@@ -73,6 +73,17 @@
 - Ground News（M‑046）：若公开网页可操作，尝试“过滤→清除/撤销→刷新/返回”的最小链；403 路线不绕行。
 - Britannica（M‑049）：继续监测可公开交互预览；一旦出现不同类型，优先最小 D4。
 
+## 本批新增（2026-10-28—D4 公网页补证·第三批）
+
+- Economist Espresso（M‑045）：未找到可匿名进入的当日样刊；仅补充公开网页的对象边界与“为何无 D4”。见 `artifacts/espresso-controls-deepening/2026-10-28-browser-operation-audit.md`；evidence.jsonl: E‑ESCD‑04。
+- AntennaPod（M‑040）：产品为 Android 原生应用，无 Web 端可操作最小链；仅补“Web 不可操作”的记录。见 `artifacts/antennapod-controls-deepening/2026-10-28-browser-operation-audit.md`；evidence.jsonl: E‑APCD‑19。
+- Ground News（M‑046）：匿名网页未取得“筛选→清除/撤销→刷新/返回”闭环；仅补“匿名不可形成 D4”的记录。见 `artifacts/ground-news-controls-deepening/2026-10-28-browser-operation-audit.md`；evidence.jsonl: E‑GRCD‑18。
+
+## 下一批（2026-10-28—D4 公网页补证·第四批，候选）
+
+- 继续监测：Tolino 公开选馆/阅读演示（若出现，最小 D4）；Britannica 其他预览类型；TIME for Kids 其他级别/样刊。
+- 新补：新闻/工具剩余（如 Inoreader M‑044 在公开演示环境下的“只读过滤→清除”最小链）；系统 AI（若 NotebookLM/Gemini 出现公开可操作最小演示）。
+
 ## 本批新增（2026-10-28—音频听书·Audible）
 
 - 在 `M-039-audible.md` 增补“结构化竞分（2026‑10‑28）”小节：继续/下载/片段/计时/队列/同步的交互框架、对象分层（移除下载/从库移除/永久删除/Hidden/交易）、关键任务流样例与失败/恢复边界；对 E‑Ink4 Plus 与 5–6 岁+成人家庭的启发与风险。
