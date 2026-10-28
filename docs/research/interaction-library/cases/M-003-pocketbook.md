@@ -27,7 +27,11 @@
 - 新增 E‑PBCD‑08：手册 Maintenance / Factory reset 章节（重置与格式化语义）；hands_on=false。
 - 新增 E‑PBCD‑09：手册 Accounts→Dropbox 章节（指定目录与Autosync，不等于整机/全云备份）；hands_on=false。
 - 新增 E‑PBCD‑10：手册 Device PIN Code 段（设置/更改/关闭/Forgot PIN 口径）；hands_on=false。
+ - 新增 E‑PBCD‑11：手册 Send‑to‑PocketBook 段（注册/白名单/下载目录/Receive files now 入口）；hands_on=false。
+ - 新增 E‑PBCD‑12：手册 Working with files / Cloud 删除语义＋Dropbox 仅应用目录；hands_on=false。
+ - 新增 E‑PBTO‑01：设备/应用 EULA（一般服务条款），不含 Send‑to 容量上限数字；hands_on=false。
   - 覆盖台账：F‑M003‑16 补 E‑PBCD‑08；F‑M003‑04/24 补 E‑PBCD‑09；F‑M003‑11 补 E‑PBCD‑10。
+  - 本轮再补：F‑M003‑06 补 E‑PBCD‑11/E‑PBTO‑01；F‑M003‑04/24 追加 E‑PBCD‑12。
 
 ## 全目录逐项清点
 

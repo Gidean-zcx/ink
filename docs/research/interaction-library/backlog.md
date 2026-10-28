@@ -110,12 +110,32 @@
   - 覆盖：F‑M044‑16、F‑M044‑02 追加证据
 - Britannica（M‑049）与 TIME for Kids（M‑047）：当前官方材料已较充足，且前批已补多处 D2/可复查 D4 网页证据；本批略过，后续如发现“对象/权限/失败‑恢复”仍有缺口，再补入官方条目。
 
+## 本批新增（2026-10-28—第三方证据·第三批）
+
+- PocketBook（M‑003）：Send‑to／Cloud‑Dropbox 冲突边界补证
+  - 证据：E‑PBCD‑11（Send‑to 向导/白名单/Receive files now）、E‑PBCD‑12（Cloud 删除语义＋Dropbox 仅应用目录）、E‑PBTO‑01（EULA 条款）
+  - 覆盖：F‑M003‑06 补 E‑PBCD‑11/E‑PBTO‑01；F‑M003‑04/24 追加 E‑PBCD‑12
+- Tolino（M‑058）：Onleihe 借阅失败/归还与 PIN 锁定口径补证
+  - 证据：E‑TLCD‑11/12/13（Onleihe 借阅/错误分组/具体错误）；E‑TLCD‑14/15（PIN 错误次数不限/Abmelden 丢失范围）
+  - 覆盖：F‑M058‑08 追加 E‑TLCD‑11/12/13；F‑M058‑18 追加 E‑TLCD‑14/15
+- Inoreader（M‑044）：API 导出/删除/撤销范围（官方开发者文档）
+  - 证据：E‑INAPI‑01/02/03/04/05（OAuth 范围；edit‑tag；mark‑all‑as‑read；subscription/edit；OPML/输出）
+  - 覆盖：新增 F‑M044‑18 并挂接上述证据
+- Britannica/TIME：未发现新的官方条目覆盖“保存/分享/翻译/失败‑恢复”缺口，本批略过。
+
 ### 下一批（第三方证据·第三批，候选）
 
 - Britannica（M‑049）/TIME for Kids（M‑047）：若出现新官方帮助涵盖“保存/分享权限、翻译限制、失败与恢复”，补入对应 D2 证据。
 - PocketBook（M‑003）：补“Send‑to‑PocketBook 服务条款/限额、Cloud 与 Dropbox 冲突/删除传播、错误码”条目。
 - Tolino（M‑058）：补“Onleihe 借阅失败码/续借/归还边界、PIN 多次失败与锁定时间、恢复流程回执”条目。
 - Inoreader（M‑044）：补“API 数据导出/删除范围、撤销/历史重算口径差异、过滤记录内容结构”条目；若出现只读演示再尝试最小 D4。
+
+## 下一批（第三方证据·第四批，候选）
+
+- 优先补未厚实产品（按 coverage.csv 标“not_observed/static_reference_only”且证据稀少者），示例：
+  - Readwise Reader（M‑015）：官方导出/删除/位置语义条目
+  - Quizlet（M‑021）：官方“保存/分享/家长控制/撤销”条目
+  - BOOX（M‑004）/reMarkable（M‑005）：官方“导出/撤销/回滚/云同步边界”条目
 
 ## 下一批（2026-10-28—D4 公网页补证·第五批，候选）
 

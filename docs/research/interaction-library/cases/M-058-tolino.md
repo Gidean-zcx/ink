@@ -11,6 +11,14 @@
 - 新增 E‑TLCD‑10：Onleihe/DRM/Reader code 与最低版本边界；hands_on=false。
   - 覆盖台账：F‑M058‑18 补 E‑TLCD‑08；F‑M058‑07 补 E‑TLCD‑09；F‑M058‑08 补 E‑TLCD‑10。
 
+（续）本批新增条目：
+
+- 新增 E‑TLCD‑11：Onleihe 借阅/阅读/归还（tolino 指南，长按封面或三点菜单归还）；hands_on=false。
+- 新增 E‑TLCD‑12：Onleihe 错误分组入口（按国家）；hands_on=false。
+- 新增 E‑TLCD‑13：W_ADEPT_CORE_NO_LOAN_TOKENS_FOUND 处理条目（授权/到期/校时/再次传输）；hands_on=false。
+- 新增 E‑TLCD‑14/15：PIN 错误次数不限、不触发锁死；“PIN 忘记→Abmelden”提示丢失自上次同步以来更改；hands_on=false。
+  - 覆盖台账：F‑M058‑08 追加 E‑TLCD‑11/12/13；F‑M058‑18 追加 E‑TLCD‑14/15。
+
 ## 已有任务的分支补强
 
 | 任务 | 条件、动作和数据变化 | 缺口与证据 |

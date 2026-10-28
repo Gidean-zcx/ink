@@ -8,6 +8,15 @@
 - 新增 E‑INCD‑35：Rules 日志与 Run rule 副作用（执行动作而非纯预览）的官方帮助；hands_on=false。
   - 覆盖台账：F‑M044‑16 补 E‑INCD‑34；F‑M044‑02 补 E‑INCD‑35。
 
+（续）开发者 API 相关官方证据：
+
+- 新增 E‑INAPI‑01：OAuth 2.0 与权限范围（read / read write）；hands_on=false。
+- 新增 E‑INAPI‑02：edit‑tag（按篇 read/unread/star/label；firstitemmsec 限制）；hands_on=false。
+- 新增 E‑INAPI‑03：mark‑all‑as‑read（按流标已读，ts 界）；hands_on=false。
+- 新增 E‑INAPI‑04：subscription/edit（unsubscribe 取消关注关系）；hands_on=false。
+- 新增 E‑INAPI‑05：导出格式范围（OPML/输出流）；hands_on=false。
+  - 覆盖台账：新增 F‑M044‑18“开发者API的导出/删除/撤销边界（范围声明）”并挂接上述证据。
+
 ## 功能目录和适用范围
 
 [帮助目录](../batches/inoreader-controls-deepening-inventory.csv)登记5大类下58个分类、258篇文章入口，共316节点；每行保留原链接、分类、正文是否已读、F/E和缺口。一次Dashboards分类502，正常重取200；原失败记录保留。目录包含Team和账单等非本次重点，**目录完整取得不等于全部正文或全部菜单已研究**。另核功能总览，菜单外的动态状态和全部API方法仍未穷尽。（E-INCD-01/05）
