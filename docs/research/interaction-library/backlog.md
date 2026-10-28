@@ -2,6 +2,20 @@
 
 更新：2026-10-27。准确登记数量与当前案例见 [案例与覆盖索引](case-index.md)，逐流程的未解决分支见 [coverage.csv](coverage.csv)。**全部产品完整功能清单仍未核定；已查看静态图不等于连续流程或亲自操作。** 这些数量是覆盖台账，不是市场穷尽率或研究质量评分。
 
+### 2026-10-28：新增两条可复查 D4 证据链（公开网页）
+
+- 学习链（5–6 岁适龄，公开可操作）：Britannica Community Helpers 预览。已覆盖“错答 →（提示/讲解）→ 重试正确 → 收束（开放问题）→ 中断/重入”。见：
+  - 审计与截图：`docs/research/interaction-library/artifacts/britannica-controls-deepening/browser-operation-audit.md`
+  - 覆盖台账：`F-M049-05`（D4）
+  - 交叉引用：`RP-M049-01/02/03`
+  - 待补：离线/网络失败、订阅版与账号保存、重复错答的差异、触屏与键盘无障碍
+
+- 阅读/听读链（K–1）：TIME for Kids 样刊文章与整期样刊。已覆盖“显式页书签 → 同页关闭重开 → 刷新复位/倍速复位 → 浏览器重启回页码（音频跨进程未取得） → 窄屏视口”。见：
+  - 审计与截图：`docs/research/interaction-library/artifacts/time-controls-deepening/browser-operation-audit.md`、`docs/research/interaction-library/artifacts/time-sample-reader/browser-operation-audit.md`
+  - 覆盖台账：`F-M047-06` 等（D4）
+  - 交叉引用：`RP-M047-01/02/03/04/05/06`
+  - 待补：实际声音/对齐、断网/来电、跨设备/账户与清站点数据后的恢复
+
 ## 先补什么
 
 优先补与两个核心目标及 5–6 岁使用者直接相关的交互：中文识字/背词的错题与提示、儿童游戏的一次完整回路、成人连续学习的恢复、个人新闻的选题与反馈、AI 跨应用执行。电子纸系统手势/显示、音频盲操、数据恢复并行保留。以下排序是研究安排建议，不是首版功能排序。
