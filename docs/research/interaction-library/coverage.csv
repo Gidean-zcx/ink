@@ -1,3 +1,4 @@
+F-M021-33,M-021,未成年账户限制与保存/分享边界,D2,E-QZMS-26;E-QZCD-08;E-QZMS-06;E-QZMS-08,未达法定年龄：不能分享/创建公开集/上传自定义媒体；部分地区需家长同意后才可创建/编辑；分享仅限公开或密码集并需另传密码,具体年龄阈值与地区差异、家长确认失败/撤回、已创建内容的可见性回滚与历史传播未知,not_observed,false,cases/M-021-quizlet.md,2026-10-28
 flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
 F-M001-01,M-001,查词再复习,D2,E-KDL-01;E-KDCD-01;E-KDCD-02,查词自动入本与关闭；词义卡/例句/Flashcards；Word Wise提示密度/多义词反馈及中英文提示独立,误标掌握/撤销与复习调度未知；中文提示不证明中文TTS或教学适龄,not_observed,false,cases/M-001-kindle.md,2026-10-27
 F-M001-02,M-001,临时翻找再回原处,D2,E-KDL-01;E-KDCD-02;E-KDAF-06,预览/点页跳转/Back原位；Go To历史退出书后清；脚注预览与跳到注释分开,静态三页与返回按钮；退出/断电/跨端历史恢复未知，不当连续视觉链,static_official_images_only,false,cases/M-001-kindle.md,2026-10-27
@@ -360,7 +361,7 @@ F-M021-03,M-021,学习资料输入与结构化导入,D2,E-QZLT-03;E-QZMW-02;E-QZ
 F-M021-04,M-021,学习集编辑复制导出,D2,E-QZLT-04;E-QZLT-11;E-QZLT-12;E-QZCD-05;E-QZCD-06;E-QZCD-07;E-QZCD-08;E-QZMW-03;E-QZMW-04;E-QZMS-05;E-QZMS-07;E-QZMS-08,已有编辑/删除/可见性分支；高级内容复制受限；网站合并可临时学习或保存新集，原集保留，保存后手机可学习编辑；Editable by与Visible to入口分开；密码可改、移动确认；访问失败分登录/密码/私有/未发布,误删撤销/并发编辑/隐藏找回/删除确认；合并去重、进度星标映射、源更新、重试与撤销未知；编辑与查看权限联动、撤权/旧密码生效及旧副本影响未知,not_observed,false,cases/M-021-quizlet.md,2026-10-27
 F-M021-05,M-021,草稿中断恢复,D2,E-QZLT-05;E-QZMW-07;E-QZMS-05,创建页自动草稿与显式发布分开；既有断网警告/退出账号丢弃规则；不将普通草稿规则套外部AI或扫描；跨端找不到先核是否发布，不能把未发布草稿当已同步,进程终止、系统重启及编辑冲突的保存边界未知；发布后可见时点与同步失败界面未知,not_observed,false,cases/M-021-quizlet.md,2026-10-27
 F-M021-06,M-021,翻卡与会话返回,D2,E-QZLT-13,手机X保存、本地进度,跨设备断点,not_observed,false,cases/M-021-quizlet.md,2026-10-26
-F-M021-07,M-021,Learn目标题型及书写纠错,D2,E-QZLT-06;E-QZCD-09;E-QZCD-10;E-QZCD-11;E-QZCD-12,有限免费轮次；Write两轮及重输，Spell错字高亮/拼读/重试，每题或词正确两次结束；路径开始才保存；重学清除Learn进度,普通Learn中断/跨日队列、重置撤销及对其他模式影响未知；Study path设置与重置帮助的Android范围不一致,not_observed,false,cases/M-021-quizlet.md,2026-10-27
+F-M021-07,M-021,Learn目标题型及书写纠错,D2,E-QZLT-06;E-QZCD-09;E-QZCD-10;E-QZCD-11;E-QZCD-12;E-QZLT-14,有限免费轮次；Write两轮及重输，Spell错字高亮/拼读/重试，每题或词正确两次结束；路径开始才保存；重学清除Learn进度,普通Learn中断/跨日队列、重置撤销及对其他模式影响未知；Study path设置与重置帮助的Android范围不一致,not_observed,false,cases/M-021-quizlet.md,2026-10-27
 F-M021-08,M-021,评分选项与连胜误判,D2,E-QZLT-07;E-QZLT-08;E-QZCD-09;E-QZCD-17;E-QZMW-06,原US/连胜误判分支保留；UK文档列Learn三级默认语言条件、网站保存/手机完成；Test单答案设置仅网站，作用于同集其他活动,地区/构建实际边界、中文数学等例外、历史成绩回算和调度影响未知；不将Learn/Write误判按钮套到Test,not_observed,false,cases/M-021-quizlet.md,2026-10-27
 F-M021-09,M-021,网站间隔复习,D2,E-QZLT-09,四档自评、日新增量,误评撤销,not_observed,false,cases/M-021-quizlet.md,2026-10-26
 F-M021-10,M-021,移动离线与同步,D2,E-QZLT-10;E-QZLT-13,灰标题、下载移除、重连,精确同步字段,not_observed,false,cases/M-021-quizlet.md,2026-10-26

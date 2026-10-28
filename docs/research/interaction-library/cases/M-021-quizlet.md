@@ -15,6 +15,11 @@
 
 本批补充记录（2026‑10‑28）：匿名网页未取得一条含“错误→提示/重试→结算→退出/重进/刷新”的 D4 闭环；见 `../artifacts/quizlet-public-sets/2026-10-28-public-web-operability.md`（E‑QZMS‑24）。保持 D2，并在后续有账户/受控演示时再补 D4。
 
+### 本批第三方证据补充（2026-10-28，续）
+
+- 新增 E‑QZLT‑14：重置 Learn 进度（Study path Reset Progress）；hands_on=false。覆盖：F‑M021‑07 追加此证据。
+- 新增 E‑QZMS‑26：未成年账户限制/家长同意（不能分享/公开集/自定义媒体等）；hands_on=false。覆盖：新增 F‑M021‑33“未成年账户限制与保存/分享边界”并挂接 E‑QZMS‑26（与 E‑QZCD‑08/E‑QZMS‑06/08 共同界定可见性/分享口径）。
+
 ## 功能目录与范围
 
 最初按官方 Studying 类目及三个展开目录登记 [逐项 inventory](../batches/quizlet-controls-deepening-inventory.csv)：**4 个父级、64 个文章入口，共 68 行**。前三组分别23/12/27篇，Folders的两项来自类目页。第54批后，原64篇均关联正文记录，另登记两篇从文章链接进入的补充材料，共70行；不是70项功能，也没有改动原目录的文章数量。两篇背景说明不单独新增任务，早期短记也不等于所有分支已核。未涵盖 Account、Billing、Teaching、Schools 等其他类目，不宣称产品全功能已穷尽。目录证据为E-QZCD-01～04，正文另列对应E。
