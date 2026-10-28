@@ -97,6 +97,26 @@
 - Ground News（M‑046）：方法论与阅读/离线说明补证（E‑GRCD‑18/19）；F‑M046‑01/11 补入证据。
 - AntennaPod（M‑040）：Wiki Sleep timer / Backup 与文档主页索引补证（E‑APCD‑20/21/22）；F‑M040‑08/12/03/07 补入证据。
 
+## 本批新增（2026-10-28—第三方证据·第二批）
+
+- PocketBook（M‑003）：补入手册条目作为对象/权限/恢复的官方口径
+  - E‑PBCD‑08 Maintenance/Factory reset；E‑PBCD‑09 Accounts→Dropbox；E‑PBCD‑10 Device PIN Code
+  - 覆盖：F‑M003‑16、F‑M003‑04/24、F‑M003‑11 追加证据
+- Tolino（M‑058）：补入 PIN/重置/Onleihe‑DRM 边界帮助
+  - E‑TLCD‑08 PIN 与忘记 PIN；E‑TLCD‑09 恢复出厂设置/专用 USB；E‑TLCD‑10 Onleihe/Reader code/最低版本
+  - 覆盖：F‑M058‑18、F‑M058‑07、F‑M058‑08 追加证据
+- Inoreader（M‑044）余项：补入“批量已读撤销范围 / Rules 试跑副作用”官方帮助
+  - E‑INCD‑34 Mark all as read 撤销范围；E‑INCD‑35 Rules 日志与副作用
+  - 覆盖：F‑M044‑16、F‑M044‑02 追加证据
+- Britannica（M‑049）与 TIME for Kids（M‑047）：当前官方材料已较充足，且前批已补多处 D2/可复查 D4 网页证据；本批略过，后续如发现“对象/权限/失败‑恢复”仍有缺口，再补入官方条目。
+
+### 下一批（第三方证据·第三批，候选）
+
+- Britannica（M‑049）/TIME for Kids（M‑047）：若出现新官方帮助涵盖“保存/分享权限、翻译限制、失败与恢复”，补入对应 D2 证据。
+- PocketBook（M‑003）：补“Send‑to‑PocketBook 服务条款/限额、Cloud 与 Dropbox 冲突/删除传播、错误码”条目。
+- Tolino（M‑058）：补“Onleihe 借阅失败码/续借/归还边界、PIN 多次失败与锁定时间、恢复流程回执”条目。
+- Inoreader（M‑044）：补“API 数据导出/删除范围、撤销/历史重算口径差异、过滤记录内容结构”条目；若出现只读演示再尝试最小 D4。
+
 ## 下一批（2026-10-28—D4 公网页补证·第五批，候选）
 
 - 具备公开 D4 潜力的继续监测：Britannica 其他交互预览、TIME for Kids 新样刊/级别、The Week Junior 新一期样刊。

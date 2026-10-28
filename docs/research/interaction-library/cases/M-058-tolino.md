@@ -4,6 +4,13 @@
 
 本案例含19项任务，其中设备及账户任务来自D2文档/静态页；**唯一D4是桌面匿名公开图书馆选择器**，不代表T302实机、账号登录或借阅已验证。[逐条目录](../batches/tolino-controls-deepening-inventory.csv)与[来源摘记](../artifacts/tolino-controls-deepening/source-notes.md)保留父项、重复问题和未深读条目，不是全功能完成率。
 
+### 本批第三方证据补充（2026-10-28）
+
+- 新增 E‑TLCD‑08：PIN 与忘记 PIN 的官方帮助条目；hands_on=false。
+- 新增 E‑TLCD‑09：恢复出厂设置/专用 USB 步骤（更新页章节）；hands_on=false。
+- 新增 E‑TLCD‑10：Onleihe/DRM/Reader code 与最低版本边界；hands_on=false。
+  - 覆盖台账：F‑M058‑18 补 E‑TLCD‑08；F‑M058‑07 补 E‑TLCD‑09；F‑M058‑08 补 E‑TLCD‑10。
+
 ## 已有任务的分支补强
 
 | 任务 | 条件、动作和数据变化 | 缺口与证据 |

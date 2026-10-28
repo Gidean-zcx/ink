@@ -22,6 +22,13 @@
 - 对 E‑Ink4 Plus 与 5–6 岁+成人家庭的启发：
   - 明确“导出件/手写图/本地书库/云账户条目/阅读点/音频点”的不同持久层级；不可把“导出成功/云同步已开”当作“学习资料已可回导编辑/全端恢复”。
 
+### 本批第三方证据补充（2026-10-28）
+
+- 新增 E‑PBCD‑08：手册 Maintenance / Factory reset 章节（重置与格式化语义）；hands_on=false。
+- 新增 E‑PBCD‑09：手册 Accounts→Dropbox 章节（指定目录与Autosync，不等于整机/全云备份）；hands_on=false。
+- 新增 E‑PBCD‑10：手册 Device PIN Code 段（设置/更改/关闭/Forgot PIN 口径）；hands_on=false。
+  - 覆盖台账：F‑M003‑16 补 E‑PBCD‑08；F‑M003‑04/24 补 E‑PBCD‑09；F‑M003‑11 补 E‑PBCD‑10。
+
 ## 全目录逐项清点
 
 手册印刷页与PDF文件页相同。第2–4页的65项原目录完整保留在[当前功能目录CSV](../batches/pocketbook-app-controls-deepening-inventory.csv)，此前为26项补正文；第45批在同一目录就地更新27项，保留原名与页码，不新建重复目录。父章节与子项有包含关系，不是新增功能数。其余条目保留前次状态；最初[目录快照](../artifacts/pocketbook-controls-deepening/functional-inventory.csv)仅供追溯，当前判断用更新后的CSV。目录完整、正文读过与操作验证分别记录。
