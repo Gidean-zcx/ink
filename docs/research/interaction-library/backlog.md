@@ -47,6 +47,18 @@
 - DragonBox Numbers：在 Puzzle 与 Ladder/Run 下继续收敛“错放→提示→撤销→重试→结算→恢复”的证据与缺口；当前仍以文档与静态图为主。
 - 索引同步：如出现新 D4，更新 `coverage.csv` task_depths 与 `evidence.jsonl`；否则继续增加 `reference-points.csv` 的边界锚点。
 
+## 本批新增（2026-10-28—D4 公网页补证·第一批）
+
+- Britannica School（M‑049，Early 公开预览）：补充“Start Again→回到首题”“Back→讲解稳定→Next”两条可复查子链（一次序列）。见 `artifacts/britannica-controls-deepening/2026-10-28-browser-operation-audit.md`；`reference-points.csv` 已新增 RP‑M049‑04/05；后续在 `coverage.csv` 补入 E‑BRCD‑08 引用。
+- The Week Junior US（M‑048，公开样刊）：补充“文章页刷新→位置/视图重置”“目录返回→再入同文章→从首章开始”。见 `artifacts/week-junior-controls-deepening/2026-10-28-browser-operation-audit.md`；将新增 RP‑M048‑05/06 与 `evidence.jsonl`/`coverage.csv` 对应更新。
+  - 共同限制：仅公开网页，零副作用；不主张设备原生、登录后或订阅平台保存；离线/跨设备仍待补。
+
+## 下一批（2026-10-28—D4 公网页补证·第二批，候选）
+
+- TIME for Kids：同一期内再取一条最小链（刷新/书签/重启的对照），或另一篇公开文章的朗读/搜索/刷新复位。
+- Duolingo（Chess/Math 公网页匿名）：围绕“错误→提示→重试→结算→退出/重进/刷新”再补一条最小链（不含登录/购买）。
+- Britannica：选择不同交互类型的另一个公开预览；若出现离线/刷新失败分支，按 D4 记录具体现象与未知。
+
 ## 本批新增（2026-10-28—音频听书·Audible）
 
 - 在 `M-039-audible.md` 增补“结构化竞分（2026‑10‑28）”小节：继续/下载/片段/计时/队列/同步的交互框架、对象分层（移除下载/从库移除/永久删除/Hidden/交易）、关键任务流样例与失败/恢复边界；对 E‑Ink4 Plus 与 5–6 岁+成人家庭的启发与风险。

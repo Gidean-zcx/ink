@@ -765,9 +765,9 @@ F-M048-01,M-048,一期内容阅读路线,D2,E-WJ-02;E-WJ-03,历史公开样张�
 F-M048-02,M-048,辩论阅读与跨周反馈,D2,E-WJ-03;E-WJ-04,背景双方论据及下周结果,未投票;提交与改票未知,static_reference_only,false,cases/M-048-week-junior.md,2026-10-26
 F-M048-03,M-048,纸面谜题提示与核对,D2,E-WJ-03,第26页题与提示及29页答案,没有数字判错/奖励证据,static_reference_only,false,cases/M-048-week-junior.md,2026-10-26
 F-M048-04,M-048,US数字当期与往期,D1,E-WJ-05;E-WJ-06;E-WJ-07,数字访问随权益期限,阅读器朗读离线恢复和购买恢复,not_observed,false,cases/M-048-week-junior.md,2026-10-26
-F-M048-05,M-048,公开样刊导航、缩略图与页码跳转,D4,E-WJCD-01;E-WJCD-02,原桌面1→2、缩略图、14/首页/32；续查窄屏触摸菜单/页码14。第二次重启后Next捕获空白且仍14，Previous回14，未记成功到15。,实体触控/手势、非法页码、断网与全部阅读完成未测；原隐藏控件/侧栏遮挡失败保留。,observed_browser_sequence,true,cases/M-048-week-junior.md,2026-10-27
+F-M048-05,M-048,公开样刊导航、缩略图与页码跳转,D4,E-WJCD-01;E-WJCD-02;E-WJCD-09,原桌面1→2、缩略图、14/首页/32；续查窄屏触摸菜单/页码14。第二次重启后Next捕获空白且仍14，Previous回14，未记成功到15。,实体触控/手势、非法页码、断网与全部阅读完成未测；原隐藏控件/侧栏遮挡失败保留。,observed_browser_sequence,true,cases/M-048-week-junior.md,2026-10-27
 F-M048-06,M-048,公开样刊页内搜索与清空,D4,E-WJCD-03,Nobel有5页组；原空结果/清空已测。续查封面两次入口不展开，第2页可以；Page15标题等3秒/缩略图等1.5秒仍14。,入口/结果未跳转原因未定；逐个命中、中文搜索、排名与断网未测；不外推全部环境。,observed_browser_sequence,true,cases/M-048-week-junior.md,2026-10-27
-F-M048-07,M-048,公开样刊保存位置并重访,D4,E-WJCD-04,Save14后回封面，同上下文重访及同资料目录两次浏览器重启均回14；旧空上下文、新窄屏空上下文从1。,存储机制、覆盖/删除书签、清站点数据、跨端/账户与刷机恢复未测；不能从页书签推导音频秒点恢复。,observed_browser_sequence,true,cases/M-048-week-junior.md,2026-10-27
+F-M048-07,M-048,公开样刊保存位置并重访,D4,E-WJCD-04;E-WJCD-09,Save14后回封面，同上下文重访及同资料目录两次浏览器重启均回14；旧空上下文、新窄屏空上下文从1。,存储机制、覆盖/删除书签、清站点数据、跨端/账户与刷机恢复未测；不能从页书签推导音频秒点恢复。,observed_browser_sequence,true,cases/M-048-week-junior.md,2026-10-27
 F-M048-08,M-048,以新闻议题写观点作品,D2,E-WJCD-05;E-WJCD-06,事实支持、反方观点、行动建议和成人校读组成作品路径。,活动面向原产品8–14岁；5–6岁改编、口述、评价标准待研究；未投稿。,static_reference_only,false,cases/M-048-week-junior.md,2026-10-26
 F-M048-09,M-048,围绕读书组织知识问答,D2,E-WJCD-05;E-WJCD-07,每人备题，限时写答、同时揭晓、人工记分和可选换书。,争议答案、难度、年龄差与长期收益未知；不是内置自适应练习。,static_reference_only,false,cases/M-048-week-junior.md,2026-10-26
 F-M048-10,M-048,以线索组织观察和寻物,D2,E-WJCD-05;E-WJCD-08,清单/谜面两种挑战，分组记录发现，时间结束后比较。,活动规则不证明App计时/识别；5–6岁执行难度和学习效果未知。,static_reference_only,false,cases/M-048-week-junior.md,2026-10-26
@@ -777,7 +777,7 @@ F-M049-01,M-049,Elementary文章研究,D2,E-BRIT-01;E-BRIT-02;E-BRIT-04;E-BRCD-0
 F-M049-02,M-049,Early百科读听,D2,E-BRIT-03;E-BRCD-01;E-BRCD-04,六类/关键词、分节与画廊；原生英西语及逐词朗读。Early导航图与Elementary级别工具分开,自动续节、换语言位置、退出和离线恢复；未验证触屏词典或中文原生内容,static_reference_only,false,cases/M-049-britannica.md,2026-10-27
 F-M049-03,M-049,保存引用与翻译限制,D2,E-BRIT-02;E-BRIT-04;E-BRCD-04,保存需个人账号；教师课程需教师身份，课堂分享取决机构权限；打印工具带引用；机器翻译工具限制仍在,保存成功/重名/删除/冲突和跨端未知；原生西语不等于Google翻译副本,static_reference_only,false,cases/M-049-britannica.md,2026-10-27
 F-M049-04,M-049,Fundamentals活动,D1,E-BRIT-03;E-BRED-01,Read/Explore/Play/Create需订阅启用；绘画有擦除/重置/打印声明，打印不证明云存储或可再编辑,Fundamentals错答/提示/重试/结算及退出保存仍未知；本轮Community Helpers实际预览不是该四模式,static_manual_pages_only,false,cases/M-049-britannica.md,2026-10-27
-F-M049-05,M-049,Early互动：说明、点选与收束,D4,E-BRED-01;E-BRCD-05;E-BRCD-07,限定Community Helpers公开预览：四道线索、场景选人；一次错答→重试→回看线索→正确解释；第二题Back恢复前题讲解；四项勾选后开放问题，Start Again回标题,只核一个预览和一次错答；iframe重载回标题，不推广其他场景或账号保存。音频开关/听音/键盘/触屏/断网及学习成效未知,observed_browser_sequence,true,cases/M-049-britannica.md,2026-10-27
+F-M049-05,M-049,Early互动：说明、点选与收束,D4,E-BRED-01;E-BRCD-05;E-BRCD-07;E-BRCD-08,限定Community Helpers公开预览：四道线索、场景选人；一次错答→重试→回看线索→正确解释；第二题Back恢复前题讲解；四项勾选后开放问题，Start Again回标题,只核一个预览和一次错答；iframe重载回标题，不推广其他场景或账号保存。音频开关/听音/键盘/触屏/断网及学习成效未知,observed_browser_sequence,true,cases/M-049-britannica.md,2026-10-27
 F-M049-06,M-049,成人组织回收主题：共读、互动、应用与讲解,D2,E-BRED-02,成人组织；配套分层纸面任务,非自动课程；软件评分、账号掌握状态未知,not_observed,false,cases/M-049-britannica.md,2026-10-26
 F-M049-07,M-049,Early图片与视频的来源、辅助和分享工具,D2,E-BRIT-03;E-BRCD-03;E-BRCD-01,首页分类/文章画廊进入媒体；图片说明/来源和共享，视频字幕/描述/下载按钮分别有文档与静态依据,真实弹层返回、字幕/音轨切换、格式/下载失败、离线及分享权限结果未知,static_manual_pages_only,false,cases/M-049-britannica.md,2026-10-27
 F-M049-08,M-049,打开公开内容目录查看文章入口,D4,E-BRCD-05;E-BRCD-06,主页面200，目录区显示加载失败和接口429；搜索/类别/类型/清除控件可见，停止目录重试,没有取得列表或执行筛选；不是订阅内搜索的失败结论,observed_browser_sequence,true,cases/M-049-britannica.md,2026-10-27
