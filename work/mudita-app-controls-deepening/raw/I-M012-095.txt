@@ -1,0 +1,70 @@
+How To Manage Mudita Kompakt Contacts With Mudita Center
+Modified on: Sat, 3 Oct, 2026 at 8:47 AM
+How to import contacts from CSV file or vCard
+Before you start, you need to create a CSV using outlook, create a vCard using Google Account or create a vCard (VCF file) using iCloud.
+Open Mudita Center and connect your device
+Look under Your Kompakt > Click Contacts
+Click Import contacts
+Click Upload CSV or vCard
+Select the CSV or Vcard file from your computer
+Select the individual contacts to import or select All contacts
+Click Import selected contacts to transfer contacts to phone*
+*Important - do not disconnect your phone while the import is in progress
+How to import contacts from Google
+Open Mudita Center and connect your device
+Look under Your Kompakt > Click Contacts
+Click Import contacts
+Click Google
+Log in to Google
+Select the individual contacts to import or select All contacts
+Click Import selected contacts to transfer contacts to phone*
+*Important - do not disconnect your phone while the import is in progress 
+How to import contacts from Outlook
+Open Mudita Center and connect your device
+Look under Your Kompakt > Click Contacts
+Click Import contacts
+Click Outlook
+Log in to Outlook
+Select the individual contacts to import or select All contacts
+Click Import selected contacts to transfer contacts to phone*
+*Important - do not disconnect your phone while the import is in progress 
+How to create a vCard (VCF file) using iCloud
+On your computer, sign into your iCloud account using your Apple ID 
+Click Contacts
+Select the contacts to export either by using ctrl + click or shift + click*
+Click the Export Icon
+Click Export vCard
+The vCard (VCF file) should appear in your downloads folder
+*To quickly select all contacts, click the 3 dots in a circle icon > click Select All
+How to create a CSV or vCard using Google Account
+On your computer, sign into your Gmail account using your Google ID 
+Click the Grid icon to show the apps list 
+Click Contacts
+Select the contacts to export 
+Click the 3 dots icon
+Click Export 
+Select how you would like to export the contacts, either CSV or vCard
+Click Export 
+The CSV or vCard should appear in your downloads folder
+*To quickly select all contacts, click the down arrow icon > click All
+How to create a CSV file using Outlook
+On your computer, sign into your Outlook account using your Microsoft ID 
+Click the People icon 
+Click the Manage contacts
+Click Export 
+Click Export 
+The CSV should appear in your downloads folder
+How to delete contacts using Mudita Center
+Open Mudita Center and connect your device
+Look under Your Kompakt > Click Contacts
+Hover the mouse pointer over contact you want to delete
+Click the Checkbox to select the contact* 
+Select any other contacts you want to delete
+Click Delete
+Click Delete
+*To select all, click the minus icon near the top of the screen
+Was this article helpful?
+ No
+ Yes
+That’s Great!
+Thank you for your feedback

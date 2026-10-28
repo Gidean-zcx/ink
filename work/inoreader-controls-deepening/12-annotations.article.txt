@@ -1,0 +1,62 @@
+Highlight and annotate what you read
+Add a note to an article to remember why it mattered, and highlight the sentences you will want to quote. Everything you mark is collected in one place, ready when you need it.
+Create a free account
+FreeNotes on articles are free on every plan.
+ProPro adds highlights, with your own notes on them and sync to Readwise.
+TeamTeam plans let you share notes and highlights with your team.
+Turn reading into notes
+Annotations let you keep your thoughts next to the text that prompted them. When you come back to an article weeks later, your notes and highlights tell you at once why it mattered.
+Notes
+Add a note to any article to say why you saved it, what to check or who should see it. Notes are indexed with the article, so you can find it again by something you wrote.
+Highlights
+With Pro, select a sentence or a paragraph and click Highlight text. Each highlight can carry its own note, so a quote and your comment stay together.
+The Annotations section
+Every annotated article is collected under Saved, Annotations, with its notes and highlights at the top.
+Readwise and Team sharing
+Connect Readwise and your highlights arrive there as you make them. On Team plans, you can share a note or a highlight with your colleagues.
+Start annotating
+To add a note, open an article and click Add note at the bottom of the article view.
+With Pro, select a passage while you read and click Highlight text. Click Edit under the highlight to add a note to it.
+Open Saved, then Annotations, to see every article you annotated.
+To send your highlights to Readwise, connect it under Preferences > Share, save, login.
+Use cases
+Research for a paper or a talk
+Highlight the findings and figures you will cite, add a note with the context, and come back to the Annotations section when you start writing.
+Remembering why you saved something
+Add a short note to an article you want to come back to, and you will know what it was for when you find it again weeks later.
+Sharing what matters with a team
+On a Team plan, share a highlight with a note on it, and your colleagues see exactly which part of the article you mean and why.
+Highlights that stay in place
+Your highlights stay where you put them even if the publisher later edits the article, because Inoreader keeps your copy of the text you marked. If the publisher edits the article later, a bar above it tells you so, and the edit history shows what changed.
+Frequently asked questions
+What is the difference between a note and a highlight?
+A note belongs to the whole article, and you can add one to any article on every plan. A highlight marks a passage inside the article, and with Pro you can also write a note on that passage.
+How do I highlight a passage?
+Select the text while you read and click Highlight text. The passage stays marked in the article and also appears in the Annotations panel at the top, where you can add a note to it.
+Where do I find my annotations later?
+Open Saved and then Annotations. Every article you highlighted or wrote a note on is listed there, and each one opens with its annotations at the top.
+Can I search my notes?
+Yes. Your notes are indexed together with the article, so a search for a word you wrote in a note finds the article it belongs to.
+What happens to a highlight if the publisher updates the article?
+Your highlight stays where you put it. When you highlight an article, Inoreader keeps your own copy of the text you highlighted, so a later change on the publisher's side does not move or remove it.
+Can I send my highlights to other tools?
+Yes. Connect Readwise under Preferences > Share, save, login, and your highlights and their notes are sent there as you make them. Your annotations also work in the iOS and Android apps.
+Related features
+Save to other services
+Save any article to your notes app, bookmarks or cloud drive
+Search
+Find any article in your feeds and beyond
+Teams
+Share one set of sources with your whole team
+Article edit history
+See what changed after an article was published
+Help center
+What are annotations?
+How do I create a highlight?
+How do I add a note to an article?
+Where can I find my annotations?
+What’s the difference between highlights, notes, and comments?
+Build your own newsfeed
+Ready to give it a go?
+Start a 14-day trial, no credit card required.
+Create account

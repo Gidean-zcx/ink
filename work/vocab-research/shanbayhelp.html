@@ -1,0 +1,113 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>扇贝帮助</title><meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1"><script>(function() {
+    // 存储需要监控的脚本资源
+    const pendingResources = new Map();
+    
+    // 记录原始脚本顺序
+    const originalScripts = Array.from(document.querySelectorAll('script[src]'));
+    
+    window.addEventListener('error', function(event) {
+        if (event.target && (event.target.tagName === 'SCRIPT' || event.target.tagName === 'LINK')) {
+            const url = event.target.src || event.target.href;
+            if (url && url.includes('assets.baydn.com')) {
+                event.preventDefault();
+                event.stopPropagation();
+                
+                const fallbackUrl = url.replace('assets.baydn.com', 'assets-fallback.baydn.com');
+                const timestamp = new Date().toISOString();
+                console.log(`[LAYOUT ${timestamp}] 资源 ${url} 加载失败，切换到 ${fallbackUrl}`);
+                
+                // 如果是脚本，需要特殊处理顺序
+                if (event.target.tagName === 'SCRIPT') {
+                    const index = originalScripts.findIndex(s => s === event.target);
+                    pendingResources.set(index, {
+                        element: event.target,
+                        fallbackUrl: fallbackUrl
+                    });
+                    
+                    // 尝试按顺序重新加载
+                    tryLoadNextScript(index);
+                } else {
+                    // 非脚本资源可以直接替换
+                    replaceElement(event.target, fallbackUrl);
+                }
+            }
+        }
+    }, true);
+    
+    function tryLoadNextScript(currentIndex) {
+        if (!pendingResources.has(currentIndex)) return;
+        
+        const { element, fallbackUrl } = pendingResources.get(currentIndex);
+        const newScript = document.createElement('script');
+        
+        // 复制属性
+        Array.from(element.attributes).forEach(attr => {
+            newScript.setAttribute(attr.name, attr.name === 'src' ? fallbackUrl : attr.value);
+        });
+        
+        // 重要：保持同步加载
+        newScript.async = false;
+        
+        newScript.onload = () => {
+            pendingResources.delete(currentIndex);
+            // 尝试加载下一个待处理脚本
+            tryLoadNextScript(currentIndex + 1);
+        };
+        
+        newScript.onerror = () => {
+            console.error(`备用CDN资源加载失败: ${fallbackUrl}`);
+        };
+        
+        // 替换元素
+        element.parentNode.replaceChild(newScript, element);
+    }
+    
+    function replaceElement(element, fallbackUrl) {
+        const newElement = document.createElement(element.tagName);
+        Array.from(element.attributes).forEach(attr => {
+            newElement.setAttribute(attr.name, 
+                (attr.name === 'src' || attr.name === 'href') ? fallbackUrl : attr.value);
+        });
+        
+        if (element.tagName === 'LINK') {
+            document.head.appendChild(newElement);
+        } else {
+            element.parentNode.replaceChild(newElement, element);
+        }
+    }
+})(); </script><meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width"><link rel="icon" type="image/png" href="https://assets0.baydn.com/static/img/shanbay_favicon.png"><script>window.configData = {"appName":"web","cdnOrigin":"https://assets.baydn.com","baydnPrefix":"https://assets.baydn.com/baydn/public","browserApm":{"url":"https://apm.shanbay.com","version":"7.4.2"},"wechat":{"shareHosts":["17bdc.com"],"codename":"shanbay17"},"port":3000,"origin":"https://web.shanbay.com","oldOrigin":"https://www.shanbay.com","domain":".shanbay.com","loginUrl":"https://web.shanbay.com/web/account/login","apiv3Prefix":"https://apiv3.shanbay.com","apiv2Prefix":"https://www.shanbay.com/api/v2","apiv1Prefix":"https://www.shanbay.com/api/v1","log":{"level":"ERROR"},"ossSecure":true,"ossAvatarImgCode":"avatar_img","appletsMap":{"roots":{"title":"智慧词根","productId":"bqnris","appletId":"bbohes"},"collins":{"title":"柯林斯词典","productId":"hgfxn","appletId":"juuxc"},"affixes":{"title":"派生联想","productId":"topmz","appletId":"burubg"},"oxford":{"title":"牛津英汉词典","productId":"rthvg","appletId":"brfpi"}},"sensors":{"server_url":"https://sa.shanbay.com/sa?project=production&token=e8d971a5389d7939"}}</script><style>body {
+    padding-bottom: constant(safe-area-inset-bottom);
+    padding-bottom: env(safe-area-inset-bottom);
+}</style><link rel="stylesheet" href="https://assets.baydn.com/baydn/public/bay-components/0.3.1/dist/bay-components.min.css"><link rel="stylesheet" href="https://assets.baydn.com/baydn/public/shanbay/iconbay/0.1.28/dist/iconbay.css"><link rel="stylesheet" href="https://assets.baydn.com/baydn/public/shanbay/xbay/1.11.5/dist/mobile-ui.css"><link rel="stylesheet" href="https://assets.baydn.com/baydn/public/shanbay/xbay/1.11.5/dist/client-ui.css"><link href="https://static.baydn.com/baydn/public/iconbay/v0.1.21/iconbay-full.css" rel="stylesheet"><link rel="stylesheet" href="https://assets.baydn.com/web_static/web/help-6d46130c443b68b2fb6a.css"></head><body><div id="shanbay-nav"></div><script src="https://assets.baydn.com/baydn/public/shanbay-nav/latest/dist/shanbay-nav.min.js" data-container="#shanbay-nav" data-skin="green" defer></script><div id="app"></div><script src="https://assets.baydn.com/baydn/public/sentry/6.7.2/bundle.min.js"></script><script>"use strict";Sentry.init({dsn:"https://750da88dffaa5c734c9dfee673de6663@sentry.17bdc.com/300",release:"web",allowUrls:[/https?:\/\/((\w+)\.)?(shanbay|baydn)\.com/],denyUrls:[/(moz|safari|==chrome)-extension/i],ignoreErrors:[/WeixinJSBridge/,/MyAppGetHTMLElementsAtPoint/,/MyAppGetLinkTitleNameAtPoint/,/com\.shanbay\.community\.activity\.ShanbayWebPageActivity/,/diableNightMode/,/fetchShareChannels/],initialScope:function(e){return e.setExtra("cookie",document.cookie),e}}),Sentry.setUser({id:''});</script><script>"use strict";!function(t){var r,n=t.Base64;if("undefined"!=typeof module&&module.exports)try{r=require("buffer").Buffer}catch(e){}var o,u="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/",c=function(e){for(var t={},r=0,n=e.length;r<n;r++)t[e.charAt(r)]=r;return t}(u),a=String.fromCharCode,i=function(e){if(e.length<2)return(t=e.charCodeAt(0))<128?e:t<2048?a(192|t>>>6)+a(128|63&t):a(224|t>>>12&15)+a(128|t>>>6&63)+a(128|63&t);var t=65536+1024*(e.charCodeAt(0)-55296)+(e.charCodeAt(1)-56320);return a(240|t>>>18&7)+a(128|t>>>12&63)+a(128|t>>>6&63)+a(128|63&t)},f=/[\uD800-\uDBFF][\uDC00-\uDFFFF]|[^\x00-\x7F]/g,d=function(e){return e.replace(f,i)},s=function(e){var t=[0,2,1][e.length%3],r=e.charCodeAt(0)<<16|(1<e.length?e.charCodeAt(1):0)<<8|(2<e.length?e.charCodeAt(2):0);return[u.charAt(r>>>18),u.charAt(r>>>12&63),2<=t?"=":u.charAt(r>>>6&63),1<=t?"=":u.charAt(63&r)].join("")},h=t.btoa?function(e){return t.btoa(e)}:function(e){return e.replace(/[\s\S]{1,3}/g,s)},l=r?function(e){return(e.constructor===r.constructor?e:new r(e)).toString("base64")}:function(e){return h(d(e))},g=function(e,t){return t?l(String(e)).replace(/[+\/]/g,function(e){return"+"==e?"-":"_"}).replace(/=/g,""):l(String(e))},p=new RegExp(["[À-ß][-¿]","[à-ï][-¿]{2}","[ð-÷][-¿]{3}"].join("|"),"g"),A=function(e){switch(e.length){case 4:var t=((7&e.charCodeAt(0))<<18|(63&e.charCodeAt(1))<<12|(63&e.charCodeAt(2))<<6|63&e.charCodeAt(3))-65536;return a(55296+(t>>>10))+a(56320+(1023&t));case 3:return a((15&e.charCodeAt(0))<<12|(63&e.charCodeAt(1))<<6|63&e.charCodeAt(2));default:return a((31&e.charCodeAt(0))<<6|63&e.charCodeAt(1))}},b=function(e){return e.replace(p,A)},C=function(e){var t=e.length,r=t%4,n=(0<t?c[e.charAt(0)]<<18:0)|(1<t?c[e.charAt(1)]<<12:0)|(2<t?c[e.charAt(2)]<<6:0)|(3<t?c[e.charAt(3)]:0),o=[a(n>>>16),a(n>>>8&255),a(255&n)];return o.length-=[0,0,2,1][r],o.join("")},B=t.atob?function(e){return t.atob(e)}:function(e){return e.replace(/[\s\S]{1,4}/g,C)},y=r?function(e){return(e.constructor===r.constructor?e:new r(e,"base64")).toString()}:function(e){return b(B(e))},e=function(e){return y(String(e).replace(/[-_]/g,function(e){return"-"==e?"+":"/"}).replace(/[^A-Za-z0-9\+\/]/g,""))};if(t.Base64={VERSION:"2.1.9",atob:B,btoa:h,fromBase64:e,toBase64:g,utob:d,encode:g,encodeURI:function(e){return g(e,!0)},btou:b,decode:e,noConflict:function(){var e=t.Base64;return t.Base64=n,e}},window.getMetaData=(o=JSON.parse(e("bnVsbA==")),function(e){return e?o[e]:o}),"function"==typeof Object.defineProperty){var S=function(e){return{value:e,enumerable:!1,writable:!0,configurable:!0}};t.Base64.extendString=function(){Object.defineProperty(String.prototype,"fromBase64",S(function(){return e(this)})),Object.defineProperty(String.prototype,"toBase64",S(function(e){return g(this,e)})),Object.defineProperty(String.prototype,"toBase64URI",S(function(){return g(this,!0)}))}}t.Meteor&&(Base64=t.Base64),"undefined"!=typeof module&&module.exports&&(module.exports.Base64=t.Base64),"function"==typeof define&&define.amd&&define([],function(){return t.Base64})}("undefined"!=typeof self?self:"undefined"!=typeof window?window:"undefined"!=typeof global?global:void 0);</script><script src="https://assets.baydn.com/baydn/public/jquery/3.2.1/jquery.min.js"></script><script src="https://assets.baydn.com/baydn/public/bay-utils/1.3.1/dist/bay-utils.min.js"></script><script src="https://assets.baydn.com/baydn/public/bay-components/0.3.1/dist/bay-components.min.js"></script><script src="https://assets.baydn.com/baydn/public/jweixin/1.6.1/jweixin.min.js"></script><script>"use strict";function _objectSpread(t){for(var e=1;e<arguments.length;e++){var a=null!=arguments[e]?arguments[e]:{},n=Object.keys(a);"function"==typeof Object.getOwnPropertySymbols&&(n=n.concat(Object.getOwnPropertySymbols(a).filter(function(e){return Object.getOwnPropertyDescriptor(a,e).enumerable}))),n.forEach(function(e){_defineProperty(t,e,a[e])})}return t}function _defineProperty(e,t,a){return t in e?Object.defineProperty(e,t,{value:a,enumerable:!0,configurable:!0,writable:!0}):e[t]=a,e}var _configData=configData,_configData$wechat=_configData.wechat,wechat=void 0===_configData$wechat?{}:_configData$wechat,defaultCodename=wechat.codename,shareHosts=wechat.shareHosts,_wechat$configUrl=wechat.configUrl,configUrl=void 0===_wechat$configUrl?"https://apiv3.shanbay.com/bayuser/wechat/jsconfig":_wechat$configUrl;function request(a){return new Promise(function(e){var t=new XMLHttpRequest;t.onload=function(){200===t.status&&e(JSON.parse(t.response))},t.open("GET",a),t.send()})}var defaultJsApiList=["updateTimelineShareData","updateAppMessageShareData"],jsApiListMap={updateTimelineShareData:"wechat",updateAppMessageShareData:"wechat_user"},requiredConfigKeys=["timestamp","appid","signature","noncestr"],replaceLinkHost=function(e,t){return e.replace(/:\/\/(.*?)\//,"://".concat(t,"/"))},isWechatUA=function(e){return/micromessenger/i.test(e)},checkConfigData=function(t){if(!shareHosts||"[object Array]"!==Object.prototype.toString.call(shareHosts))throw new Error("shareHosts is missing or shareHosts type is not array");requiredConfigKeys.forEach(function(e){if(!t[e])throw new Error("".concat(e," is missed in wx config, please check ").concat(configUrl," response"))})},unique=function(n){var r=[];return n.forEach(function(e,t){var a=n[t];-1===r.indexOf(a)&&r.push(a)}),r},getShareMeta=function(e){var t=document.getElementsByTagName("meta");return{title:e.title||t.share_title&&t.share_title.content||document.title,desc:e.desc||t.description&&t.description.content,shareUrls:e.shareUrls||t.share_urls&&t.share_urls.content,shareUrl:e.shareUrl||t.share_url&&t.share_url.content||window.location.href,imgUrl:e.imgUrl||t.share_img&&t.share_img.content}},getWxShareData=function(e){var t=e.shareUrls,a=e.shareUrl,n=e.jsApi,r=e.wxShareData,o=t?JSON.parse(t)[jsApiListMap[n]]:a,i=new URL(o),s=i.host,c=i.pathname,u=o;if("s.shanbay.com"===s&&alert("分享请不要使用短链！"),-1<["www.shanbay.com","web.shanbay.com","h10.shanbay.com"].indexOf(s)){var h="/s/track"===c?"web":s.split(".")[0],f="".concat(h,".").concat(shareHosts[Math.floor(Math.random()*shareHosts.length)]);u=replaceLinkHost(o,f)}var l=_objectSpread({},r,{success:function(){r.success&&r.success(n)},link:u});return Object.keys(l).forEach(function(e){return void 0===l[e]&&delete l[e]}),l},configWxSdk=function(){var e=0<arguments.length&&void 0!==arguments[0]?arguments[0]:{},t=e.debug,n=void 0!==t&&t,a=e.onShareSuccess,h=void 0===a?function(){}:a,r=e.onShareCancel,f=void 0===r?function(){}:r,o=e.onConfigReady,l=void 0===o?function(){}:o,i=e.onError,p=void 0===i?function(){}:i,s=e.jsApiList,d=void 0===s?defaultJsApiList:s,c=e.shareData,g=void 0===c?{}:c,u=e.codename,w=void 0===u?defaultCodename:u,m=e.openTagList,v=void 0===m?[]:m;isWechatUA(window.navigator.userAgent)?request("".concat(configUrl,"?url=").concat(encodeURIComponent(window.location.href)).concat(w?"&app_name=".concat(w):"")).then(function(e){var i=e.appid,s=e.timestamp,c=e.noncestr,u=e.signature;checkConfigData(e);var t=unique(d.concat(defaultJsApiList)),a={debug:n,appId:i,timestamp:s,nonceStr:c,signature:u,jsApiList:t,openTagList:v};wx.config(a),wx.ready(function(){var e=getShareMeta(g),t=e.title,a=e.desc,n=e.shareUrls,r=e.shareUrl,o={title:t,desc:a,imgUrl:e.imgUrl,success:h,cancel:f};defaultJsApiList.forEach(function(e){var t=getWxShareData({shareUrls:n,shareUrl:r,jsApi:e,wxShareData:o});wx[e](t)}),l&&l({appId:i,timestamp:s,nonceStr:c,signature:u})}),wx.error(function(e){p&&p(e)})}):l&&l()};window.configWxSdk=configWxSdk;</script><script src="https://assets.baydn.com/baydn/public/shanbay/xbay/1.11.5/dist/mobile-common.min.js"></script><script src="https://assets.baydn.com/baydn/public/art-template/3.0.3/dist/template.js"></script><script src="https://assets.baydn.com/baydn/public/react/17.0.1/umd/react.production.min.js"></script><script src="https://assets.baydn.com/baydn/public/react-dom/17.0.1/umd/react-dom.production.min.js"></script><script src="https://assets.baydn.com/baydn/public/prop-types/15.6.2/prop-types.min.js"></script><script src="https://assets.baydn.com/baydn/public/shanbay/xbay-react-components/2.0.0-alpha.100/dist/index.umd.js"></script><script src="https://assets.baydn.com/web_static/web/runtime-46345c0be71d0044191a.js"></script><script src="https://assets.baydn.com/web_static/web/vendor-8f8f618e005364d73c47.js"></script><script>(function(para) {
+var p = para.sdk_url, n = para.name, w = window, d = document, s = 'script',x = null,y = null;
+if(typeof(w['sensorsDataAnalytic201505']) !== 'undefined') {
+    return false;
+}
+w['sensorsDataAnalytic201505'] = n;
+w[n] = w[n] || function(a) {return function() {(w[n]._q = w[n]._q || []).push([a, arguments]);}};
+var ifs = ['track','quick','register','registerPage','registerOnce','trackSignup', 'trackAbtest', 'setProfile','setOnceProfile','appendProfile', 'incrementProfile', 'deleteProfile', 'unsetProfile', 'identify','login','logout','trackLink','clearAllRegister','getAppStatus'];
+for (var i = 0; i < ifs.length; i++) {
+    w[n][ifs[i]] = w[n].call(null, ifs[i]);
+}
+if (!w[n]._t) {
+    x = d.createElement(s), y = d.getElementsByTagName(s)[0];
+    x.async = 1;
+    x.src = p;
+    x.setAttribute('charset','UTF-8');
+    w[n].para = para;
+    y.parentNode.insertBefore(x, y);
+}
+})({
+sdk_url: 'https://assets.baydn.com/baydn/public/sa-sdk-javascript/1.14.13/sensorsdata.min.js',
+heatmap_url: 'https://assets.baydn.com/baydn/public/sa-sdk-javascript/1.14.13/heatmap.min.js',
+name: 'sensors',
+server_url: 'https://sa.shanbay.com/sa?project=production&token=e8d971a5389d7939',
+is_track_device_id: true
+});
+(function() {
+    var userId = '';
+
+    if (userId) {
+        sensors.login(userId)
+    }
+})()</script><script src="https://static.baydn.com/baydn/public/vendor/xml2json-v1.2.0.min.js"></script><script src="https://static.baydn.com/baydn/public/xbay/v1.9.16/client-common.min.js"></script><script src="https://assets.baydn.com/web_static/web/lib-react-router-9e4e56fdb916a79e1e1f.js"></script><script src="https://assets.baydn.com/web_static/web/help-983d3a9af40581244ab6.js"></script></body></html>

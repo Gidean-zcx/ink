@@ -1,0 +1,1 @@
+Yes. Layout preferences can be customized separately for different feeds, folders, and tags.

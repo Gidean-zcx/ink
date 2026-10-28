@@ -1,0 +1,698 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en" ng-app="player" ng-controller="playerCtrl">
+  <head>
+    <meta charset="UTF-8" />
+    <title>不背单词 | 官网下载</title>
+    <meta
+      name="Description"
+      content="不背单词是一款拥有背单词App，150万条原声例句，出自你喜欢的剧集、电影等真实语境。2000+词根词缀，覆盖近2万词条，熟词串记多个生词。极简设计、精美壁纸和主题，让你身心愉悦地背单词。记忆算法智能安排学习，在记忆临界点提醒复习。简洁的拼写测试，学完一组后动手强化记忆。正版柯林斯英汉双解词典，时刻为你答疑解惑。丰富的词书，中小学、四六级考研、雅思托福全都有。"
+    />
+    <meta
+      name="Keywords"
+      content="不背单词，轻听英语，朗易思听，英语学习，墨墨背单词，懂你英语，乐词，知米背单词，新东方，51talk，扇贝，沪江网校，新东方在线"
+    />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta content="yes" name="apple-mobile-web-app-capable" />
+    <meta content="yes" name="apple-touch-fullscreen" />
+    <meta name="x5-page-mode" content="app" />
+    <meta name="x5-orientation" content="portrait" />
+    <meta content="telephone=no" name="format-detection" />
+    <link rel="shortcut icon" href="favicon_lexis_x48.ico" />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="48x48"
+      href="favicon_lexis_96x96.png"
+    />
+    <meta content="black" name="apple-mobile-web-app-status-bar-style" />
+    <meta name="viewport" content="user-scalable=no,width=1230, minimal-ui" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="yes" />
+    <meta name="screen-orientation" content="portrait" />
+    <link rel="stylesheet" href="https://product.beingfine.cn/resources/css/swiper-4.3.3_75fc56e.css" />
+    <link rel="stylesheet" href="https://product.beingfine.cn/resources/view/home/css/lexis_8322d82.css" />
+    <script src="https://g.alicdn.com/jssdk/u-link/index.min.js"></script>
+    <script src="https://product.beingfine.cn/resources/js/lib/jquery-1.7.2_cec34fc.js"></script>
+    <script src="https://product.beingfine.cn/resources/js/lib/jquery.tap_1b72610.js"></script>
+  </head>
+  <body>
+    <script>
+      if (window.navigator.userAgent.match(/android/i)) {
+        document.querySelector("body").className = "android";
+      } else {
+        document.querySelector("body").className = "ios";
+      }
+      if (/mobile/gi.test(window.navigator.userAgent)) {
+        $("body").addClass("mobile");
+      }
+    </script>
+    <header>
+      <div class="logo-wrap">
+        <i class="logo"></i>
+        <dl>
+          <dt>不背单词</dt>
+          <dd>单词不用背，融入语境自然会</dd>
+        </dl>
+      </div>
+      <ul>
+        <li class="appstore-download">
+          <a
+            href="http://itunes.apple.com/cn/app/id698570469?pt=305575&mt=8&ct=bb_pc_product"
+            class="btn-download linkedme qcode"
+            ><i class="icon-appstore"></i><span>App Store 下载</span>
+            <div class="box" style="display: none">
+              <img src="https://product.beingfine.cn/resources/view/home/images/lexis/download_bfe67ee.png" alt="" width="188" />
+            </div>
+          </a>
+        </li>
+        <li class="android-download">
+          <a
+            href="https://langeasy.com.cn/open.action?go=6"
+            class="btn-download linkedme qcode"
+            ><i class="icon-android"></i><span>Android 下载</span>
+            <div class="box" style="display: none">
+              <img src="https://product.beingfine.cn/resources/view/home/images/lexis/download_bfe67ee.png" alt="" width="188" />
+            </div>
+          </a>
+        </li>
+      </ul>
+      <div class="wrap">
+        <div class="bg"></div>
+      </div>
+    </header>
+    <section class="main-container">
+      <section class="classify-container container">
+        <div class="wrap">
+          <div class="bg"></div>
+          <dl>
+            <dt>海量原声例句</dt>
+            <dd>选自影视和新闻等真实语境，帮你吃透词义和用法</dd>
+          </dl>
+          <div class="banner-wrap" id="bannerWrap">
+            <div class="banner">
+              <img src="https://product.beingfine.cn/resources/view/home/images/lexis/banner_scroll_875c8cc.png" alt="" />
+            </div>
+          </div>
+        </div>
+        <div class="tips-wrap">
+          <i class="logo"></i>
+          <p>
+            原声例句由<a href="http://learnywhere.com.cn">轻听英语</a
+            >全程数据支持
+          </p>
+        </div>
+      </section>
+      <section class="trans-container container">
+        <dl>
+          <dt>精选词根词缀</dt>
+          <dd>收录2000+词根词缀，溯源解义学单词</dd>
+        </dl>
+        <div class="bg"></div>
+      </section>
+      <section class="jt-container container">
+        <div class="wrap">
+          <dl>
+            <dt>科学记忆算法</dt>
+            <dd>根据记忆效果动态调整学习安排，克服遗忘曲线，科学高效记得牢</dd>
+          </dl>
+          <div class="bg"></div>
+        </div>
+      </section>
+      <section class="new-word-container container">
+        <div class="wrap">
+          <dl>
+            <dt>智能拼写测试</dt>
+            <dd>学完单词动动手指强化记忆，有效抗遗忘</dd>
+          </dl>
+          <div class="bg"></div>
+        </div>
+      </section>
+      <section class="more-container container">
+        <div class="wrap">
+          <dl>
+            <dt>权威正版词典</dt>
+            <dd>专业柯林斯英汉双解词典，时刻为你答疑解惑</dd>
+          </dl>
+          <div class="bg"></div>
+        </div>
+      </section>
+      <section class="comment-container container">
+          <div class="wrap big">
+            <ul>
+              <li>
+                <h3>
+                  <strong>颜控福利</strong>
+                  <span>Rejoic3</span>
+                </h3>
+                <p class="start-wrap">★★★★★</p>
+                <p>
+                  十分喜欢它的界面和结构，简单、干净，就是简单地背单词。它设置的学习模式很科学，以复习为主，把目标拆成片段，利用碎片时间背单词
+                </p>
+                <span>2018.05.16</span>
+              </li>
+              <li>
+                <h3>
+                  <strong>目前最喜欢</strong>
+                  <span>密封密疯</span>
+                </h3>
+                <p class="start-wrap">★★★★★</p>
+                <p>
+                  界面简洁但是风格和我心意。每天都有不同的单词壁纸！例句来源多样而且贴近学习与娱乐生活，太喜欢啦！大家都对自己喜欢的东西印象深刻不是吗？而且这样子可以对句子和单词更有印象！
+                </p>
+                <span>2018.05.13</span>
+              </li>
+            </ul>
+            <ul>
+              <li>
+                <h3>
+                  <strong>喜欢！</strong>
+                  <span>UID650559</span>
+                </h3>
+                <p class="start-wrap">★★★★★</p>
+                <p>用了好多软件，就这款坚持下来了✊</p>
+                <span>2018.05.12</span>
+              </li>
+              <li>
+                <h3>
+                  <strong>真的好好用</strong>
+                  <span>心心小朋友</span>
+                </h3>
+                <p class="start-wrap">★★★★★</p>
+                <p>
+                  不背单词和轻听两个软件结合起来超级好用，在轻听里添加的生词在不背里可以背，还有例句，省了做笔记的时间，还算好时间复习。用了这么多，这是最智能的英语学习软件。
+                </p>
+                <span>2018.05.10</span>
+              </li>
+              <li>
+                <h3>
+                  <strong>Amazing</strong>
+                  <span>CarmenoderKaka</span>
+                </h3>
+                <p class="start-wrap">★★★★★</p>
+                <p>
+                  个人觉得最好用的背单词软件，没有之一。本来没有抱很大的期望，直到逐渐发展，背过的单词，在别处遇到时，是很熟悉的，甚至脑子里会自动放起例句。
+                </p>
+                <span>2018.05.02</span>
+              </li>
+            </ul>
+            <ul>
+              <li>
+                <h3>
+                  <strong>相见恨晚</strong>
+                  <span>wwru22</span>
+                </h3>
+                <p class="start-wrap">★★★★★</p>
+                <p>
+                  因为轻听英语过来的，结果很惊喜，我背单词就喜欢看例句，这个软件正好满足需求，而且例句关联轻听英语来源，都是原生态材料，例句里面的单词还可以再收藏到单词本，可以利用词典看到详细释义。非常喜欢，坚持下去！
+                </p>
+                <span>2018.05.13</span>
+              </li>
+              <li>
+                <h3>
+                  <strong>很实用</strong>
+                  <span>木牛昵称行不行呀</span>
+                </h3>
+                <p class="start-wrap">★★★★★</p>
+                <p>
+                  记得是从知乎上看到有人推荐，下了以后觉得自己真是好运，遇到这样走心的背单词软件，还有例句可以听，钟爱！
+                </p>
+                <span>2018.05.07</span>
+              </li>
+            </ul>
+          </div>
+          <div class="page-wrap small-wrap">
+            <div class="small wrap" id="commentWrap">
+              <div class="swiper-wrapper">
+                <div class="swiper-slide">
+                  <div class="page">
+                    <h3>
+                      <strong>颜控福利</strong>
+                    </h3>
+                    <p class="start-wrap">★★★★★</p>
+                    <p class="name">Rejoic3</p>
+                    <p>
+                      十分喜欢它的界面和结构，简单、干净，就是简单地背单词。它设置的学习模式很科学，以复习为主，把目标拆成片段，利用碎片时间背单词。
+                    </p>
+                    <span>2018.05.16</span>
+                  </div>
+                </div>
+                <div class="swiper-slide">
+                  <div class="page">
+                    <h3>
+                      <strong>目前最喜欢</strong>
+                    </h3>
+                    <p class="start-wrap">★★★★★</p>
+                    <p class="name">密封密疯</p>
+                    <p>
+                      界面简洁但是风格和我心意。每天都有不同的单词壁纸！例句来源多样而且贴近学习与娱乐生活，太喜欢啦！大家都对自己喜欢的东西印象深刻不是吗？而且这样子可以对句子和单词更有印象！
+                    </p>
+                    <span>2018.05.13</span>
+                  </div>
+                </div>
+                <div class="swiper-slide">
+                  <div class="page">
+                    <h3>
+                      <strong>喜欢！</strong>
+                    </h3>
+                    <p class="start-wrap">★★★★★</p>
+                    <p class="name">UID650559</p>
+                    <p>用了好多软件，就这款坚持下来了✊</p>
+                    <span>2018.05.12</span>
+                  </div>
+                </div>
+                <div class="swiper-slide">
+                  <div class="page">
+                    <h3>
+                      <strong>真的好好用 </strong>
+                    </h3>
+                    <p class="start-wrap">★★★★★</p>
+                    <p class="name">心心小朋友</p>
+                    <p>
+                      不背单词和轻听两个软件结合起来超级好用，在轻听里添加的生词在不背里可以背，还有例句，省了做笔记的时间，还算好时间复习。用了这么多，这是最智能的英语学习软件。
+                    </p>
+                    <span>2018.05.10</span>
+                  </div>
+                </div>
+                <div class="swiper-slide">
+                  <div class="page">
+                    <h3>
+                      <strong>Amazing</strong>
+                    </h3>
+                    <p class="start-wrap">★★★★★</p>
+                    <p class="name">CarmenoderKaka</p>
+                    <p>
+                      个人觉得最好用的背单词软件，没有之一。本来没有抱很大的期望，直到逐渐发展，背过的单词，在别处遇到时，是很熟悉的，甚至脑子里会自动放起例句。
+                    </p>
+                    <span>2018.05.02</span>
+                  </div>
+                </div>
+                <div class="swiper-slide">
+                  <div class="page">
+                    <h3>
+                      <strong>相见恨晚</strong>
+                    </h3>
+                    <p class="start-wrap">★★★★★</p>
+                    <p class="name">wwru22</p>
+                    <p>
+                      因为轻听英语过来的，结果很惊喜，我背单词就喜欢看例句，这个软件正好满足需求，而且例句关联轻听英语来源，都是原生态材料，例句里面的单词还可以再收藏到单词本，可以利用词典看到详细释义。非常喜欢，坚持下去！
+                    </p>
+                    <span>2018.05.13</span>
+                  </div>
+                </div>
+                <div class="swiper-slide">
+                  <div class="page">
+                    <h3>
+                      <strong>很实用</strong>
+                    </h3>
+                    <p class="start-wrap">★★★★★</p>
+                    <p class="name">木牛昵称行不行呀</p>
+                    <p>
+                      记得是从知乎上看到有人推荐，下了以后觉得自己真是好运，遇到这样走心的背单词软件，还有例句可以听，钟爱！
+                    </p>
+                    <span>2018.05.07</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="tab-wrap">
+              <i class="tab" id="tab"></i>
+            </div>
+          </div>
+        </section>
+      <section class="award-conatainer container">
+        <div class="wrap">
+          <dl>
+            <dt>获得奖项</dt>
+          </dl>
+          <ul>
+            <li>
+              <img src="https://product.beingfine.cn/resources/view/home/images/lexis/icon1_5948f13.svg" alt="" />
+              <p>豌豆荚<br />设计奖</p>
+            </li>
+            <li>
+              <img src="https://product.beingfine.cn/resources/view/home/images/lexis/icon2_b0f7848.svg" alt="" />
+              <p>小米年度<br />最佳应用</p>
+            </li>
+            <li>
+              <img src="https://product.beingfine.cn/resources/view/home/images/lexis/icon3_b440b55.svg" alt="" />
+              <p>小米应用商店<br />金米奖</p>
+            </li>
+            <li>
+              <img src="https://product.beingfine.cn/resources/view/home/images/lexis/icon4_53510f2.svg" alt="" />
+              <p>腾讯应用宝<br />小红花奖</p>
+            </li>
+          </ul>
+        </div>
+      </section>
+      <section class="download-container container">
+        <div class="bg">
+          <div class="logo-wrap">
+            <i class="logo"></i>
+            <dl>
+              <dt>不背单词</dt>
+              <dd>单词不用背，融入语境自然会</dd>
+            </dl>
+          </div>
+          <ul>
+            <li class="appstore-download">
+              <a
+                href="http://itunes.apple.com/cn/app/id698570469?pt=305575&mt=8&ct=bb_pc_product"
+                class="btn-download linkedme qcode"
+              >
+                <div class="box" style="display: none">
+                  <img src="https://product.beingfine.cn/resources/view/home/images/lexis/download_bfe67ee.png" alt="" width="188" />
+                </div>
+                <i class="icon-appstore"></i><span>App Store 下载</span>
+              </a>
+            </li>
+            <li class="android-download">
+              <a
+                href="https://langeasy.com.cn/open.action?go=6"
+                class="btn-download linkedme qcode"
+              >
+                <div class="box" style="display: none">
+                  <img src="https://product.beingfine.cn/resources/view/home/images/lexis/download_bfe67ee.png" alt="" width="188" />
+                </div>
+                <i class="icon-android"></i><span>Android 下载</span></a
+              >
+            </li>
+          </ul>
+        </div>
+      </section>
+      <section class="share-container container" style="display:none;">
+        <ul>
+          <li>
+            <a
+              id="publicAccounts"
+              href="javascript:;"
+              data-href="http://wx.kuiledushu.com/t/5b2b0cc147400"
+              data-wechat="https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=MzUzNDc4OTAxOA==&scene=126#wechat_redirect"
+              class="icon-share1 qcode"
+            >
+              <div class="box" style="display: none">
+                <img src="https://product.beingfine.cn/resources/view/home/images/lexis/qcode_0589fb7.jpg" alt="" width="188" />
+                <p>
+                  扫描二维码或打开微信搜索<br /><span>不背单词App </span
+                  >关注我们
+                </p>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="https://weibo.com/3976409298" class="icon-share2"></a>
+          </li>
+          <li>
+              <a
+                href="https://www.zhihu.com/org/bu-bei-dan-ci-app/activities"
+                class="icon-share3"
+              ></a>
+            </li>
+          </ul>
+      </section>
+      <footer>
+        <div class="wrap">
+          <dl>
+            <dt></dt>
+            <dd>©2018 Coolab, Inc.</dd>
+          </dl>
+          <ul>
+            <li>
+              <h3>Links</h3>
+              <p>C··L语言实验室</p>
+              <p>加入C··Lab</p>
+            </li>
+            <li>
+              <h3>Products</h3>
+              <p><a href="http://learnywhere.com.cn/">轻听英语</a></p>
+              <p><a href="http://bbdc.cn/">不背单词</a></p>
+              <p><a href="http://bbdc.cn/">酷商店</a></p>
+            </li>
+            <li>
+              <h3>Company</h3>
+              <p>关注我们</p>
+              <p>商务合作</p>
+            </li>
+            <li>
+              <h3>Contact</h3>
+              <p>隐私协议</p>
+              <p>用户协议</p>
+              <p>版权声明</p>
+              <p>侵权投诉</p>
+            </li>
+          </ul>
+        </div>
+      </footer>
+    </section>
+    <section class="widget-container">
+      <div class="weibo-cover" id="weiboCover" style="display: none">
+        <div class="cover-hint">
+          <p>无法在线安装</p>
+          <p>请点击右上角图标在系统浏览器中打开</p>
+        </div>
+      </div>
+    </section>
+    <link rel="stylesheet" href="https://product.beingfine.cn/resources/view/nav/css/nav_f47a515.css"/>
+<link rel="stylesheet" href="https://product.beingfine.cn/resources/lib/dialog/css/dialog_9e4ff2a.css"/>
+<script src="https://product.beingfine.cn/resources/lib/dialog/js/dialog_b0986b6.js"></script>
+<script src="https://res.wx.qq.com/connect/zh_CN/htmledition/js/wxLogin.js"></script>
+<section class="nav-container">
+    <nav class="top" id="nav">
+        <div class="wrap">
+            <div class="more-btn">
+                <div class="more-wrap" id="linkList">
+                    <ul class="link-list" >
+                        <li><a href="javascript:;" class="login-in">我的生词</a></li>
+                        <li><a href="/lexis_book_index" class="upload">自制词书</a></li>
+                        <li>
+                            <a href="https://langeasy.com.cn/open.action?go=3">下载水墨屏版</a>
+                        </li>
+                    </ul>
+                    <div id="loginUser" class="login-user">
+                        </div>
+                </div>
+                <a href="javascript:;" id="more" class="more"></a>
+            </div>
+            <div class="bar">
+                <div class="logo">
+                    <img src="https://product.beingfine.cn/resources/view/nav/images/logo_lab_0487a65.svg" alt=""/>
+                </div>
+            </div>
+            <div class="nav-wrap" id="navWrap">
+                <div class="mask"></div>
+                <ul class="links">
+                    <li><a href="/" id="index">首页</a></li>
+                    <li>
+                        <a href="https://learnywhere.cn/lexis/privacy" target="_black"
+                        >隐私协议</a
+                        >
+                    </li>
+                    <li>
+                        <a href="https://learnywhere.cn/lexis/agreement" target="_black"
+                        >服务条款</a
+                        >
+                    </li>
+                    <li><a href="javascript:;" class="login-in">我的生词</a></li>
+                    <li><a href="/lexis_book_index" id="upload">自制词书</a></li>
+                    <li>
+                        <a href="https://langeasy.com.cn/open.action?go=3">下载水墨屏版</a>
+                    </li>
+                    <li><a href="javascript:;" class="login-in">登录</a></li>
+                    <li>
+                        <a
+                                href="https://www.zhipin.com/job_detail/?query=%E4%B8%8D%E8%83%8C%E5%8D%95%E8%AF%8D"
+                                id="joined"
+                        >加入我们</a
+                        >
+                    </li>
+                    <li>
+                        <a href="https://learnywhere.cn/bb/production/notification">公告</a>
+                    </li>
+                    <li>
+                        <a href="http://kids.bbdc.cn/">小小不背 App</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</section>
+<section class="helper-container">
+    <section class="login-container" id="loginContainer">
+        <div class="mask"></div>
+        <section class="login-content">
+            <div class="close"></div>
+<div class="text-container" id="textContainer">
+                <form
+                        action="/login"
+                        class="login-form"
+                        id="loginForm"
+                        style="display: none"
+                >
+                    <div class="logo-wrap"><img src="https://product.beingfine.cn/resources/view/nav/images/login_logo_9c33821.png" width="72" height="72" alt=""></div>
+                    <input type="hidden" value="" name="captchaToken"/>
+                    <div class="msg-wrap">
+                        <p class="msg"></p>
+                    </div>
+                    <p class="input-wrap name">
+                        <input type="text" name="userName" placeholder="昵称/ID/邮箱"/>
+                    </p>
+                    <p class="input-wrap password">
+                        <input name="passwd" placeholder="密码" type="password"/>
+                    </p>
+                    <div class="input-wrap code-wrap">
+                        <input
+                                type="text"
+                                maxlength="4"
+                                name="verifyCode"
+                                placeholder="请输入图片验证码"
+                        />
+                        <img alt=""/>
+                    </div>
+                    <div class="login-btn-wrap">
+                        <div class="btn login-btn" id="login">登录</div>
+                    </div>
+                    <p class="login-tips">
+                        <span> 提示：在App 内点击头像可以绑定手机号&修改密码 </span>
+                    </p>
+                    <div class="button-container">
+                        <div class="button wechat-login">
+                            <img src="https://product.beingfine.cn/resources/view/nav/images/icon_wechat_9c66ae6.png" alt="微信登录"/>
+                            <p>微信登录</p>
+                        </div>
+                        <div class="button phone-login">
+                            <img src="https://product.beingfine.cn/resources/view/nav/images/icon_phone_e9b8d89.png" alt="手机号登录"/>
+                            <p>手机号登录</p>
+                        </div>
+                    </div>
+                </form>
+                <!-- 手机登录 -->
+                <form action="/login" class="login-form" id="phoneLoginForm" style="display: none">
+                    <div class="logo-wrap"><img src="https://product.beingfine.cn/resources/view/nav/images/login_logo_9c33821.png" width="72" height="72" alt=""></div>
+                    <input type="hidden" value="" name="captchaToken"/>
+                    <div class="msg-wrap">
+                        <p class="msg"></p>
+                    </div>
+                    <p class="input-wrap name">
+                        <input
+                                type="text"
+                                name="phone"
+                                id="phone"
+                                maxlength="11"
+                                placeholder="手机号"
+                        />
+                    </p>
+                    <div class="input-wrap code-wrap">
+                        <input
+                                type="text"
+                                maxlength="4"
+                                name="verifyCode"
+                                placeholder="请输入图片验证码"
+                        />
+                        <img alt=""/>
+                    </div>
+                    <div class="input-wrap code">
+                        <input
+                                name="code"
+                                placeholder="输入6位短信验证码"
+                                maxlength="6"
+                                type="text"
+                        />
+                        <a href="javascript:;" id="getCode" class="get-code">获取验证码</a>
+                        <a href="javascript:;" class="code-count" id="codeCount"
+                        ><span>60</span>s</a
+                        >
+                    </div>
+                    <div class="login-btn-wrap">
+                        <div class="btn login-btn" id="codeLogin">登录</div>
+                    </div>
+                    <div class="button-container">
+                        <div class="button wechat-login">
+                            <img src="https://product.beingfine.cn/resources/view/nav/images/icon_wechat_9c66ae6.png" alt="微信登录"/>
+                            <p>微信登录</p>
+                        </div>
+                        <div class="button account-login">
+                            <img src="https://product.beingfine.cn/resources/view/nav/images/icon_password_6284834.png" alt="账号密码登录"/>
+                            <p>账号密码登录</p>
+                        </div>
+                    </div>
+                </form>
+                <!-- 二维码登录 -->
+                <form class="login-form" id="codeLoginForm">
+                    <div class="logo-wrap" style="height: 72px"></div>
+                    <div class="wechat-wrap">
+                        <div id="wechatContainer" class="wechat-container"></div>
+                        <p class="wechat-text">请使用微信扫一扫上方二维码</p>
+                    </div>
+                    <div class="button-container">
+                        <div class="button phone-login">
+                            <img src="https://product.beingfine.cn/resources/view/nav/images/icon_phone_e9b8d89.png" alt="手机号登录"/>
+                            <p>手机号登录</p>
+                        </div>
+                        <div class="button account-login">
+                            <img src="https://product.beingfine.cn/resources/view/nav/images/icon_password_6284834.png" alt="账号密码登录"/>
+                            <p>账号密码登录</p>
+                        </div>
+                    </div>
+                </form>
+                <!-- 二维码登录消息提示 -->
+                <form class="login-form" id="codeMsgLoginForm">
+                    <div class="login-wrap">
+                        <p class="qrcode-msg">该账号未注册，请先在App内注册或绑定账号</p>
+                    </div>
+                    <div class="login-btn-wrap">
+                        <div class="btn login-btn phone-login">知道了</div>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </section>
+</section>
+<input type="hidden" id="r" value="">
+<script>"use strict";$(function(){function n(n,o){$.get("https://learnywhere.cn/api/user/logoff-type",n,function(n){var e=n.data_body;e&&("noLogoff"===e.logoffType?o&&o():"loggedOff"===e.logoffType?$(document).dialog({titleText:"该账号已注销",content:"请更换账号后登录",buttonTextConfirm:"我知道了"}):"inCooldown"===e.logoffType&&$(document).dialog({titleText:"该账号正在等待注销",content:"如需继续使用，请打开不背单词 App 登录后即可终止注销",buttonTextConfirm:"我知道了"}))})}function o(){var n="t"+1e6*Math.random(),o="/captcha_code?token="+n;$(".code-wrap img").attr("src",o),$("[name=captchaToken]").val(n)}$("#more").on("click",function(){$("#nav").hasClass("on")?($("#nav").removeClass("on"),$("#linkList").fadeIn()):($("#nav").addClass("on"),$("#linkList").fadeOut())}),$("#navWrap .mask").on("click",function(){$("#nav").removeClass("on"),$("#linkList").fadeIn()}),$(".login-in").on("click",function(){$("#loginContainer").fadeIn(),t()}),$("#loginContainer .mask").on("click",function(){$("#loginContainer").fadeOut()});var e=function(n){if(200===n.result_code)window.location.reload();else{var o=n.error_body.user_message;$(".msg").html(o)}$(".login-btn").html("登录").removeClass("disabled")};$("#login").on("click",function(){if($(this).hasClass("disabled"))return!1;$(".login-btn").html("登录中...").addClass("disabled");var o=$("#loginForm").serialize(),t={userId:$("[name=userName]").val()};return n(t,function(){$.get("/login",o,function(n){e(n)})}),!1}),$("#textContainer input").on("keyup",function(){$(".msg").html("")}),$("#loginContainer .close").on("click",function(){$("#loginContainer").hide()});var t=function(){$(".msg").html(""),$(".login-form").hide(),$("#codeLoginForm").show(),$.get("/api/fetch-state",function(n){var o=n.data_body,e=o?o.state:"",t=new URL(window.location.href.replace(/#.*/,"")),i=t.searchParams.has("redirectUrl");i&&(t=new URL(t.searchParams.get("redirectUrl"))),t.searchParams.append("showMsg","1");var a=t.toString(),c="https://bbdc.cn/lexis/wx/callback?redirect_uri="+a;new WxLogin({self_redirect:!1,id:"wechatContainer",appid:"wx361671240615dce5",scope:"snsapi_login",redirect_uri:c,state:e,style:"black",href:"",onReady:function(n){}})})};if($(".wechat-login").on("click",t),/showMsg=1/.test(window.location.href)){"0"===$("#r").val()&&($("#loginContainer").show(),$(".msg").html(""),$(".login-form").hide(),$("#codeMsgLoginForm").show());var i=new URLSearchParams(window.location.search);i.delete("showMsg");var a=window.location.pathname;window.history.replaceState({},"",a)}$(".account-login").on("click",function(){$(".msg").html(""),$(".login-form").hide(),$("#loginForm").show()}),$(".phone-login").on("click",function(){$(".msg").html(""),$(".login-form").hide(),$("#phoneLoginForm").show()}),$("#phone").on("keyup",function(){var n=$(this).val();n=n.replace(/\D/g,""),$(this).val(n)});var c=function(){$("#getCode").hide(),$("#codeCount").show();var n=60,o=setInterval(function(){n--,$("#codeCount span").html(n),0===n&&($("#getCode").show(),$("#codeCount").hide(),clearInterval(o))},1e3)};$("#getCode").on("click",function(){var n=$("#phone").val(),o=$("[name=captchaToken]").eq(0).val(),e=$("#phoneLoginForm [name=verifyCode]").eq(0).val();return $.get("/phone/code",{phone:n,captchaToken:o,verifyCode:e},function(n){200===n.result_code?c():$(".msg").html(n.error_body.user_message)}),!1}),$("#loginOut").on("click",function(n){n.preventDefault();var o=function(){$(document).dialog({titleText:"退出失败",content:"请刷新页面确认登录状态后重试",buttonTextConfirm:"我知道了"})};$.getJSON("/logout",function(n){n&&200===n.result_code?window.location.reload():o()}).fail(o)}),$("#codeLogin").on("click",function(){if($(this).hasClass("disabled"))return!1;$(".login-btn").html("登录中...").addClass("disabled");var o=$("#phoneLoginForm").serialize();return n(o,function(){$.get("/phone/code/validate",o,function(n){e(n)})}),!1}),o(),$(".code-wrap img").on("click",o)});</script>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- footer start -->
+<link rel="stylesheet" href="https://product.beingfine.cn/resources/view/widget/footer_1396f70.css" />
+<div class="footer-container">
+  <div class="footer-content">
+    <p class="gabw">
+      <img
+          src="//img.alicdn.com/tfs/TB1..50QpXXXXX7XpXXXXXXXXXX-40-40.png"
+        />
+        <span>
+          <a
+            href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11011502004889"
+            style="display: flex; align-items: center"
+          >
+            <span>京公网安备 11011502004889号</span></a
+          >
+          <a href="https://beian.miit.gov.cn/"
+            >京ICP备12032362号-2</a
+          >
+          <a href="https://beian.miit.gov.cn/"
+            >京ICP备12032362号-6A</a
+          >
+      </span>
+    </p>
+    <p>Copyright © 2013 - 2026 北京艾斯酷科技有限公司</p>
+  </div>
+</div>
+<style>
+    a[title="站长统计"]{
+        display: none;
+    }
+</style>
+<script type="text/javascript" src="https://v1.cnzz.com/z_stat.php?id=1278624702&web_id=1278624702"></script>
+<script>
+    var _hmt = _hmt || [];
+    (function() {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?29659c8bfef38cfbaca18955f0ff8f6f";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+<input type="hidden" id="ct" value="" />
+  </body>
+  <script src="https://product.beingfine.cn/resources/js/lib/swiper-4.3.3_0b757e1.js"></script>
+  <script src="https://product.beingfine.cn/resources/js/app/product_site_2a6b051.js"></script>
+  <script>"use strict";var marketLinkMap={lexis:"market://details?id=cn.com.langeasy.LangEasyLexis",qlisten:"market://details?id=cn.com.langeasy.EasyListen",langeasy:"market://details?id=cn.com.langeasy.LangEasyLrc"},UlinkUtil={LEXIS:"lexis",QLISTEN:"qlisten",LANGEASY:"langeasy",proxyOpenDownload:function(i,n,e){var a="";a=marketLinkMap[e];var t=function(i){var n=setTimeout(function(){window.location=i},200);document.addEventListener("webkitvisibilitychange",function(){document.webkitHidden&&clearTimeout(n)},!1)};"scheme"===n.solution.type?window.ULink.isQQ?i():window.ULink.isWechat?window.location.href=n.solution.downloadUrl:t(a):"universalLink"===n.solution.type}};</script>
+  <script src="https://product.beingfine.cn/resources/view/home/js/lexis_b4db592.js"></script>
+</html>

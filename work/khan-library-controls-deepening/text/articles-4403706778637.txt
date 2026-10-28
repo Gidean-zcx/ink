@@ -1,0 +1,78 @@
+Fluency: The key to independent reading – Khan Academy (https://khankids.zendesk.com/hc/en-us/articles/4403706778637-Fluency-The-key-to-independent-reading)
+citeturn961view4 [wordlim: 200] Crawled: yesterday; Content type: text/html; Source: click({"ref_id":"turn958view0","id":16}); Total lines: 76
+L0: 【0†Skip to main content】
+L1: 
+L2: 【1†Submit a request】
+L3: 
+L4: [Input][Input] [Input: Search]
+L5: 
+L6: Articles in this section
+L7:   * 【2†Our Accessibility Statement】
+L8:   * 【3†Get in touch!】
+L9:   * 【4†Welcome to Khan Academy Kids】
+L10:   * 【5†Parent and Home Account Users: Getting Started and creating an account with Khan Academy Kids】
+L11:   * 【6†How do I set up an account?】
+L12:   * 【7†How do I verify my email?】
+L13:   * 【8†List of resources for parents】
+L14:   * 【9†Printable activities for parents and teachers】
+L15:   * 【10†Weekly Planners for Ages 2-8】
+L16:   * 【11†How does the learning level adjust and how do I view my child's progress?】
+L17: 【12†See more】
+L18: # Fluency: The key to independent reading
+L19: 
+L20:   * February 26, 2026 23:51
+L21:   * Updated
+L22: ## What is fluency?
+L23: 
+L24: When a child begins to move into the world of independent reading, there are several skills and strategies we can use to help them become happy, confident readers.
+L25: After a child has the building blocks of reading, the main focus shifts to developing a child's fluency as they begin to read independently. A fluent reader reads smoothly. They are no longer sounding out words or reading word by word. They also read with expression—meaning that they read with emotion and pauses that make it sound natural. Fluent readers also read with accuracy. They say all the words on the page without skipping or replacing any.
+L26: ## How can I help my child develop fluency skills?
+L27: 
+L28: A fluent reader will have an easier time understanding what they read and is more likely to enjoy reading. To help a child develop fluency, you can provide practice with sight words and with decodable texts.
+L29:   * Sight words are words that kids should be able to recognize and say instantly. They are very common words and are often tricky to read and spell because they don’t match regular phonics rules. Words like "the," "and," and "is" are all sight words.
+L30:   * Decodable texts are stories that are written completely using sight words and words that young learners can sound out using basic phonics skills.
+L31: 
+L32: Here are even more ways to help your child develop fluency. You can 【13†download】 this tip sheet below.
+L33: 【14†Image: KhanKids_Fluency.png】
+L34: ## How can the Khan Kids app help develop fluency skills?
+L35: Helping to build fluency is something we love to do at 【15†Khan Academy Kids†learn.khanacademy.org】! Your learner can practice sight words right in our app. In the Library, select the Reading tab and choose 1st or 2nd grade from the dropdown menu. Scroll down until you get to Sight Words. Let your child practice one or two lessons at a time. Wait a few days and then go back to that same lesson to see if they still remember them. It’s normal to take a lot of exposure to memorize new sight words.
+L36: 【16†Image: Coloring_Pages.png】
+L37: We also have decodable texts throughout our library. In the Books tab, scroll down to the Early Readers section of the Library. These stories are written using only sight words and words a young reader should be able to sound out. First, have them listen to the story read aloud by selecting the “Read to Me” button. Next, have them read the same story, this time choosing “Read by Myself." Have your child read the book aloud, and repeat the reading until they sound fluent.
+L38: Be sure to stop or go back to listening to the book if they start to feel frustrated. For older children, you can try this same process using the 1st and 2nd Grade Early Readers in the Library. These books are also decodable, but they will have more difficult phonics patterns.
+L39: With over 300 books in the Khan Kids library, there are plenty of stories to choose from to help build your child’s fluency.
+L40: ## Additional articles
+L41: 
+L42: This is article #3 in our series of 5 articles about the path to reading. If you’d like to learn more, be sure to read the other articles!
+L43: 
+L44: Article 1) 【17†Pre-literacy】: the period of time before a child begins to read or write
+L45: 
+L46: Article 2) 【18†Phonics】: the connection between letters and sounds
+L47: 
+L48: Article 4) 【19†Comprehension】: understanding and thinking about what you read
+L49: 
+L50: Article 5) 【20†Reading routines】: developing lifelong readers
+L51: ## 👇 Download our fluency tip sheet
+L52: 
+L53:   * 【21†KhanKids_Fluency.pdf】
+L54: 
+L55: 600 KB 【21†Download】
+L56: 
+L57: Was this article helpful?
+L58: 
+L59: [Button: Yes] [Button: No]
+L60: 
+L61: 3 out of 3 found this helpful
+L62: 
+L63: Have more questions? 【1†Submit a request】
+L64: 
+L65: 【22†Return to top】
+L66: 
+L67: ## Comments
+L68: 
+L69: 0 comments
+L70: 
+L71: Article is closed for comments.
+L72: 
+L73: 【23†Khan Academy】
+L74: 
+L75: 【24†Powered by Zendesk†www.zendesk.com】

@@ -1,0 +1,26 @@
+{
+  "copied_from": "work/anki-deepening/fetch-log.json",
+  "records": [
+    {
+      "url": "https://docs.ankiweb.net/manual/filtered-decks.md",
+      "status": 200,
+      "path": "work/anki-deepening/filtered-decks.md",
+      "sha256": "b41452aaafe8712ef8073c17a194b1a5525a3bb94706e382116cb53ad5caf695",
+      "bytes": 11354
+    },
+    {
+      "url": "https://docs.ankiweb.net/manual/stats.md",
+      "status": 200,
+      "path": "work/anki-deepening/stats.md",
+      "sha256": "4de7bc0416b51d83f3c67694ae5165bcefe6462f223a60c28e76e9aeffffe918",
+      "bytes": 13184
+    },
+    {
+      "url": "https://docs.ankiweb.net/manual/studying.md",
+      "status": 200,
+      "path": "work/anki-deepening/studying.md",
+      "sha256": "f33f06d6f944063c7a5bf9843bd4b3942ce5c465a694675bd35c5abe23cfcc46",
+      "bytes": 14055
+    }
+  ]
+}

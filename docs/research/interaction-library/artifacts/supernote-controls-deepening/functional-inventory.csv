@@ -1,0 +1,141 @@
+order,level,section,manual_title,domain,pdf_bookmark_page,printed_start_page,version_scope,coverage,flow_ids,evidence_ids,gap,page_note
+1,1,Table of Contents,Table of Contents,前置说明,2,2,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,non_flow_reference,,E-SNCD-02,目录/型号/版权参考，不计功能任务,书签页码与印刷页码对应；未实际查看此起始页图
+2,1,Applicable Models,Applicable Models,前置说明,9,9,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,non_flow_reference,,E-SNCD-02,目录/型号/版权参考，不计功能任务,书签页码与印刷页码对应；未实际查看此起始页图
+3,1,Chapter 1 Quick start,Chapter 1 Quick start,首次使用,12,12,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,chapter_index_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+4,2,1.1,1.1 Power on and the initial settings,首次使用,12,12,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+5,2,1.2,1.2 Connect to Wi-Fi,首次使用,13,13,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+6,2,1.3,1.3 Sign up and log in,首次使用,14,14,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+7,1,Chapter 2 Gestures and toolbar,Chapter 2 Gestures and toolbar,手势工具栏,17,17,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,chapter_index_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+8,2,2.1,2.1 Gestures,手势工具栏,17,17,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+9,2,2.2,2.2 Eraser/Lasso Gesture,手势工具栏,22,22,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,partially_documented,F-M006-06,E-SNCD-02;E-SUP-07;E-SNCD-10,姿势配置更新后的详细区域未覆盖,书签页码与印刷页码对应；未实际查看此起始页图
+10,2,2.3,2.3 Top menu bar,手势工具栏,24,24,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+11,2,2.4,2.4 Toolbar,手势工具栏,26,26,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+12,3,2.4.1,2.4.1 Introducing the toolbar,手势工具栏,26,26,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+13,3,2.4.2,2.4.2 Using the toolbar,手势工具栏,29,29,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+14,2,2.5,2.5 Page number bar,手势工具栏,33,33,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+15,1,Chapter 3 Basic settings,Chapter 3 Basic settings,基本设置,36,36,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,chapter_index_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+16,2,3.1,"3.1 Language, date & time",基本设置,36,36,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+17,2,3.2,3.2 Stylus,基本设置,39,39,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+18,2,3.3,3.3 Keyboard,基本设置,43,43,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+19,2,3.4,3.4 Sleep Screen,基本设置,45,45,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+20,2,3.5,3.5 Low power consumption,基本设置,48,48,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+21,2,3.6,3.6 Drive,基本设置,50,50,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,partially_documented,F-M006-05,E-SNCD-02;E-SNCD-08;E-SNCD-09;E-SNCD-11,第三方云与私有云只查目录/入口，不作完整任务,书签页码与印刷页码对应；未实际查看此起始页图
+22,2,3.7,3.7 Third party application,基本设置,54,54,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+23,2,3.8,3.8 Custom the sidebar menu,基本设置,55,55,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+24,2,3.9,3.9 Bluetooth,基本设置,56,56,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+25,1,Chapter 4 Handwriting and Drawing,Chapter 4 Handwriting and Drawing,笔记,58,58,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,chapter_index_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+26,2,4.1,4.1 Create a new notebook,笔记,58,58,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,partially_documented,F-M006-08;F-M006-09,E-SNCD-02;E-SNCD-05,仅识别笔记类型与语言条件,书签页码与印刷页码对应；未实际查看此起始页图
+27,2,4.2,4.2 Real-time recognition notebooks,笔记,59,59,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,partially_documented,F-M006-08;F-M006-09,E-SNCD-02;E-SNCD-05,识别错误更正及重启恢复未覆盖,书签页码与印刷页码对应；未实际查看此起始页图
+28,2,4.3,4.3 Rename a notebook,笔记,61,61,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+29,2,4.4,4.4 Set cover,笔记,62,62,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+30,2,4.5,4.5 Change templates,笔记,63,64,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,PDF书签63；纸面目录/正文64。63为封面设置尾页，未静默统一。
+31,2,4.6,4.6 Using layers,笔记,65,65,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+32,2,4.7,4.7 Using headings,笔记,67,67,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,partially_documented,F-M006-01,E-SNCD-02;E-SUP-01;E-SNCD-06,删除后原笔迹与恢复未知,书签页码与印刷页码对应；未实际查看此起始页图
+33,2,4.8,4.8 Using keywords,笔记,69,69,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,partially_documented,F-M006-01,E-SNCD-02;E-SUP-01,关键词误识别/删除关联未知,书签页码与印刷页码对应；未实际查看此起始页图
+34,2,4.9,4.9 Using links,笔记,71,71,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,partially_documented,F-M006-02,E-SNCD-02;E-SUP-02;E-SNCD-06;E-SNCD-10,文件删除/任意移动改名的边界未完,书签页码与印刷页码对应；未实际查看此起始页图
+35,2,4.10,4.10 Using text boxes,笔记,74,74,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+36,2,4.11,4.11 Using stickers,笔记,76,76,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+37,2,4.12,4.12 Organize handwriting,笔记,77,77,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+38,3,4.12.1,4.12.1 Copy/cut/paste handwriting,笔记,77,77,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+39,3,4.12.2,4.12.2 Move handwriting,笔记,79,79,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+40,3,4.12.3,4.12.3 Zoom in/zoom out handwriting,笔记,79,79,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+41,3,4.12.4,4.12.4 Rotate handwriting,笔记,80,80,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+42,2,4.13,4.13 Organize pages,笔记,81,81,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+43,3,4.13.1,4.13.1 Delete/insert note pages,笔记,81,81,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+44,3,4.13.2,4.13.2 Copy/move note pages,笔记,82,82,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+45,3,4.13.3,4.13.3 Cut/copy current note page,笔记,83,83,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+46,2,4.14,4.14. Export & share,笔记,84,84,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,partially_documented,F-M006-09,E-SNCD-02;E-SNCD-05;E-SNCD-07,输出错误与结构往返未知,书签页码与印刷页码对应；该起始页图已实际查看
+47,1,Chapter 5 Read,Chapter 5 Read,阅读,84,84,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,chapter_index_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；该起始页图已实际查看
+48,2,5.1,5.1 Import documents,阅读,84,84,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；该起始页图已实际查看
+49,2,5.2,5.2 Change the fonts,阅读,86,86,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+50,2,5.3,5.3 Adjust screen contrast,阅读,87,87,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+51,2,5.4,5.4 Zoom,阅读,88,88,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+52,2,5.5,5.5 Trimming,阅读,90,90,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+53,2,5.6,5.6 Table of Contents and Bookmarks,阅读,91,91,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+54,2,5.7,5.7 Annotation,阅读,93,93,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+55,2,5.8,5.8 Highlights and comments,阅读,94,94,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+56,2,5.9,5.9 Export & Share,阅读,96,96,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+57,1,Chapter 6 Digest,Chapter 6 Digest,Digest,97,97,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,chapter_index_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+58,2,6.1,6.1 Create new digests,Digest,97,97,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,partially_documented,F-M006-03,E-SNCD-02;E-SUP-03,官方帮助Text与手册Digest文案冲突保留,书签页码与印刷页码对应；未实际查看此起始页图
+59,2,6.2,6.2 Organize digests,Digest,99,99,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,partially_documented,F-M006-03,E-SNCD-02;E-SUP-03,回源失效及删除恢复未知,书签页码与印刷页码对应；未实际查看此起始页图
+60,2,6.3,6.3 Import digests,Digest,100,100,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,partially_documented,F-M006-03;F-M006-04,E-SNCD-02;E-SUP-03,仅TXT元数据导入；非完整备份恢复证明,书签页码与印刷页码对应；未实际查看此起始页图
+61,2,6.4,6.4 Export digests,Digest,101,101,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,partially_documented,F-M006-03,E-SNCD-02;E-SUP-03,评论/笔迹/来源往返未知,书签页码与印刷页码对应；未实际查看此起始页图
+62,2,6.5,6.5 Annotations,Digest,101,101,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,partially_documented,F-M006-03,E-SNCD-02;E-SUP-03,仅评论类型，完整编辑状态未完,书签页码与印刷页码对应；未实际查看此起始页图
+63,1,Chapter 7 TXT,Chapter 7 TXT,TXT,102,102,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,chapter_index_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+64,1,Chapter 8 Word,Chapter 8 Word,Word,103,103,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,chapter_index_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+65,2,8.1,8.1 New Word file,Word,103,103,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+66,2,8.2,8.2 Browse Mode,Word,104,104,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+67,2,8.3,8.3 Pinch to zoom,Word,105,105,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+68,2,8.4,8.4 Repage view,Word,105,105,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+69,2,8.5,8.5 Editing,Word,106,106,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+70,2,8.6,8.6 Proofreader's marks,Word,107,107,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+71,3,8.6.1,8.6.1 Delete,Word,108,108,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+72,3,8.6.2,8.6.2 Line break,Word,108,108,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+73,3,8.6.3,8.6.3 Transpose,Word,109,109,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+74,3,8.6.4,8.6.4 Insert Handwritten,Word,109,109,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+75,3,8.6.5,8.6.5 Insert space,Word,111,111,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+76,1,Chapter 9 To-Do,Chapter 9 To-Do,To-Do,112,112,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,chapter_index_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；该起始页图已实际查看
+77,2,9.1,9.1 Create tasks,To-Do,112,112,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,partially_documented,F-M006-07,E-SNCD-02;E-SNCD-03,仅保证回笔记，不保证回原笔划,书签页码与印刷页码对应；该起始页图已实际查看
+78,2,9.2,9.2 Organize tasks,To-Do,113,113,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,partially_documented,F-M006-07,E-SNCD-02;E-SNCD-03;E-SNCD-10,任务删除恢复及最新离线异常未知,书签页码与印刷页码对应；未实际查看此起始页图
+79,1,Chapter 10 Atelier,Chapter 10 Atelier,Atelier,113,113,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,chapter_index_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+80,2,10.1,10.1 Create drawings,Atelier,113,113,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+81,2,10.2,"10.2 Brushes, erasers, and colors",Atelier,114,114,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+82,2,10.3,10.3 Selection tool,Atelier,115,115,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+83,2,10.4,10.4 Layers,Atelier,116,116,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+84,2,10.5,10.5 Adjust canvas,Atelier,116,116,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+85,2,10.6,10.6 Export drawings,Atelier,117,117,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+86,1,Chapter 11 InkFlow,Chapter 11 InkFlow,InkFlow,117,117,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,chapter_index_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+87,2,11.1,11.1 Using InkFlow,InkFlow,118,118,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+88,2,11.2,11.2 Configure InkFlow,InkFlow,119,119,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+89,1,Chapter 12 InkHub,Chapter 12 InkHub,InkHub,119,119,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,chapter_index_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+90,1,Chapter 13 NetVirtualDisk,Chapter 13 NetVirtualDisk,NetVirtualDisk,122,122,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,chapter_index_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+91,1,Chapter 14 Convenient Features,Chapter 14 Convenient Features,便利功能,124,124,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,chapter_index_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+92,2,14.1,14.1 Organize files,便利功能,124,124,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,partially_documented,F-M006-10,E-SNCD-02;E-SNCD-11,仅删除和文件副本，重命名/排序/视图未拆,书签页码与印刷页码对应；未实际查看此起始页图
+93,2,14.2,14.2 Protect files,便利功能,128,128,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+94,2,14.3,14.3 Smart Straight Line,便利功能,129,129,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+95,2,14.4,14.4 Star tag,便利功能,130,130,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,partially_documented,F-M006-01,E-SNCD-02;E-SUP-01,Erase Star标题例外，误识别恢复未知,书签页码与印刷页码对应；未实际查看此起始页图
+96,2,14.5,14.5 Clipboard,便利功能,131,131,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+97,2,14.6,14.6 Browse & Access,便利功能,133,133,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,partially_documented,F-M006-10,E-SNCD-02;E-SNCD-11,无实传；中断/权限/同名未知,书签页码与印刷页码对应；未实际查看此起始页图
+98,2,14.7,14.7 Screen mirroring,便利功能,134,134,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+99,2,14.8,14.8 Search,便利功能,135,135,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,partially_documented,F-M006-08,E-SNCD-02;E-SNCD-04;E-SNCD-05,新版本文本类别界面与无结果反馈未覆盖,书签页码与印刷页码对应；未实际查看此起始页图
+100,2,14.9,14.9 Quick access,便利功能,137,137,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+101,2,14.10,14.10 Recent access,便利功能,139,139,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+102,1,Chapter 15 Mailbox,Chapter 15 Mailbox,邮件,139,139,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,chapter_index_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+103,2,15.1,15.1 Login,邮件,139,139,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+104,2,15.2,15.2 Settings,邮件,144,144,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+105,2,15.3,15.3 Compose,邮件,145,145,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+106,2,15.4,15.4 Inbox,邮件,146,146,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+107,2,15.5,15.5 Delete Local emails,邮件,148,148,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+108,2,15.6,15.6 Read and Unread,邮件,148,148,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+109,1,Chapter 16 Calendar,Chapter 16 Calendar,日历,148,148,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,chapter_index_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+110,2,16.1,16.1 Manage account,日历,148,148,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+111,2,16.2,16.2 Settings,日历,150,150,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+112,2,16.3,16.3 Switch view,日历,151,151,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+113,2,16.4,16.4 Select the date,日历,151,151,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+114,2,16.5,16.5 Using events,日历,152,152,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+115,2,16.6,16.6 Today’s Notes,日历,155,155,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+116,1,Chapter 17 Basic functions,Chapter 17 Basic functions,系统基本操作,156,156,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,chapter_index_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+117,2,17.1,17.1 USB connection,系统基本操作,156,156,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,partially_documented,F-M006-10,E-SNCD-02;E-SNCD-11,仅文件备份通道，不作连接兼容实测,书签页码与印刷页码对应；未实际查看此起始页图
+118,2,17.2,17.2 USB OTG,系统基本操作,156,156,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+119,2,17.3,17.3 Wake up from sleep mode,系统基本操作,157,157,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+120,2,17.4,17.4 Reboot/update,系统基本操作,158,158,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+121,2,17.5,17.5 Backup and Restore,系统基本操作,159,159,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,partially_documented,F-M006-04;F-M006-10,E-SNCD-02;E-SUP-04;E-SUP-05,按数据分类备份；完整还原/去重未知,书签页码与印刷页码对应；未实际查看此起始页图
+122,2,17.6,17.6 Reset,系统基本操作,161,161,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,partially_documented,F-M006-10,E-SNCD-02,仅破坏范围边界；未实施重置或重建后续设置,书签页码与印刷页码对应；未实际查看此起始页图
+123,2,17.7,17.7 Power off/Shutdown,系统基本操作,163,163,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+124,1,Chapter 18 Privacy and security,Chapter 18 Privacy and security,隐私安全,164,164,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,chapter_index_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+125,2,18.1,18.1 Privacy,隐私安全,164,164,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+126,3,18.1.1,18.1.1 User Experience Project ON/ Off,隐私安全,164,164,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+127,2,18.2,18.2 Security,隐私安全,164,164,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+128,3,18.2.1,18.2.1 Screen-lock password,隐私安全,165,165,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+129,3,18.2.2,18.2.2 File password,隐私安全,167,167,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+130,1,Chapter 19 Supernote Cloud,Chapter 19 Supernote Cloud,云服务,171,171,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,chapter_index_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+131,2,19.1,19.1 Register and log in,云服务,171,171,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+132,2,19.2,19.2 Cloud service,云服务,173,173,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,partially_documented,F-M006-05;F-M006-10,E-SNCD-02;E-SNCD-08;E-SNCD-09;E-SNCD-10;E-SNCD-11,云端界面未访问，回收站恢复缺口,书签页码与印刷页码对应；未实际查看此起始页图
+133,1,Chapter 20 Safety,Chapter 20 Safety,安全说明,175,175,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,chapter_index_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+134,1,Chapter 21 FAQ and Troubleshooting,Chapter 21 FAQ and Troubleshooting,FAQ排错,177,177,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,chapter_index_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+135,2,Q：How to make custom image templates?,Q：How to make custom image templates?,FAQ排错,177,177,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+136,2,Q：How to import document customized fonts,Q：How to import document customized fonts,FAQ排错,179,179,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+137,2,Q：How to get Supernote Partner APP?,Q：How to get Supernote Partner APP?,FAQ排错,180,180,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+138,2,Q：What should I do when the device freezes or fails to boot?,Q：What should I do when the device freezes or fails to boot?,FAQ排错,180,180,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+139,2,Q：How to eliminate afterimages on note pages or display screen?,Q：How to eliminate afterimages on note pages or display screen?,FAQ排错,181,181,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,inventory_only,,E-SNCD-02,仅登记目录，未重建该项操作/反馈/异常,书签页码与印刷页码对应；未实际查看此起始页图
+140,1,Copyright,Copyright,FAQ排错,182,182,A5 X2 Manta / A6 X2 Nomad; manual V3.28.42,non_flow_reference,,E-SNCD-02,目录/型号/版权参考，不计功能任务,书签页码与印刷页码对应；未实际查看此起始页图

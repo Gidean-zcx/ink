@@ -1,0 +1,127 @@
+[
+  {
+    "class": "page-header-inner-logo-link",
+    "href": "/en",
+    "title": "",
+    "url": "https://help.ground.news/en"
+  },
+  {
+    "class": "page-header-inner-title",
+    "href": "/en",
+    "title": "Ground News Help Center",
+    "url": "https://help.ground.news/en"
+  },
+  {
+    "type": "button",
+    "class": "kb-button primary",
+    "href": "/en/contact-us",
+    "title": "Contact Us",
+    "url": "https://help.ground.news/en/contact-us"
+  },
+  {
+    "id": "moreResultsLink",
+    "type": "button",
+    "class": "kb-button secondary",
+    "href": "/en/search",
+    "title": "More results",
+    "url": "https://help.ground.news/en/search"
+  },
+  {
+    "href": "https://ground.news/privacy-policy",
+    "title": "Privacy Policy",
+    "url": "https://ground.news/privacy-policy"
+  },
+  {
+    "href": "#how_to_manage_your_sign_in_methods",
+    "class": "navigation-item indent-2",
+    "title": "How to Manage Your Sign-In Methods",
+    "url": "https://help.ground.news/en/articles/6692033#how_to_manage_your_sign_in_methods"
+  },
+  {
+    "href": "#important_notes",
+    "class": "navigation-item indent-2",
+    "title": "Important Notes",
+    "url": "https://help.ground.news/en/articles/6692033#important_notes"
+  },
+  {
+    "href": "/en",
+    "title": "Home",
+    "url": "https://help.ground.news/en"
+  },
+  {
+    "href": "/en/categories/2272833-manage-your-account-subscription",
+    "title": "Manage Your Account & Subscription",
+    "url": "https://help.ground.news/en/categories/2272833-manage-your-account-subscription"
+  },
+  {
+    "href": "/en/categories/2273153-account-questions",
+    "title": "Account Questions",
+    "url": "https://help.ground.news/en/categories/2273153-account-questions"
+  },
+  {
+    "href": "/en/categories/2273153-sign-in-login-support",
+    "title": "Sign-In & Login Support",
+    "url": "https://help.ground.news/en/categories/2273153-sign-in-login-support"
+  },
+  {
+    "target": "_self",
+    "rel": "noopener noreferrer nofollow",
+    "class": "kb-link kb-link",
+    "href": "https://ground.news/account",
+    "title": "account page",
+    "url": "https://ground.news/account"
+  },
+  {
+    "href": "https://usw2.frontkb-cdn.com/attachments/7440402/17473/41c7a6e7-a1fb-448a-abe4-1db738e9176e.png",
+    "class": "knowledge-base-image-expand-link",
+    "data-lightbox": "41c7a6e7-a1fb-448a-abe4-1db738e9176e",
+    "title": "",
+    "url": "https://usw2.frontkb-cdn.com/attachments/7440402/17473/41c7a6e7-a1fb-448a-abe4-1db738e9176e.png"
+  },
+  {
+    "target": "_self",
+    "rel": "noopener noreferrer nofollow",
+    "class": "kb-link kb-link",
+    "href": "mailto:feedback@ground.news",
+    "title": "feedback@ground.news",
+    "url": "mailto:feedback@ground.news"
+  },
+  {
+    "target": "_self",
+    "rel": "noopener noreferrer nofollow",
+    "class": "kb-link kb-link",
+    "href": "mailto:feedback@ground.news",
+    "title": "feedback@ground.news",
+    "url": "mailto:feedback@ground.news"
+  },
+  {
+    "href": "https://twitter.com/Ground_app",
+    "title": "",
+    "url": "https://twitter.com/Ground_app"
+  },
+  {
+    "href": "https://ca.linkedin.com/company/groundnews",
+    "title": "",
+    "url": "https://ca.linkedin.com/company/groundnews"
+  },
+  {
+    "href": "https://www.instagram.com/groundnews/",
+    "title": "",
+    "url": "https://www.instagram.com/groundnews/"
+  },
+  {
+    "href": "https://ground.news/refund-policy",
+    "title": "Refund and Cancellation Policy",
+    "url": "https://ground.news/refund-policy"
+  },
+  {
+    "href": "https://ground.news/terms-and-conditions",
+    "title": "Terms and Conditions",
+    "url": "https://ground.news/terms-and-conditions"
+  },
+  {
+    "href": "https://about.ground.news/privacy-policy",
+    "title": "Privacy Policy",
+    "url": "https://about.ground.news/privacy-policy"
+  }
+]

@@ -1,0 +1,101 @@
+[
+  {
+    "name": "mobile-index",
+    "url": "https://www.fmworld.net/digital-paper/mobileapp/helpguide/",
+    "status": 200,
+    "raw_work_path": "work/quaderno-controls-deepening/raw/mobile-index.html",
+    "raw_sha256": "1643cc14aaa50735e465f0dd74f51f874fdf42a5dbbade0f0567980db318bff6",
+    "encoding": "cp932 (declared Shift_JIS)",
+    "extracted_work_path": "work/quaderno-controls-deepening/extracted/mobile-index.txt",
+    "extracted_sha256": "4aa3ce13cc4c9ddced8dba040def68fc00cd1f1f462444356bac6da4106ce72b"
+  },
+  {
+    "name": "download",
+    "url": "https://www.fmworld.net/digital-paper/support/download/",
+    "status": 200,
+    "final_url": "https://www.fmworld.net/digital-paper/support/download/",
+    "raw_work_path": "work/quaderno-controls-deepening/raw/download.html",
+    "raw_sha256": "43e16fcf02616fba24b5dada5c873757b050e5690effa5c204ed252130266375",
+    "extracted_work_path": "work/quaderno-controls-deepening/extracted/download.txt",
+    "extracted_sha256": "a8bb0273381c2ea95507d623f822f12702efc7babd0a6b660419a8160a08991d"
+  },
+  {
+    "name": "QHG00001",
+    "url": "https://www.fmworld.net/digital-paper/mobileapp/helpguide/contents/QHG00001.html",
+    "status": 200,
+    "raw_work_path": "work/quaderno-controls-deepening/raw/QHG00001.html",
+    "raw_sha256": "4c882cf21c6cafda0e5c8c6bffa898f33d45e2ba41daec919182dc3d34300c44",
+    "extracted_work_path": "work/quaderno-controls-deepening/extracted/QHG00001.txt",
+    "extracted_sha256": "cd8e4982c4c516c0eeb48e11cef31c9d6dc7ffd8e46845f2fee8145529205053",
+    "encoding": "cp932 (declared Shift_JIS)"
+  },
+  {
+    "name": "QHG00002",
+    "url": "https://www.fmworld.net/digital-paper/mobileapp/helpguide/contents/QHG00002.html",
+    "status": 200,
+    "raw_work_path": "work/quaderno-controls-deepening/raw/QHG00002.html",
+    "raw_sha256": "c92204043c0f508aa1e9c588529e2d3e3a365b1831bc4b4fbd37ebbe5e70b83c",
+    "extracted_work_path": "work/quaderno-controls-deepening/extracted/QHG00002.txt",
+    "extracted_sha256": "652ca6897902fa0b53e1618191e43b0db2f94b6cca72fcd595ec1a653f8bb383",
+    "encoding": "cp932 (declared Shift_JIS)"
+  },
+  {
+    "name": "QHG00003",
+    "url": "https://www.fmworld.net/digital-paper/mobileapp/helpguide/contents/QHG00003.html",
+    "status": 200,
+    "raw_work_path": "work/quaderno-controls-deepening/raw/QHG00003.html",
+    "raw_sha256": "9dc21496f2aca3e4388cce1f2d4de637ffd07f1ab092add0ce746c7d3c0fa705",
+    "extracted_work_path": "work/quaderno-controls-deepening/extracted/QHG00003.txt",
+    "extracted_sha256": "176114a2b51a597b1ca2070b6a87478f1bfab8ebe21d2605db832cca1d5477fc",
+    "encoding": "cp932 (declared Shift_JIS)"
+  },
+  {
+    "name": "QHG00004",
+    "url": "https://www.fmworld.net/digital-paper/mobileapp/helpguide/contents/QHG00004.html",
+    "status": 200,
+    "raw_work_path": "work/quaderno-controls-deepening/raw/QHG00004.html",
+    "raw_sha256": "cc5b48eef339c213281479445c7c8e348fa83f3d627f4979f6752f1596985880",
+    "extracted_work_path": "work/quaderno-controls-deepening/extracted/QHG00004.txt",
+    "extracted_sha256": "bb80972adf6fc2b5418edd6f82490c3d9bbc0fae7e078b63e13a92d7f341bb2e",
+    "encoding": "cp932 (declared Shift_JIS)"
+  },
+  {
+    "name": "QHG00005",
+    "url": "https://www.fmworld.net/digital-paper/mobileapp/helpguide/contents/QHG00005.html",
+    "status": 200,
+    "raw_work_path": "work/quaderno-controls-deepening/raw/QHG00005.html",
+    "raw_sha256": "c935cd42de2a43d1cf44c5b00a2f567a3506e7516556bd168f7ce26eec57997a",
+    "extracted_work_path": "work/quaderno-controls-deepening/extracted/QHG00005.txt",
+    "extracted_sha256": "2537167f6968030063857758eeea82796bb962f547cd7ad8f55adc6adb00022d",
+    "encoding": "cp932 (declared Shift_JIS)"
+  },
+  {
+    "name": "QHG00006",
+    "url": "https://www.fmworld.net/digital-paper/mobileapp/helpguide/contents/QHG00006.html",
+    "status": 200,
+    "raw_work_path": "work/quaderno-controls-deepening/raw/QHG00006.html",
+    "raw_sha256": "676de27684f8dab32e54dd62460ae0b42a379b0a7db60ce5efb190196dbfa28e",
+    "extracted_work_path": "work/quaderno-controls-deepening/extracted/QHG00006.txt",
+    "extracted_sha256": "c716075a157762102bef9a9b0161aaf3cec4b80a8cf28d7805b3da7c7a40f424",
+    "encoding": "cp932 (declared Shift_JIS)"
+  },
+  {
+    "name": "QHG00007",
+    "url": "https://www.fmworld.net/digital-paper/mobileapp/helpguide/contents/QHG00007.html",
+    "status": 200,
+    "raw_work_path": "work/quaderno-controls-deepening/raw/QHG00007.html",
+    "raw_sha256": "8fce55a7862ec23362bdc7f2e60ecaada4ed9e01f5674c6ff97ef21fc152ddbc",
+    "extracted_work_path": "work/quaderno-controls-deepening/extracted/QHG00007.txt",
+    "extracted_sha256": "d0a51071854903e3b8ac4963b4131aeaa26b2442bcb1fb909d7bea77f727cfb6",
+    "encoding": "cp932 (declared Shift_JIS)"
+  },
+  {
+    "name": "support",
+    "url": "https://www.fmworld.net/digital-paper/support/",
+    "status": 200,
+    "raw_work_path": "work/quaderno-controls-deepening/raw/support.html",
+    "raw_sha256": "df57540305ecf9c0e84eac54625bd9f4f3bdf0571381b3e79bf5c8c8c859e615",
+    "extracted_work_path": "work/quaderno-controls-deepening/extracted/support.txt",
+    "extracted_sha256": "fb01b7e02dced96da4290c60e51643cf89f7b3cab86712f2636a6724ce3538b2"
+  }
+]

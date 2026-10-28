@@ -1,0 +1,85 @@
+[
+  {
+    "class": "page-header-inner-logo-link",
+    "href": "/en",
+    "title": "",
+    "url": "https://help.ground.news/en"
+  },
+  {
+    "class": "page-header-inner-title",
+    "href": "/en",
+    "title": "Ground News Help Center",
+    "url": "https://help.ground.news/en"
+  },
+  {
+    "type": "button",
+    "class": "kb-button primary",
+    "href": "/en/contact-us",
+    "title": "Contact Us",
+    "url": "https://help.ground.news/en/contact-us"
+  },
+  {
+    "id": "moreResultsLink",
+    "type": "button",
+    "class": "kb-button secondary",
+    "href": "/en/search",
+    "title": "More results",
+    "url": "https://help.ground.news/en/search"
+  },
+  {
+    "href": "https://ground.news/privacy-policy",
+    "title": "Privacy Policy",
+    "url": "https://ground.news/privacy-policy"
+  },
+  {
+    "href": "/en",
+    "title": "Home",
+    "url": "https://help.ground.news/en"
+  },
+  {
+    "class": "kb-category-card",
+    "href": "https://help.ground.news/en/articles/9683777",
+    "target": "_blank",
+    "rel": "noreferrer",
+    "title": "Submit Your Feedback",
+    "url": "https://help.ground.news/en/articles/9683777"
+  },
+  {
+    "class": "kb-category-card",
+    "href": "https://help.ground.news/en/articles/1750273",
+    "target": "_blank",
+    "rel": "noreferrer",
+    "title": "Submit a News Source",
+    "url": "https://help.ground.news/en/articles/1750273"
+  },
+  {
+    "href": "https://twitter.com/Ground_app",
+    "title": "",
+    "url": "https://twitter.com/Ground_app"
+  },
+  {
+    "href": "https://ca.linkedin.com/company/groundnews",
+    "title": "",
+    "url": "https://ca.linkedin.com/company/groundnews"
+  },
+  {
+    "href": "https://www.instagram.com/groundnews/",
+    "title": "",
+    "url": "https://www.instagram.com/groundnews/"
+  },
+  {
+    "href": "https://ground.news/refund-policy",
+    "title": "Refund and Cancellation Policy",
+    "url": "https://ground.news/refund-policy"
+  },
+  {
+    "href": "https://ground.news/terms-and-conditions",
+    "title": "Terms and Conditions",
+    "url": "https://ground.news/terms-and-conditions"
+  },
+  {
+    "href": "https://about.ground.news/privacy-policy",
+    "title": "Privacy Policy",
+    "url": "https://about.ground.news/privacy-policy"
+  }
+]

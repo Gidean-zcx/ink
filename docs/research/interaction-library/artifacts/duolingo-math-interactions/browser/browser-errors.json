@@ -1,0 +1,3224 @@
+[
+  {
+    "at": "2026-10-27T06:22:44.951373+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.google.com/rmkt/collect/728842606/",
+    "failure": "net::ERR_ABORTED"
+  },
+  {
+    "at": "2026-10-27T06:22:44.951610+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.google.com/ccm/collect",
+    "failure": "net::ERR_ABORTED"
+  },
+  {
+    "at": "2026-10-27T06:22:45.550150+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.google.co.jp/pagead/1p-conversion/397119219/",
+    "failure": "net::ERR_ABORTED"
+  },
+  {
+    "at": "2026-10-27T06:23:44.098595+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.recaptcha.net/recaptcha/enterprise/clr",
+    "failure": "net::ERR_ABORTED"
+  },
+  {
+    "at": "2026-10-27T06:24:02.453524+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/2017-06-30/users/<anonymous-user>/family-plan/invites",
+    "failure": "net::ERR_ABORTED"
+  },
+  {
+    "at": "2026-10-27T06:24:02.454439+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.google.com/measurement/conversion",
+    "failure": "net::ERR_ABORTED"
+  },
+  {
+    "at": "2026-10-27T06:24:02.460723+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.google.com/measurement/1p-conversion/",
+    "failure": "net::ERR_ABORTED"
+  },
+  {
+    "at": "2026-10-27T06:25:32.652192+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.google.com/measurement/conversion",
+    "failure": "net::ERR_ABORTED"
+  },
+  {
+    "at": "2026-10-27T06:25:49.632745+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/analytics/user-property",
+    "failure": "net::ERR_ABORTED"
+  },
+  {
+    "at": "2026-10-27T06:25:50.697589+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.google.com/measurement/conversion",
+    "failure": "net::ERR_ABORTED"
+  },
+  {
+    "at": "2026-10-27T06:26:29.668748+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/analytics/user-property",
+    "failure": "net::ERR_ABORTED"
+  },
+  {
+    "at": "2026-10-27T06:26:30.723107+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.google.com/measurement/conversion",
+    "failure": "net::ERR_ABORTED"
+  },
+  {
+    "at": "2026-10-27T06:27:15.088135+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.google.com/measurement/conversion",
+    "failure": "net::ERR_ABORTED"
+  },
+  {
+    "at": "2026-10-27T06:27:17.372316+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.google.com/measurement/conversion",
+    "failure": "net::ERR_ABORTED"
+  },
+  {
+    "at": "2026-10-27T06:31:26.256369+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/analytics/user-property",
+    "failure": "net::ERR_ABORTED"
+  },
+  {
+    "at": "2026-10-27T06:32:44.260703+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_AMS-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:32:44.264343+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_AMS-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:32:44.264691+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_AMS-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:32:44.267607+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Caligraphic-Bold.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:32:44.268273+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Caligraphic-Bold.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:32:44.268579+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Caligraphic-Bold.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:32:44.268905+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Caligraphic-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:32:44.269211+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Caligraphic-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:32:44.275406+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Caligraphic-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:32:44.275673+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Fraktur-Bold.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:32:44.277764+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Fraktur-Bold.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:32:44.278042+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Fraktur-Bold.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:32:44.278313+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Fraktur-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:32:44.278569+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Fraktur-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:32:44.279245+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Fraktur-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:32:44.280045+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-Bold.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:32:44.281021+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-Bold.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:32:44.281955+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-Bold.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:32:44.282863+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-BoldItalic.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:32:44.283508+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-BoldItalic.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:32:44.286041+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-BoldItalic.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:32:44.286373+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-Italic.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:32:44.287025+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-Italic.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:32:44.287372+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-Italic.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:32:44.287660+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:32:44.287986+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:32:44.289021+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:32:44.289367+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Math-BoldItalic.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:32:44.293255+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Math-BoldItalic.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:32:44.293546+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Math-BoldItalic.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:32:44.293878+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Math-Italic.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:32:44.294175+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Math-Italic.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:32:44.294489+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Math-Italic.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:32:44.294784+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_SansSerif-Bold.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:32:44.296086+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_SansSerif-Bold.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:32:44.296463+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_SansSerif-Bold.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:32:44.296793+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_SansSerif-Italic.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:32:44.299214+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_SansSerif-Italic.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:32:44.299551+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_SansSerif-Italic.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:32:44.299924+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_SansSerif-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:32:44.300240+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_SansSerif-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:32:44.300518+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_SansSerif-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:32:44.301894+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Script-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:32:44.302268+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Script-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:32:44.303799+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Script-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:32:44.304660+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size1-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:32:44.305098+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size1-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:32:44.305395+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size1-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:32:44.305674+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size2-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:32:44.307976+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size2-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:32:44.308308+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size2-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:32:44.308621+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size3-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:32:44.308870+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size3-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:32:44.309085+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size3-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:32:44.309298+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size4-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:32:44.309492+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size4-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:32:44.309677+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size4-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:32:44.311894+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Typewriter-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:32:44.313866+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Typewriter-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:32:44.314285+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Typewriter-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:32:44.314686+00:00",
+    "kind": "requestfailed",
+    "url": "https://appassets.androidplatform.net/res/font/duolingosansmath_bold.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:32:44.315026+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/DuolingoSansMath-Bold.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:32:44.315314+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/DuolingoSansMath-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:32:44.315561+00:00",
+    "kind": "requestfailed",
+    "url": "https://appassets.androidplatform.net/res/font/din_next_for_duolingo_bold.otf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:32:44.315737+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/DINNextforDuolingo-Bold.otf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:33:33.676581+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_AMS-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:33:33.681023+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_AMS-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:33:33.681331+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_AMS-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:33:33.681580+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Caligraphic-Bold.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:33:33.685862+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Caligraphic-Bold.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:33:33.686261+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Caligraphic-Bold.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:33:33.686537+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Caligraphic-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:33:33.686803+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Caligraphic-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:33:33.687139+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Caligraphic-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:33:33.687443+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Fraktur-Bold.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:33:33.687734+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Fraktur-Bold.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:33:33.689063+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Fraktur-Bold.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:33:33.689334+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Fraktur-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:33:33.689580+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Fraktur-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:33:33.689987+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Fraktur-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:33:33.692369+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-Bold.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:33:33.697708+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-Bold.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:33:33.701149+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-Bold.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:33:33.703237+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-BoldItalic.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:33:33.706316+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-BoldItalic.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:33:33.706701+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-BoldItalic.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:33:33.708674+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-Italic.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:33:33.709049+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-Italic.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:33:33.709327+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-Italic.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:33:33.709591+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:33:33.712226+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:33:33.713021+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:33:33.713666+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Math-BoldItalic.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:33:33.722788+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Math-BoldItalic.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:33:33.724522+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Math-BoldItalic.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:33:33.725770+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Math-Italic.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:33:33.726697+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Math-Italic.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:33:33.727626+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Math-Italic.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:33:33.732520+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_SansSerif-Bold.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:33:33.733872+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_SansSerif-Bold.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:33:33.734269+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_SansSerif-Bold.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:33:33.734529+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_SansSerif-Italic.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:33:33.734769+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_SansSerif-Italic.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:33:33.737269+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_SansSerif-Italic.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:33:33.738688+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_SansSerif-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:33:33.738983+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_SansSerif-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:33:33.739245+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_SansSerif-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:33:33.741714+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Script-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:33:33.744434+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Script-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:33:33.745046+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Script-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:33:33.745578+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size1-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:33:33.746613+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size1-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:33:33.748023+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size1-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:33:33.749005+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size2-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:33:33.751369+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size2-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:33:33.751669+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size2-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:33:33.758439+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size3-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:33:33.761987+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size3-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:33:33.762317+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size3-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:33:33.762585+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size4-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:33:33.765797+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size4-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:33:33.766386+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size4-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:33:33.767783+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Typewriter-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:33:33.768360+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Typewriter-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:33:33.768665+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Typewriter-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:33:33.769220+00:00",
+    "kind": "requestfailed",
+    "url": "https://appassets.androidplatform.net/res/font/duolingosansmath_bold.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:33:33.769799+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/DuolingoSansMath-Bold.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:33:33.770776+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/DuolingoSansMath-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:33:33.772348+00:00",
+    "kind": "requestfailed",
+    "url": "https://appassets.androidplatform.net/res/font/din_next_for_duolingo_bold.otf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:33:33.772656+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/DINNextforDuolingo-Bold.otf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:34:17.075372+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_AMS-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:34:17.079329+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_AMS-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:34:17.079619+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_AMS-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:34:17.081144+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Caligraphic-Bold.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:34:17.085655+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Caligraphic-Bold.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:34:17.085906+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Caligraphic-Bold.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:34:17.086205+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Caligraphic-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:34:17.086426+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Caligraphic-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:34:17.093766+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Caligraphic-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:34:17.094071+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Fraktur-Bold.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:34:17.095355+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Fraktur-Bold.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:34:17.102443+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Fraktur-Bold.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:34:17.102770+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Fraktur-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:34:17.104190+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Fraktur-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:34:17.104450+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Fraktur-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:34:17.104672+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-Bold.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:34:17.109135+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-Bold.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:34:17.109394+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-Bold.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:34:17.109619+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-BoldItalic.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:34:17.109870+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-BoldItalic.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:34:17.112421+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-BoldItalic.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:34:17.112693+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-Italic.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:34:17.115127+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-Italic.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:34:17.115415+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-Italic.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:34:17.115677+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:34:17.115969+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:34:17.116235+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:34:17.118287+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Math-BoldItalic.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:34:17.118552+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Math-BoldItalic.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:34:17.118777+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Math-BoldItalic.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:34:17.120880+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Math-Italic.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:34:17.121122+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Math-Italic.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:34:17.123024+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Math-Italic.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:34:17.123286+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_SansSerif-Bold.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:34:17.126398+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_SansSerif-Bold.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:34:17.127424+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_SansSerif-Bold.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:34:17.127736+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_SansSerif-Italic.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:34:17.128102+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_SansSerif-Italic.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:34:17.128384+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_SansSerif-Italic.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:34:17.128766+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_SansSerif-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:34:17.132190+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_SansSerif-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:34:17.132462+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_SansSerif-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:34:17.132734+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Script-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:34:17.132992+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Script-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:34:17.133203+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Script-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:34:17.137793+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size1-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:34:17.138142+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size1-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:34:17.138367+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size1-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:34:17.138584+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size2-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:34:17.138790+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size2-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:34:17.139044+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size2-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:34:17.139274+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size3-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:34:17.141765+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size3-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:34:17.142211+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size3-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:34:17.145898+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size4-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:34:17.146540+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size4-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:34:17.149897+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size4-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:34:17.150202+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Typewriter-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:34:17.150463+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Typewriter-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:34:17.151346+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Typewriter-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:34:17.151779+00:00",
+    "kind": "requestfailed",
+    "url": "https://appassets.androidplatform.net/res/font/duolingosansmath_bold.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:34:17.152096+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/DuolingoSansMath-Bold.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:34:17.152396+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/DuolingoSansMath-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:34:17.154910+00:00",
+    "kind": "requestfailed",
+    "url": "https://appassets.androidplatform.net/res/font/din_next_for_duolingo_bold.otf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:34:17.167308+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/DINNextforDuolingo-Bold.otf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:39:25.665697+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_AMS-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:39:25.668041+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_AMS-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:39:25.668485+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_AMS-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:39:25.668710+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Caligraphic-Bold.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:39:25.668960+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Caligraphic-Bold.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:39:25.669244+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Caligraphic-Bold.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:39:25.673179+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Caligraphic-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:39:25.673455+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Caligraphic-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:39:25.674164+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Caligraphic-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:39:25.674482+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Fraktur-Bold.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:39:25.674786+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Fraktur-Bold.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:39:25.680056+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Fraktur-Bold.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:39:25.680390+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Fraktur-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:39:25.680693+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Fraktur-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:39:25.681022+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Fraktur-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:39:25.683153+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-Bold.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:39:25.686801+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-Bold.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:39:25.687103+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-Bold.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:39:25.687556+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-BoldItalic.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:39:25.688941+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-BoldItalic.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:39:25.691277+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-BoldItalic.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:39:25.691561+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-Italic.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:39:25.691805+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-Italic.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:39:25.692091+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-Italic.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:39:25.693703+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:39:25.694413+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:39:25.694656+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:39:25.696844+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Math-BoldItalic.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:39:25.697088+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Math-BoldItalic.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:39:25.697308+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Math-BoldItalic.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:39:25.697517+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Math-Italic.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:39:25.697731+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Math-Italic.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:39:25.697998+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Math-Italic.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:39:25.698296+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_SansSerif-Bold.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:39:25.701528+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_SansSerif-Bold.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:39:25.703484+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_SansSerif-Bold.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:39:25.703793+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_SansSerif-Italic.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:39:25.705175+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_SansSerif-Italic.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:39:25.705417+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_SansSerif-Italic.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:39:25.707978+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_SansSerif-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:39:25.708307+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_SansSerif-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:39:25.708536+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_SansSerif-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:39:25.709322+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Script-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:39:25.710911+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Script-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:39:25.711543+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Script-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:39:25.711770+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size1-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:39:25.712014+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size1-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:39:25.732761+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size1-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:39:25.734002+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size2-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:39:25.734259+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size2-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:39:25.734468+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size2-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:39:25.734661+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size3-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:39:25.734888+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size3-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:39:25.735101+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size3-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:39:25.738022+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size4-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:39:25.738330+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size4-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:39:25.738572+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size4-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:39:25.739409+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Typewriter-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:39:25.739642+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Typewriter-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:39:25.739884+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Typewriter-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:39:25.740122+00:00",
+    "kind": "requestfailed",
+    "url": "https://appassets.androidplatform.net/res/font/duolingosansmath_bold.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:39:25.740340+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/DuolingoSansMath-Bold.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:39:25.740555+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/DuolingoSansMath-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:39:25.744493+00:00",
+    "kind": "requestfailed",
+    "url": "https://appassets.androidplatform.net/res/font/din_next_for_duolingo_bold.otf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:39:25.744764+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/DINNextforDuolingo-Bold.otf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:22.560459+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_AMS-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:22.560941+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_AMS-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:22.561274+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_AMS-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:22.561504+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Caligraphic-Bold.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:22.561665+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Caligraphic-Bold.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:22.564728+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Caligraphic-Bold.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:22.569270+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Caligraphic-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:22.569605+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Caligraphic-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:22.574661+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Caligraphic-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:22.578155+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Fraktur-Bold.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:22.578545+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Fraktur-Bold.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:22.578837+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Fraktur-Bold.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:22.579137+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Fraktur-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:22.583726+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Fraktur-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:22.588264+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Fraktur-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:22.588605+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-Bold.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:22.592032+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-Bold.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:22.592355+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-Bold.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:22.592604+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-BoldItalic.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:22.596176+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-BoldItalic.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:22.597284+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-BoldItalic.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:22.597559+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-Italic.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:22.600708+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-Italic.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:22.602435+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-Italic.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:22.607767+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:22.609374+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:22.612012+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:22.615167+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Math-BoldItalic.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:22.617918+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Math-BoldItalic.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:22.618259+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Math-BoldItalic.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:22.620296+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Math-Italic.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:22.622052+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Math-Italic.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:22.623684+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Math-Italic.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:22.624497+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_SansSerif-Bold.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:22.624784+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_SansSerif-Bold.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:22.629526+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_SansSerif-Bold.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:22.630109+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_SansSerif-Italic.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:22.630751+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_SansSerif-Italic.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:22.632940+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_SansSerif-Italic.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:22.633268+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_SansSerif-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:22.633519+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_SansSerif-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:22.633746+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_SansSerif-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:22.638118+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Script-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:22.639362+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Script-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:22.641137+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Script-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:22.643474+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size1-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:22.643789+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size1-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:22.644071+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size1-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:22.649889+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size2-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:22.650259+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size2-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:22.651573+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size2-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:22.651802+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size3-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:22.652056+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size3-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:22.652287+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size3-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:22.652489+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size4-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:22.652686+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size4-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:22.653978+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size4-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:22.655000+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Typewriter-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:22.655267+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Typewriter-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:22.655495+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Typewriter-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:22.655711+00:00",
+    "kind": "requestfailed",
+    "url": "https://appassets.androidplatform.net/res/font/duolingosansmath_bold.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:22.655951+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/DuolingoSansMath-Bold.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:22.656176+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/DuolingoSansMath-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:22.659383+00:00",
+    "kind": "requestfailed",
+    "url": "https://appassets.androidplatform.net/res/font/din_next_for_duolingo_bold.otf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:22.659592+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/DINNextforDuolingo-Bold.otf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:46.547361+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_AMS-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:46.551887+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_AMS-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:46.552220+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_AMS-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:46.552526+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Caligraphic-Bold.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:46.559246+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Caligraphic-Bold.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:46.559647+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Caligraphic-Bold.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:46.559946+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Caligraphic-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:46.560212+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Caligraphic-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:46.560447+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Caligraphic-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:46.560670+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Fraktur-Bold.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:46.572948+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Fraktur-Bold.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:46.573375+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Fraktur-Bold.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:46.573683+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Fraktur-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:46.579283+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Fraktur-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:46.579569+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Fraktur-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:46.579792+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-Bold.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:46.580056+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-Bold.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:46.581186+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-Bold.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:46.581439+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-BoldItalic.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:46.581663+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-BoldItalic.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:46.588517+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-BoldItalic.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:46.588942+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-Italic.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:46.589320+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-Italic.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:46.589594+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-Italic.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:46.592232+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:46.592522+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:46.592787+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:46.606916+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Math-BoldItalic.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:46.607236+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Math-BoldItalic.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:46.607475+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Math-BoldItalic.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:46.607698+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Math-Italic.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:46.607988+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Math-Italic.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:46.618246+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Math-Italic.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:46.619220+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_SansSerif-Bold.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:46.620341+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_SansSerif-Bold.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:46.621854+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_SansSerif-Bold.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:46.622191+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_SansSerif-Italic.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:46.622502+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_SansSerif-Italic.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:46.629616+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_SansSerif-Italic.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:46.630136+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_SansSerif-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:46.630427+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_SansSerif-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:46.630676+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_SansSerif-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:46.630931+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Script-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:46.631153+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Script-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:46.631368+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Script-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:46.631580+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size1-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:46.631792+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size1-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:46.644426+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size1-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:46.644755+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size2-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:46.645057+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size2-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:46.645285+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size2-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:46.645502+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size3-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:46.645718+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size3-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:46.651058+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size3-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:46.651308+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size4-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:46.651529+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size4-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:46.651774+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size4-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:46.654104+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Typewriter-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:46.654344+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Typewriter-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:46.654568+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Typewriter-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:46.654788+00:00",
+    "kind": "requestfailed",
+    "url": "https://appassets.androidplatform.net/res/font/duolingosansmath_bold.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:46.659913+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/DuolingoSansMath-Bold.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:46.660161+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/DuolingoSansMath-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:46.674101+00:00",
+    "kind": "requestfailed",
+    "url": "https://appassets.androidplatform.net/res/font/din_next_for_duolingo_bold.otf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:40:46.674371+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/DINNextforDuolingo-Bold.otf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:41:11.440245+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_AMS-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:41:11.440666+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_AMS-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:41:11.441139+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_AMS-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:41:11.442731+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Caligraphic-Bold.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:41:11.443064+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Caligraphic-Bold.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:41:11.445173+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Caligraphic-Bold.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:41:11.447521+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Caligraphic-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:41:11.448454+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Caligraphic-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:41:11.450407+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Caligraphic-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:41:11.451512+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Fraktur-Bold.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:41:11.452520+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Fraktur-Bold.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:41:11.454232+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Fraktur-Bold.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:41:11.455793+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Fraktur-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:41:11.456135+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Fraktur-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:41:11.456414+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Fraktur-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:41:11.456687+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-Bold.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:41:11.458348+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-Bold.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:41:11.460782+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-Bold.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:41:11.461152+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-BoldItalic.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:41:11.461546+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-BoldItalic.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:41:11.462085+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-BoldItalic.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:41:11.462376+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-Italic.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:41:11.462752+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-Italic.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:41:11.463057+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-Italic.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:41:11.464876+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:41:11.465265+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:41:11.465574+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:41:11.467900+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Math-BoldItalic.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:41:11.468239+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Math-BoldItalic.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:41:11.468966+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Math-BoldItalic.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:41:11.469889+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Math-Italic.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:41:11.471056+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Math-Italic.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:41:11.471487+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Math-Italic.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:41:11.471780+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_SansSerif-Bold.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:41:11.474170+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_SansSerif-Bold.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:41:11.474429+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_SansSerif-Bold.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:41:11.474657+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_SansSerif-Italic.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:41:11.474918+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_SansSerif-Italic.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:41:11.478349+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_SansSerif-Italic.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:41:11.478676+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_SansSerif-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:41:11.480956+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_SansSerif-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:41:11.481337+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_SansSerif-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:41:11.481652+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Script-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:41:11.484152+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Script-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:41:11.484427+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Script-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:41:11.485480+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size1-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:41:11.485858+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size1-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:41:11.486171+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size1-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:41:11.488506+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size2-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:41:11.488770+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size2-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:41:11.489745+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size2-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:41:11.490016+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size3-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:41:11.490239+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size3-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:41:11.490443+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size3-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:41:11.490646+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size4-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:41:11.493071+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size4-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:41:11.493482+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size4-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:41:11.493776+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Typewriter-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:41:11.495675+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Typewriter-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:41:11.496025+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Typewriter-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:41:11.496291+00:00",
+    "kind": "requestfailed",
+    "url": "https://appassets.androidplatform.net/res/font/duolingosansmath_bold.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:41:11.496549+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/DuolingoSansMath-Bold.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:41:11.497864+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/DuolingoSansMath-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:41:11.498618+00:00",
+    "kind": "requestfailed",
+    "url": "https://appassets.androidplatform.net/res/font/din_next_for_duolingo_bold.otf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:41:11.498860+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/DINNextforDuolingo-Bold.otf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:42:02.470985+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_AMS-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:42:02.474459+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_AMS-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:42:02.474850+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_AMS-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:42:02.475944+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Caligraphic-Bold.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:42:02.478063+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Caligraphic-Bold.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:42:02.478351+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Caligraphic-Bold.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:42:02.478611+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Caligraphic-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:42:02.480513+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Caligraphic-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:42:02.484446+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Caligraphic-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:42:02.484861+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Fraktur-Bold.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:42:02.485165+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Fraktur-Bold.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:42:02.485447+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Fraktur-Bold.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:42:02.485707+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Fraktur-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:42:02.486244+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Fraktur-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:42:02.486560+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Fraktur-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:42:02.490208+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-Bold.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:42:02.491253+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-Bold.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:42:02.491520+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-Bold.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:42:02.491790+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-BoldItalic.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:42:02.494154+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-BoldItalic.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:42:02.494443+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-BoldItalic.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:42:02.495964+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-Italic.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:42:02.496278+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-Italic.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:42:02.496540+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-Italic.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:42:02.496753+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:42:02.499519+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:42:02.500629+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Main-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:42:02.500932+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Math-BoldItalic.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:42:02.504087+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Math-BoldItalic.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:42:02.504374+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Math-BoldItalic.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:42:02.504654+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Math-Italic.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:42:02.507992+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Math-Italic.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:42:02.508256+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Math-Italic.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:42:02.508486+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_SansSerif-Bold.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:42:02.508696+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_SansSerif-Bold.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:42:02.519085+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_SansSerif-Bold.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:42:02.519428+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_SansSerif-Italic.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:42:02.519690+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_SansSerif-Italic.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:42:02.520290+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_SansSerif-Italic.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:42:02.520609+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_SansSerif-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:42:02.522780+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_SansSerif-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:42:02.523105+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_SansSerif-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:42:02.523457+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Script-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:42:02.523694+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Script-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:42:02.527008+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Script-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:42:02.527289+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size1-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:42:02.527522+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size1-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:42:02.527734+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size1-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:42:02.530418+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size2-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:42:02.530733+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size2-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:42:02.533035+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size2-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:42:02.533314+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size3-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:42:02.533580+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size3-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:42:02.537897+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size3-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:42:02.538174+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size4-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:42:02.538419+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size4-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:42:02.538661+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Size4-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:42:02.540950+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Typewriter-Regular.woff2",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:42:02.541262+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Typewriter-Regular.woff",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:42:02.541484+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/fonts/KaTeX_Typewriter-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:42:02.541695+00:00",
+    "kind": "requestfailed",
+    "url": "https://appassets.androidplatform.net/res/font/duolingosansmath_bold.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:42:02.546041+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/DuolingoSansMath-Bold.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:42:02.546345+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/DuolingoSansMath-Regular.ttf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:42:02.549188+00:00",
+    "kind": "requestfailed",
+    "url": "https://appassets.androidplatform.net/res/font/din_next_for_duolingo_bold.otf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:42:02.549435+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/lesson/unit/1/level/DINNextforDuolingo-Bold.otf",
+    "failure": "csp"
+  },
+  {
+    "at": "2026-10-27T06:43:40.555078+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/2017-06-30/users/<anonymous-user>/family-plan/invites",
+    "failure": "net::ERR_ABORTED"
+  },
+  {
+    "at": "2026-10-27T06:44:29.484063+00:00",
+    "kind": "requestfailed",
+    "url": "https://www.duolingo.com/2017-06-30/users/<anonymous-user>/family-plan/invites",
+    "failure": "net::ERR_ABORTED"
+  }
+]

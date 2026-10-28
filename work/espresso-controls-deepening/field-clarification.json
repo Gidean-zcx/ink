@@ -1,0 +1,17 @@
+{
+  "reason": "do not infer datePublished means last update",
+  "source_before_sha256": "d50dc05d70a9489be68cf355309b8790a550c020ef99daacaf3576dd9e93a282",
+  "source_after_sha256": "a29fc4674505f78d117f93e6095fc67dd9a7ccb28f758759709c1781c83dd64e",
+  "files": [
+    {
+      "path": "docs/research/interaction-library/batches/espresso-controls-deepening-evidence.jsonl",
+      "before_sha256": "8acb4f64a3f50c88d0121900fae68c2236c9501c09e56b078510699663caeeda",
+      "after_sha256": "b9140b043d410a91d80c257d93dfc4bda01ee1687e0cb639976ef0c3f855c778"
+    },
+    {
+      "path": "work/espresso-controls-deepening/additional-captures-updates.json",
+      "before_sha256": "59c8e53217eee53c8e17e4e7935c4cd18f5157befcaa503f3f0ea9ceda7d4804",
+      "after_sha256": "05864f9903d58fe50a58a468caa9b7408bd2c02d275b73d1eb63848599e17d5d"
+    }
+  ]
+}

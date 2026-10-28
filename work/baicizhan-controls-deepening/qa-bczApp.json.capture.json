@@ -1,0 +1,11 @@
+{
+  "name": "qa-bczApp.json",
+  "url": "https://assistant.baicizhan.com/feedback_api/get_qa_info?platform=bczApp",
+  "checked_on": "2026-10-27",
+  "access_mode": "ordinary_anonymous_GET",
+  "status": 200,
+  "final_url": "https://assistant.baicizhan.com/feedback_api/get_qa_info?platform=bczApp",
+  "bytes": 24768,
+  "raw_work_path": "work/baicizhan-controls-deepening/qa-bczApp.json",
+  "raw_sha256": "2fae2b92327222c9641122ae218671bb3fa5efb52c1f3646bad06f7cd2a3d7ab"
+}

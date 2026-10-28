@@ -1,0 +1,2730 @@
+[
+  {
+    "name": "screen",
+    "url": "https://support.google.com/gemini/answer/15850607?hl=en",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "final_url": "https://support.google.com/gemini/answer/15850607?hl=en",
+    "raw_work_path": "work/gemini-controls-deepening/raw/screen.html",
+    "raw_sha256": "9c9188d4480c4dda1a687dad6e02ab8be376ea0f05dc9016b6a285de0a31e996",
+    "bytes": 1615053,
+    "text_work_path": "work/gemini-controls-deepening/raw/screen.txt",
+    "text_sha256": "58f28ad0eba11d03e24112f23c905ce885a863f2056b6c9649ca134beaf671bf",
+    "headings": [
+      [
+        "h1",
+        "Use screen actions to chat with the Gemini mobile app"
+      ],
+      [
+        "h2",
+        "Get started"
+      ],
+      [
+        "h3",
+        "Turn auto-submit on or off"
+      ],
+      [
+        "h3",
+        "Let Gemini infer when to use your screen context"
+      ],
+      [
+        "h3",
+        "Your data"
+      ],
+      [
+        "h2",
+        "Need more help?"
+      ],
+      [
+        "h3",
+        "Try these next steps:"
+      ],
+      [
+        "h2",
+        "Help"
+      ]
+    ],
+    "links": [
+      {
+        "url": "https://support.google.com/gemini/answer/15850607?hl=en#hcfe-content",
+        "title": "Skip to main content"
+      },
+      {
+        "url": "https://support.google.com/gemini",
+        "title": "Gemini Apps Help"
+      },
+      {
+        "url": "https://accounts.google.com/ServiceLogin?hl=en&passive=true&continue=http://support.google.com/gemini/answer/15850607%3Fhl%3Den&ec=GAZAdQ",
+        "title": "Sign in"
+      },
+      {
+        "url": "https://support.google.com/",
+        "title": "Google Help"
+      },
+      {
+        "url": "https://support.google.com/gemini/?hl=en",
+        "title": "Help Center"
+      },
+      {
+        "url": "https://support.google.com/gemini/community?hl=en&help_center_link=CO-4xwcSNVVzZSBzY3JlZW4gYWN0aW9ucyB0byBjaGF0IHdpdGggdGhlIEdlbWluaSBtb2JpbGUgYXBw",
+        "title": "Community"
+      },
+      {
+        "url": "https://gemini.google.com/",
+        "title": "Gemini Apps"
+      },
+      {
+        "url": "https://www.google.com/intl/en/privacy.html",
+        "title": "Privacy Policy"
+      },
+      {
+        "url": "https://www.google.com/accounts/TOS",
+        "title": "Terms of Service"
+      },
+      {
+        "url": "https://support.google.com/gemini/?hl=en",
+        "title": "Help Center"
+      },
+      {
+        "url": "https://support.google.com/gemini/community?hl=en&help_center_link=CO-4xwcSNVVzZSBzY3JlZW4gYWN0aW9ucyB0byBjaGF0IHdpdGggdGhlIEdlbWluaSBtb2JpbGUgYXBw",
+        "title": "Community"
+      },
+      {
+        "url": "https://support.google.com/gemini/announcements/15294201",
+        "title": "Privacy Hub"
+      },
+      {
+        "url": "https://gemini.google.com/",
+        "title": "Gemini Apps"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/13594961?hl=en#gemini_apps&zippy=%2Cwhat-are-gemini-apps",
+        "title": "the Gemini mobile app"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/13594961",
+        "title": "Gemini Apps Privacy Hub"
+      },
+      {
+        "url": "https://support.google.com/gemini/community?hl=en&help_center_link=CO-4xwcSNVVzZSBzY3JlZW4gYWN0aW9ucyB0byBjaGF0IHdpdGggdGhlIEdlbWluaSBtb2JpbGUgYXBw",
+        "title": "Post to the help community    Get answers from community members"
+      },
+      {
+        "url": "https://support.google.com/gemini?hl=en#topic=14554810",
+        "title": "Help"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/14554984?hl=en&ref_topic=14554810",
+        "title": "Get started with the Gemini mobile app"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/14579631?hl=en&ref_topic=14554810",
+        "title": "What you can do with your Gemini mobile app"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/14579026?hl=en&ref_topic=14554810",
+        "title": "Gemini mobile app availability"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/14576209?hl=en&ref_topic=14554810",
+        "title": "How your Gemini mobile app can help when your phone is locked"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15274899?hl=en&ref_topic=14554810",
+        "title": "Talk naturally with Gemini Live"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/16938321?hl=en&ref_topic=14554810",
+        "title": "Manage or delete the Gemini app on your Android device"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15456140?hl=en&ref_topic=14554810",
+        "title": "Use Gemini on your headphones"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15850607?hl=en",
+        "title": "Use screen actions to chat with the Gemini mobile app"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/16179553?hl=en&ref_topic=14554810",
+        "title": "Add & customize your Gemini widget"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/16401122?hl=en&ref_topic=14554810",
+        "title": "Use Gemini on your smartwatch"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/16940971?hl=en&ref_topic=14554810",
+        "title": "Ask Gemini to handle your multi-step tasks in select Android apps"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/17079170?hl=en&ref_topic=14554810",
+        "title": "Get Started with Gemini Go"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/18336420?hl=en&ref_topic=14554810",
+        "title": "Ask Gemini to handle your everyday phone calls"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/18365638?hl=en&ref_topic=14554810",
+        "title": "Get audio descriptions with Guided Vision in Gemini Live"
+      },
+      {
+        "url": "https://www.google.com/intl/en/privacy.html",
+        "title": "Privacy Policy"
+      },
+      {
+        "url": "https://www.google.com/accounts/TOS",
+        "title": "Terms of Service"
+      }
+    ]
+  },
+  {
+    "name": "connectors",
+    "url": "https://support.google.com/gemini/answer/13695044?co=GENIE.Platform%3DAndroid&hl=en",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "final_url": "https://support.google.com/gemini/answer/13695044?co=GENIE.Platform%3DAndroid&hl=en",
+    "raw_work_path": "work/gemini-controls-deepening/raw/connectors.html",
+    "raw_sha256": "a4eb683a1dc0f69783837120dcec71b9d467a0effda41a4b18fd9298b5fdce23",
+    "bytes": 1640124,
+    "text_work_path": "work/gemini-controls-deepening/raw/connectors.txt",
+    "text_sha256": "bfc019ea9ecc43a0630fe84bc7e8c3e6eddfaebd502c929c463f7bf0b6b62572",
+    "headings": [
+      [
+        "h1",
+        "Use & manage Connected Apps in Gemini"
+      ],
+      [
+        "h2",
+        "Get started with Connected Apps in Gemini"
+      ],
+      [
+        "h2",
+        "How to use Connected Apps in Gemini"
+      ],
+      [
+        "h2",
+        "Browse available apps & their supported actions"
+      ],
+      [
+        "h2",
+        "Control which apps Gemini works with"
+      ],
+      [
+        "h2",
+        "Connect custom apps to Gemini Apps"
+      ],
+      [
+        "h2",
+        "Learn more about Connected Apps"
+      ],
+      [
+        "h2",
+        "How your data is handled"
+      ],
+      [
+        "h2",
+        "Related resources"
+      ],
+      [
+        "h2",
+        "Need more help?"
+      ],
+      [
+        "h3",
+        "Try these next steps:"
+      ],
+      [
+        "h2",
+        "Help"
+      ]
+    ],
+    "links": [
+      {
+        "url": "https://support.google.com/gemini/answer/13695044?co=GENIE.Platform%3DAndroid&hl=en#hcfe-content",
+        "title": "Skip to main content"
+      },
+      {
+        "url": "https://support.google.com/gemini",
+        "title": "Gemini Apps Help"
+      },
+      {
+        "url": "https://accounts.google.com/ServiceLogin?hl=en&passive=true&continue=http://support.google.com/gemini/answer/13695044%3Fco%3DGENIE.Platform%253DAndroid%26hl%3Den&ec=GAZAdQ",
+        "title": "Sign in"
+      },
+      {
+        "url": "https://support.google.com/",
+        "title": "Google Help"
+      },
+      {
+        "url": "https://support.google.com/gemini/?hl=en",
+        "title": "Help Center"
+      },
+      {
+        "url": "https://support.google.com/gemini/community?hl=en&help_center_link=CMTwwwYSRlVzZSAmYW1wOyBtYW5hZ2UgQ29ubmVjdGVkIEFwcHMgaW4gR2VtaW5pIC0gQW5kcm9pZCBwaG9uZSAmYW1wOyB0YWJsZXQ",
+        "title": "Community"
+      },
+      {
+        "url": "https://gemini.google.com/",
+        "title": "Gemini Apps"
+      },
+      {
+        "url": "https://www.google.com/intl/en/privacy.html",
+        "title": "Privacy Policy"
+      },
+      {
+        "url": "https://www.google.com/accounts/TOS",
+        "title": "Terms of Service"
+      },
+      {
+        "url": "https://support.google.com/gemini/?hl=en",
+        "title": "Help Center"
+      },
+      {
+        "url": "https://support.google.com/gemini/community?hl=en&help_center_link=CMTwwwYSRlVzZSAmYW1wOyBtYW5hZ2UgQ29ubmVjdGVkIEFwcHMgaW4gR2VtaW5pIC0gQW5kcm9pZCBwaG9uZSAmYW1wOyB0YWJsZXQ",
+        "title": "Community"
+      },
+      {
+        "url": "https://support.google.com/gemini/announcements/15294201",
+        "title": "Privacy Hub"
+      },
+      {
+        "url": "https://gemini.google.com/",
+        "title": "Gemini Apps"
+      },
+      {
+        "url": "https://support.google.com/gemini/table/17434654",
+        "title": "Learn more about apps Gemini can connect to"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/16598406",
+        "title": "Learn more about personalization based on Connected Apps"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/14959807",
+        "title": "use Connected Apps in Gemini with a work and school Google Account"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/13278668",
+        "title": "Learn how to sign in to Gemini Apps"
+      },
+      {
+        "url": "https://myactivity.google.com/product/gemini?utm_source=help",
+        "title": "Keep Activity"
+      },
+      {
+        "url": "https://gemini.google.com",
+        "title": "gemini.google.com"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/13695044?co=GENIE.Platform%3DAndroid&hl=en#turn_on_off",
+        "title": "Learn how to connect or disconnect apps in Gemini"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/13695044?co=GENIE.Platform%3DAndroid&hl=en#google_services",
+        "title": "Learn more about Gemini and these Google services"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/13695044?co=GENIE.Platform%3DAndroid&hl=en#turn_on_off",
+        "title": "Learn how to disconnect apps in Gemini"
+      },
+      {
+        "url": "https://gemini.google.com",
+        "title": "gemini.google.com"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15274899#apps",
+        "title": "Learn how to use Connected Apps in Live chats"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/13695044?co=GENIE.Platform%3DAndroid&hl=en#about_apps",
+        "title": "about the apps on the Connected Apps settings page"
+      },
+      {
+        "url": "https://gemini.google.com",
+        "title": "gemini.google.com"
+      },
+      {
+        "url": "https://gemini.google.com/apps",
+        "title": "Browse Connected Apps"
+      },
+      {
+        "url": "https://gemini.google.com",
+        "title": "gemini.google.com"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/13695044?co=GENIE.Platform%3DAndroid&hl=en#google_services",
+        "title": "Learn more about Google services that Gemini automatically uses info from"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/13594961#data_exchange",
+        "title": "What happens when you disconnect an app in Gemini"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/13594961#extensions",
+        "title": "How your data is handled when you use Connected Apps in Gemini"
+      },
+      {
+        "url": "https://gemini.google.com",
+        "title": "gemini.google.com"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/16622256",
+        "title": "Google Flights"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/16622256",
+        "title": "Google Hotels"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/16622866",
+        "title": "Google Maps"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/16622858",
+        "title": "YouTube"
+      },
+      {
+        "url": "https://myactivity.google.com/product/gemini?utm_source=help",
+        "title": "Keep Activity"
+      },
+      {
+        "url": "https://myactivity.google.com/product/gemini?utm_source=help",
+        "title": "Keep Activity"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/17209137",
+        "title": "Learn how to connect custom apps"
+      },
+      {
+        "url": "https://support.google.com/gemini/table/17434654",
+        "title": "review the Connected Apps list"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15575143",
+        "title": "Phone"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15574940",
+        "title": "Messages"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15574928",
+        "title": "WhatsApp"
+      },
+      {
+        "url": "https://myactivity.google.com/product/gemini?utm_source=help",
+        "title": "Keep Activity"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/13695044?co=GENIE.Platform%3DAndroid&hl=en#turn_on_off",
+        "title": "Learn how to connect and disconnect these apps"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15274899#live_apps",
+        "title": "Learn how to use Connected Apps in Live chats"
+      },
+      {
+        "url": "https://support.google.com/gemini/table/17434654",
+        "title": "Explore Connected Apps"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/13594961#data_exchange",
+        "title": "how your data is handled when Gemini works with Connected Apps"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/13275745",
+        "title": "Use Gemini Apps"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/13594961",
+        "title": "Gemini Apps Privacy Hub"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/13666746",
+        "title": "Find & manage your recent chats in Gemini Apps"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/13695044?co=GENIE.Platform%3DAndroid&hl=en",
+        "title": "Android phone & tablet"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/13695044?co=GENIE.Platform%3DDesktop&hl=en",
+        "title": "Computer"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/13695044?co=GENIE.Platform%3DiOS&hl=en",
+        "title": "iPhone & iPad"
+      },
+      {
+        "url": "https://support.google.com/gemini/community?hl=en&help_center_link=CMTwwwYSRlVzZSAmYW1wOyBtYW5hZ2UgQ29ubmVjdGVkIEFwcHMgaW4gR2VtaW5pIC0gQW5kcm9pZCBwaG9uZSAmYW1wOyB0YWJsZXQ",
+        "title": "Post to the help community    Get answers from community members"
+      },
+      {
+        "url": "https://support.google.com/gemini?hl=en#topic=13194540",
+        "title": "Help"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/13275745?hl=en&ref_topic=13194540",
+        "title": "Use Gemini Apps"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/13278668?hl=en&ref_topic=13194540",
+        "title": "What you need to sign in to Gemini Apps"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/18648722?hl=en&ref_topic=13194540",
+        "title": "About Gemini models"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/16275805?hl=en&ref_topic=13194540",
+        "title": "Gemini Apps limits & feature availability"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/13666746?hl=en&ref_topic=13194540",
+        "title": "Find & manage your recent chats in Gemini Apps"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/13695044?co=GENIE.Platform%3DAndroid&hl=en",
+        "title": "Use & manage Connected Apps in Gemini"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/14517446?hl=en&ref_topic=13194540",
+        "title": "Manage your Google AI plan from Gemini Apps"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/13575153?hl=en&ref_topic=13194540",
+        "title": "Where you can use the Gemini web app"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/14903178?hl=en&ref_topic=13194540",
+        "title": "Upload & analyze files in Gemini Apps"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/16972047?hl=en&ref_topic=13194540",
+        "title": "Organize your projects with notebooks in Gemini Apps"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/16316416?hl=en&ref_topic=13194540",
+        "title": "Schedules in Gemini Apps"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/16345172?hl=en&ref_topic=13194540",
+        "title": "Use Deep Think in Gemini Apps"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/16722517?hl=en&ref_topic=13194540",
+        "title": "Verify AI-generated images, videos, and audio"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/16868299?hl=en&ref_topic=13194540",
+        "title": "Import from other AI platforms to Gemini Apps"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/13954172?hl=en&ref_topic=13194540",
+        "title": "Learn about generative AI"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15216790?hl=en&ref_topic=13194540",
+        "title": "Learn in creative ways with generative AI"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/16109150?hl=en&ref_topic=13194540",
+        "title": "Guide your child's Gemini Apps experience"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/17011627?hl=en&ref_topic=13194540",
+        "title": "Use the Gemini app on Mac"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/18263854?hl=en&ref_topic=13194540",
+        "title": "Use the Gemini app for Windows"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/18736938?hl=en&ref_topic=13194540",
+        "title": "Customize your Gemini chats experience"
+      },
+      {
+        "url": "https://www.google.com/intl/en/privacy.html",
+        "title": "Privacy Policy"
+      },
+      {
+        "url": "https://www.google.com/accounts/TOS",
+        "title": "Terms of Service"
+      }
+    ]
+  },
+  {
+    "name": "availability",
+    "url": "https://support.google.com/gemini/table/17434654",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "final_url": "https://support.google.com/gemini/table/17434654",
+    "raw_work_path": "work/gemini-controls-deepening/raw/availability.html",
+    "raw_sha256": "4037c9f2f88cdfa1e8af0d4e3b2d30853ea80ffd8f49d27fc175f7087a730f4d",
+    "bytes": 1533220,
+    "text_work_path": "work/gemini-controls-deepening/raw/availability.txt",
+    "text_sha256": "a476e56de237c5746a4341f4bd9b90b5f2b035e876bc4580709d0700acfdb346",
+    "headings": [
+      [
+        "h1",
+        "Check the availability & requirements of Connected Apps in Gemini Apps"
+      ],
+      [
+        "h2",
+        "How your data is handled"
+      ],
+      [
+        "h2",
+        "Related resources"
+      ],
+      [
+        "h2",
+        "Help"
+      ]
+    ],
+    "links": [
+      {
+        "url": "https://support.google.com/gemini/table/17434654#hcfe-content",
+        "title": "Skip to main content"
+      },
+      {
+        "url": "https://support.google.com/gemini",
+        "title": "Gemini Apps Help"
+      },
+      {
+        "url": "https://accounts.google.com/ServiceLogin?hl=en&passive=true&continue=http://support.google.com/gemini/table/17434654&ec=GAZAdQ",
+        "title": "Sign in"
+      },
+      {
+        "url": "https://support.google.com/",
+        "title": "Google Help"
+      },
+      {
+        "url": "https://support.google.com/gemini/?hl=en",
+        "title": "Help Center"
+      },
+      {
+        "url": "https://support.google.com/gemini/community?hl=en",
+        "title": "Community"
+      },
+      {
+        "url": "https://gemini.google.com/",
+        "title": "Gemini Apps"
+      },
+      {
+        "url": "https://www.google.com/intl/en/privacy.html",
+        "title": "Privacy Policy"
+      },
+      {
+        "url": "https://www.google.com/accounts/TOS",
+        "title": "Terms of Service"
+      },
+      {
+        "url": "https://support.google.com/gemini/?hl=en",
+        "title": "Help Center"
+      },
+      {
+        "url": "https://support.google.com/gemini/community?hl=en",
+        "title": "Community"
+      },
+      {
+        "url": "https://support.google.com/gemini/announcements/15294201",
+        "title": "Privacy Hub"
+      },
+      {
+        "url": "https://gemini.google.com/",
+        "title": "Gemini Apps"
+      },
+      {
+        "url": "https://gemini.google.com",
+        "title": "gemini.google.com"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/17100956",
+        "title": "Learn more"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/17100956#reqs",
+        "title": "Review all requirements"
+      },
+      {
+        "url": "https://gemini.google.com",
+        "title": "gemini.google.com"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15574940",
+        "title": "Learn more"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/14579026#countries",
+        "title": "All countries and territories"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/14579026#languages",
+        "title": "All languages supported"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15574940#reqs",
+        "title": "Review all requirements"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15575143",
+        "title": "Learn more"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/14579026#countries",
+        "title": "All countries and territories"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/14579026#languages",
+        "title": "All languages supported"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15575143#reqs",
+        "title": "Review all requirements"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15574928",
+        "title": "Learn more"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/14579026#languages",
+        "title": "All languages supported"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15574928#reqs",
+        "title": "Review all requirements"
+      },
+      {
+        "url": "https://gemini.google.com",
+        "title": "gemini.google.com"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/17081444",
+        "title": "Learn more"
+      },
+      {
+        "url": "https://gemini.google.com",
+        "title": "gemini.google.com"
+      },
+      {
+        "url": "https://gemini.google.com",
+        "title": "gemini.google.com"
+      },
+      {
+        "url": "https://gemini.google.com",
+        "title": "gemini.google.com"
+      },
+      {
+        "url": "https://gemini.google.com",
+        "title": "gemini.google.com"
+      },
+      {
+        "url": "https://gemini.google.com",
+        "title": "gemini.google.com"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/17081444",
+        "title": "Learn more"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/17081444#reqs",
+        "title": "Review all requirements"
+      },
+      {
+        "url": "https://gemini.google.com",
+        "title": "gemini.google.com"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15235441",
+        "title": "Learn more"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/14579026#countries",
+        "title": "All countries and territories"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/14579026#languages",
+        "title": "All languages supported"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15335456",
+        "title": "Learn more"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/14579026#languages",
+        "title": "All languages supported"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15335456#reqs",
+        "title": "Review all requirements"
+      },
+      {
+        "url": "https://gemini.google.com",
+        "title": "gemini.google.com"
+      },
+      {
+        "url": "https://gemini.google.com",
+        "title": "gemini.google.com"
+      },
+      {
+        "url": "https://gemini.google.com",
+        "title": "gemini.google.com"
+      },
+      {
+        "url": "https://gemini.google.com",
+        "title": "gemini.google.com"
+      },
+      {
+        "url": "https://gemini.google.com",
+        "title": "gemini.google.com"
+      },
+      {
+        "url": "https://support.google.com/android/answer/18132896",
+        "title": "Learn more"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/14579026#countries",
+        "title": "All countries and territories"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/14579026#languages",
+        "title": "All languages supported"
+      },
+      {
+        "url": "https://support.google.com/android/answer/18132896",
+        "title": "Review all requirements"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/17131257",
+        "title": "Learn more"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/14579026#languages",
+        "title": "All languages supported"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/17131257#reqs",
+        "title": "Review all requirements"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/17090317",
+        "title": "Learn more"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/17090317#reqs",
+        "title": "Review all requirements"
+      },
+      {
+        "url": "https://gemini.google.com",
+        "title": "gemini.google.com"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/17090712",
+        "title": "Learn more"
+      },
+      {
+        "url": "https://gemini.google.com",
+        "title": "gemini.google.com"
+      },
+      {
+        "url": "https://gemini.google.com",
+        "title": "gemini.google.com"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/17187706",
+        "title": "Learn more"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/17187706#reqs",
+        "title": "Review all requirements"
+      },
+      {
+        "url": "https://gemini.google.com",
+        "title": "gemini.google.com"
+      },
+      {
+        "url": "https://gemini.google.com",
+        "title": "gemini.google.com"
+      },
+      {
+        "url": "https://gemini.google.com",
+        "title": "gemini.google.com"
+      },
+      {
+        "url": "https://gemini.google.com",
+        "title": "gemini.google.com"
+      },
+      {
+        "url": "https://gemini.google.com",
+        "title": "gemini.google.com"
+      },
+      {
+        "url": "https://gemini.google.com",
+        "title": "gemini.google.com"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15734842",
+        "title": "Learn more"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15734842#gp_countries",
+        "title": "Specific countries and territories"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/13575153",
+        "title": "All languages supported"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15734842#reqs",
+        "title": "Review all requirements"
+      },
+      {
+        "url": "https://gemini.google.com",
+        "title": "gemini.google.com"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15300097",
+        "title": "Learn more"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15300097#reqs",
+        "title": "Review all requirements"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15300097",
+        "title": "Learn more"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15300097#reqs",
+        "title": "Review all requirements"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15734842?co=GENIE.Platform%3DAndroid&oco=1#connect_ss_gallery",
+        "title": "Learn more"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/14579026#languages",
+        "title": "All languages supported"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15734842?co=GENIE.Platform%3DAndroid&oco=1#reqs&connect_ss_gallery",
+        "title": "Review all requirements"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15300097",
+        "title": "Learn more"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/14579026#languages",
+        "title": "All languages supported"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15300097#reqs",
+        "title": "Review all requirements"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15734842?co=GENIE.Platform%3DAndroid&oco=1",
+        "title": "Learn more"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15734842?co=GENIE.Platform%3DAndroid&oco=1#reqs&connect_tecno_ai_gallery",
+        "title": "Review all requirements"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15734842?co=GENIE.Platform%3DAndroid&oco=1",
+        "title": "Learn more"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15734842?co=GENIE.Platform%3DAndroid&oco=1#reqs&connect_xiaomi_gallery",
+        "title": "Review all requirements"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15237118",
+        "title": "Learn more"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/13575153",
+        "title": "All languages supported"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15237118#reqs",
+        "title": "Review all requirements"
+      },
+      {
+        "url": "https://gemini.google.com",
+        "title": "gemini.google.com"
+      },
+      {
+        "url": "https://gemini.google.com",
+        "title": "gemini.google.com"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/17211088",
+        "title": "Learn more"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/17211088#reqs",
+        "title": "Review all requirements"
+      },
+      {
+        "url": "https://gemini.google.com",
+        "title": "gemini.google.com"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/16972047",
+        "title": "Learn more"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/13575153",
+        "title": "All languages supported"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/16972047#reqs",
+        "title": "Review all requirements"
+      },
+      {
+        "url": "https://gemini.google.com",
+        "title": "gemini.google.com"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/16176929",
+        "title": "Learn more"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/13575153",
+        "title": "All languages supported"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/16176929#reqs",
+        "title": "Review all requirements"
+      },
+      {
+        "url": "https://gemini.google.com",
+        "title": "gemini.google.com"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/17266651",
+        "title": "Learn more"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/17266651#reqs",
+        "title": "Review all requirements"
+      },
+      {
+        "url": "https://gemini.google.com",
+        "title": "gemini.google.com"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/17142585",
+        "title": "Learn more"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/13575153",
+        "title": "All languages supported"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/17142585#reqs",
+        "title": "Review all requirements"
+      },
+      {
+        "url": "https://gemini.google.com",
+        "title": "gemini.google.com"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/16865250",
+        "title": "Learn more"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/16865250#reqs",
+        "title": "Review all requirements"
+      },
+      {
+        "url": "https://gemini.google.com",
+        "title": "gemini.google.com"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15229592",
+        "title": "Learn more"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/13575153",
+        "title": "All languages supported"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15229592#reqs",
+        "title": "Review all requirements"
+      },
+      {
+        "url": "https://gemini.google.com",
+        "title": "gemini.google.com"
+      },
+      {
+        "url": "https://gemini.google.com",
+        "title": "gemini.google.com"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15305236?co=GENIE.Platform%3DAndroid#honor_calendar",
+        "title": "Learn more"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/14579026#languages",
+        "title": "All languages supported"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15305236?co=GENIE.Platform%3DAndroid#reqs&honor_calendar",
+        "title": "Review all requirements"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15230597?co=GENIE.Platform%3DAndroid#connect_honor_notes",
+        "title": "Learn more"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/14579026#languages",
+        "title": "All languages supported"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15230597?co=GENIE.Platform%3DAndroid#reqs&connect_honor_notes",
+        "title": "Review all requirements"
+      },
+      {
+        "url": "https://gemini.google.com",
+        "title": "gemini.google.com"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15230597?co=GENIE.Platform%3DAndroid#connect_lenovo_notes",
+        "title": "Learn more"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15230597?co=GENIE.Platform%3DAndroid#reqs&connect_lenovo_notes",
+        "title": "Review all requirements"
+      },
+      {
+        "url": "https://gemini.google.com",
+        "title": "gemini.google.com"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/16675209",
+        "title": "Learn more"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/14579026#languages",
+        "title": "All languages supported"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/16675209#reqs",
+        "title": "Review all requirements"
+      },
+      {
+        "url": "https://gemini.google.com",
+        "title": "gemini.google.com"
+      },
+      {
+        "url": "https://gemini.google.com",
+        "title": "gemini.google.com"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15230597?co=GENIE.Platform%3DAndroid#connect_oneplus_notes",
+        "title": "Learn more"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/14579026#languages",
+        "title": "All languages supported"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15230597?co=GENIE.Platform%3DAndroid#reqs&connect_oneplus_notes",
+        "title": "Review all requirements"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15305236?co=GENIE.Platform%3DAndroid#oppo_calendar",
+        "title": "Learn more"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/14579026#languages",
+        "title": "All languages supported"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15305236?co=GENIE.Platform%3DAndroid#reqs&oppo_calendar",
+        "title": "Review all requirements"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15230597?co=GENIE.Platform%3DAndroid#oppo_notes",
+        "title": "Learn more"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/14579026#languages",
+        "title": "All languages supported"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15230597?co=GENIE.Platform%3DAndroid#reqs&oppo_notes",
+        "title": "Review all requirements"
+      },
+      {
+        "url": "https://gemini.google.com",
+        "title": "gemini.google.com"
+      },
+      {
+        "url": "https://gemini.google.com",
+        "title": "gemini.google.com"
+      },
+      {
+        "url": "https://gemini.google.com",
+        "title": "gemini.google.com"
+      },
+      {
+        "url": "https://gemini.google.com",
+        "title": "gemini.google.com"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15305236?co=GENIE.Platform%3DAndroid#connect_samsung_calendar",
+        "title": "Learn more"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/14579026#languages",
+        "title": "All languages supported"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15305236?co=GENIE.Platform%3DAndroid#reqs&connect_samsung_calendar",
+        "title": "Review all requirements"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15230597?co=GENIE.Platform%3DAndroid#connect_samsung_notes",
+        "title": "Learn more"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/14579026#languages",
+        "title": "All languages supported"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15230597?co=GENIE.Platform%3DAndroid#reqs&connect_samsung_notes",
+        "title": "Review all requirements"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15230285?co=GENIE.Platform%3DAndroid#connect_samsung_reminder",
+        "title": "Learn more"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/14579026#languages",
+        "title": "All languages supported"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15230285?co=GENIE.Platform%3DAndroid#reqs&connect_samsung_reminder",
+        "title": "Review all requirements"
+      },
+      {
+        "url": "https://gemini.google.com",
+        "title": "gemini.google.com"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15305236?co=GENIE.Platform%3DAndroid#connect_tecno_calendar",
+        "title": "Learn more"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/14579026#languages",
+        "title": "All languages supported"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15305236?co=GENIE.Platform%3DAndroid#reqs&connect_tecno_calendar",
+        "title": "Review all requirements"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15230597?co=GENIE.Platform%3DAndroid#connect_tecno_notepad",
+        "title": "Learn more"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/14579026#languages",
+        "title": "All languages supported"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15230597?co=GENIE.Platform%3DAndroid#reqs&connect_tecno_notepad",
+        "title": "Review all requirements"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15230597?co=GENIE.Platform%3DAndroid#connect_vivo_notes",
+        "title": "Learn more"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/14579026#languages",
+        "title": "All languages supported"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15230597?co=GENIE.Platform%3DAndroid#reqs&connect_vivo_notes",
+        "title": "Review all requirements"
+      },
+      {
+        "url": "https://gemini.google.com",
+        "title": "gemini.google.com"
+      },
+      {
+        "url": "https://gemini.google.com",
+        "title": "gemini.google.com"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15305236?co=GENIE.Platform%3DAndroid#connect_xiaomi_calendar",
+        "title": "Learn more"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/14579026#languages",
+        "title": "All languages supported"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15305236?co=GENIE.Platform%3DAndroid#reqs&connect_xiaomi_calendar",
+        "title": "Review all requirements"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15230597?co=GENIE.Platform%3DAndroid#connect_xiaomi_notes",
+        "title": "Learn more"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/14579026#languages",
+        "title": "All languages supported"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15230597?co=GENIE.Platform%3DAndroid#reqs&connect_xiaomi_notes",
+        "title": "Review all requirements"
+      },
+      {
+        "url": "https://gemini.google.com",
+        "title": "gemini.google.com"
+      },
+      {
+        "url": "https://gemini.google.com",
+        "title": "gemini.google.com"
+      },
+      {
+        "url": "https://gemini.google.com",
+        "title": "gemini.google.com"
+      },
+      {
+        "url": "https://gemini.google.com",
+        "title": "gemini.google.com"
+      },
+      {
+        "url": "https://gemini.google.com",
+        "title": "gemini.google.com"
+      },
+      {
+        "url": "https://gemini.google.com",
+        "title": "gemini.google.com"
+      },
+      {
+        "url": "https://gemini.google.com",
+        "title": "gemini.google.com"
+      },
+      {
+        "url": "https://gemini.google.com",
+        "title": "gemini.google.com"
+      },
+      {
+        "url": "https://gemini.google.com",
+        "title": "gemini.google.com"
+      },
+      {
+        "url": "https://gemini.google.com",
+        "title": "gemini.google.com"
+      },
+      {
+        "url": "https://gemini.google.com",
+        "title": "gemini.google.com"
+      },
+      {
+        "url": "https://gemini.google.com",
+        "title": "gemini.google.com"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/17256222",
+        "title": "Learn more"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/17256222#reqs",
+        "title": "Review all requirements"
+      },
+      {
+        "url": "https://gemini.google.com",
+        "title": "gemini.google.com"
+      },
+      {
+        "url": "https://www.google.com/search?q=&hl=en",
+        "title": "Google Web Search"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/13695044#turn_on_off",
+        "title": "Learn how to manage apps in Connected Apps settings"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/13695044#browse",
+        "title": "Learn how to browse available apps"
+      },
+      {
+        "url": "https://support.google.com/accounts/answer/13533235#link_account",
+        "title": "Learn how to manage third-party connections"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/13594961#data_exchange",
+        "title": "how your data is handled when Gemini works with Connected Apps"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/13695044",
+        "title": "Gemini Apps Privacy Hub"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/13695044",
+        "title": "Use & manage Connected Apps in Gemini"
+      },
+      {
+        "url": "https://support.google.com/gemini?hl=en#topic=15157994",
+        "title": "Help"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/13695044?hl=en&ref_topic=15157994",
+        "title": "Use & manage Connected Apps in Gemini"
+      },
+      {
+        "url": "https://support.google.com/gemini/table/17434654",
+        "title": "Check the availability & requirements of Connected Apps in Gemini Apps"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15229592?hl=en&ref_topic=15157994",
+        "title": "Connect the Google Workspace app to Gemini Apps"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/16176929?hl=en&ref_topic=15157994",
+        "title": "Import a GitHub repository & ask about it in the Gemini web app"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15574928?hl=en&ref_topic=15157994",
+        "title": "Make calls & send messages on WhatsApp with the Gemini mobile app on Android"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15575143?hl=en&ref_topic=15157994",
+        "title": "Make calls with the Gemini mobile app on Android"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15335456?hl=en&ref_topic=15157994",
+        "title": "Control your smart home devices with the Gemini mobile app"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15305236?hl=en&ref_topic=15157994",
+        "title": "Create & manage your calendar events with Gemini Apps"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/17209137?hl=en&ref_topic=15157994",
+        "title": "Connect & manage custom apps for Gemini Apps"
+      },
+      {
+        "url": "https://support.google.com/gemini/topic/16622650?hl=en&ref_topic=15157994",
+        "title": "Explore more Connected Apps & other integrated services"
+      },
+      {
+        "url": "https://www.google.com/intl/en/privacy.html",
+        "title": "Privacy Policy"
+      },
+      {
+        "url": "https://www.google.com/accounts/TOS",
+        "title": "Terms of Service"
+      }
+    ]
+  },
+  {
+    "name": "custom",
+    "url": "https://support.google.com/gemini/answer/17209137",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "final_url": "https://support.google.com/gemini/answer/17209137",
+    "raw_work_path": "work/gemini-controls-deepening/raw/custom.html",
+    "raw_sha256": "65170def10f049d707a61a05a723b81a982a0dc6295a50b6715e98c5a316366b",
+    "bytes": 1629315,
+    "text_work_path": "work/gemini-controls-deepening/raw/custom.txt",
+    "text_sha256": "e5951e8e4a998dda9b6e9ffcf7300b96c36ab3d6a50564f5cd90e93523595847",
+    "headings": [
+      [
+        "h1",
+        "Connect & manage custom apps for Gemini Apps"
+      ],
+      [
+        "h2",
+        "What you need"
+      ],
+      [
+        "h2",
+        "Before you connect a custom app"
+      ],
+      [
+        "h2",
+        "Connect a custom app"
+      ],
+      [
+        "h2",
+        "Disconnect a custom app"
+      ],
+      [
+        "h2",
+        "Unlink an MCP server from your Google Account"
+      ],
+      [
+        "h2",
+        "Remove a custom connected app"
+      ],
+      [
+        "h2",
+        "Understand risks of connecting custom Connected Apps"
+      ],
+      [
+        "h2",
+        "What you can do to protect your data"
+      ],
+      [
+        "h2",
+        "Related resources"
+      ],
+      [
+        "h2",
+        "Need more help?"
+      ],
+      [
+        "h3",
+        "Try these next steps:"
+      ],
+      [
+        "h2",
+        "Help"
+      ]
+    ],
+    "links": [
+      {
+        "url": "https://support.google.com/gemini/answer/17209137#hcfe-content",
+        "title": "Skip to main content"
+      },
+      {
+        "url": "https://support.google.com/gemini",
+        "title": "Gemini Apps Help"
+      },
+      {
+        "url": "https://accounts.google.com/ServiceLogin?hl=en&passive=true&continue=http://support.google.com/gemini/answer/17209137&ec=GAZAdQ",
+        "title": "Sign in"
+      },
+      {
+        "url": "https://support.google.com/",
+        "title": "Google Help"
+      },
+      {
+        "url": "https://support.google.com/gemini/?hl=en",
+        "title": "Help Center"
+      },
+      {
+        "url": "https://support.google.com/gemini/community?hl=en&help_center_link=CLGumggSO0Nvbm5lY3QgJmFtcDsgbWFuYWdlIGN1c3RvbSBhcHBzIGZvciBHZW1pbmkgQXBwcyAtIENvbXB1dGVy",
+        "title": "Community"
+      },
+      {
+        "url": "https://gemini.google.com/",
+        "title": "Gemini Apps"
+      },
+      {
+        "url": "https://www.google.com/intl/en/privacy.html",
+        "title": "Privacy Policy"
+      },
+      {
+        "url": "https://www.google.com/accounts/TOS",
+        "title": "Terms of Service"
+      },
+      {
+        "url": "https://support.google.com/gemini/?hl=en",
+        "title": "Help Center"
+      },
+      {
+        "url": "https://support.google.com/gemini/community?hl=en&help_center_link=CLGumggSO0Nvbm5lY3QgJmFtcDsgbWFuYWdlIGN1c3RvbSBhcHBzIGZvciBHZW1pbmkgQXBwcyAtIENvbXB1dGVy",
+        "title": "Community"
+      },
+      {
+        "url": "https://support.google.com/gemini/announcements/15294201",
+        "title": "Privacy Hub"
+      },
+      {
+        "url": "https://gemini.google.com/",
+        "title": "Gemini Apps"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/13278668",
+        "title": "Learn how to sign in to Gemini Apps"
+      },
+      {
+        "url": "https://myactivity.google.com/product/gemini?utm_source=help",
+        "title": "Keep Activity"
+      },
+      {
+        "url": "https://gemini.google.com",
+        "title": "gemini.google.com"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/17209137#risks",
+        "title": "Learn more about the risks of connecting custom apps"
+      },
+      {
+        "url": "https://gemini.google.com/apps",
+        "title": "Connected Apps settings"
+      },
+      {
+        "url": "https://gemini.google.com",
+        "title": "gemini.google.com"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/16598406",
+        "title": "Learn about Personal Intelligence and Connected Apps"
+      },
+      {
+        "url": "https://gemini.google.com",
+        "title": "gemini.google.com"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/16598406",
+        "title": "Learn about Personal Intelligence and Connected Apps"
+      },
+      {
+        "url": "https://gemini.google.com/apps",
+        "title": "Connected Apps settings"
+      },
+      {
+        "url": "https://gemini.google.com",
+        "title": "gemini.google.com"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/16598406",
+        "title": "Learn about Personal Intelligence and Connected Apps"
+      },
+      {
+        "url": "https://myaccount.google.com/linkedapps",
+        "title": "Google Account’s Linked apps page"
+      },
+      {
+        "url": "https://support.google.com/accounts/answer/13533235#link_account",
+        "title": "Learn how to manage linked apps"
+      },
+      {
+        "url": "https://gemini.google.com",
+        "title": "gemini.google.com"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/16598406",
+        "title": "Learn about Personal Intelligence and Connected Apps"
+      },
+      {
+        "url": "https://support.google.com/accounts/answer/13867826",
+        "title": "Learn how Google helps you share data safely using Google Account Linking"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/13594961#extensions",
+        "title": "Gemini Apps Privacy Hub"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/13594961",
+        "title": "Gemini Apps Privacy Hub"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/17094507",
+        "title": "Manage your tasks & workflows in Gemini Apps"
+      },
+      {
+        "url": "https://support.google.com/accounts/answer/13533235",
+        "title": "Manage links between your Google Account & apps from other developers"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/13695044",
+        "title": "Use & manage Connected Apps in Gemini"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/17209137?co=GENIE.Platform%3DDesktop",
+        "title": "Computer"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/17209137?co=GENIE.Platform%3DAndroid",
+        "title": "Android phone & tablet"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/17209137?co=GENIE.Platform%3DiOS",
+        "title": "iPhone & iPad"
+      },
+      {
+        "url": "https://support.google.com/gemini/community?hl=en&help_center_link=CLGumggSO0Nvbm5lY3QgJmFtcDsgbWFuYWdlIGN1c3RvbSBhcHBzIGZvciBHZW1pbmkgQXBwcyAtIENvbXB1dGVy",
+        "title": "Post to the help community    Get answers from community members"
+      },
+      {
+        "url": "https://support.google.com/gemini?hl=en#topic=15157994",
+        "title": "Help"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/13695044?hl=en&ref_topic=15157994",
+        "title": "Use & manage Connected Apps in Gemini"
+      },
+      {
+        "url": "https://support.google.com/gemini/table/17434654?hl=en&ref_topic=15157994",
+        "title": "Check the availability & requirements of Connected Apps in Gemini Apps"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15229592?hl=en&ref_topic=15157994",
+        "title": "Connect the Google Workspace app to Gemini Apps"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/16176929?hl=en&ref_topic=15157994",
+        "title": "Import a GitHub repository & ask about it in the Gemini web app"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15574928?hl=en&ref_topic=15157994",
+        "title": "Make calls & send messages on WhatsApp with the Gemini mobile app on Android"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15575143?hl=en&ref_topic=15157994",
+        "title": "Make calls with the Gemini mobile app on Android"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15335456?hl=en&ref_topic=15157994",
+        "title": "Control your smart home devices with the Gemini mobile app"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15305236?hl=en&ref_topic=15157994",
+        "title": "Create & manage your calendar events with Gemini Apps"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/17209137",
+        "title": "Connect & manage custom apps for Gemini Apps"
+      },
+      {
+        "url": "https://support.google.com/gemini/topic/16622650?hl=en&ref_topic=15157994",
+        "title": "Explore more Connected Apps & other integrated services"
+      },
+      {
+        "url": "https://www.google.com/intl/en/privacy.html",
+        "title": "Privacy Policy"
+      },
+      {
+        "url": "https://www.google.com/accounts/TOS",
+        "title": "Terms of Service"
+      }
+    ]
+  },
+  {
+    "name": "phone",
+    "url": "https://support.google.com/gemini/answer/15575143",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "final_url": "https://support.google.com/gemini/answer/15575143",
+    "raw_work_path": "work/gemini-controls-deepening/raw/phone.html",
+    "raw_sha256": "69979962f1e09f90c2b5d8f5435fc5966cf41f8cbc731423c187cf3130f061ad",
+    "bytes": 1630248,
+    "text_work_path": "work/gemini-controls-deepening/raw/phone.txt",
+    "text_sha256": "10352e29949c6c8845996ed576190f5d6f7acc4d44b48fade0c327edab50e62f",
+    "headings": [
+      [
+        "h1",
+        "Make calls with the Gemini mobile app on Android"
+      ],
+      [
+        "h2",
+        "What you need"
+      ],
+      [
+        "h2",
+        "Connect the Phone app"
+      ],
+      [
+        "h2",
+        "Make a phone call"
+      ],
+      [
+        "h2",
+        "Manage settings"
+      ],
+      [
+        "h4",
+        "Allow calls and text messages without unlocking your phone"
+      ],
+      [
+        "h2",
+        "What Gemini can’t do with the Phone app"
+      ],
+      [
+        "h2",
+        "About your data & communication apps"
+      ],
+      [
+        "h2",
+        "How your data is handled"
+      ],
+      [
+        "h2",
+        "Related resources"
+      ],
+      [
+        "h2",
+        "Need more help?"
+      ],
+      [
+        "h3",
+        "Try these next steps:"
+      ],
+      [
+        "h2",
+        "Help"
+      ]
+    ],
+    "links": [
+      {
+        "url": "https://support.google.com/gemini/answer/15575143#hcfe-content",
+        "title": "Skip to main content"
+      },
+      {
+        "url": "https://support.google.com/gemini",
+        "title": "Gemini Apps Help"
+      },
+      {
+        "url": "https://accounts.google.com/ServiceLogin?hl=en&passive=true&continue=http://support.google.com/gemini/answer/15575143&ec=GAZAdQ",
+        "title": "Sign in"
+      },
+      {
+        "url": "https://support.google.com/",
+        "title": "Google Help"
+      },
+      {
+        "url": "https://support.google.com/gemini/?hl=en",
+        "title": "Help Center"
+      },
+      {
+        "url": "https://support.google.com/gemini/community?hl=en&help_center_link=COfQtgcSME1ha2UgY2FsbHMgd2l0aCB0aGUgR2VtaW5pIG1vYmlsZSBhcHAgb24gQW5kcm9pZA",
+        "title": "Community"
+      },
+      {
+        "url": "https://gemini.google.com/",
+        "title": "Gemini Apps"
+      },
+      {
+        "url": "https://www.google.com/intl/en/privacy.html",
+        "title": "Privacy Policy"
+      },
+      {
+        "url": "https://www.google.com/accounts/TOS",
+        "title": "Terms of Service"
+      },
+      {
+        "url": "https://support.google.com/gemini/?hl=en",
+        "title": "Help Center"
+      },
+      {
+        "url": "https://support.google.com/gemini/community?hl=en&help_center_link=COfQtgcSME1ha2UgY2FsbHMgd2l0aCB0aGUgR2VtaW5pIG1vYmlsZSBhcHAgb24gQW5kcm9pZA",
+        "title": "Community"
+      },
+      {
+        "url": "https://support.google.com/gemini/announcements/15294201",
+        "title": "Privacy Hub"
+      },
+      {
+        "url": "https://gemini.google.com/",
+        "title": "Gemini Apps"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/14554984",
+        "title": "Learn more about the Gemini mobile app"
+      },
+      {
+        "url": "https://myactivity.google.com/devicecontacts?utm_source=help",
+        "title": "Save contact info from your signed-in devices"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15575143#sync_device_contacts",
+        "title": "Learn how to sync your device contacts to your Google Account"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15575143#manage_app_permissions",
+        "title": "Learn how to manage Android app permissions"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/14579631#ga_powers",
+        "title": "features powered directly by Google Assistant"
+      },
+      {
+        "url": "https://myactivity.google.com/product/gemini?utm_source=help",
+        "title": "Keep Activity"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/13695044?co=GENIE.Platform%3DAndroid#turn_on_off_gma",
+        "title": "Learn how to manage Connected Apps in Gemini"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/14579631#vm",
+        "title": "check if 'Hey Google' and Voice Match are set up"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15575143#check_default_app",
+        "title": "Learn how to change your default phone app"
+      },
+      {
+        "url": "https://support.google.com/accounts/answer/6135999",
+        "title": "Learn how to manage contact info from your devices"
+      },
+      {
+        "url": "https://myactivity.google.com/devicecontacts?utm_source=help",
+        "title": "Go to setting"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/14579631#GA_in_Gemini",
+        "title": "Learn more about Google Assistant features in your Gemini mobile app"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/13594961#comms_ext",
+        "title": "Learn more about your data and communication apps"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/13594961#data_exchange",
+        "title": "how your data is handled when Gemini works with Connected Apps"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/13594961",
+        "title": "Gemini Apps Privacy Hub"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/13695044",
+        "title": "Use & manage Connected Apps in Gemini"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15574940",
+        "title": "Send text messages with the Gemini mobile app on Android"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15574928",
+        "title": "Make calls & send messages on WhatsApp with the Gemini mobile app on Android"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/14554984",
+        "title": "Get started with the Gemini mobile app"
+      },
+      {
+        "url": "https://support.google.com/gemini/community?hl=en&help_center_link=COfQtgcSME1ha2UgY2FsbHMgd2l0aCB0aGUgR2VtaW5pIG1vYmlsZSBhcHAgb24gQW5kcm9pZA",
+        "title": "Post to the help community    Get answers from community members"
+      },
+      {
+        "url": "https://support.google.com/gemini?hl=en#topic=15157994",
+        "title": "Help"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/13695044?hl=en&ref_topic=15157994",
+        "title": "Use & manage Connected Apps in Gemini"
+      },
+      {
+        "url": "https://support.google.com/gemini/table/17434654?hl=en&ref_topic=15157994",
+        "title": "Check the availability & requirements of Connected Apps in Gemini Apps"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15229592?hl=en&ref_topic=15157994",
+        "title": "Connect the Google Workspace app to Gemini Apps"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/16176929?hl=en&ref_topic=15157994",
+        "title": "Import a GitHub repository & ask about it in the Gemini web app"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15574928?hl=en&ref_topic=15157994",
+        "title": "Make calls & send messages on WhatsApp with the Gemini mobile app on Android"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15575143",
+        "title": "Make calls with the Gemini mobile app on Android"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15335456?hl=en&ref_topic=15157994",
+        "title": "Control your smart home devices with the Gemini mobile app"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15305236?hl=en&ref_topic=15157994",
+        "title": "Create & manage your calendar events with Gemini Apps"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/17209137?hl=en&ref_topic=15157994",
+        "title": "Connect & manage custom apps for Gemini Apps"
+      },
+      {
+        "url": "https://support.google.com/gemini/topic/16622650?hl=en&ref_topic=15157994",
+        "title": "Explore more Connected Apps & other integrated services"
+      },
+      {
+        "url": "https://www.google.com/intl/en/privacy.html",
+        "title": "Privacy Policy"
+      },
+      {
+        "url": "https://www.google.com/accounts/TOS",
+        "title": "Terms of Service"
+      }
+    ]
+  },
+  {
+    "name": "messages",
+    "url": "https://support.google.com/gemini/answer/15574940",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "final_url": "https://support.google.com/gemini/answer/15574940",
+    "raw_work_path": "work/gemini-controls-deepening/raw/messages.html",
+    "raw_sha256": "d5e25233250c66885c7d9310b52be00bdc5b3f3648473ff8478d120ea249f031",
+    "bytes": 1628283,
+    "text_work_path": "work/gemini-controls-deepening/raw/messages.txt",
+    "text_sha256": "04dab2234beb79d3397166211f6cb3b18f8fd74efd2141a421ac2162c8eae187",
+    "headings": [
+      [
+        "h1",
+        "Send messages with the Gemini mobile app on Android"
+      ],
+      [
+        "h2",
+        "What you need"
+      ],
+      [
+        "h2",
+        "Connect the Messages app in Gemini"
+      ],
+      [
+        "h3",
+        "Example"
+      ],
+      [
+        "h2",
+        "Send a message"
+      ],
+      [
+        "h2",
+        "Add an image to your message"
+      ],
+      [
+        "h2",
+        "Manage settings"
+      ],
+      [
+        "h2",
+        "What Gemini can’t do with the Messages app"
+      ],
+      [
+        "h2",
+        "About your data & communication apps"
+      ],
+      [
+        "h2",
+        "How your data is handled"
+      ],
+      [
+        "h2",
+        "Related resources"
+      ],
+      [
+        "h2",
+        "Need more help?"
+      ],
+      [
+        "h3",
+        "Try these next steps:"
+      ],
+      [
+        "h2",
+        "Communication"
+      ]
+    ],
+    "links": [
+      {
+        "url": "https://support.google.com/gemini/answer/15574940#hcfe-content",
+        "title": "Skip to main content"
+      },
+      {
+        "url": "https://support.google.com/gemini",
+        "title": "Gemini Apps Help"
+      },
+      {
+        "url": "https://accounts.google.com/ServiceLogin?hl=en&passive=true&continue=http://support.google.com/gemini/answer/15574940&ec=GAZAdQ",
+        "title": "Sign in"
+      },
+      {
+        "url": "https://support.google.com/",
+        "title": "Google Help"
+      },
+      {
+        "url": "https://support.google.com/gemini/?hl=en",
+        "title": "Help Center"
+      },
+      {
+        "url": "https://support.google.com/gemini/community?hl=en&help_center_link=CJzPtgcSM1NlbmQgbWVzc2FnZXMgd2l0aCB0aGUgR2VtaW5pIG1vYmlsZSBhcHAgb24gQW5kcm9pZA",
+        "title": "Community"
+      },
+      {
+        "url": "https://gemini.google.com/",
+        "title": "Gemini Apps"
+      },
+      {
+        "url": "https://www.google.com/intl/en/privacy.html",
+        "title": "Privacy Policy"
+      },
+      {
+        "url": "https://www.google.com/accounts/TOS",
+        "title": "Terms of Service"
+      },
+      {
+        "url": "https://support.google.com/gemini/?hl=en",
+        "title": "Help Center"
+      },
+      {
+        "url": "https://support.google.com/gemini/community?hl=en&help_center_link=CJzPtgcSM1NlbmQgbWVzc2FnZXMgd2l0aCB0aGUgR2VtaW5pIG1vYmlsZSBhcHAgb24gQW5kcm9pZA",
+        "title": "Community"
+      },
+      {
+        "url": "https://support.google.com/gemini/announcements/15294201",
+        "title": "Privacy Hub"
+      },
+      {
+        "url": "https://gemini.google.com/",
+        "title": "Gemini Apps"
+      },
+      {
+        "url": "https://support.google.com/gemini/topic/16622650?hl=en&ref_topic=15157994",
+        "title": "Explore more Connected Apps & other integrated services"
+      },
+      {
+        "url": "https://support.google.com/gemini/topic/16695932?hl=en&ref_topic=16622650",
+        "title": "Communication"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15574940",
+        "title": "Send messages with the Gemini mobile app on Android"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15574940#reqs",
+        "title": "device app permissions and other settings"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/13695044?co=GENIE.Platform%3DAndroid#turn_on_off_gma",
+        "title": "Learn how to manage Connected Apps in Gemini"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/14554984",
+        "title": "Learn more about the Gemini mobile app"
+      },
+      {
+        "url": "https://myactivity.google.com/devicecontacts?utm_source=help",
+        "title": "Save contact info from your signed-in devices"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15574940#sync_contacts",
+        "title": "Learn how to sync your device contacts to your Google Account"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15574940#app_permissions",
+        "title": "Learn how to manage Android app permissions"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/14579631#ga_powers",
+        "title": "features powered directly by Google Assistant"
+      },
+      {
+        "url": "https://myactivity.google.com/product/gemini?utm_source=help",
+        "title": "Keep Activity"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/13695044?co=GENIE.Platform%3DAndroid#turn_on_off_gma",
+        "title": "Learn how to manage Connected Apps in Gemini"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/14579631#vm",
+        "title": "check if 'Hey Google' and Voice Match are set up"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15574940#default",
+        "title": "Learn how to change your default SMS app"
+      },
+      {
+        "url": "https://support.google.com/messages/answer/7189714",
+        "title": "Learn how to turn on RCS chats"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15574940#app_permissions",
+        "title": "Learn how to manage Android app permissions"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/13695044?co=GENIE.Platform%3DAndroid#turn_on_off_gma",
+        "title": "Learn how to manage Connected Apps in Gemini"
+      },
+      {
+        "url": "https://support.google.com/accounts/answer/6135999",
+        "title": "Learn how to manage contact info from your devices"
+      },
+      {
+        "url": "https://myactivity.google.com/devicecontacts?utm_source=help",
+        "title": "Go to setting"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15235441#read_messages",
+        "title": "Learn more about the Device assistance app"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/13594961#comms_ext",
+        "title": "Learn more about your data and communication apps"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/13594961#data_exchange",
+        "title": "how your data is handled when Gemini works with Connected Apps"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/13594961",
+        "title": "Gemini Apps Privacy Hub"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/13695044",
+        "title": "Use & manage Connected Apps in Gemini"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15574928",
+        "title": "Make calls & send messages on WhatsApp with the Gemini mobile app on Android"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15575143",
+        "title": "Make calls with the Gemini mobile app on Android"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/14554984",
+        "title": "Get started with the Gemini mobile app"
+      },
+      {
+        "url": "https://support.google.com/gemini/community?hl=en&help_center_link=CJzPtgcSM1NlbmQgbWVzc2FnZXMgd2l0aCB0aGUgR2VtaW5pIG1vYmlsZSBhcHAgb24gQW5kcm9pZA",
+        "title": "Post to the help community    Get answers from community members"
+      },
+      {
+        "url": "https://support.google.com/gemini/topic/16695932?hl=en&ref_topic=16622650",
+        "title": "Communication"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15574940",
+        "title": "Send messages with the Gemini mobile app on Android"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15575143?hl=en&ref_topic=16695932",
+        "title": "Make calls with the Gemini mobile app on Android"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15574928?hl=en&ref_topic=16695932",
+        "title": "Make calls & send messages on WhatsApp with the Gemini mobile app on Android"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/16313933?hl=en&ref_topic=16695932",
+        "title": "Broadcast messages in your home with the Gemini mobile app"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/17100956?hl=en&ref_topic=16695932",
+        "title": "Manage your contacts in Gemini Apps"
+      },
+      {
+        "url": "https://www.google.com/intl/en/privacy.html",
+        "title": "Privacy Policy"
+      },
+      {
+        "url": "https://www.google.com/accounts/TOS",
+        "title": "Terms of Service"
+      }
+    ]
+  },
+  {
+    "name": "live",
+    "url": "https://support.google.com/gemini/answer/15274899",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "final_url": "https://support.google.com/gemini/answer/15274899",
+    "raw_work_path": "work/gemini-controls-deepening/raw/live.html",
+    "raw_sha256": "222f7a85de7c210aa0d41c261b2a76144e3af8f37ecb03cf709f9120112c056d",
+    "bytes": 1654790,
+    "text_work_path": "work/gemini-controls-deepening/raw/live.txt",
+    "text_sha256": "fb4bd03bfd99359bdc871a7d35c61d30b85b987031a63cc4f38674a95442298c",
+    "headings": [
+      [
+        "h1",
+        "Talk naturally with Gemini Live"
+      ],
+      [
+        "h2",
+        "What you need"
+      ],
+      [
+        "h2",
+        "Before you use Gemini Live"
+      ],
+      [
+        "h2",
+        "Go Live with Gemini"
+      ],
+      [
+        "h3",
+        "Examples"
+      ],
+      [
+        "h2",
+        "Your Gemini Live data"
+      ],
+      [
+        "h2",
+        "Manage your Live chat with Gemini"
+      ],
+      [
+        "h2",
+        "Share your camera or screen with Live"
+      ],
+      [
+        "h4",
+        "When your camera automatically turns off"
+      ],
+      [
+        "h4",
+        "Share your screen"
+      ],
+      [
+        "h4",
+        "Stop sharing your screen"
+      ],
+      [
+        "h4",
+        "When screen sharing automatically stops"
+      ],
+      [
+        "h2",
+        "Use Connected Apps & services in Gemini Live chats"
+      ],
+      [
+        "h4",
+        "If you’re signed in to a personal Google Account"
+      ],
+      [
+        "h4",
+        "If you’re signed in to a work or school Google Account"
+      ],
+      [
+        "h2",
+        "Personalize your experience in Gemini Live"
+      ],
+      [
+        "h2",
+        "Let Gemini use the memory of past Gemini chats"
+      ],
+      [
+        "h2",
+        "Choose which Connected Apps are connected to Gemini"
+      ],
+      [
+        "h2",
+        "Use Live in the background"
+      ],
+      [
+        "h2",
+        "Manage settings"
+      ],
+      [
+        "h4",
+        "Change caption size and style"
+      ],
+      [
+        "h2",
+        "Related resources"
+      ],
+      [
+        "h2",
+        "Need more help?"
+      ],
+      [
+        "h3",
+        "Try these next steps:"
+      ],
+      [
+        "h2",
+        "Help"
+      ]
+    ],
+    "links": [
+      {
+        "url": "https://support.google.com/gemini/answer/15274899#hcfe-content",
+        "title": "Skip to main content"
+      },
+      {
+        "url": "https://support.google.com/gemini",
+        "title": "Gemini Apps Help"
+      },
+      {
+        "url": "https://accounts.google.com/ServiceLogin?hl=en&passive=true&continue=http://support.google.com/gemini/answer/15274899&ec=GAZAdQ",
+        "title": "Sign in"
+      },
+      {
+        "url": "https://support.google.com/",
+        "title": "Google Help"
+      },
+      {
+        "url": "https://support.google.com/gemini/?hl=en",
+        "title": "Help Center"
+      },
+      {
+        "url": "https://support.google.com/gemini/community?hl=en&help_center_link=CJOnpAcSPFRhbGsgbmF0dXJhbGx5IHdpdGggR2VtaW5pIExpdmUgLSBBbmRyb2lkIHBob25lICZhbXA7IHRhYmxldA",
+        "title": "Community"
+      },
+      {
+        "url": "https://gemini.google.com/",
+        "title": "Gemini Apps"
+      },
+      {
+        "url": "https://www.google.com/intl/en/privacy.html",
+        "title": "Privacy Policy"
+      },
+      {
+        "url": "https://www.google.com/accounts/TOS",
+        "title": "Terms of Service"
+      },
+      {
+        "url": "https://support.google.com/gemini/?hl=en",
+        "title": "Help Center"
+      },
+      {
+        "url": "https://support.google.com/gemini/community?hl=en&help_center_link=CJOnpAcSPFRhbGsgbmF0dXJhbGx5IHdpdGggR2VtaW5pIExpdmUgLSBBbmRyb2lkIHBob25lICZhbXA7IHRhYmxldA",
+        "title": "Community"
+      },
+      {
+        "url": "https://support.google.com/gemini/announcements/15294201",
+        "title": "Privacy Hub"
+      },
+      {
+        "url": "https://gemini.google.com/",
+        "title": "Gemini Apps"
+      },
+      {
+        "url": "https://support.google.com/googleplay/answer/113412",
+        "title": "Learn how to update apps on Android"
+      },
+      {
+        "url": "https://support.google.com/accounts/answer/1350409",
+        "title": "the applicable age in your country"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/13278668",
+        "title": "Learn how to sign in to Gemini Apps"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/14579026",
+        "title": "Learn more about Gemini mobile app availability"
+      },
+      {
+        "url": "https://policies.google.com/terms/generative-ai/use-policy",
+        "title": "Respect others’ privacy"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/13594961#live_data",
+        "title": "Learn how Google works with Gemini Live data"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15456140",
+        "title": "Learn more about Gemini on Pixel Buds"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15274899#videostream",
+        "title": "Learn more about video streaming"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15274899#screenshare",
+        "title": "Learn more about screen sharing"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/13594961#live_data",
+        "title": "how Google works with Gemini Live data"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15274899#notifications",
+        "title": "turn on notifications for Gemini Live"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/18365638",
+        "title": "Learn more about using Guided Vision"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/13695044",
+        "title": "Learn how to connect or disconnect an app"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/14959807",
+        "title": "using apps with a work or school account"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15274899#notifications",
+        "title": "turn on notifications for Gemini Live"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/14576209",
+        "title": "Learn how to turn on Gemini on lock screen"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15984485",
+        "title": "Learn how to change Gemini's display language"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15984485",
+        "title": "learn how to change Gemini's display language"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/14554984",
+        "title": "Get started with the Gemini mobile app"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/14579631",
+        "title": "What you can do with your Gemini mobile app"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15277943",
+        "title": "Change Gemini's voice"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/13594961",
+        "title": "Gemini Apps Privacy Hub"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15274899?co=GENIE.Platform%3DAndroid",
+        "title": "Android phone & tablet"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15274899?co=GENIE.Platform%3DiOS",
+        "title": "iPhone & iPad"
+      },
+      {
+        "url": "https://support.google.com/gemini/community?hl=en&help_center_link=CJOnpAcSPFRhbGsgbmF0dXJhbGx5IHdpdGggR2VtaW5pIExpdmUgLSBBbmRyb2lkIHBob25lICZhbXA7IHRhYmxldA",
+        "title": "Post to the help community    Get answers from community members"
+      },
+      {
+        "url": "https://support.google.com/gemini?hl=en#topic=14554810",
+        "title": "Help"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/14554984?hl=en&ref_topic=14554810",
+        "title": "Get started with the Gemini mobile app"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/14579631?hl=en&ref_topic=14554810",
+        "title": "What you can do with your Gemini mobile app"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/14579026?hl=en&ref_topic=14554810",
+        "title": "Gemini mobile app availability"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/14576209?hl=en&ref_topic=14554810",
+        "title": "How your Gemini mobile app can help when your phone is locked"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15274899",
+        "title": "Talk naturally with Gemini Live"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/16938321?hl=en&ref_topic=14554810",
+        "title": "Manage or delete the Gemini app on your Android device"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15456140?hl=en&ref_topic=14554810",
+        "title": "Use Gemini on your headphones"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15850607?hl=en&ref_topic=14554810",
+        "title": "Use screen actions to chat with the Gemini mobile app"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/16179553?hl=en&ref_topic=14554810",
+        "title": "Add & customize your Gemini widget"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/16401122?hl=en&ref_topic=14554810",
+        "title": "Use Gemini on your smartwatch"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/16940971?hl=en&ref_topic=14554810",
+        "title": "Ask Gemini to handle your multi-step tasks in select Android apps"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/17079170?hl=en&ref_topic=14554810",
+        "title": "Get Started with Gemini Go"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/18336420?hl=en&ref_topic=14554810",
+        "title": "Ask Gemini to handle your everyday phone calls"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/18365638?hl=en&ref_topic=14554810",
+        "title": "Get audio descriptions with Guided Vision in Gemini Live"
+      },
+      {
+        "url": "https://www.google.com/intl/en/privacy.html",
+        "title": "Privacy Policy"
+      },
+      {
+        "url": "https://www.google.com/accounts/TOS",
+        "title": "Terms of Service"
+      }
+    ]
+  },
+  {
+    "name": "locked",
+    "url": "https://support.google.com/gemini/answer/14576209?hl=en&ref_topic=14554810",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "final_url": "https://support.google.com/gemini/answer/14576209?hl=en&ref_topic=14554810",
+    "raw_work_path": "work/gemini-controls-deepening/raw/locked.html",
+    "raw_sha256": "6df0b59ff215a4bf69900e4a1ba1fcd4c90dda7ba0cf748ad3ee36b97fe70475",
+    "bytes": 1616799,
+    "text_work_path": "work/gemini-controls-deepening/raw/locked.txt",
+    "text_sha256": "dc8b73cfd01996a0de8b6fbb7b6e223b1395db77c46ed5a3d6cb3b6318fedb35",
+    "headings": [
+      [
+        "h1",
+        "How your Gemini mobile app can help when your phone is locked"
+      ],
+      [
+        "h2",
+        "Turn your Gemini mobile app’s lock screen setting on or off"
+      ],
+      [
+        "h3",
+        "Allow calls and text messages without unlocking your phone"
+      ],
+      [
+        "h2",
+        "Need more help?"
+      ],
+      [
+        "h3",
+        "Try these next steps:"
+      ],
+      [
+        "h2",
+        "Help"
+      ]
+    ],
+    "links": [
+      {
+        "url": "https://support.google.com/gemini/answer/14576209?hl=en&ref_topic=14554810#hcfe-content",
+        "title": "Skip to main content"
+      },
+      {
+        "url": "https://support.google.com/gemini",
+        "title": "Gemini Apps Help"
+      },
+      {
+        "url": "https://accounts.google.com/ServiceLogin?hl=en&passive=true&continue=http://support.google.com/gemini/answer/14576209%3Fhl%3Den%26ref_topic%3D14554810&ec=GAZAdQ",
+        "title": "Sign in"
+      },
+      {
+        "url": "https://support.google.com/",
+        "title": "Google Help"
+      },
+      {
+        "url": "https://support.google.com/gemini/?hl=en",
+        "title": "Help Center"
+      },
+      {
+        "url": "https://support.google.com/gemini/community?hl=en&help_center_link=CNHU-QYSPUhvdyB5b3VyIEdlbWluaSBtb2JpbGUgYXBwIGNhbiBoZWxwIHdoZW4geW91ciBwaG9uZSBpcyBsb2NrZWQ",
+        "title": "Community"
+      },
+      {
+        "url": "https://gemini.google.com/",
+        "title": "Gemini Apps"
+      },
+      {
+        "url": "https://www.google.com/intl/en/privacy.html",
+        "title": "Privacy Policy"
+      },
+      {
+        "url": "https://www.google.com/accounts/TOS",
+        "title": "Terms of Service"
+      },
+      {
+        "url": "https://support.google.com/gemini/?hl=en",
+        "title": "Help Center"
+      },
+      {
+        "url": "https://support.google.com/gemini/community?hl=en&help_center_link=CNHU-QYSPUhvdyB5b3VyIEdlbWluaSBtb2JpbGUgYXBwIGNhbiBoZWxwIHdoZW4geW91ciBwaG9uZSBpcyBsb2NrZWQ",
+        "title": "Community"
+      },
+      {
+        "url": "https://support.google.com/gemini/announcements/15294201",
+        "title": "Privacy Hub"
+      },
+      {
+        "url": "https://gemini.google.com/",
+        "title": "Gemini Apps"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/14579631#tk",
+        "title": "Learn more about using Gemini on your tablet"
+      },
+      {
+        "url": "https://support.google.com/gemini/community?hl=en&help_center_link=CNHU-QYSPUhvdyB5b3VyIEdlbWluaSBtb2JpbGUgYXBwIGNhbiBoZWxwIHdoZW4geW91ciBwaG9uZSBpcyBsb2NrZWQ",
+        "title": "Post to the help community    Get answers from community members"
+      },
+      {
+        "url": "https://support.google.com/gemini?hl=en#topic=14554810",
+        "title": "Help"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/14554984?hl=en&ref_topic=14554810",
+        "title": "Get started with the Gemini mobile app"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/14579631?hl=en&ref_topic=14554810",
+        "title": "What you can do with your Gemini mobile app"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/14579026?hl=en&ref_topic=14554810",
+        "title": "Gemini mobile app availability"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/14576209?hl=en&ref_topic=14554810",
+        "title": "How your Gemini mobile app can help when your phone is locked"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15274899?hl=en&ref_topic=14554810",
+        "title": "Talk naturally with Gemini Live"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/16938321?hl=en&ref_topic=14554810",
+        "title": "Manage or delete the Gemini app on your Android device"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15456140?hl=en&ref_topic=14554810",
+        "title": "Use Gemini on your headphones"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/15850607?hl=en&ref_topic=14554810",
+        "title": "Use screen actions to chat with the Gemini mobile app"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/16179553?hl=en&ref_topic=14554810",
+        "title": "Add & customize your Gemini widget"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/16401122?hl=en&ref_topic=14554810",
+        "title": "Use Gemini on your smartwatch"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/16940971?hl=en&ref_topic=14554810",
+        "title": "Ask Gemini to handle your multi-step tasks in select Android apps"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/17079170?hl=en&ref_topic=14554810",
+        "title": "Get Started with Gemini Go"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/18336420?hl=en&ref_topic=14554810",
+        "title": "Ask Gemini to handle your everyday phone calls"
+      },
+      {
+        "url": "https://support.google.com/gemini/answer/18365638?hl=en&ref_topic=14554810",
+        "title": "Get audio descriptions with Guided Vision in Gemini Live"
+      },
+      {
+        "url": "https://www.google.com/intl/en/privacy.html",
+        "title": "Privacy Policy"
+      },
+      {
+        "url": "https://www.google.com/accounts/TOS",
+        "title": "Terms of Service"
+      }
+    ]
+  }
+]

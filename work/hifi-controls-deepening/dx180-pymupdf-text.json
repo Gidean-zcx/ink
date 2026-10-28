@@ -1,0 +1,317 @@
+[
+  {
+    "pdf_page": 1,
+    "printed_page": 0,
+    "text": "iBasso Audio\n\n\n\n\n\n                         USER GUIDE"
+  },
+  {
+    "pdf_page": 2,
+    "printed_page": 1,
+    "text": "Contents\n\n\n    Package Components                        2-4\n\n    Main Features                                5-6\n\n    Speciﬁcations                                7-8\n\n   Names of Parts & Functions                  9-13\n\n    Android Basic Features Introduction          14-26\n      WiFi Connection/Bluetooth Connection                   15-16\n      Application (APP) Installation/App，to Uninstall/USB Connections\n                                                     17-20\n     System Settings                                    21-25\n     Power Oﬀ/Reboot/System Switching                    26\n\n    iBasso Mango Music Player Application       27-62\n\n      Playback Screen (home screen)                        27-29\n     Music Screen                                      30-42\n      Settings Screen                                    43-62"
+  },
+  {
+    "pdf_page": 3,
+    "printed_page": 2,
+    "text": "Package Components\n\n\n\n\n\n         DX180 Player                  Clear TPU\n                                          protection case\n\n\n\n\n\n         USB-C cable              Screen Protector\n\n\n\n\n\n         Quick Start Guide             Warranty Card\n\n\n\n\n\n                                                       2"
+  },
+  {
+    "pdf_page": 4,
+    "printed_page": 3,
+    "text": "Clear TPU protection case:\nUse the TPU protection case to protect the DX180\nchassis from scratches.\n\nUSB-C Cable：\nConnect the USB-C cable to a computer for charging,\ndata transfer, and USB-DAC function.The USB-C cable\ncan also be used with a USB charger to charge the\nbattery.\n\nScreen Protector：\nUse the screen protector to protect the DX180 screen\nfrom scratches.\n\nWarranty Card：\nThe warranty card will be requested at the time of\nwarranty repair. Please retain the warranty card.\n\nQuick Start Guide:\nThis reviews the basic functions of the DX180.\n\n\n\n\n\n                                                    3"
+  },
+  {
+    "pdf_page": 5,
+    "printed_page": 4,
+    "text": "Tips for burn-in\n\nThe burn-in time is commonly 100 to 200 hours and doesn't\nhave to be continual. You can power oﬀ the player and\ncontinue the burn-in after a few days. Or you can just listen\nand enjoy the music as your player goes through this process.\nFor burn-in to occur a load is required and all that is needed\nis a set of IEMs or Headphones played at a normal listening\nvolume. The point of burn-in is to help to form the new\ncapacitors and other components.\n\n\n\n\n\n                                                  4"
+  },
+  {
+    "pdf_page": 6,
+    "printed_page": 5,
+    "text": "Main Features\n\n\n     - Quad CS43131 DAC Chipset matrix.\n\n     - In-house developed FPGA-Master2.0 as the audio system\n          controller, synchronizing and generating the signal to all\n        audio clocks.\n\n     - 2 NDK ultra-low phase noise Femtosecond oscillators.\n\n     - Hardware FIR output mode.\n\n     - Bit for Bit playback with support up to 32bit/768kHz.\n\n     - Support of Native DSD up to 256x.\n\n     - 11nm Octa-Core Qualcomm Snapdragon 665 SoC.\n\n     - 3GB LPDDR4X + 32G ROM/4GB LPDDR4X + 128G ROM\n\n     - Sharp 5.0″ IPS full screen (1080*1920), with On-Cell\n         capacitive touch panel.\n\n     - Support of QC3.0 and PD3.0 quick charge.\n\n     - USB digital output up to PCM 32bit/384kHz, Native\n       DSD256, and DoP DSD128.\n\n     - Mini coaxial output that supports up to 24bit/384kHz and\n      DoP DSD128.\n\n     - USB DAC function that supports up to 32bit/384kHz and\n         native DSD256 input.\n\n     - Support of 2.4GHz and 5GHz WiFi and Bluetooth 5.0.\n\n\n\n\n                                                       5"
+  },
+  {
+    "pdf_page": 7,
+    "printed_page": 6,
+    "text": "- Support of SDHC and SDXC Micro SD cards up to 2TB.\n\n- Support of USB 3.1 Super speed transfer.\n\n- 2 gain settings for hardware control.\n\n- 100 step volume control.\n\n- Removable back cover design.\n\n- Audio Formats Supported: APE, FLAC, WAV, WMA, AAC,\n  ALAC, AIFF, OGG, MP3, DFF, DSF, and DXD.\n\n- Support for M3U playlists.\n\n- 3.8V 3200mAh Li-Polymer battery.\n\n\n\n\n\n                                                6"
+  },
+  {
+    "pdf_page": 8,
+    "printed_page": 7,
+    "text": " Speciﬁcations\n\n\n\n\n\n        3.5mm PO：\n\nMaximum output level：  2Vrms (Low Gain)\n                     3Vrms (High Gain)\n       Output Power：  525mW + 525mW@16ohm,THD+N< 0.1%\n                 281mW + 281mW@32ohm,THD+N< 0.1%\n Frequency Response：  10Hz~75kHz, -1 dB\n            S/N：  127dB\n     Dynamic Range：  127dB\n         THD+N：  -116dB (0.000156%)@1kHz (600ohm Load)\n           Crosstalk：  -118dB\n   Output impedance：   0.6ohm\n\n\n       4.4mm PO：\n\nMaximum output level：  4Vrms (Low Gain)\n                     6Vrms (High Gain)\n       Output Power：  690mW + 690mW@32ohm, THD+N< 0.1%\n Frequency Response：  10Hz~75kHz, -1dB\n            S/N：  133dB\n     Dynamic Range：  133dB\n         THD+N：  -121dB (0.000087%)@1kHz (600ohm Load)\n           Crosstalk：  -144dB\n   Output impedance：  1.1ohm\n\n\n\n\n\n                                                      7"
+  },
+  {
+    "pdf_page": 9,
+    "printed_page": 8,
+    "text": "        3.5mm LO：\n\nMaximum output level：  2Vrms\n Frequency Response：  10Hz~ 75kHz, -1dB\n            S/N：  125dB\n     Dynamic Range：  125dB\n         THD+N：  -112dB (0.00025%)@1kHz\n           Crosstalk：  -115dB\n\n\n    4.4mm Line LO：\n\nMaximum output level：  4Vrms\n Frequency Response：  10Hz~75kHz, -1 dB\n            S/N：  133dB\n     Dynamic Range：  133dB\n         THD+N：  -121dB (0.00089%)@1kHz\n           Crosstalk：  -130dB\n\n\n\n\n    Average Play Time:  PO low gain for 15.5 hours,\n                  PO high gain 13 hours,\n                         Line Out 30 hours.\n\n                                 (The play time varies with diﬀerent resolutions,\n\n                                volume used and headphone/IEMloads.)\n\n        Charging Time:  About 1.5 hours.\n\n\n\n\n                                                   8"
+  },
+  {
+    "pdf_page": 10,
+    "printed_page": 9,
+    "text": "Names of Parts & Functions\n\n\n\n\n\n         Micro SD                       USB-C\n\n\n\n\n\n  4.4mm Balanced Output\n                                      3.5mm Single-ended Output\n\n\n   Coaxial Output Port:\n   Use the coaxial cable to play music stored in the DX180 on an\n    external device with a coaxial input port. Mini coaxial output has\n   the highest output priority which would close the phone out or\n    line out when coaxial cable plugged in. The output of this port is\n   up to 24bit/384kHz or DoP DSD128.\n\n                                          Coaxial signal\n\n\n                                    Ground\n\n\n\n\n               As shown in the picture above, users can choose TS, TRS,\n                         TRRS standard 3.5 sockets.\n        The ﬁrst section \"T\" is the coaxial signal, and the last section \"S\" is ground.\n\n\n                                                       9"
+  },
+  {
+    "pdf_page": 11,
+    "printed_page": 10,
+    "text": "USB-C Port\nConnect the DX180 to a computer or a USB charger to charge\nthe DX180.\nConnect the DX180 to a computer to allow the DX180 to work\nas a card reader or an external storage.\nConnect the DX180 to an OTG storage device to play music\nﬁles stored in this OTG storage device.\nConnect the DX180 to a Windows PC or a Mac computer to\nwork as a USB DAC.\n\n4.4mm Balanced output\nWhen PO is selected on the output interface, plug in a 4.4mm\nbalanced earphone and output sound through the 4.4mm BAL\nport.\nWhen LO is selected on the output interface, plug in a 4.4mm\nbalanced interconnect and output LO to an external ampliﬁer.\n\n3.5mm Single-ended Output\nWhen PO is selected on the output interface, plug in a 3.5mm\nSingle-ended earphone and output sound through the 3.5mm\nSE port.\nWhen LO is selected on the output interface, plug in a 3.5mm\ninterconnect and output LO to an external ampliﬁer.\n\nMicro SD Card Slot\nInsert a Micro SD card into the DX180 to access its stored ﬁles.\n\n\n\n\n\n                                                  10"
+  },
+  {
+    "pdf_page": 12,
+    "printed_page": 11,
+    "text": "                                  5.0 Inch LED\n\nMicro SD                  USB-C\n\n\n\n\n\n                                                        Power/Volume\n\n\n\n                                                              Next/Fast Forward\n\n                                                             Play/Pause\n\n                                                             Previous/Rewind\n\n\n\n\n\n                                                    11"
+  },
+  {
+    "pdf_page": 13,
+    "printed_page": 12,
+    "text": "Power：\n\n Short Press - Power the LCD screen on and oﬀ.\n Long Press - To display the pop up window with two\n options that are Power oﬀ and Reboot.\n\nVolume：\n\n Rotate the wheel clockwise to increase the volume.\n Rotate the wheel counter clockwise to decrease the volume.\n\nPrevious/Rewind：\n\n Short Press - Replay previous track.\n Long Press - Rewind.\n\nPlay/Pause：\n\n Short Press - Play/Pause.\n\nNext/Fast Forward：\n\n Short Press - Play the next track.\n Long Press - Fast forward.\n\n\n\n\n\n                                                 12"
+  },
+  {
+    "pdf_page": 14,
+    "printed_page": 13,
+    "text": "Basic Operation:\n\n Power on/oﬀ:\n   1. Press and hold the power button to power on.\n   2. After the DX180 is powered on, a long press of the Power\n  button to display the pop up window, press Power Oﬀ button\n  to power oﬀ the DX180.\n\n Power on/oﬀ the screen:\n\n   Single press the power button to power on/oﬀ the screen after\n  the DX180 has been powered on.\n\n Reset:\n\n  When the DX180 stops unexpectedly during operation and the\n  keys are no longer responsive, press and hold the power button\n   for 10 seconds to reset the DX180.\n\n Charging:\n\n  DX180 supports two quick charge protocols, QC3.0 and PD3.0.\n  Charging can be done with a standard 5V USB charger or with\n  quick charger that is compliant the stated 2 protocols. A full\n  charge takes about 1.5 hours with the afore mentioned quick\n  charge types.\n\n Connecting to a computer to work as a USB DAC:\n\n  The DX180 can work as a USB DAC for Windows PC, Mac\n  computer, and Linux computer. It is driver free on Mac computer\n  and Linux computer. With Mac computers, the DX180 Supports\n  PCM up to 32bit/384kHz and DoP DSD up to 128x. For Windows\n  PC, one can download the driver from iBasso.com and install it\n   following the steps, before using the USB DAC function. The\n  DX180 supports up to 32bit/384kHz PCM, and native DSD up to\n  256x when be used as a USB-DAC on Windows OS.\n\n\n                                                    13"
+  },
+  {
+    "pdf_page": 15,
+    "printed_page": 14,
+    "text": "Android Basic Features\nIntroduction\n\n\n\n\n\n                                               Bluetooth\n   Digital Filter                                               WiFi         Gain\n                                                 Battery indicator      Volume\n\n                                         Time\n\n\n\n\n\n                                                     14"
+  },
+  {
+    "pdf_page": 16,
+    "printed_page": 15,
+    "text": "WiFi Connection:\n\n\n\n\n\n  ① On the Android desktop, from the top, swipe down\n       the screen to display the notiﬁcation bar.\n  ② Press the Wireless local area network(WLAN) to turn\n      on the WiFi function. The ﬁrst time you enter the\n     WLAN, you need to choose the hot spot you will be\n       using and enter the password. From this point\n      forward your password for this hotspot will be\n      remembered and you simply press the WLAN icon\n       to connect to the WiFi internet.\n\n\n                                                    15"
+  },
+  {
+    "pdf_page": 17,
+    "printed_page": 16,
+    "text": "Bluetooth Connection:\n\n\n\n\n\n ① On the Android desktop, swipe down from the top\n      of the screen to display the notiﬁcation bar.\n ② Press the Bluetooth icon to turn on the Bluetooth\n      function. The DX180 will automatically search for\n      the nearby Bluetooth device. At the same time, the\n     DX180 will be visible to the nearby devices.\n     Choose the device that you would like to pair with.\n      After the device has been paired, you can use the\n     DX180 in the Bluetooth mode.\n\n\n                                                    16"
+  },
+  {
+    "pdf_page": 18,
+    "printed_page": 17,
+    "text": "APP Installation:\n\n\n\n\n\n    Method 1:\n  ① Google Play and Aptoide are pre-installed on the\n       DX180.\n  ② Launch one of them.\n  ③ Search for the APP that you would like to install.\n  ④ Download the APP and install it.\n    Method 2:\n  ① Press the internet browser on the desktop.\n  ② Enter the website address of the APP.\n  ③ Find the download icon on the website and start\n        the download.\n  ④ Return to the desktop and open download\n       manager.\n  ⑤ Press the on downloaded app and install it.\n\n                                                    17"
+  },
+  {
+    "pdf_page": 19,
+    "printed_page": 18,
+    "text": "① Press the Settings icon on the desktop and scroll\n  down and press APPs.\n② Press the APP that you would like to uninstall.\n③ Press uninstall to delete the APP.\n\n\n\n\n\n                                                 18"
+  },
+  {
+    "pdf_page": 20,
+    "printed_page": 19,
+    "text": "USB Connections:\n\n\n\n\n\n   Connect the DX180 to the computer using the furnished\n   USB-C cable. The DX180 will show on the computer as\n   an external storage. Users can transfer ﬁles by copying\n   and pasting.\n\n    * If you are using a Mac computer, please make sure the MTP\n     software Android File Transfer is installed.\n\n\n\n\n\n                                                      19"
+  },
+  {
+    "pdf_page": 21,
+    "printed_page": 20,
+    "text": "Charge The Connected Device:\n\n① Connect the DX180 to a device.\n② The USB option appears at the bottom of the notiﬁcation\n   bar drop down window\n③ After pressing it, you can select the USB connection\n   purpose.\n    After turning on the function of charging connected\n    devices, you can charge the devices connected to the\n   DX180.\n\n\nUSB DAC:\n\nPlease refer to page13.\n\n\n\n\n\n                                                   20"
+  },
+  {
+    "pdf_page": 22,
+    "printed_page": 21,
+    "text": "System Settings:\n\n\n\n    Press Settings icon on the DX180 desktop to go into system\n     settings.\n\n\n\n\n\n                                                     21"
+  },
+  {
+    "pdf_page": 23,
+    "printed_page": 22,
+    "text": "Audio Settings:\n\n     Press Settings Icon, then press Audio Settings.\n\n\n\n\n\n  ①  Gain:\n       One of the two gains can be selected.\n  ②  Digital Filter:\n      A total of ﬁve ﬁlters are available for user setting.\n  ③ FIR Output:\n       One of the two Outputs can be selected.\n  ④ Volume Limitation:\n         This sets the volume to a maximum preset point.\n  ⑤ Volume Control knob:\n       The volume knob can be set according to needs.\n\n\n   NOS Filter:\n   When using NOS ﬁlter, the pop sound when switching sample\n     rates will be at a higher volume than the other four ﬁlters. This\n      is part of the DAC chipset design and normal.\n\n\n\n\n                                                     22"
+  },
+  {
+    "pdf_page": 24,
+    "printed_page": 23,
+    "text": "Firmware Update:\n\n\n\n\n\n        DX180               DX180              DX180               DX180\n\n\n\n\n\n    Online Update:\n\n  ① Make sure the DX180 is connected to WiFi.\n  ② After online update is selected, press Check Update.\n  ③ Press Download, the DX180 will start downloading\n       the available update package.\n  ④ After the download complete, press Update Now to\n        start the ﬁrmware update.\n\n\n\n\n\n                                                      23"
+  },
+  {
+    "pdf_page": 25,
+    "printed_page": 24,
+    "text": "         DX180                DX180\n\n\n\n\n\nLocal Update:\n\n① Download the ﬁrmware ﬁle from our website.\n      If it is a rar ﬁle, extract it.\n② Press the icon located on the top right corner,\n   then press Local Update.\n③ Browse the folder where the ﬁrmware ﬁle is saved,\n   and select the ﬁrmware ﬁle.\n④ Press Update Now to start the ﬁrmware update.\n\n\n\n\n\n                                                 24"
+  },
+  {
+    "pdf_page": 26,
+    "printed_page": 25,
+    "text": "Firmware Version:\n\n\n\n\n\n   ① Press Settings icon, System, About DX180.\n   ②  Scroll down the page, the Build number is the\n       ﬁrmware version.\n\n\n\n\n\n                                                    25"
+  },
+  {
+    "pdf_page": 27,
+    "printed_page": 26,
+    "text": "Power Oﬀ And Reboot :\n\n\n\n\n\n   ① Long press the power button for 2 seconds.\n   ② There is a pop up window with two options.\n\n\n\n\n\n                                                     26"
+  },
+  {
+    "pdf_page": 28,
+    "printed_page": 27,
+    "text": "iBasso Mango Music Player\nApplication\n\n\n   iBasso Audio Mango music player is composed of the Playback\n   screen (home screen), Music screen and Settings.\n\n  When on the playback screen, one can swipe left and right on\n   the Album artwork area to switch a song: Press the icon on the\n   top left corner ① to go into Music Screen.\n   Press the icon on the top right corner ② to go into Settings.\n  No matter which sub screens of the Music Screen you are\n   browsing, press the thumbnail icon on the bottom left to return\n   to the playback screen.\n\n\n            ①      ②\n\n\n\n\n\n                                                     27"
+  },
+  {
+    "pdf_page": 29,
+    "printed_page": 28,
+    "text": "Playback Screen (home screen):\n\n\n                                Sample Rate\n\n                             Equalizer\n                                                       WiFi\n    Digital Filter\n  L/R Balance\n         Gain                                           Battery indicator for\n                                                                     digital section\n     Volume\n                                                           Settings\n\n  Music screen\n\n\n\n\n\n                                         Now Playing\n\n\n\n    Track title\n    Artist name\n\n    Music info                                            Play Mode\n\n\n\n      Previous/Rewind                          Next/Fast Forward\n\n                               Play/Pause\n\n\n\n\n\n                                                      28"
+  },
+  {
+    "pdf_page": 30,
+    "printed_page": 29,
+    "text": "Now Playing Screen:\nPress the icon located on the bottom right to display the\nnow playing screen. One can swipe a song to the left to display\nthe Delete button. Press the delete button to remove it from this\nnow playing list.\n\n\n\n\n\n    ①\n\n\n\n\nMusic Info Screen:\nPress the Music info icon ②, the bottom of the home screen will\nshow the music info. Adding the current playing music into the\nplaylist or deleting the current playing music also can be achieved\nin the music info screen. Press any areas of the upper part will\nreturn to the home screen.\n\n\n\n\n\n      ②\n                                                   29"
+  },
+  {
+    "pdf_page": 31,
+    "printed_page": 30,
+    "text": "Music screen:\n\n\n\n\n\n                ②        ③\n\n\n①\n\n\n\n\n\n      Press the Music Screen icon ① will go into the Music Screen②.\n      Swipe from left to right on the Music Screen will bring up the\n       Navigation Menu③.\n\n\n\n\n\n                                                      30"
+  },
+  {
+    "pdf_page": 32,
+    "printed_page": 31,
+    "text": "                                             Song sorting②\n        Return to\n   home screen①\n\n\n\n        Music order                             Now playing\n\n  Swipe to trigger\n    the Navigation\n       Menu③                                  Long press ④\n\n\n\n          Track title\n         /Artist name                                     Music format\n                                                     Quickly position\n                                                    the current playing\n                                               music ﬁle⑤\n       Playback bar\n\nThumbnail artwork⑥                                      Play/Pause\n\n                          Track title and artist name\n                            of the song that is playing\n\n\n          Return:\n         Press the Return button will move back one page at a time,\n            until return to the home screen.\n\n          Sorting:\n          Click the Sorting icon to pop-up the sorting options. You\n        can select \"Title/Album/Artist/Time/Folder\" to sort the All\n         Music.\n\n\n\n                                                       31"
+  },
+  {
+    "pdf_page": 33,
+    "printed_page": 32,
+    "text": "Swipe to trigger the Navigation Menu：\nSwipe from left to right to bring up the navigation menu.\n\nLong Press:\nLong pressing a song will pop up a window with more\noptions.\n\nQuickly position the current playing music ﬁle:\nOn the All Music screen, press the Position icon to quickly\nposition the current playing music ﬁle.\n\nThumbnail artwork:\nPress to return to the playback screen.\n\n\n\n\n\n                                                32"
+  },
+  {
+    "pdf_page": 34,
+    "printed_page": 33,
+    "text": "Sorting:\n\n\n\n\n\n     Click the Sorting icon to pop-up the sorting options. You\n    can select \"Title/Album/Artist/Time/Folder\" to sort the All\n    Music.\n\n\n\n\n\n                                                    33"
+  },
+  {
+    "pdf_page": 35,
+    "printed_page": 34,
+    "text": "Navigation Menu：\n\n\n\n\n\n      Swipe from left to right to bring up the Navigation Menu.\n     One can choose among All Music, Album, Artist, Genre,\n     Now Playing, Playlist, Internal Storage, and SD card. Also,\n       the search bar is located at the bottom of the Navigation\n      Menu.\n\n\n\n\n                                                     34"
+  },
+  {
+    "pdf_page": 36,
+    "printed_page": 35,
+    "text": "Long Press Pop-up:\n\n\n\n\n\n    Further Options:\n    Long Press of a song will pop up a window with further\n    options that allows to play this song, add this song to a\n     playlist, or delete this song.\n\n\n\n\n\n                                                   35"
+  },
+  {
+    "pdf_page": 37,
+    "printed_page": 36,
+    "text": "Album View:\n\n             Thumbnail view             Artwork view\n\n\n\n\n\nArtist View:\n             Thumbnail view             Artwork view\n\n\n\n\n\n                                                      36"
+  },
+  {
+    "pdf_page": 38,
+    "printed_page": 37,
+    "text": "Playlist View:\n\n\n\n                      ③\n      ①\n      ②\n\n\n\n\n\n                                                     37"
+  },
+  {
+    "pdf_page": 39,
+    "printed_page": 38,
+    "text": "Playlist View:\n\n\n\n\n\n    New Playlist:\n     Press the New Playlist to create a playlist. On the pop-up\n     window, one can name the playlist and add playlist description.\n\n     Further Options:\n    A Long press of the playlist will popup a window with further\n      options, which allows renaming the playlist, exporting the\n       playlist, or deletion of the playlist.\n\n     The playlist can be found on the internal storage of the iBasso\n    /mango player folder, after the playlist has been exported.\n\n     Sorting：\n      Click the Sorting icon to pop-up the sorting options. One can\n      select “Title/Creation Time/ Latest Update\" to sort the playlists.\n\n\n\n\n\n                                                     38"
+  },
+  {
+    "pdf_page": 40,
+    "printed_page": 39,
+    "text": "Recent Play:\n\n    50 recently played tracks are listed.\n\n\n\n\n\n                                                     39"
+  },
+  {
+    "pdf_page": 41,
+    "printed_page": 40,
+    "text": " File：\n\n   Press Internal Storage or SD Card on the Navigation Menu to go\n    into Directory view. One can browse the music ﬁles under internal\n    storage and SD card via folder structure.\n\n\n\n\n\n①\n\n\n\n\n\n                                                    40"
+  },
+  {
+    "pdf_page": 42,
+    "printed_page": 41,
+    "text": "①\n\n\n\n\n\n    Press the return button① will move back one page at a time.\n\n\n\n\n\n                                                   41"
+  },
+  {
+    "pdf_page": 43,
+    "printed_page": 42,
+    "text": "Search Screen:\n\nInput the keywords to search a track, an album, or an artist.\n\n\n\n\n\n                                                42"
+  },
+  {
+    "pdf_page": 44,
+    "printed_page": 43,
+    "text": "Settings Screen:\n\nPress the Settings icon to go into settings screen.\n\n\n\n\n\n Gapless:\n\n One can enable the gapless to eliminate the gap between\n two tracks.\n\n Gain:\n\n There are two gain settings. The low gain has the lowest\n noise ﬂoor and is good for ultra sensitive IEMs.\n\n\n\n\n                                                43"
+  },
+  {
+    "pdf_page": 45,
+    "printed_page": 44,
+    "text": "Play Mode:\nOne can choose the desired play mode here.\n\nFolder Play:\nTo enable the folder play function, tick the Folder Play,\nthen select either the order play mode or loop play mode.\nAfter a full media scan, or rescan the library, you can go\nto Directory and select a song under a folder. After this\nfolder is played, the DX180 will play the next folder.\n\nL/R Balance:\nPress to go into the L/R balance setting page.\n\nDigital Filter:\nThere are ﬁve ﬁlters, press the number to quickly choose\na ﬁlter.\n\nMedia Scan:\nPress to go into the Media Scan settings page.\n\nUnplug Pause:\nWhen Unplug Pause is enable, the music playback will be\npaused when unplugging the earphone from the player.\n\n\n\n\n\n                                                44"
+  },
+  {
+    "pdf_page": 46,
+    "printed_page": 45,
+    "text": "Equalizer:\n\nThe DX180 has two types of Equalizers, Graphic EQ and Parametric\nEQ.\n\n\n\n\n\n                                                   45"
+  },
+  {
+    "pdf_page": 47,
+    "printed_page": 46,
+    "text": "Graphic Equalizer:\n\nPress the button of the Graphic Equalizer to enable the Graphic\nEqualizer.\n\n\n\n\n\n      Pre-set EQ:\n      There are 5 kinds of pre-set EQ and a custom option.\n     One can quickly set the equalizer as desired by selecting\n      them.\n\n    How to Adjust The EQ Settings:\n      Press on the response curve, the 10 band slide bars will\n     show up. One can adjust the EQ settings by positioning\n      the bars up or down.\n\n\n\n\n\n                                                   46"
+  },
+  {
+    "pdf_page": 48,
+    "printed_page": 47,
+    "text": "Parametric Equalizer:\n\nPress the button of the Parametric Equalizer to enable the it.\n\n\n\n\n\n   Parametric Equalizer:\n   Press the button of the Parametric Equalizer to\n   enable the it.\n\n  How to Go Into The Parametric EQ Setting Screen:\n   Press the response curve to go into the parametric\n  EQ setting screen.\n\n\n\n\n                                                 47"
+  },
+  {
+    "pdf_page": 49,
+    "printed_page": 48,
+    "text": "Parametric Equalizer Setting Screen:\n\n\n\n\n\n                       ①\n\n\n\n\n\n   ②\n   ③\n   ④\n   ⑤\n   ⑥\n   ⑦\n\n\n\n\n\n   ① Settings on the Selection Bar:\n        One can swipe left and right to select a setting.\n\n\n\n\n\n                                                    48"
+  },
+  {
+    "pdf_page": 50,
+    "printed_page": 49,
+    "text": "② Filter Navigation Bar:\n   There are maximum of 6 ﬁlters allowed for each\n   setting. One can swipe left and right to select a\n    ﬁlter, then customize it.\n\n③ Status:\n   Status of each ﬁlter. One can turn on or turn oﬀ\n   the selected ﬁlter.\n\n④ Filter Type:\n   There are eight kinds of ﬁlters. Select one of the\n   ﬁlters.\n\n⑤ Central Frequency (Fc)：\n   This is the central frequency. Input a value between\n  33Hz to 16,000Hz.\n\n⑥ Gain:\n   This is the gain for each central frequency. Input a\n   value between -20dB to 20dB.\n\n⑦ Q Factor:\n   This is the quality factor. Input a value between 0.3\n   to 20.\n\n\n\n\n\n                                              49"
+  },
+  {
+    "pdf_page": 51,
+    "printed_page": 50,
+    "text": " Parametric Equalizer Setting Instruction:\n\n\n\n       Central Frequency (Fc):\n      The central frequency of each ﬁlter setting.\n\n       Gain:\n      The gain for the central frequency.\n\n       Quality Factor:\n      The range of eﬀect of the ﬁlter.\n\n      As shown on the pictures below, the larger value of the\n    Q factor, the smaller the eﬀect compared the central\n       frequency. The smaller value of the Q factor, the larger\n       the eﬀect in relation to the central frequency.\n\n      The following are the curves of the ﬁlters\n      (Fc=100Hz, gain=4dB)\n\n\n1. Low Pass Filter\n\n  The frequency higher than the central frequency will be aﬀected.\n  Gain setting is ineﬀective with low pass ﬁlter.\n\n\n\n\n\n       2  3 4 5 6  10  20 30      100 200         1k                     4 5 6 78910    20  30 40 50    100   200 300         1k\n\n      ①. Q=0.7071                    ②. Q=20\n\n\n\n                                                     50"
+  },
+  {
+    "pdf_page": 52,
+    "printed_page": 51,
+    "text": "2. High Pass Filter\n\n  The frequency smaller than the central frequency will be aﬀected.\n  Gain setting is ineﬀective with high pass ﬁlter.\n\n\n\n\n\n      2  3 4 5 6  10  20 30      100 200         1k                    4 5 6 78910    20  30 40 50    100   200 300         1k\n\n       ③. Q=0.7071                 ④. Q=20\n\n\n\n3. All Pass Filter\n\n  There is no eﬀect besides the central frequency. Gain setting is\n  ineﬀective with all pass ﬁlter.\n\n\n\n\n\n                                2  3 4 5 6  10  20 30      100 200         1k\n\n                      ⑤.\n\n\n                                                     51"
+  },
+  {
+    "pdf_page": 53,
+    "printed_page": 52,
+    "text": "4. Band Filter\n\n  The eﬀect on the central frequency is not large. The frequency\n  beside the central frequency has similar eﬀect. Gain setting is\n  ineﬀective with band ﬁlter.\n\n\n\n\n\n     2  3 4 5 6  10  20 30      100 200         1k                    4 5 6 78910    20  30 40 50    100   200 300         1k\n\n      ⑥. Q=0.7071                  ⑦. Q=20\n\n\n\n5. Peak Filter\n\n  There is a large eﬀect on the central frequency. The frequency beside\n  the central frequency has similar eﬀect.\n\n\n\n\n\n      2  3 4 5 6  10  20 30      100 200         1k                    4 5 6 78910    20  30 40 50    100   200 300         1k\n\n       ⑧. Q=0.7071                  ⑨. Q=20\n\n\n\n                                                    52"
+  },
+  {
+    "pdf_page": 54,
+    "printed_page": 53,
+    "text": "6. Notch Filter\n\n  The central frequency has obvious reduction. The frequency beside\n  the central frequency has similar eﬀect. Gain setting is ineﬀective\n  with notch ﬁlter.\n\n\n\n\n\n     2  3 4 5 6  10  20 30      100 200         1k                     4 5 6 78910    20  30 40 50    100   200  300         1k\n\n      ⑩. Q=0.7071                  ⑪. Q=20\n\n\n\n7. High Shelf Filter\n\n  There is a wide eﬀect on the frequency that is higher than the\n   central frequency.\n\n\n\n\n\n      2  3 4 5 6  10  20 30      100 200         1k                     4 5 6 78910    20  30 40 50    100   200  300         1k\n\n       ⑫. Q=0.7071                  ⑬. Q=20\n\n\n\n                                                    53"
+  },
+  {
+    "pdf_page": 55,
+    "printed_page": 54,
+    "text": "8. Low Shelf Filter\n\n  There is a wide eﬀect on the frequency that is lower than the central\n  frequency.\n\n\n\n\n\n    2  3 4 5 6  10  20 30      100 200         1k                     4 5 6 789 10    20  30 40 50    100   200 300         1k\n\n      ⑭. Q=0.7071                  ⑮. Q=20\n\n\n\n\n\n                                                    54"
+  },
+  {
+    "pdf_page": 56,
+    "printed_page": 55,
+    "text": "L/R Balance:\n\nTurn in the clockwise direction to decrease to volume in right\nchannel.\nTurn in the counterclockwise direction to decrease the volume\nin left channel.\n\n\n\n\n\n                                                   55"
+  },
+  {
+    "pdf_page": 57,
+    "printed_page": 56,
+    "text": "Digital Filter:\n\n\n\n\n\n      Digital Filter:\n\n     There are ﬁve digital ﬁlters available. Press a digital\n      ﬁlter to view the ﬁgure.\n    When using NOS ﬁlter, the pop sound when switching\n     sample rates will be at a higher volume than the other\n      four ﬁlters. This is part of the DAC chipset design and\n     normal.\n\n\n                                                   56"
+  },
+  {
+    "pdf_page": 58,
+    "printed_page": 57,
+    "text": "Media Scan:\n\n\n\n\n\n                                                  57"
+  },
+  {
+    "pdf_page": 59,
+    "printed_page": 58,
+    "text": "USB DAC:\n\n\n\n\n\n   The DX180 can work as a USB DAC for Windows PC,\n   Mac computer, and Linux computer. It is driver free on\n   Mac computer and Linux computer. With Mac computers,\n    the DX180 supports PCM up to 32bit/384kHz and DoP\n   DSD up to 128x. For Windows PC, one can download\n    the driver from iBasso.com and install it following the\n    steps, before using the USB DAC function. The DX180\n    supports up to 32bit/384kHz PCM, and native DSD up\n    to 256x when be used as a USB-DAC on Windows OS.\n\n\n\n\n                                                 58"
+  },
+  {
+    "pdf_page": 60,
+    "printed_page": 59,
+    "text": "Bluetooth DAC:\n\n\n\n\n\n  DX180 Bluetooth DAC.\n   After turning on the Bluetooth DAC, Bluetooth devices\n   such as a mobile phone can be paired with the DX180.\n  The DX180 can now stream from the connected Bluetooth\n   device.\n   Note: When in Bluetooth DAC mode, the DX180 supports\n  AAC and SBC.\n\n\n\n\n\n                                                  59"
+  },
+  {
+    "pdf_page": 61,
+    "printed_page": 60,
+    "text": "Display Settings:\n\n\n\n\n\n Ambient mode:\n Use album artwork as the background picture.\n Normal mode:\n Use the selected picture as the background picture.\n Playback screen album artwork:\n Choose to display rectangular artwork or rounded artwork.\n Lock screen artwork:\n Display the album artwork on the lock screen.\n Year tag:\n Display year information of the ID3 on the playback screen.\n Alphabetic scrolling bar:\n Use alphabetic scrolling bar instead of the traditional\n scrolling bar.\n Dark Mode:\n After turning it on, the player is in a dark color theme.\n\n\n\n                                                  60"
+  },
+  {
+    "pdf_page": 62,
+    "printed_page": 61,
+    "text": "Sleep Timer:\n\n\n\n\n\n     Set the count down sleep timer to power oﬀ the DX180.\n    The left hand side is the value of hours. The right hand is\n     the value of minutes. The DX180 will be powered oﬀ after\n     the counter has completed. If there are any operations\n      in the meanwhile, the DX180 will start the counter again\n      after the last operation.\n\n\n\n\n\n                                                     61"
+  },
+  {
+    "pdf_page": 63,
+    "printed_page": 62,
+    "text": "System Info:\n\n\n\n\n\n    One can see the Mango music player APP version on\n      this screen. Also, one can see the space available of\n     the internal memory and micro SD card.\n\n\n\n\n\n                                                    62"
+  }
+]

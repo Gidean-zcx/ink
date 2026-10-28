@@ -1,0 +1,39 @@
+How To Manage Blocked Numbers on Mudita Kompakt
+Modified on: Sat, 3 Oct, 2026 at 8:45 AM
+Kompakt gives you many ways to block numbers:
+You can choose to block all hidden or all unrecognized numbers 
+You can block individual numbers when you add a number to your blocked list
+You can block a number during an incoming call
+How to block hidden or unrecognized numbers
+You can block all incoming calls and messages from hidden numbers.  You can also choose to block all numbers that you don’t recognize, you will only receive calls and messages from numbers in your contacts list.  
+To block all hidden or unrecognised numbers: 
+Tap Phone
+Tap Recents
+Tap App settings icon in the topbar
+Tap Call Blocking 
+Use the Toggle switches to select either Block hidden numbers or Block unrecognised numbers
+How to manually add a number to your blocked list
+Tap Phone
+Tap Recents
+Tap App settings icon in the topbar
+Tap Call Blocking 
+Tap Blocked Numbers
+Tap Add to blocked or the Plus icon
+Enter the number you want to block
+Tap Block 
+How to block a number from an incoming call
+When you receive a call from the number you want to block: 
+Tap the Block icon
+Tap Block number
+How to unblock numbers on Kompakt
+Tap Phone
+Tap Contacts
+Tap the App settings icon
+Tap Call Blocking
+Tap Blocked Numbers
+Tap the Minus icon for the number you want to unblock 
+Was this article helpful?
+ No
+ Yes
+That’s Great!
+Thank you for your feedback

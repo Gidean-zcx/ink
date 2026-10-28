@@ -1,0 +1,8 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M009-25,M-009,AIUI按日期或主题语音查找笔记,D2,E-IXCD-01,桌面语音图标或轻压指纹电源键→提出日期/主题查询→文档称可多轮直到找到笔记；静态图仅见语音提示和示例。,结果列表/自动打开、无结果、退出、唤醒词、加密与跨账号范围未知；历史AIUI不等于全局大模型Agent。,static_manual_pages_only,false,cases/M-009-iflytek-office.md,2026-10-27
+F-M009-26,M-009,将详情页手写转为文字并选择出口,D2,E-IXCD-01,写作工具栏转文字→详情页所有手写转换→关联高亮结果→Word/PDF、扫码、邮件或打印出口。,原笔迹保留、错误修订、重复转换覆盖、原位置锚点与导出保真/失败均未知。,not_observed,false,cases/M-009-iflytek-office.md,2026-10-27
+F-M009-27,M-009,查看Office文件并保存批注,D2,E-IXCD-01,列表开文档；doc两侧翻页/中部导航，ppt每页两幻灯片/播放横屏，xls二维滑动；批注可保存文档或上传读写客/邮件分享。,原件还是副本、格式保真、撤销/只读、上传冲突/失败未知；导入路径沿F01/02。,not_observed,false,cases/M-009-iflytek-office.md,2026-10-27
+F-M009-28,M-009,通过搜索和星标找回邮件,D2,E-IXCD-01,邮件列表搜邮件→输入主题或发件人→对应邮件；列表/详情空心星标记→左侧星标邮件目录。,取消星标、零结果、全文/模糊匹配、离线索引与服务器同步未知。,not_observed,false,cases/M-009-iflytek-office.md,2026-10-27
+F-M009-29,M-009,维护联系人并开始给联系人写信,D2,E-IXCD-01,邮件列表通讯录→字母/搜索选人→编辑信息或写邮件；新增填表确认。正文称完成设置，静态图为确定；图有取消。,重复合并、删除确认/恢复、同步和离线修改、写信返回状态未核；有按钮不证明保存/取消成功。,static_manual_pages_only,false,cases/M-009-iflytek-office.md,2026-10-27
+F-M009-30,M-009,配置网络、蓝牙和蜂窝数据,D2,E-IXCD-01,WiFi开关→选网→密码→连接；蓝牙选设备后双端确认；SIM可开关流量/看月统计。飞行模式关闭恢复先前无线状态，开启时可再开WiFi/蓝牙。,错误密码/配对失败/断连恢复、APN与当前固件未知；仅历史4G数据设置，不能证明短信/通话或Plus能力。,not_observed,false,cases/M-009-iflytek-office.md,2026-10-27
+F-M009-31,M-009,设置锁屏验证与无操作休眠,D2,E-IXCD-01,设备密码开关→四位密码两次确认；关闭须旧密码。指纹先验密码后录入/命名/删除/开关；设置无操作休眠，历史默认15分钟。,笔记独立密码另见F13；锁屏后录音/同步/TTS、唤醒恢复、忘记密码与指纹失败回退未知，图1/5不当实测容量。,static_manual_pages_only,false,cases/M-009-iflytek-office.md,2026-10-27

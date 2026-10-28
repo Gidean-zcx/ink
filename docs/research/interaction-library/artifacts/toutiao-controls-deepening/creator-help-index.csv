@@ -1,0 +1,74 @@
+source_id,parent_id,level,menu_path,read_scope,scope,evidence_id,checked_on
+204,0,1,账号相关,menu_title_only,creator_help_not_reader_menu,E-TTCD-03,2026-10-27
+205,204,2,账号相关 / 账号注册,menu_title_only,creator_help_not_reader_menu,E-TTCD-03,2026-10-27
+259,204,2,账号相关 / 账号登录,menu_title_only,creator_help_not_reader_menu,E-TTCD-03,2026-10-27
+372,204,2,账号相关 / 实名认证,menu_title_only,creator_help_not_reader_menu,E-TTCD-03,2026-10-27
+260,204,2,账号相关 / 账号信息修改,menu_title_only,creator_help_not_reader_menu,E-TTCD-03,2026-10-27
+261,204,2,账号相关 / 账号注销及冻结,menu_title_only,creator_help_not_reader_menu,E-TTCD-03,2026-10-27
+229,0,1,头条认证,menu_title_only,creator_help_not_reader_menu,E-TTCD-03,2026-10-27
+230,229,2,头条认证 / 认证简介,menu_title_only,creator_help_not_reader_menu,E-TTCD-03,2026-10-27
+584,229,2,头条认证 / 个人认证,menu_title_only,creator_help_not_reader_menu,E-TTCD-03,2026-10-27
+585,584,3,头条认证 / 个人认证 / 职业认证,menu_title_only,creator_help_not_reader_menu,E-TTCD-03,2026-10-27
+586,584,3,头条认证 / 个人认证 / 兴趣认证,menu_title_only,creator_help_not_reader_menu,E-TTCD-03,2026-10-27
+234,229,2,头条认证 / 企业认证,menu_title_only,creator_help_not_reader_menu,E-TTCD-03,2026-10-27
+235,229,2,头条认证 / 机构认证,menu_title_only,creator_help_not_reader_menu,E-TTCD-03,2026-10-27
+236,0,1,平台规则,menu_title_only,creator_help_not_reader_menu,E-TTCD-03,2026-10-27
+426,236,2,平台规则 / 禁言机制,menu_title_only,creator_help_not_reader_menu,E-TTCD-03,2026-10-27
+470,236,2,平台规则 / 信用分机制,menu_title_only,creator_help_not_reader_menu,E-TTCD-03,2026-10-27
+240,236,2,平台规则 / 侵权投诉指引,menu_title_only,creator_help_not_reader_menu,E-TTCD-03,2026-10-27
+238,236,2,平台规则 / 今日头条社区规范,menu_title_only,creator_help_not_reader_menu,E-TTCD-03,2026-10-27
+427,236,2,平台规则 / 涉未成年人内容管理规范,menu_title_only,creator_help_not_reader_menu,E-TTCD-03,2026-10-27
+211,0,1,内容相关,menu_title_only,creator_help_not_reader_menu,E-TTCD-03,2026-10-27
+212,211,2,内容相关 / 全体裁创作,menu_title_only,creator_help_not_reader_menu,E-TTCD-03,2026-10-27
+214,212,3,内容相关 / 全体裁创作 / 图文,menu_title_only,creator_help_not_reader_menu,E-TTCD-03,2026-10-27
+220,212,3,内容相关 / 全体裁创作 / 音频,menu_title_only,creator_help_not_reader_menu,E-TTCD-03,2026-10-27
+572,212,3,内容相关 / 全体裁创作 / 合集,menu_title_only,creator_help_not_reader_menu,E-TTCD-03,2026-10-27
+215,212,3,内容相关 / 全体裁创作 / 微头条,menu_title_only,creator_help_not_reader_menu,E-TTCD-03,2026-10-27
+583,212,3,内容相关 / 全体裁创作 / 中视频,menu_title_only,creator_help_not_reader_menu,E-TTCD-03,2026-10-27
+217,212,3,内容相关 / 全体裁创作 / 小视频,menu_title_only,creator_help_not_reader_menu,E-TTCD-03,2026-10-27
+474,212,3,内容相关 / 全体裁创作 / 优质内容,menu_title_only,creator_help_not_reader_menu,E-TTCD-03,2026-10-27
+570,212,3,内容相关 / 全体裁创作 / 内容创作规则,menu_title_only,creator_help_not_reader_menu,E-TTCD-03,2026-10-27
+223,211,2,内容相关 / 内容管理,menu_title_only,creator_help_not_reader_menu,E-TTCD-03,2026-10-27
+226,223,3,内容相关 / 内容管理 / 收发私信,menu_title_only,creator_help_not_reader_menu,E-TTCD-03,2026-10-27
+225,223,3,内容相关 / 内容管理 / 评论管理,menu_title_only,creator_help_not_reader_menu,E-TTCD-03,2026-10-27
+224,223,3,内容相关 / 内容管理 / 数据查询,menu_title_only,creator_help_not_reader_menu,E-TTCD-03,2026-10-27
+573,211,2,内容相关 / 创作功能,menu_title_only,creator_help_not_reader_menu,E-TTCD-03,2026-10-27
+575,573,3,内容相关 / 创作功能 / 热点图库,menu_title_only,creator_help_not_reader_menu,E-TTCD-03,2026-10-27
+574,573,3,内容相关 / 创作功能 / 发文助手,menu_title_only,creator_help_not_reader_menu,E-TTCD-03,2026-10-27
+576,573,3,内容相关 / 创作功能 / 多体裁发布功能,menu_title_only,creator_help_not_reader_menu,E-TTCD-03,2026-10-27
+221,211,2,内容相关 / 推荐机制,menu_title_only,creator_help_not_reader_menu,E-TTCD-03,2026-10-27
+222,211,2,内容相关 / 征文活动,menu_title_only,creator_help_not_reader_menu,E-TTCD-03,2026-10-27
+242,0,1,平台功能及权益,menu_title_only,creator_help_not_reader_menu,E-TTCD-03,2026-10-27
+246,242,2,平台功能及权益 / MCN,menu_title_only,creator_help_not_reader_menu,E-TTCD-03,2026-10-27
+250,242,2,平台功能及权益 / 头条抽奖,menu_title_only,creator_help_not_reader_menu,E-TTCD-03,2026-10-27
+587,242,2,平台功能及权益 / 创作认证,menu_title_only,creator_help_not_reader_menu,E-TTCD-03,2026-10-27
+255,242,2,平台功能及权益 / 创作者计划,menu_title_only,creator_help_not_reader_menu,E-TTCD-03,2026-10-27
+589,242,2,平台功能及权益 / 成长权益体系,menu_title_only,creator_help_not_reader_menu,E-TTCD-03,2026-10-27
+252,242,2,平台功能及权益 / 头条加油包,menu_title_only,creator_help_not_reader_menu,E-TTCD-03,2026-10-27
+248,242,2,平台功能及权益 / 内容源接入,menu_title_only,creator_help_not_reader_menu,E-TTCD-03,2026-10-27
+244,242,2,平台功能及权益 / 自定义菜单,menu_title_only,creator_help_not_reader_menu,E-TTCD-03,2026-10-27
+566,242,2,平台功能及权益 / 首发激励计划,menu_title_only,creator_help_not_reader_menu,E-TTCD-03,2026-10-27
+340,242,2,平台功能及权益 / 专业领域发文资质证明,menu_title_only,creator_help_not_reader_menu,E-TTCD-03,2026-10-27
+245,242,2,平台功能及权益 / 创作保护(全网维权签约),menu_title_only,creator_help_not_reader_menu,E-TTCD-03,2026-10-27
+192,0,1,作者变现及提现,menu_title_only,creator_help_not_reader_menu,E-TTCD-03,2026-10-27
+577,192,2,作者变现及提现 / 变现功能,menu_title_only,creator_help_not_reader_menu,E-TTCD-03,2026-10-27
+578,577,3,作者变现及提现 / 变现功能 / 赞赏功能,menu_title_only,creator_help_not_reader_menu,E-TTCD-03,2026-10-27
+579,577,3,作者变现及提现 / 变现功能 / 付费专栏,menu_title_only,creator_help_not_reader_menu,E-TTCD-03,2026-10-27
+580,577,3,作者变现及提现 / 变现功能 / 头条小店,menu_title_only,creator_help_not_reader_menu,E-TTCD-03,2026-10-27
+582,577,3,作者变现及提现 / 变现功能 / 巨量星图平台,menu_title_only,creator_help_not_reader_menu,E-TTCD-03,2026-10-27
+193,192,2,作者变现及提现 / 收益查看,menu_title_only,creator_help_not_reader_menu,E-TTCD-03,2026-10-27
+194,192,2,作者变现及提现 / 收益提现,menu_title_only,creator_help_not_reader_menu,E-TTCD-03,2026-10-27
+198,192,2,作者变现及提现 / 文章创作收益,menu_title_only,creator_help_not_reader_menu,E-TTCD-03,2026-10-27
+567,192,2,作者变现及提现 / 视频创作收益,menu_title_only,creator_help_not_reader_menu,E-TTCD-03,2026-10-27
+200,192,2,作者变现及提现 / 微头条创作收益,menu_title_only,creator_help_not_reader_menu,E-TTCD-03,2026-10-27
+571,192,2,作者变现及提现 / 小视频创作收益 ,menu_title_only,creator_help_not_reader_menu,E-TTCD-03,2026-10-27
+195,0,1,常见问题,menu_title_only,creator_help_not_reader_menu,E-TTCD-03,2026-10-27
+256,195,2,常见问题 / 账号相关,menu_title_only,creator_help_not_reader_menu,E-TTCD-03,2026-10-27
+257,256,3,常见问题 / 账号相关 / 注册&实名认证,menu_title_only,creator_help_not_reader_menu,E-TTCD-03,2026-10-27
+280,256,3,常见问题 / 账号相关 / 登录&注销&封禁,menu_title_only,creator_help_not_reader_menu,E-TTCD-03,2026-10-27
+282,195,2,常见问题 / 内容相关,one_faq_body_read,creator_help_not_reader_menu,E-TTCD-03,2026-10-27
+284,195,2,常见问题 / 头条认证,menu_title_only,creator_help_not_reader_menu,E-TTCD-03,2026-10-27
+263,195,2,常见问题 / 创作功能及权益,menu_title_only,creator_help_not_reader_menu,E-TTCD-03,2026-10-27
+196,195,2,常见问题 / 作者变现及提现,menu_title_only,creator_help_not_reader_menu,E-TTCD-03,2026-10-27
+197,196,3,常见问题 / 作者变现及提现 / 收益查看,menu_title_only,creator_help_not_reader_menu,E-TTCD-03,2026-10-27
+283,196,3,常见问题 / 作者变现及提现 / 收益提现,menu_title_only,creator_help_not_reader_menu,E-TTCD-03,2026-10-27

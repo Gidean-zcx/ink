@@ -1,0 +1,4 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M028-05,M-028,在线字词听写：历史任务局部,D2,E-XYCD-01;E-XYCD-03,提交与后续操作边界,当前版本、撤回、强退恢复和识别误判修订,static_reference_only,false,cases/M-028-xiaoyuan-ai.md,2026-10-26
+F-M028-06,M-028,单词跟读：历史失败分支,D2,E-XYCD-01;E-XYCD-04,失败次数对应不同路径,评分门槛、漏录和中断保存；拼图非连续,static_reference_only,false,cases/M-028-xiaoyuan-ai.md,2026-10-26
+F-M014-06,M-014,手机关闭个性化推荐：历史政策路径,D2,E-IPAD-01,2024政策路径关个性化栏目，保留精选等；关闭推荐不证明清除阅读记录,历史路径未逐OS绑定；8.6.2菜单、生效时间、跨设备及历史清除仍未知,not_observed,false,cases/M-014-ireader.md,2026-10-27

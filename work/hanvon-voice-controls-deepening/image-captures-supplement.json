@@ -1,0 +1,28 @@
+[
+  {
+    "source_html": "work/hanvon-voice-controls-deepening/raw/sina-comparison-elements.json",
+    "index_1_based": 18,
+    "url": "https://zhongces3.sina.com.cn/product/20251030/e12e541153e402e287a3ba5c738bdf5e.jpeg",
+    "final_url": "https://zhongces3.sina.com.cn/product/20251030/e12e541153e402e287a3ba5c738bdf5e.jpeg",
+    "status": 200,
+    "content_type": "image/jpeg",
+    "bytes": 110233,
+    "path": "work/hanvon-voice-controls-deepening/images/sina-18.jpg",
+    "sha256": "5d4b9c7a393701ac5ab5241be41f77047a1444387100b99acdaa9011d284fceb",
+    "exception": null,
+    "curl_exit": 0
+  },
+  {
+    "source_html": "work/hanvon-voice-controls-deepening/raw/sina-comparison-elements.json",
+    "index_1_based": 25,
+    "url": "https://zhongces3.sina.com.cn/product/20251030/307688ee51641e42f4dfd6ec73981517.jpeg",
+    "final_url": "https://zhongces3.sina.com.cn/product/20251030/307688ee51641e42f4dfd6ec73981517.jpeg",
+    "status": 200,
+    "content_type": "image/jpeg",
+    "bytes": 121421,
+    "path": "work/hanvon-voice-controls-deepening/images/sina-25.jpg",
+    "sha256": "0f61de196067c8d784cd688d416d4dc26d14cdeec5da0b0077f683116eafb72e",
+    "exception": null,
+    "curl_exit": 0
+  }
+]

@@ -1,0 +1,21 @@
+{
+  "result": "PASS",
+  "new_E": 3,
+  "new_F": 3,
+  "case_F": 13,
+  "case_D2": 12,
+  "case_D1": 1,
+  "old_field_changes": 22,
+  "inventory": {
+    "help_page": 22,
+    "help_section": 12
+  },
+  "raw_and_artifact_hashes": "match",
+  "csv_LF": true,
+  "unchanged_old_batches": [
+    "docs/research/interaction-library/batches/dictionary-evidence.jsonl",
+    "docs/research/interaction-library/batches/dictionary-coverage.csv",
+    "docs/research/interaction-library/batches/dictionary-inventory-evidence.jsonl"
+  ],
+  "no_hands_on_or_visual_claim": true
+}

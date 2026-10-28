@@ -1,0 +1,25 @@
+{
+  "order": 18,
+  "entry_id": "INO-basic--syncing-mobile-apps--where-can-i-use-inoreader",
+  "title": "Where can I use Inoreader?",
+  "url": "https://www.inoreader.com/help/basic/syncing-mobile-apps/where-can-i-use-inoreader",
+  "checked_on": "2026-10-27",
+  "http_status": 200,
+  "final_url": "https://www.inoreader.com/help/basic/syncing-mobile-apps/where-can-i-use-inoreader",
+  "acquisition": "one_anonymous_normal_GET",
+  "raw_path": "work/research/batch41-inoreader-help/18-INO-basic--syncing-mobile-apps--where-can-i-use-inoreader.html",
+  "headers_path": "work/research/batch41-inoreader-help/18-INO-basic--syncing-mobile-apps--where-can-i-use-inoreader.headers.json",
+  "raw_sha256": "386f972dc71bb872f822cea19768e71a8032f6628d26a5ce1383527028c124c1",
+  "bytes": 140793,
+  "status": "body_obtained",
+  "body_status": "extracted_not_yet_root_read",
+  "body_path": "work/research/batch41-inoreader-help/18-INO-basic--syncing-mobile-apps--where-can-i-use-inoreader.body.txt",
+  "body_sha256": "53a583f0c62e77b29ed750ce6e5f72c1b5ec2adc803d5a0e0b28c952757af164",
+  "body_chars": 69,
+  "links": [
+    "http://www.inoreader.com",
+    "https://apps.apple.com/app/apple-store/id892355414?pt=32204000&ct=inoreader_internal&mt=8",
+    "https://play.google.com/store/apps/details?id=com.innologica.inoreader"
+  ],
+  "images": []
+}

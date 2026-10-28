@@ -1,0 +1,3 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M017-08,M-017,筛选和固定词条学习内容,D2,E-MMCD-05;E-MMCD-06;E-MMCD-07,标签筛选与固定选择；超级释义设置、缺词回退及考点查看,自创内容审核/冲突/删除恢复、报错结果和跨端偏好同步未知,not_observed,false,cases/M-017-maimemo.md,2026-10-27
+F-M017-09,M-017,将词列表导出为 PDF,D2,E-MMCD-08;E-MMCD-06,选词→样式→确认生成→本地保存；退出与闪退分支,设备保存器、取消确认、断网/失败扣次判定及文件恢复未知,not_observed,false,cases/M-017-maimemo.md,2026-10-27

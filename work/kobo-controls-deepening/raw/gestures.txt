@@ -1,0 +1,4 @@
+When your eReader is turned on, you can touch the screen to open books, turn pages, select items, and more.
+Tap: Touch the screen lightly to open a book, turn a page, select a menu, and more.
+Swipe: Use this gesture to turn pages and scroll through menus.
+Press and hold: Touch the screen and hold your finger in place. You can use this gesture on book covers and book titles to see more options. This gesture also lets you select text while reading. Press and hold a word, and when you let go, your eReader will underline your selection and show a circle at each end of the word. Drag the circles to select more text. Note : Not all books allow text selection. For example, you can’t select text in PDFs or comic books.

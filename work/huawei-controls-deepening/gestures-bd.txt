@@ -1,0 +1,22 @@
+Direct Your Device with a Wave of the Hand
+Navigate on your tablet with a few simple hand gestures.
+Try it out
+Notification Panel
+: Swipe down from the upper left edge of the screen to view and manage app notifications.
+Control Panel
+: Swipe down from the upper right edge of the screen to display control panel, to quickly enable or disable frequently-used features.
+Gestures
+: Go to
+>
+System & updates
+>
+System navigation
+and select
+Gestures
+. You'll then be able to use the following hand gestures:
+Back
+: Swipe inward from the left or right edge.
+Return to the home screen
+: Swipe up from the bottom of the screen.
+Access recent tasks
+: Swipe up from the bottom of the screen and hold for a short while.

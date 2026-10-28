@@ -1,0 +1,71 @@
+My Bias Bar Colors Are Wrong
+Ground News Help Center
+Contact Us
+How can we help you?
+Results
+No results found
+More results
+We use cookies to analyze website traffic and help improve our visitor experience. Privacy Policy
+Reject
+Accept
+In this articleHow to Fix the IssueCheck Your Ground News Edition (Web Readers)Set Up Your Account Preferences (Web Readers)Change the Bias Bar Color Scheme (Mobile App Readers)Still Having Trouble?Related Articles
+Home
+Fix a Problem
+News Feed Issues
+My Bias Bar Colors Are Wrong
+Edited Saturday, April 11 2026
+If the colors on the Ground News bias bar look different from what you expected, it is usually because your Ground News edition or account settings are set to a different regional color scheme.
+Different countries use different political color associations and the Ground News bias bar is designed to represent the political party associations, depending on your Ground News edition. In countries such as the UK, Canada, and Australia, the left-leaning parties are associated with red, and the right-leaning parties are associated with blue, so the colors are set accordingly in our UK, International, and Canadian Editions.
+Follow the steps below to confirm or change your bias bar color scheme.
+How to Fix the Issue
+Check Your Ground News Edition (Web Readers)
+The bias bar colors change depending on which Ground News edition you are currently using. To confirm or change your edition on the website:
+Sign into your account on our website and select the edition drop-down menu in the top-right corner of the page
+Select the edition you'd like to opt into for your account
+Changing the edition for your account will update the bias bar colors depending on the region.
+For a full walkthrough on changing your edition, visit: Follow Relevant News For Your Region
+Set Up Your Account Preferences (Web Readers)
+If you'd like to change the color scheme of the bias bar without having to change the Ground News edition, you can set up your Account Preferences to the US or International color scheme. To set this up on the website:
+Sign into your account on our website
+Select My Account at the top right-hand corner of the screen
+Select Preferences on the selection bar on the left-hand side of the screen
+Click on the Bias Bar drop-down and select the US or International color scheme
+This will change your bias bar color scheme while keeping your preferred Ground News edition!
+Change the Bias Bar Color Scheme (Mobile App Readers)
+If you are using the Ground News mobile app, you can manually choose your preferred bias bar color scheme, regardless of the edition you are viewing.
+To update the color scheme on the app:
+Launch the Ground News app
+Tap the Profile tab (bottom-right corner of the page)
+Tap the Settings icon (top-right corner of the page)
+Select Bias Bar Color Scheme
+Choose your preferred scheme (US or International)
+Still Having Trouble?
+If the issue continues after following these steps, our support team may be able to help investigate further. You can contact our support team at feedback@ground.news for assistance and we'd be happy to help.
+Related Articles
+Known Issues & Bug Fixes
+How Do I Read the Ground News Bias Bar?
+Learn more about the Ground News Bias Bar
+About Our Ratings
+Report an Issue
+Need help using Ground News?
+If you have any questions or are experiencing an issue with a feature, setting, or something not working as expected, our team can help investigate and provide support. Learn more about reporting an issue here or email us directly at feedback@ground.news
+Need help with your account or subscription?
+If you have questions about your account, subscription, billing, or payments, our support team is available to help. You can visit your Account page here or email us directly at subscriptions@ground.news
+Help us improve the Help Center
+We’re always working to make the Ground News Help Center more helpful for our readers. If you have suggestions for improving this article or notice something that could be clarified, we welcome your feedback at feedback@ground.news Please keep in mind that feedback submitted directly through Help Center article comments is not monitored for support requests, and we encourage you to contact our support team directly so we can assist you.
+Bias Bar
+Colours
+Colors
+Wrong
+Not Working
+Was this article helpful?
+Yes
+No
+Sorry about that! Care to tell us more?
+What was unhelpful?
+Submit
+Thanks for the feedback!
+There was an issue submitting your feedback
+Please check your connection and try again.
+Cookie preferences
+Refund and Cancellation PolicyTerms and ConditionsPrivacy Policy

@@ -1,0 +1,4 @@
+About transform actions in Shortcuts on iPhone or iPad
+Transform actions edit content (such as cropping an image) or convert content to a different format (such as changing a PNG to a JPEG). Using the Content Graph engine, Shortcuts often automatically converts content that’s passed between actions, but you can use transform actions for more control over the conversions.
+As you build your shortcut, you can search for transform actions using keywords like make, filter, convert, edit, get, and adjust. For example, you might want to use Filter Images to separate out portrait photos, or use Make Rich Text from HTML on a link from Safari. A search using the keyword convert displays actions that perform conversion tasks.
+Other helpful transform actions include Combine Text, Combine Images, Translate Text, Detect Language, Filter Event Attendees, and Filter Files.

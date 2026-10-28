@@ -1,0 +1,6 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M030-04,M-030,求助与错后再试,D2,E-KHD-01;E-KHD-03;E-KHCD-10;E-KLCD-07,Kodi求助与分步示范；中文指南称重复活动说明，旧英文称下一句,两种帮助措辞未解；上一句回放、触发次数、示范后操作及结束页未知,static_reference_only,false,cases/M-030-khan-kids.md,2026-10-27
+F-M030-05,M-030,首次正确奖励与角色收藏入口,D2,E-KHD-01;E-KHD-03;E-KHCD-10,首次正确分支；主页角色房间,错后奖励；发奖阈值；课内退出；重复收益,static_reference_only,false,cases/M-030-khan-kids.md,2026-10-27
+F-M030-06,M-030,Learning Path 中断后按 Play,D2,E-KHD-02,回应用按 Play 进入下一课,未完成课记录；强退/断网；原题重找,not_observed,false,cases/M-030-khan-kids.md,2026-10-26
+F-M050-05,M-050,拼图错放后求助与重试,D1,E-DRGD-01;E-DRGD-02;E-DRGN-02;E-DBGP-02,2018作者报告孩子因数块放不到预期位置而受挫；错误原因和程序反馈未说明，成人暂停建议不是内置提示。,错放原因及界面反馈、提示、撤销、重试到结算；当前版本亦未核。,not_observed,false,cases/M-050-dragonbox.md,2026-10-27
+F-M050-06,M-050,未完拼图退出与恢复,D1,E-DRGD-03;E-DRGN-04;E-DBCD-02,旧档案和更新记录仍不证明局内续接；Google Play含Offline标签，但没有Numbers专属离线授权/保存步骤。,退出/重开按钮、未完槽位及金币提交时机、离线存档与跨端冲突；不套Kahoot主App离线机制。,not_observed,false,cases/M-050-dragonbox.md,2026-10-27

@@ -1,0 +1,62 @@
+Download Read on reMarkable Chrome extension.
+You can also send Word and PowerPoint files to your reMarkable using our Read on reMarkable add-in for Microsoft Office. Once the documents have been sent to your paper tablet, you can read, review, and annotate without any distractions.
+Learn how to install our add-in for Microsoft Office.Read this article to learn how to send web articles to your reMarkable paper tablet with our Read on reMarkable extension for Google Chrome.
+You can choose whether you want to send documents as reMarkable notebooks or as EPUB files.
+Download Read on reMarkable Chrome extension.
+You can also send Word and PowerPoint files to your reMarkable using our Read on reMarkable add-in for Microsoft Office. Once the documents have been sent to your paper tablet, you can read, review, and annotate without any distractions.
+Learn how to install our add-in for Microsoft Office.
+Before you start
+Currently, Read on reMarkable only works with the Google Chrome web browser.
+Make sure you have a reMarkable account set up.
+Note that importing articles as editable reMarkable notebooks requires a Connect subscription. You don't need a subscription to use the EPUB option.
+Once installed, you’ll find the Read on reMarkable icon at the top-right of your Chrome browser window (next to the address bar).
+Each website has its own way of displaying content, which may change the formatting of the page when it appears on your paper tablet.
+How to install Read on reMarkable
+Open Chrome.
+Go to the Chrome Web Store.
+Click Add to Chrome in the top-right corner.
+Click Add extension.
+A new tab will open, giving you the option to connect Read on reMarkable to your account.
+Click Get one-time code. A new tab will open and take you to my.remarkable.com.
+Log in at my.remarkable.com.
+Copy the one-time code, then go back to the reMarkable page in the Chrome Web Store, and paste the code.
+Click Connect and wait a few seconds. Click Done.
+The Read on reMarkable extension is now installed and will appear in the top-right corner of your browser.
+Different reading options
+reMarkable notebook
+Click the reMarkable icon and the content on the page you're viewing will be sent to your paper tablet as a notebook within a few seconds. Images in the article will also be included (requires software version 3.27).
+These notebooks are fully editable.
+EPUB
+Here are two ways to send an article to your paper tablet as an EPUB:
+Right-click on the reMarkable icon, then click Read on reMarkable as EPUB.
+Click the three dots next to the Chrome extension icon, click Options, then EPUB.
+Note: EPUB files are read-only, so you won't be able to adjust the underlying text. However, you can still annotate on top of the file.
+Sending articles as PDFs
+To add a PDF to your paper tablet, use the print function in your web browser to save the page, then import the file using the reMarkable web app or desktop app.
+Here’s how:
+Find the article you want to read, then open the print menu in your web browser (Ctrl+P or Command+P).
+Save the file to your computer.
+Open the reMarkable desktop or web app.
+Import the saved PDF into the app to send it to your paper tablet.
+Read more about importing files.
+EPUB settings
+Click Read on reMarkable as EPUB. A print dialogue box will open.
+Change the destination to Read on reMarkable as EPUB.
+Select the pages you want to send, and adjust the layout if you want to make changes.
+Click Save.
+How to create more space for note-taking
+Right-click the rM icon and select Read on reMarkable as EPUB.
+Click More settings.
+Click Margins, and choose Custom.
+Move the margins to make extra space for notes.
+Click Save to finish.
+How to set your default file type
+You can choose your default file type (reMarkable notebook or EPUB) for one-click transfer:
+Click the three dots next to the reMarkable icon.
+Click Options.
+Select your preferred default option.
+Click Done.
+How to remove the Read on reMarkable extension
+Click the three dots next to the reMarkable icon.
+Select Remove from Chrome.
+Click Remove.

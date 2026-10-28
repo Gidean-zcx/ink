@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1.0,user-scalable=no,minimal-ui">
+    <title>“猿辅导系”产品分析（1）：快思考、慢决策的「粉笔网」 | 人人都是产品经理</title>
+    <meta name="baidu-site-verification" content="codeva-oZwKtV7LDl" />
+    <meta property="og:title" content="“猿辅导系”产品分析（1）：快思考、慢决策的「粉笔网」 &#8211; 人人都是产品经理"><meta property="og:url" content="https://www.woshipm.com/evaluating/3331984.html"><meta property="og:image" content="https://image.woshipm.com/wp-files/2020/03/bkYSMHJa7cwPY9d4ghMn.jpg"><meta property="og:description" content="随着互联网行业的迅速发展，很多互联网教育公司迅速崛起，本文以猿辅导产品粉笔网为例，透过产品看本质，从互联网教育社区到互联网教育平台的转型中思考教育赛道的“快思考”“慢决策。 在风云变幻的教育赛道中，充斥着大量的涌入者，教育行业经历过这些涌入者的野蛮生长，见证过"><meta property="og:type" content="article"><script type="application/ld+json">
+            {
+                "@context": "http://schema.org",
+                "@type": "Article",
+                "name": "“猿辅导系”产品分析（1）：快思考、慢决策的「粉笔网」 &#8211; 人人都是产品经理,","author": "爱吃糖炒栗子","description": "随着互联网行业的迅速发展，很多互联网教育公司迅速崛起，本文以猿辅导产品粉笔网为例，透过产品看本质，从互联网教育社区到互联网教育平台的转型中思考教育赛道的“快思考”“慢决策。 在风云变幻的教育赛道中，充斥着大量的涌入者，教育行业经历过这些涌入者的野蛮生长，见证过",
+                "image": [
+                    "https:https://image.woshipm.com/wp-files/2020/03/bkYSMHJa7cwPY9d4ghMn.jpg"
+                ],
+              "datePublished": "2020-03-11T17:03:31",
+              "commentCount": 2,
+              "interactionStatistic": {
+                "@type": "InteractionCounter",
+                "interactionType": "http://schema.org/LikeAction",
+                "userInteractionCount": 0
+              }
+            }
+        </script><meta name="keywords" content="2年, 初级, 猿辅导, 粉笔网, "><meta name="description" content="随着互联网行业的迅速发展，很多互联网教育公司迅速崛起，本文以猿辅导产品粉笔网为例，透过产品看本质，从互联网教育社区到互联网教育平台的转型中思考教育赛道的“快思考”“慢决策。 在风云变幻的教育赛道中，充斥着大量的涌入者，教育行业经历过这些涌入者的野蛮生长，见证过"><link type="image/vnd.microsoft.icon" href="//image.woshipm.com/favicon.ico" rel="shortcut icon"><meta name='robots' content='max-image-preview:large' />
+	<style>img:is([sizes="auto" i], [sizes^="auto," i]) { contain-intrinsic-size: 3000px 1500px }</style>
+	<link rel='dns-prefetch' href='//image.woshipm.com' />
+<script type="text/javascript">
+/* <![CDATA[ */
+window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/16.0.1\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/16.0.1\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/www.woshipm.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=6.8.11"}};
+/*! This file is auto-generated */
+!function(s,n){var o,i,e;function c(e){try{var t={supportTests:e,timestamp:(new Date).valueOf()};sessionStorage.setItem(o,JSON.stringify(t))}catch(e){}}function p(e,t,n){e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(t,0,0);var t=new Uint32Array(e.getImageData(0,0,e.canvas.width,e.canvas.height).data),a=(e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(n,0,0),new Uint32Array(e.getImageData(0,0,e.canvas.width,e.canvas.height).data));return t.every(function(e,t){return e===a[t]})}function u(e,t){e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(t,0,0);for(var n=e.getImageData(16,16,1,1),a=0;a<n.data.length;a++)if(0!==n.data[a])return!1;return!0}function f(e,t,n,a){switch(t){case"flag":return n(e,"\ud83c\udff3\ufe0f\u200d\u26a7\ufe0f","\ud83c\udff3\ufe0f\u200b\u26a7\ufe0f")?!1:!n(e,"\ud83c\udde8\ud83c\uddf6","\ud83c\udde8\u200b\ud83c\uddf6")&&!n(e,"\ud83c\udff4\udb40\udc67\udb40\udc62\udb40\udc65\udb40\udc6e\udb40\udc67\udb40\udc7f","\ud83c\udff4\u200b\udb40\udc67\u200b\udb40\udc62\u200b\udb40\udc65\u200b\udb40\udc6e\u200b\udb40\udc67\u200b\udb40\udc7f");case"emoji":return!a(e,"\ud83e\udedf")}return!1}function g(e,t,n,a){var r="undefined"!=typeof WorkerGlobalScope&&self instanceof WorkerGlobalScope?new OffscreenCanvas(300,150):s.createElement("canvas"),o=r.getContext("2d",{willReadFrequently:!0}),i=(o.textBaseline="top",o.font="600 32px Arial",{});return e.forEach(function(e){i[e]=t(o,e,n,a)}),i}function t(e){var t=s.createElement("script");t.src=e,t.defer=!0,s.head.appendChild(t)}"undefined"!=typeof Promise&&(o="wpEmojiSettingsSupports",i=["flag","emoji"],n.supports={everything:!0,everythingExceptFlag:!0},e=new Promise(function(e){s.addEventListener("DOMContentLoaded",e,{once:!0})}),new Promise(function(t){var n=function(){try{var e=JSON.parse(sessionStorage.getItem(o));if("object"==typeof e&&"number"==typeof e.timestamp&&(new Date).valueOf()<e.timestamp+604800&&"object"==typeof e.supportTests)return e.supportTests}catch(e){}return null}();if(!n){if("undefined"!=typeof Worker&&"undefined"!=typeof OffscreenCanvas&&"undefined"!=typeof URL&&URL.createObjectURL&&"undefined"!=typeof Blob)try{var e="postMessage("+g.toString()+"("+[JSON.stringify(i),f.toString(),p.toString(),u.toString()].join(",")+"));",a=new Blob([e],{type:"text/javascript"}),r=new Worker(URL.createObjectURL(a),{name:"wpTestEmojiSupports"});return void(r.onmessage=function(e){c(n=e.data),r.terminate(),t(n)})}catch(e){}c(n=g(i,f,p,u))}t(n)}).then(function(e){for(var t in e)n.supports[t]=e[t],n.supports.everything=n.supports.everything&&n.supports[t],"flag"!==t&&(n.supports.everythingExceptFlag=n.supports.everythingExceptFlag&&n.supports[t]);n.supports.everythingExceptFlag=n.supports.everythingExceptFlag&&!n.supports.flag,n.DOMReady=!1,n.readyCallback=function(){n.DOMReady=!0}}).then(function(){return e}).then(function(){var e;n.supports.everything||(n.readyCallback(),(e=n.source||{}).concatemoji?t(e.concatemoji):e.wpemoji&&e.twemoji&&(t(e.twemoji),t(e.wpemoji)))}))}((window,document),window._wpemojiSettings);
+/* ]]> */
+</script>
+<style id='wp-emoji-styles-inline-css' type='text/css'>
+
+	img.wp-smiley, img.emoji {
+		display: inline !important;
+		border: none !important;
+		box-shadow: none !important;
+		height: 1em !important;
+		width: 1em !important;
+		margin: 0 0.07em !important;
+		vertical-align: -0.1em !important;
+		background: none !important;
+		padding: 0 !important;
+	}
+</style>
+<link rel='stylesheet' id='wp-block-library-css' href='https://www.woshipm.com/wp-includes/css/dist/block-library/style.min.css?ver=6.8.11' type='text/css' media='all' />
+<style id='classic-theme-styles-inline-css' type='text/css'>
+/*! This file is auto-generated */
+.wp-block-button__link{color:#fff;background-color:#32373c;border-radius:9999px;box-shadow:none;text-decoration:none;padding:calc(.667em + 2px) calc(1.333em + 2px);font-size:1.125em}.wp-block-file__button{background:#32373c;color:#fff;text-decoration:none}
+</style>
+<style id='global-styles-inline-css' type='text/css'>
+:root{--wp--preset--aspect-ratio--square: 1;--wp--preset--aspect-ratio--4-3: 4/3;--wp--preset--aspect-ratio--3-4: 3/4;--wp--preset--aspect-ratio--3-2: 3/2;--wp--preset--aspect-ratio--2-3: 2/3;--wp--preset--aspect-ratio--16-9: 16/9;--wp--preset--aspect-ratio--9-16: 9/16;--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgba(6,147,227,1) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgba(252,185,0,1) 0%,rgba(255,105,0,1) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgba(255,105,0,1) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgba(255, 255, 255, 1), 6px 6px rgba(0, 0, 0, 1);--wp--preset--shadow--crisp: 6px 6px 0px rgba(0, 0, 0, 1);}:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flex{display: flex;}.is-layout-flex{flex-wrap: wrap;align-items: center;}.is-layout-flex > :is(*, div){margin: 0;}body .is-layout-grid{display: grid;}.is-layout-grid > :is(*, div){margin: 0;}:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}
+:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}
+:root :where(.wp-block-pullquote){font-size: 1.5em;line-height: 1.6;}
+</style>
+<link rel='stylesheet' id='ui-css' href='//image.woshipm.com/fp/css/ui.css?ver=6.0.12' type='text/css' media='screen' />
+<link rel='stylesheet' id='swipper-css' href='//image.woshipm.com/fp/css/swiper-bundle.min.css?ver=6.0.12' type='text/css' media='screen' />
+<link rel='stylesheet' id='misc-css' href='//image.woshipm.com/fp/css/app.min.css?ver=6.0.12' type='text/css' media='screen' />
+<link rel='stylesheet' id='fa-css' href='//image.woshipm.com/kan/css/font-awesome.min.css?ver=6.0.12' type='text/css' media='screen' />
+<link rel='stylesheet' id='article-intelligence-sidebar-css' href='https://www.woshipm.com/wp-content/themes/Hannah/css/article-intelligence-sidebar.css?ver=1787811033' type='text/css' media='screen' />
+<link rel="canonical" href="https://www.woshipm.com/evaluating/3331984.html" />
+<link rel="icon" href="https://image.woshipm.com/wp-files/2024/11/MbtEc6Z3dCX41DLY4alz.png" sizes="32x32" />
+<link rel="icon" href="https://image.woshipm.com/wp-files/2024/11/MbtEc6Z3dCX41DLY4alz.png" sizes="192x192" />
+<link rel="apple-touch-icon" href="https://image.woshipm.com/wp-files/2024/11/MbtEc6Z3dCX41DLY4alz.png" />
+<meta name="msapplication-TileImage" content="https://image.woshipm.com/wp-files/2024/11/MbtEc6Z3dCX41DLY4alz.png" />
+<style>.comment--location {
+			display: flex;
+			margin-top: 8px;
+			align-items: center;
+			font-size: 14px!important;
+			padding-left: 10px;
+			color: rgba(0,0,0,.5)!important;
+			fill: rgba(0,0,0,.5)!important;
+		}
+		.comment--location svg {
+			margin-right: 5px;
+		}
+		</style></head>
+
+<body class="single u-backgroundColorLightBlue is-fixedHeader">
+    <div id="app" class="surface--content">
+        <el-backtop></el-backtop>
+        <header class="pm--metabar">
+            <div class="container u-flex">
+                <a href="/" class="u-flex u-relative"><img class="logo" src="//image.woshipm.com/fp/images/logo.png" alt="人人都是产品经理"></a>
+                <nav class="header-nav">
+                    <ul class="subnav-ul">
+                        <li class="menu-item"><a href="https://www.woshipm.com/">首页</a></li>
+                        <li class="menu-item menu-item-has-children menu-item--new">
+                            <a href="javascript:;">培训课程</a>
+                            <div class="sub--menuWidth">
+                                <div class="container dropCard--courses">
+                                    <div class="dropCourse--list">
+                                        <div class="dropCourse--title"><a href="https://www.qidianla.com/" target="_blank">名师辅导课</a></div>
+                                        <div class="dropCourse--item"><a href="https://ke.qidianla.com/courses/aipmtc" target="_blank">AI产品经理转岗特训营</a></div>
+                                        <div class="dropCourse--item"><a href="https://vip.qidianla.com/studyClass.html" target="_blank">BAT大厂产品运营体系课</a></div>
+                                        <div class="dropCourse--item"><a href="https://ke.qidianla.com/courses/bcpm" target="_blank">B端C端全栈产品经理私教课</a></div>
+                                        <div class="dropCourse--more"><a href="https://www.qidianla.com/" target="_blank">查看更多<span class="el-icon-d-arrow-right"></span></a></div>
+                                    </div>
+                                    <div class="dropCourse--list">
+                                        <div class="dropCourse--title"><a href="https://www.qidianla.com/" target="_blank">个人自学课</a></div>
+                                        <div class="dropCourse--item"><a href="https://ke.qidianla.com/courses/iom" target="_blank">互联网运营能力进阶</a></div>
+                                        <div class="dropCourse--item"><a href="https://ke.qidianla.com/courses/bupm" target="_blank">业务产品经理能力进阶</a></div>
+                                        <div class="dropCourse--item"><a href="https://ke.qidianla.com/courses/ecpm1" target="_blank">电商产品经理从入门到进阶</a></div>
+                                        <div class="dropCourse--more"><a href="https://www.qidianla.com/" target="_blank">查看更多<span class="el-icon-d-arrow-right"></span></a></div>
+                                    </div>
+                                    <div class="dropCourse--list">
+                                        <div class="dropCourse--title"><a href="https://daxue.qidianla.com/" target="_blank">企业内训课</a></div>
+                                        <div class="dropCourse--double">
+                                            <div class="dropCourse--doubleItem">
+                                                <div class="dropCourse--item"><a href="https://daxue.qidianla.com/" target="_blank">数字化产品经理课</a></div>
+                                                <div class="dropCourse--item"><a href="https://daxue.qidianla.com/" target="_blank">商业化产品实战课</a></div>
+                                                <div class="dropCourse--item"><a href="https://daxue.qidianla.com/" target="_blank">数字化营销体系课</a></div>
+                                            </div>
+                                            <div class="dropCourse--doubleItem">
+                                                <div class="dropCourse--item"><a href="https://daxue.qidianla.com/" target="_blank">B端运营实战课</a></div>
+                                                <div class="dropCourse--item"><a href="https://daxue.qidianla.com/" target="_blank">私域流量实战课</a></div>
+                                                <div class="dropCourse--item"><a href="https://daxue.qidianla.com/" target="_blank">数据分析体系课</a></div>
+                                            </div>
+                                        </div>
+                                        <div class="dropCourse--more"><a href="https://daxue.qidianla.com/" target="_blank">查看更多<span class="el-icon-d-arrow-right"></span></a></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="menu-item menu-item-has-children">
+                            <a href="javascript:;">分类浏览</a>
+                            <svg width="14" height="14" viewBox="0 0 19 19" class="svgIcon">
+                                <path d="M3.9 6.77l5.2 5.76.43.47.43-.47 5.15-5.7-.85-.77-4.73 5.25L4.75 6z" fill-rule="evenodd"></path>
+                            </svg>
+                            <div class="sub--menuWidth">
+                                <div class="container dropCard--list">
+                                    <div class="pm--category">
+                                                                                    <div class="pm--categoryItem">
+                                                <a href="https://www.woshipm.com/category/it" class="u-flex" target="_blank">
+                                                    <div class="content">
+                                                        <div class="name">业界动态</div>
+                                                        <div class="count">31345篇文章</div>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                                                                    <div class="pm--categoryItem">
+                                                <a href="https://www.woshipm.com/category/pd" class="u-flex" target="_blank">
+                                                    <div class="content">
+                                                        <div class="name">产品设计</div>
+                                                        <div class="count">19562篇文章</div>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                                                                    <div class="pm--categoryItem">
+                                                <a href="https://www.woshipm.com/category/operate" class="u-flex" target="_blank">
+                                                    <div class="content">
+                                                        <div class="name">产品运营</div>
+                                                        <div class="count">15353篇文章</div>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                                                                    <div class="pm--categoryItem">
+                                                <a href="https://www.woshipm.com/category/pmd" class="u-flex" target="_blank">
+                                                    <div class="content">
+                                                        <div class="name">产品经理</div>
+                                                        <div class="count">9602篇文章</div>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                                                                    <div class="pm--categoryItem">
+                                                <a href="https://www.woshipm.com/category/zhichang" class="u-flex" target="_blank">
+                                                    <div class="content">
+                                                        <div class="name">职场攻略</div>
+                                                        <div class="count">5449篇文章</div>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                                                                    <div class="pm--categoryItem">
+                                                <a href="https://www.woshipm.com/category/marketing" class="u-flex" target="_blank">
+                                                    <div class="content">
+                                                        <div class="name">营销推广</div>
+                                                        <div class="count">4963篇文章</div>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                                                                    <div class="pm--categoryItem">
+                                                <a href="https://www.woshipm.com/category/ucd" class="u-flex" target="_blank">
+                                                    <div class="content">
+                                                        <div class="name">交互体验</div>
+                                                        <div class="count">3956篇文章</div>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                                                                    <div class="pm--categoryItem">
+                                                <a href="https://www.woshipm.com/category/evaluating" class="u-flex" target="_blank">
+                                                    <div class="content">
+                                                        <div class="name">分析评测</div>
+                                                        <div class="count">3662篇文章</div>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                                                                    <div class="pm--categoryItem">
+                                                <a href="https://www.woshipm.com/category/chuangye" class="u-flex" target="_blank">
+                                                    <div class="content">
+                                                        <div class="name">创业学院</div>
+                                                        <div class="count">2350篇文章</div>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                                                                    <div class="pm--categoryItem">
+                                                <a href="https://www.woshipm.com/category/user-research" class="u-flex" target="_blank">
+                                                    <div class="content">
+                                                        <div class="name">用户研究</div>
+                                                        <div class="count">1916篇文章</div>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                                                                    <div class="pm--categoryItem">
+                                                <a href="https://www.woshipm.com/category/data-analysis" class="u-flex" target="_blank">
+                                                    <div class="content">
+                                                        <div class="name">数据分析</div>
+                                                        <div class="count">1812篇文章</div>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                                                                    <div class="pm--categoryItem">
+                                                <a href="https://www.woshipm.com/category/rp" class="u-flex" target="_blank">
+                                                    <div class="content">
+                                                        <div class="name">原型设计</div>
+                                                        <div class="count">1436篇文章</div>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                                                            </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="menu-item"><a target="_blank" data-id="37" data-adid="41" href="/category/active">活动讲座</a></li>
+                        <li class="menu-item"><a target="_blank" data-id="35" data-adid="41" href="https://wen.woshipm.com/">问答</a></li>
+                        <li class="menu-item"><a target="_blank" data-id="32" data-adid="41" href="https://daxue.qidianla.com/">企业培训</a></li>
+                        <li class="menu-item"><a target="_blank" data-id="32" data-adid="41" href="https://www.aixq.cc">AI社区</a></li>
+                        <li class="menu-item"><a target="_blank" data-id="32" data-adid="41" href="/fish">摸鱼</a></li>
+                        <li class="menu-item"><a target="_blank" data-id="32" data-adid="41" href="/harmony">HarmonyOS</a></li>
+                    </ul>
+                </nav>
+                <div class="pm--metabar__right u-flex">
+                    <a class="pm--metabarItem u-flex u-cursorPointer" href="https://api.woshipm.com/search/list.html" target="_blank">
+                        <svg class="svgIcon-use" width="16" height="16" viewBox="0 0 16 16">
+                            <path d="M15.800,14.481 L12.519,11.200 C12.504,11.184 12.487,11.170 12.471,11.156 C13.361,9.988 13.890,8.529 13.890,6.947 C13.890,3.110 10.780,-0.000 6.945,-0.000 C3.109,-0.000 -0.000,3.110 -0.000,6.947 C-0.000,10.785 3.109,13.895 6.945,13.895 C8.529,13.895 9.990,13.364 11.159,12.471 C11.172,12.487 11.186,12.503 11.201,12.518 L14.483,15.800 C14.786,16.104 15.329,16.056 15.693,15.692 C16.056,15.328 16.104,14.786 15.800,14.481 L15.800,14.481 ZM0.772,6.947 C0.772,3.537 3.535,0.771 6.945,0.771 C10.354,0.771 13.118,3.537 13.118,6.947 C13.118,8.621 12.453,10.138 11.373,11.250 C11.351,11.269 11.330,11.288 11.310,11.308 C11.289,11.329 11.269,11.351 11.250,11.373 C10.138,12.456 8.619,13.123 6.945,13.123 C3.535,13.123 0.772,10.358 0.772,6.947 L0.772,6.947 Z" class="cls-1"></path>
+                        </svg>搜索
+                    </a>
+                    <div class="pm--metabarItem pm--metabar__dropdown u-flex u-relative"><svg class="svgIcon-use" width="12" height="18" viewBox="0 0 12 18">
+                            <path d="M10.599,17.999 L1.401,17.999 C0.626,17.999 -0.000,17.381 -0.000,16.616 L-0.000,1.382 C-0.000,0.617 0.626,-0.001 1.401,-0.001 L10.599,-0.001 C11.374,-0.001 12.000,0.627 12.000,1.382 L12.000,16.616 C12.000,17.381 11.374,17.999 10.599,17.999 ZM11.066,1.382 C11.066,1.128 10.857,0.922 10.599,0.922 L1.401,0.922 C1.142,0.922 0.934,1.128 0.934,1.382 L0.934,12.800 L11.066,12.800 L11.066,1.382 ZM11.066,13.811 L0.934,13.811 L0.934,16.626 C0.934,16.881 1.142,17.087 1.401,17.087 L10.599,17.087 C10.857,17.087 11.066,16.881 11.066,16.626 L11.066,13.811 ZM6.000,16.283 C5.483,16.283 5.066,15.871 5.066,15.361 C5.066,14.851 5.483,14.439 6.000,14.439 C6.516,14.439 6.934,14.851 6.934,15.361 C6.934,15.871 6.516,16.283 6.000,16.283 Z"></path>
+                        </svg>APP<div class="pm--qrcodeCard__dropdown">
+                            <img class="app-qrcode-img" src="https://image.woshipm.com/build/img/footer-appdownload.png">
+                        </div>
+                    </div>
+                    <div class="pm--metabarItem pm--metabar__dropdown u-flex u-relative">
+                        <img src="https://image.woshipm.com/VIP.svg" width="32" />
+                        <div class="pm--userCard__dropdown u-shadowed" style="right: -165px;
+    width: 365px;box-sizing: border-box;">
+                            <div class="pm--vipCard">
+                                <div class="pm--vipCard__title"><img src="https://image.woshipm.com/2023/05/19/de725b98-f62f-11ed-adbb-00163e0b5ff3.png">起点课堂会员权益</div>
+                                <div class="pm--vipCard__list">
+                                    <div class="pm--vipCard__item"><img width="24" src="https://image.woshipm.com/2023/05/19/dfe517e2-f62d-11ed-bbb6-00163e0b5ff3.png" />职业体系课特权</div>
+                                    <div class="pm--vipCard__item"><img width="24" src="https://image.woshipm.com/2023/05/19/ebb5071c-f62d-11ed-bbb6-00163e0b5ff3.png" />线下行业大会特权</div>
+                                    <div class="pm--vipCard__item"><img width="24" src="https://image.woshipm.com/2023/05/19/c9756278-f62d-11ed-94e0-00163e0b5ff3.png" />个人IP打造特权</div>
+                                    <div class="pm--vipCard__item"><img width="24" src="https://image.woshipm.com/2023/05/19/f64625a8-f62d-11ed-bbb6-00163e0b5ff3.png" />30+门专项技能课</div>
+                                    <div class="pm--vipCard__item"><img width="20" src="https://image.woshipm.com/2023/05/19/0148a02a-f62e-11ed-96ae-00163e0b5ff3.png" />1300+专题课程</div>
+                                    <div class="pm--vipCard__item"><img width="24" src="https://image.woshipm.com/2023/05/19/25fc8396-f62e-11ed-adbb-00163e0b5ff3.png" />12场职场软技能直播</div>
+                                    <div class="pm--vipCard__item"><img width="24" src="https://image.woshipm.com/2023/05/19/1d4ecd4e-f62e-11ed-adbb-00163e0b5ff3.png" />12场求职辅导直播</div>
+                                    <div class="pm--vipCard__item"><img width="24" src="https://image.woshipm.com/2023/05/19/30793c56-f62e-11ed-adbb-00163e0b5ff3.png" />12场专业技能直播</div>
+                                    <div class="pm--vipCard__item"><img width="24" src="https://image.woshipm.com/2023/05/19/15fae604-f62e-11ed-bbb6-00163e0b5ff3.png" />会员专属社群</div>
+                                    <div class="pm--vipCard__item"><img width="24" src="https://image.woshipm.com/2023/05/19/0e3283be-f62e-11ed-8df9-00163e0b5ff3.png" />荣耀标识</div>
+                                </div>
+                                <div class="pm--vipCard__button">
+                                    <a href="https://vip.qidianla.com/member.html" target="_blank">{{ userInfo.member ? '查看权益' : '开通会员' }}</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <metabar-notice :islogin="islogin"></metabar-notice>
+                    <div class="pm--metabar__dropdown u-flex u-relative"><span @click="showLoginForm" class="u-flex el-button el-button--primary el-button--mini" style="padding-right: 5px;font-size: 14px;padding-left: 13px;"><svg class="svgIcon-use" width="18" height="17" viewBox="0 0 18 17" style="width: 13px;fill: white;margin-right: 6px;">
+                                <path d="M17.831,3.950 L9.184,12.519 C9.113,12.590 9.024,12.641 8.927,12.667 L4.754,13.785 C4.705,13.798 4.655,13.805 4.603,13.805 C4.450,13.805 4.301,13.743 4.193,13.635 C4.047,13.489 3.992,13.275 4.048,13.078 L5.219,8.984 C5.246,8.891 5.296,8.805 5.366,8.736 L14.013,0.165 C14.122,0.058 14.267,-0.002 14.421,-0.002 C14.575,-0.002 14.720,0.058 14.829,0.165 L17.831,3.141 C17.940,3.249 18.000,3.393 18.000,3.545 C18.000,3.698 17.940,3.842 17.831,3.950 ZM8.156,11.689 L6.199,9.750 L5.436,12.419 L8.156,11.689 ZM14.421,1.378 L6.902,8.830 L9.088,10.997 L16.607,3.546 L14.421,1.378 ZM1.153,2.286 L1.153,14.895 C1.153,15.425 1.588,15.855 2.122,15.855 L14.732,15.855 C15.267,15.855 15.701,15.425 15.701,14.895 L15.701,10.476 L16.855,10.476 L16.855,14.895 C16.855,16.055 15.902,16.998 14.732,16.998 L2.122,16.998 C0.952,16.998 -0.000,16.055 -0.000,14.895 L-0.000,2.286 C-0.000,1.126 0.952,0.183 2.122,0.183 L9.326,0.183 L9.326,1.326 L2.122,1.326 C1.588,1.326 1.153,1.756 1.153,2.286 Z"></path>
+                            </svg>发布<svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" class="unfold12-icon" style="margin-right: 0; margin-left: 8px;">
+                                <path d="M2.45025 4.82383C2.17422 4.49908 2.40501 4 2.83122 4H9.16878C9.59499 4 9.82578 4.49908 9.54975 4.82382L6.38097 8.5518C6.1813 8.7867 5.8187 8.7867 5.61903 8.5518L2.45025 4.82383Z" fill="white" data-v-3a3133c9=""></path>
+                            </svg></span>
+                                            </div>
+                                            <div class="pm--metabarItem u-flex u-paddingLeft20">
+                            <span @click="showLoginForm" class="item">注册 | 登录
+                                <div class="login-popover">
+                                    <div class="login-guide-wrap">
+                                        <div class="login-guide-title">登录人人都是产品经理即可获得以下权益</div>
+                                        <ul class="login-guide-list">
+                                            <li class="login-guide-list-item">
+                                                <div class="login-guide-icon-wrap">
+                                                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" class="login-guide-icon">
+                                                        <path d="M4.62218 2.68165C3.64897 2.29236 2.59033 3.0091 2.59033 4.05728V13.961C2.59033 14.2639 2.77476 14.5363 3.05601 14.6488L8.88416 16.98C9.59939 17.2661 10.3973 17.2661 11.1125 16.98L16.9406 14.6488C17.2219 14.5363 17.4063 14.2639 17.4063 13.961V4.05728C17.4063 3.0091 16.3477 2.29236 15.3745 2.68165L11.1125 4.38644C10.3973 4.67253 9.59939 4.67253 8.88416 4.38644L4.62218 2.68165Z" stroke="currentColor" stroke-width="1.2"></path>
+                                                        <path d="M9.99609 7.42676V14.094" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"></path>
+                                                    </svg>
+                                                </div>
+                                                <span class="login-guide-text">关注优质作者</span>
+                                            </li>
+                                            <li class="login-guide-list-item">
+                                                <div class="login-guide-icon-wrap">
+                                                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" class="login-guide-icon">
+                                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M8.99999 3.37781L7.26101 6.9014C7.15913 7.10768 6.96219 7.25119 6.73392 7.28433L2.84544 7.84938L5.65897 10.5919C5.65903 10.592 5.6589 10.5919 5.65897 10.5919C5.82418 10.7529 5.89936 10.9849 5.8605 11.2116L5.19624 15.0845L8.67423 13.256C8.87818 13.1488 9.12181 13.1488 9.32576 13.256L12.8037 15.0845L12.1395 11.2117C12.1006 10.9849 12.1756 10.7531 12.3408 10.5921C12.3409 10.592 12.3408 10.5922 12.3408 10.5921L15.1545 7.84938L11.2663 7.28437C11.038 7.25122 10.8409 7.10782 10.739 6.90153L8.99999 3.37781ZM9.26883 2.83308C9.26888 2.83298 9.26878 2.83318 9.26883 2.83308V2.83308ZM9.62775 2.39022C9.37097 1.86993 8.62901 1.86993 8.37224 2.39022L6.43408 6.3174L2.10014 6.94718C1.52608 7.03061 1.29661 7.73615 1.71217 8.14119C1.71216 8.14118 1.71219 8.14121 1.71217 8.14119L4.84822 11.1981L4.10789 15.5145C4.00989 16.0863 4.61 16.5224 5.12357 16.2525L8.99999 14.2145L12.8764 16.2525C13.3899 16.5224 13.9901 16.0863 13.8921 15.5146L13.1518 11.1981L16.2877 8.14126C16.7035 7.73618 16.4739 7.0306 15.8999 6.94718L11.5659 6.3174L9.62775 2.39022ZM4.96134 11.3084C4.96141 11.3084 4.96128 11.3083 4.96134 11.3084V11.3084Z" fill="currentColor"></path>
+                                                    </svg>
+                                                </div>
+                                                <span class="login-guide-text">收藏优质内容</span>
+                                            </li>
+                                            <li class="login-guide-list-item">
+                                                <div class="login-guide-icon-wrap">
+                                                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" class="login-guide-icon">
+                                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M12.1337 10.5801C12.4205 10.5801 12.653 10.8125 12.653 11.0993V11.8658H13.4194C13.7062 11.8658 13.9387 12.0983 13.9387 12.385C13.9387 12.6718 13.7062 12.9043 13.4194 12.9043H12.1337C11.847 12.9043 11.6145 12.6718 11.6145 12.385V11.0993C11.6145 10.8125 11.847 10.5801 12.1337 10.5801Z" fill="currentColor"></path>
+                                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M2.05225 4.64889C2.05225 3.21507 3.21458 2.05273 4.6484 2.05273H11.4231C12.8569 2.05273 14.0193 3.21507 14.0193 4.64889V9.32197H12.9808V4.64889C12.9808 3.7886 12.2834 3.0912 11.4231 3.0912H4.6484C3.78811 3.0912 3.09071 3.7886 3.09071 4.64889V13.3522C3.09071 14.2125 3.78811 14.9099 4.6484 14.9099H12.2143V15.9483H4.6484C3.21459 15.9483 2.05225 14.786 2.05225 13.3522V4.64889Z" fill="currentColor"></path>
+                                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M12.214 9.51893C10.7255 9.51893 9.51893 10.7255 9.51893 12.214C9.51893 13.7024 10.7255 14.909 12.214 14.909C13.7024 14.909 14.909 13.7024 14.909 12.214C14.909 10.7255 13.7024 9.51893 12.214 9.51893ZM8.48047 12.214C8.48047 10.152 10.152 8.48047 12.214 8.48047C14.2759 8.48047 15.9475 10.152 15.9475 12.214C15.9475 14.2759 14.2759 15.9475 12.214 15.9475C10.152 15.9475 8.48047 14.2759 8.48047 12.214Z" fill="currentColor"></path>
+                                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M4.82129 5.4372C4.82129 5.15044 5.05376 4.91797 5.34052 4.91797L10.7306 4.91797C11.0174 4.91797 11.2499 5.15044 11.2499 5.4372C11.2499 5.72396 11.0174 5.95643 10.7306 5.95643L5.34052 5.95643C5.05376 5.95643 4.82129 5.72396 4.82129 5.4372Z" fill="currentColor"></path>
+                                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M4.78394 8.35712C4.78394 8.07035 5.01641 7.83789 5.30317 7.83789L8.03531 7.83791C8.32208 7.83791 8.55454 8.07038 8.55454 8.35715C8.55454 8.64391 8.32207 8.87637 8.03531 8.87637L5.30316 8.87635C5.0164 8.87635 4.78393 8.64388 4.78394 8.35712Z" fill="currentColor"></path>
+                                                    </svg>
+                                                </div>
+                                                <span class="login-guide-text">查阅浏览足迹</span>
+                                            </li>
+                                            <li class="login-guide-list-item">
+                                                <div class="login-guide-icon-wrap">
+                                                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" class="login-guide-icon">
+                                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M5.21627 3.23729H2.91894L2.91894 14.2645H5.21627V3.23729ZM2.91894 2.31836C2.41142 2.31836 2 2.72978 2 3.23729V14.2645C2 14.772 2.41142 15.1835 2.91894 15.1835H5.21627C5.72379 15.1835 6.13521 14.772 6.13521 14.2645V3.23729C6.13521 2.72978 5.72379 2.31836 5.21627 2.31836H2.91894Z" fill="currentColor"></path>
+                                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M8.43258 3.23729H6.13524L6.13524 14.2645H8.43258V3.23729ZM6.13524 2.31836C5.62773 2.31836 5.21631 2.72978 5.21631 3.23729V14.2645C5.21631 14.772 5.62773 15.1835 6.13524 15.1835H8.43258C8.9401 15.1835 9.35152 14.772 9.35152 14.2645V3.23729C9.35152 2.72978 8.9401 2.31836 8.43258 2.31836H6.13524Z" fill="currentColor"></path>
+                                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M12.0205 3.1255L9.80149 3.7201L12.6555 14.3716L14.8746 13.777L12.0205 3.1255ZM9.56365 2.83247C9.07343 2.96383 8.78251 3.46772 8.91386 3.95794L11.7679 14.6094C11.8993 15.0996 12.4032 15.3906 12.8934 15.2592L15.1124 14.6646C15.6027 14.5333 15.8936 14.0294 15.7622 13.5391L12.9082 2.88767C12.7768 2.39744 12.2729 2.10653 11.7827 2.23788L9.56365 2.83247Z" fill="currentColor"></path>
+                                                    </svg>
+                                                </div>
+                                                <span class="login-guide-text">免费发布作品</span>
+                                            </li>
+                                            <li class="login-guide-list-item">
+                                                <div class="login-guide-icon-wrap">
+                                                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" class="login-guide-icon">
+                                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M13.2368 3.03451C12.587 2.18471 11.3966 2.05398 10.5779 2.74252L8.99865 4.07065L7.41943 2.74252C6.60071 2.05398 5.41026 2.18471 4.76048 3.03451C4.40851 3.49484 4.28737 4.07174 4.38041 4.61328H3.42708C2.6907 4.61328 2.09375 5.21023 2.09375 5.94661V7.78026C2.09375 8.50852 2.67761 9.10041 3.40278 9.11338V14.285C3.40278 15.3896 4.29821 16.285 5.40278 16.285H12.5945C13.6991 16.285 14.5945 15.3896 14.5945 14.285V9.11342C15.3209 9.10187 15.9062 8.50942 15.9062 7.78026V5.94661C15.9062 5.21024 15.3093 4.61328 14.5729 4.61328H13.6169C13.7099 4.07174 13.5888 3.49484 13.2368 3.03451ZM12.61 4.61328C12.7209 4.3068 12.6796 3.95035 12.4715 3.67815C12.1572 3.26708 11.5813 3.20384 11.1853 3.53691L9.90541 4.61328H12.61ZM8.09189 4.61328L6.81202 3.53691C6.41598 3.20384 5.84013 3.26708 5.52581 3.67815C5.31768 3.95035 5.27642 4.3068 5.38727 4.61328H8.09189ZM3.09375 5.94661C3.09375 5.76252 3.24299 5.61328 3.42708 5.61328H8.49863V8.11359H3.42708C3.24299 8.11359 3.09375 7.96435 3.09375 7.78026V5.94661ZM9.49863 8.11359V5.61328H14.5729C14.757 5.61328 14.9062 5.76252 14.9062 5.94661V7.78026C14.9062 7.96435 14.757 8.11359 14.5729 8.11359H9.49863ZM4.40278 9.11719H8.49863L8.49863 15.285H5.40278C4.85049 15.285 4.40278 14.8373 4.40278 14.285V9.11719ZM9.49863 9.11719L9.49863 15.285H12.5945C13.1468 15.285 13.5945 14.8373 13.5945 14.285V9.11719H9.49863Z" fill="currentColor"></path>
+                                                    </svg>
+                                                </div>
+                                                <span class="login-guide-text">参与提问答疑</span>
+                                            </li>
+                                            <li class="login-guide-list-item">
+                                                <div class="login-guide-icon-wrap">
+                                                    <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" class="user-level-icon login-guide-icon">
+                                                        <path d="M17.2673 10.1562H19.7673V12.6562" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                        <path d="M8.5625 8.25V18.375C8.5625 18.9273 9.01022 19.375 9.5625 19.375H20.4375" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                        <path d="M10.5625 16.0938L13.888 12.36L16.0216 14.2603L18.9739 10.9455" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                    </svg>
+                                                </div>
+                                                <span class="login-guide-text">交流互动学习</span>
+                                            </li>
+                                        </ul>
+                                        <button type="button" class="login-guide-login-button" @click.stop="showLoginForm">
+                                            <span>
+                                                立即登录
+                                            </span>
+                                        </button>
+                                        <div class="login-guide-register">
+                                            首次使用？
+                                            <div class="login-guide-register-button" @click.stop="showLoginForm">
+                                                点我注册
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </span>
+                        </div>
+                                    </div>
+            </div>
+        </header><div class="main-content" data-dts-page="article_detail_normal" data-dts-event-info='{"article_id":3331984}'>
+    <div class="container">
+        <div class="article--heroAd js-star" data-id="16"></div>
+        <div class="home-block">
+            <div class="u-width850">
+                <div class="article--wrapper u-backgroundColorWhite u-rounded u-shadowed">
+                    <h2 class="article--title"> “猿辅导系”产品分析（1）：快思考、慢决策的「粉笔网」</h2>
+                    <div class="stream-list-meta artilce--meta2">
+                        <div class="u-flex0">
+                            <a target="_blank" class="u-flex" href="https://www.woshipm.com/u/720993"><img src="https://static.woshipm.com/pmapp_avatar_20230329213446_1122.jpg?imageView2/1/w/72/h/72/q/100" alt="" height="36" width="36" class="avatar"></a>
+                        </div>
+                        <div class="u-flex1">
+                            <div class="author u-flex" data-id="720993">
+                                <a target="_blank" class="ui-captionStrong" href="https://www.woshipm.com/u/720993">爱吃糖炒栗子</a>
+                                <el-tooltip class="newusertagIcon icon-num-1121" effect="dark" content="专栏作家" placement="top"><img src="https://static.woshipm.com/tag/1121_1@2x.png " width=16 @click="goVip({parentCode: 1100})" /></el-tooltip>                                <sub-button :author="720993" :status="isFollowing" @subauthorchild="subauthor" />
+                            </div>
+                            <div class="meta--sup">
+                                <time>2020-03-11</time>
+                                <div class="meta--sup__right">
+                                    2 评论
+                                    <span class="dot"></span>
+                                    13024 浏览
+                                    <span class="dot"></span>
+                                    32 收藏
+                                    <span class="dot"></span>
+                                    <el-tooltip class="item" effect="dark" content="预计阅读时间 16 分钟" placement="top">
+                                        <span>16 分钟</span>
+                                    </el-tooltip>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                                        <div class="article-topAd js-star js-star-25" data-id="3"></div>
+                    <div class="article--content grap">
+                        <div v-pre>
+                            <blockquote><p>随着互联网行业的迅速发展，很多互联网教育公司迅速崛起，本文以猿辅导产品粉笔网为例，透过产品看本质，从互联网教育社区到互联网教育平台的转型中思考教育赛道的“快思考”“慢决策。</p></blockquote>
+<p><img data-action="zoom" loading="lazy" decoding="async" class="aligncenter" src="https://image.woshipm.com/wp-files/2020/03/bkYSMHJa7cwPY9d4ghMn.jpg" alt="" width="800" height="450" /></p>
+<p>在风云变幻的教育赛道中，充斥着大量的涌入者，教育行业经历过这些涌入者的野蛮生长，见证过他们的辉煌，也见证过他们的落幕。</p>
+<p>有人说教育行业是个“慢”行业，对待自己的用户要精耕细作，才能更好的解决用户的需求。可是近些年互联网行业的蓬勃发展，很多公司却在几年的时间快速地崛起了，甚至大有赶超老牌教育机构的势头。那教育行业中的“快”与“慢”究竟要如何衡量呢？</p>
+<p>猿辅导的联合创始人李鑫认为教育赛道要“快思考”“慢决策”。而“猿氏家族系列文章，将围绕猿辅导的产品矩阵，透过产品看本质，参透教育行业中的“快与慢”之道。</p>
+<h2  id="toc-1" class="jltoc--item">一、产品背景</h2>
+<p>粉笔网归属于北京粉笔蓝天科技有限公司，同属猿辅导系，创立于2012年8月。粉笔网曾经由李勇创办，定位是互联网教育社区，不过由于点评类学习社区的定位未能走通，在2013年关闭。</p>
+<p>2014年华图名师张小龙加入公司，重新确立互联网教育平台的业务模式。粉笔网重新起航，并在2019年上半年做到了营收8.2亿元，注册用户超过1400万人。粉笔网是猿辅导系的第一次试水教育行业，虽然有波折，但是却直接催生了猿题库，揭开了猿辅导的教育篇章。</p>
+<p><img data-action="zoom" loading="lazy" decoding="async" class="aligncenter" src="https://image.woshipm.com/wp-files/2020/03/ZawvoVERjsl41IHNmXIT.jpg" alt="" width="566" height="228" /></p>
+<h2  id="toc-2" class="jltoc--item">二、产品历程</h2>
+<h3>1. 李勇时代的初尝试</h3>
+<p>2012年，从网易门户事业部离职的李勇进行了关于教育行业的第一次创业，将目标对准了教育行业的点评学习社区。</p>
+<p>尽管2013年11月粉笔网关闭，但是本次尝试却有着相当重要的意义，这是“猿”氏家族的第一次“快”思考，决定停止粉笔网业务。而这背后折射出的深度思考，则值得我们每个产品人细细品味。下面我们就来复盘一下吧~</p>
+<p><strong>李勇要做一件什么样的事情呢 ?</strong></p>
+<p>2012年的互联网，3G网络蓬勃发展，推动着移动互联网的进步，这一年的7月，微博服务月度覆盖人数超过 2.9 亿。人和人之间通过网络更多的联系到了一起，线下社区中人人分享所见所闻的行为也被搬到线上，线上的隐蔽性和便利性更是催生了人们在线上的聚集。</p>
+<p>有人的地方就有江湖（哦，不对，是需求），人和人之间的联系靠的是什么呢？——<strong>是内容，是习惯，是价值</strong>。如果一个人有需求，而另一个人又可以满足他需求的内容，那么供求关系就产生了。人与人之间也就产生了联系。</p>
+<p>李勇看中了人们对学习资源的需求，同时也看好微博这种连接人和人的方式，于是开启了一场满足此需求的探索。</p>
+<p>此时粉笔网的产品定位是：线上学习资源点评互动社区。他们的目标用户是：具有KOL属性的老师和希望通过互联网找到学习资源的学生。</p>
+<p><strong>首先，何为社区？</strong></p>
+<p>从社会学的角度看，是指由网民在电子网络空间进行频繁的社会互动形成的具有文化认同的共同体及其活动场所。也就是说，社区里面的人需要找到彼此的认同感，并有可持续留存的需求点。</p>
+<p>此时的粉笔网是如何满足用户的认同感的呢？</p>
+<ol>
+<li>从老师层面，认证的老师可以分享自己的学习资源，引发学生的讨论并为自己的课程引流。</li>
+<li>从学生层面，网站上线的时候包括四六级，考研，雅思，托福，公务员考试，摄影，吉他，瑜伽，潜水，高尔夫，司法考试等50多个学科，并且有422名认证的老师。生活中可接触的多种教育场景学生都可以在粉笔网这样的一个网络社区找到资源，并发表自己的看法。</li>
+</ol>
+<p>那么，似乎这样看来，在这个社区中的人都得到了彼此的认同感，这样的项目为什么会被李勇叫停了呢？</p>
+<p>我们看看这样的社区在其他的产品上是否也可以存在，比如微博，知乎，豆瓣。</p>
+<p>如果豆瓣做了一个这样的学习资源分享功能，作为豆瓣的细分用户是会停留在豆瓣上，还是粉笔网呢？社区中的人都是有圈子属性的，也就是说豆瓣的用户大概率还是会停留在豆瓣上。</p>
+<p><strong>从用户的角度分析：<br />
+</strong></p>
+<p><strong>首先是教师，什么样的教师需要在粉笔网获得认同感呢？</strong></p>
+<p>金牌教师，或者新东方等教育机构头部名师是不需要到一个新的网站上寻找认同感的，他们自身已经带有流量属性了，他们的精力是有限的，只能在有限的时间内服务定量的学员，所以他们会选择自己时间的最佳利益导向，在自己的自增流量上就可以满足他们的利益需求了。而真正需要在一个新的平台上寻找流量为其个人品牌进行推广的老师输出的内容质量又没法保证。</p>
+<p><strong>其次是学生。</strong></p>
+<p>学生群体无论是成人群体还是大学生，都是很看重学习效率和学习效果的，如果在教育行业中，想要留住大学生和成人群体，其产品必然是满足这两点其一甚至是两点都满足的。</p>
+<ul>
+<li><strong>针对学习效率，</strong>粉笔网满足学生的学习效率了吗，学生想要马上掌握一个知识点，30天拿下四六级，粉笔网的社区可以吗？恐怕仅仅以PDF文件分享的形式满足不了。</li>
+<li><strong>针对学习效果，</strong>粉笔网分享的学习资料能保证质量高于学生报的正价班吗？从成本的角度去思考，粉笔网需要付出极大的成本才能保证粉笔网上教师提供的学习资料质量足够高，去满足学生学习效果的诉求。学习本身是逆人性的，当一个人选择去学习的时候，一定是目的性极强的，满足不了他的目的，其他围绕这个目的衍生的次级需求都成了伪需求。</li>
+</ul>
+<p>其实教育社区不是不能做，在做这个社区之前首先要清楚教育的本质，<strong>如何提供一个教育场，让教师和学生都找到彼此的需求点</strong>，这样的教育社区才能持续存在下去。</p>
+<p>在这样的一个教育社区中，教师和学生的关系一定是强相关的，首先是教师可以传道授业解惑给学生并可以获得利益分成，学生通过教师传授的知识可以解决学习效率和学习效果的痛点。然后在这样的关系中衍生出的场，才有可能做成教育社区，形成各自推动的循环。</p>
+<h3>2. 张小龙的“口碑为王”</h3>
+<p>2013年叫停粉笔网后，李勇将教育的发力点聚焦在了题库上面，切中学生群体的学习效果需求，以此来开拓新的教育疆土。</p>
+<p>随着华图名师张小龙的加入，粉笔网被重新启用，产品重新定位成人在线培训业务，除了主营的公务员考试，同时拓展有事业单位招聘、教师招聘、考研、财会、英语四六级、法考、建造、公开课等多个领域。粉笔网此时的模式是以题库为发力点，逐渐建立学生和平台的强大关系。</p>
+<p>粉笔网还利用技术手段实现智能批改功能，并提供免费题库，供用户查阅学习，利用网络直播，进行线上授课，同时提供实物图书、试卷以及客户服务。</p>
+<p>张小龙时代的粉笔网更聚焦自研和用户体验。要想保证稳定优质的教学质量，自研是一条必由之路。</p>
+<p>相对的，自研也是一条痛苦且漫长的路。更何况，在2015年，市场上同时有很多家在做自研题库的产品。我们公司也有自己的题库，做题库有这样一个特点，技术门槛不高，任何一家有研发和内容资源的都可以做，但是题库做到100%题目内容正确很难，同样的，用户使用题库的体验提升1%也很难。</p>
+<p>举个例子，一个题型如果用户就是不会，你给推相似题，如果只是替换题目中的数字和文字，用户就会抱怨还是不懂，用户想要什么样的相似题呢？</p>
+<p>用户不会告诉你，你要自己去针对题型去设计，去思考，这是个很慢的过程。这样的问题放在了以题库为其核心价值的粉笔网会被放到无限大，是使用钱快速的进行题库推广而对题库内容降低标准保证快速上线，还是做慢一点提高行业壁垒。</p>
+<p>张小龙必须选择一个，所幸，张小龙选择了一条决定粉笔网价值观的决定：<strong>以用户体验和产品内容为为粉笔网的首要任务</strong>。张小龙通过这种慢而重的方式，走出了一条口碑为王的道路。</p>
+<h3>3. 粉笔网没有销售部门</h3>
+<p>做过教培行业的都知道，课销是整个公司产品闭环的重要一部分，没了这个部分，想要用户自发的去进行产品付费，对产品的质量和用户对产品的信任要求是很高的。</p>
+<p>关于口碑，张小龙曾经举个例子，是关于通过率的：</p>
+<blockquote><p>很多教培机构会宣传通过率在80%以上，因为在考试类行业里，通过率是刚性指标。如果教培机构这样宣传其通过率，一旦用户报班后发现通过率跌到了20%，用户就会和其他人说这个机构有多不靠谱。</p>
+<p>而粉笔网在宣传中不会虚假宣传通过率，甚至还会和用户普及通过率超过80%是不可能的。长期去看，用户会发现粉笔的判断是对的，真诚的，自然用户也选择信任粉笔网，同时也赢得了口碑。</p></blockquote>
+<p><strong>良好的口碑源于用户的信任</strong>，用户的信任是以持续的良好用户体验为判断标准的。对用户愈敬畏，产品才会具有良好用户体验。</p>
+<h3>4. 关于粉笔网的线下之路探索</h3>
+<p>2019年，国考招录人数锐减，从去年招录2.8万人骤减到1.4万人，这意味着千军万马过的独木桥又窄了一半，粉笔网想要保持用户的持续增长又要保持口碑，势必要调整布局，探索新的用户增长入口。</p>
+<p>而在公考领域，虽然粉笔网的笔试占着线上的绝对优势，但是面试环节大部分用户更愿意选择线下的面授班。因为面试的重要程度使得用户更愿意选择面对面这样稳定且体验最好的方式。并且，如果采用在线大班授课的方式，盗版的问题很难解决，线下的场景成为粉笔网不得不做的下一步。</p>
+<p>粉笔网目前已经开设了30多个线下教学中心，采用线上和线下课程相结合，用线上理论打基础、线下高效封闭训练、线上名师陪跑到考前的系统性教学。粉笔网这种线上线下结合的学习方式，更符合公考群体的实际情况，而将线上线下环节串联起来，则将成为粉笔网下一站需要探索的方向。</p>
+<h2  id="toc-3" class="jltoc--item">三、总结</h2>
+<p>“猿”氏家族的第一个产品粉笔网是那么有代表性，虽然现在我们对“猿”氏家族的印象都是猿辅导、猿题库、小猿搜题等产品，可是粉笔网的产品历程，却奠定了整个“猿”系的产品基调——</p>
+<ul>
+<li>“快思考”：针对选择的赛道要持续思考产品的价值，不断自我反省。</li>
+<li>“慢决策”：确保每一个决定都是经过充分考虑的。</li>
+</ul>
+<p>粉笔网的经历，也触发了我们的深思：</p>
+<ol>
+<li>产品的业绩不好，真的是我们表现层做的不够吗，我们有没有深入去了解我们用户的需求？</li>
+<li>针对我们的产品，漂亮的用户增长数据真的是我们活下去的必要条件吗？我们产品有没有服务好我们的存量用户？</li>
+<li>今天，你的产品践行【极致口碑】了吗？</li>
+</ol>
+<p>不同公司，有着不一样的场景，上面的问题也有着不尽相同答案，希望通过本文，能为各位看官提供一个不一样的看问题角度。</p>
+<p>&nbsp;</p>
+<p>本文由 @云胡不喜 原创发布于人人都是产品经理，未经许可，禁止转载。</p>
+<p>题图来自 Unsplash，基于CC0协议</p>
+                        </div>
+                        <div class="article--bottomActions">
+                            <donate-button author="720993" post_id="3331984" avatar="https://static.woshipm.com/pmapp_avatar_20230329213446_1122.jpg"></donate-button>
+                            <button class="button button--toggle article--bottomAction" data-dts-event-location="favorite_article" data-dts-event-info='{"article_id":3331984}' @click="bookmark" :class="{ active:isMarked }"><svg class="svgIcon--use" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2609" width="16" height="16">
+                                    <path d="M565.273 34.627L677.369 272.17c8.706 18.32 25.411 31.051 44.823 33.996l250.776 38.081c48.698 7.411 68.225 70.046 32.934 105.98L824.407 635.164c-13.998 14.23-20.352 34.815-17.059 54.935l42.82 261.127c8.346 50.696-42.643 89.452-86.226 65.519L539.634 893.474c-17.286-9.526-37.992-9.526-55.278 0l-224.314 123.27c-43.583 23.934-94.572-14.822-86.22-65.518L216.638 690.1c3.32-20.12-3.089-40.705-17.087-54.935L18.11 450.227c-35.285-35.934-15.818-98.574 32.934-105.98l250.75-38.081c19.35-2.94 36.082-15.675 44.756-33.996L458.673 34.627c21.825-46.168 84.836-46.168 106.6 0z" fill="#ffffff"></path>
+                                </svg><span class="default">收藏</span><span class="active">已收藏</span><span class="count" v-if="!!postmeta.bookmark">{{ postmeta.bookmark }}</span></button>
+                            <button class="button button--toggle article--bottomAction" data-dts-event-location="like_article" data-dts-event-info='{"article_id":3331984}' @click="postlike" :class="{ active:isLiked }"><svg class="svgIcon--use" viewBox="0 0 1028 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3817" width="16" height="16">
+                                    <path d="M478.277632 264.88832C659.364864-28.16 1028.096 88.004608 1028.096 404.086784c0 167.119872-96.451584 299.108352-253.950976 398.988288-53.8112 34.1248-111.1808 62.082048-168.53504 84.415488-20.087808 7.82336-38.781952 14.39744-55.63392 19.781632-10.307584 3.293184-17.855488 5.49376-22.193152 6.651904a45.341696 45.341696 0 0 1-24.087552-0.196608c-4.31104-1.227776-11.83232-3.54816-22.112256-7.001088-16.818176-5.648384-35.478528-12.50304-55.53152-20.606976-57.255936-23.138304-114.526208-51.75296-168.23808-86.290432C100.463616 698.655744 4.096 567.63392 4.096 404.086784 4.096 88.11008 368.360448-26.631168 553.612288 264.40704l-75.334656 0.48128z" fill="#ffffff" p-id="3818"></path>
+                                </svg><span class="default">点赞</span><span class="active">已赞</span><span class="count" v-if="!!postmeta.bookmark">{{ postmeta.postlike }}</span></button>
+                        </div>
+                    </div>
+                    <section class="pm-adTitle trackRead">更多精彩内容，请关注人人都是产品经理微信公众号或下载App</section>
+                    <div class="article-bottomAd js-star js-star-1" data-id="1"></div>
+                    <div class="article--actions">
+                        <div class="taglist"  data-dts-event-location="tag_items"><a href="https://www.woshipm.com/tag/2%e5%b9%b4" rel="tag">2年</a><a href="https://www.woshipm.com/tag/%e5%88%9d%e7%ba%a7" rel="tag">初级</a><a href="https://www.woshipm.com/tag/%e7%8c%bf%e8%be%85%e5%af%bc" rel="tag">猿辅导</a><a href="https://www.woshipm.com/tag/%e7%b2%89%e7%ac%94%e7%bd%91" rel="tag">粉笔网</a></div>                        <div class="article--actions__right">
+                            <span class="" @click="posterVisible = true" style="display: none;">海报</span>
+                            <share-button link="https://www.woshipm.com/evaluating/3331984.html" title="“猿辅导系”产品分析（1）：快思考、慢决策的「粉笔网」" image="https://image.woshipm.com/wp-files/2020/03/bkYSMHJa7cwPY9d4ghMn.jpg"></share-button>
+                        </div>
+                    </div>
+                </div>
+                        <div class="postFooterInfo u-marginTop20 u-backgroundColorWhite u-rounded u-shadowed">
+        <div class="u-flex">
+            <div class="u-flex0">
+                <a href="https://www.woshipm.com/u/720993" target="_blank"><img src="https://static.woshipm.com/pmapp_avatar_20230329213446_1122.jpg?imageView2/1/w/150/h/150/q/100" alt="" height="75" width="75" class="avatar"></a>
+            </div>
+            <div class="u-flex1 u-paddingLeft15 u-overflowHidden">
+                <div class="authorCard--content">
+                    <span class="authorCard--title u-flex">
+                        <a href="https://www.woshipm.com/u/720993" target="_blank">爱吃糖炒栗子</a>
+                        <el-tooltip class="newusertagIcon" effect="dark" content="实名认证" placement="top"><img src="https://static.woshipm.com/tag/1601_1@2x.png " class="icon-height20" @click="goVip({parentCode: 1600})" /></el-tooltip><el-tooltip class="newusertagIcon" effect="dark" content="专栏作家" placement="top"><img src="https://static.woshipm.com/tag/1121_1@2x.png " class="icon-height20" @click="goVip({parentCode: 1100})" /></el-tooltip>                        <sub-button :author="720993" :status="isFollowing" @subauthorchild="subauthor" />
+                    </span>
+                </div>
+                <div class="authorCard--description">产品经理一枚</div>
+                <div class="authorCard--meta">
+                    <span class="authorInfo-item">18篇作品</span>
+                    <span class="dot"></span>
+                    <span class="authorInfo-item">203949总阅读量</span>
+                </div>
+            </div>
+        </div>
+    </div>                <div class="relate-text u-shadowed u-rounded">
+    <nav class="stream-video--title"><span class="title">为你推荐</span></nav>
+    <div class="relate-text__list" data-dts-event-location="recom_article_module">
+                    <div class="relate-text__item">
+                <div class="content">
+                    <div class="title"><a href="https://www.woshipm.com/zhichang/5858270.html" target="_blank" title="毕业两年，工资涨幅80%，晋升高级产品经理待遇，我是怎么做到的？">毕业两年，工资涨幅80%，晋升高级产品经理待遇，我是怎么做到的？</a></div>
+                    <div class="meta">07-02<span class="dot"></span>8161 浏览</div>
+                </div>
+                <a href="https://www.woshipm.com/zhichang/5858270.html" target="_blank" class="img-link" title="毕业两年，工资涨幅80%，晋升高级产品经理待遇，我是怎么做到的？"><img class="cover" src="https://image.woshipm.com/2023/05/29/bcfc14de-fdc0-11ed-9128-00163e0b5ff3.jpg!/both/120x80" alt="毕业两年，工资涨幅80%，晋升高级产品经理待遇，我是怎么做到的？"></a>
+            </div>
+                    <div class="relate-text__item">
+                <div class="content">
+                    <div class="title"><a href="https://www.woshipm.com/pd/5833131.html" target="_blank" title="零代码核心模块之三：报表">零代码核心模块之三：报表</a></div>
+                    <div class="meta">05-27<span class="dot"></span>7770 浏览</div>
+                </div>
+                <a href="https://www.woshipm.com/pd/5833131.html" target="_blank" class="img-link" title="零代码核心模块之三：报表"><img class="cover" src="https://image.woshipm.com/2023/04/14/76d3ffc0-da9e-11ed-af94-00163e0b5ff3.png!/both/120x80" alt="零代码核心模块之三：报表"></a>
+            </div>
+        <div class="relate-text__item js-star" data-id="12"></div>            <div class="relate-text__item">
+                <div class="content">
+                    <div class="title"><a href="https://www.woshipm.com/zhichang/5736841.html" target="_blank" title="做好敏捷管理，从敏捷看板开始">做好敏捷管理，从敏捷看板开始</a></div>
+                    <div class="meta">02-01<span class="dot"></span>6543 浏览</div>
+                </div>
+                <a href="https://www.woshipm.com/zhichang/5736841.html" target="_blank" class="img-link" title="做好敏捷管理，从敏捷看板开始"><img class="cover" src="https://image.woshipm.com/wp-files/2023/01/Fer60EmwS1IiV7akBwno.png!/both/120x80" alt="做好敏捷管理，从敏捷看板开始"></a>
+            </div>
+                    <div class="relate-text__item">
+                <div class="content">
+                    <div class="title"><a href="https://www.woshipm.com/it/5797667.html" target="_blank" title="B站需要给UGC们“找粮”了">B站需要给UGC们“找粮”了</a></div>
+                    <div class="meta">04-04<span class="dot"></span>6236 浏览</div>
+                </div>
+                <a href="https://www.woshipm.com/it/5797667.html" target="_blank" class="img-link" title="B站需要给UGC们“找粮”了"><img class="cover" src="https://image.woshipm.com/wp-files/2023/04/GHpgF9v2F41OkZkKhuhx.jpg!/both/120x80" alt="B站需要给UGC们“找粮”了"></a>
+            </div>
+                    <div class="relate-text__item">
+                <div class="content">
+                    <div class="title"><a href="https://www.woshipm.com/pd/5818351.html" target="_blank" title="零基础：如何用AI三小时上线自己的小程序">零基础：如何用AI三小时上线自己的小程序</a></div>
+                    <div class="meta">05-04<span class="dot"></span>12320 浏览</div>
+                </div>
+                <a href="https://www.woshipm.com/pd/5818351.html" target="_blank" class="img-link" title="零基础：如何用AI三小时上线自己的小程序"><img class="cover" src="https://image.woshipm.com/2023/04/20/240f37e4-df4b-11ed-946e-00163e0b5ff3.jpg!/both/120x80" alt="零基础：如何用AI三小时上线自己的小程序"></a>
+            </div>
+            </div>
+</div>
+<div class="fixed--posts">
+</div>                <div class="u-backgroundColorWhite comments-area u-shadowed u-rounded">
+    <div class="comment-list-header"><span class="title">评论</span></div>
+    <div id="respond" class="respond respond-3331984" role="form">
+        <form action="https://www.woshipm.com/wp-comments-post.php" method="post" id="commentform" data-post="3331984" class="comment-form u-clearfix">
+                            <div class="textarea--unlogin" @click="showLoginForm">评论请登录</div>
+                <div class="comment-form-bottom u-clearfix">
+                    <input class="comment-submit u-floatRight" type="submit" value="发布" @click="showLoginForm" data-dts-event-location="comment" data-dts-event-info='{"article_id":3331984}'>
+                </div>
+                    </form>
+    </div>
+            <div class="commentshow">
+            <ol class="comment-list">
+                            <li class="comment byuser comment-author-745143 even thread-even depth-1" id="li-comment-440260" itemtype="http://schema.org/Comment" itemscope="" itemprop="comment">
+                                    <div id="comment-440260" class="comment-block">
+                        <div class="comment-avatar">
+                            <a href="https://www.woshipm.com/u/745143" target="_blank"><img src="https://image.woshipm.com/wp-files/2020/09/y3BIf2OVTz7Q9GiPfYAi.jpg!/both/80x80" alt="" height="40" width="40" class="avatar"></a>
+                        </div>
+                        <div class="comment-section">
+                            <div class="comment-info">
+                                <div class="comment-meta">
+                                    <div class="comment-author" itemprop="author">
+                                        <a href="https://www.woshipm.com/u/745143" target="_blank">Lemon</a>
+                                                                                                                    </div>
+                                </div>
+                            </div>
+                            <div class="comment-content" itemprop="description">
+                                <p>之前也了解过粉笔的发家之路，觉得对于一款app来说，公司/产品经理的核心价值观是很重要的，目前看粉笔是一直保持初心在前行</p>
+                            </div>
+                            <div class="comment-bottom">
+                                                                    <span class="comment-time" itemprop="datePublished" datetime="2020-09-06T10:56:08+08:00">最近</span>
+                                    <span class="comment-reply">来自北京</span>                                                                                                    <span @click="moveForm" data-id="440260" class="comment-reply">回复</span>
+                                <span class="js-report-content" @click="showReport(440260)">
+                                    <img src="//image.woshipm.com/more.svg" width="16">
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    </li><!-- #comment-## -->
+            <li class="comment byuser comment-author-743125 odd alt thread-odd thread-alt depth-1" id="li-comment-420559" itemtype="http://schema.org/Comment" itemscope="" itemprop="comment">
+                                    <div id="comment-420559" class="comment-block">
+                        <div class="comment-avatar">
+                            <a href="https://www.woshipm.com/u/743125" target="_blank"><img src="https://static.woshipm.com/WX_U_201808_20180821113550_5419.jpg?imageView2/1/w/80/h/80/q/100" alt="" height="40" width="40" class="avatar"></a>
+                        </div>
+                        <div class="comment-section">
+                            <div class="comment-info">
+                                <div class="comment-meta">
+                                    <div class="comment-author" itemprop="author">
+                                        <a href="https://www.woshipm.com/u/743125" target="_blank">秋梨炖陈皮</a>
+                                                                                                                    </div>
+                                </div>
+                            </div>
+                            <div class="comment-content" itemprop="description">
+                                <p>同在线教育产品，期待更新</p>
+                            </div>
+                            <div class="comment-bottom">
+                                                                    <span class="comment-time" itemprop="datePublished" datetime="2020-05-12T15:35:53+08:00">最近</span>
+                                    <span class="comment-reply">来自湖南</span>                                                                                                    <span @click="moveForm" data-id="420559" class="comment-reply">回复</span>
+                                <span class="js-report-content" @click="showReport(420559)">
+                                    <img src="//image.woshipm.com/more.svg" width="16">
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    </li><!-- #comment-## -->
+            </ol>
+            <nav class="commentnav" data-fuck="3331984">
+                            </nav>
+        </div>
+        <comment-report :show.sync="reportVisivle" :id="reportComment"></comment-report>
+    </div>                <div class="relatedPosts u-backgroundColorWhite u-rounded u-marginTop20 u-shadowed">
+    <nav class="stream-video--title">
+        <span class="title">为你推荐</span>
+    </nav>
+        <div class="relatedPosts--list" data-dts-event-location="interested_items">
+        <div class="relatedPosts--half js-star relatedPosts--aladdin" data-id="11">
+        </div>
+        <div class="relatedPosts--half">
+            <ul class="relatedPosts--group" data-dts-event-location="interested_items">
+                                    <li class="relatedPosts--item__small">
+                        <div class="img">
+                            <a href="https://www.woshipm.com/marketing/5945163.html" target="_blank">
+                                <img src="https://image.woshipm.com/2023/05/06/9cbbfc78-ec01-11ed-adbb-00163e0b5ff3.jpg!/both/130x88" width="130" height="88" alt="不懂情绪营销，做不了品牌CMO">
+                            </a>
+                        </div>
+                        <div class="content">
+                            <div class="title"><a href="https://www.woshipm.com/marketing/5945163.html" target="_blank">不懂情绪营销，做不了品牌CMO</a></div>
+                            <div class="meta">11-21<span class="dot"></span>4314 浏览</div>
+                        </div>
+                    </li>
+                                    <li class="relatedPosts--item__small">
+                        <div class="img">
+                            <a href="https://www.woshipm.com/operate/5927175.html" target="_blank">
+                                <img src="https://image.woshipm.com/2023/04/17/bb860736-dcf5-11ed-a8f2-00163e0b5ff3.png!/both/130x88" width="130" height="88" alt="小杨哥急了，关闭电商，会带来什么后果？">
+                            </a>
+                        </div>
+                        <div class="content">
+                            <div class="title"><a href="https://www.woshipm.com/operate/5927175.html" target="_blank">小杨哥急了，关闭电商，会带来什么后果？</a></div>
+                            <div class="meta">10-25<span class="dot"></span>4823 浏览</div>
+                        </div>
+                    </li>
+                                    <li class="relatedPosts--item__small">
+                        <div class="img">
+                            <a href="https://www.woshipm.com/it/5906143.html" target="_blank">
+                                <img src="https://image.woshipm.com/2023/04/17/77655430-dcf5-11ed-9781-00163e0b5ff3.png!/both/130x88" width="130" height="88" alt="外卖柜开始向外卖员收费，疯了吗？">
+                            </a>
+                        </div>
+                        <div class="content">
+                            <div class="title"><a href="https://www.woshipm.com/it/5906143.html" target="_blank">外卖柜开始向外卖员收费，疯了吗？</a></div>
+                            <div class="meta">09-18<span class="dot"></span>5541 浏览</div>
+                        </div>
+                    </li>
+                            </ul>
+        </div>
+    </div>
+</div>                <index-topic-card data-dts-event-location="recom_topic_module" />
+            </div>
+            <aside class="u-width335 sidebar article-detail-sidebar">
+    <div class="js-sidebar">
+        <section
+            id="article-intelligence-sidebar"
+            class="widget article-intelligence-sidebar u-backgroundColorWhite"
+            data-post-id="3331984"
+            data-endpoint="https://t.aixq.cc/api/public/v1/articles/3331984/intelligence"
+            data-dts-event-location="article_ai_read_sidebar"
+            aria-live="polite"
+            hidden>
+        </section>
+
+        <widget-qrcode-card></widget-qrcode-card>
+
+        <div class="widget u-backgroundColorWhite widget-post-item--withImage article-sidebar-ad--feed js-star" data-id="41"></div>
+        <div class="widget widget-rich js-star" data-id="39"></div>
+        <div class="widget widget-rich js-star" data-id="40"></div>
+
+        <widget-question-card></widget-question-card>
+
+        <div class="widget widget-rich fixed-sidebar-id js-star" data-id="27"></div>
+    </div>
+</aside>
+        </div>
+    </div>
+</div>
+    <footer class="site-footer">
+        <div class="container u-flex footer-sections">
+            <section class="info-section">
+                <div class="footer-title">关于</div>
+                人人都是产品经理（woshipm.com）是以产品经理、运营为核心的学习、交流、分享平台，集媒体、培训、社群为一体，全方位服务产品人和运营人，成立12年举办在线讲座1000+期，线下分享会500+场，产品经理大会、运营大会50+场，覆盖北上广深杭成都等20个城市，在行业有较高的影响力和知名度。平台聚集了众多BAT美团京东滴滴360小米网易等知名互联网公司产品总监和运营总监，他们在这里与你一起成长。
+            </section>
+            <section class="partner-section">
+                <div class="footer-title">合作伙伴</div>
+                <ul class="blue-pic-ul">
+                    <li>
+                        <a href="https://www.qidianla.com?woshipm" title="起点课堂" target="_blank"><img src="https://image.woshipm.com/wp-files/2021/10/zUwm4IYjmoiV63Kk9aKQ.png" alt="起点课堂" title="起点课堂"></a>
+                    </li>
+                    <li>
+                        <a href="https://36kr.com/" target="_blank"><img src="https://image.yunyingpai.com/wp/2021/12/wyRAfH2rXJha57p06bbQ.png"></a>
+                    </li>
+                    <li>
+                        <a href="https://www.geetest.com/?woshipm" target="_blank"><img src="https://image.woshipm.com/wp-files/2020/05/zHiqREB7rkGZsC6rFerJ.png" alt="极验验证"></a>
+                    </li>
+                    <li>
+                        <a href="https://www.zhisheji.com/?woshipm" title="致设计" target="_blank"><img src="https://image.woshipm.com/wp-files/2020/05/k7Gf25a7GdaoRNLLogCo.png" alt="致设计" title="致设计"></a>
+                    </li>
+                    <li>
+                        <a href="https://www.polyv.net/?-cpjl" target="_blank"><img src="https://image.woshipm.com/wp-files/2020/05/KZTBx2R2UyR2k96mHpa4.png" alt="保利威"></a>
+                    </li>
+                </ul>
+                <div class="footer-title">链接</div>
+                <nav class="footer-nav">
+                    <ul>
+                        <li><a href="https://www.woshipm.com/policy" target="_blank">隐私政策</a></li>
+                        <li><a href="/it/1010671.html" target="_blank">投稿须知</a></li>
+                        <li><a href="https://wen.woshipm.com/question/detail/omkf.html" target="_blank">意见反馈</a></li>
+                        <li><a href="https://doc.weixin.qq.com/doc/w3_ALsAdwZgAO8uhueZ8ahRse75jgAJm?scode=AGsAywdaAA0wPabVgMAYgAZgbwAOM" target="_blank">帮助中心</a></li>
+                    </ul>
+                </nav>
+            </section>
+            <section class="qr-section">
+                <div class="qr-section--item">
+                    <img src="//image.woshipm.com/wp-files/2020/06/cKMzCQWucvwdFhHVeoib.jpeg" alt="公众号">
+                    <p>公众号</p>
+                </div>
+                <div class="qr-section--item">
+                    <img src="//image.woshipm.com/wp-files/2020/06/PAVQDSOr3b6NRnHyqAVy.jpeg" alt="视频号">
+                    <p>视频号</p>
+                </div>
+            </section>
+        </div>
+        <div class="copyright">
+            <div class="container">
+                <ul class="footer--links">
+                    <li>友情链接</li>
+                    <li><a href="https://pm265.com" target="_blank">PM265</a></li>
+<li><a href="https://www.pmbaobao.com/" target="_blank">产品经理导航</a></li>
+<li><a href="https://www.qidianla.com/" target="_blank">起点课堂</a></li>
+<li><a href="http://www.zbj.com/" target="_blank">猪八戒网</a></li>
+<li><a href="https://www.huoban.com" target="_blank">伙伴云表格</a></li>
+<li><a href="https://dun.163.com/" target="_blank">网易易盾</a></li>
+<li><a href="https://www.getui.com/cn/" target="_blank">个推</a></li>
+<li><a href="https://www.umeng.com/" target="_blank">友盟+</a></li>
+<li><a href="https://www.cyzone.cn/?woshipm" target="_blank">创业邦</a></li>
+<li><a href="https://www.aixq.cc" title="学习AI第一站" target="_blank">AI学习社区</a></li>
+<li><a href="https://www.imooc.com/" title="慕课网" target="_blank">慕课网</a></li>
+                </ul>
+            </div>
+            <div class="container u-flex">
+                <div class="infoleft">
+                    旗下品牌: <a target="_blank" href="https://www.qidianla.com/">起点课堂</a> | <a target="_blank" href="https://www.yunyingpai.com/">运营派</a> | <a target="_blank" href="https://www.liangcang.cc">粮仓企微管家</a>
+                    <br>
+                    ©2010-2024 - 人人都是产品经理 - <a target="_blank" href="https://beian.miit.gov.cn">粤ICP备14037330号</a>-<a target="_blank" href="https://www.beian.gov.cn/portal/registerSystemInfo?recordcode=44030502001309">粤公网安备 44030502001309号</a>
+                    <br>
+                    <a target="_blank" href="https://static.qidianla.com/Audio-TVLicense.jpg">广播电视节目制作经营许可证（粤）字第03109号</a>  <a href="https://dxzhgl.miit.gov.cn/dxxzsp/xkz/xkzgl/resource/qiyesearch.jsp?num=深圳聚力创想信息科技有限公司&type=xuke" target="_blank" >增值电信业务经营许可证粤B2-20190788</a> 版权所有 © 深圳聚力创想信息科技有限公司
+                </div>
+
+            </div>
+        </div>
+    </footer>
+    <transition name="component-fade">
+        <overlay-search v-if="searchActive"></overlay-search>
+    </transition>
+    <login-overlay v-if="showLogin" :showLogin="showLogin" @closeloginchild="closelogin"></login-overlay>
+    <event-overlay v-if="eventOverlay" :overlay="overlay" @eventclose="eventOverlayClose"></event-overlay>
+    <online-overlay v-if="onlineOverlay" :overlay="online" @eventclose="onlineOverlayClose"></online-overlay>
+    </div>
+    <div class="js-star" data-id="25" style="position:fixed;bottom:100px;right:20px;width:80px;z-index:100">
+    </div>
+    <script type="speculationrules">
+{"prefetch":[{"source":"document","where":{"and":[{"href_matches":"\/*"},{"not":{"href_matches":["\/wp-*.php","\/wp-admin\/*","\/wp-content\/uploads\/*","\/wp-content\/*","\/wp-content\/plugins\/*","\/wp-content\/themes\/Hannah\/*","\/*\\?(.+)"]}},{"not":{"selector_matches":"a[rel~=\"nofollow\"]"}},{"not":{"selector_matches":".no-prefetch, .no-prefetch a"}}]},"eagerness":"conservative"}]}
+</script>
+<script type="text/javascript" src="//image.woshipm.com/fp/js/swiper-bundle.min.js?ver=6.0.12" id="swipper-js"></script>
+<script type="text/javascript" src="//image.woshipm.com/fp/js/html2canvas.min.js?ver=6.0.12" id="html2canvas-js"></script>
+<script type="text/javascript" src="//image.woshipm.com/fp/js/require-v1.0.7.js?ver=6.0.12" id="vue-js"></script>
+<script type="text/javascript" src="//image.woshipm.com/kan/js/comment-reply.min.js?ver=6.0.12" id="cp-js"></script>
+<script type="text/javascript" id="misc-js-extra">
+/* <![CDATA[ */
+var PURE = {"ajax_url":"https:\/\/www.woshipm.com\/wp-admin\/admin-ajax.php","restapi":"https:\/\/www.woshipm.com\/__api\/","nonce":"82126f51d6","home_url":"https:\/\/www.woshipm.com","is_user_logged_in":"","is_singular":"1","is_home":"","is_author":"","id":"3331984","is_bookmark":"","is_posts":"","is_reward":"","is_comment":"","is_answer":"","is_event":"","is_subposts":"","is_sub":"","is_writing":"","token":"","secret":"","user_id":"0","is_recuser":"","is_hotposts":"","is_setting":"","logout":"https:\/\/passport.woshipm.com\/user\/exit.html?FS=PM&REDIRECT=http:\/\/www.woshipm.com\/evaluating\/3331984.html&_protocol=http","production":"1","is_views":"","post_title":"\u201c\u733f\u8f85\u5bfc\u7cfb\u201d\u4ea7\u54c1\u5206\u6790\uff081\uff09\uff1a\u5feb\u601d\u8003\u3001\u6162\u51b3\u7b56\u7684\u300c\u7c89\u7b14\u7f51\u300d","is_adpost":"","jltoken":"","is_preview":""};
+/* ]]> */
+</script>
+<script type="text/javascript" src="//image.woshipm.com/fp/js/all.bundle.js?ver=6.0.12" id="misc-js"></script>
+<script type="text/javascript" src="https://www.woshipm.com/wp-content/themes/Hannah/js/article-intelligence-sidebar.js?ver=1787811041" id="article-intelligence-sidebar-js"></script>
+    <script>
+        var UID = PURE.user_id;
+    </script>
+    <script type="text/javascript" src="https://dts.woshipm.com/dtsReport/pm_pc_dts_data.js?t=1222222222"></script>
+        <div class="u-hide"><script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3Fb85cbcc76e92e3fd79be8f2fed0f504f' type='text/javascript'%3E%3C/script%3E"));
+</script></div>
+    </body>
+
+    </html>

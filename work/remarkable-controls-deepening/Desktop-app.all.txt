@@ -1,0 +1,126 @@
+try{ NetworkTracking.init('/_ui/networks/tracking/NetworkTrackingServlet', 'network', 'null'); }catch(x){}try{ NetworkTracking.logPageView();}catch(x){}(function(UITheme) {
+UITheme.getUITheme = function() {
+return UserContext.uiTheme;
+};
+}(window.UITheme = window.UITheme || {}));
+Login | Forgot Your Password?
+if(!window.sfdcPage) { window.sfdcPage = new ApexDetailPage(); }UserContext.initialize({"ampm":["AM","PM"],"isAccessibleMode":false,"salesforceURL":"https://support.remarkable.com?refURL=http%3A%2F%2Fsupport.remarkable.com%2Farticles%2FKnowledge%2FDesktop-app","dateFormat":"dd.MM.yyyy","dayPeriods":[],"language":"en_US","locale":"no_NO","enableLoggingInAuraAlohaFrameNavigator":true,"dateTimeFormat":"dd.MM.yyyy, HH:mm","labelLastModified":"1789190098000","today":"26.10.2026, 18:11","userPreferences":[{"index":112,"name":"HideInlineEditSplash","value":false},{"index":114,"name":"OverrideTaskSendNotification","value":false},{"index":115,"name":"DefaultTaskSendNotification","value":false},{"index":119,"name":"HideUserLayoutStdFieldInfo","value":false},{"index":116,"name":"HideRPPWarning","value":false},{"index":87,"name":"HideInlineSchedulingSplash","value":false},{"index":88,"name":"HideCRUCNotification","value":false},{"index":89,"name":"HideNewPLESplash","value":false},{"index":90,"name":"HideNewPLEWarnIE6","value":false},{"index":122,"name":"HideOverrideSharingMessage","value":false},{"index":91,"name":"HideProfileILEWarn","value":false},{"index":93,"name":"HideProfileElvVideo","value":false},{"index":97,"name":"ShowPicklistEditSplash","value":false},{"index":92,"name":"HideDataCategorySplash","value":false},{"index":128,"name":"ShowDealView","value":false},{"index":129,"name":"HideDealViewGuidedTour","value":false},{"index":132,"name":"HideKnowledgeFirstTimeSetupMsg","value":false},{"index":104,"name":"DefaultOffEntityPermsMsg","value":false},{"index":135,"name":"HideNewCsnSplash","value":false},{"index":101,"name":"HideBrowserWarning","value":false},{"index":139,"name":"HideDashboardBuilderGuidedTour","value":false},{"index":140,"name":"HideSchedulingGuidedTour","value":false},{"index":180,"name":"HideReportBuilderGuidedTour","value":false},{"index":183,"name":"HideAssociationQueueCallout","value":false},{"index":194,"name":"HideQTEBanner","value":false},{"index":270,"name":"HideIDEGuidedTour","value":false},{"index":282,"name":"HideQueryToolGuidedTour","value":false},{"index":196,"name":"HideCSIGuidedTour","value":false},{"index":271,"name":"HideFewmetGuidedTour","value":false},{"index":272,"name":"HideEditorGuidedTour","value":false},{"index":205,"name":"HideApexTestGuidedTour","value":false},{"index":206,"name":"HideSetupProfileHeaderTour","value":false},{"index":207,"name":"HideSetupProfileObjectsAndTabsTour","value":false},{"index":213,"name":"DefaultOffArticleTypeEntityPermMsg","value":false},{"index":214,"name":"HideSelfInfluenceGetStarted","value":false},{"index":215,"name":"HideOtherInfluenceGetStarted","value":false},{"index":216,"name":"HideFeedToggleGuidedTour","value":false},{"index":268,"name":"ShowChatterTab178GuidedTour","value":false},{"index":275,"name":"HidePeopleTabDeprecationMsg","value":false},{"index":276,"name":"HideGroupTabDeprecationMsg","value":false},{"index":224,"name":"HideUnifiedSearchGuidedTour","value":false},{"index":226,"name":"ShowDevContextMenu","value":false},{"index":227,"name":"HideWhatRecommenderForActivityQueues","value":false},{"index":228,"name":"HideLiveAgentFirstTimeSetupMsg","value":false},{"index":232,"name":"HideGroupAllowsGuestsMsgOnMemberWidget","value":false},{"index":233,"name":"HideGroupAllowsGuestsMsg","value":false},{"index":234,"name":"HideWhatAreGuestsMsg","value":false},{"index":235,"name":"HideNowAllowGuestsMsg","value":false},{"index":236,"name":"HideSocialAccountsAndContactsGuidedTour","value":false},{"index":237,"name":"HideAnalyticsHomeGuidedTour","value":false},{"index":238,"name":"ShowQuickCreateGuidedTour","value":false},{"index":245,"name":"HideFilePageGuidedTour","value":false},{"index":250,"name":"HideForecastingGuidedTour","value":false},{"index":251,"name":"HideBucketFieldGuide","value":false},{"index":263,"name":"HideSmartSearchCallOut","value":false},{"index":273,"name":"ShowForecastingQuotaAttainment","value":false},{"index":280,"name":"HideForecastingQuotaColumn","value":false},{"index":301,"name":"HideManyWhoGuidedTour","value":false},{"index":298,"name":"HideFileSyncBannerMsg","value":false},{"index":299,"name":"HideTestConsoleGuidedTour","value":false},{"index":302,"name":"HideManyWhoInlineEditTip","value":false},{"index":303,"name":"HideSetupV2WelcomeMessage","value":false},{"index":312,"name":"ForecastingShowQuantity","value":false},{"index":313,"name":"HideDataImporterIntroMsg","value":false},{"index":314,"name":"HideEnvironmentHubLightbox","value":false},{"index":316,"name":"HideSetupV2GuidedTour","value":false},{"index":317,"name":"HideFileSyncMobileDownloadDialog","value":false},{"index":322,"name":"HideEnhancedProfileHelpBubble","value":false},{"index":328,"name":"ForecastingHideZeroRows","value":false},{"index":330,"name":"HideEmbeddedComponentsFeatureCallout","value":false},{"index":341,"name":"HideDedupeMatchResultCallout","value":false},{"index":340,"name":"HideS1BrowserUI","value":true},{"index":346,"name":"HideS1Banner","value":false},{"index":358,"name":"HideEmailVerificationAlert","value":false},{"index":354,"name":"HideLearningPathModal","value":false},{"index":359,"name":"HideAtMentionsHelpBubble","value":false},{"index":368,"name":"LightningExperiencePreferred","value":true},{"index":373,"name":"PreviewLightning","value":false},{"index":281,"name":"HideMSPPopup","value":false}],"networkId":"0DB7Q000000bqvW","uiTheme":"Theme3","uiSkin":"Theme3","userName":"support_web@00d7q000002qcc5uam.org.force.com","userId":"0057Q000006iZrQ","isCurrentlySysAdminSU":false,"renderMode":"RETRO","startOfWeek":"2","vfDomainPattern":"getremarkable--(?:[^.]+).vf.force.com","auraDomain":"getremarkable.lightning.force.com","useNativeAlertConfirmPrompt":false,"orgPreferences":[{"index":257,"name":"TabOrganizer","value":true},{"index":113,"name":"GroupTasks","value":true}],"isDefaultNetwork":false,"timeFormat":"HH:mm"});
+Desktop appPrintable View
+« Go Back
+Information
+Properties
+Information
+Title
+Desktop app
+URL Name
+Desktop-app
+Summary
+View, organize, import files, and use Screen Share with the desktop app. Connect subscribers can also take and edit notes in the app.
+Description
+j_id0__SiteTemplate__j_id17__j_id18__j_id25__j_id26__j_id387__0__j_id390__3__j_id398 = window.onload; window.onload=function() { if (j_id0__SiteTemplate__j_id17__j_id18__j_id25__j_id26__j_id387__0__j_id390__3__j_id398!= null) j_id0__SiteTemplate__j_id17__j_id18__j_id25__j_id26__j_id387__0__j_id390__3__j_id398();};
+Time Estimate
+Article Body
+Read ahead to learn how to install and pair the reMarkable Desktop app to view, organize, import files, and use Screen Share. Connect subscribers can also take and edit notes in the app.
+Once you’ve set up the desktop app and your paper tablet is paired with the reMarkable cloud, all your notebooks and documents will be synced across your devices when connected to Wi-Fi.
+The desktop app can be downloaded from https://my.remarkable.com/device/apps
+Pairing your desktop app
+Install the app on your PC.
+Open the app and click Log in. This will open a browser window where you can get a verification code to pair the app with your account (if prompted to log in, please do so - you are logging into my.remarkable.com to retrieve the code).
+Copy the code from your browser and go back to the app.
+4. Enter the code in your desktop app and click Pair the app. The desktop app is now set up!
+Note: You must first set up your paper tablet before using the desktop app. Installation and updating of the desktop app on managed/company PCs may require admin access or credentials.
+Take and edit notes
+Connect subscribers can take notes on reMarkable using the desktop and mobile apps. You can create new notebooks or quick sheets, add more pages to existing notebooks, PDFs, and ebooks, plus export, delete, and organize with tags.
+Without a Connect subscription, you’ll have the option to view and export individual pages from notebooks and documents in the desktop app. You can also use tags to organize your documents.
+If you subscribe to Connect, you can also take and edit notes in the desktop app. Here's how:
+On your computer, open the desktop app.
+Double-click the notebook with the text you'd like to edit, or click Notebook at the top of the app window to create a new one
+Click the page and start typing.
+Importing files
+Import files using the import button
+Open the reMarkable desktop app.
+Click the import button at the top.
+Select a file from the browser menu, and click open.
+Drag and Drop
+You can also simply drag and drop a supported file into the application window to import it to your cloud.
+Exporting files
+To export files using your desktop app, do the following:
+Open the desktop app.
+In the desktop app, select the file you want to export to your computer.
+Right-click on the file.
+Select Export as PDF, Export as PNG to folder, or Export as SVG to folder.
+Choose a destination for the file on your computer.
+Organize files
+If you subscribe to Connect, you can view notes, copy, export, delete, add new pages to notebooks, or rearrange them. Simply click a file or folder to access these options using the action menu.
+If you don't subscribe to Connect, you’ll have the option to view and export individual pages from notebooks and documents in the desktop app.
+Tags you've added to pages and files on your reMarkable paper tablet will appear in the desktop app, and you can use them to sort and filter your notes and find content more easily.
+Click Tags in the menu on the left side of the app window, then select one or more tags to filter your files.
+Help
+Which operating systems are supported?
+Windows 10 and newer (*64-bit, version 1809 or newer), and macOS 13 and newer
+Installing the reMarkable desktop app when you have antivirus software installed
+Some antivirus programs may quarantine the desktop app installation file after it's been downloaded. You can solve this by whitelisting the desktop app in your antivirus software. Here’s how:
+1. Create an exception for the desktop app in your antivirus or firewall program.
+2. Go to my.remarkable.com and log in.
+3. Click the menu in the upper-left corner.
+4. Click Devices and apps in the menu in the upper-left corner.
+5. Click Desktop app.
+6. Click Download.
+7. Open the installation file and install the desktop app.
+8. Restart your antivirus program.
+Installing the app on Windows computers with ARM based processors
+The reMarkable desktop app does not support Windows computers using ARM-based processors.
+If you can’t access our companion apps for mobile or desktop, then importing files from your browser using my.remarkable.com is an easy alternative for transferring them to your paper tablet.
+Find instructions for importing files using my.remarkable.com here.
+Need further assistance?
+If the issues you’ve experienced persist, or you're unsure how to proceed, contact our support team so we can help. Having a brief explanation of the situation and the steps you’ve already taken ready is always helpful, along with:
+Your PC’s model
+OS (Windows/MacOS version), and OS build
+Search ‘About this PC’ or ‘About this Mac’
+Whether this is a fully private or managed/work machine
+Whether it is connected to an enterprise network or a home Wi-Fi
+j_id0__SiteTemplate__j_id17__j_id18__j_id25__j_id26__j_id387__0__j_id390__5__j_id398 = window.onload; window.onload=function() { if (j_id0__SiteTemplate__j_id17__j_id18__j_id25__j_id26__j_id387__0__j_id390__5__j_id398!= null) j_id0__SiteTemplate__j_id17__j_id18__j_id25__j_id26__j_id387__0__j_id390__5__j_id398();};
+Properties
+Article Created Date
+05.07.2022, 10:38
+Last Published Date
+02.09.2026, 13:42
+Override Page Navigation
+Override Page Navigation API Name
+Tile Image URL
+Validation Status
+Not Validated
+Publication Status
+Published
+DesktopContext.pageTitle = "Knowledge: Desktop app";
+document.title = "Knowledge: Desktop app";
+var isModal = false;
+Ext.onReady(function() {
+if (!isModal){
+var propertiesPanel = Ext.query('*[id=j_id0:SiteTemplate:j_id17:j_id18:j_id25:j_id26:articleRendererToolbar] *[id $= :extPanel]')[0];
+if (true) {
+var renderer = new TOCDetailRenderer({elemId:"knowledgeTOCRenderer", height:-110, contentId:'knowledgeTOCRendererContent'});
+if (propertiesPanel) {
+Ext.ComponentMgr.get(propertiesPanel.id).addListener('beforeExpand', function() {
+renderer.height = -190;
+renderer.resize();
+});
+Ext.ComponentMgr.get(propertiesPanel.id).addListener('collapse', function() {
+renderer.height = -110;
+renderer.resize();
+});
+}
+new TOCSectionSelector({menuId:'menu', contentId:'knowledgeTOCRendererContent'});
+}
+ArticleRenderer.registerArticleLinksForConsole();
+}
+else{
+Sfdc.onReady(function(){window.addEventListener("beforeunload", function(){
+if(window.parent.Sfdc.get('ChatterDeflectionModal')){
+Sfdc.Dom.hideByVisibility(window.parent.Sfdc.get('ChatterDeflectionModal'));
+}
+});
+});
+}
+});
+Powered by

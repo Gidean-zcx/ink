@@ -1,0 +1,11 @@
+{
+  "name": "SubscriptionFragment.java",
+  "repo_path": "app/src/main/java/de/danoeh/antennapod/ui/screen/subscriptions/SubscriptionFragment.java",
+  "raw_work_path": "work/antennapod-controls-deepening/src/app/src/main/java/de/danoeh/antennapod/ui/screen/subscriptions/SubscriptionFragment.java",
+  "raw_sha256": "0d35a96da963bd24f39653fe879527290c302e5cc05638145407a2cc7cac643f",
+  "verified_git_blob": "4c991062ec13512875c52f23223699f152181d07",
+  "url": "https://github.com/AntennaPod/AntennaPod/blob/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/app/src/main/java/de/danoeh/antennapod/ui/screen/subscriptions/SubscriptionFragment.java",
+  "access_mode": "existing_local_source_reread",
+  "checked_on": "2026-10-27",
+  "derived_from": "E-APCD-13"
+}

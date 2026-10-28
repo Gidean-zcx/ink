@@ -1,0 +1,19 @@
+{
+  "result": "PASS",
+  "new_E": 13,
+  "new_F": 2,
+  "case_unique_F": 9,
+  "inventory": {
+    "help_node": 30,
+    "support_index": 7,
+    "api_operation": 24
+  },
+  "old_field_proposals": 13,
+  "unchanged_old_batches": [
+    "docs/research/interaction-library/batches/vocab-evidence.jsonl",
+    "docs/research/interaction-library/batches/vocab-coverage.csv"
+  ],
+  "all_raw_and_artifact_hashes_match": true,
+  "csv_LF": true,
+  "no_static_or_hands_on_claim": true
+}

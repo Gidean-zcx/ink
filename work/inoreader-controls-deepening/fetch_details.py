@@ -1,0 +1,11 @@
+import json,concurrent.futures
+from fetch import fetch,work
+spec=[
+('09-search','/features/search'),('10-monitoring','/features/monitoring-feeds'),('11-organize','/features/folders-and-tags'),('12-annotations','/features/annotations'),('13-archive','/features/archive'),('14-spotlights','/features/spotlights'),('15-dashboards','/features/dashboards'),('16-intelligence','/features/intelligence'),('17-api','/features/api'),
+('18-unread-restore','/help/basic/article-view/how-can-i-restore-articles-accidentally-marked-as-read'),('19-import','/help/basic/feeds-sources/can-i-import-feeds-from-another-rss-reader'),('20-feed-failure','/help/basic/feeds-sources/why-has-a-feed-stopped-updating'),('21-add-feed','/help/basic/feeds-sources/how-do-i-add-a-feed'),('22-layout','/help/basic/article-view/can-i-customize-how-articles-are-displayed'),('23-sorting','/help/basic/article-view/what-sorting-options-are-available'),('24-magic','/help/pro/magic-sorting/what-is-magic-sorting'),('25-summary-generate','/help/intelligence/article-summaries/how-do-i-generate-a-summary'),('26-summary-config','/help/intelligence/article-summaries/can-i-customize-how-summaries-work'),('27-summary-store','/help/intelligence/article-summaries/where-are-summaries-stored'),('28-report-create','/help/intelligence/intelligence-reports/how-do-i-create-an-intelligence-report'),('29-report-auto','/help/intelligence/intelligence-reports/how-do-i-create-an-automated-report'),('30-report-vs-digest','/help/intelligence/intelligence-reports/should-i-use-an-intelligence-report-or-an-email-digest'),('31-monitor-empty','/help/pro/monitoring-feeds/why-is-my-monitoring-feed-not-finding-the-articles-i-expect'),('32-search-empty','/help/basic/search/why-does-my-search-return-no-results')]
+results=[]
+for start in range(0,len(spec),4):
+ with concurrent.futures.ThreadPoolExecutor(max_workers=4) as ex:rs=list(ex.map(lambda x:fetch(x[0],'https://www.inoreader.com'+x[1]),spec[start:start+4]))
+ results+=rs;print(json.dumps(dict(processed=len(results),statuses=[x.get('status') for x in rs])),flush=True)
+ if any(x.get('status') in (401,403,429) for x in rs):break
+(work/'detail-fetch.json').write_text(json.dumps(results,ensure_ascii=False,indent=2)+'\n')

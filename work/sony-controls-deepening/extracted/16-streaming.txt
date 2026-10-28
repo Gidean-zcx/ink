@@ -1,0 +1,15 @@
+Using the High-Res streaming function
+You can enjoy music streaming from online music services in high sound quality.
+Swipe the [WALKMAN Home] screen upwards.
+Tap the menu items in the following order.
+[Settings] － [Sound] － [High-Res streaming].
+Tap the switch to turn on the [High-Res streaming] function.
+Music streamed using apps other than “Music player” is played in the following quality.
+[Use High-Res streaming] is on:
+Up-converted playback at 192 kHz/32 bit
+[Use High-Res streaming] is off:
+Down-converted playback at 48 kHz/16 bit
+Note
+The [High-Res streaming] function does not support all online music service apps.
+The contents of the Help Guide may be subject to change without notice due to updates to the product's specifications.
+Go to Page Top

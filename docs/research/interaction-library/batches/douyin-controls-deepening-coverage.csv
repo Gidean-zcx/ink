@@ -1,0 +1,6 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M051-07,M-051,进入和关闭未成年人模式,D2,E-DYCD-03;E-DOUY-05,我侧栏/首页更多/搜索/弹窗进入；首页或我左上关闭，文档有密码校验,年龄实名条件与历史指南不同；X/不再提醒、验证失败、退出后的数据/频道恢复未测,static_official_images_only,false,cases/M-051-douyin.md,2026-10-27
+F-M051-08,M-051,按上学日和休息日设儿童时长,D2,E-DYCD-03;E-DOUY-05,首页菜单时间管理或我侧栏守护工具时间锁；分上学日/休息日，日超限密码提示,保存/撤销和跨端累计时点未知；夜间密码截图与强制关闭文字冲突，不能认定例外有效,static_official_images_only,false,cases/M-051-douyin.md,2026-10-27
+F-M051-09,M-051,选择适龄内容并按主题找内容,D2,E-DYCD-03,首页左上适龄内容→年龄→设置完成；发现下拉全部频道，陪伴周刊分类/期刊，订阅频道,1–18岁为图文范围而非能力分级；年龄改后保存/推荐变化、频道进入返回、取消订阅未测,static_official_images_only,false,cases/M-051-douyin.md,2026-10-27
+F-M051-10,M-051,阻止指定账号继续出现,D2,E-DYCD-04,账号主页右上…→拉黑，区别于某条视频不感兴趣及类别偏好,拉黑确认、成功回执、解除、旧收藏/关注处理及跨端结果未知,static_official_images_only,false,cases/M-051-douyin.md,2026-10-27
+F-M051-11,M-051,从可疑内容进入核查卡片,D2,E-DYCD-04,视频左下AI抖音求真链接或搜索事件词→求真卡；核查结果与事件脉络示意,无结果/存疑、来源打开/日期与修订、AI误判纠错、返回视频位置未知；不验证示例事实,static_official_images_only,false,cases/M-051-douyin.md,2026-10-27

@@ -1,0 +1,37 @@
+flow_id,source_batch,field,before,after,reason
+F-M020-01,docs/research/interaction-library/batches/initial-coverage.csv,evidence_ids,E-ANK-01,E-ANK-01;E-ANCD-03;E-ANCD-04,2026-10-27补机制/恢复分支，原任务与深度不变；待root合并
+F-M020-01,docs/research/interaction-library/batches/initial-coverage.csv,known_branches,评分、到期队列、当日完成,评分、到期队列、当日完成；v3允许回答/暂埋交错逐步撤销；多数可撤销动作可Redo；2.1.45历史条件,2026-10-27补机制/恢复分支，原任务与深度不变；待root合并
+F-M020-01,docs/research/interaction-library/batches/initial-coverage.csv,gaps,误评撤销、插件/调度版本,学习页Undo/Redo具体入口、撤销后题面、跨同步/重启保存、定点回改旧评分及插件影响未知,2026-10-27补机制/恢复分支，原任务与深度不变；待root合并
+F-M020-01,docs/research/interaction-library/batches/initial-coverage.csv,checked_on,2026-10-26,2026-10-27,2026-10-27补机制/恢复分支，原任务与深度不变；待root合并
+F-M020-02,docs/research/interaction-library/batches/initial-coverage.csv,evidence_ids,E-ANK-01,E-ANK-01;E-ANCD-03;E-ANCD-04,2026-10-27补机制/恢复分支，原任务与深度不变；待root合并
+F-M020-02,docs/research/interaction-library/batches/initial-coverage.csv,known_branches,恢复期限、对象范围,暂埋/停用/删除对象不同；v3跨日学习卡可暂埋；2.1.45列删除笔记/暂埋可多步撤销,2026-10-27补机制/恢复分支，原任务与深度不变；待root合并
+F-M020-02,docs/research/interaction-library/batches/initial-coverage.csv,gaps,确认对话、Undo、持久保存粒度,删除确认、当前快捷键、撤销栈跨退出、每种批处理保存粒度；删除日志恢复见F03,2026-10-27补机制/恢复分支，原任务与深度不变；待root合并
+F-M020-02,docs/research/interaction-library/batches/initial-coverage.csv,checked_on,2026-10-26,2026-10-27,2026-10-27补机制/恢复分支，原任务与深度不变；待root合并
+F-M020-03,docs/research/interaction-library/batches/initial-coverage.csv,evidence_ids,E-ANK-02;E-ANK-03,E-ANK-02;E-ANK-03;E-ANCD-02,2026-10-27补机制/恢复分支，原任务与深度不变；待root合并
+F-M020-03,docs/research/interaction-library/batches/initial-coverage.csv,known_branches,单向同步、合并、媒体、恢复,单向同步覆盖；合并前取消自动同步、逐顶层组导出apkg再下载/导回；媒体独立合并；自动备份不含媒体；deleted.txt按档案建立版本区分类型列,2026-10-27补机制/恢复分支，原任务与深度不变；待root合并
+F-M020-03,docs/research/interaction-library/batches/initial-coverage.csv,gaps,两端测试、失败恢复、版本差异,实际两端结果、失败中断/重复导回、旧档案日志迁移、笔记日志恢复调度/媒体未知；Network设置名需固定构建,2026-10-27补机制/恢复分支，原任务与深度不变；待root合并
+F-M020-03,docs/research/interaction-library/batches/initial-coverage.csv,checked_on,2026-10-26,2026-10-27,2026-10-27补机制/恢复分支，原任务与深度不变；待root合并
+F-M020-07,docs/research/interaction-library/batches/anki-deepening-coverage.csv,evidence_ids,E-AND-06;E-AND-07,E-AND-06;E-AND-07;E-ANCD-01;E-ANCD-03;E-ANCD-06,2026-10-27补机制/恢复分支，原任务与深度不变；待root合并
+F-M020-07,docs/research/interaction-library/batches/anki-deepening-coverage.csv,known_branches,模板作用于同类型材料；删除字段内容不会立即删除原卡。Deck Override 可改变生成目的地。,2.1.45+保存类型/导出前阻止部分错误；Browse定位类型→Cards修引用/条件；区分单张与全部cloze空卡；23.12关闭布局页提供保存机会,2026-10-27补机制/恢复分支，原任务与深度不变；待root合并
+F-M020-07,docs/research/interaction-library/batches/anki-deepening-coverage.csv,gaps,共享模板影响预览、删除恢复,保存/放弃按钮文案、所有CSS/JS错误、删除重复类型的精确对象、取消/Undo后全部恢复范围未知,2026-10-27补机制/恢复分支，原任务与深度不变；待root合并
+F-M020-07,docs/research/interaction-library/batches/anki-deepening-coverage.csv,checked_on,2026-10-26,2026-10-27,2026-10-27补机制/恢复分支，原任务与深度不变；待root合并
+F-M020-10,docs/research/interaction-library/batches/anki-deepening-coverage.csv,evidence_ids,E-AND-09;E-AND-10,E-AND-09;E-AND-10;E-ANCD-03,2026-10-27补机制/恢复分支，原任务与深度不变；待root合并
+F-M020-10,docs/research/interaction-library/batches/anki-deepening-coverage.csv,known_branches,操作对象不同；删除笔记连带卡片。变更笔记类型不改变调度，但涉及单向同步。Edit / Undo 有最近操作撤销入口。,卡片/笔记模式及批量对象不同；Edit/Undo入口；2.1.45多数动作多步Undo/Redo，Check Database/不兼容插件可清历史,2026-10-27补机制/恢复分支，原任务与深度不变；待root合并
+F-M020-10,docs/research/interaction-library/batches/anki-deepening-coverage.csv,gaps,多选误改撤销范围、同步冲突,全部批动作撤销支持、重做入口、跨窗口/同步/退出后的撤销栈、查找替换误操作恢复,2026-10-27补机制/恢复分支，原任务与深度不变；待root合并
+F-M020-10,docs/research/interaction-library/batches/anki-deepening-coverage.csv,checked_on,2026-10-26,2026-10-27,2026-10-27补机制/恢复分支，原任务与深度不变；待root合并
+F-M020-15,docs/research/interaction-library/batches/anki-deepening-coverage.csv,evidence_ids,E-AND-12,E-AND-12;E-ANCD-06;E-ANCD-07,2026-10-27补机制/恢复分支，原任务与深度不变；待root合并
+F-M020-15,docs/research/interaction-library/batches/anki-deepening-coverage.csv,known_branches,显示计时、记录用时与自动动作分别配置；停止/重进及与语音争用仍缺操作证据。,23.12+非零停留时间→More/Auto Advance；计时显示/记录和自动动作分开；2025-07-25维护者说明失焦停止的历史防误评机制,2026-10-27补机制/恢复分支，原任务与深度不变；待root合并
+F-M020-15,docs/research/interaction-library/batches/anki-deepening-coverage.csv,gaps,停止、重进、语音冲突,当前手动停止/重进/跨日、自动评分动作组合、等待音频与焦点恢复；未把历史议题当现版保证,2026-10-27补机制/恢复分支，原任务与深度不变；待root合并
+F-M020-15,docs/research/interaction-library/batches/anki-deepening-coverage.csv,checked_on,2026-10-26,2026-10-27,2026-10-27补机制/恢复分支，原任务与深度不变；待root合并
+F-M020-18,docs/research/interaction-library/batches/anki-deepening-coverage.csv,evidence_ids,E-AND-15,E-AND-15;E-ANCD-05;E-ANK-02,2026-10-27补机制/恢复分支，原任务与深度不变；待root合并
+F-M020-18,docs/research/interaction-library/batches/anki-deepening-coverage.csv,known_branches,不扫描模板；手工加入媒体后还需核文件名。正文对回收位置的说法需按版本复核，未证明保留期限。,检查未引用/缺失；模板静态附件须区别；缺失文件从未清空回收站或仍可得共享包复原；删媒体可能传播、全量同步不覆盖媒体方向,2026-10-27补机制/恢复分支，原任务与深度不变；待root合并
+F-M020-18,docs/research/interaction-library/batches/anki-deepening-coverage.csv,gaps,回收位置、期限、格式与损坏恢复,工具垃圾箱/OS回收站措辞冲突、保留期、清空后恢复、重名替换与断网结果；恢复云端文件取决于尚存,2026-10-27补机制/恢复分支，原任务与深度不变；待root合并
+F-M020-18,docs/research/interaction-library/batches/anki-deepening-coverage.csv,checked_on,2026-10-26,2026-10-27,2026-10-27补机制/恢复分支，原任务与深度不变；待root合并
+F-M020-20,docs/research/interaction-library/batches/anki-deepening-coverage.csv,evidence_ids,E-AND-17,E-AND-17;E-AND-16,2026-10-27补机制/恢复分支，原任务与深度不变；待root合并
+F-M020-20,docs/research/interaction-library/batches/anki-deepening-coverage.csv,known_branches,学习集合与程序设置分档案，插件共享；多个档案连同一云账户会覆盖数据。不能把档案切换当成同账户多成员同步。,档案集合/设置分开、插件共享；同账户多档案可覆盖；A逐牌组导出再导入B合并；旧版打不开时回新版执行Downgrade后重试,2026-10-27补机制/恢复分支，原任务与深度不变；待root合并
+F-M020-20,docs/research/interaction-library/batches/anki-deepening-coverage.csv,gaps,多人同步冲突、退出保留、删除恢复,档案删除确认/回收、导出选项/重名重复、降级可支持的版本及失败恢复；不当权限隔离保证,2026-10-27补机制/恢复分支，原任务与深度不变；待root合并
+F-M020-20,docs/research/interaction-library/batches/anki-deepening-coverage.csv,checked_on,2026-10-26,2026-10-27,2026-10-27补机制/恢复分支，原任务与深度不变；待root合并
+F-M020-21,docs/research/interaction-library/batches/anki-deepening-coverage.csv,evidence_ids,E-AND-18;E-AND-19,E-AND-18;E-AND-19;E-ANCD-02;E-ANCD-03,2026-10-27补机制/恢复分支，原任务与深度不变；待root合并
+F-M020-21,docs/research/interaction-library/batches/anki-deepening-coverage.csv,known_branches,扩展可随主程序升级失效；文档没有保证删除扩展后恢复其全部数据影响。,Shift安全启动同时禁插件与自动同步；Check Database查损坏/重建标签；闲置标签清理不随集合同步；检查会清撤销历史的2.1.45边界,2026-10-27补机制/恢复分支，原任务与深度不变；待root合并
+F-M020-21,docs/research/interaction-library/batches/anki-deepening-coverage.csv,gaps,安装和卸载状态、主版本迁移,固定构建/插件兼容、损坏修复实际结果、检测遗漏、所有故障保存粒度；未执行SQLite修复,2026-10-27补机制/恢复分支，原任务与深度不变；待root合并
+F-M020-21,docs/research/interaction-library/batches/anki-deepening-coverage.csv,checked_on,2026-10-26,2026-10-27,2026-10-27补机制/恢复分支，原任务与深度不变；待root合并

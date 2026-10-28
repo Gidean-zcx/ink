@@ -1,0 +1,268 @@
+{
+  "name": "02-get-started",
+  "url": "https://www.duolingo.com/register",
+  "title": "Learning Goal - Duolingo",
+  "utc": "2026-10-26T17:36:33.287917+00:00",
+  "text": "SITE LANGUAGE: ENGLISH\nI want to learn...\nSpanish\n41.9M learners\nFrench\n22.6M learners\nChess\nEnglish\n19.4M learners\nJapanese\n17.8M learners\nGerman\n15.9M learners\nMath\nHindi\n13.7M learners\nKorean\n12M learners\nItalian\n10.2M learners\nChinese (Simplified)\n9.28M learners\nRussian\n7.93M learners\nArabic\n6.54M learners\nPortuguese\n4.64M learners\nTurkish\n3.99M learners\nDutch\n2.7M learners\nGreek\n2.55M learners\nPolish\n2.13M learners\nSwedish\n1.9M learners\nVietnamese\n1.81M learners\nLatin\n1.79M learners\nNorwegian (Bokmål)\n1.61M learners\nIrish\n1.51M learners\nHebrew\n1.29M learners\nIndonesian\n1.24M learners\nHigh Valyrian\n1.08M learners\nUkrainian\n940K learners\nFinnish\n925K learners\nDanish\n910K learners\nRomanian\n879K learners\nCzech\n771K learners\nZulu\n720K learners\nHawaiian\n706K learners\nSwahili\n663K learners\nWelsh\n607K learners\nHungarian\n577K learners\nScottish Gaelic\n544K learners\nHaitian Creole\n446K learners\nEsperanto\n303K learners\nKlingon\n298K learners\nNavajo\n280K learners\nYiddish\n280K learners",
+  "buttons": [
+    {
+      "text": "SITE LANGUAGE: ENGLISH",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "Spanish\n41.9M learners",
+      "aria": null,
+      "test": "flag-spanish language-card",
+      "visible": true
+    },
+    {
+      "text": "French\n22.6M learners",
+      "aria": null,
+      "test": "flag-french language-card",
+      "visible": true
+    },
+    {
+      "text": "Chess",
+      "aria": null,
+      "test": "flag-chess language-card",
+      "visible": true
+    },
+    {
+      "text": "English\n19.4M learners",
+      "aria": null,
+      "test": "flag-english language-card",
+      "visible": true
+    },
+    {
+      "text": "Japanese\n17.8M learners",
+      "aria": null,
+      "test": "flag-japanese language-card",
+      "visible": true
+    },
+    {
+      "text": "German\n15.9M learners",
+      "aria": null,
+      "test": "flag-german language-card",
+      "visible": true
+    },
+    {
+      "text": "Math",
+      "aria": null,
+      "test": "flag-math language-card",
+      "visible": true
+    },
+    {
+      "text": "Hindi\n13.7M learners",
+      "aria": null,
+      "test": "flag-hindi language-card",
+      "visible": true
+    },
+    {
+      "text": "Korean\n12M learners",
+      "aria": null,
+      "test": "flag-korean language-card",
+      "visible": true
+    },
+    {
+      "text": "Italian\n10.2M learners",
+      "aria": null,
+      "test": "flag-italian language-card",
+      "visible": true
+    },
+    {
+      "text": "Chinese (Simplified)\n9.28M learners",
+      "aria": null,
+      "test": "flag-chinese language-card",
+      "visible": true
+    },
+    {
+      "text": "Russian\n7.93M learners",
+      "aria": null,
+      "test": "flag-russian language-card",
+      "visible": true
+    },
+    {
+      "text": "Arabic\n6.54M learners",
+      "aria": null,
+      "test": "flag-arabic language-card",
+      "visible": true
+    },
+    {
+      "text": "Portuguese\n4.64M learners",
+      "aria": null,
+      "test": "flag-portuguese language-card",
+      "visible": true
+    },
+    {
+      "text": "Turkish\n3.99M learners",
+      "aria": null,
+      "test": "flag-turkish language-card",
+      "visible": true
+    },
+    {
+      "text": "Dutch\n2.7M learners",
+      "aria": null,
+      "test": "flag-dutch language-card",
+      "visible": true
+    },
+    {
+      "text": "Greek\n2.55M learners",
+      "aria": null,
+      "test": "flag-greek language-card",
+      "visible": true
+    },
+    {
+      "text": "Polish\n2.13M learners",
+      "aria": null,
+      "test": "flag-polish language-card",
+      "visible": true
+    },
+    {
+      "text": "Swedish\n1.9M learners",
+      "aria": null,
+      "test": "flag-swedish language-card",
+      "visible": true
+    },
+    {
+      "text": "Vietnamese\n1.81M learners",
+      "aria": null,
+      "test": "flag-vietnamese language-card",
+      "visible": true
+    },
+    {
+      "text": "Latin\n1.79M learners",
+      "aria": null,
+      "test": "flag-latin language-card",
+      "visible": true
+    },
+    {
+      "text": "Norwegian (Bokmål)\n1.61M learners",
+      "aria": null,
+      "test": "flag-norwegian language-card",
+      "visible": true
+    },
+    {
+      "text": "Irish\n1.51M learners",
+      "aria": null,
+      "test": "flag-irish language-card",
+      "visible": true
+    },
+    {
+      "text": "Hebrew\n1.29M learners",
+      "aria": null,
+      "test": "flag-hebrew language-card",
+      "visible": true
+    },
+    {
+      "text": "Indonesian\n1.24M learners",
+      "aria": null,
+      "test": "flag-indonesian language-card",
+      "visible": true
+    },
+    {
+      "text": "High Valyrian\n1.08M learners",
+      "aria": null,
+      "test": "flag-high-valyrian language-card",
+      "visible": true
+    },
+    {
+      "text": "Ukrainian\n940K learners",
+      "aria": null,
+      "test": "flag-ukrainian language-card",
+      "visible": true
+    },
+    {
+      "text": "Finnish\n925K learners",
+      "aria": null,
+      "test": "flag-finnish language-card",
+      "visible": true
+    },
+    {
+      "text": "Danish\n910K learners",
+      "aria": null,
+      "test": "flag-danish language-card",
+      "visible": true
+    },
+    {
+      "text": "Romanian\n879K learners",
+      "aria": null,
+      "test": "flag-romanian language-card",
+      "visible": true
+    },
+    {
+      "text": "Czech\n771K learners",
+      "aria": null,
+      "test": "flag-czech language-card",
+      "visible": true
+    },
+    {
+      "text": "Zulu\n720K learners",
+      "aria": null,
+      "test": "flag-south-africa language-card",
+      "visible": true
+    },
+    {
+      "text": "Hawaiian\n706K learners",
+      "aria": null,
+      "test": "flag-hawaiian language-card",
+      "visible": true
+    },
+    {
+      "text": "Swahili\n663K learners",
+      "aria": null,
+      "test": "flag-swahili language-card",
+      "visible": true
+    },
+    {
+      "text": "Welsh\n607K learners",
+      "aria": null,
+      "test": "flag-welsh language-card",
+      "visible": true
+    },
+    {
+      "text": "Hungarian\n577K learners",
+      "aria": null,
+      "test": "flag-hungarian language-card",
+      "visible": true
+    },
+    {
+      "text": "Scottish Gaelic\n544K learners",
+      "aria": null,
+      "test": "flag-scottish-gaelic language-card",
+      "visible": true
+    },
+    {
+      "text": "Haitian Creole\n446K learners",
+      "aria": null,
+      "test": "flag-haitian-creole language-card",
+      "visible": true
+    },
+    {
+      "text": "Esperanto\n303K learners",
+      "aria": null,
+      "test": "flag-esperanto language-card",
+      "visible": true
+    },
+    {
+      "text": "Klingon\n298K learners",
+      "aria": null,
+      "test": "flag-klingon language-card",
+      "visible": true
+    },
+    {
+      "text": "Navajo\n280K learners",
+      "aria": null,
+      "test": "flag-navajo language-card",
+      "visible": true
+    },
+    {
+      "text": "Yiddish\n280K learners",
+      "aria": null,
+      "test": "flag-yiddish language-card",
+      "visible": true
+    }
+  ],
+  "inputs": []
+}

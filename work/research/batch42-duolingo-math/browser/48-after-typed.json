@@ -1,0 +1,41 @@
+{
+  "name": "48-after-typed",
+  "at": "2026-10-27T06:39:15.193654+00:00",
+  "url": "https://www.duolingo.com/lesson/unit/1/level/1",
+  "title": "Duolingo - The world’s most popular way to learn",
+  "text": "Type\nthe\nanswer\nType the answer\n3\n+\n2\n=\n1\n3+2=\nTOOLKIT\nCHECK",
+  "controls": [
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": null,
+      "test": "quit-button",
+      "type": "submit",
+      "disabled": false
+    },
+    {
+      "tag": "INPUT",
+      "text": "",
+      "aria": null,
+      "test": "challenge-text-input",
+      "type": "text",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "TOOLKIT",
+      "aria": null,
+      "test": null,
+      "type": "submit",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "CHECK",
+      "aria": null,
+      "test": "player-next",
+      "type": "submit",
+      "disabled": false
+    }
+  ]
+}

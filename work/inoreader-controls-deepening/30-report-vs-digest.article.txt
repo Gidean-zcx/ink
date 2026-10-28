@@ -1,0 +1,13 @@
+Should I use an Intelligence report or an email digest?
+Use an Intelligence report for analysis across several articles, such as a comparison or an overview of recurring themes. Use an email digest to send a curated selection of content to recipients on a schedule. Digests can also include AI summaries. Choose based on whether your main goal is to analyze material or distribute selected content.
+Related questions
+What are Intelligence reports?
+What can Intelligence reports be used for?
+How do I create an Intelligence report?
+Where can I find saved Intelligence reports?
+Can I search through Intelligence reports?
+Can I share Intelligence reports?
+What are automated reports?
+How do I create an automated report?
+How can I create a weekly overview of a monitored topic?
+Are Intelligence reports available in all plans?

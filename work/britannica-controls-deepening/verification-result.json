@@ -1,0 +1,22 @@
+{
+  "new_evidence": 11,
+  "new_tasks": 4,
+  "new_D2": 3,
+  "new_D4": 1,
+  "old_tasks_amended": 17,
+  "old_fields_amended": 63,
+  "old_evidence_additional_captures": 14,
+  "audit_id_fix_fields": 4,
+  "inventories": 47,
+  "inventory_rows": 4577,
+  "new_inventory_rows": 244,
+  "new_archived_images": 28,
+  "static_images": 6,
+  "browser_images": 22,
+  "raw_files_checked": 57,
+  "rejected_response_files_checked": 5,
+  "browser_states": 35,
+  "browser_command_groups": 29,
+  "command_errors": 3,
+  "errors": []
+}

@@ -1,0 +1,81 @@
+> For the complete documentation index, see [llms.txt](https://docs.eudic.net/1/llms.txt). Markdown versions of documentation pages are available by appending `.md` to page URLs; this page is available as [Markdown](https://docs.eudic.net/1/shi-yong-zhi-yin/untitled-3/untitled-2.md).
+
+# 常见问题
+
+## 1. 单词复习相关
+
+### （1）标记为“不认识” 、“认识” 、“已掌握”的单词还会再次出现吗？
+
+“不认识” 的单词会在当日不断地重复出现，直至您选择了“认识” 或“已掌握”；
+
+“认识”的单词当日不会再次出现，但后续仍会再次出现（出现的频率是根据单词的难度动态计算）直至您“认识”该单词四次后不再出现。如果中途选择“不认识”，则“认识”数量减一。
+
+（举例：“认识”“认识” “认识”“不认识”“认识”“认识”，则视为“已掌握”该单词。）
+
+“已掌握”单词分为两种情况：累计“认识”四次后被视为“已掌握”的单词，每过3，6，9周后会再次出现，因出现的间隔时间很长，您不用担心它会占用您太多的复习时间；而人为标记“已掌握”的单词（上滑卡片或点击垃圾桶图标），将不再出现。
+
+### （2）如果我误将某词设置为了“已掌握”，能撤销吗？
+
+您可以在“单词复习——已掌握”中，按住单词向左滑动，选择“重新学习”，被设为“重新学习”的单词会以“新词”的方式再次出现。您也可以点击右上角的“批量重学”按钮，快速勾选多个单词并重新学习。
+
+![](https://3412199665-files.gitbook.io/~/files/v0/b/gitbook-legacy-files/o/assets%2F-Mgyh1kdOQ5JH6pNTt27%2F-MhXUzYLtU0rkME6U36d%2F-MhXawQOQSGAFlybzLsI%2F6.png?alt=media\&token=3a7ad994-c8dc-4c7a-923a-2a966a297fa0)
+
+### （3）为什么我设置了每天背诵30个词，当天待学习的单词数量却超过30个？
+
+请注意您在设置中选择的是“每天学习新词数”，即您从未在该课本中背诵过的单词。先前标记为“认识” 的单词，会以“待复习单词” 的身份再次出现，因此两者相加会超过您设置的数量。
+
+![](https://3412199665-files.gitbook.io/~/files/v0/b/gitbook-legacy-files/o/assets%2F-Mgyh1kdOQ5JH6pNTt27%2F-MhXUzYLtU0rkME6U36d%2F-MhXbREeAvIeBt_lNJRc%2F7.png?alt=media\&token=03b98d77-a369-4c85-86a7-01d74f096e5a)
+
+### （4）当天背诵任务完成后，我还能继续背诵吗？
+
+可以，当天背诵任务完成后，您可以选择再背X个新词。但为了加强长期记忆效果，已经背诵过的词只有等到第二天才能再次复习，除非您已背过当前课本中的所有新词。
+
+### （5）什么是"提前学习将来的任务"？
+
+当天背诵任务完成后，若当前课本中没有未背的新词，您可以选择继续复习之前背诵过的但还未掌握的单词。
+
+### （6）哪些单词会出现在卡片复习中？
+
+卡片复习中的单词是您当日已学习的新词+当日已复习或待复习的单词。
+
+## 2. 如何选择或切换复习的课本？
+
+点&#x51FB;**【单词复习】**- 右上角 **【更换】**&#x5373;可，您也可以选择自己添加的生词本进行复习。
+
+## 3. 如何单词出现自动发音？
+
+点&#x51FB;**【开始学习】**- 右上角设置中轻&#x70B9;**【自动发音】**&#x9009;项即可。
+
+![](https://3412199665-files.gitbook.io/~/files/v0/b/gitbook-legacy-files/o/assets%2F-Mgyh1kdOQ5JH6pNTt27%2F-MhXg5rHxR7feWhL0H38%2F-MhXiwAGADSRSSZbt1jo%2F8.png?alt=media\&token=c179e51a-b43d-4f4d-8f67-b88e2ac5b165)
+
+## 4. 如何浏览单词？
+
+(1) 点&#x51FB;**【单词复习】**&#x5373;可查看当前课本中的单词。通过点击右上角&#x7684;**【所有单词】**&#x548C;**【课本默认】**&#x6309;钮，您可以调整列表中显示的单词及其排序。
+
+(2) &#x5728;**【单词复习】**&#x6A21;块中，点击左上&#x89D2;**【开始播放】**&#x6309;钮，即可自动播放当前列表中的单词。
+
+![](https://3412199665-files.gitbook.io/~/files/v0/b/gitbook-legacy-files/o/assets%2F-Mgyh1kdOQ5JH6pNTt27%2F-MhXg5rHxR7feWhL0H38%2F-MhXiZHX9DYGXsyAz4DP%2F9.png?alt=media\&token=5d00195d-ffb5-4305-a9fb-5878a9bb9c5c)
+
+## 5. 如何使用单词复习模块？
+
+(1) 点&#x51FB;**【学习】**--**【单词复习】**&#x5373;可进入卡片复习模块，卡片复习中的单词是您当日已学的新词+当日已复习或待复习的单词。
+
+(2) 卡片复习中的单词可自动播放，您可以轻点右上角的设置来调整每个单词循环的次数、间隔的时长、是否播放单词例句等。
+
+(3) 点击左下角的三横图标，您可以看到当天全部复习词的列表，方便您快速浏览。轻点其中某个单词，即可跳转到对应单词，方便您查看该单词的释义及例句。
+
+![](https://3412199665-files.gitbook.io/~/files/v0/b/gitbook-legacy-files/o/assets%2F-Mgyh1kdOQ5JH6pNTt27%2F-MhXg5rHxR7feWhL0H38%2F-MhXib16E1fVqswZR28Z%2F10.png?alt=media\&token=c4be4450-d5e6-46b5-a485-22984ce892b7)
+
+## 6. 如何设置学习提醒？
+
+&#x5728;**【学习设置】**&#x4E2D;打&#x5F00;**【记忆时间段提醒】**&#x540E;，点击下&#x65B9;**【记忆提醒时间】**&#x9009;择每天收到通知的时间即可。
+
+![](https://3412199665-files.gitbook.io/~/files/v0/b/gitbook-legacy-files/o/assets%2F-Mgyh1kdOQ5JH6pNTt27%2F-MhXg5rHxR7feWhL0H38%2F-MhXidlcUuDW0MnXD-5-%2F11.png?alt=media\&token=0077cc45-8701-48ca-a2d6-3a2377d6cadb)
+
+## 7. 背单词记录是如何保存在本地的，多久保存一次？
+
+> 以下为安卓设备的保存逻辑。
+
+（1）第一天开始背诵时，系统将备份一次您的背单词记录，接下来每7天进行一次备份。
+
+（2）系统将自动删除50天前的备份文件，备份文件会保存在 /storage/emulated/0/.eudb\_en 中。

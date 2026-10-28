@@ -1,0 +1,218 @@
+Learn about the Audible Standard Membership (https://help.audible.com/s/article/learn-about-standard-plan?language=en_US)
+citeturn770view0 [wordlim: 200] Crawled: today; Content type: text/html; Source: open({"ref_id":"https://help.audible.com/s/article/learn-about-standard-plan?language=en_US","lineno":135}); Total lines: 216
+L0: Loading
+L1: 
+L2: Sorry to interrupt
+L3: 
+L4: Uncaught TypeError: Cannot read properties of null (reading 'style')
+L5: 
+L6: 【0†Refresh】
+L7: 
+L8: Skip to Main Content
+L9: 
+L10: Related topics
+L11: 
+L12: Ask A Question Plans Plans & benefits
+L13: ## Learn about the Audible Standard Membership
+L14: 
+L15:   * Oct 6, 2026
+L16:   * Knowledge
+L17: 
+L18: Title
+L19: 
+L20: Learn about the Audible Standard Membership
+L21: 
+L22: URL Name
+L23: 
+L24: learn-about-standard-plan
+L25: 
+L26: Answer
+L27: 
+L28: Audible Standard is a monthly membership where you can select one new audiobook each month from the entire Audible collection of 1 million titles without using credits.
+L29: 
+L30: With an Audible Standard monthly subscription, you can:
+L31:   * Select a credit-free monthly audiobook: You can select 1 audiobook a month from the entire Audible collection of 1 million titles and grow your Library over time, and it's yours to keep in your Library as long as your membership is active.
+L32:   * Access podcasts: Unlimited listening to podcasts and early access to new episodes of select shows. The access to podcasts is complimentary in addition to your monthly selection.
+L33:   * Listen anywhere: You can download titles in your Library through the Audible app (downloads aren't available on the website) and listen to them without being connected to the internet.
+L34:   * Pause your membership: You can pause your membership for 30, 60, or 90 days (up to 90 days total every 12 months). During your pause, you won't receive new monthly listens and your previously selected monthly listens will be temporarily locked in your Library. You can still listen to purchased titles and buy new audiobooks. 【1†Learn more about pausing your membership.】
+L35:   * Access great deals: Enjoy our Daily Deals and special sales (though some member-exclusive sales are reserved for Premium).
+L36:   * Purchase titles: You can buy any audiobook using your credit/debit card and keep it forever, even after cancellation. Any unused credit from your previous Premium membership or gift credits can still be used for purchases.
+L37: Notes:
+L38:   * You can pause your Audible Standard membership or cancel at any time.
+L39:   * The ability to select a monthly audiobook doesn't roll over to the next month. This means if you miss a month, you'll still only have 1 monthly audiobook selection the next month. Be sure to make a new selection each month to get the full value of your membership.
+L40:   * Memberships billed through the Google Play Store can be paused for 30, 60, or 90 days; memberships billed through the Apple App Store can only be paused for 30 days. For information on how to pause your membership through these platforms, please refer to 【2†Manage App Store subscription】 and 【3†Manage Google Play Store subscription】.
+L41: In this article:
+L42: 
+L43:   * 【4†How do I sign up for Audible Standard membership?】
+L44:   * 【5†How do I sign up for an Audible Standard trial?】
+L45:   * 【6†What is a monthly audiobook selection or monthly title?】
+L46:   * 【7†How do I cancel my Audible Standard membership?】
+L47:   * 【8†Can I return or exchange my monthly audiobook selections?】
+L48:   * 【9†What if I don't select a monthly audiobook one month?】
+L49:   * 【10†Can I listen to Audible titles with the Amazon Prime subscription?】
+L50:   * 【11†What membership plans does Audible offer?】
+L51: ## How do I sign up for Audible Standard membership?
+L52: 
+L53: You can sign up for the Audible Standard membership in the Audible app and on the Audible site.
+L54: 
+L55: On the Audible website
+L56: 
+L57:   1. Go to the Audible site.
+L58:   2. Select Get started.
+L59:   3. Select Sign up for Standard.
+L60:   4. You may be asked to sign in with your Amazon account.
+L61:   5. Select Start now.
+L62: Note: If you sign up with a 30-day free trial, your Audible Standard membership will automatically renew and you'll be charged the regular monthly price after 30 days. You can cancel anytime from your 【12†Membership details†www.audible.com】 page.
+L63: 
+L64: In the app
+L65: 
+L66:   1. Go to your Profile.
+L67:   2. Select the Settings gear icon.
+L68:   3. Under Membership, select Details.
+L69:   4. Select Sign up for Standard.
+L70:   5. Select Start now.
+L71: Note: You can cancel anytime from your app settings. For more details, please see  【13†Manage App Store subscription】 and 【14†Manage Google Play Store subscription】.
+L72: ## How do I sign up for an Audible Standard trial?
+L73: 
+L74: You can sign up for a 30-day free trial if you haven't been an Audible member or taken a free trial in the last 12 months.
+L75: 
+L76: On the Audible website
+L77: 
+L78:   11. Go to the Audible site.
+L79:   12. Select Try Standard free.
+L80:   13. You may be asked to sign in with your Amazon account.
+L81:   14. Select Try Standard free to confirm your subscription.
+L82: 
+L83: In the app
+L84:   15. Open the Audible app.
+L85:   16. Sign in with your Amazon account.
+L86:   17. Select Try Standard free.
+L87:   18. Select Try for $0.00 to confirm your subscription.
+L88: 
+L89: After 30 days, your membership will automatically renew and you'll be charged the regular monthly price. You can cancel anytime from your 【12†Membership details†www.audible.com】 page.
+L90: 
+L91: Note:
+L92:   * While you won't be charged for your free trial, the trial membership is converted to a paid membership plan at the end of the trial period. You can change your membership status at any time through your Membership details page.
+L93:   * If your membership is billed through Google Play or Apple you will need to cancel from your 【15†App Store】 or 【16†Google Play Store】.
+L94: ## What is a monthly audiobook selection or monthly title?
+L95: 
+L96: Monthly audiobook selections are any title you select as part of your Audible Standard membership benefit. With Audible Standard membership, you can select 1 audiobook a month and grow your Library collection over time.
+L97: 
+L98: Monthly audiobook selections are available in your Library until you cancel. Once you cancel, you will no longer have access to titles you selected with this membership.
+L99: If you miss a monthly selection, your ability to select 1 monthly audiobook doesn't roll over to the next month.
+L100: 
+L101: Note: Audible Standard membership includes access to our podcast collection. These ad-free podcasts are available in addition to your monthly audiobook selection, and you'll have early access to new episodes of select shows as they're released.
+L102: ## How do I cancel my Audible Standard membership?
+L103: 
+L104: When you cancel your membership, you'll lose access to all titles that you received through your monthly selections at the end of your final billing cycle. You'll still have access to titles purchased with Audible credits or cash.
+L105: 
+L106: After your plan is cancelled, any monthly audiobook selections in your Library will 【17†have a 🔒 lock icon next to them】 and you will see a message that a title is no longer available if you try to play it.
+L107: However, you can still purchase that title if you'd like to own it or become a member again to regain access. If no purchase options are available, we no longer carry the title.
+L108: 
+L109: As an Audible Standard member you can switch to other Audible plans anytime from the Audible site or through the Google Play Store or App Store. For more details, please visit 【18†Switch plans】.
+L110: Note: If you signed up on the Audible website, please see 【19†Cancel membership】 to learn more. If you signed up in the Audible app, visit 【2†Manage App Store subscription】 or 【20†Manage Google Play Store subscription】 for more details.
+L111: ## Can I return or exchange my monthly audiobook selections?
+L112: 
+L113: Monthly audiobook selections aren't eligible for return or exchange. If you're having an issue playing or listening to your monthly selection, you can try these 【21†playback troubleshooting steps.】
+L114: ## What if I don't select a monthly audiobook one month?
+L115: 
+L116: If you miss a month, your ability to select 1 monthly audiobook doesn't roll over to the next month. You can always see the date by which you need to make your monthly audiobook selection on your Membership details page on the Audible site or in your Profile in the app.
+L117: ## Can I listen to Audible titles with the Amazon Prime subscription?
+L118: 
+L119: Audible is not included with an Amazon Prime subscription. You will need to purchase a separate Audible membership. However, Prime members do get some Audible benefits. You can try Audible Premium free and get two free audiobooks.
+L120: ## What membership plans does Audible offer?
+L121: 
+L122: Audible offers monthly and annual membership plans.
+L123: 
+L124: Monthly memberships
+L125: 
+L126: Plan  | Benefits
+L127: 【22†Audible Standard】  |
+L128: 
+L129:   * Select 1 audiobook a month from our entire collection.
+L130:   * Download your selected audiobooks for offline listening.
+L131:   * Get unlimited access to podcasts.
+L132:   * Listen to your selected audiobooks until you cancel. Unused monthly selections don't roll over to the next month.
+L133: 【23†Audible Premium – 1 Credit†www.audible.com】  |
+L134:   * 1 credit per month to be used to redeem any title from our entire collection of titles.
+L135:   * Titles you buy with a credit are yours to keep even if you cancel your membership.
+L136:   * Access to unlimited streaming and listening from the included catalog.
+L137:   * Exclusive sales and discounts on purchased titles.
+L138: 【24†Audible Premium – 2 Credits†www.audible.com】  |
+L139:   * 2 credits per month to be used to redeem any title from our entire collection of titles.
+L140:   * Titles you buy with a credit are yours to keep even if you cancel your membership.
+L141:   * Access to unlimited streaming and listening from the included catalog.
+L142:   * Exclusive sales and discounts on purchased titles.
+L143: 
+L144: Annual memberships
+L145: 
+L146: Plan  | Benefits
+L147: 【25†Audible Premium Annual – 12 Credits†www.audible.com】  |
+L148:   * 12 credits at time of purchase to be used to redeem any title from our entire collection of titles.
+L149:   * Titles you buy with a credit are yours to keep even if you cancel your membership.
+L150:   * Access to unlimited streaming and listening from the included catalog.
+L151:   * Exclusive sales and discounts on purchased titles.
+L152: 【26†Audible Premium Annual – 24 Credits†www.audible.com】  |
+L153:   * 24 credits at time of purchase to be used to redeem any title from our entire collection of titles.
+L154:   * Titles you buy with a credit are yours to keep even if you cancel your membership.
+L155:   * Access to unlimited streaming and listening from the included catalog.
+L156:   * Exclusive sales and discounts on purchased titles.
+L157: 
+L158: Notes:
+L159:   * If your subscription is billed through the Google Play Store or App Store, the price may differ from what's shown in 【27†Audible.com†audible.com】. Payments are handled directly by Google or Apple. You can manage your Audible subscription in their respective app stores.
+L160:   * Visit the 【28†Audible membership benefits page】 to view all Audible membership plans, prices, and benefits details.
+L161:   * Membership prices may vary due to special offers and deals.
+L162: 
+L163: Did this answer your question?
+L164: 【29†Image: Thumbs Up】Like
+L165: 
+L166: 
+L167: 
+L168: 【30†Image: Thumbs Down】Dislike
+L169: 
+L170:  Back to top
+L171: 
+L172: 【31†Image: Share link】 Share link
+L173: 
+L174: 【32†Image: Download PDF】 Download PDF
+L175: ## Need more assistance?
+L176: 
+L177: 【33†Contact us†www.audible.com】
+L178: 
+L179: 
+L180: 
+L181: How satisfied were you with our Help Center today?
+L182: 
+L183: 
+L184: 
+L185: Worst
+L186: 
+L187: 1
+L188: 
+L189: 2
+L190: 
+L191: 3
+L192: 
+L193: 4
+L194: 
+L195: 5
+L196: 
+L197: 6
+L198: 
+L199: 7
+L200: 
+L201: Best
+L202: 
+L203: 
+L204: 
+L205: Region
+L206: 
+L207: United States
+L208: 
+L209: Language
+L210: 
+L211: English
+L212: 
+L213: Loading
+L214: 
+L215: Learn about the Audible Standard Membership 【34†Adobe ID Syncing iFrame†audible.demdex.net】

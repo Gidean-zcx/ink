@@ -1,0 +1,9 @@
+Can I Scan QR Codes with Mudita Kompakt?
+Modified on: Sat, 3 Oct, 2026 at 8:34 AM
+Initially, the only QR codes that the Mudita Kompakt will be able to scan are those with eSIM configuration data.
+The Kompakt won't include a QR scanner feature at launch. It's worth noting that the Kompakt doesn't have an internet browser, which means it wouldn't be able to open links from QR codes. We will explore ways to expand on the phone's code scanning capabilities in future updates.
+Was this article helpful?
+No
+Yes
+That’s Great!
+Thank you for your feedback

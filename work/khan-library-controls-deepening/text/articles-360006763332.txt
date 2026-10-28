@@ -1,0 +1,52 @@
+How do I delete a user? – Khan Academy (https://khankids.zendesk.com/hc/en-us/articles/360006763332-How-do-I-delete-a-user)
+citeturn959view6 [wordlim: 200] Crawled: 2 weeks ago; Content type: text/html; Source: click({"ref_id":"turn958view0","id":28}); Total lines: 50
+L0: 【0†Skip to main content】
+L1: 
+L2: 【1†Submit a request】
+L3: 
+L4: [Input][Input] [Input: Search]
+L5: 
+L6: Articles in this section
+L7:   * 【2†Our Accessibility Statement】
+L8:   * 【3†Get in touch!】
+L9:   * 【4†Welcome to Khan Academy Kids】
+L10:   * 【5†Parent and Home Account Users: Getting Started and creating an account with Khan Academy Kids】
+L11:   * 【6†How do I set up an account?】
+L12:   * 【7†How do I verify my email?】
+L13:   * 【8†List of resources for parents】
+L14:   * 【9†Printable activities for parents and teachers】
+L15:   * 【10†Weekly Planners for Ages 2-8】
+L16:   * 【11†How does the learning level adjust and how do I view my child's progress?】
+L17: 【12†See more】
+L18: # How do I delete a user?
+L19: 
+L20:   * February 27, 2026 00:12
+L21:   * Updated
+L22: 
+L23: To delete a user:
+L24: 
+L25:   * Open the Khan Academy Kids app on your device
+L26:   * Tap “For Parents” at the bottom of the opening page of the app (or select the user avatar in the top right corner of the Home screen)
+L27:   * Follow instructions to access the “Grown-Ups Only” section
+L28:   * Select the gray Enable Delete button under the email address listed for My Account
+L29:   * Tap the X on the user avatar to delete the user profile
+L30: Please note that deleting a user profile will erase the progress and learning path history for that user.
+L31: 
+L32: Was this article helpful?
+L33: 
+L34: [Button: Yes] [Button: No]
+L35: 
+L36: 1 out of 5 found this helpful
+L37: 
+L38: Have more questions? 【1†Submit a request】
+L39: 
+L40: 【13†Return to top】
+L41: ## Comments
+L42: 
+L43: 0 comments
+L44: 
+L45: Article is closed for comments.
+L46: 
+L47: 【14†Khan Academy】
+L48: 
+L49: 【15†Powered by Zendesk†www.zendesk.com】

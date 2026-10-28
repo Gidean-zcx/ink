@@ -1,0 +1,5 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M006-07,M-006,手写变待办并回来源笔记,D2,E-SNCD-02;E-SNCD-03;E-SNCD-10,套索New Task/Add；Note图标回笔记；无日期不列Planned；完成可撤销；Data Sync独立于文件同步；3.18.29历史离线丢任务修复,原句/笔划定位、任务删除恢复、改任务是否影响原笔迹、最新断网序列未验证,static_reference_only,false,cases/M-006-supernote.md,2026-10-26
+F-M006-08,M-006,按类别搜索并回到命中内容,D2,E-SNCD-02;E-SNCD-04;E-SNCD-05;E-SUP-05,Keyword/Star可空查全部；Star输入文件名筛选；Handwriting需识别文本并回页；File/Star按File回最后页；后台识别延后/触摸暂停；3.24.38文字搜索仅日志能力补充,3.24.38后文本框搜索完整界面、无结果/误识别修正、实际耗时及重启队列未知,not_observed,false,cases/M-006-supernote.md,2026-10-27
+F-M006-09,M-006,选择笔记页导出交换文件,D2,E-SNCD-02;E-SNCD-05;E-SNCD-07;E-SNCD-10,PNG/PDF与识别TXT/DOCX；标准笔记导出时识别；实时识别语言创建后固定；QR/InkHub另列；3.28.42称修复隐藏层仍进入TXT/DOCX导出,其他格式显隐规则、输出目录、重名/取消/存储不足、编辑后结构关系往返与原笔迹回写未知,static_reference_only,false,cases/M-006-supernote.md,2026-10-27
+F-M006-10,M-006,删除文件前保留副本并区分云回收,D2,E-SNCD-02;E-SNCD-10;E-SNCD-11,Files多选Delete；USB/同WiFi传输和独立副本；3.31.45云同步删除进回收站；V3.28.42非整机备份,本地确认/撤销；云恢复按钮/保留期/永久删除/再次同步；恢复外链和重名规则未知,static_reference_only,false,cases/M-006-supernote.md,2026-10-26

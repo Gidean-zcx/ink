@@ -1,0 +1,2138 @@
+
+--- PDF page 1 ---
+InkPad Color 3
+User Manual
+
+
+--- PDF page 2 ---
+Table of Contents
+SAFETY PRECAUTIONS . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ⁠5
+APPEARANCE . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ⁠9
+TECHNICAL SPECIFICATIONS . . . . . . . . . . . . . . . . . . . . . . . . . . . ⁠10
+GETTING STARTED . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ⁠11
+Charging Battery . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ⁠11
+Device management . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ⁠12
+Main menu overview . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ⁠13
+Gestures . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ⁠15
+Working with On-Screen Keyboard . . . . . . . . . . . . . . . . . ⁠16
+Brightness . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ⁠17
+Connecting to the Internet . . . . . . . . . . . . . . . . . . . . . . . . . ⁠18
+Configuring Bluetooth pairing . . . . . . . . . . . . . . . . . . . . . . ⁠19
+APPLICATIONS . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ⁠21
+Library . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ⁠22
+Store . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ⁠22
+Browser . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ⁠24
+Notes . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ⁠25
+General . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ⁠28
+Calendar & Clock . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ⁠28
+Calculator . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ⁠28
+
+
+--- PDF page 3 ---
+Gallery . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ⁠28
+Photo Frame . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ⁠28
+RSS News . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ⁠30
+Music Player . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ⁠30
+Audiobooks . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ⁠32
+PocketBook x Libby . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ⁠34
+Games . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ⁠40
+Klondike . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ⁠40
+Sudoku . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ⁠40
+Chess . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ⁠40
+Scribble . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ⁠40
+Coloring . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ⁠41
+Services . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ⁠41
+Dropbox PocketBook . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ⁠41
+Send-to-PocketBook . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ⁠43
+READING BOOKS . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ⁠46
+Gestures in Reading Mode . . . . . . . . . . . . . . . . . . . . . . . . . . ⁠47
+Reading Menu . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ⁠48
+Adjust SMARTlight and frontlight Brightness in 
+reading mode . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ⁠49
+Contents . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ⁠49
+Bookmarks . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ⁠50
+Dictionary . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ⁠50
+Note . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ⁠53
+Voice . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ⁠55
+
+
+--- PDF page 4 ---
+Settings . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ⁠56
+Following Links . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ⁠59
+Loading Files . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ⁠59
+Library . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ⁠63
+PocketBook Cloud . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ⁠65
+SETTINGS . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ⁠69
+Wi-Fi . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ⁠69
+Bluetooth . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ⁠69
+Accounts and Synchronization . . . . . . . . . . . . . . . . . . . . . . ⁠70
+PIN code . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ⁠72
+Accessibility . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ⁠74
+Personalize . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ⁠78
+Languages . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ⁠84
+Date/Time . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ⁠84
+Saving Power . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ⁠84
+Maintenance . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ⁠85
+About Device . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ⁠85
+FIRMWARE UPDATE . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ⁠87
+TROUBLESHOOTING . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ⁠89
+CUSTOMER SUPPORT . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ⁠91
+COMPLIANCE WITH INTERNATIONAL STANDARDS . . . ⁠92
+
+
+--- PDF page 5 ---
+Safety Precautions
+Before start working with the Device, please, read this section carefully. Follow­
+ing these instructions will help you ensure your safety and extend service life 
+of the Device.
+Storage, Carriage and Usage Conditions
+Device operating temperature range is 0°C to 40°C, so don’t ex- pose the Device 
+to excessively high or low temperatures. Never leave cables near heat sources. 
+Heated cables or their insulation may become deformed or damaged, which 
+could lead to fire or electric shock.
+Try to avoid next impacts:
+Electrostatic charges
+Excessive mechanical 
+pressure
+Strong electro-magnetic 
+fields
+Direct
+sunlight
+UV electromag-netic 
+radiation
+Liquids or
+damp
+Direct flame
+or smoke
+Maintenance
+ Do not leave the Device for a long time in poorly ventilated environment, 
+e.g. in a car or in closed tight boxes/packaging.
+ Neither drop nor try to bend the Device.
+ Protect the screen from objects that may scratch or damage it. To ensure 
+adequate protection of the screen, we recommend storing the Device in a 
+protective and/or hard cover.
+5
+
+
+--- PDF page 6 ---
+ Do not disassemble or modify the book reader.
+ Do not use the Device with a damaged battery or charger (broken case, poor 
+contact, broken feed cable). If the battery is damaged (cracked case, leakage of 
+electrolyte, off-shape, etc.), it should be replaced by the authorized personnel. 
+Usage of home-made or modified batteries may cause an explosion and/or 
+damage the Device.
+ Do not use organic or inorganic solvents (e.g. benzoyl etc.) to clean the 
+screen/case.
+ Keep away from children.
+ Use a soft cloth to remove dust from the Device’s surface. Apply a few drops 
+of distilled water to remove dirt.
+Up to five faulty pixels are acceptable in the screen and do not constitute a 
+warrantable defect of the screen.
+If the device has not been used for a long time, the battery charge indicator 
+may not work when the charger is connected. In this case, connect the charger, 
+let the device charge for 1 hour, then disconnect and reconnect the charging 
+device or USB cable. The device can then be used as normal.
+By the end of product guarantee term, please contact the nearest authorized 
+service facility for examination on the subject of security is maintained.
+For detailed information about service centers in your region please visit the 
+official website: https://pocketbook.ch.
+6
+
+
+--- PDF page 7 ---
+To prevent possible hearing damage, do not listen at high volume 
+levels for long periods.
+Warning
+The screen of the device has a fragile glass base! To avoid damage, make sure 
+not to drop, bend, or apply pressure to the device, do not allow point pressure 
+on the screen surface and any other actions that might break or damage the 
+glass base. Also, the screen does not have any special protective layer so please 
+avoid any contact between its surface and objects that might leave marks or 
+scratches on it. To decrease the risk of damaging the device and its screen it 
+is recommended to keep and transport it in a Pocketbook protection cover.
+Attention! The device cannot be used under water or when wet. If your device 
+was immersed underwater, first allow the water to flow out through the holes 
+in the case, then shake the device while holding it firmly and then leave it to 
+dry for 24 hours. Do not immerse the device in sea water.
+RF Safety
+The Device receives and transmits radio frequencies and may interfere with 
+radio communications and other electronic equipment. If you use personal 
+medical Devices (e.g. a pacemaker or hearing aid) please contact your doctor or 
+the manufacturer to learn whether or not such medical devices are protected 
+against external RF signals.
+Do not use wireless communication in places where it is prohibited, e.g. 
+onboard a plane and in hospitals — this may affect airborne avionics or medical 
+equipment.
+7
+
+
+--- PDF page 8 ---
+Utilization
+Incorrect disposal of this Device may have adverse impacts on the 
+environment and public health. To prevent such consequences follow 
+the device-specific disposal requirements. Recycling of these materials 
+helps preserve natural resources. For more information regarding re­
+cycling issues please contact local municipal authorities, your domestic 
+waste collection service, store where you purchased the Device, or the 
+authorized service center.
+Disposal of electric and electronic components (the Directive is applicable to 
+the EU and other European countries where separate waste disposal systems 
+exist). In other countries dispose batteries accordingly to local laws.
+Do not destroy the battery by burning it to avoid the danger of explosion.
+8
+
+
+--- PDF page 9 ---
+Appearance
+1. Home – return to Main menu.
+2. Backward – in reading mode turns page 
+backward; in navigation mode – goes to 
+the previous menu or page of the list.
+3. Forward – turns page forward.
+4. Menu | On/Off – open context menu 
+(if available); continuous press turns the 
+Device on/off.
+5. Speaker.
+6. Smart accessories connector.
+7. Decorative lid.
+8. USB Type-C connector – connect the De­
+vice to a C or charge using USB-cable.
+9. LED indicator.
+NOTE: You can configure key mapping to your own in Settings > Personalize > Key mapping. Navigation and 
+page turning buttons mapping depends on screen orientation.
+9
+
+
+--- PDF page 10 ---
+Technical Specifications
+Display
+7.8″ (19.8 cm) E Ink Kaleido™ 3, Capacitive (multisensor), 1404 × 1872 (greyscale mode), 702 × 936 
+(color mode)
+DPI
+300 (greyscale mode), 150 (color mode)
+Color depth
+16 (greyscale mode), 4096 (color mode)
+Frontlight
+Yes
+SMARTlight
+Yes
+Processor
+Quad Core (4×1.8 GHz)
+RAM 1 GB
+Storage 32 GB *︎
+Operating system Linux 4.9.56
+Communications
+USB Type-C, Wi-Fi (802.11 b/g/n/ac/ax 2,4/5 GHz), Bluetooth 5.2
+Audio output
+Built-in mono speaker (1W), 3.5mm audio jack to USB Type-C adaptor or Bluetooth
+Battery Li-Ion Pol, 2900 mAh *︎*︎
+G-sensor
+Yes
+Cover sensor
+Yes
+Book formats
+ACSM, AZW, AZW3, CBR, CBZ, CHM, DJVU, DOC, DOCX, EPUB(DRM), EPUB, FB2, FB2.ZIP, HTM, HTML, 
+MOBI, PDF (DRM), PDF, PRC, RTF, TXT
+Image formats
+JPEG, BMP, PNG, TIFF
+Audio format
+MP3, MP3.zip, OGG, OGG.zip
+Audio book format
+M4A, M4B, OGG, OGG.ZIP, MP3, MP3.ZIP
+Dimensions
+134 × 189.5 × 7.95 mm
+Weight 270 g
+Water protection
+IPX8
+*︎ The actual available internal storage size may vary depending on the software configuration of your device.
+*︎*︎ Up to one month of battery life (may vary depending on usage mode, connectivity and settings).
+10
+
+
+--- PDF page 11 ---
+Getting Started
+In this chapter you will learn how to prepare the Device to work and about its 
+main control features.
+CHARGING BATTERY
+You can charge the battery from (1) PC using USB-cable or from (2) the power 
+line using a charger (optional).
+1
+2
+To charge the battery for the first time, do the following:
+• Connect the Device to a computer or charger with USB-cable. The device 
+will turn on as soon as charging starts.
+• When the battery is fully charged, you can disconnect the cable from the 
+Device which is ready for usage.
+If the Device is on when you connect the cable to PC, a dialog window asking 
+to select action – PC link or Charge – will appear. Charging starts only if the 
+appropriate mode was selected.
+11
+
+
+--- PDF page 12 ---
+DEVICE MANAGEMENT
+Turn on
+Press On/Off button. When the Device is ready to operate, Main menu or last opened book will 
+appear, depending on settings.
+Turn off
+Press and hold On/Off button for about two seconds until the Device goes off.
+Lock
+You can lock your Device in three ways:
+1. Press On/Off button.
+2. Invoke Task Manager. Touch icon 
+ to block your Device.
+3. You can set automatic key lock or power off: go to Settings > Saving Power > Power off after 
+or Lock device after, and set the idle time before power off or locking Device.
+Unlock
+Press On/Off button.
+Restart
+In case your device ‘freezes’ (doesn’t respond to pressing buttons, tapping keys or touching the 
+screen) you can restart it. To do this, press the On/Off button for 10-12 seconds. Then, turn on the 
+device in the usual way.
+Task Manager
+You can invoke Task Manager in two ways:
+• by touching at the notification bar 
+ icon;
+• by continuous press on the 
+ Home button.
+Task Manager gives quick access to some Device control features:
+• close running applications: press 
+ against an application in the list.
+•
+ Lock Device. To unlock, press On/Off button.
+•
+ Open wireless connections list.
+•
+ Take a screenshot.
+•
+ Turn off the Device.
+12
+
+
+--- PDF page 13 ---
+MAIN MENU OVERVIEW
+Touch to open Calendar
+Slide down to open a
+Notification panel
+Home screen - list of
+recently opened and
+newly added books
+Bestsellers
+Application menu
+13
+
+
+--- PDF page 14 ---
+Notification panel
+Touch or slide down the icon 
+ to open a Notification panel.
+Note: You can open Notification panel also pressing a Menu button.
+Notification panel gives an easy access to configuration of Wi-Fi, Bluetooth, 
+DARKmode, Flight Mode, Sync of network services and Brightness.
+14
+
+
+--- PDF page 15 ---
+GESTURES
+CAUTION! Touch screen of the Device is sensitive enough and is a fragile detail. 
+To avoid its damage, please, touch it carefully while controlling the Device with 
+gestures.
+Tap
+Opens an element (book, file, folder application or menu item).
+Tap & hold
+Opens context menu of an element (if available).
+Slide
+Turns pages of a book or a list; moves an image: slide your finger 
+across the screen.
+Flick
+Scrolls lists: move your finger across the screen rapidly.
+Scaling
+Changes the image scale: place two fingers on a screen and 
+pinch them together to zoom out or spread them apart to 
+zoom in.
+ 
+15
+
+
+--- PDF page 16 ---
+WORKING WITH ON-SCREEN KEYBOARD
+On-screen keyboard is used when it’s necessary to enter text information, for 
+example, for search or network connection credentials.
+To type a character, tap a dedicated button. To type a special character, long 
+press a dedicated button. Select the required special character in the drop-
+down list. To switch from alphabet to numeric keyboard, tap 
+. To switch 
+from numeric to alphabet keyboard, tap 
+.
+To add a new keyboard language, go to Settings > Languages > Keyboard layouts.
+To switch to a different keyboard language, tap 
+. The selected language is 
+displayed on the spacebar.
+If necessary, you can enable/disable the preview of special characters in the 
+top-right corner of the keyboard. To do so, go to Settings > Languages > Keyboard 
+layouts > Key shortcut preview.
+1
+3
+2
+4
+5
+16
+
+
+--- PDF page 17 ---
+1. Change case;
+2. Enter the typed text;
+3. Switching keyboard modes;
+4. Erase last typed symbol;
+5. Change input language.
+As you type a password (e.g. Wi-Fi credentials) 
+ icon will appear on a text 
+field. Touch it to see typed symbols.
+BRIGHTNESS
+Open the Notification bar to display the Frontlight control menu. The Frontlight 
+control menu has two parts:
+1. General frontlight Brightness control. This includes an ON/OFF switch to 
+turn the light on and off and a brightness slider.
+NOTE: To turn the frontlight on or off without opening the Notification bar, hold 
+the Menu button for one second.
+17
+
+
+--- PDF page 18 ---
+2. SMARTlight frontlight temperature control. By default, this function is 
+in automatic mode (the switch is in the ON position). This means that the 
+device determines the optimal temperature depending on the time of day (from 
+neutral white in the morning to warmer hues in the evening).
+When the automatic mode is off (the switch is in the OFF position), the slider on 
+the screen is activated and you can manually select the frontlight temperature.
+NOTE: The device should have the correct time to ensure that it works correctly 
+in automatic mode. To adjust the time setting, enable “Automatic time synchro­
+nization” (Settings – Date/time) or set the time manually.
+You can adjust the frontlight Brightness and SMARTlight frontlight temper­
+ature of your display by tapping the frontlight Brightness and SMARTlight 
+icons respectively. The brightness and colour temperature are raised/lowered 
+by one per cent per tap.
+CONNECTING TO THE INTERNET
+The Device can be connected to the Internet using Wi-Fi networks. When 
+you open an application that requires an Internet connection (eg, Browser or 
+BookStore) Wi-Fi connection is established automatically. If a known network is 
+not available, the list of available wireless connections opens. If the network to 
+which you want to connect is secured, enter the network password using the 
+onscreen keyboard.
+Also, Wi-Fi connection can be enabled/disabled by clicking the icon 
+ on the 
+notification panel. If a known network is available, the connection is established 
+automatically, otherwise - opens a list of available networks.
+18
+
+
+--- PDF page 19 ---
+Advanced Settings
+If it is needed to configure network settings manually select Settings > Wi-Fi, go 
+to the selected network and click More… at the bottom of the screen:
+• You can change IP address configuration:
+‣ DHCP — get IP address automatically (if DHCP server is configured);
+‣ Manual (for skilled users) — enter networks parameters manually 
+from the on-screen keyboard.
+• If the network you need to connect to has a proxy server, you can specify 
+its parameters in Proxy configuration section.
+Connection to a hidden network
+1. Select Settings > Wi-Fi.
+2. Open Connection to a hidden network and enter its SSID from the on-
+screen keyboard in the Network name (SSID) field.
+3. Select security type in the corresponding list:
+• None – for an open network;
+• Simple (WEP) – after you select this option, you will need to specify 
+WEP Authentication type – Open System or Shared Key either.
+• WPA/WPA2 PSK – you will need to enter network key (up to 64 
+symbols).
+4. To check network configuration and connect to a network, return to the 
+Connection to hidden network section and press Connect.
+CONFIGURING BLUETOOTH PAIRING
+This type of connection allows you to connect wireless Bluetooth devices (such 
+as headsets, speakers, and car audio systems) to play audio files and use the 
+Text-to-Speech feature.
+19
+
+
+--- PDF page 20 ---
+You can pair your Bluetooth device with your e-book in two ways.
+ATTENTION! When connecting for the first time:
+• activate Bluetooth on the notification panel of your e-book;
+• switch your Bluetooth device to pairing mode;
+• when connecting for the first time, your Bluetooth device may request 
+permission to pair. Please confirm this action.
+Option 1
+A list of available Bluetooth devices for pairing will appear as soon as you 
+launch an audio file or the Text-to-Speech feature. In the list that appears, click 
+your headset’s name.
+Option 2
+1. Go to Settings -> Bluetooth and set the switch to ON.
+2. The system will automatically display a list of devices available for pairing.
+3. Find the name of the Bluetooth device to connect to and click on it.
+4. If the target Bluetooth device is not listed, click on Find BT device at the 
+bottom of the screen.
+The next time you turn on the device, the connection will be established 
+automatically.
+20
+
+
+--- PDF page 21 ---
+Applications
+In this section, you can review the applications installed on your device. The 
+default home screen contains four applications:
+• Library;
+• Audiobooks;
+• Store;
+• Notes.
+Other apps are available in the application menu. To open the application menu, 
+click on the icon 
+.
+To move, replace, or delete apps in the Main menu, use the context menu.
+21
+
+
+--- PDF page 22 ---
+LIBRARY
+Library is e-books file manager, which allows to group, sort, change appearance 
+of the section and perform search. Read more about this app at Library.
+STORE
+The Store application provides access to high-quality licensed content at the 
+PocketBook bookstore portal from your device. You just need an active Internet 
+connection to use the app.
+To access all of the PocketBook portal features, you will need to log in to an 
+existing account or create one. In order to authorize a current account or to 
+register a new one, enter the authorization center and click on “Login / Create 
+Account.”
+Then follow the onscreen instructions. If the connection to the account has 
+been set up correctly, you will have access to all of the PocketBook portal 
+features.
+In order to manage the account, the following sections are available in the 
+Personal Account:
+22
+
+
+--- PDF page 23 ---
+Personal
+Account
+• My purchases — a list of purchased goods.
+• Wish List — a list of desired books.
+• Book language — select the language for the displayed books.
+• Choose Store — select from the available PocketBook stores.
+• Settings — general settings menu.
+• Log out — log out of the account.
+To purchase the selected product, click Buy. Afterward, a window with a list 
+of available payment options will appear. Choose the one that suits you and 
+provide payment.
+The purchased file will appear in the “My purchases” section, where you can 
+download it at any time. When the download is complete, the file will be moved 
+to the Library > Downloads folder and appear on the Recent Events wall of the 
+Main menu.
+23
+
+
+--- PDF page 24 ---
+BROWSER
+This is an application for viewing web-pages. As you start Browser, you are 
+suggested to connect to one of available wireless networks.
+To enter website address, touch address bar, type an address from on-screen 
+keyboard appeared and press Enter. To follow a link, just touch it. If a web-
+page doesn’t fit a screen, you can scroll it: place your finger on the screen 
+and move a page. Also, you can change scale of a web-page using zooming 
+gestures (pinch or spread two fingers). Hardware buttons 
+ / 
+ are used to 
+scroll page vertically: 
+ scrolls down and 
+ scrolls up, respectively.
+24
+
+
+--- PDF page 25 ---
+From browser menu you can view history of visited websites, downloads, 
+favorites, adjust scale of displaying webpages, rotate a screen and configure 
+the browser from Settings section. Under Settings you can clear history and 
+cookies, disable/enable JavaScript and loading images.
+To exit Browser, touch the corresponding item in browser menu.
+NOTES
+The Notes application shows a list of books that contain notes as well as the 
+notes themselves made in these books. These can be selected text fragments, 
+pencil notes, screenshots, translation notes made using a dictionary while 
+reading as well as comments on these selected fragments. The application can 
+also be used to export or import notes.
+On the main screen of the application, tapping long on 
+a book with notes, a context menu will open that allows 
+you to open the book, export or delete notes or select 
+several books with notes for further group actions on the 
+notes of selected books.
+The Notes Menu allows you to sort, export, and change the display of notes 
+made in the book.
+1. Filtering
+To filter notes select the 
+ icon.
+Notes are filtered by the following categories:
+25
+
+
+--- PDF page 26 ---
+• All Notes;
+• Highlights;
+• Comments;
+• Screenshots;
+• Pencil Notes;
+• Translation Notes.
+2. Sorting
+Depending on the selected option, books with notes can be sorted by the 
+following categories:
+• Most recent first;
+• By title (A — Z);
+• By author (A — Z);
+• By number of notes.
+To sort notes, select the icon 
+, or tap on the icon 
+, and select Sort by.
+In the menu that opens, notes can be sorted by the following categories:
+• By page 1 — 99;
+• By page 99 — 1;
+• Newest first;
+• Oldest first.
+26
+
+
+--- PDF page 27 ---
+3. Exporting notes
+To export notes, tap on the icon 
+, and select a note. To select all notes tap 
+, then tap Export notes. You can also export multiple notes using the long-
+tap gesture on the note and select Select multiple… > Select action > Export notes 
+in the window that opens, specify the path for the export and tap on Export. 
+By default, exported notes appear in the Library in the Notes folder.
+By tapping long on a note, a context menu will open, in which the following 
+options are available:
+• Rename quote;
+• Edit comment;
+• Delete comment;
+• Delete note;
+• Select multiple…
+You can also change the font size of notes in the Notes App. To do this, tap 
+on the icon 
+, and use the slider to select the required size.
+To add or edit a comment to a note, select the note you are interested in and 
+use the long-tap gesture, select the desired action in the window that opens, 
+add or change the text of the comment, and tap on Save.
+27
+
+
+--- PDF page 28 ---
+GENERAL
+Calendar & Clock
+Opens current month calendar and clock. Navigation 
+ / 
+ allows turning 
+over a calendar. The button 
+ returns you to the current month. Read about 
+date and time setting in Date/Time manual’s chapter.
+Calculator
+Engineering calculator supports a wide range of mathematical operations, 
+such as different numeric systems, trigonometric, logarithm, power, and logical 
+operations.
+Gallery
+Opens Library in the mode of viewing images (downloaded to the folder Gallery). 
+The opened photo is displayed in a fullscreen mode. To set a photo as Power-
+off Logo, to Rotate or view Information about it, touch the full-screen image to 
+switch to the editing mode and press menu sign 
+ in the right top corner of 
+the screen. In the editing mode you can zoom a photo by zooming gestures 
+and set the selected area as a logo.
+Photo Frame
+The Photo Frame application allows you to view photos and pictures down­
+loaded to your device in the Slideshow mode.
+28
+
+
+--- PDF page 29 ---
+To create a new playlist, go to Applications > Photo Frame > New Playlist, enter a 
+name for the playlist using the onscreen keyboard, and choose Continue. Select 
+the photos that will be in this playlist, then choose Create Playlist.
+To add new photos to an existing playlist, open the playlist, tap on the icon 
+, select photos, and choose Add Photos.
+You may also use the long touch gesture on the playlist, select Add photos to 
+playlist in the context menu that opens. Using this menu, you may also rename 
+the playlist or delete it.
+To start the slideshow, tap on the icon 
+ or open the playlist and tap Play.
+To remove photos from a playlist, open it with a long touch gesture on a photo, 
+open the context menu, and select Delete.
+You can set up slideshow playback by tapping on the icon 
+, located in the 
+upper right corner of the screen. If you want to do it directly in the slideshow 
+playback mode, you can tap in the middle of the screen. This will bring up a 
+menu where you can go to the slideshow settings.
+Change picture every… — set the time after which the next photo will be played.
+Picture created date — allows you to display the date of creation of the photo 
+on the displayed photo.
+Current Date & Time — allows you to display the current date and time on the 
+displayed photo.
+Shuffle — randomly shuffles photos in the playlist.
+Display mode — allows you to set the method of playing photos in full screen 
+29
+
+
+--- PDF page 30 ---
+mode, filling the entire screen of the Device with an image, or playing it on a 
+black background.
+RSS News
+Application for adding and reading RSS feeds. To add RSS news feeds, open 
+RSS setup. Select the Add RSS feed option. Enter the feed address using the on-
+screen keyboard.
+To delete the feed, select it, open the context menu, and select Delete command 
+or press the Recycle bin icon 
+.
+To edit the feed, select it, open the context menu and select Edit name or 
+Edit URL command. Edit the RSS feed name or address using the on-screen 
+keyboard.
+To update feed, select Update in the application menu. Updated content is 
+added to the file with .hrss extension, and the file will be accessible for reading 
+after updating. The news downloading status is displayed while updating. After 
+the update file is available for reading off-line using the browser.
+To read latest feeds, select Read the latest news option in the application’s menu. 
+The latest downloaded RSS feed updates open in browser.
+News Archive: by selecting this option you can choose to read the previously 
+stored updating RSS feeds
+Music Player
+Music player for playing .mp3 media files.
+30
+
+
+--- PDF page 31 ---
+In the Application menu you can add audio files and folders with audio to the 
+playlist, rearrange tracks, and save or clear playlist.
+Exit
+Playlist
+Collapse
+Repeat
+once
+Normal
+Shuffle
+Previous
+Next
+Play/Pause
+Volume “-”
+Volume “+”
+31
+
+
+--- PDF page 32 ---
+By means of the context menu, opened with along press 
+on the track, you can perform the following operations: 
+view info about track, add to queue, or remove the file 
+from the list.
+Audiobooks
+This application plays audio books in the following formats: .m4a, .m4b, .ogg, 
+and .mp3. In addition, audio books in containers are supported: .mp3.zip, .zip. 
+Audio books with files located in a directory can also be played.
+Using the corresponding menu options you can add/
+remove audio books to/from the playlist, manage the list 
+of books, and sort the list according to basic parameters.
+Set your preferred playback speed and voice tone 
+using the Playback Control menu.
+32
+
+
+--- PDF page 33 ---
+Book List
+Bookmark
+Play/Pause
+Volume “-”
+Volume “+”
+33
+
+
+--- PDF page 34 ---
+PocketBook x Libby
+The PocketBook × Libby App provides access to public libraries, allowing users 
+to read e-books or listen to audiobooks from their local library.
+NOTE: The application requires an Internet connection.
+To use this feature you first need to choose the library. Enter the name, 
+postcode, or city of your library to find it. Use the country filter to change the 
+search country.
+You can sign in to the library (tap Sign in with my card) if you are a subscriber 
+of this library and have a library card.
+Or you can preview the library content without logging in (tap Preview Library). 
+You cannot borrow books in Library preview mode.
+34
+
+
+--- PDF page 35 ---
+NOTE: Information on how to get a library card is usually available on the library’s 
+website.
+To log in to your library, scan the QR code with another device. If you are having 
+difficulty scanning the QR code, you can enter the link (and code) provided 
+on the authorization page in an external browser, or choose to log in on this 
+device.
+35
+
+
+--- PDF page 36 ---
+After logging in, you can borrow books from this library or place a hold on them.
+To find a book, you can browse the list, use search (by name, author, isbn), 
+sort, filter by book format. For many books, samples are available for reading 
+or listening.
+If there are any free copies available, you can borrow the book. Tap Borrow 
+and change the borrowing period as needed. The borrowed book will appear 
+on the shelf.
+36
+
+
+--- PDF page 37 ---
+If a title isn’t available to borrow, tap Place Hold to join the wait list. You will 
+be notified when the book is available. The book will be returned automatically 
+at the end of the loan period.
+You can return the book earlier (go to Manage Loan > Return Early).
+The shelf gives you quick access to your current books.
+Usually, the book you have borrowed will be downloaded to your device, where 
+you can read it using the built-in reader. Such books will also appear on your 
+device’s desktop and in its library.
+37
+
+
+--- PDF page 38 ---
+If downloading is not possible, you can read the book in webview, which 
+requires an internet connection. Borrowed audiobooks can be listened online.
+The current card and library are displayed in the top tab bar of the library. 
+From here you can switch to the list of cards in this library.
+From the menu in the upper right corner, you can switch between libraries, go 
+to the library card list, remove library or add a new library.
+38
+
+
+--- PDF page 39 ---
+OverDrive’s Privacy Policy and request for removal of personal data PocketBook 
+X Libby Application interacts with the Overdrive Platform, which is under the 
+control of OverDrive, Inc.
+Should you be interested, kindly find below a link to OverDrive’s Privacy Policy, 
+request for the deletion of your personal data, or a link to the FAQ page:
+https://overdrive.com/policies/privacy-policy
+https://user-privacy.overdrive.com
+https://pocketbook.ch/en-ch/faq-pocketbook-x-libby
+39
+
+
+--- PDF page 40 ---
+GAMES
+Klondike
+Classic solitaire.
+Sudoku
+Popular Japanese puzzle. Press on an empty cell to select it. After that you can 
+input in the selected cell the digit you think should be in the cell or set labels — 
+digits that you suggest may be in the cell. Digits and labels should be chosen 
+from the bottom selection panel.
+Chess
+You can play versus your friend or the Device. If you are playing against the 
+Device, you can select 10 difficulty levels.
+Scribble
+Application for drawing. To select the drawing tool, use the application control 
+panel:
+ Palette - pencil color selection tool;
+ Text: select the position and size of the text box. Text is entered with the 
+on-screen keyboard;
+ Font: change font and its size;
+ Pencil: a tool for drawing thin lines;
+ Eraser: a tool for removing lines and text;
+40
+
+
+--- PDF page 41 ---
+ Back: cancel the last operation;
+ New: start new drawing;
+ Delete drawing.
+To save a picture, touch 
+ icon. The current picture will be saved to the My 
+Pictures folder in the root folder of the Device. In addition, Scribble application 
+is used for editing graphic notes.
+Coloring
+This is a classic Coloring app where you can use different colors to transform 
+black and white images. Colored images will be automatically saved on your 
+device.
+SERVICES
+Dropbox PocketBook
+DropBox application allows to download files, added to Dropbox from any 
+computer or any Device with installed Dropbox app or from the Dropbox 
+website, to your Device. And you do not need to install anything to your 
+PocketBook, it is enough to authorize in the service.
+How to start using
+1. Register in the Dropbox service (https://dropbox.com);
+2. Input your Dropbox account data (email address and password) on your 
+PocketBook Device in the section Settings > Accounts and Synchronization 
+41
+
+
+--- PDF page 42 ---
+> Dropbox > Login to authorize Dropbox. (The Wi-Fi connection should be 
+on, otherwise you will be asked to turn it on);
+3. After successful authorization, the Dropbox PocketBook sync folder will be 
+created in the Library of the Device. The Application > Dropbox PocketBook 
+directory will show up in your Dropbox account, and after synchronization 
+it will be available from other devices with Dropbox.
+NOTE: The application on your device will have access only to files in the Application 
+> Dropbox PocketBook folder on the server.
+How to synchronize
+Automatically:
+1. Files, added to the directory Application > Dropbox PocketBook on the 
+server and to the sync folder on your Device, will be automatically 
+synchronized when the internet connection is on.
+2. All synchronized files will be downloaded to the sync folder in the Library 
+(by default, Dropbox PocketBook is the sync folder, but you can change it 
+in Settings > Accounts and Synchronization > Dropbox > Sync folder).
+Manually:
+1. To synchronize all content in sync folders, in Settings choose ‘Accounts 
+and Synchronization > Dropbox > Synchronize files now’, or in the Library 
+choose ‘Synchronize files now’ in the context menu of the sync folder.
+2. After synchronization all obtained files will be also available in the sync 
+folder in the Library on the Device.
+42
+
+
+--- PDF page 43 ---
+Send-to-PocketBook
+Send-to-PocketBook allows to send files to the email address of your Device. 
+Sent books will be automatically downloaded to your Device, if the Wi-Fi is 
+turned on.
+How to start using
+Register for the Send-to-PocketBook service, for this purpose do the following:
+1. Launch application:
+• from the Applications > Send-to-PocketBook section;
+• or from Settings > Accounts and Synchronization > Send-to-PocketBook.
+NOTE: The Wi-Fi connection should be on, otherwise you will be asked to turn 
+it on.
+2. In the opened wizard enter your contact email address and password.
+3. The email with the activation link will be sent to the specified address. 
+Follow this link to receive the email address of your Device (for example, 
+username@pbsync.com).
+NOTE: The contact email address is used only for the authorization of the appli­
+cation, and the service address of the Device username@pbsync.com is used for 
+sending books to it, if you want them to be downloaded to your Device. The email 
+address of your Device can only be in the @pbsync.com domain.
+4. After activation update the registration wizard on the Device. After that 
+all applications features will be available for you, and the download folder 
+for received books will be created in the library — SendToPb.
+43
+
+
+--- PDF page 44 ---
+How to get files
+Automatically:
+1. Files, sent to the service email address of your Device, will be automati­
+cally downloaded to the download folder in the Device Library, when the 
+internet connection is on. Download folder is available after authorization 
+from the locations:
+• Applications > Send-to-PocketBook;
+• Settings > Accounts and synchronizations > Sendto-PocketBook > Go to 
+folder of the context menu of the Download folder;
+• Library > SendToPb.
+2. By default, ‘Send-to-PocketBook’ is the download folder, but you can 
+change it at registration or in the Settings > Accounts and synchronization 
+> Send-to-PocketBook > Download folder section.
+Manually:
+To update the content of the download folder, in Settings choose Accounts and 
+synchronization > Send-to-PocketBook > Receive files now.
+Received files will be also available in the download folder in the Library of the 
+Device.
+The list of trusted senders
+Documents can be downloaded on the Device, if they are sent from the address, 
+contained in the ‘white list’ (a list of the trusted senders).
+The address, specified at registration, is contained in the list by default.
+If the mail is sent to your Device from the unknown address, you will receive the 
+letter with a proposal to add a sender to the ‘white list’. After your confirmation 
+44
+
+
+--- PDF page 45 ---
+you will receive files from the added address to your Device. Thus, spam won’t 
+get on the Device.
+45
+
+
+--- PDF page 46 ---
+Reading Books
+In this chapter you will learn how to read e-books and configure reader software 
+for the most comfortable reading. The Device supports next book formats: 
+ACSM, CBR, CBZ, CHM, DJVU, DOC, DOCX, EPUB, EPUB (DRM), FB2, FB2.ZIP, 
+HTM, TXT, HTML, MOBI, PDF, PDF (DRM), PRC, RTF, AZW, AZW3.
+To open a book, touch its icon on Recent Books or Library section. If you opened 
+a book before, it will be opened at the page you’ve finished reading. In some 
+book formats (e.g. fb2 or EPUB) after opening a book reader application will 
+count pages – this is indicated with ‘…’ sign instead of a page count in a status 
+bar. During page calculation some features will not be available.
+To bring up reading menu, touch the center of the screen or press Menu 
+button.
+46
+
+
+--- PDF page 47 ---
+GESTURES IN READING MODE
+ CLOSE BOOK;
+ MAKE A BOOKMARK;
+ TURN PAGES FORWARD;
+ TURN PAGES BACKWARD;
+Pressing in the center
+of the screen evokes
+the Reading Menu
+Page turning
+Scaling
+47
+
+
+--- PDF page 48 ---
+READING MENU
+Back
+Contents
+Book name
+Search
+Bookmark
+Pull the slider to turn pages or touch the page number to
+input the digits of needed page
+48
+
+
+--- PDF page 49 ---
+ADJUST SMARTLIGHT AND FRONTLIGHT BRIGHTNESS IN READING 
+MODE
+You can adjust the frontlight Brightness and the SMARTlight colour temper­
+ature using gestures.
+To change brightness or the colour temperature without leaving your book, 
+just swipe your finger across the screen as shown in the illustration.
+If the Brightness and SMARTlight automatic ad­
+justment mode is enabled, then the device will ask 
+if you want to disable it and configure the settings 
+manually, without interrupting your reading.
+CONTENTS
+If a book has table of contents, you can open it by selecting the corresponding 
+reading menu item.
+Content section contains four insets:
+• Sections (book’s chapters names);
+• Bookmarks (made during reading);
+• Notes (graphic or text);
+• Book Info.
+49
+
+
+--- PDF page 50 ---
+If table of contents has more then one level, higher level entry will be marked 
+with ‘+’ sign – touch it to expand. ‘+’ sign will be changed to ‘-‘ – touch it to 
+collapse.
+To open the contents menu touch and hold your finger on the screen or press 
+Menu key. Using the menu you can open contents entry, edit or delete notes 
+and bookmarks.
+In addition, you can expand or collapse all the table of contents entries.
+BOOKMARKS
+To create a bookmark, touch right top corner of the screen. A dog ear mark 
+will appear. To delete a bookmark, touch this mark again and confirm deletion.
+Also you can add/remove bookmarks by selecting the corresponding reading 
+menu item. All the bookmarks are displayed in book contents.
+DICTIONARY
+50
+
+
+--- PDF page 51 ---
+To translate a word, highlight it by using the long-touch gesture. In the menu 
+that appears, tap the 
+ icon.
+If the book you are reading contains numerous words that need translation, 
+consider using the Dictionary Reading Mode for convenience.
+To enable Dictionary Reading Mode, open the reading menu by tapping the 
+center of the screen, then select Dictionary. Simply tap on any word to translate 
+it instantly.
+Next tools are available:
+Speech
+synthesis
+On-screen key-
+board for typing
+text for translation
+Save trans-
+lation as a
+note
+Change
+dictionary
+Fix
+window
+Context
+menu
+Exit
+To exit Dictionary Reading Mode, tap the Exit icon located in the upper-right 
+corner of the dictionary window.
+Do the following to download new dictionaries to your device:
+51
+
+
+--- PDF page 52 ---
+1. Click the “Change Dictionary” icon;
+2. In the newly opened window, click “Add New Dictionaries…”;
+3. Select a dictionary and click “Download”.
+If desired, the translation and context of the word selected in the book in the 
+Dictionary mode can be saved as a note.
+To do this, tap on the icon 
+. The saved translation becomes available in the 
+Notes in the table of contents.
+For quick access to the saved translation, you can also use the icon 
+ displayed 
+on the left side of the book page.
+With the help of the context menu, which can be opened by a long touch on 
+the icon 
+, it is possible to manually change the translation, edit the context, 
+delete the saved translation or context and delete this note.
+In the dictionary panel, there is also an opportunity to configure how the 
+translation of a word will be saved as a note.
+To do this tap on the icon 
+ on the dictionary panel, go to Save translation 
+as note, and select the desired option in the menu that opens to save the 
+translation and context in notes.
+52
+
+
+--- PDF page 53 ---
+NOTE
+Notes allows you to save favorite book fragments and make handwritten 
+records directly in the text. All the notes will be displayed in book’s table of 
+contents. To enter notes mode, select 
+ Note reading menu section.
+After you will enter Notes, a tooltip window will appear.
+53
+
+
+--- PDF page 54 ---
+Saved notes can be sorted or filtered for convenience in the Notes section of 
+the table of contents.
+To sort notes, tap on the icon 
+ in the upper right corner of the screen and 
+select the desired option in the context menu that opens.
+To filter notes, tap on the icon 
+ in the upper right corner of the screen.
+Using the context menu that opens, notes can be filtered by parameters:
+• All notes,
+• Highlights,
+• Comments,
+• Screenshots,
+• Pencils,
+• Translations.
+54
+
+
+--- PDF page 55 ---
+VOICE
+Text-to-Speech (TTS) software is designed to transform text into speech.
+To start TTS, open the reading menu and select Voice. TTS control panel will 
+appear:
+Select voice package
+Add voice
+Play/Pause
+Speed
+Volume
+Minimize window
+Exit
+Progress bar indicates a fragment read currently, pages are turned automati­
+cally as you listen.
+Initially, there is 1 TTS package installed on the Device.
+If you want to add a new TTS package, tap on Download New Voices in the 
+menu and choose the package you want.
+You can install additional voice packs from the same menu. To do so:
+1. Tap Download New Voices;
+2. Select the voice packs to download;
+3. Tap Download.
+55
+
+
+--- PDF page 56 ---
+SETTINGS
+In this section, you can find out how to configure your reading settings for 
+different book formats. You can also learn about all the available options and 
+features in this menu.
+EPUB, FB2, etc.
+To configure EPUB, TXT, FB2, DOC, and other text format books, open the 
+Reading menu and select Settings.
+56
+
+
+--- PDF page 57 ---
+Page tab - you can choose line spac­
+ing, font size, margins width and also 
+enable or disable hyphenation.
+Font tab - use this tab to select font 
+size and font style.
+Screen tab - you can enable or disable 
+page numbering, the status bar and 
+set how the pages are numbered.
+Built-in page numbering displays the number of pages in the book’s original 
+layout. One page can cover one or several screens, depending on reading 
+settings.
+If the function is disabled, the numbering will display the number of screens. 
+It may take a while to calculate the number of screens when you first open the 
+book, or after the reading settings have been changed. The number of screens 
+won’t be calculated again whenever the book is opened after this.
+57
+
+
+--- PDF page 58 ---
+PDF & DjVu
+You can change the whole page scale only (except Reflow mode for PDF).
+Pinch two fingers together to zoom out or spread them apart to zoom in.
+Under Mode reading menu section you can zoom pages or select viewing mode:
+1. Scroll mode – this mode continuously “glues” the pages together. In Scroll 
+mode, book pages are scrolled up and down with a drag gesture;
+2. Whole page – one page scaling;
+3. Columns – for reading books with columns. To navigate the page use 
+navigation buttons. A page will be turned after the bottom edge of the 
+sheet reached;
+4. Reflow – in this mode, text is formatted to display completely on the 
+screen. Reflow mode is supported for PDF books only. Some tables and 
+pictures cannot be displayed in the Reflow mode;
+5. Margins cropping – allows to decrease margins width or heigth:
+• off — turn off margins cropping;
+• automatic — margins will be cropped automatically;
+• manual — move arrow buttons to set margins width and heigth of 
+margins.
+6. Display – turn on or turn off the fullscreen mode during reading:
+• Pages — turn on or turn off pages numbering;
+• Status bar — turn on or turn off the display of status bar during 
+reading.
+• Pages left until the end of the chapter — shows the number of pages 
+left until the end of a section or chapter
+• Page edges — shows the border of the part of the page that was 
+displayed on the previous screen by a barely noticeable dotted line.
+58
+
+
+--- PDF page 59 ---
+NOTE! This device can display books using different reading programs. Long press 
+on a book in the Library or on the desktop to select a program. You can also 
+select the program in the reading settings. You can open EPUB files with B Reader 
+(EPUB2/EPUB3); PDF files can be opened with B Reader (quick) and B Reader 
+(universal). If you are not happy with the playback quality, long press on a book 
+in the Library, on the desktop, or in the reading settings to change the playback 
+software.
+Adjustment tab - Contrast, brightness, 
+and gamma are automatically adjusted 
+when you first open a book. In this tab, 
+you can adjust these settings to your 
+preference.
+You can also set up touch gestures in the Reading mode. To do this, go to 
+Settings > Personalize > Gestures in reading mode.
+More information about gesture settings can be found in the Personalization 
+section.
+FOLLOWING LINKS
+To follow a footnote, internal or external link, touch to enter links mode. To 
+exit this mode, touch top left corner of the screen.
+If a link follows to a web-site, it will be opened with Device built-in browser. To 
+return to reading, press Exit in Browser menu.
+LOADING FILES
+Connect the Device to the PC using microUSB cable.
+59
+
+
+--- PDF page 60 ---
+NOTE: The Device should be kept on while transferring files.
+You will be prompted to select USB mode: PC Link or Charge either. Select PC 
+Link. Operating system of computer will detect Device’s storage as removable 
+disk. Now you can copy files to the Device using Explorer or other file manager.
+ATTENTION! After copying files safely remove the Device before disconnect the 
+cable!
+Downloading protected e-books (Adobe DRM)
+Registration at https://www.adobe.com/ is required to use e-books in protected 
+format (Sign in > Create an Adobe Account).
+Download via *.acsm
+1. Visit https://www.adobe.com/ via your browser.
+NOTE: The current version of your browser on the Device does not support Flash 
+Player.
+2. Open Menu > Products > All products.
+3. Follow the link Digital Editions in the alphabetical index of products.
+4. Open Visit the sample eBook library at the bottom of the page to enter 
+the library.
+5. Choose a book and click Download item.
+6. A download window will appear on the screen.
+The file name should contain the name of the book and the file exten­
+sion .acsm. Click Save.
+7. After the file is saved on your PC, a link as URLlink.acsm will appear.
+60
+
+
+--- PDF page 61 ---
+NOTE: The same sequence of actions allows downloading a link to a protected 
+book from any online bookstore.
+Do the following to open a protected (DRM) book on the Device:
+1. Copy the file of the link to a book (*.acsm) to your Device.
+2. Find and open the file on your Device.
+3. Follow the on-screen instructions to activate your Device. To do this, use 
+the on-screen keyboard to enter the login and password of your account 
+on https://www.adobe.com/ into the Device Activation form. Then you will 
+be able to download the book.
+4. Download the book. After the download is complete, a full version of the 
+book will be available for reading in the Digital Edition folder.
+The downloaded book is protected (DRM) and cannot be opened by a non-
+registered user.
+Download books via PC
+1. Open the Adobe Digital Editions application.
+NOTE: When connecting your Device to C for the first time, Adobe Digital Editions 
+prompts you to activate the new device. Use your registration data at https://www.
+adobe.com/ for this. If the Device is not activated, it will be impossible to copy a 
+book from PC to device using Adobe Digital Editions. Authorization of Adobe Digital 
+Edition can be deleted in section Settings > Service > Delete ADE authorization.
+2. Select the Go to library view icon.
+3. Click All items.
+4. Choose a book and copy it to your Device.
+61
+
+
+--- PDF page 62 ---
+Sync your device with network services
+You can also upload files to the Device synchronizing device memory with 
+personal accounts of network services - Send-to-PocketBook, PocketBook Cloud, 
+and Dropbox.
+Variant 1
+• Open Settings > Accounts and Synchronization;
+• Select the appropriate network service (Send-toPocketBook, PocketBook 
+Cloud or Dropbox);
+• Select the synchronization option.
+For detailed information about work with network services see sections Send-
+to-PocketBook, PocketBook Cloud, and Dropbox PocketBook. Read more about 
+configuring network services at the section Accounts and Synchronization. Syn­
+chronization status can be viewed on the Notification panel.
+During uploading or downloading files an animated icon 
+ displays at the 
+status bar. Touch the icon to open a window with the synchronization status 
+of all services.
+The icon in the status bar changes to 
+ if the error occurred during synchro­
+nization of one of the services. If all synchronization processes are completed 
+without errors, the icon in the status bar disappears.
+62
+
+
+--- PDF page 63 ---
+LIBRARY
+Library is e-books file manager. Library menu allows to filter, group, sort, 
+change appearance of the section and perform search.
+1. Grouping criteria
+Depending on selected criterion books are grouping by:
+• All Books;
+• Authors;
+• Genres;
+• Collections - create your own shelves with books depend­
+ing on your interests and preferences;
+• Favorites;
+• Folders;
+• Formats;
+• Series;
+• PocketBook Cloud.
+The results of grouping can be displayed as ascending (A-Z) or 
+descending (Z-A).
+63
+
+
+--- PDF page 64 ---
+2. Sorting criteria
+• By opening date;
+• By addition date;
+• By title;
+• By author.
+3. Books list views
+ Simple – in this mode the cover icon of the book is displayed.
+ Detailed – in this mode there’s added author, title, thumbnails, information 
+about file format and size, read percentage.
+ List - in this mode next information is displayed:
+• Folder or book icon;
+• Book title and author name (if known);
+• Read percentage and Read status.
+Context menu…
+…opened by continuous touch…
+64
+
+
+--- PDF page 65 ---
+…and allows proceeding with next file and folder operations:
+• Book Info - brief information about book/folder;
+• Mark as read;
+• Add to Collection;
+• Add to Favorites;
+• All books of author;
+• Delete;
+• Upload to the Cloud;
+• Select - multiple choice of files;
+• Open with.
+PocketBook Cloud
+You can read your books on different devices and be confident that all your 
+books, favorites, collections and reading progress will be saved. You can access 
+your books from any device logged into your PocketBook Cloud account.
+65
+
+
+--- PDF page 66 ---
+NOTE: PocketBook Cloud stores files in PDF, PDF (DRM), EPUB, EPUB DRM, DJVU, 
+FB2, FB2.ZIP, DOC, DOCX, RTF, RC, TXT, CHM, HTM, HTML, MOBI, ACSM, AZW, AZW3 
+formats. However, syncing reading position is currently only available for PDF, 
+EPUB, Fb2 formats.
+How to sign in
+You can sign into the PocketBook Cloud service through a website, the Pock­
+etBook Reader mobile app (for Android and IOS) or from your PocketBook 
+e-ink reader.
+When you first set up your Device, you will be asked to sign into your PocketBook 
+Cloud account or, if possible, you will be automatically registered.
+If you have skipped this step, a prompt to sign in to your PocketBook Cloud 
+account will appear in the notification panel.
+66
+
+
+--- PDF page 67 ---
+To sign in:
+1. Tap on this notification or go to Settings > Accounts and Synchronization > 
+PocketBook Cloud.
+2. You will be redirected to the login form, where you can sign in using your 
+bookstore account or you can tap on Don’t have an account? Create! link.
+3. A list of partners bookstores will open in the Browser app. To continue, 
+choose one of the suggested bookstores by tapping on its name.
+4. You will be redirected to the partner’s bookstore website. Go to the Sign 
+in form and follow the instructions to create a new account.
+5. Then go back to Settings > Accounts and Synchronization > PocketBook 
+Cloud and enter the account credentials you used to create your partner’s 
+bookstore account and tap Log in.
+Sync process
+Your book list and reading position automatically sync when you:
+• log into your PocketBook Cloud account,
+• open a book,
+• close a book,
+• add to a Collection / remove from a Collection,
+• add to Favorites / remove from Favorites.
+To force synchronization, click on the sync icon 
+ on the notification panel.
+If your Device isn’t connected to the internet, you will only have access to the 
+books which are already on your Device. Once the device is connected to the 
+internet all your books will be synced.
+If an error occurred during synchronization, please check your internet connec­
+tion. If your internet connection is working, try to sync your books later.
+67
+
+
+--- PDF page 68 ---
+Working with files
+• File storage. A dotted frame line around the book on the PocketBook e-
+ink reader means that the book has not been loaded yet to the device’s 
+memory and is only stored in your PocketBook Cloud account.
+• Uploading new books. You can upload new books to your PocketBook Cloud 
+via website, PocketBook e-ink reader or Android/IOS PocketBook Reader 
+app. After synchronization, all new books are automatically stored in your 
+PocketBook Cloud account. The book will be automatically uploaded to your 
+PocketBook Cloud after you open the book on your Device, or you can 
+choose Upload to PB Cloud option in the context menu.
+File stored both in Device
+memory and in PB Cloud
+File stored only in PB Cloud
+File stored only in Device
+memory
+• Deleting books. Use the context menu to remove a book from PocketBook 
+Cloud. There are two options – Delete (from the device’s memory) and 
+Remove from Cloud. If the file is stored on PocketBook Cloud and is only 
+deleted from the device’s memory, it will appear again after the next 
+synchronization. If the file was deleted from the Cloud, it cannot be 
+restored.
+68
+
+
+--- PDF page 69 ---
+Settings
+In this chapter you will learn how configure the interface and software features 
+of the Device for the most comfortable usage. Select Settings at Notification 
+Panel, to configure the Device. All changes will be applied after exiting the 
+section.
+WI-FI
+In this section you can set parameters needed for network connection.
+Network Access — on or off. After network access activation, the following 
+settings appear:
+• Connection to the hidden network — read more in the Connecting to the 
+Internet section of this manual.
+• Available Networks — a list of available networks. Choose one of them 
+and you’ll see parameters of this connection: Network name (SSID), signal 
+strength, security, IP-address, network mask, main gateway, DNS.
+NOTE: If “Scanning” is displayed instead of “Available Networks”, it means that Device 
+is searching for available networks.
+BLUETOOTH
+This section is designed for setting up Bluetooth connections and contains the 
+following controls:
+Bluetooth (ON/OFF). Used to enable and disable the function.
+Visible to all BT devices nearby. By default, the e-book is not visible to other 
+devices. If you want to make it visible to other devices, set the switch to ON.
+69
+
+
+--- PDF page 70 ---
+Read more about pairing methods in the Configuring Bluetooth pairing. You can 
+also assign the buttons of HID-compatible Bluetooth devices (keyboard, mouse, 
+joystick, tripod, selfie stick, etc.) to remotely control the e-book. To do this, go 
+to Settings > Personalize > Key mapping, add a new Bluetooth button and assign 
+an action to it, for example, “page forward”.
+ACCOUNTS AND SYNCHRONIZATION
+PocketBook Store. You can use your PocketBook Store account to log in to 
+any of the PocketBook services.
+Store — in this section you can enter Login and Password for authorization in 
+the Store.
+Send-to-PocketBook — the following options are available:
+• PocketBook account: your account email.
+• Login/Log out: if you are not authorized in the application, input your 
+contact email address and password, to authorize. If you are authorized, 
+the email, to which you can send books, is displayed. You can logout Send-
+to-PocketBook.
+• Receive files now: The content of the Download folder will be updated. Before 
+update, please, check if your Device is connected to the Internet.
+• Receive files automatically: On or Off. Files, sent to the Device address 
+username@pbsync.com, will be automatically updated in the download 
+folder, if Wi-Fi connection is on. You can turn off automatic receiving files 
+to optimize the Device productivity.
+• Download folder: location of received files. The Send-to-PocketBook folder is 
+set by default. You can choose any other folder or create a new one in 
+the internal Device storage.
+70
+
+
+--- PDF page 71 ---
+• About service — more detailed about service.
+Dropbox — In this section the following options are available:
+• Login/Log out: if you are not authorized in the application, input your 
+Dropbox account data to authorize. If you are authorized, then you can 
+logout Dropbox.
+• Synchronize Now: Files in the Sync folder and Pocketbook device directory 
+will be synced. Before syncing files, please check if your Device is con­
+nected to the Internet and is linked to the proper Dropbox account.
+• Autosync: Turn On or Off auto synchronization. The service is turned on 
+automatically at the authorization, so Dropbox will automatically sync files, 
+if Wi-Fi connection is on. You can turn off autosync to optimize the Device 
+productivity.
+• Sync Folder: location of synced files. You can also move files to Sync folder, 
+if you want to sync them with Dropbox Pocketbook directory on the server. 
+The Dropbox PocketBook folder on the Device is set by default. You can 
+choose another folder or create a new one in the internal Device storage.
+• About Service — more detailed about service.
+Adobe DRM
+To authorize, input your Login (e-mail address) and Password. When you are 
+authorized, your login and Remove Adobe DRM Authorization item are displayed. 
+After removing all protected DRM documents will be unavailable.
+PocketBook Cloud — In this section the following options are available:
+• Login/Log out: if you are not signed into the application, enter your 
+PocketBook Cloud account data to log in. If you are signed in, then you 
+can log out.
+71
+
+
+--- PDF page 72 ---
+• Sync Now: Files in the Download folder and Pocketbook device directory will 
+be synced. Before syncing files, check if your Device is connected to the 
+internet and is linked to the correct PocketBook Cloud account.
+• Download Folder: the location of synced files. You can choose another 
+folder or create a new one in the internal Device storage.
+• About Service — more information about the service.
+PIN CODE
+A PIN Code is a user-defined combination of numbers that unlocks the screen 
+and helps to increase the level of security for accessing the device.
+To set a PIN Code: Follow these steps:
+• Open Settings > Device PIN Code > Turn PIN code on.
+• Follow the instructions to set an email address that will be used to recover 
+the PIN Code.
+• Confirm your email in the email that will be sent to the email address you 
+provided.
+• After confirming the email, you will be able to set the PIN Code on the 
+device.
+72
+
+
+--- PDF page 73 ---
+NOTE: you can use both your PocketBook Store account and your personal e-mail 
+to set a PIN Code.
+If you enter an incorrect PIN Code, the message “Wrong PIN” appears on the 
+device screen. If you enter the PIN Code incorrectly three times, the message 
+“Forgot PIN?” will appear, and by clicking on it, you will receive an email with a 
+link to recover your password.
+NOTE:
+1. To recover your PIN Code, you need access to the email address you set as 
+your recovery email.
+2. If you have lost access to the e-mail to recover your PIN Code, you can 
+contact the call center.
+IMPORTANT! To contact the call center, you need to specify the serial number to 
+the device and/or the e-mail address that was used to set the PIN code.
+To change the PIN code, go to Settings > Device PIN > Change PIN.
+Also, in the settings, you can select options when the Device requests the PIN 
+code. To do this, go to Settings > Device PIN Code > Request PIN. The following 
+options are available in the opened menu:
+• Always.
+• When Device is turned on.
+• When Device is unlocked.
+• When connected to PC.
+• When disconnected from PC.
+• Settings.
+73
+
+
+--- PDF page 74 ---
+To disable the PIN code, go to Settings > Device PIN Code > Turn PIN code off, 
+and then click Turn off in the window that appears.
+ACCESSIBILITY
+PocketBook accessibility features are designed to assist users with visual 
+impairments or blindness. Users can customize the UI text to better fit their 
+invididual needs, enhancing readability and usability. Additionally, the device 
+offers a Screen Reader mode that reads aloud the onscreen content, helping 
+users navigate, interact with, and enjoy their device through spoken feedback.
+74
+
+
+--- PDF page 75 ---
+These features aim to provide an inclusive and independent reading experience 
+for all users.
+To enable accessibility features, go to Settings > Accessibility or press Menu 
+button on the device three times. This menu is organized into two sections 
+allowing quick access to customization options: Audio Guidance where you can 
+enable Screen Reader feature, and Text & Contrast with UI text customization 
+settings.
+Text and contrast settings:
+Text size - adjust the size of the text for better readability. Use the slider or 
+buttons to increase or decrease the text size.
+75
+
+
+--- PDF page 76 ---
+Bold text - enable this feature to make text appear bolder, enhancing clarity.
+Use OpenDyslexic Font - enable this switch to use an OpenDyslexic font, 
+specifically designed to improve readability for users with dyslexia.
+Go to the Screen Reader menu to enable it and customize its operation:
+Use Screen Reader – toggle the switch to enable the screen reader feature.
+Screen Reader Shortcut – toggle the switch to enable the activation of feature 
+by triple-clicking the power button.
+Voice – enter this menu to set up voice speaking rate and volume, and change 
+the voice itself.
+76
+
+
+--- PDF page 77 ---
+When accessibility is enabled, it is possible to navigate through the device using 
+gestures:
+tap or tap and drag gesture moves focus onto tapped item;
+double tap gesture opens or activates an item;
+swipe right gesture moves the focus to the next item;
+swipe left gesture moves focus to the previous item;
+swipe up gesture moves focus to the next slider value (if applicable). 
+Works on any part of the screen;
+swipe down gesture moves focus to the previous slider value (if 
+applicable). Works on any part of the screen;
+double tap and hold gesture opens or exits the context menu. Works 
+on any part of the screen;
+77
+
+
+--- PDF page 78 ---
+slide with two fingers from left to right returns to the previous screen 
+or closes pop-up;
+ 
+swipe with two fingers up/down gesture scrolls scrollable 
+object up/down.
+PERSONALIZE
+Frontlight — this section allows you to set up the Frontlight and SMARTlight 
+extended settings.
+Frontlight – use the ON/OFF switch to turn the Frontlight on or off.
+Advanced Frontlight Settings – you can create your own settings configurations 
+and manage them.
+• New settings – allows you to create your own custom settings for automatic 
+Frontlight adjustment.
+• Default – factory settings for automatic Frontlight adjustment.
+78
+
+
+--- PDF page 79 ---
+Your custom settings will be displayed in this sec­
+tion as you create them. When a new settings 
+configuration is created, a graph will be displayed 
+on the screen where you can set the Frontlight 
+brightness and its SMARTlight colour temperature. 
+To define a parameter, position the cursor at the 
+required time on the graph, and by moving the 
+sliders under the graph define the comfortable 
+brightness and temperature for each hour.
+If you want to apply the new configuration immediately, exit the graph 
+parameters and confirm the new settings. When a configuration is pressed, 
+a context menu will appear that will allow you to manage custom Frontlight 
+settings:
+• Activate;
+• Edit;
+• Copy;
+• Rename;
+• Delete.
+The DARKmode changes the background and design of the e-book into a dark 
+colour. This can help to prevent eye strain when reading in the dark.
+To enable the DARKmode, go to Settings > Personalize > SMARTlight & DARKmode 
+or open the notification panel and select the icon 
+.
+In the settings, you may also enable the inversion of illustrations in the Reading 
+App in the DARKmode. This can be helpful when reading technical literature 
+that contains drawings, diagrams etc., which mostly have a light background.
+79
+
+
+--- PDF page 80 ---
+Logos — are the images that appear on the device screen when you turn on 
+the device and when the device is turned off.
+To set a Boot Logo, go to Settings > Personalize > Logos > Boot Logo.
+The following options are available in the menu that opens:
+• Default – sets the default image.
+• Book Cover – in this case, the cover of the book that the user is currently 
+reading will be displayed as the device’s screen saver.
+• Current Page – if you select this option, the device will display the current 
+page of the book you are currently reading as a screen saver.
+• Custom – allows you to choose any image stored on the device as a screen 
+saver. To set an image as a screen saver or change the selected image, 
+click on the 
+ icon, select an image, and click “Set”. To return to the 
+previous menu, press the 
+ icon.
+• Random – allows you to select up to 10 images that will be displayed as 
+a screensaver in a random order. To add an image to the list of playable 
+images, click on the 
+ icon in the upper right corner of the screen, select 
+the images you want to add, and then click “Add Photos”. The 
+ icon 
+allows you to change the appearance of the list. To return to the previous 
+menu, click the 
+ icon.
+To set a Power-off Logo, go to Settings > Personalize > Logos > Power-off Logo.
+The following options are available in the menu that opens:
+• Default – sets the default image.
+• Book Cover – in this case, the cover to the book that the user is currently 
+reading will be displayed as the device’s screen saver.
+80
+
+
+--- PDF page 81 ---
+• Custom – allows you to choose any image stored on the device as a screen 
+saver. To set an image as a screen saver or change the selected image, 
+click on the 
+ icon, select an image, and click “Set”. To return to the 
+previous menu, press the 
+ icon.
+• Random – allows you to select up to 10 images that will be displayed as 
+a screensaver in a random order. To add an image to the list of playable 
+images, click on the icon in the 
+ upper right corner of the screen, select 
+the images you want to add, and then click “Add Photos”. The 
+ icon 
+allows you to change the appearance of the list. To return to the previous 
+menu, click the 
+ icon.
+• none – when the device is turned off, no images will be displayed on 
+the screen.
+NOTE: You can also set your own picture as a logo from the Gallery application. 
+Read about it in the Gallery section.
+LED indication — you can turn on or off an LED indicator. The LED indicator 
+is on if the device processor is active and off if the device processor switches 
+to the sleep mode to save power.
+When connecting to a charger or a PC via a USB port, the LED indicator of 
+the device is on when the battery is charging and turns off when charging 
+completes.
+Gestures in Reading Mode:
+Configure tap gesture — allows you to customize touch gestures for individual 
+areas of the screen in Reading mode. In the menu that opens, tap on the 
+81
+
+
+--- PDF page 82 ---
+desired zone. Now, select the required function choosing from the context 
+menu.
+Confirm your choice by tapping on the icon 
+.
+82
+
+
+--- PDF page 83 ---
+Swipe in Reading mode — allows you to customize swipe from 
+right to left, swipe from left to right, swipe from bottom to 
+top, swipe from top to bottom.
+Select the desired Swipe gesture, and in the context menu 
+that opens, select the desired setting for this gesture.
+Drag in Reading mode — allows you to customize the drag gesture on the 
+left and right edges of the screen. The following options are available in the 
+settings:
+• Frontlight;
+• SMARTlight;
+• Voice volume;
+• Font size.
+Complete Page Refresh. Select the amount of pages turned before the screen 
+will be updated completely. Always item provides the best quality, but consumes 
+the most power. Less frequency may cause some artifacts from previous pages 
+on a screen.
+Open at Startup last opened book or main menu.
+User Profiles. There is a possbility to create and configure different profiles. 
+Each profile stores individual books’ statuses, last opened books, bookmarks, 
+notes, favourites and pre-configured network connections.
+83
+
+
+--- PDF page 84 ---
+To add new profile, enter the menu and tap New Profile. Enter the name and 
+confirm it. To activate desired profile tap on its name and tap Activate in the 
+opened menu. Active profile has a tick sign. Tap on the profile to set the avatar 
+for the profile, copy its parameters, rename or delete it.
+LANGUAGES
+Language. Select the Device’s interface language.
+Keyboard Layouts. Under this section you can add up to 3 keyboard layouts.
+DATE/TIME
+In this section you will be able to set date, time, time zone and clock format. You 
+can also Synchronize Time or set Auto Time Sync to use the network time/date.
+SAVING POWER
+Here you can see battery level and set parameters, which help to save battery 
+charge:
+• Battery percentage - shows current charge level;
+• Show Battery Percentage - enable/disable display of charge level in percents;
+• Auto screen lock - set the idle time after which the device is locked: off, 5 
+min, 10 min.
+• Power off after - set the idle time after which the device powers off: 10, 
+20, 30 or 60 minutes.
+84
+
+
+--- PDF page 85 ---
+MAINTENANCE
+USB Mode — set how the Device handles USB connection by default: PC link, 
+Charge or Ask when connected.
+Privacy
+Protect Configurations by Password — in this section you can protect your setting 
+by password. Select Set Password section and type the password from on-
+screen keyboard. Now each time you try to enter Settings section, you will be 
+asked to enter the password. You can remove or change password by selecting 
+the corresponding item. To proceed, you will be asked to enter the password 
+once more.
+Factory Reset – the Device state will be reset to factory default settings, erasing 
+user settings. Other data (e.g. books, photos) won’t be lost;
+Demo mode - switching demo mode for the Device. To activate demonstration 
+mode check On in the Demo mode item.
+ABOUT DEVICE
+The following information about Device will be displayed:
+Device Model (model, serial number, hardware platform, Wi-Fi and Bluetooth 
+MAC address).
+Memory (RAM, total and available internal memory):
+Format Internal Memory – this action will erase all data, except system files.
+85
+
+
+--- PDF page 86 ---
+CAUTION! If you need to erase all data on the Device, use this feature only, don’t 
+try to format the Device internal memory via PC.
+Legal Information – license and information about software, used on the 
+Device.
+Third-Party Software — license and information about thirdparty software, used 
+on the Device.
+Software
+Software Version - displays the current version of firmware.
+Check for updates automatically - device will search for updates automatically in 
+the following order: internal storage, internet.
+Download new updates automatically - enable or disable to install found updates 
+automatically;
+Check for updates - manual check for updates.
+86
+
+
+--- PDF page 87 ---
+Firmware Update
+WARNING! Firmware Update is a responsible operation, during which management 
+software of the Device will be changed. In case of improper execution control 
+program may be damaged and will require treatment in the service centre. Please 
+perform the upgrade procedure in accordance with the instructions below.
+There are two ways to update the firmware.
+Automatic Update
+To start automatic software update go to Settings > Abouut Device > Software.
+The Device will begin to check available update sources in the following order:
+• Internal memory;
+• Internet.
+If default Internet connection is not set, the Device will ask to connect to one 
+of the available wireless networks.
+Also you can activate the automatic updates check (Settings > Software > Auto 
+Update). In this case, the Device will use Wi-Fi connection only.
+Manual Firmware Installation
+1. Open site https://pocketbook.ch. Select your country.
+2. Click the Support button on top menu. Select hardware model of your 
+Device.
+3. Download the Firmware to your PC.
+4. Unpack the content of the archive, file SWUPDATE.BIN, and copy it to the 
+root folder of internal Device storage.
+87
+
+
+--- PDF page 88 ---
+5. Switch off the Device by pressing button On/Off.
+6. Press and hold the Forward and Backward buttons simultaneously, then 
+connect your device to the computer with Type-C cable without releasing 
+the Forward/Backward buttons!
+7. Hold the Forward/Backward buttons until the message “Firmware up­
+date…” appears on the screen.
+8. Follow the on-screen instructions with pictures: connect USB cable to the 
+Device and Press Menu Key.
+NOTE: You can check your Firmware version in Settings > About Device > Software 
+> Software Version.
+Troubleshooting
+Error Message
+Reason
+Correction Method
+No upgrade image found
+File SWUPDATE.BIN cannot be 
+found on the card. Make sure 
+the file is in the root folder of 
+the card.
+Delete some files from the 
+Device and copy SWUPDATE.BIN 
+file on it one more time. 
+Repeat the download from 
+https://pocketbook.ch.
+Upgrade image is corrupted or 
+Image is empty
+SWUDATE.BIN file is damaged 
+or there is no space available 
+on the card.
+Delete some files from the 
+Device and copy SWUPDATE.BIN 
+file on it one more time. 
+Repeat the download from 
+https://pocketbook.ch.
+File read error
+Memory card error.
+Please contact service center.
+Error. A different firmware 
+version is installed on the device
+A firmware file of an older 
+version is stored in the device 
+internal memory.
+Delete the old version of the 
+firmware file from the Device’s 
+internal memory root folder.
+88
+
+
+--- PDF page 89 ---
+Troubleshooting
+Malfunction
+Possible Reason
+Solution
+Device does not turn on or 
+turns on but only the logo is 
+loaded
+Battery is low.
+Charge the battery.
+A book does not open - the 
+message Book is probably 
+damaged or protected appears, 
+or nothing happens at all
+The book is damaged.
+If the book was downloaded 
+from the online store try to re-
+load it again. If the file opens 
+on your PC but does not open 
+on the Device, save the book in 
+another format (TXT, DOC, 
+PDF).
+HTML book opens but is 
+displayed incorrectly. For 
+example, there are empty 
+pages, some part of the text is 
+missing, etc.
+HTML-files contain non-text 
+elements (frames, JAVA-scripts, 
+flash-elements).
+Save the page in TXT format.
+Book opens but various 
+symbols, question marks, etc. 
+are displayed instead of letters.
+Incorrect encoding.
+Switch to reading mode, select 
+Settings and change encoding.
+No response when you press 
+any key
+Sometimes (e.g., when 
+downloading damaged or too 
+large books) the Device may 
+freeze.
+Close the frozen application by 
+pressing 
+ / 
+ keys 
+simultaneously for 1–2 sec.
+89
+
+
+--- PDF page 90 ---
+Malfunction
+Possible Reason
+Solution
+Your Device is in the battery 
+charging mode.
+Check USB mode in Settings 
+Main Menu item. Set Connection 
+to PC or Ask at Connection.
+After connection to PC disks are 
+not displayed in Explore.
+No signal in connection cable.
+Check USB cable condition and 
+its proper connection to 
+connector. Try to connect the 
+USB-cable to another port.
+File system damaged.
+Connect the device to a PC and 
+check disks. To proceed, open 
+My Computer, right-click on the 
+selected disk and select 
+Properties > Service > Check Disk.
+Bookmarks, settings and 
+current position in file cannot 
+be saved.
+Internal memory is full.
+Delete books, images and/or 
+music files that you do not 
+need.
+Battery discharges too fast.
+Disabled automatic turning off.
+Settings > Date/Time in Main 
+Menu. Select automatic turn off 
+time in Auto Turn Off in… item.
+90
+
+
+--- PDF page 91 ---
+Customer Support
+For detailed information about service centers in your country please use 
+contacts below:
+Deutschland
+0-800-187-30-03
+0-800-183-39-70
+Česko
+800-701-307
+France
+0-805-080-277
+Österreich
+0-800-802-077
+0-800-281-770
+Polska
+0-800-141-01-12
+4-822-307-92-56
+Switzerland
+0-800-898-720
+ישראל1-809-494-246
+Україна
+0-800-805-108
+Қазақстан
+8-800-200-69-90
+https://pocketbook.ch
+help@pocketbook.ch
+91
+
+
+--- PDF page 92 ---
+Compliance with International Standards
+Product name: PocketBook InkPad Color 3
+Model number: PB743K3
+Firmware version: 6.10
+Rated input power: 5V/2A
+Manufacturer: Pocketbook International SA. Crocicchio Cortogna 6, 6900, 
+Lugano, Switzerland. Tel. 0800-187-3003. Made in China
+EU DECLARATION OF CONFORMITY
+Pocketbook International SA (Crocicchio Cortogna 6, 6900 
+Lugano, Switzerland) hereby declares that the radio equip­
+ment in this product box corresponds to Directive 2014/53/
+EU. The full text of the EU declaration of conformity 
+for the product in box is available at the following in­
+ternet address: https://pocketbook.ch/en-ch/declaration-of-
+conformity-pocketbook-readers
+RF OUTPUT POWER
+WLAN & Bluetooth Output Power (dBm):
+This device has been tested and meets applicable limits for Radio Frequency 
+(RF) exposure.
+The frequency and maximum transmitted power in EU are listed as below:
+2412 - 2472 MHz: 16.36 (WLAN 2.4G);
+5180 - 5240 MHz: 10.14 (WLAN 5.2G);
+5745 - 5825 MHz: 10.5 (WLAN 5.8G);
+2402 - 2480MHz: 3.49 (BR-EDR), 3.49 (BLE).
+92
+
+
+--- PDF page 93 ---
+WLAN 2.4G Transfer Rate (Mbps):
+802.11b:11/ 5.5/ 2/ 1;
+802.11g: 54/ 48/ 36/ 24/ 18/ 12/ 9/ 6;
+802.11n (20MHz) use 800 ns GI: 65.0/ 58.5/ 52.0 /39.0/ 26.0/ 19.5/ 13.0/ 6.5 
+(MCS0-MCS7).
+WLAN 5.2G Transfer Rate (Mbps):
+802.11a: 6 /9 /12 /18 /24 /36 /48 /54;
+802.11n (20MHz): up to MCS0-7;
+802.11n (40MHz): up to MCS0-7;
+802.11ac (20MHz): up to MCS0-8;
+802.11ac (40MHz): up to MCS0-9.
+WLAN 5.8G Transfer Rate (Mbps):
+802.11a: 6/ 9/ 12/ 18/ 24/ 36/ 48/ 54;
+802.11n (HT20/HT40): MCS0-MCS7;
+802.11ac (VHT20/ VHT40): NSS1, MCS0-MCS9, NSS2.
+FCC
+This device (FCC ID: 2AUVWPB743C) complies with part 15 
+of the FCC rules. Operation is subject to the following two 
+conditions:
+(1) This device may not cause harmful interference, and (2) this device must 
+accept any interference received, including interference that may cause unde­
+sired operation.
+15.21 Information to the user. Any changes or modifications not expressly ap­
+93
+
+
+--- PDF page 94 ---
+proved by the party responsible for compliance could void the user’s authority 
+to operate the equipment. 15.105 Information for the user.
+NOTE: This equipment has been tested and found to comply with the limits for 
+a Class B digital device, pursuant to part 15 of the FCC rules. These limits are 
+designed to provide reasonable protection against harmful interference in a resi­
+dential installation. This equipment generates, uses and can radiate radio frequency 
+energy and, if not installed and used in accordance with the instructions, may 
+cause interference to radio communications. However, there is no guarantee that 
+interference will not occur in a particular installation. If this equipment does cause 
+harmful interference to radio or television reception, which can be determined by 
+turning the equipment off and on, the user is encouraged to try to correct the 
+interference by one or more of the following measures:
+• Reorient or relocate the receiving antenna.
+• Increase the separation between the equipment and receiver.
+• Connecting the equipment to a socket on a circuit different from that to 
+which the receiver is connected.
+• Contact with the provider or a radio TV technician for help.
+SAR
+The exposure standards for wireless devices employ a unit of measurement 
+known as the Specific Absorption Rate, or SAR. The SAR limit set by the FCC/IC 
+is 1.6 W/kg. The SAR limit recommended by the Council of the European Union 
+is 2.0 W/kg. The SAR limit required by the ANFR (member DAS) is 4.0 W/kg. 
+This device’s maximum SAR value is well below the FCC/IC and EU limits with 
+specific measurements shown in the below table.
+94
+
+
+--- PDF page 95 ---
+FCC / IC
+Max SAR Value (W/kg)
+1-g Body (Separation distance of 0 mm)
+1.6
+WLAN 2.4G - 0.735
+WLAN 5.2G - 0.540
+WLAN 5.8G - 0.577
+EU / ACMA
+Max SAR Value (W/kg)
+2.0
+0.094
+10-g Body (Separation distance of 5 mm)
+EU / ANFR
+Max SAR Value (W/kg)
+4.0
+0.404
+10-g Body (Separation distance of 0 mm)
+To maintain compliance with FCC’s RF Exposure guidelines, this equipment 
+should be installed and operated with a minimum 0 cm distance between 
+radiator and your body. Use only the supplied antenna.
+IMPORTANT: Changes or modifications to this product not authorized could void 
+the EMC and wireless compliance and negate your authority to operate the 
+product. This product has demonstrated EMC compliance under conditions that 
+included the use of compliant peripheral devices and shielded cables between 
+system components. It is important that you use compliant peripheral devices and 
+shielded cables between system components to reduce the possibility of causing 
+interference to radios, televisions, and other electronic devices.
+95

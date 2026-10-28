@@ -1,0 +1,25 @@
+Set up and run shortcuts from a widget on iPhone or iPad
+Widgets show you current information from your favorite apps at a glance. You can run shortcuts from the Shortcuts widget or Siri Suggestions widget on the Home Screen of your iPhone or iPad.
+Add a Shortcuts widget to the Home Screen
+On your iPhone or iPad, touch and hold the background of the Home Screen until the apps begin to jiggle.
+Tap at the top of the screen to open the widget gallery.
+Scroll down, then tap Shortcuts.
+Swipe to choose a widget size.
+Tap Add Widget, then tap Done.
+The Shortcuts widget appears on your Home Screen.
+While the apps are still jiggling, move the widget where you want it on the screen, then tap Done.
+Set which shortcuts appear in a Shortcuts widget
+The small Shortcuts widget displays a single shortcut of your choice. The other Shortcuts widgets display the first widgets in one of your shortcuts collections.
+On the Home Screen of your iOS or iPadOS device, touch and hold a Shortcuts widget.
+Tap Edit Widget.
+Do one of the following:
+Set which shortcut appears in the small widget: Tap the shortcut name, tap a different shortcut in the list, then tap outside of the widget.
+Set which shortcuts collection appears in the larger widgets: Tap the folder name, tap a different folder in the list, then tap outside of the widget. To change of order in which the shortcuts appear in the widget, see Reorder shortcuts.
+Note: Folders are organizing containers that hold related shortcuts. For information on creating and using folders in Shortcuts, see Organize shortcuts in folders.
+Run a shortcut from a widget
+In the Shortcuts widget or Siri Suggestions widget on the Home Screen of your iPhone or iPad, tap a shortcut.
+The shortcut begins, and the widget button displays a progress indicator as the actions advance. To cancel the shortcut, tap .
+If a shortcut has an action that can’t be completed in the widget, the Shortcuts app automatically opens. If an action requires additional data, the shortcut pauses, allowing you to enter the necessary data. For more information on which shortcuts work well in the widget (without opening the Shortcuts app), see About actions in complicated shortcuts.
+Remove the Shortcuts widget or Siri Suggestions widget
+On your iPhone or iPad, touch and hold the widget on the Home Screen.
+Tap Remove Widget, then tap Remove.

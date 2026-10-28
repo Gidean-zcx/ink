@@ -1,0 +1,23 @@
+How to reset your Toniebox 2 to factory settings – tonies® Support (https://support.tonies.com/hc/en-us/articles/29251407505682-How-to-reset-your-Toniebox-2-to-factory-settings)
+citeturn781search0 [wordlim: 200] Crawled: last week; # How to reset your Toniebox 2 to factory settings ... The Toniebox 2 will begin the factory reset and guide you through the process.
+
+# How to reset your Toniebox 2 to factory settings
+
+Think of a factory reset as your Toniebox 2 “fresh start button.” It wipes everything clean and takes your Toniebox 2 back to the way it was on day one. Because it’s such a big step, a factory reset should only be used as a last resort, after you’ve tried all other troubleshooting tips.
+When to use a factory reset
+- Something went wrong during the initial setup and your Toniebox 2 isn’t responding as expected.
+- You’d like to return your Toniebox 2 and remove it from your tonies® account.
+
+To Factory Reset your Toniebox 2, follow these steps:
+1. Turn on your Toniebox 2 and wait until the light ring turns green.
+2. Make sure the Toniebox 2 is not plugged in.
+3. Turn the Toniebox 2 upside down and press and hold both ears for 5 seconds until you hear a sound signal.
+4. Turn it back over – the light ring will glow white.
+5. Press and hold the small ear. The Toniebox 2 will begin the factory reset and guide you through the process.
+6. Wait until the Toniebox 2 confirms that the reset is complete.
+Your Toniebox 2 is now reset and ready for a brand-new start.
+For in app guideance to factory reset:
+1. Open the tonies® app and log in to your account.
+2. Go to “Mine” and select your Toniebox 2.
+3. Tap “Settings” (top right corner).
+4. Scroll to the bottom and select “Factory reset instructions.”

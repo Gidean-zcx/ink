@@ -1,0 +1,8 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M004-20,M-004,截取当前画面或长网页（通用帮助参考）,D2,E-BXSD-03;E-BXCD-03,控制中心/导航球/三指三入口；快捷项缺失可Edit补入；应用可限制截图,本机V4.1.2路径、权限/限制反馈、长截图范围、保存/取消未核,not_observed,false,cases/M-004-boox-neoreader.md,2026-10-27
+F-M004-21,M-004,录屏后保存和查看输出（通用帮助参考）,D2,E-BXSD-04,长按先配置；圆形开始/X结束；MP4目标目录、缩略图查看/分享；静态锁屏保存选项,本机构建、实际锁屏保存、权限拒绝/空间不足/取消、音源和文件可播放性未知,static_official_images_only,false,cases/M-004-boox-neoreader.md,2026-10-27
+F-M004-22,M-004,向另一屏幕展示设备内容（通用帮助参考）,D2,E-BXSD-08,Miracast与BOOXDrop浏览器显示、第三方AnyDesk分别记录；BOOXDrop静态说明无反向控制,设备固件和接收端资格、失败/拒绝、断开重连、延迟及真实控制未验证,static_official_images_only,false,cases/M-004-boox-neoreader.md,2026-10-27
+F-M004-23,M-004,订阅来源并接收稍后读内容（通用帮助参考）,D2,E-BXSD-16,公共源Subscribe、自建组加源、OPML导入及独立OPDS页签；Push网页分开,本机构建、无效源/重复/部分导入、取消订阅后内容、正文缓存和已读状态未知,not_observed,false,cases/M-004-boox-neoreader.md,2026-10-27
+F-M004-24,M-004,网页阅读中调整显示并查词（通用帮助参考）,D2,E-BXSD-15,菜单预设字号；Page Visibility Enhanced开关；长按词后Dictionary并切词典,本机版本、全屏退出、查词关闭/返回选区、断网/保存、模式持久化未知,not_observed,false,cases/M-004-boox-neoreader.md,2026-10-27
+F-M004-25,M-004,按日期回看备忘和阅读痕迹（现行通用帮助参考）,D2,E-BXSD-17;E-BXSD-01,日期Memo、最后编辑/最后阅读条目点击打开；现行Events/Reminder只记入口,V4.1.2逐项适用、保存/删除/恢复、日界线/时区、完成判定未知；日程表单未闭合,not_observed,false,cases/M-004-boox-neoreader.md,2026-10-27
+F-M010-11,M-010,把推送网页切为阅读模式并离线回看（通用V4.0参考）,D2,E-PALMA-15;E-BXSD-16,同ONYX账号推送；首次联网加载后可离线；中央菜单切Web/Reading Mode、字号/全刷,Palma 2现固件适用、网页完整缓存/附件/失效、断网实测、取消订阅与持久进度未知,not_observed,false,cases/M-010-palma.md,2026-10-27

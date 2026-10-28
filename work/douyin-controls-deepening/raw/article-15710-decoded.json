@@ -1,0 +1,177 @@
+{
+  "_deltas": {
+    "0": {
+      "ops": [
+        {
+          "attributes": {
+            "lmkr": "1",
+            "align": "left"
+          },
+          "insert": "*"
+        },
+        {
+          "insert": "近日，抖音全面升级“使用管理助手”，为用户提供了观看时长分析和内容偏好管理的便捷工具。",
+          "attributes": {
+            "fontweight": "400"
+          }
+        },
+        {
+          "insert": "\n"
+        },
+        {
+          "attributes": {
+            "lmkr": "1",
+            "align": "center"
+          },
+          "insert": "*"
+        },
+        {
+          "insert": " ",
+          "attributes": {
+            "fontweight": "400",
+            "fontcolor": "#1C1F23FF",
+            "backgroundcolor": "rgb(255, 255, 255)",
+            "image": "true",
+            "src": "https://lf3-beecdn.bytetos.com/obj/ies-fe-bee-upload/bee_prod/biz_1665/tos_b9b29c0a6ac188d912fd3fb98dc4d911.jpg",
+            "uuid": "n3fPTzIx"
+          }
+        },
+        {
+          "insert": "\n"
+        },
+        {
+          "insert": "让内容偏好可视化",
+          "attributes": {
+            "fontweight": "400",
+            "bold": "true"
+          }
+        },
+        {
+          "insert": "\n"
+        },
+        {
+          "insert": "全新升级的“使用管理助手”通过抖音“首页侧边栏—更多功能”或“我—主页侧边栏—更多功能”即可找到。它基于用户近期的观看行为，将电影、美食、旅游等众多内容按照“垂类”智能归类，通过生成的色盘圆环图，帮助用户直观了解自己近期观看各“垂类”内容的占比，更客观地评估自己的观看喜好。",
+          "attributes": {
+            "fontweight": "400"
+          }
+        },
+        {
+          "insert": "\n"
+        },
+        {
+          "insert": "帮用户探索更多内容",
+          "attributes": {
+            "fontweight": "400",
+            "bold": "true"
+          }
+        },
+        {
+          "insert": "\n"
+        },
+        {
+          "insert": "如果用户希望看到更多不同类别的内容，可在“使用管理助手”界面点击“探索更多”按钮，算法会在推荐里加大多样化“垂类”的权重，拓展探索更多类型的内容。算法会先分析用户近期观看历史，确定用户常看的内容类型（即头部兴趣）和较少接触的新内容类型（即尾部兴趣）。对于头部兴趣，算法会适当减少重复推荐；而对于尾部兴趣，算法会结合用户的兴趣推荐更多类别的优质视频。这样一来，既保证了用户能看到更多不同类型的内容，又能在已知喜好和待探索的内容间找到平衡，让用户有机会发现更多感兴趣的视频。",
+          "attributes": {
+            "fontweight": "400"
+          }
+        },
+        {
+          "insert": "\n"
+        },
+        {
+          "attributes": {
+            "lmkr": "1",
+            "align": "center"
+          },
+          "insert": "*"
+        },
+        {
+          "insert": " ",
+          "attributes": {
+            "fontweight": "400",
+            "fontcolor": "#1C1F23FF",
+            "backgroundcolor": "rgb(255, 255, 255)",
+            "image": "true",
+            "src": "https://lf3-beecdn.bytetos.com/obj/ies-fe-bee-upload/bee_prod/biz_1665/tos_2eb8f28b679b578ecd62cb5de2c9328a.png",
+            "uuid": "YkJIEhpK"
+          }
+        },
+        {
+          "insert": "\n"
+        },
+        {
+          "attributes": {
+            "lmkr": "1",
+            "align": "center"
+          },
+          "insert": "*"
+        },
+        {
+          "insert": "抖音使用管理助手及调节内容偏好功能示意",
+          "attributes": {
+            "fontcolor": "#00000099",
+            "fontweight": "400",
+            "italic": "true"
+          }
+        },
+        {
+          "insert": "\n"
+        },
+        {
+          "attributes": {
+            "lmkr": "1",
+            "align": "left"
+          },
+          "insert": "*"
+        },
+        {
+          "insert": "自主调整内容偏好",
+          "attributes": {
+            "fontweight": "400",
+            "bold": "true"
+          }
+        },
+        {
+          "insert": "\n"
+        },
+        {
+          "insert": "本次“使用管理助手”还升级了内容偏好管理系统，用户可以使用“减少 - 默认 - 增加”三级调节按钮，更便捷地调节内容权重。",
+          "attributes": {
+            "fontweight": "400"
+          }
+        },
+        {
+          "insert": "\n"
+        },
+        {
+          "insert": "此外，为了让用户更好地控制推荐内容，抖音还提供了“屏蔽设置”和“不感兴趣”功能。用户可以在“使用管理助手”添加“不想看到的内容”；在浏览视频时，也可以长按视频，或点击视频右下角的“分享”按钮，在弹出的菜单中点击“不感兴趣”，算法就会减少此类视频的推荐。",
+          "attributes": {
+            "fontweight": "400"
+          }
+        },
+        {
+          "insert": "\n"
+        },
+        {
+          "insert": "无论选择“探索更多”还是在“调节内容偏好”进行设置，算法都会根据用户需求进行推荐权重的调整，但用户的浏览习惯仍会显著影响后续推荐的内容。",
+          "attributes": {
+            "fontweight": "400"
+          }
+        },
+        {
+          "insert": "\n"
+        },
+        {
+          "insert": "此次全新升级“使用管理助手”，希望帮助用户更直观地了解自身的观看喜好，同时更便捷地对内容类别进行管理。未来，抖音也将继续优化“使用管理助手”功能，与用户共同打造多元、健康的平台环境。",
+          "attributes": {
+            "fontweight": "400"
+          }
+        },
+        {
+          "insert": "\n"
+        }
+      ],
+      "zoneId": "0",
+      "zoneType": "Z"
+    }
+  }
+}

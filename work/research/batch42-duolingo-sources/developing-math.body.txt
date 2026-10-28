@@ -1,0 +1,189 @@
+October 18, 2024
+
+Sammi Siegel
+
+Teaching Owlgebra: developing math on Duolingo
+
+What’s our formula for creating the math course? We’ll tell you!
+
+October 18, 2024
+
+Sammi Siegel
+
+You’ve heard of Spanish or vanish, but what about divide or hide? Last year, Duolingo launched a new Math course in an effort to expand our mission beyond language, into subjects we believe have the power to create new opportunities for our learners. Along the way, our team has discovered that teaching math comes with its own unique challenges—and we’ve been developing a formula that we’re excited to share.
+
+How do we teach language?
+
+In our language courses, each lesson is constructed from knowledge components—you can think of these as words, characters, or phrases. While the prompt and input of a given exercise may change, the knowledge component itself will always be represented as text.
+
+What makes math different?
+
+For math, this gets more complicated. We can’t represent all content in the same way, and how we teach depends on the context.
+
+For example, addition lessons may represent the equation using countable blocks, integers, and word problems. Rectangular perimeter lessons—while technically rooted in addition—look significantly different because the context has changed.
+
+Geometry adds a whole other layer of complexity. Addition and perimeter are based on numbers and equations—but what about classifying a trapezoid? We need new visuals and exercises to explain these concepts!
+
+So, “knowledge components” in math don’t have a consistent form like they do in language. Instead, visuals and exercises need to change depending on the lesson’s difficulty and context.
+
+This introduces some interesting engineering challenges, particularly in how we can develop math content at scale.
+
+Content at scale
+
+For numeric content, we scale difficulty by changing both visuals and number ranges. For example, in our addition unit, each skill gets progressively harder by increasing the max result from 10 to 100 to 500.
+
+This means our visuals also need to scale across that range. This results in hundreds of variations for those countable blocks alone! Multiply that by all of our different content domains, and that number quickly grows into the thousands.
+
+To solve this, we dynamically draw many of our visuals in code. We took advantage of how these assets can build off each other—e.g., changing the shape of a fraction piece. One class can programmatically generate thousands of variations—allowing us to easily swap design components, change colors, add localized text, and more.
+
+Case study: area and perimeter
+
+Through dynamic drawing, we use the same class (`GriddedGraphView`) to generate all of the visuals for teaching area, perimeter, decimals, shapes, and coordinates.
+
+On iOS, the base is a CAShapeLayer with a path that draws a dynamic M by N grid. We can add masks, lines, buttons, and labels anywhere along the grid to adapt to new content. This same view also serves as the foundation for some interactive challenges, like building quadrilaterals.
+
+Evolving with Rive
+
+This approach worked for a while, but some of our visuals became very difficult to draw programmatically. A few even involved mathematical proofs, written in code comments, that gave me bad flashbacks to high school trigonometry. Math was also initially developed just for iOS, so the Swift code doesn’t immediately scale to other platforms.
+
+As we ported to Android (launched last month!), we turned to Rive as a new cross-platform solution. Rive is an animation tool that allows for programmatic inputs—so we maintain the same functionality while offloading the development time to design. Plus, our in-house Creative Technologists make the animations even more delightful!
+
+This lets us support more complex interactions without as much engineering burden—like the wave of water in our liquid volume challenge, or an actual fraction pie.
+
+What else is different?
+
+I remember sitting in Math class—probably that same high school trigonometry one—and thinking to myself, “when am I ever going to use this?”
+
+While many of us may not need SOHCAHTOA on the regular, there are a lot of other math concepts that we do need to use every day. Like counting money, measuring ingredients, using a ruler, or cutting a pizza pie into even slices!
+
+Math uses unique exercise types to cover this kind of real-world contextualization—to make our content feel more relevant to you, our learners. And of course, many of these are implemented in Rive!
+
+In conclusion…
+
+Duolingo’s mission has always been to develop the best education in the world and make it universally available—and Math has become an integral part of that! Each new subject we develop presents its own unique challenges and opportunities for teaching, and it’s been fun to figure out how to scale math education to millions of learners.
+
+If you like solving these kinds of problems or making math puns… we’re hiring!SEE OUR OPEN ROLES
+
+TAGS
+
+Math
+
+Engineering
+
+Life at Duolingo
+
+Features
+
+SHARE ARTICLE
+
+RELATED ARTICLES
+
+About us
+
+Courses
+
+Mission
+
+Approach
+
+Efficacy
+
+Team
+
+Research
+
+Careers
+
+Brand guidelines
+
+Press
+
+Investors
+
+Contact us
+
+Products
+
+Duolingo
+
+Duolingo English Test
+
+Duolingo for Business
+
+Super Duolingo
+
+Store
+
+Apps
+
+Duolingo Apps
+
+Duolingo for Desktop
+
+Duolingo for Android
+
+Duolingo for iOS
+
+Help and support
+
+Duolingo FAQs
+
+Duolingo English Test FAQs
+
+Status
+
+Privacy and terms
+
+Community guidelines
+
+Terms
+
+Privacy
+
+Respecting your "do not sell my personal information" rights
+
+Social
+
+Blog
+
+Instagram
+
+Facebook
+
+YouTube
+
+TikTok
+
+LinkedIn
+
+X
+
+Site language:
+
+Deutsch
+
+English
+
+Español
+
+Français
+
+Português
+
+日本語
+
+한국어
+
+©2026 Duolingo. All rights reserved.
+
+About us
+
+Press
+
+Careers
+
+Help and support
+
+Privacy and terms
+
+©2026 Duolingo. All rights reserved.

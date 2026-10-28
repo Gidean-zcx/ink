@@ -1,0 +1,18 @@
+[
+  {
+    "type": "TimeoutError",
+    "message": "Locator.click: Timeout 6000ms exceeded.\nCall log:\n  - waiting for get_by_role(\"link\", name=\"GET STARTED\", exact=True).first\n"
+  },
+  {
+    "type": "TimeoutError",
+    "message": "Locator.click: Timeout 6000ms exceeded.\nCall log:\n  - waiting for get_by_text(\"GET STARTED\", exact=True).first\n"
+  },
+  {
+    "type": "TimeoutError",
+    "message": "Locator.hover: Timeout 6000ms exceeded.\nCall log:\n  - waiting for get_by_text(\"thé\", exact=True)\n"
+  },
+  {
+    "type": "TimeoutError",
+    "message": "Locator.click: Timeout 6000ms exceeded.\nCall log:\n  - waiting for get_by_role(\"button\", name=\"CONTINUE\", exact=True)\n"
+  }
+]

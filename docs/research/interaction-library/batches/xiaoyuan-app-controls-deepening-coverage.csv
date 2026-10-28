@@ -1,0 +1,7 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M028-07,M-028,听算：听题、语音回答与有限时重试,D2,E-XYCD-01;E-XYAC-05,选范围/题量→听题/重播→语音→对错；作者述倒计时内可再试,超时、噪声误判、拒麦、完成及中断保存未知；未测音频,static_reference_only,false,cases/M-028-xiaoyuan-ai.md,2026-10-27
+F-M028-08,M-028,趣味识字：学读练、反馈与字卡,D2,E-XYCD-01;E-XYAC-07,单元地图→学/读/练；示范/录音星级，选字/缺字；字卡与继续,解锁门槛、答错/跳过、重试上限和退出恢复未知；无儿童实测,static_reference_only,false,cases/M-028-xiaoyuan-ai.md,2026-10-27
+F-M028-09,M-028,背古诗：提示、重背与录音成绩,D2,E-XYCD-01;E-XYAC-08,选诗开始→呈字/提示/重背→错字/提示次数/用时/分数→回放或再背,提示扣分公式、误识别修正、漏录、录音删除/导出和恢复未知,static_reference_only,false,cases/M-028-xiaoyuan-ai.md,2026-10-27
+F-M028-10,M-028,背单词：学习、辨认、提交与错题重练,D2,E-XYCD-01;E-XYAC-11,计划新学/复习→释义图音→选图/释义提交→反馈继续→重练→统计；补字母仅作者文字,首次与重练正确率口径、复习调度、改计划数据与退出保存未知；未证学习效果,static_reference_only,false,cases/M-028-xiaoyuan-ai.md,2026-10-27
+F-M028-11,M-028,申请注销手机软件账号与学习记录,D2,E-XYAI-04,政策我→设置→关于→注销→确认→二次确认；列检查/练习/榜/金币范围,未执行；失败/撤回/恢复及具体时限未知；关联产品需分别处理,not_observed,false,cases/M-028-xiaoyuan-ai.md,2026-10-27
+F-M028-12,M-028,获取个人资料的截图副本,D2,E-XYAI-04,政策我→头像框→截屏；资料访问/副本局部路径,非完整学习记录导出；格式、范围、回灌/备份恢复未知，也不证明全产品没有其他导出,not_observed,false,cases/M-028-xiaoyuan-ai.md,2026-10-27

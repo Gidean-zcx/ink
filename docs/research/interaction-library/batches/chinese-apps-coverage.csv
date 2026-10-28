@@ -1,0 +1,27 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M013-01,M-013,手机阅读、查词、划线与AI问书,D2,E-WRD-01;E-WRD-07;E-WRCD-02,仅2024历史AI子链D2：搜索问题→AI问书→回答及来源→文档称可跳书中段落；正文选区入口有静态图,当前版本沿用性、查词结果/划线保存撤销、AI取消失败/返回原位仍未知；2024 OS与构建未给,static_reference_only,false,cases/M-013-weread.md,2026-10-27
+F-M013-02,M-013,听书与导入书阅读,D1,E-WRD-01;E-WRD-08,10.2.2公告导入书独立字号；定时听书公告；读听分项统计为条件字段,格式导入/重复与失败、离线、续播和读听位置映射；分项字段缺失不代表零,not_observed,false,cases/M-013-weread.md,2026-10-27
+F-M013-03,M-013,Skill搜索与书架读取,D2,E-WRD-02;E-WRD-03;E-WRD-04;E-WRD-05;E-WRCD-04,搜索类别/分页/空数据；书架含专辑及文章入口；推荐与相似推荐游标不同，后者显式count/maxIdx并续sessionId,是否覆盖所有私有内容和写动作、推荐服务实际可用性；未调用接口,not_observed,false,cases/M-013-weread.md,2026-10-27
+F-M013-04,M-013,Skill阅读位置与章节读取,D2,E-WRD-03;E-WRD-06,0/1—99/100进度；输出规则要求100且有finishTime才标读完；目录分层与付费状态,100但finishTime缺失的真实状态、位置回写、读听切换与同步冲突未知,not_observed,false,cases/M-013-weread.md,2026-10-27
+F-M013-05,M-013,Skill划线与想法整理导出,D2,E-WRD-03;E-WRD-07,统计含书签而内容排除；reviewCount已含个人点评；notebooks至hasMore=0、mine用synckey；公开点评与个人内容分开,导出文件保存/备份完整性、修改回写、删除撤销；热门top20与热度不替代个人全量,not_observed,false,cases/M-013-weread.md,2026-10-27
+F-M013-06,M-013,Skill周期阅读统计,D2,E-WRD-03;E-WRD-08,默认月；固定自然周期拼接，边界无日明细须标近似；自然日日均；时段从6时起，作者时长是格式化字符串,离线补传/时区/分项保真；排行和读听字段可缺省；字段表与全部按秒的概括存在例外,not_observed,false,cases/M-013-weread.md,2026-10-27
+F-M013-07,M-013,注销等待期与撤回,D2,E-WRD-09,15天内登录撤回；最终注销不可恢复,进入注销页面路径、备份完整性,not_observed,false,cases/M-013-weread.md,2026-10-26
+F-M014-01,M-014,手机阅读、查词和划线,D1,E-IRD-01,中国区商店8.6.2列版式能力；未取得手机选书/选文操作说明,查词/划线创建、撤销、回原文及选择范围未知；不以评论或墨水屏规则补手机链,not_observed,false,cases/M-014-ireader.md,2026-10-27
+F-M014-02,M-014,手机本地文件与同步,D1,E-IRD-01;E-IPAD-01,商店列epub/txt/pdf与同步；2024政策区分本地上传、章节记录和分享笔记服务器存储,导入菜单/解析反馈、重复/损坏/取消、逐对象同步、换机重装及原件恢复未知,not_observed,false,cases/M-014-ireader.md,2026-10-27
+F-M014-03,M-014,手机AI辅助与听书,D1,E-IRD-01;E-IRD-02;E-IPAD-01,书童政策只说明输入文本与回答；8.5.1标点停顿/8.5.2外部音乐中断为历史修复声明，8.5.9仅部分音色升级,AI入口/引用/纠错/保存、听书启停/换声/定时/读听定位、离线与后台恢复均未闭合,not_observed,false,cases/M-014-ireader.md,2026-10-27
+F-M014-04,M-014,墨水屏版书架同步后刷新,D2,E-IRD-03,仅MatePad Paper适配版：同步后切其他页回书架刷新；进度可延迟；桌面/适配App书架和不同文件须分辨,备份与同步启动入口、原件下载、账号冲突/重复书合并和重装恢复未知；不套手机,not_observed,false,cases/M-014-ireader.md,2026-10-27
+F-M014-05,M-014,墨水屏版PDF笔迹重新显示,D2,E-IRD-03,仅适配版：三点展开旧笔迹、竖排不显示、PDF原页/重排独立、笔记模式显示；未标构建FAQ称无逐笔撤销,擦除后恢复、导出/跨端原稿、后续版本撤销能力未知；分屏退出不证明保存完成,not_observed,false,cases/M-014-ireader.md,2026-10-27
+F-M032-01,M-032,行测模考报名与岗位锁定,D2,E-FENB-03;E-FBCD-03;E-FBCD-07,FAQ通用卷、岗位导入与锁定；2019图有职位编辑/报名结果；无法入场或答题仅引导客服,现行构建入口、报名失败、答题与交卷恢复；FAQ内容时间非版本,static_reference_only,false,cases/M-032-fenbi.md,2026-10-26
+F-M032-02,M-032,错过行测模考后补练及看报告,D2,E-FENB-03;E-FBCD-03;E-FBCD-09,补练有分无职位排名；2020托管帮助：年份/国省考季→折线场次→查看报告,具体托管租户官方反链；当前入口、空报告/失败、考中恢复与补交,not_observed,false,cases/M-032-fenbi.md,2026-10-26
+F-M032-03,M-032,北京行测真题选择到解析,D1,E-FENB-07,地区和年份选择,答案修改、交卷、即时错误反馈,not_observed,false,cases/M-032-fenbi.md,2026-10-26
+F-M032-04,M-032,错题重做与移出（规则分来源）,D1,E-FENB-05;E-FENB-06;E-FBCD-04;E-FBCD-05;E-FBCD-08;E-FBPC-01;E-FBPC-03,官方备考文章仅功能声明；2020目录四方块与2026“我的”入口并列；2019作者称重答正确移出/错误看解析，科目构建未明；2022行测作者描述做题时间/题型选择,现行控件/执行结果仍未核；历史文字不证当前自动移出，未见回执/撤销/空列表/历史答案口径；2022自报8.0.1未官方核定；清理与同步未知,static_reference_only,false,cases/M-032-fenbi.md,2026-10-27
+F-M032-05,M-032,收藏疑难题并回看,D1,E-FENB-06;E-FBCD-05;E-FBCD-08,文章声明练习页或我的收藏；2020托管目录按考试类别列我的收藏,收藏保存反馈、取消与撤销、重复与同步；当前构建与具体租户官方反链,not_observed,false,cases/M-032-fenbi.md,2026-10-26
+F-M032-06,M-032,套卷计时与提交后耗时,D1,E-FENB-08;E-FBCD-06,计时模式/模块耗时是备考文章声明；不可暂停未证为技术规则,现行套卷答题卡、改选/跳题、确认/漏题/超时、后台/断网与重复提交,not_observed,false,cases/M-032-fenbi.md,2026-10-26
+F-M032-07,M-032,公基模考交卷后结果与解析课,D2,E-FENB-04,个人分先出、整体分后出；解析课另购,行测是否相同、付费退款与断流,not_observed,false,cases/M-032-fenbi.md,2026-10-26
+F-M032-08,M-032,课程离线与PC机考范围,D1,E-FENB-01;E-FENB-02;E-FBCD-01;E-FBCD-02,课程离线；商店iOS6.19.9与下载页6.19.7并存；PC版本独立,题库/草稿离线、缓存清理及端间进度同步,not_observed,false,cases/M-032-fenbi.md,2026-10-26
+F-M033-01,M-033,小车科一练习与错误反馈,D4,E-JKB-02;E-JKB-03;E-JKCD-01,网页错答停留、解析手动展开；改点正确不改首次记录；正确自动前进可取消；返回保留当次选答。,只核匿名顺序网页三题；App题型、声音、错题集合再练、离线及更多分支未知。,observed_browser_sequence,true,cases/M-033-jiakaobaodian.md,2026-10-26
+F-M033-02,M-033,错题与收藏再练,D1,E-JKB-02;E-JKB-03;E-JKB-04;E-JKCD-02,错题/收藏入口；匿名网页点收藏出现登录框，未完成收藏。,登录后加入/移出、错题再练、撤销与题目更新未知；入口前置观察不等于收藏链完成。,not_observed,false,cases/M-033-jiakaobaodian.md,2026-10-26
+F-M033-03,M-033,Web计时模拟与交卷,D4,E-JKB-05;E-JKCD-04,北京匿名模拟页倒计时运行；错/对均前进；交卷通用确认可取消；返回已答题显示结果；确认后结果中心空白。,未见成绩/复盘/再做一套；完整100题、到零、中断恢复、记录保存与App未知。,observed_browser_sequence,true,cases/M-033-jiakaobaodian.md,2026-10-26
+F-M033-04,M-033,App上传并在Web看云端记录,D2,E-JKB-04;E-JKCD-02,原文档App同步→立即同步→Web返回查看；匿名网页点云同步实际先要求登录。,未登录或同步；成功提示、冲突、重装后恢复仍未知。,not_observed,false,cases/M-033-jiakaobaodian.md,2026-10-26
+F-M033-05,M-033,App AI讲解与陪练,D1,E-JKB-01,开发者公告AI陪练/错题分析,生成入口、引用、错误反馈和保存,not_observed,false,cases/M-033-jiakaobaodian.md,2026-10-26
+F-M033-06,M-033,题库更新与版本边界,D1,E-JKB-01;E-JKB-02,App版本与题库更新分开,更新下载/回滚/旧题ID迁移,not_observed,false,cases/M-033-jiakaobaodian.md,2026-10-26

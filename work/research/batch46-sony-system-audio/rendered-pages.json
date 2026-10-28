@@ -1,0 +1,44 @@
+[
+  {
+    "pdf_page": 27,
+    "path": "work/research/batch46-sony-system-audio/manual-p27.png",
+    "sha256": "2d98e46e4b03013fd2ee7deaca3089a4e738924ab308903e006b0812787e9a0b",
+    "bytes": 122545
+  },
+  {
+    "pdf_page": 29,
+    "path": "work/research/batch46-sony-system-audio/manual-p29.png",
+    "sha256": "44ee52ff6010b954c7490fefe4bc680e9bdc1759b3833614da775a76ea798473",
+    "bytes": 126585
+  },
+  {
+    "pdf_page": 32,
+    "path": "work/research/batch46-sony-system-audio/manual-p32.png",
+    "sha256": "78076abc1f78f9e2d1cbb4af2f7d2b4bc3825193d0faadf6a77e0765499d9f10",
+    "bytes": 58231
+  },
+  {
+    "pdf_page": 53,
+    "path": "work/research/batch46-sony-system-audio/manual-p53.png",
+    "sha256": "feb61d7092ec0ae39cb640b2598596e08f8ea44c3fc3bf886f9cddb596bd078a",
+    "bytes": 75368
+  },
+  {
+    "pdf_page": 56,
+    "path": "work/research/batch46-sony-system-audio/manual-p56.png",
+    "sha256": "121a076415b25cd726884dcfa802bf9f87858e279ff6f79222e472c1581e9206",
+    "bytes": 96283
+  },
+  {
+    "pdf_page": 57,
+    "path": "work/research/batch46-sony-system-audio/manual-p57.png",
+    "sha256": "60b245168d630e080d695199ca34e641e1ee4e260bab9cfdd7bc66e9dca9bb13",
+    "bytes": 103416
+  },
+  {
+    "pdf_page": 113,
+    "path": "work/research/batch46-sony-system-audio/manual-p113.png",
+    "sha256": "584dcfc0fb336368dc4713f271aa3eb53c52c78c4a116b50d27c0d833270ee8f",
+    "bytes": 97350
+  }
+]

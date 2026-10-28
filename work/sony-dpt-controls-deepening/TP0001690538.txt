@@ -1,0 +1,6 @@
+The Digital Paper screen can be displayed on the computer using the Digital Paper App.
+Connect the computer to the Digital Paper.
+Launch the Digital Paper App on the computer.
+Click [Screen capture].
+Note
+When the Bluetooth connection is established, the display speed becomes slower compared to USB connection or Wi-Fi connection.

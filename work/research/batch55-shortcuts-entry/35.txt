@@ -1,0 +1,9 @@
+Open and create a shortcut using a URL scheme on iPhone or iPad
+The Shortcuts URL scheme allows you to open the app, create, run, or edit a shortcut, and interact with the Gallery in the Shortcuts app. URL schemes can be used anywhere a URL can be used—your own app, in a web browser, or in the command line.
+Open Shortcuts using a URL scheme
+Open the URL shortcuts:// to launch the app to the state when it was last used.
+Create a new shortcut using a URL scheme
+Open the URL shortcuts://create-shortcut to jump to the shortcut editor and to create a new shortcut.
+Open a specific shortcut using a URL scheme
+You can launch the app to a particular shortcut in your collection.
+Open a URL with the following structure: shortcuts://open-shortcut?name=[name], and provide the name of the shortcut in the name parameter.See alsoIntro to variables in Shortcuts on iPhone or iPad

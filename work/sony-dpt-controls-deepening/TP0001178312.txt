@@ -1,0 +1,15 @@
+Using the Digital Paper App, you can add a note template to the Digital Paper. You can also delete templates and change their names.
+Connect the computer to the Digital Paper.
+Launch the Digital Paper App on the computer.
+Click [Settings] to display the [Settings] screen.
+To add a note template
+Click [Add] under [Note template].
+Click [Select file], and then select the PDF file you want to use as a template from your computer. Enter a name for the template, then click [OK].
+To delete a note template
+Select a template, and click [Delete].
+To change the name of a template
+Select a template, and click [Rename]. Then enter a name for the template, and click [OK].
+Note
+PDF files that are password protected cannot be added as templates.
+Hint
+For PDF files that have multiple pages, only the first page will be registered as a template.

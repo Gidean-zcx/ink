@@ -1,0 +1,3 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M029-04,M-029,按教材核查整课汉字,D1,E-IHD-01;E-IHCD-01,年级/书册/课文范围；iOS4.4.0/2026-02-05宣布部编版地图；先单字后整课测验,当前4.5.2具体入口、错答/提示/补练、结算、退出恢复,not_observed,false,cases/M-029-ihuman.md,2026-10-26
+F-M031-04,M-031,从 Practice 回访 Adventures,D2,E-DAD-01,底部杠铃；未显示时从三点菜单；课程可用条件,内容列表；未完成任务；重玩结算；中途恢复；Speaking 范围,not_observed,false,cases/M-031-duolingo-adventures.md,2026-10-26

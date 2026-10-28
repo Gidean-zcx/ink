@@ -1,0 +1,66 @@
+manual_item,printed_page,pdf_page,checked_scope,flow_ids,evidence_ids,gap,body_pages_reread,controls_or_tasks,read_basis,checked_on
+Safety Precautions,5,5,目录定位；正文未作任务分析,,E-PBCD-01,完整操作、确认/取消、错误、数据保留与恢复未逐项闭环。,,,prior_inventory_scope_inherited,2026-10-27
+Appearance,9,9,目录定位；正文未作任务分析,,E-PBCD-01,完整操作、确认/取消、错误、数据保留与恢复未逐项闭环。,,,prior_inventory_scope_inherited,2026-10-27
+Technical Specifications,10,10,目录定位；正文未作任务分析,,E-PBCD-01,完整操作、确认/取消、错误、数据保留与恢复未逐项闭环。,,,prior_inventory_scope_inherited,2026-10-27
+Getting Started,11,11,已读章节/功能目录；未单列完整任务,,E-PBCD-01,完整操作、确认/取消、错误、数据保留与恢复未逐项闭环。,,,prior_inventory_scope_inherited,2026-10-27
+Charging Battery,11,11,充电与USB模式文字复读；未单列完整任务,,E-PBK-01,供电模式措辞不推所有组合；充电时长/失败/续航未测,11,设备开机；已有开机连接PC提供PC link/Charge,existing_local_manual_body_reread_with_bounded_static_pages,2026-10-27
+Device management,12,12,D2对应任务/仍有缺口,F-M003-01,E-PBK-01,锁屏/关闭/关机不同；后台和未存内容影响未知,12,开/关/锁/10–12秒重启；任务管理关闭单应用,existing_local_manual_body_reread_with_bounded_static_pages,2026-10-27
+Main menu overview,13,13,D2对应任务/仍有缺口,F-M003-01,E-PBCD-01,13图含Settings，21默认文字含Notes；不自行统一。,,,prior_inventory_scope_inherited,2026-10-27
+Gestures,15,15,系统控件已读；不是新增独立任务,F-M003-01,E-PBK-01,普通手势不套读屏；实际触发/冲突未知,15,点按/长按/滑动/快速划动/捏合,existing_local_manual_body_reread_with_bounded_static_pages,2026-10-27
+Working with On-Screen Keyboard,16,16,系统输入局部任务补证,F-M003-01,E-PBK-01;E-PBRC-01,space图与语言标签文字不同；输入/取消/草稿保留未知,16–17、84,长按特殊字符；模式切换；globe/最多3布局；密码眼睛,existing_local_manual_body_reread_with_bounded_static_pages,2026-10-27
+Brightness,17,17,D2对应任务/仍有缺口,F-M003-25,E-PBK-01;E-PBRC-01,时间前提；拒绝切手动、恢复/功耗未核,17–18、49、78–79,通知调光/Menu长按；自动/手动；时段图确认应用,existing_local_manual_body_reread_with_bounded_static_pages,2026-10-27
+Connecting to the Internet,18,18,D2对应任务/仍有缺口,F-M003-18,E-PBK-01,错密/门户/取消/重连和真实联网结果未核,18–19、69,已知自动/未知选网；安全密码；隐藏SSID/安全方式/Connect；More,existing_local_manual_body_reread_with_bounded_static_pages,2026-10-27
+Configuring Bluetooth pairing,19,19,D2对应任务/仍有缺口,F-M003-09,E-PBCD-01,完整操作、确认/取消、错误、数据保留与恢复未逐项闭环。,,,prior_inventory_scope_inherited,2026-10-27
+Applications,21,21,D2对应任务/仍有缺口,F-M003-01,E-PBCD-01,完整操作、确认/取消、错误、数据保留与恢复未逐项闭环。,,,prior_inventory_scope_inherited,2026-10-27
+Library [Applications],22,22,D2对应任务/仍有缺口,F-M003-21,E-PBK-01,入口不等于完整合集/删除/收藏链,22、63–65,进入书库；分类/排序/视图和长按菜单,existing_local_manual_body_reread_with_bounded_static_pages,2026-10-27
+Store,22,22,D2对应任务/仍有缺口,F-M003-19,E-PBK-01,未购买；权益、下载和可读状态分别未知,22–23,授权/Buy/支付选项；My Purchases/下载/Library-Downloads/Recent Events,existing_local_manual_body_reread_with_bounded_static_pages,2026-10-27
+Browser,24,24,D2对应任务/仍有缺口,F-M003-20,E-PBK-01,精确返回点/网页错误/清除确认和保存未核,24–25、59,地址/Enter；缩放/滚动；历史/下载/收藏/清除；Exit回阅读,existing_local_manual_body_reread_with_bounded_static_pages,2026-10-27
+Notes,25,25,D2对应任务/仍有缺口,F-M003-03,E-PBCD-01,扩展名、import入口和回导可编辑性未给出；本地评论编辑与导出分开。,,,prior_inventory_scope_inherited,2026-10-27
+General,28,28,正文功能域；子项分别登记,,E-PBK-01,无整个应用集合完成声明,28–30,日历/计算/Gallery/Photo Frame/RSS,existing_local_manual_body_reread,2026-10-27
+Calendar & Clock,28,28,正文已读；未单列任务,,E-PBK-01,不含事件增改删或提醒流程,28,上/下月；返回本月,existing_local_manual_body_reread,2026-10-27
+Calculator,28,28,功能声明；未单列任务,,E-PBK-01,无按键、输入错误和结果保存流程,28,数制/三角/对数/幂/逻辑,existing_local_manual_body_reread,2026-10-27
+Gallery,28,28,正文已读；未单列任务,,E-PBK-01,保存确认/退出及原图变化未核,28,Gallery文件夹图片；全屏触摸进编辑；旋转/信息/Power-off Logo；缩放选区,existing_local_manual_body_reread,2026-10-27
+Photo Frame,28,28,D2对应任务/仍有缺口,F-M003-15,E-PBK-01;E-PBACD-01,列表删除不推定文件清除；退出、断点和电源规则缺,28–30,New Playlist/Continue/Create；＋/Add Photos/Play；长按菜单；齿轮；日期/间隔/Shuffle/Display mode,existing_local_manual_body_reread,2026-10-27
+RSS News,30,30,D2对应任务/仍有缺口,F-M003-08,E-PBCD-01,失败URL、认证、取消/断网、重复更新、删源与档案范围未知。,,,prior_inventory_scope_inherited,2026-10-27
+Music Player,30,30,D2对应任务/仍有缺口,F-M003-17,E-PBK-01;E-PBRC-01,移出列表与Remove from the device矛盾；背景与恢复未知,30–32,文件/目录建列表，排序保存清空；播放模式/音量/曲目；Exit/Collapse,existing_local_manual_body_reread_with_bounded_static_pages,2026-10-27
+Audiobooks,32,32,D2对应任务/仍有缺口,F-M003-07,E-PBCD-01,Contents/Bookmarks只有部分入口；时间书签全链、章节和恢复未知。,,,prior_inventory_scope_inherited,2026-10-27
+PocketBook x Libby,34,34,D2对应任务/仍有缺口,F-M003-10,E-PBK-01;E-PBACD-02,需网络；在线音频；配额/到期文件及删除馆副作用未核,34–39,查馆/国家筛选/卡登录或Preview；Borrow/Place Hold/Return Early；馆卡列表/换馆/移除馆,existing_local_manual_body_reread,2026-10-27
+Games,40,40,正文功能域；不是独立完成任务,,E-PBK-01,玩法规则/错误反馈/局内恢复未给全链,40–41,Klondike/Sudoku/Chess/Scribble/Coloring,existing_local_manual_body_reread,2026-10-27
+Klondike,40,40,仅功能声明,,E-PBK-01,无牌局步骤或胜负反馈,40,经典接龙,existing_local_manual_body_reread,2026-10-27
+Sudoku,40,40,局部输入控件已读；未单列任务,,E-PBK-01,未给错误判定、提示/清空、完成奖励、退出恢复,40,选空格；底部选数字或候选标签,existing_local_manual_body_reread,2026-10-27
+Chess,40,40,仅功能声明,,E-PBK-01,棋子选择、非法步/悔棋、结束保存未核,40,对朋友/设备；设备10难度,existing_local_manual_body_reread,2026-10-27
+Scribble,40,40,D2对应任务/仍有缺口,F-M003-14;F-M003-03,E-PBK-01;E-PBACD-03,New/保存同形图标；格式、退出自动保存、回导/恢复未核,40–41,Palette/Text/Font/Pencil/Eraser；Back/New/Delete；My Pictures保存,existing_local_manual_body_reread,2026-10-27
+Coloring,41,41,功能及保存声明；未单列任务,,E-PBK-01,位置、恢复编辑、撤销及保存失败未知；不套Scribble,41,给黑白图上色；文档称自动保存,existing_local_manual_body_reread,2026-10-27
+Services,41,41,功能域局部补读；非一个完整功能,F-M003-06;F-M003-24,E-PBK-01,不能据一服务推全服务恢复,41–42、70–71,邮件接收与Dropbox指定目录同步分开,existing_local_manual_body_reread_with_bounded_static_pages,2026-10-27
+Dropbox PocketBook,41,41,D2对应任务/仍有缺口,F-M003-24,E-PBK-01,删除传播/冲突/换目录/退出副本和恢复未知,41–42、71,授权建目录/自动同步；手动同步/改Sync Folder；仅指定云目录,existing_local_manual_body_reread_with_bounded_static_pages,2026-10-27
+Send-to-PocketBook,43,43,D2对应任务/仍有缺口,F-M003-06,E-PBCD-01,43/44默认目录名不一致，实际Download folder待核；未发送。,,,prior_inventory_scope_inherited,2026-10-27
+Reading Books,46,46,D2对应任务/仍有缺口,F-M003-21,E-PBK-01,无实测恢复或完整搜索,46–50,最近/书库打开；重开位置文档描述；计页中部分不可用,existing_local_manual_body_reread_with_bounded_static_pages,2026-10-27
+Gestures in Reading Mode,47,47,D2对应原系统任务/仍有缺口,F-M003-01,E-PBK-01,当前配置/取消/持久化未核,47、81–83,默认示意与可配置区域/滑动/拖动；勾号确认,existing_local_manual_body_reread_with_bounded_static_pages,2026-10-27
+Reading Menu,48,48,D2对应任务/仍有缺口,F-M003-21,E-PBK-01;E-PBRC-01,左下13含义未释；搜索/误触/退出结果未知,48,中央/Menu打开；滑条/数字跳页；搜索等仅入口,existing_local_manual_body_reread_with_bounded_static_pages,2026-10-27
+Adjust SMARTlight and frontlight Brightness in reading mode,49,49,D2对应任务/仍有缺口,F-M003-25;F-M003-01,E-PBK-01;E-PBRC-01,未见实际询问弹窗及拒绝分支,49、83,边缘调光；自动模式先询问关闭；边缘可另映射,existing_local_manual_body_reread_with_bounded_static_pages,2026-10-27
+Contents,49,49,D2对应任务/仍有缺口,F-M003-21,E-PBK-01,重排/定位/异常未核；不把所有菜单各当功能完成,49–50,章节/书签/笔记/书信息；层级展开折叠/上下文,existing_local_manual_body_reread_with_bounded_static_pages,2026-10-27
+Bookmarks,50,50,D2对应任务/仍有缺口,F-M003-21,E-PBK-01,确认界面/取消/误删恢复/同步未核,50,右上折角添加；再点并确认删除；菜单亦可操作,existing_local_manual_body_reread_with_bounded_static_pages,2026-10-27
+Dictionary,50,50,D2对应任务/仍有缺口,F-M003-02,E-PBCD-01,完整操作、确认/取消、错误、数据保留与恢复未逐项闭环。,,,prior_inventory_scope_inherited,2026-10-27
+Note,53,53,D2对应任务/仍有缺口,F-M003-03,E-PBCD-01,完整操作、确认/取消、错误、数据保留与恢复未逐项闭环。,,,prior_inventory_scope_inherited,2026-10-27
+Voice,55,55,D2对应任务/仍有缺口,F-M003-05,E-PBCD-01,55控制与自动翻页明确；后台/退出恢复、格式顺序未知。,,,prior_inventory_scope_inherited,2026-10-27
+Settings [Reading Books],56,56,D2对应任务/仍有缺口,F-M003-22,E-PBK-01;E-PBRC-01,PDF重排可能缺图表；保存/切引擎定位未知,56–59,排版/原书页与屏数/重算；PDF模式/裁边/Reflow/引擎,existing_local_manual_body_reread_with_bounded_static_pages,2026-10-27
+Following Links,59,59,D2对应任务/仍有缺口,F-M003-20,E-PBK-01,返回精确位置和失败网页未知,59,书内链接模式左上退出；外链浏览器Exit回阅读,existing_local_manual_body_reread_with_bounded_static_pages,2026-10-27
+Loading Files,59,59,D2对应任务/仍有缺口,F-M003-23;F-M003-04;F-M003-06,E-PBK-01,microUSB旧字样不改型号；旧Adobe网页流程不当当前指南,59–61,USB PC link/复制/安全移除；ACSM/授权/整书下载,existing_local_manual_body_reread_with_bounded_static_pages,2026-10-27
+Library [Reading Books],63,63,D2对应任务/仍有缺口,F-M003-21,E-PBK-01,整理入口不代表持久化；已读不当掌握,63–65,分组/排序/三视图；长按已读/合集/收藏/删除/上传等,existing_local_manual_body_reread_with_bounded_static_pages,2026-10-27
+PocketBook Cloud,65,65,D2对应任务/仍有缺口,F-M003-04,E-PBCD-01,同步进度仅PDF/EPUB/FB2；删除条目再现不推定自动重下载；他端/冲突未知。,,,prior_inventory_scope_inherited,2026-10-27
+Settings [system],69,69,D2对应任务/仍有缺口,F-M003-01,E-PBK-01,不将总则套Reset/Format延迟执行,69,通知面板Settings；退出节应用更改,existing_local_manual_body_reread,2026-10-27
+Wi-Fi,69,69,D2对应任务/仍有缺口,F-M003-18,E-PBK-01,真实连通、错密/取消/重连未知,18–19、69,Network Access/扫描与列表；隐藏网络/参数/连接,existing_local_manual_body_reread_with_bounded_static_pages,2026-10-27
+Bluetooth,69,69,D2对应任务/仍有缺口,F-M003-09;F-M003-01,E-PBK-01,默认不可见为手册描述；外设/音频适配未测,69–70,ON/OFF/Visible；HID按钮在Personalize/Key mapping新增并映射,existing_local_manual_body_reread,2026-10-27
+Accounts and Synchronization,70,70,局部正文与对应任务；未全服务验证,F-M003-04;F-M003-06;F-M003-23;F-M003-24,E-PBK-01,删除传播/冲突/退出与恢复未知；Adobe移除路径有差异,70–71,邮件接收/Dropbox自动与手动/Adobe授权/Cloud范围分开,existing_local_manual_body_reread_with_bounded_static_pages,2026-10-27
+PIN code,72,72,D2对应任务/仍有缺口,F-M003-11,E-PBK-01,不保证离线找回；实际邮件/重设/客服流程未执行,72–74,恢复邮箱确认；Turn on/Change/Request/Turn off；Wrong PIN/三错Forgot PIN,existing_local_manual_body_reread,2026-10-27
+Accessibility,74,74,D2对应任务/仍有缺口,F-M003-13,E-PBK-01;E-PBACD-04;E-PBACD-05,快捷开关示例非默认；中断/触摸失败、关闭全链未知,74–78,Menu三击；文本大小/粗体/OpenDyslexic；Screen Reader/Shortcut/Voice；焦点/激活/返回手势,existing_local_manual_body_reread,2026-10-27
+Personalize,78,78,部分D2及设置正文复读,F-M003-01;F-M003-12;F-M003-25;F-M003-26,E-PBK-01;E-PBRC-01,普通睡眠Logo规则未知；控件设置不证明性能/隔离,78–84,时段图/Logos/点按勾号确认/滑动拖动/全刷/Startup/档案,existing_local_manual_body_reread_with_bounded_static_pages,2026-10-27
+Languages,84,84,系统输入局部任务补证,F-M003-01,E-PBK-01;E-PBRC-01,语言文字与space图不同；切换保存未核,16–17、84,界面语言/最多3键盘布局；globe切换,existing_local_manual_body_reread_with_bounded_static_pages,2026-10-27
+Date/Time,84,84,局部设置已读；未单列任务,,E-PBK-01,网络失败/回退与内容时间影响未知,84,日期/时间/时区/格式；Synchronize Time/Auto Time Sync,existing_local_manual_body_reread,2026-10-27
+Saving Power,84,84,局部设置已读；未单列任务,,E-PBK-01,只列空闲时长；不推定音频/TTS会阻止或受影响,84,电量显示；Auto screen lock off/5/10分钟；Power off after 10/20/30/60分钟,existing_local_manual_body_reread,2026-10-27
+Maintenance,85,85,D2对应任务/仍有缺口,F-M003-16;F-M003-23,E-PBK-01,USB连接角色不等于已复制；重置细项保留旧缺口,85,USB默认PC link/Charge/每次询问；配置密码/Factory Reset/Demo,existing_local_manual_body_reread_with_bounded_static_pages,2026-10-27
+About Device,85,85,D2对应任务/仍有缺口,F-M003-16,E-PBK-01,格式化除系统文件外删除；恢复/失败范围未核,85–86,设备信息/Memory/格式化；版本/自动检查/下载设置,existing_local_manual_body_reread,2026-10-27
+Firmware Update,87,87,操作正文已读；未执行/未单列任务,,E-PBK-01,保留Abouut、card、SWUDATE.BIN等文案；没有固件下载或刷机,87–88,内存→网络检查；自动/手动更新步骤；版本错误项,existing_local_manual_body_reread,2026-10-27
+Troubleshooting,89,89,错误正文复读；不作已恢复结果,,E-PBK-01,未实测；冻结按键图本轮未看，不凭抽取空白命名按键,89–90,电量/坏书/编码/冻结应用/USB/满存储或文件系统导致保存失败,existing_local_manual_body_reread,2026-10-27
+Customer Support,91,91,目录定位；正文未作任务分析,,E-PBCD-01,完整操作、确认/取消、错误、数据保留与恢复未逐项闭环。,,,prior_inventory_scope_inherited,2026-10-27
+Compliance with International Standards,92,92,目录定位；正文未作任务分析,,E-PBCD-01,完整操作、确认/取消、错误、数据保留与恢复未逐项闭环。,,,prior_inventory_scope_inherited,2026-10-27

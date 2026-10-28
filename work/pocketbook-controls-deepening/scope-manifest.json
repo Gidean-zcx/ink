@@ -1,0 +1,21 @@
+{
+  "modified_cases": [
+    "cases/M-003-pocketbook.md"
+  ],
+  "new_batch_files": [
+    "batches/pocketbook-controls-deepening-evidence.jsonl",
+    "batches/pocketbook-controls-deepening-coverage.csv"
+  ],
+  "artifacts": [
+    "artifacts/pocketbook-controls-deepening/pb743k3-p27.png",
+    "artifacts/pocketbook-controls-deepening/pb743k3-p33.png",
+    "artifacts/pocketbook-controls-deepening/pb743k3-p55.png",
+    "artifacts/pocketbook-controls-deepening/pb743k3-p62.png",
+    "artifacts/pocketbook-controls-deepening/pb743k3-p68.png"
+  ],
+  "inventory": "artifacts/pocketbook-controls-deepening/functional-inventory.csv",
+  "inventory_items": 65,
+  "new_evidence": 7,
+  "new_flows": 3,
+  "old_flow_updates": 6
+}

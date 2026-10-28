@@ -1,0 +1,85 @@
+{
+  "environment": {
+    "browser": "156.0.8078.4",
+    "viewport": {
+      "width": 320,
+      "height": 640
+    }
+  },
+  "action": {
+    "method": "visible_canvas_mouse_click",
+    "target": {
+      "id": "h_102",
+      "x": 143.04265695653854,
+      "y": 465.0132967774399
+    }
+  },
+  "state": {
+    "selected": "h_102",
+    "filter": null,
+    "panelOpen": true,
+    "panelRect": {
+      "x": -140,
+      "y": 0,
+      "width": 460,
+      "height": 640,
+      "top": 0,
+      "right": 320,
+      "bottom": 640,
+      "left": -140
+    },
+    "textRect": {
+      "x": -111,
+      "y": 61,
+      "width": 403,
+      "height": 42,
+      "top": 61,
+      "right": 292,
+      "bottom": 103,
+      "left": -111
+    },
+    "text": "Synthetic highlight B: a later attempt can distinguish recognition from recall.",
+    "canvasRect": {
+      "x": 0,
+      "y": 0,
+      "width": 320,
+      "height": 640,
+      "top": 0,
+      "right": 320,
+      "bottom": 640,
+      "left": 0
+    }
+  },
+  "screenshot": "10-narrow-fresh-panel.png",
+  "sha256": "daad54dbde164902ab7cc13524f04e418175f9a0bb7304a1b1e6dbbc4f836583",
+  "network": [
+    {
+      "url": "file:///home/workspace/reader/work/research/batch36-readwise/synthetic-graph.html",
+      "status": 200
+    },
+    {
+      "url": "https://unpkg.com/force-graph",
+      "status": 302
+    },
+    {
+      "url": "https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap",
+      "status": 200
+    },
+    {
+      "url": "https://unpkg.com/force-graph@1.52.0/dist/force-graph.min.js",
+      "status": 200
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/dmmono/v16/aFTU7PB1QTsUX8KYthqQBA.woff2",
+      "status": 200
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/dmmono/v16/aFTR7PB1QTsUX8KYvumzEYOtbQ.woff2",
+      "status": 200
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/crimsonpro/v28/q5uDsoa5M_tv7IihmnkabARboYE.woff2",
+      "status": 200
+    }
+  ]
+}

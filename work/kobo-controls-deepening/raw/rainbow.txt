@@ -1,0 +1,11 @@
+If you notice that some colour images on your Kobo Libra Colour or Kobo Clara Colour have a "rainbow" effect, you may be able to reduce the rainbow effect by turning on a feature on your eReader.
+Note : Only Kobo Libra Colour and Kobo Clara Colour have colour screens.
+To reduce the rainbow effect:
+While reading, tap the middle of the screen to bring up the Reading Menu.
+Tap the gear icon at the top-right corner of the screen.
+Swipe right on the screen until you see 'Page 2 of 3' at the top-right corner of the screen.
+Beside 'Reduce rainbow effect', select the checkbox beside 'On'. Note : When the 'Reduce Rainbow effect" feature is turned on, it may reduce your eReader's performance or blur some images.
+Tap the close icon at the top-right corner of the screen to resume reading.
+Learn more
+About the Reading Menu
+Adjust font size and change the font style on your Kobo eReader

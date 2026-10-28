@@ -1,0 +1,62 @@
+[
+  {
+    "evidence_id": "E-DRGN-05",
+    "before": {
+      "evidence_id": "E-DRGN-05",
+      "product_id": "M-050",
+      "title": "Child Activity Dashboard",
+      "url": "https://support.kahoot.com/hc/en-us/articles/39935017652125-Child-Activity-Dashboard-your-parent-dashboard-for-Kahoot-Kids",
+      "checked_on": "2026-10-26",
+      "source_type": "official_help",
+      "access_mode": "official_index_text",
+      "version_scope": "Kahoot/Kids cross-app dashboard; Numbers-specific fields untested",
+      "app_build": null,
+      "firmware_version": null,
+      "source_updated_on": null,
+      "locator": "Access; What you see; FAQ",
+      "note": "活动概览不等于能力证明。",
+      "hands_on": false,
+      "visual_observed": false,
+      "archived_artifact": null,
+      "sha256": null,
+      "capture_state": "bibliography_and_short_note_only",
+      "supersedes": null
+    },
+    "after": {
+      "evidence_id": "E-DRGN-05",
+      "product_id": "M-050",
+      "title": "Child Activity Dashboard",
+      "url": "https://support.kahoot.com/hc/en-us/articles/39935017652125-Child-Activity-Dashboard-your-parent-dashboard-for-Kahoot-Kids",
+      "checked_on": "2026-10-26",
+      "source_type": "official_help",
+      "access_mode": "official_index_text",
+      "version_scope": "Kahoot/Kids cross-app dashboard; Numbers-specific fields untested",
+      "app_build": null,
+      "firmware_version": null,
+      "source_updated_on": null,
+      "locator": "Access; What you see; FAQ",
+      "note": "活动概览不等于能力证明。",
+      "hands_on": false,
+      "visual_observed": false,
+      "archived_artifact": null,
+      "sha256": null,
+      "capture_state": "bibliography_and_short_note_only",
+      "supersedes": null,
+      "additional_captures": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "official_search_index_text",
+          "source_updated_on": "2026-10-17",
+          "raw_work_path": "work/dragonbox-controls-deepening/search-profiles.txt",
+          "raw_sha256": "2ecaef1c790e209ba6b4f0662fd391d75475d1fa075cdf7e8dcb67c853bda8be",
+          "locator": "Child Activity Dashboard indexed result; weekly/topic/FAQ sections",
+          "archived_artifact": "artifacts/dragonbox-controls-deepening/source-notes.md",
+          "sha256": "ac0000db47dba4b5206225d17cd95181fa8108daed9be8998e0ef8f100b1683b",
+          "hands_on": false,
+          "visual_observed": false,
+          "access_limitation": "Direct HTTP returned403 and stopped; this is independently returned official indexed text, not origin HTML."
+        }
+      ]
+    }
+  }
+]

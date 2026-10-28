@@ -1,0 +1,7 @@
+Why does my search return no results?
+Check where you’re searching first: articles outside the selected feed, folder, or account section won’t appear in the results. Remove any language, date, or title-only restrictions, then try one distinctive word from the article. Add your other conditions back one at a time.
+Related questions
+How do I search for articles in Inoreader?
+Can I search within a specific feed or folder?
+Can I filter search results?
+How can I combine search conditions?

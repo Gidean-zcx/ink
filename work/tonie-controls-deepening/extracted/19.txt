@@ -1,0 +1,70 @@
+How do I transfer ownership of my Household? – tonies® Support (https://support.tonies.com/hc/en-150/articles/29206380198162-How-do-I-transfer-ownership-of-my-Household)
+citeturn786view2 [wordlim: 200] Crawled: last week; Content type: text/html; Source: open({"ref_id":"turn783search0","lineno":25}); Total lines: 68
+L0: 【0†Skip to main content】
+L1: 
+L2: 【1†Contact us】
+L3: 
+L4: [Input] English (Europe)
+L5: 
+L6: Articles in this section
+L7: 
+L8:   * 【2†How do I transfer ownership of my Household?】
+L9:   * 【3†How to create a my.tonies account】
+L10:   * 【4†How do I invite other members into my Household?】
+L11:   * 【5†How do I manage Household members permissions?】
+L12:   * 【6†How do I change the name of my Household?】
+L13:   * 【7†How do I remove a Toniebox from my Household?】
+L14:   * 【8†I'm having trouble logging in to my account】
+L15:   * 【9†How do I delete my Household?】
+L16: # How do I transfer ownership of my Household?
+L17: 
+L18: If you have already set up a Toniebox in your Household but would like to give the Toniebox as a gift, you will need to transfer ownership of the Household to the gift recipient.
+L19: 
+L20: To transfer ownership of your Household, you will first need to invite the other member into your Household. For a walkthrough on this process, check out our support article here: 【10†How do I invite other members into my Household?】
+L21: It is also important to note that, in order to transfer ownership of a Household to another member, that member must not already be the owner of their own Household. If they have already set up their own Household and do not own a Toniebox, they will need to delete their Household. For detailed steps on this process, check out our support article here: 【9†How do I delete my Household?】
+L22: Once these steps have been completed, you are ready to transfer ownership of your Household! To do this, follow these steps:
+L23: 
+L24: 【11†iframe†www.youtube-nocookie.com】
+L25:   1. Login to your account at 【12†my.tonies.com†my.tonies.com】 and click the 'Members' tab.
+L26: 【13†Image: TransferStep1.jpg】
+L27: 
+L28:   2. Click the 'Household preferences' dropdown.
+L29: 【14†Image: TransferStep2.jpg】
+L30: 
+L31:   3. Click 'Leave this household'.
+L32: 【15†Image: TransferStep3.jpg】
+L33:   4. Once you click 'Leave this household', a window will appear where you can choose to either specify another member as the new owner of the Household or dissolve (delete) the Household entirely. Choose the intended new owner of the Household by clicking the white circle next to their name and email address. It's important to note that you will not see a recipient listed here if they already own their own Household.
+L34: 【16†Image: TransferStep4.jpg】
+L35:   5. Once you have specified the intended new owner, click 'Set New Owner'.
+L36: 【17†Image: TransferStep5.jpg】
+L37: 
+L38:   6. This will transfer ownership of the Household to the new member and you will automatically leave the Household. If you would like to rejoin the Household, the new owner will simply need to invite you back into the Household with the same process you used before to invite them.
+L39: If you are having any trouble transferring ownership of your Household, 【18†send us a message】 and we will help guide you through the process!
+L40: 
+L41: 
+L42: 
+L43: 【19†Return to top】
+L44: 
+L45: Return to top
+L46: ## Was this article helpful?
+L47: 
+L48: [Button: Yes] [Button: No]
+L49: 
+L50: 4 out of 4 found this helpful
+L51: 
+L52: Have more questions? 【1†Submit a request】
+L53: 
+L54: ### In this article
+L55: 
+L56: Contents Articles
+L57: 
+L58: ### Title
+L59: 
+L60: [Button: ×]
+L61: 
+L62: 【20†tonies® Support】
+L63: 
+L64:   * 【21†Imprint†login.tonies.com】
+L65:   * 【22†Privacy policy†login.tonies.com】
+L66:   * 【23†Cookie Settings】
+L67:   * © tonies GmbH

@@ -1,0 +1,80 @@
+[
+  {
+    "flow_id": "F-M014-01",
+    "product_id": "M-014",
+    "task": "手机阅读、查词和划线",
+    "depth": "D1",
+    "evidence_ids": "E-IRD-01",
+    "known_branches": "字体封面背景可设",
+    "gaps": "查词/划线证据不足，回原文与撤销未知",
+    "visual_status": "not_observed",
+    "hands_on": "false",
+    "case_path": "cases/M-014-ireader.md",
+    "checked_on": "2026-10-26"
+  },
+  {
+    "flow_id": "F-M014-02",
+    "product_id": "M-014",
+    "task": "手机本地文件与同步",
+    "depth": "D1",
+    "evidence_ids": "E-IRD-01;E-IPAD-01",
+    "known_branches": "epub/txt/pdf及多设备同步声明",
+    "gaps": "导入动作、同步字段、重装恢复",
+    "visual_status": "not_observed",
+    "hands_on": "false",
+    "case_path": "cases/M-014-ireader.md",
+    "checked_on": "2026-10-26"
+  },
+  {
+    "flow_id": "F-M014-03",
+    "product_id": "M-014",
+    "task": "手机AI辅助与听书",
+    "depth": "D1",
+    "evidence_ids": "E-IRD-01;E-IRD-02;E-IPAD-01",
+    "known_branches": "AI摘要/导图/导读/双人讲书",
+    "gaps": "入口、来源定位、失败、续播",
+    "visual_status": "not_observed",
+    "hands_on": "false",
+    "case_path": "cases/M-014-ireader.md",
+    "checked_on": "2026-10-26"
+  },
+  {
+    "flow_id": "F-M014-04",
+    "product_id": "M-014",
+    "task": "墨水屏版书架同步后刷新",
+    "depth": "D2",
+    "evidence_ids": "E-IRD-03",
+    "known_branches": "云端同步完成但书架未刷新",
+    "gaps": "冲突、文件是否下载、重装恢复",
+    "visual_status": "not_observed",
+    "hands_on": "false",
+    "case_path": "cases/M-014-ireader.md",
+    "checked_on": "2026-10-26"
+  },
+  {
+    "flow_id": "F-M014-05",
+    "product_id": "M-014",
+    "task": "墨水屏版PDF笔迹重新显示",
+    "depth": "D2",
+    "evidence_ids": "E-IRD-03",
+    "known_branches": "阅读/笔记模式不同",
+    "gaps": "误擦撤销、导出、跨端复原",
+    "visual_status": "not_observed",
+    "hands_on": "false",
+    "case_path": "cases/M-014-ireader.md",
+    "checked_on": "2026-10-26"
+  },
+  {
+    "flow_id": "F-M014-06",
+    "product_id": "M-014",
+    "task": "手机关闭个性化推荐：历史政策路径",
+    "depth": "D2",
+    "evidence_ids": "E-IPAD-01",
+    "known_branches": "个性化与非个性化栏目区别",
+    "gaps": "当前版本路径、生效时间、跨设备及历史清除",
+    "visual_status": "not_observed",
+    "hands_on": "false",
+    "case_path": "cases/M-014-ireader.md",
+    "checked_on": "2026-10-26"
+  }
+]

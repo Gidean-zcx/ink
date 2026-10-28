@@ -1,0 +1,342 @@
+[
+  {
+    "command": "go('https://www.duolingo.com/chess'); snap('01-chess-home')",
+    "started": "2026-10-27T02:00:44.374394+00:00",
+    "result": "ok",
+    "ended": "2026-10-27T02:00:47.965578+00:00"
+  },
+  {
+    "command": "page.get_by_role('button', name='Do I need a Duolingo account to play chess?', exact=True).click(); snap('02-account-condition')",
+    "started": "2026-10-27T02:01:13.033929+00:00",
+    "result": "ok",
+    "ended": "2026-10-27T02:01:13.266670+00:00"
+  },
+  {
+    "command": "page.get_by_role('link', name='START PLAYING', exact=True).first.click(); page.wait_for_timeout(1500); snap('03-onboarding')",
+    "started": "2026-10-27T02:01:19.138166+00:00",
+    "result": "error",
+    "error": "TimeoutError('Locator.click: Timeout 6000ms exceeded.\\nCall log:\\n  - waiting for get_by_role(\"link\", name=\"START PLAYING\", exact=True).first\\n')",
+    "ended": "2026-10-27T02:01:25.140698+00:00"
+  },
+  {
+    "command": "import re; page.get_by_role('link', name=re.compile('^start playing$', re.I)).first.click(); page.wait_for_timeout(1800); snap('03-onboarding')",
+    "started": "2026-10-27T02:01:41.868265+00:00",
+    "result": "ok",
+    "ended": "2026-10-27T02:01:46.267573+00:00"
+  },
+  {
+    "command": "page.wait_for_timeout(1500); snap('04-welcome-ready')",
+    "started": "2026-10-27T02:02:01.427625+00:00",
+    "result": "ok",
+    "ended": "2026-10-27T02:02:03.121006+00:00"
+  },
+  {
+    "command": "page.locator('[data-test=\"funboarding-continue-button\"]').click(); page.wait_for_timeout(1000); snap('05-welcome-next')",
+    "started": "2026-10-27T02:02:33.771569+00:00",
+    "result": "ok",
+    "ended": "2026-10-27T02:02:35.465876+00:00"
+  },
+  {
+    "command": "page.locator('[data-test=\"funboarding-continue-button\"]').click(); page.wait_for_timeout(1200); snap('06-chess-level')",
+    "started": "2026-10-27T02:03:12.914033+00:00",
+    "result": "ok",
+    "ended": "2026-10-27T02:03:14.503715+00:00"
+  },
+  {
+    "command": "snap('07-ready')",
+    "started": "2026-10-27T02:03:38.406488+00:00",
+    "result": "ok",
+    "ended": "2026-10-27T02:03:38.686790+00:00"
+  },
+  {
+    "command": "page.get_by_text('Other', exact=True).click(); page.locator('[data-test=\"funboarding-continue-button\"]').click(); page.wait_for_timeout(2500); snap('08-learning-reason')",
+    "started": "2026-10-27T02:03:43.827855+00:00",
+    "result": "ok",
+    "ended": "2026-10-27T02:03:47.007354+00:00"
+  },
+  {
+    "command": "page.get_by_text('I’m a total beginner', exact=True).click(); page.locator('[data-test=\"funboarding-continue-button\"]').click(); page.wait_for_timeout(2200); snap('09-beginner')",
+    "started": "2026-10-27T02:04:10.018027+00:00",
+    "result": "ok",
+    "ended": "2026-10-27T02:04:12.647259+00:00"
+  },
+  {
+    "command": "page.get_by_text('5 min / day', exact=True).click(); page.locator('[data-test=\"funboarding-continue-button\"]').click(); page.wait_for_timeout(2400); snap('10-goal-feedback')",
+    "started": "2026-10-27T02:04:18.032968+00:00",
+    "result": "ok",
+    "ended": "2026-10-27T02:04:20.947849+00:00"
+  },
+  {
+    "command": "page.get_by_text('Start from scratch', exact=True).click(); page.locator('[data-test=\"funboarding-continue-button\"]').click(); page.wait_for_timeout(2400); snap('11-before-lesson')",
+    "started": "2026-10-27T02:04:26.320769+00:00",
+    "result": "ok",
+    "ended": "2026-10-27T02:04:29.297235+00:00"
+  },
+  {
+    "command": "page.locator('[data-test=\"funboarding-continue-button\"]').click(); page.wait_for_timeout(1700); snap('12-motivation')",
+    "started": "2026-10-27T02:04:38.843966+00:00",
+    "result": "ok",
+    "ended": "2026-10-27T02:04:40.874235+00:00"
+  },
+  {
+    "command": "page.locator('[data-test=\"funboarding-continue-button\"]').click(); page.wait_for_timeout(3000); snap('13-lesson-load')",
+    "started": "2026-10-27T02:04:47.072087+00:00",
+    "result": "ok",
+    "ended": "2026-10-27T02:04:50.471982+00:00"
+  },
+  {
+    "command": "page.wait_for_timeout(2000); snap('14-first-task')",
+    "started": "2026-10-27T02:04:55.442109+00:00",
+    "result": "ok",
+    "ended": "2026-10-27T02:04:57.706583+00:00"
+  },
+  {
+    "command": "print(page.locator('[role], [data-square], [data-test], canvas').evaluate_all('(es)=>es.filter(e=>e.getClientRects().length).map(e=>({tag:e.tagName,role:e.getAttribute(\"role\"),aria:e.getAttribute(\"aria-label\"),test:e.getAttribute(\"data-test\"),square:e.getAttribute(\"data-square\"),text:e.innerText?.slice(0,120)}))'))",
+    "started": "2026-10-27T02:05:04.950505+00:00",
+    "result": "ok",
+    "ended": "2026-10-27T02:05:04.970917+00:00"
+  },
+  {
+    "command": "page.mouse.move(678,661); page.mouse.down(); page.mouse.move(603,587,steps=8); page.mouse.up(); page.wait_for_timeout(600); snap('15-diagonal-attempt')",
+    "started": "2026-10-27T02:05:17.801740+00:00",
+    "result": "ok",
+    "ended": "2026-10-27T02:05:19.379855+00:00"
+  },
+  {
+    "command": "page.mouse.move(678,661); page.mouse.down(); page.mouse.move(678,438,steps=10); page.mouse.up(); page.wait_for_timeout(700); snap('16-first-star')",
+    "started": "2026-10-27T02:05:24.573288+00:00",
+    "result": "ok",
+    "ended": "2026-10-27T02:05:26.304152+00:00"
+  },
+  {
+    "command": "page.get_by_role('button',name='Previous move',exact=True).click(); snap('17-previous-move')",
+    "started": "2026-10-27T02:05:46.862807+00:00",
+    "result": "ok",
+    "ended": "2026-10-27T02:05:47.301868+00:00"
+  },
+  {
+    "command": "page.get_by_role('button',name='Next move',exact=True).click(); page.wait_for_timeout(300); snap('18-next-move'); page.locator('[data-test=\"quit-button\"]').click(); snap('19-exit-confirm')",
+    "started": "2026-10-27T02:05:54.939258+00:00",
+    "result": "ok",
+    "ended": "2026-10-27T02:05:57.055716+00:00"
+  },
+  {
+    "command": "snap('20-after-exit'); page.get_by_text('I’m a total beginner',exact=True).click(); page.locator('[data-test=\"funboarding-continue-button\"]').click(); page.wait_for_timeout(2000); snap('21-reentry-path')",
+    "started": "2026-10-27T02:06:21.187245+00:00",
+    "result": "ok",
+    "ended": "2026-10-27T02:06:23.966068+00:00"
+  },
+  {
+    "command": "page.get_by_text('Start from scratch',exact=True).click(); page.locator('[data-test=\"funboarding-continue-button\"]').click(); page.wait_for_timeout(3000); snap('22-reentry-task')",
+    "started": "2026-10-27T02:06:33.954089+00:00",
+    "result": "ok",
+    "ended": "2026-10-27T02:06:37.610373+00:00"
+  },
+  {
+    "command": "page.mouse.move(678,661); page.mouse.down(); page.mouse.move(678,438,steps=10); page.mouse.up(); page.wait_for_timeout(300); page.mouse.move(678,438); page.mouse.down(); page.mouse.move(454,438,steps=10); page.mouse.up(); page.wait_for_timeout(600); snap('23-puzzle-completed')",
+    "started": "2026-10-27T02:06:45.643319+00:00",
+    "result": "ok",
+    "ended": "2026-10-27T02:06:48.311645+00:00"
+  },
+  {
+    "command": "page.locator('[data-test=\"player-next\"]').click(); page.wait_for_timeout(700); snap('24-next-puzzle')",
+    "started": "2026-10-27T02:07:11.872671+00:00",
+    "result": "ok",
+    "ended": "2026-10-27T02:07:13.294557+00:00"
+  },
+  {
+    "command": "page.get_by_role('checkbox').click(); page.wait_for_timeout(300); snap('25-hint-on')",
+    "started": "2026-10-27T02:07:19.264514+00:00",
+    "result": "error",
+    "error": "TimeoutError('Locator.click: Timeout 6000ms exceeded.\\nCall log:\\n  - waiting for get_by_role(\"checkbox\")\\n    - locator resolved to <div tabindex=\"-1\" role=\"checkbox\" aria-checked=\"false\" aria-disabled=\"true\" class=\"_8dMUn _3neHb _1cwlN\">…</div>\\n  - attempting click action\\n    2 × waiting for element to be visible, enabled and stable\\n      - element is not enabled\\n    - retrying click action\\n    - waiting 20ms\\n    2 × waiting for element to be visible, enabled and stable\\n      - element is not enabled\\n    - retrying click action\\n      - waiting 100ms\\n    10 × waiting for element to be visible, enabled and stable\\n       - element is not enabled\\n     - retrying click action\\n       - waiting 500ms\\n')",
+    "ended": "2026-10-27T02:07:25.269587+00:00"
+  },
+  {
+    "command": "page.mouse.move(520,721); page.mouse.down(); page.mouse.move(520,484,steps=10); page.mouse.up(); page.wait_for_timeout(600); snap('25-off-target-move')",
+    "started": "2026-10-27T02:07:47.152070+00:00",
+    "result": "ok",
+    "ended": "2026-10-27T02:07:48.836728+00:00"
+  },
+  {
+    "command": "page.mouse.move(520,484); page.mouse.down(); page.mouse.move(600,484,steps=8); page.mouse.up(); page.wait_for_timeout(300); snap('26-star-from-detour')",
+    "started": "2026-10-27T02:07:56.226116+00:00",
+    "result": "ok",
+    "ended": "2026-10-27T02:07:57.435662+00:00"
+  },
+  {
+    "command": "def drag(x1,y1,x2,y2): page.mouse.move(x1,y1); page.mouse.down(); page.mouse.move(x2,y2,steps=10); page.mouse.up(); page.wait_for_timeout(350)",
+    "started": "2026-10-27T02:08:11.246947+00:00",
+    "result": "ok",
+    "ended": "2026-10-27T02:08:11.247240+00:00"
+  },
+  {
+    "command": "drag(600,484,600,722); snap('27-second-star'); drag(600,722,840,722); snap('28-detour-two'); drag(840,722,840,484); snap('29-second-puzzle-complete')",
+    "started": "2026-10-27T02:08:11.249159+00:00",
+    "result": "ok",
+    "ended": "2026-10-27T02:08:15.610408+00:00"
+  },
+  {
+    "command": "page.locator('[data-test=\"player-next\"]').click(); page.wait_for_timeout(1400); snap('30-third-puzzle')",
+    "started": "2026-10-27T02:08:24.767260+00:00",
+    "result": "ok",
+    "ended": "2026-10-27T02:08:26.736305+00:00"
+  },
+  {
+    "command": "drag(360,878,918,878); snap('31-far-star'); drag(918,878,918,326); snap('32-pass-middle-star')",
+    "started": "2026-10-27T02:08:41.926901+00:00",
+    "result": "ok",
+    "ended": "2026-10-27T02:08:44.802070+00:00"
+  },
+  {
+    "command": "drag(918,326,918,560); snap('33-third-complete'); page.locator('[data-test=\"player-next\"]').click(); page.wait_for_timeout(1700); snap('34-fourth-puzzle')",
+    "started": "2026-10-27T02:08:55.196929+00:00",
+    "result": "error",
+    "error": "TimeoutError('Locator.click: Timeout 6000ms exceeded.\\nCall log:\\n  - waiting for locator(\"[data-test=\\\\\"player-next\\\\\"]\")\\n')",
+    "ended": "2026-10-27T02:09:02.535702+00:00"
+  },
+  {
+    "command": "drag(918,878,918,560); snap('34-nearest-star'); drag(918,560,918,326); page.wait_for_timeout(300); snap('35-third-complete')",
+    "started": "2026-10-27T02:09:14.057370+00:00",
+    "result": "ok",
+    "ended": "2026-10-27T02:09:17.476369+00:00"
+  },
+  {
+    "command": "page.locator('[data-test=\"player-next\"]').click(); page.wait_for_timeout(1800); snap('36-fourth-puzzle')",
+    "started": "2026-10-27T02:09:34.827590+00:00",
+    "result": "ok",
+    "ended": "2026-10-27T02:09:37.115103+00:00"
+  },
+  {
+    "command": "drag(600,484,840,484); page.wait_for_timeout(400); snap('37-constrained-wrong-order')",
+    "started": "2026-10-27T02:09:53.378338+00:00",
+    "result": "ok",
+    "ended": "2026-10-27T02:09:55.327193+00:00"
+  },
+  {
+    "command": "page.locator('[data-test=\"player-next\"]').click(); page.wait_for_timeout(1600); snap('38-after-wrong')",
+    "started": "2026-10-27T02:10:16.348291+00:00",
+    "result": "ok",
+    "ended": "2026-10-27T02:10:18.680933+00:00"
+  },
+  {
+    "command": "print(page.get_by_role('checkbox').get_attribute('aria-disabled')); page.get_by_role('checkbox').click(); snap('39-constrained-hint')",
+    "started": "2026-10-27T02:10:25.362161+00:00",
+    "result": "ok",
+    "ended": "2026-10-27T02:10:26.045903+00:00"
+  },
+  {
+    "command": "page.get_by_role('checkbox').click(); snap('40-hint-off'); drag(600,484,520,484); snap('41-first-correct-star'); drag(520,484,840,484); snap('42-second-correct-star'); drag(840,484,840,722); page.wait_for_timeout(300); snap('43-retry-correct')",
+    "started": "2026-10-27T02:10:34.392642+00:00",
+    "result": "ok",
+    "ended": "2026-10-27T02:10:39.460878+00:00"
+  },
+  {
+    "command": "page.locator('[data-test=\"player-next\"]').click(); page.wait_for_timeout(1800); snap('44-fifth-puzzle')",
+    "started": "2026-10-27T02:10:48.009840+00:00",
+    "result": "ok",
+    "ended": "2026-10-27T02:10:50.325046+00:00"
+  },
+  {
+    "command": "page.get_by_role('checkbox').click(); page.wait_for_timeout(1800); snap('45-hint-waited')",
+    "started": "2026-10-27T02:10:57.039533+00:00",
+    "result": "ok",
+    "ended": "2026-10-27T02:10:59.392280+00:00"
+  },
+  {
+    "command": "drag(520,484,520,801); snap('46-fifth-first-move'); drag(520,801,840,801); snap('47-fifth-first-star'); drag(840,801,918,801); page.wait_for_timeout(300); snap('48-fifth-complete')",
+    "started": "2026-10-27T02:11:06.253651+00:00",
+    "result": "ok",
+    "ended": "2026-10-27T02:11:11.607550+00:00"
+  },
+  {
+    "command": "page.locator('[data-test=\"player-next\"]').click(); page.wait_for_timeout(1800); snap('49-sixth-puzzle')",
+    "started": "2026-10-27T02:11:17.333987+00:00",
+    "result": "ok",
+    "ended": "2026-10-27T02:11:19.676628+00:00"
+  },
+  {
+    "command": "drag(752,660,530,438); snap('50-bishop-first'); drag(530,438,380,587); page.wait_for_timeout(300); snap('51-bishop-complete'); page.locator('[data-test=\"player-next\"]').click(); page.wait_for_timeout(1800); snap('52-seventh-puzzle')",
+    "started": "2026-10-27T02:11:34.585334+00:00",
+    "result": "ok",
+    "ended": "2026-10-27T02:11:40.212024+00:00"
+  },
+  {
+    "command": "drag(360,801,600,563); snap('53-bishop-middle'); drag(600,563,360,326); snap('54-bishop-corner'); drag(360,326,918,878); page.wait_for_timeout(300); snap('55-seventh-complete'); page.locator('[data-test=\"player-next\"]').click(); page.wait_for_timeout(1800); snap('56-eighth-puzzle')",
+    "started": "2026-10-27T02:12:10.282448+00:00",
+    "result": "ok",
+    "ended": "2026-10-27T02:12:16.868310+00:00"
+  },
+  {
+    "command": "drag(600,722,680,801); snap('57-bishop-low'); drag(680,801,840,642); snap('58-bishop-right'); drag(840,642,680,484); page.wait_for_timeout(300); snap('59-eighth-complete'); page.locator('[data-test=\"player-next\"]').click(); page.wait_for_timeout(1800); snap('60-next-state')",
+    "started": "2026-10-27T02:12:29.054748+00:00",
+    "result": "ok",
+    "ended": "2026-10-27T02:12:35.569141+00:00"
+  },
+  {
+    "command": "drag(600,801,760,642); snap('61-ninth-first'); drag(760,642,600,484); snap('62-ninth-star'); drag(600,484,680,405); page.wait_for_timeout(300); snap('63-ninth-complete'); page.locator('[data-test=\"player-next\"]').click(); page.wait_for_timeout(1800); snap('64-next-state')",
+    "started": "2026-10-27T02:12:56.815340+00:00",
+    "result": "ok",
+    "ended": "2026-10-27T02:13:03.315392+00:00"
+  },
+  {
+    "command": "drag(360,878,520,722); snap('65-combination-one'); drag(520,722,360,563); snap('66-combination-two'); drag(760,878,760,563); page.wait_for_timeout(300); snap('67-tenth-complete'); page.locator('[data-test=\"player-next\"]').click(); page.wait_for_timeout(1800); snap('68-after-tenth')",
+    "started": "2026-10-27T02:13:20.619210+00:00",
+    "result": "ok",
+    "ended": "2026-10-27T02:13:27.135040+00:00"
+  },
+  {
+    "command": "drag(360,563,360,878); snap('69-last-rook'); drag(840,722,600,484); snap('70-last-bishop-one'); drag(600,484,440,642); page.wait_for_timeout(300); snap('71-last-correct'); page.locator('[data-test=\"player-next\"]').click(); page.wait_for_timeout(2200); snap('72-lesson-result')",
+    "started": "2026-10-27T02:13:45.989097+00:00",
+    "result": "ok",
+    "ended": "2026-10-27T02:13:53.251297+00:00"
+  },
+  {
+    "command": "snap('73-result-settled'); page.locator('[data-test=\"player-next\"]').click(); page.wait_for_timeout(1600); snap('74-after-result')",
+    "started": "2026-10-27T02:14:19.819446+00:00",
+    "result": "ok",
+    "ended": "2026-10-27T02:14:22.082792+00:00"
+  },
+  {
+    "command": "page.locator('[data-test=\"player-next\"]').click(); page.wait_for_timeout(1700); snap('75-after-streak')",
+    "started": "2026-10-27T02:14:30.214680+00:00",
+    "result": "ok",
+    "ended": "2026-10-27T02:14:32.194961+00:00"
+  },
+  {
+    "command": "page.locator('[data-test=\"player-next\"]').click(); page.wait_for_timeout(1700); snap('76-after-streak-goal')",
+    "started": "2026-10-27T02:14:43.015045+00:00",
+    "result": "error",
+    "error": "TimeoutError('Locator.click: Timeout 6000ms exceeded.\\nCall log:\\n  - waiting for locator(\"[data-test=\\\\\"player-next\\\\\"]\")\\n    - locator resolved to <button aria-disabled=\"true\" data-test=\"player-next\" class=\"_2wryV _1rcV8 _1VYyp _1ursp _7jW2t _5eJl _3DbUj\">…</button>\\n  - attempting click action\\n    2 × waiting for element to be visible, enabled and stable\\n      - element is not enabled\\n    - retrying click action\\n    - waiting 20ms\\n    2 × waiting for element to be visible, enabled and stable\\n      - element is not enabled\\n    - retrying click action\\n      - waiting 100ms\\n    11 × waiting for element to be visible, enabled and stable\\n       - element is not enabled\\n     - retrying click action\\n       - waiting 500ms\\n')",
+    "ended": "2026-10-27T02:14:49.019862+00:00"
+  },
+  {
+    "command": "page.get_by_text('7 day streak',exact=True).click(); snap('76-streak-goal-selected'); page.locator('[data-test=\"player-next\"]').click(); page.wait_for_timeout(1800); snap('77-next-after-goal')",
+    "started": "2026-10-27T02:15:36.230346+00:00",
+    "result": "ok",
+    "ended": "2026-10-27T02:15:38.535806+00:00"
+  },
+  {
+    "command": "page.locator('[data-test=\"player-next\"]').click(); page.wait_for_timeout(2200); snap('78-after-quests')",
+    "started": "2026-10-27T02:15:49.029419+00:00",
+    "result": "ok",
+    "ended": "2026-10-27T02:15:51.430718+00:00"
+  },
+  {
+    "command": "page.locator('[data-test=\"player-next\"]').click(); page.wait_for_timeout(1800); snap('79-after-reward')",
+    "started": "2026-10-27T02:16:04.095904+00:00",
+    "result": "ok",
+    "ended": "2026-10-27T02:16:06.069594+00:00"
+  },
+  {
+    "command": "page.locator('[data-test=\"create-profile-later\"]').click(); page.wait_for_timeout(2200); snap('80-returned-path')",
+    "started": "2026-10-27T02:16:12.900156+00:00",
+    "result": "ok",
+    "ended": "2026-10-27T02:16:15.868130+00:00"
+  },
+  {
+    "command": "page.reload(wait_until='domcontentloaded'); page.wait_for_timeout(2200); snap('81-refreshed-path'); page.locator('[data-test=\"skill-path-level-0 skill-path-level-chess_skill\"]').click(); snap('82-first-node-card')",
+    "started": "2026-10-27T02:16:23.753131+00:00",
+    "result": "ok",
+    "ended": "2026-10-27T02:16:29.673964+00:00"
+  }
+]

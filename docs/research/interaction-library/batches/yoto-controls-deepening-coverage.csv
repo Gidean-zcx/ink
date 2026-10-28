@@ -1,0 +1,5 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M037-16,M-037,设置、取消及停响闹钟,D2,E-YTCD-06,保存后列在该机闹钟列表，每机最多10项；点已有项编辑后保存或取消，右侧开关启停，详情底部Delete删除。到时需开机；任意设备键或app停止响铃。音量受日夜上限约束。,离线响铃、自动关机后唤醒、正在播故事时打断/恢复、时区变更和多机同步未说明；预听耗时未实测。,not_observed,false,cases/M-037-yoto.md,2026-10-27
+F-M037-17,M-037,设日夜作息与第三代夜灯提示,D2,E-YOD-02;E-YTCD-07,日夜作息、夜灯、F02停播和F16闹钟是不同状态；Mini2024仅用日夜设置，没有夜灯。Player3夜灯模式暂不读室温；不套第四代自动夜灯亮度。,更改作息时正播内容、时区/离线转换、设置下发失败及跨设备冲突未知；第三代屏幕自动亮度不等于夜灯自动亮度。,not_observed,false,cases/M-037-yoto.md,2026-10-27
+F-M037-18,M-037,接受亲友MYO列表并保留作者关系,D2,E-YTCD-10;E-YOD-06,收件人接受的是共享列表入口，所有权仍属原作者；后续作者更新会反映在关联卡。作者邮件地址可见，持链接者可继续转发。内容被暂停后，官方仅受理创作者申请复核。,未接受/拒绝的具体按钮、复制成独立副本、撤回链接、删除成员对共享列表的影响、离线缓存何时失效和正在播放时更新未知。,not_observed,false,cases/M-037-yoto.md,2026-10-27
+F-M037-19,M-037,清空本机后重新设置并区分家庭解绑,D2,E-YTCD-11,下载内容清除，但家庭绑定保留。赠送前另在Settings → 设备删Player Name，底部Remove from family account；用户退出则Settings → 本用户三点 → Leave this family account。,三键等待时长、错过3秒窗口、清除失败、缓存/进度/设置完整恢复、解绑传播与他人书库归属未核；不把F05硬重启当出厂重置。,not_observed,false,cases/M-037-yoto.md,2026-10-27

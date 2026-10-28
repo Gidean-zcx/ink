@@ -1,0 +1,17 @@
+The reading menu lets you adjust font size, view the table of contents, and more. You can use the Reading Menu while reading.
+While reading, tap the middle of the screen. The Reading menu will appear.
+Tap an icon from the Reading Menu: Icon Description
+Back icon : Go back to the Home screen.
+Screen lock icon : Lock your eReader's screen orientation (select models only).
+ComfortLight icon : Brighten or dim your screen (select models only).
+Font icon : Make the text larger or smaller and adjust font styling.
+Reading stats icon: See your book reading progress.
+Table of contents icon : See the table of contents.
+Reading Settings icon : Adjust onscreen controls, page appearance and more.
+Menu icon: Write a review, see book details, and more.
+Chapter back icon: Go to the previous chapter.
+Chapter forward icon: Go to the next chapter.
+Circle icon: Drag to skim through pages.
+Dot icon: Tap to go back to a previous page you've opened.
+Search icon: Tap to search for keywords in your book.
+Annotation icon: Tap to see the notes and highlights you've created.

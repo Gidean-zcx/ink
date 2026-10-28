@@ -1,0 +1,6 @@
+Documents that are saved to the Digital Paper can be opened using a PDF-viewer program on your computer.
+Connect the computer to the Digital Paper.
+Launch the Digital Paper App on the computer.
+Double-click on the document you want to display.
+The computer will launch a PDF-viewer program and display the document as read only.
+Though the document is temporarily saved to the computer, it is deleted when the Digital Paper App is closed.

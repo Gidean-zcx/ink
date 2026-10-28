@@ -1,0 +1,305 @@
+{
+  "name": "76-learning-page-reloaded",
+  "at": "2026-10-27T06:44:32.264908+00:00",
+  "url": "https://www.duolingo.com/learn",
+  "title": "Duolingo - The world’s most popular way to learn",
+  "text": "LEARN\nLEADERBOARDS\nQUESTS\nSHOP\nPROFILE\nMORE\n1\n505\n5\nUnlock Leaderboards!\nComplete 2 more lessons to start competing\nDaily Quests\nVIEW ALL\nEarn 10 XP\n10 / 10\n10 / 10\nCreate a profile to save your progress!\nCREATE A PROFILE\nSIGN IN\nABOUT\nBLOG\nSTORE\nEFFICACY\nCAREERS\nINVESTORS\nTERMS\nPRIVACY\nGRADE 2\nNumber patterns\nSTART\n\nUP NEXT\n\nIntro to addition and subtraction\nJUMP HERE?",
+  "controls": [
+    {
+      "tag": "A",
+      "text": "",
+      "aria": null,
+      "test": null,
+      "type": "",
+      "disabled": null
+    },
+    {
+      "tag": "A",
+      "text": "LEARN",
+      "aria": null,
+      "test": "home-nav",
+      "type": "",
+      "disabled": null
+    },
+    {
+      "tag": "A",
+      "text": "LEADERBOARDS",
+      "aria": null,
+      "test": "leaderboard-nav",
+      "type": "",
+      "disabled": null
+    },
+    {
+      "tag": "A",
+      "text": "QUESTS",
+      "aria": null,
+      "test": "quests-nav",
+      "type": "",
+      "disabled": null
+    },
+    {
+      "tag": "A",
+      "text": "SHOP",
+      "aria": null,
+      "test": "shop-nav",
+      "type": "",
+      "disabled": null
+    },
+    {
+      "tag": "A",
+      "text": "PROFILE",
+      "aria": null,
+      "test": "profile-tab",
+      "type": "",
+      "disabled": null
+    },
+    {
+      "tag": "SPAN",
+      "text": "MORE",
+      "aria": null,
+      "test": null,
+      "type": null,
+      "disabled": null
+    },
+    {
+      "tag": "SPAN",
+      "text": "",
+      "aria": null,
+      "test": null,
+      "type": null,
+      "disabled": null
+    },
+    {
+      "tag": "SPAN",
+      "text": "1",
+      "aria": null,
+      "test": null,
+      "type": null,
+      "disabled": null
+    },
+    {
+      "tag": "SPAN",
+      "text": "505",
+      "aria": null,
+      "test": null,
+      "type": null,
+      "disabled": null
+    },
+    {
+      "tag": "SPAN",
+      "text": "5",
+      "aria": null,
+      "test": null,
+      "type": null,
+      "disabled": null
+    },
+    {
+      "tag": "A",
+      "text": "VIEW ALL",
+      "aria": null,
+      "test": null,
+      "type": "",
+      "disabled": null
+    },
+    {
+      "tag": "BUTTON",
+      "text": "CREATE A PROFILE",
+      "aria": null,
+      "test": "create-profile-juicy",
+      "type": "submit",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "SIGN IN",
+      "aria": null,
+      "test": "sign-in-juicy",
+      "type": "submit",
+      "disabled": false
+    },
+    {
+      "tag": "A",
+      "text": "ABOUT",
+      "aria": null,
+      "test": null,
+      "type": "",
+      "disabled": null
+    },
+    {
+      "tag": "A",
+      "text": "BLOG",
+      "aria": null,
+      "test": null,
+      "type": "",
+      "disabled": null
+    },
+    {
+      "tag": "A",
+      "text": "STORE",
+      "aria": null,
+      "test": null,
+      "type": "",
+      "disabled": null
+    },
+    {
+      "tag": "A",
+      "text": "EFFICACY",
+      "aria": null,
+      "test": null,
+      "type": "",
+      "disabled": null
+    },
+    {
+      "tag": "A",
+      "text": "CAREERS",
+      "aria": null,
+      "test": null,
+      "type": "",
+      "disabled": null
+    },
+    {
+      "tag": "A",
+      "text": "INVESTORS",
+      "aria": null,
+      "test": null,
+      "type": "",
+      "disabled": null
+    },
+    {
+      "tag": "A",
+      "text": "TERMS",
+      "aria": null,
+      "test": null,
+      "type": "",
+      "disabled": null
+    },
+    {
+      "tag": "A",
+      "text": "PRIVACY",
+      "aria": null,
+      "test": null,
+      "type": "",
+      "disabled": null
+    },
+    {
+      "tag": "A",
+      "text": "",
+      "aria": null,
+      "test": null,
+      "type": "",
+      "disabled": null
+    },
+    {
+      "tag": "A",
+      "text": "GRADE 2",
+      "aria": null,
+      "test": null,
+      "type": "",
+      "disabled": null
+    },
+    {
+      "tag": "DIV",
+      "text": "",
+      "aria": null,
+      "test": null,
+      "type": null,
+      "disabled": null
+    },
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": "Lesson",
+      "test": "skill-path-level-0 skill-path-level-math_skill",
+      "type": "submit",
+      "disabled": false
+    },
+    {
+      "tag": "DIV",
+      "text": "START",
+      "aria": null,
+      "test": null,
+      "type": null,
+      "disabled": null
+    },
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": "Lesson 1 of 1",
+      "test": "skill-path-level-1 skill-path-level-math_skill",
+      "type": "submit",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": "Chest",
+      "test": null,
+      "type": "submit",
+      "disabled": true
+    },
+    {
+      "tag": "DIV",
+      "text": "",
+      "aria": null,
+      "test": null,
+      "type": null,
+      "disabled": null
+    },
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": "Lesson",
+      "test": "skill-path-level-3 skill-path-level-math_skill",
+      "type": "submit",
+      "disabled": false
+    },
+    {
+      "tag": "DIV",
+      "text": "",
+      "aria": null,
+      "test": null,
+      "type": null,
+      "disabled": null
+    },
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": "Match madness, 0 of 3 stars",
+      "test": "skill-path-level-4 skill-path-level-math_match_practice",
+      "type": "submit",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": "Chest",
+      "test": null,
+      "type": "submit",
+      "disabled": true
+    },
+    {
+      "tag": "DIV",
+      "text": "",
+      "aria": null,
+      "test": null,
+      "type": null,
+      "disabled": null
+    },
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": "Unit Review",
+      "test": "skill-path-level-6 skill-path-level-math_unit_review",
+      "type": "submit",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "JUMP HERE?",
+      "aria": null,
+      "test": null,
+      "type": "submit",
+      "disabled": false
+    }
+  ]
+}

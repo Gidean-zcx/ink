@@ -1,0 +1,27 @@
+Navigation
+How do I customize the sections in the left sidebar of the web app?
+The sections in the left sidebar are just defaults and fully customizable, except for Home, Library, Feed, and Search (those are fixed). You can reorder the views by dragging and dropping, unpin the views from the sidebar by clicking the down caret at the top of the view, and pin new views from the Manage views page.
+How do I customize the swipe actions in the Reader mobile app?
+You can customize the swipe actions in the Reader mobile app by navigating to the Account tab in the bottom right and choosing Customize swipes.
+Can I auto-advance to the next document when I perform an action (e.g. moving the current document to the Archive)?
+By default, if you move a document while in its reading view, you'll be returned to previous document list. You can toggle this behavior to instead auto-advance by looking for "Toggle auto-advance" in the Command Palette on web or switching the setting in the Settings panel on mobile.
+How do I find a list of keyboard shortcuts?
+Reader on web is fully keyboard shortcut driven, including while reading documents. Most keyboard shortcuts are shown in hover tooltips in the user interface, but you can additionally open the Command Palette (Cmd/Ctrl + K) and search for an action to find its or use the ? shortcut to pull up a reference guide.
+How can I customize the keyboard shortcuts?
+You can edit the default keyboard shortcuts to your preference by navigating to Account settings > Preferences > Customize.
+Some keyboard shortcuts are not working on my keyboard such as [ and ] to open or hide the side panels. How do I customize my keyboard shortcuts?
+Some non-North American keyboard layouts (such as German, Swedish, Dutch, Norwegian, Catalonian, etc) may not be optimized for the default Reader shortcuts. You can customize these shortcuts to your preference by navigating to Account settings > Preferences > Customize.
+How do I use keyboard shortcuts in the iPad app?
+If you use your iPad with a keyboard as a quasi-laptop and would like to be able to use keyboard shortcuts, we recommed using Reader inside the browser web app (read.readwise.io) rather than the native app.
+How do I dismiss the nudge to use the mobile app when using read.readwise.io  in Safari on iPad?
+Whenever an iOS app has deeplinking enabled (which is what allows Reader to open links from external sources), Apple will detect the link pattern in Safari and display a banner nudging you to use the native app rather than the web app.
+There are a couple of workarounds to permanently hide this banner:
+Delete the app from your device if you only ever plan to use Reader in the browser
+Turn on Hide and require Face ID in the app options by long-pressing the home screen icon
+Once you've hidden the app, the banner should no longer appear at the top of the Safari page.
+How do I change my settings to keep the sidebars hidden at all times?
+You can change the default sidebar setting upon entering the reading view by opening the Command Palette and searching for Hide side panels by default in reading view.
+Alternatively, you can go to the Preferences page and use the Side panel visibility by default dropdown to select which of the panels you would like to be displayed by default when you open a document.
+Can I bump an old document back to the top of my document list?
+Yes! To do this, you can use the Bump to top option in the actions menu (...) of any document (or press B on your keyboard with the document selected).
+Note that bumped documents will only appear at the top while the list view is sorted by Date moved. Any other sorting option (date published, author, progress, etc.) will still place the document according to its metadata for that sorting category.

@@ -1,0 +1,44 @@
+{
+  "status": "failed",
+  "source": {
+    "source_home_url": "https://www.xiaoyuanyingjian.com/#/S6",
+    "source_frontend_path": "work/learning-hardware/official-main.js",
+    "source_frontend_sha256": "f3e9acdba2af4c5de5cd342a81d0300d57c5748d868c75338b98d1f112d092ec",
+    "extraction_pattern": "https://[^\" ]*smart_camera_pc_1715653479252[^\" ]*\\.mp4",
+    "media_url": "https://solar-online.fbcontent.cn/megrez-online/megrez-alkaid/public/20240514/smart_camera_pc_1715653479252_8b72001-136b-1cc-bff8-c24c56f63bb.mp4",
+    "capture_policy": {
+      "anonymous": true,
+      "muted": true,
+      "audio_listened": false,
+      "mp4_downloaded": false,
+      "max_seek_points": 8,
+      "continuous_observation": false,
+      "product_operation": false
+    }
+  },
+  "network": [
+    {
+      "url": "https://solar-online.fbcontent.cn/megrez-online/megrez-alkaid/public/20240514/smart_camera_pc_1715653479252_8b72001-136b-1cc-bff8-c24c56f63bb.mp4",
+      "status": 206,
+      "content_type": "video/mp4",
+      "content_length": "1163298",
+      "content_range": "bytes 0-1163297/1163298",
+      "accept_ranges": "bytes",
+      "date": "Tue, 27 Oct 2026 01:10:31 GMT"
+    }
+  ],
+  "frames": [],
+  "metadata": {
+    "duration": 14.5,
+    "videoWidth": 2260,
+    "videoHeight": 700,
+    "readyState": 4,
+    "networkState": 1,
+    "currentSrc": "https://solar-online.fbcontent.cn/megrez-online/megrez-alkaid/public/20240514/smart_camera_pc_1715653479252_8b72001-136b-1cc-bff8-c24c56f63bb.mp4",
+    "paused": true,
+    "muted": true
+  },
+  "error_type": "TypeError",
+  "error": "Page.wait_for_function() takes 2 positional arguments but 3 positional arguments (and 1 keyword-only argument) were given",
+  "finished_unix": 1793063431.997439
+}

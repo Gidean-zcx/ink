@@ -1,0 +1,103 @@
+{
+  "checked_date": "2026-10-26",
+  "access": "Public read-only GET via the catalog frontend endpoint; descriptions are publisher claims, not hardware tests. No login or firmware download.",
+  "catalog_url": "https://burner.cloudzao.com/",
+  "public_api": "https://admin.metalio.world/xiaozhi/api/firmwares",
+  "queries": [
+    {
+      "page": 1,
+      "limit": 100,
+      "sourceType": "all",
+      "hardwareModelId": 44
+    },
+    {
+      "page": 1,
+      "limit": 100,
+      "sourceType": "all",
+      "keyword": "短信"
+    }
+  ],
+  "plus_catalog_total": 13,
+  "records": [
+    {
+      "id": "f4576587b25c738295eb196468c20307",
+      "firmwareName": "布丁",
+      "description": "布丁（Pudding）是一款为 E-INK4 墨水屏设备打造的轻量系统，集成本地音乐、wyy音乐、网络电台、TXT 阅读、录音、电话与短信，并支持 Wi-Fi、蜂窝网络和蓝牙音频，让阅读与后台播放自然衔接。短信目前无法发送，诊断中，，，",
+      "hardwareModelName": "Metalio E-Ink4",
+      "chipName": "esp32s3",
+      "sourceType": "community",
+      "authorName": "paouke",
+      "updateDate": "2026-10-14T18:26:23+08:00",
+      "versions": [
+        {
+          "version": "v0.1.0",
+          "versionStatus": "test",
+          "remark": "测试版哈，有bug，无4G模块的不建议刷",
+          "githubUrl": "",
+          "createDate": "2026-10-14T18:16:17+08:00"
+        }
+      ],
+      "source_catalog": "https://burner.cloudzao.com/"
+    },
+    {
+      "id": "f5c35ac9c523aac3bd307090a0fded68",
+      "firmwareName": "RickyOS",
+      "description": "RickyOS 无名 4.7 plus 最新版本去https://rickyaistudio.com/ 进行安装",
+      "hardwareModelName": "Metalio E-Ink4 Plus",
+      "chipName": "esp32s31",
+      "sourceType": "community",
+      "authorName": "Ricky AI Studio",
+      "updateDate": "2026-10-24T18:54:06+08:00",
+      "versions": [
+        {
+          "version": "v1.2.5",
+          "versionStatus": "latest",
+          "remark": "之前的不小心删了，重新上传",
+          "githubUrl": "",
+          "createDate": "2026-10-22T23:51:57+08:00"
+        }
+      ],
+      "source_catalog": "https://burner.cloudzao.com/"
+    },
+    {
+      "id": "b9df44db099418cd836cb32d74941b05",
+      "firmwareName": "kiikoread · Metalio EINK 4 Plus",
+      "description": "务必从官方固件刷入！！！！ 特别感谢 MokuMMk kiikoread 的持续帮助与贡献。\n\n为 Metalio EINK 4 Plus 适配的 kiikoread 阅读固件。支持 EPUB/TXT 阅读、导入字体、排版调整、封面书架、阅读统计、多种锁屏、BLE 翻页器、前光亮度与冷暖调节、振动反馈、Wi-Fi 传书及联网 OTA。\n\n适用于 V1.5、34Pin、ESP32-S31 设备。完整安装会重置设备设置，TF 卡书籍保留。",
+      "hardwareModelName": "Metalio E-Ink4 Plus",
+      "chipName": "esp32s31",
+      "sourceType": "community",
+      "authorName": "Kiiko厂长",
+      "updateDate": "2026-10-24T15:38:00+08:00",
+      "versions": [
+        {
+          "version": "rc100",
+          "versionStatus": "latest",
+          "remark": "",
+          "githubUrl": "",
+          "createDate": "2026-10-24T14:39:56+08:00"
+        }
+      ],
+      "source_catalog": "https://burner.cloudzao.com/"
+    },
+    {
+      "id": "d339eb28f76779495b909d1129ce994f",
+      "firmwareName": "固件口袋",
+      "description": "可以把固件放到这个口袋里，让很多个固件一起使用。 \n不过，你得配个TF卡才行，你配吗？\n\n【注1】安全性问题：可以通过 AI 直接审计 bin 文件，但 AI 评审的绝对可靠性有待评估，建议与上传者取得联系或者自己通过以下协议复现。\n【注2】固件需要适配才能被集成，极简的适配协议：https://github.com/Changkai9888/CloudZao-Projects/blob/main/protocols](https://github.com/Changkai9888/CloudZao-Projects/blob/main/protocols)/固件口袋接入规范与开发指南.md（欢迎大家提出修改意见）",
+      "hardwareModelName": "Metalio E-Ink4 Plus",
+      "chipName": "esp32s31",
+      "sourceType": "community",
+      "authorName": "开哥",
+      "updateDate": "2026-10-26T09:03:24+08:00",
+      "versions": [
+        {
+          "version": "v1.0.7",
+          "versionStatus": "latest",
+          "remark": "plus..6增加了背光和锁屏画面。 plus..11新增休眠模式，可设解锁密码；新增“研磨”按钮，用于全刷；优化界面，触控，字体；plus..12修复被坏固件启动卡死问题。",
+          "githubUrl": "",
+          "createDate": "2026-10-24T22:39:41+08:00"
+        }
+      ],
+      "source_catalog": "https://burner.cloudzao.com/"
+    }
+  ]
+}

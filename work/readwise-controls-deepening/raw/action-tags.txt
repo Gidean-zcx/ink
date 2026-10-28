@@ -1,0 +1,13 @@
+Action Tags
+What is an Action Tag?
+Action tags are highlight notes that use a specific syntax to perform actions on the associated highlight. All action tags begin with a . character, and their functionality effects how the highlights appear in Readwise.
+How can I create headings between my highlights?
+In Reader, headings are added to the Notebook view (Shift + 1) automatically when they’re detected within the document’s content. However, if you want to see those headings in Readwise as well, you’ll need to use an action tag. To do so, highlight the text that you want to appear as a heading, then add a note (N) with the text .h1. This will create a top-level heading with the text of the highlight. To create nested headings, you can use an .h2 tag and so on.
+Note that you can start with lower level headings (e.g. .h3) and they’ll still appear in Readwise, but for the table of contents to appear on the left side of the page, you’ll need to start with at least one .h1 tag.
+How can I combine two disparate pieces of text into a single highlight?
+Oftentimes, the most salient parts of a paragraph are the first and last sentence, which can be frustrating when the author includes a bunch of fluff in between them that just bog you down when reviewing the highlight later. To fix this, you can use the concatenation action tag. Simply add a note (N) with the text .c1 to the first highlight, then .c2 to the next highlight. When the highlights sync to Readwise, they’ll appear as a single highlight with an ellipse (…) between the two pieces of text.
+You can string as many highlights together in this way as you’d like by continuing on to .c3, .c4, etc. A tag of .c1 will always begin a new concatenation string.
+How can I create a Q&A mastery card while reading?
+You can use action tags to create a Q&A mastery card in Readwise associated with a particular highlight. To do so, add a note (N) to the highlight using the syntax .qa [QUESTION?][ANSWER].
+Can I add a regular note to a highlight with an action tag?
+Yes! To add a note to a highlight that has an action tag, simply add a line break after the action tag. You can do this by pressing Shift + Enter in the note field (Enter by itself will save the note). For example, if you wanted to add a brief description of a section’s content with a heading, you could do something like .h1 ⏎ This section is about how Topic A relates to Topic X. The note text will then appear below the heading in Readwise.

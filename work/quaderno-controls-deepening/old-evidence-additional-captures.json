@@ -1,0 +1,101 @@
+[
+  {
+    "evidence_id": "E-QUA-01",
+    "field": "additional_captures",
+    "before": [],
+    "after": [
+      {
+        "checked_on": "2026-10-27",
+        "access_mode": "existing_pdf_reread_PyMuPDF",
+        "hands_on": false,
+        "visual_observed": false,
+        "archived_artifact": "artifacts/quaderno-controls-deepening/source-notes.md",
+        "sha256": "4b696f7c102d7c345146f844eeb2b8625e57059b00f953307c41e6f728218753",
+        "raw_work_path": "work/research/extension-manuals/quaderno-gen3c.pdf",
+        "raw_sha256": "d7248dfc9cd602139f4a5dddf03c33809b02b00d9f13601cf73f17ad1b8ac5f4",
+        "locator": "全212项outline；正文页列表work/quaderno-controls-deepening/read-pages.json；p134发行2025-04与官网公开日不同"
+      }
+    ],
+    "append": {
+      "checked_on": "2026-10-27",
+      "access_mode": "existing_pdf_reread_PyMuPDF",
+      "hands_on": false,
+      "visual_observed": false,
+      "archived_artifact": "artifacts/quaderno-controls-deepening/source-notes.md",
+      "sha256": "4b696f7c102d7c345146f844eeb2b8625e57059b00f953307c41e6f728218753",
+      "raw_work_path": "work/research/extension-manuals/quaderno-gen3c.pdf",
+      "raw_sha256": "d7248dfc9cd602139f4a5dddf03c33809b02b00d9f13601cf73f17ad1b8ac5f4",
+      "locator": "全212项outline；正文页列表work/quaderno-controls-deepening/read-pages.json；p134发行2025-04与官网公开日不同"
+    }
+  },
+  {
+    "evidence_id": "E-QUA-02",
+    "field": "additional_captures",
+    "before": [],
+    "after": [
+      {
+        "checked_on": "2026-10-27",
+        "access_mode": "anonymous_public_html_GET",
+        "hands_on": false,
+        "visual_observed": false,
+        "archived_artifact": "artifacts/quaderno-controls-deepening/source-notes.md",
+        "sha256": "4b696f7c102d7c345146f844eeb2b8625e57059b00f953307c41e6f728218753",
+        "url": "https://www.fmworld.net/digital-paper/support/",
+        "status": 200,
+        "raw_work_path": "work/quaderno-controls-deepening/raw/support.html",
+        "raw_sha256": "df57540305ecf9c0e84eac54625bd9f4f3bdf0571381b3e79bf5c8c8c859e615",
+        "extracted_work_path": "work/quaderno-controls-deepening/extracted/support.txt",
+        "extracted_sha256": "fb01b7e02dced96da4290c60e51643cf89f7b3cab86712f2636a6724ce3538b2"
+      }
+    ],
+    "append": {
+      "checked_on": "2026-10-27",
+      "access_mode": "anonymous_public_html_GET",
+      "hands_on": false,
+      "visual_observed": false,
+      "archived_artifact": "artifacts/quaderno-controls-deepening/source-notes.md",
+      "sha256": "4b696f7c102d7c345146f844eeb2b8625e57059b00f953307c41e6f728218753",
+      "url": "https://www.fmworld.net/digital-paper/support/",
+      "status": 200,
+      "raw_work_path": "work/quaderno-controls-deepening/raw/support.html",
+      "raw_sha256": "df57540305ecf9c0e84eac54625bd9f4f3bdf0571381b3e79bf5c8c8c859e615",
+      "extracted_work_path": "work/quaderno-controls-deepening/extracted/support.txt",
+      "extracted_sha256": "fb01b7e02dced96da4290c60e51643cf89f7b3cab86712f2636a6724ce3538b2"
+    }
+  },
+  {
+    "evidence_id": "E-QUA-03",
+    "field": "additional_captures",
+    "before": [],
+    "after": [
+      {
+        "checked_on": "2026-10-27",
+        "access_mode": "anonymous_public_html_GET",
+        "hands_on": false,
+        "visual_observed": false,
+        "archived_artifact": "artifacts/quaderno-controls-deepening/source-notes.md",
+        "sha256": "4b696f7c102d7c345146f844eeb2b8625e57059b00f953307c41e6f728218753",
+        "url": "https://www.fmworld.net/digital-paper/support/download/",
+        "status": 200,
+        "raw_work_path": "work/quaderno-controls-deepening/raw/download.html",
+        "raw_sha256": "43e16fcf02616fba24b5dada5c873757b050e5690effa5c204ed252130266375",
+        "extracted_work_path": "work/quaderno-controls-deepening/extracted/download.txt",
+        "extracted_sha256": "a8bb0273381c2ea95507d623f822f12702efc7babd0a6b660419a8160a08991d"
+      }
+    ],
+    "append": {
+      "checked_on": "2026-10-27",
+      "access_mode": "anonymous_public_html_GET",
+      "hands_on": false,
+      "visual_observed": false,
+      "archived_artifact": "artifacts/quaderno-controls-deepening/source-notes.md",
+      "sha256": "4b696f7c102d7c345146f844eeb2b8625e57059b00f953307c41e6f728218753",
+      "url": "https://www.fmworld.net/digital-paper/support/download/",
+      "status": 200,
+      "raw_work_path": "work/quaderno-controls-deepening/raw/download.html",
+      "raw_sha256": "43e16fcf02616fba24b5dada5c873757b050e5690effa5c204ed252130266375",
+      "extracted_work_path": "work/quaderno-controls-deepening/extracted/download.txt",
+      "extracted_sha256": "a8bb0273381c2ea95507d623f822f12702efc7babd0a6b660419a8160a08991d"
+    }
+  }
+]

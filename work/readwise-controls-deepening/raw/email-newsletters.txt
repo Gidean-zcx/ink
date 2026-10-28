@@ -1,0 +1,39 @@
+Email Newsletters
+How do I find my custom Reader email address?
+You can find your custom Reader email address in Reader a variety of places.
+On web, if navigate to the default Email section, your address will be in the right sidebar if there's no content (if there is content, you can click into the ? menu in the bottom right of the right sidebar and select Show getting started tips). The same is true if you navigate to the Feed section. You can also click the blue + button in the bottom left and select More import options... to navigate to the import page and see your custom email addresses.
+On mobile, if you navigate to the Settings tab, you'll be able to find your custom email addresses listed.
+Why do I have two custom email addresses?
+Your Reader account has two custom emails: one to send things to your Library and one to send things to your Feed.
+You can find both email addresses in your account preferences. Your library email will be under Add to Library and will end with @library.readwise.io, while your feed email will be under Add to Feed and will end with @feed.readwise.io.
+We recommend using the library email address when sending one-off documents to your Reader account that you know you want to read, and to use the feed email when setting up auto-forwarding rules or subscribing directly to newsletters.
+Can I change my custom Reader email address to make it easier to remember?
+To customize your Reader email address, go to the Add to Library page and click Personalize email addresses. Keep in mind that your chosen email must be unique to your account and that using a non-random string may increase the chance of your Reader email receiving spam.
+Note: Any newsletters you subscribed to using your randomly assigned custom email will still appear in your account. However, if you personalize your email more than once, only your current personalized email will work. Any personalized emails prior to your current one are effectively deleted and will no longer be able to receive mail.
+How do I forward emails to Reader?
+Once you have your custom Reader email address, you can send any email to that address to have it appear in your Reader Feed or Library, respectively. This includes one-off emails, subscribing directly to newsletters with the custom address, or subscribing to newsletters using your personal address and auto-forwarding. Because it's a random string of characters, you don't need to whitelist any sending addresses.
+How do I unsubscribe from an email newsletter subscribed to my Reader custom email address?
+You can unsubscribe from an email newsletter in Reader the same way you would in your email client: by opening the email, navigating to the bottom, and finding an unsubscribe link. You can also use Reader's Unsubscribe button, which appears in the right sidebar of subscribed emails on web and in the document info panel on mobile.
+What happens when I click Reader's "Unsubscribe" button for an email?
+Reader can't actually remove you from any external email lists, so instead it puts the sender on a list of blocked emails. This means that any email from that sender will be blocked, regardless of how it's being sent to Reader (e.g. directly subscribed or forwarded).
+If you'd like to stop receiving newsletters in Reader but would still like to be able to forward emails from that sender, we recommend using the newsletter's built-in unsubscribe option, which you can usually find at the bottom of the email content.
+Note that the newsletter's built-in unsubscribe button sometimes gets parsed out of Reader's clean text view. If you don't see the unsubscribe button for a particular email, try switching to original view.
+If you've used Reader's unsubcribe button but later decide you'd like to receive emails from that sender again, reach out to us at hello@readwise.io and we'll be happy to resubscribe you!
+Are unsubscribed RSS feeds also added to the blocklist?
+No. The RSS feed technology was created with this sort of use-case in mind, so subscribing and unsubscribing from RSS feeds works much more like how you would probably expect it to. You can unsubscribe from a feed to remove it, then use the same button to resubscribe at any time.
+How do I find email newsletters that I'm subscribed to in Reader?
+There's no way to find a list of all email newsletters you're subscribed to inside Reader, but you can create a filtered view to see all of the email newsletters you've received in one place.
+How do I confirm auto-forwarding from Gmail to my custom Reader email address?
+If you set up auto-forwarding from Gmail to your custom Reader email address, Reader will automatically "click" the link contained inside that email to confirm. If Gmail is still asking for a confirmation code to complete the auto-forwarding setup, Reader will email your Gmail address automatically with the code, which you can then enter into the auto-forwarding setup.
+How can I subscribe to Substack newsletters in Reader?
+If the newsletter is free, you can subscribe via the RSS feed. The easiest way is to save any article from the Substack feed you’d like to subscribe to, then use the Subscribe button in the Info panel to add the feed. You can also add the feed manually in the Add to Feed dialogue (shift + A) using the URL generated by Substack, which will usually be [newsletter-name].substack.com/feed/, or by searching for the newsletter feed name.
+For newsletters with paid content, the RSS feed will only display the first paragraph or two. To get the full content, you can open the original article by pressing O on your keyboard. You can then save the page using the browser extension, which will bring the full content into your Reader Library.
+Alternatively, you can set up a forwarding rule to forward the paid newsletters from your email to Reader by using your custom email address.
+Can I view an email with its original formatting in Reader?
+By default, Reader parses email content into a clean, readable text view. However, if you would prefer to see the email the original sender's chosen styles, you can switch to "original view".
+On web or in the desktop app, click the document icon in the top left corner.
+On mobile, tap into the More actions (...) menu, then select View original.
+How can I set the default view (text or original) for a particular email newsletter?
+Reader will remember whichever view you used last for a particular email sender. So if you previously switched to original view, it will open any other emails from that sender in original view as well.
+To change that sender's default back to text view, you can open an email from them and switch to text view. Then, any time you open emails from them in the future it should display in Reader's clean text view.
+This setting is saved to your account, not to your current device, so your view preferences for email senders will persist across devices and app sessions.

@@ -1,0 +1,9 @@
+Receive onscreen items from other apps
+The share sheet allows you to use content from an app as input. The Receive What’s On Screen option allows you to send content to a shortcut when using other ways of running a shortcut—such as Siri or back tap. When run, the shortcut can receive onscreen items from supported apps, such as Safari, Maps, or Photos. The items onscreen are passed into the first action of your shortcut.
+In the Shortcuts app  on your iPhone or iPad, tap  on a shortcut.
+The shortcut opens in the shortcut editor.
+Tap  to open Details, then turn on Receive What’s On Screen.
+Tap Done.
+A new action appears at the beginning of your workflow, defining inputs the shortcut will accept.
+You can limit the input to the shortcut to allow only specific types of input—for example, if you have a shortcut to process URLs and your screen has URLs and images on screen.
+For more information about input types, see Understanding input types in Shortcuts on iPhone or iPad.

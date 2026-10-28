@@ -1,0 +1,1 @@
+Yes. Playback continues while multitasking on web, iOS, and Android.

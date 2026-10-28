@@ -1,0 +1,146 @@
+[
+  {
+    "flow_id": "F-M014-01",
+    "source_batch": "docs/research/interaction-library/batches/chinese-apps-coverage.csv",
+    "field": "known_branches",
+    "before": "字体封面背景可设",
+    "after": "中国区商店8.6.2列版式能力；未取得手机选书/选文操作说明",
+    "reason": "旧任务补对象/版本/恢复边界；深度不变；只建议root合并"
+  },
+  {
+    "flow_id": "F-M014-01",
+    "source_batch": "docs/research/interaction-library/batches/chinese-apps-coverage.csv",
+    "field": "gaps",
+    "before": "查词/划线证据不足，回原文与撤销未知",
+    "after": "查词/划线创建、撤销、回原文及选择范围未知；不以评论或墨水屏规则补手机链",
+    "reason": "旧任务补对象/版本/恢复边界；深度不变；只建议root合并"
+  },
+  {
+    "flow_id": "F-M014-01",
+    "source_batch": "docs/research/interaction-library/batches/chinese-apps-coverage.csv",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27",
+    "reason": "旧任务补对象/版本/恢复边界；深度不变；只建议root合并"
+  },
+  {
+    "flow_id": "F-M014-02",
+    "source_batch": "docs/research/interaction-library/batches/chinese-apps-coverage.csv",
+    "field": "known_branches",
+    "before": "epub/txt/pdf及多设备同步声明",
+    "after": "商店列epub/txt/pdf与同步；2024政策区分本地上传、章节记录和分享笔记服务器存储",
+    "reason": "旧任务补对象/版本/恢复边界；深度不变；只建议root合并"
+  },
+  {
+    "flow_id": "F-M014-02",
+    "source_batch": "docs/research/interaction-library/batches/chinese-apps-coverage.csv",
+    "field": "gaps",
+    "before": "导入动作、同步字段、重装恢复",
+    "after": "导入菜单/解析反馈、重复/损坏/取消、逐对象同步、换机重装及原件恢复未知",
+    "reason": "旧任务补对象/版本/恢复边界；深度不变；只建议root合并"
+  },
+  {
+    "flow_id": "F-M014-02",
+    "source_batch": "docs/research/interaction-library/batches/chinese-apps-coverage.csv",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27",
+    "reason": "旧任务补对象/版本/恢复边界；深度不变；只建议root合并"
+  },
+  {
+    "flow_id": "F-M014-03",
+    "source_batch": "docs/research/interaction-library/batches/chinese-apps-coverage.csv",
+    "field": "known_branches",
+    "before": "AI摘要/导图/导读/双人讲书",
+    "after": "书童政策只说明输入文本与回答；8.5.1标点停顿/8.5.2外部音乐中断为历史修复声明，8.5.9仅部分音色升级",
+    "reason": "旧任务补对象/版本/恢复边界；深度不变；只建议root合并"
+  },
+  {
+    "flow_id": "F-M014-03",
+    "source_batch": "docs/research/interaction-library/batches/chinese-apps-coverage.csv",
+    "field": "gaps",
+    "before": "入口、来源定位、失败、续播",
+    "after": "AI入口/引用/纠错/保存、听书启停/换声/定时/读听定位、离线与后台恢复均未闭合",
+    "reason": "旧任务补对象/版本/恢复边界；深度不变；只建议root合并"
+  },
+  {
+    "flow_id": "F-M014-03",
+    "source_batch": "docs/research/interaction-library/batches/chinese-apps-coverage.csv",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27",
+    "reason": "旧任务补对象/版本/恢复边界；深度不变；只建议root合并"
+  },
+  {
+    "flow_id": "F-M014-04",
+    "source_batch": "docs/research/interaction-library/batches/chinese-apps-coverage.csv",
+    "field": "known_branches",
+    "before": "云端同步完成但书架未刷新",
+    "after": "仅MatePad Paper适配版：同步后切其他页回书架刷新；进度可延迟；桌面/适配App书架和不同文件须分辨",
+    "reason": "旧任务补对象/版本/恢复边界；深度不变；只建议root合并"
+  },
+  {
+    "flow_id": "F-M014-04",
+    "source_batch": "docs/research/interaction-library/batches/chinese-apps-coverage.csv",
+    "field": "gaps",
+    "before": "冲突、文件是否下载、重装恢复",
+    "after": "备份与同步启动入口、原件下载、账号冲突/重复书合并和重装恢复未知；不套手机",
+    "reason": "旧任务补对象/版本/恢复边界；深度不变；只建议root合并"
+  },
+  {
+    "flow_id": "F-M014-04",
+    "source_batch": "docs/research/interaction-library/batches/chinese-apps-coverage.csv",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27",
+    "reason": "旧任务补对象/版本/恢复边界；深度不变；只建议root合并"
+  },
+  {
+    "flow_id": "F-M014-05",
+    "source_batch": "docs/research/interaction-library/batches/chinese-apps-coverage.csv",
+    "field": "known_branches",
+    "before": "阅读/笔记模式不同",
+    "after": "仅适配版：三点展开旧笔迹、竖排不显示、PDF原页/重排独立、笔记模式显示；未标构建FAQ称无逐笔撤销",
+    "reason": "旧任务补对象/版本/恢复边界；深度不变；只建议root合并"
+  },
+  {
+    "flow_id": "F-M014-05",
+    "source_batch": "docs/research/interaction-library/batches/chinese-apps-coverage.csv",
+    "field": "gaps",
+    "before": "误擦撤销、导出、跨端复原",
+    "after": "擦除后恢复、导出/跨端原稿、后续版本撤销能力未知；分屏退出不证明保存完成",
+    "reason": "旧任务补对象/版本/恢复边界；深度不变；只建议root合并"
+  },
+  {
+    "flow_id": "F-M014-05",
+    "source_batch": "docs/research/interaction-library/batches/chinese-apps-coverage.csv",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27",
+    "reason": "旧任务补对象/版本/恢复边界；深度不变；只建议root合并"
+  },
+  {
+    "flow_id": "F-M014-06",
+    "source_batch": "docs/research/interaction-library/batches/chinese-app-controls-deepening-coverage.csv",
+    "field": "known_branches",
+    "before": "个性化与非个性化栏目区别",
+    "after": "2024政策路径关个性化栏目，保留精选等；关闭推荐不证明清除阅读记录",
+    "reason": "旧任务补对象/版本/恢复边界；深度不变；只建议root合并"
+  },
+  {
+    "flow_id": "F-M014-06",
+    "source_batch": "docs/research/interaction-library/batches/chinese-app-controls-deepening-coverage.csv",
+    "field": "gaps",
+    "before": "当前版本路径、生效时间、跨设备及历史清除",
+    "after": "历史路径未逐OS绑定；8.6.2菜单、生效时间、跨设备及历史清除仍未知",
+    "reason": "旧任务补对象/版本/恢复边界；深度不变；只建议root合并"
+  },
+  {
+    "flow_id": "F-M014-06",
+    "source_batch": "docs/research/interaction-library/batches/chinese-app-controls-deepening-coverage.csv",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27",
+    "reason": "旧任务补对象/版本/恢复边界；深度不变；只建议root合并"
+  }
+]

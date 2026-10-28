@@ -1,0 +1,86 @@
+[
+  {
+    "name": "hku-guide-1",
+    "url": "https://d329ms1y997xa5.cloudfront.net/accounts/128564/images/thumbnail_IMG_0460.png",
+    "source_page": "hku-guide",
+    "checked_on": "2026-10-27",
+    "visual_observed": false,
+    "status": 200,
+    "final_url": "https://d329ms1y997xa5.cloudfront.net/accounts/128564/images/thumbnail_IMG_0460.png",
+    "content_type": "image/png",
+    "raw_work_path": "work/espresso-controls-deepening/raw/hku-guide-1.png",
+    "raw_sha256": "bdca0190c6c42236ada94fcc19b40ebf8ec1274ea4faccadaf1a70b186e2c490"
+  },
+  {
+    "name": "hku-guide-2",
+    "url": "https://d329ms1y997xa5.cloudfront.net/accounts/128564/images/thumbnail_IMG_0461.png",
+    "source_page": "hku-guide",
+    "checked_on": "2026-10-27",
+    "visual_observed": false,
+    "status": 200,
+    "final_url": "https://d329ms1y997xa5.cloudfront.net/accounts/128564/images/thumbnail_IMG_0461.png",
+    "content_type": "image/png",
+    "raw_work_path": "work/espresso-controls-deepening/raw/hku-guide-2.png",
+    "raw_sha256": "d132c6821b89c5f65f1286957c014ae445646e21303108b133002dff4bfe97a0"
+  },
+  {
+    "name": "hku-guide-3",
+    "url": "https://d329ms1y997xa5.cloudfront.net/accounts/128564/images/thumbnail_IMG_0462.png",
+    "source_page": "hku-guide",
+    "checked_on": "2026-10-27",
+    "visual_observed": false,
+    "status": 200,
+    "final_url": "https://d329ms1y997xa5.cloudfront.net/accounts/128564/images/thumbnail_IMG_0462.png",
+    "content_type": "image/png",
+    "raw_work_path": "work/espresso-controls-deepening/raw/hku-guide-3.png",
+    "raw_sha256": "b430978b63a845d688a58afe2694f42a049e5a681e7c24d9c2814f7a82e6c753"
+  },
+  {
+    "name": "hku-guide-4",
+    "url": "https://d329ms1y997xa5.cloudfront.net/accounts/128564/images/thumbnail_IMG_0464.png",
+    "source_page": "hku-guide",
+    "checked_on": "2026-10-27",
+    "visual_observed": false,
+    "status": 200,
+    "final_url": "https://d329ms1y997xa5.cloudfront.net/accounts/128564/images/thumbnail_IMG_0464.png",
+    "content_type": "image/png",
+    "raw_work_path": "work/espresso-controls-deepening/raw/hku-guide-4.png",
+    "raw_sha256": "a2e680cd36eb8f6eeb5ee99af71f6fdf6a619e2f98a3faeaea7e8a00a4dd82aa"
+  },
+  {
+    "name": "historical-finish-1",
+    "url": "https://alearningaday.blog/wp-content/uploads/2017/07/2017-07-26-05-23-20.png?w=298&h=532",
+    "source_page": "historical-finish",
+    "checked_on": "2026-10-27",
+    "visual_observed": false,
+    "status": 200,
+    "final_url": "https://alearningaday.blog/wp-content/uploads/2017/07/2017-07-26-05-23-20.png?w=298&h=532",
+    "content_type": "image/png",
+    "raw_work_path": "work/espresso-controls-deepening/raw/historical-finish-1.png",
+    "raw_sha256": "2ee4514a28ac9b676444cd8845b40966ecf1a92d6ae296a298f2c19a99685f5d"
+  },
+  {
+    "name": "historical-finish-2",
+    "url": "https://alearningaday.blog/wp-content/uploads/2017/07/2017-07-26-05-23-34.png?w=300&h=528",
+    "source_page": "historical-finish",
+    "checked_on": "2026-10-27",
+    "visual_observed": false,
+    "status": 200,
+    "final_url": "https://alearningaday.blog/wp-content/uploads/2017/07/2017-07-26-05-23-34.png?w=300&h=528",
+    "content_type": "image/png",
+    "raw_work_path": "work/espresso-controls-deepening/raw/historical-finish-2.png",
+    "raw_sha256": "9f3b4f2a3e67bab782282facb300a4da52a7668e6ece53000b52b74ae1a9372a"
+  },
+  {
+    "name": "historical-finish-3",
+    "url": "https://alearningaday.blog/wp-content/uploads/2017/07/2017-07-26-05-23-40.png?w=299&h=1080",
+    "source_page": "historical-finish",
+    "checked_on": "2026-10-27",
+    "visual_observed": false,
+    "status": 200,
+    "final_url": "https://alearningaday.blog/wp-content/uploads/2017/07/2017-07-26-05-23-40.png?w=299&h=1080",
+    "content_type": "image/png",
+    "raw_work_path": "work/espresso-controls-deepening/raw/historical-finish-3.png",
+    "raw_sha256": "64307ae72ff9e1e056c5e7397959460b8d3a52efc927b50cd241509986432b97"
+  }
+]

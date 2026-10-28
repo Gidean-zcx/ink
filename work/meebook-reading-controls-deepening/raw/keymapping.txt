@@ -1,0 +1,1510 @@
+Keymapping · koreader/koreader Wiki · GitHub
+Skip to content
+Navigation Menu
+Sign in
+Appearance settings
+Platform
+AI CODE CREATION
+GitHub Copilot
+Write better code with AI
+GitHub Copilot app
+Direct agents from issue to merge
+MCP Registry
+Integrate external tools
+DEVELOPER WORKFLOWS
+Actions
+Automate any workflow
+Codespaces
+Instant dev environments
+Issues
+Plan and track work
+Code Review
+Manage code changes
+Code Quality
+Enforce quality at merge
+APPLICATION SECURITY
+GitHub Advanced Security
+Find and fix vulnerabilities
+Code security
+Secure your code as you build
+Secret protection
+Stop leaks before they start
+EXPLORE
+Why GitHub
+Documentation
+Blog
+Changelog
+Marketplace
+View all features
+Solutions
+BY COMPANY SIZE
+Enterprises
+Small and medium teams
+Startups
+Nonprofits
+BY USE CASE
+App Modernization
+DevSecOps
+DevOps
+CI/CD
+View all use cases
+BY INDUSTRY
+Healthcare
+Financial services
+Manufacturing
+Government
+See all industries
+View all solutions
+Resources
+EXPLORE BY TOPIC
+AI
+Software Development
+DevOps
+Security
+View all topics
+EXPLORE BY TYPE
+Customer stories
+Events & webinars
+Ebooks & reports
+Business insights
+GitHub Skills
+SUPPORT & SERVICES
+Documentation
+Customer support
+Community forum
+Trust center
+Partners
+View all resources
+Open Source
+COMMUNITY
+GitHub Sponsors
+Fund open source developers
+PROGRAMS
+Security Lab
+Maintainer Community
+GitHub Stars
+Archive Program
+REPOSITORIES
+Topics
+Trending
+Collections
+Enterprise
+ENTERPRISE SOLUTIONS
+Enterprise platform
+AI-powered developer platform
+AVAILABLE ADD-ONS
+GitHub Advanced Security
+Enterprise-grade security features
+Copilot for Business
+Enterprise-grade AI features
+Premium Support
+Enterprise-grade 24/7 support
+Pricing
+Search
+/
+Sign in
+Sign up
+Appearance settings
+You signed in with another tab or window.
+Reload
+to refresh your session.
+You signed out in another tab or window.
+Reload
+to refresh your session.
+You switched accounts on another tab or window.
+Reload
+to refresh your session.
+Dismiss alert
+{{ message }}
+koreader
+koreader
+Repository navigation
+Code
+Issues
+1.3k
+(
+1.3k
+)
+Pull requests
+82
+(
+82
+)
+Discussions
+Actions
+Projects
+Wiki
+Security and quality
+Insights
+More
+items
+Keymapping
+Jump to bottom
+Edit
+New page
+mergen3107 edited this page
+Oct 13, 2026
+·
+9 revisions
+What is key mapping?
+KOReader supports key mapping, i.e. associate different actions to physical buttons (for devices such as Kobo, PocketBook, etc.).
+How does key mapping work?
+You need to create the file (if it doesn't already exist)
+koreader/settings/event_map.lua
+. There you can edit key bindings. For each button, an integer key is associated to an event. The format of the file is as follows:
+return
+{
+   [
+<
+Integer
+key
+for
+button
+A
+>
+]
+=
+"
+<Event X>
+"
+,
+   [
+<
+Integer
+key
+for
+button
+B
+>
+]
+=
+"
+<Event Y>
+"
+,
+   [
+<
+Integer
+key
+for
+button
+C
+>
+]
+=
+"
+<Event Z>
+"
+,
+...
+}
+How to find the key associated to each physical button?
+Each vendor defines its own set of keys associated to the physical buttons. See vendor specific examples below.
+A more generic way is to check the logs associated with pressing button events.
+Kobo devices
+The keys for Kobo devices can be found in
+frontend/device/kobo/device.lua
+:
+event_map
+=
+{
+    [
+59
+]
+=
+"
+SleepCover
+"
+,
+    [
+90
+]
+=
+"
+LightButton
+"
+,
+    [
+102
+]
+=
+"
+Home
+"
+,
+    [
+116
+]
+=
+"
+Power
+"
+,
+    [
+193
+]
+=
+"
+RPgBack
+"
+,
+    [
+194
+]
+=
+"
+RPgFwd
+"
+,
+},
+For instance:
+the key
+102
+corresponds to the
+Home
+button
+the key
+193
+corresponds to the
+Back
+button
+etc.
+PocketBook devices
+For PocketBook devices, the device keys used in
+frontend/device/pocketbook/device.lua
+are defined in
+ffi/inkview_h.lua
+(which can be found under the
+koreader/koreader-base
+project):
+event_map
+=
+setmetatable
+({
+    [
+-
+C
+.
+IV_KEY_HOME
+]
+=
+"
+Home
+"
+,
+    [
+-
+C
+.
+IV_KEY_MENU
+]
+=
+"
+Menu
+"
+,
+    [
+-
+C
+.
+IV_KEY_PREV
+]
+=
+"
+LPgBack
+"
+,
+    [
+-
+C
+.
+IV_KEY_NEXT
+]
+=
+"
+LPgFwd
+"
+,
+    [
+-
+C
+.
+IV_KEY_UP
+]
+=
+"
+Up
+"
+,
+    [
+-
+C
+.
+IV_KEY_DOWN
+]
+=
+"
+Down
+"
+,
+    [
+-
+C
+.
+IV_KEY_LEFT
+]
+=
+"
+Left
+"
+,
+    [
+-
+C
+.
+IV_KEY_RIGHT
+]
+=
+"
+Right
+"
+,
+    [
+-
+C
+.
+IV_KEY_OK
+]
+=
+"
+Press
+"
+,
+},
+static
+const
+int
+IV_KEY_0
+=
+48
+;
+static
+const
+int
+IV_KEY_1
+=
+49
+;
+static
+const
+int
+IV_KEY_2
+=
+50
+;
+static
+const
+int
+IV_KEY_3
+=
+51
+;
+static
+const
+int
+IV_KEY_4
+=
+52
+;
+static
+const
+int
+IV_KEY_5
+=
+53
+;
+static
+const
+int
+IV_KEY_6
+=
+54
+;
+static
+const
+int
+IV_KEY_7
+=
+55
+;
+static
+const
+int
+IV_KEY_8
+=
+56
+;
+static
+const
+int
+IV_KEY_9
+=
+57
+;
+static
+const
+int
+IV_KEY_BACK
+=
+27
+;
+static
+const
+int
+IV_KEY_COVERCLOSE
+=
+3
+;
+static
+const
+int
+IV_KEY_COVEROPEN
+=
+2
+;
+static
+const
+int
+IV_KEY_DELETE
+=
+8
+;
+static
+const
+int
+IV_KEY_DOWN
+=
+18
+;
+static
+const
+int
+IV_KEY_HOME
+=
+26
+;
+static
+const
+int
+IV_KEY_KEYBOARDCLOSE
+=
+16
+;
+static
+const
+int
+IV_KEY_LANGUAGECHANGE
+=
+15
+;
+static
+const
+int
+IV_KEY_LEFT
+=
+19
+;
+static
+const
+int
+IV_KEY_MAX
+=
+32
+;
+static
+const
+int
+IV_KEY_MENU
+=
+23
+;
+static
+const
+int
+IV_KEY_MENU_POWER
+=
+4
+;
+static
+const
+int
+IV_KEY_MINUS
+=
+21
+;
+static
+const
+int
+IV_KEY_MUSIC
+=
+30
+;
+static
+const
+int
+IV_KEY_NEXT
+=
+25
+;
+static
+const
+int
+IV_KEY_NEXT2
+=
+29
+;
+static
+const
+int
+IV_KEY_OK
+=
+10
+;
+static
+const
+int
+IV_KEY_PLUS
+=
+22
+;
+static
+const
+int
+IV_KEY_POWER
+=
+1
+;
+static
+const
+int
+IV_KEY_PREV
+=
+24
+;
+static
+const
+int
+IV_KEY_PREV2
+=
+28
+;
+static
+const
+int
+IV_KEY_RIGHT
+=
+20
+;
+static
+const
+int
+IV_KEY_SHIFT
+=
+14
+;
+static
+const
+int
+IV_KEY_UP
+=
+17
+;
+static
+const
+int
+IV_KEY_ZOOMIN
+=
+7
+;
+static
+const
+int
+IV_KEY_ZOOMOUT
+=
+6
+;
+NOTE: the use of negated values when declaring the mapping (to avoid conflicts with the standard Linux keycodes).
+How to find the keys in the logs?
+Enable the verbose logs in the file browser:
+Check Top menu > "Hamburger menu" icon (three lines) > Help > Report a bug > Enable verbose logging
+Agree to restart KOReader
+Press each button on your device
+Open the
+koreader/crash.log
+file.
+Search for lines with the following pattern:
+DEBUG key event
+For instance, pressing the
+Menu
+,
+Previous page
+,
+Next page
+and
+Home
+buttons on a PocketBook device generates the following lines in the log file:
+...
+11/16/24-11:12:45 DEBUG key event => code: 23 (Menu), value: 1, time: 1731751992.873064 
+...
+11/16/24-11:12:40 DEBUG key event => code: 24 (LPgBack), value: 1, time: 1731751987.199226 
+...
+11/16/24-11:12:41 DEBUG key event => code: 25 (LPgFwd), value: 1, time: 1731751988.055044 
+...
+11/16/24-11:12:53 DEBUG key event => code: 26 (Home), value: 1, time: 1731752000.164119
+Key mapping use-cases
+Inverting page turn buttons
+A common use-case for changing key mapping is to invert the
+Next page
+and
+Previous page
+buttons.
+Important note:
+recent versions of KOReader have a built-in feature for inverting page turn buttons (under Settings > Navigation > Physical buttons > Invert page turn buttons), so this key mapping trick is now obsolete.
+For inverting page turn buttons, simply swap the keys associated with the
+"RPgBack"
+and
+"RPgFwd"
+events.
+Kobo example:
+return
+{
+    [
+194
+]
+=
+"
+RPgBack
+"
+,
+    [
+193
+]
+=
+"
+RPgFwd
+"
+,
+}
+More info on this can be found
+here
+.
+Replace
+Esc
+action with the old
+Backspace
+action on ReaderBack
+One example is shown
+here,
+with example below:
+return
+{
+    [
+42
+]
+=
+"
+Back
+"
+}
+Complex use-cases (for advanced users)
+event_map.lua
+is limited to associating predefined actions with each button. It is however possible to create customized actions, but this requires patching the KOReader code. See
+this discussion
+for more details.
+Home
+|
+Wiki pages
+Pages
+112
+Loading
+Home
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Advanced WiFi control
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Alternate TOC
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Android FAQs
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Android tips and tricks
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Auto frontlight
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Auto Standby
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Auto suspend
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Background runner
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Battery statistics
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Bookmarks
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+calibre
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Calibre wireless connection
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Change defaults
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Change Next Page   Previous Page touch targets
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Changelog
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Chinese keyboard
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Clipboard
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Cover browser
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Coverimage
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+deprecated devices
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Development and Debugging on Android
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Dictionary download
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Dictionary support
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+DPI control
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Evernote export
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Extended keyboard   swipe to get new characters
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Extensive footer controls
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Features list
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+File manager
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+File search
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Following links within documents
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Fonts
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Frontlight gesture controller
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Gamepad support
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Getting Started
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Goodreads
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Highlight export
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Hyphenation
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Image Viewer
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+In page footnotes
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Install on Windows with WSL
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Install using Linux container (Docker, Podman
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Install using Linux container (Docker, Podman)
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Installation on Android devices
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Installation on BQ devices
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Installation on Chromebook devices
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Installation on desktop Linux
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Installation on Kindle devices
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Installation on Kobo devices
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Installation on MacOS
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Installation on PocketBook devices
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Installation on reMarkable
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Japanese Support
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Joplin
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Keep alive
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Keyboard navigation
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Keymapping
+What is key mapping?
+How does key mapping work?
+How to find the key associated to each physical button?
+Kobo devices
+PocketBook devices
+How to find the keys in the logs?
+Key mapping use-cases
+Inverting page turn buttons
+Replace Esc action with the old Backspace action on ReaderBack
+Complex use-cases (for advanced users)
+Loading
+kobolight
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+KOReader Gestures
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+KOReader Screenshots
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+KOReader Wiki CN
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+KOReader手势操作
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+KOReader用户手册
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Light control
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Localization
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Movable UI elements
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+multiswipes
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Nav TOC and page maps
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+News downloader
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Nextcloud notes
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+OPDS support
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+PDF Annotations
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Perception Expander plugin
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Press and hold function
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Profiles
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Progress Status Bars: Main (bottom) and Alternative (Top)
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Progress sync
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Read timer
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+README.html.md
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Reflowing tweaks
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Report a bug
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Screen saver options
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Send2Ebook
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Send2Ebook)=
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Set time and date
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Shell scripts
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Skim document
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+SSH
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Statistics plugin
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Style tweaks
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+System statistics
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Terminal emulator
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Time sync
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Tips and Tricks
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Troubleshooting
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Tweak document settings by directory
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+User patches
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Vignettes around chapter titles
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Virtual keyboard
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Vocabulary builder
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Wallabag
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Which one should I buy?
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Wikipedia support
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+ZIP
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+云盘存储
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+在Kindle上安装和运行KOReader
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+如何在Kobo上安装KOReader
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+更改默认设置
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+更新日志
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+笔画输入法
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+进度同步
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Show 97 more pages…
+Installation
+Changelog
+Install on Android
+Install on Cervantes
+Install on ChromeOS
+Install on Kindle
+Install on Kobo
+Install on PocketBook
+Install on reMarkable
+Install on Desktop Linux
+Install on MacOS
+Install on Windows with WSL
+Install using Linux container (Docker, Podman)
+Usage
+Basic reading controls (click to open)
+Keyboard navigation
+Advanced reading controls (click to open)
+Gestures
+Press and hold
+Frontlight control
+Multiswipe gestures
+Gamepad
+Keymapping
+Extended keyboard
+Tips and Tricks
+Getting started
+Gestures
+Change defaults
+DPI control
+Style tweaks for misbehaving books
+Reflowing tweaks
+Screenshots
+Troubleshooting
+Android tips and tricks
+Features
+Dictionary support
+Highlight export
+OPDS-support
+Progress-sync
+Wikipedia-support
+ZIP file support
+Plugins
+Auto frontlight
+Auto standby
+Auto suspend
+Background runner
+Battery statistics
+Calibre
+Cover browser
+Cover image
+Frontlight gesture controller
+Goodreads (deprecated)
+Highlight exporter
+Japanese Support
+Keep alive
+News downloader
+Perception expander
+Progress sync
+Read timer
+Reading statistics
+Send2Ebook
+SSH
+System statistics
+Terminal emulator
+Time sync
+Vocabulary builder
+Wallabag
+User patches
+Overview
+Installation
+Available patches
+Development
+Building the emulator
+Coding Style
+Development and Debugging on Android
+How to collaborate with Git
+How to port KOReader to other platform
+Remote debugging with gdbserver
+UI Events
+简体中文
+KOReader 手势操作
+KOReader 用户手册
+在 Kindle 上安装和运行 KOReader
+在 Kobo 上安装和运行 KOReader
+更改默认设置
+笔画输入法
+更新日志
+进度同步
+云盘存储
+Clone this wiki locally
+Footer
+© 2026 GitHub, Inc.
+Footer navigation
+Terms
+Privacy
+Security
+Status
+Community
+Docs
+Contact
+Manage cookies
+Do not share my personal information
+You can’t perform that action at this time.

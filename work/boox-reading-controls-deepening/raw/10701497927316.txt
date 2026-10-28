@@ -1,0 +1,22 @@
+In this article, you will learn how to organize your book collections and change the way books are visually presented in the Library.
+ 
+Library Modes
+Library Modes include Scan Mode and Directory Mode. To switch between them, tap the books icon in the Library to bring up the menu.
+ [image:1] 
+1. Scan Mode
+When Scan Mode is selected, the icon will change to a bookshelf. In this mode, you can add a bookshelf, filter, and sort the books in the hamburger menu.
+ [image:2] 
+ 
+2. Directory Mode
+When Directory Mode is selected, the icon will change to a folder. In this mode, the books will be sorted according to their paths in the directory.
+ [image:3] 
+ 
+Layout Options
+You can determine how your books look in the library. Cover Mode shows book covers for a visual vibe, while List Mode gives a simple list for easy browsing. To switch between them:
+1. Under Scan Mode, tap the option in the hamburger menu.
+ [image:4] 
+2. Under Directory Mode, tap the second icon.
+ [image:5] 
+Recent Files
+To look for the recent files, tap the clock icon in the Library. It will show up to 12 of the most recent files here.
+ [image:6]

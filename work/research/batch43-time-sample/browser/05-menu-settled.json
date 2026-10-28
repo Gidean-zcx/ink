@@ -1,0 +1,121 @@
+{
+  "name": "05-menu-settled",
+  "at": "2026-10-27T07:08:20.567293+00:00",
+  "url": "https://reader.emagazines.com/issue/time-for-kids-k-1/may-8-2026/meet-sea-turtles?ipt=c8869aa3-8f3d-4699-b112-1d4a6270a953#p2",
+  "title": "TIME for Kids K-1, May 8, 2026",
+  "text": "    Save my place\n    Download PDF\n    Mobile view\n / 4",
+  "controls": [
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": "Toggle navigation",
+      "test": null,
+      "type": "button",
+      "disabled": false
+    },
+    {
+      "tag": "INPUT",
+      "text": "",
+      "aria": "Search magazine content",
+      "test": null,
+      "type": "text",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": "Clear search",
+      "test": null,
+      "type": "button",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "    Save my place",
+      "aria": "Save my place",
+      "test": null,
+      "type": "button",
+      "disabled": false
+    },
+    {
+      "tag": "A",
+      "text": "    Download PDF",
+      "aria": "Download PDF issue",
+      "test": null,
+      "type": "",
+      "disabled": null
+    },
+    {
+      "tag": "A",
+      "text": "    Mobile view",
+      "aria": "View mobile version",
+      "test": null,
+      "type": "",
+      "disabled": null
+    },
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": "Go to first page",
+      "test": null,
+      "type": "button",
+      "disabled": false
+    },
+    {
+      "tag": "INPUT",
+      "text": "",
+      "aria": "Go to page number",
+      "test": null,
+      "type": "number",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": "Go to last page",
+      "test": null,
+      "type": "button",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": "Zoom in on content",
+      "test": null,
+      "type": "button",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": "Listen to audio version",
+      "test": null,
+      "type": "button",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": "Enter full screen mode",
+      "test": null,
+      "type": "button",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": "Previous page",
+      "test": null,
+      "type": "button",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": "Next page",
+      "test": null,
+      "type": "button",
+      "disabled": false
+    }
+  ]
+}

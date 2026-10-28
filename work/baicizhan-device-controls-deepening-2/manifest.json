@@ -1,0 +1,147 @@
+[
+  {
+    "path": "docs/research/interaction-library/cases/M-022-baicizhan-device.md",
+    "sha256": "356c92cceb52756913036dfbaa0f29ad7ace25762f6689cc9d91da84d0f3c60e",
+    "bytes": 14649
+  },
+  {
+    "path": "docs/research/interaction-library/batches/baicizhan-device-controls-deepening-2-coverage.csv",
+    "sha256": "aa0cf671b21fa0390e9b0cfb58c6cecf3a0d7df66eaad894707f17ea224f6025",
+    "bytes": 107
+  },
+  {
+    "path": "docs/research/interaction-library/batches/baicizhan-device-controls-deepening-2-evidence.jsonl",
+    "sha256": "43192cca42b9ea5ce67f9c9cb8fa4aab54761e1c8ac738d064dc0de4f211edac",
+    "bytes": 1826
+  },
+  {
+    "path": "docs/research/interaction-library/batches/baicizhan-device-controls-deepening-2-inventory.csv",
+    "sha256": "cd9269f1cfcab53f1c3c60ab5f7d1d55bc331c4ea0577235348fed64b4d83803",
+    "bytes": 13343
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/baicizhan-device-controls-deepening-2/source-notes.md",
+    "sha256": "101dae305557f5f02ddcb23f17edf95d2d80cc3856c790f4600f1d5a9d49996a",
+    "bytes": 2505
+  },
+  {
+    "path": "work/baicizhan-device-controls-deepening-2/01-official-home-reread.txt",
+    "sha256": "97a6264392097c8a7c23d84c7f4cfb4c5200329345986e52f4c3b0a4ffb9a1c8",
+    "bytes": 1862
+  },
+  {
+    "path": "work/baicizhan-device-controls-deepening-2/02-52audio-ace-max-reread.txt",
+    "sha256": "07741912cd7ff8b039c3ed39aeeb7e0ec92846531bfafe59dd8a6c814caff8fd",
+    "bytes": 7738
+  },
+  {
+    "path": "work/baicizhan-device-controls-deepening-2/baseline.json",
+    "sha256": "54df9beeacfebb170ed7a313a09cd2c4f5ebe4054c9357300df5889565081356",
+    "bytes": 36176
+  },
+  {
+    "path": "work/baicizhan-device-controls-deepening-2/build-result.json",
+    "sha256": "01385b22acd13516548ab59920ba8e97d1760d7145ae9a82b481d38179303286",
+    "bytes": 567
+  },
+  {
+    "path": "work/baicizhan-device-controls-deepening-2/build.py",
+    "sha256": "d8bc3a07c0d4d35cb542dad870ccc9986afd0109853ff9729f97296b4213ec4a",
+    "bytes": 16353
+  },
+  {
+    "path": "work/baicizhan-device-controls-deepening-2/capture.py",
+    "sha256": "202625f116964eeb65ed6687134c1b40018ba84df1358515d0b5d2b84cdcda8d",
+    "bytes": 1451
+  },
+  {
+    "path": "work/baicizhan-device-controls-deepening-2/case-after.md",
+    "sha256": "356c92cceb52756913036dfbaa0f29ad7ace25762f6689cc9d91da84d0f3c60e",
+    "bytes": 14649
+  },
+  {
+    "path": "work/baicizhan-device-controls-deepening-2/case-before.md",
+    "sha256": "62c74d6a962ce3a46e78a98e40ce8f2da319b7f1292c2b62a367a3158c22af91",
+    "bytes": 12181
+  },
+  {
+    "path": "work/baicizhan-device-controls-deepening-2/check.py",
+    "sha256": "2737f1509a3eafab494d03bd264fbea843f94f24a2f3b2c9b2c6af2e45ca7f20",
+    "bytes": 5230
+  },
+  {
+    "path": "work/baicizhan-device-controls-deepening-2/coverage-before.json",
+    "sha256": "9be86039f1f792af23afd70ac6e7e3cf95372d65dfd974bbdf35c270491a794e",
+    "bytes": 1605
+  },
+  {
+    "path": "work/baicizhan-device-controls-deepening-2/evidence-before.json",
+    "sha256": "4fc5ff2591678651ff6c898a4bd9fd0c2fb828bff2b679ba2bf0123c9d62833b",
+    "bytes": 7581
+  },
+  {
+    "path": "work/baicizhan-device-controls-deepening-2/existing-coverage-updates.json",
+    "sha256": "f0e69332e3294ba7a453b244872f83fceb5e84098a6f5bf80a0d80344943f389",
+    "bytes": 3187
+  },
+  {
+    "path": "work/baicizhan-device-controls-deepening-2/existing-evidence-additional-captures.json",
+    "sha256": "4888b3e7c02a8ecf7b513beabada8cdb480e117d6207bab5c4ac3c8de0cb91e0",
+    "bytes": 2275
+  },
+  {
+    "path": "work/baicizhan-device-controls-deepening-2/qa-dcj2-pretty.json",
+    "sha256": "153a299c36c7f98d59e015bc341bd852e4532a84ff27ff4515536ae40437b047",
+    "bytes": 14603
+  },
+  {
+    "path": "work/baicizhan-device-controls-deepening-2/qa-dcj2-text.txt",
+    "sha256": "d10c5cb7ae57d2508a5fb1d3e06f1e4fa2303a7bf49f9bc8c4eaf89eb29448a7",
+    "bytes": 10024
+  },
+  {
+    "path": "work/baicizhan-device-controls-deepening-2/qa-dcj2.json",
+    "sha256": "774b63ea53111bdf9366af03e54563612949813c8266dd7d11da6f1a510c9bd9",
+    "bytes": 11055
+  },
+  {
+    "path": "work/baicizhan-device-controls-deepening-2/qa-dcj2.json.capture.json",
+    "sha256": "b3698f05f2bf7f1ee5bf657395d4513fe2eab689d83da2d361f27fd06b37b96d",
+    "bytes": 471
+  },
+  {
+    "path": "work/baicizhan-device-controls-deepening-2/qa-routing-excerpt.txt",
+    "sha256": "0555a5b5098a7992aaa9b42296213297b6350dd2756975dd105b37f0d1c9d801",
+    "bytes": 337
+  },
+  {
+    "path": "work/baicizhan-device-controls-deepening-2/research-log.md",
+    "sha256": "902bf84eb84d1b9d89f8323aa0a93874cb7332d9ffdb9c4db07f158036d01a13",
+    "bytes": 4047
+  },
+  {
+    "path": "work/baicizhan-controls-deepening/qa.html",
+    "sha256": "4e8ef5c8b17ebba0dff64a26139639c3110ec35c9661572eebf17aa5d48ad803",
+    "bytes": 1833
+  },
+  {
+    "path": "work/baicizhan-controls-deepening/qa-index.js",
+    "sha256": "faa2b162d1675eb819006ec6c69ba4336ef82bed48a7c0fbcdb0cfe942ee31f0",
+    "bytes": 290213
+  },
+  {
+    "path": "work/baicizhan-device-controls-deepening/01-official-home.html",
+    "sha256": "47e7718d62b9b0e94707740198d4335181cfc730842a884da62d26845e41e828",
+    "bytes": 55044
+  },
+  {
+    "path": "work/baicizhan-device-controls-deepening/01-official-home-links.json",
+    "sha256": "d2208cb93c909097299630b92b3905bb1d121f9b67ac4cd85cf419ff189c8c9a",
+    "bytes": 22463
+  },
+  {
+    "path": "work/baicizhan-device-controls-deepening/02-52audio-ace-max.html",
+    "sha256": "12fd996dcc2af3cdf35f8eaf894a74163db488d1e14f6580a03c0d29b55519fb",
+    "bytes": 99802
+  }
+]

@@ -1,0 +1,25 @@
+{
+  "name": "15-motivation-next",
+  "at": "2026-10-27T06:27:41.118117+00:00",
+  "url": "https://www.duolingo.com/welcome?welcomeStep=mathSelection",
+  "title": "Duolingo - The world’s most popular way to learn",
+  "text": "…so Duolingo is designed to be fun like a game!\n…so Duolingo is designed to be fun like a game!\nCONTINUE",
+  "controls": [
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": null,
+      "test": null,
+      "type": "submit",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "CONTINUE",
+      "aria": null,
+      "test": "funboarding-continue-button",
+      "type": "submit",
+      "disabled": false
+    }
+  ]
+}

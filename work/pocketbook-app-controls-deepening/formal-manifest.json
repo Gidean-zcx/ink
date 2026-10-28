@@ -1,0 +1,57 @@
+[
+  {
+    "path": "docs/research/interaction-library/cases/M-003-pocketbook.md",
+    "sha256": "059e5d2e33481dd3faff112809a8f56574a626460bfbf16d5c9409decfdda4f5",
+    "bytes": 22448
+  },
+  {
+    "path": "docs/research/interaction-library/batches/pocketbook-app-controls-deepening-coverage.csv",
+    "sha256": "adfeaaac6ee5205bca187d85ac7921e61e428ec495ea026c7100a84e1f204f28",
+    "bytes": 2999
+  },
+  {
+    "path": "docs/research/interaction-library/batches/pocketbook-app-controls-deepening-evidence.jsonl",
+    "sha256": "be0a5cc8cda032ab7d0768010048a6a4bf62bc3d827a069ec0bce5ed9b513604",
+    "bytes": 6055
+  },
+  {
+    "path": "docs/research/interaction-library/batches/pocketbook-app-controls-deepening-inventory.csv",
+    "sha256": "6ed722545364f96a218dce8d12c66c9edd78d70c34a18db585dd0946b72d03a8",
+    "bytes": 14348
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/pocketbook-app-controls-deepening/manual-p29.png",
+    "sha256": "91a642c829ee86c443cca95da9520f27becca19aa56823da9374f3886de31347",
+    "bytes": 80545
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/pocketbook-app-controls-deepening/manual-p37.png",
+    "sha256": "71c8ebced51aafd6c375ebb3d15cd8840daaca2b5965c2ba39730d8ded46c654",
+    "bytes": 67041
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/pocketbook-app-controls-deepening/manual-p41.png",
+    "sha256": "6ce55bf9aa6ad416835838c01cf305dbdf8cd5a0d3b0fe2a3ebc600bf595b554",
+    "bytes": 60209
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/pocketbook-app-controls-deepening/manual-p76.png",
+    "sha256": "1eca66a5bfc0b806f48886b4338ec5f68a38474fde51c95fe6857d2ad74978c5",
+    "bytes": 57998
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/pocketbook-app-controls-deepening/manual-p77.png",
+    "sha256": "5b374e901b219cf0946255d1b43ec36042bb4f28078d030db44502f30d73562b",
+    "bytes": 56584
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/pocketbook-app-controls-deepening/observed-pages.json",
+    "sha256": "c0f76668c0661958a01d81aca1d999f3a65a3e8a93b5292dec9517d1bf20c24b",
+    "bytes": 3143
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/pocketbook-app-controls-deepening/source-notes.md",
+    "sha256": "f773ab64456a13a2a23ad3a8fa2d77d8cf0610879c8a63394685378355936a40",
+    "bytes": 3066
+  }
+]

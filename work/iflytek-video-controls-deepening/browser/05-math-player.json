@@ -1,0 +1,18 @@
+{
+  "name": "05-math-player",
+  "url": "https://xxj.xunfei.cn/h5-help/#/play?bgc=https%3A%2F%2Fk12-swift.xunfeixxj.com%2Fxxjserver%2Fwx%2Fh5%2Fhelp%2Fvideo%2F%E5%B0%8F%E6%95%B0AI%E5%90%8C%E6%AD%A5%E7%B2%BE%E5%87%86%E5%AD%A6.jpg&video=https%3A%2F%2Fk12-swift.xunfeixxj.com%2Fxxjserver%2Fwx%2Fh5%2Fhelp%2Fvideo%2F%E5%B0%8F%E5%AD%A6%E6%95%B0%E5%AD%A6AI%E5%90%8C%E6%AD%A5%E7%B2%BE%E5%87%86%E5%AD%A6.mp4&videoName=%E5%B0%8F%E5%AD%A6%E6%95%B0%E5%AD%A6AI%E5%90%8C%E6%AD%A5%E7%B2%BE%E5%87%86%E5%AD%A6&productName=%E5%AD%A6%E4%B9%A0%E6%9C%BAT30Pro&moduleType=introduce&productId=2e5298d3%2FAISTUDY_SU30_T30PRO",
+  "text": "",
+  "videos": [
+    {
+      "src": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E6%95%B0%E5%AD%A6AI%E5%90%8C%E6%AD%A5%E7%B2%BE%E5%87%86%E5%AD%A6.mp4",
+      "duration": 125.28,
+      "time": 2.018462,
+      "paused": false,
+      "readyState": 4,
+      "error": null,
+      "width": 1920,
+      "height": 1080
+    }
+  ],
+  "sha256": "6dea7e262cb5d0b3ea15c67c8319b3b361815b461c5b51c0912c2144b70edede"
+}

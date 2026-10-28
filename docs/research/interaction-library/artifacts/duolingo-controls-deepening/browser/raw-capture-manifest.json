@@ -1,0 +1,867 @@
+[
+  {
+    "path": "work/duolingo-controls-deepening/browser/01-home.html",
+    "sha256": "a1aacb0e292f21cf3a5e873f4fe34f702c7f373e676efd62c851533869e8eda5",
+    "bytes": 506971
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/01-home.json",
+    "sha256": "57fcee4795af367afa6ca6b549537131e4fefd6ed6ae5f171ba9dea70efabc74",
+    "bytes": 3177
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/01-home.png",
+    "sha256": "154a97a6e7c104d4bca981685819630a6dd601439dc82a2725997f6007b25646",
+    "bytes": 49648
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/02-get-started.html",
+    "sha256": "87b859ba35f93fde53ecbb6c43f30f1ac9acc7f4086477c350471f772446cafe",
+    "bytes": 91663
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/02-get-started.json",
+    "sha256": "305c771cdc12c01b239adaca5ad4b9d9dbbe8f92961198a0a9c927e93b4bc708",
+    "bytes": 7280
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/02-get-started.png",
+    "sha256": "040b890bc512a0bd4c3fa5a33e6c1dcd432153d02915b5f90793d0d9b0452c12",
+    "bytes": 52255
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/03-french.html",
+    "sha256": "382fbab180ded10fa8f969edd45b10ea5b7f8973d23c5c9df2af1f388db97431",
+    "bytes": 86878
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/03-french.json",
+    "sha256": "2733d7006172c7b000b73368b0dcbe94b3372b56d382cdca8afa0c0fecd38dc5",
+    "bytes": 362
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/03-french.png",
+    "sha256": "ad1be768e640380bfd50e1e09ff64f19c5ae212fcf30296a237ea987004f752c",
+    "bytes": 15962
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/04-after-wait.html",
+    "sha256": "57e2e60bdd5e7b01898171369a5011230a260757d705084eb7477ddd66b42502",
+    "bytes": 350826
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/04-after-wait.json",
+    "sha256": "80271c226eb3061e5e632f2ad5de90bbd97432408cf1ecd4015eb8a25fe554a0",
+    "bytes": 501
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/04-after-wait.png",
+    "sha256": "5e537d6b1f9b2aa6bb8d58fabd9e3fc0fc0f09ebf708ce424d54b23fa1d9e0dc",
+    "bytes": 24494
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/05-welcome-continue.html",
+    "sha256": "727bde8da72cb4a27643872227435838ce4d8d530827820862e971e57a07e883",
+    "bytes": 399407
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/05-welcome-continue.json",
+    "sha256": "9a46e7c99cbd1af8f5c0ee1a82bdc4ef62511de12f923e8fe8a0bd0e32067594",
+    "bytes": 529
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/05-welcome-continue.png",
+    "sha256": "d875061c953df9f7740915cb808236f5dfd645854d542a111d096b2f21a1161e",
+    "bytes": 24924
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/06-onboarding-question.html",
+    "sha256": "2a83e46ade2d54fb7e6949c7b43966ee77b557f747eb0dc81d9ea6e4e3ea2ddf",
+    "bytes": 587700
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/06-onboarding-question.json",
+    "sha256": "8ff19a5ccbbb79501be36a66b0d7b6072a61fd83914acf38f96690022df78724",
+    "bytes": 466
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/06-onboarding-question.png",
+    "sha256": "906abe591368df83d6e045a2751ece54f2c16848b3f6d44caa251048c40f7e55",
+    "bytes": 21389
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/07-question-ready.html",
+    "sha256": "ac34566eb3d3db3547ab0bad939b89e88b42963b3084bfe08be7fb549fa41ac4",
+    "bytes": 612912
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/07-question-ready.json",
+    "sha256": "e3ac763a889812f3b994dcc2dae6e685be209a0c5217263f6dc67073480edc17",
+    "bytes": 671
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/07-question-ready.png",
+    "sha256": "5e5bbe2bf2d09aba50604d1ff00817fc31e1566797e00f5f0e2dc98cef3b760c",
+    "bytes": 47706
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/08-after-source.html",
+    "sha256": "acd5211ae4e6025840e83348a0b4d1c64748c4f85befe6e41b6ad81de7d68b76",
+    "bytes": 709870
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/08-after-source.json",
+    "sha256": "d4a1dc0c463043936c851b2a0392524b9c064f2ca549d806d013647678fd4102",
+    "bytes": 672
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/08-after-source.png",
+    "sha256": "61d8c35edacf53d37ece9e0620d12a5659fa82d63d699436dcbb6a227c9d0bad",
+    "bytes": 39344
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/09-after-reason.html",
+    "sha256": "805c964bed1b33d6fad186b7789d971bda31554776027733b08e27997be2b874",
+    "bytes": 765999
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/09-after-reason.json",
+    "sha256": "ed43f940a7a4aa1339e5f0c2835472e9f6ede16d335a5a2f48d0d3163a7c5e19",
+    "bytes": 692
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/09-after-reason.png",
+    "sha256": "5a5b60909c46dd39385889727aec73b4239d51f94fda4abe1a887d43643d0eeb",
+    "bytes": 32896
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/10-after-level.html",
+    "sha256": "a65f132507582417b0fd266ce73b9b9016e30c878187d187573b83418f184399",
+    "bytes": 764828
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/10-after-level.json",
+    "sha256": "46faebde404449c7b26874700445f381cf43da70aaea5f80849e75e3d9d935ff",
+    "bytes": 752
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/10-after-level.png",
+    "sha256": "01038e9563a96d1e9b0ad7fb0d97d5755835fe607f26015eeedaaf45171c5ccd",
+    "bytes": 38361
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/11-daily-goal.html",
+    "sha256": "0631f81326c17bbb56207896c37480cb98b4ab14cab33b4410d5ead8764f4670",
+    "bytes": 765166
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/11-daily-goal.json",
+    "sha256": "cee8d9138625e79a9864608216c2be366c5692c1ca3bcc290570711d0a995810",
+    "bytes": 641
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/11-daily-goal.png",
+    "sha256": "492872a0c7cae895fb1cf6cfa63eff5a596b2a06b8ef6d06ccc46a36e81998c0",
+    "bytes": 32578
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/12-goal-confirmed.html",
+    "sha256": "a021b2d216e7ffb944cee9613e1130a674886fc60d70d480c5125d7ba9344af2",
+    "bytes": 766813
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/12-goal-confirmed.json",
+    "sha256": "3540ce46db47c9c290833b403e3423a28b09a8e474b757a74f161721c87e43a3",
+    "bytes": 702
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/12-goal-confirmed.png",
+    "sha256": "90ed64b89f4a9731758ba617b5f6038b2ec8c56810ee65859d7add627459e518",
+    "bytes": 33974
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/13-first-lesson-entry.html",
+    "sha256": "8bc86ba8658a8d24ec3e67b458ddf3f90c52fc674cbc6c32afbf4d79b4638d96",
+    "bytes": 810700
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/13-first-lesson-entry.json",
+    "sha256": "798acdf18e40c8a190341e7fcdc9095bff9961af3e269e714b4783c03b89af13",
+    "bytes": 562
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/13-first-lesson-entry.png",
+    "sha256": "fc3d98a46199e457e3658ea1d8b56c23cdb825b2acff930ffe2b20d32d94672a",
+    "bytes": 24665
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/14-motivation.html",
+    "sha256": "baf3935f5f77ccb2a2e82f1849a00b9e345821910dc5b1aa8c3694ce0621e5c7",
+    "bytes": 811097
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/14-motivation.json",
+    "sha256": "9a653586e5b59275b98219019dda41a7211dcfe37a65e9aa67fbdb9eea6c22bd",
+    "bytes": 582
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/14-motivation.png",
+    "sha256": "9f321c04c4c8286f5457af916b3664d977355de6cea60578c9a7f6e31e2308ed",
+    "bytes": 24856
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/15-begin-lesson.html",
+    "sha256": "92d998dd9564975804b86c5ae2eedda129d6e791b5ab1b0120ef037fbf7476b5",
+    "bytes": 116933
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/15-begin-lesson.json",
+    "sha256": "b7f33499a2af6c679cc98fc746720fba0c9a661b3bd042cf7fb7782edf124d3c",
+    "bytes": 320
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/15-begin-lesson.png",
+    "sha256": "9ade63f40478112d9e590c244971ed32c2ce7ac7d5e02b89aa81060830c73538",
+    "bytes": 21559
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/16-lesson-ready.html",
+    "sha256": "fabe2986770dede2b5b2380df583c5f02c40e12cc43c33a72bdd6c676a181247",
+    "bytes": 87811
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/16-lesson-ready.json",
+    "sha256": "58f4507d48c94137a667f46ccf2be429c7defbeb21195ae58871f82adb5abedc",
+    "bytes": 640
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/16-lesson-ready.png",
+    "sha256": "ca2fc90746c0f4fceddcabf7c80a75fb0842e4b6bad00e35fb905bc9e98fba72",
+    "bytes": 30753
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/17-wrong-choice-selected.html",
+    "sha256": "e7947285b332f08f4580e71ed91a389633fc85b14569f4217fa8dfbfaaa0f8d4",
+    "bytes": 87811
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/17-wrong-choice-selected.json",
+    "sha256": "f557d1120409079856047a1915de648b2009e0762dc3d4c7810d3eb00a521584",
+    "bytes": 649
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/17-wrong-choice-selected.png",
+    "sha256": "ce131f066785947ebb8c233372c07b80d022c68489210929a162cb792533a4ea",
+    "bytes": 32588
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/18-wrong-choice-checked.html",
+    "sha256": "19cc94931e3dc418b5009f0037a4b1e1d953a1d76cc26d68a3ec4bb119112c8e",
+    "bytes": 87873
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/18-wrong-choice-checked.json",
+    "sha256": "1ae5d1524ed066c5558e647487652d82215eb28f29352974473770bb781597c6",
+    "bytes": 1153
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/18-wrong-choice-checked.png",
+    "sha256": "5a7770815a26dd346ad1b677487021419a80e6ccdd4fc5e62c8319eb743107ef",
+    "bytes": 48646
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/19-error-feedback.html",
+    "sha256": "9fdf23a8c7a376495cae8c62d8507e26d2b482c0e02e0d989ec0652974999ce4",
+    "bytes": 87404
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/19-error-feedback.json",
+    "sha256": "68e391adce20fccd135eb22dfb8f1006d52a07f27334a5469853721f1fd31b8c",
+    "bytes": 1147
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/19-error-feedback.png",
+    "sha256": "e4e16e8f2703e4bed6985e8594a940d2656da4d9ff7de1319f42d1c590c5c08c",
+    "bytes": 48340
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/20-next-question.html",
+    "sha256": "ca5f7a26f2e9cfa1b42047e8db849a86822d94c976929f536a7ab6e67ce4706f",
+    "bytes": 84535
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/20-next-question.json",
+    "sha256": "a3071d69e7fbe8b348135648e00ad597344fa6ab6f7f6a2c06b4b45fd8c2ed8e",
+    "bytes": 638
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/20-next-question.png",
+    "sha256": "3c021354abd73d59c8c85248d85547a8df7a6751458883e58b61c36e882b8392",
+    "bytes": 31217
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/21-correct-feedback.html",
+    "sha256": "454f800d09c7990cc43dbaeeb4d9259927c5f2941a280b829d74843d4d5bcef9",
+    "bytes": 93963
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/21-correct-feedback.json",
+    "sha256": "7d64dabb117c3c231305db2fbd8114332802774290175570b5efd16efca58f2a",
+    "bytes": 902
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/21-correct-feedback.png",
+    "sha256": "0f42ad297e02b15a93f34b47ae59d92f25d845fd0f3387a80ec4125415f7d004",
+    "bytes": 39296
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/22-question-three.html",
+    "sha256": "3df7667dacd3789f0e25be7fb18bb2f38efe28bb63cd50ede0802375301b47dd",
+    "bytes": 88678
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/22-question-three.json",
+    "sha256": "aa2d85ec60a97cdc77e1d531a7df7d7d3be361f26b50b4cf2b443da81e15a204",
+    "bytes": 1148
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/22-question-three.png",
+    "sha256": "95d20ff0ba74e07296d94894344ad0b268ad22ed3255f0b1af90eeadbf119be6",
+    "bytes": 39301
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/23-word-hint.html",
+    "sha256": "dc844a870aeb3e0e3dfa6ebace2f1b832e47217a906c690eeb635f9fee93c52c",
+    "bytes": 88763
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/23-word-hint.json",
+    "sha256": "950ed46880b0cf6325d068f3e64634a993d93959dd7d378627111d27d755d462",
+    "bytes": 1080
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/23-word-hint.png",
+    "sha256": "1fea167e956634efb6cfd24e3a0eb9d3027614661d178b048d2cffc976023c65",
+    "bytes": 33503
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/24-translation-correct.html",
+    "sha256": "cdf77a41bd8100beb5efe69377bae20e5571eb0181131b8edcf1862681bf431e",
+    "bytes": 93826
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/24-translation-correct.json",
+    "sha256": "8feaa907785085d09374ab6fde710a3fab2b88454e2570f5801887321c7ecd3b",
+    "bytes": 1593
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/24-translation-correct.png",
+    "sha256": "be060bf3ec62963d8e332c9bf0340137cb77dbe7d21d60e17b2fac10b5fb2799",
+    "bytes": 43830
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/25-next-exercise.html",
+    "sha256": "3c9caa16518cfd1d14d41ee1fd0d11e7043182cf908fc0c2b5ebb0cd2d5403ff",
+    "bytes": 86939
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/25-next-exercise.json",
+    "sha256": "2f7be0174f87f9801eea3afe4e9580aa8c47fdadefe4f3ddbd9381b4c28a36e2",
+    "bytes": 1065
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/25-next-exercise.png",
+    "sha256": "ad454b3eee0f929d6dd5f05dfbf7758048592cab474bed1b550e9a398a21b673",
+    "bytes": 32770
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/26-quit-confirm.html",
+    "sha256": "b53058bba143a092b9d4b52c8dc5fe680356c7e0d68c9e54e559346f05823210",
+    "bytes": 87897
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/26-quit-confirm.json",
+    "sha256": "591b4e6c6adaba9e40910eca90de0024fcb0f3c04194e71cc44364f008f75589",
+    "bytes": 1416
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/26-quit-confirm.png",
+    "sha256": "7206d85dc413c87709db6b8b6a0fcd29344d0fb30c1cc15654631b5fb8fcebfe",
+    "bytes": 42463
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/27-keep-learning.html",
+    "sha256": "3c9caa16518cfd1d14d41ee1fd0d11e7043182cf908fc0c2b5ebb0cd2d5403ff",
+    "bytes": 86939
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/27-keep-learning.json",
+    "sha256": "adcd95b763dcc62a85cf8a570903f574a660d902cd3e58525aacd7f7a2c83c63",
+    "bytes": 1065
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/27-keep-learning.png",
+    "sha256": "3af4d7f82b896207678c29df727b62ca7ea42c00ae3678e1168af946d43cece6",
+    "bytes": 32774
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/28-coffee-correct.html",
+    "sha256": "fb343a03347932f24a5c2314b3b936c56c9716450f2f1d1a22c49def69cba463",
+    "bytes": 92567
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/28-coffee-correct.json",
+    "sha256": "39806de5dcf82631a66495ad9b716fbfa5646d1a802ed3329df46dea89fcafd6",
+    "bytes": 1587
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/28-coffee-correct.png",
+    "sha256": "9f65074fb43683cebc2e405f5004e48f3afe8fdb54ad3f6f1c73423170b42395",
+    "bytes": 43762
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/29-next.html",
+    "sha256": "f0a8a05f8d7bf31612a4ecbf00e9abbf45fd994cd0965d6b321fdc1b52087f02",
+    "bytes": 86700
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/29-next.json",
+    "sha256": "8c08ef85e5d4e9aee3750579b868c78c8fd9c8bd83fe20387e10464fa0423aa4",
+    "bytes": 1049
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/29-next.png",
+    "sha256": "901a270ff3fe73a21330699275c2c69c60a247c5c271993d356c20266a5ce6c9",
+    "bytes": 31134
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/30-answer-five.html",
+    "sha256": "c0d2911f1a1e4bb23feb38ba69597ab6e98cc03bf5692f3944e5eca84d15db86",
+    "bytes": 92327
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/30-answer-five.json",
+    "sha256": "ba2fa6ccd733839d931e9b4a1f82474d5f1909dfa15b6f87abbd7f697ce9bae2",
+    "bytes": 1568
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/30-answer-five.png",
+    "sha256": "771919acdd0aa0dc7bb2653e2eaa3da001ed0be15c9dcfd5dbf0ea59ec97b0ca",
+    "bytes": 42451
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/31-next.html",
+    "sha256": "1dbb7ca431f1d07ec03b5573ef1d5521452408312bd68106579a3c3dcf44e74f",
+    "bytes": 87633
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/31-next.json",
+    "sha256": "c84b8854ad69ba070ed7e9967a16acf7d9f7441169de6bdce408f9400c8cb653",
+    "bytes": 950
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/31-next.png",
+    "sha256": "61a9916b3babe559c3de9c6900a1b4da21a1e0209a3a525cd176658b2c36a7da",
+    "bytes": 31172
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/32-answer-six.html",
+    "sha256": "d79ecb9b1a2df02b6321a6c75e71e25a4d092af1d12433337711bc2b8027d03a",
+    "bytes": 92778
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/32-answer-six.json",
+    "sha256": "99b3105f1538419167f4172796f0aa1e45f2e5d8648cfa632fca77c89e7e4b55",
+    "bytes": 1354
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/32-answer-six.png",
+    "sha256": "8324e4a138514b2c6bc572e687dfe4b0070484671e1cba57ffe5851017f56e94",
+    "bytes": 41835
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/33-next.html",
+    "sha256": "cc95a5da4d38608aca2a4041da194d8a1b74a1d2204e868f485013a628c37c06",
+    "bytes": 114512
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/33-next.json",
+    "sha256": "cb11d292a544540df74bf50f2eadb2069c3b1cc594abe9b67b156a4a83077dc0",
+    "bytes": 478
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/33-next.png",
+    "sha256": "900e8767261f9e65831f9ef3005b9e1297b97ff51ccafb229127bc9562a961d6",
+    "bytes": 21432
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/34-next.html",
+    "sha256": "df1518af794bb81c771de9b41ceea757fd0a14b928c1b6bff5e1fe1a2e0e3d9f",
+    "bytes": 86778
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/34-next.json",
+    "sha256": "ff04d973aeb8b3acedc1692d6eb34ea0dd44c3ffa994a737bfd52bb4dc5ee0e1",
+    "bytes": 1047
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/34-next.png",
+    "sha256": "b634fc72f904d82438036ebc902e24eac28195a0887f82d1c206bca35f2803d5",
+    "bytes": 31470
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/35-answer-seven.html",
+    "sha256": "8e30ea1ff80f41605d35be454943e0cb667c42c5bedd15323d17fad3ad50ed0d",
+    "bytes": 92428
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/35-answer-seven.json",
+    "sha256": "f3e365f911a214402744fe680d182c7c080fb841d6c2297e1213097337f0546f",
+    "bytes": 1576
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/35-answer-seven.png",
+    "sha256": "98ddd6c145ab8d8b4f2125ac94a6547c351a0e0991919c629e991fb0e550e304",
+    "bytes": 43023
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/36-next.html",
+    "sha256": "545ae07ed15e22f11453b70026b52ab692f03bb6f093bb40629d1d1a20e88db2",
+    "bytes": 83517
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/36-next.json",
+    "sha256": "e6b6ba3de5d5c01ce0c9171f6ebc7ad4610b21ee134af6ec52c92c11d595783e",
+    "bytes": 630
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/36-next.png",
+    "sha256": "6b651951b48f425674eceff3d5ad18448a1c3a50c2f2e76f283cade205e0a80f",
+    "bytes": 35815
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/37-answer-eight.html",
+    "sha256": "145f396d8d3999e859d8eac289535e85bb73fa8915bf0e5b5e7617c35879ebf7",
+    "bytes": 92972
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/37-answer-eight.json",
+    "sha256": "bdf1eff7710a1bdeaf084f13cb1e4e7e1a0a0557cf5def92b0ea0c4be4362ac2",
+    "bytes": 907
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/37-answer-eight.png",
+    "sha256": "f8d95493ee8ea4c1836a284ba0a702c45eb02ec67c10eebdf4903dd460290794",
+    "bytes": 44366
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/38-next.html",
+    "sha256": "c913b798a3ed74e63c57b22978e2a110ac9255baa9d9f2b983a51632061edf31",
+    "bytes": 89481
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/38-next.json",
+    "sha256": "80fca96eb1598979da2bc9531495d02fae569442205c918cbea83d7e7973651b",
+    "bytes": 1194
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/38-next.png",
+    "sha256": "ebb6fefd165cc5ba67f5b2699b67af32f28901cc4f728029b19fdb5b1ea7b9f9",
+    "bytes": 35067
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/39-answer-nine.html",
+    "sha256": "3066a5a6039811e27b85f7a8e4ae31866b296cb0025118d7afadf3461aadafc9",
+    "bytes": 95575
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/39-answer-nine.json",
+    "sha256": "39cbfa9e648869982ec13ac3cadd0fe9b0281c1bf5c4e9993b51edf227f8aa7a",
+    "bytes": 1849
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/39-answer-nine.png",
+    "sha256": "65df4ab8f7016d32925f1004949de4f63c69c8ce1dcc715bb4b5115dd8ab144e",
+    "bytes": 45528
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/40-next.html",
+    "sha256": "96d83cebd1d8014ef3a921de36c91d9e471b3992285cc83d60ac36f18c53175e",
+    "bytes": 90029
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/40-next.json",
+    "sha256": "47b4f3670f52e260c1e8cedb550e6d8722d8e94d9cc7bc0f825e2bd5624838e2",
+    "bytes": 1098
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/40-next.png",
+    "sha256": "fc22477c28a6da9375ffef6cdeb30be39ae9735c23259067de6b1ee80a496f19",
+    "bytes": 37060
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/41-answer-ten.html",
+    "sha256": "441b1450b263cb13cf4228df32acfdfbe6ae0fe269b290eebcb1a7574c7f0efa",
+    "bytes": 95656
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/41-answer-ten.json",
+    "sha256": "8f6af4dc6d6707ee6a2a5b5361b71f739723165d7d9008c82aa8fd1c6605e772",
+    "bytes": 1635
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/41-answer-ten.png",
+    "sha256": "247c06abbf57c61e03f794556cb8e746752699eba1f8102aa8e91d1516ba48f2",
+    "bytes": 46544
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/42-next.html",
+    "sha256": "89f3e6311960fa4b91e900f87ca746e29a27f168086f27d4a27e8b6ea2106d4b",
+    "bytes": 83524
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/42-next.json",
+    "sha256": "8bfe4d908677a4906ffb7c88cbf8802c73febfb6ff072da83ddc71c6355aa944",
+    "bytes": 628
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/42-next.png",
+    "sha256": "e355692c879f1168c3cf8abd4ec4f8ab14c5d305de153e291cd71d26025fc436",
+    "bytes": 30725
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/43-answer-eleven.html",
+    "sha256": "7b305a70d2abfc4b87becd6b92244f71709a04dad5c370e71b434eae86eb5cde",
+    "bytes": 92986
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/43-answer-eleven.json",
+    "sha256": "822af20a3a9fab569eee628de892606b5fa4179c9174e2e7f40730bc0fe09e3b",
+    "bytes": 911
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/43-answer-eleven.png",
+    "sha256": "97e560f817213c79ec0c8d6c5f60ce969397592c11ca0bc479b62d3ba6b3382f",
+    "bytes": 40182
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/44-next.html",
+    "sha256": "ddf50382e1922004271dd9fa21ad38f86e33dab9e3f09f56210f0694a9a3ed13",
+    "bytes": 114709
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/44-next.json",
+    "sha256": "1a4df2b435fd481b8a422595f1c4bdd83bbc16be993f142a98b6725bf8bf2b3b",
+    "bytes": 480
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/44-next.png",
+    "sha256": "92020307ec7e0d8df7c1a26910a587e10f21b3cf3dbea8a76f420f0559cc0991",
+    "bytes": 17653
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/45-next.html",
+    "sha256": "5b7fe8eacdca540d4c326c74457331a058a521a7853a1047e75b164dff45c0ff",
+    "bytes": 91122
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/45-next.json",
+    "sha256": "cfbd9c19f66d4919d5a233dc5a1d6ec76550300f44ebe11c93b1b07d0c78a929",
+    "bytes": 1179
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/45-next.png",
+    "sha256": "bd4087533b904ddd27d8f3a26fbdcffa9efcf94cac89cef5b36669b3f4b9ed98",
+    "bytes": 25559
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/46-cannot-listen.html",
+    "sha256": "14757617d21773de5c6b82b1c95f02962e25f41039904dc3599ce3e3cf68c840",
+    "bytes": 95548
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/46-cannot-listen.json",
+    "sha256": "c07f8a5c4d8b36082ec3cd4ac4fbf1911aa6b4a51a0f073b6ad35ea4062eac67",
+    "bytes": 1334
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/46-cannot-listen.png",
+    "sha256": "02ff35c04fff6363d1d223e3411a4dc6b87a86bc9d44c9badc7f48a214101d12",
+    "bytes": 33962
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/47-next.html",
+    "sha256": "a61b68cb4b69ff99fa546cc5daf45601bf00d0da6dbaeb4dda116e630b33aa0d",
+    "bytes": 87715
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/47-next.json",
+    "sha256": "af04831abe2a7261d4e8791458b8fcfb340a2f6bee9b4116c629676458b8cb13",
+    "bytes": 937
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/47-next.png",
+    "sha256": "316cc0acc9fa58fe17ba6d07358e59ec56105250ab43fc1527f595bec7e0cd64",
+    "bytes": 32194
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/48-answer-thirteen.html",
+    "sha256": "d195d06dbc42c921347238bba4f13072cb9d0b7c0dd1eba7f8ceb42bbaf82f43",
+    "bytes": 92906
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/48-answer-thirteen.json",
+    "sha256": "9f117ed44b9a74d7c86684fd4fa5b8f6174fde2a2b504d081f465b54d480f981",
+    "bytes": 1346
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/48-answer-thirteen.png",
+    "sha256": "e9acce299e372d227b47e535c719121249c8ce5a5cc157eddc12f6203d9a68b2",
+    "bytes": 41790
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/49-next.html",
+    "sha256": "5b9e30ff4db66e27ece5c8b327dd34a73143f8b244feef0c9fa3f8f21cdda748",
+    "bytes": 25860
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/49-next.json",
+    "sha256": "fd268265b2e0744bf5e6bbd6b73bcf89a6250b9ced75f385488bcb7476372b3a",
+    "bytes": 224
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/49-next.png",
+    "sha256": "9ea642835ee7b59ce3c8300ee2a56da67997824c781a5b2476938cdba3eb51c8",
+    "bytes": 5576
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/50-after-lesson-wait.html",
+    "sha256": "8a9909dca274e9d90288126bf4e7283985a196008a04993c38dce0294b56cf4d",
+    "bytes": 168626
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/50-after-lesson-wait.json",
+    "sha256": "3ef9e9b94193a78568c153538afcfa1424f05b4fc03f662285cdbdaa732985d4",
+    "bytes": 1129
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/50-after-lesson-wait.png",
+    "sha256": "c9604128937581946b76a0553957c25656ba80c6fd995e42a6cc40893fe95897",
+    "bytes": 34560
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/51-after-return-level.html",
+    "sha256": "6afe62e041f2b1e9084e2a66ebd71e404d7dcd9bfa6855e07c718017611f9c7d",
+    "bytes": 168957
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/51-after-return-level.json",
+    "sha256": "45d0eb53b3223cd54aec966e860631e00110d4dcd1f1a7ef091bd0a6a60597ab",
+    "bytes": 1288
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/51-after-return-level.png",
+    "sha256": "7079301960db74b91d9dfb3c6d9ab0f5e44e3c8e62301f835f34e48b9d91a1fa",
+    "bytes": 34215
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/52-reenter-start.html",
+    "sha256": "7f942c218d5afe1e69aaf21ec2c805b40a8d368655f1b77ad0584ed470cec942",
+    "bytes": 112937
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/52-reenter-start.json",
+    "sha256": "d6d92973c90d5e85c5af255b3fb973bc41e9440dc59778336212047cc158d6cf",
+    "bytes": 307
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/52-reenter-start.png",
+    "sha256": "691d33cc55f4e048f61c56dc6eb11291de66ebaae898763bf778ac14276f79ed",
+    "bytes": 20635
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/53-second-entry-ready.html",
+    "sha256": "559bf16a855568ca8eba1dcddfb19d1146840a75d7202eb939e099b2926ceb54",
+    "bytes": 83959
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/53-second-entry-ready.json",
+    "sha256": "a5c127d127ee8d710c1536a8c2c6b57d8ccacc2032dfbbb27810669d1e9a88f1",
+    "bytes": 646
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/53-second-entry-ready.png",
+    "sha256": "f8b9a500064afeacda7c766cb97d642500d43f0bb86cea481538fae06695802b",
+    "bytes": 30720
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/54-second-entry-correct.html",
+    "sha256": "257792f11d7c2b90de91095e1d99e97e33e43f2becd36b9953314032d1ccb9c0",
+    "bytes": 90065
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/54-second-entry-correct.json",
+    "sha256": "f12a88eb35a8486d393ed8af7b679f57eaccb94f23d78382673f997319f234a7",
+    "bytes": 908
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/54-second-entry-correct.png",
+    "sha256": "2a84dc18de3d0b01d39a3940ca4286a17b7d3d266d28372ad3d5eb23253bd52b",
+    "bytes": 39484
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/55-second-question.html",
+    "sha256": "4bcdf20a849ae072eed089e499dbfd0063003f9c54f7d51ae483f3129499c899",
+    "bytes": 80664
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/55-second-question.json",
+    "sha256": "3d8b13eb81bb55d807add26fc6859041c0c0d216f4f86f8fdc8b6faa9cfab47a",
+    "bytes": 640
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/55-second-question.png",
+    "sha256": "522c5ddd2ccdddf197df50c735565ba32e659e7f526eca1e2b39b06889272471",
+    "bytes": 31173
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/56-confirm-exit.html",
+    "sha256": "6fca90b081dfebcec22eba3de92415e9ce5a70974e04eecbae0d549f2b2bc2e6",
+    "bytes": 81622
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/56-confirm-exit.json",
+    "sha256": "0fff8c3f88f1a79739655a3c38a3dc6b3c7d0f148702d5030ef884a1928d4ab2",
+    "bytes": 989
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/56-confirm-exit.png",
+    "sha256": "b05929e9fd90fab8ba4d2d6a452fb022ef5ca2b6d91df75aa6bad6e2eeb8ea53",
+    "bytes": 37058
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/57-exited.html",
+    "sha256": "b5ccfd35a4078eb7db5b9d64eb4849124130bbcec05673ca4fdecaf9774db2f6",
+    "bytes": 169169
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/57-exited.json",
+    "sha256": "1df056a8757f18ad8e365a8aba3af64da27899804a1c22f015d5e484b5e42abe",
+    "bytes": 1118
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/57-exited.png",
+    "sha256": "2e1c5b313c328456a627a2c196929a8e328086e143f3175dc833e9241ab362d5",
+    "bytes": 34691
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/actions.jsonl",
+    "sha256": "45271eaf5dbe7de3f7dcca5638ce90464379de3755f8a6c5a4814deeca5e6509",
+    "bytes": 11120
+  },
+  {
+    "path": "work/duolingo-controls-deepening/browser/errors.jsonl",
+    "sha256": "fd99264cad78f0cc9010324be039657b844162035792c147febb1782fef4201e",
+    "bytes": 638
+  }
+]

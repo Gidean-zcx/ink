@@ -1,0 +1,8 @@
+# 本地临时资料
+/work/
+.DS_Store
+
+# 本地服务配置
+.env
+.env.*
+!.env.example

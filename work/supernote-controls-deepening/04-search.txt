@@ -1,0 +1,112 @@
+Global Search Based on Categorization - Supernote
+English (US)
+Japanese
+English (US)
+繁體中文
+简体中文
+Support Home
+Contact Us
+English (US)
+Japanese
+English (US)
+繁體中文
+简体中文
+Home
+Organizing & Managing
+Global Search Based on Categorization
+Written by
+James Huang
+Updated at October 20th, 2023
+Contact Us
+If you still have questions or prefer to get help directly from an agent, please submit a request.
+We’ll get back to you as soon as possible.
+Please fill out the contact form below and we will reply as soon as possible.
+title="ReCAPTCHA"
+Getting Started
+Tools & Features
+Organizing & Managing
+Workflow Cases
+What's New
+FAQ
+My Order
+Hardware & Repair
+Changelog
++ More
+Table of Contents
+Search by Handwriting
+Search by File
+Search by Keyword
+Search by Star
+The ability to search by category has made global search on Supernote simpler and more efficient. Let's see how you can utilize this feature for better and faster results.
+Search by Handwriting
+You can now search for handwritten text in real-time recognition notes. To perform a global search for handwritten text, do the following:
+Swipe down from the top of the screen to bring up the top menu bar.
+Tap the Search icon
+to access global search.
+On the global search page, tap
+to open the drop-down menu.
+Select “Handwriting” with your pen or finger.
+In the search text box, enter text that you have handwritten that has been recognized in real-time recognition notes.
+Tap the “Search” icon
+next to the search text box.
+When the search results are shown, you can single-tap anywhere in the result sections with your pen or finger to quickly navigate to the pages where the search text is located.
+Search by File
+You can also limit search results to a specific file format by doing the following:
+Swipe down from the top of the screen to bring up the top menu bar.
+Tap the “Search” icon
+to access global search.
+On the global search page, tap
+to open the drop-down menu.
+Select
+“File” with your pen or finger.
+You will see the “All Formats” option is selected by default.
+To switch to another file format, simply tap it with your pen or finger.
+In the search text box, enter the file name of the file you are looking for. It can be an incomplete file name, which means you can enter letters or words contained within the file name.
+Tap the “Search” icon
+next to the search text box. It will bring up all the relevant files if you entered an incomplete file name. (Step 7 is optional, which means you can choose not to enter anything in the search text box.)
+When the search results are shown, you can single-tap anywhere in the result sections with your pen or finger to open to the last viewed pages of the searched files.
+Search by Keyword
+Swipe down from the top of the screen to bring up the top menu bar.
+Tap the “Search” icon
+to access global search.
+On the global search page, tap
+to open the drop-down menu.
+Select
+“Keyword” with your pen or finger.
+You will see the “All Formats” option is selected by default. The file formats that don't support the keyword feature are greyed out.
+To switch to another file format, simply tap it with your pen or finger.
+In the search text box, enter the keyword you are looking for. It can be an incomplete keyword, which means you can enter letters contained within in the keyword or misspell it.
+Tap the “Search” icon
+next to the search text box. It will bring up all the relevant files. （Step 7 is optional, which means you can choose not to enter anything in the search text box.）
+When the search results are shown, you can single-tap anywhere in the result sections with your pen or finger to navigate to the page where the keyword was added.
+You can sort the search results by Page or File and Name, Size or Time in an ascending or descending order. In addition, you can change the display view of the search results to specify how they look by tapping the last icon from left to right in the “Search results” line.
+Search by Star
+Swipe down from the top of the screen to bring up the top menu bar.
+Tap the “Search” icon
+to access global search.
+On the global search page, tap
+to open the drop-down menu.
+Select
+“Star” with your pen or finger.
+You will see the “All Formats” option is selected by default. The file formats that don't support the star feature are greyed out.
+To switch to another file format, simply tap it with your pen or finger.
+In the search text box, enter the file name of the file that contains stars. It can be an incomplete file name, which means you can enter letters or words contained within the file name.
+Tap the “Search” icon
+next to the search text box. It will bring up all the relevant files. (Step 7 is optional, which means you can choose not to enter anything in the search text box.)
+When the search results are shown, you can single-tap anywhere in the result sections with your pen or finger to navigate to the file that contains stars.
+You can sort the search results by Page or File and Name, Size or Time in an ascending or descending order. If you sort them by File, tapping the search results will open the last viewed page of the files, not necessarily an actual page that contains stars. In addition, you can change the display view of the search results to specify how they look by tapping the last icon from left to right in the “Search results” line.
+organized search
+classified search
+Was this article helpful?
+Yes
+No
+Give feedback about this article
+Related Articles
+Screen Mirroring
+Keyboard
+Word Documents
+Add Folders to Quick Access
+Copyright © 2026 Ratta Supernote
+Knowledge Base Software powered by Helpjuice
+Close
+Expand

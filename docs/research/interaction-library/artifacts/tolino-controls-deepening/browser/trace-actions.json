@@ -1,0 +1,51 @@
+[
+  {
+    "utc": "2026-10-26T18:32:31+00:00",
+    "command": "Fresh anonymous Chromium context; page.goto('https://mytolino.de/onleihe/') HTTP200; capture('01-home')",
+    "note": "Initial command from browser_session.py, timestamp first capture; not navigation timing."
+  },
+  {
+    "utc": "2026-10-26T18:36:50.835007+00:00",
+    "command": "page.get_by_role('button',name='Nur essentielle Cookies akzeptieren',exact=True).click(); capture('02-essential-cookies')"
+  },
+  {
+    "utc": "2026-10-26T18:36:57.330479+00:00",
+    "command": "page.get_by_text('Bibliothek auswählen',exact=True).click(); capture('03-select-library')"
+  },
+  {
+    "utc": "2026-10-26T18:37:15.057274+00:00",
+    "command": "page.get_by_placeholder('Ort oder Name der Bibliothek eingeben').fill('zzqvexample'); capture('04-no-matches')"
+  },
+  {
+    "utc": "2026-10-26T18:37:23.378914+00:00",
+    "command": "page.get_by_placeholder('Ort oder Name der Bibliothek eingeben').fill('Hamburg'); page.get_by_role('button',name='Hamburg (Bücherhallen Hamburg)',exact=True).wait_for(state='visible'); capture('05-hamburg-results')"
+  },
+  {
+    "utc": "2026-10-26T18:37:29.706164+00:00",
+    "command": "page.get_by_role('button',name='Hamburg (Bücherhallen Hamburg)',exact=True).click(); capture('06-selected-library')"
+  },
+  {
+    "utc": "2026-10-26T18:37:51.234034+00:00",
+    "command": "capture('07-library-loaded')"
+  },
+  {
+    "utc": "2026-10-26T18:38:06.616977+00:00",
+    "command": "page.go_back(wait_until='domcontentloaded'); capture('08-back-to-finder')"
+  },
+  {
+    "utc": "2026-10-26T18:38:16.112153+00:00",
+    "command": "print(page.url); print(page.locator('a').evaluate_all('(es)=>es.filter(e=>e.offsetWidth||e.offsetHeight).map(e=>({text:e.innerText,aria:e.getAttribute(\"aria-label\"),href:e.getAttribute(\"href\")}))')); print(page.locator('button').evaluate_all('(es)=>es.filter(e=>e.offsetWidth||e.offsetHeight).map(e=>({text:e.innerText,aria:e.getAttribute(\"aria-label\")}))'))"
+  },
+  {
+    "utc": "2026-10-26T18:38:27.226155+00:00",
+    "command": "page.locator('button:visible').nth(0).click(); capture('09-home-after-selection')"
+  },
+  {
+    "utc": "2026-10-26T18:38:48.241845+00:00",
+    "command": "page.reload(wait_until='domcontentloaded'); page.get_by_text('Bibliothek auswählen',exact=True).wait_for(state='visible'); capture('10-home-reloaded')"
+  },
+  {
+    "command": "quit; browser context closed",
+    "exit_status": 0
+  }
+]

@@ -1,0 +1,468 @@
+{
+  "headings": [
+    {
+      "level": "h1",
+      "id": "",
+      "title": "Appearance"
+    },
+    {
+      "level": "h2",
+      "id": "can-i-customize-the-appearance-of-reader",
+      "title": "Can I customize the appearance of Reader?"
+    },
+    {
+      "level": "h2",
+      "id": "does-reader-have-dark-mode",
+      "title": "Does Reader have dark mode?"
+    },
+    {
+      "level": "h2",
+      "id": "can-i-change-the-reading-theme-or-background-color",
+      "title": "Can I change the reading theme or background color?"
+    },
+    {
+      "level": "h2",
+      "id": "how-do-i-change-text-direction-for-right-to-left-languages-like-arabic-or-hebrew",
+      "title": "How do I change text direction for right-to-left languages like Arabic or Hebrew?"
+    },
+    {
+      "level": "h2",
+      "id": "can-i-close-the-side-panels-when-i-m-reading-on-web",
+      "title": "Can I close the side panels when I'm reading on web?"
+    },
+    {
+      "level": "h2",
+      "id": "can-i-change-the-app-icon",
+      "title": "Can I change the app icon?"
+    },
+    {
+      "level": "h2",
+      "id": "how-can-i-enable-pagination-for-reading-ebooks-and-other-long-documents",
+      "title": "How can I enable pagination for reading ebooks and other long documents?"
+    },
+    {
+      "level": "h2",
+      "id": "why-is-it-called-paged-scroll-why-cant-i-swipe-sideways-to-turn-pages",
+      "title": "Why is it called \"paged scroll\"? Why can't I swipe sideways to turn pages?"
+    },
+    {
+      "level": "h2",
+      "id": "is-there-a-way-to-make-the-reading-view-nicer-for-long-documents-and-ebooks",
+      "title": "Is there a way to make the reading view nicer for long documents and ebooks?"
+    },
+    {
+      "level": "h2",
+      "id": "how-do-i-switch-between-the-modern-and-classic-mobile-toolbars",
+      "title": "How do I switch between the modern and classic mobile toolbars?"
+    },
+    {
+      "level": "h2",
+      "id": "how-can-i-view-my-document-text-in-two-columns-on-a-tablet",
+      "title": "How can I view my document text in two columns on a tablet?"
+    }
+  ],
+  "links": [
+    {
+      "href": "/",
+      "text": "",
+      "in_article": false
+    },
+    {
+      "href": "/",
+      "text": "",
+      "in_article": false
+    },
+    {
+      "href": "/",
+      "text": "",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs",
+      "text": "Documentation",
+      "in_article": false
+    },
+    {
+      "href": "/reader/guides",
+      "text": "Guides",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs",
+      "text": "What is Reader?",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/migrating-content",
+      "text": "Migrating from Other Apps",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/saving-content",
+      "text": "Saving Content",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/organizing-content",
+      "text": "Organizing Content",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs",
+      "text": "Basics",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/importing-content",
+      "text": "Importing Content",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/adding-new-content",
+      "text": "Adding New Content",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/highlights-tags-notes",
+      "text": "Highlights, Tags, and Notes",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/appearance",
+      "text": "Appearance",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/feed",
+      "text": "Feed",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/email-newsletters",
+      "text": "Email Newsletters",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/navigation",
+      "text": "Navigation",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/searching",
+      "text": "Searching",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/parsing",
+      "text": "Parsing",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/filtered-views",
+      "text": "Filtered Views",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/action-tags",
+      "text": "Action Tags",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/pdfs",
+      "text": "PDFs",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/videos",
+      "text": "Videos",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/text-to-speech",
+      "text": "Text-to-Speech (TTS)",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/exporting",
+      "text": "Exporting",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/sharing",
+      "text": "Sharing",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/daily-digest",
+      "text": "Daily Digest",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/ghostreader",
+      "text": "Ghostreader",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/eink",
+      "text": "E-ink Devices",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/miscellaneous",
+      "text": "Miscellaneous",
+      "in_article": false
+    },
+    {
+      "href": "/",
+      "text": "Home",
+      "in_article": false
+    },
+    {
+      "href": "/reader",
+      "text": "Reader",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs",
+      "text": "Docs",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs",
+      "text": "Faqs",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/appearance",
+      "text": "Appearance",
+      "in_article": false
+    },
+    {
+      "href": "#can-i-change-the-reading-theme-or-background-color",
+      "text": "reading theme",
+      "in_article": true
+    },
+    {
+      "href": "#is-there-a-way-to-make-the-reading-view-nicer-for-long-documents-and-ebooks",
+      "text": "long-form reading view",
+      "in_article": true
+    },
+    {
+      "href": "#can-i-change-the-reading-theme-or-background-color",
+      "text": "reading theme",
+      "in_article": true
+    },
+    {
+      "href": "#does-reader-have-dark-mode",
+      "text": "light or dark mode",
+      "in_article": true
+    },
+    {
+      "href": "https://read.readwise.io/preferences",
+      "text": "account preferences",
+      "in_article": true
+    },
+    {
+      "href": "/reader/docs/faqs/appearance#is-there-a-way-to-make-the-reading-view-nicer-for-long-documents-and-ebooks",
+      "text": "long-form reading view",
+      "in_article": true
+    },
+    {
+      "href": "/reader/guides/ghostreader/chat",
+      "text": "Ghostreader chat",
+      "in_article": true
+    },
+    {
+      "href": "/reader/docs/faqs/eink#justify-text",
+      "text": "justified text",
+      "in_article": true
+    },
+    {
+      "href": "/reader/docs/faqs/highlights-tags-notes",
+      "text": "Highlights, Tags, and Notes",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/feed",
+      "text": "Feed",
+      "in_article": false
+    },
+    {
+      "href": "mailto:hello@readwise.io",
+      "text": "Email Ushello@readwise.io",
+      "in_article": false
+    },
+    {
+      "href": "https://x.com/readwise",
+      "text": "Follow Us@readwise",
+      "in_article": false
+    },
+    {
+      "href": "https://www.reddit.com/r/readwise/",
+      "text": "Ask the CommunityJoin us on Reddit",
+      "in_article": false
+    },
+    {
+      "href": "https://en.wikipedia.org/wiki/Curse_of_knowledge",
+      "text": "Curse of Knowledge",
+      "in_article": false
+    },
+    {
+      "href": "mailto:hello@readwise.io?Subject=Documentation Feedback",
+      "text": "Send Feedback",
+      "in_article": false
+    },
+    {
+      "href": "#can-i-customize-the-appearance-of-reader",
+      "text": "Can I customize the appearance of Reader?",
+      "in_article": false
+    },
+    {
+      "href": "#does-reader-have-dark-mode",
+      "text": "Does Reader have dark mode?",
+      "in_article": false
+    },
+    {
+      "href": "#can-i-change-the-reading-theme-or-background-color",
+      "text": "Can I change the reading theme or background color?",
+      "in_article": false
+    },
+    {
+      "href": "#how-do-i-change-text-direction-for-right-to-left-languages-like-arabic-or-hebrew",
+      "text": "How do I change text direction for right-to-left languages like Arabic or Hebrew?",
+      "in_article": false
+    },
+    {
+      "href": "#can-i-close-the-side-panels-when-i-m-reading-on-web",
+      "text": "Can I close the side panels when I'm reading on web?",
+      "in_article": false
+    },
+    {
+      "href": "#can-i-change-the-app-icon",
+      "text": "Can I change the app icon?",
+      "in_article": false
+    },
+    {
+      "href": "#how-can-i-enable-pagination-for-reading-ebooks-and-other-long-documents",
+      "text": "How can I enable pagination for reading ebooks and other long documents?",
+      "in_article": false
+    },
+    {
+      "href": "#why-is-it-called-paged-scroll-why-cant-i-swipe-sideways-to-turn-pages",
+      "text": "Why is it called \"paged scroll\"? Why can't I swipe sideways to turn pages?",
+      "in_article": false
+    },
+    {
+      "href": "#is-there-a-way-to-make-the-reading-view-nicer-for-long-documents-and-ebooks",
+      "text": "Is there a way to make the reading view nicer for long documents and ebooks?",
+      "in_article": false
+    },
+    {
+      "href": "#how-do-i-switch-between-the-modern-and-classic-mobile-toolbars",
+      "text": "How do I switch between the modern and classic mobile toolbars?",
+      "in_article": false
+    },
+    {
+      "href": "#how-can-i-view-my-document-text-in-two-columns-on-a-tablet",
+      "text": "How can I view my document text in two columns on a tablet?",
+      "in_article": false
+    }
+  ],
+  "images": [
+    {
+      "src": "/images/reader-appearance_long-form-aa-icon.png",
+      "alt": "Aa icon in the top right of the long-form reading view in the Reader mobile app.",
+      "class": "rounded-lg max-w-[350px] h-auto ml-0"
+    },
+    {
+      "src": "/images/reader-appearance_mode-toggle.png",
+      "alt": "Light or dark mode icon in the top left of the Appearance menu in the Reader mobile app.",
+      "class": "rounded-lg max-w-[350px] h-auto mx-auto"
+    },
+    {
+      "src": "/images/reader-appearance_theme-row.png",
+      "alt": "Row of reading themes at the top of the Appearance menu in the Reader mobile app.",
+      "class": "rounded-lg max-w-[350px] h-auto mx-auto"
+    },
+    {
+      "src": "/images/reader-appearance_themes-light.png",
+      "alt": "Reading theme options in light mode.",
+      "class": "rounded-lg max-h-[600px] w-auto mx-auto"
+    },
+    {
+      "src": "/images/reader-appearance_themes-dark.png",
+      "alt": "Reading theme options in dark mode.",
+      "class": "rounded-lg max-h-[600px] w-auto mx-auto"
+    },
+    {
+      "src": "/images/reader-appearance_rtl-web-command-palette.png",
+      "alt": "Command palette with the Change text direction to RTL option in Reader.",
+      "class": "rounded-lg max-h-[500px] w-auto mx-auto"
+    },
+    {
+      "src": "/images/reader-appearance_rtl-mobile-menu.png",
+      "alt": "More style options menu with the Text direction setting in the Reader mobile app.",
+      "class": "rounded-lg max-h-[600px] w-auto mx-auto"
+    },
+    {
+      "src": "/images/side-panel_close-left_web.png",
+      "alt": "Icon to close the left side panel of Reader's reading view.",
+      "class": "rounded-lg max-h-[400px] w-auto mx-auto"
+    },
+    {
+      "src": "/images/side-panel_close-right_web.png",
+      "alt": "Icon to close the right side panel of Reader's reading view.",
+      "class": "rounded-lg max-h-[400px] w-auto mx-auto"
+    },
+    {
+      "src": "/images/side-panel_defaults_web.png",
+      "alt": "Side panel visibility default settings for Reader.",
+      "class": "rounded-lg max-h-[500px] w-auto mx-auto"
+    },
+    {
+      "src": "/images/settings_change-app-icon.png",
+      "alt": "Change app icon for Reader.",
+      "class": "rounded-lg max-h-[600px] w-auto mx-auto"
+    },
+    {
+      "src": "/images/appearance-options.png",
+      "alt": "Appearance options menu in Reader.",
+      "class": "rounded-lg max-w-[350px] h-auto mx-auto"
+    },
+    {
+      "src": "/images/paged-scroll.png",
+      "alt": "Option to turn on paged scroll view in Reader.",
+      "class": "rounded-lg max-w-[350px] h-auto mx-auto"
+    },
+    {
+      "src": "/images/paged-scroll-default_settings.png",
+      "alt": "Toggles for default pagination of each document type.",
+      "class": "rounded-lg max-h-[500px] w-auto mx-auto"
+    },
+    {
+      "src": "/images/reading-view_standard-vs-long-form.gif",
+      "alt": "Comparison of standard reading view versus long-form reading view.",
+      "class": "rounded-lg max-w-[350px] h-auto mx-auto"
+    },
+    {
+      "src": "/images/long-form-default_settings.png",
+      "alt": "Turn on long-form reading view in account settings.",
+      "class": "rounded-lg max-h-[500px] w-auto mx-auto"
+    },
+    {
+      "src": "/images/reader-toolbar-layout_settings.png",
+      "alt": "Toolbar layout settings page in the Reader mobile app.",
+      "class": "rounded-lg max-h-[600px] w-auto mx-auto"
+    },
+    {
+      "src": "/images/swipe-to-next_mobile.gif",
+      "alt": "Swiping across the modern toolbar to open the next document in the Reader mobile app.",
+      "class": "rounded-lg max-w-[350px] h-auto mx-auto -mt-4"
+    },
+    {
+      "src": "/images/horizontal-pagination_tablet.png",
+      "alt": "Horizontal pagination setting in the Reader Appearance panel.",
+      "class": "rounded-lg max-h-[500px] w-auto mx-auto"
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+[
+  {
+    "path": "work/research/interaction-depth/pocketbook-6.10.2854.pdf",
+    "sha256": "87bf56b461cd298b7c53421c5b21f72f1498e4c060d4eea89844545667030101",
+    "bytes": 6374302
+  },
+  {
+    "path": "work/pocketbook-controls-deepening/pb743k3-text.json",
+    "sha256": "58132d302bcfc0cc041ba2e9fbe889b4ed655fb94dd867d00bb3cf345c4f5449",
+    "bytes": 105574
+  },
+  {
+    "path": "work/pocketbook-app-controls-deepening/raw/manual-metadata.json",
+    "sha256": "36662e6f556ca0909829e8fc2f06ff2d5754e01df24bd4dcd2ddab668d705c31",
+    "bytes": 569
+  },
+  {
+    "path": "work/pocketbook-app-controls-deepening/raw/manual-p29.png",
+    "sha256": "91a642c829ee86c443cca95da9520f27becca19aa56823da9374f3886de31347",
+    "bytes": 80545
+  },
+  {
+    "path": "work/pocketbook-app-controls-deepening/raw/manual-p37.png",
+    "sha256": "71c8ebced51aafd6c375ebb3d15cd8840daaca2b5965c2ba39730d8ded46c654",
+    "bytes": 67041
+  },
+  {
+    "path": "work/pocketbook-app-controls-deepening/raw/manual-p41.png",
+    "sha256": "6ce55bf9aa6ad416835838c01cf305dbdf8cd5a0d3b0fe2a3ebc600bf595b554",
+    "bytes": 60209
+  },
+  {
+    "path": "work/pocketbook-app-controls-deepening/raw/manual-p76.png",
+    "sha256": "1eca66a5bfc0b806f48886b4338ec5f68a38474fde51c95fe6857d2ad74978c5",
+    "bytes": 57998
+  },
+  {
+    "path": "work/pocketbook-app-controls-deepening/raw/manual-p77.png",
+    "sha256": "5b374e901b219cf0946255d1b43ec36042bb4f28078d030db44502f30d73562b",
+    "bytes": 56584
+  },
+  {
+    "path": "work/pocketbook-app-controls-deepening/raw/selected-manual-text.json",
+    "sha256": "86ce1fbb49888d0e3c7abb23b4031693fd5c6f94f52c792e7c65be23a6edd1de",
+    "bytes": 33258
+  }
+]

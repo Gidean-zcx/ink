@@ -1,0 +1,57 @@
+from pathlib import Path
+import json,csv,hashlib
+root=Path('/home/workspace/reader');out=root/'docs/research/interaction-library/batches'
+rows=[]
+def add(e,p,t,u,kind,mode,scope,loc,note,updated=None,build=None,**extras):
+ d=dict(evidence_id=e,product_id=p,title=t,url=u,checked_on='2026-10-26',source_type=kind,access_mode=mode,version_scope=scope,app_build=build,firmware_version=None,source_updated_on=updated,locator=loc,note=note,hands_on=False,visual_observed=False,archived_artifact=None,sha256=None,capture_state='bibliography_and_short_note_only',supersedes=None)
+ d.update(extras);rows.append(d)
+add('E-IFLYL-01','M-027','AI学习机产品总页','https://edu.iflytek.com/solution/family/learning-pad','official_product','official_index_text','Current family product page; imagery T30 Ultra; not T30 Pro firmware proof','AI 1对1精准学；海量优质资源；脚注','总页与固定型号需分开。',access_limitation='Direct open timed out; official indexed text read.')
+add('E-IFLYL-02','M-027','新学期新挑战：T30 Pro/Lite','https://edu.iflytek.com/about-us/news/special-column/1355.html','official_product_announcement','opened_text','T30 Pro 2024 announcement; grade/subject-specific','AI精准学','有明确型号和学科范围。','2024-09-02')
+add('E-IFLYL-03','M-027','官方帮助型号与T30Pro教程目录','https://xxj.xunfei.cn/h5-help/','official_help_index','public_help_api_text','T30Pro model selected in public help; tutorial builds unknown','device/getProductList; video/getHelpVideoList','仅看目录，未观看视频。',retrieval_request={'base':'https://api.xunfeixxj.com/assistant/','method':'POST','endpoints':[{'path':'device/getProductList','body':{}},{'path':'video/getHelpVideoList','body':{'productId':'2e5298d3','modelId':'AISTUDY_SU30_T30PRO'}}]},access_limitation='Help HTML is a JS shell. Public read-only help API identified from linked JS; tutorial video URLs retained in work, not played.')
+add('E-IFLYL-04','M-027','错题打印使用手册','https://xxj.xunfei.cn/h5-help/#/manuals-detail?guideId=14','official_manual','public_help_api_text','Model/firmware unspecified by manual','步骤1–7','打印提交与实际输出分开。',retrieval_request={'url':'https://api.xunfeixxj.com/assistant/guide/getGuideDetail','method':'POST','body':{'guideId':14}})
+add('E-IFLYL-05','M-027','讯飞AI学家长端其他常见问题','https://xxj.xunfei.cn/h5-help/#/manuals-detail?guideId=93','official_help','public_help_api_text','Explicitly X3pro/T10/Q20/A10 only','问答1–6','不能套用到T30。',retrieval_request={'url':'https://api.xunfeixxj.com/assistant/guide/getGuideDetail','method':'POST','body':{'guideId':93}})
+add('E-XYAI-01','M-028','小猿AI官网','https://leo.fbcontent.cn/','official_product','opened_text','Software formerly 小猿口算; not learning-pad hardware','九大核心功能','功能域目录，非实测。')
+add('E-XYAI-02','M-028','小猿AI常见问题','https://xykspt.yuanfudao.com/faq','official_help','public_http_text','Software iOS/Android/HarmonyOS; build unknown','只是给答案吗；免费吗；下载平台','明确解析和会员边界。',access_limitation='Initial web open timed out; indexed text and subsequent public HTTP HTML were readable.')
+add('E-XYAI-03','M-028','小猿AI儿童隐私政策','https://solar-online.oss-cn-beijing.aliyuncs.com/solar-user-profile/user-privacy-policy/leo-child-privacy-xyks.html','official_privacy_with_function_steps','opened_text','Software iOS/Android/HarmonyOS; policy 2025-08-18','拍照检查；练习；学练VIP','记录输入和保存历史。','2025-08-18')
+add('E-XYAI-04','M-028','小猿AI隐私政策','https://xyks.yuanfudao.com/common/mobile-privacy-policy','official_privacy_with_function_steps','opened_text','Software; current policy page dated 2025-08-18','二（2）（4）产品功能提供；智能助手','对话、反馈和权限边界。','2025-08-18')
+add('E-XYAI-05','M-028','小猿AI iOS开发者说明','https://apps.apple.com/cn/app/id1325419855','official_app_store_listing','opened_text','CN iOS listing; not installed','简介；开学季口算PK竞速赛；版本历史','活动奖励不能当永久规则。',build='3.143.2 (store listing only)')
+add('E-XYAI-06','M-028','小猿AI用户协议','https://xyks.yuanfudao.com/common/mobile-agreement','official_terms','opened_text','Software terms dated 2025-03-28','生成式人工智能服务；网络风险','未验证离线和模型路由。','2025-03-28')
+add('E-IHUM-01','M-029','洪恩识字官网','https://www.ihuman.com/shizi/','official_product','opened_text','CN 洪恩识字; not other iHuman products','五大标准；原创子集绘本；AI伴学','内容关系，非掌握证据。')
+add('E-IHUM-02','M-029','洪恩识字iOS说明与开发者回复','https://apps.apple.com/cn/app/id1139733348','official_app_store_listing_and_developer_reply','opened_text','Current listing plus separately dated 2020-05-04 reply','五步学习；家长管理；版本历史；2020-05-04回复','当前五环节与旧设置路径分开。',build='4.5.0 (store listing only)')
+add('E-IHUM-03','M-029','洪恩隐私中心操作路径','https://www.ihuman.com/agreement/privacy/operator.html','official_help','opened_text','洪恩识字 >=3.0.1; path may change','洪恩识字段','具体隐私中心入口。')
+add('E-IHUM-04','M-029','洪恩个人信息保护政策','https://www.ihuman.com/agreement/new_privacy/cn.html','official_privacy_with_function_steps','opened_text','Shared iHuman policy; product exceptions must be respected','1.1.1;1.1.2.1;1.2.2;4.4–4.5','数据副本不是恢复备份。')
+add('E-DUOA-01','M-031','Adventures官方介绍','https://blog.duolingo.com/adventures/','official_feature_explanation','opened_text','2024 click-based Adventures; iOS/Android and course scope as written','What are Adventures; mistakes; Dive into the story','任务反馈机制，无完整一集。','2024-09-24',access_limitation='Read text and media alt text only; embedded GIFs not continuously observed.')
+add('E-DUOA-02','M-031','Duolingo Q1 FY2026股东信','https://duolingo.gcs-web.com/static-files/aab30d54-eb91-422e-b365-c03859fea85c','official_investor_update','official_index_text','Speaking Adventures; actual app build/course availability unknown','Page 4 Speaking practice','新版语音任务与旧版分开。')
+add('E-DUOA-03','M-031','Duolingo隐私入口获取受限','https://www.duolingo.com/privacy','official_privacy_access_failure','dynamic_shell_only','Current website; details not retrieved','Page shell','不能据本次获取确认儿童规则。',access_limitation='Web tool and ordinary HTTP did not return readable policy body; no product behavior claimed.')
+add('E-DRGN-01','M-050','DragonBox Numbers官网','https://www.dragonboxapp.com/products/numbers','official_product','opened_text','Numbers app; not Big Numbers/Algebra','Meet the Nooms','角色与数字的对应。')
+pdf=root/'work/children-interactions/dragon-guide.pdf'
+add('E-DRGN-02','M-050','DragonBox Numbers Pedagogical Guide','https://dragonbox.com/attachment/14/download','official_pedagogical_guide','opened_pdf_text_and_local_static_pages','Historical Numbers; release date/build unknown; 9-page guide','PDF pp.3–8; static pages visually inspected pp.3,6,7','静态图不算连续玩法观察。',visual_observed=True,archived_artifact='work/children-interactions/dragon-guide.pdf',sha256=hashlib.sha256(pdf.read_bytes()).hexdigest(),capture_state='downloaded_pdf_and_static_pages',visual_scope='Static official PDF illustrations only; no live game or continuous video',rendered_artifacts=['work/children-interactions/dragon-guide-p3.png','work/children-interactions/dragon-guide-p6.png','work/children-interactions/dragon-guide-p7.png'])
+add('E-DRGN-03','M-050','Kahoot Numbers iOS开发者说明','https://apps.apple.com/us/app/kahoot-numbers-by-dragonbox/id1529174508','official_app_store_listing','opened_text','US iOS current listing; not installed','HOW THE GAME WORKS; FEATURES; version history','四模式与订阅条目。',build='1.31.9 (store listing only)')
+add('E-DRGN-04','M-050','How to manage profiles in learning apps','https://support.kahoot.com/hc/en-us/articles/4815253732371-How-to-manage-profiles-in-learning-apps','official_help','opened_text','DragonBox/Poio; purchase method dependent','Create; edit/remove profiles','多档案和购买方式有边界。','2026-09-18')
+add('E-DRGN-05','M-050','Child Activity Dashboard','https://support.kahoot.com/hc/en-us/articles/39935017652125-Child-Activity-Dashboard-your-parent-dashboard-for-Kahoot-Kids','official_help','official_index_text','Kahoot/Kids cross-app dashboard; Numbers-specific fields untested','Access; What you see; FAQ','活动概览不等于能力证明。')
+add('E-DRGN-06','M-050','DragonBox learning apps','https://support.kahoot.com/hc/en-us/articles/4786930773907-DragonBox-learning-apps','official_help','opened_text','App family access methods; exact SKU not pinned','Opening access paragraph; Numbers','保留与商店订阅描述的差异。',access_limitation='Search index and body report different update dates; no exact source_updated_on asserted.')
+with (out/'children-evidence.jsonl').open('w') as f:
+ for r in rows:f.write(json.dumps(r,ensure_ascii=False)+'\n')
+flow=[]
+def fl(i,p,t,d,es,branches,gaps,case,visual='not_observed'):
+ flow.append(dict(flow_id=i,product_id=p,task=t,depth=d,evidence_ids=es,known_branches=branches,gaps=gaps,visual_status=visual,hands_on='false',case_path=case,checked_on='2026-10-26'))
+fl('F-M027-01','M-027','薄弱点诊学练路线','D1','E-IFLYL-01;E-IFLYL-02','学段科目限制','一道题的入口提示重试结算与恢复','cases/M-027-iflytek-learning.md')
+fl('F-M027-02','M-027','错题文件打印','D2','E-IFLYL-04','自动发现或手动IP添加','型号范围与打印失败取消重复任务','cases/M-027-iflytek-learning.md')
+fl('F-M027-03','M-027','旧型号家庭孩子角色','D2','E-IFLYL-05','绑定归属和角色权限与不可恢复删除','T30规则与具体确认页面','cases/M-027-iflytek-learning.md')
+fl('F-M028-01','M-028','检查后解释与错题整理','D2','E-XYAI-02;E-XYAI-03','解析会员边界','拍照识别纠错提示和再练全链','cases/M-028-xiaoyuan-ai.md')
+fl('F-M028-02','M-028','指定知识点手写练习','D2','E-XYAI-03','语音权限与打印输出','提交判分重答与保存粒度','cases/M-028-xiaoyuan-ai.md')
+fl('F-M028-03','M-028','AI追问与单条反馈','D2','E-XYAI-04','文本语音图像权限与历史','生成失败重试删除和恢复','cases/M-028-xiaoyuan-ai.md')
+fl('F-M028-04','M-028','PK赛季任务与装扮','D1','E-XYAI-05','同年级知识点与赛季活动','结算奖励数值退出与掉线','cases/M-028-xiaoyuan-ai.md')
+fl('F-M029-01','M-029','单字到子集故事内容循环','D1','E-IHUM-01;E-IHUM-02','地图教材入口与可调环节','单字错答提示重试奖励和故事解锁','cases/M-029-ihuman.md')
+fl('F-M029-02','M-029','调节游戏和跳过','D2','E-IHUM-02','关闭游戏与禁止跳过','历史路径当前核对及课内生效','cases/M-029-ihuman.md')
+fl('F-M029-03','M-029','获取档案成长报告副本','D2','E-IHUM-03;E-IHUM-04','登录与相册权限','拒绝权限及结构化恢复能力','cases/M-029-ihuman.md')
+fl('F-M031-01','M-031','点击式场景任务','D1','E-DUOA-01','环境和角色交互','完整一集目标达成退出恢复','cases/M-031-duolingo-adventures.md')
+fl('F-M031-02','M-031','情境澄清反馈','D2','E-DUOA-01','角色对错误澄清','提示层数扣分重试与最终失败','cases/M-031-duolingo-adventures.md')
+fl('F-M031-03','M-031','Speaking Adventures口语场景','D1','E-DUOA-02','免费付费用户与课程场景','构建课程儿童范围及识别判定','cases/M-031-duolingo-adventures.md')
+fl('F-M050-01','M-050','拼图构数与金币解锁','D2','E-DRGN-02;E-DRGN-03','不同数字表示与金币解锁','错误放置提示结算奖励数值与恢复','cases/M-050-dragonbox.md','static_reference_only')
+fl('F-M050-02','M-050','梯子目标数量与障碍','D2','E-DRGN-02','炸弹与奖励位置','碰撞重试成功结算','cases/M-050-dragonbox.md','static_reference_only')
+fl('F-M050-03','M-050','家庭档案创建与管理','D2','E-DRGN-04','订阅与单买差异成人入口','存档同步冲突删除恢复','cases/M-050-dragonbox.md')
+fl('F-M050-04','M-050','跨应用家长活动报告','D2','E-DRGN-05','孩子周次套餐限制','Numbers具体字段精确续接','cases/M-050-dragonbox.md')
+with (out/'children-coverage.csv').open('w',newline='') as f:
+ w=csv.DictWriter(f,fieldnames=['flow_id','product_id','task','depth','evidence_ids','known_branches','gaps','visual_status','hands_on','case_path','checked_on']);w.writeheader();w.writerows(flow)
+print('evidence',len(rows),'flows',len(flow))

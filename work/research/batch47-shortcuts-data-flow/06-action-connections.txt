@@ -1,0 +1,7 @@
+Action connections in Shortcuts on iPhone and iPad
+When an action uses content provided by the action before it, a line appears down the center of the list of actions, connecting the actions. This line indicates that the output of the action will be used as input to the following action.
+Many Shortcuts actions can accept input and provide output. Some actions accept only input, create only output, or pass input through as output without changing it.
+Tap an action’s icon in the shortcut, then tap Show Info, to see a description of the action, the types of input it accepts, and the types of output it provides.
+Some actions accept only specific types of content as input. Actions that aren’t compatible appear in the list without a connecting line, to show that the actions won’t work together. For example, the Get Current Location action can’t provide an output for the Create Playlist action because Create Playlist requires a song item, not a map location.
+Some actions don’t take input and produce only output. These are typically “get” actions, like Get Upcoming Events, Get Current Song, or Select Photos, all of which simply retrieve data. An action that doesn’t take input appears in the list of actions separated from the previous action, without a center connecting line.
+Some actions take no input and have no output. For example, the Set Appearance action switches between light and dark mode in between actions.See alsoIntro to variables in Shortcuts on iPhone or iPad

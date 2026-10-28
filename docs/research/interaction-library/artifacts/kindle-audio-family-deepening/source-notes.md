@@ -1,0 +1,58 @@
+# Kindle：音频、家庭与系统控件补证
+
+查阅2026-10-27。固定主样本为Scribe 2024 Release现行在线指南；不是2024出厂固件。原指南重新GET的SHA与旧抓取相同。3篇新官方帮助为美国/英国站，未给可核固件/更新日。以下为文档重建与11幅官方静态图观察，没有设备操作、音频试听、账号登录或购买。HTTP成功只证明取得文件；图像另经view_image实际查看。
+
+## 材料定位与核心区别
+
+- E-KDCD-02，指南AI Notebook Tools：摘要15页、整理手写10页；本轮新帮助E-KDAF-01补选页、开始前取消、预览、插入首/末页及放弃确认。25词及以下不能摘要，不能扩展为整理手写的门槛。新增笔记可能先等云同步；未测耗时。结果可作为手写页编辑，不证明已纠正事实或能以普通文字字段编辑。
+- AI地区不一致：指南列美国、加拿大、德国、澳大利亚、新西兰；帮助列美国、英国、爱尔兰、德国、加拿大、澳大利亚。语言分别写French/Canadian French，均未证中文。保留不同范围，不合并成“全部支持”。
+- 指南Playing Audible books/Pairing/Player/Bookmarks/Downloading：真人有声书依赖蓝牙与地区/内容权益。可播部分与整书下载完成分开；首次未读可在5%时开始，不是整书离线就绪。配套电子书的等待点是当前阅读位置；取消下载有书库和封面入口。拖动只到已下载区域，选章节/音频书签会开始播放。未证睡眠、断连或AI插话后的恢复。
+- 音频书签只定位音频，附注、编辑和删除有文档动作；没有删除撤销。配套电子书切换按同一位置描述，不证明任意音频/文本自动对齐。合并书库条目中的“删书同时删音频”未区分删除层级，不能推断云端权益消失。
+- Assistive Reader是设备OS TTS，需要蓝牙及Enhanced Typesetting/支持的语言、来源。Aa→More启用，底部播放/速率/退30秒；导航或批注会自动暂停。设置保持启用不等于关菜单自动续播。英国帮助列英/西/法/德/意，无中文支持证据；不能因Word Wise有简体中文提示而推断中文TTS。
+- VoiceView是读屏导航，首次电源开启后等45秒、蓝牙配对、按3次电源，最后步骤才有声音并进教程。后续可设置切换；无声先查配对。教程有Exit、语速/音量和蓝牙设置；具体读屏手势、焦点返回未给。本项目未测指南声称的恢复延迟，也不能把读屏当语音命令。
+- 家庭章节讲成人共享及儿童资料，而英国专页E-KDAF-02明确Scribe当前不支持Child Profiles，仅可家长PIN锁浏览器、商店、云内容及Goodreads。不为Scribe建立儿童建档成功链；把成人共享、内容限制、开机密码和儿童独立进度分开。指南家庭付款授权和180天退出限制仅来源描述，未另核当期家庭服务条款，不作为本项目制度建议。
+
+## 阅读与系统细节
+
+指南Reading controls/Customizing/Time to Read：顶端触区呼出菜单，左右区域前后翻，Aa排版。主题保存当前设置，可改名/删除/控制可见；排版是设备级，作用于本机各书。系统UI字号另设。双栏只横屏；PDF裁边/对比度只按其指定输入类型。预计读完时间是速度估计，不是学习效果；具体速度按指南仅留本机，未验证实现。
+
+指南Side Panel/Sticky Notes/Notebook Overview：页边栏在工具条另一侧，可改宽及停靠/覆盖；关闭后笔记以便签呈现，重开互换显示，不是删除。便签X保存，AI预览X却放弃并需确认，不能从图标推通用语义。多页概览点一次选择、再点打开，Back回原页，多选X回概览；模板选中页/全本范围不同。
+
+Quick Actions和Settings：下拉快捷设置；飞行关闭Wi-Fi/蓝牙；深色反转全屏、锁旋转180度、明暗/冷暖与日程分别设置。手动Wi-Fi选网/密码/连接、Rescan；保存到Amazon的网络密码可另删，不等于清除全部本地网络。休眠可能断Wi-Fi，不证音频停止或进度保存。重启不删除；恢复出厂清本地内容与设置，要先备份个人文件，重注册后能下载的云内容也不是整机状态恢复。Quick Archive/Manual Removal遇USB文件没有云副本。隐私营销/改进开关不证明禁止全部AI上传。
+
+指南Web Browser：More入口→网址/链接→Back/History；Article Mode改正文列；书签可勾选Remove，历史和Cookie独立清理。下载需确认且受列出的格式约束；没有执行任何下载。网络失败、重复文件、跨会话位置和删除撤销未知。
+
+指南Content types：部分儿童书自动Text Pop-Up，滑动/点击换段，双击返回正常；漫画双击Panel View（部分需先启用），图片/互动表格各有缩放、拖移与退出。长按快翻不证明帧率。报刊章节有自动过期规则，但服务当前可用性未核，不当现行新闻产品；Goodreads有公开书架/评级及移除入口，未登录，未建跨端成功链。
+
+指南X-Ray/Recaps：人物/地点长按后查看关联片段，超过最远阅读处默认隐藏直到要求显示全部；Recaps区分系列前情与读到当前的Story So Far，美国/英文/部分书籍。具体入口无可用内容则不显示；未验证是否真不剧透、数据更新时间、AI生成来源或后退位置。
+
+## 已查看的静态图逐项记录
+
+| 临时文件名 | 观察到的内容 | 不能证明 |
+| --- | --- | --- |
+| home.png | 状态图标、下拉箭头、搜索、购物车、更多 | 未显示完整首页/快捷面板 |
+| reading.png | 返回Library、Aa、目录、笔记、搜索、更多 | 不证明新旧固件全部布局一致 |
+| portrait.png / landscape.png | 顶部工具区、左侧较窄上一页区，其余下一页区 | 示意图不是触控实测面积或响应 |
+| pageflip.png | 三页预览、返回原页按钮、章节与位置滑条 | 一帧不能证明连续返回栈或自动保存 |
+| progress.png | 章节、位置、剩余分钟、百分比及视图按钮 | 示例数值不是速度准确性测试 |
+| themes.png | Standard当前勾选、Compact/Large/Low Vision、Save Current Settings及Manage Themes | 未见重命名/删除确认弹窗 |
+| writing.png | 竖向工具、选中黑底、剪贴板、撤销/重做灰态、更多 | 灰态不证明清空或删除后可恢复 |
+| audible.png | 章节剩余时间、滑条、±30秒、播放、速率/章节/书签、音量/已连设备/Reading、顶部X | X的暂停/后台作用未证；静态展示未试听 |
+| assistive-controls.png | 实际是Aa More开关页，含TTS说明、阅读进度及书籍提及 | 文件本地名不是画面语义；没有连续启用过程 |
+| assistive-setting.png | 实际是导航预览页及底部Assistive Reader条，含1x/退30/播放 | 不证明导航后自动恢复；两图不是连续录像 |
+
+原URL、散列及正式图像见下表；所有图均派生于同一指南，不是11个独立来源。
+
+| 图像 | 来源 | SHA256 |
+| --- | --- | --- |
+| [home.png](home.png) | [指南原图](https://d1ergij2b6wmg5.cloudfront.net/kug/kindle_scribe_2024/v1/en-US/image/chrome_en.png) | `98af5417ded8f1f71cf96ebe2b7b601bdb27b9bdfab724e4f6626c097e3255d3` |
+| [reading.png](reading.png) | [指南原图](https://d1ergij2b6wmg5.cloudfront.net/kug/kindle_scribe_2024/v1/en-US/image/KPP%20Chrome.png) | `4653376390a8592949df4920fa3f9390bd07f1ad3028d7bcfda43c7374cc1d17` |
+| [portrait.png](portrait.png) | [指南原图](https://d1ergij2b6wmg5.cloudfront.net/kug/kindle_scribe_2024/v1/en-US/image/Portrait.png) | `1e931d98fdee578207abb29ac7e0056b8b716c56096aaca066bd49c72107201a` |
+| [landscape.png](landscape.png) | [指南原图](https://d1ergij2b6wmg5.cloudfront.net/kug/kindle_scribe_2024/v1/en-US/image/Landscape.png) | `30cd7f95047c153d59c01cd5b2895b3f0b2eec34f18ebcc22e1b15ecee8bba86` |
+| [pageflip.png](pageflip.png) | [指南原图](https://d1ergij2b6wmg5.cloudfront.net/kug/kindle_scribe_2024/v1/en-US/image/KPP%20PFV.png) | `a23e07116c48ac4b33ea50d6b87f8823a15a4fd346f1a175c274ec62f53dee1f` |
+| [themes.png](themes.png) | [指南原图](https://d1ergij2b6wmg5.cloudfront.net/kug/kindle_scribe_2024/v1/en-US/image/themes.png) | `f8b4a8cfbc9685f57126a765e51ed34311d8734631c3e75af1fac5e464480386` |
+| [writing.png](writing.png) | [指南原图](https://d1ergij2b6wmg5.cloudfront.net/kug/kindle_scribe_2024/v1/en-US/image/toolbar.PNG) | `a9fecddd1fb5d3e42ee93ea00404ea6ddfebb05131b7f2db39022b1ccb9bd583` |
+| [audible.png](audible.png) | [指南原图](https://d1ergij2b6wmg5.cloudfront.net/kug/kindle_scribe_2024/v1/en-US/image/audibleplayer.png) | `44495c6d5edb2c03233ef33191809699ff36d059d23de82101bbf2c77a2a0922` |
+| [progress.png](progress.png) | [指南原图](https://d1ergij2b6wmg5.cloudfront.net/kug/kindle_scribe_2024/v1/en-US/image/reader_chrome_bottom_1.png) | `d68057599ad41f29ea1f5e96e7267e70ab60d484602d59069b6fb3da778f0b5e` |
+| [assistive-controls.png](assistive-controls.png) | [指南原图](https://d1ergij2b6wmg5.cloudfront.net/kug/kindle_scribe_2024/v1/en-US/image/Assistive_Reader_2_Scribe.png) | `cf8c6a9df11b3ab4184008aba170004fc7c38e39319787e9a60b41e015065b9d` |
+| [assistive-setting.png](assistive-setting.png) | [指南原图](https://d1ergij2b6wmg5.cloudfront.net/kug/kindle_scribe_2024/v1/en-US/image/Assistive_Reader_1_Scribe.png) | `6082f552f7806c2b3631061abfa2a2707adbf4ddca6268b119694bdb51474f53` |

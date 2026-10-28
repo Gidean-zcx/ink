@@ -1,0 +1,6 @@
+Order of actions in Shortcuts on iPhone or iPad
+The key to building a shortcut is arranging actions in the right order so that they properly accomplish the task at hand. As you use Shortcuts, you’ll notice that many shortcuts follow a similar pattern of actions:
+Get actions: The first actions bring content into the shortcut. See About get actions in Shortcuts on iPhone or iPad.
+Transform actions: The middle group of actions in a shortcut transform the content into a different format. See About transform actions in Shortcuts on iPhone or iPad.
+Share actions: The final actions in a shortcut often share data with a service or launch data in another app. See About share actions in Shortcuts on iPhone or iPad.
+These aren’t hard-and-fast rules, of course. Many shortcuts omit one or more of these action types. But keeping the get-transform-share order of actions in mind can help you build more efficient shortcuts.

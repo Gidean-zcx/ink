@@ -1,0 +1,71 @@
+[
+  {
+    "name": "onboarding",
+    "url": "https://britannicaeducation.com/onboarding/britannica-school/",
+    "final_url": "https://britannicaeducation.com/onboarding/britannica-school/",
+    "status": 200,
+    "raw_work_path": "work/britannica-controls-deepening/raw/onboarding.html",
+    "raw_sha256": "7dfda083067acefb67923f79198c6ecf0135413f477a0c0a209919c4f01c2b1c",
+    "checked_on": "2026-10-27",
+    "text_work_path": "work/britannica-controls-deepening/raw/onboarding.txt",
+    "text_sha256": "a3cacaeb7b31fc6b2f58cc7984e80da436d759789f28b16e4e54abeba0910d01",
+    "structure_path": "work/britannica-controls-deepening/raw/onboarding-structure.json",
+    "structure_sha256": "fefa4042b2db15e1daf8523e2166bcefd213aeada000962139c7eeb350fb56f2"
+  },
+  {
+    "name": "early-product",
+    "url": "https://britannicaeducation.com/solutions/prek-12/britannica-school/early-elementary/",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "final_url": "https://britannicaeducation.com/solutions/prek-12/britannica-school/early-elementary/",
+    "content_type": "text/html; charset=UTF-8",
+    "raw_work_path": "work/britannica-controls-deepening/raw/early-product.html",
+    "raw_sha256": "45b2fcd5f0e1ed615f9428e634db830eecdd7503d9c735536cf45ef19fdcbb30",
+    "bytes": 391209,
+    "text_work_path": "work/britannica-controls-deepening/raw/early-product.txt",
+    "text_sha256": "9dd707c2e5f250d6472a6163182485d4cc0784ccdcb6fa80e51c3a1ff4c9b221",
+    "structure_path": "work/britannica-controls-deepening/raw/early-product-structure.json",
+    "structure_sha256": "8f252aa1d709735afb543f19b03fd3f07988a59fbbbd468a25e0b24d94b81853"
+  },
+  {
+    "name": "content-catalog",
+    "url": "https://britannicaeducation.com/resources/britannica-school-early-elementary-content-catalog/",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "final_url": "https://britannicaeducation.com/resources/britannica-school-early-elementary-content-catalog/",
+    "content_type": "text/html; charset=UTF-8",
+    "raw_work_path": "work/britannica-controls-deepening/raw/content-catalog.html",
+    "raw_sha256": "706cf33c080e57b9d13f5abf9aa13dde63c47a02011b113cd459b07dd202ac00",
+    "bytes": 214990,
+    "text_work_path": "work/britannica-controls-deepening/raw/content-catalog.txt",
+    "text_sha256": "cb37b4eb424f343633fa2054dcfc0b564a9ba235e82fb22153af4867761d8896",
+    "structure_path": "work/britannica-controls-deepening/raw/content-catalog-structure.json",
+    "structure_sha256": "a898f4e25a82f4623a249a477b89a2afe823c212332d427c7116e98ee195e089"
+  },
+  {
+    "name": "early-checklist",
+    "url": "https://britannicaeducation.com/wp-content/uploads/2026/01/be-resource-BSchool-Early-Elementary-Getting-Started-Checklist-1.pdf",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "final_url": "https://britannicaeducation.com/wp-content/uploads/2026/01/be-resource-BSchool-Early-Elementary-Getting-Started-Checklist-1.pdf",
+    "content_type": "application/pdf",
+    "raw_work_path": "work/britannica-controls-deepening/raw/early-checklist.pdf",
+    "raw_sha256": "ecf502a0ea3711a68ebf1a88de1acebcc56ecbf295ca37cc0563c890721bc5bd",
+    "bytes": 173200,
+    "text_work_path": "work/britannica-controls-deepening/raw/early-checklist.txt",
+    "text_sha256": "14a64740645d2303cb632108418b39ee7286d8e3194f3e67365ff4436cf76546"
+  },
+  {
+    "name": "school-checklist",
+    "url": "https://britannicaeducation.com/wp-content/uploads/2026/01/be-resource-BSchool-Grades-3-12-Getting-Started-Checklist.pdf",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "final_url": "https://britannicaeducation.com/wp-content/uploads/2026/01/be-resource-BSchool-Grades-3-12-Getting-Started-Checklist.pdf",
+    "content_type": "application/pdf",
+    "raw_work_path": "work/britannica-controls-deepening/raw/school-checklist.pdf",
+    "raw_sha256": "126b0ce051c278c101b529ad844961f2f06146d333193104b9f4c185c836a504",
+    "bytes": 155111,
+    "text_work_path": "work/britannica-controls-deepening/raw/school-checklist.txt",
+    "text_sha256": "a1f051ae8177bdc9738bad44b318b63d7f83b3d66fa94ad5f9e966c64f511ba2"
+  }
+]

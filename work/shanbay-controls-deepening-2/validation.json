@@ -1,0 +1,26 @@
+{
+  "result": "PASS",
+  "new_E": 7,
+  "new_F": 0,
+  "case_F": 11,
+  "old_depth_unchanged": true,
+  "inventory": {
+    "help_column": 12,
+    "help_article": 34,
+    "existing_off_directory_source": 5,
+    "extension_help_section": 14,
+    "product_claim_domain": 3
+  },
+  "old_F_field_changes": 26,
+  "old_E_additional_capture_suggestions": 7,
+  "old_batches_unchanged": [
+    "batches/vocab-evidence.jsonl",
+    "batches/vocab-coverage.csv",
+    "batches/shanbay-controls-deepening-evidence.jsonl",
+    "batches/shanbay-controls-deepening-coverage.csv"
+  ],
+  "sha256": "match",
+  "CSV": "UTF-8/LF",
+  "visual_observed": false,
+  "hands_on": false
+}

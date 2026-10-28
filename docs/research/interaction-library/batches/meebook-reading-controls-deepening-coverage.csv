@@ -1,0 +1,2 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M057-07,M-057,切换刷新模式并核对应用实际模式,D2,E-MRCD-01,2024作者描述下拉快设选Regal/Normal/Fast/A2及顶栏模式；长按App优化可另设模式，但报告进App未沿所设模式而改用快设。,固件/文图互证、全局与App优先级、退出恢复和故障原因未核；无帧率/触摸延迟/残影实测，不保证当前所有M7。,not_observed,false,cases/M-057-meebook.md,2026-10-27

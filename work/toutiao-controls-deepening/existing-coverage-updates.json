@@ -1,0 +1,146 @@
+[
+  {
+    "flow_id": "F-M052-01",
+    "source_batch": "docs/research/interaction-library/batches/feed-coverage.csv",
+    "field": "known_branches",
+    "before": "无连续观察",
+    "after": "商店18.8.0仍仅一般功能/修复声明；官网普通GET为身份初始化壳，未取得阅读主链",
+    "reason": "原任务补对象/数据/历史版本边界；不改旧批，由root合并"
+  },
+  {
+    "flow_id": "F-M052-01",
+    "source_batch": "docs/research/interaction-library/batches/feed-coverage.csv",
+    "field": "gaps",
+    "before": "阅读器状态及出处返回续读",
+    "after": "文章来源跳转、阅读器结束/回卡位置、收藏回访和重启续读仍未知",
+    "reason": "原任务补对象/数据/历史版本边界；不改旧批，由root合并"
+  },
+  {
+    "flow_id": "F-M052-01",
+    "source_batch": "docs/research/interaction-library/batches/feed-coverage.csv",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27",
+    "reason": "原任务补对象/数据/历史版本边界；不改旧批，由root合并"
+  },
+  {
+    "flow_id": "F-M052-02",
+    "source_batch": "docs/research/interaction-library/batches/feed-coverage.csv",
+    "field": "evidence_ids",
+    "before": "E-TT-01",
+    "after": "E-TT-01;E-TTCD-02",
+    "reason": "原任务补对象/数据/历史版本边界；不改旧批，由root合并"
+  },
+  {
+    "flow_id": "F-M052-02",
+    "source_batch": "docs/research/interaction-library/batches/feed-coverage.csv",
+    "field": "known_branches",
+    "before": "X理由与增删屏蔽",
+    "after": "政策仅信息栏X→相关理由；内容屏蔽标签可增删，效果措辞为不再或减少；未证长按",
+    "reason": "原任务补对象/数据/历史版本边界；不改旧批，由root合并"
+  },
+  {
+    "flow_id": "F-M052-02",
+    "source_batch": "docs/research/interaction-library/batches/feed-coverage.csv",
+    "field": "gaps",
+    "before": "提交撤销及弱网",
+    "after": "理由枚举、作者/关键词/单篇对象范围、提交/撤销/弱网与即时移卡未知",
+    "reason": "原任务补对象/数据/历史版本边界；不改旧批，由root合并"
+  },
+  {
+    "flow_id": "F-M052-02",
+    "source_batch": "docs/research/interaction-library/batches/feed-coverage.csv",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27",
+    "reason": "原任务补对象/数据/历史版本边界；不改旧批，由root合并"
+  },
+  {
+    "flow_id": "F-M052-03",
+    "source_batch": "docs/research/interaction-library/batches/feed-coverage.csv",
+    "field": "evidence_ids",
+    "before": "E-TT-01",
+    "after": "E-TT-01;E-TTCD-02",
+    "reason": "原任务补对象/数据/历史版本边界；不改旧批，由root合并"
+  },
+  {
+    "flow_id": "F-M052-03",
+    "source_batch": "docs/research/interaction-library/batches/feed-coverage.csv",
+    "field": "known_branches",
+    "before": "隐藏推荐保留其他频道",
+    "after": "关闭推荐隐藏推荐频道；可分别关闭基于位置/搜索/关注的特征；丰富度为尝试多样化，广告开关另列",
+    "reason": "原任务补对象/数据/历史版本边界；不改旧批，由root合并"
+  },
+  {
+    "flow_id": "F-M052-03",
+    "source_batch": "docs/research/interaction-library/batches/feed-coverage.csv",
+    "field": "gaps",
+    "before": "重启同步及恢复内容",
+    "after": "关注内容是否按时间排序、频道编辑按钮、重启/跨端/恢复内容；2024省略设置层不可套现版",
+    "reason": "原任务补对象/数据/历史版本边界；不改旧批，由root合并"
+  },
+  {
+    "flow_id": "F-M052-03",
+    "source_batch": "docs/research/interaction-library/batches/feed-coverage.csv",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27",
+    "reason": "原任务补对象/数据/历史版本边界；不改旧批，由root合并"
+  },
+  {
+    "flow_id": "F-M052-04",
+    "source_batch": "docs/research/interaction-library/batches/feed-coverage.csv",
+    "field": "evidence_ids",
+    "before": "E-TT-01",
+    "after": "E-TT-01;E-TTCD-01;E-TTCD-02",
+    "reason": "原任务补对象/数据/历史版本边界；不改旧批，由root合并"
+  },
+  {
+    "flow_id": "F-M052-04",
+    "source_batch": "docs/research/interaction-library/batches/feed-coverage.csv",
+    "field": "known_branches",
+    "before": "清除后重新积累",
+    "after": "2026政策清兴趣/偏好后重新积累；我的内容查删浏览/收藏等记录；旧指引删除行为措辞和2024永久字样单独保留",
+    "reason": "原任务补对象/数据/历史版本边界；不改旧批，由root合并"
+  },
+  {
+    "flow_id": "F-M052-04",
+    "source_batch": "docs/research/interaction-library/batches/feed-coverage.csv",
+    "field": "gaps",
+    "before": "确认撤销及列表内容续读",
+    "after": "删除确认/撤销/同步、收藏精确续读、旧文行为删除范围与现版关系未知",
+    "reason": "原任务补对象/数据/历史版本边界；不改旧批，由root合并"
+  },
+  {
+    "flow_id": "F-M052-04",
+    "source_batch": "docs/research/interaction-library/batches/feed-coverage.csv",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27",
+    "reason": "原任务补对象/数据/历史版本边界；不改旧批，由root合并"
+  },
+  {
+    "flow_id": "F-M052-05",
+    "source_batch": "docs/research/interaction-library/batches/feed-coverage.csv",
+    "field": "known_branches",
+    "before": "搜索阅读两个无痕入口",
+    "after": "搜索框删本地历史；无痕搜索不本地记录展示/用于推荐，仍作搜索与安全基本服务；无痕阅读另限点击浏览",
+    "reason": "原任务补对象/数据/历史版本边界；不改旧批，由root合并"
+  },
+  {
+    "flow_id": "F-M052-05",
+    "source_batch": "docs/research/interaction-library/batches/feed-coverage.csv",
+    "field": "gaps",
+    "before": "实际检索主链及错误恢复",
+    "after": "无痕切换回执、既有记录是否追溯清理、跨端、实际检索错误与返回恢复未知",
+    "reason": "原任务补对象/数据/历史版本边界；不改旧批，由root合并"
+  },
+  {
+    "flow_id": "F-M052-05",
+    "source_batch": "docs/research/interaction-library/batches/feed-coverage.csv",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27",
+    "reason": "原任务补对象/数据/历史版本边界；不改旧批，由root合并"
+  }
+]

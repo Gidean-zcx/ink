@@ -1,0 +1,26 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M007-01,M-007,从正文进入系统控制,D2,E-VIW-08;E-VIW-09,刷新策略与关闭进程是两个动作。,模式是否逐app保存；关闭前自动保存、听读中断和耗时。,not_observed,false,cases/M-007-viwoods.md,2026-10-26
+F-M007-02,M-007,从书内选段问AI,D2,E-VIW-06;E-VIW-12,选中文本是上下文，不证明AI自动取得整本书。,关闭对话后原选区/页锚；扫描PDF；长文本截断。,not_observed,false,cases/M-007-viwoods.md,2026-10-26
+F-M007-03,M-007,设置重复使用的AI指令,D2,E-VIW-06,保存提示词与保存生成结果不同。,V3.15数量上限、直接编辑入口、已有结果是否受改指令影响。,not_observed,false,cases/M-007-viwoods.md,2026-10-26
+F-M007-04,M-007,语音提问并带走结果,D2,E-VIW-06,短语音问题与Meeting长录音分属不同任务。,误触提交/取消、失败重试；历史会话保留期与最新云端关系。,not_observed,false,cases/M-007-viwoods.md,2026-10-26
+F-M007-05,M-007,录音后转写、改结果再输出,D2,E-VIW-03,已证实可连续处理结果；回写原笔记的方式仍未知。,开始/停止精确按钮、录音自动分段、原音保留、纠错回听、断网续传。,not_observed,false,cases/M-007-viwoods.md,2026-10-26
+F-M007-06,M-007,区分录音数据与显示状态,D2,E-VIW-04,隐藏窗口不应被解释为停止或删除；导出文本不是音频备份。,隐藏时是否持续录音、锁屏/切app、后台杀进程后的恢复，均待测。,not_observed,false,cases/M-007-viwoods.md,2026-10-26
+F-M007-07,M-007,从长笔记找回标记位置,D2,E-VIW-03;E-VIW-04,标记与大纲是导航对象；删除入口不等于删原文。,重排/移页后的锚点、同名条目、撤销和恢复。,not_observed,false,cases/M-007-viwoods.md,2026-10-26
+F-M007-08,M-007,提取其他app内容并继续AI,D2,E-VIW-07;E-VIW-04;E-VIW-05,老Picking与新Knowledge Base名称需辨明；当前剪辑按来源app递增命名。,是否保存URL/书页、来源修改、AI使用的是图像还是OCR文本、重复裁剪去重。,not_observed,false,cases/M-007-viwoods.md,2026-10-26
+F-M007-09,M-007,从阅读导航回到证据,D2,E-VIW-12;E-VIW-05,书签/标注与临时跳页不同。,跳转后的一键返回历史、其他语言离线词库、删书后标注保留。,not_observed,false,cases/M-007-viwoods.md,2026-10-26
+F-M007-10,M-007,通过ViTransfer传入资料,D2,E-VIW-12,是显式收件；不是自动双向云同步。,账户切换、重复名、断线/取消/满盘；旧手册路径当前适配。,not_observed,false,cases/M-007-viwoods.md,2026-10-26
+F-M007-11,M-007,选择需要同步的内容（D1）,D1,E-VIW-02,原生云、第三方云和ViTransfer要分开；账号内容独立。,开关完整菜单、合并规则、离线删除、云满、退出账号本地可见性。,not_observed,false,cases/M-007-viwoods.md,2026-10-26
+F-M007-12,M-007,把手写/日程推进为待办（D1）,D1,E-VIW-05;E-VIW-03;E-VIW-02,待办是另一对象，不能推定会改写原手写。,完整创建/完成/误删恢复、跨日迁移和日历同步冲突。,not_observed,false,cases/M-007-viwoods.md,2026-10-26
+F-M007-13,M-007,网络/Google服务故障恢复,D2,E-VIW-09,网络恢复不证明未完成AI请求会自动续跑。,AI请求队列/收费重试、离线识别语言包、缓存/数据清理影响。,not_observed,false,cases/M-007-viwoods.md,2026-10-26
+F-M008-01,M-008,读文档后批注并分享（D1）,D1,E-HANV-03,能力终点明确，原稿与输出副本关系未知。,选页/批量、导出路径、隐藏层、撤销、覆盖/取消。,not_observed,false,cases/M-008-hanvon.md,2026-10-26
+F-M008-02,M-008,扫描PDF转为适读内容（D1）,D1,E-HANV-03,重新显示与生成新文件不能混为一谈。,语言、联网条件、识别错误修订、原PDF保留、恢复原版式。,not_observed,false,cases/M-008-hanvon.md,2026-10-26
+F-M008-03,M-008,录音→分角色→纪要（D1）,D1,E-HANV-03,不能推定转写、纪要、原声总是一起保存或一起删除。,说话人修正、暂停/锁屏、断网后AI、原音回听、改指令、导出格式。,not_observed,false,cases/M-008-hanvon.md,2026-10-26
+F-M008-04,M-008,多端流转同一份材料（D1）,D1,E-HANV-03,“传输”“多端同步”不能自动解释为冲突合并。,云离线、重名、版本、删除、取消和回滚；是否需要付费。,not_observed,false,cases/M-008-hanvon.md,2026-10-26
+F-M009-01,M-009,电脑书籍/文档入库,D2,E-IFLYO-02;E-IXCD-01,历史手册区分讯飞阅读/office文档及TF路径；后续未标版本帮助概括内部共享存储；手机上传后须设备下载。,版本目录差异、重名覆盖、索引刷新、断线；Office帮助不展示文件夹。,not_observed,false,cases/M-009-iflytek-office.md,2026-10-26
+F-M009-02,M-009,云盘/邮件资料送入阅读,D2,E-IFLYO-02;E-IXCD-01,云盘按格式下载归类；邮件附件另有本地目录，不能当云原件编辑。,双向回传、授权失效、删除缓存与云文件、网络中断。,not_observed,false,cases/M-009-iflytek-office.md,2026-10-26
+F-M009-03,M-009,从U盘导入,D2,E-IFLYO-02,官方路径为“移动”，不能当成保留外部原件的复制承诺。,exFAT在帮助中不支持；改格式会影响原数据，实际未做；拔出中断恢复。,not_observed,false,cases/M-009-iflytek-office.md,2026-10-26
+F-M009-04,M-009,把笔记连同需要的文本带到PC,D2,E-IFLYO-01;E-IXCD-01,历史上传读写客与后续帮助先加入笔记的前提分别保留；写作录音PC出口不同。,加入文本具体按钮、重复同步、导出与原笔记可编辑性。,not_observed,false,cases/M-009-iflytek-office.md,2026-10-26
+F-M009-05,M-009,走本地出口保留记录,D2,E-IFLYO-01,写作插入录音不走此音频出口；记录模式音频在阅读/文件/音频。,固件最低版本、音频剪辑/标记、错误和空文件。,not_observed,false,cases/M-009-iflytek-office.md,2026-10-26
+F-M009-06,M-009,分享/导出失败后定位,D2,E-IFLYO-01;E-IXCD-01,邮件播放链接不等于音频文件；导出说明不证明识别在设备本地完成。,链接期限/权限、取消、保真、是否保留原声；不承诺永久可用。,not_observed,false,cases/M-009-iflytek-office.md,2026-10-26
+F-M009-07,M-009,控制自动上传,D2,E-IFLYO-04;E-IXCD-01;E-IXCD-07,历史开关在编辑退出时触发；手动上传、加密后云删除与自动上传分开；上传触发不等于服务器完成。,现版菜单、上传失败/排队、关闭前云副本、同步冲突。,static_manual_pages_only,false,cases/M-009-iflytek-office.md,2026-10-26
+F-M009-08,M-009,录音整理为纪要并再修改（D1）,D1,E-IFLYO-03,功能存在有据；原音→转写→纪要的回写及版本关系未明。,输入范围、离线、重试、语言、结果引用定位、导出后的原稿关系。,not_observed,false,cases/M-009-iflytek-office.md,2026-10-26

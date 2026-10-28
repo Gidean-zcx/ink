@@ -1,0 +1,13 @@
+entry_id,product_id,function_domain,evidence_ids,flow_ids,status,remaining_gap
+M-031-MA01,M-031,引导身份/年级/日目标,E-DUMA-04,F-M031-16,observed_public_browser,偏好保存422影响、其他年级/语言
+M-031-MA02,M-031,Toolkit与题目提交分离,E-DUMA-04,F-M031-20,observed_public_browser,Math Coach未操作；解释与其他工具
+M-031-MA03,M-031,选择题错误后推进,E-DUMA-04,F-M031-20,observed_public_browser,反复错答与其他课程
+M-031-MA04,M-031,未提交选择退出再进,E-DUMA-04,F-M031-18,observed_public_browser,账号/跨进程/离线
+M-031-MA05,M-031,拼块不完整输入/移回/判分,E-DUMA-04,F-M031-20,observed_public_browser,遗漏原因、通用撤销/等价式规则
+M-031-MA06,M-031,数轴估计与刻度范围,E-DUMA-04,F-M031-20,observed_public_browser,容差、吸附、错误和触摸精度
+M-031-MA07,M-031,键盘输入后判分,E-DUMA-04,F-M031-20,observed_public_browser,空值/非法字符/Enter/粘贴
+M-031-MA08,M-031,课末错题回顾,E-DUMA-04,F-M031-20,observed_public_browser,重排/调度与反复错答规则
+M-031-MA09,M-031,完成/目标未设/刷新保留,E-DUMA-04,F-M031-20,observed_public_browser,评分公式、持久身份/备份
+M-031-MA10,M-031,历史数学内容及动态视觉,E-DUMA-01;E-DUMA-02,F-M031-20,official_document_scope,原生实现/Plus适配未验证
+M-031-MA11,M-031,Math Coach与主题跳转,E-DUMA-04,,vendor_claim_only,没有执行入口到结果
+M-031-MA12,M-031,Music琴键/读谱/听辨/歌曲,E-DUMA-03,,range_only,核心错误/重听/节奏容差/退出/结算

@@ -1,0 +1,102 @@
+[
+  {
+    "source_name": "redesign",
+    "html_image_index": 8,
+    "url": "https://www.inoreader.com/blog/wp-content/uploads/2024/10/2-tab-bar.png",
+    "status": 200,
+    "path": "work/research/batch41-inoreader-visuals/redesign-image-08.png",
+    "sha256": "116eb7000aad3da3b4a1294534c3fbc6b98a5eadd8b9f8ec049b0cda4dce396b",
+    "bytes": 309748,
+    "visual_observed": false
+  },
+  {
+    "source_name": "redesign",
+    "html_image_index": 9,
+    "url": "https://www.inoreader.com/blog/wp-content/uploads/2024/10/3-dashboards-2.png",
+    "status": 200,
+    "path": "work/research/batch41-inoreader-visuals/redesign-image-09.png",
+    "sha256": "7f4304c87b80f098fd088bd89b784ded20964310a49779434a0fee38cd430195",
+    "bytes": 223540,
+    "visual_observed": false
+  },
+  {
+    "source_name": "redesign",
+    "html_image_index": 11,
+    "url": "https://www.inoreader.com/blog/wp-content/uploads/2024/10/5-filters.png",
+    "status": 200,
+    "path": "work/research/batch41-inoreader-visuals/redesign-image-11.png",
+    "sha256": "229bc566c1de63ebd16e50e500cbb05a4ae9322ad05022fcfbf63040c77c0b33",
+    "bytes": 142286,
+    "visual_observed": false
+  },
+  {
+    "source_name": "redesign",
+    "html_image_index": 13,
+    "url": "https://www.inoreader.com/blog/wp-content/uploads/2024/10/7-audio-player-1.png",
+    "status": 200,
+    "path": "work/research/batch41-inoreader-visuals/redesign-image-13.png",
+    "sha256": "5024655a83776620aa95742e375b0f0b9905d246a2e47e6fb18b5c9f12f01eee",
+    "bytes": 160700,
+    "visual_observed": false
+  },
+  {
+    "source_name": "active-reading",
+    "html_image_index": 8,
+    "url": "https://www.inoreader.com/blog/wp-content/uploads/2024/11/chapter-3-1-1.png",
+    "status": 200,
+    "path": "work/research/batch41-inoreader-visuals/active-reading-image-08.png",
+    "sha256": "bab025854cf2dfd02df4b1064f5372cdbbb164c0efb7118b169f377b16f17bd4",
+    "bytes": 268314,
+    "visual_observed": false
+  },
+  {
+    "source_name": "active-reading",
+    "html_image_index": 9,
+    "url": "https://www.inoreader.com/blog/wp-content/uploads/2025/06/chapter-3-1.png",
+    "status": 200,
+    "path": "work/research/batch41-inoreader-visuals/active-reading-image-09.png",
+    "sha256": "1fa4e40bfc327bd0e4aa32056d46b74c64569634ef3beb053d5b5b181bc9c035",
+    "bytes": 160332,
+    "visual_observed": false
+  },
+  {
+    "source_name": "active-reading",
+    "html_image_index": 10,
+    "url": "https://www.inoreader.com/blog/wp-content/uploads/2024/11/chapter-3-3.png",
+    "status": 200,
+    "path": "work/research/batch41-inoreader-visuals/active-reading-image-10.png",
+    "sha256": "c6d298f6061524e481757cdf1c89256d96d367f4990804cade8e856103cdbbde",
+    "bytes": 161436,
+    "visual_observed": false
+  },
+  {
+    "source_name": "active-reading",
+    "html_image_index": 11,
+    "url": "https://www.inoreader.com/blog/wp-content/uploads/2025/06/chapter-3-3.png",
+    "status": 200,
+    "path": "work/research/batch41-inoreader-visuals/active-reading-image-11.png",
+    "sha256": "f988479fd65d008948500c6d755af8931e4ac8b936575c2ea7c892bb63e0e4f2",
+    "bytes": 199660,
+    "visual_observed": false
+  },
+  {
+    "source_name": "active-reading",
+    "html_image_index": 12,
+    "url": "https://www.inoreader.com/blog/wp-content/uploads/2025/06/chapter-3-4.png",
+    "status": 200,
+    "path": "work/research/batch41-inoreader-visuals/active-reading-image-12.png",
+    "sha256": "ec0ccaaa3b6fe61be8328d28fdfdc29ccd108c36aeb8659914b5e1a9c740c19a",
+    "bytes": 169292,
+    "visual_observed": false
+  },
+  {
+    "source_name": "active-reading",
+    "html_image_index": 13,
+    "url": "https://www.inoreader.com/blog/wp-content/uploads/2025/06/chapter-3-5.png",
+    "status": 200,
+    "path": "work/research/batch41-inoreader-visuals/active-reading-image-13.png",
+    "sha256": "1cf8a409aef505a2d63e6fc4094538c42289ef789cb233728ff7f524dcf226cb",
+    "bytes": 115494,
+    "visual_observed": false
+  }
+]

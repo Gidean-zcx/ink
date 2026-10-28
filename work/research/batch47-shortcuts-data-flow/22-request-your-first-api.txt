@@ -1,0 +1,27 @@
+Request your first API in Shortcuts on iPhone or iPad
+To request your first API, you create the URL that points at the API “endpoint” that you want to talk to, and then pass that URL to the Get Contents of URL action. When the shortcut is run, this action makes the API request.
+Build the API request
+Typicode’s endpoint requires a URL request to be formatted this way:
+https://jsonplaceholder.typicode.com/[RESOURCE]
+The text in brackets is the resource you would like to access. Typicode provides many different examples for testing requests. This example will be using
+https://jsonplaceholder.typicode.com/users to request a list of users.
+In the Shortcuts app on your iPhone or iPad, add the request to the URL.
+The users request will return a list of users.
+You can narrow your search by specifying a specific user by the id: https://jsonplaceholder.typicode.com/users/6. This will return the user whose id is 6.
+Most APIs allow for queries using the following format: https://jsonplaceholder.typicode.com/users?username=Bret. The “?” starts the query, which searches for items using key/value pairs. In this example, the query ?username=Bret searches for a user whose username is Bret.
+Check your API’s documentation for supported searches and queries.
+Perform the API request with the Get Contents of URL action
+In the Shortcuts app on your iPhone or iPad, tap Show More in the Get Contents of URL action.
+The following options for the types of API requests you can make become available:
+GET allows you to retrieve data.
+POST allows you to create new data.
+PUT allows you to update data by replacing it.
+PATCH allows you to update data by modifying it.
+DELETE allows you to remove an object specified in the URL request.
+For this example, use a GET request to retrieve data from the Typicode API.
+Now that the URL action has your request and the Get Contents of URL action is set up to GET data, you’re ready to make the API request.
+Note: When the Get Contents of URL action is switched to POST, PUT, or PATCH, a new parameter called Request Body is added. Request Body allows you to send JSON, a Form, or a File to the API as part of your request. This lets you enter new data manually or by using variables so you can send the data to the API for creating, replacing, or modifying an entry.
+To test the shortcut, tap .
+Upon first look, the API appears to return a mess of text. This data is encoded in JSON, which stands for JavaScript Object Notation.
+To learn about working with JSON and to continue with the Typicode API example, see Intro to using JSON in Shortcuts on iPhone and iPad.
+Not all apps, services, and content are available in all countries or regions.

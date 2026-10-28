@@ -1,0 +1,22 @@
+{
+  "name": "11-daily-goal",
+  "url": "https://www.duolingo.com/welcome?welcomeStep=dailyGoal",
+  "title": "Duolingo - Learn French with lessons that work",
+  "utc": "2026-10-26T17:41:52.291700+00:00",
+  "text": "What’s your daily learning goal?\nWhat’s your daily learning goal?\n5 min / day\nCasual\n10 min / day\nRegular\n15 min / day\nSerious\n20 min / day\nIntense\nCONTINUE",
+  "buttons": [
+    {
+      "text": "",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "CONTINUE",
+      "aria": null,
+      "test": "funboarding-continue-button",
+      "visible": true
+    }
+  ],
+  "inputs": []
+}

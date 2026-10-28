@@ -1,0 +1,592 @@
+{
+  "checked_on": "2026-10-27",
+  "network_used": false,
+  "unique_article_count": 31,
+  "formal_evidence_files_scanned": 131,
+  "articles": [
+    {
+      "article_id": "10701146091284",
+      "title": "Screensaver",
+      "url": "https://booxsupport.zendesk.com/hc/en-us/articles/10701146091284-Screensaver",
+      "updated_at": "2026-05-25T02:20:37Z",
+      "edited_at": "2024-04-01T10:14:26Z",
+      "formal_evidence_ids_same_url": [],
+      "local_cache": "work/eink-systems-research/boox-articles.json",
+      "body_length": 7268,
+      "applicability_condition_extracts": [
+        {
+          "kind": "tab_series",
+          "quote": "In this article, you will learn how to set the screensaver and shutdown image for your BOOX Tab Series device."
+        },
+        {
+          "kind": "limited_models",
+          "quote": "Monthly Calendar Screensaver is only available in some models."
+        }
+      ],
+      "explicit_firmware_versions_later_than_v4_1_2": []
+    },
+    {
+      "article_id": "10701108549140",
+      "title": "Home Screen and Dock",
+      "url": "https://booxsupport.zendesk.com/hc/en-us/articles/10701108549140-Home-Screen-and-Dock",
+      "updated_at": "2026-05-24T11:30:17Z",
+      "edited_at": "2024-04-02T10:23:04Z",
+      "formal_evidence_ids_same_url": [],
+      "local_cache": "work/eink-systems-research/boox-articles.json",
+      "body_length": 6329,
+      "applicability_condition_extracts": [
+        {
+          "kind": "tab_series",
+          "quote": "The BOOX Tab Series devices have a redesigned interface for you to enjoy a unique user experience like on a conventional tablet."
+        }
+      ],
+      "explicit_firmware_versions_later_than_v4_1_2": []
+    },
+    {
+      "article_id": "10701630316436",
+      "title": "Screenshot",
+      "url": "https://booxsupport.zendesk.com/hc/en-us/articles/10701630316436-Screenshot",
+      "updated_at": "2025-06-09T08:20:02Z",
+      "edited_at": "2024-12-03T08:46:39Z",
+      "formal_evidence_ids_same_url": [],
+      "local_cache": "work/eink-systems-research/boox-articles.json",
+      "body_length": 3909,
+      "applicability_condition_extracts": [],
+      "explicit_firmware_versions_later_than_v4_1_2": []
+    },
+    {
+      "article_id": "25403769498004",
+      "title": "Screen Recording",
+      "url": "https://booxsupport.zendesk.com/hc/en-us/articles/25403769498004-Screen-Recording",
+      "updated_at": "2025-06-09T08:20:47Z",
+      "edited_at": "2024-04-08T06:30:24Z",
+      "formal_evidence_ids_same_url": [],
+      "local_cache": "work/eink-systems-research/boox-articles.json",
+      "body_length": 2492,
+      "applicability_condition_extracts": [],
+      "explicit_firmware_versions_later_than_v4_1_2": []
+    },
+    {
+      "article_id": "10701620011540",
+      "title": "Scan Documents App",
+      "url": "https://booxsupport.zendesk.com/hc/en-us/articles/10701620011540-Scan-Documents-App",
+      "updated_at": "2025-06-09T08:19:12Z",
+      "edited_at": "2024-04-08T06:22:38Z",
+      "formal_evidence_ids_same_url": [],
+      "local_cache": "work/eink-systems-research/boox-articles.json",
+      "body_length": 3586,
+      "applicability_condition_extracts": [
+        {
+          "kind": "tab_ultra",
+          "quote": "Note: The camera is only available on Tab Ultra, Tab Ultra C, and Tab Ultra C Pro."
+        },
+        {
+          "kind": "tab_ultra",
+          "quote": "Tab Ultra, Tab Ultra C, and Tab Ultra C Pro are equipped with an exclusive 16MP rear camera as the Smart Scanner for document scanning, OCR, and other amazing functions."
+        }
+      ],
+      "explicit_firmware_versions_later_than_v4_1_2": []
+    },
+    {
+      "article_id": "10701172864916",
+      "title": "Display Settings",
+      "url": "https://booxsupport.zendesk.com/hc/en-us/articles/10701172864916-Display-Settings",
+      "updated_at": "2026-10-08T21:10:28Z",
+      "edited_at": "2024-04-01T10:11:03Z",
+      "formal_evidence_ids_same_url": [],
+      "local_cache": "work/eink-systems-research/boox-articles.json",
+      "body_length": 3999,
+      "applicability_condition_extracts": [
+        {
+          "kind": "limited_models",
+          "quote": "Note : Importing fonts is only available in some models."
+        }
+      ],
+      "explicit_firmware_versions_later_than_v4_1_2": []
+    },
+    {
+      "article_id": "10701109999636",
+      "title": "Volume",
+      "url": "https://booxsupport.zendesk.com/hc/en-us/articles/10701109999636-Volume",
+      "updated_at": "2026-05-18T07:57:10Z",
+      "edited_at": "2024-04-01T10:45:38Z",
+      "formal_evidence_ids_same_url": [],
+      "local_cache": "work/eink-systems-research/boox-articles.json",
+      "body_length": 1450,
+      "applicability_condition_extracts": [
+        {
+          "kind": "tab_series",
+          "quote": "The BOOX Tab Series devices are equipped with a speaker for audio output."
+        }
+      ],
+      "explicit_firmware_versions_later_than_v4_1_2": []
+    },
+    {
+      "article_id": "10701622160916",
+      "title": "Screen Mirroring",
+      "url": "https://booxsupport.zendesk.com/hc/en-us/articles/10701622160916-Screen-Mirroring",
+      "updated_at": "2025-06-06T06:34:02Z",
+      "edited_at": "2024-06-27T07:32:01Z",
+      "formal_evidence_ids_same_url": [],
+      "local_cache": "work/eink-systems-research/boox-articles.json",
+      "body_length": 6584,
+      "applicability_condition_extracts": [],
+      "explicit_firmware_versions_later_than_v4_1_2": []
+    },
+    {
+      "article_id": "10701171762452",
+      "title": "Sleep and Battery",
+      "url": "https://booxsupport.zendesk.com/hc/en-us/articles/10701171762452-Sleep-and-Battery",
+      "updated_at": "2025-06-06T06:22:52Z",
+      "edited_at": "2022-11-10T10:00:48Z",
+      "formal_evidence_ids_same_url": [
+        "E-BXCD-14"
+      ],
+      "local_cache": "work/eink-systems-research/boox-articles.json",
+      "body_length": 3345,
+      "applicability_condition_extracts": [
+        {
+          "kind": "tab_series",
+          "quote": "The BOOX Tab Series devices consumes more power than typical BOOX devices due to an increased performance and efficiency."
+        }
+      ],
+      "explicit_firmware_versions_later_than_v4_1_2": []
+    },
+    {
+      "article_id": "10701262170644",
+      "title": "App Management Settings",
+      "url": "https://booxsupport.zendesk.com/hc/en-us/articles/10701262170644-App-Management-Settings",
+      "updated_at": "2025-06-06T07:06:48Z",
+      "edited_at": "2023-04-27T03:28:05Z",
+      "formal_evidence_ids_same_url": [
+        "E-BOOX-22",
+        "E-BXCD-07",
+        "E-PALMA-13"
+      ],
+      "local_cache": "work/eink-systems-research/boox-articles.json",
+      "body_length": 8058,
+      "applicability_condition_extracts": [
+        {
+          "kind": "limited_models",
+          "quote": "Note: This function is only available for select models."
+        }
+      ],
+      "explicit_firmware_versions_later_than_v4_1_2": []
+    },
+    {
+      "article_id": "25213043150996",
+      "title": "Navigate Your Device",
+      "url": "https://booxsupport.zendesk.com/hc/en-us/articles/25213043150996-Navigate-Your-Device",
+      "updated_at": "2026-05-26T20:22:12Z",
+      "edited_at": "2024-06-28T03:08:26Z",
+      "formal_evidence_ids_same_url": [
+        "E-BOOX-05",
+        "E-BXCD-03",
+        "E-PALMA-04"
+      ],
+      "local_cache": "work/eink-systems-research/boox-articles.json",
+      "body_length": 11238,
+      "applicability_condition_extracts": [
+        {
+          "kind": "tab_series",
+          "quote": "Smart Assistant Smart Assistant is a screen of useful shortcuts on your BOOX Tab Series device."
+        },
+        {
+          "kind": "tab_series",
+          "quote": "Multi-Finger Gestures The BOOX Tab Series devices are available with multi-finger gestures."
+        },
+        {
+          "kind": "limited_models",
+          "quote": "Auto-rotate is only available for models with G Sensor."
+        }
+      ],
+      "explicit_firmware_versions_later_than_v4_1_2": []
+    },
+    {
+      "article_id": "10701173983508",
+      "title": "Language and Input",
+      "url": "https://booxsupport.zendesk.com/hc/en-us/articles/10701173983508-Language-and-Input",
+      "updated_at": "2026-05-25T11:59:24Z",
+      "edited_at": "2024-04-01T04:25:11Z",
+      "formal_evidence_ids_same_url": [],
+      "local_cache": "work/eink-systems-research/boox-articles.json",
+      "body_length": 1649,
+      "applicability_condition_extracts": [],
+      "explicit_firmware_versions_later_than_v4_1_2": []
+    },
+    {
+      "article_id": "10701147047188",
+      "title": "WiFi and Bluetooth",
+      "url": "https://booxsupport.zendesk.com/hc/en-us/articles/10701147047188-WiFi-and-Bluetooth",
+      "updated_at": "2026-05-23T09:00:48Z",
+      "edited_at": "2022-11-10T09:59:58Z",
+      "formal_evidence_ids_same_url": [],
+      "local_cache": "work/eink-systems-research/boox-articles.json",
+      "body_length": 1601,
+      "applicability_condition_extracts": [],
+      "explicit_firmware_versions_later_than_v4_1_2": []
+    },
+    {
+      "article_id": "10701137102100",
+      "title": "Front Lights",
+      "url": "https://booxsupport.zendesk.com/hc/en-us/articles/10701137102100-Front-Lights",
+      "updated_at": "2026-05-26T17:15:44Z",
+      "edited_at": "2025-08-28T08:21:35Z",
+      "formal_evidence_ids_same_url": [],
+      "local_cache": "work/eink-systems-research/boox-articles.json",
+      "body_length": 893,
+      "applicability_condition_extracts": [
+        {
+          "kind": "firmware_version",
+          "quote": "Since Firmware V4.1, you can switch between four front light modes with a tap, or customize the front light settings manually to suit your preferences."
+        }
+      ],
+      "explicit_firmware_versions_later_than_v4_1_2": []
+    },
+    {
+      "article_id": "20259982794772",
+      "title": "Customize Mouse",
+      "url": "https://booxsupport.zendesk.com/hc/en-us/articles/20259982794772-Customize-Mouse",
+      "updated_at": "2025-06-06T06:33:06Z",
+      "edited_at": "2024-04-02T10:16:00Z",
+      "formal_evidence_ids_same_url": [],
+      "local_cache": "work/eink-systems-research/boox-articles.json",
+      "body_length": 1404,
+      "applicability_condition_extracts": [
+        {
+          "kind": "tab_series",
+          "quote": "rience, please make sure: Update to the latest firmware Choose Fast/Ultrafast mode Set Ponter Speed to about 80% Note : Currently, only the Tab series supports customizing the mouse."
+        },
+        {
+          "kind": "limited_models",
+          "quote": "trol experience, please make sure: Update to the latest firmware Choose Fast/Ultrafast mode Set Ponter Speed to about 80% Note : Currently, only the Tab series supports customizing the mouse."
+        }
+      ],
+      "explicit_firmware_versions_later_than_v4_1_2": []
+    },
+    {
+      "article_id": "10701256390548",
+      "title": "Contrast and Color",
+      "url": "https://booxsupport.zendesk.com/hc/en-us/articles/10701256390548-Contrast-and-Color",
+      "updated_at": "2026-05-27T12:52:46Z",
+      "edited_at": "2025-08-28T08:38:23Z",
+      "formal_evidence_ids_same_url": [],
+      "local_cache": "work/eink-systems-research/boox-articles.json",
+      "body_length": 5226,
+      "applicability_condition_extracts": [],
+      "explicit_firmware_versions_later_than_v4_1_2": []
+    },
+    {
+      "article_id": "10701308914964",
+      "title": "Download and Install Apps",
+      "url": "https://booxsupport.zendesk.com/hc/en-us/articles/10701308914964-Download-and-Install-Apps",
+      "updated_at": "2026-05-23T04:22:45Z",
+      "edited_at": "2024-04-07T10:13:45Z",
+      "formal_evidence_ids_same_url": [
+        "E-BXCD-08"
+      ],
+      "local_cache": "work/eink-systems-research/boox-articles.json",
+      "body_length": 1299,
+      "applicability_condition_extracts": [
+        {
+          "kind": "limited_models",
+          "quote": "Download from the Google Play Store Google Play is pre-installed on some models."
+        }
+      ],
+      "explicit_firmware_versions_later_than_v4_1_2": []
+    },
+    {
+      "article_id": "15194669819796",
+      "title": "Work Profile",
+      "url": "https://booxsupport.zendesk.com/hc/en-us/articles/15194669819796-Work-Profile",
+      "updated_at": "2026-05-14T13:53:17Z",
+      "edited_at": "2023-04-27T03:27:22Z",
+      "formal_evidence_ids_same_url": [],
+      "local_cache": "work/eink-systems-research/boox-articles.json",
+      "body_length": 2436,
+      "applicability_condition_extracts": [
+        {
+          "kind": "limited_models",
+          "quote": "Note: This function is only available for select models."
+        }
+      ],
+      "explicit_firmware_versions_later_than_v4_1_2": []
+    },
+    {
+      "article_id": "10701348022676",
+      "title": "BOOXDrop",
+      "url": "https://booxsupport.zendesk.com/hc/en-us/articles/10701348022676-BOOXDrop",
+      "updated_at": "2026-10-19T16:36:11Z",
+      "edited_at": "2023-04-27T03:31:26Z",
+      "formal_evidence_ids_same_url": [],
+      "local_cache": "work/eink-systems-research/boox-articles.json",
+      "body_length": 661,
+      "applicability_condition_extracts": [],
+      "explicit_firmware_versions_later_than_v4_1_2": []
+    },
+    {
+      "article_id": "10701363849108",
+      "title": "NeoBrowser",
+      "url": "https://booxsupport.zendesk.com/hc/en-us/articles/10701363849108-NeoBrowser",
+      "updated_at": "2026-05-27T12:30:12Z",
+      "edited_at": "2023-04-27T03:30:55Z",
+      "formal_evidence_ids_same_url": [],
+      "local_cache": "work/eink-systems-research/boox-articles.json",
+      "body_length": 3378,
+      "applicability_condition_extracts": [],
+      "explicit_firmware_versions_later_than_v4_1_2": []
+    },
+    {
+      "article_id": "10701356797332",
+      "title": "PushRead",
+      "url": "https://booxsupport.zendesk.com/hc/en-us/articles/10701356797332-PushRead",
+      "updated_at": "2025-06-06T07:14:15Z",
+      "edited_at": "2022-11-10T11:01:22Z",
+      "formal_evidence_ids_same_url": [],
+      "local_cache": "work/eink-systems-research/boox-articles.json",
+      "body_length": 4956,
+      "applicability_condition_extracts": [],
+      "explicit_firmware_versions_later_than_v4_1_2": []
+    },
+    {
+      "article_id": "10701353744916",
+      "title": "Calendar Memo",
+      "url": "https://booxsupport.zendesk.com/hc/en-us/articles/10701353744916-Calendar-Memo",
+      "updated_at": "2026-05-24T12:34:06Z",
+      "edited_at": "2026-04-28T06:17:28Z",
+      "formal_evidence_ids_same_url": [],
+      "local_cache": "work/eink-systems-research/boox-articles.json",
+      "body_length": 3809,
+      "applicability_condition_extracts": [],
+      "explicit_firmware_versions_later_than_v4_1_2": []
+    },
+    {
+      "article_id": "10701398359572",
+      "title": "Integrated Third-Party Cloud Storage",
+      "url": "https://booxsupport.zendesk.com/hc/en-us/articles/10701398359572-Integrated-Third-Party-Cloud-Storage",
+      "updated_at": "2026-10-16T22:08:54Z",
+      "edited_at": "2023-10-23T07:41:43Z",
+      "formal_evidence_ids_same_url": [
+        "E-BOOX-24"
+      ],
+      "local_cache": "work/eink-systems-research/boox-articles.json",
+      "body_length": 3585,
+      "applicability_condition_extracts": [],
+      "explicit_firmware_versions_later_than_v4_1_2": []
+    },
+    {
+      "article_id": "10701398942356",
+      "title": "Transfer with Your Smartphone",
+      "url": "https://booxsupport.zendesk.com/hc/en-us/articles/10701398942356-Transfer-with-Your-Smartphone",
+      "updated_at": "2026-05-23T09:47:20Z",
+      "edited_at": "2025-08-08T10:37:47Z",
+      "formal_evidence_ids_same_url": [],
+      "local_cache": "work/eink-systems-research/boox-articles.json",
+      "body_length": 4241,
+      "applicability_condition_extracts": [],
+      "explicit_firmware_versions_later_than_v4_1_2": []
+    },
+    {
+      "article_id": "10701493804820",
+      "title": "Enhance Content Display",
+      "url": "https://booxsupport.zendesk.com/hc/en-us/articles/10701493804820-Enhance-Content-Display",
+      "updated_at": "2026-04-28T06:20:15Z",
+      "edited_at": "2026-04-28T06:20:15Z",
+      "formal_evidence_ids_same_url": [],
+      "local_cache": "work/eink-systems-research/boox-articles.json",
+      "body_length": 1453,
+      "applicability_condition_extracts": [],
+      "explicit_firmware_versions_later_than_v4_1_2": []
+    },
+    {
+      "article_id": "20261817911828",
+      "title": "AI Assistant",
+      "url": "https://booxsupport.zendesk.com/hc/en-us/articles/20261817911828-AI-Assistant",
+      "updated_at": "2026-05-14T12:12:56Z",
+      "edited_at": "2026-04-28T06:25:07Z",
+      "formal_evidence_ids_same_url": [],
+      "local_cache": "work/eink-systems-research/boox-articles.json",
+      "body_length": 10978,
+      "applicability_condition_extracts": [
+        {
+          "kind": "limited_models",
+          "quote": "The AI Assistant is only available in some models."
+        }
+      ],
+      "explicit_firmware_versions_later_than_v4_1_2": []
+    },
+    {
+      "article_id": "37475824326420",
+      "title": "Stylus Calibration (EMR)",
+      "url": "https://booxsupport.zendesk.com/hc/en-us/articles/37475824326420-Stylus-Calibration-EMR",
+      "updated_at": "2025-05-29T07:20:52Z",
+      "edited_at": "2025-05-14T03:43:12Z",
+      "formal_evidence_ids_same_url": [],
+      "local_cache": "work/eink-systems-research/boox-articles.json",
+      "body_length": 549,
+      "applicability_condition_extracts": [],
+      "explicit_firmware_versions_later_than_v4_1_2": []
+    },
+    {
+      "article_id": "37475843783700",
+      "title": "InkSpire",
+      "url": "https://booxsupport.zendesk.com/hc/en-us/articles/37475843783700-InkSpire",
+      "updated_at": "2026-05-22T12:35:44Z",
+      "edited_at": "2025-05-14T03:47:58Z",
+      "formal_evidence_ids_same_url": [],
+      "local_cache": "work/eink-systems-research/boox-articles.json",
+      "body_length": 954,
+      "applicability_condition_extracts": [
+        {
+          "kind": "tab_x_c",
+          "quote": "InkSpire is BOOX’s active stylus with wireless charging and magnetic attachment, currently compatible with Tab X C ."
+        },
+        {
+          "kind": "tab_x_c",
+          "quote": "Attach the middle section of InkSpire to the magnetic charging area on the right side of the Tab X C."
+        }
+      ],
+      "explicit_firmware_versions_later_than_v4_1_2": []
+    },
+    {
+      "article_id": "10701627053460",
+      "title": "Connection and Settings",
+      "url": "https://booxsupport.zendesk.com/hc/en-us/articles/10701627053460-Connection-and-Settings",
+      "updated_at": "2025-06-09T08:15:50Z",
+      "edited_at": "2024-04-08T04:18:34Z",
+      "formal_evidence_ids_same_url": [],
+      "local_cache": "work/eink-systems-research/boox-articles.json",
+      "body_length": 4630,
+      "applicability_condition_extracts": [
+        {
+          "kind": "tab_ultra",
+          "quote": "Please do as follows: Setting＞More Settings＞Physical Keyboard＞Trackpad Gesture＞Custom Note : Currently, only Tab Ultra C Pro supports customizing Trackpad Gestures."
+        }
+      ],
+      "explicit_firmware_versions_later_than_v4_1_2": []
+    },
+    {
+      "article_id": "10701617416852",
+      "title": "Keyboard Shortcuts",
+      "url": "https://booxsupport.zendesk.com/hc/en-us/articles/10701617416852-Keyboard-Shortcuts",
+      "updated_at": "2025-06-09T08:17:51Z",
+      "edited_at": "2024-04-08T04:24:05Z",
+      "formal_evidence_ids_same_url": [],
+      "local_cache": "work/eink-systems-research/boox-articles.json",
+      "body_length": 2751,
+      "applicability_condition_extracts": [],
+      "explicit_firmware_versions_later_than_v4_1_2": []
+    },
+    {
+      "article_id": "42939290151700",
+      "title": "Talk Insights",
+      "url": "https://booxsupport.zendesk.com/hc/en-us/articles/42939290151700-Talk-Insights",
+      "updated_at": "2026-05-16T22:39:30Z",
+      "edited_at": "2025-11-04T02:19:57Z",
+      "formal_evidence_ids_same_url": [],
+      "local_cache": "work/eink-systems-research/boox-articles.json",
+      "body_length": 12432,
+      "applicability_condition_extracts": [],
+      "explicit_firmware_versions_later_than_v4_1_2": []
+    }
+  ],
+  "image_count": 7,
+  "images": [
+    {
+      "filename": "home.jpg",
+      "attachment_id": "10725493990676",
+      "source_url": "https://booxsupport.zendesk.com/hc/article_attachments/10725493990676",
+      "source_article_ids": [
+        "10701108549140"
+      ],
+      "http_status": 200,
+      "content_type": "image/jpeg",
+      "bytes": 188317,
+      "sha256": "239d7b8fc1560807591d481f7c02c56dc07e212766e003a56514d45a858b5e51",
+      "local_path": "work/research/batch44-boox-depth/images/home.jpg"
+    },
+    {
+      "filename": "screen-record.jpg",
+      "attachment_id": "25403784340116",
+      "source_url": "https://booxsupport.zendesk.com/hc/article_attachments/25403784340116",
+      "source_article_ids": [
+        "25403769498004"
+      ],
+      "http_status": 200,
+      "content_type": "image/jpeg",
+      "bytes": 165100,
+      "sha256": "575deec83ec0e8460aca3dbc9d6c7f948486f66b078f6f939589ca7cf6b83ed5",
+      "local_path": "work/research/batch44-boox-depth/images/screen-record.jpg"
+    },
+    {
+      "filename": "volume.jpg",
+      "attachment_id": "25175232660116",
+      "source_url": "https://booxsupport.zendesk.com/hc/article_attachments/25175232660116",
+      "source_article_ids": [
+        "10701109999636"
+      ],
+      "http_status": 200,
+      "content_type": "image/jpeg",
+      "bytes": 326114,
+      "sha256": "5e16b6ee8f0fd0fd532d498bc7baf0a7413f4a52b8bcb2a5609688c8acf1f3e1",
+      "local_path": "work/research/batch44-boox-depth/images/volume.jpg"
+    },
+    {
+      "filename": "screensaver-types.jpg",
+      "attachment_id": "10726276107156",
+      "source_url": "https://booxsupport.zendesk.com/hc/article_attachments/10726276107156",
+      "source_article_ids": [
+        "10701146091284"
+      ],
+      "http_status": 200,
+      "content_type": "image/jpeg",
+      "bytes": 164851,
+      "sha256": "fae41d5c31af195fc58fc9aebc83dffbe0c77a0c5122c73176fd5520a8447b63",
+      "local_path": "work/research/batch44-boox-depth/images/screensaver-types.jpg"
+    },
+    {
+      "filename": "screensaver-images.jpg",
+      "attachment_id": "10726306716820",
+      "source_url": "https://booxsupport.zendesk.com/hc/article_attachments/10726306716820",
+      "source_article_ids": [
+        "10701146091284"
+      ],
+      "http_status": 200,
+      "content_type": "image/jpeg",
+      "bytes": 129013,
+      "sha256": "c03c9b8127d881c260589f821a7b23082f4e88fd753ff97e420c4cd4b47e36af",
+      "local_path": "work/research/batch44-boox-depth/images/screensaver-images.jpg"
+    },
+    {
+      "filename": "mirror-step.jpg",
+      "attachment_id": "27963633162900",
+      "source_url": "https://booxsupport.zendesk.com/hc/article_attachments/27963633162900",
+      "source_article_ids": [
+        "10701622160916"
+      ],
+      "http_status": 200,
+      "content_type": "image/jpeg",
+      "bytes": 309687,
+      "sha256": "1b5046a0fc79e6f12a2bde2d224c41030dcff2d77b8b890279e8c11ebe8933cd",
+      "local_path": "work/research/batch44-boox-depth/images/mirror-step.jpg"
+    },
+    {
+      "filename": "mirror-browser.jpg",
+      "attachment_id": "27963693945876",
+      "source_url": "https://booxsupport.zendesk.com/hc/article_attachments/27963693945876",
+      "source_article_ids": [
+        "10701622160916"
+      ],
+      "http_status": 200,
+      "content_type": "image/jpeg",
+      "bytes": 177188,
+      "sha256": "42c1bc6ba4de5982ddc3a0e9a81083c654824f2cb59128517d50f4b18c275d4f",
+      "local_path": "work/research/batch44-boox-depth/images/mirror-browser.jpg"
+    }
+  ],
+  "audit_notes": {
+    "fixed_model_baseline": "M-004 Note Air5 C V4.1.2",
+    "explicit_later_version_result": "No explicit firmware version later than V4.1.2 was found in the 31 cached bodies. Source updated_at dates may be later calendar dates and are not treated as firmware applicability conditions.",
+    "scope": "Field comparison and verbatim condition-location extracts only; no product applicability conclusion."
+  }
+}

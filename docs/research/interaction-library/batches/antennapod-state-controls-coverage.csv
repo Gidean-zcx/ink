@@ -1,0 +1,2 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M040-14,M-040,筛选全局或单播客单集并恢复可见范围,D2,E-APST-02;E-APST-03;E-APST-07;E-APST-09;E-APST-10;E-APST-11;E-APST-12;E-APST-13;E-APQD-06;E-APQD-07;E-APCD-03;E-APCD-14,全局事件即存偏好并回第一页；单源即请求写feed过滤字段并事件重载；Confirm只关闭；Reset空集；全局空条件回已订阅、收藏扩全部状态；单源仍限feed,系统落盘、并发改变、进程中断/重装恢复、真实空结果/查询错误反馈未测；订阅筛选是另一未读控件,not_observed,false,cases/M-040-antennapod.md,2026-10-27

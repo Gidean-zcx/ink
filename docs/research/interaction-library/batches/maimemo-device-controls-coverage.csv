@@ -1,0 +1,2 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M023-07,M-023,查阅并区分三类学习统计（入口/交互待补）,D1,E-MMDVC-01;E-MMDS-01,官方静态图分别示遗忘曲线、跨日学习情况、持久度；历史反馈/未来待学/模型估计不混为掌握。,统计入口、时间窗/点选、图例全文、空数据、重复反馈口径、刷新/保存；文图范围差异；学习效果未验证,static_reference_only,false,cases/M-023-maimemo-device.md,2026-10-27

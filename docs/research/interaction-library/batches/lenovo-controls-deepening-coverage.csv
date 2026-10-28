@@ -1,0 +1,12 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M062-09,M-062,跳过联网或账号完成初次设置,D2,E-LNP-01,网络与账号可后补，入口分别在Settings > WLAN / Lenovo ID；同步可现在或稍后选择。,只证明向导允许跳过，不能推导离线/无账号下全部功能可用；本地内容与后续账号绑定、取消条款未知。,not_observed,false,cases/M-062-lenovo-paper.md,2026-10-27
+F-M062-10,M-062,创建并修改笔记本,D2,E-LNP-01;E-LNCD-01,创建参数包含模板；后续设置只明确名称/封面，不能据此说已有笔记模板一定可整体更换。,同名、空名、模板切换影响、保存时机和创建取消未知。,static_manual_pages_only,false,cases/M-062-lenovo-paper.md,2026-10-27
+F-M062-11,M-062,选取笔迹并撤销近期编辑,D2,E-LNP-01;E-LNCD-01,指南限最近十步。页管理和图层入口列有增删、移动、合并、隐藏，但未说明哪些动作进入同一撤销历史。,跨页/退出/重启后历史、页或层删除恢复、合并拆回及圈选后的全部菜单未知；不能套用其他设备规则。,static_manual_pages_only,false,cases/M-062-lenovo-paper.md,2026-10-27
+F-M062-12,M-062,分享笔记或将手写转换为文字,D2,E-LNP-01;E-LNCD-01,不清晰手写可能识别错误；说明只支持文字转换，不能推出公式/图表结构化。导出副本和原笔记是不同对象。,识别结果校订入口、离线/服务额度、取消发送、邮件失败及原笔记是否改写均未说明。,static_manual_pages_only,false,cases/M-062-lenovo-paper.md,2026-10-27
+F-M062-13,M-062,整理笔记与区分回收和彻底删除,D2,E-LNP-01,手册证明两个生命周期入口；未逐步证明每一类删除对象都进入Trash，不能把删除录音或单页等同删文件。,Trash保留期限、原位置冲突、确认弹窗、云端删除传播，以及复制是否包含录音关联未知。,not_observed,false,cases/M-062-lenovo-paper.md,2026-10-27
+F-M062-14,M-062,在书内找页并管理书签,D2,E-LNP-01,搜索内容与首页文件搜索不同。显示菜单随格式变化，PDF调边距与文本排版分别列出。,跳转后返回历史、无命中反馈、书签同步、PDF边距是否写回源文件未知。,not_observed,false,cases/M-062-lenovo-paper.md,2026-10-27
+F-M062-15,M-062,管理本地书与识别在线书限制,D2,E-LNP-01,指南明确在线书不能执行前述长按管理动作；不能假设所有Library条目都有同一套能力。,预览、已购下载、DRM与离线资格的进一步划分未给；重复文件、删除恢复及内容授权未知。,not_observed,false,cases/M-062-lenovo-paper.md,2026-10-27
+F-M062-16,M-062,设置锁屏内容与自动停机,D2,E-LNP-01,Quick Sheets显示最近浏览页；时钟每分钟后台刷新。2023指南自动关机为启用后闲置十天，Auto sleep是锁屏；改/删密码须旧密码。,锁屏是否受密码遮盖、忘记密码恢复、各计时范围和版本差异未核；电池保护/维护模式仅有名称。,not_observed,false,cases/M-062-lenovo-paper.md,2026-10-27
+F-M062-17,M-062,从快捷设置向其他屏幕投影,D2,E-LNP-01,笔记与阅读分享也有Miracast入口；投影是画面呈现，不证明可编辑导出或可远程控制。,选设备每屏、断线/重连、锁屏后状态、帧率及笔画延迟未说明。,not_observed,false,cases/M-062-lenovo-paper.md,2026-10-27
+F-M062-18,M-062,检查应用状态并辨认安装和清理后果,D2,E-LNP-02,各动作作用不同；定制WPS卸载后不能按普通方式重装。不能把APK可导入当完整应用恢复方案。,安装确认/权限/错误、清理范围、卸载数据保留、强停恢复均无连续步骤或实测。,not_observed,false,cases/M-062-lenovo-paper.md,2026-10-27
+F-M062-19,M-062,文件突然不可见时核对登录身份,D2,E-LNP-02,该帮助把所述故障解释为账号导致隐藏，并称重登原账号后重新出现；这是特定排查分支，不能诊断一切丢失。,本地文件与账号绑定规则、访客/换号可见性、损坏/误删/云过期均未被该说明解决。,not_observed,false,cases/M-062-lenovo-paper.md,2026-10-27

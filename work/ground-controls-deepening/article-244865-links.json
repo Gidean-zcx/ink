@@ -1,0 +1,201 @@
+[
+  {
+    "class": "page-header-inner-logo-link",
+    "href": "/en",
+    "title": "",
+    "url": "https://help.ground.news/en"
+  },
+  {
+    "class": "page-header-inner-title",
+    "href": "/en",
+    "title": "Ground News Help Center",
+    "url": "https://help.ground.news/en"
+  },
+  {
+    "type": "button",
+    "class": "kb-button primary",
+    "href": "/en/contact-us",
+    "title": "Contact Us",
+    "url": "https://help.ground.news/en/contact-us"
+  },
+  {
+    "id": "moreResultsLink",
+    "type": "button",
+    "class": "kb-button secondary",
+    "href": "/en/search",
+    "title": "More results",
+    "url": "https://help.ground.news/en/search"
+  },
+  {
+    "href": "https://ground.news/privacy-policy",
+    "title": "Privacy Policy",
+    "url": "https://ground.news/privacy-policy"
+  },
+  {
+    "href": "#troubleshooting_faq",
+    "class": "navigation-item indent-1",
+    "title": "Troubleshooting FAQ",
+    "url": "https://help.ground.news/en/articles/244865#troubleshooting_faq"
+  },
+  {
+    "href": "#why_does_my_subscription_status_say_free_when_i_recently_redeemed_a_gift_code",
+    "class": "navigation-item indent-2",
+    "title": "Why does my subscription status say \"Free\" when I recently redeemed a gift code?",
+    "url": "https://help.ground.news/en/articles/244865#why_does_my_subscription_status_say_free_when_i_recently_redeemed_a_gift_code"
+  },
+  {
+    "href": "#i_do_not_have_a_gift_code_or_referral_credit_and_my_subscription_status_is_still_free_even_though_i_have_a_receipt_of_purchase",
+    "class": "navigation-item indent-2",
+    "title": "I do not have a gift code or referral credit, and my subscription status is still \"free\" even though I have a receipt of purchase...",
+    "url": "https://help.ground.news/en/articles/244865#i_do_not_have_a_gift_code_or_referral_credit_and_my_subscription_status_is_still_free_even_though_i_have_a_receipt_of_purchase"
+  },
+  {
+    "href": "#for_subscriptions_purchased_via_the_app_store_or_play_store",
+    "class": "navigation-item indent-3",
+    "title": "For Subscriptions Purchased via the App Store or Play Store",
+    "url": "https://help.ground.news/en/articles/244865#for_subscriptions_purchased_via_the_app_store_or_play_store"
+  },
+  {
+    "href": "#for_subscriptions_purchased_via_the_ground_news_website",
+    "class": "navigation-item indent-3",
+    "title": "For Subscriptions Purchased via the Ground News Website",
+    "url": "https://help.ground.news/en/articles/244865#for_subscriptions_purchased_via_the_ground_news_website"
+  },
+  {
+    "href": "#how_to_sign_out_of_the_wrong_account",
+    "class": "navigation-item indent-2",
+    "title": "How to Sign Out of the Wrong Account",
+    "url": "https://help.ground.news/en/articles/244865#how_to_sign_out_of_the_wrong_account"
+  },
+  {
+    "href": "#if_restore_my_subscription_and_signing_into_the_correct_account_did_not_work",
+    "class": "navigation-item indent-2",
+    "title": "If \"Restore my subscription\" and Signing into the Correct Account Did Not Work...",
+    "url": "https://help.ground.news/en/articles/244865#if_restore_my_subscription_and_signing_into_the_correct_account_did_not_work"
+  },
+  {
+    "href": "#get_in_touch",
+    "class": "navigation-item indent-2",
+    "title": "Get In Touch",
+    "url": "https://help.ground.news/en/articles/244865#get_in_touch"
+  },
+  {
+    "href": "/en",
+    "title": "Home",
+    "url": "https://help.ground.news/en"
+  },
+  {
+    "href": "/en/categories/2272833-manage-your-account-subscription",
+    "title": "Manage Your Account & Subscription",
+    "url": "https://help.ground.news/en/categories/2272833-manage-your-account-subscription"
+  },
+  {
+    "href": "/en/categories/2273217-subscription-questions",
+    "title": "Subscription Questions",
+    "url": "https://help.ground.news/en/categories/2273217-subscription-questions"
+  },
+  {
+    "href": "/en/categories/2273217-subscription-troubleshooting",
+    "title": "Subscription Troubleshooting",
+    "url": "https://help.ground.news/en/categories/2273217-subscription-troubleshooting"
+  },
+  {
+    "target": "_self",
+    "rel": "noopener noreferrer nofollow",
+    "class": "kb-link kb-link",
+    "href": "/en/articles/924865",
+    "title": "upgrading",
+    "url": "https://help.ground.news/en/articles/924865"
+  },
+  {
+    "href": "https://usw2.frontkb-cdn.com/attachments/7440402/17473/4ed5d0ae-9494-45df-9db8-e4d339fecc0f.jpeg",
+    "class": "knowledge-base-image-expand-link",
+    "data-lightbox": "4ed5d0ae-9494-45df-9db8-e4d339fecc0f",
+    "title": "",
+    "url": "https://usw2.frontkb-cdn.com/attachments/7440402/17473/4ed5d0ae-9494-45df-9db8-e4d339fecc0f.jpeg"
+  },
+  {
+    "href": "https://usw2.frontkb-cdn.com/attachments/7440402/17473/47ee7c91-9054-4799-9252-70df628f3a36.png",
+    "class": "knowledge-base-image-expand-link",
+    "data-lightbox": "47ee7c91-9054-4799-9252-70df628f3a36",
+    "title": "",
+    "url": "https://usw2.frontkb-cdn.com/attachments/7440402/17473/47ee7c91-9054-4799-9252-70df628f3a36.png"
+  },
+  {
+    "target": "_self",
+    "rel": "noopener noreferrer nofollow",
+    "class": "kb-link kb-link",
+    "href": "mailto:feedback@ground.news",
+    "title": "feedback@ground.news",
+    "url": "mailto:feedback@ground.news"
+  },
+  {
+    "href": "https://usw2.frontkb-cdn.com/attachments/7440402/17473/0a1978d6-cf17-4e74-acd8-0d969e1e381b.png",
+    "class": "knowledge-base-image-expand-link",
+    "data-lightbox": "0a1978d6-cf17-4e74-acd8-0d969e1e381b",
+    "title": "",
+    "url": "https://usw2.frontkb-cdn.com/attachments/7440402/17473/0a1978d6-cf17-4e74-acd8-0d969e1e381b.png"
+  },
+  {
+    "target": "_self",
+    "rel": "noopener noreferrer nofollow",
+    "class": "kb-link kb-link",
+    "href": "https://ground.news/login",
+    "title": "https://ground.news/login",
+    "url": "https://ground.news/login"
+  },
+  {
+    "target": "_self",
+    "rel": "noopener noreferrer nofollow",
+    "class": "kb-link kb-link",
+    "href": "mailto:feedback@ground.news",
+    "title": "subscriptions@ground.news",
+    "url": "mailto:feedback@ground.news"
+  },
+  {
+    "target": "_self",
+    "rel": "noopener noreferrer nofollow",
+    "class": "kb-link kb-link",
+    "href": "mailto:subscriptions@ground.news",
+    "title": "subscriptions@ground.news",
+    "url": "mailto:subscriptions@ground.news"
+  },
+  {
+    "target": "_self",
+    "rel": "noopener noreferrer nofollow",
+    "class": "kb-link kb-link",
+    "href": "mailto:feedback@ground.news",
+    "title": "feedback@ground.news",
+    "url": "mailto:feedback@ground.news"
+  },
+  {
+    "href": "https://twitter.com/Ground_app",
+    "title": "",
+    "url": "https://twitter.com/Ground_app"
+  },
+  {
+    "href": "https://ca.linkedin.com/company/groundnews",
+    "title": "",
+    "url": "https://ca.linkedin.com/company/groundnews"
+  },
+  {
+    "href": "https://www.instagram.com/groundnews/",
+    "title": "",
+    "url": "https://www.instagram.com/groundnews/"
+  },
+  {
+    "href": "https://ground.news/refund-policy",
+    "title": "Refund and Cancellation Policy",
+    "url": "https://ground.news/refund-policy"
+  },
+  {
+    "href": "https://ground.news/terms-and-conditions",
+    "title": "Terms and Conditions",
+    "url": "https://ground.news/terms-and-conditions"
+  },
+  {
+    "href": "https://about.ground.news/privacy-policy",
+    "title": "Privacy Policy",
+    "url": "https://about.ground.news/privacy-policy"
+  }
+]

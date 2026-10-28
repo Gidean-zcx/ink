@@ -1,0 +1,66 @@
+{
+  "checked_on": "2026-10-26",
+  "model_scope": [
+    "A5 X2 Manta",
+    "A6 X2 Nomad"
+  ],
+  "manual": {
+    "url": "https://ib.supernote.com/x2/X2_V3.28.42_EN.pdf",
+    "path": "work/supernote-controls-deepening/X2_V3.28.42_EN.pdf",
+    "http_status": 200,
+    "bytes": 19158941,
+    "sha256": "9c7b24be22b8f06727381564412f192273e50e2157a2aa5b4350d12b6c3037d2",
+    "pages": 182,
+    "toc_rows": 140
+  },
+  "assets": [
+    {
+      "path": "docs/research/interaction-library/artifacts/supernote-controls-deepening/x2-v3.28.42-p73.png",
+      "sha256": "f0df7b12e6d30f0d138f2319f66c4a9e0324652cce6768042ef01db1b2897282",
+      "source": "https://ib.supernote.com/x2/X2_V3.28.42_EN.pdf",
+      "pdf_page": 73,
+      "printed_page": 73,
+      "visual_observed": true,
+      "hands_on": false,
+      "evidence_id": "E-SNCD-02",
+      "note": "实际view_image单帧，非连续流程"
+    },
+    {
+      "path": "docs/research/interaction-library/artifacts/supernote-controls-deepening/x2-v3.28.42-p84.png",
+      "sha256": "f689cf8956402bf861e802cbe424fdc606655aa27074fa8c3fbd354f4c5b12c9",
+      "source": "https://ib.supernote.com/x2/X2_V3.28.42_EN.pdf",
+      "pdf_page": 84,
+      "printed_page": 84,
+      "visual_observed": true,
+      "hands_on": false,
+      "evidence_id": "E-SNCD-02",
+      "note": "实际view_image单帧，非连续流程"
+    },
+    {
+      "path": "docs/research/interaction-library/artifacts/supernote-controls-deepening/x2-v3.28.42-p112.png",
+      "sha256": "60eb4d423f33bfecc4441989e7aba21e8d2171d940912e91e9919dad03fc2e3b",
+      "source": "https://ib.supernote.com/x2/X2_V3.28.42_EN.pdf",
+      "pdf_page": 112,
+      "printed_page": 112,
+      "visual_observed": true,
+      "hands_on": false,
+      "evidence_id": "E-SNCD-02",
+      "note": "实际view_image单帧，非连续流程"
+    },
+    {
+      "path": "docs/research/interaction-library/artifacts/supernote-controls-deepening/x2-v3.28.42-p160.png",
+      "sha256": "4ef6f664b38f3bc987825bcce8a8779778db7bfd29a0d310ec69386fd9c308f8",
+      "source": "https://ib.supernote.com/x2/X2_V3.28.42_EN.pdf",
+      "pdf_page": 160,
+      "printed_page": 160,
+      "visual_observed": true,
+      "hands_on": false,
+      "evidence_id": "E-SNCD-02",
+      "note": "实际view_image单帧，非连续流程"
+    }
+  ],
+  "new_evidence": 11,
+  "new_flows": 4,
+  "old_flow_updates": 6,
+  "hands_on": false
+}

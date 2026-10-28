@@ -1,0 +1,2 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M040-13,M-040,整理订阅标签、按标签浏览并恢复选择,D2,E-APQD-01;E-APQD-02;E-APCD-13;E-APST-04;E-APST-06;E-APST-07;E-APST-14;E-APCD-14,单/多订阅标签临时编辑，OK逐节目写入；批量仅改共同标签，保留独有标签；空/重复名不新增但不阻止OK提交；保留原last_tag浏览恢复条件,长按标签全局管理、并行写入/部分失败、跨端同步、删除恢复及异常终止保存未测,not_observed,false,cases/M-040-antennapod.md,2026-10-27

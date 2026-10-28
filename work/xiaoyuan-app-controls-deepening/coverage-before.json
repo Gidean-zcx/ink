@@ -1,0 +1,80 @@
+[
+  {
+    "flow_id": "F-M028-01",
+    "product_id": "M-028",
+    "task": "检查后解释与错题整理",
+    "depth": "D2",
+    "evidence_ids": "E-XYAI-02;E-XYAI-03",
+    "known_branches": "解析会员边界",
+    "gaps": "拍照识别纠错提示和再练全链",
+    "visual_status": "not_observed",
+    "hands_on": "false",
+    "case_path": "cases/M-028-xiaoyuan-ai.md",
+    "checked_on": "2026-10-26"
+  },
+  {
+    "flow_id": "F-M028-02",
+    "product_id": "M-028",
+    "task": "指定知识点手写练习",
+    "depth": "D2",
+    "evidence_ids": "E-XYAI-03;E-XYCD-01;E-XYCD-02",
+    "known_branches": "历史口算局部补证；其他题型不套用",
+    "gaps": "当前构建、识别误判修订、保存粒度",
+    "visual_status": "static_reference_only",
+    "hands_on": "false",
+    "case_path": "cases/M-028-xiaoyuan-ai.md",
+    "checked_on": "2026-10-26"
+  },
+  {
+    "flow_id": "F-M028-03",
+    "product_id": "M-028",
+    "task": "AI追问与单条反馈",
+    "depth": "D2",
+    "evidence_ids": "E-XYAI-04",
+    "known_branches": "文本语音图像权限与历史",
+    "gaps": "生成失败重试删除和恢复",
+    "visual_status": "not_observed",
+    "hands_on": "false",
+    "case_path": "cases/M-028-xiaoyuan-ai.md",
+    "checked_on": "2026-10-26"
+  },
+  {
+    "flow_id": "F-M028-04",
+    "product_id": "M-028",
+    "task": "PK赛季任务与装扮",
+    "depth": "D1",
+    "evidence_ids": "E-XYAI-05",
+    "known_branches": "同年级知识点与赛季活动",
+    "gaps": "结算奖励数值退出与掉线",
+    "visual_status": "not_observed",
+    "hands_on": "false",
+    "case_path": "cases/M-028-xiaoyuan-ai.md",
+    "checked_on": "2026-10-26"
+  },
+  {
+    "flow_id": "F-M028-05",
+    "product_id": "M-028",
+    "task": "在线字词听写：历史任务局部",
+    "depth": "D2",
+    "evidence_ids": "E-XYCD-01;E-XYCD-03",
+    "known_branches": "提交与后续操作边界",
+    "gaps": "当前版本、撤回、强退恢复和识别误判修订",
+    "visual_status": "static_reference_only",
+    "hands_on": "false",
+    "case_path": "cases/M-028-xiaoyuan-ai.md",
+    "checked_on": "2026-10-26"
+  },
+  {
+    "flow_id": "F-M028-06",
+    "product_id": "M-028",
+    "task": "单词跟读：历史失败分支",
+    "depth": "D2",
+    "evidence_ids": "E-XYCD-01;E-XYCD-04",
+    "known_branches": "失败次数对应不同路径",
+    "gaps": "评分门槛、漏录和中断保存；拼图非连续",
+    "visual_status": "static_reference_only",
+    "hands_on": "false",
+    "case_path": "cases/M-028-xiaoyuan-ai.md",
+    "checked_on": "2026-10-26"
+  }
+]

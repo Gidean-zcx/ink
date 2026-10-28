@@ -1,0 +1,16 @@
+[
+  {
+    "url": "https://guide.hiby.com/en/assets/images/hiby_r3ii_2025_1-d434cfb556f22b75f15d0a04f3549131.png",
+    "raw_work_path": "work/hiby-controls-deepening/raw/product-1.png",
+    "raw_sha256": "df1452475f2b24af6adfd187de6214f9ddde5a99c391a4119f9318cb83933b91",
+    "http_status": 200,
+    "checked_on": "2026-10-27"
+  },
+  {
+    "url": "https://guide.hiby.com/en/assets/images/hiby_r3ii_2025_2-1a91d40cbcfec30358d2d124a4107f7a.png",
+    "raw_work_path": "work/hiby-controls-deepening/raw/product-2.png",
+    "raw_sha256": "ce5bc1038a41f76f3c1e5438a8dba7657809e1f8995b1dadfe6f3c49fa77cbc5",
+    "http_status": 200,
+    "checked_on": "2026-10-27"
+  }
+]

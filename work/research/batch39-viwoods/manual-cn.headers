@@ -1,0 +1,25 @@
+HTTP/2 200 
+date: Tue, 27 Oct 2026 05:07:15 GMT
+content-type: application/pdf
+content-length: 19179844
+access-control-allow-origin: *
+access-control-expose-headers: *
+cache-control: public, max-age=31557600
+cache-tag: segment4-11537,shop-72973680674,mime-application/pdf-11537,time-bucket-20261027-11537,03e1018514b2d83733b429c12c90744f67882b107c89a08fd04ade9def283af7,host-cdn.shopify.com-11537
+link: <https://cdn.shopify.com/s/files/1/0729/7368/0674/files/User_Manual_CN-0305.pdf>; rel="canonical"
+server-timing: imagery;dur=268.379, imageryFetch;dur=217.627
+timing-allow-origin: *
+x-content-type-options: nosniff
+x-robots-tag: none
+x-shopid: 72973680674
+x-xss-protection: 1; mode=block
+strict-transport-security: max-age=63072000; includeSubDomains; preload
+x-dc: gcp-us-central1,gcp-us-central1
+x-request-id: 01a17bc1-67b4-78a6-842a-9d401cd3d940-1793077634
+server: envoy
+nel: {"max_age":0}
+alt-svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+alt-svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+x-shopify-gclb-trace-timing: 1793077634.996
+via: 1.1 google
+

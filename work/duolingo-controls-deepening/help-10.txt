@@ -1,0 +1,24 @@
+HELP CENTER
+ACCOUNT MANAGEMENT
+How do I delete my account and access my data?
+How do I access my personal data?
+Visit the “Duolingo Data Vault” to request a copy of all of your personal data stored by Duolingo. This can take up to 30 days.
+How do I delete my account and erase personal data?
+When you delete your account and erase your personal data, you will lose your learning progress and achievements. Once completed, deletion cannot be undone. This deletion can take up to 30 days.
+Note: Deleting your account will NOT cancel an existing Super Duolingo subscription.
+Visit the “Duolingo Data Vault” to delete your Duolingo, Duolingo for Schools, and Duolingo ABC accounts and erase all of your personal data stored by Duolingo.
+Alternatively, if you use the iOS app, you can delete your account within the app by going to your Profile, then Settings (gear icon), then scroll to the bottom and tap “Delete account.”
+After you submit a request, we’ll send an email to the email address associated with your account. You will need to click on the “Delete my data” confirmation link in the email message.
+In case you change your mind, you’ll have 7 days to cancel the erasure process, via a link in the same email where you confirmed your request.
+Once the erasure is completed, we’ll send you another email confirming that your account has been deleted and your personal data erased.
+Will deleting my account and data also cancel my Super Duolingo subscription?
+No — if you subscribed to Super Duolingo via the app, deleting your account will not suspend charges, as those are managed by Apple or Google. You must cancel your subscription renewal before proceeding with data erasure.
+What is the Duolingo Privacy Policy?
+For more details on data and privacy on Duolingo, please review our “Privacy Policy”
+Relevant Articles
+How do I change my username or email address?
+How do I find, follow, and block users on Duolingo?
+How do I remove or reset a course?
+I’m having trouble accessing my account.
+What to do if your data was compromised
+I want to submit a bug report

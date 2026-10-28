@@ -1,0 +1,478 @@
+Release 23.12 · ankitects/anki · GitHub
+Skip to content
+Navigation Menu
+Sign in
+Appearance settings
+Platform
+AI CODE CREATION
+GitHub Copilot
+Write better code with AI
+GitHub Copilot app
+Direct agents from issue to merge
+MCP Registry
+Integrate external tools
+DEVELOPER WORKFLOWS
+Actions
+Automate any workflow
+Codespaces
+Instant dev environments
+Issues
+Plan and track work
+Code Review
+Manage code changes
+Code Quality
+Enforce quality at merge
+APPLICATION SECURITY
+GitHub Advanced Security
+Find and fix vulnerabilities
+Code security
+Secure your code as you build
+Secret protection
+Stop leaks before they start
+EXPLORE
+Why GitHub
+Documentation
+Blog
+Changelog
+Marketplace
+View all features
+Solutions
+BY COMPANY SIZE
+Enterprises
+Small and medium teams
+Startups
+Nonprofits
+BY USE CASE
+App Modernization
+DevSecOps
+DevOps
+CI/CD
+View all use cases
+BY INDUSTRY
+Healthcare
+Financial services
+Manufacturing
+Government
+See all industries
+View all solutions
+Resources
+EXPLORE BY TOPIC
+AI
+Software Development
+DevOps
+Security
+View all topics
+EXPLORE BY TYPE
+Customer stories
+Events & webinars
+Ebooks & reports
+Business insights
+GitHub Skills
+SUPPORT & SERVICES
+Documentation
+Customer support
+Community forum
+Trust center
+Partners
+View all resources
+Open Source
+COMMUNITY
+GitHub Sponsors
+Fund open source developers
+PROGRAMS
+Security Lab
+Maintainer Community
+GitHub Stars
+Archive Program
+REPOSITORIES
+Topics
+Trending
+Collections
+Enterprise
+ENTERPRISE SOLUTIONS
+Enterprise platform
+AI-powered developer platform
+AVAILABLE ADD-ONS
+GitHub Advanced Security
+Enterprise-grade security features
+Copilot for Business
+Enterprise-grade AI features
+Premium Support
+Enterprise-grade 24/7 support
+Pricing
+Search
+/
+Sign in
+Sign up
+Appearance settings
+You signed in with another tab or window.
+Reload
+to refresh your session.
+You signed out in another tab or window.
+Reload
+to refresh your session.
+You switched accounts on another tab or window.
+Reload
+to refresh your session.
+Dismiss alert
+{{ message }}
+ankitects
+anki
+Repository navigation
+Code
+Issues
+445
+(
+445
+)
+Pull requests
+152
+(
+152
+)
+Actions
+Security and quality
+7
+(
+7
+)
+Insights
+More
+items
+Releases
+23.12
+23.12
+Compare
+Choose a tag to compare
+Sorry, something went wrong.
+Filter
+Loading
+Sorry, something went wrong.
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+No results found
+View all tags
+dae
+released this
+25 Dec 01:16
+·
+1784 commits
+to main
+          since this release
+23.12
+This tag was signed with the committer’s
+verified signature
+.
+dae
+Damien Elmes
+GPG key ID:
+C0A351979B37E3B9
+Verified
+Learn about vigilant mode
+.
+55ef11a
+What's Changed
+FSRS:
+Minor improvements to the algorithm (FSRS 4.5). While not essential, we recommend you re-optimize your FSRS parameters after updating. By
+@L-M-Sherlock
+and
+@asukaminato0721
+in
+open-spaced-repetition/fsrs-rs#111
+and
+open-spaced-repetition/fsrs-rs#119
+and
+#2901
+.
+The deck options Save dropdown now lets you optimize all presets at once.
+Rewrite the optimal retention code. The new code will give different results. By
+@L-M-Sherlock
+and
+@asukaminato0721
+in
+open-spaced-repetition/fsrs-rs#122
+and
+open-spaced-repetition/fsrs-rs#124
+The search used for optimizing presets is now remembered. By
+@abdnh
+in
+#2827
+Exclude suspended cards from optimization by default.
+When using 'deck:*' in the search, reviews from deleted cards are included.
+The reschedule-on-parameters-change option is now shared between all presets, and will default to off each time.
+When cards are rescheduled multiple times without reviews, extra entries will not be added to the review log.
+Fix some bugs in sorting by FSRS retrievability.
+Clarify learning steps recommendation by
+@user1823
+in
+#2832
+Ignore filtered revlog in time of last review by
+@L-M-Sherlock
+in
+#2845
+Fix FSRS scheduling when add-ons manually convert cards to learning by
+@L-M-Sherlock
+in
+#2849
+Better approximate average retention/ease/difficulty.
+Don't use SM2 memory state when cards are manually introduced.
+Fix incorrect search being used when evaluating parameters.
+Recompute FSRS memory state when cards moved into different deck.
+Correct the description of FSRS Difficulty in Stats by
+@user1823
+in
+#2888
+FSRS ignores revlog entries with time = 0 when calculating time taken. By
+@L-M-Sherlock
+in
+#2870
+Keep two decimals for stability by
+@L-M-Sherlock
+in
+#2873
+Improve calculated difficulty for cards that skipped initial learning.
+Catch NaNs in FSRS parameters.
+Deck options screen:
+Added a new v3 option to limit child decks by their parent, when clicking on the child. By
+@RumovZ
+in
+#2824
+Added an auto-advance feature. Activate from More menu; configure via deck options. By
+@abdnh
+in
+#2765
+The deck options screen now opens faster.
+Change link to manual in help screen from icon to text by
+@Gustaf-C
+in
+#2886
+Make help button more obvious, and remove hover animations.
+Add a globe icon to global settings in the deck options.
+Fix some RTL issues in help modals by
+@abdnh
+in
+#2857
+Do not close web pages when Esc is pressed and a modal is open by
+@abdnh
+in
+#2894
+Other scheduling/review-related changes:
+When rescheduling is disabled in a filtered deck, you can now choose different delays for again, hard and good. Set to 0 to have that button immediately remove the card.
+The 'preview new cards' option in custom study now uses note-added order.
+Don't restrict answer key shortcuts to alphanumeric characters and a few symbols.
+Include elapsed_secs in learning card state by
+@Gustaf-C
+in
+#2862
+Fix cards showing up due in the past in a filtered deck.
+Fix filtered deck ordering of intraday learning cards and reviews by
+@abdnh
+in
+#2828
+Support all MathJax modules in review screen by
+@abdnh
+in
+#2836
+Add hint for zero minutes in filtered deck by
+@Gustaf-C
+in
+#2887
+Fix relative overdueness order error in filtered deck.
+Image occlusion:
+Add keyboard shortcuts to Image Occlusion, and fix a number of issues. By
+@krmanik
+in
+#2809
+and
+#2847
+Fix image occlusion not showing up in Qt5 by
+@hikaru-y
+in
+#2829
+Don't show an error when opening add screen when the existing I/O notetype is invalid.
+Fix overlapping I/O icons in some languages
+Fix changes to groups of I/O masks not saving by
+@abdnh
+in
+#2878
+Fix switching of add & history buttons when selecting IO notetype by
+@akashreddy03
+in
+#2833
+Fix IO card count by
+@abdnh
+in
+#2884
+Import/export:
+Allow importing/exporting with/without deck configs by
+@RumovZ
+in
+#2804
+Fix CSV importer dropdowns not updating after changes by
+@RumovZ
+in
+#2885
+Fix inability to search for existing notes in CSV import screen by
+@RumovZ
+in
+#2898
+Fix broken HTML in CSV import screen.
+Editor:
+Fix image overlay not closing when clicking outside on Qt6.6 by
+@hikaru-y
+in
+#2861
+Clear editor's internal copied text on cut/copy by
+@abdnh
+in
+#2866
+Fix Mathjax can only be pasted once by
+@akashreddy03
+in
+#2869
+Improve confirmation message in Add screen by
+@abdnh
+in
+#2903
+Fix macOS clipboard issues by
+@msisovic
+in
+#2900
+Improve visibility of clicked buttons in editor by
+@Gustaf-C
+in
+#2841
+Card info:
+Show due date of buried/suspended cards in card info by
+@abdnh
+in
+#2820
+Hide "position" in card info when card not new.
+Show actual due date of learning cards in Card Info screen by
+@abdnh
+in
+#2865
+Bring card info window to top if card info action used again by
+@akashreddy03
+in
+#2896
+Browser:
+Ensure cloze numbers sort in order when sorting by card template.
+Fix sorting by due column in notes mode.
+When sorting by due, intraday and interday intervals are no longer separated. By
+@abdnh
+in
+#2840
+Calculate elapsed days for intraday learning cards in browse screen and relative overdueness sorting.
+Platform changes:
+Update to PyQt 6.6.1 on all platforms.
+Platform CSS has been reimplemented. Standard selectors like .win and .mobile should continue to work; more obscure ones that weren't documented will not. By
+@abdnh
+in
+#2854
+Automatically disable sandbox on Qt5 PyPi/packaged builds on Linux, as is required on modern glibc versions.
+The Qt6 Apple Silicon build now correctly declares it requires macOS 12+ to run, instead of crashing on startup.
+Update licensing info of a few third-party modules by @antecrescent in
+#2850
+Mention environment variable YARN_BINARY in documentation by @antecrescent in
+#2851
+Other:
+Improve keyboard handling and accessibility of dropdown boxes by @grepgrok in
+#2811
+Resolve some accessibility issues for tag options buttons by @grepgrok in
+#2787
+Ensure deck browser fetches collection data in the background.
+Fix sync status check blocking collection access when network offline.
+Ensure correct endpoint is used when syncing from Rust.  By
+@sartak
+in
+#2864
+Ignore rescheduled cards in old stats page by
+@user1823
+in
+#2863
+Do not add a fallback field reference if front side contains conditionals by
+@abdnh
+in
+#2859
+Ensure progress windows get cleaned up.
+Fix mpv idle notification not using main thread.
+Fix mpv not working out of the box in win32 source build.
+Handle invalid install timestamps in add-ons.
+Offer to save changes when card layout screen is closed by
+@abdnh
+in
+#2899
+Make the error dialog shown when an error occurs more friendly.
+Refresh model list when legacy addon adds notetype by
+@kieranlblack
+in
+#2825
+New Contributors
+@msisovic
+made their first contribution in
+#2900
+@gustavosmendes1
+made their first contribution in
+#2855
+@sartak
+made their first contribution in
+#2864
+@grepgrok made their first contribution in
+#2787
+@akashreddy03
+made their first contribution in
+#2833
+@antecrescent made their first contribution in
+#2850
+Contributors
+sartak, krmanik, and 13 other contributors
+Assets
+10
+Loading
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+👍
+11
+Chroma01, heEXDe, WeltKarl, Swim0o0, arindamukawlas, Mar2ck, cantalupo555, sschmidTU, xiongdy54, hoonlight, and zaveshaa reacted with thumbs up emoji
+😄
+3
+estherkl, ElvaronGames, and najafice reacted with laugh emoji
+🎉
+32
+5hir0kur0, L-M-Sherlock, hustrjh, vhick, sstangl, Aleks-Ya, serjflint, xiety, SqrtNegativOne, mahmoudk1000, and 22 more reacted with hooray emoji
+❤️
+7
+chrislongros, woj-tek, Abderrahmantbs, c4k3L0v3r, rwmpelstilzchen, Mar2ck, and egeres reacted with heart emoji
+🚀
+7
+xxhk-org, nickel8448, Rdkang, jcznk, fundon, Borinith, and TylerNakamura reacted with rocket emoji
+All reactions
+👍
+11 reactions
+😄
+3 reactions
+🎉
+32 reactions
+❤️
+7 reactions
+🚀
+7 reactions
+54 people reacted
+Footer
+© 2026 GitHub, Inc.
+Footer navigation
+Terms
+Privacy
+Security
+Status
+Community
+Docs
+Contact
+Manage cookies
+Do not share my personal information
+You can’t perform that action at this time.

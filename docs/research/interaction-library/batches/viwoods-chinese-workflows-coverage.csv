@@ -1,0 +1,4 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M007-21,M-007,设置邮箱账号并切换/筛选邮件,D2,E-VWCN-01,中文历史61–64：Google/Outlook或手动IMAP/POP3→SMTP；账号下拉/最多5个；文件夹/日期过滤/翻页，设置20/60/100/200/1000为单文件夹显示数。,实际授权/同步/搜索、清缓存与删账号范围、重新登录恢复、当前构建未知；截图1.9.74是邮箱应用号。,static_manual_pages_only,false,cases/M-007-viwoods.md,2026-10-27
+F-M007-22,M-007,手写或文本写邮件，经AI预览后回到编辑器,D2,E-VWCN-01,中文65–67：新建填写To/CC/BCC/主题、模式/附件；手写→AI生成→独立预览→Copy to the mailbox→编辑器→另有Send。签名可从写信/设置入口编辑。,AI前已填收件地址；不证明自动选收件人。取消/替换范围、草稿持久化、签名保存、发送失败与送达回执未知。,static_manual_pages_only,false,cases/M-007-viwoods.md,2026-10-27
+F-M007-23,M-007,为Memo便笺设置提醒,D2,E-VWCN-01,中文73–74：打开便笺→时钟→提醒开关/日期/时刻→Cancel或Confirm；长选工具栏另有提醒入口。,保存结果、到点/锁屏/后台/离线、删除和恢复后的提醒未知；图中确认不等于实机已触发。,static_manual_pages_only,false,cases/M-007-viwoods.md,2026-10-27

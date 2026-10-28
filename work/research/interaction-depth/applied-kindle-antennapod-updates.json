@@ -1,0 +1,495 @@
+[
+  {
+    "batch": "docs/research/interaction-library/batches/audio-coverage.csv",
+    "before": {
+      "flow_id": "F-M040-01",
+      "product_id": "M-040",
+      "task": "新增播客来源",
+      "depth": "D2",
+      "evidence_ids": "E-ANTP-01",
+      "known_branches": "新增订阅是获得目录/更新来源，并非自动取得所有历史音频。",
+      "gaps": "搜索无结果、重复源合并、私有 feed 认证、取消订阅时下载处理。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-040-antennapod.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M040-01",
+      "product_id": "M-040",
+      "task": "新增来源、取消订阅与归档恢复",
+      "depth": "D2",
+      "evidence_ids": "E-ANTP-01;E-APCD-01;E-APCD-13;E-APCD-14",
+      "known_branches": "新增只建目录；Archive改状态并保留下载/历史，文案称停止找新集；Unsubscribe删该源记录、移出队列、取消下载并清在线源下载，当前媒体发STOP。本地文件夹退订不删底层原文件。归档Restore与删除后的重订阅不同。",
+      "gaps": "重复源合并、私有认证；删除后无逐项撤销证据，重订阅能否保留原历史未知；同步远端处理、批量中途失败回滚未闭合。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-040-antennapod.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "batch": "docs/research/interaction-library/batches/audio-coverage.csv",
+    "before": {
+      "flow_id": "F-M040-02",
+      "product_id": "M-040",
+      "task": "把想听内容放进队列",
+      "depth": "D2",
+      "evidence_ids": "E-ANTP-02;E-ANTP-06",
+      "known_branches": "手动排队、已下载、已播放是不同状态。",
+      "gaps": "默认值/可配置差异、重复添加、临时播非队列单集、退出后队列。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-040-antennapod.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M040-02",
+      "product_id": "M-040",
+      "task": "把想听内容放进队列",
+      "depth": "D2",
+      "evidence_ids": "E-ANTP-02;E-ANTP-06;E-APCD-03",
+      "known_branches": "排队、已下载、已播放分开；下载入队是可配规则，不能写成无条件。",
+      "gaps": "具体安装/迁移默认值、重复加入和退出恢复未实测；菜单文本及用户自定排序仍依旧帮助。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-040-antennapod.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "batch": "docs/research/interaction-library/batches/audio-coverage.csv",
+    "before": {
+      "flow_id": "F-M040-04",
+      "product_id": "M-040",
+      "task": "自动准备下一批离线节目",
+      "depth": "D2",
+      "evidence_ids": "E-ANTP-05",
+      "known_branches": "下载受 Wi-Fi/移动设置、数量上限、单播客筛选影响；不是“订阅后全部下载”。",
+      "gaps": "半文件、失败重试、断网恢复、下载顺序；通知和进度未观察。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-040-antennapod.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M040-04",
+      "product_id": "M-040",
+      "task": "自动准备下一批离线节目",
+      "depth": "D2",
+      "evidence_ids": "E-ANTP-05;E-APCD-03",
+      "known_branches": "数量不能统一报默认值：旧帮助50、该tag XML25、UserPreferences缺值回退20；三者适用层不同，真实安装默认未定。",
+      "gaps": "半文件、失败重试、断网恢复、下载顺序；未观察通知进度，也未闭合首次初始化/迁移如何决定默认。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-040-antennapod.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "batch": "docs/research/interaction-library/batches/audio-coverage.csv",
+    "before": {
+      "flow_id": "F-M040-05",
+      "product_id": "M-040",
+      "task": "听完清空间或手动清下载",
+      "depth": "D2",
+      "evidence_ids": "E-ANTP-06;E-ANTP-07",
+      "known_branches": "手动标记 played 不触发“播完自动删”；空间清理有收藏/在队列等资格条件，必须读取当前配置。",
+      "gaps": "删除确认/撤销、正在播的文件、存储损坏、清理候选预览。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-040-antennapod.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M040-05",
+      "product_id": "M-040",
+      "task": "清下载并区分退订与本地原文件删除",
+      "depth": "D2",
+      "evidence_ids": "E-ANTP-06;E-ANTP-07;E-APCD-14",
+      "known_branches": "在线源下载删除同时处理转录文件/下载状态并排待同步DELETE；文件删除失败可能只记录日志，代码仍清下载标记，不能据界面变化保证物理文件已删。收藏/自动清理条件沿旧帮助。",
+      "gaps": "逐集删除确认与撤销UI、存储损坏、物理删除失败的可见提示未闭合；本地原文件无可重下载保证。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-040-antennapod.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "batch": "docs/research/interaction-library/batches/audio-coverage.csv",
+    "before": {
+      "flow_id": "F-M040-07",
+      "product_id": "M-040",
+      "task": "查章并跳到起点（源码范围）",
+      "depth": "D2",
+      "evidence_ids": "E-ANTP-14",
+      "known_branches": "当前章与播放位置变化，章节来自内容而非 app 凭空生成。",
+      "gaps": "上层入口及其显示条件、错误加载文案、当前发行版分支；本行不是运行观察。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-040-antennapod.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M040-07",
+      "product_id": "M-040",
+      "task": "从播放封面查章并跳转（3.12.3静态）",
+      "depth": "D2",
+      "evidence_ids": "E-ANTP-14;E-APCD-05;E-APCD-06",
+      "known_branches": "显隐由章节数据/标记决定；上一章窗口按10000×播放速度换算媒体毫秒。空集关闭并提示无章；异常回调仅日志，未证明可见重试。",
+      "gaps": "无当前媒体/网络章节错误的最终UI与残留进度未知；章节按键、无障碍焦点、跨章实机时间未观察。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-040-antennapod.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "batch": "docs/research/interaction-library/batches/audio-coverage.csv",
+    "before": {
+      "flow_id": "F-M040-08",
+      "product_id": "M-040",
+      "task": "设睡眠结束条件（源码范围）",
+      "depth": "D2",
+      "evidence_ids": "E-ANTP-15;E-ANTP-16",
+      "known_branches": "计时类型、上次输入、自动启用时段分别保存；范围超过队列/剩余时长有提示逻辑。",
+      "gaps": "发行版本、后台持久化、Shake 重设与实际暂停动作、系统杀进程后的结果。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-040-antennapod.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M040-08",
+      "product_id": "M-040",
+      "task": "设分钟或集数睡眠计时（3.12.3静态）",
+      "depth": "D2",
+      "evidence_ids": "E-ANTP-15;E-ANTP-16;E-APCD-07;E-APCD-08;E-APCD-09;E-APCD-10",
+      "known_branches": "类型/上次数值/自动时段是偏好；当前剩余值在计时对象。分钟计时由位置事件触发，以System.currentTimeMillis两次事件到达差扣减，间隔>10秒跳过，绝非用position差计算。临近10秒渐弱/可振动，摇动可重置初值；到期pause，集数完结阻止接播；服务销毁停止计时。",
+      "gaps": "短暂停、缓冲、未知duration、后台杀进程和时钟变动的真实表现未测；传感器不可用异常未闭合；不得承诺纯墙钟到期。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-040-antennapod.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "batch": "docs/research/interaction-library/batches/audio-coverage.csv",
+    "before": {
+      "flow_id": "F-M040-09",
+      "product_id": "M-040",
+      "task": "顺序播下一个及外设变化（源码范围）",
+      "depth": "D2",
+      "evidence_ids": "E-ANTP-17",
+      "known_branches": "用户主动暂停不能简单等同外设中断。新旧服务并存，未验证默认构建，不能承诺所有 Android 上自动恢复。",
+      "gaps": "Media3 路径完整行为、来电音频焦点、耳机/蓝牙实机与锁屏。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-040-antennapod.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M040-09",
+      "product_id": "M-040",
+      "task": "顺序接播、输出断开与音频焦点变化（3.12.3静态）",
+      "depth": "D2",
+      "evidence_ids": "E-ANTP-17;E-APCD-04;E-APCD-10;E-APCD-11;E-APCD-12",
+      "known_branches": "停播回调保存位置并排同步播放动作；不能把旧服务的蓝牙重连分支搬来。API31+隐藏耳机/蓝牙重连设置，较低API有设置不等于新服务相同恢复。",
+      "gaps": "Media3库底层永久/暂时焦点、电话与导航策略、蓝牙恢复及各系统实际通知未操作；源码委托不构成恢复保证。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-040-antennapod.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "batch": "docs/research/interaction-library/batches/audio-coverage.csv",
+    "before": {
+      "flow_id": "F-M040-11",
+      "product_id": "M-040",
+      "task": "锁屏/后台停止后找回控制",
+      "depth": "D2",
+      "evidence_ids": "E-ANTP-10;E-ANTP-11",
+      "known_branches": "控件失效和播放服务被系统结束是不同问题；官方对前者根因尚不确定。",
+      "gaps": "发生率、受影响厂商和最新系统；本项目没有复现，不能写普遍缺陷。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-040-antennapod.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M040-11",
+      "product_id": "M-040",
+      "task": "核对锁屏/通知控制与后台排错的版本适用性",
+      "depth": "D2",
+      "evidence_ids": "E-ANTP-10;E-ANTP-11;E-APCD-03;E-APCD-04;E-APCD-17",
+      "known_branches": "设置中的高优先通知API26+隐藏、持久控制API30+隐藏；声明的按钮偏好不代表系统一定全部呈现。旧帮助根因未定，不升级成3.12.3已复现问题。",
+      "gaps": "锁屏布局/槽位、厂商电池行为、后台被杀与暂停后重建均未验证；须另做固定Android版本观察。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-040-antennapod.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "batch": "docs/research/interaction-library/batches/audio-coverage.csv",
+    "before": {
+      "flow_id": "F-M040-12",
+      "product_id": "M-040",
+      "task": "换机/多端保存订阅和进度",
+      "depth": "D2",
+      "evidence_ids": "E-ANTP-12;E-ANTP-13",
+      "known_branches": "数据库、OPML、gPodder/Nextcloud 同步三种覆盖不同；同步不包含收藏/队列/设置，OPML 主要只有订阅。",
+      "gaps": "双端离线冲突、数据库覆盖确认、版本迁移、失败回滚和同步敏感 URL。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-040-antennapod.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M040-12",
+      "product_id": "M-040",
+      "task": "备份恢复、部分同步与删除后的恢复边界",
+      "depth": "D2",
+      "evidence_ids": "E-ANTP-12;E-ANTP-13;E-APCD-03;E-APCD-15;E-APCD-16;E-APCD-18",
+      "known_branches": "SQLite导出保留库数据，不含音频；全局UserPreferences在SharedPreferences，不能以官网all data推成全部设置备份。导入拒绝比当前更高的DB schema，随后替换旧库；非合并。OPML/同步/HTML收藏输出范围不同。归档Restore不等同退订撤销；数据库恢复会覆盖当前库。",
+      "gaps": "失败后事务回滚未证明；同步冲突/账户切换未核；历史损库修复帮助不能当正常删除恢复。全局设置迁移、自动备份周期执行与文件权限撤销待验证。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-040-antennapod.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "batch": "docs/research/interaction-library/batches/reader-coverage.csv",
+    "before": {
+      "flow_id": "F-M001-01",
+      "product_id": "M-001",
+      "task": "查词再复习",
+      "depth": "D2",
+      "evidence_ids": "E-KDL-01",
+      "known_branches": "可标记掌握；自动收词可配置。Word Wise 的密度可调且受内容/语言支持限制。",
+      "gaps": "见案例的范围/分支/后续观察；未实测",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-001-kindle.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M001-01",
+      "product_id": "M-001",
+      "task": "查词再复习",
+      "depth": "D2",
+      "evidence_ids": "E-KDL-01;E-KDCD-01;E-KDCD-02",
+      "known_branches": "2024在线指南补明确路径：正文查词→阅读菜单Vocabulary Builder→Words/Books→Flashcards→See Definition→Exit Flashcards。Learning显示学习/掌握统计，但正文未给标记掌握或撤销按钮；关闭自动收词后新查询不入本。",
+      "gaps": "掌握标记/误标撤销、删词恢复、跨端同步与复习调度未知；Word Wise有内容语言条件",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-001-kindle.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "batch": "docs/research/interaction-library/batches/reader-coverage.csv",
+    "before": {
+      "flow_id": "F-M001-02",
+      "product_id": "M-001",
+      "task": "临时翻找再回原处",
+      "depth": "D2",
+      "evidence_ids": "E-KDL-01",
+      "known_branches": "预览保留原位置；需区分“预览位置”和真正阅读进度。",
+      "gaps": "见案例的范围/分支/后续观察；未实测",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-001-kindle.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M001-02",
+      "product_id": "M-001",
+      "task": "临时翻找再回原处",
+      "depth": "D2",
+      "evidence_ids": "E-KDL-01;E-KDCD-02",
+      "known_branches": "Page Flip预览后Back to page/loc重定位原阅读点，点预览页才跳转；历史箭头在退出书籍后清空；不能把预览位置当持久阅读进度。",
+      "gaps": "不同格式可用导航、跨会话返回栈、断电恢复位置未知",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-001-kindle.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "batch": "docs/research/interaction-library/batches/reader-coverage.csv",
+    "before": {
+      "flow_id": "F-M001-03",
+      "product_id": "M-001",
+      "task": "在书中写批注",
+      "depth": "D2",
+      "evidence_ids": "E-KDL-02;E-KDL-03",
+      "known_branches": "PDF 经 Send to Kindle 与 USB 传入有不同手写支持；兼容表是按入口和内容类型区分，不只按扩展名。",
+      "gaps": "见案例的范围/分支/后续观察；未实测",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-001-kindle.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M001-03",
+      "product_id": "M-001",
+      "task": "在书中写批注",
+      "depth": "D2",
+      "evidence_ids": "E-KDL-02;E-KDL-03;E-KDCD-08;E-KDCD-09",
+      "known_branches": "画布框可调整；删除需指针选框→垃圾桶→确认。便签X关闭自动保存；工具可隐藏再显示。USB PDF及2022-11-11前已传入库的PDF不支持该手写路径；漫画/儿童EPUB不泛化。",
+      "gaps": "最低固件、删除画布后恢复、PDF变更对笔迹锚点影响未知；手机手写与同步帮助范围差异未解",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-001-kindle.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "batch": "docs/research/interaction-library/batches/reader-coverage.csv",
+    "before": {
+      "flow_id": "F-M001-04",
+      "product_id": "M-001",
+      "task": "整理多页笔记",
+      "depth": "D2",
+      "evidence_ids": "E-KDL-04",
+      "known_branches": "多选后 Add 在各选中页后添加，不只是最后追加一页；2025 及以后机型另有操作，不套旧机。",
+      "gaps": "见案例的范围/分支/后续观察；未实测",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-001-kindle.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M001-04",
+      "product_id": "M-001",
+      "task": "创建并整理笔记页与文件夹",
+      "depth": "D2",
+      "evidence_ids": "E-KDL-04;E-KDCD-05;E-KDCD-06;E-KDCD-07",
+      "known_branches": "Notebook页+新建文件夹/笔记本，至少需100MB空闲才能保存新对象/笔迹；整本More→Move选文件夹或Notebook顶层，书与个人文档不能混入。页多选Add逐页后加页，Move选页间位置，X退多选；2025+才另列Duplicate与跨本移页。",
+      "gaps": "删除单页确认/撤销、空间不足实际提示和未保存笔迹、跨本移动断网冲突未知",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-001-kindle.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "batch": "docs/research/interaction-library/batches/reader-coverage.csv",
+    "before": {
+      "flow_id": "F-M001-05",
+      "product_id": "M-001",
+      "task": "导出与转换",
+      "depth": "D2",
+      "evidence_ids": "E-KDL-05",
+      "known_branches": "下载链接 7 天有效；文字转换预览修改与可搜索手写 PDF 是不同产物。Family 共享不自动覆盖这些个人笔记。",
+      "gaps": "见案例的范围/分支/后续观察；未实测",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-001-kindle.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M001-05",
+      "product_id": "M-001",
+      "task": "导出与转换",
+      "depth": "D2",
+      "evidence_ids": "E-KDL-05;E-KDCD-10",
+      "known_branches": "Share邮件入口保留，下载链接7天有效。Convert to text预览校订不会进入可搜索手写PDF；定向邮箱需勾选附带搜索PDF，快发另链。不能批量分享多本，Family不自动共享个人笔记。",
+      "gaps": "发送失败重试、7天后重新分享与重复导出命名、文字校订回写设备规则未知",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-001-kindle.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "batch": "docs/research/interaction-library/batches/reader-coverage.csv",
+    "before": {
+      "flow_id": "F-M001-06",
+      "product_id": "M-001",
+      "task": "同步并排查缺失",
+      "depth": "D2",
+      "evidence_ids": "E-KDL-06;E-KDL-07",
+      "known_branches": "关闭同步会限制云端笔记下载、备份与永久删除。手写跨端支持在不同帮助页中有范围差异，不能统一泛化。",
+      "gaps": "见案例的范围/分支/后续观察；未实测",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-001-kindle.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M001-06",
+      "product_id": "M-001",
+      "task": "同步并排查缺失",
+      "depth": "D2",
+      "evidence_ids": "E-KDL-06;E-KDL-07;E-KDCD-03;E-KDCD-04;E-KDCD-11",
+      "known_branches": "联网Sync备份；关闭Sync不能云下载/备份/永久删除。缺失先核同账号设备删除；模板问题重选→重开，仍异常时移除本地后重下载。More的Remove download保留云对象；Permanently delete影响所有设备且不能恢复。；已作为附件发送给Alexa的副本另行保留，不随Kindle永久删除自动清除。",
+      "gaps": "本地未同步笔迹保护、误删确认、冲突优先级、删除文件夹内对象范围未知；跨端手写支持文档冲突保留",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-001-kindle.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "batch": "docs/research/interaction-library/batches/reader-coverage.csv",
+    "before": {
+      "flow_id": "F-M001-07",
+      "product_id": "M-001",
+      "task": "从云盘导入再带回",
+      "depth": "D2",
+      "evidence_ids": "E-KDL-08",
+      "known_branches": "手动导入/导出；不兼容或超限文件灰显。USB 导入内容不能直接按该路径导回；授权断开、重复导出及替换规则待逐项核查。",
+      "gaps": "见案例的范围/分支/后续观察；未实测",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-001-kindle.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M001-07",
+      "product_id": "M-001",
+      "task": "从云盘导入再带回（2025+ Scribe）",
+      "depth": "D2",
+      "evidence_ids": "E-KDL-08;E-KDCD-10;E-KDCD-12",
+      "known_branches": "限定2025+：Connections扫码同Amazon账户授权；Import/长按定制，历史图标查状态。重复导入创建新副本，原文件和笔记不变；受密码保护者只读。Share回云盘是PDF副本；断开/重置移除连接，已导入Kindle云库文件保留。",
+      "gaps": "重复导出命名/覆盖、并发修改、授权失效/导入失败恢复未知；不适用于2024主样本；USB内容不能回传云盘",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-001-kindle.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "batch": "docs/research/interaction-library/batches/reader-coverage.csv",
+    "before": {
+      "flow_id": "F-M001-08",
+      "product_id": "M-001",
+      "task": "首页随手记",
+      "depth": "D2",
+      "evidence_ids": "E-KDL-09",
+      "known_branches": "文档要求注册和联网；不能据此断言每次离线都无法编辑，也不能套所有 Scribe。",
+      "gaps": "见案例的范围/分支/后续观察；未实测",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-001-kindle.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M001-08",
+      "product_id": "M-001",
+      "task": "首页随手记",
+      "depth": "D2",
+      "evidence_ids": "E-KDL-09;E-KDCD-13",
+      "known_branches": "2025+且注册联网；首页显示末次页，双箭头调展示大小，+在末尾添页；可用Move跨本移动/复制，Workspace能找到同一Quick Notes笔记本。",
+      "gaps": "离线持续编辑与回网冲突、末次页选择规则、删页确认/撤销未知",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-001-kindle.md",
+      "checked_on": "2026-10-27"
+    }
+  }
+]

@@ -1,0 +1,4 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M007-18,M-007,在Paper编辑选区、撤销并返回笔记列表,D2,E-VWCD-06;E-VWCD-07;E-VICD-01;E-VWCN-01,旧编辑/撤销/返回入口保留；中文p26圈选笔迹只在同应用笔记间复制，p27文字复制可跨模块粘贴，空剪贴板粘贴入口灰。两指返回位于撤销节，不作页面导航。,撤销层数/重开保留、改模板/层与原笔迹关系、保存时点未知；不将back解释成离开页面。,static_manual_pages_only,false,cases/M-007-viwoods.md,2026-10-27
+F-M007-19,M-007,创建Quick Note模板并理解关联文件夹,D2,E-VWCD-04;E-VWCD-05;E-VICD-01;E-VWCN-01,中文p23：新快捷入口使用既有普通目录名可建立关联；删除快捷入口使目录普通化，删关联目录移除快捷入口。旧模板名称/Done步骤保持。,多个同名目录的冲突、目录内容去向、撤销/当前数量限制未知；关联规则不等于已证明删除无损。,static_manual_pages_only,false,cases/M-007-viwoods.md,2026-10-27
+F-M007-20,M-007,删除Memo并核查回收去向,D2,E-VWCD-14,历史Memo长按→Delete；Recycle Bin入口可见，正文称最近删除最多保留30天，可恢复或永久删除。,未见恢复按钮/确认步骤、到期触发条件、恢复位置/提醒重建、V3.15云传播；不套Paper/Meeting/Learning或系统文件。,static_manual_pages_only,false,cases/M-007-viwoods.md,2026-10-27

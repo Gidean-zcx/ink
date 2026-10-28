@@ -1,0 +1,139 @@
+# M-038 Toniebox 1 / 2：实体内容入口、离线准备与家长配置
+
+## 范围
+
+初查：2026-10-26；本批补证：2026-10-27。**Toniebox 1 与 Toniebox 2 分开记录**，不与 Toniebox Lite 混用。证据来自英文美国/英国/欧洲/澳洲/加拿大官方帮助；具体固件、tonies app 构建和账号地区未知。1 代实体暂停/续播细节来自 EN 1.0、2018-04 的官方旧手册，适用性单列；其余尽量采用当前带代际名称的帮助页。家长 app 是管理端，盒子是实际播放/缓存端，Tonie/Creative Tonie 是内容入口，Toniecloud 是自制内容的保存和分发环节。
+
+**D2 文档重建；无实机、无连续视觉观察。**已查实体选内容/音量/跳转、下载与离线、家长配置同步、Creative Tonie 编辑/删除、2 代远程播放和睡眠。本批补Tonieplay准备/恢复、闹钟条件、家庭授权与数据迁移/删除；具体游戏随盒说明书、逐题规则、耳机出口仍未核。没有播放或下载网页内嵌视频，未查看单帧图片，不能据“Image/iframe”标签记视觉观察。
+
+## 官方目录与覆盖边界
+
+[逐项台账](../batches/tonie-controls-deepening-inventory.csv)按本次返回的目录登记150个入口：1代63、2代65、Tonieplay14、US家庭管理8；这些是帮助条目，不是150项功能已完成。地区及搜索/直接打开快照数目不同，不能据此声称全站目录完整或内容缺失。其余Creative、App、Audio Library等入口只取得部分专页，完整目录仍待查。
+
+| 目录域 | 本批定位与已关联任务 | 仍未覆盖 |
+| --- | --- | --- |
+| 1代：Quick Solutions、Setup、Care、Settings、Playing、Battery、Error、Other | E-TNCD-01；原F01–04；旧2018手册继续单列 | 多网络/初设失败、具体错误词、耳机/电量等未逐条分析；目录不更新旧固件行为 |
+| 2代：Product、Setup、Settings、Compatibility、Purchasing、Battery、Troubleshooting、Error | E-TNCD-02；F07–11、14；购买标题仅台账 | 初设/蓝牙配网、全部12错误词、充电完整路径与新旧关机页冲突未闭合 |
+| Tonieplay：14项帮助 | E-TNCD-03；F12–13及F11排错 | 年龄/共同游玩为功能说明；操作频次数据不证明可查孩子成绩；具体游戏纸本规则未取得 |
+| 家庭管理：US 8项 | E-TNCD-04；F15–18 | 注册、改名、登录故障、移除盒子只登记；Full权限页设备措辞限1代 |
+| Creative局部专页 | F05–06、16；Live补E-TNCD-17/18 | 通用Creative与各特殊公仔不能混成统一备份/恢复模型 |
+
+范围以各证据URL的US/UK/Europe/Canada地区为准；所有新资料的App构建与盒子固件未知，网页抓取日期不代表功能上线日期。E-TNCD-23是产品介绍，只用于控制器“转/按”和共同游玩的D1发现，不证明判分或学习成效。
+
+## 两代任务路径
+
+| F 编号 | 任务 | 前置状态 | 操作与官方反馈 | 数据变化与结束 | E 证据 | 尚未核实 |
+| --- | --- | --- | --- | --- | --- | --- |
+| F-M038-01 | 1 代选故事、暂停和继续 | 盒子开机、绿灯；内容可用 | 放上 Tonie 播放；取下暂停，再放同一个续播。大/小耳朵调整音量。旧手册明确：中间没有播过另一 Tonie 才从原处恢复。 | 公仔存在性参与播放控制；不是每个公仔都已证明有独立持久断点。 | E-TONI-01 | 当前固件、自动关机/耗尽电量后位置、相同公仔换盒；旧手册限制待当前机验证。 |
+| F-M038-02 | 1 代先下载，再带出门 | 已完成设置、有 Wi-Fi | 首次放公仔需联网；蓝灯闪说明未下完，留在顶部直到提示音与常绿。出门前主动开离线模式，逐个试播可检查是否准备好。 | 音频完整缓存在盒子中，公仔不等于音频存储卡；新版 Creative 内容也需再次联网取得。 | E-TONI-02 | 下载取消/断线续传、容量淘汰规则、缓存精确列表、离线错误词。 |
+| F-M038-03 | 1 代切章与段内快进 | 内容已完整下载、加速度传感功能开启 | 敲侧面跳曲；轻倾直到提示音并保持姿势，在曲内快进/后退。App：Collection → Toniebox → 选盒 → Advanced settings → Fast-forwarding & rewinding 可改侧向含义，然后同步。 | 切曲和改变时间点是不同动作；未下完或功能关闭时不能据手势无效推定硬件坏。 | E-TONI-03；E-TONI-04 | 敲击力度、误识别、单章/末章边界、暂停时手势；未测固定秒数。 |
+| F-M038-04 | 1 代开/关离线并下发设置 | 顶部无公仔 | 双耳约 5 秒至提示音/蓝闪，再单耳约 3 秒至白灯与语音进入离线；退出为双耳至绿灯/在线语音。联网同步配置：无公仔时单耳约 3 秒，等常绿及提示音。 | 离线状态跨使用保持，需手动退出；离线不取新公仔/新内容。App 保存配置与盒子接收配置是两步。 | E-TONI-05；E-TONI-06 | 同步失败回滚、离线时改配置的积压与冲突、语音语言。 |
+| F-M038-05 | 家长给 Creative Tonie 添加内容 | 家庭账号、公仔已加入家庭；成员还须有该Creative编辑权（F15） | App选择Creative Tonie，可录音或上传已有MP3/WAV、保存；原教程列90分钟总量，再按盒子代际同步。若公仔未出现，先查成员授权及是否仍在其他家庭（F16）。 | 云内容清单、账号授权、盒子缓存分开；上传不等于盒子离线可播，拿到实体公仔也不等于拥有编辑权。 | E-TONI-15；E-TONI-05；E-TONI-10；E-TNCD-14；E-TNCD-16 | 录音权限、取消上传、格式失败和容量超限提示；授权撤销后旧离线缓存是否仍播放未知。 |
+| F-M038-06 | 重排/删去 Creative 章节 | 已有自制内容及编辑权；UK帮助限定手动排序须关闭Live | 原路径Collection→Creative Tonies→目标→Edit；拖柄排序Done；选圆圈Delete→Done，官网Edit Content后Save Content。Live另在目标→Advanced settings开启；官网开关On后Save Changes；它把以后新加内容置顶。 | 手动顺序与自动新内容置顶是两种规则；UK页给出Live前置条件，US页未同样明确。1代按专页同步，2代仍按自动同步专页；原文件应另留。 | E-TONI-16；E-TONI-17；E-TONI-18；E-TNCD-17；E-TNCD-18 | Live关闭的确认/旧顺序恢复、两地区帮助对应构建、删除撤销、旧缓存清理及正播章节进度映射未知；Live不是直播。 |
+| F-M038-07 | 2 代查看并远程控制当前播放 | 盒子有互联网、家长 app 可连接；顶部 Tonie | App 播放控制提供当前 Tonie/章节、播放/暂停、重启/跳过。官方明确这些控制仅限 2 代；Tonieplay 游戏只可用其中的音量控制。 | 家长可以观察实际盒子当前内容；这是联网控制，不代表 app 离线或 1 代同样有效。 | E-TONI-08 | 完整入口层级、指令送达/超时反馈、重启究竟回曲还是整本、多人同时控制。 |
+| F-M038-08 | 2 代下载后进入离线 | 顶部无Tonie/游戏；所需内容完整缓存，Tonieplay首次须下完完整游戏 | 倒置盒子长按双耳，白环进入Parent Access；捏大耳听离线语音；同入口再捏大耳退出。游戏首次准备详见F12。 | 完整已缓存Tonie/Tonieplay可用；新内容不能激活，App不同步，日出闹钟等App功能被列为停用；需手动恢复在线。 | E-TONI-09；E-TNCD-05；E-TNCD-07 | 实体睡眠键离线范围、游戏断电/重置后缓存与进度持久性；不能把后续离线游戏推广为首次无网可玩。 |
+| F-M038-09 | 2 代更新配置/内容并纠正“还播旧的” | 网络可用，暂不放公仔 | 配置联网自动同步；固件更新需空置等待自动关机完成，放公仔会让更新跳过/延后。旧内容排查先在 app 看 online；帮助页称开机后约 30 秒同步，太早放公仔会阻止它，建议重新唤醒后先等。 | 配置已保存、盒子在线、同步完成、媒体已缓存是不同状态；故事优先可使更新延后。 | E-TONI-10；E-TONI-14 | 30 秒是官方提示而非本项目测速；网络差时完成确认、同步中断后版本原子性。 |
+| F-M038-10 | 2 代睡前计时、续设与停止 | App控制要求盒子在线；2代，1代不套用 | Mine→盒子→Sleep Timer with Light，5–60分钟，显示剩余时间/橙光；可重启、停止或立即关机。双耳5秒按上次配置启用（默认30分钟）；再按5秒至橙光消失、提示音/绿灯关闭。 | 计时到期关盒；Settings→Bedtime & Sleep Light→Preferences调音量/亮度，计时或闹钟启用时生效。闹钟另见F14。 | E-TONI-11；E-TONI-07；E-TNCD-13 | 换公仔、重启、离线转换及下一晚记忆的具体范围未测；灯持续整夜/到计时结束的条件与关盒后灯状态未说明清楚。 |
+| F-M038-11 | 2 代判断“不能播/没灯” | 2代；需知道年龄模式、供电、灯环设置 | 1+充电不播且禁倾斜；App→盒子→Settings→Age Mode可切3+。无灯/蓝闪/红闪按原灯环帮助分流。读游戏盘失败：拔电开机，长按双耳越过睡眠设置至重启/Welcome Lights，稍候再试；详见下方恢复分支。 | 年龄模式、灯光、网络和固件分别解释。重启不等于恢复出厂；App中的Factory reset instructions是操作指南入口，不证明远程执行。 | E-TONI-12；E-TONI-13；E-TNCD-08；E-TNCD-21；E-TNCD-24 | 年龄切换确认、普通Tonie的2代持久续播、每个错误词及重置对云数据/游戏存档的具体范围仍未知；未执行重启/重置。 |
+| F-M038-12 | 2代准备并开始一款Tonieplay游戏 | Toniebox 2、游戏盘和Controller；首次联网 | 放盘，等完整游戏下载；帮助以绿进度表示下载，完成后自动开始；将Controller置于灯环中央并按键开始。卡住可取盘、重启盒子再试；持续白闪则同时取下盘与Controller，稍候再放。 | 完整缓存后可离线再玩；普通Tonie首章可先播的规则不能套给游戏。 | E-TNCD-05；E-TNCD-06；E-TNCD-07；E-TNCD-23；E-TNCD-24 | 两页“开始”分别对应引导/音频还是正式游戏未核；控制器旋转选择/按压确认、每款规则/判分/退出、下载取消与续传未知；官网30分钟至1小时以上仅估计，不是本项目测速。 |
+| F-M038-13 | 2代Tonieplay中断、回检查点与重开 | 明确游戏类型、是否已达检查点或通关 | Europe重启帮助：取盘数五再放；未到检查点从开头，已到则回最近点，通关前不能全重置。US另页按类型说明：quiz未完轮次不续，互动故事回最后位置，Discover开新轮。 | 这里的恢复不是统一秒点暂停；5题只是quiz轮次举例。多数开场可跳，但答题/选择不能立即重播；章节页当时仅点名Winnie The Pooh可选故事。 | E-TNCD-09；E-TNCD-10；E-TNCD-11；E-TNCD-12 | 两页“pause/从头/last position/checkpoint”如何对应具体游戏未知；跳过具体按键、通关全重置入口、断电/跨盒持久性、错误答案和奖励均未核。 |
+| F-M038-14 | 2代设置日出闹钟并识别不响条件 | 盒子在线；页面要求连接充电器且仅3+模式 | Mine→盒子→Sleep Timer with Light→Set time & Sunrise Alarm；设时间、启用，调音量，Tone选音，可加入日出光。 | 若顶部Tonie仍在播放，闹钟不响；页面另提醒电量耗尽不启动。首次设定与次日实际响铃未观察。 | E-TNCD-13；E-TONI-09 | 仅有设置路径：停止响铃/贪睡/重复日程、时区、断网/断电恢复未知；“需充电器”与“电量足够”并列，不能推出拔线可用。 |
+| F-M038-15 | 邀请家庭成员并限制可编辑的Creative Tonie | 邀请者具家庭管理权；对方有免费账号 | App头像→Household→＋→Full或Creative成员→邮箱→Next→Confirm。对方从邮件Accept Invitation登录确认；Creative成员还须指定公仔。Owner在Household→成员→Membership改角色；返回成员页设置图标勾选公仔，绿勾表示授权。 | 受限成员只见/编辑获授权Creative对象；Full可编辑全部Creative，权限页设备管理措辞只明确1代。官网Members→成员→选公仔→Save Changes。 | E-TNCD-14；E-TNCD-15 | 邀请过期、撤回/移除成员、并发修改、降权对盒子离线缓存的影响；2代设备细粒度管理权未逐项说明。 |
+| F-M038-16 | 收到外家庭Creative Tonie后取得编辑权限 | 公仔有内容却不出现在自己的云账户 | 先核是否绑定原家庭。保留原家庭内容供编辑的官方路径是请原家庭邀请为Full或获指定权限的Creative成员；换云账户则由原Owner/Full删内容或从原家庭移除。 | 拿到实体公仔不等于获得云端编辑权；带内容公仔不能携内容转入另一云账户。二手公仔需原持有人释放，支持方说明不会替用户移除内容。 | E-TNCD-16；E-TNCD-14 | 原持有人失联、释放后旧盒离线缓存、解绑撤销、内容导出与自动备份未核；不能把公仔移交等同全家数据迁移。 |
+| F-M038-17 | 把家庭所有权移交给已邀请成员 | 接收者已加入且不是另一家庭Owner | 官网Members→Household preferences→Leave this household；窗口选接收成员→Set New Owner。若其已拥有别的家庭，列表不会出现；同窗口另有解散家庭分支。 | 完成后新成员成为Owner，旧Owner自动退出；旧Owner要回家庭须由新Owner重新邀请。 | E-TNCD-19 | 未操作确认/失败/撤销；接收者原家庭有数据时的合并方案未说明，不把“删除自己的家庭”当无损步骤。 |
+| F-M038-18 | 删除整个家庭并确认数据损失范围 | 家庭管理端；已了解将永久删除数据 | App头像→Household→设置→Dissolve Household→红色Delete确认；官网Members→Household preferences→Delete this household→弹窗Delete Household确认。 | 官方明确永久删除家庭全部数据，包括Creative Tonie录音；不等同删除某段音频、释放公仔、退出家庭或重置盒子。 | E-TNCD-20；E-TONI-18 | 未执行；回收站/撤销/客服恢复未说明，盒子离线旧缓存清除时机未知。 |
+
+## 主要异常、世代差异和材料冲突
+
+1 代官方当前帮助明确不提供定时器，也不能用 app 逐标题禁用公仔内容；app 可改耳机/扬声器最大音量、LED 亮度和敲击/倾斜方向。[E-TONI-07] 2 代则有联网 app 播放控制和睡眠计时；泛称“tonies app 能遥控”会误导 1 代家长。[E-TONI-08、E-TONI-11]
+
+1 代旧手册中的重启与恢复出厂动作相近，但有无充电底座改变结果：离开底座倒置长按双耳是重启，连底座做相应动作是重置并清网络、内容和设置。因此不能把“一直按双耳”当作通用排障。此处是旧版操作风险的研究记录，实际使用应按型号当前支持页核对。[E-TONI-01]
+
+2 代灯环红色全环闪和部分闪分别指向连接错误/错误词与低电；需结合语音和触发时刻，而不是只认“红灯坏了”。[E-TONI-13] 即使管理端仍可编辑，也不能据此判定盒子已收到；本案例未观察离线编辑、待同步反馈或冲突合并。
+
+2026-08 的 Creative Tonies 通用教程仍给出“单耳同步”步骤；专门 2 代帮助明确自动同步，因此本案例只把通用教程用于录入内容，2 代同步以专页为准。[E-TONI-15、E-TONI-10、E-TONI-14] 本批UK睡眠页补足本地关计时反馈和闹钟设置；与离线页合看仍不能确定所有离线本地计时行为。故事队列、书签、笔记和跨盒逐书进度未查到足够证据，不写“不支持”。
+
+## 本批新增的异常与证据限制
+
+- **游戏“暂停”不是单一状态**：E-TNCD-09按游戏类型说恢复，E-TNCD-10又以起点/检查点解释取盘重开，同时使用pause一词。两页并列保留，不补造逐秒暂停、统一存档或固定倒退五题。E-TNCD-11/12只给跳过/章节限制，未给手势和控制器细节，不能据此写出完整玩法。
+- **2代恢复分级**：游戏盘未识别时，官方先给不插电、持续捏双耳重启至Welcome Lights，再等约一分钟重试；20–60秒是文档提示，非测速。最后手段为不插电、绿灯、倒置双耳5秒至提示音、扶正白环、长按小耳并依提示完成重置。App路径Mine→盒子→Settings→Factory reset instructions只打开说明。恢复出厂清回初始状态，但未列清云端录音及各游戏存档的传播范围。[E-TNCD-08/21]
+- **家庭归属、设备重置和云删除分开**：受邀、接受、按公仔授权是三个步骤；Full权限帮助写的是Toniebox 1管理，不能推广成已核定2代全部权限。移交家庭会让旧Owner退出；删整个家庭则明确永久删录音。它们都不能替代原文件备份。[E-TNCD-14/15/19/20；E-TONI-18]
+- **获取限制**：EU睡眠页一次正常HTTP请求返回403，已停止该直接抓取路线；权限页/US移交页web工具另有超时。部分事实来自官方搜索索引正文，不能称已取得原HTML或当前App界面。公开页中发现iframe但未播放；静态Image标签也没有作为观察证据。原始工具返回与逐源摘取保存在work并校验散列；正式库仅存短摘记。
+
+## 对本项目的分析（推断）
+
+Tonie 的可借鉴处是“对象即入口”：孩子无需先读出书名就能选择内容；对已能独立阅读的 5–6 岁儿童，应比较实体入口与可读封面/标题列表的效率，不能直接认定实体公仔优于屏幕。对应 R-018，1 代的换公仔例外提醒本项目明确“谁、哪本、哪个版本、听到哪、是否仍想继续”，不能只保存最近一个播放槽。
+
+对 G-002，AI 要得到同步和缓存的真实状态，才能回答“明天没网能听吗”“刚换的故事为什么没变”。若只有后台编辑权限而无设备确认，不能宣称任务完成。家长准备、儿童选择、设备播出是三段任务；其云依赖与备份不可逆性也应独立讨论。Plus 的输入、音频与内容识别仍需硬件核查；本案例不构成 NFC、公仔或云服务选型。
+
+本批启发（推断）：为G-002提供“重新开始”时，至少区分重新播音频、重开本轮、回检查点、清游戏进度与重置设备；儿童是否学会不能由按了控制器或游戏使用频次推断。家庭邀请的最小权限也应区分可编辑的内容对象与可管理的设备，仍是候选问题而非本项目既定权限方案。
+
+下一项最小观察：用同一家庭账号和一只 Creative Tonie，在两代分别做 A→暂停→A、A→B→A、离线前后改章节、睡眠中换公仔；保存 app 状态和盒子语音/灯光的同步记录。达到“每代每个状态转换有完整起止记录”才升级连续观察。
+
+## 证据
+
+E-TONI为2026-10-26初查；下列E-TNCD为2026-10-27续补。均未实机。除明确写出的日期，其余页面更新时间未显示。
+
+| E 编号 | 来源 | 定位 |
+| --- | --- | --- |
+| E-TONI-01 | [Toniebox Guide EN 1.0](https://assets.ctfassets.net/l6vo76cztcax/6PkEgkjjGmwpatuF0n3lTH/1e2878aad4e7f405e9b07fc1eab54fdb/Manual_Toniebox_EN.pdf) | 2018-04，PDF 第 2 页 Playing and pausing；第 1 页重启/重置。仅旧 1 代。 |
+| E-TONI-02 | [1 代无 Wi-Fi 使用](https://support.tonies.com/hc/en-us/articles/29036566638994-Does-the-Toniebox-1-work-without-Wi-Fi) | 下载完成指示与出行前离线试播。 |
+| E-TONI-03 | [1 代快进/后退](https://support.tonies.com/hc/en-us/articles/29036493650962-How-do-I-fast-forward-and-rewind-using-the-Toniebox-1) | 倾斜、提示音、完整下载条件。 |
+| E-TONI-04 | [1 代切换曲目](https://support.tonies.com/hc/en-us/articles/29036580563602-How-do-I-skip-back-and-forth-between-tracks-using-the-Toniebox-1) | 敲击、方向配置、同步。 |
+| E-TONI-05 | [1 代同步](https://support.tonies.com/hc/en-us/articles/29036498212754-How-do-I-update-my-Toniebox-1-or-sync-changes-I-ve-made) | 空顶部、联网、单耳、绿灯提示音。 |
+| E-TONI-06 | [1 代离线模式](https://support.tonies.com/hc/en-us/articles/29036416576402-How-do-I-put-my-Toniebox-1-in-Offline-Mode) | 开关步骤与保留状态。 |
+| E-TONI-07 | [1 代 app 控制范围](https://support.tonies.com/hc/en-us/articles/29036587884050-Can-I-control-the-Toniebox-1-remotely-via-the-tonies-app) | 配置项、无 timer/逐标题停用。 |
+| E-TONI-08 | [2 代 Playback Features FAQ](https://support.tonies.com/hc/en-150/articles/37307520777874-Playback-Features-FAQ) | 当前章节、远程播放、联网要求、排除 1 代。 |
+| E-TONI-09 | [2 代离线模式](https://support.tonies.com/hc/en-au/articles/29352008338578-How-do-I-put-my-Toniebox-2-in-Offline-Mode) | Parent Access、手动退出、app 功能停用。 |
+| E-TONI-10 | [2 代同步与固件更新](https://support.tonies.com/hc/en-150/articles/31004929359250-How-do-I-update-my-Toniebox-2-or-sync-changes-I-ve-made) | 自动同步、空置更新、内容优先。 |
+| E-TONI-11 | [2 代 Sleep Light / Sunrise Alarm](https://support.tonies.com/hc/en-150/articles/29255589102866-Sleep-Light-with-Timer-Sunrise-Alarm-guide) | app 与双耳入口、剩余时间、记忆配置；闹钟仅目录级。 |
+| E-TONI-12 | [2 代 Features FAQ](https://support.tonies.com/hc/en-150/articles/29036389310738-Meet-the-Toniebox-2-Features-FAQ) | 1+/3+ 模式；Tonieplay 与普通 Tonie 区别。 |
+| E-TONI-13 | [2 代灯环状态](https://support.tonies.com/hc/en-150/articles/33985836073874-Toniebox-2-Dynamic-Light-Ring-Guide) | 无灯、蓝、绿、红、彩虹；只读正文未观察动画。 |
+| E-TONI-14 | [2 代仍播放旧内容](https://support.tonies.com/hc/en-150/articles/34276878021138-My-Tonie-Creative-Tonie-is-not-playing-the-updated-content-on-the-Toniebox-2) | online 检查、约 30 秒同步、过早放公仔。 |
+| E-TONI-15 | [Creative Tonies 101](https://us.tonies.com/blogs/beyond-the-box/creative-tonies-101) | 2026-08-18，注册、录音/上传、90 分钟；通用同步段不套给 2 代。 |
+| E-TONI-16 | [重排 Creative 内容](https://support.tonies.com/hc/en-us/articles/29036510512658-How-do-I-change-the-order-of-the-content-on-my-Creative-Tonie) | App Edit/拖柄/Done，网页版 Save Content。 |
+| E-TONI-17 | [删除 Creative 内容](https://support.tonies.com/hc/en-us/articles/29036577008658-How-do-I-delete-content-from-my-Creative-Tonie) | 选中/删除/保存/同步。 |
+| E-TONI-18 | [Creative 内容可否下载](https://support.tonies.com/hc/en-us/articles/29036568693522-Can-I-download-content-from-a-Creative-Tonie) | 上传文件不可重新下载，另留原文件。 |
+
+## 本批证据索引
+
+具体取得方式、地区与临时原件散列见[本批JSONL](../batches/tonie-controls-deepening-evidence.jsonl)；[短摘记](../artifacts/tonie-controls-deepening/source-notes.md)不包含完整转载。无新增视觉观察。
+
+| E编号 | 官方来源 | 定位/限制 |
+| --- | --- | --- |
+| E-TNCD-01 | [1代官方帮助目录](https://support.tonies.com/hc/en-us/sections/29036371188498-Toniebox-1) | Quick Solutions至All Other Articles；63个标题；官方索引正文 |
+| E-TNCD-02 | [2代官方帮助目录](https://support.tonies.com/hc/en-us/sections/29036371272594-Toniebox-2) | Product Information至Error Codes；65个标题；官方索引正文 |
+| E-TNCD-03 | [Tonieplay官方帮助目录](https://support.tonies.com/hc/en-gb/sections/29036400009490-Tonieplay) | L24–75；14个条目；web正文文本 |
+| E-TNCD-04 | [US家庭管理帮助目录](https://support.tonies.com/hc/en-us/sections/29036388191506-Managing-Your-Household) | 8个标题；官方索引正文 |
+| E-TNCD-05 | [Tonieplay设备与首次联网条件](https://support.tonies.com/hc/en-gb/articles/29036518566802-What-do-I-need-in-order-to-play-a-Tonieplay-game) | L18–22；web正文文本 |
+| E-TNCD-06 | [2代Features FAQ的Tonieplay启动步骤](https://support.tonies.com/hc/en-ca/articles/29036389310738-Meet-the-Toniebox-2-Features-FAQ) | TONIEPLAY / Ready to play；官方索引正文 |
+| E-TNCD-07 | [Tonieplay下载和白灯排错](https://support.tonies.com/hc/en-gb/articles/29255022702354-Tonieplay-Troubleshooting-Tips) | Download / disc / Light Ring / Not Recognised；官方索引正文 |
+| E-TNCD-08 | [Tonieplay读盘失败的重启与重置](https://support.tonies.com/hc/en-gb/articles/29537628346770-Tonieplay-game-card-not-recognised) | restart / factory reset；官方索引正文 |
+| E-TNCD-09 | [取盘后的游戏类型恢复差异](https://support.tonies.com/hc/en-us/articles/29036389045778-How-long-does-the-Toniebox-2-remember-your-auto-saved-status-when-you-remove-the-disc-take-a-break-or-play-something-else) | L18–20；web正文文本 |
+| E-TNCD-10 | [Tonieplay重启与检查点](https://support.tonies.com/hc/en-150/articles/29036401221522-Can-I-restart-a-Tonieplay-game) | L22–28；web正文文本 |
+| E-TNCD-11 | [Tonieplay跳过开场限制](https://support.tonies.com/hc/en-gb/articles/29036617886482-Can-I-skip-past-the-intro-to-the-Tonieplay-game) | L18–20；web正文文本 |
+| E-TNCD-12 | [Tonieplay章节选择限制](https://support.tonies.com/hc/en-gb/articles/29036401264530-Can-you-ever-choose-the-chapter) | L18–20；web正文文本 |
+| E-TNCD-13 | [2代睡眠与日出闹钟条件](https://support.tonies.com/hc/en-gb/articles/29255589102866-Sleep-Light-with-Timer-Sunrise-Alarm-guide) | Sleep timer / Sunrise Alarm / Preferences；官方索引正文 |
+| E-TNCD-14 | [家庭成员权限设置](https://support.tonies.com/hc/en-us/articles/29036509409170-How-do-I-manage-Household-members-permissions) | app步骤1–8；web步骤1–6；官方索引正文 |
+| E-TNCD-15 | [邀请家庭成员与接收](https://support.tonies.com/hc/en-us/articles/29036487201170-How-do-I-invite-other-members-into-my-Household) | L25–60；web正文文本 |
+| E-TNCD-16 | [Creative Tonie已绑定其他家庭](https://support.tonies.com/hc/en-us/articles/29036607088914-A-Creative-Tonie-does-not-appear-in-the-Toniecloud-account) | 正文与Useful tips；官方索引正文 |
+| E-TNCD-17 | [Creative Live开关与1代同步](https://support.tonies.com/hc/en-us/articles/29036519484562-How-do-I-activate-Live-function-on-my-Creative-Tonie) | app步骤1–6；web步骤1–6；官方索引正文 |
+| E-TNCD-18 | [UK手动排序的Live前置条件](https://support.tonies.com/hc/en-gb/articles/29036510512658-How-do-I-change-the-order-of-the-content-on-my-Creative-Tonie) | 正文首段及拖动段；官方索引正文 |
+| E-TNCD-19 | [家庭所有权移交](https://support.tonies.com/hc/en-150/articles/29206380198162-How-do-I-transfer-ownership-of-my-Household) | L20–38；web正文文本 |
+| E-TNCD-20 | [删除整个家庭及录音](https://support.tonies.com/hc/en-us/articles/29036630818578-How-do-I-delete-my-Household) | L18、25–54；web正文文本 |
+| E-TNCD-21 | [2代恢复出厂与App说明入口](https://support.tonies.com/hc/en-us/articles/29251407505682-How-to-reset-your-Toniebox-2-to-factory-settings) | Factory Reset步骤1–6；in app guidance；官方索引正文 |
+| E-TNCD-22 | [Tonieplay交互数据类别](https://support.tonies.com/hc/en-gb/articles/29264253409682-What-new-Tonieplay-specific-data-will-we-capture) | L18–20；web正文文本 |
+| E-TNCD-23 | [Tonieplay控制器动作宣传与FAQ](https://us.tonies.com/pages/tonieplay) | How to Use / Questions & Answers；官方索引正文 |
+| E-TNCD-24 | [2代故障目录中的年龄模式路径](https://support.tonies.com/hc/en-us/sections/29258108517522-Troubleshooting) | Why does…plugged in；10条故障目录；官方索引正文 |
+
+## 2026-10-27：家庭音频与执行状态补证（第33批）
+
+本轮来源定位见[正式摘记](../artifacts/tonie-playback-recovery/source-notes.md)。所有新材料保持D2文档依据；没有新增设备、App或网页实际操作。
+
+| F任务 | 步骤、状态与分支 | 仍未知 | E依据 |
+| --- | --- | --- | --- |
+| F-M038-09 2 代更新配置/内容并纠正“还播旧的” | 配置已保存、盒子在线、同步完成、媒体已缓存是不同状态；故事优先可使更新延后。 US同ID帮助另给未接电时双耳持续60秒到关机再接电的重启，或等自动关机再开；联网开机后至少等30秒再放公仔。 | 60秒/30秒是官方操作提示非实测；普通故事的关机持久断点、网络差时同步完成确认和版本原子性未核。 | E-TONI-10;E-TONI-14 |
+| F-M038-11 2 代判断“不能播/没灯” | 年龄模式、灯光、网络和固件分别解释。重启不等于恢复出厂；App中的Factory reset instructions是操作指南入口，不证明远程执行。 快换公仔播错对象可移下等几秒再放；敲击失效可等无活动自动关机再唤醒。特定下载故障页要求开机/自动关机/再开联网后在App核v1.6或更高。 | 文档排错不是保证恢复；普通故事位置、全部错误词、重置对云/游戏存档范围未核。v1.6是该故障门槛，不表示最新版本。 | E-TONI-12;E-TONI-13;E-TNCD-08;E-TNCD-21;E-TNCD-24;E-TNPR-01;E-TNPR-02;E-TNPR-03 |
+| F-M038-12 2代准备并开始一款Tonieplay游戏 | 完整缓存后可离线再玩；普通Tonie首章可先播的规则不能套给游戏。 US正文明确取走Tonieplay盘后下载仍在后台继续；取盘不等于取消。普通Tonie卡住可移下等待再放，持续失败再重启。 | 两页开始阶段、逐步输入反馈及游戏判分仍缺；真正取消入口、断网/断电续传、完整缓存回执及存档恢复未知。官方等待时长不作实测。 | E-TNCD-05;E-TNCD-06;E-TNCD-07;E-TNCD-23;E-TNCD-24;E-TNPR-04 |
+
+这些排错步骤没有证明目标音频已恢复，更没有证明普通故事重启后续播。取消下载、取走实体入口和停止声音应分别比较；不从游戏检查点推普通故事秒点。US与旧en-150同ID内容排错均留存，实际构建未知。

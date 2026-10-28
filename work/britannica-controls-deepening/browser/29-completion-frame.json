@@ -1,0 +1,634 @@
+{
+  "name": "29-completion",
+  "at": "2026-10-26T21:01:03.977864+00:00",
+  "url": "https://cdn.britannica.com/11/288011-184-BF60C826/default.html?autoplay=1",
+  "text": "slide: HClue4\nBack\nMusic\nMute label audio\nSee clue\nFirefighter\nCrossing guard\nMail carrier\nLibrarian\nDoctor\nFood truck worker\nConstruction worker\nPolice officer\nBack\nbuttons_09 restart.png\n\nGreat work! You solved all the clues. You met a librarian, a construction worker, a doctor, and a police officer. That’s just a few of the people who help in our community every day!\n\nCheck box – librarian\n\nlibrarian\n\nCheckmark 1\n\nCheck box – construction worker\n\nconstruction worker\n\nCheckmark 1\n\nCheck box – doctor\n\ndoctor\n\nCheckmark 1\n\nCheck box – police officer\n\npolice officer\n\nCheckmark 1\n\nNext\nGreat work! You soved a the cues. You met \na librarian\n, \na construction worker\n, \na doctor\n, \nand\n \na police ofcer\n. That’s just a ew o the \npeope who hep in our community every day!\nibrarian\nconstruction worker\ndoctor\npoice ocer",
+  "controls": [
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": "Back",
+      "title": "",
+      "id": "acc-5lPbDg5dKej",
+      "visible": true
+    },
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": "Pause / Play audio",
+      "title": "",
+      "id": "acc-62y4pi5xlso",
+      "visible": true
+    },
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": "Magnifying glass",
+      "title": "",
+      "id": "acc-6peP2sd40HC",
+      "visible": true
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Back",
+      "aria": "Back",
+      "title": "",
+      "id": "acc-6Aswav2EmXr",
+      "visible": true
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Music",
+      "aria": "Music",
+      "title": "",
+      "id": "acc-5Wkyv4KqSiq",
+      "visible": true
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Mute label audio",
+      "aria": "Mute label audio",
+      "title": "",
+      "id": "acc-6PS41kaHoyD",
+      "visible": true
+    },
+    {
+      "tag": "BUTTON",
+      "text": "See clue",
+      "aria": "See clue",
+      "title": "",
+      "id": "acc-6rZZldH8VDV",
+      "visible": true
+    },
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": "notepad icon 1",
+      "title": "",
+      "id": "acc-5dEBQTG5chT",
+      "visible": true
+    },
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": "notepad icon 1",
+      "title": "",
+      "id": "acc-6OoigLKxNY9",
+      "visible": true
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Firefighter",
+      "aria": "Firefighter",
+      "title": "",
+      "id": "acc-6Ebc8DATdXE",
+      "visible": true
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Crossing guard",
+      "aria": "Crossing guard",
+      "title": "",
+      "id": "acc-5eRLMOFos3H",
+      "visible": true
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Mail carrier",
+      "aria": "Mail carrier",
+      "title": "",
+      "id": "acc-6TfKTQG4zAH",
+      "visible": true
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Librarian",
+      "aria": "Librarian",
+      "title": "",
+      "id": "acc-5VNKKT61xK4",
+      "visible": true
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Doctor",
+      "aria": "Doctor",
+      "title": "",
+      "id": "acc-6WrhvuCs2fI",
+      "visible": true
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Food truck worker",
+      "aria": "Food truck worker",
+      "title": "",
+      "id": "acc-6DbwR9ARfEv",
+      "visible": true
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Construction worker",
+      "aria": "Construction worker",
+      "title": "",
+      "id": "acc-6MGAOBbgxap",
+      "visible": true
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Police officer",
+      "aria": "Police officer",
+      "title": "",
+      "id": "acc-6gNJT13R08r",
+      "visible": true
+    },
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": "Pause / Play audio",
+      "title": "",
+      "id": "acc-6CleOKApzA1",
+      "visible": true
+    },
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": "Try again",
+      "title": "",
+      "id": "acc-68sp4KjsGZ7",
+      "visible": true
+    },
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": "Pause / Play audio",
+      "title": "",
+      "id": "acc-5fpL5CE6H3V",
+      "visible": true
+    },
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": "Try again",
+      "title": "",
+      "id": "acc-691WBGQhExY",
+      "visible": true
+    },
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": "Pause / Play audio",
+      "title": "",
+      "id": "acc-5fdksrXfz1M",
+      "visible": true
+    },
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": "Try again",
+      "title": "",
+      "id": "acc-5i1hNRpOP2K",
+      "visible": true
+    },
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": "Pause / Play audio",
+      "title": "",
+      "id": "acc-6P3DvnlPnjD",
+      "visible": true
+    },
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": "Try again",
+      "title": "",
+      "id": "acc-6eHkKEP9kfh",
+      "visible": true
+    },
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": "Pause / Play audio",
+      "title": "",
+      "id": "acc-5Zg8MJG5ZmD",
+      "visible": true
+    },
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": "Try again",
+      "title": "",
+      "id": "acc-5mvun1xRSYf",
+      "visible": true
+    },
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": "Pause / Play audio",
+      "title": "",
+      "id": "acc-6fIl7zi2PDV",
+      "visible": true
+    },
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": "Try again",
+      "title": "",
+      "id": "acc-6qPyAXbIWdM",
+      "visible": true
+    },
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": "Pause / Play audio",
+      "title": "",
+      "id": "acc-5XSOcFJV0uX",
+      "visible": true
+    },
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": "Try again",
+      "title": "",
+      "id": "acc-5a4A4egQrqm",
+      "visible": true
+    },
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": "Pause / Play / Replay feedback",
+      "title": "",
+      "id": "acc-6gNHBrotonR",
+      "visible": true
+    },
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": "Next",
+      "title": "",
+      "id": "acc-6JEZeazg33d",
+      "visible": true
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Back",
+      "aria": "Back",
+      "title": "",
+      "id": "acc-5VATgYfvtTJ",
+      "visible": true
+    },
+    {
+      "tag": "BUTTON",
+      "text": "buttons_09 restart.png",
+      "aria": "buttons_09 restart.png",
+      "title": "",
+      "id": "acc-6GRRatDga1Y",
+      "visible": true
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Next",
+      "aria": "Next",
+      "title": "",
+      "id": "acc-6OLv6yOKmhx",
+      "visible": true
+    },
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": null,
+      "title": "",
+      "id": "",
+      "visible": false
+    }
+  ],
+  "media": [
+    {
+      "tag": "VIDEO",
+      "paused": true,
+      "time": 0,
+      "duration": 0.04644,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "VIDEO",
+      "paused": true,
+      "time": 0,
+      "duration": 0.04644,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 0.1945,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 12.236916,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 1.241361,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 1.439637,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 1.448617,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 2.635465,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 2.635465,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 2.635465,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 2.635465,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 0.1945,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 0.1945,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 0.1945,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 1.359501,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 5.097551,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 0.1945,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 0.1945,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 0.1945,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 0.1945,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 0.1945,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 0.1945,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 2.635465,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 0.1945,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 0.1945,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 2.635465,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 2.635465,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 7.949452,
+      "duration": 9.505125,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 0.962177,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 0.1945,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 0.1945,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 0.1945,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 0.689524,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 5.097551,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 1.100635,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 1.188299,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 0.1945,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 0.1945,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 0.1945,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 0.1945,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 0.1945,
+      "ended": false,
+      "error": null
+    }
+  ]
+}

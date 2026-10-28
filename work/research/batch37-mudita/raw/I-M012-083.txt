@@ -1,0 +1,29 @@
+Mudita Kompakt Drop and Scratch Resistance
+Modified on: Sat, 3 Oct, 2026 at 8:46 AM
+The Mudita Kompakt underwent extensive drop testing to confirm that its design is robust enough to handle common, everyday use. As with any device, rough or uneven surfaces (e.g. gravel or rocks) pose a higher risk, especially for the E-ink display, so it’s always best to exercise caution.
+Kompakt users who want to further increase their phone's durability can also consider purchasing our dedicated cases and screen protectors.
+Drop Test Results
+The Mudita Kompakt passed the following drop tests onto smooth surfaces:
+18 free drops from heights of 0.8m, 1m, and 1.2m,
+200 repeated free falls from a height of 100cm.
+These tests are meant to reflect real-world scenarios and simulate how the Kompakt would hold up to wear caused by everyday use. 
+In the first test, the phone was not tested further after 18 drops. This doesn't mean that the following drops past these numbers would have caused failure, only that the phone successfully endured this test scenario. 
+The second test was performed in compliance with (EU) 2023/1669 regulation and was conducted to failure. 200 drops correspond to a grade B rating for free-fall performance on the EU energy label.
+Impact, Vibrations and Shocks Test Results
+Drops are the primary factor affecting a phone’s lifespan, but not the only one. Other mechanical stresses - such as impacts and shocks - also contribute to reducing its durability.
+Basing on official technical and industry standards we performed following durability tests:
+impacts: on the screen and back cover, 
+random and sinusoidal vibrations: tests with different frequencies in each direction, 
+mechanical shocks: 100 shocks in each direction.
+Kompakt successfully met the requirements and fulfilled all test criteria without any issues.
+Sturdy Design
+The Kompakt's casing is made from polycarbonate with an addition of glass fiber. This durable material helps resist everyday wear and tear. The phone is also reinforced with a sturdy metal frame on the inside, further contributing to its overall durability. 
+The external surface is covered with smooth paint for white and gray versions. For black version we decided to choose paint with a soft touch effect. We have tested our paints for scratches, common cosmetics (make up foundation, light insect repellents, sunscreen and moisturizer), sweat, rubbing (e.g. against jeans) and UV exposure. 
+User operated parts were tested for thousands of usage cycles to ensure many years durability. Parts like USB, audio connector were tested for insertion/exertion cycles. Mechanical buttons were tested for closing cycles.
+The front glass is made from a mineral material with a matte texture, designed to balance durability and functionality. It achieved an 8H rating in the pencil hardness test, indicating good resistance to everyday scratches. The Mohs scale hardness rating is above 4. Minor marks may appear with normal use, especially due to the matte finish, but the screen is well-suited for daily life.
+The Kompakt has an IP54 rating for resistance to solids and liquids. It means that it is protected against dust and water splashing against the phone from any direction. However, the phone is not waterproof and should never be submerged in water.
+Was this article helpful?
+No
+Yes
+That’s Great!
+Thank you for your feedback

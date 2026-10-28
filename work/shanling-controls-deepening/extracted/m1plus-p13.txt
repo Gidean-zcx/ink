@@ -1,0 +1,33 @@
+Charging
+
+It is recommended to use DC5V 2A adapter for charging. The charging
+icon and the battery level will be displayed on the LCD display when the
+device is charging with the USB cable, The status indicator lights up red
+while charging.
+
+Micro SD Card Port
+
+1. The port is only for the standard Micro SD card and supports a
+  capacity up to 2TB.
+
+2. Insert the Micro SD card into the card slot in the indicated direction
+  and press it gently until it locks inside. Press again to remove the card.
+
+Headphone Output Interface
+
+Device  offer industry-standard 3.5mm single-ended and Balanced
+4.4mm connectors. Please use 4.4mm output only with headphones
+with proper balanced wiring.
+
+
+USB Port
+
+1. Data Transport to MicroSD Card
+
+   a. Swipe down to view quick access menu,  it includes "USB
+    AUDIO/USB Storage/USB DAC" switch. Make sure it's set to "USB
+      Storage".
+
+   b. After connecting to a computer, you can simply copy all the needed
+      files to MicroSD Card.  It will show up as a new drive on the
+    computer.

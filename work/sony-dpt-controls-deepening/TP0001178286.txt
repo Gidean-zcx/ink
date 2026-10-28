@@ -1,0 +1,6 @@
+When [Limit Editing Annotations] is set to [Enable], annotations that were made outside of your Digital Paper cannot be edited. To make these annotations editable, press the  (home) button and tap [Settings] — [System Settings], then change [Limit Editing Annotations] to [Disable].
+The handwritten sticky notes, text sticky notes, and bookmarks that were added to a document using the former model, “DPT-S1,” cannot be edited.
+When the battery level of the pen is low, you may not be able to edit or delete annotations. Charge the pen.
+When the document is protected, you cannot edit or delete annotations.
+When there is limited free space in system storage, documents will open as “Read-Only,” and you cannot edit or delete annotations. Delete unnecessary documents to increase the amount of free space.
+When operating the Digital Paper using the Digital Paper App, you temporarily may not be able to edit or delete annotations. Wait until operations are complete.

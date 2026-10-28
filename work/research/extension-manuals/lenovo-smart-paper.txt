@@ -1,0 +1,704 @@
+
+=== PAGE 1 ===
+Lenovo
+Smart Paper
+User Guide
+SP101FU
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+=== PAGE 2 ===
+Table of Contents
+1. Getting Started
+1.1 Icons
+1.2 Setup wizard
+2. Basics
+2.1 Home screen
+2.2 Quick settings
+2.3 Gestures
+2.4 Files transfer
+2.5 Force restart
+3. Notebooks
+3.1 New Notebook
+3.2 Notebook instructions
+3.3 Recording
+3.4 More actions
+4. Reading
+4.1 Library
+4.2 Bookstore
+5. Apps
+5.1 E-mail
+6. Google Drive
+7. Settings
+7.1 Lenovo ID
+7.2 Wireless connection
+7.3 Sound
+7.4 Display
+7.5 General
+7.6 Lock screen
+7.7 Security
+7.8 Battery
+7.9 Accessibility
+8. Appendix
+
+
+=== PAGE 3 ===
+Getting started
+Before using this documentation and the product it supports, be sure to read the following:
+Safety, Warranty & Quick Start Guide
+Regulatory Notice
+"Important safety and handling information" in "Appendix"
+To obtain Safety, Warranty & Quick Start Guide and Regulatory Notice, visit:
+http://support.lenovo.com.
+ All pictures and illustrations in this document are for your reference only and may differ from
+the final product.
+Icons
+  Instruction, reminder or suggestion.
+  Attention or caution.
+  Danger or warning.
+Setup wizard
+Follow the steps below to set up your device:
+1. Select your device language.
+2. Read and select I have carefully read and agree to the terms.
+3. Tap an available WLAN network on the list and connect to the Internet.
+ You can tap Skip and connect to networks later by going to Settings＞WLAN.
+4. Select your dominant hand.
+5. Sign in to your Lenovo ID. You can choose to sync account data immediately or later.
+ You can tap Skip and sign in later by going to Settings＞Lenovo ID.
+6. Tap Get started to use your device.
+
+
+=== PAGE 4 ===
+Basics
+Home screen
+Welcome to the home screen. Some frequently used functions are added in advance for your convenience.
+
+
+=== PAGE 5 ===
+No.
+Area
+Icon/Function
+Description
+1
+Function
+area
+Show/Hide the toolbar.
+Open Quick Sheets.
+ You can add new pages to the Quick Sheets.
+Add new Notebook.
+Create new folder.
+Type a filename or keyword to search.
+2
+Content
+area
+Favorites
+Store files to Favorites folder.
+Trash 
+Store deleted files.
+ Files in the Trash folder can be restored or deleted permanently.
+Downloads
+Store attachments downloaded from e-mails.
+Notebook
+Store the notes you created.
+Library
+Store imported files or books purchased from the online Bookstore.
+Quick Sheets
+Open Quick Sheets.
+
+
+=== PAGE 6 ===
+Quick settings
+Swipe down from the top of the screen to display quick settings. The quick settings panel enables you to
+access frequently-used settings such as the WLAN switch.
+
+
+=== PAGE 7 ===
+No. 
+Icon/Function
+Description
+1 
+Wi-Fi
+Enable/Disable Wi-Fi.
+ Long press to open network settings and select a Wi-Fi network to
+connect.
+Bluetooth
+Enable/Disable Bluetooth.
+ Long press to open Bluetooth settings and start pairing.
+Screen rotation
+Enable/Disable screen rotation.
+Miracast
+Quickly project the content on your device to other displays.
+1. Make sure the Miracast switch is enabled on another device or display.
+ Please make sure that this device or display is connected to the same
+Wi-Fi network as your device.
+2. Tap 
+ to launch Miracast. Follow on-screen instructions to complete
+connection.
+2
+Screen refresh
+modes
+Change the screen refresh mode as needed.
+3
+Brightness and
+color temperature
+Drag 
+ or tap +/- button to adjust display brightness or color temperature.
+Adaptive brightness
+If enabled, your device will adjust brightness according to ambient lighting.
+4
+Volume
+Drag 
+ or tap the +/- button to adjust volume.
+ Your device must be connected to a Bluetooth audio device to be able to
+adjust the volume.
+
+
+=== PAGE 8 ===
+Gestures
+Swipe down from
+the top of the
+screen to open
+quick settings.
+Swipe up from the
+bottom of the screen
+to return to the
+home screen.
+Swipe left or right
+from the edge of the
+screen to go the
+previous screen.
+Swipe right to go to
+the last page. Swipe
+left to go to the next
+page.
+Files transfer
+Connect your device to a PC using a USB cable and select File Transfer on your device. You can transfer
+files between two devices once the connection is set up.
+Force restart
+Press and hold the button for 10 seconds to force restart the device.
+
+
+=== PAGE 9 ===
+Notebooks 
+New Notebook
+1. Tap
+ to create a new Notebook.
+2. Add a name and select a cover and template for the new Notebook.
+3. Tap 
+ on the top right corner to open the Notebook.
+Notebook instructions
+ Icon 
+Description
+Show/Hide taskbar.
+Writing tools
+Select writing tools.
+Stroke
+Select the stroke and color for your writing tool.
+Select the size for your eraser.
+Eraser
+Select the eraser type.
+Selection
+Draw a circle around the text you want to select.
+Undo and redo
+Undo or redo the last ten steps.
+Recording
+Take notes while recording audio.
+Page
+Add, delete and manage pages.
+Layer
+Add, delete, move, merge, hide layers and select layer templates.
+
+
+=== PAGE 10 ===
+ Icon 
+Description
+Share
+Send by e-mail
+Export the selected pages in original format or to a different file type, and
+then send by e-mail.
+Convert to text
+Convert handwriting notes to text and send by e-mail.
+Unclear handwriting may cause errors in text recognition.
+Select target language before converting.
+Your device only supports text converting.
+Miracast
+Cast your Lenovo Smart paper to other screens through WLAN.
+Google Drive
+Upload selected notes to Google Drive.
+Notebook settings
+Edit Notebook name and select Notebook cover.
+Recording
+Recording allows you to take notes while recording audios.
+ Icon 
+Description
+Record
+Tap to start/stop recording.
+Play
+Tap to play recordings. You can speed up the recording when necessary.
+ Your device must be connected to a Bluetooth audio device to playback
+recordings.
+Recording list
+Tap to view all recordings. Long press to select a recording that needs to be
+renamed or deleted.
+Note replay
+When the function is enabled, the recording will be synchronized with the
+handwritten notes.
+During playback, the screen displays the handwritten content.
+
+
+=== PAGE 11 ===
+More actions
+1. Tap 
+ to select Notebook and view all Notebooks.
+2. Long press to rename, duplicate, share, move, delete or add the selected note to Favourites.
+
+
+=== PAGE 12 ===
+Reading
+Library
+The Library contains your documents and your imported books.
+Reading mode
+Tap a book to start reading.
+The following table describes the functions available in reading mode.
+Icon
+Description
+Immersive Reading
+Your device will recommend music while you are reading a book.
+ Your device must be connected to a Bluetooth audio device to playback
+audio.
+Study mode
+View original texts and translations on a split screen.
+ The device must be connected to a WLAN network and signed in to a
+Lenovo ID to use this feature. Study mode does not support note taking.
+Overview
+View all book pages or navigate to a specific page.
+Share
+Send by e-mail
+Export the selected pages in original format or to a different file type, and
+then send by e-mail.
+Miracast
+Cast your Lenovo Smart Paper to other screens through WLAN.
+Google Drive
+Share your book to Google Drive.
+Additional functions
+ Menu content varies depending on the file type.
+Adjust view-PDF files
+Adjust margins for a better reading experience.
+Text settings
+Adjust page and text settings.
+
+
+=== PAGE 13 ===
+Icon
+Description
+Add Bookmarks
+Tap 
+ to add bookmark. Tap again to delete the page bookmark. Tap 
+or 
+ on the top right corner of the screen to view and manage all
+bookmarked pages in the book.
+Search
+Enter keywords to search book contents.
+Notes
+In reading mode, you can add notes to books using the Lenovo Smart Paper pen. Refer to
+Notebook Instructions in Notebooks for instructions. 
+Word selection window
+1. Open the dictionaries, translation and speak window by doing one of the following:
+Underline the target text and draw “?” on the screen.
+Long press to select text.
+2. You can highlight, copy or initiate a Wiki search on selected text.
+ A network connection is required to use the online search, translation and speak feature.
+Library management 
+Tap Library to view all files.
+Long press to rename, copy, share, move, delete books or add books to Favorite.
+ The above-mentioned actions cannot be performed on online books.
+Bookstore 
+Bookstore gives you access to high-quality online book resources.
+Bookstore supports book previews. These books can be added to your Library.
+Once signed in, you can purchase and download books to your Library from the Bookstore.
+
+
+=== PAGE 14 ===
+Apps
+Tap 
+ to open the toolbar and view Apps.
+E-mail
+1. Go to Apps > Email，and then enter your e-mail address and password.
+When signing in for the first time, you may need to grant e-mail access permissions.
+2. Follow on-screen instructions to set up your account.
+iCloud e-mail setup
+You cannot sign in directly to iCloud account on your device. Sign in to your account from the
+provider's website. Follow the steps below:
+1. Visit https://appleid.apple.com in a browser. Enter account and password to sign in to iCloud.
+2. In the Sign-In and Security section, select App-Specific Passwords.
+3. Select Generate an App-specific password. Enter your account and password to receive a
+verification code.
+4. Enter the verification code in the password field on your device to sign in.
+Google Drive
+Tap 
+ to open Google Drive on your device.
+1. Tap SIGN IN and enter your Google account and password.
+2. Follow on-screen instructions to set up your account.
+File management 
+Tap the icon on the top right corner to switch between bullet view and grid view.
+To view files on your device, tap to select the file and download.
+To share your notes or books to Google drive, refer to Notebook instructions and Reading
+mode for details.
+
+
+=== PAGE 15 ===
+Settings
+Lenovo ID
+Go to Settings > Lenovo ID, tap Login, and enter your ID and password.
+Cloud sync
+1. Go to Cloud sync to view your Cloud space usage status.
+2. Download Lenovo Smart Paper app on Android device. After signed in to your Lenovo ID,
+you can view the files on your device in the app.
+Service status
+View the paid services provided by the device.
+Wireless connection
+WLAN
+1. Go to Settings > WLAN.
+2. Enable WLAN and tap an available WLAN network on the list to connect to the Internet.
+Enter password to connect to a security link.
+Bluetooth
+1. Go to Settings > Bluetooth.
+2. Enable Bluetooth and tap a Bluetooth device on the list to connect.
+You can go to Device name to change the Bluetooth name of the device.
+Sound
+Go to Settings > Sound and adjust the device volume.
+ A connected Bluetooth device is required to adjust volume.
+Display 
+Go to Settings > Display to adjust the following：
+Brightness
+Drag 
+ or tap +/- button to adjust screen brightness.
+Adaptive brightness
+Once enabled, your device will automatically adjust the screen brightness according to ambient
+lighting.
+Color temperature
+Drag 
+ +/- button to adjust color temperature.
+Screen refresh mode
+Adjust the screen refresh mode.
+
+
+=== PAGE 16 ===
+General
+Go to Settings > General to view the product model and other device information. 
+System updates
+Your device will inform you when a new version of the system software is available for download
+and installation.
+Go to Settings > General > System updates to view the current device software version. Tap
+Check for updates to detect new software version.
+ Lenovo does not recommend updating the device from unofficial sources. Download and install
+device software only from Lenovo.
+Date and time 
+Use 24-hour format
+Enable this option to display time in the 24-hour format.
+Use network-provided time
+Enable this option to sync the device's time with the network.
+Time zone
+Set the time zone for your device.
+Languages
+Go to Settings > General > Languages and select the display language for your device.
+Keyboards
+Go to Settings > General > Keyboards and adjust keyboard and type settings.
+Go to Manage on-screen keyboards > Language to adjust keyboard language settings.
+Go to Manage on-screen keyboards > Input to enable or disable Auto-capitalization, Next-
+word suggestions and other functions.
+Factory Reset
+Factory reset will erase all data from your device's internal storage. Please back up important data
+before resetting your device.
+1. Go to Settings > General > Factory Reset > Erase all data (factory reset).
+2. Tap Factory reset, then tap 
+ and the system will restart automatically.
+ You can enable Cloud sync and upload device data to the Cloud after signing in to your Lenovo
+ID. For additional details, refer to Lenovo ID.
+Lock screen
+Edit the lock screen and select display content for the screen.
+Wallpaper
+Display wallpaper on the lock screen.
+ Your device includes a wallpaper gallery. Select a wallpaper you like and set it as the lock
+screen.
+Clock
+The clock is refreshed in the background every minute, which will affect the endurance time of
+
+
+=== PAGE 17 ===
+the device.
+Calendar
+Display the current calendar on the lock screen.
+ Select a month calendar or year calendar for the lock screen.
+Quick sheets
+Display the last browsed page of Quick Sheets on the lock screen.
+Security
+Go to Settings > Security to reset or remove the device password.
+ You need to enter the old password to change or remove the password.
+Battery
+Adjust battery settings.
+Battery percentage
+Once enabled, the remaining battery level will be displayed as a percentage in the lower left
+corner of the screen.
+Auto sleep
+Set the time of automatic lock screen.
+Auto power off
+Once enabled, your device will automatically shut down after 10 days of inactivity.
+Battery saver
+Reduces power consumption to extend the service time of device.
+Smart Cover mode
+Once enabled, the device will automatically lock the screen after closing the folio case.
+Battery optimization
+Battery protection mode and battery care mode can extend device battery life.
+Accessibility
+Dominant hand
+Select which hand you use with the device.
+Font size
+Select Default or Large font size for display.
+
+
+=== PAGE 18 ===
+Appendix
+Important safety and handling information
+To avoid personal injury, property damage, or accidental damage to the product, read all of the
+information in this section before using the product. For addtional tips to help you operate your
+device safely, go to http://www.lenovo.com/safety.
+Handle your device with care
+Do not drop, bend, or puncture your device; do not insert foreign objects into or place heavy
+objects on your device. Sensitive components inside might become damaged.
+Your device screen is made of glass. The glass might break if the device is dropped on a hard
+surface, is subjected to a high impact, or is crushed by a heavy object. If the glass chips or cracks,
+do not touch the broken glass or attempt to remove it from the device. Stop using the device
+immediately and contact Lenovo technical support for repair, replacement, or disposal information.
+When using your device, keep it away from hot or high-voltage environments, such as electrical
+appliances, electrical heating equipment, or electrical cooking equipment. Use your device only in
+the temperature range of 0°C (32°F) to 40°C (104°F)（storage-20°C [-4°F] to 60 °C [140°F]）to
+avoid damage.
+Don't expose your device to water, rain, extreme humidity, sweat or other liquids.
+Do not disassemble or modify your device
+Your device is a sealed unit. There are no end-user serviceable parts inside. All internal repairs
+must be done by a Lenovo-authorized repair facility or a Lenovo-authorized technician. Attempting
+to open or modify your device will void the warranty.
+Built-in rechargeable battery notice
+DANGER: 
+Do not attempt to replace the internal rechargeable lithium ion battery. There is risk of
+explosion if the battery is replaced with an incorrect type. Contact Lenovo Support for
+replacement.
+Plastic bag notice
+DANGER: 
+Plastic bags can be dangerous. Keep plastic bags away from babies and children to avoid
+danger of suffocation.
+Adapter information
+Prevent your device and AC adapter from getting wet.
+Do not immerse your device in water or leave your device in a location where it can come into
+contact with water or other liquids.
+Use approved charging methods only.
+Note: Please only use standard Lenovo power adapters. The use of third-party power adapters
+will affect the charging speed, resulting in abnormal charging and potential damage to the
+
+
+=== PAGE 19 ===
+equipment.
+Connect a standard power adapter to a suitable power outlet.
+Use a standard data cable to connect the device to a PC or a device that complies with USB
+2.0 or higher.
+Charging devices might become warm during normal use. Ensure that you have adequate
+ventilation around the charging device. Unplug the charging device if any of the following occurs:
+The charging device has been exposed to rain, liquid, or excessive moisture.
+The charging device shows signs of physical damage.
+You want to clean the charging device.
+Warning:
+Lenovo is not responsible for the performance or safety of products not manufactured or
+approved by Lenovo. Use only approved Lenovo ac adapters and batteries.
+EU ErP (EcoDesign) Directive (2009/125/EC) - external power adapters
+(Regulation (EU) 2019/1782)
+Ecodesign for Energy-Relater Products Regulations 2010 - UK SI 2010 No. 2617
+(Ext PSU), SI 2020 No. 485 (Ntwk Standby), SI 2014 No. 1290 as amended
+Lenovo products are compliance with the EU EcoDesign (ErP) Directive & UK EcoDesign for
+Energy-related Products Regulations. Refer to the following for details:
+For EU, refer to the system declaration https://www.lenovo.com/us/en/compliance/eu-doc, and for
+UK refer to the system declaration https://www.lenovo.com/us/en/compliance/uk-doc.
+Caution about high volume usage
+Warning：exposure to loud noise from any source for extended periods of time may affect your
+hearing. The louder the sound, the less time is required before your hearing could be affected. To
+protect your hearing:
+Limit the amount of time you use headsets or headphones at high volume.
+Avoid turning up the volume to block out noisy surroundings.
+Turn the volume down if you can’t hear people speaking near you.
+If you experience hearing discomfort, including the sensation of pressure or fullness in your ears,
+ringing in your ears or muffled speech, you should stop listening to the device through your
+headset or headphones and have your hearing checked.
+To prevent possible hearing damage, do not listen at high volume levels for long periods.
+Take care when using your device in a motor vehicle or on a bicycle
+Always prioritize your safety and the safety of others. Follow the law. Local laws and regulations
+might govern how you can use mobile electronic devices, such as your device, while you drive a
+motor vehicle or ride a bicycle.
+Dispose according to local laws and regulations
+When your device reaches the end of its useful life, do not crush, incinerate, immerse in water, or
+dispose of your device in any manner contrary to local laws and regulations. Some internal parts
+contain substances that can explode, leak, or have an adverse environmental effects if disposed of
+
+
+=== PAGE 20 ===
+incorrectly.
+See “Recycling and environmental information” for additional information.
+Keep your device and accessories away from small children
+Your device contains small parts that can be a choking hazard to small children. Additionally, the
+glass screen can break or crack if dropped on or thrown against a hard surface.
+Protect your data and software
+Do not delete unknown files or change the name of files or directories that were not created by
+you; otherwise, your device software might fail to work.
+Be aware that accessing network resources can leave your device vulnerable to computer viruses,
+hackers, spyware, and other malicious activities that might damage your device, software, or data.
+It is your responsibility to ensure that you have adequate protection in the form of firewalls,
+antivirus software, and anti-spyware software and keep such software up to date.
+Keep electrical appliances away from your device. These include electric fans, radios, high-
+powered speakers, air-conditioners, and microwave ovens. The strong magnetic fields generated
+by electrical appliances can damage the screen and the data on the device.
+Be aware of heat generated by your device
+When your device is turned on or the battery is charging, some parts might become hot. The
+temperature that they reach depends on the amount of system activity and the battery charge
+level. Extended contact with your body, even through clothing, could cause discomfort or even a
+skin burn. Avoid keeping your hands, your lap, or any other part of your body in contact with a hot
+section of the device for any extended time.
+Electronic emission notices
+FCC Compliance Statement
+This equipment has been tested and found to comply with the limits for a Class B digital device,
+pursuant to Part 15 of the FCC Rules. These limits are designed to provide reasonable protection
+against harmful interference in a residential installation. This equipment generates, uses, and can
+radiate radio frequency energy and, if not installed and used in accordance with the instructions,
+may cause harmful interference to radio communications. However, there is no guarantee that
+interference will not occur in a particular installation. If this equipment does cause harmful
+interference to radio or television reception, which can be determined by turning the equipment off
+and on, the user is encouraged to try to correct the interference by one or more of the following
+measures:
+Reorient or relocate the receiving antenna.
+Increase the separation between the equipment and receiver.
+Connect the equipment into an outlet on a circuit different from that to which the receiver is
+connected.
+Consult an authorized dealer or service representative for help.
+Lenovo is not responsible for any radio or television interference caused by unauthorized changes
+or modifications to this equipment. Unauthorized changes or modifications could void the user’s
+authority to operate the equipment.
+This device complies with Part 15 of the FCC Rules. Operation is subject to the following two
+
+
+=== PAGE 21 ===
+conditions: (1) this device may not cause harmful interference, and (2) this device must accept any
+interference received, including interference that may cause undesired operation.
+Responsible Party:
+Lenovo (United States) Incorporated
+1009 Think Place - Building One
+Morrisville, NC 27560
+Telephone: 1-919-294-5900
+ISED Caution
+This device complies with Innovation, Science and Economic Development Canada license-exempt
+RSS standard(s). Operation is subject to the following two conditions: 
+(1) This device may not cause interference, and 
+(2) this device must accept any interference, including interference that may cause undesired
+operation of the device.
+Le présent appareil est conforme aux CNR d'Industrie Canada applicables aux appareils radio
+exempts de licence. L'exploitation est autorisée aux deux conditions suivantes:
+(1) l'appareil ne doit pas produire de brouillage, et
+(2) l'utilisateur de l'appareil doit accepter tout brouillage radioélectrique subi, même si le
+brouillage est susceptible d'en compromettre le fonctionnement.
+Japanese VCCI Class B statement
+Japan compliance statement for products that connect to power mains rated at less
+than or equal to 20A per phase
+Environmental, recycling, and disposal information
+General recycling statement
+Lenovo encourages owners of information technology (IT) equipment to responsibly recycle their
+equipment when it is no longer needed. Lenovo offers a variety of programs and services to assist
+equipment owners in recycling their IT products. For information on recycling Lenovo products, go
+to http://www.lenovo.com/recycling.
+Important battery and WEEE information
+Take back and recycling information for WEEE and batteries/accumulators in the European Union
+and the United Kingdom
+The crossed-out wheeled bin marking applies only to countries with WEEE and batteries waste
+regulations within the European Union (EU), and United Kingdom (UK).
+Appliances and batteries/accumulators are labeled in accordance with local regulations concerning
+waste electrical and electronic equipment (WEEE) and waste batteries and waste accumulators.
+この装置は、クラスB情報技術装置です。この装置は、家庭環境で使用することを目的としていますが、
+この装置がラジオやテレビジョン受信機に近接して使用されると、受信障害を引き起こすことがありま
+す。 取扱説明書に従って正しい取り扱いをして下さい。VCCI-B
+日本の定格電流が 20A/相 以下の機器に対する高調波電流規制
+高調波電流規格 JIS C 61000-3-2 適合品
+
+
+=== PAGE 22 ===
+These regulations determine the framework for the return and recycling of used appliances and
+used batteries/accumulators as applicable within each geography. This label is applied to various
+products to indicate that the product is not to be thrown away, but rather put in the established
+collection systems for reclaiming these end of life products. 
+The label on the battery may also include a chemical symbol for the metal concerned in the battery
+(Pb for lead, Hg for mercury, and Cd for cadmium).
+Users of electrical and electronic equipment (EEE) and users of batteries/accumulators with the
+crossed-out wheeled bin marking must not dispose of end of life products as unsorted municipal
+waste, but use the collection framework available to them for the return, recycle, and recovery of
+WEEE and waste batteries/accumulators and to minimize any potential effects of EEE and
+batteries on the environment and human health due to the presence of hazardous substances.
+Lenovo electrical and electronic equipment (EEE) may contain parts and components, which at
+end-of-life might qualify as hazardous waste.
+EEE and waste electrical and electronic equipment (WEEE) can be delivered free of charge to the
+place of sale or any distributor that sells electrical and electronic equipment of the same nature
+and function as the used EEE or WEEE.
+Before placing electrical and electronic equipment (EEE) in the waste collection stream or in waste
+collection facilities, the end user of equipment containing batteries and/or accumulators must
+remove those batteries and accumulators for separate collection.
+Dispose of lithium batteries and battery packs from Lenovo products:
+A coin-cell type lithium battery might be installed inside your Lenovo product. You can find details
+about the battery in the product documentation. If the battery needs to be replaced, contact your
+place of purchase or contact Lenovo for service. If you need to dispose of a lithium battery,
+insulate it with vinyl tape, contact your place of purchase or a waste-disposal operator, and follow
+their instructions.
+Your Lenovo device might contain a lithium-ion battery pack or a nickel metal hydride battery pack.
+You can find details on the battery pack in the product documentation. If you need to dispose of a
+battery pack, insulate it with vinyl tape, contact Lenovo sales, service, or your place of purchase,
+or a waste-disposal operator, and follow their instructions. You also can refer to the instructions
+provided in the user guide for your product.
+For proper collection and treatment, go to:
+https://www.lenovo.com/recycling. 
+Battery recycling information for Brazil
+Declarações de Reciclagem no Brasil
+Descarte de um Produto Lenovo Fora de Uso Equipamentos elétricos e eletrônicos não devem ser
+descartados em lixo comum, mas enviados à pontos de coleta, autorizados pelo fabricante do
+produto para que sejam encaminhados e processados por empresas especializadas no manuseio
+de resíduos industriais, devidamente certificadas pelos orgãos ambientais, de acordo com a
+legislação local. A Lenovo possui um canal específico para auxiliá-lo no descarte desses produtos.
+Caso você possua um produto Lenovo em situação de descarte, ligue para o nosso SAC ou
+encaminhe um e-mail para: reciclar@lenovo.com, informando o modelo, número de série e cidade,
+a fim de enviarmos as instruções para o correto descarte do seu produto Lenovo.
+
+
+=== PAGE 23 ===
+Recycling information for Japan
+Recycling and disposal information for Japan is available at
+http://www.lenovo.com/recycling/japan.
+Recycling information for India
+Recycling and disposal information for India is available at
+https://www.lenovo.com/in/en/social_responsibility/sustainability/ptb_india.html.
+Battery recycling marks
+The battery recycling information of Taiwan
+Battery recycling information for the United States and Canada
+Export classification notice
+This product is subject to the United States Export Administration Regulations (EAR) and has an
+Export Classification Control Number (ECCN) of 5A992.c. It can be re-exported except to any of
+the embargoed countries in the EAR E1 country list.

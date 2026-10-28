@@ -1,0 +1,80 @@
+[
+  {
+    "flow_id": "F-M049-01",
+    "product_id": "M-049",
+    "task": "Elementary文章研究",
+    "depth": "D2",
+    "evidence_ids": "E-BRIT-01;E-BRIT-02;E-BRIT-04",
+    "known_branches": "章节词典和可用阅读级别",
+    "gaps": "精确搜索返回与播放恢复",
+    "visual_status": "static_reference_only",
+    "hands_on": "false",
+    "case_path": "cases/M-049-britannica.md",
+    "checked_on": "2026-10-26"
+  },
+  {
+    "flow_id": "F-M049-02",
+    "product_id": "M-049",
+    "task": "Early百科读听",
+    "depth": "D2",
+    "evidence_ids": "E-BRIT-03",
+    "known_branches": "原生英西语与逐词朗读",
+    "gaps": "自动续节和退出恢复",
+    "visual_status": "static_reference_only",
+    "hands_on": "false",
+    "case_path": "cases/M-049-britannica.md",
+    "checked_on": "2026-10-26"
+  },
+  {
+    "flow_id": "F-M049-03",
+    "product_id": "M-049",
+    "task": "保存引用与翻译限制",
+    "depth": "D2",
+    "evidence_ids": "E-BRIT-02;E-BRIT-04",
+    "known_branches": "个人账号及翻译禁用工具",
+    "gaps": "成功提示删除重名跨设备",
+    "visual_status": "static_reference_only",
+    "hands_on": "false",
+    "case_path": "cases/M-049-britannica.md",
+    "checked_on": "2026-10-26"
+  },
+  {
+    "flow_id": "F-M049-04",
+    "product_id": "M-049",
+    "task": "Fundamentals活动",
+    "depth": "D1",
+    "evidence_ids": "E-BRIT-03;E-BRED-01",
+    "known_branches": "订阅必须启用",
+    "gaps": "题面与画板静态图已看；错答、提示、重试、结算及退出保存未知",
+    "visual_status": "static_manual_pages_only",
+    "hands_on": "false",
+    "case_path": "cases/M-049-britannica.md",
+    "checked_on": "2026-10-26"
+  },
+  {
+    "flow_id": "F-M049-05",
+    "product_id": "M-049",
+    "task": "Early互动：说明、点选与收束",
+    "depth": "D2",
+    "evidence_ids": "E-BRED-01",
+    "known_branches": "目录/文章两种入口；音频与描述开关",
+    "gaps": "题目错误反馈、暂停位置、关闭恢复未知",
+    "visual_status": "static_manual_pages_only",
+    "hands_on": "false",
+    "case_path": "cases/M-049-britannica.md",
+    "checked_on": "2026-10-26"
+  },
+  {
+    "flow_id": "F-M049-06",
+    "product_id": "M-049",
+    "task": "成人组织回收主题：共读、互动、应用与讲解",
+    "depth": "D2",
+    "evidence_ids": "E-BRED-02",
+    "known_branches": "成人组织；配套分层纸面任务",
+    "gaps": "非自动课程；软件评分、账号掌握状态未知",
+    "visual_status": "not_observed",
+    "hands_on": "false",
+    "case_path": "cases/M-049-britannica.md",
+    "checked_on": "2026-10-26"
+  }
+]

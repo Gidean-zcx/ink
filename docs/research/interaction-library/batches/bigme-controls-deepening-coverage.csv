@@ -1,0 +1,2 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M011-12,M-011,分别调整普通文本与PDF的阅读版式,D2,E-BIGME-02;E-BGCD-02,书内底部Format：文本字号/间距；PDF分页/缩放/裁边/旋转/边距；Contrast与Navigation另列。宣传字体帧无确定入口，只作静态参考,PDF p20–21；保存/撤销、作用于本书还是全局、源文件是否改动、横竖屏与返回位置、Navigation重排具体行为未知,static_reference_only,false,cases/M-011-bigme.md,2026-10-27

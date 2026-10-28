@@ -1,0 +1,22 @@
+{
+  "name": "33-next",
+  "url": "https://www.duolingo.com/lesson",
+  "title": "Duolingo - Learn French with lessons that work",
+  "utc": "2026-10-26T17:51:42.844474+00:00",
+  "text": "4\nYou’re getting good at this!\nCONTINUE",
+  "buttons": [
+    {
+      "text": "",
+      "aria": null,
+      "test": "quit-button",
+      "visible": true
+    },
+    {
+      "text": "CONTINUE",
+      "aria": null,
+      "test": "player-next",
+      "visible": true
+    }
+  ],
+  "inputs": []
+}

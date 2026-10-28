@@ -1,0 +1,170 @@
+[
+  {
+    "evidence_id": "E-WRD-01",
+    "source_batch": "docs/research/interaction-library/batches/chinese-apps-evidence.jsonl",
+    "field": "additional_captures",
+    "before": [],
+    "after": [
+      {
+        "checked_on": "2026-10-27",
+        "capture_url": "https://apps.apple.com/cn/app/id952059546",
+        "final_url": "https://apps.apple.com/cn/app/%E5%BE%AE%E4%BF%A1%E8%AF%BB%E4%B9%A6/id952059546",
+        "access_mode": "public_html_body",
+        "raw_work_path": "work/weread-controls-deepening/appstore.html",
+        "raw_sha256": "a6121bbc1bf47883dd30e3d8be7cf54d3d7493c8f392f85cff41e68f4e4bc0d0",
+        "locator": "10.2.3 HTML time datetime=2026-10-26；10.2.2 datetime=2026-09-17",
+        "app_build": "10.2.3",
+        "source_updated_on": "2026-10-26",
+        "limitation": "日期来自HTML标记；历史日志不证明当前操作链",
+        "archived_artifact": "artifacts/weread-controls-deepening/source-notes.md",
+        "sha256": "7de92903a20630c9c303c128fb53fb9643a68dc6d8f943ee795754750d1af9de",
+        "hands_on": false,
+        "visual_observed": false
+      }
+    ],
+    "reason": "同URL/原件补采集元数据；保留原始记录，不另编E"
+  },
+  {
+    "evidence_id": "E-WRD-03",
+    "source_batch": "docs/research/interaction-library/batches/chinese-apps-evidence.jsonl",
+    "field": "additional_captures",
+    "before": [],
+    "after": [
+      {
+        "checked_on": "2026-10-27",
+        "capture_url": "https://github.com/Tencent/WeChatReading/blob/d98e66ee60a8c7bcd35da549d0643c4470439643/skills/SKILL.md",
+        "access_mode": "local_reread_of_existing_public_artifact",
+        "raw_work_path": "work/chinese-apps/wrd-SKILL.md",
+        "raw_sha256": "c78981c72ff5940343d641d04912932d7f983b264ed69a799b33c8508c2eccc9",
+        "original_capture_on": "2026-10-26",
+        "locator": "请求格式、鉴权、错误及跳转约定",
+        "limitation": "本轮重读旧固定提交原件，未重新联网取得；API未执行",
+        "auxiliary_original": {
+          "raw_work_path": "work/chinese-apps/wrd-README.md",
+          "raw_sha256": "4865ea7d3b4b73128455b809c9e617f86d3d331efeef041d64e7218b51a8b2d7",
+          "locator": "版本段1.0.4，与SKILL顶部1.0.5不同"
+        },
+        "archived_artifact": "artifacts/weread-controls-deepening/source-notes.md",
+        "sha256": "7de92903a20630c9c303c128fb53fb9643a68dc6d8f943ee795754750d1af9de",
+        "hands_on": false,
+        "visual_observed": false
+      }
+    ],
+    "reason": "同URL/原件补采集元数据；保留原始记录，不另编E"
+  },
+  {
+    "evidence_id": "E-WRD-04",
+    "source_batch": "docs/research/interaction-library/batches/chinese-apps-evidence.jsonl",
+    "field": "additional_captures",
+    "before": [],
+    "after": [
+      {
+        "checked_on": "2026-10-27",
+        "capture_url": "https://github.com/Tencent/WeChatReading/blob/d98e66ee60a8c7bcd35da549d0643c4470439643/skills/shelf.md",
+        "access_mode": "local_reread_of_existing_public_artifact",
+        "raw_work_path": "work/chinese-apps/wrd-shelf.md",
+        "raw_sha256": "5d5658396dae1d36cec8f2509a82582978e9ecfe9cfe87d8d02ebf3a013ec514",
+        "original_capture_on": "2026-10-26",
+        "locator": "书架对象和数量口径",
+        "limitation": "本轮重读旧固定提交原件，未重新联网取得；API未执行",
+        "archived_artifact": "artifacts/weread-controls-deepening/source-notes.md",
+        "sha256": "7de92903a20630c9c303c128fb53fb9643a68dc6d8f943ee795754750d1af9de",
+        "hands_on": false,
+        "visual_observed": false
+      }
+    ],
+    "reason": "同URL/原件补采集元数据；保留原始记录，不另编E"
+  },
+  {
+    "evidence_id": "E-WRD-05",
+    "source_batch": "docs/research/interaction-library/batches/chinese-apps-evidence.jsonl",
+    "field": "additional_captures",
+    "before": [],
+    "after": [
+      {
+        "checked_on": "2026-10-27",
+        "capture_url": "https://github.com/Tencent/WeChatReading/blob/d98e66ee60a8c7bcd35da549d0643c4470439643/skills/search.md",
+        "access_mode": "local_reread_of_existing_public_artifact",
+        "raw_work_path": "work/chinese-apps/wrd-search.md",
+        "raw_sha256": "019337ec094bc39a2b12db0cd732eb33a49ace2c42fe6525d8f0a3318b2414d9",
+        "original_capture_on": "2026-10-26",
+        "locator": "scope、分页和结果链接",
+        "limitation": "本轮重读旧固定提交原件，未重新联网取得；API未执行",
+        "archived_artifact": "artifacts/weread-controls-deepening/source-notes.md",
+        "sha256": "7de92903a20630c9c303c128fb53fb9643a68dc6d8f943ee795754750d1af9de",
+        "hands_on": false,
+        "visual_observed": false
+      }
+    ],
+    "reason": "同URL/原件补采集元数据；保留原始记录，不另编E"
+  },
+  {
+    "evidence_id": "E-WRD-06",
+    "source_batch": "docs/research/interaction-library/batches/chinese-apps-evidence.jsonl",
+    "field": "additional_captures",
+    "before": [],
+    "after": [
+      {
+        "checked_on": "2026-10-27",
+        "capture_url": "https://github.com/Tencent/WeChatReading/blob/d98e66ee60a8c7bcd35da549d0643c4470439643/skills/book.md",
+        "access_mode": "local_reread_of_existing_public_artifact",
+        "raw_work_path": "work/chinese-apps/wrd-book.md",
+        "raw_sha256": "5578ef66944f71e654934f534c388f70ac55d0f2b429dd32c1f8415121e12fe6",
+        "original_capture_on": "2026-10-26",
+        "locator": "基本信息、目录、进度工作流",
+        "limitation": "本轮重读旧固定提交原件，未重新联网取得；API未执行",
+        "archived_artifact": "artifacts/weread-controls-deepening/source-notes.md",
+        "sha256": "7de92903a20630c9c303c128fb53fb9643a68dc6d8f943ee795754750d1af9de",
+        "hands_on": false,
+        "visual_observed": false
+      }
+    ],
+    "reason": "同URL/原件补采集元数据；保留原始记录，不另编E"
+  },
+  {
+    "evidence_id": "E-WRD-07",
+    "source_batch": "docs/research/interaction-library/batches/chinese-apps-evidence.jsonl",
+    "field": "additional_captures",
+    "before": [],
+    "after": [
+      {
+        "checked_on": "2026-10-27",
+        "capture_url": "https://github.com/Tencent/WeChatReading/blob/d98e66ee60a8c7bcd35da549d0643c4470439643/skills/notes.md",
+        "access_mode": "local_reread_of_existing_public_artifact",
+        "raw_work_path": "work/chinese-apps/wrd-notes.md",
+        "raw_sha256": "b333ce09a32815b23a9dd0dcaeb406039b3d3b531674b331c07f19a283c32b16",
+        "original_capture_on": "2026-10-26",
+        "locator": "笔记口径、列表游标、划线及个人想法",
+        "limitation": "本轮重读旧固定提交原件，未重新联网取得；API未执行",
+        "archived_artifact": "artifacts/weread-controls-deepening/source-notes.md",
+        "sha256": "7de92903a20630c9c303c128fb53fb9643a68dc6d8f943ee795754750d1af9de",
+        "hands_on": false,
+        "visual_observed": false
+      }
+    ],
+    "reason": "同URL/原件补采集元数据；保留原始记录，不另编E"
+  },
+  {
+    "evidence_id": "E-WRD-08",
+    "source_batch": "docs/research/interaction-library/batches/chinese-apps-evidence.jsonl",
+    "field": "additional_captures",
+    "before": [],
+    "after": [
+      {
+        "checked_on": "2026-10-27",
+        "capture_url": "https://github.com/Tencent/WeChatReading/blob/d98e66ee60a8c7bcd35da549d0643c4470439643/skills/readdata.md",
+        "access_mode": "local_reread_of_existing_public_artifact",
+        "raw_work_path": "work/chinese-apps/wrd-readdata.md",
+        "raw_sha256": "35534d41984199b315f565a0c468346b1115ebfb5a5b09d89685aec9c820434c",
+        "original_capture_on": "2026-10-26",
+        "locator": "统计周期、时长、天数与排行",
+        "limitation": "本轮重读旧固定提交原件，未重新联网取得；API未执行",
+        "archived_artifact": "artifacts/weread-controls-deepening/source-notes.md",
+        "sha256": "7de92903a20630c9c303c128fb53fb9643a68dc6d8f943ee795754750d1af9de",
+        "hands_on": false,
+        "visual_observed": false
+      }
+    ],
+    "reason": "同URL/原件补采集元数据；保留原始记录，不另编E"
+  }
+]

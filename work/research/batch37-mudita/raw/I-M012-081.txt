@@ -1,0 +1,8 @@
+Will Mudita Kompakt Be Open-Source?
+Modified on: Sat, 3 Oct, 2026 at 8:33 AM
+Mudita Kompakt is built on a custom version of AOSP (Android Open Source Project). While we won't be releasing the entire source code due to licensing restrictions on certain components (like hardware drivers), we are considering making parts of it available to the public. We will update the information on what may be shared.
+Was this article helpful?
+No
+Yes
+That’s Great!
+Thank you for your feedback

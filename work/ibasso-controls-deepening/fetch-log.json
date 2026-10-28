@@ -1,0 +1,53 @@
+[
+  {
+    "url": "https://ibasso.cn/support/dx180firmware",
+    "checked_on": "2026-10-27",
+    "network_refetched": true,
+    "status": 200,
+    "final_url": "https://ibasso.cn/support/dx180firmware",
+    "content_type": "text/html; charset=UTF-8",
+    "raw_work_path": "work/ibasso-controls-deepening/firmware-cn.html",
+    "raw_sha256": "c9a111a08010b38a11934502d5d061bacd104d5ae65aa861b1e339fc7434d615",
+    "bytes": 41541
+  },
+  {
+    "url": "https://ibasso.com/dx180-firmware/",
+    "checked_on": "2026-10-27",
+    "network_refetched": true,
+    "status": 200,
+    "final_url": "https://ibasso.com/dx180-firmware/",
+    "content_type": "text/html; charset=UTF-8",
+    "raw_work_path": "work/ibasso-controls-deepening/firmware-en.html",
+    "raw_sha256": "ae03d36392cce123b57e19d74bdecadad6aff7657f37c1b97288db1e5959030a",
+    "bytes": 110637
+  },
+  {
+    "url": "https://musinltd.com/News/1165.html",
+    "checked_on": "2026-10-27",
+    "network_refetched": true,
+    "error": "Remote end closed connection without response",
+    "status": null
+  },
+  {
+    "url": "https://ibasso.com/where-to-buy/",
+    "checked_on": "2026-10-27",
+    "network_refetched": true,
+    "status": 200,
+    "final_url": "https://ibasso.com/where-to-buy/",
+    "content_type": "text/html; charset=UTF-8",
+    "raw_work_path": "work/ibasso-controls-deepening/distributors.html",
+    "raw_sha256": "c50b32d3f2dd001427f0902fde86a9b156bd965d11543f192124c37ee9c5d5c8",
+    "bytes": 127303
+  },
+  {
+    "url": "https://prtimes.jp/main/html/rd/p/000000144.000139013.html",
+    "checked_on": "2026-10-27",
+    "network_refetched": true,
+    "status": 200,
+    "final_url": "https://prtimes.jp/main/html/rd/p/000000144.000139013.html",
+    "content_type": "text/html; charset=utf-8",
+    "raw_work_path": "work/ibasso-controls-deepening/musin-release.html",
+    "raw_sha256": "6744d2e08e5cc62ccb3eae49d377a8909fae4e485121992795e40fa670c3ada7",
+    "bytes": 240703
+  }
+]

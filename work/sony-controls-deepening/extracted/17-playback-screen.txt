@@ -1,0 +1,72 @@
+Playback screen in “Music player”
+You can confirm a variety of information for the currently selected track. During playback, the background color of the screen changes to match the base color of the cover art.
+To display the playback screen
+On the [WALKMAN Home] screen, tap [Music player].
+You can also launch “Music player” by tapping the cover art of Music player widget.
+If a screen other than the playback screen appears, perform one of the following procedures.
+Swipe the screen (upwards/downwards/to the left/to the right).
+Tap the mini player to display the playback screen.
+[Illustration showing the items on the playback screen. The status bar is at the top of the screen. The navigation bar is at the bottom of the screen. In the area between the bars, the following items appear. From the top, the information for the current track and the playback operating buttons.]
+Cover art
+Sound quality (codec, sampling frequency, bit rate/quantization bit rate) / High-Resolution Audio icon
+Track title / Artist name / Album title
+Tap this area to search for content related to the current track, such as tracks on the same album and albums from the same artist.
+Elapsed time of the current track
+Timeline bar
+Shuffle button / Previous button / Play (Pause) button / Next button / Repeat button
+Tap each button to control playback such as playing, pausing, moving to the next track or previous track, and changing the playback method.
+Also, you can swipe this area to the left or right to move to the next track or previous track.
+Library top button
+Options button
+Favorites button
+Tap this button to add the current track to Favorites, or to remove the track from Favorites.
+Track number / Total number of tracks
+Length of the track
+Option menu
+Tap (Options) to display the option menu.
+Displayed items may differ depending on the settings.
+Settings
+Select the item to display the Settings menu for “Music player”.
+Add to playlist
+Select the item to add the current track to a playlist.
+Search related
+Select the item to search for content related to the current track, such as tracks on the same album and albums from the same artist.
+Display tape playback screen
+When you turn on the item, the playback screen changes to an animation of a cassette tape rotating. The type of cassette tape displayed varies according to the track being played back.
+Detailed song information
+Select the item to display the details of the current track.
+Display lyrics
+Select the item to display the lyrics of the current track.
+Delete
+Select the item to delete the current track.
+Operation guide
+Select the item to view the operating guide.
+Hint
+You can determine the current status of playback from the background color of the playback screen.
+During playback: the base color of the cover art
+Paused: black
+Drag the timeline bar to change the playback position within a track.
+While you drag the timeline bar, the elapsed time of the current track appears over the cover art.
+If a certain amount of time elapses without any button or screen operations on the playback screen, the display will switch to the cassette tape screen. This occurs when you select the playback screen while there is a check mark in the box for [Display tape playback screen]. To perform screen operations, tap the cassette tape screen. The display will temporarily switch back to the regular playback screen. Then, you can perform screen operations.
+Even if there is a check mark in the box for [Display tape playback screen], the playback screen will not switch to the cassette tape screen while the item [Detailed song information] or [Display lyrics] is displayed.
+You can also turn the [Display tape playback screen] function on or off from the menu of any screen in “Music player”. Tap the menu items in the following order.
+(Options) － [Settings] － [Play on cassette tape screen].
+You can also execute [Search related] by tapping the track title, artist name, or album title on the playback screen in “Music player”.
+When [Add to playlist] is selected, a playlist transferred from a computer cannot be selected as the addition destination. In this case, create a new playlist with the same content as the playlist transferred from the computer in advance, and then select that playlist as the addition destination.
+On the library screen, tap (Context menu) to the right side of the playlist transferred from the computer.
+Tap the menu items in the following order.
+[Add to another playlist] － [Create new playlist].
+Note
+The player will automatically turn off the screen if you have displayed the tape playback screen for 10 minutes.
+The elapsed time and timeline bar indications may not be accurate.
+The player may not display cover art depending on the file format.
+The contents of the Help Guide may be subject to change without notice due to updates to the product's specifications.
+Go to Page Top
+Related Topic
+How to use the various screens of “Music player”
+Playing music
+Playback methods
+Managing playlists in “Music player”
+Importing playlists from a Windows computer, playing, or deleting playlists in “Music player”
+Managing Favorites in “Music player”
+Displaying lyrics

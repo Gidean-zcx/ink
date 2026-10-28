@@ -1,0 +1,197 @@
+[
+  {
+    "class": "page-header-inner-logo-link",
+    "href": "/en",
+    "title": "",
+    "url": "https://help.ground.news/en"
+  },
+  {
+    "class": "page-header-inner-title",
+    "href": "/en",
+    "title": "Ground News Help Center",
+    "url": "https://help.ground.news/en"
+  },
+  {
+    "type": "button",
+    "class": "kb-button primary",
+    "href": "/en/contact-us",
+    "title": "Contact Us",
+    "url": "https://help.ground.news/en/contact-us"
+  },
+  {
+    "id": "moreResultsLink",
+    "type": "button",
+    "class": "kb-button secondary",
+    "href": "/en/search",
+    "title": "More results",
+    "url": "https://help.ground.news/en/search"
+  },
+  {
+    "href": "https://ground.news/privacy-policy",
+    "title": "Privacy Policy",
+    "url": "https://ground.news/privacy-policy"
+  },
+  {
+    "href": "#how_to_find_good_news_offbeat_stories_and_other_uplifting_interests",
+    "class": "navigation-item indent-2",
+    "title": "How to Find Good News, Offbeat Stories, and Other Uplifting Interests",
+    "url": "https://help.ground.news/en/articles/950337#how_to_find_good_news_offbeat_stories_and_other_uplifting_interests"
+  },
+  {
+    "href": "#exploring_personalized_feeds",
+    "class": "navigation-item indent-2",
+    "title": "Exploring Personalized Feeds",
+    "url": "https://help.ground.news/en/articles/950337#exploring_personalized_feeds"
+  },
+  {
+    "href": "#your_for_you_page",
+    "class": "navigation-item indent-3",
+    "title": "Your For You Page",
+    "url": "https://help.ground.news/en/articles/950337#your_for_you_page"
+  },
+  {
+    "href": "#custom_feeds",
+    "class": "navigation-item indent-3",
+    "title": "Custom Feeds*",
+    "url": "https://help.ground.news/en/articles/950337#custom_feeds"
+  },
+  {
+    "href": "#show_me_less_of_a_topic",
+    "class": "navigation-item indent-2",
+    "title": "Show Me Less of a Topic",
+    "url": "https://help.ground.news/en/articles/950337#show_me_less_of_a_topic"
+  },
+  {
+    "href": "/en",
+    "title": "Home",
+    "url": "https://help.ground.news/en"
+  },
+  {
+    "href": "/en/categories/2272769-personalize-your-news-feed",
+    "title": "Personalize Your News Feed",
+    "url": "https://help.ground.news/en/categories/2272769-personalize-your-news-feed"
+  },
+  {
+    "href": "/en/categories/2272769-follow-topics-interests",
+    "title": "Follow Topics & Interests",
+    "url": "https://help.ground.news/en/categories/2272769-follow-topics-interests"
+  },
+  {
+    "target": "_self",
+    "rel": "noopener noreferrer nofollow",
+    "class": "kb-link kb-link",
+    "href": "https://ground.news/newsletters",
+    "title": "Offbeat weekly newsletter",
+    "url": "https://ground.news/newsletters"
+  },
+  {
+    "target": "_self",
+    "rel": "noopener noreferrer nofollow",
+    "class": "kb-link kb-link",
+    "href": "https://ground.news/interest/wholesome",
+    "title": "Wholesome Interest page",
+    "url": "https://ground.news/interest/wholesome"
+  },
+  {
+    "target": "_self",
+    "rel": "noopener noreferrer nofollow",
+    "class": "kb-link kb-link",
+    "href": "https://ground.news/interest/innovation",
+    "title": "uplifting stories about advancements and positive changes",
+    "url": "https://ground.news/interest/innovation"
+  },
+  {
+    "target": "_self",
+    "rel": "noopener noreferrer nofollow",
+    "class": "kb-link kb-link",
+    "href": "https://ground.news/interest/nature",
+    "title": "Science and Nature",
+    "url": "https://ground.news/interest/nature"
+  },
+  {
+    "target": "_self",
+    "rel": "noopener noreferrer nofollow",
+    "class": "kb-link kb-link",
+    "href": "https://ground.news/interest/tech",
+    "title": "Tech interest page",
+    "url": "https://ground.news/interest/tech"
+  },
+  {
+    "target": "_self",
+    "rel": "noopener noreferrer nofollow",
+    "class": "kb-link kb-link",
+    "href": "/en/articles/950017",
+    "title": "If you find yourself wanting to explore and follow other topics or interests in your feed, we have a dedicated help article addressing this specific feature.",
+    "url": "https://help.ground.news/en/articles/950017"
+  },
+  {
+    "target": "_self",
+    "rel": "noopener noreferrer nofollow",
+    "class": "kb-link kb-link",
+    "href": "https://ground.news/my",
+    "title": "My Feed",
+    "url": "https://ground.news/my"
+  },
+  {
+    "target": "_self",
+    "rel": "noopener noreferrer nofollow",
+    "class": "kb-link kb-link",
+    "href": "https://ground.news/subscribe",
+    "title": "Pro+ subscribers",
+    "url": "https://ground.news/subscribe"
+  },
+  {
+    "target": "_self",
+    "rel": "noopener noreferrer nofollow",
+    "class": "kb-link kb-link",
+    "href": "https://ground.news/my/customFeeds",
+    "title": "personalized news feeds",
+    "url": "https://ground.news/my/customFeeds"
+  },
+  {
+    "target": "_self",
+    "rel": "noopener noreferrer nofollow",
+    "class": "kb-link kb-link",
+    "href": "/en/articles/866177",
+    "title": "learn more about Custom Feeds",
+    "url": "https://help.ground.news/en/articles/866177"
+  },
+  {
+    "target": "_self",
+    "rel": "noopener noreferrer nofollow",
+    "class": "kb-link kb-link",
+    "href": "mailto:feedback@ground.news",
+    "title": "feedback@ground.news",
+    "url": "mailto:feedback@ground.news"
+  },
+  {
+    "href": "https://twitter.com/Ground_app",
+    "title": "",
+    "url": "https://twitter.com/Ground_app"
+  },
+  {
+    "href": "https://ca.linkedin.com/company/groundnews",
+    "title": "",
+    "url": "https://ca.linkedin.com/company/groundnews"
+  },
+  {
+    "href": "https://www.instagram.com/groundnews/",
+    "title": "",
+    "url": "https://www.instagram.com/groundnews/"
+  },
+  {
+    "href": "https://ground.news/refund-policy",
+    "title": "Refund and Cancellation Policy",
+    "url": "https://ground.news/refund-policy"
+  },
+  {
+    "href": "https://ground.news/terms-and-conditions",
+    "title": "Terms and Conditions",
+    "url": "https://ground.news/terms-and-conditions"
+  },
+  {
+    "href": "https://about.ground.news/privacy-policy",
+    "title": "Privacy Policy",
+    "url": "https://about.ground.news/privacy-policy"
+  }
+]

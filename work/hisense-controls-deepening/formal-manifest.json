@@ -1,0 +1,42 @@
+[
+  {
+    "path": "docs/research/interaction-library/cases/M-055-hisense.md",
+    "sha256": "71b13b0560a2b58fca080e6096fbf63129b6c6b2a1ff3097f316d3b5803ab897"
+  },
+  {
+    "path": "docs/research/interaction-library/batches/hisense-controls-deepening-evidence.jsonl",
+    "sha256": "d36c728d8db4a0488aee12a9ec8d2acefdb086421f176ebd98b27b1a7f7ccc01"
+  },
+  {
+    "path": "docs/research/interaction-library/batches/hisense-controls-deepening-coverage.csv",
+    "sha256": "fd30eb551fcd40640a7ff59f6e1799cbbc0b2998efb709bf3419d6fd9df0ed8e"
+  },
+  {
+    "path": "docs/research/interaction-library/batches/hisense-controls-deepening-inventory.csv",
+    "sha256": "1d495c70e98b78d4e0053f7857f6057862f7f4810ed619e9e0f5e65b0ac0fcb3"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/hisense-controls-deepening/hireader-key-guide.webp",
+    "sha256": "b041e7c415aa62fa63e3ebce04337188420b950b7aecba3b2ac1549d761483ae"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/hisense-controls-deepening/hireader-note.jpeg",
+    "sha256": "b30d3493e9a77e3ba3dae3d0bd0a3c9506ae09d75b58c55ee1308279fa50166a"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/hisense-controls-deepening/hireader-screen-guide.webp",
+    "sha256": "b0835be77481a58479ee1d408d1d09cb34891ee39ec72b4f26a39058386ca67c"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/hisense-controls-deepening/hireader-selection.jpeg",
+    "sha256": "6c0fb281a9435f6dbd34c677eb88019f314ac535e7cb8a1ac67c31476654d328"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/hisense-controls-deepening/hireader-settings.webp",
+    "sha256": "915066bca2f51a57b0bbfb8a60d8e62afed6f9bfbe59d4ab402d8daf7e7acc8d"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/hisense-controls-deepening/source-notes.md",
+    "sha256": "b7775a8330b022ad88e1e720f904054c02fcf0f082430e849c6d856ff0792eaf"
+  }
+]

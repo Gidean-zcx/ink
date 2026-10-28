@@ -1,0 +1,182 @@
+Update your country/marketplace (https://help.audible.com/s/article/update-your-country-marketplace?language=en_US)
+citeturn770view2 [wordlim: 200] Crawled: today; Content type: text/html; Source: open({"ref_id":"https://help.audible.com/s/article/update-your-country-marketplace?language=en_US","lineno":65}); Total lines: 180
+L0: Loading
+L1: 
+L2: Sorry to interrupt
+L3: 
+L4: Uncaught TypeError: Cannot read properties of null (reading 'style')
+L5: 
+L6: 【0†Refresh】
+L7: 
+L8: Skip to Main Content
+L9: 
+L10: Related topics
+L11: 
+L12: Account Account & billing Account details Ask A Question+1
+L13: ## Update your country/marketplace
+L14: 
+L15:   * Sep 3, 2026
+L16:   * Knowledge
+L17: 
+L18: Title
+L19: 
+L20: Update your country/marketplace
+L21: 
+L22: URL Name
+L23: 
+L24: update-your-country-marketplace
+L25: 
+L26: Answer
+L27: 
+L28: Your Audible marketplace is determined by the country you live in. Making sure you're signed in to the right marketplace ensures you're getting tailored support for troubleshooting and account-specific inquiries. It also ensures you see region-specific titles that may be exclusive to your area as well as pricing in the right currency for your region.
+L29: Note: Coupon balances cannot be transferred across marketplaces.
+L30: 
+L31: Important:
+L32:   * Changing your marketplace in the app (signing out and signing in to a different marketplace) is not the same as migrating your account. Changing your marketplace simply signs you in to a different storefront. Migrating your account permanently transfers your membership, credits, and purchased titles to a new marketplace.
+L33:   * At this time, you can only transfer your account to Audible Brazil if you have a Brazilian billing address, or from Audible US to Audible Canada, Audible UK, or Audible Australia. It can only be done once and can't be reversed unless migrating between Canada and the US.
+L34: In this article:
+L35: 
+L36:   * 【1†Which marketplace should I be in?】
+L37:   * 【2†How do I change my marketplace in the Audible app?】
+L38:   * 【3†How do I migrate my account to the Audible AU marketplace?】
+L39:   * 【4†How do I migrate my account to the Audible Canada marketplace?】
+L40:   * 【5†How do I migrate my account to the Audible Brazil marketplace?】
+L41: ## Which marketplace should I be in?
+L42: 
+L43: The following table provides a breakdown of which marketplace supports which country or region.
+L44: Audible Marketplace  | Supported Countries
+L45: 【6†Audible.com†audible.com】  | US, MX, and all other countries not listed.
+L46: 【7†Audible.ca†audible.ca】  | Canada
+L47: 【8†Audible.co.uk†audible.co.uk】  | UK, South Africa, Singapore, Turkey
+L48: 【9†Audible.com.au†audible.com.au】  | Australia and New Zealand
+L49: 【10†Audible.fr†audible.fr】  | France, Switzerland, Ireland
+L50: 【11†Audible.de†audible.de】  | Germany, Austria, Switzerland, Belgium, the Netherlands, Poland, Sweden
+L51: 【12†Audible.co.jp†audible.co.jp】  | Japan
+L52: 【13†Audible.it†audible.it】  | Italy
+L53: 【14†Audible.in†audible.in】  | India
+L54: 【15†Audible.es†audible.es】  | Spain
+L55: 【16†Audible.com.br†audible.com.br】  | Brazil
+L56: Notes:
+L57: 
+L58:   * Some titles will be geographically restricted based on your location.
+L59: ## How do I change my marketplace in the Audible app?
+L60: 
+L61: Using the Marketplace setting
+L62: 
+L63:   1. Open the Audible app.
+L64:   2. Go to your Profile.
+L65:   3. Select the Settings gear icon.
+L66:   4. Select Marketplace.
+L67:   5. Choose your preferred country from the list.
+L68:   6. Select Switch.
+L69: 
+L70: By signing out and signing back in
+L71:   7. While signed in, go to your Profile.
+L72:   8. Select the Settings gear icon.
+L73:   9. Select Sign out. To confirm, select Sign out again.
+L74:   10. Select Sign in.
+L75:   11. Choose your marketplace
+L76:   12. Select Sign in or Continue to continue with your account information.
+L77: 
+L78: Note: Changing your marketplace in the app does not migrate or transfer your account. Your purchased titles remain in the marketplace where they were bought.
+L79: ## How do I migrate my account to the Audible AU marketplace?
+L80: 
+L81: You should only have one active Audible account before migrating and be based in the UK or US.
+L82: 
+L83:   13. Go to 【9†Audible.com.au†audible.com.au】 and sign in to your account.
+L84:   14. On the pop-up message, select Find out more.
+L85:   15. Review the information about migrating your account, then select Transfer my account to 【9†Audible.com.au†audible.com.au】.
+L86:   16. Select Confirm.
+L87: Once you've completed the account migration, you'll be brought to the Audible AU website. To see your complete Library, sign out of the Audible app and sign in to the AU marketplace.
+L88: ## How do I migrate my account to the Audible Canada marketplace?
+L89: 
+L90: We'll do it for you. Call us and one of our representatives will process the transfer.
+L91: 
+L92: To be eligible to migrate, you must:
+L93: 
+L94:   * Have a Canadian billing address
+L95:   * Have an active 【17†Audible Premium membership plan】
+L96:   * Have valid, up-to-date billing information on your profile
+L97:   * Not currently have your account on hold
+L98: Note: When transferring, your Audible Canada account will not include pre-orders, Listener page information, or current shopping cart contents. In addition, several US site features are in development but not yet supported on Audible Canada: Read & Listen (previously known as Whispersync for Voice), eReaders (Kindle), Car Mode, and the Listener Page.
+L99: ## How do I migrate my account to the Audible Brazil marketplace?
+L100: 
+L101: We'll do it for you. Call us and one of our representatives will process the transfer.
+L102: 
+L103: Why do I have to migrate my account to Audible Brazil?
+L104: 
+L105: We don't require members to switch to Audible Brazil. However, Brazil's tax rules require that all members with a billing address based in Brazil are enrolled in Audible Brazil.
+L106: Note: If your Audible membership is billed by the 【18†App Store】 or 【19†Google Play Store】, your membership isn't eligible for migration.
+L107: 
+L108: What happens if I don't migrate my account to Audible Brazil?
+L109: 
+L110: We may terminate your account to remain compliant with local tax requirements if you don't migrate your account to Audible Brazil.
+L111: 
+L112: How do I know if my account is eligible for migration?
+L113:   * You have an active membership (including trials).
+L114:   * Your Amazon account has a billing address based in Brazil.
+L115:   * You have a Brazilian payment method on file.
+L116:   * Your Amazon account has a CPF on file.
+L117:   * Your account is in good standing (e.g., it has no overdue payments).
+L118: 
+L119: Note: If your Audible membership is billed by the 【18†App Store】 or 【19†Google Play Store】, your membership isn't eligible for migration.
+L120: ## How do I migrate my Audible account to the Brazil marketplace?
+L121: 
+L122: We're happy to help you through this process, but we'll need your consent to migrate your account first. 【20†Contact Audible Customer Support†www.audible.com】 for assistance with your account.
+L123: 
+L124: How much is the Audible membership fee in the Brazil marketplace?
+L125: If you migrate your existing Audible account to the Brazil marketplace, the membership will be R$9,95 for the first three months (thereafter, R$19,90). New users can sign up for a 30-day trial (3-month trial if you have Amazon Prime). Following the 30-day (or 3-month, as applicable) trial period, you would be charged the membership fee of R$19,90/month.
+L126: 
+L127: Did this answer your question?
+L128: 
+L129: 【21†Image: Thumbs Up】Like
+L130: 
+L131: 
+L132: 
+L133: 【22†Image: Thumbs Down】Dislike
+L134: 
+L135:  Back to top
+L136: 
+L137: 【23†Image: Share link】 Share link
+L138: 【24†Image: Download PDF】 Download PDF
+L139: ## Need more assistance?
+L140: 
+L141: 【25†Contact us†www.audible.com】
+L142: 
+L143: 
+L144: 
+L145: How satisfied were you with our Help Center today?
+L146: 
+L147: 
+L148: 
+L149: Worst
+L150: 
+L151: 1
+L152: 
+L153: 2
+L154: 
+L155: 3
+L156: 
+L157: 4
+L158: 
+L159: 5
+L160: 
+L161: 6
+L162: 
+L163: 7
+L164: 
+L165: Best
+L166: 
+L167: 
+L168: 
+L169: Region
+L170: 
+L171: United States
+L172: 
+L173: Language
+L174: 
+L175: English
+L176: 
+L177: Loading
+L178: 
+L179: Update your country/marketplace 【26†Adobe ID Syncing iFrame†audible.demdex.net】

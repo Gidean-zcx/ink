@@ -1,0 +1,35 @@
+Importing content from “Music player” to Music Center for PC
+Note
+Ensure that the software version of Music Center for PC is 2.5 or later. In earlier versions, Music Center for PC will not recognize the player.
+If you connect the player to a battery-powered computer, the battery of the computer will deplete. When you connect the player to a computer for a long period of time, connect the computer to an AC power supply.
+Use a computer on which Music Center for PC has been installed.
+Launch Music Center for PC.
+Connect the player to the computer via USB.
+Confirm the [Use USB for] menu on the player. Select [File Transfer], and tap [OK].
+If the [Use USB for] menu does not appear, you can access the menu from the Settings app.
+Swipe the [WALKMAN Home] screen upwards.
+Tap the menu items in the following order.
+[Settings] － [Connected devices] － [USB].
+The transfer screen for the player will appear on the right side of Music Center for PC.
+A list of the music content in Music Center for PC will appear on the left side of Music Center for PC.
+To import music content from the microSD card in the player:
+Select the microSD card from the device selection menu on the transfer screen.
+Click [Manage songs in device] to display the list of music content on “Music player”.
+Select the music content that you want to import to Music Center for PC.
+Right-click the music content to select [Import to PC].
+For details on the procedure, see [How to use] on the Music Center for PC support website. (https://www.sony.net/smc4pc/)
+Note
+Do not disconnect the USB Type-C cable during data transfer (USB Type-C cable: supplied). Otherwise, the data may be damaged.
+Imported music content is limited to private use only. Use of music content for other purposes requires the permission of the copyright holders.
+The use of a USB hub is only guaranteed when you use a self-powered USB hub that carries an authorized logo.
+While the player is connected to a computer, observe the following cautions. Otherwise, the player may not function properly.
+Do not turn on the computer.
+Do not restart the computer.
+Do not wake the computer from sleep mode.
+Do not shut down the computer.
+The contents of the Help Guide may be subject to change without notice due to updates to the product's specifications.
+Go to Page Top
+Related Topic
+Installing Music Center for PC (Windows)
+Playing music
+Supported formats

@@ -1,0 +1,120 @@
+[
+  {
+    "evidence_id": "E-HBD-01",
+    "expected_url": "https://guide.hiby.com/en/docs/products/audio_player/hiby_r3ii_2025/guide/",
+    "before_additional_captures": [
+      {
+        "url": "https://guide.hiby.com/en/docs/products/audio_player/hiby_r3ii_2025/guide/",
+        "checked_on": "2026-10-27",
+        "raw_work_path": "work/hiby-controls-deepening/raw/manual-en.html",
+        "raw_sha256": "d631a86d1cf1cd41e685034d1c6808efbdea05effc147aaf77452b2d4be27ede",
+        "extracted_work_path": "work/hiby-controls-deepening/extracted/manual-en.txt",
+        "extracted_sha256": "eb5c95421824b5c847e823cbf08d71a42fdf2a5c4be3cd4a629b3c8422c6be36",
+        "access_mode": "anonymous_public_html_GET",
+        "locator": "article正文；章节/设置定位见本批inventory",
+        "archived_artifact": "artifacts/hiby-controls-deepening/source-notes.md",
+        "sha256": "cf50722812021de3a024d49e7fa78a611f4b457fea05b03132ba48738230f946",
+        "hands_on": false,
+        "visual_observed": false
+      }
+    ],
+    "append_additional_captures": [
+      {
+        "checked_on": "2026-10-27",
+        "access_mode": "existing_local_official_html_and_text_reread_no_network",
+        "raw_work_path": "work/hiby-controls-deepening/raw/manual-en.html",
+        "raw_sha256": "d631a86d1cf1cd41e685034d1c6808efbdea05effc147aaf77452b2d4be27ede",
+        "extracted_work_path": "work/hiby-controls-deepening/extracted/manual-en.txt",
+        "extracted_sha256": "eb5c95421824b5c847e823cbf08d71a42fdf2a5c4be3cd4a629b3c8422c6be36",
+        "locator": "§5 Music 333–341; Import 343–375; scan 421–439; playback/gapless/speed 499–616; playback interface 617–666; §8 827–838; §10 1022–1029 and blank Restore 1062–1067",
+        "locator_basis": "existing extracted text line numbers; HTML headings are canonical; no PDF pages",
+        "archived_artifact": "artifacts/hiby-library-controls-deepening/source-notes.md",
+        "sha256": "1c626780fcb24bbfe3392b03b2a3fce77b168844fbd8ed947fdc6757790dc671",
+        "hands_on": false,
+        "visual_observed": false,
+        "note": "同源复读；不新建来源E。不将菜单/建议视为设备执行。"
+      }
+    ]
+  },
+  {
+    "evidence_id": "E-HBCD-01",
+    "expected_url": "https://guide.hiby.com/docs/products/audio_player/hiby_r3ii_2025/guide",
+    "before_additional_captures": [],
+    "append_additional_captures": [
+      {
+        "checked_on": "2026-10-27",
+        "access_mode": "existing_local_official_html_and_text_reread_no_network",
+        "raw_work_path": "work/hiby-controls-deepening/raw/manual-zh.html",
+        "raw_sha256": "38b541d793b2e7b343591d47ada81e5599c6a43a17e46a0131bd6fa4b654c84c",
+        "extracted_work_path": "work/hiby-controls-deepening/extracted/manual-zh.txt",
+        "extracted_sha256": "a21719acb29ab48ca34cc9f21b6471c5e709472796159ed274858eaafd4bdff6",
+        "locator": "§5 363–404; scan 448–460; speed/auto-slide/playback 650–715; §8 890–901; §10 1116–1125; Restore heading has no body",
+        "locator_basis": "existing extracted text line numbers; HTML headings are canonical; no PDF pages",
+        "archived_artifact": "artifacts/hiby-library-controls-deepening/source-notes.md",
+        "sha256": "1c626780fcb24bbfe3392b03b2a3fce77b168844fbd8ed947fdc6757790dc671",
+        "hands_on": false,
+        "visual_observed": false,
+        "note": "同源复读；不新建来源E。不将菜单/建议视为设备执行。"
+      }
+    ]
+  },
+  {
+    "evidence_id": "E-HBD-03",
+    "expected_url": "https://guide.hiby.com/en/docs/question/audio_player/x1600_r/",
+    "before_additional_captures": [
+      {
+        "url": "https://guide.hiby.com/en/docs/question/audio_player/x1600_r/",
+        "checked_on": "2026-10-27",
+        "raw_work_path": "work/hiby-controls-deepening/raw/faq-en.html",
+        "raw_sha256": "10cc0e02d3059703e4189b2d9c7e7e4428e350a40358525685ff1b9c5be1555d",
+        "extracted_work_path": "work/hiby-controls-deepening/extracted/faq-en.txt",
+        "extracted_sha256": "6a4582cfd2d65e3517a815698ca91a22658ed7617a46eead933b220e026452de",
+        "access_mode": "anonymous_public_html_GET",
+        "locator": "article正文；章节/设置定位见本批inventory",
+        "archived_artifact": "artifacts/hiby-controls-deepening/source-notes.md",
+        "sha256": "cf50722812021de3a024d49e7fa78a611f4b457fea05b03132ba48738230f946",
+        "hands_on": false,
+        "visual_observed": false
+      }
+    ],
+    "append_additional_captures": [
+      {
+        "checked_on": "2026-10-27",
+        "access_mode": "existing_local_official_html_and_text_reread_no_network",
+        "raw_work_path": "work/hiby-controls-deepening/raw/faq-en.html",
+        "raw_sha256": "10cc0e02d3059703e4189b2d9c7e7e4428e350a40358525685ff1b9c5be1555d",
+        "extracted_work_path": "work/hiby-controls-deepening/extracted/faq-en.txt",
+        "extracted_sha256": "6a4582cfd2d65e3517a815698ca91a22658ed7617a46eead933b220e026452de",
+        "locator": "Description 6–14; Audio 78–229; errors/gapless 235–257",
+        "locator_basis": "existing extracted text line numbers; HTML headings are canonical; no PDF pages",
+        "archived_artifact": "artifacts/hiby-library-controls-deepening/source-notes.md",
+        "sha256": "1c626780fcb24bbfe3392b03b2a3fce77b168844fbd8ed947fdc6757790dc671",
+        "hands_on": false,
+        "visual_observed": false,
+        "note": "同源复读；不新建来源E。不将菜单/建议视为设备执行。"
+      }
+    ]
+  },
+  {
+    "evidence_id": "E-HBCD-02",
+    "expected_url": "https://guide.hiby.com/docs/question/audio_player/x1600_r",
+    "before_additional_captures": [],
+    "append_additional_captures": [
+      {
+        "checked_on": "2026-10-27",
+        "access_mode": "existing_local_official_html_and_text_reread_no_network",
+        "raw_work_path": "work/hiby-controls-deepening/raw/faq-zh.html",
+        "raw_sha256": "d132f48295345e8d33eb3a51f2c0cada130e5a2fd7ffc1b8c56f8318dbb96031",
+        "extracted_work_path": "work/hiby-controls-deepening/extracted/faq-zh.txt",
+        "extracted_sha256": "c9869c6af22938401728c93503507dfff7c921451c3802294feb260c924f38d5",
+        "locator": "Audio 83–231; errors/gapless 237–259",
+        "locator_basis": "existing extracted text line numbers; HTML headings are canonical; no PDF pages",
+        "archived_artifact": "artifacts/hiby-library-controls-deepening/source-notes.md",
+        "sha256": "1c626780fcb24bbfe3392b03b2a3fce77b168844fbd8ed947fdc6757790dc671",
+        "hands_on": false,
+        "visual_observed": false,
+        "note": "同源复读；不新建来源E。不将菜单/建议视为设备执行。"
+      }
+    ]
+  }
+]

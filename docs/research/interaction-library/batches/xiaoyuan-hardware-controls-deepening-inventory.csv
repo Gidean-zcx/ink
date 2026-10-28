@@ -1,0 +1,34 @@
+inventory_id,product_id,node_type,function_domain,source_locator,evidence_ids,flow_ids,model_scope,body_status,visual_status,applicability,remaining_gap,checked_on
+XYH-01,M-056,product_function,智能出题,decoded rn 90400–91300,E-XYHW-01,F-M056-01,官网前端 S6 条目；代际/固件未知,body_reread_marketing,not_observed,scope_conditioned_existing_record,进入教材/课时、题数及推题触发未知,2026-10-27
+XYH-02,M-056,product_function,AI批改,decoded rn 90400–91300,E-XYHW-01,F-M056-01,官网前端 S6 条目；代际/固件未知,body_reread_marketing,not_observed,scope_conditioned_existing_record,提交入口、空白/部分答案、手写识别纠正未知,2026-10-27
+XYH-03,M-056,product_function,错题归纳,decoded rn 90400–91300,E-XYHW-01,F-M056-01,官网前端 S6 条目；代际/固件未知,body_reread_marketing,not_observed,scope_conditioned_existing_record,归档/订正/移除条件未知,2026-10-27
+XYH-04,M-056,product_function,错题讲解,decoded rn 90400–91300,E-XYHW-01,F-M056-01,官网前端 S6 条目；代际/固件未知,body_reread_marketing,not_observed,scope_conditioned_existing_record,提示层级、视频入口和再答是否计独立答对未知,2026-10-27
+XYH-05,M-056,product_function,薄弱点专练,decoded rn 90400–91300,E-XYHW-01,F-M056-01,官网前端 S6 条目；代际/固件未知,body_reread_marketing,not_observed,scope_conditioned_existing_record,薄弱判定与生成/结束条件未知,2026-10-27
+XYH-06,M-056,product_function,举一反三,decoded rn 90400–91300,E-XYHW-01,F-M056-01,官网前端 S6 条目；代际/固件未知,body_reread_marketing,not_observed,scope_conditioned_existing_record,原题到新题入口、队列与重试规则未知,2026-10-27
+XYH-07,M-056,product_function,教材同步练,decoded约64931,E-XYHW-01,F-M056-01,官网前端 S6 条目；代际/固件未知,body_reread_marketing,not_observed,scope_conditioned_existing_record,年级/教材版本选择与退出恢复未知,2026-10-27
+XYH-08,M-056,product_function,专项突破,decoded约60645,E-XYHW-01,F-M056-01,官网前端 S6 条目；代际/固件未知,body_reread_marketing,not_observed,scope_conditioned_existing_record,题型目录、提示与完成门槛未知,2026-10-27
+XYH-09,M-056,product_function,智慧拍,decoded约74030；视频链接未观看,E-XYHW-01,F-M056-01,官网前端 S6 条目；代际/固件未知,body_reread_marketing,not_observed,scope_conditioned_existing_record,拍摄/裁剪/识别/失败处理未知,2026-10-27
+XYH-10,M-056,product_function,文档传输,decoded Rn 109700–110800,E-XYHW-01,F-M056-05,官网前端 S6 条目；代际/固件未知,body_reread_marketing,not_observed,scope_conditioned_existing_record,小程序入口后选择、接收、打开与删除未知；E1不确定,2026-10-27
+XYH-11,M-056,product_function,语文听写,decoded74858图片alt文字，未新看图,E-XYHW-01,,官网前端 S6 条目；代际/固件未知,body_reread_marketing,not_observed,scope_conditioned_existing_record,开始/暂停、答题与听写错误反馈未知,2026-10-27
+XYH-12,M-056,product_function,英语听力,decoded75339图片alt文字，未新看图,E-XYHW-01,,官网前端 S6 条目；代际/固件未知,body_reread_marketing,not_observed,scope_conditioned_existing_record,音频选择、暂停/续播及离线未知,2026-10-27
+XYH-13,M-056,product_function,内置书目与文件阅读,decoded108917–109350,E-XYHW-01,,官网前端 S6 条目；代际/固件未知,body_reread_marketing,not_observed,scope_conditioned_existing_record,目录、打开/定位、标注及阅读恢复未知,2026-10-27
+XYH-14,M-056,product_function,阅读灯档位,decoded109015,E-XYHW-01,,官网前端 S6 条目；代际/固件未知,body_reread_marketing,not_observed,scope_conditioned_existing_record,控制入口、档位与生效状态未知,2026-10-27
+XYH-15,M-056,product_function,拼音,旧E-XYHW-03功能目录图记录,E-XYHW-03,F-M056-02,彩墨 E1；课程/固件未知,prior_static_record_reused,not_observed,scope_conditioned_existing_record,课程入口、单题反馈/重试、完成与暂退恢复未知,2026-10-27
+XYH-16,M-056,product_function,识字,旧E-XYHW-03功能目录图记录,E-XYHW-03,F-M056-02,彩墨 E1；课程/固件未知,prior_static_record_reused,not_observed,scope_conditioned_existing_record,课程入口、单题反馈/重试、完成与暂退恢复未知,2026-10-27
+XYH-17,M-056,product_function,口算,旧E-XYHW-03功能目录图记录,E-XYHW-03,F-M056-02,彩墨 E1；课程/固件未知,prior_static_record_reused,not_observed,scope_conditioned_existing_record,课程入口、单题反馈/重试、完成与暂退恢复未知,2026-10-27
+XYH-18,M-056,product_function,思维闯关,旧E-XYHW-03功能目录图记录,E-XYHW-03,F-M056-02,彩墨 E1；课程/固件未知,prior_static_record_reused,not_observed,scope_conditioned_existing_record,课程入口、单题反馈/重试、完成与暂退恢复未知,2026-10-27
+XYH-19,M-056,product_function,自然拼读,旧E-XYHW-03功能目录图记录,E-XYHW-03,F-M056-02,彩墨 E1；课程/固件未知,prior_static_record_reused,not_observed,scope_conditioned_existing_record,课程入口、单题反馈/重试、完成与暂退恢复未知,2026-10-27
+XYH-20,M-056,product_function,中英文分级阅读,旧E-XYHW-03功能目录图记录,E-XYHW-03,F-M056-02,彩墨 E1；课程/固件未知,prior_static_record_reused,not_observed,scope_conditioned_existing_record,课程入口、单题反馈/重试、完成与暂退恢复未知,2026-10-27
+XYH-21,M-056,product_function,课程S1/S2/S3分龄,旧E-XYHW-03课程分龄表,E-XYHW-03,F-M056-02,彩墨 E1；课程/固件未知,prior_static_record_reused,not_observed,scope_conditioned_existing_record,选择/跳级/回退未知；级别不是硬件型号,2026-10-27
+XYH-22,M-056,product_function,防挫折设计反馈,旧E-XYHW-04示意图,E-XYHW-04,F-M056-02,彩墨 E1；课程/固件未知,prior_static_record_reused,not_observed,scope_conditioned_existing_record,研发回路不能当儿童实时提示/奖励状态,2026-10-27
+XYH-23,M-056,parent_control,时段与每日时长,旧E-XYHW-02四张静态构图记录,E-XYHW-02,F-M056-03,家长App；iPhone1.25.1商店；政策2025-08-15未标构建,prior_static_record_reused,not_observed,scope_conditioned_existing_record,上级入口、保存、生效、到时锁定及离线解锁未知,2026-10-27
+XYH-24,M-056,parent_control,答案管控,旧E-XYHW-02四张静态构图记录,E-XYHW-02,F-M056-03,家长App；iPhone1.25.1商店；政策2025-08-15未标构建,prior_static_record_reused,not_observed,scope_conditioned_existing_record,开关示例非默认；未核适用型号、保存或同步,2026-10-27
+XYH-25,M-056,parent_control,学习轨迹,旧E-XYHW-02四张静态构图记录,E-XYHW-02,F-M056-04,家长App；iPhone1.25.1商店；政策2025-08-15未标构建,prior_static_record_reused,not_observed,scope_conditioned_existing_record,计时口径、离线积压、答错状态明细未知,2026-10-27
+XYH-26,M-056,parent_control,家庭家长列表,旧E-XYHW-02四张静态构图记录,E-XYHW-02,F-M056-04,家长App；iPhone1.25.1商店；政策2025-08-15未标构建,prior_static_record_reused,not_observed,scope_conditioned_existing_record,邀请/退出反馈、角色权限、拒绝与撤回未知,2026-10-27
+XYH-27,M-056,parent_control,发送文件和题目打印,政策§二(4)，txt130–143,E-XYHW-05,F-M056-05,家长App；iPhone1.25.1商店；政策2025-08-15未标构建,policy_capability_declaration,not_observed,scope_conditioned_existing_record,关联设备范围、传输确认、打印反馈及错误恢复未知,2026-10-27
+XYH-28,M-056,account_data,家庭资料更正,政策§六.2，txt274,E-XYHW-05,F-M056-04,家长App；iPhone1.25.1商店；政策2025-08-15未标构建,policy_partial_path,not_observed,scope_conditioned_existing_record,仅家庭模块入口；具体编辑项/保存结果未知,2026-10-27
+XYH-29,M-056,account_data,共享登录与独立注销,政策§二、§四(一)4，txt75/217,E-XYHW-05,F-M056-06,家长App；iPhone1.25.1商店；政策2025-08-15未标构建,policy_boundary_read,not_observed,scope_conditioned_existing_record,共享手机号不证明进度跨产品迁移,2026-10-27
+XYH-30,M-056,account_data,家长账号注销,政策§六.5，txt281,E-XYHW-05,F-M056-06,家长App；iPhone1.25.1商店；政策2025-08-15未标构建,policy_step_chain_read,not_observed,scope_conditioned_existing_record,失败验证码、儿童设备遗留数据与重建家庭恢复未知,2026-10-27
+XYH-31,M-056,account_data,后台备份删除时序,政策§六.3，txt277,E-XYHW-05,F-M056-06,家长App；iPhone1.25.1商店；政策2025-08-15未标构建,policy_boundary_read,not_observed,scope_conditioned_existing_record,无用户恢复入口或明确删除完成回执,2026-10-27
+XYH-32,M-056,account_data,个人信息副本请求,政策§六.6–7，txt282–285,E-XYHW-05,F-M056-06,家长App；iPhone1.25.1商店；政策2025-08-15未标构建,policy_partial_path,not_observed,scope_conditioned_existing_record,须登录；客服请求与验证条件；副本格式/交付/回灌未知,2026-10-27
+XYH-33,M-056,version_directory,家长App版本记录,新商店1.25.1；25项TitledParagraph,E-XYHW-02,F-M056-03;F-M056-04,家长App；iPhone1.25.1商店；政策2025-08-15未标构建,version_history_generic,not_observed,scope_conditioned_existing_record,泛化修复无硬件适配表/具体修复步骤,2026-10-27

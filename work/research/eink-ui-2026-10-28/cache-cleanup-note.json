@@ -1,0 +1,15 @@
+{
+  "action": "Deleted only .pyc under __pycache__ with corresponding source verified",
+  "roots": [
+    "numpy/ma",
+    "google/protobuf",
+    "onnxruntime/quantization",
+    "numpy/f2py",
+    "networkx/classes",
+    "networkx/generators"
+  ],
+  "base": "work/research/tools/pymupdf",
+  "files_removed": 272,
+  "bytes_removed": 5511943,
+  "verification": "Source hashes and all retained file hashes compared in memory before audit mkdir failed. Assertion passed; per-file hashes lost when process exited, not reconstructed. No formal evidence or product source removed. Workspace still unwritable."
+}

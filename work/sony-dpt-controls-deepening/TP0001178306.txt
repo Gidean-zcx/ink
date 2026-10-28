@@ -1,0 +1,16 @@
+Set the way you hold the pen, and correct any displacement between where the pen touches the screen and where the writing appears.
+Press the
+(home) button, and tap [Settings].
+Tap [System Settings] — [Pen Calibration].
+From the four variations of how to hold the pen, select the variation that most resembles your own grip, and then tap [Next].
+Use the pen to trace the dotted lines as you would normally write.
+A line does not appear atop the dotted line as you trace. When you lift the pen, the line appears.
+Displacement in the line that you drew will be corrected on the following screen. Do not worry if this line is displaced.
+Tap [Next].
+The manual correction screen is displayed.
+Tap the arrows that point up, down, left, and right to move the line that you drew and align it with the dotted line.
+When the lines are in basically the same position, tap [Next].
+The confirmation screen is displayed.
+Trace the dotted line again, as you did in step 4.
+If the line that you drew appears displaced, tap [Recalibrate] to return to the previous screen. The line that you drew on the confirmation screen will be displayed, so correct the placement again, as you did in step 6. After you finish correcting the position, tap [Next], and trace the dotted line on the confirmation screen again.
+When the dotted line and the line that you drew appear to line up, tap [Save].

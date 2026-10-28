@@ -1,0 +1,84 @@
+entry_id,entry_type,title,source_url,evidence_ids,flow_ids,review_status,gap
+M047-TKVD-001,public_menu_parent,Articles by Grade level,https://www.timeforkids.com/k1/,E-TKVD-02,F-M047-01,当前DOM目录，已观察部分展开,父子层级；未走所有目标
+M047-TKVD-002,public_menu_link,Grades K-1 Articles,https://www.timeforkids.com/k1/,E-TKVD-02,F-M047-01,链接/标签已核；K–1、Science实际进入，其余目录发现,关联资源未分析成主阅读站功能；登录/成人提交未执行
+M047-TKVD-003,public_menu_link,Grade 2 Articles,https://www.timeforkids.com/g2/,E-TKVD-02,F-M047-01,链接/标签已核；K–1、Science实际进入，其余目录发现,关联资源未分析成主阅读站功能；登录/成人提交未执行
+M047-TKVD-004,public_menu_link,Grades 3-4 Articles,https://www.timeforkids.com/g34/,E-TKVD-02,F-M047-01,链接/标签已核；K–1、Science实际进入，其余目录发现,关联资源未分析成主阅读站功能；登录/成人提交未执行
+M047-TKVD-005,public_menu_link,Grades 5-6 Articles,https://www.timeforkids.com/g56/,E-TKVD-02,F-M047-01,链接/标签已核；K–1、Science实际进入，其余目录发现,关联资源未分析成主阅读站功能；登录/成人提交未执行
+M047-TKVD-006,public_menu_parent,Topics,https://www.timeforkids.com/k1/,E-TKVD-02,F-M047-01,当前DOM目录，已观察部分展开,父子层级；未走所有目标
+M047-TKVD-007,public_menu_link,Animals,https://www.timeforkids.com/k1/topics/animals/,E-TKVD-02,F-M047-01,链接/标签已核；K–1、Science实际进入，其余目录发现,关联资源未分析成主阅读站功能；登录/成人提交未执行
+M047-TKVD-008,public_menu_link,Arts,https://www.timeforkids.com/k1/topics/arts/,E-TKVD-02,F-M047-01,链接/标签已核；K–1、Science实际进入，其余目录发现,关联资源未分析成主阅读站功能；登录/成人提交未执行
+M047-TKVD-009,public_menu_link,Ask Angela,https://www.timeforkids.com/k1/topics/ask-angela/,E-TKVD-02,F-M047-01,链接/标签已核；K–1、Science实际进入，其余目录发现,关联资源未分析成主阅读站功能；登录/成人提交未执行
+M047-TKVD-010,public_menu_link,Books,https://www.timeforkids.com/k1/topics/books/,E-TKVD-02,F-M047-01,链接/标签已核；K–1、Science实际进入，其余目录发现,关联资源未分析成主阅读站功能；登录/成人提交未执行
+M047-TKVD-011,public_menu_link,Business,https://www.timeforkids.com/k1/topics/business/,E-TKVD-02,F-M047-01,链接/标签已核；K–1、Science实际进入，其余目录发现,关联资源未分析成主阅读站功能；登录/成人提交未执行
+M047-TKVD-012,public_menu_link,Careers,https://www.timeforkids.com/k1/topics/careers/,E-TKVD-02,F-M047-01,链接/标签已核；K–1、Science实际进入，其余目录发现,关联资源未分析成主阅读站功能；登录/成人提交未执行
+M047-TKVD-013,public_menu_link,Community,https://www.timeforkids.com/k1/topics/community/,E-TKVD-02,F-M047-01,链接/标签已核；K–1、Science实际进入，其余目录发现,关联资源未分析成主阅读站功能；登录/成人提交未执行
+M047-TKVD-014,public_menu_link,Culture,https://www.timeforkids.com/k1/topics/culture/,E-TKVD-02,F-M047-01,链接/标签已核；K–1、Science实际进入，其余目录发现,关联资源未分析成主阅读站功能；登录/成人提交未执行
+M047-TKVD-015,public_menu_link,Debate,https://www.timeforkids.com/k1/topics/debate/,E-TKVD-02,F-M047-01,链接/标签已核；K–1、Science实际进入，其余目录发现,关联资源未分析成主阅读站功能；登录/成人提交未执行
+M047-TKVD-016,public_menu_link,Earth Science,https://www.timeforkids.com/k1/topics/earth-science/,E-TKVD-02,F-M047-01,链接/标签已核；K–1、Science实际进入，其余目录发现,关联资源未分析成主阅读站功能；登录/成人提交未执行
+M047-TKVD-017,public_menu_link,Education,https://www.timeforkids.com/k1/topics/education/,E-TKVD-02,F-M047-01,链接/标签已核；K–1、Science实际进入，其余目录发现,关联资源未分析成主阅读站功能；登录/成人提交未执行
+M047-TKVD-018,public_menu_link,Election 2024,https://www.timeforkids.com/k1/topics/election-2024/,E-TKVD-02,F-M047-01,链接/标签已核；K–1、Science实际进入，其余目录发现,关联资源未分析成主阅读站功能；登录/成人提交未执行
+M047-TKVD-019,public_menu_link,Engineering,https://www.timeforkids.com/k1/topics/engineering/,E-TKVD-02,F-M047-01,链接/标签已核；K–1、Science实际进入，其余目录发现,关联资源未分析成主阅读站功能；登录/成人提交未执行
+M047-TKVD-020,public_menu_link,Environment,https://www.timeforkids.com/k1/topics/environment/,E-TKVD-02,F-M047-01,链接/标签已核；K–1、Science实际进入，其余目录发现,关联资源未分析成主阅读站功能；登录/成人提交未执行
+M047-TKVD-021,public_menu_link,Food and Nutrition,https://www.timeforkids.com/k1/topics/food-and-nutrition/,E-TKVD-02,F-M047-01,链接/标签已核；K–1、Science实际进入，其余目录发现,关联资源未分析成主阅读站功能；登录/成人提交未执行
+M047-TKVD-022,public_menu_link,Games,https://www.timeforkids.com/k1/topics/games/,E-TKVD-02,F-M047-01,链接/标签已核；K–1、Science实际进入，其余目录发现,关联资源未分析成主阅读站功能；登录/成人提交未执行
+M047-TKVD-023,public_menu_link,Government,https://www.timeforkids.com/k1/topics/government/,E-TKVD-02,F-M047-01,链接/标签已核；K–1、Science实际进入，其余目录发现,关联资源未分析成主阅读站功能；登录/成人提交未执行
+M047-TKVD-024,public_menu_link,History,https://www.timeforkids.com/k1/topics/history/,E-TKVD-02,F-M047-01,链接/标签已核；K–1、Science实际进入，其余目录发现,关联资源未分析成主阅读站功能；登录/成人提交未执行
+M047-TKVD-025,public_menu_link,Holidays,https://www.timeforkids.com/k1/topics/holidays/,E-TKVD-02,F-M047-01,链接/标签已核；K–1、Science实际进入，其余目录发现,关联资源未分析成主阅读站功能；登录/成人提交未执行
+M047-TKVD-026,public_menu_link,Inventions,https://www.timeforkids.com/k1/topics/inventions/,E-TKVD-02,F-M047-01,链接/标签已核；K–1、Science实际进入，其余目录发现,关联资源未分析成主阅读站功能；登录/成人提交未执行
+M047-TKVD-027,public_menu_link,Movies and Television,https://www.timeforkids.com/k1/topics/movies-and-television/,E-TKVD-02,F-M047-01,链接/标签已核；K–1、Science实际进入，其余目录发现,关联资源未分析成主阅读站功能；登录/成人提交未执行
+M047-TKVD-028,public_menu_link,Music and Theater,https://www.timeforkids.com/k1/topics/music-and-theater/,E-TKVD-02,F-M047-01,链接/标签已核；K–1、Science实际进入，其余目录发现,关联资源未分析成主阅读站功能；登录/成人提交未执行
+M047-TKVD-029,public_menu_link,Nature,https://www.timeforkids.com/k1/topics/nature/,E-TKVD-02,F-M047-01,链接/标签已核；K–1、Science实际进入，其余目录发现,关联资源未分析成主阅读站功能；登录/成人提交未执行
+M047-TKVD-030,public_menu_link,News,https://www.timeforkids.com/k1/topics/news/,E-TKVD-02,F-M047-01,链接/标签已核；K–1、Science实际进入，其余目录发现,关联资源未分析成主阅读站功能；登录/成人提交未执行
+M047-TKVD-031,public_menu_link,People,https://www.timeforkids.com/k1/topics/people/,E-TKVD-02,F-M047-01,链接/标签已核；K–1、Science实际进入，其余目录发现,关联资源未分析成主阅读站功能；登录/成人提交未执行
+M047-TKVD-032,public_menu_link,Places,https://www.timeforkids.com/k1/topics/places/,E-TKVD-02,F-M047-01,链接/标签已核；K–1、Science实际进入，其余目录发现,关联资源未分析成主阅读站功能；登录/成人提交未执行
+M047-TKVD-033,public_menu_link,Podcasts,https://www.timeforkids.com/k1/topics/podcasts/,E-TKVD-02,F-M047-01,链接/标签已核；K–1、Science实际进入，其余目录发现,关联资源未分析成主阅读站功能；登录/成人提交未执行
+M047-TKVD-034,public_menu_link,Science,https://www.timeforkids.com/k1/topics/science/,E-TKVD-02,F-M047-01,链接/标签已核；K–1、Science实际进入，其余目录发现,关联资源未分析成主阅读站功能；登录/成人提交未执行
+M047-TKVD-035,public_menu_link,Service Stars,https://www.timeforkids.com/k1/topics/service-stars/,E-TKVD-02,F-M047-01,链接/标签已核；K–1、Science实际进入，其余目录发现,关联资源未分析成主阅读站功能；登录/成人提交未执行
+M047-TKVD-036,public_menu_link,Space,https://www.timeforkids.com/k1/topics/space/,E-TKVD-02,F-M047-01,链接/标签已核；K–1、Science实际进入，其余目录发现,关联资源未分析成主阅读站功能；登录/成人提交未执行
+M047-TKVD-037,public_menu_link,Sports,https://www.timeforkids.com/k1/topics/sports/,E-TKVD-02,F-M047-01,链接/标签已核；K–1、Science实际进入，其余目录发现,关联资源未分析成主阅读站功能；登录/成人提交未执行
+M047-TKVD-038,public_menu_link,The Human Body,https://www.timeforkids.com/k1/topics/the-human-body/,E-TKVD-02,F-M047-01,链接/标签已核；K–1、Science实际进入，其余目录发现,关联资源未分析成主阅读站功能；登录/成人提交未执行
+M047-TKVD-039,public_menu_link,The View,https://www.timeforkids.com/k1/topics/the-view/,E-TKVD-02,F-M047-01,链接/标签已核；K–1、Science实际进入，其余目录发现,关联资源未分析成主阅读站功能；登录/成人提交未执行
+M047-TKVD-040,public_menu_link,Transportation,https://www.timeforkids.com/k1/topics/transportation/,E-TKVD-02,F-M047-01,链接/标签已核；K–1、Science实际进入，其余目录发现,关联资源未分析成主阅读站功能；登录/成人提交未执行
+M047-TKVD-041,public_menu_link,Weather,https://www.timeforkids.com/k1/topics/weather/,E-TKVD-02,F-M047-01,链接/标签已核；K–1、Science实际进入，其余目录发现,关联资源未分析成主阅读站功能；登录/成人提交未执行
+M047-TKVD-042,public_menu_link,World,https://www.timeforkids.com/k1/topics/world/,E-TKVD-02,F-M047-01,链接/标签已核；K–1、Science实际进入，其余目录发现,关联资源未分析成主阅读站功能；登录/成人提交未执行
+M047-TKVD-043,public_menu_link,Young Game Changers,https://www.timeforkids.com/k1/topics/young-game-changers/,E-TKVD-02,F-M047-01,链接/标签已核；K–1、Science实际进入，其余目录发现,关联资源未分析成主阅读站功能；登录/成人提交未执行
+M047-TKVD-044,public_menu_parent,Your $ Financial Literacy Content,https://www.timeforkids.com/k1/,E-TKVD-02,F-M047-01,当前DOM目录，已观察部分展开,父子层级；未走所有目标
+M047-TKVD-045,public_menu_link,Grade 4 Edition,https://www.timeforkids.com/partner/pwc/g4/,E-TKVD-02,F-M047-01,链接/标签已核；K–1、Science实际进入，其余目录发现,关联资源未分析成主阅读站功能；登录/成人提交未执行
+M047-TKVD-046,public_menu_link,Grade 5-6 Edition,https://www.timeforkids.com/partner/pwc/g56/,E-TKVD-02,F-M047-01,链接/标签已核；K–1、Science实际进入，其余目录发现,关联资源未分析成主阅读站功能；登录/成人提交未执行
+M047-TKVD-047,public_menu_parent,For Grown-ups,https://www.timeforkids.com/k1/,E-TKVD-02,F-M047-01,当前DOM目录，已观察部分展开,父子层级；未走所有目标
+M047-TKVD-048,public_menu_link,For Grown-ups,https://www.timeforkids.com/?age-gate=1,E-TKVD-02,F-M047-01,链接/标签已核；K–1、Science实际进入，其余目录发现,关联资源未分析成主阅读站功能；登录/成人提交未执行
+M047-TKVD-049,public_menu_parent,Resource Spotlight,https://www.timeforkids.com/k1/,E-TKVD-02,F-M047-01,当前DOM目录，已观察部分展开,父子层级；未走所有目标
+M047-TKVD-050,public_menu_link,Your Hot Job,https://timeforkids.com/your-hot-job,E-TKVD-02,F-M047-01,链接/标签已核；K–1、Science实际进入，其余目录发现,关联资源未分析成主阅读站功能；登录/成人提交未执行
+M047-TKVD-051,public_menu_link,Kid Reporter,https://www.timeforkids.com/kid-reporter/,E-TKVD-02,F-M047-01,链接/标签已核；K–1、Science实际进入，其余目录发现,关联资源未分析成主阅读站功能；登录/成人提交未执行
+M047-TKVD-052,public_menu_link,Financial Literacy for Kids,https://www.timeforkids.com/partner/pwc/g56/,E-TKVD-02,F-M047-01,链接/标签已核；K–1、Science实际进入，其余目录发现,关联资源未分析成主阅读站功能；登录/成人提交未执行
+M047-TKVD-053,public_menu_link,Service Stars,https://www.timeforkids.com/service-stars,E-TKVD-02,F-M047-01,链接/标签已核；K–1、Science实际进入，其余目录发现,关联资源未分析成主阅读站功能；登录/成人提交未执行
+M047-TKVD-054,public_menu_parent,Log In,https://www.timeforkids.com/k1/,E-TKVD-02,F-M047-01,当前DOM目录，已观察部分展开,父子层级；未走所有目标
+M047-TKVD-055,public_menu_link,Log In,https://www.timeforkids.com/login/,E-TKVD-02,F-M047-01,链接/标签已核；K–1、Science实际进入，其余目录发现,关联资源未分析成主阅读站功能；登录/成人提交未执行
+M047-TKVD-056,observed_article_or_list_control,Article date / author / credits,https://www.timeforkids.com/g34/food-for-thought/?rl=en-760,E-TKVD-01,F-M047-01,DOM控件/选定实际操作；正文为G3–4，列表为K–1,Print/Submit没有触发；不声称全部控制完成
+M047-TKVD-057,observed_article_or_list_control,Read Aloud,https://www.timeforkids.com/g34/food-for-thought/?rl=en-760,E-TKVD-01,F-M047-04,本篇DOM可见入口；本轮未触发该控件,不借其他文章已完成的操作填补本篇分支；Print未触发
+M047-TKVD-058,observed_article_or_list_control,Language switch,https://www.timeforkids.com/g34/food-for-thought/?rl=en-760,E-TKVD-01,F-M047-01,本篇DOM可见入口；本轮未触发该控件,不借其他文章已完成的操作填补本篇分支；Print未触发
+M047-TKVD-059,observed_article_or_list_control,Print,https://www.timeforkids.com/g34/food-for-thought/?rl=en-760,E-TKVD-01,,本篇DOM可见入口；本轮未触发该控件,不借其他文章已完成的操作填补本篇分支；Print未触发
+M047-TKVD-060,observed_article_or_list_control,Marked word / definition / image / example,https://www.timeforkids.com/g34/food-for-thought/?rl=en-760,E-TKVD-01,F-M047-03,DOM控件/选定实际操作；正文为G3–4，列表为K–1,Print/Submit没有触发；不声称全部控制完成
+M047-TKVD-061,observed_article_or_list_control,Word audio / pause / close,https://www.timeforkids.com/g34/food-for-thought/?rl=en-760,E-TKVD-01,F-M047-03,DOM控件/选定实际操作；正文为G3–4，列表为K–1,Print/Submit没有触发；不声称全部控制完成
+M047-TKVD-062,observed_article_or_list_control,Assessment link / paper quiz,https://www.timeforkids.com/g34/food-for-thought/?rl=en-760,E-TKVD-01;E-TKVD-03,F-M047-05,DOM控件/选定实际操作；正文为G3–4，列表为K–1,Print/Submit没有触发；不声称全部控制完成
+M047-TKVD-063,observed_article_or_list_control,More from topic,https://www.timeforkids.com/g34/food-for-thought/?rl=en-760,E-TKVD-01,F-M047-01,本篇DOM可见入口；本轮未触发该控件,不借其他文章已完成的操作填补本篇分支；Print未触发
+M047-TKVD-064,observed_article_or_list_control,Audio / Spanish availability labels,https://www.timeforkids.com/k1/topics/science/,E-TKVD-02,F-M047-01,DOM控件/选定实际操作；正文为G3–4，列表为K–1,Print/Submit没有触发；不声称全部控制完成
+M047-TKVD-065,observed_article_or_list_control,Numbered page / Next,https://www.timeforkids.com/k1/topics/science/,E-TKVD-02,F-M047-01,DOM控件/选定实际操作；正文为G3–4，列表为K–1,Print/Submit没有触发；不声称全部控制完成
+M047-TKVD-066,observed_article_or_list_control,Birth month / year / Submit / close,https://www.timeforkids.com/k1/topics/science/,E-TKVD-02,F-M047-01,DOM控件/选定实际操作；正文为G3–4，列表为K–1,Print/Submit没有触发；不声称全部控制完成
+M047-TKVD-067,educators_declared_domain,Included Content,https://www.timeforkids.com/educators,E-TFK-01,,普通HTML复读；仅栏目/功能声明,没有登录教师后台，不把课程权益当当前匿名能力
+M047-TKVD-068,educators_declared_domain,Accessibility Features,https://www.timeforkids.com/educators,E-TFK-01,,普通HTML复读；仅栏目/功能声明,没有登录教师后台，不把课程权益当当前匿名能力
+M047-TKVD-069,educators_declared_domain,TIME Archives,https://www.timeforkids.com/educators,E-TFK-01,,普通HTML复读；仅栏目/功能声明,没有登录教师后台，不把课程权益当当前匿名能力
+M047-TKVD-070,educators_declared_domain,View Samples / Teacher Guides,https://www.timeforkids.com/educators,E-TFK-01,,普通HTML复读；仅栏目/功能声明,没有登录教师后台，不把课程权益当当前匿名能力
+M047-TKVD-071,educators_declared_domain,Title 1,https://www.timeforkids.com/educators,E-TFK-01,,普通HTML复读；仅栏目/功能声明,没有登录教师后台，不把课程权益当当前匿名能力
+M047-TKVD-072,educators_declared_domain,Common Core State Standards,https://www.timeforkids.com/educators,E-TFK-01,,普通HTML复读；仅栏目/功能声明,没有登录教师后台，不把课程权益当当前匿名能力
+M047-TKVD-073,educators_declared_domain,Response to Intervention,https://www.timeforkids.com/educators,E-TFK-01,,普通HTML复读；仅栏目/功能声明,没有登录教师后台，不把课程权益当当前匿名能力
+M047-TKVD-074,educators_declared_domain,Grades K-1 and Grade2 bundles,https://www.timeforkids.com/educators,E-TFK-01,,普通HTML复读；仅栏目/功能声明,没有登录教师后台，不把课程权益当当前匿名能力
+M047-TKVD-075,educators_declared_domain,Grades3-6 current events,https://www.timeforkids.com/educators,E-TFK-01,,普通HTML复读；仅栏目/功能声明,没有登录教师后台，不把课程权益当当前匿名能力
+M047-TKVD-076,educators_declared_domain,Homeschool Subscription,https://www.timeforkids.com/educators,E-TFK-01,,普通HTML复读；仅栏目/功能声明,没有登录教师后台，不把课程权益当当前匿名能力
+M047-TKVD-077,educators_declared_domain,Career Exploration,https://www.timeforkids.com/educators,E-TFK-01,,普通HTML复读；仅栏目/功能声明,没有登录教师后台，不把课程权益当当前匿名能力
+M047-TKVD-078,worksheet_task_type,Read for Detail,https://www.timeforkids.com/wp-content/uploads/2018/02/edition-3-4-cover-quiz-022318.pdf,E-TKVD-03,F-M047-05,两页测验文字读取，非软件题型目录,历史G3–4；答案/完整纸刊和儿童适配未核
+M047-TKVD-079,worksheet_task_type,Analyze Information,https://www.timeforkids.com/wp-content/uploads/2018/02/edition-3-4-cover-quiz-022318.pdf,E-TKVD-03,F-M047-05,两页测验文字读取，非软件题型目录,历史G3–4；答案/完整纸刊和儿童适配未核
+M047-TKVD-080,worksheet_task_type,Analyze Text Features,https://www.timeforkids.com/wp-content/uploads/2018/02/edition-3-4-cover-quiz-022318.pdf,E-TKVD-03,F-M047-05,两页测验文字读取，非软件题型目录,历史G3–4；答案/完整纸刊和儿童适配未核
+M047-TKVD-081,worksheet_task_type,Define Words and Phrases,https://www.timeforkids.com/wp-content/uploads/2018/02/edition-3-4-cover-quiz-022318.pdf,E-TKVD-03,F-M047-05,两页测验文字读取，非软件题型目录,历史G3–4；答案/完整纸刊和儿童适配未核
+M047-TKVD-082,worksheet_task_type,Make an Inference,https://www.timeforkids.com/wp-content/uploads/2018/02/edition-3-4-cover-quiz-022318.pdf,E-TKVD-03,F-M047-05,两页测验文字读取，非软件题型目录,历史G3–4；答案/完整纸刊和儿童适配未核
+M047-TKVD-083,worksheet_task_type,Bonus open response,https://www.timeforkids.com/wp-content/uploads/2018/02/edition-3-4-cover-quiz-022318.pdf,E-TKVD-03,F-M047-05,两页测验文字读取，非软件题型目录,历史G3–4；答案/完整纸刊和儿童适配未核

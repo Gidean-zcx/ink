@@ -1,0 +1,17 @@
+Information on software updates for the Digital Paper and the Digital Paper App is checked automatically via the Internet. When update information is found, a message appears on the screen of the Digital Paper App, and you can choose whether to update. When updating the software of the Digital Paper, use the supplied USB cable to connect the computer to the Digital Paper.
+Note
+For customers using the firmware earlier than Ver. 1.2, make sure to update the Digital Paper App and then update the firmware of the Digital Paper.
+For how to update, see the following;
+https://www.sony.net/dpapp/
+To update the software, connecting the computer to the internet is required.
+If you have skipped an update or want to manually check the update information, follow the steps below.
+Use the supplied USB cable to connect the computer to the Digital Paper.
+Connect the computer to the Internet, and launch the Digital Paper App.
+From the menu bar click [Help] — [Software update], and follow the screen to update.
+To check the software version of the Digital Paper
+Press the  (home) button on the Digital Paper, and tap [Settings] — [About This Device] — [Device Details].
+To check the software version of the Digital Paper App
+For Windows
+From the menu bar of the Digital Paper App, click [Help] — [About Digital Paper App].
+For Mac
+From the menu bar of the Digital Paper App, click [Digital Paper App] — [About Digital Paper App].

@@ -1,0 +1,25 @@
+Names of Parts
+
+ Micro SD card slot                           Type-C USB data port
+
+                                                                                 microSD          USB/DAC
+
+
+     Indicator Light       3.2 inch touch screen (320 x 480)
+             Volume         Power/Lock                control                                                                                                                                                                                                                               Previous     button           wheel                                                                                                             Next                                                                                                                                                                                                                                                                                                      Play/Pause                                                                                                                                                                                                                                                                                        selection
+                                                                                                                                                                                                                                                      selection      button                                                                                                                                                                                           button
+
+
+
+
+
+                                                                           BAL                                                                                                                                                                    button
+
+
+
+      3.5mm Headphone/     4.4mm Balanced
+        Line output/           Headphone output
+         Coaxial SPDIF Output
+
+         Pinout for 3.5mm
+        Coax output      Ground         Signal

@@ -1,0 +1,149 @@
+[
+  {
+    "flow_id": "F-M024-02",
+    "field": "evidence_ids",
+    "before": "E-CASIO-01;E-CASIO-02;E-CASIO-04",
+    "after": "E-CASIO-01;E-CASIO-02;E-CASIO-04;E-CACD-07",
+    "reason": "2026-10-27复核同一MA2307-A正文；补旧任务分支，不增加重复F或升深度"
+  },
+  {
+    "flow_id": "F-M024-02",
+    "field": "known_branches",
+    "before": "模糊、通配符、SHIFT",
+    "after": "模糊/通配符及SHIFT；无命中检查连字符/空格与&；问号星号不能混用，HOME多词典部分不可用",
+    "reason": "2026-10-27复核同一MA2307-A正文；补旧任务分支，不增加重复F或升深度"
+  },
+  {
+    "flow_id": "F-M024-02",
+    "field": "gaps",
+    "before": "无命中和跳查栈",
+    "after": "完整无命中界面和跳查返回栈未观察；归一化规则依查询类型",
+    "reason": "2026-10-27复核同一MA2307-A正文；补旧任务分支，不增加重复F或升深度"
+  },
+  {
+    "flow_id": "F-M024-02",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27",
+    "reason": "2026-10-27复核同一MA2307-A正文；补旧任务分支，不增加重复F或升深度"
+  },
+  {
+    "flow_id": "F-M024-04",
+    "field": "known_branches",
+    "before": "色标/CHECK、容量",
+    "after": "色标/CHECK可切换；12本各300条、每词10处；单条直删与批量确认；便笺可同词组合",
+    "reason": "2026-10-27复核同一MA2307-A正文；补旧任务分支，不增加重复F或升深度"
+  },
+  {
+    "flow_id": "F-M024-04",
+    "field": "gaps",
+    "before": "任意外部原句",
+    "after": "任意外部原句、满额提示、误删撤销和组合删除联动未知",
+    "reason": "2026-10-27复核同一MA2307-A正文；补旧任务分支，不增加重复F或升深度"
+  },
+  {
+    "flow_id": "F-M024-04",
+    "field": "evidence_ids",
+    "before": "E-CASIO-05;E-CASIO-09",
+    "after": "E-CASIO-05;E-CASIO-09;E-CACD-03",
+    "reason": "2026-10-27复核同一MA2307-A正文；补旧任务分支，不增加重复F或升深度"
+  },
+  {
+    "flow_id": "F-M024-04",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27",
+    "reason": "2026-10-27复核同一MA2307-A正文；补旧任务分支，不增加重复F或升深度"
+  },
+  {
+    "flow_id": "F-M024-05",
+    "field": "evidence_ids",
+    "before": "E-CASIO-06;E-CASIO-09",
+    "after": "E-CASIO-06;E-CASIO-09;E-CACD-02",
+    "reason": "2026-10-27复核同一MA2307-A正文；补旧任务分支，不增加重复F或升深度"
+  },
+  {
+    "flow_id": "F-M024-05",
+    "field": "visual_status",
+    "before": "not_observed",
+    "after": "static_manual_pages_only",
+    "reason": "2026-10-27复核同一MA2307-A正文；补旧任务分支，不增加重复F或升深度"
+  },
+  {
+    "flow_id": "F-M024-05",
+    "field": "known_branches",
+    "before": "看/听、返回原文",
+    "after": "看/听与返回原文；本机6本各100卡；语音单独保存后仍须保存整卡；编辑保存及单卡/批量删除",
+    "reason": "2026-10-27复核同一MA2307-A正文；补旧任务分支，不增加重复F或升深度"
+  },
+  {
+    "flow_id": "F-M024-05",
+    "field": "gaps",
+    "before": "导出/调度",
+    "after": "满额/撤销/导出/调度未知；手册171页最后删除选项标签与说明范围冲突，未选定其实际行为",
+    "reason": "2026-10-27复核同一MA2307-A正文；补旧任务分支，不增加重复F或升深度"
+  },
+  {
+    "flow_id": "F-M024-05",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27",
+    "reason": "2026-10-27复核同一MA2307-A正文；补旧任务分支，不增加重复F或升深度"
+  },
+  {
+    "flow_id": "F-M024-08",
+    "field": "evidence_ids",
+    "before": "E-CASIO-01;E-CASIO-10;E-CASIO-11",
+    "after": "E-CASIO-01;E-CASIO-10;E-CASIO-11;E-CACD-07",
+    "reason": "2026-10-27复核同一MA2307-A正文；补旧任务分支，不增加重复F或升深度"
+  },
+  {
+    "flow_id": "F-M024-08",
+    "field": "known_branches",
+    "before": "网络重搜、2026停服",
+    "after": "网络重搜及2026-12-31 17:00停下载；卡读失败先回书库关机、拔卡等约10秒重插；2至3次仍失败换卡",
+    "reason": "2026-10-27复核同一MA2307-A正文；补旧任务分支，不增加重复F或升深度"
+  },
+  {
+    "flow_id": "F-M024-08",
+    "field": "gaps",
+    "before": "下载失败、导入",
+    "after": "下载失败/导入仍未知；他机认证卡不等于可迁移备份；没有把换卡当数据恢复",
+    "reason": "2026-10-27复核同一MA2307-A正文；补旧任务分支，不增加重复F或升深度"
+  },
+  {
+    "flow_id": "F-M024-08",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27",
+    "reason": "2026-10-27复核同一MA2307-A正文；补旧任务分支，不增加重复F或升深度"
+  },
+  {
+    "flow_id": "F-M024-09",
+    "field": "evidence_ids",
+    "before": "E-CASIO-01;E-CASIO-09",
+    "after": "E-CASIO-01;E-CASIO-09;E-CACD-07",
+    "reason": "2026-10-27复核同一MA2307-A正文；补旧任务分支，不增加重复F或升深度"
+  },
+  {
+    "flow_id": "F-M024-09",
+    "field": "known_branches",
+    "before": "音频合盖继续",
+    "after": "语音播放器合盖续播且播放时不自动关机；无线连接时自动关机为6分钟；低电量可退到语言设置",
+    "reason": "2026-10-27复核同一MA2307-A正文；补旧任务分支，不增加重复F或升深度"
+  },
+  {
+    "flow_id": "F-M024-09",
+    "field": "gaps",
+    "before": "未保存内容",
+    "after": "未保存内容与异常掉电恢复未知；合盖续用不等于复位或备份恢复",
+    "reason": "2026-10-27复核同一MA2307-A正文；补旧任务分支，不增加重复F或升深度"
+  },
+  {
+    "flow_id": "F-M024-09",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27",
+    "reason": "2026-10-27复核同一MA2307-A正文；补旧任务分支，不增加重复F或升深度"
+  }
+]

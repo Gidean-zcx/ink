@@ -1,0 +1,60 @@
+[
+  {
+    "flow_id": "F-M031-16",
+    "before": {
+      "flow_id": "F-M031-16",
+      "product_id": "M-031",
+      "task": "匿名选择课程和学习目标",
+      "depth": "D4",
+      "evidence_ids": "E-DUCD-25;E-DUCX-02",
+      "known_branches": "公开Web选法语、来源/动机/基础、5分钟目标和从零开始进入首课；未提交身份；另实际从Chess页选零基础、5分钟、从零开始；课后Later跳过注册。",
+      "gaps": "不同选择/回退、儿童与中文母语、正式账号及原生端未核；匿名会建立临时服务端状态。",
+      "visual_status": "observed_browser_sequence",
+      "hands_on": "true",
+      "case_path": "cases/M-031-duolingo-adventures.md",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "flow_id": "F-M031-16",
+      "product_id": "M-031",
+      "task": "匿名选择课程和学习目标",
+      "depth": "D4",
+      "evidence_ids": "E-DUCD-25;E-DUCX-02;E-DUMA-04",
+      "known_branches": "公开Web选法语、来源/动机/基础、5分钟目标和从零开始进入首课；未提交身份；另实际从Chess页选零基础、5分钟、从零开始；课后Later跳过注册。；Math补Student/练习目的/Other/5分钟/Grade 2进入；退出后只重选身份和年级。",
+      "gaps": "不同选择/回退、儿童与中文母语、正式账号及原生端未核；匿名会建立临时服务端状态。；Math引导PATCH422具体字段未知，不认定偏好已保存；Math Coach与跳级未执行。",
+      "visual_status": "observed_browser_sequence",
+      "hands_on": "true",
+      "case_path": "cases/M-031-duolingo-adventures.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "flow_id": "F-M031-18",
+    "before": {
+      "flow_id": "F-M031-18",
+      "product_id": "M-031",
+      "task": "课中退出提示与保留当前题",
+      "depth": "D4",
+      "evidence_ids": "E-DUCD-27;E-DUCX-02",
+      "known_branches": "课中X→警告→Keep learning回原题；第二次进入答一题后X→End session回学习页/基础选择；Chess首题取一星后X直接离开，无语言课确认；同会话重进首题初盘。",
+      "gaps": "棋课其余题和正式账号退出规则、跨进程/设备、离线恢复未知；法语课先前未结算原因仍缺。",
+      "visual_status": "observed_browser_sequence",
+      "hands_on": "true",
+      "case_path": "cases/M-031-duolingo-adventures.md",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "flow_id": "F-M031-18",
+      "product_id": "M-031",
+      "task": "课中退出提示与保留当前题",
+      "depth": "D4",
+      "evidence_ids": "E-DUCD-27;E-DUCX-02;E-DUMA-04",
+      "known_branches": "课中X→警告→Keep learning回原题；第二次进入答一题后X→End session回学习页/基础选择；Chess首题取一星后X直接离开，无语言课确认；同会话重进首题初盘。；Math选中未提交时X直退引导，重进换题且进度条为空；完成后目标页刷新进入新题，未答X回学习页。",
+      "gaps": "棋课其余题和正式账号退出规则、跨进程/设备、离线恢复未知；法语课先前未结算原因仍缺。；Math未提交选择未恢复；正式账户、断网、跨进程与跨设备仍未知，不改其他模式范围。",
+      "visual_status": "observed_browser_sequence",
+      "hands_on": "true",
+      "case_path": "cases/M-031-duolingo-adventures.md",
+      "checked_on": "2026-10-27"
+    }
+  }
+]

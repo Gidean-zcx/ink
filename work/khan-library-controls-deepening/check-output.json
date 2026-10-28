@@ -1,0 +1,12 @@
+{
+  "status": "PASS",
+  "assertions": 589,
+  "failures": [],
+  "new_E": 11,
+  "new_F": 2,
+  "old_F_fields": 18,
+  "old_E_capture_fields": 1,
+  "old_E_metadata_fields": 7,
+  "inventory_rows": 130,
+  "before_dependent": "do not rerun after root merges old rows"
+}

@@ -1,0 +1,25 @@
+How to import contacts from CSV file or vCard?
+Modified on: Sat, 3 Oct, 2026 at 8:40 AM
+You can import contacts to your Kompakt device using a CSV file or a vCard (VCF) file through Mudita Center
+Before importing your contacts, you need to prepare a supported contact file:
+Create a CSV file by exporting contacts from Outlook.
+Create a vCard (VCF) file from your Google account.
+Create a vCard (VCF) file from iCloud.
+Make sure that:
+Mudita Center is installed on your computer.
+Your Kompakt device is connected to your computer.
+The CSV or VCF file is saved on your computer and ready to import.
+Importing Contacts from a CSV File or vCard
+Open Mudita Center and connect your Kompakt device.
+In the left-hand menu, navigate to Your Kompakt and select Contacts.
+Click Import contacts.
+Select Upload CSV or vCard.
+Choose the CSV or VCF file from your computer.
+Select the contacts you want to import, or choose All contacts to import the entire list.
+Click Import selected contacts to start transferring the contacts to your phone.
+Once the process is complete, the selected contacts will be available on your Kompakt device.
+Was this article helpful?
+No
+Yes
+That’s Great!
+Thank you for your feedback

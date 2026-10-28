@@ -1,0 +1,25 @@
+In this article, you will learn how to enter Sleep Mode, shut down the device, check the battery status and manage the battery power.
+Sleep Mode
+To enter or exit Sleep Mode, simply press the Power Button on your device. The device will consume extremely low power and display the screensaver in Sleep Mode. Please refer to the
+Screensavers
+page for more info.
+Shutdown
+To turn on the device, simply press and hold the Power Button. To turn off the device, press and hold the Power Button and then tap
+Power off
+. The device will consume almost no power and display the shutdown image after the shutdown. Please refer to the
+Screensavers
+page for more info.
+Advanced Power Settings
+For advanced power settings including Auto Sleep and Auto Shutdown, please go to
+Settings
+>
+Power
+.
+Battery Management
+The BOOX devices have a typical battery life of up to 3 to 5 weeks in Sleep Mode. Using third-party apps, front lights or WiFi / Bluetooth connection may consume more power than usual. You can go to
+Settings
+>
+Power
+>
+Battery Status
+and check your battery status regularly.

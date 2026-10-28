@@ -1,0 +1,134 @@
+[
+  {
+    "class": "page-header-inner-logo-link",
+    "href": "/en",
+    "title": "",
+    "url": "https://help.ground.news/en"
+  },
+  {
+    "class": "page-header-inner-title",
+    "href": "/en",
+    "title": "Ground News Help Center",
+    "url": "https://help.ground.news/en"
+  },
+  {
+    "type": "button",
+    "class": "kb-button primary",
+    "href": "/en/contact-us",
+    "title": "Contact Us",
+    "url": "https://help.ground.news/en/contact-us"
+  },
+  {
+    "id": "moreResultsLink",
+    "type": "button",
+    "class": "kb-button secondary",
+    "href": "/en/search",
+    "title": "More results",
+    "url": "https://help.ground.news/en/search"
+  },
+  {
+    "href": "https://ground.news/privacy-policy",
+    "title": "Privacy Policy",
+    "url": "https://ground.news/privacy-policy"
+  },
+  {
+    "href": "/en",
+    "title": "Home",
+    "url": "https://help.ground.news/en"
+  },
+  {
+    "class": "kb-category-card",
+    "href": "https://ground.news/frequently-asked-questions",
+    "target": "_blank",
+    "rel": "noreferrer",
+    "title": "Frequently Asked QuestionsGet the answers to your FAQ.",
+    "url": "https://ground.news/frequently-asked-questions"
+  },
+  {
+    "class": "kb-category-card",
+    "href": "https://ground.news/redeem",
+    "target": "_blank",
+    "rel": "noreferrer",
+    "title": "Redeem A Promo CodeLearn how to apply your Ground News promo code to your account.",
+    "url": "https://ground.news/redeem"
+  },
+  {
+    "class": "article-card",
+    "href": "/en/articles/225473",
+    "data-edited": "1773617235458",
+    "title": "Getting Started Tutorial Edited Monday, March 16 2026If you're new to Ground News, this tutorial below will walk you through the basics of exploring news coverage, understanding perspectives, and customi...",
+    "url": "https://help.ground.news/en/articles/225473"
+  },
+  {
+    "class": "article-card",
+    "href": "/en/articles/335105",
+    "data-edited": "1773619437243",
+    "title": "Where Can I Read Ground News?Edited Monday, March 16 2026Ground News is a news comparison platform that helps you explore coverage from thousands of news publishers across the political spectrum. You can acc...",
+    "url": "https://help.ground.news/en/articles/335105"
+  },
+  {
+    "class": "article-card",
+    "href": "/en/articles/5609857",
+    "data-edited": "1773029332807",
+    "title": "Search for Articles or Find CoverageEdited Monday, March 9 2026Whether you're trying to track down a specific article, follow ongoing events, or see how different sources are reporting the same story, Ground News ...",
+    "url": "https://help.ground.news/en/articles/5609857"
+  },
+  {
+    "class": "article-card",
+    "href": "/en/articles/7541441",
+    "data-edited": "1773032753572",
+    "title": "What Features Are Included With Ground News Vantage? Edited Monday, March 9 2026Ground News Vantage is our most comprehensive subscription tier, designed to give you the fullest view of how stories are covered across the media lan...",
+    "url": "https://help.ground.news/en/articles/7541441"
+  },
+  {
+    "class": "article-card",
+    "href": "/en/articles/648513",
+    "data-edited": "1773032673966",
+    "title": "What Features Are Included In A Ground News Subscription?Edited Monday, March 9 2026Are you wondering what features are included in specific Ground News subscription tiers? Find out here. If you have any more questions about these spe...",
+    "url": "https://help.ground.news/en/articles/648513"
+  },
+  {
+    "class": "article-card",
+    "href": "/en/articles/1753281",
+    "data-edited": "1773616408934",
+    "title": "Download the Ground News AppEdited Monday, March 16 2026The Ground News mobile app allows you to explore news coverage, compare perspectives, and access your Ground News subscription features directly from ...",
+    "url": "https://help.ground.news/en/articles/1753281"
+  },
+  {
+    "class": "article-card",
+    "href": "/en/articles/1750529",
+    "data-edited": "1773029667444",
+    "title": "Our Browser ExtensionEdited Monday, March 9 2026If you're keen on understanding the underlying bias in every news story you encounter online, our browser extension is a must-have tool. It provides i...",
+    "url": "https://help.ground.news/en/articles/1750529"
+  },
+  {
+    "href": "https://twitter.com/Ground_app",
+    "title": "",
+    "url": "https://twitter.com/Ground_app"
+  },
+  {
+    "href": "https://ca.linkedin.com/company/groundnews",
+    "title": "",
+    "url": "https://ca.linkedin.com/company/groundnews"
+  },
+  {
+    "href": "https://www.instagram.com/groundnews/",
+    "title": "",
+    "url": "https://www.instagram.com/groundnews/"
+  },
+  {
+    "href": "https://ground.news/refund-policy",
+    "title": "Refund and Cancellation Policy",
+    "url": "https://ground.news/refund-policy"
+  },
+  {
+    "href": "https://ground.news/terms-and-conditions",
+    "title": "Terms and Conditions",
+    "url": "https://ground.news/terms-and-conditions"
+  },
+  {
+    "href": "https://about.ground.news/privacy-policy",
+    "title": "Privacy Policy",
+    "url": "https://about.ground.news/privacy-policy"
+  }
+]

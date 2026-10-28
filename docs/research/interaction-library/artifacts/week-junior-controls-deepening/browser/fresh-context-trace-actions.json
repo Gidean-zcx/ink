@@ -1,0 +1,49 @@
+{
+  "origin_trace_sha256": "52e5a2eb00ed0645d9ee00115474d5bb04fa24397b2d9a8056d73efab26f773b",
+  "context_metadata": {
+    "version": 10,
+    "type": "context-options",
+    "origin": "library",
+    "browserName": "chromium",
+    "playwrightVersion": "1.64.0-beta-1791568591000",
+    "options": {
+      "viewport": {
+        "width": 1200,
+        "height": 900
+      },
+      "selectorEngines": [],
+      "acceptDownloads": "accept"
+    },
+    "platform": "linux",
+    "wallTime": 1793026458955,
+    "monotonicTime": 415158.447,
+    "sdkLanguage": "python",
+    "testIdAttributeName": "data-testid"
+  },
+  "actions": [
+    {
+      "method": "goto",
+      "class": "Frame",
+      "params": {
+        "url": "https://reader.emagazines.com/issue/the-week-junior/october-23-2026?ipt=F0826FC3-4129-46CF-A5F3-FF70A931F1FF",
+        "waitUntil": "domcontentloaded",
+        "timeout": 30000
+      },
+      "start_ms": 415334.805,
+      "end_ms": 417611.737,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 30000
+      },
+      "start_ms": 420104.178,
+      "end_ms": 421494.003,
+      "error": null
+    }
+  ]
+}

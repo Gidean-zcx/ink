@@ -1,0 +1,266 @@
+{
+  "checked_on": "2026-10-27",
+  "files": [
+    {
+      "path": "docs/research/interaction-library/cases/M-030-khan-kids.md",
+      "bytes": 13436,
+      "sha256": "e1d69158992a32a2c3caae1b0481e92c5a1b3ba45904848fcaabc038dd50ecb8"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/khan-library-controls-deepening-coverage.csv",
+      "bytes": 763,
+      "sha256": "9f731b63c0e1251bae929a3d3a2e1a8777882c963bc863b6e3a416e12507527a"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/khan-library-controls-deepening-evidence.jsonl",
+      "bytes": 15712,
+      "sha256": "b84d9e3ef76ee04194a98e2ce649566271689c2db3e95faf108d6129375ff09e"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/khan-library-controls-deepening-inventory.csv",
+      "bytes": 39191,
+      "sha256": "bc6a5f044ce01aca6543e21b1873013734eb1243da671972be4f887ff61f48c8"
+    },
+    {
+      "path": "docs/research/interaction-library/artifacts/khan-library-controls-deepening/look-at-my-map.png",
+      "bytes": 463885,
+      "sha256": "63852e61859312f3250de1b3dc98dc221435ef05d8c2ccc3f77578dcbc82ea0d"
+    },
+    {
+      "path": "docs/research/interaction-library/artifacts/khan-library-controls-deepening/mute.png",
+      "bytes": 449770,
+      "sha256": "cfddb5c7187007ebe5f2a6f5f87083f9d6ac6fffddf0a3cfa29fb0f7e5c8de6a"
+    },
+    {
+      "path": "docs/research/interaction-library/artifacts/khan-library-controls-deepening/source-notes.md",
+      "bytes": 3842,
+      "sha256": "dc0bf2de45ba29857a4c303a9fc1d65fdaba624a6a68bb57efa9e799e700d1a6"
+    },
+    {
+      "path": "work/khan-library-controls-deepening/HANDOFF.md",
+      "bytes": 8948,
+      "sha256": "bfc1ab5e04a717c8a5fbc56b602c583e9a4bd67498a1affe1a0229b016050292"
+    },
+    {
+      "path": "work/khan-library-controls-deepening/baseline.json",
+      "bytes": 122,
+      "sha256": "ba33459fe84dd13c6fd72baaf2c14b59c7f4463271e046608b4b6e51c188e6ca"
+    },
+    {
+      "path": "work/khan-library-controls-deepening/build.py",
+      "bytes": 22661,
+      "sha256": "4a1fabea2e9a93c8f555bc6b6b43a14b96ad8d7239ff2bb593c3e1e4eb9aa9a5"
+    },
+    {
+      "path": "work/khan-library-controls-deepening/capture.py",
+      "bytes": 1445,
+      "sha256": "59969c67270e11032a740fe6b186aa753ea4622a3923c4ba18eebada72103812"
+    },
+    {
+      "path": "work/khan-library-controls-deepening/case-before.md",
+      "bytes": 9286,
+      "sha256": "109d63bd538699d8f24a6ccc2192c667c58ee69875a3d028d116b460ac6ce429"
+    },
+    {
+      "path": "work/khan-library-controls-deepening/case.diff",
+      "bytes": 13505,
+      "sha256": "e0b4259c14fc58740312a6164069321e9e3feaee8d52c9a5ca3851a9250b3b83"
+    },
+    {
+      "path": "work/khan-library-controls-deepening/check.py",
+      "bytes": 5974,
+      "sha256": "4a6230e5bad2459d9d2a774a3f80f6ffb580e7d112d0fc184f7aa3b946c2ac7a"
+    },
+    {
+      "path": "work/khan-library-controls-deepening/coverage-before.json",
+      "bytes": 5061,
+      "sha256": "c09461a6eb0e0b35b4fa2d9ba60b2897ad9da67c4eaf00752971f2054733e559"
+    },
+    {
+      "path": "work/khan-library-controls-deepening/directory-counts.json",
+      "bytes": 388,
+      "sha256": "a1811549e02a2de48820ac3a2181c8ff350a857dbd44f95933bff7decc439a14"
+    },
+    {
+      "path": "work/khan-library-controls-deepening/evidence-before.json",
+      "bytes": 20555,
+      "sha256": "4eb9518b85c4613e1cdfb127538256646d28a042848c738f1f8585815867a80a"
+    },
+    {
+      "path": "work/khan-library-controls-deepening/existing-coverage-updates.json",
+      "bytes": 7221,
+      "sha256": "07d9fba5aae72d722d37fc7342f2a004621c9bdb3cdb2f2f1f8251f9079a59b9"
+    },
+    {
+      "path": "work/khan-library-controls-deepening/existing-evidence-additional-captures.json",
+      "bytes": 1374,
+      "sha256": "fc60898f39f277fb15bc3f59ac6397995e6d92681d03212634e8e80a65a12b4e"
+    },
+    {
+      "path": "work/khan-library-controls-deepening/existing-evidence-field-updates.json",
+      "bytes": 2251,
+      "sha256": "eb3ae83fb6c185db1824990b0b5f1dd69d4614b42d554e58d6d85ed4c9b89e2e"
+    },
+    {
+      "path": "work/khan-library-controls-deepening/freeze.py",
+      "bytes": 939,
+      "sha256": "e18b79e8dd7f10bf8cb20d152d992bfa7b3bfaef46eab1139e07663cb347641f"
+    },
+    {
+      "path": "work/khan-library-controls-deepening/look-at-my-map.png",
+      "bytes": 463885,
+      "sha256": "63852e61859312f3250de1b3dc98dc221435ef05d8c2ccc3f77578dcbc82ea0d"
+    },
+    {
+      "path": "work/khan-library-controls-deepening/look-at-my-map.png.capture.json",
+      "bytes": 468,
+      "sha256": "02c5d0e0a156e9b6ddb4dd4737b70b8759df4a98d89a10f74cdfbb00e38b4417"
+    },
+    {
+      "path": "work/khan-library-controls-deepening/mute.png",
+      "bytes": 449770,
+      "sha256": "cfddb5c7187007ebe5f2a6f5f87083f9d6ac6fffddf0a3cfa29fb0f7e5c8de6a"
+    },
+    {
+      "path": "work/khan-library-controls-deepening/mute.png.capture.json",
+      "bytes": 448,
+      "sha256": "8ff19c2f93579baec8ee48c4177a867f3171637992cf950a5653818c32c0ab30"
+    },
+    {
+      "path": "work/khan-library-controls-deepening/source-map.json",
+      "bytes": 8210,
+      "sha256": "5ec551d86286a30a81342b28dc60a675d99d705d0a63c087cdbf96431aabdc34"
+    },
+    {
+      "path": "work/khan-library-controls-deepening/text/articles-360006761532.txt",
+      "bytes": 2416,
+      "sha256": "f27cc91fd61ce0341767d649e7e04e3d670f82f0afe671987fc53df5b6ec44be"
+    },
+    {
+      "path": "work/khan-library-controls-deepening/text/articles-360006761932.txt",
+      "bytes": 2060,
+      "sha256": "875ae608d8f2d660d8d291baa5176a97d52bce4b3d5490035afd2a8867ee2d59"
+    },
+    {
+      "path": "work/khan-library-controls-deepening/text/articles-360006763332.txt",
+      "bytes": 2088,
+      "sha256": "8439e9b20bd34bfa46359cd455f2da4a72d243e01cd73d43917c54c97eacd654"
+    },
+    {
+      "path": "work/khan-library-controls-deepening/text/articles-360006764152.txt",
+      "bytes": 1795,
+      "sha256": "27f79571927cbfcf1796233b2f3edb65d241b891bee5ec91d229ab4bd9e1f2cb"
+    },
+    {
+      "path": "work/khan-library-controls-deepening/text/articles-360007053151.txt",
+      "bytes": 4288,
+      "sha256": "69e04c948279786cd4b71db405e4e55d3a8fa5f53e9476fb6ca7352210465a02"
+    },
+    {
+      "path": "work/khan-library-controls-deepening/text/articles-360007053871.txt",
+      "bytes": 2083,
+      "sha256": "7fdfe16ccf92d38d88bc7b182c7379a3a99c51d392510a9151cd7b17b02885a8"
+    },
+    {
+      "path": "work/khan-library-controls-deepening/text/articles-360048828572.txt",
+      "bytes": 4493,
+      "sha256": "83b577057c1a741fa9b8a5280009c23ae897b3ce3038c07b49228b413294c13f"
+    },
+    {
+      "path": "work/khan-library-controls-deepening/text/articles-360053927172.txt",
+      "bytes": 2421,
+      "sha256": "85f76e800caa047180addf20ab7575d1628cbd4d8d01cfbd3ff736a488d9d3b9"
+    },
+    {
+      "path": "work/khan-library-controls-deepening/text/articles-4403614100109.txt",
+      "bytes": 6229,
+      "sha256": "7c0b83e4ce1436322cec83e9d10c6ddbf9aedc1cf680c6d1b6b5b8bf8012b1db"
+    },
+    {
+      "path": "work/khan-library-controls-deepening/text/articles-4403706778637.txt",
+      "bytes": 5271,
+      "sha256": "13b2494aac382d87f3bfdab6b112fda38af5f499c8aee185ed7d3afb0d67dfef"
+    },
+    {
+      "path": "work/khan-library-controls-deepening/text/articles-4409036780955.txt",
+      "bytes": 8852,
+      "sha256": "ab4253f3f39f21e22ade2fa1bbdb4a8665af58e389d419b3dd544d066d3b8a99"
+    },
+    {
+      "path": "work/khan-library-controls-deepening/text/articles-4457349308059.txt",
+      "bytes": 8745,
+      "sha256": "941f31f662cf110612d90475fcb229fdff3de0d7ccc5483dd501821dfcd1f012"
+    },
+    {
+      "path": "work/khan-library-controls-deepening/text/sections-360001481891-p2.txt",
+      "bytes": 965,
+      "sha256": "3c3c32cc0afee273facfcdb911e9f9ca427a1725c3f602208107fa66555fc454"
+    },
+    {
+      "path": "work/khan-library-controls-deepening/text/sections-360001481891.txt",
+      "bytes": 2648,
+      "sha256": "3ed9cad8344f59d35648d9c47011e18993ec2af459f403142c7682154aa4e9ca"
+    },
+    {
+      "path": "work/khan-library-controls-deepening/text/sections-360008453772-p2.txt",
+      "bytes": 985,
+      "sha256": "637cca8b69541174660d0b34efb25c92a4bcb62d253dc6b0a275eb61edd02f84"
+    },
+    {
+      "path": "work/khan-library-controls-deepening/text/sections-360008453772.txt",
+      "bytes": 2644,
+      "sha256": "f611fa9ce2001c59110a79a52c8add737c9e716225dfefea316577642ab9bc63"
+    },
+    {
+      "path": "work/khan-library-controls-deepening/text/sections-39182012411547.txt",
+      "bytes": 1143,
+      "sha256": "48cadcd4e7158d8546f5070044d0086adde6b49149fd25c0ecb194b96056d3be"
+    },
+    {
+      "path": "work/khan-library-controls-deepening/text/sections-46978591932315.txt",
+      "bytes": 1348,
+      "sha256": "5414ab88e1e095a18b4d809b463398c9e0c2c865adee3f5e3a33c9c55e568304"
+    },
+    {
+      "path": "work/khan-library-controls-deepening/text/sections-46978742033051.txt",
+      "bytes": 2210,
+      "sha256": "ab6a1fa3042498f7052acb676f20d94a08fca0272485a40c196f18bb004d030c"
+    },
+    {
+      "path": "work/khan-library-controls-deepening/text/sections-47204226038171.txt",
+      "bytes": 1048,
+      "sha256": "e9f27e4ab8c80d8fa6aed5480a47b7439375ee041734240e4352e21004013799"
+    },
+    {
+      "path": "work/khan-library-controls-deepening/update_case.py",
+      "bytes": 7993,
+      "sha256": "0feeb8dbc96111304ae140039ad75c8aa4f45a08656497923ea3e2fe081cf0fb"
+    },
+    {
+      "path": "work/khan-library-controls-deepening/web-images-response.json",
+      "bytes": 591,
+      "sha256": "23c529dc7f2eebe3373838edb8b0142e8c4d132096d0cfa9cbab1310ecd9ed44"
+    },
+    {
+      "path": "work/khan-library-controls-deepening/web-index-response.json",
+      "bytes": 11674,
+      "sha256": "578274fc308b46b84580e19e4fa67096c4d7125fbcd792594d8e0702f576844b"
+    },
+    {
+      "path": "work/khan-library-controls-deepening/web-response-1.json",
+      "bytes": 24291,
+      "sha256": "26c175bd1d031892ead417c122f7b1df700dcd053b0a8175dc4b9b2f4e83c838"
+    },
+    {
+      "path": "work/khan-library-controls-deepening/web-response-2.json",
+      "bytes": 30422,
+      "sha256": "83aa5d229b599120b14a7a3e705511a25ac589ef9ad4822f3d8f2a69397c4c2e"
+    },
+    {
+      "path": "work/khan-controls-deepening/12-sections.json",
+      "bytes": 3445,
+      "sha256": "56baffa85bdbda0a375fbbb98f481f82b89ae7e5cab17fb707fc3e1432b74131"
+    }
+  ],
+  "scope": "owned case/new batch/work and referenced unchanged section JSON; old/global ledgers excluded"
+}

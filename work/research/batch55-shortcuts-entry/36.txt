@@ -1,0 +1,11 @@
+Open or search the Shortcuts Gallery using a URL scheme on iPhone or iPad
+Shortcuts offers two URL scheme options for interacting with the Gallery: one for opening the Gallery, and one for searching the Gallery. URL schemes can be used anywhere a URL can be used—your own app, in a web browser, or in the command line.
+Open the Gallery from a URL
+Open a URL with the following structure: shortcuts://gallery
+Shortcuts opens, showing you the main page of the Gallery.
+Search the Gallery from a URL
+Open a URL with the following structure: shortcuts://gallery/search?query=[query]
+The query parameter determines the URL-encoded keywords to be searched in the Gallery.
+For example, if you want to send someone a link to explore shortcuts for photos available in the Gallery, you would instruct them to open
+shortcuts://gallery/search?query=photosSee alsoIntro to variables in Shortcuts on iPhone or iPad
+Not all apps, services, and content are available in all countries or regions.

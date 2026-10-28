@@ -1,0 +1,10 @@
+[
+  {
+    "evidence_id": "E-IPAD-01",
+    "source_batch": "docs/research/interaction-library/batches/chinese-app-controls-deepening-evidence.jsonl",
+    "field": "locator",
+    "before": "第二节2阅读记录、5智能对话、7个性化服务",
+    "after": "第一节内二、扩展业务2阅读记录、5智能对话、7个性化服务；非顶层第二节",
+    "reason": "对照旧HTML层级修正定位，不改变功能事实"
+  }
+]

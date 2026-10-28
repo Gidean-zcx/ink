@@ -1,0 +1,145 @@
+Manage your auto-play settings (https://help.audible.com/s/article/manage-your-auto-play-settings?language=en_US)
+citeturn764view2 [wordlim: 200] Crawled: today; Content type: text/html; Source: open({"ref_id":"https://help.audible.com/s/article/manage-your-auto-play-settings?language=en_US","lineno":null}); Total lines: 143
+L0: Loading
+L1: 
+L2: Sorry to interrupt
+L3: 
+L4: Uncaught TypeError: Cannot read properties of null (reading 'style')
+L5: 
+L6: 【0†Refresh】
+L7: 
+L8: Skip to Main Content
+L9: 
+L10: Related topics
+L11: 
+L12: App settings Ask A Question Listening Player Player tools
+L13: ## Manage your auto-play settings
+L14: 
+L15:   * Sep 3, 2026
+L16:   * Knowledge
+L17: 
+L18: Title
+L19: 
+L20: Manage your auto-play settings
+L21: 
+L22: URL Name
+L23: 
+L24: manage-your-auto-play-settings
+L25: 
+L26: Answer
+L27: 
+L28: Control how titles play automatically in the Audible app. You can have your next selected title play automatically or discover related titles through previews when your current listen ends. For additional player options, please visit 【1†View player settings】.
+L29: 
+L30: In this article:
+L31:   * 【2†How do I turn on Up next titles?】
+L32:   * 【3†How do I add titles to my Up next list?】
+L33:   * 【4†How do I edit titles in my Up next list?】
+L34:   * 【5†How do I turn on related title previews?】
+L35: ## How do I turn on Up next titles?
+L36: 
+L37: You can have your selected titles play automatically without interruption.
+L38: 
+L39:   1. Go to your Profile.
+L40:   2. Select the Settings gear icon.
+L41:   3. Select Player.
+L42:   4. Scroll to Continuous listening.
+L43:   5. Toggle Up next titles on.
+L44: ## How do I add titles to my Up next list?
+L45: 
+L46: You can add titles to your Up next list directly from your Library. This feature is only available in the app.
+L47: 
+L48: Using the 3-dot More menu:
+L49: 
+L50:   1. Go to your Library.
+L51:   2. Select your title's 3-dot More menu.
+L52:   3. Select Play next.
+L53: 
+L54: Using select and hold:
+L55: 
+L56:   1. Open the Audible app.
+L57:   2. Go to your Library.
+L58:   3. Find the title you want to play next.
+L59:   4. Select and hold on the title.
+L60:   5. Select Play Next.
+L61: ## How do I edit titles in my Up next list?
+L62: 
+L63:   1. Go to the player screen of your current listen.
+L64:   2. Select the Chapters menu.
+L65:   3. Select Up next.
+L66:   4. Select the 3-dot More menu next to the title you want to edit.
+L67:   5. Choose from the following options:
+L68:      * Title details
+L69:      * Share
+L70:      * Move to top
+L71:      * Move up
+L72:      * Move down
+L73:      * Move to bottom
+L74:      * Remove from queue
+L75: ## How do I turn on related title previews?
+L76: 
+L77: Discover new titles through automatic previews when your current listen ends.
+L78: 
+L79:   1. Go to your Profile.
+L80:   2. Select the Settings gear icon.
+L81:   3. Select Player.
+L82:   4. Scroll to Continuous listening.
+L83:   5. Toggle Recommended titles on.
+L84: 
+L85: Note:
+L86: 
+L87:   * Related title previews will only play if you don't have another title queued up to play next.
+L88:   * You can toggle Recommended titles off if you wish to stop the auto-play of related titles.
+L89: 
+L90: Did this answer your question?
+L91: 【6†Image: Thumbs Up】Like
+L92: 
+L93: 
+L94: 
+L95: 【7†Image: Thumbs Down】Dislike
+L96: 
+L97:  Back to top
+L98: 
+L99: 【8†Image: Share link】 Share link
+L100: 
+L101: 【9†Image: Download PDF】 Download PDF
+L102: ## Need more assistance?
+L103: 
+L104: 【10†Contact us†www.audible.com】
+L105: 
+L106: 
+L107: 
+L108: How satisfied were you with our Help Center today?
+L109: 
+L110: 
+L111: 
+L112: Worst
+L113: 
+L114: 1
+L115: 
+L116: 2
+L117: 
+L118: 3
+L119: 
+L120: 4
+L121: 
+L122: 5
+L123: 
+L124: 6
+L125: 
+L126: 7
+L127: 
+L128: Best
+L129: 
+L130: 
+L131: 
+L132: Region
+L133: 
+L134: United States
+L135: 
+L136: Language
+L137: 
+L138: English
+L139: 
+L140: Loading
+L141: 
+L142: Manage your auto-play settings 【11†Adobe ID Syncing iFrame†audible.demdex.net】

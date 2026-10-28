@@ -1,0 +1,122 @@
+[
+  {
+    "flow_id": "F-M032-01",
+    "field_updates": {
+      "evidence_ids": {
+        "before": "E-FENB-03",
+        "after": "E-FENB-03;E-FBCD-03;E-FBCD-07"
+      },
+      "known_branches": {
+        "before": "默认通用卷、岗位资料更新、进入考场后不可改岗位",
+        "after": "FAQ通用卷、岗位导入与锁定；2019图有职位编辑/报名结果；无法入场或答题仅引导客服"
+      },
+      "gaps": {
+        "before": "报名失败、答题输入与交卷细节",
+        "after": "现行构建入口、报名失败、答题与交卷恢复；FAQ内容时间非版本"
+      },
+      "visual_status": {
+        "before": "not_observed",
+        "after": "static_reference_only"
+      }
+    },
+    "status": "proposal_only_master_and_old_batch_unchanged"
+  },
+  {
+    "flow_id": "F-M032-02",
+    "field_updates": {
+      "evidence_ids": {
+        "before": "E-FENB-03",
+        "after": "E-FENB-03;E-FBCD-03;E-FBCD-09"
+      },
+      "known_branches": {
+        "before": "自行作答有分数无职位排名",
+        "after": "补练有分无职位排名；2020托管帮助：年份/国省考季→折线场次→查看报告"
+      },
+      "gaps": {
+        "before": "在考中断恢复与补交卷",
+        "after": "具体托管租户官方反链；当前入口、空报告/失败、考中恢复与补交"
+      }
+    },
+    "status": "proposal_only_master_and_old_batch_unchanged"
+  },
+  {
+    "flow_id": "F-M032-04",
+    "field_updates": {
+      "depth": {
+        "before": "D2",
+        "after": "D1"
+      },
+      "evidence_ids": {
+        "before": "E-FENB-05;E-FENB-06",
+        "after": "E-FENB-05;E-FENB-06;E-FBCD-04;E-FBCD-05;E-FBCD-08"
+      },
+      "known_branches": {
+        "before": "筛选、错因、收藏独立",
+        "after": "备考文章声明自动汇集、筛选/重做/归因/移除；2020四方块目录与2026我的入口并列"
+      },
+      "gaps": {
+        "before": "自动移出条件、误删恢复、跨端同步",
+        "after": "控件与执行结果未核；清理确认/误删恢复/统计重算、首次与历次答案口径、同步"
+      }
+    },
+    "status": "proposal_only_master_and_old_batch_unchanged"
+  },
+  {
+    "flow_id": "F-M032-05",
+    "field_updates": {
+      "depth": {
+        "before": "D2",
+        "after": "D1"
+      },
+      "evidence_ids": {
+        "before": "E-FENB-06",
+        "after": "E-FENB-06;E-FBCD-05;E-FBCD-08"
+      },
+      "known_branches": {
+        "before": "考试类别；我的收藏",
+        "after": "文章声明练习页或我的收藏；2020托管目录按考试类别列我的收藏"
+      },
+      "gaps": {
+        "before": "去收藏撤销与同步",
+        "after": "收藏保存反馈、取消与撤销、重复与同步；当前构建与具体租户官方反链"
+      }
+    },
+    "status": "proposal_only_master_and_old_batch_unchanged"
+  },
+  {
+    "flow_id": "F-M032-06",
+    "field_updates": {
+      "evidence_ids": {
+        "before": "E-FENB-08",
+        "after": "E-FENB-08;E-FBCD-06"
+      },
+      "known_branches": {
+        "before": "专项默认不限时的文档声明",
+        "after": "计时模式/模块耗时是备考文章声明；不可暂停未证为技术规则"
+      },
+      "gaps": {
+        "before": "倒计时耗尽、暂停、切后台与自动交卷",
+        "after": "现行套卷答题卡、改选/跳题、确认/漏题/超时、后台/断网与重复提交"
+      }
+    },
+    "status": "proposal_only_master_and_old_batch_unchanged"
+  },
+  {
+    "flow_id": "F-M032-08",
+    "field_updates": {
+      "evidence_ids": {
+        "before": "E-FENB-01;E-FENB-02",
+        "after": "E-FENB-01;E-FENB-02;E-FBCD-01;E-FBCD-02"
+      },
+      "known_branches": {
+        "before": "课程可离线下载；PC独立版本",
+        "after": "课程离线；商店iOS6.19.9与下载页6.19.7并存；PC版本独立"
+      },
+      "gaps": {
+        "before": "题库离线及端间进度同步",
+        "after": "题库/草稿离线、缓存清理及端间进度同步"
+      }
+    },
+    "status": "proposal_only_master_and_old_batch_unchanged"
+  }
+]

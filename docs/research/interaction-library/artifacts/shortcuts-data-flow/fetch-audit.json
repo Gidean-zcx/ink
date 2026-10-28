@@ -1,0 +1,687 @@
+{
+  "checked_on": "2026-10-27",
+  "source_count": 28,
+  "scope": "Official Shortcuts 10.0 / iOS 27 guide selected in captured HTML; installed build, device and region not tested",
+  "observations": "All bodies read; no UI images viewed or app actions executed. Early web navigation varied by region/version; captured selected version and body ID used.",
+  "storage_lookup": {
+    "queries": [
+      "site:support.apple.com/guide/shortcuts \"Store Content\" \"27\"",
+      "site:support.apple.com \"Shortcuts Storage\" \"Get Stored Content\""
+    ],
+    "result": "Only existing release note E-SCCD-24 located; detailed storage workflow remains unknown."
+  },
+  "sources": [
+    {
+      "key": "01-input",
+      "url": "https://support.apple.com/guide/shortcuts/apd8195f96d6/10.0/ios/27",
+      "status": 200,
+      "final_url": "https://support.apple.com/guide/shortcuts/limit-the-input-for-a-shortcut-apd8195f96d6/10.0/ios/27",
+      "raw_work_path": "work/research/batch47-shortcuts-data-flow/01-input.html",
+      "raw_sha256": "55c0e7da051e8783f1fe7e09223ab453f25b8037c5e5910feed37bf4494570ec",
+      "text_work_path": "work/research/batch47-shortcuts-data-flow/01-input.txt",
+      "text_sha256": "4693e5521e809268c8e7d13094bf5eab62ca7efee7fafc348fdb28aec95a2184",
+      "body_id": "apd8195f96d6",
+      "selected_versions": [
+        {
+          "text": "iOS 27",
+          "url": "https://support.apple.com/guide/shortcuts/apd8195f96d6/10.0/ios/27"
+        }
+      ],
+      "text_chars": 1716,
+      "checked_on": "2026-10-27",
+      "evidence_id": "E-SCDF-01",
+      "title": "Limit the input for a shortcut",
+      "body_read": true,
+      "visual_observed": false,
+      "hands_on": false
+    },
+    {
+      "key": "02-ask",
+      "url": "https://support.apple.com/guide/shortcuts/apd68b5c9161/10.0/ios/27",
+      "status": 200,
+      "final_url": "https://support.apple.com/guide/shortcuts/use-the-ask-for-input-action-apd68b5c9161/10.0/ios/27",
+      "raw_work_path": "work/research/batch47-shortcuts-data-flow/02-ask.html",
+      "raw_sha256": "3a54261df3070b5db56d75bae346b9152bdc7a9c61f1a6c422680419ce0305bd",
+      "text_work_path": "work/research/batch47-shortcuts-data-flow/02-ask.txt",
+      "text_sha256": "afef49c0683892b10612363d5848b903dee3a08cba02a804750de89a9b0b1919",
+      "body_id": "apd68b5c9161",
+      "selected_versions": [
+        {
+          "text": "iOS 27",
+          "url": "https://support.apple.com/guide/shortcuts/apd68b5c9161/10.0/ios/27"
+        }
+      ],
+      "text_chars": 895,
+      "checked_on": "2026-10-27",
+      "evidence_id": "E-SCDF-02",
+      "title": "Use the Ask for Input action",
+      "body_read": true,
+      "visual_observed": false,
+      "hands_on": false
+    },
+    {
+      "key": "03-privacy",
+      "url": "https://support.apple.com/guide/shortcuts/apd961a4fc65/10.0/ios/27",
+      "status": 200,
+      "final_url": "https://support.apple.com/guide/shortcuts/adjust-privacy-settings-apd961a4fc65/10.0/ios/27",
+      "raw_work_path": "work/research/batch47-shortcuts-data-flow/03-privacy.html",
+      "raw_sha256": "715f504209deb60937926bb9ce9f548111490b197a921d408c4ed635705d1853",
+      "text_work_path": "work/research/batch47-shortcuts-data-flow/03-privacy.txt",
+      "text_sha256": "c11bb409d6ecf47e3b33aaa938ec93e9bd5bdde6a7c1da7229fdcc03632e39e1",
+      "body_id": "apd961a4fc65",
+      "selected_versions": [
+        {
+          "text": "iOS 27",
+          "url": "https://support.apple.com/guide/shortcuts/apd961a4fc65/10.0/ios/27"
+        }
+      ],
+      "text_chars": 1857,
+      "checked_on": "2026-10-27",
+      "evidence_id": "E-SCDF-03",
+      "title": "Adjust privacy settings",
+      "body_read": true,
+      "visual_observed": false,
+      "hands_on": false
+    },
+    {
+      "key": "04-completion",
+      "url": "https://support.apple.com/guide/shortcuts/apda9578f70f/10.0/ios/27",
+      "status": 200,
+      "final_url": "https://support.apple.com/guide/shortcuts/shortcut-completion-apda9578f70f/10.0/ios/27",
+      "raw_work_path": "work/research/batch47-shortcuts-data-flow/04-completion.html",
+      "raw_sha256": "3642cb40d212c00e244ce4f86750632d58938faee7d23cf0ca1d9c91e3804d98",
+      "text_work_path": "work/research/batch47-shortcuts-data-flow/04-completion.txt",
+      "text_sha256": "381b584ccdc9e35b77396e3ba773b1f1f81b8dbd6f718212b25f2dfcebe509cc",
+      "body_id": "apda9578f70f",
+      "selected_versions": [
+        {
+          "text": "iOS 27",
+          "url": "https://support.apple.com/guide/shortcuts/apda9578f70f/10.0/ios/27"
+        }
+      ],
+      "text_chars": 2074,
+      "checked_on": "2026-10-27",
+      "evidence_id": "E-SCDF-04",
+      "title": "Shortcut completion",
+      "body_read": true,
+      "visual_observed": false,
+      "hands_on": false
+    },
+    {
+      "key": "05-the-flow-of-content",
+      "url": "https://support.apple.com/guide/shortcuts/the-flow-of-content-apd33c8d5c6d/10.0/ios/27",
+      "status": 200,
+      "final_url": "https://support.apple.com/guide/shortcuts/the-flow-of-content-apd33c8d5c6d/10.0/ios/27",
+      "raw_work_path": "work/research/batch47-shortcuts-data-flow/05-the-flow-of-content.html",
+      "raw_sha256": "bff6d357ffbbfd33f5317ed4f91d9faaa167d7500720402ba5befb855b0f6600",
+      "text_work_path": "work/research/batch47-shortcuts-data-flow/05-the-flow-of-content.txt",
+      "text_sha256": "fcc33f89c3f57765a569fa0ebd963942a6eb582c05c6e24a03f092259f0e5e91",
+      "body_id": "apd33c8d5c6d",
+      "selected_versions": [
+        {
+          "text": "iOS 27",
+          "url": "https://support.apple.com/guide/shortcuts/apd33c8d5c6d/10.0/ios/27"
+        }
+      ],
+      "text_chars": 925,
+      "checked_on": "2026-10-27",
+      "evidence_id": "E-SCDF-05",
+      "title": "The flow of content",
+      "body_read": true,
+      "visual_observed": false,
+      "hands_on": false
+    },
+    {
+      "key": "06-action-connections",
+      "url": "https://support.apple.com/guide/shortcuts/action-connections-apda850ab0e1/10.0/ios/27",
+      "status": 200,
+      "final_url": "https://support.apple.com/guide/shortcuts/action-connections-apda850ab0e1/10.0/ios/27",
+      "raw_work_path": "work/research/batch47-shortcuts-data-flow/06-action-connections.html",
+      "raw_sha256": "2f32d3dcc17161deb4d8f49edda60cd1bfc7d6a84c79f68698d6b88e95cb1bff",
+      "text_work_path": "work/research/batch47-shortcuts-data-flow/06-action-connections.txt",
+      "text_sha256": "177547191006175b2b2f1e2551a8c99c5bc5f2d4368b952f063f0d5fd8882e18",
+      "body_id": "apda850ab0e1",
+      "selected_versions": [
+        {
+          "text": "iOS 27",
+          "url": "https://support.apple.com/guide/shortcuts/apda850ab0e1/10.0/ios/27"
+        }
+      ],
+      "text_chars": 1488,
+      "checked_on": "2026-10-27",
+      "evidence_id": "E-SCDF-06",
+      "title": "Action connections",
+      "body_read": true,
+      "visual_observed": false,
+      "hands_on": false
+    },
+    {
+      "key": "07-test-your-actions",
+      "url": "https://support.apple.com/guide/shortcuts/test-your-actions-apda75604f37/10.0/ios/27",
+      "status": 200,
+      "final_url": "https://support.apple.com/guide/shortcuts/test-your-actions-apda75604f37/10.0/ios/27",
+      "raw_work_path": "work/research/batch47-shortcuts-data-flow/07-test-your-actions.html",
+      "raw_sha256": "1c43c116dfb87e7e30fc4aa0bcc9d9375bbd5deebd0b83e799c0e0c92c7b853f",
+      "text_work_path": "work/research/batch47-shortcuts-data-flow/07-test-your-actions.txt",
+      "text_sha256": "1595e5fe3a1a7e6f8aca2c53c843dcda2590c0c646467352f20afa46fb2ec514",
+      "body_id": "apda75604f37",
+      "selected_versions": [
+        {
+          "text": "iOS 27",
+          "url": "https://support.apple.com/guide/shortcuts/apda75604f37/10.0/ios/27"
+        }
+      ],
+      "text_chars": 775,
+      "checked_on": "2026-10-27",
+      "evidence_id": "E-SCDF-07",
+      "title": "Test your actions",
+      "body_read": true,
+      "visual_observed": false,
+      "hands_on": false
+    },
+    {
+      "key": "08-intro-to-variables",
+      "url": "https://support.apple.com/guide/shortcuts/intro-to-variables-apdb5506f698/10.0/ios/27",
+      "status": 200,
+      "final_url": "https://support.apple.com/guide/shortcuts/intro-to-variables-apdb5506f698/10.0/ios/27",
+      "raw_work_path": "work/research/batch47-shortcuts-data-flow/08-intro-to-variables.html",
+      "raw_sha256": "d163f89d89695f2edde2a0b59adc6c4d62cced210308f06d9777acdcbef4d5f5",
+      "text_work_path": "work/research/batch47-shortcuts-data-flow/08-intro-to-variables.txt",
+      "text_sha256": "36918b5dc1443544f930d8f6c7220e0d84db915c92396e7f326acccaf7ec809f",
+      "body_id": "apdb5506f698",
+      "selected_versions": [
+        {
+          "text": "iOS 27",
+          "url": "https://support.apple.com/guide/shortcuts/apdb5506f698/10.0/ios/27"
+        }
+      ],
+      "text_chars": 1260,
+      "checked_on": "2026-10-27",
+      "evidence_id": "E-SCDF-08",
+      "title": "Intro to variables",
+      "body_read": true,
+      "visual_observed": false,
+      "hands_on": false
+    },
+    {
+      "key": "09-variable-types",
+      "url": "https://support.apple.com/guide/shortcuts/variable-types-apdd2b316022/10.0/ios/27",
+      "status": 200,
+      "final_url": "https://support.apple.com/guide/shortcuts/variable-types-apdd2b316022/10.0/ios/27",
+      "raw_work_path": "work/research/batch47-shortcuts-data-flow/09-variable-types.html",
+      "raw_sha256": "11329385cfd227679727d52a07bc1b50fc63c04e053b9af1c409d5236ff80d14",
+      "text_work_path": "work/research/batch47-shortcuts-data-flow/09-variable-types.txt",
+      "text_sha256": "95d2bf2e4d42fb80f52fad0749b7056a9996391eaa4700dc1517c272308e2561",
+      "body_id": "apdd2b316022",
+      "selected_versions": [
+        {
+          "text": "iOS 27",
+          "url": "https://support.apple.com/guide/shortcuts/apdd2b316022/10.0/ios/27"
+        }
+      ],
+      "text_chars": 3240,
+      "checked_on": "2026-10-27",
+      "evidence_id": "E-SCDF-09",
+      "title": "Variable types",
+      "body_read": true,
+      "visual_observed": false,
+      "hands_on": false
+    },
+    {
+      "key": "10-use-variables",
+      "url": "https://support.apple.com/guide/shortcuts/use-variables-apdd02c2780c/10.0/ios/27",
+      "status": 200,
+      "final_url": "https://support.apple.com/guide/shortcuts/use-variables-apdd02c2780c/10.0/ios/27",
+      "raw_work_path": "work/research/batch47-shortcuts-data-flow/10-use-variables.html",
+      "raw_sha256": "8fe69bafd854a73ba399aa18c85e2c13bed7bf35be335ce38b0e5176f6625c75",
+      "text_work_path": "work/research/batch47-shortcuts-data-flow/10-use-variables.txt",
+      "text_sha256": "14932a72390b88b243277864c538091006f8687b2cc8b8c1bd26823b4b35ddd8",
+      "body_id": "apdd02c2780c",
+      "selected_versions": [
+        {
+          "text": "iOS 27",
+          "url": "https://support.apple.com/guide/shortcuts/apdd02c2780c/10.0/ios/27"
+        }
+      ],
+      "text_chars": 3691,
+      "checked_on": "2026-10-27",
+      "evidence_id": "E-SCDF-10",
+      "title": "Use variables",
+      "body_read": true,
+      "visual_observed": false,
+      "hands_on": false
+    },
+    {
+      "key": "11-use-list-actions",
+      "url": "https://support.apple.com/guide/shortcuts/use-list-actions-apd4dcacc115/10.0/ios/27",
+      "status": 200,
+      "final_url": "https://support.apple.com/guide/shortcuts/use-list-actions-apd4dcacc115/10.0/ios/27",
+      "raw_work_path": "work/research/batch47-shortcuts-data-flow/11-use-list-actions.html",
+      "raw_sha256": "45c1f3279a5735b50149d38882ae44800eff235238aac6c2bf08b024d5c02403",
+      "text_work_path": "work/research/batch47-shortcuts-data-flow/11-use-list-actions.txt",
+      "text_sha256": "283298b115f15d06a3a3ed4693d5328e4dae0d4edd0cc1ca9bb46dfd5850e3b6",
+      "body_id": "apd4dcacc115",
+      "selected_versions": [
+        {
+          "text": "iOS 27",
+          "url": "https://support.apple.com/guide/shortcuts/apd4dcacc115/10.0/ios/27"
+        }
+      ],
+      "text_chars": 4417,
+      "checked_on": "2026-10-27",
+      "evidence_id": "E-SCDF-11",
+      "title": "Use list actions",
+      "body_read": true,
+      "visual_observed": false,
+      "hands_on": false
+    },
+    {
+      "key": "12-use-the-choose-from-menu-action",
+      "url": "https://support.apple.com/guide/shortcuts/use-the-choose-from-menu-action-apdd7bf369da/10.0/ios/27",
+      "status": 200,
+      "final_url": "https://support.apple.com/guide/shortcuts/use-the-choose-from-menu-action-apdd7bf369da/10.0/ios/27",
+      "raw_work_path": "work/research/batch47-shortcuts-data-flow/12-use-the-choose-from-menu-action.html",
+      "raw_sha256": "0c622ab17fdebcdfa378e6fe76682bea2f427ea5c056181077cdd56519d659fa",
+      "text_work_path": "work/research/batch47-shortcuts-data-flow/12-use-the-choose-from-menu-action.txt",
+      "text_sha256": "f4159fef864161ed02fa15eb1dcb644efc7408ee4b0526da5583498966658fd7",
+      "body_id": "apdd7bf369da",
+      "selected_versions": [
+        {
+          "text": "iOS 27",
+          "url": "https://support.apple.com/guide/shortcuts/apdd7bf369da/10.0/ios/27"
+        }
+      ],
+      "text_chars": 2213,
+      "checked_on": "2026-10-27",
+      "evidence_id": "E-SCDF-12",
+      "title": "Use the Choose from Menu action",
+      "body_read": true,
+      "visual_observed": false,
+      "hands_on": false
+    },
+    {
+      "key": "13-use-if-actions",
+      "url": "https://support.apple.com/guide/shortcuts/use-if-actions-apd83dcd1b51/10.0/ios/27",
+      "status": 200,
+      "final_url": "https://support.apple.com/guide/shortcuts/use-if-actions-apd83dcd1b51/10.0/ios/27",
+      "raw_work_path": "work/research/batch47-shortcuts-data-flow/13-use-if-actions.html",
+      "raw_sha256": "a7499cad2f170fc1644f6376a7ecdcf70123980e2b48fcaf055f52774e31d1b2",
+      "text_work_path": "work/research/batch47-shortcuts-data-flow/13-use-if-actions.txt",
+      "text_sha256": "a5979370b6fa6d63ec3fd58652cdfc12c3c7a10ee950e4ec762f6954d0d3781b",
+      "body_id": "apd83dcd1b51",
+      "selected_versions": [
+        {
+          "text": "iOS 27",
+          "url": "https://support.apple.com/guide/shortcuts/apd83dcd1b51/10.0/ios/27"
+        }
+      ],
+      "text_chars": 3028,
+      "checked_on": "2026-10-27",
+      "evidence_id": "E-SCDF-13",
+      "title": "Use If actions",
+      "body_read": true,
+      "visual_observed": false,
+      "hands_on": false
+    },
+    {
+      "key": "14-use-repeat-actions",
+      "url": "https://support.apple.com/guide/shortcuts/use-repeat-actions-apdc11deb2c1/10.0/ios/27",
+      "status": 200,
+      "final_url": "https://support.apple.com/guide/shortcuts/use-repeat-actions-apdc11deb2c1/10.0/ios/27",
+      "raw_work_path": "work/research/batch47-shortcuts-data-flow/14-use-repeat-actions.html",
+      "raw_sha256": "8a6f32ca84d37b9fff7a66f2bb7e0875eccf2e230c721dcac0c8046cc0346d46",
+      "text_work_path": "work/research/batch47-shortcuts-data-flow/14-use-repeat-actions.txt",
+      "text_sha256": "e4348396a044ab52897ad9e7157d673f67c1911026c9fe9f24519f77745487d6",
+      "body_id": "apdc11deb2c1",
+      "selected_versions": [
+        {
+          "text": "iOS 27",
+          "url": "https://support.apple.com/guide/shortcuts/apdc11deb2c1/10.0/ios/27"
+        }
+      ],
+      "text_chars": 5694,
+      "checked_on": "2026-10-27",
+      "evidence_id": "E-SCDF-14",
+      "title": "Use Repeat actions",
+      "body_read": true,
+      "visual_observed": false,
+      "hands_on": false
+    },
+    {
+      "key": "15-use-the-ask-each-time-variable",
+      "url": "https://support.apple.com/guide/shortcuts/use-the-ask-each-time-variable-apd8b28e2166/10.0/ios/27",
+      "status": 200,
+      "final_url": "https://support.apple.com/guide/shortcuts/use-the-ask-each-time-variable-apd8b28e2166/10.0/ios/27",
+      "raw_work_path": "work/research/batch47-shortcuts-data-flow/15-use-the-ask-each-time-variable.html",
+      "raw_sha256": "3ca086402a1dd1fa73e93ee18960a5826190522ec0f5963795397402e41e609f",
+      "text_work_path": "work/research/batch47-shortcuts-data-flow/15-use-the-ask-each-time-variable.txt",
+      "text_sha256": "9c777d1a43d5e8191f2ab530f2dc15c234e5ddb0fb11febe456a0c5e10163180",
+      "body_id": "apd8b28e2166",
+      "selected_versions": [
+        {
+          "text": "iOS 27",
+          "url": "https://support.apple.com/guide/shortcuts/apd8b28e2166/10.0/ios/27"
+        }
+      ],
+      "text_chars": 727,
+      "checked_on": "2026-10-27",
+      "evidence_id": "E-SCDF-15",
+      "title": "Use the Ask Each Time variable",
+      "body_read": true,
+      "visual_observed": false,
+      "hands_on": false
+    },
+    {
+      "key": "16-advanced-shortcuts-settings",
+      "url": "https://support.apple.com/guide/shortcuts/advanced-shortcuts-settings-apdfeb05586f/10.0/ios/27",
+      "status": 200,
+      "final_url": "https://support.apple.com/guide/shortcuts/advanced-shortcuts-settings-apdfeb05586f/10.0/ios/27",
+      "raw_work_path": "work/research/batch47-shortcuts-data-flow/16-advanced-shortcuts-settings.html",
+      "raw_sha256": "63fab88e077852195926170bfdae0fe48c7414af6fa330861337ae950c2f4df7",
+      "text_work_path": "work/research/batch47-shortcuts-data-flow/16-advanced-shortcuts-settings.txt",
+      "text_sha256": "1bd8ea0b6d54ba6954d667d0237c3bf88a54449a7eefda7f52911fc5f3ef99f4",
+      "body_id": "apdfeb05586f",
+      "selected_versions": [
+        {
+          "text": "iOS 27",
+          "url": "https://support.apple.com/guide/shortcuts/apdfeb05586f/10.0/ios/27"
+        }
+      ],
+      "text_chars": 2265,
+      "checked_on": "2026-10-27",
+      "evidence_id": "E-SCDF-16",
+      "title": "Advanced Shortcuts settings",
+      "body_read": true,
+      "visual_observed": false,
+      "hands_on": false
+    },
+    {
+      "key": "17-intro-to-the-run-javascript-on-webpage-action",
+      "url": "https://support.apple.com/guide/shortcuts/intro-to-the-run-javascript-on-webpage-action-apd218e2187d/10.0/ios/27",
+      "status": 200,
+      "final_url": "https://support.apple.com/guide/shortcuts/intro-to-the-run-javascript-on-webpage-action-apd218e2187d/10.0/ios/27",
+      "raw_work_path": "work/research/batch47-shortcuts-data-flow/17-intro-to-the-run-javascript-on-webpage-action.html",
+      "raw_sha256": "783279d993977645de52dfed2c5853a614c47587b1bb0789e747583b6d29ef00",
+      "text_work_path": "work/research/batch47-shortcuts-data-flow/17-intro-to-the-run-javascript-on-webpage-action.txt",
+      "text_sha256": "a649cd2dd9a9144dc1648681e12e73d03247961cc9b7e4a899559abbb00532cc",
+      "body_id": "apd218e2187d",
+      "selected_versions": [
+        {
+          "text": "iOS 27",
+          "url": "https://support.apple.com/guide/shortcuts/apd218e2187d/10.0/ios/27"
+        }
+      ],
+      "text_chars": 4868,
+      "checked_on": "2026-10-27",
+      "evidence_id": "E-SCDF-17",
+      "title": "Intro to the Run JavaScript on Webpage action",
+      "body_read": true,
+      "visual_observed": false,
+      "hands_on": false
+    },
+    {
+      "key": "18-use-the-run-javascript-on-webpage-action",
+      "url": "https://support.apple.com/guide/shortcuts/use-the-run-javascript-on-webpage-action-apdb71a01d93/10.0/ios/27",
+      "status": 200,
+      "final_url": "https://support.apple.com/guide/shortcuts/use-the-run-javascript-on-webpage-action-apdb71a01d93/10.0/ios/27",
+      "raw_work_path": "work/research/batch47-shortcuts-data-flow/18-use-the-run-javascript-on-webpage-action.html",
+      "raw_sha256": "e9e2e9e0707ab79e8b00b36eb09b5e4d8f46b9a3c5f5ab64bec646c27f132091",
+      "text_work_path": "work/research/batch47-shortcuts-data-flow/18-use-the-run-javascript-on-webpage-action.txt",
+      "text_sha256": "f9b49473938766a78e83975f9697c154fb519fe6c644ea2ebc69fd264b345ee5",
+      "body_id": "apdb71a01d93",
+      "selected_versions": [
+        {
+          "text": "iOS 27",
+          "url": "https://support.apple.com/guide/shortcuts/apdb71a01d93/10.0/ios/27"
+        }
+      ],
+      "text_chars": 2012,
+      "checked_on": "2026-10-27",
+      "evidence_id": "E-SCDF-18",
+      "title": "Use the Run JavaScript on Webpage action",
+      "body_read": true,
+      "visual_observed": false,
+      "hands_on": false
+    },
+    {
+      "key": "19-run-a-shortcut-from-a-url",
+      "url": "https://support.apple.com/guide/shortcuts/run-a-shortcut-from-a-url-apd624386f42/10.0/ios/27",
+      "status": 200,
+      "final_url": "https://support.apple.com/guide/shortcuts/run-a-shortcut-from-a-url-apd624386f42/10.0/ios/27",
+      "raw_work_path": "work/research/batch47-shortcuts-data-flow/19-run-a-shortcut-from-a-url.html",
+      "raw_sha256": "e59ac5e604591ca81e0872aa1d0f928e317838de392046a374d4518be82bd571",
+      "text_work_path": "work/research/batch47-shortcuts-data-flow/19-run-a-shortcut-from-a-url.txt",
+      "text_sha256": "fa3456a685547621ab082e4c2ddb17e7dbeef55db56faa99e4ea6d3cc9bda39f",
+      "body_id": "apd624386f42",
+      "selected_versions": [
+        {
+          "text": "iOS 27",
+          "url": "https://support.apple.com/guide/shortcuts/apd624386f42/10.0/ios/27"
+        }
+      ],
+      "text_chars": 1875,
+      "checked_on": "2026-10-27",
+      "evidence_id": "E-SCDF-19",
+      "title": "Run a shortcut from a URL",
+      "body_read": true,
+      "visual_observed": false,
+      "hands_on": false
+    },
+    {
+      "key": "20-use-x-callback-url",
+      "url": "https://support.apple.com/guide/shortcuts/use-x-callback-url-apdcd7f20a6f/10.0/ios/27",
+      "status": 200,
+      "final_url": "https://support.apple.com/guide/shortcuts/use-x-callback-url-apdcd7f20a6f/10.0/ios/27",
+      "raw_work_path": "work/research/batch47-shortcuts-data-flow/20-use-x-callback-url.html",
+      "raw_sha256": "faa588b815b962a0c23501b3706596a15959af8d513462b7ae3bee246f1392f0",
+      "text_work_path": "work/research/batch47-shortcuts-data-flow/20-use-x-callback-url.txt",
+      "text_sha256": "34fff5c29796770a3d03b670041457cfe9c390516cf3245bd4a89086cdeeb30e",
+      "body_id": "apdcd7f20a6f",
+      "selected_versions": [
+        {
+          "text": "iOS 27",
+          "url": "https://support.apple.com/guide/shortcuts/apdcd7f20a6f/10.0/ios/27"
+        }
+      ],
+      "text_chars": 1736,
+      "checked_on": "2026-10-27",
+      "evidence_id": "E-SCDF-20",
+      "title": "Use x-callback-url",
+      "body_read": true,
+      "visual_observed": false,
+      "hands_on": false
+    },
+    {
+      "key": "21-use-another-apps-url-scheme",
+      "url": "https://support.apple.com/guide/shortcuts/use-another-apps-url-scheme-apd68802640c/10.0/ios/27",
+      "status": 200,
+      "final_url": "https://support.apple.com/guide/shortcuts/use-another-apps-url-scheme-apd68802640c/10.0/ios/27",
+      "raw_work_path": "work/research/batch47-shortcuts-data-flow/21-use-another-apps-url-scheme.html",
+      "raw_sha256": "2f919bc86715428b5b1768555bbc45db310fe5062f32f88b5ed3989277d93f77",
+      "text_work_path": "work/research/batch47-shortcuts-data-flow/21-use-another-apps-url-scheme.txt",
+      "text_sha256": "0c36069b53ffd23322ca87f13c3c0aa1a3652eee230a10c8b6dbe7b00f2c2f3f",
+      "body_id": "apd68802640c",
+      "selected_versions": [
+        {
+          "text": "iOS 27",
+          "url": "https://support.apple.com/guide/shortcuts/apd68802640c/10.0/ios/27"
+        }
+      ],
+      "text_chars": 904,
+      "checked_on": "2026-10-27",
+      "evidence_id": "E-SCDF-21",
+      "title": "Use another app’s URL scheme",
+      "body_read": true,
+      "visual_observed": false,
+      "hands_on": false
+    },
+    {
+      "key": "22-request-your-first-api",
+      "url": "https://support.apple.com/guide/shortcuts/request-your-first-api-apd58d46713f/10.0/ios/27",
+      "status": 200,
+      "final_url": "https://support.apple.com/guide/shortcuts/request-your-first-api-apd58d46713f/10.0/ios/27",
+      "raw_work_path": "work/research/batch47-shortcuts-data-flow/22-request-your-first-api.html",
+      "raw_sha256": "ff9dfc929d7108ab6d22dee380e537fa9c1c39c4cc3b81dc6b7acd662b7f7b62",
+      "text_work_path": "work/research/batch47-shortcuts-data-flow/22-request-your-first-api.txt",
+      "text_sha256": "ac8b96324a0fd26e9ab46baefa0bf50d18e8708d81a2cc534a92fc729094cf15",
+      "body_id": "apd58d46713f",
+      "selected_versions": [
+        {
+          "text": "iOS 27",
+          "url": "https://support.apple.com/guide/shortcuts/apd58d46713f/10.0/ios/27"
+        }
+      ],
+      "text_chars": 2680,
+      "checked_on": "2026-10-27",
+      "evidence_id": "E-SCDF-22",
+      "title": "Request your first API",
+      "body_read": true,
+      "visual_observed": false,
+      "hands_on": false
+    },
+    {
+      "key": "23-handling-lists",
+      "url": "https://support.apple.com/guide/shortcuts/handling-lists-apd9ba41d21b/10.0/ios/27",
+      "status": 200,
+      "final_url": "https://support.apple.com/guide/shortcuts/handling-lists-apd9ba41d21b/10.0/ios/27",
+      "raw_work_path": "work/research/batch47-shortcuts-data-flow/23-handling-lists.html",
+      "raw_sha256": "4c90ff5b8c09e153c28304dae4e02f9e642ee8008f1d9c5ceb77aaa55a87668a",
+      "text_work_path": "work/research/batch47-shortcuts-data-flow/23-handling-lists.txt",
+      "text_sha256": "1f8c181f086641a12f89f3b99ec89f604a1ae0bc545d88c9b1578b841d0c5346",
+      "body_id": "apd9ba41d21b",
+      "selected_versions": [
+        {
+          "text": "iOS 27",
+          "url": "https://support.apple.com/guide/shortcuts/apd9ba41d21b/10.0/ios/27"
+        }
+      ],
+      "text_chars": 1892,
+      "checked_on": "2026-10-27",
+      "evidence_id": "E-SCDF-23",
+      "title": "Handling lists",
+      "body_read": true,
+      "visual_observed": false,
+      "hands_on": false
+    },
+    {
+      "key": "24-get-dictionary-value-action",
+      "url": "https://support.apple.com/guide/shortcuts/get-dictionary-value-action-apdf01294032/10.0/ios/27",
+      "status": 200,
+      "final_url": "https://support.apple.com/guide/shortcuts/get-dictionary-value-action-apdf01294032/10.0/ios/27",
+      "raw_work_path": "work/research/batch47-shortcuts-data-flow/24-get-dictionary-value-action.html",
+      "raw_sha256": "6538625df68f5f5aabb87189049a9afa5e2dddb63228b76e782e2591ca55a842",
+      "text_work_path": "work/research/batch47-shortcuts-data-flow/24-get-dictionary-value-action.txt",
+      "text_sha256": "b76dc727c2eb67b08f24f4fdf1b7b8bc4f344648e0d46c5fbb75da8683c9d72c",
+      "body_id": "apdf01294032",
+      "selected_versions": [
+        {
+          "text": "iOS 27",
+          "url": "https://support.apple.com/guide/shortcuts/apdf01294032/10.0/ios/27"
+        }
+      ],
+      "text_chars": 683,
+      "checked_on": "2026-10-27",
+      "evidence_id": "E-SCDF-24",
+      "title": "Get Dictionary Value action",
+      "body_read": true,
+      "visual_observed": false,
+      "hands_on": false
+    },
+    {
+      "key": "25-api-limitations",
+      "url": "https://support.apple.com/guide/shortcuts/api-limitations-apd891a6c84e/10.0/ios/27",
+      "status": 200,
+      "final_url": "https://support.apple.com/guide/shortcuts/api-limitations-apd891a6c84e/10.0/ios/27",
+      "raw_work_path": "work/research/batch47-shortcuts-data-flow/25-api-limitations.html",
+      "raw_sha256": "aac511dd9c58acea29a0e379b73a6ec65d28053be70290792d86862be0f87d84",
+      "text_work_path": "work/research/batch47-shortcuts-data-flow/25-api-limitations.txt",
+      "text_sha256": "461319dad72cb52f42065e1f52d44e5717034f50d675a18f14cd63703478b122",
+      "body_id": "apd891a6c84e",
+      "selected_versions": [
+        {
+          "text": "iOS 27",
+          "url": "https://support.apple.com/guide/shortcuts/apd891a6c84e/10.0/ios/27"
+        }
+      ],
+      "text_chars": 1294,
+      "checked_on": "2026-10-27",
+      "evidence_id": "E-SCDF-25",
+      "title": "API limitations",
+      "body_read": true,
+      "visual_observed": false,
+      "hands_on": false
+    },
+    {
+      "key": "26-dictionaries",
+      "url": "https://support.apple.com/guide/shortcuts/dictionaries-apd43b69f337/10.0/ios/27",
+      "status": 200,
+      "final_url": "https://support.apple.com/guide/shortcuts/dictionaries-apd43b69f337/10.0/ios/27",
+      "raw_work_path": "work/research/batch47-shortcuts-data-flow/26-dictionaries.html",
+      "raw_sha256": "64d1577772e52ca00298d1a99c014b463c398506984d8d493c7ec334862820ba",
+      "text_work_path": "work/research/batch47-shortcuts-data-flow/26-dictionaries.txt",
+      "text_sha256": "526f7c731d8c843b5b3a7cfc31611c4e7656787475d9e680f7a098e91c9d2d1b",
+      "body_id": "apd43b69f337",
+      "selected_versions": [
+        {
+          "text": "iOS 27",
+          "url": "https://support.apple.com/guide/shortcuts/apd43b69f337/10.0/ios/27"
+        }
+      ],
+      "text_chars": 963,
+      "checked_on": "2026-10-27",
+      "evidence_id": "E-SCDF-26",
+      "title": "Dictionaries",
+      "body_read": true,
+      "visual_observed": false,
+      "hands_on": false
+    },
+    {
+      "key": "27-json",
+      "url": "https://support.apple.com/guide/shortcuts/intro-to-using-json-apd0f2e057df/10.0/ios/27",
+      "status": 200,
+      "final_url": "https://support.apple.com/guide/shortcuts/intro-to-using-json-apd0f2e057df/10.0/ios/27",
+      "raw_work_path": "work/research/batch47-shortcuts-data-flow/27-json.html",
+      "raw_sha256": "f6a381dfe5e71919def71a947caf136b90eb313bc7278961fb56a7bf72b0aae4",
+      "text_work_path": "work/research/batch47-shortcuts-data-flow/27-json.txt",
+      "text_sha256": "a23edb8362cc527c1e059af91922f57069adde0b26dd0d2bfb64cd9d6159b2ca",
+      "body_id": "apd0f2e057df",
+      "selected_versions": [
+        {
+          "text": "iOS 27",
+          "url": "https://support.apple.com/guide/shortcuts/apd0f2e057df/10.0/ios/27"
+        }
+      ],
+      "text_chars": 1752,
+      "checked_on": "2026-10-27",
+      "evidence_id": "E-SCDF-27",
+      "title": "Intro to using JSON",
+      "body_read": true,
+      "visual_observed": false,
+      "hands_on": false
+    },
+    {
+      "key": "28-json",
+      "url": "https://support.apple.com/guide/shortcuts/parsing-json-apdde2dfe749/10.0/ios/27",
+      "status": 200,
+      "final_url": "https://support.apple.com/guide/shortcuts/parsing-json-apdde2dfe749/10.0/ios/27",
+      "raw_work_path": "work/research/batch47-shortcuts-data-flow/28-json.html",
+      "raw_sha256": "f02750c2f675f380558ecb9bee709f1530514beb16cfb6ce52ba706afe7a5b0e",
+      "text_work_path": "work/research/batch47-shortcuts-data-flow/28-json.txt",
+      "text_sha256": "e6811bdd367d6bdf68f7fa35b666cc86d6743fa1f1f82ade5a32369e2801bb43",
+      "body_id": "apdde2dfe749",
+      "selected_versions": [
+        {
+          "text": "iOS 27",
+          "url": "https://support.apple.com/guide/shortcuts/apdde2dfe749/10.0/ios/27"
+        }
+      ],
+      "text_chars": 1096,
+      "checked_on": "2026-10-27",
+      "evidence_id": "E-SCDF-28",
+      "title": "Parsing JSON",
+      "body_read": true,
+      "visual_observed": false,
+      "hands_on": false
+    }
+  ]
+}

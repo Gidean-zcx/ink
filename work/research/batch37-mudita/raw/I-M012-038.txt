@@ -1,0 +1,21 @@
+How to Import Contacts from Outlook to Your Kompakt?
+Modified on: Sat, 3 Oct, 2026 at 8:39 AM
+You can easily transfer your contacts from Outlook to your Kompakt device using Mudita Center. Follow the steps below to complete the import process
+Before importing your contacts, make sure that: 
+Mudita Center is installed on your computer.
+Your Kompakt device is connected to your computer.
+You have access to your Outlook account credentials.
+Importing Contacts from Outlook
+Open Mudita Center and connect your Kompakt device.
+In the left-hand menu, navigate to Your Kompakt and select Contacts.
+Click Import contacts.
+Choose Outlook as the contact source.
+Sign in to your Outlook account when prompted.
+Select the contacts you want to import, or choose All contacts to import your entire contact list.
+Click Import selected contacts to start transferring the contacts to your phone.
+Once the process is complete, your selected Outlook contacts will be available on your Kompakt device.
+Was this article helpful?
+No
+Yes
+That’s Great!
+Thank you for your feedback

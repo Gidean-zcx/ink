@@ -1,0 +1,23 @@
+Handling lists in Shortcuts on iPhone or iPad
+This section discusses using the data returned by the Typicode API (in the previous topic) with the Get Item from List and Repeat with Each actions. The Get Item from List action allows a shortcut to act on a specific item from a list. The Repeat with Each action allows a shortcut to act on every item in a list, one after another.
+Before you process all items in a list, you may want to test your actions on a single item. You can pass a list to an action and Shortcuts will ask which item you want to process. You can also choose a specific item, by adding the Get Item from List action, thereby creating a testing environment similar to your final workflow.
+Get a value for a single item in the list
+In the Shortcuts app on your iPhone or iPad, add a Get Item from List action after the Get Contents of URL action.
+The action will automatically take the output from the previous action.
+Add a Get Dictionary Value action.
+This will get the value of a key.
+Set the key to name.
+Tap to run the shortcut.
+Shortcuts displays the value of name for the first item.
+Get values for all the items in the list
+In the Shortcuts app on your iPhone or iPad, add a Repeat with Each action after the Get Contents of URL action.
+The action will automatically take the output from the previous action.
+Add a Get Dictionary Value action before the End Repeat action.
+This will get the value of a key.
+Set the key to name.
+Add a Text action after the Get Dictionary Value action. Add the Repeat Index and Dictionary Value variables to the Text action.
+Add an Alert action after the End Repeat action.
+Set the alert to only show the Repeat Results variable.
+Tap to run the shortcut.
+Shortcuts displays the End Repeat variable, a combination of all the values passed during the loop.
+Not all apps, services, and content are available in all countries or regions.

@@ -1,0 +1,198 @@
+inventory_id,model,item,locator,coverage_status,evidence_ids,flow_ids,gap
+I-QGNT-001,Gen.2 FMVDP41/FMVDP51,目次,PDF/print p2; outline level 1,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-002,Gen.2 FMVDP41/FMVDP51,本書をお読みになる前に,PDF/print p7; outline level 2,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-003,Gen.2 FMVDP41/FMVDP51,安全にお使いいただくために,PDF/print p7; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-004,Gen.2 FMVDP41/FMVDP51,本書の表記,PDF/print p7; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-005,Gen.2 FMVDP41/FMVDP51,商標および著作権,PDF/print p9; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-006,Gen.2 FMVDP41/FMVDP51,お使いになる前に,PDF/print p10; outline level 1,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-007,Gen.2 FMVDP41/FMVDP51,1. 各部名称,PDF/print p11; outline level 2,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-008,Gen.2 FMVDP41/FMVDP51,クアデルノ,PDF/print p11; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-009,Gen.2 FMVDP41/FMVDP51,スタイラスペン,PDF/print p12; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-010,Gen.2 FMVDP41/FMVDP51,2. セキュリティについて,PDF/print p13; outline level 2,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-011,Gen.2 FMVDP41/FMVDP51,画面ロックをかける,PDF/print p13; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-012,Gen.2 FMVDP41/FMVDP51,FeliCa カードや対応機器で画面ロックを解除する,PDF/print p13; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-013,Gen.2 FMVDP41/FMVDP51,3. バージョンの確認方法,PDF/print p15; outline level 2,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-014,Gen.2 FMVDP41/FMVDP51,クアデルノの本体ソフトウェアバージョンを確認する,PDF/print p15; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-015,Gen.2 FMVDP41/FMVDP51,QUADERNO PC Appのバージョンを確認する,PDF/print p15; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-016,Gen.2 FMVDP41/FMVDP51,4. ドキュメントを転送する,PDF/print p16; outline level 2,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-017,Gen.2 FMVDP41/FMVDP51,QUADERNO PC Appでドキュメントを転送する,PDF/print p16; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-018,Gen.2 FMVDP41/FMVDP51,USB ケーブルを接続してドキュメントを転送する（Windowsのみ）,PDF/print p16; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-019,Gen.2 FMVDP41/FMVDP51,5. スマートフォン連携,PDF/print p17; outline level 2,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-020,Gen.2 FMVDP41/FMVDP51,QUADERNO Mobile Appのインストール方法,PDF/print p17; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-021,Gen.2 FMVDP41/FMVDP51,QUADERNO Mobile Appのヘルプガイド,PDF/print p17; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-022,Gen.2 FMVDP41/FMVDP51,6. クアデルノのファイルを復元させるために,PDF/print p18; outline level 2,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-023,Gen.2 FMVDP41/FMVDP51,7. スケジュールフォーマットを活用する,PDF/print p19; outline level 2,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-024,Gen.2 FMVDP41/FMVDP51,スケジュールフォーマットを入手する,PDF/print p19; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-025,Gen.2 FMVDP41/FMVDP51,スケジュールフォーマットを使いこなす,PDF/print p19; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-026,Gen.2 FMVDP41/FMVDP51,8. テンプレートを活用する,PDF/print p21; outline level 2,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-027,Gen.2 FMVDP41/FMVDP51,テンプレートを入手する,PDF/print p21; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-028,Gen.2 FMVDP41/FMVDP51,テンプレートを取り込む,PDF/print p21; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-029,Gen.2 FMVDP41/FMVDP51,クアデルノの使い方,PDF/print p22; outline level 1,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-030,Gen.2 FMVDP41/FMVDP51,1. 基本機能について,PDF/print p23; outline level 2,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-031,Gen.2 FMVDP41/FMVDP51,電源ボタンで操作する,PDF/print p23; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-032,Gen.2 FMVDP41/FMVDP51,ホームメニュー,PDF/print p24; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-033,Gen.2 FMVDP41/FMVDP51,バッテリーについて,PDF/print p25; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-034,Gen.2 FMVDP41/FMVDP51,ドキュメント画面,PDF/print p26; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-035,Gen.2 FMVDP41/FMVDP51,2. スリープについて,PDF/print p28; outline level 2,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-036,Gen.2 FMVDP41/FMVDP51,スリープにする,PDF/print p28; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-037,Gen.2 FMVDP41/FMVDP51,復帰する,PDF/print p28; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-038,Gen.2 FMVDP41/FMVDP51,スリープ画面を設定する,PDF/print p28; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-039,Gen.2 FMVDP41/FMVDP51,3. 画面をリフレッシュする,PDF/print p29; outline level 2,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-040,Gen.2 FMVDP41/FMVDP51,リフレッシュする,PDF/print p29; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-041,Gen.2 FMVDP41/FMVDP51,4. ドキュメントを開く,PDF/print p30; outline level 2,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-042,Gen.2 FMVDP41/FMVDP51,ドキュメント一覧から開く,PDF/print p30; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-043,Gen.2 FMVDP41/FMVDP51,フォルダーから選択して開く,PDF/print p30; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-044,Gen.2 FMVDP41/FMVDP51,ドキュメントを切り替える,PDF/print p31; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-045,Gen.2 FMVDP41/FMVDP51,5. フォルダーの作成と名称変更／複製／移動／削除,PDF/print p33; outline level 2,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-046,Gen.2 FMVDP41/FMVDP51,フォルダーを作成する,PDF/print p33; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-047,Gen.2 FMVDP41/FMVDP51,フォルダーの名称変更／複製／移動／削除をする,PDF/print p33; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-048,Gen.2 FMVDP41/FMVDP51,6. ドキュメントの名称変更／複製／移動／削除,PDF/print p35; outline level 2,selected_body_pages_read_task_partial,E-QGNT-01,F-M060-04;F-M060-20,本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留
+I-QGNT-049,Gen.2 FMVDP41/FMVDP51,ドキュメント画面から操作する,PDF/print p35; outline level 3,selected_body_pages_read_task_partial,E-QGNT-01,F-M060-04;F-M060-20,本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留
+I-QGNT-050,Gen.2 FMVDP41/FMVDP51,「フォルダーから探す」から操作する,PDF/print p36; outline level 3,selected_body_pages_read_task_partial,E-QGNT-01,F-M060-04;F-M060-20,本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留
+I-QGNT-051,Gen.2 FMVDP41/FMVDP51,「一覧から探す」から操作する,PDF/print p37; outline level 3,selected_body_pages_read_task_partial,E-QGNT-01,F-M060-04;F-M060-20,本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留
+I-QGNT-052,Gen.2 FMVDP41/FMVDP51,「ごみ箱」フォルダーを操作する,PDF/print p38; outline level 3,selected_body_pages_read_task_partial,E-QGNT-01,F-M060-04,本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留
+I-QGNT-053,Gen.2 FMVDP41/FMVDP51,7. ドキュメントを読む,PDF/print p40; outline level 2,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-054,Gen.2 FMVDP41/FMVDP51,ページ位置表示でページを切り替える,PDF/print p40; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-055,Gen.2 FMVDP41/FMVDP51,ページをめくる,PDF/print p41; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-056,Gen.2 FMVDP41/FMVDP51,ページ一覧を表示してページを切り替える,PDF/print p42; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-057,Gen.2 FMVDP41/FMVDP51,ページを指定して表示する,PDF/print p43; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-058,Gen.2 FMVDP41/FMVDP51,左右のページを見開きで表示する,PDF/print p43; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-059,Gen.2 FMVDP41/FMVDP51,左右にドキュメントを並べて表示する,PDF/print p44; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-060,Gen.2 FMVDP41/FMVDP51,画面を拡大する,PDF/print p45; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-061,Gen.2 FMVDP41/FMVDP51,8. お気に入りのドキュメントを登録する,PDF/print p47; outline level 2,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-062,Gen.2 FMVDP41/FMVDP51,お気に入りを登録する,PDF/print p47; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-063,Gen.2 FMVDP41/FMVDP51,お気に入りを解除する,PDF/print p47; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-064,Gen.2 FMVDP41/FMVDP51,9. 検索する,PDF/print p49; outline level 2,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-065,Gen.2 FMVDP41/FMVDP51,ドキュメント内を検索する,PDF/print p49; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-066,Gen.2 FMVDP41/FMVDP51,ドキュメントを検索する,PDF/print p50; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-067,Gen.2 FMVDP41/FMVDP51,10. ドキュメントに書く,PDF/print p51; outline level 2,start_page_text_read_not_whole_section,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-068,Gen.2 FMVDP41/FMVDP51,ペン先の位置を調整する,PDF/print p51; outline level 3,start_page_text_read_not_whole_section,E-QGNT-01,F-M060-17,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-069,Gen.2 FMVDP41/FMVDP51,ドキュメントに直接手書きをする,PDF/print p52; outline level 3,start_page_text_read_not_whole_section,E-QGNT-01,F-M060-12,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-070,Gen.2 FMVDP41/FMVDP51,消しゴムを使う,PDF/print p53; outline level 3,start_page_text_read_not_whole_section,E-QGNT-01,F-M060-12,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-071,Gen.2 FMVDP41/FMVDP51,ハイライトを付ける,PDF/print p55; outline level 3,start_page_text_read_not_whole_section,E-QGNT-01,F-M060-12,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-072,Gen.2 FMVDP41/FMVDP51,手書きをコピー／切り取り／貼り付けする,PDF/print p56; outline level 3,start_page_text_read_not_whole_section,E-QGNT-01,F-M060-12,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-073,Gen.2 FMVDP41/FMVDP51,書き込み一覧を表示する,PDF/print p56; outline level 3,start_page_text_read_not_whole_section,E-QGNT-01,F-M060-11,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-074,Gen.2 FMVDP41/FMVDP51,書き込みの編集を制限する,PDF/print p57; outline level 3,start_page_text_read_not_whole_section,E-QGNT-01,F-M060-12,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-075,Gen.2 FMVDP41/FMVDP51,11. 暗記モードを使用する,PDF/print p58; outline level 2,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-076,Gen.2 FMVDP41/FMVDP51,暗記ポイントを作成する,PDF/print p58; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-077,Gen.2 FMVDP41/FMVDP51,暗記モードで暗記する,PDF/print p58; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-078,Gen.2 FMVDP41/FMVDP51,12. ノートを活用する,PDF/print p60; outline level 2,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-079,Gen.2 FMVDP41/FMVDP51,ノートを新規に作成する,PDF/print p60; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-080,Gen.2 FMVDP41/FMVDP51,ノートを開く,PDF/print p60; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-081,Gen.2 FMVDP41/FMVDP51,開いているドキュメントのサイドノートを作成する,PDF/print p61; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-082,Gen.2 FMVDP41/FMVDP51,サイドノートを開く,PDF/print p61; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-083,Gen.2 FMVDP41/FMVDP51,ノートにページを追加／削除する,PDF/print p62; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-084,Gen.2 FMVDP41/FMVDP51,ノートのテンプレートを設定する,PDF/print p62; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-085,Gen.2 FMVDP41/FMVDP51,13. パソコン（Windows）とクアデルノでドキュメントを転送する,PDF/print p63; outline level 2,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-086,Gen.2 FMVDP41/FMVDP51,パソコンからドキュメントを転送する,PDF/print p63; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-087,Gen.2 FMVDP41/FMVDP51,パソコンへドキュメントを転送する,PDF/print p63; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-088,Gen.2 FMVDP41/FMVDP51,ノートのテンプレートを取り込む,PDF/print p64; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-089,Gen.2 FMVDP41/FMVDP51,14. 楽譜を見る,PDF/print p66; outline level 2,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-090,Gen.2 FMVDP41/FMVDP51,Bluetooth フットペダルを接続する,PDF/print p66; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-091,Gen.2 FMVDP41/FMVDP51,ページ送り順を設定する,PDF/print p67; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-092,Gen.2 FMVDP41/FMVDP51,15. クアデルノで設定を変更する,PDF/print p68; outline level 2,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-093,Gen.2 FMVDP41/FMVDP51,ワイヤレス,PDF/print p68; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-094,Gen.2 FMVDP41/FMVDP51,システム,PDF/print p69; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-095,Gen.2 FMVDP41/FMVDP51,16. ScanSnapから取り込む,PDF/print p72; outline level 2,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-096,Gen.2 FMVDP41/FMVDP51,Wi-Fiで接続する,PDF/print p72; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-097,Gen.2 FMVDP41/FMVDP51,取り込む,PDF/print p73; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-098,Gen.2 FMVDP41/FMVDP51,17. クアデルノの本体ソフトウェアのアップデート,PDF/print p77; outline level 2,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-099,Gen.2 FMVDP41/FMVDP51,アップデートするうえでの注意事項,PDF/print p77; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-100,Gen.2 FMVDP41/FMVDP51,アップデートする,PDF/print p77; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-101,Gen.2 FMVDP41/FMVDP51,QUADERNO PC Appの使い方,PDF/print p78; outline level 1,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-102,Gen.2 FMVDP41/FMVDP51,1. QUADERNO PC Appの画面,PDF/print p79; outline level 2,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-103,Gen.2 FMVDP41/FMVDP51,2. パソコンにQUADERNO PC Appをインストールする,PDF/print p81; outline level 2,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-104,Gen.2 FMVDP41/FMVDP51,3. パソコンとクアデルノを接続する,PDF/print p82; outline level 2,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-105,Gen.2 FMVDP41/FMVDP51,USB ケーブルで接続する,PDF/print p82; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-106,Gen.2 FMVDP41/FMVDP51,Wi-Fiで接続する,PDF/print p82; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-107,Gen.2 FMVDP41/FMVDP51,Bluetoothで接続する,PDF/print p83; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-108,Gen.2 FMVDP41/FMVDP51,接続状態を確認する,PDF/print p84; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-109,Gen.2 FMVDP41/FMVDP51,4. ドキュメントを転送する,PDF/print p85; outline level 2,selected_body_pages_read_task_partial,E-QGNT-01,F-M060-18,本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留
+I-QGNT-110,Gen.2 FMVDP41/FMVDP51,パソコンからドキュメントを転送する,PDF/print p85; outline level 3,selected_body_pages_read_task_partial,E-QGNT-01,F-M060-18,本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留
+I-QGNT-111,Gen.2 FMVDP41/FMVDP51,印刷機能を利用してクアデルノに転送・表示する,PDF/print p85; outline level 3,selected_body_pages_read_task_partial,E-QGNT-01,F-M060-18,本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留
+I-QGNT-112,Gen.2 FMVDP41/FMVDP51,パソコンへドキュメントを転送する,PDF/print p86; outline level 3,selected_body_pages_read_task_partial,E-QGNT-01,F-M060-18,本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留
+I-QGNT-113,Gen.2 FMVDP41/FMVDP51,5. バックアップする,PDF/print p87; outline level 2,selected_body_pages_read_task_partial,E-QGNT-01,F-M060-06;F-M060-07,本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留
+I-QGNT-114,Gen.2 FMVDP41/FMVDP51,バックアップする,PDF/print p87; outline level 3,selected_body_pages_read_task_partial,E-QGNT-01,F-M060-06;F-M060-07,本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留
+I-QGNT-115,Gen.2 FMVDP41/FMVDP51,バックアップをインポートする,PDF/print p87; outline level 3,selected_body_pages_read_task_partial,E-QGNT-01,F-M060-06;F-M060-07,本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留
+I-QGNT-116,Gen.2 FMVDP41/FMVDP51,バックアップデータを削除する,PDF/print p88; outline level 3,selected_body_pages_read_task_partial,E-QGNT-01,F-M060-06,本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留
+I-QGNT-117,Gen.2 FMVDP41/FMVDP51,6. クアデルノとパソコンを同期する,PDF/print p89; outline level 2,selected_body_pages_read_task_partial,E-QGNT-01,F-M060-08,本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留
+I-QGNT-118,Gen.2 FMVDP41/FMVDP51,同期するうえでのご注意,PDF/print p90; outline level 3,selected_body_pages_read_task_partial,E-QGNT-01,F-M060-08;F-M060-04,本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留
+I-QGNT-119,Gen.2 FMVDP41/FMVDP51,同期するパソコンのフォルダーを設定する,PDF/print p90; outline level 3,selected_body_pages_read_task_partial,E-QGNT-01,F-M060-08;F-M060-04,本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留
+I-QGNT-120,Gen.2 FMVDP41/FMVDP51,同期したフォルダー内の内容を更新する,PDF/print p90; outline level 3,selected_body_pages_read_task_partial,E-QGNT-01,F-M060-08;F-M060-04,本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留
+I-QGNT-121,Gen.2 FMVDP41/FMVDP51,同期設定を解除する,PDF/print p90; outline level 3,selected_body_pages_read_task_partial,E-QGNT-01,F-M060-08;F-M060-04,本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留
+I-QGNT-122,Gen.2 FMVDP41/FMVDP51,7. QUADERNO PC Appで検索する,PDF/print p91; outline level 2,selected_body_pages_read_task_partial,E-QGNT-01,F-M060-11,本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留
+I-QGNT-123,Gen.2 FMVDP41/FMVDP51,ドキュメントやフォルダーを検索する,PDF/print p91; outline level 3,selected_body_pages_read_task_partial,E-QGNT-01,F-M060-11,本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留
+I-QGNT-124,Gen.2 FMVDP41/FMVDP51,特定のマークを書き込んだドキュメントを検索する,PDF/print p91; outline level 3,selected_body_pages_read_task_partial,E-QGNT-01,F-M060-11,本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留
+I-QGNT-125,Gen.2 FMVDP41/FMVDP51,8. クアデルノのドキュメント／フォルダー構成を変更する,PDF/print p92; outline level 2,selected_body_pages_read_task_partial,E-QGNT-01,F-M060-20;F-M060-08;F-M060-04,本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留
+I-QGNT-126,Gen.2 FMVDP41/FMVDP51,変更するうえでのご注意,PDF/print p92; outline level 3,selected_body_pages_read_task_partial,E-QGNT-01,F-M060-20;F-M060-08;F-M060-04,本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留
+I-QGNT-127,Gen.2 FMVDP41/FMVDP51,変更方法,PDF/print p92; outline level 3,selected_body_pages_read_task_partial,E-QGNT-01,F-M060-20;F-M060-08;F-M060-04,本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留
+I-QGNT-128,Gen.2 FMVDP41/FMVDP51,9. ノートのテンプレートを追加／削除／名称変更する,PDF/print p93; outline level 2,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-129,Gen.2 FMVDP41/FMVDP51,10. パソコンでドキュメントを表示する,PDF/print p94; outline level 2,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-130,Gen.2 FMVDP41/FMVDP51,11. 複数のクアデルノを操作する,PDF/print p95; outline level 2,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-131,Gen.2 FMVDP41/FMVDP51,2台目のクアデルノをペアリングする,PDF/print p95; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-132,Gen.2 FMVDP41/FMVDP51,複数のクアデルノを切り替えて使う,PDF/print p95; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-133,Gen.2 FMVDP41/FMVDP51,ペアリングを解除する,PDF/print p95; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-134,Gen.2 FMVDP41/FMVDP51,12. QUADERNO PC Appで設定を変更する,PDF/print p96; outline level 2,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-135,Gen.2 FMVDP41/FMVDP51,設定項目,PDF/print p96; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-136,Gen.2 FMVDP41/FMVDP51,13. QUADERNO PC Appをアップデートする,PDF/print p98; outline level 2,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-137,Gen.2 FMVDP41/FMVDP51,アップデートするうえでの注意事項,PDF/print p98; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-138,Gen.2 FMVDP41/FMVDP51,アップデート通知,PDF/print p98; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-139,Gen.2 FMVDP41/FMVDP51,手動でアップデートする,PDF/print p99; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-140,Gen.2 FMVDP41/FMVDP51,14. QUADERNO PC Appからクアデルノ本体ソフトウェアをアップデート する,PDF/print p100; outline level 2,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-141,Gen.2 FMVDP41/FMVDP51,アップデートするうえでの注意事項,PDF/print p100; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-142,Gen.2 FMVDP41/FMVDP51,アップデート通知,PDF/print p100; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-143,Gen.2 FMVDP41/FMVDP51,手動でアップデートする,PDF/print p101; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-144,Gen.2 FMVDP41/FMVDP51,トラブルシューティング,PDF/print p102; outline level 1,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-145,Gen.2 FMVDP41/FMVDP51,1. クアデルノのトラブル,PDF/print p103; outline level 2,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-146,Gen.2 FMVDP41/FMVDP51,電源が入らない,PDF/print p103; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-147,Gen.2 FMVDP41/FMVDP51,充電ができない,PDF/print p103; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-148,Gen.2 FMVDP41/FMVDP51,バッテリーの消費が早く感じる,PDF/print p103; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-149,Gen.2 FMVDP41/FMVDP51,画面が表示されるまで時間がかかる,PDF/print p104; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-150,Gen.2 FMVDP41/FMVDP51,画面が表示されない,PDF/print p104; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-151,Gen.2 FMVDP41/FMVDP51,タッチパネルの反応が遅い,PDF/print p104; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-152,Gen.2 FMVDP41/FMVDP51,ホームメニューのWi-Fiのアイコンを押しても反応しない,PDF/print p104; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-153,Gen.2 FMVDP41/FMVDP51,画面に以前に表示されていた画像が薄く残る,PDF/print p104; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-154,Gen.2 FMVDP41/FMVDP51,本体ソフトウェアをアップデートしたら、「今回の本体ソフトウェア向けにデー タ変換を行う必要があります。」と表示されるようになった,PDF/print p105; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-155,Gen.2 FMVDP41/FMVDP51,2. スタイラスペンのトラブル,PDF/print p106; outline level 2,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-156,Gen.2 FMVDP41/FMVDP51,スタイラスペンの操作ができない,PDF/print p106; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-157,Gen.2 FMVDP41/FMVDP51,ペン先と実際に書かれた位置がずれる,PDF/print p106; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-158,Gen.2 FMVDP41/FMVDP51,スタイラスペンの芯がすり減ったときは,PDF/print p106; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-159,Gen.2 FMVDP41/FMVDP51,3. ネットワークのトラブル,PDF/print p108; outline level 2,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-160,Gen.2 FMVDP41/FMVDP51,Wi-Fiネットワークの設定／接続ができない,PDF/print p108; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-161,Gen.2 FMVDP41/FMVDP51,Wi-Fiネットワークの接続が突然できなくなった,PDF/print p108; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-162,Gen.2 FMVDP41/FMVDP51,Bluetoothの接続が突然できなくなった,PDF/print p109; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-163,Gen.2 FMVDP41/FMVDP51,4. ドキュメントのトラブル,PDF/print p110; outline level 2,selected_body_pages_read_task_partial,E-QGNT-01,F-M060-12,本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留
+I-QGNT-164,Gen.2 FMVDP41/FMVDP51,ドキュメントを表示できない,PDF/print p110; outline level 3,selected_body_pages_read_task_partial,E-QGNT-01,F-M060-12,本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留
+I-QGNT-165,Gen.2 FMVDP41/FMVDP51,文字が表示されない,PDF/print p110; outline level 3,selected_body_pages_read_task_partial,E-QGNT-01,F-M060-12,本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留
+I-QGNT-166,Gen.2 FMVDP41/FMVDP51,ドキュメントの操作ができない（ペン操作、タップ操作などができない）,PDF/print p110; outline level 3,selected_body_pages_read_task_partial,E-QGNT-01,F-M060-12,本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留
+I-QGNT-167,Gen.2 FMVDP41/FMVDP51,書き込みができない,PDF/print p110; outline level 3,selected_body_pages_read_task_partial,E-QGNT-01,F-M060-12,本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留
+I-QGNT-168,Gen.2 FMVDP41/FMVDP51,書き込みの編集や削除ができない,PDF/print p110; outline level 3,selected_body_pages_read_task_partial,E-QGNT-01,F-M060-12,本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留
+I-QGNT-169,Gen.2 FMVDP41/FMVDP51,「フォルダーから探す」のメニューに「ドキュメントを復元」と表示されている,PDF/print p111; outline level 3,selected_body_pages_read_task_partial,E-QGNT-01,F-M060-16,本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留
+I-QGNT-170,Gen.2 FMVDP41/FMVDP51,5. パソコンとの接続に関するトラブル,PDF/print p112; outline level 2,selected_body_pages_read_task_partial,E-QGNT-01,F-M060-19,本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留
+I-QGNT-171,Gen.2 FMVDP41/FMVDP51,パソコンにクアデルノが認識されない,PDF/print p112; outline level 3,selected_body_pages_read_task_partial,E-QGNT-01,F-M060-19,本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留
+I-QGNT-172,Gen.2 FMVDP41/FMVDP51,パソコンからクアデルノにドキュメントを転送できない,PDF/print p113; outline level 3,selected_body_pages_read_task_partial,E-QGNT-01,F-M060-06;F-M060-18;F-M060-19,本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留
+I-QGNT-173,Gen.2 FMVDP41/FMVDP51,パソコンからクアデルノのごみ箱を見つけられない,PDF/print p113; outline level 3,selected_body_pages_read_task_partial,E-QGNT-01,F-M060-06;F-M060-18;F-M060-19,本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留
+I-QGNT-174,Gen.2 FMVDP41/FMVDP51,エラーメッセージが表示された,PDF/print p113; outline level 3,selected_body_pages_read_task_partial,E-QGNT-01,F-M060-06;F-M060-18;F-M060-19,本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留
+I-QGNT-175,Gen.2 FMVDP41/FMVDP51,バックアップが作成できない,PDF/print p113; outline level 3,selected_body_pages_read_task_partial,E-QGNT-01,F-M060-06;F-M060-18;F-M060-19,本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留
+I-QGNT-176,Gen.2 FMVDP41/FMVDP51,バックアップデータが表示されない,PDF/print p113; outline level 3,selected_body_pages_read_task_partial,E-QGNT-01,F-M060-06;F-M060-18;F-M060-19,本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留
+I-QGNT-177,Gen.2 FMVDP41/FMVDP51,6. ScanSnapから取り込むときのトラブル,PDF/print p114; outline level 2,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-178,Gen.2 FMVDP41/FMVDP51,ScanSnap本体の「Scan」ボタンを押してしまった,PDF/print p114; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-179,Gen.2 FMVDP41/FMVDP51,「本機のWi-Fiがオフになっています」というエラーメッセージが表示された,PDF/print p114; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-180,Gen.2 FMVDP41/FMVDP51,接続中にクアデルノで操作しない状態が続くと、ScanSnapとの接続が切断され る,PDF/print p114; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-181,Gen.2 FMVDP41/FMVDP51,接続したいScanSnapが「接続可能なScanSnap一覧」に表示されない,PDF/print p114; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-182,Gen.2 FMVDP41/FMVDP51,7. ログファイルの保存,PDF/print p115; outline level 2,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-183,Gen.2 FMVDP41/FMVDP51,ログファイルの設定,PDF/print p115; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-184,Gen.2 FMVDP41/FMVDP51,8. お手入れ,PDF/print p116; outline level 2,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-185,Gen.2 FMVDP41/FMVDP51,クアデルノのお手入れ,PDF/print p116; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-186,Gen.2 FMVDP41/FMVDP51,ペンのお手入れ,PDF/print p116; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-187,Gen.2 FMVDP41/FMVDP51,9. アルコール消毒について,PDF/print p117; outline level 2,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-188,Gen.2 FMVDP41/FMVDP51,用意するもの,PDF/print p117; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-189,Gen.2 FMVDP41/FMVDP51,お手入れ方法,PDF/print p117; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-190,Gen.2 FMVDP41/FMVDP51,消毒薬によるお手入れの後は,PDF/print p118; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-191,Gen.2 FMVDP41/FMVDP51,消毒薬の影響について,PDF/print p118; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-192,Gen.2 FMVDP41/FMVDP51,仕様一覧,PDF/print p119; outline level 1,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-193,Gen.2 FMVDP41/FMVDP51,1. クアデルノ,PDF/print p120; outline level 2,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-194,Gen.2 FMVDP41/FMVDP51,2. スタイラスペン,PDF/print p122; outline level 2,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-195,Gen.2 FMVDP41/FMVDP51,3. その他の仕様,PDF/print p123; outline level 2,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-196,Gen.2 FMVDP41/FMVDP51,サポートしているファイル形式,PDF/print p123; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作
+I-QGNT-197,Gen.2 FMVDP41/FMVDP51,QUADERNO PC Appの動作条件,PDF/print p123; outline level 3,toc_extracted_not_reviewed,E-QGNT-01,,仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作

@@ -1,0 +1,1531 @@
+[
+  {
+    "class": "sr-only",
+    "href": "#main",
+    "title": "Skip to main content",
+    "url": "https://ground.news/#main"
+  },
+  {
+    "data-element-id": "sticky-banner-get-started-button",
+    "class": "px-[0.6rem] py-[0.6rem] rounded-lg-s bg-dark-primary text-light-primary text-12 tablet:text-14 whitespace-nowrap",
+    "href": "/subscribe",
+    "title": "Get Started",
+    "url": "https://ground.news/subscribe"
+  },
+  {
+    "id": "browser-extension-top",
+    "class": "py-[5px]",
+    "href": "/extension",
+    "title": "Browser Extension",
+    "url": "https://ground.news/extension"
+  },
+  {
+    "id": "header-logo",
+    "class": "relative cursor-pointer flex items-center my-[5px] mx-auto",
+    "style": "width:4.06rem;height:auto",
+    "aria-label": "Ground News Home",
+    "href": "/",
+    "title": "News Logo",
+    "url": "https://ground.news/"
+  },
+  {
+    "id": "header-logo",
+    "class": "relative cursor-pointer flex items-center my-[5px] mx-auto",
+    "style": "width:4.38rem;height:auto",
+    "aria-label": "Ground News Home",
+    "href": "/",
+    "title": "News Logo",
+    "url": "https://ground.news/"
+  },
+  {
+    "id": "header-navbar-home",
+    "aria-current": "page",
+    "class": "flex gap-[5px] whitespace-nowrap",
+    "href": "/",
+    "title": "Home",
+    "url": "https://ground.news/"
+  },
+  {
+    "id": "header-navbar-my",
+    "class": "flex gap-[5px] whitespace-nowrap",
+    "href": "/my",
+    "title": "For You",
+    "url": "https://ground.news/my"
+  },
+  {
+    "id": "header-navbar-local",
+    "href": "/local",
+    "title": "Local",
+    "url": "https://ground.news/local"
+  },
+  {
+    "id": "header-navbar-blindspot",
+    "href": "/blindspot",
+    "title": "Blindspot",
+    "url": "https://ground.news/blindspot"
+  },
+  {
+    "id": "header-subscribe",
+    "class": "px-[0.7rem] py-[0.7rem] text-16 font-bold rounded-[4px] leading-10 bg-dark-primary flex shrink items-center dark:bg-light-primary text-light-primary dark:text-dark-primary hover:text-light-heavy active:text-light-heavy disabled:opacity-50 hideElementSiteWide v5-legacy-pill-button",
+    "href": "/subscribe",
+    "title": "Subscribe",
+    "url": "https://ground.news/subscribe"
+  },
+  {
+    "id": "header-login",
+    "rel": "nofollow",
+    "class": "gn-secondary-focus-target focus-visible:ring-2 focus-visible:ring-offset-[3px] focus-visible:ring-[color:var(--color-dark-primary)] dark:focus-visible:ring-[color:var(--color-light-primary)] px-[0.7rem] py-[0.7rem] text-16 rounded-[4px] font-bold leading-10 whitespace-nowrap border flex shrink items-center border-dark-primary dark:border-light-primary text-dark-primary dark:text-light-primary hover:text-light-heavy active:text-light-heavy disabled:opacity-50 hideElementSiteWide v5-legacy-pill-button",
+    "href": "/login",
+    "title": "Login",
+    "url": "https://ground.news/login"
+  },
+  {
+    "class": "px-[0.6rem] py-[0.6rem] tablet:w-[6.9rem] desktop:w-[8.8rem] tablet:justify-center text-center tablet:h-[2.8rem] text-16 font-bold rounded-[4px] leading-10 bg-dark-primary flex shrink items-center dark:bg-light-primary text-light-primary dark:text-dark-primary hover:text-light-heavy active:text-light-heavy disabled:opacity-50 v5-legacy-pill-button",
+    "href": "/subscribe",
+    "title": "Subscribe",
+    "url": "https://ground.news/subscribe"
+  },
+  {
+    "id": "header-login",
+    "rel": "nofollow",
+    "class": "gn-secondary-focus-target focus-visible:ring-2 focus-visible:ring-offset-[3px] focus-visible:ring-[color:var(--color-dark-primary)] dark:focus-visible:ring-[color:var(--color-light-primary)] px-[0.7rem] py-[0.6rem] desktop:w-[8.8rem] tablet:w-[6.9rem] text-center tablet:justify-center tablet:h-[2.8rem] text-16 rounded-[4px] font-bold leading-10 whitespace-nowrap border flex shrink items-center border-dark-primary dark:border-light-primary text-dark-primary dark:text-light-primary hover:text-light-heavy active:text-light-heavy disabled:opacity-50 v5-legacy-pill-button",
+    "href": "/login",
+    "title": "Login",
+    "url": "https://ground.news/login"
+  },
+  {
+    "class": "text-16 text-light-primary font-normal",
+    "href": "/interest/lula_127ddc",
+    "title": "Lula Da Silva",
+    "url": "https://ground.news/interest/lula_127ddc"
+  },
+  {
+    "class": "text-16 text-light-primary font-normal",
+    "href": "/interest/halloween",
+    "title": "Halloween",
+    "url": "https://ground.news/interest/halloween"
+  },
+  {
+    "class": "text-16 text-light-primary font-normal",
+    "href": "/interest/ai",
+    "title": "Artificial Intelligence",
+    "url": "https://ground.news/interest/ai"
+  },
+  {
+    "class": "text-16 text-light-primary font-normal",
+    "href": "/interest/senate",
+    "title": "Senate",
+    "url": "https://ground.news/interest/senate"
+  },
+  {
+    "class": "text-16 text-light-primary font-normal",
+    "href": "/interest/united-states_b67315",
+    "title": "United States",
+    "url": "https://ground.news/interest/united-states_b67315"
+  },
+  {
+    "class": "apple-app-store app-store-icon ",
+    "href": "https://apps.apple.com/app/apple-store/id1324203419?pt=107503821&ct=unknown&mt=8",
+    "target": "_blank",
+    "id": "",
+    "rel": "noopener",
+    "title": "",
+    "url": "https://apps.apple.com/app/apple-store/id1324203419?pt=107503821&ct=unknown&mt=8"
+  },
+  {
+    "class": "google-play-store play-store-icon",
+    "href": "https://play.google.com/store/apps/details?id=com.checkitt&referrer=utm_source%3Dunknown",
+    "id": "",
+    "title": "",
+    "url": "https://play.google.com/store/apps/details?id=com.checkitt&referrer=utm_source%3Dunknown"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_About",
+    "href": "/about",
+    "title": "About",
+    "url": "https://ground.news/about"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_History",
+    "href": "/history",
+    "title": "History",
+    "url": "https://ground.news/history"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_Mission",
+    "href": "/mission",
+    "title": "Mission",
+    "url": "https://ground.news/mission"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_Blog",
+    "href": "/blog",
+    "title": "Blog",
+    "url": "https://ground.news/blog"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_Testimonials",
+    "href": "/testimonials",
+    "title": "Testimonials",
+    "url": "https://ground.news/testimonials"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_Group-Subscriptions",
+    "href": "/group-subscriptions",
+    "title": "Group Subscriptions",
+    "url": "https://ground.news/group-subscriptions"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_Subscribe",
+    "href": "/subscribe",
+    "title": "Subscribe",
+    "url": "https://ground.news/subscribe"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_Gift",
+    "href": "/gift",
+    "title": "Gift",
+    "url": "https://ground.news/gift"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_Free-Trial",
+    "href": "/free-trial-landing",
+    "title": "Free Trial",
+    "url": "https://ground.news/free-trial-landing"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_Careers",
+    "href": "/careers",
+    "title": "Careers",
+    "url": "https://ground.news/careers"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_Affiliates",
+    "href": "/affiliates",
+    "title": "Affiliates",
+    "url": "https://ground.news/affiliates"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_blank",
+    "id": "footer_Help-Center",
+    "href": "https://help.ground.news",
+    "title": "Help Center",
+    "url": "https://help.ground.news"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_FAQ",
+    "href": "/frequently-asked-questions",
+    "title": "FAQ",
+    "url": "https://ground.news/frequently-asked-questions"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_Contact-Us",
+    "href": "/contact-us",
+    "title": "Contact Us",
+    "url": "https://ground.news/contact-us"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_Media-Bias-Ratings",
+    "href": "/rating-system",
+    "title": "Media Bias Ratings",
+    "url": "https://ground.news/rating-system"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_Ownership-and-Factuality-Ratings",
+    "href": "/rating-system#factualityCategory",
+    "title": "Ownership and Factuality Ratings",
+    "url": "https://ground.news/rating-system#factualityCategory"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_Referral-Code",
+    "href": "/checkout/referral",
+    "title": "Referral Code",
+    "url": "https://ground.news/checkout/referral"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_News-Sources",
+    "href": "/my/discover/source",
+    "title": "News Sources",
+    "url": "https://ground.news/my/discover/source"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_Topics",
+    "href": "/my/discover/topic",
+    "title": "Topics",
+    "url": "https://ground.news/my/discover/topic"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_blank",
+    "id": "footer_Impersonation-Scams",
+    "href": "https://help.ground.news/en/articles/11659713",
+    "title": "Impersonation Scams",
+    "url": "https://help.ground.news/en/articles/11659713"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_App",
+    "href": "/app",
+    "title": "App",
+    "url": "https://ground.news/app"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_Browser-Extension",
+    "href": "/extension",
+    "title": "Browser Extension",
+    "url": "https://ground.news/extension"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_Daily-Newsletter",
+    "href": "/newsletters/daily-ground",
+    "title": "Daily Newsletter",
+    "url": "https://ground.news/newsletters/daily-ground"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_Blindspot-Report-Newsletter",
+    "href": "/newsletters/blindspot-report",
+    "title": "Blindspot Report Newsletter",
+    "url": "https://ground.news/newsletters/blindspot-report"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_Burst-Your-Bubble-Newsletter",
+    "href": "/newsletters/burst-your-bubble",
+    "title": "Burst Your Bubble Newsletter",
+    "url": "https://ground.news/newsletters/burst-your-bubble"
+  },
+  {
+    "class": "apple-app-store app-store-icon ",
+    "href": "https://apps.apple.com/app/apple-store/id1324203419?pt=107503821&ct=unknown&mt=8",
+    "target": "_blank",
+    "id": "",
+    "rel": "noopener",
+    "title": "",
+    "url": "https://apps.apple.com/app/apple-store/id1324203419?pt=107503821&ct=unknown&mt=8"
+  },
+  {
+    "class": "google-play-store play-store-icon",
+    "href": "https://play.google.com/store/apps/details?id=com.checkitt&referrer=utm_source%3Dunknown",
+    "id": "",
+    "title": "",
+    "url": "https://play.google.com/store/apps/details?id=com.checkitt&referrer=utm_source%3Dunknown"
+  },
+  {
+    "href": "https://www.facebook.com/ground.newsapp",
+    "id": "footer_share-facebook",
+    "class": "block p-[1.1rem] min-w-[44px] min-h-[44px] flex items-center justify-center flex-shrink-0",
+    "aria-label": "Visit Ground News on Facebook",
+    "title": "Facebook Icon",
+    "url": "https://www.facebook.com/ground.newsapp"
+  },
+  {
+    "href": "https://twitter.com/Ground_app",
+    "id": "footer_share-twitter",
+    "class": "block p-[1.1rem] min-w-[44px] min-h-[44px] flex items-center justify-center flex-shrink-0",
+    "aria-label": "Visit Ground News on Twitter",
+    "title": "Twitter Icon",
+    "url": "https://twitter.com/Ground_app"
+  },
+  {
+    "href": "https://www.instagram.com/groundnews",
+    "id": "footer_share-instagram",
+    "class": "block p-[1.1rem] min-w-[44px] min-h-[44px] flex items-center justify-center flex-shrink-0",
+    "aria-label": "Visit Ground News on Instagram",
+    "title": "Instagram Icon",
+    "url": "https://www.instagram.com/groundnews"
+  },
+  {
+    "href": "https://www.linkedin.com/company/groundnews",
+    "id": "footer_share-linkedIn",
+    "class": "block p-[1.1rem] min-w-[44px] min-h-[44px] flex items-center justify-center flex-shrink-0",
+    "aria-label": "Visit Ground News on LinkedIn",
+    "title": "LinkedIn Icon",
+    "url": "https://www.linkedin.com/company/groundnews"
+  },
+  {
+    "href": "https://reddit.com/r/News_Blindspot",
+    "id": "footer_share-reddit",
+    "class": "block p-[1.1rem] min-w-[44px] min-h-[44px] flex items-center justify-center flex-shrink-0",
+    "aria-label": "Visit Ground News on Reddit",
+    "title": "Reddit Icon",
+    "url": "https://reddit.com/r/News_Blindspot"
+  },
+  {
+    "class": "hideElementSiteWide min-h-[44px] flex items-center justify-center",
+    "id": "footer_gift",
+    "aria-label": "Gift Ground News subscription",
+    "href": "/gift",
+    "title": "Gift",
+    "url": "https://ground.news/gift"
+  },
+  {
+    "id": "footer_privacy-policy",
+    "class": "min-h-[44px] flex items-center justify-center",
+    "aria-label": "Read our Privacy Policy",
+    "href": "/privacy-policy",
+    "title": "Privacy Policy",
+    "url": "https://ground.news/privacy-policy"
+  },
+  {
+    "id": "footer_terms-and-conditions",
+    "class": "min-h-[44px] flex items-center justify-center",
+    "aria-label": "Read our Terms and Conditions",
+    "href": "/terms-and-conditions",
+    "title": "Terms and Conditions",
+    "url": "https://ground.news/terms-and-conditions"
+  },
+  {
+    "class": "apple-app-store app-store-icon ",
+    "href": "https://apps.apple.com/app/apple-store/id1324203419?pt=107503821&ct=unknown&mt=8",
+    "target": "_blank",
+    "id": "",
+    "rel": "noopener",
+    "title": "",
+    "url": "https://apps.apple.com/app/apple-store/id1324203419?pt=107503821&ct=unknown&mt=8"
+  },
+  {
+    "class": "google-play-store play-store-icon",
+    "href": "https://play.google.com/store/apps/details?id=com.checkitt&referrer=utm_source%3Dunknown",
+    "id": "",
+    "title": "",
+    "url": "https://play.google.com/store/apps/details?id=com.checkitt&referrer=utm_source%3Dunknown"
+  },
+  {
+    "id": "mobile-nav-bar-news",
+    "class": "flex flex-col gap-[5px] text-15 items-center text-dark-primary dark:text-light-primary",
+    "href": "/",
+    "title": "News",
+    "url": "https://ground.news/"
+  },
+  {
+    "id": "mobile-nav-bar-myFeed",
+    "class": "hideElementSiteWide flex flex-col gap-[5px] text-12 items-center text-[var(--gray-100)]",
+    "href": "/my",
+    "title": "Feed Dots IconFor You",
+    "url": "https://ground.news/my"
+  },
+  {
+    "rel": "nofollow",
+    "id": "mobile-nav-bar-search",
+    "class": "flex flex-col gap-0 items-center text-12 h-full text-[var(--gray-100)]",
+    "href": "/search",
+    "title": "Search IconSearch",
+    "url": "https://ground.news/search"
+  },
+  {
+    "id": "mobile-nav-bar-blindspot",
+    "class": "flex flex-col gap-[5px] text-12 items-center text-[var(--gray-100)]",
+    "href": "/blindspot",
+    "title": "Blindspot LogoBlindspot",
+    "url": "https://ground.news/blindspot"
+  },
+  {
+    "id": "mobile-nav-bar-local",
+    "class": "flex flex-col gap-[5px] text-15 items-center text-[var(--gray-100)]",
+    "href": "/local",
+    "title": "Local",
+    "url": "https://ground.news/local"
+  },
+  {
+    "id": "header-trending-Lula da Silva",
+    "data-dd-action-name": "interest-pill-click",
+    "class": "whitespace-nowrap text-ellipsis overflow-hidden ",
+    "href": "/interest/lula_127ddc",
+    "title": "Lula Da Silva",
+    "url": "https://ground.news/interest/lula_127ddc"
+  },
+  {
+    "id": "header-trending-Halloween",
+    "data-dd-action-name": "interest-pill-click",
+    "class": "whitespace-nowrap text-ellipsis overflow-hidden ",
+    "href": "/interest/halloween",
+    "title": "Halloween",
+    "url": "https://ground.news/interest/halloween"
+  },
+  {
+    "id": "header-trending-Artificial Intelligence",
+    "data-dd-action-name": "interest-pill-click",
+    "class": "whitespace-nowrap text-ellipsis overflow-hidden ",
+    "href": "/interest/ai",
+    "title": "Artificial Intelligence",
+    "url": "https://ground.news/interest/ai"
+  },
+  {
+    "id": "header-trending-Senate",
+    "data-dd-action-name": "interest-pill-click",
+    "class": "whitespace-nowrap text-ellipsis overflow-hidden ",
+    "href": "/interest/senate",
+    "title": "Senate",
+    "url": "https://ground.news/interest/senate"
+  },
+  {
+    "id": "header-trending-Wall Street",
+    "data-dd-action-name": "interest-pill-click",
+    "class": "whitespace-nowrap text-ellipsis overflow-hidden ",
+    "href": "/interest/wall-street",
+    "title": "Wall Street",
+    "url": "https://ground.news/interest/wall-street"
+  },
+  {
+    "id": "header-trending-2026 Midterm Elections",
+    "data-dd-action-name": "interest-pill-click",
+    "class": "whitespace-nowrap text-ellipsis overflow-hidden ",
+    "href": "/interest/midterm-elections",
+    "title": "2026 Midterm Elections",
+    "url": "https://ground.news/interest/midterm-elections"
+  },
+  {
+    "id": "header-trending-Republican Party",
+    "data-dd-action-name": "interest-pill-click",
+    "class": "whitespace-nowrap text-ellipsis overflow-hidden ",
+    "href": "/interest/republican-party",
+    "title": "Republican Party",
+    "url": "https://ground.news/interest/republican-party"
+  },
+  {
+    "id": "header-trending-Stock Markets",
+    "data-dd-action-name": "interest-pill-click",
+    "class": "whitespace-nowrap text-ellipsis overflow-hidden ",
+    "href": "/interest/stock-markets",
+    "title": "Stock Markets",
+    "url": "https://ground.news/interest/stock-markets"
+  },
+  {
+    "id": "header-trending-US Politics",
+    "data-dd-action-name": "interest-pill-click",
+    "class": "whitespace-nowrap text-ellipsis overflow-hidden ",
+    "href": "/interest/us-politics_3c3c3c",
+    "title": "US Politics",
+    "url": "https://ground.news/interest/us-politics_3c3c3c"
+  },
+  {
+    "id": "header-trending-European Union",
+    "data-dd-action-name": "interest-pill-click",
+    "class": "whitespace-nowrap text-ellipsis overflow-hidden ",
+    "href": "/interest/european-union",
+    "title": "European Union",
+    "url": "https://ground.news/interest/european-union"
+  },
+  {
+    "id": "header-trending-Democratic Party",
+    "data-dd-action-name": "interest-pill-click",
+    "class": "whitespace-nowrap text-ellipsis overflow-hidden ",
+    "href": "/interest/democratic-party",
+    "title": "Democratic Party",
+    "url": "https://ground.news/interest/democratic-party"
+  },
+  {
+    "id": "header-trending-Election Day",
+    "data-dd-action-name": "interest-pill-click",
+    "class": "whitespace-nowrap text-ellipsis overflow-hidden ",
+    "href": "/interest/election-day",
+    "title": "Election Day",
+    "url": "https://ground.news/interest/election-day"
+  },
+  {
+    "class": "mb-[8px] font-semibold hover:underline text-22",
+    "id": "footer_interest-News",
+    "href": "/",
+    "title": "News",
+    "url": "https://ground.news/"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_Home-Page",
+    "href": "/",
+    "title": "Home Page",
+    "url": "https://ground.news/"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_Local-News",
+    "href": "/local",
+    "title": "Local News",
+    "url": "https://ground.news/local"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_Blindspot-Feed",
+    "href": "/blindspot",
+    "title": "Blindspot Feed",
+    "url": "https://ground.news/blindspot"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_interest-International",
+    "href": "/interest/international",
+    "title": "International",
+    "url": "https://ground.news/interest/international"
+  },
+  {
+    "class": "mb-[8px] font-semibold hover:underline text-22",
+    "id": "footer_interest-International",
+    "href": "/interest/international",
+    "title": "International",
+    "url": "https://ground.news/interest/international"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_interest-North-America",
+    "href": "/interest/north-america",
+    "title": "North America",
+    "url": "https://ground.news/interest/north-america"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_interest-South-America",
+    "href": "/interest/south-america",
+    "title": "South America",
+    "url": "https://ground.news/interest/south-america"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_interest-Europe",
+    "href": "/interest/europe",
+    "title": "Europe",
+    "url": "https://ground.news/interest/europe"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_interest-Asia",
+    "href": "/interest/asia",
+    "title": "Asia",
+    "url": "https://ground.news/interest/asia"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_interest-Australia",
+    "href": "/interest/australia",
+    "title": "Australia",
+    "url": "https://ground.news/interest/australia"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_interest-Africa",
+    "href": "/interest/africa",
+    "title": "Africa",
+    "url": "https://ground.news/interest/africa"
+  },
+  {
+    "class": "mb-[8px] font-semibold hover:underline text-22",
+    "id": "footer_interest-Trending-Internationally",
+    "href": "/interest/international",
+    "title": "Trending Internationally",
+    "url": "https://ground.news/interest/international"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_interest-Lula-Da-Silva",
+    "href": "/interest/lula_127ddc",
+    "title": "Lula Da Silva",
+    "url": "https://ground.news/interest/lula_127ddc"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_interest-Halloween",
+    "href": "/interest/halloween",
+    "title": "Halloween",
+    "url": "https://ground.news/interest/halloween"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_interest-Artificial-Intelligence",
+    "href": "/interest/ai",
+    "title": "Artificial Intelligence",
+    "url": "https://ground.news/interest/ai"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_interest-Senate",
+    "href": "/interest/senate",
+    "title": "Senate",
+    "url": "https://ground.news/interest/senate"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_interest-Wall-Street",
+    "href": "/interest/wall-street",
+    "title": "Wall Street",
+    "url": "https://ground.news/interest/wall-street"
+  },
+  {
+    "class": "mb-[8px] font-semibold hover:underline text-22",
+    "id": "footer_interest-Trending-in-U.S.",
+    "href": "/interest/united-states_b67315",
+    "title": "Trending in U.S.",
+    "url": "https://ground.news/interest/united-states_b67315"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_interest-2026-Midterm-Elections",
+    "href": "/interest/midterm-elections",
+    "title": "2026 Midterm Elections",
+    "url": "https://ground.news/interest/midterm-elections"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_interest-Republican-Party",
+    "href": "/interest/republican-party",
+    "title": "Republican Party",
+    "url": "https://ground.news/interest/republican-party"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_interest-US-Politics",
+    "href": "/interest/us-politics_3c3c3c",
+    "title": "US Politics",
+    "url": "https://ground.news/interest/us-politics_3c3c3c"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_interest-Democratic-Party",
+    "href": "/interest/democratic-party",
+    "title": "Democratic Party",
+    "url": "https://ground.news/interest/democratic-party"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_interest-Halloween",
+    "href": "/interest/halloween",
+    "title": "Halloween",
+    "url": "https://ground.news/interest/halloween"
+  },
+  {
+    "class": "mb-[8px] font-semibold hover:underline text-22",
+    "id": "footer_interest-Trending-in-U.K.",
+    "href": "/interest/united-kingdom",
+    "title": "Trending in U.K.",
+    "url": "https://ground.news/interest/united-kingdom"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_interest-Manchester-United",
+    "href": "/interest/manchester-united",
+    "title": "Manchester United",
+    "url": "https://ground.news/interest/manchester-united"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_interest-Budget",
+    "href": "/interest/budget",
+    "title": "Budget",
+    "url": "https://ground.news/interest/budget"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_interest-Premier-League",
+    "href": "/interest/premier-league_1ae81c",
+    "title": "Premier League",
+    "url": "https://ground.news/interest/premier-league_1ae81c"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_interest-Andy-Burnham",
+    "href": "/interest/andy-burnham",
+    "title": "Andy Burnham",
+    "url": "https://ground.news/interest/andy-burnham"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_interest-Halloween",
+    "href": "/interest/halloween",
+    "title": "Halloween",
+    "url": "https://ground.news/interest/halloween"
+  },
+  {
+    "href": "/daily-briefing",
+    "title": "Daily Briefing",
+    "url": "https://ground.news/daily-briefing"
+  },
+  {
+    "data-dd-action-name": "gaia-digest-briefing-story-click",
+    "class": "flex flex-col rounded-[8px] overflow-hidden gap-[6px] bg-white dark:bg-dark-light border border-tertiary-light dark:border-dark-light v5-legacy-card-bg pb-[1rem] desktop:py-0",
+    "href": "/daily-briefing",
+    "title": "8 stories • 1295 articles • 8m read8 stories • 1295 articles • 8m readTallahassee Police Investigate Shooting Near FAMU Stadium That Left 12 InjuredPolice investigate the incident at Florida A&M University in Tallahassee, with victims transported to local hospitals and authorities searching for suspects.+Sunday hearing on California voting;Audi invests billions in Georgia;BC Conservatives win, Eby resigns;and more.",
+    "url": "https://ground.news/daily-briefing"
+  },
+  {
+    "href": "/daily-briefing",
+    "title": "Daily Briefing",
+    "url": "https://ground.news/daily-briefing"
+  },
+  {
+    "data-dd-action-name": "gaia-digest-briefing-story-click",
+    "class": "flex flex-col rounded-[8px] overflow-hidden gap-[6px] bg-white dark:bg-dark-light border border-tertiary-light dark:border-dark-light v5-legacy-card-bg pb-[1rem] desktop:py-0",
+    "href": "/daily-briefing",
+    "title": "8 stories • 1295 articles • 8m read8 stories • 1295 articles • 8m readTallahassee Police Investigate Shooting Near FAMU Stadium That Left 12 InjuredPolice investigate the incident at Florida A&M University in Tallahassee, with victims transported to local hospitals and authorities searching for suspects.+Sunday hearing on California voting;Audi invests billions in Georgia;BC Conservatives win, Eby resigns;and more.",
+    "url": "https://ground.news/daily-briefing"
+  },
+  {
+    "class": "mt-[8px] tablet:-mt-0 flex justify-center border border-ground-black dark:border-light-primary py-[0.6rem] tablet:py-[0.7rem] w-full font-bold text-16 rounded-lg-s v5-legacy-pill-button v5-legacy-mnb-cta",
+    "href": "/my-news-bias-vantage",
+    "title": "See the demo",
+    "url": "https://ground.news/my-news-bias-vantage"
+  },
+  {
+    "id": "trending-topic_e5ac73cc-71c6-4eaa-a916-55f655fa0c7b",
+    "class": "flex min-w-0 max-w-full items-center gap-[1rem] cursor-pointer rounded-sm",
+    "href": "/interest/lula_127ddc",
+    "title": "Lula Da Silva",
+    "url": "https://ground.news/interest/lula_127ddc"
+  },
+  {
+    "id": "trending-topic_2f572a73-d592-4fb0-bca1-0ea66750f95e",
+    "class": "flex min-w-0 max-w-full items-center gap-[1rem] cursor-pointer rounded-sm",
+    "href": "/interest/halloween",
+    "title": "Halloween",
+    "url": "https://ground.news/interest/halloween"
+  },
+  {
+    "id": "trending-topic_c7cb94ca-63a5-477d-9fbe-aef13db092e6",
+    "class": "flex min-w-0 max-w-full items-center gap-[1rem] cursor-pointer rounded-sm",
+    "href": "/interest/ai",
+    "title": "Artificial Intelligence",
+    "url": "https://ground.news/interest/ai"
+  },
+  {
+    "id": "trending-topic_b8484bb3-a1dc-42c7-bd10-40f15538b7d4",
+    "class": "flex min-w-0 max-w-full items-center gap-[1rem] cursor-pointer rounded-sm",
+    "href": "/interest/senate",
+    "title": "Senate",
+    "url": "https://ground.news/interest/senate"
+  },
+  {
+    "id": "trending-topic_23b731be-f903-4a41-86f8-38a37c3280df",
+    "class": "flex min-w-0 max-w-full items-center gap-[1rem] cursor-pointer rounded-sm",
+    "href": "/interest/wall-street",
+    "title": "Wall Street",
+    "url": "https://ground.news/interest/wall-street"
+  },
+  {
+    "id": "trending-topic_ef0c7d7f-a50f-447c-8e4c-6940dc13c81f",
+    "class": "flex min-w-0 max-w-full items-center gap-[1rem] cursor-pointer rounded-sm",
+    "href": "/interest/midterm-elections",
+    "title": "2026 Midterm Elections",
+    "url": "https://ground.news/interest/midterm-elections"
+  },
+  {
+    "id": "trending-topic_a2fb5024-ec9b-4b21-b16b-0bdc8eb736fe",
+    "class": "flex min-w-0 max-w-full items-center gap-[1rem] cursor-pointer rounded-sm",
+    "href": "/interest/stock-markets",
+    "title": "Stock Markets",
+    "url": "https://ground.news/interest/stock-markets"
+  },
+  {
+    "class": "flex cursor-pointer gap-[1rem] ",
+    "data-dd-action-name": "article-card-click",
+    "id": "newsroom-feed_5e03164e-c931-47bf-bb68-c7cfd81c7ecc_card0",
+    "href": "/article/5e03164e-c931-47bf-bb68-c7cfd81c7ecc",
+    "title": "Info IconPABLO PORCIUNCULA/AFP via Getty Images/Getty via Getty ImagesLula Da Silva · BrazilLula re-elected president in Brazil, electoral authority says34% Center coverage: 490 sources",
+    "url": "https://ground.news/article/5e03164e-c931-47bf-bb68-c7cfd81c7ecc"
+  },
+  {
+    "class": "flex cursor-pointer gap-[1rem] ",
+    "data-dd-action-name": "article-card-click",
+    "id": "newsroom-feed_9254f39c-0a22-48ad-b9c2-5dad2385b1e9_card1",
+    "href": "/article/venezuelan-opposition-leader-maria-machado-returns-after-months-in-exile_4e0739",
+    "title": "Info IconFederico PARRA / AFP via Getty Images/Getty via Getty ImagesMaria Corina Machado · VenezuelaVenezuelan opposition leader María Machado returns after months in exile42% Center coverage: 336 sources",
+    "url": "https://ground.news/article/venezuelan-opposition-leader-maria-machado-returns-after-months-in-exile_4e0739"
+  },
+  {
+    "class": "flex cursor-pointer gap-[1rem] ",
+    "data-dd-action-name": "article-card-click",
+    "id": "newsroom-feed_323e135d-e93b-49a6-b5d6-a45fa8f61f84_card2",
+    "href": "/article/at-least-7-people-killed-in-shooting-at-church-in-jordan-public-security-agency-says_1e3324",
+    "title": "Info IconKHALIL MAZRAAWI/AFP via Getty Images/Getty via Getty ImagesTerrorism · JordanAt least 7 people killed in shooting at church in Jordan, public security agency says37% Right coverage: 268 sources",
+    "url": "https://ground.news/article/at-least-7-people-killed-in-shooting-at-church-in-jordan-public-security-agency-says_1e3324"
+  },
+  {
+    "class": "flex cursor-pointer gap-[1rem] ",
+    "data-dd-action-name": "article-card-click",
+    "id": "newsroom-feed_ff3ce24f-3406-4400-8fad-1b29b2a828d6_card3",
+    "href": "/article/netanyahu-orders-closure-of-west-bank-after-two-soldiers-killed-in-shooting-attack_ecbe93",
+    "title": "Info IconMosab Shawer / Middle East Images / AFP via Getty Images/Getty via Getty ImagesIsrael Politics · IsraelNetanyahu orders closure of West Bank after two soldiers killed in shooting attack38% Left coverage: 371 sources",
+    "url": "https://ground.news/article/netanyahu-orders-closure-of-west-bank-after-two-soldiers-killed-in-shooting-attack_ecbe93"
+  },
+  {
+    "class": "flex cursor-pointer gap-[1rem] ",
+    "data-dd-action-name": "article-card-click",
+    "id": "newsroom-feed_07ebf7cf-2e29-4637-9cc8-de6de12c684c_card4",
+    "href": "/article/helen-haines-husband-phil-reveals-surgeons-have-amputated-both-of-mps-legs-injured-in-alleged-attack_789efa",
+    "title": "Info IconREUTERS / Cordelia Hsu/ReutersAustralia Politics · AustraliaHelen Haines’ husband Phil reveals surgeons have amputated both of MP’s legs injured in alleged attack41% Center coverage: 196 sources",
+    "url": "https://ground.news/article/helen-haines-husband-phil-reveals-surgeons-have-amputated-both-of-mps-legs-injured-in-alleged-attack_789efa"
+  },
+  {
+    "class": "flex cursor-pointer gap-[1rem] ",
+    "data-dd-action-name": "article-card-click",
+    "id": "newsroom-feed_5e03164e-c931-47bf-bb68-c7cfd81c7ecc_card0",
+    "href": "/article/5e03164e-c931-47bf-bb68-c7cfd81c7ecc",
+    "title": "Lula re-elected president in Brazil, electoral authority says34% Center coverage: 490 sources",
+    "url": "https://ground.news/article/5e03164e-c931-47bf-bb68-c7cfd81c7ecc"
+  },
+  {
+    "class": "flex cursor-pointer gap-[1rem] ",
+    "data-dd-action-name": "article-card-click",
+    "id": "newsroom-feed_9254f39c-0a22-48ad-b9c2-5dad2385b1e9_card1",
+    "href": "/article/venezuelan-opposition-leader-maria-machado-returns-after-months-in-exile_4e0739",
+    "title": "Venezuelan opposition leader María Machado returns after months in exile42% Center coverage: 336 sources",
+    "url": "https://ground.news/article/venezuelan-opposition-leader-maria-machado-returns-after-months-in-exile_4e0739"
+  },
+  {
+    "class": "flex cursor-pointer gap-[1rem] ",
+    "data-dd-action-name": "article-card-click",
+    "id": "newsroom-feed_323e135d-e93b-49a6-b5d6-a45fa8f61f84_card2",
+    "href": "/article/at-least-7-people-killed-in-shooting-at-church-in-jordan-public-security-agency-says_1e3324",
+    "title": "At least 7 people killed in shooting at church in Jordan, public security agency says37% Right coverage: 268 sources",
+    "url": "https://ground.news/article/at-least-7-people-killed-in-shooting-at-church-in-jordan-public-security-agency-says_1e3324"
+  },
+  {
+    "class": "flex cursor-pointer gap-[1rem] ",
+    "data-dd-action-name": "article-card-click",
+    "id": "newsroom-feed_ff3ce24f-3406-4400-8fad-1b29b2a828d6_card3",
+    "href": "/article/netanyahu-orders-closure-of-west-bank-after-two-soldiers-killed-in-shooting-attack_ecbe93",
+    "title": "Netanyahu orders closure of West Bank after two soldiers killed in shooting attack38% Left coverage: 371 sources",
+    "url": "https://ground.news/article/netanyahu-orders-closure-of-west-bank-after-two-soldiers-killed-in-shooting-attack_ecbe93"
+  },
+  {
+    "class": "flex cursor-pointer gap-[1rem] ",
+    "data-dd-action-name": "article-card-click",
+    "id": "newsroom-feed_07ebf7cf-2e29-4637-9cc8-de6de12c684c_card4",
+    "href": "/article/helen-haines-husband-phil-reveals-surgeons-have-amputated-both-of-mps-legs-injured-in-alleged-attack_789efa",
+    "title": "Helen Haines’ husband Phil reveals surgeons have amputated both of MP’s legs injured in alleged attack41% Center coverage: 196 sources",
+    "url": "https://ground.news/article/helen-haines-husband-phil-reveals-surgeons-have-amputated-both-of-mps-legs-injured-in-alleged-attack_789efa"
+  },
+  {
+    "class": "relative flex flex-col cursor-pointer tablet:gap-[0.6rem] desktop:gap-auto",
+    "href": "/article/exclusive-ambani-adani-outlets-among-indian-publishers-contesting-modis-privacy-law",
+    "title": "",
+    "url": "https://ground.news/article/exclusive-ambani-adani-outlets-among-indian-publishers-contesting-modis-privacy-law"
+  },
+  {
+    "class": "relative flex flex-col cursor-pointer tablet:gap-[0.6rem] desktop:gap-auto",
+    "href": "/article/anthropic-opens-books-on-ais-explosive-growth-and-staggering-costs_ab72a6",
+    "title": "",
+    "url": "https://ground.news/article/anthropic-opens-books-on-ais-explosive-growth-and-staggering-costs_ab72a6"
+  },
+  {
+    "class": "relative flex flex-col cursor-pointer tablet:gap-[0.6rem] desktop:gap-auto",
+    "href": "/article/anthropic-opens-books-on-ais-explosive-growth-and-staggering-costs_ab72a6",
+    "title": "",
+    "url": "https://ground.news/article/anthropic-opens-books-on-ais-explosive-growth-and-staggering-costs_ab72a6"
+  },
+  {
+    "class": "flex cursor-pointer gap-[1rem] ",
+    "data-dd-action-name": "article-card-click",
+    "id": "newsroom-feed_rss_9437_1793012697912_4_card0",
+    "href": "/article/exclusive-ambani-adani-outlets-among-indian-publishers-contesting-modis-privacy-law",
+    "title": "Info IconREUTERS / Pyotr Kovalyov/ReutersIndian Politics · IndiaAmbani, Adani outlets among Indian publishers contesting Modi’s privacy law45% Center coverage: 9 sources",
+    "url": "https://ground.news/article/exclusive-ambani-adani-outlets-among-indian-publishers-contesting-modis-privacy-law"
+  },
+  {
+    "aria-label": "Go to Blindspot",
+    "class": "inline-block rounded-sm",
+    "href": "/blindspot",
+    "title": "Blindspot Title And Logo",
+    "url": "https://ground.news/blindspot"
+  },
+  {
+    "class": "relative flex flex-col cursor-pointer tablet:gap-[0.6rem] desktop:gap-auto",
+    "href": "/article/exclusive-ambani-adani-outlets-among-indian-publishers-contesting-modis-privacy-law",
+    "title": "",
+    "url": "https://ground.news/article/exclusive-ambani-adani-outlets-among-indian-publishers-contesting-modis-privacy-law"
+  },
+  {
+    "class": "flex cursor-pointer gap-[1rem] ",
+    "data-dd-action-name": "article-card-click",
+    "id": "newsroom-feed_b9284415-bd23-4d1e-9989-ef15dad4fbfa_card1",
+    "href": "/article/unless-its-declared-a-source-of-revelation-for-the-new-world-the-integration-of-the-singer-into-the-security-forces",
+    "title": "Sinjar · SinjarPKK-Linked Yazidi Militia Units to Disarm and Join Iraq's Army in Push to Control Weapons42% Center coverage: 12 sources",
+    "url": "https://ground.news/article/unless-its-declared-a-source-of-revelation-for-the-new-world-the-integration-of-the-singer-into-the-security-forces"
+  },
+  {
+    "class": "flex cursor-pointer gap-[1rem] ",
+    "data-dd-action-name": "article-card-click",
+    "id": "newsroom-feed_rss_9437_1793012697912_4_card0",
+    "href": "/article/exclusive-ambani-adani-outlets-among-indian-publishers-contesting-modis-privacy-law",
+    "title": "Info IconREUTERS / Pyotr Kovalyov/ReutersIndian Politics · IndiaAmbani, Adani outlets among Indian publishers contesting Modi’s privacy law45% Center coverage: 9 sources",
+    "url": "https://ground.news/article/exclusive-ambani-adani-outlets-among-indian-publishers-contesting-modis-privacy-law"
+  },
+  {
+    "class": "flex cursor-pointer gap-[1rem] ",
+    "data-dd-action-name": "article-card-click",
+    "id": "newsroom-feed_b9284415-bd23-4d1e-9989-ef15dad4fbfa_card1",
+    "href": "/article/unless-its-declared-a-source-of-revelation-for-the-new-world-the-integration-of-the-singer-into-the-security-forces",
+    "title": "Sinjar · SinjarPKK-Linked Yazidi Militia Units to Disarm and Join Iraq's Army in Push to Control Weapons42% Center coverage: 12 sources",
+    "url": "https://ground.news/article/unless-its-declared-a-source-of-revelation-for-the-new-world-the-integration-of-the-singer-into-the-security-forces"
+  },
+  {
+    "class": "flex cursor-pointer gap-[1rem] ",
+    "data-dd-action-name": "article-card-click",
+    "id": "newsroom-feed_c79e07c9-db30-4580-8a88-71b65b52f474_card2",
+    "href": "/article/popes-visit-confirmed-i-look-forward-to-returning-to-latin-america",
+    "title": "Pope FrancisVatican Confirms Pope Leo's Latin America Trip After Post-Surgery CheckupCoverage: 68 sources",
+    "url": "https://ground.news/article/popes-visit-confirmed-i-look-forward-to-returning-to-latin-america"
+  },
+  {
+    "class": "flex cursor-pointer gap-[1rem] ",
+    "data-dd-action-name": "article-card-click",
+    "id": "newsroom-feed_a67d355a-e1a0-477b-b304-669a47abadca_card3",
+    "href": "/article/why-the-kings-caribbean-tour-could-be-biggest-risk-of-his-reign",
+    "title": "King CharlesCaribbean Seeks Reparations and Questions Role of Monarchy Before King Charles III Visits45% Center coverage: 36 sources",
+    "url": "https://ground.news/article/why-the-kings-caribbean-tour-could-be-biggest-risk-of-his-reign"
+  },
+  {
+    "class": "flex cursor-pointer gap-[1rem] ",
+    "data-dd-action-name": "article-card-click",
+    "id": "newsroom-feed_e04b70b2-bcc0-4f4d-9694-29bfdca8ea14_card4",
+    "href": "/article/direct-jordan-reveals-the-names-of-the-perpetrators-of-the-crack-attack-and-provides-new-details",
+    "title": "Info IconAFP via Getty Images/Getty via Getty ImagesJordan · JordanJordanian security forces arrest 3 men over last week’s deadly church attack48% Center coverage: 25 sources",
+    "url": "https://ground.news/article/direct-jordan-reveals-the-names-of-the-perpetrators-of-the-crack-attack-and-provides-new-details"
+  },
+  {
+    "class": "flex cursor-pointer gap-[1rem] ",
+    "data-dd-action-name": "article-card-click",
+    "id": "newsroom-feed_14904a90-9ca6-47d3-8ae7-1c22e2a00c29_card5",
+    "href": "/article/flash-floods-inundate-several-areas-of-thailands-phuket-island-after-heavy-rain-wtop-news",
+    "title": "Info IconREUTERS / Kin Cheung/ReutersFloods · PhuketFlash floods inundate several areas of Thailand’s Phuket island after heavy rain35% Left coverage: 29 sources",
+    "url": "https://ground.news/article/flash-floods-inundate-several-areas-of-thailands-phuket-island-after-heavy-rain-wtop-news"
+  },
+  {
+    "class": "flex cursor-pointer gap-[1rem] ",
+    "data-dd-action-name": "article-card-click",
+    "id": "newsroom-feed_c79e07c9-db30-4580-8a88-71b65b52f474_card0",
+    "href": "/article/popes-visit-confirmed-i-look-forward-to-returning-to-latin-america",
+    "title": "Pope FrancisVatican Confirms Pope Leo's Latin America Trip After Post-Surgery CheckupCoverage: 68 sources",
+    "url": "https://ground.news/article/popes-visit-confirmed-i-look-forward-to-returning-to-latin-america"
+  },
+  {
+    "class": "flex cursor-pointer gap-[1rem] ",
+    "data-dd-action-name": "article-card-click",
+    "id": "newsroom-feed_a67d355a-e1a0-477b-b304-669a47abadca_card1",
+    "href": "/article/why-the-kings-caribbean-tour-could-be-biggest-risk-of-his-reign",
+    "title": "King CharlesCaribbean Seeks Reparations and Questions Role of Monarchy Before King Charles III Visits45% Center coverage: 36 sources",
+    "url": "https://ground.news/article/why-the-kings-caribbean-tour-could-be-biggest-risk-of-his-reign"
+  },
+  {
+    "class": "flex cursor-pointer gap-[1rem] ",
+    "data-dd-action-name": "article-card-click",
+    "id": "newsroom-feed_e04b70b2-bcc0-4f4d-9694-29bfdca8ea14_card2",
+    "href": "/article/direct-jordan-reveals-the-names-of-the-perpetrators-of-the-crack-attack-and-provides-new-details",
+    "title": "Info IconAFP via Getty Images/Getty via Getty ImagesJordan · JordanJordanian security forces arrest 3 men over last week’s deadly church attack48% Center coverage: 25 sources",
+    "url": "https://ground.news/article/direct-jordan-reveals-the-names-of-the-perpetrators-of-the-crack-attack-and-provides-new-details"
+  },
+  {
+    "class": "flex cursor-pointer gap-[1rem] ",
+    "data-dd-action-name": "article-card-click",
+    "id": "newsroom-feed_14904a90-9ca6-47d3-8ae7-1c22e2a00c29_card3",
+    "href": "/article/flash-floods-inundate-several-areas-of-thailands-phuket-island-after-heavy-rain-wtop-news",
+    "title": "Info IconREUTERS / Kin Cheung/ReutersFloods · PhuketFlash floods inundate several areas of Thailand’s Phuket island after heavy rain35% Left coverage: 29 sources",
+    "url": "https://ground.news/article/flash-floods-inundate-several-areas-of-thailands-phuket-island-after-heavy-rain-wtop-news"
+  },
+  {
+    "class": "flex cursor-pointer gap-[1rem] ",
+    "data-dd-action-name": "article-card-click",
+    "id": "newsroom-feed_6f8e8936-2021-406d-8db0-6a93d1814a00_card0",
+    "href": "/article/maxxing-is-dictionarycoms-2026-word-of-the-year",
+    "title": "Info IconClose-up view of an open Russian dictionary showing detailed text and entries. by freestocks.org/Pexels / PexelsLiterature · United StatesDictionary.com Names 'Maxxing' 2026 Word of the Year67% Center coverage: 34 sources",
+    "url": "https://ground.news/article/maxxing-is-dictionarycoms-2026-word-of-the-year"
+  },
+  {
+    "class": "flex cursor-pointer gap-[1rem] ",
+    "data-dd-action-name": "article-card-click",
+    "id": "newsroom-feed_f4b1788a-468d-4b89-b8eb-64ae2590119e_card1",
+    "href": "/article/hezbollah-readies-for-new-regional-war-with-funds-from-iran-sources-say_ae7707",
+    "title": "Info IconREUTERS / Zohra Bensemra/ReutersHezbollah · LebanonHezbollah readies for new regional war with funds from Iran, sources say55% Right coverage: 11 sources",
+    "url": "https://ground.news/article/hezbollah-readies-for-new-regional-war-with-funds-from-iran-sources-say_ae7707"
+  },
+  {
+    "class": "flex cursor-pointer gap-[1rem] ",
+    "data-dd-action-name": "article-card-click",
+    "id": "newsroom-feed_da911aab-ecf1-4a2a-b1ae-263102a7e41f_card2",
+    "href": "/article/nigeria-confirms-ebola-patient-departed-to-switzerland-on-evacuation-flight",
+    "title": "Info IconREUTERS / Sodiq Adelakun/ReutersEbola · AbujaSwiss Ebola Patient in Nigeria Evacuated to Switzerland48% Left coverage: 48 sources",
+    "url": "https://ground.news/article/nigeria-confirms-ebola-patient-departed-to-switzerland-on-evacuation-flight"
+  },
+  {
+    "class": "flex cursor-pointer gap-[1rem] ",
+    "data-dd-action-name": "article-card-click",
+    "id": "newsroom-feed_1384e053-5945-41c0-b0b9-833f0163b41e_card3",
+    "href": "/article/4-rescued-on-third-day-after-kenya-building-collapse-as-families-lose-hope_7b0f40",
+    "title": "Info IconREUTERS / Monicah Mwangi/ReutersBuilding Collapse · Nairobi4 rescued on third day after Kenya building collapse as families lose hope38% Right coverage: 8 sources",
+    "url": "https://ground.news/article/4-rescued-on-third-day-after-kenya-building-collapse-as-families-lose-hope_7b0f40"
+  },
+  {
+    "class": "flex cursor-pointer gap-[1rem] ",
+    "data-dd-action-name": "article-card-click",
+    "id": "newsroom-feed_1e8fab52-53a5-4521-b651-3baa80563961_card0",
+    "href": "/article/head-of-mexicos-electoral-authority-resigns-amid-corruption-allegations_200160",
+    "title": "Info IconREUTERS / HENRY ROMERO/ReutersMexico Politics · MexicoHead of Mexico’s Electoral Authority Resigns Amid Corruption Allegations40% Center coverage: 25 sources",
+    "url": "https://ground.news/article/head-of-mexicos-electoral-authority-resigns-amid-corruption-allegations_200160"
+  },
+  {
+    "class": "flex cursor-pointer gap-[1rem] ",
+    "data-dd-action-name": "article-card-click",
+    "id": "newsroom-feed_8a32ccc8-bb9b-4233-b3e9-4e005748f27d_card1",
+    "href": "/article/bombing-in-el-tambo-cauca-leaves-nine-eln-guerrillas-dead-alias-marcos-pacifico-would-be-among-them",
+    "title": "Airstrikes · ColombiaColombia’s President Says Two Key Leaders of National Liberation Army Killed43% Center coverage: 14 sources",
+    "url": "https://ground.news/article/bombing-in-el-tambo-cauca-leaves-nine-eln-guerrillas-dead-alias-marcos-pacifico-would-be-among-them"
+  },
+  {
+    "class": "flex cursor-pointer gap-[1rem] ",
+    "data-dd-action-name": "article-card-click",
+    "id": "newsroom-feed_c17a1486-34c4-4507-8a47-23b2766efb6c_card2",
+    "href": "/article/dozens-killed-in-attack-on-ethiopia-orthodox-christians",
+    "title": "Info IconREUTERS / Siegfried Modola/ReutersCrime · EthiopiaDozens Killed in Attack on Ethiopia Orthodox Christians42% Center coverage: 12 sources",
+    "url": "https://ground.news/article/dozens-killed-in-attack-on-ethiopia-orthodox-christians"
+  },
+  {
+    "class": "flex cursor-pointer gap-[1rem] ",
+    "data-dd-action-name": "article-card-click",
+    "id": "newsroom-feed_39bce669-6182-4d0f-a5ad-3d12ede62776_card3",
+    "href": "/article/baby-orangutans-in-india-expose-illegal-wildlife-trade-as-experts-question-a-billionaires-zoo-wtop-news",
+    "title": "Info IconA playful orangutan hanging in the jungle, showcasing natural wildlife in its habitat. by Florian Kriechbaumer/Pexels / PexelsAnimal Cruelty · IndiaBaby Orangutans in India Expose Illegal Wildlife Trade as Experts Question a Billionaire’s Zoo42% Left coverage: 31 sources",
+    "url": "https://ground.news/article/baby-orangutans-in-india-expose-illegal-wildlife-trade-as-experts-question-a-billionaires-zoo-wtop-news"
+  },
+  {
+    "class": "flex cursor-pointer gap-[1rem] ",
+    "data-dd-action-name": "article-card-click",
+    "id": "newsroom-feed_0890d7a7-c239-48c3-a5db-5c82c456a03b_card4",
+    "href": "/article/iran-expects-no-change-after-israeli-elections-tehran-makes-sharp-accusations",
+    "title": "Info IconREUTERS / Majid-Asgaripour/ReutersIsrael Politics · IsraelOutcome Of Israeli Elections 'Makes No Difference', Says Iran54% Right coverage: 13 sources",
+    "url": "https://ground.news/article/iran-expects-no-change-after-israeli-elections-tehran-makes-sharp-accusations"
+  },
+  {
+    "class": "flex cursor-pointer gap-[1rem] ",
+    "data-dd-action-name": "article-card-click",
+    "id": "newsroom-feed_0ca770a2-bf4e-4c60-9d20-c61820877cdb_card5",
+    "href": "/article/attackers-kill-nurse-severely-injure-health-worker-responding-to-ebola-case-in-eastern-congo-wtop-news_84249b",
+    "title": "Info IconREUTERS / Gradel Muyisa Mumbere/ReutersEbola · Democratic Republic of the CongoAttackers kill nurse, severely injure health worker responding to Ebola case in eastern Congo43% Left coverage: 37 sources",
+    "url": "https://ground.news/article/attackers-kill-nurse-severely-injure-health-worker-responding-to-ebola-case-in-eastern-congo-wtop-news_84249b"
+  },
+  {
+    "class": "underline font-semibold cursor-pointer rounded-sm",
+    "href": "/blindspot/about",
+    "title": "Learn more about political bias in news coverage.",
+    "url": "https://ground.news/blindspot/about"
+  },
+  {
+    "class": "gn-secondary-focus-target focus-visible:ring-2 focus-visible:ring-offset-[3px] focus-visible:ring-[color:var(--color-dark-primary)] dark:focus-visible:ring-[color:var(--color-light-primary)] h-full cursor-pointer rounded-[8px] p-[8px] flex flex-col min-h-0 bg-ground-new-dark-red text-light-primary",
+    "href": "/article/uks-burnham-says-he-agrees-with-principle-of-migration-reform_cc2d11",
+    "title": "Info IconREUTERS / Kin Cheung/ReutersBlindspot6 SourcesUK's Burnham says he agrees with principle of migration reformCenter 67%Right 33%",
+    "url": "https://ground.news/article/uks-burnham-says-he-agrees-with-principle-of-migration-reform_cc2d11"
+  },
+  {
+    "class": "gn-secondary-focus-target focus-visible:ring-2 focus-visible:ring-offset-[3px] focus-visible:ring-[color:var(--color-dark-primary)] dark:focus-visible:ring-[color:var(--color-light-primary)] h-full cursor-pointer rounded-[8px] p-[8px] flex flex-col min-h-0 bg-ground-new-dark-blue text-light-primary",
+    "href": "/article/gas-prices-under-trump-eclipse-highs-of-biden-era-federal-data-reveals",
+    "title": "",
+    "url": "https://ground.news/article/gas-prices-under-trump-eclipse-highs-of-biden-era-federal-data-reveals"
+  },
+  {
+    "href": "/blindspot",
+    "id": "newsroom-blindspot-click",
+    "class": "gn-secondary-focus-target focus-visible:ring-2 focus-visible:ring-offset-[3px] focus-visible:ring-[color:var(--color-dark-primary)] dark:focus-visible:ring-[color:var(--color-light-primary)] px-[0.7rem] py-[0.7rem] text-16 rounded-[4px] font-bold leading-10 whitespace-nowrap border flex shrink items-center border-dark-primary dark:border-light-primary text-dark-primary dark:text-light-primary hover:text-light-heavy active:text-light-heavy disabled:opacity-50 self-stretch tablet:self-start desktop:self-stretch v5-legacy-pill-button",
+    "title": "View Blindspot Feed",
+    "url": "https://ground.news/blindspot"
+  },
+  {
+    "class": "flex cursor-pointer gap-[1rem] ",
+    "data-dd-action-name": "article-card-click",
+    "id": "newsroom-feed_6f8e8936-2021-406d-8db0-6a93d1814a00_card0",
+    "href": "/article/maxxing-is-dictionarycoms-2026-word-of-the-year",
+    "title": "Info IconClose-up view of an open Russian dictionary showing detailed text and entries. by freestocks.org/Pexels / PexelsLiterature · United StatesDictionary.com Names 'Maxxing' 2026 Word of the Year67% Center coverage: 34 sources",
+    "url": "https://ground.news/article/maxxing-is-dictionarycoms-2026-word-of-the-year"
+  },
+  {
+    "class": "flex cursor-pointer gap-[1rem] ",
+    "data-dd-action-name": "article-card-click",
+    "id": "newsroom-feed_6f8e8936-2021-406d-8db0-6a93d1814a00_card0",
+    "href": "/article/maxxing-is-dictionarycoms-2026-word-of-the-year",
+    "title": "Info IconClose-up view of an open Russian dictionary showing detailed text and entries. by freestocks.org/Pexels / PexelsLiterature · United StatesDictionary.com Names 'Maxxing' 2026 Word of the Year67% Center coverage: 34 sources",
+    "url": "https://ground.news/article/maxxing-is-dictionarycoms-2026-word-of-the-year"
+  },
+  {
+    "class": "flex cursor-pointer gap-[1rem] ",
+    "data-dd-action-name": "article-card-click",
+    "id": "newsroom-feed_1e8fab52-53a5-4521-b651-3baa80563961_card0",
+    "href": "/article/head-of-mexicos-electoral-authority-resigns-amid-corruption-allegations_200160",
+    "title": "Info IconREUTERS / HENRY ROMERO/ReutersMexico Politics · MexicoHead of Mexico’s Electoral Authority Resigns Amid Corruption Allegations40% Center coverage: 25 sources",
+    "url": "https://ground.news/article/head-of-mexicos-electoral-authority-resigns-amid-corruption-allegations_200160"
+  },
+  {
+    "class": "flex cursor-pointer gap-[1rem] ",
+    "data-dd-action-name": "article-card-click",
+    "id": "newsroom-feed_f4b1788a-468d-4b89-b8eb-64ae2590119e_card1",
+    "href": "/article/hezbollah-readies-for-new-regional-war-with-funds-from-iran-sources-say_ae7707",
+    "title": "Info IconREUTERS / Zohra Bensemra/ReutersHezbollah · LebanonHezbollah readies for new regional war with funds from Iran, sources say55% Right coverage: 11 sources",
+    "url": "https://ground.news/article/hezbollah-readies-for-new-regional-war-with-funds-from-iran-sources-say_ae7707"
+  },
+  {
+    "class": "flex cursor-pointer gap-[1rem] ",
+    "data-dd-action-name": "article-card-click",
+    "id": "newsroom-feed_da911aab-ecf1-4a2a-b1ae-263102a7e41f_card2",
+    "href": "/article/nigeria-confirms-ebola-patient-departed-to-switzerland-on-evacuation-flight",
+    "title": "Info IconREUTERS / Sodiq Adelakun/ReutersEbola · AbujaSwiss Ebola Patient in Nigeria Evacuated to Switzerland48% Left coverage: 48 sources",
+    "url": "https://ground.news/article/nigeria-confirms-ebola-patient-departed-to-switzerland-on-evacuation-flight"
+  },
+  {
+    "class": "flex cursor-pointer gap-[1rem] ",
+    "data-dd-action-name": "article-card-click",
+    "id": "newsroom-feed_1384e053-5945-41c0-b0b9-833f0163b41e_card3",
+    "href": "/article/4-rescued-on-third-day-after-kenya-building-collapse-as-families-lose-hope_7b0f40",
+    "title": "Info IconREUTERS / Monicah Mwangi/ReutersBuilding Collapse · Nairobi4 rescued on third day after Kenya building collapse as families lose hope38% Right coverage: 8 sources",
+    "url": "https://ground.news/article/4-rescued-on-third-day-after-kenya-building-collapse-as-families-lose-hope_7b0f40"
+  },
+  {
+    "class": "flex cursor-pointer gap-[1rem] ",
+    "data-dd-action-name": "article-card-click",
+    "id": "newsroom-feed_f4b1788a-468d-4b89-b8eb-64ae2590119e_card1",
+    "href": "/article/hezbollah-readies-for-new-regional-war-with-funds-from-iran-sources-say_ae7707",
+    "title": "Info IconREUTERS / Zohra Bensemra/ReutersHezbollah · LebanonHezbollah readies for new regional war with funds from Iran, sources say55% Right coverage: 11 sources",
+    "url": "https://ground.news/article/hezbollah-readies-for-new-regional-war-with-funds-from-iran-sources-say_ae7707"
+  },
+  {
+    "class": "flex cursor-pointer gap-[1rem] ",
+    "data-dd-action-name": "article-card-click",
+    "id": "newsroom-feed_da911aab-ecf1-4a2a-b1ae-263102a7e41f_card2",
+    "href": "/article/nigeria-confirms-ebola-patient-departed-to-switzerland-on-evacuation-flight",
+    "title": "Info IconREUTERS / Sodiq Adelakun/ReutersEbola · AbujaSwiss Ebola Patient in Nigeria Evacuated to Switzerland48% Left coverage: 48 sources",
+    "url": "https://ground.news/article/nigeria-confirms-ebola-patient-departed-to-switzerland-on-evacuation-flight"
+  },
+  {
+    "class": "flex cursor-pointer gap-[1rem] ",
+    "data-dd-action-name": "article-card-click",
+    "id": "newsroom-feed_1384e053-5945-41c0-b0b9-833f0163b41e_card3",
+    "href": "/article/4-rescued-on-third-day-after-kenya-building-collapse-as-families-lose-hope_7b0f40",
+    "title": "Info IconREUTERS / Monicah Mwangi/ReutersBuilding Collapse · Nairobi4 rescued on third day after Kenya building collapse as families lose hope38% Right coverage: 8 sources",
+    "url": "https://ground.news/article/4-rescued-on-third-day-after-kenya-building-collapse-as-families-lose-hope_7b0f40"
+  },
+  {
+    "class": "flex cursor-pointer gap-[1rem] ",
+    "data-dd-action-name": "article-card-click",
+    "id": "newsroom-feed_8a32ccc8-bb9b-4233-b3e9-4e005748f27d_card1",
+    "href": "/article/bombing-in-el-tambo-cauca-leaves-nine-eln-guerrillas-dead-alias-marcos-pacifico-would-be-among-them",
+    "title": "Airstrikes · ColombiaColombia’s President Says Two Key Leaders of National Liberation Army Killed43% Center coverage: 14 sources",
+    "url": "https://ground.news/article/bombing-in-el-tambo-cauca-leaves-nine-eln-guerrillas-dead-alias-marcos-pacifico-would-be-among-them"
+  },
+  {
+    "class": "flex cursor-pointer gap-[1rem] ",
+    "data-dd-action-name": "article-card-click",
+    "id": "newsroom-feed_c17a1486-34c4-4507-8a47-23b2766efb6c_card2",
+    "href": "/article/dozens-killed-in-attack-on-ethiopia-orthodox-christians",
+    "title": "Info IconREUTERS / Siegfried Modola/ReutersCrime · EthiopiaDozens Killed in Attack on Ethiopia Orthodox Christians42% Center coverage: 12 sources",
+    "url": "https://ground.news/article/dozens-killed-in-attack-on-ethiopia-orthodox-christians"
+  },
+  {
+    "class": "flex cursor-pointer gap-[1rem] ",
+    "data-dd-action-name": "article-card-click",
+    "id": "newsroom-feed_39bce669-6182-4d0f-a5ad-3d12ede62776_card3",
+    "href": "/article/baby-orangutans-in-india-expose-illegal-wildlife-trade-as-experts-question-a-billionaires-zoo-wtop-news",
+    "title": "Info IconA playful orangutan hanging in the jungle, showcasing natural wildlife in its habitat. by Florian Kriechbaumer/Pexels / PexelsAnimal Cruelty · IndiaBaby Orangutans in India Expose Illegal Wildlife Trade as Experts Question a Billionaire’s Zoo42% Left coverage: 31 sources",
+    "url": "https://ground.news/article/baby-orangutans-in-india-expose-illegal-wildlife-trade-as-experts-question-a-billionaires-zoo-wtop-news"
+  },
+  {
+    "class": "flex cursor-pointer gap-[1rem] ",
+    "data-dd-action-name": "article-card-click",
+    "id": "newsroom-feed_0890d7a7-c239-48c3-a5db-5c82c456a03b_card4",
+    "href": "/article/iran-expects-no-change-after-israeli-elections-tehran-makes-sharp-accusations",
+    "title": "Info IconREUTERS / Majid-Asgaripour/ReutersIsrael Politics · IsraelOutcome Of Israeli Elections 'Makes No Difference', Says Iran54% Right coverage: 13 sources",
+    "url": "https://ground.news/article/iran-expects-no-change-after-israeli-elections-tehran-makes-sharp-accusations"
+  },
+  {
+    "class": "flex cursor-pointer gap-[1rem] ",
+    "data-dd-action-name": "article-card-click",
+    "id": "newsroom-feed_0ca770a2-bf4e-4c60-9d20-c61820877cdb_card5",
+    "href": "/article/attackers-kill-nurse-severely-injure-health-worker-responding-to-ebola-case-in-eastern-congo-wtop-news_84249b",
+    "title": "Info IconREUTERS / Gradel Muyisa Mumbere/ReutersEbola · Democratic Republic of the CongoAttackers kill nurse, severely injure health worker responding to Ebola case in eastern Congo43% Left coverage: 37 sources",
+    "url": "https://ground.news/article/attackers-kill-nurse-severely-injure-health-worker-responding-to-ebola-case-in-eastern-congo-wtop-news_84249b"
+  },
+  {
+    "class": "flex cursor-pointer gap-[1rem] ",
+    "data-dd-action-name": "article-card-click",
+    "id": "newsroom-feed_a165426c-53e6-4f99-8f90-e70711c3c5a5_card0",
+    "href": "/article/tanzanian-activist-twaha-mwaipaya-reportedly-abducted-in-kenya",
+    "title": "Info IconLUIS TATO/AFP via Getty Images/Getty via Getty ImagesActivism · KenyaKenya: Tanzanian Activist Twaha Mwaipaya Reportedly Abducted in Kenya50% Center coverage: 6 sources",
+    "url": "https://ground.news/article/tanzanian-activist-twaha-mwaipaya-reportedly-abducted-in-kenya"
+  },
+  {
+    "class": "flex cursor-pointer gap-[1rem] ",
+    "data-dd-action-name": "article-card-click",
+    "id": "newsroom-feed_9fe61d26-7c0e-4fcd-b355-a95298a34456_card1",
+    "href": "/article/algeria-to-send-troops-to-niger-in-first-foreign-deployment-in-over-50-years",
+    "title": "Info IconREUTERS / RAMZI BOUDINA/ReutersAlgeria Politics · AlgeriaAlgeria to send troops to Niger in first foreign deployment in over 50 years43% Left coverage: 51 sources",
+    "url": "https://ground.news/article/algeria-to-send-troops-to-niger-in-first-foreign-deployment-in-over-50-years"
+  },
+  {
+    "class": "flex cursor-pointer gap-[1rem] ",
+    "data-dd-action-name": "article-card-click",
+    "id": "newsroom-feed_1fe9ef06-6f06-4127-9e15-29d15b63cae3_card2",
+    "href": "/article/netanyahu-touts-trump-endorsement-on-eve-of-vote-suggests-they-may-restart-war-on-iran_cfc072",
+    "title": "Info IconREUTERS / Jonathan Ernst/ReutersIsrael Politics · IsraelNetanyahu touts Trump endorsement on eve of vote, suggests they may restart war on Iran45% Left coverage: 29 sources",
+    "url": "https://ground.news/article/netanyahu-touts-trump-endorsement-on-eve-of-vote-suggests-they-may-restart-war-on-iran_cfc072"
+  },
+  {
+    "class": "flex cursor-pointer gap-[1rem] ",
+    "data-dd-action-name": "article-card-click",
+    "id": "newsroom-feed_c57b231f-3b15-4060-a23b-e70589128458_card3",
+    "href": "/article/europe-protests-spread-to-romes-colosseum-as-demonstrators-try-to-force-entry",
+    "title": "Info IconAlberto PIZZOLI / AFP via Getty Images/Getty via Getty ImagesItaly Politics · ItalyPro-Palestinian Protesters Breach Roman Colosseum Gates as Unrest Escalates44% Right coverage: 45 sources",
+    "url": "https://ground.news/article/europe-protests-spread-to-romes-colosseum-as-demonstrators-try-to-force-entry"
+  },
+  {
+    "class": "flex cursor-pointer gap-[1rem] ",
+    "data-dd-action-name": "article-card-click",
+    "id": "newsroom-feed_a8bf3c37-8c28-433c-b0aa-75b7dbbc8532_card4",
+    "href": "/article/lieberman-responds-to-report-on-netanyahu-treason-to-the-country",
+    "title": "Info IconREUTERS / Ronen Zvulun/ReutersBenjamin Netanyahu · IsraelFormer Israeli Defense Minister Seeks Treason Probe of Netanyahu47% Right coverage: 17 sources",
+    "url": "https://ground.news/article/lieberman-responds-to-report-on-netanyahu-treason-to-the-country"
+  },
+  {
+    "class": "flex cursor-pointer gap-[1rem] ",
+    "data-dd-action-name": "article-card-click",
+    "id": "newsroom-feed_1e8fab52-53a5-4521-b651-3baa80563961_card0",
+    "href": "/article/head-of-mexicos-electoral-authority-resigns-amid-corruption-allegations_200160",
+    "title": "Info IconREUTERS / HENRY ROMERO/ReutersMexico Politics · MexicoHead of Mexico’s Electoral Authority Resigns Amid Corruption Allegations40% Center coverage: 25 sources",
+    "url": "https://ground.news/article/head-of-mexicos-electoral-authority-resigns-amid-corruption-allegations_200160"
+  },
+  {
+    "class": "flex cursor-pointer gap-[1rem] ",
+    "data-dd-action-name": "article-card-click",
+    "id": "newsroom-feed_8a32ccc8-bb9b-4233-b3e9-4e005748f27d_card1",
+    "href": "/article/bombing-in-el-tambo-cauca-leaves-nine-eln-guerrillas-dead-alias-marcos-pacifico-would-be-among-them",
+    "title": "Airstrikes · ColombiaColombia’s President Says Two Key Leaders of National Liberation Army Killed43% Center coverage: 14 sources",
+    "url": "https://ground.news/article/bombing-in-el-tambo-cauca-leaves-nine-eln-guerrillas-dead-alias-marcos-pacifico-would-be-among-them"
+  },
+  {
+    "class": "flex cursor-pointer gap-[1rem] ",
+    "data-dd-action-name": "article-card-click",
+    "id": "newsroom-feed_c17a1486-34c4-4507-8a47-23b2766efb6c_card2",
+    "href": "/article/dozens-killed-in-attack-on-ethiopia-orthodox-christians",
+    "title": "Info IconREUTERS / Siegfried Modola/ReutersCrime · EthiopiaDozens Killed in Attack on Ethiopia Orthodox Christians42% Center coverage: 12 sources",
+    "url": "https://ground.news/article/dozens-killed-in-attack-on-ethiopia-orthodox-christians"
+  },
+  {
+    "class": "flex cursor-pointer gap-[1rem] ",
+    "data-dd-action-name": "article-card-click",
+    "id": "newsroom-feed_39bce669-6182-4d0f-a5ad-3d12ede62776_card3",
+    "href": "/article/baby-orangutans-in-india-expose-illegal-wildlife-trade-as-experts-question-a-billionaires-zoo-wtop-news",
+    "title": "Info IconA playful orangutan hanging in the jungle, showcasing natural wildlife in its habitat. by Florian Kriechbaumer/Pexels / PexelsAnimal Cruelty · IndiaBaby Orangutans in India Expose Illegal Wildlife Trade as Experts Question a Billionaire’s Zoo42% Left coverage: 31 sources",
+    "url": "https://ground.news/article/baby-orangutans-in-india-expose-illegal-wildlife-trade-as-experts-question-a-billionaires-zoo-wtop-news"
+  },
+  {
+    "class": "flex cursor-pointer gap-[1rem] ",
+    "data-dd-action-name": "article-card-click",
+    "id": "newsroom-feed_0890d7a7-c239-48c3-a5db-5c82c456a03b_card4",
+    "href": "/article/iran-expects-no-change-after-israeli-elections-tehran-makes-sharp-accusations",
+    "title": "Info IconREUTERS / Majid-Asgaripour/ReutersIsrael Politics · IsraelOutcome Of Israeli Elections 'Makes No Difference', Says Iran54% Right coverage: 13 sources",
+    "url": "https://ground.news/article/iran-expects-no-change-after-israeli-elections-tehran-makes-sharp-accusations"
+  },
+  {
+    "class": "flex cursor-pointer gap-[1rem] ",
+    "data-dd-action-name": "article-card-click",
+    "id": "newsroom-feed_0ca770a2-bf4e-4c60-9d20-c61820877cdb_card5",
+    "href": "/article/attackers-kill-nurse-severely-injure-health-worker-responding-to-ebola-case-in-eastern-congo-wtop-news_84249b",
+    "title": "Info IconREUTERS / Gradel Muyisa Mumbere/ReutersEbola · Democratic Republic of the CongoAttackers kill nurse, severely injure health worker responding to Ebola case in eastern Congo43% Left coverage: 37 sources",
+    "url": "https://ground.news/article/attackers-kill-nurse-severely-injure-health-worker-responding-to-ebola-case-in-eastern-congo-wtop-news_84249b"
+  },
+  {
+    "id": "interest-read-more",
+    "class": "gn-secondary-focus-target focus-visible:ring-2 focus-visible:ring-offset-[3px] focus-visible:ring-[color:var(--color-dark-primary)] dark:focus-visible:ring-[color:var(--color-light-primary)] px-[0.7rem] py-[0.7rem] text-16 rounded-[4px] font-bold leading-10 whitespace-nowrap border flex shrink items-center border-dark-primary dark:border-light-primary text-dark-primary dark:text-light-primary hover:text-light-heavy active:text-light-heavy disabled:opacity-50 hidden tablet:block v5-legacy-pill-button",
+    "href": "/interest/israeli-palestinian-conflict",
+    "title": "Read More",
+    "url": "https://ground.news/interest/israeli-palestinian-conflict"
+  },
+  {
+    "class": "relative flex flex-col cursor-pointer tablet:gap-[0.6rem] desktop:gap-auto",
+    "href": "/article/netanyahu-touts-trump-endorsement-on-eve-of-vote-suggests-they-may-restart-war-on-iran_cfc072",
+    "title": "",
+    "url": "https://ground.news/article/netanyahu-touts-trump-endorsement-on-eve-of-vote-suggests-they-may-restart-war-on-iran_cfc072"
+  },
+  {
+    "href": "/interest/israeli-palestinian-conflict",
+    "class": "gn-secondary-focus-target focus-visible:ring-2 focus-visible:ring-offset-[3px] focus-visible:ring-[color:var(--color-dark-primary)] dark:focus-visible:ring-[color:var(--color-light-primary)] flex rounded-lg-s self-center justify-center border border-ground-black dark:border-light-primary text-16 w-full py-[0.7rem] tablet:hidden",
+    "title": "Read more Israel-Gaza",
+    "url": "https://ground.news/interest/israeli-palestinian-conflict"
+  },
+  {
+    "class": "flex flex-col gap-[8px] cursor-pointer",
+    "href": "/article/netanyahu-says-us-and-israel-must-topple-iranian-regime_14e5d5",
+    "title": "Info IconREUTERS / Jonathan Ernst/ReutersBlindspot LogoBlindspot:Only 17% Left44 sourcesNetanyahu says U.S. and Israel must topple Iranian regime",
+    "url": "https://ground.news/article/netanyahu-says-us-and-israel-must-topple-iranian-regime_14e5d5"
+  },
+  {
+    "class": "flex flex-col gap-[8px] cursor-pointer",
+    "href": "/article/nl-faces-serious-liability-questions-over-ithaca-energys-entry-into-provinces-oil-sector-legal-expert-warns-the-independent",
+    "title": "Info IconREUTERS / DADO RUVIC/ReutersBlindspot LogoBlindspot: 0% Right7 sourcesN.L. Faces ‘Serious Liability Questions’ over Ithaca Energy’s Entry Into Province’s Oil Sector, Legal Expert Warns",
+    "url": "https://ground.news/article/nl-faces-serious-liability-questions-over-ithaca-energys-entry-into-provinces-oil-sector-legal-expert-warns-the-independent"
+  },
+  {
+    "id": "interest-read-more",
+    "class": "gn-secondary-focus-target focus-visible:ring-2 focus-visible:ring-offset-[3px] focus-visible:ring-[color:var(--color-dark-primary)] dark:focus-visible:ring-[color:var(--color-light-primary)] px-[0.7rem] py-[0.7rem] text-16 rounded-[4px] font-bold leading-10 whitespace-nowrap border flex shrink items-center border-dark-primary dark:border-light-primary text-dark-primary dark:text-light-primary hover:text-light-heavy active:text-light-heavy disabled:opacity-50 hidden tablet:block v5-legacy-pill-button",
+    "href": "/interest/politics",
+    "title": "Read More",
+    "url": "https://ground.news/interest/politics"
+  },
+  {
+    "class": "relative flex flex-col cursor-pointer tablet:gap-[0.6rem] desktop:gap-auto",
+    "href": "/article/hes-earned-it-conservatives-want-doerkson-as-premier-amid-constitutional-question",
+    "title": "",
+    "url": "https://ground.news/article/hes-earned-it-conservatives-want-doerkson-as-premier-amid-constitutional-question"
+  },
+  {
+    "href": "/interest/politics",
+    "class": "gn-secondary-focus-target focus-visible:ring-2 focus-visible:ring-offset-[3px] focus-visible:ring-[color:var(--color-dark-primary)] dark:focus-visible:ring-[color:var(--color-light-primary)] flex rounded-lg-s self-center justify-center border border-ground-black dark:border-light-primary text-16 w-full py-[0.7rem] tablet:hidden",
+    "title": "Read more Politics",
+    "url": "https://ground.news/interest/politics"
+  },
+  {
+    "class": "flex flex-col gap-[8px] cursor-pointer",
+    "href": "/article/cant-make-this-up-mamdani-proudly-coaches-illegal-aliens-in-new-video_01eb70",
+    "title": "Info IconMichael M. Santiago/Getty Images/Getty via Getty ImagesBlindspot LogoBlindspot:Only 14% Left32 sourcesMamdani Faces Conservative Backlash Over Spanish-Language Video Explaining Rights During ICE Encounters",
+    "url": "https://ground.news/article/cant-make-this-up-mamdani-proudly-coaches-illegal-aliens-in-new-video_01eb70"
+  },
+  {
+    "class": "flex flex-col gap-[8px] cursor-pointer",
+    "href": "/article/britain-will-not-join-canadas-defence-bank-source-says",
+    "title": "Info IconREUTERS / Toby Melville/ReutersBlindspot LogoBlindspot:Only 8% Right62 sourcesBritain will not join Canada-led defence bank initiative",
+    "url": "https://ground.news/article/britain-will-not-join-canadas-defence-bank-source-says"
+  },
+  {
+    "class": "flex items-center justify-center hideElementSiteWide mt-[1.5rem] px-[0.6rem] w-full tablet:w-[12.5rem] h-[3.1rem] py-[8px] text-20 rounded-lg-s bg-dark-primary dark:bg-light-primary text-light-primary dark:text-dark-primary v5-legacy-pill-button",
+    "id": "home-hero",
+    "href": "/checkout/all",
+    "title": "Get Started",
+    "url": "https://ground.news/checkout/all"
+  },
+  {
+    "href": "/testimonials",
+    "class": "z-10",
+    "title": "10,000+5-starreviews",
+    "url": "https://ground.news/testimonials"
+  },
+  {
+    "class": "apple-app-store app-store-icon z-10 w-[7.5rem]",
+    "href": "https://apps.apple.com/app/apple-store/id1324203419?pt=107503821&ct=unknown&mt=8",
+    "target": "_blank",
+    "id": "",
+    "rel": "noopener",
+    "title": "",
+    "url": "https://apps.apple.com/app/apple-store/id1324203419?pt=107503821&ct=unknown&mt=8"
+  },
+  {
+    "href": "/testimonials",
+    "class": "z-10",
+    "title": "10,000+5-starreviews",
+    "url": "https://ground.news/testimonials"
+  },
+  {
+    "class": "apple-app-store app-store-icon z-10 w-[6.3rem]",
+    "href": "https://apps.apple.com/app/apple-store/id1324203419?pt=107503821&ct=unknown&mt=8",
+    "target": "_blank",
+    "id": "",
+    "rel": "noopener",
+    "title": "",
+    "url": "https://apps.apple.com/app/apple-store/id1324203419?pt=107503821&ct=unknown&mt=8"
+  },
+  {
+    "class": "self-start -mt-[1.3rem] lg:mb-[1.3rem] desktop:my-0 mx-auto",
+    "href": "/article/5e03164e-c931-47bf-bb68-c7cfd81c7ecc",
+    "title": "The Hindu ·ChennaiLula wins a record fourth presidential term as Brazil defeats far-right, defies Trump and MetaBBC News ·LondonElections 2026: What Weighs Against Lula? - BBC News BrazilTimes of India ·IndiaBrazil’s Lula wins re-election, defeating Trump ally BolsonaroLEFTCENTERRIGHT2 / 1412 sourcesRead more",
+    "url": "https://ground.news/article/5e03164e-c931-47bf-bb68-c7cfd81c7ecc"
+  },
+  {
+    "href": "/testimonials",
+    "class": "z-10",
+    "title": "10,000+5-starreviews",
+    "url": "https://ground.news/testimonials"
+  },
+  {
+    "class": "apple-app-store app-store-icon z-10 w-[7.5rem]",
+    "href": "https://apps.apple.com/app/apple-store/id1324203419?pt=107503821&ct=unknown&mt=8",
+    "target": "_blank",
+    "id": "",
+    "rel": "noopener",
+    "title": "",
+    "url": "https://apps.apple.com/app/apple-store/id1324203419?pt=107503821&ct=unknown&mt=8"
+  },
+  {
+    "href": "/testimonials",
+    "class": "z-10",
+    "title": "10,000+5-starreviews",
+    "url": "https://ground.news/testimonials"
+  },
+  {
+    "class": "apple-app-store app-store-icon z-10 w-[6.3rem]",
+    "href": "https://apps.apple.com/app/apple-store/id1324203419?pt=107503821&ct=unknown&mt=8",
+    "target": "_blank",
+    "id": "",
+    "rel": "noopener",
+    "title": "",
+    "url": "https://apps.apple.com/app/apple-store/id1324203419?pt=107503821&ct=unknown&mt=8"
+  }
+]

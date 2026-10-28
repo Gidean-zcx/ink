@@ -1,0 +1,132 @@
+Use Page Sync (https://help.audible.com/s/article/use-page-sync)
+citeturn762view4 [wordlim: 200] Crawled: 2 days ago; Content type: text/html; Source: click({"ref_id":"turn754view1","id":15}); Total lines: 130
+L0: Loading
+L1: 
+L2: Sorry to interrupt
+L3: 
+L4: Uncaught TypeError: Cannot read properties of null (reading 'style')
+L5: 
+L6: 【0†Refresh】
+L7: 
+L8: Skip to Main Content
+L9: 
+L10: Related topics
+L11: 
+L12: Library Listening
+L13: ## Use Page Sync
+L14: 
+L15:   * Sep 3, 2026
+L16:   * Knowledge
+L17: 
+L18: Title
+L19: 
+L20: Use Page Sync
+L21: 
+L22: URL Name
+L23: 
+L24: use-page-sync
+L25: 
+L26: Answer
+L27: 
+L28: Page Sync lets you seamlessly switch between reading your physical book and listening to the audiobook. With the corresponding audiobook open in the Audible app, simply scan a page with your phone's camera, and your audiobook automatically jumps to that exact spot—no manual searching needed.
+L29: 
+L30: In this article:
+L31:   * 【1†What is Page Sync?】
+L32:   * 【2†How do I use Page Sync?】
+L33:   * 【3†Which titles work with Page Sync?】
+L34:   * 【4†Troubleshooting】
+L35: ## What is Page Sync?
+L36: 
+L37: Page Sync uses your phone's camera to recognize text from your physical book and automatically syncs your listening position in the audiobook to match where you are in your physical book.
+L38: 
+L39: Note: Page Sync allows you to sync from the physical book to the audiobook, but not from the audiobook to the physical book. As audiobooks do not have page numbers, Page Sync cannot indicate the page number of the physical book.
+L40: ## How do I use Page Sync?
+L41: 
+L42:   1. Open the audiobook in the Audible app that corresponds to the physical book you want to scan.
+L43:   2. Select the 3-dot More menu.
+L44:   3. Select Page Sync.
+L45:   4. Grant camera permission (first-time only).
+L46:   5. Hold your camera over any page of text in your physical book.
+L47:   6. The app automatically captures and recognizes the text.
+L48:   7. Your audiobook jumps to the matching position.
+L49: 
+L50: Note:
+L51:   * Keep the page flat and well-lit for best results.
+L52:   * Make sure the text is fully visible in your camera frame.
+L53:   * The app provides real-time feedback on text readability.
+L54: ## Which titles work with Page Sync?
+L55: 
+L56: Page Sync is available for select English-language audiobooks. Your audiobook doesn't need to be downloaded to use this feature. You can access Page Sync from the 3-dot More menu.
+L57: 
+L58: Not supported:
+L59: 
+L60:   * Podcasts
+L61:   * Audible Originals without book equivalents
+L62:   * Kids Profiles
+L63:   * Children's picture books
+L64: 
+L65: Note: Page Sync works with any edition of your physical book if the text matches the audiobook.
+L66: ## Troubleshooting
+L67: 
+L68: If Page Sync isn't working:
+L69: 
+L70:   * Check your internet connection (Page Sync requires an active internet connection).
+L71:   * Ensure camera permissions are enabled in your device settings.
+L72:   * Make sure the text is fully visible in your camera frame.
+L73:   * Improve lighting and keep the page flat.
+L74: 
+L75: Note: Different book editions may have different page numbers. Page Sync works best when your physical book edition closely matches the audiobook version.
+L76: 
+L77: Did this answer your question?
+L78: 【5†Image: Thumbs Up】Like
+L79: 
+L80: 
+L81: 
+L82: 【6†Image: Thumbs Down】Dislike
+L83: 
+L84:  Back to top
+L85: 
+L86: 【7†Image: Share link】 Share link
+L87: 
+L88: 【8†Image: Download PDF】 Download PDF
+L89: ## Need more assistance?
+L90: 
+L91: 【9†Contact us†www.audible.com】
+L92: 
+L93: 
+L94: 
+L95: How satisfied were you with our Help Center today?
+L96: 
+L97: 
+L98: 
+L99: Worst
+L100: 
+L101: 1
+L102: 
+L103: 2
+L104: 
+L105: 3
+L106: 
+L107: 4
+L108: 
+L109: 5
+L110: 
+L111: 6
+L112: 
+L113: 7
+L114: 
+L115: Best
+L116: 
+L117: 
+L118: 
+L119: Region
+L120: 
+L121: United States
+L122: 
+L123: Language
+L124: 
+L125: English
+L126: 
+L127: Loading
+L128: 
+L129: Use Page Sync 【10†Adobe ID Syncing iFrame†audible.demdex.net】

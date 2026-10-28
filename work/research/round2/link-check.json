@@ -1,0 +1,42 @@
+[
+  {
+    "url": "https://burner.cloudzao.com/",
+    "status": 200
+  },
+  {
+    "url": "https://chat.nologo.tech/",
+    "error": "<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: certificate has expired (_ssl.c:1000)>"
+  },
+  {
+    "url": "https://opendocs.lierda.com/docs/CAT.1_Doc_Protal/zh_CN/index.html",
+    "status": 200
+  },
+  {
+    "url": "https://opendocs.lierda.com/docs/CAT.1_Doc_Protal/zh_CN/software/api-overview.html",
+    "status": 200
+  },
+  {
+    "url": "https://github.com/lierda-iot/CAT1.bis_OpenCPU",
+    "status": 200
+  },
+  {
+    "url": "https://docs.espressif.com/projects/esp-idf/en/v6.1/esp32s31/api-reference/system/ota.html",
+    "status": 200
+  },
+  {
+    "url": "https://docs.espressif.com/projects/esptool/en/latest/esp32s31/esptool/basic-commands.html",
+    "status": 200
+  },
+  {
+    "url": "https://docs.syncthing.net/users/versioning.html",
+    "status": 200
+  },
+  {
+    "url": "https://restic.readthedocs.io/en/stable/050_restore.html",
+    "error": "HTTP Error 403: Forbidden"
+  },
+  {
+    "url": "https://github.com/wegooo-cell/Metalio-S31-kiikoread/blob/e942aeb1745241273d737c584c88a8068ef6e933/README.md",
+    "status": 200
+  }
+]

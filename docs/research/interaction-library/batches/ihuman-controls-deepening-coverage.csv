@@ -1,0 +1,2 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M029-05,M-029,历史3.7.2家长验证与退出登录入口,D1,E-IHCD-04,正文描述设置→数字验证→账户中心→退出登录；iPhone12/iOS15.6/3.7.2,截图403；确认/取消与退出后状态；当前构建、草稿/进度保留和重登录恢复,not_observed,false,cases/M-029-ihuman.md,2026-10-26

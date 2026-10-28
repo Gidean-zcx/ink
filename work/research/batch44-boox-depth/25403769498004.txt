@@ -1,0 +1,13 @@
+To start a screen recording, do the following:
+Swipe down from the top right corner to open the Control Center.
+Find and tap the Screen Recorder button in the Shortcut Switches.
+Tap the ⚪ button to start recording. Then tap the ❌ button to end the recording. The recordings will be saved in Storage/Movies/Captures in mp4 format.
+You can tap the thumbnail to view it directly or tap the Share button to share it with others.
+Note: If you cannot find the Screen Recorder button on the Control Center, you may do the following:
+Swipe down from the top right corner to open the Control Center.
+Tap the Edit icon.
+Drag and drop the Screen Recorder button to the enabled Shortcut Switches.
+To customize the screen-recording settings before starting, do the following:
+Swipe down from the top right corner to open the Control Center.
+Long press the Screen Recorder button in the Shortcut Switches.
+Here you can customize settings including resolution, quality, framerate and more.

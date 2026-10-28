@@ -1,0 +1,317 @@
+[
+  {
+    "key": "02",
+    "title": "Intro to Shortcuts",
+    "entry_id": "SCT-APDF22B0444C",
+    "upstream_id": "APDF22B0444C",
+    "url": "https://support.apple.com/guide/shortcuts/intro-to-shortcuts-apdf22b0444c/10.0/ios/27"
+  },
+  {
+    "key": "03",
+    "title": "Discover shortcuts in the Gallery",
+    "entry_id": "SCT-APDD018638CA",
+    "upstream_id": "APDD018638CA",
+    "url": "https://support.apple.com/guide/shortcuts/discover-shortcuts-in-the-gallery-apdd018638ca/10.0/ios/27"
+  },
+  {
+    "key": "04",
+    "title": "Run a shortcut from the app",
+    "entry_id": "SCT-APD5BA077760",
+    "upstream_id": "APD5BA077760",
+    "url": "https://support.apple.com/guide/shortcuts/run-a-shortcut-from-the-app-apd5ba077760/10.0/ios/27"
+  },
+  {
+    "key": "05",
+    "title": "Run shortcuts with Siri",
+    "entry_id": "SCT-APD07C25BB38",
+    "upstream_id": "APD07C25BB38",
+    "url": "https://support.apple.com/guide/shortcuts/run-shortcuts-with-siri-apd07c25bb38/10.0/ios/27"
+  },
+  {
+    "key": "06",
+    "title": "Run shortcuts from Control Center",
+    "entry_id": "SCT-APD06A9201D4",
+    "upstream_id": "APD06A9201D4",
+    "url": "https://support.apple.com/guide/shortcuts/run-shortcuts-from-control-center-apd06a9201d4/10.0/ios/27"
+  },
+  {
+    "key": "07",
+    "title": "Run shortcuts with the Action button",
+    "entry_id": "SCT-APDFEA15680B",
+    "upstream_id": "APDFEA15680B",
+    "url": "https://support.apple.com/guide/shortcuts/run-shortcuts-with-the-action-button-apdfea15680b/10.0/ios/27"
+  },
+  {
+    "key": "08",
+    "title": "Run shortcuts with Apple Pencil Pro",
+    "entry_id": "SCT-APDBE445A3A2",
+    "upstream_id": "APDBE445A3A2",
+    "url": "https://support.apple.com/guide/shortcuts/run-shortcuts-with-apple-pencil-pro-apdbe445a3a2/10.0/ios/27"
+  },
+  {
+    "key": "09",
+    "title": "Run shortcuts from the Home Screen widget",
+    "entry_id": "SCT-APD029B36D05",
+    "upstream_id": "APD029B36D05",
+    "url": "https://support.apple.com/guide/shortcuts/run-shortcuts-from-the-home-screen-widget-apd029b36d05/10.0/ios/27"
+  },
+  {
+    "key": "10",
+    "title": "Run shortcuts from the Search screen",
+    "entry_id": "SCT-APD8A8FFB4AC",
+    "upstream_id": "APD8A8FFB4AC",
+    "url": "https://support.apple.com/guide/shortcuts/run-shortcuts-from-the-search-screen-apd8a8ffb4ac/10.0/ios/27"
+  },
+  {
+    "key": "11",
+    "title": "Add a shortcut to the Home Screen",
+    "entry_id": "SCT-APD735880972",
+    "upstream_id": "APD735880972",
+    "url": "https://support.apple.com/guide/shortcuts/add-a-shortcut-to-the-home-screen-apd735880972/10.0/ios/27"
+  },
+  {
+    "key": "12",
+    "title": "Run a shortcut from another app",
+    "entry_id": "SCT-APD163EB9F95",
+    "upstream_id": "APD163EB9F95",
+    "url": "https://support.apple.com/guide/shortcuts/run-a-shortcut-from-another-app-apd163eb9f95/10.0/ios/27"
+  },
+  {
+    "key": "13",
+    "title": "Run shortcuts from Apple Watch",
+    "entry_id": "SCT-APD5888B0858",
+    "upstream_id": "APD5888B0858",
+    "url": "https://support.apple.com/guide/shortcuts/run-shortcuts-from-apple-watch-apd5888b0858/10.0/ios/27"
+  },
+  {
+    "key": "14",
+    "title": "Run shortcuts by tapping the back of your iPhone",
+    "entry_id": "SCT-APD897693606",
+    "upstream_id": "APD897693606",
+    "url": "https://support.apple.com/guide/shortcuts/run-shortcuts-tapping-iphone-apd897693606/10.0/ios/27"
+  },
+  {
+    "key": "15",
+    "title": "Intro to how shortcuts work",
+    "entry_id": "SCT-APDAD3CBABFC",
+    "upstream_id": "APDAD3CBABFC",
+    "url": "https://support.apple.com/guide/shortcuts/intro-to-how-shortcuts-work-apdad3cbabfc/10.0/ios/27"
+  },
+  {
+    "key": "16",
+    "title": "Control the flow of actions",
+    "entry_id": "SCT-APD25A01237E",
+    "upstream_id": "APD25A01237E",
+    "url": "https://support.apple.com/guide/shortcuts/control-the-flow-of-actions-apd25a01237e/10.0/ios/27"
+  },
+  {
+    "key": "17",
+    "title": "Ideas for custom shortcuts",
+    "entry_id": "SCT-APDB272B27EC",
+    "upstream_id": "APDB272B27EC",
+    "url": "https://support.apple.com/guide/shortcuts/ideas-for-custom-shortcuts-apdb272b27ec/10.0/ios/27"
+  },
+  {
+    "key": "18",
+    "title": "Order of actions",
+    "entry_id": "SCT-APDE53AB0903",
+    "upstream_id": "APDE53AB0903",
+    "url": "https://support.apple.com/guide/shortcuts/order-of-actions-apde53ab0903/10.0/ios/27"
+  },
+  {
+    "key": "19",
+    "title": "Get actions",
+    "entry_id": "SCT-APD5C2BD430F",
+    "upstream_id": "APD5C2BD430F",
+    "url": "https://support.apple.com/guide/shortcuts/get-actions-apd5c2bd430f/10.0/ios/27"
+  },
+  {
+    "key": "20",
+    "title": "Transform actions",
+    "entry_id": "SCT-APD1D9413CFB",
+    "upstream_id": "APD1D9413CFB",
+    "url": "https://support.apple.com/guide/shortcuts/transform-actions-apd1d9413cfb/10.0/ios/27"
+  },
+  {
+    "key": "21",
+    "title": "Share actions",
+    "entry_id": "SCT-APDAF74D75A5",
+    "upstream_id": "APDAF74D75A5",
+    "url": "https://support.apple.com/guide/shortcuts/share-actions-apdaf74d75a5/10.0/ios/27"
+  },
+  {
+    "key": "22",
+    "title": "About actions in complicated shortcuts",
+    "entry_id": "SCT-APD081D9D61F",
+    "upstream_id": "APD081D9D61F",
+    "url": "https://support.apple.com/guide/shortcuts/about-actions-in-complicated-shortcuts-apd081d9d61f/10.0/ios/27"
+  },
+  {
+    "key": "23",
+    "title": "Intro to editing shortcuts",
+    "entry_id": "SCT-APD5B1537CA0",
+    "upstream_id": "APD5B1537CA0",
+    "url": "https://support.apple.com/guide/shortcuts/intro-to-editing-shortcuts-apd5b1537ca0/10.0/ios/27"
+  },
+  {
+    "key": "24",
+    "title": "Organize shortcuts in folders",
+    "entry_id": "SCT-APD113493874",
+    "upstream_id": "APD113493874",
+    "url": "https://support.apple.com/guide/shortcuts/organize-shortcuts-in-folders-apd113493874/10.0/ios/27"
+  },
+  {
+    "key": "25",
+    "title": "Change the layout",
+    "entry_id": "SCT-APD873475724",
+    "upstream_id": "APD873475724",
+    "url": "https://support.apple.com/guide/shortcuts/change-the-layout-apd873475724/10.0/ios/27"
+  },
+  {
+    "key": "26",
+    "title": "Reorder shortcuts",
+    "entry_id": "SCT-APD052072D68",
+    "upstream_id": "APD052072D68",
+    "url": "https://support.apple.com/guide/shortcuts/reorder-shortcuts-apd052072d68/10.0/ios/27"
+  },
+  {
+    "key": "27",
+    "title": "Rename shortcuts",
+    "entry_id": "SCT-APDD57094696",
+    "upstream_id": "APDD57094696",
+    "url": "https://support.apple.com/guide/shortcuts/rename-shortcuts-apdd57094696/10.0/ios/27"
+  },
+  {
+    "key": "28",
+    "title": "Modify shortcut icons",
+    "entry_id": "SCT-APD5AD5A2128",
+    "upstream_id": "APD5AD5A2128",
+    "url": "https://support.apple.com/guide/shortcuts/modify-shortcut-icons-apd5ad5a2128/10.0/ios/27"
+  },
+  {
+    "key": "29",
+    "title": "Duplicate shortcuts",
+    "entry_id": "SCT-APD6B467942C",
+    "upstream_id": "APD6B467942C",
+    "url": "https://support.apple.com/guide/shortcuts/duplicate-shortcuts-apd6b467942c/10.0/ios/27"
+  },
+  {
+    "key": "30",
+    "title": "Add a shortcut to Reminders using Siri",
+    "entry_id": "SCT-APDACFDF1802",
+    "upstream_id": "APDACFDF1802",
+    "url": "https://support.apple.com/guide/shortcuts/add-a-shortcut-to-reminders-using-siri-apdacfdf1802/10.0/ios/27"
+  },
+  {
+    "key": "31",
+    "title": "Intro to Find and Filter actions",
+    "entry_id": "SCT-APD3C845E881",
+    "upstream_id": "APD3C845E881",
+    "url": "https://support.apple.com/guide/shortcuts/intro-to-find-and-filter-actions-apd3c845e881/10.0/ios/27"
+  },
+  {
+    "key": "32",
+    "title": "Intro to using prompts",
+    "entry_id": "SCT-APD8EFA49A70",
+    "upstream_id": "APD8EFA49A70",
+    "url": "https://support.apple.com/guide/shortcuts/intro-to-using-prompts-apd8efa49a70/10.0/ios/27"
+  },
+  {
+    "key": "33",
+    "title": "Input types",
+    "entry_id": "SCT-APD7644168E1",
+    "upstream_id": "APD7644168E1",
+    "url": "https://support.apple.com/guide/shortcuts/input-types-apd7644168e1/10.0/ios/27"
+  },
+  {
+    "key": "34",
+    "title": "Intro to URL schemes",
+    "entry_id": "SCT-APD621A1AD7A",
+    "upstream_id": "APD621A1AD7A",
+    "url": "https://support.apple.com/guide/shortcuts/intro-to-url-schemes-apd621a1ad7a/10.0/ios/27"
+  },
+  {
+    "key": "35",
+    "title": "Open, create, and run a shortcut",
+    "entry_id": "SCT-APDA283236D7",
+    "upstream_id": "APDA283236D7",
+    "url": "https://support.apple.com/guide/shortcuts/open-create-and-run-a-shortcut-apda283236d7/10.0/ios/27"
+  },
+  {
+    "key": "36",
+    "title": "Open or search the Gallery from a URL",
+    "entry_id": "SCT-APD9C112CA23",
+    "upstream_id": "APD9C112CA23",
+    "url": "https://support.apple.com/guide/shortcuts/open-or-search-the-gallery-from-a-url-apd9c112ca23/10.0/ios/27"
+  },
+  {
+    "key": "37",
+    "title": "Intro to web APIs",
+    "entry_id": "SCT-APD2D448B2DE",
+    "upstream_id": "APD2D448B2DE",
+    "url": "https://support.apple.com/guide/shortcuts/intro-to-web-apis-apd2d448b2de/10.0/ios/27"
+  },
+  {
+    "key": "38",
+    "title": "What’s an API?",
+    "entry_id": "SCT-APD2E30C9D45",
+    "upstream_id": "APD2E30C9D45",
+    "url": "https://support.apple.com/guide/shortcuts/whats-an-api-apd2e30c9d45/10.0/ios/27"
+  },
+  {
+    "key": "39",
+    "title": "Create contacts",
+    "entry_id": "SCT-APD9CF19A736",
+    "upstream_id": "APD9CF19A736",
+    "url": "https://support.apple.com/guide/shortcuts/create-contacts-apd9cf19a736/10.0/ios/27"
+  },
+  {
+    "key": "40",
+    "title": "Format Date timestamps",
+    "entry_id": "SCT-APDFB33B0E17",
+    "upstream_id": "APDFB33B0E17",
+    "url": "https://support.apple.com/guide/shortcuts/format-date-timestamps-apdfb33b0e17/10.0/ios/27"
+  },
+  {
+    "key": "41",
+    "title": "About date and time formatting",
+    "entry_id": "SCT-APD71B0AC246",
+    "upstream_id": "APD71B0AC246",
+    "url": "https://support.apple.com/guide/shortcuts/about-date-and-time-formatting-apd71b0ac246/10.0/ios/27"
+  },
+  {
+    "key": "42",
+    "title": "Date and time formats",
+    "entry_id": "SCT-APDFBAD418CA",
+    "upstream_id": "APDFBAD418CA",
+    "url": "https://support.apple.com/guide/shortcuts/date-and-time-formats-apdfbad418ca/10.0/ios/27"
+  },
+  {
+    "key": "43",
+    "title": "Dates as written language",
+    "entry_id": "SCT-APDC6348BCA9",
+    "upstream_id": "APDC6348BCA9",
+    "url": "https://support.apple.com/guide/shortcuts/dates-as-written-language-apdc6348bca9/10.0/ios/27"
+  },
+  {
+    "key": "44",
+    "title": "Technical standards",
+    "entry_id": "SCT-APDFD459E13D",
+    "upstream_id": "APDFD459E13D",
+    "url": "https://support.apple.com/guide/shortcuts/technical-standards-apdfd459e13d/10.0/ios/27"
+  },
+  {
+    "key": "45",
+    "title": "Custom date formats",
+    "entry_id": "SCT-APD8D9B19184",
+    "upstream_id": "APD8D9B19184",
+    "url": "https://support.apple.com/guide/shortcuts/custom-date-formats-apd8d9b19184/10.0/ios/27"
+  },
+  {
+    "key": "46",
+    "title": "Copyright and trademarks",
+    "entry_id": "SCT-APD19E3E6994",
+    "upstream_id": "APD19E3E6994",
+    "url": "https://support.apple.com/guide/shortcuts/copyright-and-trademarks-apd19e3e6994/10.0/ios/27"
+  }
+]

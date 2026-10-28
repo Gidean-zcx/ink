@@ -1,0 +1,642 @@
+[
+  {
+    "evidence_id": "E-YOD-01",
+    "before": {
+      "evidence_id": "E-YOD-01",
+      "product_id": "M-037",
+      "title": "实体控制",
+      "url": "https://support.yotoplay.com/en_gb/how-to-control-your-yoto-player-SyGKKj7zg",
+      "checked_on": "2026-10-26",
+      "source_type": "official_help",
+      "access_mode": "official_search_index_text",
+      "version_scope": "Yoto Player 3rd Generation / Yoto Mini 2024 Edition; iOS/Android app; actual OS/app build unknown; excludes 4th Generation",
+      "app_build": null,
+      "firmware_version": null,
+      "source_updated_on": "2026-09-10",
+      "locator": "Earlier players controls；2026-09-10；排除第四代段落。",
+      "note": "本轮新增定位；具体已查/未知见 M-037-yoto.md。",
+      "hands_on": false,
+      "visual_observed": false,
+      "archived_artifact": null,
+      "sha256": null,
+      "capture_state": "bibliography_and_short_note_only",
+      "supersedes": null
+    },
+    "after": {
+      "evidence_id": "E-YOD-01",
+      "product_id": "M-037",
+      "title": "实体控制",
+      "url": "https://support.yotoplay.com/en_gb/how-to-control-your-yoto-player-SyGKKj7zg",
+      "checked_on": "2026-10-26",
+      "source_type": "official_help",
+      "access_mode": "official_search_index_text",
+      "version_scope": "Yoto Player 3rd Generation / Yoto Mini 2024 Edition; iOS/Android app; actual OS/app build unknown; excludes 4th Generation",
+      "app_build": null,
+      "firmware_version": null,
+      "source_updated_on": "2026-09-10",
+      "locator": "Earlier players controls；2026-09-10；排除第四代段落。",
+      "note": "本轮新增定位；具体已查/未知见 M-037-yoto.md。",
+      "hands_on": false,
+      "visual_observed": false,
+      "archived_artifact": null,
+      "sha256": null,
+      "capture_state": "bibliography_and_short_note_only",
+      "supersedes": null,
+      "additional_captures": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "anonymous_public_category_html_embedded_article",
+          "capture_url": "https://support.yotoplay.com/en_gb/categories/using-your-yoto-rkx2SXPlGl",
+          "canonical_article_url": "https://support.yotoplay.com/en_gb/how-to-control-your-yoto-player-SyGKKj7zg",
+          "raw_work_path": "work/yoto-controls-deepening/raw/category-using-your-yoto.html",
+          "raw_sha256": "52cc235dd8f8d5a769d11e164c730ea93958d8fa7a3aed7f70a433e33d330727",
+          "extracted_work_path": "work/yoto-controls-deepening/extracted/article-SyGKKj7zg.json",
+          "extracted_sha256": "c22d439635495165f21482efe24b5cb1fbb1a6f58b9efd444d82b8943c60b264",
+          "extracted_text_work_path": "work/yoto-controls-deepening/extracted/article-SyGKKj7zg.txt",
+          "extracted_text_sha256": "c8f96a7f6122356217fee7c319fe16db70bcbdd6c8f1afe71bea53f8a44a88e1",
+          "locator": "initial-data.data.articles[hash=SyGKKj7zg].body",
+          "source_updated_on": "2026-09-10T12:19:12.727Z",
+          "hands_on": false,
+          "visual_observed": false,
+          "archived_artifact": "artifacts/yoto-controls-deepening/source-notes.md",
+          "sha256": "a984b3dfac78091ada9607b831110db5fc296d243371d7317ebc097badf1fb0e"
+        }
+      ]
+    },
+    "changed_fields": {
+      "additional_captures": {
+        "before": null,
+        "after": [
+          {
+            "checked_on": "2026-10-27",
+            "access_mode": "anonymous_public_category_html_embedded_article",
+            "capture_url": "https://support.yotoplay.com/en_gb/categories/using-your-yoto-rkx2SXPlGl",
+            "canonical_article_url": "https://support.yotoplay.com/en_gb/how-to-control-your-yoto-player-SyGKKj7zg",
+            "raw_work_path": "work/yoto-controls-deepening/raw/category-using-your-yoto.html",
+            "raw_sha256": "52cc235dd8f8d5a769d11e164c730ea93958d8fa7a3aed7f70a433e33d330727",
+            "extracted_work_path": "work/yoto-controls-deepening/extracted/article-SyGKKj7zg.json",
+            "extracted_sha256": "c22d439635495165f21482efe24b5cb1fbb1a6f58b9efd444d82b8943c60b264",
+            "extracted_text_work_path": "work/yoto-controls-deepening/extracted/article-SyGKKj7zg.txt",
+            "extracted_text_sha256": "c8f96a7f6122356217fee7c319fe16db70bcbdd6c8f1afe71bea53f8a44a88e1",
+            "locator": "initial-data.data.articles[hash=SyGKKj7zg].body",
+            "source_updated_on": "2026-09-10T12:19:12.727Z",
+            "hands_on": false,
+            "visual_observed": false,
+            "archived_artifact": "artifacts/yoto-controls-deepening/source-notes.md",
+            "sha256": "a984b3dfac78091ada9607b831110db5fc296d243371d7317ebc097badf1fb0e"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "evidence_id": "E-YOD-02",
+    "before": {
+      "evidence_id": "E-YOD-02",
+      "product_id": "M-037",
+      "title": "app 页签与设置总览",
+      "url": "https://support.yotoplay.com/en_gb/using-the-yoto-app-on-ios-and-android-ryJtFi7Me",
+      "checked_on": "2026-10-26",
+      "source_type": "official_help",
+      "access_mode": "official_search_index_text",
+      "version_scope": "Yoto Player 3rd Generation / Yoto Mini 2024 Edition; iOS/Android app; actual OS/app build unknown; excludes 4th Generation",
+      "app_build": null,
+      "firmware_version": null,
+      "source_updated_on": "2026-07-17",
+      "locator": "News/Create/Library/Discover/Settings；2026-07-17。",
+      "note": "本轮新增定位；具体已查/未知见 M-037-yoto.md。",
+      "hands_on": false,
+      "visual_observed": false,
+      "archived_artifact": null,
+      "sha256": null,
+      "capture_state": "bibliography_and_short_note_only",
+      "supersedes": null
+    },
+    "after": {
+      "evidence_id": "E-YOD-02",
+      "product_id": "M-037",
+      "title": "app 页签与设置总览",
+      "url": "https://support.yotoplay.com/en_gb/using-the-yoto-app-on-ios-and-android-ryJtFi7Me",
+      "checked_on": "2026-10-26",
+      "source_type": "official_help",
+      "access_mode": "official_search_index_text",
+      "version_scope": "Yoto Player 3rd Generation / Yoto Mini 2024 Edition; iOS/Android app; actual OS/app build unknown; excludes 4th Generation",
+      "app_build": null,
+      "firmware_version": null,
+      "source_updated_on": "2026-07-17",
+      "locator": "News/Create/Library/Discover/Settings；2026-07-17。",
+      "note": "本轮新增定位；具体已查/未知见 M-037-yoto.md。",
+      "hands_on": false,
+      "visual_observed": false,
+      "archived_artifact": null,
+      "sha256": null,
+      "capture_state": "bibliography_and_short_note_only",
+      "supersedes": null,
+      "additional_captures": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "anonymous_public_category_html_embedded_article",
+          "capture_url": "https://support.yotoplay.com/en_gb/categories/using-your-yoto-rkx2SXPlGl",
+          "canonical_article_url": "https://support.yotoplay.com/en_gb/using-the-yoto-app-on-ios-and-android-ryJtFi7Me",
+          "raw_work_path": "work/yoto-controls-deepening/raw/category-using-your-yoto.html",
+          "raw_sha256": "52cc235dd8f8d5a769d11e164c730ea93958d8fa7a3aed7f70a433e33d330727",
+          "extracted_work_path": "work/yoto-controls-deepening/extracted/article-ryJtFi7Me.json",
+          "extracted_sha256": "0bc13465dea161e83b16dcc335bca41144e575b918eda28a06ce4897f8f5da8f",
+          "extracted_text_work_path": "work/yoto-controls-deepening/extracted/article-ryJtFi7Me.txt",
+          "extracted_text_sha256": "2c5bb4387d988933af00c6f348eb72f2b33d13bcd3600268a1668d4832538336",
+          "locator": "initial-data.data.articles[hash=ryJtFi7Me].body",
+          "source_updated_on": "2026-07-17T14:50:48.027Z",
+          "hands_on": false,
+          "visual_observed": false,
+          "archived_artifact": "artifacts/yoto-controls-deepening/source-notes.md",
+          "sha256": "a984b3dfac78091ada9607b831110db5fc296d243371d7317ebc097badf1fb0e"
+        }
+      ]
+    },
+    "changed_fields": {
+      "additional_captures": {
+        "before": null,
+        "after": [
+          {
+            "checked_on": "2026-10-27",
+            "access_mode": "anonymous_public_category_html_embedded_article",
+            "capture_url": "https://support.yotoplay.com/en_gb/categories/using-your-yoto-rkx2SXPlGl",
+            "canonical_article_url": "https://support.yotoplay.com/en_gb/using-the-yoto-app-on-ios-and-android-ryJtFi7Me",
+            "raw_work_path": "work/yoto-controls-deepening/raw/category-using-your-yoto.html",
+            "raw_sha256": "52cc235dd8f8d5a769d11e164c730ea93958d8fa7a3aed7f70a433e33d330727",
+            "extracted_work_path": "work/yoto-controls-deepening/extracted/article-ryJtFi7Me.json",
+            "extracted_sha256": "0bc13465dea161e83b16dcc335bca41144e575b918eda28a06ce4897f8f5da8f",
+            "extracted_text_work_path": "work/yoto-controls-deepening/extracted/article-ryJtFi7Me.txt",
+            "extracted_text_sha256": "2c5bb4387d988933af00c6f348eb72f2b33d13bcd3600268a1668d4832538336",
+            "locator": "initial-data.data.articles[hash=ryJtFi7Me].body",
+            "source_updated_on": "2026-07-17T14:50:48.027Z",
+            "hands_on": false,
+            "visual_observed": false,
+            "archived_artifact": "artifacts/yoto-controls-deepening/source-notes.md",
+            "sha256": "a984b3dfac78091ada9607b831110db5fc296d243371d7317ebc097badf1fb0e"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "evidence_id": "E-YOD-19",
+    "before": {
+      "evidence_id": "E-YOD-19",
+      "product_id": "M-037",
+      "title": "app 更新记录",
+      "url": "https://support.yotoplay.com/en_gb/yoto-app-updates-BJZeKFsQGg",
+      "checked_on": "2026-10-26",
+      "source_type": "official_release_notes",
+      "access_mode": "official_search_index_text",
+      "version_scope": "Yoto Player 3rd Generation / Yoto Mini 2024 Edition; iOS/Android app; actual OS/app build unknown; excludes 4th Generation",
+      "app_build": null,
+      "firmware_version": null,
+      "source_updated_on": "2026-07-20",
+      "locator": "3.34、3.35 beta、3.22 邀请码；页示 2026-07-20。",
+      "note": "页列稳定 3.34 / beta 3.35、历史 3.22 邀请码；不是设备构建测量。",
+      "hands_on": false,
+      "visual_observed": false,
+      "archived_artifact": null,
+      "sha256": null,
+      "capture_state": "bibliography_and_short_note_only",
+      "supersedes": null
+    },
+    "after": {
+      "evidence_id": "E-YOD-19",
+      "product_id": "M-037",
+      "title": "app 更新记录",
+      "url": "https://support.yotoplay.com/en_gb/yoto-app-updates-BJZeKFsQGg",
+      "checked_on": "2026-10-26",
+      "source_type": "official_release_notes",
+      "access_mode": "official_search_index_text",
+      "version_scope": "Yoto Player 3rd Generation / Yoto Mini 2024 Edition; iOS/Android app; actual OS/app build unknown; excludes 4th Generation",
+      "app_build": null,
+      "firmware_version": null,
+      "source_updated_on": "2026-07-20",
+      "locator": "3.34、3.35 beta、3.22 邀请码；页示 2026-07-20。",
+      "note": "页列稳定 3.34 / beta 3.35、历史 3.22 邀请码；不是设备构建测量。",
+      "hands_on": false,
+      "visual_observed": false,
+      "archived_artifact": null,
+      "sha256": null,
+      "capture_state": "bibliography_and_short_note_only",
+      "supersedes": null,
+      "additional_captures": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "anonymous_public_category_html_embedded_article",
+          "capture_url": "https://support.yotoplay.com/en_gb/categories/using-your-yoto-rkx2SXPlGl",
+          "canonical_article_url": "https://support.yotoplay.com/en_gb/yoto-app-updates-BJZeKFsQGg",
+          "raw_work_path": "work/yoto-controls-deepening/raw/category-using-your-yoto.html",
+          "raw_sha256": "52cc235dd8f8d5a769d11e164c730ea93958d8fa7a3aed7f70a433e33d330727",
+          "extracted_work_path": "work/yoto-controls-deepening/extracted/article-BJZeKFsQGg.json",
+          "extracted_sha256": "51540f974bbdbd7bde9971f87155f5e720691c2b5f72a15973452af5f3033a92",
+          "extracted_text_work_path": "work/yoto-controls-deepening/extracted/article-BJZeKFsQGg.txt",
+          "extracted_text_sha256": "8f42cd51dfb7c8130351fbcf9abdff66b293c3663b2ffa20aa8e4e686f6fbc40",
+          "locator": "initial-data.data.articles[hash=BJZeKFsQGg].body",
+          "source_updated_on": "2026-07-20T09:39:11.728Z",
+          "hands_on": false,
+          "visual_observed": false,
+          "archived_artifact": "artifacts/yoto-controls-deepening/source-notes.md",
+          "sha256": "a984b3dfac78091ada9607b831110db5fc296d243371d7317ebc097badf1fb0e"
+        }
+      ]
+    },
+    "changed_fields": {
+      "additional_captures": {
+        "before": null,
+        "after": [
+          {
+            "checked_on": "2026-10-27",
+            "access_mode": "anonymous_public_category_html_embedded_article",
+            "capture_url": "https://support.yotoplay.com/en_gb/categories/using-your-yoto-rkx2SXPlGl",
+            "canonical_article_url": "https://support.yotoplay.com/en_gb/yoto-app-updates-BJZeKFsQGg",
+            "raw_work_path": "work/yoto-controls-deepening/raw/category-using-your-yoto.html",
+            "raw_sha256": "52cc235dd8f8d5a769d11e164c730ea93958d8fa7a3aed7f70a433e33d330727",
+            "extracted_work_path": "work/yoto-controls-deepening/extracted/article-BJZeKFsQGg.json",
+            "extracted_sha256": "51540f974bbdbd7bde9971f87155f5e720691c2b5f72a15973452af5f3033a92",
+            "extracted_text_work_path": "work/yoto-controls-deepening/extracted/article-BJZeKFsQGg.txt",
+            "extracted_text_sha256": "8f42cd51dfb7c8130351fbcf9abdff66b293c3663b2ffa20aa8e4e686f6fbc40",
+            "locator": "initial-data.data.articles[hash=BJZeKFsQGg].body",
+            "source_updated_on": "2026-07-20T09:39:11.728Z",
+            "hands_on": false,
+            "visual_observed": false,
+            "archived_artifact": "artifacts/yoto-controls-deepening/source-notes.md",
+            "sha256": "a984b3dfac78091ada9607b831110db5fc296d243371d7317ebc097badf1fb0e"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "evidence_id": "E-YOD-20",
+    "before": {
+      "evidence_id": "E-YOD-20",
+      "product_id": "M-037",
+      "title": "OS 更新记录",
+      "url": "https://support.yotoplay.com/en_gb/yoto-player-software-%28os%29-updates-ByglYKimze",
+      "checked_on": "2026-10-26",
+      "source_type": "official_release_notes",
+      "access_mode": "official_search_index_text",
+      "version_scope": "Yoto Player 3rd Generation / Yoto Mini 2024 Edition; iOS/Android app; actual OS/app build unknown; excludes 4th Generation",
+      "app_build": null,
+      "firmware_version": null,
+      "source_updated_on": null,
+      "locator": "2.23.2/2.23.3 批次；2.22.4 快进；旧播客续播条件。",
+      "note": "2.23.3 限生产批次、其余 2.23.2；旧播客续播条目不证明全内容跨设备断点。",
+      "hands_on": false,
+      "visual_observed": false,
+      "archived_artifact": null,
+      "sha256": null,
+      "capture_state": "bibliography_and_short_note_only",
+      "supersedes": null
+    },
+    "after": {
+      "evidence_id": "E-YOD-20",
+      "product_id": "M-037",
+      "title": "OS 更新记录",
+      "url": "https://support.yotoplay.com/en_gb/yoto-player-software-%28os%29-updates-ByglYKimze",
+      "checked_on": "2026-10-26",
+      "source_type": "official_release_notes",
+      "access_mode": "official_search_index_text",
+      "version_scope": "Yoto Player 3rd Generation / Yoto Mini 2024 Edition; iOS/Android app; actual OS/app build unknown; excludes 4th Generation",
+      "app_build": null,
+      "firmware_version": null,
+      "source_updated_on": null,
+      "locator": "2.23.2/2.23.3 批次；2.22.4 快进；旧播客续播条件。",
+      "note": "2.23.3 限生产批次、其余 2.23.2；旧播客续播条目不证明全内容跨设备断点。",
+      "hands_on": false,
+      "visual_observed": false,
+      "archived_artifact": null,
+      "sha256": null,
+      "capture_state": "bibliography_and_short_note_only",
+      "supersedes": null,
+      "additional_captures": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "anonymous_public_category_html_embedded_article",
+          "capture_url": "https://support.yotoplay.com/en_gb/categories/using-your-yoto-rkx2SXPlGl",
+          "canonical_article_url": "https://support.yotoplay.com/en_gb/yoto-player-software-(os)-updates-ByglYKimze",
+          "raw_work_path": "work/yoto-controls-deepening/raw/category-using-your-yoto.html",
+          "raw_sha256": "52cc235dd8f8d5a769d11e164c730ea93958d8fa7a3aed7f70a433e33d330727",
+          "extracted_work_path": "work/yoto-controls-deepening/extracted/article-ByglYKimze.json",
+          "extracted_sha256": "05f7dcf40bc3d0c651f802636292547dddf951ef3f41ea92642547607e31112f",
+          "extracted_text_work_path": "work/yoto-controls-deepening/extracted/article-ByglYKimze.txt",
+          "extracted_text_sha256": "10e62b1dae63a2cd3cf6c5d47dd4b60b73a0e062947b98bd1963750329a4d8fc",
+          "locator": "initial-data.data.articles[hash=ByglYKimze].body",
+          "source_updated_on": "2026-07-20T09:37:47.840Z",
+          "hands_on": false,
+          "visual_observed": false,
+          "archived_artifact": "artifacts/yoto-controls-deepening/source-notes.md",
+          "sha256": "a984b3dfac78091ada9607b831110db5fc296d243371d7317ebc097badf1fb0e"
+        }
+      ]
+    },
+    "changed_fields": {
+      "additional_captures": {
+        "before": null,
+        "after": [
+          {
+            "checked_on": "2026-10-27",
+            "access_mode": "anonymous_public_category_html_embedded_article",
+            "capture_url": "https://support.yotoplay.com/en_gb/categories/using-your-yoto-rkx2SXPlGl",
+            "canonical_article_url": "https://support.yotoplay.com/en_gb/yoto-player-software-(os)-updates-ByglYKimze",
+            "raw_work_path": "work/yoto-controls-deepening/raw/category-using-your-yoto.html",
+            "raw_sha256": "52cc235dd8f8d5a769d11e164c730ea93958d8fa7a3aed7f70a433e33d330727",
+            "extracted_work_path": "work/yoto-controls-deepening/extracted/article-ByglYKimze.json",
+            "extracted_sha256": "05f7dcf40bc3d0c651f802636292547dddf951ef3f41ea92642547607e31112f",
+            "extracted_text_work_path": "work/yoto-controls-deepening/extracted/article-ByglYKimze.txt",
+            "extracted_text_sha256": "10e62b1dae63a2cd3cf6c5d47dd4b60b73a0e062947b98bd1963750329a4d8fc",
+            "locator": "initial-data.data.articles[hash=ByglYKimze].body",
+            "source_updated_on": "2026-07-20T09:37:47.840Z",
+            "hands_on": false,
+            "visual_observed": false,
+            "archived_artifact": "artifacts/yoto-controls-deepening/source-notes.md",
+            "sha256": "a984b3dfac78091ada9607b831110db5fc296d243371d7317ebc097badf1fb0e"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "evidence_id": "E-YOT-01",
+    "before": {
+      "evidence_id": "E-YOT-01",
+      "product_id": "M-037",
+      "title": "Does my Yoto need to be online",
+      "url": "https://support.yotoplay.com/en_gb/does-my-yoto-need-to-be-online-to-play-content-rkmbFFj7fg",
+      "checked_on": "2026-10-26",
+      "source_type": "official_help",
+      "access_mode": "official_index_text",
+      "version_scope": "Yoto family; some 4th-generation-only paragraphs",
+      "app_build": null,
+      "firmware_version": null,
+      "source_updated_on": null,
+      "locator": "Offline preparation; Audio Download Status; cache",
+      "note": "下载状态与书库条目不同；播放中下载描述与 E-YOT-03 待核对。",
+      "hands_on": false,
+      "visual_observed": false,
+      "archived_artifact": null,
+      "sha256": null,
+      "capture_state": "bibliography_and_short_note_only",
+      "supersedes": null,
+      "access_limitation": "Direct open returned a dynamic shell; official indexed text used. Not a full archived page.",
+      "index_reported_date": "2026-09-10"
+    },
+    "after": {
+      "evidence_id": "E-YOT-01",
+      "product_id": "M-037",
+      "title": "Does my Yoto need to be online",
+      "url": "https://support.yotoplay.com/en_gb/does-my-yoto-need-to-be-online-to-play-content-rkmbFFj7fg",
+      "checked_on": "2026-10-26",
+      "source_type": "official_help",
+      "access_mode": "official_index_text",
+      "version_scope": "Yoto family; some 4th-generation-only paragraphs",
+      "app_build": null,
+      "firmware_version": null,
+      "source_updated_on": null,
+      "locator": "Offline preparation; Audio Download Status; cache",
+      "note": "下载状态与书库条目不同；播放中下载描述与 E-YOT-03 待核对。",
+      "hands_on": false,
+      "visual_observed": false,
+      "archived_artifact": null,
+      "sha256": null,
+      "capture_state": "bibliography_and_short_note_only",
+      "supersedes": null,
+      "access_limitation": "Direct open returned a dynamic shell; official indexed text used. Not a full archived page.",
+      "index_reported_date": "2026-09-10",
+      "additional_captures": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "anonymous_public_category_html_embedded_article",
+          "capture_url": "https://support.yotoplay.com/en_gb/categories/using-your-yoto-rkx2SXPlGl",
+          "canonical_article_url": "https://support.yotoplay.com/en_gb/does-my-yoto-need-to-be-online-to-play-content-rkmbFFj7fg",
+          "raw_work_path": "work/yoto-controls-deepening/raw/category-using-your-yoto.html",
+          "raw_sha256": "52cc235dd8f8d5a769d11e164c730ea93958d8fa7a3aed7f70a433e33d330727",
+          "extracted_work_path": "work/yoto-controls-deepening/extracted/article-rkmbFFj7fg.json",
+          "extracted_sha256": "26fc7fa0c33f14c61d1951d549996fde3b8b5696a102b5392d05e3c7f71f84cc",
+          "extracted_text_work_path": "work/yoto-controls-deepening/extracted/article-rkmbFFj7fg.txt",
+          "extracted_text_sha256": "f59deb941f025486984a2c80a1e193e90e5f2044b2c3287192c8ba8d03d0005c",
+          "locator": "initial-data.data.articles[hash=rkmbFFj7fg].body",
+          "source_updated_on": "2026-09-10T14:02:23.215Z",
+          "hands_on": false,
+          "visual_observed": false,
+          "archived_artifact": "artifacts/yoto-controls-deepening/source-notes.md",
+          "sha256": "a984b3dfac78091ada9607b831110db5fc296d243371d7317ebc097badf1fb0e"
+        }
+      ]
+    },
+    "changed_fields": {
+      "additional_captures": {
+        "before": null,
+        "after": [
+          {
+            "checked_on": "2026-10-27",
+            "access_mode": "anonymous_public_category_html_embedded_article",
+            "capture_url": "https://support.yotoplay.com/en_gb/categories/using-your-yoto-rkx2SXPlGl",
+            "canonical_article_url": "https://support.yotoplay.com/en_gb/does-my-yoto-need-to-be-online-to-play-content-rkmbFFj7fg",
+            "raw_work_path": "work/yoto-controls-deepening/raw/category-using-your-yoto.html",
+            "raw_sha256": "52cc235dd8f8d5a769d11e164c730ea93958d8fa7a3aed7f70a433e33d330727",
+            "extracted_work_path": "work/yoto-controls-deepening/extracted/article-rkmbFFj7fg.json",
+            "extracted_sha256": "26fc7fa0c33f14c61d1951d549996fde3b8b5696a102b5392d05e3c7f71f84cc",
+            "extracted_text_work_path": "work/yoto-controls-deepening/extracted/article-rkmbFFj7fg.txt",
+            "extracted_text_sha256": "f59deb941f025486984a2c80a1e193e90e5f2044b2c3287192c8ba8d03d0005c",
+            "locator": "initial-data.data.articles[hash=rkmbFFj7fg].body",
+            "source_updated_on": "2026-09-10T14:02:23.215Z",
+            "hands_on": false,
+            "visual_observed": false,
+            "archived_artifact": "artifacts/yoto-controls-deepening/source-notes.md",
+            "sha256": "a984b3dfac78091ada9607b831110db5fc296d243371d7317ebc097badf1fb0e"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "evidence_id": "E-YOT-02",
+    "before": {
+      "evidence_id": "E-YOT-02",
+      "product_id": "M-037",
+      "title": "How to use the sleep timer",
+      "url": "https://support.yotoplay.com/en_gb/how-to-use-the-sleep-timer-on-your-yoto-HJ4gYKj7Mg",
+      "checked_on": "2026-10-26",
+      "source_type": "official_help",
+      "access_mode": "official_index_text",
+      "version_scope": "Yoto companion app and player; model not pinned",
+      "app_build": null,
+      "firmware_version": null,
+      "source_updated_on": null,
+      "locator": "Maxi Player; timer; changing content",
+      "note": "换卡/内容不重置计时；重启后行为未核实。",
+      "hands_on": false,
+      "visual_observed": false,
+      "archived_artifact": null,
+      "sha256": null,
+      "capture_state": "bibliography_and_short_note_only",
+      "supersedes": null,
+      "access_limitation": "Direct open returned a dynamic shell; official indexed text used. Not a full archived page.",
+      "index_reported_date": "2026-07-20"
+    },
+    "after": {
+      "evidence_id": "E-YOT-02",
+      "product_id": "M-037",
+      "title": "How to use the sleep timer",
+      "url": "https://support.yotoplay.com/en_gb/how-to-use-the-sleep-timer-on-your-yoto-HJ4gYKj7Mg",
+      "checked_on": "2026-10-26",
+      "source_type": "official_help",
+      "access_mode": "official_index_text",
+      "version_scope": "Yoto companion app and player; model not pinned",
+      "app_build": null,
+      "firmware_version": null,
+      "source_updated_on": null,
+      "locator": "Maxi Player; timer; changing content",
+      "note": "换卡/内容不重置计时；重启后行为未核实。",
+      "hands_on": false,
+      "visual_observed": false,
+      "archived_artifact": null,
+      "sha256": null,
+      "capture_state": "bibliography_and_short_note_only",
+      "supersedes": null,
+      "access_limitation": "Direct open returned a dynamic shell; official indexed text used. Not a full archived page.",
+      "index_reported_date": "2026-07-20",
+      "additional_captures": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "anonymous_public_category_html_embedded_article",
+          "capture_url": "https://support.yotoplay.com/en_gb/categories/using-your-yoto-rkx2SXPlGl",
+          "canonical_article_url": "https://support.yotoplay.com/en_gb/how-to-use-the-sleep-timer-on-your-yoto-HJ4gYKj7Mg",
+          "raw_work_path": "work/yoto-controls-deepening/raw/category-using-your-yoto.html",
+          "raw_sha256": "52cc235dd8f8d5a769d11e164c730ea93958d8fa7a3aed7f70a433e33d330727",
+          "extracted_work_path": "work/yoto-controls-deepening/extracted/article-HJ4gYKj7Mg.json",
+          "extracted_sha256": "d01563358ea6018f1e49166300009fa89b9836fdfab34839116b69b4430b75b0",
+          "extracted_text_work_path": "work/yoto-controls-deepening/extracted/article-HJ4gYKj7Mg.txt",
+          "extracted_text_sha256": "ad7d83d1adf97efff1c74fb7b0434018a5a79965001b442e059021b60295f8e2",
+          "locator": "initial-data.data.articles[hash=HJ4gYKj7Mg].body",
+          "source_updated_on": "2026-07-20T09:44:08.539Z",
+          "hands_on": false,
+          "visual_observed": false,
+          "archived_artifact": "artifacts/yoto-controls-deepening/source-notes.md",
+          "sha256": "a984b3dfac78091ada9607b831110db5fc296d243371d7317ebc097badf1fb0e"
+        }
+      ]
+    },
+    "changed_fields": {
+      "additional_captures": {
+        "before": null,
+        "after": [
+          {
+            "checked_on": "2026-10-27",
+            "access_mode": "anonymous_public_category_html_embedded_article",
+            "capture_url": "https://support.yotoplay.com/en_gb/categories/using-your-yoto-rkx2SXPlGl",
+            "canonical_article_url": "https://support.yotoplay.com/en_gb/how-to-use-the-sleep-timer-on-your-yoto-HJ4gYKj7Mg",
+            "raw_work_path": "work/yoto-controls-deepening/raw/category-using-your-yoto.html",
+            "raw_sha256": "52cc235dd8f8d5a769d11e164c730ea93958d8fa7a3aed7f70a433e33d330727",
+            "extracted_work_path": "work/yoto-controls-deepening/extracted/article-HJ4gYKj7Mg.json",
+            "extracted_sha256": "d01563358ea6018f1e49166300009fa89b9836fdfab34839116b69b4430b75b0",
+            "extracted_text_work_path": "work/yoto-controls-deepening/extracted/article-HJ4gYKj7Mg.txt",
+            "extracted_text_sha256": "ad7d83d1adf97efff1c74fb7b0434018a5a79965001b442e059021b60295f8e2",
+            "locator": "initial-data.data.articles[hash=HJ4gYKj7Mg].body",
+            "source_updated_on": "2026-07-20T09:44:08.539Z",
+            "hands_on": false,
+            "visual_observed": false,
+            "archived_artifact": "artifacts/yoto-controls-deepening/source-notes.md",
+            "sha256": "a984b3dfac78091ada9607b831110db5fc296d243371d7317ebc097badf1fb0e"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "evidence_id": "E-YOT-03",
+    "before": {
+      "evidence_id": "E-YOT-03",
+      "product_id": "M-037",
+      "title": "Sound stuttering or playback not working",
+      "url": "https://support.yotoplay.com/en_gb/sound-is-stuttering-or-playback-isn%27t-working-on-my-yoto-BJ1yKYsXMg",
+      "checked_on": "2026-10-26",
+      "source_type": "official_help",
+      "access_mode": "official_index_text",
+      "version_scope": "Yoto family; model/firmware unpinned",
+      "app_build": null,
+      "firmware_version": null,
+      "source_updated_on": null,
+      "locator": "Wi-Fi; download queue; idle download condition",
+      "note": "故障文档称新内容空闲下载，与 E-YOT-01 有待解释差异。",
+      "hands_on": false,
+      "visual_observed": false,
+      "archived_artifact": null,
+      "sha256": null,
+      "capture_state": "bibliography_and_short_note_only",
+      "supersedes": null,
+      "access_limitation": "Direct open returned a dynamic shell; official indexed text used. Not a full archived page."
+    },
+    "after": {
+      "evidence_id": "E-YOT-03",
+      "product_id": "M-037",
+      "title": "Sound stuttering or playback not working",
+      "url": "https://support.yotoplay.com/en_gb/sound-is-stuttering-or-playback-isn%27t-working-on-my-yoto-BJ1yKYsXMg",
+      "checked_on": "2026-10-26",
+      "source_type": "official_help",
+      "access_mode": "official_index_text",
+      "version_scope": "Yoto family; model/firmware unpinned",
+      "app_build": null,
+      "firmware_version": null,
+      "source_updated_on": null,
+      "locator": "Wi-Fi; download queue; idle download condition",
+      "note": "故障文档称新内容空闲下载，与 E-YOT-01 有待解释差异。",
+      "hands_on": false,
+      "visual_observed": false,
+      "archived_artifact": null,
+      "sha256": null,
+      "capture_state": "bibliography_and_short_note_only",
+      "supersedes": null,
+      "access_limitation": "Direct open returned a dynamic shell; official indexed text used. Not a full archived page.",
+      "additional_captures": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "anonymous_public_category_html_embedded_article",
+          "capture_url": "https://support.yotoplay.com/en_gb/categories/fixing-a-problem-safety-HyL6rmvgGg",
+          "canonical_article_url": "https://support.yotoplay.com/en_gb/sound-is-stuttering-or-playback-isn't-working-on-my-yoto-BJ1yKYsXMg",
+          "raw_work_path": "work/yoto-controls-deepening/raw/category-fixing-a-problem-safety.html",
+          "raw_sha256": "1bd9833e216068f5fa09cc4a1e9a8b63dd6dc29a21fd9d95d0882ceddd82c3b9",
+          "extracted_work_path": "work/yoto-controls-deepening/extracted/article-BJ1yKYsXMg.json",
+          "extracted_sha256": "6cbd319f1673c03883236cb45b2ea1495baa4b054172c5923bba3e0009d17904",
+          "extracted_text_work_path": "work/yoto-controls-deepening/extracted/article-BJ1yKYsXMg.txt",
+          "extracted_text_sha256": "173de1c4c8737dcbefd94fd308c23b44ac79b349851affd23ac100c3750e6932",
+          "locator": "initial-data.data.articles[hash=BJ1yKYsXMg].body",
+          "source_updated_on": "2026-07-20T11:42:07.065Z",
+          "hands_on": false,
+          "visual_observed": false,
+          "archived_artifact": "artifacts/yoto-controls-deepening/source-notes.md",
+          "sha256": "a984b3dfac78091ada9607b831110db5fc296d243371d7317ebc097badf1fb0e"
+        }
+      ]
+    },
+    "changed_fields": {
+      "additional_captures": {
+        "before": null,
+        "after": [
+          {
+            "checked_on": "2026-10-27",
+            "access_mode": "anonymous_public_category_html_embedded_article",
+            "capture_url": "https://support.yotoplay.com/en_gb/categories/fixing-a-problem-safety-HyL6rmvgGg",
+            "canonical_article_url": "https://support.yotoplay.com/en_gb/sound-is-stuttering-or-playback-isn't-working-on-my-yoto-BJ1yKYsXMg",
+            "raw_work_path": "work/yoto-controls-deepening/raw/category-fixing-a-problem-safety.html",
+            "raw_sha256": "1bd9833e216068f5fa09cc4a1e9a8b63dd6dc29a21fd9d95d0882ceddd82c3b9",
+            "extracted_work_path": "work/yoto-controls-deepening/extracted/article-BJ1yKYsXMg.json",
+            "extracted_sha256": "6cbd319f1673c03883236cb45b2ea1495baa4b054172c5923bba3e0009d17904",
+            "extracted_text_work_path": "work/yoto-controls-deepening/extracted/article-BJ1yKYsXMg.txt",
+            "extracted_text_sha256": "173de1c4c8737dcbefd94fd308c23b44ac79b349851affd23ac100c3750e6932",
+            "locator": "initial-data.data.articles[hash=BJ1yKYsXMg].body",
+            "source_updated_on": "2026-07-20T11:42:07.065Z",
+            "hands_on": false,
+            "visual_observed": false,
+            "archived_artifact": "artifacts/yoto-controls-deepening/source-notes.md",
+            "sha256": "a984b3dfac78091ada9607b831110db5fc296d243371d7317ebc097badf1fb0e"
+          }
+        ]
+      }
+    }
+  }
+]

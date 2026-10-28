@@ -1,0 +1,96 @@
+【0†iframe†www.googletagmanager.com】
+
+【1†Help center†quizlet.zendesk.com】
+
+Topics
+
+Popular Articles
+
+【2†Resending a confirmation message】 【3†Changing your username】 【4†Changing your password】 【5†Finding flashcard sets】 【6†Finding your teacher's class】 【7†Browser and device compatibility】
+
+[Input][Input: Search]
+
+【8†Image】   【8†Username】
+# Creating sets by importing content
+
+【8†IOS】 【8†Web】 【8†Android】
+
+Quickly create new flashcard sets based on existing notes or documents by importing them right into Quizlet.
+
+To import your content
+
+  1. Open or create a word or spreadsheet document.
+  2. Separate terms and definitions with a comma, tab, or dash.
+  3. Separate rows with a semicolon or a new line.
+Each row of your document will become a distinct card.
+
+Create a set
+  1. 【9†Log in†quizlet.com】 to your account.
+  2. Select Create.
+  3. Select Flashcard set.
+  4. Enter a title for your set.
+
+Import your text
+
+  1. Select Import.
+  2. Open your document on your computer, and copy the text.
+  3. Paste the text into the Import field in your browser.
+
+Save and publish your set
+
+  1. Select Import to upload your terms and definitions.
+  2. Set the language for your terms and definitions.
+  3. Select Create to save and publish your set.
+
+Settings and options
+【10†Quizlet Plus†quizlet.com】 and 【11†Quizlet Plus for teachers†quizlet.com】 subscribers can highlight, bold, italicize, or underline text in sets.
+
+Tips
+
+If you have study notes—not a list of terms and definitions—try 【12†creating a study guide】. This feature is powered by AI and generates questions and answers from longer blocks of notes.
+
+You can currently only import flashcard sets on the website. You can always import content on the Quizlet website and then study it using your iOS app.
+You can currently only import flashcard sets on the website. You can always import content on the Quizlet website and then study it using your Android app.
+### Related Articles
+
+  * 【13†Create flashcard sets directly in Claude】
+  * 【14†Studying with Study Groups】
+  * 【15†Creating study sets with Smart Assist】
+  * 【16†Becoming a top creator on Quizlet】
+  * 【17†Studying with Study Guides】
+  * 【18†What are flashcard sets?】
+  * 【19†Creating flashcard sets】
+  * 【20†Adding images to sets from the free gallery】
+  * 【21†Adding your own images to sets】
+  * 【22†Recording custom audio】
+  * 【23†See more】
+### Can't find what you're looking for?
+
+【24†Ask a question】
+
+Was this article helpful?
+
+[Button: Yes] [Button: No]
+
+##### About us
+
+【25†About Quizlet†quizlet.com】 【26†How Quizlet works†quizlet.com】 【27†Careers†quizlet.com】 【28†Advertise with us†quizlet.com】 【29†Get the app†quizlet.com】
+##### For students
+
+【30†Flashcards†quizlet.com】 【31†Test†quizlet.com】 【32†Learn†quizlet.com】 【33†Solutions†quizlet.com】 【34†Modern Learning Lab†quizlet.com】 【35†Quizlet Plus†quizlet.com】 【36†Study Guides†quizlet.com】 【37†Pomodoro timer†quizlet.com】
+
+##### For Teachers
+
+【38†Live†quizlet.com】 【39†Blog†quizlet.com】 【40†Be the Change†quizlet.com】 【41†Quizlet Plus for teachers†quizlet.com】
+##### Resources
+
+【42†Help center†quizlet.com】 【43†Sign up†quizlet.com】 【44†Honor code†quizlet.com】 【45†Community guidelines†quizlet.com】 【46†Accessibility statement†quizlet.com】 【47†Privacy†quizlet.com】 【48†Your Privacy/Cookies Choices†quizlet.com】 【49†Terms†quizlet.com】 【50†Ad and Cookie Policy†quizlet.com】 【51†Interest-Based Advertising†quizlet.com】 【52†Quizlet for Schools†quizlet.com】 【53†Parents†quizlet.com】
+
+##### Language
+
+English (United States)
+
+【54†Image】 【55†Get the app†get.quizlet.com】
+##### Get the app
+
+© Quizlet Inc.

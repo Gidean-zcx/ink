@@ -1,0 +1,25 @@
+{
+  "status": "PASS",
+  "checks": 376,
+  "new_evidence": 1,
+  "new_flows": 3,
+  "old_flow_fields": 14,
+  "old_flow_count": 4,
+  "old_evidence_captures": 3,
+  "inventory_counts": {
+    "official_toc_entry": 13,
+    "manual_function": 41,
+    "observed_static_menu": 37,
+    "release_capability_claim": 37,
+    "regional_release_interpretation": 1
+  },
+  "actually_viewed_printed_pages": [
+    17,
+    18,
+    20,
+    21,
+    34,
+    42
+  ],
+  "old_batches_unchanged": true
+}

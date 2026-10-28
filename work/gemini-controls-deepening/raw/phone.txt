@@ -1,0 +1,165 @@
+Make calls with the Gemini mobile app on Android - Gemini Apps Help       Skip to main content
+Gemini Apps Help
+Sign in
+Google Help
+Help Center
+Community
+Gemini Apps
+Privacy Policy
+Terms of Service
+Submit feedback
+Send feedback on...
+This help content & information
+General Help Center experience
+CloseNext
+Help Center
+Community
+Privacy Hub
+Gemini Apps
+Make calls with the Gemini mobile app on Android
+You can ask the Gemini mobile app, including Gemini as your mobile assistant, to make phone calls for you with the Phone app. With the Phone app, Gemini can use your device’s calling app to call your contacts, businesses, and phone numbers directly.
+What you need
+An Android phone or tablet.
+An active mobile phone plan for your device.
+The Gemini app, including as your mobile assistant. Learn more about the Gemini mobile app.
+The Phone app isn’t available in Gemini in Google Messages or the Gemini web app.
+Save contact info from your signed-in devices on.
+Learn how to sync your device contacts to your Google Account.
+Phone Android app permission given to the Google app. Learn how to manage Android app permissions.
+Important:
+For now, this feature isn’t available in Live chats.
+Connected Apps are not available while using features powered directly by Google Assistant.
+Don’t use the Phone app in Gemini to call emergency services. Instead, use your device’s calling app directly to make an emergency call.
+On Android devices, you can ask Gemini to make calls at any time, even when Keep Activity is off. If Keep Activity is off, a call request that requires certain other apps or Google services may not work. For example, asking Gemini to “call the nearest pizza place" would require Google Maps, which isn’t available if Keep Activity is off.
+On connected smartwatches, the Phone app isn’t available if Keep Activity is off.
+Connect the Phone app
+Important: The Phone app in Gemini is designed to work automatically with the Gemini mobile app. You can disconnect the Phone app anytime in your Connected Apps settings. Learn how to manage Connected Apps in Gemini.
+On your Android phone or tablet, open Gemini .
+Ask it to make a call.
+If Gemini doesn’t use the Phone app, add @Phone to your prompt. If the app isn't connected, you’ll get the option to connect it.
+Follow the on-screen instructions.
+Tip: You can also say 'Hey Google' to ask Gemini to use a connected app. If 'Hey Google' doesn't work, check if 'Hey Google' and Voice Match are set up.
+Make a phone call
+You can ask the Gemini mobile app to make a phone call for you, in a natural and conversational way.
+Tip: By default, the Gemini mobile app uses the last app it used to call the same contact. If the Gemini app uses the Phone app, it uses your default phone app on your Android device. Learn how to change your default phone app.
+Call based on your conversation
+Try these example prompts:
+Show me some good Thai restaurants nearby.
+Summarize the reviews for the second one.
+Ok, call this restaurant.
+Help me negotiate buying a new car over the phone before going to the dealer.
+Call [car dealership] in [city].
+Call your contacts & phone numbers
+Try these example prompts:
+I need to talk to [contacts name]. Can you call them?
+Call [contact first name]’s [mobile, home, work] number.
+Call [contact full name].
+Can you call [phone number]?
+Call my voicemail.
+Gemini can make a call based on a relationship (e.g., “call my sister”) if the relationship is saved in your instructions for Gemini.
+Call a business or organization
+Try these example prompts:
+Call the closest [cuisine] restaurant
+Call [business with multiple locations]
+The one on [street name]
+Call [business or organization name]
+Call my district representative
+Can you call the nearest hospital
+Manage settings
+Sync your device contacts to your Google Account
+On your Android phone or tablet, open Gemini .
+At the left, tap Menu   your Profile pic or Initial  Settings  Contact info from your devices.
+Turn on Save contact info from your signed-in devices.
+Learn how to manage contact info from your devices.
+Go to setting
+Manage Android app permissions
+Important: To use the Phone app in the Gemini mobile app, you need to allow the Google app access to your Phone.
+Touch and hold the Google app .
+Tap App info  Permissions.
+To change a permission setting, tap it, then choose Allow or Don't allow.
+Tip: For a better experience, you can also choose to allow access to your:
+Call Logs to help Gemini connect you to the right person
+Contacts to call device contacts that aren’t synced to your Google Account
+Check or change your default phone app
+Important: Some steps may vary by device and Android version.
+On your Android device, open Settings .
+Tap Apps  Default apps or Choose default apps.
+Tap Phone app.
+To change the default app, select the phone app you want to use.
+Take action when your phone is locked
+To control whether Gemini can help you with answers to general questions when your device is locked:
+On your Android phone or tablet, open Gemini .
+At the left, tap Menu    your Profile picture or Initial  Settings.
+Tap Gemini on lock screen.
+Turn Use Gemini without unlocking on or off.
+Allow calls and text messages without unlocking your phone
+You can ask Gemini to make calls and send text messages without unlocking your phone.
+On your Android phone or tablet, open Gemini .
+At the left, tap Menu   your Profile picture or Initial  Settings.
+Tap Gemini on lock screen.
+Turn Allow calls and messages without unlocking on or off.
+What Gemini can’t do with the Phone app
+There are some actions that are available with Google Assistant that currently aren't available with the Phone app. For now, the Phone app can't help you accept or reject calls.
+While some actions aren’t supported by the Phone app in Gemini yet, your Gemini mobile app may still perform them with help from Google Assistant, even when apps aren't connected. Learn more about Google Assistant features in your Gemini mobile app.
+About your data & communication apps
+The Gemini mobile app uses your data to help it choose the most helpful app to use and connect you with the right person. Learn more about your data and communication apps.
+How your data is handled
+Learn more about how your data is handled when Gemini works with Connected Apps.
+Related resources
+Gemini Apps Privacy Hub
+Use & manage Connected Apps in Gemini
+Send text messages with the Gemini mobile app on Android
+Make calls & send messages on WhatsApp with the Gemini mobile app on Android
+Get started with the Gemini mobile app
+Need more help?
+Try these next steps:
+Post to the help community    Get answers from community members
+true
+Help
+1 of 10
+Use & manage Connected Apps in Gemini
+2 of 10
+Check the availability & requirements of Connected Apps in Gemini Apps
+3 of 10
+Connect the Google Workspace app to Gemini Apps
+4 of 10
+Import a GitHub repository & ask about it in the Gemini web app
+5 of 10
+Make calls & send messages on WhatsApp with the Gemini mobile app on Android
+6 of 10
+Make calls with the Gemini mobile app on Android
+7 of 10
+Control your smart home devices with the Gemini mobile app
+8 of 10
+Create & manage your calendar events with Gemini Apps
+9 of 10
+Connect & manage custom apps for Gemini Apps
+10 of 10
+Explore more Connected Apps & other integrated services
+©2026 Google
+Privacy Policy
+Terms of Service
+Language   Afrikaans‎azərbaycan‎bosanski‎català‎dansk‎Deutsch‎eesti‎English (United Kingdom)‎español‎español (Latinoamérica)‎euskara‎Filipino‎français‎français (Canada)‎galego‎hrvatski‎Indonesia‎isiZulu‎italiano‎Kiswahili‎latviešu‎lietuvių‎magyar‎Melayu‎Nederlands‎norsk‎o‘zbek‎polski‎português‎português (Brasil)‎română‎shqip‎slovenčina‎slovenščina‎suomi‎svenska‎Tiếng Việt‎Türkçe‎íslenska‎čeština‎Ελληνικά‎беларуская‎български‎македонски‎монгол‎русский‎српски‎українська‎қазақ тілі‎հայերեն‎‏עברית‏اردو‏العربية‏فارسیनेपाली‎मराठी‎हिन्दी‎অসমীয়া‎বাংলা‎ਪੰਜਾਬੀ‎ଓଡ଼ିଆ‎தமிழ்‎తెలుగు‎ไทย‎ລາວ‎ქართული‎አማርኛ‎ខ្មែរ‎中文（简体）‎中文（繁體）‎中文（香港）‎日本語‎한국어‎ English‎
+Enable Dark Mode
+Send feedback on...
+This help content & information General Help Center experience
+Search
+Clear search
+Close search
+Google apps
+Main menu
+16193683462787837199
+true
+Search Help Center
+false
+true
+true
+true
+true
+true
+5295044
+false
+false
+false
+false
+false

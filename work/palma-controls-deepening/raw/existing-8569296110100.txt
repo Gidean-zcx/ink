@@ -1,0 +1,120 @@
+In this article, you will learn several methods to take notes on books in NeoReader.
+Highlights, Underlines & Annotations
+Firmware V4.1 simplifies the
+Annotation Toolbar
+, allowing users to customize the icons on the toolbar. To make highlights, underlines, or annotations, do the following:
+1. Long-press the content to select it, and the
+Annotation Toolbar
+will be displayed. You can choose the style and color of lines and highlights.
+2. 2. You can mark content by underlining or highlighting. The content you marked will be shown in
+Contents
+>
+Annotation
+.
+To manage your highlighted, underlined, or annotated content, go to
+Contents
+>
+Annotations
+. Here you can also export them to local storage, email, or other accounts to share with others.
+To share the selected range of text in a reading card, you can also tap the
+Share
+button in the
+Highlights & Underlines Menu
+after selecting them.
+To customize the export settings, do the following:
+In NeoReader, tap the center area to display the main menu.
+Tap the More icon in the top right corner and choose
+Settings
+>
+Annotation Export Settings
+.
+Handwriting
+Note:
+Only available for models with handwriting functions.
+To make Handwriting, do any of the following:
+Tap the
+Stylus
+button in the main menu and turn off Use Stylus for Touch, and you can make handwriting with the stylus without the Handwriting Toolbar.
+Tap the
+Handwriting
+button via the main menu or via the Floating Toolbar to access the Handwriting status with the Handwriting Toolbar.
+Please refer to the
+Floating Toolbar
+page in the Reading chapter for more info about the Handwriting Toolbar.
+To manage your handwriting, go to
+Contents
+>
+Handwriting
+. Here you can also export them in PNG or PDF format.
+AI Smart Scribe
+AI Smart Scribe enables you to handwrite notes in a smarter way. Tap the center area to bring up the
+main menu
+and tap the
+AI icon
+to discover all the new features.
+Auto-Perfect Shapes
+: Draw a perfect circle, rectangle, triangle, or straight line. Remember to finish the shape with
+one stroke
+and pause for
+1 second
+before lifting your stylus.
+Mark Recognition
+:
+Highlight the marked content by underlining or circling sentences. You can choose the style and color of lines and highlights in the menu. The content you highlighted will be shown in
+Contents＞Annotation
+.
+Tape keywords by drawing a wavy line on it to quiz yourself. And you can reveal the hidden areas by repeating the action.
+Strikethrough Erase
+: Draw a wavy line to erase unwanted notes or shapes. Remember to cover the unwanted content as much as possible for complete deletion. To avoid unintended erasing, with firmware
+V3.5.1
+, Strikethrough Erase will be disabled when you are using
+Markers
+.
+Double-tap Recognition
+: Double tap to convert your handwritten notes into text, or drawing into perfect shapes. You can manage your handwriting in
+Contents＞Handwriting
+.
+Turn Pages with Stylus
+: Use the stylus to tap the left or right side of the screen to turn pages.
+Note
+: Smart Scribe is only available in some models.
+Notepads
+Note:
+Only available for models with handwriting functions.
+Take Notes with Split View
+To use notepads to take notes while reading books, do the following:
+1. In NeoReader, tap the center area to display the main menu.
+2. Choose
+Split View
+.
+3. Choose your preferred Split View mode and tap
+Handwritten
+Note
+or
+Text
+Note
+. (The note will be created with the same name as the document and will be associated with it.)
+or
+1. In NeoReader, swipe down from the top right corner to open the
+Control Center
+.
+2. Tap the
+Split Screen
+button.
+3. Choose your preferred Split Screen mode.
+4. Open a note in the Notes app on the other screen. (The note created will not be associated with the document.)
+Please refer to the
+Note-Taking
+chapter for more info about the Notes app.
+Take Notes by Adding Blank Pages
+You can add blank pages in
+PDF documents
+for taking notes. The pages you added will be embedded in the document, which means you can export a PDF with your notes. You can delete unwanted blank pages in
+Preview
+. In addition, you can also
+delete
+added pages by tapping the icon next to the bookmark.
+Reading Data Syncing
+You can sync your reading data across all your BOOX devices, including reading progress, bookmarks, highlights, underlines, annotations, handwritten notes, and format for reflowable documents (optional). The annotated contents can be viewed and shared on our send2boox websites and BOOX Assistant app. Please refer to the
+Reading Data Syncing
+page for more info.

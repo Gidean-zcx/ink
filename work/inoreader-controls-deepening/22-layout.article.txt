@@ -1,0 +1,9 @@
+Can I customize how articles are displayed?
+Yes. You can adjust layouts, sorting, and grouping options for feeds, folders, and tags.
+Related questions
+What layout options are available?
+What sorting options are available?
+Can I group articles visually?
+Can different feeds use different layouts?
+Why do I see only part of an article?
+How can I restore articles accidentally marked as read?

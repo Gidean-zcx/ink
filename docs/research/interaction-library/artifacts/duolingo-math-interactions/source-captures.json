@@ -1,0 +1,118 @@
+{
+  "checked_on": "2026-10-27",
+  "evidence_lookup": "no exact URL matches; rg exit 1",
+  "results": [
+    {
+      "slug": "duolingo-launches-math-app",
+      "requested_url": "https://blog.duolingo.com/duolingo-launches-math-app/",
+      "reused_evidence_ids": [],
+      "request_count": 1,
+      "status": 200,
+      "final_url": "https://blog.duolingo.com/duolingo-launches-math-app/",
+      "redirect_history": [],
+      "content_type": "text/html; charset=utf-8",
+      "response_headers_path": "duolingo-launches-math-app.headers.json",
+      "html_path": "duolingo-launches-math-app.html",
+      "html_sha256": "5a08a930290eef208bf9bd12626751c26694087e3126781b884fcc86cb0cd3da",
+      "html_bytes": 117411,
+      "body_sha256": "731842d7fb17298ce8c25c1c6b852d037d6ed07d8da45b1f3cde69e702d08a90",
+      "images_sha256": "8dfa94cbbc50b0a889050c0f6404c6b683be6fc2c6ebd0a114b21a58e1320524",
+      "jsonld_sha256": "8671d7718be83961d12ddc42f7f6909c79be294729fac3dbe3adeb67c38a8b17",
+      "headers_sha256": "764a35e830d7610ed9bf08929608b7ce70dc59da3b1e613382f1ef357368008f",
+      "body_obtained": true,
+      "body_path": "duolingo-launches-math-app.body.txt",
+      "body_chars": 6208,
+      "image_urls_path": "duolingo-launches-math-app.images.txt",
+      "image_url_count": 2,
+      "canonical": "https://blog.duolingo.com/duolingo-launches-math-app/",
+      "title": "Duolingo Launches a New Math App for Students and Adults",
+      "jsonld_path": "duolingo-launches-math-app.jsonld.json",
+      "jsonld_blocks": 1,
+      "dates": {
+        "datePublished": [
+          "2022-10-26T04:01:00.000Z"
+        ],
+        "dateModified": [
+          "2026-10-01T10:05:06.000Z"
+        ]
+      },
+      "stopped": null,
+      "body_extraction": "first article element; script/style/noscript/svg excluded; adjacent duplicate lines collapsed"
+    },
+    {
+      "slug": "developing-math",
+      "requested_url": "https://blog.duolingo.com/developing-math/",
+      "reused_evidence_ids": [],
+      "request_count": 1,
+      "status": 200,
+      "final_url": "https://blog.duolingo.com/developing-math/",
+      "redirect_history": [],
+      "content_type": "text/html; charset=utf-8",
+      "response_headers_path": "developing-math.headers.json",
+      "html_path": "developing-math.html",
+      "html_sha256": "6532bb81e17d750828a987b0fcd3b5fcb37547c206cce415f9c746c1b071ec73",
+      "html_bytes": 117282,
+      "body_sha256": "9329fff60511cae215ee3b3e68818957deeb48f99669c960707ba1f60a3bb04e",
+      "images_sha256": "993332e6e5d36785da96b1121ec7f2facdda01398f40e37f19827d9e6d2f4fa2",
+      "jsonld_sha256": "8ccb5409106063c290ae035b13cf25973a96dbfe38490db4ceab7aa92286fd8c",
+      "headers_sha256": "16a106d5e6f63e05b2441a3838a806078ad0923ea6b716e5602f58bdcead27ef",
+      "body_obtained": true,
+      "body_path": "developing-math.body.txt",
+      "body_chars": 5819,
+      "image_urls_path": "developing-math.images.txt",
+      "image_url_count": 7,
+      "canonical": "https://blog.duolingo.com/developing-math/",
+      "title": "Duolingo Blog",
+      "jsonld_path": "developing-math.jsonld.json",
+      "jsonld_blocks": 1,
+      "dates": {
+        "datePublished": [
+          "2024-10-18T21:00:00.000Z"
+        ],
+        "dateModified": [
+          "2026-09-18T10:07:13.000Z"
+        ]
+      },
+      "stopped": null,
+      "body_extraction": "first article element; script/style/noscript/svg excluded; adjacent duplicate lines collapsed"
+    },
+    {
+      "slug": "music-course",
+      "requested_url": "https://blog.duolingo.com/music-course/",
+      "reused_evidence_ids": [],
+      "request_count": 1,
+      "status": 200,
+      "final_url": "https://blog.duolingo.com/music-course/",
+      "redirect_history": [],
+      "content_type": "text/html; charset=utf-8",
+      "response_headers_path": "music-course.headers.json",
+      "html_path": "music-course.html",
+      "html_sha256": "88a5aad07aece46fba3a9cbb026bd3f8e649cf58668811f1c7484b6aabc87487",
+      "html_bytes": 117008,
+      "body_sha256": "c18d7527709e0217dd24b5d181efbafb6ce2142d524af8cb352cf4396e07ce8a",
+      "images_sha256": "f6a63dc014c801f2bdb092f8b3939b9c3d3afcc4da863b4f9dc210f7a3654f01",
+      "jsonld_sha256": "65c05d1cec6a3fe648c64203bb241ff25574968edb76ace1fb2a8eb50499cd4e",
+      "headers_sha256": "1158f93353a2fc61da197bd7b7b36971b0507227c6d9a23cedcc21773d205ee6",
+      "body_obtained": true,
+      "body_path": "music-course.body.txt",
+      "body_chars": 3927,
+      "image_urls_path": "music-course.images.txt",
+      "image_url_count": 11,
+      "canonical": "https://blog.duolingo.com/music-course/",
+      "title": "Duolingo Music Is Here - Learn More About the New Subject",
+      "jsonld_path": "music-course.jsonld.json",
+      "jsonld_blocks": 1,
+      "dates": {
+        "datePublished": [
+          "2023-10-11T05:00:57.000Z"
+        ],
+        "dateModified": [
+          "2025-01-16T08:24:27.000Z"
+        ]
+      },
+      "stopped": null,
+      "body_extraction": "first article element; script/style/noscript/svg excluded; adjacent duplicate lines collapsed"
+    }
+  ],
+  "raw_work_base": "work/research/batch42-duolingo-sources"
+}

@@ -1,0 +1,274 @@
+[
+  {
+    "flow_id": "F-M065-01",
+    "changes": {
+      "evidence_ids": {
+        "old": "E-AK-02",
+        "new": "E-AK-02;E-AKCD-01"
+      },
+      "known_branches": {
+        "old": "文件传入不证明全部索引成功。",
+        "new": "Media Device复制后断线；型号手册补通知栏Safely Remove及System Information/Unmount。"
+      }
+    },
+    "replacement_row": {
+      "flow_id": "F-M065-01",
+      "product_id": "M-065",
+      "task": "USB传入并安全结束",
+      "depth": "D2",
+      "evidence_ids": "E-AK-02;E-AKCD-01",
+      "known_branches": "Media Device复制后断线；型号手册补通知栏Safely Remove及System Information/Unmount。",
+      "gaps": "扫描触发、空库/坏文件、复制取消、同名覆盖、移动后歌单。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-065-astell-kern.md",
+      "checked_on": "2026-10-26"
+    }
+  },
+  {
+    "flow_id": "F-M065-02",
+    "changes": {
+      "evidence_ids": {
+        "old": "E-AK-02",
+        "new": "E-AK-02;E-AKCD-01"
+      },
+      "known_branches": {
+        "old": "队列、歌单、文件应分开记录。",
+        "new": "队列Next/Last；新建名称Add、加歌Complete；删除成员确认DELETE且不删存储音频。"
+      },
+      "gaps": {
+        "old": "当前曲移除、撤销、排序持久化、整歌单删除后的恢复。",
+        "new": "当前项移除后的播放、撤销、顺序持久化、整歌单删除后的恢复。"
+      }
+    },
+    "replacement_row": {
+      "flow_id": "F-M065-02",
+      "product_id": "M-065",
+      "task": "放入队列或歌单",
+      "depth": "D2",
+      "evidence_ids": "E-AK-02;E-AKCD-01",
+      "known_branches": "队列Next/Last；新建名称Add、加歌Complete；删除成员确认DELETE且不删存储音频。",
+      "gaps": "当前项移除后的播放、撤销、顺序持久化、整歌单删除后的恢复。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-065-astell-kern.md",
+      "checked_on": "2026-10-26"
+    }
+  },
+  {
+    "flow_id": "F-M065-03",
+    "changes": {
+      "task": {
+        "old": "找回常用文件夹（D1）",
+        "new": "添加与移除常用文件夹书签"
+      },
+      "depth": {
+        "old": "D1",
+        "new": "D2"
+      },
+      "evidence_ids": {
+        "old": "E-AK-02",
+        "new": "E-AK-02;E-AKCD-02"
+      },
+      "known_branches": {
+        "old": "不能把它记作音频时间书签。",
+        "new": "Folder内右侧菜单Add Bookmark，图示Bookmarked及顶部入口；左侧书签图标移除；最多5个。"
+      },
+      "gaps": {
+        "old": "当前固件的创建/替换全链、逐曲标记、章节和断点保存。",
+        "new": "第6个拒绝/替换、移动目录、跨重启保留；不是音频时间书签。"
+      },
+      "visual_status": {
+        "old": "not_observed",
+        "new": "static_reference_only"
+      }
+    },
+    "replacement_row": {
+      "flow_id": "F-M065-03",
+      "product_id": "M-065",
+      "task": "添加与移除常用文件夹书签",
+      "depth": "D2",
+      "evidence_ids": "E-AK-02;E-AKCD-02",
+      "known_branches": "Folder内右侧菜单Add Bookmark，图示Bookmarked及顶部入口；左侧书签图标移除；最多5个。",
+      "gaps": "第6个拒绝/替换、移动目录、跨重启保留；不是音频时间书签。",
+      "visual_status": "static_reference_only",
+      "hands_on": "false",
+      "case_path": "cases/M-065-astell-kern.md",
+      "checked_on": "2026-10-26"
+    }
+  },
+  {
+    "flow_id": "F-M065-04",
+    "changes": {
+      "evidence_ids": {
+        "old": "E-AK-09",
+        "new": "E-AK-09;E-AKCD-01;E-AKCD-04"
+      },
+      "known_branches": {
+        "old": "变化是快捷入口配置，不是删除对应功能。",
+        "new": "SR35手册53独立支持Notification Panel拖动增删排序；静态图24为历史布局。"
+      },
+      "gaps": {
+        "old": "V1.22具体图标、满额、默认恢复；FAQ为共用说明。",
+        "new": "V1.22具体All Lock图标、满额、默认恢复及当前布局。"
+      },
+      "visual_status": {
+        "old": "not_observed",
+        "new": "static_reference_only"
+      }
+    },
+    "replacement_row": {
+      "flow_id": "F-M065-04",
+      "product_id": "M-065",
+      "task": "调整下拉快捷入口",
+      "depth": "D2",
+      "evidence_ids": "E-AK-09;E-AKCD-01;E-AKCD-04",
+      "known_branches": "SR35手册53独立支持Notification Panel拖动增删排序；静态图24为历史布局。",
+      "gaps": "V1.22具体All Lock图标、满额、默认恢复及当前布局。",
+      "visual_status": "static_reference_only",
+      "hands_on": "false",
+      "case_path": "cases/M-065-astell-kern.md",
+      "checked_on": "2026-10-26"
+    }
+  },
+  {
+    "flow_id": "F-M065-05",
+    "changes": {
+      "evidence_ids": {
+        "old": "E-AK-05",
+        "new": "E-AK-05;E-AKCD-01"
+      },
+      "known_branches": {
+        "old": "基于FTP的文件访问，不能据此称为云同步；FAQ不支持FTPS/SFTP。",
+        "new": "型号手册补FTP地址/凭据及匿名仅下载；Windows网络位置细节仍为SE180示例。"
+      },
+      "gaps": {
+        "old": "FAQ以SE180截图示范，SR35支持页链接；断线、权限、覆盖与退出会话待测。",
+        "new": "断线、权限、覆盖、退出会话及部分文件清理；不是云同步。"
+      }
+    },
+    "replacement_row": {
+      "flow_id": "F-M065-05",
+      "product_id": "M-065",
+      "task": "无线双向传文件",
+      "depth": "D2",
+      "evidence_ids": "E-AK-05;E-AKCD-01",
+      "known_branches": "型号手册补FTP地址/凭据及匿名仅下载；Windows网络位置细节仍为SE180示例。",
+      "gaps": "断线、权限、覆盖、退出会话及部分文件清理；不是云同步。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-065-astell-kern.md",
+      "checked_on": "2026-10-26"
+    }
+  },
+  {
+    "flow_id": "F-M065-08",
+    "changes": {
+      "evidence_ids": {
+        "old": "E-AK-02;E-AK-08",
+        "new": "E-AK-02;E-AK-08;E-AKCD-06;E-AKCD-08"
+      },
+      "known_branches": {
+        "old": "接收角色与连接耳机发射角色不同。",
+        "new": "型号图在Bluetooth页有Sink开关；开启会断开原设备；共用FAQ的AK Connect前置差异保留；SCMS-T限制有官方FAQ。"
+      },
+      "gaps": {
+        "old": "旧FAQ写先开AK Connect，入口冲突未裁定；手机来电、断开恢复、音量保存。",
+        "new": "手机来电、断开恢复、音量保存与当前服务；共用FAQ不作型号截图。"
+      },
+      "visual_status": {
+        "old": "not_observed",
+        "new": "static_reference_only"
+      }
+    },
+    "replacement_row": {
+      "flow_id": "F-M065-08",
+      "product_id": "M-065",
+      "task": "手机音频经SR35播放",
+      "depth": "D2",
+      "evidence_ids": "E-AK-02;E-AK-08;E-AKCD-06;E-AKCD-08",
+      "known_branches": "型号图在Bluetooth页有Sink开关；开启会断开原设备；共用FAQ的AK Connect前置差异保留；SCMS-T限制有官方FAQ。",
+      "gaps": "手机来电、断开恢复、音量保存与当前服务；共用FAQ不作型号截图。",
+      "visual_status": "static_reference_only",
+      "hands_on": "false",
+      "case_path": "cases/M-065-astell-kern.md",
+      "checked_on": "2026-10-26"
+    }
+  },
+  {
+    "flow_id": "F-M065-10",
+    "changes": {
+      "evidence_ids": {
+        "old": "E-AK-03;E-AK-04",
+        "new": "E-AK-03;E-AK-04;E-AKCD-01;E-AKCD-04"
+      },
+      "known_branches": {
+        "old": "V1.22新增All Lock；日区解释为原音量轮锁扩展到侧键。备份文件不等于备份所有设置。",
+        "new": "历史手册轮锁与V1.22扩侧键分开；新版专用电量/空间条件优先于旧手册；更新初始化设置。"
+      },
+      "gaps": {
+        "old": "开关精确位置、锁屏下每键范围、应用/歌单/进度保留、更新中断回退。",
+        "new": "All Lock精确图/逐键规则、应用/歌单/进度保留、更新中断回退。"
+      },
+      "visual_status": {
+        "old": "not_observed",
+        "new": "static_reference_only"
+      }
+    },
+    "replacement_row": {
+      "flow_id": "F-M065-10",
+      "product_id": "M-065",
+      "task": "更新、备份与锁键差异",
+      "depth": "D2",
+      "evidence_ids": "E-AK-03;E-AK-04;E-AKCD-01;E-AKCD-04",
+      "known_branches": "历史手册轮锁与V1.22扩侧键分开；新版专用电量/空间条件优先于旧手册；更新初始化设置。",
+      "gaps": "All Lock精确图/逐键规则、应用/歌单/进度保留、更新中断回退。",
+      "visual_status": "static_reference_only",
+      "hands_on": "false",
+      "case_path": "cases/M-065-astell-kern.md",
+      "checked_on": "2026-10-26"
+    }
+  },
+  {
+    "flow_id": "F-M065-12",
+    "changes": {
+      "task": {
+        "old": "网络下载、计时与USB DAC（D1）",
+        "new": "从AK Connect库下载"
+      },
+      "depth": {
+        "old": "D1",
+        "new": "D2"
+      },
+      "evidence_ids": {
+        "old": "E-AK-02",
+        "new": "E-AK-02;E-AKCD-01;E-AKCD-03"
+      },
+      "known_branches": {
+        "old": "流式播放、落地文件、DAC输入需分别判断。",
+        "new": "旧混合行收束下载；同网选库、流播/下载分流、默认/逐次目录、通知完成及暂停/删除管理；计时/USB DAC移至独立F13/F14。"
+      },
+      "gaps": {
+        "old": "下载位置/暂停/删除及离线可用核对；计时与自动关机协同；DAC退出恢复。",
+        "new": "断网续传、删除临时/成品范围、重名覆盖、下载后离线回查；扬声器连接取消不当下载取消。"
+      },
+      "visual_status": {
+        "old": "not_observed",
+        "new": "static_reference_only"
+      }
+    },
+    "replacement_row": {
+      "flow_id": "F-M065-12",
+      "product_id": "M-065",
+      "task": "从AK Connect库下载",
+      "depth": "D2",
+      "evidence_ids": "E-AK-02;E-AKCD-01;E-AKCD-03",
+      "known_branches": "旧混合行收束下载；同网选库、流播/下载分流、默认/逐次目录、通知完成及暂停/删除管理；计时/USB DAC移至独立F13/F14。",
+      "gaps": "断网续传、删除临时/成品范围、重名覆盖、下载后离线回查；扬声器连接取消不当下载取消。",
+      "visual_status": "static_reference_only",
+      "hands_on": "false",
+      "case_path": "cases/M-065-astell-kern.md",
+      "checked_on": "2026-10-26"
+    }
+  }
+]

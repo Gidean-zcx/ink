@@ -1,0 +1,16 @@
+{
+  "source_and_note_hashes_checked": 34,
+  "newE": 30,
+  "newF": 3,
+  "oldF": 5,
+  "oldF_changed_fields": 15,
+  "oldE": 3,
+  "inventory_rows": 60,
+  "inventory_rows_changed": 30,
+  "inventory_status": {
+    "body_read_no_task": 8,
+    "body_read_partial": 52
+  },
+  "requirements_unchanged": true,
+  "errors": []
+}

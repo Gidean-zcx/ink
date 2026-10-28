@@ -1,0 +1,120 @@
+[
+  {
+    "kind": "requestfailed",
+    "url": "https://britannicaeducation.com/wp-includes/js/wp-emoji-release.min.js?ver=7.1.3",
+    "failure": "net::ERR_ABORTED",
+    "at": "2026-10-26T20:50:20.566286+00:00"
+  },
+  {
+    "kind": "requestfailed",
+    "url": "https://www.google.com/rmkt/collect/11380087750/?random=1793047821644&cv=11&fst=1793047821644&fmt=8&bg=ffffff&guid=ON&async=1&en=gtag.config&gtm=45be6am0v9169985171za208zb9183486519zd9183486519xecxf1&gcd=13l3l3l3l1l1&dma=0&tag_exp=115938466~115938468~118897920~118897930~119381662~120213116~120385423~120412526~120420414~120469145~120469153~121246026~121246034~123620775&u_w=1280&u_h=950&url=https%3A%2F%2Fbritannicaeducation.com%2Fresources%2Fbritannica-school-early-elementary-content-catalog%2F&rcb=19&frm=0&tiba=Britannica%20School%3A%20Early%20Elementary%20Content%20Catalog%20Resources%20-%20Britannica%20Education%20-%20US&did=dZTQ1Zm&gdid=dZTQ1Zm&hn=www.googleadservices.com&npa=0&pscdl=noapi&auid=1851817682.1793047822&uaa=x86&uab=64&uafvl=Not%253AA-Brand%3B8.0.0.0%7CChromium%3B156.0.8078.4%7CHeadlessChrome%3B156.0.8078.4&uamb=0&uam=&uap=Linux&uapv=&uaw=0&data=event%3Dgtag.config&ept=68&gcp=5",
+    "failure": "net::ERR_ABORTED",
+    "at": "2026-10-26T20:50:22.139865+00:00"
+  },
+  {
+    "kind": "requestfailed",
+    "url": "https://www.google.com/ccm/collect?rcb=19&frm=0&apvc=1&auid=1851817682.1793047822&dt=Britannica%20School%3A%20Early%20Elementary%20Content%20Catalog%20Resources%20-%20Britannica%20Education%20-%20US&tid=AW-11380087750&en=page_view&dl=https%3A%2F%2Fbritannicaeducation.com%2Fresources%2Fbritannica-school-early-elementary-content-catalog%2F&scrsrc=www.googletagmanager.com&rnd=881913722.1793047822&navt=n&npa=0&did=dZTQ1Zm&gdid=dZTQ1Zm&gtm=45be6am0v9169985171za208zb9183486519zd9183486519xecxf1&gcd=13l3l3l3l1l1&dma=0&tag_exp=115938466~115938468~118897920~118897930~119381662~120213116~120385423~120412526~120420414~120469145~120469153~121246026~121246034~123620775&tft=1793047821710&tfd=3477&tids=AW-11380087750&fmt=8",
+    "failure": "net::ERR_ABORTED",
+    "at": "2026-10-26T20:50:22.146417+00:00"
+  },
+  {
+    "kind": "requestfailed",
+    "url": "https://www.google.com/rmkt/collect/16493046346/?random=1793047821866&cv=11&fst=1793047821866&fmt=8&bg=ffffff&guid=ON&async=1&en=gtag.config&gtm=45be6am0v9182913556za208zb9183486519zd9183486519xecxf1&gcd=13l3l3l3l1l1&dma=0&tag_exp=115938466~115938469~118897920~118897930~119381662~120213116~120385423~120412528~120469145~120469153~121246026~121246034&u_w=1280&u_h=950&url=https%3A%2F%2Fbritannicaeducation.com%2Fresources%2Fbritannica-school-early-elementary-content-catalog%2F&rcb=8&frm=0&tiba=Britannica%20School%3A%20Early%20Elementary%20Content%20Catalog%20Resources%20-%20Britannica%20Education%20-%20US&did=dZTQ1Zm&gdid=dZTQ1Zm&hn=www.googleadservices.com&npa=0&pscdl=noapi&auid=1851817682.1793047822&uaa=x86&uab=64&uafvl=Not%253AA-Brand%3B8.0.0.0%7CChromium%3B156.0.8078.4%7CHeadlessChrome%3B156.0.8078.4&uamb=0&uam=&uap=Linux&uapv=&uaw=0&data=event%3Dgtag.config&ept=68&gcp=5",
+    "failure": "net::ERR_ABORTED",
+    "at": "2026-10-26T20:50:22.165038+00:00"
+  },
+  {
+    "kind": "requestfailed",
+    "url": "https://www.google.com/ccm/collect?rcb=8&frm=0&apvc=0&auid=1851817682.1793047822&dt=Britannica%20School%3A%20Early%20Elementary%20Content%20Catalog%20Resources%20-%20Britannica%20Education%20-%20US&tid=AW-16493046346&en=page_view&dl=https%3A%2F%2Fbritannicaeducation.com%2Fresources%2Fbritannica-school-early-elementary-content-catalog%2F&scrsrc=www.googletagmanager.com&rnd=881913722.1793047822&navt=n&npa=0&did=dZTQ1Zm&gdid=dZTQ1Zm&gtm=45be6am0v9182913556za208zb9183486519zd9183486519xecxf1&gcd=13l3l3l3l1l1&dma=0&tag_exp=115938466~115938469~118897920~118897930~119381662~120213116~120385423~120412528~120469145~120469153~121246026~121246034&tft=1793047821973&tfd=3740&tids=AW-16493046346&fmt=8",
+    "failure": "net::ERR_ABORTED",
+    "at": "2026-10-26T20:50:22.236369+00:00"
+  },
+  {
+    "kind": "pageerror",
+    "message": "reCAPTCHA Timeout (C)",
+    "at": "2026-10-26T20:50:50.264878+00:00"
+  },
+  {
+    "kind": "pageerror",
+    "message": "reCAPTCHA Timeout (z)",
+    "at": "2026-10-26T20:50:50.265863+00:00"
+  },
+  {
+    "kind": "requestfailed",
+    "url": "https://cdn.britannica.com/11/288011-184-BF60C826/story_content/video_6l9S1r09M77_1_160_960x540.mp4",
+    "failure": "net::ERR_ABORTED",
+    "at": "2026-10-26T20:51:20.066282+00:00"
+  },
+  {
+    "kind": "requestfailed",
+    "url": "https://cdn.britannica.com/11/288011-184-BF60C826/story_content/video_5sViGrOYXaB_1_160_960x540.mp4",
+    "failure": "net::ERR_ABORTED",
+    "at": "2026-10-26T20:59:52.536370+00:00"
+  },
+  {
+    "kind": "requestfailed",
+    "url": "https://cdn.britannica.com/11/288011-184-BF60C826/story_content/5jSYfsItf0D_44100_160_0.mp3",
+    "failure": "net::ERR_ABORTED",
+    "at": "2026-10-26T21:03:39.568254+00:00"
+  },
+  {
+    "kind": "requestfailed",
+    "url": "https://cdn.britannica.com/11/288011-184-BF60C826/story_content/6N4CxyweqAD_44100_160_0.mp3",
+    "failure": "net::ERR_ABORTED",
+    "at": "2026-10-26T21:03:39.568525+00:00"
+  },
+  {
+    "kind": "requestfailed",
+    "url": "https://cdn.britannica.com/11/288011-184-BF60C826/story_content/5zLi7eMfeD8_44100_160_0.mp3",
+    "failure": "net::ERR_ABORTED",
+    "at": "2026-10-26T21:03:39.572443+00:00"
+  },
+  {
+    "kind": "requestfailed",
+    "url": "https://cdn.britannica.com/11/288011-184-BF60C826/story_content/5gh8N0PUR2k_44100_160_0.mp3",
+    "failure": "net::ERR_ABORTED",
+    "at": "2026-10-26T21:03:39.572769+00:00"
+  },
+  {
+    "kind": "requestfailed",
+    "url": "https://cdn.britannica.com/11/288011-184-BF60C826/story_content/6PJRJPmLeNJ_44100_160_0.mp3",
+    "failure": "net::ERR_ABORTED",
+    "at": "2026-10-26T21:03:39.572975+00:00"
+  },
+  {
+    "kind": "requestfailed",
+    "url": "https://cdn.britannica.com/11/288011-184-BF60C826/story_content/5uQx1YnU8wm_44100_160_0.mp3",
+    "failure": "net::ERR_ABORTED",
+    "at": "2026-10-26T21:03:39.573155+00:00"
+  },
+  {
+    "kind": "requestfailed",
+    "url": "https://cdn.britannica.com/11/288011-184-BF60C826/story_content/6ml2Jsx4gzt_44100_160_0.mp3",
+    "failure": "net::ERR_ABORTED",
+    "at": "2026-10-26T21:03:39.589582+00:00"
+  },
+  {
+    "kind": "requestfailed",
+    "url": "https://cdn.britannica.com/11/288011-184-BF60C826/story_content/5YPyOeM1f6u_44100_160_0.mp3",
+    "failure": "net::ERR_ABORTED",
+    "at": "2026-10-26T21:03:39.596083+00:00"
+  },
+  {
+    "kind": "requestfailed",
+    "url": "https://cdn.britannica.com/11/288011-184-BF60C826/story_content/6E9GBoXWkrM_44100_160_0.mp3",
+    "failure": "net::ERR_ABORTED",
+    "at": "2026-10-26T21:03:39.596282+00:00"
+  },
+  {
+    "kind": "requestfailed",
+    "url": "https://cdn.britannica.com/11/288011-184-BF60C826/story_content/5giqSe7c9bC_44100_160_0.mp3",
+    "failure": "net::ERR_ABORTED",
+    "at": "2026-10-26T21:03:39.629219+00:00"
+  },
+  {
+    "kind": "requestfailed",
+    "url": "https://cdn.britannica.com/11/288011-184-BF60C826/story_content/5emFh1VzHXV_44100_160_0.mp3",
+    "failure": "net::ERR_ABORTED",
+    "at": "2026-10-26T21:03:39.654372+00:00"
+  }
+]

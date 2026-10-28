@@ -1,0 +1,64 @@
+{
+  "name": "32-answer-six",
+  "url": "https://www.duolingo.com/lesson",
+  "title": "Duolingo - Learn French with lessons that work",
+  "utc": "2026-10-26T17:51:41.421186+00:00",
+  "text": "5 IN A ROW\n4\nNEW WORD\nWrite this in English\nBonjour.\nHello\nperfect\nHello\nGreat!\nTOO EASY\nTOO DIFFICULT\nREPORT\nCONTINUE",
+  "buttons": [
+    {
+      "text": "",
+      "aria": null,
+      "test": "quit-button",
+      "visible": true
+    },
+    {
+      "text": "",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "Hello",
+      "aria": null,
+      "test": "Hello-challenge-tap-token",
+      "visible": true
+    },
+    {
+      "text": "perfect",
+      "aria": null,
+      "test": "perfect-challenge-tap-token",
+      "visible": true
+    },
+    {
+      "text": "Hello",
+      "aria": null,
+      "test": "Hello-challenge-tap-token",
+      "visible": true
+    },
+    {
+      "text": "TOO EASY",
+      "aria": "Too easy",
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "TOO DIFFICULT",
+      "aria": "Too difficult",
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "REPORT",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "CONTINUE",
+      "aria": null,
+      "test": "player-next",
+      "visible": true
+    }
+  ],
+  "inputs": []
+}

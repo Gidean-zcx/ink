@@ -1,0 +1,22 @@
+{
+  "name": "04-after-wait",
+  "url": "https://www.duolingo.com/welcome",
+  "title": "Duolingo - Learn French with lessons that work",
+  "utc": "2026-10-26T17:37:51.714722+00:00",
+  "text": "Hi there! I’m Duo!\nHi there! I’m Duo!\nCONTINUE",
+  "buttons": [
+    {
+      "text": "",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "CONTINUE",
+      "aria": null,
+      "test": "funboarding-continue-button",
+      "visible": true
+    }
+  ],
+  "inputs": []
+}

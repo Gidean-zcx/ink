@@ -1,0 +1,111 @@
+[
+  {
+    "action": "go('https://www.timeforkids.com/g34/food-for-thought/?rl=en-760');snap('01-article')",
+    "started": "2026-10-26T20:09:31.850224+00:00",
+    "result": "ok",
+    "ended": "2026-10-26T20:09:34.784918+00:00"
+  },
+  {
+    "action": "print(page.locator('body').inner_text()[:1800]);print(page.locator('[class*=\"vocab\"],[class*=\"gloss\"],[data-toggle]').evaluate_all('(es)=>es.slice(0,30).map(e=>({tag:e.tagName,cls:e.className,text:e.innerText.slice(0,100),html:e.outerHTML.slice(0,400)}))'))",
+    "started": "2026-10-26T20:09:45.853273+00:00",
+    "result": "ok",
+    "ended": "2026-10-26T20:09:45.871183+00:00"
+  },
+  {
+    "action": "print(page.locator('span').filter(has_text='consume').evaluate_all('(es)=>es.filter(e=>e.textContent.trim()===\"consume\").map(e=>({cls:e.className,html:e.outerHTML}))'));print(page.locator('header').inner_text());print(page.locator('select').count())",
+    "started": "2026-10-26T20:10:10.190599+00:00",
+    "result": "ok",
+    "ended": "2026-10-26T20:10:10.210371+00:00"
+  },
+  {
+    "action": "page.locator('.powerword').nth(0).scroll_into_view_if_needed();snap('02-word-before');page.locator('.powerword').nth(0).click();page.wait_for_timeout(300);snap('03-consume-open')",
+    "started": "2026-10-26T20:10:17.146592+00:00",
+    "result": "ok",
+    "ended": "2026-10-26T20:10:17.977254+00:00"
+  },
+  {
+    "action": "import contextlib,io;full_snap=snap;exec('def snap(name):\\n with contextlib.redirect_stdout(io.StringIO()): full_snap(name)\\n print(name,page.url,page.evaluate(\"scrollY\"),flush=True)');page.keyboard.press('Escape');snap('04-after-escape');print('visible definitions',page.locator('.definition:visible').count())",
+    "started": "2026-10-26T20:10:29.716620+00:00",
+    "result": "ok",
+    "ended": "2026-10-26T20:10:29.947722+00:00"
+  },
+  {
+    "action": "box=page.locator('.definition:visible audio').bounding_box();page.mouse.click(box['x']+25,box['y']+box['height']/2);page.wait_for_timeout(1800);snap('05-word-audio-playing');print(page.locator('.powerword audio').evaluate_all('(es)=>es.map(e=>({paused:e.paused,time:e.currentTime,duration:e.duration,ended:e.ended,error:e.error?.message}))'));page.locator('.definition:visible button.close').click();snap('06-word-closed');page.wait_for_timeout(1200);print(page.locator('.powerword audio').evaluate_all('(es)=>es.map(e=>({paused:e.paused,time:e.currentTime,ended:e.ended}))'));snap('07-after-close-wait')",
+    "started": "2026-10-26T20:10:49.099343+00:00",
+    "result": "ok",
+    "ended": "2026-10-26T20:10:52.656348+00:00"
+  },
+  {
+    "action": "exec('def snap(name):\\n with contextlib.redirect_stdout(io.StringIO()): full_snap(name)\\n path=out/(name+\".json\");d=json.loads(path.read_text());d[\"media\"]=page.locator(\"audio,video\").evaluate_all(\"(es)=>es.map(e=>({tag:e.tagName,paused:e.paused,time:e.currentTime,duration:Number.isFinite(e.duration)?e.duration:null,ended:e.ended,ready:e.readyState,error:e.error?.message}))\");path.write_text(json.dumps(d,ensure_ascii=False,indent=2))\\n print(name,page.url,d[\"media\"],flush=True)');page.locator('.powerword').nth(0).click();snap('08-word-reopen');page.locator('.definition:visible button.close').click();page.locator('.powerword').nth(1).press('Enter');snap('09-portrait-enter')",
+    "started": "2026-10-26T20:11:03.344066+00:00",
+    "result": "ok",
+    "ended": "2026-10-26T20:11:04.140155+00:00"
+  },
+  {
+    "action": "print('defs',page.locator('.definition:visible').count());page.locator('.powerword').nth(1).click();snap('10-portrait-click');box=page.locator('.definition:visible audio').bounding_box();page.mouse.click(box['x']+25,box['y']+box['height']/2);page.wait_for_timeout(1200);snap('11-portrait-playing');page.locator('.definition:visible button.close').click();page.wait_for_timeout(1000);snap('12-portrait-closed-playing')",
+    "started": "2026-10-26T20:11:10.736805+00:00",
+    "result": "ok",
+    "ended": "2026-10-26T20:11:13.720071+00:00"
+  },
+  {
+    "action": "page.locator('.powerword').nth(1).click();box=page.locator('.definition:visible audio').bounding_box();page.mouse.click(box['x']+25,box['y']+box['height']/2);page.wait_for_timeout(700);snap('13-replay-before-close');page.locator('.definition:visible button.close').click();page.wait_for_timeout(700);snap('14-replay-after-close');page.locator('.powerword').nth(1).click();snap('15-reopen-during-play');box=page.locator('.definition:visible audio').bounding_box();page.mouse.click(box['x']+25,box['y']+box['height']/2);snap('16-word-paused');page.get_by_role('heading',name='A Trip Around the World').click();snap('17-outside-click');print('defs',page.locator('.definition:visible').count())",
+    "started": "2026-10-26T20:11:29.139452+00:00",
+    "result": "ok",
+    "ended": "2026-10-26T20:11:32.071787+00:00"
+  },
+  {
+    "action": "print(page.locator('header').inner_html()[:5000])",
+    "started": "2026-10-26T20:11:55.995491+00:00",
+    "result": "ok",
+    "ended": "2026-10-26T20:11:56.007191+00:00"
+  },
+  {
+    "action": "page.locator('.definition:visible button.close').click();page.reload(wait_until='domcontentloaded');page.wait_for_timeout(1200);page.locator('.powerword').nth(1).click();snap('18-reload-word-reset');page.locator('.definition:visible button.close').click();page.locator('.c-header__hamburger').click();snap('19-main-menu');print(page.locator('.c-header__floating-menu').inner_text())",
+    "started": "2026-10-26T20:12:08.736230+00:00",
+    "result": "ok",
+    "ended": "2026-10-26T20:12:11.041145+00:00"
+  },
+  {
+    "action": "page.locator('.top-level.articles-grade').click();snap('20-grade-options');page.get_by_role('link',name='Grades K-1 Articles',exact=True).click();page.wait_for_load_state('domcontentloaded');page.wait_for_timeout(1000);snap('21-k1-list');page.locator('.c-header__hamburger').click();page.locator('.top-level.topics').click();snap('22-k1-topics');print(page.locator('.top-level.topics').inner_text())",
+    "started": "2026-10-26T20:12:20.749427+00:00",
+    "result": "ok",
+    "ended": "2026-10-26T20:12:24.283060+00:00"
+  },
+  {
+    "action": "page.get_by_role('link',name='Science',exact=True).first.click();page.wait_for_load_state('domcontentloaded');page.wait_for_timeout(1000);snap('23-k1-science');print(page.locator('body').inner_text()[:950]);print(page.locator('a').evaluate_all('(es)=>es.filter(e=>e.getClientRects().length&&(/page|next|older|2/i.test(e.innerText))).map(e=>({text:e.innerText,href:e.href})).slice(-12)'))",
+    "started": "2026-10-26T20:12:54.840247+00:00",
+    "result": "ok",
+    "ended": "2026-10-26T20:12:57.279915+00:00"
+  },
+  {
+    "action": "print(page.locator('body').inner_text()[-1600:]);print(page.locator('a').evaluate_all('(es)=>es.filter(e=>e.getClientRects().length&&e.href.includes(\"page\")).map(e=>({text:e.innerText,href:e.href}))'))",
+    "started": "2026-10-26T20:13:07.624065+00:00",
+    "result": "ok",
+    "ended": "2026-10-26T20:13:07.635148+00:00"
+  },
+  {
+    "action": "page.get_by_role('link',name='Next',exact=True).click();page.wait_for_load_state('domcontentloaded');page.wait_for_timeout(800);snap('24-science-page2');page.go_back(wait_until='domcontentloaded');page.wait_for_timeout(500);snap('25-back-to-science');page.locator('.c-header__hamburger').click();print(page.locator('.c-header__floating-menu li.top-level').evaluate_all('(es)=>es.map(e=>({text:e.innerText,html:e.outerHTML.slice(0,300)}))'));snap('26-menu-again')",
+    "started": "2026-10-26T20:13:22.950653+00:00",
+    "result": "ok",
+    "ended": "2026-10-26T20:13:26.609975+00:00"
+  },
+  {
+    "action": "page.get_by_role('link',name='For Grown-ups',exact=True).click();snap('27-adult-gate');print(page.locator('button:visible,select:visible,[title]:visible').evaluate_all('(es)=>es.map(e=>({tag:e.tagName,text:e.innerText.slice(0,90),title:e.title,cls:e.className}))'))",
+    "started": "2026-10-26T20:13:34.774192+00:00",
+    "result": "ok",
+    "ended": "2026-10-26T20:13:35.065380+00:00"
+  },
+  {
+    "action": "page.keyboard.press('Escape');snap('28-gate-escape');print(page.locator('select:visible').count());print(page.locator('[class*=\"age-gate\"]').evaluate_all('(es)=>es.filter(e=>e.getClientRects().length).map(e=>e.outerHTML.slice(0,650))').slice(0,4))",
+    "started": "2026-10-26T20:13:42.652224+00:00",
+    "result": "error",
+    "error": "AttributeError(\"'list' object has no attribute 'slice'\")",
+    "ended": "2026-10-26T20:13:43.077280+00:00"
+  },
+  {
+    "action": "page.locator('.c-header__close_btn').click();snap('29-gate-closed');page.locator('.c-header__hamburger').click();page.locator('.top-level.resource-spotlight').click();snap('30-resources');(out/'menu-inventory.json').write_text(json.dumps(page.locator('.c-header__floating-menu > li:not(.hidden)').evaluate_all('(es)=>es.map(e=>({label:(e.querySelector(\"span.wrap\")||e.querySelector(\"a\")||e).textContent.trim(),links:[...e.querySelectorAll(\"a\")].map(a=>({title:a.textContent.trim()||a.querySelector(\"img\")?.alt||\"\",href:a.href}))}))'),ensure_ascii=False,indent=2));print('menu saved');page.locator('.c-header__close_btn').click();snap('31-menu-closed')",
+    "started": "2026-10-26T20:13:56.067891+00:00",
+    "result": "ok",
+    "ended": "2026-10-26T20:13:58.064612+00:00"
+  }
+]

@@ -1,0 +1,12 @@
+Use the pen to write directly on the page.
+Just like when using a normal pen and paper, you can lay the side of your palm flat against the screen as you write.
+To change the pen type
+Tap anywhere on the screen of a document to display the tool bar. Then, tap  (pen settings) in the top right corner of the document screen and select an item for [Pen Color] or [Pen Thickness].
+To undo/redo handwriting
+Tap anywhere on the screen of a document to display the tool bar. Then, tap  (Undo/Redo) in the top right corner of the document screen and select [ Undo] or [ Redo].
+Note
+The [Undo]/[Redo] function will be reset when you go to a different  page.
+Hint
+To change the pen color combination, press the  (home) button and tap [Settings] — [System Settings] — [Pen Color].
+On the screen of the Digital Paper, the blue pen and black pen will appear in black, and the red pen will appear in gray. However, when transferred to a computer they will be displayed as the selected color (blue/black and red).
+The contents of your handwriting are saved the moment you finish writing them.

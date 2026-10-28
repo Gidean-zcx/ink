@@ -1,0 +1,52 @@
+{
+  "name": "25-next-exercise",
+  "url": "https://www.duolingo.com/lesson",
+  "title": "Duolingo - Learn French with lessons that work",
+  "utc": "2026-10-26T17:50:38.187674+00:00",
+  "text": "4\nWrite this in English\nUn café ?\ncoffee\nhello\nA\nSKIP\nCHECK",
+  "buttons": [
+    {
+      "text": "",
+      "aria": null,
+      "test": "quit-button",
+      "visible": true
+    },
+    {
+      "text": "",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "coffee",
+      "aria": null,
+      "test": "coffee-challenge-tap-token",
+      "visible": true
+    },
+    {
+      "text": "hello",
+      "aria": null,
+      "test": "hello-challenge-tap-token",
+      "visible": true
+    },
+    {
+      "text": "A",
+      "aria": null,
+      "test": "A-challenge-tap-token",
+      "visible": true
+    },
+    {
+      "text": "SKIP",
+      "aria": null,
+      "test": "player-skip",
+      "visible": true
+    },
+    {
+      "text": "CHECK",
+      "aria": null,
+      "test": "player-next",
+      "visible": true
+    }
+  ],
+  "inputs": []
+}

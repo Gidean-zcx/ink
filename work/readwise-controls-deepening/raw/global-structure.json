@@ -1,0 +1,393 @@
+{
+  "headings": [
+    {
+      "level": "h1",
+      "id": "",
+      "title": "Global Ghostreader"
+    },
+    {
+      "level": "h2",
+      "id": "turn-on-global-ghostreader",
+      "title": "Turn on Global Ghostreader"
+    },
+    {
+      "level": "h2",
+      "id": "start-a-conversation",
+      "title": "Start a conversation"
+    },
+    {
+      "level": "h2",
+      "id": "choose-a-model",
+      "title": "Choose a model"
+    },
+    {
+      "level": "h2",
+      "id": "run-skills",
+      "title": "Run skills"
+    },
+    {
+      "level": "h2",
+      "id": "control-what-ghostreader-can-do-with-tools",
+      "title": "Control what Ghostreader can do with tools"
+    },
+    {
+      "level": "h2",
+      "id": "set-custom-instructions",
+      "title": "Set custom instructions"
+    },
+    {
+      "level": "h2",
+      "id": "chat-about-a-single-document",
+      "title": "Chat about a single document"
+    },
+    {
+      "level": "h2",
+      "id": "manage-your-conversations",
+      "title": "Manage your conversations"
+    },
+    {
+      "level": "h2",
+      "id": "global-ghostreader-faqs",
+      "title": "Global Ghostreader FAQs"
+    },
+    {
+      "level": "h3",
+      "id": "can-i-switch-back-to-the-classic-ghostreader",
+      "title": "Can I switch back to the classic Ghostreader?"
+    },
+    {
+      "level": "h3",
+      "id": "will-conversations-from-the-mobile-app-appear-on-web",
+      "title": "Will conversations from the mobile app appear on web?"
+    }
+  ],
+  "links": [
+    {
+      "href": "/",
+      "text": "",
+      "in_article": false
+    },
+    {
+      "href": "/",
+      "text": "",
+      "in_article": false
+    },
+    {
+      "href": "/",
+      "text": "",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs",
+      "text": "Documentation",
+      "in_article": false
+    },
+    {
+      "href": "/reader/guides",
+      "text": "Guides",
+      "in_article": false
+    },
+    {
+      "href": "/reader/guides/filtering/syntax-guide",
+      "text": "Syntax Guide",
+      "in_article": false
+    },
+    {
+      "href": "/reader/guides/filtering/query-examples",
+      "text": "Filter Library",
+      "in_article": false
+    },
+    {
+      "href": "/reader/guides/filtering/default-views",
+      "text": "Default Views",
+      "in_article": false
+    },
+    {
+      "href": "/reader/guides/ghostreader/overview",
+      "text": "Overview",
+      "in_article": false
+    },
+    {
+      "href": "/reader/guides/ghostreader/global",
+      "text": "Global Ghostreader",
+      "in_article": false
+    },
+    {
+      "href": "/reader/guides/ghostreader/chat",
+      "text": "Chat",
+      "in_article": false
+    },
+    {
+      "href": "/reader/guides/ghostreader/quick-lookup",
+      "text": "Quick Lookup",
+      "in_article": false
+    },
+    {
+      "href": "/reader/guides/ghostreader/default-prompts",
+      "text": "Default Prompts",
+      "in_article": false
+    },
+    {
+      "href": "/reader/guides/ghostreader/custom-prompts",
+      "text": "Custom Prompts",
+      "in_article": false
+    },
+    {
+      "href": "/reader/guides/ghostreader/prompt-library",
+      "text": "Prompt Library",
+      "in_article": false
+    },
+    {
+      "href": "/reader/guides/ghostreader/reference",
+      "text": "Reference",
+      "in_article": false
+    },
+    {
+      "href": "/reader/guides/ghostreader/tips-tricks",
+      "text": "Tips & Tricks",
+      "in_article": false
+    },
+    {
+      "href": "/",
+      "text": "Home",
+      "in_article": false
+    },
+    {
+      "href": "/reader",
+      "text": "Reader",
+      "in_article": false
+    },
+    {
+      "href": "/reader/guides",
+      "text": "Guides",
+      "in_article": false
+    },
+    {
+      "href": "/reader/guides/ghostreader",
+      "text": "Ghostreader",
+      "in_article": false
+    },
+    {
+      "href": "/reader/guides/ghostreader/global",
+      "text": "Global",
+      "in_article": false
+    },
+    {
+      "href": "/reader/guides/ghostreader/chat",
+      "text": "chat with an individual document",
+      "in_article": true
+    },
+    {
+      "href": "https://read.readwise.io/preferences/ghostreader",
+      "text": "Ghostreader preferences",
+      "in_article": true
+    },
+    {
+      "href": "/reader/docs/faqs/ghostreader#can-i-turn-off-ghostreader-entirely",
+      "text": "Ghostreader is enabled",
+      "in_article": true
+    },
+    {
+      "href": "https://read.readwise.io/integrations",
+      "text": "added your own OpenAI API key",
+      "in_article": true
+    },
+    {
+      "href": "https://read.readwise.io/preferences/ghostreader",
+      "text": "Ghostreader preferences",
+      "in_article": true
+    },
+    {
+      "href": "https://read.readwise.io/preferences/ghostreader",
+      "text": "Ghostreader preferences",
+      "in_article": true
+    },
+    {
+      "href": "https://read.readwise.io/preferences/ghostreader",
+      "text": "Ghostreader preferences",
+      "in_article": true
+    },
+    {
+      "href": "https://read.readwise.io/preferences/ghostreader",
+      "text": "Ghostreader preferences",
+      "in_article": true
+    },
+    {
+      "href": "/reader/guides/ghostreader/chat",
+      "text": "chat",
+      "in_article": true
+    },
+    {
+      "href": "/reader/guides/ghostreader/overview",
+      "text": "Overview",
+      "in_article": false
+    },
+    {
+      "href": "/reader/guides/ghostreader/chat",
+      "text": "Chat",
+      "in_article": false
+    },
+    {
+      "href": "mailto:hello@readwise.io",
+      "text": "Email Ushello@readwise.io",
+      "in_article": false
+    },
+    {
+      "href": "https://x.com/readwise",
+      "text": "Follow Us@readwise",
+      "in_article": false
+    },
+    {
+      "href": "https://www.reddit.com/r/readwise/",
+      "text": "Ask the CommunityJoin us on Reddit",
+      "in_article": false
+    },
+    {
+      "href": "https://en.wikipedia.org/wiki/Curse_of_knowledge",
+      "text": "Curse of Knowledge",
+      "in_article": false
+    },
+    {
+      "href": "mailto:hello@readwise.io?Subject=Documentation Feedback",
+      "text": "Send Feedback",
+      "in_article": false
+    },
+    {
+      "href": "#turn-on-global-ghostreader",
+      "text": "Turn on Global Ghostreader",
+      "in_article": false
+    },
+    {
+      "href": "#start-a-conversation",
+      "text": "Start a conversation",
+      "in_article": false
+    },
+    {
+      "href": "#choose-a-model",
+      "text": "Choose a model",
+      "in_article": false
+    },
+    {
+      "href": "#run-skills",
+      "text": "Run skills",
+      "in_article": false
+    },
+    {
+      "href": "#control-what-ghostreader-can-do-with-tools",
+      "text": "Control what Ghostreader can do with tools",
+      "in_article": false
+    },
+    {
+      "href": "#set-custom-instructions",
+      "text": "Set custom instructions",
+      "in_article": false
+    },
+    {
+      "href": "#chat-about-a-single-document",
+      "text": "Chat about a single document",
+      "in_article": false
+    },
+    {
+      "href": "#manage-your-conversations",
+      "text": "Manage your conversations",
+      "in_article": false
+    },
+    {
+      "href": "#global-ghostreader-faqs",
+      "text": "Global Ghostreader FAQs",
+      "in_article": false
+    },
+    {
+      "href": "#can-i-switch-back-to-the-classic-ghostreader",
+      "text": "Can I switch back to the classic Ghostreader?",
+      "in_article": false
+    },
+    {
+      "href": "#will-conversations-from-the-mobile-app-appear-on-web",
+      "text": "Will conversations from the mobile app appear on web?",
+      "in_article": false
+    }
+  ],
+  "images": [
+    {
+      "src": "/images/global-ghostreader_revisit-unread-example.gif",
+      "alt": "Asking Global Ghostreader which documents were saved but never read.",
+      "class": "rounded-lg max-h-[500px] w-auto mx-auto"
+    },
+    {
+      "src": "/images/global-ghostreader_preferences-toggle.png",
+      "alt": "The Global Ghostreader toggle on the Ghostreader preferences page.",
+      "class": "rounded-lg max-h-[600px] w-auto mx-auto"
+    },
+    {
+      "src": "/images/global-ghostreader_sidebar-entry.png",
+      "alt": "The Ghostreader item in Reader's left sidebar, between Home and Library.",
+      "class": "rounded-lg max-h-[600px] w-auto mx-auto"
+    },
+    {
+      "src": "/images/global-ghostreader_new-conversation.png",
+      "alt": "The new conversation screen showing the document count, the Ask anything field, and suggestion chips.",
+      "class": "rounded-lg max-h-[600px] w-auto mx-auto"
+    },
+    {
+      "src": "/images/global-ghostreader_ref-hover.gif",
+      "alt": "Hovering over a reference in a Ghostreader answer to preview the cited line from the linked document.",
+      "class": "rounded-lg max-h-[500px] w-auto mx-auto"
+    },
+    {
+      "src": "/images/global-ghostreader_model-picker.png",
+      "alt": "The model picker menu in the chat input showing the Fast and Thinking options.",
+      "class": "rounded-lg max-h-[400px] w-auto mx-auto"
+    },
+    {
+      "src": "/images/global-ghostreader_edit-skill.png",
+      "alt": "The Edit skill option appearing when hovering over a skill's name.",
+      "class": "rounded-lg max-h-[600px] w-auto mx-auto"
+    },
+    {
+      "src": "/images/global-ghostreader_add-skill-button.png",
+      "alt": "The Add skill button at the bottom of a skills list on the Prompts and skills page.",
+      "class": "rounded-lg max-h-[400px] w-auto mx-auto"
+    },
+    {
+      "src": "/images/global-ghostreader_add-skill-form.png",
+      "alt": "The skill editor with fields for name, description, and instructions, plus Scope and Model dropdowns.",
+      "class": "rounded-lg max-h-[500px] w-auto mx-auto"
+    },
+    {
+      "src": "/images/global-ghostreader_allow-tool.gif",
+      "alt": "Changing a tool's permission on the Ghostreader tools page from Confirm each time to Always allow.",
+      "class": "rounded-lg max-h-[600px] w-auto mx-auto"
+    },
+    {
+      "src": "/images/global-ghostreader_tool-approval-card.png",
+      "alt": "The inline confirmation card in chat with Remember, Deny, and Approve options.",
+      "class": "rounded-lg max-h-[300px] w-auto mx-auto"
+    },
+    {
+      "src": "/images/global-ghostreader_custom-instructions.png",
+      "alt": "The Custom instructions field on the Ghostreader preferences page.",
+      "class": "rounded-lg max-h-[600px] w-auto mx-auto"
+    },
+    {
+      "src": "/images/global-ghostreader_sidebar-chat.gif",
+      "alt": "Chatting in the right sidebar of a document, with answers drawing on the current document and related library documents.",
+      "class": "rounded-lg max-h-[500px] w-auto mx-auto"
+    },
+    {
+      "src": "/images/global-ghostreader_full-screen.gif",
+      "alt": "Expanding a sidebar chat into the full-screen Ghostreader view.",
+      "class": "rounded-lg max-h-[500px] w-auto mx-auto"
+    },
+    {
+      "src": "/images/global-ghostreader_actions-menu.png",
+      "alt": "The Ghostreader actions menu with options to start, rename, copy, or delete conversations.",
+      "class": "rounded-lg max-w-[350px] h-auto mx-auto"
+    },
+    {
+      "src": "/images/global-ghostreader_conversation-history.png",
+      "alt": "The Recent conversations list on web showing conversations synced from the mobile app.",
+      "class": "rounded-lg max-h-[600px] w-auto mx-auto"
+    }
+  ]
+}

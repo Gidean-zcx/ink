@@ -1,0 +1,34 @@
+How To Manage Contacts on Mudita Kompakt
+Modified on: Sat, 3 Oct, 2026 at 8:44 AM
+How to manually add contacts on Kompakt
+Tap Phone
+Tap Contacts
+Tap the Add contact icon
+Enter the contact information
+Tap Create
+How to delete contacts on Kompakt
+Tap Phone 
+Tap Contacts
+Select the contact you want to delete
+Tap the Pencil icon
+Tap the Bin icon
+Tap Delete contact
+How to block contacts on Kompakt
+Tap Phone
+Tap Contacts
+Select the contact you want to block
+Tap the Pencil icon
+Tap the Block icon
+Tap Block contact
+How to unblock contacts on Kompakt
+Tap Phone
+Tap Contacts
+Select the contact you want to block
+Tap the Pencil icon
+Tap the Block icon
+Tap Unblock contact  
+Was this article helpful?
+ No
+ Yes
+That’s Great!
+Thank you for your feedback

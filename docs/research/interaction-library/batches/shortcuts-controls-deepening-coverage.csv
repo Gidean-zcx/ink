@@ -1,0 +1,7 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M043-07,M-043,将模型作为动作链的一步,D2,E-SCCD-04;E-SCCD-24;E-SCCD-25,选择模型、提示和输入；Follow Up允许修订后再把响应传下去；生成与写入成功分别判断。,追问取消、输出类型、错误重试、额度与离线反馈,not_observed,false,cases/M-043-shortcuts.md,2026-10-27
+F-M043-08,M-043,查看转换对象并回溯来源,D2,E-SCCD-05;E-SCCD-06;E-SCDF-05;E-SCDF-08;E-SCDF-09;E-SCDF-10;E-SCEN-19;E-SCEN-20;E-SCEN-21,另补Magic变量来源选择、特殊参数及Set覆盖/Add追加；Clear移除引用不证明删原对象。普通链完成复位，跨运行存储是另一能力。；Open In明确交付副本；剪贴板可Local Only/Expire At，主动转换与自动转换分别处理,转换/缺字段、来源被删、参数引用更新、跨运行存储的键/覆盖/删除/恢复；剪贴板到期不证明其他App副本清除，原件联动和类型损失未知,not_observed,false,cases/M-043-shortcuts.md,2026-10-27
+F-M043-09,M-043,筛选并限制后续动作的内容,D2,E-SCCD-07;E-SCEN-30,All/Any、排序、数量与变量；连续Find可能筛上一输出，Nothing可重取；大数据执行环境有限制。；Find有输入筛上一输出，无输入才向自身App取；Filter处理传入集合,空结果、取消、不匹配、实际性能；实际空输入/空结果及菜单反馈未验证,not_observed,false,cases/M-043-shortcuts.md,2026-10-27
+F-M043-10,M-043,添加移除和查看自动化,D2,E-SCCD-08;E-SCCD-09;E-SCCD-10;E-SCCD-11;E-SCCD-12;E-SCCD-13;E-SCCD-14,触发条件、锁屏许可与各动作交互要求分别处理；App关闭包含切走，卡片触发不证明支付结算。,漏触发、去重、循环、并发、锁屏实际反馈及新触发无询问覆盖,not_observed,false,cases/M-043-shortcuts.md,2026-10-27
+F-M043-11,M-043,同步与删除指令配置,D2,E-SCCD-08;E-SCCD-15;E-SCCD-16;E-SCCD-19;E-SCEN-23;E-SCEN-25;E-SCEN-28,26自动化不跨设备同步；27同步到其他设备默认停用；删除跨同账户设备传播。；自动集合Remove保留All；删自建夹可保留或删内容；排序/复制有同账号传播说明,恢复、并发冲突、迁移执行会话与业务数据；跨端实际生效、删除恢复、副本权限/自动化与业务记录继承未知,not_observed,false,cases/M-043-shortcuts.md,2026-10-27
+F-M043-12,M-043,分享可配置指令并停止分享,D2,E-SCCD-17;E-SCCD-18,导入问题清空相应共享参数；试答覆盖原配置；文件与链接及两类文件接收条件不同。,已经导入副本能否撤销、传播延迟、误覆盖恢复,not_observed,false,cases/M-043-shortcuts.md,2026-10-27

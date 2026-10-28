@@ -1,0 +1,7 @@
+Duplicate shortcuts on iPhone or iPad
+You can quickly make a copy of a shortcut to use an existing shortcut as the basis of a new shortcut.
+In the Shortcuts app on your iPhone or iPad, tap Edit.
+Tap one or more shortcuts (a checkmark appears in the upper-right corner to indicate selection), then tap Duplicate.
+A copy of the selected shortcut is created.
+Note: If you’re signed in to your Apple Account, new shortcuts are also added to your other devices where you’re signed in to the same Apple Account.
+Tip: To quickly duplicate a shortcut, touch and hold a shortcut, then tap Duplicate.See alsoDelete shortcuts on iPhone or iPad

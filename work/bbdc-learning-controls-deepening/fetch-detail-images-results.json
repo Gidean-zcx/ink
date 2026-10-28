@@ -1,0 +1,24 @@
+[
+  {
+    "path": "work/bbdc-learning-controls-deepening/raw/c05-first-word.jpg",
+    "url": "https://agirls.aottercdn.com/media/938c6c86-6d40-4535-889a-cdc60612335e.jpg",
+    "status": 200,
+    "bytes": 67009,
+    "sha256": "612074b3c73d73f040d0f5a6438fb61e1e2af791fa69415edb31591eed096f04"
+  },
+  {
+    "path": "work/bbdc-learning-controls-deepening/raw/c05-spelling.jpg",
+    "url": "https://agirls.aottercdn.com/media/baa41d1e-b01c-4e59-9c7a-4da53ff2aac5.jpg",
+    "status": 200,
+    "bytes": 71653,
+    "sha256": "c0d7d271df931274fc6a57a8f9ecfa206122ab5b48044e2b44ba56aba4c5da11"
+  },
+  {
+    "path": "work/bbdc-learning-controls-deepening/raw/c06-word-tips.jpg",
+    "url": "https://cdnfile.sspai.com/2022/11/08/article/666cb10ed33b6a65039b0023baa0fc3b?imageView2/2/w/1120/q/90/interlace/1/ignore-error/1",
+    "status": 403,
+    "bytes": 207,
+    "sha256": "21e4bbc5edf3ece7ed55176e6a07c99c0e18c252e77c3d60af8977c37e5fbe6f",
+    "stop": "no retry"
+  }
+]

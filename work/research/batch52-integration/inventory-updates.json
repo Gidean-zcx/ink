@@ -1,0 +1,242 @@
+[
+  {
+    "before": {
+      "order": "2",
+      "entry_kind": "child_topic",
+      "parent_order": "1",
+      "functional_domain": "Create flashcard sets directly in Claude",
+      "source_url": "https://help.quizlet.com/hc/en-us/sections/360004698771-Creating-editing-and-saving-sets",
+      "source_section": "Creating, editing, and saving sets / Create flashcard sets directly in Claude",
+      "article_url": "",
+      "evidence_ids": "E-QZCD-02",
+      "flow_ids": "",
+      "coverage": "仅目录；正文未在本例展开",
+      "missing_controls_or_branches": "可从官方目录继续；入口/动作/反馈/结束/异常恢复均未逐项核定",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "order": "2",
+      "entry_kind": "child_topic",
+      "parent_order": "1",
+      "functional_domain": "Create flashcard sets directly in Claude",
+      "source_url": "https://help.quizlet.com/hc/en-us/sections/360004698771-Creating-editing-and-saving-sets",
+      "source_section": "Creating, editing, and saving sets / Create flashcard sets directly in Claude",
+      "article_url": "https://help.quizlet.com/hc/en-us/articles/49258738112525-Create-flashcard-sets-directly-in-Claude",
+      "evidence_ids": "E-QZCD-02;E-QZMW-01",
+      "flow_ids": "F-M021-01",
+      "coverage": "D2部分；文档重建，未操作",
+      "missing_controls_or_branches": "保存、账号、权限及失败未知",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "before": {
+      "order": "8",
+      "entry_kind": "child_topic",
+      "parent_order": "1",
+      "functional_domain": "Creating flashcard sets",
+      "source_url": "https://help.quizlet.com/hc/en-us/sections/360004698771-Creating-editing-and-saving-sets",
+      "source_section": "Creating, editing, and saving sets / Creating flashcard sets",
+      "article_url": "",
+      "evidence_ids": "E-QZCD-02",
+      "flow_ids": "",
+      "coverage": "仅目录；正文未在本例展开",
+      "missing_controls_or_branches": "可从官方目录继续；入口/动作/反馈/结束/异常恢复均未逐项核定",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "order": "8",
+      "entry_kind": "child_topic",
+      "parent_order": "1",
+      "functional_domain": "Creating flashcard sets",
+      "source_url": "https://help.quizlet.com/hc/en-us/sections/360004698771-Creating-editing-and-saving-sets",
+      "source_section": "Creating, editing, and saving sets / Creating flashcard sets",
+      "article_url": "https://help.quizlet.com/hc/en-us/articles/360029780752-Creating-flashcard-sets",
+      "evidence_ids": "E-QZCD-02;E-QZMW-07",
+      "flow_ids": "F-M021-03;F-M021-05",
+      "coverage": "D2部分；文档重建，未操作",
+      "missing_controls_or_branches": "重启保存未知",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "before": {
+      "order": "12",
+      "entry_kind": "child_topic",
+      "parent_order": "1",
+      "functional_domain": "Creating a set by scanning a document",
+      "source_url": "https://help.quizlet.com/hc/en-us/sections/360004698771-Creating-editing-and-saving-sets",
+      "source_section": "Creating, editing, and saving sets / Creating a set by scanning a document",
+      "article_url": "",
+      "evidence_ids": "E-QZCD-02",
+      "flow_ids": "",
+      "coverage": "仅目录；正文未在本例展开",
+      "missing_controls_or_branches": "可从官方目录继续；入口/动作/反馈/结束/异常恢复均未逐项核定",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "order": "12",
+      "entry_kind": "child_topic",
+      "parent_order": "1",
+      "functional_domain": "Creating a set by scanning a document",
+      "source_url": "https://help.quizlet.com/hc/en-us/sections/360004698771-Creating-editing-and-saving-sets",
+      "source_section": "Creating, editing, and saving sets / Creating a set by scanning a document",
+      "article_url": "https://help.quizlet.com/hc/en-us/articles/360030936511-Creating-a-set-by-scanning-a-document",
+      "evidence_ids": "E-QZCD-02;E-QZMW-02",
+      "flow_ids": "F-M021-03",
+      "coverage": "D2部分；文档重建，未操作",
+      "missing_controls_or_branches": "拒权/取消/重扫未知",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "before": {
+      "order": "18",
+      "entry_kind": "child_topic",
+      "parent_order": "1",
+      "functional_domain": "Trouble copying and saving a set",
+      "source_url": "https://help.quizlet.com/hc/en-us/sections/360004698771-Creating-editing-and-saving-sets",
+      "source_section": "Creating, editing, and saving sets / Trouble copying and saving a set",
+      "article_url": "",
+      "evidence_ids": "E-QZCD-02",
+      "flow_ids": "",
+      "coverage": "仅目录；正文未在本例展开",
+      "missing_controls_or_branches": "可从官方目录继续；入口/动作/反馈/结束/异常恢复均未逐项核定",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "order": "18",
+      "entry_kind": "child_topic",
+      "parent_order": "1",
+      "functional_domain": "Trouble copying and saving a set",
+      "source_url": "https://help.quizlet.com/hc/en-us/sections/360004698771-Creating-editing-and-saving-sets",
+      "source_section": "Creating, editing, and saving sets / Trouble copying and saving a set",
+      "article_url": "https://help.quizlet.com/hc/en-us/articles/360036242411-Trouble-copying-and-saving-a-set",
+      "evidence_ids": "E-QZCD-02;E-QZMW-03",
+      "flow_ids": "F-M021-04",
+      "coverage": "正文已读；资格原因，非错误恢复闭环",
+      "missing_controls_or_branches": "没有网络错误或重试步骤",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "before": {
+      "order": "19",
+      "entry_kind": "child_topic",
+      "parent_order": "1",
+      "functional_domain": "Combining flashcard sets",
+      "source_url": "https://help.quizlet.com/hc/en-us/sections/360004698771-Creating-editing-and-saving-sets",
+      "source_section": "Creating, editing, and saving sets / Combining flashcard sets",
+      "article_url": "",
+      "evidence_ids": "E-QZCD-02",
+      "flow_ids": "",
+      "coverage": "仅目录；正文未在本例展开",
+      "missing_controls_or_branches": "可从官方目录继续；入口/动作/反馈/结束/异常恢复均未逐项核定",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "order": "19",
+      "entry_kind": "child_topic",
+      "parent_order": "1",
+      "functional_domain": "Combining flashcard sets",
+      "source_url": "https://help.quizlet.com/hc/en-us/sections/360004698771-Creating-editing-and-saving-sets",
+      "source_section": "Creating, editing, and saving sets / Combining flashcard sets",
+      "article_url": "https://help.quizlet.com/hc/en-us/articles/360029638892-Combining-flashcard-sets",
+      "evidence_ids": "E-QZCD-02;E-QZMW-04",
+      "flow_ids": "F-M021-04",
+      "coverage": "D2部分；文档重建，未操作",
+      "missing_controls_or_branches": "去重/进度映射未知",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "before": {
+      "order": "44",
+      "entry_kind": "child_topic",
+      "parent_order": "38",
+      "functional_domain": "Create flashcard sets directly in ChatGPT",
+      "source_url": "https://help.quizlet.com/hc/en-us/sections/360005938691-Studying",
+      "source_section": "Studying / Create flashcard sets directly in ChatGPT",
+      "article_url": "",
+      "evidence_ids": "E-QZCD-03",
+      "flow_ids": "",
+      "coverage": "仅目录；正文未在本例展开",
+      "missing_controls_or_branches": "可从官方目录继续；入口/动作/反馈/结束/异常恢复均未逐项核定",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "order": "44",
+      "entry_kind": "child_topic",
+      "parent_order": "38",
+      "functional_domain": "Create flashcard sets directly in ChatGPT",
+      "source_url": "https://help.quizlet.com/hc/en-us/sections/360005938691-Studying",
+      "source_section": "Studying / Create flashcard sets directly in ChatGPT",
+      "article_url": "https://help.quizlet.com/hc/en-us/articles/44716146144909-Create-flashcard-sets-directly-in-ChatGPT",
+      "evidence_ids": "E-QZCD-03;E-QZMW-05",
+      "flow_ids": "F-M021-01",
+      "coverage": "D2部分；文档重建，未操作",
+      "missing_controls_or_branches": "没有全页面控制、发布前校订或持久回执证明",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "before": {
+      "order": "50",
+      "entry_kind": "child_topic",
+      "parent_order": "38",
+      "functional_domain": "Studying on Quizlet",
+      "source_url": "https://help.quizlet.com/hc/en-us/sections/360005938691-Studying",
+      "source_section": "Studying / Studying on Quizlet",
+      "article_url": "",
+      "evidence_ids": "E-QZCD-03",
+      "flow_ids": "",
+      "coverage": "仅目录；正文未在本例展开",
+      "missing_controls_or_branches": "可从官方目录继续；入口/动作/反馈/结束/异常恢复均未逐项核定",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "order": "50",
+      "entry_kind": "child_topic",
+      "parent_order": "38",
+      "functional_domain": "Studying on Quizlet",
+      "source_url": "https://help.quizlet.com/hc/en-us/sections/360005938691-Studying",
+      "source_section": "Studying / Studying on Quizlet",
+      "article_url": "https://help.quizlet.com/hc/en-us/articles/360030841732-Studying-on-Quizlet",
+      "evidence_ids": "E-QZCD-03;E-QZMW-08",
+      "flow_ids": "F-M021-07;F-M021-11;F-M021-12",
+      "coverage": "正文已读；功能关系总览，不独立计任务",
+      "missing_controls_or_branches": "不计完整任务",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "before": {
+      "order": "63",
+      "entry_kind": "child_topic",
+      "parent_order": "38",
+      "functional_domain": "Using error checking options (UK)",
+      "source_url": "https://help.quizlet.com/hc/en-us/sections/360005938691-Studying",
+      "source_section": "Studying / Using error checking options (UK)",
+      "article_url": "",
+      "evidence_ids": "E-QZCD-03",
+      "flow_ids": "",
+      "coverage": "仅目录；正文未在本例展开",
+      "missing_controls_or_branches": "可从官方目录继续；入口/动作/反馈/结束/异常恢复均未逐项核定",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "order": "63",
+      "entry_kind": "child_topic",
+      "parent_order": "38",
+      "functional_domain": "Using error checking options (UK)",
+      "source_url": "https://help.quizlet.com/hc/en-us/sections/360005938691-Studying",
+      "source_section": "Studying / Using error checking options (UK)",
+      "article_url": "https://help.quizlet.com/hc/en-us/articles/360048331232-Using-error-checking-options-UK",
+      "evidence_ids": "E-QZCD-03;E-QZMW-06",
+      "flow_ids": "F-M021-08",
+      "coverage": "D2部分；文档重建，未操作",
+      "missing_controls_or_branches": "历史回算未知",
+      "checked_on": "2026-10-27"
+    }
+  }
+]

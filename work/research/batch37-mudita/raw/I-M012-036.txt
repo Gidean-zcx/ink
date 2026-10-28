@@ -1,0 +1,16 @@
+How to delete an alarm?
+Modified on: Sat, 3 Oct, 2026 at 8:35 AM
+You can easily remove unwanted alarms on your Mudita Kompakt
+Delete an alarm
+Tap the clock on the Home screen.
+Tap the pencil (edit) icon.
+Tap the delete icon next to the alarm you want to remove.
+Confirm the deletion if prompted.
+Access the Alarm app
+If the Alarm app icon is hidden, you can access it by navigating to: Apps → Alarm
+From there, you can manage all alarms, including creating, editing, and deleting them
+Was this article helpful?
+No
+Yes
+That’s Great!
+Thank you for your feedback

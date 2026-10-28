@@ -1,0 +1,36 @@
+HELP CENTER
+SUBSCRIPTION & PAYMENTS
+How do I use a promo code?
+How do I enter the promotion (promo) code?
+Visit duolingo.com/redeem in a web browser (on a phone, tablet, or computer)
+Enter your promo code and click “Redeem”
+If you’re recognized as an eligible user, click “Claim offer”
+Log in if you have a Duolingo account, or if you don’t, create an account
+Select a monthly, annual, or family Super Duolingo plan for after your free trial ends
+Submit your credit card information (you will only be charged if you continue with Super after your free trial ends)
+Start learning with Super Duolingo!
+What platforms (web, Android, iOS) can accept my promo code?
+Currently, you can only redeem the code on a web browser. However, once subscribed to Super Duolingo via your promo code, you can access your Super features across all platforms (iOS/Android app and web).
+When does my promo code expire?
+The expiration date will be specified when you receive your promotion code. If your promo code has expired, you cannot claim it.
+If my promo code isn’t working, what can I do?
+If the code was entered incorrectly, try re-entering the code
+If you are not logged in to your Duolingo account, you’ll need to log in or create an account
+If you are in a Duolingo classroom, you can leave the classroom, then re-enter the promo code
+Or, you may be ineligible for the promo code:
+The code is no longer eligible (i.e. expired or already claimed)
+You are already actively subscribed to Super Duolingo
+You are under 13 years of age
+I’m already subscribed to Super Duolingo. Can I use this promo code for my existing subscription?
+No. A promo code cannot be used on active subscriptions.
+What happens if I don’t cancel my extended free trial?
+If you do not cancel your extended free trial, Duolingo will start your subscription and you will be billed to the payment method originally entered during checkout.
+Will the subscription auto-renew?
+All subscriptions auto-renew unless you cancel them.
+Relevant Articles
+What is Super Duolingo and how do I subscribe?
+Family Plan
+How do I cancel my Super Duolingo subscription?
+How do I request a refund?
+What is Duolingo Max?
+I want to submit a bug report

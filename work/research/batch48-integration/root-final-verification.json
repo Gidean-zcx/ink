@@ -1,0 +1,99 @@
+{
+  "status": "passed",
+  "total_flows": 963,
+  "total_evidence": 1696,
+  "total_reference_points": 106,
+  "M023_flows": 7,
+  "M023_depths": {
+    "D2": 6,
+    "D1": 1
+  },
+  "M023_evidence": 6,
+  "M023_reference_points": 8,
+  "source_headings": 41,
+  "images_observed": 24,
+  "images_archived": 21,
+  "all_briefs_indexed": 48,
+  "flow_owners": {
+    "F-M023-01": [
+      "docs/research/interaction-library/batches/vocab-coverage.csv"
+    ],
+    "F-M023-02": [
+      "docs/research/interaction-library/batches/vocab-coverage.csv"
+    ],
+    "F-M023-03": [
+      "docs/research/interaction-library/batches/vocab-coverage.csv"
+    ],
+    "F-M023-04": [
+      "docs/research/interaction-library/batches/vocab-coverage.csv"
+    ],
+    "F-M023-05": [
+      "docs/research/interaction-library/batches/vocab-coverage.csv"
+    ],
+    "F-M023-06": [
+      "docs/research/interaction-library/batches/vocab-device-deepening-coverage.csv"
+    ],
+    "F-M023-07": [
+      "docs/research/interaction-library/batches/maimemo-device-controls-coverage.csv"
+    ]
+  },
+  "requirements_unchanged": true,
+  "requirements_sha256": "e141320e2714df805c009fe64dd92d17decd6429d5728f8ce42d6d868b775087",
+  "new_formal_files": [
+    "docs/briefs/048-learning-controls-and-statistics.md",
+    "docs/research/interaction-library/artifacts/batch48-source-route-audit.md",
+    "docs/research/interaction-library/artifacts/maimemo-device-controls/capture-audit.json",
+    "docs/research/interaction-library/artifacts/maimemo-device-controls/image-01.png",
+    "docs/research/interaction-library/artifacts/maimemo-device-controls/image-02.png",
+    "docs/research/interaction-library/artifacts/maimemo-device-controls/image-03.png",
+    "docs/research/interaction-library/artifacts/maimemo-device-controls/image-04.png",
+    "docs/research/interaction-library/artifacts/maimemo-device-controls/image-05.png",
+    "docs/research/interaction-library/artifacts/maimemo-device-controls/image-09.png",
+    "docs/research/interaction-library/artifacts/maimemo-device-controls/image-10.png",
+    "docs/research/interaction-library/artifacts/maimemo-device-controls/image-11.png",
+    "docs/research/interaction-library/artifacts/maimemo-device-controls/image-12.png",
+    "docs/research/interaction-library/artifacts/maimemo-device-controls/image-14.png",
+    "docs/research/interaction-library/artifacts/maimemo-device-controls/image-15.png",
+    "docs/research/interaction-library/artifacts/maimemo-device-controls/image-16.png",
+    "docs/research/interaction-library/artifacts/maimemo-device-controls/image-17.png",
+    "docs/research/interaction-library/artifacts/maimemo-device-controls/image-18.png",
+    "docs/research/interaction-library/artifacts/maimemo-device-controls/image-19.png",
+    "docs/research/interaction-library/artifacts/maimemo-device-controls/image-20.png",
+    "docs/research/interaction-library/artifacts/maimemo-device-controls/image-21.png",
+    "docs/research/interaction-library/artifacts/maimemo-device-controls/image-22.png",
+    "docs/research/interaction-library/artifacts/maimemo-device-controls/image-23.png",
+    "docs/research/interaction-library/artifacts/maimemo-device-controls/image-24.png",
+    "docs/research/interaction-library/artifacts/maimemo-device-controls/image-25.png",
+    "docs/research/interaction-library/artifacts/maimemo-device-controls/source-notes.md",
+    "docs/research/interaction-library/batches/maimemo-device-controls-coverage.csv",
+    "docs/research/interaction-library/batches/maimemo-device-controls-evidence.jsonl",
+    "docs/research/interaction-library/batches/maimemo-device-controls-inventory.csv"
+  ],
+  "modified_formal_files": [
+    "README.md",
+    "docs/briefs/README.md",
+    "docs/ideas.md",
+    "docs/research/interaction-library/README.md",
+    "docs/research/interaction-library/analysis-status.md",
+    "docs/research/interaction-library/backlog.md",
+    "docs/research/interaction-library/batches/README.md",
+    "docs/research/interaction-library/batches/vocab-coverage.csv",
+    "docs/research/interaction-library/batches/vocab-device-deepening-evidence.jsonl",
+    "docs/research/interaction-library/case-index.md",
+    "docs/research/interaction-library/cases/M-008-hanvon.md",
+    "docs/research/interaction-library/cases/M-018-bbdc.md",
+    "docs/research/interaction-library/cases/M-022-baicizhan-device.md",
+    "docs/research/interaction-library/cases/M-023-maimemo-device.md",
+    "docs/research/interaction-library/catalog.csv",
+    "docs/research/interaction-library/comparison.md",
+    "docs/research/interaction-library/coverage.csv",
+    "docs/research/interaction-library/design-reference-guide.md",
+    "docs/research/interaction-library/evidence.jsonl",
+    "docs/research/interaction-library/inventories/README.md",
+    "docs/research/interaction-library/reference-points.csv",
+    "docs/research/interaction-library/verification-log.md"
+  ],
+  "deleted_formal_files": [],
+  "semantic_review": "Root rechecked key image 09/11/14/23 and full body; retained stage, direction, timer-unit and static-result limits. Other prior observations retained with their audit.",
+  "scope": "Document and evidence consistency; no product behavior or learning efficacy verified"
+}

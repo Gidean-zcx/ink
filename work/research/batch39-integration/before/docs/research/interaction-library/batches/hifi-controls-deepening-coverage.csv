@@ -1,0 +1,7 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M063-09,M-063,找回播放页、歌词与曲目信息,D2,E-SHCD-03,评测记载Now Playing和歌词/信息切换、返回图标；作者自报V2.1。,缺歌词、长信息、返回筛选位置；AB/速度仅入口。,not_observed,false,cases/M-063-shanling.md,2026-10-26
+F-M063-10,M-063,外部M3U歌单导入,D2,E-SHCD-03,作者自报V2.1：A:\音频引用、_explaylist_data及Import playlist；另描述可导出，歌单按创建次序、后添在末尾。此为评测版本口径，非当前固件排序保证。,导出入口/文件名/重导冲突、相对路径/M3U8、失效项和换卡未核；无删除对象确认或撤销，不能用Eddict手机队列能力补成M1队列。,not_observed,false,cases/M-063-shanling.md,2026-10-27
+F-M064-09,M-064,播放视图与曲目信息,D2,E-IBCD-01;E-IBCD-03,封面切曲、Music/Settings入口；Music子页缩略图回播放、Return逐页返回；Info点上半部收回；Recent Play限最近50曲，ID3年份仅显示,Info与曲库Delete对象；原筛选/滚动位置、历史清除、跨会话时间点；只读标签不等于编辑ID3,static_reference_only,false,cases/M-064-ibasso.md,2026-10-27
+F-M064-10,M-064,编辑与停用EQ滤波器,D2,E-IBCD-01;E-IBCD-10,GEQ5预设+自定义/10段；PEQ每设置最多6滤波器、8类型；Fc33–16000Hz/Gain−20–20dB/Q0.3–20；低通/高通/全通/Band/Notch的Gain不生效；逐项On/Off,越界输入/校验反馈、保存/重置、模式间持久化、跨app范围及音质未验证,static_reference_only,false,cases/M-064-ibasso.md,2026-10-27
+F-M064-11,M-064,进入与退出USB DAC,D2,E-IBCD-05;E-IBCD-07,图示确认/取消、Charging mode和Back To DAP Mode；仅静态。,电脑输出选择、断线、后台干扰、音量与原曲恢复。,static_reference_only,false,cases/M-064-ibasso.md,2026-10-26
+F-M064-12,M-064,模拟输出与同轴分支,D2,E-IBCD-01;E-IBCD-06,Output设置；PO耳机/LO外放；手册说明同轴接入关闭phone/line输出。,实际切换反馈、拔同轴恢复、USB/蓝牙同时接入及音量。,static_reference_only,false,cases/M-064-ibasso.md,2026-10-26

@@ -1,0 +1,359 @@
+Create flashcard sets directly in Claude – Quizlet Help Center (https://help.quizlet.com/hc/en-us/articles/49258738112525-Create-flashcard-sets-directly-in-Claude)
+citeturn1081view0 [wordlim: 200] Crawled: today; Content type: text/html; Source: click({"ref_id":"turn1080view0","id":9}); Total lines: 85
+L0: 【0†iframe†www.googletagmanager.com】
+L1: 
+L2: 【1†Help center†quizlet.zendesk.com】
+L3: 
+L4: Topics
+L5: 
+L6: Popular Articles
+L7: 
+L8: 【2†Resending a confirmation message】 【3†Changing your username】 【4†Changing your password】 【5†Finding flashcard sets】 【6†Finding your teacher's class】 【7†Browser and device compatibility】
+L9: 
+L10: [Input][Input: Search]
+L11: 
+L12: 【8†Image】   【8†Username】
+L13: # Create flashcard sets directly in Claude
+L14: 
+L15: The Quizlet connector for Claude makes it easy to generate flashcards in seconds — so you can go from learning something new to studying it effectively without breaking your flow.
+L16: 
+L17: Whether you're prepping for a test, squeezing in a quick review, or creating a classroom game for your students, Quizlet meets you right where you are.
+L18: 
+L19: With the Quizlet connector in Claude you can:
+L20:   * Create a flashcard set and start studying directly in your Claude conversation
+L21:   * Continue studying on Quizlet using interactive study modes for deeper learning
+L22:   * Turn your flashcard set into an activity for your students (by opening the set in Quizlet)
+L23: 
+L24: How it works
+L25:   1. Connect Quizlet in Claude (Settings → Connectors → Quizlet, or add it when prompted).
+L26:   2. Ask Claude for flashcards (e.g. "Create flashcards on photosynthesis.") or upload a file or your notes to have Claude and Quizlet build the cards from your class
+L27:   3. Claude automatically creates a complete Quizlet flashcard set which can be reviewed in Claude or opened in Quizlet for more study modes
+L28: Once your set is created, you'll see your flashcards directly in Claude that you can flip through and begin studying.
+L29: 
+L30: When you're ready to study further, select the option to open your set in Quizlet. From there, you can:
+L31: 
+L32:   * Edit and personalize your flashcards
+L33:   * Study your flashcards in any of the study modes
+L34:   * Practice, review, and build mastery
+L35:   * Share your flashcard set with others or turn it into a group activity
+L36: For teachers, select the option to open your set in Quizlet. From there, you can:
+L37: 
+L38:   * Review and edit flashcard content
+L39:   * Turn your flashcard set into a free in-class or at-home assignment in seconds
+L40:     * Choose between flashcard review, games, or practice tests
+L41:     * Afterwards, easily monitor class performance in Quizlet
+L42: ### Related Articles
+L43: 
+L44:   * 【9†Create flashcard sets directly in Claude】
+L45:   * 【10†Studying with Study Groups】
+L46:   * 【11†Creating study sets with Smart Assist】
+L47:   * 【12†Becoming a top creator on Quizlet】
+L48:   * 【13†Studying with Study Guides】
+L49:   * 【14†What are flashcard sets?】
+L50:   * 【15†Creating flashcard sets】
+L51:   * 【16†Adding images to sets from the free gallery】
+L52:   * 【17†Adding your own images to sets】
+L53:   * 【18†Recording custom audio】
+L54:   * 【19†See more】
+L55: ### Can't find what you're looking for?
+L56: 
+L57: 【20†Ask a question】
+L58: 
+L59: Was this article helpful?
+L60: 
+L61: [Button: Yes] [Button: No]
+L62: 
+L63: ##### About us
+L64: 
+L65: 【21†About Quizlet†quizlet.com】 【22†How Quizlet works†quizlet.com】 【23†Careers†quizlet.com】 【24†Advertise with us†quizlet.com】 【25†Get the app†quizlet.com】
+L66: ##### For students
+L67: 
+L68: 【26†Flashcards†quizlet.com】 【27†Test†quizlet.com】 【28†Learn†quizlet.com】 【29†Solutions†quizlet.com】 【30†Modern Learning Lab†quizlet.com】 【31†Quizlet Plus†quizlet.com】 【32†Study Guides†quizlet.com】 【33†Pomodoro timer†quizlet.com】
+L69: 
+L70: ##### For Teachers
+L71: 
+L72: 【34†Live†quizlet.com】 【35†Blog†quizlet.com】 【36†Be the Change†quizlet.com】 【37†Quizlet Plus for teachers†quizlet.com】
+L73: ##### Resources
+L74: 
+L75: 【38†Help center†quizlet.com】 【39†Sign up†quizlet.com】 【40†Honor code†quizlet.com】 【41†Community guidelines†quizlet.com】 【42†Accessibility statement†quizlet.com】 【43†Privacy†quizlet.com】 【44†Your Privacy/Cookies Choices†quizlet.com】 【45†Terms†quizlet.com】 【46†Ad and Cookie Policy†quizlet.com】 【47†Interest-Based Advertising†quizlet.com】 【48†Quizlet for Schools†quizlet.com】 【49†Parents†quizlet.com】
+L76: 
+L77: ##### Language
+L78: 
+L79: English (United States)
+L80: 
+L81: 【50†Image】 【51†Get the app†get.quizlet.com】
+L82: ##### Get the app
+L83: 
+L84: © Quizlet Inc.
+--------------------------------------------------------------------------------
+Creating a set by scanning a document – Quizlet Help Center (https://help.quizlet.com/hc/en-us/articles/360030936511-Creating-a-set-by-scanning-a-document)
+citeturn1081view1 [wordlim: 200] Crawled: today; Content type: text/html; Source: click({"ref_id":"turn1080view0","id":19}); Total lines: 119
+L0: 【0†iframe†www.googletagmanager.com】
+L1: 
+L2: 【1†Help center†quizlet.zendesk.com】
+L3: 
+L4: Topics
+L5: 
+L6: Popular Articles
+L7: 
+L8: 【2†Resending a confirmation message】 【3†Changing your username】 【4†Changing your password】 【5†Finding flashcard sets】 【6†Finding your teacher's class】 【7†Browser and device compatibility】
+L9: 
+L10: [Input][Input: Search]
+L11: 
+L12: 【8†Image】   【8†Username】
+L13: # Creating a set by scanning a document
+L14: 
+L15: 【8†IOS】 【8†Web】 【8†Android】
+L16: 
+L17: Creating sets by scanning your documents is currently available on the 【9†iOS†quizlet.app.link】 and 【10†Android†quizlet.app.link】 apps for 【11†Quizlet Plus†quizlet.com】 and 【12†Quizlet Plus for teachers†quizlet.com】 subscribers.*
+L18: 
+L19: You can always make sets faster by 【13†importing content】 on the Quizlet website.
+L20: *If you’re under the required age, you are unable to create sets by scanning documents until you reach your region’s age of consent. Find out more about 【14†younger users’ account limitations】.
+L21: 
+L22: Creating sets is easy and quick when you scan your documents on the iOS app. This feature is available for 【11†Quizlet Plus†quizlet.com】 and 【12†Quizlet Plus for teachers†quizlet.com】 subscribers.*
+L23: 
+L24: To scan terms and definitions
+L25:   1. 【15†Create a flashcard set.】
+L26:   2. Select Scan document.
+L27:   3. Select Allow camera.
+L28:   4. Choose an image from your photo library, or take a picture by selecting Take photo.
+L29:   5. Take a clear picture of your notes or documents.
+L30:   6. Tap Use photo.
+L31: Boxes will outline the words detected in your image. Pinch and drag the picture to zoom in.
+L32:   7. Tap the Term field and select the outlined term you want to add.
+L33: To add more than one term, drag your finger across the outlined words.
+L34:   8. Tap the Definition field and select the outlined definition you want to add.
+L35: To edit a term or definition, tap 【16†Image: Keyboard_-_Resized.png】 (keyboard).
+L36:   9. Tap the + to add a new card to the set.
+L37: You'll need to add at least two cards to publish your set.
+L38:   10. Tap 【17†Image: Image_-_Resized.png】 (image) to add another image.
+L39:   11. Tap Done to publish or preview your set.
+L40: You can delete a card in the preview by swiping left on it and tapping 【18†Image: Trash_-_Resized.png】(trash can).
+L41:   12. Tap 【19†Image: Check_mark.png】 (check mark).
+L42: Settings and options
+L43: 
+L44: You can edit an existing set by opening it and tapping 【20†Image: More_menu_-_iOS_-_Resized.png】 (more menu). Then, select Edit set and select Scan document to edit the set.
+L45: 
+L46: How do I make sure I don't violate a document's copyright?
+L47: 
+L48: You can review these 【21†copyright basics】 to find out more.
+L49: *If you’re under the required age, you are unable to create sets by scanning documents until you reach your region’s age of consent. Find out more about 【14†younger users’ account limitations】.
+L50: 
+L51: Creating sets is easy and quick when you scan your documents on the Android app. This feature is available for 【11†Quizlet Plus†quizlet.com】 and 【12†Quizlet Plus for teachers†quizlet.com】 subscribers.*
+L52: 
+L53: To scan terms and definitions
+L54:   1. 【15†Create a flashcard set.】
+L55:   2. Select Scan document.
+L56:   3. Select Allow camera.
+L57:   4. Choose an image from your photo library, or take a picture by selecting Take photo.
+L58:   5. Take a clear picture of your notes or documents.
+L59:   6. Tap Use photo.
+L60: Boxes will outline the words detected in your image. Pinch and drag the picture to zoom in.
+L61:   7. Tap the Term field and select the outlined term you want to add.
+L62: To add more than one term, drag your finger across the outlined words.
+L63:   8. Tap the Definition field and select the outlined definition you want to add.
+L64: To edit a term or definition, tap 【16†Image: Keyboard_-_Resized.png】 (keyboard).
+L65:   9. Tap the + to add a new card to the set.
+L66: You'll need to add at least two cards to publish your set.
+L67:   10. Tap 【17†Image: Image_-_Resized.png】 (image) to add another image.
+L68:   11. Tap Done to publish or preview your set.
+L69: You can delete a card in the preview by swiping left on it and tapping 【18†Image: Trash_-_Resized.png】(trash can).
+L70:   12. Tap 【19†Image: Check_mark.png】 (check mark).
+L71: How do I make sure I don't violate a document's copyright?
+L72: 
+L73: You can review these 【21†copyright basics】 to find out more.
+L74: 
+L75: *If you’re under the required age, you are unable to create sets by scanning documents until you reach your region’s age of consent. Find out more about 【14†younger users’ account limitations】.
+L76: ### Related Articles
+L77: 
+L78:   * 【22†Create flashcard sets directly in Claude】
+L79:   * 【23†Studying with Study Groups】
+L80:   * 【24†Creating study sets with Smart Assist】
+L81:   * 【25†Becoming a top creator on Quizlet】
+L82:   * 【26†Studying with Study Guides】
+L83:   * 【27†What are flashcard sets?】
+L84:   * 【28†Creating flashcard sets】
+L85:   * 【29†Adding images to sets from the free gallery】
+L86:   * 【30†Adding your own images to sets】
+L87:   * 【31†Recording custom audio】
+L88:   * 【32†See more】
+L89: ### Can't find what you're looking for?
+L90: 
+L91: 【33†Ask a question】
+L92: 
+L93: Was this article helpful?
+L94: 
+L95: [Button: Yes] [Button: No]
+L96: 
+L97: ##### About us
+L98: 
+L99: 【34†About Quizlet†quizlet.com】 【35†How Quizlet works†quizlet.com】 【36†Careers†quizlet.com】 【37†Advertise with us†quizlet.com】 【38†Get the app†quizlet.com】
+L100: ##### For students
+L101: 
+L102: 【39†Flashcards†quizlet.com】 【40†Test†quizlet.com】 【41†Learn†quizlet.com】 【42†Solutions†quizlet.com】 【43†Modern Learning Lab†quizlet.com】 【44†Quizlet Plus†quizlet.com】 【45†Study Guides†quizlet.com】 【46†Pomodoro timer†quizlet.com】
+L103: 
+L104: ##### For Teachers
+L105: 
+L106: 【47†Live†quizlet.com】 【48†Blog†quizlet.com】 【49†Be the Change†quizlet.com】 【50†Quizlet Plus for teachers†quizlet.com】
+L107: ##### Resources
+L108: 
+L109: 【51†Help center†quizlet.com】 【52†Sign up†quizlet.com】 【53†Honor code†quizlet.com】 【54†Community guidelines†quizlet.com】 【55†Accessibility statement†quizlet.com】 【56†Privacy†quizlet.com】 【57†Your Privacy/Cookies Choices†quizlet.com】 【58†Terms†quizlet.com】 【59†Ad and Cookie Policy†quizlet.com】 【60†Interest-Based Advertising†quizlet.com】 【61†Quizlet for Schools†quizlet.com】 【62†Parents†quizlet.com】
+L110: 
+L111: ##### Language
+L112: 
+L113: English (United States)
+L114: 
+L115: 【63†Image】 【64†Get the app†get.quizlet.com】
+L116: ##### Get the app
+L117: 
+L118: © Quizlet Inc.
+--------------------------------------------------------------------------------
+Trouble copying and saving a set – Quizlet Help Center (https://help.quizlet.com/hc/en-us/articles/360036242411-Trouble-copying-and-saving-a-set)
+citeturn1081view2 [wordlim: 200] Crawled: today; Content type: text/html; Source: click({"ref_id":"turn1080view0","id":25}); Total lines: 64
+L0: 【0†iframe†www.googletagmanager.com】
+L1: 
+L2: 【1†Help center†quizlet.zendesk.com】
+L3: 
+L4: Topics
+L5: 
+L6: Popular Articles
+L7: 
+L8: 【2†Resending a confirmation message】 【3†Changing your username】 【4†Changing your password】 【5†Finding flashcard sets】 【6†Finding your teacher's class】 【7†Browser and device compatibility】
+L9: 
+L10: [Input][Input: Search]
+L11: 
+L12: 【8†Image】   【8†Username】
+L13: # Trouble copying and saving a set
+L14: 
+L15: All content on Quizlet is created by individual students and teachers.
+L16: 
+L17: Some sets can't be copied and saved
+L18: 
+L19: If you're using the free version of Quizlet, you can only copy and save sets created with basic features available to all free users. You must be subscribed to Quizlet Plus or Quizlet Plus for teachers to copy and save sets that were created using 【9†premium subscriber features†quizlet.com】 (like rich text editing or custom audio and images).
+L20: Users in certain locations must have their parent confirm their consent via a confirmation email before they can create and edit study sets. Find out more about 【10†younger users' account limitations】.
+L21: ### Related Articles
+L22: 
+L23:   * 【11†Create flashcard sets directly in Claude】
+L24:   * 【12†Studying with Study Groups】
+L25:   * 【13†Creating study sets with Smart Assist】
+L26:   * 【14†Becoming a top creator on Quizlet】
+L27:   * 【15†Studying with Study Guides】
+L28:   * 【16†What are flashcard sets?】
+L29:   * 【17†Creating flashcard sets】
+L30:   * 【18†Adding images to sets from the free gallery】
+L31:   * 【19†Adding your own images to sets】
+L32:   * 【20†Recording custom audio】
+L33:   * 【21†See more】
+L34: ### Can't find what you're looking for?
+L35: 
+L36: 【22†Ask a question】
+L37: 
+L38: Was this article helpful?
+L39: 
+L40: [Button: Yes] [Button: No]
+L41: 
+L42: ##### About us
+L43: 
+L44: 【23†About Quizlet†quizlet.com】 【24†How Quizlet works†quizlet.com】 【25†Careers†quizlet.com】 【26†Advertise with us†quizlet.com】 【27†Get the app†quizlet.com】
+L45: ##### For students
+L46: 
+L47: 【28†Flashcards†quizlet.com】 【29†Test†quizlet.com】 【30†Learn†quizlet.com】 【31†Solutions†quizlet.com】 【32†Modern Learning Lab†quizlet.com】 【33†Quizlet Plus†quizlet.com】 【34†Study Guides†quizlet.com】 【35†Pomodoro timer†quizlet.com】
+L48: 
+L49: ##### For Teachers
+L50: 
+L51: 【36†Live†quizlet.com】 【37†Blog†quizlet.com】 【38†Be the Change†quizlet.com】 【39†Quizlet Plus for teachers†quizlet.com】
+L52: ##### Resources
+L53: 
+L54: 【40†Help center†quizlet.com】 【41†Sign up†quizlet.com】 【42†Honor code†quizlet.com】 【43†Community guidelines†quizlet.com】 【44†Accessibility statement†quizlet.com】 【45†Privacy†quizlet.com】 【46†Your Privacy/Cookies Choices†quizlet.com】 【47†Terms†quizlet.com】 【48†Ad and Cookie Policy†quizlet.com】 【49†Interest-Based Advertising†quizlet.com】 【50†Quizlet for Schools†quizlet.com】 【51†Parents†quizlet.com】
+L55: 
+L56: ##### Language
+L57: 
+L58: English (United States)
+L59: 
+L60: 【52†Image】 【53†Get the app†get.quizlet.com】
+L61: ##### Get the app
+L62: 
+L63: © Quizlet Inc.
+--------------------------------------------------------------------------------
+Combining flashcard sets – Quizlet Help Center (https://help.quizlet.com/hc/en-us/articles/360029638892-Combining-flashcard-sets)
+citeturn1081view3 [wordlim: 200] Crawled: today; Content type: text/html; Source: click({"ref_id":"turn1080view0","id":26}); Total lines: 79
+L0: 【0†iframe†www.googletagmanager.com】
+L1: 
+L2: 【1†Help center†quizlet.zendesk.com】
+L3: 
+L4: Topics
+L5: 
+L6: Popular Articles
+L7: 
+L8: 【2†Resending a confirmation message】 【3†Changing your username】 【4†Changing your password】 【5†Finding flashcard sets】 【6†Finding your teacher's class】 【7†Browser and device compatibility】
+L9: 
+L10: [Input][Input: Search]
+L11: 
+L12: 【8†Image】   【8†Username】
+L13: # Combining flashcard sets
+L14: 
+L15: 【8†IOS】 【8†Web】 【8†Android】
+L16: 
+L17: You can study several topics together or make a new set by combining several existing sets. Saving a combined set just creates a new set and doesn't delete the original sets.
+L18: 
+L19: To combine sets
+L20:   1. 【9†Log in†quizlet.com】 to your account.
+L21:   2. Go to the first set you want to use.
+L22:   3. Select 【10†Image: More_menu_-_iOS_-_Resized.png】 (more menu).
+L23:   4. Select Combine.
+L24:   5. On the Combine sets page, add sets by selecting the + icon.
+L25:   6. Select Create a set from the dropdown menu on the left.
+L26:   7. Select Go to save your combined set.
+L27: To start studying the two sets without saving them as a new set, select the study activity you want from the dropdown menu, and select Go. Once you exit that study activity, the combination is not saved.
+L28: 
+L29: Tips
+L30:   * As you combine sets, their titles show up in the left column.
+L31:   * You can make combinations from your sets, folders, or classes by choosing one from the Combine dropdown menu. You can also search for sets in that menu if you want to add new content.
+L32:   * If you're using the free version of Quizlet, you can only combine sets that use basic features. To combine sets that have 【11†premium subscriber features†quizlet.com】 (like rich text editing or custom audio and images), you must be subscribed to 【11†Quizlet Plus†quizlet.com】 or 【12†Quizlet Plus for teachers†quizlet.com】.
+L33: Currently, you can only combine sets on the website. Once you've created and saved a new combination, you can study and edit it in the iOS app.
+L34: 
+L35: Currently, you can only combine sets on the website. Once you've created and saved a new combination, you can study and edit it in the Android app.
+L36: ### Related Articles
+L37: 
+L38:   * 【13†Create flashcard sets directly in Claude】
+L39:   * 【14†Studying with Study Groups】
+L40:   * 【15†Creating study sets with Smart Assist】
+L41:   * 【16†Becoming a top creator on Quizlet】
+L42:   * 【17†Studying with Study Guides】
+L43:   * 【18†What are flashcard sets?】
+L44:   * 【19†Creating flashcard sets】
+L45:   * 【20†Adding images to sets from the free gallery】
+L46:   * 【21†Adding your own images to sets】
+L47:   * 【22†Recording custom audio】
+L48:   * 【23†See more】
+L49: ### Can't find what you're looking for?
+L50: 
+L51: 【24†Ask a question】
+L52: 
+L53: Was this article helpful?
+L54: 
+L55: [Button: Yes] [Button: No]
+L56: 
+L57: ##### About us
+L58: 
+L59: 【25†About Quizlet†quizlet.com】 【26†How Quizlet works†quizlet.com】 【27†Careers†quizlet.com】 【28†Advertise with us†quizlet.com】 【29†Get the app†quizlet.com】
+L60: ##### For students
+L61: 
+L62: 【30†Flashcards†quizlet.com】 【31†Test†quizlet.com】 【32†Learn†quizlet.com】 【33†Solutions†quizlet.com】 【34†Modern Learning Lab†quizlet.com】 【35†Quizlet Plus†quizlet.com】 【36†Study Guides†quizlet.com】 【37†Pomodoro timer†quizlet.com】
+L63: 
+L64: ##### For Teachers
+L65: 
+L66: 【38†Live†quizlet.com】 【39†Blog†quizlet.com】 【40†Be the Change†quizlet.com】 【41†Quizlet Plus for teachers†quizlet.com】
+L67: ##### Resources
+L68: 
+L69: 【42†Help center†quizlet.com】 【43†Sign up†quizlet.com】 【44†Honor code†quizlet.com】 【45†Community guidelines†quizlet.com】 【46†Accessibility statement†quizlet.com】 【47†Privacy†quizlet.com】 【48†Your Privacy/Cookies Choices†quizlet.com】 【49†Terms†quizlet.com】 【50†Ad and Cookie Policy†quizlet.com】 【51†Interest-Based Advertising†quizlet.com】 【52†Quizlet for Schools†quizlet.com】 【53†Parents†quizlet.com】
+L70: 
+L71: ##### Language
+L72: 
+L73: English (United States)
+L74: 
+L75: 【54†Image】 【55†Get the app†get.quizlet.com】
+L76: ##### Get the app
+L77: 
+L78: © Quizlet Inc.
+

@@ -1,0 +1,76 @@
+{
+  "name": "41-answer-ten",
+  "url": "https://www.duolingo.com/lesson",
+  "title": "Duolingo - Learn French with lessons that work",
+  "utc": "2026-10-26T17:54:13.960488+00:00",
+  "text": "9 IN A ROW\n4\nNEW WORD\nWrite this in English\nS'il vous plaît, Madame.\nPlease\nMadam\nperfect\nMadam\nPlease\nAwesome!\nTOO EASY\nTOO DIFFICULT\nREPORT\nCONTINUE",
+  "buttons": [
+    {
+      "text": "",
+      "aria": null,
+      "test": "quit-button",
+      "visible": true
+    },
+    {
+      "text": "",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "Please",
+      "aria": null,
+      "test": "Please-challenge-tap-token",
+      "visible": true
+    },
+    {
+      "text": "Madam",
+      "aria": null,
+      "test": "Madam-challenge-tap-token",
+      "visible": true
+    },
+    {
+      "text": "perfect",
+      "aria": null,
+      "test": "perfect-challenge-tap-token",
+      "visible": true
+    },
+    {
+      "text": "Madam",
+      "aria": null,
+      "test": "Madam-challenge-tap-token",
+      "visible": true
+    },
+    {
+      "text": "Please",
+      "aria": null,
+      "test": "Please-challenge-tap-token",
+      "visible": true
+    },
+    {
+      "text": "TOO EASY",
+      "aria": "Too easy",
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "TOO DIFFICULT",
+      "aria": "Too difficult",
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "REPORT",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "CONTINUE",
+      "aria": null,
+      "test": "player-next",
+      "visible": true
+    }
+  ],
+  "inputs": []
+}

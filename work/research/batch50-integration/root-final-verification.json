@@ -1,0 +1,63 @@
+{
+  "status": "passed",
+  "flows": 967,
+  "evidence": 1713,
+  "reference_points": 122,
+  "reference_columns": 22,
+  "reference_audit_links": 21,
+  "new_evidence": 3,
+  "new_flows": 3,
+  "old_flows_updated": 4,
+  "new_reference_points": 8,
+  "gen2_read_pages": [
+    1,
+    27,
+    51,
+    52,
+    53,
+    54,
+    55,
+    56,
+    57,
+    124
+  ],
+  "gen2_identity_only_pages": [
+    120
+  ],
+  "requirements_unchanged": true,
+  "new_formal_files": [
+    "docs/briefs/050-interaction-depth-and-reuse.md",
+    "docs/research/interaction-library/artifacts/gemini-notes-reminders/source-audit.json",
+    "docs/research/interaction-library/artifacts/gemini-notes-reminders/source-notes.md",
+    "docs/research/interaction-library/artifacts/quaderno-gen2-ink/source-audit.json",
+    "docs/research/interaction-library/artifacts/quaderno-gen2-ink/source-notes.md",
+    "docs/research/interaction-library/batches/notes-and-ink-coverage.csv",
+    "docs/research/interaction-library/batches/notes-and-ink-evidence.jsonl",
+    "docs/research/interaction-library/batches/quaderno-gen2-ink-inventory.csv"
+  ],
+  "modified_formal_files": [
+    "README.md",
+    "docs/briefs/README.md",
+    "docs/ideas.md",
+    "docs/research/interaction-library/README.md",
+    "docs/research/interaction-library/analysis-status.md",
+    "docs/research/interaction-library/backlog.md",
+    "docs/research/interaction-library/batches/ai-coverage.csv",
+    "docs/research/interaction-library/batches/gemini-controls-deepening-coverage.csv",
+    "docs/research/interaction-library/batches/gemini-controls-deepening-inventory.csv",
+    "docs/research/interaction-library/batches/quaderno-controls-deepening-coverage.csv",
+    "docs/research/interaction-library/case-index.md",
+    "docs/research/interaction-library/cases/M-042-gemini.md",
+    "docs/research/interaction-library/cases/M-060-quaderno.md",
+    "docs/research/interaction-library/catalog.csv",
+    "docs/research/interaction-library/coverage.csv",
+    "docs/research/interaction-library/data-dictionary.md",
+    "docs/research/interaction-library/design-reference-guide.md",
+    "docs/research/interaction-library/evidence.jsonl",
+    "docs/research/interaction-library/inventories/README.md",
+    "docs/research/interaction-library/reference-points.csv",
+    "docs/research/interaction-library/verification-log.md"
+  ],
+  "deleted_formal_files": [],
+  "scope": "Source identity and selected text claims plus references/schema; no UI/device execution or learning result verified"
+}

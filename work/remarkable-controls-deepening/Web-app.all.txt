@@ -1,0 +1,128 @@
+try{ NetworkTracking.init('/_ui/networks/tracking/NetworkTrackingServlet', 'network', 'null'); }catch(x){}try{ NetworkTracking.logPageView();}catch(x){}(function(UITheme) {
+UITheme.getUITheme = function() {
+return UserContext.uiTheme;
+};
+}(window.UITheme = window.UITheme || {}));
+Login | Forgot Your Password?
+if(!window.sfdcPage) { window.sfdcPage = new ApexDetailPage(); }UserContext.initialize({"ampm":["AM","PM"],"isAccessibleMode":false,"salesforceURL":"https://support.remarkable.com?refURL=http%3A%2F%2Fsupport.remarkable.com%2Farticles%2FKnowledge%2FWeb-app","dateFormat":"dd.MM.yyyy","dayPeriods":[],"language":"en_US","locale":"no_NO","enableLoggingInAuraAlohaFrameNavigator":true,"dateTimeFormat":"dd.MM.yyyy, HH:mm","labelLastModified":"1789190098000","today":"26.10.2026, 18:11","userPreferences":[{"index":112,"name":"HideInlineEditSplash","value":false},{"index":114,"name":"OverrideTaskSendNotification","value":false},{"index":115,"name":"DefaultTaskSendNotification","value":false},{"index":119,"name":"HideUserLayoutStdFieldInfo","value":false},{"index":116,"name":"HideRPPWarning","value":false},{"index":87,"name":"HideInlineSchedulingSplash","value":false},{"index":88,"name":"HideCRUCNotification","value":false},{"index":89,"name":"HideNewPLESplash","value":false},{"index":90,"name":"HideNewPLEWarnIE6","value":false},{"index":122,"name":"HideOverrideSharingMessage","value":false},{"index":91,"name":"HideProfileILEWarn","value":false},{"index":93,"name":"HideProfileElvVideo","value":false},{"index":97,"name":"ShowPicklistEditSplash","value":false},{"index":92,"name":"HideDataCategorySplash","value":false},{"index":128,"name":"ShowDealView","value":false},{"index":129,"name":"HideDealViewGuidedTour","value":false},{"index":132,"name":"HideKnowledgeFirstTimeSetupMsg","value":false},{"index":104,"name":"DefaultOffEntityPermsMsg","value":false},{"index":135,"name":"HideNewCsnSplash","value":false},{"index":101,"name":"HideBrowserWarning","value":false},{"index":139,"name":"HideDashboardBuilderGuidedTour","value":false},{"index":140,"name":"HideSchedulingGuidedTour","value":false},{"index":180,"name":"HideReportBuilderGuidedTour","value":false},{"index":183,"name":"HideAssociationQueueCallout","value":false},{"index":194,"name":"HideQTEBanner","value":false},{"index":270,"name":"HideIDEGuidedTour","value":false},{"index":282,"name":"HideQueryToolGuidedTour","value":false},{"index":196,"name":"HideCSIGuidedTour","value":false},{"index":271,"name":"HideFewmetGuidedTour","value":false},{"index":272,"name":"HideEditorGuidedTour","value":false},{"index":205,"name":"HideApexTestGuidedTour","value":false},{"index":206,"name":"HideSetupProfileHeaderTour","value":false},{"index":207,"name":"HideSetupProfileObjectsAndTabsTour","value":false},{"index":213,"name":"DefaultOffArticleTypeEntityPermMsg","value":false},{"index":214,"name":"HideSelfInfluenceGetStarted","value":false},{"index":215,"name":"HideOtherInfluenceGetStarted","value":false},{"index":216,"name":"HideFeedToggleGuidedTour","value":false},{"index":268,"name":"ShowChatterTab178GuidedTour","value":false},{"index":275,"name":"HidePeopleTabDeprecationMsg","value":false},{"index":276,"name":"HideGroupTabDeprecationMsg","value":false},{"index":224,"name":"HideUnifiedSearchGuidedTour","value":false},{"index":226,"name":"ShowDevContextMenu","value":false},{"index":227,"name":"HideWhatRecommenderForActivityQueues","value":false},{"index":228,"name":"HideLiveAgentFirstTimeSetupMsg","value":false},{"index":232,"name":"HideGroupAllowsGuestsMsgOnMemberWidget","value":false},{"index":233,"name":"HideGroupAllowsGuestsMsg","value":false},{"index":234,"name":"HideWhatAreGuestsMsg","value":false},{"index":235,"name":"HideNowAllowGuestsMsg","value":false},{"index":236,"name":"HideSocialAccountsAndContactsGuidedTour","value":false},{"index":237,"name":"HideAnalyticsHomeGuidedTour","value":false},{"index":238,"name":"ShowQuickCreateGuidedTour","value":false},{"index":245,"name":"HideFilePageGuidedTour","value":false},{"index":250,"name":"HideForecastingGuidedTour","value":false},{"index":251,"name":"HideBucketFieldGuide","value":false},{"index":263,"name":"HideSmartSearchCallOut","value":false},{"index":273,"name":"ShowForecastingQuotaAttainment","value":false},{"index":280,"name":"HideForecastingQuotaColumn","value":false},{"index":301,"name":"HideManyWhoGuidedTour","value":false},{"index":298,"name":"HideFileSyncBannerMsg","value":false},{"index":299,"name":"HideTestConsoleGuidedTour","value":false},{"index":302,"name":"HideManyWhoInlineEditTip","value":false},{"index":303,"name":"HideSetupV2WelcomeMessage","value":false},{"index":312,"name":"ForecastingShowQuantity","value":false},{"index":313,"name":"HideDataImporterIntroMsg","value":false},{"index":314,"name":"HideEnvironmentHubLightbox","value":false},{"index":316,"name":"HideSetupV2GuidedTour","value":false},{"index":317,"name":"HideFileSyncMobileDownloadDialog","value":false},{"index":322,"name":"HideEnhancedProfileHelpBubble","value":false},{"index":328,"name":"ForecastingHideZeroRows","value":false},{"index":330,"name":"HideEmbeddedComponentsFeatureCallout","value":false},{"index":341,"name":"HideDedupeMatchResultCallout","value":false},{"index":340,"name":"HideS1BrowserUI","value":true},{"index":346,"name":"HideS1Banner","value":false},{"index":358,"name":"HideEmailVerificationAlert","value":false},{"index":354,"name":"HideLearningPathModal","value":false},{"index":359,"name":"HideAtMentionsHelpBubble","value":false},{"index":368,"name":"LightningExperiencePreferred","value":true},{"index":373,"name":"PreviewLightning","value":false},{"index":281,"name":"HideMSPPopup","value":false}],"networkId":"0DB7Q000000bqvW","uiTheme":"Theme3","uiSkin":"Theme3","userName":"support_web@00d7q000002qcc5uam.org.force.com","userId":"0057Q000006iZrQ","isCurrentlySysAdminSU":false,"renderMode":"RETRO","startOfWeek":"2","vfDomainPattern":"getremarkable--(?:[^.]+).vf.force.com","auraDomain":"getremarkable.lightning.force.com","useNativeAlertConfirmPrompt":false,"orgPreferences":[{"index":257,"name":"TabOrganizer","value":true},{"index":113,"name":"GroupTasks","value":true}],"isDefaultNetwork":false,"timeFormat":"HH:mm"});
+Web appPrintable View
+« Go Back
+Information
+Properties
+Information
+Title
+Web app
+URL Name
+Web-app
+Summary
+Description
+j_id0__SiteTemplate__j_id17__j_id18__j_id25__j_id26__j_id387__0__j_id390__3__j_id398 = window.onload; window.onload=function() { if (j_id0__SiteTemplate__j_id17__j_id18__j_id25__j_id26__j_id387__0__j_id390__3__j_id398!= null) j_id0__SiteTemplate__j_id17__j_id18__j_id25__j_id26__j_id387__0__j_id390__3__j_id398();};
+Time Estimate
+Article Body
+The reMarkable web app lets you access and manage your reMarkable files from a supported web browser, without installing the desktop or mobile app.
+Use the web app to upload and view files, organize your library, and present content from your paper tablet with Screen Share.
+Go to app.remarkable.com and log in with your reMarkable account to get started.
+With the reMarkable web app, you can:
+Access your files: Open and view files in your reMarkable library directly from your browser.
+Upload files: Add PDF, EPUB, JPG, and PNG files to your library.
+Organize your library: Browse and manage files using My files, Shared links, Favorites, and Trash.
+Present with Screen Share: Display content from your paper tablet on a computer or phone using your browser.
+Convert files to notebooks with Connect: Import supported PDF and Microsoft Word (DOCX) files as editable notebooks.
+Changes to your library sync across your reMarkable account and connected devices.
+Access the web app
+Go to app.remarkable.com.
+Log in with your reMarkable account.
+Your recent files appear on the Home screen. Select My files to browse your library.
+Select a file to open and view it in your browser.
+Upload files
+You can upload supported files from your computer to your reMarkable library:
+Go to app.remarkable.com and log in.
+Drag and drop a file into the upload area on the Home screen, or select browse your files.
+Select the file you want to upload.
+Once the file has uploaded and synced, it will appear in your reMarkable library and on your connected paper tablet.
+The maximum file size for transfer using the web app is 100 MB.
+Import PDFs
+You can upload PDFs to your reMarkable library using the standard upload option. With a Connect subscription, you can also use Convert to Notebook to import supported PDFs as editable notebooks.
+Go to app.remarkable.com and log in.
+Drag and drop your PDF into the upload area, or select browse your files.
+Choose Convert to Notebook, when available, to import the PDF as an editable notebook.
+Once the file has synced, open it from your library or paper tablet.
+Import Word documents with Connect
+With a Connect subscription, you can import Microsoft Word (DOCX) files and convert them into editable notebooks.
+Go to app.remarkable.com and log in.
+Drag and drop a DOCX file into the upload area, or select browse your files.
+The document is converted into an editable notebook.
+Once the file has synced, open it from your library or paper tablet.
+Organize your files
+Select My files to browse and organize your reMarkable library. You can also access:
+Shared links for content you've shared using a link.
+Favorites for files and folders you've marked as favorites.
+Trash for deleted content.
+Present with Screen Share
+Screen Share lets you display content from your paper tablet in the web app.
+Go to app.remarkable.com and log in.
+Select Screen Share from the side menu.
+On your paper tablet, open the file you want to present.
+Tap the three-dot menu, then tap Share.
+Tap Present with Screen Share.
+Content from your paper tablet will appear in the web app on your computer or phone.
+Limitations
+The maximum file size for transfer using the web app is 100 MB.
+You need an internet connection and must be logged in to your reMarkable account to access your synced library.
+Convert to Notebook requires a Connect subscription.
+Some features available in the reMarkable desktop or mobile apps may not be available in the web app.
+Newly uploaded files and changes need to sync before they appear on your connected devices.
+Frequently Asked Questions
+Why can't I see a file I uploaded on my paper tablet?
+Make sure your paper tablet is connected to the internet and logged in to the same reMarkable account as the web app. It may take a short time for newly uploaded files to sync and appear.
+Why can't I see changes I made in the web app on my paper tablet?
+Check that both your paper tablet and the web app are connected to the internet and using the same reMarkable account. Changes need to sync before they appear across your devices.
+Why can't I upload a file?
+Check that the file is a supported format and doesn't exceed the 100 MB maximum file size for transfer using the web app. Also make sure you have a stable internet connection.
+Why don't I see Convert to Notebook?
+Convert to Notebook requires a Connect subscription and is only available for supported file types. Make sure you're logged in to the reMarkable account associated with your Connect subscription.
+j_id0__SiteTemplate__j_id17__j_id18__j_id25__j_id26__j_id387__0__j_id390__5__j_id398 = window.onload; window.onload=function() { if (j_id0__SiteTemplate__j_id17__j_id18__j_id25__j_id26__j_id387__0__j_id390__5__j_id398!= null) j_id0__SiteTemplate__j_id17__j_id18__j_id25__j_id26__j_id387__0__j_id390__5__j_id398();};
+Properties
+Article Created Date
+03.09.2026, 13:47
+Last Published Date
+05.09.2026, 09:03
+Override Page Navigation
+Override Page Navigation API Name
+Tile Image URL
+Validation Status
+Not Validated
+Publication Status
+Published
+DesktopContext.pageTitle = "Knowledge: Web app";
+document.title = "Knowledge: Web app";
+var isModal = false;
+Ext.onReady(function() {
+if (!isModal){
+var propertiesPanel = Ext.query('*[id=j_id0:SiteTemplate:j_id17:j_id18:j_id25:j_id26:articleRendererToolbar] *[id $= :extPanel]')[0];
+if (true) {
+var renderer = new TOCDetailRenderer({elemId:"knowledgeTOCRenderer", height:-110, contentId:'knowledgeTOCRendererContent'});
+if (propertiesPanel) {
+Ext.ComponentMgr.get(propertiesPanel.id).addListener('beforeExpand', function() {
+renderer.height = -190;
+renderer.resize();
+});
+Ext.ComponentMgr.get(propertiesPanel.id).addListener('collapse', function() {
+renderer.height = -110;
+renderer.resize();
+});
+}
+new TOCSectionSelector({menuId:'menu', contentId:'knowledgeTOCRendererContent'});
+}
+ArticleRenderer.registerArticleLinksForConsole();
+}
+else{
+Sfdc.onReady(function(){window.addEventListener("beforeunload", function(){
+if(window.parent.Sfdc.get('ChatterDeflectionModal')){
+Sfdc.Dom.hideByVisibility(window.parent.Sfdc.get('ChatterDeflectionModal'));
+}
+});
+});
+}
+});
+Powered by

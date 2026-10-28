@@ -1,0 +1,2662 @@
+{
+  "checked_on": "2026-10-27",
+  "sources": [
+    {
+      "key": "02",
+      "title": "Intro to Shortcuts",
+      "entry_id": "SCT-APDF22B0444C",
+      "upstream_id": "APDF22B0444C",
+      "url": "https://support.apple.com/guide/shortcuts/intro-to-shortcuts-apdf22b0444c/10.0/ios/27",
+      "status": 200,
+      "final_url": "https://support.apple.com/guide/shortcuts/intro-to-shortcuts-apdf22b0444c/10.0/ios/27",
+      "raw_work_path": "work/research/batch55-shortcuts-entry/02.html.gz",
+      "raw_sha256": "22ddd7dc70637c79df5b7481b08eaa79f83bac32d9268eb6a011a4fd6fc29239",
+      "raw_encoding": "gzip",
+      "text_work_path": "work/research/batch55-shortcuts-entry/02.txt",
+      "text_sha256": "0e5d90e7e845b39de6bc3fcf1f3e821daace5591729d94ade2e14430aa5602a4",
+      "text_chars": 2734,
+      "body_id": "apdf22b0444c",
+      "selected_versions": [
+        {
+          "text": "iOS 27",
+          "url": "https://support.apple.com/guide/shortcuts/apdf22b0444c/10.0/ios/27"
+        }
+      ],
+      "images": [
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/3a9da019-7298-48eb-ab81-7213f7f8b53b",
+          "alt": "Shortcut icons in All Shortcuts.",
+          "height": "499",
+          "width": "245"
+        },
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/3340df37-6db7-44d5-af22-4af92e1906b1",
+          "alt": "Shortcut editor showing actions used to send a message with photos as an animated GIF.",
+          "height": "499",
+          "width": "246"
+        },
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/4d4a949f-222a-4bba-ae0f-d9d640d45cc8",
+          "alt": "",
+          "height": "30",
+          "width": "30"
+        }
+      ],
+      "links": [
+        {
+          "name": "apdf22b0444c"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/discover-shortcuts-in-the-gallery-apdd018638ca/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/create-a-custom-shortcut-apd84c576f8c/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/run-a-shortcut-from-the-app-apd5ba077760/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/add-a-shortcut-to-the-home-screen-apd735880972/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/run-shortcuts-from-the-home-screen-widget-apd029b36d05/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/run-shortcuts-from-apple-watch-apd5888b0858/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/run-a-shortcut-from-another-app-apd163eb9f95/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/run-shortcuts-with-siri-apd07c25bb38/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/intro-to-how-shortcuts-work-apdad3cbabfc/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/navigate-the-action-list-apdc33e4f4da/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        }
+      ],
+      "checked_on": "2026-10-27",
+      "decompressed_sha256": "549fdb49616c6c6357ab9f258b6e1ebe6683515e2d2d9cf1f20253eed7675b8d",
+      "body_read_by_root": true,
+      "visual_observed": false,
+      "hands_on": false,
+      "evidence_id": "E-SCEN-01",
+      "flow_ids": [
+        "F-M043-01"
+      ],
+      "locator": "正文 apdf22b0444c"
+    },
+    {
+      "key": "03",
+      "title": "Discover shortcuts in the Gallery",
+      "entry_id": "SCT-APDD018638CA",
+      "upstream_id": "APDD018638CA",
+      "url": "https://support.apple.com/guide/shortcuts/discover-shortcuts-in-the-gallery-apdd018638ca/10.0/ios/27",
+      "status": 200,
+      "final_url": "https://support.apple.com/guide/shortcuts/discover-shortcuts-in-the-gallery-apdd018638ca/10.0/ios/27",
+      "raw_work_path": "work/research/batch55-shortcuts-entry/03.html.gz",
+      "raw_sha256": "e461f982412f2981a1bf2d5405f2dbe3762905aec761e587ede3e9f6abf02ef9",
+      "raw_encoding": "gzip",
+      "text_work_path": "work/research/batch55-shortcuts-entry/03.txt",
+      "text_sha256": "80ea8f50c2cbcf679cc3bfb5d2ecafca494031a6d3e5898e931e768eb616f353",
+      "text_chars": 1732,
+      "body_id": "apdd018638ca",
+      "selected_versions": [
+        {
+          "text": "iOS 27",
+          "url": "https://support.apple.com/guide/shortcuts/apdd018638ca/10.0/ios/27"
+        }
+      ],
+      "images": [
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/0bf74d9f-d59c-4b8f-ab64-d8876f3304cb",
+          "alt": "",
+          "height": "30",
+          "width": "30"
+        },
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/b083626b-c43c-4155-b145-d06493704613",
+          "alt": "",
+          "height": "30",
+          "width": "28"
+        },
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/b083626b-c43c-4155-b145-d06493704613",
+          "alt": "",
+          "height": "30",
+          "width": "28"
+        },
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/b083626b-c43c-4155-b145-d06493704613",
+          "alt": "",
+          "height": "30",
+          "width": "28"
+        },
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/5ed98c29-cb48-4498-a6e6-f7b91cc525f7",
+          "alt": "",
+          "height": "30",
+          "width": "28"
+        },
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/fae917c0-6c9a-41c7-ae37-b8e90249a6ec",
+          "alt": "",
+          "height": "30",
+          "width": "30"
+        },
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/5ed98c29-cb48-4498-a6e6-f7b91cc525f7",
+          "alt": "",
+          "height": "30",
+          "width": "28"
+        },
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/901a55bb-7b82-4d4b-9b45-dbfe5f354be1",
+          "alt": "",
+          "height": "30",
+          "width": "30"
+        }
+      ],
+      "links": [
+        {
+          "name": "apdd018638ca"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/run-a-shortcut-from-the-app-apd5ba077760/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        }
+      ],
+      "checked_on": "2026-10-27",
+      "decompressed_sha256": "497eac3547dfa8806045271cc530fef2d3130de1418e287bc4057db363fc6fcf",
+      "body_read_by_root": true,
+      "visual_observed": false,
+      "hands_on": false,
+      "evidence_id": "E-SCEN-02",
+      "flow_ids": [
+        "F-M043-19"
+      ],
+      "locator": "正文 apdd018638ca"
+    },
+    {
+      "key": "04",
+      "title": "Run a shortcut from the app",
+      "entry_id": "SCT-APD5BA077760",
+      "upstream_id": "APD5BA077760",
+      "url": "https://support.apple.com/guide/shortcuts/run-a-shortcut-from-the-app-apd5ba077760/10.0/ios/27",
+      "status": 200,
+      "final_url": "https://support.apple.com/guide/shortcuts/run-a-shortcut-from-the-app-apd5ba077760/10.0/ios/27",
+      "raw_work_path": "work/research/batch55-shortcuts-entry/04.html.gz",
+      "raw_sha256": "9c9c3c477b13430fae31f747f09918c709be154e2e5689de86841d7d684b3bcc",
+      "raw_encoding": "gzip",
+      "text_work_path": "work/research/batch55-shortcuts-entry/04.txt",
+      "text_sha256": "764d0c65eacc19f509718c042ae1813454d1e794efc320f50aa98c2ce66c3bc3",
+      "text_chars": 1421,
+      "body_id": "apd5ba077760",
+      "selected_versions": [
+        {
+          "text": "iOS 27",
+          "url": "https://support.apple.com/guide/shortcuts/apd5ba077760/10.0/ios/27"
+        }
+      ],
+      "images": [
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/243ddfc2-7226-467a-955d-cc3e6cf8685b",
+          "alt": "",
+          "height": "30",
+          "width": "30"
+        },
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/d96df203-4622-400a-a3f2-1c50ebfae79e",
+          "alt": "",
+          "height": "30",
+          "width": "30"
+        },
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/0bf10e9a-798d-4586-a941-92a46876fa94",
+          "alt": "",
+          "height": "30",
+          "width": "28"
+        },
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/a5c16f73-2a83-42fe-8b15-f096054c257a",
+          "alt": "",
+          "height": "30",
+          "width": "31"
+        },
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/7db27620-e00c-4090-b94b-8d1d1f399957",
+          "alt": "",
+          "height": "30",
+          "width": "25"
+        },
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/243ddfc2-7226-467a-955d-cc3e6cf8685b",
+          "alt": "",
+          "height": "30",
+          "width": "30"
+        },
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/660386b7-a53e-455a-9b50-4282d562ff4a",
+          "alt": "",
+          "height": "30",
+          "width": "30"
+        },
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/2bdc6f0f-338b-4b42-8085-893e5c6a3f25",
+          "alt": "",
+          "height": "30",
+          "width": "30"
+        }
+      ],
+      "links": [
+        {
+          "name": "apd5ba077760"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/adjust-privacy-settings-apd961a4fc65/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/share-shortcuts-apdf01f8c054/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/run-shortcuts-with-siri-apd07c25bb38/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/run-shortcuts-from-the-home-screen-widget-apd029b36d05/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/run-a-shortcut-from-another-app-apd163eb9f95/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/run-shortcuts-from-the-search-screen-apd8a8ffb4ac/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/add-a-shortcut-to-the-home-screen-apd735880972/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        }
+      ],
+      "checked_on": "2026-10-27",
+      "decompressed_sha256": "9a6b46ef2b4963e22c134ee6afb5957dd8bf9c4093f309ea00436c9bff8ba1a3",
+      "body_read_by_root": true,
+      "visual_observed": false,
+      "hands_on": false,
+      "evidence_id": "E-SCEN-03",
+      "flow_ids": [
+        "F-M043-01",
+        "F-M043-06"
+      ],
+      "locator": "正文 apd5ba077760"
+    },
+    {
+      "key": "05",
+      "title": "Run shortcuts with Siri",
+      "entry_id": "SCT-APD07C25BB38",
+      "upstream_id": "APD07C25BB38",
+      "url": "https://support.apple.com/guide/shortcuts/run-shortcuts-with-siri-apd07c25bb38/10.0/ios/27",
+      "status": 200,
+      "final_url": "https://support.apple.com/guide/shortcuts/run-shortcuts-with-siri-apd07c25bb38/10.0/ios/27",
+      "raw_work_path": "work/research/batch55-shortcuts-entry/05.html.gz",
+      "raw_sha256": "a982caf6bd5355c80ba43712fa919e8687b7f6bd8fb9258954b51f6b64edc92c",
+      "raw_encoding": "gzip",
+      "text_work_path": "work/research/batch55-shortcuts-entry/05.txt",
+      "text_sha256": "e40196301c93c7df4baf61614012cc84ff2bfb331085cc3daae689146deba609",
+      "text_chars": 1062,
+      "body_id": "apd07c25bb38",
+      "selected_versions": [
+        {
+          "text": "iOS 27",
+          "url": "https://support.apple.com/guide/shortcuts/apd07c25bb38/10.0/ios/27"
+        }
+      ],
+      "images": [],
+      "links": [
+        {
+          "name": "apd07c25bb38"
+        },
+        {
+          "href": "https://support.apple.com/105020",
+          "class": "URL"
+        },
+        {
+          "href": "https://support.apple.com/guide/iphone/iph83aad8922/ios",
+          "class": "xRef AppleTopic"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/receive-onscreen-items-apd350ce757a/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/intro-to-variables-apdb5506f698/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        }
+      ],
+      "checked_on": "2026-10-27",
+      "decompressed_sha256": "d73e6dfad083946404950196169943fdcd0ddbc4611ec376827f5f647c12e90e",
+      "body_read_by_root": true,
+      "visual_observed": false,
+      "hands_on": false,
+      "evidence_id": "E-SCEN-04",
+      "flow_ids": [
+        "F-M043-20",
+        "F-M043-05"
+      ],
+      "locator": "正文 apd07c25bb38"
+    },
+    {
+      "key": "06",
+      "title": "Run shortcuts from Control Center",
+      "entry_id": "SCT-APD06A9201D4",
+      "upstream_id": "APD06A9201D4",
+      "url": "https://support.apple.com/guide/shortcuts/run-shortcuts-from-control-center-apd06a9201d4/10.0/ios/27",
+      "status": 200,
+      "final_url": "https://support.apple.com/guide/shortcuts/run-shortcuts-from-control-center-apd06a9201d4/10.0/ios/27",
+      "raw_work_path": "work/research/batch55-shortcuts-entry/06.html.gz",
+      "raw_sha256": "e5924104fc7ef4bbc2e4291d26eff88fd0261fb60f304fd9c785da92fe675039",
+      "raw_encoding": "gzip",
+      "text_work_path": "work/research/batch55-shortcuts-entry/06.txt",
+      "text_sha256": "b05559e2629af90b679c4396b0215ca803ccf4b9915e5bc40a107e70954e9d03",
+      "text_chars": 449,
+      "body_id": "apd06a9201d4",
+      "selected_versions": [
+        {
+          "text": "iOS 27",
+          "url": "https://support.apple.com/guide/shortcuts/apd06a9201d4/10.0/ios/27"
+        }
+      ],
+      "images": [
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/1a9c12ea-c896-46a2-ae4a-c6cf969504d2",
+          "alt": "the Add button",
+          "height": "30",
+          "width": "29"
+        }
+      ],
+      "links": [
+        {
+          "name": "apd06a9201d4"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/intro-to-variables-apdb5506f698/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        }
+      ],
+      "checked_on": "2026-10-27",
+      "decompressed_sha256": "eb1a671610a8f27ff5a625ae502fbe8d6ab94d4d1ca4372fc37b96b57545c986",
+      "body_read_by_root": true,
+      "visual_observed": false,
+      "hands_on": false,
+      "evidence_id": "E-SCEN-05",
+      "flow_ids": [
+        "F-M043-21"
+      ],
+      "locator": "正文 apd06a9201d4"
+    },
+    {
+      "key": "07",
+      "title": "Run shortcuts with the Action button",
+      "entry_id": "SCT-APDFEA15680B",
+      "upstream_id": "APDFEA15680B",
+      "url": "https://support.apple.com/guide/shortcuts/run-shortcuts-with-the-action-button-apdfea15680b/10.0/ios/27",
+      "status": 200,
+      "final_url": "https://support.apple.com/guide/shortcuts/run-shortcuts-with-the-action-button-apdfea15680b/10.0/ios/27",
+      "raw_work_path": "work/research/batch55-shortcuts-entry/07.html.gz",
+      "raw_sha256": "a56c8371c9d5692e0c803f8c07918c9f18f5d507bd80bb8ab09cf63aac108dff",
+      "raw_encoding": "gzip",
+      "text_work_path": "work/research/batch55-shortcuts-entry/07.txt",
+      "text_sha256": "fdeb7ee02d97bbfebc8e60c0d6aa5ead705c4cb9ead304bf96ef5b497a672ae1",
+      "text_chars": 598,
+      "body_id": "apdfea15680b",
+      "selected_versions": [
+        {
+          "text": "iOS 27",
+          "url": "https://support.apple.com/guide/shortcuts/apdfea15680b/10.0/ios/27"
+        }
+      ],
+      "images": [
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/a375e346-1d40-480c-9bdb-2a0187d6c8bd",
+          "alt": "",
+          "height": "30",
+          "width": "30"
+        }
+      ],
+      "links": [
+        {
+          "name": "apdfea15680b"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/intro-to-variables-apdb5506f698/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        }
+      ],
+      "checked_on": "2026-10-27",
+      "decompressed_sha256": "4301cdd25844d1850b3f2e7fc7f5a2e56202703aefaa48913b48d81742c5d1f4",
+      "body_read_by_root": true,
+      "visual_observed": false,
+      "hands_on": false,
+      "evidence_id": "E-SCEN-06",
+      "flow_ids": [
+        "F-M043-21"
+      ],
+      "locator": "正文 apdfea15680b"
+    },
+    {
+      "key": "08",
+      "title": "Run shortcuts with Apple Pencil Pro",
+      "entry_id": "SCT-APDBE445A3A2",
+      "upstream_id": "APDBE445A3A2",
+      "url": "https://support.apple.com/guide/shortcuts/run-shortcuts-with-apple-pencil-pro-apdbe445a3a2/10.0/ios/27",
+      "status": 200,
+      "final_url": "https://support.apple.com/guide/shortcuts/run-shortcuts-with-apple-pencil-pro-apdbe445a3a2/10.0/ios/27",
+      "raw_work_path": "work/research/batch55-shortcuts-entry/08.html.gz",
+      "raw_sha256": "740c4339c42dfc55803345b2c87a2fe12e2ca33ff50ca556ad5f68099a39ca66",
+      "raw_encoding": "gzip",
+      "text_work_path": "work/research/batch55-shortcuts-entry/08.txt",
+      "text_sha256": "ba0874d5306a0bbeadbfad2f18d9757690978416dbcfe000d29216dbecead4ab",
+      "text_chars": 373,
+      "body_id": "apdbe445a3a2",
+      "selected_versions": [
+        {
+          "text": "iOS 27",
+          "url": "https://support.apple.com/guide/shortcuts/apdbe445a3a2/10.0/ios/27"
+        }
+      ],
+      "images": [
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/42c3a8c7-df56-4004-83d6-779aa0158c0b",
+          "alt": "",
+          "height": "30",
+          "width": "30"
+        }
+      ],
+      "links": [
+        {
+          "name": "apdbe445a3a2"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/intro-to-how-shortcuts-work-apdad3cbabfc/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        }
+      ],
+      "checked_on": "2026-10-27",
+      "decompressed_sha256": "c6408caedadef4fb9689016aefdd7a43e340c8067e4fe900210ebe721bf9ca1e",
+      "body_read_by_root": true,
+      "visual_observed": false,
+      "hands_on": false,
+      "evidence_id": "E-SCEN-07",
+      "flow_ids": [
+        "F-M043-21"
+      ],
+      "locator": "正文 apdbe445a3a2"
+    },
+    {
+      "key": "09",
+      "title": "Run shortcuts from the Home Screen widget",
+      "entry_id": "SCT-APD029B36D05",
+      "upstream_id": "APD029B36D05",
+      "url": "https://support.apple.com/guide/shortcuts/run-shortcuts-from-the-home-screen-widget-apd029b36d05/10.0/ios/27",
+      "status": 200,
+      "final_url": "https://support.apple.com/guide/shortcuts/run-shortcuts-from-the-home-screen-widget-apd029b36d05/10.0/ios/27",
+      "raw_work_path": "work/research/batch55-shortcuts-entry/09.html.gz",
+      "raw_sha256": "619efd22ce4e05de91265d6c4d119395c60a1e67caa454a0785546837cd667e9",
+      "raw_encoding": "gzip",
+      "text_work_path": "work/research/batch55-shortcuts-entry/09.txt",
+      "text_sha256": "a7a575ffff342c0e0d2c6949aaca4c66651397eb7fa997c81bf284cb4bab255b",
+      "text_chars": 2357,
+      "body_id": "apd029b36d05",
+      "selected_versions": [
+        {
+          "text": "iOS 27",
+          "url": "https://support.apple.com/guide/shortcuts/apd029b36d05/10.0/ios/27"
+        }
+      ],
+      "images": [
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/5b927777-554b-4b18-9284-e82af953122c",
+          "alt": "",
+          "height": "30",
+          "width": "67"
+        },
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/6282fbb1-8835-48ec-ad6f-f88f00a8d29f",
+          "alt": "",
+          "height": "30",
+          "width": "30"
+        }
+      ],
+      "links": [
+        {
+          "name": "apd029b36d05"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/reorder-shortcuts-apd052072d68/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/organize-shortcuts-in-folders-apd113493874/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/about-actions-in-complicated-shortcuts-apd081d9d61f/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        }
+      ],
+      "checked_on": "2026-10-27",
+      "decompressed_sha256": "da7fe87042afec96f10eb3cf934da42023bd0de4930b91439c5a23a8416c5aab",
+      "body_read_by_root": true,
+      "visual_observed": false,
+      "hands_on": false,
+      "evidence_id": "E-SCEN-08",
+      "flow_ids": [
+        "F-M043-22"
+      ],
+      "locator": "正文 apd029b36d05"
+    },
+    {
+      "key": "10",
+      "title": "Run shortcuts from the Search screen",
+      "entry_id": "SCT-APD8A8FFB4AC",
+      "upstream_id": "APD8A8FFB4AC",
+      "url": "https://support.apple.com/guide/shortcuts/run-shortcuts-from-the-search-screen-apd8a8ffb4ac/10.0/ios/27",
+      "status": 200,
+      "final_url": "https://support.apple.com/guide/shortcuts/run-shortcuts-from-the-search-screen-apd8a8ffb4ac/10.0/ios/27",
+      "raw_work_path": "work/research/batch55-shortcuts-entry/10.html.gz",
+      "raw_sha256": "c02b6847e3f9d6e0fda948c4878210e39cc7751e60143b7936770af0f708b61d",
+      "raw_encoding": "gzip",
+      "text_work_path": "work/research/batch55-shortcuts-entry/10.txt",
+      "text_sha256": "35966af90c6a17948c0452c2ad4434f0905924d7ee4f69ab953a12ba35d4c48c",
+      "text_chars": 696,
+      "body_id": "apd8a8ffb4ac",
+      "selected_versions": [
+        {
+          "text": "iOS 27",
+          "url": "https://support.apple.com/guide/shortcuts/apd8a8ffb4ac/10.0/ios/27"
+        }
+      ],
+      "images": [
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/0b32e4d9-b7d8-4616-87f3-5647f6e889a7",
+          "alt": "",
+          "height": "30",
+          "width": "28"
+        },
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/99cbf825-e3b3-4684-8839-758d093a64eb",
+          "alt": "",
+          "height": "30",
+          "width": "29"
+        }
+      ],
+      "links": [
+        {
+          "name": "apd8a8ffb4ac"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/intro-to-how-shortcuts-work-apdad3cbabfc/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        }
+      ],
+      "checked_on": "2026-10-27",
+      "decompressed_sha256": "2b23fa19d12ccc0babfbd2b6554dead2b806d73eec513c98da3be99a02f3b9a0",
+      "body_read_by_root": true,
+      "visual_observed": false,
+      "hands_on": false,
+      "evidence_id": "E-SCEN-09",
+      "flow_ids": [
+        "F-M043-21"
+      ],
+      "locator": "正文 apd8a8ffb4ac"
+    },
+    {
+      "key": "11",
+      "title": "Add a shortcut to the Home Screen",
+      "entry_id": "SCT-APD735880972",
+      "upstream_id": "APD735880972",
+      "url": "https://support.apple.com/guide/shortcuts/add-a-shortcut-to-the-home-screen-apd735880972/10.0/ios/27",
+      "status": 200,
+      "final_url": "https://support.apple.com/guide/shortcuts/add-a-shortcut-to-the-home-screen-apd735880972/10.0/ios/27",
+      "raw_work_path": "work/research/batch55-shortcuts-entry/11.html.gz",
+      "raw_sha256": "b188e2ac9d3fa494ab2da739aec79e4d2e319791925b252da1e58736bba865f2",
+      "raw_encoding": "gzip",
+      "text_work_path": "work/research/batch55-shortcuts-entry/11.txt",
+      "text_sha256": "944ac1d141ad3072cb1ea68ac79d2ba8e491f28d564a13d986f59154f9103124",
+      "text_chars": 816,
+      "body_id": "apd735880972",
+      "selected_versions": [
+        {
+          "text": "iOS 27",
+          "url": "https://support.apple.com/guide/shortcuts/apd735880972/10.0/ios/27"
+        }
+      ],
+      "images": [
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/04fc7eff-b585-49f0-9026-9b780e8894c3",
+          "alt": "",
+          "height": "30",
+          "width": "30"
+        },
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/ac66d0fb-c85a-4769-ad99-26e66d4f9967",
+          "alt": "",
+          "height": "30",
+          "width": "30"
+        },
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/c0a3dcb9-6f40-41fc-b71f-f195b1157d7b",
+          "alt": "",
+          "height": "30",
+          "width": "35"
+        },
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/9b4b5da4-f704-4170-bfbc-34708701d9f7",
+          "alt": "",
+          "height": "30",
+          "width": "30"
+        }
+      ],
+      "links": [
+        {
+          "name": "apd735880972"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/intro-to-how-shortcuts-work-apdad3cbabfc/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        }
+      ],
+      "checked_on": "2026-10-27",
+      "decompressed_sha256": "b66c51130ca7caae64246b0c4084ccb3b397f70ba412088f87acc91855b36600",
+      "body_read_by_root": true,
+      "visual_observed": false,
+      "hands_on": false,
+      "evidence_id": "E-SCEN-10",
+      "flow_ids": [
+        "F-M043-21"
+      ],
+      "locator": "正文 apd735880972"
+    },
+    {
+      "key": "12",
+      "title": "Run a shortcut from another app",
+      "entry_id": "SCT-APD163EB9F95",
+      "upstream_id": "APD163EB9F95",
+      "url": "https://support.apple.com/guide/shortcuts/run-a-shortcut-from-another-app-apd163eb9f95/10.0/ios/27",
+      "status": 200,
+      "final_url": "https://support.apple.com/guide/shortcuts/run-a-shortcut-from-another-app-apd163eb9f95/10.0/ios/27",
+      "raw_work_path": "work/research/batch55-shortcuts-entry/12.html.gz",
+      "raw_sha256": "6569207ab032aebcaff91aec1caade44782c71ba5d8046ba2883bf2773082f30",
+      "raw_encoding": "gzip",
+      "text_work_path": "work/research/batch55-shortcuts-entry/12.txt",
+      "text_sha256": "d4e97a620d52ab5dd9b796b1624444bb2dba96c81f5f8f60c492fda22b70dcbe",
+      "text_chars": 1740,
+      "body_id": "apd163eb9f95",
+      "selected_versions": [
+        {
+          "text": "iOS 27",
+          "url": "https://support.apple.com/guide/shortcuts/apd163eb9f95/10.0/ios/27"
+        }
+      ],
+      "images": [
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/ca5125b0-040b-41a8-ad45-8f1680973f6c",
+          "alt": "",
+          "height": "30",
+          "width": "25"
+        },
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/ca5125b0-040b-41a8-ad45-8f1680973f6c",
+          "alt": "",
+          "height": "30",
+          "width": "25"
+        },
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/ca5125b0-040b-41a8-ad45-8f1680973f6c",
+          "alt": "",
+          "height": "30",
+          "width": "25"
+        },
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/faad1867-8027-46db-9281-3ceb4737aabb",
+          "alt": "",
+          "height": "30",
+          "width": "30"
+        },
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/11b20f9c-5fd8-4662-ba54-2e24e2f96d20",
+          "alt": "",
+          "height": "30",
+          "width": "30"
+        },
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/c54b53d1-a3ec-43b1-9d50-5f308e4b2be5",
+          "alt": "",
+          "height": "30",
+          "width": "19"
+        },
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/ca5125b0-040b-41a8-ad45-8f1680973f6c",
+          "alt": "",
+          "height": "30",
+          "width": "25"
+        },
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/ca5125b0-040b-41a8-ad45-8f1680973f6c",
+          "alt": "",
+          "height": "30",
+          "width": "25"
+        }
+      ],
+      "links": [
+        {
+          "name": "apd163eb9f95"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/limit-the-input-for-a-shortcut-apd8195f96d6/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/limit-the-input-for-a-shortcut-apd8195f96d6/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        }
+      ],
+      "checked_on": "2026-10-27",
+      "decompressed_sha256": "4488f786a88307c5c831a6131b4d763bb683bf9dd7d10698ecd2c74d0cd8a203",
+      "body_read_by_root": true,
+      "visual_observed": false,
+      "hands_on": false,
+      "evidence_id": "E-SCEN-11",
+      "flow_ids": [
+        "F-M043-03"
+      ],
+      "locator": "正文 apd163eb9f95"
+    },
+    {
+      "key": "13",
+      "title": "Run shortcuts from Apple Watch",
+      "entry_id": "SCT-APD5888B0858",
+      "upstream_id": "APD5888B0858",
+      "url": "https://support.apple.com/guide/shortcuts/run-shortcuts-from-apple-watch-apd5888b0858/10.0/ios/27",
+      "status": 200,
+      "final_url": "https://support.apple.com/guide/shortcuts/run-shortcuts-from-apple-watch-apd5888b0858/10.0/ios/27",
+      "raw_work_path": "work/research/batch55-shortcuts-entry/13.html.gz",
+      "raw_sha256": "dccb29fe37105372bbe5b4818e1fab3b0042d2f7389a30ba97b88e2224ab9aed",
+      "raw_encoding": "gzip",
+      "text_work_path": "work/research/batch55-shortcuts-entry/13.txt",
+      "text_sha256": "2f7b823b88edcda686835eb94778421620a1c8c7c063a9f62392b3acc4805fdb",
+      "text_chars": 1190,
+      "body_id": "apd5888b0858",
+      "selected_versions": [
+        {
+          "text": "iOS 27",
+          "url": "https://support.apple.com/guide/shortcuts/apd5888b0858/10.0/ios/27"
+        }
+      ],
+      "images": [
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/e1e6d503-8f71-4ca9-8eee-f0edad9b0bfa",
+          "alt": "",
+          "height": "30",
+          "width": "30"
+        },
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/cda441f4-c677-427c-8be2-c846e53bffd3",
+          "alt": "",
+          "height": "30",
+          "width": "30"
+        },
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/f4907b2a-a86f-410b-bb60-23f5ac6df7ad",
+          "alt": "",
+          "height": "30",
+          "width": "19"
+        }
+      ],
+      "links": [
+        {
+          "name": "apd5888b0858"
+        },
+        {
+          "href": "https://support.apple.com/guide/watch/welcome/watchos",
+          "class": "URL"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/about-actions-in-complicated-shortcuts-apd081d9d61f/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        }
+      ],
+      "checked_on": "2026-10-27",
+      "decompressed_sha256": "a573887f2083d48fc3da600a13fc4c80bce831046f406432c7fdd4f60f261b8a",
+      "body_read_by_root": true,
+      "visual_observed": false,
+      "hands_on": false,
+      "evidence_id": "E-SCEN-12",
+      "flow_ids": [
+        "F-M043-23"
+      ],
+      "locator": "正文 apd5888b0858"
+    },
+    {
+      "key": "14",
+      "title": "Run shortcuts by tapping the back of your iPhone",
+      "entry_id": "SCT-APD897693606",
+      "upstream_id": "APD897693606",
+      "url": "https://support.apple.com/guide/shortcuts/run-shortcuts-tapping-iphone-apd897693606/10.0/ios/27",
+      "status": 200,
+      "final_url": "https://support.apple.com/guide/shortcuts/run-shortcuts-tapping-iphone-apd897693606/10.0/ios/27",
+      "raw_work_path": "work/research/batch55-shortcuts-entry/14.html.gz",
+      "raw_sha256": "00a82a6a806654bcfb49c2f7abd7fcbd928ec0689645d25561462a4f38851f11",
+      "raw_encoding": "gzip",
+      "text_work_path": "work/research/batch55-shortcuts-entry/14.txt",
+      "text_sha256": "2e0fb979d35f4d366314f76550b425c936966f53b501d07ea8be4f8342c5d70a",
+      "text_chars": 671,
+      "body_id": "apd897693606",
+      "selected_versions": [
+        {
+          "text": "iOS 27",
+          "url": "https://support.apple.com/guide/shortcuts/apd897693606/10.0/ios/27"
+        }
+      ],
+      "images": [
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/eafe50cf-c3b4-4d85-93ab-46db21456d85",
+          "alt": "",
+          "height": "30",
+          "width": "30"
+        }
+      ],
+      "links": [
+        {
+          "name": "apd897693606"
+        },
+        {
+          "href": "https://support.apple.com/guide/iphone/iph77bcdd132",
+          "class": "URL"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/receive-onscreen-items-apd350ce757a/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/intro-to-how-shortcuts-work-apdad3cbabfc/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        }
+      ],
+      "checked_on": "2026-10-27",
+      "decompressed_sha256": "6cecafa3bc1fa6a38c1b350bc6f88e48cd755f9c7cb15b9967dd9edc6392ae2d",
+      "body_read_by_root": true,
+      "visual_observed": false,
+      "hands_on": false,
+      "evidence_id": "E-SCEN-13",
+      "flow_ids": [
+        "F-M043-21"
+      ],
+      "locator": "正文 apd897693606"
+    },
+    {
+      "key": "15",
+      "title": "Intro to how shortcuts work",
+      "entry_id": "SCT-APDAD3CBABFC",
+      "upstream_id": "APDAD3CBABFC",
+      "url": "https://support.apple.com/guide/shortcuts/intro-to-how-shortcuts-work-apdad3cbabfc/10.0/ios/27",
+      "status": 200,
+      "final_url": "https://support.apple.com/guide/shortcuts/intro-to-how-shortcuts-work-apdad3cbabfc/10.0/ios/27",
+      "raw_work_path": "work/research/batch55-shortcuts-entry/15.html.gz",
+      "raw_sha256": "ac69a7fc2ee82fc71bc9b9f1198b897533482c8306da687c0736fc417d0dce8b",
+      "raw_encoding": "gzip",
+      "text_work_path": "work/research/batch55-shortcuts-entry/15.txt",
+      "text_sha256": "f58a932ad5d4b6238469fc82e44b67d654a2ebee1682700c026d60f55822f141",
+      "text_chars": 608,
+      "body_id": "apdad3cbabfc",
+      "selected_versions": [
+        {
+          "text": "iOS 27",
+          "url": "https://support.apple.com/guide/shortcuts/apdad3cbabfc/10.0/ios/27"
+        }
+      ],
+      "images": [
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/4fff7286-cfd7-44ef-add7-b936c23c2f5e",
+          "alt": "Shortcut editor showing the sequence of actions in a shortcut.",
+          "height": "499",
+          "width": "246"
+        }
+      ],
+      "links": [
+        {
+          "name": "apdad3cbabfc"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/intro-to-variables-apdb5506f698/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        }
+      ],
+      "checked_on": "2026-10-27",
+      "decompressed_sha256": "5e8a9d1d3f61f3e6bff57a23807605f746cfa62bfd10e0a5905cd862d8e6806e",
+      "body_read_by_root": true,
+      "visual_observed": false,
+      "hands_on": false,
+      "evidence_id": "E-SCEN-14",
+      "flow_ids": [
+        "F-M043-01"
+      ],
+      "locator": "正文 apdad3cbabfc"
+    },
+    {
+      "key": "16",
+      "title": "Control the flow of actions",
+      "entry_id": "SCT-APD25A01237E",
+      "upstream_id": "APD25A01237E",
+      "url": "https://support.apple.com/guide/shortcuts/control-the-flow-of-actions-apd25a01237e/10.0/ios/27",
+      "status": 200,
+      "final_url": "https://support.apple.com/guide/shortcuts/control-the-flow-of-actions-apd25a01237e/10.0/ios/27",
+      "raw_work_path": "work/research/batch55-shortcuts-entry/16.html.gz",
+      "raw_sha256": "59f09ef1b6a9d72f1e3bec5040a31a0f5d66eb9dfa5dc65b43ed1b10b62d1c52",
+      "raw_encoding": "gzip",
+      "text_work_path": "work/research/batch55-shortcuts-entry/16.txt",
+      "text_sha256": "a2346b12441d52569c3e39eff6bf72ecc84f2f2caea6917485a9fa912e5f975a",
+      "text_chars": 1506,
+      "body_id": "apd25a01237e",
+      "selected_versions": [
+        {
+          "text": "iOS 27",
+          "url": "https://support.apple.com/guide/shortcuts/apd25a01237e/10.0/ios/27"
+        }
+      ],
+      "images": [],
+      "links": [
+        {
+          "name": "apd25a01237e"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/use-variables-apdd02c2780c/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/use-if-actions-apd83dcd1b51/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/use-repeat-actions-apdc11deb2c1/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/use-the-choose-from-menu-action-apdd7bf369da/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        }
+      ],
+      "checked_on": "2026-10-27",
+      "decompressed_sha256": "a91a4e18d4491be489dbc781014bf41317cbc313bc27a0fee80dd9ca8d176e38",
+      "body_read_by_root": true,
+      "visual_observed": false,
+      "hands_on": false,
+      "evidence_id": "E-SCEN-15",
+      "flow_ids": [
+        "F-M043-13",
+        "F-M043-14",
+        "F-M043-15"
+      ],
+      "locator": "正文 apd25a01237e"
+    },
+    {
+      "key": "17",
+      "title": "Ideas for custom shortcuts",
+      "entry_id": "SCT-APDB272B27EC",
+      "upstream_id": "APDB272B27EC",
+      "url": "https://support.apple.com/guide/shortcuts/ideas-for-custom-shortcuts-apdb272b27ec/10.0/ios/27",
+      "status": 200,
+      "final_url": "https://support.apple.com/guide/shortcuts/ideas-for-custom-shortcuts-apdb272b27ec/10.0/ios/27",
+      "raw_work_path": "work/research/batch55-shortcuts-entry/17.html.gz",
+      "raw_sha256": "d6d4bc900ff4c720a9df49bb080801a28bf7ed0a9084f0a22cf8276cf1abb660",
+      "raw_encoding": "gzip",
+      "text_work_path": "work/research/batch55-shortcuts-entry/17.txt",
+      "text_sha256": "b4b447e2e7857a369eabc23aed5c96c952b2a4c4b52474169a23e82e19a6f5a4",
+      "text_chars": 2394,
+      "body_id": "apdb272b27ec",
+      "selected_versions": [
+        {
+          "text": "iOS 27",
+          "url": "https://support.apple.com/guide/shortcuts/apdb272b27ec/10.0/ios/27"
+        }
+      ],
+      "images": [],
+      "links": [
+        {
+          "name": "apdb272b27ec"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/navigate-the-action-list-apdc33e4f4da/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        }
+      ],
+      "checked_on": "2026-10-27",
+      "decompressed_sha256": "812271a34318dd2ae82596aec8624abbdcb3d63bfd5a90f6c359793ef464ccda",
+      "body_read_by_root": true,
+      "visual_observed": false,
+      "hands_on": false,
+      "evidence_id": "E-SCEN-16",
+      "flow_ids": [
+        "F-M043-01"
+      ],
+      "locator": "正文 apdb272b27ec"
+    },
+    {
+      "key": "18",
+      "title": "Order of actions",
+      "entry_id": "SCT-APDE53AB0903",
+      "upstream_id": "APDE53AB0903",
+      "url": "https://support.apple.com/guide/shortcuts/order-of-actions-apde53ab0903/10.0/ios/27",
+      "status": 200,
+      "final_url": "https://support.apple.com/guide/shortcuts/order-of-actions-apde53ab0903/10.0/ios/27",
+      "raw_work_path": "work/research/batch55-shortcuts-entry/18.html.gz",
+      "raw_sha256": "87a241dbc443929e23bdd8d6990ac0ec7b1fb7e1c34f48954ba72d9d02ee9b52",
+      "raw_encoding": "gzip",
+      "text_work_path": "work/research/batch55-shortcuts-entry/18.txt",
+      "text_sha256": "53ff5138d021145a0e91a279aca0958c58ea4a1bf3cde4e7f5b889de2245e0f7",
+      "text_chars": 921,
+      "body_id": "apde53ab0903",
+      "selected_versions": [
+        {
+          "text": "iOS 27",
+          "url": "https://support.apple.com/guide/shortcuts/apde53ab0903/10.0/ios/27"
+        }
+      ],
+      "images": [],
+      "links": [
+        {
+          "name": "apde53ab0903"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/get-actions-apd5c2bd430f/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/transform-actions-apd1d9413cfb/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/share-actions-apdaf74d75a5/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        }
+      ],
+      "checked_on": "2026-10-27",
+      "decompressed_sha256": "0578d5d4826c1fe6dba4484db44327dc7b187a5bd40813d3e2ac17721d3b6cf2",
+      "body_read_by_root": true,
+      "visual_observed": false,
+      "hands_on": false,
+      "evidence_id": "E-SCEN-17",
+      "flow_ids": [
+        "F-M043-01"
+      ],
+      "locator": "正文 apde53ab0903"
+    },
+    {
+      "key": "19",
+      "title": "Get actions",
+      "entry_id": "SCT-APD5C2BD430F",
+      "upstream_id": "APD5C2BD430F",
+      "url": "https://support.apple.com/guide/shortcuts/get-actions-apd5c2bd430f/10.0/ios/27",
+      "status": 200,
+      "final_url": "https://support.apple.com/guide/shortcuts/get-actions-apd5c2bd430f/10.0/ios/27",
+      "raw_work_path": "work/research/batch55-shortcuts-entry/19.html.gz",
+      "raw_sha256": "a5ec5f29527d946334640211254c8b10d88db739f29048f394ebe1fd9baa3515",
+      "raw_encoding": "gzip",
+      "text_work_path": "work/research/batch55-shortcuts-entry/19.txt",
+      "text_sha256": "1519d98ed1807c8cc1ee223ede2a14da84e850db546c47f47248ac488ce5c5f7",
+      "text_chars": 1211,
+      "body_id": "apd5c2bd430f",
+      "selected_versions": [
+        {
+          "text": "iOS 27",
+          "url": "https://support.apple.com/guide/shortcuts/apd5c2bd430f/10.0/ios/27"
+        }
+      ],
+      "images": [],
+      "links": [
+        {
+          "name": "apd5c2bd430f"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/intro-to-variables-apdb5506f698/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        }
+      ],
+      "checked_on": "2026-10-27",
+      "decompressed_sha256": "3675de9a733fd7bbe7caa532eed174cf4741b15ffea7259b9b3aab069217cff5",
+      "body_read_by_root": true,
+      "visual_observed": false,
+      "hands_on": false,
+      "evidence_id": "E-SCEN-18",
+      "flow_ids": [
+        "F-M043-01"
+      ],
+      "locator": "正文 apd5c2bd430f"
+    },
+    {
+      "key": "20",
+      "title": "Transform actions",
+      "entry_id": "SCT-APD1D9413CFB",
+      "upstream_id": "APD1D9413CFB",
+      "url": "https://support.apple.com/guide/shortcuts/transform-actions-apd1d9413cfb/10.0/ios/27",
+      "status": 200,
+      "final_url": "https://support.apple.com/guide/shortcuts/transform-actions-apd1d9413cfb/10.0/ios/27",
+      "raw_work_path": "work/research/batch55-shortcuts-entry/20.html.gz",
+      "raw_sha256": "bfbfccc779a99bc750b85337f10ed676ab5fb794516396c8090011e61350d9c9",
+      "raw_encoding": "gzip",
+      "text_work_path": "work/research/batch55-shortcuts-entry/20.txt",
+      "text_sha256": "e7a683f898e24bc411334efb383fdd99222cb464665d30fc28b67dda083f808c",
+      "text_chars": 870,
+      "body_id": "apd1d9413cfb",
+      "selected_versions": [
+        {
+          "text": "iOS 27",
+          "url": "https://support.apple.com/guide/shortcuts/apd1d9413cfb/10.0/ios/27"
+        }
+      ],
+      "images": [],
+      "links": [
+        {
+          "name": "apd1d9413cfb"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/the-content-graph-engine-apd4618db957/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        }
+      ],
+      "checked_on": "2026-10-27",
+      "decompressed_sha256": "0986f91349bb150149025a12153cc8d6b56e4318ac33cf90a3bb21eeac1057e6",
+      "body_read_by_root": true,
+      "visual_observed": false,
+      "hands_on": false,
+      "evidence_id": "E-SCEN-19",
+      "flow_ids": [
+        "F-M043-01",
+        "F-M043-08"
+      ],
+      "locator": "正文 apd1d9413cfb"
+    },
+    {
+      "key": "21",
+      "title": "Share actions",
+      "entry_id": "SCT-APDAF74D75A5",
+      "upstream_id": "APDAF74D75A5",
+      "url": "https://support.apple.com/guide/shortcuts/share-actions-apdaf74d75a5/10.0/ios/27",
+      "status": 200,
+      "final_url": "https://support.apple.com/guide/shortcuts/share-actions-apdaf74d75a5/10.0/ios/27",
+      "raw_work_path": "work/research/batch55-shortcuts-entry/21.html.gz",
+      "raw_sha256": "c771f3b161a9a048f2e96abc84437cae0276f143231bd4ec6ab47f43fe7789a7",
+      "raw_encoding": "gzip",
+      "text_work_path": "work/research/batch55-shortcuts-entry/21.txt",
+      "text_sha256": "4a9d1c345d8c2ce88ae32900f60c95fffa144d8e56e67a3ae74c55baeb5933b1",
+      "text_chars": 2325,
+      "body_id": "apdaf74d75a5",
+      "selected_versions": [
+        {
+          "text": "iOS 27",
+          "url": "https://support.apple.com/guide/shortcuts/apdaf74d75a5/10.0/ios/27"
+        }
+      ],
+      "images": [],
+      "links": [
+        {
+          "name": "apdaf74d75a5"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/ideas-for-custom-shortcuts-apdb272b27ec/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        }
+      ],
+      "checked_on": "2026-10-27",
+      "decompressed_sha256": "a7e5777a93a6e5ecbc1ae1844467f7d6b63eacfb7372565cdf936e95cbb2d2ea",
+      "body_read_by_root": true,
+      "visual_observed": false,
+      "hands_on": false,
+      "evidence_id": "E-SCEN-20",
+      "flow_ids": [
+        "F-M043-08"
+      ],
+      "locator": "正文 apdaf74d75a5"
+    },
+    {
+      "key": "22",
+      "title": "About actions in complicated shortcuts",
+      "entry_id": "SCT-APD081D9D61F",
+      "upstream_id": "APD081D9D61F",
+      "url": "https://support.apple.com/guide/shortcuts/about-actions-in-complicated-shortcuts-apd081d9d61f/10.0/ios/27",
+      "status": 200,
+      "final_url": "https://support.apple.com/guide/shortcuts/about-actions-in-complicated-shortcuts-apd081d9d61f/10.0/ios/27",
+      "raw_work_path": "work/research/batch55-shortcuts-entry/22.html.gz",
+      "raw_sha256": "e0fb230046683fabdcafadfe76ee927ced40552da36977263373d84c5a37c39b",
+      "raw_encoding": "gzip",
+      "text_work_path": "work/research/batch55-shortcuts-entry/22.txt",
+      "text_sha256": "9c2fdc412843010540d56ad6a81e0932324fa0db6c71db7d52d5e0532fff3b76",
+      "text_chars": 3462,
+      "body_id": "apd081d9d61f",
+      "selected_versions": [
+        {
+          "text": "iOS 27",
+          "url": "https://support.apple.com/guide/shortcuts/apd081d9d61f/10.0/ios/27"
+        }
+      ],
+      "images": [],
+      "links": [
+        {
+          "name": "apd081d9d61f"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/run-shortcuts-from-the-home-screen-widget-apd029b36d05/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/run-shortcuts-from-apple-watch-apd5888b0858/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/use-list-actions-apd4dcacc115/10.0/ios/27#apd19a8dbc87",
+          "\"": null,
+          "class": "xRef Subhead"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/use-the-choose-from-menu-action-apdd7bf369da/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        }
+      ],
+      "checked_on": "2026-10-27",
+      "decompressed_sha256": "644f50eb5eda1ef31ee204c9cd81be95e6db78b88d5a733ccd90dbfa8f3ceb91",
+      "body_read_by_root": true,
+      "visual_observed": false,
+      "hands_on": false,
+      "evidence_id": "E-SCEN-21",
+      "flow_ids": [
+        "F-M043-22",
+        "F-M043-23",
+        "F-M043-04",
+        "F-M043-08"
+      ],
+      "locator": "正文 apd081d9d61f"
+    },
+    {
+      "key": "23",
+      "title": "Intro to editing shortcuts",
+      "entry_id": "SCT-APD5B1537CA0",
+      "upstream_id": "APD5B1537CA0",
+      "url": "https://support.apple.com/guide/shortcuts/intro-to-editing-shortcuts-apd5b1537ca0/10.0/ios/27",
+      "status": 200,
+      "final_url": "https://support.apple.com/guide/shortcuts/intro-to-editing-shortcuts-apd5b1537ca0/10.0/ios/27",
+      "raw_work_path": "work/research/batch55-shortcuts-entry/23.html.gz",
+      "raw_sha256": "6a455ba17e3d44672ea269100ebfe769b10ccac52a2277819ef5d524d63ead23",
+      "raw_encoding": "gzip",
+      "text_work_path": "work/research/batch55-shortcuts-entry/23.txt",
+      "text_sha256": "c617ddfa2ad62db7365893120670dc7b6d6243231dbd7d1c149a077a73af72d2",
+      "text_chars": 662,
+      "body_id": "apd5b1537ca0",
+      "selected_versions": [
+        {
+          "text": "iOS 27",
+          "url": "https://support.apple.com/guide/shortcuts/apd5b1537ca0/10.0/ios/27"
+        }
+      ],
+      "images": [],
+      "links": [
+        {
+          "name": "apd5b1537ca0"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/reorder-shortcuts-apd052072d68/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/create-a-custom-shortcut-apd84c576f8c/10.0/ios/27#apde99514ded",
+          "\"": null,
+          "class": "xRef Task"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/duplicate-shortcuts-apd6b467942c/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/delete-shortcuts-apd096cd65c6/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/share-shortcuts-apdf01f8c054/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/add-import-questions-to-shared-shortcuts-apdf330fd3a0/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/sync-shortcuts-apdb3a4240b0/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/organize-shortcuts-in-folders-apd113493874/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        }
+      ],
+      "checked_on": "2026-10-27",
+      "decompressed_sha256": "a424956dea3281ce38353de30ac32ebf7e29b3607eabb5bbd8b322191d7ce3fb",
+      "body_read_by_root": true,
+      "visual_observed": false,
+      "hands_on": false,
+      "evidence_id": "E-SCEN-22",
+      "flow_ids": [
+        "F-M043-01"
+      ],
+      "locator": "正文 apd5b1537ca0"
+    },
+    {
+      "key": "24",
+      "title": "Organize shortcuts in folders",
+      "entry_id": "SCT-APD113493874",
+      "upstream_id": "APD113493874",
+      "url": "https://support.apple.com/guide/shortcuts/organize-shortcuts-in-folders-apd113493874/10.0/ios/27",
+      "status": 200,
+      "final_url": "https://support.apple.com/guide/shortcuts/organize-shortcuts-in-folders-apd113493874/10.0/ios/27",
+      "raw_work_path": "work/research/batch55-shortcuts-entry/24.html.gz",
+      "raw_sha256": "a2cdef2c21e3fb876b789569ff7044d11cbd77430330a94a09053c9e6003d9a4",
+      "raw_encoding": "gzip",
+      "text_work_path": "work/research/batch55-shortcuts-entry/24.txt",
+      "text_sha256": "fb8e8e4d4d27fad28755b8e5d6c66b54437398b6726447533b21806fd9be38b1",
+      "text_chars": 3454,
+      "body_id": "apd113493874",
+      "selected_versions": [
+        {
+          "text": "iOS 27",
+          "url": "https://support.apple.com/guide/shortcuts/apd113493874/10.0/ios/27"
+        }
+      ],
+      "images": [
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/a5216308-3f83-4436-9099-1020abbcad93",
+          "alt": "",
+          "height": "30",
+          "width": "30"
+        },
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/e010d8a3-21a9-4210-b9df-1a44266e05af",
+          "alt": "",
+          "height": "30",
+          "width": "20"
+        },
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/a5216308-3f83-4436-9099-1020abbcad93",
+          "alt": "",
+          "height": "30",
+          "width": "30"
+        },
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/e010d8a3-21a9-4210-b9df-1a44266e05af",
+          "alt": "",
+          "height": "30",
+          "width": "20"
+        },
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/5a54d891-1d9b-4318-97e4-e541144c1191",
+          "alt": "",
+          "height": "30",
+          "width": "36"
+        },
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/a5216308-3f83-4436-9099-1020abbcad93",
+          "alt": "",
+          "height": "30",
+          "width": "30"
+        },
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/e010d8a3-21a9-4210-b9df-1a44266e05af",
+          "alt": "",
+          "height": "30",
+          "width": "20"
+        },
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/a5216308-3f83-4436-9099-1020abbcad93",
+          "alt": "",
+          "height": "30",
+          "width": "30"
+        },
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/e010d8a3-21a9-4210-b9df-1a44266e05af",
+          "alt": "",
+          "height": "30",
+          "width": "20"
+        },
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/a1dba18c-ea49-43e2-b874-4448fade3e6f",
+          "alt": "",
+          "height": "30",
+          "width": "30"
+        },
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/a5216308-3f83-4436-9099-1020abbcad93",
+          "alt": "",
+          "height": "30",
+          "width": "30"
+        },
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/5a54d891-1d9b-4318-97e4-e541144c1191",
+          "alt": "",
+          "height": "30",
+          "width": "36"
+        },
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/a5216308-3f83-4436-9099-1020abbcad93",
+          "alt": "",
+          "height": "30",
+          "width": "30"
+        },
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/e010d8a3-21a9-4210-b9df-1a44266e05af",
+          "alt": "",
+          "height": "30",
+          "width": "20"
+        },
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/6399ea06-90f0-4650-a7af-ac97c16796ee",
+          "alt": "",
+          "height": "30",
+          "width": "30"
+        },
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/a5216308-3f83-4436-9099-1020abbcad93",
+          "alt": "",
+          "height": "30",
+          "width": "30"
+        },
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/e010d8a3-21a9-4210-b9df-1a44266e05af",
+          "alt": "",
+          "height": "30",
+          "width": "20"
+        },
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/f970a1f9-060e-4b4d-9bc2-b5994df8faf0",
+          "alt": "",
+          "height": "30",
+          "width": "29"
+        }
+      ],
+      "links": [
+        {
+          "name": "apd113493874"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/create-a-custom-shortcut-apd84c576f8c/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/organize-shortcuts-in-folders-apd113493874/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        }
+      ],
+      "checked_on": "2026-10-27",
+      "decompressed_sha256": "b9bf7dae3572c7572564c6a3a31410976db2c9b59b59f28469f35d4210129999",
+      "body_read_by_root": true,
+      "visual_observed": false,
+      "hands_on": false,
+      "evidence_id": "E-SCEN-23",
+      "flow_ids": [
+        "F-M043-24",
+        "F-M043-11"
+      ],
+      "locator": "正文 apd113493874"
+    },
+    {
+      "key": "25",
+      "title": "Change the layout",
+      "entry_id": "SCT-APD873475724",
+      "upstream_id": "APD873475724",
+      "url": "https://support.apple.com/guide/shortcuts/change-the-layout-apd873475724/10.0/ios/27",
+      "status": 200,
+      "final_url": "https://support.apple.com/guide/shortcuts/change-the-layout-apd873475724/10.0/ios/27",
+      "raw_work_path": "work/research/batch55-shortcuts-entry/25.html.gz",
+      "raw_sha256": "91f2819e3f1caba6428d5116680977b9f11b4cdccefeb293b00433cdc3a0e78f",
+      "raw_encoding": "gzip",
+      "text_work_path": "work/research/batch55-shortcuts-entry/25.txt",
+      "text_sha256": "0f5dc8007d9be8d666c17aecaf0ec5a2a7e9ed574e30602ef63f71ca2da3e35a",
+      "text_chars": 1372,
+      "body_id": "apd873475724",
+      "selected_versions": [
+        {
+          "text": "iOS 27",
+          "url": "https://support.apple.com/guide/shortcuts/apd873475724/10.0/ios/27"
+        }
+      ],
+      "images": [
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/7fc6baff-73d3-48cc-8092-348aa3d6fd84",
+          "alt": "",
+          "height": "30",
+          "width": "36"
+        },
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/8e21cfdc-45e1-4831-85ed-19e18efca339",
+          "alt": "",
+          "height": "30",
+          "width": "41"
+        },
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/c376294c-fa59-4653-9469-831ce1921dc1",
+          "alt": "",
+          "height": "30",
+          "width": "30"
+        },
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/7fc6baff-73d3-48cc-8092-348aa3d6fd84",
+          "alt": "",
+          "height": "30",
+          "width": "36"
+        },
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/8e21cfdc-45e1-4831-85ed-19e18efca339",
+          "alt": "",
+          "height": "30",
+          "width": "41"
+        },
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/8e21cfdc-45e1-4831-85ed-19e18efca339",
+          "alt": "",
+          "height": "30",
+          "width": "41"
+        },
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/7fc6baff-73d3-48cc-8092-348aa3d6fd84",
+          "alt": "",
+          "height": "30",
+          "width": "36"
+        },
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/c376294c-fa59-4653-9469-831ce1921dc1",
+          "alt": "",
+          "height": "30",
+          "width": "30"
+        },
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/e7d6ac63-dd90-45ff-b6ea-4560dfdeaa53",
+          "alt": "",
+          "height": "30",
+          "width": "41"
+        }
+      ],
+      "links": [
+        {
+          "name": "apd873475724"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/intro-to-how-shortcuts-work-apdad3cbabfc/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        }
+      ],
+      "checked_on": "2026-10-27",
+      "decompressed_sha256": "2a9c113028c3ff7675235b6da4c407d88ed02b93ab131bf03a6c79ff468f7786",
+      "body_read_by_root": true,
+      "visual_observed": false,
+      "hands_on": false,
+      "evidence_id": "E-SCEN-24",
+      "flow_ids": [
+        "F-M043-24"
+      ],
+      "locator": "正文 apd873475724"
+    },
+    {
+      "key": "26",
+      "title": "Reorder shortcuts",
+      "entry_id": "SCT-APD052072D68",
+      "upstream_id": "APD052072D68",
+      "url": "https://support.apple.com/guide/shortcuts/reorder-shortcuts-apd052072d68/10.0/ios/27",
+      "status": 200,
+      "final_url": "https://support.apple.com/guide/shortcuts/reorder-shortcuts-apd052072d68/10.0/ios/27",
+      "raw_work_path": "work/research/batch55-shortcuts-entry/26.html.gz",
+      "raw_sha256": "dad31effc614c99a7cd6f3a703035e2898cb165ce8a06480ee58545e8fa4ec10",
+      "raw_encoding": "gzip",
+      "text_work_path": "work/research/batch55-shortcuts-entry/26.txt",
+      "text_sha256": "c1c4a4261d73f5d430cf396fdb60adc7120506ee9f7f5c9b095ca1a052f497f4",
+      "text_chars": 876,
+      "body_id": "apd052072d68",
+      "selected_versions": [
+        {
+          "text": "iOS 27",
+          "url": "https://support.apple.com/guide/shortcuts/apd052072d68/10.0/ios/27"
+        }
+      ],
+      "images": [
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/4af4fca3-d525-421c-a369-3264be3955df",
+          "alt": "",
+          "height": "30",
+          "width": "30"
+        }
+      ],
+      "links": [
+        {
+          "name": "apd052072d68"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/sync-shortcuts-apdb3a4240b0/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        }
+      ],
+      "checked_on": "2026-10-27",
+      "decompressed_sha256": "6dbf8df9472e54c7ba8302eb1e9eef8292b7ac46924093fdde3f57e67d0b4ae0",
+      "body_read_by_root": true,
+      "visual_observed": false,
+      "hands_on": false,
+      "evidence_id": "E-SCEN-25",
+      "flow_ids": [
+        "F-M043-24",
+        "F-M043-11"
+      ],
+      "locator": "正文 apd052072d68"
+    },
+    {
+      "key": "27",
+      "title": "Rename shortcuts",
+      "entry_id": "SCT-APDD57094696",
+      "upstream_id": "APDD57094696",
+      "url": "https://support.apple.com/guide/shortcuts/rename-shortcuts-apdd57094696/10.0/ios/27",
+      "status": 200,
+      "final_url": "https://support.apple.com/guide/shortcuts/rename-shortcuts-apdd57094696/10.0/ios/27",
+      "raw_work_path": "work/research/batch55-shortcuts-entry/27.html.gz",
+      "raw_sha256": "3a1f505eb079503e65ab48c162e1b9b0d64517c6648e030855022eeada9f219c",
+      "raw_encoding": "gzip",
+      "text_work_path": "work/research/batch55-shortcuts-entry/27.txt",
+      "text_sha256": "2f7b3ee60abf638ccd3d68320350d17f2aeb45945f4609bcf3c538fe3181d80f",
+      "text_chars": 264,
+      "body_id": "apdd57094696",
+      "selected_versions": [
+        {
+          "text": "iOS 27",
+          "url": "https://support.apple.com/guide/shortcuts/apdd57094696/10.0/ios/27"
+        }
+      ],
+      "images": [
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/35bc0267-7668-4f78-a6eb-6160ffbfc6b5",
+          "alt": "",
+          "height": "30",
+          "width": "30"
+        },
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/57ff55e2-603e-45d0-a21a-7a3bc1835cbf",
+          "alt": "",
+          "height": "30",
+          "width": "30"
+        }
+      ],
+      "links": [
+        {
+          "name": "apdd57094696"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/run-shortcuts-with-siri-apd07c25bb38/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        }
+      ],
+      "checked_on": "2026-10-27",
+      "decompressed_sha256": "e2cccffe0637b7c8b5abbf80949e05149937f10da6509fa63bd09381fba64555",
+      "body_read_by_root": true,
+      "visual_observed": false,
+      "hands_on": false,
+      "evidence_id": "E-SCEN-26",
+      "flow_ids": [
+        "F-M043-20",
+        "F-M043-24"
+      ],
+      "locator": "正文 apdd57094696"
+    },
+    {
+      "key": "28",
+      "title": "Modify shortcut icons",
+      "entry_id": "SCT-APD5AD5A2128",
+      "upstream_id": "APD5AD5A2128",
+      "url": "https://support.apple.com/guide/shortcuts/modify-shortcut-icons-apd5ad5a2128/10.0/ios/27",
+      "status": 200,
+      "final_url": "https://support.apple.com/guide/shortcuts/modify-shortcut-icons-apd5ad5a2128/10.0/ios/27",
+      "raw_work_path": "work/research/batch55-shortcuts-entry/28.html.gz",
+      "raw_sha256": "09d08e522206d404cf6c656ef8390b5f404863873869235d2eac0e68ca2c4a86",
+      "raw_encoding": "gzip",
+      "text_work_path": "work/research/batch55-shortcuts-entry/28.txt",
+      "text_sha256": "4a7c99c39a775add6d00516528666ee31d433c2f97d5c42c135985f8866a908b",
+      "text_chars": 771,
+      "body_id": "apd5ad5a2128",
+      "selected_versions": [
+        {
+          "text": "iOS 27",
+          "url": "https://support.apple.com/guide/shortcuts/apd5ad5a2128/10.0/ios/27"
+        }
+      ],
+      "images": [
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/be65aa06-6e74-4290-be92-1e8014c50174",
+          "alt": "",
+          "height": "30",
+          "width": "30"
+        },
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/9288f10f-73e9-448a-ac67-15ce5ed7afad",
+          "alt": "",
+          "height": "30",
+          "width": "30"
+        }
+      ],
+      "links": [
+        {
+          "name": "apd5ad5a2128"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/add-a-shortcut-to-the-home-screen-apd735880972/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        }
+      ],
+      "checked_on": "2026-10-27",
+      "decompressed_sha256": "383a7ae733257930ef18e2aa2264a6abe68d703920fc6ed6978cc1909bb47af9",
+      "body_read_by_root": true,
+      "visual_observed": false,
+      "hands_on": false,
+      "evidence_id": "E-SCEN-27",
+      "flow_ids": [
+        "F-M043-24"
+      ],
+      "locator": "正文 apd5ad5a2128"
+    },
+    {
+      "key": "29",
+      "title": "Duplicate shortcuts",
+      "entry_id": "SCT-APD6B467942C",
+      "upstream_id": "APD6B467942C",
+      "url": "https://support.apple.com/guide/shortcuts/duplicate-shortcuts-apd6b467942c/10.0/ios/27",
+      "status": 200,
+      "final_url": "https://support.apple.com/guide/shortcuts/duplicate-shortcuts-apd6b467942c/10.0/ios/27",
+      "raw_work_path": "work/research/batch55-shortcuts-entry/29.html.gz",
+      "raw_sha256": "04871a2b77571a43db1bce2eed584ba4e285560824089964c85ef83003be15c2",
+      "raw_encoding": "gzip",
+      "text_work_path": "work/research/batch55-shortcuts-entry/29.txt",
+      "text_sha256": "ffa38d8e149dbdc0172391f6e36b407be33f1a66ba5e6eb1fb15319675a9fc3b",
+      "text_chars": 633,
+      "body_id": "apd6b467942c",
+      "selected_versions": [
+        {
+          "text": "iOS 27",
+          "url": "https://support.apple.com/guide/shortcuts/apd6b467942c/10.0/ios/27"
+        }
+      ],
+      "images": [
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/a4374aa1-a619-4eca-9e57-50ac3e4ddf47",
+          "alt": "",
+          "height": "30",
+          "width": "30"
+        }
+      ],
+      "links": [
+        {
+          "name": "apd6b467942c"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/delete-shortcuts-apd096cd65c6/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        }
+      ],
+      "checked_on": "2026-10-27",
+      "decompressed_sha256": "bd78e0e6cd94b7455a22c9834f2d998027e0c2bea217a39eb970aca626ef54c6",
+      "body_read_by_root": true,
+      "visual_observed": false,
+      "hands_on": false,
+      "evidence_id": "E-SCEN-28",
+      "flow_ids": [
+        "F-M043-24",
+        "F-M043-11"
+      ],
+      "locator": "正文 apd6b467942c"
+    },
+    {
+      "key": "30",
+      "title": "Add a shortcut to Reminders using Siri",
+      "entry_id": "SCT-APDACFDF1802",
+      "upstream_id": "APDACFDF1802",
+      "url": "https://support.apple.com/guide/shortcuts/add-a-shortcut-to-reminders-using-siri-apdacfdf1802/10.0/ios/27",
+      "status": 200,
+      "final_url": "https://support.apple.com/guide/shortcuts/add-a-shortcut-to-reminders-using-siri-apdacfdf1802/10.0/ios/27",
+      "raw_work_path": "work/research/batch55-shortcuts-entry/30.html.gz",
+      "raw_sha256": "a0ff4f3097b82162c77d420f12d760017c6dca34e7d69062c24171f014642916",
+      "raw_encoding": "gzip",
+      "text_work_path": "work/research/batch55-shortcuts-entry/30.txt",
+      "text_sha256": "573fb7fd13e37448e7b11cb67f408cd8c27210511daad62eaea449623fd619d1",
+      "text_chars": 938,
+      "body_id": "apdacfdf1802",
+      "selected_versions": [
+        {
+          "text": "iOS 27",
+          "url": "https://support.apple.com/guide/shortcuts/apdacfdf1802/10.0/ios/27"
+        }
+      ],
+      "images": [
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/db459051-3270-441b-b41c-92fdb6cf4126",
+          "alt": "",
+          "height": "30",
+          "width": "30"
+        },
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/f2d175a4-e13d-4ebb-a24d-02a723dd71a0",
+          "alt": "",
+          "height": "30",
+          "width": "30"
+        }
+      ],
+      "links": [
+        {
+          "name": "apdacfdf1802"
+        },
+        {
+          "href": "https://support.apple.com/guide/iphone/ask-siri-iph83aad8922/ios",
+          "class": "URL"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/ideas-for-custom-shortcuts-apdb272b27ec/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        }
+      ],
+      "checked_on": "2026-10-27",
+      "decompressed_sha256": "8d72a805484944c4e52bb7101a263f8ae2acde4935f73e36d89b6c88d9b7c11c",
+      "body_read_by_root": true,
+      "visual_observed": false,
+      "hands_on": false,
+      "evidence_id": "E-SCEN-29",
+      "flow_ids": [
+        "F-M043-25"
+      ],
+      "locator": "正文 apdacfdf1802"
+    },
+    {
+      "key": "31",
+      "title": "Intro to Find and Filter actions",
+      "entry_id": "SCT-APD3C845E881",
+      "upstream_id": "APD3C845E881",
+      "url": "https://support.apple.com/guide/shortcuts/intro-to-find-and-filter-actions-apd3c845e881/10.0/ios/27",
+      "status": 200,
+      "final_url": "https://support.apple.com/guide/shortcuts/intro-to-find-and-filter-actions-apd3c845e881/10.0/ios/27",
+      "raw_work_path": "work/research/batch55-shortcuts-entry/31.html.gz",
+      "raw_sha256": "c42251ba83c45e413dc40afbdb01f8fe97fa4ccf18398bf234a7f7f8940de4d0",
+      "raw_encoding": "gzip",
+      "text_work_path": "work/research/batch55-shortcuts-entry/31.txt",
+      "text_sha256": "b25a1ec2c991256b91a769cdb0e443a39480fdb969e19a6aad2fb41e1b33cac5",
+      "text_chars": 963,
+      "body_id": "apd3c845e881",
+      "selected_versions": [
+        {
+          "text": "iOS 27",
+          "url": "https://support.apple.com/guide/shortcuts/apd3c845e881/10.0/ios/27"
+        }
+      ],
+      "images": [],
+      "links": [
+        {
+          "name": "apd3c845e881"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/add-filter-parameters-apdbdab3433f/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        }
+      ],
+      "checked_on": "2026-10-27",
+      "decompressed_sha256": "6ec1e3e43dc04b44126a8509393183a0dab3f80abb865f3b1124339887c8df55",
+      "body_read_by_root": true,
+      "visual_observed": false,
+      "hands_on": false,
+      "evidence_id": "E-SCEN-30",
+      "flow_ids": [
+        "F-M043-09"
+      ],
+      "locator": "正文 apd3c845e881"
+    },
+    {
+      "key": "32",
+      "title": "Intro to using prompts",
+      "entry_id": "SCT-APD8EFA49A70",
+      "upstream_id": "APD8EFA49A70",
+      "url": "https://support.apple.com/guide/shortcuts/intro-to-using-prompts-apd8efa49a70/10.0/ios/27",
+      "status": 200,
+      "final_url": "https://support.apple.com/guide/shortcuts/intro-to-using-prompts-apd8efa49a70/10.0/ios/27",
+      "raw_work_path": "work/research/batch55-shortcuts-entry/32.html.gz",
+      "raw_sha256": "1adcf91611505361ae4d462ea205fb9dcfce086c45f6b8f0e8a79bcad7461892",
+      "raw_encoding": "gzip",
+      "text_work_path": "work/research/batch55-shortcuts-entry/32.txt",
+      "text_sha256": "09c5fec68301084fd68c282e5f7b77ef8e9e7f7e0f14379724c523a13e33ac36",
+      "text_chars": 793,
+      "body_id": "apd8efa49a70",
+      "selected_versions": [
+        {
+          "text": "iOS 27",
+          "url": "https://support.apple.com/guide/shortcuts/apd8efa49a70/10.0/ios/27"
+        }
+      ],
+      "images": [],
+      "links": [
+        {
+          "name": "apd8efa49a70"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/use-the-ask-for-input-action-apd68b5c9161/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/use-the-show-alert-action-apdb9661c761/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/use-the-show-notification-action-apd2175adcab/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/use-the-ask-each-time-variable-apd8b28e2166/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        }
+      ],
+      "checked_on": "2026-10-27",
+      "decompressed_sha256": "60fdf4ffba19cd724a988c65d9531ca0377ea8a19c2ce582ea79a59f50f26cc9",
+      "body_read_by_root": true,
+      "visual_observed": false,
+      "hands_on": false,
+      "evidence_id": "E-SCEN-31",
+      "flow_ids": [
+        "F-M043-04"
+      ],
+      "locator": "正文 apd8efa49a70"
+    },
+    {
+      "key": "33",
+      "title": "Input types",
+      "entry_id": "SCT-APD7644168E1",
+      "upstream_id": "APD7644168E1",
+      "url": "https://support.apple.com/guide/shortcuts/input-types-apd7644168e1/10.0/ios/27",
+      "status": 200,
+      "final_url": "https://support.apple.com/guide/shortcuts/input-types-apd7644168e1/10.0/ios/27",
+      "raw_work_path": "work/research/batch55-shortcuts-entry/33.html.gz",
+      "raw_sha256": "61e92cf72f076490172797c59cdbb7742580db81b3e8247874861ff932c2a1ae",
+      "raw_encoding": "gzip",
+      "text_work_path": "work/research/batch55-shortcuts-entry/33.txt",
+      "text_sha256": "b09d9aa7f7b0e4688bddc994c3d0568d0dd9a52439cddd2c74b70bcfb331bff5",
+      "text_chars": 2924,
+      "body_id": "apd7644168e1",
+      "selected_versions": [
+        {
+          "text": "iOS 27",
+          "url": "https://support.apple.com/guide/shortcuts/apd7644168e1/10.0/ios/27"
+        }
+      ],
+      "images": [],
+      "links": [
+        {
+          "name": "apd7644168e1"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/run-a-shortcut-from-another-app-apd163eb9f95/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/the-content-graph-engine-apd4618db957/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        }
+      ],
+      "checked_on": "2026-10-27",
+      "decompressed_sha256": "ca2cec541a84aaa6f804a5fb48894512b38da590ba701550f82ea32e2e838a19",
+      "body_read_by_root": true,
+      "visual_observed": false,
+      "hands_on": false,
+      "evidence_id": "E-SCEN-32",
+      "flow_ids": [
+        "F-M043-03"
+      ],
+      "locator": "正文 apd7644168e1"
+    },
+    {
+      "key": "34",
+      "title": "Intro to URL schemes",
+      "entry_id": "SCT-APD621A1AD7A",
+      "upstream_id": "APD621A1AD7A",
+      "url": "https://support.apple.com/guide/shortcuts/intro-to-url-schemes-apd621a1ad7a/10.0/ios/27",
+      "status": 200,
+      "final_url": "https://support.apple.com/guide/shortcuts/intro-to-url-schemes-apd621a1ad7a/10.0/ios/27",
+      "raw_work_path": "work/research/batch55-shortcuts-entry/34.html.gz",
+      "raw_sha256": "7adc60e4b1c5060200d76d8ee8ed19dec7dd8727cd3fef40e8fbc56df768d978",
+      "raw_encoding": "gzip",
+      "text_work_path": "work/research/batch55-shortcuts-entry/34.txt",
+      "text_sha256": "23e2c766017a73c4bde31d1ac04859d9fed4e0702e1bc31454a26c3c34363809",
+      "text_chars": 570,
+      "body_id": "apd621a1ad7a",
+      "selected_versions": [
+        {
+          "text": "iOS 27",
+          "url": "https://support.apple.com/guide/shortcuts/apd621a1ad7a/10.0/ios/27"
+        }
+      ],
+      "images": [],
+      "links": [
+        {
+          "name": "apd621a1ad7a"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/intro-to-variables-apdb5506f698/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        }
+      ],
+      "checked_on": "2026-10-27",
+      "decompressed_sha256": "617b389672600a9696a7b23940d1693e652603fa163da2d02cc2689717e32975",
+      "body_read_by_root": true,
+      "visual_observed": false,
+      "hands_on": false,
+      "evidence_id": "E-SCEN-33",
+      "flow_ids": [
+        "F-M043-17"
+      ],
+      "locator": "正文 apd621a1ad7a"
+    },
+    {
+      "key": "35",
+      "title": "Open, create, and run a shortcut",
+      "entry_id": "SCT-APDA283236D7",
+      "upstream_id": "APDA283236D7",
+      "url": "https://support.apple.com/guide/shortcuts/open-create-and-run-a-shortcut-apda283236d7/10.0/ios/27",
+      "status": 200,
+      "final_url": "https://support.apple.com/guide/shortcuts/open-create-and-run-a-shortcut-apda283236d7/10.0/ios/27",
+      "raw_work_path": "work/research/batch55-shortcuts-entry/35.html.gz",
+      "raw_sha256": "93f39ad1bc96642ff9c2bd4faf278a5d2a38c89357a9f7fcba3843df9c38d070",
+      "raw_encoding": "gzip",
+      "text_work_path": "work/research/batch55-shortcuts-entry/35.txt",
+      "text_sha256": "5c890bcb3b976e8c9fab72864058e4b9c22a6731bfacb6c1120e9fc26c1c7a66",
+      "text_chars": 875,
+      "body_id": "apda283236d7",
+      "selected_versions": [
+        {
+          "text": "iOS 27",
+          "url": "https://support.apple.com/guide/shortcuts/apda283236d7/10.0/ios/27"
+        }
+      ],
+      "images": [],
+      "links": [
+        {
+          "name": "apda283236d7"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/intro-to-variables-apdb5506f698/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        }
+      ],
+      "checked_on": "2026-10-27",
+      "decompressed_sha256": "202814894999ddce81152d9476ac113887f3a1f77ebae632cc1f1df65628c8d7",
+      "body_read_by_root": true,
+      "visual_observed": false,
+      "hands_on": false,
+      "evidence_id": "E-SCEN-34",
+      "flow_ids": [
+        "F-M043-17"
+      ],
+      "locator": "正文 apda283236d7"
+    },
+    {
+      "key": "36",
+      "title": "Open or search the Gallery from a URL",
+      "entry_id": "SCT-APD9C112CA23",
+      "upstream_id": "APD9C112CA23",
+      "url": "https://support.apple.com/guide/shortcuts/open-or-search-the-gallery-from-a-url-apd9c112ca23/10.0/ios/27",
+      "status": 200,
+      "final_url": "https://support.apple.com/guide/shortcuts/open-or-search-the-gallery-from-a-url-apd9c112ca23/10.0/ios/27",
+      "raw_work_path": "work/research/batch55-shortcuts-entry/36.html.gz",
+      "raw_sha256": "e25b83aad261bf959f9dc1659bbcf3c13c028280b52b03e2e663f84cc6c66af7",
+      "raw_encoding": "gzip",
+      "text_work_path": "work/research/batch55-shortcuts-entry/36.txt",
+      "text_sha256": "687003ff698aa387ae912d94dc4cf5f014c757fe41fa5484068345992f410f3d",
+      "text_chars": 980,
+      "body_id": "apd9c112ca23",
+      "selected_versions": [
+        {
+          "text": "iOS 27",
+          "url": "https://support.apple.com/guide/shortcuts/apd9c112ca23/10.0/ios/27"
+        }
+      ],
+      "images": [],
+      "links": [
+        {
+          "name": "apd9c112ca23"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/intro-to-variables-apdb5506f698/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        }
+      ],
+      "checked_on": "2026-10-27",
+      "decompressed_sha256": "ba6eeb5205ee4b456a927cec594784adb1531020beefabf9f6f7b3204e0df68f",
+      "body_read_by_root": true,
+      "visual_observed": false,
+      "hands_on": false,
+      "evidence_id": "E-SCEN-35",
+      "flow_ids": [
+        "F-M043-19",
+        "F-M043-17"
+      ],
+      "locator": "正文 apd9c112ca23"
+    },
+    {
+      "key": "37",
+      "title": "Intro to web APIs",
+      "entry_id": "SCT-APD2D448B2DE",
+      "upstream_id": "APD2D448B2DE",
+      "url": "https://support.apple.com/guide/shortcuts/intro-to-web-apis-apd2d448b2de/10.0/ios/27",
+      "status": 200,
+      "final_url": "https://support.apple.com/guide/shortcuts/intro-to-web-apis-apd2d448b2de/10.0/ios/27",
+      "raw_work_path": "work/research/batch55-shortcuts-entry/37.html.gz",
+      "raw_sha256": "f4d0766a3c63c236e30a4fc5ad67f19a18d2785c4fce073ebcd2e5654913c47b",
+      "raw_encoding": "gzip",
+      "text_work_path": "work/research/batch55-shortcuts-entry/37.txt",
+      "text_sha256": "8787107c7c8ed0b5430e833d92d23178377215f705a83fb064528b98d4f5d228",
+      "text_chars": 966,
+      "body_id": "apd2d448b2de",
+      "selected_versions": [
+        {
+          "text": "iOS 27",
+          "url": "https://support.apple.com/guide/shortcuts/apd2d448b2de/10.0/ios/27"
+        }
+      ],
+      "images": [],
+      "links": [
+        {
+          "name": "apd2d448b2de"
+        },
+        {
+          "href": "https://jsonplaceholder.typicode.com",
+          "class": "URL"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/intro-to-how-shortcuts-work-apdad3cbabfc/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        }
+      ],
+      "checked_on": "2026-10-27",
+      "decompressed_sha256": "1901ee3b7a12f91074badfb224de585fe9ca3f455bccca9b9ba54a08dcda12d3",
+      "body_read_by_root": true,
+      "visual_observed": false,
+      "hands_on": false,
+      "evidence_id": "E-SCEN-36",
+      "flow_ids": [
+        "F-M043-18"
+      ],
+      "locator": "正文 apd2d448b2de"
+    },
+    {
+      "key": "38",
+      "title": "What’s an API?",
+      "entry_id": "SCT-APD2E30C9D45",
+      "upstream_id": "APD2E30C9D45",
+      "url": "https://support.apple.com/guide/shortcuts/whats-an-api-apd2e30c9d45/10.0/ios/27",
+      "status": 200,
+      "final_url": "https://support.apple.com/guide/shortcuts/whats-an-api-apd2e30c9d45/10.0/ios/27",
+      "raw_work_path": "work/research/batch55-shortcuts-entry/38.html.gz",
+      "raw_sha256": "358ce6af26c4cf0ab9613ae87b97889f482708738b1107ef3c615a491a104c87",
+      "raw_encoding": "gzip",
+      "text_work_path": "work/research/batch55-shortcuts-entry/38.txt",
+      "text_sha256": "3289a38b18e8d1af390e5f697d013ebc9c4317209429b48657825a10abd60ed2",
+      "text_chars": 1190,
+      "body_id": "apd2e30c9d45",
+      "selected_versions": [
+        {
+          "text": "iOS 27",
+          "url": "https://support.apple.com/guide/shortcuts/apd2e30c9d45/10.0/ios/27"
+        }
+      ],
+      "images": [],
+      "links": [
+        {
+          "name": "apd2e30c9d45"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/intro-to-how-shortcuts-work-apdad3cbabfc/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        }
+      ],
+      "checked_on": "2026-10-27",
+      "decompressed_sha256": "32c2166cc0b72687832e0e65f71b0815e2a47fd7c147631bcf5762304c13b522",
+      "body_read_by_root": true,
+      "visual_observed": false,
+      "hands_on": false,
+      "evidence_id": "E-SCEN-37",
+      "flow_ids": [
+        "F-M043-18"
+      ],
+      "locator": "正文 apd2e30c9d45"
+    },
+    {
+      "key": "39",
+      "title": "Create contacts",
+      "entry_id": "SCT-APD9CF19A736",
+      "upstream_id": "APD9CF19A736",
+      "url": "https://support.apple.com/guide/shortcuts/create-contacts-apd9cf19a736/10.0/ios/27",
+      "status": 200,
+      "final_url": "https://support.apple.com/guide/shortcuts/create-contacts-apd9cf19a736/10.0/ios/27",
+      "raw_work_path": "work/research/batch55-shortcuts-entry/39.html.gz",
+      "raw_sha256": "0ea1ebd584904e951859faf062459fa4371c927a60caaf2db50106e7d87660e0",
+      "raw_encoding": "gzip",
+      "text_work_path": "work/research/batch55-shortcuts-entry/39.txt",
+      "text_sha256": "2074538add6076c2968da35c8c80074bf65c065c1ca7f19d3d6888595ebf2ee6",
+      "text_chars": 2294,
+      "body_id": "apd9cf19a736",
+      "selected_versions": [
+        {
+          "text": "iOS 27",
+          "url": "https://support.apple.com/guide/shortcuts/apd9cf19a736/10.0/ios/27"
+        }
+      ],
+      "images": [
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/f2d71843-7111-4ee7-82db-42edfddb2b22",
+          "alt": "",
+          "height": "30",
+          "width": "30"
+        },
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/f2d71843-7111-4ee7-82db-42edfddb2b22",
+          "alt": "",
+          "height": "30",
+          "width": "30"
+        },
+        {
+          "src": "https://ipcdn-web.apple.com/assets/v2/web/c2aee169-857b-4cfb-8498-10c76c5163b9",
+          "alt": "",
+          "height": "30",
+          "width": "28"
+        }
+      ],
+      "links": [
+        {
+          "name": "apd9cf19a736"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/intro-to-how-shortcuts-work-apdad3cbabfc/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        }
+      ],
+      "checked_on": "2026-10-27",
+      "decompressed_sha256": "5c4a0a3909699b5f478fe0296549830b00a31d3ff8e39cd5108ea4c11db3a945",
+      "body_read_by_root": true,
+      "visual_observed": false,
+      "hands_on": false,
+      "evidence_id": "E-SCEN-38",
+      "flow_ids": [
+        "F-M043-26",
+        "F-M043-18"
+      ],
+      "locator": "正文 apd9cf19a736"
+    },
+    {
+      "key": "40",
+      "title": "Format Date timestamps",
+      "entry_id": "SCT-APDFB33B0E17",
+      "upstream_id": "APDFB33B0E17",
+      "url": "https://support.apple.com/guide/shortcuts/format-date-timestamps-apdfb33b0e17/10.0/ios/27",
+      "status": 200,
+      "final_url": "https://support.apple.com/guide/shortcuts/format-date-timestamps-apdfb33b0e17/10.0/ios/27",
+      "raw_work_path": "work/research/batch55-shortcuts-entry/40.html.gz",
+      "raw_sha256": "0cc92632e3ff222db87f2ff16eccea34e0c5676e2a13058c20ff03da379b2c41",
+      "raw_encoding": "gzip",
+      "text_work_path": "work/research/batch55-shortcuts-entry/40.txt",
+      "text_sha256": "5795a7fd74a32da126165a2032e2b6736190ad1f1cab0fd92ae7ec58f84b84b5",
+      "text_chars": 1145,
+      "body_id": "apdfb33b0e17",
+      "selected_versions": [
+        {
+          "text": "iOS 27",
+          "url": "https://support.apple.com/guide/shortcuts/apdfb33b0e17/10.0/ios/27"
+        }
+      ],
+      "images": [],
+      "links": [
+        {
+          "name": "apdfb33b0e17"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/about-date-and-time-formatting-apd71b0ac246/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        }
+      ],
+      "checked_on": "2026-10-27",
+      "decompressed_sha256": "94f987054f50802be047b0adda542a8453999268f3e91e14a47b73831f328238",
+      "body_read_by_root": true,
+      "visual_observed": false,
+      "hands_on": false,
+      "evidence_id": "E-SCEN-39",
+      "flow_ids": [
+        "F-M043-27",
+        "F-M043-18"
+      ],
+      "locator": "正文 apdfb33b0e17"
+    },
+    {
+      "key": "41",
+      "title": "About date and time formatting",
+      "entry_id": "SCT-APD71B0AC246",
+      "upstream_id": "APD71B0AC246",
+      "url": "https://support.apple.com/guide/shortcuts/about-date-and-time-formatting-apd71b0ac246/10.0/ios/27",
+      "status": 200,
+      "final_url": "https://support.apple.com/guide/shortcuts/about-date-and-time-formatting-apd71b0ac246/10.0/ios/27",
+      "raw_work_path": "work/research/batch55-shortcuts-entry/41.html.gz",
+      "raw_sha256": "12c8bd26de7421959b7cb8726ce63f71dfbcbff816bbb0d7103c1c3315225e8c",
+      "raw_encoding": "gzip",
+      "text_work_path": "work/research/batch55-shortcuts-entry/41.txt",
+      "text_sha256": "b7d9d7810be2c0b7277035cc0e8e5eb78bd113a9d70484674d3125a4d25cac6d",
+      "text_chars": 334,
+      "body_id": "apd71b0ac246",
+      "selected_versions": [
+        {
+          "text": "iOS 27",
+          "url": "https://support.apple.com/guide/shortcuts/apd71b0ac246/10.0/ios/27"
+        }
+      ],
+      "images": [],
+      "links": [
+        {
+          "name": "apd71b0ac246"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/intro-to-how-shortcuts-work-apdad3cbabfc/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        }
+      ],
+      "checked_on": "2026-10-27",
+      "decompressed_sha256": "e24a25eb2614bd7180e0f0525e40b0f6c92e90c8a77453ea72236ca36e077dd1",
+      "body_read_by_root": true,
+      "visual_observed": false,
+      "hands_on": false,
+      "evidence_id": "E-SCEN-40",
+      "flow_ids": [
+        "F-M043-27"
+      ],
+      "locator": "正文 apd71b0ac246"
+    },
+    {
+      "key": "42",
+      "title": "Date and time formats",
+      "entry_id": "SCT-APDFBAD418CA",
+      "upstream_id": "APDFBAD418CA",
+      "url": "https://support.apple.com/guide/shortcuts/date-and-time-formats-apdfbad418ca/10.0/ios/27",
+      "status": 200,
+      "final_url": "https://support.apple.com/guide/shortcuts/date-and-time-formats-apdfbad418ca/10.0/ios/27",
+      "raw_work_path": "work/research/batch55-shortcuts-entry/42.html.gz",
+      "raw_sha256": "f574830ce749db143fd1e38f45810451619cc6c6a28bfea2700a4e9fa240d611",
+      "raw_encoding": "gzip",
+      "text_work_path": "work/research/batch55-shortcuts-entry/42.txt",
+      "text_sha256": "75b711b4a1ee03ab353f41429e1b7c7cd997253ca39a17899626b4faea720e26",
+      "text_chars": 1008,
+      "body_id": "apdfbad418ca",
+      "selected_versions": [
+        {
+          "text": "iOS 27",
+          "url": "https://support.apple.com/guide/shortcuts/apdfbad418ca/10.0/ios/27"
+        }
+      ],
+      "images": [],
+      "links": [
+        {
+          "name": "apdfbad418ca"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/intro-to-how-shortcuts-work-apdad3cbabfc/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        }
+      ],
+      "checked_on": "2026-10-27",
+      "decompressed_sha256": "5b119e835538da8810004b1e3d96602dc2342a36a6068e9bfda746fa2aa01469",
+      "body_read_by_root": true,
+      "visual_observed": false,
+      "hands_on": false,
+      "evidence_id": "E-SCEN-41",
+      "flow_ids": [
+        "F-M043-27"
+      ],
+      "locator": "正文 apdfbad418ca"
+    },
+    {
+      "key": "43",
+      "title": "Dates as written language",
+      "entry_id": "SCT-APDC6348BCA9",
+      "upstream_id": "APDC6348BCA9",
+      "url": "https://support.apple.com/guide/shortcuts/dates-as-written-language-apdc6348bca9/10.0/ios/27",
+      "status": 200,
+      "final_url": "https://support.apple.com/guide/shortcuts/dates-as-written-language-apdc6348bca9/10.0/ios/27",
+      "raw_work_path": "work/research/batch55-shortcuts-entry/43.html.gz",
+      "raw_sha256": "686f13d5a564ceae45d6481d07022eff3e856709af965b6a7602673baab71553",
+      "raw_encoding": "gzip",
+      "text_work_path": "work/research/batch55-shortcuts-entry/43.txt",
+      "text_sha256": "c610428f5acc4dd7ff433867bd485914e9b25e4fef9ec526e53d1452fae2820c",
+      "text_chars": 627,
+      "body_id": "apdc6348bca9",
+      "selected_versions": [
+        {
+          "text": "iOS 27",
+          "url": "https://support.apple.com/guide/shortcuts/apdc6348bca9/10.0/ios/27"
+        }
+      ],
+      "images": [],
+      "links": [
+        {
+          "name": "apdc6348bca9"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/intro-to-how-shortcuts-work-apdad3cbabfc/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        }
+      ],
+      "checked_on": "2026-10-27",
+      "decompressed_sha256": "748c2f1c171a5ee0c1dea432f8fd2cad3e805e2a0205ede2a78ff15071a81db6",
+      "body_read_by_root": true,
+      "visual_observed": false,
+      "hands_on": false,
+      "evidence_id": "E-SCEN-42",
+      "flow_ids": [
+        "F-M043-27"
+      ],
+      "locator": "正文 apdc6348bca9"
+    },
+    {
+      "key": "44",
+      "title": "Technical standards",
+      "entry_id": "SCT-APDFD459E13D",
+      "upstream_id": "APDFD459E13D",
+      "url": "https://support.apple.com/guide/shortcuts/technical-standards-apdfd459e13d/10.0/ios/27",
+      "status": 200,
+      "final_url": "https://support.apple.com/guide/shortcuts/technical-standards-apdfd459e13d/10.0/ios/27",
+      "raw_work_path": "work/research/batch55-shortcuts-entry/44.html.gz",
+      "raw_sha256": "ccce26b8aa30fb4b4a39dac5fa8d59fa6fd0b8c367f14f26548ed26cc7c8384c",
+      "raw_encoding": "gzip",
+      "text_work_path": "work/research/batch55-shortcuts-entry/44.txt",
+      "text_sha256": "370146fd31bbc1ec71c706bcd7f2d67b5c5eb3e996e09222ea03b64c878d8138",
+      "text_chars": 1104,
+      "body_id": "apdfd459e13d",
+      "selected_versions": [
+        {
+          "text": "iOS 27",
+          "url": "https://support.apple.com/guide/shortcuts/apdfd459e13d/10.0/ios/27"
+        }
+      ],
+      "images": [],
+      "links": [
+        {
+          "name": "apdfd459e13d"
+        },
+        {
+          "href": "https://tools.ietf.org/html/rfc2822",
+          "class": "URL"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/intro-to-how-shortcuts-work-apdad3cbabfc/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        }
+      ],
+      "checked_on": "2026-10-27",
+      "decompressed_sha256": "859a86373a5b9eb6af37cb5132c352d8990e08c21ece46a8778376224fd27e4a",
+      "body_read_by_root": true,
+      "visual_observed": false,
+      "hands_on": false,
+      "evidence_id": "E-SCEN-43",
+      "flow_ids": [
+        "F-M043-27"
+      ],
+      "locator": "正文 apdfd459e13d"
+    },
+    {
+      "key": "45",
+      "title": "Custom date formats",
+      "entry_id": "SCT-APD8D9B19184",
+      "upstream_id": "APD8D9B19184",
+      "url": "https://support.apple.com/guide/shortcuts/custom-date-formats-apd8d9b19184/10.0/ios/27",
+      "status": 200,
+      "final_url": "https://support.apple.com/guide/shortcuts/custom-date-formats-apd8d9b19184/10.0/ios/27",
+      "raw_work_path": "work/research/batch55-shortcuts-entry/45.html.gz",
+      "raw_sha256": "cb149e74659532919c5f91e8568e0698cb8bd2965347fac56ec17af065ec8312",
+      "raw_encoding": "gzip",
+      "text_work_path": "work/research/batch55-shortcuts-entry/45.txt",
+      "text_sha256": "f7c27237594ecf29290cdca2ab430f207aac75866f24feca6de3a55f519cc2ec",
+      "text_chars": 1299,
+      "body_id": "apd8d9b19184",
+      "selected_versions": [
+        {
+          "text": "iOS 27",
+          "url": "https://support.apple.com/guide/shortcuts/apd8d9b19184/10.0/ios/27"
+        }
+      ],
+      "images": [],
+      "links": [
+        {
+          "name": "apd8d9b19184"
+        },
+        {
+          "href": "https://unicode.org/reports/tr35/tr35-dates.html#Date_Format_Patterns",
+          "class": "URL"
+        },
+        {
+          "href": "https://www.icloud.com/shortcuts/90986961b95b4f7c8c42ade22ff182be",
+          "class": "URL"
+        },
+        {
+          "href": "https://unicode.org/reports/tr35/tr35-dates.html#Date_Format_Patterns",
+          "class": "URL"
+        },
+        {
+          "href": "https://support.apple.com/guide/shortcuts/intro-to-how-shortcuts-work-apdad3cbabfc/10.0/ios/27",
+          "class": "xRef AppleTopic"
+        }
+      ],
+      "checked_on": "2026-10-27",
+      "decompressed_sha256": "a21db62aa7fff631c0a2b710b807b4670a7bd3c9c0193847fdfd43ee3d7d0c6d",
+      "body_read_by_root": true,
+      "visual_observed": false,
+      "hands_on": false,
+      "evidence_id": "E-SCEN-44",
+      "flow_ids": [
+        "F-M043-27"
+      ],
+      "locator": "正文 apd8d9b19184"
+    }
+  ],
+  "auxiliary_sources": [
+    {
+      "key": "01",
+      "title": "Welcome",
+      "entry_id": "SCT-APDA2B83D0E0",
+      "upstream_id": "APDA2B83D0E0",
+      "url": "https://support.apple.com/guide/shortcuts/welcome/ios",
+      "status": 200,
+      "final_url": "https://support.apple.com/guide/shortcuts/welcome/ios",
+      "raw_work_path": "work/research/batch55-shortcuts-entry/01.html.gz",
+      "raw_sha256": "d929d97895d8bbcaed25ca144cbfb2b60b5e6149cea912e75f25dbb1351aaebc",
+      "raw_encoding": "gzip",
+      "text_work_path": "work/research/batch55-shortcuts-entry/01.txt",
+      "text_sha256": "306982a47b1def25c5380854f55c70d32e136c100180d8ff818886b06585dcfc",
+      "text_chars": 1174,
+      "body_id": null,
+      "selected_versions": [
+        {
+          "text": "iOS 27",
+          "url": "https://support.apple.com/guide/shortcuts/welcome/10.0/ios/27"
+        }
+      ],
+      "images": [],
+      "links": [],
+      "checked_on": "2026-10-27",
+      "decompressed_sha256": "36442c6c833bccaeb5ce3fa64e09d37acfb4822fa55c5a7531b42a1c0599e20d",
+      "extraction_scope": "passion-point-section through before toc-hidden-content; welcome has no article-section",
+      "initial_extraction_chars": 1,
+      "body_read_by_root": true,
+      "visual_observed": false,
+      "hands_on": false
+    },
+    {
+      "key": "46",
+      "title": "Copyright and trademarks",
+      "entry_id": "SCT-APD19E3E6994",
+      "upstream_id": "APD19E3E6994",
+      "url": "https://support.apple.com/guide/shortcuts/copyright-and-trademarks-apd19e3e6994/10.0/ios/27",
+      "status": 200,
+      "final_url": "https://support.apple.com/guide/shortcuts/copyright-and-trademarks-apd19e3e6994/10.0/ios/27",
+      "raw_work_path": "work/research/batch55-shortcuts-entry/46.html.gz",
+      "raw_sha256": "db2692761ee5bf9af5a659a970d8f63855d7ed2f4d93138e9ae93e7ac2fbdbed",
+      "raw_encoding": "gzip",
+      "text_work_path": "work/research/batch55-shortcuts-entry/46.txt",
+      "text_sha256": "7d5d50ff44fd4e92484abd20830d66a0713a56ba460ec645ff9ecfb3f5abc865",
+      "text_chars": 1400,
+      "body_id": "apd19e3e6994",
+      "selected_versions": [
+        {
+          "text": "iOS 27",
+          "url": "https://support.apple.com/guide/shortcuts/apd19e3e6994/10.0/ios/27"
+        }
+      ],
+      "images": [],
+      "links": [
+        {
+          "name": "apd19e3e6994"
+        },
+        {
+          "href": "https://www.apple.com",
+          "class": "URL"
+        }
+      ],
+      "checked_on": "2026-10-27",
+      "decompressed_sha256": "8ad175ec4ee3f53e917893a5a27e7fdb07d8a8a530782fea94d45315e937cdf9",
+      "body_read_by_root": true,
+      "visual_observed": false,
+      "hands_on": false
+    }
+  ],
+  "existing_comparison_sources": [
+    {
+      "evidence_id": "E-SCDF-04",
+      "raw_work_path": "work/research/batch47-shortcuts-data-flow/04-completion.html",
+      "raw_sha256": "3642cb40d212c00e244ce4f86750632d58938faee7d23cf0ca1d9c91e3804d98",
+      "extracted_work_path": "work/research/batch47-shortcuts-data-flow/04-completion.txt",
+      "extracted_sha256": "381b584ccdc9e35b77396e3ba773b1f1f81b8dbd6f718212b25f2dfcebe509cc",
+      "body_reread": true
+    }
+  ],
+  "images_viewed": false,
+  "hands_on": false,
+  "account_used": false,
+  "api_requests_executed": false,
+  "limitations": "No native UI, icon observation, device execution or actual side effects; some official wording conflicts retained."
+}

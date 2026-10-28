@@ -1,0 +1,47 @@
+                    E d d i c t P l a y e r
+
+
+Wireless Projection
+
+Allowing for 1:1 screen mirroring from your streamer to your
+smartphone over Wi-Fi. Providing access to all functions and all
+settings of the streamer.
+
+Connecting:
+
+1. Make sure your streamer is connected to Wi-Fi. Go to "Network
+  Service" menu and enable Wireless projection.
+
+2. Open Eddict Player on your smartphone and open Wireless
+  Projection menu. App will search for compatible devices and
+  show them in the list. Click on your device in the list to
+   establish connection.
+
+Note: When connecting for the first time, Streamer will show
+warning message and you need to confirm connection. This
+message might be hidden inside the notification bar, accessible
+ins wipe down menu.
+
+
+
+
+
+                          USB DAC/AMP Control menu
+
+                                    Allowing access to range of settings for USB DAC/AMP device.
+                                  Only available on Android system, not compatible with iOS.
+
+                                   Connecting:
+
+                                            1. Connect your USB DAC/AMP over cable to your smartphone.
+                               Make sure connection is established.
+
+                                            2. In Eddict Player app, go to USB Control menu and click on the
+                                      icon of connected USB DAC/AMP. Now you are able to adjust
+                                          settings of the connected device.
+
+
+
+
+
+                                        13

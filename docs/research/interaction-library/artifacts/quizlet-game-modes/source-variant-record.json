@@ -1,0 +1,16 @@
+{
+  "checked_on": "2026-10-27",
+  "url": "https://help.quizlet.com/hc/en-us/articles/27393733229965-Playing-a-game-of-Blast",
+  "helper_snapshot": {
+    "path": "work/research/batch32-quizlet/raw/blast.txt",
+    "sha256": "b7c48b3c383b36c8e9cbf3ddea5a436cab44ae5d36cb5d72fd57aeef902a7067",
+    "observation": "搜索抽取摘要为teacher-only，缺单人段落；不是HTTP原件。"
+  },
+  "root_review": {
+    "method": "web_open_official_source",
+    "locator": "正文17–71行",
+    "observation": "多人Web主持为学生和教师；另含Web/App单人入口；移动端可加入多人。",
+    "http_status": null
+  },
+  "version_relation": "两次无修订日期；不推断准确改版时间。"
+}

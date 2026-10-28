@@ -1,0 +1,19 @@
+entry_id,product_id,function_domain,evidence_ids,flow_ids,status,remaining_gap
+M-020-GC01,M-020,学习中返回概览/列表,E-ANK-01,F-M020-01,local_document_reread,未评分卡精确恢复
+M-020-GC02,M-020,当日队列结束范围,E-ANK-01,F-M020-01,local_document_reread,完成页与每日上限说明
+M-020-GC03,M-020,统计选择与Today解释,E-AND-14,F-M020-17,local_document_reread,选择持久化、布局和全部图表
+M-020-GC04,M-020,Empty与Rebuild,E-AND-11,F-M020-12,local_document_reread,确认/撤销/重建失败
+M-020-GC05,M-020,删过滤容器归还卡,E-AND-11,F-M020-12,local_document_reread,删除入口/确认/定义恢复
+M-021-GC01,M-021,Match,E-QZGM-01,F-M021-14,official_help_text,取消、恢复和成绩留存
+M-021-GC02,M-021,Blocks,E-QZGM-02,F-M021-15,official_help_text,错答、换题代价和棋盘恢复
+M-021-GC03,M-021,Blast单人/多人,E-QZGM-03,F-M021-16,official_help_text,来源资格冲突、提前结束/重连
+M-021-GC04,M-021,Classic Live加入,E-QZGM-04,F-M021-17,official_help_text,游客/无效码/重连及整局未核
+M-031-GC01,M-031,棋课基础与每日目标,E-DUCX-02,F-M031-16,observed_public_browser,其他课程/语言/正式档案
+M-031-GC02,M-031,无步数约束的移动,E-DUCX-02,F-M031-19,observed_public_browser,其他非法/受阻走法
+M-031-GC03,M-031,限步题错误与同题重试,E-DUCX-02,F-M031-19,observed_public_browser,心耗尽与评分算法
+M-031-GC04,M-031,前后步盘面,E-DUCX-02,F-M031-19,observed_public_browser,历史位置分叉改走
+M-031-GC05,M-031,Hint开关,E-DUCX-02,F-M031-19,observed_public_browser,完整提示表达及其他关卡
+M-031-GC06,M-031,首题退出/再进入,E-DUCX-02,F-M031-18,observed_public_browser,后续题中断与跨进程恢复
+M-031-GC07,M-031,车/象/组合进阶,E-DUCX-02,F-M031-19,observed_public_browser,完整课程与学习效果
+M-031-GC08,M-031,结算及目标保存403,E-DUCX-02,F-M031-19,observed_public_browser,目标未证保存、错误解释
+M-031-GC09,M-031,Later及刷新保留,E-DUCX-02,F-M031-19,observed_public_browser,清存储/换设备/正式账户

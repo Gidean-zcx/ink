@@ -1,0 +1,46 @@
+Mudita Kompakt Technical Specifications
+Modified on: Sat, 3 Oct, 2026 at 8:44 AM
+Dimensions: 70mm x 128mm x 12.6mm
+Weight: 164g
+Display: 4,3" E-ink touchscreen; 800x480 resolution
+Processor: Quad-core MediaTek MT6761V/WBA
+RAM: 3GB LPDDR3
+Storage: 32GB expandable with microSD (up to 2TB)
+Battery: 3300 mAh Li-Polymer (up to 6 days standby)
+Charging: USB-C (10W max) or wireless (2.5W max)
+Audio:
+ACC speaker
+3.5mm headphone jack
+Connectivity:
+2G, 3G, 4G LTE
+Wi-Fi 5 802.11 a/b/g/n/ac, dual-band
+Bluetooth 5.0
+NFC
+Location:
+GPS
+Glonass
+Galileo
+Camera: Rear-facing 8MP with dual-color flash (warm and cold light temperature LEDs)
+Operating System: MuditaOS K (custom de-Googled AOSP)
+SIM Card Configuration:
+SIM tray layout: 1 SIM card slot + 1 hybrid slot (second SIM or microSD card)
+SIM card format: nano-SIM (4FF)
+eSIM: supported (deactivates SIM 2 if used)
+Durability:
+IP54 dust/splash resistance
+Matte mineral glass screen with 8H hardness
+PC GF casing (polycarbonate reinforced with glass fiber)
+Reinforced metal frame
+Sensors:
+Fingerprint reader
+Accelerometer
+Barometer
+Gyroscope
+Ambient light sensor
+Proximity sensor
+Magnetometer
+Was this article helpful?
+No
+Yes
+That’s Great!
+Thank you for your feedback

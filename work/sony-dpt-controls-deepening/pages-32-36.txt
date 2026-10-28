@@ -1,0 +1,139 @@
+=== PDF PAGE 32 ===
+Help Guide
+Digital Paper System
+DPT-RP1/DPT-CP1
+Displaying the screen of the Digital Paper on the computer via Digital Paper App
+The Digital Paper screen can be displayed on the computer using the Digital Paper App.
+Note
+When the Bluetooth connection is established, the display speed becomes slower compared to USB connection or Wi-Fi
+connection.
+Related Topic
+Connecting via Wi-Fi/Connecting using a USB cable
+Connecting via Bluetooth
+4-597-942-19(1)
+Copyright 2016 Sony Corporation
+Connect the computer to the Digital Paper.
+1
+Launch the Digital Paper App on the computer.
+2
+Click [Screen capture].
+3
+32
+
+=== PDF PAGE 33 ===
+Help Guide
+Digital Paper System
+DPT-RP1/DPT-CP1
+Changing the organization of documents/folders on the Digital Paper
+Using the Digital Paper App, you can create new folders on the Digital Paper, as well as rename, move, copy, and delete
+the existing folders/documents.
+To create a folder
+Click 
+ (New folder) at the level where you want to make a new folder. Then input the name of the folder and click
+[OK].
+To change the folder name/file name
+Right-click to select a folder/document, and then click [Rename]. Proceed to enter the folder name/file name, and then
+click [OK].
+To move/copy
+Right-click to select a folder/document, and then click [Cut (within Digital Paper)]/[Copy (within Digital Paper)]. Next,
+display the folder that you want to move/copy to and right-click, then click [Paste (within Digital Paper)].
+To delete
+Select a folder/document, and then click 
+ (Delete).
+Note
+Folder names and file names that contain certain special characters may not be displayed properly.
+Folders and documents cut or copied with the Digital Paper App cannot be pasted anywhere other than in the Digital Paper App.
+If copying a folder or document to your computer, copy using the [Transfer documents to computer] function.
+Files and folders cut or copied on your computer cannot be pasted in the Digital Paper App. If copying to the Digital Paper App,
+copy using the [Transfer documents to Digital Paper] function.
+When renaming or moving the synced folder, the sync settings are deleted. If you want to sync continuously, set [Set sync folder]
+again.
+Related Topic
+Connecting via Wi-Fi/Connecting using a USB cable
+Connecting via Bluetooth
+4-597-942-19(1)
+Copyright 2016 Sony Corporation
+Connect the computer to the Digital Paper.
+1
+Launch the Digital Paper App on the computer.
+2
+Click [Folders] or [All documents] to display the folder/document you want to edit.
+To move/copy/create a new folder, click [Folders] to display the folders.
+3
+33
+
+=== PDF PAGE 34 ===
+34
+
+=== PDF PAGE 35 ===
+Help Guide
+Digital Paper System
+DPT-RP1/DPT-CP1
+Adding/editing a note template
+Using the Digital Paper App, you can add a note template to the Digital Paper. You can also delete templates and
+change their names.
+To add a note template
+Click [Add] under [Note template]. 
+Click [Select file], and then select the PDF file you want to use as a template from your computer. Enter a name for the
+template, then click [OK].
+To delete a note template
+Select a template, and click [Delete].
+To change the name of a template
+Select a template, and click [Rename]. Then enter a name for the template, and click [OK].
+Note
+PDF files that are password protected cannot be added as templates.
+Hint
+For PDF files that have multiple pages, only the first page will be registered as a template.
+Related Topic
+Selecting defaults for the note template
+4-597-942-19(1)
+Copyright 2016 Sony Corporation
+Connect the computer to the Digital Paper.
+1
+Launch the Digital Paper App on the computer.
+2
+Click [Settings] to display the [Settings] screen.
+3
+35
+
+=== PDF PAGE 36 ===
+Help Guide
+Digital Paper System
+DPT-RP1/DPT-CP1
+Opening a document
+You can organize the All Documents list by [Date Read] or [Date Modified] and select a document from there.
+To delete a document
+Tap anywhere on the screen of a document to display the tool bar, and then tap 
+(option) in the upper right of the
+document screen — [Delete This Document].
+To change the document name
+Tap anywhere on the screen of a document to display the tool bar, and then tap 
+(option) in the upper right of the
+document screen — [Change Document Name / Copy].
+Enter the desired name, and tap [OK].
+To copy a document
+Tap anywhere on the screen of a document to display the tool bar, and then tap 
+(option) in the upper right of the
+document screen — [Change Document Name / Copy].
+Enter the document name, add a check mark in [Copy document], and then tap [OK].
+The copied document is saved in the same folder.
+Hint
+The display direction rotates automatically according to the page orientation (aspect ratio).
+Related Topic
+Selecting and opening from a folder
+Opening a different document from the quick access list
+4-597-942-19(1)
+Copyright 2016 Sony Corporation
+Press the 
+
+(home) button, and tap [All Documents].
+1
+Tap [Date Read] or [Date Modified].
+ is displayed to the left of documents, and 
+ is displayed to the left of notes.
+For unread files, 
+ is displayed.
+2
+Tap the document you want to open.
+3
+36

@@ -1,0 +1,12 @@
+19.How to change the language on the JM21? Lyrics display, screenshot of the JM21
+How to change the language on the JM21?
+1. Go to the menu of Settings->System->Languages and input->Languages.
+2. Tap "Add a language" to choose the intended one.
+3. Press the "=" icon on the right side and drag it to the first line to select the language successfully.
+Note: The language of the FIIO Music app defaults to follow the system's. You can also go to the FIIO Music app->ME>Languages/语言 to choose the language independently.
+Lyrics display
+Supported. Name the LRC lyrics file the same as the music file and put them in the same folder. On the music playing page, tap the cover on the middle of the screen to switch to the lyrics display page.
+Screenshot
+Use 3 fingers to swipe down the screen. Or hold the power button and volume- button together to get a screenshot.
+Where does the screenshot store: FiiO JM21\Files\Internal storage\Pictures\Screenshots
+ꄘ

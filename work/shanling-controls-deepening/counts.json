@@ -1,0 +1,20 @@
+{
+  "new_E": 3,
+  "new_F": 0,
+  "total_case_F": 10,
+  "old_F_rows": 3,
+  "old_F_fields": 12,
+  "old_E_captures": 3,
+  "inventory_rows": 114,
+  "inventory_domains": {
+    "M1快速指南章节（合并译文定位）": 22,
+    "M1部件/接口标签": 11,
+    "M1官方FAQ条目": 5,
+    "M1评测目录/主屏与分类": 8,
+    "M1评测目录/播放设置": 15,
+    "M1评测目录/系统设置": 16,
+    "Eddict共用手册章节（非M1功能声明）": 21,
+    "Eddict本地播放设置（对连接设备无影响）": 12,
+    "Eddict下载页范围": 4
+  }
+}

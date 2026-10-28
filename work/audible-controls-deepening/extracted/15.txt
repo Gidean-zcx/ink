@@ -1,0 +1,139 @@
+Browse chapters and episodes (https://help.audible.com/s/article/browse-chapters-and-episodes)
+citeturn764view3 [wordlim: 200] Crawled: today; Content type: text/html; Source: open({"ref_id":"https://help.audible.com/s/article/browse-chapters-and-episodes","lineno":null}); Total lines: 137
+L0: Loading
+L1: 
+L2: Sorry to interrupt
+L3: 
+L4: Uncaught TypeError: Cannot read properties of null (reading 'style')
+L5: 
+L6: 【0†Refresh】
+L7: 
+L8: Skip to Main Content
+L9: 
+L10: Related topics
+L11: 
+L12: Account & billing Alexa Android Ask A Question+5
+L13: ## Browse chapters and episodes
+L14: 
+L15:   * Sep 3, 2026
+L16:   * Knowledge
+L17: 
+L18: Title
+L19: 
+L20: Browse chapters and episodes
+L21: 
+L22: URL Name
+L23: 
+L24: browse-chapters-and-episodes
+L25: 
+L26: Answer
+L27: 
+L28: No matter how you're listening, you can navigate between audiobook chapters or podcast episodes.
+L29: 
+L30: In this article:
+L31:   * 【1†How can I browse chapters or podcast episodes in the player?】
+L32:   * 【2†How can I browse audiobook chapters or podcast episodes on my Fire TV?】
+L33:   * 【3†How can I browse audiobook chapters or podcast episodes on my Fire Tablet?】
+L34:   * 【4†Why don't the chapter numbers match my audiobook?】
+L35: ## How can I browse chapters or podcast episodes in the player?
+L36: 
+L37: You can browse chapters or podcast episodes right from your player screen in the app or on your Cloud Player, or you can use Alexa voice commands to control Audible with any Alexa device.
+L38: 
+L39: In the app player
+L40: 
+L41:   1. In the player, select the Chapters menu icon.
+L42:   2. Select the chapter or episode you want to hear.
+L43: 
+L44: On Cloud Player
+L45: 
+L46:   1. In the player, select the Chapters icon.
+L47:   2. Select the chapter you want to hear.
+L48: ## How can I browse audiobook chapters or podcast episodes on my Fire TV?
+L49: 
+L50: You can browse audiobook chapters or podcast episodes with the buttons on your paired Fire TV remote.
+L51: 
+L52: Browse with your remote
+L53: 
+L54:   1. Next to the title you want to hear, select Listen Now.
+L55:   2. When the player is open, select the Menu button on your remote.
+L56:   3. Select Chapters.
+L57:   4. Use the up and down buttons on the directional pad of your paired remote to navigate to a specific chapter.
+L58: 
+L59: Browse with Alexa voice commands
+L60:   1. Press the microphone button on your remote.
+L61:   2. Try one of the following voice commands:
+L62:      * "Alexa, next [chapter or episode]."
+L63:      * "Alexa, previous [chapter or episode]."
+L64:      * "Alexa, go to [chapter or episode] number [7]."
+L65:      * "Alexa, go to last [chapter or episode]."
+L66: ## How can I browse audiobook chapters or podcast episodes on my Fire Tablet?
+L67: 
+L68: You can browse chapters or podcast episodes right from your player screen in the app.
+L69: 
+L70: In the app player
+L71: 
+L72:   1. In the player, select the Chapters menu icon.
+L73:   2. Select the chapter or episode you want to hear.
+L74: ## Why don't the chapter numbers match my audiobook?
+L75: 
+L76: Chapters in audiobooks may have numbers or names depending on how the audiobook was produced. In some cases, the chapter numbers in the Audible player may not perfectly align with the chapters in the physical or eBook version. Here's why:
+L77:   * Multi-part audiobooks: If the book is more than 8–10 hours or has more than 100 chapters, the audiobook will be split into several parts for a faster and easier download process.
+L78:   * Long chapters split into segments: Audiobooks with chapters that are longer than 2 hours will be broken down into smaller chapters to enhance the listening experience.
+L79:   * No chapter breakdown: Audiobooks with no chapter breakdown will be broken down into 30-minute segments to create easier navigation.
+L80:   * Short chapters grouped together: Audiobooks with very short chapters may be grouped together.
+L81: Note: If the chapter numbering in your audiobook seems incorrect and none of the above explanations apply, please contact the 【5†Audible Customer Service team†www.audible.com】 for assistance.
+L82: 
+L83: Did this answer your question?
+L84: 
+L85: 【6†Image: Thumbs Up】Like
+L86: 
+L87: 
+L88: 
+L89: 【7†Image: Thumbs Down】Dislike
+L90: 
+L91:  Back to top
+L92: 
+L93: 【8†Image: Share link】 Share link
+L94: 
+L95: 【9†Image: Download PDF】 Download PDF
+L96: ## Need more assistance?
+L97: 
+L98: 【10†Contact us†www.audible.com】
+L99: 
+L100: 
+L101: 
+L102: How satisfied were you with our Help Center today?
+L103: 
+L104: 
+L105: 
+L106: Worst
+L107: 
+L108: 1
+L109: 
+L110: 2
+L111: 
+L112: 3
+L113: 
+L114: 4
+L115: 
+L116: 5
+L117: 
+L118: 6
+L119: 
+L120: 7
+L121: 
+L122: Best
+L123: 
+L124: 
+L125: 
+L126: Region
+L127: 
+L128: United States
+L129: 
+L130: Language
+L131: 
+L132: English
+L133: 
+L134: Loading
+L135: 
+L136: Browse chapters and episodes 【11†Adobe ID Syncing iFrame†audible.demdex.net】

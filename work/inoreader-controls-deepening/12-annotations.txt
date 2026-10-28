@@ -1,0 +1,197 @@
+Annotations - highlight and take notes on the articles you read | Inoreader
+inoreader-logo
+Start 15-Day Trial
+Home
+Features
+Enterprise
+Pricing
+Blog
+Contact
+RSS tools
+Free tools
+Feed validatorValidate a feed for errors
+Podcast validatorGet a podcast listed everywhere
+Feed analyticsSee how a feed performs
+Feed finderFind the feeds of any website
+OPML checkerCheck and repair an OPML export
+All RSS tools
+Feed validator
+Inoreader fetches the feed the way a reader does, reports what is wrong and tells you exactly what to change.
+Open the validator
+Podcast validator
+Inoreader fetches a podcast feed, its newest episode files and the artwork, and checks everything Apple Podcasts, Spotify and the apps require.
+Open the podcast validator
+Feed analytics
+See how many Inoreader readers follow a feed, how it ranks in its topic and how reliably it delivers new posts.
+Open feed analytics
+Feed finder
+Paste a website's address and Inoreader lists the feeds it publishes, for you to copy or follow in one click.
+Open the finder
+OPML checker
+Upload an OPML export and see which of its feeds still work, which fail, which moved and which are listed twice.
+Open the checker
+All RSS tools →
+Sign in
+Create account
+Features
+/
+Annotations
+Highlight and annotate what you read
+Add a note to an article to remember why it mattered, and highlight the sentences you will want to quote. Everything you mark is collected in one place, ready when you need it.
+Create a free account
+FreeNotes on articles are free on every plan.
+ProPro adds highlights, with your own notes on them and sync to Readwise.
+TeamTeam plans let you share notes and highlights with your team.
+Turn reading into notes
+Annotations let you keep your thoughts next to the text that prompted them. When you come back to an article weeks later, your notes and highlights tell you at once why it mattered.
+Notes
+Add a note to any article to say why you saved it, what to check or who should see it. Notes are indexed with the article, so you can find it again by something you wrote.
+Highlights
+With Pro, select a sentence or a paragraph and click Highlight text. Each highlight can carry its own note, so a quote and your comment stay together.
+The Annotations section
+Every annotated article is collected under Saved, Annotations, with its notes and highlights at the top.
+Readwise and Team sharing
+Connect Readwise and your highlights arrive there as you make them. On Team plans, you can share a note or a highlight with your colleagues.
+Start annotating
+To add a note, open an article and click Add note at the bottom of the article view.
+With Pro, select a passage while you read and click Highlight text. Click Edit under the highlight to add a note to it.
+Open Saved, then Annotations, to see every article you annotated.
+To send your highlights to Readwise, connect it under Preferences > Share, save, login.
+Use cases
+Research for a paper or a talk
+Highlight the findings and figures you will cite, add a note with the context, and come back to the Annotations section when you start writing.
+Remembering why you saved something
+Add a short note to an article you want to come back to, and you will know what it was for when you find it again weeks later.
+Sharing what matters with a team
+On a Team plan, share a highlight with a note on it, and your colleagues see exactly which part of the article you mean and why.
+Highlights that stay in place
+Your highlights stay where you put them even if the publisher later edits the article, because Inoreader keeps your copy of the text you marked. If the publisher edits the article later, a bar above it tells you so, and the edit history shows what changed.
+Frequently asked questions
+What is the difference between a note and a highlight?
+A note belongs to the whole article, and you can add one to any article on every plan. A highlight marks a passage inside the article, and with Pro you can also write a note on that passage.
+How do I highlight a passage?
+Select the text while you read and click Highlight text. The passage stays marked in the article and also appears in the Annotations panel at the top, where you can add a note to it.
+Where do I find my annotations later?
+Open Saved and then Annotations. Every article you highlighted or wrote a note on is listed there, and each one opens with its annotations at the top.
+Can I search my notes?
+Yes. Your notes are indexed together with the article, so a search for a word you wrote in a note finds the article it belongs to.
+What happens to a highlight if the publisher updates the article?
+Your highlight stays where you put it. When you highlight an article, Inoreader keeps your own copy of the text you highlighted, so a later change on the publisher's side does not move or remove it.
+Can I send my highlights to other tools?
+Yes. Connect Readwise under Preferences > Share, save, login, and your highlights and their notes are sent there as you make them. Your annotations also work in the iOS and Android apps.
+Related features
+Save to other services
+Save any article to your notes app, bookmarks or cloud drive
+Search
+Find any article in your feeds and beyond
+Teams
+Share one set of sources with your whole team
+Article edit history
+See what changed after an article was published
+Help center
+What are annotations?
+How do I create a highlight?
+How do I add a note to an article?
+Where can I find my annotations?
+What’s the difference between highlights, notes, and comments?
+Build your own newsfeed
+Ready to give it a go?
+Start a 14-day trial, no credit card required.
+Create account
+With Inoreader, content comes to you the minute it's available.
+Follow websites, social media feeds, podcasts, blogs, and newsletters. Enjoy what's important to you, all in one place.
+With Inoreader, content comes to you the minute it's available.
+Follow websites, social media feeds, podcasts, blogs, and newsletters. Enjoy what's important to you, all in one place.
+Create account
+Product
+Features
+Pricing
+Enterprise
+Mobile apps
+Browser extension
+Inoreader alternatives
+RSS tools
+All tools
+Feed finder
+Feed analytics
+Top RSS feeds
+Feed validator
+Podcast validator
+Feed viewer
+OPML checker
+Company
+About us
+Blog
+Help center
+Developer portal
+Contact us
+Brand portal
+Service status
+Legal
+Terms of Service
+Privacy Policy
+Security commitment
+© 2026 Innologica Ltd
+We use cookies to enhance your Inoreader experience. By using our website, you agree to our use of cookies.
+Access cookie settings
+OK, I agree
+×
+Sign in
+Use a different account
+Sign in with a passkey
+Other sign-in methods
+Change user
+Passkey sign-in was canceled or couldn't be completed.
+Don't have a passkey yet? Sign in with your password first, then add one in your account settings.
+Sign in
+Email address:
+Please enter Email
+Password
+Please enter password
+Remember me
+Forgot password?
+Sign in
+Sign in with a passkey
+Passkey sign-in was canceled or couldn't be completed
+Don't have a passkey yet? Sign in with your password first, then add one in your account settings.
+Or simply sign in with:
+New to Inoreader? Create an account
+Create account
+With Inoreader, content comes to you.
+Sign up to browse more than 5 000 000 sources and build the ultimate newsfeed!
+Create account
+Don't have an account?
+Create one now
+×
+Create account
+Email address
+Please enter email
+Password
+Please enter password
+Create account
+Or simply sign in with:
+Already have an account? Sign in.
+Sign in
+Already have an account?
+Enter your profile and access your feeds now.
+Sign in
+Already have an account?
+Sign in
+×
+Request Quote
+Name
+Please enter name
+Email
+Please provide valid email
+Company                    Optional
+Industry                    Optional
+Select from listMedia and PublishingPharmaceuticalsCybersecurityTelecommunicationsIT and SoftwareFinance and BankingTransport and LogisticsMarketing and PRPublic AuthoritiesInternational OrganizationsResearchEducation ServicesOther
+Position                    Optional
+Message
+Please enter message
+I understand and accept the Inoreader Privacy
+Policy
+You must accept the privacy policy
+Send message
+Thank you for your query. Our team will review the details and get back to you shortly.
+Go to homepage

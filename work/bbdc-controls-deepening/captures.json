@@ -1,0 +1,62 @@
+[
+  {
+    "evidence_id": "E-BBDC-01",
+    "url": "https://www.bbdc.cn/index",
+    "final_url": "https://www.bbdc.cn/index",
+    "status": 200,
+    "bytes": 35980,
+    "raw_work_path": "work/bbdc-controls-deepening/index.html",
+    "raw_sha256": "4ee092ce7e67d895ecb56f3705f14d88e74d9e6a402d15721ca9823ff4443fa8",
+    "links": [
+      "http://itunes.apple.com/cn/app/id698570469?pt=305575&mt=8&ct=bb_pc_product",
+      "https://langeasy.com.cn/open.action?go=6",
+      "http://learnywhere.com.cn",
+      "http://itunes.apple.com/cn/app/id698570469?pt=305575&mt=8&ct=bb_pc_product",
+      "https://langeasy.com.cn/open.action?go=6",
+      "javascript:;",
+      "https://weibo.com/3976409298",
+      "https://www.zhihu.com/org/bu-bei-dan-ci-app/activities",
+      "http://learnywhere.com.cn/",
+      "http://bbdc.cn/",
+      "http://bbdc.cn/",
+      "javascript:;",
+      "/lexis_book_index",
+      "https://langeasy.com.cn/open.action?go=3",
+      "javascript:;",
+      "/",
+      "https://learnywhere.cn/lexis/privacy",
+      "https://learnywhere.cn/lexis/agreement",
+      "javascript:;",
+      "/lexis_book_index",
+      "https://langeasy.com.cn/open.action?go=3",
+      "javascript:;",
+      "https://www.zhipin.com/job_detail/?query=%E4%B8%8D%E8%83%8C%E5%8D%95%E8%AF%8D",
+      "https://learnywhere.cn/bb/production/notification",
+      "http://kids.bbdc.cn/",
+      "javascript:;",
+      "javascript:;",
+      "http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11011502004889",
+      "https://beian.miit.gov.cn/",
+      "https://beian.miit.gov.cn/"
+    ]
+  },
+  {
+    "evidence_id": "E-BBDC-03",
+    "url": "https://learnywhere.cn/lexis/privacy",
+    "final_url": "https://learnywhere.cn/lexis/privacy",
+    "status": 200,
+    "bytes": 976,
+    "raw_work_path": "work/bbdc-controls-deepening/privacy.html",
+    "raw_sha256": "6aa7a91f42f7ca1a7ba8b0563661a976d59008b2f704ec3d1434f1f8a0ef3ebe",
+    "links": []
+  },
+  {
+    "evidence_id": "E-BBD-01",
+    "url": "https://apps.apple.com/cn/app/不背单词-四六级考研等英语单词学习/id698570469?platform=mac",
+    "final_url": "https://apps.apple.com/cn/app/%E4%B8%8D%E8%83%8C%E5%8D%95%E8%AF%8D-%E5%9B%9B%E5%85%AD%E7%BA%A7%E8%80%83%E7%A0%94%E7%AD%89%E8%8B%B1%E8%AF%AD%E5%8D%95%E8%AF%8D%E5%AD%A6%E4%B9%A0/id698570469?platform=mac",
+    "status": 200,
+    "bytes": 655769,
+    "raw_work_path": "work/bbdc-controls-deepening/appstore-cn.html",
+    "raw_sha256": "3f11560658cfcd9f94ca8e9359f193456b8f2b0ff2ca3ce28c7871b07429218b"
+  }
+]

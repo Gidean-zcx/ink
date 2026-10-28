@@ -1,0 +1,28 @@
+PDFs
+Sometimes PDFs have strange filenames. How do I change the name of a PDF?
+Reader uses the metadata contained inside the PDF to determine its filename, which was often improperly set or not set at all by the PDF file creator. When this happens, the title of the PDF may be strange or confusing. With that in mind, you can edit this metadata by selecting Edit Metadata (Shift + M) in the bottom right of the Info sidebar. You can edit other document-level metadata than just title, and you can do this on documents other than just PDFs.
+How do I edit metadata on mobile?
+While viewing a document, tap the i icon in the top right to open the Info sidebar. Then tap the Edit metadata button at the bottom.
+How do I zoom in or out on a PDF?
+On web, you can zoom in or out by using the + and - icons in the top of a PDF or the keyboard shortcuts Ctrl/Cmd + - Ctrl/Cmd + +. On mobile, you can pinch.
+How do I highlight images, tables, and figures in a PDF?
+You can use the "snapshotting" feature to save screenshots of a PDF as a highlight via the icon in the top left that looks like a square with a plus in the corner. Click the icon, then click and drag to select the area of the PDF you'd like to save. The selected area will be saved as an image in the document's Notebook.
+How do I download and/or export a highlighted PDF from Reader?
+You can download an annotated version of a PDF document by pressing Shift + D while viewing the document in the web app. The downloaded PDF will contain all of your highlights and highlight notes.
+How do I import highlights from a previously highlighted PDF to Reader?
+Currently, highlights made in another PDF app will not be recognized as proper highlights inside of Reader, but this is on our roadmap to add.
+How do I highlight across pages inside a PDF?
+Without reflowing the PDF into plain text, there is no way to highlight across PDF pages in any app that we're aware of. That said, you can use Readwise's "inline concatenation" feature to combine two disjointed highlights when they're imported into Readwise and before they're exported to your note-taking app.
+How do I remove the random line breaks from highlights made in a PDF?
+The underlying text behind a PDF often has glitches that aren't visible on the rendered PDF that will appear in the highlights such as random line breaks. To clean these up, you can edit your highlights in Readwise to remove the line breaks.
+How do I customize the appearance of a PDF while reading?
+Although customizing the actual PDF isn't possible within Reader, since PDFs are essentially just a series of images, you can switch the document to Enhanced text mode (via the Text view icon in the top left on web or ... > View as text on mobile) to view a plain text version. While in this mode, you can use the same appearance customization available in any other document type via the Aa menu.
+I'm using dark mode and the images in my PDF look strange. How can I fix it?
+By default when using dark mode, PDFs have a color inversion filter applied to maintain the white-on-black color scheme. However, the filter can cause images to look pretty weird. If you'd prefer to turn it off, you can use the Command Palette (Cmd/Ctrl + K) to search for Disable/enable PDF color inverting. On mobile, you can navigate to the Settings page and toggle off the Enable PDF color inverting setting.
+Why can't I see my highlights overlaid on the PDF?
+Highlights made while in the text view mode won't be visible in the default PDF view mode, and vice versa. However, any highlights you've made will always be visible in the document's Notebook panel.
+Why doesn't the auto-highlighting option appear when I'm reading a PDF?
+The auto-highlighting option isn't available in the default PDF view. Reader uses a specialized service to render PDFs, which means some features available for other types of documents (including auto-highlighting) don't work in this mode.
+To use auto-highlighting on a PDF, you'll need to first switch to Text view.
+To do this on web, click the Text view icon in the top left corner of the document. On mobile, tap ... > View as text.
+Once you're in text view, the auto-highlighting option will appear and work as expected.

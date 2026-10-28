@@ -1,0 +1,21 @@
+[
+  {
+    "source": "c05-wrong2019",
+    "image_index": 1,
+    "url": "https://exp-picture.cdn.bcebos.com/27725684cde34b2c7820decc0d0e7c75e4f44361.jpg?x-bce-process=image%2Fresize%2Cm_lfit%2Cw_500%2Climit_1%2Fformat%2Cf_auto%2Fquality%2Cq_80",
+    "path": "work/fenbi-practice-controls-deepening/raw/c05-wrong2019-img1.jpg",
+    "status": 200,
+    "sha256": "9ece924a058ccaade2ccbf44db0b6ded9f8b47008819edc5b4374ffc06619cfe",
+    "bytes": 104508
+  },
+  {
+    "source": "c05-wrong2019",
+    "image_index": 4,
+    "url": "https://exp-picture.cdn.bcebos.com/1562a0b9763e21c2fb184463e6e89a618725b161.jpg?x-bce-process=image%2Fresize%2Cm_lfit%2Cw_500%2Climit_1%2Fformat%2Cf_auto%2Fquality%2Cq_80",
+    "path": "work/fenbi-practice-controls-deepening/raw/c05-wrong2019-img4.jpg",
+    "status": 403,
+    "sha256": "c7fdbb15b4f6f81c1f7bd05442f213a8d25a90effe55b6705fce730af3f1aab3",
+    "bytes": 101,
+    "stop": "refusal on image route; remaining images not requested"
+  }
+]

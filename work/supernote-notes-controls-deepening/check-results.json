@@ -1,0 +1,20 @@
+{
+  "command": "python3 work/supernote-notes-controls-deepening/check.py --manifest",
+  "exit_code": 0,
+  "result": {
+    "status": "PASS",
+    "checks": 560,
+    "before_merge_only": true,
+    "new_E": 0,
+    "new_F": 5,
+    "old_F_rows": 3,
+    "old_F_fields": 10,
+    "old_E_capture_rows": 2,
+    "inventory_rows": 140,
+    "this_batch_body_rows": 29,
+    "network_requests": 0,
+    "device_or_account_state_changed": false
+  },
+  "diff_check_exit_code": 0,
+  "sha256sum_and_scoped_git_status_exit_code": 0
+}

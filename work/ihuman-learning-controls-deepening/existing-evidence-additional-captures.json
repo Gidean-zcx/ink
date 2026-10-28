@@ -1,0 +1,35 @@
+[
+  {
+    "evidence_id": "E-IHCD-01",
+    "source_batch": "docs/research/interaction-library/batches/ihuman-controls-deepening-evidence.jsonl",
+    "field": "additional_captures",
+    "before_exists": false,
+    "before": [],
+    "after": [
+      {
+        "checked_on": "2026-10-27",
+        "capture_method": "local_reread_of_2026-10-26_public_html_no_network",
+        "url": "https://apps.apple.com/cn/app/id1139733348",
+        "raw_work_path": "work/ihuman-controls-deepening/apple.html",
+        "raw_sha256": "5c19b57db4cf374704ecda7a85b0e1d243d4658800d5737434734a14ded6069f",
+        "locator": "五步学习/子集绘本/分阶与生活应用/家长管理/AI辅助及2020-05-04回复；只用于新目录，不宣称新版本快照",
+        "archived_artifact": "artifacts/ihuman-learning-controls-deepening/source-notes.md",
+        "sha256": "02dd9dcbd3738fb023e1828aa07207249003e9408b75339ca8c3875bcb5c7d7a",
+        "hands_on": false,
+        "visual_observed": false
+      }
+    ],
+    "append": {
+      "checked_on": "2026-10-27",
+      "capture_method": "local_reread_of_2026-10-26_public_html_no_network",
+      "url": "https://apps.apple.com/cn/app/id1139733348",
+      "raw_work_path": "work/ihuman-controls-deepening/apple.html",
+      "raw_sha256": "5c19b57db4cf374704ecda7a85b0e1d243d4658800d5737434734a14ded6069f",
+      "locator": "五步学习/子集绘本/分阶与生活应用/家长管理/AI辅助及2020-05-04回复；只用于新目录，不宣称新版本快照",
+      "archived_artifact": "artifacts/ihuman-learning-controls-deepening/source-notes.md",
+      "sha256": "02dd9dcbd3738fb023e1828aa07207249003e9408b75339ca8c3875bcb5c7d7a",
+      "hands_on": false,
+      "visual_observed": false
+    }
+  }
+]

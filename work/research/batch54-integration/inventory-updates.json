@@ -1,0 +1,689 @@
+[
+  {
+    "kind": "old_directory_body",
+    "before": {
+      "order": "3",
+      "entry_kind": "child_topic",
+      "parent_order": "1",
+      "functional_domain": "Studying with Study Groups",
+      "source_url": "https://help.quizlet.com/hc/en-us/sections/360004698771-Creating-editing-and-saving-sets",
+      "source_section": "Creating, editing, and saving sets / Studying with Study Groups",
+      "article_url": "",
+      "evidence_ids": "E-QZCD-02",
+      "flow_ids": "",
+      "coverage": "仅目录；正文未在本例展开",
+      "missing_controls_or_branches": "可从官方目录继续；入口/动作/反馈/结束/异常恢复均未逐项核定",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "order": "3",
+      "entry_kind": "child_topic",
+      "parent_order": "1",
+      "functional_domain": "Studying with Study Groups",
+      "source_url": "https://help.quizlet.com/hc/en-us/sections/360004698771-Creating-editing-and-saving-sets",
+      "source_section": "Creating, editing, and saving sets / Studying with Study Groups",
+      "article_url": "https://help.quizlet.com/hc/en-us/articles/39890856206733-Studying-with-Study-Groups",
+      "evidence_ids": "E-QZCD-02;E-QZMS-11",
+      "flow_ids": "F-M021-30",
+      "coverage": "D2部分；正文已读，未操作",
+      "missing_controls_or_branches": "满员、拒绝/撤回、离组后数据；不合并Study with friends",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "kind": "old_directory_body",
+    "before": {
+      "order": "5",
+      "entry_kind": "child_topic",
+      "parent_order": "1",
+      "functional_domain": "Becoming a top creator on Quizlet",
+      "source_url": "https://help.quizlet.com/hc/en-us/sections/360004698771-Creating-editing-and-saving-sets",
+      "source_section": "Creating, editing, and saving sets / Becoming a top creator on Quizlet",
+      "article_url": "",
+      "evidence_ids": "E-QZCD-02",
+      "flow_ids": "",
+      "coverage": "仅目录；正文未在本例展开",
+      "missing_controls_or_branches": "可从官方目录继续；入口/动作/反馈/结束/异常恢复均未逐项核定",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "order": "5",
+      "entry_kind": "child_topic",
+      "parent_order": "1",
+      "functional_domain": "Becoming a top creator on Quizlet",
+      "source_url": "https://help.quizlet.com/hc/en-us/sections/360004698771-Creating-editing-and-saving-sets",
+      "source_section": "Creating, editing, and saving sets / Becoming a top creator on Quizlet",
+      "article_url": "https://help.quizlet.com/hc/en-us/articles/20961378604429-Becoming-a-top-creator-on-Quizlet",
+      "evidence_ids": "E-QZCD-02;E-QZMS-12",
+      "flow_ids": "",
+      "coverage": "正文背景；非独立操作任务",
+      "missing_controls_or_branches": "仅称号标准背景，无完整操作步骤或准确性保证",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "kind": "old_directory_body",
+    "before": {
+      "order": "7",
+      "entry_kind": "child_topic",
+      "parent_order": "1",
+      "functional_domain": "What are flashcard sets?",
+      "source_url": "https://help.quizlet.com/hc/en-us/sections/360004698771-Creating-editing-and-saving-sets",
+      "source_section": "Creating, editing, and saving sets / What are flashcard sets?",
+      "article_url": "",
+      "evidence_ids": "E-QZCD-02",
+      "flow_ids": "",
+      "coverage": "仅目录；正文未在本例展开",
+      "missing_controls_or_branches": "可从官方目录继续；入口/动作/反馈/结束/异常恢复均未逐项核定",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "order": "7",
+      "entry_kind": "child_topic",
+      "parent_order": "1",
+      "functional_domain": "What are flashcard sets?",
+      "source_url": "https://help.quizlet.com/hc/en-us/sections/360004698771-Creating-editing-and-saving-sets",
+      "source_section": "Creating, editing, and saving sets / What are flashcard sets?",
+      "article_url": "https://help.quizlet.com/hc/en-us/articles/360032006352-What-are-flashcard-sets",
+      "evidence_ids": "E-QZCD-02;E-QZMS-16",
+      "flow_ids": "",
+      "coverage": "正文背景；非独立操作任务",
+      "missing_controls_or_branches": "仅内容模型背景，非完整功能或套餐表",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "kind": "old_directory_body",
+    "before": {
+      "order": "9",
+      "entry_kind": "child_topic",
+      "parent_order": "1",
+      "functional_domain": "Adding images to sets from the free gallery",
+      "source_url": "https://help.quizlet.com/hc/en-us/sections/360004698771-Creating-editing-and-saving-sets",
+      "source_section": "Creating, editing, and saving sets / Adding images to sets from the free gallery",
+      "article_url": "",
+      "evidence_ids": "E-QZCD-02",
+      "flow_ids": "",
+      "coverage": "仅目录；正文未在本例展开",
+      "missing_controls_or_branches": "可从官方目录继续；入口/动作/反馈/结束/异常恢复均未逐项核定",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "order": "9",
+      "entry_kind": "child_topic",
+      "parent_order": "1",
+      "functional_domain": "Adding images to sets from the free gallery",
+      "source_url": "https://help.quizlet.com/hc/en-us/sections/360004698771-Creating-editing-and-saving-sets",
+      "source_section": "Creating, editing, and saving sets / Adding images to sets from the free gallery",
+      "article_url": "https://help.quizlet.com/hc/en-us/articles/360029814512-Adding-images-to-sets-from-the-free-gallery",
+      "evidence_ids": "E-QZCD-02;E-QZMS-01",
+      "flow_ids": "F-M021-24",
+      "coverage": "D2部分；正文已读，未操作",
+      "missing_controls_or_branches": "图库卡面措辞不一；无结果、取消、移除撤销和保存时点",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "kind": "old_directory_body",
+    "before": {
+      "order": "10",
+      "entry_kind": "child_topic",
+      "parent_order": "1",
+      "functional_domain": "Adding your own images to sets",
+      "source_url": "https://help.quizlet.com/hc/en-us/sections/360004698771-Creating-editing-and-saving-sets",
+      "source_section": "Creating, editing, and saving sets / Adding your own images to sets",
+      "article_url": "",
+      "evidence_ids": "E-QZCD-02",
+      "flow_ids": "",
+      "coverage": "仅目录；正文未在本例展开",
+      "missing_controls_or_branches": "可从官方目录继续；入口/动作/反馈/结束/异常恢复均未逐项核定",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "order": "10",
+      "entry_kind": "child_topic",
+      "parent_order": "1",
+      "functional_domain": "Adding your own images to sets",
+      "source_url": "https://help.quizlet.com/hc/en-us/sections/360004698771-Creating-editing-and-saving-sets",
+      "source_section": "Creating, editing, and saving sets / Adding your own images to sets",
+      "article_url": "https://help.quizlet.com/hc/en-us/articles/360030154311-Adding-your-own-images-to-sets",
+      "evidence_ids": "E-QZCD-02;E-QZMS-02",
+      "flow_ids": "F-M021-24",
+      "coverage": "D2部分；正文已读，未操作",
+      "missing_controls_or_branches": "移动仅释义侧；拒权、替换旧图、缩放质量与同步",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "kind": "old_directory_body",
+    "before": {
+      "order": "11",
+      "entry_kind": "child_topic",
+      "parent_order": "1",
+      "functional_domain": "Recording custom audio",
+      "source_url": "https://help.quizlet.com/hc/en-us/sections/360004698771-Creating-editing-and-saving-sets",
+      "source_section": "Creating, editing, and saving sets / Recording custom audio",
+      "article_url": "",
+      "evidence_ids": "E-QZCD-02",
+      "flow_ids": "",
+      "coverage": "仅目录；正文未在本例展开",
+      "missing_controls_or_branches": "可从官方目录继续；入口/动作/反馈/结束/异常恢复均未逐项核定",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "order": "11",
+      "entry_kind": "child_topic",
+      "parent_order": "1",
+      "functional_domain": "Recording custom audio",
+      "source_url": "https://help.quizlet.com/hc/en-us/sections/360004698771-Creating-editing-and-saving-sets",
+      "source_section": "Creating, editing, and saving sets / Recording custom audio",
+      "article_url": "https://help.quizlet.com/hc/en-us/articles/360029769792-Recording-custom-audio",
+      "evidence_ids": "E-QZCD-02;E-QZMS-03",
+      "flow_ids": "F-M021-24",
+      "coverage": "D2部分；正文已读，未操作",
+      "missing_controls_or_branches": "录音局部保存与整集提交、重录覆盖/撤销、时长及离线",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "kind": "old_directory_body",
+    "before": {
+      "order": "14",
+      "entry_kind": "child_topic",
+      "parent_order": "1",
+      "functional_domain": "Creating diagram sets",
+      "source_url": "https://help.quizlet.com/hc/en-us/sections/360004698771-Creating-editing-and-saving-sets",
+      "source_section": "Creating, editing, and saving sets / Creating diagram sets",
+      "article_url": "",
+      "evidence_ids": "E-QZCD-02",
+      "flow_ids": "",
+      "coverage": "仅目录；正文未在本例展开",
+      "missing_controls_or_branches": "可从官方目录继续；入口/动作/反馈/结束/异常恢复均未逐项核定",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "order": "14",
+      "entry_kind": "child_topic",
+      "parent_order": "1",
+      "functional_domain": "Creating diagram sets",
+      "source_url": "https://help.quizlet.com/hc/en-us/sections/360004698771-Creating-editing-and-saving-sets",
+      "source_section": "Creating, editing, and saving sets / Creating diagram sets",
+      "article_url": "https://help.quizlet.com/hc/en-us/articles/360029631292-Creating-diagram-sets",
+      "evidence_ids": "E-QZCD-02;E-QZMS-04",
+      "flow_ids": "F-M021-25",
+      "coverage": "D2部分；正文已读，未操作",
+      "missing_controls_or_branches": "图替换/点位、模糊撤销、MBP格式原文未验证",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "kind": "old_directory_body",
+    "before": {
+      "order": "21",
+      "entry_kind": "child_topic",
+      "parent_order": "1",
+      "functional_domain": "Rating a set",
+      "source_url": "https://help.quizlet.com/hc/en-us/sections/360004698771-Creating-editing-and-saving-sets",
+      "source_section": "Creating, editing, and saving sets / Rating a set",
+      "article_url": "",
+      "evidence_ids": "E-QZCD-02",
+      "flow_ids": "",
+      "coverage": "仅目录；正文未在本例展开",
+      "missing_controls_or_branches": "可从官方目录继续；入口/动作/反馈/结束/异常恢复均未逐项核定",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "order": "21",
+      "entry_kind": "child_topic",
+      "parent_order": "1",
+      "functional_domain": "Rating a set",
+      "source_url": "https://help.quizlet.com/hc/en-us/sections/360004698771-Creating-editing-and-saving-sets",
+      "source_section": "Creating, editing, and saving sets / Rating a set",
+      "article_url": "https://help.quizlet.com/hc/en-us/articles/360038516272-Rating-a-set",
+      "evidence_ids": "E-QZCD-02;E-QZMS-13",
+      "flow_ids": "F-M021-31",
+      "coverage": "D2部分；正文已读，未操作",
+      "missing_controls_or_branches": "刻度、取消、重复提交、聚合规则",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "kind": "old_directory_body",
+    "before": {
+      "order": "22",
+      "entry_kind": "child_topic",
+      "parent_order": "1",
+      "functional_domain": "Changing a rating on a set",
+      "source_url": "https://help.quizlet.com/hc/en-us/sections/360004698771-Creating-editing-and-saving-sets",
+      "source_section": "Creating, editing, and saving sets / Changing a rating on a set",
+      "article_url": "",
+      "evidence_ids": "E-QZCD-02",
+      "flow_ids": "",
+      "coverage": "仅目录；正文未在本例展开",
+      "missing_controls_or_branches": "可从官方目录继续；入口/动作/反馈/结束/异常恢复均未逐项核定",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "order": "22",
+      "entry_kind": "child_topic",
+      "parent_order": "1",
+      "functional_domain": "Changing a rating on a set",
+      "source_url": "https://help.quizlet.com/hc/en-us/sections/360004698771-Creating-editing-and-saving-sets",
+      "source_section": "Creating, editing, and saving sets / Changing a rating on a set",
+      "article_url": "https://help.quizlet.com/hc/en-us/articles/360038900411-Changing-a-rating-on-a-set",
+      "evidence_ids": "E-QZCD-02;E-QZMS-14",
+      "flow_ids": "F-M021-31",
+      "coverage": "D2部分；正文已读，未操作",
+      "missing_controls_or_branches": "评分可改不可删；历史和更新时间未知",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "kind": "old_directory_body",
+    "before": {
+      "order": "23",
+      "entry_kind": "child_topic",
+      "parent_order": "1",
+      "functional_domain": "Viewing your sets' ratings",
+      "source_url": "https://help.quizlet.com/hc/en-us/sections/360004698771-Creating-editing-and-saving-sets",
+      "source_section": "Creating, editing, and saving sets / Viewing your sets' ratings",
+      "article_url": "",
+      "evidence_ids": "E-QZCD-02",
+      "flow_ids": "",
+      "coverage": "仅目录；正文未在本例展开",
+      "missing_controls_or_branches": "可从官方目录继续；入口/动作/反馈/结束/异常恢复均未逐项核定",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "order": "23",
+      "entry_kind": "child_topic",
+      "parent_order": "1",
+      "functional_domain": "Viewing your sets' ratings",
+      "source_url": "https://help.quizlet.com/hc/en-us/sections/360004698771-Creating-editing-and-saving-sets",
+      "source_section": "Creating, editing, and saving sets / Viewing your sets' ratings",
+      "article_url": "https://help.quizlet.com/hc/en-us/articles/360038900751-Viewing-your-sets-ratings",
+      "evidence_ids": "E-QZCD-02;E-QZMS-15",
+      "flow_ids": "F-M021-31",
+      "coverage": "D2部分；正文已读，未操作",
+      "missing_controls_or_branches": "评分不可关闭；作者不收到通知，身份可见性未知",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "kind": "old_directory_body",
+    "before": {
+      "order": "26",
+      "entry_kind": "child_topic",
+      "parent_order": "25",
+      "functional_domain": "Finding flashcard sets",
+      "source_url": "https://help.quizlet.com/hc/en-us/sections/360005877232-Accessing-and-sharing",
+      "source_section": "Accessing and sharing / Finding flashcard sets",
+      "article_url": "",
+      "evidence_ids": "E-QZCD-04",
+      "flow_ids": "",
+      "coverage": "仅目录；正文未在本例展开",
+      "missing_controls_or_branches": "可从官方目录继续；入口/动作/反馈/结束/异常恢复均未逐项核定",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "order": "26",
+      "entry_kind": "child_topic",
+      "parent_order": "25",
+      "functional_domain": "Finding flashcard sets",
+      "source_url": "https://help.quizlet.com/hc/en-us/sections/360005877232-Accessing-and-sharing",
+      "source_section": "Accessing and sharing / Finding flashcard sets",
+      "article_url": "https://help.quizlet.com/hc/en-us/articles/360029772872-Finding-flashcard-sets",
+      "evidence_ids": "E-QZCD-04;E-QZMS-17",
+      "flow_ids": "F-M021-28",
+      "coverage": "D2部分；正文已读，未操作",
+      "missing_controls_or_branches": "公共搜索筛选不证明准确；排序/空结果和来源版本",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "kind": "old_directory_body",
+    "before": {
+      "order": "27",
+      "entry_kind": "child_topic",
+      "parent_order": "25",
+      "functional_domain": "Finding your teacher's class",
+      "source_url": "https://help.quizlet.com/hc/en-us/sections/360005877232-Accessing-and-sharing",
+      "source_section": "Accessing and sharing / Finding your teacher's class",
+      "article_url": "",
+      "evidence_ids": "E-QZCD-04",
+      "flow_ids": "",
+      "coverage": "仅目录；正文未在本例展开",
+      "missing_controls_or_branches": "可从官方目录继续；入口/动作/反馈/结束/异常恢复均未逐项核定",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "order": "27",
+      "entry_kind": "child_topic",
+      "parent_order": "25",
+      "functional_domain": "Finding your teacher's class",
+      "source_url": "https://help.quizlet.com/hc/en-us/sections/360005877232-Accessing-and-sharing",
+      "source_section": "Accessing and sharing / Finding your teacher's class",
+      "article_url": "https://help.quizlet.com/hc/en-us/articles/360030764951-Finding-your-teacher-s-class",
+      "evidence_ids": "E-QZCD-04;E-QZMS-18",
+      "flow_ids": "F-M021-29",
+      "coverage": "D2部分；正文已读，未操作",
+      "missing_controls_or_branches": "申请不等于批准；等待、拒绝/撤回和权限时点",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "kind": "old_directory_body",
+    "before": {
+      "order": "28",
+      "entry_kind": "child_topic",
+      "parent_order": "25",
+      "functional_domain": "Navigating your home feed on mobile devices",
+      "source_url": "https://help.quizlet.com/hc/en-us/sections/360005877232-Accessing-and-sharing",
+      "source_section": "Accessing and sharing / Navigating your home feed on mobile devices",
+      "article_url": "",
+      "evidence_ids": "E-QZCD-04",
+      "flow_ids": "",
+      "coverage": "仅目录；正文未在本例展开",
+      "missing_controls_or_branches": "可从官方目录继续；入口/动作/反馈/结束/异常恢复均未逐项核定",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "order": "28",
+      "entry_kind": "child_topic",
+      "parent_order": "25",
+      "functional_domain": "Navigating your home feed on mobile devices",
+      "source_url": "https://help.quizlet.com/hc/en-us/sections/360005877232-Accessing-and-sharing",
+      "source_section": "Accessing and sharing / Navigating your home feed on mobile devices",
+      "article_url": "https://help.quizlet.com/hc/en-us/articles/38999971996301-Navigating-your-home-feed-on-mobile-devices",
+      "evidence_ids": "E-QZCD-04;E-QZMS-19",
+      "flow_ids": "F-M021-32",
+      "coverage": "D1；正文已读但主页交互主链不足",
+      "missing_controls_or_branches": "主页问答、推荐控制、短活动玩法与跳回状态缺失，D1",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "kind": "old_directory_body",
+    "before": {
+      "order": "29",
+      "entry_kind": "child_topic",
+      "parent_order": "25",
+      "functional_domain": "Trouble accessing a set",
+      "source_url": "https://help.quizlet.com/hc/en-us/sections/360005877232-Accessing-and-sharing",
+      "source_section": "Accessing and sharing / Trouble accessing a set",
+      "article_url": "",
+      "evidence_ids": "E-QZCD-04",
+      "flow_ids": "",
+      "coverage": "仅目录；正文未在本例展开",
+      "missing_controls_or_branches": "可从官方目录继续；入口/动作/反馈/结束/异常恢复均未逐项核定",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "order": "29",
+      "entry_kind": "child_topic",
+      "parent_order": "25",
+      "functional_domain": "Trouble accessing a set",
+      "source_url": "https://help.quizlet.com/hc/en-us/sections/360005877232-Accessing-and-sharing",
+      "source_section": "Accessing and sharing / Trouble accessing a set",
+      "article_url": "https://help.quizlet.com/hc/en-us/articles/360029768352-Trouble-accessing-a-set",
+      "evidence_ids": "E-QZCD-04;E-QZMS-05",
+      "flow_ids": "F-M021-04;F-M021-05",
+      "coverage": "D2部分；正文已读，未操作",
+      "missing_controls_or_branches": "私有/密码/班级登录/未发布分开；无错误画面或同步时点",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "kind": "old_directory_body",
+    "before": {
+      "order": "30",
+      "entry_kind": "child_topic",
+      "parent_order": "25",
+      "functional_domain": "Sharing sets and folders",
+      "source_url": "https://help.quizlet.com/hc/en-us/sections/360005877232-Accessing-and-sharing",
+      "source_section": "Accessing and sharing / Sharing sets and folders",
+      "article_url": "",
+      "evidence_ids": "E-QZCD-04",
+      "flow_ids": "",
+      "coverage": "仅目录；正文未在本例展开",
+      "missing_controls_or_branches": "可从官方目录继续；入口/动作/反馈/结束/异常恢复均未逐项核定",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "order": "30",
+      "entry_kind": "child_topic",
+      "parent_order": "25",
+      "functional_domain": "Sharing sets and folders",
+      "source_url": "https://help.quizlet.com/hc/en-us/sections/360005877232-Accessing-and-sharing",
+      "source_section": "Accessing and sharing / Sharing sets and folders",
+      "article_url": "https://help.quizlet.com/hc/en-us/articles/360030254831-Sharing-sets-and-folders",
+      "evidence_ids": "E-QZCD-04;E-QZMS-06",
+      "flow_ids": "F-M021-27",
+      "coverage": "D2部分；正文已读，未操作",
+      "missing_controls_or_branches": "公开与密码集分享措辞并存；访问结果、撤销和副本后果",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "kind": "old_directory_body",
+    "before": {
+      "order": "31",
+      "entry_kind": "child_topic",
+      "parent_order": "25",
+      "functional_domain": "Changing a set's editing permissions",
+      "source_url": "https://help.quizlet.com/hc/en-us/sections/360005877232-Accessing-and-sharing",
+      "source_section": "Accessing and sharing / Changing a set's editing permissions",
+      "article_url": "",
+      "evidence_ids": "E-QZCD-04",
+      "flow_ids": "",
+      "coverage": "仅目录；正文未在本例展开",
+      "missing_controls_or_branches": "可从官方目录继续；入口/动作/反馈/结束/异常恢复均未逐项核定",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "order": "31",
+      "entry_kind": "child_topic",
+      "parent_order": "25",
+      "functional_domain": "Changing a set's editing permissions",
+      "source_url": "https://help.quizlet.com/hc/en-us/sections/360005877232-Accessing-and-sharing",
+      "source_section": "Accessing and sharing / Changing a set's editing permissions",
+      "article_url": "https://help.quizlet.com/hc/en-us/articles/360037864311-Changing-a-set-s-editing-permissions",
+      "evidence_ids": "E-QZCD-04;E-QZMS-07",
+      "flow_ids": "F-M021-04",
+      "coverage": "D2部分；正文已读，未操作",
+      "missing_controls_or_branches": "Editable by与Visible to联动、撤权与并发修改",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "kind": "old_directory_body",
+    "before": {
+      "order": "33",
+      "entry_kind": "child_topic",
+      "parent_order": "25",
+      "functional_domain": "Protecting a set with a password",
+      "source_url": "https://help.quizlet.com/hc/en-us/sections/360005877232-Accessing-and-sharing",
+      "source_section": "Accessing and sharing / Protecting a set with a password",
+      "article_url": "",
+      "evidence_ids": "E-QZCD-04",
+      "flow_ids": "",
+      "coverage": "仅目录；正文未在本例展开",
+      "missing_controls_or_branches": "可从官方目录继续；入口/动作/反馈/结束/异常恢复均未逐项核定",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "order": "33",
+      "entry_kind": "child_topic",
+      "parent_order": "25",
+      "functional_domain": "Protecting a set with a password",
+      "source_url": "https://help.quizlet.com/hc/en-us/sections/360005877232-Accessing-and-sharing",
+      "source_section": "Accessing and sharing / Protecting a set with a password",
+      "article_url": "https://help.quizlet.com/hc/en-us/articles/360029771292-Protecting-a-set-with-a-password",
+      "evidence_ids": "E-QZCD-04;E-QZMS-08",
+      "flow_ids": "F-M021-04",
+      "coverage": "D2部分；正文已读，未操作",
+      "missing_controls_or_branches": "查看密码与编辑密码关系、旧会话/副本及生效时点",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "kind": "old_directory_body",
+    "before": {
+      "order": "35",
+      "entry_kind": "child_topic",
+      "parent_order": "25",
+      "functional_domain": "Embedding sets",
+      "source_url": "https://help.quizlet.com/hc/en-us/sections/360005877232-Accessing-and-sharing",
+      "source_section": "Accessing and sharing / Embedding sets",
+      "article_url": "",
+      "evidence_ids": "E-QZCD-04",
+      "flow_ids": "",
+      "coverage": "仅目录；正文未在本例展开",
+      "missing_controls_or_branches": "可从官方目录继续；入口/动作/反馈/结束/异常恢复均未逐项核定",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "order": "35",
+      "entry_kind": "child_topic",
+      "parent_order": "25",
+      "functional_domain": "Embedding sets",
+      "source_url": "https://help.quizlet.com/hc/en-us/sections/360005877232-Accessing-and-sharing",
+      "source_section": "Accessing and sharing / Embedding sets",
+      "article_url": "https://help.quizlet.com/hc/en-us/articles/360032935851-Embedding-sets",
+      "evidence_ids": "E-QZCD-04;E-QZMS-20",
+      "flow_ids": "F-M021-27",
+      "coverage": "D2部分；正文已读，未操作",
+      "missing_controls_or_branches": "复制HTML不证明嵌入可运行、身份/进度与源权限更新",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "kind": "old_directory_body",
+    "before": {
+      "order": "37",
+      "entry_kind": "child_topic",
+      "parent_order": "25",
+      "functional_domain": "Dropping a class",
+      "source_url": "https://help.quizlet.com/hc/en-us/sections/360005877232-Accessing-and-sharing",
+      "source_section": "Accessing and sharing / Dropping a class",
+      "article_url": "",
+      "evidence_ids": "E-QZCD-04",
+      "flow_ids": "",
+      "coverage": "仅目录；正文未在本例展开",
+      "missing_controls_or_branches": "可从官方目录继续；入口/动作/反馈/结束/异常恢复均未逐项核定",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "order": "37",
+      "entry_kind": "child_topic",
+      "parent_order": "25",
+      "functional_domain": "Dropping a class",
+      "source_url": "https://help.quizlet.com/hc/en-us/sections/360005877232-Accessing-and-sharing",
+      "source_section": "Accessing and sharing / Dropping a class",
+      "article_url": "https://help.quizlet.com/hc/en-us/articles/360031518251-Dropping-a-class",
+      "evidence_ids": "E-QZCD-04;E-QZMS-21",
+      "flow_ids": "F-M021-29",
+      "coverage": "D2部分；正文已读，未操作",
+      "missing_controls_or_branches": "退出、所有者删除与重新加入分开；历史恢复未知",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "kind": "old_directory_body",
+    "before": {
+      "order": "67",
+      "entry_kind": "child_topic",
+      "parent_order": "66",
+      "functional_domain": "Organizing study content with tags",
+      "source_url": "https://help.quizlet.com/hc/en-us/categories/360001601132-Studying",
+      "source_section": "Folders / Organizing study content with tags",
+      "article_url": "",
+      "evidence_ids": "E-QZCD-01",
+      "flow_ids": "",
+      "coverage": "仅目录；正文未在本例展开",
+      "missing_controls_or_branches": "可从官方目录继续；入口/动作/反馈/结束/异常恢复均未逐项核定",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "order": "67",
+      "entry_kind": "child_topic",
+      "parent_order": "66",
+      "functional_domain": "Organizing study content with tags",
+      "source_url": "https://help.quizlet.com/hc/en-us/categories/360001601132-Studying",
+      "source_section": "Folders / Organizing study content with tags",
+      "article_url": "https://help.quizlet.com/hc/en-us/articles/37762790252941-Organizing-study-content-with-tags",
+      "evidence_ids": "E-QZCD-01;E-QZMS-09",
+      "flow_ids": "F-M021-26",
+      "coverage": "D2部分；正文已读，未操作",
+      "missing_controls_or_branches": "标签层级、重命名/删除、重名、迁移与权限",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "kind": "old_directory_body",
+    "before": {
+      "order": "68",
+      "entry_kind": "child_topic",
+      "parent_order": "66",
+      "functional_domain": "Organizing study content with folders",
+      "source_url": "https://help.quizlet.com/hc/en-us/categories/360001601132-Studying",
+      "source_section": "Folders / Organizing study content with folders",
+      "article_url": "",
+      "evidence_ids": "E-QZCD-01",
+      "flow_ids": "",
+      "coverage": "仅目录；正文未在本例展开",
+      "missing_controls_or_branches": "可从官方目录继续；入口/动作/反馈/结束/异常恢复均未逐项核定",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "order": "68",
+      "entry_kind": "child_topic",
+      "parent_order": "66",
+      "functional_domain": "Organizing study content with folders",
+      "source_url": "https://help.quizlet.com/hc/en-us/categories/360001601132-Studying",
+      "source_section": "Folders / Organizing study content with folders",
+      "article_url": "https://help.quizlet.com/hc/en-us/articles/360030986151-Organizing-study-content-with-folders",
+      "evidence_ids": "E-QZCD-01;E-QZMS-10",
+      "flow_ids": "F-M021-26",
+      "coverage": "D2部分；正文已读，未操作",
+      "missing_controls_or_branches": "高亮与提交、移除/删除后果、空夹/混合内容权限",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "kind": "linked_article_added",
+    "before": null,
+    "after": {
+      "order": "69",
+      "entry_kind": "linked_article",
+      "parent_order": "11",
+      "functional_domain": "Troubleshooting custom audio recording",
+      "source_url": "https://help.quizlet.com/hc/en-us/articles/360029769792-Recording-custom-audio",
+      "source_section": "Recording custom audio / related help outside original section snapshot",
+      "article_url": "https://help.quizlet.com/hc/en-us/articles/360030842071-Troubleshooting-custom-audio-recording",
+      "evidence_ids": "E-QZMS-03;E-QZMS-22",
+      "flow_ids": "F-M021-24",
+      "coverage": "正文已读；旧式排查步骤，未操作",
+      "missing_controls_or_branches": "旧OS/浏览器式排查；重载后的未保存录音未知",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "kind": "linked_article_added",
+    "before": null,
+    "after": {
+      "order": "70",
+      "entry_kind": "linked_article",
+      "parent_order": "28",
+      "functional_domain": "Updating your school information",
+      "source_url": "https://help.quizlet.com/hc/en-us/articles/38999971996301-Navigating-your-home-feed-on-mobile-devices",
+      "source_section": "Navigating your home feed on mobile devices / related help outside original section snapshot",
+      "article_url": "https://help.quizlet.com/hc/en-us/articles/360032561391-Updating-your-school-information",
+      "evidence_ids": "E-QZMS-19;E-QZMS-23",
+      "flow_ids": "F-M021-32",
+      "coverage": "正文已读；关联推荐任务仍D1",
+      "missing_controls_or_branches": "13国设置范围、移动Manage subscription路径及推荐生效未知",
+      "checked_on": "2026-10-27"
+    }
+  }
+]

@@ -1,0 +1,21 @@
+{
+  "order": 3,
+  "entry_id": "INO-basic--article-view--can-different-feeds-use-different-layouts",
+  "title": "Can different feeds use different layouts?",
+  "url": "https://www.inoreader.com/help/basic/article-view/can-different-feeds-use-different-layouts",
+  "checked_on": "2026-10-27",
+  "http_status": 200,
+  "final_url": "https://www.inoreader.com/help/basic/article-view/can-different-feeds-use-different-layouts",
+  "acquisition": "one_anonymous_normal_GET",
+  "raw_path": "work/research/batch41-inoreader-help/03-INO-basic--article-view--can-different-feeds-use-different-layouts.html",
+  "headers_path": "work/research/batch41-inoreader-help/03-INO-basic--article-view--can-different-feeds-use-different-layouts.headers.json",
+  "raw_sha256": "a1dfbb6892092805fe46e52a89f5cd8680eeb3dc62ea18ef6fc8d1123ad91e38",
+  "bytes": 143052,
+  "status": "body_obtained",
+  "body_status": "extracted_not_yet_root_read",
+  "body_path": "work/research/batch41-inoreader-help/03-INO-basic--article-view--can-different-feeds-use-different-layouts.body.txt",
+  "body_sha256": "fcd9e45dcaaa06eaf2f1ed35fd55ecea5d692bdb5c1edd6ee966423536c7fbf9",
+  "body_chars": 92,
+  "links": [],
+  "images": []
+}

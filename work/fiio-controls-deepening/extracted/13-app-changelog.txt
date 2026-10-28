@@ -1,0 +1,489 @@
+How to check the APP version of FiiO Music app:
+From settings-About-VersionX.X.X
+How to update the FiiO Music app online:
+Method 1: Search and download FiiO Music in the App Store on your mobile phone;
+Method 2: Connect the mobile phones/players to the Internet, then click 'Check for update' from Personal-Settings-About menu.
+If the update fails to work correctly, please try following steps:
+1. If the update prompt does not shows after connecting to the Internet for sometime, please delete theinstallation package in 'Android-data-com.fiio.music-file-update'. Then restart the APP and wait from the re-download.
+2. If the current APP version is too old, the automatical update may not work. Please
+try to update locally.
+How to update the FiiO Music app locally:
+Set the device to storage mode and connect to computer, drag the downloaded FiiO Music (.apk) to the device. Then disconnect the connection and enter ES file explorer/file manager, find the FiiO Music app in internal storage/sd card and click install.
+Updated on 2026-09-11
+Changes and improvements about new Android APP are as follows :
+1. Redesigned playback interface featuring four new playback page styles: Dynamic vinyl, Background vinyl, Realistic vinyl, and Minimalist mode (selectable via Skins->Playback Interface).
+2. Redesigned equalizer interface featuring AUTO EQ, EQ sharing, and four sound effect adjustment options.
+3. Added support for displaying local song cover art and lyrics during remote playback control.
+4. Added support for the phone Live Window.
+5. Improved online lyrics and cover art matching for higher accuracy.
+6. Fixed an issue where the USB exclusive mode switch did not take effect immediately.
+7. Other performance optimizations and bug fixes.
+1.全新播放界面设计，新增幻动黑胶、背景黑胶、拟物黑胶及轻简模式四种播放页样式（可从皮肤-播放界面选用）
+2.全新均衡器界面设计，新增 AUTO EQ 、EQ分享及四种音效调节
+3.新增播放器远程控制本地歌曲封面及歌词显示
+4.新增手机实况窗适配
+5.优化在线匹配词图功能，提高歌词和封面匹配准确率
+6.修复USB独占开关不实时生效问题
+7.其他性能优化及Bug修复
+Android FiiO Music app-V3.3.4:
+Click here
+FiiO Music app-V3.3.4 for M/R/S series Android players:
+Click here
+FiiO Music app-V3.3.4 for JM21/M21/M27/M33 R2R:
+Click here
+Updated on 2026-05-28
+Changes and improvements about new Android APP are as follows :
+1. Added CUE track splitting support in the multimedia service.
+2. Optimized multimedia service server compatibility.
+3. Optimized USB exclusive device compatibility.
+4. Optimized the shuffle playback algorithm.
+5. Fixed an issue where embedded lyrics occasionally failed to display.
+6. Fixed an issue where songs would fail to play under the WebDAV protocol.
+7. Fixed an issue where FIIO Link control may crash.
+8. Fixed an issue of information display for some songs.
+9. Other performance optimizations and bug fixes.
+1.新增多媒体服务支持CUE分轨播放
+2.优化多媒体服务服务器兼容性
+3.优化USB独占设备兼容性
+4.优化随机播放算法
+5.修复内嵌歌词几率性不显示问题
+6.修复WebDAV协议部分曲目播放异常问题
+7.修复FiiO Link控制几率性闪退问题
+8.修复部分曲目信息显示异常问题
+9.其他性能优化和Bug修复
+Android FiiO Music app-V3.3.3:
+Click here
+FiiO Music app-V3.3.3 for M/R/S series Android players:
+Click here
+FiiO Music app-V3.3.3 for JM21/M21/M27/M33 R2R:
+Click here
+Updated on 2026-03-02
+Changes and improvements about new Android APP are as follows :
+1. Added tape themes (Go to Settings–Skin–Tape Theme to select themes, and enable Tape Theme in the Playback Interface–More);
+2. Added multiple VU meter effects (Go to Settings–Skin–VU Meter to select styles) ;
+3. Added adaptation for Android 15;
+4. Added composer classification;
+5. Optimized sorting logic and folder loading speed;
+6. Optimized NAS playback smoothness;
+7. Fixed the issue where disorder occurs when using the remote control to play all songs and sorted songs;
+8. Other performance optimizations and bug fixes.
+Android FiiO Music app-V3.3.1:
+Click here
+FiiO Music app-V3.3.1 for M/R/S series Android players:
+Click here
+FiiO Music app-V3.3.1 for JM21/M21/M27/M33 R2R:
+Click here
+Note:
+Due to insufficient hardware performance, which fails to meet the operating requirements of the latest version of the APP, FiiO Music APP in FiiO X Series Android players will no longer be updated or maintained in the future.
+Updated on 2025-11-11
+Changes and improvements about new Android APP are as follows :
+1. Miscellaneous performance improvements and bug fixes.
+Android FiiO Music app-V3.3.0: Click here
+FiiO Music app-V3.3.0 for M/R/S series Android players: Click here
+FiiO Music app-V3.3.0 for X series Android players: Click here
+FiiO Music app-V3.3.0 for JM21/M21/M27：Click here
+Updated on 2025-06-12
+Changes and improvements about new Android APP are as follows :
+1. Added "Use cover image in the same folder" option (when enabled, if a song has no embedded cover, the first image in the same folder will be used as the cover. Go to Settings in FiiO Music to enable or disable it).
+2. Added lyrics display functionality for external Bluetooth devices (when enabled, Bluetooth devices can show lyrics. Go to Settings in FiiO Music to enable or disable it).
+3. Added folder transfer support for WiFi song sharing.
+4. Fixed the issue where songs on certain NAS servers using WebDAV protocol would fail to play.
+5. Fixed issues related to shuffle play.
+6. Improved cover art loading during playlist scrolling.
+7. Miscellaneous performance improvements and bug fixes.
+1.新增同文件夹任意名称封面选项
+（开启后，当歌曲无封面时，将使用同文件夹下第一张图片作为歌曲封面，可前往飞傲音乐设置下选择开启或关闭）
+2.新增外接设备蓝牙歌词功能
+（开启后，蓝牙设备可显示歌词。可前往飞傲音乐设置下选择开启）
+3.新增WiFi传歌支持文件夹传输
+4.修复部分NAS服务器WebDAV协议下歌曲无法播放问题
+5.修复随机播放相关问题
+6.优化歌曲列表滑动封面加载效果
+7.其他性能优化及Bug修复
+Android FiiO Music app-V3.2.8: Click here
+FiiO Music app-V3.2.8 for M/R/S series Android players: Click here
+FiiO Music app-V3.2.8 for X series Android players: Click here
+FiiO Music app-V3.2.8 for JM21/M21：Click here
+Updated on 2025-04-11
+Changes and improvements about new Android APP are as follows :
+1.Fixed the DSD playback noise issue on some models.
+2.Optimized performance and fixed other bugs.
+1.修复部分机型DSD播放杂音问题
+2.其他性能优化及Bug修复
+Android FiiO Music app-V3.2.7:
+https://fiio-file.fiio.net/FiiOMusicAndroid3.2.7.apk
+FiiO Music app-V3.2.7 for M/R/S series Android players:
+https://fiio-file.fiio.net/FiiOMusicAndroidM3.2.7.apk
+FiiO Music app-V3.2.7 for X series Android players:
+https://fiio-file.fiio.net/FiiOMusicAndroidX3.2.7.apk
+FiiO Music app-V3.2.7 for JM21：
+https://fiio-file.fiio.net/FiiOMusicAndroidA133.2.7.apk
+Updated on 2025-03-25
+Changes and improvements about new Android APP are as follows :
+1. Added quick sorting for folders;
+2. Added retro preset PEQ;
+3. Optimized local music loading speed and stability in remote control for music player (requires to use with FiiO Control 3.34);
+4. Optimized loading speed for multi-track folders and all music multi-track playback.
+1.新增文件夹快速排序
+2.新增PEQ复古预设
+3.优化播放器远程控制-本地音乐加载速度和稳定性
+(需搭配FiiOControl3.34或以上版本使用)
+4.优化多曲目文件夹和全部音乐多曲目加载速度
+Android FiiO Music app-V3.2.6: Click here
+FiiO Music app-V3.2.6 for M/R/S series Android players: Click here
+FiiO Music app-V3.2.6 for X series Android players: ：Click here
+FiiO Music app-V3.2.6 for JM21：Click here
+Updated on 2025-01-14
+Changes and improvements about new Android APP are as follows :
+1.Added settings for Folder Direct Display Mode.
+2.Optimized performance and fixed other bugs.
+1.新增文件夹直显模式设置
+2.其他性能优化及Bug修复
+Android FiiO Music app-V3.2.5: Click here
+FiiO Music app-V3.2.5 for M/R/S series Android players: Click here
+FiiO Music app-V3.2.5 for X series Android players: ：Click here
+FiiO Music app-V3.2.5 for JM21：Click here
+Updated on 2024-12-31
+Changes and improvements about new Android APP are as follows :
+1. Added the second layout pattern on homepage for the S15.
+2. Adapted for Android 14.
+3. Added memory for file access paths and display of folder storage capacity.
+4. Added a full display setting for folder lists.
+5. Added a folder path jump feature at the top of the list.
+6. Optimized the display logic for folders not scanned for music files.
+7.
+Fixed the issue where noise would occur when operating other apps
+during exclusive USB playback running in the background (requires
+enabling the setting of playback silent data via Android audio system).
+8. Fixed the issue where OTG directories failed to display on some devices.
+9. Optimized performance and fixed other bugs.
+1.新增S15首页第二布局
+2.适配Android14
+3.新增文件访问路径记忆和文件夹存储容量显示
+4.新增文件夹列表完整显示设置
+5.新增文件夹顶部路径跳转
+6.优化过滤未扫描歌曲文件夹目录显示逻辑
+7.修复Usb独占播放后台操作其他应用有杂音的问题（需打开通过Android音频系统播放静音数据设置）
+8.修复部分设备OTG目录无法显示的问题
+9.其他性能优化及Bug修复
+Note: This update removes the built-in FiiO Control app. To use it, please download the FiiO Control app from the App store or the official forum.
+Android FiiO Music app-V3.2.4: Click here
+FiiO Music app-V3.2.4 for X series Android players: Click here
+FiiO Music app-V3.2.4 for M/R/S series Android players: Click here
+FiiO Music app-V3.2.4 for JM21：Click here
+Updated on 2024-08-16
+Changes and improvements about new Android APP are as follows :
+1. Added an option of switching between tab grid and list view - located to the left
+of the multi-select icon on the home page.
+2. Added settings of reverse landscape and reverse portrait in the screen orientation
+menu.
+3. Added manual refresh for song information - located at the bottom left of the song
+information page.
+4. Optimized certain landscape layouts.
+5. Fixed an issue where enabling “keep background activity” did not lead to the
+permission settings page, causing background playback to pause on some
+devices - found in the USB output settings.
+6. Optimized performance and fixed other bugs.
+Android FiiO Music app-V3.2.2: Click here
+FiiO Music app-V3.2.2 for X series Android players: Click here
+FiiO Music app-V3.2.2 for M/R series Android players: Click here
+Updated on 2024-03-14
+Changes and improvements about new Android APP are as follows :
+1. Added filter type selection for PEQ;
+2. Added compressor;
+3. Added landscape adaptation;
+4. Added FiiO SP3 control;
+5. Added FiiO KA11 control;
+6. Added FiiO K19 control;
+7. Added FiiO KA17 control.
+Android FiiO Music app-V3.2.1: Click here
+FiiO Music app-V3.2.1 for X series Android players: Click here
+FiiO Music app-V3.2.1 for M/R series Android players: Click here
+Updated on 2023-11-01
+Changes and improvements about new Android APP are as follows :
+1. Support Android13;
+2. BR13 is added to FiiO Control;
+3. Optimized some problems with the UI display and flashbacks;
+4. Miscellaneous improvements on performance.
+Android FiiO Music app-V3.2.0: Click here
+FiiO Music app-V3.2.0 for X series Android players: Click here
+FiiO Music app-V3.2.0 for M/R series Android players: Click here
+Updated on 2023-10-14
+Changes and improvements about new Android APP are as follows :
+1. Fiio Music's new Ul is released;
+2. Added online feedback for users;
+3. Added track information copy function to the song menu button;
+4. Optimized the sorting logic under folders;
+5. Fiio Labs has added an ID3 editing function to customize song information;
+6. FiiO Labs has added new sound effects, which can adjust channel balance, high and low bass enhancement, and stereo expand;
+7. FiiO Control has added device firmware push updates and update log functions;
+Android FiiO Music app-V3.1.9: Click here
+FiiO Music app-V3.1.9 for X series Android players: Click here
+FiiO Music app-V3.1.9 for M series Android players: Click here
+Updated on 2023-06-16
+Changes and improvements about new Android APP are as follows :
+1. Added a new function of adding local music tabs, and added tabs of music format,year and sampling rate;
+2. Added desktop lyrics and status bar lyrics;
+3. Added a new function of playback highlight on the multimedia playlist, and returning to the memorized position of the previous folder;
+4. Added a new function of exporting and importing M3U;
+5. Optimized desktop widgets;
+Android FiiO Music app-V3.1.8: Click here
+FiiO Music app-V3.1.8 for X series Android players: Click here
+FiiO Music app-V3.1.8 for M series Android players: Click here
+Updated on 2023-04-04
+Changes and improvements about new Android APP are as follows :
+1. Added: the function of jumping to the folder from the song information page;2. Added: support for iso tracks, when connecting to SMB;3. Added: media tracks now can be added to favorites and playlists;4. Optimized: PEQ custom function, allowing multiple custom EQs to be added;5. Optimized: Wifi Link connection function;6. Fixed: some USB Audio devices cannot be recognized and playing lag problem;7. Fixed: SMB cannot be logged in.
+Android FiiO Music app-V3.1.7: Click here
+FiiO Music app-V3.1.7 for X series Android players: Click here
+FiiO Music app-V3.1.7 for M series Android players: Click here
+Updated on 2023-01-16
+Changes and improvements about new Android APP are as follows :
+1. Updated multi-language translation;
+2. Added controls for the K9, Q11 and FW5;3. Added PEQ, codec display, and codec selection functions for the UTWS5;
+4. Added support for DTS tracks;
+5. Optimized the online update function;
+6. Fixed the registration problem;
+7. Fixed other bugs.
+Android FiiO Music app-V3.1.6: Click here
+FiiO Music app-V3.1.6 for X series Android players: Click here
+FiiO Music app-V3.1.6 for M series Android players: Click here
+Updated on 2022-12-30
+Changes and improvements about new Android APP are as follows :
+1. Added experimental functions (PEQ adjustment, DLNA transmission);
+2. Added desktop icon shortcuts (multimedia service, local music, playlists, continue);
+3. Fixed the abnormal playback issue of some tracks;
+4. Fixed the issue that some MQA tracks cannot be recognized;
+5. Optimized DLNA album catalog tracks to be sorted by track number;
+6. Optimized performance and fixed other bugs.
+Android FiiO Music app-V3.1.5: Click here
+FiiO Music app-V3.1.5 for X series Android players: Click here
+FiiO Music app-V3.1.5 for M series Android players: Click here
+Updated on 2022-09-17
+Changes and improvements about new Android APP are as follows :
+1. Added fade in/out feature.
+2. Added one-key return to the home page function in the settings page.
+3. Added playlist resume feature.
+4. Optimized media scanning speed.
+5. Optimized searching accuracy of online lyrics and album cover.
+6. Fixed the issue that the MQA format cannot be recognized/played by USB Audio devices in some cases.
+7. Fixed the issue that the SMB cannot be logged in with an empty account name in some cases.
+8. Miscellaneous improvements on performance.
+Android FiiO Music app-V3.1.4: Click here
+FiiO Music app-V3.1.4 for X series Android players: Click here
+FiiO Music app-V3.1.4 for M series Android players: Click here
+Updated on 2022-07-20
+Changes and improvements about new Android APP are as follows :
+1. Added support for DST-encoded DSD tracks;
+2. Added "Scan Settings - MQA Option" (It's recommended to disable
+this feature if you don't have any MQA tracks in your library, or you
+don't want to unfold MQA tracks, which can improve the scanning speed);
+3. Added support for embedded CUE tracks in Media server;
+4. Added the function of "add to my favorites" in the song list menu;
+5. Added support for UAC1.0;
+6. Added support for the BTR7, KA2 and KA1 in FiiO Control;
+7. Optimized some UI effects;
+8. Optimized performance and fixed other bugs.
+Android FiiO Music app-V3.1.3: Click here
+FiiO Music app-V3.1.3 for X series Android players: Click here
+FiiO Music app-V3.1.3 for M series Android players: Click here
+Updated on 2022-04-29
+The FiiO Music App V3.1.0 is coming with brand new functions! With support for MQA Core Decoder (1.99 USD), it allows you to enjoy your music the way it was meant to be heard. In addition, the new V3.1.0 supports built-in CUE, built-in lyrics, multimedia service WebDAV and so forth. Come and try it now!
+Changes and improvements about the new V3.1.0 are as follows:
+1. Added a new function of user account system;
+2. Added support for MQA Core Decoder (There is no ‘MQA subscription’ option in the settings menu of the FiiO Music App if you are using the M17, M11 Plus, M15, M11 Pro and M11 since they support decoding MQA tracks already. Other players should pay for subscription);
+3. Added support for built-in lyrics;
+4. Added support for built-in CUE;
+5. Added support for multimedia service WebDAV;
+6. Added a new function of displaying the name of the DAC and currently playing sampling rate under USB Audio mode;
+7. Improved the function of volume control under USB Audio mode;
+8. Improved the display effect on some UI pages;
+9. Miscellaneous performance improvements and bug fixes.
+10. FAQs about MQA in FiiO Music app (Ver above 3.1.0)： https://forum.fiio.com/note/showNoteContent.do?id=202205251643211513606&tid=17
+Android FiiO Music app V3.1.0: Click here
+FiiO Music app V3.1.0 for X series Android players (X7II, X7, X5III): Click here
+FiiO Music app V3.1.0 for M series Android players (M17, M11 Plus, M15, M11 Pro, M11, M9, M7, M6): Click here
+Note:
+After subscribing to the MQA channel, please reset the database first, and then re-scan the music library to ensure normal MQA working.
+Updated on 2022-01-24
+Changes and improvements about new Android APP are as follows :
+1. Added a new theme: Technology (can be enabled in Settings -> Theme -> Custom background);
+2. Upgraded the BT device control center to a brand new one(now called FiiO Control);
+3. Added sorting by year;
+4. Added support for DLNA-Emby service in Media Server(Emby/UPNP/SMB protocols are now supported);
+5. Added Now Playing list in the Media Server playback menu;
+6. Added new options: Max Volume Lock and Allow background Activity (can be set in Settings -> USB output);
+7. Fixed the issue where the volume control would not work for some tracks in D2P output mode;
+8. Fixed the issue where the DSD tracks might not be played properly (only white noise can be heard) while the Exclusive USB audio access mode is turned off;
+9. Miscellaneous improvements on performance;
+Android FiiO Music app-V3.0.9: Click here
+FiiO Music app-V3.0.9 for X series Android players: Click here
+FiiO Music app-V3.0.9 for M series Android players: Click here
+Updated on 2021-11-02
+Changes and improvements about new Android APP are as follows :
+1. Added quick search navigation bar in Playlist menu (available when the list is sorted by alphabet);
+2. Fixed the issue where some album art were not displayed properly;
+3. Fixed the issue where scanning for tracks might cause errors in a few cases;
+4. Fixed the issue where reading tracks files might fail on some devices running with Android 11;
+5. Fixed the issue where the WiFi Song Transfer might not work on some devices running with Android 11;
+6. Miscellaneous improvements on performance.
+Changes and improvements about new Android APP for for X series and M series Android players are as follows :
+1. Added quick search navigation bar in Playlist menu (available when the list is sorted by alphabet);
+2. Fixed the issue where some album art were not displayed properly;
+3. Fixed the issue where scanning for tracks might cause errors in a few cases;
+4. Improve file sorting function;
+5. Miscellaneous improvements on performance.
+Android FiiO Music app-V3.0.8: Click here
+FiiO Music app-V3.0.8 for X series Android players: Click here
+FiiO Music app-V3.0.8 for M series Android players: Click here
+Updated on 2021-09-29
+Changes and improvements about new Android APP are as follows :
+1. Added Play Next feature;
+2. Added volume adjustment for USB Audio output;
+3. Added SMB protocol for local network connections（The DLNA and NAS features have now been integrated into Media Service）;
+4. Fixed the issue where the gapless playback might not work in a few cases;
+5. Fixed the issue where the album art of some OGG tracks could not be loaded;
+6. Improved the speed of deleting tracks;
+7. Miscellaneous improvements on performance.
+Android FiiO Music app-V3.0.7: Click here
+FiiO Music app-V3.0.7 for X series Android players: Click here
+FiiO Music app-V3.0.7 for M series Android players: Click here
+Updated on 2021-07-15
+Changes and improvements about new Android APP are as follows :
+1. Added VU meters(When you choose default now playing page theme,you could enter the now playing page then tap the cover area to switch to the UV meter. );
+2. Added an option to display the album art in original size or by full screen under Spectrum display mode;
+3. Added ID3 tag support for DFF tracks;
+4. Added dark theme adaptation of the media control bar; (Android version)
+5. Fixed the issue where the album art of some tracks could not be loaded;
+6. Fixed the issue where creating new folders would fail when transferring tracks to the SD card using WiFi Song Transfer;
+7. Fixed the issue where a few tracks might not be played properly;
+8. Improved the Home screen widget;
+9. Improved the stability of FiiO Link;
+10. Improved the USB Audio compatibility with some USB DACs (such as iFi);
+11. Miscellaneous improvements.
+Android FiiO Music app-V3.0.5: Click here
+(Backup link: Click here)
+FiiO Music app-V3.0.5 for X series Android players: Click here
+(Backup link: Click here)
+FiiO Music app-V3.0.5 for M series Android players: Click here
+(Backup link: Click here)
+Updated on 2020-12-31
+Changes and improvements about new Android APP are as follows :
+1. Added full-screen album cover display and spectrum display (can be set in app settings -> Theme -> Now playing menu);
+Note: In the spectrum display mode, click the title or artist display area activate the time progress bar; switch to the lyric page and then return to the cover page to hide the bar；
+2. Added displaying the total number of tracks in the track list;
+3. Added a new function of ignoring the audio focus;
+4. Added sorting by artist under the Album category;
+5. Added a new function of switching between album list display or track list display under the Artist/Genre category;
+6. Added support for using any image file as custom album cover;
+7. Added support for the OTG function;
+8. Added file sorting in FiiO Link mode;
+9. Added sliding on the bottom control bar to skip tracks in FiiO Link mode;
+10. Miscellaneous improvements.
+Android FiiO Music app-V3.0.3: Click here
+FiiO Music app-V3.0.3 for X series Android players: Click here
+FiiO Music app-V3.0.3 for M series Android players: Click here
+Updated on 2020-10-22
+Changes and improvements about new Android APP are as follows :
+1. Brand new v3.0 design, with an overall upgrade on visual effects and interactions, as well as the new Simplicity White and Deep Black themes, all for a unique listening experience!
+2. Added a new option, "Unlimited", to the "File size limit for album art" setting;
+3. Fixed some issues that might cause app crashes and improved the stability;
+4. Improved the speed of scanning songs;
+5. Miscellaneous improvements.
+Android FiiO Music app-V3.0.2: Click here
+FiiO Music app-V3.0.2 for X series Android players: Click here
+FiiO Music app-V3.0.2 for M series Android players: Click here
+Updated on 2020-09-30
+Changes and improvements about new Android APP are as follows :
+1. Fixed the issue where the app might crash on a few devices running with Android 8;
+2. Fixed the issue where frame drops might happen to the USB Audio output and cause bubble noise;
+3. Miscellaneous bug fixes and stability improvements.
+Android FiiO Music app-V3.0.1: Click here
+Changes and improvements about new APP for X series and M series players are as follows :
+1. Brand new v3.0 design, with an overall upgrade on visual effects and interactions, all for better listening;
+2. Added Simplicity White and Deep Black themes;
+3. Added a new option, "Unlimited", to the "File size limit for album art" setting;
+4. Improved the speed of scanning songs;
+5. Improved the USB Audio compatibility and also added support for FiiO Q3;
+6. Miscellaneous improvements.
+FiiO Music app-V3.0.1 for X series Android players: Click here
+FiiO Music app-V3.0.1 for M series Android players: Click here
+Updated on 2020-09-25
+Changes and improvements about new APP are as follows :
+1. Brand new v3.0 design, with an overall upgrade on visual effects and interactions, all for better listening;
+2. Added Simplicity White and Deep Black themes;
+3. Added a new option, "Unlimited", to the "File size limit for album art" setting;
+4. Fixed the issue where the launch image would be distorted on some devices;
+5. Improved the speed of scanning songs;
+6. Improved the USB Audio compatibility and also added support for FiiO Q3;
+7. Miscellaneous improvements.
+Android FiiO Music app-V3.0: Click here
+(Note: FiiO music V3.0 APP for X series and M series players will be updated next week)
+Updated on 2020-06-17
+The changes and improvements about new APP are as follows (Android devices FiiO Music app):
+1. Added a new function of hiding the un-scanned or empty folders in Folder view menu（can be set in Settings -> Scan for music）
+2. Added 'File size limit for album art' function
+3. Added album art display in Folder view menu;
+4. Added support for DSD 256 playback when output via USB Audio;
+5. Added support for DSD playback in DLNA mode;
+6. Fixed the issue where the playback would not skip to the next track after deleting the current track in the Folder View menu;
+7. Improved the function of working as a Home screen widget;
+8. Miscellaneous improvements.
+The changes and improvements about new APP are as follows( X5III/X7/X7MKII FiiO Music App):
+1. Added a new function of hiding the un-scanned or empty folders in Folder view menu（can be set in Settings -> Scan for music）
+2. Added 'File size limit for album art' function
+3. Added album art display in Folder view menu;
+4. Added support for DSD playback in DLNA mode;
+5. Fixed the issue where the playback would not skip to the next track after deleting the current track in the Folder View menu;
+6. Improved the function of working as a Home screen widget;
+7. Miscellaneous improvements.
+Android FiiO Music app-1.2.0: Click here (Don't update this version if you are using M11/M11PRO/M15)
+X5III/X7/X7MKII FiiO Music App-1.2.0: Click here
+Updated on 2020-03-28
+The changes and improvements about new APP are as follows:
+1. Added grouping tracks by Album Artist category ;（You can select the Artist or Album Artist in the Settings->Artist List Display. This upgrade requires a database update, please scan for music again）
+2. Added FiiO Music widget(Long press the homepage to pop up widget lists, and then choose FiiO Music to put it on the homepage);
+3. Added a new feature of scrolling displaying the currently played track;
+4. Fixed the issue where the Gapless playback would not work when playing DSD tracks;
+5. Fixed the issue where a few types of tracks could not be played properly;
+6. Improved the sorting by Artist (now the articles 'the, a, an' at the beginning of the names will be ignored);
+7. Improved the rule of HR audio quality classification (according to the JEITA standard);
+8. Improved the sorting of Japanese characters;
+9. Improved some UI translations of different languages;
+10. Miscellaneous improvements.
+Android, M11/M11PRO FiiO Music app-1.1.9: Click here
+X5III/X7/X7MKII FiiO Music App-1.1.9: Click here
+Updated on 2020-01-11
+The changes and improvements about new APP are as follows:
+1. Added car mode display (go to Now Playing screen, tap the '...' icon and then tap Car Mode to enable it);
+2. Added custom track sorting for playlists (while in a playlist, tap and hold on a track, then drag it to a different position);
+3. Added a new play mode: play single once;
+4. Added playback position and track remembering;
+5. Added a new method to enable volume adjustment by swiping up in FiiO Music Now Playing screen, and also improved the volume bar operation (now you'll need to drag on the volume bar to adjust the volume instead of just tapping as before, so to avoid misoperations);
+6. Added app controlling of LC-BT2;
+7. Fixed the issue where the replay gain would work when playing tracks through the Folder View menu;
+8. Improved the display effect of the default album cover and UI background;
+9. Miscellaneous improvements.
+Android, M11/M11PRO FiiO Music app-1.1.8: Click here
+The FiiO Music App X5III/X7/X7MKII-1.1.8: Click here
+Reply
+0 Against
+0 Agree
+56Replies Positive
+Reverse
+Go to reply no. GO!
+Back to article
+1 2 3 4 ... 5
+Post
+About FiiO
+After sales policy
+Legal Notice
+Privacy Policy
+Intellectual Property Rights Statement
+简体中文
+国家或者地区
+繁體中文 台灣繁體
+English Indonesia Русский
+עברית India
+FiiO Electronic Technology Co., Ltd. All rights reserved.
+National service hotline 4000 426 826
+

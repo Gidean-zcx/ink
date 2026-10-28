@@ -1,0 +1,13 @@
+{
+  "name": "newsletter-blog",
+  "url": "https://www.inoreader.com/blog/2026/08/a-better-way-to-keep-up-with-newsletters.html",
+  "status": 200,
+  "final_url": "https://www.inoreader.com/blog/2026/08/a-better-way-to-keep-up-with-newsletters.html",
+  "bytes": 103654,
+  "raw_path": "work/research/batch41-inoreader-visuals/newsletter-blog.html",
+  "sha256": "d63ac11a4672d30fe8b7f4006fc9cf2d6c98d2980008e48613c2ef0afa55bad2",
+  "images": [
+    "https://www.inoreader.com/blog/wp-content/uploads/2026/08/1-newsletter-feeds.png",
+    "https://www.inoreader.com/blog/wp-content/uploads/2026/08/2-newsletter-feeds.png"
+  ]
+}

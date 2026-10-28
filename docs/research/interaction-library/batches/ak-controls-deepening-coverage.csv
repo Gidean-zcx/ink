@@ -1,0 +1,5 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M065-13,M-065,设置睡眠停止与自动关机,D2,E-AKCD-01,Timer Settings区分Sleep Timer、Auto Power Off、Screen Timeout；Sleep到时停止播放，关机依Auto Power Off。,时长/确认/取消、重计、锁屏/重启、第三方app范围未给出；非到时立即关机承诺。,not_observed,false,cases/M-065-astell-kern.md,2026-10-26
+F-M065-14,M-065,电脑音频进入SR35,D2,E-AKCD-01;E-AKCD-07,USB Mode/DAC Input；电脑声卡输入；Windows10/11驱动及Mac条件；模式内Previous/Play/Next不可用。,电脑声卡选择、退出/断线原曲恢复和音量；未装驱动/未实测；与USB Audio输出不同。,not_observed,false,cases/M-065-astell-kern.md,2026-10-26
+F-M065-15,M-065,蓝牙发射、断开与移除配对,D2,E-AKCD-01;E-AKCD-05;E-AKCD-06,列表配对；点已连设备确认断开；信息按钮/Remove清配对；改codec需重连及不支持时回落。,取消仅为按钮可见；配对拒绝、音量、断连续播、外设多点及现版差异。,static_reference_only,false,cases/M-065-astell-kern.md,2026-10-26
+F-M065-16,M-065,返回播放页、定位时间与歌词,D2,E-AKCD-01,Mini Player上滑/点按展开，下滑/返回收起；拖进度、封面歌词、时长切换。More可回歌曲的Album/Artist/Folder或File Info；Songs/Albums/Artists/MQS分类支持名称关键词检索，结果编辑可播/加入歌单。,无歌词/空搜索反馈、定位粒度、章节/持久时间书签、重启进度和返回滚动位置未核；分类排序/首页次序只有入口，不推定拖拽或持久化规则。,not_observed,false,cases/M-065-astell-kern.md,2026-10-27

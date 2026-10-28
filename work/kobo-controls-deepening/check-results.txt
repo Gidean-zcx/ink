@@ -1,0 +1,3 @@
+kobo-controls-deepening-coverage.csv LF 3 DictReader 2 literal_backslash_rn 0
+kobo-controls-deepening-inventory.csv LF 142 DictReader 141 literal_backslash_rn 0
+PASS 12E/2F/141 inventory; 4 old F/18 fields; 4 old E captures; 2 static images; all hashes, links, scope and pre-merge before assertions

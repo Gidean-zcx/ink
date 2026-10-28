@@ -1,0 +1,156 @@
+[
+  {
+    "capture": "01-initial",
+    "action": "打开官网公开样刊链接",
+    "observed_result": "新上下文从封面1/32开始",
+    "url": "https://reader.emagazines.com/issue/the-week-junior/october-23-2026/cover-3?ipt=F0826FC3-4129-46CF-A5F3-FF70A931F1FF",
+    "page_number": "1",
+    "search": "",
+    "captured_at_utc": "2026-10-26T14:47:37.652446+00:00",
+    "image": "artifacts/week-junior-controls-deepening/browser/01-initial.png",
+    "sha256": "510ded6010d8a10ce262872ddfeb7576283e6926222f89499a07a933f2f967ab"
+  },
+  {
+    "capture": "02-next",
+    "action": "点击Next page",
+    "observed_result": "页码变2，显示对应新闻版面",
+    "url": "https://reader.emagazines.com/issue/the-week-junior/october-23-2026/nobel-prizes-for-2026-are-awarded-1?ipt=F0826FC3-4129-46CF-A5F3-FF70A931F1FF#p2",
+    "page_number": "2",
+    "search": "",
+    "captured_at_utc": "2026-10-26T14:48:06.429381+00:00",
+    "image": "artifacts/week-junior-controls-deepening/browser/02-next.png",
+    "sha256": "78f44a6038595596161edadd8c392066367f8dc3d8327f9a4e3669dc9ce65108"
+  },
+  {
+    "capture": "03-thumbnails",
+    "action": "点击Show page thumbnails",
+    "observed_result": "侧栏及底部横向缩略图展开，显示封面和成对页范围",
+    "url": "https://reader.emagazines.com/issue/the-week-junior/october-23-2026/nobel-prizes-for-2026-are-awarded-1?ipt=F0826FC3-4129-46CF-A5F3-FF70A931F1FF#p2",
+    "page_number": "2",
+    "search": "",
+    "captured_at_utc": "2026-10-26T14:48:38.897308+00:00",
+    "image": "artifacts/week-junior-controls-deepening/browser/03-thumbnails.png",
+    "sha256": "56565d26686bdb26df95eee6be9f532753f1b82c8304b9bbc5e5855d31cb3d89"
+  },
+  {
+    "capture": "04-after-close",
+    "action": "点击缩略图右上关闭；随后寻找折叠状态下的页码输入框超时",
+    "observed_result": "留在第2页；自动定位失败，不算成功跳转",
+    "url": "https://reader.emagazines.com/issue/the-week-junior/october-23-2026/nobel-prizes-for-2026-are-awarded-1?ipt=F0826FC3-4129-46CF-A5F3-FF70A931F1FF#p2",
+    "page_number": "2",
+    "search": "",
+    "captured_at_utc": "2026-10-26T14:49:55.209132+00:00",
+    "image": "artifacts/week-junior-controls-deepening/browser/04-after-close.png",
+    "sha256": "5056b16d62779a0a99863d7a279f23ada6ecf7de535119a739f49a92b4954464"
+  },
+  {
+    "capture": "05-search-open",
+    "action": "隐藏Toggle navigation定位超时后，点击可见搜索图标(40,38)",
+    "observed_result": "侧栏展开，底部页码输入框可见",
+    "url": "https://reader.emagazines.com/issue/the-week-junior/october-23-2026/nobel-prizes-for-2026-are-awarded-1?ipt=F0826FC3-4129-46CF-A5F3-FF70A931F1FF#p2",
+    "page_number": "2",
+    "search": "",
+    "captured_at_utc": "2026-10-26T14:51:09.466986+00:00",
+    "image": "artifacts/week-junior-controls-deepening/browser/05-search-open.png",
+    "sha256": "d658bcac2e29ca0ba6b208b12ec1f26b3605e3924a375369f17537a4e1b0ea52"
+  },
+  {
+    "capture": "06-jump14",
+    "action": "在可见pageNumberInput填14并按Enter",
+    "observed_result": "页码14和对应科学版面，URL为#p14",
+    "url": "https://reader.emagazines.com/issue/the-week-junior/october-23-2026/tuts-tomb-may-have-hidden-rooms-1?ipt=F0826FC3-4129-46CF-A5F3-FF70A931F1FF#p14",
+    "page_number": "14",
+    "search": "",
+    "captured_at_utc": "2026-10-26T14:51:36.035961+00:00",
+    "image": "artifacts/week-junior-controls-deepening/browser/06-jump14.png",
+    "sha256": "b550f57ff5afe539e47370f442bd3fe8aca7903d30da92e5164d9ed9df9c871d"
+  },
+  {
+    "capture": "07-search-nobel",
+    "action": "搜索框输入Nobel并Enter",
+    "observed_result": "5个结果组，含页码、计数、缩略图及标亮摘要；当前页仍14",
+    "url": "https://reader.emagazines.com/issue/the-week-junior/october-23-2026/tuts-tomb-may-have-hidden-rooms-1?ipt=F0826FC3-4129-46CF-A5F3-FF70A931F1FF#p14",
+    "page_number": "14",
+    "search": "Nobel",
+    "captured_at_utc": "2026-10-26T14:52:06.408933+00:00",
+    "image": "artifacts/week-junior-controls-deepening/browser/07-search-nobel.png",
+    "sha256": "2bf60f2f89e82a96d16c9d7dfca7b8fd1e57fb92a872778334de6886b29328ca"
+  },
+  {
+    "capture": "08-result15",
+    "action": "点击结果Page 15，等待1秒后捕获",
+    "observed_result": "结果项高亮，但页图、页码与URL仍为14；未观察到目标页打开",
+    "url": "https://reader.emagazines.com/issue/the-week-junior/october-23-2026/tuts-tomb-may-have-hidden-rooms-1?ipt=F0826FC3-4129-46CF-A5F3-FF70A931F1FF#p14",
+    "page_number": "14",
+    "search": "Nobel",
+    "captured_at_utc": "2026-10-26T14:52:29.943887+00:00",
+    "image": "artifacts/week-junior-controls-deepening/browser/08-result15.png",
+    "sha256": "718cdc6253545f5ed7ae65931e21126d713b43672a937b7bfeb1fb82710a657d"
+  },
+  {
+    "capture": "09-search-empty",
+    "action": "输入zzqzxq-no-such-term并Enter",
+    "observed_result": "结果数0，阅读页仍14",
+    "url": "https://reader.emagazines.com/issue/the-week-junior/october-23-2026/tuts-tomb-may-have-hidden-rooms-1?ipt=F0826FC3-4129-46CF-A5F3-FF70A931F1FF#p14",
+    "page_number": "14",
+    "search": "zzqzxq-no-such-term",
+    "captured_at_utc": "2026-10-26T14:52:44.067855+00:00",
+    "image": "artifacts/week-junior-controls-deepening/browser/09-search-empty.png",
+    "sha256": "fea4868a05cd26a913375fc1c969bb54a55e5f3dce395a01ee39d695a683f810"
+  },
+  {
+    "capture": "10-save-place",
+    "action": "Clear search；点击Save my place",
+    "observed_result": "出现书签成功和本设备下次访问回此页的提示",
+    "url": "https://reader.emagazines.com/issue/the-week-junior/october-23-2026/tuts-tomb-may-have-hidden-rooms-1?ipt=F0826FC3-4129-46CF-A5F3-FF70A931F1FF#p14",
+    "page_number": "14",
+    "search": "",
+    "captured_at_utc": "2026-10-26T14:53:07.250804+00:00",
+    "image": "artifacts/week-junior-controls-deepening/browser/10-save-place.png",
+    "sha256": "6b72fc6204373dac82fd8babbd25ac2801fd5f067e00f87a96705709976b50bf"
+  },
+  {
+    "capture": "11-front",
+    "action": "点击Go to first page",
+    "observed_result": "回封面，页码1，未重新保存书签",
+    "url": "https://reader.emagazines.com/issue/the-week-junior/october-23-2026/cover-3?ipt=F0826FC3-4129-46CF-A5F3-FF70A931F1FF#p1",
+    "page_number": "1",
+    "search": "",
+    "captured_at_utc": "2026-10-26T14:53:38.929721+00:00",
+    "image": "artifacts/week-junior-controls-deepening/browser/11-front.png",
+    "sha256": "65abbe400a540786c4a92f54300f4639bca9cd81d2833ab92fc5431be987460f"
+  },
+  {
+    "capture": "12-reopen-same-context",
+    "action": "同一浏览器上下文重新打开无页码的公开期刊入口",
+    "observed_result": "回第14页；一次实测支持手动书签优先于之后浏览到的封面",
+    "url": "https://reader.emagazines.com/issue/the-week-junior/october-23-2026/tuts-tomb-may-have-hidden-rooms-1?ipt=F0826FC3-4129-46CF-A5F3-FF70A931F1FF#p14",
+    "page_number": "14",
+    "search": "",
+    "captured_at_utc": "2026-10-26T14:53:47.003698+00:00",
+    "image": "artifacts/week-junior-controls-deepening/browser/12-reopen-same-context.png",
+    "sha256": "0ba7fd4708e4a79346e6fc439dcbd8797989dbefd9ec3b65d1c54a9f1ebd9eb2"
+  },
+  {
+    "capture": "13-new-context",
+    "action": "同一浏览器新建空上下文，打开同一入口",
+    "observed_result": "从封面1/32开始；没有复制任何原上下文状态",
+    "url": "https://reader.emagazines.com/issue/the-week-junior/october-23-2026/cover-3?ipt=F0826FC3-4129-46CF-A5F3-FF70A931F1FF",
+    "page_number": "1",
+    "search": "",
+    "captured_at_utc": "2026-10-26T14:54:25.789594+00:00",
+    "image": "artifacts/week-junior-controls-deepening/browser/13-new-context.png",
+    "sha256": "120b4f1df63c6f3a48b94d177c3bb4797e5cd54bcf2ca4b486fdd03eba032171"
+  },
+  {
+    "capture": "14-last-page",
+    "action": "回到原上下文点击Go to last page",
+    "observed_result": "32/32和封底；之后Previous page被展开侧栏拦截而超时，未产生回31/再前32截图",
+    "url": "https://reader.emagazines.com/issue/the-week-junior/october-23-2026/the-week-junior-p29-1?ipt=F0826FC3-4129-46CF-A5F3-FF70A931F1FF#p32",
+    "page_number": "32",
+    "search": "",
+    "captured_at_utc": "2026-10-26T14:54:59.159520+00:00",
+    "image": "artifacts/week-junior-controls-deepening/browser/14-last-page.png",
+    "sha256": "7b9ba2be6b546f042b25da026d3970ac75d4b5341a305a9ab4bc67949e90da6c"
+  }
+]

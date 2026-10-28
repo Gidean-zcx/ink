@@ -1,0 +1,22 @@
+Managing the Battery in the Mudita Kompakt
+Modified on: Sat, 3 Oct, 2026 at 8:41 AM
+How to check battery information
+You can get an idea of your battery's health by checking its maximum capacity, cycle count, date of manufacture and date of first use
+To find battery information:
+Press the Control Center button
+Tap Settings icon
+Tap Battery
+Tap Battery Information
+How to toggle battery charging between 80% and 100%
+Limiting battery change to 80% can help maintain battery health.
+To toggle charging between 80% and 100%:
+Press the Control Center button
+Tap Settings icon
+Tap Battery
+Tap Battery Information
+Tap the Stop charging at 80% toggle switch
+Was this article helpful?
+No
+Yes
+That’s Great!
+Thank you for your feedback

@@ -1,0 +1,47 @@
+Understanding input types in Shortcuts on iPhone or iPad
+If you’ve set your shortcut to launch from another app, you can open the shortcut from other apps. When run from other apps, the shortcut receives input—such as a URL or an image—from the app. The input from the host app is passed into the first action of your shortcut.
+You can specify which input types the shortcut can accept. The default input type is Any, which allows the shortcut to appear in any app.
+When you change input types, the shortcut appears only in apps that share the specified type of content. For example, a shortcut that accepts only URLs appears when you run the shortcut from Safari, but does not appear when you run the shortcut from Photos. Shortcuts that don’t work with the current app are hidden.
+Tip: Specify an input type for each of your shortcuts so that your share sheet is organized when opened.
+Note: At times, shortcuts may appear in unexpected places—for example, a shortcut that accepts images appears when sharing a webpage in Safari (because webpages can contain images).
+The following table lists supported input types.
+Input type
+Definition
+Images
+Image files, including images from apps and on the web, as well as photos shared from the Photos app
+Media
+Video and audio files
+Files
+Any file, including documents, images, PDFs, zips, and more
+Folder
+A folder
+PDFs
+PDF files
+Text
+Plain text with no applied formatting
+Rich text
+Text with formatting applied, including HTML from webpages and content in text editors, such as Microsoft Word
+Safari webpages
+Pages shared from the Safari app or from the Safari View Controller in third-party apps
+URLs
+Any URL, whether a web link (such as http://) or another scheme (such as facetime://)
+Articles
+Articles identified when a web URL is passed as input, including details such as title, author, published date, body, excerpt, number of words, and main image URL
+Maps links
+Links to locations or directions from Maps or other navigation apps
+Locations
+Street addresses (automatically identified in text by Shortcuts) or locations shared from the Maps app
+Contacts
+Contact cards shared from the Contacts app, or vCard files
+Email addresses
+Email addresses (automatically identified in text by Shortcuts)
+Phone numbers
+Telephone numbers (automatically identified in text by Shortcuts)
+Dates
+Dates and times (To run a shortcut with a date as input, in any app, touch and hold an underlined date, such as “tomorrow at 4 PM,” tap Share, then tap Run Shortcut.)
+App Store apps
+Apps shared from the App Store
+iTunes products
+Items shared from the iTunes Store app
+Tip: To explore what an app passes into Shortcuts, set up a shortcut that accepts Anything and includes only a View Content Graph action. When the shortcut is run from the app, the content items that the Content Graph can identify are displayed.
+Not all apps, services, and content are available in all countries or regions.

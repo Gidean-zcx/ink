@@ -1,0 +1,137 @@
+[
+  {
+    "flow_id": "F-M059-02",
+    "before": {
+      "known_branches": "文件进入 Received；这不是设备直接解析原网页/Office。旧系统列表需单独复核。",
+      "gaps": "新系统兼容性、失败恢复",
+      "evidence_ids": "E-DPT-02",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "known_branches": "电脑转换为PDF→显示传输状态→完成后设备打开并进Received；单文件≤1GB，传输断连可能损坏。",
+      "gaps": "当前OS兼容、同名冲突和失败恢复未测；旧打印OS与App总体OS列表不同。",
+      "evidence_ids": "E-DPT-02;E-DPT-01",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "flow_id": "F-M059-03",
+    "before": {
+      "known_branches": "另一文档须出现在最近/同目录列表；可恢复上次组合，或选择某一侧退回单文档。",
+      "gaps": "快速列表外文档与恢复",
+      "evidence_ids": "E-DPT-03",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "known_branches": "先显示同文档两份；另一侧快速列表可选最近/同目录资料，列表外不能直接并排。可恢复最近组合；不能上下排或旋转。",
+      "gaps": "相应资料不在列表时要先使其可访问；组合/页码跨重启保留未测。",
+      "evidence_ids": "E-DPT-03;E-DPT-01",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "flow_id": "F-M059-04",
+    "before": {
+      "known_branches": "与两文档并排不同；双页下不能创建关联笔记，也不能跨两页画连续笔迹。",
+      "gaps": "不同PDF和返回位置",
+      "evidence_ids": "E-DPT-04",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "known_branches": "有封面从第2页起，无封面从第1页；双页不可旋转、并排另一文档、建关联笔记、增删笔记页或跨两页连画。",
+      "gaps": "PDF排版/退出页码和设置持久化未测。",
+      "evidence_ids": "E-DPT-04;E-DPT-01",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "flow_id": "F-M059-05",
+    "before": {
+      "known_branches": "每文档一个关联笔记；新建替代时旧笔记转为独立笔记。官方 App 移动或改笔记名仍保留关系。",
+      "gaps": "原文删除、重命名与跨软件关系",
+      "evidence_ids": "E-DPT-05",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "known_branches": "每原文一份，原目录名加_Note；替换时旧笔记转独立。App移动原文或笔记、改笔记名保持关联；不能在笔记内再建side-note。",
+      "gaps": "原文改名/删除、外部软件修改、复制和恢复后的关联未知。",
+      "evidence_ids": "E-DPT-05;E-DPT-01",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "flow_id": "F-M059-06",
+    "before": {
+      "known_branches": "选择及粘贴模式不能翻页；只可粘贴一次。重启丢失剪贴内容，翻到别页会重置撤销/重做。",
+      "gaps": "剪贴取消与重启实测",
+      "evidence_ids": "E-DPT-06",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "known_branches": "选区/粘贴模式不可翻页；Copy/Cut结束回文档后再选目标。只粘贴一次，新剪贴覆盖旧内容，重启丢失；换页清撤销。",
+      "gaps": "取消选区/剪切后未粘贴、跨文档及故障恢复未测。",
+      "evidence_ids": "E-DPT-06;E-DPT-01",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "flow_id": "F-M059-07",
+    "before": {
+      "known_branches": "同页多个命中合并；电脑端同类搜索按文档合并，双击交给电脑 PDF 阅读器。识别成功率未测。",
+      "gaps": "漏检和实际定位",
+      "evidence_ids": "E-DPT-07;E-DPT-08",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "known_branches": "设备书内标记按页合并；全库及PC按文档合并，PC可选择全库/文件夹范围。手写方式影响识别，不是通用手写全文检索。",
+      "gaps": "漏检、匹配形状与命中定位未测；搜索结果退出不保证恢复所有滚动状态。",
+      "evidence_ids": "E-DPT-07;E-DPT-08;E-DPT-01",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "flow_id": "F-M059-08",
+    "before": {
+      "known_branches": "双方同一 PDF 都修改时，设备版本保留原名、电脑版本另存；删除会传播。仅指定目录的 PDF。",
+      "gaps": "多端并发/传输中断",
+      "evidence_ids": "E-DPT-09",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "known_branches": "同PDF双改保留两份；只同步指定目录PDF，空PDF目录不参与，最多20目录。PC App可设自动同步间隔，作用于连接使用时。",
+      "gaps": "并发/中断、删除与另一边编辑同时发生的规则未知；不可借QUADERNO规则补全。",
+      "evidence_ids": "E-DPT-09;E-DPT-01;E-DPCD-28",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "flow_id": "F-M059-09",
+    "before": {
+      "known_branches": "只解除关系，已有双方文件不删；同步正在进行时不能改该配置。",
+      "gaps": "取消配置实际回执",
+      "evidence_ids": "E-DPT-09",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "known_branches": "Delete sync setting只去关系、不删两边文件；同步中不可配/删关系。同步目录改名或移动也会删除配置，继续使用须重设。",
+      "gaps": "解除/移动后的回执、重新指定目录的冲突处置未测。",
+      "evidence_ids": "E-DPT-09;E-DPT-01;E-DPCD-11",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "flow_id": "F-M059-10",
+    "before": {
+      "known_branches": "这是文件复制流程；不能据此承诺恢复账号、设置、临时剪贴或全部阅读历史。传输中断可能损坏文件。",
+      "gaps": "设置/历史/账号恢复范围",
+      "evidence_ids": "E-DPT-01",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "known_branches": "System storage全选传出是文件复制；每文件≤1GB且断连可能损坏。双击只读临时副本关闭App即删除，不能当完成备份。",
+      "gaps": "设置/历史/关联笔记属性的回导与恢复范围未核。",
+      "evidence_ids": "E-DPT-01;E-DPCD-09;E-DPCD-16",
+      "checked_on": "2026-10-27"
+    }
+  }
+]

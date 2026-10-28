@@ -1,0 +1,18 @@
+{
+  "evidence_id": "E-IHLC-01",
+  "url": "https://www.bilibili.com/opus/425918819985666271",
+  "web_response_reference": "turn972view0",
+  "response_kind": "web_open_extracted_article_text",
+  "title": "快来识字吧！识字APP测评--第一期",
+  "publisher_account": "懂课鸭",
+  "article_byline": "小张解课",
+  "published_as_shown": "2020-08-21 18:22",
+  "location": "web response lines142–221, 洪恩识字/课程体验/其他",
+  "short_verbatim_excerpt": "根据语音提示找出“二”字的石头，三次选择正确后",
+  "body_read": true,
+  "original_html_archived": false,
+  "direct_get_status": 412,
+  "images_viewed": false,
+  "video_viewed": false,
+  "capture_limitation": "网页工具已返回正文；随后普通GET412停止，未取图，不用其他域名/参数重试。此JSON仅记录工具结果的定位和短摘，不是完整原网页。"
+}

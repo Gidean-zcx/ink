@@ -1,0 +1,50 @@
+inventory_id,domain,item,source_url,locator,coverage_status,evidence_ids,flow_ids,gap
+I-MECD-001,快速指南正文栏目,Schematic Diagram,https://www.manualslib.com/guide/4006924/meebook-m7-manual.html,Schematic Diagram,heading_read_body_as_noted,E-MEE-03,,图像未取得；文字已读。栏目不等于完整系统菜单
+I-MECD-002,快速指南正文栏目,Warm Tips,https://www.manualslib.com/guide/4006924/meebook-m7-manual.html,Warm Tips,heading_read_body_as_noted,E-MEE-03,,图像未取得；文字已读。栏目不等于完整系统菜单
+I-MECD-003,快速指南正文栏目,Basic operating guidance,https://www.manualslib.com/guide/4006924/meebook-m7-manual.html,Basic operating guidance,heading_read_body_as_noted,E-MEE-03,,图像未取得；文字已读。栏目不等于完整系统菜单
+I-MECD-004,快速指南正文栏目,About maintenance guarantee,https://www.manualslib.com/guide/4006924/meebook-m7-manual.html,About maintenance guarantee,heading_read_body_as_noted,E-MEE-03,,图像未取得；文字已读。栏目不等于完整系统菜单
+I-MECD-005,快速指南基本操作,Loading Books,https://www.manualslib.com/guide/4006924/meebook-m7-manual.html,Basic operating guidance 1,body_read,E-MEE-03,F-M057-01;F-M057-02,A2/换笔尖条件归属仍待原版；安装与后台仅入口；无实操
+I-MECD-006,快速指南基本操作,Loading Dictionary,https://www.manualslib.com/guide/4006924/meebook-m7-manual.html,Basic operating guidance 2,body_read,E-MEE-03,F-M057-03,A2/换笔尖条件归属仍待原版；安装与后台仅入口；无实操
+I-MECD-007,快速指南基本操作,Change the fonts,https://www.manualslib.com/guide/4006924/meebook-m7-manual.html,Basic operating guidance 3,body_read,E-MEE-03,F-M057-03,A2/换笔尖条件归属仍待原版；安装与后台仅入口；无实操
+I-MECD-008,快速指南基本操作,Download and install apps,https://www.manualslib.com/guide/4006924/meebook-m7-manual.html,Basic operating guidance 4,body_read,E-MEE-03,F-M057-05,A2/换笔尖条件归属仍待原版；安装与后台仅入口；无实操
+I-MECD-009,快速指南基本操作,A2 Refresh,https://www.manualslib.com/guide/4006924/meebook-m7-manual.html,Basic operating guidance 5,body_read,E-MEE-03,,A2/换笔尖条件归属仍待原版；安装与后台仅入口；无实操
+I-MECD-010,快速指南基本操作,Renewal nib,https://www.manualslib.com/guide/4006924/meebook-m7-manual.html,Basic operating guidance 6,body_read,E-MEE-03,,A2/换笔尖条件归属仍待原版；安装与后台仅入口；无实操
+I-MECD-011,快速指南基本操作,Power save technique,https://www.manualslib.com/guide/4006924/meebook-m7-manual.html,Basic operating guidance 7,body_read,E-MEE-03,F-M057-06,A2/换笔尖条件归属仍待原版；安装与后台仅入口；无实操
+I-MECD-012,快速指南操作子项,USB,https://www.manualslib.com/guide/4006924/meebook-m7-manual.html,1 Method 1,body_read,E-MEE-03,F-M057-01,入口/反馈/数据结果需按任务行判断；目录不计完成任务
+I-MECD-013,快速指南操作子项,WiFi,https://www.manualslib.com/guide/4006924/meebook-m7-manual.html,1 Method 2,body_read,E-MEE-03,F-M057-02,入口/反馈/数据结果需按任务行判断；目录不计完成任务
+I-MECD-014,快速指南操作子项,Task manage,https://www.manualslib.com/guide/4006924/meebook-m7-manual.html,7 Technique 1,body_read,E-MEE-03,F-M057-06,入口/反馈/数据结果需按任务行判断；目录不计完成任务
+I-MECD-015,快速指南操作子项,Application/Snow,https://www.manualslib.com/guide/4006924/meebook-m7-manual.html,7 Technique 2,body_read,E-MEE-03,F-M057-06,入口/反馈/数据结果需按任务行判断；目录不计完成任务
+I-MECD-016,快速指南维护子项,maintenance guarantee scope,https://www.manualslib.com/guide/4006924/meebook-m7-manual.html,maintenance guarantee scope,body_read,E-MEE-03,,保修条款只登记，不作当前地区法律/服务承诺；备份无操作法
+I-MECD-017,快速指南维护子项,maintenance guarantee clauses,https://www.manualslib.com/guide/4006924/meebook-m7-manual.html,maintenance guarantee clauses,body_read,E-MEE-03,,保修条款只登记，不作当前地区法律/服务承诺；备份无操作法
+I-MECD-018,快速指南维护子项,Execute maintenance guarantee,https://www.manualslib.com/guide/4006924/meebook-m7-manual.html,Execute maintenance guarantee,body_read,E-MEE-03,,保修条款只登记，不作当前地区法律/服务承诺；备份无操作法
+I-MECD-019,快速指南维护子项,Data backups,https://www.manualslib.com/guide/4006924/meebook-m7-manual.html,Data backups,body_read,E-MEE-03,F-M057-06,保修条款只登记，不作当前地区法律/服务承诺；备份无操作法
+I-MECD-020,M7 V1.5.3-2023092114,Automatic rotation,https://ereader.co.th/firmware/,Meebook M7 / V1.5.3-2023092114 / New functions 1,release_claim_only,E-MEE-04,F-M057-04,销售商历史声明；未核OEM发布/现行构建/完整操作/修复效果
+I-MECD-021,M7 V1.5.3-2023092114,Bluetooth auto off,https://ereader.co.th/firmware/,Meebook M7 / V1.5.3-2023092114 / New functions 2,release_claim_only,E-MEE-04,,销售商历史声明；未核OEM发布/现行构建/完整操作/修复效果
+I-MECD-022,M7 V1.5.3-2023092114,JD reading records sync,https://ereader.co.th/firmware/,Meebook M7 / V1.5.3-2023092114 / New functions 3,release_claim_only,E-MEE-04,F-M057-05,销售商历史声明；未核OEM发布/现行构建/完整操作/修复效果
+I-MECD-023,M7 V1.5.3-2023092114,Long press / portrait 180°,https://ereader.co.th/firmware/,Meebook M7 / V1.5.3-2023092114 / New functions 4,release_claim_only,E-MEE-04,F-M057-04,销售商历史声明；未核OEM发布/现行构建/完整操作/修复效果
+I-MECD-024,M7 V1.5.3-2023092114,Wallpaper,https://ereader.co.th/firmware/,Meebook M7 / V1.5.3-2023092114 / Optimizations 1,release_claim_only,E-MEE-04,,销售商历史声明；未核OEM发布/现行构建/完整操作/修复效果
+I-MECD-025,M7 V1.5.3-2023092114,Bluetooth transfer,https://ereader.co.th/firmware/,Meebook M7 / V1.5.3-2023092114 / Optimizations 2,release_claim_only,E-MEE-04,,销售商历史声明；未核OEM发布/现行构建/完整操作/修复效果
+I-MECD-026,M7 V1.5.3-2023092114,UI translations,https://ereader.co.th/firmware/,Meebook M7 / V1.5.3-2023092114 / Optimizations 3,release_claim_only,E-MEE-04,,销售商历史声明；未核OEM发布/现行构建/完整操作/修复效果
+I-MECD-027,M7 V1.5.3-2023092114,Third-party image brightness,https://ereader.co.th/firmware/,Meebook M7 / V1.5.3-2023092114 / Optimizations 4,release_claim_only,E-MEE-04,,销售商历史声明；未核OEM发布/现行构建/完整操作/修复效果
+I-MECD-028,M7 V1.5.3-2023092114,Folder name display,https://ereader.co.th/firmware/,Meebook M7 / V1.5.3-2023092114 / Optimizations 5,release_claim_only,E-MEE-04,,销售商历史声明；未核OEM发布/现行构建/完整操作/修复效果
+I-MECD-029,M7 V1.5.2,Long-press mapping,https://ereader.co.th/firmware/,Meebook M7 / V1.5.2 / New Functions 1,release_claim_only,E-MEE-04,F-M057-04,销售商历史声明；未核OEM发布/现行构建/完整操作/修复效果
+I-MECD-030,M7 V1.5.2,Third-party key scrolling,https://ereader.co.th/firmware/,Meebook M7 / V1.5.2 / New Functions 2,release_claim_only,E-MEE-04,F-M057-04,销售商历史声明；未核OEM发布/现行构建/完整操作/修复效果
+I-MECD-031,M7 V1.5.2,WeChat image display,https://ereader.co.th/firmware/,Meebook M7 / V1.5.2 / Optimizations 1,release_claim_only,E-MEE-04,,销售商历史声明；未核OEM发布/现行构建/完整操作/修复效果
+I-MECD-032,M7 V1.5.2,Automatic power off,https://ereader.co.th/firmware/,Meebook M7 / V1.5.2 / Optimizations 2,release_claim_only,E-MEE-04,F-M057-06,销售商历史声明；未核OEM发布/现行构建/完整操作/修复效果
+I-MECD-033,M7 V1.5.2,KOReader key response,https://ereader.co.th/firmware/,Meebook M7 / V1.5.2 / Optimizations 3,release_claim_only,E-MEE-04,F-M057-04,销售商历史声明；未核OEM发布/现行构建/完整操作/修复效果
+I-MECD-034,M7 V1.5.2,Punctuation,https://ereader.co.th/firmware/,Meebook M7 / V1.5.2 / Optimizations 4,release_claim_only,E-MEE-04,,销售商历史声明；未核OEM发布/现行构建/完整操作/修复效果
+I-MECD-035,M7 V1.5.2,Book opening crash,https://ereader.co.th/firmware/,Meebook M7 / V1.5.2 / Optimizations 5,release_claim_only,E-MEE-04,,销售商历史声明；未核OEM发布/现行构建/完整操作/修复效果
+I-MECD-036,M7 V1.5.2,microSD Books listing,https://ereader.co.th/firmware/,Meebook M7 / V1.5.2 / Optimizations 6,release_claim_only,E-MEE-04,,销售商历史声明；未核OEM发布/现行构建/完整操作/修复效果
+I-MECD-037,M7 V1.5.2,Copied/preinstalled book opening,https://ereader.co.th/firmware/,Meebook M7 / V1.5.2 / Optimizations 7,release_claim_only,E-MEE-04,,销售商历史声明；未核OEM发布/现行构建/完整操作/修复效果
+I-MECD-038,M7 V1.5.2,Clock wallpaper / frontlight,https://ereader.co.th/firmware/,Meebook M7 / V1.5.2 / Optimizations 8,release_claim_only,E-MEE-04,,销售商历史声明；未核OEM发布/现行构建/完整操作/修复效果
+I-MECD-039,M7 V1.5.2,Warm/cold light after wake,https://ereader.co.th/firmware/,Meebook M7 / V1.5.2 / Optimizations 9,release_claim_only,E-MEE-04,,销售商历史声明；未核OEM发布/现行构建/完整操作/修复效果
+I-MECD-040,M7 V1.5.2,Heat / power use,https://ereader.co.th/firmware/,Meebook M7 / V1.5.2 / Optimizations 10,release_claim_only,E-MEE-04,F-M057-06,销售商历史声明；未核OEM发布/现行构建/完整操作/修复效果
+I-MECD-041,M7 V1.5.2,WiFi connection,https://ereader.co.th/firmware/,Meebook M7 / V1.5.2 / Optimizations 11,release_claim_only,E-MEE-04,F-M057-06,销售商历史声明；未核OEM发布/现行构建/完整操作/修复效果
+I-MECD-042,研究缺口（非官方目录）,阅读导航/章节/书签,,未取得M7对应帮助,not_found_in_available_sources,,F-M057-05,需要明确M7及构建的原厂说明/机内帮助；未知不等于不支持
+I-MECD-043,研究缺口（非官方目录）,选词/批注/笔记导出,,未取得M7对应帮助,not_found_in_available_sources,,F-M057-05,需要明确M7及构建的原厂说明/机内帮助；未知不等于不支持
+I-MECD-044,研究缺口（非官方目录）,显示刷新菜单与手势,,未取得M7对应帮助,not_found_in_available_sources,,F-M057-04,需要明确M7及构建的原厂说明/机内帮助；未知不等于不支持
+I-MECD-045,研究缺口（非官方目录）,本地文件删除/恢复,,未取得M7对应帮助,not_found_in_available_sources,,F-M057-01,需要明确M7及构建的原厂说明/机内帮助；未知不等于不支持
+I-MECD-046,研究缺口（非官方目录）,应用卸载与数据保留,,未取得M7对应帮助,not_found_in_available_sources,,F-M057-05,需要明确M7及构建的原厂说明/机内帮助；未知不等于不支持
+I-MECD-047,研究缺口（非官方目录）,音频/后台/重启断点,,未取得M7对应帮助,not_found_in_available_sources,,F-M057-06,需要明确M7及构建的原厂说明/机内帮助；未知不等于不支持
+I-MECD-048,研究缺口（非官方目录）,更新失败/回滚/恢复出厂,,未取得M7对应帮助,not_found_in_available_sources,,F-M057-06,需要明确M7及构建的原厂说明/机内帮助；未知不等于不支持
+I-MECD-049,研究缺口（非官方目录）,备份范围/导入恢复,,未取得M7对应帮助,not_found_in_available_sources,,F-M057-06,需要明确M7及构建的原厂说明/机内帮助；未知不等于不支持

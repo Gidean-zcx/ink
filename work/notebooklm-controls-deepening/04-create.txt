@@ -1,0 +1,111 @@
+Create a notebook in Gemini Notebook
+Important: At this time, the Gemini Notebook mobile app may have limitations to this feature. Learn more about the supported features in the Gemini Notebook mobile app.
+In Gemini Notebook, you can create individual notebooks. A notebook is a collection of sources for a specific project.
+Tip: Each notebook is independent. Gemini Notebook can’t access information across multiple notebooks at the same time.
+Get started with your first notebook
+On your device, open Gemini Notebook.
+To create a new notebook, select  Create new notebook.
+To add a source, in the pop-up window, select Upload a source.
+Select the sources you want to upload for your notebook or discover new sources.
+To start collaborating with Gemini Notebook:
+The “Chat” panel displays a generated summary of all your sources. You can ask questions about your sources, give instructions to perform actions, or choose from suggested options. Learn more about chats.
+The “Studio” panel is where outputs based on your sources are generated. In the studio panel, you can create and view:
+Notes. Learn more about Notes.
+Audio Overviews. Learn more about Audio Overview.
+Video Overviews. Learn more about Video Overviews.
+Mind maps. Learn more about Mind Maps.
+Reports.
+Create your own, or choose from FAQ, study guide, briefing document, or an AI suggested report type.
+Open the three dots menu next to your generated report to select “Export to Docs.” If there are data tables in your report, “Export to Sheets” will populate each table in its own tab in a Google Sheets.
+Data Tables
+Click to generate, or customize by selecting the pencil icon. Choose a language, or use the prompt box to customize your data table. For example, you can describe the rows and columns for a more focused, precise table.
+Open the three dots menu next to your generated Data Table to select “Export to Sheets.” The content of your data table will populate the first tab of a new Google Sheet, and any citations will populate the second tab.
+Flashcards or Quizzes. Learn more about Flashcards or Quizzes.
+Slide Decks. Learn more about Slide Decks.
+Infographics. Learn more about Infographics.
+To help you get started, you may see a report, flashcards, infographic, slide decks, audio, or a video overview created automatically sometimes, when you first add sources to a notebook. These are generated once and do not contribute to limits. Learn more about Gemini Notebook usage limits.
+Tip: You can add or remove sources in your notebook by selecting + Add or unselecting individual sources in the “Sources” panel.
+Tip: When you have 5+ sources, Gemini Notebook can auto-label & categorize sources, allowing you to quickly and easily organize your sources by topic. You can also manually modify source organization by:
+Adding a new label
+Re-naming labels
+Deleting labels
+Moving sources to different labels
+Tip: to view the prompt used to generate your audio overview, video overview, flashcards, quizzes, or reports, select “View custom prompt” within the three dots menu next to your artifact in the Studio panel. For flashcards, quizzes, and videos, a “Show prompt” is also available next to the title in the viewer.
+Tip: Any modifications made within exported Docs or Sheets files do not synchronize with your original Gemini Notebook content. Sharing permissions do not carry over from Gemini Notebook to exported files.
+Create a notebook in Gemini
+You can also create a new notebook with Gemini Apps. Learn more about notebooks in Gemini.
+Turn on web notifications for completed artifacts
+On your computer, go to Gemini Notebook.
+At the top right, click Settings  Notifications.
+Turn on Web notifications.
+In the browser pop-up, click Allow.
+Tip: To turn on device level notifications, go to your browser settings.
+How you’ll be notified
+When your artifact is completed, you’ll be notified in these ways:
+You’ll receive a desktop notification.
+The tab title animates.
+In your Gemini Notebook Studio, a small blue dot appears next to any new, unread artifact. Until you open the artifact, this dot will appear across web sessions.
+Each notification contains the title of the notebook or artifact.
+Update Notebook Emoji
+After you upload sources, Gemini Notebook will automatically assign an emoji to represent your notebook.
+To update the emoji:
+Open an existing notebook
+In the chat panel, select the current emoji
+Use the emoji search to choose a new emoji to represent your notebook
+Share notebooks privately
+Open a notebook.
+Select Share .
+You can grant “Viewer” or “Editor” access to another user by adding their email address.
+A viewer has read-only access to all the source documents and notes you shared with them in the shared notebook.
+An editor can view, add, or remove sources and notes in your shared notebook as well as share it further with other users.
+Copy link
+Copy the link and share it with recipients.  You can also choose to “Copy link to chat view” to copy the Chat View link.
+Note, viewers may still be able to access sources and artifacts. Chat View hides these materials for a focused experience, but it does not completely revoke a viewer's underlying access to the notebook contents. Viewers may still find ways to navigate to the hidden materials outside of the default chat experience.
+Tips:
+Personal Gmail accounts can share a notebook with up to 50 users but can't share with Google Groups.
+When notebooks are shared with a group, users do not receive any welcome emails or notifications.
+Share notebooks & artifacts publicly
+You can make your notebook public and share a link with anyone with a Google account. To access a shared notebook, you must be signed in to your Google account. Learn how to share a notebook publicly in Gemini Notebook.
+If you are the owner of a publicly shared notebook, you can also share artifacts, such as slide decks, audio overviews, reports, or any studio generated content. Anyone who has the link to your shared artifacts can view them, even if they are not signed in to their Google accounts.
+Understand notebook & artifact sharing limits
+Sharing limits for Play Books ebooks
+You can privately and publicly share notebooks that use Play Books ebooks as sources, but there are access limits for your recipients:
+Artifacts: To interact with or view artifacts generated from your notebook, recipients may need to buy the source ebook from Play Books.
+Source ebooks: To interact with or view source ebooks, recipients must also buy them from Play Books. Play Books ebooks they haven’t bought are grayed out as a source.
+You cannot publicly share notebooks with artifacts created from Play Books ebooks.
+Create a private copy of a notebook
+On your device, go to Gemini Notebook.
+Open a notebook that you have copy permissions for. This includes:
+Notebooks that you own.
+Private notebooks that allow copies and are shared with you.
+Publicly shared notebooks that allow copies.
+At the top, select Copy  Create.
+All Studio content & sources are copied.
+Chat history & notes are not copied.
+Allow others to create a copy of your notebook
+On your device, go to Gemini Notebook.
+Open a notebook.
+At the top, select Share.
+Share your notebook with at least one other person.
+Check or uncheck the box next to Allow copies.
+If you allow copies: Users you’ve shared the notebook with can duplicate the notebook, including its sources and artifacts.
+If you do not allow copies: Users you’ve shared the notebook with cannot duplicate the notebook itself. But they can still copy content in the notebook that they have access to.
+Select Save.
+Usage analytics
+Users can check the past-seven-day usage analytics of their notebooks by selecting Analytics .
+2 metrics are currently supported:
+Users per day: The number of users who made at least one query per day. This includes the owner.
+Queries per day: The number of queries made by the users per day. This includes the queries made by the owner.
+To get analytics, the notebook must be shared with at least 4 other users and have some chat activity within the past 7 days.
+Analytics update approximately every 24 hours.
+Learn about Gemini Notebook responses
+Gemini Notebook answers and outputs are generated by AI based on user-provided sources and instructions.
+Gemini Notebook may remove notebooks and artifacts when our systems detect a possible violation of Google's Terms of Service, including the Prohibited Use Policy. Users with a Google Workspace or Google Workspace for Education account may be subject to different terms.
+Don't rely on Gemini Notebook for medical, legal, financial, or other professional advice. Any content regarding those topics is provided for informational purposes only and isn’t a substitute for advice from a qualified professional.
+Copyright
+Respect copyright laws. Do not share copyrighted content without the necessary rights to do so. It’s our policy to respond to clear notices of alleged copyright infringement. Repeated infringement of intellectual property rights, including copyright, will result in account termination.
+Some of our services, including Gemini Notebook, allow you to generate original content. Google won't claim ownership over that content. If you see a violation of Google's copyright policies, report copyright infringement.
+Related resources
+Create & add notes in Gemini Notebook
+Generate an Audio Overview in Gemini Notebook
+Add or discover new sources for your Notebook

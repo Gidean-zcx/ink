@@ -1,0 +1,142 @@
+[
+  {
+    "path": "docs/research/interaction-library/cases/M-026-eudic.md",
+    "sha256": "170a68563b1e3a6abf54b7670383a9b83858caeca64acf8d12445ef52ca6906f"
+  },
+  {
+    "path": "docs/research/interaction-library/batches/eudic-controls-deepening-coverage.csv",
+    "sha256": "1d536ce16583797d44afdbdc2985bdd6f66b097f3618a30d271847e72a8d6fbb"
+  },
+  {
+    "path": "docs/research/interaction-library/batches/eudic-controls-deepening-evidence.jsonl",
+    "sha256": "a6bfb0248495a51474dfd7d8a67848cd968e39cede98424e63799b0b96bcccec"
+  },
+  {
+    "path": "docs/research/interaction-library/batches/eudic-controls-deepening-inventory.csv",
+    "sha256": "7cf56e65ac58bb8b2890955f2afd9bb16b0f002358c9d0c27d3b3179fc0248a4"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/eudic-controls-deepening/source-notes.md",
+    "sha256": "e51c20b015a6decae0163f3d82eda00e5ec62fd4e26bb9e4145377b1899f34aa"
+  },
+  {
+    "path": "work/eudic-controls-deepening/15-ios-log.html",
+    "sha256": "7b7e716522af6c780190459ff592cbd5f90d661fdb3020b4dee7a84f016c7dd3"
+  },
+  {
+    "path": "work/eudic-controls-deepening/17-desktop-log.html",
+    "sha256": "f0b187594ca95beaa840e567f24d5a4f8e0f2e71f235662ef0d2ece45a7fb264"
+  },
+  {
+    "path": "work/eudic-controls-deepening/06-product.html",
+    "sha256": "386c80ff86df81c44c78f5ef4babaa0c8b2ec69aef2d1f00d7475494f21dc1f9"
+  },
+  {
+    "path": "work/eudic-controls-deepening/05-api.html",
+    "sha256": "7fa539a9c397798d8c96ce1a9df2d4bb97d4049218690c4cf547c7e45fd264d3"
+  },
+  {
+    "path": "work/eudic-controls-deepening/18-privacy.html",
+    "sha256": "3c5479db3846b3d53dded78af9cda8d2f959e4de9f9a4ed0dd1e8e0a685cfb8d"
+  },
+  {
+    "path": "work/eudic-controls-deepening/13-log.html",
+    "sha256": "bf8c895d4219a43286e115a8f903567ae1553220ebcac0c7d708fc2d5c8dbd54"
+  },
+  {
+    "path": "work/eudic-controls-deepening/16-android-log.html",
+    "sha256": "f41779b7d1fd7937f1782c5e2d55cbaf3da0b164a96b7a49030766db2d97dda5"
+  },
+  {
+    "path": "work/eudic-controls-deepening/10-keyboard.txt",
+    "sha256": "1f85fab0bf6c31c24fe5c712b5402c41a59c2c493b0f618779872684f05ba209"
+  },
+  {
+    "path": "work/eudic-controls-deepening/02-scheme.txt",
+    "sha256": "855e2ae82800b9e570b8fb6e0239ff8b32fae167c9aa3f0474611172d153a577"
+  },
+  {
+    "path": "work/eudic-controls-deepening/08-fulltext.txt",
+    "sha256": "0cf89c90345c5b504ae73b709d498e602e466d4ac72313fb83785ced1a4c40e8"
+  },
+  {
+    "path": "work/eudic-controls-deepening/07-cross.txt",
+    "sha256": "96eef09643f9d77f2bdcc9bdb698084fae2788ca62f9620c3c715668055a5226"
+  },
+  {
+    "path": "work/eudic-controls-deepening/15-ios-log-_doc_description.txt",
+    "sha256": "5ce2eac6238ecf1aa86ba1adabc27f5c250fdcfb62b86efc63ad33538f483ad3"
+  },
+  {
+    "path": "work/eudic-controls-deepening/09-display.txt",
+    "sha256": "cfa95c1c1e9d4f0c4cd008f9055458cb5adc501407693d01042f341c1a2e8701"
+  },
+  {
+    "path": "work/eudic-controls-deepening/06-product-parsed.txt",
+    "sha256": "462d2034fc2274d6bfe1ee64ce53c044bb4f3010101ab61189a222e875eaf296"
+  },
+  {
+    "path": "work/eudic-controls-deepening/05-api-parsed.txt",
+    "sha256": "fbb30044249447ec45be9ec168c6a3c5e5dc1ef830958ed0ba90fb9ba21b3c1a"
+  },
+  {
+    "path": "work/eudic-controls-deepening/03-library.txt",
+    "sha256": "46d9c22dbb420a555dd61213983ffbf18729945926f9e6ea328f804e29cc5e1c"
+  },
+  {
+    "path": "work/eudic-controls-deepening/13-log-parsed.txt",
+    "sha256": "e058e0d853c5a83e03d726531374b0343adada508226f6d0681698e7a1a10cb1"
+  },
+  {
+    "path": "work/eudic-controls-deepening/14-aiarticle-search-capture.txt",
+    "sha256": "c507ac506143d5e11574aea98492c4a2ba7a2318ccaeadb551b78a5a876dd51f"
+  },
+  {
+    "path": "work/eudic-controls-deepening/12-wordbook.txt",
+    "sha256": "0a6a9dd66156e5645df60c4b77f5db32bcaccf1261904df1456ab4d1ecde021c"
+  },
+  {
+    "path": "work/eudic-controls-deepening/17-desktop-log-parsed.txt",
+    "sha256": "d751b19446f35e42a14bece32e0660fbdf5c4b748f87da4987bba9ae23c43592"
+  },
+  {
+    "path": "work/eudic-controls-deepening/16-android-log-_doc_description.txt",
+    "sha256": "7244c212d5f6d030a5f80f5158f3a492b937ae624b305823672195b77b26461b"
+  },
+  {
+    "path": "work/eudic-controls-deepening/01-index.txt",
+    "sha256": "a082bfd1238d77e6ebd5ff928c2f83c52856e9e05012ca1b2c54f38749bd7386"
+  },
+  {
+    "path": "work/eudic-controls-deepening/15-ios-log-parsed.txt",
+    "sha256": "b5ca4c5115d8ce2d1e1558ffd9c2633dfebedd3fc2718a0faa57359a9b3de857"
+  },
+  {
+    "path": "work/eudic-controls-deepening/04-reader.txt",
+    "sha256": "5037dca7813882c28a496d26caa2a099f43187ff0ba463eabe6ad081eab05cf0"
+  },
+  {
+    "path": "work/eudic-controls-deepening/17-desktop-log-_doc_description.txt",
+    "sha256": "e1fa140ddabfb6e07779ae452d7ab6be2fd8990d0ed500f74423ce3fc0080b39"
+  },
+  {
+    "path": "work/eudic-controls-deepening/16-android-log-parsed.txt",
+    "sha256": "5aa3e05a1316625db44a41d3a9501c75b9a3c7559b74f6307d616fcdb9155a71"
+  },
+  {
+    "path": "work/eudic-controls-deepening/18-privacy-parsed.txt",
+    "sha256": "ffd76d39e988be659a8fa866b50ae9d3cb9493f61b5cf0a591a8164507945e80"
+  },
+  {
+    "path": "work/eudic-controls-deepening/11-learnfaq.txt",
+    "sha256": "ccce5fd6759acac39f4b41dc4a3e29cad9b6361e99e96b96847c47538493430b"
+  },
+  {
+    "path": "work/eudic-controls-deepening/existing-coverage-updates.json",
+    "sha256": "33b1023d92f2cca5c311e19822c6e3ac0a269dea87ef20aaf06a5d2da1c3e557"
+  },
+  {
+    "path": "work/eudic-controls-deepening/existing-coverage-updates.csv",
+    "sha256": "5a794545f3605979bc9f3d20bc45ba865656daf56aae3a09c915acd5674f1194"
+  }
+]

@@ -1,0 +1,31 @@
+   c. Click on the "Update Library" and click on "Scan music now", device
+      will scan all the files and view them in"All Songs" tab.
+
+2. Using player as USB DAC
+
+   a. Swipe down to view quick access menu,  it includes "USB
+    AUDIO/USB Storage/USB DAC" switch. Make sure it's set to "USB
+     DAC".
+
+   b. Install the USB Driver on the computer before connecting player
+      (Drivers only needed for Windows).
+
+USB drivers download:
+
+Visit download section on our official website to downloads the latest
+USB drivers for your device: en.shanling.com
+
+
+Firmware Update
+
+1. When updating the firmware, please make sure that device is fully
+  charged.
+
+2. Do not do operate the device during the update process.
+
+Over-the-Air Update
+
+1. Turn on WiFi in the player and connect to an available network.
+
+2. In the "System Setting", select "System Update" - "Network Update" to
+  update latest firmware automatically.

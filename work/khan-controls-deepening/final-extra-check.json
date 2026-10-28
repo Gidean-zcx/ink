@@ -1,0 +1,23 @@
+{
+  "new_evidence_raw_hashes": 42,
+  "antenna_manifest_raw_hashes": 50,
+  "kindle_raw_hashes": 14,
+  "khan_sample_hashes": 16,
+  "inventories": 12,
+  "inventory_rows": 655,
+  "inventory_counts": {
+    "batches/kindle-controls-deepening-inventory.csv": 58,
+    "batches/khan-controls-deepening-inventory.csv": 8,
+    "artifacts/antennapod-controls-deepening/functional-inventory.csv": 131,
+    "artifacts/boox-controls-deepening/functional-inventory.csv": 59,
+    "batches/notebooklm-controls-deepening-inventory.csv": 19,
+    "artifacts/supernote-controls-deepening/functional-inventory.csv": 140,
+    "artifacts/pocketbook-controls-deepening/functional-inventory.csv": 65,
+    "inventories/M027-help-inventory.csv": 70,
+    "inventories/M049-early-guide-inventory.csv": 11,
+    "inventories/M009-X2-manual-inventory.csv": 64,
+    "inventories/M007-historical-manual-inventory.csv": 17,
+    "inventories/M028-historical-practice-inventory.csv": 13
+  },
+  "errors": []
+}

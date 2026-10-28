@@ -1,0 +1,111 @@
+{
+  "product_id": "M-029",
+  "frozen_on": "2026-10-27",
+  "files": [
+    {
+      "path": "docs/research/interaction-library/artifacts/ihuman-learning-controls-deepening/source-notes.md",
+      "bytes": 2600,
+      "sha256": "02dd9dcbd3738fb023e1828aa07207249003e9408b75339ca8c3875bcb5c7d7a"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/ihuman-learning-controls-deepening-coverage.csv",
+      "bytes": 107,
+      "sha256": "aa0cf671b21fa0390e9b0cfb58c6cecf3a0d7df66eaad894707f17ea224f6025"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/ihuman-learning-controls-deepening-evidence.jsonl",
+      "bytes": 3103,
+      "sha256": "9206034c5bbc88fb5eba3016b3a2f56bf87f20b9b163fa49a63fb50c688ff38b"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/ihuman-learning-controls-deepening-inventory.csv",
+      "bytes": 8282,
+      "sha256": "7dea7eeda1863c9cdaa184b2e6211aa92d854c633cd85f87a130767acf559ce0"
+    },
+    {
+      "path": "docs/research/interaction-library/cases/M-029-ihuman.md",
+      "bytes": 21982,
+      "sha256": "1d94d943510f4220d40a6455dcb10d1e8059f5235310163609b16c80e6b8b07a"
+    },
+    {
+      "path": "work/ihuman-learning-controls-deepening/HANDOFF.md",
+      "bytes": 7840,
+      "sha256": "a0bf10bb63899f1ba4c344082015dcea0869b3b0df113a8f5be416ac2fad8766"
+    },
+    {
+      "path": "work/ihuman-learning-controls-deepening/build-results.json",
+      "bytes": 270,
+      "sha256": "85bbf65d08ab58fd8e5f55c0b4a8544fa8eb37eb42587907219401726d49bf41"
+    },
+    {
+      "path": "work/ihuman-learning-controls-deepening/case-before.md",
+      "bytes": 19510,
+      "sha256": "b64b433e712f1fecf8c15c878824e4d89250d49a622ab98a6f6656fa4ab2ee28"
+    },
+    {
+      "path": "work/ihuman-learning-controls-deepening/coverage-before.json",
+      "bytes": 3392,
+      "sha256": "c5f8a289dc99c148d4b8515d6b09ca490591374a754a9f1daa69ed809434ff1f"
+    },
+    {
+      "path": "work/ihuman-learning-controls-deepening/evidence-before.json",
+      "bytes": 15824,
+      "sha256": "0d146b54854d00a3028b9cbd508d5927fa49674d7445513b7538e4984ef2f927"
+    },
+    {
+      "path": "work/ihuman-learning-controls-deepening/existing-coverage-updates.json",
+      "bytes": 3500,
+      "sha256": "a4175e62f1b5d1560d1059dabd602c4867928fd6093c3510b6c1a2d2d3e408dc"
+    },
+    {
+      "path": "work/ihuman-learning-controls-deepening/existing-evidence-additional-captures.json",
+      "bytes": 1740,
+      "sha256": "db0b168bf3d7e104bcc1e6cbe6cc1ff1d28ae264730bb3f33ec6aff81855e51c"
+    },
+    {
+      "path": "work/ihuman-learning-controls-deepening/exploration-log.json",
+      "bytes": 1771,
+      "sha256": "5700399ba4161deae3826d250a0b5acc0a3b745cdb8ca5d04ea5c008c701d71b"
+    },
+    {
+      "path": "work/ihuman-learning-controls-deepening/fetch.py",
+      "bytes": 991,
+      "sha256": "71541d1335c6b7b052ec67e11718cf9a7b3d436b6967583c156169797c31ed90"
+    },
+    {
+      "path": "work/ihuman-learning-controls-deepening/http-captures.json",
+      "bytes": 737,
+      "sha256": "ea26e865b1a29e6deff2650c06c7657d98ac072b83dd297ede60e62fc85402a7"
+    },
+    {
+      "path": "work/ihuman-learning-controls-deepening/inspect_video.py",
+      "bytes": 2444,
+      "sha256": "3182a66563b85e70497eb97ebaadc9bc558b47e9e796d0a513bc7edd39e599c7"
+    },
+    {
+      "path": "work/ihuman-learning-controls-deepening/precheck.py",
+      "bytes": 4955,
+      "sha256": "d415365bc421b8990dd3b215028511bfe96389ab6abf56a94a772d6bb27ae143"
+    },
+    {
+      "path": "work/ihuman-learning-controls-deepening/raw/E-IHLC-01-web-reading-record.json",
+      "bytes": 886,
+      "sha256": "223ca7bf2a0c582a163214449f1d1d37d1ecad5106cd16ae751c6389ecd3d545"
+    },
+    {
+      "path": "work/ihuman-learning-controls-deepening/raw/E-IHLC-02-web-reading-record.json",
+      "bytes": 957,
+      "sha256": "a8c13ac716bfe76dce58cbff13f20a5a92a12b7e3a98e5b1b6c236d3886e8c41"
+    },
+    {
+      "path": "work/ihuman-learning-controls-deepening/raw/smzdm-2020.html",
+      "bytes": 1697,
+      "sha256": "c7d2f547ca441fc1b3cf4fe982a2b953693b14762815813792c2d1598da71364"
+    },
+    {
+      "path": "work/ihuman-learning-controls-deepening/write_batch.py",
+      "bytes": 19225,
+      "sha256": "0e712f4a07633e52c0ddad94157d9136c716a3c65226caa3c48eb0e730d60978"
+    }
+  ]
+}

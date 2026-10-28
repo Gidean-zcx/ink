@@ -1,0 +1,67 @@
+[
+  {
+    "flow_id": "F-M045-01",
+    "product_id": "M-045",
+    "task": "一日简报读完",
+    "depth": "D1",
+    "evidence_ids": "E-ESPR-01;E-ESPR-02",
+    "known_branches": "内容或权限可用性未实测",
+    "gaps": "精确入口与已读结算返回",
+    "visual_status": "not_observed",
+    "hands_on": "false",
+    "case_path": "cases/M-045-espresso.md",
+    "checked_on": "2026-10-26"
+  },
+  {
+    "flow_id": "F-M045-02",
+    "product_id": "M-045",
+    "task": "主题偏好与每周深读",
+    "depth": "D2",
+    "evidence_ids": "E-ESPR-01;E-ESPR-02;E-ESD-02",
+    "known_branches": "机构指南 Settings 到 For you；不证明改每日短报",
+    "gaps": "选项、确认、生效与当前平台构建",
+    "visual_status": "not_observed",
+    "hands_on": "false",
+    "case_path": "cases/M-045-espresso.md",
+    "checked_on": "2026-10-26"
+  },
+  {
+    "flow_id": "F-M045-03",
+    "product_id": "M-045",
+    "task": "文章听读与翻译",
+    "depth": "D1",
+    "evidence_ids": "E-ESPR-02;E-ESD-01",
+    "known_branches": "静态图可见阅读时间与音频入口、时长；翻译为能力声明",
+    "gaps": "播放结果、暂停结束、精确返回恢复与语言入口",
+    "visual_status": "static_official_images_only",
+    "hands_on": "false",
+    "case_path": "cases/M-045-espresso.md",
+    "checked_on": "2026-10-26"
+  },
+  {
+    "flow_id": "F-M045-04",
+    "product_id": "M-045",
+    "task": "机构登录及学生资格",
+    "depth": "D2",
+    "evidence_ids": "E-ESPR-04;E-ESPR-03",
+    "known_branches": "机构特定账号和16岁以上资格",
+    "gaps": "通用新用户错误恢复及当前界面",
+    "visual_status": "not_observed",
+    "hands_on": "false",
+    "case_path": "cases/M-045-espresso.md",
+    "checked_on": "2026-10-26"
+  },
+  {
+    "flow_id": "F-M045-07",
+    "product_id": "M-045",
+    "task": "设置显示与通知",
+    "depth": "D2",
+    "evidence_ids": "E-ESD-02",
+    "known_branches": "机构指南 Settings 选项",
+    "gaps": "保存、通知系统权限、跨重启状态",
+    "visual_status": "not_observed",
+    "hands_on": "false",
+    "case_path": "cases/M-045-espresso.md",
+    "checked_on": "2026-10-26"
+  }
+]

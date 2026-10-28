@@ -1,0 +1,3 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M002-25,M-002,创建、编辑与删除合集,D2,E-KBCD-01,My Books/Collections菜单New collection→命名/Next→选书+/Create；长按合集Manage以勾/加号增删成员并Save，Rename后Save，Delete后再确认。跨端显示可能延迟。,取消、空名/重名、空合集、删除后的成员书/笔记细节、撤销及同步冲突未给；不等同于Remove download或账户Archive。,not_observed,false,cases/M-002-kobo.md,2026-10-27
+F-M002-26,M-002,添加页书签并回到标记页,D2,E-KBCD-03,阅读中点右上角出现折角；中央Reading Menu/Notes→选Bookmark回查。,未给删除/再次点按行为、格式限制、多个书签排序、跨端同步或重排后锚点；不把书签等同阅读进度或音频断点。,not_observed,false,cases/M-002-kobo.md,2026-10-27

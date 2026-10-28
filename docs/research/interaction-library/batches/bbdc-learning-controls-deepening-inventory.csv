@@ -1,0 +1,10 @@
+item_id,inventory_kind,functional_domain,known_entry,source_locator,evidence_ids,flow_ids,platform_version,coverage_state,gaps,prior_inventory_ids,checked_on,prior_inventory_relation
+M018-L01,historical_static_and_text,首次辨识,Learn→选义/不认识→释义/例句,Learn段及第一张采用图,E-BBLC-02,F-M018-01,2017；构建未注,historical_partial,当前规则/音频播放未核,,2026-10-27,旧34项未单列首次辨识；本次只加历史入口
+M018-L02,historical_static,辨识完成与拼写选择,辨识完成弹窗→放弃/开始拼写,拼写段相邻图,E-BBLC-02,F-M018-01,2017；构建未注,historical_partial,放弃后状态/完成拼写回执/恢复,M018-I04,2026-10-27,关联阶段选择；不补现版设置保存
+M018-L03,historical_static_and_text,拼写提示,灯泡,拼写段正文与图,E-BBLC-02,F-M018-02,2017；两个不同词样例,historical_partial,未听音；同词提示前后/扣分/重试未知,M018-I06,2026-10-27,历史提示入口；不证明现版提示规则
+M018-L04,author_flow_diagram,选择错答后继续,选错→答案→继续,3.7.3作者流程,E-BBLC-01,F-M018-02,作者自报V4.3/iOS13.6.1,diagram_not_ui_feedback,非动态判错；不映射当前错词专项,M018-I05,2026-10-27,对照一般错答；不证明现版错词专项
+M018-L05,historical_static,学习页选项,crayon四选义/看答案,四产品学习页图右侧,E-BBLC-01,F-M018-01,作者自报V4.3,static_display_only,选中后颜色/下一题/保存未知,,2026-10-27,旧34项未单列学习选项页；本次只加历史静态页
+M018-L06,historical_author_text,答对次数与重学,作者称四次/错后重学,学习内容丰富,E-BBLC-03,F-M018-01;F-M018-02,2023页面含2022经历；构建未知,text_only,未看图；与2017五次口径不统一,M018-I05,2026-10-27,对照作者重学说法；不确定现版错词集合
+M018-L07,historical_author_text,学习与拼写奖励对象,作者区分两个首组完成事项,学习奖励,E-BBLC-03,F-M018-01,2022经历/2023页面,text_only,现行奖励/到账/重复计算未知,M018-I15;M018-I21,2026-10-27,关联奖励对象；不补现版成就或酷币明细入口
+M018-L08,unresolved_task,误评撤销,本批无新可核入口,既有5.11.6修复尝试,E-BBD-01,F-M018-02,现行5.11.6旧快照,unresolved,箭头外观不等于撤销记录,M018-I07;M018-I08,2026-10-27,旧缺口保持
+M018-L09,unresolved_task,分组退出/恢复,本批未取得,6候选范围审查,,F-M018-01;F-M018-02,当前构建未核,unresolved,放弃拼写/强退/离线/跨日/重装,M018-I33,2026-10-27,旧中断缺口保持；账户恢复另属I34/F04

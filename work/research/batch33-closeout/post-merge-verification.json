@@ -1,0 +1,34 @@
+{
+  "status": "PASS",
+  "new_evidence": 29,
+  "new_flows": 20,
+  "old_flows": 4,
+  "old_fields": 12,
+  "old_evidence_captures": 4,
+  "unique_files_hash_checked": 16,
+  "inventory_changes": [
+    {
+      "path": "docs/research/interaction-library/batches/audible-controls-deepening-inventory.csv",
+      "rows": 54,
+      "changed": 23,
+      "new": 1
+    },
+    {
+      "path": "docs/research/interaction-library/batches/yoto-controls-deepening-inventory.csv",
+      "rows": 123,
+      "changed": 2,
+      "new": 0
+    },
+    {
+      "path": "docs/research/interaction-library/batches/tonie-controls-deepening-inventory.csv",
+      "rows": 150,
+      "changed": 5,
+      "new": 0
+    }
+  ],
+  "linked_inventory_csvs": 77,
+  "linked_inventory_rows": 7325,
+  "distinct_inventory_e": 1023,
+  "distinct_inventory_f": 780,
+  "requirements_sha256": "e141320e2714df805c009fe64dd92d17decd6429d5728f8ce42d6d868b775087"
+}

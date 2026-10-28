@@ -1,0 +1,25 @@
+{
+  "modified_cases": [
+    "cases/M-063-shanling.md",
+    "cases/M-064-ibasso.md"
+  ],
+  "new_batch_files": [
+    "batches/hifi-controls-deepening-evidence.jsonl",
+    "batches/hifi-controls-deepening-coverage.csv"
+  ],
+  "artifacts": [
+    "artifacts/hifi-controls-deepening/dx180-printed-25.png",
+    "artifacts/hifi-controls-deepening/dx180-printed-28.png",
+    "artifacts/hifi-controls-deepening/dx180-printed-57.png",
+    "artifacts/hifi-controls-deepening/dx180-printed-58.png",
+    "artifacts/hifi-controls-deepening/dx180-printed-22.png",
+    "artifacts/hifi-controls-deepening/dx180-printed-43.png",
+    "artifacts/hifi-controls-deepening/dx180-printed-23.png",
+    "artifacts/hifi-controls-deepening/dx180-printed-49.png",
+    "artifacts/hifi-controls-deepening/dx180-printed-60.png",
+    "artifacts/hifi-controls-deepening/m1plus-pdf-05.png"
+  ],
+  "new_evidence": 16,
+  "new_flows": 6,
+  "old_flow_updates": 10
+}

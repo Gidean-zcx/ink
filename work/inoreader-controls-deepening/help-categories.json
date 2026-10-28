@@ -1,0 +1,292 @@
+[
+  {
+    "title": "Getting started",
+    "url": "https://www.inoreader.com/help/basic/getting-started",
+    "key": "cat-basic-getting-started"
+  },
+  {
+    "title": "Account & login",
+    "url": "https://www.inoreader.com/help/basic/account-and-login",
+    "key": "cat-basic-account-and-login"
+  },
+  {
+    "title": "Feeds & sources",
+    "url": "https://www.inoreader.com/help/basic/feeds-sources",
+    "key": "cat-basic-feeds-sources"
+  },
+  {
+    "title": "Search",
+    "url": "https://www.inoreader.com/help/basic/search",
+    "key": "cat-basic-search"
+  },
+  {
+    "title": "Folders",
+    "url": "https://www.inoreader.com/help/basic/folders",
+    "key": "cat-basic-folders"
+  },
+  {
+    "title": "Tags",
+    "url": "https://www.inoreader.com/help/basic/tags",
+    "key": "cat-basic-tags"
+  },
+  {
+    "title": "Dashboards",
+    "url": "https://www.inoreader.com/help/basic/dashboards",
+    "key": "cat-basic-dashboards"
+  },
+  {
+    "title": "Article view",
+    "url": "https://www.inoreader.com/help/basic/article-view",
+    "key": "cat-basic-article-view"
+  },
+  {
+    "title": "Saved & Read later",
+    "url": "https://www.inoreader.com/help/basic/saved-read-later",
+    "key": "cat-basic-saved-read-later"
+  },
+  {
+    "title": "Archive",
+    "url": "https://www.inoreader.com/help/basic/archive",
+    "key": "cat-basic-archive"
+  },
+  {
+    "title": "Web pages",
+    "url": "https://www.inoreader.com/help/basic/web-pages",
+    "key": "cat-basic-web-pages"
+  },
+  {
+    "title": "Spotlights",
+    "url": "https://www.inoreader.com/help/basic/spotlights",
+    "key": "cat-basic-spotlights"
+  },
+  {
+    "title": "Preferences & customization",
+    "url": "https://www.inoreader.com/help/basic/preferences-customization",
+    "key": "cat-basic-preferences-customization"
+  },
+  {
+    "title": "Syncing & mobile apps",
+    "url": "https://www.inoreader.com/help/basic/syncing-mobile-apps",
+    "key": "cat-basic-syncing-mobile-apps"
+  },
+  {
+    "title": "Global search",
+    "url": "https://www.inoreader.com/help/pro/global-search",
+    "key": "cat-pro-global-search"
+  },
+  {
+    "title": "Monitoring feeds",
+    "url": "https://www.inoreader.com/help/pro/monitoring-feeds",
+    "key": "cat-pro-monitoring-feeds"
+  },
+  {
+    "title": "Web feeds",
+    "url": "https://www.inoreader.com/help/pro/web-feeds",
+    "key": "cat-pro-web-feeds"
+  },
+  {
+    "title": "Track changes",
+    "url": "https://www.inoreader.com/help/pro/track-changes",
+    "key": "cat-pro-track-changes"
+  },
+  {
+    "title": "Boosted feeds",
+    "url": "https://www.inoreader.com/help/pro/boosted-feeds",
+    "key": "cat-pro-boosted-feeds"
+  },
+  {
+    "title": "Social feeds",
+    "url": "https://www.inoreader.com/help/pro/social-feeds",
+    "key": "cat-pro-social-feeds"
+  },
+  {
+    "title": "YouTube",
+    "url": "https://www.inoreader.com/help/pro/youtube",
+    "key": "cat-pro-youtube"
+  },
+  {
+    "title": "Podcasts",
+    "url": "https://www.inoreader.com/help/pro/podcasts",
+    "key": "cat-pro-podcasts"
+  },
+  {
+    "title": "Newsletter feeds",
+    "url": "https://www.inoreader.com/help/pro/newsletter-feeds",
+    "key": "cat-pro-newsletter-feeds"
+  },
+  {
+    "title": "Password-protected feeds",
+    "url": "https://www.inoreader.com/help/pro/password-protected-feeds",
+    "key": "cat-pro-password-protected-feeds"
+  },
+  {
+    "title": "Rules",
+    "url": "https://www.inoreader.com/help/pro/rules",
+    "key": "cat-pro-rules"
+  },
+  {
+    "title": "Filters",
+    "url": "https://www.inoreader.com/help/pro/filters",
+    "key": "cat-pro-filters"
+  },
+  {
+    "title": "Bulk actions",
+    "url": "https://www.inoreader.com/help/pro/bulk-actions",
+    "key": "cat-pro-bulk-actions"
+  },
+  {
+    "title": "Article translations",
+    "url": "https://www.inoreader.com/help/pro/article-translations",
+    "key": "cat-pro-article-translations"
+  },
+  {
+    "title": "Text-to-speech",
+    "url": "https://www.inoreader.com/help/pro/text-to-speech",
+    "key": "cat-pro-text-to-speech"
+  },
+  {
+    "title": "File uploads",
+    "url": "https://www.inoreader.com/help/pro/file-uploads",
+    "key": "cat-pro-file-uploads"
+  },
+  {
+    "title": "Annotations",
+    "url": "https://www.inoreader.com/help/pro/annotations",
+    "key": "cat-pro-annotations"
+  },
+  {
+    "title": "Offline mode",
+    "url": "https://www.inoreader.com/help/pro/offline-mode",
+    "key": "cat-pro-offline-mode"
+  },
+  {
+    "title": "Magic sorting",
+    "url": "https://www.inoreader.com/help/pro/magic-sorting",
+    "key": "cat-pro-magic-sorting"
+  },
+  {
+    "title": "Secure image proxy",
+    "url": "https://www.inoreader.com/help/pro/secure-image-proxy",
+    "key": "cat-pro-secure-image-proxy"
+  },
+  {
+    "title": "Custom CSS",
+    "url": "https://www.inoreader.com/help/pro/custom-css",
+    "key": "cat-pro-custom-css"
+  },
+  {
+    "title": "Integrations",
+    "url": "https://www.inoreader.com/help/pro/integrations",
+    "key": "cat-pro-integrations"
+  },
+  {
+    "title": "Output feeds",
+    "url": "https://www.inoreader.com/help/pro/output-feeds",
+    "key": "cat-pro-output-feeds"
+  },
+  {
+    "title": "API access",
+    "url": "https://www.inoreader.com/help/pro/api-access",
+    "key": "cat-pro-api-access"
+  },
+  {
+    "title": "Article summaries",
+    "url": "https://www.inoreader.com/help/intelligence/article-summaries",
+    "key": "cat-intelligence-article-summaries"
+  },
+  {
+    "title": "Intelligence reports",
+    "url": "https://www.inoreader.com/help/intelligence/intelligence-reports",
+    "key": "cat-intelligence-intelligence-reports"
+  },
+  {
+    "title": "Suggested tags",
+    "url": "https://www.inoreader.com/help/intelligence/suggested-tags",
+    "key": "cat-intelligence-suggested-tags"
+  },
+  {
+    "title": "Mentions",
+    "url": "https://www.inoreader.com/help/intelligence/mentions",
+    "key": "cat-intelligence-mentions"
+  },
+  {
+    "title": "Podcast and video enhancements",
+    "url": "https://www.inoreader.com/help/intelligence/podcast-and-video-enhancements",
+    "key": "cat-intelligence-podcast-and-video-enhancements"
+  },
+  {
+    "title": "Intelligence usage",
+    "url": "https://www.inoreader.com/help/intelligence/intelligence-usage",
+    "key": "cat-intelligence-intelligence-usage"
+  },
+  {
+    "title": "Getting started",
+    "url": "https://www.inoreader.com/help/teams/getting-started",
+    "key": "cat-teams-getting-started"
+  },
+  {
+    "title": "Team dashboards",
+    "url": "https://www.inoreader.com/help/teams/team-dashboards",
+    "key": "cat-teams-team-dashboards"
+  },
+  {
+    "title": "Team folders",
+    "url": "https://www.inoreader.com/help/teams/team-folders",
+    "key": "cat-teams-team-folders"
+  },
+  {
+    "title": "Team filters",
+    "url": "https://www.inoreader.com/help/teams/team-filters",
+    "key": "cat-teams-team-filters"
+  },
+  {
+    "title": "Team channels",
+    "url": "https://www.inoreader.com/help/teams/team-channels",
+    "key": "cat-teams-team-channels"
+  },
+  {
+    "title": "Email digests",
+    "url": "https://www.inoreader.com/help/teams/email-digests",
+    "key": "cat-teams-email-digests"
+  },
+  {
+    "title": "Team tags",
+    "url": "https://www.inoreader.com/help/teams/team-tags",
+    "key": "cat-teams-team-tags"
+  },
+  {
+    "title": "Team spotlights",
+    "url": "https://www.inoreader.com/help/teams/team-spotlights",
+    "key": "cat-teams-team-spotlights"
+  },
+  {
+    "title": "Team file uploads",
+    "url": "https://www.inoreader.com/help/teams/team-file-uploads",
+    "key": "cat-teams-team-file-uploads"
+  },
+  {
+    "title": "Highlights, notes & comments",
+    "url": "https://www.inoreader.com/help/teams/highlights-notes-comments",
+    "key": "cat-teams-highlights-notes-comments"
+  },
+  {
+    "title": "Activity & collaboration",
+    "url": "https://www.inoreader.com/help/teams/activity-collaboration",
+    "key": "cat-teams-activity-collaboration"
+  },
+  {
+    "title": "Access, limits & plans",
+    "url": "https://www.inoreader.com/help/teams/access-limits-plans",
+    "key": "cat-teams-access-limits-plans"
+  },
+  {
+    "title": "Account & login",
+    "url": "https://www.inoreader.com/help/teams/account-login",
+    "key": "cat-teams-account-login"
+  },
+  {
+    "title": "Billing & subscriptions",
+    "url": "https://www.inoreader.com/help/subscriptions/billing-subscriptions",
+    "key": "cat-subscriptions-billing-subscriptions"
+  }
+]

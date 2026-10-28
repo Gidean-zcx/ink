@@ -1,0 +1,50 @@
+[
+  {
+    "name": "viw385",
+    "url": "https://viwoods.com/pages/update-version-3-8-5",
+    "http_status": 200,
+    "chars": 14261
+  },
+  {
+    "name": "viw315",
+    "url": "https://viwoods.com/pages/system-update-3-15",
+    "http_status": 200,
+    "chars": 18999
+  },
+  {
+    "name": "viwfaq",
+    "url": "https://viwoods.com/pages/frequently-asked-questions-about-viwoods",
+    "http_status": 200,
+    "chars": 40771
+  },
+  {
+    "name": "viwtrouble",
+    "url": "https://viwoods.com/pages/troubleshooting",
+    "http_status": 200,
+    "chars": 19577
+  },
+  {
+    "name": "viwmanuals",
+    "url": "https://viwoods.com/pages/user-manuals",
+    "http_status": 200,
+    "chars": 13800
+  },
+  {
+    "name": "hanv399",
+    "url": "https://www.hanwang.com.cn/index.php?a=show&c=index&catid=66&id=399&m=content",
+    "http_status": 200,
+    "chars": 3613
+  },
+  {
+    "name": "hanvlist",
+    "url": "https://www.hanwang.com.cn/index.php?a=lists&c=index&catid=136&m=content",
+    "http_status": 200,
+    "chars": 2056
+  },
+  {
+    "name": "iflyexport",
+    "url": "https://zskzs.iflytek.com/myfiles/d0a8ad2d-836d-4a8f-a587-18c0077db6c1/gzhqd.html",
+    "http_status": 404,
+    "chars": 135
+  }
+]

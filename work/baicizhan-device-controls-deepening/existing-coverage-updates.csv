@@ -1,0 +1,5 @@
+flow_id,field,before,after,reason
+F-M022-02,evidence_ids,E-BCZH-03,E-BCZH-03;E-BDCD-01,同任务补一个非官方原作者正文；D1、hands_on=false、既有静态官方图状态不变；root复核后更新所属旧批次
+F-M022-02,known_branches,六入口、分页,官方图六入口及分页；2025 BCZ-Ace-Max 独立拆解正文补方向/确认/发音/返回键与单击斩词描述，无动作后状态,同任务补一个非官方原作者正文；D1、hands_on=false、既有静态官方图状态不变；root复核后更新所属旧批次
+F-M022-02,gaps,按键映射、完整任务与第二页,官方按键规则、长短按及状态作用、进入/答错/误斩撤销/结束、第二页、复习与同步影响未知；固件和 App 构建未知,同任务补一个非官方原作者正文；D1、hands_on=false、既有静态官方图状态不变；root复核后更新所属旧批次
+F-M022-02,checked_on,2026-10-26,2026-10-27,同任务补一个非官方原作者正文；D1、hands_on=false、既有静态官方图状态不变；root复核后更新所属旧批次

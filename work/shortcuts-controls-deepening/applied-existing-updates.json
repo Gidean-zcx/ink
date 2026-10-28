@@ -1,0 +1,336 @@
+{
+  "before": {
+    "docs/research/interaction-library/batches/ai-coverage.csv": "1ae79f217fee1974c462c2324d4208d41355e284bf03b3cfeb2e9974abdda704",
+    "docs/research/interaction-library/batches/vocab-coverage.csv": "5e36be42ebe6b986df05ca1161dd70a787ff099ce522a36671209641373b4461",
+    "docs/research/interaction-library/batches/reader-coverage.csv": "d8f66e6fef307e2060313b8985c01012e3c4ffe13cc8a09614def2bafc3858a1"
+  },
+  "updates": [
+    {
+      "flow_id": "F-M043-01",
+      "field": "evidence_ids",
+      "before": "E-SCT-01;E-SCT-02",
+      "after": "E-SCT-01;E-SCT-02;E-SCCD-02;E-SCCD-03;E-SCCD-23",
+      "reason": "根代理已核27指南正文；保留旧26证据及D2"
+    },
+    {
+      "flow_id": "F-M043-01",
+      "field": "known_branches",
+      "before": "操作按从上到下顺序执行；编辑时 Undo/Redo 改的是指令构成，不证明能撤回已经执行的跨 app 动作。",
+      "after": "27可自然语言生成后修改/运行；动作Info可看输入输出，App Shortcuts可嵌入；编辑撤销不代表执行副作用回滚。",
+      "reason": "根代理已核27指南正文；保留旧26证据及D2"
+    },
+    {
+      "flow_id": "F-M043-01",
+      "field": "gaps",
+      "before": "运行副作用能否撤回",
+      "after": "生成错误、缺动作、额度耗尽、运行副作用与撤回",
+      "reason": "根代理已核27指南正文；保留旧26证据及D2"
+    },
+    {
+      "flow_id": "F-M043-01",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27",
+      "reason": "根代理已核27指南正文；保留旧26证据及D2"
+    },
+    {
+      "flow_id": "F-M043-02",
+      "field": "evidence_ids",
+      "before": "E-SCT-03",
+      "after": "E-SCT-03;E-SCCD-22;E-SCCD-24",
+      "reason": "根代理已核27指南正文；保留旧26证据及D2"
+    },
+    {
+      "flow_id": "F-M043-02",
+      "field": "known_branches",
+      "before": "受支持 app 的屏幕项目成为第一步输入；可限定类型。仅对支持的 app 有文档依据，不代表任意页面全部数据均可读取。",
+      "after": "受支持App当前项目作为第一步输入；27更新声明更结构化，仍非任意页面全部数据。",
+      "reason": "根代理已核27指南正文；保留旧26证据及D2"
+    },
+    {
+      "flow_id": "F-M043-02",
+      "field": "gaps",
+      "before": "任意app页面/屏幕外数据",
+      "after": "各App实际字段、空页面、屏幕外数据与读取失败",
+      "reason": "根代理已核27指南正文；保留旧26证据及D2"
+    },
+    {
+      "flow_id": "F-M043-02",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27",
+      "reason": "根代理已核27指南正文；保留旧26证据及D2"
+    },
+    {
+      "flow_id": "F-M043-06",
+      "field": "evidence_ids",
+      "before": "E-SCT-07",
+      "after": "E-SCT-07;E-SCCD-20;E-SCCD-21",
+      "reason": "根代理已核27指南正文；保留旧26证据及D2"
+    },
+    {
+      "flow_id": "F-M043-06",
+      "field": "known_branches",
+      "before": "编辑器内可看结果；从外部运行通常回原处而不预览。可把输出返回调用者或选择显示/不处理/复制，停止与输出是分开的语义。",
+      "after": "原输出/返回语义保留；Show Alert的Done继续、Cancel可停止；Show Notification发出即继续，不能当已确认。",
+      "reason": "根代理已核27指南正文；保留旧26证据及D2"
+    },
+    {
+      "flow_id": "F-M043-06",
+      "field": "gaps",
+      "before": "进程终止、事务回滚、恢复入口",
+      "after": "进程终止、停止后的对象去留、事务回滚、恢复入口",
+      "reason": "根代理已核27指南正文；保留旧26证据及D2"
+    },
+    {
+      "flow_id": "F-M043-06",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27",
+      "reason": "根代理已核27指南正文；保留旧26证据及D2"
+    },
+    {
+      "flow_id": "F-M022-02",
+      "field": "evidence_ids",
+      "before": "E-BCZH-03",
+      "after": "E-BCZH-03;E-BDCD-01",
+      "reason": "同任务补一个非官方原作者正文；D1、hands_on=false、既有静态官方图状态不变；root复核后更新所属旧批次"
+    },
+    {
+      "flow_id": "F-M022-02",
+      "field": "known_branches",
+      "before": "六入口、分页",
+      "after": "官方图六入口及分页；2025 BCZ-Ace-Max 独立拆解正文补方向/确认/发音/返回键与单击斩词描述，无动作后状态",
+      "reason": "同任务补一个非官方原作者正文；D1、hands_on=false、既有静态官方图状态不变；root复核后更新所属旧批次"
+    },
+    {
+      "flow_id": "F-M022-02",
+      "field": "gaps",
+      "before": "按键映射、完整任务与第二页",
+      "after": "官方按键规则、长短按及状态作用、进入/答错/误斩撤销/结束、第二页、复习与同步影响未知；固件和 App 构建未知",
+      "reason": "同任务补一个非官方原作者正文；D1、hands_on=false、既有静态官方图状态不变；root复核后更新所属旧批次"
+    },
+    {
+      "flow_id": "F-M022-02",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27",
+      "reason": "同任务补一个非官方原作者正文；D1、hands_on=false、既有静态官方图状态不变；root复核后更新所属旧批次"
+    },
+    {
+      "flow_id": "F-M012-01",
+      "field": "evidence_ids",
+      "before": "E-MUD-01;E-MUD-03",
+      "after": "E-MUD-01;E-MUD-03;E-MDCD-01;E-MDCD-03;E-MDCD-04;E-MDCD-05",
+      "reason": "已由根代理复核重要原文及静态图"
+    },
+    {
+      "flow_id": "F-M012-01",
+      "field": "known_branches",
+      "before": "设置改变物理键作用；没有据四步成功路径推断待接通/无服务/占线处理。",
+      "after": "新增拨号和来电阻止入口；电源结束通话为可选设置；1.6.1修正未接来电计数。",
+      "reason": "已由根代理复核重要原文及静态图"
+    },
+    {
+      "flow_id": "F-M012-01",
+      "field": "gaps",
+      "before": "见案例的范围/分支/后续观察；未实测",
+      "after": "接听/拒接、占线、无服务、SIM选择与音乐打断恢复未知",
+      "reason": "已由根代理复核重要原文及静态图"
+    },
+    {
+      "flow_id": "F-M012-01",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27",
+      "reason": "已由根代理复核重要原文及静态图"
+    },
+    {
+      "flow_id": "F-M012-02",
+      "field": "evidence_ids",
+      "before": "E-MUD-04;E-MUD-05;E-MUD-06",
+      "after": "E-MUD-04;E-MUD-05;E-MUD-06;E-MDCD-06;E-MDCD-22",
+      "reason": "已由根代理复核重要原文及静态图"
+    },
+    {
+      "flow_id": "F-M012-02",
+      "field": "known_branches",
+      "before": "官方不同页面将新建入口称为 Pencil/Plus，需核对版本或模式。发送、已送达和对端已读不是同一状态，后两者未核实。",
+      "after": "同页联系人Pencil/新号码Plus差异仍在；键盘光标补救；RCS明确不支持。",
+      "reason": "已由根代理复核重要原文及静态图"
+    },
+    {
+      "flow_id": "F-M012-02",
+      "field": "gaps",
+      "before": "见案例的范围/分支/后续观察；未实测",
+      "after": "草稿保留、离线重试、送达/已读、MMS失败未知",
+      "reason": "已由根代理复核重要原文及静态图"
+    },
+    {
+      "flow_id": "F-M012-02",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27",
+      "reason": "已由根代理复核重要原文及静态图"
+    },
+    {
+      "flow_id": "F-M012-03",
+      "field": "evidence_ids",
+      "before": "E-MUD-07",
+      "after": "E-MUD-07;E-MDCD-06",
+      "reason": "已由根代理复核重要原文及静态图"
+    },
+    {
+      "flow_id": "F-M012-03",
+      "field": "known_branches",
+      "before": "有二次删除步骤；作用于对话，单条删除/撤销/附件保留规则未知。",
+      "after": "统一帮助再次给出选择会话与两次Delete；未见撤销依据。",
+      "reason": "已由根代理复核重要原文及静态图"
+    },
+    {
+      "flow_id": "F-M012-03",
+      "field": "gaps",
+      "before": "见案例的范围/分支/后续观察；未实测",
+      "after": "单条删除、附件生命周期、恢复范围未知",
+      "reason": "已由根代理复核重要原文及静态图"
+    },
+    {
+      "flow_id": "F-M012-03",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27",
+      "reason": "已由根代理复核重要原文及静态图"
+    },
+    {
+      "flow_id": "F-M012-04",
+      "field": "evidence_ids",
+      "before": "E-MUD-01;E-MUD-02",
+      "after": "E-MUD-01;E-MUD-02;E-MDCD-01;E-MDCD-04;E-MDCD-07;E-MDCD-08",
+      "reason": "已由根代理复核重要原文及静态图"
+    },
+    {
+      "flow_id": "F-M012-04",
+      "field": "known_branches",
+      "before": "总音量与铃声/闹钟等用途有分别设置；具体互相覆盖规则不能猜测。",
+      "after": "返回/主页/控制中心有独立图标；主音量、特定用途音量及静音多入口；通知振动有版本变化。",
+      "reason": "已由根代理复核重要原文及静态图"
+    },
+    {
+      "flow_id": "F-M012-04",
+      "field": "gaps",
+      "before": "见案例的范围/分支/后续观察；未实测",
+      "after": "音量/静音/闹钟优先级、媒体音焦点与中断恢复未知",
+      "reason": "已由根代理复核重要原文及静态图"
+    },
+    {
+      "flow_id": "F-M012-04",
+      "field": "visual_status",
+      "before": "not_observed",
+      "after": "static_reference_only",
+      "reason": "已由根代理复核重要原文及静态图"
+    },
+    {
+      "flow_id": "F-M012-04",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27",
+      "reason": "已由根代理复核重要原文及静态图"
+    },
+    {
+      "flow_id": "F-M012-05",
+      "field": "evidence_ids",
+      "before": "E-MUD-01",
+      "after": "E-MUD-01;E-MDCD-01;E-MDCD-03;E-MDCD-09;E-MDCD-10",
+      "reason": "已由根代理复核重要原文及静态图"
+    },
+    {
+      "flow_id": "F-M012-05",
+      "field": "known_branches",
+      "before": "手册明确该状态不能紧急呼叫；不能称为“允许重要来电”的专注模式。切回注册网络的时间和失败反馈未测。",
+      "after": "飞行模式允许重开蓝牙；Offline+硬件/软件停用分层；1.6.1仅重启后立刻退出Offline+时再要SIM PIN。",
+      "reason": "已由根代理复核重要原文及静态图"
+    },
+    {
+      "flow_id": "F-M012-05",
+      "field": "gaps",
+      "before": "见案例的范围/分支/后续观察；未实测",
+      "after": "网络恢复时延、离线期间通话/短信补收、正在播放音频行为未知",
+      "reason": "已由根代理复核重要原文及静态图"
+    },
+    {
+      "flow_id": "F-M012-05",
+      "field": "visual_status",
+      "before": "not_observed",
+      "after": "static_reference_only",
+      "reason": "已由根代理复核重要原文及静态图"
+    },
+    {
+      "flow_id": "F-M012-05",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27",
+      "reason": "已由根代理复核重要原文及静态图"
+    },
+    {
+      "flow_id": "F-M012-06",
+      "field": "evidence_ids",
+      "before": "E-MUD-08;E-MUD-09",
+      "after": "E-MUD-08;E-MUD-09;E-MDCD-11",
+      "reason": "已由根代理复核重要原文及静态图"
+    },
+    {
+      "flow_id": "F-M012-06",
+      "field": "known_branches",
+      "before": "不支持的文件不能选/上传；完成传输与设备能成功解析仍应区分。电脑预处理不算设备端能力。",
+      "after": "Center传入沿用；USB文件不可见另走Connected Devices > USB Preferences > File Transfer；未连接不显示入口；No data transfer收回文件访问。",
+      "reason": "已由根代理复核重要原文及静态图"
+    },
+    {
+      "flow_id": "F-M012-06",
+      "field": "gaps",
+      "before": "见案例的范围/分支/后续观察；未实测",
+      "after": "不假设Center依赖MTP；重复文件、容量不足、中断半成品、解析与位置保留未知",
+      "reason": "已由根代理复核重要原文及静态图"
+    },
+    {
+      "flow_id": "F-M012-06",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27",
+      "reason": "已由根代理复核重要原文及静态图"
+    },
+    {
+      "flow_id": "F-M012-07",
+      "field": "evidence_ids",
+      "before": "E-MUD-10",
+      "after": "E-MUD-10;E-MDCD-12;E-MDCD-13;E-MDCD-16",
+      "reason": "已由根代理复核重要原文及静态图"
+    },
+    {
+      "flow_id": "F-M012-07",
+      "field": "known_branches",
+      "before": "图书/音乐文件删除与应用卸载不是同一操作；与笔记、播放历史的依赖未知。",
+      "after": "普通文件删除沿用；已安装应用不会随APK安装包删除；卸载限制详F08，清空恢复出厂详F09。",
+      "reason": "已由根代理复核重要原文及静态图"
+    },
+    {
+      "flow_id": "F-M012-07",
+      "field": "gaps",
+      "before": "见案例的范围/分支/后续观察；未实测",
+      "after": "图书笔记/历史依赖、回收站、单项恢复未知",
+      "reason": "已由根代理复核重要原文及静态图"
+    },
+    {
+      "flow_id": "F-M012-07",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27",
+      "reason": "已由根代理复核重要原文及静态图"
+    }
+  ],
+  "after": {
+    "docs/research/interaction-library/batches/ai-coverage.csv": "496ffc1415d676cfb74b4b54a99f19e489bd28b1b789588ce822e8d9cd57f242",
+    "docs/research/interaction-library/batches/vocab-coverage.csv": "b228df80c8490e6ad5e71464a6928a28b53a07e95f2b4f941963c3d3bd95c299",
+    "docs/research/interaction-library/batches/reader-coverage.csv": "4170b005fa4c73a16a41114525f9e529e0756432d8c55d1cc6c8dd95b5b6743d"
+  }
+}

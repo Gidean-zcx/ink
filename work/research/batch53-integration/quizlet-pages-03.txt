@@ -1,0 +1,75 @@
+Searching your flashcard sets by keyword – Quizlet Help Center (https://help.quizlet.com/hc/en-us/articles/360058606332-Searching-your-flashcard-sets-by-keyword)
+citeturn1086view0 [wordlim: 200] Crawled: today; Content type: text/html; Source: click({"ref_id":"turn1083view0","id":28}); Total lines: 72
+L0: 【0†iframe†www.googletagmanager.com】
+L1: 
+L2: 【1†Help center†quizlet.zendesk.com】
+L3: 
+L4: Topics
+L5: 
+L6: Popular Articles
+L7: 
+L8: 【2†Resending a confirmation message】 【3†Changing your username】 【4†Changing your password】 【5†Finding flashcard sets】 【6†Finding your teacher's class】 【7†Browser and device compatibility】
+L9: 
+L10: [Input][Input: Search]
+L11: 
+L12: 【8†Image】   【8†Username】
+L13: # Searching your flashcard sets by keyword
+L14: 
+L15: 【8†IOS】 【8†Web】 【8†Android】
+L16: 
+L17: You can search for keywords within your flashcard sets to find the exact content you need.
+L18: 
+L19: To search your flashcard sets by keyword
+L20:   1. 【9†Log in†quizlet.com】 to your account.
+L21:   2. Select Your Library on the left side panel.
+L22:   3. Select Flashcard sets.
+L23:   4. Choose to search Recent sets you’ve viewed or sets you’ve Created.
+L24:   5. Enter the term you're looking for in the Type to filter field.
+L25: All sets containing the term or phrase you’ve entered appear below the search field.
+L26: You can currently only search your sets by keyword on the website. Log in to your account on the website from a mobile browser and follow the web instructions on this article to search from your mobile device's browser.
+L27: 
+L28: You can currently only search your sets by keyword on the website. Log in to your account on the website from a mobile browser and follow the web instructions on this article to search from your mobile device's browser.
+L29: ### Related Articles
+L30: 
+L31:   * 【10†Studying with Podcasts】
+L32:   * 【11†Studying with Spaced Repetition】
+L33:   * 【12†Using Study with friends】
+L34:   * 【13†Playing Charms】
+L35:   * 【14†Studying with Audio Notes】
+L36:   * 【15†Create flashcard sets directly in ChatGPT】
+L37:   * 【16†Studying with Ask Quizlet】
+L38:   * 【17†Using Quizlet with Superhuman】
+L39:   * 【18†Studying with Answer Streaks】
+L40:   * 【19†Playing a game of Blocks】
+L41:   * 【20†See more】
+L42: ### Can't find what you're looking for?
+L43: 
+L44: 【21†Ask a question】
+L45: 
+L46: Was this article helpful?
+L47: 
+L48: [Button: Yes] [Button: No]
+L49: 
+L50: ##### About us
+L51: 
+L52: 【22†About Quizlet†quizlet.com】 【23†How Quizlet works†quizlet.com】 【24†Careers†quizlet.com】 【25†Advertise with us†quizlet.com】 【26†Get the app†quizlet.com】
+L53: ##### For students
+L54: 
+L55: 【27†Flashcards†quizlet.com】 【28†Test†quizlet.com】 【29†Learn†quizlet.com】 【30†Solutions†quizlet.com】 【31†Modern Learning Lab†quizlet.com】 【32†Quizlet Plus†quizlet.com】 【33†Study Guides†quizlet.com】 【34†Pomodoro timer†quizlet.com】
+L56: 
+L57: ##### For Teachers
+L58: 
+L59: 【35†Live†quizlet.com】 【36†Blog†quizlet.com】 【37†Be the Change†quizlet.com】 【38†Quizlet Plus for teachers†quizlet.com】
+L60: ##### Resources
+L61: 
+L62: 【39†Help center†quizlet.com】 【40†Sign up†quizlet.com】 【41†Honor code†quizlet.com】 【42†Community guidelines†quizlet.com】 【43†Accessibility statement†quizlet.com】 【44†Privacy†quizlet.com】 【45†Your Privacy/Cookies Choices†quizlet.com】 【46†Terms†quizlet.com】 【47†Ad and Cookie Policy†quizlet.com】 【48†Interest-Based Advertising†quizlet.com】 【49†Quizlet for Schools†quizlet.com】 【50†Parents†quizlet.com】
+L63: 
+L64: ##### Language
+L65: 
+L66: English (United States)
+L67: 
+L68: 【51†Image】 【52†Get the app†get.quizlet.com】
+L69: ##### Get the app
+L70: 
+L71: © Quizlet Inc.
+

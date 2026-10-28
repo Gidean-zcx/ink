@@ -1,0 +1,330 @@
+{
+  "checked_on": "2026-10-27",
+  "network_used": false,
+  "scope": [
+    "E-KLCD-02",
+    "E-KLCD-07",
+    "E-KLCD-10"
+  ],
+  "raw_html_found": false,
+  "source_note": "Only saved web-tool text extracts were found for these three articles. Link reference numbers and image filenames are present, but their target attachment URLs were not preserved.",
+  "article_media": [
+    {
+      "evidence_id": "E-KLCD-02",
+      "article_url": "https://khankids.zendesk.com/hc/en-us/articles/360048828572-Learn-more-about-the-Learning-Path",
+      "article_text_path": "work/khan-library-controls-deepening/text/articles-360048828572.txt",
+      "article_text_sha256": "83b577057c1a741fa9b8a5280009c23ae897b3ce3038c07b49228b413294c13f",
+      "article_line": 27,
+      "link_ref_in_saved_text": 13,
+      "image_label": "OlloStudentView.PNG",
+      "media_url": null,
+      "media_url_status": "not_preserved_in_saved_web-tool text; no raw article HTML available; do not guess",
+      "context_before": [],
+      "context_after": [
+        "Dynamically adapts to a student’s skill level on each topic: Students are presented with activities, books, educational videos, and creative lessons that allow them to learn each skill at the appropriate level and at their own pace.",
+        "* Student progression is based on mastery of a topic."
+      ],
+      "local_files": []
+    },
+    {
+      "evidence_id": "E-KLCD-07",
+      "article_url": "https://khankids.zendesk.com/hc/en-us/articles/4457349308059-Chinese-Parent-Guide-%E5%AE%B6%E9%95%BF%E6%8C%87%E5%8D%97-%E5%BC%80%E5%A7%8B%E4%BD%BF%E7%94%A8%E5%8F%AF%E6%B1%97%E5%AD%A6%E9%99%A2%E5%84%BF%E7%AB%A5%E7%89%88",
+      "article_text_path": "work/khan-library-controls-deepening/text/articles-4457349308059.txt",
+      "article_text_sha256": "941f31f662cf110612d90475fcb229fdff3de0d7ccc5483dd501821dfcd1f012",
+      "article_line": 36,
+      "link_ref_in_saved_text": 17,
+      "image_label": "Home.png",
+      "media_url": null,
+      "media_url_status": "not_preserved_in_saved_web-tool text; no raw article HTML available; do not guess",
+      "context_before": [
+        "8. 返回应用并点击下一步创建一个用户帐户。",
+        "9. 输入你孩子的名字、年龄和头像后，你就准备好了可以开始使用这个应用程序了！"
+      ],
+      "context_after": [
+        "## 点击绿色按钮开始学习之路",
+        "在主屏幕上，点击大的绿色箭头开始个性化学习之路。 和Kodi一起聆听，学习，它是我们的学习指南角色，它总是可以帮忙。 儿童可以点击Kodi来重复每项活动内容的说明。"
+      ],
+      "local_files": []
+    },
+    {
+      "evidence_id": "E-KLCD-07",
+      "article_url": "https://khankids.zendesk.com/hc/en-us/articles/4457349308059-Chinese-Parent-Guide-%E5%AE%B6%E9%95%BF%E6%8C%87%E5%8D%97-%E5%BC%80%E5%A7%8B%E4%BD%BF%E7%94%A8%E5%8F%AF%E6%B1%97%E5%AD%A6%E9%99%A2%E5%84%BF%E7%AB%A5%E7%89%88",
+      "article_text_path": "work/khan-library-controls-deepening/text/articles-4457349308059.txt",
+      "article_text_sha256": "941f31f662cf110612d90475fcb229fdff3de0d7ccc5483dd501821dfcd1f012",
+      "article_line": 47,
+      "link_ref_in_saved_text": 18,
+      "image_label": "Zendesk_Library.png",
+      "media_url": null,
+      "media_url_status": "not_preserved_in_saved_web-tool text; no raw article HTML available; do not guess",
+      "context_before": [
+        "儿童可以访问资料库，从数以千计的儿童的书籍、视频和活动中选择。 通过点击主屏幕左上角的紫色图书图标来找到图书馆。"
+      ],
+      "context_after": [
+        "#### 书籍"
+      ],
+      "local_files": []
+    },
+    {
+      "evidence_id": "E-KLCD-07",
+      "article_url": "https://khankids.zendesk.com/hc/en-us/articles/4457349308059-Chinese-Parent-Guide-%E5%AE%B6%E9%95%BF%E6%8C%87%E5%8D%97-%E5%BC%80%E5%A7%8B%E4%BD%BF%E7%94%A8%E5%8F%AF%E6%B1%97%E5%AD%A6%E9%99%A2%E5%84%BF%E7%AB%A5%E7%89%88",
+      "article_text_path": "work/khan-library-controls-deepening/text/articles-4457349308059.txt",
+      "article_text_sha256": "941f31f662cf110612d90475fcb229fdff3de0d7ccc5483dd501821dfcd1f012",
+      "article_line": 79,
+      "link_ref_in_saved_text": 19,
+      "image_label": "Progress_checkmarks.png",
+      "media_url": null,
+      "media_url_status": "not_preserved_in_saved_web-tool text; no raw article HTML available; do not guess",
+      "context_before": [
+        "在资料库中，您可以看到您的孩子已经完成了哪些活动。 彩色检查标记显示出您的孩子在某个主题上的进度。"
+      ],
+      "context_after": [
+        "当你的孩子直接从资料库里完成某项活动后，或者当你的孩子完成包含在资料库里的学习之路上活动，检查标记就会出现。 资料馆提供数学、阅读、视频和逻辑+类别的从学前教育到二年级的不同学习水平的内容。",
+        "## 点击动物图标来玩帽子、虫子和玩具"
+      ],
+      "local_files": []
+    },
+    {
+      "evidence_id": "E-KLCD-07",
+      "article_url": "https://khankids.zendesk.com/hc/en-us/articles/4457349308059-Chinese-Parent-Guide-%E5%AE%B6%E9%95%BF%E6%8C%87%E5%8D%97-%E5%BC%80%E5%A7%8B%E4%BD%BF%E7%94%A8%E5%8F%AF%E6%B1%97%E5%AD%A6%E9%99%A2%E5%84%BF%E7%AB%A5%E7%89%88",
+      "article_text_path": "work/khan-library-controls-deepening/text/articles-4457349308059.txt",
+      "article_text_sha256": "941f31f662cf110612d90475fcb229fdff3de0d7ccc5483dd501821dfcd1f012",
+      "article_line": 84,
+      "link_ref_in_saved_text": 20,
+      "image_label": "IMG_0236_copy.PNG",
+      "media_url": null,
+      "media_url_status": "not_preserved_in_saved_web-tool text; no raw article HTML available; do not guess",
+      "context_before": [
+        "## 点击动物图标来玩帽子、虫子和玩具"
+      ],
+      "context_after": [
+        "点击主屏幕底部的每个角色图标，来访问可汗学院儿童版里的不同人物。 看看他们的房间，玩玩他们的玩具，看看他们的收藏随着孩子在应用中的学习进度逐渐丰富。"
+      ],
+      "local_files": []
+    },
+    {
+      "evidence_id": "E-KLCD-10",
+      "article_url": "https://khankids.zendesk.com/hc/en-us/articles/4403614100109-Progress-reports-in-the-Khan-Academy-Kids-app",
+      "article_text_path": "work/khan-library-controls-deepening/text/articles-4403614100109.txt",
+      "article_text_sha256": "7c0b83e4ce1436322cec83e9d10c6ddbf9aedc1cf680c6d1b6b5b8bf8012b1db",
+      "article_line": 23,
+      "link_ref_in_saved_text": 13,
+      "image_label": "Reports_Banner.png",
+      "media_url": null,
+      "media_url_status": "not_preserved_in_saved_web-tool text; no raw article HTML available; do not guess",
+      "context_before": [
+        "* Updated"
+      ],
+      "context_after": [
+        "The Khan Academy Kids app has progress reports that allow teachers to identify student needs at a glance. Use the Assignments Report to see which students have completed their assignments, or use the All Progress Report to see cumulative student progress in each subject area. The best part? You can respond to student data in real time by assigning lessons directly from the reports. Read below to learn more!",
+        "## What can you do with the progress reports in Khan Academy Kids?"
+      ],
+      "local_files": []
+    },
+    {
+      "evidence_id": "E-KLCD-10",
+      "article_url": "https://khankids.zendesk.com/hc/en-us/articles/4403614100109-Progress-reports-in-the-Khan-Academy-Kids-app",
+      "article_text_path": "work/khan-library-controls-deepening/text/articles-4403614100109.txt",
+      "article_text_sha256": "7c0b83e4ce1436322cec83e9d10c6ddbf9aedc1cf680c6d1b6b5b8bf8012b1db",
+      "article_line": 35,
+      "link_ref_in_saved_text": 15,
+      "image_label": "ClassReport_AllProgress__1_.png",
+      "media_url": null,
+      "media_url_status": "not_preserved_in_saved_web-tool text; no raw article HTML available; do not guess",
+      "context_before": [
+        "Here’s what the progress reports look like! Need a close up? Look 【14†here】."
+      ],
+      "context_after": [
+        "Access these reports from your teacher view in the Khan Academy Kids app. Make sure you are on the Students tab, and then select Class Reports."
+      ],
+      "local_files": []
+    },
+    {
+      "evidence_id": "E-KLCD-10",
+      "article_url": "https://khankids.zendesk.com/hc/en-us/articles/4403614100109-Progress-reports-in-the-Khan-Academy-Kids-app",
+      "article_text_path": "work/khan-library-controls-deepening/text/articles-4403614100109.txt",
+      "article_text_sha256": "7c0b83e4ce1436322cec83e9d10c6ddbf9aedc1cf680c6d1b6b5b8bf8012b1db",
+      "article_line": 35,
+      "link_ref_in_saved_text": 16,
+      "image_label": "ClassReport_Assignments.png",
+      "media_url": null,
+      "media_url_status": "not_preserved_in_saved_web-tool text; no raw article HTML available; do not guess",
+      "context_before": [
+        "Here’s what the progress reports look like! Need a close up? Look 【14†here】."
+      ],
+      "context_after": [
+        "Access these reports from your teacher view in the Khan Academy Kids app. Make sure you are on the Students tab, and then select Class Reports."
+      ],
+      "local_files": []
+    },
+    {
+      "evidence_id": "E-KLCD-10",
+      "article_url": "https://khankids.zendesk.com/hc/en-us/articles/4403614100109-Progress-reports-in-the-Khan-Academy-Kids-app",
+      "article_text_path": "work/khan-library-controls-deepening/text/articles-4403614100109.txt",
+      "article_text_sha256": "7c0b83e4ce1436322cec83e9d10c6ddbf9aedc1cf680c6d1b6b5b8bf8012b1db",
+      "article_line": 39,
+      "link_ref_in_saved_text": 17,
+      "image_label": "StudentsTab_ClassReports.png",
+      "media_url": null,
+      "media_url_status": "not_preserved_in_saved_web-tool text; no raw article HTML available; do not guess",
+      "context_before": [
+        "Access these reports from your teacher view in the Khan Academy Kids app. Make sure you are on the Students tab, and then select Class Reports."
+      ],
+      "context_after": [
+        "There are two different reports. You can switch between the two by tapping Assignments or All Progress at the top of the screen."
+      ],
+      "local_files": []
+    },
+    {
+      "evidence_id": "E-KLCD-10",
+      "article_url": "https://khankids.zendesk.com/hc/en-us/articles/4403614100109-Progress-reports-in-the-Khan-Academy-Kids-app",
+      "article_text_path": "work/khan-library-controls-deepening/text/articles-4403614100109.txt",
+      "article_text_sha256": "7c0b83e4ce1436322cec83e9d10c6ddbf9aedc1cf680c6d1b6b5b8bf8012b1db",
+      "article_line": 59,
+      "link_ref_in_saved_text": 19,
+      "image_label": "5-25-21_Report_Dialog_Assignments_iPad.png",
+      "media_url": null,
+      "media_url_status": "not_preserved_in_saved_web-tool text; no raw article HTML available; do not guess",
+      "context_before": [
+        "* Tap the lesson thumbnails on the left to edit the assignment or to view the lesson."
+      ],
+      "context_after": [
+        "### The All Progress report",
+        "* The All Progress report shows every lesson that students have completed, whether it was sent to them as an assignment, an activity they chose from the Library, or lessons from their Learning Path.",
+        "* It’s easy to see overall progress in a subject area. The fractions show how many skills have been mastered."
+      ],
+      "local_files": []
+    },
+    {
+      "evidence_id": "E-KLCD-10",
+      "article_url": "https://khankids.zendesk.com/hc/en-us/articles/4403614100109-Progress-reports-in-the-Khan-Academy-Kids-app",
+      "article_text_path": "work/khan-library-controls-deepening/text/articles-4403614100109.txt",
+      "article_text_sha256": "7c0b83e4ce1436322cec83e9d10c6ddbf9aedc1cf680c6d1b6b5b8bf8012b1db",
+      "article_line": 66,
+      "link_ref_in_saved_text": 20,
+      "image_label": "Progress_article.png",
+      "media_url": null,
+      "media_url_status": "not_preserved_in_saved_web-tool text; no raw article HTML available; do not guess",
+      "context_before": [
+        "* Tap the lesson titles on the left to edit the assignment or to view the lesson.",
+        "* Respond to student scores immediately. If you see that a student received a low score on a Main assignment, then assign the Basic lesson to provide them with additional scaffolding. Tap Basic directly on this screen to assign."
+      ],
+      "context_after": [
+        "#### Email reports",
+        "You can email these reports to yourself so you can view them on a computer. Or, you can use filters to select an individual student and send their report to their parent or guardian. Tap the Email button in the top right corner. Enter an email address in the \"To\" field to send."
+      ],
+      "local_files": []
+    },
+    {
+      "evidence_id": "E-KLCD-10",
+      "article_url": "https://khankids.zendesk.com/hc/en-us/articles/4403614100109-Progress-reports-in-the-Khan-Academy-Kids-app",
+      "article_text_path": "work/khan-library-controls-deepening/text/articles-4403614100109.txt",
+      "article_text_sha256": "7c0b83e4ce1436322cec83e9d10c6ddbf9aedc1cf680c6d1b6b5b8bf8012b1db",
+      "article_line": 71,
+      "link_ref_in_saved_text": 21,
+      "image_label": "ClassReport_Arrow_Email.png",
+      "media_url": null,
+      "media_url_status": "not_preserved_in_saved_web-tool text; no raw article HTML available; do not guess",
+      "context_before": [
+        "You can email these reports to yourself so you can view them on a computer. Or, you can use filters to select an individual student and send their report to their parent or guardian. Tap the Email button in the top right corner. Enter an email address in the \"To\" field to send."
+      ],
+      "context_after": [
+        "When you or a student's family member receives the email, there will be an attachment in the form of a ZIP file. Unzip the file to see an HTML file that will open up inside of a web browser.",
+        "Please note that your mobile device must be connected to an email address in the device's Settings in order for this to work. That way the app has a \"From\" address to reference when it sends the email."
+      ],
+      "local_files": []
+    },
+    {
+      "evidence_id": "E-KLCD-10",
+      "article_url": "https://khankids.zendesk.com/hc/en-us/articles/4403614100109-Progress-reports-in-the-Khan-Academy-Kids-app",
+      "article_text_path": "work/khan-library-controls-deepening/text/articles-4403614100109.txt",
+      "article_text_sha256": "7c0b83e4ce1436322cec83e9d10c6ddbf9aedc1cf680c6d1b6b5b8bf8012b1db",
+      "article_line": 71,
+      "link_ref_in_saved_text": 22,
+      "image_label": "EmailDialogue.png",
+      "media_url": null,
+      "media_url_status": "not_preserved_in_saved_web-tool text; no raw article HTML available; do not guess",
+      "context_before": [
+        "You can email these reports to yourself so you can view them on a computer. Or, you can use filters to select an individual student and send their report to their parent or guardian. Tap the Email button in the top right corner. Enter an email address in the \"To\" field to send."
+      ],
+      "context_after": [
+        "When you or a student's family member receives the email, there will be an attachment in the form of a ZIP file. Unzip the file to see an HTML file that will open up inside of a web browser.",
+        "Please note that your mobile device must be connected to an email address in the device's Settings in order for this to work. That way the app has a \"From\" address to reference when it sends the email."
+      ],
+      "local_files": []
+    }
+  ],
+  "selected_up_to_6": [
+    {
+      "evidence_id": "E-KLCD-10",
+      "image_label": "5-25-21_Report_Dialog_Assignments_iPad.png",
+      "article_line": 59,
+      "media_url": null,
+      "local_files": [],
+      "selection_reason": "attempt history dialog / multiple attempts",
+      "limitation": "not_preserved_in_saved_web-tool text; no raw article HTML available; do not guess"
+    },
+    {
+      "evidence_id": "E-KLCD-10",
+      "image_label": "Progress_article.png",
+      "article_line": 66,
+      "media_url": null,
+      "local_files": [],
+      "selection_reason": "All Progress, low score and Basic scaffolding context",
+      "limitation": "not_preserved_in_saved_web-tool text; no raw article HTML available; do not guess"
+    },
+    {
+      "evidence_id": "E-KLCD-10",
+      "image_label": "ClassReport_Assignments.png",
+      "article_line": 35,
+      "media_url": null,
+      "local_files": [],
+      "selection_reason": "Assignments report and completion/attempt entry",
+      "limitation": "not_preserved_in_saved_web-tool text; no raw article HTML available; do not guess"
+    },
+    {
+      "evidence_id": "E-KLCD-10",
+      "image_label": "ClassReport_AllProgress__1_.png",
+      "article_line": 35,
+      "media_url": null,
+      "local_files": [],
+      "selection_reason": "All Progress return/report state",
+      "limitation": "not_preserved_in_saved_web-tool text; no raw article HTML available; do not guess"
+    },
+    {
+      "evidence_id": "E-KLCD-07",
+      "image_label": "Home.png",
+      "article_line": 36,
+      "media_url": null,
+      "local_files": [],
+      "selection_reason": "home Play button and Kodi help entry context",
+      "limitation": "not_preserved_in_saved_web-tool text; no raw article HTML available; do not guess"
+    },
+    {
+      "evidence_id": "E-KLCD-07",
+      "image_label": "Progress_checkmarks.png",
+      "article_line": 79,
+      "media_url": null,
+      "local_files": [],
+      "selection_reason": "post-activity visible progress state",
+      "limitation": "not_preserved_in_saved_web-tool text; no raw article HTML available; do not guess"
+    }
+  ],
+  "existing_local_images_note": "No local file matched any article image filename. Existing look-at-my-map.png and mute.png belong to other E/articles and were not selected.",
+  "known_attachment_urls_excluded": [
+    {
+      "url": "https://khankids.zendesk.com/hc/article_attachments/4420861003803",
+      "local_path": "work/khan-library-controls-deepening/mute.png",
+      "reason": "belongs to background-music article, not E-KLCD-02/07/10"
+    },
+    {
+      "url": "https://khankids.zendesk.com/hc/article_attachments/4409150302747",
+      "local_path": "work/khan-library-controls-deepening/look-at-my-map.png",
+      "reason": "belongs to fluency article, not E-KLCD-02/07/10"
+    },
+    {
+      "url": "https://khankids.zendesk.com/hc/article_attachments/360007362331",
+      "local_path": null,
+      "reason": "previous timeout and source article mapping is not one of the three target E; not requested"
+    }
+  ]
+}

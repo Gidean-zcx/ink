@@ -1,0 +1,62 @@
+Play queue screen in “Music player”
+You can check and edit the list of tracks that the player will play.
+To display the play queue screen
+Swipe the playback screen in “Music player” to the right.
+[Illustration showing the items on the play queue screen. The status bar is at the top of the screen. The navigation bar is at the bottom of the screen. The library top button and options button are below the status bar. The list of content in the play queue appears below these buttons. The list contains the following information for each item of content: artist name, track title, codec, length, and a context menu button. The scroll indicator appears at the right edge of the screen.]
+Playback unit
+Current track
+Playback order
+Library top button
+Options button
+Context menu button
+Content list
+Artist name
+Track title
+Codec
+Codecs for High-Resolution Audio formats appear in color.
+Length
+Scroll indicator
+Option menu
+Tap (Options) to display the option menu.
+Displayed items may differ depending on the settings.
+Settings
+Select the item to display the Settings menu for “Music player”.
+Edit song order
+Select the item to change the order of tracks in the current play queue. Drag and drop the reordering icons on the left sides of the tracks until they are in the desired order.
+Add to playlist
+Select the item to add all tracks in the current play queue to a playlist.
+Context menu
+Tap (Context menu) to display the context menu. (Context menu) will appear to the right side of each item.
+Displayed items may differ depending on the settings.
+Add to Favorites
+Select the item to add the track to Favorites.
+Add to playlist
+Select the item to add the track to a playlist.
+Remove from this list
+Select the item to remove the track from the current play queue.
+Detailed song information
+Select the item to display the details of the track.
+Hint
+You can also display the context menu by holding down an item in the list.
+You can add items such as tracks/albums/playlists to the play queue.
+On the library screen or favorites screen, tap (Context menu) to the right side of the item, and then tap one of the following items.
+[Play next]
+Select the item to add the selected track or all tracks in the selected item to the position after the current track in the play queue.
+[Add to the end of Play queue]
+Select the item to add the selected track or all tracks in the selected item to the end of the play queue.
+[Empty Play queue and add]
+Select the item to clear the current play queue and newly add the selected track or all tracks in the selected item to the play queue.
+On the play queue screen, the screen automatically scrolls to focus on the current track when you have not operated the player for a while.
+When [Add to playlist] is selected, a playlist transferred from a computer cannot be selected as the addition destination. In this case, create a new playlist with the same content as the playlist transferred from the computer in advance, and then select that playlist as the addition destination.
+On the library screen, tap (Context menu) to the right side of the playlist transferred from the computer.
+Tap the menu items in the following order.
+[Add to another playlist] － [Create new playlist].
+The contents of the Help Guide may be subject to change without notice due to updates to the product's specifications.
+Go to Page Top
+Related Topic
+How to use the various screens of “Music player”
+Playing music
+Playback methods
+Managing playlists in “Music player”
+Importing playlists from a Windows computer, playing, or deleting playlists in “Music player”
+Managing Favorites in “Music player”

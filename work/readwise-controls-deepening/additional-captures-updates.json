@@ -1,0 +1,50 @@
+[
+  {
+    "evidence_id": "E-RDD-01",
+    "capture": {
+      "capture_kind": "ordinary_public_html_reread",
+      "checked_on": "2026-10-27",
+      "capture_url": "https://docs.readwise.io/reader/docs/faqs",
+      "hands_on": false,
+      "visual_observed": false,
+      "archived_artifact": "artifacts/readwise-controls-deepening/source-notes.md",
+      "sha256": "c1acd83aee1c26d85de94fad1173941340ee4055e7898a346f6997ed4ed981c7",
+      "raw_work_path": "work/readwise-controls-deepening/raw/basics.html",
+      "raw_sha256": "95c1adad43bcb1bd2b74071c3aa8c4dbfcb769321ee1053ee54bdc5c05c28380",
+      "text_work_path": "work/readwise-controls-deepening/raw/basics.txt",
+      "text_sha256": "b46028614afdd4e5282cb5dec38c56cab8cb397b305a20b32680213f48c9367a"
+    }
+  },
+  {
+    "evidence_id": "E-RDD-02",
+    "capture": {
+      "capture_kind": "ordinary_public_html_reread",
+      "checked_on": "2026-10-27",
+      "capture_url": "https://docs.readwise.io/reader/guides/ghostreader/global",
+      "hands_on": false,
+      "visual_observed": false,
+      "archived_artifact": "artifacts/readwise-controls-deepening/source-notes.md",
+      "sha256": "c1acd83aee1c26d85de94fad1173941340ee4055e7898a346f6997ed4ed981c7",
+      "raw_work_path": "work/readwise-controls-deepening/raw/global.html",
+      "raw_sha256": "8bfa8163a949c857547b3eff7f4e85a1cb589c38f8938e8a997efd642c807d5a",
+      "text_work_path": "work/readwise-controls-deepening/raw/global.txt",
+      "text_sha256": "df7a9995f584e74e224cbd03df05eb16b7df03f5b6c307eb143b3848c76dc5c8"
+    }
+  },
+  {
+    "evidence_id": "E-RDD-06",
+    "capture": {
+      "capture_kind": "ordinary_public_html_reread",
+      "checked_on": "2026-10-27",
+      "capture_url": "https://docs.readwise.io/reader/docs/organizing-content",
+      "hands_on": false,
+      "visual_observed": false,
+      "archived_artifact": "artifacts/readwise-controls-deepening/source-notes.md",
+      "sha256": "c1acd83aee1c26d85de94fad1173941340ee4055e7898a346f6997ed4ed981c7",
+      "raw_work_path": "work/readwise-controls-deepening/raw/organizing.html",
+      "raw_sha256": "47e7f36deac47c1708c83079de7640e9f607568e922159ce707d1487b0bb35de",
+      "text_work_path": "work/readwise-controls-deepening/raw/organizing.txt",
+      "text_sha256": "a75ec699d649180e7c2b7d033e89c61ff0a07cada18780ddf4f7bb747db52dd2"
+    }
+  }
+]

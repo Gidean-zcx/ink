@@ -1,0 +1,170 @@
+[
+  {
+    "evidence_id": "E-SBY-04",
+    "field": "additional_captures",
+    "before": null,
+    "after": [
+      {
+        "capture_kind": "local_recheck_of_prior_public_cms_response",
+        "original_acquisition_date": "2026-10-26",
+        "checked_on": "2026-10-27",
+        "network_refetched": false,
+        "source_url": "https://web.shanbay.com/web/help/bcrmcn/yjgia",
+        "capture_url": "https://apiv3.shanbay.com/cms/articles/yjgia",
+        "raw_work_path": "work/shanbay-controls-deepening-2/reused-E-SBY-04.json",
+        "raw_sha256": "c20ed60c6ef1cbef333de3123a2071f5165468512d6dc6948bfa66a44791ff2d",
+        "cms_assign_date": "2021-06-28T16:00:00+00:00",
+        "assign_date_is_update": false,
+        "archived_artifact": "artifacts/shanbay-controls-deepening-2/source-notes.md",
+        "sha256": "0b2162da9bb30185597eabbb336d028bbbc0d309f31588bc7cb8d6cfb43699ec",
+        "hands_on": false,
+        "visual_observed": false
+      }
+    ],
+    "reason": "同页旧E追加本地原件/散列与本轮复核；非新来源或新网络抓取"
+  },
+  {
+    "evidence_id": "E-SBY-05",
+    "field": "additional_captures",
+    "before": null,
+    "after": [
+      {
+        "capture_kind": "local_recheck_of_prior_public_cms_response",
+        "original_acquisition_date": "2026-10-26",
+        "checked_on": "2026-10-27",
+        "network_refetched": false,
+        "source_url": "https://web.shanbay.com/web/help/bcrmcn/brnsyu",
+        "capture_url": "https://apiv3.shanbay.com/cms/articles/brnsyu",
+        "raw_work_path": "work/shanbay-controls-deepening-2/reused-E-SBY-05.json",
+        "raw_sha256": "7b8e9ef090c497d605a7fbdf97f3e5faa12751ffdaec2aef2f1e81fbc77bfcca",
+        "cms_assign_date": "2021-06-24T16:00:00+00:00",
+        "assign_date_is_update": false,
+        "archived_artifact": "artifacts/shanbay-controls-deepening-2/source-notes.md",
+        "sha256": "0b2162da9bb30185597eabbb336d028bbbc0d309f31588bc7cb8d6cfb43699ec",
+        "hands_on": false,
+        "visual_observed": false
+      }
+    ],
+    "reason": "同页旧E追加本地原件/散列与本轮复核；非新来源或新网络抓取"
+  },
+  {
+    "evidence_id": "E-SBY-06",
+    "field": "additional_captures",
+    "before": null,
+    "after": [
+      {
+        "capture_kind": "local_recheck_of_prior_public_cms_response",
+        "original_acquisition_date": "2026-10-26",
+        "checked_on": "2026-10-27",
+        "network_refetched": false,
+        "source_url": "https://web.shanbay.com/web/help/btfesx/frhdp",
+        "capture_url": "https://apiv3.shanbay.com/cms/articles/frhdp",
+        "raw_work_path": "work/shanbay-controls-deepening-2/reused-E-SBY-06.json",
+        "raw_sha256": "f3ee822a8559bc193de2e055598c71620913c9506a8aae85110743874ce1749a",
+        "cms_assign_date": "2021-06-28T16:00:00+00:00",
+        "assign_date_is_update": false,
+        "archived_artifact": "artifacts/shanbay-controls-deepening-2/source-notes.md",
+        "sha256": "0b2162da9bb30185597eabbb336d028bbbc0d309f31588bc7cb8d6cfb43699ec",
+        "hands_on": false,
+        "visual_observed": false
+      }
+    ],
+    "reason": "同页旧E追加本地原件/散列与本轮复核；非新来源或新网络抓取"
+  },
+  {
+    "evidence_id": "E-SBY-10",
+    "field": "additional_captures",
+    "before": null,
+    "after": [
+      {
+        "capture_kind": "local_recheck_of_prior_public_cms_response",
+        "original_acquisition_date": "2026-10-26",
+        "checked_on": "2026-10-27",
+        "network_refetched": false,
+        "source_url": "https://web.shanbay.com/web/help/bbumgi/iwlnc",
+        "capture_url": "https://apiv3.shanbay.com/cms/articles/iwlnc",
+        "raw_work_path": "work/shanbay-controls-deepening-2/reused-E-SBY-10.json",
+        "raw_sha256": "1f970f2731e8f3c3039b6ac976aeb93aea47d87dc187ab244bf0c171a46ecc26",
+        "cms_assign_date": "2021-06-28T16:00:00+00:00",
+        "assign_date_is_update": false,
+        "archived_artifact": "artifacts/shanbay-controls-deepening-2/source-notes.md",
+        "sha256": "0b2162da9bb30185597eabbb336d028bbbc0d309f31588bc7cb8d6cfb43699ec",
+        "hands_on": false,
+        "visual_observed": false
+      }
+    ],
+    "reason": "同页旧E追加本地原件/散列与本轮复核；非新来源或新网络抓取"
+  },
+  {
+    "evidence_id": "E-SBY-11",
+    "field": "additional_captures",
+    "before": null,
+    "after": [
+      {
+        "capture_kind": "local_recheck_of_prior_public_cms_response",
+        "original_acquisition_date": "2026-10-26",
+        "checked_on": "2026-10-27",
+        "network_refetched": false,
+        "source_url": "https://web.shanbay.com/web/help/bbumgi/wldgi",
+        "capture_url": "https://apiv3.shanbay.com/cms/articles/wldgi",
+        "raw_work_path": "work/shanbay-controls-deepening-2/reused-E-SBY-11.json",
+        "raw_sha256": "d532c0df9c22641443fa12c4ea83acbd8f5dcf8b9aee7c2ad8aedf27781c39d3",
+        "cms_assign_date": "2021-06-28T16:00:00+00:00",
+        "assign_date_is_update": false,
+        "archived_artifact": "artifacts/shanbay-controls-deepening-2/source-notes.md",
+        "sha256": "0b2162da9bb30185597eabbb336d028bbbc0d309f31588bc7cb8d6cfb43699ec",
+        "hands_on": false,
+        "visual_observed": false
+      }
+    ],
+    "reason": "同页旧E追加本地原件/散列与本轮复核；非新来源或新网络抓取"
+  },
+  {
+    "evidence_id": "E-SBY-12",
+    "field": "additional_captures",
+    "before": null,
+    "after": [
+      {
+        "capture_kind": "local_recheck_of_prior_public_cms_response",
+        "original_acquisition_date": "2026-10-26",
+        "checked_on": "2026-10-27",
+        "network_refetched": false,
+        "source_url": "https://web.shanbay.com/web/help/svgln/bqahtq",
+        "capture_url": "https://apiv3.shanbay.com/cms/articles/bqahtq",
+        "raw_work_path": "work/shanbay-controls-deepening-2/reused-E-SBY-12.json",
+        "raw_sha256": "5d1c57a9e5b57fb4d162b5eb143df6f4cd1040603ea87f2bafb137116a274571",
+        "cms_assign_date": "2021-06-28T16:00:00+00:00",
+        "assign_date_is_update": false,
+        "archived_artifact": "artifacts/shanbay-controls-deepening-2/source-notes.md",
+        "sha256": "0b2162da9bb30185597eabbb336d028bbbc0d309f31588bc7cb8d6cfb43699ec",
+        "hands_on": false,
+        "visual_observed": false
+      }
+    ],
+    "reason": "同页旧E追加本地原件/散列与本轮复核；非新来源或新网络抓取"
+  },
+  {
+    "evidence_id": "E-SBCD-02",
+    "field": "additional_captures",
+    "before": null,
+    "after": [
+      {
+        "capture_kind": "local_recheck_of_prior_public_cms_response",
+        "original_acquisition_date": "2026-10-26",
+        "checked_on": "2026-10-27",
+        "network_refetched": false,
+        "source_url": "https://web.shanbay.com/web/help/onnjg/buxtne",
+        "capture_url": "https://apiv3.shanbay.com/cms/articles/buxtne",
+        "raw_work_path": "work/shanbay-controls-deepening-2/reused-E-SBCD-02.json",
+        "raw_sha256": "5cc178578f35997f3f56a5ad1951796eec97f6131c33049e7c3f01cfbf553bfd",
+        "cms_assign_date": "2021-06-28T16:00:00+00:00",
+        "assign_date_is_update": false,
+        "archived_artifact": "artifacts/shanbay-controls-deepening-2/source-notes.md",
+        "sha256": "0b2162da9bb30185597eabbb336d028bbbc0d309f31588bc7cb8d6cfb43699ec",
+        "hands_on": false,
+        "visual_observed": false
+      }
+    ],
+    "reason": "同页旧E追加本地原件/散列与本轮复核；非新来源或新网络抓取"
+  }
+]

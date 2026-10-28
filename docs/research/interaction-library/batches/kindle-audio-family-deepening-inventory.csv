@@ -1,0 +1,52 @@
+item_id,product_id,item,source_locator,evidence_ids,flow_ids,status,gap,checked_on
+KDAF-001,M-001,单页/全本/指定页,笔记AI：选页、生成预览、插入或放弃,E-KDCD-02;E-KDAF-01,F-M001-10,documented_partial_controls,地区/语言文档冲突；断网/超时/重试/重复插入/已插入恢复、正确性与最低固件未知,2026-10-27
+KDAF-002,M-001,25词摘要门槛,笔记AI：选页、生成预览、插入或放弃,E-KDCD-02;E-KDAF-01,F-M001-10,documented_partial_controls,地区/语言文档冲突；断网/超时/重试/重复插入/已插入恢复、正确性与最低固件未知,2026-10-27
+KDAF-003,M-001,摘要15页/整理10页,笔记AI：选页、生成预览、插入或放弃,E-KDCD-02;E-KDAF-01,F-M001-10,documented_partial_controls,地区/语言文档冲突；断网/超时/重试/重复插入/已插入恢复、正确性与最低固件未知,2026-10-27
+KDAF-004,M-001,开始前Cancel,笔记AI：选页、生成预览、插入或放弃,E-KDCD-02;E-KDAF-01,F-M001-10,documented_partial_controls,地区/语言文档冲突；断网/超时/重试/重复插入/已插入恢复、正确性与最低固件未知,2026-10-27
+KDAF-005,M-001,等待同步与预览,笔记AI：选页、生成预览、插入或放弃,E-KDCD-02;E-KDAF-01,F-M001-10,documented_partial_controls,地区/语言文档冲突；断网/超时/重试/重复插入/已插入恢复、正确性与最低固件未知,2026-10-27
+KDAF-006,M-001,字体/行距/摘要语气,笔记AI：选页、生成预览、插入或放弃,E-KDCD-02;E-KDAF-01,F-M001-10,documented_partial_controls,地区/语言文档冲突；断网/超时/重试/重复插入/已插入恢复、正确性与最低固件未知,2026-10-27
+KDAF-007,M-001,插入首/末页,笔记AI：选页、生成预览、插入或放弃,E-KDCD-02;E-KDAF-01,F-M001-10,documented_partial_controls,地区/语言文档冲突；断网/超时/重试/重复插入/已插入恢复、正确性与最低固件未知,2026-10-27
+KDAF-008,M-001,预览X确认放弃,笔记AI：选页、生成预览、插入或放弃,E-KDCD-02;E-KDAF-01,F-M001-10,documented_partial_controls,地区/语言文档冲突；断网/超时/重试/重复插入/已插入恢复、正确性与最低固件未知,2026-10-27
+KDAF-009,M-001,地区/语言冲突,笔记AI：选页、生成预览、插入或放弃,E-KDCD-02;E-KDAF-01,F-M001-10,documented_partial_controls,地区/语言文档冲突；断网/超时/重试/重复插入/已插入恢复、正确性与最低固件未知,2026-10-27
+KDAF-010,M-001,蓝牙配对/Rescan,Audible：下载、配对、播放及读听切换,E-KDCD-02;E-KDAF-09,F-M001-11,documented_partial_controls,5%可播不等于整书离线；地区/内容权益；睡眠/断连/AI插话恢复、输出失败和匹配误差未测,2026-10-27
+KDAF-011,M-001,已下载区域拖动,Audible：下载、配对、播放及读听切换,E-KDCD-02;E-KDAF-09,F-M001-11,documented_partial_controls,5%可播不等于整书离线；地区/内容权益；睡眠/断连/AI插话恢复、输出失败和匹配误差未测,2026-10-27
+KDAF-012,M-001,5%与当前阅读位置,Audible：下载、配对、播放及读听切换,E-KDCD-02;E-KDAF-09,F-M001-11,documented_partial_controls,5%可播不等于整书离线；地区/内容权益；睡眠/断连/AI插话恢复、输出失败和匹配误差未测,2026-10-27
+KDAF-013,M-001,取消下载两入口,Audible：下载、配对、播放及读听切换,E-KDCD-02;E-KDAF-09,F-M001-11,documented_partial_controls,5%可播不等于整书离线；地区/内容权益；睡眠/断连/AI插话恢复、输出失败和匹配误差未测,2026-10-27
+KDAF-014,M-001,选章节即播,Audible：下载、配对、播放及读听切换,E-KDCD-02;E-KDAF-09,F-M001-11,documented_partial_controls,5%可播不等于整书离线；地区/内容权益；睡眠/断连/AI插话恢复、输出失败和匹配误差未测,2026-10-27
+KDAF-015,M-001,配套电子书切换,Audible：下载、配对、播放及读听切换,E-KDCD-02;E-KDAF-09,F-M001-11,documented_partial_controls,5%可播不等于整书离线；地区/内容权益；睡眠/断连/AI插话恢复、输出失败和匹配误差未测,2026-10-27
+KDAF-016,M-001,音频位置加书签,有声书位置加书签、附注及回听,E-KDCD-02;E-KDAF-09,F-M001-12,documented_partial_controls,音频书签不等于文字锚点；删除确认/撤销、跨端同步、进度覆盖和离线恢复未知,2026-10-27
+KDAF-017,M-001,Add Note,有声书位置加书签、附注及回听,E-KDCD-02;E-KDAF-09,F-M001-12,documented_partial_controls,音频书签不等于文字锚点；删除确认/撤销、跨端同步、进度覆盖和离线恢复未知,2026-10-27
+KDAF-018,M-001,选书签即播,有声书位置加书签、附注及回听,E-KDCD-02;E-KDAF-09,F-M001-12,documented_partial_controls,音频书签不等于文字锚点；删除确认/撤销、跨端同步、进度覆盖和离线恢复未知,2026-10-27
+KDAF-019,M-001,编辑/删除,有声书位置加书签、附注及回听,E-KDCD-02;E-KDAF-09,F-M001-12,documented_partial_controls,音频书签不等于文字锚点；删除确认/撤销、跨端同步、进度覆盖和离线恢复未知,2026-10-27
+KDAF-020,M-001,Enhanced Typesetting和语言,辅助TTS：启用、读听及导航打断,E-KDCD-02;E-KDAF-03;E-KDAF-10,F-M001-13,documented_partial_controls,语言/Enhanced Typesetting/来源有限；关菜单自动续播、中文、USB文档、睡眠/重启续读未证,2026-10-27
+KDAF-021,M-001,Aa More开关,辅助TTS：启用、读听及导航打断,E-KDCD-02;E-KDAF-03;E-KDAF-10,F-M001-13,documented_partial_controls,语言/Enhanced Typesetting/来源有限；关菜单自动续播、中文、USB文档、睡眠/重启续读未证,2026-10-27
+KDAF-022,M-001,退30秒/速度/播放,辅助TTS：启用、读听及导航打断,E-KDCD-02;E-KDAF-03;E-KDAF-10,F-M001-13,documented_partial_controls,语言/Enhanced Typesetting/来源有限；关菜单自动续播、中文、USB文档、睡眠/重启续读未证,2026-10-27
+KDAF-023,M-001,导航或批注暂停,辅助TTS：启用、读听及导航打断,E-KDCD-02;E-KDAF-03;E-KDAF-10,F-M001-13,documented_partial_controls,语言/Enhanced Typesetting/来源有限；关菜单自动续播、中文、USB文档、睡眠/重启续读未证,2026-10-27
+KDAF-024,M-001,开关持续≠自动续播,辅助TTS：启用、读听及导航打断,E-KDCD-02;E-KDAF-03;E-KDAF-10,F-M001-13,documented_partial_controls,语言/Enhanced Typesetting/来源有限；关菜单自动续播、中文、USB文档、睡眠/重启续读未证,2026-10-27
+KDAF-025,M-001,首次无声到最后步骤,VoiceView：配对、读屏教程与切换,E-KDCD-02,F-M001-14,documented_partial_controls,读屏不是语音命令；具体手势/焦点回退/盲操作失败/读书断点未知；文档6秒未实测,2026-10-27
+KDAF-026,M-001,教程与Exit,VoiceView：配对、读屏教程与切换,E-KDCD-02,F-M001-14,documented_partial_controls,读屏不是语音命令；具体手势/焦点回退/盲操作失败/读书断点未知；文档6秒未实测,2026-10-27
+KDAF-027,M-001,快捷入口变化,VoiceView：配对、读屏教程与切换,E-KDCD-02,F-M001-14,documented_partial_controls,读屏不是语音命令；具体手势/焦点回退/盲操作失败/读书断点未知；文档6秒未实测,2026-10-27
+KDAF-028,M-001,语速/音量,VoiceView：配对、读屏教程与切换,E-KDCD-02,F-M001-14,documented_partial_controls,读屏不是语音命令；具体手势/焦点回退/盲操作失败/读书断点未知；文档6秒未实测,2026-10-27
+KDAF-029,M-001,家长PIN与限制对象,设置家长限制并区分儿童档案,E-KDCD-02;E-KDAF-02,F-M001-15,documented_partial_controls,指南家庭建档与英国专页Scribe排除冲突；不建立Scribe儿童建档成功链；限制逐项确认/解除失败未知,2026-10-27
+KDAF-030,M-001,Scribe儿童建档排除,设置家长限制并区分儿童档案,E-KDCD-02;E-KDAF-02,F-M001-15,documented_partial_controls,指南家庭建档与英国专页Scribe排除冲突；不建立Scribe儿童建档成功链；限制逐项确认/解除失败未知,2026-10-27
+KDAF-031,M-001,成人共享与儿童档案区别,设置家长限制并区分儿童档案,E-KDCD-02;E-KDAF-02,F-M001-15,documented_partial_controls,指南家庭建档与英国专页Scribe排除冲突；不建立Scribe儿童建档成功链；限制逐项确认/解除失败未知,2026-10-27
+KDAF-032,M-001,Article Mode,浏览网页正文、书签与文件入口,E-KDCD-02,F-M001-16,documented_partial_controls,网络失败、登录适配、重复文件、下载中断、删除撤销及跨会话位置未知；格式仅指南列项,2026-10-27
+KDAF-033,M-001,书签勾选Remove,浏览网页正文、书签与文件入口,E-KDCD-02,F-M001-16,documented_partial_controls,网络失败、登录适配、重复文件、下载中断、删除撤销及跨会话位置未知；格式仅指南列项,2026-10-27
+KDAF-034,M-001,历史/Cookie分开,浏览网页正文、书签与文件入口,E-KDCD-02,F-M001-16,documented_partial_controls,网络失败、登录适配、重复文件、下载中断、删除撤销及跨会话位置未知；格式仅指南列项,2026-10-27
+KDAF-035,M-001,下载格式/确认,浏览网页正文、书签与文件入口,E-KDCD-02,F-M001-16,documented_partial_controls,网络失败、登录适配、重复文件、下载中断、删除撤销及跨会话位置未知；格式仅指南列项,2026-10-27
+KDAF-036,M-001,主题保存和管理,阅读排版、主题保存与进度显示,E-KDCD-02;E-KDAF-06;E-KDAF-07,F-M001-17,documented_partial_controls,本机各书生效与系统UI字号分开；主题删除确认/撤销及跨设备未证；预计时间不等于理解进度,2026-10-27
+KDAF-037,M-001,本机各书与UI字号分开,阅读排版、主题保存与进度显示,E-KDCD-02;E-KDAF-06;E-KDAF-07,F-M001-17,documented_partial_controls,本机各书生效与系统UI字号分开；主题删除确认/撤销及跨设备未证；预计时间不等于理解进度,2026-10-27
+KDAF-038,M-001,横屏双栏,阅读排版、主题保存与进度显示,E-KDCD-02;E-KDAF-06;E-KDAF-07,F-M001-17,documented_partial_controls,本机各书生效与系统UI字号分开；主题删除确认/撤销及跨设备未证；预计时间不等于理解进度,2026-10-27
+KDAF-039,M-001,PDF裁边/对比,阅读排版、主题保存与进度显示,E-KDCD-02;E-KDAF-06;E-KDAF-07,F-M001-17,documented_partial_controls,本机各书生效与系统UI字号分开；主题删除确认/撤销及跨设备未证；预计时间不等于理解进度,2026-10-27
+KDAF-040,M-001,预计时间/隐藏进度,阅读排版、主题保存与进度显示,E-KDCD-02;E-KDAF-06;E-KDAF-07,F-M001-17,documented_partial_controls,本机各书生效与系统UI字号分开；主题删除确认/撤销及跨设备未证；预计时间不等于理解进度,2026-10-27
+KDAF-041,M-001,下拉与飞行,下拉快捷设置、全局显示与联网,E-KDCD-02;E-KDAF-04,F-M001-18,documented_partial_controls,只看到顶栏，未看快捷面板；系统全局与阅读排版分开；网络密码云保存删除不等于忘记本地网络；休眠/错误回退未知,2026-10-27
+KDAF-042,M-001,冷暖自动/手动日程,下拉快捷设置、全局显示与联网,E-KDCD-02;E-KDAF-04,F-M001-18,documented_partial_controls,只看到顶栏，未看快捷面板；系统全局与阅读排版分开；网络密码云保存删除不等于忘记本地网络；休眠/错误回退未知,2026-10-27
+KDAF-043,M-001,系统深色与旋转锁,下拉快捷设置、全局显示与联网,E-KDCD-02;E-KDAF-04,F-M001-18,documented_partial_controls,只看到顶栏，未看快捷面板；系统全局与阅读排版分开；网络密码云保存删除不等于忘记本地网络；休眠/错误回退未知,2026-10-27
+KDAF-044,M-001,选网/密码/重扫,下拉快捷设置、全局显示与联网,E-KDCD-02;E-KDAF-04,F-M001-18,documented_partial_controls,只看到顶栏，未看快捷面板；系统全局与阅读排版分开；网络密码云保存删除不等于忘记本地网络；休眠/错误回退未知,2026-10-27
+KDAF-045,M-001,云保存网络密码删除,下拉快捷设置、全局显示与联网,E-KDCD-02;E-KDAF-04,F-M001-18,documented_partial_controls,只看到顶栏，未看快捷面板；系统全局与阅读排版分开；网络密码云保存删除不等于忘记本地网络；休眠/错误回退未知,2026-10-27
+KDAF-046,M-001,儿童文字弹出/双击退出,按内容类型放大阅读与返回,E-KDCD-02;E-KDAF-05,F-M001-19,documented_partial_controls,支持书籍各异；漫画退出/跨页状态及误触恢复未全列；点击区示意不证明这些模式实操或60fps,2026-10-27
+KDAF-047,M-001,漫画Panel View,按内容类型放大阅读与返回,E-KDCD-02;E-KDAF-05,F-M001-19,documented_partial_controls,支持书籍各异；漫画退出/跨页状态及误触恢复未全列；点击区示意不证明这些模式实操或60fps,2026-10-27
+KDAF-048,M-001,图片与表格缩放退出,按内容类型放大阅读与返回,E-KDCD-02;E-KDAF-05,F-M001-19,documented_partial_controls,支持书籍各异；漫画退出/跨页状态及误触恢复未全列；点击区示意不证明这些模式实操或60fps,2026-10-27
+KDAF-049,M-001,X-Ray未来片段隐藏,查看人物线索与前情回顾,E-KDCD-02,F-M001-20,documented_partial_controls,地区/英文/书籍资格；无条目不等于故障；剧透边界、回顾更新、返回位置、来源和AI生成方式未验证,2026-10-27
+KDAF-050,M-001,系列前情/Story So Far,查看人物线索与前情回顾,E-KDCD-02,F-M001-20,documented_partial_controls,地区/英文/书籍资格；无条目不等于故障；剧透边界、回顾更新、返回位置、来源和AI生成方式未验证,2026-10-27
+KDAF-051,M-001,资格和缺入口,查看人物线索与前情回顾,E-KDCD-02,F-M001-20,documented_partial_controls,地区/英文/书籍资格；无条目不等于故障；剧透边界、回顾更新、返回位置、来源和AI生成方式未验证,2026-10-27

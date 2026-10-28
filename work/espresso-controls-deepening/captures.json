@@ -1,0 +1,44 @@
+[
+  {
+    "name": "hku-guide",
+    "url": "https://libguides.lib.hku.hk/espresso",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "final_url": "https://libguides.lib.hku.hk/espresso",
+    "content_type": "text/html; charset=UTF-8",
+    "raw_work_path": "work/espresso-controls-deepening/raw/hku-guide.html",
+    "raw_sha256": "7b63d29a8a26294be88d2df3732251e55c39303274a6cbbcd74770f899c15031",
+    "text_work_path": "work/espresso-controls-deepening/raw/hku-guide.txt",
+    "text_sha256": "89e875197efb5506b79f7c69d9ad4cb6dfe9598bf2936bb01f4ac54a84e7140b",
+    "structure_path": "work/espresso-controls-deepening/raw/hku-guide-structure.json",
+    "structure_sha256": "8aed1ea34eda4de47453e10c5dbcaa5cf4cb8a3ce0f7515eaa3b32516c8800de"
+  },
+  {
+    "name": "historical-finish",
+    "url": "https://alearningaday.blog/2017/07/26/delight-to-use-and-the-economist-espresso-thinking-product/",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "final_url": "https://alearningaday.blog/2017/07/26/delight-to-use-and-the-economist-espresso-thinking-product/",
+    "content_type": "text/html; charset=UTF-8",
+    "raw_work_path": "work/espresso-controls-deepening/raw/historical-finish.html",
+    "raw_sha256": "beaac84e47b884c0d98571a4d9a0a0fe8c059366ab738de3c47a66681a61f38b",
+    "text_work_path": "work/espresso-controls-deepening/raw/historical-finish.txt",
+    "text_sha256": "ebd1af93f48a017127f7613f413dfbd28ca8fa92536c2e9cb3bfe598a8de08df",
+    "structure_path": "work/espresso-controls-deepening/raw/historical-finish-structure.json",
+    "structure_sha256": "6d524876715f1c492d948190775f2a3eae45fb3791ecc361a3ef03b967ad0795"
+  },
+  {
+    "name": "content-api",
+    "url": "https://developer.economist.com/docs",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "final_url": "https://developer.economist.com/docs",
+    "content_type": "text/html; charset=utf-8",
+    "raw_work_path": "work/espresso-controls-deepening/raw/content-api.html",
+    "raw_sha256": "b9aa4d94968ba65ee4f5a8b09043430909234c874c22283bbc112f83d9f5727c",
+    "text_work_path": "work/espresso-controls-deepening/raw/content-api.txt",
+    "text_sha256": "5a64fc0d70823581787463a6e105d77c74a8e51dda79fb3486188a67cf0d1be4",
+    "structure_path": "work/espresso-controls-deepening/raw/content-api-structure.json",
+    "structure_sha256": "28dc5639407c7adacf8c3fb04d90442c7f5306b38c51f45a42999873ae581e17"
+  }
+]

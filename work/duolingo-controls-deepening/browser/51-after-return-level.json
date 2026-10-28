@@ -1,0 +1,28 @@
+{
+  "name": "51-after-return-level",
+  "url": "https://www.duolingo.com/learn",
+  "title": "Duolingo - Learn French with lessons that work",
+  "utc": "2026-10-26T17:58:18.153509+00:00",
+  "text": "LEARN\nLEADERBOARDS\nQUESTS\nSHOP\nPROFILE\nMORE\n0\n500\n4\nUnlock Leaderboards!\nComplete 3 more lessons to start competing\nDaily Quests\nVIEW ALL\nEarn 10 XP\n0 / 10\n0 / 10\nCreate a profile to save your progress!\nCREATE A PROFILE\nSIGN IN\nABOUT\nBLOG\nSTORE\nEFFICACY\nCAREERS\nINVESTORS\nTERMS\nPRIVACY\nNow let’s find the best place to start!\nNow let’s find the best place to start!\nI’m new to French\nI know some common words\nI can have basic conversations\nI can talk about various topics\nI can discuss most topics in detail\nStart from scratch\nTake the easiest lesson of the French course\nFind my level\nLet Duo recommend where you should start learning\nCONTINUE",
+  "buttons": [
+    {
+      "text": "CREATE A PROFILE",
+      "aria": null,
+      "test": "create-profile-juicy",
+      "visible": true
+    },
+    {
+      "text": "SIGN IN",
+      "aria": null,
+      "test": "sign-in-juicy",
+      "visible": true
+    },
+    {
+      "text": "CONTINUE",
+      "aria": null,
+      "test": "funboarding-continue-button",
+      "visible": true
+    }
+  ],
+  "inputs": []
+}

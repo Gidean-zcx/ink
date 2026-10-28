@@ -1,0 +1,2 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M031-20,M-031,数学算术课的输入、错误回顾与结算,D4,E-DUMA-01;E-DUMA-02;E-DUMA-04,Grade 2匿名课：计算器与作答分离，选择/拼块/键入/数轴；错后换题、末尾两题回顾；拼块待提交可移除；20XP/88%，学习页刷新仍见节点/任务/奖励。,Math Coach/跳主题未执行；近似容差、反复错答、输入遗漏原因、评分公式、离线/进程重启/账户同步和儿童效果未知；目标未提交，422保存影响未核。,observed_browser_sequence,true,cases/M-031-duolingo-adventures.md,2026-10-27

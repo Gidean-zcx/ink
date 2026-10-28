@@ -1,0 +1,27 @@
+The Floating Toolbar is a useful feature that provides quick access to different functions in NeoReader. In this article, you will learn more about the Floating Toolbar in NeoReader.
+ 
+Standard Floating Toolbar
+The standard Floating Toolbar is displayed during reading.
+ 
+ [image:1] 
+ 
+To enable / disable or customize the Floating Toolbar, do the following:
+In NeoReader, tap the center area to display the main menu.
+Tap the hamburger menu in the top right corner and choose Settings > Floating Toolbar Settings > General Settings.
+ 
+Here you can also add, remove or check the description of each button.
+ 
+ [image:2] 
+ 
+Handwriting Toolbar
+The Handwriting Toolbar will be displayed in handwriting status. Please refer to Take Notes on Books page in the Reading chapter for more info.
+ 
+ [image:3] 
+ 
+To customize the Handwriting Toolbar, do the following:
+In NeoReader, tap the center area to display the main menu.
+Tap the hamburger menu in the top right corner and choose Settings > Floating Toolbar Settings > Handwriting Toolbar Settings.
+ 
+Here you can also add, remove or check the description of each button.
+ 
+ [image:4]

@@ -1,0 +1,5 @@
+{
+  "inventory_page_regex": "Removed word boundary before p because Chinese locator 印刷p is one Unicode word; Gen.3C rows now updated",
+  "gen3c_rows_updated": 25,
+  "source_note": "same-day backup filename appends a number, not a literal plus sign"
+}

@@ -1,0 +1,600 @@
+Supernote Manta & Nomad Changelog - Supernote
+English (US)
+Japanese
+English (US)
+繁體中文
+简体中文
+Support Home
+Contact Us
+English (US)
+Japanese
+English (US)
+繁體中文
+简体中文
+Home
+Changelog
+Supernote Manta & Nomad Changelog
+Written by
+James Huang
+Updated at October 23rd, 2026
+Contact Us
+If you still have questions or prefer to get help directly from an agent, please submit a request.
+We’ll get back to you as soon as possible.
+Please fill out the contact form below and we will reply as soon as possible.
+title="ReCAPTCHA"
+Getting Started
+Tools & Features
+Organizing & Managing
+Workflow Cases
+What's New
+FAQ
+My Order
+Hardware & Repair
+Changelog
++ More
+Table of Contents
+Chauvet 3.31.45
+Chauvet 3.25.39
+Chauvet 3.24.38
+Chauvet 3.23.32
+Chauvet 3.22.31
+Chauvet 3.21.31
+Chauvet 3.20.29
+Chauvet 3.19.29
+Chauvet 3.18.29
+Chauvet 3.17.29
+Chauvet 3.16.27
+Chauvet 3.15.27
+Chauvet 3.14.27
+Warning:
+DO NOT downgrade to previous firmware versions on your own. This may cause the device to get stuck in a boot loop or become unresponsive. If you're experiencing issues, please reach out to our support team before attempting any manual changes.
+Please note: OTA updates use a staged rollout and typically reach all devices within a few days. To install immediately,
+download the firmware
+and update manually.
+Chauvet 3.31.45
+Oct 20, 2026
+Note: After updating to this version, if you experience unexpected behaviour with the eraser on a third-party stylus or any other standalone EMR eraser, go to Settings > Display & Input > Stylus > Stylus & Eraser and switch to Compatibility Mode.
+Added:
+[Note & Document] Added plugin functionality.
+[Note & Document] Supports toolbar customization.
+[Note & Document] Added content transform features:
+Supports flipping selected handwriting horizontally or vertically.
+Supports non-proportional scaling of shapes and images added via plugins.
+Supports real-time angle display when rotating selected content; tapping the rotate button rotates it by 90° each time.
+[InkHub] Added "Plugins" as a new resource type.
+[System] Added side button support for the new Supernote × LAMY AL-star EMR Pen Plus and Supernote × LAMY safari vista EMR Pen Plus. If you do not update to this firmware version, the side button behavior may vary depending on the distance between the pen tip and the screen:
+- Near: When the pen tip is ≤1 cm from the screen, press and hold the side button, then place the tip on the screen to trigger the mapped side button function, which can be set to either eraser or lasso.
+- Far: When the pen tip is >1 cm from the screen, press and hold the side button, then place the tip on the screen to trigger the eraser.
+After updating, the side button function will no longer be affected by the distance between the pen tip and the screen.
+[Settings] Supports the Supernote EMR Eraser. (To use it, switch to the corresponding mode in Settings > Display & Input > Stylus > Stylus & Eraser.)
+[Settings] Supports setting the side button of compatible styluses to “Regular Eraser”.
+Adjusted:
+[System] No longer automatically creates the device's default folders when using a USB drive or microSD card.
+[Note & Document] Adjusted the toolbar:
+Grouped similar tools into unified entries on the main toolbar.
+Supports long-pressing different areas of the screen with the pen to quickly access corresponding frequently used tools.
+[Settings] Replaced left/right hand selection with 8 common writing postures. (InkFlow needs to be updated to the latest version to support this change.)
+[Settings] Optimized writing sensitivity and removed both "Balanced Mode" and "Sensitive Mode".
+[Sync] When files are deleted via Supernote Cloud sync, their corresponding cloud copies will now be moved to the Supernote Cloud Recycle Bin. (To disable this feature, please go to https://account.supernote.com/ or
+https://account.supernote.com.cn/)
+[Sync] When files are deleted via Google Drive sync, their corresponding cloud copies will also be moved to the Google Drive Recycle Bin.
+Optimized:
+[System] Reduced instances of non‑contact writing with certain EMR pens on the Nomad.
+[System] Reduced visual artifacts when moving the floating toolbar.
+[Note & Document] Supports detecting and resolving files with sync conflicts.
+[Note & Document] Supports multi-page preview in the quick page-turning window.
+[Note & Document] Optimized keyword sorting for letters with diacritics.
+[Note & Document] Reduced unintended exits when activating the Lasso/Region Eraser by pressing the sidebar with two fingers.
+[Note & Document & Calendar] Supports real-time angle display when adjusting the direction of a straight line while drawing.
+[Note] Improved the recognition accuracy when using "Re-recognize" or lasso-selecting handwriting.
+[Handwriting] Optimized the calligraphy pen for different writing postures.
+[Document] Improved keyword recognition accuracy.
+[Document] Supports selecting right-to-left text in PDFs, including Hebrew.
+[Document] Supports turning pages with media control buttons on Bluetooth page turners.
+[Files] Optimized file path display to show more folder levels.
+[InkHub] Optimized resource browsing and management.
+Supports full-screen viewing of resource preview images.
+Supports blocking resources.
+Supports editing resources under review.
+[Mail] Supports choosing whether to keep a copy of sent emails in "Sent".
+[Settings] Supports adding recovery information (email address or phone number) to recover the lock screen password.
+[Keyboard] Improved handwriting recognition accuracy.
+Fixed:
+[System] Fixed the issue where only 15 grayscale levels were displayed, restoring 16-level grayscale.
+[System] Fixed the issue where some webpages could not be accessed properly in the browser.
+[System] Fixed the issue where the Wi‑Fi icon remained visible in the top‑right status bar after Wi‑Fi was disabled and the screen rotated.
+[System] Fixed inaccurate daylight saving time display in some regions.
+[Note] Fixed the issue where preset line widths for the Needle-point Pen automatically reverted to default after waking from sleep.
+[Note] Fixed the issue where turning to a page with many text boxes occasionally caused the app to crash.
+[Document] Fixed the issue where handwritten annotations in exported PDFs (when "Original" was selected in Export Settings) displayed offset in macOS Preview.
+[Keyboard] Fixed the issue where pressing Enter on some Bluetooth keyboards would insert line breaks at random positions.
+Chauvet 3.30.45
+Oct 12, 2026
+Added:
+[Note & Document] Added plugin functionality.
+[Note & Document] Supports toolbar customization.
+[Note & Document] Added content transform features:
+Supports flipping selected handwriting horizontally or vertically.
+Supports non-proportional scaling of shapes and images added via plugins.
+Supports real-time angle display when rotating selected content; tapping the rotate button rotates it by 90° each time.
+[InkHub] Added "Plugins" as a new resource type.
+[System] Added side button support for the new Supernote × LAMY AL-star EMR Pen Plus and Supernote × LAMY safari vista EMR Pen Plus. If you do not update to this firmware version, the side button behavior may vary depending on the distance between the pen tip and the screen:
+Near: When the pen tip is ≤1 cm from the screen, press and hold the side button, then place the tip on the screen to trigger the mapped side button function, which can be set to either eraser or lasso.
+Far: When the pen tip is >1 cm from the screen, press and hold the side button, then place the tip on the screen to trigger the eraser.
+After updating, the side button function will no longer be affected by the distance between the pen tip and the screen.
+[Settings] Added a switch for the Supernote EMR Eraser.
+[Settings] Supports setting the side button of compatible styluses to “Regular Eraser”.
+Adjusted:
+[System] No longer automatically creates the device's default folders when using a USB drive or microSD card.
+[Note & Document] Adjusted the toolbar:
+Grouped similar tools into unified entries on the main toolbar.
+Supports long-pressing different areas of the screen with the pen to quickly access corresponding frequently used tools.
+[Settings] Replaced left/right hand selection with 8 common writing postures. (InkFlow needs to be updated to the latest version to support this change.)
+[Settings] Optimized writing sensitivity and removed both "Balanced Mode" and "Sensitive Mode".
+[Sync] When files are deleted via Supernote Cloud sync, their corresponding cloud copies will now be moved to the Supernote Cloud Recycle Bin. (To disable this feature, please go to
+https://account.supernote.com/
+or
+https://account.supernote.com.cn/)
+[Sync] When files are deleted via Google Drive sync, their corresponding cloud copies will also be moved to the Google Drive Recycle Bin.
+Optimized:
+[System] Reduced instances of non‑contact writing with certain EMR pens on the Nomad.
+[System] Reduced visual artifacts when moving the floating toolbar.
+[Note & Document] Supports detecting and resolving files with sync conflicts.
+[Note & Document] Supports multi-page preview in the quick page-turning window.
+[Note & Document] Optimized keyword sorting for letters with diacritics.
+[Note & Document] Reduced unintended exits when activating the Lasso/Region Eraser by pressing the sidebar with two fingers.
+[Note & Document & Calendar] Supports real-time angle display when adjusting the direction of a straight line while drawing.
+[Note] Improved the recognition accuracy when using "Re-recognize" or lasso-selecting handwriting.
+[Handwriting] Optimized the calligraphy pen for different writing postures.
+[Document] Improved keyword recognition accuracy.
+[Document] Supports selecting right-to-left text in PDFs, including Hebrew.
+[Document] Supports turning pages with media control buttons on Bluetooth page turners.
+[Files] Optimized file path display to show more folder levels.
+[InkHub] Optimized resource browsing and management.
+Supports full-screen viewing of resource preview images.
+Supports blocking resources.
+Supports editing resources under review.
+[Mail] Supports choosing whether to keep a copy of sent emails in "Sent".
+[Settings] Supports adding recovery information (email address or phone number) to recover the lock screen password.
+[Keyboard] Improved handwriting recognition accuracy.
+Fixed:
+[System] Fixed the issue where only 15 grayscale levels were displayed, restoring 16-level grayscale.
+[System] Fixed the issue where some webpages could not be accessed properly in the browser.
+[System] Fixed the issue where the Wi‑Fi icon remained visible in the top‑right status bar after Wi‑Fi was disabled and the screen rotated.
+[System] Fixed inaccurate daylight saving time display in some regions.
+[Note] Fixed the issue where preset line widths for the Needle-point Pen automatically reverted to default after waking from sleep.
+[Note] Fixed the issue where turning to a page with many text boxes occasionally caused the app to crash.
+[Document] Fixed the issue where handwritten annotations in exported PDFs (when "Original" was selected in Export Settings) displayed offset in macOS Preview.
+[Keyboard] Fixed the issue where pressing Enter on some Bluetooth keyboards would insert line breaks at random positions.
+Chauvet 3.29.42
+June 15, 2026
+Added:
+[InkHub] Added the InkHub app:
+Supports browsing and downloading stickers, templates, notes, digests, and drawings.
+Supports sharing local resources to InkHub.
+Supports importing stickers and digests for direct use.
+Supports quickly navigating to InkHub from template and sticker pages.
+[Note & Document & Calendar & Mail] Added the Calligraphy Pen.
+[Settings] Supports switching between Balanced Mode and Sensitive Mode for optimal writing experience on Manta devices. (To do this, please go to Settings > Display & Input > Stylus.)
+Optimized:
+[Note] Optimized pen thickness settings:
+The Ink pen now offers ten thickness options: from 0.3mm to 1.0mm in 0.1mm increments, plus 1.5mm and 2.0mm.
+The Needle-point pen adds the 1.5mm thickness.
+[Note] Improved the success rate of using two-finger press gesture to activate the lasso or the region eraser.
+[Note & Document & Calendar & Mail] Optimized the writing display effect of the Ink Pen.
+[Note & Document & Calendar & Mail] Optimized the stroke thickness effect when using the Ink Pen with the LAMY AL-Star EMR pen.
+[Digest] Supports sorting digests.
+[Settings] Supports switching private cloud accounts.
+[Settings] Supports safely ejecting USB drives to prevent data loss.
+[System] Optimized pen calibration to mitigate the Non-Contact Writing issue affecting some EMR pens used on Manta. (lf strokes occasionally fail to register after the update, please restore the Non-Contact Writing values to defaults or re-adjust them.)
+Fixed:
+[System] Fixed the issue where hidden Wi-Fi networks could not be connected.
+[System] Fixed the issue where time zone information was displayed incorrectly in some regions.
+[Note] Fixed the issue where Undo/Redo buttons could not be tapped continuously.
+[Note] Fixed the issue where hidden layers were still included when exporting notes to TXT / DOCX.
+[Note] Fixed the issue where links on the main layer were not clickable after erasing everything on another layer.
+[Note] Fixed the issue where the “Saving notes...” prompt would get stuck when restarting or shutting down the device after setting a template.
+[Note] Fixed the issue where the app would occasionally crash when activating the lasso or region eraser by pressing the side bar with two fingers.
+Chauvet 3.28.42
+May 22, 2026
+Added:
+[InkHub] Added the InkHub app:
+Supports browsing and downloading stickers, templates, notes, digests, and drawings.
+Supports sharing local resources to InkHub.
+Supports importing stickers and digests for direct use.
+Supports quickly navigating to InkHub from template and sticker pages.
+[Note & Document & Calendar & Mail] Added the Calligraphy Pen.
+Optimized:
+[Note] Optimized pen thickness settings:
+The Ink pen now offers ten thickness options: from 0.3mm to 1.0mm in 0.1mm increments, plus 1.5mm and 2.0mm.
+The Needle-point pen adds the 1.5mm thickness.
+[Note] Improved the success rate of using two-finger press gesture to activate the lasso or the region eraser.
+[Note & Document & Calendar & Mail] Optimized the writing display effect of the Ink Pen.
+[Note & Document & Calendar & Mail] Optimized the stroke thickness effect when using the Ink Pen with the LAMY AL-Star EMR pen.
+[Digest] Supports sorting digests.
+[Settings] Supports switching private cloud accounts.
+[Settings] Supports safely ejecting USB drives to prevent data loss.
+[System] Optimized pen calibration to mitigate the Non-Contact Writing issue affecting some EMR pens used on Manta. (lf strokes occasionally fail to register after the update, please restore the Non-Contact Writing values to defaults or re-adjust them.)
+Fixed:
+[System] Fixed the issue where hidden Wi-Fi networks could not be connected.
+[System] Fixed the issue where time zone information was displayed incorrectly in some regions.
+[Note] Fixed the issue where Undo/Redo buttons could not be tapped continuously.
+[Note] Fixed the issue where hidden layers were still included when exporting notes to TXT / DOCX.
+[Note] Fixed the issue where links on the main layer were not clickable after erasing everything on another layer.
+[Note] Fixed the issue where the “Saving notes...” prompt would get stuck when restarting or shutting down the device after setting a template.
+[Note] Fixed the issue where the app would occasionally crash when activating the lasso or region eraser by pressing the side bar with two fingers.
+Chauvet 3.26.40
+Dec 29, 2025
+Added:
+[System] Added the ability to display the last viewed page when in sleep mode.
+[Calendar] Supports landscape mode.
+Adjusted:
+[Calendar] Changed the navigation for the note list and event list in the monthly and weekly views from page-based left/right flipping to continuous vertical scrolling.
+Optimized:
+[Files] Optimized the file sorting experience with improved navigation and layout of the sorting buttons.
+[Files] Improved the speed of opening folders.
+[Settings] Optimized the interface for the Screensaver settings.
+Fixed:
+[Note] Fixed the issue in left-handed mode where specific scenarios could cause unintended activation of the lasso/area eraser tool when pressing two fingers on the screen.
+[Note] Reduced the probability of unintended inertia scrolling during slow swipes when scrolling horizontally in portrait or vertically in landscape orientation.
+[Files] Fixed the issue where the locked note files might occasionally appear unlocked when returning to Files after being edited.
+Chauvet 3.25.39
+Nov 14, 2025
+Added:
+[System] Added support for private cloud. (To enable it, please go to Settings > Security & Privacy. To download the private cloud deployment manual, please visit
+here
+.)
+[System] Added the ServerLink app, which supports file synchronization, data backup, and cross-device access via WebDAV. (To download it, please go to Settings > Apps > Supernote App Store.)
+Adjusted:
+[Note] Supports using the stroke eraser and region eraser to erase the entire stroke when touching the line's interior.
+[Document] Changed the TXT file saving method from converting to UTF-8 to preserving the original encoding format.
+Optimized:
+[System] Supports cutting, copying and pasting text between Supernote and the desktop Supernote Partner app. (To do this, please enable Keyboard Sharing in the desktop Supernote Partner app.)
+[System] Optimized the note-saving process during shutdown and restart.
+[Note] Optimized the Text Box feature:
+You can now enter text editing mode by long pressing the text box with pen or tapping the Edit button after selecting text with the lasso tool. (Previously you could only do this by one-finger double tapping the text box.)
+You can now exit text editing mode by using your finger to tap anywhere outside the text box on the screen. (Previously you could only do this with pen.)
+You can now adjust the size of the text box when inserting or editing digests.
+Added support for more Bluetooth keyboard shortcuts, including Undo, Bold, Italic, Align Left, Align Center, Align Right, Increase/Decrease Font Size, and Show Font Selection Menu.
+[Note] Links within notes and between notes remain functional even after the notes and their link targets are moved to a microSD card or an OTG flash drive.
+[Digest] Optimized the Digest app:
+When exporting digests from a single note file or document under the Sources tab, they are now sorted by page number, instead of last edited time.
+When importing digests through TXT files, you can now restore the digest data, including the source, category and author. (Only applies to those TXT files exported from the Digest app.)
+[Keyboard] Improved the reliability of the handwriting keyboard to prevent it from closing accidentally when using certain gestures.
+[Settings] Added a new Non-Contact Writing value to address the issue where the initial stroke doesn't register when placing the pen down quickly on the screen.
+[Settings] When connecting to a Wi-Fi network that requires a CA certificate, users can choose to install the certificate.
+Fixed:
+[System] Fixed the issue where certain webpages in the browser cannot be accessed by updating the system WebView component.
+[System] Fixed the issue where some books cannot be downloaded in the Kindle app. (After upgrading to this system version, please go to Settings > Apps > Supernote App Store to update the Kindle app.)
+[System] Fixed the issue where certain grayscale content couldn't be displayed properly.
+[Note] Fixed the issue where layers containing the special characters "<" or ">" in their names would disappear.
+[Note] Fixed the issue where the "Reformat" feature failed to work as expected when exporting standard notes to DOCX/TXT.
+[Note] Fixed the issue where the template Favorites list appeared empty and switching templates caused a crash after applying a custom template to a new note.
+[Digest] Fixed the issue where moving documents between the internal storage and a microSD card caused the loss of digest link relationships.
+Chauvet 3.24.38
+Aug 22, 2025
+Note:
+After upgrading your Supernote to this system version, please update the InkFlow app to use it. (To update it, please go to Settings > Apps > Supernote App Store.)
+An Easter egg is hidden in this system version, awaiting your exploration.
+Added:
+[Note] Added the Text Box feature:
+Supports inserting digests, pasting text and creating a new text box in notes.
+Supports recognizing and converting lasso-selected handwriting into text.
+Supports setting text as bold and italic, adjusting text alignment, and selecting font type and size.
+Supports using custom fonts and built-in handwriting fonts.
+Supports searching for text in notes.
+Supports searching for text in global search.
+[Digest] Optimized the Digest app:
+Supports creating digests directly in the Digest app.
+Supports recognizing lasso-selected content in the Note app as digests.
+Supports creating digests using the text selection pen in PDF, EPUB, CBZ, FB2 and XPS documents.
+Supports searching and categorizing digests.
+Supports importing digests (that are available in TXT files only).
+Supports syncing digest data to the desktop and mobile Supernote Partner apps.
+[Document] Supports copying text using the text selection pen in PDF, EPUB, CBZ, FB2 and XPS documents.
+[System] Added the Clipboard feature (only works for text content).
+Adjusted:
+[Document] The zoom level in the reflow view in Word will now be automatically saved, instead of not being saved.
+[Settings] When restoring digests from backup files, it will now be performed without clearing existing data in the Digest app first.
+[Settings] The sync button for To-Do is now toggled on by default. (Effective when your Supernote is restored to factory settings. To toggle it off, please go to Settings > My Account > Data Sync.)
+[Settings] Adjusted the maximum values for the Non-Contact Writing feature.
+Optimized:
+[System] Optimized the refreshing mode to reduce afterimages on the screen when turning pages and changed the default setting of the Auto Refresh feature from Enabled to Disabled.
+[System] Improved the refreshing technique to minimize afterimages when using the lasso tool to move the selected content.
+[Handwriting] Enhanced the real-time display effect of handwriting.
+[Note] Supports rotating smart straight lines using the lasso tool.
+[Note] Enhanced the reformatting display when exporting notes to DOCX and TXT.
+[Note] Improved the indentation display for converted text of real-time recognition notes.
+[Note] Reduced the storage space occupied by new handwritten content.
+[Note] Optimized the display effect of existing links that have been re-edited.
+[Keyboard] Added a button for quickly switching to the handwriting keyboard.
+[Global Search] It now remembers the last selected search type.
+[Settings] Added the battery calibration guide. (To view it, please go to Settings > Battery > Battery Level.)
+[Password] Added brute-force protection for screen lock password and file password.
+Fixed:
+[System] Fixed the issue where the No Load Shutdown feature on Nomad devices was ineffective after being turned on.
+[Note] Fixed the issue where a note with a custom template, opened via the sidebar menu, would be occasionally overwritten with the previous note.
+[Note] Fixed the issue where a note that failed to open via Quick Access would occasionally display the content of the previous note.
+[Note] Fixed the issue where the handwritten content in a real-time recognition note would occasionally be lost after continuously turning pages.
+[Note] Fixed the issue where undo and redo couldn't be activated by sliding up and down on the sidebar.
+[Note] Fixed the issue where handwriting was lost due to not being saved promptly when using the shortcut keys on a Bluetooth keyboard to exit the note.
+[Document] Fixed the issue where the Word app would occasionally crash after prolonged editing with a Bluetooth keyboard.
+[Document] Fixed the issue where some PDFs would freeze during loading.
+[Document] Fixed the issue where handwriting input on the handwriting keyboard would be added as annotation when adding a comment to the highlighted text.
+Chauvet 3.23.32
+Mar 31, 2025
+Added:
+[Note] Added the Sticker feature:
+Supports creating stickers by lassoing handwritten notes.
+Supports searching and managing stickers.
+Supports exporting and importing sticker collections. (Only sticker collections that are exported using this feature can be imported.)
+Supports backing up sticker data. (To do so, please go to Settings > System > Backup and Restore.)
+[System] Added the InkFlow app that allows you to use your Supernote as a drawing tablet. (To download it, please go to Settings > Apps > Supernote App Store.)
+[Sync] Added the following Supernote Cloud servers: Amazon (Germany), Amazon (Australia), Amazon (Singapore), Amazon (South Africa); and optimized sync efficiency.
+[Settings] Added the Pogo Pin switch.
+Adjusted:
+[Settings] Changed DMS selection from manual to automatic based on the selected region, and removed the previous DMS-associated pages.
+[Settings] Supports selecting regions. (To select your specific region, please go to Settings > Display & Input > Language & Region.)
+Optimized:
+[Note] Improved the speed of opening or switching back to the same note file via Recent Files, Quick Access and Files in the sidebar menu.
+[Note] Optimized the efficiency of determining whether extra large PDFs can be set as templates for notes, reducing unnecessary wait times.
+[Files & Search] Changed the sorting method for file names containing numbers from character sorting to natural sorting.
+[Supernote Linking] Enhanced the security of transferring files through the Supernote Linking feature.
+Fixed:
+[Settings] Fixed the issue where handwritten strokes wouldn't appear during writing on some Manta devices until after a screen refresh was performed.
+[Settings] Fixed the issue where some Manta devices experienced an abnormal rapid drop in battery from 20% to 0%. (Please charge the Manta fully to calibrate the battery after upgrading your system.)
+[Settings] Fixed the issue where waking up the device from sleep would occasionally fail.
+[Note] Fixed the issue where opening notes for the first time after booting up was slightly slower than before.
+[Note] Fixed the issue where the handwritten strokes occasionally did not refresh in time when opening the notes for the first time after booting up.
+[Note] Fixed the issue where opening notes for the first time after upgrading the system would fail due to the notes not being saved during upgrade.
+[Note] Fixed the issue where only content on the top layer would be exported to PNG when hiding the background layer.
+[Document] Fixed the issue where links would not be clickable with the pen after selecting the text selection tool on the toolbar.
+[Document] Fixed the issue where handwritten annotations were occasionally lost after accidentally triggering the auto rotation feature.
+[Sync] Fixed the issue where a single folder in OneDrive containing over 200 files couldn't be synced.
+Chauvet 3.22.31
+Feb 17, 2025
+Note: This system upgrade will optimize the handwritten stroke effect in the Note, Document, and Calendar apps for all versions prior to the Chauvet 3.20.30 Beta version. It enhances the smoothness of the handwritten strokes by processing each stroke individually.
+Added:
+[Note & Document & Calendar] Added the Smart Straight Line feature:
+Supports adjusting line length and angle.
+Supports horizontal and vertical snapping.
+Supports line-to-line snapping.
+Supports template snapping (only applicable to Note).
+[Handwriting] Optimized the stroke effect by processing each stroke individually to enhance the smoothness of new handwritten strokes. (Removed the original solution's "Handwriting Antialiasing" switch from the "Preferences" menu on the toolbar.)
+Adjusted:
+[Document] Supports expanding and collapsing multi-level table of contents. (Supports PDF, EPUB, CBZ, FB2 and XPS documents only.)
+[Note & Document] Moved the "Star Mark Recognition" switch to the "Pen Preferences" menu (To access it, go to the Toolbar > Pen Selection Menu) and unified its Enable/ Disable settings in Note and Document.
+[Files] Supports opening and viewing BMP images.
+[Settings] Restored the ability to calibrate stylus accuracy on Manta. (To calibrate your pen's accuracy, go to Settings > Display & Input > Stylus > Calibration > Accuracy.)
+Optimized:
+[System] Enhanced security for system upgrade verification.
+[System] Added support for the system file picker, allowing access to files in the third-party apps.
+[Document] Improved handwriting experience in Word documents to minimize the probability of first stroke disappearing in handwriting mode.
+[Document] Optimized handwriting experience to reduce accidental page turning during writing.
+[Calendar] Added the ability to allow the automatic adjustment of start time and end time when creating and editing events.
+[Search] When returning to the search result screen, the last search results will now be displayed instead of re-running the search.
+[Settings] Added the "Auto Refresh" feature. (To enable it, please go to Settings > Display & Input.)
+[Settings] Added weak password checks for lock screen, account, and file passwords.
+Fixed:
+[System] Fixed the issue where some macOS computers could not recognize Nomad when connecting via USB.
+[System] Fixed the issue where Nomad power consumption became abnormal when connecting Nomad to macOS computers via a USB-C to USB-C cable.
+[System] Fixed the issue where Wi-Fi would disconnect if Nomad entered sleep mode during system upgrade or file synchronization.
+[Note] Fixed the issue where applying some PDF files as note templates failed.
+[Note] Fixed the issue where the target note could become abnormal when copying a note page from an existing note and pasting it into a target note using a custom PDF template.
+[Note] Fixed the issue where the exported PNG image background was white instead of transparent when the background layer was hidden.
+[Note] Fixed the issue where handwritten strokes couldn't refresh in a timely manner due to accidental screen rotation.
+[Note] Fixed the issue where handwritten notes were occasionally not saved when turning pages immediately after writing.
+[Document] Fixed the issue where text in Word documents couldn't be selected using a Bluetooth keyboard.
+[Document] Fixed the issue where annotations in PDF documents were displayed abnormally in landscape mode in a certain system version.
+[Digest] Fixed the issue where wrong page numbers linked to the original documents were displayed in the digest list after restoring digest data from backup files on a different device that had not originally created those backups.
+[Digest] Fixed the issue where the comments added to digests created across pages would occasionally be lost.
+[Search] Fixed the issue where the Korean handwriting recognition results couldn't be searched.
+[Settings] Fixed the issue where progress would occasionally stall when installing apps from the app store.
+[Keyboard] Fixed the issue where the delete key on a Bluetooth keyboard would occasionally fail to stop deleting text.
+[Quick Access] Fixed the issue where renaming note files within notes could occasionally cause the Quick Access list on the sidebar menu to disappear.
+Chauvet 3.21.31
+Edited on Feb 14:
+We have identified an issue in this release where PDF annotations appear abnormally in landscape mode. You can temporarily resolve this by lassoing or erasing the annotations while in landscape mode.
+We have temporarily suspended this release and will provide a new version with a fix shortly. If you prefer to update despite the issue, you can still download the firmware
+here
+and update it manually.
+Thank you for your understanding!
+Feb 13, 2025
+Note: This system upgrade will optimize the handwritten stroke effect in the Note, Document, and Calendar apps for all versions prior to the Chauvet 3.20.30 Beta version. It enhances the smoothness of the handwritten strokes by processing each stroke individually.
+Added:
+[Note & Document & Calendar] Added the Smart Straight Line feature:
+Supports adjusting line length and angle.
+Supports horizontal and vertical snapping.
+Supports line-to-line snapping.
+Supports template snapping (only applicable to Note).
+[Handwriting] Optimized the stroke effect by processing each stroke individually to enhance the smoothness of new handwritten strokes. (Removed the original solution's "Handwriting Antialiasing" switch from the "Preferences" menu on the toolbar.)
+Adjusted:
+[Document] Supports expanding and collapsing multi-level table of contents. (Supports PDF, EPUB, CBZ, FB2 and XPS documents only.)
+[Note & Document] Moved the "Star Mark Recognition" switch to the "Pen Preferences" menu (To access it, go to the Toolbar > Pen Selection Menu) and unified its Enable/ Disable settings in Note and Document.
+[Files] Supports opening and viewing BMP images.
+[Settings] Restored the ability to calibrate stylus accuracy on Manta. (To calibrate your pen's accuracy, go to Settings > Display & Input > Stylus > Calibration > Accuracy.)
+Optimized:
+[System] Enhanced security for system upgrade verification.
+[System] Added support for the system file picker, allowing access to files in the third-party apps.
+[Document] Improved handwriting experience in Word documents to minimize the probability of first stroke disappearing in handwriting mode.
+[Document] Optimized handwriting experience to reduce accidental page turning during writing.
+[Calendar] Added the ability to allow the automatic adjustment of start time and end time when creating and editing events.
+[Search] When returning to the search result screen, the last search results will now be displayed instead of re-running the search.
+[Settings] Added the "Auto Refresh" feature. (To enable it, please go to Settings > Display & Input.)
+[Settings] Added weak password checks for lock screen, account, and file passwords.
+Fixed:
+[System] Fixed the issue where some macOS computers could not recognize Nomad when connecting via USB.
+[System] Fixed the issue where Nomad power consumption became abnormal when connecting Nomad to macOS computers via a USB-C to USB-C cable.
+[System] Fixed the issue where Wi-Fi would disconnect if Nomad entered sleep mode during system upgrade or file synchronization.
+[Note] Fixed the issue where applying some PDF files as note templates failed.
+[Note] Fixed the issue where the target note could become abnormal when copying a note page from an existing note and pasting it into a target note using a custom PDF template.
+[Note] Fixed the issue where the exported PNG image background was white instead of transparent when the background layer was hidden.
+[Note] Fixed the issue where handwritten strokes couldn't refresh in a timely manner due to accidental screen rotation.
+[Note] Fixed the issue where handwritten notes were occasionally not saved when turning pages immediately after writing.
+[Document] Fixed the issue where text in Word documents couldn't be selected using a Bluetooth keyboard.
+[Digest] Fixed the issue where wrong page numbers linked to the original documents were displayed in the digest list after restoring digest data from backup files on a different device that had not originally created those backups.
+[Digest] Fixed the issue where the comments added to digests created across pages would occasionally be lost.
+[Search] Fixed the issue where the Korean handwriting recognition results couldn't be searched.
+[Settings] Fixed the issue where progress would occasionally stall when installing apps from the app store.
+[Keyboard] Fixed the issue where the delete key on a Bluetooth keyboard would occasionally fail to stop deleting text.
+[Quick Access] Fixed the issue where renaming note files within notes could occasionally cause the Quick Access list on the sidebar menu to disappear.
+Chauvet 3.20.29
+November 15th, 2024
+Adjusted
+[System] After pressing and holding the power button for less than 5 seconds, you can now select "Restart" or "Power Off".
+[Settings] Restored the stylus Non-Contact Writing setting option.
+[Mail] Updated the login process for Microsoft Exchange and Outlook/Hotmail/Live mail.
+[Note] Aligned the marker stroke width on Nomad with that on A6 X/A5 X.
+Optimized
+[Note] Supports long pressing headings and links with the stylus to enter editing mode.
+[Note & Document] Supports clearing the keyword use history on the "Add Keyword" screen.
+[Document] You can now access the commonly used shortcut keys (for the following actions: Copy, Cut, Paste, Undo, Redo, Italicize, Underline and Save), Arrow keys, Delete key and Backspace key on a Bluetooth keyboard in a Word document.
+[Document] Compatible with more Bluetooth page turners. (Supports left/right page turning for PDF, EPUB, CBZ, FB2 and XPS documents only.)
+[Sidebar] Optimized the reliability of the sidebar gestures.
+Fixed
+[System] Fixed the issue where files could still be accessed when the device was connected via USB to a computer running macOS and Linux with the screen locked.
+[Note] Fixed the issue where lassoing handwritten content would occasionally trigger a paste action.
+[Note] Fixed the issue where auto rotation of the screen, triggered by accident, sometimes prevented writing.
+[Note] Fixed the issue where handwriting, performed immediately after switching from a document to a note, might sometimes be lost.
+[Note] Fixed the issue where exporting notes to DOCX would sometimes fail.
+[Note] Fixed the issue where the wrong path was displayed after exporting notes to DOCX and tapping "Jump to" to view them.
+[Document] Fixed the issue where text selection was unavailable using a Bluetooth keyboard in a Word document.
+[Keyboard] Fixed the issue where the handwriting keyboard would occasionally fail to recognize handwriting input.
+Chauvet 3.19.29
+November 13th, 2024
+Adjusted
+[System] After pressing and holding the power button for less than 5 seconds, you can now select "Restart" or "Power Off".
+[Settings] Removed the stylus Non-Contact Writing setting option. (Values that were adjusted will be restored to defaults.)
+[Mail] Updated the login process for Microsoft Exchange and Outlook/Hotmail/Live mail.
+[Note] Aligned the marker stroke width on Nomad with that on A6 X/A5 X.
+Optimized
+[Note] Supports long pressing headings and links with the stylus to enter editing mode.
+[Note & Document] Supports clearing the keyword use history on the "Add Keyword" screen.
+[Document] You can now access the commonly used shortcut keys (for the following actions: Copy, Cut, Paste, Undo, Redo, Italicize, Underline and Save), Arrow keys, Delete key and Backspace key on a Bluetooth keyboard in a Word document.
+[Document] Compatible with more Bluetooth page turners. (Supports left/right page turning for PDF, EPUB, CBZ, FB2 and XPS documents only.)
+[Sidebar] Optimized the reliability of the sidebar gestures.
+Fixed
+[System] Fixed the issue where files could still be accessed when the device was connected via USB to a computer running macOS and Linux with the screen locked.
+[Note] Fixed the issue where lassoing handwritten content would occasionally trigger a paste action.
+[Note] Fixed the issue where auto rotation of the screen, triggered by accident, sometimes prevented writing.
+[Note] Fixed the issue where handwriting, performed immediately after switching from a document to a note, might sometimes be lost.
+[Note] Fixed the issue where exporting notes to DOCX would sometimes fail.
+[Note] Fixed the issue where the wrong path was displayed after exporting notes to DOCX and tapping "Jump to" to view them.
+[Document] Fixed the issue where text selection was unavailable using a Bluetooth keyboard in a Word document.
+[Keyboard] Fixed the issue where the handwriting keyboard would occasionally fail to recognize handwriting input.
+Chauvet 3.18.29
+August 14th, 2024
+Note: We've upgraded our cloud infrastructure to enhance your experience. To continue using Supernote Cloud and Partner apps, please update your device system and Partner apps.
+Optimized
+[Sidebar] Optimized the reliability of the sidebar gestures.
+Fixed
+[Note] Fixed the issue where there was sometimes a delay when writing the first stroke after waking up the device or switching applications.
+[Note] Fixed the issue where the Note app would occasionally crash after opening a locked note and restarting the device.
+[Note] Fixed the issue where the note would sometimes get corrupted when continuously changing the PDF template.
+[Note] Fixed the issue where the links at the bottom of the pages in the exported PDFs would not work.
+[Note] Fixed the issue where the scrolling performance was not smooth in landscape mode when using two fingers to scroll through a vertical note.
+[Note] Fixed the issue where the password protection was occasionally not effective when accessing a locked note through the "Last Opened Note".
+[Note] Fixed the issue where the last opened page was sometimes not saved successfully, causing the note to jump to the first page when opened.
+[Calendar] Fixed the issue where the eraser would sometimes not respond when two-finger pressing the writing area in the monthly view and weekly view.
+[To-Do] Fixed the issue where moving tasks and deleting their original list while offline sometimes caused the tasks to be lost upon reconnecting to the internet and resyncing the to-dos.
+[Stylus] Fixed the issue where pen touches on the device were not registered after adjusting the Non-Contact Writing values.
+Chauvet 3.17.29
+June 6th, 2024
+Added
+[To-Do] Added the To-Do app:
+Supports converting handwritten notes selected by lasso in the Note app into To-Do tasks.
+Supports syncing To-Do data to the desktop app and mobile app. (To enable To-Do syncing, go to Settings > My Account > Data Sync.)
+Supports choosing whether to sync To-Do data. (To configure this setting, go to Settings > My Account > Data Sync.)
+[Settings] Added the virtual Spanish, Portuguese, and Czech keyboards.
+[Settings] Supports backing up digests. (To back up your digests, go to Settings > System > Backup and Restore.)
+[Settings] Added two built-in screensavers.
+Adjusted
+[Settings & Startup Guide] Updated the Privacy Policy to the latest version.
+[Calendar & Note] After lassoing handwriting and recognizing it into an event in the Note app, you will stay within the Note app, instead of being redirected to the Calendar app.
+Optimized
+[Note & Document] Supports using lasso to delete handwritten notes.
+[Settings] Added the option to adjust values to resolve the issue of Non-Contact Writing. (To access it, go to Settings > Display & Input > Stylus > Calibration.)
+[Settings] Added the option to choose the recognition wait time after lifting the pen on the handwriting keyboard. (To configure this setting, go to Settings > Display & Input > Keyboard > Handwriting.)
+[Settings] Added "24 Hours" as an option for Auto Power Off.
+[Mail] Optimizations include:
+Supports directly opening attachments compatible with this device.
+Supports navigating through web links in the email body.
+[Sidebar] Improved the responsiveness of the sidebars.
+Fixed
+[System] Resolved the issue where the screen darkened in direct sunlight.
+[Note & Document] Fixed the issue where erasing a single stroke extending beyond the screen would mistakenly erase all the other similar strokes on the same side of the screen.
+[Note & Document] Fixed the issue where the two-finger gesture could be triggered continuously by accident to activate the eraser or lasso during writing.
+[Sync] Fixed the issue where syncing with some OneDrive accounts couldn't work.
+[Document] Fixed the issue where the documents would occasionally crash.
+[Document] Fixed the issue where adding bookmarks to some books would fail.
+[Document] Fixed the issue where the vector-exported strokes would display incorrectly when the original document contained gray handwritten strokes.
+[System] Fixed the issue where accessing files on the device via USB connection to a computer was still possible after setting a screen lock password.
+[Sidebar] Resolved the issue where pressing one of the sidebars prevented the other one from responding to touch inputs.
+Chauvet 3.16.27
+March 1st, 2024
+Added
+[Settings] Added the Sideloading switch. (To access it, go to Settings > Security & Privacy.)
+Adjusted
+[Note] Transformed some margin-compatible templates with existing margins into marginless templates.
+[Note] Recategorized the note templates into Favorites, Built-in, and Customization.
+Optimized
+[Note] Reduced the probability of accidental touches on the bottom sidebar when writing in landscape mode.
+Fixed
+[Sync] Resolved the issue where the auto sync feature caused abnormal server load.
+[Sync] Fixed the issue where syncing with OneDrive business accounts couldn't work.
+[Document] Fixed the issue where data, such as digests, bookmarks, trimming and contrast settings, and reading progress, created within the documents stored on an OTG USB flash drive, were not saved after disconnecting it.
+[Calendar] Fixed the issue where, due to Daylight Saving Time, the dots representing events didn't display correctly in the weekly and monthly view.
+[Calendar] Fixed the issue where the dates didn't align with their respective weekdays after switching months or years in the date picker on the "New Event" or "Edit Event" page.
+[System] Fixed the issue where the Wi-Fi connection was stuck in the "Connecting" state.
+[System] Fixed the issue where Wi-Fi scanning did not automatically occur after waking the device up from sleep.
+[Note] Fixed the issue where notes would momentarily flash before the file password entry box popped up.
+Chauvet 3.15.27
+Jan 20, 2024
+Note
+[Settings] The user manual is currently not up to date with the latest version. Once the updated user manual is released, you will be able to access it online or download it as a PDF document from the support center on our official website.
+Added
+[Sync] Supports OneDrive.
+Adjusted
+[Sync] Supernote Cloud has reinstated support for selective file syncing.
+[Settings] Replaced "Direct Transfer" with "Supernote Linking", which allows you to transfer files from the mobile Supernote Partner App to Supernote and share your computer's keyboard via the desktop version of the app.
+[Settings] Changed "Support" to "User Manual".
+[Android Settings] Removed the entry to access Developer Mode in the system settings to mitigate potential security risks. (Devices that had Developer Mode enabled prior to the upgrade will retain the setting, but if you perform a factory reset, Developer Mode will be disabled.)
+Optimized
+[Atelier] Optimizations include:
+Added the ability to copy and cut content between layers;
+Reduced the probability of canvas movement caused by accidental two-finger touches;
+Resolved the issue where the last selected pen, color, eraser, and custom settings for the marquee tool were not saved after restarting;
+Resolved the issue where the handwriting color in the exported PNG file was lighter than that in the original file;
+Removed the ability to cancel marquee selection with finger; now you can only cancel it with pen.
+[Note & Document] You can navigate to a specific target page by inputting the page number when the quick page turning feature is activated.
+[Top Menu Bar] Long-pressing the Bluetooth button in the top menu bar now allows direct access to the Bluetooth settings page.
+[Document] Enhanced responsiveness when typing text within DOC and TXT documents.
+Fixed
+[Document] Fixed the issue where data, such as digests, bookmarks, trimming and contrast settings, and reading progress, created within the documents stored on a microSD card or OTG thumb drive, were not saved after disconnecting it.
+[Note & Document] Fixed the issue where frequently switching pen buttons would cause incorrect display of the needle-point pen colors.
+Chauvet 3.14.27
+Dec 17th, 2023
+Note
+Supernote Cloud no longer supports selective file syncing and has switched to syncing all files by default.
+To use note files and document annotations from A5 & A6 devices (Linux based) on this device, please ensure that you have updated your A5 & A6 devices to the latest software version "SN100.B000.432_release" to upgrade them.
+Added
+Added the drawing app called Atelier (that can be downloaded from the Supernote App Store).
+[Sync] Supports auto sync with Supernote Cloud.
+[Note & Document] Supports opening, viewing, and editing note files and document annotations from A5 & A6 devices. (Note: Templates used in note files from A5 & A6 devices will not be displayed on this device, and there is a mismatch between landscape document orientation and annotation orientation on this device.)
+Optimized
+[Note] Added the ability to select custom image templates when creating new notes.
+Fixed
+Fixed the issue where, when selecting files from "Files" as link targets in landscape mode, switching between landscape and portrait modes after waking the device from sleep would not function as expected.
+nomad changelog
+a6 x2
+Was this article helpful?
+Yes
+No
+Give feedback about this article
+Related Articles
+Supernote Manta & Nomad Beta Changelog
+Supernote A5 & A6 Beta Changelog
+Copyright © 2026 Ratta Supernote
+Knowledge Base Software powered by Helpjuice
+Close
+Expand

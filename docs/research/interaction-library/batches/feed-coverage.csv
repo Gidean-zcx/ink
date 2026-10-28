@@ -1,0 +1,13 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M051-01,M-051,进入观看至退出回访,D1,E-DOUY-01;E-DOUY-04;E-DYCD-02;E-DYCD-04,侧栏历史/缓存/稍后再看及收藏夹示例仅入口；仍无连续观看至回访,启动、暂停、任务终点、收藏夹中间入口及重启准确恢复未知,static_official_images_only,false,cases/M-051-douyin.md,2026-10-27
+F-M051-02,M-051,不感兴趣与减少同类,D2,E-DOUY-03;E-DYCD-04,长按/分享不感兴趣；图示长按菜单，滑走信号和举报分别记录,当前卡片结果、撤回、弱网提交和后续推荐变化未测,static_official_images_only,false,cases/M-051-douyin.md,2026-10-27
+F-M051-03,M-051,助手调节类别与探索,D2,E-DOUY-03;E-DYCD-01;E-DYCD-04,探索更多有取消/确认；三级内容偏好/恢复默认；关键词永久或短期屏蔽,确认后的回执、统计周期、短期时长、清除/撤销/跨端一致未知；已选12仅示例,static_official_images_only,false,cases/M-051-douyin.md,2026-10-27
+F-M051-04,M-051,关闭推荐或主动搜索,D2,E-DOUY-02;E-DYCD-04,政策关闭推荐路径保留；搜索结果分类和用户关注静态示意,关闭推荐现版界面、搜索返回位置/零结果/筛选保存和取消关注未操作,static_official_images_only,false,cases/M-051-douyin.md,2026-10-27
+F-M051-05,M-051,亲子绑定与时长管理,D2,E-DOUY-05;E-DOUY-06;E-DYCD-02;E-DYCD-03,孩子三页权限说明后协议/接受；家长近7日统计/时间锁/取消订阅/解除绑定按钮；示图上限3孩子,扫码失败/拒绝/解绑确认和恢复未知；时间锁未开启示图与默认规则适用范围不同，夜间密码例外冲突保留,static_official_images_only,false,cases/M-051-douyin.md,2026-10-27
+F-M051-06,M-051,AI笔记跳回片段,D2,E-DOUY-06;E-DYCD-02;E-DYCD-03,部分知识视频AI笔记摘要/蓝色章节时间码/X关闭；只静态图,生成失败/纠错、保存导出、实际章节跳转及返回进度未知；不是掌握判定,static_official_images_only,false,cases/M-051-douyin.md,2026-10-27
+F-M052-01,M-052,一篇资讯读完回访,D1,E-TT-02;E-TT-04,商店18.8.0仍仅一般功能/修复声明；官网普通GET为身份初始化壳，未取得阅读主链,文章来源跳转、阅读器结束/回卡位置、收藏回访和重启续读仍未知,not_observed,false,cases/M-052-toutiao.md,2026-10-27
+F-M052-02,M-052,负反馈与标签屏蔽,D2,E-TT-01;E-TTCD-02,政策仅信息栏X→相关理由；内容屏蔽标签可增删，效果措辞为不再或减少；未证长按,理由枚举、作者/关键词/单篇对象范围、提交/撤销/弱网与即时移卡未知,not_observed,false,cases/M-052-toutiao.md,2026-10-27
+F-M052-03,M-052,推荐开关与内容丰富度,D2,E-TT-01;E-TTCD-02,关闭推荐隐藏推荐频道；可分别关闭基于位置/搜索/关注的特征；丰富度为尝试多样化，广告开关另列,关注内容是否按时间排序、频道编辑按钮、重启/跨端/恢复内容；2024省略设置层不可套现版,not_observed,false,cases/M-052-toutiao.md,2026-10-27
+F-M052-04,M-052,兴趣重置与历史查询,D2,E-TT-01;E-TTCD-01;E-TTCD-02,2026政策清兴趣/偏好后重新积累；我的内容查删浏览/收藏等记录；旧指引删除行为措辞和2024永久字样单独保留,删除确认/撤销/同步、收藏精确续读、旧文行为删除范围与现版关系未知,not_observed,false,cases/M-052-toutiao.md,2026-10-27
+F-M052-05,M-052,搜索历史与无痕设置,D2,E-TT-01,搜索框删本地历史；无痕搜索不本地记录展示/用于推荐，仍作搜索与安全基本服务；无痕阅读另限点击浏览,无痕切换回执、既有记录是否追溯清理、跨端、实际检索错误与返回恢复未知,not_observed,false,cases/M-052-toutiao.md,2026-10-27
+F-M052-06,M-052,未成年人模式阅读与限时,D1,E-TT-03,模式功能有限,开启设龄超时解锁完整流程,not_observed,false,cases/M-052-toutiao.md,2026-10-26

@@ -1,0 +1,56 @@
+inventory_id,product_id,node_type,function_domain,source_locator,question_id,evidence_ids,flow_ids,platform_version,body_status,visual_status,scope,hot_duplicate,remaining_gap,checked_on
+BC-P01,M-016,category,学习相关问题,data.question_categories[0],,E-BCCD-01,,bczApp公开帮助；无日期/OS/build,category_index_read,not_observed,百词斩App帮助,,父目录，不计完成任务,2026-10-27
+BC-Q49,M-016,question,如何体验押韵模式？,data.question_categories[0].questions[0] id=49,49,E-BCCD-01;E-BCCD-02,F-M016-01,bczApp公开帮助；无日期/OS/build,image_only_observed,static_reference_only,百词斩App帮助,true,构建未知；示例日期不是发布日期；题目与切换执行未见,2026-10-27
+BC-Q38,M-016,question,如何离线背单词？,data.question_categories[0].questions[1] id=38,38,E-BCCD-01,F-M016-01,bczApp公开帮助；无日期/OS/build,text_read_images_unobserved,not_observed,百词斩App帮助,false,下载完成/取消及离线题型未知,2026-10-27
+BC-Q39,M-016,question,如何修改计划？,data.question_categories[0].questions[2] id=39,39,E-BCCD-01,F-M016-01,bczApp公开帮助；无日期/OS/build,text_read_images_unobserved,not_observed,百词斩App帮助,false,保存确认、跨词书状态与日量规则未知,2026-10-27
+BC-Q18,M-016,question,如何导入自己的单词？,data.question_categories[0].questions[3] id=18,18,E-BCCD-01,F-M016-06,bczApp公开帮助；无日期/OS/build,text_read_images_unobserved,not_observed,百词斩App帮助,false,与功能介绍上传声明冲突；简单练习题型/调度未知,2026-10-27
+BC-Q19,M-016,question,如何用英音学习？,data.question_categories[0].questions[4] id=19,19,E-BCCD-01,,bczApp公开帮助；无日期/OS/build,text_read,not_observed,百词斩App帮助,false,无日期，不作为现行英音能力判断,2026-10-27
+BC-Q20,M-016,question,我的学习记录为什么消失了？,data.question_categories[0].questions[5] id=20,20,E-BCCD-01,F-M016-01;F-M016-04,bczApp公开帮助；无日期/OS/build,text_read,not_observed,百词斩App帮助,false,切网仅建议；缓存清除后恢复与绑定合并未知,2026-10-27
+BC-Q21,M-016,question,页面一直处于加载中怎么办？,data.question_categories[0].questions[6] id=21,21,E-BCCD-01,F-M016-01,bczApp公开帮助；无日期/OS/build,text_read,not_observed,百词斩App帮助,false,资源检测不证明学习断点恢复；囧记下线日期未知,2026-10-27
+BC-Q22,M-016,question,如何打印单词列表？,data.question_categories[0].questions[7] id=22,22,E-BCCD-01,F-M016-08,bczApp公开帮助；无日期/OS/build,text_read_images_unobserved,not_observed,百词斩App帮助,false,只给收藏词PDF出口；字段/保存/失败未知,2026-10-27
+BC-Q23,M-016,question,如何清空学习单词数和坚持天数？,data.question_categories[0].questions[8] id=23,23,E-BCCD-01,F-M016-01,bczApp公开帮助；无日期/OS/build,text_read,not_observed,百词斩App帮助,false,累计统计清空限制无日期；不同于删词书,2026-10-27
+BC-P02,M-016,category,同桌相关问题,data.question_categories[1],,E-BCCD-01,,bczApp公开帮助；无日期/OS/build,category_index_read,not_observed,百词斩App帮助,,父目录，不计完成任务,2026-10-27
+BC-Q41,M-016,question,同桌功能入口在哪？,data.question_categories[1].questions[0] id=41,41,E-BCCD-01,,bczApp公开帮助；无日期/OS/build,text_read_images_unobserved,not_observed,百词斩App帮助,true,内测范围/当前入口未知；发现与一起背措辞并存,2026-10-27
+BC-Q42,M-016,question,如何解除同桌关系？,data.question_categories[1].questions[1] id=42,42,E-BCCD-01,,bczApp公开帮助；无日期/OS/build,text_read_images_unobserved,not_observed,百词斩App帮助,true,正文给自然周缺卡和手动解约不可撤回；未建社交任务,2026-10-27
+BC-Q43,M-016,question,如何使用同桌邀请口令？,data.question_categories[1].questions[2] id=43,43,E-BCCD-01,,bczApp公开帮助；无日期/OS/build,text_read_images_unobserved,not_observed,百词斩App帮助,true,只读发收口令路径，未发送或接受邀请,2026-10-27
+BC-Q44,M-016,question,为什么我没有同桌功能入口？,data.question_categories[1].questions[3] id=44,44,E-BCCD-01,,bczApp公开帮助；无日期/OS/build,text_read,not_observed,百词斩App帮助,false,内测范围不对应当前构建,2026-10-27
+BC-Q45,M-016,question,小纸条内容可以自定义吗？,data.question_categories[1].questions[4] id=45,45,E-BCCD-01,,bczApp公开帮助；无日期/OS/build,text_read,not_observed,百词斩App帮助,false,纸条不支持自定义声明无日期,2026-10-27
+BC-Q46,M-016,question,同桌小卖部什么时候上新？,data.question_categories[1].questions[5] id=46,46,E-BCCD-01,,bczApp公开帮助；无日期/OS/build,text_read,not_observed,百词斩App帮助,false,上新频率为计划，不是已发生记录,2026-10-27
+BC-Q47,M-016,question,为什么复制口令到app后没有反应？,data.question_categories[1].questions[6] id=47,47,E-BCCD-01,,bczApp公开帮助；无日期/OS/build,text_read,not_observed,百词斩App帮助,false,升级/换网建议不保证接收成功,2026-10-27
+BC-Q48,M-016,question,如何添加百词斩好友为同桌？,data.question_categories[1].questions[7] id=48,48,E-BCCD-01,,bczApp公开帮助；无日期/OS/build,text_read,not_observed,百词斩App帮助,false,申请需对方同意；未操作,2026-10-27
+BC-P03,M-016,category,个人帐号问题,data.question_categories[2],,E-BCCD-01,,bczApp公开帮助；无日期/OS/build,category_index_read,not_observed,百词斩App帮助,,父目录，不计完成任务,2026-10-27
+BC-Q1,M-016,question,如何修改个人信息？,data.question_categories[2].questions[0] id=1,1,E-BCCD-01,F-M016-04,bczApp公开帮助；无日期/OS/build,text_read_images_unobserved,not_observed,百词斩App帮助,false,资料位置与2026政策不同,2026-10-27
+BC-Q2,M-016,question,如何更换手机号？,data.question_categories[2].questions[1] id=2,2,E-BCCD-01,F-M016-04,bczApp公开帮助；无日期/OS/build,text_read_images_unobserved,not_observed,百词斩App帮助,false,更换号码与旧账户数据合并未知,2026-10-27
+BC-Q4,M-016,question,如何绑定手机/微信/QQ？,data.question_categories[2].questions[2] id=4,4,E-BCCD-01,F-M016-04,bczApp公开帮助；无日期/OS/build,text_read_images_unobserved,not_observed,百词斩App帮助,false,绑定结果与跨身份记录合并未知,2026-10-27
+BC-Q6,M-016,question,如何退出帐号？,data.question_categories[2].questions[3] id=6,6,E-BCCD-01,F-M016-04,bczApp公开帮助；无日期/OS/build,text_read_images_unobserved,not_observed,百词斩App帮助,false,退出后的缓存/待上传持久化未知,2026-10-27
+BC-Q35,M-016,question,如何注销账号？,data.question_categories[2].questions[4] id=35,35,E-BCCD-01,F-M016-04,bczApp公开帮助；无日期/OS/build,text_read,not_observed,百词斩App帮助,false,注销说明不可恢复，不等于单独删除路径；未请求,2026-10-27
+BC-Q37,M-016,question,如何解绑微信/QQ？,data.question_categories[2].questions[5] id=37,37,E-BCCD-01,F-M016-04,bczApp公开帮助；无日期/OS/build,text_read_images_unobserved,not_observed,百词斩App帮助,false,先具备另一登录方式；解绑不证明数据迁移,2026-10-27
+BC-Q20205,M-016,question,如何查询、更正、删除个人信息？,data.question_categories[2].questions[6] id=20205,20205,E-BCCD-01,F-M016-04,bczApp公开帮助；无日期/OS/build,text_read,not_observed,百词斩App帮助,false,需注销删除措辞与2026政策独立请求冲突,2026-10-27
+BC-Q30144,M-016,question,如何改变您授权同意的范围或撤回授权？,data.question_categories[2].questions[7] id=30144,30144,E-BCCD-01,F-M016-04,bczApp公开帮助；无日期/OS/build,text_read,not_observed,百词斩App帮助,false,旧客服路径不同于2026政策权限设置,2026-10-27
+BC-P04,M-016,category,功能相关问题,data.question_categories[3],,E-BCCD-01,,bczApp公开帮助；无日期/OS/build,category_index_read,not_observed,百词斩App帮助,,父目录，不计完成任务,2026-10-27
+BC-Q40,M-016,question,如何找到每日一句 / 晨读箱？,data.question_categories[3].questions[0] id=40,40,E-BCCD-01,,bczApp公开帮助；无日期/OS/build,text_read_images_unobserved,not_observed,百词斩App帮助,true,仅入口和通知要求；内容播放/进度未读,2026-10-27
+BC-Q7,M-016,question,如何切换成夜间模式？,data.question_categories[3].questions[1] id=7,7,E-BCCD-01,,bczApp公开帮助；无日期/OS/build,text_read,not_observed,百词斩App帮助,false,无日期，不作为现行夜间能力判断,2026-10-27
+BC-Q8,M-016,question,如何删除词书？,data.question_categories[3].questions[2] id=8,8,E-BCCD-01,F-M016-01,bczApp公开帮助；无日期/OS/build,text_read_images_unobserved,not_observed,百词斩App帮助,false,先切换才能删当前词书；记录不可恢复声明，重置范围未知,2026-10-27
+BC-Q9,M-016,question,如何获得铜板？,data.question_categories[3].questions[3] id=9,9,E-BCCD-01,F-M016-01,bczApp公开帮助；无日期/OS/build,text_read,not_observed,百词斩App帮助,true,铜板渠道与领取点；数额/到账失败/去重未知,2026-10-27
+BC-Q10,M-016,question,如何补打卡？,data.question_categories[3].questions[4] id=10,10,E-BCCD-01,F-M016-07,bczApp公开帮助；无日期/OS/build,text_read_images_unobserved,not_observed,百词斩App帮助,false,仅学习日历；花费、确认/余额不足/撤回未知,2026-10-27
+BC-Q11,M-016,question,如何恢复已斩掉的单词？,data.question_categories[3].questions[5] id=11,11,E-BCCD-01,F-M016-01,bczApp公开帮助；无日期/OS/build,text_read_images_unobserved,not_observed,百词斩App帮助,false,已斩对象恢复，非即时误评撤销；队列和计数未知,2026-10-27
+BC-Q12,M-016,question,如何增加/关闭学习题型？,data.question_categories[3].questions[6] id=12,12,E-BCCD-01,F-M016-05,bczApp公开帮助；无日期/OS/build,text_read_images_unobserved,not_observed,百词斩App帮助,false,具体题型、保存时机/当前版本未知,2026-10-27
+BC-Q13,M-016,question,在哪里找到「单词列表」？,data.question_categories[3].questions[7] id=13,13,E-BCCD-01,F-M016-01,bczApp公开帮助；无日期/OS/build,text_read_images_unobserved,not_observed,百词斩App帮助,false,入口已给；列表筛选/搜索/返回状态未给,2026-10-27
+BC-Q14,M-016,question,如何在电脑上使用百词斩？,data.question_categories[3].questions[8] id=14,14,E-BCCD-01,,bczApp公开帮助；无日期/OS/build,text_read,not_observed,百词斩App帮助,false,无日期，不作为当前PC可用性判断,2026-10-27
+BC-Q15,M-016,question,如何修改学习计划？,data.question_categories[3].questions[9] id=15,15,E-BCCD-01,F-M016-01,bczApp公开帮助；无日期/OS/build,text_read_images_unobserved,not_observed,百词斩App帮助,false,修改日量/天数，算法与保存未知,2026-10-27
+BC-Q17,M-016,question,如何加入/创建小班？,data.question_categories[3].questions[10] id=17,17,E-BCCD-01,,bczApp公开帮助；无日期/OS/build,text_read,not_observed,百词斩App帮助,false,小班加入创建路径，未建社交任务/未操作,2026-10-27
+BC-Q36,M-016,question,如何切换词书？,data.question_categories[3].questions[11] id=36,36,E-BCCD-01,F-M016-01,bczApp公开帮助；无日期/OS/build,text_read_images_unobserved,not_observed,百词斩App帮助,true,已有或新增词书入口，保存与冲突未知,2026-10-27
+BC-Q50,M-016,question,怎么升级APP版本？,data.question_categories[3].questions[12] id=50,50,E-BCCD-01,,bczApp公开帮助；无日期/OS/build,text_read,not_observed,百词斩App帮助,true,只给更新入口，未更新/安装；当前构建未绑定,2026-10-27
+BC-Q51,M-016,question,如何打卡？,data.question_categories[3].questions[13] id=51,51,E-BCCD-01,F-M016-01,bczApp公开帮助；无日期/OS/build,text_read,not_observed,百词斩App帮助,false,北京时间截止且需上传；停留10秒不是回执,2026-10-27
+BC-P05,M-016,category,爱阅读相关问题,data.question_categories[4],,E-BCCD-01,,bczApp公开帮助；无日期/OS/build,category_index_read,not_observed,爱阅读栏目，排除普通背词推论,,父目录，不计完成任务,2026-10-27
+BC-Q24,M-016,question,为什么我充了会员没有到账？,data.question_categories[4].questions[0] id=24,24,E-BCCD-01,,bczApp公开帮助；无日期/OS/build,text_read_images_unobserved,not_observed,爱阅读栏目，排除普通背词推论,false,正文已读，产品栏目独立；未建立本轮任务/不套普通背词奖励,2026-10-27
+BC-Q25,M-016,question,为什么文章没有伴读？,data.question_categories[4].questions[1] id=25,25,E-BCCD-01,,bczApp公开帮助；无日期/OS/build,text_read,not_observed,爱阅读栏目，排除普通背词推论,false,正文已读，产品栏目独立；未建立本轮任务/不套普通背词奖励,2026-10-27
+BC-Q26,M-016,question,深度讲解相关问题,data.question_categories[4].questions[2] id=26,26,E-BCCD-01,,bczApp公开帮助；无日期/OS/build,text_read_images_unobserved,not_observed,爱阅读栏目，排除普通背词推论,false,正文已读，产品栏目独立；未建立本轮任务/不套普通背词奖励,2026-10-27
+BC-Q27,M-016,question,如何查看我的阅读记录？,data.question_categories[4].questions[3] id=27,27,E-BCCD-01,,bczApp公开帮助；无日期/OS/build,text_read_images_unobserved,not_observed,爱阅读栏目，排除普通背词推论,false,正文已读，产品栏目独立；未建立本轮任务/不套普通背词奖励,2026-10-27
+BC-Q28,M-016,question,积分相关问题,data.question_categories[4].questions[4] id=28,28,E-BCCD-01,,bczApp公开帮助；无日期/OS/build,text_read,not_observed,爱阅读栏目，排除普通背词推论,false,正文已读，产品栏目独立；未建立本轮任务/不套普通背词奖励,2026-10-27
+BC-Q29,M-016,question,如何邀请好友？,data.question_categories[4].questions[5] id=29,29,E-BCCD-01,,bczApp公开帮助；无日期/OS/build,text_read_images_unobserved,not_observed,爱阅读栏目，排除普通背词推论,false,正文已读，产品栏目独立；未建立本轮任务/不套普通背词奖励,2026-10-27
+BC-Q30,M-016,question,如何查看我的会员期限？,data.question_categories[4].questions[6] id=30,30,E-BCCD-01,,bczApp公开帮助；无日期/OS/build,text_read_images_unobserved,not_observed,爱阅读栏目，排除普通背词推论,false,正文已读，产品栏目独立；未建立本轮任务/不套普通背词奖励,2026-10-27
+BC-Q31,M-016,question,会员权益有哪些？,data.question_categories[4].questions[7] id=31,31,E-BCCD-01,,bczApp公开帮助；无日期/OS/build,text_read_images_unobserved,not_observed,爱阅读栏目，排除普通背词推论,false,正文已读，产品栏目独立；未建立本轮任务/不套普通背词奖励,2026-10-27
+BC-Q32,M-016,question,如何重新评定我的阅读水平？,data.question_categories[4].questions[8] id=32,32,E-BCCD-01,,bczApp公开帮助；无日期/OS/build,text_read_images_unobserved,not_observed,爱阅读栏目，排除普通背词推论,false,正文已读，产品栏目独立；未建立本轮任务/不套普通背词奖励,2026-10-27
+BC-Q33,M-016,question,如何调整阅读界面背景颜色/字体大小？,data.question_categories[4].questions[9] id=33,33,E-BCCD-01,,bczApp公开帮助；无日期/OS/build,text_read_images_unobserved,not_observed,爱阅读栏目，排除普通背词推论,false,正文已读，产品栏目独立；未建立本轮任务/不套普通背词奖励,2026-10-27
+BC-Q34,M-016,question,如何修改头像/昵称？,data.question_categories[4].questions[10] id=34,34,E-BCCD-01,,bczApp公开帮助；无日期/OS/build,text_read_images_unobserved,not_observed,爱阅读栏目，排除普通背词推论,false,正文已读，产品栏目独立；未建立本轮任务/不套普通背词奖励,2026-10-27

@@ -1,0 +1,142 @@
+{
+  "checked_on": "2026-10-27",
+  "sources": [
+    {
+      "evidence_id": "E-QZAS-01",
+      "title": "Studying with Podcasts",
+      "url": "https://help.quizlet.com/hc/en-us/articles/49085623511565-Studying-with-Podcasts",
+      "body_locator": "L17–64",
+      "body_read_by_root": true,
+      "raw_work_path": "work/research/batch53-integration/quizlet-pages-01.txt",
+      "raw_sha256": "a254b17805ad7fc2600f023e4797706997dafb243f497e5df1efa9d1f1dafc59",
+      "raw_capture_kind": "web_tool_response_text_not_source_HTML",
+      "inventory_order": "39",
+      "flow_ids": [
+        "F-M021-18"
+      ],
+      "hands_on": false,
+      "visual_observed": false
+    },
+    {
+      "evidence_id": "E-QZAS-02",
+      "title": "Studying with Audio Notes",
+      "url": "https://help.quizlet.com/hc/en-us/articles/47540466130829-Studying-with-Audio-Notes",
+      "body_locator": "L17–186",
+      "body_read_by_root": true,
+      "raw_work_path": "work/research/batch53-integration/quizlet-pages-01.txt",
+      "raw_sha256": "a254b17805ad7fc2600f023e4797706997dafb243f497e5df1efa9d1f1dafc59",
+      "raw_capture_kind": "web_tool_response_text_not_source_HTML",
+      "inventory_order": "43",
+      "flow_ids": [
+        "F-M021-02",
+        "F-M021-12"
+      ],
+      "hands_on": false,
+      "visual_observed": false
+    },
+    {
+      "evidence_id": "E-QZAS-03",
+      "title": "Studying with Ask Quizlet",
+      "url": "https://help.quizlet.com/hc/en-us/articles/42790350723725-Studying-with-Ask-Quizlet",
+      "body_locator": "L15–42",
+      "body_read_by_root": true,
+      "raw_work_path": "work/research/batch53-integration/quizlet-pages-01.txt",
+      "raw_sha256": "a254b17805ad7fc2600f023e4797706997dafb243f497e5df1efa9d1f1dafc59",
+      "raw_capture_kind": "web_tool_response_text_not_source_HTML",
+      "inventory_order": "45",
+      "flow_ids": [
+        "F-M021-19"
+      ],
+      "hands_on": false,
+      "visual_observed": false
+    },
+    {
+      "evidence_id": "E-QZAS-04",
+      "title": "Using Study with friends",
+      "url": "https://help.quizlet.com/hc/en-us/articles/48158602540685-Using-Study-with-friends",
+      "body_locator": "L17–90",
+      "body_read_by_root": true,
+      "raw_work_path": "work/research/batch53-integration/quizlet-pages-02.txt",
+      "raw_sha256": "bdd5020d4d00746c6da5c45b8d41550d145ae99b13dca3b5ee2d79ad4453bbc9",
+      "raw_capture_kind": "web_tool_response_text_not_source_HTML",
+      "inventory_order": "41",
+      "flow_ids": [
+        "F-M021-21"
+      ],
+      "hands_on": false,
+      "visual_observed": false
+    },
+    {
+      "evidence_id": "E-QZAS-05",
+      "title": "Playing Charms",
+      "url": "https://help.quizlet.com/hc/en-us/articles/47712424067341-Playing-Charms",
+      "body_locator": "L17–70",
+      "body_read_by_root": true,
+      "raw_work_path": "work/research/batch53-integration/quizlet-pages-02.txt",
+      "raw_sha256": "bdd5020d4d00746c6da5c45b8d41550d145ae99b13dca3b5ee2d79ad4453bbc9",
+      "raw_capture_kind": "web_tool_response_text_not_source_HTML",
+      "inventory_order": "42",
+      "flow_ids": [
+        "F-M021-20"
+      ],
+      "hands_on": false,
+      "visual_observed": false
+    },
+    {
+      "evidence_id": "E-QZAS-06",
+      "title": "Using Quizlet with Superhuman",
+      "url": "https://help.quizlet.com/hc/en-us/articles/41655677850509-Using-Quizlet-with-Superhuman",
+      "body_locator": "L19–31",
+      "body_read_by_root": true,
+      "raw_work_path": "work/research/batch53-integration/quizlet-pages-02.txt",
+      "raw_sha256": "bdd5020d4d00746c6da5c45b8d41550d145ae99b13dca3b5ee2d79ad4453bbc9",
+      "raw_capture_kind": "web_tool_response_text_not_source_HTML",
+      "inventory_order": "46",
+      "flow_ids": [
+        "F-M021-01"
+      ],
+      "hands_on": false,
+      "visual_observed": false
+    },
+    {
+      "evidence_id": "E-QZAS-07",
+      "title": "Studying with Quizlet Expert Solutions",
+      "url": "https://help.quizlet.com/hc/en-us/articles/5649137275789-Studying-with-Quizlet-Expert-Solutions",
+      "body_locator": "L17–72",
+      "body_read_by_root": true,
+      "raw_work_path": "work/research/batch53-integration/quizlet-pages-02.txt",
+      "raw_sha256": "bdd5020d4d00746c6da5c45b8d41550d145ae99b13dca3b5ee2d79ad4453bbc9",
+      "raw_capture_kind": "web_tool_response_text_not_source_HTML",
+      "inventory_order": "51",
+      "flow_ids": [
+        "F-M021-22"
+      ],
+      "hands_on": false,
+      "visual_observed": false
+    },
+    {
+      "evidence_id": "E-QZAS-08",
+      "title": "Searching your flashcard sets by keyword",
+      "url": "https://help.quizlet.com/hc/en-us/articles/360058606332-Searching-your-flashcard-sets-by-keyword",
+      "body_locator": "L17–28",
+      "body_read_by_root": true,
+      "raw_work_path": "work/research/batch53-integration/quizlet-pages-03.txt",
+      "raw_sha256": "f59c20c79f785ce129f16c882b72757511870efe37e87b87b2e6562d80666c9b",
+      "raw_capture_kind": "web_tool_response_text_not_source_HTML",
+      "inventory_order": "58",
+      "flow_ids": [
+        "F-M021-23"
+      ],
+      "hands_on": false,
+      "visual_observed": false
+    }
+  ],
+  "account_used": false,
+  "images_viewed": false,
+  "directory": {
+    "raw_work_path": "work/research/batch53-integration/quizlet-directory.txt",
+    "sha256": "fe257f4d2a230ffa623d73e8c5af78e88d4d1deb3f5195892abbe320631e5ced"
+  },
+  "operation": "read_only_public_help",
+  "limitations": "No account, recording, generation, playback, answering, invitations or actual app observation."
+}

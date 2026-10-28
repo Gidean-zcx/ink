@@ -1,0 +1,214 @@
+[
+  {
+    "path": "/api/v1/memo/interpretations",
+    "method": "get",
+    "operationId": "maimemo.openapi.memo.interpretation.v1.InterpretationService.ListInterpretations",
+    "summary": "获取释义",
+    "responses": [
+      "200"
+    ]
+  },
+  {
+    "path": "/api/v1/memo/interpretations",
+    "method": "post",
+    "operationId": "maimemo.openapi.memo.interpretation.v1.InterpretationService.CreateInterpretation",
+    "summary": "创建释义",
+    "responses": [
+      "200"
+    ]
+  },
+  {
+    "path": "/api/v1/memo/interpretations/{id}",
+    "method": "post",
+    "operationId": "maimemo.openapi.memo.interpretation.v1.InterpretationService.UpdateInterpretation",
+    "summary": "更新释义",
+    "responses": [
+      "200"
+    ]
+  },
+  {
+    "path": "/api/v1/memo/interpretations/{id}",
+    "method": "delete",
+    "operationId": "maimemo.openapi.memo.interpretation.v1.InterpretationService.DeleteInterpretation",
+    "summary": "删除释义",
+    "responses": []
+  },
+  {
+    "path": "/api/v1/memo/notes",
+    "method": "get",
+    "operationId": "maimemo.openapi.memo.note.v1.NoteService.ListNotes",
+    "summary": "获取助记",
+    "responses": [
+      "200"
+    ]
+  },
+  {
+    "path": "/api/v1/memo/notes",
+    "method": "post",
+    "operationId": "maimemo.openapi.memo.note.v1.NoteService.CreateNote",
+    "summary": "创建助记",
+    "responses": [
+      "200"
+    ]
+  },
+  {
+    "path": "/api/v1/memo/notes/{id}",
+    "method": "post",
+    "operationId": "maimemo.openapi.memo.note.v1.NoteService.UpdateNote",
+    "summary": "更新助记",
+    "responses": [
+      "200"
+    ]
+  },
+  {
+    "path": "/api/v1/memo/notes/{id}",
+    "method": "delete",
+    "operationId": "maimemo.openapi.memo.note.v1.NoteService.DeleteNote",
+    "summary": "删除助记",
+    "responses": []
+  },
+  {
+    "path": "/api/v1/memo/notepads",
+    "method": "get",
+    "operationId": "maimemo.openapi.memo.notepad.v1.NotepadService.ListNotepads",
+    "summary": "查询云词本",
+    "responses": [
+      "200"
+    ]
+  },
+  {
+    "path": "/api/v1/memo/notepads",
+    "method": "post",
+    "operationId": "maimemo.openapi.memo.notepad.v1.NotepadService.CreateNotepad",
+    "summary": "创建云词本",
+    "responses": [
+      "200"
+    ]
+  },
+  {
+    "path": "/api/v1/memo/notepads/{id}",
+    "method": "get",
+    "operationId": "maimemo.openapi.memo.notepad.v1.NotepadService.GetNotepad",
+    "summary": "获取云词本",
+    "responses": [
+      "200"
+    ]
+  },
+  {
+    "path": "/api/v1/memo/notepads/{id}",
+    "method": "post",
+    "operationId": "maimemo.openapi.memo.notepad.v1.NotepadService.UpdateNotepad",
+    "summary": "更新云词本",
+    "responses": [
+      "200"
+    ]
+  },
+  {
+    "path": "/api/v1/memo/notepads/{id}",
+    "method": "delete",
+    "operationId": "maimemo.openapi.memo.notepad.v1.NotepadService.DeleteNotepad",
+    "summary": "删除云词本",
+    "responses": [
+      "200"
+    ]
+  },
+  {
+    "path": "/api/v1/memo/phrases",
+    "method": "get",
+    "operationId": "maimemo.openapi.memo.phrase.v1.PhraseService.ListPhrases",
+    "summary": "获取例句",
+    "responses": [
+      "200"
+    ]
+  },
+  {
+    "path": "/api/v1/memo/phrases",
+    "method": "post",
+    "operationId": "maimemo.openapi.memo.phrase.v1.PhraseService.CreatePhrase",
+    "summary": "创建例句",
+    "responses": [
+      "200"
+    ]
+  },
+  {
+    "path": "/api/v1/memo/phrases/{id}",
+    "method": "post",
+    "operationId": "maimemo.openapi.memo.phrase.v1.PhraseService.UpdatePhrase",
+    "summary": "更新例句",
+    "responses": [
+      "200"
+    ]
+  },
+  {
+    "path": "/api/v1/memo/phrases/{id}",
+    "method": "delete",
+    "operationId": "maimemo.openapi.memo.phrase.v1.PhraseService.DeletePhrase",
+    "summary": "删除例句",
+    "responses": [
+      "200"
+    ]
+  },
+  {
+    "path": "/api/v1/memo/study/get_study_progress",
+    "method": "post",
+    "operationId": "maimemo.openapi.memo.study.v1.StudyService.GetStudyProgress",
+    "summary": "获取今日学习进度（公测）",
+    "responses": [
+      "200"
+    ]
+  },
+  {
+    "path": "/api/v1/memo/study/get_today_items",
+    "method": "post",
+    "operationId": "maimemo.openapi.memo.study.v1.StudyService.GetTodayItems",
+    "summary": "获取今日学习单词（公测）",
+    "responses": [
+      "200"
+    ]
+  },
+  {
+    "path": "/api/v1/memo/study/query_study_records",
+    "method": "post",
+    "operationId": "maimemo.openapi.memo.study.v1.StudyService.QueryStudyRecords",
+    "summary": "查询学习记录（公测）",
+    "responses": [
+      "200"
+    ]
+  },
+  {
+    "path": "/api/v1/memo/study/add_words",
+    "method": "post",
+    "operationId": "maimemo.openapi.memo.study.v1.StudyService.AddWords",
+    "summary": "添加单词（公测）",
+    "responses": [
+      "200"
+    ]
+  },
+  {
+    "path": "/api/v1/memo/study/advance_study",
+    "method": "post",
+    "operationId": "maimemo.openapi.memo.study.v1.StudyService.AdvanceStudy",
+    "summary": "提前复习（公测）",
+    "responses": [
+      "200"
+    ]
+  },
+  {
+    "path": "/api/v1/memo/vocabulary",
+    "method": "get",
+    "operationId": "maimemo.openapi.memo.vocabulary.v1.VocabularyService.GetVocabulary",
+    "summary": "获取单词",
+    "responses": [
+      "200"
+    ]
+  },
+  {
+    "path": "/api/v1/memo/vocabulary/query",
+    "method": "post",
+    "operationId": "maimemo.openapi.memo.vocabulary.v1.VocabularyService.ListVocabulary",
+    "summary": "查询单词",
+    "responses": [
+      "200"
+    ]
+  }
+]

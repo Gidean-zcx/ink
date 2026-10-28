@@ -1,0 +1,18 @@
+{
+  "new_evidence": 10,
+  "new_tasks": 5,
+  "new_D2": 5,
+  "new_D4": 0,
+  "old_tasks_amended": 17,
+  "old_fields_amended": 60,
+  "old_evidence_additional_captures": 19,
+  "old_evidence_locator_fields_corrected": 1,
+  "app_release_date_semantics_corrected": 1,
+  "inventories": 54,
+  "inventory_rows": 5097,
+  "new_inventory_rows": 311,
+  "new_static_images": 5,
+  "raw_files_checked": 39,
+  "actual_product_operations": 0,
+  "errors": []
+}

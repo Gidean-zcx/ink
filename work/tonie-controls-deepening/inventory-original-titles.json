@@ -1,0 +1,1052 @@
+[
+  {
+    "directory_evidence": "E-TNCD-01",
+    "item_number": 1,
+    "domain": "Quick Solutions",
+    "original_title": "The Toniebox 1 flashes red and reports an error",
+    "label": "红灯"
+  },
+  {
+    "directory_evidence": "E-TNCD-01",
+    "item_number": 2,
+    "domain": "Quick Solutions",
+    "original_title": "How the Toniebox 1 works",
+    "label": "工作方式"
+  },
+  {
+    "directory_evidence": "E-TNCD-01",
+    "item_number": 3,
+    "domain": "Quick Solutions",
+    "original_title": "How do I update my Toniebox 1 or sync changes I've made?",
+    "label": "同步"
+  },
+  {
+    "directory_evidence": "E-TNCD-01",
+    "item_number": 4,
+    "domain": "Quick Solutions",
+    "original_title": "How do I restart the Toniebox 1?",
+    "label": "重启"
+  },
+  {
+    "directory_evidence": "E-TNCD-01",
+    "item_number": 5,
+    "domain": "Quick Solutions",
+    "original_title": "How do I reset the Toniebox 1 to factory settings?",
+    "label": "恢复出厂"
+  },
+  {
+    "directory_evidence": "E-TNCD-01",
+    "item_number": 6,
+    "domain": "Quick Solutions",
+    "original_title": "Does the Toniebox 1 work without Wi-Fi?",
+    "label": "离线播放"
+  },
+  {
+    "directory_evidence": "E-TNCD-01",
+    "item_number": 7,
+    "domain": "Quick Solutions",
+    "original_title": "Avoiding wireless interference",
+    "label": "无线干扰"
+  },
+  {
+    "directory_evidence": "E-TNCD-01",
+    "item_number": 8,
+    "domain": "Quick Solutions",
+    "original_title": "No sound from the Toniebox 1 speaker",
+    "label": "扬声器无声"
+  },
+  {
+    "directory_evidence": "E-TNCD-01",
+    "item_number": 9,
+    "domain": "Quick Solutions",
+    "original_title": "Tapping the Toniebox 1 to skip forward and back isn't working",
+    "label": "敲击失效"
+  },
+  {
+    "directory_evidence": "E-TNCD-01",
+    "item_number": 10,
+    "domain": "Quick Solutions",
+    "original_title": "The Toniebox 1 LED keeps blinking blue and will not play any Tonies",
+    "label": "蓝灯卡住"
+  },
+  {
+    "directory_evidence": "E-TNCD-01",
+    "item_number": 11,
+    "domain": "Setup",
+    "original_title": "Tonies on Foot: Gifting & Receiving A Toniebox 1",
+    "label": "赠礼"
+  },
+  {
+    "directory_evidence": "E-TNCD-01",
+    "item_number": 12,
+    "domain": "Setup",
+    "original_title": "Toniebox 1: Your start-up checklist",
+    "label": "启动清单"
+  },
+  {
+    "directory_evidence": "E-TNCD-01",
+    "item_number": 13,
+    "domain": "Setup",
+    "original_title": "How do I set up a Toniebox 1?",
+    "label": "初设"
+  },
+  {
+    "directory_evidence": "E-TNCD-01",
+    "item_number": 14,
+    "domain": "Setup",
+    "original_title": "What types of Wi-Fi networks can the Toniebox 1 connect to?",
+    "label": "Wi-Fi类型"
+  },
+  {
+    "directory_evidence": "E-TNCD-01",
+    "item_number": 15,
+    "domain": "Setup",
+    "original_title": "How do I connect the Toniebox 1 to a mobile hotspot?",
+    "label": "热点"
+  },
+  {
+    "directory_evidence": "E-TNCD-01",
+    "item_number": 16,
+    "domain": "Setup",
+    "original_title": "Can I connect my Toniebox 1 to several different Wi-Fi networks?",
+    "label": "多网络"
+  },
+  {
+    "directory_evidence": "E-TNCD-01",
+    "item_number": 17,
+    "domain": "Setup",
+    "original_title": "How do I connect my Toniebox 1 to a different Wi-Fi network?",
+    "label": "换网络"
+  },
+  {
+    "directory_evidence": "E-TNCD-01",
+    "item_number": 18,
+    "domain": "Setup",
+    "original_title": "How do I set up a Wi-Fi connection without the setup assistant?",
+    "label": "无向导联网"
+  },
+  {
+    "directory_evidence": "E-TNCD-01",
+    "item_number": 19,
+    "domain": "Setup",
+    "original_title": "The Toniebox 1 is already in another Household",
+    "label": "异家庭绑定"
+  },
+  {
+    "directory_evidence": "E-TNCD-01",
+    "item_number": 20,
+    "domain": "Setup",
+    "original_title": "The Toniebox 1 won’t detect my Wi-Fi",
+    "label": "搜不到网"
+  },
+  {
+    "directory_evidence": "E-TNCD-01",
+    "item_number": 21,
+    "domain": "Setup",
+    "original_title": "The Toniebox 1 doesn’t appear in the Wi-Fi menu",
+    "label": "Wi-Fi列表"
+  },
+  {
+    "directory_evidence": "E-TNCD-01",
+    "item_number": 22,
+    "domain": "Setup",
+    "original_title": "Connection to the Toniebox 1 Wi-Fi cannot be established",
+    "label": "连接失败"
+  },
+  {
+    "directory_evidence": "E-TNCD-01",
+    "item_number": 23,
+    "domain": "Setup",
+    "original_title": "My Toniebox 1 ID cannot be found",
+    "label": "ID找不到"
+  },
+  {
+    "directory_evidence": "E-TNCD-01",
+    "item_number": 24,
+    "domain": "Setup",
+    "original_title": "Why can't I set up the Toniebox 1 with a computer that is connected to the internet via ethernet cable?",
+    "label": "以太网初设"
+  },
+  {
+    "directory_evidence": "E-TNCD-01",
+    "item_number": 25,
+    "domain": "Setup",
+    "original_title": "Caution for routers with WEP encryption",
+    "label": "WEP"
+  },
+  {
+    "directory_evidence": "E-TNCD-01",
+    "item_number": 26,
+    "domain": "Care and Maintenance",
+    "original_title": "How do I clean a Toniebox?",
+    "label": "清洁"
+  },
+  {
+    "directory_evidence": "E-TNCD-01",
+    "item_number": 27,
+    "domain": "Care and Maintenance",
+    "original_title": "How do I charge the battery properly?",
+    "label": "电池保养"
+  },
+  {
+    "directory_evidence": "E-TNCD-01",
+    "item_number": 28,
+    "domain": "Care and Maintenance",
+    "original_title": "Color Traces and Tonie Footprints",
+    "label": "印迹"
+  },
+  {
+    "directory_evidence": "E-TNCD-01",
+    "item_number": 29,
+    "domain": "Care and Maintenance",
+    "original_title": "Magnets and the Toniebox 1",
+    "label": "磁体"
+  },
+  {
+    "directory_evidence": "E-TNCD-01",
+    "item_number": 30,
+    "domain": "Care and Maintenance",
+    "original_title": "Should I share my Toniebox 1 ID?",
+    "label": "ID分享"
+  },
+  {
+    "directory_evidence": "E-TNCD-01",
+    "item_number": 31,
+    "domain": "Settings and Preferences",
+    "original_title": "How to reconnect your Toniebox to Wi-Fi",
+    "label": "重新联网"
+  },
+  {
+    "directory_evidence": "E-TNCD-01",
+    "item_number": 32,
+    "domain": "Settings and Preferences",
+    "original_title": "How do I put my Toniebox 1 in Offline Mode?",
+    "label": "离线模式"
+  },
+  {
+    "directory_evidence": "E-TNCD-01",
+    "item_number": 33,
+    "domain": "Settings and Preferences",
+    "original_title": "How do I change the name of my Toniebox 1?",
+    "label": "改名"
+  },
+  {
+    "directory_evidence": "E-TNCD-01",
+    "item_number": 34,
+    "domain": "Settings and Preferences",
+    "original_title": "How do I adjust the brightness of the Toniebox 1 LED?",
+    "label": "亮度"
+  },
+  {
+    "directory_evidence": "E-TNCD-01",
+    "item_number": 35,
+    "domain": "Settings and Preferences",
+    "original_title": "How can I change the language of my Toniebox?",
+    "label": "语言"
+  },
+  {
+    "directory_evidence": "E-TNCD-01",
+    "item_number": 36,
+    "domain": "Settings and Preferences",
+    "original_title": "How powerful is the Toniebox 1 speaker?",
+    "label": "扬声器音量"
+  },
+  {
+    "directory_evidence": "E-TNCD-01",
+    "item_number": 37,
+    "domain": "Settings and Preferences",
+    "original_title": "Can I control the Toniebox 1 remotely via the tonies® app?",
+    "label": "App遥控范围"
+  },
+  {
+    "directory_evidence": "E-TNCD-01",
+    "item_number": 38,
+    "domain": "Playing and Controls",
+    "original_title": "How do I turn the Toniebox 1 off?",
+    "label": "关机"
+  },
+  {
+    "directory_evidence": "E-TNCD-01",
+    "item_number": 39,
+    "domain": "Playing and Controls",
+    "original_title": "How do I adjust the volume of the Toniebox 1?",
+    "label": "调音量"
+  },
+  {
+    "directory_evidence": "E-TNCD-01",
+    "item_number": 40,
+    "domain": "Playing and Controls",
+    "original_title": "How do I fast-forward and rewind using the Toniebox 1?",
+    "label": "段内跳转"
+  },
+  {
+    "directory_evidence": "E-TNCD-01",
+    "item_number": 41,
+    "domain": "Playing and Controls",
+    "original_title": "How do I skip back and forth between tracks using the Toniebox 1?",
+    "label": "跳曲"
+  },
+  {
+    "directory_evidence": "E-TNCD-01",
+    "item_number": 42,
+    "domain": "Battery and Charging",
+    "original_title": "How can I check the battery level of my Toniebox?",
+    "label": "电量查看"
+  },
+  {
+    "directory_evidence": "E-TNCD-01",
+    "item_number": 43,
+    "domain": "Battery and Charging",
+    "original_title": "How long does it take for the battery to fully charge?",
+    "label": "充电时长"
+  },
+  {
+    "directory_evidence": "E-TNCD-01",
+    "item_number": 44,
+    "domain": "Battery and Charging",
+    "original_title": "Battery Trouble: The Toniebox turns off when disconnected from the charging station",
+    "label": "离底座关机"
+  },
+  {
+    "directory_evidence": "E-TNCD-01",
+    "item_number": 45,
+    "domain": "Battery and Charging",
+    "original_title": "How long can I use the Toniebox 1 with a full battery?",
+    "label": "续航"
+  },
+  {
+    "directory_evidence": "E-TNCD-01",
+    "item_number": 46,
+    "domain": "Battery and Charging",
+    "original_title": "Can I charge the Toniebox 1 using other power supply units?",
+    "label": "替代电源"
+  },
+  {
+    "directory_evidence": "E-TNCD-01",
+    "item_number": 47,
+    "domain": "Battery and Charging",
+    "original_title": "What type of battery does the Toniebox 1 use?",
+    "label": "电池类型"
+  },
+  {
+    "directory_evidence": "E-TNCD-01",
+    "item_number": 48,
+    "domain": "Battery and Charging",
+    "original_title": "My Toniebox 1 only works on the charging station!",
+    "label": "仅底座运行"
+  },
+  {
+    "directory_evidence": "E-TNCD-01",
+    "item_number": 49,
+    "domain": "Error Codes",
+    "original_title": "Codeword: Turtle",
+    "label": "Turtle"
+  },
+  {
+    "directory_evidence": "E-TNCD-01",
+    "item_number": 50,
+    "domain": "Error Codes",
+    "original_title": "Codeword: Hedgehog",
+    "label": "Hedgehog"
+  },
+  {
+    "directory_evidence": "E-TNCD-01",
+    "item_number": 51,
+    "domain": "Error Codes",
+    "original_title": "Codeword: Groundhog",
+    "label": "Groundhog"
+  },
+  {
+    "directory_evidence": "E-TNCD-01",
+    "item_number": 52,
+    "domain": "Error Codes",
+    "original_title": "Codeword: Elephant",
+    "label": "Elephant"
+  },
+  {
+    "directory_evidence": "E-TNCD-01",
+    "item_number": 53,
+    "domain": "Error Codes",
+    "original_title": "Codeword: Koala",
+    "label": "Koala"
+  },
+  {
+    "directory_evidence": "E-TNCD-01",
+    "item_number": 54,
+    "domain": "Error Codes",
+    "original_title": "Codeword: Owl",
+    "label": "Owl"
+  },
+  {
+    "directory_evidence": "E-TNCD-01",
+    "item_number": 55,
+    "domain": "Error Codes",
+    "original_title": "Code Word: Squirrel",
+    "label": "Squirrel"
+  },
+  {
+    "directory_evidence": "E-TNCD-01",
+    "item_number": 56,
+    "domain": "Error Codes",
+    "original_title": "Codeword: Ant",
+    "label": "Ant"
+  },
+  {
+    "directory_evidence": "E-TNCD-01",
+    "item_number": 57,
+    "domain": "Error Codes",
+    "original_title": "Codeword: Meerkat",
+    "label": "Meerkat"
+  },
+  {
+    "directory_evidence": "E-TNCD-01",
+    "item_number": 58,
+    "domain": "Error Codes",
+    "original_title": "Oh no, that didn't work. I think your password is wrong.",
+    "label": "密码错误"
+  },
+  {
+    "directory_evidence": "E-TNCD-01",
+    "item_number": 59,
+    "domain": "Error Codes",
+    "original_title": "Uh-oh! The download has stopped too soon. Please check if I'm still connected to the internet.",
+    "label": "下载中断"
+  },
+  {
+    "directory_evidence": "E-TNCD-01",
+    "item_number": 60,
+    "domain": "All Other Articles",
+    "original_title": "Tonieboxes on flights",
+    "label": "乘机"
+  },
+  {
+    "directory_evidence": "E-TNCD-01",
+    "item_number": 61,
+    "domain": "All Other Articles",
+    "original_title": "Is there still support for the Toniebox 1?",
+    "label": "继续支持"
+  },
+  {
+    "directory_evidence": "E-TNCD-01",
+    "item_number": 62,
+    "domain": "All Other Articles",
+    "original_title": "How long will the Toniebox 1 remain available for?",
+    "label": "销售期限"
+  },
+  {
+    "directory_evidence": "E-TNCD-01",
+    "item_number": 63,
+    "domain": "All Other Articles",
+    "original_title": "My Toniebox 1 is still within warranty and is defective, can it still be replaced?",
+    "label": "保修替换"
+  },
+  {
+    "directory_evidence": "E-TNCD-02",
+    "item_number": 1,
+    "domain": "Product Information",
+    "original_title": "Meet Toniebox 2: Features Overview",
+    "label": "功能概览"
+  },
+  {
+    "directory_evidence": "E-TNCD-02",
+    "item_number": 2,
+    "domain": "Product Information",
+    "original_title": "Toniebox 2: Everything you need to know!",
+    "label": "产品介绍"
+  },
+  {
+    "directory_evidence": "E-TNCD-02",
+    "item_number": 3,
+    "domain": "Product Information",
+    "original_title": "How do I update my Toniebox 2 or sync changes I've made?",
+    "label": "更新同步"
+  },
+  {
+    "directory_evidence": "E-TNCD-02",
+    "item_number": 4,
+    "domain": "Product Information",
+    "original_title": "Toniebox 2 Dynamic Light Ring Guide",
+    "label": "灯环指示"
+  },
+  {
+    "directory_evidence": "E-TNCD-02",
+    "item_number": 5,
+    "domain": "Product Information",
+    "original_title": "What is the Toniebox 2 made of?",
+    "label": "材质"
+  },
+  {
+    "directory_evidence": "E-TNCD-02",
+    "item_number": 6,
+    "domain": "Product Information",
+    "original_title": "Magnets and the Toniebox 2",
+    "label": "磁体"
+  },
+  {
+    "directory_evidence": "E-TNCD-02",
+    "item_number": 7,
+    "domain": "Product Information",
+    "original_title": "Which data will be captured through the Toniebox 2?",
+    "label": "使用数据"
+  },
+  {
+    "directory_evidence": "E-TNCD-02",
+    "item_number": 8,
+    "domain": "Product Information",
+    "original_title": "More information about the photosensitive epilepsy warning",
+    "label": "光敏提示"
+  },
+  {
+    "directory_evidence": "E-TNCD-02",
+    "item_number": 9,
+    "domain": "Setup",
+    "original_title": "Toniebox 2: Your start-up checklist",
+    "label": "启动清单"
+  },
+  {
+    "directory_evidence": "E-TNCD-02",
+    "item_number": 10,
+    "domain": "Setup",
+    "original_title": "How long do I need to set up the Toniebox 2?",
+    "label": "初设用时"
+  },
+  {
+    "directory_evidence": "E-TNCD-02",
+    "item_number": 11,
+    "domain": "Setup",
+    "original_title": "How do I set up my Toniebox 2?",
+    "label": "初设"
+  },
+  {
+    "directory_evidence": "E-TNCD-02",
+    "item_number": 12,
+    "domain": "Setup",
+    "original_title": "How to set up a mobile hotspot for your Toniebox 2",
+    "label": "热点"
+  },
+  {
+    "directory_evidence": "E-TNCD-02",
+    "item_number": 13,
+    "domain": "Setup",
+    "original_title": "What Wi-Fi connection is required to use the Toniebox 2?",
+    "label": "Wi-Fi要求"
+  },
+  {
+    "directory_evidence": "E-TNCD-02",
+    "item_number": 14,
+    "domain": "Setup",
+    "original_title": "Can I add the Toniebox 2 to my existing household or is a new one required?",
+    "label": "已有家庭"
+  },
+  {
+    "directory_evidence": "E-TNCD-02",
+    "item_number": 15,
+    "domain": "Setup",
+    "original_title": "Do I need to charge the Toniebox 2 when I first unpack it?",
+    "label": "首次充电"
+  },
+  {
+    "directory_evidence": "E-TNCD-02",
+    "item_number": 16,
+    "domain": "Setup",
+    "original_title": "Troubleshooting Bluetooth connection issues when setting up the Toniebox 2",
+    "label": "蓝牙配网排错"
+  },
+  {
+    "directory_evidence": "E-TNCD-02",
+    "item_number": 17,
+    "domain": "Setup",
+    "original_title": "Toniebox 2: Setup troubleshooting",
+    "label": "初设排错"
+  },
+  {
+    "directory_evidence": "E-TNCD-02",
+    "item_number": 18,
+    "domain": "Settings and Preferences",
+    "original_title": "How to reconnect your Toniebox to Wi-Fi",
+    "label": "重新联网"
+  },
+  {
+    "directory_evidence": "E-TNCD-02",
+    "item_number": 19,
+    "domain": "Settings and Preferences",
+    "original_title": "Playback Features: FAQ",
+    "label": "播放控制"
+  },
+  {
+    "directory_evidence": "E-TNCD-02",
+    "item_number": 20,
+    "domain": "Settings and Preferences",
+    "original_title": "Can I manually turn off my Toniebox 2?",
+    "label": "手动关机"
+  },
+  {
+    "directory_evidence": "E-TNCD-02",
+    "item_number": 21,
+    "domain": "Settings and Preferences",
+    "original_title": "Can I connect my Toniebox 2 to several different Wi-Fi networks?",
+    "label": "多网络"
+  },
+  {
+    "directory_evidence": "E-TNCD-02",
+    "item_number": 22,
+    "domain": "Settings and Preferences",
+    "original_title": "How do I put my Toniebox 2 in Offline Mode?",
+    "label": "离线模式"
+  },
+  {
+    "directory_evidence": "E-TNCD-02",
+    "item_number": 23,
+    "domain": "Settings and Preferences",
+    "original_title": "How do I turn off the Toniebox 2?",
+    "label": "自动关机"
+  },
+  {
+    "directory_evidence": "E-TNCD-02",
+    "item_number": 24,
+    "domain": "Settings and Preferences",
+    "original_title": "What features of the Toniebox 2 can I customize via the app?",
+    "label": "App自定义"
+  },
+  {
+    "directory_evidence": "E-TNCD-02",
+    "item_number": 25,
+    "domain": "Settings and Preferences",
+    "original_title": "Sleep Light with Timer & Sunrise Alarm guide",
+    "label": "睡眠与闹钟"
+  },
+  {
+    "directory_evidence": "E-TNCD-02",
+    "item_number": 26,
+    "domain": "Settings and Preferences",
+    "original_title": "What does the dynamic Light Ring do?",
+    "label": "灯环用途"
+  },
+  {
+    "directory_evidence": "E-TNCD-02",
+    "item_number": 27,
+    "domain": "Settings and Preferences",
+    "original_title": "Can I turn off the Light Ring?",
+    "label": "关闭灯环"
+  },
+  {
+    "directory_evidence": "E-TNCD-02",
+    "item_number": 28,
+    "domain": "Settings and Preferences",
+    "original_title": "How does the Toniebox 2 function differently in 1+ vs 3+ mode?",
+    "label": "年龄模式"
+  },
+  {
+    "directory_evidence": "E-TNCD-02",
+    "item_number": 29,
+    "domain": "Compatibility",
+    "original_title": "Will our existing Tonies work on the Toniebox 2?",
+    "label": "旧Tonie兼容"
+  },
+  {
+    "directory_evidence": "E-TNCD-02",
+    "item_number": 30,
+    "domain": "Compatibility",
+    "original_title": "Will new tonies® products work on the Toniebox 1?",
+    "label": "新Tonie兼容"
+  },
+  {
+    "directory_evidence": "E-TNCD-02",
+    "item_number": 31,
+    "domain": "Purchasing",
+    "original_title": "Can I try the Toniebox 2 and Tonieplay items somewhere?",
+    "label": "试用地点"
+  },
+  {
+    "directory_evidence": "E-TNCD-02",
+    "item_number": 32,
+    "domain": "Purchasing",
+    "original_title": "Can I pre-order on the tonies® online shop?",
+    "label": "预购"
+  },
+  {
+    "directory_evidence": "E-TNCD-02",
+    "item_number": 33,
+    "domain": "Purchasing",
+    "original_title": "Are partial deliveries possible?",
+    "label": "分批交付"
+  },
+  {
+    "directory_evidence": "E-TNCD-02",
+    "item_number": 34,
+    "domain": "Purchasing",
+    "original_title": "Can I upgrade my Toniebox 1 for a Toniebox 2?",
+    "label": "旧机升级"
+  },
+  {
+    "directory_evidence": "E-TNCD-02",
+    "item_number": 35,
+    "domain": "Purchasing",
+    "original_title": "Are there any discount campaigns planned for Toniebox 2?",
+    "label": "促销"
+  },
+  {
+    "directory_evidence": "E-TNCD-02",
+    "item_number": 36,
+    "domain": "Purchasing",
+    "original_title": "Can I send in my Toniebox 1 to get a discounted Toniebox 2?",
+    "label": "旧机抵扣"
+  },
+  {
+    "directory_evidence": "E-TNCD-02",
+    "item_number": 37,
+    "domain": "Purchasing",
+    "original_title": "Is the Toniebox 1 now being offered at a discount? If so, when and where can I get it?",
+    "label": "旧机折扣"
+  },
+  {
+    "directory_evidence": "E-TNCD-02",
+    "item_number": 38,
+    "domain": "Battery and Charging",
+    "original_title": "What type of battery does the Toniebox 2 use?",
+    "label": "电池类型"
+  },
+  {
+    "directory_evidence": "E-TNCD-02",
+    "item_number": 39,
+    "domain": "Battery and Charging",
+    "original_title": "How do I charge the Toniebox 2 and how long does it take?",
+    "label": "充电"
+  },
+  {
+    "directory_evidence": "E-TNCD-02",
+    "item_number": 40,
+    "domain": "Battery and Charging",
+    "original_title": "How can I check the battery level of my Toniebox?",
+    "label": "电量"
+  },
+  {
+    "directory_evidence": "E-TNCD-02",
+    "item_number": 41,
+    "domain": "Battery and Charging",
+    "original_title": "How long does the Toniebox 2 battery last?",
+    "label": "续航"
+  },
+  {
+    "directory_evidence": "E-TNCD-02",
+    "item_number": 42,
+    "domain": "Battery and Charging",
+    "original_title": "What plug do I need to use to charge the Toniebox 2?",
+    "label": "电源"
+  },
+  {
+    "directory_evidence": "E-TNCD-02",
+    "item_number": 43,
+    "domain": "Battery and Charging",
+    "original_title": "How to replace or remove the Toniebox 2 battery?",
+    "label": "换电池"
+  },
+  {
+    "directory_evidence": "E-TNCD-02",
+    "item_number": 44,
+    "domain": "Troubleshooting",
+    "original_title": "How do I restart the Toniebox 2?",
+    "label": "重启"
+  },
+  {
+    "directory_evidence": "E-TNCD-02",
+    "item_number": 45,
+    "domain": "Troubleshooting",
+    "original_title": "How to reset your Toniebox 2 to factory settings",
+    "label": "恢复出厂"
+  },
+  {
+    "directory_evidence": "E-TNCD-02",
+    "item_number": 46,
+    "domain": "Troubleshooting",
+    "original_title": "My Toniebox 2 is stuck, what do I do?",
+    "label": "卡住"
+  },
+  {
+    "directory_evidence": "E-TNCD-02",
+    "item_number": 47,
+    "domain": "Troubleshooting",
+    "original_title": "What can I do if my Toniebox 2 isn’t turning on?",
+    "label": "不开机"
+  },
+  {
+    "directory_evidence": "E-TNCD-02",
+    "item_number": 48,
+    "domain": "Troubleshooting",
+    "original_title": "Why does my Toniebox 2 not play a Tonie when it is plugged in?",
+    "label": "充电不播"
+  },
+  {
+    "directory_evidence": "E-TNCD-02",
+    "item_number": 49,
+    "domain": "Troubleshooting",
+    "original_title": "My Tonie isn't playing",
+    "label": "Tonie不播"
+  },
+  {
+    "directory_evidence": "E-TNCD-02",
+    "item_number": 50,
+    "domain": "Troubleshooting",
+    "original_title": "Tonie is playing the audio from a different Tonie",
+    "label": "播错内容"
+  },
+  {
+    "directory_evidence": "E-TNCD-02",
+    "item_number": 51,
+    "domain": "Troubleshooting",
+    "original_title": "Toniebox 2 download speed seems slow",
+    "label": "下载慢"
+  },
+  {
+    "directory_evidence": "E-TNCD-02",
+    "item_number": 52,
+    "domain": "Troubleshooting",
+    "original_title": "Tapping the Toniebox 2 to skip forward and back isn't working",
+    "label": "敲击失效"
+  },
+  {
+    "directory_evidence": "E-TNCD-02",
+    "item_number": 53,
+    "domain": "Troubleshooting",
+    "original_title": "My Tonie/Creative Tonie is not playing the updated content on the Toniebox 2",
+    "label": "内容未更新"
+  },
+  {
+    "directory_evidence": "E-TNCD-02",
+    "item_number": 54,
+    "domain": "Error Codes",
+    "original_title": "Code Word: Squirrel",
+    "label": "Squirrel"
+  },
+  {
+    "directory_evidence": "E-TNCD-02",
+    "item_number": 55,
+    "domain": "Error Codes",
+    "original_title": "Code Word: Frog",
+    "label": "Frog"
+  },
+  {
+    "directory_evidence": "E-TNCD-02",
+    "item_number": 56,
+    "domain": "Error Codes",
+    "original_title": "Code Word: Rabbit",
+    "label": "Rabbit"
+  },
+  {
+    "directory_evidence": "E-TNCD-02",
+    "item_number": 57,
+    "domain": "Error Codes",
+    "original_title": "Code Word: Parrot",
+    "label": "Parrot"
+  },
+  {
+    "directory_evidence": "E-TNCD-02",
+    "item_number": 58,
+    "domain": "Error Codes",
+    "original_title": "Code Word: Dog",
+    "label": "Dog"
+  },
+  {
+    "directory_evidence": "E-TNCD-02",
+    "item_number": 59,
+    "domain": "Error Codes",
+    "original_title": "Code Word: Tiger",
+    "label": "Tiger"
+  },
+  {
+    "directory_evidence": "E-TNCD-02",
+    "item_number": 60,
+    "domain": "Error Codes",
+    "original_title": "Code Word: Horse",
+    "label": "Horse"
+  },
+  {
+    "directory_evidence": "E-TNCD-02",
+    "item_number": 61,
+    "domain": "Error Codes",
+    "original_title": "Code Word: Cat",
+    "label": "Cat"
+  },
+  {
+    "directory_evidence": "E-TNCD-02",
+    "item_number": 62,
+    "domain": "Error Codes",
+    "original_title": "Code Word: Llama",
+    "label": "Llama"
+  },
+  {
+    "directory_evidence": "E-TNCD-02",
+    "item_number": 63,
+    "domain": "Error Codes",
+    "original_title": "Code Word: Zebra",
+    "label": "Zebra"
+  },
+  {
+    "directory_evidence": "E-TNCD-02",
+    "item_number": 64,
+    "domain": "Error Codes",
+    "original_title": "Code Word: Sheep",
+    "label": "Sheep"
+  },
+  {
+    "directory_evidence": "E-TNCD-02",
+    "item_number": 65,
+    "domain": "Error Codes",
+    "original_title": "Code Word: Fox",
+    "label": "Fox"
+  },
+  {
+    "directory_evidence": "E-TNCD-03",
+    "item_number": 1,
+    "domain": "Articles",
+    "original_title": "What is Tonieplay?",
+    "label": "定义"
+  },
+  {
+    "directory_evidence": "E-TNCD-03",
+    "item_number": 2,
+    "domain": "Articles",
+    "original_title": "Tonieplay - Troubleshooting Tips",
+    "label": "故障提示"
+  },
+  {
+    "directory_evidence": "E-TNCD-03",
+    "item_number": 3,
+    "domain": "Articles",
+    "original_title": "Tonieplay game card not recognised",
+    "label": "读盘失败"
+  },
+  {
+    "directory_evidence": "E-TNCD-03",
+    "item_number": 4,
+    "domain": "Articles",
+    "original_title": "How long does the Toniebox 2 remember your auto-saved status when you remove the disc, take a break or play something else?",
+    "label": "中断存档"
+  },
+  {
+    "directory_evidence": "E-TNCD-03",
+    "item_number": 5,
+    "domain": "Articles",
+    "original_title": "Can you ever choose the chapter?",
+    "label": "章节选择"
+  },
+  {
+    "directory_evidence": "E-TNCD-03",
+    "item_number": 6,
+    "domain": "Articles",
+    "original_title": "Can I restart a Tonieplay game?",
+    "label": "重启游戏"
+  },
+  {
+    "directory_evidence": "E-TNCD-03",
+    "item_number": 7,
+    "domain": "Articles",
+    "original_title": "What do I need in order to play a Tonieplay game?",
+    "label": "所需设备"
+  },
+  {
+    "directory_evidence": "E-TNCD-03",
+    "item_number": 8,
+    "domain": "Articles",
+    "original_title": "What aged children is Tonieplay suitable for?",
+    "label": "适用年龄"
+  },
+  {
+    "directory_evidence": "E-TNCD-03",
+    "item_number": 9,
+    "domain": "Articles",
+    "original_title": "Is Tonieplay compatible with Toniebox 1?",
+    "label": "1代兼容性"
+  },
+  {
+    "directory_evidence": "E-TNCD-03",
+    "item_number": 10,
+    "domain": "Articles",
+    "original_title": "Are Tonieplay games multiplayer?",
+    "label": "共同游玩"
+  },
+  {
+    "directory_evidence": "E-TNCD-03",
+    "item_number": 11,
+    "domain": "Articles",
+    "original_title": "How much help will my child need with playing a Tonieplay game?",
+    "label": "成人协助"
+  },
+  {
+    "directory_evidence": "E-TNCD-03",
+    "item_number": 12,
+    "domain": "Articles",
+    "original_title": "Can I skip past the intro to the Tonieplay game?",
+    "label": "跳过开场"
+  },
+  {
+    "directory_evidence": "E-TNCD-03",
+    "item_number": 13,
+    "domain": "Articles",
+    "original_title": "How do Tonieplay games appear in the app?",
+    "label": "App可见性"
+  },
+  {
+    "directory_evidence": "E-TNCD-03",
+    "item_number": 14,
+    "domain": "Articles",
+    "original_title": "What new Tonieplay specific data will we capture?",
+    "label": "交互数据"
+  },
+  {
+    "directory_evidence": "E-TNCD-04",
+    "item_number": 1,
+    "domain": "Articles",
+    "original_title": "How do I transfer ownership of my Household?",
+    "label": "移交家庭"
+  },
+  {
+    "directory_evidence": "E-TNCD-04",
+    "item_number": 2,
+    "domain": "Articles",
+    "original_title": "How to create a my.tonies account",
+    "label": "创建账号"
+  },
+  {
+    "directory_evidence": "E-TNCD-04",
+    "item_number": 3,
+    "domain": "Articles",
+    "original_title": "How do I invite other members into my Household?",
+    "label": "邀请成员"
+  },
+  {
+    "directory_evidence": "E-TNCD-04",
+    "item_number": 4,
+    "domain": "Articles",
+    "original_title": "How do I manage Household members permissions?",
+    "label": "成员权限"
+  },
+  {
+    "directory_evidence": "E-TNCD-04",
+    "item_number": 5,
+    "domain": "Articles",
+    "original_title": "How do I change the name of my Household?",
+    "label": "家庭改名"
+  },
+  {
+    "directory_evidence": "E-TNCD-04",
+    "item_number": 6,
+    "domain": "Articles",
+    "original_title": "How do I remove a Toniebox 1 from my Household?",
+    "label": "移除1代"
+  },
+  {
+    "directory_evidence": "E-TNCD-04",
+    "item_number": 7,
+    "domain": "Articles",
+    "original_title": "I'm having trouble logging in to my account",
+    "label": "登录排错"
+  },
+  {
+    "directory_evidence": "E-TNCD-04",
+    "item_number": 8,
+    "domain": "Articles",
+    "original_title": "How do I delete my Household?",
+    "label": "删除家庭"
+  }
+]

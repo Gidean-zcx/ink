@@ -1,0 +1,23 @@
+[
+  {
+    "name": "bilibili-2020",
+    "url": "https://www.bilibili.com/opus/425918819985666271",
+    "checked_on": "2026-10-27",
+    "method": "ordinary_public_GET_once",
+    "status": 412,
+    "stopped": true,
+    "error": "HTTP Error 412: Precondition Failed"
+  },
+  {
+    "name": "smzdm-2020",
+    "url": "https://post.smzdm.com/p/aoo8one6/",
+    "checked_on": "2026-10-27",
+    "method": "ordinary_public_GET_once",
+    "status": 200,
+    "final_url": "https://post.smzdm.com/p/aoo8one6/",
+    "raw_work_path": "work/ihuman-learning-controls-deepening/raw/smzdm-2020.html",
+    "raw_sha256": "c7d2f547ca441fc1b3cf4fe982a2b953693b14762815813792c2d1598da71364",
+    "bytes": 1697,
+    "content_type": "text/html; charset=utf-8"
+  }
+]

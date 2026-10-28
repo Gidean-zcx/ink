@@ -1,0 +1,8 @@
+Delete shortcuts on iPhone or iPad
+When it’s time to part ways with a shortcut, you can easily delete it.
+Delete a shortcut
+In the Shortcuts app  on your iPhone or iPad, tap Edit.
+Tap one or more shortcuts (a checkmark appears in the upper-right corner to indicate selection), then tap Delete.
+Tap Delete Shortcut.
+Note: If you’re signed in to your Apple Account, deleted shortcuts are also removed from your other devices where you’re signed in to the same Apple Account.
+Tip: To quickly delete a shortcut, touch and hold a shortcut, tap Delete, then tap Delete Shortcut.See alsoUse variables in Shortcuts on iPhone or iPad

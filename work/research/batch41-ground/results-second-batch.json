@@ -1,0 +1,39 @@
+{
+  "targets": 2,
+  "attempted": 2,
+  "stopped_on_block_or_challenge": false,
+  "results": [
+    {
+      "id": "485057",
+      "requested_url": "https://help.ground.news/en/articles/485057",
+      "final_url": "https://help.ground.news/en/articles/485057",
+      "status": 200,
+      "checked_utc": "2026-10-27T05:58:26.378800+00:00",
+      "bytes": 103957,
+      "sha256": "529c89b97eeab5b0f074341e6b1b88f39198b768d1550740966ec0b865c31930",
+      "content_type": "text/html",
+      "challenge_detected": false,
+      "blocked_status": false,
+      "body_extracted": true,
+      "text_lines": 43,
+      "links": 27,
+      "images": 1
+    },
+    {
+      "id": "593857",
+      "requested_url": "https://help.ground.news/en/articles/593857",
+      "final_url": "https://help.ground.news/en/articles/593857",
+      "status": 200,
+      "checked_utc": "2026-10-27T05:58:26.379316+00:00",
+      "bytes": 97266,
+      "sha256": "779fb2cc82544fd5bb163dcd475bacd7dae187d5e2248efe0ee8233cf4c6c948",
+      "content_type": "text/html",
+      "challenge_detected": false,
+      "blocked_status": false,
+      "body_extracted": true,
+      "text_lines": 16,
+      "links": 13,
+      "images": 1
+    }
+  ]
+}

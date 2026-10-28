@@ -1,0 +1,5 @@
+Annotations cannot be made if the pen battery is too low. Please charge the pen.
+Annotations cannot be made while a document is being saved.
+When there is limited free space in system storage, documents will open as “Read-Only,” and annotations cannot be made. Delete unnecessary documents to increase the amount of free space.
+Highlights cannot be added to a document that was scanned (pages containing only image data) or on text that is embedded in an image.
+When the Digital Paper is being operated via the Digital Paper App, annotations may be temporarily unavailable. Wait until operations are complete.

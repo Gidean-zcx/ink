@@ -1,0 +1,52 @@
+Troubleshooting – tonies® Support (https://support.tonies.com/hc/en-us/sections/29258108517522-Troubleshooting)
+citeturn778search5 [wordlim: 200] Crawled: last week; Give it a quick restart by following the simple steps in this guide: How to Restart Your Toniebox 2 ... If the Toniebox 2 starts playing audio from another Tonie, don’t worry—your little one has likely just swapped their Tonies too quickly. ... Before your story, song, or audio adventure can begin, the Toniebox 2 needs to download the opening chapter from our servers or the full game for a Tonieplay Disc.
+
+# Troubleshooting
+
+### Popular Articles
+
+Troubleshooting
+
+## Articles
+
+10 articles
+
+### How do I restart the Toniebox 2?
+
+It doesn’t happen often, but if the Toniebox 2 isn’t doing what it’s supposed to, restarting it is the best way to get it back on track. No worries, it's simple to do: Make sure the Toniebox 2 is not plugged in. Squeeze both ears until the Toniebox 2 enters the sleep light with timer setting. Keep s...
+
+### How to reset your Toniebox 2 to factory settings
+
+Think of a factory reset as your Toniebox 2 “fresh start button.” It wipes everything clean and takes your Toniebox 2 back to the way it was on day one. Because it’s such a big step, a factory reset should only be used as a last resort, after you’ve tried all other troubleshooting tips. When to use ...
+
+### My Toniebox 2 is stuck, what do I do?
+
+Oh no! Has your Toniebox 2 paused mid-adventure? Don’t worry, it’s an easy fix! Give it a quick restart by following the simple steps in this guide: How to Restart Your Toniebox 2
+
+### What can I do if my Toniebox 2 isn’t turning on?
+
+If giving it a good old telling off hasn’t worked (we assume you’ve tried), then here are some suggestions of where to go next: You might need to restart your Toniebox. Here’s a little guide to walk you through it. If that doesn’t fix it, try giving your Toniebox a full recharge. It takes about 4 ho...
+
+### Why does my Toniebox 2 not play a Tonie when it is plugged in?
+
+This is expected behaviour when your Toniebox 2 is set to 1+ mode. If you want to change this setting, simply open the tonies® app, tap on your Toniebox 2, select settings and the scroll to "Age Mode" to change from 1+ to 3+.
+
+### My Tonie isn't playing
+
+Some Toniebox 2 customers have had trouble downloading Tonies recently. The issue has now been fixed, but you’ll need to update your Toniebox 2 to make sure everything runs smoothly. Here’s how to do it: Switch on your Toniebox 2. Wait until it turns off again by itself. Switch it back on. Wait for ...
+
+### Tonie is playing the audio from a different Tonie
+
+If the Toniebox 2 starts playing audio from another Tonie, don’t worry—your little one has likely just swapped their Tonies too quickly. This is an easy fix: simply remove the Tonie from the Toniebox 2, wait a few seconds, and then place the desired Tonie back on top to resume the listening fun.
+
+### Toniebox 2 download speed seems slow
+
+When you place a new Tonie or Tonieplay Disc on your Toniebox 2, the fun doesn’t always start instantly. Before your story, song, or audio adventure can begin, the Toniebox 2 needs to download the opening chapter from our servers or the full game for a Tonieplay Disc. What to expect: Tonies - Normal...
+
+### Tapping the Toniebox 2 to skip forward and back isn't working
+
+If your Toniebox 2 isn’t skipping tracks when you give it a tap, don’t worry—it may just need to turn off and back on again. Your Toniebox 2 will turn off automatically on its own after five minutes of no activity. When it wakes up again, the tapping magic should be back in action.
+
+### My Tonie/Creative Tonie is not playing the updated content on the Toniebox 2
+
+If you have edited the audio content on your Tonie or Creative Tonie but your Toniebox 2 is still playing the old content, there are two possible reasons for this: Your Toniebox 2 isn’t connected to Wi-Fi: Check whether your Toniebox 2 is connected to Wi-Fi. To do this, open the tonies app and tap o...

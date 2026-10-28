@@ -1,0 +1,1550 @@
+[
+  {
+    "category": "Getting started",
+    "category_url": "https://www.inoreader.com/help/basic/getting-started",
+    "title": "What are the most essential parts of Inoreader’s interface?",
+    "url": "https://www.inoreader.com/help/basic/getting-started/what-are-the-most-essential-parts-of-inoreaders-interface"
+  },
+  {
+    "category": "Getting started",
+    "category_url": "https://www.inoreader.com/help/basic/getting-started",
+    "title": "What can I find in the tab bar?",
+    "url": "https://www.inoreader.com/help/basic/getting-started/what-can-i-find-in-the-tab-bar"
+  },
+  {
+    "category": "Getting started",
+    "category_url": "https://www.inoreader.com/help/basic/getting-started",
+    "title": "What is the sidebar used for?",
+    "url": "https://www.inoreader.com/help/basic/getting-started/what-is-the-sidebar-used-for"
+  },
+  {
+    "category": "Getting started",
+    "category_url": "https://www.inoreader.com/help/basic/getting-started",
+    "title": "What is the reading panel?",
+    "url": "https://www.inoreader.com/help/basic/getting-started/what-is-the-reading-panel"
+  },
+  {
+    "category": "Getting started",
+    "category_url": "https://www.inoreader.com/help/basic/getting-started",
+    "title": "What should I do first in Inoreader?",
+    "url": "https://www.inoreader.com/help/basic/getting-started/what-should-i-do-first-in-inoreader"
+  },
+  {
+    "category": "Getting started",
+    "category_url": "https://www.inoreader.com/help/basic/getting-started",
+    "title": "How can I contact the Inoreader support team?",
+    "url": "https://www.inoreader.com/help/basic/getting-started/how-can-i-contact-the-inoreader-support-team"
+  },
+  {
+    "category": "Account & login",
+    "category_url": "https://www.inoreader.com/help/basic/account-and-login",
+    "title": "How do I set up a passkey?",
+    "url": "https://www.inoreader.com/help/basic/account-and-login/how-do-i-set-up-a-passkey"
+  },
+  {
+    "category": "Account & login",
+    "category_url": "https://www.inoreader.com/help/basic/account-and-login",
+    "title": "Why am I not receiving the password reset email?",
+    "url": "https://www.inoreader.com/help/basic/account-and-login/why-am-i-not-receiving-the-password-reset-email"
+  },
+  {
+    "category": "Feeds & sources",
+    "category_url": "https://www.inoreader.com/help/basic/feeds-sources",
+    "title": "What is a feed?",
+    "url": "https://www.inoreader.com/help/basic/feeds-sources/what-is-a-feed"
+  },
+  {
+    "category": "Feeds & sources",
+    "category_url": "https://www.inoreader.com/help/basic/feeds-sources",
+    "title": "What types of sources can I follow?",
+    "url": "https://www.inoreader.com/help/basic/feeds-sources/what-types-of-sources-can-i-follow"
+  },
+  {
+    "category": "Feeds & sources",
+    "category_url": "https://www.inoreader.com/help/basic/feeds-sources",
+    "title": "How do I add a feed?",
+    "url": "https://www.inoreader.com/help/basic/feeds-sources/how-do-i-add-a-feed"
+  },
+  {
+    "category": "Feeds & sources",
+    "category_url": "https://www.inoreader.com/help/basic/feeds-sources",
+    "title": "Can I import feeds from another RSS reader?",
+    "url": "https://www.inoreader.com/help/basic/feeds-sources/can-i-import-feeds-from-another-rss-reader"
+  },
+  {
+    "category": "Feeds & sources",
+    "category_url": "https://www.inoreader.com/help/basic/feeds-sources",
+    "title": "Can I discover new sources in Inoreader?",
+    "url": "https://www.inoreader.com/help/basic/feeds-sources/can-i-discover-new-sources-in-inoreader"
+  },
+  {
+    "category": "Feeds & sources",
+    "category_url": "https://www.inoreader.com/help/basic/feeds-sources",
+    "title": "Where can I see all articles from my feeds together?",
+    "url": "https://www.inoreader.com/help/basic/feeds-sources/where-can-i-see-all-articles-from-my-feeds-together"
+  },
+  {
+    "category": "Feeds & sources",
+    "category_url": "https://www.inoreader.com/help/basic/feeds-sources",
+    "title": "Why can’t Inoreader find a feed for a website?",
+    "url": "https://www.inoreader.com/help/basic/feeds-sources/why-cant-inoreader-find-a-feed-for-a-website"
+  },
+  {
+    "category": "Feeds & sources",
+    "category_url": "https://www.inoreader.com/help/basic/feeds-sources",
+    "title": "Why has a feed stopped updating?",
+    "url": "https://www.inoreader.com/help/basic/feeds-sources/why-has-a-feed-stopped-updating"
+  },
+  {
+    "category": "Search",
+    "category_url": "https://www.inoreader.com/help/basic/search",
+    "title": "How do I search for articles in Inoreader?",
+    "url": "https://www.inoreader.com/help/basic/search/how-do-i-search-for-articles-in-inoreader"
+  },
+  {
+    "category": "Search",
+    "category_url": "https://www.inoreader.com/help/basic/search",
+    "title": "Can I search within a specific feed or folder?",
+    "url": "https://www.inoreader.com/help/basic/search/can-i-search-within-a-specific-feed-or-folder"
+  },
+  {
+    "category": "Search",
+    "category_url": "https://www.inoreader.com/help/basic/search",
+    "title": "Can I filter search results?",
+    "url": "https://www.inoreader.com/help/basic/search/can-i-filter-search-results"
+  },
+  {
+    "category": "Search",
+    "category_url": "https://www.inoreader.com/help/basic/search",
+    "title": "How can I combine search conditions?",
+    "url": "https://www.inoreader.com/help/basic/search/how-can-i-combine-search-conditions"
+  },
+  {
+    "category": "Search",
+    "category_url": "https://www.inoreader.com/help/basic/search",
+    "title": "Why does my search return no results?",
+    "url": "https://www.inoreader.com/help/basic/search/why-does-my-search-return-no-results"
+  },
+  {
+    "category": "Folders",
+    "category_url": "https://www.inoreader.com/help/basic/folders",
+    "title": "What are folders?",
+    "url": "https://www.inoreader.com/help/basic/folders/what-are-folders"
+  },
+  {
+    "category": "Folders",
+    "category_url": "https://www.inoreader.com/help/basic/folders",
+    "title": "How do I create a folder?",
+    "url": "https://www.inoreader.com/help/basic/folders/how-do-i-create-a-folder"
+  },
+  {
+    "category": "Folders",
+    "category_url": "https://www.inoreader.com/help/basic/folders",
+    "title": "Can I move feeds between folders?",
+    "url": "https://www.inoreader.com/help/basic/folders/can-i-move-feeds-between-folders"
+  },
+  {
+    "category": "Folders",
+    "category_url": "https://www.inoreader.com/help/basic/folders",
+    "title": "Can one feed belong to multiple folders?",
+    "url": "https://www.inoreader.com/help/basic/folders/can-one-feed-belong-to-multiple-folders"
+  },
+  {
+    "category": "Folders",
+    "category_url": "https://www.inoreader.com/help/basic/folders",
+    "title": "What is the difference between a folder and a tag?",
+    "url": "https://www.inoreader.com/help/basic/folders/what-is-the-difference-between-a-folder-and-a-tag"
+  },
+  {
+    "category": "Tags",
+    "category_url": "https://www.inoreader.com/help/basic/tags",
+    "title": "What are tags?",
+    "url": "https://www.inoreader.com/help/basic/tags/what-are-tags"
+  },
+  {
+    "category": "Tags",
+    "category_url": "https://www.inoreader.com/help/basic/tags",
+    "title": "How do I tag an article?",
+    "url": "https://www.inoreader.com/help/basic/tags/how-do-i-tag-an-article"
+  },
+  {
+    "category": "Tags",
+    "category_url": "https://www.inoreader.com/help/basic/tags",
+    "title": "Where can I find my tagged articles?",
+    "url": "https://www.inoreader.com/help/basic/tags/where-can-i-find-my-tagged-articles"
+  },
+  {
+    "category": "Tags",
+    "category_url": "https://www.inoreader.com/help/basic/tags",
+    "title": "Can I combine tags when searching?",
+    "url": "https://www.inoreader.com/help/basic/tags/can-i-combine-tags-when-searching"
+  },
+  {
+    "category": "Dashboards",
+    "category_url": "https://www.inoreader.com/help/basic/dashboards",
+    "title": "What are dashboards?",
+    "url": "https://www.inoreader.com/help/basic/dashboards/what-are-dashboards"
+  },
+  {
+    "category": "Dashboards",
+    "category_url": "https://www.inoreader.com/help/basic/dashboards",
+    "title": "Can I create multiple dashboards?",
+    "url": "https://www.inoreader.com/help/basic/dashboards/can-i-create-multiple-dashboards"
+  },
+  {
+    "category": "Dashboards",
+    "category_url": "https://www.inoreader.com/help/basic/dashboards",
+    "title": "Can I customize dashboard layouts and widgets?",
+    "url": "https://www.inoreader.com/help/basic/dashboards/can-i-customize-dashboard-layouts-and-widgets"
+  },
+  {
+    "category": "Dashboards",
+    "category_url": "https://www.inoreader.com/help/basic/dashboards",
+    "title": "Can I set a dashboard as my start page?",
+    "url": "https://www.inoreader.com/help/basic/dashboards/can-i-set-a-dashboard-as-my-start-page"
+  },
+  {
+    "category": "Article view",
+    "category_url": "https://www.inoreader.com/help/basic/article-view",
+    "title": "Can I customize how articles are displayed?",
+    "url": "https://www.inoreader.com/help/basic/article-view/can-i-customize-how-articles-are-displayed"
+  },
+  {
+    "category": "Article view",
+    "category_url": "https://www.inoreader.com/help/basic/article-view",
+    "title": "What layout options are available?",
+    "url": "https://www.inoreader.com/help/basic/article-view/what-layout-options-are-available"
+  },
+  {
+    "category": "Article view",
+    "category_url": "https://www.inoreader.com/help/basic/article-view",
+    "title": "What sorting options are available?",
+    "url": "https://www.inoreader.com/help/basic/article-view/what-sorting-options-are-available"
+  },
+  {
+    "category": "Article view",
+    "category_url": "https://www.inoreader.com/help/basic/article-view",
+    "title": "Can I group articles visually?",
+    "url": "https://www.inoreader.com/help/basic/article-view/can-i-group-articles-visually"
+  },
+  {
+    "category": "Article view",
+    "category_url": "https://www.inoreader.com/help/basic/article-view",
+    "title": "Can different feeds use different layouts?",
+    "url": "https://www.inoreader.com/help/basic/article-view/can-different-feeds-use-different-layouts"
+  },
+  {
+    "category": "Article view",
+    "category_url": "https://www.inoreader.com/help/basic/article-view",
+    "title": "Why do I see only part of an article?",
+    "url": "https://www.inoreader.com/help/basic/article-view/why-do-i-see-only-part-of-an-article"
+  },
+  {
+    "category": "Article view",
+    "category_url": "https://www.inoreader.com/help/basic/article-view",
+    "title": "How can I restore articles accidentally marked as read?",
+    "url": "https://www.inoreader.com/help/basic/article-view/how-can-i-restore-articles-accidentally-marked-as-read"
+  },
+  {
+    "category": "Saved & Read later",
+    "category_url": "https://www.inoreader.com/help/basic/saved-read-later",
+    "title": "What is the Saved section?",
+    "url": "https://www.inoreader.com/help/basic/saved-read-later/what-is-the-saved-section"
+  },
+  {
+    "category": "Saved & Read later",
+    "category_url": "https://www.inoreader.com/help/basic/saved-read-later",
+    "title": "How do I save an article for later?",
+    "url": "https://www.inoreader.com/help/basic/saved-read-later/how-do-i-save-an-article-for-later"
+  },
+  {
+    "category": "Saved & Read later",
+    "category_url": "https://www.inoreader.com/help/basic/saved-read-later",
+    "title": "What is Read later?",
+    "url": "https://www.inoreader.com/help/basic/saved-read-later/what-is-read-later"
+  },
+  {
+    "category": "Saved & Read later",
+    "category_url": "https://www.inoreader.com/help/basic/saved-read-later",
+    "title": "Can I continue reading where I left off?",
+    "url": "https://www.inoreader.com/help/basic/saved-read-later/can-i-continue-reading-where-i-left-off"
+  },
+  {
+    "category": "Saved & Read later",
+    "category_url": "https://www.inoreader.com/help/basic/saved-read-later",
+    "title": "Can I receive reminders about saved articles?",
+    "url": "https://www.inoreader.com/help/basic/saved-read-later/can-i-receive-reminders-about-saved-articles"
+  },
+  {
+    "category": "Archive",
+    "category_url": "https://www.inoreader.com/help/basic/archive",
+    "title": "What is the Archive?",
+    "url": "https://www.inoreader.com/help/basic/archive/what-is-the-archive"
+  },
+  {
+    "category": "Archive",
+    "category_url": "https://www.inoreader.com/help/basic/archive",
+    "title": "Can I restore archived articles?",
+    "url": "https://www.inoreader.com/help/basic/archive/can-i-restore-archived-articles"
+  },
+  {
+    "category": "Web pages",
+    "category_url": "https://www.inoreader.com/help/basic/web-pages",
+    "title": "Can I save web pages outside my feeds?",
+    "url": "https://www.inoreader.com/help/basic/web-pages/can-i-save-web-pages-outside-my-feeds"
+  },
+  {
+    "category": "Web pages",
+    "category_url": "https://www.inoreader.com/help/basic/web-pages",
+    "title": "How can I save web pages on mobile?",
+    "url": "https://www.inoreader.com/help/basic/web-pages/is-the-browser-extension-available-on-mobile"
+  },
+  {
+    "category": "Spotlights",
+    "category_url": "https://www.inoreader.com/help/basic/spotlights",
+    "title": "What are spotlights?",
+    "url": "https://www.inoreader.com/help/basic/spotlights/what-are-spotlights"
+  },
+  {
+    "category": "Spotlights",
+    "category_url": "https://www.inoreader.com/help/basic/spotlights",
+    "title": "How do I create a spotlight?",
+    "url": "https://www.inoreader.com/help/basic/spotlights/how-do-i-create-a-spotlight"
+  },
+  {
+    "category": "Spotlights",
+    "category_url": "https://www.inoreader.com/help/basic/spotlights",
+    "title": "What are spotlights useful for?",
+    "url": "https://www.inoreader.com/help/basic/spotlights/what-are-spotlights-useful-for"
+  },
+  {
+    "category": "Preferences & customization",
+    "category_url": "https://www.inoreader.com/help/basic/preferences-customization",
+    "title": "Can I customize the appearance of Inoreader?",
+    "url": "https://www.inoreader.com/help/basic/preferences-customization/can-i-customize-the-appearance-of-inoreader"
+  },
+  {
+    "category": "Preferences & customization",
+    "category_url": "https://www.inoreader.com/help/basic/preferences-customization",
+    "title": "Where can I manage my account settings?",
+    "url": "https://www.inoreader.com/help/basic/preferences-customization/where-can-i-manage-my-account-settings"
+  },
+  {
+    "category": "Preferences & customization",
+    "category_url": "https://www.inoreader.com/help/basic/preferences-customization",
+    "title": "Can I export my subscriptions and content?",
+    "url": "https://www.inoreader.com/help/basic/preferences-customization/can-i-export-my-subscriptions-and-content"
+  },
+  {
+    "category": "Syncing & mobile apps",
+    "category_url": "https://www.inoreader.com/help/basic/syncing-mobile-apps",
+    "title": "Does Inoreader sync across devices?",
+    "url": "https://www.inoreader.com/help/basic/syncing-mobile-apps/does-inoreader-sync-across-devices"
+  },
+  {
+    "category": "Syncing & mobile apps",
+    "category_url": "https://www.inoreader.com/help/basic/syncing-mobile-apps",
+    "title": "Where can I use Inoreader?",
+    "url": "https://www.inoreader.com/help/basic/syncing-mobile-apps/where-can-i-use-inoreader"
+  },
+  {
+    "category": "Global search",
+    "category_url": "https://www.inoreader.com/help/pro/global-search",
+    "title": "What is Global search?",
+    "url": "https://www.inoreader.com/help/pro/global-search/what-is-global-search"
+  },
+  {
+    "category": "Global search",
+    "category_url": "https://www.inoreader.com/help/pro/global-search",
+    "title": "What can I search for with Global search?",
+    "url": "https://www.inoreader.com/help/pro/global-search/what-can-i-search-for-with-global-search"
+  },
+  {
+    "category": "Global search",
+    "category_url": "https://www.inoreader.com/help/pro/global-search",
+    "title": "Can I search only within my own account?",
+    "url": "https://www.inoreader.com/help/pro/global-search/can-i-search-only-within-my-own-account"
+  },
+  {
+    "category": "Global search",
+    "category_url": "https://www.inoreader.com/help/pro/global-search",
+    "title": "Can I filter Global search results?",
+    "url": "https://www.inoreader.com/help/pro/global-search/can-i-filter-global-search-results"
+  },
+  {
+    "category": "Monitoring feeds",
+    "category_url": "https://www.inoreader.com/help/pro/monitoring-feeds",
+    "title": "What are monitoring feeds?",
+    "url": "https://www.inoreader.com/help/pro/monitoring-feeds/what-are-monitoring-feeds"
+  },
+  {
+    "category": "Monitoring feeds",
+    "category_url": "https://www.inoreader.com/help/pro/monitoring-feeds",
+    "title": "How do I create a monitoring feed?",
+    "url": "https://www.inoreader.com/help/pro/monitoring-feeds/how-do-i-create-a-monitoring-feed"
+  },
+  {
+    "category": "Monitoring feeds",
+    "category_url": "https://www.inoreader.com/help/pro/monitoring-feeds",
+    "title": "Can monitoring feeds track content from my account?",
+    "url": "https://www.inoreader.com/help/pro/monitoring-feeds/can-monitoring-feeds-track-my-own-content"
+  },
+  {
+    "category": "Monitoring feeds",
+    "category_url": "https://www.inoreader.com/help/pro/monitoring-feeds",
+    "title": "Can monitoring feeds track content beyond my account?",
+    "url": "https://www.inoreader.com/help/pro/monitoring-feeds/can-monitoring-feeds-track-content-beyond-my-account"
+  },
+  {
+    "category": "Monitoring feeds",
+    "category_url": "https://www.inoreader.com/help/pro/monitoring-feeds",
+    "title": "Can I edit a monitoring feed later?",
+    "url": "https://www.inoreader.com/help/pro/monitoring-feeds/can-i-edit-a-monitoring-feed-later"
+  },
+  {
+    "category": "Monitoring feeds",
+    "category_url": "https://www.inoreader.com/help/pro/monitoring-feeds",
+    "title": "Why is my monitoring feed not finding the articles I expect?",
+    "url": "https://www.inoreader.com/help/pro/monitoring-feeds/why-is-my-monitoring-feed-not-finding-the-articles-i-expect"
+  },
+  {
+    "category": "Web feeds",
+    "category_url": "https://www.inoreader.com/help/pro/web-feeds",
+    "title": "What are Web feeds?",
+    "url": "https://www.inoreader.com/help/pro/web-feeds/what-are-web-feeds"
+  },
+  {
+    "category": "Web feeds",
+    "category_url": "https://www.inoreader.com/help/pro/web-feeds",
+    "title": "What can I use Web feeds for?",
+    "url": "https://www.inoreader.com/help/pro/web-feeds/what-can-i-use-web-feeds-for"
+  },
+  {
+    "category": "Web feeds",
+    "category_url": "https://www.inoreader.com/help/pro/web-feeds",
+    "title": "How do I create a Web feed?",
+    "url": "https://www.inoreader.com/help/pro/web-feeds/how-do-i-create-a-web-feed"
+  },
+  {
+    "category": "Web feeds",
+    "category_url": "https://www.inoreader.com/help/pro/web-feeds",
+    "title": "Should I use Web feeds or Track changes?",
+    "url": "https://www.inoreader.com/help/pro/web-feeds/should-i-use-web-feeds-or-track-changes"
+  },
+  {
+    "category": "Web feeds",
+    "category_url": "https://www.inoreader.com/help/pro/web-feeds",
+    "title": "What should I do if a Web feed cannot read a page?",
+    "url": "https://www.inoreader.com/help/pro/web-feeds/what-should-i-do-if-a-web-feed-cannot-read-a-page"
+  },
+  {
+    "category": "Track changes",
+    "category_url": "https://www.inoreader.com/help/pro/track-changes",
+    "title": "What is Track changes?",
+    "url": "https://www.inoreader.com/help/pro/track-changes/what-is-track-changes"
+  },
+  {
+    "category": "Track changes",
+    "category_url": "https://www.inoreader.com/help/pro/track-changes",
+    "title": "What can Track changes monitor?",
+    "url": "https://www.inoreader.com/help/pro/track-changes/what-can-track-changes-monitor"
+  },
+  {
+    "category": "Track changes",
+    "category_url": "https://www.inoreader.com/help/pro/track-changes",
+    "title": "How do I create a Track changes feed?",
+    "url": "https://www.inoreader.com/help/pro/track-changes/how-do-i-create-a-track-changes-feed"
+  },
+  {
+    "category": "Boosted feeds",
+    "category_url": "https://www.inoreader.com/help/pro/boosted-feeds",
+    "title": "What are boosted feeds?",
+    "url": "https://www.inoreader.com/help/pro/boosted-feeds/what-are-boosted-feeds"
+  },
+  {
+    "category": "Boosted feeds",
+    "category_url": "https://www.inoreader.com/help/pro/boosted-feeds",
+    "title": "How often are feeds refreshed by default?",
+    "url": "https://www.inoreader.com/help/pro/boosted-feeds/how-often-are-feeds-refreshed-by-default"
+  },
+  {
+    "category": "Boosted feeds",
+    "category_url": "https://www.inoreader.com/help/pro/boosted-feeds",
+    "title": "How do I boost a feed?",
+    "url": "https://www.inoreader.com/help/pro/boosted-feeds/how-do-i-boost-a-feed"
+  },
+  {
+    "category": "Social feeds",
+    "category_url": "https://www.inoreader.com/help/pro/social-feeds",
+    "title": "Can I follow social media sources in Inoreader?",
+    "url": "https://www.inoreader.com/help/pro/social-feeds/can-i-follow-social-media-sources-in-inoreader"
+  },
+  {
+    "category": "Social feeds",
+    "category_url": "https://www.inoreader.com/help/pro/social-feeds",
+    "title": "How do I follow Bluesky feeds?",
+    "url": "https://www.inoreader.com/help/pro/social-feeds/how-do-i-follow-bluesky-feeds"
+  },
+  {
+    "category": "Social feeds",
+    "category_url": "https://www.inoreader.com/help/pro/social-feeds",
+    "title": "How do I follow Facebook pages?",
+    "url": "https://www.inoreader.com/help/pro/social-feeds/how-do-i-follow-facebook-pages"
+  },
+  {
+    "category": "Social feeds",
+    "category_url": "https://www.inoreader.com/help/pro/social-feeds",
+    "title": "How do I follow Telegram channels?",
+    "url": "https://www.inoreader.com/help/pro/social-feeds/how-do-i-follow-telegram-channels"
+  },
+  {
+    "category": "YouTube",
+    "category_url": "https://www.inoreader.com/help/pro/youtube",
+    "title": "Can I follow YouTube channels and playlists in Inoreader?",
+    "url": "https://www.inoreader.com/help/pro/youtube/can-i-follow-youtube-channels-and-playlists-in-inoreader"
+  },
+  {
+    "category": "YouTube",
+    "category_url": "https://www.inoreader.com/help/pro/youtube",
+    "title": "Can I sync my YouTube subscriptions with Inoreader?",
+    "url": "https://www.inoreader.com/help/pro/youtube/can-i-sync-my-youtube-subscriptions-with-inoreader"
+  },
+  {
+    "category": "YouTube",
+    "category_url": "https://www.inoreader.com/help/pro/youtube",
+    "title": "Can I hide YouTube Shorts from my folders?",
+    "url": "https://www.inoreader.com/help/pro/youtube/can-i-hide-youtube-shorts-from-my-folders"
+  },
+  {
+    "category": "Podcasts",
+    "category_url": "https://www.inoreader.com/help/pro/podcasts",
+    "title": "Can I follow podcasts in Inoreader?",
+    "url": "https://www.inoreader.com/help/pro/podcasts/can-i-follow-podcasts-in-inoreader"
+  },
+  {
+    "category": "Podcasts",
+    "category_url": "https://www.inoreader.com/help/pro/podcasts",
+    "title": "What can I do with the audio player?",
+    "url": "https://www.inoreader.com/help/pro/podcasts/what-can-i-do-with-the-audio-player"
+  },
+  {
+    "category": "Newsletter feeds",
+    "category_url": "https://www.inoreader.com/help/pro/newsletter-feeds",
+    "title": "What are newsletter feeds?",
+    "url": "https://www.inoreader.com/help/pro/newsletter-feeds/what-are-newsletter-feeds"
+  },
+  {
+    "category": "Newsletter feeds",
+    "category_url": "https://www.inoreader.com/help/pro/newsletter-feeds",
+    "title": "How do I subscribe to a newsletter with Inoreader?",
+    "url": "https://www.inoreader.com/help/pro/newsletter-feeds/how-do-i-subscribe-to-a-newsletter-with-inoreader"
+  },
+  {
+    "category": "Newsletter feeds",
+    "category_url": "https://www.inoreader.com/help/pro/newsletter-feeds",
+    "title": "Can I process newsletters with rules and filters?",
+    "url": "https://www.inoreader.com/help/pro/newsletter-feeds/can-i-process-newsletters-with-rules-and-filters"
+  },
+  {
+    "category": "Newsletter feeds",
+    "category_url": "https://www.inoreader.com/help/pro/newsletter-feeds",
+    "title": "What happens if I unfollow a newsletter feed?",
+    "url": "https://www.inoreader.com/help/pro/newsletter-feeds/what-happens-if-i-unfollow-a-newsletter-feed"
+  },
+  {
+    "category": "Newsletter feeds",
+    "category_url": "https://www.inoreader.com/help/pro/newsletter-feeds",
+    "title": "Why is my newsletter not arriving?",
+    "url": "https://www.inoreader.com/help/pro/newsletter-feeds/why-is-my-newsletter-not-arriving"
+  },
+  {
+    "category": "Password-protected feeds",
+    "category_url": "https://www.inoreader.com/help/pro/password-protected-feeds",
+    "title": "Can I add password-protected RSS feeds?",
+    "url": "https://www.inoreader.com/help/pro/password-protected-feeds/can-i-add-password-protected-rss-feeds"
+  },
+  {
+    "category": "Rules",
+    "category_url": "https://www.inoreader.com/help/pro/rules",
+    "title": "What are rules?",
+    "url": "https://www.inoreader.com/help/pro/rules/what-are-rules"
+  },
+  {
+    "category": "Rules",
+    "category_url": "https://www.inoreader.com/help/pro/rules",
+    "title": "Where can I create and manage rules?",
+    "url": "https://www.inoreader.com/help/pro/rules/where-can-i-create-and-manage-rules"
+  },
+  {
+    "category": "Rules",
+    "category_url": "https://www.inoreader.com/help/pro/rules",
+    "title": "What can trigger a rule?",
+    "url": "https://www.inoreader.com/help/pro/rules/what-can-trigger-a-rule"
+  },
+  {
+    "category": "Rules",
+    "category_url": "https://www.inoreader.com/help/pro/rules",
+    "title": "What conditions can rules use?",
+    "url": "https://www.inoreader.com/help/pro/rules/what-conditions-can-rules-use"
+  },
+  {
+    "category": "Rules",
+    "category_url": "https://www.inoreader.com/help/pro/rules",
+    "title": "What actions can rules perform?",
+    "url": "https://www.inoreader.com/help/pro/rules/what-actions-can-rules-perform"
+  },
+  {
+    "category": "Rules",
+    "category_url": "https://www.inoreader.com/help/pro/rules",
+    "title": "Can one rule perform multiple actions?",
+    "url": "https://www.inoreader.com/help/pro/rules/can-one-rule-perform-multiple-actions"
+  },
+  {
+    "category": "Rules",
+    "category_url": "https://www.inoreader.com/help/pro/rules",
+    "title": "Can I test a rule before saving it?",
+    "url": "https://www.inoreader.com/help/pro/rules/can-i-test-a-rule-before-saving-it"
+  },
+  {
+    "category": "Rules",
+    "category_url": "https://www.inoreader.com/help/pro/rules",
+    "title": "Why is my rule not triggering?",
+    "url": "https://www.inoreader.com/help/pro/rules/why-is-my-rule-not-triggering"
+  },
+  {
+    "category": "Rules",
+    "category_url": "https://www.inoreader.com/help/pro/rules",
+    "title": "How many rules are included in Pro plans?",
+    "url": "https://www.inoreader.com/help/pro/rules/how-many-rules-are-included-in-pro-plans"
+  },
+  {
+    "category": "Filters",
+    "category_url": "https://www.inoreader.com/help/pro/filters",
+    "title": "What are filters?",
+    "url": "https://www.inoreader.com/help/pro/filters/what-are-filters"
+  },
+  {
+    "category": "Filters",
+    "category_url": "https://www.inoreader.com/help/pro/filters",
+    "title": "Where can I create and manage filters?",
+    "url": "https://www.inoreader.com/help/pro/filters/where-can-i-create-and-manage-filters"
+  },
+  {
+    "category": "Filters",
+    "category_url": "https://www.inoreader.com/help/pro/filters",
+    "title": "What are content filters?",
+    "url": "https://www.inoreader.com/help/pro/filters/what-are-content-filters"
+  },
+  {
+    "category": "Filters",
+    "category_url": "https://www.inoreader.com/help/pro/filters",
+    "title": "What are duplicate filters?",
+    "url": "https://www.inoreader.com/help/pro/filters/what-are-duplicate-filters"
+  },
+  {
+    "category": "Filters",
+    "category_url": "https://www.inoreader.com/help/pro/filters",
+    "title": "How are duplicate articles detected?",
+    "url": "https://www.inoreader.com/help/pro/filters/how-are-duplicate-articles-detected"
+  },
+  {
+    "category": "Filters",
+    "category_url": "https://www.inoreader.com/help/pro/filters",
+    "title": "How many filters are included in Pro plans?",
+    "url": "https://www.inoreader.com/help/pro/filters/how-many-filters-are-included-in-pro-plans"
+  },
+  {
+    "category": "Filters",
+    "category_url": "https://www.inoreader.com/help/pro/filters",
+    "title": "What is the difference between a rule and a filter?",
+    "url": "https://www.inoreader.com/help/pro/filters/what-is-the-difference-between-a-rule-and-a-filter"
+  },
+  {
+    "category": "Bulk actions",
+    "category_url": "https://www.inoreader.com/help/pro/bulk-actions",
+    "title": "What are bulk actions?",
+    "url": "https://www.inoreader.com/help/pro/bulk-actions/what-are-bulk-actions"
+  },
+  {
+    "category": "Bulk actions",
+    "category_url": "https://www.inoreader.com/help/pro/bulk-actions",
+    "title": "What can I do with bulk actions?",
+    "url": "https://www.inoreader.com/help/pro/bulk-actions/what-can-i-do-with-bulk-actions"
+  },
+  {
+    "category": "Bulk actions",
+    "category_url": "https://www.inoreader.com/help/pro/bulk-actions",
+    "title": "How do I use bulk actions?",
+    "url": "https://www.inoreader.com/help/pro/bulk-actions/how-do-i-use-bulk-actions"
+  },
+  {
+    "category": "Bulk actions",
+    "category_url": "https://www.inoreader.com/help/pro/bulk-actions",
+    "title": "How many articles can I process at once with bulk actions?",
+    "url": "https://www.inoreader.com/help/pro/bulk-actions/how-many-articles-can-i-process-at-once-with-bulk-actions"
+  },
+  {
+    "category": "Article translations",
+    "category_url": "https://www.inoreader.com/help/pro/article-translations",
+    "title": "What are article translations?",
+    "url": "https://www.inoreader.com/help/pro/article-translations/what-are-article-translations"
+  },
+  {
+    "category": "Article translations",
+    "category_url": "https://www.inoreader.com/help/pro/article-translations",
+    "title": "How do I translate an article?",
+    "url": "https://www.inoreader.com/help/pro/article-translations/how-do-i-translate-an-article"
+  },
+  {
+    "category": "Article translations",
+    "category_url": "https://www.inoreader.com/help/pro/article-translations",
+    "title": "Can I switch back to the original article?",
+    "url": "https://www.inoreader.com/help/pro/article-translations/can-i-switch-back-to-the-original-article"
+  },
+  {
+    "category": "Article translations",
+    "category_url": "https://www.inoreader.com/help/pro/article-translations",
+    "title": "Can translations be automated?",
+    "url": "https://www.inoreader.com/help/pro/article-translations/can-translations-be-automated"
+  },
+  {
+    "category": "Article translations",
+    "category_url": "https://www.inoreader.com/help/pro/article-translations",
+    "title": "How many languages are supported for translations?",
+    "url": "https://www.inoreader.com/help/pro/article-translations/how-many-languages-are-supported-for-translations"
+  },
+  {
+    "category": "Article translations",
+    "category_url": "https://www.inoreader.com/help/pro/article-translations",
+    "title": "Can I control when article translations are offered?",
+    "url": "https://www.inoreader.com/help/pro/article-translations/can-i-control-when-article-translations-are-offered"
+  },
+  {
+    "category": "Article translations",
+    "category_url": "https://www.inoreader.com/help/pro/article-translations",
+    "title": "Why is the translation option not offered?",
+    "url": "https://www.inoreader.com/help/pro/article-translations/why-is-the-translation-option-not-offered"
+  },
+  {
+    "category": "Text-to-speech",
+    "category_url": "https://www.inoreader.com/help/pro/text-to-speech",
+    "title": "What is text-to-speech?",
+    "url": "https://www.inoreader.com/help/pro/text-to-speech/what-is-text-to-speech"
+  },
+  {
+    "category": "Text-to-speech",
+    "category_url": "https://www.inoreader.com/help/pro/text-to-speech",
+    "title": "How do I listen to an article with text-to-speech?",
+    "url": "https://www.inoreader.com/help/pro/text-to-speech/how-do-i-listen-to-an-article-with-text-to-speech"
+  },
+  {
+    "category": "Text-to-speech",
+    "category_url": "https://www.inoreader.com/help/pro/text-to-speech",
+    "title": "Can I listen to articles and podcasts together?",
+    "url": "https://www.inoreader.com/help/pro/text-to-speech/can-i-listen-to-articles-and-podcasts-together"
+  },
+  {
+    "category": "Text-to-speech",
+    "category_url": "https://www.inoreader.com/help/pro/text-to-speech",
+    "title": "Can I listen in the background?",
+    "url": "https://www.inoreader.com/help/pro/text-to-speech/can-i-listen-in-the-background"
+  },
+  {
+    "category": "File uploads",
+    "category_url": "https://www.inoreader.com/help/pro/file-uploads",
+    "title": "What are file uploads?",
+    "url": "https://www.inoreader.com/help/pro/file-uploads/what-are-file-uploads"
+  },
+  {
+    "category": "File uploads",
+    "category_url": "https://www.inoreader.com/help/pro/file-uploads",
+    "title": "How do I upload a file to Inoreader?",
+    "url": "https://www.inoreader.com/help/pro/file-uploads/how-do-i-upload-a-file-to-inoreader"
+  },
+  {
+    "category": "File uploads",
+    "category_url": "https://www.inoreader.com/help/pro/file-uploads",
+    "title": "What file types can I upload?",
+    "url": "https://www.inoreader.com/help/pro/file-uploads/what-file-types-can-i-upload"
+  },
+  {
+    "category": "File uploads",
+    "category_url": "https://www.inoreader.com/help/pro/file-uploads",
+    "title": "What happens after I upload a file?",
+    "url": "https://www.inoreader.com/help/pro/file-uploads/what-happens-after-i-upload-a-file"
+  },
+  {
+    "category": "File uploads",
+    "category_url": "https://www.inoreader.com/help/pro/file-uploads",
+    "title": "Where can I find uploaded files?",
+    "url": "https://www.inoreader.com/help/pro/file-uploads/where-can-i-find-uploaded-files"
+  },
+  {
+    "category": "Annotations",
+    "category_url": "https://www.inoreader.com/help/pro/annotations",
+    "title": "What are annotations?",
+    "url": "https://www.inoreader.com/help/pro/annotations/what-are-annotations"
+  },
+  {
+    "category": "Annotations",
+    "category_url": "https://www.inoreader.com/help/pro/annotations",
+    "title": "How do I create a highlight?",
+    "url": "https://www.inoreader.com/help/pro/annotations/how-do-i-create-a-highlight"
+  },
+  {
+    "category": "Annotations",
+    "category_url": "https://www.inoreader.com/help/pro/annotations",
+    "title": "How do I add a note to a highlight?",
+    "url": "https://www.inoreader.com/help/pro/annotations/how-do-i-add-a-note-to-a-highlight"
+  },
+  {
+    "category": "Annotations",
+    "category_url": "https://www.inoreader.com/help/pro/annotations",
+    "title": "How do I add a note to an article?",
+    "url": "https://www.inoreader.com/help/pro/annotations/how-do-i-add-a-note-to-an-article"
+  },
+  {
+    "category": "Annotations",
+    "category_url": "https://www.inoreader.com/help/pro/annotations",
+    "title": "Where can I find my annotations?",
+    "url": "https://www.inoreader.com/help/pro/annotations/where-can-i-find-my-annotations"
+  },
+  {
+    "category": "Annotations",
+    "category_url": "https://www.inoreader.com/help/pro/annotations",
+    "title": "Are annotations available on all plans?",
+    "url": "https://www.inoreader.com/help/pro/annotations/are-annotations-available-on-all-plans"
+  },
+  {
+    "category": "Offline mode",
+    "category_url": "https://www.inoreader.com/help/pro/offline-mode",
+    "title": "What is offline mode?",
+    "url": "https://www.inoreader.com/help/pro/offline-mode/what-is-offline-mode"
+  },
+  {
+    "category": "Offline mode",
+    "category_url": "https://www.inoreader.com/help/pro/offline-mode",
+    "title": "What can I make available offline?",
+    "url": "https://www.inoreader.com/help/pro/offline-mode/what-can-i-make-available-offline"
+  },
+  {
+    "category": "Offline mode",
+    "category_url": "https://www.inoreader.com/help/pro/offline-mode",
+    "title": "How do I make content available offline?",
+    "url": "https://www.inoreader.com/help/pro/offline-mode/how-do-i-make-content-available-offline"
+  },
+  {
+    "category": "Offline mode",
+    "category_url": "https://www.inoreader.com/help/pro/offline-mode",
+    "title": "Do offline changes sync automatically later?",
+    "url": "https://www.inoreader.com/help/pro/offline-mode/do-offline-changes-sync-automatically-later"
+  },
+  {
+    "category": "Offline mode",
+    "category_url": "https://www.inoreader.com/help/pro/offline-mode",
+    "title": "Why can’t I read an article offline?",
+    "url": "https://www.inoreader.com/help/pro/offline-mode/why-cant-i-read-an-article-offline"
+  },
+  {
+    "category": "Magic sorting",
+    "category_url": "https://www.inoreader.com/help/pro/magic-sorting",
+    "title": "What is Magic sorting?",
+    "url": "https://www.inoreader.com/help/pro/magic-sorting/what-is-magic-sorting"
+  },
+  {
+    "category": "Secure image proxy",
+    "category_url": "https://www.inoreader.com/help/pro/secure-image-proxy",
+    "title": "What is the secure image proxy?",
+    "url": "https://www.inoreader.com/help/pro/secure-image-proxy/what-is-the-secure-image-proxy"
+  },
+  {
+    "category": "Custom CSS",
+    "category_url": "https://www.inoreader.com/help/pro/custom-css",
+    "title": "Can I customize the interface with my own CSS?",
+    "url": "https://www.inoreader.com/help/pro/custom-css/can-i-customize-the-interface-with-my-own-css"
+  },
+  {
+    "category": "Integrations",
+    "category_url": "https://www.inoreader.com/help/pro/integrations",
+    "title": "Can I integrate Inoreader with other automation services?",
+    "url": "https://www.inoreader.com/help/pro/integrations/can-i-integrate-inoreader-with-other-automation-services"
+  },
+  {
+    "category": "Integrations",
+    "category_url": "https://www.inoreader.com/help/pro/integrations",
+    "title": "Where can I manage my integrations?",
+    "url": "https://www.inoreader.com/help/pro/integrations/where-can-i-manage-my-integrations"
+  },
+  {
+    "category": "Output feeds",
+    "category_url": "https://www.inoreader.com/help/pro/output-feeds",
+    "title": "What are output feeds?",
+    "url": "https://www.inoreader.com/help/pro/output-feeds/what-are-output-feeds"
+  },
+  {
+    "category": "Output feeds",
+    "category_url": "https://www.inoreader.com/help/pro/output-feeds",
+    "title": "What formats can I use to share or export content and subscriptions?",
+    "url": "https://www.inoreader.com/help/pro/output-feeds/what-output-feed-formats-are-available-in-inoreader"
+  },
+  {
+    "category": "Output feeds",
+    "category_url": "https://www.inoreader.com/help/pro/output-feeds",
+    "title": "What are HTML clips used for?",
+    "url": "https://www.inoreader.com/help/pro/output-feeds/what-are-html-clips-used-for"
+  },
+  {
+    "category": "Output feeds",
+    "category_url": "https://www.inoreader.com/help/pro/output-feeds",
+    "title": "What is OPML used for?",
+    "url": "https://www.inoreader.com/help/pro/output-feeds/what-is-opml-used-for"
+  },
+  {
+    "category": "Output feeds",
+    "category_url": "https://www.inoreader.com/help/pro/output-feeds",
+    "title": "How do I create an output feed?",
+    "url": "https://www.inoreader.com/help/pro/output-feeds/how-do-i-create-an-output-feed"
+  },
+  {
+    "category": "Output feeds",
+    "category_url": "https://www.inoreader.com/help/pro/output-feeds",
+    "title": "How often are output feeds refreshed?",
+    "url": "https://www.inoreader.com/help/pro/output-feeds/how-often-are-output-feeds-refreshed"
+  },
+  {
+    "category": "API access",
+    "category_url": "https://www.inoreader.com/help/pro/api-access",
+    "title": "Does Inoreader provide API access?",
+    "url": "https://www.inoreader.com/help/pro/api-access/does-inoreader-provide-api-access"
+  },
+  {
+    "category": "API access",
+    "category_url": "https://www.inoreader.com/help/pro/api-access",
+    "title": "What can developers use the API for?",
+    "url": "https://www.inoreader.com/help/pro/api-access/what-can-developers-use-the-api-for"
+  },
+  {
+    "category": "Article summaries",
+    "category_url": "https://www.inoreader.com/help/intelligence/article-summaries",
+    "title": "What are article summaries?",
+    "url": "https://www.inoreader.com/help/intelligence/article-summaries/what-are-article-summaries"
+  },
+  {
+    "category": "Article summaries",
+    "category_url": "https://www.inoreader.com/help/intelligence/article-summaries",
+    "title": "How do I generate a summary?",
+    "url": "https://www.inoreader.com/help/intelligence/article-summaries/how-do-i-generate-a-summary"
+  },
+  {
+    "category": "Article summaries",
+    "category_url": "https://www.inoreader.com/help/intelligence/article-summaries",
+    "title": "Can I use custom prompts with summaries?",
+    "url": "https://www.inoreader.com/help/intelligence/article-summaries/can-i-use-custom-prompts-with-summaries"
+  },
+  {
+    "category": "Article summaries",
+    "category_url": "https://www.inoreader.com/help/intelligence/article-summaries",
+    "title": "Where are summaries stored?",
+    "url": "https://www.inoreader.com/help/intelligence/article-summaries/where-are-summaries-stored"
+  },
+  {
+    "category": "Article summaries",
+    "category_url": "https://www.inoreader.com/help/intelligence/article-summaries",
+    "title": "Can I customize how summaries work?",
+    "url": "https://www.inoreader.com/help/intelligence/article-summaries/can-i-customize-how-summaries-work"
+  },
+  {
+    "category": "Article summaries",
+    "category_url": "https://www.inoreader.com/help/intelligence/article-summaries",
+    "title": "Are article summaries available in all plans?",
+    "url": "https://www.inoreader.com/help/intelligence/article-summaries/are-article-summaries-available-in-all-plans"
+  },
+  {
+    "category": "Intelligence reports",
+    "category_url": "https://www.inoreader.com/help/intelligence/intelligence-reports",
+    "title": "What are Intelligence reports?",
+    "url": "https://www.inoreader.com/help/intelligence/intelligence-reports/what-are-intelligence-reports"
+  },
+  {
+    "category": "Intelligence reports",
+    "category_url": "https://www.inoreader.com/help/intelligence/intelligence-reports",
+    "title": "What can Intelligence reports be used for?",
+    "url": "https://www.inoreader.com/help/intelligence/intelligence-reports/what-can-intelligence-reports-be-used-for"
+  },
+  {
+    "category": "Intelligence reports",
+    "category_url": "https://www.inoreader.com/help/intelligence/intelligence-reports",
+    "title": "How do I create an Intelligence report?",
+    "url": "https://www.inoreader.com/help/intelligence/intelligence-reports/how-do-i-create-an-intelligence-report"
+  },
+  {
+    "category": "Intelligence reports",
+    "category_url": "https://www.inoreader.com/help/intelligence/intelligence-reports",
+    "title": "Where can I find saved Intelligence reports?",
+    "url": "https://www.inoreader.com/help/intelligence/intelligence-reports/where-can-i-find-saved-intelligence-reports"
+  },
+  {
+    "category": "Intelligence reports",
+    "category_url": "https://www.inoreader.com/help/intelligence/intelligence-reports",
+    "title": "Can I search through Intelligence reports?",
+    "url": "https://www.inoreader.com/help/intelligence/intelligence-reports/can-i-search-through-intelligence-reports"
+  },
+  {
+    "category": "Intelligence reports",
+    "category_url": "https://www.inoreader.com/help/intelligence/intelligence-reports",
+    "title": "Can I share Intelligence reports?",
+    "url": "https://www.inoreader.com/help/intelligence/intelligence-reports/can-i-share-intelligence-reports"
+  },
+  {
+    "category": "Intelligence reports",
+    "category_url": "https://www.inoreader.com/help/intelligence/intelligence-reports",
+    "title": "What are automated reports?",
+    "url": "https://www.inoreader.com/help/intelligence/intelligence-reports/what-are-automated-reports"
+  },
+  {
+    "category": "Intelligence reports",
+    "category_url": "https://www.inoreader.com/help/intelligence/intelligence-reports",
+    "title": "How do I create an automated report?",
+    "url": "https://www.inoreader.com/help/intelligence/intelligence-reports/how-do-i-create-an-automated-report"
+  },
+  {
+    "category": "Intelligence reports",
+    "category_url": "https://www.inoreader.com/help/intelligence/intelligence-reports",
+    "title": "How can I create a weekly overview of a monitored topic?",
+    "url": "https://www.inoreader.com/help/intelligence/intelligence-reports/how-can-i-create-a-weekly-overview-of-a-monitored-topic"
+  },
+  {
+    "category": "Intelligence reports",
+    "category_url": "https://www.inoreader.com/help/intelligence/intelligence-reports",
+    "title": "Should I use an Intelligence report or an email digest?",
+    "url": "https://www.inoreader.com/help/intelligence/intelligence-reports/should-i-use-an-intelligence-report-or-an-email-digest"
+  },
+  {
+    "category": "Intelligence reports",
+    "category_url": "https://www.inoreader.com/help/intelligence/intelligence-reports",
+    "title": "Are Intelligence reports available in all plans?",
+    "url": "https://www.inoreader.com/help/intelligence/intelligence-reports/are-intelligence-reports-available-in-all-plans"
+  },
+  {
+    "category": "Suggested tags",
+    "category_url": "https://www.inoreader.com/help/intelligence/suggested-tags",
+    "title": "What are suggested tags?",
+    "url": "https://www.inoreader.com/help/intelligence/suggested-tags/what-are-suggested-tags"
+  },
+  {
+    "category": "Suggested tags",
+    "category_url": "https://www.inoreader.com/help/intelligence/suggested-tags",
+    "title": "Are suggested tags available in all plans?",
+    "url": "https://www.inoreader.com/help/intelligence/suggested-tags/are-suggested-tags-available-in-all-plans"
+  },
+  {
+    "category": "Mentions",
+    "category_url": "https://www.inoreader.com/help/intelligence/mentions",
+    "title": "What are mentions?",
+    "url": "https://www.inoreader.com/help/intelligence/mentions/what-are-mentions"
+  },
+  {
+    "category": "Mentions",
+    "category_url": "https://www.inoreader.com/help/intelligence/mentions",
+    "title": "Where are mentions displayed?",
+    "url": "https://www.inoreader.com/help/intelligence/mentions/where-are-mentions-displayed"
+  },
+  {
+    "category": "Mentions",
+    "category_url": "https://www.inoreader.com/help/intelligence/mentions",
+    "title": "Can I move or hide mentions in articles?",
+    "url": "https://www.inoreader.com/help/intelligence/mentions/can-i-move-or-hide-mentions-in-articles"
+  },
+  {
+    "category": "Mentions",
+    "category_url": "https://www.inoreader.com/help/intelligence/mentions",
+    "title": "What can I do with a mention?",
+    "url": "https://www.inoreader.com/help/intelligence/mentions/what-can-i-do-with-a-mention"
+  },
+  {
+    "category": "Mentions",
+    "category_url": "https://www.inoreader.com/help/intelligence/mentions",
+    "title": "What information is available on a mention’s details page?",
+    "url": "https://www.inoreader.com/help/intelligence/mentions/what-information-is-available-on-a-mentions-details-page"
+  },
+  {
+    "category": "Mentions",
+    "category_url": "https://www.inoreader.com/help/intelligence/mentions",
+    "title": "Can I follow coverage of a mention?",
+    "url": "https://www.inoreader.com/help/intelligence/mentions/can-i-follow-coverage-of-a-mention"
+  },
+  {
+    "category": "Mentions",
+    "category_url": "https://www.inoreader.com/help/intelligence/mentions",
+    "title": "Can I use mentions in rules and filters?",
+    "url": "https://www.inoreader.com/help/intelligence/mentions/can-i-use-mentions-in-rules-and-filters"
+  },
+  {
+    "category": "Mentions",
+    "category_url": "https://www.inoreader.com/help/intelligence/mentions",
+    "title": "What is the difference between a mention and a keyword?",
+    "url": "https://www.inoreader.com/help/intelligence/mentions/what-is-the-difference-between-a-mention-and-a-keyword"
+  },
+  {
+    "category": "Mentions",
+    "category_url": "https://www.inoreader.com/help/intelligence/mentions",
+    "title": "Which languages work best with mentions?",
+    "url": "https://www.inoreader.com/help/intelligence/mentions/which-languages-work-best-with-mentions"
+  },
+  {
+    "category": "Mentions",
+    "category_url": "https://www.inoreader.com/help/intelligence/mentions",
+    "title": "Why are mentions missing from some articles?",
+    "url": "https://www.inoreader.com/help/intelligence/mentions/are-mentions-generated-for-every-article"
+  },
+  {
+    "category": "Mentions",
+    "category_url": "https://www.inoreader.com/help/intelligence/mentions",
+    "title": "Are mentions available in all plans?",
+    "url": "https://www.inoreader.com/help/intelligence/mentions/are-mentions-available-in-all-plans"
+  },
+  {
+    "category": "Podcast and video enhancements",
+    "category_url": "https://www.inoreader.com/help/intelligence/podcast-and-video-enhancements",
+    "title": "What are podcast and video enhancements?",
+    "url": "https://www.inoreader.com/help/intelligence/podcast-and-video-enhancements/what-are-podcast-and-video-enhancements"
+  },
+  {
+    "category": "Podcast and video enhancements",
+    "category_url": "https://www.inoreader.com/help/intelligence/podcast-and-video-enhancements",
+    "title": "Are podcast and video enhancements available in all plans?",
+    "url": "https://www.inoreader.com/help/intelligence/podcast-and-video-enhancements/are-podcast-and-video-enhancements-available-in-all-plans"
+  },
+  {
+    "category": "Intelligence usage",
+    "category_url": "https://www.inoreader.com/help/intelligence/intelligence-usage",
+    "title": "How many Intelligence tokens are included in the Pro plan?",
+    "url": "https://www.inoreader.com/help/intelligence/intelligence-usage/how-many-intelligence-tokens-are-included-in-the-pro-plan"
+  },
+  {
+    "category": "Intelligence usage",
+    "category_url": "https://www.inoreader.com/help/intelligence/intelligence-usage",
+    "title": "Can I buy additional Intelligence tokens?",
+    "url": "https://www.inoreader.com/help/intelligence/intelligence-usage/can-i-buy-additional-intelligence-tokens"
+  },
+  {
+    "category": "Intelligence usage",
+    "category_url": "https://www.inoreader.com/help/intelligence/intelligence-usage",
+    "title": "Which AI platforms does Inoreader support?",
+    "url": "https://www.inoreader.com/help/intelligence/intelligence-usage/which-ai-platforms-does-inoreader-support"
+  },
+  {
+    "category": "Intelligence usage",
+    "category_url": "https://www.inoreader.com/help/intelligence/intelligence-usage",
+    "title": "What model does Inoreader Intelligence use by default?",
+    "url": "https://www.inoreader.com/help/intelligence/intelligence-usage/what-model-does-inoreader-intelligence-use-by-default"
+  },
+  {
+    "category": "Intelligence usage",
+    "category_url": "https://www.inoreader.com/help/intelligence/intelligence-usage",
+    "title": "Can I use my own API key?",
+    "url": "https://www.inoreader.com/help/intelligence/intelligence-usage/can-i-use-my-own-api-key"
+  },
+  {
+    "category": "Intelligence usage",
+    "category_url": "https://www.inoreader.com/help/intelligence/intelligence-usage",
+    "title": "Is my personal data shared with AI providers?",
+    "url": "https://www.inoreader.com/help/intelligence/intelligence-usage/is-my-personal-data-shared-with-ai-providers"
+  },
+  {
+    "category": "Intelligence usage",
+    "category_url": "https://www.inoreader.com/help/intelligence/intelligence-usage",
+    "title": "How do Intelligence limits work in Teams?",
+    "url": "https://www.inoreader.com/help/intelligence/intelligence-usage/how-do-intelligence-limits-work-in-teams"
+  },
+  {
+    "category": "Intelligence usage",
+    "category_url": "https://www.inoreader.com/help/intelligence/intelligence-usage",
+    "title": "Can my Team have a default AI platform and model?",
+    "url": "https://www.inoreader.com/help/intelligence/intelligence-usage/can-my-team-have-a-default-ai-platform-and-model"
+  },
+  {
+    "category": "Intelligence usage",
+    "category_url": "https://www.inoreader.com/help/intelligence/intelligence-usage",
+    "title": "Can a Team member switch to their own AI platform or model?",
+    "url": "https://www.inoreader.com/help/intelligence/intelligence-usage/can-a-team-member-switch-to-their-own-ai-platform-or-model"
+  },
+  {
+    "category": "Intelligence usage",
+    "category_url": "https://www.inoreader.com/help/intelligence/intelligence-usage",
+    "title": "Where can I check my Intelligence access and usage?",
+    "url": "https://www.inoreader.com/help/intelligence/intelligence-usage/where-can-i-check-my-intelligence-access-and-usage"
+  },
+  {
+    "category": "Getting started",
+    "category_url": "https://www.inoreader.com/help/teams/getting-started",
+    "title": "What should I do when I join a Team?",
+    "url": "https://www.inoreader.com/help/teams/getting-started/what-should-i-do-when-i-join-a-team"
+  },
+  {
+    "category": "Getting started",
+    "category_url": "https://www.inoreader.com/help/teams/getting-started",
+    "title": "What is my Team sidebar, and what can I find there?",
+    "url": "https://www.inoreader.com/help/teams/getting-started/what-is-my-team-sidebar-and-what-can-i-find-there"
+  },
+  {
+    "category": "Getting started",
+    "category_url": "https://www.inoreader.com/help/teams/getting-started",
+    "title": "Where can I see my Team members and settings?",
+    "url": "https://www.inoreader.com/help/teams/getting-started/where-can-i-see-my-team-members-and-settings"
+  },
+  {
+    "category": "Team dashboards",
+    "category_url": "https://www.inoreader.com/help/teams/team-dashboards",
+    "title": "What is a Team dashboard?",
+    "url": "https://www.inoreader.com/help/teams/team-dashboards/what-is-a-team-dashboard"
+  },
+  {
+    "category": "Team dashboards",
+    "category_url": "https://www.inoreader.com/help/teams/team-dashboards",
+    "title": "What kind of information can I see on dashboards?",
+    "url": "https://www.inoreader.com/help/teams/team-dashboards/what-kind-of-information-can-i-see-on-dashboards"
+  },
+  {
+    "category": "Team dashboards",
+    "category_url": "https://www.inoreader.com/help/teams/team-dashboards",
+    "title": "Can I customize dashboards?",
+    "url": "https://www.inoreader.com/help/teams/team-dashboards/can-i-customize-dashboards"
+  },
+  {
+    "category": "Team folders",
+    "category_url": "https://www.inoreader.com/help/teams/team-folders",
+    "title": "What are Team folders?",
+    "url": "https://www.inoreader.com/help/teams/team-folders/what-are-team-folders"
+  },
+  {
+    "category": "Team folders",
+    "category_url": "https://www.inoreader.com/help/teams/team-folders",
+    "title": "Do I need to add all feeds manually?",
+    "url": "https://www.inoreader.com/help/teams/team-folders/do-i-need-to-add-all-feeds-manually"
+  },
+  {
+    "category": "Team folders",
+    "category_url": "https://www.inoreader.com/help/teams/team-folders",
+    "title": "What types of content can Team folders include?",
+    "url": "https://www.inoreader.com/help/teams/team-folders/what-types-of-content-can-team-folders-include"
+  },
+  {
+    "category": "Team folders",
+    "category_url": "https://www.inoreader.com/help/teams/team-folders",
+    "title": "What is the difference between a Team folder and a Team channel?",
+    "url": "https://www.inoreader.com/help/teams/team-folders/what-is-the-difference-between-a-team-folder-and-a-team-channel"
+  },
+  {
+    "category": "Team filters",
+    "category_url": "https://www.inoreader.com/help/teams/team-filters",
+    "title": "What are Team filters?",
+    "url": "https://www.inoreader.com/help/teams/team-filters/what-are-team-filters"
+  },
+  {
+    "category": "Team channels",
+    "category_url": "https://www.inoreader.com/help/teams/team-channels",
+    "title": "What is a Team channel?",
+    "url": "https://www.inoreader.com/help/teams/team-channels/what-is-a-team-channel"
+  },
+  {
+    "category": "Team channels",
+    "category_url": "https://www.inoreader.com/help/teams/team-channels",
+    "title": "How do I share an article with my Team?",
+    "url": "https://www.inoreader.com/help/teams/team-channels/how-do-i-share-an-article-with-my-team"
+  },
+  {
+    "category": "Team channels",
+    "category_url": "https://www.inoreader.com/help/teams/team-channels",
+    "title": "Can I share translated articles?",
+    "url": "https://www.inoreader.com/help/teams/team-channels/can-i-share-translated-articles"
+  },
+  {
+    "category": "Team channels",
+    "category_url": "https://www.inoreader.com/help/teams/team-channels",
+    "title": "What’s the difference between Team channels and Team tags?",
+    "url": "https://www.inoreader.com/help/teams/team-channels/whats-the-difference-between-team-channels-and-team-tags"
+  },
+  {
+    "category": "Email digests",
+    "category_url": "https://www.inoreader.com/help/teams/email-digests",
+    "title": "What is an email digest?",
+    "url": "https://www.inoreader.com/help/teams/email-digests/what-is-an-email-digest"
+  },
+  {
+    "category": "Email digests",
+    "category_url": "https://www.inoreader.com/help/teams/email-digests",
+    "title": "How do I create an email digest?",
+    "url": "https://www.inoreader.com/help/teams/email-digests/how-do-i-create-an-email-digest"
+  },
+  {
+    "category": "Email digests",
+    "category_url": "https://www.inoreader.com/help/teams/email-digests",
+    "title": "Can email digest layouts be customized?",
+    "url": "https://www.inoreader.com/help/teams/email-digests/can-email-digest-layouts-be-customized"
+  },
+  {
+    "category": "Email digests",
+    "category_url": "https://www.inoreader.com/help/teams/email-digests",
+    "title": "Can I preview a digest issue before it is sent?",
+    "url": "https://www.inoreader.com/help/teams/email-digests/can-i-preview-a-digest-issue-before-it-is-sent"
+  },
+  {
+    "category": "Email digests",
+    "category_url": "https://www.inoreader.com/help/teams/email-digests",
+    "title": "Can I edit scheduled digest issues?",
+    "url": "https://www.inoreader.com/help/teams/email-digests/can-i-edit-scheduled-digest-issues"
+  },
+  {
+    "category": "Email digests",
+    "category_url": "https://www.inoreader.com/help/teams/email-digests",
+    "title": "Can email digests include AI summaries?",
+    "url": "https://www.inoreader.com/help/teams/email-digests/can-email-digests-include-ai-summaries"
+  },
+  {
+    "category": "Email digests",
+    "category_url": "https://www.inoreader.com/help/teams/email-digests",
+    "title": "How do I start receiving a digest?",
+    "url": "https://www.inoreader.com/help/teams/email-digests/how-do-i-start-receiving-a-digest"
+  },
+  {
+    "category": "Email digests",
+    "category_url": "https://www.inoreader.com/help/teams/email-digests",
+    "title": "Can I unsubscribe from a digest?",
+    "url": "https://www.inoreader.com/help/teams/email-digests/can-i-unsubscribe-from-a-digest"
+  },
+  {
+    "category": "Email digests",
+    "category_url": "https://www.inoreader.com/help/teams/email-digests",
+    "title": "Why has an email digest not arrived?",
+    "url": "https://www.inoreader.com/help/teams/email-digests/why-has-an-email-digest-not-arrived"
+  },
+  {
+    "category": "Email digests",
+    "category_url": "https://www.inoreader.com/help/teams/email-digests",
+    "title": "Where can I view all Team digests?",
+    "url": "https://www.inoreader.com/help/teams/email-digests/where-can-i-view-all-team-digests"
+  },
+  {
+    "category": "Email digests",
+    "category_url": "https://www.inoreader.com/help/teams/email-digests",
+    "title": "Are email digests available outside Team plans?",
+    "url": "https://www.inoreader.com/help/teams/email-digests/are-email-digests-available-outside-team-plans"
+  },
+  {
+    "category": "Team tags",
+    "category_url": "https://www.inoreader.com/help/teams/team-tags",
+    "title": "What are Team tags?",
+    "url": "https://www.inoreader.com/help/teams/team-tags/what-are-team-tags"
+  },
+  {
+    "category": "Team tags",
+    "category_url": "https://www.inoreader.com/help/teams/team-tags",
+    "title": "How do I add a Team tag?",
+    "url": "https://www.inoreader.com/help/teams/team-tags/how-do-i-add-a-team-tag"
+  },
+  {
+    "category": "Team tags",
+    "category_url": "https://www.inoreader.com/help/teams/team-tags",
+    "title": "Can I remove tags?",
+    "url": "https://www.inoreader.com/help/teams/team-tags/can-i-remove-tags"
+  },
+  {
+    "category": "Team tags",
+    "category_url": "https://www.inoreader.com/help/teams/team-tags",
+    "title": "Can I tag multiple articles at once?",
+    "url": "https://www.inoreader.com/help/teams/team-tags/can-i-tag-multiple-articles-at-once"
+  },
+  {
+    "category": "Team tags",
+    "category_url": "https://www.inoreader.com/help/teams/team-tags",
+    "title": "Can I control which tags appear in my sidebar?",
+    "url": "https://www.inoreader.com/help/teams/team-tags/can-i-control-which-tags-appear-in-my-sidebar"
+  },
+  {
+    "category": "Team spotlights",
+    "category_url": "https://www.inoreader.com/help/teams/team-spotlights",
+    "title": "What are Team spotlights?",
+    "url": "https://www.inoreader.com/help/teams/team-spotlights/what-are-team-spotlights"
+  },
+  {
+    "category": "Team spotlights",
+    "category_url": "https://www.inoreader.com/help/teams/team-spotlights",
+    "title": "Do Team spotlights apply automatically?",
+    "url": "https://www.inoreader.com/help/teams/team-spotlights/do-team-spotlights-apply-automatically"
+  },
+  {
+    "category": "Team spotlights",
+    "category_url": "https://www.inoreader.com/help/teams/team-spotlights",
+    "title": "What happens if a keyword exists in both personal and Team spotlights?",
+    "url": "https://www.inoreader.com/help/teams/team-spotlights/what-happens-if-a-keyword-exists-in-both-personal-and-team-spotlights"
+  },
+  {
+    "category": "Team file uploads",
+    "category_url": "https://www.inoreader.com/help/teams/team-file-uploads",
+    "title": "What are Team file uploads used for?",
+    "url": "https://www.inoreader.com/help/teams/team-file-uploads/what-are-team-file-uploads-used-for"
+  },
+  {
+    "category": "Team file uploads",
+    "category_url": "https://www.inoreader.com/help/teams/team-file-uploads",
+    "title": "How do I upload a file to my Team?",
+    "url": "https://www.inoreader.com/help/teams/team-file-uploads/how-do-i-upload-a-file-to-my-team"
+  },
+  {
+    "category": "Team file uploads",
+    "category_url": "https://www.inoreader.com/help/teams/team-file-uploads",
+    "title": "What happens after I upload a file to my Team?",
+    "url": "https://www.inoreader.com/help/teams/team-file-uploads/what-happens-after-i-upload-a-file-to-my-team"
+  },
+  {
+    "category": "Team file uploads",
+    "category_url": "https://www.inoreader.com/help/teams/team-file-uploads",
+    "title": "Where can I find Team uploads?",
+    "url": "https://www.inoreader.com/help/teams/team-file-uploads/where-can-i-find-team-uploads"
+  },
+  {
+    "category": "Highlights, notes & comments",
+    "category_url": "https://www.inoreader.com/help/teams/highlights-notes-comments",
+    "title": "What’s the difference between highlights, notes, and comments?",
+    "url": "https://www.inoreader.com/help/teams/highlights-notes-comments/whats-the-difference-between-highlights-notes-and-comments"
+  },
+  {
+    "category": "Highlights, notes & comments",
+    "category_url": "https://www.inoreader.com/help/teams/highlights-notes-comments",
+    "title": "Can I keep notes private?",
+    "url": "https://www.inoreader.com/help/teams/highlights-notes-comments/can-i-keep-notes-private"
+  },
+  {
+    "category": "Highlights, notes & comments",
+    "category_url": "https://www.inoreader.com/help/teams/highlights-notes-comments",
+    "title": "Where can I find shared highlights and notes?",
+    "url": "https://www.inoreader.com/help/teams/highlights-notes-comments/where-can-i-find-shared-highlights-and-notes"
+  },
+  {
+    "category": "Highlights, notes & comments",
+    "category_url": "https://www.inoreader.com/help/teams/highlights-notes-comments",
+    "title": "Where do comments appear?",
+    "url": "https://www.inoreader.com/help/teams/highlights-notes-comments/where-do-comments-appear"
+  },
+  {
+    "category": "Activity & collaboration",
+    "category_url": "https://www.inoreader.com/help/teams/activity-collaboration",
+    "title": "Where can I see what my Team is doing?",
+    "url": "https://www.inoreader.com/help/teams/activity-collaboration/where-can-i-see-what-my-team-is-doing"
+  },
+  {
+    "category": "Activity & collaboration",
+    "category_url": "https://www.inoreader.com/help/teams/activity-collaboration",
+    "title": "What actions are tracked?",
+    "url": "https://www.inoreader.com/help/teams/activity-collaboration/what-actions-are-tracked-there"
+  },
+  {
+    "category": "Access, limits & plans",
+    "category_url": "https://www.inoreader.com/help/teams/access-limits-plans",
+    "title": "What features do I get as a Team member?",
+    "url": "https://www.inoreader.com/help/teams/access-limits-plans/what-features-do-i-get-as-a-team-member"
+  },
+  {
+    "category": "Access, limits & plans",
+    "category_url": "https://www.inoreader.com/help/teams/access-limits-plans",
+    "title": "How do shared feature pools work?",
+    "url": "https://www.inoreader.com/help/teams/access-limits-plans/how-do-shared-feature-pools-work"
+  },
+  {
+    "category": "Access, limits & plans",
+    "category_url": "https://www.inoreader.com/help/teams/access-limits-plans",
+    "title": "How can I track my Team’s usage?",
+    "url": "https://www.inoreader.com/help/teams/access-limits-plans/how-can-i-track-my-teams-usage"
+  },
+  {
+    "category": "Account & login",
+    "category_url": "https://www.inoreader.com/help/teams/account-login",
+    "title": "What is Single Sign-On (SSO)?",
+    "url": "https://www.inoreader.com/help/teams/account-login/what-is-single-sign-on-sso"
+  },
+  {
+    "category": "Account & login",
+    "category_url": "https://www.inoreader.com/help/teams/account-login",
+    "title": "How do I log in with SSO?",
+    "url": "https://www.inoreader.com/help/teams/account-login/how-do-i-log-in-with-sso"
+  },
+  {
+    "category": "Billing & subscriptions",
+    "category_url": "https://www.inoreader.com/help/subscriptions/billing-subscriptions",
+    "title": "What payment methods are available?",
+    "url": "https://www.inoreader.com/help/subscriptions/billing-subscriptions/what-payment-methods-are-available"
+  },
+  {
+    "category": "Billing & subscriptions",
+    "category_url": "https://www.inoreader.com/help/subscriptions/billing-subscriptions",
+    "title": "How does subscription renewal work?",
+    "url": "https://www.inoreader.com/help/subscriptions/billing-subscriptions/how-does-subscription-renewal-work"
+  },
+  {
+    "category": "Billing & subscriptions",
+    "category_url": "https://www.inoreader.com/help/subscriptions/billing-subscriptions",
+    "title": "What happens if an auto-renewal payment fails?",
+    "url": "https://www.inoreader.com/help/subscriptions/billing-subscriptions/what-happens-if-an-auto-renewal-payment-fails"
+  },
+  {
+    "category": "Billing & subscriptions",
+    "category_url": "https://www.inoreader.com/help/subscriptions/billing-subscriptions",
+    "title": "What happens if I cancel my subscription?",
+    "url": "https://www.inoreader.com/help/subscriptions/billing-subscriptions/what-happens-if-i-cancel-my-subscription"
+  },
+  {
+    "category": "Billing & subscriptions",
+    "category_url": "https://www.inoreader.com/help/subscriptions/billing-subscriptions",
+    "title": "How do I stop a subscription purchased through the App Store or Google Play?",
+    "url": "https://www.inoreader.com/help/subscriptions/billing-subscriptions/how-do-i-stop-a-subscription-purchased-through-the-app-store-or-google-play"
+  },
+  {
+    "category": "Billing & subscriptions",
+    "category_url": "https://www.inoreader.com/help/subscriptions/billing-subscriptions",
+    "title": "Can I increase the limit on a specific feature?",
+    "url": "https://www.inoreader.com/help/subscriptions/billing-subscriptions/can-i-increase-the-limit-on-a-specific-feature"
+  },
+  {
+    "category": "Billing & subscriptions",
+    "category_url": "https://www.inoreader.com/help/subscriptions/billing-subscriptions",
+    "title": "Can I get an invoice for my payment?",
+    "url": "https://www.inoreader.com/help/subscriptions/billing-subscriptions/can-i-get-an-invoice-for-my-payment"
+  },
+  {
+    "category": "Billing & subscriptions",
+    "category_url": "https://www.inoreader.com/help/subscriptions/billing-subscriptions",
+    "title": "What happens when I upgrade an existing subscription?",
+    "url": "https://www.inoreader.com/help/subscriptions/billing-subscriptions/what-happens-when-i-upgrade-an-existing-subscription"
+  },
+  {
+    "category": "Billing & subscriptions",
+    "category_url": "https://www.inoreader.com/help/subscriptions/billing-subscriptions",
+    "title": "Why does the final price differ from the listed price?",
+    "url": "https://www.inoreader.com/help/subscriptions/billing-subscriptions/why-does-the-final-price-differ-from-the-listed-price"
+  },
+  {
+    "category": "Billing & subscriptions",
+    "category_url": "https://www.inoreader.com/help/subscriptions/billing-subscriptions",
+    "title": "Can I get a refund?",
+    "url": "https://www.inoreader.com/help/subscriptions/billing-subscriptions/can-i-get-a-refund"
+  },
+  {
+    "category": "Billing & subscriptions",
+    "category_url": "https://www.inoreader.com/help/subscriptions/billing-subscriptions",
+    "title": "Can I use my subscription on multiple platforms?",
+    "url": "https://www.inoreader.com/help/subscriptions/billing-subscriptions/can-i-use-my-subscription-on-multiple-platforms"
+  },
+  {
+    "category": "Billing & subscriptions",
+    "category_url": "https://www.inoreader.com/help/subscriptions/billing-subscriptions",
+    "title": "Why is my paid subscription not showing?",
+    "url": "https://www.inoreader.com/help/subscriptions/billing-subscriptions/why-is-my-paid-subscription-not-showing"
+  },
+  {
+    "category": "Billing & subscriptions",
+    "category_url": "https://www.inoreader.com/help/subscriptions/billing-subscriptions",
+    "title": "How can I update my payment method?",
+    "url": "https://www.inoreader.com/help/subscriptions/billing-subscriptions/how-can-i-update-my-payment-method"
+  }
+]

@@ -1,0 +1,518 @@
+{
+  "flow_changes": [
+    {
+      "id": "F-M001-01",
+      "field": "known_branches",
+      "before": "2024在线指南补明确路径：正文查词→阅读菜单Vocabulary Builder→Words/Books→Flashcards→See Definition→Exit Flashcards。Learning显示学习/掌握统计，但正文未给标记掌握或撤销按钮；关闭自动收词后新查询不入本。",
+      "after": "查词自动入本与关闭；词义卡/例句/Flashcards；Word Wise提示密度/多义词反馈及中英文提示独立"
+    },
+    {
+      "id": "F-M001-01",
+      "field": "gaps",
+      "before": "掌握标记/误标撤销、删词恢复、跨端同步与复习调度未知；Word Wise有内容语言条件",
+      "after": "误标掌握/撤销与复习调度未知；中文提示不证明中文TTS或教学适龄"
+    },
+    {
+      "id": "F-M001-02",
+      "field": "evidence_ids",
+      "before": "E-KDL-01;E-KDCD-02",
+      "after": "E-KDL-01;E-KDCD-02;E-KDAF-06"
+    },
+    {
+      "id": "F-M001-02",
+      "field": "known_branches",
+      "before": "Page Flip预览后Back to page/loc重定位原阅读点，点预览页才跳转；历史箭头在退出书籍后清空；不能把预览位置当持久阅读进度。",
+      "after": "预览/点页跳转/Back原位；Go To历史退出书后清；脚注预览与跳到注释分开"
+    },
+    {
+      "id": "F-M001-02",
+      "field": "gaps",
+      "before": "不同格式可用导航、跨会话返回栈、断电恢复位置未知",
+      "after": "静态三页与返回按钮；退出/断电/跨端历史恢复未知，不当连续视觉链"
+    },
+    {
+      "id": "F-M001-02",
+      "field": "visual_status",
+      "before": "not_observed",
+      "after": "static_official_images_only"
+    },
+    {
+      "id": "F-M001-03",
+      "field": "evidence_ids",
+      "before": "E-KDL-02;E-KDL-03;E-KDCD-08;E-KDCD-09",
+      "after": "E-KDL-02;E-KDL-03;E-KDCD-02;E-KDCD-08;E-KDCD-09;E-KDAF-08"
+    },
+    {
+      "id": "F-M001-03",
+      "field": "known_branches",
+      "before": "画布框可调整；删除需指针选框→垃圾桶→确认。便签X关闭自动保存；工具可隐藏再显示。USB PDF及2022-11-11前已传入库的PDF不支持该手写路径；漫画/儿童EPUB不泛化。",
+      "after": "画布确认/取消及整块删除；便签X保存；页边栏宽/停靠/覆盖，关后便签显示；笔迹Undo/Redo与剪贴板分别"
+    },
+    {
+      "id": "F-M001-03",
+      "field": "gaps",
+      "before": "最低固件、删除画布后恢复、PDF变更对笔迹锚点影响未知；手机手写与同步帮助范围差异未解",
+      "after": "工具条静态非笔迹执行；整体删除/内容更新锚点与跨端恢复未知；页边栏关闭不等于删除"
+    },
+    {
+      "id": "F-M001-03",
+      "field": "visual_status",
+      "before": "not_observed",
+      "after": "static_official_images_only"
+    },
+    {
+      "id": "F-M001-04",
+      "field": "evidence_ids",
+      "before": "E-KDL-04;E-KDCD-05;E-KDCD-06;E-KDCD-07",
+      "after": "E-KDL-04;E-KDCD-02;E-KDCD-05;E-KDCD-06;E-KDCD-07"
+    },
+    {
+      "id": "F-M001-04",
+      "field": "known_branches",
+      "before": "Notebook页+新建文件夹/笔记本，至少需100MB空闲才能保存新对象/笔迹；整本More→Move选文件夹或Notebook顶层，书与个人文档不能混入。页多选Add逐页后加页，Move选页间位置，X退多选；2025+才另列Duplicate与跨本移页。",
+      "after": "100MB与关闭保存；概览单点选择/再点打开，Back回原页，多选X回概览；模板选页/全本；2025+复制/跨本移页另列"
+    },
+    {
+      "id": "F-M001-04",
+      "field": "gaps",
+      "before": "删除单页确认/撤销、空间不足实际提示和未保存笔迹、跨本移动断网冲突未知",
+      "after": "空间不足实际提示、删除页确认/恢复、模板更换数据保护未知；不把2025+套2024"
+    },
+    {
+      "id": "F-M001-06",
+      "field": "evidence_ids",
+      "before": "E-KDL-06;E-KDL-07;E-KDCD-03;E-KDCD-04;E-KDCD-11",
+      "after": "E-KDL-06;E-KDL-07;E-KDCD-02;E-KDCD-03;E-KDCD-04;E-KDCD-11"
+    },
+    {
+      "id": "F-M001-06",
+      "field": "known_branches",
+      "before": "联网Sync备份；关闭Sync不能云下载/备份/永久删除。缺失先核同账号设备删除；模板问题重选→重开，仍异常时移除本地后重下载。More的Remove download保留云对象；Permanently delete影响所有设备且不能恢复。；已作为附件发送给Alexa的副本另行保留，不随Kindle永久删除自动清除。",
+      "after": "联网Sync云备份；移除下载/永久删除对象不同；Alexa附件单独副本；重启保内容，出厂重置清本地与设置后重注册"
+    },
+    {
+      "id": "F-M001-06",
+      "field": "gaps",
+      "before": "本地未同步笔迹保护、误删确认、冲突优先级、删除文件夹内对象范围未知；跨端手写支持文档冲突保留",
+      "after": "未同步笔迹、USB文件备份、跨端冲突及整机恢复未知；云下载不等于恢复本地全部状态"
+    },
+    {
+      "id": "F-M001-09",
+      "field": "known_branches",
+      "before": "2024指南：Library创建合集→命名→勾选→Done；合集菜单可增删成员，Back/Home退出。合集删除同步但不删内容；合集内项目需另行Download all items。本地移除与永久删除分开，USB文件无云副本。",
+      "after": "合集结构/下载分开，删合集不删书；音频筛选不删除；配套书音频合一条目，文档泛称删书连音频；Quick Archive/Manual Removal"
+    },
+    {
+      "id": "F-M001-09",
+      "field": "gaps",
+      "before": "删除确认/撤销、下载失败/部分成功、跨端合集冲突未知；指南Downloaded选取/取消选取措辞内部不一致，不能据此拼造准确筛选状态",
+      "after": "合并音频删除层级/确认/撤销未知；USB无云副本；合集冲突、下载失败与Downloaded措辞冲突保留"
+    },
+    {
+      "id": "F-M012-01",
+      "field": "evidence_ids",
+      "before": "E-MUD-01;E-MUD-03;E-MDCD-01;E-MDCD-03;E-MDCD-04;E-MDCD-05",
+      "after": "E-MUD-01;E-MUD-03;E-MDCD-01;E-MDCD-03;E-MDCD-04;E-MDCD-05;E-MACD-01;E-MACD-10"
+    },
+    {
+      "id": "F-M012-01",
+      "field": "known_branches",
+      "before": "新增拨号和来电阻止入口；电源结束通话为可选设置；1.6.1修正未接来电计数。",
+      "after": "原拨号/来电阻止保留；增加隐藏/非联系人号码来电和消息阻止、手动名单及减号解封；与删除联系人不同。"
+    },
+    {
+      "id": "F-M012-01",
+      "field": "gaps",
+      "before": "接听/拒接、占线、无服务、SIM选择与音乐打断恢复未知",
+      "after": "接听/拒接、占线/无服务/SIM选择、媒体打断、阻止反馈及解封后补收未知。"
+    },
+    {
+      "id": "F-M012-02",
+      "field": "evidence_ids",
+      "before": "E-MUD-04;E-MUD-05;E-MUD-06;E-MDCD-06;E-MDCD-22",
+      "after": "E-MUD-04;E-MUD-05;E-MUD-06;E-MDCD-06;E-MDCD-22;E-MACD-02;E-MACD-03;E-MACD-04;E-MACD-05"
+    },
+    {
+      "id": "F-M012-02",
+      "field": "known_branches",
+      "before": "同页联系人Pencil/新号码Plus差异仍在；键盘光标补救；RCS明确不支持。",
+      "after": "四个拆页与原汇总重复；Pencil/Plus差异仍在；新号码MMS先Send to确认收件人再Image；Send不证明送达或建联系人。"
+    },
+    {
+      "id": "F-M012-02",
+      "field": "gaps",
+      "before": "草稿保留、离线重试、送达/已读、MMS失败未知",
+      "after": "草稿保留/取消、离线重试、送达/已读、MMS失败与附件保留未知。"
+    },
+    {
+      "id": "F-M012-06",
+      "field": "evidence_ids",
+      "before": "E-MUD-08;E-MUD-09;E-MDCD-11",
+      "after": "E-MUD-08;E-MUD-09;E-MDCD-11;E-MACD-12"
+    },
+    {
+      "id": "F-M012-06",
+      "field": "known_branches",
+      "before": "Center传入沿用；USB文件不可见另走Connected Devices > USB Preferences > File Transfer；未连接不显示入口；No data transfer收回文件访问。",
+      "after": "Center Music/Add file/确认复制；不支持格式不可选或上传。USB文件可见性另走USB Preferences，未连接不显示；No data transfer收回访问。"
+    },
+    {
+      "id": "F-M012-06",
+      "field": "gaps",
+      "before": "不假设Center依赖MTP；重复文件、容量不足、中断半成品、解析与位置保留未知",
+      "after": "不假设Center依赖MTP；未给完整格式清单；重复、容量/断线、解码、入库反馈和断点未知。"
+    },
+    {
+      "id": "F-M012-07",
+      "field": "evidence_ids",
+      "before": "E-MUD-10;E-MDCD-12;E-MDCD-13;E-MDCD-16",
+      "after": "E-MUD-10;E-MDCD-12;E-MDCD-13;E-MDCD-16;E-MACD-13"
+    },
+    {
+      "id": "F-M012-07",
+      "field": "known_branches",
+      "before": "普通文件删除沿用；已安装应用不会随APK安装包删除；卸载限制详F08，清空恢复出厂详F09。",
+      "after": "Center类别选文件；顶部减号样式复选框全选；Delete/Delete file。删APK不卸载应用；类别文案Manage与传入Manage Files分别保留。"
+    },
+    {
+      "id": "F-M012-07",
+      "field": "gaps",
+      "before": "图书笔记/历史依赖、回收站、单项恢复未知",
+      "after": "删除后的回收/单项恢复、图书笔记和播放历史依赖、断线结果未知。"
+    },
+    {
+      "id": "F-M012-08",
+      "field": "evidence_ids",
+      "before": "E-MDCD-12;E-MDCD-13;E-MDCD-14;E-MDCD-16;E-MDCD-20",
+      "after": "E-MDCD-12;E-MDCD-13;E-MDCD-14;E-MDCD-16;E-MDCD-20;E-MACD-15"
+    },
+    {
+      "id": "F-M012-08",
+      "field": "known_branches",
+      "before": "Center安装完成弹窗；APK可删但应用保留；隐藏图标返回保存；当前帮助无内置单应用卸载。",
+      "after": "Center安装完成弹窗；APK可删但应用保留；隐藏图标返回保存；当前帮助无内置单应用卸载。 定位的全局/逐App入口另见F15，不能当全部应用权限已核。"
+    },
+    {
+      "id": "F-M012-08",
+      "field": "gaps",
+      "before": "不保证应用兼容；更新覆盖、权限撤销、后台/崩溃与数据保留未知。",
+      "after": "兼容性、覆盖更新、后台/崩溃与数据保留未知；定位等级/撤销结果及其他权限仍缺。"
+    },
+    {
+      "id": "F-M012-09",
+      "field": "evidence_ids",
+      "before": "E-MDCD-03;E-MDCD-15;E-MDCD-16;E-MDCD-17",
+      "after": "E-MDCD-03;E-MDCD-15;E-MDCD-16;E-MDCD-17;E-MACD-17"
+    },
+    {
+      "id": "F-M012-09",
+      "field": "known_branches",
+      "before": "自动通知或手查；下载配置后重启；失败先排查；设置与Recovery两种清空入口，OS版本不回退。",
+      "after": "自动通知或手查；下载配置后重启；失败先排查；设置与Recovery两种清空入口，OS版本不回退。 忘PIN/图案FAQ也指向Recovery清空，未备份资料丢失。"
+    },
+    {
+      "id": "F-M012-09",
+      "field": "gaps",
+      "before": "安装中断、回滚、锁屏凭据失败、清空后SIM/eSIM细项未核。",
+      "after": "安装中断/回滚、重置后SIM/eSIM细项及备份覆盖恢复未知；没有无损找回口令依据。"
+    },
+    {
+      "id": "F-M030-01",
+      "field": "evidence_ids",
+      "before": "E-KHK-01;E-KHCD-03",
+      "after": "E-KHK-01;E-KHCD-03;E-KLCD-11"
+    },
+    {
+      "id": "F-M030-01",
+      "field": "known_branches",
+      "before": "Books/Reading、朗读/自主读",
+      "after": "Books两种读法；Reading含提问/点图及高年级选择题；Early Readers先听后读是成人练习建议"
+    },
+    {
+      "id": "F-M030-01",
+      "field": "gaps",
+      "before": "中途切换、具体题型与提示",
+      "after": "中途切换、逐字点读、答案判定与提示、退出续接未知；静态三角按钮作用未核"
+    },
+    {
+      "id": "F-M030-01",
+      "field": "visual_status",
+      "before": "not_observed",
+      "after": "static_reference_only"
+    },
+    {
+      "id": "F-M030-02",
+      "field": "task",
+      "before": "路线、进度与中断",
+      "after": "路线级别与家长进度"
+    },
+    {
+      "id": "F-M030-02",
+      "field": "evidence_ids",
+      "before": "E-KHK-02;E-KHK-03;E-KHCD-03",
+      "after": "E-KHK-02;E-KHK-03;E-KHCD-03;E-KLCD-02;E-KLCD-07"
+    },
+    {
+      "id": "F-M030-02",
+      "field": "known_branches",
+      "before": "级别/档案、奖励、下一课",
+      "after": "年级决定起点；表现影响主题推进及基础支持；Library勾号按档案/级别查看"
+    },
+    {
+      "id": "F-M030-02",
+      "field": "gaps",
+      "before": "奖励数值、失败重试、课内保存",
+      "after": "调级阈值、提示计分、失败重试与课内保存未知；中断另见F06；教师报告另见F13"
+    },
+    {
+      "id": "F-M030-04",
+      "field": "evidence_ids",
+      "before": "E-KHD-01;E-KHD-03;E-KHCD-10",
+      "after": "E-KHD-01;E-KHD-03;E-KHCD-10;E-KLCD-07"
+    },
+    {
+      "id": "F-M030-04",
+      "field": "known_branches",
+      "before": "Kodi 提示；错误反馈；分步示范",
+      "after": "Kodi求助与分步示范；中文指南称重复活动说明，旧英文称下一句"
+    },
+    {
+      "id": "F-M030-04",
+      "field": "gaps",
+      "before": "触发顺序/次数；示范后操作；结束页",
+      "after": "两种帮助措辞未解；上一句回放、触发次数、示范后操作及结束页未知"
+    },
+    {
+      "id": "F-M030-09",
+      "field": "task",
+      "before": "同一家长账户增加儿童档案",
+      "after": "家长账户下新增、编辑及删除儿童档案"
+    },
+    {
+      "id": "F-M030-09",
+      "field": "evidence_ids",
+      "before": "E-KHCD-07",
+      "after": "E-KHCD-07;E-KLCD-04;E-KLCD-05;E-KLCD-06"
+    },
+    {
+      "id": "F-M030-09",
+      "field": "known_branches",
+      "before": "New或头像入口、成人区、名字年龄头像、Next",
+      "after": "新增同旧；成人区My Account编辑名字/头像；Enable Delete后头像X删除，清进度及路线历史"
+    },
+    {
+      "id": "F-M030-09",
+      "field": "gaps",
+      "before": "已有成员切换/删除/合并、作品与进度隔离及跨端冲突未知",
+      "after": "编辑保存回执、误删撤销、作品去留、账号整体删除及跨端冲突未知"
+    },
+    {
+      "id": "F-M030-10",
+      "field": "evidence_ids",
+      "before": "E-KHCD-08;E-KHCD-09",
+      "after": "E-KHCD-08;E-KHCD-09;E-KLCD-07;E-KLCD-09"
+    },
+    {
+      "id": "F-M030-10",
+      "field": "known_branches",
+      "before": "家庭/课堂/Clever退出不同；单设备重置后逐台登录",
+      "after": "家庭/课堂/Clever退出不同；单设备重置后逐台登录；邮件账号保留进度是官方说明非恢复实测"
+    },
+    {
+      "id": "F-M030-10",
+      "field": "gaps",
+      "before": "未同步数据、过期链接、其他登录方式及实测恢复未知",
+      "after": "未同步数据、过期链接和作品恢复未知；重装页iOS旧菜单/Android仅卸载，不证明完整恢复"
+    }
+  ],
+  "evidence_changes": [
+    {
+      "id": "E-KDCD-02",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "name": "guide.html",
+          "url": "https://d1ergij2b6wmg5.cloudfront.net/kug/kindle_scribe_2024/v1/en-US/html/kug.html",
+          "checked_on": "2026-10-27",
+          "access_mode": "public_GET",
+          "hands_on": false,
+          "visual_observed": false,
+          "status": 200,
+          "content_type": "text/html",
+          "last_modified": "Mon, 05 Oct 2026 07:48:33 GMT",
+          "raw_work_path": "work/kindle-audio-family-deepening/raw/guide.html",
+          "raw_sha256": "6122a2ee70cb5748992d93a301a72fc2c76608e3bf2c99dabd732a99595f8815",
+          "bytes": 152359,
+          "archived_artifact": "artifacts/kindle-audio-family-deepening/source-notes.md",
+          "sha256": "90b7a8fea030817a03f73d452cfbdabcbb1138c1d363bea58bab3e478397915b",
+          "note": "同SHA指南复读扩展；11图另立派生E，不把GET当看图"
+        }
+      ]
+    },
+    {
+      "id": "E-KHK-01",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "capture_url": "https://khankids.zendesk.com/hc/en-us/articles/4409036780955-Learn-more-about-the-books-in-the-Khan-Academy-Kids-app",
+          "checked_on": "2026-10-27",
+          "access_mode": "web_tool_public_page_text_and_static_image",
+          "source_updated_on": "2026-02-26",
+          "raw_work_path": "work/khan-library-controls-deepening/web-response-2.json",
+          "raw_sha256": "83aa5d229b599120b14a7a3e705511a25ac589ef9ad4822f3d8f2a69397c4c2e",
+          "locator": "Books article L30–43/81; one look-at-my-map image",
+          "archived_artifact": "artifacts/khan-library-controls-deepening/source-notes.md",
+          "sha256": "dc0bf2de45ba29857a4c303a9fc1d65fdaba624a6a68bb57efa9e799e700d1a6",
+          "hands_on": false,
+          "visual_observed": true,
+          "visual_scope": "Single page image: Home, arrows, triangular control; reading mode and effects unknown",
+          "artifact_hashes": {
+            "artifacts/khan-library-controls-deepening/look-at-my-map.png": "63852e61859312f3250de1b3dc98dc221435ef05d8c2ccc3f77578dcbc82ea0d"
+          }
+        }
+      ]
+    },
+    {
+      "id": "E-MDCD-04",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "existing_local_source_text_reread_no_network",
+          "locator": "PDF p2 Contacts; p4 Notes; p5 SMS/Voice Recorder; local text reread only",
+          "raw_work_path": "work/mudita-controls-deepening/release-1.6.pdf",
+          "raw_sha256": "0667012d506810e4972a53d8e8c62c43a9e744fd4b55ea37cbb91a8d05fba3d9",
+          "hands_on": false,
+          "visual_observed": false,
+          "note": "本轮复读旧原件；没有新请求或新修订；限定与新帮助对照见独立摘记。",
+          "archived_artifact": "artifacts/mudita-app-controls-deepening/source-notes.md",
+          "sha256": "50b3015be7094b8d6931c95d659e8e90a7a1092257f8e09c786753bbce301727"
+        }
+      ]
+    },
+    {
+      "id": "E-MDCD-06",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "existing_local_source_text_reread_no_network",
+          "locator": "Send SMS/MMS contact/new number; delete conversations; compare dedicated articles",
+          "raw_work_path": "work/mudita-controls-deepening/messaging.html",
+          "raw_sha256": "d85170331c357d81a246c897961a471e6a676a62591e5042714b6012f1ec11ee",
+          "hands_on": false,
+          "visual_observed": false,
+          "note": "本轮复读旧原件；没有新请求或新修订；限定与新帮助对照见独立摘记。",
+          "archived_artifact": "artifacts/mudita-app-controls-deepening/source-notes.md",
+          "sha256": "50b3015be7094b8d6931c95d659e8e90a7a1092257f8e09c786753bbce301727"
+        }
+      ]
+    },
+    {
+      "id": "E-KHK-01",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "E-KHK-01",
+      "field": "source_updated_on",
+      "before": null,
+      "after": "2026-02-26"
+    },
+    {
+      "id": "E-KHK-01",
+      "field": "visual_observed",
+      "before": false,
+      "after": true
+    },
+    {
+      "id": "E-KHK-01",
+      "field": "visual_kind",
+      "before": null,
+      "after": "static_official_help_image"
+    },
+    {
+      "id": "E-KHK-01",
+      "field": "visual_audit_path",
+      "before": null,
+      "after": "artifacts/khan-library-controls-deepening/source-notes.md"
+    },
+    {
+      "id": "E-KHK-01",
+      "field": "visual_audit_sha256",
+      "before": null,
+      "after": "dc0bf2de45ba29857a4c303a9fc1d65fdaba624a6a68bb57efa9e799e700d1a6"
+    },
+    {
+      "id": "E-KHK-01",
+      "field": "observed_on",
+      "before": null,
+      "after": "2026-10-27"
+    }
+  ],
+  "files": [
+    {
+      "path": "docs/research/interaction-library/batches/initial-coverage.csv",
+      "backup": "work/kindle-audio-family-deepening/reviewed-before/initial-coverage.csv",
+      "before_sha256": "47295cb1d1c407b2bfc592b18d2a1e876eb5682ab06ef0ce707bec161e834a83",
+      "after_sha256": "0907ee6e7bcc1dc8606d9173482f69c22819c6dad1a95774afc36aa19f903413"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/kindle-controls-deepening-evidence.jsonl",
+      "backup": "work/kindle-audio-family-deepening/reviewed-before/kindle-controls-deepening-evidence.jsonl",
+      "before_sha256": "9ed818c0ce4ad6fcd022c150c9ee234cbad9cfe62e50cef94198c443cb53d3fb",
+      "after_sha256": "a232e0a74cd2f7486ef4d0384ab92590ebc35a8cdf175769af619415fd4b2b60"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/initial-evidence.jsonl",
+      "backup": "work/kindle-audio-family-deepening/reviewed-before/initial-evidence.jsonl",
+      "before_sha256": "c7ea4d216f4c1f6faf9068a5d1f0159e8bb11353aaaaa609128a989c393ca92c",
+      "after_sha256": "6e036d424f20fbaba7db57cc886dd9a88bb3a72a45d2d737e99c9b94dcc3b638"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/mudita-controls-deepening-evidence.jsonl",
+      "backup": "work/kindle-audio-family-deepening/reviewed-before/mudita-controls-deepening-evidence.jsonl",
+      "before_sha256": "15c5e27a97a26ffcd00367586c5b3acc0e133de9ad814af5d0e47e3695f9b962",
+      "after_sha256": "7e3473ff55c421b65899d47712c84a8824d5ab0a2a60d17a40defc1026a42ecf"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/children-deepening-coverage.csv",
+      "backup": "work/kindle-audio-family-deepening/reviewed-before/children-deepening-coverage.csv",
+      "before_sha256": "bda9d8f66384bd223ffd83ea41e483c282615f96376f0b803ef86000d8a896f6",
+      "after_sha256": "1c03b51368458b74aab93091a471de6624c6b0dc138d0bca1bac30e8f0d9c948"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/reader-coverage.csv",
+      "backup": "work/kindle-audio-family-deepening/reviewed-before/reader-coverage.csv",
+      "before_sha256": "4170b005fa4c73a16a41114525f9e529e0756432d8c55d1cc6c8dd95b5b6743d",
+      "after_sha256": "b2c3649c79cb3c06d7b5fc3da3ffe7f2d79d1e14d7158f6df887348f07627bff"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/khan-controls-deepening-coverage.csv",
+      "backup": "work/kindle-audio-family-deepening/reviewed-before/khan-controls-deepening-coverage.csv",
+      "before_sha256": "a5404671083ba0cfad021aea508858e39430441192e0c923e158733fe18338d5",
+      "after_sha256": "2c2ce5162579e87dbf95b21cb2c40f7d08cf2577fbac5b718a0677208a34f730"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/kindle-controls-deepening-coverage.csv",
+      "backup": "work/kindle-audio-family-deepening/reviewed-before/kindle-controls-deepening-coverage.csv",
+      "before_sha256": "774bf05a14d76603d5508e5c31215bfd08784c7768982aa174ecb2f7035440d4",
+      "after_sha256": "f7baedfc0b37efac33b18664ee25ee5dc1e308ccabc492ea82343af8efd68e03"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/mudita-controls-deepening-coverage.csv",
+      "backup": "work/kindle-audio-family-deepening/reviewed-before/mudita-controls-deepening-coverage.csv",
+      "before_sha256": "4aab3bc19d2c726dc213b9cf75613dae3f61421aecececfe1e2f7c6622801d50",
+      "after_sha256": "a9dab61f2317b39f6a2f93ee82c529b291481ab204300012da4f3c30194fc73e"
+    }
+  ],
+  "old_tasks": 17,
+  "old_task_fields": 54,
+  "old_evidence_captures": 4,
+  "old_evidence_metadata_fields": 7
+}

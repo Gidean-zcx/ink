@@ -1,0 +1,46 @@
+[
+  {
+    "name": "reader-demo",
+    "exit": 0,
+    "frames": [
+      {
+        "path": "work/bigme-controls-deepening/raw/reader-demo/frame-01.png",
+        "sha256": "14bf253f52e2180136467d79af3f63844e5a79fa298e268db2066e88e1a24416"
+      },
+      {
+        "path": "work/bigme-controls-deepening/raw/reader-demo/frame-02.png",
+        "sha256": "2dc494156193b86242fdbad8c3a965e29020df59061f076acc5b9648d61ac95c"
+      },
+      {
+        "path": "work/bigme-controls-deepening/raw/reader-demo/frame-03.png",
+        "sha256": "d352b7f891558be2bd86b234d959b0390394acc33e5e28c228d1b2164fa74266"
+      },
+      {
+        "path": "work/bigme-controls-deepening/raw/reader-demo/frame-04.png",
+        "sha256": "a6e459b56e849d6164439d6f0e4a204234bd67e187f69a5a06f607d1a99fba85"
+      },
+      {
+        "path": "work/bigme-controls-deepening/raw/reader-demo/frame-05.png",
+        "sha256": "f827b5f0c8252737f87aec3b09f5264e66438df02c6e4f620637d3df0e703c7f"
+      }
+    ]
+  },
+  {
+    "name": "tts-demo",
+    "exit": 0,
+    "frames": [
+      {
+        "path": "work/bigme-controls-deepening/raw/tts-demo/frame-01.png",
+        "sha256": "d1c9b1ae3d4903912195adc52e00c94706ac45519151e64b4cf19876a5761cd9"
+      },
+      {
+        "path": "work/bigme-controls-deepening/raw/tts-demo/frame-02.png",
+        "sha256": "76f104b7debfe969269e1168fb963898a02f70ef10550651fabaf556358a974a"
+      },
+      {
+        "path": "work/bigme-controls-deepening/raw/tts-demo/frame-03.png",
+        "sha256": "7b10c028c1f44efe03ad17dc85a9fa6e6e4782a26eda48b465e00913f78c0277"
+      }
+    ]
+  }
+]

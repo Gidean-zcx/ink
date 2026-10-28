@@ -1,0 +1,162 @@
+[
+  {
+    "path": "work/tonie-controls-deepening/extracted/01.txt",
+    "bytes": 5287,
+    "sha256": "d1bf82bcd4e83dcbb0fe8ac4fe19a323b9705fa1b9284f1db992d4621f4ac6d4"
+  },
+  {
+    "path": "work/tonie-controls-deepening/extracted/02.txt",
+    "bytes": 5158,
+    "sha256": "493111496c7c69c25d081a52b39c1ef2f3acc8ff2ac7efd620673190e40d43a1"
+  },
+  {
+    "path": "work/tonie-controls-deepening/extracted/03.txt",
+    "bytes": 2249,
+    "sha256": "4e5e314c15ae2d6d675fe09af758e79c25a308a27c747e314a22e3af59a3d9a4"
+  },
+  {
+    "path": "work/tonie-controls-deepening/extracted/04.txt",
+    "bytes": 3437,
+    "sha256": "1863b27df213c369171e2a772d0873951547a4d7886ada3507c938df542503f1"
+  },
+  {
+    "path": "work/tonie-controls-deepening/extracted/05.txt",
+    "bytes": 1969,
+    "sha256": "d4e36a6a9af729a9fe427078a76a678a1963cac2b02338fc49021fc1572c6237"
+  },
+  {
+    "path": "work/tonie-controls-deepening/extracted/06.txt",
+    "bytes": 4250,
+    "sha256": "a03731b670bd30cd4a490ceb7a5b5a3903df82f0d9670e09dbfffb684e1fcd82"
+  },
+  {
+    "path": "work/tonie-controls-deepening/extracted/07.txt",
+    "bytes": 3818,
+    "sha256": "c95fffd5cdb1f132e77eac5a9e290b1fcc16eb38086f2cbfb1f1456d44b47d10"
+  },
+  {
+    "path": "work/tonie-controls-deepening/extracted/08.txt",
+    "bytes": 1420,
+    "sha256": "6e8e21ef15bbb3d73a25c7a2192dab64108ed8b3ea0d5a370741b7f93c098d13"
+  },
+  {
+    "path": "work/tonie-controls-deepening/extracted/09.txt",
+    "bytes": 2407,
+    "sha256": "bd6df6bc49662fa73267fc75b2e1d15ba9454d7e80d2c9cefd53964d3871ec61"
+  },
+  {
+    "path": "work/tonie-controls-deepening/extracted/10.txt",
+    "bytes": 2569,
+    "sha256": "3cb79a1067f4045d7e6906cf07d80750dbe917ee45bbef293308bd8fc809ec19"
+  },
+  {
+    "path": "work/tonie-controls-deepening/extracted/11.txt",
+    "bytes": 950,
+    "sha256": "6f179b3b7a2977557572ff79f56520404f22f9ca6c7725badaedcd4007e081c8"
+  },
+  {
+    "path": "work/tonie-controls-deepening/extracted/12.txt",
+    "bytes": 782,
+    "sha256": "870798cbeaae519b2810d1efd78ddc72ea7740d19dee6a6af1befedd5c4107dc"
+  },
+  {
+    "path": "work/tonie-controls-deepening/extracted/13.txt",
+    "bytes": 3330,
+    "sha256": "54c4442b14bfa50d01814e172da301d9561b502c87668fd84f6f5ebc6e83abfa"
+  },
+  {
+    "path": "work/tonie-controls-deepening/extracted/14.txt",
+    "bytes": 4013,
+    "sha256": "17e416c3a83ff398e83057cbe7ad66c86e1f609944a67d84cf42cb7a81610efc"
+  },
+  {
+    "path": "work/tonie-controls-deepening/extracted/15.txt",
+    "bytes": 5934,
+    "sha256": "342681784b76a2fd6f25f4b213f399ba610a24c48e357e269d083f59c2295cd5"
+  },
+  {
+    "path": "work/tonie-controls-deepening/extracted/16.txt",
+    "bytes": 2013,
+    "sha256": "69a0e9f1ff80b5d14af25ad3768942bdad4cde09c042c5ddeaefcf2ad28aad7a"
+  },
+  {
+    "path": "work/tonie-controls-deepening/extracted/17.txt",
+    "bytes": 3496,
+    "sha256": "1ce765984ce74f7356da7fc2294b0580a4f45723b8daa84898c6c9561665f627"
+  },
+  {
+    "path": "work/tonie-controls-deepening/extracted/18.txt",
+    "bytes": 926,
+    "sha256": "3c601f17cabce9d62f588ff7bdfb4cfdc8be3e54dea0a0824af75d9352520551"
+  },
+  {
+    "path": "work/tonie-controls-deepening/extracted/19.txt",
+    "bytes": 3968,
+    "sha256": "9b7860196f0a707aa1181be044375fdf361d7f461d0167af64a52a0df945444d"
+  },
+  {
+    "path": "work/tonie-controls-deepening/extracted/20.txt",
+    "bytes": 3445,
+    "sha256": "c94d727aaf69c10cabec6374460069114b115553db5577e862a4803488d2f7f2"
+  },
+  {
+    "path": "work/tonie-controls-deepening/extracted/21.txt",
+    "bytes": 1767,
+    "sha256": "f311916fb45ef622fcf42c81db2044f7c5ce2e492cf202ea4060c7c0155ef053"
+  },
+  {
+    "path": "work/tonie-controls-deepening/extracted/22.txt",
+    "bytes": 2263,
+    "sha256": "c32b25dbdec892f1e838e97410e08405b243f03880df450ef4c19b919dd91bf0"
+  },
+  {
+    "path": "work/tonie-controls-deepening/extracted/23.txt",
+    "bytes": 4583,
+    "sha256": "9c83256ba9cc873239eba8bedcdb43b69c2f509edeea696ca08ede394b115bb5"
+  },
+  {
+    "path": "work/tonie-controls-deepening/extracted/24.txt",
+    "bytes": 4073,
+    "sha256": "da106b26ff0cfd754c836edbec52f194b8c9e88b06b543455f055a0736a1ef12"
+  },
+  {
+    "path": "work/tonie-controls-deepening/tn-pages1.json",
+    "bytes": 33296,
+    "sha256": "1fa9f0c71ba95ff37bdf069b89f608043bf15409b56aaf43b49f70d76ef03c49"
+  },
+  {
+    "path": "work/tonie-controls-deepening/tn-pages2.json",
+    "bytes": 32861,
+    "sha256": "254b31414d6ec3c0f63e2b7e46ffb6bec556789ae236ee68ab9beb9466e6f8fc"
+  },
+  {
+    "path": "work/tonie-controls-deepening/tn-pages3.json",
+    "bytes": 36174,
+    "sha256": "32b38e583bd7b1bc2d98a0a33acd0780de6fd2981f194024b745da207683b7f4"
+  },
+  {
+    "path": "work/tonie-controls-deepening/tn-pages4.json",
+    "bytes": 32748,
+    "sha256": "b13140f0cb0c95738a1e38751ef6510e20087552a192dbd6e87cac30d874c7ad"
+  },
+  {
+    "path": "work/tonie-controls-deepening/tn-pages5.json",
+    "bytes": 34617,
+    "sha256": "668bca63955378eaa9266a4c17dfbb66d56eecc848e6902fd1b13a5362dacb0e"
+  },
+  {
+    "path": "work/tonie-controls-deepening/tn-pages6.json",
+    "bytes": 32068,
+    "sha256": "7bf90c4b72f2526f1712547d9eccb2e7a3fb51df24401e93516250697c282485"
+  },
+  {
+    "path": "work/tonie-controls-deepening/tn-pages7.json",
+    "bytes": 23547,
+    "sha256": "19066f297b372a9ef7bf00e53e046369df2aa2dcbe0e6889e174119239382bb5"
+  },
+  {
+    "path": "work/tonie-controls-deepening/web-discovery.json",
+    "bytes": 33924,
+    "sha256": "488d003cca337c344e801156d5660383841530b6b8987a6fbbe4f3ba6d81ea97"
+  }
+]

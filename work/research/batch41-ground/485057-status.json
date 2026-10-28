@@ -1,0 +1,21 @@
+{
+  "id": "485057",
+  "requested_url": "https://help.ground.news/en/articles/485057",
+  "final_url": "https://help.ground.news/en/articles/485057",
+  "status": 200,
+  "checked_utc": "2026-10-27T05:58:26.378800+00:00",
+  "bytes": 103957,
+  "sha256": "529c89b97eeab5b0f074341e6b1b88f39198b768d1550740966ec0b865c31930",
+  "content_type": "text/html",
+  "challenge_detected": false,
+  "blocked_status": false,
+  "body_extracted": true,
+  "text_lines": 28,
+  "links": 27,
+  "images": 1,
+  "challenge_review": "false_positive: recaptcha appeared only in normal Content-Security-Policy and empty site-key configuration; article content was present",
+  "article_links": 12,
+  "article_images": 0,
+  "source_updated_display": "Monday, March 16 2026",
+  "source_updated_epoch_ms": 1773619101869
+}

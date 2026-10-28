@@ -1,0 +1,60 @@
+My Subscription Isn’t Recognized
+Ground News Help Center
+Contact Us
+How can we help you?
+Results
+No results found
+More results
+We use cookies to analyze website traffic and help improve our visitor experience. Privacy Policy
+Reject
+Accept
+In this articleTroubleshooting FAQWhy does my subscription status say "Free" when I recently redeemed a gift code?I do not have a gift code or referral credit, and my subscription status is still "free" even though I have a receipt of purchase...For Subscriptions Purchased via the App Store or Play StoreFor Subscriptions Purchased via the Ground News WebsiteHow to Sign Out of the Wrong AccountIf "Restore my subscription" and Signing into the Correct Account Did Not Work...Get In Touch
+Home
+Manage Your Account & Subscription
+Subscription Questions
+Subscription Troubleshooting
+My Subscription Isn’t Recognized
+Edited Saturday, August 29 2026
+If you're experiencing issues with your Ground News subscription, such as it not syncing or being unable to access paid features, these troubleshooting steps may be helpful for you.
+Troubleshooting FAQ
+Why does my subscription status say "Free" when I recently redeemed a gift code?
+If you have recently redeemed a code, please refer to the "Referral Credit" section of the Manage Account page in the mobile app. This is where you'll notice your gift credit and its expiry date. A "Referral Credit" is a one-time code that can be redeemed for a specified amount of time and it does not automatically renew.
+It is possible to purchase an auto-renewing subscription in addition to your referral credit, though it will not give you additional features unless you are upgrading.
+I do not have a gift code or referral credit, and my subscription status is still "free" even though I have a receipt of purchase...
+For Subscriptions Purchased via the App Store or Play Store
+On the Ground News App, navigate to Profile > Manage Account > Restore In-App Purchase.
+Important: Choosing "Restore In-App Purchase" in the mobile apps will reactivate a cancelled subscription.
+Note: If you tap "Restore In-App Purchase" in the mobile app and it does not restore, but only continuously loads, it is an indication that you may have purchased your subscription via the Ground News Website. If this is the case, please follow the steps below.
+If "Restore In-App Purchase" does not work, but you have subscribed via the App Store or Play Store, please let our team know at feedback@ground.news .
+For Subscriptions Purchased via the Ground News Website
+To recognize your subscription, please sign in with the same account credentials that you initially subscribed with. The same credentials should be used to access your subscription across all platforms, including the mobile apps and website.
+You can sign in here: https://ground.news/login
+Please keep in mind that if you signed up for your subscription via a social login method, you will need to sign in again using the same method. If you sign in with a new account, your subscription will not automatically transfer over to your new account.
+If you’ve accidentally signed into the wrong account on Ground News, these instructions will help you sign out and regain access to the correct account.
+How to Sign Out of the Wrong Account
+If you are on Ground Web, kindly click the "My Account" button located on the top-right side of your screen. From there, scroll down to the "Enabled Login Methods" and you'll find the "Sign Out" button there.
+If you are on our mobile app, click the "Profile" tab on the bottom-right of your screen, then click the "Setting icon" which looks like a cogwheel, and scroll down to the bottom where you should see the "Sign Out" option.
+Once you are signed out, you can simply sign back in with your original account. If you'd prefer to access your subscription using a new or different account, please contact our team at subscriptions@ground.news to arrange an update.
+If "Restore my subscription" and Signing into the Correct Account Did Not Work...
+If neither of the steps listed above resolved your issue, it is likely that the email address that your subscription is attached to might 1) be obscured by a service (for example, iCloud Private Relay creates an anonymized email address) or 2) may have a typo in it.
+If you did not receive any confirmation of purchase nor a registration email, this is evidence that the email you entered upon subscribing might have been invalid.
+To resolve this, please get in touch with our team and share your receipt number with us. If you have not received a receipt due to there being a typo in your email address, you can share your name (entered at checkout) and (only) the last 4 digits of the card you paid with, along with the date of payment.
+Get In Touch
+If you continue to experience trouble recognizing your subscription, please reach out to our team at subscriptions@ground.news and we would be happy to help.
+We hope this article was helpful! If you have any concerns about this article and would like to leave a comment, we welcome your feedback – but please keep in mind feedback that is submitted on a Help Center article will not be responded to by our team. If you have an issue you would like resolved by our team, please contact feedback@ground.news
+subscription
+not recognized
+not syncing
+paid for subscription
+restore my subscription
+Was this article helpful?
+Yes
+No
+Sorry about that! Care to tell us more?
+What was unhelpful?
+Submit
+Thanks for the feedback!
+There was an issue submitting your feedback
+Please check your connection and try again.
+Cookie preferences
+Refund and Cancellation PolicyTerms and ConditionsPrivacy Policy

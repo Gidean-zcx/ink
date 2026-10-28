@@ -1,0 +1,25 @@
+{
+  "name": "51-endpoint-selected",
+  "at": "2026-10-27T06:39:45.614550+00:00",
+  "url": "https://www.duolingo.com/lesson/unit/1/level/1",
+  "title": "Duolingo - The world’s most popular way to learn",
+  "text": "Get\nas\nclose\nas\nyou\ncan\nGet as close as you can\n6\n+\n1\n=\n10\n6+=10\nCHECK",
+  "controls": [
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": null,
+      "test": "quit-button",
+      "type": "submit",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "CHECK",
+      "aria": null,
+      "test": "player-next",
+      "type": "submit",
+      "disabled": false
+    }
+  ]
+}

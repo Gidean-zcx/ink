@@ -1,0 +1,671 @@
+{
+  "flow_changes": [
+    {
+      "id": "F-M015-03",
+      "field": "evidence_ids",
+      "before": "E-RDW-03",
+      "after": "E-RDW-03;E-RDD-06;E-RWCD-03"
+    },
+    {
+      "id": "F-M015-03",
+      "field": "known_branches",
+      "before": "自动高亮、定位失败、标签层级",
+      "after": "网页列表T/文内Shift+T标文档，选高亮T标高亮；Enter确认关闭，Ctrl/Cmd+Enter确认留菜单。Action Tag置于note影响Readwise：.h1标题、.c1/.c2合并；旧锚点失败仍从Notebook查回。"
+    },
+    {
+      "id": "F-M015-03",
+      "field": "gaps",
+      "before": "重定位、内容更新、完整返回流程",
+      "after": "标签不互相继承；合并/删除、锚点修复、离线冲突、Action Tag更新回滚未核；不是全部高亮自动制题。"
+    },
+    {
+      "id": "F-M015-03",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M015-05",
+      "field": "evidence_ids",
+      "before": "E-RDD-01",
+      "after": "E-RDD-01;E-RWCD-14"
+    },
+    {
+      "id": "F-M015-05",
+      "field": "known_branches",
+      "before": "最远进度与最后位置；X改进度",
+      "after": "最远进度与最后位置分开；网页箭头/手机Return返回，手机X重设当前位置。网页Shift+R重设可能暂显灰色0%，持续阅读后更新；关闭Return indicator只隐藏按钮仍跟踪。 默认视图可选Currently reading以进入最近文档，非精确音频断点证明。"
+    },
+    {
+      "id": "F-M015-05",
+      "field": "gaps",
+      "before": "判定阈值、跨端冲突、原句位置",
+      "after": "实际阅读判定阈值、刷新/跨端并发、音频与文本锚点、重设失败及误关按钮恢复未核。"
+    },
+    {
+      "id": "F-M015-05",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M015-06",
+      "field": "known_branches",
+      "before": "原删除设备；正文和批注一起恢复",
+      "after": "More/Delete或网页D删除；原设备Trash恢复批注。网页Z可逐步撤销近几项、iOS系统摇动或部分toast可撤销；批量恢复Restore all，移动Search/View措辞差异保留。"
+    },
+    {
+      "id": "F-M015-06",
+      "field": "gaps",
+      "before": "移动端Search/View入口差异、清空后的处理",
+      "after": "撤销深度/时限/重启、Android通用Undo、永久清空、换设备恢复、更新文章后旧批注与版本冲突未知；即时撤销不等同备份。"
+    },
+    {
+      "id": "F-M015-06",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M015-08",
+      "field": "evidence_ids",
+      "before": "E-RDD-02",
+      "after": "E-RDD-02;E-RWCD-13"
+    },
+    {
+      "id": "F-M015-08",
+      "field": "known_branches",
+      "before": "逐工具权限、确认、Remember",
+      "after": "Global网页/桌面启用后问答带段落引用；读写工具分组、每工具允许/确认/禁用。确认卡Remember加Approve/Deny将该工具后续权限改为允许/禁用；静态卡未展开详情。"
+    },
+    {
+      "id": "F-M015-08",
+      "field": "gaps",
+      "before": "全部工具、执行失败、部分成功、撤回",
+      "after": "文档只举工具类别不是完整工具清单；拒绝后对话、部分成功/取消/重试、并发状态、失败回滚与移动全库能力未核。"
+    },
+    {
+      "id": "F-M015-08",
+      "field": "visual_status",
+      "before": "not_observed",
+      "after": "static_reference_only"
+    },
+    {
+      "id": "F-M015-08",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M015-09",
+      "field": "evidence_ids",
+      "before": "E-RDD-02",
+      "after": "E-RDD-02;E-RWCD-13"
+    },
+    {
+      "id": "F-M015-09",
+      "field": "known_branches",
+      "before": "作用范围、侧栏展开、移动端清除与网页历史",
+      "after": "技能编辑名称/描述/指令/作用域/模型，斜杠触发；文内会话可展开同聊天，菜单新建/改名/复制/删除/检索历史。静态空表Save灰显；移动清除聊天仍可能在网页历史。"
+    },
+    {
+      "id": "F-M015-09",
+      "field": "gaps",
+      "before": "模型错误、历史删除传播、移动端构建",
+      "after": "未填表；保存校验、技能加载与模型上下文成本、触发歧义、删除与跨端历史一致性未知；空表灰显不证明具体必填规则。"
+    },
+    {
+      "id": "F-M015-09",
+      "field": "visual_status",
+      "before": "not_observed",
+      "after": "static_reference_only"
+    },
+    {
+      "id": "F-M015-09",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M015-11",
+      "field": "evidence_ids",
+      "before": "E-RDD-05",
+      "after": "E-RDD-05;E-RWCD-08;E-RWCD-11"
+    },
+    {
+      "id": "F-M015-11",
+      "field": "known_branches",
+      "before": "笔记、CSV、OPML、ZIP；异步邮件",
+      "after": "Notebook笔记、账户CSV/OPML/内容ZIP分开；完整包邮件异步。网页Shift+D导出带批注PDF；Print with annotations调用浏览器打印，未实际输出。"
+    },
+    {
+      "id": "F-M015-11",
+      "field": "gaps",
+      "before": "文件结构、恢复一致性、链接失效重试",
+      "after": "完整账户回导、ZIP进度/失败、文字视图高亮在PDF出口中的位置、外部PDF批注往返和第三方删改同步未核。"
+    },
+    {
+      "id": "F-M015-11",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M015-12",
+      "field": "evidence_ids",
+      "before": "E-RDD-06",
+      "after": "E-RDD-06;E-RWCD-12"
+    },
+    {
+      "id": "F-M015-12",
+      "field": "known_branches",
+      "before": "web/mobile保存查询、RSS分组",
+      "after": "命名保存查询；可从标签/作者/源建立视图；按Location或Seen分栏、启计数及在Home配置排序。移动Feed文件夹选源Next创建，之后Done确认增减；视图是查询而非内容副本。"
+    },
+    {
+      "id": "F-M015-12",
+      "field": "gaps",
+      "before": "无效查询、重命名冲突、删除引用",
+      "after": "计数范围、空/错误查询、重名/删视图、移出结果后的当前阅读状态、跨端排序和批量恢复未知。"
+    },
+    {
+      "id": "F-M015-12",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M015-02",
+      "field": "evidence_ids",
+      "before": "E-RDW-02",
+      "after": "E-RDW-02;E-RWCD-14"
+    },
+    {
+      "id": "F-M015-02",
+      "field": "known_branches",
+      "before": "暂停/停止、滚动分离、离线",
+      "after": "暂停/停止、滚动分离、离线 长文模式顶端改为Aa，More/Listen using text-to-speech进入听读；不是播放能力被移除。"
+    },
+    {
+      "id": "F-M015-02",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M002-02",
+      "field": "evidence_ids",
+      "before": "E-KOB-02;E-KOB-03",
+      "after": "E-KOB-02;E-KOB-03;E-KBCD-07"
+    },
+    {
+      "id": "F-M002-02",
+      "field": "known_branches",
+      "before": "自动高亮、撤销、第三方书删除",
+      "after": "自动高亮/撤销及第三方书删除；通用手势页明确PDF和漫画不能按此长按方式选文本。"
+    },
+    {
+      "id": "F-M002-02",
+      "field": "gaps",
+      "before": "取消/撤销全流程、离线、冲突",
+      "after": "格式例外不等于不支持手写；取消/撤销全链、离线、冲突及当前N428构建未测。"
+    },
+    {
+      "id": "F-M002-02",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M002-10",
+      "field": "evidence_ids",
+      "before": "E-KBD-01;E-KBD-12;E-KBD-13;E-KBD-29",
+      "after": "E-KBD-01;E-KBD-12;E-KBD-13;E-KBD-29;E-KBCD-02;E-KBCD-04"
+    },
+    {
+      "id": "F-M002-10",
+      "field": "known_branches",
+      "before": "退出预览和回原页、软件分支",
+      "after": "预览外退出/回原页保持旧链；中央Reading Menu→目录→点章，目录超过一页可左右划页。菜单另区分章节前后、书内搜索与Notes。"
+    },
+    {
+      "id": "F-M002-10",
+      "field": "gaps",
+      "before": "N428键反转与快翻具体动作",
+      "after": "N428按键反转/长按快翻仍未闭合；目录跳转后的原页返回是否与预览相同、空目录/搜索及无障碍分支差异未核。"
+    },
+    {
+      "id": "F-M002-10",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M002-13",
+      "field": "evidence_ids",
+      "before": "E-KBD-18;E-KBD-19",
+      "after": "E-KBD-18;E-KBD-19;E-KBCD-05;E-KBCD-06;E-KBCD-11"
+    },
+    {
+      "id": "F-M002-13",
+      "field": "known_branches",
+      "before": "彩虹纹处理的显示取舍",
+      "after": "原彩虹纹取舍保留；深色由Reading Settings/Page appearance勾选后X保存，图像不反相。暖光Auto与手动分开，可设Bedtime。官方共用Page2静态图可见Refresh the screen every: Chapter。"
+    },
+    {
+      "id": "F-M002-13",
+      "field": "gaps",
+      "before": "全刷频率入口、刷新实际表现",
+      "after": "仅刷新入口/示例值，非默认或完整档位；未测刷新/残影性能。Bedtime不等于音频计时；当前固件菜单、模式持久化/相互作用未核。"
+    },
+    {
+      "id": "F-M002-13",
+      "field": "visual_status",
+      "before": "not_observed",
+      "after": "static_reference_only"
+    },
+    {
+      "id": "F-M002-13",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M002-18",
+      "field": "evidence_ids",
+      "before": "E-KBD-23",
+      "after": "E-KBD-23;E-KBCD-08;E-KBCD-10;E-KBCD-12"
+    },
+    {
+      "id": "F-M002-18",
+      "field": "known_branches",
+      "before": "下载状态、配对失败、未缓存章节",
+      "after": "原下载/配对/跳章；统计按钮看章/全书剩余和下一章时长，菜单可详情/词典。排错给Rescan及Settings/Bluetooth connection设备菜单Forget后重配；启用蓝牙自动开Wi-Fi只指开关，不证明需互联网。"
+    },
+    {
+      "id": "F-M002-18",
+      "field": "gaps",
+      "before": "断网换章、断连与重启续播",
+      "after": "静态Back to My Books未触发，不推定退出续播；整本离线/断连/重启进度仍未知。设计概述计时范围未给N428音频入口/对象，不能套手机App睡眠计时。"
+    },
+    {
+      "id": "F-M002-18",
+      "field": "visual_status",
+      "before": "not_observed",
+      "after": "static_reference_only"
+    },
+    {
+      "id": "F-M002-18",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M018-01",
+      "field": "known_branches",
+      "before": "中国区iOS拼写设置日志；Android例句显示修复",
+      "after": "分别配置学后/复习后拼写；5.9.8复习100词/组不是每日计划；Android例句显示修复仍限旧记录"
+    },
+    {
+      "id": "F-M018-01",
+      "field": "gaps",
+      "before": "逐题回忆/揭示/评价/反馈链、原声音频与中断恢复未知",
+      "after": "逐题回忆/揭示/评价/反馈、听写与听词区分、原声音频、分组中断和跨日队列未知"
+    },
+    {
+      "id": "F-M018-01",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M018-02",
+      "field": "known_branches",
+      "before": "回上一词/只拼错词/提示页与记错了修复日志",
+      "after": "回上一词/只拼错词/提示页声明；5.11.6仅记尝试修复纠错按钮，不证修复成功"
+    },
+    {
+      "id": "F-M018-02",
+      "field": "gaps",
+      "before": "是否撤销、空错词集合、提示阶梯、重试和队列更新未知",
+      "after": "返回是否撤销、空错词集合、提示阶梯、重试、按钮恢复和队列更新未知"
+    },
+    {
+      "id": "F-M018-02",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M018-04",
+      "field": "known_branches",
+      "before": "部分共享数据范围",
+      "after": "部分共享数据范围；政策索引列特定老账号密码条件和两种账户入口名称；04:00限日数据边界"
+    },
+    {
+      "id": "F-M018-04",
+      "field": "gaps",
+      "before": "冲突、离线、重装",
+      "after": "账号入口版本关系、身份合并、同步冲突、离线、重装和用户可执行备份/回滚未知"
+    },
+    {
+      "id": "F-M018-04",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M018-05",
+      "field": "known_branches",
+      "before": "iOS帮助路径；Android描述路径差异",
+      "after": "iOS帮助路径；Android描述路径差异；2026-10-27政策直接请求仅壳、搜索索引仍有说明"
+    },
+    {
+      "id": "F-M018-05",
+      "field": "gaps",
+      "before": "具体FAQ正文、反馈受理状态、离线保存与工单恢复未知",
+      "after": "应用内帮助目录与具体FAQ正文、反馈受理状态、离线保存和工单恢复未知"
+    },
+    {
+      "id": "F-M018-05",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M018-04",
+      "field": "evidence_ids",
+      "before": "E-BBDC-03",
+      "after": "E-BBDC-03;E-BBD-01"
+    }
+  ],
+  "evidence_changes": [
+    {
+      "id": "E-KBD-01",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "anonymous_public_html_GET",
+          "url": "https://help.kobo.com/hc/en-us/articles/17971574287895-Kobo-Libra-Colour",
+          "http_status": 200,
+          "raw_work_path": "work/kobo-controls-deepening/raw/model.html",
+          "raw_sha256": "8c1a1d406f1d769b25e9527b746ecf71c5e6781c0c5b10649c0beed764266a26",
+          "extracted_work_path": "work/kobo-controls-deepening/raw/model.txt",
+          "extracted_sha256": "04494ecb8b80821021ee77f84667e5a6e8ec7c8e5b40d82ad4f731a54dc631c7",
+          "archived_artifact": "artifacts/kobo-controls-deepening/source-notes.md",
+          "sha256": "a08fb3c02953833150d278aecb7547b6e3e79a4f5f3f223515eceabdf309c21a",
+          "hands_on": false,
+          "visual_observed": false,
+          "locator": "N428身份和官方指南链接"
+        }
+      ]
+    },
+    {
+      "id": "E-KBD-02",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "anonymous_public_html_GET",
+          "url": "https://help.kobo.com/hc/en-us/articles/360019123773-Kobo-eReader-User-Guide",
+          "http_status": 200,
+          "raw_work_path": "work/kobo-controls-deepening/raw/guide.html",
+          "raw_sha256": "e354657f25ed8a224a90a02c3bba83c1a68eeaf48c6d590831fd96153766f0b5",
+          "extracted_work_path": "work/kobo-controls-deepening/raw/guide.txt",
+          "extracted_sha256": "458759d4e30db2a5280a3668529325478ec996008ed75d331edcca3dcb974ce3",
+          "archived_artifact": "artifacts/kobo-controls-deepening/source-notes.md",
+          "sha256": "a08fb3c02953833150d278aecb7547b6e3e79a4f5f3f223515eceabdf309c21a",
+          "hands_on": false,
+          "visual_observed": false,
+          "locator": "全部正文链接分层台账；未读子页单列"
+        }
+      ]
+    },
+    {
+      "id": "E-KBD-23",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "anonymous_public_html_GET",
+          "url": "https://help.kobo.com/hc/en-us/articles/4406292712471-Listen-to-audiobooks-on-your-Kobo-eReader",
+          "http_status": 200,
+          "raw_work_path": "work/kobo-controls-deepening/raw/audiobook.html",
+          "raw_sha256": "6eb3c63c03fb984eaaa15dfd15a9ca2dc4a04d5406952d0c354d159624b3b96f",
+          "extracted_work_path": "work/kobo-controls-deepening/raw/audiobook.txt",
+          "extracted_sha256": "a2357202571fac9ea09b97199adad68c1003d1876393d6c19e8ac0df3a79ad18",
+          "archived_artifact": "artifacts/kobo-controls-deepening/source-notes.md",
+          "sha256": "a08fb3c02953833150d278aecb7547b6e3e79a4f5f3f223515eceabdf309c21a",
+          "hands_on": false,
+          "visual_observed": false,
+          "locator": "stats/dictionary、未缓存章；静态另E-KBCD-12"
+        }
+      ]
+    },
+    {
+      "id": "E-KBD-18",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "anonymous_public_html_GET",
+          "url": "https://help.kobo.com/hc/en-us/articles/21355003278615-Reduce-the-rainbow-effect-when-viewing-colour-content",
+          "http_status": 200,
+          "raw_work_path": "work/kobo-controls-deepening/raw/rainbow.html",
+          "raw_sha256": "f6f83348d8f8aa0b534f6054f3a2cc0db3b5ece54ccbb38029606f4c42752427",
+          "extracted_work_path": "work/kobo-controls-deepening/raw/rainbow.txt",
+          "extracted_sha256": "75728a48927d5aa3a5ba24b44025e99681b1e05a610207bb663735f21bcb4391",
+          "archived_artifact": "artifacts/kobo-controls-deepening/source-notes.md",
+          "sha256": "a08fb3c02953833150d278aecb7547b6e3e79a4f5f3f223515eceabdf309c21a",
+          "hands_on": false,
+          "visual_observed": false,
+          "locator": "型号范围及Reading Settings Page2；静态另E-KBCD-11"
+        }
+      ]
+    },
+    {
+      "id": "E-BBDC-01",
+      "field": "additional_captures",
+      "before": null,
+      "after": [
+        {
+          "capture_kind": "public_html_get",
+          "checked_on": "2026-10-27",
+          "url": "https://www.bbdc.cn/index",
+          "final_url": "https://www.bbdc.cn/index",
+          "http_status": 200,
+          "raw_work_path": "work/bbdc-controls-deepening/index.html",
+          "raw_sha256": "4ee092ce7e67d895ecb56f3705f14d88e74d9e6a402d15721ca9823ff4443fa8",
+          "response_bytes": 35980,
+          "locator": "顶部/移动导航；表单节点非实际操作",
+          "archived_artifact": "artifacts/bbdc-controls-deepening/source-notes.md",
+          "sha256": "134db89f2ce646ffc806efa6caaaf139e959656c9def7afecba315cf0e1cc700",
+          "hands_on": false,
+          "visual_observed": false
+        }
+      ]
+    },
+    {
+      "id": "E-BBD-01",
+      "field": "additional_captures",
+      "before": null,
+      "after": [
+        {
+          "capture_kind": "public_html_get",
+          "checked_on": "2026-10-27",
+          "url": "https://apps.apple.com/cn/app/不背单词-四六级考研等英语单词学习/id698570469?platform=mac",
+          "final_url": "https://apps.apple.com/cn/app/%E4%B8%8D%E8%83%8C%E5%8D%95%E8%AF%8D-%E5%9B%9B%E5%85%AD%E7%BA%A7%E8%80%83%E7%A0%94%E7%AD%89%E8%8B%B1%E8%AF%AD%E5%8D%95%E8%AF%8D%E5%AD%A6%E4%B9%A0/id698570469?platform=mac",
+          "http_status": 200,
+          "raw_work_path": "work/bbdc-controls-deepening/appstore-cn.html",
+          "raw_sha256": "3f11560658cfcd9f94ca8e9359f193456b8f2b0ff2ca3ce28c7871b07429218b",
+          "response_bytes": 655769,
+          "locator": "serialized-server-data > data[0].data.shelfMapping.mostRecentVersion.seeAllAction.pageData.shelves[0].items；版本标签/完整日期",
+          "archived_artifact": "artifacts/bbdc-controls-deepening/source-notes.md",
+          "sha256": "134db89f2ce646ffc806efa6caaaf139e959656c9def7afecba315cf0e1cc700",
+          "hands_on": false,
+          "visual_observed": false,
+          "app_build": "5.11.6",
+          "source_updated_on": "2026-09-18",
+          "version_scope": "CN iPhone/iPad listing; date from HTML embedded version record, not installed build"
+        }
+      ]
+    },
+    {
+      "id": "E-BBDC-03",
+      "field": "additional_captures",
+      "before": null,
+      "after": [
+        {
+          "capture_kind": "http_shell_only",
+          "checked_on": "2026-10-27",
+          "url": "https://learnywhere.cn/lexis/privacy",
+          "final_url": "https://learnywhere.cn/lexis/privacy",
+          "http_status": 200,
+          "raw_work_path": "work/bbdc-controls-deepening/privacy.html",
+          "raw_sha256": "6aa7a91f42f7ca1a7ba8b0563661a976d59008b2f704ec3d1434f1f8a0ef3ebe",
+          "response_bytes": 976,
+          "locator": "976字节JavaScript壳；不含政策正文",
+          "archived_artifact": "artifacts/bbdc-controls-deepening/source-notes.md",
+          "sha256": "134db89f2ce646ffc806efa6caaaf139e959656c9def7afecba315cf0e1cc700",
+          "hands_on": false,
+          "visual_observed": false
+        },
+        {
+          "capture_kind": "official_search_index_text",
+          "checked_on": "2026-10-27",
+          "url": "https://learnywhere.cn/lexis/privacy",
+          "raw_work_path": "work/bbdc-controls-deepening/privacy-web-search-response.json",
+          "raw_sha256": "0cfc9429187f424247194a556c1b53c2251ebde9ad4cb711a1102fe3d52c9b38",
+          "upstream_http_body_verified": false,
+          "locator": "web.search响应；第二章（一）/（三）/（五）、第六章（一）/（二）；与直接GET脚本壳分开",
+          "archived_artifact": "artifacts/bbdc-controls-deepening/source-notes.md",
+          "sha256": "134db89f2ce646ffc806efa6caaaf139e959656c9def7afecba315cf0e1cc700",
+          "hands_on": false,
+          "visual_observed": false,
+          "app_build": null,
+          "source_updated_on": "2026-08-28",
+          "effective_on": "2026-09-04",
+          "version_scope": "policy index; client build unspecified"
+        }
+      ]
+    },
+    {
+      "id": "E-RDD-01",
+      "field": "additional_captures",
+      "before": null,
+      "after": [
+        {
+          "capture_kind": "ordinary_public_html_reread",
+          "checked_on": "2026-10-27",
+          "capture_url": "https://docs.readwise.io/reader/docs/faqs",
+          "hands_on": false,
+          "visual_observed": false,
+          "archived_artifact": "artifacts/readwise-controls-deepening/source-notes.md",
+          "sha256": "c1acd83aee1c26d85de94fad1173941340ee4055e7898a346f6997ed4ed981c7",
+          "raw_work_path": "work/readwise-controls-deepening/raw/basics.html",
+          "raw_sha256": "95c1adad43bcb1bd2b74071c3aa8c4dbfcb769321ee1053ee54bdc5c05c28380",
+          "text_work_path": "work/readwise-controls-deepening/raw/basics.txt",
+          "text_sha256": "b46028614afdd4e5282cb5dec38c56cab8cb397b305a20b32680213f48c9367a"
+        }
+      ]
+    },
+    {
+      "id": "E-RDD-02",
+      "field": "additional_captures",
+      "before": null,
+      "after": [
+        {
+          "capture_kind": "ordinary_public_html_reread",
+          "checked_on": "2026-10-27",
+          "capture_url": "https://docs.readwise.io/reader/guides/ghostreader/global",
+          "hands_on": false,
+          "visual_observed": false,
+          "archived_artifact": "artifacts/readwise-controls-deepening/source-notes.md",
+          "sha256": "c1acd83aee1c26d85de94fad1173941340ee4055e7898a346f6997ed4ed981c7",
+          "raw_work_path": "work/readwise-controls-deepening/raw/global.html",
+          "raw_sha256": "8bfa8163a949c857547b3eff7f4e85a1cb589c38f8938e8a997efd642c807d5a",
+          "text_work_path": "work/readwise-controls-deepening/raw/global.txt",
+          "text_sha256": "df7a9995f584e74e224cbd03df05eb16b7df03f5b6c307eb143b3848c76dc5c8"
+        }
+      ]
+    },
+    {
+      "id": "E-RDD-06",
+      "field": "additional_captures",
+      "before": null,
+      "after": [
+        {
+          "capture_kind": "ordinary_public_html_reread",
+          "checked_on": "2026-10-27",
+          "capture_url": "https://docs.readwise.io/reader/docs/organizing-content",
+          "hands_on": false,
+          "visual_observed": false,
+          "archived_artifact": "artifacts/readwise-controls-deepening/source-notes.md",
+          "sha256": "c1acd83aee1c26d85de94fad1173941340ee4055e7898a346f6997ed4ed981c7",
+          "raw_work_path": "work/readwise-controls-deepening/raw/organizing.html",
+          "raw_sha256": "47e7f36deac47c1708c83079de7640e9f607568e922159ce707d1487b0bb35de",
+          "text_work_path": "work/readwise-controls-deepening/raw/organizing.txt",
+          "text_sha256": "a75ec699d649180e7c2b7d033e89c61ff0a07cada18780ddf4f7bb747db52dd2"
+        }
+      ]
+    }
+  ],
+  "files": [
+    {
+      "path": "docs/research/interaction-library/batches/reading-news-deepening-coverage.csv",
+      "backup": "work/readwise-controls-deepening/reviewed-before/reading-news-deepening-coverage.csv",
+      "before_sha256": "fbc3a7bc5a02b982a44590c1d28e16f914be77ff7463c8055819912a5318bca5",
+      "after_sha256": "b61688f8d297716fe8a6b003a21af65d5a92b61bd830210ca0c1ec6dbb49e4c8"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/vocab-coverage.csv",
+      "backup": "work/readwise-controls-deepening/reviewed-before/vocab-coverage.csv",
+      "before_sha256": "5c7d228e00ce53fcbb54550a3db5475354b86b230980fab0376002e1c2efa2ee",
+      "after_sha256": "c042ca21eb14be94d668ff1db04ffd788cfaa1f210763a747e0e0e2e729c4a1b"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/chinese-vocab-deepening-evidence.jsonl",
+      "backup": "work/readwise-controls-deepening/reviewed-before/chinese-vocab-deepening-evidence.jsonl",
+      "before_sha256": "77cc63b4b49aee626f72e5fe1bf892ef9de5ead104ad7694c54c0fce32e4dc14",
+      "after_sha256": "c52a080d50183443ef0d2dbc9b6f27e6c79c13cb9174065724e897c9a7796d1b"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/reading-news-deepening-evidence.jsonl",
+      "backup": "work/readwise-controls-deepening/reviewed-before/reading-news-deepening-evidence.jsonl",
+      "before_sha256": "92deb95ddf5c61e0d26548d4e4a05668fa13a520329a6e8d0c8e39638c88d7cd",
+      "after_sha256": "b08223323012eadc458a6ecfcbbdd6c836e4b68f04c71ca74fb035a50e2cb018"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/kobo-deepening-coverage.csv",
+      "backup": "work/readwise-controls-deepening/reviewed-before/kobo-deepening-coverage.csv",
+      "before_sha256": "f56b27aa5867fb80ef527d45e1440366055b38b95bce4e7c0b1d36f8ed708917",
+      "after_sha256": "e6ffb441e25b30666652e36fec168c0994d313e88f4a03d28a8c04847c9757b3"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/kobo-deepening-evidence.jsonl",
+      "backup": "work/readwise-controls-deepening/reviewed-before/kobo-deepening-evidence.jsonl",
+      "before_sha256": "8b19618dce3069cc11c686dcfd234e32eb9ebc8c59957d9f6c23f4591510536a",
+      "after_sha256": "a08ceb2c32ae46b30670ed6812b11b67cb6e7378c4fec3fb00f8cf1b14fe6c2e"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/initial-coverage.csv",
+      "backup": "work/readwise-controls-deepening/reviewed-before/initial-coverage.csv",
+      "before_sha256": "e47579de45f8f4cf83d9e5ab91f1fe8bdd124b0894ac78cd448ac176bbab4b87",
+      "after_sha256": "47295cb1d1c407b2bfc592b18d2a1e876eb5682ab06ef0ce707bec161e834a83"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/vocab-evidence.jsonl",
+      "backup": "work/readwise-controls-deepening/reviewed-before/vocab-evidence.jsonl",
+      "before_sha256": "3ab8bac2c61202525834da7a2e05fa3f11b6ce07282e010970deed791ea36467",
+      "after_sha256": "d41587936013da7d86ddf8d83aff1b7407dc29a667211563accf8e9247db5226"
+    }
+  ],
+  "old_tasks": 16,
+  "old_task_fields": 63,
+  "old_evidence_captures": 10
+}

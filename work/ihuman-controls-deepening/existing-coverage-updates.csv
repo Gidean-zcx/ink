@@ -1,0 +1,5 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M029-01,M-029,单字到子集故事内容循环,D1,E-IHUM-01;E-IHUM-02;E-IHD-02;E-IHCD-01;E-IHCD-03,当前五步声明；2018版练界面仅静态选项/导航；作者示范建议不当实现,现行选课、错答提示/重试、奖励/复习结算、故事解锁及退出恢复,static_reference_only,false,cases/M-029-ihuman.md,2026-10-26
+F-M029-02,M-029,调节游戏和跳过,D2,E-IHUM-02;E-IHCD-01;E-IHCD-02,2020官方回复关闭游戏与禁止跳过；3.0.1静态设置容器；重置进度回复仅表示考虑,现行入口/验证失败、教学开关保存与课内生效、按孩子分别配置,static_official_images_only,false,cases/M-029-ihuman.md,2026-10-26
+F-M029-03,M-029,获取档案成长报告副本,D2,E-IHUM-03;E-IHUM-04;E-IHCD-02,登录与相册权限；官方设置图显示3.0.1及隐私中心进入按钮,平台与图日期、拒绝权限、图片导出失败及结构化进度恢复,static_official_images_only,false,cases/M-029-ihuman.md,2026-10-26
+F-M029-04,M-029,按教材核查整课汉字,D1,E-IHD-01;E-IHCD-01,年级/书册/课文范围；iOS4.4.0/2026-02-05宣布部编版地图；先单字后整课测验,当前4.5.2具体入口、错答/提示/补练、结算、退出恢复,not_observed,false,cases/M-029-ihuman.md,2026-10-26

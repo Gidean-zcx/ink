@@ -1,0 +1,7 @@
+{
+  "url": "https://help.quizlet.com/hc/en-us/articles/360030642972-Studying-with-Test",
+  "method": "requests GET timeout=(5,18), one attempt",
+  "status": 403,
+  "final_url": "https://help.quizlet.com/hc/en-us/articles/360030642972-Studying-with-Test",
+  "result": "stop requests route; do not retry or vary headers"
+}

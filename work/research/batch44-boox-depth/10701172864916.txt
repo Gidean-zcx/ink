@@ -1,0 +1,13 @@
+In this article, you will learn how to set up some basic display preference.
+In Home Screen, go to Settings > Display.
+Font & Text Size
+Here you can adjust the system font and text size based on your reading preference. To import fonts, please tap Font＞Import font.
+Note: Importing fonts is only available in some models.
+Brightness
+Here you can slide to adjust the dual-tone front lights.
+Auto Sleep
+Here you can set up the auto sleep settings after there is no action for a certain period of time.
+Inactivity Shutdown
+Here you can set up the auto shutdown settings after there is no action for a certain period of time.
+Full Refresh Frequency
+Unlike LED and LCD, E Ink has a special mechanism for display and refresh. Here you can set the frequency to perform a full refresh based on your actions. The more taps you need, the more ghosting it will accumulate before a full refresh.

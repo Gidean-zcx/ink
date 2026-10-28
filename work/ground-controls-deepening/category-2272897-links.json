@@ -1,0 +1,139 @@
+[
+  {
+    "class": "page-header-inner-logo-link",
+    "href": "/en",
+    "title": "",
+    "url": "https://help.ground.news/en"
+  },
+  {
+    "class": "page-header-inner-title",
+    "href": "/en",
+    "title": "Ground News Help Center",
+    "url": "https://help.ground.news/en"
+  },
+  {
+    "type": "button",
+    "class": "kb-button primary",
+    "href": "/en/contact-us",
+    "title": "Contact Us",
+    "url": "https://help.ground.news/en/contact-us"
+  },
+  {
+    "id": "moreResultsLink",
+    "type": "button",
+    "class": "kb-button secondary",
+    "href": "/en/search",
+    "title": "More results",
+    "url": "https://help.ground.news/en/search"
+  },
+  {
+    "href": "https://ground.news/privacy-policy",
+    "title": "Privacy Policy",
+    "url": "https://ground.news/privacy-policy"
+  },
+  {
+    "href": "/en",
+    "title": "Home",
+    "url": "https://help.ground.news/en"
+  },
+  {
+    "class": "article-card",
+    "href": "/en/articles/6049857",
+    "data-edited": "1773029483379",
+    "title": "Sort and Filter News SourcesEdited Monday, March 9 2026Ground News offers several tools to help you customize how you view and compare news coverage. Sorting and filtering sources can help you explore dive...",
+    "url": "https://help.ground.news/en/articles/6049857"
+  },
+  {
+    "class": "article-card",
+    "href": "/en/articles/5224577",
+    "data-edited": "1776288472106",
+    "title": "Filtering For High-Factuality News SourcesEdited Wednesday, April 15 2026Ground News provides  factuality ratings  to indicate the reliability of news sources based on their historical reporting practices. It’s important to...",
+    "url": "https://help.ground.news/en/articles/5224577"
+  },
+  {
+    "class": "article-card",
+    "href": "/en/articles/7212801",
+    "data-edited": "1773029901583",
+    "title": "Universal Web Source FiltersEdited Monday, March 9 2026Ground News is built to give news readers transparency and control, not to decide what you should read, but to empower you to see how stories are cove...",
+    "url": "https://help.ground.news/en/articles/7212801"
+  },
+  {
+    "class": "article-card",
+    "href": "/en/articles/3405953",
+    "data-edited": "1773028433426",
+    "title": "Translate Foreign Language ArticlesEdited Monday, March 9 2026Ground News provides perspectives from around the world, including coverage in different languages. We offer translation possibilities for subscribers...",
+    "url": "https://help.ground.news/en/articles/3405953"
+  },
+  {
+    "class": "article-card",
+    "href": "/en/articles/3523649",
+    "data-edited": "1773028946872",
+    "title": "Hide Read Mobile StoriesEdited Monday, March 9 2026We're excited to share a more organized and personal news feed with the \" Hide Read Stories \" feature on the Ground News app. This feature helps creat...",
+    "url": "https://help.ground.news/en/articles/3523649"
+  },
+  {
+    "class": "article-card",
+    "href": "/en/articles/2044545",
+    "data-edited": "1773029398227",
+    "title": "Save Articles for LaterEdited Monday, March 9 2026Keeping track of your favourite stories has never been easier. Our mobile app and website allow you to save articles for later reading. Follow the ste...",
+    "url": "https://help.ground.news/en/articles/2044545"
+  },
+  {
+    "class": "article-card",
+    "href": "/en/articles/1858561",
+    "data-edited": "1773029052295",
+    "title": "Enable Dark ModeEdited Monday, March 9 2026Dark mode can be a great alternative for readers who prefer a darker colour scheme for their browsing experience. Here's how you can enable dark mode ...",
+    "url": "https://help.ground.news/en/articles/1858561"
+  },
+  {
+    "class": "article-card",
+    "href": "/en/articles/1096641",
+    "data-edited": "1773028460182",
+    "title": "Reduce Ad InterferenceEdited Monday, March 9 2026At Ground News, we value our subscribers and strive to provide the best news reading experience. We understand that external ads can sometimes be intr...",
+    "url": "https://help.ground.news/en/articles/1096641"
+  },
+  {
+    "class": "article-card",
+    "href": "/en/articles/245569",
+    "data-edited": "1773028480587",
+    "title": "Hide Paywalled ArticlesEdited Monday, March 9 2026Ground News is the world's largest news comparison platform, with over 60,000 news sources to compare reporting from. If an external source has a payw...",
+    "url": "https://help.ground.news/en/articles/245569"
+  },
+  {
+    "class": "article-card",
+    "href": "/en/articles/3523713",
+    "data-edited": "1773028798238",
+    "title": "Universal Mobile Paywall FilterEdited Monday, March 9 2026The \" Universal Paywall Filter \"   gives you more control over your newsfeed by allowing you to filter out sources with paywalls. This optional settin...",
+    "url": "https://help.ground.news/en/articles/3523713"
+  },
+  {
+    "href": "https://twitter.com/Ground_app",
+    "title": "",
+    "url": "https://twitter.com/Ground_app"
+  },
+  {
+    "href": "https://ca.linkedin.com/company/groundnews",
+    "title": "",
+    "url": "https://ca.linkedin.com/company/groundnews"
+  },
+  {
+    "href": "https://www.instagram.com/groundnews/",
+    "title": "",
+    "url": "https://www.instagram.com/groundnews/"
+  },
+  {
+    "href": "https://ground.news/refund-policy",
+    "title": "Refund and Cancellation Policy",
+    "url": "https://ground.news/refund-policy"
+  },
+  {
+    "href": "https://ground.news/terms-and-conditions",
+    "title": "Terms and Conditions",
+    "url": "https://ground.news/terms-and-conditions"
+  },
+  {
+    "href": "https://about.ground.news/privacy-policy",
+    "title": "Privacy Policy",
+    "url": "https://about.ground.news/privacy-policy"
+  }
+]

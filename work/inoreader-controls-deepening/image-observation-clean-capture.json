@@ -1,0 +1,26 @@
+{
+  "url": "https://www.inoreader.com/blog/2026/10/introducing-article-edit-history.html",
+  "status": 200,
+  "browser": "156.0.8078.4",
+  "viewport": {
+    "width": 1440,
+    "height": 1000
+  },
+  "product_operated": false,
+  "captures": [
+    {
+      "src": "https://www.inoreader.com/blog/wp-content/uploads/2026/10/1-edit-history.png",
+      "width": 1340,
+      "height": 758,
+      "path": "/home/workspace/reader/work/inoreader-controls-deepening/edit-history-reference-clean-01.png",
+      "sha256": "7190d1c81513ea1cf2937998a86384dd81e3652b8c7ebd13f3adeaa45f7d1ba0"
+    },
+    {
+      "src": "https://www.inoreader.com/blog/wp-content/uploads/2026/10/2-edit-history.png",
+      "width": 1340,
+      "height": 758,
+      "path": "/home/workspace/reader/work/inoreader-controls-deepening/edit-history-reference-clean-02.png",
+      "sha256": "4914ea76fee6d7437cc568f7622f7fee656b5e72da2db0c32888749dfd426ac2"
+    }
+  ]
+}

@@ -1,0 +1,76 @@
+{
+  "name": "30-answer-five",
+  "url": "https://www.duolingo.com/lesson",
+  "title": "Duolingo - Learn French with lessons that work",
+  "utc": "2026-10-26T17:51:27.489160+00:00",
+  "text": "4 IN A ROW\n4\nWrite this in English\nun thé\na\ntea\ngoodbye\na\ntea\nGreat job!\nTOO EASY\nTOO DIFFICULT\nREPORT\nCONTINUE",
+  "buttons": [
+    {
+      "text": "",
+      "aria": null,
+      "test": "quit-button",
+      "visible": true
+    },
+    {
+      "text": "",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "a",
+      "aria": null,
+      "test": "a-challenge-tap-token",
+      "visible": true
+    },
+    {
+      "text": "tea",
+      "aria": null,
+      "test": "tea-challenge-tap-token",
+      "visible": true
+    },
+    {
+      "text": "goodbye",
+      "aria": null,
+      "test": "goodbye-challenge-tap-token",
+      "visible": true
+    },
+    {
+      "text": "a",
+      "aria": null,
+      "test": "a-challenge-tap-token",
+      "visible": true
+    },
+    {
+      "text": "tea",
+      "aria": null,
+      "test": "tea-challenge-tap-token",
+      "visible": true
+    },
+    {
+      "text": "TOO EASY",
+      "aria": "Too easy",
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "TOO DIFFICULT",
+      "aria": "Too difficult",
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "REPORT",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "CONTINUE",
+      "aria": null,
+      "test": "player-next",
+      "visible": true
+    }
+  ],
+  "inputs": []
+}

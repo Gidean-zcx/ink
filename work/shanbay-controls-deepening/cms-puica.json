@@ -1,0 +1,24 @@
+{
+  "id": "puica",
+  "type": "FORBIDDEN_COMMENT",
+  "title": "可以同时背诵两本单词书吗？",
+  "description": "可以同时背诵两本单词书吗？",
+  "content_html": "<div class=\"kraft-content\" style=\"width:100%;padding:16px;color:#333;font-size:16px;line-height:1.75;letter-spacing:1px;word-spacing:0;word-break:break-word;background-color:#fff;overflow:hidden\"><h4 style=\"margin:0;padding:7px 0;font-weight:bold;font-size:16px\"><span>可以同时背诵两本单词书吗？</span></h4><p style=\"margin:0;padding:0;line-height:1.75;text-align:start;letter-spacing:normal;word-spacing:0px\"><span>我们现在可以支持随时切换单词书和设置任务量，也就是说，目前可以支持同时学习多本单词书，但是为了能让同学们有更好的学习效果，现在同一账号的书库中最多可以添加10本单词书（包括APP、小程序及网页版），同学们可以认真背完一本后再去添加下一本。</span></p><p style=\"margin:0;padding:0;line-height:1.75;text-align:start;letter-spacing:normal;word-spacing:0px\"><span>删除单词书后，所有相关的单词书学习进度都会重置为零！删除之后学习数据无法恢复，所以删除单词书时一定要考虑清楚哦！</span></p></div>",
+  "content_json": "[{\"type\":\"h4\",\"children\":[{\"text\":\"可以同时背诵两本单词书吗？\"}]},{\"type\":\"p\",\"textAlign\":\"start\",\"letterSpacing\":\"normal\",\"wordSpacing\":\"0px\",\"children\":[{\"text\":\"我们现在可以支持随时切换单词书和设置任务量，也就是说，目前可以支持同时学习多本单词书，但是为了能让同学们有更好的学习效果，现在同一账号的书库中最多可以添加10本单词书（包括APP、小程序及网页版），同学们可以认真背完一本后再去添加下一本。\"}]},{\"type\":\"p\",\"textAlign\":\"start\",\"letterSpacing\":\"normal\",\"wordSpacing\":\"0px\",\"children\":[{\"text\":\"删除单词书后，所有相关的单词书学习进度都会重置为零！删除之后学习数据无法恢复，所以删除单词书时一定要考虑清楚哦！\"}]}]",
+  "like_num": 0,
+  "comment_num": 0,
+  "assign_date": "2021-06-28T16:00:00+00:00",
+  "order_type": "COMMEND",
+  "reply_push_url": "",
+  "weight": 1000,
+  "allow_comment": false,
+  "cover_url": "",
+  "is_send": false,
+  "column_id": "onnjg",
+  "is_like": false,
+  "column": {
+    "name": "官网帮助-单词书"
+  },
+  "tags": [],
+  "redirect_url": "https://web.shanbay.com/op/articles/puica?shanbay_immersive_mode=true"
+}

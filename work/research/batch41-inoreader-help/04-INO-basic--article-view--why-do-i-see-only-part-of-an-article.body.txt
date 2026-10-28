@@ -1,0 +1,1 @@
+The content Inoreader displays depends on what the publisher provides through their RSS feed. Some publishers include the full article, while others provide only a headline or a short excerpt.

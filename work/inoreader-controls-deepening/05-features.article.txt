@@ -1,0 +1,88 @@
+Features
+Content may be king, but we citizens have rights too
+Discover
+Consume
+Distribute
+Follow websites and creators
+Bring the content that matters to you together and enjoy the best from the web in a single place.
+Read more
+Monitoring feeds
+Stay in the know by keeping track of people, brands, companies, emerging trends, and events.
+Read more
+Social listening
+Listen to brands and creators on Facebook, Reddit, Mastodon, and Telegram without algorithms.
+Read more
+But wait, there's more:
+360 brand monitoring
+Automatically gather articles, brand mentions, market updates, and customer reviews.
+Read more
+Subscribe to newsletters
+Declutter your inbox by getting your newsletters as regular feeds in Inoreader.
+Read more
+Global search
+Discover articles not only in your feeds but within all publicly available sources in Inoreader.
+Read more
+Google News alerts
+Follow Google News searches for keywords and topic updates in different languages.
+Read more
+YouTube sync
+Sync your YouTube subscriptions with Inoreader to get all the content you follow in one place.
+Read more
+Discover feeds
+Explore featured collections on different topics and find the best sources curated by our team.
+Read more
+Save articles
+Collect articles from across the web with a single click and keep them in Inoreader to read later.
+Read more
+Track changes
+Monitor websites for visual or textual changes like price fluctuations and product availability.
+Read more
+Browser extension
+Save the best from the internet in Inoreader while surfing online and come back to it later.
+Read more
+All features
+Discover9
+Find RSS feeds to followFind the sources worth following
+Google News feedsFollow any topic on Google News
+MentionsFollow companies, people and places instead of keywords
+Monitoring feedsWatch any keyword, brand or topic across the web
+NewslettersRead your newsletters in Inoreader
+Password-protected feedsFollow feeds that need a login
+SearchFind any article in your feeds and beyond
+Web feedsFollow any website, even without a feed
+YouTubeFollow YouTube channels in your RSS reader
+Consume19
+AnnotationsHighlight and annotate what you read
+Article archiveFind any article your feeds ever published
+Article edit historySee what changed after an article was published
+Boosted feedsGet your most important feeds every 10 minutes
+Custom CSSMake Inoreader look exactly the way you want
+DashboardsSee what is new on a single screen
+FiltersRead only the articles you want
+Folders and tagsOrganize your feeds and the articles you keep
+Full contentRead the whole article instead of the snippet
+Inoreader IntelligenceSummarize and analyze the news you follow with AI
+Offline modeKeep reading without a connection
+PodcastsListen to podcasts in your RSS reader
+Push notificationsGet notified about the articles that cannot wait
+Read laterSave articles and read them when you have time
+RulesAutomate what happens to every new article
+Secure image proxyKeep the images in articles from tracking you
+SpotlightsMake the names you care about stand out
+Text-to-speechListen to any article
+TranslationsRead any feed in your language
+Distribute6
+APIConnect your own apps and scripts to Inoreader
+Email digestsSend the articles that matter to anyone by email
+IntegrationsSend your articles to the tools you work in
+Output feeds and HTML clipsPublish the articles you collect as a feed or on your site
+Save to other servicesSave any article to your notes app, bookmarks or cloud drive
+TeamsShare one set of sources with your whole team
+Use Inoreader to...
+Discover
+Consume
+Distribute
+Build your own newsfeed
+Ready to give it a go?
+Start a 14-day trial, no credit card required.
+Create account

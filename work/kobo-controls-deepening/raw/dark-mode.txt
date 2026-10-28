@@ -1,0 +1,22 @@
+Dark mode lets you inverse the colour of the screen so that the text appears white, and the background is black. This may make it easier on your eyes in lowlight environments.
+Dark mode is only available on Kobo Sage , Kobo Libra 2 , Kobo Elipsa , Kobo Clara 2E , and Kobo Elipsa 2E , Kobo Libra Colour , Kobo Clara Colour , and Kobo Clara BW.
+Here’s how Dark mode looks like: Note : Images are not colour inverted.
+To turn on Dark mode:
+While reading, tap the middle of the screen. The Reading Menu will appear.
+Tap the Gear icon at the top of the screen.
+Under ‘Page appearance’, select the blank checkbox beside ‘Dark Mode’.
+Tap the close icon at the top-right corner to save your changes.
+Learn more about using your Kobo Stylus
+About Kobo Stylus 2 (Released in 2023)
+Troubleshoot your Kobo Stylus
+Use gestures to edit handwriting
+Write notes in your book with Kobo Stylus
+Highlight text with your Kobo Stylus Kobo Stylus (2021)
+About Kobo Stylus
+Check your Kobo Stylus battery status
+Replace your Kobo Stylus battery
+Change your Kobo Stylus tip Kobo eReaders compatible with Kobo Stylus
+Kobo Elipsa
+Kobo Sage
+Kobo Elipsa 2E
+Kobo Libra Colour

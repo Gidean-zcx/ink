@@ -1,0 +1,18 @@
+{
+  "coverage_rows": 4,
+  "coverage_physical_lf": 5,
+  "inventory_rows": 123,
+  "inventory_physical_lf": 124,
+  "status": "PASS",
+  "new_E": 14,
+  "new_F": 4,
+  "case_F": 19,
+  "old_F_updates": 6,
+  "old_E_captures": 7,
+  "old_fields": 23,
+  "url_duplicates": 0,
+  "all_hashes_match": true,
+  "all_before_match": true,
+  "visual_observed": false,
+  "hands_on": false
+}

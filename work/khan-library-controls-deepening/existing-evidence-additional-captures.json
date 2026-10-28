@@ -1,0 +1,28 @@
+[
+  {
+    "evidence_id": "E-KHK-01",
+    "source_batch": "docs/research/interaction-library/batches/initial-evidence.jsonl",
+    "field": "additional_captures",
+    "before": [],
+    "after": [
+      {
+        "capture_url": "https://khankids.zendesk.com/hc/en-us/articles/4409036780955-Learn-more-about-the-books-in-the-Khan-Academy-Kids-app",
+        "checked_on": "2026-10-27",
+        "access_mode": "web_tool_public_page_text_and_static_image",
+        "source_updated_on": "2026-02-26",
+        "raw_work_path": "work/khan-library-controls-deepening/web-response-2.json",
+        "raw_sha256": "83aa5d229b599120b14a7a3e705511a25ac589ef9ad4822f3d8f2a69397c4c2e",
+        "locator": "Books article L30–43/81; one look-at-my-map image",
+        "archived_artifact": "artifacts/khan-library-controls-deepening/source-notes.md",
+        "sha256": "dc0bf2de45ba29857a4c303a9fc1d65fdaba624a6a68bb57efa9e799e700d1a6",
+        "hands_on": false,
+        "visual_observed": true,
+        "visual_scope": "Single page image: Home, arrows, triangular control; reading mode and effects unknown",
+        "artifact_hashes": {
+          "artifacts/khan-library-controls-deepening/look-at-my-map.png": "63852e61859312f3250de1b3dc98dc221435ef05d8c2ccc3f77578dcbc82ea0d"
+        }
+      }
+    ],
+    "reason": "同URL取得完整正文并实际看单张静态图，保留原ID"
+  }
+]

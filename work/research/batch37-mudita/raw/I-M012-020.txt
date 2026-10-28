@@ -1,0 +1,31 @@
+How To Add SIM Cards and eSIM to Mudita Kompakt
+Modified on: Sat, 3 Oct, 2026 at 8:44 AM
+How to insert a physical SIM card
+Insert the SIM Key into the round hole
+Fully remove the SIM tray
+Insert a SIM card into the SIM tray - gold side of the SIM facing down
+Insert the SIM tray into Kompakt
+How to add an eSIM
+Before you start, make sure Kompakt is connected to the internet and make sure you are in eSIM mode.
+Press the Control Center button
+Tap Settings icon
+Tap Network and Internet
+Tap SIM Cards
+Tap Add eSIM
+Tap Continue 
+Either scan the QR code or tap Insert code instead and enter the activation code manually
+Read the Profile Policy rules and Tap Accept if you agree to the rules
+Tap Add this eSIM*
+ *Tap the Check box if you want to enable the eSIM immediately (Kompakt will restart)
+How to switch between SIM 2 and eSIM mode
+Press the Control Center button
+Tap Settings icon
+Tap Network and Internet
+Tap SIM Cards
+Tap Switch mode 
+Tap Switch mode and Komapkt will restart automatically
+Was this article helpful?
+No
+Yes
+That’s Great!
+Thank you for your feedback

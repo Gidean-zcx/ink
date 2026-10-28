@@ -1,0 +1,421 @@
+{
+  "new_evidence": [
+    "E-ANCM-01",
+    "E-ANCM-02",
+    "E-ANCM-03",
+    "E-ANCM-04",
+    "E-ANCM-19",
+    "E-ANCM-23",
+    "E-ANCM-25",
+    "E-ANCM-26",
+    "E-ANCM-27",
+    "E-ANCM-28",
+    "E-ANCM-29",
+    "E-ANCM-30",
+    "E-ANCM-31",
+    "E-ANCM-32",
+    "E-ANCM-33",
+    "E-ANCM-34",
+    "E-ANCM-35",
+    "E-ANCM-36",
+    "E-ANCM-37",
+    "E-ANCM-38",
+    "E-ANCM-39",
+    "E-ANCM-40",
+    "E-ANCM-41",
+    "E-ANCM-42",
+    "E-ANCM-43",
+    "E-ANCM-44",
+    "E-ANCM-45",
+    "E-ANCM-46",
+    "E-ANCM-47",
+    "E-ANCM-51"
+  ],
+  "new_flows": [
+    "F-M020-23",
+    "F-M020-24",
+    "F-M020-25"
+  ],
+  "old_flows": [
+    {
+      "flow_id": "F-M020-05",
+      "before": {
+        "flow_id": "F-M020-05",
+        "product_id": "M-020",
+        "task": "导入新版共享牌组",
+        "depth": "D2",
+        "evidence_ids": "E-AND-02;E-AND-04",
+        "known_branches": "默认较新内容更新；可覆盖或不更新。类型合并会涉及完整同步；不要把作者的学习历史当成自己的记录。",
+        "gaps": "类型合并后字段映射、失败恢复",
+        "visual_status": "not_observed",
+        "hands_on": "false",
+        "case_path": "cases/M-020-anki.md",
+        "checked_on": "2026-10-26"
+      },
+      "after": {
+        "flow_id": "F-M020-05",
+        "product_id": "M-020",
+        "task": "导入新版共享牌组",
+        "depth": "D2",
+        "evidence_ids": "E-AND-02;E-AND-04;E-ANCM-02;E-ANCM-25",
+        "known_branches": "默认较新内容更新；可覆盖或不更新。类型合并会涉及完整同步；不要把作者的学习历史当成自己的记录。 共享包需在客户端导入后同步到AnkiWeb；发布者更新不会自动送达既有用户，删除项也不自动从接收者集合删除。",
+        "gaps": "23.10+包更新策略与旧分享说明须按实际版本核对；尚未操作更新预览、冲突、撤销或跨设备恢复。",
+        "visual_status": "not_observed",
+        "hands_on": "false",
+        "case_path": "cases/M-020-anki.md",
+        "checked_on": "2026-10-26"
+      },
+      "fields_changed": [
+        "evidence_ids",
+        "known_branches",
+        "gaps"
+      ],
+      "owning_files": [
+        "docs/research/interaction-library/batches/anki-deepening-coverage.csv"
+      ]
+    },
+    {
+      "flow_id": "F-M020-06",
+      "before": {
+        "flow_id": "F-M020-06",
+        "product_id": "M-020",
+        "task": "制作笔记及派生卡",
+        "depth": "D2",
+        "evidence_ids": "E-AND-05",
+        "known_branches": "添加的是笔记，再按模板生成卡；首字段重复检查受笔记类型限制。",
+        "gaps": "空字段拒绝/取消、重复提示确认",
+        "visual_status": "not_observed",
+        "hands_on": "false",
+        "case_path": "cases/M-020-anki.md",
+        "checked_on": "2026-10-26"
+      },
+      "after": {
+        "flow_id": "F-M020-06",
+        "product_id": "M-020",
+        "task": "制作笔记及派生卡",
+        "depth": "D2",
+        "evidence_ids": "E-AND-05;E-ANCM-02",
+        "known_branches": "添加的是笔记，再按模板生成卡；首字段重复检查受笔记类型限制。 Fields中排序字段仅一个；编辑字体/RTL与复习样式分开。类型与牌组独立，标签作用笔记及兄弟卡，旗标仅单卡。",
+        "gaps": "字段移位/删除后的模板错误和恢复仍缺；尚未实测取消、输入法与批量撤销。",
+        "visual_status": "not_observed",
+        "hands_on": "false",
+        "case_path": "cases/M-020-anki.md",
+        "checked_on": "2026-10-26"
+      },
+      "fields_changed": [
+        "evidence_ids",
+        "known_branches",
+        "gaps"
+      ],
+      "owning_files": [
+        "docs/research/interaction-library/batches/anki-deepening-coverage.csv"
+      ]
+    },
+    {
+      "flow_id": "F-M020-07",
+      "before": {
+        "flow_id": "F-M020-07",
+        "product_id": "M-020",
+        "task": "改模板与处理空卡",
+        "depth": "D2",
+        "evidence_ids": "E-AND-06;E-AND-07;E-ANCD-01;E-ANCD-03;E-ANCD-06",
+        "known_branches": "2.1.45+保存类型/导出前阻止部分错误；Browse定位类型→Cards修引用/条件；区分单张与全部cloze空卡；23.12关闭布局页提供保存机会",
+        "gaps": "保存/放弃按钮文案、所有CSS/JS错误、删除重复类型的精确对象、取消/Undo后全部恢复范围未知",
+        "visual_status": "not_observed",
+        "hands_on": "false",
+        "case_path": "cases/M-020-anki.md",
+        "checked_on": "2026-10-27"
+      },
+      "after": {
+        "flow_id": "F-M020-07",
+        "product_id": "M-020",
+        "task": "改模板与处理空卡",
+        "depth": "D2",
+        "evidence_ids": "E-AND-06;E-AND-07;E-ANCD-01;E-ANCD-03;E-ANCD-06;E-ANCM-51",
+        "known_branches": "2.1.45+保存类型/导出前阻止部分错误；Browse定位类型→Cards修引用/条件；区分单张与全部cloze空卡；23.12关闭布局页提供保存机会 Styling默认跨同类型卡；可限定卡/字段，Browser Appearance仅表格摘要。媒体字体精确匹配名称；id=answer决定滚到哪里，淡入可关闭。JS不保证跨端或升级兼容。",
+        "gaps": "已读CSS/HTML章节但非全部语言特性测试；客户端渲染差异、取消/保存/恢复与电子纸表现未测。",
+        "visual_status": "not_observed",
+        "hands_on": "false",
+        "case_path": "cases/M-020-anki.md",
+        "checked_on": "2026-10-27"
+      },
+      "fields_changed": [
+        "evidence_ids",
+        "known_branches",
+        "gaps"
+      ],
+      "owning_files": [
+        "docs/research/interaction-library/batches/anki-deepening-coverage.csv"
+      ]
+    },
+    {
+      "flow_id": "F-M020-10",
+      "before": {
+        "flow_id": "F-M020-10",
+        "product_id": "M-020",
+        "task": "检索后批量整理",
+        "depth": "D2",
+        "evidence_ids": "E-AND-09;E-AND-10;E-ANCD-03",
+        "known_branches": "卡片/笔记模式及批量对象不同；Edit/Undo入口；2.1.45多数动作多步Undo/Redo，Check Database/不兼容插件可清历史",
+        "gaps": "全部批动作撤销支持、重做入口、跨窗口/同步/退出后的撤销栈、查找替换误操作恢复",
+        "visual_status": "not_observed",
+        "hands_on": "false",
+        "case_path": "cases/M-020-anki.md",
+        "checked_on": "2026-10-27"
+      },
+      "after": {
+        "flow_id": "F-M020-10",
+        "product_id": "M-020",
+        "task": "检索后批量整理",
+        "depth": "D2",
+        "evidence_ids": "E-AND-09;E-AND-10;E-ANCD-03",
+        "known_branches": "卡片/笔记模式及批量对象不同；Edit/Undo入口；2.1.45多数动作多步Undo/Redo，Check Database/不兼容插件可清历史 卡片模式选任一派生卡即可选中所属笔记；笔记模式隐含其全部卡。批量标记/停用/旗标按当前项状态设置整组选中对象。Find and Replace默认仅选中笔记，取消限制可扩大；Find Duplicates可跨同名字段类型，结果可统一打标签，非自动合并。",
+        "gaps": "当前版本批量预览/确认/误操作撤销、跨重启历史和全部搜索组合未测；普通子串与字段精确匹配、HTML格式分段可能改变检索范围。",
+        "visual_status": "not_observed",
+        "hands_on": "false",
+        "case_path": "cases/M-020-anki.md",
+        "checked_on": "2026-10-27"
+      },
+      "fields_changed": [
+        "known_branches",
+        "gaps"
+      ],
+      "owning_files": [
+        "docs/research/interaction-library/batches/anki-deepening-coverage.csv"
+      ]
+    },
+    {
+      "flow_id": "F-M020-21",
+      "before": {
+        "flow_id": "F-M020-21",
+        "product_id": "M-020",
+        "task": "扩展故障与安全启动",
+        "depth": "D2",
+        "evidence_ids": "E-AND-18;E-AND-19;E-ANCD-02;E-ANCD-03",
+        "known_branches": "Shift安全启动同时禁插件与自动同步；Check Database查损坏/重建标签；闲置标签清理不随集合同步；检查会清撤销历史的2.1.45边界",
+        "gaps": "固定构建/插件兼容、损坏修复实际结果、检测遗漏、所有故障保存粒度；未执行SQLite修复",
+        "visual_status": "not_observed",
+        "hands_on": "false",
+        "case_path": "cases/M-020-anki.md",
+        "checked_on": "2026-10-27"
+      },
+      "after": {
+        "flow_id": "F-M020-21",
+        "product_id": "M-020",
+        "task": "安装、升级、扩展与启动故障定位",
+        "depth": "D2",
+        "evidence_ids": "E-AND-18;E-AND-19;E-ANCD-02;E-ANCD-03;E-ANCM-04;E-ANCM-29;E-ANCM-30;E-ANCM-31;E-ANCM-32;E-ANCM-33;E-ANCM-34;E-ANCM-35;E-ANCM-37;E-ANCM-38;E-ANCM-40;E-ANCM-41;E-ANCM-42;E-ANCM-43;E-ANCM-44;E-ANCM-45;E-ANCM-46;E-ANCM-47",
+        "known_branches": "Shift安全启动同时禁插件与自动同步；Check Database查损坏/重建标签；闲置标签清理不随集合同步；检查会清撤销历史的2.1.45边界 平台手册补安装/升级与启动排错：先区分安装源、依赖、权限、显示与输入法；macOS改驱动需重启。升级保留卡数据是文档承诺，不涵盖插件兼容或完整备份。",
+        "gaps": "没有执行安装、升级、权限/驱动修复或数据库恢复；旧排错和当前安装要求混列，默认渲染器/输入法差异保留，不能据此保证修复。",
+        "visual_status": "not_observed",
+        "hands_on": "false",
+        "case_path": "cases/M-020-anki.md",
+        "checked_on": "2026-10-27"
+      },
+      "fields_changed": [
+        "task",
+        "evidence_ids",
+        "known_branches",
+        "gaps"
+      ],
+      "owning_files": [
+        "docs/research/interaction-library/batches/anki-deepening-coverage.csv"
+      ]
+    }
+  ],
+  "old_evidence": [
+    {
+      "evidence_id": "E-AND-05",
+      "before": {
+        "evidence_id": "E-AND-05",
+        "product_id": "M-020",
+        "title": "Adding/Editing",
+        "url": "https://docs.ankiweb.net/manual/editing.md",
+        "checked_on": "2026-10-26",
+        "source_type": "official_manual",
+        "access_mode": "downloaded_official_markdown_read",
+        "version_scope": "Anki desktop current manual; explicit minimum versions retained; installed build unknown",
+        "app_build": null,
+        "firmware_version": null,
+        "source_updated_on": null,
+        "locator": "Adding; Cloze; Image Occlusion",
+        "note": "笔记生成卡片与遮挡练习。",
+        "hands_on": false,
+        "visual_observed": false,
+        "archived_artifact": null,
+        "sha256": null,
+        "capture_state": "bibliography_and_short_note_only",
+        "supersedes": null,
+        "raw_work_path": "work/anki-deepening/editing.md",
+        "raw_sha256": "26e96c191439a915c2a6cf78828e139704b10a979b67b0a5fadd0deb5ce263fb"
+      },
+      "after": {
+        "evidence_id": "E-AND-05",
+        "product_id": "M-020",
+        "title": "Adding/Editing",
+        "url": "https://docs.ankiweb.net/manual/editing.md",
+        "checked_on": "2026-10-26",
+        "source_type": "official_manual",
+        "access_mode": "downloaded_official_markdown_read",
+        "version_scope": "Anki desktop current manual; explicit minimum versions retained; installed build unknown",
+        "app_build": null,
+        "firmware_version": null,
+        "source_updated_on": null,
+        "locator": "Adding; Cloze; Image Occlusion",
+        "note": "笔记生成卡片与遮挡练习。",
+        "hands_on": false,
+        "visual_observed": false,
+        "archived_artifact": null,
+        "sha256": null,
+        "capture_state": "bibliography_and_short_note_only",
+        "supersedes": null,
+        "raw_work_path": "work/anki-deepening/editing.md",
+        "raw_sha256": "26e96c191439a915c2a6cf78828e139704b10a979b67b0a5fadd0deb5ce263fb",
+        "additional_captures": [
+          {
+            "checked_on": "2026-10-27",
+            "access_mode": "local_reread_previously_captured_markdown",
+            "locator": "Customizing Fields; Using Tags/Flags",
+            "note": "补字段属性及对象范围。",
+            "raw_work_path": "work/anki-deepening/editing.md",
+            "raw_sha256": "26e96c191439a915c2a6cf78828e139704b10a979b67b0a5fadd0deb5ce263fb",
+            "archived_artifact": "artifacts/anki-content-and-maintenance/source-notes.md",
+            "sha256": "98c39c46a04c4d81bd22caef7a9afccdf995359971e6faaa172250b74976091d"
+          }
+        ]
+      },
+      "owning_files": [
+        "docs/research/interaction-library/batches/anki-deepening-evidence.jsonl"
+      ]
+    },
+    {
+      "evidence_id": "E-AND-09",
+      "before": {
+        "evidence_id": "E-AND-09",
+        "product_id": "M-020",
+        "title": "Browsing",
+        "url": "https://docs.ankiweb.net/manual/browsing.md",
+        "checked_on": "2026-10-26",
+        "source_type": "official_manual",
+        "access_mode": "downloaded_official_markdown_read",
+        "version_scope": "Anki desktop current manual; explicit minimum versions retained; installed build unknown",
+        "app_build": null,
+        "firmware_version": null,
+        "source_updated_on": null,
+        "locator": "Table Modes; Menus and Actions",
+        "note": "笔记/卡片动作范围不同。",
+        "hands_on": false,
+        "visual_observed": false,
+        "archived_artifact": null,
+        "sha256": null,
+        "capture_state": "bibliography_and_short_note_only",
+        "supersedes": null,
+        "raw_work_path": "work/anki-deepening/browsing.md",
+        "raw_sha256": "26f82d80fdfd689bfa5c6392302e3dc6ba6907d1c2f9a3ba170729e64384fded"
+      },
+      "after": {
+        "evidence_id": "E-AND-09",
+        "product_id": "M-020",
+        "title": "Browsing",
+        "url": "https://docs.ankiweb.net/manual/browsing.md",
+        "checked_on": "2026-10-26",
+        "source_type": "official_manual",
+        "access_mode": "downloaded_official_markdown_read",
+        "version_scope": "Anki desktop current manual; explicit minimum versions retained; installed build unknown",
+        "app_build": null,
+        "firmware_version": null,
+        "source_updated_on": null,
+        "locator": "Table Modes; Menus and Actions",
+        "note": "笔记/卡片动作范围不同。",
+        "hands_on": false,
+        "visual_observed": false,
+        "archived_artifact": null,
+        "sha256": null,
+        "capture_state": "bibliography_and_short_note_only",
+        "supersedes": null,
+        "raw_work_path": "work/anki-deepening/browsing.md",
+        "raw_sha256": "26f82d80fdfd689bfa5c6392302e3dc6ba6907d1c2f9a3ba170729e64384fded",
+        "additional_captures": [
+          {
+            "checked_on": "2026-10-27",
+            "access_mode": "local_reread_previously_captured_markdown",
+            "locator": "Rows; Notes/Cards; Find and Replace; Finding Duplicates",
+            "note": "补选区换算、批量目标及查重。",
+            "raw_work_path": "work/anki-deepening/browsing.md",
+            "raw_sha256": "26f82d80fdfd689bfa5c6392302e3dc6ba6907d1c2f9a3ba170729e64384fded",
+            "archived_artifact": "artifacts/anki-content-and-maintenance/source-notes.md",
+            "sha256": "98c39c46a04c4d81bd22caef7a9afccdf995359971e6faaa172250b74976091d"
+          }
+        ]
+      },
+      "owning_files": [
+        "docs/research/interaction-library/batches/anki-deepening-evidence.jsonl"
+      ]
+    },
+    {
+      "evidence_id": "E-AND-10",
+      "before": {
+        "evidence_id": "E-AND-10",
+        "product_id": "M-020",
+        "title": "Searching",
+        "url": "https://docs.ankiweb.net/manual/searching.md",
+        "checked_on": "2026-10-26",
+        "source_type": "official_manual",
+        "access_mode": "downloaded_official_markdown_read",
+        "version_scope": "Anki desktop current manual; explicit minimum versions retained; installed build unknown",
+        "app_build": null,
+        "firmware_version": null,
+        "source_updated_on": null,
+        "locator": "Simple; Limiting; Tags; Card State",
+        "note": "查询组合和对象范围。",
+        "hands_on": false,
+        "visual_observed": false,
+        "archived_artifact": null,
+        "sha256": null,
+        "capture_state": "bibliography_and_short_note_only",
+        "supersedes": null,
+        "raw_work_path": "work/anki-deepening/searching.md",
+        "raw_sha256": "d58f94e862eccc61b04c575474ed8400e73299e6b765a5d560b1857750481939"
+      },
+      "after": {
+        "evidence_id": "E-AND-10",
+        "product_id": "M-020",
+        "title": "Searching",
+        "url": "https://docs.ankiweb.net/manual/searching.md",
+        "checked_on": "2026-10-26",
+        "source_type": "official_manual",
+        "access_mode": "downloaded_official_markdown_read",
+        "version_scope": "Anki desktop current manual; explicit minimum versions retained; installed build unknown",
+        "app_build": null,
+        "firmware_version": null,
+        "source_updated_on": null,
+        "locator": "Simple; Limiting; Tags; Card State",
+        "note": "查询组合和对象范围。",
+        "hands_on": false,
+        "visual_observed": false,
+        "archived_artifact": null,
+        "sha256": null,
+        "capture_state": "bibliography_and_short_note_only",
+        "supersedes": null,
+        "raw_work_path": "work/anki-deepening/searching.md",
+        "raw_sha256": "d58f94e862eccc61b04c575474ed8400e73299e6b765a5d560b1857750481939",
+        "additional_captures": [
+          {
+            "checked_on": "2026-10-27",
+            "access_mode": "local_reread_previously_captured_markdown",
+            "locator": "Simple searches; Limiting to a field",
+            "note": "补子串/精确匹配与格式条件，非全部语法验证。",
+            "raw_work_path": "work/anki-deepening/searching.md",
+            "raw_sha256": "d58f94e862eccc61b04c575474ed8400e73299e6b765a5d560b1857750481939",
+            "archived_artifact": "artifacts/anki-content-and-maintenance/source-notes.md",
+            "sha256": "98c39c46a04c4d81bd22caef7a9afccdf995359971e6faaa172250b74976091d"
+          }
+        ]
+      },
+      "owning_files": [
+        "docs/research/interaction-library/batches/anki-deepening-evidence.jsonl"
+      ]
+    }
+  ],
+  "inventory_rows_updated": 30
+}

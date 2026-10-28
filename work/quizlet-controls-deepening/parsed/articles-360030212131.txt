@@ -1,0 +1,148 @@
+【0†iframe†www.googletagmanager.com】
+
+【1†Help center†quizlet.zendesk.com】
+
+Topics
+
+Popular Articles
+
+【2†Resending a confirmation message】 【3†Changing your username】 【4†Changing your password】 【5†Finding flashcard sets】 【6†Finding your teacher's class】 【7†Browser and device compatibility】
+
+[Input][Input: Search]
+
+【8†Image】   【8†Username】
+# Editing sets
+
+【8†IOS】 【8†Web】 【8†Android】
+
+You can easily edit your flashcard sets. You can also 【9†copy someone else's flashcard set】 and then edit your version.*
+
+To edit your set
+
+  1. 【10†Log in†quizlet.com】 to your account.
+  2. Open the set.
+  3. Select 【11†Image: More_menu_-_iOS_-_Resized.png】  (more menu).
+  4. Select 【12†Image: Edit_-_Resized.png】 (edit).
+  5. Make your changes and select Done.
+
+To change the audio playback language
+  1. 【10†Log in†quizlet.com】 to your account.
+  2. Open the set.
+  3. Select 【13†Image: More_menu_-_iOS_-_Resized.png】 (more menu).
+  4. Select 【14†Image: Edit_-_Resized.png】 (edit).
+  5. Click on the text of a term or definition.
+  6. Select the current language.
+  7. Choose a new language from the menu.
+  8. Select Done.
+
+To rearrange terms and definitions
+  1. 【10†Log in†quizlet.com】 to your account.
+  2. Open the set.
+  3. Select 【15†Image: More_menu_-_iOS_-_Resized.png】 (more menu).
+  4. Select 【16†Image: Edit_-_Resized.png】 (edit).
+  5. Hover over a row until your pointer becomes crossed arrows.
+  6. Click and drag the row to where you want it.
+
+To switch terms and definitions between columns, select the double-sided arrow.
+
+To delete terms and definitions
+
+Select 【17†Image: Trash_-_Resized.png】 (trash can) on the row you'd like to delete.
+Settings and options
+
+Subscribers to 【18†Quizlet Plus†quizlet.com】 and 【19†Quizlet Plus for teachers†quizlet.com】 can highlight, bold, italicize, or underline text in sets.
+
+Tips
+
+To insert a row in the middle of your set, hover your pointer between two rows and select the +.
+
+*Users in certain locations must have their parent confirm their consent via a confirmation email before they can create and edit flashcard sets. Find out more about 【20†younger users' account limitations】.
+  1. Open the set.
+  2. Select 【21†Image: More_menu_-_iOS_-_Resized.png】 (more menu).
+  3. Select Edit set.
+  4. Make your changes and select 【22†Image: Check_mark.png】 (check mark).
+
+To change the audio playback language
+
+  1. Select the text of a term or definition.
+  2. Select the current language.
+  3. Choose a new language from the menu.
+  4. Select the back arrow.
+  5. Select Done.
+
+Settings and options
+  * Published sets are public by default. Select 【21†Image: More_menu_-_iOS_-_Resized.png】 (More menu) to 【23†change who can see your sets】.
+  * Select 【21†Image: More_menu_-_iOS_-_Resized.png】 (More menu) to change a set's language.
+  * Subscribers to 【18†Quizlet Plus†quizlet.com】 and 【19†Quizlet Plus for teachers†quizlet.com】 can highlight, bold, italicize, or underline text in sets.
+
+Tips
+  * You can add a card in the middle of your set, rather than at the bottom, by tapping any card other than the last one and then tapping the 【24†Image: Size=Medium (24).png】. The new card is added below the card you selected.
+  * You can delete a card by swiping left on it and tapping 【25†Image: Trash_-_Resized.png】 (trash can).
+  * Tap 【26†Image: Image_-_Resized.png】 (image) to add images to a card.
+*Users in certain locations must have their parent confirm their consent via a confirmation email before they can create and edit flashcard sets. Find out more about 【20†younger users' account limitations】.
+
+  1. Open the set.
+  2. Select 【21†Image: More_menu_-_iOS_-_Resized.png】 (more menu).
+  3. Select Edit set.
+  4. Make your changes and select 【22†Image: Check_mark.png】 (check mark).
+
+To change the audio playback language
+  1. Select the text of a term or definition.
+  2. Select the current language.
+  3. Choose a new language from the menu.
+  4. Select the back arrow.
+  5. Select Done.
+
+Settings and options
+  * Published sets are public by default. Select 【21†Image: More_menu_-_iOS_-_Resized.png】 (More menu) to 【23†change who can see your sets】.
+  * Select 【21†Image: More_menu_-_iOS_-_Resized.png】 (More menu) to change a set's language.
+  * Subscribers to 【18†Quizlet Plus†quizlet.com】 and 【19†Quizlet Plus for teachers†quizlet.com】 subscribers can highlight, bold, italicize, or underline text in sets.
+
+Tips
+  * You can add a card in the middle of your set, rather than at the bottom, by tapping any card other than the last one and then tapping the 【24†Image: Size=Medium (24).png】. The new card is added below the card you selected.
+  * You can delete a card by swiping left on it and tapping 【25†Image: Trash_-_Resized.png】 (trash can).
+  * Tap 【26†Image: Image_-_Resized.png】 (image) to add images to a card.
+*Users in certain locations must have their parent confirm their consent via a confirmation email before they can create and edit flashcard sets. Find out more about 【20†younger users' account limitations】.
+### Related Articles
+
+  * 【27†Create flashcard sets directly in Claude】
+  * 【28†Studying with Study Groups】
+  * 【29†Creating study sets with Smart Assist】
+  * 【30†Becoming a top creator on Quizlet】
+  * 【31†Studying with Study Guides】
+  * 【32†What are flashcard sets?】
+  * 【33†Creating flashcard sets】
+  * 【34†Adding images to sets from the free gallery】
+  * 【35†Adding your own images to sets】
+  * 【36†Recording custom audio】
+  * 【37†See more】
+### Can't find what you're looking for?
+
+【38†Ask a question】
+
+Was this article helpful?
+
+[Button: Yes] [Button: No]
+
+##### About us
+
+【39†About Quizlet†quizlet.com】 【40†How Quizlet works†quizlet.com】 【41†Careers†quizlet.com】 【42†Advertise with us†quizlet.com】 【43†Get the app†quizlet.com】
+##### For students
+
+【44†Flashcards†quizlet.com】 【45†Test†quizlet.com】 【46†Learn†quizlet.com】 【47†Solutions†quizlet.com】 【48†Modern Learning Lab†quizlet.com】 【49†Quizlet Plus†quizlet.com】 【50†Study Guides†quizlet.com】 【51†Pomodoro timer†quizlet.com】
+
+##### For Teachers
+
+【52†Live†quizlet.com】 【53†Blog†quizlet.com】 【54†Be the Change†quizlet.com】 【55†Quizlet Plus for teachers†quizlet.com】
+##### Resources
+
+【56†Help center†quizlet.com】 【57†Sign up†quizlet.com】 【58†Honor code†quizlet.com】 【59†Community guidelines†quizlet.com】 【60†Accessibility statement†quizlet.com】 【61†Privacy†quizlet.com】 【62†Your Privacy/Cookies Choices†quizlet.com】 【63†Terms†quizlet.com】 【64†Ad and Cookie Policy†quizlet.com】 【65†Interest-Based Advertising†quizlet.com】 【66†Quizlet for Schools†quizlet.com】 【67†Parents†quizlet.com】
+
+##### Language
+
+English (United States)
+
+【68†Image】 【69†Get the app†get.quizlet.com】
+##### Get the app
+
+© Quizlet Inc.

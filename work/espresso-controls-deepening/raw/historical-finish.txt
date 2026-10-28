@@ -1,0 +1,72 @@
+Delight to use and The Economist Espresso – Thinking Product – A Learning a Day
+Skip to content
+A Learning a Day
+Menu and widgets
+Home
+Subscribe via Email (it’s free!)
+Subscribe via Feedly (also free!)
+RSS
+Archives
+Projects
+Best of
+Email
+LinkedIn
+Twitter
+Search
+Search for:
+About
+Delight to use and The Economist Espresso – Thinking Product
+My hypothesis is that great products have 3 characteristics.
+1. Nail job-to-be-done: They are a great solution to a problem users care about
+2. Delight to use: They are well designed
+3. Sticky: Makes the customer/user want to come back
+Last week, I wrote about nailing the job-to-be-done. Today, we’ll take a quick look at what it means to be well designed. I say “quick look” because it is impossible to do justice to an overview on great design as there’s so much to write about.
+When we talk about a well designed product, most folks likely think of the iPhone. Beautiful and easy to use – what’s not to like? My primary focus when I think of great design is going to focus on the latter – usability. Everything else is a bonus.
+So, what is usability? The definition from usability guru Steve Krug works well here – a person of average (or even below average) ability and experience can figure out how to use the thing to accomplish something without it being more trouble than it is worth.
+This sounds simple enough. But, it rarely is.
+The 2 questions I love to ask with respect to usability are –
+1. Does the user know what it takes to “win” in the product?
+2. How easy is it for the user to win?
+Users come to products to get some job done. Getting that job done is how they “win.” For example, the job you might want to get done is – “I’d like to share my notes from XYZ conference to folks who’d be interested.” You might debate between sending an email (private) or blogging (public). Assume you decide to go the public route, you’ll probably debate between a bunch of sources – let’s say Medium, LinkedIn and WordPress. Now, as a new user to Medium, LinkedIn, or WordPress, do you intuitively know what you need to do to post? And, is it easy?
+Of course, you might want to get other jobs done, e.g., I want to get more social media followers or I want to learn and write more about artificial intelligence. If a large enough group of users want to use your product for a particular job, it is important for them to feel like they’re winning in the product.
+The Economist Espresso
+An app that does a really great job of this, in my opinion, is The Economist Espresso. Here’s are 3 screenshots of the app from today.
+The first is the home screen. You can click in to an article (which can generally be read in one glance or with a minor swipe down) and keep swiping. The checks indicate you are done. And, once you get done with all 7 of them, you get a screen that says “That’s it!” with a nice quote.
+This is a beautiful illustration of what it takes to make a simple app that gets the job done. The job users want to get done is to stay up-to-date. And, with this app, you can do so in 3 minutes or less. When you reach that last screen, you’ve won!
+As an added bonus, the app is elegant as well. The Economist Espresso app’s native ads (they show them once every couple of days) are the best I’ve seen. They show up when you swipe between articles and look gorgeous.
+The design isn’t without trade-offs. For example, none of the articles have external links to other Economist articles. They could, but they’d make the app more clunky and complicated. This is a pretty popular app and the team made a brave decision to not fill articles with links. They chose to keep it simple and beautiful and they’ve done a great job with it.
+So, if there were 3 takeaways from today’s note, it would be –
+When designing products, consider prioritizing usability first.
+When thinking about usability, I find it helpful to think about – does the user know what it takes to win? Is it easy for the user to win?
+Building for usability is often driven more by leaving things out rather than adding things in.
+Share this:
+Tweet
+Email a link to a friend (Opens in new window)
+Email
+Related
+Posted on July 26, 2017Author alearningadayCategories Product
+3 thoughts on “Delight to use and The Economist Espresso – Thinking Product”
+Pingback: Getting stickiness right – Thinking Product
+Pingback: Connecting aspects of great products and great product strategy | Thinking Product
+Pingback: Connecting aspects of great products and great product strategy | Thinking Product
+Comments are closed.
+Post navigation
+Previous Previous post: What did he do?
+Next Next post: Keeping a sense of humor
+Blog at WordPress.com.
+Subscribe
+Subscribed
+A Learning a Day
+Join 283 other subscribers
+Sign me up
+Have a WordPress.com account? Log in now.
+A Learning a Day
+Copy shortlinkView post in Reader
+Manage subscriptionsSign upLog in
+Report this content
+Collapse this bar
+Loading Comments...
+Write a Comment...
+Email (Required)
+Name (Required)
+Website

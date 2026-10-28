@@ -1,0 +1,8 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M024-10,M-024,手写识别、候选纠错后查词,D2,E-CACD-01,手动/自动识别、候选无正确字则删写、识别成功但词典无资料、触屏位置校准,精度时延未测；无候选时显示与草稿中断保存未知,static_manual_pages_only,false,cases/M-024-casio.md,2026-10-27
+F-M024-11,M-024,创建、找回和修改手写随记,D2,E-CACD-02,空白页/词典页两入口、缩略图、编辑保存、单页与批量删除、功能入口不能改名,6本各50页；满额提示、未保存退出、撤销与外部恢复未知,static_manual_pages_only,false,cases/M-024-casio.md,2026-10-27
+F-M024-12,M-024,给词条加便笺并按颜色找回,D2,E-CACD-03,保存回词条、颜色/全色筛选、修改、单条/文件夹/全部删除、与单词本组合,一词条一张、共300；满额提示、无保存关闭、跨对象删除联动未知,static_manual_pages_only,false,cases/M-024-casio.md,2026-10-27
+F-M024-13,M-024,内置文学阅读、书签和阅读位置,D2,E-CACD-04,按作者/作品/词量进入、最近十本与删除、书签保存跳转/删除、首尾和上次页面,仅两机世界文学；E-W220对照名著另支；未保存退出、字体变化定位稳定性与外部书未知,static_manual_pages_only,false,cases/M-024-casio.md,2026-10-27
+F-M024-14,M-024,听词条并录音对比后结束,D2,E-CACD-05,真人语音不可用、2分钟自动停止、输入键停止、重录、对比结束删临时录音、拔耳机停播,不是评分；意外掉电数据/合盖对比录音中断未知,static_manual_pages_only,false,cases/M-024-casio.md,2026-10-27
+F-M024-15,M-024,录制并保存演讲后回放清理,D2,E-CACD-06,1至5分钟设置、超时15秒停止、重录/放弃确认、五槽覆盖确认、位置拖动、播放结束回开头,删除范围与确认细节未给；满槽其他提示、误删/覆盖恢复、导出未知,static_manual_pages_only,false,cases/M-024-casio.md,2026-10-27
+F-M024-16,M-024,设备异常后复位并重新完成设置,D2,E-CACD-07,先关机再RESET、语言/日期设置可略过日期、保护膜提示、设置初始化例外,关闭电源后复位是否保全学习簿未知；不是备份恢复或清除全部数据,static_manual_pages_only,false,cases/M-024-casio.md,2026-10-27

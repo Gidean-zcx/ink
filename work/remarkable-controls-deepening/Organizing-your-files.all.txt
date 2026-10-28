@@ -1,0 +1,9 @@
+function redirectOnLoad() {
+if (this.SfdcApp && this.SfdcApp.projectOneNavigator) { SfdcApp.projectOneNavigator.handleRedirect('https://support.remarkable.com/s//articles/Knowledge/Organizing-your-files'); }  else
+if (window.location.replace){
+window.location.replace('https://support.remarkable.com/s//articles/Knowledge/Organizing-your-files');
+} else {
+window.location.href ='https://support.remarkable.com/s//articles/Knowledge/Organizing-your-files';
+}
+}
+redirectOnLoad();

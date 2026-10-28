@@ -1,0 +1,26 @@
+[
+  {
+    "path": "docs/research/interaction-library/cases/M-006-supernote.md",
+    "sha256": "59b21b5e45e2361c10cf5d81a0f3ebeac4f8208f7dde6ddc04d92cf35280ad92"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/supernote-controls-deepening/functional-inventory.csv",
+    "sha256": "eece9acdd84e1a34dfa087056dcaa10256a3cbee0b3d80db64996e88681cf88f"
+  },
+  {
+    "path": "docs/research/interaction-library/batches/reader-evidence.jsonl",
+    "sha256": "320f94585816ba026c8497aa26a9c3d972f53bc68e8299a078330aaab4cc073e"
+  },
+  {
+    "path": "docs/research/interaction-library/batches/supernote-controls-deepening-evidence.jsonl",
+    "sha256": "2a54af2bacc581f274648e0f016c0bc5033221aaf2fa457d110ed46ab44429cb"
+  },
+  {
+    "path": "docs/research/interaction-library/batches/reader-coverage.csv",
+    "sha256": "b2c3649c79cb3c06d7b5fc3da3ffe7f2d79d1e14d7158f6df887348f07627bff"
+  },
+  {
+    "path": "docs/research/interaction-library/batches/supernote-controls-deepening-coverage.csv",
+    "sha256": "b6e1cf069021644c93a5edef2d54e5740d8d90484502c5ad35b3384785f38ede"
+  }
+]

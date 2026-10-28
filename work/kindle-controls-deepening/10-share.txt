@@ -1,0 +1,25 @@
+Share Notes and Notebooks from Your Kindle Scribe
+en_US
+Share Notes and Notebooks from Your Kindle Scribe
+Share your annotations on books and personal documents, and your notebooks by email to coworkers, or other personal contacts. The generated email contains a link that recipients can use to download the exported content within 7 days.
+When you share content from your Kindle Scribe, your handwritten or text sticky notes show at the end of the shared document. On-page mark-ups and highlights remain in the original doc.
+Kindle Scribe doesn't support sharing multiple notebooks at once.
+Open the book, document, or Notebook and tap to display the top bar menu.
+If in a book, tap the notebook icon.
+Tap the Share icon on the top-right corner.
+On the Share bottom menu, choose Quick send to [your registered email address] or Share via email.
+The share link expires after 7 days and the content is no longer available from that link.
+Note: Currently, it isn't possible to share notebooks and personal documents with members of your Amazon Family even if they have a Kindle Scribe too.
+When using the
+Convert to text Share options, a PDF of your notebook is available. You can search for keywords in your handwritten notes when reading the PDF on your phone or laptop.
+When using the Convert to text and quick send [to your registered email] option, a searchable PDF is available as a second link.
+When using the Convert to text and email option, select the checkbox Attach notebook as a searchable PDF on the Share via email page.
+Note: The searchable PDF of your notebook doesn’t include any edits made during preview in the
+Convert to text and email option.
+Only for Kindle Scribe models released in 2025 or later. For more help, go to:
+Connect Your Kindle Scribe with Google Drive, Microsoft OneDrive, or Microsoft OneNote
+Share Kindle Scribe Notes and Notebooks to Google Drive, Microsoft OneDrive, or Microsoft OneNote
+en_US
+US
+Cpiu6TFOuXpU4ymOzD
+TJE2UYmdw0ppUuR3Rs

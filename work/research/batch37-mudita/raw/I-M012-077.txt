@@ -1,0 +1,9 @@
+Mudita Kompakt Battery Life
+Modified on: Sat, 3 Oct, 2026 at 8:33 AM
+The Mudita Kompakt is designed to provide long-lasting battery life, with up to 6 days of standby time expected at launch. We plan on extending this duration with future software updates, as we have done with our other E-ink devices.
+The Kompakt is equipped with a built-in 3300mAh Li-Polymer battery.
+Was this article helpful?
+No
+Yes
+That’s Great!
+Thank you for your feedback

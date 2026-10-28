@@ -1,0 +1,181 @@
+[
+  {
+    "name": "guide-list",
+    "url": "https://api.xunfeixxj.com/assistant/guide/getGuideList",
+    "method": "POST",
+    "payload": {},
+    "http_status": 200,
+    "raw_work_path": "work/learning-control-deepening/guide-list.json",
+    "raw_sha256": "276926e41bbf09d04e707760d187f3e88006b17fb33e743f86da2d65f7cb5778",
+    "bytes": 3541,
+    "application_status": 0
+  },
+  {
+    "name": "guide-13",
+    "url": "https://api.xunfeixxj.com/assistant/guide/getGuideDetail",
+    "method": "POST",
+    "payload": {
+      "guideId": 13
+    },
+    "http_status": 200,
+    "raw_work_path": "work/learning-control-deepening/guide-13.json",
+    "raw_sha256": "4483bbb41339b23f282cfba432ed9732fdbb152b80a6b85215fc82d66bf1e384",
+    "bytes": 7932,
+    "application_status": 0,
+    "title": "搭配讯飞翻译笔操作使用手册"
+  },
+  {
+    "name": "guide-15",
+    "url": "https://api.xunfeixxj.com/assistant/guide/getGuideDetail",
+    "method": "POST",
+    "payload": {
+      "guideId": 15
+    },
+    "http_status": 200,
+    "raw_work_path": "work/learning-control-deepening/guide-15.json",
+    "raw_sha256": "7c2a9f1fec85696c6523b23cf19d4269d006da830db8cf8dc8fba9859a83957a",
+    "bytes": 4700,
+    "application_status": 0,
+    "title": "投屏指引手册"
+  },
+  {
+    "name": "guide-16",
+    "url": "https://api.xunfeixxj.com/assistant/guide/getGuideDetail",
+    "method": "POST",
+    "payload": {
+      "guideId": 16
+    },
+    "http_status": 200,
+    "raw_work_path": "work/learning-control-deepening/guide-16.json",
+    "raw_sha256": "68d6465c17441398da7835ca9bebc9544882b045da0e6e1178778caa2d259c1d",
+    "bytes": 1909,
+    "application_status": 0,
+    "title": "与相印宝、喵喵机错题本打印文档操作手册"
+  },
+  {
+    "name": "guide-17",
+    "url": "https://api.xunfeixxj.com/assistant/guide/getGuideDetail",
+    "method": "POST",
+    "payload": {
+      "guideId": 17
+    },
+    "http_status": 200,
+    "raw_work_path": "work/learning-control-deepening/guide-17.json",
+    "raw_sha256": "94b11fc35f13a859581f79fcb2daf9327a4401e91ef0e96682899f213f2e41a4",
+    "bytes": 5564,
+    "application_status": 0,
+    "title": "二代AI手写笔使用攻略"
+  },
+  {
+    "name": "guide-18",
+    "url": "https://api.xunfeixxj.com/assistant/guide/getGuideDetail",
+    "method": "POST",
+    "payload": {
+      "guideId": 18
+    },
+    "http_status": 200,
+    "raw_work_path": "work/learning-control-deepening/guide-18.json",
+    "raw_sha256": "1ce54841ea52c0337901535c0907d20c18dc13b89a9478fa57c4ae22c0be396d",
+    "bytes": 2308,
+    "application_status": 0,
+    "title": "手写笔1.0（电容笔）使用攻略"
+  },
+  {
+    "name": "guide-19",
+    "url": "https://api.xunfeixxj.com/assistant/guide/getGuideDetail",
+    "method": "POST",
+    "payload": {
+      "guideId": 19
+    },
+    "http_status": 200,
+    "raw_work_path": "work/learning-control-deepening/guide-19.json",
+    "raw_sha256": "13ac12e37acbcf2a2d30f6c24a93a1e40d7ef733cd783275376c58f6a894b584",
+    "bytes": 2268,
+    "application_status": 0,
+    "title": "连接电脑传输文件"
+  },
+  {
+    "name": "guide-90",
+    "url": "https://api.xunfeixxj.com/assistant/guide/getGuideDetail",
+    "method": "POST",
+    "payload": {
+      "guideId": 90
+    },
+    "http_status": 200,
+    "raw_work_path": "work/learning-control-deepening/guide-90.json",
+    "raw_sha256": "4e43dfac199ea45f863360180948f1c3078d7dd3f8a567b2948dfd686e9a7e8a",
+    "bytes": 18167,
+    "application_status": 0,
+    "title": "讯飞AI学app账号迁移——通用问题"
+  },
+  {
+    "name": "guide-91",
+    "url": "https://api.xunfeixxj.com/assistant/guide/getGuideDetail",
+    "method": "POST",
+    "payload": {
+      "guideId": 91
+    },
+    "http_status": 200,
+    "raw_work_path": "work/learning-control-deepening/guide-91.json",
+    "raw_sha256": "72700ee1a8052f93fb664ea486ac4711a717e44b5a1c5483d59aff40250f0785",
+    "bytes": 3078,
+    "application_status": 0,
+    "title": "讯飞AI学app账号迁移——老用户账号迁移常见问题"
+  },
+  {
+    "name": "guide-92",
+    "url": "https://api.xunfeixxj.com/assistant/guide/getGuideDetail",
+    "method": "POST",
+    "payload": {
+      "guideId": 92
+    },
+    "http_status": 200,
+    "raw_work_path": "work/learning-control-deepening/guide-92.json",
+    "raw_sha256": "1aeb0f77939c5d4a12890bf7bc058e56ee687d5c64ec67ac288f247041b738f3",
+    "bytes": 1604,
+    "application_status": 0,
+    "title": "讯飞AI学app账号迁移——老用户设备迁移常见问题"
+  },
+  {
+    "name": "guide-94",
+    "url": "https://api.xunfeixxj.com/assistant/guide/getGuideDetail",
+    "method": "POST",
+    "payload": {
+      "guideId": 94
+    },
+    "http_status": 200,
+    "raw_work_path": "work/learning-control-deepening/guide-94.json",
+    "raw_sha256": "24ed1ad033430798feb59018842c3019327da3f7e98cdf605b448ab17c1c392b",
+    "bytes": 2081,
+    "application_status": 0,
+    "title": "讯飞AI学app账号迁移——学习机上常见问题"
+  },
+  {
+    "name": "t30pro-tutorials",
+    "url": "https://api.xunfeixxj.com/assistant/video/getHelpVideoList",
+    "method": "POST",
+    "payload": {
+      "productId": "2e5298d3",
+      "modelId": "AISTUDY_SU30_T30PRO"
+    },
+    "http_status": 200,
+    "application_status": 0,
+    "raw_work_path": "work/learning-control-deepening/t30pro-tutorials.json",
+    "raw_sha256": "1f1fa9533d3fb6965bc6083c50e1a23464f53f579b5181750560fd9146dfd75f",
+    "bytes": 16263
+  },
+  {
+    "name": "t30pro-problems",
+    "url": "https://api.xunfeixxj.com/assistant/problem/getVideoProblemList",
+    "method": "POST",
+    "payload": {
+      "productId": "2e5298d3",
+      "modelId": "AISTUDY_SU30_T30PRO"
+    },
+    "http_status": 200,
+    "application_status": 0,
+    "raw_work_path": "work/learning-control-deepening/t30pro-problems.json",
+    "raw_sha256": "b3419742ceb294505a45dd22103a2754ac5ab201e3ec8526ba267bd8a6948c9a",
+    "bytes": 11853
+  }
+]

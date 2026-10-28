@@ -1,0 +1,127 @@
+[
+  {
+    "class": "page-header-inner-logo-link",
+    "href": "/en",
+    "title": "",
+    "url": "https://help.ground.news/en"
+  },
+  {
+    "class": "page-header-inner-title",
+    "href": "/en",
+    "title": "Ground News Help Center",
+    "url": "https://help.ground.news/en"
+  },
+  {
+    "type": "button",
+    "class": "kb-button primary",
+    "href": "/en/contact-us",
+    "title": "Contact Us",
+    "url": "https://help.ground.news/en/contact-us"
+  },
+  {
+    "id": "moreResultsLink",
+    "type": "button",
+    "class": "kb-button secondary",
+    "href": "/en/search",
+    "title": "More results",
+    "url": "https://help.ground.news/en/search"
+  },
+  {
+    "href": "https://ground.news/privacy-policy",
+    "title": "Privacy Policy",
+    "url": "https://ground.news/privacy-policy"
+  },
+  {
+    "href": "/en",
+    "title": "Home",
+    "url": "https://help.ground.news/en"
+  },
+  {
+    "class": "kb-category-card",
+    "href": "https://help.ground.news/en/articles/5237505",
+    "target": "_blank",
+    "rel": "noreferrer",
+    "title": "Known Issues & Bug Fixes",
+    "url": "https://help.ground.news/en/articles/5237505"
+  },
+  {
+    "class": "kb-category-card",
+    "href": "https://help.ground.news/en/articles/9683777",
+    "target": "_blank",
+    "rel": "noreferrer",
+    "title": "Submit Your Feedback",
+    "url": "https://help.ground.news/en/articles/9683777"
+  },
+  {
+    "class": "article-card",
+    "href": "/en/articles/263489",
+    "data-edited": "1773280810845",
+    "title": "My News Feed Isn't LoadingEdited Thursday, March 12 2026If your Ground News feed isn’t loading, it may be caused by network issues, browser settings, or apps that interfere with the page. This can sometimes...",
+    "url": "https://help.ground.news/en/articles/263489"
+  },
+  {
+    "class": "article-card",
+    "href": "/en/articles/263425",
+    "data-edited": "1775859098384",
+    "title": "My Bias Bar Colors Are WrongEdited Saturday, April 11 2026If the colors on the Ground News bias bar look different from what you expected, it is usually because your Ground News edition or account settings ar...",
+    "url": "https://help.ground.news/en/articles/263425"
+  },
+  {
+    "class": "article-card",
+    "href": "/en/articles/5237505",
+    "data-edited": "1781708570239",
+    "title": "Known Issues & Bug Fixes Edited Wednesday, June 17 2026This page lists all currently known issues affecting the Ground News platform. Our development team is actively working to resolve these issues. We ap...",
+    "url": "https://help.ground.news/en/articles/5237505"
+  },
+  {
+    "class": "article-card",
+    "href": "/en/articles/4603201",
+    "data-edited": "1773283004656",
+    "title": "Why Am I Encountering Paywalls When I Have Paid For A Subscription? Edited Thursday, March 12 2026If you have a Ground News subscription but are still encountering paywalls when opening articles, this usually happens for one of three reasons: you m...",
+    "url": "https://help.ground.news/en/articles/4603201"
+  },
+  {
+    "class": "article-card",
+    "href": "/en/articles/4212161",
+    "data-edited": "1773283985856",
+    "title": "Why Am I Receiving Emails About Failed Charge Attempts to Renew My Subscription?Edited Thursday, March 12 2026If you're receiving emails about failed charge attempts to renew your Ground News subscription, it usually means the payment method associated with yo...",
+    "url": "https://help.ground.news/en/articles/4212161"
+  },
+  {
+    "class": "article-card",
+    "href": "/en/articles/11659713",
+    "data-edited": "1786383085385",
+    "title": "Impersonation Scams Claiming to be Ground NewsEdited Monday, August 10 2026Ground News has received reports of phone calls from individuals falsely claiming to represent our team. These callers have reportedly contacted our c...",
+    "url": "https://help.ground.news/en/articles/11659713"
+  },
+  {
+    "href": "https://twitter.com/Ground_app",
+    "title": "",
+    "url": "https://twitter.com/Ground_app"
+  },
+  {
+    "href": "https://ca.linkedin.com/company/groundnews",
+    "title": "",
+    "url": "https://ca.linkedin.com/company/groundnews"
+  },
+  {
+    "href": "https://www.instagram.com/groundnews/",
+    "title": "",
+    "url": "https://www.instagram.com/groundnews/"
+  },
+  {
+    "href": "https://ground.news/refund-policy",
+    "title": "Refund and Cancellation Policy",
+    "url": "https://ground.news/refund-policy"
+  },
+  {
+    "href": "https://ground.news/terms-and-conditions",
+    "title": "Terms and Conditions",
+    "url": "https://ground.news/terms-and-conditions"
+  },
+  {
+    "href": "https://about.ground.news/privacy-policy",
+    "title": "Privacy Policy",
+    "url": "https://about.ground.news/privacy-policy"
+  }
+]

@@ -1,0 +1,458 @@
+[
+  {
+    "toc_page": 1,
+    "label": "Help Guide",
+    "kind": 4,
+    "page": 0
+  },
+  {
+    "toc_page": 1,
+    "label": "https://www.sony.net/dpapp/",
+    "kind": 2,
+    "uri": "https://www.sony.net/dpapp/"
+  },
+  {
+    "toc_page": 1,
+    "label": "Turning the power on/off",
+    "kind": 4,
+    "page": 5
+  },
+  {
+    "toc_page": 1,
+    "label": "About the battery",
+    "kind": 4,
+    "page": 7
+  },
+  {
+    "toc_page": 1,
+    "label": "Setting the screen lock",
+    "kind": 4,
+    "page": 9
+  },
+  {
+    "toc_page": 1,
+    "label": "Disabling the screen lock via FeliCa card/FeliCa-compatible device",
+    "kind": 4,
+    "page": 10
+  },
+  {
+    "toc_page": 2,
+    "label": "Home menu",
+    "kind": 4,
+    "page": 12
+  },
+  {
+    "toc_page": 2,
+    "label": "Document screen",
+    "kind": 4,
+    "page": 14
+  },
+  {
+    "toc_page": 2,
+    "label": "Digital Paper App (dedicated app) screen",
+    "kind": 4,
+    "page": 16
+  },
+  {
+    "toc_page": 2,
+    "label": "Connecting via Wi-Fi/Connecting using a USB cable",
+    "kind": 4,
+    "page": 18
+  },
+  {
+    "toc_page": 2,
+    "label": "Connecting via Bluetooth",
+    "kind": 4,
+    "page": 20
+  },
+  {
+    "toc_page": 2,
+    "label": "Connecting a second and subsequent Digital Paper",
+    "kind": 4,
+    "page": 22
+  },
+  {
+    "toc_page": 2,
+    "label": "Transferring a document from a computer",
+    "kind": 4,
+    "page": 23
+  },
+  {
+    "toc_page": 2,
+    "label": "Using the print operation to transfer and display data on the Digital Paper",
+    "kind": 4,
+    "page": 24
+  },
+  {
+    "toc_page": 2,
+    "label": "Transferring a document to a computer",
+    "kind": 4,
+    "page": 25
+  },
+  {
+    "toc_page": 2,
+    "label": "Creating a back up",
+    "kind": 4,
+    "page": 26
+  },
+  {
+    "toc_page": 2,
+    "label": "Syncing the Digital Paper with a computer",
+    "kind": 4,
+    "page": 27
+  },
+  {
+    "toc_page": 2,
+    "label": "Searching for a document or folder (Digital Paper App)",
+    "kind": 4,
+    "page": 29
+  },
+  {
+    "toc_page": 2,
+    "label": "Searching for documents that contain a specific written mark (Digital Paper App)",
+    "kind": 4,
+    "page": 30
+  },
+  {
+    "toc_page": 2,
+    "label": "Displaying the screen of the Digital Paper on the computer via Digital Paper App",
+    "kind": 4,
+    "page": 31
+  },
+  {
+    "toc_page": 2,
+    "label": "Changing the organization of documents/folders on the Digital Paper",
+    "kind": 4,
+    "page": 32
+  },
+  {
+    "toc_page": 2,
+    "label": "Adding/editing a note template",
+    "kind": 4,
+    "page": 34
+  },
+  {
+    "toc_page": 2,
+    "label": "Opening a document",
+    "kind": 4,
+    "page": 35
+  },
+  {
+    "toc_page": 2,
+    "label": "Selecting and opening from a folder",
+    "kind": 4,
+    "page": 36
+  },
+  {
+    "toc_page": 2,
+    "label": "Opening a different document from the quick access list",
+    "kind": 4,
+    "page": 37
+  },
+  {
+    "toc_page": 2,
+    "label": "Turning the page",
+    "kind": 4,
+    "page": 39
+  },
+  {
+    "toc_page": 2,
+    "label": "Changing how to turn pages",
+    "kind": 4,
+    "page": 40
+  },
+  {
+    "toc_page": 2,
+    "label": "Displaying the page specifying the page number",
+    "kind": 4,
+    "page": 41
+  },
+  {
+    "toc_page": 3,
+    "label": "",
+    "kind": 4,
+    "page": 41
+  },
+  {
+    "toc_page": 3,
+    "label": "Zooming in on a document",
+    "kind": 4,
+    "page": 42
+  },
+  {
+    "toc_page": 3,
+    "label": "Display page thumbnails",
+    "kind": 4,
+    "page": 44
+  },
+  {
+    "toc_page": 3,
+    "label": "Displaying left and right pages in a two-page spread",
+    "kind": 4,
+    "page": 45
+  },
+  {
+    "toc_page": 3,
+    "label": "Displaying documents side-by-side",
+    "kind": 4,
+    "page": 46
+  },
+  {
+    "toc_page": 3,
+    "label": "Searching for a string of text within a document",
+    "kind": 4,
+    "page": 47
+  },
+  {
+    "toc_page": 3,
+    "label": "Searching for a handwritten mark within a document",
+    "kind": 4,
+    "page": 48
+  },
+  {
+    "toc_page": 3,
+    "label": "Searching using document information and other information",
+    "kind": 4,
+    "page": 49
+  },
+  {
+    "toc_page": 3,
+    "label": "Searching for documents that contain a specific mark",
+    "kind": 4,
+    "page": 50
+  },
+  {
+    "toc_page": 3,
+    "label": "Viewing a sticky note attached in “DPT-S1”",
+    "kind": 4,
+    "page": 51
+  },
+  {
+    "toc_page": 3,
+    "label": "Displaying a document on the computer",
+    "kind": 4,
+    "page": 52
+  },
+  {
+    "toc_page": 3,
+    "label": "Handwriting on a document",
+    "kind": 4,
+    "page": 53
+  },
+  {
+    "toc_page": 3,
+    "label": "Adding a highlight",
+    "kind": 4,
+    "page": 54
+  },
+  {
+    "toc_page": 3,
+    "label": "Using the eraser",
+    "kind": 4,
+    "page": 55
+  },
+  {
+    "toc_page": 3,
+    "label": "Copying/cutting and moving handwritten items",
+    "kind": 4,
+    "page": 57
+  },
+  {
+    "toc_page": 3,
+    "label": "Displaying the annotation list",
+    "kind": 4,
+    "page": 58
+  },
+  {
+    "toc_page": 3,
+    "label": "Limiting edits to annotations",
+    "kind": 4,
+    "page": 59
+  },
+  {
+    "toc_page": 3,
+    "label": "Calibrating the pen",
+    "kind": 4,
+    "page": 60
+  },
+  {
+    "toc_page": 3,
+    "label": "Using the PDF form",
+    "kind": 4,
+    "page": 61
+  },
+  {
+    "toc_page": 3,
+    "label": "Creating a new note",
+    "kind": 4,
+    "page": 62
+  },
+  {
+    "toc_page": 3,
+    "label": "Opening a note",
+    "kind": 4,
+    "page": 63
+  },
+  {
+    "toc_page": 3,
+    "label": "Creating a side-note on an open document",
+    "kind": 4,
+    "page": 64
+  },
+  {
+    "toc_page": 3,
+    "label": "Opening a side-note",
+    "kind": 4,
+    "page": 66
+  },
+  {
+    "toc_page": 3,
+    "label": "Adding/deleting a page from a note",
+    "kind": 4,
+    "page": 67
+  },
+  {
+    "toc_page": 3,
+    "label": "Selecting defaults for the note template",
+    "kind": 4,
+    "page": 68
+  },
+  {
+    "toc_page": 3,
+    "label": "Adding/editing a note template",
+    "kind": 4,
+    "page": 34
+  },
+  {
+    "toc_page": 4,
+    "label": "Changing the settings on the Digital Paper",
+    "kind": 4,
+    "page": 70
+  },
+  {
+    "toc_page": 4,
+    "label": "Changing the Digital Paper settings using the Digital Paper App",
+    "kind": 4,
+    "page": 72
+  },
+  {
+    "toc_page": 4,
+    "label": "Updating the software",
+    "kind": 4,
+    "page": 74
+  },
+  {
+    "toc_page": 4,
+    "label": "Setting up the Digital Paper App",
+    "kind": 4,
+    "page": 75
+  },
+  {
+    "toc_page": 4,
+    "label": "Cannot turn on the power",
+    "kind": 4,
+    "page": 77
+  },
+  {
+    "toc_page": 4,
+    "label": "Cannot charge the Digital Paper",
+    "kind": 4,
+    "page": 78
+  },
+  {
+    "toc_page": 4,
+    "label": "The battery seems to drain quickly",
+    "kind": 4,
+    "page": 79
+  },
+  {
+    "toc_page": 4,
+    "label": "It takes time for a screen to be displayed",
+    "kind": 4,
+    "page": 80
+  },
+  {
+    "toc_page": 4,
+    "label": "The screen is not appearing",
+    "kind": 4,
+    "page": 81
+  },
+  {
+    "toc_page": 4,
+    "label": "The touch panel is reacting slowly",
+    "kind": 4,
+    "page": 82
+  },
+  {
+    "toc_page": 4,
+    "label": "Pen does not work",
+    "kind": 4,
+    "page": 83
+  },
+  {
+    "toc_page": 4,
+    "label": "The position of the pen tip is not aligned with the actual writing",
+    "kind": 4,
+    "page": 84
+  },
+  {
+    "toc_page": 4,
+    "label": "Cannot set up/connect to a network",
+    "kind": 4,
+    "page": 85
+  },
+  {
+    "toc_page": 4,
+    "label": "The network connection suddenly stopped working",
+    "kind": 4,
+    "page": 87
+  },
+  {
+    "toc_page": 4,
+    "label": "Cannot display a document",
+    "kind": 4,
+    "page": 88
+  },
+  {
+    "toc_page": 4,
+    "label": "Characters are not being displayed",
+    "kind": 4,
+    "page": 89
+  },
+  {
+    "toc_page": 4,
+    "label": "Cannot add annotations",
+    "kind": 4,
+    "page": 90
+  },
+  {
+    "toc_page": 4,
+    "label": "Cannot edit or delete annotations",
+    "kind": 4,
+    "page": 91
+  },
+  {
+    "toc_page": 4,
+    "label": "The computer does not recognize the Digital Paper",
+    "kind": 4,
+    "page": 92
+  },
+  {
+    "toc_page": 4,
+    "label": "Cannot transfer documents from a computer to the Digital Paper",
+    "kind": 4,
+    "page": 94
+  },
+  {
+    "toc_page": 4,
+    "label": "Legal Notice",
+    "kind": 4,
+    "page": 95
+  },
+  {
+    "toc_page": 4,
+    "label": "Specifications",
+    "kind": 4,
+    "page": 96
+  }
+]

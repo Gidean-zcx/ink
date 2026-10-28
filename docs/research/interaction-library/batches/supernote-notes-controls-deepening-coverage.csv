@@ -1,0 +1,6 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M006-11,M-006,将模板应用到选定笔记页,D2,E-SNCD-02;E-SNCD-10,Templates/Pages选目标页；内置/图片点选，PDF选源页后Apply as Template；原PDF页间链接；模板修改排除一般Undo,多源/目标页数量不等的分配、失败/重启恢复未知；3.28.42修复声明非实测,static_reference_only,false,cases/M-006-supernote.md,2026-10-27
+F-M006-12,M-006,用图层组织笔记并控制显隐,D2,E-SNCD-02;E-SNCD-10,仅标准笔记；背景/主层外最多3层；新增/显隐/排序/改名OK/删除；结构入口限主层；当前页20步Undo排除增删层及换模板,删层确认与恢复、切页/重启后的撤销历史、跨层链接异常的当前表现未知,static_reference_only,false,cases/M-006-supernote.md,2026-10-27
+F-M006-13,M-006,创建和校订文本框并退出编辑,D2,E-SNCD-02;E-SNCD-10,Text/Recognize as Text；双击/笔长按/套索Edit Text；格式/尺寸/删除；3.25.39支持手指点框外退出；纯文本剪贴/桌面Keyboard Sharing分开,退出后的保存回执、OCR正确率、修改回写原笔迹或Digest、删除恢复未知,static_reference_only,false,cases/M-006-supernote.md,2026-10-27
+F-M006-14,M-006,在笔记内或跨笔记重排整页,D2,E-SNCD-02,Pages长按多选Copy/Move；目标笔记和目标页前/后；OK；当前页Cut/Copy另用Paste Page；插入/多选删除入口,Cancel后的选区、剪切未粘贴恢复、跨类型兼容、页内结构/外链保真、删除撤销未知,static_reference_only,false,cases/M-006-supernote.md,2026-10-27
+F-M006-15,M-006,从手写建立和维护日历事件,D2,E-SNCD-02,主层New Event/时间/OK；月周日视图查阅/编辑/删除；已授权且启用Auto-sync时事件变更触发同步；Today’s Notes分开,本地创建是否需授权、原笔迹双向变动/回源、离线冲突/删除恢复、日期设置清手写范围未知,static_reference_only,false,cases/M-006-supernote.md,2026-10-27

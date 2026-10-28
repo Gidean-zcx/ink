@@ -1,0 +1,62 @@
+[
+  {
+    "file": "record-nz.html",
+    "url": "https://consumer.huawei.com/nz/support/content/en-gb15879066/",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "final_url": "https://consumer.huawei.com/nz/support/content/en-gb15879066/",
+    "content_type": "text/html;charset=UTF-8",
+    "raw_work_path": "work/huawei-controls-deepening/record-nz.html",
+    "raw_sha256": "74e2cb1281180bb82c0d4eec01b0fc0329116043d410258263652fe8143a752c",
+    "bytes": 110771,
+    "article_body": true
+  },
+  {
+    "file": "notes-ca.html",
+    "url": "https://consumer.huawei.com/ca/support/content/en-us15879070/",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "final_url": "https://consumer.huawei.com/ca/support/content/en-us15879070/",
+    "content_type": "text/html;charset=UTF-8",
+    "raw_work_path": "work/huawei-controls-deepening/notes-ca.html",
+    "raw_sha256": "73e3686ac767c4e7dd4e3cfe027ae1e535eade57afa51cf1fc0e0b3856fbc522",
+    "bytes": 103020,
+    "article_body": true
+  },
+  {
+    "file": "dock-lk.html",
+    "url": "https://consumer.huawei.com/lk/support/content/en-us15892864/",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "final_url": "https://consumer.huawei.com/lk/support/content/en-us15892864/",
+    "content_type": "text/html;charset=UTF-8",
+    "raw_work_path": "work/huawei-controls-deepening/dock-lk.html",
+    "raw_sha256": "c89fc9c97e9f82ea37f001555a744669bff2ff7726b050d1c2d0834fdc93b7ad",
+    "bytes": 100904,
+    "article_body": true
+  },
+  {
+    "file": "gestures-bd.html",
+    "url": "https://consumer.huawei.com/bd/support/content/en-gb15879072/",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "final_url": "https://consumer.huawei.com/bd/support/content/en-gb15879072/",
+    "content_type": "text/html;charset=UTF-8",
+    "raw_work_path": "work/huawei-controls-deepening/gestures-bd.html",
+    "raw_sha256": "365c92b3a50f9e044e89cc9f156884afb4d611764aff596b0abd7707dbe63287",
+    "bytes": 129357,
+    "article_body": true
+  },
+  {
+    "file": "support-product-original.js",
+    "url": "https://consumer.huawei.com/etc/designs/huawei-cbg-site/clientlib-support-v3/multichannel-product-detail.min.a85cb92293989c016b91455efb79d525.js",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "final_url": "https://consumer.huawei.com/etc/designs/huawei-cbg-site/clientlib-support-v3/multichannel-product-detail.min.a85cb92293989c016b91455efb79d525.js",
+    "content_type": "application/javascript",
+    "raw_work_path": "work/huawei-controls-deepening/support-product-original.js",
+    "raw_sha256": "3785953f098055dd3840d1760b24efd1495563a9cf51ba3d486be043fafca492",
+    "bytes": 119990,
+    "article_body": false
+  }
+]

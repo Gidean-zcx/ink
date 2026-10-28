@@ -1,0 +1,52 @@
+[
+  {
+    "before": {
+      "reference_id": "RP-M043-10",
+      "product_id": "M-043",
+      "question_tags": "AI;完成;预览;返回",
+      "flow_ids": "F-M043-01;F-M043-06",
+      "evidence_ids": "E-SCDF-04;E-SCDF-06;E-SCDF-07",
+      "source_locator": "source-notes.md E-SCDF-04/06/07 完成、连接与预览",
+      "artifact_path": "artifacts/shortcuts-data-flow/source-notes.md",
+      "precondition": "明确在编辑器或外部入口运行",
+      "action": "查看末尾输出或中间Quick Look，按调用方接收结果",
+      "visible_result": "文档外部完成可无预览；无连接线也不一律是错误",
+      "evidence_basis": "official_document_text_reconstruction_no_ui_operation",
+      "persistence_result": "预览/结束不证明业务保存或执行撤销",
+      "unknown_branches": "真实结果回读;停止;回滚;输出无人接收",
+      "version_scope": "Official Shortcuts 10.0 / iOS 27 guide selected in captured HTML; installed build, device and region not tested",
+      "checked_on": "2026-10-27",
+      "task_depths": "{\"F-M043-01\":\"D2\",\"F-M043-06\":\"D2\"}",
+      "task_hands_on": "{\"F-M043-01\":false,\"F-M043-06\":false}",
+      "source_types": "{\"E-SCDF-04\":\"official_help\",\"E-SCDF-06\":\"official_help\",\"E-SCDF-07\":\"official_help\"}",
+      "access_modes": "{\"E-SCDF-04\":\"ordinary_http_200_target_body_read\",\"E-SCDF-06\":\"ordinary_http_200_target_body_read\",\"E-SCDF-07\":\"ordinary_http_200_target_body_read\"}",
+      "evidence_hands_on": "{\"E-SCDF-04\":false,\"E-SCDF-06\":false,\"E-SCDF-07\":false}",
+      "operation_methods": "{\"E-SCDF-04\":\"not_recorded\",\"E-SCDF-06\":\"not_recorded\",\"E-SCDF-07\":\"not_recorded\"}",
+      "operation_audit_paths": "none_for_cited_evidence"
+    },
+    "after": {
+      "reference_id": "RP-M043-10",
+      "product_id": "M-043",
+      "question_tags": "AI;完成;预览;返回",
+      "flow_ids": "F-M043-01;F-M043-06",
+      "evidence_ids": "E-SCDF-04;E-SCDF-06;E-SCDF-07;E-SCEN-03",
+      "source_locator": "E-SCDF-04 Completion 对照 E-SCEN-03 Run from app；预览范围差异",
+      "artifact_path": "artifacts/shortcuts-entry-and-organization/source-notes.md",
+      "precondition": "明确在编辑器或外部入口运行",
+      "action": "查看末尾输出或中间Quick Look，按调用方接收结果",
+      "visible_result": "应用内运行页描述富内容预览，Completion页称编辑器外无预览；无连接线也不一律是错误",
+      "evidence_basis": "official_document_text_reconstruction_no_ui_operation",
+      "persistence_result": "预览/结束不证明业务保存或执行撤销",
+      "unknown_branches": "真实结果回读;停止;回滚;输出无人接收;两篇文档预览条件的实际适用范围",
+      "version_scope": "Official Shortcuts 10.0 / iOS 27 guide selected in captured HTML; installed build, device and region not tested",
+      "checked_on": "2026-10-27",
+      "task_depths": "{\"F-M043-01\":\"D2\",\"F-M043-06\":\"D2\"}",
+      "task_hands_on": "{\"F-M043-01\":false,\"F-M043-06\":false}",
+      "source_types": "{\"E-SCDF-04\":\"official_help\",\"E-SCDF-06\":\"official_help\",\"E-SCDF-07\":\"official_help\"}",
+      "access_modes": "{\"E-SCDF-04\":\"ordinary_http_200_target_body_read\",\"E-SCDF-06\":\"ordinary_http_200_target_body_read\",\"E-SCDF-07\":\"ordinary_http_200_target_body_read\"}",
+      "evidence_hands_on": "{\"E-SCDF-04\":false,\"E-SCDF-06\":false,\"E-SCDF-07\":false}",
+      "operation_methods": "{\"E-SCDF-04\":\"not_recorded\",\"E-SCDF-06\":\"not_recorded\",\"E-SCDF-07\":\"not_recorded\"}",
+      "operation_audit_paths": "none_for_cited_evidence"
+    }
+  }
+]

@@ -1,0 +1,38 @@
+How To Use Wi-Fi and Create a Hotspot on Mudita Kompakt
+Modified on: Sat, 3 Oct, 2026 at 8:45 AM
+How to connect to Wi-Fi
+Press the Control Center button
+Tap Settings icon
+Tap Network and Internet
+Tap Wi-Fi
+Select the Wi-Fi network you want to join 
+Enter the Wi-Fi network password
+Tap Connect 
+How to share Wi-Fi password
+Press the Control Center button
+Tap Settings icon
+Tap Network and Internet
+Tap Wi-Fi
+Select the Wi-Fi network you are connected to 
+Tap Share
+Touch the power button to scan your fingerprint or tap USE PIN > Enter PIN
+Either scan the QR code with the other device, or copy the Wi-Fi passcode manually
+How to create a hotspot
+Hotspots allow other devices to use Kompakt’s Wi-Fi or data when they are tethered.
+To create a hotspot:
+Press the Control Center button
+Tap Settings icon
+Tap Network and Internet
+Tap Hotspot and Tethering
+Tap Wi-Fi Hotspot
+You can edit the name, password* and security settings for the hotspot
+To turn on the hotspot Tap the Toggle Switch near the top of the screen 
+*The password must be 8 or more characters long
+You can also turn the hotspot on and off from the Control Center: 
+Press the Control Center button
+Tap Hotspot icon which is above the Airplane icon
+Was this article helpful?
+No
+Yes
+That’s Great!
+Thank you for your feedback

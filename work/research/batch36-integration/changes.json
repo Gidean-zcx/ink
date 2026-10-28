@@ -1,0 +1,1390 @@
+{
+  "new_evidence": [
+    "E-RWGR-01"
+  ],
+  "new_flows": [
+    "F-M009-25",
+    "F-M009-26",
+    "F-M009-27",
+    "F-M009-28",
+    "F-M009-29",
+    "F-M009-30",
+    "F-M009-31"
+  ],
+  "old_evidence": [
+    {
+      "evidence_id": "E-RWSK-10",
+      "before": {
+        "evidence_id": "E-RWSK-10",
+        "product_id": "M-015",
+        "title": "高亮关系图",
+        "url": "https://github.com/readwiseio/readwise-skills/blob/2d1ce9627c611d24f510dfc2e05a123fa509d2f6/skills/highlight-graph/SKILL.md",
+        "checked_on": "2026-10-27",
+        "source_type": "official_workflow_definition",
+        "access_mode": "anonymous_public_source_read",
+        "version_scope": "Official external-agent definitions at 2d1ce9627c611d24f510dfc2e05a123fa509d2f6; client/server runtime unverified",
+        "app_build": null,
+        "firmware_version": null,
+        "source_updated_on": null,
+        "locator": "Fetch; Prepare; Render; Connections; Iterate",
+        "note": "先200条高亮初图再补语义边；标题可由模型猜测，图边区分同源与跨源。生成器脚本未读/未运行，交互仅工作流声明。",
+        "hands_on": false,
+        "visual_observed": false,
+        "archived_artifact": "artifacts/readwise-ai-workflows/source-notes.md",
+        "sha256": "151f5c756ce365487065045a89ee8949fab179285bc34c154cfe6788cb11ca9b",
+        "capture_state": "short_notes_archived_originals_in_work",
+        "supersedes": null,
+        "raw_work_path": "work/research/batch35-readwise/raw/skills/highlight-graph/SKILL.md",
+        "raw_sha256": "084c3861014f24374d51a0c04cce7f725e5e27d007d35d2944b7681829b0be52",
+        "source_commit": "2d1ce9627c611d24f510dfc2e05a123fa509d2f6",
+        "source_commit_date": "2026-06-19T05:27:11Z",
+        "git_blob": "ce3b77a78341242b923b094a1bc6d4b799066ff0",
+        "fetch_log_path": "work/research/batch35-readwise/fetch-log.json"
+      },
+      "after": {
+        "evidence_id": "E-RWSK-10",
+        "product_id": "M-015",
+        "title": "高亮关系图",
+        "url": "https://github.com/readwiseio/readwise-skills/blob/2d1ce9627c611d24f510dfc2e05a123fa509d2f6/skills/highlight-graph/SKILL.md",
+        "checked_on": "2026-10-27",
+        "source_type": "official_workflow_definition",
+        "access_mode": "anonymous_public_source_read",
+        "version_scope": "Official external-agent definitions at 2d1ce9627c611d24f510dfc2e05a123fa509d2f6; client/server runtime unverified",
+        "app_build": null,
+        "firmware_version": null,
+        "source_updated_on": null,
+        "locator": "Fetch; Prepare; Render; Connections; Iterate",
+        "note": "原工作流定义的初次核查仅限文字；2026-10-27另读并以合成数据运行其渲染器，见E-RWGR-01。真实工具取数、AI语义关联和Reader账户执行仍未验证。",
+        "hands_on": false,
+        "visual_observed": false,
+        "archived_artifact": "artifacts/readwise-ai-workflows/source-notes.md",
+        "sha256": "151f5c756ce365487065045a89ee8949fab179285bc34c154cfe6788cb11ca9b",
+        "capture_state": "short_notes_archived_originals_in_work",
+        "supersedes": null,
+        "raw_work_path": "work/research/batch35-readwise/raw/skills/highlight-graph/SKILL.md",
+        "raw_sha256": "084c3861014f24374d51a0c04cce7f725e5e27d007d35d2944b7681829b0be52",
+        "source_commit": "2d1ce9627c611d24f510dfc2e05a123fa509d2f6",
+        "source_commit_date": "2026-06-19T05:27:11Z",
+        "git_blob": "ce3b77a78341242b923b094a1bc6d4b799066ff0",
+        "fetch_log_path": "work/research/batch35-readwise/fetch-log.json",
+        "additional_captures": [
+          {
+            "checked_on": "2026-10-27",
+            "access_mode": "linked_renderer_source_review_and_synthetic_fixture",
+            "related_evidence_id": "E-RWGR-01",
+            "note": "同一任务补实现边界；原工作流没有安装或端到端执行。",
+            "archived_artifact": "artifacts/readwise-graph-renderer/source-notes.md",
+            "sha256": "a21bf0671b4d6d08ecc3a3b7dda85df8d57c48be37a1005a173a3c87b896a4b0"
+          }
+        ]
+      },
+      "fields_changed": [
+        "additional_captures",
+        "note"
+      ],
+      "owning_files": [
+        "docs/research/interaction-library/batches/ai-workflows-and-historical-learning-evidence.jsonl"
+      ]
+    },
+    {
+      "evidence_id": "E-IXCD-01",
+      "before": {
+        "evidence_id": "E-IXCD-01",
+        "product_id": "M-009",
+        "title": "X2官方54页完整手册",
+        "url": "https://download.iflyink.com/X2PDF%E7%89%88%E7%94%A8%E6%88%B7%E6%89%8B%E5%86%8C.pdf",
+        "checked_on": "2026-10-26",
+        "source_type": "official_manual",
+        "access_mode": "public_http200_pdf_text_read",
+        "version_scope": "China iFLYTEK Office X2; historical manual, no stated firmware revision; PDF metadata 2020-11-05 is not publication proof",
+        "app_build": null,
+        "firmware_version": null,
+        "source_updated_on": null,
+        "locator": "PDF54文件页；封面、目录i–iii、正文1–50",
+        "note": "原PDF公开HTTP200；全文提取阅读，封面已看。元数据和示意图均指向历史材料，不据此认定发布日期或当前固件。官方服务中心另有X2使用指南，但该链接404，未将其说成PDF回链。",
+        "hands_on": false,
+        "visual_observed": false,
+        "archived_artifact": null,
+        "sha256": null,
+        "capture_state": "bibliography_and_short_note_only",
+        "supersedes": null,
+        "raw_work_path": "work/office-aipaper-deepening/X2-manual.pdf",
+        "raw_sha256": "79402307df3f46d112e2c505b73761b8d481ca24b4a47d473c624b396a921ff4"
+      },
+      "after": {
+        "evidence_id": "E-IXCD-01",
+        "product_id": "M-009",
+        "title": "X2官方54页完整手册",
+        "url": "https://download.iflyink.com/X2PDF%E7%89%88%E7%94%A8%E6%88%B7%E6%89%8B%E5%86%8C.pdf",
+        "checked_on": "2026-10-26",
+        "source_type": "official_manual",
+        "access_mode": "public_http200_pdf_text_read",
+        "version_scope": "China iFLYTEK Office X2; historical manual, no stated firmware revision; PDF metadata 2020-11-05 is not publication proof",
+        "app_build": null,
+        "firmware_version": null,
+        "source_updated_on": null,
+        "locator": "PDF54文件页；封面、目录i–iii、正文1–50",
+        "note": "原PDF公开HTTP200；全文提取阅读，封面已看。元数据和示意图均指向历史材料，不据此认定发布日期或当前固件。官方服务中心另有X2使用指南，但该链接404，未将其说成PDF回链。",
+        "hands_on": false,
+        "visual_observed": true,
+        "archived_artifact": "artifacts/x2-remaining-tasks/source-notes.md",
+        "sha256": "e6a0ae65f99281ef6bb8d213dd6ffe697e771c4736e58d7acfecf9b399b10604",
+        "capture_state": "short_notes_and_static_pages_archived_original_in_work",
+        "supersedes": null,
+        "raw_work_path": "work/office-aipaper-deepening/X2-manual.pdf",
+        "raw_sha256": "79402307df3f46d112e2c505b73761b8d481ca24b4a47d473c624b396a921ff4",
+        "visual_kind": "static_manual_pages",
+        "artifact_hashes": {
+          "artifacts/x2-remaining-tasks/X2-file-9.png": "03efdd6ece2ba5622be28e57810964f762fda4d139f736e582b5e6238a2434fd",
+          "artifacts/x2-remaining-tasks/X2-file-33.png": "ef348cedaa10fea778f3fe5ef9600399fb4c2bc756a9243f0926053c773bc83e",
+          "artifacts/x2-remaining-tasks/X2-file-51.png": "0edeb26cb73fb55c28b84f5d429a1444c54af31518188758e74af01420cd8b3d"
+        },
+        "additional_captures": [
+          {
+            "checked_on": "2026-10-27",
+            "access_mode": "existing_pdf_targeted_text_reread_and_static_page_render",
+            "raw_work_path": "work/office-aipaper-deepening/X2-manual.pdf",
+            "raw_sha256": "79402307df3f46d112e2c505b73761b8d481ca24b4a47d473c624b396a921ff4",
+            "locator": "printed4–5,9–10,16,26,28–29,36,39,41,44–47; viewed file9/33/51",
+            "note": "七条新文档任务；图片插入、PDF保存和当前页选择补旧任务。书城试读仍高层描述；无设备操作。",
+            "archived_artifact": "artifacts/x2-remaining-tasks/source-notes.md",
+            "sha256": "e6a0ae65f99281ef6bb8d213dd6ffe697e771c4736e58d7acfecf9b399b10604",
+            "artifact_hashes": {
+              "artifacts/x2-remaining-tasks/X2-file-9.png": "03efdd6ece2ba5622be28e57810964f762fda4d139f736e582b5e6238a2434fd",
+              "artifacts/x2-remaining-tasks/X2-file-33.png": "ef348cedaa10fea778f3fe5ef9600399fb4c2bc756a9243f0926053c773bc83e",
+              "artifacts/x2-remaining-tasks/X2-file-51.png": "0edeb26cb73fb55c28b84f5d429a1444c54af31518188758e74af01420cd8b3d"
+            }
+          }
+        ]
+      },
+      "fields_changed": [
+        "additional_captures",
+        "sha256",
+        "visual_observed",
+        "visual_kind",
+        "artifact_hashes",
+        "archived_artifact",
+        "capture_state"
+      ],
+      "owning_files": [
+        "docs/research/interaction-library/batches/office-aipaper-deepening-evidence.jsonl"
+      ]
+    },
+    {
+      "evidence_id": "E-MOD-03",
+      "before": {
+        "evidence_id": "E-MOD-03",
+        "product_id": "M-054",
+        "title": "墨案2020指南：三种文件传输方式",
+        "url": "http://www.moaansmart.com/?show=86",
+        "checked_on": "2026-10-26",
+        "source_type": "official_legacy_user_guide",
+        "access_mode": "http_original_text_via_urllib",
+        "version_scope": "Moaan legacy guide dated 2020-06-08; hardware model and firmware unspecified; not attributed to W7/W8/inkPalm",
+        "app_build": null,
+        "firmware_version": null,
+        "source_updated_on": "2020-06-08",
+        "locator": "USB、FTP、多看WLAN",
+        "note": "实际HTTP原址正文读取；HTTPS失败。USB写books，FTP写book，保留冲突；乱码建议仅历史兼容说明。原件work/chinese-reader-deepening/moaan-transfer-2020.html。",
+        "hands_on": false,
+        "visual_observed": false,
+        "archived_artifact": null,
+        "sha256": null,
+        "capture_state": "text_only",
+        "supersedes": null,
+        "additional_captures": [
+          {
+            "checked_on": "2026-10-27",
+            "access_mode": "existing_local_official_HTTP_capture_reread",
+            "raw_work_path": "work/moaan-controls-deepening/raw/moaan-transfer-2020.html",
+            "raw_sha256": "acf75b537ce92a2165fe2c07d9358be02809678e8fa43cbd45426e48b4f0435d",
+            "original_work_path": "work/chinese-reader-deepening/moaan-transfer-2020.html",
+            "source_captured_on": "2026-10-26",
+            "locator": "USB、FTP、多看WLAN",
+            "hands_on": false,
+            "visual_observed": false,
+            "note": "本地复读，未重新联网；不更新原采集日期。",
+            "archived_artifact": "artifacts/moaan-controls-deepening/source-notes.md",
+            "sha256": "1e87162de8a6f2fbb64044e1c2547d97401e1fa5b8de2ce206043eed9d66b56b",
+            "audit_artifact": "artifacts/moaan-controls-deepening/source-notes.md",
+            "audit_sha256": "1e87162de8a6f2fbb64044e1c2547d97401e1fa5b8de2ce206043eed9d66b56b"
+          }
+        ]
+      },
+      "after": {
+        "evidence_id": "E-MOD-03",
+        "product_id": "M-054",
+        "title": "墨案2020指南：三种文件传输方式",
+        "url": "http://www.moaansmart.com/?show=86",
+        "checked_on": "2026-10-26",
+        "source_type": "official_legacy_user_guide",
+        "access_mode": "http_original_text_via_urllib",
+        "version_scope": "Moaan legacy guide dated 2020-06-08; hardware model and firmware unspecified; not attributed to W7/W8/inkPalm",
+        "app_build": null,
+        "firmware_version": null,
+        "source_updated_on": "2020-06-08",
+        "locator": "USB、FTP、多看WLAN",
+        "note": "实际HTTP原址正文读取；HTTPS失败。USB写books，FTP写book，保留冲突；乱码建议仅历史兼容说明。原件work/chinese-reader-deepening/moaan-transfer-2020.html。 此为首次采集记录；2026-10-27补媒体静态采样：补方法二JPG及方法三WLAN两画面；Books目录、二维码和保持同网/勿关闭页可见。方法一请求未知未重取；文字books/book冲突未解。",
+        "hands_on": false,
+        "visual_observed": true,
+        "archived_artifact": "artifacts/moaan-legacy-media/source-notes.md",
+        "sha256": "128e46f414d3fb2768c80dfa41ee2a718ec4b2b2930dbc30febf1e3d7f6eb340",
+        "capture_state": "notes_and_sampled_static_frames_archived_original_media_not_downloaded",
+        "supersedes": null,
+        "additional_captures": [
+          {
+            "checked_on": "2026-10-27",
+            "access_mode": "existing_local_official_HTTP_capture_reread",
+            "raw_work_path": "work/moaan-controls-deepening/raw/moaan-transfer-2020.html",
+            "raw_sha256": "acf75b537ce92a2165fe2c07d9358be02809678e8fa43cbd45426e48b4f0435d",
+            "original_work_path": "work/chinese-reader-deepening/moaan-transfer-2020.html",
+            "source_captured_on": "2026-10-26",
+            "locator": "USB、FTP、多看WLAN",
+            "hands_on": false,
+            "visual_observed": false,
+            "note": "本地复读，未重新联网；不更新原采集日期。",
+            "archived_artifact": "artifacts/moaan-controls-deepening/source-notes.md",
+            "sha256": "1e87162de8a6f2fbb64044e1c2547d97401e1fa5b8de2ce206043eed9d66b56b",
+            "audit_artifact": "artifacts/moaan-controls-deepening/source-notes.md",
+            "audit_sha256": "1e87162de8a6f2fbb64044e1c2547d97401e1fa5b8de2ce206043eed9d66b56b"
+          },
+          {
+            "checked_on": "2026-10-27",
+            "access_mode": "anonymous_browser_remote_img_static_sampling",
+            "source_urls": [
+              "http://www.moaansmart.com/data/upload/2/d7/2d76c77d76a44b151ae239734d394686.jpg",
+              "http://www.moaansmart.com/data/upload/1/69/16919ce1783fc6aaecad4bd37b845695.gif"
+            ],
+            "status": 200,
+            "locator": "local post-load samples approx0/2/5seconds; not GIF source timestamps",
+            "note": "补方法二JPG及方法三WLAN两画面；Books目录、二维码和保持同网/勿关闭页可见。方法一请求未知未重取；文字books/book冲突未解。 型号仍未知，非连续操作或产品实操。",
+            "archived_artifact": "artifacts/moaan-legacy-media/source-notes.md",
+            "sha256": "128e46f414d3fb2768c80dfa41ee2a718ec4b2b2930dbc30febf1e3d7f6eb340",
+            "artifact_hashes": {
+              "artifacts/moaan-legacy-media/media-02-0s.png": "f43857d08ba7a2c372e189f4e3358a9de584e875d5ec31657152cca4b0da07c6",
+              "artifacts/moaan-legacy-media/media-03-0s.png": "90030754fe98ad6ca265d45ab1feb4a7644420971ac532a1ebfa9d7c62fc8141",
+              "artifacts/moaan-legacy-media/media-03-2s.png": "5e7755ee2b72664ba106e84b7a8149a8fb69aa4893f451e1fb18046c0cc1250a"
+            },
+            "sampling_log_path": "artifacts/moaan-legacy-media/media-sampling.json",
+            "sampling_log_sha256": "8771828ae2b48131dd0fcce87ccb275ea61d05c7e0895872a47fade82101a4fe"
+          }
+        ],
+        "visual_kind": "sampled_legacy_tutorial_frames",
+        "artifact_hashes": {
+          "artifacts/moaan-legacy-media/media-02-0s.png": "f43857d08ba7a2c372e189f4e3358a9de584e875d5ec31657152cca4b0da07c6",
+          "artifacts/moaan-legacy-media/media-03-0s.png": "90030754fe98ad6ca265d45ab1feb4a7644420971ac532a1ebfa9d7c62fc8141",
+          "artifacts/moaan-legacy-media/media-03-2s.png": "5e7755ee2b72664ba106e84b7a8149a8fb69aa4893f451e1fb18046c0cc1250a"
+        }
+      },
+      "fields_changed": [
+        "additional_captures",
+        "sha256",
+        "visual_observed",
+        "visual_kind",
+        "artifact_hashes",
+        "archived_artifact",
+        "capture_state",
+        "note"
+      ],
+      "owning_files": [
+        "docs/research/interaction-library/batches/chinese-reader-deepening-evidence.jsonl"
+      ]
+    },
+    {
+      "evidence_id": "E-MOD-04",
+      "before": {
+        "evidence_id": "E-MOD-04",
+        "product_id": "M-054",
+        "title": "墨案2020指南：蓝牙接收书籍",
+        "url": "http://www.moaansmart.com/?show=87",
+        "checked_on": "2026-10-26",
+        "source_type": "official_legacy_user_guide",
+        "access_mode": "http_original_text_via_urllib",
+        "version_scope": "Moaan legacy guide dated 2020-06-08; hardware model and firmware unspecified; not attributed to W7/W8/inkPalm",
+        "app_build": null,
+        "firmware_version": null,
+        "source_updated_on": "2020-06-08",
+        "locator": "内部存储books、通知栏打开及加入书架",
+        "note": "实际HTTP原址正文读取；HTTPS失败。接收文件与加入书架不同状态；机型未知。",
+        "hands_on": false,
+        "visual_observed": false,
+        "archived_artifact": null,
+        "sha256": null,
+        "capture_state": "text_only",
+        "supersedes": null,
+        "additional_captures": [
+          {
+            "checked_on": "2026-10-27",
+            "access_mode": "existing_local_official_HTTP_capture_reread",
+            "raw_work_path": "work/moaan-controls-deepening/raw/root-moaan-87.html",
+            "raw_sha256": "6e5fa6a9d46f8f59ccecc66072053ec18c84552b3e52c65325b235d7a96d543f",
+            "original_work_path": "work/chinese-reader-deepening/root-moaan-87.html",
+            "source_captured_on": "2026-10-26",
+            "locator": "内部存储books、通知栏打开及加入书架",
+            "hands_on": false,
+            "visual_observed": false,
+            "note": "本地复读，未重新联网；不更新原采集日期。",
+            "archived_artifact": "artifacts/moaan-controls-deepening/source-notes.md",
+            "sha256": "1e87162de8a6f2fbb64044e1c2547d97401e1fa5b8de2ce206043eed9d66b56b",
+            "audit_artifact": "artifacts/moaan-controls-deepening/source-notes.md",
+            "audit_sha256": "1e87162de8a6f2fbb64044e1c2547d97401e1fa5b8de2ce206043eed9d66b56b"
+          }
+        ]
+      },
+      "after": {
+        "evidence_id": "E-MOD-04",
+        "product_id": "M-054",
+        "title": "墨案2020指南：蓝牙接收书籍",
+        "url": "http://www.moaansmart.com/?show=87",
+        "checked_on": "2026-10-26",
+        "source_type": "official_legacy_user_guide",
+        "access_mode": "http_original_text_via_urllib",
+        "version_scope": "Moaan legacy guide dated 2020-06-08; hardware model and firmware unspecified; not attributed to W7/W8/inkPalm",
+        "app_build": null,
+        "firmware_version": null,
+        "source_updated_on": "2020-06-08",
+        "locator": "内部存储books、通知栏打开及加入书架",
+        "note": "实际HTTP原址正文读取；HTTPS失败。接收文件与加入书架不同状态；机型未知。 此为首次采集记录；2026-10-27补媒体静态采样：补通知栏接收状态和不加入/加入书架弹窗；未看触发返回动作，不能保证两帧同一文件。",
+        "hands_on": false,
+        "visual_observed": true,
+        "archived_artifact": "artifacts/moaan-legacy-media/source-notes.md",
+        "sha256": "128e46f414d3fb2768c80dfa41ee2a718ec4b2b2930dbc30febf1e3d7f6eb340",
+        "capture_state": "notes_and_sampled_static_frames_archived_original_media_not_downloaded",
+        "supersedes": null,
+        "additional_captures": [
+          {
+            "checked_on": "2026-10-27",
+            "access_mode": "existing_local_official_HTTP_capture_reread",
+            "raw_work_path": "work/moaan-controls-deepening/raw/root-moaan-87.html",
+            "raw_sha256": "6e5fa6a9d46f8f59ccecc66072053ec18c84552b3e52c65325b235d7a96d543f",
+            "original_work_path": "work/chinese-reader-deepening/root-moaan-87.html",
+            "source_captured_on": "2026-10-26",
+            "locator": "内部存储books、通知栏打开及加入书架",
+            "hands_on": false,
+            "visual_observed": false,
+            "note": "本地复读，未重新联网；不更新原采集日期。",
+            "archived_artifact": "artifacts/moaan-controls-deepening/source-notes.md",
+            "sha256": "1e87162de8a6f2fbb64044e1c2547d97401e1fa5b8de2ce206043eed9d66b56b",
+            "audit_artifact": "artifacts/moaan-controls-deepening/source-notes.md",
+            "audit_sha256": "1e87162de8a6f2fbb64044e1c2547d97401e1fa5b8de2ce206043eed9d66b56b"
+          },
+          {
+            "checked_on": "2026-10-27",
+            "access_mode": "anonymous_browser_remote_img_static_sampling",
+            "source_urls": [
+              "http://www.moaansmart.com/data/upload/a/b9/ab9f1c1ce4b1b5581f1c820d64399ca2.gif"
+            ],
+            "status": 200,
+            "locator": "local post-load samples approx0/2/5seconds; not GIF source timestamps",
+            "note": "补通知栏接收状态和不加入/加入书架弹窗；未看触发返回动作，不能保证两帧同一文件。 型号仍未知，非连续操作或产品实操。",
+            "archived_artifact": "artifacts/moaan-legacy-media/source-notes.md",
+            "sha256": "128e46f414d3fb2768c80dfa41ee2a718ec4b2b2930dbc30febf1e3d7f6eb340",
+            "artifact_hashes": {
+              "artifacts/moaan-legacy-media/media-04-0s.png": "bd668b4a2cdc790b30ebe252ddfc1bea435e675939d46bd169f3805d689fbd22",
+              "artifacts/moaan-legacy-media/media-04-2s.png": "b49e510aef175b73d95a45930e584e6bafb037fa6c1b755018419f39d32d0c83"
+            },
+            "sampling_log_path": "artifacts/moaan-legacy-media/media-sampling.json",
+            "sampling_log_sha256": "8771828ae2b48131dd0fcce87ccb275ea61d05c7e0895872a47fade82101a4fe"
+          }
+        ],
+        "visual_kind": "sampled_legacy_tutorial_frames",
+        "artifact_hashes": {
+          "artifacts/moaan-legacy-media/media-04-0s.png": "bd668b4a2cdc790b30ebe252ddfc1bea435e675939d46bd169f3805d689fbd22",
+          "artifacts/moaan-legacy-media/media-04-2s.png": "b49e510aef175b73d95a45930e584e6bafb037fa6c1b755018419f39d32d0c83"
+        }
+      },
+      "fields_changed": [
+        "additional_captures",
+        "sha256",
+        "visual_observed",
+        "visual_kind",
+        "artifact_hashes",
+        "archived_artifact",
+        "capture_state",
+        "note"
+      ],
+      "owning_files": [
+        "docs/research/interaction-library/batches/chinese-reader-deepening-evidence.jsonl"
+      ]
+    },
+    {
+      "evidence_id": "E-MOD-05",
+      "before": {
+        "evidence_id": "E-MOD-05",
+        "product_id": "M-054",
+        "title": "墨案2020指南：文件移动",
+        "url": "http://www.moaansmart.com/?show=88",
+        "checked_on": "2026-10-26",
+        "source_type": "official_legacy_user_guide",
+        "access_mode": "http_original_text_via_urllib",
+        "version_scope": "Moaan legacy guide dated 2020-06-08; hardware model and firmware unspecified; not attributed to W7/W8/inkPalm",
+        "app_build": null,
+        "firmware_version": null,
+        "source_updated_on": "2020-06-08",
+        "locator": "文件管理长按复制/剪切；正文写“目标文件夹外面粘贴”，目标位置有歧义",
+        "note": "实际HTTP原址正文读取；HTTPS失败。正文位置措辞保留，GIF未观看，不确定目录内/外操作；没有覆盖/取消/中断行为，机型未知。",
+        "hands_on": false,
+        "visual_observed": false,
+        "archived_artifact": null,
+        "sha256": null,
+        "capture_state": "text_only",
+        "supersedes": null,
+        "additional_captures": [
+          {
+            "url": "http://www.moaansmart.com/?show=88",
+            "checked_on": "2026-10-27",
+            "access_mode": "anonymous_urllib_GET",
+            "status": 200,
+            "final_url": "http://www.moaansmart.com/?show=88",
+            "content_type": "text/html; charset=UTF-8",
+            "raw_work_path": "work/moaan-controls-deepening/raw/moaan-88.html",
+            "raw_sha256": "6fd73bf9358aa1bb614cb86b39a80af6eac5755b361725cc722532ccd881857f",
+            "extracted_work_path": "work/moaan-controls-deepening/raw/moaan-88.txt",
+            "extracted_sha256": "56bd18c4dde1b606bc69fdefde3f33e9129c709481eba624e4f2d275fd7bac18",
+            "locator": "文件管理长按、复制/剪切、目标目录粘贴",
+            "hands_on": false,
+            "visual_observed": false,
+            "archived_artifact": "artifacts/moaan-controls-deepening/source-notes.md",
+            "sha256": "1e87162de8a6f2fbb64044e1c2547d97401e1fa5b8de2ce206043eed9d66b56b",
+            "note": "同URL补原件与散列；2020历史指南型号未知，GIF未看。"
+          }
+        ]
+      },
+      "after": {
+        "evidence_id": "E-MOD-05",
+        "product_id": "M-054",
+        "title": "墨案2020指南：文件移动",
+        "url": "http://www.moaansmart.com/?show=88",
+        "checked_on": "2026-10-26",
+        "source_type": "official_legacy_user_guide",
+        "access_mode": "http_original_text_via_urllib",
+        "version_scope": "Moaan legacy guide dated 2020-06-08; hardware model and firmware unspecified; not attributed to W7/W8/inkPalm",
+        "app_build": null,
+        "firmware_version": null,
+        "source_updated_on": "2020-06-08",
+        "locator": "文件管理长按复制/剪切；正文写“目标文件夹外面粘贴”，目标位置有歧义",
+        "note": "实际HTTP原址正文读取；HTTPS失败。正文位置措辞保留，GIF未观看，不确定目录内/外操作；没有覆盖/取消/中断行为，机型未知。 此为首次采集记录；2026-10-27补媒体静态采样：补复制/剪切菜单及粘贴进去菜单；两帧时钟/文件不同，未闭合目标目录及实际移动结果。",
+        "hands_on": false,
+        "visual_observed": true,
+        "archived_artifact": "artifacts/moaan-legacy-media/source-notes.md",
+        "sha256": "128e46f414d3fb2768c80dfa41ee2a718ec4b2b2930dbc30febf1e3d7f6eb340",
+        "capture_state": "notes_and_sampled_static_frames_archived_original_media_not_downloaded",
+        "supersedes": null,
+        "additional_captures": [
+          {
+            "url": "http://www.moaansmart.com/?show=88",
+            "checked_on": "2026-10-27",
+            "access_mode": "anonymous_urllib_GET",
+            "status": 200,
+            "final_url": "http://www.moaansmart.com/?show=88",
+            "content_type": "text/html; charset=UTF-8",
+            "raw_work_path": "work/moaan-controls-deepening/raw/moaan-88.html",
+            "raw_sha256": "6fd73bf9358aa1bb614cb86b39a80af6eac5755b361725cc722532ccd881857f",
+            "extracted_work_path": "work/moaan-controls-deepening/raw/moaan-88.txt",
+            "extracted_sha256": "56bd18c4dde1b606bc69fdefde3f33e9129c709481eba624e4f2d275fd7bac18",
+            "locator": "文件管理长按、复制/剪切、目标目录粘贴",
+            "hands_on": false,
+            "visual_observed": false,
+            "archived_artifact": "artifacts/moaan-controls-deepening/source-notes.md",
+            "sha256": "1e87162de8a6f2fbb64044e1c2547d97401e1fa5b8de2ce206043eed9d66b56b",
+            "note": "同URL补原件与散列；2020历史指南型号未知，GIF未看。"
+          },
+          {
+            "checked_on": "2026-10-27",
+            "access_mode": "anonymous_browser_remote_img_static_sampling",
+            "source_urls": [
+              "http://www.moaansmart.com/data/upload/3/47/34709625632dbffa78310c90defbed6e.gif"
+            ],
+            "status": 200,
+            "locator": "local post-load samples approx0/2/5seconds; not GIF source timestamps",
+            "note": "补复制/剪切菜单及粘贴进去菜单；两帧时钟/文件不同，未闭合目标目录及实际移动结果。 型号仍未知，非连续操作或产品实操。",
+            "archived_artifact": "artifacts/moaan-legacy-media/source-notes.md",
+            "sha256": "128e46f414d3fb2768c80dfa41ee2a718ec4b2b2930dbc30febf1e3d7f6eb340",
+            "artifact_hashes": {
+              "artifacts/moaan-legacy-media/media-06-0s.png": "746a2ff565ca70b53d0b5079dd1fe28ca216adf2c52ddc366290e760115119b8",
+              "artifacts/moaan-legacy-media/media-06-2s.png": "808d1936317ad4173e453d186fec74fb5dd3713b56b0d4dbdf5f21af8e21f138"
+            },
+            "sampling_log_path": "artifacts/moaan-legacy-media/media-sampling.json",
+            "sampling_log_sha256": "8771828ae2b48131dd0fcce87ccb275ea61d05c7e0895872a47fade82101a4fe"
+          }
+        ],
+        "visual_kind": "sampled_legacy_tutorial_frames",
+        "artifact_hashes": {
+          "artifacts/moaan-legacy-media/media-06-0s.png": "746a2ff565ca70b53d0b5079dd1fe28ca216adf2c52ddc366290e760115119b8",
+          "artifacts/moaan-legacy-media/media-06-2s.png": "808d1936317ad4173e453d186fec74fb5dd3713b56b0d4dbdf5f21af8e21f138"
+        }
+      },
+      "fields_changed": [
+        "additional_captures",
+        "sha256",
+        "visual_observed",
+        "visual_kind",
+        "artifact_hashes",
+        "archived_artifact",
+        "capture_state",
+        "note"
+      ],
+      "owning_files": [
+        "docs/research/interaction-library/batches/chinese-reader-deepening-evidence.jsonl"
+      ]
+    },
+    {
+      "evidence_id": "E-MOD-07",
+      "before": {
+        "evidence_id": "E-MOD-07",
+        "product_id": "M-054",
+        "title": "墨案2020指南：PDF批注裁边重排",
+        "url": "http://www.moaansmart.com/?show=85",
+        "checked_on": "2026-10-26",
+        "source_type": "official_legacy_user_guide",
+        "access_mode": "http_original_text_via_urllib",
+        "version_scope": "Moaan legacy guide dated 2020-06-08; hardware model and firmware unspecified; not attributed to W7/W8/inkPalm",
+        "app_build": null,
+        "firmware_version": null,
+        "source_updated_on": "2020-06-08",
+        "locator": "阅读中点击空白区后的底栏",
+        "note": "实际HTTP原址正文读取；HTTPS失败。只给入口；GIF未观看，不补造后续动作。",
+        "hands_on": false,
+        "visual_observed": false,
+        "archived_artifact": null,
+        "sha256": null,
+        "capture_state": "text_only",
+        "supersedes": null,
+        "additional_captures": [
+          {
+            "url": "http://www.moaansmart.com/?show=85",
+            "checked_on": "2026-10-27",
+            "access_mode": "anonymous_urllib_GET",
+            "status": 200,
+            "final_url": "http://www.moaansmart.com/?show=85",
+            "content_type": "text/html; charset=UTF-8",
+            "raw_work_path": "work/moaan-controls-deepening/raw/moaan-85.html",
+            "raw_sha256": "7ceef44e1650ee7c0777cae1bd8e892a3e43c4979d225838b7293365c2fcc94f",
+            "extracted_work_path": "work/moaan-controls-deepening/raw/moaan-85.txt",
+            "extracted_sha256": "048d4154927efd03420607b59feb4feec9c046e537c8db10bf01435d07b382b5",
+            "locator": "阅读中点击空白区后的底栏",
+            "hands_on": false,
+            "visual_observed": false,
+            "archived_artifact": "artifacts/moaan-controls-deepening/source-notes.md",
+            "sha256": "1e87162de8a6f2fbb64044e1c2547d97401e1fa5b8de2ce206043eed9d66b56b",
+            "note": "同URL补原件与散列；2020历史指南型号未知，GIF未看。"
+          }
+        ]
+      },
+      "after": {
+        "evidence_id": "E-MOD-07",
+        "product_id": "M-054",
+        "title": "墨案2020指南：PDF批注裁边重排",
+        "url": "http://www.moaansmart.com/?show=85",
+        "checked_on": "2026-10-26",
+        "source_type": "official_legacy_user_guide",
+        "access_mode": "http_original_text_via_urllib",
+        "version_scope": "Moaan legacy guide dated 2020-06-08; hardware model and firmware unspecified; not attributed to W7/W8/inkPalm",
+        "app_build": null,
+        "firmware_version": null,
+        "source_updated_on": "2020-06-08",
+        "locator": "阅读中点击空白区后的底栏",
+        "note": "实际HTTP原址正文读取；HTTPS失败。只给入口；GIF未观看，不补造后续动作。 此为首次采集记录；2026-10-27补媒体静态采样：补重排与批注入口箭头；未展示排版变化、保存或裁边结果。",
+        "hands_on": false,
+        "visual_observed": true,
+        "archived_artifact": "artifacts/moaan-legacy-media/source-notes.md",
+        "sha256": "128e46f414d3fb2768c80dfa41ee2a718ec4b2b2930dbc30febf1e3d7f6eb340",
+        "capture_state": "notes_and_sampled_static_frames_archived_original_media_not_downloaded",
+        "supersedes": null,
+        "additional_captures": [
+          {
+            "url": "http://www.moaansmart.com/?show=85",
+            "checked_on": "2026-10-27",
+            "access_mode": "anonymous_urllib_GET",
+            "status": 200,
+            "final_url": "http://www.moaansmart.com/?show=85",
+            "content_type": "text/html; charset=UTF-8",
+            "raw_work_path": "work/moaan-controls-deepening/raw/moaan-85.html",
+            "raw_sha256": "7ceef44e1650ee7c0777cae1bd8e892a3e43c4979d225838b7293365c2fcc94f",
+            "extracted_work_path": "work/moaan-controls-deepening/raw/moaan-85.txt",
+            "extracted_sha256": "048d4154927efd03420607b59feb4feec9c046e537c8db10bf01435d07b382b5",
+            "locator": "阅读中点击空白区后的底栏",
+            "hands_on": false,
+            "visual_observed": false,
+            "archived_artifact": "artifacts/moaan-controls-deepening/source-notes.md",
+            "sha256": "1e87162de8a6f2fbb64044e1c2547d97401e1fa5b8de2ce206043eed9d66b56b",
+            "note": "同URL补原件与散列；2020历史指南型号未知，GIF未看。"
+          },
+          {
+            "checked_on": "2026-10-27",
+            "access_mode": "anonymous_browser_remote_img_static_sampling",
+            "source_urls": [
+              "http://www.moaansmart.com/data/upload/c/b1/cb17f9824ebabe6c21373a56098b532e.gif"
+            ],
+            "status": 200,
+            "locator": "local post-load samples approx0/2/5seconds; not GIF source timestamps",
+            "note": "补重排与批注入口箭头；未展示排版变化、保存或裁边结果。 型号仍未知，非连续操作或产品实操。",
+            "archived_artifact": "artifacts/moaan-legacy-media/source-notes.md",
+            "sha256": "128e46f414d3fb2768c80dfa41ee2a718ec4b2b2930dbc30febf1e3d7f6eb340",
+            "artifact_hashes": {
+              "artifacts/moaan-legacy-media/media-05-0s.png": "9e2b66476d8258a115adbc0ebaa7dbdfdd1c5dc4809aa2df0f9f1a7000dc3772",
+              "artifacts/moaan-legacy-media/media-05-2s.png": "b6157c20c05258d35ae84586df822dc66f61cf8ae103b7d5934c384316f699a3"
+            },
+            "sampling_log_path": "artifacts/moaan-legacy-media/media-sampling.json",
+            "sampling_log_sha256": "8771828ae2b48131dd0fcce87ccb275ea61d05c7e0895872a47fade82101a4fe"
+          }
+        ],
+        "visual_kind": "sampled_legacy_tutorial_frames",
+        "artifact_hashes": {
+          "artifacts/moaan-legacy-media/media-05-0s.png": "9e2b66476d8258a115adbc0ebaa7dbdfdd1c5dc4809aa2df0f9f1a7000dc3772",
+          "artifacts/moaan-legacy-media/media-05-2s.png": "b6157c20c05258d35ae84586df822dc66f61cf8ae103b7d5934c384316f699a3"
+        }
+      },
+      "fields_changed": [
+        "additional_captures",
+        "sha256",
+        "visual_observed",
+        "visual_kind",
+        "artifact_hashes",
+        "archived_artifact",
+        "capture_state",
+        "note"
+      ],
+      "owning_files": [
+        "docs/research/interaction-library/batches/chinese-reader-deepening-evidence.jsonl"
+      ]
+    },
+    {
+      "evidence_id": "E-MOD-08",
+      "before": {
+        "evidence_id": "E-MOD-08",
+        "product_id": "M-054",
+        "title": "墨案2020指南：笔记重命名",
+        "url": "http://www.moaansmart.com/?show=84",
+        "checked_on": "2026-10-26",
+        "source_type": "official_legacy_user_guide",
+        "access_mode": "http_original_text_via_urllib",
+        "version_scope": "Moaan legacy guide dated 2020-06-08; hardware model and firmware unspecified; not attributed to W7/W8/inkPalm",
+        "app_build": null,
+        "firmware_version": null,
+        "source_updated_on": "2020-06-08",
+        "locator": "新建保存命名、左上菜单改名",
+        "note": "实际HTTP原址正文读取；HTTPS失败。旧界面型号未标；没有同名/取消分支。",
+        "hands_on": false,
+        "visual_observed": false,
+        "archived_artifact": null,
+        "sha256": null,
+        "capture_state": "text_only",
+        "supersedes": null,
+        "additional_captures": [
+          {
+            "url": "http://www.moaansmart.com/?show=84",
+            "checked_on": "2026-10-27",
+            "access_mode": "anonymous_urllib_GET",
+            "status": 200,
+            "final_url": "http://www.moaansmart.com/?show=84",
+            "content_type": "text/html; charset=UTF-8",
+            "raw_work_path": "work/moaan-controls-deepening/raw/moaan-84.html",
+            "raw_sha256": "5fb65d77487ba5a672566f28ebfe7f0027f88cbedd225836a811b1bf665a8a44",
+            "extracted_work_path": "work/moaan-controls-deepening/raw/moaan-84.txt",
+            "extracted_sha256": "b1ba06e8c7b7a88467e86b31aee6bba70264e4d1ca6b99f9f673f3b0f20158ea",
+            "locator": "新建保存命名、左上菜单改名",
+            "hands_on": false,
+            "visual_observed": false,
+            "archived_artifact": "artifacts/moaan-controls-deepening/source-notes.md",
+            "sha256": "1e87162de8a6f2fbb64044e1c2547d97401e1fa5b8de2ce206043eed9d66b56b",
+            "note": "同URL补原件与散列；2020历史指南型号未知，GIF未看。"
+          }
+        ]
+      },
+      "after": {
+        "evidence_id": "E-MOD-08",
+        "product_id": "M-054",
+        "title": "墨案2020指南：笔记重命名",
+        "url": "http://www.moaansmart.com/?show=84",
+        "checked_on": "2026-10-26",
+        "source_type": "official_legacy_user_guide",
+        "access_mode": "http_original_text_via_urllib",
+        "version_scope": "Moaan legacy guide dated 2020-06-08; hardware model and firmware unspecified; not attributed to W7/W8/inkPalm",
+        "app_build": null,
+        "firmware_version": null,
+        "source_updated_on": "2020-06-08",
+        "locator": "新建保存命名、左上菜单改名",
+        "note": "实际HTTP原址正文读取；HTTPS失败。旧界面型号未标；没有同名/取消分支。 此为首次采集记录；2026-10-27补媒体静态采样：补日期名入口和标题编辑的取消/确认；未验证取消/保存结果。",
+        "hands_on": false,
+        "visual_observed": true,
+        "archived_artifact": "artifacts/moaan-legacy-media/source-notes.md",
+        "sha256": "128e46f414d3fb2768c80dfa41ee2a718ec4b2b2930dbc30febf1e3d7f6eb340",
+        "capture_state": "notes_and_sampled_static_frames_archived_original_media_not_downloaded",
+        "supersedes": null,
+        "additional_captures": [
+          {
+            "url": "http://www.moaansmart.com/?show=84",
+            "checked_on": "2026-10-27",
+            "access_mode": "anonymous_urllib_GET",
+            "status": 200,
+            "final_url": "http://www.moaansmart.com/?show=84",
+            "content_type": "text/html; charset=UTF-8",
+            "raw_work_path": "work/moaan-controls-deepening/raw/moaan-84.html",
+            "raw_sha256": "5fb65d77487ba5a672566f28ebfe7f0027f88cbedd225836a811b1bf665a8a44",
+            "extracted_work_path": "work/moaan-controls-deepening/raw/moaan-84.txt",
+            "extracted_sha256": "b1ba06e8c7b7a88467e86b31aee6bba70264e4d1ca6b99f9f673f3b0f20158ea",
+            "locator": "新建保存命名、左上菜单改名",
+            "hands_on": false,
+            "visual_observed": false,
+            "archived_artifact": "artifacts/moaan-controls-deepening/source-notes.md",
+            "sha256": "1e87162de8a6f2fbb64044e1c2547d97401e1fa5b8de2ce206043eed9d66b56b",
+            "note": "同URL补原件与散列；2020历史指南型号未知，GIF未看。"
+          },
+          {
+            "checked_on": "2026-10-27",
+            "access_mode": "anonymous_browser_remote_img_static_sampling",
+            "source_urls": [
+              "http://www.moaansmart.com/data/upload/d/00/d00e0b6a403cc94c2e7ceaacd27250d2.gif"
+            ],
+            "status": 200,
+            "locator": "local post-load samples approx0/2/5seconds; not GIF source timestamps",
+            "note": "补日期名入口和标题编辑的取消/确认；未验证取消/保存结果。 型号仍未知，非连续操作或产品实操。",
+            "archived_artifact": "artifacts/moaan-legacy-media/source-notes.md",
+            "sha256": "128e46f414d3fb2768c80dfa41ee2a718ec4b2b2930dbc30febf1e3d7f6eb340",
+            "artifact_hashes": {
+              "artifacts/moaan-legacy-media/media-08-0s.png": "a5f2c6bf81f3c164eba6e2b31e15c9c97a5e4d1e13e80f073422391eed3c6d73",
+              "artifacts/moaan-legacy-media/media-08-2s.png": "b465a545533130fc710f0a0cd2fc6235f167c7a77175e41045142abb51fb53f9"
+            },
+            "sampling_log_path": "artifacts/moaan-legacy-media/media-sampling.json",
+            "sampling_log_sha256": "8771828ae2b48131dd0fcce87ccb275ea61d05c7e0895872a47fade82101a4fe"
+          }
+        ],
+        "visual_kind": "sampled_legacy_tutorial_frames",
+        "artifact_hashes": {
+          "artifacts/moaan-legacy-media/media-08-0s.png": "a5f2c6bf81f3c164eba6e2b31e15c9c97a5e4d1e13e80f073422391eed3c6d73",
+          "artifacts/moaan-legacy-media/media-08-2s.png": "b465a545533130fc710f0a0cd2fc6235f167c7a77175e41045142abb51fb53f9"
+        }
+      },
+      "fields_changed": [
+        "additional_captures",
+        "sha256",
+        "visual_observed",
+        "visual_kind",
+        "artifact_hashes",
+        "archived_artifact",
+        "capture_state",
+        "note"
+      ],
+      "owning_files": [
+        "docs/research/interaction-library/batches/chinese-reader-deepening-evidence.jsonl"
+      ]
+    },
+    {
+      "evidence_id": "E-MOD-09",
+      "before": {
+        "evidence_id": "E-MOD-09",
+        "product_id": "M-054",
+        "title": "墨案2020指南：笔记缩略图预览",
+        "url": "http://www.moaansmart.com/?show=83",
+        "checked_on": "2026-10-26",
+        "source_type": "official_legacy_user_guide",
+        "access_mode": "http_original_text_via_urllib",
+        "version_scope": "Moaan legacy guide dated 2020-06-08; hardware model and firmware unspecified; not attributed to W7/W8/inkPalm",
+        "app_build": null,
+        "firmware_version": null,
+        "source_updated_on": "2020-06-08",
+        "locator": "多页笔记的页码与4/9格",
+        "note": "实际HTTP原址正文读取；HTTPS失败。没有核实缩略图选择后的返回栈。",
+        "hands_on": false,
+        "visual_observed": false,
+        "archived_artifact": null,
+        "sha256": null,
+        "capture_state": "text_only",
+        "supersedes": null,
+        "additional_captures": [
+          {
+            "url": "http://www.moaansmart.com/?show=83",
+            "checked_on": "2026-10-27",
+            "access_mode": "anonymous_urllib_GET",
+            "status": 200,
+            "final_url": "http://www.moaansmart.com/?show=83",
+            "content_type": "text/html; charset=UTF-8",
+            "raw_work_path": "work/moaan-controls-deepening/raw/moaan-83.html",
+            "raw_sha256": "462130a954b81d38d776a78276ed05c523f638f005cb77f660c81fe1f64532b9",
+            "extracted_work_path": "work/moaan-controls-deepening/raw/moaan-83.txt",
+            "extracted_sha256": "658412f8c7d9f694a5ee873d06e953b29f97297d4bd70a9af62f6a0e1596c650",
+            "locator": "多页笔记的页码与4/9格",
+            "hands_on": false,
+            "visual_observed": false,
+            "archived_artifact": "artifacts/moaan-controls-deepening/source-notes.md",
+            "sha256": "1e87162de8a6f2fbb64044e1c2547d97401e1fa5b8de2ce206043eed9d66b56b",
+            "note": "同URL补原件与散列；2020历史指南型号未知，GIF未看。"
+          }
+        ]
+      },
+      "after": {
+        "evidence_id": "E-MOD-09",
+        "product_id": "M-054",
+        "title": "墨案2020指南：笔记缩略图预览",
+        "url": "http://www.moaansmart.com/?show=83",
+        "checked_on": "2026-10-26",
+        "source_type": "official_legacy_user_guide",
+        "access_mode": "http_original_text_via_urllib",
+        "version_scope": "Moaan legacy guide dated 2020-06-08; hardware model and firmware unspecified; not attributed to W7/W8/inkPalm",
+        "app_build": null,
+        "firmware_version": null,
+        "source_updated_on": "2020-06-08",
+        "locator": "多页笔记的页码与4/9格",
+        "note": "实际HTTP原址正文读取；HTTPS失败。没有核实缩略图选择后的返回栈。 此为首次采集记录；2026-10-27补媒体静态采样：补6/6页码和四格预览中的九格入口；未看到九格结果或返回原页。",
+        "hands_on": false,
+        "visual_observed": true,
+        "archived_artifact": "artifacts/moaan-legacy-media/source-notes.md",
+        "sha256": "128e46f414d3fb2768c80dfa41ee2a718ec4b2b2930dbc30febf1e3d7f6eb340",
+        "capture_state": "notes_and_sampled_static_frames_archived_original_media_not_downloaded",
+        "supersedes": null,
+        "additional_captures": [
+          {
+            "url": "http://www.moaansmart.com/?show=83",
+            "checked_on": "2026-10-27",
+            "access_mode": "anonymous_urllib_GET",
+            "status": 200,
+            "final_url": "http://www.moaansmart.com/?show=83",
+            "content_type": "text/html; charset=UTF-8",
+            "raw_work_path": "work/moaan-controls-deepening/raw/moaan-83.html",
+            "raw_sha256": "462130a954b81d38d776a78276ed05c523f638f005cb77f660c81fe1f64532b9",
+            "extracted_work_path": "work/moaan-controls-deepening/raw/moaan-83.txt",
+            "extracted_sha256": "658412f8c7d9f694a5ee873d06e953b29f97297d4bd70a9af62f6a0e1596c650",
+            "locator": "多页笔记的页码与4/9格",
+            "hands_on": false,
+            "visual_observed": false,
+            "archived_artifact": "artifacts/moaan-controls-deepening/source-notes.md",
+            "sha256": "1e87162de8a6f2fbb64044e1c2547d97401e1fa5b8de2ce206043eed9d66b56b",
+            "note": "同URL补原件与散列；2020历史指南型号未知，GIF未看。"
+          },
+          {
+            "checked_on": "2026-10-27",
+            "access_mode": "anonymous_browser_remote_img_static_sampling",
+            "source_urls": [
+              "http://www.moaansmart.com/data/upload/6/31/631cd63a7acaef2b366d929c3e2371be.gif"
+            ],
+            "status": 200,
+            "locator": "local post-load samples approx0/2/5seconds; not GIF source timestamps",
+            "note": "补6/6页码和四格预览中的九格入口；未看到九格结果或返回原页。 型号仍未知，非连续操作或产品实操。",
+            "archived_artifact": "artifacts/moaan-legacy-media/source-notes.md",
+            "sha256": "128e46f414d3fb2768c80dfa41ee2a718ec4b2b2930dbc30febf1e3d7f6eb340",
+            "artifact_hashes": {
+              "artifacts/moaan-legacy-media/media-07-0s.png": "4e8654434ef778c19358977e24c3a12f8b080c2df89c1f2aa0cce37d7d3ca0ac",
+              "artifacts/moaan-legacy-media/media-07-2s.png": "f44a07b9d3a695da5a674e3ff934fc74f30a093f3e2aa5646ae3da8db190d833"
+            },
+            "sampling_log_path": "artifacts/moaan-legacy-media/media-sampling.json",
+            "sampling_log_sha256": "8771828ae2b48131dd0fcce87ccb275ea61d05c7e0895872a47fade82101a4fe"
+          }
+        ],
+        "visual_kind": "sampled_legacy_tutorial_frames",
+        "artifact_hashes": {
+          "artifacts/moaan-legacy-media/media-07-0s.png": "4e8654434ef778c19358977e24c3a12f8b080c2df89c1f2aa0cce37d7d3ca0ac",
+          "artifacts/moaan-legacy-media/media-07-2s.png": "f44a07b9d3a695da5a674e3ff934fc74f30a093f3e2aa5646ae3da8db190d833"
+        }
+      },
+      "fields_changed": [
+        "additional_captures",
+        "sha256",
+        "visual_observed",
+        "visual_kind",
+        "artifact_hashes",
+        "archived_artifact",
+        "capture_state",
+        "note"
+      ],
+      "owning_files": [
+        "docs/research/interaction-library/batches/chinese-reader-deepening-evidence.jsonl"
+      ]
+    },
+    {
+      "evidence_id": "E-MOD-10",
+      "before": {
+        "evidence_id": "E-MOD-10",
+        "product_id": "M-054",
+        "title": "墨案2020指南：笔记导出PDF",
+        "url": "http://www.moaansmart.com/?show=82",
+        "checked_on": "2026-10-26",
+        "source_type": "official_legacy_user_guide",
+        "access_mode": "http_original_text_via_urllib",
+        "version_scope": "Moaan legacy guide dated 2020-06-08; hardware model and firmware unspecified; not attributed to W7/W8/inkPalm",
+        "app_build": null,
+        "firmware_version": null,
+        "source_updated_on": "2020-06-08",
+        "locator": "保存笔记缩略图省略号、导出、Note目录",
+        "note": "实际HTTP原址正文读取；HTTPS失败。独立导出文件与可编辑笔记关系未说明；不套W7/W8。",
+        "hands_on": false,
+        "visual_observed": false,
+        "archived_artifact": null,
+        "sha256": null,
+        "capture_state": "text_only",
+        "supersedes": null,
+        "additional_captures": [
+          {
+            "checked_on": "2026-10-27",
+            "access_mode": "existing_local_official_HTTP_capture_reread",
+            "raw_work_path": "work/moaan-controls-deepening/raw/root-moaan-82.html",
+            "raw_sha256": "7894f00e6cbbbd9a43f7b856c18951cd43f4dc42eeb2396bbcfc3135b5b518f8",
+            "original_work_path": "work/chinese-reader-deepening/root-moaan-82.html",
+            "source_captured_on": "2026-10-26",
+            "locator": "保存笔记缩略图省略号、导出、Note目录",
+            "hands_on": false,
+            "visual_observed": false,
+            "note": "本地复读，未重新联网；不更新原采集日期。",
+            "archived_artifact": "artifacts/moaan-controls-deepening/source-notes.md",
+            "sha256": "1e87162de8a6f2fbb64044e1c2547d97401e1fa5b8de2ce206043eed9d66b56b",
+            "audit_artifact": "artifacts/moaan-controls-deepening/source-notes.md",
+            "audit_sha256": "1e87162de8a6f2fbb64044e1c2547d97401e1fa5b8de2ce206043eed9d66b56b"
+          }
+        ]
+      },
+      "after": {
+        "evidence_id": "E-MOD-10",
+        "product_id": "M-054",
+        "title": "墨案2020指南：笔记导出PDF",
+        "url": "http://www.moaansmart.com/?show=82",
+        "checked_on": "2026-10-26",
+        "source_type": "official_legacy_user_guide",
+        "access_mode": "http_original_text_via_urllib",
+        "version_scope": "Moaan legacy guide dated 2020-06-08; hardware model and firmware unspecified; not attributed to W7/W8/inkPalm",
+        "app_build": null,
+        "firmware_version": null,
+        "source_updated_on": "2020-06-08",
+        "locator": "保存笔记缩略图省略号、导出、Note目录",
+        "note": "实际HTTP原址正文读取；HTTPS失败。独立导出文件与可编辑笔记关系未说明；不套W7/W8。 此为首次采集记录；2026-10-27补媒体静态采样：补导出/分享/上传独立按钮及Note目录路径提示；未取得或打开导出文件。",
+        "hands_on": false,
+        "visual_observed": true,
+        "archived_artifact": "artifacts/moaan-legacy-media/source-notes.md",
+        "sha256": "128e46f414d3fb2768c80dfa41ee2a718ec4b2b2930dbc30febf1e3d7f6eb340",
+        "capture_state": "notes_and_sampled_static_frames_archived_original_media_not_downloaded",
+        "supersedes": null,
+        "additional_captures": [
+          {
+            "checked_on": "2026-10-27",
+            "access_mode": "existing_local_official_HTTP_capture_reread",
+            "raw_work_path": "work/moaan-controls-deepening/raw/root-moaan-82.html",
+            "raw_sha256": "7894f00e6cbbbd9a43f7b856c18951cd43f4dc42eeb2396bbcfc3135b5b518f8",
+            "original_work_path": "work/chinese-reader-deepening/root-moaan-82.html",
+            "source_captured_on": "2026-10-26",
+            "locator": "保存笔记缩略图省略号、导出、Note目录",
+            "hands_on": false,
+            "visual_observed": false,
+            "note": "本地复读，未重新联网；不更新原采集日期。",
+            "archived_artifact": "artifacts/moaan-controls-deepening/source-notes.md",
+            "sha256": "1e87162de8a6f2fbb64044e1c2547d97401e1fa5b8de2ce206043eed9d66b56b",
+            "audit_artifact": "artifacts/moaan-controls-deepening/source-notes.md",
+            "audit_sha256": "1e87162de8a6f2fbb64044e1c2547d97401e1fa5b8de2ce206043eed9d66b56b"
+          },
+          {
+            "checked_on": "2026-10-27",
+            "access_mode": "anonymous_browser_remote_img_static_sampling",
+            "source_urls": [
+              "http://www.moaansmart.com/data/upload/6/b4/6b466d05b9ec0c8f82db3887c075e35f.gif"
+            ],
+            "status": 200,
+            "locator": "local post-load samples approx0/2/5seconds; not GIF source timestamps",
+            "note": "补导出/分享/上传独立按钮及Note目录路径提示；未取得或打开导出文件。 型号仍未知，非连续操作或产品实操。",
+            "archived_artifact": "artifacts/moaan-legacy-media/source-notes.md",
+            "sha256": "128e46f414d3fb2768c80dfa41ee2a718ec4b2b2930dbc30febf1e3d7f6eb340",
+            "artifact_hashes": {
+              "artifacts/moaan-legacy-media/media-09-0s.png": "bcc6d7fb6f11ad487157fb81733ee8185d9451a18a7e07c9ebb2dd6e728602cb",
+              "artifacts/moaan-legacy-media/media-09-2s.png": "265293861889e375449d4b42f260aad42916d78217df642a53cf9105988642fb"
+            },
+            "sampling_log_path": "artifacts/moaan-legacy-media/media-sampling.json",
+            "sampling_log_sha256": "8771828ae2b48131dd0fcce87ccb275ea61d05c7e0895872a47fade82101a4fe"
+          }
+        ],
+        "visual_kind": "sampled_legacy_tutorial_frames",
+        "artifact_hashes": {
+          "artifacts/moaan-legacy-media/media-09-0s.png": "bcc6d7fb6f11ad487157fb81733ee8185d9451a18a7e07c9ebb2dd6e728602cb",
+          "artifacts/moaan-legacy-media/media-09-2s.png": "265293861889e375449d4b42f260aad42916d78217df642a53cf9105988642fb"
+        }
+      },
+      "fields_changed": [
+        "additional_captures",
+        "sha256",
+        "visual_observed",
+        "visual_kind",
+        "artifact_hashes",
+        "archived_artifact",
+        "capture_state",
+        "note"
+      ],
+      "owning_files": [
+        "docs/research/interaction-library/batches/chinese-reader-deepening-evidence.jsonl"
+      ]
+    }
+  ],
+  "old_flows": [
+    {
+      "flow_id": "F-M015-33",
+      "before": {
+        "flow_id": "F-M015-33",
+        "product_id": "M-015",
+        "task": "把高亮和跨来源关联生成可探索图",
+        "depth": "D2",
+        "evidence_ids": "E-RWSK-10",
+        "known_branches": "取两页共最多200高亮→准备数据→先输出无语义边HTML→补跨源关联及理由→重建→可加页或按主题重建。",
+        "gaps": "标题可能靠模型推断；同源边不是语义证明。build_graph.py及真实控件未核，CDN依赖、重建选区保持与错误恢复未测。",
+        "visual_status": "not_observed",
+        "hands_on": "false",
+        "case_path": "cases/M-015-readwise.md",
+        "checked_on": "2026-10-27"
+      },
+      "after": {
+        "flow_id": "F-M015-33",
+        "product_id": "M-015",
+        "task": "把高亮和跨来源关联生成可探索图",
+        "depth": "D2",
+        "evidence_ids": "E-RWSK-10;E-RWGR-01",
+        "known_branches": "取两页共最多200高亮→准备数据→先输出无语义边HTML→补跨源关联及理由→重建→可加页或按主题重建。 本轮补核：工作流先取高亮再生成HTML/补关系；固定渲染器合成样本核出短文本过滤、单条来源不计数、关联跳转保留筛选、屏幕esc与键盘Escape范围不同、重载清视图状态。",
+        "gaps": "只运行未修改的官方示例和合成数据，非Reader原生或真实AI执行；标题/关系质量、取数权限、写回与恢复未知。HTML依赖CDN；320px样本面板截断，不当Plus表现。",
+        "visual_status": "static_reference_only",
+        "hands_on": "false",
+        "case_path": "cases/M-015-readwise.md",
+        "checked_on": "2026-10-27"
+      },
+      "fields_changed": [
+        "evidence_ids",
+        "known_branches",
+        "gaps",
+        "visual_status"
+      ],
+      "owning_files": [
+        "docs/research/interaction-library/batches/ai-workflows-and-historical-learning-coverage.csv"
+      ]
+    },
+    {
+      "flow_id": "F-M009-09",
+      "before": {
+        "flow_id": "F-M009-09",
+        "product_id": "M-009",
+        "task": "新建写作并用标题找回页面",
+        "depth": "D2",
+        "evidence_ids": "E-IXCD-01",
+        "known_branches": "首页标题不能删；菜单搜索覆盖文本及手写转写结果，可定位页。",
+        "gaps": "自动保存时机、识别错字、删标题是否影响链接、误删页恢复。",
+        "visual_status": "not_observed",
+        "hands_on": "false",
+        "case_path": "cases/M-009-iflytek-office.md",
+        "checked_on": "2026-10-26"
+      },
+      "after": {
+        "flow_id": "F-M009-09",
+        "product_id": "M-009",
+        "task": "新建写作并用标题找回页面",
+        "depth": "D2",
+        "evidence_ids": "E-IXCD-01",
+        "known_branches": "首页标题不能删；菜单搜索覆盖文本及手写转写结果，可定位页。手机读写客云图片或华为分享可供写作插图，电磁笔长按可删插图。",
+        "gaps": "自动保存时机、识别错字、删标题是否影响链接、误删页恢复。插图完整接收/插入控件和云原图删除范围未知。",
+        "visual_status": "not_observed",
+        "hands_on": "false",
+        "case_path": "cases/M-009-iflytek-office.md",
+        "checked_on": "2026-10-27"
+      },
+      "fields_changed": [
+        "known_branches",
+        "gaps",
+        "checked_on"
+      ],
+      "owning_files": [
+        "docs/research/interaction-library/batches/office-aipaper-deepening-coverage.csv"
+      ]
+    },
+    {
+      "flow_id": "F-M009-12",
+      "before": {
+        "flow_id": "F-M009-12",
+        "product_id": "M-009",
+        "task": "记录会议、回听纠错并补转断网部分",
+        "depth": "D2",
+        "evidence_ids": "E-IXCD-01;E-IXCD-02;E-IXCD-03;E-IXCD-04",
+        "known_branches": "多人模式仅智能识别可用；语言及词库选择持久保存。专注模式隐藏转写。断网补转依赖云上传，不证明离线本地识别。",
+        "gaps": "修改后时间对齐、重复更新覆盖、上传失败重试、强退恢复、说话人改名精确入口。",
+        "visual_status": "static_manual_pages_only",
+        "hands_on": "false",
+        "case_path": "cases/M-009-iflytek-office.md",
+        "checked_on": "2026-10-26"
+      },
+      "after": {
+        "flow_id": "F-M009-12",
+        "product_id": "M-009",
+        "task": "记录会议、回听纠错并补转断网部分",
+        "depth": "D2",
+        "evidence_ids": "E-IXCD-01;E-IXCD-02;E-IXCD-03;E-IXCD-04",
+        "known_branches": "多人模式仅智能识别可用；语言及词库选择持久保存。专注模式隐藏转写。断网补转依赖云上传，不证明离线本地识别。记录也可插入读写客/华为分享图片，长按删除。",
+        "gaps": "修改后时间对齐、重复更新覆盖、上传失败重试、强退恢复、说话人改名精确入口。图片接收与插入确认、删除关联云原图未知。",
+        "visual_status": "static_manual_pages_only",
+        "hands_on": "false",
+        "case_path": "cases/M-009-iflytek-office.md",
+        "checked_on": "2026-10-27"
+      },
+      "fields_changed": [
+        "known_branches",
+        "gaps",
+        "checked_on"
+      ],
+      "owning_files": [
+        "docs/research/interaction-library/batches/office-aipaper-deepening-coverage.csv"
+      ]
+    },
+    {
+      "flow_id": "F-M009-14",
+      "before": {
+        "flow_id": "F-M009-14",
+        "product_id": "M-009",
+        "task": "阅读、跳转与保留段落标记",
+        "depth": "D2",
+        "evidence_ids": "E-IXCD-01",
+        "known_branches": "PDF进度显示缩略图，重排格式松开滑块后跳转；摘录显示下划线，点回手写笔记。",
+        "gaps": "临时跳转返回栈、重排后锚点、删书与批注关系。手册左右滑动方向表述需实机确认。",
+        "visual_status": "not_observed",
+        "hands_on": "false",
+        "case_path": "cases/M-009-iflytek-office.md",
+        "checked_on": "2026-10-26"
+      },
+      "after": {
+        "flow_id": "F-M009-14",
+        "product_id": "M-009",
+        "task": "阅读、跳转与保留段落标记",
+        "depth": "D2",
+        "evidence_ids": "E-IXCD-01",
+        "known_branches": "PDF进度显示缩略图，重排格式松开滑块后跳转；摘录显示下划线，点回手写笔记。PDF批注可保存到PDF并经邮件/读写客分享；看批注按含笔迹页面汇集并支持排序。",
+        "gaps": "临时跳转返回栈、重排后锚点、删书与批注关系。手册左右滑动方向表述需实机确认。保存覆盖原件还是副本、上传失败及批注保真未知。",
+        "visual_status": "not_observed",
+        "hands_on": "false",
+        "case_path": "cases/M-009-iflytek-office.md",
+        "checked_on": "2026-10-27"
+      },
+      "fields_changed": [
+        "known_branches",
+        "gaps",
+        "checked_on"
+      ],
+      "owning_files": [
+        "docs/research/interaction-library/batches/office-aipaper-deepening-coverage.csv"
+      ]
+    },
+    {
+      "flow_id": "F-M009-18",
+      "before": {
+        "flow_id": "F-M009-18",
+        "product_id": "M-009",
+        "task": "编写邮件、留草稿和处理附件",
+        "depth": "D2",
+        "evidence_ids": "E-IXCD-01",
+        "known_branches": "草稿、废弃、删邮件与删下载附件分属不同对象；已删除目录支持彻底删除。",
+        "gaps": "发送失败/重试重复、服务器与设备删除传播、恢复邮件入口；QQ/网易/iCloud当前授权流程未核。",
+        "visual_status": "not_observed",
+        "hands_on": "false",
+        "case_path": "cases/M-009-iflytek-office.md",
+        "checked_on": "2026-10-26"
+      },
+      "after": {
+        "flow_id": "F-M009-18",
+        "product_id": "M-009",
+        "task": "编写邮件、留草稿和处理附件",
+        "depth": "D2",
+        "evidence_ids": "E-IXCD-01",
+        "known_branches": "草稿、废弃、删邮件与删下载附件分属不同对象；已删除目录支持彻底删除。批量删除先长按选邮件，可取消勾选；全选限当前页。已删除目录仍可查看/回复/转发。",
+        "gaps": "发送失败/重试重复、服务器与设备删除传播、恢复邮件入口；QQ/网易/iCloud当前授权流程未核。",
+        "visual_status": "not_observed",
+        "hands_on": "false",
+        "case_path": "cases/M-009-iflytek-office.md",
+        "checked_on": "2026-10-27"
+      },
+      "fields_changed": [
+        "known_branches",
+        "checked_on"
+      ],
+      "owning_files": [
+        "docs/research/interaction-library/batches/office-aipaper-deepening-coverage.csv"
+      ]
+    },
+    {
+      "flow_id": "F-M054-05",
+      "before": {
+        "flow_id": "F-M054-05",
+        "product_id": "M-054",
+        "task": "书籍导入到查词/继续阅读",
+        "depth": "D1",
+        "evidence_ids": "E-MOA-01;E-MOA-02;E-MOD-07;E-MOD-14",
+        "known_branches": "inkPalm5旧手册/用户记录与Plus短说明书分开；2020未标机型PDF正文仅给点空白区唤出底栏，再找对应图标。",
+        "gaps": "固定机型完整导入开书查词返回续读；PDF批注/裁边/重排后保存、切回原页和返回栈未核，历史指南不能归属Plus/W7/W8。",
+        "visual_status": "not_observed",
+        "hands_on": "false",
+        "case_path": "cases/M-054-moaan.md",
+        "checked_on": "2026-10-27"
+      },
+      "after": {
+        "flow_id": "F-M054-05",
+        "product_id": "M-054",
+        "task": "书籍导入到查词/继续阅读",
+        "depth": "D1",
+        "evidence_ids": "E-MOA-01;E-MOA-02;E-MOD-07;E-MOD-14",
+        "known_branches": "inkPalm5旧手册/用户记录与Plus短说明书分开；2020未标机型PDF正文仅给点空白区唤出底栏，再找对应图标。 本轮补核：历史PDF抽帧可见智能重排和批注图标；没有排版前后或保存结果。",
+        "gaps": "固定机型导入/查词/返回/续读主链仍缺；裁边保存、锚点、切回原页和显示效果未知，历史图不归属Plus/W7/W8。",
+        "visual_status": "static_reference_only",
+        "hands_on": "false",
+        "case_path": "cases/M-054-moaan.md",
+        "checked_on": "2026-10-27"
+      },
+      "fields_changed": [
+        "known_branches",
+        "gaps",
+        "visual_status"
+      ],
+      "owning_files": [
+        "docs/research/interaction-library/batches/extended-readers-coverage.csv"
+      ]
+    },
+    {
+      "flow_id": "F-M054-06",
+      "before": {
+        "flow_id": "F-M054-06",
+        "product_id": "M-054",
+        "task": "墨案2020未标机型指南：传入与加入书架",
+        "depth": "D1",
+        "evidence_ids": "E-MOD-03;E-MOD-04",
+        "known_branches": "历史USB/FTP/多看WLAN分支及蓝牙内部存储books；蓝牙正文明确不加入书架则多看不显示，文件接收与书架条目分开。",
+        "gaps": "机型未知；USB books/FTP book冲突；书架扫描/发现反馈未描述；蓝牙返回顺序未看图确认；拒绝加入后重加、断传/重名/取消/删除恢复未说明。",
+        "visual_status": "not_observed",
+        "hands_on": "false",
+        "case_path": "cases/M-054-moaan.md",
+        "checked_on": "2026-10-27"
+      },
+      "after": {
+        "flow_id": "F-M054-06",
+        "product_id": "M-054",
+        "task": "墨案2020未标机型指南：传入与加入书架",
+        "depth": "D1",
+        "evidence_ids": "E-MOD-03;E-MOD-04",
+        "known_branches": "历史USB/FTP/多看WLAN分支及蓝牙内部存储books；蓝牙正文明确不加入书架则多看不显示，文件接收与书架条目分开。 本轮补核：历史方法二图列Books目录；WLAN菜单进入二维码/地址页，并提示同网且传输中勿关闭；蓝牙抽帧出现接收通知及不加入/加入书架弹窗。",
+        "gaps": "机型未知；USB方法一未取得画面，books/book文字冲突未解；蓝牙返回动作和同文件连续链缺，拒绝后重加、断传/重名/取消/删除恢复未核。",
+        "visual_status": "static_reference_only",
+        "hands_on": "false",
+        "case_path": "cases/M-054-moaan.md",
+        "checked_on": "2026-10-27"
+      },
+      "fields_changed": [
+        "known_branches",
+        "gaps",
+        "visual_status"
+      ],
+      "owning_files": [
+        "docs/research/interaction-library/batches/chinese-reader-deepening-coverage.csv"
+      ]
+    },
+    {
+      "flow_id": "F-M054-07",
+      "before": {
+        "flow_id": "F-M054-07",
+        "product_id": "M-054",
+        "task": "墨案历史文件整理/APK入口与inkPalm5应用菜单",
+        "depth": "D1",
+        "evidence_ids": "E-MOD-05;E-MOD-06;E-MOD-14",
+        "known_branches": "历史长按复制/剪切正文写到目标文件夹外面粘贴，位置歧义保留；APK三种取得入口与Apps/download路径，不代表安装完成或当前兼容。",
+        "gaps": "文件移动目标位置需对照未看的GIF；机型、覆盖/剪切中断、未知来源权限、安装失败及卸载数据保留未知；不以第三方作者泛称兼容作保证。",
+        "visual_status": "not_observed",
+        "hands_on": "false",
+        "case_path": "cases/M-054-moaan.md",
+        "checked_on": "2026-10-27"
+      },
+      "after": {
+        "flow_id": "F-M054-07",
+        "product_id": "M-054",
+        "task": "墨案历史文件整理/APK入口与inkPalm5应用菜单",
+        "depth": "D1",
+        "evidence_ids": "E-MOD-05;E-MOD-06;E-MOD-14",
+        "known_branches": "历史长按复制/剪切正文写到目标文件夹外面粘贴，两帧仍未闭合目标位置；APK三种取得入口与Apps/download路径，不代表安装完成或当前兼容。 本轮补核：历史抽帧可见长按复制/剪切和粘贴进去菜单；不同画面时钟/文件不一致，不能闭合搬移。APK取得入口沿旧文字，不代表安装成功。",
+        "gaps": "目标目录的选择与结果、覆盖/剪切中断、机型和安装权限/兼容/卸载数据保留仍未知；仅多了静态控件，D1不升级。",
+        "visual_status": "static_reference_only",
+        "hands_on": "false",
+        "case_path": "cases/M-054-moaan.md",
+        "checked_on": "2026-10-27"
+      },
+      "fields_changed": [
+        "known_branches",
+        "gaps",
+        "visual_status"
+      ],
+      "owning_files": [
+        "docs/research/interaction-library/batches/chinese-reader-deepening-coverage.csv"
+      ]
+    },
+    {
+      "flow_id": "F-M054-08",
+      "before": {
+        "flow_id": "F-M054-08",
+        "product_id": "M-054",
+        "task": "墨案2020未标机型指南：整理笔记并导出PDF",
+        "depth": "D1",
+        "evidence_ids": "E-MOD-08;E-MOD-09;E-MOD-10;E-MOD-15;E-MOD-16",
+        "known_branches": "历史新建保存命名或首项日期菜单改名；页码切4/9格；已保存笔记在列表或缩略图模式经省略号导出PDF至Note。W7/W8仍各自仅旧作者线索。",
+        "gaps": "历史指南机型未归属；返回原笔迹、可编辑原稿/导出副本关系、同名覆盖、导出失败和删除/同步恢复未核。",
+        "visual_status": "not_observed",
+        "hands_on": "false",
+        "case_path": "cases/M-054-moaan.md",
+        "checked_on": "2026-10-27"
+      },
+      "after": {
+        "flow_id": "F-M054-08",
+        "product_id": "M-054",
+        "task": "墨案2020未标机型指南：整理笔记并导出PDF",
+        "depth": "D1",
+        "evidence_ids": "E-MOD-08;E-MOD-09;E-MOD-10;E-MOD-15;E-MOD-16",
+        "known_branches": "历史新建保存命名或首项日期菜单改名；页码切4/9格；已保存笔记在列表或缩略图模式经省略号导出PDF至Note。W7/W8仍各自仅旧作者线索。 本轮补核：历史日期名入口→标题编辑有取消/确认；页码入口与四格预览含九格按钮；笔记弹窗区分文本/导出/分享/上传，导出画面提示Note目录PDF路径。",
+        "gaps": "机型未归属；改名确认/取消结果、九格结果、返回原页、导出文件可读性/原稿关系、重名/失败/删除同步恢复仍缺。",
+        "visual_status": "static_reference_only",
+        "hands_on": "false",
+        "case_path": "cases/M-054-moaan.md",
+        "checked_on": "2026-10-27"
+      },
+      "fields_changed": [
+        "known_branches",
+        "gaps",
+        "visual_status"
+      ],
+      "owning_files": [
+        "docs/research/interaction-library/batches/chinese-reader-deepening-coverage.csv"
+      ]
+    }
+  ],
+  "created": [
+    "/home/workspace/reader/docs/research/interaction-library/artifacts/readwise-graph-renderer/source-notes.md",
+    "/home/workspace/reader/docs/research/interaction-library/artifacts/x2-remaining-tasks/source-notes.md",
+    "/home/workspace/reader/docs/research/interaction-library/artifacts/readwise-graph-renderer/highlights.json",
+    "/home/workspace/reader/docs/research/interaction-library/artifacts/readwise-graph-renderer/connections.json",
+    "/home/workspace/reader/docs/research/interaction-library/artifacts/readwise-graph-renderer/generation-log.json",
+    "/home/workspace/reader/docs/research/interaction-library/artifacts/readwise-graph-renderer/states.json",
+    "/home/workspace/reader/docs/research/interaction-library/artifacts/readwise-graph-renderer/actions.json",
+    "/home/workspace/reader/docs/research/interaction-library/artifacts/readwise-graph-renderer/environment.json",
+    "/home/workspace/reader/docs/research/interaction-library/artifacts/readwise-graph-renderer/network.json",
+    "/home/workspace/reader/docs/research/interaction-library/artifacts/readwise-graph-renderer/errors.json",
+    "/home/workspace/reader/docs/research/interaction-library/artifacts/readwise-graph-renderer/narrow-fresh.json",
+    "/home/workspace/reader/docs/research/interaction-library/artifacts/readwise-graph-renderer/00-initial.png",
+    "/home/workspace/reader/docs/research/interaction-library/artifacts/readwise-graph-renderer/03-cross-source-from-panel.png",
+    "/home/workspace/reader/docs/research/interaction-library/artifacts/readwise-graph-renderer/05-onscreen-esc.png",
+    "/home/workspace/reader/docs/research/interaction-library/artifacts/readwise-graph-renderer/06-keyboard-escape.png",
+    "/home/workspace/reader/docs/research/interaction-library/artifacts/readwise-graph-renderer/07-singleton-source.png",
+    "/home/workspace/reader/docs/research/interaction-library/artifacts/readwise-graph-renderer/10-narrow-fresh-panel.png",
+    "/home/workspace/reader/docs/research/interaction-library/artifacts/x2-remaining-tasks/X2-file-9.png",
+    "/home/workspace/reader/docs/research/interaction-library/artifacts/x2-remaining-tasks/X2-file-33.png",
+    "/home/workspace/reader/docs/research/interaction-library/artifacts/x2-remaining-tasks/X2-file-51.png",
+    "/home/workspace/reader/docs/research/interaction-library/artifacts/moaan-legacy-media/media-02-0s.png",
+    "/home/workspace/reader/docs/research/interaction-library/artifacts/moaan-legacy-media/media-03-0s.png",
+    "/home/workspace/reader/docs/research/interaction-library/artifacts/moaan-legacy-media/media-03-2s.png",
+    "/home/workspace/reader/docs/research/interaction-library/artifacts/moaan-legacy-media/media-04-0s.png",
+    "/home/workspace/reader/docs/research/interaction-library/artifacts/moaan-legacy-media/media-04-2s.png",
+    "/home/workspace/reader/docs/research/interaction-library/artifacts/moaan-legacy-media/media-05-0s.png",
+    "/home/workspace/reader/docs/research/interaction-library/artifacts/moaan-legacy-media/media-05-2s.png",
+    "/home/workspace/reader/docs/research/interaction-library/artifacts/moaan-legacy-media/media-06-0s.png",
+    "/home/workspace/reader/docs/research/interaction-library/artifacts/moaan-legacy-media/media-06-2s.png",
+    "/home/workspace/reader/docs/research/interaction-library/artifacts/moaan-legacy-media/media-07-0s.png",
+    "/home/workspace/reader/docs/research/interaction-library/artifacts/moaan-legacy-media/media-07-2s.png",
+    "/home/workspace/reader/docs/research/interaction-library/artifacts/moaan-legacy-media/media-08-0s.png",
+    "/home/workspace/reader/docs/research/interaction-library/artifacts/moaan-legacy-media/media-08-2s.png",
+    "/home/workspace/reader/docs/research/interaction-library/artifacts/moaan-legacy-media/media-09-0s.png",
+    "/home/workspace/reader/docs/research/interaction-library/artifacts/moaan-legacy-media/media-09-2s.png",
+    "/home/workspace/reader/docs/research/interaction-library/artifacts/moaan-legacy-media/source-notes.md",
+    "/home/workspace/reader/docs/research/interaction-library/artifacts/moaan-legacy-media/media-sampling.json",
+    "/home/workspace/reader/docs/research/interaction-library/artifacts/moaan-legacy-media/worker-media-sampling.json",
+    "/home/workspace/reader/docs/research/interaction-library/batches/renderer-and-legacy-controls-coverage.csv",
+    "/home/workspace/reader/docs/research/interaction-library/batches/renderer-and-legacy-controls-evidence.jsonl",
+    "/home/workspace/reader/docs/briefs/036-controls-and-state-evidence.md"
+  ]
+}

@@ -1,0 +1,3 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M019-10,M-019,从自定义词进入生词本学习,D2,E-SBCD-02,我的→生词本；历史优先安排及5词打卡；Web批量与App分开,当前额度/导入校验/去重；原句保留；退出恢复,not_observed,false,cases/M-019-shanbay.md,2026-10-26
+F-M019-11,M-019,雅思智能口语作答与反馈,D2,E-SBCD-06,雅思专区→智能口语；参考答案/中文辅助；评分/语法/润色反馈,具体构建与权益；开麦/停止/提交；等待/失败；历史报告和返回,not_observed,false,cases/M-019-shanbay.md,2026-10-26

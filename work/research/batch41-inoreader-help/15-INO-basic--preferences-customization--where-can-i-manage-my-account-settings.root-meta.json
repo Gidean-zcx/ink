@@ -1,0 +1,21 @@
+{
+  "order": 15,
+  "entry_id": "INO-basic--preferences-customization--where-can-i-manage-my-account-settings",
+  "title": "Where can I manage my account settings?",
+  "url": "https://www.inoreader.com/help/basic/preferences-customization/where-can-i-manage-my-account-settings",
+  "checked_on": "2026-10-27",
+  "http_status": 200,
+  "final_url": "https://www.inoreader.com/help/basic/preferences-customization/where-can-i-manage-my-account-settings",
+  "acquisition": "one_anonymous_normal_GET",
+  "raw_path": "work/research/batch41-inoreader-help/15-INO-basic--preferences-customization--where-can-i-manage-my-account-settings.html",
+  "headers_path": "work/research/batch41-inoreader-help/15-INO-basic--preferences-customization--where-can-i-manage-my-account-settings.headers.json",
+  "raw_sha256": "43ebc4b3dbb7e968d58b450f39310e92da8f52e9c3eaacff0d104f4c2af05966",
+  "bytes": 142303,
+  "status": "body_obtained",
+  "body_status": "extracted_not_yet_root_read",
+  "body_path": "work/research/batch41-inoreader-help/15-INO-basic--preferences-customization--where-can-i-manage-my-account-settings.body.txt",
+  "body_sha256": "c82f39eb13c20c20aed824a44cafa44bcb4be4e90c0a42b02f993768dd7f0b0a",
+  "body_chars": 44,
+  "links": [],
+  "images": []
+}

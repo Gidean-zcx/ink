@@ -1,0 +1,12 @@
+[
+  {
+    "command": "python3 work/moaan-controls-deepening/check.py",
+    "exit_code": 0,
+    "output": "PASS: 1 new E, 0 new F; 82 inventory rows; 8 old F / 27 fields; 2 old E / 3 fields; 12 captures; hashes, references, physical CSV newlines and pre-merge baselines verified."
+  },
+  {
+    "command": "git diff --check -- docs/research/interaction-library/cases/M-054-moaan.md docs/research/interaction-library/batches/moaan-controls-deepening-evidence.jsonl docs/research/interaction-library/batches/moaan-controls-deepening-coverage.csv docs/research/interaction-library/batches/moaan-controls-deepening-inventory.csv docs/research/interaction-library/artifacts/moaan-controls-deepening",
+    "exit_code": 0,
+    "output": ""
+  }
+]

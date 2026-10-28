@@ -1,0 +1,26 @@
+[
+  {
+    "name": "03-box-contents",
+    "url": "https://52audio-images.oss-cn-shenzhen.aliyuncs.com/wp-content/uploads/2025/05/2025052310392256.jpg",
+    "locator": "开箱第5张；wp-image-239598；正文“取出内部物品”",
+    "method": "GET; timeout=(5,18); one attempt",
+    "status": 403,
+    "result": "stopped; no retry"
+  },
+  {
+    "name": "04-front",
+    "url": "https://52audio-images.oss-cn-shenzhen.aliyuncs.com/wp-content/uploads/2025/05/2025052310392277.jpg",
+    "locator": "开箱第6张；wp-image-239602；正文“外观采用了类似于游戏机的设计”",
+    "method": "GET; timeout=(5,18); one attempt",
+    "status": 403,
+    "result": "stopped; no retry"
+  },
+  {
+    "name": "05-rear-model",
+    "url": "https://52audio-images.oss-cn-shenzhen.aliyuncs.com/wp-content/uploads/2025/05/2025052310391016.jpg",
+    "locator": "开箱第11张；wp-image-239554；正文“机身背面”",
+    "method": "GET; timeout=(5,18); one attempt",
+    "status": 403,
+    "result": "stopped; no retry"
+  }
+]

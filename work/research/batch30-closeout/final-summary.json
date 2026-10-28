@@ -1,0 +1,46 @@
+{
+  "batch": 30,
+  "checked_on": "2026-10-27",
+  "status": "batch_complete_goal_active",
+  "products": 65,
+  "partial_cases": 65,
+  "flows": 860,
+  "depths": {
+    "D1": 78,
+    "D2": 767,
+    "D4": 15
+  },
+  "evidence_records": 1434,
+  "distinct_source_urls": 1266,
+  "static_visual_evidence": 198,
+  "operated_browser_evidence": 18,
+  "new_evidence": 9,
+  "new_flows": 2,
+  "old_flows_updated": 11,
+  "old_fields_updated": 35,
+  "old_evidence_additional_captures": 4,
+  "formal_images_added": 10,
+  "manifest_entries_verified": 77,
+  "inventory_csvs": 76,
+  "inventory_rows": 7306,
+  "markdown_files": 209,
+  "local_links_checked": 1491,
+  "errors": [],
+  "checks": [
+    {
+      "command": "python3 work/research/batch30-closeout/verify_batch.py",
+      "exit_code": 0
+    },
+    {
+      "command": "python3 work/research/interaction-depth/check_docs.py",
+      "exit_code": 0
+    }
+  ],
+  "requirements_sha256": "e141320e2714df805c009fe64dd92d17decd6429d5728f8ce42d6d868b775087",
+  "brief": "docs/briefs/030-learning-stages-and-device-state.md",
+  "guide": "docs/research/interaction-library/design-reference-guide.md",
+  "data_dictionary": "docs/research/interaction-library/data-dictionary.md",
+  "no_new_product_operation": true,
+  "no_continuous_visual_chain": true,
+  "once_only_mutations_complete": true
+}

@@ -1,0 +1,11 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M044-07,M-044,搜索账号内资料并扩大来源,D2,E-INCD-09;E-INCD-32,源/文件夹、账号与公共索引范围不同；空结果撤限制并逐项重建。,实际分词、评分、隐藏来源及空结果反馈,not_observed,false,cases/M-044-inoreader.md,2026-10-27
+F-M044-08,M-044,将查询保存为持续监控,D2,E-INCD-10;E-INCD-31,改查询保留旧历史，仅新到条目按新条件；告警需另建Rule。,历史重筛、漏收、重复、停用删除和错误重试,not_observed,false,cases/M-044-inoreader.md,2026-10-27
+F-M044-09,M-044,组织来源文章并管理未读范围,D2,E-INCD-11;E-INCD-22;E-INCD-23;E-INCD-24;E-INRS-01;E-INRS-02;E-INRS-03;E-INRS-39,文件夹装源、标签装文章；合并/固定与未读时限分开；Magic有群体及习惯因素。 五布局、按源/日期分组、源/文件夹/标签分别设布局；历史可选X执行标已读并隐藏。,默认继承/重置、当前移动菜单、X撤销与跨端传播、未读过期对象及Magic sorting权重仍未知。,static_official_images_only,false,cases/M-044-inoreader.md,2026-10-27
+F-M044-10,M-044,批注回访并保留原文关系,D2,E-INCD-12;E-INRS-28;E-INRS-29;E-INRS-30;E-INRS-31;E-INRS-32;E-INRS-33;E-INRS-40,整篇笔记与段落高亮不同；标注文本副本保留，更新另外提示。 静态笔记有Edit/Delete，选区有Highlight text/Add note；整篇和段落笔记入口分开，旧Edit入口措辞保留。,已有笔记不证明来自当前选区；修改/删除结果、确认/撤销、离线合并和副本去留未观察。,static_official_images_only,false,cases/M-044-inoreader.md,2026-10-27
+F-M044-11,M-044,查看新闻修订与发布版本,D2,E-INCD-08,Edited列表、红绿差异、版本选择器和Published；web套餐条件，只有官方静态图。,未采集修订、移动端、更新频率、保留期和AI产物联动,static_reference_only,false,cases/M-044-inoreader.md,2026-10-27
+F-M044-12,M-044,组装个人新闻起始页,D2,E-INCD-15;E-INRS-39,widget数据源、位置、列数、多看板与启动页分别设置；默认含热门推荐。 静态看板含文章、设置清单33%和阅读统计；设置完成度不是学习掌握。,移动布局、空栏目、widget操作结果、保存和跨端冲突未知。,static_official_images_only,false,cases/M-044-inoreader.md,2026-10-27
+F-M044-13,M-044,突出关键词并保留原列表,D2,E-INCD-14;E-INRS-40,Spotlights仅着色，不过滤/改排序；大小写与Team颜色优先。 静态Spotlights列表有颜色、名称、创建日期、状态开关和菜单；不等同筛选/排序。,当前开启/编辑/保存、颜色重叠、黑白屏与读听表现未知。,static_official_images_only,false,cases/M-044-inoreader.md,2026-10-27
+F-M044-14,M-044,生成单文摘要提问并设偏好,D2,E-INCD-16;E-INCD-25;E-INCD-26;E-INCD-27,预设/自写prompt、平台/语言/persona；摘要随文存储和搜索。,生成取消、重试覆盖、源更新、引用和额度失败,not_observed,false,cases/M-044-inoreader.md,2026-10-27
+F-M044-15,M-044,生成多篇报告及安排定时报告,D2,E-INCD-16;E-INCD-28;E-INCD-29;E-INCD-30,多篇/整源分析与定时分发目标不同；报告作为新文章到达。,空期、部分结果、引用、暂停删除、预览副作用及token不足,not_observed,false,cases/M-044-inoreader.md,2026-10-27
+F-M044-16,M-044,批量处理和误标已读恢复范围,D2,E-INCD-02;E-INCD-18;E-INRS-40,最多50项；近两周批量已读恢复文档有范围，所给时间菜单路径却未写明确撤销控件。 官方归档图显示4项选择含0%条目，批量工具栏、单行归档、Archive all范围不同。,真实执行/撤销和永久删除、批量标已读恢复的明确控件仍未验证。,static_official_images_only,false,cases/M-044-inoreader.md,2026-10-27

@@ -1,0 +1,8 @@
+{
+  "key": "20-feed-failure",
+  "url": "https://www.inoreader.com/help/basic/feeds-sources/why-has-a-feed-stopped-updating",
+  "final_url": "https://www.inoreader.com/help/basic/feeds-sources/why-has-a-feed-stopped-updating",
+  "status": 200,
+  "raw_work_path": "work/inoreader-controls-deepening/20-feed-failure.html",
+  "raw_sha256": "fdf47fce83c9253adfb3ba2a6ed01b2c5598f55e7d17a730f3f397eae9a9d953"
+}

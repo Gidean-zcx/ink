@@ -1,0 +1,94 @@
+{
+  "status": "passed",
+  "total_flows": 964,
+  "total_evidence": 1710,
+  "total_reference_points": 114,
+  "new_source_git_blobs_verified": 14,
+  "reused_source_files_verified": 9,
+  "M040_flows": 14,
+  "M040_evidence": 59,
+  "M040_reference_points": 8,
+  "inventory_rows": 162,
+  "briefs_indexed": 49,
+  "requirements_sha256": "e141320e2714df805c009fe64dd92d17decd6429d5728f8ce42d6d868b775087",
+  "requirements_unchanged": true,
+  "cache_only_cleanup_profile_other_files_unchanged": true,
+  "DragonBox_pdf_page_count_verified": 9,
+  "flow_owners": {
+    "F-M040-01": [
+      "docs/research/interaction-library/batches/audio-coverage.csv"
+    ],
+    "F-M040-02": [
+      "docs/research/interaction-library/batches/audio-coverage.csv"
+    ],
+    "F-M040-03": [
+      "docs/research/interaction-library/batches/audio-coverage.csv"
+    ],
+    "F-M040-04": [
+      "docs/research/interaction-library/batches/audio-coverage.csv"
+    ],
+    "F-M040-05": [
+      "docs/research/interaction-library/batches/audio-coverage.csv"
+    ],
+    "F-M040-06": [
+      "docs/research/interaction-library/batches/audio-coverage.csv"
+    ],
+    "F-M040-07": [
+      "docs/research/interaction-library/batches/audio-coverage.csv"
+    ],
+    "F-M040-08": [
+      "docs/research/interaction-library/batches/audio-coverage.csv"
+    ],
+    "F-M040-09": [
+      "docs/research/interaction-library/batches/audio-coverage.csv"
+    ],
+    "F-M040-10": [
+      "docs/research/interaction-library/batches/audio-coverage.csv"
+    ],
+    "F-M040-11": [
+      "docs/research/interaction-library/batches/audio-coverage.csv"
+    ],
+    "F-M040-12": [
+      "docs/research/interaction-library/batches/audio-coverage.csv"
+    ],
+    "F-M040-13": [
+      "docs/research/interaction-library/batches/antennapod-queue-controls-deepening-coverage.csv"
+    ],
+    "F-M040-14": [
+      "docs/research/interaction-library/batches/antennapod-state-controls-coverage.csv"
+    ]
+  },
+  "new_formal_files": [
+    "docs/briefs/049-selection-confirmation-and-persistence.md",
+    "docs/research/interaction-library/artifacts/antennapod-state-controls/source-audit.json",
+    "docs/research/interaction-library/artifacts/antennapod-state-controls/source-notes.md",
+    "docs/research/interaction-library/batches/antennapod-state-controls-coverage.csv",
+    "docs/research/interaction-library/batches/antennapod-state-controls-evidence.jsonl"
+  ],
+  "modified_formal_files": [
+    "README.md",
+    "docs/briefs/README.md",
+    "docs/ideas.md",
+    "docs/research/interaction-library/README.md",
+    "docs/research/interaction-library/analysis-status.md",
+    "docs/research/interaction-library/backlog.md",
+    "docs/research/interaction-library/batches/README.md",
+    "docs/research/interaction-library/batches/antennapod-controls-deepening-evidence.jsonl",
+    "docs/research/interaction-library/batches/antennapod-queue-controls-deepening-coverage.csv",
+    "docs/research/interaction-library/batches/antennapod-queue-controls-deepening-evidence.jsonl",
+    "docs/research/interaction-library/batches/antennapod-queue-controls-deepening-inventory.csv",
+    "docs/research/interaction-library/batches/audio-coverage.csv",
+    "docs/research/interaction-library/case-index.md",
+    "docs/research/interaction-library/cases/M-040-antennapod.md",
+    "docs/research/interaction-library/catalog.csv",
+    "docs/research/interaction-library/comparison.md",
+    "docs/research/interaction-library/coverage.csv",
+    "docs/research/interaction-library/design-reference-guide.md",
+    "docs/research/interaction-library/evidence.jsonl",
+    "docs/research/interaction-library/inventories/README.md",
+    "docs/research/interaction-library/reference-points.csv",
+    "docs/research/interaction-library/verification-log.md"
+  ],
+  "deleted_formal_files": [],
+  "scope": "Source identity, references, data consistency and narrow storage cleanup; no APK/device execution or learning result verified"
+}

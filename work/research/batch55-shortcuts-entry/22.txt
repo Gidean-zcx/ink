@@ -1,0 +1,23 @@
+About actions in complicated shortcuts
+When you run shortcuts from a widget on an iOS or iPadOS device or run shortcuts from Apple Watch, keep in mind that some actions open the Shortcuts app to finish the job, complicating your workflow. When deciding on which shortcuts to run from a widget or Apple Watch, try to avoid those with actions that:
+Preview content, such as the Quick Look action
+Use the camera or microphone
+Ask you to select photos, music, or contacts
+Use the Ask Each Time variable
+Have actions with a Show Compose Sheet or Show File Picker option turned on
+The following actions are good candidates for shortcuts that can be launched and completed entirely from the Shortcuts widget or Apple Watch:
+Ask for Input
+Use the Ask for Input action to enter numbers in shortcuts in a widget or Apple Watch. In the example below, the calculator appears after you tap the Calculate Tip shortcut in a widget.
+For example, you could use Ask for Input with the Log Health Sample action to create a widget shortcut for logging your weight. When run, the shortcut opens a number pad in the widget for typing in your weight.
+When you add an Ask for Input action to a shortcut that you plan to run from a widget or Apple Watch, be sure to set Input Type to Number.
+Clipboard
+Use the Get Clipboard action to bring content into a shortcut. When apps don’t provide the ability to share, you can copy what you want to the clipboard, and then run a shortcut from the Shortcuts widget or Apple Watch to process the content or send it somewhere else.
+Use the Copy to Clipboard action to get content from a shortcut that doesn’t need to be saved to a file. For example, you can take a list of words and send them to a shortcut as input, sort the list, format the text, and copy the result to the Clipboard to paste in another app. There are two options when using the Copy to Clipboard action. Choose the Local Only option to prevent sharing Clipboard contents to other services via Handoff. Enter a time in the Expire At field to have content erased from the Clipboard at a specific time.
+Choose from List, Choose from Menu
+Use the Choose from List and Choose from Menu actions to make selections from a list of options in the Shortcuts widget or on Apple Watch. Right from the widget or on your watch, you can make choices that change how the shortcut operates.
+For example, using the Choose from List action, you can set up a shortcut that displays a list of songs to play. A more complicated shortcut might use the Choose from Menu action to branch the shortcut and run a series of actions based on the option chosen.
+For details, see Choose from List action and Use the Choose from Menu action in Shortcuts on iPhone or iPad.
+Show Alert
+Use the Show Alert action to display alerts or to ask for a confirmation in the Shortcuts widget or on Apple Watch. When a shortcut reaches an alert, a message with an Done button (and sometimes a Cancel button) is displayed.
+Shortcuts dealing with high volumes of content or large file sizes may need to open in Shortcuts to finish.
+Note: If “Unable to Load” is displayed in the Shortcuts widget, the Shortcuts widget has run out of memory. As a workaround, add a Continue Shortcut in App action near the beginning of your shortcut. When the shortcut reaches the Continue Shortcut in App action, the Shortcuts app opens to finish the shortcut (which is no longer subject to the memory limitations of the widget environment).

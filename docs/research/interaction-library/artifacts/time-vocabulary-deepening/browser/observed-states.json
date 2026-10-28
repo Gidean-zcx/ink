@@ -1,0 +1,1101 @@
+[
+  {
+    "capture": "01-article",
+    "action": "直接打开2018年G3–4公开文章",
+    "observed_result": "HTTP200，未见可核定阅读级别选择器；URL的rl参数本身不证明切换",
+    "url": "https://www.timeforkids.com/g34/food-for-thought/?rl=en-760",
+    "captured_at_utc": "2026-10-26T20:09:34.700347+00:00",
+    "scroll": {
+      "x": 0,
+      "y": 0
+    },
+    "image_reviewed": false,
+    "raw_image_path": "work/time-vocabulary-deepening/browser/01-article.png",
+    "raw_image_sha256": "36eade525cca18a664dba7924e2e3d5a70b0a934395ae77123dfcd80717e7e19",
+    "raw_metadata_path": "work/time-vocabulary-deepening/browser/01-article.json",
+    "raw_metadata_sha256": "5342dbac2a7b43d94339a365794f716ce1653a8925f500d7eb8f0b3eababd0a9",
+    "raw_html_path": "work/time-vocabulary-deepening/browser/01-article.html",
+    "raw_html_sha256": "20b5cab01870e5a58aa8d78366ce40352df36f2a2814c3b11f67680326cfafe4"
+  },
+  {
+    "capture": "02-word-before",
+    "action": "将首个预标词滚到视区",
+    "observed_result": "记录弹窗之前的正文位置；不是用户任意选词",
+    "url": "https://www.timeforkids.com/g34/food-for-thought/?rl=en-760",
+    "captured_at_utc": "2026-10-26T20:10:17.425304+00:00",
+    "scroll": {
+      "x": 0,
+      "y": 1100
+    },
+    "image_reviewed": false,
+    "raw_image_path": "work/time-vocabulary-deepening/browser/02-word-before.png",
+    "raw_image_sha256": "2ee8ba919969f89961ff0a7414df817706078568d8fc1843478cce5bb17443d7",
+    "raw_metadata_path": "work/time-vocabulary-deepening/browser/02-word-before.json",
+    "raw_metadata_sha256": "23c4f8c99ef6381afdf7e0fb8341106f5f437a0f62d81599f3c73ccb98e86102",
+    "raw_html_path": "work/time-vocabulary-deepening/browser/02-word-before.html",
+    "raw_html_sha256": "c493568022a596e1d9b9661f159e7d45953c132cea7af9d9fc92dc3af19dcbba"
+  },
+  {
+    "capture": "03-consume-open",
+    "action": "点击consume",
+    "observed_result": "展开含音频、释义、词性、配图、例句及关闭键的卡片；卡片延伸到视区下方",
+    "url": "https://www.timeforkids.com/g34/food-for-thought/?rl=en-760",
+    "captured_at_utc": "2026-10-26T20:10:17.956372+00:00",
+    "scroll": {
+      "x": 0,
+      "y": 1100
+    },
+    "image_reviewed": true,
+    "raw_image_path": "work/time-vocabulary-deepening/browser/03-consume-open.png",
+    "raw_image_sha256": "c6317a5cf93b74675ff695ebd544027d8bda865654788c7040831103f993a179",
+    "raw_metadata_path": "work/time-vocabulary-deepening/browser/03-consume-open.json",
+    "raw_metadata_sha256": "a2f9ed483c0a72e8fe761b7726f80485850847999e084734116faf65b3ae7d1d",
+    "raw_html_path": "work/time-vocabulary-deepening/browser/03-consume-open.html",
+    "raw_html_sha256": "969916d98eef5b07b8c1c1efaf0b4a4160891bc6a33640aeb2a3f56d84a430bc",
+    "archived_image": "artifacts/time-vocabulary-deepening/browser/03-consume-open.png"
+  },
+  {
+    "capture": "04-after-escape",
+    "action": "按Escape",
+    "observed_result": "DOM仍有一个可见词卡；未据此推所有键盘关闭均失败",
+    "url": "https://www.timeforkids.com/g34/food-for-thought/?rl=en-760",
+    "captured_at_utc": "2026-10-26T20:10:29.898258+00:00",
+    "scroll": {
+      "x": 0,
+      "y": 1100
+    },
+    "image_reviewed": false,
+    "raw_image_path": "work/time-vocabulary-deepening/browser/04-after-escape.png",
+    "raw_image_sha256": "1a3e0c1dab67728b008bc6b600898fe70acaeab79bc1a1fc91812599f32cd49b",
+    "raw_metadata_path": "work/time-vocabulary-deepening/browser/04-after-escape.json",
+    "raw_metadata_sha256": "d15e1ccf75a1c8a84df4ea400a71c60fc292a7b31ec6a14f1b538ebfab7b0ad9",
+    "raw_html_path": "work/time-vocabulary-deepening/browser/04-after-escape.html",
+    "raw_html_sha256": "969916d98eef5b07b8c1c1efaf0b4a4160891bc6a33640aeb2a3f56d84a430bc"
+  },
+  {
+    "capture": "05-word-audio-playing",
+    "action": "点原生音频播放并等1.8秒",
+    "observed_result": "终端读取consume paused=false、时间约1.80秒；本帧未归档media字段，后用portrait保存完整对照",
+    "url": "https://www.timeforkids.com/g34/food-for-thought/?rl=en-760",
+    "captured_at_utc": "2026-10-26T20:10:51.068843+00:00",
+    "scroll": {
+      "x": 0,
+      "y": 1100
+    },
+    "image_reviewed": false,
+    "raw_image_path": "work/time-vocabulary-deepening/browser/05-word-audio-playing.png",
+    "raw_image_sha256": "a6f35a70c56ac5c991a3c3b41c6d394cba1e52e3979b4a92890d7d19ba01f43d",
+    "raw_metadata_path": "work/time-vocabulary-deepening/browser/05-word-audio-playing.json",
+    "raw_metadata_sha256": "23bb9dc10211f4785c88e88e27b74c64ec2f1325fedac282e6ba114153e46ec7",
+    "raw_html_path": "work/time-vocabulary-deepening/browser/05-word-audio-playing.html",
+    "raw_html_sha256": "969916d98eef5b07b8c1c1efaf0b4a4160891bc6a33640aeb2a3f56d84a430bc"
+  },
+  {
+    "capture": "06-word-closed",
+    "action": "点词卡X关闭",
+    "observed_result": "卡片消失；不是播放停止的证据",
+    "url": "https://www.timeforkids.com/g34/food-for-thought/?rl=en-760",
+    "captured_at_utc": "2026-10-26T20:10:51.282177+00:00",
+    "scroll": {
+      "x": 0,
+      "y": 1100
+    },
+    "image_reviewed": false,
+    "raw_image_path": "work/time-vocabulary-deepening/browser/06-word-closed.png",
+    "raw_image_sha256": "498a949c51c46ce466eb9e212bb60590c3083e25e7bff7fd63fa1bae02a0b3e0",
+    "raw_metadata_path": "work/time-vocabulary-deepening/browser/06-word-closed.json",
+    "raw_metadata_sha256": "428d17c318869d3b449b228d4907b965bda7e27a155096540709df9fe17c544c",
+    "raw_html_path": "work/time-vocabulary-deepening/browser/06-word-closed.html",
+    "raw_html_sha256": "0d708e638ef6ee0aee2f3b66ec4a2aa18e008a7f9a26da1a8d57a6879142a7a9"
+  },
+  {
+    "capture": "07-after-close-wait",
+    "action": "关闭后等1.2秒",
+    "observed_result": "终端读取consume仍paused=false、约3.22秒；后续采用持久media状态复核",
+    "url": "https://www.timeforkids.com/g34/food-for-thought/?rl=en-760",
+    "captured_at_utc": "2026-10-26T20:10:52.635050+00:00",
+    "scroll": {
+      "x": 0,
+      "y": 1100
+    },
+    "image_reviewed": false,
+    "raw_image_path": "work/time-vocabulary-deepening/browser/07-after-close-wait.png",
+    "raw_image_sha256": "498a949c51c46ce466eb9e212bb60590c3083e25e7bff7fd63fa1bae02a0b3e0",
+    "raw_metadata_path": "work/time-vocabulary-deepening/browser/07-after-close-wait.json",
+    "raw_metadata_sha256": "ade3d15aa25f828bfb4d737cfa930d0f4dcc322730ee67cda8d15676efedd6be",
+    "raw_html_path": "work/time-vocabulary-deepening/browser/07-after-close-wait.html",
+    "raw_html_sha256": "0d708e638ef6ee0aee2f3b66ec4a2aa18e008a7f9a26da1a8d57a6879142a7a9"
+  },
+  {
+    "capture": "08-word-reopen",
+    "action": "重新开consume",
+    "observed_result": "操作间隔已使音频自然到结尾；不把结束归因于关闭",
+    "url": "https://www.timeforkids.com/g34/food-for-thought/?rl=en-760",
+    "captured_at_utc": "2026-10-26T20:11:03.670052+00:00",
+    "scroll": {
+      "x": 0,
+      "y": 1100
+    },
+    "image_reviewed": false,
+    "raw_image_path": "work/time-vocabulary-deepening/browser/08-word-reopen.png",
+    "raw_image_sha256": "1acec69d9fe01ee728e8e94bf45795aa4a3643d5aba01d427179db943857c5fb",
+    "raw_metadata_path": "work/time-vocabulary-deepening/browser/08-word-reopen.json",
+    "raw_metadata_sha256": "e3d5bd830a9dda52bb73b705509155ccd3a3008e1260b793ca7ccb7f5709dd9e",
+    "raw_html_path": "work/time-vocabulary-deepening/browser/08-word-reopen.html",
+    "raw_html_sha256": "969916d98eef5b07b8c1c1efaf0b4a4160891bc6a33640aeb2a3f56d84a430bc",
+    "media": [
+      {
+        "tag": "AUDIO",
+        "paused": true,
+        "time": 0,
+        "duration": 166.959417,
+        "ended": false,
+        "ready": 4,
+        "error": null
+      },
+      {
+        "tag": "AUDIO",
+        "paused": true,
+        "time": 11.024438,
+        "duration": 11.024438,
+        "ended": true,
+        "ready": 4,
+        "error": null
+      },
+      {
+        "tag": "AUDIO",
+        "paused": true,
+        "time": 0,
+        "duration": 11.180813,
+        "ended": false,
+        "ready": 4,
+        "error": null
+      },
+      {
+        "tag": "AUDIO",
+        "paused": true,
+        "time": 0,
+        "duration": 10.477125,
+        "ended": false,
+        "ready": 4,
+        "error": null
+      }
+    ],
+    "media_order_note": "本篇DOM顺序：正文播放器、consume、portrait、grassroot；列表页为空"
+  },
+  {
+    "capture": "09-portrait-enter",
+    "action": "关consume，对portrait按Enter",
+    "observed_result": "键盘打开portrait词卡；不是通过全页Tab序列测试",
+    "url": "https://www.timeforkids.com/g34/food-for-thought/?rl=en-760",
+    "captured_at_utc": "2026-10-26T20:11:04.096715+00:00",
+    "scroll": {
+      "x": 0,
+      "y": 1100
+    },
+    "image_reviewed": true,
+    "raw_image_path": "work/time-vocabulary-deepening/browser/09-portrait-enter.png",
+    "raw_image_sha256": "d94cfc291624d83f2ada79dc6df6f5fcb84c4bb3c3219f661243094dd168be5c",
+    "raw_metadata_path": "work/time-vocabulary-deepening/browser/09-portrait-enter.json",
+    "raw_metadata_sha256": "e3a136eb2446770f4b8af7f87a287b60e8aefae13a9c3dd4f71801cff1c28210",
+    "raw_html_path": "work/time-vocabulary-deepening/browser/09-portrait-enter.html",
+    "raw_html_sha256": "0efa5d58ee4a53f5deb9cbbadffe3d6cb5be2eb6d00c8191d5932ae17a877b60",
+    "media": [
+      {
+        "tag": "AUDIO",
+        "paused": true,
+        "time": 0,
+        "duration": 166.959417,
+        "ended": false,
+        "ready": 4,
+        "error": null
+      },
+      {
+        "tag": "AUDIO",
+        "paused": true,
+        "time": 11.024438,
+        "duration": 11.024438,
+        "ended": true,
+        "ready": 4,
+        "error": null
+      },
+      {
+        "tag": "AUDIO",
+        "paused": true,
+        "time": 0,
+        "duration": 11.180813,
+        "ended": false,
+        "ready": 4,
+        "error": null
+      },
+      {
+        "tag": "AUDIO",
+        "paused": true,
+        "time": 0,
+        "duration": 10.477125,
+        "ended": false,
+        "ready": 4,
+        "error": null
+      }
+    ],
+    "media_order_note": "本篇DOM顺序：正文播放器、consume、portrait、grassroot；列表页为空",
+    "archived_image": "artifacts/time-vocabulary-deepening/browser/09-portrait-enter.png"
+  },
+  {
+    "capture": "10-portrait-click",
+    "action": "再次点portrait",
+    "observed_result": "词卡保持打开，未证明同词点击是开关",
+    "url": "https://www.timeforkids.com/g34/food-for-thought/?rl=en-760",
+    "captured_at_utc": "2026-10-26T20:11:10.970070+00:00",
+    "scroll": {
+      "x": 0,
+      "y": 1100
+    },
+    "image_reviewed": false,
+    "raw_image_path": "work/time-vocabulary-deepening/browser/10-portrait-click.png",
+    "raw_image_sha256": "271269bc4853212538fa8f8b307a1921848c232cd7bfcf57733631deb52e19f6",
+    "raw_metadata_path": "work/time-vocabulary-deepening/browser/10-portrait-click.json",
+    "raw_metadata_sha256": "f15fea3f5ea6357c59b0bc6e1b4a4139f87fdf6830ffb4b519627a3332e42e61",
+    "raw_html_path": "work/time-vocabulary-deepening/browser/10-portrait-click.html",
+    "raw_html_sha256": "0efa5d58ee4a53f5deb9cbbadffe3d6cb5be2eb6d00c8191d5932ae17a877b60",
+    "media": [
+      {
+        "tag": "AUDIO",
+        "paused": true,
+        "time": 0,
+        "duration": 166.959417,
+        "ended": false,
+        "ready": 4,
+        "error": null
+      },
+      {
+        "tag": "AUDIO",
+        "paused": true,
+        "time": 11.024438,
+        "duration": 11.024438,
+        "ended": true,
+        "ready": 4,
+        "error": null
+      },
+      {
+        "tag": "AUDIO",
+        "paused": true,
+        "time": 0,
+        "duration": 11.180813,
+        "ended": false,
+        "ready": 4,
+        "error": null
+      },
+      {
+        "tag": "AUDIO",
+        "paused": true,
+        "time": 0,
+        "duration": 10.477125,
+        "ended": false,
+        "ready": 4,
+        "error": null
+      }
+    ],
+    "media_order_note": "本篇DOM顺序：正文播放器、consume、portrait、grassroot；列表页为空"
+  },
+  {
+    "capture": "11-portrait-playing",
+    "action": "点portrait音频播放，等1.2秒",
+    "observed_result": "可见暂停图标；随后DOM paused=false、time约1.36秒",
+    "url": "https://www.timeforkids.com/g34/food-for-thought/?rl=en-760",
+    "captured_at_utc": "2026-10-26T20:11:12.472209+00:00",
+    "scroll": {
+      "x": 0,
+      "y": 1100
+    },
+    "image_reviewed": true,
+    "raw_image_path": "work/time-vocabulary-deepening/browser/11-portrait-playing.png",
+    "raw_image_sha256": "f6976b19502ab66e7d647060edffeb75b2f9264838d1e95b5d69a06689fda09d",
+    "raw_metadata_path": "work/time-vocabulary-deepening/browser/11-portrait-playing.json",
+    "raw_metadata_sha256": "fbf30c9c21be8f8e9b8bdd7123acb8ef24a3e58d4c913769f56aea0394194c41",
+    "raw_html_path": "work/time-vocabulary-deepening/browser/11-portrait-playing.html",
+    "raw_html_sha256": "0efa5d58ee4a53f5deb9cbbadffe3d6cb5be2eb6d00c8191d5932ae17a877b60",
+    "media": [
+      {
+        "tag": "AUDIO",
+        "paused": true,
+        "time": 0,
+        "duration": 166.959417,
+        "ended": false,
+        "ready": 4,
+        "error": null
+      },
+      {
+        "tag": "AUDIO",
+        "paused": true,
+        "time": 11.024438,
+        "duration": 11.024438,
+        "ended": true,
+        "ready": 4,
+        "error": null
+      },
+      {
+        "tag": "AUDIO",
+        "paused": false,
+        "time": 1.35707,
+        "duration": 11.180813,
+        "ended": false,
+        "ready": 4,
+        "error": null
+      },
+      {
+        "tag": "AUDIO",
+        "paused": true,
+        "time": 0,
+        "duration": 10.477125,
+        "ended": false,
+        "ready": 4,
+        "error": null
+      }
+    ],
+    "media_order_note": "本篇DOM顺序：正文播放器、consume、portrait、grassroot；列表页为空",
+    "archived_image": "artifacts/time-vocabulary-deepening/browser/11-portrait-playing.png"
+  },
+  {
+    "capture": "12-portrait-closed-playing",
+    "action": "点X并等1秒",
+    "observed_result": "卡片消失，但portrait paused=false、time约2.58秒",
+    "url": "https://www.timeforkids.com/g34/food-for-thought/?rl=en-760",
+    "captured_at_utc": "2026-10-26T20:11:13.652560+00:00",
+    "scroll": {
+      "x": 0,
+      "y": 1100
+    },
+    "image_reviewed": true,
+    "raw_image_path": "work/time-vocabulary-deepening/browser/12-portrait-closed-playing.png",
+    "raw_image_sha256": "498a949c51c46ce466eb9e212bb60590c3083e25e7bff7fd63fa1bae02a0b3e0",
+    "raw_metadata_path": "work/time-vocabulary-deepening/browser/12-portrait-closed-playing.json",
+    "raw_metadata_sha256": "54fb0c453a93826ee2f7f9b7b71c32670a88b71c6c4b2470333ce0d8341c03a7",
+    "raw_html_path": "work/time-vocabulary-deepening/browser/12-portrait-closed-playing.html",
+    "raw_html_sha256": "0d708e638ef6ee0aee2f3b66ec4a2aa18e008a7f9a26da1a8d57a6879142a7a9",
+    "media": [
+      {
+        "tag": "AUDIO",
+        "paused": true,
+        "time": 0,
+        "duration": 166.959417,
+        "ended": false,
+        "ready": 4,
+        "error": null
+      },
+      {
+        "tag": "AUDIO",
+        "paused": true,
+        "time": 11.024438,
+        "duration": 11.024438,
+        "ended": true,
+        "ready": 4,
+        "error": null
+      },
+      {
+        "tag": "AUDIO",
+        "paused": false,
+        "time": 2.576389,
+        "duration": 11.180813,
+        "ended": false,
+        "ready": 4,
+        "error": null
+      },
+      {
+        "tag": "AUDIO",
+        "paused": true,
+        "time": 0,
+        "duration": 10.477125,
+        "ended": false,
+        "ready": 4,
+        "error": null
+      }
+    ],
+    "media_order_note": "本篇DOM顺序：正文播放器、consume、portrait、grassroot；列表页为空",
+    "archived_image": "artifacts/time-vocabulary-deepening/browser/12-portrait-closed-playing.png"
+  },
+  {
+    "capture": "13-replay-before-close",
+    "action": "间隔后重新开始portrait并等0.7秒",
+    "observed_result": "第二次对照开始，paused=false、time约0.83秒",
+    "url": "https://www.timeforkids.com/g34/food-for-thought/?rl=en-760",
+    "captured_at_utc": "2026-10-26T20:11:30.144684+00:00",
+    "scroll": {
+      "x": 0,
+      "y": 1100
+    },
+    "image_reviewed": false,
+    "raw_image_path": "work/time-vocabulary-deepening/browser/13-replay-before-close.png",
+    "raw_image_sha256": "ca7d5c4974f4c38ea38b1c088e828f38ec0a7358c456e7c04447e46eb5d19954",
+    "raw_metadata_path": "work/time-vocabulary-deepening/browser/13-replay-before-close.json",
+    "raw_metadata_sha256": "9cfbebff6bd88cbeda300bdb5b5bbfe332d736cbd6e2bc57f275d1f570c28980",
+    "raw_html_path": "work/time-vocabulary-deepening/browser/13-replay-before-close.html",
+    "raw_html_sha256": "0efa5d58ee4a53f5deb9cbbadffe3d6cb5be2eb6d00c8191d5932ae17a877b60",
+    "media": [
+      {
+        "tag": "AUDIO",
+        "paused": true,
+        "time": 0,
+        "duration": 166.959417,
+        "ended": false,
+        "ready": 4,
+        "error": null
+      },
+      {
+        "tag": "AUDIO",
+        "paused": true,
+        "time": 11.024438,
+        "duration": 11.024438,
+        "ended": true,
+        "ready": 4,
+        "error": null
+      },
+      {
+        "tag": "AUDIO",
+        "paused": false,
+        "time": 0.830831,
+        "duration": 11.180813,
+        "ended": false,
+        "ready": 4,
+        "error": null
+      },
+      {
+        "tag": "AUDIO",
+        "paused": true,
+        "time": 0,
+        "duration": 10.477125,
+        "ended": false,
+        "ready": 4,
+        "error": null
+      }
+    ],
+    "media_order_note": "本篇DOM顺序：正文播放器、consume、portrait、grassroot；列表页为空"
+  },
+  {
+    "capture": "14-replay-after-close",
+    "action": "关闭词卡并等0.7秒",
+    "observed_result": "paused=false、time约1.88秒，关闭未停止底层媒体",
+    "url": "https://www.timeforkids.com/g34/food-for-thought/?rl=en-760",
+    "captured_at_utc": "2026-10-26T20:11:31.180705+00:00",
+    "scroll": {
+      "x": 0,
+      "y": 1100
+    },
+    "image_reviewed": true,
+    "raw_image_path": "work/time-vocabulary-deepening/browser/14-replay-after-close.png",
+    "raw_image_sha256": "498a949c51c46ce466eb9e212bb60590c3083e25e7bff7fd63fa1bae02a0b3e0",
+    "raw_metadata_path": "work/time-vocabulary-deepening/browser/14-replay-after-close.json",
+    "raw_metadata_sha256": "a726b69ed5a2b0c8dc2b15e130b6f3318fd299b0fcd20585b7114b61c718956e",
+    "raw_html_path": "work/time-vocabulary-deepening/browser/14-replay-after-close.html",
+    "raw_html_sha256": "0d708e638ef6ee0aee2f3b66ec4a2aa18e008a7f9a26da1a8d57a6879142a7a9",
+    "media": [
+      {
+        "tag": "AUDIO",
+        "paused": true,
+        "time": 0,
+        "duration": 166.959417,
+        "ended": false,
+        "ready": 4,
+        "error": null
+      },
+      {
+        "tag": "AUDIO",
+        "paused": true,
+        "time": 11.024438,
+        "duration": 11.024438,
+        "ended": true,
+        "ready": 4,
+        "error": null
+      },
+      {
+        "tag": "AUDIO",
+        "paused": false,
+        "time": 1.876004,
+        "duration": 11.180813,
+        "ended": false,
+        "ready": 4,
+        "error": null
+      },
+      {
+        "tag": "AUDIO",
+        "paused": true,
+        "time": 0,
+        "duration": 10.477125,
+        "ended": false,
+        "ready": 4,
+        "error": null
+      }
+    ],
+    "media_order_note": "本篇DOM顺序：正文播放器、consume、portrait、grassroot；列表页为空"
+  },
+  {
+    "capture": "15-reopen-during-play",
+    "action": "播放中重新打开词卡",
+    "observed_result": "仍paused=false、time约2.23秒，没有重头播放",
+    "url": "https://www.timeforkids.com/g34/food-for-thought/?rl=en-760",
+    "captured_at_utc": "2026-10-26T20:11:31.497228+00:00",
+    "scroll": {
+      "x": 0,
+      "y": 1100
+    },
+    "image_reviewed": true,
+    "raw_image_path": "work/time-vocabulary-deepening/browser/15-reopen-during-play.png",
+    "raw_image_sha256": "a0a695c9b2cf2a192bb79720e0b08b5937e165b5bf32c7fa84d97e270cdf6a02",
+    "raw_metadata_path": "work/time-vocabulary-deepening/browser/15-reopen-during-play.json",
+    "raw_metadata_sha256": "6920a1757e314e3b1034059db76e52d372aa76a848844552b56b84edb048a530",
+    "raw_html_path": "work/time-vocabulary-deepening/browser/15-reopen-during-play.html",
+    "raw_html_sha256": "0efa5d58ee4a53f5deb9cbbadffe3d6cb5be2eb6d00c8191d5932ae17a877b60",
+    "media": [
+      {
+        "tag": "AUDIO",
+        "paused": true,
+        "time": 0,
+        "duration": 166.959417,
+        "ended": false,
+        "ready": 4,
+        "error": null
+      },
+      {
+        "tag": "AUDIO",
+        "paused": true,
+        "time": 11.024438,
+        "duration": 11.024438,
+        "ended": true,
+        "ready": 4,
+        "error": null
+      },
+      {
+        "tag": "AUDIO",
+        "paused": false,
+        "time": 2.227579,
+        "duration": 11.180813,
+        "ended": false,
+        "ready": 4,
+        "error": null
+      },
+      {
+        "tag": "AUDIO",
+        "paused": true,
+        "time": 0,
+        "duration": 10.477125,
+        "ended": false,
+        "ready": 4,
+        "error": null
+      }
+    ],
+    "media_order_note": "本篇DOM顺序：正文播放器、consume、portrait、grassroot；列表页为空",
+    "archived_image": "artifacts/time-vocabulary-deepening/browser/15-reopen-during-play.png"
+  },
+  {
+    "capture": "16-word-paused",
+    "action": "点原生暂停",
+    "observed_result": "paused=true、time约2.24秒",
+    "url": "https://www.timeforkids.com/g34/food-for-thought/?rl=en-760",
+    "captured_at_utc": "2026-10-26T20:11:31.773914+00:00",
+    "scroll": {
+      "x": 0,
+      "y": 1100
+    },
+    "image_reviewed": true,
+    "raw_image_path": "work/time-vocabulary-deepening/browser/16-word-paused.png",
+    "raw_image_sha256": "8dfedfdd7944bbd995e562e7488a6ab6240d46edac703f31b3b343e9901e6e63",
+    "raw_metadata_path": "work/time-vocabulary-deepening/browser/16-word-paused.json",
+    "raw_metadata_sha256": "2a3ad6c4a0cd541a360de8c7e65e53bc504be8e32077c511f342416d1d503b23",
+    "raw_html_path": "work/time-vocabulary-deepening/browser/16-word-paused.html",
+    "raw_html_sha256": "0efa5d58ee4a53f5deb9cbbadffe3d6cb5be2eb6d00c8191d5932ae17a877b60",
+    "media": [
+      {
+        "tag": "AUDIO",
+        "paused": true,
+        "time": 0,
+        "duration": 166.959417,
+        "ended": false,
+        "ready": 4,
+        "error": null
+      },
+      {
+        "tag": "AUDIO",
+        "paused": true,
+        "time": 11.024438,
+        "duration": 11.024438,
+        "ended": true,
+        "ready": 4,
+        "error": null
+      },
+      {
+        "tag": "AUDIO",
+        "paused": true,
+        "time": 2.244348,
+        "duration": 11.180813,
+        "ended": false,
+        "ready": 4,
+        "error": null
+      },
+      {
+        "tag": "AUDIO",
+        "paused": true,
+        "time": 0,
+        "duration": 10.477125,
+        "ended": false,
+        "ready": 4,
+        "error": null
+      }
+    ],
+    "media_order_note": "本篇DOM顺序：正文播放器、consume、portrait、grassroot；列表页为空",
+    "archived_image": "artifacts/time-vocabulary-deepening/browser/16-word-paused.png"
+  },
+  {
+    "capture": "17-outside-click",
+    "action": "点卡片外标题",
+    "observed_result": "卡片仍可见；音频仍暂停在约2.24秒",
+    "url": "https://www.timeforkids.com/g34/food-for-thought/?rl=en-760",
+    "captured_at_utc": "2026-10-26T20:11:32.045875+00:00",
+    "scroll": {
+      "x": 0,
+      "y": 1100
+    },
+    "image_reviewed": false,
+    "raw_image_path": "work/time-vocabulary-deepening/browser/17-outside-click.png",
+    "raw_image_sha256": "0780ab90b9792977c47b41b526f1864f1b63bcdc3d6388201dd81d77f3dd8f87",
+    "raw_metadata_path": "work/time-vocabulary-deepening/browser/17-outside-click.json",
+    "raw_metadata_sha256": "f6d11bc84bd0fb638e28075cdf082f81acd98bafc35a9159f21029d0b8a1b0a1",
+    "raw_html_path": "work/time-vocabulary-deepening/browser/17-outside-click.html",
+    "raw_html_sha256": "0efa5d58ee4a53f5deb9cbbadffe3d6cb5be2eb6d00c8191d5932ae17a877b60",
+    "media": [
+      {
+        "tag": "AUDIO",
+        "paused": true,
+        "time": 0,
+        "duration": 166.959417,
+        "ended": false,
+        "ready": 4,
+        "error": null
+      },
+      {
+        "tag": "AUDIO",
+        "paused": true,
+        "time": 11.024438,
+        "duration": 11.024438,
+        "ended": true,
+        "ready": 4,
+        "error": null
+      },
+      {
+        "tag": "AUDIO",
+        "paused": true,
+        "time": 2.244348,
+        "duration": 11.180813,
+        "ended": false,
+        "ready": 4,
+        "error": null
+      },
+      {
+        "tag": "AUDIO",
+        "paused": true,
+        "time": 0,
+        "duration": 10.477125,
+        "ended": false,
+        "ready": 4,
+        "error": null
+      }
+    ],
+    "media_order_note": "本篇DOM顺序：正文播放器、consume、portrait、grassroot；列表页为空"
+  },
+  {
+    "capture": "18-reload-word-reset",
+    "action": "关卡、刷新，重新开portrait",
+    "observed_result": "paused=true、time=0；只证该匿名文章一次刷新结果，不推云端或账号规则",
+    "url": "https://www.timeforkids.com/g34/food-for-thought/?rl=en-760",
+    "captured_at_utc": "2026-10-26T20:12:10.678859+00:00",
+    "scroll": {
+      "x": 0,
+      "y": 1100
+    },
+    "image_reviewed": true,
+    "raw_image_path": "work/time-vocabulary-deepening/browser/18-reload-word-reset.png",
+    "raw_image_sha256": "271269bc4853212538fa8f8b307a1921848c232cd7bfcf57733631deb52e19f6",
+    "raw_metadata_path": "work/time-vocabulary-deepening/browser/18-reload-word-reset.json",
+    "raw_metadata_sha256": "611956cacd0756fcba874baf09295ab91792ea6ed90f2891a9bebb3e8b3585a6",
+    "raw_html_path": "work/time-vocabulary-deepening/browser/18-reload-word-reset.html",
+    "raw_html_sha256": "0a8a6944715a1cd24ec230167af618f8c00b0d2fb90cb22786eefc03ebd5c189",
+    "media": [
+      {
+        "tag": "AUDIO",
+        "paused": true,
+        "time": 0,
+        "duration": 166.959417,
+        "ended": false,
+        "ready": 4,
+        "error": null
+      },
+      {
+        "tag": "AUDIO",
+        "paused": true,
+        "time": 0,
+        "duration": 11.024438,
+        "ended": false,
+        "ready": 4,
+        "error": null
+      },
+      {
+        "tag": "AUDIO",
+        "paused": true,
+        "time": 0,
+        "duration": 11.180813,
+        "ended": false,
+        "ready": 4,
+        "error": null
+      },
+      {
+        "tag": "AUDIO",
+        "paused": true,
+        "time": 0,
+        "duration": 10.477125,
+        "ended": false,
+        "ready": 4,
+        "error": null
+      }
+    ],
+    "media_order_note": "本篇DOM顺序：正文播放器、consume、portrait、grassroot；列表页为空",
+    "archived_image": "artifacts/time-vocabulary-deepening/browser/18-reload-word-reset.png"
+  },
+  {
+    "capture": "19-main-menu",
+    "action": "关闭词卡，打开全局菜单",
+    "observed_result": "出现年级、主题、财商、成人区、资源和登录父入口",
+    "url": "https://www.timeforkids.com/g34/food-for-thought/?rl=en-760",
+    "captured_at_utc": "2026-10-26T20:12:11.009195+00:00",
+    "scroll": {
+      "x": 0,
+      "y": 0
+    },
+    "image_reviewed": false,
+    "raw_image_path": "work/time-vocabulary-deepening/browser/19-main-menu.png",
+    "raw_image_sha256": "4bfa061a9e136812aec4db56f3a455fe0ec1c41123181ec53732c7afc507a37f",
+    "raw_metadata_path": "work/time-vocabulary-deepening/browser/19-main-menu.json",
+    "raw_metadata_sha256": "be39b6817ead766e50c10e724720eb14708b62315346b4e6c1d5f90e5340f736",
+    "raw_html_path": "work/time-vocabulary-deepening/browser/19-main-menu.html",
+    "raw_html_sha256": "01fd5b310f8dc6690a820dff2d971dbd83e1dd88ab553828c01191ac04eec2cf",
+    "media": [
+      {
+        "tag": "AUDIO",
+        "paused": true,
+        "time": 0,
+        "duration": 166.959417,
+        "ended": false,
+        "ready": 4,
+        "error": null
+      },
+      {
+        "tag": "AUDIO",
+        "paused": true,
+        "time": 0,
+        "duration": 11.024438,
+        "ended": false,
+        "ready": 4,
+        "error": null
+      },
+      {
+        "tag": "AUDIO",
+        "paused": true,
+        "time": 0,
+        "duration": 11.180813,
+        "ended": false,
+        "ready": 4,
+        "error": null
+      },
+      {
+        "tag": "AUDIO",
+        "paused": true,
+        "time": 0,
+        "duration": 10.477125,
+        "ended": false,
+        "ready": 4,
+        "error": null
+      }
+    ],
+    "media_order_note": "本篇DOM顺序：正文播放器、consume、portrait、grassroot；列表页为空"
+  },
+  {
+    "capture": "20-grade-options",
+    "action": "展开年级入口",
+    "observed_result": "四个年级目录；它们不是单篇阅读难度选择",
+    "url": "https://www.timeforkids.com/g34/food-for-thought/?rl=en-760",
+    "captured_at_utc": "2026-10-26T20:12:20.997057+00:00",
+    "scroll": {
+      "x": 0,
+      "y": 0
+    },
+    "image_reviewed": true,
+    "raw_image_path": "work/time-vocabulary-deepening/browser/20-grade-options.png",
+    "raw_image_sha256": "209e175ddb0580b78a63fbc8005352a4db87c14b884f1bb0feccc8d6301e8a74",
+    "raw_metadata_path": "work/time-vocabulary-deepening/browser/20-grade-options.json",
+    "raw_metadata_sha256": "8656b163e97247f9a532194800da1f2c073edcfc46729644f6b14b8312926262",
+    "raw_html_path": "work/time-vocabulary-deepening/browser/20-grade-options.html",
+    "raw_html_sha256": "29bea315a5babfa1bc6fb2505df5120d9a99c1d50c7411db579bee976010b3af",
+    "media": [
+      {
+        "tag": "AUDIO",
+        "paused": true,
+        "time": 0,
+        "duration": 166.959417,
+        "ended": false,
+        "ready": 4,
+        "error": null
+      },
+      {
+        "tag": "AUDIO",
+        "paused": true,
+        "time": 0,
+        "duration": 11.024438,
+        "ended": false,
+        "ready": 4,
+        "error": null
+      },
+      {
+        "tag": "AUDIO",
+        "paused": true,
+        "time": 0,
+        "duration": 11.180813,
+        "ended": false,
+        "ready": 4,
+        "error": null
+      },
+      {
+        "tag": "AUDIO",
+        "paused": true,
+        "time": 0,
+        "duration": 10.477125,
+        "ended": false,
+        "ready": 4,
+        "error": null
+      }
+    ],
+    "media_order_note": "本篇DOM顺序：正文播放器、consume、portrait、grassroot；列表页为空",
+    "archived_image": "artifacts/time-vocabulary-deepening/browser/20-grade-options.png"
+  },
+  {
+    "capture": "21-k1-list",
+    "action": "点K–1目录",
+    "observed_result": "进入/k1/，保留未登录环境",
+    "url": "https://www.timeforkids.com/k1/",
+    "captured_at_utc": "2026-10-26T20:12:23.717602+00:00",
+    "scroll": {
+      "x": 0,
+      "y": 0
+    },
+    "image_reviewed": false,
+    "raw_image_path": "work/time-vocabulary-deepening/browser/21-k1-list.png",
+    "raw_image_sha256": "82ca480d3524c7baec4708eb7418376b19512765739cd31d43a5fab4f5b2ac9f",
+    "raw_metadata_path": "work/time-vocabulary-deepening/browser/21-k1-list.json",
+    "raw_metadata_sha256": "6d8dbb82eb05006febec6d87f45b98525d6ff23dc1b209d6fddd9a9789c6218b",
+    "raw_html_path": "work/time-vocabulary-deepening/browser/21-k1-list.html",
+    "raw_html_sha256": "aab6a42cbc07bb0307024b2f8615e4c96eac4abf823eb2de5201d3235eaf41b7",
+    "media": [],
+    "media_order_note": "本篇DOM顺序：正文播放器、consume、portrait、grassroot；列表页为空"
+  },
+  {
+    "capture": "22-k1-topics",
+    "action": "重新开菜单并展开Topics",
+    "observed_result": "看到长主题目录；DOM记录37项，不代表逐项进入",
+    "url": "https://www.timeforkids.com/k1/",
+    "captured_at_utc": "2026-10-26T20:12:24.240394+00:00",
+    "scroll": {
+      "x": 0,
+      "y": 0
+    },
+    "image_reviewed": true,
+    "raw_image_path": "work/time-vocabulary-deepening/browser/22-k1-topics.png",
+    "raw_image_sha256": "3eed593225271e6b57035dbd97a1e79ccbab88a015f596afa312dc90092932df",
+    "raw_metadata_path": "work/time-vocabulary-deepening/browser/22-k1-topics.json",
+    "raw_metadata_sha256": "9cbcb84adf73117d77c1886a26c59ddb0764eeec6f5be6286518a9c369ca92cf",
+    "raw_html_path": "work/time-vocabulary-deepening/browser/22-k1-topics.html",
+    "raw_html_sha256": "173b7c53ebaf3a55314f709a35c025e138223f30fc2787148abaf19f5bab8c6f",
+    "media": [],
+    "media_order_note": "本篇DOM顺序：正文播放器、consume、portrait、grassroot；列表页为空",
+    "archived_image": "artifacts/time-vocabulary-deepening/browser/22-k1-topics.png"
+  },
+  {
+    "capture": "23-k1-science",
+    "action": "点Science",
+    "observed_result": "进入K–1 Science；列表有日期/摘要/音频和西语标记，首条为2025年文章",
+    "url": "https://www.timeforkids.com/k1/topics/science/",
+    "captured_at_utc": "2026-10-26T20:12:57.217638+00:00",
+    "scroll": {
+      "x": 0,
+      "y": 0
+    },
+    "image_reviewed": false,
+    "raw_image_path": "work/time-vocabulary-deepening/browser/23-k1-science.png",
+    "raw_image_sha256": "bbd2b380e86ab6dc2467e0f89b08b7db2b195a2ba8d74feb59a2a1a39cc8b8aa",
+    "raw_metadata_path": "work/time-vocabulary-deepening/browser/23-k1-science.json",
+    "raw_metadata_sha256": "8cb375ad7f36c3a8fff708471550263028116edc9468f2d295cdc346bd38fc7d",
+    "raw_html_path": "work/time-vocabulary-deepening/browser/23-k1-science.html",
+    "raw_html_sha256": "6c498f0253452a68dd0cfb610919f0ebd6503bb0b1b1111e68a9332aa8b2989a",
+    "media": [],
+    "media_order_note": "本篇DOM顺序：正文播放器、consume、portrait、grassroot；列表页为空"
+  },
+  {
+    "capture": "24-science-page2",
+    "action": "点Next",
+    "observed_result": "进入page/2，首条为2023年文章；有限分页，未测所有末页规则",
+    "url": "https://www.timeforkids.com/k1/topics/science/page/2/",
+    "captured_at_utc": "2026-10-26T20:13:24.880795+00:00",
+    "scroll": {
+      "x": 0,
+      "y": 0
+    },
+    "image_reviewed": true,
+    "raw_image_path": "work/time-vocabulary-deepening/browser/24-science-page2.png",
+    "raw_image_sha256": "c2ab69269dcca50c57ab776f36a4b95b705cba56483b090a0453bb0af09af446",
+    "raw_metadata_path": "work/time-vocabulary-deepening/browser/24-science-page2.json",
+    "raw_metadata_sha256": "5fd93898c917ec418554f046a41b15d664595df3a337948d70196f207a8b4f8b",
+    "raw_html_path": "work/time-vocabulary-deepening/browser/24-science-page2.html",
+    "raw_html_sha256": "f974f2ae2ec9f980fef5a3380a6866adcbbd880a81d73c73195071ccc7e03ee4",
+    "media": [],
+    "media_order_note": "本篇DOM顺序：正文播放器、consume、portrait、grassroot；列表页为空",
+    "archived_image": "artifacts/time-vocabulary-deepening/browser/24-science-page2.png"
+  },
+  {
+    "capture": "25-back-to-science",
+    "action": "浏览器返回",
+    "observed_result": "回Science第一页；不推每一文章的阅读位置恢复",
+    "url": "https://www.timeforkids.com/k1/topics/science/",
+    "captured_at_utc": "2026-10-26T20:13:26.230235+00:00",
+    "scroll": {
+      "x": 0,
+      "y": 4090
+    },
+    "image_reviewed": false,
+    "raw_image_path": "work/time-vocabulary-deepening/browser/25-back-to-science.png",
+    "raw_image_sha256": "16b98e4533067b0af14dde7a5d17f56a4ca9a51c22f7bf9208913d38a3997422",
+    "raw_metadata_path": "work/time-vocabulary-deepening/browser/25-back-to-science.json",
+    "raw_metadata_sha256": "e4733a620b9eaa9049a9ed18e2d0b4841633b6cadc6eab8f56b05a0910f2f965",
+    "raw_html_path": "work/time-vocabulary-deepening/browser/25-back-to-science.html",
+    "raw_html_sha256": "3bcb4b9df09d0c92c56547fc8958aa2a99c085c5622ee64d60568362e2962bdf",
+    "media": [],
+    "media_order_note": "本篇DOM顺序：正文播放器、consume、portrait、grassroot；列表页为空"
+  },
+  {
+    "capture": "26-menu-again",
+    "action": "打开菜单",
+    "observed_result": "核父级入口；不把隐藏调试角色字段当用户菜单",
+    "url": "https://www.timeforkids.com/k1/topics/science/",
+    "captured_at_utc": "2026-10-26T20:13:26.582543+00:00",
+    "scroll": {
+      "x": 0,
+      "y": 0
+    },
+    "image_reviewed": false,
+    "raw_image_path": "work/time-vocabulary-deepening/browser/26-menu-again.png",
+    "raw_image_sha256": "4bfa061a9e136812aec4db56f3a455fe0ec1c41123181ec53732c7afc507a37f",
+    "raw_metadata_path": "work/time-vocabulary-deepening/browser/26-menu-again.json",
+    "raw_metadata_sha256": "2b616080f112d95b50159c71742bcd1748d6f9b8791de78ed5a8d3f40f1c8441",
+    "raw_html_path": "work/time-vocabulary-deepening/browser/26-menu-again.html",
+    "raw_html_sha256": "e86cbd9b2ae3d29641046e3bb7cc327d2243a384352215e127bc3f2199b8bbf5",
+    "media": [],
+    "media_order_note": "本篇DOM顺序：正文播放器、consume、portrait、grassroot；列表页为空"
+  },
+  {
+    "capture": "27-adult-gate",
+    "action": "点For Grown-ups",
+    "observed_result": "同URL弹出出生月/年表单；未填写或提交",
+    "url": "https://www.timeforkids.com/k1/topics/science/",
+    "captured_at_utc": "2026-10-26T20:13:35.004688+00:00",
+    "scroll": {
+      "x": 0,
+      "y": 0
+    },
+    "image_reviewed": true,
+    "raw_image_path": "work/time-vocabulary-deepening/browser/27-adult-gate.png",
+    "raw_image_sha256": "627641118619e320c538dc496c329f829c28d809978a60afe674b3587d505eed",
+    "raw_metadata_path": "work/time-vocabulary-deepening/browser/27-adult-gate.json",
+    "raw_metadata_sha256": "897423ccd8bb9a94031fc2fc25754b2ff9302cd78c0c0d619d8e7e278ebadcfa",
+    "raw_html_path": "work/time-vocabulary-deepening/browser/27-adult-gate.html",
+    "raw_html_sha256": "468dda2a00613072e91cbd8fdc3779c1efd1e6f2a3a2a406707950705bf0d23b",
+    "media": [],
+    "media_order_note": "本篇DOM顺序：正文播放器、consume、portrait、grassroot；列表页为空",
+    "archived_image": "artifacts/time-vocabulary-deepening/browser/27-adult-gate.png"
+  },
+  {
+    "capture": "28-gate-escape",
+    "action": "按Escape",
+    "observed_result": "两个选择框仍可见；随后只读诊断把Python列表错当JS数组slice，报错，不是产品故障",
+    "url": "https://www.timeforkids.com/k1/topics/science/",
+    "captured_at_utc": "2026-10-26T20:13:42.953863+00:00",
+    "scroll": {
+      "x": 0,
+      "y": 0
+    },
+    "image_reviewed": false,
+    "raw_image_path": "work/time-vocabulary-deepening/browser/28-gate-escape.png",
+    "raw_image_sha256": "a8a1c367f3688183d6963150579480eb411f37450cebbffb7cd7e0d1d85d1579",
+    "raw_metadata_path": "work/time-vocabulary-deepening/browser/28-gate-escape.json",
+    "raw_metadata_sha256": "a0f1be8510f613622836cc01ed44a5bc1002c0495afcc676d1c5d68d0ee03e37",
+    "raw_html_path": "work/time-vocabulary-deepening/browser/28-gate-escape.html",
+    "raw_html_sha256": "468dda2a00613072e91cbd8fdc3779c1efd1e6f2a3a2a406707950705bf0d23b",
+    "media": [],
+    "media_order_note": "本篇DOM顺序：正文播放器、consume、portrait、grassroot；列表页为空"
+  },
+  {
+    "capture": "29-gate-closed",
+    "action": "点左上X",
+    "observed_result": "关闭过渡帧仍有左侧装饰；后续已能打开资源菜单，不称本帧完全静止",
+    "url": "https://www.timeforkids.com/k1/topics/science/",
+    "captured_at_utc": "2026-10-26T20:13:56.425762+00:00",
+    "scroll": {
+      "x": 0,
+      "y": 0
+    },
+    "image_reviewed": true,
+    "raw_image_path": "work/time-vocabulary-deepening/browser/29-gate-closed.png",
+    "raw_image_sha256": "18d53ffc0e4b038ade948f0d53d0f6934ea21140ec54b605b1da2feb32649158",
+    "raw_metadata_path": "work/time-vocabulary-deepening/browser/29-gate-closed.json",
+    "raw_metadata_sha256": "99405c1f07e24e267040c6ab234c30e62415a72758b9738abf3a23332379ac7b",
+    "raw_html_path": "work/time-vocabulary-deepening/browser/29-gate-closed.html",
+    "raw_html_sha256": "857ae47d47c28ab0ed06972b680ed6f39f1c449dc0d82ab499d0afb107e78542",
+    "media": [],
+    "media_order_note": "本篇DOM顺序：正文播放器、consume、portrait、grassroot；列表页为空"
+  },
+  {
+    "capture": "30-resources",
+    "action": "重新打开菜单并展开Resource Spotlight",
+    "observed_result": "可见四个资源入口；未进入或注册这些关联服务",
+    "url": "https://www.timeforkids.com/k1/topics/science/",
+    "captured_at_utc": "2026-10-26T20:13:57.449741+00:00",
+    "scroll": {
+      "x": 0,
+      "y": 0
+    },
+    "image_reviewed": true,
+    "raw_image_path": "work/time-vocabulary-deepening/browser/30-resources.png",
+    "raw_image_sha256": "825a903f182f3d2ff819adf08c30ac3f18fc2a4c9ae115199f8a5a62e2de6d8a",
+    "raw_metadata_path": "work/time-vocabulary-deepening/browser/30-resources.json",
+    "raw_metadata_sha256": "81ff1f9b3847b1787b735fa337936ac56568a6ddc3cf3e1400cea50bdff29473",
+    "raw_html_path": "work/time-vocabulary-deepening/browser/30-resources.html",
+    "raw_html_sha256": "1f2d1df865b7206558f3ce9c75fc5ceb8715023a3af9aed95070072543301b99",
+    "media": [],
+    "media_order_note": "本篇DOM顺序：正文播放器、consume、portrait、grassroot；列表页为空",
+    "archived_image": "artifacts/time-vocabulary-deepening/browser/30-resources.png"
+  },
+  {
+    "capture": "31-menu-closed",
+    "action": "点菜单X",
+    "observed_result": "结束本轮，随后关闭浏览器；未作提交、登录、课堂分配或打印",
+    "url": "https://www.timeforkids.com/k1/topics/science/",
+    "captured_at_utc": "2026-10-26T20:13:57.978399+00:00",
+    "scroll": {
+      "x": 0,
+      "y": 0
+    },
+    "image_reviewed": false,
+    "raw_image_path": "work/time-vocabulary-deepening/browser/31-menu-closed.png",
+    "raw_image_sha256": "d89f18ec8fc99293b76fb486ce29a94c79b87c44efd73c4ff50440216fe334ac",
+    "raw_metadata_path": "work/time-vocabulary-deepening/browser/31-menu-closed.json",
+    "raw_metadata_sha256": "613abb79186e7b5e10a555c689af4901f21814a6d3fdd2d3825b17a8138929c1",
+    "raw_html_path": "work/time-vocabulary-deepening/browser/31-menu-closed.html",
+    "raw_html_sha256": "9eb9e42f98aa94e690b8a153bd76488385a40278c56418360178451082d1a5e5",
+    "media": [],
+    "media_order_note": "本篇DOM顺序：正文播放器、consume、portrait、grassroot；列表页为空"
+  }
+]

@@ -1,0 +1,144 @@
+View listening log (https://help.audible.com/s/article/view-listening-log?language=en_US)
+citeturn764view4 [wordlim: 200] Crawled: today; Content type: text/html; Source: open({"ref_id":"https://help.audible.com/s/article/view-listening-log?language=en_US","lineno":null}); Total lines: 142
+L0: Loading
+L1: 
+L2: Sorry to interrupt
+L3: 
+L4: Uncaught TypeError: Cannot read properties of null (reading 'style')
+L5: 
+L6: 【0†Refresh】
+L7: 
+L8: Skip to Main Content
+L9: 
+L10: Related topics
+L11: 
+L12: Android iOS Listening Player Player tools
+L13: ## View listening log
+L14: 
+L15:   * Sep 3, 2026
+L16:   * Knowledge
+L17: 
+L18: Title
+L19: 
+L20: View listening log
+L21: 
+L22: URL Name
+L23: 
+L24: view-listening-log
+L25: 
+L26: Answer
+L27: 
+L28: The Audible Listen Log is a feature that tracks your listening stats and activity. It shows you everything from when you first started a title to when you finished listening to it, including dates and times.
+L29: 
+L30: In this article:
+L31:   * 【1†What is the Listen Log?】
+L32:   * 【2†What is the purpose of the Listen Log?】
+L33:   * 【3†How do I find my Listen Log?】
+L34:   * 【4†How do I view my Listening History?】
+L35:   * 【5†How do I remove a title from my Listening History?】
+L36: ## What is the Listen Log?
+L37: 
+L38: Your Listen Log is a day-to-day record of your listening activity for a particular title. You can see the date and time you started listening, when you paused, and how long your listening session lasted.
+L39: 
+L40: Notes:
+L41: 
+L42:   * The Listen Log displays both dates and times for each session.
+L43:   * Listen Log data cannot be downloaded or exported.
+L44: ## What is the purpose of the Listen Log?
+L45: 
+L46: The Listen Log can help you find your place if you get lost. It's a very useful tool if, for example:
+L47: 
+L48:   * you fell asleep while listening and the book advanced without you;
+L49:   * you went back to an earlier chapter to re-listen to something, but didn't note where you had left off;
+L50:   * you accidentally moved the scrubber bar in the player and the book is now in a different section altogether.
+L51: Using the Listen Log, you can get back to the starting point of your last intentional listening section.
+L52: ## How do I find my Listen Log?
+L53: 
+L54: The Listen Log is available only on the Audible app and can be accessed through these steps:
+L55: 
+L56:   1. Open the Audible app.
+L57:   2. Open the player for a title you're currently enjoying or already finished.
+L58:   3. Select the Listen Log button below the cover of the book.
+L59: 
+L60: From here, you can choose to replay a section or clear your entire history.
+L61: ## How do I view my Listening History?
+L62: 
+L63: Your Listening History shows all the titles you've listened to over time.
+L64: 
+L65: In the app
+L66: 
+L67:   1. Open the Audible app.
+L68:   2. Go to your Profile.
+L69:   3. Swipe down to Activity & Stats.
+L70:   4. Select Listening History.
+L71: 
+L72: On desktop
+L73: 
+L74:   1. Go to the Audible site.
+L75:   2. Select your name on the top navigation.
+L76:   3. Select Listen History.
+L77: ## How do I remove a title from my Listening History?
+L78: 
+L79: On desktop
+L80: 
+L81:   1. Go to the Audible site.
+L82:   2. Select your name on the top navigation.
+L83:   3. Select Listen History.
+L84:   4. Select Remove next to the title you want to remove.
+L85: 
+L86: Note: Listening History data cannot be downloaded or exported.
+L87: 
+L88: Did this answer your question?
+L89: 
+L90: 【6†Image: Thumbs Up】Like
+L91: 
+L92: 
+L93: 
+L94: 【7†Image: Thumbs Down】Dislike
+L95: 
+L96:  Back to top
+L97: 
+L98: 【8†Image: Share link】 Share link
+L99: 
+L100: 【9†Image: Download PDF】 Download PDF
+L101: ## Need more assistance?
+L102: 
+L103: 【10†Contact us†www.audible.com】
+L104: 
+L105: 
+L106: 
+L107: How satisfied were you with our Help Center today?
+L108: 
+L109: 
+L110: 
+L111: Worst
+L112: 
+L113: 1
+L114: 
+L115: 2
+L116: 
+L117: 3
+L118: 
+L119: 4
+L120: 
+L121: 5
+L122: 
+L123: 6
+L124: 
+L125: 7
+L126: 
+L127: Best
+L128: 
+L129: 
+L130: 
+L131: Region
+L132: 
+L133: United States
+L134: 
+L135: Language
+L136: 
+L137: English
+L138: 
+L139: Loading
+L140: 
+L141: View listening log 【11†Adobe ID Syncing iFrame†audible.demdex.net】

@@ -1,0 +1,7 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M041-08,M-041,从思维导图分支追问并保存图,D2,E-NBCD-07,聊天Mind Map入口→Studio产物→展开或点节点进入主题问答→下载或退出；帮助把Delete note列为重生成动作。,下载格式、删除确认/撤销、重生成时旧图状态、来源更新传播未知,not_observed,false,cases/M-041-notebooklm.md,2026-10-26
+F-M041-09,M-041,生成报告并嵌入学习产物,D2,E-NBCD-08;E-NBCD-04,Reports分Interactive/Document；交互报告Add嵌入产物且另列Studio；模板Edit后可立即/稍后生成；文档导出Docs，表格导出Sheets。,生成取消/失败重试、排程取消、报告内文本校订、删除恢复及交互嵌入导出形态未知,not_observed,false,cases/M-041-notebooklm.md,2026-10-26
+F-M041-10,M-041,将来源整理成带引用的数据表,D2,E-NBCD-04;E-NBCD-13;E-NBCD-12,Studio Data Tables可先铅笔定义语言/行列→生成→More Export to Sheets；新表第一页数据、第二页引用，修改不回同步且权限不继承。,应用内单元格校订、重复行合并、来源变化后更新、删除恢复未知,not_observed,false,cases/M-041-notebooklm.md,2026-10-26
+F-M041-11,M-041,修订幻灯片并导出演示文件,D2,E-NBCD-10;E-NBCD-12,桌面Revise集中待改项；待删除页变灰可Restore，Generate revised deck创建新版且修订不参考来源；PDF/PPTX导出，幻灯播放Esc退出。,修订事实准确性、已生成新版的回滚、排程取消、失败恢复未知；Android文档仍限制增删页，不能套桌面,not_observed,false,cases/M-041-notebooklm.md,2026-10-26
+F-M041-12,M-041,生成信息图并下载或删除产物,D2,E-NBCD-09,Studio Infographic后台生成→按标题重新打开/缩放→PNG下载或退出；More可删除，旧分享链接随删除失效。,图片内容逐项编辑、误删恢复、失败重试、已下载副本回收未知,not_observed,false,cases/M-041-notebooklm.md,2026-10-26
+F-M041-13,M-041,审阅视频制作说明并播放产物,D2,E-NBCD-11;E-NBCD-12,Video Overview生成后按标题Play；Ultra可先Review producer notes集中反馈，Proceed后不能再改说明；Generate later绕过说明；Android左滑可删除。,生成取消、排程取消、断网续播精确位置、误删恢复、下载格式未知,not_observed,false,cases/M-041-notebooklm.md,2026-10-26

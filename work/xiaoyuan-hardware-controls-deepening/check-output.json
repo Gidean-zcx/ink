@@ -1,0 +1,12 @@
+{
+  "status": "PASS",
+  "assertions": 266,
+  "failed": [],
+  "new_E": 0,
+  "new_F": 0,
+  "old_F_fields": 16,
+  "additional_captures": 3,
+  "old_E_metadata_fields": 3,
+  "inventory_rows": 33,
+  "state": "read-only check; before-dependent: do not rerun after root merge"
+}

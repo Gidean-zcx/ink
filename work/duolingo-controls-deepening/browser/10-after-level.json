@@ -1,0 +1,22 @@
+{
+  "name": "10-after-level",
+  "url": "https://www.duolingo.com/welcome?welcomeStep=courseOverview",
+  "title": "Duolingo - Learn French with lessons that work",
+  "utc": "2026-10-26T17:41:22.597355+00:00",
+  "text": "Here’s what you can achieve!\nHere’s what you can achieve!\nConverse with confidence\nStress-free speaking and listening exercises\nBuild a large vocabulary\nCommon words and practical phrases\nDevelop a learning habit\nSmart reminders, fun challenges, and more\nCONTINUE",
+  "buttons": [
+    {
+      "text": "",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "CONTINUE",
+      "aria": null,
+      "test": "funboarding-continue-button",
+      "visible": true
+    }
+  ],
+  "inputs": []
+}

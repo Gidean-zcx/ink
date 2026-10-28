@@ -1,0 +1,348 @@
+Organizing study content with tags – Quizlet Help Center (https://help.quizlet.com/hc/en-us/articles/37762790252941-Organizing-study-content-with-tags)
+citeturn1092view0 [wordlim: 200] Crawled: today; Content type: text/html; Source: click({"ref_id":"turn1089view2","id":29}); Total lines: 72
+L0: 【0†iframe†www.googletagmanager.com】
+L1: 
+L2: 【1†Help center†quizlet.zendesk.com】
+L3: 
+L4: Topics
+L5: 
+L6: Popular Articles
+L7: 
+L8: 【2†Resending a confirmation message】 【3†Changing your username】 【4†Changing your password】 【5†Finding flashcard sets】 【6†Finding your teacher's class】 【7†Browser and device compatibility】
+L9: 
+L10: [Input][Input: Search]
+L11: 
+L12: 【8†Image】   【8†Username】
+L13: # Organizing study content with tags
+L14: 
+L15: Tags work like subfolders, letting you 【9†organize study sets within folders】 by topic, subject, exam, or any custom label. You can use tags to help you create a more structured and flexible way to manage your study content.*
+L16: 
+L17: To create a tag
+L18: 
+L19:   1. 【10†Log in†quizlet.com】 to your account.
+L20:   2. Select a folder.
+L21:   3. Select 【11†Image: Size=Medium (24).png】 (add) next to the All tab.
+L22:   4. Enter a title.
+L23:   5. Select Add.
+L24: 
+L25: To add study content to a tag
+L26:   1. Open the study content you'd like to add to a tag.
+L27:   2. Select Saved.
+L28:   3. Choose a tag.
+L29:   4. Select Save.
+L30: 
+L31: Settings and options
+L32: 
+L33:   * Folders you create are visible to others unless all the sets in it are private.
+L34:   * Teachers can 【12†add folders to classes】 they own to keep study materials organized and easy to find.
+L35: 
+L36: *If you're under the required age, you are unable to create folders until you reach your region's age of consent. Find out more about 【13†younger users’ account limitations】.
+L37: ### Related Articles
+L38: 
+L39:   * 【14†Organizing study content with tags】
+L40:   * 【15†Organizing study content with folders】
+L41: 
+L42: ### Can't find what you're looking for?
+L43: 
+L44: 【16†Ask a question】
+L45: 
+L46: Was this article helpful?
+L47: 
+L48: [Button: Yes] [Button: No]
+L49: 
+L50: ##### About us
+L51: 
+L52: 【17†About Quizlet†quizlet.com】 【18†How Quizlet works†quizlet.com】 【19†Careers†quizlet.com】 【20†Advertise with us†quizlet.com】 【21†Get the app†quizlet.com】
+L53: ##### For students
+L54: 
+L55: 【22†Flashcards†quizlet.com】 【23†Test†quizlet.com】 【24†Learn†quizlet.com】 【25†Solutions†quizlet.com】 【26†Modern Learning Lab†quizlet.com】 【27†Quizlet Plus†quizlet.com】 【28†Study Guides†quizlet.com】 【29†Pomodoro timer†quizlet.com】
+L56: 
+L57: ##### For Teachers
+L58: 
+L59: 【30†Live†quizlet.com】 【31†Blog†quizlet.com】 【32†Be the Change†quizlet.com】 【33†Quizlet Plus for teachers†quizlet.com】
+L60: ##### Resources
+L61: 
+L62: 【34†Help center†quizlet.com】 【35†Sign up†quizlet.com】 【36†Honor code†quizlet.com】 【37†Community guidelines†quizlet.com】 【38†Accessibility statement†quizlet.com】 【39†Privacy†quizlet.com】 【40†Your Privacy/Cookies Choices†quizlet.com】 【41†Terms†quizlet.com】 【42†Ad and Cookie Policy†quizlet.com】 【43†Interest-Based Advertising†quizlet.com】 【44†Quizlet for Schools†quizlet.com】 【45†Parents†quizlet.com】
+L63: 
+L64: ##### Language
+L65: 
+L66: English (United States)
+L67: 
+L68: 【46†Image】 【47†Get the app†get.quizlet.com】
+L69: ##### Get the app
+L70: 
+L71: © Quizlet Inc.
+--------------------------------------------------------------------------------
+Organizing study content with folders – Quizlet Help Center (https://help.quizlet.com/hc/en-us/articles/360030986151-Organizing-study-content-with-folders)
+citeturn1092view1 [wordlim: 200] Crawled: today; Content type: text/html; Source: click({"ref_id":"turn1089view2","id":30}); Total lines: 112
+L0: 【0†iframe†www.googletagmanager.com】
+L1: 
+L2: 【1†Help center†quizlet.zendesk.com】
+L3: 
+L4: Topics
+L5: 
+L6: Popular Articles
+L7: 
+L8: 【2†Resending a confirmation message】 【3†Changing your username】 【4†Changing your password】 【5†Finding flashcard sets】 【6†Finding your teacher's class】 【7†Browser and device compatibility】
+L9: 
+L10: [Input][Input: Search]
+L11: 
+L12: 【8†Image】   【8†Username】
+L13: # Organizing study content with folders
+L14: 
+L15: 【8†IOS】 【8†Web】 【8†Android】
+L16: 
+L17: You can add all kinds of study content to folders to help you stay organized.*
+L18: 
+L19: To create a folder
+L20: 
+L21:   1. 【9†Log in†quizlet.com】 to your account.
+L22:   2. Select Create at the top of the page.
+L23:   3. Select Folder.
+L24:   4. Enter a title.
+L25:   5. Select Create folder.
+L26: 
+L27: To add study content to a folder
+L28: 
+L29:   1. Open the study content you'd like to add to a folder.
+L30:   2. Select Save.
+L31:   3. Select Add to folder and the desired folder.
+L32: 
+L33: Settings and options
+L34:   * Folders you create are visible to others unless all the sets in it are private.
+L35:   * 【10†Use tags to organize study content】 within folders by topic, subject, exam, or any custom label.
+L36:   * Teachers can 【11†add folders to classes】 they own to keep study materials organized and easy to find.
+L37: 
+L38: *If you're under the required age, you are unable to create folders until you reach your region's age of consent. Find out more about 【12†younger users’ account limitations】.
+L39:   1. Select 【13†Image: Size=Medium (24).png】.
+L40:   2. Select Create folder.
+L41:   3. Enter a title.
+L42:   4. Select Save.
+L43: 
+L44: To add study content to a folder
+L45: 
+L46:   1. Open the folder.
+L47:   2. Select 【13†Image: Size=Medium (24).png】.
+L48:   3. Select the content you'd like to add.
+L49: You can filter by content type. The study content you select will be highlighted.
+L50:   4. Select Done.
+L51: 
+L52: Settings and options
+L53:   * Folders you create are visible to others unless all the sets in it are private.
+L54:   * 【10†Use tags to organize study content】 within folders by topic, subject, exam, or any custom label.
+L55:   * Teachers can 【11†add folders to classes】 they own to keep study materials organized and easy to find.
+L56: 
+L57: *If you're under the required age, you are unable to create folders until you reach your region's age of consent. Find out more about 【12†younger users’ account limitations】.
+L58:   1. Select 【13†Image: Size=Medium (24).png】.
+L59:   2. Select Create folder.
+L60:   3. Enter a title.
+L61:   4. Select OK.
+L62: 
+L63: To add study content to a folder
+L64: 
+L65:   1. Open the folder.
+L66:   2. Select 【13†Image: Size=Medium (24).png】.
+L67:   3. Select the content you'd like to add.
+L68: You can filter by content type. The study content you select will be highlighted.
+L69:   4. Select Done.
+L70: 
+L71: Settings and options
+L72:   * Folders you create are visible to others unless all the sets in it are private.
+L73:   * 【10†Use tags to organize study content】 within folders by topic, subject, exam, or any custom label.
+L74:   * Teachers can 【11†add folders to classes】 they own to keep study materials organized and easy to find.
+L75: 
+L76: *If you're under the required age, you are unable to create folders until you reach your region's age of consent. Find out more about 【12†younger users’ account limitations】.
+L77: ### Related Articles
+L78: 
+L79:   * 【14†Organizing study content with tags】
+L80:   * 【15†Organizing study content with folders】
+L81: 
+L82: ### Can't find what you're looking for?
+L83: 
+L84: 【16†Ask a question】
+L85: 
+L86: Was this article helpful?
+L87: 
+L88: [Button: Yes] [Button: No]
+L89: 
+L90: ##### About us
+L91: 
+L92: 【17†About Quizlet†quizlet.com】 【18†How Quizlet works†quizlet.com】 【19†Careers†quizlet.com】 【20†Advertise with us†quizlet.com】 【21†Get the app†quizlet.com】
+L93: ##### For students
+L94: 
+L95: 【22†Flashcards†quizlet.com】 【23†Test†quizlet.com】 【24†Learn†quizlet.com】 【25†Solutions†quizlet.com】 【26†Modern Learning Lab†quizlet.com】 【27†Quizlet Plus†quizlet.com】 【28†Study Guides†quizlet.com】 【29†Pomodoro timer†quizlet.com】
+L96: 
+L97: ##### For Teachers
+L98: 
+L99: 【30†Live†quizlet.com】 【31†Blog†quizlet.com】 【32†Be the Change†quizlet.com】 【33†Quizlet Plus for teachers†quizlet.com】
+L100: ##### Resources
+L101: 
+L102: 【34†Help center†quizlet.com】 【35†Sign up†quizlet.com】 【36†Honor code†quizlet.com】 【37†Community guidelines†quizlet.com】 【38†Accessibility statement†quizlet.com】 【39†Privacy†quizlet.com】 【40†Your Privacy/Cookies Choices†quizlet.com】 【41†Terms†quizlet.com】 【42†Ad and Cookie Policy†quizlet.com】 【43†Interest-Based Advertising†quizlet.com】 【44†Quizlet for Schools†quizlet.com】 【45†Parents†quizlet.com】
+L103: 
+L104: ##### Language
+L105: 
+L106: English (United States)
+L107: 
+L108: 【46†Image】 【47†Get the app†get.quizlet.com】
+L109: ##### Get the app
+L110: 
+L111: © Quizlet Inc.
+--------------------------------------------------------------------------------
+Studying with Study Groups – Quizlet Help Center (https://help.quizlet.com/hc/en-us/articles/39890856206733-Studying-with-Study-Groups)
+citeturn1092view2 [wordlim: 200] Crawled: today; Content type: text/html; Source: click({"ref_id":"turn1089view0","id":10}); Total lines: 91
+L0: 【0†iframe†www.googletagmanager.com】
+L1: 
+L2: 【1†Help center†quizlet.zendesk.com】
+L3: 
+L4: Topics
+L5: 
+L6: Popular Articles
+L7: 
+L8: 【2†Resending a confirmation message】 【3†Changing your username】 【4†Changing your password】 【5†Finding flashcard sets】 【6†Finding your teacher's class】 【7†Browser and device compatibility】
+L9: 
+L10: [Input][Input: Search]
+L11: 
+L12: 【8†Image】   【8†Username】
+L13: # Studying with Study Groups
+L14: 
+L15: Study Groups allow you to collaborate with classmates or friends directly on Quizlet. You can create or join a group to track your progress, invite others, and study together in real time.
+L16: 
+L17: To create a study group
+L18: 
+L19:   1. 【9†Log in†quizlet.com】 to your account.
+L20:   2. Open a set.
+L21:   3. Select Groups at the top of the set page.
+L22:   4. Select Create group.
+L23:   5. Enter a name for your group.
+L24:   6. Copy the invite link and share it with friends or classmates.
+L25: 
+L26: To join a study group
+L27:   1. Select the invite link you received.
+L28:   2. If logged out, 【9†log in†quizlet.com】 to your account.
+L29:   3. Review the invitation pop-up.
+L30:   4. Select Accept Invite to join the group.
+L31: 
+L32: To add a set to an existing group
+L33: 
+L34:   1. From any set page, select Groups.
+L35:   2. Select the group(s) you’d like to add the set to.
+L36:   3. Select Done.
+L37: 
+L38: Settings and options
+L39:   * Groups are limited to 8 members.
+L40:   * Use the Groups dropdown to move between study groups.
+L41:   * From the group details page, select the three-dot menu next to your name and choose Leave group.
+L42: 
+L43: Tips
+L44: 
+L45:   * With 【10†Track Progress】 enabled, you can see how group members categorized cards into Know and Still Learning.
+L46:   * Study Groups are currently only available for 【11†public sets】.
+L47:   * You can join more than one study group and switch between them as needed.
+L48: ### Related Articles
+L49: 
+L50:   * 【12†Create flashcard sets directly in Claude】
+L51:   * 【13†Studying with Study Groups】
+L52:   * 【14†Creating study sets with Smart Assist】
+L53:   * 【15†Becoming a top creator on Quizlet】
+L54:   * 【16†Studying with Study Guides】
+L55:   * 【17†What are flashcard sets?】
+L56:   * 【18†Creating flashcard sets】
+L57:   * 【19†Adding images to sets from the free gallery】
+L58:   * 【20†Adding your own images to sets】
+L59:   * 【21†Recording custom audio】
+L60:   * 【22†See more】
+L61: ### Can't find what you're looking for?
+L62: 
+L63: 【23†Ask a question】
+L64: 
+L65: Was this article helpful?
+L66: 
+L67: [Button: Yes] [Button: No]
+L68: 
+L69: ##### About us
+L70: 
+L71: 【24†About Quizlet†quizlet.com】 【25†How Quizlet works†quizlet.com】 【26†Careers†quizlet.com】 【27†Advertise with us†quizlet.com】 【28†Get the app†quizlet.com】
+L72: ##### For students
+L73: 
+L74: 【29†Flashcards†quizlet.com】 【30†Test†quizlet.com】 【31†Learn†quizlet.com】 【32†Solutions†quizlet.com】 【33†Modern Learning Lab†quizlet.com】 【34†Quizlet Plus†quizlet.com】 【35†Study Guides†quizlet.com】 【36†Pomodoro timer†quizlet.com】
+L75: 
+L76: ##### For Teachers
+L77: 
+L78: 【37†Live†quizlet.com】 【38†Blog†quizlet.com】 【39†Be the Change†quizlet.com】 【40†Quizlet Plus for teachers†quizlet.com】
+L79: ##### Resources
+L80: 
+L81: 【41†Help center†quizlet.com】 【42†Sign up†quizlet.com】 【43†Honor code†quizlet.com】 【44†Community guidelines†quizlet.com】 【45†Accessibility statement†quizlet.com】 【46†Privacy†quizlet.com】 【47†Your Privacy/Cookies Choices†quizlet.com】 【48†Terms†quizlet.com】 【49†Ad and Cookie Policy†quizlet.com】 【50†Interest-Based Advertising†quizlet.com】 【51†Quizlet for Schools†quizlet.com】 【52†Parents†quizlet.com】
+L82: 
+L83: ##### Language
+L84: 
+L85: English (United States)
+L86: 
+L87: 【53†Image】 【54†Get the app†get.quizlet.com】
+L88: ##### Get the app
+L89: 
+L90: © Quizlet Inc.
+--------------------------------------------------------------------------------
+Becoming a top creator on Quizlet – Quizlet Help Center (https://help.quizlet.com/hc/en-us/articles/20961378604429-Becoming-a-top-creator-on-Quizlet)
+citeturn1092view3 [wordlim: 200] Crawled: 3 days ago; Content type: text/html; Source: click({"ref_id":"turn1089view0","id":12}); Total lines: 61
+L0: 【0†iframe†www.googletagmanager.com】
+L1: 
+L2: 【1†Help center†quizlet.zendesk.com】
+L3: 
+L4: Topics
+L5: 
+L6: Popular Articles
+L7: 
+L8: 【2†Resending a confirmation message】 【3†Changing your username】 【4†Changing your password】 【5†Finding flashcard sets】 【6†Finding your teacher's class】 【7†Browser and device compatibility】
+L9: 
+L10: [Input][Input: Search]
+L11: 
+L12: 【8†Image】   【8†Username】
+L13: # Becoming a top creator on Quizlet
+L14: 
+L15: Top creators on Quizlet are determined by criteria like the number of flashcard sets you create and the number of viewers each set receives as compared to the activity of other Quizlet users. Because hundreds of thousands of people create flashcard sets on Quizlet every day, requirements to be a top creator can change over time.
+L16: 
+L17: Thank you to all the top creators out there for making Quizlet a vibrant place to study!
+L18: ### Related Articles
+L19: 
+L20:   * 【9†Create flashcard sets directly in Claude】
+L21:   * 【10†Studying with Study Groups】
+L22:   * 【11†Creating study sets with Smart Assist】
+L23:   * 【12†Becoming a top creator on Quizlet】
+L24:   * 【13†Studying with Study Guides】
+L25:   * 【14†What are flashcard sets?】
+L26:   * 【15†Creating flashcard sets】
+L27:   * 【16†Adding images to sets from the free gallery】
+L28:   * 【17†Adding your own images to sets】
+L29:   * 【18†Recording custom audio】
+L30:   * 【19†See more】
+L31: ### Can't find what you're looking for?
+L32: 
+L33: 【20†Ask a question】
+L34: 
+L35: Was this article helpful?
+L36: 
+L37: [Button: Yes] [Button: No]
+L38: 
+L39: ##### About us
+L40: 
+L41: 【21†About Quizlet†quizlet.com】 【22†How Quizlet works†quizlet.com】 【23†Careers†quizlet.com】 【24†Advertise with us†quizlet.com】 【25†Get the app†quizlet.com】
+L42: ##### For students
+L43: 
+L44: 【26†Flashcards†quizlet.com】 【27†Test†quizlet.com】 【28†Learn†quizlet.com】 【29†Solutions†quizlet.com】 【30†Modern Learning Lab†quizlet.com】 【31†Quizlet Plus†quizlet.com】 【32†Study Guides†quizlet.com】 【33†Pomodoro timer†quizlet.com】
+L45: 
+L46: ##### For Teachers
+L47: 
+L48: 【34†Live†quizlet.com】 【35†Blog†quizlet.com】 【36†Be the Change†quizlet.com】 【37†Quizlet Plus for teachers†quizlet.com】
+L49: ##### Resources
+L50: 
+L51: 【38†Help center†quizlet.com】 【39†Sign up†quizlet.com】 【40†Honor code†quizlet.com】 【41†Community guidelines†quizlet.com】 【42†Accessibility statement†quizlet.com】 【43†Privacy†quizlet.com】 【44†Your Privacy/Cookies Choices†quizlet.com】 【45†Terms†quizlet.com】 【46†Ad and Cookie Policy†quizlet.com】 【47†Interest-Based Advertising†quizlet.com】 【48†Quizlet for Schools†quizlet.com】 【49†Parents†quizlet.com】
+L52: 
+L53: ##### Language
+L54: 
+L55: English (United States)
+L56: 
+L57: 【50†Image】 【51†Get the app†get.quizlet.com】
+L58: ##### Get the app
+L59: 
+L60: © Quizlet Inc.
+

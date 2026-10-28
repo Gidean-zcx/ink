@@ -1,0 +1,118 @@
+[
+  {
+    "flow_id": "F-M050-01",
+    "before": {
+      "flow_id": "F-M050-01",
+      "product_id": "M-050",
+      "task": "拼图构数与金币解锁",
+      "depth": "D2",
+      "evidence_ids": "E-DRGN-02;E-DRGN-03;E-DBCD-01",
+      "known_branches": "旧p5可见数字6空槽、构件及未完成图；四表示与金币用途沿旧指南。教材Quiz气泡不当内置出题或判分。",
+      "gaps": "错放/提示/撤销、最后落位到结算、金币数值/重玩收益与恢复仍未核；静态白线不当动作轨迹。",
+      "visual_status": "static_reference_only",
+      "hands_on": "false",
+      "case_path": "cases/M-050-dragonbox.md",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "flow_id": "F-M050-01",
+      "product_id": "M-050",
+      "task": "拼图构数与金币解锁",
+      "depth": "D2",
+      "evidence_ids": "E-DRGN-02;E-DRGN-03;E-DBCD-01;E-DBGP-01",
+      "known_branches": "旧指南与2015作者体验分开：点管道取块、拖放着色，部分正确匹配后描数得星；拼图完成获币解锁。作者报告语音反馈，本研究未听音。",
+      "gaps": "当前构建、错放/提示/撤销、最后落位到结算连续过程、奖励数值/重玩收益与恢复未核；旧反馈不作当前保证。",
+      "visual_status": "static_reference_only",
+      "hands_on": "false",
+      "case_path": "cases/M-050-dragonbox.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "flow_id": "F-M050-02",
+    "before": {
+      "flow_id": "F-M050-02",
+      "product_id": "M-050",
+      "task": "梯子目标数量与障碍",
+      "depth": "D2",
+      "evidence_ids": "E-DRGN-02;E-DBCD-01",
+      "known_branches": "旧p8以数轴、70+10+角色和高度说明数量关系；1–100为指南教学范围，非当前App硬上限。",
+      "gaps": "碰撞、生命、重试、成功结算及是否保留奖励；四教学目标不当四关或学习成效。",
+      "visual_status": "static_reference_only",
+      "hands_on": "false",
+      "case_path": "cases/M-050-dragonbox.md",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "flow_id": "F-M050-02",
+      "product_id": "M-050",
+      "task": "梯子目标数量与障碍",
+      "depth": "D2",
+      "evidence_ids": "E-DRGN-02;E-DBCD-01;E-DBGP-01",
+      "known_branches": "旧p8的数轴教学范围与2015作者体验分开：恰中炸弹数值会炸掉Noom，上箭头使其增长，完成关卡补全选关图。",
+      "gaps": "当前版本碰撞/生命/重试、结算和保留奖励未核；2015描述不证明现代规则，四教学目标不当关卡或成效。",
+      "visual_status": "static_reference_only",
+      "hands_on": "false",
+      "case_path": "cases/M-050-dragonbox.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "flow_id": "F-M050-05",
+    "before": {
+      "flow_id": "F-M050-05",
+      "product_id": "M-050",
+      "task": "拼图错放后求助与重试",
+      "depth": "D1",
+      "evidence_ids": "E-DRGD-01;E-DRGD-02;E-DRGN-02",
+      "known_branches": "拼图目标与旧奖励用途；错误分支待核",
+      "gaps": "错放反馈；提示；撤销；重试到结算",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-050-dragonbox.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M050-05",
+      "product_id": "M-050",
+      "task": "拼图错放后求助与重试",
+      "depth": "D1",
+      "evidence_ids": "E-DRGD-01;E-DRGD-02;E-DRGN-02;E-DBGP-02",
+      "known_branches": "2018作者报告孩子因数块放不到预期位置而受挫；错误原因和程序反馈未说明，成人暂停建议不是内置提示。",
+      "gaps": "错放原因及界面反馈、提示、撤销、重试到结算；当前版本亦未核。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-050-dragonbox.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "flow_id": "F-M050-08",
+    "before": {
+      "flow_id": "F-M050-08",
+      "product_id": "M-050",
+      "task": "Run快速数量判断与越障",
+      "depth": "D1",
+      "evidence_ids": "E-DRGN-03;E-DBCD-02",
+      "known_branches": "开发者声明用手指/Noom/数字作快速判断并越障；不是旧PDF中的Ladder。",
+      "gaps": "输入手势、节奏/速度调整、错误惩罚、生命/奖励、完成与退出恢复全部未核。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-050-dragonbox.md",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "flow_id": "F-M050-08",
+      "product_id": "M-050",
+      "task": "Run快速数量判断与越障",
+      "depth": "D1",
+      "evidence_ids": "E-DRGN-03;E-DBCD-02;E-DBGP-02",
+      "known_branches": "2018作者描述按数字决定跳高并收集星币；与当前开发者描述分开。官方Run视频页面存在，但登录验证使播放失败。",
+      "gaps": "完整入口、按键位置/映射、节奏、错误惩罚/生命、结算和恢复未核；历史部分输入不足以升级D2。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-050-dragonbox.md",
+      "checked_on": "2026-10-27"
+    }
+  }
+]

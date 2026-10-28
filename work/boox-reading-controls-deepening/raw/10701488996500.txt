@@ -1,0 +1,9 @@
+You can set up the page-turn area in NeoReader based on your reading preference.
+ 
+To set up the page-turn area, do the following:
+Tap any book file in the Library to open NeoReader.
+Tap the center area to display the main menu.
+Tap the hamburger menu in the top right corner and choose Settings > Touch Settings.
+Here you can choose one of the preset modes or customize your own settings.
+ 
+ [image:1]

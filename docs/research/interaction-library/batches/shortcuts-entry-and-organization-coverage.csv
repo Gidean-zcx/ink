@@ -1,0 +1,10 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M043-19,M-043,发现、预览并加入现成指令,D2,E-SCEN-02;E-SCEN-35,Gallery分类/搜索、动作预览、设置后添加；URL可打开/搜索Gallery,取消配置、重复导入、来源更新、授权及加入结果未实际观察,not_observed,false,cases/M-043-shortcuts.md,2026-10-27
+F-M043-20,M-043,用语音名称调用并接收结果,D2,E-SCEN-04;E-SCEN-26,说指令名运行并报告结果；锁屏开App需解锁；同名指令优先标准Siri命令,误识别/重名、取消解锁、结果真实性、改名后旧命令及重复执行,not_observed,false,cases/M-043-shortcuts.md,2026-10-27
+F-M043-21,M-043,配置系统手势、按键与桌面入口,D2,E-SCEN-05;E-SCEN-06;E-SCEN-07;E-SCEN-09;E-SCEN-10;E-SCEN-13,控制中心、Action键、Pencil挤压、Back Tap、搜索和桌面入口分别配置；显示名可单独设置,各硬件适用、运行/取消/锁屏、误触与重复触发、桌面名联动和入口删除,not_observed,false,cases/M-043-shortcuts.md,2026-10-27
+F-M043-22,M-043,在组件中执行并转入主应用,D2,E-SCEN-08;E-SCEN-21,组件进度/取消、缺输入暂停；不适配动作打开App；Unable to Load建议前置Continue；数字输入和菜单有条件可用,精确内存/延迟、转场后位置、取消后部分产物、重试去重及返回,not_observed,false,cases/M-043-shortcuts.md,2026-10-27
+F-M043-23,M-043,向手表开放指令并调用,D2,E-SCEN-12;E-SCEN-21,Show on Apple Watch启用后出现；App/表盘复杂功能运行；按动作选择执行环境,同步延迟、手机依赖、离线/锁屏、全部动作兼容、取消恢复,not_observed,false,cases/M-043-shortcuts.md,2026-10-27
+F-M043-24,M-043,整理、定位和复制个人指令,D2,E-SCEN-23;E-SCEN-24;E-SCEN-25;E-SCEN-26;E-SCEN-27;E-SCEN-28,文件夹创建/移动；Remove与Delete；删夹保留/删内容；排序、改名图标、复制及同账号传播,取消/撤销、删除恢复、各排序优先级、权限/自动化继承、同步冲突与灰阶辨识,not_observed,false,cases/M-043-shortcuts.md,2026-10-27
+F-M043-25,M-043,把指令放入提醒并回访执行,D2,E-SCEN-29,Siri上下文提醒写入默认或指定列表，名称为标题；指定时间/地点后点提醒中的图标执行,自动执行未证、旧链接失效、提醒完成/删除与指令关系、重复提醒及恢复,not_observed,false,cases/M-043-shortcuts.md,2026-10-27
+F-M043-26,M-043,把结构化列表映射并批量创建联系人,D2,E-SCEN-38,逐项取姓名/电话、拆分首末项并映射联系人；关闭Compose Sheet后运行会创建对象,变量映射文内疑点、姓名结构/缺字段、取消、重复导入、部分成功与回滚,not_observed,false,cases/M-043-shortcuts.md,2026-10-27
+F-M043-27,M-043,转换时间字段并生成显示文本,D2,E-SCEN-39;E-SCEN-40;E-SCEN-41;E-SCEN-42;E-SCEN-43;E-SCEN-44,按UNIX秒示例调整基准日期；分别格式化日期/时间，运行时相对日期，Custom字符串,单位/时区/夏令时、格式丢失、跨locale解析、混合时区排序及目标写入；原文两处疑点,not_observed,false,cases/M-043-shortcuts.md,2026-10-27

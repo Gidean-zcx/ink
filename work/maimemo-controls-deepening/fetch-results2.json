@@ -1,0 +1,92 @@
+[
+  {
+    "name": "07-filter",
+    "url": "https://memodocs.maimemo.com/docs/Uv65whPGIih1x2kMNOCc99k4nUe",
+    "method": "requests GET timeout=(5,18), one attempt",
+    "status": 200,
+    "final_url": "https://memodocs.maimemo.com/docs/Uv65whPGIih1x2kMNOCc99k4nUe",
+    "raw_work_path": "work/maimemo-controls-deepening/07-filter.html",
+    "raw_sha256": "98ec1dc1b41822b190966995426ff9627d94aa869284addcbbbd95c678fe1937",
+    "bytes": 57428
+  },
+  {
+    "name": "08-super",
+    "url": "https://memodocs.maimemo.com/docs/AXhuwXpfFibceakKPpdc6VbVnFc",
+    "method": "requests GET timeout=(5,18), one attempt",
+    "status": 200,
+    "final_url": "https://memodocs.maimemo.com/docs/AXhuwXpfFibceakKPpdc6VbVnFc",
+    "raw_work_path": "work/maimemo-controls-deepening/08-super.html",
+    "raw_sha256": "03d119e8655a6840b3cfe852b11ead801edc209c8ad2fb526733f9236b557e8c",
+    "bytes": 63645
+  },
+  {
+    "name": "09-exam",
+    "url": "https://memodocs.maimemo.com/docs/TrSUwLo8wiwrUtkkmSBcMipgncb",
+    "method": "requests GET timeout=(5,18), one attempt",
+    "status": 200,
+    "final_url": "https://memodocs.maimemo.com/docs/TrSUwLo8wiwrUtkkmSBcMipgncb",
+    "raw_work_path": "work/maimemo-controls-deepening/09-exam.html",
+    "raw_sha256": "ab4ab09fef4ca05801a0dd8df039c9d4868a2c0dc25ec32608cdfb1a32ef0654",
+    "bytes": 58719
+  },
+  {
+    "name": "10-pdf",
+    "url": "https://memodocs.maimemo.com/docs/QbA7wb0gKiTSSyk66RzcYJxln3g",
+    "method": "requests GET timeout=(5,18), one attempt",
+    "status": 200,
+    "final_url": "https://memodocs.maimemo.com/docs/QbA7wb0gKiTSSyk66RzcYJxln3g",
+    "raw_work_path": "work/maimemo-controls-deepening/10-pdf.html",
+    "raw_sha256": "bdfc64a77df400002deb1a3b10d52af84f73fd166155a5f710784629e6d522b9",
+    "bytes": 92672
+  },
+  {
+    "name": "11-open",
+    "url": "https://memodocs.maimemo.com/docs/open/",
+    "method": "requests GET timeout=(5,18), one attempt",
+    "status": 200,
+    "final_url": "https://memodocs.maimemo.com/docs/open/",
+    "raw_work_path": "work/maimemo-controls-deepening/11-open.html",
+    "raw_sha256": "93c3a0de167fb1b8d5fa386cb10ab3a63cd29a53490e3e9f65115aca44d45748",
+    "bytes": 74126
+  },
+  {
+    "name": "12-api-site",
+    "url": "https://open.maimemo.com/",
+    "method": "requests GET timeout=(5,18), one attempt",
+    "status": 200,
+    "final_url": "https://open.maimemo.com/",
+    "raw_work_path": "work/maimemo-controls-deepening/12-api-site.html",
+    "raw_sha256": "10d3b33c7faf9439ab277b8a003d1c6aa16af1ea350fe1b8f4f34f861fcb70da",
+    "bytes": 655
+  },
+  {
+    "name": "13-streak",
+    "url": "https://memodocs.maimemo.com/docs/XMenwad9oiNVWAktTqOca6dKnqc",
+    "method": "requests GET timeout=(5,18), one attempt",
+    "status": 200,
+    "final_url": "https://memodocs.maimemo.com/docs/XMenwad9oiNVWAktTqOca6dKnqc",
+    "raw_work_path": "work/maimemo-controls-deepening/13-streak.html",
+    "raw_sha256": "d1614fd5ff4a5b638a285547286eda96bcaee4be29a2d70bcdd89c7d080330c0",
+    "bytes": 55790
+  },
+  {
+    "name": "14-ios-audio",
+    "url": "https://memodocs.maimemo.com/docs/SFzIwQTQniAAP2kZzggcgdNNntb",
+    "method": "requests GET timeout=(5,18), one attempt",
+    "status": 200,
+    "final_url": "https://memodocs.maimemo.com/docs/SFzIwQTQniAAP2kZzggcgdNNntb",
+    "raw_work_path": "work/maimemo-controls-deepening/14-ios-audio.html",
+    "raw_sha256": "58ece7edbcf2869543506717a5e03c62780c0186661d14531dd8aa7509a8c7b3",
+    "bytes": 58564
+  },
+  {
+    "name": "15-harmony",
+    "url": "https://memodocs.maimemo.com/docs/product-log-memo-harmonyos",
+    "method": "requests GET timeout=(5,18), one attempt",
+    "status": 200,
+    "final_url": "https://memodocs.maimemo.com/docs/product-log-memo-harmonyos",
+    "raw_work_path": "work/maimemo-controls-deepening/15-harmony.html",
+    "raw_sha256": "827004a00ed16f42f0eb4fd30358c6c3fdbef55c4f28d1a5adb0a86bb3bec926",
+    "bytes": 98104
+  }
+]

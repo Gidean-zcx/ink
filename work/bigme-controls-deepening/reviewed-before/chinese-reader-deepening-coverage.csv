@@ -1,0 +1,7 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M053-06,M-053,Smart4 Pro 2.5.0按标题或页码定位笔记,D2,E-IHWD-01,页列表/套索标题/页码入口,无标题、错字、删除标题和返回栈,not_observed,false,cases/M-053-ireader-hardware.md,2026-10-26
+F-M053-07,M-053,Smart4 Pro 2.5.0已同步笔记在手机查看,D2,E-IHWD-01,手机掌阅App笔记本入口；已有同步内容为前提,设备上传完整链、账户、冲突、离线、编辑权限,not_observed,false,cases/M-053-ireader-hardware.md,2026-10-26
+F-M053-08,M-053,Smart4 Pro历史2.5.0更新检查入口,D2,E-IHWD-01,联网检查；历史推送范围,安装确认、失败回滚、数据保留及当前推送版本,not_observed,false,cases/M-053-ireader-hardware.md,2026-10-26
+F-M054-06,M-054,墨案2020未标机型指南：传入与加入书架,D1,E-MOD-03;E-MOD-04,USB/FTP/WLAN/蓝牙；收到文件与加入书架分开,机型归属；books/book冲突、断传、重名、取消,not_observed,false,cases/M-054-moaan.md,2026-10-26
+F-M054-07,M-054,墨案历史文件整理/APK入口与inkPalm5应用菜单,D1,E-MOD-05;E-MOD-06;E-MOD-14,复制/剪切；APK传入或下载；用户报告单应用菜单,旧官网型号未标、权限失败、覆盖与卸载数据,not_observed,false,cases/M-054-moaan.md,2026-10-26
+F-M054-08,M-054,墨案2020未标机型指南：整理笔记并导出PDF,D1,E-MOD-08;E-MOD-09;E-MOD-10;E-MOD-15;E-MOD-16,命名、页预览、导出Note目录；W7/W8独立目录线索,机型归属、笔迹原稿/导出件、退出保存、覆盖与删除恢复,not_observed,false,cases/M-054-moaan.md,2026-10-26

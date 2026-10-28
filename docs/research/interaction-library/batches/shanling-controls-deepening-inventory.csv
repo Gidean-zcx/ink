@@ -1,0 +1,115 @@
+inventory_id,domain,item,source_url,locator,coverage_status,evidence_ids,flow_ids,gap
+I-SLCD-001,M1快速指南章节（合并译文定位）,封面/版本名,https://shanling.com/uploads/image/M1_Plus-V1.0.pdf,PDF文件页1,body_read_not_closed,E-SHCD-01,,未闭合该项全部入口/反馈/失败，目录不等于任务分析
+I-SLCD-002,M1快速指南章节（合并译文定位）,安全指示,https://shanling.com/uploads/image/M1_Plus-V1.0.pdf,PDF文件页3；英10；日17,body_read_not_closed,E-SHCD-01,,未闭合该项全部入口/反馈/失败，目录不等于任务分析
+I-SLCD-003,M1快速指南章节（合并译文定位）,环保支持,https://shanling.com/uploads/image/M1_Plus-V1.0.pdf,PDF文件页4,body_read_not_closed,E-SHCD-01,,未闭合该项全部入口/反馈/失败，目录不等于任务分析
+I-SLCD-004,M1快速指南章节（合并译文定位）,部件名称,https://shanling.com/uploads/image/M1_Plus-V1.0.pdf,PDF文件页5；英11；日18,body_read_not_closed,E-SHCD-01,,未闭合该项全部入口/反馈/失败，目录不等于任务分析
+I-SLCD-005,M1快速指南章节（合并译文定位）,操作及接口说明,https://shanling.com/uploads/image/M1_Plus-V1.0.pdf,PDF文件页6；英12；日19,body_read_not_closed,E-SHCD-01,,未闭合该项全部入口/反馈/失败，目录不等于任务分析
+I-SLCD-006,M1快速指南章节（合并译文定位）,开机/关机/锁屏,https://shanling.com/uploads/image/M1_Plus-V1.0.pdf,PDF文件页6；英12；日19,task_partially_analysed,E-SHCD-01,F-M063-02,未闭合该项全部入口/反馈/失败，目录不等于任务分析
+I-SLCD-007,M1快速指南章节（合并译文定位）,上一曲/下一曲/播放及暂停,https://shanling.com/uploads/image/M1_Plus-V1.0.pdf,PDF文件页6；英12；日19,task_partially_analysed,E-SHCD-01,F-M063-02,未闭合该项全部入口/反馈/失败，目录不等于任务分析
+I-SLCD-008,M1快速指南章节（合并译文定位）,音量控制,https://shanling.com/uploads/image/M1_Plus-V1.0.pdf,PDF文件页6；英12；日19,task_partially_analysed,E-SHCD-01,F-M063-02,未闭合该项全部入口/反馈/失败，目录不等于任务分析
+I-SLCD-009,M1快速指南章节（合并译文定位）,充电,https://shanling.com/uploads/image/M1_Plus-V1.0.pdf,PDF文件页6；英13；日20,body_read_not_closed,E-SHCD-01,,未闭合该项全部入口/反馈/失败，目录不等于任务分析
+I-SLCD-010,M1快速指南章节（合并译文定位）,MicroSD卡插口,https://shanling.com/uploads/image/M1_Plus-V1.0.pdf,PDF文件页7；英13；日20,body_read_not_closed,E-SHCD-01,,未闭合该项全部入口/反馈/失败，目录不等于任务分析
+I-SLCD-011,M1快速指南章节（合并译文定位）,耳机输出接口,https://shanling.com/uploads/image/M1_Plus-V1.0.pdf,PDF文件页7；英13；日20,body_read_not_closed,E-SHCD-01,,未闭合该项全部入口/反馈/失败，目录不等于任务分析
+I-SLCD-012,M1快速指南章节（合并译文定位）,USB接口,https://shanling.com/uploads/image/M1_Plus-V1.0.pdf,PDF文件页7；英13–14；日20–21,body_read_not_closed,E-SHCD-01,,未闭合该项全部入口/反馈/失败，目录不等于任务分析
+I-SLCD-013,M1快速指南章节（合并译文定位）,数据传输至MicroSD卡,https://shanling.com/uploads/image/M1_Plus-V1.0.pdf,PDF文件页7；英13–14；日20–21,task_partially_analysed,E-SHCD-01,F-M063-01,未闭合该项全部入口/反馈/失败，目录不等于任务分析
+I-SLCD-014,M1快速指南章节（合并译文定位）,作为USB DAC,https://shanling.com/uploads/image/M1_Plus-V1.0.pdf,PDF文件页7；英14；日21,task_partially_analysed,E-SHCD-01,F-M063-03,未闭合该项全部入口/反馈/失败，目录不等于任务分析
+I-SLCD-015,M1快速指南章节（合并译文定位）,USB驱动下载入口,https://shanling.com/uploads/image/M1_Plus-V1.0.pdf,PDF文件页7；英14；日21,body_read_not_closed,E-SHCD-01,,未闭合该项全部入口/反馈/失败，目录不等于任务分析
+I-SLCD-016,M1快速指南章节（合并译文定位）,固件升级前提,https://shanling.com/uploads/image/M1_Plus-V1.0.pdf,PDF文件页8；英14；日21,body_read_not_closed,E-SHCD-01,,未闭合该项全部入口/反馈/失败，目录不等于任务分析
+I-SLCD-017,M1快速指南章节（合并译文定位）,OTA在线升级,https://shanling.com/uploads/image/M1_Plus-V1.0.pdf,PDF文件页8；英14；日22,task_partially_analysed,E-SHCD-01,F-M063-05,未闭合该项全部入口/反馈/失败，目录不等于任务分析
+I-SLCD-018,M1快速指南章节（合并译文定位）,MicroSD卡升级,https://shanling.com/uploads/image/M1_Plus-V1.0.pdf,PDF文件页8；英15；日22,task_partially_analysed,E-SHCD-01,F-M063-04,未闭合该项全部入口/反馈/失败，目录不等于任务分析
+I-SLCD-019,M1快速指南章节（合并译文定位）,常见问题,https://shanling.com/uploads/image/M1_Plus-V1.0.pdf,PDF文件页9；英15；日22–23,task_partially_analysed,E-SHCD-01,F-M063-06,未闭合该项全部入口/反馈/失败，目录不等于任务分析
+I-SLCD-020,M1快速指南章节（合并译文定位）,随机附件（含保修卡）,https://shanling.com/uploads/image/M1_Plus-V1.0.pdf,PDF文件页9；英16；日23,body_read_not_closed,E-SHCD-01,,未闭合该项全部入口/反馈/失败，目录不等于任务分析
+I-SLCD-021,M1快速指南章节（合并译文定位）,技术证明（日文另列）,https://shanling.com/uploads/image/M1_Plus-V1.0.pdf,PDF文件页23,body_read_not_closed,E-SHCD-01,,未闭合该项全部入口/反馈/失败，目录不等于任务分析
+I-SLCD-022,M1快速指南章节（合并译文定位）,厂商/联系/变更声明,https://shanling.com/uploads/image/M1_Plus-V1.0.pdf,PDF文件页24,body_read_not_closed,E-SHCD-01,,未闭合该项全部入口/反馈/失败，目录不等于任务分析
+I-SLCD-023,M1部件/接口标签,MicroSD卡槽,https://shanling.com/uploads/image/M1_Plus-V1.0.pdf,PDF文件页5/11/18,catalogued_only,E-SHCD-01,,旧p5图已观察；本批仅文本复读，不新增观察
+I-SLCD-024,M1部件/接口标签,USB-C数据口,https://shanling.com/uploads/image/M1_Plus-V1.0.pdf,PDF文件页5/11/18,catalogued_only,E-SHCD-01,,旧p5图已观察；本批仅文本复读，不新增观察
+I-SLCD-025,M1部件/接口标签,氛围灯,https://shanling.com/uploads/image/M1_Plus-V1.0.pdf,PDF文件页5/11/18,catalogued_only,E-SHCD-01,,旧p5图已观察；本批仅文本复读，不新增观察
+I-SLCD-026,M1部件/接口标签,触摸屏,https://shanling.com/uploads/image/M1_Plus-V1.0.pdf,PDF文件页5/11/18,catalogued_only,E-SHCD-01,,旧p5图已观察；本批仅文本复读，不新增观察
+I-SLCD-027,M1部件/接口标签,电源/锁屏与音量旋钮组,https://shanling.com/uploads/image/M1_Plus-V1.0.pdf,PDF文件页5/11/18,catalogued_only,E-SHCD-01,,旧p5图已观察；本批仅文本复读，不新增观察
+I-SLCD-028,M1部件/接口标签,上一曲键,https://shanling.com/uploads/image/M1_Plus-V1.0.pdf,PDF文件页5/11/18,catalogued_only,E-SHCD-01,,旧p5图已观察；本批仅文本复读，不新增观察
+I-SLCD-029,M1部件/接口标签,播放/暂停键,https://shanling.com/uploads/image/M1_Plus-V1.0.pdf,PDF文件页5/11/18,catalogued_only,E-SHCD-01,,旧p5图已观察；本批仅文本复读，不新增观察
+I-SLCD-030,M1部件/接口标签,下一曲键,https://shanling.com/uploads/image/M1_Plus-V1.0.pdf,PDF文件页5/11/18,catalogued_only,E-SHCD-01,,旧p5图已观察；本批仅文本复读，不新增观察
+I-SLCD-031,M1部件/接口标签,3.5mm耳机/线路/同轴输出,https://shanling.com/uploads/image/M1_Plus-V1.0.pdf,PDF文件页5/11/18,catalogued_only,E-SHCD-01,,旧p5图已观察；本批仅文本复读，不新增观察
+I-SLCD-032,M1部件/接口标签,4.4mm平衡输出,https://shanling.com/uploads/image/M1_Plus-V1.0.pdf,PDF文件页5/11/18,catalogued_only,E-SHCD-01,,旧p5图已观察；本批仅文本复读，不新增观察
+I-SLCD-033,M1部件/接口标签,3.5mm同轴插头接线,https://shanling.com/uploads/image/M1_Plus-V1.0.pdf,PDF文件页5/11/18,catalogued_only,E-SHCD-01,,旧p5图已观察；本批仅文本复读，不新增观察
+I-SLCD-034,M1官方FAQ条目,适配器规格,https://shanling.com/uploads/image/M1_Plus-V1.0.pdf,PDF文件页9/15/22–23,body_read_not_closed,E-SHCD-01,,未闭合该项全部入口/反馈/失败，目录不等于任务分析
+I-SLCD-035,M1官方FAQ条目,电量低/耗尽无法开机,https://shanling.com/uploads/image/M1_Plus-V1.0.pdf,PDF文件页9/15/22–23,body_read_not_closed,E-SHCD-01,,未闭合该项全部入口/反馈/失败，目录不等于任务分析
+I-SLCD-036,M1官方FAQ条目,无响应长按强制关闭,https://shanling.com/uploads/image/M1_Plus-V1.0.pdf,PDF文件页9/15/22–23,task_partially_analysed,E-SHCD-01,F-M063-06,未闭合该项全部入口/反馈/失败，目录不等于任务分析
+I-SLCD-037,M1官方FAQ条目,耳机杂音/插头接触,https://shanling.com/uploads/image/M1_Plus-V1.0.pdf,PDF文件页9/15/22–23,body_read_not_closed,E-SHCD-01,,未闭合该项全部入口/反馈/失败，目录不等于任务分析
+I-SLCD-038,M1官方FAQ条目,无声/线缆耳机与音量检查,https://shanling.com/uploads/image/M1_Plus-V1.0.pdf,PDF文件页9/15/22–23,body_read_not_closed,E-SHCD-01,,未闭合该项全部入口/反馈/失败，目录不等于任务分析
+I-SLCD-039,M1评测目录/主屏与分类,主屏显隐/重置,https://www.hifioasis.com/reviews/shanling-m1-plus-review/,MTouch OS and UI；作者自报V2.1，截图未逐项核版,third_party_inventory_only,E-SHCD-03,,作者菜单记录；不是官方完整设置表；断点/计时只有名称及部分说明，不升D2
+I-SLCD-040,M1评测目录/主屏与分类,Now Playing,https://www.hifioasis.com/reviews/shanling-m1-plus-review/,MTouch OS and UI；作者自报V2.1，截图未逐项核版,task_partially_analysed,E-SHCD-03,F-M063-09,作者菜单记录；不是官方完整设置表；断点/计时只有名称及部分说明，不升D2
+I-SLCD-041,M1评测目录/主屏与分类,All Songs,https://www.hifioasis.com/reviews/shanling-m1-plus-review/,MTouch OS and UI；作者自报V2.1，截图未逐项核版,third_party_inventory_only,E-SHCD-03,,作者菜单记录；不是官方完整设置表；断点/计时只有名称及部分说明，不升D2
+I-SLCD-042,M1评测目录/主屏与分类,Folder,https://www.hifioasis.com/reviews/shanling-m1-plus-review/,MTouch OS and UI；作者自报V2.1，截图未逐项核版,third_party_inventory_only,E-SHCD-03,,作者菜单记录；不是官方完整设置表；断点/计时只有名称及部分说明，不升D2
+I-SLCD-043,M1评测目录/主屏与分类,Artist/Album Artist,https://www.hifioasis.com/reviews/shanling-m1-plus-review/,MTouch OS and UI；作者自报V2.1，截图未逐项核版,task_partially_analysed,E-SHCD-03,F-M063-09,作者菜单记录；不是官方完整设置表；断点/计时只有名称及部分说明，不升D2
+I-SLCD-044,M1评测目录/主屏与分类,Playlist,https://www.hifioasis.com/reviews/shanling-m1-plus-review/,MTouch OS and UI；作者自报V2.1，截图未逐项核版,task_partially_analysed,E-SHCD-03,F-M063-10,作者菜单记录；不是官方完整设置表；断点/计时只有名称及部分说明，不升D2
+I-SLCD-045,M1评测目录/主屏与分类,Update Library,https://www.hifioasis.com/reviews/shanling-m1-plus-review/,MTouch OS and UI；作者自报V2.1，截图未逐项核版,task_partially_analysed,E-SHCD-03,F-M063-01,作者菜单记录；不是官方完整设置表；断点/计时只有名称及部分说明，不升D2
+I-SLCD-046,M1评测目录/主屏与分类,CD Ripper,https://www.hifioasis.com/reviews/shanling-m1-plus-review/,MTouch OS and UI；作者自报V2.1，截图未逐项核版,third_party_inventory_only,E-SHCD-03,,作者菜单记录；不是官方完整设置表；断点/计时只有名称及部分说明，不升D2
+I-SLCD-047,M1评测目录/播放设置,Gain,https://www.hifioasis.com/reviews/shanling-m1-plus-review/,MTouch OS and UI；作者自报V2.1，截图未逐项核版,third_party_inventory_only,E-SHCD-03,,作者菜单记录；不是官方完整设置表；断点/计时只有名称及部分说明，不升D2
+I-SLCD-048,M1评测目录/播放设置,Filter,https://www.hifioasis.com/reviews/shanling-m1-plus-review/,MTouch OS and UI；作者自报V2.1，截图未逐项核版,third_party_inventory_only,E-SHCD-03,,作者菜单记录；不是官方完整设置表；断点/计时只有名称及部分说明，不升D2
+I-SLCD-049,M1评测目录/播放设置,EQ,https://www.hifioasis.com/reviews/shanling-m1-plus-review/,MTouch OS and UI；作者自报V2.1，截图未逐项核版,third_party_inventory_only,E-SHCD-03,,作者菜单记录；不是官方完整设置表；断点/计时只有名称及部分说明，不升D2
+I-SLCD-050,M1评测目录/播放设置,Play mode,https://www.hifioasis.com/reviews/shanling-m1-plus-review/,MTouch OS and UI；作者自报V2.1，截图未逐项核版,third_party_inventory_only,E-SHCD-03,,作者菜单记录；不是官方完整设置表；断点/计时只有名称及部分说明，不升D2
+I-SLCD-051,M1评测目录/播放设置,Max/Default volume,https://www.hifioasis.com/reviews/shanling-m1-plus-review/,MTouch OS and UI；作者自报V2.1，截图未逐项核版,third_party_inventory_only,E-SHCD-03,,作者菜单记录；不是官方完整设置表；断点/计时只有名称及部分说明，不升D2
+I-SLCD-052,M1评测目录/播放设置,Volume memory,https://www.hifioasis.com/reviews/shanling-m1-plus-review/,MTouch OS and UI；作者自报V2.1，截图未逐项核版,third_party_inventory_only,E-SHCD-03,,作者菜单记录；不是官方完整设置表；断点/计时只有名称及部分说明，不升D2
+I-SLCD-053,M1评测目录/播放设置,USB DAC volume,https://www.hifioasis.com/reviews/shanling-m1-plus-review/,MTouch OS and UI；作者自报V2.1，截图未逐项核版,third_party_inventory_only,E-SHCD-03,,作者菜单记录；不是官方完整设置表；断点/计时只有名称及部分说明，不升D2
+I-SLCD-054,M1评测目录/播放设置,Memory playback: Off/Track/Position,https://www.hifioasis.com/reviews/shanling-m1-plus-review/,MTouch OS and UI；作者自报V2.1，截图未逐项核版,third_party_inventory_only,E-SHCD-03,,作者菜单记录；不是官方完整设置表；断点/计时只有名称及部分说明，不升D2
+I-SLCD-055,M1评测目录/播放设置,Gapless,https://www.hifioasis.com/reviews/shanling-m1-plus-review/,MTouch OS and UI；作者自报V2.1，截图未逐项核版,third_party_inventory_only,E-SHCD-03,,作者菜单记录；不是官方完整设置表；断点/计时只有名称及部分说明，不升D2
+I-SLCD-056,M1评测目录/播放设置,ReplayGain,https://www.hifioasis.com/reviews/shanling-m1-plus-review/,MTouch OS and UI；作者自报V2.1，截图未逐项核版,third_party_inventory_only,E-SHCD-03,,作者菜单记录；不是官方完整设置表；断点/计时只有名称及部分说明，不升D2
+I-SLCD-057,M1评测目录/播放设置,Digital output,https://www.hifioasis.com/reviews/shanling-m1-plus-review/,MTouch OS and UI；作者自报V2.1，截图未逐项核版,third_party_inventory_only,E-SHCD-03,,作者菜单记录；不是官方完整设置表；断点/计时只有名称及部分说明，不升D2
+I-SLCD-058,M1评测目录/播放设置,Channel balance,https://www.hifioasis.com/reviews/shanling-m1-plus-review/,MTouch OS and UI；作者自报V2.1，截图未逐项核版,third_party_inventory_only,E-SHCD-03,,作者菜单记录；不是官方完整设置表；断点/计时只有名称及部分说明，不升D2
+I-SLCD-059,M1评测目录/播放设置,Folder Album Cover,https://www.hifioasis.com/reviews/shanling-m1-plus-review/,MTouch OS and UI；作者自报V2.1，截图未逐项核版,third_party_inventory_only,E-SHCD-03,,作者菜单记录；不是官方完整设置表；断点/计时只有名称及部分说明，不升D2
+I-SLCD-060,M1评测目录/播放设置,Folder Skip,https://www.hifioasis.com/reviews/shanling-m1-plus-review/,MTouch OS and UI；作者自报V2.1，截图未逐项核版,third_party_inventory_only,E-SHCD-03,,作者菜单记录；不是官方完整设置表；断点/计时只有名称及部分说明，不升D2
+I-SLCD-061,M1评测目录/播放设置,Enlarged Album Art,https://www.hifioasis.com/reviews/shanling-m1-plus-review/,MTouch OS and UI；作者自报V2.1，截图未逐项核版,third_party_inventory_only,E-SHCD-03,,作者菜单记录；不是官方完整设置表；断点/计时只有名称及部分说明，不升D2
+I-SLCD-062,M1评测目录/系统设置,Language,https://www.hifioasis.com/reviews/shanling-m1-plus-review/,MTouch OS and UI；作者自报V2.1，截图未逐项核版,third_party_inventory_only,E-SHCD-03,,作者菜单记录；不是官方完整设置表；断点/计时只有名称及部分说明，不升D2
+I-SLCD-063,M1评测目录/系统设置,Wireless/Bluetooth,https://www.hifioasis.com/reviews/shanling-m1-plus-review/,MTouch OS and UI；作者自报V2.1，截图未逐项核版,third_party_inventory_only,E-SHCD-03,,作者菜单记录；不是官方完整设置表；断点/计时只有名称及部分说明，不升D2
+I-SLCD-064,M1评测目录/系统设置,SyncLink,https://www.hifioasis.com/reviews/shanling-m1-plus-review/,MTouch OS and UI；作者自报V2.1，截图未逐项核版,task_partially_analysed,E-SHCD-03,F-M063-08,作者菜单记录；不是官方完整设置表；断点/计时只有名称及部分说明，不升D2
+I-SLCD-065,M1评测目录/系统设置,Network Services: DLNA/AirPlay/WiFi transfer,https://www.hifioasis.com/reviews/shanling-m1-plus-review/,MTouch OS and UI；作者自报V2.1，截图未逐项核版,third_party_inventory_only,E-SHCD-03,,作者菜单记录；不是官方完整设置表；断点/计时只有名称及部分说明，不升D2
+I-SLCD-066,M1评测目录/系统设置,Display/Atmosphere Lamp,https://www.hifioasis.com/reviews/shanling-m1-plus-review/,MTouch OS and UI；作者自报V2.1，截图未逐项核版,third_party_inventory_only,E-SHCD-03,,作者菜单记录；不是官方完整设置表；断点/计时只有名称及部分说明，不升D2
+I-SLCD-067,M1评测目录/系统设置,Idle: Sleep Timer,https://www.hifioasis.com/reviews/shanling-m1-plus-review/,MTouch OS and UI；作者自报V2.1，截图未逐项核版,third_party_inventory_only,E-SHCD-03,,作者菜单记录；不是官方完整设置表；断点/计时只有名称及部分说明，不升D2
+I-SLCD-068,M1评测目录/系统设置,Idle: Auto-standby,https://www.hifioasis.com/reviews/shanling-m1-plus-review/,MTouch OS and UI；作者自报V2.1，截图未逐项核版,third_party_inventory_only,E-SHCD-03,,作者菜单记录；不是官方完整设置表；断点/计时只有名称及部分说明，不升D2
+I-SLCD-069,M1评测目录/系统设置,Idle: Auto-Shutdown,https://www.hifioasis.com/reviews/shanling-m1-plus-review/,MTouch OS and UI；作者自报V2.1，截图未逐项核版,third_party_inventory_only,E-SHCD-03,,作者菜单记录；不是官方完整设置表；断点/计时只有名称及部分说明，不升D2
+I-SLCD-070,M1评测目录/系统设置,Vehicle mode,https://www.hifioasis.com/reviews/shanling-m1-plus-review/,MTouch OS and UI；作者自报V2.1，截图未逐项核版,third_party_inventory_only,E-SHCD-03,,作者菜单记录；不是官方完整设置表；断点/计时只有名称及部分说明，不升D2
+I-SLCD-071,M1评测目录/系统设置,Tap Screen to Activate,https://www.hifioasis.com/reviews/shanling-m1-plus-review/,MTouch OS and UI；作者自报V2.1，截图未逐项核版,third_party_inventory_only,E-SHCD-03,,作者菜单记录；不是官方完整设置表；断点/计时只有名称及部分说明，不升D2
+I-SLCD-072,M1评测目录/系统设置,Button lock,https://www.hifioasis.com/reviews/shanling-m1-plus-review/,MTouch OS and UI；作者自报V2.1，截图未逐项核版,task_partially_analysed,E-SHCD-03,F-M063-02,作者菜单记录；不是官方完整设置表；断点/计时只有名称及部分说明，不升D2
+I-SLCD-073,M1评测目录/系统设置,Screen Rotation,https://www.hifioasis.com/reviews/shanling-m1-plus-review/,MTouch OS and UI；作者自报V2.1，截图未逐项核版,third_party_inventory_only,E-SHCD-03,,作者菜单记录；不是官方完整设置表；断点/计时只有名称及部分说明，不升D2
+I-SLCD-074,M1评测目录/系统设置,Theme,https://www.hifioasis.com/reviews/shanling-m1-plus-review/,MTouch OS and UI；作者自报V2.1，截图未逐项核版,third_party_inventory_only,E-SHCD-03,,作者菜单记录；不是官方完整设置表；断点/计时只有名称及部分说明，不升D2
+I-SLCD-075,M1评测目录/系统设置,System Update,https://www.hifioasis.com/reviews/shanling-m1-plus-review/,MTouch OS and UI；作者自报V2.1，截图未逐项核版,task_partially_analysed,E-SHCD-03,F-M063-04;F-M063-05,作者菜单记录；不是官方完整设置表；断点/计时只有名称及部分说明，不升D2
+I-SLCD-076,M1评测目录/系统设置,Card Format,https://www.hifioasis.com/reviews/shanling-m1-plus-review/,MTouch OS and UI；作者自报V2.1，截图未逐项核版,task_partially_analysed,E-SHCD-03,F-M063-07,作者菜单记录；不是官方完整设置表；断点/计时只有名称及部分说明，不升D2
+I-SLCD-077,M1评测目录/系统设置,Reset,https://www.hifioasis.com/reviews/shanling-m1-plus-review/,MTouch OS and UI；作者自报V2.1，截图未逐项核版,third_party_inventory_only,E-SHCD-03,,作者菜单记录；不是官方完整设置表；断点/计时只有名称及部分说明，不升D2
+I-SLCD-078,Eddict共用手册章节（非M1功能声明）,封面与版本,https://shanling.com/uploads/image/EddictPlayerAPP.pdf,PDF/印刷页1/16,scope_boundary_read,E-SLCD-02,,App文档V1.2；未指定M1，功能不能直接移植；未注册/安装/登录
+I-SLCD-079,Eddict共用手册章节（非M1功能声明）,型号/版本适用说明,https://shanling.com/uploads/image/EddictPlayerAPP.pdf,PDF/印刷页2,scope_boundary_read,E-SLCD-02,F-M063-08,App文档V1.2；未指定M1，功能不能直接移植；未注册/安装/登录
+I-SLCD-080,Eddict共用手册章节（非M1功能声明）,介绍/软件概述/目标,https://shanling.com/uploads/image/EddictPlayerAPP.pdf,PDF/印刷页3；英10,scope_boundary_read,E-SLCD-02,,App文档V1.2；未指定M1，功能不能直接移植；未注册/安装/登录
+I-SLCD-081,Eddict共用手册章节（非M1功能声明）,功能特性,https://shanling.com/uploads/image/EddictPlayerAPP.pdf,PDF/印刷页3；英10,scope_boundary_read,E-SLCD-02,,App文档V1.2；未指定M1，功能不能直接移植；未注册/安装/登录
+I-SLCD-082,Eddict共用手册章节（非M1功能声明）,注册登录（中文）/Installation（英文）,https://shanling.com/uploads/image/EddictPlayerAPP.pdf,PDF/印刷页4/11,scope_boundary_read,E-SLCD-02,,App文档V1.2；未指定M1，功能不能直接移植；未注册/安装/登录
+I-SLCD-083,Eddict共用手册章节（非M1功能声明）,无损音乐/文件解析与传输,https://shanling.com/uploads/image/EddictPlayerAPP.pdf,PDF/印刷页4；英11,scope_boundary_read,E-SLCD-02,,App文档V1.2；未指定M1，功能不能直接移植；未注册/安装/登录
+I-SLCD-084,Eddict共用手册章节（非M1功能声明）,扫描入库/直接文件夹播放,https://shanling.com/uploads/image/EddictPlayerAPP.pdf,PDF/印刷页4；英11,scope_boundary_read,E-SLCD-02,,App文档V1.2；未指定M1，功能不能直接移植；未注册/安装/登录
+I-SLCD-085,Eddict共用手册章节（非M1功能声明）,本地音乐分类,https://shanling.com/uploads/image/EddictPlayerAPP.pdf,PDF/印刷页4；英11,scope_boundary_read,E-SLCD-02,,App文档V1.2；未指定M1，功能不能直接移植；未注册/安装/登录
+I-SLCD-086,Eddict共用手册章节（非M1功能声明）,播放界面,https://shanling.com/uploads/image/EddictPlayerAPP.pdf,PDF/印刷页4；英11,scope_boundary_read,E-SLCD-02,,App文档V1.2；未指定M1，功能不能直接移植；未注册/安装/登录
+I-SLCD-087,Eddict共用手册章节（非M1功能声明）,云音乐服务,https://shanling.com/uploads/image/EddictPlayerAPP.pdf,PDF/印刷页4–5；英11,scope_boundary_read,E-SLCD-02,,App文档V1.2；未指定M1，功能不能直接移植；未注册/安装/登录
+I-SLCD-088,Eddict共用手册章节（非M1功能声明）,索尼精选套餐（仅文档历史描述）,https://shanling.com/uploads/image/EddictPlayerAPP.pdf,PDF/印刷页5,scope_boundary_read,E-SLCD-02,,App文档V1.2；未指定M1，功能不能直接移植；未注册/安装/登录
+I-SLCD-089,Eddict共用手册章节（非M1功能声明）,Wi-Fi传歌：电脑,https://shanling.com/uploads/image/EddictPlayerAPP.pdf,PDF/印刷页5；英12,scope_boundary_read,E-SLCD-02,,App文档V1.2；未指定M1，功能不能直接移植；未注册/安装/登录
+I-SLCD-090,Eddict共用手册章节（非M1功能声明）,Wi-Fi传歌：App间,https://shanling.com/uploads/image/EddictPlayerAPP.pdf,PDF/印刷页5；英12,scope_boundary_read,E-SLCD-02,,App文档V1.2；未指定M1，功能不能直接移植；未注册/安装/登录
+I-SLCD-091,Eddict共用手册章节（非M1功能声明）,SyncLink,https://shanling.com/uploads/image/EddictPlayerAPP.pdf,PDF/印刷页6；英12,scope_boundary_read,E-SLCD-02,F-M063-08,App文档V1.2；未指定M1，功能不能直接移植；未注册/安装/登录
+I-SLCD-092,Eddict共用手册章节（非M1功能声明）,无线投屏,https://shanling.com/uploads/image/EddictPlayerAPP.pdf,PDF/印刷页6；英13,scope_boundary_read,E-SLCD-02,,App文档V1.2；未指定M1，功能不能直接移植；未注册/安装/登录
+I-SLCD-093,Eddict共用手册章节（非M1功能声明）,USB耳放控制,https://shanling.com/uploads/image/EddictPlayerAPP.pdf,PDF/印刷页7；英13,scope_boundary_read,E-SLCD-02,,App文档V1.2；未指定M1，功能不能直接移植；未注册/安装/登录
+I-SLCD-094,Eddict共用手册章节（非M1功能声明）,NAS,https://shanling.com/uploads/image/EddictPlayerAPP.pdf,PDF/印刷页7；英14,scope_boundary_read,E-SLCD-02,,App文档V1.2；未指定M1，功能不能直接移植；未注册/安装/登录
+I-SLCD-095,Eddict共用手册章节（非M1功能声明）,蓝牙耳放控制,https://shanling.com/uploads/image/EddictPlayerAPP.pdf,PDF/印刷页8；英14,scope_boundary_read,E-SLCD-02,,App文档V1.2；未指定M1，功能不能直接移植；未注册/安装/登录
+I-SLCD-096,Eddict共用手册章节（非M1功能声明）,DLNA推歌,https://shanling.com/uploads/image/EddictPlayerAPP.pdf,PDF/印刷页8；英14,scope_boundary_read,E-SLCD-02,,App文档V1.2；未指定M1，功能不能直接移植；未注册/安装/登录
+I-SLCD-097,Eddict共用手册章节（非M1功能声明）,播放设置,https://shanling.com/uploads/image/EddictPlayerAPP.pdf,PDF/印刷页9；英15,scope_boundary_read,E-SLCD-02,F-M063-08,App文档V1.2；未指定M1，功能不能直接移植；未注册/安装/登录
+I-SLCD-098,Eddict共用手册章节（非M1功能声明）,USB独占,https://shanling.com/uploads/image/EddictPlayerAPP.pdf,PDF/印刷页9；英15,scope_boundary_read,E-SLCD-02,,App文档V1.2；未指定M1，功能不能直接移植；未注册/安装/登录
+I-SLCD-099,Eddict本地播放设置（对连接设备无影响）,扫描音乐,https://shanling.com/uploads/image/EddictPlayerAPP.pdf,PDF/印刷p9、15,scope_boundary_read,E-SLCD-02;E-SLCD-03,F-M063-08,p15明确仅App本地；不能填M1定时/断点/输出能力
+I-SLCD-100,Eddict本地播放设置（对连接设备无影响）,定时关闭,https://shanling.com/uploads/image/EddictPlayerAPP.pdf,PDF/印刷p9、15,scope_boundary_read,E-SLCD-02;E-SLCD-03,F-M063-08,p15明确仅App本地；不能填M1定时/断点/输出能力
+I-SLCD-101,Eddict本地播放设置（对连接设备无影响）,记忆播放,https://shanling.com/uploads/image/EddictPlayerAPP.pdf,PDF/印刷p9、15,scope_boundary_read,E-SLCD-02;E-SLCD-03,F-M063-08,p15明确仅App本地；不能填M1定时/断点/输出能力
+I-SLCD-102,Eddict本地播放设置（对连接设备无影响）,自动进入播放页,https://shanling.com/uploads/image/EddictPlayerAPP.pdf,PDF/印刷p9、15,scope_boundary_read,E-SLCD-02;E-SLCD-03,F-M063-08,p15明确仅App本地；不能填M1定时/断点/输出能力
+I-SLCD-103,Eddict本地播放设置（对连接设备无影响）,文件夹跳曲,https://shanling.com/uploads/image/EddictPlayerAPP.pdf,PDF/印刷p9、15,scope_boundary_read,E-SLCD-02;E-SLCD-03,F-M063-08,p15明确仅App本地；不能填M1定时/断点/输出能力
+I-SLCD-104,Eddict本地播放设置（对连接设备无影响）,专辑跳曲,https://shanling.com/uploads/image/EddictPlayerAPP.pdf,PDF/印刷p9、15,scope_boundary_read,E-SLCD-02;E-SLCD-03,F-M063-08,p15明确仅App本地；不能填M1定时/断点/输出能力
+I-SLCD-105,Eddict本地播放设置（对连接设备无影响）,淡入淡出,https://shanling.com/uploads/image/EddictPlayerAPP.pdf,PDF/印刷p9、15,scope_boundary_read,E-SLCD-02;E-SLCD-03,F-M063-08,p15明确仅App本地；不能填M1定时/断点/输出能力
+I-SLCD-106,Eddict本地播放设置（对连接设备无影响）,回放增益,https://shanling.com/uploads/image/EddictPlayerAPP.pdf,PDF/印刷p9、15,scope_boundary_read,E-SLCD-02;E-SLCD-03,F-M063-08,p15明确仅App本地；不能填M1定时/断点/输出能力
+I-SLCD-107,Eddict本地播放设置（对连接设备无影响）,均衡器,https://shanling.com/uploads/image/EddictPlayerAPP.pdf,PDF/印刷p9、15,scope_boundary_read,E-SLCD-02;E-SLCD-03,F-M063-08,p15明确仅App本地；不能填M1定时/断点/输出能力
+I-SLCD-108,Eddict本地播放设置（对连接设备无影响）,USB输出,https://shanling.com/uploads/image/EddictPlayerAPP.pdf,PDF/印刷p9、15,scope_boundary_read,E-SLCD-02;E-SLCD-03,F-M063-08,p15明确仅App本地；不能填M1定时/断点/输出能力
+I-SLCD-109,Eddict本地播放设置（对连接设备无影响）,固定采样率,https://shanling.com/uploads/image/EddictPlayerAPP.pdf,PDF/印刷p9、15,scope_boundary_read,E-SLCD-02;E-SLCD-03,F-M063-08,p15明确仅App本地；不能填M1定时/断点/输出能力
+I-SLCD-110,Eddict本地播放设置（对连接设备无影响）,拔耳机暂停,https://shanling.com/uploads/image/EddictPlayerAPP.pdf,PDF/印刷p9、15,scope_boundary_read,E-SLCD-02;E-SLCD-03,F-M063-08,p15明确仅App本地；不能填M1定时/断点/输出能力
+I-SLCD-111,Eddict下载页范围,Android2.3.7/2026-09-11,https://shanling.com/download/76,正文版本及功能/机型分组,scope_boundary_read,E-SLCD-01,F-M063-08,名单缺项不等于不支持；不是M1固件清单或已装App版本
+I-SLCD-112,Eddict下载页范围,说明书下载入口,https://shanling.com/download/76,正文版本及功能/机型分组,scope_boundary_read,E-SLCD-01,F-M063-08,名单缺项不等于不支持；不是M1固件清单或已装App版本
+I-SLCD-113,Eddict下载页范围,SyncLink兼容名单（未列M1 Plus）,https://shanling.com/download/76,正文版本及功能/机型分组,scope_boundary_read,E-SLCD-01,F-M063-08,名单缺项不等于不支持；不是M1固件清单或已装App版本
+I-SLCD-114,Eddict下载页范围,投屏/蓝牙耳放/USB耳放分组名单,https://shanling.com/download/76,正文版本及功能/机型分组,scope_boundary_read,E-SLCD-01,F-M063-08,名单缺项不等于不支持；不是M1固件清单或已装App版本

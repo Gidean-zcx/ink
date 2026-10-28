@@ -1,0 +1,74 @@
+You can stream audiobooks from your eReader to your Bluetooth headphones or speakers.
+Note:
+These Kobo eReaders can play audiobooks: Kobo Clara 2E
+Kobo Sage
+Kobo Libra 2
+Kobo Elipsa
+Kobo Elipsa 2E
+Kobo Clara BW
+Kobo Clara Colour
+Kobo Libra Colour
+If you’re not sure which eReader you have, follow the steps here.
+You can only pair Bluetooth headphones and speakers to your eReader.
+Before you start:
+Purchase an audiobook on Kobo.com or on your eReader
+Connect your Bluetooth headphones or speaker to your eReader
+Open your audiobook
+To open an audiobook on your eReader:
+Go to your Home screen.
+Tap My Books at the bottom of the screen.
+Tap on the audiobook that you’d like to listen to. The audiobook file will download onto your eReader, and then open the audiobook player. Audiobook files have a headphones icon and the words 'Audiobook' in the description. Tip : If you can't find your audiobook, try using the audiobook search filter to see all the audiobooks you own. If you still don't see your audiobook, you may have to repair your eReader account .
+Audiobook download progress
+If you see a download icon next to the audiobook title, it means that you’ll need access to a Wi Fi connection so that you can download the audiobook file. As your audiobook is downloading, you’ll see the downloading in progress icon and ' Downloading' next to your audiobook.
+Depending on your internet connection, it can take a few minutes for the download to complete.
+Manage storage space on your eReader
+Since audiobooks require more storage space than eBooks, you may have to remove some eBooks on your eReader to make space for your audiobooks. When you remove an eBook from your eReader, you can always re-download it again later.
+Audiobook file sizes range from 50 MB (megabytes) all the way to 14 GB (gigabytes) or more. Depending on how many audiobooks you own, you may have to remove some eBooks or audiobooks on your eReader to free up storage space on your eReader.
+Learn how to manage your eReader’s storage by following the steps in this article:
+An overview about deleting books from your Kobo eReader
+Audiobook player controls
+After you open an audiobook, you'll see the audiobook player. The audiobook player lets you control playback speed, skim through the audiobook, view the table of contents, and more.
+Connect your Bluetooth speaker or headphones to your eReader
+If you see a ‘No Bluetooth Connected’ message, you’ll have to pair your Bluetooth speaker or headphones.
+To pair your Bluetooth speaker or headphones from the audiobook player:
+Tap No Bluetooth Connected. Your eReader will scan for nearby Bluetooth devices.
+Tap on your Bluetooth device name. Tip : You may have to set up your speaker or headphones to "pairing mode" if you don't see your device in the list. For details on how to set your speaker or headphones to pairing mode, follow your speaker or headphones manufacturer’s instructions.
+When your Bluetooth headphones or speaker is paired with your eReader, you’ll see the word 'Connected' under the device name.
+If you still can’t see your Bluetooth headphones or speaker:
+Ensure that your speaker or headphones is in pairing mode, then tap Rescan near the bottom of the menu.
+Pause, play, and skip audio
+To start or stop your audiobook, tap the Play or Pause icon. Note : If your audiobook doesn't play, try removing the audiobook from your eReader, then re-download it again. You can also try repairing your Kobo account.
+To skip ahead or go backwards thirty seconds, tap the or arrow icons.
+Skim through the audiobook
+To skim through sections of the chapter, drag the circle icon left or right in the timeline.
+Open the table of contents
+The table of contents lets you see all the chapters in your audiobook. You can listen to any chapter you'd like.
+To browse your audiobook’s table of contents:
+Tap the table of contents icon.
+Tap the chapter that you’d like to listen to. Note: Some chapters may have to be downloaded before you can start listening. Depending on the audiobook file size and your WiFi connection speed, it can take several minutes to download a chapter.
+Adjust the volume
+To control the volume of your Bluetooth speaker or headphones using your eReader:
+Tap the Volume icon at the top of the screen
+Drag the circle icon left or right to decrease or increase the volume.
+Adjust playback speed
+You can decrease or increase your audiobook's playback speed. Playback speeds range from 0.5X (half the original playback speed) to 3X (three times faster than the original playback speed).
+To adjust playback speed:
+Tap the 1X icon at the top of the screen.
+Select your desired playback speed.
+View your audiobook stats
+You can see how far you've progressed in your audiobook using the stats menu. The stats menu shows you:
+The remaining minutes left in the current chapter.
+The remaining minutes left in the entire audiobook.
+The duration of the upcoming chapter.
+To see your audiobook stats:
+Tap the stats icon at the top of the screen.
+See audiobook details and use a dictionary
+While listening, you can view your audiobook details or open the dictionary to look up a word that you're unfamiliar with.
+To view audiobook details or use the dictionary:
+Tap the Menu icon at  the top of the screen.
+Tap View Details or Dictionary.
+Learn more
+Connect your Bluetooth speaker or headphones to your Kobo eReader
+Buy audiobooks on your Kobo eReader
+Find audiobooks on your Kobo eReader
+Troubleshoot Bluetooth pairing on your Kobo eReader

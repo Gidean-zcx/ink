@@ -1,0 +1,194 @@
+The To-Do App - Supernote
+English (US)
+Japanese
+English (US)
+繁體中文
+简体中文
+Support Home
+Contact Us
+English (US)
+Japanese
+English (US)
+繁體中文
+简体中文
+Home
+What's New
+The To-Do App
+Discover the most efficient and user-friendly ways to manage your daily tasks and increase productivity with The To-Do App. Master the art of organizing your schedule and never miss an important deadline again.
+Written by
+James Huang
+Updated at June 26th, 2024
+Contact Us
+If you still have questions or prefer to get help directly from an agent, please submit a request.
+We’ll get back to you as soon as possible.
+Please fill out the contact form below and we will reply as soon as possible.
+title="ReCAPTCHA"
+Getting Started
+Tools & Features
+Organizing & Managing
+Workflow Cases
+What's New
+FAQ
+My Order
+Hardware & Repair
+Changelog
++ More
+Table of Contents
+Create a To-Do list
+Edit To-Do lists
+Create a To-Do task
+Edit To-Do tasks
+Mark a task as Completed
+Hide or display completed tasks
+Rename tasks
+Move a task to a different list
+Set a due date for your tasks
+Reorder your tasks
+Delete your tasks
+Supernote is all about boosting your productivity. To help you do just that, we are introducing a new app: To-Do. It allows you to effortlessly track and manage your tasks. In this article, we will delve into how to maximize the To-Do app's potential.
+Create a To-Do list
+Slide down on the right sidebar (assuming you are in the right-handed mode) to open the sidebar menu.
+Tap the
+To-Do
+app to open it.
+At the bottom left corner of the screen, tap
+to open the
+New List
+popup window.
+Write a description for your list in the text entry field.
+Tap
+Create
+.
+To-Do lists you create will show up under the Completed
+list in the left pane where up to 13 lists can be displayed. Once you've created 13 lists, a scrollbar will appear on the right side of the pane. It allows you to easily navigate through all your To-Do lists, especially helpful when you add additional lists after the initial 13.
+Edit To-Do lists
+In the left pane, Tap the To-Do list you want to edit.
+Tap
+to the right of the To-Do list name.
+To change the name of the To-Do list, tap
+Rename
+.
+Tap
+Delete
+to delete it.
+Create a To-Do task
+You can do this directly in the To-Do app.
+Open a list you've created yourself or open one of the three predefined lists, including Inbox, Planned and All.
+In the text entry field, enter a name for the To-Do task you are about to create. Make sure not to include special characters, such as emojis, in the name.
+Set a due date for the task by tapping the Calendar
+icon to the right of the task name.
+This opens the date picker where you can proceed to select the due date.
+Tap
+Add
+to create the To-Do task.
+If you create a task from the Planned
+list without setting a due date, it will not be displayed in the Planned
+list, but instead will appear in the All
+list.
+Alternatively, you can follow these steps to create a To-Do Task.
+Open a notebook.
+Start handwriting. (This step may be skipped if there is already handwriting in the notebook.)
+Select handwriting with the lasso tool
+.
+In the popup menu, tap
+.
+Tap
+to have it recognized as a new task.
+Set a due date for the task by tapping the Calendar
+icon.
+This opens the date picker where you can proceed to select the due date.
+Tap
+Add
+in the top right corner of the screen to create the To-Do task and you will find it in the Inbox
+list
+, the Planned
+list and in the All
+list.
+Tasks created this way will be marked with a Note
+icon, which, when tapped, will take you back to the notebook where the tasks were created.
+The Inbox
+list holds tasks that are created directly in it, as well as tasks created from the Note app.
+Edit To-Do tasks
+Mark a task as Completed
+Open a list that contains the task you want to mark as completed.
+Tap
+to the left of the name of the task.
+This moves the task to the Completed
+list. And there will be a strikethrough across the task name indicating the completed status as well.
+To undo the Completed status, simply tap
+.
+Hide or display completed tasks
+Take the Completed
+list for example:
+Tap the Completed
+list in the left pane.
+To hide the completed tasks in a specific list, tap the Down arrow
+.
+To display them, tap the Right arrow
+.
+Tasks that you mark as Completed from the other lists (excluding Planned and All) will be displayed in the Completed section in those respective lists. You can follow the same steps above to hide or display them.
+If the completed tasks (and the uncompleted tasks) fill one full page, adding more tasks to the same list will make a scrollbar appear on the right side, allowing you to scroll up and down to navigate to your desired task quickly.
+Rename tasks
+Open a list that contains the task you want to rename.
+Tap the task you want to rename to select it.
+Tap
+.
+Enter a new name for the task.
+Tap OK.
+Move a task to a different list
+There are two ways you can do this.
+Method 1:
+Open a list that contains the task you want to move.
+Locate the task and long press it to open the top function bar.
+Tap the Move
+button.
+In the popup window that opens subsequently, select a list you want to move the task to.
+Method 2:
+Open a list that contains the task you want to move.
+Tap the task you want to move to select it.
+Tap
+.
+In the popup menu, select a list you want to move the task to.
+Set a due date for your tasks
+Open a list that contains the task you want to set a due date for.
+Tap the task you want to set a due date for to select it.
+Set a due date for the task by tapping the Calendar
+icon.
+This opens the date picker where you can proceed to select the due date.
+Tap OK.
+Tasks with a due date will be listed in the Planned
+list,  with their status set to “Today" if the due date is the current date, or “Overdue” if the due date has already passed, or “Upcoming” if the due date is still in the future. This can help you quickly prioritize your work and stay on top of deadlines.
+Reorder your tasks
+Open a list that contains the task you want to rename.
+Tap the task you want to reorder to select it.
+Tap
+to move the task one spot up.
+Tap
+to move it one place down.
+Delete your tasks
+There are two ways you can do this too.
+Method 1:
+Open a list that contains the task you want to delete.
+Locate the task and long press it to open the top function bar.
+Tap
+.
+Method 2:
+Open a or list that contains the task you want to delete.
+Tap the task you want to delete to select it.
+Tap
+.
+agenda
+task manager
+Was this article helpful?
+Yes
+No
+Give feedback about this article
+Related Articles
+How to Create a Custom Note Template Using Images?
+Using Contents, Bookmarks and Annotations in Documents
+Global Search Based on Categorization
+Utilize OneDrive: Your New Cloud Sync Option for File Backup
+Copyright © 2026 Ratta Supernote
+Knowledge Base Software powered by Helpjuice
+Close
+Expand

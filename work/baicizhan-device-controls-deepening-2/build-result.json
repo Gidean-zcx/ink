@@ -1,0 +1,16 @@
+{
+  "new_evidence": 1,
+  "new_flows": 0,
+  "inventory_rows": 45,
+  "target_or_historical_items": 17,
+  "excluded_categories": 5,
+  "excluded_questions": 23,
+  "old_flow_fields": 8,
+  "old_evidence_captures": 2,
+  "old_source_batches": [
+    "docs/research/interaction-library/batches/baicizhan-device-controls-deepening-evidence.jsonl",
+    "docs/research/interaction-library/batches/vocab-coverage.csv",
+    "docs/research/interaction-library/batches/vocab-device-deepening-evidence.jsonl",
+    "docs/research/interaction-library/batches/vocab-evidence.jsonl"
+  ]
+}

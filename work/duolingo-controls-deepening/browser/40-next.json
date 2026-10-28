@@ -1,0 +1,52 @@
+{
+  "name": "40-next",
+  "url": "https://www.duolingo.com/lesson",
+  "title": "Duolingo - Learn French with lessons that work",
+  "utc": "2026-10-26T17:54:02.884596+00:00",
+  "text": "4\nNEW WORD\nWrite this in English\nS'il vous plaît, Madame.\nperfect\nMadam\nPlease\nSKIP\nCHECK",
+  "buttons": [
+    {
+      "text": "",
+      "aria": null,
+      "test": "quit-button",
+      "visible": true
+    },
+    {
+      "text": "",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "perfect",
+      "aria": null,
+      "test": "perfect-challenge-tap-token",
+      "visible": true
+    },
+    {
+      "text": "Madam",
+      "aria": null,
+      "test": "Madam-challenge-tap-token",
+      "visible": true
+    },
+    {
+      "text": "Please",
+      "aria": null,
+      "test": "Please-challenge-tap-token",
+      "visible": true
+    },
+    {
+      "text": "SKIP",
+      "aria": null,
+      "test": "player-skip",
+      "visible": true
+    },
+    {
+      "text": "CHECK",
+      "aria": null,
+      "test": "player-next",
+      "visible": true
+    }
+  ],
+  "inputs": []
+}

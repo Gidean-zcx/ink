@@ -1,0 +1,22 @@
+{
+  "name": "07-question-ready",
+  "url": "https://www.duolingo.com/welcome?welcomeStep=hdyhau",
+  "title": "Duolingo - Learn French with lessons that work",
+  "utc": "2026-10-26T17:39:35.667746+00:00",
+  "text": "How did you hear about Duolingo?\nHow did you hear about Duolingo?\nX (Twitter)\nNews/article/blog\nTV\nTinder\nGoogle Search\nHP\nTikTok\nFriends/family\nYouTube\nFacebook/Instagram\nOther\nCONTINUE",
+  "buttons": [
+    {
+      "text": "",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "CONTINUE",
+      "aria": null,
+      "test": "funboarding-continue-button",
+      "visible": true
+    }
+  ],
+  "inputs": []
+}

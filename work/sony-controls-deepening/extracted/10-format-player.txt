@@ -1,0 +1,28 @@
+Formatting the player
+This operation restores the player to its factory settings. The following data will be deleted.
+Content such as music and photos in the internal memory of the player
+Google Account information on the player
+Downloaded apps
+Save a backup copy in advance. Be careful not to delete important data.
+Swipe the [WALKMAN Home] screen upwards.
+Tap the menu items in the following order.
+[Settings] － [System] － [Reset options].
+Tap [Erase all data (factory reset)].
+Depending on the version of your player’s system software, the on-screen display may not be the same as that explained in this Help Guide. In such a case, follow the on-screen instructions of the player.
+Confirm the message carefully, and then tap [Erase all data].
+Enter the PIN, password, or pattern if necessary.
+Confirm the reconfirmation message, and then tap [Erase all data].
+When formatting is complete, the player will restart automatically.
+Hint
+When formatting is complete, the player will restore its preinstalled content.
+When you back up a music file from “Music player”, you can check the location of the file. Confirm [File location] under [Detailed song information]. To display the information, tap the menu items in the following order.
+From the playback screen in “Music player”:
+(Options) － [Detailed song information].
+From the library screen, play queue screen, or favorites screen in “Music player”:
+(Context menu) － [Detailed song information].
+Note
+Sony does not guarantee performance if you format the memory of the player using a computer.
+The contents of the Help Guide may be subject to change without notice due to updates to the product's specifications.
+Go to Page Top
+Related Topic
+Restarting the player

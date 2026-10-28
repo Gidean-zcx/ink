@@ -1,0 +1,113 @@
+item_id,product_id,item,source_locator,evidence_ids,flow_ids,status,gap,checked_on
+XYAC-001,M-028,拍照搜题,官网九大核心功能,E-XYAI-01,,official_domain_parent,宣传功能域，不是完整机内菜单；性能未验证,2026-10-27
+XYAC-002,M-028,检查作业,官网九大核心功能,E-XYAI-01,,official_domain_parent,宣传功能域，不是完整机内菜单；性能未验证,2026-10-27
+XYAC-003,M-028,答疑讲解,官网九大核心功能,E-XYAI-01,,official_domain_parent,宣传功能域，不是完整机内菜单；性能未验证,2026-10-27
+XYAC-004,M-028,专项练习,官网九大核心功能,E-XYAI-01,,official_domain_parent,宣传功能域，不是完整机内菜单；性能未验证,2026-10-27
+XYAC-005,M-028,作文批改,官网九大核心功能,E-XYAI-01,,official_domain_parent,宣传功能域，不是完整机内菜单；性能未验证,2026-10-27
+XYAC-006,M-028,同步学练,官网九大核心功能,E-XYAI-01,,official_domain_parent,宣传功能域，不是完整机内菜单；性能未验证,2026-10-27
+XYAC-007,M-028,错题本,官网九大核心功能,E-XYAI-01,,official_domain_parent,宣传功能域，不是完整机内菜单；性能未验证,2026-10-27
+XYAC-008,M-028,备考工具,官网九大核心功能,E-XYAI-01,,official_domain_parent,宣传功能域，不是完整机内菜单；性能未验证,2026-10-27
+XYAC-009,M-028,班级功能,官网九大核心功能,E-XYAI-01,,official_domain_parent,宣传功能域，不是完整机内菜单；性能未验证,2026-10-27
+XYAC-010,M-028,小猿AI是什么，适合哪些人使用？,官方FAQ,E-XYAI-02,,official_FAQ_item,功能/会员/范围说明，未逐屏操作,2026-10-27
+XYAC-011,M-028,小猿AI适合哪些学龄段的孩子？,官方FAQ,E-XYAI-02,,official_FAQ_item,功能/会员/范围说明，未逐屏操作,2026-10-27
+XYAC-012,M-028,小猿AI和小猿口算是什么关系？,官方FAQ,E-XYAI-02,,official_FAQ_item,功能/会员/范围说明，未逐屏操作,2026-10-27
+XYAC-013,M-028,小猿AI和小猿搜题是什么关系？,官方FAQ,E-XYAI-02,,official_FAQ_item,功能/会员/范围说明，未逐屏操作,2026-10-27
+XYAC-014,M-028,小猿AI和小猿搜题拍照搜题效果哪个好？,官方FAQ,E-XYAI-02,,official_FAQ_item,功能/会员/范围说明，未逐屏操作,2026-10-27
+XYAC-015,M-028,小猿AI可以检查哪些作业？支持哪些科目和题型？,官方FAQ,E-XYAI-02,,official_FAQ_item,功能/会员/范围说明，未逐屏操作,2026-10-27
+XYAC-016,M-028,小猿AI只是给答案吗？,官方FAQ,E-XYAI-02,,official_FAQ_item,功能/会员/范围说明，未逐屏操作,2026-10-27
+XYAC-017,M-028,小猿AI只有练习吗？,官方FAQ,E-XYAI-02,,official_FAQ_item,功能/会员/范围说明，未逐屏操作,2026-10-27
+XYAC-018,M-028,小猿AI是免费的吗？,官方FAQ,E-XYAI-02,,official_FAQ_item,功能/会员/范围说明，未逐屏操作,2026-10-27
+XYAC-019,M-028,在哪里可以下载小猿AI？,官方FAQ,E-XYAI-02,,official_FAQ_item,功能/会员/范围说明，未逐屏操作,2026-10-27
+XYAC-020,M-028,口算入口、草稿、退出与结果,作者13小节 block5,E-XYAC-01,F-M028-02,source_subsection_parent,仅来源局部，未操作当前版本,2026-10-27
+XYAC-021,M-028,数学页16个可见入口,block5; 具体图号见source-notes,E-XYAC-01,F-M028-02,static_partial_control,仅来源局部，未操作当前版本,2026-10-27
+XYAC-022,M-028,年级/教材/单元,block5; 具体图号见source-notes,E-XYAC-01,F-M028-02,static_partial_control,仅来源局部，未操作当前版本,2026-10-27
+XYAC-023,M-028,题量菜单可见10/20/30/60/100,block5; 具体图号见source-notes,E-XYAC-01,F-M028-02,static_partial_control,仅来源局部，未操作当前版本,2026-10-27
+XYAC-024,M-028,知识点竞速榜,block5; 具体图号见source-notes,E-XYAC-01,F-M028-02,static_partial_control,仅来源局部，未操作当前版本,2026-10-27
+XYAC-025,M-028,打印及外部输出入口,block5; 具体图号见source-notes,E-XYAC-01,F-M028-02,static_partial_control,仅来源局部，未操作当前版本,2026-10-27
+XYAC-026,M-028,手写识别/重写/跳过,block5; 具体图号见source-notes,E-XYAC-01,F-M028-02,static_partial_control,仅来源局部，未操作当前版本,2026-10-27
+XYAC-027,M-028,草稿清空/撤销/重做/关闭,block5; 具体图号见source-notes,E-XYAC-01,F-M028-02,static_partial_control,仅来源局部，未操作当前版本,2026-10-27
+XYAC-028,M-028,退出继续/离开确认,block5; 具体图号见source-notes,E-XYAC-01,F-M028-02,static_partial_control,仅来源局部，未操作当前版本,2026-10-27
+XYAC-029,M-028,今日任务金币,block5; 具体图号见source-notes,E-XYAC-01,F-M028-02,static_partial_control,仅来源局部，未操作当前版本,2026-10-27
+XYAC-030,M-028,周经验荣誉联赛,block5; 具体图号见source-notes,E-XYAC-01,F-M028-02,static_partial_control,仅来源局部，未操作当前版本,2026-10-27
+XYAC-031,M-028,完成/答对数/正确率分开,block5; 具体图号见source-notes,E-XYAC-01,F-M028-02,static_partial_control,仅来源局部，未操作当前版本,2026-10-27
+XYAC-032,M-028,分享/再练,block5; 具体图号见source-notes,E-XYAC-01,F-M028-02,static_partial_control,仅来源局部，未操作当前版本,2026-10-27
+XYAC-033,M-028,同步练的选择与下一题,作者13小节 block6,E-XYAC-02,F-M028-02,source_subsection_parent,仅来源局部，未操作当前版本,2026-10-27
+XYAC-034,M-028,单元与判断/选择题,block6; 具体图号见source-notes,E-XYAC-02,F-M028-02,static_partial_control,仅来源局部，未操作当前版本,2026-10-27
+XYAC-035,M-028,连续读题/朗读本题,block6; 具体图号见source-notes,E-XYAC-02,F-M028-02,static_partial_control,仅来源局部，未操作当前版本,2026-10-27
+XYAC-036,M-028,错后下一题；解析只正文,block6; 具体图号见source-notes,E-XYAC-02,F-M028-02,static_partial_control,仅来源局部，未操作当前版本,2026-10-27
+XYAC-037,M-028,题目反馈/草稿,block6; 具体图号见source-notes,E-XYAC-02,F-M028-02,static_partial_control,仅来源局部，未操作当前版本,2026-10-27
+XYAC-038,M-028,竖式的逐列输入与显式完成,作者13小节 block7,E-XYAC-03,F-M028-02,source_subsection_parent,仅来源局部，未操作当前版本,2026-10-27
+XYAC-039,M-028,逐列输入/重置,block7; 具体图号见source-notes,E-XYAC-03,F-M028-02,static_partial_control,仅来源局部，未操作当前版本,2026-10-27
+XYAC-040,M-028,完成灰/亮状态,block7; 具体图号见source-notes,E-XYAC-03,F-M028-02,static_partial_control,仅来源局部，未操作当前版本,2026-10-27
+XYAC-041,M-028,跳过/返回,block7; 具体图号见source-notes,E-XYAC-03,F-M028-02,static_partial_control,仅来源局部，未操作当前版本,2026-10-27
+XYAC-042,M-028,单位换算的手写输入,作者13小节 block8,E-XYAC-04,F-M028-02,source_subsection_parent,仅来源局部，未操作当前版本,2026-10-27
+XYAC-043,M-028,比较/计算分支,block8; 具体图号见source-notes,E-XYAC-04,F-M028-02,static_partial_control,仅来源局部，未操作当前版本,2026-10-27
+XYAC-044,M-028,手写比较符号,block8; 具体图号见source-notes,E-XYAC-04,F-M028-02,static_partial_control,仅来源局部，未操作当前版本,2026-10-27
+XYAC-045,M-028,跳过/草稿,block8; 具体图号见source-notes,E-XYAC-04,F-M028-02,static_partial_control,仅来源局部，未操作当前版本,2026-10-27
+XYAC-046,M-028,听算的语音回答与错答,作者13小节 block9,E-XYAC-05,F-M028-07,source_subsection_parent,仅来源局部，未操作当前版本,2026-10-27
+XYAC-047,M-028,范围/数量/开始,block9; 具体图号见source-notes,E-XYAC-05,F-M028-07,static_partial_control,仅来源局部，未操作当前版本,2026-10-27
+XYAC-048,M-028,听题/重播/跳过,block9; 具体图号见source-notes,E-XYAC-05,F-M028-07,static_partial_control,仅来源局部，未操作当前版本,2026-10-27
+XYAC-049,M-028,语音与对错标记,block9; 具体图号见source-notes,E-XYAC-05,F-M028-07,static_partial_control,仅来源局部，未操作当前版本,2026-10-27
+XYAC-050,M-028,倒计时内重试仅作者文字,block9; 具体图号见source-notes,E-XYAC-05,F-M028-07,static_partial_control,仅来源局部，未操作当前版本,2026-10-27
+XYAC-051,M-028,字词听写模式、输入与结果,作者13小节 block12,E-XYAC-06,F-M028-05,source_subsection_parent,仅来源局部，未操作当前版本,2026-10-27
+XYAC-052,M-028,课文/范围逐项及全选,block12; 具体图号见source-notes,E-XYAC-06,F-M028-05,static_partial_control,仅来源局部，未操作当前版本,2026-10-27
+XYAC-053,M-028,在线手写/重播/清写/提交,block12; 具体图号见source-notes,E-XYAC-06,F-M028-05,static_partial_control,仅来源局部，未操作当前版本,2026-10-27
+XYAC-054,M-028,纸笔上一项/暂停/下一项,block12; 具体图号见source-notes,E-XYAC-06,F-M028-05,static_partial_control,仅来源局部，未操作当前版本,2026-10-27
+XYAC-055,M-028,自由内容空格分词,block12; 具体图号见source-notes,E-XYAC-06,F-M028-05,static_partial_control,仅来源局部，未操作当前版本,2026-10-27
+XYAC-056,M-028,每项4汉字/200字词提示,block12; 具体图号见source-notes,E-XYAC-06,F-M028-05,static_partial_control,仅来源局部，未操作当前版本,2026-10-27
+XYAC-057,M-028,童声/教师声,block12; 具体图号见source-notes,E-XYAC-06,F-M028-05,static_partial_control,仅来源局部，未操作当前版本,2026-10-27
+XYAC-058,M-028,5/10/15秒间隔,block12; 具体图号见source-notes,E-XYAC-06,F-M028-05,static_partial_control,仅来源局部，未操作当前版本,2026-10-27
+XYAC-059,M-028,1/2/3次重复,block12; 具体图号见source-notes,E-XYAC-06,F-M028-05,static_partial_control,仅来源局部，未操作当前版本,2026-10-27
+XYAC-060,M-028,顺序/乱序,block12; 具体图号见source-notes,E-XYAC-06,F-M028-05,static_partial_control,仅来源局部，未操作当前版本,2026-10-27
+XYAC-061,M-028,正确写法/关闭/知道啦/下一项,block12; 具体图号见source-notes,E-XYAC-06,F-M028-05,static_partial_control,仅来源局部，未操作当前版本,2026-10-27
+XYAC-062,M-028,完成数/答对数/错题本/重练,block12; 具体图号见source-notes,E-XYAC-06,F-M028-05,static_partial_control,仅来源局部，未操作当前版本,2026-10-27
+XYAC-063,M-028,趣味识字的学读练与字卡,作者13小节 block13,E-XYAC-07,F-M028-08,source_subsection_parent,仅来源局部，未操作当前版本,2026-10-27
+XYAC-064,M-028,单元/字卡地图与锁,block13; 具体图号见source-notes,E-XYAC-07,F-M028-08,static_partial_control,仅来源局部，未操作当前版本,2026-10-27
+XYAC-065,M-028,学/读/练切换,block13; 具体图号见source-notes,E-XYAC-07,F-M028-08,static_partial_control,仅来源局部，未操作当前版本,2026-10-27
+XYAC-066,M-028,学的字形/图示,block13; 具体图号见source-notes,E-XYAC-07,F-M028-08,static_partial_control,仅来源局部，未操作当前版本,2026-10-27
+XYAC-067,M-028,读的示范/录音/星级,block13; 具体图号见source-notes,E-XYAC-07,F-M028-08,static_partial_control,仅来源局部，未操作当前版本,2026-10-27
+XYAC-068,M-028,练的选字/词组缺字,block13; 具体图号见source-notes,E-XYAC-07,F-M028-08,static_partial_control,仅来源局部，未操作当前版本,2026-10-27
+XYAC-069,M-028,字卡获得/分享/继续,block13; 具体图号见source-notes,E-XYAC-07,F-M028-08,static_partial_control,仅来源局部，未操作当前版本,2026-10-27
+XYAC-070,M-028,背古诗的提示、重背与成绩,作者13小节 block14,E-XYAC-08,F-M028-09,source_subsection_parent,仅来源局部，未操作当前版本,2026-10-27
+XYAC-071,M-028,检索/年级/课内外,block14; 具体图号见source-notes,E-XYAC-08,F-M028-09,static_partial_control,仅来源局部，未操作当前版本,2026-10-27
+XYAC-072,M-028,背诵入口/逐步呈字,block14; 具体图号见source-notes,E-XYAC-08,F-M028-09,static_partial_control,仅来源局部，未操作当前版本,2026-10-27
+XYAC-073,M-028,重背/提示/时长,block14; 具体图号见source-notes,E-XYAC-08,F-M028-09,static_partial_control,仅来源局部，未操作当前版本,2026-10-27
+XYAC-074,M-028,错字/提示次数/用时/分数,block14; 具体图号见source-notes,E-XYAC-08,F-M028-09,static_partial_control,仅来源局部，未操作当前版本,2026-10-27
+XYAC-075,M-028,录音播放/再背,block14; 具体图号见source-notes,E-XYAC-08,F-M028-09,static_partial_control,仅来源局部，未操作当前版本,2026-10-27
+XYAC-076,M-028,诗词PK仅入口,block14; 具体图号见source-notes,E-XYAC-08,F-M028-09,static_partial_control,仅来源局部，未操作当前版本,2026-10-27
+XYAC-077,M-028,语文练习的题目入口,作者13小节 block15,E-XYAC-09,,source_subsection_parent,仅来源局部，未操作当前版本,2026-10-27
+XYAC-078,M-028,课文列表/选择题,block15; 具体图号见source-notes,E-XYAC-09,,static_partial_control,仅来源局部，未操作当前版本,2026-10-27
+XYAC-079,M-028,朗读/连续读题,block15; 具体图号见source-notes,E-XYAC-09,,static_partial_control,仅来源局部，未操作当前版本,2026-10-27
+XYAC-080,M-028,跳过/题目反馈；结果缺,block15; 具体图号见source-notes,E-XYAC-09,,static_partial_control,仅来源局部，未操作当前版本,2026-10-27
+XYAC-081,M-028,练字挑战的描写入口,作者13小节 block16,E-XYAC-10,,source_subsection_parent,仅来源局部，未操作当前版本,2026-10-27
+XYAC-082,M-028,字词学习/每日挑战,block16; 具体图号见source-notes,E-XYAC-10,,static_partial_control,仅来源局部，未操作当前版本,2026-10-27
+XYAC-083,M-028,描写字形/笔画/拼音,block16; 具体图号见source-notes,E-XYAC-10,,static_partial_control,仅来源局部，未操作当前版本,2026-10-27
+XYAC-084,M-028,重写/跳过；结果缺,block16; 具体图号见source-notes,E-XYAC-10,,static_partial_control,仅来源局部，未操作当前版本,2026-10-27
+XYAC-085,M-028,背单词的多阶段作答与重练,作者13小节 block19,E-XYAC-11,F-M028-10,source_subsection_parent,仅来源局部，未操作当前版本,2026-10-27
+XYAC-086,M-028,计划新学/复习/更换,block19; 具体图号见source-notes,E-XYAC-11,F-M028-10,static_partial_control,仅来源局部，未操作当前版本,2026-10-27
+XYAC-087,M-028,释义/发音/图片/继续,block19; 具体图号见source-notes,E-XYAC-11,F-M028-10,static_partial_control,仅来源局部，未操作当前版本,2026-10-27
+XYAC-088,M-028,选择图片,block19; 具体图号见source-notes,E-XYAC-11,F-M028-10,static_partial_control,仅来源局部，未操作当前版本,2026-10-27
+XYAC-089,M-028,释义选择/提交灰亮,block19; 具体图号见source-notes,E-XYAC-11,F-M028-10,static_partial_control,仅来源局部，未操作当前版本,2026-10-27
+XYAC-090,M-028,答题反馈后继续,block19; 具体图号见source-notes,E-XYAC-11,F-M028-10,static_partial_control,仅来源局部，未操作当前版本,2026-10-27
+XYAC-091,M-028,补字母仅正文,block19; 具体图号见source-notes,E-XYAC-11,F-M028-10,static_partial_control,仅来源局部，未操作当前版本,2026-10-27
+XYAC-092,M-028,错题重练,block19; 具体图号见source-notes,E-XYAC-11,F-M028-10,static_partial_control,仅来源局部，未操作当前版本,2026-10-27
+XYAC-093,M-028,经验/时间/正确率统计,block19; 具体图号见source-notes,E-XYAC-11,F-M028-10,static_partial_control,仅来源局部，未操作当前版本,2026-10-27
+XYAC-094,M-028,记忆法标签不证调度算法,block19; 具体图号见source-notes,E-XYAC-11,F-M028-10,static_partial_control,仅来源局部，未操作当前版本,2026-10-27
+XYAC-095,M-028,单词听写的横屏输入,作者13小节 block20,E-XYAC-12,F-M028-05,source_subsection_parent,仅来源局部，未操作当前版本,2026-10-27
+XYAC-096,M-028,单元/模式/打印,block20; 具体图号见source-notes,E-XYAC-12,F-M028-05,static_partial_control,仅来源局部，未操作当前版本,2026-10-27
+XYAC-097,M-028,横屏多词输入,block20; 具体图号见source-notes,E-XYAC-12,F-M028-05,static_partial_control,仅来源局部，未操作当前版本,2026-10-27
+XYAC-098,M-028,重播/清写/下一词；结果缺,block20; 具体图号见source-notes,E-XYAC-12,F-M028-05,static_partial_control,仅来源局部，未操作当前版本,2026-10-27
+XYAC-099,M-028,口语分支与单词结果,作者13小节 block21,E-XYAC-13,F-M028-06,source_subsection_parent,仅来源局部，未操作当前版本,2026-10-27
+XYAC-100,M-028,单词/句子/情景模式入口,block21; 具体图号见source-notes,E-XYAC-13,F-M028-06,static_partial_control,仅来源局部，未操作当前版本,2026-10-27
+XYAC-101,M-028,单词示范/录音,block21; 具体图号见source-notes,E-XYAC-13,F-M028-06,static_partial_control,仅来源局部，未操作当前版本,2026-10-27
+XYAC-102,M-028,星级/再试；两次规则仅文字,block21; 具体图号见source-notes,E-XYAC-13,F-M028-06,static_partial_control,仅来源局部，未操作当前版本,2026-10-27
+XYAC-103,M-028,词级回放/色标/星级成绩,block21; 具体图号见source-notes,E-XYAC-13,F-M028-06,static_partial_control,仅来源局部，未操作当前版本,2026-10-27
+XYAC-104,M-028,下一步句子跟读仅入口,block21; 具体图号见source-notes,E-XYAC-13,F-M028-06,static_partial_control,仅来源局部，未操作当前版本,2026-10-27
+XYAC-105,M-028,免重复注册与关联产品分别注销,旧隐私政策第六节及第97行,E-XYAI-04,F-M028-11,policy_documented_path,未实操；不等于进度迁移、全量导出或恢复,2026-10-27
+XYAC-106,M-028,资料修改与头像框,旧隐私政策第六节及第97行,E-XYAI-04,F-M028-12,policy_documented_path,未实操；不等于进度迁移、全量导出或恢复,2026-10-27
+XYAC-107,M-028,撤回系统相机/麦克风权限,旧隐私政策第六节及第97行,E-XYAI-04,F-M028-03,policy_documented_path,未实操；不等于进度迁移、全量导出或恢复,2026-10-27
+XYAC-108,M-028,客服删除/备份更新时删除,旧隐私政策第六节及第97行,E-XYAI-04,F-M028-11,policy_documented_path,未实操；不等于进度迁移、全量导出或恢复,2026-10-27
+XYAC-109,M-028,注销双确认与学习记录范围,旧隐私政策第六节及第97行,E-XYAI-04,F-M028-11,policy_documented_path,未实操；不等于进度迁移、全量导出或恢复,2026-10-27
+XYAC-110,M-028,头像框截图副本,旧隐私政策第六节及第97行,E-XYAI-04,F-M028-12,policy_documented_path,未实操；不等于进度迁移、全量导出或恢复,2026-10-27
+XYAC-111,M-028,3.145.0 / 2026-10-26,当前商店HTML time datetime,E-XYAI-05,,version_metadata,不能给历史图定构建；泛化更新不作功能证据,2026-10-27
+XYAC-112,M-028,首页xyst政策新链接,首页footer，网页打开内部错误,E-XYAI-01,,unread_link,未取得新正文；旧政策结论限定2025-08-18旧URL,2026-10-27

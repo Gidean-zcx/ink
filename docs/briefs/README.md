@@ -1,0 +1,60 @@
+# 产品研究简报目录
+
+简报按新到旧排列，记录各批发现及当时的证据边界。**后续设计优先使用[按设计问题查依据](../research/interaction-library/design-reference-guide.md)**；各产品与任务的当前覆盖以[案例索引](../research/interaction-library/case-index.md)为准。旧简报的数量是历史快照，不能累计当全功能完成率。
+
+- [第五十六期：墨水屏怎样做到操作顺畅](/home/workspace/reader/docs/briefs/056-eink-ui-interaction.md)：官方文档与 Plus 固定源码交叉核查；区分输入、可见、可读和完成，比较手势、分页、AI 分段及儿童互动。
+- [第五十五期：全局入口与执行环境](/home/workspace/reader/docs/briefs/055-global-entry-and-execution-context.md)：快捷指令补语音/按键/组件、共享输入、提醒回访与配置组织；修正预览范围，新增14条设计参考。
+- [第五十四期：媒体、权限与学习资料的交付](/home/workspace/reader/docs/briefs/054-media-permissions-and-study-content.md)：Quizlet补媒体、组织、权限、成员与评价；原64篇目录文章均有正文记录，首页推荐仍D1，新增13条设计参考。
+- [第五十三期：音频学习、会话与游戏结果](/home/workspace/reader/docs/briefs/053-audio-learning-and-session-state.md)：Quizlet补音频输入/生成、问答中断、游戏与共享结果；原Studying目录27项均有关联正文，新增10条设计参考。
+- [第五十二期：学习资料如何进入，退出后留下什么](/home/workspace/reader/docs/briefs/052-study-material-interactions.md)：Quizlet补外部AI入口、扫描校订、临时/保存合并和资格限制；八项原目录补正文，新增七条设计参考依据。
+- [第五十一期：传出、同步与恢复的不同后果](/home/workspace/reader/docs/briefs/051-transfer-sync-and-recovery.md)：两代QUADERNO补连接、文件和恢复链；播放器旧安装照片分清包、确认与登录状态，新增13条设计参考依据。
+- [第五十期：交互细节与可复查依据](/home/workspace/reader/docs/briefs/050-interaction-depth-and-reuse.md)：补AI笔记/待办目标与撤销、Gen.2笔迹和校准；依据表新增可筛选的证据字段及实际操作审计入口。
+- [第四十九期：选择、确认与真正保存](/home/workspace/reader/docs/briefs/049-selection-confirmation-and-persistence.md)：沿固定源码区分即时筛选、临时标签编辑、批量结果、队列与文件删除；新增8条按问题检索的依据。
+- [第四十八期：学习按键、确认与统计](/home/workspace/reader/docs/briefs/048-learning-controls-and-statistics.md)：补答案揭示、自评、长按确认、回顾副作用和统计口径；原图与文图冲突可直接回查。
+- [第四十七期：AI动作的数据传递与结果](/home/workspace/reader/docs/briefs/047-ai-data-flow-and-results.md)：补空输入、列表/分支、批量处理、网页上下文及成功/取消/错误返回；新增10条可检索依据。
+- [第四十六期：系统音频与内容状态](/home/workspace/reader/docs/briefs/046-system-audio-and-content-state.md)：补音量输出范围、主页配置、锁屏、内容索引及电源条件；新增10条可检索依据。
+- [第四十五期：阅读、音乐与内容准备](/home/workspace/reader/docs/briefs/045-reading-media-and-content-readiness.md)：补页码单位、书签确认、音乐控制及购买/下载/授权/同步的边界；新增10条可检索依据。
+- [第四十四期：系统控件、内容状态与证据范围](/home/workspace/reader/docs/briefs/044-system-controls-and-evidence-scope.md)：补31篇帮助与7幅静态图，明确声音、后台、投屏、订阅及阅读记录的不同作用范围；新增12条可检索依据。
+- [第四十三期：整期阅读与恢复](/home/workspace/reader/docs/briefs/043-issue-reading-and-resume.md)：TIME公开样刊实操区分显式页书签、同页续播与刷新重置，配合同刊纸面任务补读后产出；新增7条可检索依据。
+- [第四十二期：数学反馈与研究深度](/home/workspace/reader/docs/briefs/042-math-feedback-and-research-depth.md)：实际追踪输入、错答推进、课末订正、结算和刷新；按设计问题增加11条可复查依据，仍明确全部产品部分覆盖。
+- [第四十一期：新闻阅读与保留](/home/workspace/reader/docs/briefs/041-news-reading-and-retention.md)：阅读进度、归档范围、网页预览/保存、过滤回看、离线可用及邮件源取消的文档冲突；补直接检索依据。
+- [第四十期：学习输入与同步](/home/workspace/reader/docs/briefs/040-learning-input-and-sync.md)：手势的学习阶段、识词计数、后台同步触发与提醒条件；补可检索的原文/画面和未验证分支。
+- [第三十九期：AI预览与数据传递](/home/workspace/reader/docs/briefs/039-ai-preview-and-transfer.md)：日程字段确认、邮件预览/回编辑器/发送、第三方云周期与多设备接收；新增可筛选的交互依据表，仍明确部分覆盖。
+- [第三十八期：读听切换与恢复](/home/workspace/reader/docs/briefs/038-reading-audio-and-recovery.md)：公开样刊的缩放、听读、关闭、重启与窄屏实际操作；按恢复条件反查证据，保留未完成分支。
+- [第三十七期：成人引导与系统结果](/home/workspace/reader/docs/briefs/037-adult-guidance-and-system-controls.md)：区分纸面激励、教师任务和App反馈；补Kompakt闹钟/地图/截图等操作与结果边界。
+- [第三十六期：控件与状态依据](/home/workspace/reader/docs/briefs/036-controls-and-state-evidence.md)：Readwise官方渲染器合成样本、X2剩余手册任务及墨案历史控件；区分按钮、状态和完成证据。
+- [第三十五期：AI工作流与阅读证据](/home/workspace/reader/docs/briefs/035-ai-workflows-and-reading-evidence.md)：外部AI逐篇筛选、订阅批次、测验与画像；小猿历史订正/听书链，保留版本和运行证据缺口。
+- [第三十四期：内容对象与学习材料](/home/workspace/reader/docs/briefs/034-content-objects-and-study-materials.md)：Anki批量编辑的影响范围、公式准备、题库修订分发与自托管同步；补读原目录剩余30页。
+- [第三十三期：家庭听书与语音控制](/home/workspace/reader/docs/briefs/033-family-audio-and-voice-controls.md)：儿童档案与位置、前台语音范围、RSS导入与绑卡、取盘后的后台下载。
+- [第三十二期：学习游戏与完成结果](/home/workspace/reader/docs/briefs/032-learning-games-and-completion.md)：Chess实际错答/提示/重试/结算及刷新，Quizlet活动规则，Anki结束与重建。
+- [第三十一期：同步、可用状态与AI产物](/home/workspace/reader/docs/briefs/031-sync-readiness-and-ai-results.md)：转写连接/纪要控件、历史手机计划到设备词卡，及未观察到的确认、保存和恢复。
+- [第三十期：学习阶段与设备状态](/home/workspace/reader/docs/briefs/030-learning-stages-and-device-state.md)：历史辨识/拼写选择、拍题宣传片的范围、设置与实际状态、歌词条件，并完善证据直达与字段说明。
+- [第二十九期：操作障碍与执行结果](/home/workspace/reader/docs/briefs/029-gameplay-errors-and-action-results.md)：儿童放置受挫、历史漏答确认、源码请求与完成的区别，并补直达证据链。
+- [第二十八期：阅读计划与交互依据](/home/workspace/reader/docs/briefs/028-reading-plans-and-interaction-evidence.md)：任务计划的修改范围、阅读统计、提示与报告，以及宣传视频仍不足以支持的结论。
+- [第二十七期：学习状态与证据复用](/home/workspace/reader/docs/briefs/027-learning-states-and-evidence-reuse.md)：四条学习机教程的具体画面、笔记撤销范围、档案与清除对象。
+- [第二十六期：声音、档案与研究复用](/home/workspace/reader/docs/briefs/026-audio-controls-and-research-reuse.md)：音频控制、AI预览/保存、家庭档案与恢复，附按设计问题检索入口。
+- [第二十五期：答完、答对与保存](/home/workspace/reader/docs/briefs/025-practice-feedback-and-recovery.md)：逐题型纠错/结束、手写编辑/恢复、资料副本与备份的范围。
+- [第二十四期：控件范围与交互证据](/home/workspace/reader/docs/briefs/024-controls-scope-and-evidence.md)：推荐控制、儿童时间管理、当前App显示与保存对象，及单词机型号排除。
+- [第二十三期：学完、保存与恢复](/home/workspace/reader/docs/briefs/023-learning-completion-and-records.md)：学习完成、记录上传、日历补卡与书库登记的区别，及阅读设置和宣传图的核查。
+- [第二十二期：AI能做什么，退出后留下什么](/home/workspace/reader/docs/briefs/022-ai-actions-and-resume-conditions.md)：AI通信/语音/接入的作用范围，阅读设备睡眠与恢复的条件。
+- [第二十一期：读完、少推和清除](/home/workspace/reader/docs/briefs/021-reading-feedback-and-data-reset.md)：历史阅读终点、推荐控制与数据重置的不同作用，型号按键与恢复缺口。
+- [第二十期：儿童纠错、任务完成与可恢复状态](/home/workspace/reader/docs/briefs/020-child-feedback-and-resumable-state.md)：儿童实际错答与返回、AI引用定位、设备后台与恢复的证据边界。
+- [第十九期：阅读队列、内容版本与 AI 动作](/home/workspace/reader/docs/briefs/019-reading-queues-and-ai-actions.md)：阅读节奏、正文更新与批注、分享范围和 AI 工具的证据边界。
+- [第十八期：关闭页面之后，内容和状态发生了什么](/home/workspace/reader/docs/briefs/018-reading-controls-and-source-completeness.md)：词卡实际开关、媒体状态、题库材料完整性与设置生效条件。
+- [第十七期：动作作用于哪里，数据留在哪里](/home/workspace/reader/docs/briefs/017-action-targets-and-lifecycle.md)：设备与配套App的控制范围、定时停止、应用生命周期和账号可见性。
+- [第十六期：可见、可改与可恢复](/home/workspace/reader/docs/briefs/016-visibility-editability-and-recovery.md)：临时副本、笔迹与显示、删除路径、跨端连接及恢复条件。
+- [第十五期：自由探索、撤销与自动停止](/home/workspace/reader/docs/briefs/015-exploration-undo-and-stopping.md)：儿童构数与教材提问、误评撤销与媒体恢复、自动推进及计时条件。
+- [第十四期：新闻控制、学习记录与离线故事](/home/workspace/reader/docs/briefs/014-news-learning-offline-evidence.md)：新闻选择与评级、学习完成与打卡、离线故事与家庭绑定，附资料深度和复用方法。
+- [第十三期：家庭内容、练习录音与音频角色](/home/workspace/reader/docs/briefs/013-household-recording-and-audio-roles.md)：家庭进度、临时/保存录音、音频方向及公开选馆器实际分支。
+- [第十二期：副本、索引与恢复状态](/home/workspace/reader/docs/briefs/012-data-objects-and-state-boundaries.md)：reMarkable跨端副本、欧路词库索引、Sony播放范围与介质恢复。
+- [第十一期：学习动作与恢复粒度](/home/workspace/reader/docs/briefs/011-learning-actions-and-recovery.md)：Duolingo匿名实际作答、墨墨导入/PDF、Tonie游戏恢复与家庭对象权限。
+- [第十期：任务证据与设计复用](/home/workspace/reader/docs/briefs/010-task-evidence-and-reuse.md)：新闻更正与规则试跑、学习恢复、AI试题校订和离线读听，附设计问题到任务和证据的检索方式。
+- [第九期：条件与交互证据](/home/workspace/reader/docs/briefs/009-conditions-and-interaction-evidence.md)：单词准备的多个阶段、儿童百科活动、新闻播放器与静态界面的证据边界。
+- [第八期：操作状态与研究复用](/home/workspace/reader/docs/briefs/008-state-and-research-reuse.md)：题库更新、新闻偏好、读听与笔记出口，续补儿童学习、家庭数据恢复与版本冲突。
+- [第七期：竞品交互证据与复用](/home/workspace/reader/docs/briefs/007-interaction-findings.md)：介绍续播、恢复、手势、学习与 AI 数据口径的具体差别，明确仍未完成的深度。
+- [第六期：竞品交互研究深度](/home/workspace/reader/docs/briefs/006-interaction-research-depth.md)：历史批次；纠正此前偏功能盘点的问题，建立深度标准与首批案例。
+- [第五期：学习、个人新闻与系统 AI](/home/workspace/reader/docs/briefs/005-learning-news-ai-first.md)：两个核心目标、成人/儿童学习体验、个人报纸候选、全场景 AI 覆盖。
+- [第四期：跨品类竞品与产品启发](/home/workspace/reader/docs/briefs/004-cross-category-competitors.md)：13 类、43 组产品/服务，新增查词学习、精听、音频和专注体验。
+- [第三期：从固件仓库吸收功能](/home/workspace/reader/docs/briefs/003-firmware-feature-inspiration.md)：39 项盘点、AI 记录与内容流转候选、不同安装机制的边界。
+- [第二期：Plus 通信与数据恢复](/home/workspace/reader/docs/briefs/002-plus-connectivity-and-data.md)：硬件边界、布丁固件线索、备份与账户建议。
+- [第一期产品与技术简报](/home/workspace/reader/docs/briefs/001-family-ai-phone.md)：整体方向、场景原型；通信判断已随本轮证据修正。

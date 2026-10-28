@@ -1,0 +1,13 @@
+How do I create an automated report?
+Go to Automate > Automated reports, select your sources, and configure the prompt and schedule. Keep your source selection focused and review the preview before saving. Automated reports require access to Intelligence reports and use your Intelligence token quota.
+Related questions
+What are Intelligence reports?
+What can Intelligence reports be used for?
+How do I create an Intelligence report?
+Where can I find saved Intelligence reports?
+Can I search through Intelligence reports?
+Can I share Intelligence reports?
+What are automated reports?
+How can I create a weekly overview of a monitored topic?
+Should I use an Intelligence report or an email digest?
+Are Intelligence reports available in all plans?

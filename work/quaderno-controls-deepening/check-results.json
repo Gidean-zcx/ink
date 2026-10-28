@@ -1,0 +1,24 @@
+{
+  "status": "PASS",
+  "new_E": 9,
+  "new_F": 8,
+  "total_case_F": 16,
+  "old_F_rows": 5,
+  "old_F_fields": 15,
+  "csv_checks": [
+    {
+      "file": "docs/research/interaction-library/batches/quaderno-controls-deepening-coverage.csv",
+      "rows": 8,
+      "physical_LF": 9,
+      "literal_backslash_rn": 0
+    },
+    {
+      "file": "docs/research/interaction-library/batches/quaderno-controls-deepening-inventory.csv",
+      "rows": 275,
+      "physical_LF": 276,
+      "literal_backslash_rn": 0
+    }
+  ],
+  "errors": [],
+  "state_changed": "only assigned case/new batch/artifacts and work; no device/account/product changes"
+}

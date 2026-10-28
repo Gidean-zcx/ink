@@ -1,0 +1,76 @@
+{
+  "name": "35-answer-seven",
+  "url": "https://www.duolingo.com/lesson",
+  "title": "Duolingo - Learn French with lessons that work",
+  "utc": "2026-10-26T17:52:10.486767+00:00",
+  "text": "6 IN A ROW\n4\nWrite this in English\nun café\na\ncoffee\ncoffee\na\nand\nExcellent!\nTOO EASY\nTOO DIFFICULT\nREPORT\nCONTINUE",
+  "buttons": [
+    {
+      "text": "",
+      "aria": null,
+      "test": "quit-button",
+      "visible": true
+    },
+    {
+      "text": "",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "a",
+      "aria": null,
+      "test": "a-challenge-tap-token",
+      "visible": true
+    },
+    {
+      "text": "coffee",
+      "aria": null,
+      "test": "coffee-challenge-tap-token",
+      "visible": true
+    },
+    {
+      "text": "coffee",
+      "aria": null,
+      "test": "coffee-challenge-tap-token",
+      "visible": true
+    },
+    {
+      "text": "a",
+      "aria": null,
+      "test": "a-challenge-tap-token",
+      "visible": true
+    },
+    {
+      "text": "and",
+      "aria": null,
+      "test": "and-challenge-tap-token",
+      "visible": true
+    },
+    {
+      "text": "TOO EASY",
+      "aria": "Too easy",
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "TOO DIFFICULT",
+      "aria": "Too difficult",
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "REPORT",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "CONTINUE",
+      "aria": null,
+      "test": "player-next",
+      "visible": true
+    }
+  ],
+  "inputs": []
+}

@@ -1,0 +1,46 @@
+inventory_id,product_id,node_type,function_domain,source_locator,evidence_ids,flow_ids,platform_version,body_status,remaining_gap,checked_on
+IR-P01,M-014,mobile_domain,内容/选书,描述：内容类型,E-IRD-01,F-M014-01,中国区iOS/iPadOS商店8.6.2；2026-10-27快照,body_read_declaration_or_partial_path,选书入口、打开/返回和章节导航未取得,2026-10-27
+IR-P02,M-014,mobile_domain,封面/背景/字体,描述：阅读器,E-IRD-01,F-M014-01,中国区iOS/iPadOS商店8.6.2；2026-10-27快照,body_read_declaration_or_partial_path,设置入口、预览与恢复默认未取得,2026-10-27
+IR-P03,M-014,mobile_domain,本地导入,描述：epub/txt/pdf,E-IRD-01,F-M014-02,中国区iOS/iPadOS商店8.6.2；2026-10-27快照,body_read_declaration_or_partial_path,导入菜单、解析/失败/重复对象未知,2026-10-27
+IR-P04,M-014,mobile_domain,多设备同步,描述：阅读器,E-IRD-01,F-M014-02,中国区iOS/iPadOS商店8.6.2；2026-10-27快照,body_read_declaration_or_partial_path,原文件、位置、笔记等字段及冲突未知,2026-10-27
+IR-P05,M-014,mobile_domain,AI提炼/导图/章节速读,描述：AI,E-IRD-01,F-M014-03,中国区iOS/iPadOS商店8.6.2；2026-10-27快照,body_read_declaration_or_partial_path,入口、适用书、生成/引用/回原文未取得,2026-10-27
+IR-P06,M-014,mobile_domain,群书速览,描述：AI,E-IRD-01,F-M014-03,中国区iOS/iPadOS商店8.6.2；2026-10-27快照,body_read_declaration_or_partial_path,选书范围、来源比较及退出未取得,2026-10-27
+IR-P07,M-014,mobile_domain,书童文本问答,第一节扩展业务5,E-IPAD-01,F-M014-03,掌阅2024-06-27政策；OS/构建未逐路径绑定,body_read_declaration_or_partial_path,未给当前书上下文/提交/纠错/保存步骤,2026-10-27
+IR-P08,M-014,mobile_domain,听书音色,描述：音色,E-IRD-01,F-M014-03,中国区iOS/iPadOS商店8.6.2；2026-10-27快照,body_read_declaration_or_partial_path,换声、下载、计时、暂停与读听定位未知,2026-10-27
+IR-P09,M-014,mobile_domain,语音/后台权限,第一节扩展业务8,E-IPAD-01,F-M014-03,掌阅2024-06-27政策；OS/构建未逐路径绑定,body_read_declaration_or_partial_path,用途声明非菜单；切后台/断网恢复未知,2026-10-27
+IR-P10,M-014,mobile_domain,阅读日志,第一节扩展业务2(1),E-IPAD-01,F-M014-02,掌阅2024-06-27政策；OS/构建未逐路径绑定,body_read_declaration_or_partial_path,章节记录不等于精确位置或恢复承诺,2026-10-27
+IR-P11,M-014,mobile_domain,分享/笔记服务器存储,第一节扩展业务2(2),E-IPAD-01,F-M014-02,掌阅2024-06-27政策；OS/构建未逐路径绑定,body_read_declaration_or_partial_path,不推广全部本地批注；删除/撤销入口未知,2026-10-27
+IR-P12,M-014,mobile_domain,推荐开关,第一节扩展业务7,E-IPAD-01,F-M014-06,掌阅2024-06-27政策；OS/构建未逐路径绑定,body_read_declaration_or_partial_path,历史路径；生效时间/跨端/现版菜单未知,2026-10-27
+IR-P13,M-014,mobile_domain,帮助与反馈,开发者描述：联系方式,E-IRD-01,,中国区iOS/iPadOS商店8.6.2；2026-10-27快照,body_read_declaration_or_partial_path,取得反馈入口但手机FAQ正文未取得,2026-10-27
+IR-P14,M-014,mobile_domain,游客退出/资产求助,第一节基本业务,E-IPAD-01,,掌阅2024-06-27政策；OS/构建未逐路径绑定,body_read_declaration_or_partial_path,非文件恢复；客服身份校验和完成状态未知,2026-10-27
+IR-P15,M-014,mobile_domain,个人资料/账号注销,第五节(一)(二)(五),E-IPAD-01,,掌阅2024-06-27政策；OS/构建未逐路径绑定,body_read_declaration_or_partial_path,历史政策路径未形成当前账户操作/恢复任务,2026-10-27
+IR-P16,M-014,mobile_domain,删除/个人信息副本,第五节(三)(六),E-IPAD-01,,掌阅2024-06-27政策；OS/构建未逐路径绑定,body_read_declaration_or_partial_path,不是书籍/笔记导出或导回，备份清理非即时,2026-10-27
+IR-P17,M-014,mobile_domain,签到/活动提醒,第一节扩展业务4及8,E-IPAD-01,,掌阅2024-06-27政策；OS/构建未逐路径绑定,body_read_declaration_or_partial_path,权限线索不说明学习激励规则/兑付流程,2026-10-27
+IR-H01,M-014,faq_question,卸载后的应用恢复,基本操作／第1问,E-IRD-03,,MatePad Paper/HarmonyOS2.1；预装系统2.1.0.191+；App构建未固定,body_read,只核恢复预装App；用户书/笔记恢复未知,2026-10-27
+IR-H02,M-014,faq_question,同意按钮不可用,基本操作／第2问,E-IRD-03,,MatePad Paper/HarmonyOS2.1；预装系统2.1.0.191+；App构建未固定,body_read,文字给滚动终点；不含权限拒绝后的完整首启,2026-10-27
+IR-H03,M-014,faq_question,LTE网络不可用,基本操作／第3问,E-IRD-03,,MatePad Paper/HarmonyOS2.1；预装系统2.1.0.191+；App构建未固定,body_read,App1.8.4+条件；不推测硬件通信配置/其他版本,2026-10-27
+IR-H04,M-014,faq_question,跨书城检索不到书,基本操作／第4问,E-IRD-03,,MatePad Paper/HarmonyOS2.1；预装系统2.1.0.191+；App构建未固定,body_read,建议改适配App书城检索；资源何时一致未知,2026-10-27
+IR-H05,M-014,faq_question,加入后桌面书架无书,基本操作／第5问,E-IRD-03,F-M014-04,MatePad Paper/HarmonyOS2.1；预装系统2.1.0.191+；App构建未固定,body_read,不同书架归属；不证明桌面联动或重复下载,2026-10-27
+IR-H06,M-014,faq_question,无线传书受网络限制,基本操作／第6问,E-IRD-03,F-M014-02,MatePad Paper/HarmonyOS2.1；预装系统2.1.0.191+；App构建未固定,body_read,仅墨水屏侧异常支路；手机主链不升D2,2026-10-27
+IR-H07,M-014,faq_question,阅读全屏与控制中心,基本操作／第7问,E-IRD-03,,MatePad Paper/HarmonyOS2.1；预装系统2.1.0.191+；App构建未固定,body_read,触发步骤可定位；退出/系统版本变化未另析,2026-10-27
+IR-H08,M-014,faq_question,忘记密码,帐号登录与云同步／第8问,E-IRD-03,,MatePad Paper/HarmonyOS2.1；预装系统2.1.0.191+；App构建未固定,body_read,转软件方客服；没有恢复验证完整链,2026-10-27
+IR-H09,M-014,faq_question,阅读进度延迟,帐号登录与云同步／第9问,E-IRD-03,F-M014-04,MatePad Paper/HarmonyOS2.1；预装系统2.1.0.191+；App构建未固定,body_read,等待建议，不证明跨端位置冲突解决,2026-10-27
+IR-H10,M-014,faq_question,同步后书架刷新,帐号登录与云同步／第10问,E-IRD-03,F-M014-04,MatePad Paper/HarmonyOS2.1；预装系统2.1.0.191+；App构建未固定,body_read,页面刷新与下载/数据恢复分开,2026-10-27
+IR-H11,M-014,faq_question,重复书籍文件,帐号登录与云同步／第11问,E-IRD-03,F-M014-04,MatePad Paper/HarmonyOS2.1；预装系统2.1.0.191+；App构建未固定,body_read,帐号/添加路径差异；合并或去重入口未知,2026-10-27
+IR-H12,M-014,faq_question,开书全刷,书籍阅读／第12问,E-IRD-03,,MatePad Paper/HarmonyOS2.1；预装系统2.1.0.191+；App构建未固定,body_read,正文解释现象；刷新设置/回退未取得,2026-10-27
+IR-H13,M-014,faq_question,字体只部分生效,书籍阅读／第13问,E-IRD-03,F-M014-01,MatePad Paper/HarmonyOS2.1；预装系统2.1.0.191+；App构建未固定,body_read,精品书主字体/简体适用范围；不是手机设置链,2026-10-27
+IR-H14,M-014,faq_question,旋转后页面位移,书籍阅读／第14问,E-IRD-03,,MatePad Paper/HarmonyOS2.1；预装系统2.1.0.191+；App构建未固定,body_read,解释分页和旋转锁定入口；原锚点找回未知,2026-10-27
+IR-H15,M-014,faq_question,逐笔撤销限制,图书笔记／第15问,E-IRD-03,F-M014-05,MatePad Paper/HarmonyOS2.1；预装系统2.1.0.191+；App构建未固定,body_read,FAQ未标构建当前版本无单笔撤销；擦除后恢复未知,2026-10-27
+IR-H16,M-014,faq_question,笔迹不可见,图书笔记／第16问,E-IRD-03,F-M014-05,MatePad Paper/HarmonyOS2.1；预装系统2.1.0.191+；App构建未固定,body_read,父项；四种分支另列，不能重复计任务,2026-10-27
+IR-H17,M-014,faq_question,分屏动作触发截图,图书笔记／第17问,E-IRD-03,,MatePad Paper/HarmonyOS2.1；预装系统2.1.0.191+；App构建未固定,body_read,手写开关改变输入解释；不从文字推断图标形状,2026-10-27
+IR-H18,M-014,faq_question,分屏返回受限,图书笔记／第18问,E-IRD-03,F-M014-05,MatePad Paper/HarmonyOS2.1；预装系统2.1.0.191+；App构建未固定,body_read,焦点退出及菜单返回；保存状态未知,2026-10-27
+IR-H16.1,M-014,faq_subbranch,版式/字体/方向改变,图书笔记／笔迹不可见／分支1,E-IRD-03,F-M014-05,MatePad Paper/HarmonyOS2.1；预装系统2.1.0.191+；App构建未固定,body_read,三点标记展开旧笔迹；未看原图或检验锚点,2026-10-27
+IR-H16.2,M-014,faq_subbranch,竖排模式,图书笔记／笔迹不可见／分支2,E-IRD-03,F-M014-05,MatePad Paper/HarmonyOS2.1；预装系统2.1.0.191+；App构建未固定,body_read,此模式不显示/不支持手写；回横排完整链未给,2026-10-27
+IR-H16.3,M-014,faq_subbranch,PDF原页与重排,图书笔记／笔迹不可见／分支3,E-IRD-03,F-M014-05,MatePad Paper/HarmonyOS2.1；预装系统2.1.0.191+；App构建未固定,body_read,两状态批注独立；合并/导出关系未知,2026-10-27
+IR-H16.4,M-014,faq_subbranch,PDF阅读/笔记模式,图书笔记／笔迹不可见／分支4,E-IRD-03,F-M014-05,MatePad Paper/HarmonyOS2.1；预装系统2.1.0.191+；App构建未固定,body_read,更多中切笔记模式；擦除/跨端恢复未知,2026-10-27
+IR-V01,M-014,version_note,一般听书优化,版本历史8.6.2／2026-10-22,E-IRD-01,F-M014-03,中国区iOS/iPadOS历史日志,body_read_developer_claim,未给操作变化/修复适用条件,2026-10-27
+IR-V02,M-014,version_note,部分听书音色升级,版本历史8.5.9／2026-08-24,E-IRD-01,F-M014-03,中国区iOS/iPadOS历史日志,body_read_developer_claim,音色枚举、收费/离线与切换未知,2026-10-27
+IR-V03,M-014,version_note,搜索结果页优化,版本历史8.5.4／2026-02-02,E-IRD-01,F-M014-01,中国区iOS/iPadOS历史日志,body_read_developer_claim,不是选书/返回具体流程,2026-10-27
+IR-V04,M-014,version_note,书架崩溃修复,版本历史8.5.3／2026-01-04,E-IRD-01,F-M014-01,中国区iOS/iPadOS历史日志,body_read_developer_claim,未说明崩溃触发条件/数据恢复,2026-10-27
+IR-V05,M-014,version_note,冷启动外部音乐中断修复,版本历史8.5.2／2025-12-23,E-IRD-01,F-M014-03,中国区iOS/iPadOS历史日志,body_read_developer_claim,不证明后台续播/所有系统音频冲突解决,2026-10-27
+IR-V06,M-014,version_note,TTS标点停顿修复,版本历史8.5.1／2025-10-30,E-IRD-01,F-M014-03,中国区iOS/iPadOS历史日志,body_read_developer_claim,未验证效果或给播放恢复步骤,2026-10-27

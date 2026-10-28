@@ -1,0 +1,30 @@
+[
+  {
+    "evidence_id": "E-TFK-01",
+    "capture": {
+      "checked_on": "2026-10-27",
+      "access_mode": "ordinary_public_html_reread",
+      "capture_url": "https://www.timeforkids.com/educators",
+      "raw_work_path": "work/time-vocabulary-deepening/educators.html",
+      "raw_sha256": "68cc02dfa8d9f0fbf8c6be7c3d3beeff29be892ce0d691b4bdfd36fb096ed4c6",
+      "text_work_path": "work/time-vocabulary-deepening/educators.txt",
+      "text_sha256": "e8a3fec65110d2b650e5712efe241434f89e9648d39ed21a7e2a8065a8930a0a",
+      "note_artifact": "artifacts/time-vocabulary-deepening/source-notes.md",
+      "note_sha256": "d3331d4d4e4e75110de17eabf55e665bd0d6ac1c4bd597a26a1edb3767f8c3c0",
+      "note": "核教育权益/分级/样刊目录，不是账号操作。"
+    }
+  },
+  {
+    "evidence_id": "E-TKD-02",
+    "capture": {
+      "checked_on": "2026-10-27",
+      "access_mode": "browser_rendered_dom_capture",
+      "capture_url": "https://www.timeforkids.com/g34/food-for-thought/?rl=en-760",
+      "raw_work_path": "work/time-vocabulary-deepening/browser/01-article.html",
+      "raw_sha256": "20b5cab01870e5a58aa8d78366ce40352df36f2a2814c3b11f67680326cfafe4",
+      "note_artifact": "artifacts/time-vocabulary-deepening/source-notes.md",
+      "note_sha256": "d3331d4d4e4e75110de17eabf55e665bd0d6ac1c4bd597a26a1edb3767f8c3c0",
+      "note": "此原件为浏览器渲染DOM，不是原站HTTP原始HTML；实际词卡操作另记E-TKVD-01。"
+    }
+  }
+]

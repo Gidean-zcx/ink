@@ -1,0 +1,236 @@
+Consider allowing auto advance even when not focused? · Issue #4228 · ankitects/anki · GitHub
+Skip to content
+Navigation Menu
+Sign in
+Appearance settings
+Platform
+AI CODE CREATION
+GitHub Copilot
+Write better code with AI
+GitHub Copilot app
+Direct agents from issue to merge
+MCP Registry
+Integrate external tools
+DEVELOPER WORKFLOWS
+Actions
+Automate any workflow
+Codespaces
+Instant dev environments
+Issues
+Plan and track work
+Code Review
+Manage code changes
+Code Quality
+Enforce quality at merge
+APPLICATION SECURITY
+GitHub Advanced Security
+Find and fix vulnerabilities
+Code security
+Secure your code as you build
+Secret protection
+Stop leaks before they start
+EXPLORE
+Why GitHub
+Documentation
+Blog
+Changelog
+Marketplace
+View all features
+Solutions
+BY COMPANY SIZE
+Enterprises
+Small and medium teams
+Startups
+Nonprofits
+BY USE CASE
+App Modernization
+DevSecOps
+DevOps
+CI/CD
+View all use cases
+BY INDUSTRY
+Healthcare
+Financial services
+Manufacturing
+Government
+See all industries
+View all solutions
+Resources
+EXPLORE BY TOPIC
+AI
+Software Development
+DevOps
+Security
+View all topics
+EXPLORE BY TYPE
+Customer stories
+Events & webinars
+Ebooks & reports
+Business insights
+GitHub Skills
+SUPPORT & SERVICES
+Documentation
+Customer support
+Community forum
+Trust center
+Partners
+View all resources
+Open Source
+COMMUNITY
+GitHub Sponsors
+Fund open source developers
+PROGRAMS
+Security Lab
+Maintainer Community
+GitHub Stars
+Archive Program
+REPOSITORIES
+Topics
+Trending
+Collections
+Enterprise
+ENTERPRISE SOLUTIONS
+Enterprise platform
+AI-powered developer platform
+AVAILABLE ADD-ONS
+GitHub Advanced Security
+Enterprise-grade security features
+Copilot for Business
+Enterprise-grade AI features
+Premium Support
+Enterprise-grade 24/7 support
+Pricing
+Search
+/
+Sign in
+Sign up
+Appearance settings
+You signed in with another tab or window.
+Reload
+to refresh your session.
+You signed out in another tab or window.
+Reload
+to refresh your session.
+You switched accounts on another tab or window.
+Reload
+to refresh your session.
+Dismiss alert
+{{ message }}
+ankitects
+anki
+Repository navigation
+Code
+Issues
+445
+(
+445
+)
+Pull requests
+152
+(
+152
+)
+Actions
+Security and quality
+7
+(
+7
+)
+Insights
+More
+items
+Consider allowing auto advance even when not focused?
+#4228
+New issue
+Copy link
+New issue
+Copy link
+Open
+Open
+Consider allowing auto advance even when not focused?
+#4228
+Copy link
+Description
+dae
+opened
+on Jul 25, 2025
+Issue body actions
+Secondly, I would also love for the auto advance feature to continue to advance when the Anki window is not in focus. As it is now, it automatically disables when a different window is in focus, which is unfortunate.
+Originally reported on
+https://forums.ankiweb.net/t/auto-advance-features/64549
+The current behaviour was chosen to minimize the chances of the user accidentally answering all their cards when they get distracted and switch away from the app, but as they require a menu/shortcut key to start auto advance, maybe it's reasonable to assume they'll know how to stop it too.
+Reactions are currently unavailable
+Activity
+ezkialrage
+commented
+on
+Jul 28, 2025
+ezkialrage
+on Jul 28, 2025
+More actions
+I agree with this 100% i actually was just searching for how to do this. if the concern is people accidentally accepting cards, make the auto advance intentionally opt in. for instance, maybe the only way to have auto advance is to make a specific type of deck that only auto advances, and does not count towards your goals.
+my specific use case, is i just want to get reps in, i have copied my main deck, and am just playing the word audio and the words sentence, and this auto advance deck i do not care about the answer as its not my main deck.  i do this during work, and would love to be able to do other things without auto advance stopping.
+i think the ability to create a completely disconnected deck that auto-advances is a valid feature request.
+👍
+React with 👍
+2
+Reacted by
+Naoyuki Hamada and Wolf
+andrewsanchez
+added this to
+Anki Projects
+on Feb 14, 2026
+github-project-automation
+moved this to
+Todo in
+Anki Projects
+on Feb 14, 2026
+carolcani
+moved this from Ready for dev to
+Problem Spec in
+Anki Projects
+on Jun 25, 2026
+carolcani
+moved this from Problem Spec to
+Backlog in
+Anki Projects
+on Jun 25, 2026
+Sign up for free
+to join this conversation on GitHub.
+Already have an account?
+Sign in to comment
+Metadata
+Metadata
+Assignees
+No one assigned
+Labels
+No labels
+No labels
+Type
+No type
+Projects
+Anki Projects
+Status
+Backlog
+Show more project fields
+Milestone
+No milestone
+Relationships
+None yet
+Development
+No branches or pull requests
+Issue actions
+Open in GitHub Copilot app
+Footer
+© 2026 GitHub, Inc.
+Footer navigation
+Terms
+Privacy
+Security
+Status
+Community
+Docs
+Contact
+Manage cookies
+Do not share my personal information
+You can’t perform that action at this time.

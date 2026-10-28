@@ -1,0 +1,88 @@
+[
+  {
+    "class": "page-header-inner-logo-link",
+    "href": "/en",
+    "title": "",
+    "url": "https://help.ground.news/en"
+  },
+  {
+    "class": "page-header-inner-title",
+    "href": "/en",
+    "title": "Ground News Help Center",
+    "url": "https://help.ground.news/en"
+  },
+  {
+    "type": "button",
+    "class": "kb-button primary",
+    "href": "/en/contact-us",
+    "title": "Contact Us",
+    "url": "https://help.ground.news/en/contact-us"
+  },
+  {
+    "id": "moreResultsLink",
+    "type": "button",
+    "class": "kb-button secondary",
+    "href": "/en/search",
+    "title": "More results",
+    "url": "https://help.ground.news/en/search"
+  },
+  {
+    "href": "https://ground.news/privacy-policy",
+    "title": "Privacy Policy",
+    "url": "https://ground.news/privacy-policy"
+  },
+  {
+    "href": "/en",
+    "title": "Home",
+    "url": "https://help.ground.news/en"
+  },
+  {
+    "href": "/en/categories/2273025-share-your-feedback",
+    "title": "Share Your Feedback",
+    "url": "https://help.ground.news/en/categories/2273025-share-your-feedback"
+  },
+  {
+    "class": "article-card",
+    "href": "/en/articles/1750273",
+    "data-edited": "1791908931653",
+    "title": "How to Submit a News Source to Ground NewsEdited Tuesday, October 13 2026Ground News features coverage from over 60,000 news sources worldwide, and we're always looking for opportunities to expand our coverage. Whether you'...",
+    "url": "https://help.ground.news/en/articles/1750273"
+  },
+  {
+    "class": "article-card",
+    "href": "/en/articles/9683777",
+    "data-edited": "1773027878260",
+    "title": "How to Report an IssueEdited Monday, March 9 2026If you run into a problem while using Ground News, we’re here to help. Reporting issues allows our team to identify bugs, review content concerns, and...",
+    "url": "https://help.ground.news/en/articles/9683777"
+  },
+  {
+    "href": "https://twitter.com/Ground_app",
+    "title": "",
+    "url": "https://twitter.com/Ground_app"
+  },
+  {
+    "href": "https://ca.linkedin.com/company/groundnews",
+    "title": "",
+    "url": "https://ca.linkedin.com/company/groundnews"
+  },
+  {
+    "href": "https://www.instagram.com/groundnews/",
+    "title": "",
+    "url": "https://www.instagram.com/groundnews/"
+  },
+  {
+    "href": "https://ground.news/refund-policy",
+    "title": "Refund and Cancellation Policy",
+    "url": "https://ground.news/refund-policy"
+  },
+  {
+    "href": "https://ground.news/terms-and-conditions",
+    "title": "Terms and Conditions",
+    "url": "https://ground.news/terms-and-conditions"
+  },
+  {
+    "href": "https://about.ground.news/privacy-policy",
+    "title": "Privacy Policy",
+    "url": "https://about.ground.news/privacy-policy"
+  }
+]

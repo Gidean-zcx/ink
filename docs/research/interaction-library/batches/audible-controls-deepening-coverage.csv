@@ -1,0 +1,4 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M039-12,M-039,按购买来源确认资格并退还标题,D2,E-AUCD-08;E-AUCD-21;E-AUCD-07,US有效Premium信用点购买365天内等条件；网页Purchase history确认后退1credit；Standard月选不退换。,自助资格和退款不是承诺；未操作；离线文件/笔记撤回时点未知。,not_observed,false,cases/M-039-audible.md,2026-10-27
+F-M039-13,M-039,在支持双格式的标题中开始沉浸读听,D2,E-AUCD-07;E-AUCD-10,匹配有声书+Kindle电子书；Listen/Read & Listen切换；专业旁白高亮；文字需联网仅部分页缓存。,具体App构建、缓存范围/驱逐、离线提示、注释/选字与样式保存未知。,not_observed,false,cases/M-039-audible.md,2026-10-27
+F-M039-14,M-039,扫描纸书页跳到有声书位置,D2,E-AUCD-11,More > Page Sync；首次相机权限；在线识别后跳转；单向且不支持Kids Profile/绘本/播客。,误匹配撤销、识别置信度、上传保存规则和耗时未验证。,not_observed,false,cases/M-039-audible.md,2026-10-27

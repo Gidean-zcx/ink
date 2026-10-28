@@ -1,0 +1,29 @@
+Tonieplay game card not recognised – tonies® Support (https://support.tonies.com/hc/en-gb/articles/29537628346770-Tonieplay-game-card-not-recognised)
+citeturn778search0 [wordlim: 200] Crawled: last week; # Tonieplay game card not recognised
+
+# Tonieplay game card not recognised
+
+We’re sorry to hear you’re having trouble with your Tonieplay game cards! Don’t worry - we’ll help you get back on track.
+
+Sometimes a simple restart solves the issue:
+
+  1. Make sure your Toniebox 2 is on and unplugged.
+  2. Squeeze both ears until the Toniebox enters the sleep light with timer setting.
+  3. Keep squeezing until it restarts (this can take 20-60 seconds).
+  4. You’ll know it worked when you see the Welcome Lights show.
+
+Once your Toniebox 2 has restarted, wait a minute before trying your Tonieplay game again. 
+
+If the issue continues, try a factory reset:
+
+  1. Turn on your Toniebox 2 and wait for the light ring to turn green.
+  2. Ensure it is not plugged in to power.
+  3. Turn it upside down and press both ears for 5 seconds until you hear a sound signal.
+  4. Turn it back upright - the light ring will glow white.
+  5. Press and hold the small ear to start the reset.
+  6. Follow the prompts until the Toniebox 2 confirms the reset is complete.
+
+ 
+
+Still having trouble?
+If none of these steps work, please let us know. We’ll make sure your little one is back to playing in no time!

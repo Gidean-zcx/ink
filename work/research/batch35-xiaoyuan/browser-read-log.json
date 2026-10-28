@@ -1,0 +1,1244 @@
+[
+  {
+    "name": "e1-video",
+    "url": "https://www.bilibili.com/video/BV1TCe8zNEcV/",
+    "method": "normal_anonymous_browser_navigation",
+    "browser": "156.0.8078.4",
+    "status": 412,
+    "final_url": "https://www.bilibili.com/video/BV1TCe8zNEcV/",
+    "error": "TimeoutError: Locator.inner_text: Timeout 8000ms exceeded.\nCall log:\n  - waiting for locator(\"body\")\n"
+  },
+  {
+    "name": "original-review",
+    "url": "https://post.smzdm.com/p/a3x3nk5d/",
+    "method": "normal_anonymous_browser_navigation",
+    "browser": "156.0.8078.4",
+    "status": 200,
+    "final_url": "https://post.smzdm.com/p/a3x3nk5d/",
+    "initial_text": "首页\n好价\n社区\n百科\n集团官网\n商业合作\n爆料投稿\n登录注册\n社区\n写篇文章\n当前位置： 社区首页  电脑数码  电子书阅读器  文章详情\n小猿学练机——智能教育新工具的深度体验及购买指南\n2024-03-08 08:40:14 2点赞 10收藏 2评论\n\n随着科技与教育领域的深度融合，智能学习设备逐渐成为家庭教育和学校辅助教学的重要组成部分。其中，小猿学练机作为一款新兴的学习助手，凭借其先进的AI技术和独特的个性化教学模式，备受家长和学生们的关注。\n\n通过一段时间的使用，我将根据体验聊聊这款学习机在提升学习效率、优化教育资源分配及增强互动性学习体验等方面的表现。\n\n一、产品概述\n\n小猿学练机由知名在线教育品牌猿力科技集团研发，也就是知名教育APP猿辅导的公司，它们旗下还拥有斑马App、小猿口算、猿编程、海豚AI学等多款在线教育产品，为用户提供互动网课、智能练习、能力培养等多元化的智能教育服务，帮助学生系统性、高效率地培养知识及能力素养。\n\n这款小猿学练机专为K-12阶段学生打造，集成了海量优质教育资源和人工智能算法。它不仅涵盖了各类学科知识内容，还具备从智能推题、AI批改、错题归纳、错题讲解、举一反三到薄弱点专练，个性化学习路径的底层逻辑实现全面升维，通过个性化的学习路径，助力学生高效掌握知识点。\n\n产品统一售价为3899元，这次购买的产品是小猿学练机《龙年限定礼盒》2024旗",
+    "videos": [
+      {
+        "time": 0,
+        "duration": 8.76,
+        "readyState": 4,
+        "paused": true,
+        "width": 960,
+        "height": 720
+      },
+      {
+        "time": 0,
+        "duration": 10.96,
+        "readyState": 4,
+        "paused": true,
+        "width": 1280,
+        "height": 720
+      },
+      {
+        "time": 0,
+        "duration": 12.818005,
+        "readyState": 4,
+        "paused": true,
+        "width": 720,
+        "height": 960
+      }
+    ],
+    "images": [
+      {
+        "src": "https://a.zdmimg.com/202403/08/65e9eebd6f1441517.jpg_fo742.jpg",
+        "alt": "小猿学练机——智能教育新工具的深度体验及购买指南"
+      },
+      {
+        "src": "https://am.zdmimg.com/202403/03/65e3d2f039cc93626.png_e1080.jpg",
+        "alt": "小猿学练机——智能教育新工具的深度体验及购买指南"
+      },
+      {
+        "src": "https://am.zdmimg.com/202403/07/65e9bb6fe765c352.png_e1080.jpg",
+        "alt": "小猿学练机——智能教育新工具的深度体验及购买指南"
+      },
+      {
+        "src": "https://qnam.smzdm.com/202403/07/65e97658e02743008.png_e1080.jpg",
+        "alt": "小猿学练机——智能教育新工具的深度体验及购买指南"
+      },
+      {
+        "src": "https://qnam.smzdm.com/202403/07/65e9c82f50e7e1628.png_e1080.jpg",
+        "alt": "小猿学练机——智能教育新工具的深度体验及购买指南"
+      },
+      {
+        "src": "https://am.zdmimg.com/202403/07/65e9c7e3511cf7658.png_e1080.jpg",
+        "alt": "小猿学练机——智能教育新工具的深度体验及购买指南"
+      },
+      {
+        "src": "https://qnam.smzdm.com/202403/07/65e9c80e51b9d8633.png_e1080.jpg",
+        "alt": "小猿学练机——智能教育新工具的深度体验及购买指南"
+      },
+      {
+        "src": "https://qnam.smzdm.com/202403/07/65e9c705699906161.png_e1080.jpg",
+        "alt": "小猿学练机——智能教育新工具的深度体验及购买指南"
+      },
+      {
+        "src": "https://am.zdmimg.com/202403/07/65e9c716fead31486.png_e1080.jpg",
+        "alt": "小猿学练机——智能教育新工具的深度体验及购买指南"
+      },
+      {
+        "src": "https://am.zdmimg.com/202403/06/65e810b2a164e3854.png_e1080.jpg",
+        "alt": "小猿学练机——智能教育新工具的深度体验及购买指南"
+      },
+      {
+        "src": "https://qnam.smzdm.com/202403/06/65e87e852104f724.png_e1080.jpg",
+        "alt": "互动阅读书目"
+      },
+      {
+        "src": "https://qnam.smzdm.com/202403/07/65e9c727676b38537.png_e1080.jpg",
+        "alt": "小猿学练机——智能教育新工具的深度体验及购买指南"
+      },
+      {
+        "src": "https://am.zdmimg.com/202403/07/65e9cc942e2c29100.jpg_e1080.jpg",
+        "alt": "小猿学练机——智能教育新工具的深度体验及购买指南"
+      },
+      {
+        "src": "https://am.zdmimg.com/202403/07/65e9c7a21f31d7544.jpg_e1080.jpg",
+        "alt": "小猿学练机——智能教育新工具的深度体验及购买指南"
+      },
+      {
+        "src": "https://am.zdmimg.com/202403/07/65e9c7b8611db8428.png_e1080.jpg",
+        "alt": "小猿学练机——智能教育新工具的深度体验及购买指南"
+      },
+      {
+        "src": "https://qnam.smzdm.com/202403/07/65e9cca809cdd1955.png_e1080.jpg",
+        "alt": "小猿学练机——智能教育新工具的深度体验及购买指南"
+      },
+      {
+        "src": "https://qnam.smzdm.com/202403/07/65e9cdcb401a88692.jpg_e1080.jpg",
+        "alt": "小猿学练机——智能教育新工具的深度体验及购买指南"
+      },
+      {
+        "src": "https://am.zdmimg.com/202403/07/65e9cfe8795637931.png_e1080.jpg",
+        "alt": "小猿学练机——智能教育新工具的深度体验及购买指南"
+      },
+      {
+        "src": "https://qnam.smzdm.com/202403/07/65e9de10a6f941807.png_e1080.jpg",
+        "alt": "小猿学练机——智能教育新工具的深度体验及购买指南"
+      },
+      {
+        "src": "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7",
+        "alt": ""
+      },
+      {
+        "src": "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7",
+        "alt": ""
+      },
+      {
+        "src": "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7",
+        "alt": ""
+      },
+      {
+        "src": "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7",
+        "alt": ""
+      },
+      {
+        "src": "https://am.zdmimg.com/202403/07/65e9e23fd16c9132.png_e1080.jpg",
+        "alt": "小猿学练机——智能教育新工具的深度体验及购买指南"
+      },
+      {
+        "src": "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7",
+        "alt": ""
+      },
+      {
+        "src": "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7",
+        "alt": ""
+      },
+      {
+        "src": "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7",
+        "alt": ""
+      },
+      {
+        "src": "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7",
+        "alt": ""
+      },
+      {
+        "src": "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7",
+        "alt": ""
+      },
+      {
+        "src": "https://am.zdmimg.com/202401/22/65ae4008f371a6959.png_e1080.jpg",
+        "alt": "小猿学练机——智能教育新工具的深度体验及购买指南"
+      },
+      {
+        "src": "https://res.smzdm.com/pc/pc_shequ/dist/img/the-end.png",
+        "alt": ""
+      },
+      {
+        "src": "data:image/png;base64,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",
+        "alt": ""
+      },
+      {
+        "src": "https://avatarimg.smzdm.com/default/8255334323/6a2bd1244ac447118-big.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://eimg.smzdm.com/202601/22/6971fe6a8f3674287.png",
+        "alt": "挂件"
+      },
+      {
+        "src": "https://static.smzdm.com/public/users/certificate/xinrui.png",
+        "alt": ""
+      },
+      {
+        "src": "https://res.smzdm.com/h5/h5_user/dist/assets/level/8.png",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202403/07/65e9d6e61d0fd3400.jpg_a200.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202403/07/65e9d8e393a296600.jpg_a200.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202403/07/65e9dac6ff0ad2252.jpg_a200.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202403/07/65e9d137225ac6745.jpg_a200.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://qna.smzdm.com/202403/07/65e9d9bde1a763779.jpg_a200.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://res.smzdm.com/images/header/default_middle.png",
+        "alt": ""
+      },
+      {
+        "src": "https://www.smzdm.com/resources/public/img/loading_comment.gif",
+        "alt": ""
+      },
+      {
+        "src": "https://avatarimg.smzdm.com/default/5121512167/647bc461c051f606-small.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://eimg.smzdm.com/202008/06/5f2bd146ae9881380.png",
+        "alt": "挂件"
+      },
+      {
+        "src": "https://res.smzdm.com/h5/h5_user/dist/assets/level/7.png",
+        "alt": ""
+      },
+      {
+        "src": "https://eimg.smzdm.com/202605/14/6a05a12d881406660.png",
+        "alt": ""
+      },
+      {
+        "src": "https://avatarimg.smzdm.com/default/5121512167/647bc461c051f606-small.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://eimg.smzdm.com/202008/06/5f2bd146ae9881380.png",
+        "alt": "挂件"
+      },
+      {
+        "src": "https://res.smzdm.com/h5/h5_user/dist/assets/level/7.png",
+        "alt": ""
+      },
+      {
+        "src": "https://eimg.smzdm.com/202605/14/6a05a12d881406660.png",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/20/6ad6ebc99c7957890.jpg_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/21/6ad7a1de6676a4736.jpg_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/21/6ad8a51bcdfde9889.jpg_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/21/6ad8b9a1515c93437.jpg_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/21/6ad83299dc4a9484.png_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/21/6ad79a16fc65f8969.jpg_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/15/6ad0455bab9af4163.jpg_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/21/6ad8366d83c0c9727.jpg_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/23/6adb48aece5449654.gif_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/23/6adafe292130e7824.png_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/21/6ad83b08c53c759.jpg_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/21/6ad83fa9ec96b5748.jpg_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/25/6adddf0641504986.jpg_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/15/6ad03f1cadd9f3184.jpg_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/12/6acccb8d87b511807.jpg_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/20/6ad72e644b0887387.jpg_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/22/6ad96cc3446c71318.jpg_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/22/6ad97dae96fa19071.jpg_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/20/6ad7032c68e8d8074.png_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/21/6ad87a8d4a6594249.png_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/22/6ad96cc3446c71318.jpg_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/21/6ad8b9a1515c93437.jpg_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/21/6ad8a51bcdfde9889.jpg_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/21/6ad8366d83c0c9727.jpg_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/19/6ad60b6d8e4921830.png_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/19/6ad5b78e480c46821.png_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/13/6acdfbfd7a3f14976.jpg_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/06/6ac4c21c0cbfc7283.jpg_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/06/6ac4be9cda5469531.jpg_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/06/6ac4c2474674e2246.jpg_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/06/6ac4be71e602e8088.jpg_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/04/6ac20684401fc3358.png_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202609/30/6abd0446eaccf4449.jpg_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202609/30/6abd010a925bf4090.jpg_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202609/24/6ab4e5cb6bad74779.jpg_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202609/24/6ab4dd116c1d37009.jpg_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202609/24/6ab4dc4f416065418.jpg_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202609/24/6ab47fd80864b7428.jpg_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202609/24/6ab47c6b334956070.jpg_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202609/23/6ab39427eac4e3848.png_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://res.smzdm.com/images/eleven/dog-btn.png",
+        "alt": "红包按钮"
+      },
+      {
+        "src": "https://avatarimg.smzdm.com/default/8255334323/6a2bd1244ac447118-big.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://eimg.smzdm.com/202601/22/6971fe6a8f3674287.png",
+        "alt": "挂件"
+      },
+      {
+        "src": "https://static.smzdm.com/public/users/certificate/xinrui.png",
+        "alt": ""
+      },
+      {
+        "src": "https://res.smzdm.com/h5/h5_user/dist/assets/level/8.png",
+        "alt": ""
+      },
+      {
+        "src": "https://eimg.smzdm.com/202609/03/6a99447b033b13851.png",
+        "alt": "兴趣好物推荐官"
+      },
+      {
+        "src": "https://static.smzdm.com/public/users/certificate/xinrui.png",
+        "alt": ""
+      },
+      {
+        "src": "https://static.smzdm.com/public/icons/renzheng.png",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/03/6ac02db49dd4c8905.jpg_a320.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/06/6ac437f263ec29477.jpg_a320.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/09/6ac846455865b3025.jpg_a320.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/09/6ac8878c9b1ce8144.jpg_a320.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/19/6ad5bc98b7acf6471.jpg_a320.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://y.zdmimg.com/202604/28/69f0195e187b14823.png_a200.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://y.zdmimg.com/202608/14/6a7ed55756f982746.png_a200.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://y.zdmimg.com/202605/30/6a1a97a1078052533.png_a200.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://y.zdmimg.com/202606/19/6a34b574aad967204.jpg_a200.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://y.zdmimg.com/202606/29/6a41e3fe5f0452197.jpg_a200.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://y.zdmimg.com/202507/09/686dea05cb6646203.jpg_a200.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://y.zdmimg.com/202607/06/6a4b523a25a706353.png_a200.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://y.zdmimg.com/202609/24/6ab49cc81a8c59836.png_a200.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://y.zdmimg.com/202604/05/69d18a220b5369506.png_a200.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://tmpf.smzdm.com//internal/202610/09/073d4f26-8e57-4042-8e86-6511f91dabc6.png",
+        "alt": "坚挺服役整六年"
+      },
+      {
+        "src": "https://tmpf.smzdm.com//internal/202610/09/6bd1b01e-548f-46cc-83ad-af22d0bd5da9.png",
+        "alt": "打破品牌刻板印象"
+      },
+      {
+        "src": "https://tmpf.smzdm.com//internal/202610/09/0ef79f36-3542-443d-b1f3-7bba9d12c8ee.png",
+        "alt": "深蓝S07实测"
+      },
+      {
+        "src": "https://tmpf.smzdm.com//internal/202610/09/34c0e6d7-146d-42e1-ba70-d9128ac595c3.png",
+        "alt": "磁轴客制化"
+      },
+      {
+        "src": "https://tmpf.smzdm.com//internal/202610/09/da6ba0e6-444f-4485-baea-75f24638a7ff.png",
+        "alt": "机械键盘配列全解析"
+      },
+      {
+        "src": "https://tmpf.smzdm.com//internal/202610/09/d93a51e4-7434-4ed5-9337-6b5093ca2a0f.png",
+        "alt": "游戏没有通天路"
+      },
+      {
+        "src": "https://tmpf.smzdm.com//internal/202610/09/073d4f26-8e57-4042-8e86-6511f91dabc6.png",
+        "alt": "坚挺服役整六年"
+      },
+      {
+        "src": "https://tmpf.smzdm.com//internal/202610/09/6bd1b01e-548f-46cc-83ad-af22d0bd5da9.png",
+        "alt": "打破品牌刻板印象"
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/22/6ad9d16ccdd4e5734.jpg_a100.jpg",
+        "alt": "HiFi玩家的听音之旅——如何用万元价格打造一套桌面音乐播放系统"
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/21/6ad8957568ea74185.gif_a100.jpg",
+        "alt": "柜门合页“静音”改造：仅需4元，升级三段缓冲液压阻尼铰链"
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/20/6ad73d9ed148c9778.jpg_a100.jpg",
+        "alt": "相隔千里，在谍战游戏里和他好好聊聊天，一局故事撞回少年心"
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/21/6ad847da3f8c0210.png_a100.jpg",
+        "alt": "威士忌税从10%降到5%，叠加1610万桶库存，今年双十一波本怎么买"
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/27/6ae016e6e93a42343.jpg_a320.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/27/6ae016cc6f8184243.jpg_a320.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/27/6ae016cc871c04243.jpg_a320.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/27/6ae016b2037532081.png_a320.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/27/6ae016ad442132146.png_a320.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/15/6ad03f1c45d4d3184.jpg_a320.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/20/6ad71a4752d612058.png_a320.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/21/6ad83fec59c629301.jpg_a320.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/20/6ad7012d3ea211971.jpg_a320.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/21/6ad87a8da5c584249.png_a320.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://res.smzdm.com/pc/pc_shequ/dist/img/xiewenzhang.png",
+        "alt": ""
+      },
+      {
+        "src": "https://avatarimg.smzdm.com/default/8255334323/6a2bd1244ac447118-big.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://eimg.smzdm.com/202601/22/6971fe6a8f3674287.png",
+        "alt": "挂件"
+      },
+      {
+        "src": "https://static.smzdm.com/public/users/certificate/xinrui.png",
+        "alt": ""
+      },
+      {
+        "src": "https://res.smzdm.com/h5/h5_user/dist/assets/level/8.png",
+        "alt": ""
+      },
+      {
+        "src": "https://eimg.smzdm.com/202609/03/6a99447b033b13851.png",
+        "alt": "兴趣好物推荐官"
+      },
+      {
+        "src": "https://static.smzdm.com/public/users/certificate/xinrui.png",
+        "alt": ""
+      },
+      {
+        "src": "https://static.smzdm.com/public/icons/renzheng.png",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/03/6ac02db49dd4c8905.jpg_a320.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/06/6ac437f263ec29477.jpg_a320.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/09/6ac846455865b3025.jpg_a320.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/09/6ac8878c9b1ce8144.jpg_a320.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/19/6ad5bc98b7acf6471.jpg_a320.jpg",
+        "alt": ""
+      },
+      {
+        "src": "data:image/png;base64,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",
+        "alt": ""
+      },
+      {
+        "src": "data:image/png;base64,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",
+        "alt": ""
+      },
+      {
+        "src": "https://res.smzdm.com/resources/public/img/pc_global/chuanxiao.svg",
+        "alt": "chuanxiao"
+      },
+      {
+        "src": "https://trust.hss.org.cn/credit/crz2002.png",
+        "alt": "互联网诚信经营示范单位"
+      },
+      {
+        "src": "https://qny.smzdm.com/202005/14/5ebd2d92741315053.png",
+        "alt": "credit"
+      },
+      {
+        "src": "https://res.smzdm.com/resources/public/img/pc_global/12315_icon.png",
+        "alt": "12315"
+      },
+      {
+        "src": "https://res.smzdm.com/resources/public/img/pc_global/qrcode.png",
+        "alt": "qrcode"
+      },
+      {
+        "src": "https://static.smzdm.com/public/logo/zdm_square_90.gif",
+        "alt": ""
+      },
+      {
+        "src": "https://res.smzdm.com/obj/public/img/pc/haojia/chevron-right.png",
+        "alt": ""
+      },
+      {
+        "src": "https://res.smzdm.com/images/deeplink.png",
+        "alt": ""
+      },
+      {
+        "src": "https://res.smzdm.com/resources/public/img/close_btn.png",
+        "alt": ""
+      },
+      {
+        "src": "https://res.smzdm.com/resources/public/img/close_btn.png",
+        "alt": ""
+      },
+      {
+        "src": "https://zhiyou.smzdm.com/user/getcaptcha/en/user_checkin/?0.3039664693044295",
+        "alt": "看不清?点击更换"
+      },
+      {
+        "src": "https://res.smzdm.com/pc/common/talent-report/talent-report-icon.png",
+        "alt": ""
+      }
+    ]
+  },
+  {
+    "name": "followup-review",
+    "url": "https://post.smzdm.com/p/a4x56p6x/",
+    "method": "normal_anonymous_browser_navigation",
+    "browser": "156.0.8078.4",
+    "status": 200,
+    "final_url": "https://post.smzdm.com/p/a4x56p6x/",
+    "initial_text": "首页\n好价\n社区\n百科\n集团官网\n商业合作\n爆料投稿\n登录注册\n社区\n写篇文章\n当前位置： 社区首页  电脑数码  电子书阅读器  文章详情\n学习平板到底好在哪儿？小猿学练机半年使用体验大揭秘！\n2024-09-14 20:58:20 2点赞 8收藏 0评论\n\n我已经给孩子配置小猿学练机已经半年多了，前面也发了深度评测，经过半年多的使用，觉得小猿学练机是越用越顺手，最近小猿学练机也对标新课标更新了新版本，现在就跟大家聊一聊。\n\n一、使用体验\n\n前面我已经对小猿的使用体验做了深度评测，有关具体内容我就不再重复了。下来重点说说我们在使用半年以后，觉得小猿特别好的几个点：\n\n（一）让自学变得十分轻松\n\n孩子有时因病请假，对于课堂拉下的课程，用小猿学练机就能轻松补回来。\n\n比如数学课程，每一课都有真人原声视频讲解，跟在课堂听老师上课一样。\n\n语文课文配有点读，可以选择连续播放听讲或者单独点击词句听讲，对不认识的地方可以反复收听。\n\n英语除了连续播放和点读，还增加了跟读模式，也就是小猿读一句，孩子跟读一句，然后录音回放，反复校准发音。\n\n而且小猿的朗读不是那种AI阅读，都是真人录音的，包括语调、语气、断句、诗词、歌曲、配乐都是非常完整的。\n\n完成课文的学习后，可以让孩子再练习一下每课的习题，这样对知识的理解和掌握的就很牢固了。\n\n（二）让假期学习不断档\n\n有句话叫“不怕同学是学霸，就怕同学放",
+    "videos": [],
+    "images": [
+      {
+        "src": "https://qna.smzdm.com/202409/14/66e5821c5aea99039.png_fo742.jpg",
+        "alt": "学习平板到底好在哪儿？小猿学练机半年使用体验大揭秘！"
+      },
+      {
+        "src": "https://a.zdmimg.com/202403/08/65e9eebd6f1441517.jpg_a200.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://avatarimg.smzdm.com/default/8255334323/6a2bd1244ac447118-small.jpg",
+        "alt": "狂徒老爹"
+      },
+      {
+        "src": "https://qnam.smzdm.com/202409/14/66e57e1c59cc88144.jpg_e1080.jpg",
+        "alt": "学习平板到底好在哪儿？小猿学练机半年使用体验大揭秘！"
+      },
+      {
+        "src": "https://qnam.smzdm.com/202409/14/66e57e84f7b342395.jpg_e1080.jpg",
+        "alt": "学习平板到底好在哪儿？小猿学练机半年使用体验大揭秘！"
+      },
+      {
+        "src": "https://am.zdmimg.com/202409/14/66e57ea71276c2812.jpg_e1080.jpg",
+        "alt": "学习平板到底好在哪儿？小猿学练机半年使用体验大揭秘！"
+      },
+      {
+        "src": "https://qnam.smzdm.com/202409/14/66e57f694a8a57440.jpg_e1080.jpg",
+        "alt": "学习平板到底好在哪儿？小猿学练机半年使用体验大揭秘！"
+      },
+      {
+        "src": "https://qnam.smzdm.com/202409/14/66e5377f789d67952.png_e1080.jpg",
+        "alt": "学习平板到底好在哪儿？小猿学练机半年使用体验大揭秘！"
+      },
+      {
+        "src": "https://qnam.smzdm.com/202409/14/66e57a38024285885.jpg_e1080.jpg",
+        "alt": "学习平板到底好在哪儿？小猿学练机半年使用体验大揭秘！"
+      },
+      {
+        "src": "https://am.zdmimg.com/202409/14/66e4e8cd59a039907.png_e1080.jpg",
+        "alt": "学习平板到底好在哪儿？小猿学练机半年使用体验大揭秘！"
+      },
+      {
+        "src": "https://qnam.smzdm.com/202409/14/66e57b207a9c76005.jpg_e1080.jpg",
+        "alt": "学习平板到底好在哪儿？小猿学练机半年使用体验大揭秘！"
+      },
+      {
+        "src": "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7",
+        "alt": ""
+      },
+      {
+        "src": "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7",
+        "alt": ""
+      },
+      {
+        "src": "https://am.zdmimg.com/202401/22/65ae4008f371a6959.png_e1080.jpg",
+        "alt": "学习平板到底好在哪儿？小猿学练机半年使用体验大揭秘！"
+      },
+      {
+        "src": "https://res.smzdm.com/pc/pc_shequ/dist/img/the-end.png",
+        "alt": ""
+      },
+      {
+        "src": "data:image/png;base64,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",
+        "alt": ""
+      },
+      {
+        "src": "https://avatarimg.smzdm.com/default/8255334323/6a2bd1244ac447118-big.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://eimg.smzdm.com/202601/22/6971fe6a8f3674287.png",
+        "alt": "挂件"
+      },
+      {
+        "src": "https://static.smzdm.com/public/users/certificate/xinrui.png",
+        "alt": ""
+      },
+      {
+        "src": "https://res.smzdm.com/h5/h5_user/dist/assets/level/8.png",
+        "alt": ""
+      },
+      {
+        "src": "https://res.smzdm.com/images/header/default_middle.png",
+        "alt": ""
+      },
+      {
+        "src": "https://www.smzdm.com/resources/public/img/loading_comment.gif",
+        "alt": ""
+      },
+      {
+        "src": "https://res.smzdm.com/pc/common/comment/no-comment-new.png",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/20/6ad6ebc99c7957890.jpg_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/21/6ad7a1de6676a4736.jpg_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/21/6ad8a51bcdfde9889.jpg_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/21/6ad8b9a1515c93437.jpg_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/21/6ad83299dc4a9484.png_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/21/6ad79a16fc65f8969.jpg_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/15/6ad0455bab9af4163.jpg_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/21/6ad8366d83c0c9727.jpg_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/23/6adb48aece5449654.gif_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/23/6adafe292130e7824.png_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/21/6ad83b08c53c759.jpg_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/21/6ad83fa9ec96b5748.jpg_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/25/6adddf0641504986.jpg_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/15/6ad03f1cadd9f3184.jpg_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/12/6acccb8d87b511807.jpg_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/20/6ad72e644b0887387.jpg_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/22/6ad96cc3446c71318.jpg_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/22/6ad97dae96fa19071.jpg_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/20/6ad7032c68e8d8074.png_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/21/6ad87a8d4a6594249.png_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/22/6ad96cc3446c71318.jpg_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/21/6ad8b9a1515c93437.jpg_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/21/6ad8a51bcdfde9889.jpg_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/21/6ad8366d83c0c9727.jpg_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/19/6ad60b6d8e4921830.png_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/19/6ad5b78e480c46821.png_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/13/6acdfbfd7a3f14976.jpg_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/06/6ac4c21c0cbfc7283.jpg_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/06/6ac4be9cda5469531.jpg_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/06/6ac4c2474674e2246.jpg_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/06/6ac4be71e602e8088.jpg_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/04/6ac20684401fc3358.png_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202609/30/6abd0446eaccf4449.jpg_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202609/30/6abd010a925bf4090.jpg_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202609/24/6ab4e5cb6bad74779.jpg_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202609/24/6ab4dd116c1d37009.jpg_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202609/24/6ab4dc4f416065418.jpg_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202609/24/6ab47fd80864b7428.jpg_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202609/24/6ab47c6b334956070.jpg_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202609/23/6ab39427eac4e3848.png_fo710.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://res.smzdm.com/images/eleven/dog-btn.png",
+        "alt": "红包按钮"
+      },
+      {
+        "src": "https://avatarimg.smzdm.com/default/8255334323/6a2bd1244ac447118-big.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://eimg.smzdm.com/202601/22/6971fe6a8f3674287.png",
+        "alt": "挂件"
+      },
+      {
+        "src": "https://static.smzdm.com/public/users/certificate/xinrui.png",
+        "alt": ""
+      },
+      {
+        "src": "https://res.smzdm.com/h5/h5_user/dist/assets/level/8.png",
+        "alt": ""
+      },
+      {
+        "src": "https://eimg.smzdm.com/202609/03/6a99447b033b13851.png",
+        "alt": "兴趣好物推荐官"
+      },
+      {
+        "src": "https://static.smzdm.com/public/users/certificate/xinrui.png",
+        "alt": ""
+      },
+      {
+        "src": "https://static.smzdm.com/public/icons/renzheng.png",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/03/6ac02db49dd4c8905.jpg_a320.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/06/6ac437f263ec29477.jpg_a320.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/09/6ac846455865b3025.jpg_a320.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/09/6ac8878c9b1ce8144.jpg_a320.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/19/6ad5bc98b7acf6471.jpg_a320.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://y.zdmimg.com/202604/05/69d18a220b5369506.png_a200.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://y.zdmimg.com/202605/30/6a1a97a1078052533.png_a200.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://y.zdmimg.com/202507/09/686dea05cb6646203.jpg_a200.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://y.zdmimg.com/202607/06/6a4b523a25a706353.png_a200.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://y.zdmimg.com/202604/28/69f0195e187b14823.png_a200.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://y.zdmimg.com/202608/14/6a7ed55756f982746.png_a200.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://y.zdmimg.com/202609/24/6ab49cc81a8c59836.png_a200.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://y.zdmimg.com/202606/19/6a34b574aad967204.jpg_a200.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://y.zdmimg.com/202606/29/6a41e3fe5f0452197.jpg_a200.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://tmpf.smzdm.com//internal/202610/09/073d4f26-8e57-4042-8e86-6511f91dabc6.png",
+        "alt": "坚挺服役整六年"
+      },
+      {
+        "src": "https://tmpf.smzdm.com//internal/202610/09/6bd1b01e-548f-46cc-83ad-af22d0bd5da9.png",
+        "alt": "打破品牌刻板印象"
+      },
+      {
+        "src": "https://tmpf.smzdm.com//internal/202610/09/0ef79f36-3542-443d-b1f3-7bba9d12c8ee.png",
+        "alt": "深蓝S07实测"
+      },
+      {
+        "src": "https://tmpf.smzdm.com//internal/202610/09/34c0e6d7-146d-42e1-ba70-d9128ac595c3.png",
+        "alt": "磁轴客制化"
+      },
+      {
+        "src": "https://tmpf.smzdm.com//internal/202610/09/da6ba0e6-444f-4485-baea-75f24638a7ff.png",
+        "alt": "机械键盘配列全解析"
+      },
+      {
+        "src": "https://tmpf.smzdm.com//internal/202610/09/d93a51e4-7434-4ed5-9337-6b5093ca2a0f.png",
+        "alt": "游戏没有通天路"
+      },
+      {
+        "src": "https://tmpf.smzdm.com//internal/202610/09/073d4f26-8e57-4042-8e86-6511f91dabc6.png",
+        "alt": "坚挺服役整六年"
+      },
+      {
+        "src": "https://tmpf.smzdm.com//internal/202610/09/6bd1b01e-548f-46cc-83ad-af22d0bd5da9.png",
+        "alt": "打破品牌刻板印象"
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/22/6ad9d16ccdd4e5734.jpg_a100.jpg",
+        "alt": "HiFi玩家的听音之旅——如何用万元价格打造一套桌面音乐播放系统"
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/21/6ad8957568ea74185.gif_a100.jpg",
+        "alt": "柜门合页“静音”改造：仅需4元，升级三段缓冲液压阻尼铰链"
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/20/6ad73d9ed148c9778.jpg_a100.jpg",
+        "alt": "相隔千里，在谍战游戏里和他好好聊聊天，一局故事撞回少年心"
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/21/6ad847da3f8c0210.png_a100.jpg",
+        "alt": "威士忌税从10%降到5%，叠加1610万桶库存，今年双十一波本怎么买"
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/27/6ae016e6e93a42343.jpg_a320.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/27/6ae016cc6f8184243.jpg_a320.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/27/6ae016cc871c04243.jpg_a320.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/27/6ae016b2037532081.png_a320.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/27/6ae016ad442132146.png_a320.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/15/6ad03f1c45d4d3184.jpg_a320.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/20/6ad71a4752d612058.png_a320.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/21/6ad83fec59c629301.jpg_a320.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/20/6ad7012d3ea211971.jpg_a320.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/21/6ad87a8da5c584249.png_a320.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://res.smzdm.com/pc/pc_shequ/dist/img/xiewenzhang.png",
+        "alt": ""
+      },
+      {
+        "src": "https://avatarimg.smzdm.com/default/8255334323/6a2bd1244ac447118-big.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://eimg.smzdm.com/202601/22/6971fe6a8f3674287.png",
+        "alt": "挂件"
+      },
+      {
+        "src": "https://static.smzdm.com/public/users/certificate/xinrui.png",
+        "alt": ""
+      },
+      {
+        "src": "https://res.smzdm.com/h5/h5_user/dist/assets/level/8.png",
+        "alt": ""
+      },
+      {
+        "src": "https://eimg.smzdm.com/202609/03/6a99447b033b13851.png",
+        "alt": "兴趣好物推荐官"
+      },
+      {
+        "src": "https://static.smzdm.com/public/users/certificate/xinrui.png",
+        "alt": ""
+      },
+      {
+        "src": "https://static.smzdm.com/public/icons/renzheng.png",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/03/6ac02db49dd4c8905.jpg_a320.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/06/6ac437f263ec29477.jpg_a320.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/09/6ac846455865b3025.jpg_a320.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/09/6ac8878c9b1ce8144.jpg_a320.jpg",
+        "alt": ""
+      },
+      {
+        "src": "https://a.zdmimg.com/202610/19/6ad5bc98b7acf6471.jpg_a320.jpg",
+        "alt": ""
+      },
+      {
+        "src": "data:image/png;base64,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",
+        "alt": ""
+      },
+      {
+        "src": "data:image/png;base64,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",
+        "alt": ""
+      },
+      {
+        "src": "https://res.smzdm.com/resources/public/img/pc_global/chuanxiao.svg",
+        "alt": "chuanxiao"
+      },
+      {
+        "src": "https://trust.hss.org.cn/credit/crz2002.png",
+        "alt": "互联网诚信经营示范单位"
+      },
+      {
+        "src": "https://qny.smzdm.com/202005/14/5ebd2d92741315053.png",
+        "alt": "credit"
+      },
+      {
+        "src": "https://res.smzdm.com/resources/public/img/pc_global/12315_icon.png",
+        "alt": "12315"
+      },
+      {
+        "src": "https://res.smzdm.com/resources/public/img/pc_global/qrcode.png",
+        "alt": "qrcode"
+      },
+      {
+        "src": "https://static.smzdm.com/public/logo/zdm_square_90.gif",
+        "alt": ""
+      },
+      {
+        "src": "https://res.smzdm.com/obj/public/img/pc/haojia/chevron-right.png",
+        "alt": ""
+      },
+      {
+        "src": "https://res.smzdm.com/images/deeplink.png",
+        "alt": ""
+      },
+      {
+        "src": "https://res.smzdm.com/resources/public/img/close_btn.png",
+        "alt": ""
+      },
+      {
+        "src": "https://res.smzdm.com/resources/public/img/close_btn.png",
+        "alt": ""
+      },
+      {
+        "src": "https://zhiyou.smzdm.com/user/getcaptcha/en/user_checkin/?0.3039664693044295",
+        "alt": "看不清?点击更换"
+      },
+      {
+        "src": "https://res.smzdm.com/pc/common/talent-report/talent-report-icon.png",
+        "alt": ""
+      }
+    ]
+  }
+]

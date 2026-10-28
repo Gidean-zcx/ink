@@ -1,0 +1,10 @@
+Communication triggers in Shortcuts on iPhone or iPad
+Use a communication trigger to run an automation when you receive an email or message. When you add multiple criteria to a communication trigger, all criteria must be met for the automation to trigger. For example, an Email trigger containing a specified sender and recipient will not be activated until an email from that sender to that recipient arrives.
+The Email trigger has the following options:
+Sender: Triggers your automation when you receive an email from any of the email addresses you’ve added to this field.
+Subject Contains: Triggers your automation when you receive an email with a subject containing the phrase you’ve added to this field.
+Account: Triggers your automation when you receive an email in the account you’ve chosen.
+Recipient: Triggers your automation when you receive an email addressed to any of the recipients you’ve added to this field.
+The Message trigger has the following options:
+Sender: Triggers your automation when you receive a message from any of the senders you’ve added to this field.
+Message Contains: Triggers your automation when you receive a message containing the phrase you’ve added to this field.See alsoUse variables in Shortcuts on iPhone or iPad

@@ -1,0 +1,17 @@
+How to edit an alarm?
+Modified on: Sat, 3 Oct, 2026 at 8:36 AM
+You can easily modify existing alarms on your Mudita Kompakt
+Edit an alarm
+Tap the clock on the Home screen.
+Select the alarm time you want to edit.
+Adjust the time using the up and down arrows or the keypad.
+(Optional) Update the alarm name, sound, and repeat schedule.
+Tap Save to confirm your changes.
+Access the Alarm app
+If the Alarm app icon is hidden, you can access it by navigating to: Apps → Alarm
+From there, you can manage all your alarms, including editing, enabling, disabling, or deleting them.
+Was this article helpful?
+No
+Yes
+That’s Great!
+Thank you for your feedback

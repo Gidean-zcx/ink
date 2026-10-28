@@ -1,0 +1,28 @@
+How To Download and Delete Maps on Mudita Kompakt
+Modified on: Sat, 3 Oct, 2026 at 8:42 AM
+How to download a map
+To view a region or country on the maps app, you will need to download the map.
+This requires an internet connection. Once you have downloaded the map, you won’t need the internet to search or view the map.    
+To download a map:
+Tap Apps
+Tap Maps > Tap Continue*
+Tap the Menu icon
+Tap Manage Maps
+Tap the Search icon** 
+Enter the country or region name of the map you want
+Tap the Download icon
+*Only when using maps for the first time
+**Or tap All Maps and select the region you want
+How to delete a map
+Tap Apps
+Tap Maps
+Tap the Menu icon
+Tap Manage Maps
+Tap the Edit icon
+Tap the Delete icon for the map you want to delete
+Tap Delete Map
+Was this article helpful?
+No
+Yes
+That’s Great!
+Thank you for your feedback

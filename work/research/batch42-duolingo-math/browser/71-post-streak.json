@@ -1,0 +1,17 @@
+{
+  "name": "71-post-streak",
+  "at": "2026-10-27T06:43:16.417738+00:00",
+  "url": "https://www.duolingo.com/lesson/unit/1/level/1",
+  "title": "Duolingo - The world’s most popular way to learn",
+  "text": "Let’s commit to learning with a Streak Goal!\n7\n7 day streak\nGood\n14 day streak\nGreat\n30 day streak\nIncredible\n50 day streak\nUnstoppable\nI CAN DO IT!",
+  "controls": [
+    {
+      "tag": "BUTTON",
+      "text": "I CAN DO IT!",
+      "aria": null,
+      "test": "player-next",
+      "type": "submit",
+      "disabled": false
+    }
+  ]
+}

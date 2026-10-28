@@ -1,0 +1,21 @@
+{
+  "order": 31,
+  "entry_id": "INO-pro--annotations--how-do-i-add-a-note-to-an-article",
+  "title": "How do I add a note to an article?",
+  "url": "https://www.inoreader.com/help/pro/annotations/how-do-i-add-a-note-to-an-article",
+  "checked_on": "2026-10-27",
+  "http_status": 200,
+  "final_url": "https://www.inoreader.com/help/pro/annotations/how-do-i-add-a-note-to-an-article",
+  "acquisition": "one_anonymous_normal_GET",
+  "raw_path": "work/research/batch41-inoreader-help/31-INO-pro--annotations--how-do-i-add-a-note-to-an-article.html",
+  "headers_path": "work/research/batch41-inoreader-help/31-INO-pro--annotations--how-do-i-add-a-note-to-an-article.headers.json",
+  "raw_sha256": "5db76aacbc3c8b3a09537fdf35c4ba6b00fd5b9fdc1dca99b47c77855aec58ac",
+  "bytes": 146899,
+  "status": "body_obtained",
+  "body_status": "extracted_not_yet_root_read",
+  "body_path": "work/research/batch41-inoreader-help/31-INO-pro--annotations--how-do-i-add-a-note-to-an-article.body.txt",
+  "body_sha256": "a5bccd7c52c0cb6bbf22d3102900259d52cc10ef3b2e1abb051b5b4457d1147a",
+  "body_chars": 49,
+  "links": [],
+  "images": []
+}

@@ -1,0 +1,2 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M044-17,M-044,创建邮件订阅源、核对收信并停止接收,D2,E-INRS-19;E-INRS-20;E-INRS-21;E-INRS-22;E-INRS-23;E-INRS-41;E-INRS-42,Add feed→Newsletter feed→名称/专用地址→到发布者订阅或转发→确认邮件→来信；静态字段和列表已看；缺信核地址/关注/确认。,名称校验/地址冲突/创建成功/确认/重投未操作；取消后删除与90天保留两种口径未统一，不能承诺恢复。,static_official_images_only,false,cases/M-044-inoreader.md,2026-10-27

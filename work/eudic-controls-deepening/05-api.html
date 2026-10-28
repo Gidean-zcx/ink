@@ -1,0 +1,37 @@
+
+
+	<script src="/scripts/jquery.min.js"></script>
+	<script src="/scripts/marked.min.js"></script>
+<div class="contain_main docPage">
+	<div class="header_path">
+			<a href="https://dict.eudic.net/account/login?returnurl=http%3a%2f%2fmy.eudic.net%2fOpenAPI%2fDoc_Index">[登录]</a>
+	</div>
+	<div id="page-content">
+		<div class="row">
+			<div class="col-sm-12 col-md-12 col-lg-12 eq-box-lg">
+				<div class="panel">
+					<div class="panel-heading group_header">
+						<h3 class="panel-title">开发指南</h3>
+					</div>
+					<div class="panel-body">
+						<div class="md_render">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	function readmd() {
+		xhr = new XMLHttpRequest();
+		xhr.open('get', '/doc/index.md');
+		xhr.send('')
+		xhr.onload = function () {
+			console.log()
+			$('.md_render').html(marked(xhr.responseText));
+		}
+	}
+	readmd();
+</script>

@@ -1,0 +1,5 @@
+Parsing JSON in Shortcuts from an API request
+If you look at the Typicode API response, you can see that there’s a lot of data stored in JSON. While it’s not easy to read at first, over time you’ll start to recognize the structures in JSON data, as well as how to identify dictionaries, lists, keys, and values. Often, developers include a nicely formatted version of the JSON data that their API will return, so look for that in their documentation. Additionally, it’s helpful to check your work using services like the online JSON Editor.
+Note that the Typicode API Response is a list. The list contains objects. The objects contain keys like id, name, username, address, and more. Some of these keys, such as phone and name, simply contain a number or text value, but others, such as company, have a dictionary value.
+The address dictionary contains some keys with values that are simple text, such as street, and other keys, such as geo, that are themselves dictionaries containing multiple values (lat and lng).
+Not all apps, services, and content are available in all countries or regions.

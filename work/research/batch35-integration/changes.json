@@ -1,0 +1,143 @@
+{
+  "new_evidence": [
+    "E-RWSK-01",
+    "E-RWSK-02",
+    "E-RWSK-03",
+    "E-RWSK-04",
+    "E-RWSK-05",
+    "E-RWSK-06",
+    "E-RWSK-07",
+    "E-RWSK-08",
+    "E-RWSK-09",
+    "E-RWSK-10",
+    "E-RWSK-11",
+    "E-RWSK-12",
+    "E-RWSK-13",
+    "E-XYHL-01",
+    "E-XYHL-02"
+  ],
+  "new_flows": [
+    "F-M015-27",
+    "F-M015-28",
+    "F-M015-29",
+    "F-M015-30",
+    "F-M015-31",
+    "F-M015-32",
+    "F-M015-33",
+    "F-M015-34",
+    "F-M015-35",
+    "F-M056-07",
+    "F-M056-08"
+  ],
+  "old_flows": [
+    {
+      "flow_id": "F-M015-26",
+      "before": {
+        "flow_id": "F-M015-26",
+        "product_id": "M-015",
+        "task": "外部AI推荐与整理阅读清单（声明范围）",
+        "depth": "D1",
+        "evidence_ids": "E-RWCD-16;E-RWCD-17",
+        "known_branches": "官方给时间/主题/来源及跨领域推荐提示和标签/移动用途；新MCP包括Reader文档与Readwise高亮，旧版范围较小；全网搜索和定期运行依赖外部AI。",
+        "gaps": "只有能力/提示示例；工具schema、授权范围、实际查询/写入反馈、索引时延、部分成功与恢复均未核。推荐页删除/可逆概括不作完整动作保证。",
+        "visual_status": "not_observed",
+        "hands_on": "false",
+        "case_path": "cases/M-015-readwise.md",
+        "checked_on": "2026-10-27"
+      },
+      "after": {
+        "flow_id": "F-M015-26",
+        "product_id": "M-015",
+        "task": "外部AI接入、发现读写工具与处理结果（文档链）",
+        "depth": "D2",
+        "evidence_ids": "E-RWCD-16;E-RWCD-17;E-RWSK-02;E-RWSK-03;E-RWSK-13",
+        "known_branches": "官方接入后可查询文档/高亮，示例给分页/字段选择、移动最多50项、精确HTML高亮与异步导出轮询。CLI只读隐藏写工具；通过CLI关闭只读模式需重登，交互TUI切换无需重登。",
+        "gaps": "已取得工作流与参数示例，仍无完整动态schema、实际OAuth范围、工具回执/部分成功/重试与回滚。索引全量后增量是声明，实际时延未测；外部AI与原生Global权限分开。",
+        "visual_status": "not_observed",
+        "hands_on": "false",
+        "case_path": "cases/M-015-readwise.md",
+        "checked_on": "2026-10-27"
+      },
+      "fields_changed": [
+        "task",
+        "depth",
+        "evidence_ids",
+        "known_branches",
+        "gaps"
+      ],
+      "owning_files": [
+        "docs/research/interaction-library/batches/readwise-controls-deepening-coverage.csv"
+      ]
+    }
+  ],
+  "old_evidence": [
+    {
+      "evidence_id": "E-RWCD-17",
+      "before": {
+        "evidence_id": "E-RWCD-17",
+        "product_id": "M-015",
+        "title": "Readwise公开工作流/能力：mcp",
+        "url": "https://docs.readwise.io/tools/mcp",
+        "checked_on": "2026-10-27",
+        "source_type": "official_help",
+        "access_mode": "ordinary_public_html_read",
+        "version_scope": "Public workflow guidance; app/client builds not fixed; external AI and native Reader separated",
+        "app_build": null,
+        "firmware_version": null,
+        "source_updated_on": null,
+        "locator": "article正文；客户端安装仅标题/范围定位",
+        "note": "正文和能力声明，不是账户、连接或执行结果；见短摘记。",
+        "hands_on": false,
+        "visual_observed": false,
+        "archived_artifact": "artifacts/readwise-controls-deepening/source-notes.md",
+        "sha256": "d4808c3f599e934a31d2a072ee5c25e5e1ffd4cf721d58077e1302c88684e8a9",
+        "capture_state": "short_note_archived_raw_temporary",
+        "raw_work_path": "work/readwise-controls-deepening/raw/mcp.html",
+        "raw_sha256": "7b154934e05b49eaa9832dc2c356477acd1c01da8bab2c1a2be315fb5739f8bc",
+        "text_work_path": "work/readwise-controls-deepening/raw/mcp.txt",
+        "text_sha256": "6b5cfb348a0e294214e98a02305462b9f10b44df0bc1e1ffc2420d80748c2f87",
+        "supersedes": null
+      },
+      "after": {
+        "evidence_id": "E-RWCD-17",
+        "product_id": "M-015",
+        "title": "Readwise公开工作流/能力：mcp",
+        "url": "https://docs.readwise.io/tools/mcp",
+        "checked_on": "2026-10-27",
+        "source_type": "official_help",
+        "access_mode": "ordinary_public_html_read",
+        "version_scope": "Public workflow guidance; app/client builds not fixed; external AI and native Reader separated",
+        "app_build": null,
+        "firmware_version": null,
+        "source_updated_on": null,
+        "locator": "article正文；客户端安装仅标题/范围定位",
+        "note": "正文和能力声明，不是账户、连接或执行结果；见短摘记。",
+        "hands_on": false,
+        "visual_observed": false,
+        "archived_artifact": "artifacts/readwise-controls-deepening/source-notes.md",
+        "sha256": "d4808c3f599e934a31d2a072ee5c25e5e1ffd4cf721d58077e1302c88684e8a9",
+        "capture_state": "short_note_archived_raw_temporary",
+        "raw_work_path": "work/readwise-controls-deepening/raw/mcp.html",
+        "raw_sha256": "7b154934e05b49eaa9832dc2c356477acd1c01da8bab2c1a2be315fb5739f8bc",
+        "text_work_path": "work/readwise-controls-deepening/raw/mcp.txt",
+        "text_sha256": "6b5cfb348a0e294214e98a02305462b9f10b44df0bc1e1ffc2420d80748c2f87",
+        "supersedes": null,
+        "additional_captures": [
+          {
+            "checked_on": "2026-10-27",
+            "access_mode": "web_tool_public_page_text_read",
+            "locator": "connection/authorization; MCP FAQs indexing and old server",
+            "note": "补普通连接/授权顺序与初次全量后增量索引；没有登录、读取个人库、测速或以旧服务源码代替新服务。",
+            "raw_work_path": "work/research/batch35-readwise/web-repository.json",
+            "raw_sha256": "c83e34f6fd9cfc3d28a350aefcc3508e921673e9f2c84b84f3a1e3ea2c0e47c2",
+            "archived_artifact": "artifacts/readwise-ai-workflows/source-notes.md",
+            "sha256": "151f5c756ce365487065045a89ee8949fab179285bc34c154cfe6788cb11ca9b"
+          }
+        ]
+      },
+      "owning_files": [
+        "docs/research/interaction-library/batches/readwise-controls-deepening-evidence.jsonl"
+      ]
+    }
+  ]
+}

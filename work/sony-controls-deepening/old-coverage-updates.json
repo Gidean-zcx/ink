@@ -1,0 +1,284 @@
+[
+  {
+    "flow_id": "F-M036-03",
+    "before": {
+      "flow_id": "F-M036-03",
+      "product_id": "M-036",
+      "task": "分类找曲与播放页导航",
+      "depth": "D2",
+      "evidence_ids": "E-SONY-01;E-SONY-02",
+      "known_branches": "当前曲目与所在分类构成后续浏览/播放上下文。",
+      "gaps": "返回时列表滚动位置、分类切换是否重建队列、空库引导。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-036-sony.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M036-03",
+      "product_id": "M-036",
+      "task": "分类找曲与播放页导航",
+      "depth": "D2",
+      "evidence_ids": "E-SONY-01;E-SONY-02;E-SYCD-12;E-SYCD-17",
+      "known_branches": "曲库分类图标可长按拖动；Options可选显示项或重置默认分类。播放页标题/作者/专辑或Search related可回相关内容；返回滚动状态未知。",
+      "gaps": "返回时列表滚动位置、分类切换是否重建队列、空库引导。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-036-sony.md",
+      "checked_on": "2026-10-27"
+    },
+    "changed_fields": {
+      "evidence_ids": {
+        "before": "E-SONY-01;E-SONY-02",
+        "after": "E-SONY-01;E-SONY-02;E-SYCD-12;E-SYCD-17"
+      },
+      "known_branches": {
+        "before": "当前曲目与所在分类构成后续浏览/播放上下文。",
+        "after": "曲库分类图标可长按拖动；Options可选显示项或重置默认分类。播放页标题/作者/专辑或Search related可回相关内容；返回滚动状态未知。"
+      },
+      "checked_on": {
+        "before": "2026-10-26",
+        "after": "2026-10-27"
+      }
+    }
+  },
+  {
+    "flow_id": "F-M036-04",
+    "before": {
+      "flow_id": "F-M036-04",
+      "product_id": "M-036",
+      "task": "临时改听歌顺序",
+      "depth": "D2",
+      "evidence_ids": "E-SONY-02",
+      "known_branches": "分别表示插到当前曲之后、末尾追加或替换整个队列；移出列表与文件删除分开。",
+      "gaps": "替换是否确认/可撤销；重复项、当前项被移除、重启保留。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-036-sony.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M036-04",
+      "product_id": "M-036",
+      "task": "临时改听歌顺序",
+      "depth": "D2",
+      "evidence_ids": "E-SONY-02;E-SYCD-13",
+      "known_branches": "插到下一首、追加、替换队列与移出单项分开；播放页右滑到队列，Options的Add to playlist保存整队列，单项菜单只加入该曲。电脑导入歌单不能作为追加目标。",
+      "gaps": "替换是否确认/可撤销；重复项、当前项被移除、重启保留；整队列保存后的重复处理未核。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-036-sony.md",
+      "checked_on": "2026-10-27"
+    },
+    "changed_fields": {
+      "evidence_ids": {
+        "before": "E-SONY-02",
+        "after": "E-SONY-02;E-SYCD-13"
+      },
+      "known_branches": {
+        "before": "分别表示插到当前曲之后、末尾追加或替换整个队列；移出列表与文件删除分开。",
+        "after": "插到下一首、追加、替换队列与移出单项分开；播放页右滑到队列，Options的Add to playlist保存整队列，单项菜单只加入该曲。电脑导入歌单不能作为追加目标。"
+      },
+      "gaps": {
+        "before": "替换是否确认/可撤销；重复项、当前项被移除、重启保留。",
+        "after": "替换是否确认/可撤销；重复项、当前项被移除、重启保留；整队列保存后的重复处理未核。"
+      },
+      "checked_on": {
+        "before": "2026-10-26",
+        "after": "2026-10-27"
+      }
+    }
+  },
+  {
+    "flow_id": "F-M036-07",
+    "before": {
+      "flow_id": "F-M036-07",
+      "product_id": "M-036",
+      "task": "收藏及找回偏好内容",
+      "depth": "D2",
+      "evidence_ids": "E-SONY-09",
+      "known_branches": "收藏可存三类对象；官方明确收藏信息不能导入电脑。",
+      "gaps": "换卡/重建数据库后的收藏、误取消恢复、不同成员收藏隔离。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-036-sony.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M036-07",
+      "product_id": "M-036",
+      "task": "收藏及找回偏好内容",
+      "depth": "D2",
+      "evidence_ids": "E-SONY-09;E-SYCD-07",
+      "known_branches": "收藏可存曲目/专辑/歌单；收藏信息不能导入电脑。移卡时卡上对象的收藏信息会disappear，原文未说明重插恢复；不可据此推定音频被删。",
+      "gaps": "重插卡/重建数据库后的收藏、误取消恢复、不同成员收藏隔离。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-036-sony.md",
+      "checked_on": "2026-10-27"
+    },
+    "changed_fields": {
+      "evidence_ids": {
+        "before": "E-SONY-09",
+        "after": "E-SONY-09;E-SYCD-07"
+      },
+      "known_branches": {
+        "before": "收藏可存三类对象；官方明确收藏信息不能导入电脑。",
+        "after": "收藏可存曲目/专辑/歌单；收藏信息不能导入电脑。移卡时卡上对象的收藏信息会disappear，原文未说明重插恢复；不可据此推定音频被删。"
+      },
+      "gaps": {
+        "before": "换卡/重建数据库后的收藏、误取消恢复、不同成员收藏隔离。",
+        "after": "重插卡/重建数据库后的收藏、误取消恢复、不同成员收藏隔离。"
+      },
+      "checked_on": {
+        "before": "2026-10-26",
+        "after": "2026-10-27"
+      }
+    }
+  },
+  {
+    "flow_id": "F-M036-08",
+    "before": {
+      "flow_id": "F-M036-08",
+      "product_id": "M-036",
+      "task": "口袋盲操、防误按与精确寻位",
+      "depth": "D2",
+      "evidence_ids": "E-SONY-02;E-SONY-03;E-SONY-04",
+      "known_branches": "锁实体键、关屏、锁屏认证、暂停四者不同；松开 HOLD 恢复按键。",
+      "gaps": "锁屏通知实际操作；误拖恢复、第三方音频焦点与重启断点。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-036-sony.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M036-08",
+      "product_id": "M-036",
+      "task": "口袋盲操、防误按与寻位",
+      "depth": "D2",
+      "evidence_ids": "E-SONY-02;E-SONY-03;E-SONY-04;E-SYCD-17",
+      "known_branches": "锁实体键、关屏、锁屏认证、暂停四者不同；松开HOLD恢复按键。长按媒体键快退/进须在播放中；官方提示已播时间和时间条可能不准确。",
+      "gaps": "锁屏通知实际操作；误拖恢复、第三方音频焦点与重启断点。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-036-sony.md",
+      "checked_on": "2026-10-27"
+    },
+    "changed_fields": {
+      "task": {
+        "before": "口袋盲操、防误按与精确寻位",
+        "after": "口袋盲操、防误按与寻位"
+      },
+      "evidence_ids": {
+        "before": "E-SONY-02;E-SONY-03;E-SONY-04",
+        "after": "E-SONY-02;E-SONY-03;E-SONY-04;E-SYCD-17"
+      },
+      "known_branches": {
+        "before": "锁实体键、关屏、锁屏认证、暂停四者不同；松开 HOLD 恢复按键。",
+        "after": "锁实体键、关屏、锁屏认证、暂停四者不同；松开HOLD恢复按键。长按媒体键快退/进须在播放中；官方提示已播时间和时间条可能不准确。"
+      },
+      "checked_on": {
+        "before": "2026-10-26",
+        "after": "2026-10-27"
+      }
+    }
+  },
+  {
+    "flow_id": "F-M036-09",
+    "before": {
+      "flow_id": "F-M036-09",
+      "product_id": "M-036",
+      "task": "蓝牙回连与出口相关音效",
+      "depth": "D2",
+      "evidence_ids": "E-SONY-11;E-SONY-12",
+      "known_branches": "配对记录不等于连接成功；Sound adjustment app 与 Music player 共享音效数值。USB 音频输出禁用这些音效；蓝牙也有功能/地区例外。",
+      "gaps": "断连后是否暂停、接有线优先级、重新连是否自动出声。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-036-sony.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M036-09",
+      "product_id": "M-036",
+      "task": "蓝牙配对/回连、音质设置与出口相关音效",
+      "depth": "D2",
+      "evidence_ids": "E-SONY-11;E-SONY-12;E-SYCD-14;E-SYCD-15;E-SYCD-16;E-SYCD-05",
+      "known_branches": "首次Pair new device选设备/所需密钥；超时重试，恢复出厂后重配。Wireless playback quality下次连接才生效且受接收端影响。USB音频输出的音效限制不能套USB-DAC输入；后者应用本机音效。High-Res streaming在系统Sound中配置第三方App，兼容性非全覆盖。",
+      "gaps": "断连后是否暂停、接有线优先级、重新连是否自动出声；第三方App后台/音频焦点/离线授权未核。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-036-sony.md",
+      "checked_on": "2026-10-27"
+    },
+    "changed_fields": {
+      "task": {
+        "before": "蓝牙回连与出口相关音效",
+        "after": "蓝牙配对/回连、音质设置与出口相关音效"
+      },
+      "evidence_ids": {
+        "before": "E-SONY-11;E-SONY-12",
+        "after": "E-SONY-11;E-SONY-12;E-SYCD-14;E-SYCD-15;E-SYCD-16;E-SYCD-05"
+      },
+      "known_branches": {
+        "before": "配对记录不等于连接成功；Sound adjustment app 与 Music player 共享音效数值。USB 音频输出禁用这些音效；蓝牙也有功能/地区例外。",
+        "after": "首次Pair new device选设备/所需密钥；超时重试，恢复出厂后重配。Wireless playback quality下次连接才生效且受接收端影响。USB音频输出的音效限制不能套USB-DAC输入；后者应用本机音效。High-Res streaming在系统Sound中配置第三方App，兼容性非全覆盖。"
+      },
+      "gaps": {
+        "before": "断连后是否暂停、接有线优先级、重新连是否自动出声。",
+        "after": "断连后是否暂停、接有线优先级、重新连是否自动出声；第三方App后台/音频焦点/离线授权未核。"
+      },
+      "checked_on": {
+        "before": "2026-10-26",
+        "after": "2026-10-27"
+      }
+    }
+  },
+  {
+    "flow_id": "F-M036-10",
+    "before": {
+      "flow_id": "F-M036-10",
+      "product_id": "M-036",
+      "task": "删除音轨并维护数据库",
+      "depth": "D2",
+      "evidence_ids": "E-SONY-10;E-SONY-13",
+      "known_branches": "删除曲目不同于移出队列/歌单/收藏；数据库更新和重建也不是同一操作。",
+      "gaps": "删除确认、文件回收/撤销、重建会否清收藏/歌单；这些帮助页未交代。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-036-sony.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M036-10",
+      "product_id": "M-036",
+      "task": "删除音轨并维护数据库",
+      "depth": "D2",
+      "evidence_ids": "E-SONY-10;E-SONY-13;E-SYCD-12;E-SYCD-18",
+      "known_branches": "默认索引范围含内存Music与Download、卡Music及已注册文件夹；可用曲库更新按钮或Options→Settings→Update database。Rebuild只证实菜单存在，未获其作用差异。",
+      "gaps": "删除确认、文件回收/撤销、Update/Rebuild对收藏/歌单的具体影响未知；不可把两个名称视为已验证的数据行为。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-036-sony.md",
+      "checked_on": "2026-10-27"
+    },
+    "changed_fields": {
+      "evidence_ids": {
+        "before": "E-SONY-10;E-SONY-13",
+        "after": "E-SONY-10;E-SONY-13;E-SYCD-12;E-SYCD-18"
+      },
+      "known_branches": {
+        "before": "删除曲目不同于移出队列/歌单/收藏；数据库更新和重建也不是同一操作。",
+        "after": "默认索引范围含内存Music与Download、卡Music及已注册文件夹；可用曲库更新按钮或Options→Settings→Update database。Rebuild只证实菜单存在，未获其作用差异。"
+      },
+      "gaps": {
+        "before": "删除确认、文件回收/撤销、重建会否清收藏/歌单；这些帮助页未交代。",
+        "after": "删除确认、文件回收/撤销、Update/Rebuild对收藏/歌单的具体影响未知；不可把两个名称视为已验证的数据行为。"
+      },
+      "checked_on": {
+        "before": "2026-10-26",
+        "after": "2026-10-27"
+      }
+    }
+  }
+]

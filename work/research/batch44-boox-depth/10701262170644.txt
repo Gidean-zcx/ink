@@ -1,0 +1,33 @@
+In this article, you will learn more about the app management settings on your device.
+To access the app management settings, go to Settings > Apps & Notifications in Home Screen.
+Application
+Here you can manage or uninstall your apps.
+Permission
+Here you can manage the permission settings of your apps.
+Notifications
+Here you can manage the notification settings of your apps.
+Default app
+Here you can change the default app when opening a new file.
+App Startup
+Here you can enable / disable the auto start settings of your apps.
+Note: The auto start functions will increase power consumption and may cause the device to run slow.
+App Refresh Mode
+Here you can manage the refresh mode settings for each app.
+DPI Setting
+Here you can manage the DPI settings for each app.
+Force to use system orientation
+Here you can manage the settings to force each app to follow the system direction.
+Scrolling Button Setting
+Here you can manage the scrolling button settings for each app.
+Work Profile
+Here you can enable a work profile to help you keep your personal and work data separate. Please refer to the Work Profile page for more info.
+Note: This function is only available for select models.
+Store
+Here you can enable / disable the built-in Store.
+Freeze Settings
+Here you can manage the freeze settings for some apps to optimize the performance of the device and save power.
+Note: Using the Freeze functions will prevent the app from any operation in the background such as sending notifications.
+Reset App Optimization Tutorial
+Here you can go through the App Optimization Tutorial again when opening a third-party app.
+Reset all app optimization
+Here you can reset all app optimization settings to the original ones for all apps.

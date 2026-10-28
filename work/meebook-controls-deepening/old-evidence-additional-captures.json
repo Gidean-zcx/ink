@@ -1,0 +1,92 @@
+[
+  {
+    "evidence_id": "E-MEE-01",
+    "before_additional_captures": [],
+    "append_additional_captures": [
+      {
+        "checked_on": "2026-10-27",
+        "source_url": "https://www.haoqingtech.com/",
+        "access_mode": "anonymous_public_html_GET",
+        "http_status": 200,
+        "hands_on": false,
+        "visual_observed": false,
+        "archived_artifact": "artifacts/meebook-controls-deepening/source-notes.md",
+        "sha256": "e096a28910f56b3e5fbbfc8339a089e799fc9b6738f72b060d45c81e304da545",
+        "locator": "厂商联系方式及en1.png型号宣传",
+        "capture_state": "raw_source_in_work_and_short_note_archived",
+        "raw_work_path": "work/meebook-controls-deepening/raw/official.html",
+        "raw_sha256": "517793993ff05808ea982eba377d0140a9a74179aefe030c0109137959c19276",
+        "extracted_work_path": "work/meebook-controls-deepening/raw/official.txt",
+        "extracted_sha256": "8a46d2a5be6808bf99113889f0fb21abc20ba4cbafd8701f130d70301dff905c"
+      }
+    ]
+  },
+  {
+    "evidence_id": "E-MEE-02",
+    "before_additional_captures": [],
+    "append_additional_captures": [
+      {
+        "checked_on": "2026-10-27",
+        "source_url": "https://fccid.io/2A53EMEEBOOKM7/User-Manual/User-Manual-6662213",
+        "access_mode": "web_text_read_then_local_GET_403_stopped",
+        "http_status": 403,
+        "hands_on": false,
+        "visual_observed": false,
+        "archived_artifact": "artifacts/meebook-controls-deepening/source-notes.md",
+        "sha256": "e096a28910f56b3e5fbbfc8339a089e799fc9b6738f72b060d45c81e304da545",
+        "locator": "Document ID6662213；申请人、型号与标题元数据",
+        "capture_state": "web_text_read_but_raw_capture_denied_no_retry",
+        "failed_response_work_path": "work/meebook-controls-deepening/raw/metadata.html",
+        "failed_response_sha256": "f46951a741d217ab40193f7cdb453d41671e3bb30d7a61888ba11f03b0eb7673",
+        "raw_work_path": null,
+        "raw_sha256": null,
+        "note": "此前web工具已读；本地文件只是403响应，不是正文。未重试拒绝路线，无PDF/新图。"
+      }
+    ]
+  },
+  {
+    "evidence_id": "E-MEE-03",
+    "before_additional_captures": [],
+    "append_additional_captures": [
+      {
+        "checked_on": "2026-10-27",
+        "source_url": "https://www.manualslib.com/guide/4006924/meebook-m7-manual.html",
+        "access_mode": "web_text_read_then_local_GET_403_stopped",
+        "http_status": 403,
+        "hands_on": false,
+        "visual_observed": false,
+        "archived_artifact": "artifacts/meebook-controls-deepening/source-notes.md",
+        "sha256": "e096a28910f56b3e5fbbfc8339a089e799fc9b6738f72b060d45c81e304da545",
+        "locator": "Basic operating guidance 1—4、7；Data backups",
+        "capture_state": "web_text_read_but_raw_capture_denied_no_retry",
+        "failed_response_work_path": "work/meebook-controls-deepening/raw/quick.html",
+        "failed_response_sha256": "3483b1775080474fb721d0801cb29ff4c046cc5e4d51711bbca77e80615b27ee",
+        "raw_work_path": null,
+        "raw_sha256": null,
+        "note": "此前web工具已读；本地文件只是403响应，不是正文。未重试拒绝路线，无PDF/新图。"
+      }
+    ]
+  },
+  {
+    "evidence_id": "E-MEE-04",
+    "before_additional_captures": [],
+    "append_additional_captures": [
+      {
+        "checked_on": "2026-10-27",
+        "source_url": "https://ereader.co.th/firmware/",
+        "access_mode": "anonymous_public_html_GET",
+        "http_status": 200,
+        "hands_on": false,
+        "visual_observed": false,
+        "archived_artifact": "artifacts/meebook-controls-deepening/source-notes.md",
+        "sha256": "e096a28910f56b3e5fbbfc8339a089e799fc9b6738f72b060d45c81e304da545",
+        "locator": "Meebook M7小节：V1.5.2；V1.5.3-2023092114",
+        "capture_state": "raw_source_in_work_and_short_note_archived",
+        "raw_work_path": "work/meebook-controls-deepening/raw/firmware.html",
+        "raw_sha256": "5a8a79916d8e0f9940496b7ba044a7cf34e07ae61ff1d2f0d5635a4266eaf099",
+        "extracted_work_path": "work/meebook-controls-deepening/raw/firmware.txt",
+        "extracted_sha256": "66db1872707740ea3bbcb9882bafe4981449469f1a51c12f985cae96bd2a7b56"
+      }
+    ]
+  }
+]

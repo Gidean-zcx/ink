@@ -1,0 +1,56 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=640, user-scalable=no" />
+    <meta name="format-detection" content="telephone=no" />
+    <title>各APP反馈入口</title>
+    <style type="text/css">
+        html{width:100%;}
+				body{width:100%; margin:0; padding:0; font-size:100%; font-family:"HYQiHei-DES","Microsoft YaHei",\5b8b\4f53,Arial, Helvetica, sans-serif; background-color:#f6f6f6}
+				.about {display:block; padding: 0.1rem 0; color: #5F5C5C; font-size: 0.20rem; line-height: 0.46rem; width:75%; margin: 0 auto;}
+        .about-page{padding: 12px;max-width: 1000px;margin: 0 auto;}
+        .about-page-content{color:#575757;text-align:left; font-family:"HYQiHei-EES";}
+    </style>
+    <script>
+    (function (doc, win) {
+      var docEl = doc.documentElement,
+        resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
+        recalc = function () {
+          var clientWidth = docEl.clientWidth;
+          if (!clientWidth) return;
+          docEl.style.fontSize = 100 * (clientWidth / 1024) + 'px';
+          document.getElementById("about").style.display="block";
+        };
+
+      if (!doc.addEventListener) return;
+      win.addEventListener(resizeEvt, recalc, false);
+      doc.addEventListener('DOMContentLoaded', recalc, false);
+    })(document, window);
+	</script>
+</head>
+<body>
+        <div id="about" class="about">
+                <div class="about-page">
+                        <div class="about-page-content">
+                        	<p>洪恩识字（APP首页--右上角“我要反馈”）</p>
+                        	<img src="https://static.ihumand.com/web/images/privacy/fb_shizi.png" style="width:500px;height: auto;"></img>
+                      	</div>	
+                      	<div class="about-page-content">
+                        	<p>洪恩故事（APP首页--右下角“我的”--“帮助中心”）</p>
+                        	<img src="https://static.ihumand.com/web/images/privacy/fb_story.png" style="width:500px;height: auto;"></img>
+                      	</div>	
+                      	<div class="about-page-content">
+                        	<p>洪恩数学（APP首页—左上角信封标志）</p>
+                        	<img src="https://static.ihumand.com/web/images/privacy/fb_math.png" style="width:500px;height: auto;"></img>
+                      	</div>	
+                      	<div class="about-page-content">
+                        	<p>洪恩双语绘本（APP首页--右上角“设置”--帮助中心）</p>
+                        	<img src="https://static.ihumand.com/web/images/privacy/fb_book_1.png" style="width:500px;height: auto;"></img>
+													<img src="https://static.ihumand.com/web/images/privacy/fb_book_2.png" style="width:500px;height: auto;"></img>
+                      	</div>	
+                </div>      
+        </div>
+        </div>
+</body>
+</html>

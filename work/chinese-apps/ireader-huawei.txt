@@ -1,0 +1,922 @@
+掌阅墨水屏版APP问题合集 | 华为官网
+window.pageLoadStart = new Date().getTime();
+function getEncCookie(name){
+		var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)");
+		if(arr=document.cookie.match(reg))
+			return unescape(arr[2]);
+		else
+			return null;
+	}
+    // data layer javascript
+    window.digitalData={"page":{"pageType":{"type":""},"pageInfo":{"appNum":"A59848116","checkDomain":false,"siteCode":"cn","staticResHost":"//consumer-res.huawei.com","isProd":false,"excludeDomainList":"","serviceGatewayPath":"https://sgw-cn.c.huawei.com/forward","gaiaPath":"//r.huaweistatic.com","ccpcApiKey":"CN","siteName":"China (CN)","siteCodeForAPI":"cn","language":"zh_cn","pageName":"cbg:cn:support:content","uri":"/cn/support/content/","site":"cbg","countryCode":"CN","siteCode2":"cn","isProductMiniSitePage":false,"knowledgeHost":"//consumer-tkb.huawei.com","baiduMapKeyV3":"eqBoO19TvrKnkXBWZSn4m5oLOolXAn48","isProductDetailPage":false,"publishedHost":"https://consumer.huawei.com","siteCurrency":"￥"},"category":{"pageType":"support","subCategory1":"content","primaryCategory":"support"}},"event":[]};
+    window.digitalData.page.pageInfo.currentHost = location.host;
+    window.encUser = getEncCookie("data_layer_enc");
+
+    // is the site Arabic site
+    window.isArabicSite = false;
+
+     // map type
+    window.customMapType = "baidu";
+var service_sessionuuid_support = "base/basecommonService/sessionuuid";
+
+	var SITE_CODE = window.digitalData.page.pageInfo.siteCodeForAPI || window.digitalData.page.pageInfo.siteCode;
+	var APP_NUM = window.digitalData.page.pageInfo.appNum;
+	var site_language = window.digitalData.page.pageInfo.language;
+	var countryCode = window.digitalData.page.pageInfo.countryCode;
+	var allowHA = false;
+	window.isEcommercePage = false;
+(function () {
+	window.isHealthWebView = function() {
+		return window.JsInteraction && typeof window.JsInteraction.isFromHuaweiHealth === 'function' && window.JsInteraction.isFromHuaweiHealth();
+	}
+
+	window.isMyHuaweiAppView = function () {
+		return window.integrationJsInterface || window.integrationJsInterfaceWebview;
+	}
+
+    window.isMiniApp = function () {
+        const ua = navigator.userAgent;
+        const miniPattern = /miniProgram\/wx4[a-zA-Z0-9]*/;
+        return (
+            miniPattern?.test(ua) ||
+            window.location.href.includes('source=miniApp')
+        );
+    }
+
+	// 页面头尾隐藏样式
+	const appWebViewStyle = `
+		#header.site-header,
+		.huawei-v4 #header-v4,
+		.huawei-v4 #second-navigation-v4,
+		.huawei-v4 #header-placeholder,
+		.huawei-v4 #robotIcon,
+		.huawei-v4 #cookie-information-template-wrapper,
+		.huawei-v4 .huawei-convergent-cookie,
+		.huawei-v4 .optanon-alert-box-wrapper,
+		.huawei-v4 .nps-survey,
+		.huawei-v4 .hwv3-animate-box,
+		.huawei-v4 .huawei-bootom-cookie,
+		.huawei-v4.nav-hidden .huawei-ie-tips {
+			display: none !important;
+		}`;
+
+    const webViewStyle = `
+        		.huawei-v4 .v4.n09-footer,
+        		#header-v4,
+        		#header.site-header,
+                .huawei-v4 .huawei-ie-tips {
+			        display: none !important;
+		        }`
+	function addCssByStyle(cssString) {
+		const style = document.createElement("style");
+		style.setAttribute("type", "text/css");
+
+		const cssText = document.createTextNode(cssString);
+		style.appendChild(cssText);
+
+		const heads = document.getElementsByTagName("head");
+		if (heads.length) {
+			heads[0].appendChild(style);
+		} else {
+			document.documentElement.appendChild(style);
+		}
+	}
+
+	/**
+	 * 判断当前页面是否为服务页面及智慧生活(window.hilink) 或者 MHW-APP(integrationJsInterface)嵌入
+	 *
+	 * @returns {*|boolean}
+	 */
+	function isSupportPageInAppView() {
+		return window.digitalData && window.digitalData.page.category.pageType == 'support'
+				&& (window.hilink || window.integrationJsInterface || window.integrationJsInterfaceWebview || window.hicareJsInterface);
+	}
+
+	function isEcommerceSite() {
+		const siteCode = window.digitalData ? window.digitalData.page.pageInfo.siteCode2 : '';
+		const ecommerceSiteCodeList = ['uk', 'fr', 'de', 'es', 'it', 'nl','ro', 'pt', 'pl', 'cz', 'tr', 'my', 'sa', 'ae', 'th', 'jp', 'pe', 'mx', 'cl', 'co', 'za', 'ru', 'ph'];
+		return ecommerceSiteCodeList.indexOf(siteCode) > -1;
+	}
+	// 在运动健康中，隐藏页面头部露出尾部（尾部隐藏contact us）
+	if ((isHealthWebView() && isEcommerceSite())) {
+		let webViewStyle = `.huawei-v4 .v4.n09-footer .contact__block.footerv4-payment-types .footerv4-payment-cnt {
+        						border-bottom: 0px!important;
+							}
+							.huawei-v4 .v4.n09-footer .contact__block:not(.footerv4-payment-types),
+							.huawei-v4 .v4.n09-footer .language-switcher{
+								display:none!important;
+							}`
+		addCssByStyle(appWebViewStyle + webViewStyle);
+	}
+	// 智慧生活服务页面webView中，隐藏页面头尾
+	if (isSupportPageInAppView()) {
+		let webViewStyle = `.huawei-v4 .v4.n09-footer .container div:not(.policy-text) {
+								display: none !important;
+							}`
+		addCssByStyle(appWebViewStyle + webViewStyle);
+	}
+
+	// myHuaweiApp隐藏头尾
+	if (isMyHuaweiAppView()) {
+		addCssByStyle(appWebViewStyle);
+	}
+    //小程序去头尾
+    function getUrlParam(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) {
+            return decodeURIComponent(r[2]);
+        }
+        return null; //返回参数值
+    }
+
+    if(isMiniApp()){
+        addCssByStyle(appWebViewStyle+webViewStyle)
+    }
+
+    //智慧音频app去头尾
+    function isAudioConnectApp(){
+        return window.JsInteraction
+            && typeof window.JsInteraction.getSignToken=== 'function'
+            && window.JsInteraction.getSignToken()
+    }
+    if(isAudioConnectApp()){
+        addCssByStyle(appWebViewStyle+webViewStyle)
+    }
+
+})();
+window.dataLayer = window.dataLayer || [];
+
+	function getChapter2(){
+		var pageType = window.digitalData.page.category.pageType;
+		pageType = pageType.split("_")[0];
+		var chapter2 = window.digitalData.page.category.subCategory1;
+		if(pageType == "product-detail" || pageType == "product-listing"){
+			chapter2 = window.digitalData.page.category.primaryCategory;
+		}
+		return chapter2;
+	}
+
+	function getPageName(){
+		var pageName = "";
+		var pathArr = location.pathname.split("/");
+		for(var index = pathArr.length - 1; index > 0; index --){
+			if(pathArr[index] != ""){
+				pageName = pathArr[index];
+				if(pageName.indexOf(".html") != -1){
+					pageName = pageName.split(".")[0];
+				}
+				break;
+			}
+		}
+		return pageName;
+	}
+var siteCode = window.digitalData ? window.digitalData.page.pageInfo.siteCode2 : '';
+	var pageCategory = window.digitalData ? window.digitalData.page.category.pageType: '';
+	var countryCode = window.digitalData ? window.digitalData.page.pageInfo.countryCode: '';
+	var language = window.digitalData ? window.digitalData.page.pageInfo.language: '';
+	var siteName = window.digitalData ? window.digitalData.page.pageInfo.siteName:'';
+	var pageProductInfo =  window.digitalData.product ? window.digitalData.product.productInfo:'';
+	function dateFormat(fmt) {
+		var d = new Date();
+		var local = d.getTime();
+		var offset = d.getTimezoneOffset() * 60000;
+		var localUtc = new Date().getTimezoneOffset() / 60;
+		var utcTime;
+		if (localUtc > 0) {
+			utcTime = local - offset;
+		} else {
+			utcTime = local + offset;
+		}
+		var CNTime = utcTime + 3600000 * 8;
+		var nd = new Date(CNTime);
+		var o = {
+			"M+": nd.getMonth() + 1,
+			"d+": nd.getDate(),
+			"H+": nd.getHours(),
+			"m+": nd.getMinutes(),
+			"s+": nd.getSeconds(),
+			"q+": Math.floor((nd.getMonth() + 3) / 3),
+			"S": nd.getMilliseconds()
+		};
+		if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (nd.getFullYear() + "").substr(4 - RegExp.$1.length));
+		for (var k in o)
+			if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+		return fmt;
+	}
+
+	// hitTimeStamp : YYYYMMDD_hh:mm:ss 时区是(GMT+08:00) China Time，就是GA全球视图的时区
+	window.dataLayer.push({
+		userId: "",
+		sessionId: "",
+		firstSourceMedium:"",
+		lastSourceMedium:"",
+		accountStatus: "",
+		loginStatus: "",
+		hitTimeStamp: dateFormat("yyyy-MM-dd_HH:mm:ss"),
+		pageCategory: pageCategory,
+		siteCountryCode: countryCode,
+		siteLanguage: language,
+		siteCountryName: siteName,
+		"productMktName":pageProductInfo&&pageProductInfo.marketingName||'',
+		"productCategory":pageProductInfo&&pageProductInfo.category||'',
+		"userCategory":""
+	});
+
+	if(pageCategory == 'search') {
+		var reg = new RegExp("(^|&)keyword=([^&]*)(&|$)");
+		var val = window.location.search.substr(1).match(reg);
+		if(val!=null&&val[2]) {
+			var searchKeyword=decodeURIComponent(val[2])
+			window.dataLayer.push({
+				cat55: "product",
+				kw55: searchKeyword,
+				siteSearchResults: ""
+			});
+		} ;
+
+	}
+/**
+	 * 获取url中的参数
+	 */
+	function getUrlParam(name) {
+		var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+		var r = window.location.search.substr(1).match(reg); //匹配目标参数
+		if (r != null) {
+			return decodeURIComponent(r[2]);
+		}
+		return null; //返回参数值
+	}
+(function (w, d, s, l, i) {
+				w[l] = w[l] || [];
+				w[l].push({
+					'gtm.start': new Date().getTime(),
+					event: 'gtm.js'
+				});
+				var f = d.getElementsByTagName(s)[0],
+					j = d.createElement(s),
+					dl = l != 'dataLayer' ? '&l=' + l : '';
+				j.async = true;
+				j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+				f.parentNode.insertBefore(j, f);
+			})(window, document, 'script', 'dataLayer', 'GTM-MBP7H56');
+var enableExternalLinkPopup = Boolean(true);
+		var externalLinkWhitelist = "[\x22huawei.com\x22,\x22huawei.cn\x22,\x22h5hosting\u002Ddrcn.dbankcdn.cn\x22,\x22vmall.com\x22,\x22dpd.pt\x22,\x22cn.biosenseclinic.com\x22,\x22yangshipin.cn\x22,\x22contentcenter\u002Ddrcn.dbankcdn.com\x22,\x22css\u002Dcomplain\u002Ddrcn.platform.dbankcloud.cn\x22,\x22fancourier.ro\x22]" != ''
+										? JSON.parse("[\x22huawei.com\x22,\x22huawei.cn\x22,\x22h5hosting\u002Ddrcn.dbankcdn.cn\x22,\x22vmall.com\x22,\x22dpd.pt\x22,\x22cn.biosenseclinic.com\x22,\x22yangshipin.cn\x22,\x22contentcenter\u002Ddrcn.dbankcdn.com\x22,\x22css\u002Dcomplain\u002Ddrcn.platform.dbankcloud.cn\x22,\x22fancourier.ro\x22]")
+										: [];
+var enableNewCookieCfg = Boolean(false);
+    var cookieModeSetting = "noPromptMode";
+    var ctlAnalysisCookie = Boolean();
+    var ctlAdvertiseCookie = Boolean();
+    var enableDefaultCookieAccept = Boolean();
+    var pushForConsentTime = "";
+    var pushForConsentTimeNewMode = "";
+
+    // 分享于My Huawei App中打开 开关
+    var enableShareFeature = Boolean(false);
+    // My Huawei App 下载页面地址配置项
+    var appDownloadLink = "";
+    // 是否启用 App 侧 FA 数据推送
+    var enableAppFa = Boolean();
+    // App 区域映射Json配置项
+    var appRegionMapperJsonStr = "[{\r\n        \x22region\x22: \x22fr_FR\x22,\r\n        \x22site\x22: \x22fr\x22\r\n    }, {\r\n        \x22region\x22: \x22en_GB\x22,\r\n        \x22site\x22: \x22uk\x22\r\n    }, {\r\n        \x22region\x22: \x22de_DE\x22,\r\n        \x22site\x22: \x22de\x22\r\n    }, {\r\n        \x22region\x22: \x22it_IT\x22,\r\n        \x22site\x22: \x22it\x22\r\n    }, {\r\n        \x22region\x22: \x22es_ES\x22,\r\n        \x22site\x22: \x22es\x22\r\n    }, {\r\n        \x22region\x22: \x22nl_NL\x22,\r\n        \x22site\x22: \x22nl\x22\r\n    }, {\r\n        \x22region\x22: \x22ja_JP\x22,\r\n        \x22site\x22: \x22jp\x22\r\n    }, {\r\n        \x22region\x22: \x22en_PH\x22,\r\n        \x22site\x22: \x22ph\x22\r\n    }, {\r\n        \x22region\x22: \x22zh_CN\x22,\r\n        \x22site\x22: \x22cn\x22\r\n    }, {\r\n        \x22region\x22: \x22en_ZA\x22,\r\n        \x22site\x22: \x22za\x22\r\n    }, {\r\n        \x22region\x22: \x22pl_PL\x22,\r\n        \x22site\x22: \x22pl\x22\r\n    }, {\r\n        \x22region\x22: \x22ru_RU\x22,\r\n        \x22site\x22: \x22ru\x22\r\n    }, {\r\n        \x22region\x22: \x22th_TH\x22,\r\n        \x22site\x22: \x22th\x22\r\n    }, {\r\n        \x22region\x22: \x22cs_CZ\x22,\r\n        \x22site\x22: \x22cz\x22\r\n    }, {\r\n        \x22region\x22: \x22ro_RO\x22,\r\n        \x22site\x22: \x22ro\x22\r\n    }, {\r\n        \x22region\x22: \x22tr_TR\x22,\r\n        \x22site\x22: \x22tr\x22\r\n    }, {\r\n        \x22region\x22: \x22es_PE\x22,\r\n        \x22site\x22: \x22pe\x22\r\n    }, {\r\n        \x22region\x22: \x22pt_PT\x22,\r\n        \x22site\x22: \x22pt\x22\r\n    }, {\r\n        \x22region\x22: \x22ar_AE\x22,\r\n        \x22site\x22: \x22ae\x22\r\n    }, {\r\n        \x22region\x22: \x22en_AE\x22,\r\n        \x22site\x22: \x22ae_en\x22\r\n    }, {\r\n        \x22region\x22: \x22ar_EG\x22,\r\n        \x22site\x22: \x22eg\x22\r\n    }, {\r\n        \x22region\x22: \x22en_EG\x22,\r\n        \x22site\x22: \x22eg_en\x22\r\n    }, {\r\n        \x22region\x22: \x22ar_SA\x22,\r\n        \x22site\x22: \x22sa\x22\r\n    }, {\r\n        \x22region\x22: \x22en_SA\x22,\r\n        \x22site\x22: \x22sa_en\x22\r\n    }, {\r\n        \x22region\x22: \x22es_CL\x22,\r\n        \x22site\x22: \x22cl\x22\r\n    }, {\r\n        \x22region\x22: \x22es_MX\x22,\r\n        \x22site\x22: \x22mx\x22\r\n    }, {\r\n        \x22region\x22: \x22es_CO\x22,\r\n        \x22site\x22: \x22co\x22\r\n    }, {\r\n        \x22region\x22: \x22en_MY\x22,\r\n        \x22site\x22: \x22my\x22\r\n    }, {\r\n        \x22region\x22: \x22id_ID\x22,\r\n        \x22site\x22: \x22id\x22\r\n    }, {\r\n        \x22region\x22: \x22en_AU\x22,\r\n        \x22site\x22: \x22au\x22\r\n    }, {\r\n        \x22region\x22: \x22de_CH\x22,\r\n        \x22site\x22: \x22ch\x22\r\n    }, {\r\n        \x22region\x22: \x22fr_CH\x22,\r\n        \x22site\x22: \x22ch_fr\x22\r\n    }, {\r\n        \x22region\x22: \x22nl_BE\x22,\r\n        \x22site\x22: \x22be\x22\r\n    }, {\r\n        \x22region\x22: \x22fr_BE\x22,\r\n        \x22site\x22: \x22be_fr\x22\r\n    }, {\r\n        \x22region\x22: \x22en_KH\x22,\r\n        \x22site\x22: \x22kh\x22\r\n    }, {\r\n        \x22region\x22: \x22my_MM\x22,\r\n        \x22site\x22: \x22mm\x22\r\n    }, {\r\n        \x22region\x22: \x22en_MM\x22,\r\n        \x22site\x22: \x22mm\x22\r\n    }, {\r\n        \x22region\x22: \x22vi_VN\x22,\r\n        \x22site\x22: \x22vn\x22\r\n    }, {\r\n        \x22region\x22: \x22en_SG\x22,\r\n        \x22site\x22: \x22sg\x22\r\n    }, {\r\n        \x22region\x22: \x22es_PY\x22,\r\n        \x22site\x22: \x22py\x22\r\n    }, {\r\n        \x22region\x22: \x22es_PA\x22,\r\n        \x22site\x22: \x22pa\x22\r\n    }, {\r\n        \x22region\x22: \x22es_BO\x22,\r\n        \x22site\x22: \x22bo\x22\r\n    }, {\r\n        \x22region\x22: \x22es_EC\x22,\r\n        \x22site\x22: \x22ec\x22\r\n    }, {\r\n        \x22region\x22: \x22es_HN\x22,\r\n        \x22site\x22: \x22hn\x22\r\n    }, {\r\n        \x22region\x22: \x22es_GT\x22,\r\n        \x22site\x22: \x22gt\x22\r\n    }, {\r\n        \x22region\x22: \x22es_CR\x22,\r\n        \x22site\x22: \x22cr\x22\r\n    }, {\r\n        \x22region\x22: \x22es_UY\x22,\r\n        \x22site\x22: \x22uy\x22\r\n    }, {\r\n        \x22region\x22: \x22sk_SK\x22,\r\n        \x22site\x22: \x22sk\x22\r\n    }, {\r\n        \x22region\x22: \x22en_MU\x22,\r\n        \x22site\x22: \x22mu\x22\r\n    }, {\r\n        \x22region\x22: \x22ar_JO\x22,\r\n        \x22site\x22: \x22jo\x22\r\n    }, {\r\n        \x22region\x22: \x22ar_BH\x22,\r\n        \x22site\x22: \x22bh_ar\x22\r\n    }, {\r\n        \x22region\x22: \x22en_BH\x22,\r\n        \x22site\x22: \x22bh\x22\r\n    }, {\r\n        \x22region\x22: \x22ar_KW\x22,\r\n        \x22site\x22: \x22kw\x22\r\n    }, {\r\n        \x22region\x22: \x22en_KW\x22,\r\n        \x22site\x22: \x22kw_en\x22\r\n    }, {\r\n        \x22region\x22: \x22en_GH\x22,\r\n        \x22site\x22: \x22gh\x22\r\n    }, {\r\n        \x22region\x22: \x22ar_QA\x22,\r\n        \x22site\x22: \x22qa_ar\x22\r\n    }, {\r\n        \x22region\x22: \x22en_QA\x22,\r\n        \x22site\x22: \x22qa\x22\r\n    }, {\r\n        \x22region\x22: \x22en_NG\x22,\r\n        \x22site\x22: \x22ng\x22\r\n    }, {\r\n        \x22region\x22: \x22en_IE\x22,\r\n        \x22site\x22: \x22ie\x22\r\n    }, {\r\n        \x22region\x22: \x22ar_DZ\x22,\r\n        \x22site\x22: \x22dz_ar\x22\r\n    }, {\r\n        \x22region\x22: \x22fr_DZ\x22,\r\n        \x22site\x22: \x22dz\x22\r\n    }, {\r\n        \x22region\x22: \x22en_KE\x22,\r\n        \x22site\x22: \x22ke\x22\r\n    }, {\r\n        \x22region\x22: \x22en_LB\x22,\r\n        \x22site\x22: \x22lb\x22\r\n    }, {\r\n        \x22region\x22: \x22ar_TN\x22,\r\n        \x22site\x22: \x22tn_ar\x22\r\n    }, {\r\n        \x22region\x22: \x22fr_TN\x22,\r\n        \x22site\x22: \x22tn\x22\r\n    }, {\r\n        \x22region\x22: \x22ar_IQ\x22,\r\n        \x22site\x22: \x22iq_ar\x22\r\n    }, {\r\n        \x22region\x22: \x22en_IQ\x22,\r\n        \x22site\x22: \x22iq\x22\r\n    }, {\r\n        \x22region\x22: \x22ar_OM\x22,\r\n        \x22site\x22: \x22om_ar\x22\r\n    }, {\r\n        \x22region\x22: \x22en_OM\x22,\r\n        \x22site\x22: \x22om\x22\r\n    }, {\r\n        \x22region\x22: \x22en_IN\x22,\r\n        \x22site\x22: \x22in\x22\r\n    }, {\r\n        \x22region\x22: \x22en_PK\x22,\r\n        \x22site\x22: \x22pk\x22\r\n    }, {\r\n        \x22region\x22: \x22ar_MA\x22,\r\n        \x22site\x22: \x22ma_ar\x22\r\n    }, {\r\n        \x22region\x22: \x22fr_MA\x22,\r\n        \x22site\x22: \x22ma\x22\r\n    }, {\r\n        \x22region\x22: \x22sr_RS\x22,\r\n        \x22site\x22: \x22rs\x22\r\n    }, {\r\n        \x22region\x22: \x22hu_HU\x22,\r\n        \x22site\x22: \x22hu\x22\r\n    }, {\r\n        \x22region\x22: \x22de_AT\x22,\r\n        \x22site\x22: \x22at\x22\r\n    }, {\r\n        \x22region\x22: \x22hr_HR\x22,\r\n        \x22site\x22: \x22hr\x22\r\n    }, {\r\n        \x22region\x22: \x22el_CY\x22,\r\n        \x22site\x22: \x22cy\x22\r\n    }, {\r\n        \x22region\x22: \x22sl_SI\x22,\r\n        \x22site\x22: \x22si\x22\r\n    }, {\r\n        \x22region\x22: \x22el_GR\x22,\r\n        \x22site\x22: \x22gr\x22\r\n    }, {\r\n        \x22region\x22: \x22uk_UA\x22,\r\n        \x22site\x22: \x22ua\x22\r\n    }, {\r\n        \x22region\x22: \x22bg_BG\x22,\r\n        \x22site\x22: \x22bg\x22\r\n    }, {\r\n        \x22region\x22: \x22en_BD\x22,\r\n        \x22site\x22: \x22bd\x22\r\n    }, {\r\n        \x22region\x22: \x22zh_tw_HK\x22,\r\n        \x22site\x22: \x22hk\x22\r\n    }, {\r\n        \x22region\x22: \x22en_NZ\x22,\r\n        \x22site\x22: \x22nz\x22\r\n    }, {\r\n        \x22region\x22: \x22es_SV\x22,\r\n        \x22site\x22: \x22sv\x22\r\n    }, {\r\n        \x22region\x22: \x22pt_BR\x22,\r\n        \x22site\x22: \x22br\x22\r\n    }, {\r\n        \x22region\x22: \x22es_DO\x22,\r\n        \x22site\x22: \x22do\x22\r\n    }, {\r\n        \x22region\x22: \x22es_AR\x22,\r\n        \x22site\x22: \x22ar\x22\r\n    }, {\r\n        \x22region\x22: \x22ru_BE\x22,\r\n        \x22site\x22: \x22by\x22\r\n    }, {\r\n        \x22region\x22: \x22ru_KZ\x22,\r\n        \x22site\x22: \x22kz\x22\r\n    }, {\r\n        \x22region\x22: \x22ru_UZ\x22,\r\n        \x22site\x22: \x22uz\x22\r\n    }, {\r\n        \x22region\x22: \x22en_LK\x22,\r\n        \x22site\x22: \x22lk\x22\r\n    }, {\r\n        \x22region\x22: \x22en_CA\x22,\r\n        \x22site\x22: \x22ca\x22\r\n    }, {\r\n        \x22region\x22: \x22fr_CA\x22,\r\n        \x22site\x22: \x22ca_fr\x22\r\n    }, {\r\n        \x22region\x22: \x22bs_BA\x22,\r\n        \x22site\x22: \x22ba\x22\r\n    }, {\r\n        \x22region\x22: \x22ro_MD\x22,\r\n        \x22site\x22: \x22md\x22\r\n    }, {\r\n        \x22region\x22: \x22he_IL\x22,\r\n        \x22site\x22: \x22il\x22\r\n    }, {\r\n        \x22region\x22: \x22mk_MK\x22,\r\n        \x22site\x22: \x22mk\x22\r\n    }, {\r\n        \x22region\x22: \x22fi_FI\x22,\r\n        \x22site\x22: \x22fi\x22\r\n    }, {\r\n        \x22region\x22: \x22da_DK\x22,\r\n        \x22site\x22: \x22dk\x22\r\n    }, {\r\n        \x22region\x22: \x22no_NO\x22,\r\n        \x22site\x22: \x22no\x22\r\n    }, {\r\n        \x22region\x22: \x22et_EE\x22,\r\n        \x22site\x22: \x22ee\x22\r\n    }, {\r\n        \x22region\x22: \x22ru_EE\x22,\r\n        \x22site\x22: \x22ee\x22\r\n    }, {\r\n        \x22region\x22: \x22lv_LV\x22,\r\n        \x22site\x22: \x22lv\x22\r\n    }, {\r\n        \x22region\x22: \x22ru_LV\x22,\r\n        \x22site\x22: \x22lv\x22\r\n    }, {\r\n        \x22region\x22: \x22lt_LT\x22,\r\n        \x22site\x22: \x22lt\x22\r\n    }, {\r\n        \x22region\x22: \x22sv_SE\x22,\r\n        \x22site\x22: \x22se\x22\r\n    }\r\n]";
+var supportv2 = {};
+    supportv2["toCApiUrl"] = "https:\/\/brandzone\u002Dcn.c.huawei.com";
+    supportv2["captchaServiceDomain"] = "csc\u002Dadapter\u002Ddrcn.security.dbankcloud.cn";
+    supportv2["apiBaseUrl"] = "https:\/\/ccpce\u002Dcn.consumer.huawei.com\/ccpcmd\/services\/dispatch\/secured\/CCPC\/EN";
+    supportv2["captchaUrl"] = "contentcenter\u002Ddrcn.dbankcdn.cn\/pub_1\/cscaptcha_captcha_900_9\/b\/v3\/netease";
+    supportv2["supportApiUrl"] =  "https:\/\/consumer.huawei.com\/support";
+    supportv2["ccpcServiceGatewayUrl"] =  "";
+	supportv2["cmktApiUrl"] =  "https:\/\/consumer.huawei.com\/cmkt";
+	supportv2["casUrl"] = "https:\/\/id1.cloud.huawei.com\/CAS";
+	supportv2["logisticcode"] = "SF\u002DCN";
+	supportv2["knowledgeLangCode"] = "";
+	supportv2["knowledgeCountry"] = "";
+    supportv2["productCategoryMapping"] = "[{\x22deviceProductLv2Id\x22:\x22CMCG10000002\x22,\x22categoryNameKey\x22:\x22Phones\x22,\x22majorProductCode\x22:\x22CMCG10000160,CMCG10000014,CMCG10000059,CMCG10000013,CMCG10000056,CMCG10000057,CMCG10000051,CMCG10000016,CMCG10000052,CMCG10000054,CMCG10000055,CMCG10000058,CMCG10000017,CMCG10000015,CMCG10000053\x22,\x22picUrl\x22:\x22\/content\/dam\/huawei\u002Dcbg\u002Dsite\/greate\u002Dchina\/cn\/support\/support\u002Dv3\/warranty\u002Dquery\/phones.svg\x22,\x22deviceCenterMajorName\x22:\x22Phones\x22},{\x22deviceProductLv2Id\x22:\x22CMCG10000003\x22,\x22categoryNameKey\x22:\x22Tablets\x22,\x22majorProductCode\x22:\x22CMCG10000018,CMCG10000019,CMCG10000061,CMCG10000060\x22,\x22picUrl\x22:\x22\/content\/dam\/huawei\u002Dcbg\u002Dsite\/greate\u002Dchina\/cn\/support\/support\u002Dv3\/warranty\u002Dquery\/tablets.svg\x22,\x22deviceCenterMajorName\x22:\x22平板\x22},{\x22deviceProductLv2Id\x22:\x22CMCG10000240\x22,\x22categoryNameKey\x22:\x22Vision\x22,\x22majorProductCode\x22:\x22CMCG10000920,CMCG10000280,CMCG10000922,CMCG10000941,CMCG10000980,CMCG10000940,CMCG10001000,CMCG10000921,CMCG10000300\x22,\x22picUrl\x22:\x22\/content\/dam\/huawei\u002Dcbg\u002Dsite\/greate\u002Dchina\/cn\/support\/support\u002Dv3\/warranty\u002Dquery\/visions.svg\x22,\x22deviceCenterMajorName\x22:\x22智慧屏\x22},{\x22deviceProductLv2Id\x22:\x22CMCG10000005\x22,\x22categoryNameKey\x22:\x22Wearables\x22,\x22majorProductCode\x22:\x22CMCG10000021,CMCG10000022,CMCG10000023,CMCG10000063,CMCG10000062\x22,\x22picUrl\x22:\x22\/content\/dam\/huawei\u002Dcbg\u002Dsite\/greate\u002Dchina\/cn\/support\/support\u002Dv3\/warranty\u002Dquery\/wearables.svg\x22,\x22deviceCenterMajorName\x22:\x22穿戴\x22},{\x22deviceProductLv2Id\x22:\x22CMCG10000004\x22,\x22categoryNameKey\x22:\x22Laptops\x22,\x22majorProductCode\x22:\x22CMCG10000620,CMCG10000400,CMCG10000383,CMCG10000401,CMCG10000020,CMCG10000384,CMCG10000402,CMCG10000121,CMCG10000345\x22,\x22picUrl\x22:\x22\/content\/dam\/huawei\u002Dcbg\u002Dsite\/greate\u002Dchina\/cn\/support\/support\u002Dv3\/warranty\u002Dquery\/laptops.svg\x22,\x22deviceCenterMajorName\x22:\x22笔记本\x22},{\x22deviceProductLv2Id\x22:\x22CMCG10000006\x22,\x22categoryNameKey\x22:\x22Smart home\x22,\x22majorProductCode\x22:\x22CMCG10000029,CMCG10000200,CMCG10000027,CMCG10000075,CMCG10000180,CMCG10000065,CMCG10000220,CMCG10000026,CMCG10000064,CMCG10000025,CMCG10000820,CMCG10000221,CMCG10000024,CMCG10000028,CMCG10000031,CMCG10000030\x22,\x22picUrl\x22:\x22\/content\/dam\/huawei\u002Dcbg\u002Dsite\/greate\u002Dchina\/cn\/support\/support\u002Dv3\/warranty\u002Dquery\/homes.svg\x22,\x22deviceCenterMajorName\x22:\x22智能家居\x22},{\x22deviceProductLv2Id\x22:\x22CMCG10000010\x22,\x22categoryNameKey\x22:\x22Accessories\x22,\x22majorProductCode\x22:\x22CMCG10000037,CMCG10000036,CMCG10000038,CMCG10000034,CMCG10000035,CMCG10000067,CMCG10000070,CMCG10000068,CMCG10000069,CMCG10000066\x22,\x22picUrl\x22:\x22\/content\/dam\/huawei\u002Dcbg\u002Dsite\/greate\u002Dchina\/cn\/support\/support\u002Dv3\/warranty\u002Dquery\/accessories.svg\x22,\x22deviceCenterMajorName\x22:\x22配件\x22},{\x22deviceProductLv2Id\x22:\x22CMCG10000340\x22,\x22categoryNameKey\x22:\x22Monitors\x22,\x22majorProductCode\x22:\x22CMCG10000381,CMCG10000382\x22,\x22picUrl\x22:\x22\/content\/dam\/huawei\u002Dcbg\u002Dsite\/greate\u002Dchina\/cn\/support\/support\u002Dv3\/warranty\u002Dquery\/monitors.svg\x22,\x22deviceCenterMajorName\x22:\x22显示器\x22},{\x22deviceProductLv2Id\x22:\x22CMCG10000360\x22,\x22categoryNameKey\x22:\x22Desktops\x22,\x22majorProductCode\x22:\x22CMCG10000342,CMCG10000420,CMCG10000380,CMCG10000361\x22,\x22picUrl\x22:\x22\/content\/dam\/huawei\u002Dcbg\u002Dsite\/greate\u002Dchina\/cn\/support\/support\u002Dv3\/warranty\u002Dquery\/desktops.svg\x22,\x22deviceCenterMajorName\x22:\x22台式机\x22},{\x22deviceProductLv2Id\x22:\x22CMCG10000760\x22,\x22categoryNameKey\x22:\x22Smart office\x22,\x22majorProductCode\x22:\x22CMCG10000761,CMCG10000780\x22,\x22picUrl\x22:\x22\/content\/dam\/huawei\u002Dcbg\u002Dsite\/greate\u002Dchina\/cn\/support\/support\u002Dv3\/warranty\u002Dquery\/printers.svg\x22,\x22deviceCenterMajorName\x22:\x22智慧办公选件\x22}]";
+    supportv2["myDeviceI18nValue"] = "我的设备";
+    supportv2["gaEntrance"] = "knowledge page"
+    supportv2["gaModule"] = ""
+    supportv2["entranceLv2ForGa"] = ""
+    supportv2["productCategory1"] = ""
+    supportv2["productCategory2"] = ""
+    supportv2["productCategory3"] = ""
+    supportv2["productCategory4"] = ""
+    supportv2["ccpcSgwAppId"] = "96E6614BD648F3582A2D6D657C5CC768"
+    supportv2["ccpcMyHuaweiApiId"] = "EDCF82D77A5AB59706CD5F2163F67427"
+    supportv2["uumSgwAppId"] = "EDCF82D77A5AB59706CD5F2163F67427"
+    supportv2["enableCsrfVerify"] = "true" == "true";
+    supportv2["cmktSgwAppId"] = "DE1FDF33D6278164A62EC486793F7CCF"
+    supportv2.weComSdk = "https:\/\/wwcdn.weixin.qq.com\/node\/open\/js\/wecom\u002Djssdk\u002D2.0.2.js";
+    supportv2.weComCorpId = "ww1c80e3515f0cf2c3";
+    supportv2.weComAgentId = "1000397";
+    supportv2.weComOauth2BaseUrl = "https:\/\/open.weixin.qq.com";
+    supportv2.uniportalBaseUrl = "https:\/\/uniportal.huawei.com";
+    supportv2.clientId = "cbgwebsite";
+    supportv2.salesAdvisorBaseUrl = "https:\/\/iretail.huawei.com\/sales\u002Dadvisor\/console\/services";
+    supportv2.agreementHost = "https:\/\/iretail.huawei.com\/retail\/rp\/web\/index.html#";
+var loginApiUrl={};
+			loginApiUrl["cmscApiUrl"] = "https:\/\/api\u002Dcn.c.huawei.com\/cuepf";
+    		loginApiUrl["huaweitimeApiUrl"] = "https:\/\/cbg.huawei.com\/mkt\/scrm";
+
+        var mktConfig={};
+            mktConfig["websiteFunctionApi"] = "";
+            mktConfig["uumApi"] = "https:\/\/brandzone\u002Dcn.c.huawei.com";
+            mktConfig["sgwApi"] = (window.digitalData && window.digitalData.page.pageInfo.serviceGatewayPath) ? window.digitalData.page.pageInfo.serviceGatewayPath : "https:\/\/sgw\u002Dcn.c.huawei.com\/forward";
+// 站点
+	var siteCode = window.digitalData ? window.digitalData.page.pageInfo.siteCode2 : '';
+	var ec_siteCode = window.digitalData ? window.digitalData.page.pageInfo.siteCode2 : '';
+    var isECommerceSite = "None";
+    	isECommerceSite = isECommerceSite ? isECommerceSite : "None";
+    var apiHost = "https:\/\/itrinity\u002Dcn.c.huawei.com\/eCommerce\/";
+    var loginApiHost = "";
+    var upPersonalCenterLink = "";
+    var loginLink = "";
+
+ 	// 价格货币展示：货币代码
+    var ecCurrencyCode = "";
+    // 价格货币展示：货币符号位置处理
+    var putCurrencyFront = "true" !== ''
+    						? JSON.parse("true")
+							: true;
+    // 价格货币展示：from显示与否
+	var showFrom = Boolean(false);
+	// 价格货币展示：from文本位置
+    var putFromFront = Boolean(true);
+    // 价格货币展示：千位分隔符
+    var thousandSeparator = "";
+    // 价格货币展示：小数点
+    var decimalPoint = "";
+    // 价格货币展示：是否显示小数
+    var showDecimal = Boolean(true);
+    var showIntegerDecimal = Boolean(true);
+    // 价格货币展示：是否空格隔开
+    var showCurrencySpace = Boolean(true);
+
+ 	// 时区
+    var ecTimezone = "none";
+
+    // vmall登出接口
+    var vmallLogoutAPI = "";
+    // vmall需登录图片，用来拉起登录
+    var vmallLoginImgUrl = "";
+
+    // RRP
+	var enableRRP = Boolean(false);
+	var RRPText = "";
+    if (enableRRP) {
+        RRPText = "";
+    }
+    var enableScribes = Boolean(true);
+    var rrpTips = "";
+    var enableShowSave = Boolean(true);
+    var saveText = "";
+
+    // trade in开关（目前只针对PLP页，其他由中台控制）
+    var enableTradeIn = Boolean(false);
+    // 开启分期显示配置
+    var enableInstallmentCfg = Boolean(false);
+    // 显示免息文本
+    var enableInterestFree = Boolean(false);
+    // 免息文本
+    var interestFreeText = "";
+    // 分期左文本
+    var insatallmentLeftText = "";
+    // 分期右文本
+    var insatallmentRightText = "";
+    // 分期显示格式
+    var installmentDispType = "numberAndAmount";
+
+    // APP DMPA开关
+    var enableAppDmpa = Boolean(false);
+
+    // 运动健康内强制登录开关
+    var enableUnitedLoginForHealth = Boolean(false);
+$(function () {
+        var curPageCategory = window.digitalData ? window.digitalData.page.category.pageType : "";
+        var haAvailableMktPageTypes = ['homepage','product-listing','product-detail','product-detail_specs','search','compare'];
+
+        if (window.isECommerceSite !== "None"
+            && haAvailableMktPageTypes.includes(curPageCategory) && window.ecCom) {
+            // HA自动埋码
+            try {
+                var haAutoTrackTimerMkt = null;
+                if (window._hasdk) {
+                    ecCom.HATrack.autoTrack();
+                } else {
+                    haAutoTrackTimerMkt = setInterval(function () {
+                        if (window._hasdk) {
+                            clearInterval(haAutoTrackTimerMkt);
+                            ecCom.HATrack.autoTrack();
+                        }
+                    }, 100);
+                }
+            } catch (error) {
+            }
+        }
+    });
+var pbi3name = "";
+    var pbi3 = "";
+    var gascroll = 1;
+{"@context":"http://schema.org","@id":"https://consumer.huawei.com/cn/support/#organization","@type":"Organization","url":"https://consumer.huawei.com/cn/support/","name":"HUAWEI Support"}
+{
+				"@context": "https://schema.org",
+				"@type": "Article",
+				"headLine": "掌阅墨水屏版APP问题合集"
+			}
+我们使用cookie来确保您的高速浏览体验。继续浏览本站，即表示您同意我们使用cookie。
+详情
+消费者业务网站
+关闭
+个人用户
+手机，PC和平板，穿戴设备等个人及家用产品
+集团网站
+公司信息，社会责任，新闻，展会活动，行业洞察等等
+企业用户
+企业商用产品、解决方案和云服务
+运营商用户
+运营商网络解决方案、产品及服务
+手机
+穿戴
+电脑
+平板
+智慧屏
+耳机音箱
+全屋智能
+路由器
+HarmonyOS 7
+服务支持
+零售店
+商用
+华为商城
+华为商城
+商城
+搜索
+简介
+登录
+注册
+我的服务
+我的个人信息
+退出
+打开菜单
+关闭
+search
+搜索
+关闭
+热门产品
+HUAWEI Mate 90 Pro Max
+HUAWEI Mate 90 RS 非凡大师
+HUAWEI Mate 90 Pro
+HUAWEI Mate 90
+华为智慧屏 Mate TV 2
+HUAWEI FreeBuds Neo
+快速预览
+手机
+穿戴
+电脑
+平板
+智慧屏
+耳机音箱
+配件
+查找零售店
+热门搜索
+推荐搜索
+请键入更多关键词
+Africa
+Asia Pacific
+Europe
+Latin America
+Middle East
+North America
+Global
+// 隐私协议总开关
+        var privacyPopupSwitch = Boolean();
+		var privacyButtonLineStyle = Boolean(false);
+目录
+选择版本
+掌阅墨水屏版APP问题合集
+适用产品：
+HUAWEI MatePad Paper
+适用版本：
+HarmonyOS 2.1
+适用产品：
+适用版本：
+请选择
+为您查询到以下结果，请选择
+无法查询到结果，请重新选择
+.knowledge-detail-static-component{
+    font-family: "Microsoft YaHei","arial","sans-serif" !important;
+    line-height:30px;
+}
+
+.knowledge-detail-static-component .knowledge-detail .s-wrapplayskill .box .s-tips span {
+    font-size: 14px;
+    color: #6f6f6f;
+    line-height: 22px;
+    float: left;
+}
+
+#tkb-content strong,
+#tkb-content h1,
+#tkb-content h2,
+#tkb-content h3,
+#tkb-content b,
+#tkb-content b span{
+    font-weight:bold;
+}
+
+#tkb-content .tkb-wrapper .note  span,
+#tkb-content .note .notespanimage,
+#tkb-content  .msonormal>span{
+    float: none  !important;
+    margin-left: 0  !important;
+    display: inline-block;
+    vertical-align: top;
+}
+
+#tkb-content .note .notespanimage img {
+    margin: 10px 0;
+}
+
+#tkb-content .topictitle1{
+     font-size: 16pt;
+    display:block;
+    font-weight: inherit;
+}
+
+#tkb-content .tkb-wrapper th{
+    padding:2%;
+}
+
+#tkb-content .tkb-wrapper img{
+    margin-top:0;
+}
+
+#tkb-content #jd-content,
+#tkb-content ul li ,
+#tkb-content ul li span,
+#tkb-content ol li,
+#tkb-content ol li span,
+#tkb-content strong,
+#tkb-content .note p,
+#tkb-content .note,
+#tkb-content .shortdesc,
+#tkb-content #jd-content p,
+#tkb-content #jd-content p span,
+#tkb-content .tkb-wrapper .sectiontitle,
+#tkb-content h2,
+#tkb-content p,
+#tkb-content span,
+#tkb-content .p
+ {
+    font-size:16px !important;
+}
+
+@media screen and (max-width:767px){
+    #tkb-content #jd-content,
+	#tkb-content ul li ,
+	#tkb-content ul li span,
+	#tkb-content ol li,
+	#tkb-content ol li span,
+	#tkb-content strong,
+	#tkb-content .note p,
+	#tkb-content .note,
+	#tkb-content .shortdesc,
+	#tkb-content #jd-content p,
+	#tkb-content #jd-content p span,
+	#tkb-content h2,
+	#tkb-content p,
+	#tkb-content .p,
+        #tkb-content span,
+	{
+		font-size:14px !important;
+	}
+
+	.knowledge-detail-static-component{
+		line-height:28px;
+	}
+
+}
+
+
+#tkb-content a {
+    color:#0000EE;
+}
+
+#tkb-content a:hover {
+    color: -webkit-link;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+#tkb-content .guide-cont,
+#tkb-content #jd-content{
+	padding-left: 0;
+	padding-right: 0;
+}
+#tkb-content .sectiontitle,
+#tkb-content #jd-content p,
+#tkb-content #jd-content table{
+	margin-left: 0;
+	margin-right: 0;
+}
+
+#tkb-content  ol {
+    margin-left:25px;
+}
+
+#tkb-content ol {
+	list-style-type: decimal !important;
+}
+#tkb-content ul {
+    list-style-type: disc !important;
+}
+
+#tkb-content li {
+    list-style-type: inherit !important;
+}
+
+#tkb-content ol li ol ,
+#tkb-content  ol li ol li{
+    list-style-type: lower-alpha !important;
+}
+
+#tkb-content .tkb-wrapper #jd-content{
+    box-shadow: none;
+    margin: 0;
+    padding: 12px 16px;
+}
+
+table.dbh-header{
+    display:none;
+} 
+
+#tkb-content td ul{
+    margin-left:20px !important;
+}
+
+.tkb-zoom-in .zoom-in-pic {
+    max-height:80%;
+}
+#tkb-content .topictitle1 .topictitlenumber1{
+font-size: 16pt !important;
+}
+.tkb-wrapper .topicbody, .tkb-wrapper .taskbody, .tkb-wrapper .familylinks{
+    margin-left: 0.45cm!important;
+}
+#tkb-content #jd-content, #tkb-content ul li, #tkb-content ul li span, #tkb-content ol li, #tkb-content ol li span, #tkb-content strong, #tkb-content .note p, #tkb-content .note, #tkb-content .shortdesc, #tkb-content #jd-content p, #tkb-content #jd-content p span, #tkb-content .tkb-wrapper .sectiontitle, #tkb-content h2, #tkb-content p, #tkb-content span, #tkb-content .p{
+font-family: Microsoft YaHei!important;
+}
+.tkb-wrapper .topictitlenumber1{
+font-weight: inherit!important;
+}
+.tkb-wrapper .tocheading, .tkb-wrapper .heading1, .tkb-wrapper .topictitle1{
+font-family: Microsoft YaHei!important;
+}
+@media screen and (max-width: 750px){
+	#tkb-content .tkb-wrapper #jd-divcontent {
+		width: 100%;
+	}
+}
+
+/* 26-12-24超长图片展示修复 */
+#tkb-content .tkb-wrapper .row-nocellborder img, #tkb-content .tkb-wrapper .uicontrol img, #tkb-content .tkb-wrapper .notespanimage img {
+    height: auto;
+    width: 20px;
+}
+
+#tkb-content img {
+	height: auto;
+}
+
+/* 26-12-24图片放大置顶修复 */
+.huawei-v4.scroll-disabled {
+    position: unset;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    overflow-y: hidden;
+}
+
+.tkb-zoom-in .zoom-in-pic{
+    margin: 0 auto;
+}
+function wheelZoomIn(o){
+					var zoom = parseInt(o.style.zoom,10)||100;
+					var add = (event.wheelDelta/12) || (event.detail * 10/3);
+					zoom = zoom + add;
+					if(zoom>0){
+						o.style.zoom = zoom + "%";
+						o.style.maxWidth = zoom + "%";
+						return false;
+					}
+				}
+table { width: 100% !important };
+.tkb-wrapper ﻿html,.tkb-wrapper body,.tkb-wrapper div,.tkb-wrapper span,.tkb-wrapper p,.tkb-wrapper em,.tkb-wrapper img,.tkb-wrapper ol,.tkb-wrapper ul,.tkb-wrapper li,.tkb-wrapper dl,.tkb-wrapper dt,.tkb-wrapper dd{margin-top:0;margin-bottom:0;padding-top:0;padding-bottom:0;outline:0;vertical-align:baseline;line-height:1.7em;color:#333;font-size:15px;word-wrap:break-word;font-family:'Frutiger Next Com','Arial',微软雅黑}.tkb-wrapper img{max-width:100%;height:auto;vertical-align:text-bottom;border:0}.tkb-wrapper body{margin:0;padding:0;vertical-align:baseline}.tkb-wrapper h2{margin-top:15px;margin-bottom:5px;font-size:18px;color:#009dd9}.tkb-wrapper h3{color:maroon}.tkb-wrapper h4{margin-top:15px;margin-bottom:5px;font-size:18px;color:#009dd9}.tkb-wrapper pre{margin-top:10px;margin-left:0;margin-bottom:10px;font-family:Arial}.tkb-wrapper pre.screen{margin-top:20px;margin-bottom:10px;padding:5px;border:0;background-color:#ddd;white-space:pre-line;font-size:15px}.tkb-wrapper #dbhht{font-size:25px;font-weight:500;font-family:Sans-serif;font-style:normal;color:#09c;margin-left:10px}.tkb-wrapper .dbh-header{font-size:24px;line-height:1.4em;color:#09c;display:none}.tkb-wrapper .dbh-header td{margin-top:0;padding-top:30px;margin-bottom:0;padding-bottom:15px}.tkb-wrapper #jd-content{padding:0}.tkb-wrapper .back{width:10px}.tkb-wrapper ul,.tkb-wrapper ol{padding-left:0;margin-left:0}.tkb-wrapper ul{margin-left:20px;*+margin-left:17px}.tkb-wrapper ol{margin-left:30px;*+margin-left:33px}.tkb-wrapper ul li{line-height:1.9em}.tkb-wrapper ol li{line-height:1.9em}.tkb-wrapper caption{margin-top:8pt;text-align:left;font-weight:700}.tkb-wrapper table{width:99%;word-wrap:break-word;border-collapse:collapse;border-spacing:0;border-color:#c0c0c0;table-layout:fixed;margin-bottom:1.0em}.tkb-wrapper th{padding:0 5px;vertical-align:middle;background-color:#e0e0e0}.tkb-wrapper td{vertical-align:middle;padding:0 5px}.tkb-wrapper th ol{list-style-position:inside;margin-left:0}.tkb-wrapper th ul{list-style-position:inside;margin-left:0}.tkb-wrapper td ol{list-style-position:inside;margin-left:0}.tkb-wrapper td ul{list-style-position:inside;margin-left:0}.tkb-wrapper p,.tkb-wrapper .p{padding:3px 0 3px}.tkb-wrapper li p,.tkb-wrapper li .p{padding:0}.tkb-wrapper td p,.tkb-wrapper td .p{margin:6px 0 3px}.tkb-wrapper th p,.tkb-wrapper th .p{margin:6px 0 3px}.tkb-wrapper .figcap{display:block;font-weight:700}.tkb-wrapper #jd-content1{padding:0 16px 12px}.tkb-wrapper #jd-content1 .g-idx a{display:block;line-height:1.2;padding:8px}.tkb-wrapper .g-idx li span{vertical-align:middle}.tkb-wrapper .gd-list>li{border-bottom:1px solid #c2c2c2}.tkb-wrapper .gl-img{vertical-align:middle;width:32px;height:32px;margin-right:2%}.tkb-wrapper .note{font-size:15px;margin:10px 0;padding:5px 5px 0 0;overflow:hidden;background-color:#fcfcfc}.tkb-wrapper .notespanimage img{float:left}.tkb-wrapper .row-nocellborder img,.tkb-wrapper .uicontrol img,.tkb-wrapper .notespanimage img{height:20px;width:auto}.tkb-wrapper .note>p{padding-left:28px}.tkb-wrapper li .note>span{margin-left:0}.tkb-wrapper .note ol{margin-left:40px}.tkb-wrapper .note ul{margin-left:40px}.tkb-wrapper .notetitle,.tkb-wrapper .notelisttitle,.tkb-wrapper .dlterm{font-weight:700}.tkb-wrapper .uicontrol{font-weight:bolder}.tkb-wrapper sup span{font-size:inherit}.tkb-wrapper h2 span{font-size:18px;color:#009dd9}.tkb-wrapper h2 .uicontrol{margin-top:15px;margin-bottom:5px;font-weight:bold;font-size:18px;color:#009dd9}.tkb-wrapper .menucascade{font-weight:bolder}.tkb-wrapper samp{font-family:-webkit-body}@media screen and (max-width:980px){html,body,div,span,p,em,img,ol,ul,li,dl,dt,dd{margin:0;padding:0;outline:0;vertical-align:baseline;line-height:1.7em;color:#1a1a1a;font-size:15px;font-family:'Frutiger Next Com','Arial',微软雅黑;word-wrap:break-word}a{text-decoration:none}img{max-width:100%;height:auto;vertical-align:text-bottom;border:0}body{margin:0;padding:0;vertical-align:baseline}h2{margin-top:15px;margin-bottom:5px;font-size:18px;color:black}h3{color:maroon}h4{margin-top:15px;margin-bottom:5px;font-size:18px;color:black}pre{margin-top:5px;margin-right:0;margin-bottom:5px;font-family:Arial}pre.screen{margin-top:10px;margin-bottom:0;padding:5px;border:0;background-color:#ddd;white-space:pre-line;font-size:15px}#dbhht{font-size:25px;font-weight:500;font-family:Sans-serif;font-style:normal;color:#09c;margin-left:10px}.dbh-header{font-size:24px;line-height:1.4em;color:#09c;display:none}.dbh-header td{margin-top:0;padding-top:30px;margin-bottom:0;padding-bottom:15px}#jd-content{padding:0}.back{width:10px}ul,ol{padding-left:0;margin-left:0;margin-bottom:1.0em}ul{margin-left:20px;*+margin-left:17px}ol{margin-left:25px;*+margin-left:26px}ul li{line-height:1.7em}ol li{line-height:1.7em}caption{margin-top:8pt;text-align:left;font-weight:700}table{width:99%;word-wrap:break-word;border-collapse:collapse;border-spacing:0;border-color:#c0c0c0;table-layout:fixed;margin-bottom:10px}th{padding:0 5px;vertical-align:middle;background-color:#e0e0e0}td{vertical-align:middle;padding:0 5px}th ol{list-style-position:inside;margin-left:0}th ul{list-style-position:inside;margin-left:0}td ol{list-style-position:inside;margin-left:0}td ul{list-style-position:inside;margin-left:0}p,.p{padding:3px 0 3px}li p,li .p{padding:0}td p,td .p{margin:4px 0 2px}th p,th .p{margin:4px 0 2px}.figcap{display:block;font-weight:700}#jd-content1{padding:0 16px 12px}#jd-content1 .g-idx a{display:block;line-height:1.2;padding:8px}.g-idx li span{vertical-align:middle}.gd-list>li{border-bottom:1px solid #c2c2c2}.gl-img{vertical-align:middle;width:32px;height:32px;margin-right:2%}.note{font-size:15px;margin:10px 0;padding:5px 5px 0 0;overflow:hidden;background-color:#fcfcfc}.notespanimage img{float:left}.row-nocellborder img,.uicontrol img,.notespanimage img{height:20px;width:auto}.note>p{padding-left:28px;margin-top:0;margin-bottom:5px}li .note>span{margin-left:0}.note ol{margin-left:40px}.note ul{margin-left:40px}.notetitle,.notelisttitle,.dlterm{font-weight:700}.uicontrol{font-weight:bolder}sup span{font-size:inherit}h2 span{font-size:18px;color:black}h2 .uicontrol{margin-top:15px;margin-bottom:5px;font-size:18px;color:black;font-weight:bold}.menucascade{font-weight:bolder}samp{font-family:-webkit-body}}.tkb-wrapper .section{margin-top:1em;margin-bottom:1em}.tkb-wrapper .sectiontitle{margin-left:0}.tkb-wrapper div.sectionTab{border:1px solid #ccc;border-top-width:0;padding:15px;position:relative;left:0;margin:0}.tkb-wrapper .example{margin-top:1em;margin-bottom:1em}.tkb-wrapper .sectiontitle2contents:link{color:#007af4}.tkb-wrapper .sectiontitle2contents:visited{color:#800080}.tkb-wrapper .dropdownAllButtonexpand{cursor:pointer;background-repeat:no-repeat;background-position:0 4px;padding-left:15px;background-image:url(icon-arrowrt.gif);text-decoration:underline;color:#007af4}.tkb-wrapper .dropdownAllButtoncollapse{cursor:pointer;background-repeat:no-repeat;background-position:0 4px;padding-left:15px;background-image:url(icon-arrowdn.gif);text-decoration:underline;color:#007af4}.tkb-wrapper .dropdowntitle{background-repeat:no-repeat;background-position:0 4px;padding-left:15px;cursor:pointer}.tkb-wrapper .dropdownexpand .dropdowntitle{background-image:none;text-decoration:underline;color:#007af4;margin:0 0 8px 0}.tkb-wrapper .dropdownexpand .dropdowntitle .sectiontitle,.tkb-wrapper .dropdownexpand .dropdowntitle p{display:flex;align-items:center}.tkb-wrapper .dropdownexpand .dropdowntitle .sectiontitle::before,.tkb-wrapper .dropdownexpand .dropdowntitle p::before{display:block;content:'';width:0;height:0;border-top:5px solid #8b2525;border-right:5px solid transparent;border-left:5px solid transparent;border-bottom:5px solid transparent;margin-right:7px}.tkb-wrapper .dropdowncollapse .dropdowncontext{display:none}.tkb-wrapper .dropdowncollapse .dropdowntitle{background-image:none;text-decoration:underline;color:#007af4;margin:0 0 8px 0}.tkb-wrapper .dropdowncollapse .dropdowntitle .sectiontitle,.tkb-wrapper .dropdowncollapse .dropdowntitle p{display:flex;align-items:center}.tkb-wrapper .dropdowncollapse .dropdowntitle .sectiontitle::before,.tkb-wrapper .dropdowncollapse .dropdowntitle p::before{display:block;content:'';width:0;height:0;border-top:5px solid transparent;border-right:5px solid transparent;border-left:5px solid #039;border-bottom:5px solid transparent;margin-right:7px}.tkb-wrapper .dropdowncollapsetable{border:0}.tkb-wrapper .dropdowncollapsetable .dropdowncontext{display:none}.tkb-wrapper .dropdowncollapsetable .dropdowntitle{background-image:url(icon-arrowrt.gif);text-decoration:underline;color:#007af4}.tkb-wrapper .clearfix{zoom:1}.tkb-wrapper .clearfix:after{content:".";display:block;height:0;clear:both;visibility:hidden}.tkb-wrapper .sectionTitleTab{background-color:#eee;margin-top:2em;margin-left:1pt}.tkb-wrapper .sectionTitleTab ul{padding:0;margin:0}.tkb-wrapper .sectionTitleTab li{padding:0;margin:0;float:left;display:inline-block;padding:8px 0;font-size:16px;list-style:none;*display:inline;border-top:2px solid #eee}.tkb-wrapper .sectionTitleTab li a{color:#666;display:inline-block;padding:0 20px;border-right:1px solid #ddd;*display:inline}.tkb-wrapper .sectionTitleTab li:hover a{color:#009dd9}.tkb-wrapper .sectionTitleTab li.active{background-color:#fff;padding:0;border:1px solid #ccc;border-width:0 1px;border-top:2px solid #009dd9;position:relative;left:-1px}.tkb-wrapper .sectionTitleTab li.active a{color:#009dd9;padding:8px 20px;border:0}.tkb-wrapper .hide{display:none}.tkb-wrapper .blueBtn{display:inline-block;height:24px;min-width:48px;font-size:12px;background-color:#009dd9;color:#fff;border:1px solid #009dd9;cursor:pointer;*display:inline}.tkb-wrapper .blueBtn:hover{background-color:#21afe5}.tkb-wrapper .blueBtn:active{background-color:#0a90c4}.tkb-wrapper .grayBtn{display:inline-block;height:24px;min-width:48px;font-size:12px;background-color:#fff;color:#444;border:1px solid #ccc;cursor:pointer;*display:inline}.tkb-wrapper .grayBtn:hover{background-color:#eee}.tkb-wrapper .grayBtn:active{background-color:#ddd}.tkb-wrapper .videoForResponsive{display:none}
+掌阅墨水屏版APP问题合集
+掌阅墨水屏版App在HarmonyOS 2.1.0.191及以上版本中预装
+问题分类
+问题现象
+解决方案
+基本操作
+卸载后无法重新安装。
+在桌面“首页”右上角搜索框中搜索“掌阅墨水屏版”，选择“恢复”即可重新安装该应用。
+隐私保护说明的“同意”按钮置灰，无法点击。
+滑动到说明文字的最下方，即可点击“同意”。
+无法使用LTE移动数据网络。
+打开掌阅墨水屏版APP后，根据弹框提示进行软件更新，或者进入“
+我的> 关于 > 软件更新
+”将掌阅墨水屏版更新到1.8.4及以上版本即可。
+在华为阅读书城中搜索到“来自掌阅”的书籍，点击打开后显示“抱歉，暂无此书信息”；或者，在华为阅读书城中搜索不到某书籍。
+不同书城的书籍资源信息同步需要一段时间，建议可打开掌阅墨水屏版APP，在其书城中搜索。
+在华为阅读书城中搜索到“来自掌阅”的书籍，点击打开后加入书架，但在桌面书架中并没有该书籍。
+“来自掌阅”的书籍加入书架后，只会出现在掌阅墨水屏版APP的书架中，请打开该APP即可看到。
+手机和墨水平板已连接到同一局域网络，但扫码后无法使用“无线传书”功能。
+部分企业内网等特殊网络会对此加以限制，建议通过家庭WLAN网络或手机自建热点等方式进行无线传书；或者，也可以使用华为分享传书，并使用“导入本地书”功能或使用文件管理APP打开。
+阅读时无法下拉状态栏控制中心或通知中心。
+建议您先点击屏幕中央，待工具栏弹出后再下拉。
+或者，也可以分两步操作，第一次下拉出现状态栏，再下拉即可出现控制中心或通知中心。
+帐号登录与云同步
+使用掌阅帐号登录时，忘记密码。
+您好，非常抱歉，这里是华为消费者售后客服，您所反馈的问题属于第三方软件帐号咨询，不在我们的受理范围之内，关于您反馈的问题可根据页面设置操作或反馈软件方客服获取帮助，反馈路径：
+掌阅墨水屏版 >我的 > 关于 > 联系我们
+。
+掌阅墨水屏版APP的阅读进度和手机上“阅读”APP不一致，或者书架上的阅读进度和实际不一致。
+阅读进度的刷新或同步需要一段时间，请稍等待几分钟后再查看。
+使用“备份与同步”功能，从云端同步书架，完成后返回书架时，书籍并没有同步到书架上。
+书架的刷新可能存在一定的延迟，请点击进入其它界面（比如“书城”）后，再回到书架即可。
+书架中出现两本同样的书城书籍。
+在不同的帐号登录状态下将书城书籍加入书架，或者通过不同的操作路径将书城书籍加入书架，可能会出现同一本书对应不同书籍文件的情况，这与掌阅的校验机制有关，如影响您的正常阅读，请通过
+我的 > 关于 > 联系我们
+反馈软件方客服获取帮助。
+书籍阅读
+打开书籍时，会全屏闪黑一次。
+为保障您阅读时的显示效果体验，此时屏幕会全刷一次以清除残影。
+修改字体后，只有部分文字生效。
+1、掌阅精品书支持同时使用多种字体，以呈现精美的效果，调整其字体时，只针对主要字体生效。
+2、所选字体名称带有“简体”的（比如：方正硬笔行书简体），只针对简体字生效。
+阅读时竖屏变横屏再变回竖屏后，无法回到原来的页面。
+此为横竖屏切换时的排版策略所致：每次横竖屏切换时，均需保障旋转后页面的内容中，包含旋转前页面开头的内容，因此当横竖屏分页位置不一致时，会出现反复旋转后，屏幕方向还原但页面内容逐渐偏移。另外，在“
+我的> 显示设置
+”中打开“
+旋转锁定
+”功能，可以禁止界面随重力方向变化。
+图书笔记
+阅读时手写批注，只能使用橡皮擦擦除，而不能进行单笔撤销操作。
+当前版本暂不支持此功能，建议可通过双击手写笔快速切换笔刷和橡皮擦，以提升擦除的使用体验，参见：
+HUAWEI M-Pencil第二代/第三代/Pro手写笔双击切换功能使用指导
+原来手写批注的内容丢失不见了。
+1、如果手写批注后，调整过页面版式、字体、横竖屏等，可能会出现无法兼容原笔迹显示的情况，此时会在对应位置显示三个点图标，点击此图标即可展开显示原笔迹：
+；
+2、如果手写批注后，调整页面排版为竖排版模式，则不支持手写批注，也不支持已有手写批注的显示；
+3、如果阅读的是PDF书籍，重排前和重排后两种状态下，手写批注是相互独立的；
+4、如果阅读的是PDF书籍，点击屏幕中央，在上方工具栏中选择“
+更多> 阅读模式
+”，则不会显示已有的手写批注，需要重新选择“
+更多> 笔记模式
+”。
+阅读时用手写笔开启分屏笔记功能，会自动截屏。
+墨水平板系统中开启分屏笔记的动作，与掌阅墨水屏版APP中阅读时截图的动作，均为“从屏幕右上角向内滑动”，但前者需使用手写笔操作，后者可使用手指触摸操作。当在掌阅墨水屏版中开启“
+禁止手写
+”功能时，手写笔操作会被视同为手指触摸操作，从而触发其截屏功能。该截图可以通过点击书架右上角第三个按钮
+，进入“
+文件管理> 文件分类> 图片
+”，选择右上角“
+管理
+”来进行删除。
+建议在“
+开启手写
+”状态下，再开启分屏笔记功能。
+分屏笔记状态下按返回键，提示“分屏状态下请先退出其它应用”。
+1、如果需要退出分屏笔记，可以先点击笔记界面空白处，将焦点切换到笔记上，再按返回键即可；
+2、如果需要从阅读功能菜单中返回，点击左上角的“
+<
+”按钮即可。
+是否有帮助?
+是
+否
+很抱歉，未能帮助到您。请选择以下方式获取更多支持:
+提交
+谢谢您的鼓励！
+相关文章
+import.meta.url;import("_").catch(()=>1);(async function*(){})().next();if(location.protocol!="file:"){window.__vite_is_modern_browser=true}
+!function(){if(window.__vite_is_modern_browser)return;console.warn("vite: loading legacy chunks, syntax error above and the same error below should be ignored");var e=document.getElementById("vite-legacy-polyfill_support_page-share"),n=document.createElement("script");n.src=e.src,n.onload=function(){System.import(document.getElementById('vite-legacy-entry_support_page-share').getAttribute('data-src'))},document.body.appendChild(n)}();
+!function(){var e=document,t=e.createElement("script");if(!("noModule"in t)&&"onbeforeload"in t){var n=!1;e.addEventListener("beforeload",(function(e){if(e.target===t)n=!0;else if(!e.target.hasAttribute("nomodule")||!n)return;e.preventDefault()}),!0),t.type="module",t.src=".",e.head.appendChild(t),t.remove()}}();
+System.import(document.getElementById('vite-legacy-entry_support_page-share').getAttribute('data-src'))
+联系我们
+联系我们
+在线客服 | 7*24小时
+var onlineType =  1
+消费者服务热线
+微信服务号
+服务店查询
+服务小程序
+销售门店查询
+华为终端客户服务微信公众号
+#wechat{z-index:9996;}
+            @media screen and (min-width:768px) {
+                .wechat-container .scan-tip:after { content: "扫一扫，关注华为终端客户服务微信公众号" }
+            }
+            @media screen and (max-width:767px) {
+                .wechat-container .scan-tip:after { content: "扫一扫，关注华为终端客户服务微信公众号" }
+            }
+@media screen and (min-width: 1080px) {
+	.huawei-v4 .v5-style.v4.n09-footer .footer-links .row .footer-offline-support-box .contact__block .contact__text,
+	.huawei-v4 .v5-style.v4.n09-footer .footer-links .row .footer-online-support-box .contact__block .contact__text,
+	.huawei-v4 .v5-style.v4.n09-footer .footer-links .row .footer-follow-us-box .contact__block .contact__text{
+		margin-bottom: 10px;
+	}
+
+	.huawei-v4 .v5-style.v4.n09-footer .footer-links .row .footer-offline-support-box .contact__block .contact__title,
+	.huawei-v4 .v5-style.v4.n09-footer .footer-links .row .footer-online-support-box .contact__block .contact__title,
+	.huawei-v4 .v5-style.v4.n09-footer .footer-links .row .footer-follow-us-box .contact__block .contact__title {
+		margin-bottom: 16px;
+	}
+}
+@media screen and (min-width:321px) and (max-width:767px) {
+    body .fancybox-wrap.fancybox-mobile {
+        margin-top: 0
+    }
+}
+{"@context":"http://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"主页","item":"https://consumer.huawei.com/cn/"},{"@type":"ListItem","position":2,"name":"服务与支持","item":"https://consumer.huawei.com/cn/support/"},{"@type":"ListItem","position":3,"name":"知识内容","item":"https://consumer.huawei.com/cn/support/content/"}]}
+主页
+服务与支持
+知识内容
+购买产品
+手机
+穿戴
+鸿蒙电脑
+笔记本
+显示器
+打印机
+平板
+智慧屏
+耳机音箱
+路由器
+配件
+商用产品
+教育商店
+服务支持
+保修政策
+上门安装
+维修服务
+保修期及权益查询
+维修备件价格
+服务进度查询
+联系我们
+服务隐私声明
+商用服务
+应用与下载
+终端云服务
+华为商城 APP
+我的华为 APP
+华为手机助手
+华为电脑管家
+HarmonyOS 7
+预置应用公示
+HUAWEI HiCar
+HUAWEI HiPlay
+新闻中心
+华为新闻
+华为活动
+线下支持
+服务店查询
+零售店查询
+关于我们
+关于我们
+可持续发展
+隐私
+华为商城
+HarmonyOS 开发者
+华为云
+企业业务
+运营商网络
+华为集团
+加入华为
+内容举报
+在线支持
+消费者服务热线
+950800
+7*24小时 | 普通话
+在线客服 | 7*24小时
+关注我们
+版权所有 © 华为终端有限公司 1998-2026。保留一切权利。
+粤A2-20044005号
+网站地图
+使用条款
+隐私声明
+关于cookies
+法律信息
+China - 简体中文
+China - 简体中文
+即将离开consumer.huawei.com
+您即将跳转至第三方页面，华为无法控制，也无法对该页面内容负责。
+继续访问
+取消
+调查问卷
+尊敬的客户，现诚邀您对我们的服务质量进行评价。
+否
+是
+调查问卷
+为进一步提升我们的服务品质，我们真诚地邀请您填写此份问卷，提供宝贵的意见和建议。我们承诺按业界成熟的隐私安全标准来保护您的个人信息。
+关闭
+调查问卷

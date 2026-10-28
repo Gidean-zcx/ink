@@ -1,0 +1,720 @@
+--- PAGE 1 ---
+English
+1
+Mudita Kompakt
+User manual
+
+--- PAGE 2 ---
+English
+2
+1. Push key into the hole 
+to open the SIM tray
+Turn sound up 
+Turn sound down 
+Press to turn on 
+or touch to scan 
+fingerprint 
+Hold for 2s then 
+select the power off 
+option to turn off
+Charge phone using the 
+USB-C cable and a power 
+adapter (not included) or 
+a wireless charger
+Left side
+Right side
+Bottom
+2. Insert 1 or 2 Nano SIMs  
+– gold chip facing down
+3. Gently push the SIM  
+tray into the phone 
+until it clicks shut 
+1
+2
+Get Started
+Charging and Turning on
+First install the SIM
+
+--- PAGE 3 ---
+English
+3
+Switch up for full phone 
+function 
+Switch down to use 
+Offline+
+Warning! You can’t 
+make emergency calls 
+when using Offline+
+Go back
+Go home
+Open Control Center
+Offline+
+Navigate the Apps
+Gain focus, tranquillity and privacy while ensuring zero radio frequency emissions by disabling the antenna, 
+microphones, camera, Wi-Fi and Bluetooth. 
+Left side
+For how-to guides and more 
+information, scan the QR code or visit:
+Plug in headphones 
+(not included)
+https://www.mudita.com/products/phones/
+mudita-kompakt/quick-start/  
+Top
+
+--- PAGE 4 ---
+English
+4
+Accessibility Options
+To find the accessibility options:
+Control Center Button > Settings > Accessibility
+Accessibility features include:
+•	 Touch and hold delay – Choose how long you 
+need to press the screen before an action happens
+•	 Popup duration – Choose how long 
+certain notification popups stay on screen 
+before disappearing*
+•	 Power button ends calls (on/off) – Press the power 
+button to end calls
+•	 Ring vibration (on/off) – Feel a vibration when 
+your phone rings or gets messages
+•	 Touch vibration (on/off) – Feel feedback when 
+long pressing*
+•	 Audio balance (left/right) – Shift sound toward the 
+left or right ear to suit your hearing
+•	 Mono audio (on/off) – Combines both audio 
+channels so both ears hear the same thing
+	
+*May not apply to all apps
+Contents
+Get Started
+2
+Charging and Turning on
+2
+Offline+ 
+3
+Navigate the Apps 
+3
+Accessibility 
+4
+Mudita Center
+5
+Important Safety and Legal Information
+5
+Safety Instructions
+5
+Frequency Bands and Power Output
+7
+Charging and Battery Information 
+9
+Regulatory Information
+10
+Before you use Kompakt
+12
+Cleaning, Storage and Maintenance 
+12
+Guarantee Information
+12
+Contact Details
+12
+
+--- PAGE 5 ---
+English
+5
+Mudita Center 
+Get the most out of your Kompakt with our free 
+software for Windows, MacOS and Linux
+•	 Import and manage your contacts
+•	 Back up your device
+•	 Find help and support
+You can find Mudita Center at: 
+http://www.mudita.com/center 
+Important Safety and Legal 
+Information 
+The Mudita Kompakt is designed to send and receive 
+phone calls and messages.
+Using the phone in a way that we advise not to may 
+void the warranty!
+This means we may not fix or replace your device, so 
+please read this information very carefully. 
+By using the device, you accept the terms of the 
+software license. You can find it in the phone settings 
+and online at: 
+https://www.mudita.com/products/phones/ 
+mudita-kompakt/quick-start/ 
+Safety Instructions 
+Introduction
+Read these instructions carefully and retain them for 
+future use. If this device is passed to a third party, 
+then these instructions must be included.  
+When using electrical appliances, basic safety 
+precautions should always be followed to reduce the 
+risk of fire, electric shock, and/or injury to persons 
+including the following: 
+Risk of suffocation! Keep any packaging 
+materials away from children – these materials are 
+a potential source of danger, e.g. suffocation. 
+Risk of electric shock! Do not use the device 
+while in the bath or in other wet environments.  
+General safety precautions
+•	 Do not drop, strike, or shake the device severely, it 
+may harm the internal circuit boards.
+•	 Do not leave the device exposed to direct sunlight.
+•	 The device is not waterproof, do not use it in 
+wet environments.
+•	 Do not handle the device with wet hands while 
+it is being charged as this may cause an electric 
+shock or seriously damage the product.  
+•	 Do not disassemble the device.
+•	 Only authorized personnel should service the 
+device and its accessories as faulty installation 
+or service may result in accidents and invalidate 
+the warranty.
+•	 If you suspect there is damage to the phone or the 
+battery, stop using it immediately.  
+•	 No liability will be accepted for damages resulting 
+from improper use or non-compliance with 
+these instructions.
+Medical device interference
+The device contains magnets as well as components 
+and/or radios that emit electromagnetic fields and 
+might interfere with medical devices. 
+Consult your physician or the manufacturer of your 
+medical device regarding potential interference from 
+mobile phone signals.
+ 
+Risk of hearing loss! To prevent possible 
+hearing damage, do not listen at high volume levels 
+for long periods.
+Listening to sound at high volumes may damage 
+your hearing. Background noise, as well as continued 
+exposure to high volume levels, can make sounds 
+seem quieter than they actually are. Turn on audio 
+playback and check the volume before inserting 
+anything  
+in your ear. 
+Power cord
+•	 Do not damage the power cord by bending, 
+twisting, pulling, or heating.
+•	 Do not use the plug if it is loose as it may cause 
+electric shock or fire.
+•	 Do not place any heavy items on the power cord.
+•	 Do not allow the power cord to be crimped as it 
+may cause electric shock or fire.
+•	 Do not sit or sleep on the power cord.
+•	 If the power cord is damaged, stop using 
+it immediately.
+
+--- PAGE 6 ---
+English
+6
+Situational awareness
+•	 Using the device in some circumstances may 
+distract you and might cause a dangerous situation 
+for yourself or others e.g. avoid using headphones 
+while riding a bicycle.
+•	 Observe rules that prohibit or restrict the use of 
+mobile devices or headphones.
+•	 Always be aware of your surroundings when using 
+the device.
+•	 Do not use the device in high explosive areas as 
+the phone may generate sparks.
+•	 Do not use a hand-held phone while driving or 
+operating machinery.
+•	 Do not use the device in areas where its use 
+is prohibited.
+•	 Always follow the airline’s instructions when 
+traveling by plane.
+Radio Frequency (RF) exposure
+•	 The device emits radio frequency electromagnetic 
+fields during operation unless in Offline+. 
+•	 Maintain a minimum distance between the device 
+and your body especially when not in use or in 
+Offline+.
+•	 Use hands-free options (such as speakerphone or 
+headphones) whenever possible. 
+
+--- PAGE 7 ---
+English
+7
+Kompakt Global Version
+Mode
+Frequency Bands
+Power Output (Power Value)
+GSM (2G)
+850/900 
+GSM900: 32.79d8m GSM850: 
+32.75d8m (conducted)/29.55d8m(ERP)
+1800
+GSM1800: 29.46d8m
+3G
+2100/850/ 900 
+WCDMA 81: 22.74d8m WCDMA 88: 
+22.85d8m WCDMA 85: 23.27d8m 
+(conducted)/20.07d8m(ERP)
+LTE 4G
+1/3/5/7/8/ 
+12/13/18/1
+9/20/26/3
+4/38/39/4
+0/41
+LTE B1:22.22dBm
+LTE B3: 22.85dBm 
+LTE B7: 21.92dBm 
+LTE B8: 22.67dBm
+LTE B20: 22.31dBm 
+LTE B34: 22.49dBm 
+LTE B38: 22.13dBm 
+LTE B40: 21.76dBm 
+LTE B5: 22.71dBm 
+(conducted)/19.5 ldBm(ERP) 
+LTE B12: 22.58dBm 
+(conducted)/19.27dBm(ERP) 
+LTE B13: 22.64dBm 
+(conducted)/19.40dBm(ERP) 
+LTE B18: 22.87dBm 
+(conducted)/19.66dBm(ERP) 
+LTE B19: 22.88dBm 
+(conducted)/19.68dBm(ERP) 
+LTE B26: 22.92dBm 
+(conducted)/19.72dBm(ERP) 
+LTE B41: 22.95dBm
+(conducted)/22.68d Bm(EIRP)
+BLUETOOTH
+IEEE 802.15.1 (2402-2480 MHz or 
+2.4 GHz)
+8.0 dBm (EIRP) 
+WIFI/WLAN
+IEEE 802.11 b/g/n (2412-2484 MHz 
+or 2.4 GHz)
+14.5 dBm (EIRP)
+WIFI/WLAN
+IEEE 802.11 a/ac/n (4915-5925 MHz 
+or 11.5 dBm 5 GHz)
+10.9 dBm (5150-5250 MHz, EIRP) 
+11.5 dBm (5250-5350 MHz, EIRP)
+12.7 dBm (5470-5725 MHz, EIRP) 
+12.9 dBm (5725-5825 MHz, EIRP)
+WIRELESS CHARGING
+10W 
+NFC
+13.56 MHz
+42dB µA/m@10 m
+Frequency Bands and Power Output
+These are the maximum radio frequency power outputs for each of the frequency bands that Kompakt uses:
+
+--- PAGE 8 ---
+English
+8
+Kompakt NAM Version
+Mode
+Frequency Bands
+Power Output (Power Value)
+LTE (4G)
+B2/4/5
+/7/8/12
+/13/17
+ /18/19
+/ 25/26
+/34/38
+/40/41
+/66/71
+LTE B2: 22.65 dBm
+LTE B4: 22.56 dBm
+LTE B5: 19.28 dBm
+LTE B7: 22.55 dBm
+LTE B8: 22.65 dBm
+LTE B12: 19.22 dBm
+LTE B13: 19.11 dBm
+LTE B17: 19.39 dBm
+LTE B18: 19.16 dBm
+LTE B19: 19.28 dBm
+LTE B25: 23.53 dBm
+LTE B26: 19.40 dBm
+LTE B34: 22.30 dBm
+LTE B38: 22.48 dBm
+LTE B40: 22.38 dBm
+LTE B41: 22.55 dBm
+LTE B66: 22.56 dBm
+LTE B71: 18.86 dBm
+BLUETOOTH
+IEEE 802.15.1 (2402–2480 MHz or 
+2.4 GHz)
+8.9 dBm (EIRP)
+WIFI/WLAN
+IEEE 802.11 
+b/g/n  
+(2412–2484 MHz or 2.4 GHz)
+13.6 dBm (EIRP)
+WIFI/WLAN
+IEEE 802.11  
+a/ac/n  
+(5.15–5.725 GHz)
+13.0 dBm (EIRP)
+WIFI/WLAN
+IEEE 802.11 a/ac/n (5.725–
+5.85 GHz)
+13.2 dBm (EIRP)
+WPT
+(RX only)
+110–205 kHz
+/
+FM (RX Only)
+87.5–108 MHz
+/
+NFC
+13.56 MHz
+<42dBuA/m @10 m
+
+--- PAGE 9 ---
+English
+9
+Charging and Battery 
+Information
+For environmental reasons, Kompakt does not include 
+a charger. This device can be powered with most USB 
+power adapters and a cable with a USB Type-C plug.
+Charging power adapter 
+2.5-10
+W
+The power delivered by the charger must be 
+between minimum power 2.5 W required by 
+the radio equipment and maximum power 
+10 W in order to achieve the maximum 
+charging speed. Using a different one may 
+damage the battery. 
+Wireless charging 
+Wireless charging (optional) may generate heat, use 
+more energy and reduce battery life compared to 
+charging via USB-C.
+Battery information
+You can select either charging to 100% (default) or 
+80% which can help protect battery health.  To find 
+this setting as well as the maximum capacity, cycle 
+count, date of manufacture and date of first use, 
+go to:
+Control Center Button > Settings > Battery > 
+Battery Information
+Battery type 
+Lithium-(ion-)Polymer (LiPo, Li-Poly) rechargeable.
+Battery warnings
+•	 Keep batteries out of the reach of children.
+•	 Do not expose the battery charger or adapter 
+to direct sunlight or use it in places with high 
+humidity, such as a bathroom.
+•	 If the battery leaks, avoid contact with skin and 
+eyes. Rinse affected areas immediately with plenty 
+of clean water, then consult a doctor.
+•	 Before disposal, the battery must be removed 
+from the device.
+•	 Do not dispose of batteries in fire or with 
+hazardous or flammable materials.
+•	 Charge the battery in a well-ventilated area and 
+avoid overcharging.
+•	 Do not leave the battery charging for a prolonged 
+period of time when the device is not in use.
+•	 Do not charge the battery overnight.
+•	 Unplug the power cord and charger during 
+lightning storms to avoid electric shock or fire.
+•	 Ensure that no sharp-edged items, such as animal 
+teeth or nails, come into contact with the battery 
+as this could cause a fire.
+•	 If the device appears to be bulging or shows other 
+undesirable behavior (e.g. excess noise, strange 
+smells), stop using it immediately.
+•	 Batteries produce heat when charging 
+and discharging.
+•	 If the device becomes too hot to touch, switch it 
+off and unplug it immediately.
+•	 Do not cover the device while charging 
+the battery.
+•	 If storing the device for a long period, charge 
+it to 40% once every 3 months to maintain 
+battery health.
+•	 Only charge the device with a compatible  
+power source from a reputable manufacturer 
+certified with a Limited Power Source output per  
+IEC 60950-1/62368-1 rated 5 V 1.5 A.
+Battery disposal
+Do not dispose of used batteries with your 
+household waste. Take them to an 
+appropriate disposal/collection site. 
+The Waste Electrical and Electronic 
+Equipment (WEEE) Directive aims to 
+minimize the impact of electrical and 
+electronic goods on the environment, by 
+increasing re-use and recycling and by 
+reducing the amount of WEEE going to 
+landfill. 
+The symbol on this device or its packaging signifies 
+that this device must be disposed separately from 
+ordinary household wastes at its end of life. Be aware 
+that it is your responsibility to dispose of electronic 
+equipment at recycling centers in order to conserve 
+natural resources. 
+Each country should have its collection centers 
+for electrical and electronic equipment recycling. 
+For information about your recycling drop off area, 
+please contact your related electrical and electronic 
+equipment waste management authority, your local 
+city office, or your household waste disposal service.
+
+--- PAGE 10 ---
+English
+10
+Regulatory Information 
+You can find a copy of all the regulatory information 
+and certificates on your phone:  
+Control Center Button > Settings > Legal and 
+Regulatory
+ Wireless regulatory compliance
+This mobile phone has been tested and 
+complies with the Wi-Fi standards set by 
+the Wi-Fi Alliance. It is designed to 
+provide reliable wireless connectivity and 
+interoperability with other Wi-Fi  
+certified devices.
+This mobile phone has been tested and 
+complies with Bluetooth® standards set 
+by the Bluetooth Special Interest Group 
+(SIG). 
+It is designed to provide seamless connectivity 
+and interoperability with other Bluetooth-enabled 
+devices. The Bluetooth® word mark and logos are 
+registered trademarks owned by the Bluetooth SIG, 
+Inc. and any use of such marks by Mudita sp. z o.o. is 
+under license. Other trademarks and trade names are 
+those of their respective owners.
+This mobile phone complies with the Specific 
+Absorption Rate (SAR) limits set by regulatory 
+authorities. The SAR value for this device has 
+been tested and falls within the permissible limits 
+established for safe usage. 
+EU compliance - Global version
+Hereby, Mudita sp. z o.o. declares that the 
+radio equipment type Kompakt is in 
+compliance with Directive 2014/53/EU. The 
+full text of conformity is available at the 
+following internet address:  
+https://www.mudita.com/products/phones/ 
+mudita-kompakt/quick-start/ 
+EU compliance - NAM version
+Hereby, Mudita sp. z o.o. declares that the radio 
+equipment type Kompakt-NAM is in compliance with 
+Directive 2014/53/EU. The full text of conformity is 
+available at the following internet address:  
+https://www.mudita.com/products/phones/ 
+mudita-kompakt/quick-start/ 
+FCC and ISED Canada Compliance
+This equipment has been tested and found 
+to comply with the limits for a Class B digital 
+device, pursuant to part 15 of the FCC 
+Rules. 
+These limits are designed to provide reasonable 
+protection against harmful interference in 
+a residential installation. 
+This equipment generates uses and can radiate radio 
+frequency energy and, if not installed and used in 
+accordance with the instructions, may cause harmful 
+interference to radio communications. However, 
+there is no guarantee that interference will not occur 
+in a particular installation.  
+If this equipment does cause harmful interference 
+to radio or television reception, which can be 
+determined by turning the equipment off and on, the 
+user is encouraged to try to correct the interference 
+by one or more of the following measures: reorient 
+or relocate the receiving antenna, increase the 
+separation between the equipment and receiver, 
+connect the equipment into an outlet on a circuit 
+different from that to which the receiver is connected, 
+consult the dealer or an experienced radio/TV 
+technician for help.
+This device and its antenna(s) must not be co-located 
+or operating in conjunction with any other antenna 
+or transmitter.
+This device complies with part 15 of the FCC rules 
+and RSS-247 of Industry Canada. 
+Operation is subject to the following two conditions: 
+1.	 this device may not cause harmful interference, 
+and 
+2.	 his device must accept any interference received, 
+including interference that may cause undesired 
+operation. 
+This product meets the applicable Innovation, Science 
+and Economic Development Canada technical 
+specifications. 
+Unauthorized modifications could void the 
+user’s authority to operate the equipment. Regulatory 
+information can also be found in the user manual  
+online at:
+https://www.mudita.com/products/phones/ 
+mudita-kompakt/quick-start/
+
+--- PAGE 11 ---
+English
+11
+SAR limit in Europe – Global 
+version
+The SAR limit in Europe is 2.0 W/kg. Device type 
+GSM/WCDMA/LTE Mobile Phone, was also tested 
+with regard to this SAR limit.  
+The highest SAR value reported in accordance with 
+said standard during product certification for use was 
+0.490 W/kg against the ear, and 1.310 W/kg when 
+properly worn or carried on the body.
+The device was tested with regard to its typical use 
+while wearing or carrying it on the body, with the 
+back of the phone being held 5 mm away from the 
+body. To maintain compliance with the RF exposure 
+requirements, the user should use accessories that 
+keep a 5 mm distance between the user’s body and 
+the back of the phone.
+Belt clips, holsters and similar accessories used by the 
+user should not contain any metal parts. Accessories 
+that do not meet such requirements may not be in 
+compliance with the RF exposure requirements, and 
+their use should be avoided. 
+ 
+For the French market: The SAR limit for limbs is 
+3.502 W/kg. The device was tested with regard to its 
+typical use while wearing or carrying it on the body, 
+with the back of the phone being held 0 mm away 
+from the body.
+SAR limit in the US (FCC)   
+– Global version
+The SAR limit in the USA (FCC) is 1.6 W/kg, averaged 
+over one gram of tissue. The device type GSM/
+WCDMA/LTE Mobile Phone FCC ID: 2BCWI-
+KOMPAKT, IC: 31299-KOMPAKT was tested to 
+comply with this limit.
+The highest SAR value reported in accordance with 
+the standard during product certification for use 
+was 0.97 W/kg against the ear, and 0.78 W/kg when 
+properly worn or carried on the body. The device was 
+tested for typical body-worn operation, with the back 
+of the phone held 10 mm from the body.
+To maintain compliance with FCC RF exposure 
+requirements, users should use accessories that 
+ensure this 10 mm separation.
+Belt clips, holsters, and similar accessories should 
+not contain any metal parts.  Accessories that do not 
+meet these requirements may not comply with FCC 
+RF exposure rules and should be avoided.
+	
+SAR limit in Europe – NAM version
+The SAR limit in Europe is 2.0 W/kg. Device type 
+GSM/WCDMA/LTE Mobile Phone, was also tested 
+with regard to this SAR limit.
+The highest SAR value reported in accordance with 
+said standard during product certification for use was 
+0.457 W/kg against the ear, and 1.279 W/kg when 
+properly worn or carried on the body. 
+The device was tested with regard to its typical use 
+while wearing or carrying it on the body, with the 
+back of the phone being held 5 mm away from the 
+body. To maintain compliance with the RF exposure 
+requirements, the user should use accessories that 
+keep a 5 mm distance between the user’s body and 
+the back of the phone. 
+Belt clips, holsters and similar accessories used by the 
+user should not contain any metal parts. Accessories 
+that do not meet such requirements may not be in 
+compliance with the RF exposure requirements, and 
+their use should be avoided. 
+For the French market: The SAR limit for limbs is 
+2.824 W/kg. The device was tested with regard to its 
+typical use while wearing or carrying it on the body, 
+with the back of the phone being held 0 mm away 
+from the body.
+SAR limit in the US (FCC)  
+– NAM version
+The SAR limit in the USA (FCC) is 1.6 W/kg, averaged 
+over one gram of tissue. The device type GSM/
+WCDMA/LTE Mobile Phone FCC ID: 2BCWI- 
+KOMPAKT-NAM, IC: 31299-KOMPAKTNAM was 
+tested to comply with this limit.
+The highest SAR value reported in accordance with 
+the standard during product certification for use 
+was 1.06 W/kg against the ear, and 1.17 W/kg when 
+properly worn or carried on the body. The device was 
+tested for typical body-worn operation, with the back 
+of the phone held 10 mm from the body.
+To maintain compliance with FCC RF exposure 
+requirements, users should use accessories that 
+ensure this 10 mm separation.
+Belt clips, holsters, and similar accessories should 
+not contain any metal parts.  Accessories that do not 
+meet these requirements may not comply with FCC 
+RF exposure rules and should be avoided.
+
+--- PAGE 12 ---
+English
+12
+Before you use Kompakt
+Intended use
+•	 This device is intended for household use only and 
+it is not intended for commercial use.
+•	 This device is intended to be used in dry 
+areas only.
+•	 No liability will be accepted for damages resulting 
+from improper use or non-compliance with 
+these instructions.
+Before first use
+Risk of suffocation! Keep any packaging 
+materials away from children – these materials are 
+a potential source of danger, e.g. suffocation. 
+•	 Check the device for transport damage. 
+•	 Remove all the packing materials.
+Cleaning, Storage and 
+Maintenance 
+Risk of electric shock! 
+•	 Switch the device off before cleaning.
+•	 During cleaning do not immerse the electrical 
+parts of the device in water or other liquids.
+•	 Never hold the device under running water.
+Cleaning
+•	 To clean the device, wipe with a soft, slightly 
+moist cloth.
+•	 Dry the device after cleaning.
+•	 Never use corrosive detergents, wire brushes, 
+abrasive scourers, metal or sharp utensils to clean 
+the device.
+Storage 
+•	 Store the device in its original packaging in 
+a dry area.
+•	 Keep away from children and pets.
+•	 Do not store the device in temperatures lower 
+than -25°C (-13°F) or greater than +60°C (140°F).
+•	 Do not use the device in temperatures lower than 
+0°C (32°F) or greater than +50°C (122°F).
+Maintenance
+•	 Any other servicing than mentioned in this 
+manual should be performed by a professional 
+repair center.
+Guarantee Information 
+Our guarantee 
+Please read the warranty carefully, it will help you 
+understand what is and isn’t covered, and what to do 
+if something goes wrong. Don’t hesitate to contact us 
+if you have any questions.
+Contact Details 
+For more information
+You can find how-to videos, the user manual, 
+frequently asked questions and more at: 
+https://www.mudita.com/products/phones/ 
+mudita-kompakt/quick-start/ 
+If you can’t find an answer please don’t hesitate to 
+email our customer support:  
+support@mudita.com 
+Our address
+Mudita sp. z o.o. 
+Jana Czeczota 6, 
+02-607 Warsaw, 
+Poland 
+Mindfully designed in Europe
+Manufactured in China.
+2025© Mudita All images and content may not be 
+used without permission.
+Mudita® are registered trademarks of Mudita sp. z o.o. 
+registered in the EU. 
+Country of Origin: China

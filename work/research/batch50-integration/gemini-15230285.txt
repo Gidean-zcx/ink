@@ -1,0 +1,197 @@
+Capture your tasks & reminders with Gemini Apps - Android phone & tablet - Gemini Apps Help (https://support.google.com/gemini/answer/15230285?co=GENIE.Platform%3DAndroid&hl=en)
+citeturn1076view1 [wordlim: 200] Crawled: today; Content type: text/html; Source: open({"ref_id":"turn1075view2","lineno":18}); Total lines: 195
+L0: 【0†Gemini Apps Help】
+L1: 
+L2: [Input: Describe your issue]
+L3: 
+L4: 【1†Sign in†accounts.google.com】
+L5: 
+L6: Send feedback on...
+L7: 
+L8: [Input]
+L9: 
+L10: This help content & information
+L11: 
+L12: [Input]
+L13: 
+L14: General Help Center experience
+L15: 
+L16: [Button: Close][Button: Next]
+L17: 
+L18: # Capture your tasks & reminders with Gemini Apps
+L19: 
+L20: You can ask Gemini Apps to add, edit, and show your tasks and reminders from Google Tasks and Samsung Reminder.
+L21: ## What you need
+L22: 
+L23: To connect your tasks and reminders apps to Gemini Apps, you need to:
+L24: 
+L25:   * Be signed in to the Gemini app. 【2†Learn how to sign in to Gemini Apps】.
+L26: 
+L27:   * Have 【3†Keep Activity†myactivity.google.com】 on. Gemini can’t connect to these apps when this setting is off.
+L28: 
+L29: Important:
+L30:   * The supported tasks and reminders apps aren’t available in Gemini in Google Messages.
+L31:   * Gemini Apps can hallucinate responses or provide outdated information. To check the information, click and review the sources listed after the response.
+L32: ## Connect your tasks & reminders to Gemini Apps
+L33: 
+L34: Connect Google Tasks
+L35: 
+L36: To work with your lists and reminders from Google Tasks in Gemini Apps, Google Workspace must be connected to Gemini Apps.
+L37:   1. On your phone or tablet, open the Gemini mobile app 【4†Image†lh3.googleusercontent.com】 or go to 【5†gemini.google.com†gemini.google.com】.
+L38:   2. Make sure you’re signed in to the same account you use with Google Workspace.
+L39:   3. Ask the Gemini app to add or show a task from Google Tasks.
+L40:      * Tip: To tell Gemini Apps to specifically use Google Tasks, add `@Google Tasks` to your prompt.
+L41:   4. If Google Workspace isn’t connected, you’ll get the option to connect it.
+L42:   5. Follow the on-screen instructions.
+L43: Connect Samsung Reminder
+L44: 
+L45: Important: The Gemini mobile app supports the Samsung Reminder app only on the Galaxy S25 or later and select Samsung devices running OneUI7 and later, and only if the Samsung Reminder app is installed on your device. This app is connected by default on supported Samsung devices.
+L46:   1. Open the Gemini mobile app 【4†Image†lh3.googleusercontent.com】.
+L47:   2. Ask the Gemini app to add or show a reminder from Samsung Reminder.
+L48:      * Tip: To tell the Gemini app to specifically use Samsung Reminder, add `@Samsung Reminder` to your prompt.
+L49:   3. If you disconnected the Samsung Reminder app, you’ll get the option to connect it again.
+L50:   4. Follow the on-screen instructions.
+L51: 
+L52: For the best Gemini experience ensure your Google app is updated to the latest version.
+L53: 
+L54: Tips:
+L55:   * You can disconnect these apps anytime in your Connected Apps settings. 【6†Learn how to manage Connected Apps in Gemini】.
+L56:   * If you connect multiple tasks and reminders apps, the Gemini app defaults to the last one it accessed. To manage a different app, you can specify it in your prompt by adding `@` and selecting the app.
+L57:   * You can also manage your tasks and reminders for some apps in your Gemini Live chats. 【7†Learn how to use Connected Apps in Live chats】.
+L58:   * You can also say 'Hey Google' to ask Gemini to use a connected app. If "Hey Google" doesn’t work, 【8†check if “Hey Google” and Voice Match are set up】.
+L59: ## Add reminders & tasks
+L60: 
+L61: Add reminders & tasks by giving specific details
+L62: 
+L63: You can tell Gemini Apps exactly what to add. Here are some example prompts:
+L64: 
+L65:   * Remind me on [date] at [time] to [task].
+L66:   * Remind me at [time] to call [name].
+L67:   * Add [task] in my to-dos.
+L68: 
+L69: Add reminders & tasks based on your conversation
+L70: 
+L71: You can also tell Gemini Apps to add reminders and tasks based on your conversation or other information. Try these example prompts:
+L72:   * When does [movie name] come out?
+L73: 【9†Image: After Gemini's response:†lh3.googleusercontent.com】 Remind me 1 week before that to buy tickets for it.
+L74:   * Help me plan a trip to [country or place]. Create a packing list for me.
+L75: 【9†Image: After Gemini's response:†lh3.googleusercontent.com】 Create a reminder to bring those things in Google Tasks.
+L76:   * <Take a photo of a list of things> Add the items from this image to my to-dos for [time, date].
+L77: 
+L78: Tips:
+L79:   * To add a task or reminder, you can include “Add this to my tasks,” “@Google Tasks,” or "@Samsung Reminder" in your prompt.
+L80:   * To undo an action, select Undo in the confirmation notification, or open and edit the list linked below the response.
+L81:     * If you created an action with Gemini Live on in the background, Gemini can’t undo the action.
+L82: ## Show or update your reminders & tasks
+L83: 
+L84: Show your reminders & tasks
+L85: 
+L86: For example, you can ask Gemini Apps:
+L87: 
+L88:   * What are my upcoming tasks?
+L89:   * What are my to-dos for [time, date]?
+L90:   * What are my tasks related to [topic, activity, event]?
+L91:   * What are the tasks I need to get done this week?
+L92: 
+L93: Update your reminders & tasks
+L94: 
+L95: For example, you can ask Gemini Apps:
+L96:   * Change the date of [task name] task to [date].
+L97:   * Mark [task name] as done in Tasks.
+L98:   * Change the name of task [task name] to [task name].
+L99:   * Delete my tasks about [topic, activity, event].
+L100: 
+L101: Tip: To help Gemini Apps understand that you want to update a task or reminder, include “task,” “@Google Tasks,” or "@Samsung Reminder" in your prompt.
+L102: ## How your data is handled
+L103: 
+L104: Learn more about 【10†how your data is handled when Gemini works with Connected Apps】.
+L105: 
+L106: ## Related resources
+L107: 
+L108:   * 【11†Use & manage Connected Apps in Gemini】
+L109:   * 【12†Gemini Apps Privacy Hub】
+L110:   * 【13†Connect Google Workspace apps & services to Gemini Apps】
+L111:   * 【14†Capture your ideas & notes with Gemini Apps】
+L112:   * 【15†Create & manage your calendar events with Gemini Apps】
+L113: 
+L114: 【16†Android phone & tablet】 【17†Computer】【18†iPhone & iPad】
+L115: 
+L116: [Select]
+L117: 
+L118: ## Need more help?
+L119: ### Try these next steps:
+L120: 
+L121: 【19†Post to the help community Get answers from community members】
+L122: 
+L123: true
+L124: ## 【20†Productivity】
+L125: 
+L126:   * 1 of 11
+L127: 
+L128: 【21†Connect the Google Workspace app to Gemini Apps】
+L129:   * 2 of 11
+L130: 
+L131: 【22†Create & manage your calendar events with Gemini Apps】
+L132:   * 3 of 11
+L133: 
+L134: 【23†Capture your tasks & reminders with Gemini Apps】
+L135:   * 4 of 11
+L136: 
+L137: 【24†Capture your ideas & notes with Gemini Apps】
+L138:   * 5 of 11
+L139: 
+L140: 【25†Import a GitHub repository & ask about it in the Gemini web app】
+L141:   * 6 of 11
+L142: 
+L143: 【26†Ask for info & tailored responses using your content from Mind Space in the Gemini mobile app】
+L144:   * 7 of 11
+L145: 【27†Ask about your Google Classroom assignments, classes & more in Gemini Apps】
+L146:   * 8 of 11
+L147: 
+L148: 【28†Create designs & build websites with your creative apps in Gemini Apps】
+L149:   * 9 of 11
+L150: 
+L151: 【29†Manage your Business Profile on Google with the Gemini web app】
+L152:   * 10 of 11
+L153: 
+L154: 【30†Get personalized Google Ads advice with Gemini Apps】
+L155:   * 11 of 11
+L156: 
+L157: 【31†Manage files & folders in your Dropbox in Gemini Apps】
+L158: 
+L159: Search
+L160: 
+L161: Clear search
+L162: 
+L163: Close search
+L164: 
+L165: Main menu
+L166: 
+L167: 609163355055846422
+L168: 
+L169: true
+L170: 
+L171: Search Help Center
+L172: 
+L173: false
+L174: 
+L175: true
+L176: 
+L177: true
+L178: true
+L179: 
+L180: true
+L181: 
+L182: true
+L183: 
+L184: 5295044
+L185: 
+L186: false
+L187: 
+L188: false
+L189: 
+L190: false
+L191: 
+L192: false
+L193: 
+L194: false

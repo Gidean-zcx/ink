@@ -1,0 +1,17 @@
+{
+  "new_evidence": 16,
+  "new_tasks": 3,
+  "new_D2": 2,
+  "new_D1": 1,
+  "new_D4": 0,
+  "old_tasks_amended": 19,
+  "old_fields_amended": 75,
+  "old_evidence_additional_captures": 11,
+  "inventories": 32,
+  "inventory_rows": 2785,
+  "new_inventory_rows": 232,
+  "new_archived_images": 4,
+  "raw_files_checked": 57,
+  "device_or_app_operations": 0,
+  "errors": []
+}

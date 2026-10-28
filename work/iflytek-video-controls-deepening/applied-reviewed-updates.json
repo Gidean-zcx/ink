@@ -1,0 +1,326 @@
+{
+  "flow_changes": [
+    {
+      "id": "F-M027-01",
+      "field": "depth",
+      "before": "D1",
+      "after": "D2"
+    },
+    {
+      "id": "F-M027-01",
+      "field": "evidence_ids",
+      "before": "E-IFLYL-01;E-IFLYL-02",
+      "after": "E-IFLYL-01;E-IFLYL-02;E-IFVC-01"
+    },
+    {
+      "id": "F-M027-01",
+      "field": "known_branches",
+      "before": "学段科目限制",
+      "after": "局部教程重建：选知识点/方案→讲解/典例/练习；手写、思路点拨入口、批改正确反馈/解析/下一题；全绿完成与下一节"
+    },
+    {
+      "id": "F-M027-01",
+      "field": "gaps",
+      "before": "一道题的入口提示重试结算与恢复",
+      "after": "视频剪辑换题，无同题错答→提示→重试链；首次诊断、误识别校订、阈值、完成持久化/离线/重启恢复未知"
+    },
+    {
+      "id": "F-M027-01",
+      "field": "visual_status",
+      "before": "not_observed",
+      "after": "static_reference_only"
+    },
+    {
+      "id": "F-M027-01",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M027-14",
+      "field": "evidence_ids",
+      "before": "E-ILD-12;E-ILD-16",
+      "after": "E-ILD-12;E-ILD-16;E-IFVC-02"
+    },
+    {
+      "id": "F-M027-14",
+      "field": "known_branches",
+      "before": "家庭打印助手配套手册，完整兼容机型未标明：按科目/教材或错题选择内容→打印预览→设答案位置、作答空间等→提交。",
+      "after": "家庭打印助手配套手册，完整兼容机型未标明：按科目/教材或错题选择内容→打印预览→设答案位置、作答空间等→提交。；T30目录教程90s可见加载中的打印配置，目标/纸张/浓度/份数/字号"
+    },
+    {
+      "id": "F-M027-14",
+      "field": "gaps",
+      "before": "学习素材变为练习单是准备任务，不代表作答或计分。部分阶段测提交后不再显示打印入口，题目来源也影响是否有解析。",
+      "after": "学习素材变为练习单是准备任务，不代表作答或计分。部分阶段测提交后不再显示打印入口，题目来源也影响是否有解析。；视频仅配置及加载，未证明打印完成或与旧型号帮助完全一致"
+    },
+    {
+      "id": "F-M027-14",
+      "field": "visual_status",
+      "before": "not_observed",
+      "after": "static_reference_only"
+    },
+    {
+      "id": "F-M027-14",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M003-01",
+      "field": "known_branches",
+      "before": "补Menu键通知栏、长按Home任务管理；13图底栏Settings与21默认文字Notes不一致。",
+      "after": "补Menu键通知栏、长按Home任务管理；13图底栏Settings与21默认文字Notes不一致。 Settings总则为退出节应用更改；阅读触摸/滑动/边缘拖动可配置；HID蓝牙按键映射有独立入口。"
+    },
+    {
+      "id": "F-M003-01",
+      "field": "gaps",
+      "before": "当前默认布局、手势触发、后台/关闭应用行为及实际安装版本。",
+      "after": "当前默认布局/实际安装版、配置保存失败、HID适配、后台保留与关闭影响未知；读屏手势仅见F13。"
+    },
+    {
+      "id": "F-M003-01",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M003-03",
+      "field": "evidence_ids",
+      "before": "E-PBK-01;E-PBK-02;E-PBCD-02",
+      "after": "E-PBK-01;E-PBK-02;E-PBCD-02;E-PBACD-03"
+    },
+    {
+      "id": "F-M003-03",
+      "field": "known_branches",
+      "before": "本地Edit comment/Save；多选Export notes至指定路径，默认Library/Notes。",
+      "after": "本地Edit comment/Save；多选Export notes至指定路径，默认Library/Notes。 Scribble可编辑图形注释，但New/保存句同形图标有歧义，不补成导出文件回导链。"
+    },
+    {
+      "id": "F-M003-03",
+      "field": "gaps",
+      "before": "当前格式和回导编辑仍未知；导出文件不保证随本地修改更新；同名覆盖、取消、恢复。",
+      "after": "导出格式/回导编辑、同名覆盖/取消/恢复仍未知；绘图My Pictures路径不证明Notes导出格式或自动保存。"
+    },
+    {
+      "id": "F-M003-03",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M006-01",
+      "field": "known_branches",
+      "before": "标题可再套索编辑；主图层限制；p131 Erase Star不擦标题内星标；历史帮助称标记删除不可撤销",
+      "after": "标题可再套索编辑且选区内不可直接书写；关键词可键入Add/选最近项；主图层限制；p131 Erase Star不擦标题内星标；历史帮助称标记删除不可撤销"
+    },
+    {
+      "id": "F-M006-01",
+      "field": "gaps",
+      "before": "删除标记后的原笔迹、当前版本恢复/星标识别误触未知",
+      "after": "删除标记后的原笔迹、当前版本恢复/星标识别误触未知；改关键词不证明改写原笔迹"
+    },
+    {
+      "id": "F-M006-01",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M006-08",
+      "field": "known_branches",
+      "before": "Handwriting/Keyword回页，File回最后页；Star按File也不保证星标页；后台识别延后及触摸暂停为文档规则",
+      "after": "Keyword/Star可空查全部；Star输入文件名筛选；Handwriting需识别文本并回页；File/Star按File回最后页；后台识别延后/触摸暂停；3.24.38文字搜索仅日志能力补充"
+    },
+    {
+      "id": "F-M006-08",
+      "field": "gaps",
+      "before": "3.24.38后文本搜索完整界面、无结果/误识别修正、实际耗时及重启队列未知",
+      "after": "3.24.38后文本框搜索完整界面、无结果/误识别修正、实际耗时及重启队列未知"
+    },
+    {
+      "id": "F-M006-08",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M006-09",
+      "field": "evidence_ids",
+      "before": "E-SNCD-02;E-SNCD-05;E-SNCD-07",
+      "after": "E-SNCD-02;E-SNCD-05;E-SNCD-07;E-SNCD-10"
+    },
+    {
+      "id": "F-M006-09",
+      "field": "known_branches",
+      "before": "PNG/PDF与识别TXT/DOCX；标准笔记导出时识别；实时识别语言创建后固定；QR/InkHub另列",
+      "after": "PNG/PDF与识别TXT/DOCX；标准笔记导出时识别；实时识别语言创建后固定；QR/InkHub另列；3.28.42称修复隐藏层仍进入TXT/DOCX导出"
+    },
+    {
+      "id": "F-M006-09",
+      "field": "gaps",
+      "before": "输出目录、重名/取消/存储不足、编辑后结构关系往返与原笔迹回写未知",
+      "after": "其他格式显隐规则、输出目录、重名/取消/存储不足、编辑后结构关系往返与原笔迹回写未知"
+    },
+    {
+      "id": "F-M006-09",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    }
+  ],
+  "evidence_changes": [
+    {
+      "id": "E-ILD-17",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "anonymous_public_browser_help_model_selection",
+          "raw_work_path": "work/iflytek-video-controls-deepening/browser/04-t30pro-directory.json",
+          "raw_sha256": "0c97b1732308b7d30f6d9d016da33d58d666c83c3c26b00ef6c646f082dc04cb",
+          "archived_artifact": "artifacts/iflytek-video-controls-deepening/source-notes.md",
+          "sha256": "779fb67bc48194cf3ec6b38d09bd1a54eec7c5a9a9cc6cd46dc54c1b7aebc40e",
+          "note": "实际选择T30Pro，34功能标题；四条所选教程另立视频URL证据；不计产品实操",
+          "hands_on": false,
+          "artifact_hashes": {
+            "artifacts/iflytek-video-controls-deepening/04-t30pro-directory.json": "0c97b1732308b7d30f6d9d016da33d58d666c83c3c26b00ef6c646f082dc04cb",
+            "artifacts/iflytek-video-controls-deepening/04-t30pro-directory.png": "9c2656d1ff8f66556cab5146d2f3873375c817327629711cb8e7e395adfdb2c8",
+            "artifacts/iflytek-video-controls-deepening/video-samples.json": "ac833622b81ee6cddbfb82b7ff08e3eeba05563be0de2d29519afac83fdf2c97",
+            "artifacts/iflytek-video-controls-deepening/network-events.json": "f678e1ef6c8533b6dd70e6671676f8a75120a0d21c13c64762221de1bfa30973"
+          }
+        }
+      ]
+    },
+    {
+      "id": "E-SNCD-02",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "capture_method": "local_reread_of_existing_public_snapshot_no_network",
+          "original_capture_on": "2026-10-26",
+          "url": "https://ib.supernote.com/x2/X2_V3.28.42_EN.pdf",
+          "raw_work_path": "work/supernote-notes-controls-deepening/raw/X2_V3.28.42_EN.pdf",
+          "raw_sha256": "9c7b24be22b8f06727381564412f192273e50e2157a2aa5b4350d12b6c3037d2",
+          "source_updated_on": null,
+          "locator": "p28,58–59,64–84,130–133,135–137,148–155; actual static pages65/66/75/83/153",
+          "archived_artifact": "artifacts/supernote-notes-controls-deepening/source-notes.md",
+          "sha256": "57e07f1645ab884ed6d99267d8349c1c2f52c464aa94f4a91b29fa8d28051180",
+          "hands_on": false,
+          "visual_observed": true,
+          "note": "复读既有原件，不是新HTTP抓取或独立来源；版本不自动延伸为当前实机状态",
+          "artifact_hashes": {
+            "artifacts/supernote-notes-controls-deepening/x2-v3.28.42-p153.png": "737eacaf66291150af2ccbad4f874cccc81fc18261bd50b35754a967b8a6bced",
+            "artifacts/supernote-notes-controls-deepening/x2-v3.28.42-p65.png": "70fcaa4ce2a9c54b3520c66e1f89580cd9da4a72b3ffc37a3e0dc688dd1cfb41",
+            "artifacts/supernote-notes-controls-deepening/x2-v3.28.42-p66.png": "cfda3129505aa12cf542d3e8060710d7de66c51465e90b6144ec035b02aa9e1b",
+            "artifacts/supernote-notes-controls-deepening/x2-v3.28.42-p75.png": "1aa140420e5e4730a83852df627cbad9624d945daad63c87f9c7d84fb3cedbe6",
+            "artifacts/supernote-notes-controls-deepening/x2-v3.28.42-p83.png": "d08dfa8255c35c3f527ae0dba5b7af0eee1affcf4f40a5b4171cca263e773baf"
+          },
+          "visual_audit_path": "artifacts/supernote-notes-controls-deepening/source-notes.md",
+          "visual_audit_sha256": "57e07f1645ab884ed6d99267d8349c1c2f52c464aa94f4a91b29fa8d28051180"
+        }
+      ]
+    },
+    {
+      "id": "E-SNCD-10",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "capture_method": "local_reread_of_existing_public_snapshot_no_network",
+          "original_capture_on": "2026-10-26",
+          "url": "https://support.supernote.com/changelog-for-manta-and-nomad",
+          "raw_work_path": "work/supernote-notes-controls-deepening/raw/10-changelog.html",
+          "raw_sha256": "28ce34428094d1f9778d5071ccb79a4bfdc7ea946170099001cc9e61823b1030",
+          "source_updated_on": "2026-10-23",
+          "locator": "Chauvet3.24.38 Added Text Box/search; 3.25.39 Optimized Text Box exit; 3.28.42 Fixed hidden-layer export/template shutdown/link issue",
+          "archived_artifact": "artifacts/supernote-notes-controls-deepening/source-notes.md",
+          "sha256": "57e07f1645ab884ed6d99267d8349c1c2f52c464aa94f4a91b29fa8d28051180",
+          "hands_on": false,
+          "visual_observed": false,
+          "note": "复读既有原件，不是新HTTP抓取或独立来源；版本不自动延伸为当前实机状态"
+        }
+      ]
+    },
+    {
+      "id": "E-PBK-01",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "existing_local_pdf_text_and_selected_static_pages_no_network",
+          "raw_work_path": "work/research/interaction-depth/pocketbook-6.10.2854.pdf",
+          "raw_sha256": "87bf56b461cd298b7c53421c5b21f72f1498e4c060d4eea89844545667030101",
+          "locator": "Printed/PDF pp28–30,34–41,69–90 text; actual static views pp29,37,41,76,77 only",
+          "text_pages_count": 33,
+          "visual_observed": true,
+          "visual_pages": [
+            29,
+            37,
+            41,
+            76,
+            77
+          ],
+          "hands_on": false,
+          "continuous_sequence": false,
+          "archived_artifact": "artifacts/pocketbook-app-controls-deepening/source-notes.md",
+          "sha256": "f773ab64456a13a2a23ad3a8fa2d77d8cf0610879c8a63394685378355936a40",
+          "visual_audit_path": "artifacts/pocketbook-app-controls-deepening/observed-pages.json",
+          "note": "旧同一原件本地复读；非新修订或独立来源，未重新下载；同URL旧E-PBCD-01保持历史记录。"
+        }
+      ]
+    }
+  ],
+  "files": [
+    {
+      "path": "docs/research/interaction-library/batches/children-coverage.csv",
+      "backup": "work/iflytek-video-controls-deepening/reviewed-before/children-coverage.csv",
+      "before_sha256": "02db29374bccf1df8e969878842d49db60544b8e6654bc5ad4797bcc539beb0f",
+      "after_sha256": "994d704d3156df73cc995a4da005736870c7415f50afb27df6a6ab8fc9157dae"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/learning-control-deepening-coverage.csv",
+      "backup": "work/iflytek-video-controls-deepening/reviewed-before/learning-control-deepening-coverage.csv",
+      "before_sha256": "25e812da40a99c214a738543e2817932d850dd5f778d9c1a8b69bbb4ccc36bd7",
+      "after_sha256": "eb5ec7d30e811944eb80104d365adf67cb876cb07e3d9e0565f311a840572d0b"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/learning-control-deepening-evidence.jsonl",
+      "backup": "work/iflytek-video-controls-deepening/reviewed-before/learning-control-deepening-evidence.jsonl",
+      "before_sha256": "2438f0886a6433c82379c94b35ed35a8113f3bbf7262d71c7929a7104e26bee6",
+      "after_sha256": "02c28eab712a0dd50359663d0730ae5e88346ac7917e1116bfac858e684272d5"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/supernote-controls-deepening-evidence.jsonl",
+      "backup": "work/iflytek-video-controls-deepening/reviewed-before/supernote-controls-deepening-evidence.jsonl",
+      "before_sha256": "2a54af2bacc581f274648e0f016c0bc5033221aaf2fa457d110ed46ab44429cb",
+      "after_sha256": "04e0d333e11270c9ababb6e91bdf7858fe0ce10f322f839da740e9b1598b6010"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/supernote-controls-deepening-coverage.csv",
+      "backup": "work/iflytek-video-controls-deepening/reviewed-before/supernote-controls-deepening-coverage.csv",
+      "before_sha256": "b6e1cf069021644c93a5edef2d54e5740d8d90484502c5ad35b3384785f38ede",
+      "after_sha256": "fdde2a04116fde0be96e98e8dd9be797eba2e10902acdaded8af4159ff47b106"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/reader-coverage.csv",
+      "backup": "work/iflytek-video-controls-deepening/reviewed-before/reader-coverage.csv",
+      "before_sha256": "b2c3649c79cb3c06d7b5fc3da3ffe7f2d79d1e14d7158f6df887348f07627bff",
+      "after_sha256": "508cb19314deae7637434af9b3448f1ace6677d121f54af310d13825ac36230d"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/reader-evidence.jsonl",
+      "backup": "work/iflytek-video-controls-deepening/reviewed-before/reader-evidence.jsonl",
+      "before_sha256": "320f94585816ba026c8497aa26a9c3d972f53bc68e8299a078330aaab4cc073e",
+      "after_sha256": "c033f877a7b1ff9a7bbbca4baef6a61b7e5f953c57728ce64f244fac2d643f55"
+    }
+  ],
+  "old_tasks": 7,
+  "old_task_fields": 28,
+  "old_evidence_captures": 4
+}

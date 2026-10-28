@@ -1,0 +1,16 @@
+entry_id,entry_type,title,source_url,evidence_ids,flow_ids,review_status,gap
+M047-TKSM-001,entry,官方教育页的K–1样刊链接,https://reader.emagazines.com/issue/time-for-kids-k-1/may-8-2026?ipt=c8869aa3-8f3d-4699-b112-1d4a6270a953,E-TKSM-01,F-M047-06,document_link_checked,其他学段未进入
+M047-TKSM-002,read,封面/有限四页,https://reader.emagazines.com/issue/time-for-kids-k-1/may-8-2026?ipt=c8869aa3-8f3d-4699-b112-1d4a6270a953,E-TKSM-01,F-M047-06,observed_browser,未证读完或理解
+M047-TKSM-003,next,连续Next与短时空白,https://reader.emagazines.com/issue/time-for-kids-k-1/may-8-2026?ipt=c8869aa3-8f3d-4699-b112-1d4a6270a953,E-TKSM-01,F-M047-06,observed_browser,时延与p2/印刷3页关系未定
+M047-TKSM-004,last,菜单到末页/Next边界,https://reader.emagazines.com/issue/time-for-kids-k-1/may-8-2026?ipt=c8869aa3-8f3d-4699-b112-1d4a6270a953,E-TKSM-01,F-M047-06,observed_browser,其他期刊未核
+M047-TKSM-005,save,Save my place成功提示,https://reader.emagazines.com/issue/time-for-kids-k-1/may-8-2026?ipt=c8869aa3-8f3d-4699-b112-1d4a6270a953,E-TKSM-01,F-M047-06,observed_browser,清除/覆盖/多书签未核
+M047-TKSM-006,restart,保存4页→回封面→浏览器重启,https://reader.emagazines.com/issue/time-for-kids-k-1/may-8-2026?ipt=c8869aa3-8f3d-4699-b112-1d4a6270a953,E-TKSM-01,F-M047-06,observed_browser,账号/跨设备/重装未测
+M047-TKSM-007,mobile,Mobile view开新标签,https://reader.emagazines.com/issue/time-for-kids-k-1/may-8-2026?ipt=c8869aa3-8f3d-4699-b112-1d4a6270a953,E-TKSM-01,F-M047-06,observed_browser,其他浏览器未测
+M047-TKSM-008,contents,目录选择文章,https://reader.emagazines.com/issue/time-for-kids-k-1/may-8-2026?ipt=c8869aa3-8f3d-4699-b112-1d4a6270a953,E-TKSM-01,F-M047-06,observed_browser,搜索未测
+M047-TKSM-009,audio,Listen/暂停/1.5x/关闭重开,https://reader.emagazines.com/issue/time-for-kids-k-1/may-8-2026?ipt=c8869aa3-8f3d-4699-b112-1d4a6270a953,E-TKSM-01,F-M047-06,observed_browser,未听音/关闭期间推进未采样
+M047-TKSM-010,reload,0:53暂停后刷新再Listen,https://reader.emagazines.com/issue/time-for-kids-k-1/may-8-2026?ipt=c8869aa3-8f3d-4699-b112-1d4a6270a953,E-TKSM-01,F-M047-06,observed_browser,断网/来电/睡眠未测
+M047-TKSM-011,narrow,390×844重排文本/图,https://reader.emagazines.com/issue/time-for-kids-k-1/may-8-2026?ipt=c8869aa3-8f3d-4699-b112-1d4a6270a953,E-TKSM-01,F-M047-06,observed_browser,非真实触屏/Plus
+M047-TKSM-012,search,目录/纸刊搜索入口,https://reader.emagazines.com/issue/time-for-kids-k-1/may-8-2026?ipt=c8869aa3-8f3d-4699-b112-1d4a6270a953,E-TKSM-01,F-M047-06,visible_control_only,未提交搜索
+M047-TKSM-013,download,Download PDF入口,https://reader.emagazines.com/issue/time-for-kids-k-1/may-8-2026?ipt=c8869aa3-8f3d-4699-b112-1d4a6270a953,E-TKSM-01,F-M047-06,visible_control_only,未下载/验证离线
+M047-TKSM-014,zoom,放大入口,https://reader.emagazines.com/issue/time-for-kids-k-1/may-8-2026?ipt=c8869aa3-8f3d-4699-b112-1d4a6270a953,E-TKSM-01,F-M047-06,visible_control_only,未操作
+M047-TKSM-015,guide,同刊Lesson4纸面活动,https://www.timeforkids.com/wp-content/themes/tfk/build/assets/pdf/educators/teachers-guide-gk1.pdf,E-TFK-04,F-M047-02,document_and_static,无孩子实际完成或自动评分

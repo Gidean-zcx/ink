@@ -1,0 +1,57 @@
+[
+  {
+    "key": "hireader-key-guide",
+    "url": "https://blog.deali.cn/media/blog/ae81f511c3595bbd/IMG_20230906_172126.webp",
+    "derived_from": "E-HSD-09",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "content_type": "image/webp",
+    "final_url": "https://blog.deali.cn/media/blog/ae81f511c3595bbd/IMG_20230906_172126.webp",
+    "raw_work_path": "work/hisense-controls-deepening/raw/hireader-key-guide.webp",
+    "raw_sha256": "b041e7c415aa62fa63e3ebce04337188420b950b7aecba3b2ac1549d761483ae"
+  },
+  {
+    "key": "hireader-screen-guide",
+    "url": "https://blog.deali.cn/media/blog/ae81f511c3595bbd/IMG_20230906_172130.webp",
+    "derived_from": "E-HSD-09",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "content_type": "image/webp",
+    "final_url": "https://blog.deali.cn/media/blog/ae81f511c3595bbd/IMG_20230906_172130.webp",
+    "raw_work_path": "work/hisense-controls-deepening/raw/hireader-screen-guide.webp",
+    "raw_sha256": "b0835be77481a58479ee1d408d1d09cb34891ee39ec72b4f26a39058386ca67c"
+  },
+  {
+    "key": "hireader-settings",
+    "url": "https://blog.deali.cn/media/blog/ae81f511c3595bbd/IMG_20230906_172257.webp",
+    "derived_from": "E-HSD-09",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "content_type": "image/webp",
+    "final_url": "https://blog.deali.cn/media/blog/ae81f511c3595bbd/IMG_20230906_172257.webp",
+    "raw_work_path": "work/hisense-controls-deepening/raw/hireader-settings.webp",
+    "raw_sha256": "915066bca2f51a57b0bbfb8a60d8e62afed6f9bfbe59d4ab402d8daf7e7acc8d"
+  },
+  {
+    "key": "hireader-note",
+    "url": "https://img.ithome.com/newsuploadfiles/2022/4/5059da2b-2420-452a-957e-3cf5f4e8bdbb.jpeg",
+    "derived_from": "E-HSD-05",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "content_type": "image/jpeg",
+    "final_url": "https://img.ithome.com/newsuploadfiles/2022/4/5059da2b-2420-452a-957e-3cf5f4e8bdbb.jpeg",
+    "raw_work_path": "work/hisense-controls-deepening/raw/hireader-note.jpeg",
+    "raw_sha256": "b30d3493e9a77e3ba3dae3d0bd0a3c9506ae09d75b58c55ee1308279fa50166a"
+  },
+  {
+    "key": "hireader-selection",
+    "url": "https://img.ithome.com/newsuploadfiles/2022/4/c0479726-ee3e-4f19-8254-7c182101bea5.jpeg",
+    "derived_from": "E-HSD-05",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "content_type": "image/jpeg",
+    "final_url": "https://img.ithome.com/newsuploadfiles/2022/4/c0479726-ee3e-4f19-8254-7c182101bea5.jpeg",
+    "raw_work_path": "work/hisense-controls-deepening/raw/hireader-selection.jpeg",
+    "raw_sha256": "6c0fb281a9435f6dbd34c677eb88019f314ac535e7cb8a1ac67c31476654d328"
+  }
+]

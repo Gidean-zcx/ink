@@ -1,0 +1,667 @@
+{
+  "new_evidence_ids": [
+    "E-MKRD-17",
+    "E-MKRD-18",
+    "E-MKRD-19",
+    "E-MKRD-20",
+    "E-MKRD-21",
+    "E-MKRD-29",
+    "E-MKRD-30",
+    "E-MKRD-32",
+    "E-MKRD-33",
+    "E-MKRD-34",
+    "E-MKRD-35",
+    "E-MKRD-36",
+    "E-MKRD-37",
+    "E-MKRD-38",
+    "E-MKRD-39",
+    "E-MKRD-40",
+    "E-MKRD-41",
+    "E-MKRD-42",
+    "E-MKRD-43",
+    "E-MKRD-50",
+    "E-MKRD-51",
+    "E-MKRD-55",
+    "E-MKRD-61",
+    "E-MKRD-62",
+    "E-MKRD-66",
+    "E-MKRD-68",
+    "E-MKRD-69",
+    "E-MKRD-70",
+    "E-MKRD-71",
+    "E-MKRD-74",
+    "E-MKRD-75",
+    "E-MKRD-76",
+    "E-MKRD-77",
+    "E-MKRD-78",
+    "E-MKRD-79",
+    "E-MKRD-81",
+    "E-MKRD-82",
+    "E-MKRD-83",
+    "E-MKRD-84",
+    "E-MKRD-85",
+    "E-MKRD-86",
+    "E-MKRD-87",
+    "E-MKRD-88",
+    "E-MKRD-89",
+    "E-MKRD-90",
+    "E-MKRD-93",
+    "E-KHAT-01",
+    "E-KHAT-02",
+    "E-KHAT-03",
+    "E-KHAT-04",
+    "E-KHAT-05",
+    "E-KHAT-06",
+    "E-KHAT-07",
+    "E-KHAT-08",
+    "E-KHAT-09",
+    "E-KHAT-10",
+    "E-KHAT-11",
+    "E-KHAT-12",
+    "E-KHAT-13"
+  ],
+  "new_flow_ids": [
+    "F-M012-17",
+    "F-M012-18",
+    "F-M012-19",
+    "F-M012-20",
+    "F-M012-21",
+    "F-M012-22",
+    "F-M012-23",
+    "F-M012-24",
+    "F-M012-25",
+    "F-M012-26",
+    "F-M012-27",
+    "F-M030-14",
+    "F-M030-15",
+    "F-M030-16"
+  ],
+  "updated_flows": [
+    {
+      "flow_id": "F-M012-06",
+      "before": {
+        "flow_id": "F-M012-06",
+        "product_id": "M-012",
+        "task": "从电脑准备书和音乐",
+        "depth": "D2",
+        "evidence_ids": "E-MUD-08;E-MUD-09;E-MDCD-11;E-MACD-12",
+        "known_branches": "Center Music/Add file/确认复制；不支持格式不可选或上传。USB文件可见性另走USB Preferences，未连接不显示；No data transfer收回访问。",
+        "gaps": "不假设Center依赖MTP；未给完整格式清单；重复、容量/断线、解码、入库反馈和断点未知。",
+        "visual_status": "not_observed",
+        "hands_on": "false",
+        "case_path": "cases/M-012-mudita.md",
+        "checked_on": "2026-10-27"
+      },
+      "after": {
+        "flow_id": "F-M012-06",
+        "product_id": "M-012",
+        "task": "从电脑准备书、音乐和照片并传出文件",
+        "depth": "D2",
+        "evidence_ids": "E-MUD-08;E-MUD-09;E-MDCD-11;E-MACD-12;E-MKRD-50;E-MKRD-51;E-MKRD-87",
+        "known_branches": "Center Music/Add file/确认复制；不支持格式不可选或上传。USB文件可见性另走USB Preferences，未连接不显示；No data transfer收回访问。 照片传入经Center Photos；USB传出照片在DCIM、截图在Pictures，须启用MTP，Mac可能需额外工具。",
+        "gaps": "不假设Center依赖MTP；未给完整格式清单；重复、容量/断线、解码、入库反馈和断点未知。 传输、相册登记和双向同步分开，未测。",
+        "visual_status": "not_observed",
+        "hands_on": "false",
+        "case_path": "cases/M-012-mudita.md",
+        "checked_on": "2026-10-27"
+      },
+      "fields_changed": [
+        "task",
+        "evidence_ids",
+        "known_branches",
+        "gaps"
+      ],
+      "owning_files": [
+        "docs/research/interaction-library/batches/reader-coverage.csv"
+      ]
+    },
+    {
+      "flow_id": "F-M012-08",
+      "before": {
+        "flow_id": "F-M012-08",
+        "product_id": "M-012",
+        "task": "安装应用并区分隐藏、删除安装包与卸载",
+        "depth": "D2",
+        "evidence_ids": "E-MDCD-12;E-MDCD-13;E-MDCD-14;E-MDCD-16;E-MDCD-20;E-MACD-15",
+        "known_branches": "Center安装完成弹窗；APK可删但应用保留；隐藏图标返回保存；当前帮助无内置单应用卸载。 定位的全局/逐App入口另见F15，不能当全部应用权限已核。",
+        "gaps": "兼容性、覆盖更新、后台/崩溃与数据保留未知；定位等级/撤销结果及其他权限仍缺。",
+        "visual_status": "static_reference_only",
+        "hands_on": "false",
+        "case_path": "cases/M-012-mudita.md",
+        "checked_on": "2026-10-27"
+      },
+      "after": {
+        "flow_id": "F-M012-08",
+        "product_id": "M-012",
+        "task": "安装应用并区分隐藏、删除安装包与卸载",
+        "depth": "D2",
+        "evidence_ids": "E-MDCD-12;E-MDCD-13;E-MDCD-14;E-MDCD-16;E-MDCD-20;E-MACD-15;E-MKRD-74",
+        "known_branches": "Center安装完成弹窗；APK可删但应用保留；隐藏图标返回保存；当前帮助无内置单应用卸载。 定位的全局/逐App入口另见F15，不能当全部应用权限已核。 第三方消息应用FAQ仍为首发范围，无应用商店；是否可侧载另受兼容条件约束。",
+        "gaps": "兼容性、覆盖更新、后台/崩溃与数据保留未知；定位等级/撤销结果及其他权限仍缺。 修改日期不证明最新固件或指定APK运行。",
+        "visual_status": "static_reference_only",
+        "hands_on": "false",
+        "case_path": "cases/M-012-mudita.md",
+        "checked_on": "2026-10-27"
+      },
+      "fields_changed": [
+        "evidence_ids",
+        "known_branches",
+        "gaps"
+      ],
+      "owning_files": [
+        "docs/research/interaction-library/batches/mudita-controls-deepening-coverage.csv"
+      ]
+    },
+    {
+      "flow_id": "F-M012-09",
+      "before": {
+        "flow_id": "F-M012-09",
+        "product_id": "M-012",
+        "task": "更新系统及失败后的恢复出厂分支",
+        "depth": "D2",
+        "evidence_ids": "E-MDCD-03;E-MDCD-15;E-MDCD-16;E-MDCD-17;E-MACD-17",
+        "known_branches": "自动通知或手查；下载配置后重启；失败先排查；设置与Recovery两种清空入口，OS版本不回退。 忘PIN/图案FAQ也指向Recovery清空，未备份资料丢失。",
+        "gaps": "安装中断/回滚、重置后SIM/eSIM细项及备份覆盖恢复未知；没有无损找回口令依据。",
+        "visual_status": "not_observed",
+        "hands_on": "false",
+        "case_path": "cases/M-012-mudita.md",
+        "checked_on": "2026-10-27"
+      },
+      "after": {
+        "flow_id": "F-M012-09",
+        "product_id": "M-012",
+        "task": "更新系统及失败后的恢复出厂分支",
+        "depth": "D2",
+        "evidence_ids": "E-MDCD-03;E-MDCD-15;E-MDCD-16;E-MDCD-17;E-MACD-17;E-MKRD-79",
+        "known_branches": "自动通知或手查；下载配置后重启；失败先排查；设置与Recovery两种清空入口，OS版本不回退。 忘PIN/图案FAQ也指向Recovery清空，未备份资料丢失。 root相关FAQ表示厂商不提供MuditaOS K ROM；此陈述不等于已验证刷机或回刷。",
+        "gaps": "安装中断/回滚、重置后SIM/eSIM细项及备份覆盖恢复未知；没有无损找回口令依据。 没有安装其他系统或取得回滚原件。",
+        "visual_status": "not_observed",
+        "hands_on": "false",
+        "case_path": "cases/M-012-mudita.md",
+        "checked_on": "2026-10-27"
+      },
+      "fields_changed": [
+        "evidence_ids",
+        "known_branches",
+        "gaps"
+      ],
+      "owning_files": [
+        "docs/research/interaction-library/batches/mudita-controls-deepening-coverage.csv"
+      ]
+    },
+    {
+      "flow_id": "F-M012-12",
+      "before": {
+        "flow_id": "F-M012-12",
+        "product_id": "M-012",
+        "task": "选择联系人来源并导入Kompakt",
+        "depth": "D2",
+        "evidence_ids": "E-MACD-18",
+        "known_branches": "Center Contacts/Import contacts；CSV或vCard文件、Google、Outlook三路；选择部分/全部后Import selected contacts；过程勿断线。",
+        "gaps": "不等于持续同步；授权细目、重复/字段映射、失败重试、完成反馈与远端删除传播未知。",
+        "visual_status": "not_observed",
+        "hands_on": "false",
+        "case_path": "cases/M-012-mudita.md",
+        "checked_on": "2026-10-27"
+      },
+      "after": {
+        "flow_id": "F-M012-12",
+        "product_id": "M-012",
+        "task": "选择联系人来源并导入Kompakt",
+        "depth": "D2",
+        "evidence_ids": "E-MACD-18;E-MKRD-38;E-MKRD-39;E-MKRD-40;E-MKRD-41;E-MKRD-42;E-MKRD-43",
+        "known_branches": "Center Contacts/Import contacts；CSV或vCard文件、Google、Outlook三路；选择部分/全部后Import selected contacts；过程勿断线。 拆分六页已读：Outlook/Google登录选联系人，或电脑先导出CSV/vCard再上传；选择部分或全部后Import selected contacts。",
+        "gaps": "不等于持续同步；授权细目、重复/字段映射、失败重试、完成反馈与远端删除传播未知。 第三方网站步骤仅厂商转述，导入不等于持续同步；未核去重、坏行、覆盖和失败回执。",
+        "visual_status": "not_observed",
+        "hands_on": "false",
+        "case_path": "cases/M-012-mudita.md",
+        "checked_on": "2026-10-27"
+      },
+      "fields_changed": [
+        "evidence_ids",
+        "known_branches",
+        "gaps"
+      ],
+      "owning_files": [
+        "docs/research/interaction-library/batches/mudita-app-controls-deepening-coverage.csv"
+      ]
+    },
+    {
+      "flow_id": "F-M012-14",
+      "before": {
+        "flow_id": "F-M012-14",
+        "product_id": "M-012",
+        "task": "录音保存、回听及删除",
+        "depth": "D2",
+        "evidence_ids": "E-MACD-07;E-MACD-08;E-MACD-09;E-MDCD-04",
+        "known_branches": "录制Pause与Done停止分开；命名后Done保存。Menu选录音回放；Done仅说明关画面。单个Bin/Delete，批量Edit选择并二次Delete。",
+        "gaps": "暂停续录、保存前离开、关闭画面是否停播、来电/锁屏、导出格式、误删恢复与备份范围未知。",
+        "visual_status": "not_observed",
+        "hands_on": "false",
+        "case_path": "cases/M-012-mudita.md",
+        "checked_on": "2026-10-27"
+      },
+      "after": {
+        "flow_id": "F-M012-14",
+        "product_id": "M-012",
+        "task": "录音保存、回听及删除",
+        "depth": "D2",
+        "evidence_ids": "E-MACD-07;E-MACD-08;E-MACD-09;E-MDCD-04;E-MKRD-78",
+        "known_branches": "录制Pause与Done停止分开；命名后Done保存。Menu选录音回放；Done仅说明关画面。单个Bin/Delete，批量Edit选择并二次Delete。 FAQ没有内置语音转文字承诺，录音保存与转写分开。",
+        "gaps": "暂停续录、保存前离开、关闭画面是否停播、来电/锁屏、导出格式、误删恢复与备份范围未知。 FAQ未标构建，未核侧载转写。",
+        "visual_status": "not_observed",
+        "hands_on": "false",
+        "case_path": "cases/M-012-mudita.md",
+        "checked_on": "2026-10-27"
+      },
+      "fields_changed": [
+        "evidence_ids",
+        "known_branches",
+        "gaps"
+      ],
+      "owning_files": [
+        "docs/research/interaction-library/batches/mudita-app-controls-deepening-coverage.csv"
+      ]
+    },
+    {
+      "flow_id": "F-M012-15",
+      "before": {
+        "flow_id": "F-M012-15",
+        "product_id": "M-012",
+        "task": "选择全局或逐App定位共享范围",
+        "depth": "D2",
+        "evidence_ids": "E-MACD-15",
+        "known_branches": "Control Center/Settings/Location Sharing；总开关或选择App再选共享等级。",
+        "gaps": "具体等级名、总开关优先级、保存/退出、后台或精确定位、其他权限均未说明。",
+        "visual_status": "not_observed",
+        "hands_on": "false",
+        "case_path": "cases/M-012-mudita.md",
+        "checked_on": "2026-10-27"
+      },
+      "after": {
+        "flow_id": "F-M012-15",
+        "product_id": "M-012",
+        "task": "选择全局或逐App定位共享范围",
+        "depth": "D2",
+        "evidence_ids": "E-MACD-15;E-MKRD-89",
+        "known_branches": "Control Center/Settings/Location Sharing；总开关或选择App再选共享等级。 GPS帮助明确总开关与逐App许可均须打开，后者有Share/While using app/Don’t share；定位及App显示可分别滞后。",
+        "gaps": "总开关与逐App等级的生效优先级、保存/退出、后台或精确定位、其他权限均未说明。 授权状态不代表已定位或App显示已刷新。",
+        "visual_status": "not_observed",
+        "hands_on": "false",
+        "case_path": "cases/M-012-mudita.md",
+        "checked_on": "2026-10-27"
+      },
+      "fields_changed": [
+        "evidence_ids",
+        "known_branches",
+        "gaps"
+      ],
+      "owning_files": [
+        "docs/research/interaction-library/batches/mudita-app-controls-deepening-coverage.csv"
+      ]
+    },
+    {
+      "flow_id": "F-M030-01",
+      "before": {
+        "flow_id": "F-M030-01",
+        "product_id": "M-030",
+        "task": "自主读听与阅读课",
+        "depth": "D2",
+        "evidence_ids": "E-KHK-01;E-KHCD-03;E-KLCD-11",
+        "known_branches": "Books两种读法；Reading含提问/点图及高年级选择题；Early Readers先听后读是成人练习建议",
+        "gaps": "中途切换、逐字点读、答案判定与提示、退出续接未知；静态三角按钮作用未核",
+        "visual_status": "static_reference_only",
+        "hands_on": "false",
+        "case_path": "cases/M-030-khan-kids.md",
+        "checked_on": "2026-10-27"
+      },
+      "after": {
+        "flow_id": "F-M030-01",
+        "product_id": "M-030",
+        "task": "自主读听与阅读课",
+        "depth": "D2",
+        "evidence_ids": "E-KHK-01;E-KHCD-03;E-KLCD-11;E-KHAT-03;E-KHAT-06;E-KHAT-07",
+        "known_branches": "Books两种读法；Reading含提问/点图及高年级选择题；Early Readers先听后读是成人练习建议 阅读理解文建议孩子暂停、口头回答再翻页；家庭共读及学前活动建议不等于自动判分。",
+        "gaps": "中途切换、逐字点读、答案判定与提示、退出续接未知；静态三角按钮作用未核 未有ASR评分或连续读听恢复证据。",
+        "visual_status": "static_reference_only",
+        "hands_on": "false",
+        "case_path": "cases/M-030-khan-kids.md",
+        "checked_on": "2026-10-27"
+      },
+      "fields_changed": [
+        "evidence_ids",
+        "known_branches",
+        "gaps"
+      ],
+      "owning_files": [
+        "docs/research/interaction-library/batches/initial-coverage.csv"
+      ]
+    },
+    {
+      "flow_id": "F-M030-02",
+      "before": {
+        "flow_id": "F-M030-02",
+        "product_id": "M-030",
+        "task": "路线级别与家长进度",
+        "depth": "D2",
+        "evidence_ids": "E-KHK-02;E-KHK-03;E-KHCD-03;E-KLCD-02;E-KLCD-07",
+        "known_branches": "年级决定起点；表现影响主题推进及基础支持；Library勾号按档案/级别查看",
+        "gaps": "调级阈值、提示计分、失败重试与课内保存未知；中断另见F06；教师报告另见F13",
+        "visual_status": "not_observed",
+        "hands_on": "false",
+        "case_path": "cases/M-030-khan-kids.md",
+        "checked_on": "2026-10-27"
+      },
+      "after": {
+        "flow_id": "F-M030-02",
+        "product_id": "M-030",
+        "task": "路线级别与家长进度",
+        "depth": "D2",
+        "evidence_ids": "E-KHK-02;E-KHK-03;E-KHCD-03;E-KLCD-02;E-KLCD-07;E-KHAT-01;E-KHAT-02;E-KHAT-07",
+        "known_branches": "年级决定起点；表现影响主题推进及基础支持；Library勾号按档案/级别查看 阅读发展文章系列不同于App Learning Path；Letters/Reading拼读顺序是成人挑选建议。",
+        "gaps": "调级阈值、提示计分、失败重试与课内保存未知；中断另见F06；教师报告另见F13 不据文章顺序推导系统解锁、适应阈值或能力测评。",
+        "visual_status": "not_observed",
+        "hands_on": "false",
+        "case_path": "cases/M-030-khan-kids.md",
+        "checked_on": "2026-10-27"
+      },
+      "fields_changed": [
+        "evidence_ids",
+        "known_branches",
+        "gaps"
+      ],
+      "owning_files": [
+        "docs/research/interaction-library/batches/initial-coverage.csv"
+      ]
+    },
+    {
+      "flow_id": "F-M030-07",
+      "before": {
+        "flow_id": "F-M030-07",
+        "product_id": "M-030",
+        "task": "画图、录故事并保存作品",
+        "depth": "D2",
+        "evidence_ids": "E-KHCD-01;E-KHCD-03",
+        "known_branches": "背景/贴纸/画笔、撤销、录音停止回放、绿色勾存Gallery",
+        "gaps": "权限拒绝、退出未保存、覆盖、可编辑数据与同步未知",
+        "visual_status": "not_observed",
+        "hands_on": "false",
+        "case_path": "cases/M-030-khan-kids.md",
+        "checked_on": "2026-10-27"
+      },
+      "after": {
+        "flow_id": "F-M030-07",
+        "product_id": "M-030",
+        "task": "画图、录故事并保存作品",
+        "depth": "D2",
+        "evidence_ids": "E-KHCD-01;E-KHCD-03;E-KHAT-07",
+        "known_branches": "背景/贴纸/画笔、撤销、录音停止回放、绿色勾存Gallery 学前活动文建议成人利用Create引导绘画和故事表达。",
+        "gaps": "权限拒绝、退出未保存、覆盖、可编辑数据与同步未知 没有自动识别口述答案或给作品评分的依据。",
+        "visual_status": "not_observed",
+        "hands_on": "false",
+        "case_path": "cases/M-030-khan-kids.md",
+        "checked_on": "2026-10-27"
+      },
+      "fields_changed": [
+        "evidence_ids",
+        "known_branches",
+        "gaps"
+      ],
+      "owning_files": [
+        "docs/research/interaction-library/batches/khan-controls-deepening-coverage.csv"
+      ]
+    },
+    {
+      "flow_id": "F-M030-13",
+      "before": {
+        "flow_id": "F-M030-13",
+        "product_id": "M-030",
+        "task": "查看课堂多次尝试并导出进度报告",
+        "depth": "D2",
+        "evidence_ids": "E-KLCD-10",
+        "known_branches": "教师Students到Class Reports切报告；勾号/百分比展开尝试；Email导出ZIP内HTML需设备邮件配置",
+        "gaps": "取消/发送失败、附件权限、格式字段、同步冲突和回导未知；不可套家庭账户",
+        "visual_status": "not_observed",
+        "hands_on": "false",
+        "case_path": "cases/M-030-khan-kids.md",
+        "checked_on": "2026-10-27"
+      },
+      "after": {
+        "flow_id": "F-M030-13",
+        "product_id": "M-030",
+        "task": "查看课堂多次尝试并导出进度报告",
+        "depth": "D2",
+        "evidence_ids": "E-KLCD-10;E-KHAT-08",
+        "known_branches": "教师Students到Class Reports切报告；勾号/百分比展开尝试；Email导出ZIP内HTML需设备邮件配置 教师总览确认课堂报告、分配任务与家庭账户的范围分别处理；安排/改派另见F16。",
+        "gaps": "取消/发送失败、附件权限、格式字段、同步冲突和回导未知；不可套家庭账户 完成人数不是分数；报告导出仍不等于可回导备份。",
+        "visual_status": "not_observed",
+        "hands_on": "false",
+        "case_path": "cases/M-030-khan-kids.md",
+        "checked_on": "2026-10-27"
+      },
+      "fields_changed": [
+        "evidence_ids",
+        "known_branches",
+        "gaps"
+      ],
+      "owning_files": [
+        "docs/research/interaction-library/batches/khan-library-controls-deepening-coverage.csv"
+      ]
+    }
+  ],
+  "updated_evidence": [
+    {
+      "evidence_id": "E-KLCD-01",
+      "before": {
+        "evidence_id": "E-KLCD-01",
+        "product_id": "M-030",
+        "title": "Khan Kids公开帮助六栏目及分页目录",
+        "url": "https://khankids.zendesk.com/api/v2/help_center/en-us/sections.json?per_page=100",
+        "checked_on": "2026-10-27",
+        "source_type": "official_help_directory",
+        "access_mode": "existing_public_directory_json_and_web_tool_section_text",
+        "version_scope": "Khan Academy Kids mobile help; iOS/Android build and region unspecified; family/teacher scope separated",
+        "app_build": null,
+        "firmware_version": null,
+        "source_updated_on": null,
+        "locator": "6 sections; parent/teacher 2 pages each; others 1 page",
+        "note": "112条栏目文章入口含重复列示；标题不是已读正文或完成任务。目录范围以本次8页可见列表为限。",
+        "hands_on": false,
+        "visual_observed": false,
+        "archived_artifact": "artifacts/khan-library-controls-deepening/source-notes.md",
+        "sha256": "dc0bf2de45ba29857a4c303a9fc1d65fdaba624a6a68bb57efa9e799e700d1a6",
+        "supersedes": null,
+        "capture_state": "durable_short_notes_with_temporary_web_tool_return",
+        "raw_work_path": "work/khan-controls-deepening/12-sections.json",
+        "raw_sha256": "56baffa85bdbda0a375fbbb98f481f82b89ae7e5cab17fb707fc3e1432b74131",
+        "additional_captures": [
+          {
+            "capture_url": "https://khankids.zendesk.com/hc/en-us/sections/360001481891-Home-and-Parent-Resources",
+            "checked_on": "2026-10-27",
+            "raw_work_path": "work/khan-library-controls-deepening/web-index-response.json",
+            "raw_sha256": "578274fc308b46b84580e19e4fa67096c4d7125fbcd792594d8e0702f576844b",
+            "locator": "visible article links; pagination read",
+            "hands_on": false,
+            "visual_observed": false
+          },
+          {
+            "capture_url": "https://khankids.zendesk.com/hc/en-us/sections/360008453772-Class-and-Teacher-Resources",
+            "checked_on": "2026-10-27",
+            "raw_work_path": "work/khan-library-controls-deepening/web-index-response.json",
+            "raw_sha256": "578274fc308b46b84580e19e4fa67096c4d7125fbcd792594d8e0702f576844b",
+            "locator": "visible article links; pagination read",
+            "hands_on": false,
+            "visual_observed": false
+          },
+          {
+            "capture_url": "https://khankids.zendesk.com/hc/en-us/sections/39182012411547-District-and-IT-Administrator-Resources",
+            "checked_on": "2026-10-27",
+            "raw_work_path": "work/khan-library-controls-deepening/web-index-response.json",
+            "raw_sha256": "578274fc308b46b84580e19e4fa67096c4d7125fbcd792594d8e0702f576844b",
+            "locator": "visible article links; pagination read",
+            "hands_on": false,
+            "visual_observed": false
+          },
+          {
+            "capture_url": "https://khankids.zendesk.com/hc/en-us/sections/46978742033051-Resources-in-Spanish-and-Other-Languages",
+            "checked_on": "2026-10-27",
+            "raw_work_path": "work/khan-library-controls-deepening/web-index-response.json",
+            "raw_sha256": "578274fc308b46b84580e19e4fa67096c4d7125fbcd792594d8e0702f576844b",
+            "locator": "visible article links; pagination read",
+            "hands_on": false,
+            "visual_observed": false
+          },
+          {
+            "capture_url": "https://khankids.zendesk.com/hc/en-us/sections/46978591932315-News-and-Announcements",
+            "checked_on": "2026-10-27",
+            "raw_work_path": "work/khan-library-controls-deepening/web-index-response.json",
+            "raw_sha256": "578274fc308b46b84580e19e4fa67096c4d7125fbcd792594d8e0702f576844b",
+            "locator": "visible article links; pagination read",
+            "hands_on": false,
+            "visual_observed": false
+          },
+          {
+            "capture_url": "https://khankids.zendesk.com/hc/en-us/sections/47204226038171-Camp-Khan-Kids",
+            "checked_on": "2026-10-27",
+            "raw_work_path": "work/khan-library-controls-deepening/web-index-response.json",
+            "raw_sha256": "578274fc308b46b84580e19e4fa67096c4d7125fbcd792594d8e0702f576844b",
+            "locator": "visible article links; pagination read",
+            "hands_on": false,
+            "visual_observed": false
+          },
+          {
+            "capture_url": "https://khankids.zendesk.com/hc/en-us/sections/360001481891-Home-and-Parent-Resources?page=2",
+            "checked_on": "2026-10-27",
+            "raw_work_path": "work/khan-library-controls-deepening/web-response-1.json",
+            "raw_sha256": "26c175bd1d031892ead417c122f7b1df700dcd053b0a8175dc4b9b2f4e83c838",
+            "locator": "visible article links; pagination read",
+            "hands_on": false,
+            "visual_observed": false
+          },
+          {
+            "capture_url": "https://khankids.zendesk.com/hc/en-us/sections/360008453772-Class-and-Teacher-Resources?page=2",
+            "checked_on": "2026-10-27",
+            "raw_work_path": "work/khan-library-controls-deepening/web-response-1.json",
+            "raw_sha256": "26c175bd1d031892ead417c122f7b1df700dcd053b0a8175dc4b9b2f4e83c838",
+            "locator": "visible article links; pagination read",
+            "hands_on": false,
+            "visual_observed": false
+          }
+        ]
+      },
+      "after": {
+        "evidence_id": "E-KLCD-01",
+        "product_id": "M-030",
+        "title": "Khan Kids公开帮助六栏目及分页目录",
+        "url": "https://khankids.zendesk.com/api/v2/help_center/en-us/sections.json?per_page=100",
+        "checked_on": "2026-10-27",
+        "source_type": "official_help_directory",
+        "access_mode": "existing_public_directory_json_and_web_tool_section_text",
+        "version_scope": "Khan Academy Kids mobile help; iOS/Android build and region unspecified; family/teacher scope separated",
+        "app_build": null,
+        "firmware_version": null,
+        "source_updated_on": null,
+        "locator": "6 sections; parent/teacher 2 pages each; others 1 page",
+        "note": "112条栏目文章入口含重复列示；标题不是已读正文或完成任务。目录范围以本次8页可见列表为限。",
+        "hands_on": false,
+        "visual_observed": false,
+        "archived_artifact": "artifacts/khan-library-controls-deepening/source-notes.md",
+        "sha256": "dc0bf2de45ba29857a4c303a9fc1d65fdaba624a6a68bb57efa9e799e700d1a6",
+        "supersedes": null,
+        "capture_state": "durable_short_notes_with_temporary_web_tool_return",
+        "raw_work_path": "work/khan-controls-deepening/12-sections.json",
+        "raw_sha256": "56baffa85bdbda0a375fbbb98f481f82b89ae7e5cab17fb707fc3e1432b74131",
+        "additional_captures": [
+          {
+            "capture_url": "https://khankids.zendesk.com/hc/en-us/sections/360001481891-Home-and-Parent-Resources",
+            "checked_on": "2026-10-27",
+            "raw_work_path": "work/khan-library-controls-deepening/web-index-response.json",
+            "raw_sha256": "578274fc308b46b84580e19e4fa67096c4d7125fbcd792594d8e0702f576844b",
+            "locator": "visible article links; pagination read",
+            "hands_on": false,
+            "visual_observed": false
+          },
+          {
+            "capture_url": "https://khankids.zendesk.com/hc/en-us/sections/360008453772-Class-and-Teacher-Resources",
+            "checked_on": "2026-10-27",
+            "raw_work_path": "work/khan-library-controls-deepening/web-index-response.json",
+            "raw_sha256": "578274fc308b46b84580e19e4fa67096c4d7125fbcd792594d8e0702f576844b",
+            "locator": "visible article links; pagination read",
+            "hands_on": false,
+            "visual_observed": false
+          },
+          {
+            "capture_url": "https://khankids.zendesk.com/hc/en-us/sections/39182012411547-District-and-IT-Administrator-Resources",
+            "checked_on": "2026-10-27",
+            "raw_work_path": "work/khan-library-controls-deepening/web-index-response.json",
+            "raw_sha256": "578274fc308b46b84580e19e4fa67096c4d7125fbcd792594d8e0702f576844b",
+            "locator": "visible article links; pagination read",
+            "hands_on": false,
+            "visual_observed": false
+          },
+          {
+            "capture_url": "https://khankids.zendesk.com/hc/en-us/sections/46978742033051-Resources-in-Spanish-and-Other-Languages",
+            "checked_on": "2026-10-27",
+            "raw_work_path": "work/khan-library-controls-deepening/web-index-response.json",
+            "raw_sha256": "578274fc308b46b84580e19e4fa67096c4d7125fbcd792594d8e0702f576844b",
+            "locator": "visible article links; pagination read",
+            "hands_on": false,
+            "visual_observed": false
+          },
+          {
+            "capture_url": "https://khankids.zendesk.com/hc/en-us/sections/46978591932315-News-and-Announcements",
+            "checked_on": "2026-10-27",
+            "raw_work_path": "work/khan-library-controls-deepening/web-index-response.json",
+            "raw_sha256": "578274fc308b46b84580e19e4fa67096c4d7125fbcd792594d8e0702f576844b",
+            "locator": "visible article links; pagination read",
+            "hands_on": false,
+            "visual_observed": false
+          },
+          {
+            "capture_url": "https://khankids.zendesk.com/hc/en-us/sections/47204226038171-Camp-Khan-Kids",
+            "checked_on": "2026-10-27",
+            "raw_work_path": "work/khan-library-controls-deepening/web-index-response.json",
+            "raw_sha256": "578274fc308b46b84580e19e4fa67096c4d7125fbcd792594d8e0702f576844b",
+            "locator": "visible article links; pagination read",
+            "hands_on": false,
+            "visual_observed": false
+          },
+          {
+            "capture_url": "https://khankids.zendesk.com/hc/en-us/sections/360001481891-Home-and-Parent-Resources?page=2",
+            "checked_on": "2026-10-27",
+            "raw_work_path": "work/khan-library-controls-deepening/web-response-1.json",
+            "raw_sha256": "26c175bd1d031892ead417c122f7b1df700dcd053b0a8175dc4b9b2f4e83c838",
+            "locator": "visible article links; pagination read",
+            "hands_on": false,
+            "visual_observed": false
+          },
+          {
+            "capture_url": "https://khankids.zendesk.com/hc/en-us/sections/360008453772-Class-and-Teacher-Resources?page=2",
+            "checked_on": "2026-10-27",
+            "raw_work_path": "work/khan-library-controls-deepening/web-response-1.json",
+            "raw_sha256": "26c175bd1d031892ead417c122f7b1df700dcd053b0a8175dc4b9b2f4e83c838",
+            "locator": "visible article links; pagination read",
+            "hands_on": false,
+            "visual_observed": false
+          },
+          {
+            "checked_on": "2026-10-27",
+            "access_mode": "local_index_title_audit_and_related_article_read",
+            "note": "112文章标题按原栏目链接核对；纠正KLC-I025/026中文标签，不换稳定ID或F/E；新增10篇正文和3份配套PDF另建证据。",
+            "archived_artifact": "artifacts/khan-adult-guidance/source-notes.md",
+            "sha256": "e53c195f9cca24aea1df120009b30b538f247ad60901eb3a12bc23ea118e4535",
+            "artifact_hashes": {
+              "artifacts/khan-adult-guidance/index-title-audit.json": "94e79b214d5edf86e245523ed3aac911859ca8ddb1c8332b99108a85321bfea5"
+            }
+          }
+        ]
+      },
+      "fields_changed": [
+        "additional_captures"
+      ],
+      "owning_files": [
+        "docs/research/interaction-library/batches/khan-library-controls-deepening-evidence.jsonl"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+> For the complete documentation index, see [llms.txt](https://docs.eudic.net/1/llms.txt). Markdown versions of documentation pages are available by appending `.md` to page URLs; this page is available as [Markdown](https://docs.eudic.net/1/jin-jie-gong-neng/wen-jian-yue-du.md).
+
+# 文件阅读
+
+![](https://3412199665-files.gitbook.io/~/files/v0/b/gitbook-legacy-files/o/assets%2F-Mgyh1kdOQ5JH6pNTt27%2F-Mi5qU5ds9iXuu6L2ig5%2F-Mi5qrm1CgEjeLxjs35m%2F1.png?alt=media\&token=ba333958-4b01-4d42-ad74-b9839ae0c20c)
+
+不仅仅是查词！欧路词典支持导入文档阅读，点击即可查词，秒变掌上「阅读器」。
+
+> **iOS 设备**
+
+* 您可以&#x5728;**【帐号】**-**【WiFi 文件传输】**&#x4E2D;导入 **PDF**、**ePub**、**docx 格式**的文件。
+* 您也可以通过 **iTunes** 将电脑中的文件导入手机端阅读。
+
+> 安**卓设备**
+
+* 点&#x51FB;**【帐号】**-**【文件阅读】**-**【导入】**，即可导入 **PDF**、**ePub 格式**的文件并阅读。
+* 您可以&#x5728;**【帐号】**-**【WiFi 文件传输】**&#x4E2D;导入 **PDF**、**ePub 格式**的文件。
+* 您也可以通过数据线连接电脑，将电脑端的文件导入到手机端阅读。
+
+## **阅读时如何查词？**
+
+* 阅读时，您可以长按选中希望查询的单词，软件会自动提示释义。
+* 您也可以通过点击右上角&#x7684;**【Aa】**&#x56FE;标，切换**单击查词**或者**长按选择查词**，切换至**单击查词**&#x540E;**，**&#x70B9;击需要查询的单词即可提示释义。
+
+## **阅读时如何添加高亮/批注？**
+
+* 阅读时，长按选中需要高亮的内容，在菜单中点击【**颜色】**，即可为选中的内容添加高亮标注，方便后续阅读时浏览重点。
+* 阅读时，长按选中需要添加批注的内容，在菜单中点&#x51FB;**【批注】，**&#x5373;可为文本添加批注。
+
+## 添加好的高亮和批注可以多设备同步吗？
+
+高亮和批注暂不支持多设备同步，您可以将已添加高亮/批注的**文件本身**导入到新设备上，高亮/批注也会随之保留，支持在新设备上查看。

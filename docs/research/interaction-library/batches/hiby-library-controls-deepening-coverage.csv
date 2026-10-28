@@ -1,0 +1,2 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M035-11,M-035,查看本地歌词并返回歌曲列表,D2,E-HBD-01;E-HBCD-01,播放页点屏幕上半部切歌词；外置LRC与音频同目录/同文件名，另支持内嵌歌词及UTF-8/UTF-16。整页右划回歌曲列表或主界面。,反向回封面、内外歌词优先级、逐句点击/跟随/偏移、无歌词/乱码具体反馈及返回后播放状态未说明；不是时间书签或实机观察。,not_observed,false,cases/M-035-hiby.md,2026-10-27

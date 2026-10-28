@@ -1,0 +1,98 @@
+[
+  {
+    "name": "category-2273089",
+    "url": "https://help.ground.news/en/categories/2273089-getting-started",
+    "final_url": "https://help.ground.news/en/categories/2273089-getting-started",
+    "status": 200,
+    "checked_on": "2026-10-27",
+    "checked_utc": "2026-10-26T18:53:11.086646+00:00",
+    "raw_work_path": "work/ground-controls-deepening/category-2273089.html",
+    "raw_sha256": "2ada9fa4ad1e0b265c8c26ec3ec2784075f23d0e4e67a7d8d9e70a8f9e515054",
+    "bytes": 99373,
+    "parsed_text_path": "work/ground-controls-deepening/category-2273089.txt"
+  },
+  {
+    "name": "category-2272705",
+    "url": "https://help.ground.news/en/categories/2272705-understanding-ground-news",
+    "final_url": "https://help.ground.news/en/categories/2272705-understanding-ground-news",
+    "status": 200,
+    "checked_on": "2026-10-27",
+    "checked_utc": "2026-10-26T18:53:10.398691+00:00",
+    "raw_work_path": "work/ground-controls-deepening/category-2272705.html",
+    "raw_sha256": "1905898b5c33576d0fc763e00d42bcc1cf88ca1a309e160d0905373fc4fb5d18",
+    "bytes": 99321,
+    "parsed_text_path": "work/ground-controls-deepening/category-2272705.txt"
+  },
+  {
+    "name": "category-2272769",
+    "url": "https://help.ground.news/en/categories/2272769-personalize-your-news-feed",
+    "final_url": "https://help.ground.news/en/categories/2272769-personalize-your-news-feed",
+    "status": 200,
+    "checked_on": "2026-10-27",
+    "checked_utc": "2026-10-26T18:53:10.803221+00:00",
+    "raw_work_path": "work/ground-controls-deepening/category-2272769.html",
+    "raw_sha256": "48224015927014357bfd213e92bee9e72a9eb3066005c71f09aeca5ff14d824a",
+    "bytes": 99821,
+    "parsed_text_path": "work/ground-controls-deepening/category-2272769.txt"
+  },
+  {
+    "name": "category-2272897",
+    "url": "https://help.ground.news/en/categories/2272897-advanced-browsing-tools",
+    "final_url": "https://help.ground.news/en/categories/2272897-advanced-browsing-tools",
+    "status": 200,
+    "checked_on": "2026-10-27",
+    "checked_utc": "2026-10-26T18:53:10.828047+00:00",
+    "raw_work_path": "work/ground-controls-deepening/category-2272897.html",
+    "raw_sha256": "d31b274aba4adf780f5a5cd79447364e0e584db179dc6aea969662ed8c4a713c",
+    "bytes": 93807,
+    "parsed_text_path": "work/ground-controls-deepening/category-2272897.txt"
+  },
+  {
+    "name": "category-2272833",
+    "url": "https://help.ground.news/en/categories/2272833-manage-your-account-subscription",
+    "final_url": "https://help.ground.news/en/categories/2272833-manage-your-account-subscription",
+    "status": 200,
+    "checked_on": "2026-10-27",
+    "checked_utc": "2026-10-26T18:53:11.317952+00:00",
+    "raw_work_path": "work/ground-controls-deepening/category-2272833.html",
+    "raw_sha256": "103001edcd2f22cb8edffed437bc75d834f23a0850da100ad44494cd1aa3bd23",
+    "bytes": 92322,
+    "parsed_text_path": "work/ground-controls-deepening/category-2272833.txt"
+  },
+  {
+    "name": "category-2272961",
+    "url": "https://help.ground.news/en/categories/2272961-fix-a-problem",
+    "final_url": "https://help.ground.news/en/categories/2272961-fix-a-problem",
+    "status": 200,
+    "checked_on": "2026-10-27",
+    "checked_utc": "2026-10-26T18:53:11.327095+00:00",
+    "raw_work_path": "work/ground-controls-deepening/category-2272961.html",
+    "raw_sha256": "5e0235e271b267a693d680757507cbfa039084480550da57f24401ae2bd92564",
+    "bytes": 97026,
+    "parsed_text_path": "work/ground-controls-deepening/category-2272961.txt"
+  },
+  {
+    "name": "category-2273025",
+    "url": "https://help.ground.news/en/categories/2273025-share-your-feedback",
+    "final_url": "https://help.ground.news/en/categories/2273025-share-your-feedback",
+    "status": 200,
+    "checked_on": "2026-10-27",
+    "checked_utc": "2026-10-26T18:53:11.652256+00:00",
+    "raw_work_path": "work/ground-controls-deepening/category-2273025.html",
+    "raw_sha256": "741cf9a7dedb00cb6714bc21689aed50fb7e965ba964ed6a8865ed0dcd9f914e",
+    "bytes": 93197,
+    "parsed_text_path": "work/ground-controls-deepening/category-2273025.txt"
+  },
+  {
+    "name": "category-2358337",
+    "url": "https://help.ground.news/en/categories/2358337-partner-with-us",
+    "final_url": "https://help.ground.news/en/categories/2358337-partner-with-us",
+    "status": 200,
+    "checked_on": "2026-10-27",
+    "checked_utc": "2026-10-26T18:53:11.831134+00:00",
+    "raw_work_path": "work/ground-controls-deepening/category-2358337.html",
+    "raw_sha256": "61d4d0764ec94bfdfc066e346b51326e4954751df2838c55e89968aea5665bda",
+    "bytes": 96921,
+    "parsed_text_path": "work/ground-controls-deepening/category-2358337.txt"
+  }
+]

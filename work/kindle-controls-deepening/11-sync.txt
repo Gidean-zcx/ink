@@ -1,0 +1,14 @@
+Sync Your Kindle E-Reader
+en_US
+Sync Your Kindle E-Reader
+Seamlessly read across all your devices using sync to download pending books, notes and highlights, software updates, and back up your furthest page read.
+First, make sure that your Kindle is connected to the internet.
+From the home screen, swipe down to open the Quick Actions or select Menu.
+Select the Sync icon or the Sync and Check for Items option.
+You can access your highlights and text-based annotations across all Kindle surfaces after you sync. Currently, you can only access your handwritten annotations across Kindle Scribe devices.
+Kindle Scribe notebooks are backed up to the Cloud when the device is connected to the internet and Sync is turned on.
+If Sync is off, you can't download notebooks, or backup and save notebooks to the Cloud. To prevent data loss, you're also unable to permanently delete notebooks in the Cloud using your device.
+en_US
+US
+Cpiu6TFOuXpU4ymOzD
+GDCAMDFMC2LZP6BR

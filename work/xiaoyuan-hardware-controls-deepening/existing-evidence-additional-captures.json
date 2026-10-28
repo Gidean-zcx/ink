@@ -1,0 +1,76 @@
+[
+  {
+    "evidence_id": "E-XYHW-01",
+    "source_batch": "docs/research/interaction-library/batches/learning-hardware-evidence.jsonl",
+    "field": "additional_captures",
+    "before": [],
+    "after": [
+      {
+        "capture_url": "https://www.xiaoyuanyingjian.com/",
+        "checked_on": "2026-10-27",
+        "original_capture_on": "2026-10-26",
+        "access_mode": "local_reread_of_existing_public_artifact",
+        "raw_work_path": "work/learning-hardware/official-main.js",
+        "raw_sha256": "f3e9acdba2af4c5de5cd342a81d0300d57c5748d868c75338b98d1f112d092ec",
+        "locator": "Te/rn/Rn/S2-S6路由；解码字符偏移详独立摘记",
+        "archived_artifact": "artifacts/xiaoyuan-hardware-controls-deepening/source-notes.md",
+        "sha256": "b23dd9adc9131e36885fe67b7d61f85dbfdffad09b471c5e5fac119cc032c14c",
+        "hands_on": false,
+        "visual_observed": false,
+        "limitation": "本轮只读文字；旧静态观察不扩展。硬件固件/代际与完整主链未核定。",
+        "retrieval_request": "GET https://www.xiaoyuanyingjian.com/static/js/main.12d356ac.chunk.js"
+      }
+    ],
+    "reason": "同URL复读/新快照；保留原件与旧观察，不新增E"
+  },
+  {
+    "evidence_id": "E-XYHW-02",
+    "source_batch": "docs/research/interaction-library/batches/learning-hardware-evidence.jsonl",
+    "field": "additional_captures",
+    "before": [],
+    "after": [
+      {
+        "capture_url": "https://apps.apple.com/cn/app/%E5%B0%8F%E7%8C%BF%E6%99%BA%E8%83%BD%E8%AE%BE%E5%A4%87/id6738277050",
+        "checked_on": "2026-10-27",
+        "original_capture_on": "2026-10-27",
+        "access_mode": "ordinary_anonymous_GET",
+        "raw_work_path": "work/xiaoyuan-hardware-controls-deepening/parent-store.html",
+        "raw_sha256": "eb9a6caaa2efc25caaf05036db03983050e21eef75fcd9e42ec2e5c23921de2d",
+        "locator": "time datetime=2026-09-25；1.25.1；25条版本日志；iOS13.5",
+        "archived_artifact": "artifacts/xiaoyuan-hardware-controls-deepening/source-notes.md",
+        "sha256": "b23dd9adc9131e36885fe67b7d61f85dbfdffad09b471c5e5fac119cc032c14c",
+        "hands_on": false,
+        "visual_observed": false,
+        "limitation": "本轮只读文字；旧静态观察不扩展。硬件固件/代际与完整主链未核定。",
+        "http_status": 200,
+        "source_updated_on": "2026-09-25",
+        "version_scope": "China iPhone App Store 1.25.1; iOS13.5+; paired hardware unknown"
+      }
+    ],
+    "reason": "同URL复读/新快照；保留原件与旧观察，不新增E"
+  },
+  {
+    "evidence_id": "E-XYHW-05",
+    "source_batch": "docs/research/interaction-library/batches/learning-hardware-evidence.jsonl",
+    "field": "additional_captures",
+    "before": [],
+    "after": [
+      {
+        "capture_url": "https://megrez.yuanfudao.com/megrez-parent-web/privacys/privacy",
+        "checked_on": "2026-10-27",
+        "original_capture_on": "2026-10-26",
+        "access_mode": "local_reread_of_existing_public_artifact",
+        "raw_work_path": "work/learning-hardware/parent-privacy-body.html",
+        "raw_sha256": "cda62866625f96c6bffbfb25a7c095dbf788e5c1621f47cd118ddc1a161a3b01",
+        "locator": "2025-08-15政策§二/§四(一)4/§六.2、3、5、6、7",
+        "archived_artifact": "artifacts/xiaoyuan-hardware-controls-deepening/source-notes.md",
+        "sha256": "b23dd9adc9131e36885fe67b7d61f85dbfdffad09b471c5e5fac119cc032c14c",
+        "hands_on": false,
+        "visual_observed": false,
+        "limitation": "本轮只读文字；旧静态观察不扩展。硬件固件/代际与完整主链未核定。",
+        "resolved_source_url": "https://solar-online.fbcontent.cn/megrez-online/megrez-gallery/megrez-resource/1a017eac33f2fb4.html"
+      }
+    ],
+    "reason": "同URL复读/新快照；保留原件与旧观察，不新增E"
+  }
+]

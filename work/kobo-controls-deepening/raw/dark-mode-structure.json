@@ -1,0 +1,138 @@
+{
+  "links": [
+    {
+      "title": "Kobo Sage",
+      "url": "https://help.kobo.com/hc/en-us/articles/4406285084183",
+      "section": ""
+    },
+    {
+      "title": "Kobo Libra 2",
+      "url": "https://help.kobo.com/hc/en-us/articles/4406285169175",
+      "section": ""
+    },
+    {
+      "title": "Kobo Elipsa",
+      "url": "https://help.kobo.com/hc/en-us/articles/360053504173",
+      "section": ""
+    },
+    {
+      "title": "Kobo Clara 2E",
+      "url": "https://help.kobo.com/hc/en-us/articles/6122943232407",
+      "section": ""
+    },
+    {
+      "title": "Kobo Elipsa 2E",
+      "url": "https://help.kobo.com/hc/en-us/articles/12100658162071",
+      "section": ""
+    },
+    {
+      "title": "Kobo Libra Colour",
+      "url": "https://help.kobo.com/hc/en-us/articles/17971574287895",
+      "section": ""
+    },
+    {
+      "title": "Kobo Clara Colour",
+      "url": "https://help.kobo.com/hc/en-us/articles/18001606982679",
+      "section": ""
+    },
+    {
+      "title": "Kobo Clara BW.",
+      "url": "https://help.kobo.com/hc/en-us/articles/18499096277015",
+      "section": ""
+    },
+    {
+      "title": "About Kobo Stylus 2",
+      "url": "https://help.kobo.com/hc/en-us/articles/10733885674391",
+      "section": "Learn more about using your Kobo Stylus"
+    },
+    {
+      "title": "Troubleshoot your Kobo Stylus",
+      "url": "https://help.kobo.com/hc/en-us/articles/1500001927422",
+      "section": "Learn more about using your Kobo Stylus"
+    },
+    {
+      "title": "Use gestures to edit handwriting",
+      "url": "https://help.kobo.com/hc/en-us/articles/1500001833721",
+      "section": "Learn more about using your Kobo Stylus"
+    },
+    {
+      "title": "Write notes in your book with Kobo Stylus",
+      "url": "https://help.kobo.com/hc/en-us/articles/1500001927562",
+      "section": "Learn more about using your Kobo Stylus"
+    },
+    {
+      "title": "Highlight text with your Kobo Stylus",
+      "url": "https://help.kobo.com/hc/en-us/articles/1500001927662",
+      "section": "Learn more about using your Kobo Stylus"
+    },
+    {
+      "title": "About Kobo Stylus",
+      "url": "https://help.kobo.com/hc/en-us/articles/1500001833421",
+      "section": "Learn more about using your Kobo Stylus"
+    },
+    {
+      "title": "Check your Kobo Stylus battery status",
+      "url": "https://help.kobo.com/hc/en-us/articles/1500002996221",
+      "section": "Learn more about using your Kobo Stylus"
+    },
+    {
+      "title": "Replace your Kobo Stylus battery",
+      "url": "https://help.kobo.com/hc/en-us/articles/360060438054",
+      "section": "Learn more about using your Kobo Stylus"
+    },
+    {
+      "title": "Change your Kobo Stylus tip",
+      "url": "https://help.kobo.com/hc/en-us/articles/360060438294",
+      "section": "Learn more about using your Kobo Stylus"
+    },
+    {
+      "title": "Kobo Elipsa",
+      "url": "https://help.kobo.com/hc/en-us/articles/360053504173",
+      "section": "Learn more about using your Kobo Stylus"
+    },
+    {
+      "title": "Kobo Sage",
+      "url": "https://help.kobo.com/hc/en-us/articles/4406285084183",
+      "section": "Learn more about using your Kobo Stylus"
+    },
+    {
+      "title": "Kobo Elipsa 2E",
+      "url": "https://help.kobo.com/hc/en-us/articles/12100658162071",
+      "section": "Learn more about using your Kobo Stylus"
+    },
+    {
+      "title": "Kobo Libra Colour",
+      "url": "https://help.kobo.com/hc/en-us/articles/17971574287895",
+      "section": "Learn more about using your Kobo Stylus"
+    }
+  ],
+  "headings": [
+    "Learn more about using your Kobo Stylus"
+  ],
+  "images": [
+    {
+      "src": "https://help.kobo.com/hc/article_attachments/25996503134615",
+      "alt": "Kobo eReader page with white text and a black background."
+    },
+    {
+      "src": "https://help.kobo.com/hc/article_attachments/25996503135767",
+      "alt": ""
+    },
+    {
+      "src": "https://help.kobo.com/hc/article_attachments/25996534125079",
+      "alt": "Kobo eReader Reading Menu with the gear icon highlighted."
+    },
+    {
+      "src": "https://help.kobo.com/hc/article_attachments/25996534124567",
+      "alt": "Kobo eReader Reading Settings menu with the On checkbox highlighted."
+    },
+    {
+      "src": "https://help.kobo.com/hc/article_attachments/25996534127511",
+      "alt": ""
+    },
+    {
+      "src": "https://help.kobo.com/hc/article_attachments/25996503138071",
+      "alt": "Kobo eReader Reading Settings menu with the X icon highlighted."
+    }
+  ]
+}

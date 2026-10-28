@@ -1,0 +1,4 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M042-12,M-042,从对话创建、查找笔记并追加既有列表,D2,E-GENR-01,连接→指定应用/最近应用→生成或查找→Keep列表追加；通知Undo或回链接编辑；后台Live不可同样撤销,同名消歧、写前确认、失败回执、重复请求和重启未知；OEM动作和内容类型受限,not_observed,false,cases/M-042-gemini.md,2026-10-27
+F-M042-13,M-042,把前文或图片转成待办并管理完成状态,D2,E-GENR-02,连接Google Tasks或Samsung Reminder→请求添加/查看→改名日期、标完成或删除；默认最近访问应用,相对时间/多项识别、删除确认、通知实际触达、部分失败与离线保存未核；不是代理后台Tasks工作流,not_observed,false,cases/M-042-gemini.md,2026-10-27
+F-M060-17,M-060,校准笔尖位置并复核后保存,D2,E-QGNT-01,Gen.2设置→描虚线→抬笔显线→方向调整→确认描线→必要时再调整→保存,仅Gen.2手册；没有设备操作，取消/断电/重启保存和校准误差未知,not_observed,false,cases/M-060-quaderno.md,2026-10-27

@@ -1,0 +1,46 @@
+{
+  "name": "19-error-feedback",
+  "url": "https://www.duolingo.com/lesson",
+  "title": "Duolingo - Learn French with lessons that work",
+  "utc": "2026-10-26T17:44:29.724041+00:00",
+  "text": "4\nNEW WORD\nWhich one of these is “coffee”?\nthé\n1\ncroissant\n2\ncafé\n3\nCorrect solution:\ncafé\nTOO EASY\nTOO DIFFICULT\nREPORT\nCONTINUE\nEach mistake costs 1 heart!\nStay sharp and focused to keep your hearts. You got this!\nKEEP GOING",
+  "buttons": [
+    {
+      "text": "",
+      "aria": null,
+      "test": "quit-button",
+      "visible": true
+    },
+    {
+      "text": "TOO EASY",
+      "aria": "Too easy",
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "TOO DIFFICULT",
+      "aria": "Too difficult",
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "REPORT",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "CONTINUE",
+      "aria": null,
+      "test": "player-next",
+      "visible": true
+    },
+    {
+      "text": "KEEP GOING",
+      "aria": null,
+      "test": "hearts-intro-continue-button",
+      "visible": true
+    }
+  ],
+  "inputs": []
+}

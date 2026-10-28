@@ -1,0 +1,994 @@
+{
+  "origin_trace_sha256": "bb8e4f05f20160a635f958c5116171f8fba9c32bc4d1759b9da506846a768a88",
+  "context_metadata": {
+    "version": 10,
+    "type": "context-options",
+    "origin": "library",
+    "browserName": "chromium",
+    "playwrightVersion": "1.64.0-beta-1791568591000",
+    "options": {
+      "viewport": {
+        "width": 1280,
+        "height": 950
+      },
+      "selectorEngines": [],
+      "acceptDownloads": "accept"
+    },
+    "platform": "linux",
+    "wallTime": 1793027576565,
+    "monotonicTime": 1440.081,
+    "sdkLanguage": "python",
+    "testIdAttributeName": "data-testid"
+  },
+  "actions": [
+    {
+      "method": "goto",
+      "class_name": "Frame",
+      "params": {
+        "url": "https://www.jiakaobaodian.com/mnks/exercise/0-car-kemu1.html",
+        "waitUntil": "domcontentloaded",
+        "timeout": 45000
+      },
+      "start_ms": 1669.255,
+      "end_ms": 8551.427,
+      "error": null
+    },
+    {
+      "method": "waitForTimeout",
+      "class_name": "Frame",
+      "params": {
+        "waitTimeout": 3000
+      },
+      "start_ms": 8563.558,
+      "end_ms": 11564.72,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 11579.185,
+      "end_ms": 11686.067,
+      "error": null
+    },
+    {
+      "method": "mouseClick",
+      "class_name": "Page",
+      "params": {
+        "x": 920,
+        "y": 234
+      },
+      "start_ms": 70491.145,
+      "end_ms": 70792.933,
+      "error": null
+    },
+    {
+      "method": "waitForTimeout",
+      "class_name": "Frame",
+      "params": {
+        "waitTimeout": 400
+      },
+      "start_ms": 70809.954,
+      "end_ms": 71214.894,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 71248.653,
+      "end_ms": 71538.29,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": "internal:text=\"B\\u3001\\u9519\\u8bef\"s",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 96669.139,
+      "end_ms": 97152.582,
+      "error": null
+    },
+    {
+      "method": "waitForTimeout",
+      "class_name": "Frame",
+      "params": {
+        "waitTimeout": 700
+      },
+      "start_ms": 97155.428,
+      "end_ms": 97857.044,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 97864.947,
+      "end_ms": 97980.714,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": "internal:text=\"A\\u3001\\u6b63\\u786e\"s",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 143008.751,
+      "end_ms": 143279.099,
+      "error": null
+    },
+    {
+      "method": "waitForTimeout",
+      "class_name": "Frame",
+      "params": {
+        "waitTimeout": 350
+      },
+      "start_ms": 143285.075,
+      "end_ms": 143636.477,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 143670.244,
+      "end_ms": 143987.29,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": "internal:role=button[name=\"显示详解\"s]",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 144704.886,
+      "end_ms": 144936.367,
+      "error": null
+    },
+    {
+      "method": "waitForTimeout",
+      "class_name": "Frame",
+      "params": {
+        "waitTimeout": 800
+      },
+      "start_ms": 144939.696,
+      "end_ms": 145742.35,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 145747.257,
+      "end_ms": 146047.345,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": "internal:role=button[name=\"收藏\"s]",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 205030.383,
+      "end_ms": 205722.904,
+      "error": null
+    },
+    {
+      "method": "waitForTimeout",
+      "class_name": "Frame",
+      "params": {
+        "waitTimeout": 500
+      },
+      "start_ms": 205726.872,
+      "end_ms": 206227.767,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 206232.574,
+      "end_ms": 206436.377,
+      "error": null
+    },
+    {
+      "method": "mouseClick",
+      "class_name": "Page",
+      "params": {
+        "x": 826,
+        "y": 325
+      },
+      "start_ms": 434676.644,
+      "end_ms": 435541.546,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": "internal:role=button[name=\"显示答题卡\"s]",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 435598.459,
+      "end_ms": 436512.175,
+      "error": null
+    },
+    {
+      "method": "waitForTimeout",
+      "class_name": "Frame",
+      "params": {
+        "waitTimeout": 400
+      },
+      "start_ms": 436526.596,
+      "end_ms": 436930.912,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 436980.596,
+      "end_ms": 437291.607,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": "internal:role=button[name=\"下一题\"s]",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 445177.412,
+      "end_ms": 445367.401,
+      "error": null
+    },
+    {
+      "method": "waitForTimeout",
+      "class_name": "Frame",
+      "params": {
+        "waitTimeout": 400
+      },
+      "start_ms": 445369.524,
+      "end_ms": 445770.487,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 445772.015,
+      "end_ms": 445895.927,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": "internal:text=\"C\\u3001\\u9a7e\\u9a76\\u8bc1\"s",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 458542.586,
+      "end_ms": 458629.119,
+      "error": null
+    },
+    {
+      "method": "waitForTimeout",
+      "class_name": "Frame",
+      "params": {
+        "waitTimeout": 1200
+      },
+      "start_ms": 458630.853,
+      "end_ms": 459831.552,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 459835.069,
+      "end_ms": 459964.74,
+      "error": null
+    },
+    {
+      "method": "uncheck",
+      "class_name": "Frame",
+      "params": {
+        "selector": "input.checkbox-next",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 465869.142,
+      "end_ms": 465944.262,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": "internal:role=button[name=\"收起答题卡\"s]",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 465946.167,
+      "end_ms": 466062.568,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": "internal:role=button[name=\"收起详解\"s]",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 466069.207,
+      "end_ms": 466142.938,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": "internal:text=\"A\\u3001\\u6b63\\u786e\"s",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 466144.814,
+      "end_ms": 471158.017,
+      "error": {
+        "message": "Timeout 5000ms exceeded.",
+        "stack": "TimeoutError: Timeout 5000ms exceeded.\n    at _ProgressController.run (/home/workspace/reader/work/research/tools/browser/playwright/driver/package/lib/coreBundle.js:13004:32)\n    at DispatcherConnection.dispatch (/home/workspace/reader/work/research/tools/browser/playwright/driver/package/lib/coreBundle.js:20191:44)",
+        "name": "TimeoutError"
+      }
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": "internal:text=\"A\\u3001\\u7edf\\u4e00\\u5f0f\\u6837\\u7684\\u5b9e\\u4e60\\u6807\\u5fd7\"s",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 479734.834,
+      "end_ms": 479858.811,
+      "error": null
+    },
+    {
+      "method": "waitForTimeout",
+      "class_name": "Frame",
+      "params": {
+        "waitTimeout": 700
+      },
+      "start_ms": 479861.108,
+      "end_ms": 480561.946,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 480564.291,
+      "end_ms": 480656.212,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": "internal:role=button[name=\"上一题\"s]",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 487075.864,
+      "end_ms": 487127.112,
+      "error": null
+    },
+    {
+      "method": "waitForTimeout",
+      "class_name": "Frame",
+      "params": {
+        "waitTimeout": 300
+      },
+      "start_ms": 487129.068,
+      "end_ms": 487429.619,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 487431.397,
+      "end_ms": 487529.763,
+      "error": null
+    },
+    {
+      "method": "reload",
+      "class_name": "Page",
+      "params": {
+        "waitUntil": "domcontentloaded",
+        "timeout": 5000
+      },
+      "start_ms": 487606.825,
+      "end_ms": 489934.224,
+      "error": null
+    },
+    {
+      "method": "waitForTimeout",
+      "class_name": "Frame",
+      "params": {
+        "waitTimeout": 1200
+      },
+      "start_ms": 489943.583,
+      "end_ms": 491144.053,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 491147.735,
+      "end_ms": 491263.651,
+      "error": null
+    },
+    {
+      "method": "mouseClick",
+      "class_name": "Page",
+      "params": {
+        "x": 920,
+        "y": 234
+      },
+      "start_ms": 493661.585,
+      "end_ms": 493666.621,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": "internal:text=\"\\u4e91\\u540c\\u6b65\\u505a\\u9898\\u8fdb\\u5ea6\"s",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 493669.389,
+      "end_ms": 493745.862,
+      "error": null
+    },
+    {
+      "method": "waitForTimeout",
+      "class_name": "Frame",
+      "params": {
+        "waitTimeout": 500
+      },
+      "start_ms": 493747.871,
+      "end_ms": 494248.738,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 494252.351,
+      "end_ms": 494359.989,
+      "error": null
+    },
+    {
+      "method": "mouseClick",
+      "class_name": "Page",
+      "params": {
+        "x": 826,
+        "y": 325
+      },
+      "start_ms": 504261.523,
+      "end_ms": 504270.589,
+      "error": null
+    },
+    {
+      "method": "waitForTimeout",
+      "class_name": "Frame",
+      "params": {
+        "waitTimeout": 1500
+      },
+      "start_ms": 504274.393,
+      "end_ms": 505775.612,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 505779.987,
+      "end_ms": 505940.379,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": "internal:role=link[name=\"小车科目一\"s]",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 523124.807,
+      "end_ms": 523439.686,
+      "error": null
+    },
+    {
+      "method": "waitForTimeout",
+      "class_name": "Frame",
+      "params": {
+        "waitTimeout": 1500
+      },
+      "start_ms": 523443.583,
+      "end_ms": 524944.944,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 524946.452,
+      "end_ms": 528921.4,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": "a[href=\"/mnks/exam/car-kemu1-beijing.html\"]",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 540906.14,
+      "end_ms": 540956.78,
+      "error": null
+    },
+    {
+      "method": "waitForTimeout",
+      "class_name": "Frame",
+      "params": {
+        "waitTimeout": 1500
+      },
+      "start_ms": 540958.781,
+      "end_ms": 542459.534,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 542461.549,
+      "end_ms": 542583.661,
+      "error": null
+    },
+    {
+      "method": "waitForTimeout",
+      "class_name": "Frame",
+      "params": {
+        "waitTimeout": 500
+      },
+      "start_ms": 557563.483,
+      "end_ms": 558064.811,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 558066.838,
+      "end_ms": 558150.679,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": "a[href=\"/mnks/exam/car-kemu1-beijing.html\"]",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 569619.589,
+      "end_ms": 569643.701,
+      "error": null
+    },
+    {
+      "method": "waitForTimeout",
+      "class_name": "Frame",
+      "params": {
+        "waitTimeout": 600
+      },
+      "start_ms": 569646.983,
+      "end_ms": 570247.407,
+      "error": null
+    },
+    {
+      "method": "goto",
+      "class_name": "Frame",
+      "params": {
+        "url": "https://www.jiakaobaodian.com/mnks/exam/car-kemu1-beijing.html",
+        "waitUntil": "domcontentloaded",
+        "timeout": 5000
+      },
+      "start_ms": 582862.12,
+      "end_ms": 587871.099,
+      "error": {
+        "message": "Timeout 5000ms exceeded.",
+        "stack": "TimeoutError: Timeout 5000ms exceeded.\n    at _ProgressController.run (/home/workspace/reader/work/research/tools/browser/playwright/driver/package/lib/coreBundle.js:13004:32)\n    at DispatcherConnection.dispatch (/home/workspace/reader/work/research/tools/browser/playwright/driver/package/lib/coreBundle.js:20191:44)",
+        "name": "TimeoutError"
+      }
+    },
+    {
+      "method": "goto",
+      "class_name": "Frame",
+      "params": {
+        "url": "https://www.jiakaobaodian.com/mnks/exam/car-kemu1-beijing.html",
+        "waitUntil": "domcontentloaded",
+        "timeout": 45000
+      },
+      "start_ms": 619542.449,
+      "end_ms": 664582.439,
+      "error": {
+        "message": "Timeout 45000ms exceeded.",
+        "stack": "TimeoutError: Timeout 45000ms exceeded.\n    at _ProgressController.run (/home/workspace/reader/work/research/tools/browser/playwright/driver/package/lib/coreBundle.js:13004:32)\n    at DispatcherConnection.dispatch (/home/workspace/reader/work/research/tools/browser/playwright/driver/package/lib/coreBundle.js:20191:44)",
+        "name": "TimeoutError"
+      }
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 698163.714,
+      "end_ms": 698323.958,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": "internal:role=button[name=\"确定\"s]",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 707953.175,
+      "end_ms": 708113.595,
+      "error": null
+    },
+    {
+      "method": "waitForTimeout",
+      "class_name": "Frame",
+      "params": {
+        "waitTimeout": 1200
+      },
+      "start_ms": 708121.659,
+      "end_ms": 709325.724,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 709329.027,
+      "end_ms": 709427.673,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": "internal:role=button[name=\"B\"s]",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 714883.507,
+      "end_ms": 714951.803,
+      "error": null
+    },
+    {
+      "method": "waitForTimeout",
+      "class_name": "Frame",
+      "params": {
+        "waitTimeout": 600
+      },
+      "start_ms": 714954.271,
+      "end_ms": 715555.998,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 715558.423,
+      "end_ms": 715635.473,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": "internal:role=button[name=\"A\"s]",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 723491.858,
+      "end_ms": 723585.734,
+      "error": null
+    },
+    {
+      "method": "waitForTimeout",
+      "class_name": "Frame",
+      "params": {
+        "waitTimeout": 300
+      },
+      "start_ms": 723588.697,
+      "end_ms": 723889.238,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 723891.663,
+      "end_ms": 723970.05,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": "internal:role=button[name=\"交卷\"s]",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 724061.753,
+      "end_ms": 724116.584,
+      "error": null
+    },
+    {
+      "method": "waitForTimeout",
+      "class_name": "Frame",
+      "params": {
+        "waitTimeout": 400
+      },
+      "start_ms": 724117.974,
+      "end_ms": 724518.202,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 724520.446,
+      "end_ms": 724609.826,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": "internal:role=button[name=\"取消\"s]",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 760384.049,
+      "end_ms": 760432.593,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": "internal:role=button[name=\"上一题\"s]",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 760435.442,
+      "end_ms": 760483.961,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": "internal:role=button[name=\"B\"s]",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 760487.97,
+      "end_ms": 765493.403,
+      "error": {
+        "message": "Timeout 5000ms exceeded.",
+        "stack": "TimeoutError: Timeout 5000ms exceeded.\n    at _ProgressController.run (/home/workspace/reader/work/research/tools/browser/playwright/driver/package/lib/coreBundle.js:13004:32)\n    at DispatcherConnection.dispatch (/home/workspace/reader/work/research/tools/browser/playwright/driver/package/lib/coreBundle.js:20191:44)",
+        "name": "TimeoutError"
+      }
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 783761.357,
+      "end_ms": 783889.635,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": "internal:role=button[name=\"交卷\"s]",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 795055.622,
+      "end_ms": 795140.357,
+      "error": null
+    },
+    {
+      "method": "waitForTimeout",
+      "class_name": "Frame",
+      "params": {
+        "waitTimeout": 250
+      },
+      "start_ms": 795145.7,
+      "end_ms": 795396.116,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": "internal:role=button[name=\"确定\"s]",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 795397.546,
+      "end_ms": 795427.627,
+      "error": null
+    },
+    {
+      "method": "waitForTimeout",
+      "class_name": "Frame",
+      "params": {
+        "waitTimeout": 1200
+      },
+      "start_ms": 795428.754,
+      "end_ms": 796629.131,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 796632.704,
+      "end_ms": 797715.063,
+      "error": null
+    },
+    {
+      "method": "waitForTimeout",
+      "class_name": "Frame",
+      "params": {
+        "waitTimeout": 5000
+      },
+      "start_ms": 816985.998,
+      "end_ms": 821988.39,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 821990.06,
+      "end_ms": 822050.784,
+      "error": null
+    }
+  ]
+}

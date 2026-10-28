@@ -1,0 +1,812 @@
+[
+  {
+    "article": {
+      "id": "6a5de1dd6993329d8bc2e70f",
+      "articleId": "6a4e08a2df55e9ce5b7b96a0",
+      "title": "How to share audio with your child remotely",
+      "body": "<h4 id=\"isPasted\"><span style=\"color: rgb(248, 94, 65);\">Recording and making audio is great, but sharing is even better, especially when you can&#39;t be there in person.</span></h4><p><br></p><p>Grandparents, aunties, uncles, cousins, siblings, everyone, can make recordings and share them, so they can be linked to cards for the kids.&nbsp;</p><p>Note: you are not allowed to share copyrighted content. If you create your own, totally original content, and you are happy to share with families, friends or the community, then please do.</p><p><br><strong>Option 1 - Share your audio as an MP3</strong></p><p>Use this option if you want to share audio with more than one other family member (say, lots of grandchildren or nieces and nephews), but you&#39;d rather not have to log in to the app using their details.</p><ol><li>Record your audio using any voice recording app on your phone. Make sure you record in MP3 format.</li><li>Share that audio MP3 file by whatever means you like: WhatsApp, email, USB stick&hellip;</li><li>The person you share with can then turn that audio MP3 file into a playlist on Yoto, and link that to a physical card</li></ol><p><br></p><p><strong>Option 2 - Join the Family Account</strong></p><p>Use this option if you are only sharing audio with one other family member, and they are happy to have you join their Family Account.</p><ol><li>Download the Yoto app</li><li>Log in to the app with your own email and password</li><li>In the app&rsquo;s Menu, tap Join a Family Account and follow the instructions to pair with a player and join the Family Account.&nbsp;</li></ol><p>You will need your family member to press some buttons on the player, so they will need to be on the phone and near the player while you do this.&nbsp;</p><p>As a member of the Family Account, all your story playlists will be visible on the app of your family member, and they can link them to cards at their end.</p><p><br></p><p><strong>Option 3 - Sign in as the person who owns the Yoto Player</strong></p><p>Use this option if you want to share audio with multiple family members, all of whom don&#39;t mind you logging into their app!</p><ol><li>Download the Yoto app</li><li>Log in using the email and password of the person who owns the Yoto Player (please ask permission for this!)</li><li id=\"isPasted\">You can rhen record stories directly into the app and turn these into Yoto playlists.</li><li>These story playlists will then be visible in their app, and they can link them to cards using the same instructions as the link in step 3.</li></ol>",
+      "categories": [
+        {
+          "id": "6a19a59641fb94cd78a45e3e",
+          "knowledgeBase": "69d522fcb7baaa50525b3529"
+        }
+      ],
+      "primaryCategory": "6a19a59641fb94cd78a45e3e",
+      "metaDescription": "Recording and making audio is great but sharing is even better especially when you cant be there in person    Grandparents aunties uncles cousins siblin",
+      "metaKeywords": [
+        "app",
+        "Yoto",
+        "audio",
+        "share",
+        "can",
+        "family",
+        "member",
+        "Family",
+        "Account",
+        "person",
+        "MP3",
+        "using",
+        "link",
+        "playlists"
+      ],
+      "metaTitle": "",
+      "lang": "en_gb",
+      "slug": "how-to-share-audio-with-your-child-remotely",
+      "draftSlug": null,
+      "hash": "SJcsOtiXzx",
+      "publishedAt": "2026-07-20T08:53:52.867Z",
+      "updatedAt": "2026-07-20T08:53:52.965Z",
+      "createdAt": "2026-07-20T08:52:45.909Z",
+      "href": "/en_gb/how-to-share-audio-with-your-child-remotely-SJcsOtiXzx",
+      "tags": [],
+      "knowledgeBases": [],
+      "scope": "public"
+    },
+    "category_file": "work/yoto-controls-deepening/extracted/category-cards-content-make-your-own.json",
+    "text_file": "work/yoto-controls-deepening/extracted/how-to-share-audio-with-your-child-remotely.txt",
+    "images": [],
+    "links": []
+  },
+  {
+    "article": {
+      "id": "6a5de252cbbcf3693a4421eb",
+      "articleId": "6a4e08a3d76963d4aeb423aa",
+      "title": "How much audio fits on a Make Your Own Card?",
+      "body": "<p><strong>The limit for each card is as follows:</strong></p><ul><li>100 tracks per card</li><li style=\"color: rgb(0, 0, 0);\">100 MB / 60 minutes maximum file size of any single track</li><li style=\"color: rgb(0, 0, 0);\">500 MB / 5 hours maximum total file size of the audio content for any one card</li></ul><p><span style=\"color: rgb(0, 0, 0);\">Note: this limit only applies to the playlists created by the user, and does not apply when linking a Yoto Card in your Yoto App library. A Make Your Own card can be linked to any single Yoto Card in your Yoto App.</span></p>",
+      "categories": [
+        {
+          "id": "6a19a59641fb94cd78a45e3e",
+          "knowledgeBase": "69d522fcb7baaa50525b3529"
+        }
+      ],
+      "primaryCategory": "6a19a59641fb94cd78a45e3e",
+      "metaDescription": "The limit for each card is as follows         100 tracks per card  100 MB  60 minutes maximum file size of any single track  500 MB  5 hours maximum total fi",
+      "metaKeywords": [
+        "card",
+        "Yoto",
+        "100",
+        "limit",
+        "MB",
+        "maximum",
+        "file",
+        "size",
+        "single",
+        "Card",
+        "App",
+        "5",
+        "60",
+        "500"
+      ],
+      "metaTitle": "",
+      "lang": "en_gb",
+      "slug": "how-much-audio-fits-on-a-make-your-own-card",
+      "draftSlug": null,
+      "hash": "r1ssdFimfl",
+      "publishedAt": "2026-07-20T08:55:39.343Z",
+      "updatedAt": "2026-07-20T08:55:39.458Z",
+      "createdAt": "2026-07-20T08:54:42.291Z",
+      "href": "/en_gb/how-much-audio-fits-on-a-make-your-own-card-r1ssdFimfl",
+      "tags": [],
+      "knowledgeBases": [],
+      "scope": "public"
+    },
+    "category_file": "work/yoto-controls-deepening/extracted/category-cards-content-make-your-own.json",
+    "text_file": "work/yoto-controls-deepening/extracted/how-much-audio-fits-on-a-make-your-own-card.txt",
+    "images": [],
+    "links": []
+  },
+  {
+    "article": {
+      "id": "6a5e0c1988f3830f8630970d",
+      "articleId": "6a4e08dfb42d99ab4e8d28f4",
+      "title": "Safe sharing with friends and family",
+      "body": "<h4><span style=\"color: rgb(248, 94, 65);\">Key principles for safe sharing.</span></h4><p><br></p><p><strong>Trust</strong></p><p>When sharing a playlist, your email address will be shared with any recipient, so only send it to those you trust. If you&rsquo;re a recipient, only review and accept a playlist from those you trust.&nbsp;</p><p><br></p><p><strong>Act fairly and responsibly</strong></p><p>Yoto doesn&rsquo;t generally moderate shared content, so please make sure the content you share or receive is safe, age appropriate and doesn&rsquo;t breach the copyright of others. Yoto is not responsible for this uploaded content.</p><p><br></p><p>To ensure safe and fair sharing, we may remove Content or disable Content if we believe that Content:</p><ul><li>is shared in breach of copyright*</li><li>contains offensive language</li><li>is racist, obscene, defamatory, sexual, or violent</li><li>incites hatred or discrimination</li><li>is unsuitable for children under the age of 12</li><li>may have been shared more widely than close friends or family</li></ul><p dir=\"ltr\">If the Content is reported to us as inappropriate, or otherwise flagged by an algorithm as contrary to this Sharing Policy, sharing or access to the Content may be suspended from the Yoto platform pending review.&nbsp;</p><p dir=\"ltr\">If this happens, and you would like us to reactivate your content, please see below for how to arrange this.</p><p dir=\"ltr\" id=\"isPasted\">&nbsp;*If you&rsquo;re not sure whether you have sharing permission, please read the terms and conditions provided by the audio rights holders.</p><p dir=\"ltr\"><br></p><p dir=\"ltr\"><br></p><p dir=\"ltr\"><strong>Sharing your MYO digital playlist</strong></p><p dir=\"ltr\"><a href=\"https://support.yotoplay.com/sharing-audio-remotely-11558\">For details on how to share your playlist, click here</a>. Once the playlist is shared, anyone with access to the link will be able to listen to it. This means that if the person you share it with then sends it to another person, that other person will be able to listen to it, and also share further if they wish.&nbsp;</p><p dir=\"ltr\">As the creator of the audio,&nbsp;your email address is always attached&nbsp;to the shared content and is therefore visible to anyone who receives the content, so think carefully before you share any playlists.&nbsp;</p><p dir=\"ltr\">Note: it is not possible to change ownership of a MYO playlist. Only the original creator will be the owner of the playlist.</p><p dir=\"ltr\"><br></p><p dir=\"ltr\"><strong>Receiving a MYO digital playlist &nbsp;</strong></p><p dir=\"ltr\">When you receive a playlist link, you will see the email address of&nbsp;the original content Creator. This may be the same person who shared the content, or it may be someone else. &nbsp;You can listen to the audio in the app to make sure you are happy with the content before you accept it being added to your library. Please ensure you trust both the Sharer and the Creator.&nbsp;</p><p dir=\"ltr\">Yoto does not take responsibility for the content that is shared.&nbsp;We do not listen to or approve content before it is shared. It is the responsibility of the individual to listen to the content in full to decide if it&rsquo;s suitable before adding it to their library and subsequently linking it to a Make Your Own card.</p><p dir=\"ltr\">Once you accept a playlist, it will be added to your library in the app, and you will be able to link it to a physical card that can be played on your player.</p><p dir=\"ltr\"><br></p><p dir=\"ltr\"><strong>Giving or receiving a MYO digital playlist </strong></p><p dir=\"ltr\">If you have made a playlist and linked it to a Make Your Own card, your email address as the original Creator will always be attached to the playlist when shared digitally, and it will be visible in the app.</p><p dir=\"ltr\">When a piece of content shared with you is updated by the original Creator, this update will be automatically reflected on all cards that are linked to that playlist. So again, make sure you trust the creator.</p><p dir=\"ltr\"><br></p><p dir=\"ltr\"><strong>Reactivating your content</strong></p><p dir=\"ltr\">Just to be on the safe side, if a shared piece of content has been flagged by another user or automated algorithms as potentially violating our Sharing Policy, it will be temporarily suspended, and no further sharing will be allowed.</p><p dir=\"ltr\">In case this happens with content you have created, please get in touch with us via email or live chat. Please note that we will review suspended content only on the content creator&#39;s request.</p><p dir=\"ltr\"><br></p><p dir=\"ltr\"><strong>Why and how we share?</strong></p><p dir=\"ltr\">Sharing is fundamental to life. One of the earliest lessons we teach our children is to share, and as we get older, that same generosity rewards us with our closest relationships and fondest memories. So it&rsquo;s no surprise that sharing is an important part of what we do at Yoto!</p><p dir=\"ltr\">When we started Yoto, we knew that families would be excited to share their own stories as much as they&rsquo;d enjoy listening to their favorite audiobooks and music. So we made it as easy as possible to record your own audio and link these to Make-Your-Own blank cards for kids to enjoy.</p><p dir=\"ltr\">Over time, we have found this feature to be one of the most popular on Yoto Player - surprise, surprise!&nbsp;</p><p dir=\"ltr\">In light of all this creativity, we&rsquo;ve now made it easier than ever to share audio with the ones you love. However, it also requires a great deal of careful thought to ensure our customers can share safely and freely.</p><p dir=\"ltr\">Allowing our customers to create and share their own audio means trusting our community of users to share this responsibility with us. The content you upload is private and personal and securely held in a private storage area for you (like Dropbox, Google Drive etc.) that we don&rsquo;t access or vet.</p><p dir=\"ltr\">To ensure safe sharing, we have put in place some measures to help our customers verify received content, and this policy to help you understand any potential risk.</p><p><br></p><p dir=\"ltr\">If you&rsquo;re not sure whether you have sharing permission, please read the terms and conditions provided by the audio rights holders.</p>",
+      "categories": [
+        {
+          "id": "6a19a59641fb94cd78a45e3e",
+          "knowledgeBase": "69d522fcb7baaa50525b3529"
+        }
+      ],
+      "primaryCategory": "6a19a59641fb94cd78a45e3e",
+      "metaDescription": "Key principles for safe sharing      Trust  When sharing a playlist your email address will be shared with any recipient so only send it to those you trust ",
+      "metaKeywords": [
+        "content",
+        "playlist",
+        "will",
+        "shared",
+        "share",
+        "sharing",
+        "Yoto",
+        "audio",
+        "not",
+        "us",
+        "safe",
+        "email",
+        "please",
+        "sure"
+      ],
+      "metaTitle": "",
+      "lang": "en_gb",
+      "slug": "safe-sharing-with-friends-and-family",
+      "draftSlug": null,
+      "hash": "S1vytKsmMg",
+      "publishedAt": "2026-07-20T11:53:28.019Z",
+      "updatedAt": "2026-07-20T11:53:28.132Z",
+      "createdAt": "2026-07-20T11:52:57.477Z",
+      "href": "/en_gb/safe-sharing-with-friends-and-family-S1vytKsmMg",
+      "tags": [],
+      "knowledgeBases": [],
+      "scope": "public"
+    },
+    "category_file": "work/yoto-controls-deepening/extracted/category-cards-content-make-your-own.json",
+    "text_file": "work/yoto-controls-deepening/extracted/safe-sharing-with-friends-and-family.txt",
+    "images": [],
+    "links": [
+      "https://support.yotoplay.com/sharing-audio-remotely-11558"
+    ]
+  },
+  {
+    "article": {
+      "id": "6a5dfaf8a3fa769cb4ecf1e7",
+      "articleId": "6a4e08d0cdeb84d826ae740b",
+      "title": "How to check if your Yoto player is online",
+      "body": "<h4><span style=\"color: rgb(248, 94, 65);\">There are several reasons why you may need to know if your player is currently online.</span></h4><p><strong><br></strong></p><p><strong>Downloading content to the player</strong></p><p><span style=\"color: rgb(0, 0, 0);\">The player needs to be online to download and store locally the audio content for each card. So to play a card for the first time, your player needs to be online.</span><br><span style=\"font-family: Inter;\"><br></span></p><p><strong>Streaming content</strong></p><p><span style=\"font-family: Inter; color: rgb(0, 0, 0);\">Some cards or content, like radio, always need a connection to play, so if your player is offline, this content won&#39;t work.</span></p><p><br></p><p><strong>Addi</strong><strong>ng new Wi-Fi details</strong></p><p><span style=\"font-family: Inter; color: rgb(0, 0, 0);\">If you want to add new Wi-Fi details to your player, so it can access another network, you can only do this if your player is offline.</span></p><p><span style=\"font-family: Inter;\"><br></span></p><p><strong>How to tell if your player is online</strong></p><p><span style=\"font-family: Inter;\">When your player is online, the sun or moon icon will be displayed (depending on whether your Yoto is currently in &#39;day&#39; mode or &#39;night&#39; mode), and the time will be displayed in red.&nbsp;</span></p><p><span style=\"font-family: Inter;\"><img src=\"https://attachments.gorgias.help/uploads.gorgias.io/Aa90l7EQnv7JWorj/Moon_clock-8e9e20f7-beb9-4db9-9acf-2bdcb48bfeab.png\" style=\"width: 500px;\" class=\"fr-fic fr-dib\" alt=\"Yoto players - online display\"></span></p><p><span style=\"font-family: Inter; color: rgb(0, 0, 0);\">If the time is displayed in white, this means Yoto Player is currently offline.</span></p><p><span style=\"font-family: Inter;\"><img src=\"https://attachments.gorgias.help/uploads.gorgias.io/Aa90l7EQnv7JWorj/Moon_clock-1-ac960d1b-5ff0-4626-ab80-c5d82316b65d.png\" style=\"width: 500px;\" class=\"fr-fic fr-dib\" alt=\"Yoto players - offline display\"></span></p><p><span style=\"font-family: Inter;\">&nbsp;</span></p><p><span style=\"color: rgb(0, 0, 0);\"><strong>Some other icons you may see, and what they mean</strong></span></p><p><span style=\"font-family: Inter; color: rgb(0, 0, 0);\">The green Yoto Face icon means that your player is connected to Wi-Fi but not connected to the internet - this can happen if your internet connection is down.</span></p><p><span style=\"font-family: Inter;\"><img src=\"https://attachments.gorgias.help/uploads.gorgias.io/Aa90l7EQnv7JWorj/Mini_green_face-6529c069-6852-49b6-bc28-f62a10fc68d0.png\" style=\"width: 500px;\" class=\"fr-fic fr-dib\" alt=\"Yoto mini - green Yoto face display\"></span></p><p><span style=\"font-family: Inter; color: rgb(0, 0, 0);\">When the white Yoto Face icon doesn&#39;t go away, it means that your player is offline, and it can&rsquo;t see what the time is &nbsp;- please follow the setup flow in the Yoto app to get your player online.</span></p><p><span style=\"font-family: Inter;\"><img src=\"https://attachments.gorgias.help/uploads.gorgias.io/Aa90l7EQnv7JWorj/Mini_white_face-c8a60ee4-0cec-4408-95c3-13ea9fd7d274.png\" style=\"width: 500px;\" class=\"fr-fic fr-dib\" alt=\"Yoto mini - white Yoto face display\"></span></p><p><br></p><p><span style=\"font-family: Inter;\"><a href=\"https://support.yotoplay.com/en-US/yoto-display-icons-11571\">Click here for more information on all the display icons and what they mean.</a></span></p><p><br></p>",
+      "categories": [
+        {
+          "id": "6a19a5be6e96d255daa8983f",
+          "knowledgeBase": "69d522fcb7baaa50525b3529"
+        }
+      ],
+      "primaryCategory": "6a19a5be6e96d255daa8983f",
+      "metaDescription": "There are several reasons why you may need to know if your player is currently online      Downloading content to the player  The player needs to be online to ",
+      "metaKeywords": [
+        "player",
+        "online",
+        "content",
+        "Yoto",
+        "time",
+        "offline",
+        "currently",
+        "WiFi",
+        "can",
+        "icon",
+        "displayed",
+        "means",
+        "may",
+        "need"
+      ],
+      "metaTitle": "",
+      "lang": "en_gb",
+      "slug": "how-to-check-if-your-yoto-player-is-online",
+      "draftSlug": null,
+      "hash": "rJ_A_Ki7Mx",
+      "publishedAt": "2026-07-20T10:40:25.993Z",
+      "updatedAt": "2026-07-20T10:40:26.089Z",
+      "createdAt": "2026-07-20T10:39:52.891Z",
+      "href": "/en_gb/how-to-check-if-your-yoto-player-is-online-rJ_A_Ki7Mx",
+      "tags": [],
+      "knowledgeBases": [],
+      "scope": "public"
+    },
+    "category_file": "work/yoto-controls-deepening/extracted/category-fixing-a-problem-safety.json",
+    "text_file": "work/yoto-controls-deepening/extracted/how-to-check-if-your-yoto-player-is-online.txt",
+    "images": [
+      {
+        "src": "https://attachments.gorgias.help/uploads.gorgias.io/Aa90l7EQnv7JWorj/Moon_clock-8e9e20f7-beb9-4db9-9acf-2bdcb48bfeab.png",
+        "style": "width: 500px;",
+        "class": "fr-fic fr-dib",
+        "alt": "Yoto players - online display"
+      },
+      {
+        "src": "https://attachments.gorgias.help/uploads.gorgias.io/Aa90l7EQnv7JWorj/Moon_clock-1-ac960d1b-5ff0-4626-ab80-c5d82316b65d.png",
+        "style": "width: 500px;",
+        "class": "fr-fic fr-dib",
+        "alt": "Yoto players - offline display"
+      },
+      {
+        "src": "https://attachments.gorgias.help/uploads.gorgias.io/Aa90l7EQnv7JWorj/Mini_green_face-6529c069-6852-49b6-bc28-f62a10fc68d0.png",
+        "style": "width: 500px;",
+        "class": "fr-fic fr-dib",
+        "alt": "Yoto mini - green Yoto face display"
+      },
+      {
+        "src": "https://attachments.gorgias.help/uploads.gorgias.io/Aa90l7EQnv7JWorj/Mini_white_face-c8a60ee4-0cec-4408-95c3-13ea9fd7d274.png",
+        "style": "width: 500px;",
+        "class": "fr-fic fr-dib",
+        "alt": "Yoto mini - white Yoto face display"
+      }
+    ],
+    "links": [
+      "https://support.yotoplay.com/en-US/yoto-display-icons-11571"
+    ]
+  },
+  {
+    "article": {
+      "id": "6a5e0aeff7351ed8c8cb8c93",
+      "articleId": "6a4e08dbd72beb3969ce1178",
+      "title": "How to factory reset your Yoto Player or Mini",
+      "body": "<h4><span style=\"color: rgb(248, 94, 65);\">A factory reset will delete all downloaded content and restore your Yoto Player or Yoto Mini to factory conditions.</span></h4><p><br></p><p><strong>To factory reset a Yoto Player:</strong></p><ol><li>Press and hold all three buttons on the Yoto Player until the nightlight pulses red.</li><li>Within three seconds of this red pulse, release all three buttons and press the orange button on the right-hand side once.</li><li>The nightlight will briefly flash orange and then shut down once reset is complete.</li></ol><p><br></p><p><strong>To factory reset a Yoto Mini:</strong></p><ol><li>Press and hold all three buttons on the Yoto Mini until a red dot appears on the screen.</li><li>Within three seconds of this red button, release all three buttons and press the orange button on the right-hand side once.</li><li>An orange dot should appear and then shut down once reset is complete.</li></ol><p><br></p><p>After a factory reset, your Yoto Player or Mini will need to go through its setup process again <a href=\"https://support.yotoplay.com/en-US/setting-up-your-yoto-player--mini-3098\">(click here to open the setup article)</a>. If you require any further support, feel free to message us.</p><p><br></p><p><strong>Remove the device from the previous account:</strong></p><p id=\"isPasted\">A factory reset will not remove the device from your family account. If you are giving it to someone else, make sure to also delete its name and remove it from your family account, through the Yoto App.</p><p dir=\"ltr\">To remove it from the family account:&nbsp;</p><ul><li>Go to the Settings tab in the Yoto App</li><li>Tap on the device to open the settings page</li><li>At the top of the page, delete the Player Name</li><li>Scroll to the bottom of the settings page</li><li>Select &ldquo;Remove from family account&rdquo;.</li></ul><p><br></p><p dir=\"ltr\"><strong>Leave the old family account</strong></p><p dir=\"ltr\">If you received a Yoto player from someone else, but they have forgotten to first remove it from their account, you can leave their family account by:</p><ul id=\"isPasted\"><li dir=\"ltr\">Go to the Settings tab in the Yoto App</li><li dir=\"ltr\">Tap on the three dots next to your user</li><li dir=\"ltr\">Select &ldquo;Leave this family account&rdquo;.</li></ul>",
+      "categories": [
+        {
+          "id": "6a19a5be6e96d255daa8983f",
+          "knowledgeBase": "69d522fcb7baaa50525b3529"
+        }
+      ],
+      "primaryCategory": "6a19a5be6e96d255daa8983f",
+      "metaDescription": "A factory reset will delete all downloaded content and restore your Yoto Player or Yoto Mini to factory conditions      To factory reset a Yoto Player    Pres",
+      "metaKeywords": [
+        "Yoto",
+        "reset",
+        "three",
+        "account",
+        "family",
+        "factory",
+        "Player",
+        "will",
+        "Mini",
+        "buttons",
+        "red",
+        "orange",
+        "remove",
+        "delete"
+      ],
+      "metaTitle": "",
+      "lang": "en_gb",
+      "slug": "how-to-factory-reset-your-yoto-player-or-mini",
+      "draftSlug": null,
+      "hash": "ByE1FKsXzl",
+      "publishedAt": "2026-07-20T11:48:03.359Z",
+      "updatedAt": "2026-07-20T11:48:03.462Z",
+      "createdAt": "2026-07-20T11:47:59.565Z",
+      "href": "/en_gb/how-to-factory-reset-your-yoto-player-or-mini-ByE1FKsXzl",
+      "tags": [],
+      "knowledgeBases": [],
+      "scope": "public"
+    },
+    "category_file": "work/yoto-controls-deepening/extracted/category-fixing-a-problem-safety.json",
+    "text_file": "work/yoto-controls-deepening/extracted/how-to-factory-reset-your-yoto-player-or-mini.txt",
+    "images": [],
+    "links": [
+      "https://support.yotoplay.com/en-US/setting-up-your-yoto-player--mini-3098"
+    ]
+  },
+  {
+    "article": {
+      "id": "6aa2b72a013749062a600da0",
+      "articleId": "6a4e08c7b686e8110d9f10e5",
+      "title": "Playing your first Yoto Card",
+      "body": "<h3 id=\"isPasted\"><strong><span style=\"color: rgb(226, 80, 65);\">Pop a card into the slot on top of your player, and it plays - that&rsquo;s the magic. The first time each card plays, your Yoto needs Wi-Fi to fetch the audio; after that, the card plays anywhere, no internet needed.</span></strong></h3><p><br></p><p style=\"text-align: center;\"><img src=\"https://cdn.prod2.kustomerhostedcontent.com/media/69d522f66edcac3fee157fa8/ba648f82d2078ab19a713610925dc7c2.png\" width=\"378\" height=\"316\" class=\"fr-fic fr-dii\"></p><p><br></p><h2><strong>Give every card a head start (10 minutes now, zero interruptions later)</strong></h2><p>Want the first experience to be seamless? After setup, do this once:</p><ol><li><p><strong>Pop each of your cards into the player, one by one.</strong> A few seconds each is fine.</p></li><li><p><strong>Take the last card out</strong>, and leave the player switched on, charging and online overnight.</p></li><li><p>That&rsquo;s it - your player quietly downloads everything while it rests. By morning, every card plays instantly, with or without Wi-Fi.</p></li></ol><p><br></p><h2><strong>How Yoto Cards actually work</strong></h2><p>Each card holds a little chip (NFC - the same tech as contactless payment) that acts like a key. Insert the card, and your player unlocks that audio in one of two ways:</p><ul><li><p><strong>Already downloaded?</strong> It plays straight from the player - no internet needed. This is how cards your child has played before will work.</p></li><li><p><strong>First play, or not finished downloading?</strong> The audio streams over Wi-Fi while the player downloads it in the background - so you&rsquo;ll need to be online, with a decent connection. (Some cards, like radio stations, always stream.)</p></li></ul><p>Curious which is happening? Your player&rsquo;s display tells you - See: What the icons on your Yoto&rsquo;s display mean.</p><p><br></p><h3><strong>If the audio stutters or breaks up</strong></h3><p>Almost always one of two things, and both pass:</p><ul><li><p><strong>Busy Wi-Fi or a weak signal</strong> - move the player closer to the router.&nbsp;</p></li><li><p><strong>Lots of downloads at once</strong> - typical on day one when every card is new. Give it time (or run the overnight routine above).</p></li></ul><p><br></p><h3><strong>If a card won&rsquo;t play at all&nbsp;</strong></h3><ul><li><strong><p>Take it out, and try again.</p></strong></li><li><p>Try another Yoto Card. If other cards play normally, test the affected card using a phone with NFC:</p><ul><li><p>Make sure NFC is switched on, if your phone has this setting.</p></li><li><p>Hold the card against your phone&rsquo;s NFC reader-usually near the top or on the back-for a few seconds.</p></li><li><p>If nothing happens, remove your phone case and try moving the card slowly across the back of your phone.</p></li><li><p>If possible, scan a Yoto Card that works normally for comparison.</p></li><li><p><br></p></li></ul></li><li><p>Check the display. A red stop sign means the card wasn&rsquo;t recognised.</p></li></ul><p style=\"text-align: center;\"><img src=\"https://cdn.prod2.kustomerhostedcontent.com/media/69d522f66edcac3fee157fa8/07e7152c5340a53a2241c9455295742b.png\" width=\"283\" height=\"278\" class=\"fr-fic fr-dii\"><img src=\"https://cdn.prod2.kustomerhostedcontent.com/media/69d522f66edcac3fee157fa8/f729762f8118da18e4d7168e42c9a835.png\" width=\"154\" height=\"154\" class=\"fr-fic fr-dii\"><br><br></p><p><br></p><ul><li><p>Still stuck? Contact our Customer Happiness team and tell us:</p><ul><li><p>The name of the card</p></li><li><p>What you see on the display</p></li><li><p>Whether other cards play normally</p></li><li><p>Whether your phone detected the affected card</p></li></ul></li></ul><p><strong>Wondering about compatibility?</strong> See<a href=\"https://support.yotoplay.com/en_gb/interactive-yoto-cards-and-4th-generation-players-what-you-need-to-know-Sypn8apdzg\"><strong style=\" text-align: left;\" id=\"isPasted\"><strong>&nbsp;</strong></strong></a><span style=\" text-align: left;\"><a href=\"https://support.yotoplay.com/en_gb/interactive-yoto-cards-and-4th-generation-players-what-you-need-to-know-Sypn8apdzg\">Interactive Yoto Cards and 4th Generation Players - What You Need to Know</a></span></p>",
+      "categories": [
+        {
+          "id": "6a19a5b43d71ac5e793f021b",
+          "knowledgeBase": "69d522fcb7baaa50525b3529"
+        }
+      ],
+      "primaryCategory": "6a19a5b43d71ac5e793f021b",
+      "metaDescription": "A guide to playing cards on your player for the first time      How do Yoto cards work   Yoto cards have an NFC chip in them which is read by your player whe",
+      "metaKeywords": [
+        "player",
+        "cards",
+        "content",
+        "will",
+        "first",
+        "time",
+        "card",
+        "audio",
+        "online",
+        "one",
+        "locally",
+        "stored",
+        "play",
+        "download"
+      ],
+      "metaTitle": "",
+      "lang": "en_gb",
+      "slug": "playing-your-first-yoto-card",
+      "draftSlug": null,
+      "hash": "HygA_FiXze",
+      "publishedAt": "2026-09-10T13:57:40.290Z",
+      "updatedAt": "2026-09-10T13:57:40.560Z",
+      "createdAt": "2026-09-10T13:56:58.302Z",
+      "href": "/en_gb/playing-your-first-yoto-card-HygA_FiXze",
+      "tags": [],
+      "knowledgeBases": [],
+      "scope": "public"
+    },
+    "category_file": "work/yoto-controls-deepening/extracted/category-new-to-yoto.json",
+    "text_file": "work/yoto-controls-deepening/extracted/playing-your-first-yoto-card.txt",
+    "images": [
+      {
+        "src": "https://cdn.prod2.kustomerhostedcontent.com/media/69d522f66edcac3fee157fa8/ba648f82d2078ab19a713610925dc7c2.png",
+        "width": "378",
+        "height": "316",
+        "class": "fr-fic fr-dii"
+      },
+      {
+        "src": "https://cdn.prod2.kustomerhostedcontent.com/media/69d522f66edcac3fee157fa8/07e7152c5340a53a2241c9455295742b.png",
+        "width": "283",
+        "height": "278",
+        "class": "fr-fic fr-dii"
+      },
+      {
+        "src": "https://cdn.prod2.kustomerhostedcontent.com/media/69d522f66edcac3fee157fa8/f729762f8118da18e4d7168e42c9a835.png",
+        "width": "154",
+        "height": "154",
+        "class": "fr-fic fr-dii"
+      }
+    ],
+    "links": [
+      "https://support.yotoplay.com/en_gb/interactive-yoto-cards-and-4th-generation-players-what-you-need-to-know-Sypn8apdzg",
+      "https://support.yotoplay.com/en_gb/interactive-yoto-cards-and-4th-generation-players-what-you-need-to-know-Sypn8apdzg"
+    ]
+  },
+  {
+    "article": {
+      "id": "6a5de5c7580bada496f25a0a",
+      "articleId": "6a4e08b237a5b6c3ed1bf509",
+      "title": "What are Family Accounts?",
+      "body": "<h4><span style=\"color: rgb(248, 94, 65);\">A quick guide to Family Accounts</span></h4><p><br></p><p><span style=\"font-family: Inter; color: rgb(0, 0, 0);\">When you set up a player to get it online and pair it with the phone you are using for the Yoto app, you automatically create what we call a &lsquo;Family Account&rsquo;.&nbsp;</span></p><p><span style=\"font-family: Inter; color: rgb(0, 0, 0);\"><img src=\"https://attachments.gorgias.help/uploads.gorgias.io/Aa90l7EQnv7JWorj/FA_Set_up-3b73b611-e4f0-44a3-884b-939b50f9eb68.png\" style=\"width: 300px;\" class=\"fr-fic fr-dib\" alt=\"Pairing smartphone and Yoto player\"></span></p><p><br></p><p><span style=\"font-family: Inter; color: rgb(0, 0, 0);\">A Family Account can be just one member and one player, or you could add more players and multiple members to the same account.</span></p><p><br></p><p><span style=\"font-family: Inter;\"><img src=\"https://attachments.gorgias.help/uploads.gorgias.io/Aa90l7EQnv7JWorj/FA_multi_member_multi_players-e1985db5-d5fc-47ff-ae34-2c6ef801a0a5.png\" style=\"width: 300px;\" class=\"fr-fic fr-dib\" alt=\"Adding multiple accounts to the Family Account\"></span></p><p><span style=\"font-family: Inter;\"><br></span></p><p><span style=\"color: rgb(248, 94, 65); font-family: Inter;\"><strong>A Family Account lets anyone who is a member use the Yoto app to:</strong></span></p><p><span style=\"font-family: Inter;\"><strong><span style=\"color: rgb(0, 0, 0);\">Control your player/s</span></strong><span style=\"color: rgb(0, 0, 0);\"><br>Use the app to play content, adjust the volume, set a sleep timer etc. for any players in the Family Account</span></span></p><p><span style=\"font-family: Inter; color: rgb(0, 0, 0);\"><strong>Manage player settings</strong><br></span><span style=\"font-size: 16px; font-family: Inter; color: rgb(0, 0, 0);\">Control features behind the scenes, like setting sleep and wake times, customizing the color of the nightlight and setting maximum volume.</span></p><p><span style=\"font-family: Inter; color: rgb(0, 0, 0);\"><strong>Access cards you buy from Yoto instantly</strong><br>When you purchase cards from the Yoto Store (using the same email address as you use for the app) those cards will be added to your Library straight away, so you can enjoy listening to them before the actual cards arrive in the post</span></p><p><br></p>",
+      "categories": [
+        {
+          "id": "6a19a5a89f2ebfcad8e9da8f",
+          "knowledgeBase": "69d522fcb7baaa50525b3529"
+        }
+      ],
+      "primaryCategory": "6a19a5a89f2ebfcad8e9da8f",
+      "metaDescription": "A quick guide to Family Accounts    When you set up a player to get it online and pair it with the phone you are using for the Yoto app you automatically creat",
+      "metaKeywords": [
+        "Yoto",
+        "Family",
+        "player",
+        "app",
+        "cards",
+        "Account",
+        "players",
+        "guide",
+        "set",
+        "phone",
+        "using",
+        "can",
+        "one",
+        "member"
+      ],
+      "metaTitle": "",
+      "lang": "en_gb",
+      "slug": "family-accounts",
+      "draftSlug": null,
+      "hash": "HJq3OKomzx",
+      "publishedAt": "2026-07-20T09:11:20.378Z",
+      "updatedAt": "2026-07-20T09:11:20.472Z",
+      "createdAt": "2026-07-20T09:09:27.209Z",
+      "href": "/en_gb/family-accounts-HJq3OKomzx",
+      "tags": [],
+      "knowledgeBases": [],
+      "scope": "public"
+    },
+    "category_file": "work/yoto-controls-deepening/extracted/category-using-your-yoto.json",
+    "text_file": "work/yoto-controls-deepening/extracted/family-accounts.txt",
+    "images": [
+      {
+        "src": "https://attachments.gorgias.help/uploads.gorgias.io/Aa90l7EQnv7JWorj/FA_Set_up-3b73b611-e4f0-44a3-884b-939b50f9eb68.png",
+        "style": "width: 300px;",
+        "class": "fr-fic fr-dib",
+        "alt": "Pairing smartphone and Yoto player"
+      },
+      {
+        "src": "https://attachments.gorgias.help/uploads.gorgias.io/Aa90l7EQnv7JWorj/FA_multi_member_multi_players-e1985db5-d5fc-47ff-ae34-2c6ef801a0a5.png",
+        "style": "width: 300px;",
+        "class": "fr-fic fr-dib",
+        "alt": "Adding multiple accounts to the Family Account"
+      }
+    ],
+    "links": []
+  },
+  {
+    "article": {
+      "id": "6a5de6c06e111286dc535354",
+      "articleId": "6a4e08b5a629f31c9ed1a3a6",
+      "title": "How to remove a user from your Family Account",
+      "body": "<p>Each member of a Family Account can either remove themselves or remove other users.<br>To remove a user from a Family Account:</p><ul><li>Open the Yoto App</li><li>Go to the Settings tab</li><li>Tap the three dots menu next to a user</li><li>This will show the menu with the remove options</li><li>Select either Remove from Family Account or Leave this Family Account</li></ul>",
+      "categories": [
+        {
+          "id": "6a19a5a89f2ebfcad8e9da8f",
+          "knowledgeBase": "69d522fcb7baaa50525b3529"
+        }
+      ],
+      "primaryCategory": "6a19a5a89f2ebfcad8e9da8f",
+      "metaDescription": "How to remove a users account from a Family Account   Each member of a Family Account can either remove themselves or remove other users   To remove a user f",
+      "metaKeywords": [
+        "Family",
+        "remove",
+        "Account",
+        "users",
+        "user",
+        "account",
+        "either",
+        "menu",
+        "add",
+        "member",
+        "can",
+        "Open",
+        "Yoto",
+        "App"
+      ],
+      "metaTitle": "",
+      "lang": "en_gb",
+      "slug": "how-to-remove-a-user-from-your-family-account",
+      "draftSlug": null,
+      "hash": "H162uFjmfl",
+      "publishedAt": "2026-07-20T09:14:23.429Z",
+      "updatedAt": "2026-07-20T09:14:23.600Z",
+      "createdAt": "2026-07-20T09:13:36.204Z",
+      "href": "/en_gb/how-to-remove-a-user-from-your-family-account-H162uFjmfl",
+      "tags": [],
+      "knowledgeBases": [],
+      "scope": "public"
+    },
+    "category_file": "work/yoto-controls-deepening/extracted/category-using-your-yoto.json",
+    "text_file": "work/yoto-controls-deepening/extracted/how-to-remove-a-user-from-your-family-account.txt",
+    "images": [],
+    "links": []
+  },
+  {
+    "article": {
+      "id": "6a5dee9d95c61b025fceb0b9",
+      "articleId": "6a4e08edecfb0e06a4498c10",
+      "title": "How to set an alarm on your Yoto",
+      "body": "<h4><span style=\"color: rgb(248, 94, 65);\">Our alarms are perfect for wake-up time, time to go to school, bedtime, but they can be useful for other situations too!</span></h4><p><br></p><p>To get started, you will need to have the 2.46 version of the Yoto app or above, and Yoto player OS 2.10.7 or above. To set an alarm, simply follow these steps:</p><p>1) Open the Yoto App</p><p><img src=\"https://attachments.gorgias.help/Aa90l7EQnv7JWorj/hc/9JWjXVxGb7DvMqmO/2024082708-bb02bfe3-d4cb-4f7f-9fde-fe5ef7eb1abe-01@2x%20(1).png\" style=\"box-sizing: border-box; -webkit-font-smoothing: antialiased; border-style: none; cursor: pointer; padding: 0px 1px; user-select: none; max-width: 100%; width: 500px;\" class=\"fr-fic fr-dib\" alt=\"Open the Yoto App\"></p><p>2) Go to the Settings tab&nbsp;</p><p><img src=\"https://attachments.gorgias.help/Aa90l7EQnv7JWorj/hc/9JWjXVxGb7DvMqmO/2024082708-5789a2e8-d7dd-4ccd-9fb8-78db6f45f45c-02@2x%20(1).png\" style=\"box-sizing: border-box; -webkit-font-smoothing: antialiased; border-style: none; cursor: pointer; padding: 0px 1px; user-select: none; max-width: 100%; width: 500px;\" class=\"fr-fic fr-dib\" alt=\"Go to the Settings tab\"></p><p><br></p><p>3) Go to the player settings of the player where you want to play alarms from. Make sure your player is switched on and connected to the internet.</p><p><img src=\"https://attachments.gorgias.help/Aa90l7EQnv7JWorj/hc/9JWjXVxGb7DvMqmO/2024082708-bf4bf330-fda4-4656-8dce-eb419d0cc9e7-03@2x%20(1).png\" style=\"box-sizing: border-box; -webkit-font-smoothing: antialiased; border-style: none; cursor: pointer; padding: 0px 1px; user-select: none; max-width: 100%; width: 500px;\" class=\"fr-fic fr-dib\" alt=\"Go to the player settings of the player\"></p><p>4) In your chosen player settings, go to Alarms &gt; Set an alarm</p><p><img data-fr-image-pasted=\"true\" src=\"https://attachments.gorgias.help/uploads.gorgias.io/Aa90l7EQnv7JWorj/undefined-f2139e2c-bfaf-467f-8034-d2dc66b88577\" style=\"box-sizing: border-box; -webkit-font-smoothing: antialiased; border-style: none; cursor: pointer; padding: 0px 1px; user-select: none; max-width: 100%; width: 300px;\" class=\"fr-fic fr-dib\" alt=\"go to Alarms &gt; Set an alarm\"></p><p>5) Go to Add an alarm</p><p><img data-fr-image-pasted=\"true\" src=\"https://attachments.gorgias.help/uploads.gorgias.io/Aa90l7EQnv7JWorj/undefined-bfae677d-31f4-483c-a10b-3bb98a329b34\" style=\"box-sizing: border-box; -webkit-font-smoothing: antialiased; border-style: none; cursor: pointer; padding: 0px 1px; user-select: none; max-width: 100%; width: 300px;\" class=\"fr-fic fr-dib\" alt=\"Go to Add an alarm\"></p><p>6) Select your alarm time</p><p>Tap the time</p><p><img data-fr-image-pasted=\"true\" src=\"https://attachments.gorgias.help/uploads.gorgias.io/Aa90l7EQnv7JWorj/undefined-61bf160d-fc21-401a-b010-3afde7b66a2f\" style=\"box-sizing: border-box; -webkit-font-smoothing: antialiased; border-style: none; cursor: pointer; padding: 0px 1px; user-select: none; max-width: 100%; width: 300px;\" class=\"fr-fic fr-dib\" alt=\"Tap the time\"></p><p>Scroll to your preferred alarm time</p><p><img data-fr-image-pasted=\"true\" src=\"https://attachments.gorgias.help/uploads.gorgias.io/Aa90l7EQnv7JWorj/undefined-7d75a4f1-dbb0-495d-9b6f-890d9b3cc862\" style=\"box-sizing: border-box; -webkit-font-smoothing: antialiased; border-style: none; cursor: pointer; padding: 0px 1px; user-select: none; max-width: 100%; width: 300px;\" class=\"fr-fic fr-dib\" alt=\"Scroll to your preferred alarm time\"></p><p>7) Select which days you want this alarm to be active for.&nbsp;</p><p>The default setting is for every day to be selected, if you want your alarm to go off on specific days, tap the ones that don&#39;t apply.</p><p>Selected days will show in red and are listed in text underneath&nbsp;</p><p><img data-fr-image-pasted=\"true\" src=\"https://attachments.gorgias.help/uploads.gorgias.io/Aa90l7EQnv7JWorj/undefined-3405e8d1-6648-4e3a-b967-2d1acb695ce2\" style=\"box-sizing: border-box; -webkit-font-smoothing: antialiased; border-style: none; cursor: pointer; padding: 0px 1px; user-select: none; max-width: 100%; width: 300px;\" class=\"fr-fic fr-dib\" alt=\"Selected days will show in red and are listed in text underneath \"></p><p>If you wanted your alarm to only be active Mon-Fri, this is what it would look like</p><p><img data-fr-image-pasted=\"true\" src=\"https://attachments.gorgias.help/uploads.gorgias.io/Aa90l7EQnv7JWorj/undefined-2828c1fb-2824-44f0-b126-68f102daee63\" style=\"box-sizing: border-box; -webkit-font-smoothing: antialiased; border-style: none; cursor: pointer; padding: 0px 1px; user-select: none; max-width: 100%; width: 300px;\" class=\"fr-fic fr-dib\" alt=\"If you wanted your alarm to only be active Mon-Fri, this is what it would look like\"></p><p>8) Choose a sound for your alarm</p><p>Select from our 7 alarm sounds, tap on each sound to have a 3-second preview on your phone.</p><p><img data-fr-image-pasted=\"true\" src=\"https://attachments.gorgias.help/uploads.gorgias.io/Aa90l7EQnv7JWorj/undefined-9ca42016-4f6c-4959-bd3f-48e8e758e61a\" style=\"box-sizing: border-box; -webkit-font-smoothing: antialiased; border-style: none; cursor: pointer; padding: 0px 1px; user-select: none; max-width: 100%; width: 300px;\" class=\"fr-fic fr-dib\" alt=\"Select from our 7 alarm sounds, tap on each sound to have a 3-second preview on your phone.\"></p><p>9) Select your alarm volume</p><p>You can do this by using the +/- buttons or our volume slider&nbsp;</p><p><img data-fr-image-pasted=\"true\" src=\"https://attachments.gorgias.help/uploads.gorgias.io/Aa90l7EQnv7JWorj/undefined-9ba5cb89-406c-4bbe-b292-732f25a957f3\" style=\"box-sizing: border-box; -webkit-font-smoothing: antialiased; border-style: none; cursor: pointer; padding: 0px 1px; user-select: none; max-width: 100%; width: 300px;\" class=\"fr-fic fr-dib\" alt=\"Select your alarm volume\"></p><p>Please note, the alarm volume will not exceed your day or night settings. For example, if you set the alarm volume to 16, but your maximum day volume is 10, the alarm will play at a volume of 10.</p><p>10) Want to know what the alarm sounds like on your player? Use the preview on player button and the alarm will play for 10 seconds.</p><p><img data-fr-image-pasted=\"true\" src=\"https://attachments.gorgias.help/uploads.gorgias.io/Aa90l7EQnv7JWorj/undefined-062d5daf-7e3c-4a89-a70d-40d67135296c\" style=\"box-sizing: border-box; -webkit-font-smoothing: antialiased; border-style: none; cursor: pointer; padding: 0px 1px; user-select: none; max-width: 100%; width: 300px;\" class=\"fr-fic fr-dib\" alt=\"Use the preview on player button and the alarm will play for 10 seconds.\"></p><p>If you want to change any of the settings you have selected, just go back and make adjustments</p><p>11) Once you are happy with your alarm, click Save alarm</p><p><img data-fr-image-pasted=\"true\" src=\"https://attachments.gorgias.help/uploads.gorgias.io/Aa90l7EQnv7JWorj/undefined-1b30d95c-9507-4ffc-9e54-e8762d14cdf7\" style=\"box-sizing: border-box; -webkit-font-smoothing: antialiased; border-style: none; cursor: pointer; padding: 0px 1px; user-select: none; max-width: 100%; width: 300px;\" class=\"fr-fic fr-dib\" alt=\"Once you are happy with your alarm, click Save alarm\"></p><p>12) Press cancel to stop the alarm from being saved.</p><p><img src=\"https://attachments.gorgias.help/uploads.gorgias.io/Aa90l7EQnv7JWorj/undefined-e3d4f686-0a3b-4af0-a8aa-33d1b470d176\" style=\"box-sizing: border-box; -webkit-font-smoothing: antialiased; border-style: none; cursor: pointer; padding: 0px 1px; user-select: none; max-width: 100%; width: 300px;\" class=\"fr-fic fr-dib\" alt=\"Press cancel to stop the alarm from being saved\"></p><p>13) The saved alarm is now visible in the alarms settings.&nbsp;</p><p>You can have a maximum of 10 alarms per player.</p><p><img src=\"https://attachments.gorgias.help/uploads.gorgias.io/Aa90l7EQnv7JWorj/FR_single_Alarm-b8e1565a-96c3-4e78-b4be-9d74e1c6e404.jpg\" style=\"width: 300px;\" class=\"fr-fic fr-dib\" alt=\"The saved alarm is now visible in the alarms settings.\"><br></p><p>From this screen, you will be able to see your alarm time and the days selected.&nbsp;</p><p>Here is what multiple alarms will look like:</p><p><img src=\"https://attachments.gorgias.help/uploads.gorgias.io/Aa90l7EQnv7JWorj/EN_3_Alarms-b02d0318-79c2-463b-986a-b332454a2f9c.jpg\" style=\"width: 300px;\" class=\"fr-fic fr-dib\"><br></p><p>14) To edit an alarm, tap on the alarm that you would like to make changes to, make your changes and don&#39;t forget to save!&nbsp;</p><p><img src=\"https://attachments.gorgias.help/uploads.gorgias.io/Aa90l7EQnv7JWorj/EN_Focused_alarms-c617677e-fdf5-4659-bca3-9b8b020e2667.jpg\" style=\"width: 300px;\" class=\"fr-fic fr-dib\" alt=\"To edit an alarm, tap on the alarm that you would like to make changes to\"><br></p><p>Or cancel if you don&#39;t want your changes to be saved.</p><p><img data-fr-image-pasted=\"true\" src=\"https://attachments.gorgias.help/uploads.gorgias.io/Aa90l7EQnv7JWorj/undefined-d4d26f1a-f4b0-48f8-b2c9-bba8c593e575\" style=\"box-sizing: border-box; -webkit-font-smoothing: antialiased; border-style: none; cursor: pointer; padding: 0px 1px; user-select: none; max-width: 100%; width: 300px;\" class=\"fr-fic fr-dib\" alt=\"Or cancel if you don't want your changes to be saved.\"></p><p>15) To disable or enable an alarm, tap on the slider to the right of the alarm you would like to disable or enable.</p><p><img src=\"https://attachments.gorgias.help/uploads.gorgias.io/Aa90l7EQnv7JWorj/EN_Toggle-b253a4a2-bdf1-4a98-8c6b-e91be1a91842.jpg\" style=\"width: 300px;\" class=\"fr-fic fr-dib\" alt=\"To disable or enable an alarm, tap on the slider to the right of the alarm you would like to disable or enable.\"><br></p><p><br></p><p>16) To delete an alarm, tap on the alarm you would like to delete, scroll to the bottom and press the delete button.&nbsp;</p><p><img data-fr-image-pasted=\"true\" src=\"https://attachments.gorgias.help/uploads.gorgias.io/Aa90l7EQnv7JWorj/undefined-a81435c4-dc14-45b2-bf43-ebe63e95997f\" style=\"box-sizing: border-box; -webkit-font-smoothing: antialiased; border-style: none; cursor: pointer; padding: 0px 1px; user-select: none; max-width: 100%; width: 300px;\" class=\"fr-fic fr-dib\" alt=\" To delete an alarm, tap on the alarm you would like to delete, scroll to the bottom and press the delete button. \"></p><p><br style=\"box-sizing: border-box; -webkit-font-smoothing: antialiased;\"></p><p>17) Please make sure your player is switched on at the time of the alarm for it to play.</p><p>18) To stop your alarm, press any player button or go to the app to stop it like an ordinary card.</p>",
+      "categories": [
+        {
+          "id": "6a19a5a89f2ebfcad8e9da8f",
+          "knowledgeBase": "69d522fcb7baaa50525b3529"
+        }
+      ],
+      "primaryCategory": "6a19a5a89f2ebfcad8e9da8f",
+      "metaDescription": "Our alarms are perfect for wakeup time time to go to school bedtime but they can be useful for other situations too    To get started you will need to hav",
+      "metaKeywords": [
+        "alarm",
+        "player",
+        "time",
+        "will",
+        "like",
+        "volume",
+        "10",
+        "alarms",
+        "go",
+        "settings",
+        "want",
+        "tap",
+        "play",
+        "Select"
+      ],
+      "metaTitle": "",
+      "lang": "en_gb",
+      "slug": "how-to-set-an-alarm-on-your-yoto",
+      "draftSlug": null,
+      "hash": "BJIxYtimMl",
+      "publishedAt": "2026-07-20T09:48:25.440Z",
+      "updatedAt": "2026-07-20T09:48:25.587Z",
+      "createdAt": "2026-07-20T09:47:09.687Z",
+      "href": "/en_gb/how-to-set-an-alarm-on-your-yoto-BJIxYtimMl",
+      "tags": [],
+      "knowledgeBases": [],
+      "scope": "public"
+    },
+    "category_file": "work/yoto-controls-deepening/extracted/category-using-your-yoto.json",
+    "text_file": "work/yoto-controls-deepening/extracted/how-to-set-an-alarm-on-your-yoto.txt",
+    "images": [
+      {
+        "src": "https://attachments.gorgias.help/Aa90l7EQnv7JWorj/hc/9JWjXVxGb7DvMqmO/2024082708-bb02bfe3-d4cb-4f7f-9fde-fe5ef7eb1abe-01@2x%20(1).png",
+        "style": "box-sizing: border-box; -webkit-font-smoothing: antialiased; border-style: none; cursor: pointer; padding: 0px 1px; user-select: none; max-width: 100%; width: 500px;",
+        "class": "fr-fic fr-dib",
+        "alt": "Open the Yoto App"
+      },
+      {
+        "src": "https://attachments.gorgias.help/Aa90l7EQnv7JWorj/hc/9JWjXVxGb7DvMqmO/2024082708-5789a2e8-d7dd-4ccd-9fb8-78db6f45f45c-02@2x%20(1).png",
+        "style": "box-sizing: border-box; -webkit-font-smoothing: antialiased; border-style: none; cursor: pointer; padding: 0px 1px; user-select: none; max-width: 100%; width: 500px;",
+        "class": "fr-fic fr-dib",
+        "alt": "Go to the Settings tab"
+      },
+      {
+        "src": "https://attachments.gorgias.help/Aa90l7EQnv7JWorj/hc/9JWjXVxGb7DvMqmO/2024082708-bf4bf330-fda4-4656-8dce-eb419d0cc9e7-03@2x%20(1).png",
+        "style": "box-sizing: border-box; -webkit-font-smoothing: antialiased; border-style: none; cursor: pointer; padding: 0px 1px; user-select: none; max-width: 100%; width: 500px;",
+        "class": "fr-fic fr-dib",
+        "alt": "Go to the player settings of the player"
+      },
+      {
+        "data-fr-image-pasted": "true",
+        "src": "https://attachments.gorgias.help/uploads.gorgias.io/Aa90l7EQnv7JWorj/undefined-f2139e2c-bfaf-467f-8034-d2dc66b88577",
+        "style": "box-sizing: border-box; -webkit-font-smoothing: antialiased; border-style: none; cursor: pointer; padding: 0px 1px; user-select: none; max-width: 100%; width: 300px;",
+        "class": "fr-fic fr-dib",
+        "alt": "go to Alarms > Set an alarm"
+      },
+      {
+        "data-fr-image-pasted": "true",
+        "src": "https://attachments.gorgias.help/uploads.gorgias.io/Aa90l7EQnv7JWorj/undefined-bfae677d-31f4-483c-a10b-3bb98a329b34",
+        "style": "box-sizing: border-box; -webkit-font-smoothing: antialiased; border-style: none; cursor: pointer; padding: 0px 1px; user-select: none; max-width: 100%; width: 300px;",
+        "class": "fr-fic fr-dib",
+        "alt": "Go to Add an alarm"
+      },
+      {
+        "data-fr-image-pasted": "true",
+        "src": "https://attachments.gorgias.help/uploads.gorgias.io/Aa90l7EQnv7JWorj/undefined-61bf160d-fc21-401a-b010-3afde7b66a2f",
+        "style": "box-sizing: border-box; -webkit-font-smoothing: antialiased; border-style: none; cursor: pointer; padding: 0px 1px; user-select: none; max-width: 100%; width: 300px;",
+        "class": "fr-fic fr-dib",
+        "alt": "Tap the time"
+      },
+      {
+        "data-fr-image-pasted": "true",
+        "src": "https://attachments.gorgias.help/uploads.gorgias.io/Aa90l7EQnv7JWorj/undefined-7d75a4f1-dbb0-495d-9b6f-890d9b3cc862",
+        "style": "box-sizing: border-box; -webkit-font-smoothing: antialiased; border-style: none; cursor: pointer; padding: 0px 1px; user-select: none; max-width: 100%; width: 300px;",
+        "class": "fr-fic fr-dib",
+        "alt": "Scroll to your preferred alarm time"
+      },
+      {
+        "data-fr-image-pasted": "true",
+        "src": "https://attachments.gorgias.help/uploads.gorgias.io/Aa90l7EQnv7JWorj/undefined-3405e8d1-6648-4e3a-b967-2d1acb695ce2",
+        "style": "box-sizing: border-box; -webkit-font-smoothing: antialiased; border-style: none; cursor: pointer; padding: 0px 1px; user-select: none; max-width: 100%; width: 300px;",
+        "class": "fr-fic fr-dib",
+        "alt": "Selected days will show in red and are listed in text underneath "
+      },
+      {
+        "data-fr-image-pasted": "true",
+        "src": "https://attachments.gorgias.help/uploads.gorgias.io/Aa90l7EQnv7JWorj/undefined-2828c1fb-2824-44f0-b126-68f102daee63",
+        "style": "box-sizing: border-box; -webkit-font-smoothing: antialiased; border-style: none; cursor: pointer; padding: 0px 1px; user-select: none; max-width: 100%; width: 300px;",
+        "class": "fr-fic fr-dib",
+        "alt": "If you wanted your alarm to only be active Mon-Fri, this is what it would look like"
+      },
+      {
+        "data-fr-image-pasted": "true",
+        "src": "https://attachments.gorgias.help/uploads.gorgias.io/Aa90l7EQnv7JWorj/undefined-9ca42016-4f6c-4959-bd3f-48e8e758e61a",
+        "style": "box-sizing: border-box; -webkit-font-smoothing: antialiased; border-style: none; cursor: pointer; padding: 0px 1px; user-select: none; max-width: 100%; width: 300px;",
+        "class": "fr-fic fr-dib",
+        "alt": "Select from our 7 alarm sounds, tap on each sound to have a 3-second preview on your phone."
+      },
+      {
+        "data-fr-image-pasted": "true",
+        "src": "https://attachments.gorgias.help/uploads.gorgias.io/Aa90l7EQnv7JWorj/undefined-9ba5cb89-406c-4bbe-b292-732f25a957f3",
+        "style": "box-sizing: border-box; -webkit-font-smoothing: antialiased; border-style: none; cursor: pointer; padding: 0px 1px; user-select: none; max-width: 100%; width: 300px;",
+        "class": "fr-fic fr-dib",
+        "alt": "Select your alarm volume"
+      },
+      {
+        "data-fr-image-pasted": "true",
+        "src": "https://attachments.gorgias.help/uploads.gorgias.io/Aa90l7EQnv7JWorj/undefined-062d5daf-7e3c-4a89-a70d-40d67135296c",
+        "style": "box-sizing: border-box; -webkit-font-smoothing: antialiased; border-style: none; cursor: pointer; padding: 0px 1px; user-select: none; max-width: 100%; width: 300px;",
+        "class": "fr-fic fr-dib",
+        "alt": "Use the preview on player button and the alarm will play for 10 seconds."
+      },
+      {
+        "data-fr-image-pasted": "true",
+        "src": "https://attachments.gorgias.help/uploads.gorgias.io/Aa90l7EQnv7JWorj/undefined-1b30d95c-9507-4ffc-9e54-e8762d14cdf7",
+        "style": "box-sizing: border-box; -webkit-font-smoothing: antialiased; border-style: none; cursor: pointer; padding: 0px 1px; user-select: none; max-width: 100%; width: 300px;",
+        "class": "fr-fic fr-dib",
+        "alt": "Once you are happy with your alarm, click Save alarm"
+      },
+      {
+        "src": "https://attachments.gorgias.help/uploads.gorgias.io/Aa90l7EQnv7JWorj/undefined-e3d4f686-0a3b-4af0-a8aa-33d1b470d176",
+        "style": "box-sizing: border-box; -webkit-font-smoothing: antialiased; border-style: none; cursor: pointer; padding: 0px 1px; user-select: none; max-width: 100%; width: 300px;",
+        "class": "fr-fic fr-dib",
+        "alt": "Press cancel to stop the alarm from being saved"
+      },
+      {
+        "src": "https://attachments.gorgias.help/uploads.gorgias.io/Aa90l7EQnv7JWorj/FR_single_Alarm-b8e1565a-96c3-4e78-b4be-9d74e1c6e404.jpg",
+        "style": "width: 300px;",
+        "class": "fr-fic fr-dib",
+        "alt": "The saved alarm is now visible in the alarms settings."
+      },
+      {
+        "src": "https://attachments.gorgias.help/uploads.gorgias.io/Aa90l7EQnv7JWorj/EN_3_Alarms-b02d0318-79c2-463b-986a-b332454a2f9c.jpg",
+        "style": "width: 300px;",
+        "class": "fr-fic fr-dib"
+      },
+      {
+        "src": "https://attachments.gorgias.help/uploads.gorgias.io/Aa90l7EQnv7JWorj/EN_Focused_alarms-c617677e-fdf5-4659-bca3-9b8b020e2667.jpg",
+        "style": "width: 300px;",
+        "class": "fr-fic fr-dib",
+        "alt": "To edit an alarm, tap on the alarm that you would like to make changes to"
+      },
+      {
+        "data-fr-image-pasted": "true",
+        "src": "https://attachments.gorgias.help/uploads.gorgias.io/Aa90l7EQnv7JWorj/undefined-d4d26f1a-f4b0-48f8-b2c9-bba8c593e575",
+        "style": "box-sizing: border-box; -webkit-font-smoothing: antialiased; border-style: none; cursor: pointer; padding: 0px 1px; user-select: none; max-width: 100%; width: 300px;",
+        "class": "fr-fic fr-dib",
+        "alt": "Or cancel if you don't want your changes to be saved."
+      },
+      {
+        "src": "https://attachments.gorgias.help/uploads.gorgias.io/Aa90l7EQnv7JWorj/EN_Toggle-b253a4a2-bdf1-4a98-8c6b-e91be1a91842.jpg",
+        "style": "width: 300px;",
+        "class": "fr-fic fr-dib",
+        "alt": "To disable or enable an alarm, tap on the slider to the right of the alarm you would like to disable or enable."
+      },
+      {
+        "data-fr-image-pasted": "true",
+        "src": "https://attachments.gorgias.help/uploads.gorgias.io/Aa90l7EQnv7JWorj/undefined-a81435c4-dc14-45b2-bf43-ebe63e95997f",
+        "style": "box-sizing: border-box; -webkit-font-smoothing: antialiased; border-style: none; cursor: pointer; padding: 0px 1px; user-select: none; max-width: 100%; width: 300px;",
+        "class": "fr-fic fr-dib",
+        "alt": " To delete an alarm, tap on the alarm you would like to delete, scroll to the bottom and press the delete button. "
+      }
+    ],
+    "links": []
+  },
+  {
+    "article": {
+      "id": "6aa2b83933112fabacb6584c",
+      "articleId": "6a4e08faa629f31c9ed1a537",
+      "title": "Does my Yoto need to be online to play content?",
+      "body": "<h3><br></h3><h3 id=\"isPasted\"><strong><span style=\"color: rgb(226, 80, 65);\">Only twice: when you first set it up, and the first time you play each card. Once a card has downloaded, it plays anywhere - car, campsite, Grandma&rsquo;s - no internet needed.</span></strong></h3><h4><table style=\"margin-right: calc(12%); width: 88%;\"><tbody><tr><td><em><strong>The exception&nbsp;</strong></em><span style=\" text-align: left;\" id=\"isPasted\"><strong>-&nbsp;</strong></span>audio that needs to be streamed over Wi-Fi by nature, like radio stations and podcasts, always needs your player to be online.</td></tr></tbody></table></h4><h4><br></h4><h2><strong>When your player needs to be online</strong></h2><p><br></p><ul><li><strong>Setting up</strong>: &nbsp;your player connects to Wi-Fi as part of setup.&nbsp;</li><li><strong>The first play of any card:</strong> the audio streams from our servers while your player downloads it in the background, so you&rsquo;ll need a solid connection.</li><li><strong>Radio stations and podcasts</strong>: cards linked to these stream continuously, so they won&rsquo;t play offline.</li><li><strong>Playing to your player from the app</strong>: both your phone and your player need to be online.</li></ul><p><br></p><h2><strong>When your player does not need to be online</strong></h2><p><br></p><ul><li><strong>Any card that&rsquo;s finished downloading</strong> plays straight from your player&rsquo;s built-in storage - completely offline.</li></ul><p>On your phone, it&rsquo;s simpler still: if your phone has internet (Wi-Fi or mobile data), the app can play anything in your library, including radio, podcasts and cards that haven&rsquo;t downloaded to the player yet.</p><p><br></p><h2><strong>How do I download audio before a trip?</strong></h2><p><br></p><p>First, connect your player to Wi-Fi and plug it in to charge. You can check its connection in the Yoto App.</p><p>To start downloading audio:</p><ul><li><p><strong>On&nbsp;</strong><u><strong>any</strong></u><strong>&nbsp;Yoto Player or Yoto Mini:</strong> Insert each Yoto Card and let it play for a few seconds.</p></li><li><p><strong>On a Yoto Player 4th Gen or Yoto Mini 4th Gen:</strong> You can also download titles that are already in your Yoto Library by adding them to a Green Button playlist. Some titles purchased as physical cards will only appear in your Library after you&rsquo;ve inserted the card once. [Learn how to use the Green Button.]</p></li></ul><p>Once you&rsquo;ve added your Green Button titles or played each card for a few seconds, remove any card and leave the player switched on, plugged in and idle while the downloads complete. Leaving it overnight before a trip works a treat.</p><p>To check your downloads, open the Yoto App, go to <strong>Settings</strong>, select your player and tap <strong>Audio Download Status</strong>. You&rsquo;ll see which titles have downloaded and which are still waiting.</p><h4><br></h4><h2><strong>Got more than one Yoto player?</strong></h2><p><br></p><p>All the cards in your library download to each of your players:</p><ul><li><p>If your library fits within a player&rsquo;s storage, <strong>everything</strong> downloads.</p></li><li><p>If your library is bigger than a player&rsquo;s storage, the least-played cards make room for the most popular ones, worked out per player. Nothing leaves your app library, and any card re-downloads when you play it online.&nbsp;</p></li></ul><p><br></p><p><strong>Related help:</strong> <a href=\"https://support.yotoplay.com/en_gb/how-much-audio-can-my-yoto-player-store-SJNFKiQGe\" target=\"_blank\" rel=\"noopener noreferrer\">How much audio can my Yoto player store?</a>; <a href=\"https://support.yotoplay.com/en_gb/playing-your-first-yoto-card-HygA_FiXze\" target=\"_blank\" rel=\"noopener noreferrer\">Playing your first Yoto Card.</a></p>",
+      "categories": [
+        {
+          "id": "6a19a5a89f2ebfcad8e9da8f",
+          "knowledgeBase": "69d522fcb7baaa50525b3529"
+        }
+      ],
+      "primaryCategory": "6a19a5a89f2ebfcad8e9da8f",
+      "metaDescription": "The answer is both yes and no    To play streamed content like radio and podcasts you will need your Yoto player to be online  And the first time you play ",
+      "metaKeywords": [
+        "will",
+        "player",
+        "Yoto",
+        "play",
+        "content",
+        "need",
+        "cards",
+        "online",
+        "card",
+        "downloaded",
+        "download",
+        "radio",
+        "podcasts",
+        "first"
+      ],
+      "metaTitle": "",
+      "lang": "en_gb",
+      "slug": "does-my-yoto-need-to-be-online-to-play-content",
+      "draftSlug": null,
+      "hash": "rkmbFFj7fg",
+      "publishedAt": "2026-09-10T14:02:23.019Z",
+      "updatedAt": "2026-09-10T14:02:23.215Z",
+      "createdAt": "2026-09-10T14:01:29.598Z",
+      "href": "/en_gb/does-my-yoto-need-to-be-online-to-play-content-rkmbFFj7fg",
+      "tags": [],
+      "knowledgeBases": [],
+      "scope": "public"
+    },
+    "category_file": "work/yoto-controls-deepening/extracted/category-using-your-yoto.json",
+    "text_file": "work/yoto-controls-deepening/extracted/does-my-yoto-need-to-be-online-to-play-content.txt",
+    "images": [],
+    "links": [
+      "https://support.yotoplay.com/en_gb/how-much-audio-can-my-yoto-player-store-SJNFKiQGe",
+      "https://support.yotoplay.com/en_gb/playing-your-first-yoto-card-HygA_FiXze"
+    ]
+  },
+  {
+    "article": {
+      "id": "6aa2a45cf858cdcb3ea325d3",
+      "articleId": "6a4e08fba629f31c9ed1a540",
+      "title": "How much content can my Yoto store for offline listening?",
+      "body": "<p style=\"text-align: right;\" id=\"isPasted\"><br></p><h3 style=\"text-align: justify;\"><strong><span style=\"color: rgb(226, 80, 65);\">Plenty! Every Yoto player stores hundreds of hours of audio for offline listening, and when it&rsquo;s full, your player quietly makes room by itself. Everything always stays safe in your Yoto App library.&nbsp;</span></strong></h3><p><br></p><h2 style=\"text-align: justify;\"><strong>How much audio can my Yoto player store for offline listening?&nbsp;</strong></h2><p><br></p><p style=\"text-align: justify;\">Storage capacity depends on the model you own.&nbsp;</p><p style=\"text-align: justify;\">Not sure where to look? See: <a href=\"https://support.yotoplay.com/en_gb/which-yoto-player-do-i-have-rywZFtoQfe\">Which Yoto do I have?</a></p><div style=\"margin-left:0pt;\" align=\"left\"><table><tbody><tr><td style=\"background-color: rgb(226, 80, 65);\"><p style=\"text-align: justify;\"><strong><span style=\"color: rgb(255, 255, 255);\">Yoto model</span></strong></p></td><td style=\"background-color: rgb(226, 80, 65);\"><p style=\"text-align: justify;\"><span style=\"color: rgb(255, 255, 255);\"><strong>Built-in storage</strong></span></p></td><td style=\"background-color: rgb(226, 80, 65);\"><p style=\"text-align: justify;\"><span style=\"color: rgb(255, 255, 255);\"><strong>Estimated audio capacity*&nbsp;</strong></span></p></td></tr><tr><td><p style=\"text-align: justify;\">Yoto Player and Yoto Mini (4th Generation)</p></td><td><p style=\"text-align: justify;\">64 GB</p></td><td><p style=\"text-align: justify;\">At least 1,000 hours</p></td></tr><tr><td><p style=\"text-align: justify;\">Yoto Player (3rd Generation)</p></td><td><p style=\"text-align: justify;\">32 GB</p></td><td><p style=\"text-align: justify;\">Around 700 hours</p></td></tr><tr><td><p style=\"text-align: justify;\">Yoto Mini (2024 Edition) and Yoto Mini (2021&ndash;2023 Edition)</p></td><td><p style=\"text-align: justify;\">16 GB or 32 GB - one quick check below</p></td><td><p style=\"text-align: justify;\">Around 250 or 700 hours</p></td></tr><tr><td><p style=\"text-align: justify;\">Yoto Player (2nd Generation)</p></td><td><p style=\"text-align: justify;\">16GB&nbsp;</p></td><td><p style=\"text-align: justify;\">Around 350 hours</p></td></tr></tbody></table></div><p style=\"text-align: justify;\"><em>*Estimates based on spoken-word audio, like Roald Dahl or Julia Donaldson stories.&nbsp;</em><em>Music may take up more space, so a music-heavy library may store fewer hours</em></p><h2 style=\"text-align: justify;\"><br></h2><h2 style=\"text-align: justify;\"><strong>Check the storage on an earlier Yoto Mini&nbsp;</strong></h2><p style=\"text-align: justify;\">Turn it over and look at the serial number on the base:</p><ul><li><p style=\"text-align: justify;\"><strong>16 GB</strong> - the serial number starts with <strong>5 or a lower number</strong>, and <strong>doesn&#39;t</strong> end in -H, -H7 or -U.</p></li><li><p style=\"text-align: justify;\"><strong>32 GB</strong> - everything else (starts with 6 or higher, starts with letters, or ends in -H, -H7 or -U).</p></li></ul><p><br></p><h2 style=\"text-align: justify;\"><strong>When the storage is full</strong></h2><p style=\"text-align: justify;\">Nothing you&rsquo;ll notice - and don&rsquo;t worry, it won&rsquo;t be &ldquo;lost&rdquo; from your library:&nbsp;</p><ul><li><p style=\"text-align: justify;\">Your player automatically removes the audio that hasn&rsquo;t been played for the longest time, to make room for new downloads of more popular content.&nbsp;</p></li><li><p style=\"text-align: justify;\">Removed audio <strong>stays in your Yoto App library</strong>. To get it back on the player, just play it while your Yoto is online, it downloads again automatically.</p></li></ul><p><br></p><h2 style=\"text-align: justify;\"><strong>Check storage and downloads</strong></h2><p style=\"text-align: left;\">In the Yoto App, go to Settings, select your player and open <strong>Audio</strong> <strong>Download Status</strong>. If your model does not show a storage total, use the title list to check which audio is ready offline.</p><p style=\"text-align: center;\"><br></p><p style=\"text-align: center;\"><br></p><div style=\"text-align: center;\"><img src=\"https://cdn.prod2.kustomerhostedcontent.com/media/69d522f66edcac3fee157fa8/b4fac0b7479bf17b43fbf3d81005e08a.jpg\" width=\"289\" height=\"349\" id=\"isPasted\" class=\"fr-fic fr-dii\"></div><p style=\"text-align: center;\"></p><p style=\"text-align: center;\"><img src=\"https://cdn.prod2.kustomerhostedcontent.com/media/69d522f66edcac3fee157fa8/6cf65bc15bdaffe24505bbc9f33c8531.jpg\" width=\"269\" height=\"380\" class=\"fr-fic fr-dii\">*</p><p><br></p><p><br></p><p><br></p>",
+      "categories": [
+        {
+          "id": "6a19a5a89f2ebfcad8e9da8f",
+          "knowledgeBase": "69d522fcb7baaa50525b3529"
+        }
+      ],
+      "primaryCategory": "6a19a5a89f2ebfcad8e9da8f",
+      "metaDescription": "Storage information for Yoto Player and Yoto Mini       Both the  Yoto Player 3rd Generation  and  Yoto Mini  currently sold come with  32 GB  of builtin st",
+      "metaKeywords": [
+        "Yoto",
+        "storage",
+        "Mini",
+        "GB",
+        "number",
+        "content",
+        "16",
+        "Player",
+        "come",
+        "builtin",
+        "hours",
+        "audio",
+        "serial",
+        "Starts"
+      ],
+      "metaTitle": "",
+      "lang": "en_gb",
+      "slug": "how-much-content-can-my-yoto-store-for-offline-listening",
+      "draftSlug": null,
+      "hash": "SJNFKiQGe",
+      "publishedAt": "2026-09-10T13:29:38.841Z",
+      "updatedAt": "2026-09-10T13:29:39.030Z",
+      "createdAt": "2026-09-10T12:36:44.978Z",
+      "href": "/en_gb/how-much-content-can-my-yoto-store-for-offline-listening-SJNFKiQGe",
+      "tags": [],
+      "knowledgeBases": [],
+      "scope": "public"
+    },
+    "category_file": "work/yoto-controls-deepening/extracted/category-using-your-yoto.json",
+    "text_file": "work/yoto-controls-deepening/extracted/how-much-content-can-my-yoto-store-for-offline-listening.txt",
+    "images": [
+      {
+        "src": "https://cdn.prod2.kustomerhostedcontent.com/media/69d522f66edcac3fee157fa8/b4fac0b7479bf17b43fbf3d81005e08a.jpg",
+        "width": "289",
+        "height": "349",
+        "id": "isPasted",
+        "class": "fr-fic fr-dii"
+      },
+      {
+        "src": "https://cdn.prod2.kustomerhostedcontent.com/media/69d522f66edcac3fee157fa8/6cf65bc15bdaffe24505bbc9f33c8531.jpg",
+        "width": "269",
+        "height": "380",
+        "class": "fr-fic fr-dii"
+      }
+    ],
+    "links": [
+      "https://support.yotoplay.com/en_gb/which-yoto-player-do-i-have-rywZFtoQfe"
+    ]
+  },
+  {
+    "article": {
+      "id": "6aa28cc8c8a230eb08baebe1",
+      "articleId": "6a4e08fc31b4cac9e0446e1c",
+      "title": "Using your Yoto as a nightlight",
+      "body": "<h3 id=\"isPasted\"><strong><span style=\"color: rgb(226, 80, 65);\">Turn your Yoto Player onto its front, and the nightlight comes on. Stand it upright, and it&rsquo;s off. But there&rsquo;s a little more to it&hellip;&nbsp;</span></strong></h3><p><strong>One quick tip:</strong> flip it on a hard, flat surface like a bedside table. Avoid carpeted floors or beds.</p><p><br></p><p style=\"text-align: center;\"><img src=\"https://cdn.prod2.kustomerhostedcontent.com/media/69d522f66edcac3fee157fa8/76ee7041fdb07a70b472eb1ed11c37e0.png\" width=\"430\" height=\"365\" class=\"fr-fic fr-dii\"></p><p style=\"text-align: center;\"><br></p><h3 id=\"isPasted\"><strong>Adjusting the brightness</strong></h3><p>While the player is face down, twist the <strong>right-hand orange dial</strong> - left to dim (all the way down to off), right to brighten.</p><p><strong>Yoto Player (4th Generation) adjusts itself:</strong> its auto-brightness dims the nightlight to match the light in the room. Twisting the dial overrides it for the night - stand the player upright and pop it back down, and auto-brightness takes over again.</p><p><br></p><h3><strong>Changing the colour</strong></h3><p>Pick your nightlight colour in the Yoto App: go to the <strong>Settings tab</strong> and tap the <strong>arrow icon</strong> next to your player.</p><p>You can set a <strong>different colour for Day and Night mode</strong> - a lovely okay-to-wake cue for little ones who can&rsquo;t read the clock yet: one colour means it&rsquo;s still sleep time, another means it&rsquo;s fine to get up.&nbsp;</p><p><img alt=\"Yoto app - Settings - Nightlight color\" src=\"https://cdn.prod2.kustomerhostedcontent.com/media/69d522f66edcac3fee157fa8/3f242e9bff4557f17d72787ff4c2699f.png\" width=\"602\" height=\"401\" class=\"fr-fic fr-dii\"></p><p><br></p><p><br></p><p><strong>While the nightlight is on - Yoto Player (4th Generation)</strong></p><p>The display switches off so it doesn&rsquo;t light up the room. Your child can still:</p><ul><li><p>Play and pause audio</p></li><li><p>Change the volume</p></li><li><p>Skip through tracks</p></li></ul><p>Please also note that selecting content on the Green Button is disabled when the nightlight is on.</p><p><br></p><h3><strong>Good to know</strong></h3><ul><li><p><strong>Yoto Player (3rd Generation):</strong> the room-temperature sensor takes a break while the player is in nightlight mode.</p></li><li><p><strong>Yoto Mini&nbsp;</strong>does not have a nightlight, but it does have a Day and Night mode!&nbsp;</p></li></ul><p><br></p><p><strong>Related help</strong><strong>:</strong> <a href=\"https://support.yotoplay.com/en_gb/how-to-control-your-yoto-player-SyGKKj7zg\">How to control your Yoto player.</a></p>",
+      "categories": [
+        {
+          "id": "6a19a5a89f2ebfcad8e9da8f",
+          "knowledgeBase": "69d522fcb7baaa50525b3529"
+        }
+      ],
+      "primaryCategory": "6a19a5a89f2ebfcad8e9da8f",
+      "metaDescription": "A quick guide to using the Yoto Player nightlight       If you turn Yoto Player onto its front  and be careful only to do this on a friendly surface like a bed",
+      "metaKeywords": [
+        "nightlight",
+        "turn",
+        "Player",
+        "Yoto",
+        "will",
+        "player",
+        "brightness",
+        "off",
+        "mode",
+        "not",
+        "upright",
+        "adjust",
+        "can",
+        "Note",
+        "4th Gen"
+      ],
+      "metaTitle": "",
+      "lang": "en_gb",
+      "slug": "using-your-yoto-as-a-nightlight",
+      "draftSlug": null,
+      "hash": "r1BYtjXfg",
+      "publishedAt": "2026-09-10T11:00:20.023Z",
+      "updatedAt": "2026-09-10T11:00:20.420Z",
+      "createdAt": "2026-09-10T10:56:08.490Z",
+      "href": "/en_gb/using-your-yoto-as-a-nightlight-r1BYtjXfg",
+      "tags": [],
+      "knowledgeBases": [],
+      "scope": "public"
+    },
+    "category_file": "work/yoto-controls-deepening/extracted/category-using-your-yoto.json",
+    "text_file": "work/yoto-controls-deepening/extracted/using-your-yoto-as-a-nightlight.txt",
+    "images": [
+      {
+        "src": "https://cdn.prod2.kustomerhostedcontent.com/media/69d522f66edcac3fee157fa8/76ee7041fdb07a70b472eb1ed11c37e0.png",
+        "width": "430",
+        "height": "365",
+        "class": "fr-fic fr-dii"
+      },
+      {
+        "alt": "Yoto app - Settings - Nightlight color",
+        "src": "https://cdn.prod2.kustomerhostedcontent.com/media/69d522f66edcac3fee157fa8/3f242e9bff4557f17d72787ff4c2699f.png",
+        "width": "602",
+        "height": "401",
+        "class": "fr-fic fr-dii"
+      }
+    ],
+    "links": [
+      "https://support.yotoplay.com/en_gb/how-to-control-your-yoto-player-SyGKKj7zg"
+    ]
+  }
+]

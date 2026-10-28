@@ -1,0 +1,323 @@
+{
+  "headings": [
+    {
+      "level": "h1",
+      "id": "",
+      "title": "How to optimize for long-form reading"
+    },
+    {
+      "level": "h2",
+      "id": "default-settings",
+      "title": "Default settings"
+    },
+    {
+      "level": "h3",
+      "id": "long-form-reading-view",
+      "title": "Long-form reading view"
+    },
+    {
+      "level": "h3",
+      "id": "paged-scroll",
+      "title": "Paged scroll"
+    },
+    {
+      "level": "h3",
+      "id": "justify-text",
+      "title": "Justify text"
+    },
+    {
+      "level": "h2",
+      "id": "app-layout-configurations",
+      "title": "App layout configurations"
+    },
+    {
+      "level": "h3",
+      "id": "pin-books-view-to-home",
+      "title": "Pin \"Books\" view to Home"
+    },
+    {
+      "level": "h3",
+      "id": "set-the-default-view-to-currently-reading",
+      "title": "Set the default view to \"Currently reading\""
+    },
+    {
+      "level": "h2",
+      "id": "faqs",
+      "title": "FAQs"
+    },
+    {
+      "level": "h3",
+      "id": "i-want-to-listen-to-my-book-with-text-to-speech-tts-but-the-play-button-is-missing-can-i-still-use-tts",
+      "title": "I want to listen to my book with text-to-speech (TTS) but the play button is missing. Can I still use TTS?"
+    },
+    {
+      "level": "h3",
+      "id": "can-i-use-my-volume-buttons-to-turn-pages",
+      "title": "Can I use my volume buttons to turn pages?"
+    }
+  ],
+  "links": [
+    {
+      "href": "/",
+      "text": "",
+      "in_article": false
+    },
+    {
+      "href": "/",
+      "text": "",
+      "in_article": false
+    },
+    {
+      "href": "/",
+      "text": "",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs",
+      "text": "Documentation",
+      "in_article": false
+    },
+    {
+      "href": "/reader/guides",
+      "text": "Guides",
+      "in_article": false
+    },
+    {
+      "href": "/reader/guides/filtering/syntax-guide",
+      "text": "Syntax Guide",
+      "in_article": false
+    },
+    {
+      "href": "/reader/guides/filtering/query-examples",
+      "text": "Filter Library",
+      "in_article": false
+    },
+    {
+      "href": "/reader/guides/filtering/default-views",
+      "text": "Default Views",
+      "in_article": false
+    },
+    {
+      "href": "/reader/guides/ghostreader/overview",
+      "text": "Overview",
+      "in_article": false
+    },
+    {
+      "href": "/reader/guides/ghostreader/global",
+      "text": "Global Ghostreader",
+      "in_article": false
+    },
+    {
+      "href": "/reader/guides/ghostreader/chat",
+      "text": "Chat",
+      "in_article": false
+    },
+    {
+      "href": "/reader/guides/ghostreader/quick-lookup",
+      "text": "Quick Lookup",
+      "in_article": false
+    },
+    {
+      "href": "/reader/guides/ghostreader/default-prompts",
+      "text": "Default Prompts",
+      "in_article": false
+    },
+    {
+      "href": "/reader/guides/ghostreader/custom-prompts",
+      "text": "Custom Prompts",
+      "in_article": false
+    },
+    {
+      "href": "/reader/guides/ghostreader/prompt-library",
+      "text": "Prompt Library",
+      "in_article": false
+    },
+    {
+      "href": "/reader/guides/ghostreader/reference",
+      "text": "Reference",
+      "in_article": false
+    },
+    {
+      "href": "/reader/guides/ghostreader/tips-tricks",
+      "text": "Tips & Tricks",
+      "in_article": false
+    },
+    {
+      "href": "/",
+      "text": "Home",
+      "in_article": false
+    },
+    {
+      "href": "/reader",
+      "text": "Reader",
+      "in_article": false
+    },
+    {
+      "href": "/reader/guides",
+      "text": "Guides",
+      "in_article": false
+    },
+    {
+      "href": "/reader/guides/workflows",
+      "text": "Workflows",
+      "in_article": false
+    },
+    {
+      "href": "/reader/guides/workflows/longform-reading",
+      "text": "Longform Reading",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/eink",
+      "text": "using an e-ink device",
+      "in_article": true
+    },
+    {
+      "href": "/reader/docs/faqs/appearance#is-there-a-way-to-make-the-reading-view-nicer-for-long-documents-and-ebooks",
+      "text": "dedicated reading layout",
+      "in_article": true
+    },
+    {
+      "href": "/reader/docs/faqs/appearance#how-can-i-enable-pagination-for-reading-ebooks-and-other-long-form-documents",
+      "text": "the paged scroll option",
+      "in_article": true
+    },
+    {
+      "href": "/reader/guides/workflows/library-configuration",
+      "text": "Library Configurations",
+      "in_article": false
+    },
+    {
+      "href": "/reader/guides/workflows/recommendations",
+      "text": "Reading Recommendations",
+      "in_article": false
+    },
+    {
+      "href": "mailto:hello@readwise.io",
+      "text": "Email Ushello@readwise.io",
+      "in_article": false
+    },
+    {
+      "href": "https://x.com/readwise",
+      "text": "Follow Us@readwise",
+      "in_article": false
+    },
+    {
+      "href": "https://www.reddit.com/r/readwise/",
+      "text": "Ask the CommunityJoin us on Reddit",
+      "in_article": false
+    },
+    {
+      "href": "https://en.wikipedia.org/wiki/Curse_of_knowledge",
+      "text": "Curse of Knowledge",
+      "in_article": false
+    },
+    {
+      "href": "mailto:hello@readwise.io?Subject=Documentation Feedback",
+      "text": "Send Feedback",
+      "in_article": false
+    },
+    {
+      "href": "#default-settings",
+      "text": "Default settings",
+      "in_article": false
+    },
+    {
+      "href": "#long-form-reading-view",
+      "text": "Long-form reading view",
+      "in_article": false
+    },
+    {
+      "href": "#paged-scroll",
+      "text": "Paged scroll",
+      "in_article": false
+    },
+    {
+      "href": "#justify-text",
+      "text": "Justify text",
+      "in_article": false
+    },
+    {
+      "href": "#app-layout-configurations",
+      "text": "App layout configurations",
+      "in_article": false
+    },
+    {
+      "href": "#pin-books-view-to-home",
+      "text": "Pin \"Books\" view to Home",
+      "in_article": false
+    },
+    {
+      "href": "#set-the-default-view-to-currently-reading",
+      "text": "Set the default view to \"Currently reading\"",
+      "in_article": false
+    },
+    {
+      "href": "#faqs",
+      "text": "FAQs",
+      "in_article": false
+    },
+    {
+      "href": "#i-want-to-listen-to-my-book-with-text-to-speech-tts-but-the-play-button-is-missing-can-i-still-use-tts",
+      "text": "I want to listen to my book with text-to-speech (TTS) but the play button is missing. Can I still use TTS?",
+      "in_article": false
+    },
+    {
+      "href": "#can-i-use-my-volume-buttons-to-turn-pages",
+      "text": "Can I use my volume buttons to turn pages?",
+      "in_article": false
+    }
+  ],
+  "images": [
+    {
+      "src": "/images/reading-view_standard-vs-long-form.gif",
+      "alt": "Comparison of standard reading view versus long-form reading view.",
+      "class": "rounded-lg max-w-[350px] h-auto mx-auto"
+    },
+    {
+      "src": "/images/long-form-default_settings.png",
+      "alt": "Turn on long-form reading view in account settings.",
+      "class": "rounded-lg max-h-[500px] w-auto mx-auto"
+    },
+    {
+      "src": "/images/paged-scroll-default_settings.png",
+      "alt": "Turn on paged scroll defaults in account settings.",
+      "class": "rounded-lg max-h-[500px] w-auto mx-auto"
+    },
+    {
+      "src": "/images/style-options_justify-text.png",
+      "alt": "Turn on text justification in style settings.",
+      "class": "rounded-lg max-h-[400px] w-auto mx-auto"
+    },
+    {
+      "src": "/images/justify-text_off.png",
+      "alt": "Justify text setting turned off.",
+      "class": "rounded-lg max-w-[250px] h-auto mx-auto"
+    },
+    {
+      "src": "/images/justify-text_on.png",
+      "alt": "Justify text setting turned on.",
+      "class": "rounded-lg max-w-[250px] h-auto mx-auto"
+    },
+    {
+      "src": "/images/pin-books-to-home_mobile.gif",
+      "alt": "Pin the Books view to your Home screen.",
+      "class": "rounded-lg max-w-[350px] h-auto mx-auto"
+    },
+    {
+      "src": "/images/default-view_currently-reading_mobile.png",
+      "alt": "Set default view to Currently Reading.",
+      "class": "rounded-lg max-h-[500px] w-auto mx-auto"
+    },
+    {
+      "src": "/images/reader-tts_longform-actions-menu.png",
+      "alt": "Actions menu in long-form reading mode with the Listen using text-to-speech option highlighted.",
+      "class": "rounded-lg max-w-[350px] h-auto mx-auto"
+    },
+    {
+      "src": "/images/eink-mode_volume-buttons_android.png",
+      "alt": "Volume buttons to turn pages option in Reader settings.",
+      "class": "rounded-lg max-w-[350px] h-auto mx-auto"
+    }
+  ]
+}

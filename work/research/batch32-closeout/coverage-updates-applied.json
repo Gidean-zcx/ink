@@ -1,0 +1,176 @@
+[
+  {
+    "flow_id": "F-M020-12",
+    "owning_file": "docs/research/interaction-library/batches/anki-deepening-coverage.csv",
+    "before": {
+      "flow_id": "F-M020-12",
+      "product_id": "M-020",
+      "task": "额外练一组",
+      "depth": "D2",
+      "evidence_ids": "E-AND-11",
+      "known_branches": "默认会重排复习；关闭 Reschedule 才是预览。暂停、暂埋或已在另一过滤组的卡不会被纳入；删除过滤组不删卡。",
+      "gaps": "取消/重建反馈、预览练习历史口径",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-020-anki.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M020-12",
+      "product_id": "M-020",
+      "task": "额外练一组",
+      "depth": "D2",
+      "evidence_ids": "E-AND-11",
+      "known_branches": "默认会重排复习；关闭 Reschedule 才是预览。暂停、暂埋或已在另一过滤组的卡不会被纳入；删除过滤组不删卡。 Empty归还卡并保留空容器；Rebuild按条件重取，非旧集合快照；删除另移除容器。",
+      "gaps": "Empty/Delete确认及Undo、Rebuild失败反馈、预览练习历史口径未知。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-020-anki.md",
+      "checked_on": "2026-10-27"
+    },
+    "fields_changed": [
+      "known_branches",
+      "gaps",
+      "checked_on"
+    ]
+  },
+  {
+    "flow_id": "F-M020-17",
+    "owning_file": "docs/research/interaction-library/batches/anki-deepening-coverage.csv",
+    "before": {
+      "flow_id": "F-M020-17",
+      "product_id": "M-020",
+      "task": "查看一题或整体历史",
+      "depth": "D2",
+      "evidence_ids": "E-AND-14",
+      "known_branches": "一题多次回答可算多次 review；删笔记后的历史仍计入全集统计，但不计入原牌组。人工改期记录与正常评分不同。",
+      "gaps": "全部统计图、跨时区与历史修正",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-020-anki.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M020-17",
+      "product_id": "M-020",
+      "task": "查看一题或整体历史",
+      "depth": "D2",
+      "evidence_ids": "E-AND-14",
+      "known_branches": "一题多次回答可算多次 review；删笔记后的历史仍计入全集统计，但不计入原牌组。人工改期记录与正常评分不同。 Stats/T打开，默认当前及子牌组；可切全集、搜索和历史范围，Today不随历史范围；选择器2.1.61+。",
+      "gaps": "全部统计图、选择持久化、跨时区与历史修正；正文上下位置措辞未看图核对。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-020-anki.md",
+      "checked_on": "2026-10-27"
+    },
+    "fields_changed": [
+      "known_branches",
+      "gaps",
+      "checked_on"
+    ]
+  },
+  {
+    "flow_id": "F-M031-16",
+    "owning_file": "docs/research/interaction-library/batches/duolingo-controls-deepening-coverage.csv",
+    "before": {
+      "flow_id": "F-M031-16",
+      "product_id": "M-031",
+      "task": "匿名选择课程和学习目标",
+      "depth": "D4",
+      "evidence_ids": "E-DUCD-25",
+      "known_branches": "公开Web选法语、来源/动机/基础、5分钟目标和从零开始进入首课；未提交身份",
+      "gaps": "没有测试跳过/回退、账号持久化、孩子模式、中文母语课程或原生App",
+      "visual_status": "observed_browser_sequence",
+      "hands_on": "true",
+      "case_path": "cases/M-031-duolingo-adventures.md",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "flow_id": "F-M031-16",
+      "product_id": "M-031",
+      "task": "匿名选择课程和学习目标",
+      "depth": "D4",
+      "evidence_ids": "E-DUCD-25;E-DUCX-02",
+      "known_branches": "公开Web选法语、来源/动机/基础、5分钟目标和从零开始进入首课；未提交身份；另实际从Chess页选零基础、5分钟、从零开始；课后Later跳过注册。",
+      "gaps": "不同选择/回退、儿童与中文母语、正式账号及原生端未核；匿名会建立临时服务端状态。",
+      "visual_status": "observed_browser_sequence",
+      "hands_on": "true",
+      "case_path": "cases/M-031-duolingo-adventures.md",
+      "checked_on": "2026-10-27"
+    },
+    "fields_changed": [
+      "evidence_ids",
+      "known_branches",
+      "gaps"
+    ]
+  },
+  {
+    "flow_id": "F-M031-18",
+    "owning_file": "docs/research/interaction-library/batches/duolingo-controls-deepening-coverage.csv",
+    "before": {
+      "flow_id": "F-M031-18",
+      "product_id": "M-031",
+      "task": "课中退出提示与保留当前题",
+      "depth": "D4",
+      "evidence_ids": "E-DUCD-27",
+      "known_branches": "课中X→警告→Keep learning回原题；第二次进入答一题后X→End session回学习页/基础选择",
+      "gaps": "确认退出后再进、跨会话保存范围、网络失败/进程重启、跨设备和账户恢复未知",
+      "visual_status": "observed_browser_sequence",
+      "hands_on": "true",
+      "case_path": "cases/M-031-duolingo-adventures.md",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "flow_id": "F-M031-18",
+      "product_id": "M-031",
+      "task": "课中退出提示与保留当前题",
+      "depth": "D4",
+      "evidence_ids": "E-DUCD-27;E-DUCX-02",
+      "known_branches": "课中X→警告→Keep learning回原题；第二次进入答一题后X→End session回学习页/基础选择；Chess首题取一星后X直接离开，无语言课确认；同会话重进首题初盘。",
+      "gaps": "棋课其余题和正式账号退出规则、跨进程/设备、离线恢复未知；法语课先前未结算原因仍缺。",
+      "visual_status": "observed_browser_sequence",
+      "hands_on": "true",
+      "case_path": "cases/M-031-duolingo-adventures.md",
+      "checked_on": "2026-10-27"
+    },
+    "fields_changed": [
+      "evidence_ids",
+      "known_branches",
+      "gaps"
+    ]
+  },
+  {
+    "flow_id": "F-M020-01",
+    "owning_file": "docs/research/interaction-library/batches/initial-coverage.csv",
+    "before": {
+      "flow_id": "F-M020-01",
+      "product_id": "M-020",
+      "task": "回忆与自评",
+      "depth": "D2",
+      "evidence_ids": "E-ANK-01;E-ANCD-03;E-ANCD-04",
+      "known_branches": "评分、到期队列、当日完成；v3允许回答/暂埋交错逐步撤销；多数可撤销动作可Redo；2.1.45历史条件",
+      "gaps": "学习页Undo/Redo具体入口、撤销后题面、跨同步/重启保存、定点回改旧评分及插件影响未知",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-020-anki.md",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "flow_id": "F-M020-01",
+      "product_id": "M-020",
+      "task": "回忆与自评",
+      "depth": "D2",
+      "evidence_ids": "E-ANK-01;E-ANCD-03;E-ANCD-04",
+      "known_branches": "评分、到期队列、当日完成；v3允许回答/暂埋交错逐步撤销；多数可撤销动作可Redo；2.1.45历史条件；S回概览、Decks回列表；结束只到当天应显示队列耗尽。",
+      "gaps": "学习页Undo/Redo具体入口、撤销后题面、跨同步/重启保存、定点回改旧评分及插件影响未知；未评分卡导航恢复和完成页文案未知。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-020-anki.md",
+      "checked_on": "2026-10-27"
+    },
+    "fields_changed": [
+      "known_branches",
+      "gaps"
+    ]
+  }
+]

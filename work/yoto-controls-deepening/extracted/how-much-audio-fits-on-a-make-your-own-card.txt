@@ -1,0 +1,6 @@
+
+The limit for each card is as follows:
+100 tracks per card
+100 MB / 60 minutes maximum file size of any single track
+500 MB / 5 hours maximum total file size of the audio content for any one card
+Note: this limit only applies to the playlists created by the user, and does not apply when linking a Yoto Card in your Yoto App library. A Make Your Own card can be linked to any single Yoto Card in your Yoto App.

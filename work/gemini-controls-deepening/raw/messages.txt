@@ -1,0 +1,151 @@
+Send messages with the Gemini mobile app on Android - Gemini Apps Help       Skip to main content
+Gemini Apps Help
+Sign in
+Google Help
+Help Center
+Community
+Gemini Apps
+Privacy Policy
+Terms of Service
+Submit feedback
+Send feedback on...
+This help content & information
+General Help Center experience
+CloseNext
+Help Center
+Community
+Privacy Hub
+Gemini Apps
+Explore more Connected Apps & other integrated services
+Communication
+Send messages with the Gemini mobile app on Android
+Send messages with the Gemini mobile app on Android
+You can ask the Gemini mobile app to send text messages with images for you with the Messages app, which uses your phone’s default messaging app. You can also ask it to help compose and edit messages.
+To help you quickly get started, the Messages app will work automatically on your device depending on your device app permissions and other settings. If you upgraded to Gemini from Google Assistant and your Personal Results setting was turned off, you may need to connect the Messages app in your Connected Apps settings. Learn how to manage Connected Apps in Gemini.
+What you need
+An Android phone or tablet.
+An active mobile phone plan.
+The Gemini app, including as your mobile assistant. Learn more about the Gemini mobile app.
+The Messages app is not supported in Gemini in Google Messages or the Gemini web app.
+Save contact info from your signed-in devices on.
+With the Messages app, Gemini can help you send messages to contacts saved to your Google Account. Learn how to sync your device contacts to your Google Account.
+The SMS Android app permission given to the Google app.
+Learn how to manage Android app permissions.
+Important:
+For now, this feature isn’t available in Live chats.
+Connected Apps are not available while using features powered directly by Google Assistant.
+Messages that you create with the Gemini app are not end-to-end encrypted.
+You can use Gemini to send messages even when Keep Activity is off. If Keep Activity is off, a message request that requires certain other apps or Google services may not work. For example, asking Gemini to “text the nearest pizza place” would require Google Maps, which isn't available if Keep Activity is off.
+On a connected smart watch, you can only use Gemini to send messages when Keep Activity is on.
+Connect the Messages app in Gemini
+Important: The Messages app in Gemini is designed to work automatically with the Gemini mobile app. You can disconnect the Messages app anytime in your Connected Apps settings. Learn how to manage Connected Apps in Gemini.
+On your Android phone or tablet, open Gemini .
+Ask it to send a message to one of your contacts.
+If Gemini doesn’t use the Messages app, add @Messages to your prompt. If the app isn't connected, you’ll get the option to connect it.
+Follow the on-screen instructions.
+Tip: You can also say 'Hey Google' to ask Gemini to use a connected app. If 'Hey Google' doesn't work, check if 'Hey Google' and Voice Match are set up.
+Example
+Help me write a congratulations message to [contact name] on their 25th anniversary.
+Actually, make it a haiku.
+Send it to [contact name].
+Send a message
+You can ask the Gemini mobile app to send a message in any way that feels natural and conversational to you.
+Try these example prompts:
+Send a message to [contact name].
+Text [contact name] [message].
+Ask [contact name] [question].
+Tip: By default, the Gemini mobile app uses the last app it used to message the same contact. If the Gemini app uses the Messages app, it uses your default SMS app on your Android device. Learn how to change your default SMS app.
+Add an image to your message
+Important:
+For now, this feature only works if Google Messages is set as your default messaging app.
+If you’re outside the US, you need RCS chats turned on. Learn how to turn on RCS chats.
+The Gemini mobile app can’t add images when you reply to a notification.
+You can ask the Gemini mobile app to send an image to a contact, either by itself or with a message. You can generate a new image, search for one on the web, or upload your own. For now, only static images in GIF, JPEG, or PNG format are supported.
+Try these example prompts:
+Generate a coloring book image of a knight fighting a giant cat.
+Send it to my wife and ask her to print it.
+Find a picture of the Eiffel tower.
+Send it to mom saying I’m so excited about our trip to Paris!
+<Upload an image> Send this to [contact name].
+Manage settings
+Important: Even if you disconnect the Messages app, the Gemini mobile app can still access:
+Your device contacts if the Google app has Contacts permission. Learn how to manage Android app permissions.
+Your notifications if the Device assistance app is connected. Learn how to manage Connected Apps in Gemini.
+Sync your device contacts to your Google Account
+On your Android phone or tablet, open Gemini .
+At the left, tap Menu   your Profile pic or Initial  Settings  Contact info from your devices.
+Turn on Save contact info from your signed-in devices.
+Learn how to manage contact info from your devices.
+Go to setting
+Manage Android app permissions
+Important: To use the Messages app in the Gemini mobile app, you need to allow the Google app access to your SMS.
+Touch and hold the Google app .
+Tap App info  Permissions.
+To change a permission setting, tap it, then choose Allow or Don't allow.
+Tip: For a better experience, you can also choose to allow access to your Contacts to message device contacts that aren’t synced to your Google Account
+Check or change your default SMS app
+Important: Some steps may vary by device and Android version.
+On your Android device, open Settings .
+Tap Apps  Default apps or Choose default apps.
+Tap SMS app.
+To change the default app, select the SMS app you want to use.
+What Gemini can’t do with the Messages app
+The following actions aren’t supported by the Messages app in Gemini:
+Read or summarize your messages directly from your messaging app.
+Create or message group chats.
+Read images or memes in your messages.
+Add or play audio or videos in your messages.
+Read or respond to messages in your device notifications.
+Gemini only uses the Device assistance app to read or reply to messages in your notifications, including those from WhatsApp. Learn more about the Device assistance app.
+About your data & communication apps
+The Gemini mobile app uses your data to help it choose the most helpful app to use and connect you with the right person. Learn more about your data and communication apps.
+How your data is handled
+Learn more about how your data is handled when Gemini works with Connected Apps.
+Related resources
+Gemini Apps Privacy Hub
+Use & manage Connected Apps in Gemini
+Make calls & send messages on WhatsApp with the Gemini mobile app on Android
+Make calls with the Gemini mobile app on Android
+Get started with the Gemini mobile app
+Need more help?
+Try these next steps:
+Post to the help community    Get answers from community members
+true
+Communication
+1 of 5
+Send messages with the Gemini mobile app on Android
+2 of 5
+Make calls with the Gemini mobile app on Android
+3 of 5
+Make calls & send messages on WhatsApp with the Gemini mobile app on Android
+4 of 5
+Broadcast messages in your home with the Gemini mobile app
+5 of 5
+Manage your contacts in Gemini Apps
+©2026 Google
+Privacy Policy
+Terms of Service
+Language   Afrikaans‎azərbaycan‎bosanski‎català‎dansk‎Deutsch‎eesti‎English (United Kingdom)‎español‎español (Latinoamérica)‎euskara‎Filipino‎français‎français (Canada)‎galego‎hrvatski‎Indonesia‎isiZulu‎italiano‎Kiswahili‎latviešu‎lietuvių‎magyar‎Melayu‎Nederlands‎norsk‎o‘zbek‎polski‎português‎português (Brasil)‎română‎shqip‎slovenčina‎slovenščina‎suomi‎svenska‎Tiếng Việt‎Türkçe‎íslenska‎čeština‎Ελληνικά‎беларуская‎български‎македонски‎монгол‎русский‎српски‎українська‎қазақ тілі‎հայերեն‎‏עברית‏اردو‏العربية‏فارسیनेपाली‎मराठी‎हिन्दी‎অসমীয়া‎বাংলা‎ਪੰਜਾਬੀ‎ଓଡ଼ିଆ‎தமிழ்‎తెలుగు‎ไทย‎ລາວ‎ქართული‎አማርኛ‎ខ្មែរ‎中文（简体）‎中文（繁體）‎中文（香港）‎日本語‎한국어‎ English‎
+Enable Dark Mode
+Send feedback on...
+This help content & information General Help Center experience
+Search
+Clear search
+Close search
+Google apps
+Main menu
+15802505953311061455
+true
+Search Help Center
+false
+true
+true
+true
+true
+true
+5295044
+false
+false
+false
+false
+false

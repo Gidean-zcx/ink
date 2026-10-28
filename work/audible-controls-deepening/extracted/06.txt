@@ -1,0 +1,141 @@
+Missing title issues (https://help.audible.com/s/article/title-is-missing?language=en_US)
+citeturn761view2 [wordlim: 200] Crawled: today; Content type: text/html; Source: open({"ref_id":"https://help.audible.com/s/article/title-is-missing?language=en_US","lineno":null}); Total lines: 197
+L0: Loading
+L1: 
+L2: Sorry to interrupt
+L3: 
+L4: Uncaught TypeError: Cannot read properties of null (reading 'style')
+L5: 
+L6: 【0†Refresh】
+L7: 
+L8: Skip to Main Content
+L9: 
+L10: Related topics
+L11: 
+L12: Android Ask A Question iOS Library issues+2
+L13: ## Missing title issues
+L14: 
+L15:   * Oct 1, 2026
+L16:   * Knowledge
+L17: 
+L18: Title
+L19: 
+L20: Missing title issues
+L21: 
+L22: URL Name
+L23: 
+L24: title-is-missing
+L25: 
+L26: Answer
+L27: 
+L28: 
+L29: 
+L30: The content in the included catalog may rotate from time to time. As a result, a title that was previously included with your membership may not be available anymore. Contact 【1†Audible Customer Service team†www.audible.com】 for assistance with your missing titles.
+L31: There are a few reasons why you're not seeing a title or recent purchase in your Library. After completing a purchase, there may be a few seconds where an audiobook does not appear in your Library on the Audible site or in the app. If after waiting for some time, you cannot find a purchase or title in your Library, you can try the following troubleshooting steps.
+L32: 
+L33: In this article:
+L34:   * 【2†Refresh your Library】
+L35:   * 【3†Check your marketplace】
+L36:   * 【4†Sign out and sign back in】
+L37:   * 【5†Check your archive】
+L38:   * 【6†Apply new filters】
+L39:   * 【7†Check your purchase history on the Audible site】
+L40:   * 【8†Update your app】
+L41:   * 【9†Check if the title has been shared (Kids Profile users only)】
+L42: ## Refresh your Library
+L43: 
+L44: You can refresh your Library by swiping down from the top of the screen until you see the spinning circle. (That means it's refreshing.)
+L45: 
+L46: If a swipe-to-refresh doesn't work, you can do a manual refresh:
+L47: 
+L48:   1. Open the Audible app.
+L49:   2. Select Profile.
+L50:   3. Select the Settings gear icon.
+L51:   4. Select Library.
+L52:   5. Select Refresh Library.
+L53: Note: If you're not using the most up-to-date Audible app available for your Android or iOS device, new titles won't appear when you attempt to refresh. See the "Update your app" section below if refreshing doesn't resolve the issue.
+L54: ## Check your marketplace
+L55: 
+L56: You may be signed in to the wrong Audible marketplace. If that's the case, none of your titles will be available to listen to. Sign out and then sign in to the Audible marketplace where you made your purchases.
+L57:   1. Open the Audible app.
+L58:   2. Go to your Profile.
+L59:   3. Select the Settings gear icon.
+L60:   4. Scroll down and select Sign Out twice.
+L61:   5. Select Sign In once and you'll be brought to the welcome screen.
+L62:   6. Select Marketplace at the bottom of the welcome screen to 【10†Audible.com†audible.com】.
+L63:   7. Return to your Library and check to see if your title is now there.
+L64: If your title is not there, it may be that you made your purchase in a different marketplace (for example 【11†Audible.ca†audible.ca】 or 【12†Audible.au†audible.au】). In this case, you will need to verify if you are registered in 【13†another Audible marketplace】.
+L65: ## Sign out and sign back in
+L66: 
+L67: You may simply need to sign out and sign back in to your account:
+L68:   1. Open the Audible app.
+L69:   2. Go to your Profile.
+L70:   3. Select the Settings gear icon.
+L71:   4. Scroll down and select Sign Out twice.
+L72:   5. Select Sign In once and you'll be brought to the welcome screen.
+L73:   6. Select Marketplace at the bottom of the welcome screen to 【10†Audible.com†audible.com】.
+L74:   7. Select Sign In and enter your email address and password.
+L75:   8. Return to your Library and check to see if your title is now there.
+L76: 
+L77: For more information, see 【14†Can't sign in or out】.
+L78: ## Check your archive
+L79: 
+L80: It could be that the title you're looking for has been archived. Follow these steps to remove the title from your archive:
+L81: 
+L82:   1. Open the Audible app.
+L83:   2. Select Library.
+L84:   3. Select Lists at the top of the screen.
+L85:   4. Select Hidden.
+L86:   5. Select the title's 3-dot More menu.
+L87:   6. Select Remove from list.
+L88:   7. Return to your Library and check to see if your title is now there.
+L89: ## Apply new filters
+L90: 
+L91: Our filters allow you to change the way you view your titles in the app so you can find what you need faster. For example, you can set a filter so that you see only the titles you haven't started yet.
+L92: 
+L93:   1. Go to your Library.
+L94:   2. Select All.
+L95:   3. Select All titles.
+L96:   4. Select the sort icon (up and down arrows) to open up a menu of options:
+L97:     1. Recent
+L98:     2. Length
+L99:     3. Title
+L100:     4. Author
+L101:     5. Release date
+L102: ### Use the In your library filter in catalog search
+L103: 
+L104: When searching in the Audible app, you can use the In your library filter to narrow search results to titles in your Library only.
+L105: 
+L106:   1. Open the Audible app.
+L107: 
+L108:   2. Search for the title you are looking for.
+L109: 
+L110:   3. Select In your library from the suggestions that appear to find titles you own.
+L111: 
+L112: Use this option to find titles that you own and are no longer available in the Audible catalog.
+L113: ## Check your purchase history on the Audible site
+L114: 
+L115: You can check your recent purchase by going to your Purchase history on the Audible site within your account.
+L116: 
+L117: Your default payment method may not have gone through—or you may have not hit "Complete purchase" to finalize the order. You can check to see if this is the case by visiting the Audible site and going to your Purchase history within your account to see if an order was declined. View purchase history to learn step by step how to do this.
+L118: ## Update your app
+L119: 
+L120: If you're not using the most up-to-date Audible app available for your Android or iOS device, new titles won't appear when you attempt to refresh.
+L121: 
+L122: Note: An update will only display if there's one available to download. If you're using an older device that doesn't support the latest version of the app, you can continue to listen to all of your audiobooks on another compatible device or in the Audible Cloud Player.
+L123: 
+L124: Update the iOS app
+L125:   1. Open the App Store.
+L126:   2. Select your profile icon.
+L127:   3. Find the Audible app.
+L128:   4. Select Update.
+L129: 
+L130: Note: If you don't see the Audible app, you may need to swipe down to refresh your list of available updates.
+L131: 
+L132: Update the Android app
+L133: 
+L134:   1. Open the Google Play Store.
+L135:   2. Select your profile icon.
+L136:   3. Select My apps & games.
+L137:   4. Find the Audible app in the Updates pending list.
+L138:   5. Select Update.

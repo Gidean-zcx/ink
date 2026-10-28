@@ -1,0 +1,47 @@
+{
+  "result": "PASS",
+  "new_E": 8,
+  "new_F": 7,
+  "case_F": 16,
+  "all_case_depth": "D2",
+  "inventory": {
+    "pdf_outline": 113,
+    "model_content_index": 96,
+    "total": 209
+  },
+  "observed_static_pages": [
+    34,
+    87,
+    116,
+    117,
+    121,
+    123,
+    156,
+    161,
+    171,
+    197
+  ],
+  "archived_static_pages": [
+    87,
+    117,
+    121
+  ],
+  "old_field_changes": 21,
+  "old_tasks": [
+    "F-M024-02",
+    "F-M024-04",
+    "F-M024-05",
+    "F-M024-08",
+    "F-M024-09"
+  ],
+  "old_depth_changed": false,
+  "csv_LF": true,
+  "raw_and_artifact_hashes": "match",
+  "unchanged_old_batches": [
+    "batches/dictionary-evidence.jsonl",
+    "batches/dictionary-coverage.csv",
+    "batches/dictionary-inventory-evidence.jsonl"
+  ],
+  "network_requests": 0,
+  "hands_on": false
+}

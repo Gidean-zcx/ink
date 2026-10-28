@@ -1,0 +1,2609 @@
+[
+  {
+    "name": "01-home",
+    "url": "https://www.duolingo.com/",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "utc": "2026-10-26T17:34:43.282106+00:00",
+    "text": "SITE LANGUAGE: ENGLISH\nThe most fun way to learn languages, chess, and more!\nGET STARTED\nI ALREADY HAVE AN ACCOUNT\nENGLISH\nCHESS\nMATH\nSPANISH\nFRENCH\nGERMAN\nITALIAN\nPORTUGUESE\nDUTCH\nJAPANESE\nARABIC\nCZECH\nWELSH\nDANISH\nGREEK\nESPERANTO\nFINNISH\nIRISH\nSCOTTISH GAELIC\nHEBREW\nHINDI\nHAITIAN CREOLE\nHUNGARIAN\nHIGH VALYRIAN\nHAWAIIAN\nINDONESIAN\nKOREAN\nLATIN\nNORWEGIAN (BOKMÅL)\nNAVAJO\nPOLISH\nROMANIAN\nRUSSIAN\nSWEDISH\nSWAHILI\nKLINGON\nTURKISH\nUKRAINIAN\nVIETNAMESE\nYIDDISH\nCHINESE (SIMPLIFIED)\nZULU\nfree. fun. effective.\n\nLearning with Duolingo is fun, and research shows that it works! With quick, bite-sized lessons, you’ll earn points and unlock new levels while gaining real-world communication skills.\n\nbacked by science\n\nWe use a combination of research-backed teaching methods and delightful content to create courses that effectively teach reading, writing, listening, and speaking skills!\n\nstay motivated\n\nWe make it easy to form a habit of language learning with game-like features, fun challenges, and reminders from our friendly mascot, Duo the owl.\n\npersonalized learning\n\nCombining the best of AI and language science, lessons are tailored to help you learn at just the right level and pace.\n\nlearn anytime, anywhere\nDownload on the\nApp Store\n下载请前往\n360 手机助手\nTRY 1 WEEK FREE\nduolingo english test\n\nOur convenient, fast, and affordable English test integrates the latest assessment science and AI — empowering anyone to accurately test their English where and when they’re at their best.\n\nCERTIFY YOUR ENGLISH\nlearn a language with duolingo\nGET STARTED\nAbout us\nCourses\nMission\nApproach\nEfficacy\nDuolingo Handbook\nResearch\nCareers\nStore\nPress\nInvestors\nContact us\nProducts\nDuolingo\nDuolingo for Schools\nDuolingo English Test\nPodcast\nDuolingo for Business\nSuper Duolingo\nGift Super Duolingo\nDuolingo Max\nApps\nDuolingo for Android\nDuolingo for iOS\nHelp and support\nDuolingo FAQs\nSchools FAQs\nDuolingo English Test FAQs\nStatus\nPrivacy and terms\nCommunity guidelines\nTerms\nPrivacy\nDo Not Sell or Share My Personal Information\nSocial\nBlog\nInstagram\nTikTok\nTwitter\nYouTube\nLinkedIn\nSite language:\nالعربيةবাংলাČeštinaDeutschΕλληνικάEnglishEspañolFrançaisहिंदीMagyarBahasa IndonesiaItaliano日本語ಕನ್ನಡ한국어मराठीNederlandsਪੰਜਾਬੀPolskiPortuguêsRomânăРусскийsvenskaதமிழ்తెలుగుภาษาไทยTagalogTürkçeУкраїнськоюاُردُوTiếng Việt中文",
+    "buttons": [
+      {
+        "text": "SITE LANGUAGE: ENGLISH",
+        "aria": null,
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "I ALREADY HAVE AN ACCOUNT",
+        "aria": null,
+        "test": "have-account",
+        "visible": true
+      },
+      {
+        "text": "TRY 1 WEEK FREE",
+        "aria": null,
+        "test": null,
+        "visible": true
+      }
+    ],
+    "inputs": [],
+    "screenshot_reviewed": true,
+    "archived_screenshot": null
+  },
+  {
+    "name": "02-get-started",
+    "url": "https://www.duolingo.com/register",
+    "title": "Learning Goal - Duolingo",
+    "utc": "2026-10-26T17:36:33.287917+00:00",
+    "text": "SITE LANGUAGE: ENGLISH\nI want to learn...\nSpanish\n41.9M learners\nFrench\n22.6M learners\nChess\nEnglish\n19.4M learners\nJapanese\n17.8M learners\nGerman\n15.9M learners\nMath\nHindi\n13.7M learners\nKorean\n12M learners\nItalian\n10.2M learners\nChinese (Simplified)\n9.28M learners\nRussian\n7.93M learners\nArabic\n6.54M learners\nPortuguese\n4.64M learners\nTurkish\n3.99M learners\nDutch\n2.7M learners\nGreek\n2.55M learners\nPolish\n2.13M learners\nSwedish\n1.9M learners\nVietnamese\n1.81M learners\nLatin\n1.79M learners\nNorwegian (Bokmål)\n1.61M learners\nIrish\n1.51M learners\nHebrew\n1.29M learners\nIndonesian\n1.24M learners\nHigh Valyrian\n1.08M learners\nUkrainian\n940K learners\nFinnish\n925K learners\nDanish\n910K learners\nRomanian\n879K learners\nCzech\n771K learners\nZulu\n720K learners\nHawaiian\n706K learners\nSwahili\n663K learners\nWelsh\n607K learners\nHungarian\n577K learners\nScottish Gaelic\n544K learners\nHaitian Creole\n446K learners\nEsperanto\n303K learners\nKlingon\n298K learners\nNavajo\n280K learners\nYiddish\n280K learners",
+    "buttons": [
+      {
+        "text": "SITE LANGUAGE: ENGLISH",
+        "aria": null,
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "Spanish\n41.9M learners",
+        "aria": null,
+        "test": "flag-spanish language-card",
+        "visible": true
+      },
+      {
+        "text": "French\n22.6M learners",
+        "aria": null,
+        "test": "flag-french language-card",
+        "visible": true
+      },
+      {
+        "text": "Chess",
+        "aria": null,
+        "test": "flag-chess language-card",
+        "visible": true
+      },
+      {
+        "text": "English\n19.4M learners",
+        "aria": null,
+        "test": "flag-english language-card",
+        "visible": true
+      },
+      {
+        "text": "Japanese\n17.8M learners",
+        "aria": null,
+        "test": "flag-japanese language-card",
+        "visible": true
+      },
+      {
+        "text": "German\n15.9M learners",
+        "aria": null,
+        "test": "flag-german language-card",
+        "visible": true
+      },
+      {
+        "text": "Math",
+        "aria": null,
+        "test": "flag-math language-card",
+        "visible": true
+      },
+      {
+        "text": "Hindi\n13.7M learners",
+        "aria": null,
+        "test": "flag-hindi language-card",
+        "visible": true
+      },
+      {
+        "text": "Korean\n12M learners",
+        "aria": null,
+        "test": "flag-korean language-card",
+        "visible": true
+      },
+      {
+        "text": "Italian\n10.2M learners",
+        "aria": null,
+        "test": "flag-italian language-card",
+        "visible": true
+      },
+      {
+        "text": "Chinese (Simplified)\n9.28M learners",
+        "aria": null,
+        "test": "flag-chinese language-card",
+        "visible": true
+      },
+      {
+        "text": "Russian\n7.93M learners",
+        "aria": null,
+        "test": "flag-russian language-card",
+        "visible": true
+      },
+      {
+        "text": "Arabic\n6.54M learners",
+        "aria": null,
+        "test": "flag-arabic language-card",
+        "visible": true
+      },
+      {
+        "text": "Portuguese\n4.64M learners",
+        "aria": null,
+        "test": "flag-portuguese language-card",
+        "visible": true
+      },
+      {
+        "text": "Turkish\n3.99M learners",
+        "aria": null,
+        "test": "flag-turkish language-card",
+        "visible": true
+      },
+      {
+        "text": "Dutch\n2.7M learners",
+        "aria": null,
+        "test": "flag-dutch language-card",
+        "visible": true
+      },
+      {
+        "text": "Greek\n2.55M learners",
+        "aria": null,
+        "test": "flag-greek language-card",
+        "visible": true
+      },
+      {
+        "text": "Polish\n2.13M learners",
+        "aria": null,
+        "test": "flag-polish language-card",
+        "visible": true
+      },
+      {
+        "text": "Swedish\n1.9M learners",
+        "aria": null,
+        "test": "flag-swedish language-card",
+        "visible": true
+      },
+      {
+        "text": "Vietnamese\n1.81M learners",
+        "aria": null,
+        "test": "flag-vietnamese language-card",
+        "visible": true
+      },
+      {
+        "text": "Latin\n1.79M learners",
+        "aria": null,
+        "test": "flag-latin language-card",
+        "visible": true
+      },
+      {
+        "text": "Norwegian (Bokmål)\n1.61M learners",
+        "aria": null,
+        "test": "flag-norwegian language-card",
+        "visible": true
+      },
+      {
+        "text": "Irish\n1.51M learners",
+        "aria": null,
+        "test": "flag-irish language-card",
+        "visible": true
+      },
+      {
+        "text": "Hebrew\n1.29M learners",
+        "aria": null,
+        "test": "flag-hebrew language-card",
+        "visible": true
+      },
+      {
+        "text": "Indonesian\n1.24M learners",
+        "aria": null,
+        "test": "flag-indonesian language-card",
+        "visible": true
+      },
+      {
+        "text": "High Valyrian\n1.08M learners",
+        "aria": null,
+        "test": "flag-high-valyrian language-card",
+        "visible": true
+      },
+      {
+        "text": "Ukrainian\n940K learners",
+        "aria": null,
+        "test": "flag-ukrainian language-card",
+        "visible": true
+      },
+      {
+        "text": "Finnish\n925K learners",
+        "aria": null,
+        "test": "flag-finnish language-card",
+        "visible": true
+      },
+      {
+        "text": "Danish\n910K learners",
+        "aria": null,
+        "test": "flag-danish language-card",
+        "visible": true
+      },
+      {
+        "text": "Romanian\n879K learners",
+        "aria": null,
+        "test": "flag-romanian language-card",
+        "visible": true
+      },
+      {
+        "text": "Czech\n771K learners",
+        "aria": null,
+        "test": "flag-czech language-card",
+        "visible": true
+      },
+      {
+        "text": "Zulu\n720K learners",
+        "aria": null,
+        "test": "flag-south-africa language-card",
+        "visible": true
+      },
+      {
+        "text": "Hawaiian\n706K learners",
+        "aria": null,
+        "test": "flag-hawaiian language-card",
+        "visible": true
+      },
+      {
+        "text": "Swahili\n663K learners",
+        "aria": null,
+        "test": "flag-swahili language-card",
+        "visible": true
+      },
+      {
+        "text": "Welsh\n607K learners",
+        "aria": null,
+        "test": "flag-welsh language-card",
+        "visible": true
+      },
+      {
+        "text": "Hungarian\n577K learners",
+        "aria": null,
+        "test": "flag-hungarian language-card",
+        "visible": true
+      },
+      {
+        "text": "Scottish Gaelic\n544K learners",
+        "aria": null,
+        "test": "flag-scottish-gaelic language-card",
+        "visible": true
+      },
+      {
+        "text": "Haitian Creole\n446K learners",
+        "aria": null,
+        "test": "flag-haitian-creole language-card",
+        "visible": true
+      },
+      {
+        "text": "Esperanto\n303K learners",
+        "aria": null,
+        "test": "flag-esperanto language-card",
+        "visible": true
+      },
+      {
+        "text": "Klingon\n298K learners",
+        "aria": null,
+        "test": "flag-klingon language-card",
+        "visible": true
+      },
+      {
+        "text": "Navajo\n280K learners",
+        "aria": null,
+        "test": "flag-navajo language-card",
+        "visible": true
+      },
+      {
+        "text": "Yiddish\n280K learners",
+        "aria": null,
+        "test": "flag-yiddish language-card",
+        "visible": true
+      }
+    ],
+    "inputs": [],
+    "screenshot_reviewed": true,
+    "archived_screenshot": "browser/02-get-started.png"
+  },
+  {
+    "name": "03-french",
+    "url": "https://www.duolingo.com/register",
+    "title": "Learning Goal - Duolingo",
+    "utc": "2026-10-26T17:37:03.299349+00:00",
+    "text": "SITE LANGUAGE: ENGLISH\nI want to learn...",
+    "buttons": [
+      {
+        "text": "SITE LANGUAGE: ENGLISH",
+        "aria": null,
+        "test": null,
+        "visible": true
+      }
+    ],
+    "inputs": [],
+    "screenshot_reviewed": false,
+    "archived_screenshot": null
+  },
+  {
+    "name": "04-after-wait",
+    "url": "https://www.duolingo.com/welcome",
+    "title": "Duolingo - Learn French with lessons that work",
+    "utc": "2026-10-26T17:37:51.714722+00:00",
+    "text": "Hi there! I’m Duo!\nHi there! I’m Duo!\nCONTINUE",
+    "buttons": [
+      {
+        "text": "",
+        "aria": null,
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "CONTINUE",
+        "aria": null,
+        "test": "funboarding-continue-button",
+        "visible": true
+      }
+    ],
+    "inputs": [],
+    "screenshot_reviewed": true,
+    "archived_screenshot": null
+  },
+  {
+    "name": "05-welcome-continue",
+    "url": "https://www.duolingo.com/welcome",
+    "title": "Duolingo - Learn French with lessons that work",
+    "utc": "2026-10-26T17:38:15.052894+00:00",
+    "text": "Let’s get this party started!\nLet’s get this party started!\nCONTINUE",
+    "buttons": [
+      {
+        "text": "",
+        "aria": null,
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "CONTINUE",
+        "aria": null,
+        "test": "funboarding-continue-button",
+        "visible": true
+      }
+    ],
+    "inputs": [],
+    "screenshot_reviewed": false,
+    "archived_screenshot": null
+  },
+  {
+    "name": "06-onboarding-question",
+    "url": "https://www.duolingo.com/welcome",
+    "title": "Duolingo - Learn French with lessons that work",
+    "utc": "2026-10-26T17:39:16.856106+00:00",
+    "text": "CONTINUE",
+    "buttons": [
+      {
+        "text": "",
+        "aria": null,
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "CONTINUE",
+        "aria": null,
+        "test": "funboarding-continue-button",
+        "visible": true
+      }
+    ],
+    "inputs": [],
+    "screenshot_reviewed": false,
+    "archived_screenshot": null
+  },
+  {
+    "name": "07-question-ready",
+    "url": "https://www.duolingo.com/welcome?welcomeStep=hdyhau",
+    "title": "Duolingo - Learn French with lessons that work",
+    "utc": "2026-10-26T17:39:35.667746+00:00",
+    "text": "How did you hear about Duolingo?\nHow did you hear about Duolingo?\nX (Twitter)\nNews/article/blog\nTV\nTinder\nGoogle Search\nHP\nTikTok\nFriends/family\nYouTube\nFacebook/Instagram\nOther\nCONTINUE",
+    "buttons": [
+      {
+        "text": "",
+        "aria": null,
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "CONTINUE",
+        "aria": null,
+        "test": "funboarding-continue-button",
+        "visible": true
+      }
+    ],
+    "inputs": [],
+    "screenshot_reviewed": false,
+    "archived_screenshot": null
+  },
+  {
+    "name": "08-after-source",
+    "url": "https://www.duolingo.com/welcome?welcomeStep=learningReason",
+    "title": "Duolingo - Learn French with lessons that work",
+    "utc": "2026-10-26T17:40:19.954216+00:00",
+    "text": "Why are you learning French?\nWhy are you learning French?\nPrepare for travel\nConnect with people\nSpend time productively\nSupport my education\nJust for fun\nBoost my career\nOther\nCONTINUE",
+    "buttons": [
+      {
+        "text": "",
+        "aria": null,
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "CONTINUE",
+        "aria": null,
+        "test": "funboarding-continue-button",
+        "visible": true
+      }
+    ],
+    "inputs": [],
+    "screenshot_reviewed": false,
+    "archived_screenshot": null
+  },
+  {
+    "name": "09-after-reason",
+    "url": "https://www.duolingo.com/welcome?welcomeStep=proficiency",
+    "title": "Duolingo - Learn French with lessons that work",
+    "utc": "2026-10-26T17:40:43.952162+00:00",
+    "text": "How much French do you know?\nHow much French do you know?\nI’m new to French\nI know some common words\nI can have basic conversations\nI can talk about various topics\nI can discuss most topics in detail\nCONTINUE",
+    "buttons": [
+      {
+        "text": "",
+        "aria": null,
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "CONTINUE",
+        "aria": null,
+        "test": "funboarding-continue-button",
+        "visible": true
+      }
+    ],
+    "inputs": [],
+    "screenshot_reviewed": false,
+    "archived_screenshot": null
+  },
+  {
+    "name": "10-after-level",
+    "url": "https://www.duolingo.com/welcome?welcomeStep=courseOverview",
+    "title": "Duolingo - Learn French with lessons that work",
+    "utc": "2026-10-26T17:41:22.597355+00:00",
+    "text": "Here’s what you can achieve!\nHere’s what you can achieve!\nConverse with confidence\nStress-free speaking and listening exercises\nBuild a large vocabulary\nCommon words and practical phrases\nDevelop a learning habit\nSmart reminders, fun challenges, and more\nCONTINUE",
+    "buttons": [
+      {
+        "text": "",
+        "aria": null,
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "CONTINUE",
+        "aria": null,
+        "test": "funboarding-continue-button",
+        "visible": true
+      }
+    ],
+    "inputs": [],
+    "screenshot_reviewed": false,
+    "archived_screenshot": null
+  },
+  {
+    "name": "11-daily-goal",
+    "url": "https://www.duolingo.com/welcome?welcomeStep=dailyGoal",
+    "title": "Duolingo - Learn French with lessons that work",
+    "utc": "2026-10-26T17:41:52.291700+00:00",
+    "text": "What’s your daily learning goal?\nWhat’s your daily learning goal?\n5 min / day\nCasual\n10 min / day\nRegular\n15 min / day\nSerious\n20 min / day\nIntense\nCONTINUE",
+    "buttons": [
+      {
+        "text": "",
+        "aria": null,
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "CONTINUE",
+        "aria": null,
+        "test": "funboarding-continue-button",
+        "visible": true
+      }
+    ],
+    "inputs": [],
+    "screenshot_reviewed": true,
+    "archived_screenshot": "browser/11-daily-goal.png"
+  },
+  {
+    "name": "12-goal-confirmed",
+    "url": "https://www.duolingo.com/welcome?welcomeStep=choosePath",
+    "title": "Duolingo - Learn French with lessons that work",
+    "utc": "2026-10-26T17:42:29.170676+00:00",
+    "text": "Now let’s find the best place to start!\nNow let’s find the best place to start!\nStart from scratch\nTake the easiest lesson of the French course\nFind my level\nLet Duo recommend where you should start learning\nCONTINUE",
+    "buttons": [
+      {
+        "text": "",
+        "aria": null,
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "CONTINUE",
+        "aria": null,
+        "test": "funboarding-continue-button",
+        "visible": true
+      }
+    ],
+    "inputs": [],
+    "screenshot_reviewed": false,
+    "archived_screenshot": null
+  },
+  {
+    "name": "13-first-lesson-entry",
+    "url": "https://www.duolingo.com/welcome?welcomeStep=choosePath",
+    "title": "Duolingo - Learn French with lessons that work",
+    "utc": "2026-10-26T17:42:41.353156+00:00",
+    "text": "It can be hard to stay motivated…\nIt can be hard to stay motivated…\nCONTINUE",
+    "buttons": [
+      {
+        "text": "",
+        "aria": null,
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "CONTINUE",
+        "aria": null,
+        "test": "funboarding-continue-button",
+        "visible": true
+      }
+    ],
+    "inputs": [],
+    "screenshot_reviewed": false,
+    "archived_screenshot": null
+  },
+  {
+    "name": "14-motivation",
+    "url": "https://www.duolingo.com/welcome?welcomeStep=choosePath",
+    "title": "Duolingo - Learn French with lessons that work",
+    "utc": "2026-10-26T17:43:00.570599+00:00",
+    "text": "…so Duolingo is designed to be fun like a game!\n…so Duolingo is designed to be fun like a game!\nCONTINUE",
+    "buttons": [
+      {
+        "text": "",
+        "aria": null,
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "CONTINUE",
+        "aria": null,
+        "test": "funboarding-continue-button",
+        "visible": true
+      }
+    ],
+    "inputs": [],
+    "screenshot_reviewed": false,
+    "archived_screenshot": null
+  },
+  {
+    "name": "15-begin-lesson",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - Learn French with lessons that work",
+    "utc": "2026-10-26T17:43:36.406546+00:00",
+    "text": "LOADING...\nProtip: After a lesson, write down as many phrases as you can remember from it.",
+    "buttons": [],
+    "inputs": [],
+    "screenshot_reviewed": false,
+    "archived_screenshot": null
+  },
+  {
+    "name": "16-lesson-ready",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - Learn French with lessons that work",
+    "utc": "2026-10-26T17:43:51.148207+00:00",
+    "text": "5\nNEW WORD\nWhich one of these is “coffee”?\nthé\n1\ncroissant\n2\ncafé\n3\nSKIP\nCHECK",
+    "buttons": [
+      {
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "visible": true
+      },
+      {
+        "text": "SKIP",
+        "aria": null,
+        "test": "player-skip",
+        "visible": true
+      },
+      {
+        "text": "CHECK",
+        "aria": null,
+        "test": "player-next",
+        "visible": true
+      }
+    ],
+    "inputs": [],
+    "screenshot_reviewed": true,
+    "archived_screenshot": "browser/16-lesson-ready.png"
+  },
+  {
+    "name": "17-wrong-choice-selected",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - Learn French with lessons that work",
+    "utc": "2026-10-26T17:44:03.642841+00:00",
+    "text": "5\nNEW WORD\nWhich one of these is “coffee”?\nthé\n1\ncroissant\n2\ncafé\n3\nSKIP\nCHECK",
+    "buttons": [
+      {
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "visible": true
+      },
+      {
+        "text": "SKIP",
+        "aria": null,
+        "test": "player-skip",
+        "visible": true
+      },
+      {
+        "text": "CHECK",
+        "aria": null,
+        "test": "player-next",
+        "visible": true
+      }
+    ],
+    "inputs": [],
+    "screenshot_reviewed": false,
+    "archived_screenshot": null
+  },
+  {
+    "name": "18-wrong-choice-checked",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - Learn French with lessons that work",
+    "utc": "2026-10-26T17:44:05.014535+00:00",
+    "text": "4\nNEW WORD\nWhich one of these is “coffee”?\nthé\n1\ncroissant\n2\ncafé\n3\nCorrect solution:\ncafé\nTOO EASY\nTOO DIFFICULT\nREPORT\nCONTINUE\nEach mistake costs 1 heart!\nStay sharp and focused to keep your hearts. You got this!\nKEEP GOING",
+    "buttons": [
+      {
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "visible": true
+      },
+      {
+        "text": "TOO EASY",
+        "aria": "Too easy",
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "TOO DIFFICULT",
+        "aria": "Too difficult",
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "REPORT",
+        "aria": null,
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "CONTINUE",
+        "aria": null,
+        "test": "player-next",
+        "visible": true
+      },
+      {
+        "text": "KEEP GOING",
+        "aria": null,
+        "test": "hearts-intro-continue-button",
+        "visible": true
+      }
+    ],
+    "inputs": [],
+    "screenshot_reviewed": true,
+    "archived_screenshot": "browser/18-wrong-choice-checked.png"
+  },
+  {
+    "name": "19-error-feedback",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - Learn French with lessons that work",
+    "utc": "2026-10-26T17:44:29.724041+00:00",
+    "text": "4\nNEW WORD\nWhich one of these is “coffee”?\nthé\n1\ncroissant\n2\ncafé\n3\nCorrect solution:\ncafé\nTOO EASY\nTOO DIFFICULT\nREPORT\nCONTINUE\nEach mistake costs 1 heart!\nStay sharp and focused to keep your hearts. You got this!\nKEEP GOING",
+    "buttons": [
+      {
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "visible": true
+      },
+      {
+        "text": "TOO EASY",
+        "aria": "Too easy",
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "TOO DIFFICULT",
+        "aria": "Too difficult",
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "REPORT",
+        "aria": null,
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "CONTINUE",
+        "aria": null,
+        "test": "player-next",
+        "visible": true
+      },
+      {
+        "text": "KEEP GOING",
+        "aria": null,
+        "test": "hearts-intro-continue-button",
+        "visible": true
+      }
+    ],
+    "inputs": [],
+    "screenshot_reviewed": false,
+    "archived_screenshot": null
+  },
+  {
+    "name": "20-next-question",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - Learn French with lessons that work",
+    "utc": "2026-10-26T17:44:30.656222+00:00",
+    "text": "4\nNEW WORD\nWhich one of these is “tea”?\nthé\n1\ncafé\n2\ncroissant\n3\nSKIP\nCHECK",
+    "buttons": [
+      {
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "visible": true
+      },
+      {
+        "text": "SKIP",
+        "aria": null,
+        "test": "player-skip",
+        "visible": true
+      },
+      {
+        "text": "CHECK",
+        "aria": null,
+        "test": "player-next",
+        "visible": true
+      }
+    ],
+    "inputs": [],
+    "screenshot_reviewed": false,
+    "archived_screenshot": null
+  },
+  {
+    "name": "21-correct-feedback",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - Learn French with lessons that work",
+    "utc": "2026-10-26T17:44:45.937231+00:00",
+    "text": "4\nNEW WORD\nWhich one of these is “tea”?\nthé\n1\ncafé\n2\ncroissant\n3\nNice job!\nTOO EASY\nTOO DIFFICULT\nREPORT\nCONTINUE",
+    "buttons": [
+      {
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "visible": true
+      },
+      {
+        "text": "TOO EASY",
+        "aria": "Too easy",
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "TOO DIFFICULT",
+        "aria": "Too difficult",
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "REPORT",
+        "aria": null,
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "CONTINUE",
+        "aria": null,
+        "test": "player-next",
+        "visible": true
+      }
+    ],
+    "inputs": [],
+    "screenshot_reviewed": false,
+    "archived_screenshot": null
+  },
+  {
+    "name": "22-question-three",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - Learn French with lessons that work",
+    "utc": "2026-10-26T17:44:47.321294+00:00",
+    "text": "4\nNEW WORD\nWrite this in English\nUn thé ?\nthank you\ntea\nA\nSKIP\nCHECK\nRemember that you can always hover over words to see what they mean.",
+    "buttons": [
+      {
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "visible": true
+      },
+      {
+        "text": "",
+        "aria": null,
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "thank you",
+        "aria": null,
+        "test": "thank you-challenge-tap-token",
+        "visible": true
+      },
+      {
+        "text": "tea",
+        "aria": null,
+        "test": "tea-challenge-tap-token",
+        "visible": true
+      },
+      {
+        "text": "A",
+        "aria": null,
+        "test": "A-challenge-tap-token",
+        "visible": true
+      },
+      {
+        "text": "SKIP",
+        "aria": null,
+        "test": "player-skip",
+        "visible": true
+      },
+      {
+        "text": "CHECK",
+        "aria": null,
+        "test": "player-next",
+        "visible": true
+      }
+    ],
+    "inputs": [],
+    "screenshot_reviewed": false,
+    "archived_screenshot": null
+  },
+  {
+    "name": "23-word-hint",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - Learn French with lessons that work",
+    "utc": "2026-10-26T17:50:09.667290+00:00",
+    "text": "4\nNEW WORD\nWrite this in English\nUn thé ?\nthank you\ntea\nA\nSKIP\nCHECK\n\ntea",
+    "buttons": [
+      {
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "visible": true
+      },
+      {
+        "text": "",
+        "aria": null,
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "thank you",
+        "aria": null,
+        "test": "thank you-challenge-tap-token",
+        "visible": true
+      },
+      {
+        "text": "tea",
+        "aria": null,
+        "test": "tea-challenge-tap-token",
+        "visible": true
+      },
+      {
+        "text": "A",
+        "aria": null,
+        "test": "A-challenge-tap-token",
+        "visible": true
+      },
+      {
+        "text": "SKIP",
+        "aria": null,
+        "test": "player-skip",
+        "visible": true
+      },
+      {
+        "text": "CHECK",
+        "aria": null,
+        "test": "player-next",
+        "visible": true
+      }
+    ],
+    "inputs": [],
+    "screenshot_reviewed": true,
+    "archived_screenshot": "browser/23-word-hint.png"
+  },
+  {
+    "name": "24-translation-correct",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - Learn French with lessons that work",
+    "utc": "2026-10-26T17:50:36.873361+00:00",
+    "text": "2 IN A ROW\n4\nNEW WORD\nWrite this in English\nUn thé ?\nA\ntea\nthank you\ntea\nA\nAwesome!\nTOO EASY\nTOO DIFFICULT\nREPORT\nCONTINUE",
+    "buttons": [
+      {
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "visible": true
+      },
+      {
+        "text": "",
+        "aria": null,
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "A",
+        "aria": null,
+        "test": "A-challenge-tap-token",
+        "visible": true
+      },
+      {
+        "text": "tea",
+        "aria": null,
+        "test": "tea-challenge-tap-token",
+        "visible": true
+      },
+      {
+        "text": "thank you",
+        "aria": null,
+        "test": "thank you-challenge-tap-token",
+        "visible": true
+      },
+      {
+        "text": "tea",
+        "aria": null,
+        "test": "tea-challenge-tap-token",
+        "visible": true
+      },
+      {
+        "text": "A",
+        "aria": null,
+        "test": "A-challenge-tap-token",
+        "visible": true
+      },
+      {
+        "text": "TOO EASY",
+        "aria": "Too easy",
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "TOO DIFFICULT",
+        "aria": "Too difficult",
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "REPORT",
+        "aria": null,
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "CONTINUE",
+        "aria": null,
+        "test": "player-next",
+        "visible": true
+      }
+    ],
+    "inputs": [],
+    "screenshot_reviewed": true,
+    "archived_screenshot": "browser/24-translation-correct.png"
+  },
+  {
+    "name": "25-next-exercise",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - Learn French with lessons that work",
+    "utc": "2026-10-26T17:50:38.187674+00:00",
+    "text": "4\nWrite this in English\nUn café ?\ncoffee\nhello\nA\nSKIP\nCHECK",
+    "buttons": [
+      {
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "visible": true
+      },
+      {
+        "text": "",
+        "aria": null,
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "coffee",
+        "aria": null,
+        "test": "coffee-challenge-tap-token",
+        "visible": true
+      },
+      {
+        "text": "hello",
+        "aria": null,
+        "test": "hello-challenge-tap-token",
+        "visible": true
+      },
+      {
+        "text": "A",
+        "aria": null,
+        "test": "A-challenge-tap-token",
+        "visible": true
+      },
+      {
+        "text": "SKIP",
+        "aria": null,
+        "test": "player-skip",
+        "visible": true
+      },
+      {
+        "text": "CHECK",
+        "aria": null,
+        "test": "player-next",
+        "visible": true
+      }
+    ],
+    "inputs": [],
+    "screenshot_reviewed": false,
+    "archived_screenshot": null
+  },
+  {
+    "name": "26-quit-confirm",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - Learn French with lessons that work",
+    "utc": "2026-10-26T17:50:55.685542+00:00",
+    "text": "4\nWrite this in English\nUn café ?\ncoffee\nhello\nA\nSKIP\nCHECK\nWait, don’t go! You’ll lose your progress if you quit now\nKEEP LEARNING\nEND SESSION",
+    "buttons": [
+      {
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "visible": true
+      },
+      {
+        "text": "",
+        "aria": null,
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "coffee",
+        "aria": null,
+        "test": "coffee-challenge-tap-token",
+        "visible": true
+      },
+      {
+        "text": "hello",
+        "aria": null,
+        "test": "hello-challenge-tap-token",
+        "visible": true
+      },
+      {
+        "text": "A",
+        "aria": null,
+        "test": "A-challenge-tap-token",
+        "visible": true
+      },
+      {
+        "text": "SKIP",
+        "aria": null,
+        "test": "player-skip",
+        "visible": true
+      },
+      {
+        "text": "CHECK",
+        "aria": null,
+        "test": "player-next",
+        "visible": true
+      },
+      {
+        "text": "KEEP LEARNING",
+        "aria": null,
+        "test": "notification-button",
+        "visible": true
+      },
+      {
+        "text": "END SESSION",
+        "aria": null,
+        "test": "notification-drawer-no-thanks-button",
+        "visible": true
+      }
+    ],
+    "inputs": [],
+    "screenshot_reviewed": true,
+    "archived_screenshot": "browser/26-quit-confirm.png"
+  },
+  {
+    "name": "27-keep-learning",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - Learn French with lessons that work",
+    "utc": "2026-10-26T17:51:13.234059+00:00",
+    "text": "4\nWrite this in English\nUn café ?\ncoffee\nhello\nA\nSKIP\nCHECK",
+    "buttons": [
+      {
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "visible": true
+      },
+      {
+        "text": "",
+        "aria": null,
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "coffee",
+        "aria": null,
+        "test": "coffee-challenge-tap-token",
+        "visible": true
+      },
+      {
+        "text": "hello",
+        "aria": null,
+        "test": "hello-challenge-tap-token",
+        "visible": true
+      },
+      {
+        "text": "A",
+        "aria": null,
+        "test": "A-challenge-tap-token",
+        "visible": true
+      },
+      {
+        "text": "SKIP",
+        "aria": null,
+        "test": "player-skip",
+        "visible": true
+      },
+      {
+        "text": "CHECK",
+        "aria": null,
+        "test": "player-next",
+        "visible": true
+      }
+    ],
+    "inputs": [],
+    "screenshot_reviewed": true,
+    "archived_screenshot": "browser/27-keep-learning.png"
+  },
+  {
+    "name": "28-coffee-correct",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - Learn French with lessons that work",
+    "utc": "2026-10-26T17:51:14.574312+00:00",
+    "text": "3 IN A ROW\n4\nWrite this in English\nUn café ?\nA\ncoffee\ncoffee\nhello\nA\nGreat job!\nTOO EASY\nTOO DIFFICULT\nREPORT\nCONTINUE",
+    "buttons": [
+      {
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "visible": true
+      },
+      {
+        "text": "",
+        "aria": null,
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "A",
+        "aria": null,
+        "test": "A-challenge-tap-token",
+        "visible": true
+      },
+      {
+        "text": "coffee",
+        "aria": null,
+        "test": "coffee-challenge-tap-token",
+        "visible": true
+      },
+      {
+        "text": "coffee",
+        "aria": null,
+        "test": "coffee-challenge-tap-token",
+        "visible": true
+      },
+      {
+        "text": "hello",
+        "aria": null,
+        "test": "hello-challenge-tap-token",
+        "visible": true
+      },
+      {
+        "text": "A",
+        "aria": null,
+        "test": "A-challenge-tap-token",
+        "visible": true
+      },
+      {
+        "text": "TOO EASY",
+        "aria": "Too easy",
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "TOO DIFFICULT",
+        "aria": "Too difficult",
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "REPORT",
+        "aria": null,
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "CONTINUE",
+        "aria": null,
+        "test": "player-next",
+        "visible": true
+      }
+    ],
+    "inputs": [],
+    "screenshot_reviewed": false,
+    "archived_screenshot": null
+  },
+  {
+    "name": "29-next",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - Learn French with lessons that work",
+    "utc": "2026-10-26T17:51:15.831294+00:00",
+    "text": "4\nWrite this in English\nun thé\ngoodbye\na\ntea\nSKIP\nCHECK",
+    "buttons": [
+      {
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "visible": true
+      },
+      {
+        "text": "",
+        "aria": null,
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "goodbye",
+        "aria": null,
+        "test": "goodbye-challenge-tap-token",
+        "visible": true
+      },
+      {
+        "text": "a",
+        "aria": null,
+        "test": "a-challenge-tap-token",
+        "visible": true
+      },
+      {
+        "text": "tea",
+        "aria": null,
+        "test": "tea-challenge-tap-token",
+        "visible": true
+      },
+      {
+        "text": "SKIP",
+        "aria": null,
+        "test": "player-skip",
+        "visible": true
+      },
+      {
+        "text": "CHECK",
+        "aria": null,
+        "test": "player-next",
+        "visible": true
+      }
+    ],
+    "inputs": [],
+    "screenshot_reviewed": false,
+    "archived_screenshot": null
+  },
+  {
+    "name": "30-answer-five",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - Learn French with lessons that work",
+    "utc": "2026-10-26T17:51:27.489160+00:00",
+    "text": "4 IN A ROW\n4\nWrite this in English\nun thé\na\ntea\ngoodbye\na\ntea\nGreat job!\nTOO EASY\nTOO DIFFICULT\nREPORT\nCONTINUE",
+    "buttons": [
+      {
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "visible": true
+      },
+      {
+        "text": "",
+        "aria": null,
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "a",
+        "aria": null,
+        "test": "a-challenge-tap-token",
+        "visible": true
+      },
+      {
+        "text": "tea",
+        "aria": null,
+        "test": "tea-challenge-tap-token",
+        "visible": true
+      },
+      {
+        "text": "goodbye",
+        "aria": null,
+        "test": "goodbye-challenge-tap-token",
+        "visible": true
+      },
+      {
+        "text": "a",
+        "aria": null,
+        "test": "a-challenge-tap-token",
+        "visible": true
+      },
+      {
+        "text": "tea",
+        "aria": null,
+        "test": "tea-challenge-tap-token",
+        "visible": true
+      },
+      {
+        "text": "TOO EASY",
+        "aria": "Too easy",
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "TOO DIFFICULT",
+        "aria": "Too difficult",
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "REPORT",
+        "aria": null,
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "CONTINUE",
+        "aria": null,
+        "test": "player-next",
+        "visible": true
+      }
+    ],
+    "inputs": [],
+    "screenshot_reviewed": false,
+    "archived_screenshot": null
+  },
+  {
+    "name": "31-next",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - Learn French with lessons that work",
+    "utc": "2026-10-26T17:51:28.766105+00:00",
+    "text": "4\nNEW WORD\nWrite this in English\nBonjour.\nperfect\nHello\nSKIP\nCHECK",
+    "buttons": [
+      {
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "visible": true
+      },
+      {
+        "text": "",
+        "aria": null,
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "perfect",
+        "aria": null,
+        "test": "perfect-challenge-tap-token",
+        "visible": true
+      },
+      {
+        "text": "Hello",
+        "aria": null,
+        "test": "Hello-challenge-tap-token",
+        "visible": true
+      },
+      {
+        "text": "SKIP",
+        "aria": null,
+        "test": "player-skip",
+        "visible": true
+      },
+      {
+        "text": "CHECK",
+        "aria": null,
+        "test": "player-next",
+        "visible": true
+      }
+    ],
+    "inputs": [],
+    "screenshot_reviewed": false,
+    "archived_screenshot": null
+  },
+  {
+    "name": "32-answer-six",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - Learn French with lessons that work",
+    "utc": "2026-10-26T17:51:41.421186+00:00",
+    "text": "5 IN A ROW\n4\nNEW WORD\nWrite this in English\nBonjour.\nHello\nperfect\nHello\nGreat!\nTOO EASY\nTOO DIFFICULT\nREPORT\nCONTINUE",
+    "buttons": [
+      {
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "visible": true
+      },
+      {
+        "text": "",
+        "aria": null,
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "Hello",
+        "aria": null,
+        "test": "Hello-challenge-tap-token",
+        "visible": true
+      },
+      {
+        "text": "perfect",
+        "aria": null,
+        "test": "perfect-challenge-tap-token",
+        "visible": true
+      },
+      {
+        "text": "Hello",
+        "aria": null,
+        "test": "Hello-challenge-tap-token",
+        "visible": true
+      },
+      {
+        "text": "TOO EASY",
+        "aria": "Too easy",
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "TOO DIFFICULT",
+        "aria": "Too difficult",
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "REPORT",
+        "aria": null,
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "CONTINUE",
+        "aria": null,
+        "test": "player-next",
+        "visible": true
+      }
+    ],
+    "inputs": [],
+    "screenshot_reviewed": false,
+    "archived_screenshot": null
+  },
+  {
+    "name": "33-next",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - Learn French with lessons that work",
+    "utc": "2026-10-26T17:51:42.844474+00:00",
+    "text": "4\nYou’re getting good at this!\nCONTINUE",
+    "buttons": [
+      {
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "visible": true
+      },
+      {
+        "text": "CONTINUE",
+        "aria": null,
+        "test": "player-next",
+        "visible": true
+      }
+    ],
+    "inputs": [],
+    "screenshot_reviewed": false,
+    "archived_screenshot": null
+  },
+  {
+    "name": "34-next",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - Learn French with lessons that work",
+    "utc": "2026-10-26T17:51:57.658946+00:00",
+    "text": "4\nWrite this in English\nun café\ncoffee\na\nand\nSKIP\nCHECK",
+    "buttons": [
+      {
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "visible": true
+      },
+      {
+        "text": "",
+        "aria": null,
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "coffee",
+        "aria": null,
+        "test": "coffee-challenge-tap-token",
+        "visible": true
+      },
+      {
+        "text": "a",
+        "aria": null,
+        "test": "a-challenge-tap-token",
+        "visible": true
+      },
+      {
+        "text": "and",
+        "aria": null,
+        "test": "and-challenge-tap-token",
+        "visible": true
+      },
+      {
+        "text": "SKIP",
+        "aria": null,
+        "test": "player-skip",
+        "visible": true
+      },
+      {
+        "text": "CHECK",
+        "aria": null,
+        "test": "player-next",
+        "visible": true
+      }
+    ],
+    "inputs": [],
+    "screenshot_reviewed": false,
+    "archived_screenshot": null
+  },
+  {
+    "name": "35-answer-seven",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - Learn French with lessons that work",
+    "utc": "2026-10-26T17:52:10.486767+00:00",
+    "text": "6 IN A ROW\n4\nWrite this in English\nun café\na\ncoffee\ncoffee\na\nand\nExcellent!\nTOO EASY\nTOO DIFFICULT\nREPORT\nCONTINUE",
+    "buttons": [
+      {
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "visible": true
+      },
+      {
+        "text": "",
+        "aria": null,
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "a",
+        "aria": null,
+        "test": "a-challenge-tap-token",
+        "visible": true
+      },
+      {
+        "text": "coffee",
+        "aria": null,
+        "test": "coffee-challenge-tap-token",
+        "visible": true
+      },
+      {
+        "text": "coffee",
+        "aria": null,
+        "test": "coffee-challenge-tap-token",
+        "visible": true
+      },
+      {
+        "text": "a",
+        "aria": null,
+        "test": "a-challenge-tap-token",
+        "visible": true
+      },
+      {
+        "text": "and",
+        "aria": null,
+        "test": "and-challenge-tap-token",
+        "visible": true
+      },
+      {
+        "text": "TOO EASY",
+        "aria": "Too easy",
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "TOO DIFFICULT",
+        "aria": "Too difficult",
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "REPORT",
+        "aria": null,
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "CONTINUE",
+        "aria": null,
+        "test": "player-next",
+        "visible": true
+      }
+    ],
+    "inputs": [],
+    "screenshot_reviewed": false,
+    "archived_screenshot": null
+  },
+  {
+    "name": "36-next",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - Learn French with lessons that work",
+    "utc": "2026-10-26T17:52:11.798368+00:00",
+    "text": "4\nSelect the correct meaning\nhello\n1\ns'il vous plaît\n2\nbonjour\n3\ncafé\nSKIP\nCHECK",
+    "buttons": [
+      {
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "visible": true
+      },
+      {
+        "text": "SKIP",
+        "aria": null,
+        "test": "player-skip",
+        "visible": true
+      },
+      {
+        "text": "CHECK",
+        "aria": null,
+        "test": "player-next",
+        "visible": true
+      }
+    ],
+    "inputs": [],
+    "screenshot_reviewed": false,
+    "archived_screenshot": null
+  },
+  {
+    "name": "37-answer-eight",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - Learn French with lessons that work",
+    "utc": "2026-10-26T17:53:42.208454+00:00",
+    "text": "7 IN A ROW\n4\nSelect the correct meaning\nhello\n1\ns'il vous plaît\n2\nbonjour\n3\ncafé\nNice!\nTOO EASY\nTOO DIFFICULT\nREPORT\nCONTINUE",
+    "buttons": [
+      {
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "visible": true
+      },
+      {
+        "text": "TOO EASY",
+        "aria": "Too easy",
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "TOO DIFFICULT",
+        "aria": "Too difficult",
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "REPORT",
+        "aria": null,
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "CONTINUE",
+        "aria": null,
+        "test": "player-next",
+        "visible": true
+      }
+    ],
+    "inputs": [],
+    "screenshot_reviewed": false,
+    "archived_screenshot": null
+  },
+  {
+    "name": "38-next",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - Learn French with lessons that work",
+    "utc": "2026-10-26T17:53:43.497520+00:00",
+    "text": "4\nNEW WORD\nWrite this in English\nMadame, un thé ?\ntea\nsir\nMa'am\nsome\nSKIP\nCHECK",
+    "buttons": [
+      {
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "visible": true
+      },
+      {
+        "text": "",
+        "aria": null,
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "tea",
+        "aria": null,
+        "test": "tea-challenge-tap-token",
+        "visible": true
+      },
+      {
+        "text": "sir",
+        "aria": null,
+        "test": "sir-challenge-tap-token",
+        "visible": true
+      },
+      {
+        "text": "Ma'am",
+        "aria": null,
+        "test": "Ma'am-challenge-tap-token",
+        "visible": true
+      },
+      {
+        "text": "some",
+        "aria": null,
+        "test": "some-challenge-tap-token",
+        "visible": true
+      },
+      {
+        "text": "SKIP",
+        "aria": null,
+        "test": "player-skip",
+        "visible": true
+      },
+      {
+        "text": "CHECK",
+        "aria": null,
+        "test": "player-next",
+        "visible": true
+      }
+    ],
+    "inputs": [],
+    "screenshot_reviewed": false,
+    "archived_screenshot": null
+  },
+  {
+    "name": "39-answer-nine",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - Learn French with lessons that work",
+    "utc": "2026-10-26T17:54:01.615773+00:00",
+    "text": "8 IN A ROW\n4\nNEW WORD\nWrite this in English\nMadame, un thé ?\nMa'am\nsome\ntea\ntea\nsir\nMa'am\nsome\nNice job!\nTOO EASY\nTOO DIFFICULT\nREPORT\nCONTINUE",
+    "buttons": [
+      {
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "visible": true
+      },
+      {
+        "text": "",
+        "aria": null,
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "Ma'am",
+        "aria": null,
+        "test": "Ma'am-challenge-tap-token",
+        "visible": true
+      },
+      {
+        "text": "some",
+        "aria": null,
+        "test": "some-challenge-tap-token",
+        "visible": true
+      },
+      {
+        "text": "tea",
+        "aria": null,
+        "test": "tea-challenge-tap-token",
+        "visible": true
+      },
+      {
+        "text": "tea",
+        "aria": null,
+        "test": "tea-challenge-tap-token",
+        "visible": true
+      },
+      {
+        "text": "sir",
+        "aria": null,
+        "test": "sir-challenge-tap-token",
+        "visible": true
+      },
+      {
+        "text": "Ma'am",
+        "aria": null,
+        "test": "Ma'am-challenge-tap-token",
+        "visible": true
+      },
+      {
+        "text": "some",
+        "aria": null,
+        "test": "some-challenge-tap-token",
+        "visible": true
+      },
+      {
+        "text": "TOO EASY",
+        "aria": "Too easy",
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "TOO DIFFICULT",
+        "aria": "Too difficult",
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "REPORT",
+        "aria": null,
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "CONTINUE",
+        "aria": null,
+        "test": "player-next",
+        "visible": true
+      }
+    ],
+    "inputs": [],
+    "screenshot_reviewed": false,
+    "archived_screenshot": null
+  },
+  {
+    "name": "40-next",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - Learn French with lessons that work",
+    "utc": "2026-10-26T17:54:02.884596+00:00",
+    "text": "4\nNEW WORD\nWrite this in English\nS'il vous plaît, Madame.\nperfect\nMadam\nPlease\nSKIP\nCHECK",
+    "buttons": [
+      {
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "visible": true
+      },
+      {
+        "text": "",
+        "aria": null,
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "perfect",
+        "aria": null,
+        "test": "perfect-challenge-tap-token",
+        "visible": true
+      },
+      {
+        "text": "Madam",
+        "aria": null,
+        "test": "Madam-challenge-tap-token",
+        "visible": true
+      },
+      {
+        "text": "Please",
+        "aria": null,
+        "test": "Please-challenge-tap-token",
+        "visible": true
+      },
+      {
+        "text": "SKIP",
+        "aria": null,
+        "test": "player-skip",
+        "visible": true
+      },
+      {
+        "text": "CHECK",
+        "aria": null,
+        "test": "player-next",
+        "visible": true
+      }
+    ],
+    "inputs": [],
+    "screenshot_reviewed": false,
+    "archived_screenshot": null
+  },
+  {
+    "name": "41-answer-ten",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - Learn French with lessons that work",
+    "utc": "2026-10-26T17:54:13.960488+00:00",
+    "text": "9 IN A ROW\n4\nNEW WORD\nWrite this in English\nS'il vous plaît, Madame.\nPlease\nMadam\nperfect\nMadam\nPlease\nAwesome!\nTOO EASY\nTOO DIFFICULT\nREPORT\nCONTINUE",
+    "buttons": [
+      {
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "visible": true
+      },
+      {
+        "text": "",
+        "aria": null,
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "Please",
+        "aria": null,
+        "test": "Please-challenge-tap-token",
+        "visible": true
+      },
+      {
+        "text": "Madam",
+        "aria": null,
+        "test": "Madam-challenge-tap-token",
+        "visible": true
+      },
+      {
+        "text": "perfect",
+        "aria": null,
+        "test": "perfect-challenge-tap-token",
+        "visible": true
+      },
+      {
+        "text": "Madam",
+        "aria": null,
+        "test": "Madam-challenge-tap-token",
+        "visible": true
+      },
+      {
+        "text": "Please",
+        "aria": null,
+        "test": "Please-challenge-tap-token",
+        "visible": true
+      },
+      {
+        "text": "TOO EASY",
+        "aria": "Too easy",
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "TOO DIFFICULT",
+        "aria": "Too difficult",
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "REPORT",
+        "aria": null,
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "CONTINUE",
+        "aria": null,
+        "test": "player-next",
+        "visible": true
+      }
+    ],
+    "inputs": [],
+    "screenshot_reviewed": false,
+    "archived_screenshot": null
+  },
+  {
+    "name": "42-next",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - Learn French with lessons that work",
+    "utc": "2026-10-26T17:54:15.252459+00:00",
+    "text": "4\nSelect the correct meaning\nplease\n1\ns'il vous plaît\n2\nthé\n3\ncafé\nSKIP\nCHECK",
+    "buttons": [
+      {
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "visible": true
+      },
+      {
+        "text": "SKIP",
+        "aria": null,
+        "test": "player-skip",
+        "visible": true
+      },
+      {
+        "text": "CHECK",
+        "aria": null,
+        "test": "player-next",
+        "visible": true
+      }
+    ],
+    "inputs": [],
+    "screenshot_reviewed": false,
+    "archived_screenshot": null
+  },
+  {
+    "name": "43-answer-eleven",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - Learn French with lessons that work",
+    "utc": "2026-10-26T17:55:07.113566+00:00",
+    "text": "10 IN A ROW\n4\nSelect the correct meaning\nplease\n1\ns'il vous plaît\n2\nthé\n3\ncafé\nGood job!\nTOO EASY\nTOO DIFFICULT\nREPORT\nCONTINUE",
+    "buttons": [
+      {
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "visible": true
+      },
+      {
+        "text": "TOO EASY",
+        "aria": "Too easy",
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "TOO DIFFICULT",
+        "aria": "Too difficult",
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "REPORT",
+        "aria": null,
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "CONTINUE",
+        "aria": null,
+        "test": "player-next",
+        "visible": true
+      }
+    ],
+    "inputs": [],
+    "screenshot_reviewed": false,
+    "archived_screenshot": null
+  },
+  {
+    "name": "44-next",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - Learn French with lessons that work",
+    "utc": "2026-10-26T17:55:08.323380+00:00",
+    "text": "4\nWow, you’ve been working hard!\nCONTINUE",
+    "buttons": [
+      {
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "visible": true
+      },
+      {
+        "text": "CONTINUE",
+        "aria": null,
+        "test": "player-next",
+        "visible": true
+      }
+    ],
+    "inputs": [],
+    "screenshot_reviewed": false,
+    "archived_screenshot": null
+  },
+  {
+    "name": "45-next",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - Learn French with lessons that work",
+    "utc": "2026-10-26T17:55:22.527791+00:00",
+    "text": "4\nTap what you hear\nthé\nBonjour\nCAN'T LISTEN NOW\nUSE KEYBOARD\nCHECK",
+    "buttons": [
+      {
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "visible": true
+      },
+      {
+        "text": "",
+        "aria": null,
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "",
+        "aria": null,
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "thé",
+        "aria": null,
+        "test": "thé-challenge-tap-token",
+        "visible": true
+      },
+      {
+        "text": "Bonjour",
+        "aria": null,
+        "test": "Bonjour-challenge-tap-token",
+        "visible": true
+      },
+      {
+        "text": "CAN'T LISTEN NOW",
+        "aria": null,
+        "test": "player-skip",
+        "visible": true
+      },
+      {
+        "text": "USE KEYBOARD",
+        "aria": null,
+        "test": "player-toggle-keyboard",
+        "visible": true
+      },
+      {
+        "text": "CHECK",
+        "aria": null,
+        "test": "player-next",
+        "visible": true
+      }
+    ],
+    "inputs": [],
+    "screenshot_reviewed": true,
+    "archived_screenshot": "browser/45-next.png"
+  },
+  {
+    "name": "46-cannot-listen",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - Learn French with lessons that work",
+    "utc": "2026-10-26T17:55:40.677207+00:00",
+    "text": "4\nTap what you hear\nthé\nBonjour\nNo listening exercises.\nThey will be back in 15 minutes.\nTOO EASY\nTOO DIFFICULT\nREPORT\nCONTINUE",
+    "buttons": [
+      {
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "visible": true
+      },
+      {
+        "text": "",
+        "aria": null,
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "",
+        "aria": null,
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "thé",
+        "aria": null,
+        "test": "thé-challenge-tap-token",
+        "visible": true
+      },
+      {
+        "text": "Bonjour",
+        "aria": null,
+        "test": "Bonjour-challenge-tap-token",
+        "visible": true
+      },
+      {
+        "text": "TOO EASY",
+        "aria": "Too easy",
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "TOO DIFFICULT",
+        "aria": "Too difficult",
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "REPORT",
+        "aria": null,
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "CONTINUE",
+        "aria": null,
+        "test": "player-next",
+        "visible": true
+      }
+    ],
+    "inputs": [],
+    "screenshot_reviewed": true,
+    "archived_screenshot": "browser/46-cannot-listen.png"
+  },
+  {
+    "name": "47-next",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - Learn French with lessons that work",
+    "utc": "2026-10-26T17:56:43.321189+00:00",
+    "text": "4\nNEW WORD\nWrite this in English\nBonjour !\nor\nHello\nSKIP\nCHECK",
+    "buttons": [
+      {
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "visible": true
+      },
+      {
+        "text": "",
+        "aria": null,
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "or",
+        "aria": null,
+        "test": "or-challenge-tap-token",
+        "visible": true
+      },
+      {
+        "text": "Hello",
+        "aria": null,
+        "test": "Hello-challenge-tap-token",
+        "visible": true
+      },
+      {
+        "text": "SKIP",
+        "aria": null,
+        "test": "player-skip",
+        "visible": true
+      },
+      {
+        "text": "CHECK",
+        "aria": null,
+        "test": "player-next",
+        "visible": true
+      }
+    ],
+    "inputs": [],
+    "screenshot_reviewed": false,
+    "archived_screenshot": null
+  },
+  {
+    "name": "48-answer-thirteen",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - Learn French with lessons that work",
+    "utc": "2026-10-26T17:56:57.143537+00:00",
+    "text": "11 IN A ROW\n4\nNEW WORD\nWrite this in English\nBonjour !\nHello\nor\nHello\nNice!\nTOO EASY\nTOO DIFFICULT\nREPORT\nCONTINUE",
+    "buttons": [
+      {
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "visible": true
+      },
+      {
+        "text": "",
+        "aria": null,
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "Hello",
+        "aria": null,
+        "test": "Hello-challenge-tap-token",
+        "visible": true
+      },
+      {
+        "text": "or",
+        "aria": null,
+        "test": "or-challenge-tap-token",
+        "visible": true
+      },
+      {
+        "text": "Hello",
+        "aria": null,
+        "test": "Hello-challenge-tap-token",
+        "visible": true
+      },
+      {
+        "text": "TOO EASY",
+        "aria": "Too easy",
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "TOO DIFFICULT",
+        "aria": "Too difficult",
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "REPORT",
+        "aria": null,
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "CONTINUE",
+        "aria": null,
+        "test": "player-next",
+        "visible": true
+      }
+    ],
+    "inputs": [],
+    "screenshot_reviewed": false,
+    "archived_screenshot": null
+  },
+  {
+    "name": "49-next",
+    "url": "https://www.duolingo.com/learn",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "utc": "2026-10-26T17:57:00.327802+00:00",
+    "text": "",
+    "buttons": [],
+    "inputs": [],
+    "screenshot_reviewed": false,
+    "archived_screenshot": null
+  },
+  {
+    "name": "50-after-lesson-wait",
+    "url": "https://www.duolingo.com/learn",
+    "title": "Duolingo - Learn French with lessons that work",
+    "utc": "2026-10-26T17:57:28.160598+00:00",
+    "text": "LEARN\nLEADERBOARDS\nQUESTS\nSHOP\nPROFILE\nMORE\n0\n500\n4\nUnlock Leaderboards!\nComplete 3 more lessons to start competing\nDaily Quests\nVIEW ALL\nEarn 10 XP\n0 / 10\n0 / 10\nCreate a profile to save your progress!\nCREATE A PROFILE\nSIGN IN\nABOUT\nBLOG\nSTORE\nEFFICACY\nCAREERS\nINVESTORS\nTERMS\nPRIVACY\nHow much French do you know?\nHow much French do you know?\nI’m new to French\nI know some common words\nI can have basic conversations\nI can talk about various topics\nI can discuss most topics in detail\nCONTINUE",
+    "buttons": [
+      {
+        "text": "CREATE A PROFILE",
+        "aria": null,
+        "test": "create-profile-juicy",
+        "visible": true
+      },
+      {
+        "text": "SIGN IN",
+        "aria": null,
+        "test": "sign-in-juicy",
+        "visible": true
+      },
+      {
+        "text": "CONTINUE",
+        "aria": null,
+        "test": "funboarding-continue-button",
+        "visible": true
+      }
+    ],
+    "inputs": [],
+    "screenshot_reviewed": true,
+    "archived_screenshot": "browser/50-after-lesson-wait.png"
+  },
+  {
+    "name": "51-after-return-level",
+    "url": "https://www.duolingo.com/learn",
+    "title": "Duolingo - Learn French with lessons that work",
+    "utc": "2026-10-26T17:58:18.153509+00:00",
+    "text": "LEARN\nLEADERBOARDS\nQUESTS\nSHOP\nPROFILE\nMORE\n0\n500\n4\nUnlock Leaderboards!\nComplete 3 more lessons to start competing\nDaily Quests\nVIEW ALL\nEarn 10 XP\n0 / 10\n0 / 10\nCreate a profile to save your progress!\nCREATE A PROFILE\nSIGN IN\nABOUT\nBLOG\nSTORE\nEFFICACY\nCAREERS\nINVESTORS\nTERMS\nPRIVACY\nNow let’s find the best place to start!\nNow let’s find the best place to start!\nI’m new to French\nI know some common words\nI can have basic conversations\nI can talk about various topics\nI can discuss most topics in detail\nStart from scratch\nTake the easiest lesson of the French course\nFind my level\nLet Duo recommend where you should start learning\nCONTINUE",
+    "buttons": [
+      {
+        "text": "CREATE A PROFILE",
+        "aria": null,
+        "test": "create-profile-juicy",
+        "visible": true
+      },
+      {
+        "text": "SIGN IN",
+        "aria": null,
+        "test": "sign-in-juicy",
+        "visible": true
+      },
+      {
+        "text": "CONTINUE",
+        "aria": null,
+        "test": "funboarding-continue-button",
+        "visible": true
+      }
+    ],
+    "inputs": [],
+    "screenshot_reviewed": false,
+    "archived_screenshot": null
+  },
+  {
+    "name": "52-reenter-start",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - Learn French with lessons that work",
+    "utc": "2026-10-26T17:58:40.528382+00:00",
+    "text": "LOADING...\nDuolingo is the world’s largest community of language learners.",
+    "buttons": [],
+    "inputs": [],
+    "screenshot_reviewed": false,
+    "archived_screenshot": null
+  },
+  {
+    "name": "53-second-entry-ready",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - Learn French with lessons that work",
+    "utc": "2026-10-26T17:59:39.468585+00:00",
+    "text": "4\nNEW WORD\nWhich one of these is “coffee”?\ncroissant\n1\nthé\n2\ncafé\n3\nSKIP\nCHECK",
+    "buttons": [
+      {
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "visible": true
+      },
+      {
+        "text": "SKIP",
+        "aria": null,
+        "test": "player-skip",
+        "visible": true
+      },
+      {
+        "text": "CHECK",
+        "aria": null,
+        "test": "player-next",
+        "visible": true
+      }
+    ],
+    "inputs": [],
+    "screenshot_reviewed": true,
+    "archived_screenshot": "browser/53-second-entry-ready.png"
+  },
+  {
+    "name": "54-second-entry-correct",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - Learn French with lessons that work",
+    "utc": "2026-10-26T17:59:56.445194+00:00",
+    "text": "4\nNEW WORD\nWhich one of these is “coffee”?\ncroissant\n1\nthé\n2\ncafé\n3\nCorrect!\nTOO EASY\nTOO DIFFICULT\nREPORT\nCONTINUE",
+    "buttons": [
+      {
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "visible": true
+      },
+      {
+        "text": "TOO EASY",
+        "aria": "Too easy",
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "TOO DIFFICULT",
+        "aria": "Too difficult",
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "REPORT",
+        "aria": null,
+        "test": null,
+        "visible": true
+      },
+      {
+        "text": "CONTINUE",
+        "aria": null,
+        "test": "player-next",
+        "visible": true
+      }
+    ],
+    "inputs": [],
+    "screenshot_reviewed": false,
+    "archived_screenshot": null
+  },
+  {
+    "name": "55-second-question",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - Learn French with lessons that work",
+    "utc": "2026-10-26T17:59:57.451278+00:00",
+    "text": "4\nNEW WORD\nWhich one of these is “tea”?\nthé\n1\ncroissant\n2\ncafé\n3\nSKIP\nCHECK",
+    "buttons": [
+      {
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "visible": true
+      },
+      {
+        "text": "SKIP",
+        "aria": null,
+        "test": "player-skip",
+        "visible": true
+      },
+      {
+        "text": "CHECK",
+        "aria": null,
+        "test": "player-next",
+        "visible": true
+      }
+    ],
+    "inputs": [],
+    "screenshot_reviewed": false,
+    "archived_screenshot": null
+  },
+  {
+    "name": "56-confirm-exit",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - Learn French with lessons that work",
+    "utc": "2026-10-26T17:59:58.315598+00:00",
+    "text": "4\nNEW WORD\nWhich one of these is “tea”?\nthé\n1\ncroissant\n2\ncafé\n3\nSKIP\nCHECK\nWait, don’t go! You’ll lose your progress if you quit now\nKEEP LEARNING\nEND SESSION",
+    "buttons": [
+      {
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "visible": true
+      },
+      {
+        "text": "SKIP",
+        "aria": null,
+        "test": "player-skip",
+        "visible": true
+      },
+      {
+        "text": "CHECK",
+        "aria": null,
+        "test": "player-next",
+        "visible": true
+      },
+      {
+        "text": "KEEP LEARNING",
+        "aria": null,
+        "test": "notification-button",
+        "visible": true
+      },
+      {
+        "text": "END SESSION",
+        "aria": null,
+        "test": "notification-drawer-no-thanks-button",
+        "visible": true
+      }
+    ],
+    "inputs": [],
+    "screenshot_reviewed": true,
+    "archived_screenshot": "browser/56-confirm-exit.png"
+  },
+  {
+    "name": "57-exited",
+    "url": "https://www.duolingo.com/learn",
+    "title": "Duolingo - Learn French with lessons that work",
+    "utc": "2026-10-26T18:00:00.600209+00:00",
+    "text": "LEARN\nLEADERBOARDS\nQUESTS\nSHOP\nPROFILE\nMORE\n0\n500\n4\nUnlock Leaderboards!\nComplete 3 more lessons to start competing\nDaily Quests\nVIEW ALL\nEarn 10 XP\n0 / 10\n0 / 10\nCreate a profile to save your progress!\nCREATE A PROFILE\nSIGN IN\nABOUT\nBLOG\nSTORE\nEFFICACY\nCAREERS\nINVESTORS\nTERMS\nPRIVACY\nHow much French do you know?\nHow much French do you know?\nI’m new to French\nI know some common words\nI can have basic conversations\nI can talk about various topics\nI can discuss most topics in detail\nCONTINUE",
+    "buttons": [
+      {
+        "text": "CREATE A PROFILE",
+        "aria": null,
+        "test": "create-profile-juicy",
+        "visible": true
+      },
+      {
+        "text": "SIGN IN",
+        "aria": null,
+        "test": "sign-in-juicy",
+        "visible": true
+      },
+      {
+        "text": "CONTINUE",
+        "aria": null,
+        "test": "funboarding-continue-button",
+        "visible": true
+      }
+    ],
+    "inputs": [],
+    "screenshot_reviewed": true,
+    "archived_screenshot": "browser/57-exited.png"
+  }
+]

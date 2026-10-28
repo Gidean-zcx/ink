@@ -1,0 +1,77 @@
+[
+  {
+    "url": "https://blog.duolingo.com/adventures/",
+    "status": 200,
+    "final": "https://blog.duolingo.com/adventures/"
+  },
+  {
+    "url": "https://docs.ankiweb.net/manual/deck-options",
+    "status": 200,
+    "final": "https://docs.ankiweb.net/manual/deck-options"
+  },
+  {
+    "url": "https://docs.ankiweb.net/manual/importing/text-files",
+    "status": 200,
+    "final": "https://docs.ankiweb.net/manual/importing/text-files"
+  },
+  {
+    "url": "https://docs.espressif.com/projects/esp-sr/en/latest/esp32s3/wake_word_engine/README.html",
+    "status": 200,
+    "final": "https://docs.espressif.com/projects/esp-sr/en/latest/esp32s3/wake_word_engine/README.html"
+  },
+  {
+    "url": "https://docs.readwise.io/reader/docs",
+    "status": 200,
+    "final": "https://docs.readwise.io/reader/docs"
+  },
+  {
+    "url": "https://modelcontextprotocol.io/specification/2025-11-25/server/tools",
+    "status": 200,
+    "final": "https://modelcontextprotocol.io/specification/2025-11-25/server/tools"
+  },
+  {
+    "url": "https://shop.boox.com/en-ca/blogs/news/boox-super-refresh-bsr-technology",
+    "status": 200,
+    "final": "https://shop.boox.com/en-ca/blogs/news/boox-super-refresh-bsr-technology"
+  },
+  {
+    "url": "https://store.bigme.vip/pages/hibreak-pro-landing-page",
+    "status": 200,
+    "final": "https://store.bigme.vip/pages/hibreak-pro-landing-page"
+  },
+  {
+    "url": "https://support.yotoplay.com/en_gb/does-my-yoto-need-to-be-online-to-play-content-rkmbFFj7fg",
+    "status": 200,
+    "final": "https://support.yotoplay.com/en_gb/does-my-yoto-need-to-be-online-to-play-content-rkmbFFj7fg"
+  },
+  {
+    "url": "https://support.yotoplay.com/en_gb/how-to-control-your-yoto-player-SyGKKj7zg",
+    "status": 200,
+    "final": "https://support.yotoplay.com/en_gb/how-to-control-your-yoto-player-SyGKKj7zg"
+  },
+  {
+    "url": "https://www.anthropic.com/research/code-execution-with-mcp",
+    "status": 200,
+    "final": "https://www.anthropic.com/research/code-execution-with-mcp"
+  },
+  {
+    "url": "https://www.hackster.io/wenting-zhang/60fps-eink-gameboy-emulator-on-m5papers3-57e4e5",
+    "status": 200,
+    "final": "https://www.hackster.io/wenting-zhang/60fps-eink-gameboy-emulator-on-m5papers3-57e4e5"
+  },
+  {
+    "url": "https://www.ihuman.com/shizi",
+    "status": 200,
+    "final": "https://www.ihuman.com/shizi"
+  },
+  {
+    "url": "https://www.jiakaobaodian.com/",
+    "status": 403,
+    "note": "HTTP rejection; browser evidence must be considered separately"
+  },
+  {
+    "url": "https://www.khanacademy.org/kids",
+    "status": 200,
+    "final": "https://www.khanacademy.org/kids"
+  }
+]

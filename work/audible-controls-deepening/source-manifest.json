@@ -1,0 +1,212 @@
+[
+  {
+    "path": "work/audible-controls-deepening/extracted/01.txt",
+    "sha256": "561439afa39beace3ec25e771cebe4180d462bfdff2c7b96e452e977b7a54a13",
+    "bytes": 5363,
+    "kind": "derived_per_source_web_text"
+  },
+  {
+    "path": "work/audible-controls-deepening/extracted/02.txt",
+    "sha256": "a876080b0ca20ded5674da66a6bfb2c5f3c9be838498c1f1b32035eefbf68d6d",
+    "bytes": 6465,
+    "kind": "derived_per_source_web_text"
+  },
+  {
+    "path": "work/audible-controls-deepening/extracted/03.txt",
+    "sha256": "ac128ecd1b016e3eca169ffbd66559be0a96642c8d86d8f5b57f41007fe84886",
+    "bytes": 9094,
+    "kind": "derived_per_source_web_text"
+  },
+  {
+    "path": "work/audible-controls-deepening/extracted/04.txt",
+    "sha256": "2ffbf4fe355c4669271d8209c64ca2e5f539f361207dac6e5a1764cecd6e0c62",
+    "bytes": 5959,
+    "kind": "derived_per_source_web_text"
+  },
+  {
+    "path": "work/audible-controls-deepening/extracted/05.txt",
+    "sha256": "061834cf46d4485479a0daec0afc51744a7c48b8c9ec0e8a99b18f91bfb0ed36",
+    "bytes": 7467,
+    "kind": "derived_per_source_web_text"
+  },
+  {
+    "path": "work/audible-controls-deepening/extracted/06.txt",
+    "sha256": "e630bb7fe3987a9601d7a5690a514c72cf6e9616b3ba6b62aa3df1c94d187ac6",
+    "bytes": 7095,
+    "kind": "derived_per_source_web_text"
+  },
+  {
+    "path": "work/audible-controls-deepening/extracted/07.txt",
+    "sha256": "b6d26afd3353db26c815f416bb15eb3226a639507d91bcf7a4053ad42b520d7b",
+    "bytes": 6868,
+    "kind": "derived_per_source_web_text"
+  },
+  {
+    "path": "work/audible-controls-deepening/extracted/08.txt",
+    "sha256": "37e5f6b2583d3ad9b34921afd38d747b32afb2ec9a9c549b930200ea0c1432c2",
+    "bytes": 5021,
+    "kind": "derived_per_source_web_text"
+  },
+  {
+    "path": "work/audible-controls-deepening/extracted/09.txt",
+    "sha256": "f56f5afffd3135596837c762ce3c6363fb6b1799146cadc69a59bf26bcb2b541",
+    "bytes": 11388,
+    "kind": "derived_per_source_web_text"
+  },
+  {
+    "path": "work/audible-controls-deepening/extracted/10.txt",
+    "sha256": "80c5caf7f6265e7258bcdc815cfa318c88c95f435adc3d63577ed3f63ad2610c",
+    "bytes": 3950,
+    "kind": "derived_per_source_web_text"
+  },
+  {
+    "path": "work/audible-controls-deepening/extracted/11.txt",
+    "sha256": "f07d3eb52612b232bc44ff8c7ed245faf1b25e3772bdd6f554ceeafd66467576",
+    "bytes": 4052,
+    "kind": "derived_per_source_web_text"
+  },
+  {
+    "path": "work/audible-controls-deepening/extracted/12.txt",
+    "sha256": "16af6c0017c8acd0e5fd76d180d3075a2785613af45a0f3ab1eeeffdc3830f78",
+    "bytes": 4124,
+    "kind": "derived_per_source_web_text"
+  },
+  {
+    "path": "work/audible-controls-deepening/extracted/13.txt",
+    "sha256": "2368990d59a17d22185257a72a25e474ff02366dc7db37fb5a6bc2ce280f37e9",
+    "bytes": 3255,
+    "kind": "derived_per_source_web_text"
+  },
+  {
+    "path": "work/audible-controls-deepening/extracted/14.txt",
+    "sha256": "216855c2faf1566d90bb23cbf37fcf55572329acd59d555ab7876cb5fda19481",
+    "bytes": 4030,
+    "kind": "derived_per_source_web_text"
+  },
+  {
+    "path": "work/audible-controls-deepening/extracted/15.txt",
+    "sha256": "c99e8bb44a44e1bd984ff5f4db1880414a5b5fa89424f87bf9a13e47405131bd",
+    "bytes": 4939,
+    "kind": "derived_per_source_web_text"
+  },
+  {
+    "path": "work/audible-controls-deepening/extracted/16.txt",
+    "sha256": "49b43f0d1c4928d801537d3e141c0a49f8678fe41b001e0f12f37f9dbf1925ed",
+    "bytes": 4253,
+    "kind": "derived_per_source_web_text"
+  },
+  {
+    "path": "work/audible-controls-deepening/extracted/17.txt",
+    "sha256": "45933c749c985a00af51f18ad3c83e7f60b5ee86093f7b5ee665cfeaf2d32209",
+    "bytes": 2550,
+    "kind": "derived_per_source_web_text"
+  },
+  {
+    "path": "work/audible-controls-deepening/extracted/18.txt",
+    "sha256": "f5c4293868eb2b8335a19e90ce6821db8eb30dff7fc088a7d5b50c53f9348eae",
+    "bytes": 4092,
+    "kind": "derived_per_source_web_text"
+  },
+  {
+    "path": "work/audible-controls-deepening/extracted/19.txt",
+    "sha256": "46444d67991705ee43129662cd78547867956452a77ebe70f26d08c4b2cbe82e",
+    "bytes": 4741,
+    "kind": "derived_per_source_web_text"
+  },
+  {
+    "path": "work/audible-controls-deepening/extracted/20.txt",
+    "sha256": "8732d263ae3bda46ddab967da6ea50260eb0d115a549018d6518116bd8c3efc0",
+    "bytes": 8550,
+    "kind": "derived_per_source_web_text"
+  },
+  {
+    "path": "work/audible-controls-deepening/extracted/21.txt",
+    "sha256": "bd6cf0c2e2bab8e44dd23dbba2ff0158f35108b2bbfe24e108c2d87a322e1e48",
+    "bytes": 12658,
+    "kind": "derived_per_source_web_text"
+  },
+  {
+    "path": "work/audible-controls-deepening/extracted/22.txt",
+    "sha256": "ccb29464ae8ddd4a4bc647cc55b3477623855223b6131d485b0af65b997d6c89",
+    "bytes": 1707,
+    "kind": "derived_per_source_web_text"
+  },
+  {
+    "path": "work/audible-controls-deepening/extracted/23.txt",
+    "sha256": "34931dc80149956ac9f3d9901194aa2af8fddf8cafc124b1ba3c86584b08f28f",
+    "bytes": 3329,
+    "kind": "derived_per_source_web_text"
+  },
+  {
+    "path": "work/audible-controls-deepening/library.html",
+    "sha256": "ba58cc455533a178ceb1ff07e07b376a6e59c8bf720ddb30efd2b675f1e55242",
+    "bytes": 127181,
+    "kind": "http_frontend_shell_no_article_body"
+  },
+  {
+    "path": "work/audible-controls-deepening/listen.html",
+    "sha256": "ba58cc455533a178ceb1ff07e07b376a6e59c8bf720ddb30efd2b675f1e55242",
+    "bytes": 127181,
+    "kind": "http_frontend_shell_no_article_body"
+  },
+  {
+    "path": "work/audible-controls-deepening/listening-index.html",
+    "sha256": "ba58cc455533a178ceb1ff07e07b376a6e59c8bf720ddb30efd2b675f1e55242",
+    "bytes": 127181,
+    "kind": "http_frontend_shell_no_article_body"
+  },
+  {
+    "path": "work/audible-controls-deepening/player-index.html",
+    "sha256": "ba58cc455533a178ceb1ff07e07b376a6e59c8bf720ddb30efd2b675f1e55242",
+    "bytes": 127181,
+    "kind": "http_frontend_shell_no_article_body"
+  },
+  {
+    "path": "work/audible-controls-deepening/web-boundaries-snapshot.json",
+    "sha256": "725d9fc3a1a52cb10b2c568cdb7123589e8d09467e8e6f1f7faf7355e50c5e09",
+    "bytes": 36178,
+    "kind": "web_tool_snapshot"
+  },
+  {
+    "path": "work/audible-controls-deepening/web-controls-snapshot.json",
+    "sha256": "9e4640458f3d8c2b6092cb7cfc305a46223d909beb774f10bfd0f3d46547add5",
+    "bytes": 29767,
+    "kind": "web_tool_snapshot"
+  },
+  {
+    "path": "work/audible-controls-deepening/web-core-snapshot.json",
+    "sha256": "b7672487bb43dabfd3436b0df480acc42866bd6371f196503dd16c90378eee55",
+    "bytes": 28371,
+    "kind": "web_tool_snapshot"
+  },
+  {
+    "path": "work/audible-controls-deepening/web-discovery-snapshot.json",
+    "sha256": "21b1f7aafe47331eb4b38b78be8e079d9a99097ef9912e37cc5f181cc0aedc36",
+    "bytes": 36295,
+    "kind": "web_tool_snapshot"
+  },
+  {
+    "path": "work/audible-controls-deepening/web-final-snapshot.json",
+    "sha256": "9af6e34be96163a6076f6691786ff16ae40a6d708229ab0037a65728fa156cf9",
+    "bytes": 26688,
+    "kind": "web_tool_snapshot"
+  },
+  {
+    "path": "work/audible-controls-deepening/web-index-snapshot.json",
+    "sha256": "c36832643b056c4b39b8ba8d7d238f83e2cb189e0d5755c20b2c143bab3ea514",
+    "bytes": 24134,
+    "kind": "web_tool_snapshot"
+  },
+  {
+    "path": "work/audible-controls-deepening/web-player-snapshot.json",
+    "sha256": "ea5f9a06f6b6852c3a2528cc5c99d1082f17f894302c108a29516c3b5d47c455",
+    "bytes": 21648,
+    "kind": "web_tool_snapshot"
+  },
+  {
+    "path": "work/audible-controls-deepening/web-state-snapshot.json",
+    "sha256": "a02f03791f0fbc9fd43bcc668dbc528ae01453c8eca51e6674c18371506a9e77",
+    "bytes": 25848,
+    "kind": "web_tool_snapshot"
+  }
+]

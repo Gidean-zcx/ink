@@ -1,0 +1,74 @@
+[
+  {
+    "name": "article-6692033",
+    "url": "https://help.ground.news/en/articles/6692033",
+    "final_url": "https://help.ground.news/en/articles/6692033",
+    "status": 200,
+    "checked_on": "2026-10-27",
+    "checked_utc": "2026-10-26T18:55:34.119434+00:00",
+    "raw_work_path": "work/ground-controls-deepening/article-6692033.html",
+    "raw_sha256": "6b71fe01a36e04bdc79ca99e88df248833ba6f7e2ddd321ab4ba68bac45a6465",
+    "bytes": 100940,
+    "parsed_text_path": "work/ground-controls-deepening/article-6692033.txt"
+  },
+  {
+    "name": "article-334913",
+    "url": "https://help.ground.news/en/articles/334913",
+    "final_url": "https://help.ground.news/en/articles/334913",
+    "status": 200,
+    "checked_on": "2026-10-27",
+    "checked_utc": "2026-10-26T18:55:34.104086+00:00",
+    "raw_work_path": "work/ground-controls-deepening/article-334913.html",
+    "raw_sha256": "1a61662e6d482e28a38551c227d8bbb1dca62ea6841807c0c6c2591bb2fa4718",
+    "bytes": 99539,
+    "parsed_text_path": "work/ground-controls-deepening/article-334913.txt"
+  },
+  {
+    "name": "article-245697",
+    "url": "https://help.ground.news/en/articles/245697",
+    "final_url": "https://help.ground.news/en/articles/245697",
+    "status": 200,
+    "checked_on": "2026-10-27",
+    "checked_utc": "2026-10-26T18:55:34.342335+00:00",
+    "raw_work_path": "work/ground-controls-deepening/article-245697.html",
+    "raw_sha256": "dd97eae4c996146b16d02fa27a4d94c8366b9906fa722b257c7ffbfd0c433bd1",
+    "bytes": 101759,
+    "parsed_text_path": "work/ground-controls-deepening/article-245697.txt"
+  },
+  {
+    "name": "article-335041",
+    "url": "https://help.ground.news/en/articles/335041",
+    "final_url": "https://help.ground.news/en/articles/335041",
+    "status": 200,
+    "checked_on": "2026-10-27",
+    "checked_utc": "2026-10-26T18:55:34.837207+00:00",
+    "raw_work_path": "work/ground-controls-deepening/article-335041.html",
+    "raw_sha256": "ea5a97b151bdc459ac001d2dd0fbe89b32b22f3ac8eb4e297df43c112b33f58c",
+    "bytes": 107440,
+    "parsed_text_path": "work/ground-controls-deepening/article-335041.txt"
+  },
+  {
+    "name": "article-648577",
+    "url": "https://help.ground.news/en/articles/648577",
+    "final_url": "https://help.ground.news/en/articles/648577",
+    "status": 200,
+    "checked_on": "2026-10-27",
+    "checked_utc": "2026-10-26T18:55:34.923678+00:00",
+    "raw_work_path": "work/ground-controls-deepening/article-648577.html",
+    "raw_sha256": "ef4a68842f1d1ca01048a980d24be3dd1e608931ba6fd94203713929bcdc954a",
+    "bytes": 98199,
+    "parsed_text_path": "work/ground-controls-deepening/article-648577.txt"
+  },
+  {
+    "name": "article-244865",
+    "url": "https://help.ground.news/en/articles/244865",
+    "final_url": "https://help.ground.news/en/articles/244865",
+    "status": 200,
+    "checked_on": "2026-10-27",
+    "checked_utc": "2026-10-26T18:55:35.030757+00:00",
+    "raw_work_path": "work/ground-controls-deepening/article-244865.html",
+    "raw_sha256": "4f1828a6e474eba218a308abd64e33f79b012945dfe7a97c90989c706f927985",
+    "bytes": 107421,
+    "parsed_text_path": "work/ground-controls-deepening/article-244865.txt"
+  }
+]

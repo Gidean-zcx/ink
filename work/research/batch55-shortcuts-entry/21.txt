@@ -1,0 +1,12 @@
+About share actions in Shortcuts on iPhone or iPad
+After get actions bring content into the shortcut and transform actions modify that content, share actions send your content to a new place. Share actions comprise the largest group of actions in Shortcuts and include a variety of integrations with other apps and services (including third-party apps and services) that widen the capabilities of your shortcuts. These actions are commonly used near the end of a shortcut to pass the content into another app as the final step in accomplishing your goal.
+The most straightforward sharing actions are Share and Share with Extensions.
+As you build your shortcut, you can search the list of actions using keywords like add, create, post, share, send, and log for making new items, save and append for working with files, and open for launching other apps.
+Share actions for adding new items
+Share actions let you add or create items in other apps. For example, Add New Event adds an event to the Calendar app, Create Playlist creates a playlist in the Music app, and Save to Photo Album adds photos to a specified album in the Photos app. Some share actions are used for posting content to social media services. Other share actions are used for logging data, including Log Health Sample and Log Workout.
+Share actions for file management
+File-related share actions include Save File and Save to Photo Album. In some cases, share actions can append data to existing files, namely the Append to Note action and some third-party actions. You can search for file-related share actions using the keyword save.
+Share actions for launching content in another app
+Share actions that launch content in another app include Open URLs, Open App, Open In, and so on. You can search for these share actions using the keyword open.
+For example, Open URLs takes any links passed as input and opens them in Safari. Open URLs also supports URL schemes provided by other apps you’ve installed.
+The Open In action sends a copy of your work to another app that supports documents. Perhaps you want your shortcut to fetch a webpage, convert it from HTML to Rich Text, and then send it to Pages or another word processor. Open in Books is similarly useful for saving PDFs or ebooks in Apple Books.See alsoIdeas for custom shortcuts on iPhone or iPad

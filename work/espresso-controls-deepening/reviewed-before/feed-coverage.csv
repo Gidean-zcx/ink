@@ -1,0 +1,13 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M051-01,M-051,进入观看至退出回访,D1,E-DOUY-01;E-DOUY-04,无连续观察,播放状态与主入口及结束恢复,not_observed,false,cases/M-051-douyin.md,2026-10-26
+F-M051-02,M-051,不感兴趣与减少同类,D2,E-DOUY-03,长按或分享入口,撤销及提交反馈,not_observed,false,cases/M-051-douyin.md,2026-10-26
+F-M051-03,M-051,助手调节类别与探索,D2,E-DOUY-03,探索风格和三级强度及屏蔽,统计周期及同步恢复,not_observed,false,cases/M-051-douyin.md,2026-10-26
+F-M051-04,M-051,关闭推荐或主动搜索,D2,E-DOUY-02,推荐频道隐藏;其他频道保留,搜索结果返回与实际界面,not_observed,false,cases/M-051-douyin.md,2026-10-26
+F-M051-05,M-051,亲子绑定与时长管理,D2,E-DOUY-05;E-DOUY-06,双端接受与超时密码夜间限制,拒绝误绑解绑忘记密码,not_observed,false,cases/M-051-douyin.md,2026-10-26
+F-M051-06,M-051,AI笔记跳回片段,D2,E-DOUY-06,仅部分知识视频,摘要失败纠错导出与掌握判定,not_observed,false,cases/M-051-douyin.md,2026-10-26
+F-M052-01,M-052,一篇资讯读完回访,D1,E-TT-02;E-TT-04,无连续观察,阅读器状态及出处返回续读,not_observed,false,cases/M-052-toutiao.md,2026-10-26
+F-M052-02,M-052,负反馈与标签屏蔽,D2,E-TT-01,X理由与增删屏蔽,提交撤销及弱网,not_observed,false,cases/M-052-toutiao.md,2026-10-26
+F-M052-03,M-052,推荐开关与内容丰富度,D2,E-TT-01,隐藏推荐保留其他频道,重启同步及恢复内容,not_observed,false,cases/M-052-toutiao.md,2026-10-26
+F-M052-04,M-052,兴趣重置与历史查询,D2,E-TT-01,清除后重新积累,确认撤销及列表内容续读,not_observed,false,cases/M-052-toutiao.md,2026-10-26
+F-M052-05,M-052,搜索历史与无痕设置,D2,E-TT-01,搜索阅读两个无痕入口,实际检索主链及错误恢复,not_observed,false,cases/M-052-toutiao.md,2026-10-26
+F-M052-06,M-052,未成年人模式阅读与限时,D1,E-TT-03,模式功能有限,开启设龄超时解锁完整流程,not_observed,false,cases/M-052-toutiao.md,2026-10-26

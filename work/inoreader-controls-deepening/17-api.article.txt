@@ -1,0 +1,58 @@
+Connect your own apps and scripts to Inoreader
+The Inoreader API gives your own code access to your subscriptions, folders, tags, articles and unread counts. It is a documented REST API with OAuth 2.0 and JSON responses.
+Read the API documentation
+ProAPI access is included in Pro.
+TeamTeam plans include it too, with one shared application for the whole team.
+Work with your account from your own code
+With the Inoreader API, your program can do what you do in the reader: list feeds, read articles, mark them read, tag them and add new sources.
+Full account access
+List the subscriptions, folders and tags, read the articles of any stream with paging and filters, change the unread state, tag and save articles, add feeds and create monitoring feeds.
+JSON responses
+The responses are JSON in the format feed reader clients have used for years, so existing libraries and code often fit with little change.
+OAuth 2.0 or a client login
+Applications that other people use sign in with OAuth 2.0 through a consent page on Inoreader. Scripts that act on your own account can use a client login instead.
+Usage limits
+You register each application in the developer panel in Preferences, which shows its daily limits and usage. Higher limits come with Custom plans.
+Connect in four steps
+On a Pro or Team account, open Preferences > Developer, and create an application. Note its app ID and key.
+Read the authentication guide and implement OAuth 2.0, or use the client login for a script that works on your own account.
+Call the methods you need, such as the subscription list, stream contents, unread counts and edit tag. Each one is documented with a request and a response.
+Watch the usage in the developer panel. The rate limit headers on every response tell your code when the daily quota resets.
+Use cases
+Building a newsroom dashboard
+Read your media team's monitoring feeds every minute and show them on a wall screen.
+Running a content pipeline
+Your editors tag articles in Inoreader, and a script pulls them and publishes them to a website or a newsletter tool.
+Building a client for a platform we do not cover
+Write a reader for a computer or device that has no Inoreader app, with the same subscriptions, folders, tags and read state as your account.
+Use the API when integrations are not enough
+The Zapier, IFTTT and n8n integrations are built on this API. When an integration platform cannot do what you need, the API is the next step.
+Frequently asked questions
+What can the API do?
+It can list and edit subscriptions, folders and tags, and read the articles of any stream, such as a feed, a folder, a tag, your saved articles or your unread ones. It can also get unread counts, mark articles as read, tag them, add feeds and create monitoring feeds. The developer portal lists every method with examples.
+How do I get access?
+Register an application under Preferences > Developer, on a Pro or Team account. You get an app ID and key, along with usage statistics for the last 30 days and the daily limits of your app.
+How do users sign in to my app?
+Through OAuth 2.0. Your app sends the user to a consent page on Inoreader and receives an access token and a refresh token, so the user never types their password outside Inoreader. For scripts that only act on your own account, there is also a simpler client login.
+What are the limits?
+Each app can make 100 calls a day in each of the two method zones. Every response reports the usage and the reset time in its headers. Higher limits are available on Custom plans.
+Is there a Team application?
+Yes. Every Team plan includes one shared application that all members can use. More applications and higher limits are available as add-ons.
+Where is the documentation?
+At inoreader.com/developers. There you will find every method with its parameters and responses, the authentication flows, the ID formats and the rate limits. You can send questions to [email protected].
+Related features
+Integrations
+Send your articles to the tools you work in
+Rules
+Automate what happens to every new article
+Monitoring feeds
+Watch any keyword, brand or topic across the web
+Help center
+Does Inoreader provide API access?
+What can developers use the API for?
+Blog
+Inoreader API now supports OAuth 2.0
+Build your own newsfeed
+Ready to give it a go?
+Start a 14-day trial, no credit card required.
+Create account

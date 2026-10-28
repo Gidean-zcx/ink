@@ -1,0 +1,20 @@
+{
+  "path": "docs/research/interaction-library/batches/readwise-controls-deepening-coverage.csv",
+  "backup": "work/readwise-controls-deepening/new-coverage-before-conditions.csv",
+  "before_sha256": "fe2e1e0f9929c58bcf648504316ff001facaf3ec22a962f2111510eaec8cf6a8",
+  "after_sha256": "f9ac458d442b8d84ac9ff2141c40e07366fedd49443fa4d12b8684460e476a99",
+  "changes": [
+    {
+      "flow_id": "F-M015-15",
+      "field": "known_branches",
+      "before": "Appearance调整字形/主题；分页默认按文档类型设置且同设备保留，EPUB默认分页/长文。Toolbar layout分别选短/长Modern或Classic，Modern需先启用Ghostreader；横屏平板双栏有独立条件。",
+      "after": "Appearance调整字形/主题；分页默认按文档类型设置且同设备保留，EPUB默认分页/长文。移动端Toolbar layout分别选短/长Modern或Classic，Modern需先启用Ghostreader；横屏平板双栏有独立条件。"
+    },
+    {
+      "flow_id": "F-M015-24",
+      "field": "known_branches",
+      "before": "网页过滤视图菜单Enable public link创建Bundle；接收者Open in Reader建立视图及内容。新增文章不自动传播，Refresh public link显式增加到公开包及已有接收者账号。",
+      "after": "网页过滤视图菜单Enable public link创建Bundle；接收者Open in Reader建立视图及内容。新增文章不自动传播，Refresh public link显式增加到公开包及此前已将该Bundle添加到Reader的用户账号。"
+    }
+  ]
+}

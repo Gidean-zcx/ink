@@ -1,0 +1,164 @@
+Introduction to the Toolbar - Supernote
+English (US)
+Japanese
+English (US)
+繁體中文
+简体中文
+Support Home
+Contact Us
+English (US)
+Japanese
+English (US)
+繁體中文
+简体中文
+Home
+Tools & Features
+Introduction to the Toolbar
+Learn how to navigate the toolbar with ease and make the most of its features.
+Written by
+James Huang
+Updated at November 1st, 2023
+Contact Us
+If you still have questions or prefer to get help directly from an agent, please submit a request.
+We’ll get back to you as soon as possible.
+Please fill out the contact form below and we will reply as soon as possible.
+title="ReCAPTCHA"
+Getting Started
+Tools & Features
+Organizing & Managing
+Workflow Cases
+What's New
+FAQ
+My Order
+Hardware & Repair
+Changelog
++ More
+Learn what each icon on the toolbar represents and how to make the best use of them.
+Icon
+Name
+Description
+Back to
+Files
+Tap to go back to Files screen.
+Navigation Window
+In
+notes
+, the Navigation Window consists  of
+titles
+,
+keywords
+and
+stars
+.
+In
+documents
+, it comprises
+contents
+,
+keywords
+,
+bookmarks
+and
+annotations
+and
+highlights
+.
+(Highlights are only available in PDFs.)
+Needle-point Pen
+Handwriting is not affected by pen pressure. Thickness and grayscale are optional.
+Ink Pen
+Handwriting width changes according to pen pressure. Thickness and grayscale are optional.
+Marker
+Thickness is non-optional, while grayscale is optional.
+Highlighter
+Default color: yellow. (Highlighter is only available in PDFs.)
+Text selection tool
+Drag over text using this tool to select it.
+White
+Grayscale colors
+Light Gray
+Dark Gray
+Black
+Regular Eraser
+Allows you to erase specific details or parts of your handwriting. Thickness is optional.
+Stroke Eraser
+Allows you to erase lines or strokes. Thickness is optional. (This eraser only applies to real-time recognition notes.)
+Region Eraser
+Allows you to erase the lines or strokes within a specific area you have circled. (You can also slide the pen tip over the lines or strokes to quickly erase them.)
+Erase All
+Allows you to erase all the handwriting on the current layer at once.
+Lasso
+You can
+zoom
+,
+rotate
+,
+move
+,
+copy
+,
+copy
+to another note page
+and
+cut
+handwriting you select with the lasso tool, which you can turn into
+titles
+,
+keywords
+,
+calendar events
+and
+links
+.
+Layer
+The layer feature is only applicable to
+standard notes
+. By default, every note page contains two layers which are the main layer and the background layer. You can create up to three additional layers.
+Undo
+The undo button can cancel the last
+20
+handwritten or erased strokes on the current page, as well as the last
+20
+layer and title actions.
+Redo
+The redo button restores cancelled strokes, layer actions and title actions. (When layers and titles are deleted, they cannot be restored.)
+Share/Export
+Share via QR code or export note pages in a notebook to
+PNG/PDF/TXT/DOCX
+.
+Export PDF documents to see the annotations and highlights applied to the original PDF documents.
+Quick Access
+Allows you to add up to 8 items (including specified pages, notes/documents and folders) to the Quick Access list in the sidebar menu.
+One-Finger Swipe Page Turning
+Allows you to swipe left and right with one finger to turn pages.
+Two-Finger Swipe Page Turning
+Allows you to swipe left and right with two fingers to turn pages.
+One-Finger Tap Page Turning
+Allows you to tap on the left and right side of the screen with one finger to turn pages.
+Disabling Finger Page Turning
+Allows you to disable page turning with finger gestures.
+More
+Tap to display additional functions in notes or documents.
+Enter Full Screen
+Tap to enter full screen mode.
+Exit Full Screen
+Tap to exit full screen mode.
+intro
+toolbar
+applicable to a6 x2 nomad
+a6 x2 nomad
+supernote a5 x
+supernote a6 x
+Was this article helpful?
+Yes
+No
+Give feedback about this article
+Related Articles
+Screen Mirroring
+Supernote Calendar
+Maximize Your Battery Life
+Supernote Partner App for Mobile
+Copyright © 2026 Ratta Supernote
+Knowledge Base Software powered by Helpjuice
+Close
+Expand

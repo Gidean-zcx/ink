@@ -1,0 +1,14 @@
+{
+  "new_evidence": 3,
+  "new_flows": 1,
+  "new_D2": 1,
+  "old_flows": 2,
+  "promoted_D1_to_D4": 1,
+  "inventory_rows": 83,
+  "browser_captures": 31,
+  "reviewed_images": 14,
+  "archived_images": 12,
+  "browser_evidence": 2,
+  "selected_trace_calls": 81,
+  "ui_calls_failed": 0
+}

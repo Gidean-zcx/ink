@@ -1,0 +1,71 @@
+HELP CENTER
+SUBSCRIPTION & PAYMENTS
+Family Plan
+Language learning is better together — which is why we offer a Family Plan for Super Duolingo! Now you can share all the benefits of Super Duolingo with 5 of your family and friends, and encourage everyone to reach their goals together.
+When you join, start, or leave a Family Plan, your learning progress and streak will not be affected.
+Who can I invite to my Family Plan?
+Invite anyone — friends and family, in any location, in any language!
+However, you can’t invite someone who already has an active paid Duolingo subscription. They’ll need to cancel their subscription and wait for it to expire before joining your plan.
+You also can’t resell slots on your Family Plan for cash or other items of monetary value. Duolingo reserves the right to block new members from being added to Family Plans or terminate Family Plans where we have determined that the slots have been resold.
+How do I manage my Family Plan?
+Only the family manager can manage the subscription. If you are the family manager, you can manage your family plan via the Super Duolingo dashboard to invite and remove members.
+How do I invite someone to my Family Plan?
+The family manager can send an invite link to any eligible Duolingo user. Once they receive the link, they’ll have to accept the invite in order to be added to your Family Plan.
+Open the Duolingo app
+Tap the Super icon at the top of the home screen
+In the Family Plan section of the Super dashboard, tap the “+” icon or tap “Manage,” then “Add member”
+Choose the invite method: Text message/SMS, WhatsApp, email, etc.
+Confirm and send the invitation
+Duolingo users under the age of 13 will have private profiles since we restrict social features. With that, we recommend that you send your invite link via text message or email. If you share the same device, you can add them directly.
+How do I remove someone from my Family Plan?
+Open the Duolingo app
+Tap the Super icon at the top of the home screen
+In the Family Plan section of the Super dashboard, tap “Manage,” then “Edit”
+Tap the user’s name then confirm removal
+How can I upgrade my individual subscription to a Family Plan?
+You can upgrade an individual subscription to a Family Plan in the Duolingo app or web browser based on how you originally subscribed. Also, if you have a monthly subscription through Google Play, you will not see an option to upgrade to a Family Plan.
+iOS Duolingo app:
+Open the Duolingo app
+Tap the Super icon at the top of the home screen
+Tap Settings (gear icon)
+Tap “Manage subscription”
+Tap “Change plan”
+Select the Family Plan and confirm
+Confirm purchase via Apple
+The upgrade should take effect immediately
+Once upgraded, you will be charged immediately for the Family Plan, and then Apple will process a prorated refund based on the remainder of your individual subscription
+The renewal date will be adjusted to the date of the upgrade
+Android Duolingo app:
+Open the Duolingo app
+Tap the Super icon at the top of the home screen
+Tap Settings (gear icon)
+Tap “Manage subscription”
+Tap “Change plan”
+Select the Family Plan and confirm
+Confirm purchase via Google Play
+The upgrade should take effect immediately
+Once upgraded, you will be charged a prorated amount immediately to upgrade the remaining billing period in your current subscription to the Family Plan
+The renewal date will be based on the original subscription
+Web:
+Open your Duolingo account on a web browser
+Click “More” menu (left)
+Select “Settings”
+Select “Super Duolingo”
+Click “Change plan”
+Select the Family Plan and confirm
+Confirm purchase
+The upgrade should take effect immediately
+Once upgraded, you will be charged immediately for the Family Plan, and then a prorated refund will process in 5–10 business days based on the remainder of your individual subscription
+The renewal date will be adjusted to the date of the upgrade
+If I don’t see an option to upgrade my individual plan, what do I do?
+If you canceled auto-renewal but your Super subscription has not yet expired, you will not see the option to upgrade. To see the upgrade option:
+In the Duolingo app, go to your Profile
+Tap “Keep my Subscription”
+Reopen the app and follow the steps above to upgrade your plan
+Relevant Articles
+What is Super Duolingo and how do I subscribe?
+How do I cancel my Super Duolingo subscription?
+How do I request a refund?
+How do I use a promo code?
+What is Duolingo Max?
+I want to submit a bug report

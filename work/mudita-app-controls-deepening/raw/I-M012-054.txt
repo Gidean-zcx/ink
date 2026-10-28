@@ -1,0 +1,15 @@
+How to Delete Files from Kompakt?
+Modified on: Sat, 3 Oct, 2026 at 8:38 AM
+You can easily delete files from your Kompakt using Mudita Center. Follow the steps below to remove unwanted content
+Open Mudita Center and connect your Kompakt to your computer.
+Under Your Kompakt, click Manage (Music, Photos, or E-books).
+Navigate to the files you want to delete.
+Select the files using the checkbox.
+To select all files, click the minus icon checkbox at the top of the screen.
+Click Delete.
+Confirm by clicking Delete file.
+Was this article helpful?
+ No
+ Yes
+That’s Great!
+Thank you for your feedback

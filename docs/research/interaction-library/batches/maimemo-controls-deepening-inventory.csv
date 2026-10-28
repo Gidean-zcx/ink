@@ -1,0 +1,62 @@
+item_id,kind,title,source_url,evidence_ids,flow_ids,coverage,gaps,checked_on
+M017-H01,help_node,墨墨背单词,https://memodocs.maimemo.com/docs/memo,E-MMO-10,,parent_index,目录父项，不计完整功能,2026-10-27
+M017-H02,help_node,快速上手,https://memodocs.maimemo.com/docs/memo-get-started,E-MMO-10,,parent_index,目录父项，不计完整功能,2026-10-27
+M017-H03,help_node,每日学习量,https://memodocs.maimemo.com/docs/PulqwOB1xi5jV0kb8Y1cPE7ZnKc,E-MMO-02,F-M017-01;F-M017-02,partial_documented,见既有 F 的未核实栏,2026-10-27
+M017-H04,help_node,超级释义,https://memodocs.maimemo.com/docs/I4FxwHbgqiboqmklZHbczSaVnne,E-MMO-10,,parent_index,目录父项，不计完整功能,2026-10-27
+M017-H05,help_node,超级释义功能介绍,https://memodocs.maimemo.com/docs/AXhuwXpfFibceakKPpdc6VbVnFc,E-MMCD-06,F-M017-08;F-M017-09,partial_documented,正文现有考点能力与后续计划措辞并存,2026-10-27
+M017-H06,help_node,超级释义 - 考点义项,https://memodocs.maimemo.com/docs/TrSUwLo8wiwrUtkkmSBcMipgncb,E-MMCD-07,F-M017-08,partial_documented,5.5.65+；平台未注明；考研范围,2026-10-27
+M017-H07,help_node,墨墨口袋手柄 / 外设功能,https://memodocs.maimemo.com/docs/OxvKwPNcTi8PR4k6Xzyc8Ad5nMd,E-MMO-10;E-MMSC-01,F-M017-11,main_text_read_partial_task,默认按键表只在App内；返回上词不证明撤销；连接及回连未实操；所链PDF仅取得外壳,2026-10-27
+M017-H08,help_node,墨墨单词机,https://memodocs.maimemo.com/docs/support_wordmachine,E-MMO-10,,excluded_other_product,M023 单词机，不能补本软件学习链,2026-10-27
+M017-H09,help_node,鸿蒙版本特色功能介绍,https://memodocs.maimemo.com/docs/memo-get-started-harmonyos,E-MMO-10;E-MMSC-02,F-M017-01;F-M017-04;F-M017-10,main_text_and_9_static_images_read,识词提交/校正、手势误判、同构建学习结果与接续持久状态未知,2026-10-27
+M017-H10,help_node,筛选 释义 / 助记 / 例句 内容标签,https://memodocs.maimemo.com/docs/Uv65whPGIih1x2kMNOCc99k4nUe,E-MMCD-05,F-M017-08,partial_documented,仅文档；未观察标签状态,2026-10-27
+M017-H11,help_node,云词本,https://memodocs.maimemo.com/docs/QKUlwb6qTiLtzvk49BGc1ZVFnqg,E-MMO-04,F-M017-03,partial_documented,见既有 F 的未核实栏,2026-10-27
+M017-H12,help_node,学习好友,https://memodocs.maimemo.com/docs/YGRKwwq9Li4VNAk8OeFcng4onie,E-MMO-08,F-M017-06,partial_documented,见既有 F 的未核实栏,2026-10-27
+M017-H13,help_node,导出 PDF,https://memodocs.maimemo.com/docs/QbA7wb0gKiTSSyk66RzcYJxln3g,E-MMCD-08,F-M017-09,partial_documented,生成、保存、退出与闪退分支；无实操,2026-10-27
+M017-H14,help_node,单词机,https://memodocs.maimemo.com/docs/OPLXw0KlkiaSUDkN69ScWREfnhc,E-MMO-10,,excluded_other_product,M023 单词机，不能补本软件学习链,2026-10-27
+M017-H15,help_node,常见问题,https://memodocs.maimemo.com/docs/memo-faq,E-MMO-10,,parent_index,目录父项，不计完整功能,2026-10-27
+M017-H16,help_node,一些基础使用小技巧,https://memodocs.maimemo.com/docs/GKfswhD6Ei4TdMk0naQcfMBtnJg,E-MMCD-01,F-M017-01,partial_documented,入口补证；完整拼写判断链未知,2026-10-27
+M017-H17,help_node,认识 / 模糊 / 忘记 / 熟知该如何选择？对单词下一次出现有什么影响？,https://memodocs.maimemo.com/docs/Ok6YwF2X7iJZvvkCunjcmWwLnzb,E-MMO-01,F-M017-01,partial_documented,见既有 F 的未核实栏,2026-10-27
+M017-H18,help_node,为什么不设定固定的每日新学单词量？,https://memodocs.maimemo.com/docs/TXhHwrM8Ei5QKjk562mcq8uInef,E-MMCD-13,,partial_documented,调度解释；不能据建议断言不支持固定设置,2026-10-27
+M017-H19,help_node,如何更换单词书进行学习？,https://memodocs.maimemo.com/docs/Y0iDwaZYeixhnzkuqJRcOEt6ncc,E-MMO-03,F-M017-01;F-M017-02;F-M017-05,partial_documented,见既有 F 的未核实栏,2026-10-27
+M017-H20,help_node,更换学习设备时，如何将学习数据从 A 设备同步到 B 设备？,https://memodocs.maimemo.com/docs/TJDKwbRRfi1prCktSXPcDQjrnJf,E-MMO-05,F-M017-04,partial_documented,见既有 F 的未核实栏,2026-10-27
+M017-H21,help_node,已选单词列表左侧的饼状图是什么意思？,https://memodocs.maimemo.com/docs/IAdywC1b0if5N4knUqocOxphnwr,E-MMCD-02,F-M017-01,partial_documented,展示口径不等于独立测验结果,2026-10-27
+M017-H22,help_node,有补签卡但无法使用是怎么回事？为什么没有补签卡按钮？,https://memodocs.maimemo.com/docs/WVyFwrbiXiexP7k6N7gcYY0Vnzh,E-MMCD-03,,partial_documented,统计修复规则；发卡、奖励与完整签到流程未知,2026-10-27
+M017-H23,help_node,墨墨支持离线学习吗？,https://memodocs.maimemo.com/docs/Nw46wDLqRiLbpikFsxNcONXCnfc,E-MMO-06,F-M017-04,partial_documented,见既有 F 的未核实栏,2026-10-27
+M017-H24,help_node,为什么墨墨没有提醒我学习？,https://memodocs.maimemo.com/docs/SAWgwCEyZimLSRkZv98cqglEnUg,E-MMO-10;E-MMSC-03,F-M017-12,main_text_read_partial_task,时间选择/权限拒绝/实际通知/跨日补发未知,2026-10-27
+M017-H25,help_node,当天签到总是失败如何处理？,https://memodocs.maimemo.com/docs/Ai7rwDzjpi9RelkODxmcGcPnncA,E-MMCD-04,,partial_documented,排障建议，不是成功恢复记录,2026-10-27
+M017-H26,help_node,如何重置学习数据？,https://memodocs.maimemo.com/docs/KE8ZwhQ8UikDpKkeEggcKYgcnsd,E-MMO-07,F-M017-05,partial_documented,见既有 F 的未核实栏,2026-10-27
+M017-H27,help_node,应用好评操作指南 - 找不到评论？,https://memodocs.maimemo.com/docs/RPC9w0jZFi4K4Qk5BlrcgBcNnWg,E-MMO-10;E-MMSC-04,,read_external_support_not_learning_task,应用商店评价说明；没有产品学习交互或实际投稿,2026-10-27
+M017-H28,help_node,iOS 单词不发音,https://memodocs.maimemo.com/docs/SFzIwQTQniAAP2kZzggcgdNNntb,E-MMCD-11,,partial_documented,iOS 专属排障；未实际听音,2026-10-27
+M017-H29,help_node,断签问题,https://memodocs.maimemo.com/docs/XMenwad9oiNVWAktTqOca6dKnqc,E-MMO-10,,read_no_procedure,正文只有人工客服；跨日续学未知,2026-10-27
+M017-H30,help_node,墨墨背单词网页版,https://memodocs.maimemo.com/docs/memo-web_study,E-MMO-10;E-MMSC-05,F-M017-04,main_text_read_partial_task,已核后台触发及等待；未登录或观察真实同步/冲突/失败恢复,2026-10-27
+M017-S01,support_index,墨墨背单词 - iOS,https://memodocs.maimemo.com/docs/product-log-memo-ios,E-MMO-11,,partial_documented,平台/历史边界按案例；不由日志还原按钮连续过程,2026-10-27
+M017-S02,support_index,墨墨背单词 - Android,https://memodocs.maimemo.com/docs/product-log-memo-android,E-MMO-10;E-MMDVC-03,F-M017-02,historical_release_notes_read,历史声明不补随身听队列和恢复；顶部日期不一，不证明现行最高版本,2026-10-27
+M017-S03,support_index,墨墨背单词 - HarmonyOS,https://memodocs.maimemo.com/docs/product-log-memo-harmonyos,E-MMCD-12,,partial_documented,平台/历史边界按案例；不由日志还原按钮连续过程,2026-10-27
+M017-S04,support_index,墨墨背单词 - Web,https://memodocs.maimemo.com/docs/product-log-memo-web,E-MMO-10;E-MMSC-06,F-M017-01;F-M017-04,release_notes_read,功能声明不等于App全端一致；按钮/完成结果未读到,2026-10-27
+M017-S05,support_index,开放平台,https://memodocs.maimemo.com/docs/open,E-MMCD-09,F-M017-07,partial_documented,平台/历史边界按案例；不由日志还原按钮连续过程,2026-10-27
+M017-S06,support_index,墨墨开放 API 功能介绍,https://memodocs.maimemo.com/docs/PNvOw2E1AivPtlkRlQgce1W1n2c,E-MMO-09,F-M017-07,partial_documented,平台/历史边界按案例；不由日志还原按钮连续过程,2026-10-27
+M017-S07,support_index,墨墨开放平台服务协议,https://memodocs.maimemo.com/docs/open-terms,E-MMO-10;E-MMSC-07,F-M017-07,selected_sections_3_4_7_read,接口可返回不表示允许永久离线语料；非完整法律审查或实际授权,2026-10-27
+M017-A01,api_operation,获取释义,https://open.maimemo.com/api_bundle.yaml,E-MMCD-10,F-M017-07,contract_read_not_called,失败码/回滚/幂等未知；GET /api/v1/memo/interpretations,2026-10-27
+M017-A02,api_operation,创建释义,https://open.maimemo.com/api_bundle.yaml,E-MMCD-10,F-M017-07,contract_read_not_called,失败码/回滚/幂等未知；POST /api/v1/memo/interpretations,2026-10-27
+M017-A03,api_operation,更新释义,https://open.maimemo.com/api_bundle.yaml,E-MMCD-10,F-M017-07,contract_read_not_called,失败码/回滚/幂等未知；POST /api/v1/memo/interpretations/{id},2026-10-27
+M017-A04,api_operation,删除释义,https://open.maimemo.com/api_bundle.yaml,E-MMCD-10,F-M017-07,contract_read_not_called,未列响应结构；失败码/回滚/幂等未知；DELETE /api/v1/memo/interpretations/{id},2026-10-27
+M017-A05,api_operation,获取助记,https://open.maimemo.com/api_bundle.yaml,E-MMCD-10,F-M017-07,contract_read_not_called,失败码/回滚/幂等未知；GET /api/v1/memo/notes,2026-10-27
+M017-A06,api_operation,创建助记,https://open.maimemo.com/api_bundle.yaml,E-MMCD-10,F-M017-07,contract_read_not_called,失败码/回滚/幂等未知；POST /api/v1/memo/notes,2026-10-27
+M017-A07,api_operation,更新助记,https://open.maimemo.com/api_bundle.yaml,E-MMCD-10,F-M017-07,contract_read_not_called,失败码/回滚/幂等未知；POST /api/v1/memo/notes/{id},2026-10-27
+M017-A08,api_operation,删除助记,https://open.maimemo.com/api_bundle.yaml,E-MMCD-10,F-M017-07,contract_read_not_called,未列响应结构；失败码/回滚/幂等未知；DELETE /api/v1/memo/notes/{id},2026-10-27
+M017-A09,api_operation,查询云词本,https://open.maimemo.com/api_bundle.yaml,E-MMCD-10,F-M017-07,contract_read_not_called,失败码/回滚/幂等未知；GET /api/v1/memo/notepads,2026-10-27
+M017-A10,api_operation,创建云词本,https://open.maimemo.com/api_bundle.yaml,E-MMCD-10,F-M017-07,contract_read_not_called,失败码/回滚/幂等未知；POST /api/v1/memo/notepads,2026-10-27
+M017-A11,api_operation,获取云词本,https://open.maimemo.com/api_bundle.yaml,E-MMCD-10,F-M017-07,contract_read_not_called,失败码/回滚/幂等未知；GET /api/v1/memo/notepads/{id},2026-10-27
+M017-A12,api_operation,更新云词本,https://open.maimemo.com/api_bundle.yaml,E-MMCD-10,F-M017-07,contract_read_not_called,失败码/回滚/幂等未知；POST /api/v1/memo/notepads/{id},2026-10-27
+M017-A13,api_operation,删除云词本,https://open.maimemo.com/api_bundle.yaml,E-MMCD-10,F-M017-07,contract_read_not_called,失败码/回滚/幂等未知；DELETE /api/v1/memo/notepads/{id},2026-10-27
+M017-A14,api_operation,获取例句,https://open.maimemo.com/api_bundle.yaml,E-MMCD-10,F-M017-07,contract_read_not_called,失败码/回滚/幂等未知；GET /api/v1/memo/phrases,2026-10-27
+M017-A15,api_operation,创建例句,https://open.maimemo.com/api_bundle.yaml,E-MMCD-10,F-M017-07,contract_read_not_called,失败码/回滚/幂等未知；POST /api/v1/memo/phrases,2026-10-27
+M017-A16,api_operation,更新例句,https://open.maimemo.com/api_bundle.yaml,E-MMCD-10,F-M017-07,contract_read_not_called,失败码/回滚/幂等未知；POST /api/v1/memo/phrases/{id},2026-10-27
+M017-A17,api_operation,删除例句,https://open.maimemo.com/api_bundle.yaml,E-MMCD-10,F-M017-07,contract_read_not_called,失败码/回滚/幂等未知；DELETE /api/v1/memo/phrases/{id},2026-10-27
+M017-A18,api_operation,获取今日学习进度（公测）,https://open.maimemo.com/api_bundle.yaml,E-MMCD-10,F-M017-07,contract_read_not_called,失败码/回滚/幂等未知；POST /api/v1/memo/study/get_study_progress,2026-10-27
+M017-A19,api_operation,获取今日学习单词（公测）,https://open.maimemo.com/api_bundle.yaml,E-MMCD-10,F-M017-07,contract_read_not_called,失败码/回滚/幂等未知；POST /api/v1/memo/study/get_today_items,2026-10-27
+M017-A20,api_operation,查询学习记录（公测）,https://open.maimemo.com/api_bundle.yaml,E-MMCD-10,F-M017-07,contract_read_not_called,失败码/回滚/幂等未知；POST /api/v1/memo/study/query_study_records,2026-10-27
+M017-A21,api_operation,添加单词（公测）,https://open.maimemo.com/api_bundle.yaml,E-MMCD-10,F-M017-07,contract_read_not_called,失败码/回滚/幂等未知；POST /api/v1/memo/study/add_words,2026-10-27
+M017-A22,api_operation,提前复习（公测）,https://open.maimemo.com/api_bundle.yaml,E-MMCD-10,F-M017-07,contract_read_not_called,失败码/回滚/幂等未知；POST /api/v1/memo/study/advance_study,2026-10-27
+M017-A23,api_operation,获取单词,https://open.maimemo.com/api_bundle.yaml,E-MMCD-10,F-M017-07,contract_read_not_called,失败码/回滚/幂等未知；GET /api/v1/memo/vocabulary,2026-10-27
+M017-A24,api_operation,查询单词,https://open.maimemo.com/api_bundle.yaml,E-MMCD-10,F-M017-07,contract_read_not_called,失败码/回滚/幂等未知；POST /api/v1/memo/vocabulary/query,2026-10-27

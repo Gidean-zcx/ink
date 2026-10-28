@@ -1,0 +1,323 @@
+{
+  "headings": [
+    {
+      "level": "h1",
+      "id": "",
+      "title": "YouTube Videos"
+    },
+    {
+      "level": "h2",
+      "id": "how-do-i-watch-a-you-tube-video-inside-reader",
+      "title": "How do I watch a YouTube video inside Reader?"
+    },
+    {
+      "level": "h2",
+      "id": "what-keyboard-shortcuts-can-i-use-while-watching-videos-in-reader",
+      "title": "What keyboard shortcuts can I use while watching videos in Reader?"
+    },
+    {
+      "level": "h2",
+      "id": "what-is-autoscroll-and-how-do-i-turn-it-off",
+      "title": "What is \"autoscroll\" and how do I turn it off?"
+    },
+    {
+      "level": "h2",
+      "id": "can-i-resize-the-you-tube-video-to-see-more-of-the-transcript",
+      "title": "Can I resize the YouTube video to see more of the transcript?"
+    },
+    {
+      "level": "h2",
+      "id": "the-transcript-from-you-tube-isnt-great-can-i-improve-it-somehow",
+      "title": "The transcript from YouTube isn't great. Can I improve it somehow?"
+    },
+    {
+      "level": "h2",
+      "id": "how-can-i-select-a-different-language-for-a-videos-transcript",
+      "title": "How can I select a different language for a video's transcript?"
+    },
+    {
+      "level": "h2",
+      "id": "how-do-i-add-my-you-tube-subscriptions-to-reader",
+      "title": "How do I add my YouTube subscriptions to Reader?"
+    }
+  ],
+  "links": [
+    {
+      "href": "/",
+      "text": "",
+      "in_article": false
+    },
+    {
+      "href": "/",
+      "text": "",
+      "in_article": false
+    },
+    {
+      "href": "/",
+      "text": "",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs",
+      "text": "Documentation",
+      "in_article": false
+    },
+    {
+      "href": "/reader/guides",
+      "text": "Guides",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs",
+      "text": "What is Reader?",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/migrating-content",
+      "text": "Migrating from Other Apps",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/saving-content",
+      "text": "Saving Content",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/organizing-content",
+      "text": "Organizing Content",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs",
+      "text": "Basics",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/importing-content",
+      "text": "Importing Content",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/adding-new-content",
+      "text": "Adding New Content",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/highlights-tags-notes",
+      "text": "Highlights, Tags, and Notes",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/appearance",
+      "text": "Appearance",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/feed",
+      "text": "Feed",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/email-newsletters",
+      "text": "Email Newsletters",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/navigation",
+      "text": "Navigation",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/searching",
+      "text": "Searching",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/parsing",
+      "text": "Parsing",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/filtered-views",
+      "text": "Filtered Views",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/action-tags",
+      "text": "Action Tags",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/pdfs",
+      "text": "PDFs",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/videos",
+      "text": "Videos",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/text-to-speech",
+      "text": "Text-to-Speech (TTS)",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/exporting",
+      "text": "Exporting",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/sharing",
+      "text": "Sharing",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/daily-digest",
+      "text": "Daily Digest",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/ghostreader",
+      "text": "Ghostreader",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/eink",
+      "text": "E-ink Devices",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/miscellaneous",
+      "text": "Miscellaneous",
+      "in_article": false
+    },
+    {
+      "href": "/",
+      "text": "Home",
+      "in_article": false
+    },
+    {
+      "href": "/reader",
+      "text": "Reader",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs",
+      "text": "Docs",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs",
+      "text": "Faqs",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/videos",
+      "text": "Videos",
+      "in_article": false
+    },
+    {
+      "href": "https://github.com/jeb5/YouTube-Subscriptions-RSS?tab=readme-ov-file",
+      "text": "this bookmarklet created by jeb5 on Github",
+      "in_article": true
+    },
+    {
+      "href": "/reader/docs/faqs/pdfs",
+      "text": "PDFs",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/text-to-speech",
+      "text": "Text-to-Speech (TTS)",
+      "in_article": false
+    },
+    {
+      "href": "mailto:hello@readwise.io",
+      "text": "Email Ushello@readwise.io",
+      "in_article": false
+    },
+    {
+      "href": "https://x.com/readwise",
+      "text": "Follow Us@readwise",
+      "in_article": false
+    },
+    {
+      "href": "https://www.reddit.com/r/readwise/",
+      "text": "Ask the CommunityJoin us on Reddit",
+      "in_article": false
+    },
+    {
+      "href": "https://en.wikipedia.org/wiki/Curse_of_knowledge",
+      "text": "Curse of Knowledge",
+      "in_article": false
+    },
+    {
+      "href": "mailto:hello@readwise.io?Subject=Documentation Feedback",
+      "text": "Send Feedback",
+      "in_article": false
+    },
+    {
+      "href": "#how-do-i-watch-a-you-tube-video-inside-reader",
+      "text": "How do I watch a YouTube video inside Reader?",
+      "in_article": false
+    },
+    {
+      "href": "#what-keyboard-shortcuts-can-i-use-while-watching-videos-in-reader",
+      "text": "What keyboard shortcuts can I use while watching videos in Reader?",
+      "in_article": false
+    },
+    {
+      "href": "#what-is-autoscroll-and-how-do-i-turn-it-off",
+      "text": "What is \"autoscroll\" and how do I turn it off?",
+      "in_article": false
+    },
+    {
+      "href": "#can-i-resize-the-you-tube-video-to-see-more-of-the-transcript",
+      "text": "Can I resize the YouTube video to see more of the transcript?",
+      "in_article": false
+    },
+    {
+      "href": "#the-transcript-from-you-tube-isnt-great-can-i-improve-it-somehow",
+      "text": "The transcript from YouTube isn't great. Can I improve it somehow?",
+      "in_article": false
+    },
+    {
+      "href": "#how-can-i-select-a-different-language-for-a-videos-transcript",
+      "text": "How can I select a different language for a video's transcript?",
+      "in_article": false
+    },
+    {
+      "href": "#how-do-i-add-my-you-tube-subscriptions-to-reader",
+      "text": "How do I add my YouTube subscriptions to Reader?",
+      "in_article": false
+    }
+  ],
+  "images": [
+    {
+      "src": "/images/resize-yt-video.gif",
+      "alt": "Resize the video player in Reader.",
+      "class": "rounded-lg max-h-[400px] w-auto mx-auto"
+    },
+    {
+      "src": "/images/enhanced-transcript_web.png",
+      "alt": "Toggle the enhanced transcript option for YouTube videos on web.",
+      "class": "rounded-lg max-h-[400px] w-auto mx-auto"
+    },
+    {
+      "src": "/images/enhanced-transcript_mobile.png",
+      "alt": "Toggle the enhanced transcript option for YouTube videos on mobile.",
+      "class": "rounded-lg max-w-[350px] h-auto mx-auto"
+    },
+    {
+      "src": "/images/yt-language-dropdown_web.png",
+      "alt": "Select the language for the video transcript.",
+      "class": "rounded-lg max-h-[400px] w-auto mx-auto"
+    },
+    {
+      "src": "/images/yt-transcript-language_mobile.png",
+      "alt": "Select the language for the video transcript on mobile.",
+      "class": "rounded-lg max-w-[350px] h-auto mx-auto"
+    }
+  ]
+}

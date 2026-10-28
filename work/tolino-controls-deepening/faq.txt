@@ -1,0 +1,443 @@
+tolino shine (5. generation) - mytolino
+Zum Inhalt springen
+de
+en
+nl
+Suche
+Hauptmenü
+Products
+eReader tolino vision color
+Remote tolino flip
+eReader tolino shine
+eReader tolino shine color
+tolino stylus
+ereader tolino epos 3
+eReader comparison
+tolino webreader
+tolino app
+Advantages
+The world of tolino
+Service
+Software Updates
+Manuals | eReader I tab
+tolino shine 5 Gen.
+tolino shine color
+tolino vision color
+tolino page
+tolino page 2
+tolino shine
+tolino shine 2 HD
+tolino shine 3
+tolino vision 2
+tolino vision 3 HD
+tolino vision 4 HD
+tolino vision 5
+tolino vision 6
+tolino epos
+tolino epos 2
+tolino epos 3
+tolino tab 8″
+Legal note
+FAQ
+FAQ | eReader & accessories
+tolino vision color
+tolino shine 5
+tolino shine color
+tolino stylus
+tolino flip
+Previous models
+FAQ | tolino app
+FAQ | tolino tab
+FAQ | Data Protection
+tolino webreader
+de
+en
+nl
+tolino shine (5. generation)
+Downloads
+Factsheet tolino shine (5. generation)
+Quickstartguide
+Warrantyinformations
+Weitere Downloads
+More Downloads
+1. Audiobooks (tolino shine 5. generation)
+1.1. How can I connect my Bluetooth speaker and my headphones to my tolino eReader?
+To listen to audio books on your tolino eReader, you will need to pair a Bluetooth speaker or headphones with your eReader.
+Before you start:
+Make sure that your headphones or speakers support a Bluetooth connection.
+Turn on your headphones or speakers and make sure they are in pairing mode ready to add a new device, e.g. your tolino eReader.
+If you're not sure how to put your Bluetooth headphones or speaker into pairing mode, please contact the manufacturer for help.
+On your tolino eReader homepage, tap  “More” icon and click “Settings”. Here you will find the option “Bluetooth”.
+Click the circle item next to "Bluetooth"  to activate. It might take a few moments before you see your device's name on the list. Tap the name of your Bluetooth device to connect it to the tolino eReader. If you don't see your Bluetooth device on the list, make sure your Bluetooth device is in pairing mode and then tap to refresh.
+1.2. How can I manage my Bluetooth devices?
+Open the menu on your tolino eReader's homepage. Click on “More”, select “Settings” and then go to “Bluetooth”. To display your saved devices, activate Bluetooth by tapping the 3 dots to the right of the device name. You can connect to the saved device, block it, activate the software volume or remove the device from the list of saved devices using “Forget”. You can also assign an individual device name using “Edit”.
+1.3. How do I listen to an audiobook on my tolino eReader?
+To listen to an audiobook purchased from a tolino Allianz partner on your tolino eReader, connect your Bluetooth speaker or headphones to the tolino eReader.
+Go to your library using  “My Books”, then tap on the audiobook you want to listen to. The audiobook file will download to your tolino eReader and the audiobook player will open. Audiobooks are marked as “audiobooks” in list view.
+Tip: To easily view the audiobooks in your library, filter by “audiobooks”.
+1.4. How do I use the audiobook player on my tolino eReader?
+Play and pause:
+To play or pause your audiobook, tap the  Play or  Pause icon.
+Fast forward and rewind:
+To skip forward or backwards by thirty seconds, use the arrows  or  to skip through longer sections, drag the circle symbol on the timeline to the left or right.
+Table of contents:
+To jump directly to a specific part of your audiobook, tap on the contents menu in the bottom left corner .
+Playback speed:
+You can adjust playback speed to suit your needs. To do this, go to the audiobook you want to listen to.  In the menu bar at the top, you will find the icon “1x”. Once you tap this icon, you will see the available speed settings.
+Volume control:
+To adjust the volume, tap the speaker icon . Drag the circle to the left or right to increase or decrease the volume.
+Audiobook stats:
+Use the statistics menu to view audiobook details. The statistics menu will show you:
+The minutes remaining in the current chapter.
+The minutes remaining in the entire audiobook.
+The duration of the next chapter.
+View audiobook details and use a dictionary:
+While listening to an audiobook, you can view the details of your audiobook or open a dictionary to look up a word you're not familiar with. To do this, tap on the 3 dots in the top right corner. Next, tap “Details” or “Dictionary.”
+2. ebooks (tolino shine 5. generation)
+2.1. Can I look up or translate words from an eBook?
+To translate or look up individual words in an eBook, simply tap and hold the word you want to look up. You will then see the translation and look-up function in the context menu. When you do this for the first time, you will be asked to download a dictionary. For example, you might select a French-German or English-German dictionary, or any other from our ever-increasing number of dictionaries
+2.2. Can I read eBooks from public libraries on my tolino eReader?
+Looking to borrow eBooks online? Public libraries across Germany, Austria, Switzerland, etc. give you the opportunity to borrow eBooks from a library. Smaller libraries often join forces to start an eLibrary network. You can borrow eBooks from their website and download them to your tolino eReader.
+Easily borrow eBooks from a public library using the integrated web browser on your tolino eReader. The tolino web browser can be found under "More", then "Beta Features". Any eBooks you borrow and download are automatically saved on your tolino eReader and are immediately available for you to read. You can also return borrowed eBooks, e.g. from the eLibrary, on your tolino eReader. For more information and FAQs on this topic, see: https://mytolino.de/faq-gruppe/faq-onleihe
+2.3. Can I read eBooks I have purchased without an internet connection?
+Yes, reading an eBook without an active internet connection is simple as long as you have downloaded the book to your tolino eReader.
+To do this, go to  “My Books”. If a book has not yet been downloaded, you will see the download symbol on the book cover.  The word "Download" also appears in list view. Tap on the marked title in your tolino library to start downloading. The book will then be downloaded to your tolino eReader and will be saved locally so you can start reading it straightaway.
+2.4. How can I delete an eBook from my library?
+You can delete eBooks from your tolino library in the  “My Books” library view by long-tapping on the cover. A pop-up menu opens, which you can use to remove the ebook. There are 2 options available:
+Delete from this device:
+Remove the book from your tolino eReader to save storage space. You can download the book again from the tolino cloud later. You'll still see the book cover on your eReader. This option is automatically selected. If necessary, these titles can be downloaded again.
+Delete from tolino cloud:
+This deletes the book from your tolino book store account and from all of your devices. You will no longer be able to see this book cover on your tolino eReader, in any tolino apps or the webreader. If you accidentally delete a book from your library, please contact your tolino book store's customer service team.
+Remove all downloads:
+In your  “My Books” library, tap on the 3 small dots in the top right corner of the overview and select the “Manage Books” option. Here, you can remove selected content using the “Remove” option. If you want to remove all of the books in one go, tap the 3 small dots in the top right corner again and click "Select all". This selects all the items in your library, which you can then remove in one go. Content can be downloaded from the cloud at a later date as required.
+You can also delete all of the books in your library using the option "Manage storage space".
+2.5. How can I download eBooks I have purchased to my tolino?
+If you haven't downloaded your book, you will see a download icon on the book cover on your tolino homepage
+. To download, simply tap the download icon. The desired title will then be saved to your tolino eReader. You can also download a book in your library under  “My Books”. In this menu, you will see the same download icon  on the book cover. The word "Download" also appears in the list view. Tap on the marked title in the tolino library to start downloading.
+2.6. How can I import books I've already purchased or upload my own content onto the tolino eReader? (Side loading)
+All ebooks or files in ePub or PDF format for example, can be saved to your tolino eReader to read. An overview of all compatible formats can be found in chapter 2.3. There are two ways to download eBooks to your tolino eReader:
+Transfer eBooks using the tolino Cloud
+You can easily transfer eBooks in ePUB and PDF format using the tolino webreader. Log in and simply upload your purchased eBooks to the tolino Cloud using the tolino webreader. Next, log in to your tolino eReader as usual and start synchronization with the tolino Cloud using your tolino eReader. Once your tolino eReader has been synchronized (assuming you have an internet connection via WLAN), the eBooks stored in your tolino Cloud will be visible. To download them to your tolino, simply tap on the cover of the eBook you wish to download. Your eBook will then be saved on your tolino eReader and you can get reading!
+Transfer eBooks using a cable (sideloading)
+You can transfer eBooks you have already purchased in PDF, ePub, TXT, MOBI, CBZ, and CBR formats to your tolino using a cable connection. Connect your tolino eReader to your computer using the included USB-C cable. Once it has been recognized by the computer, you will be able to access your tolino eReader from your computer. You can now transfer files between your computer and your tolino eReader. Always store eBooks in the “Books” folder on the tolino eReader's hard drive.
+We recommend adding purchased eBooks automatically via the tolino Cloud, rather than via USB-C. This is because if you download eBooks from the tolino Cloud, Adobe DRM will not be activated and you won't need to enter an Adobe account to read these eBooks.
+Important note:
+While transferring data, do not disconnect your device. Always unselect the tolino eReader disk icon from your computer before disconnecting the cable from your tolino eReader and your computer.
+2.7. How can I navigate while reading my eBook and how do I adjust my reading settings?
+Navigation:
+Scroll: On all tolino devices, you can scroll by simply tapping on the right or left of the screen.
+Skip chapters/pages:
+While reading, tap the center of the screen to open the reading menu. Drag the circle icon  in the navigation bar to the left or right to skim through the entire book. You can also go directly to the table of contents  to select individual chapters.
+Reading settings:
+You can adjust the custom settings on your tolino eReader while reading, such as the font, text size, page margins, line spacing, text alignment and brightness. To do this, open the reading menu by tapping the middle of the screen.
+Customize your text settings:
+In the reading menu, tap the AA icon. From here you can adjust the font, text size, line spacing, page margins, and text alignment. In advanced settings, you can also adjust the font thickness.
+Adjust screen brightness:
+To adjust your screen brightness, tap the sun icon  in the reading menu. You can use the Smart Light function to adjust the color temperature of your screen. Colors range from orange candlelight for nighttime reading, to white sunlight for daytime reading.
+In the settings menu,  you can adjust additional settings, for example you can display your reading progress and make adjustments to navigation, etc.
+2.8. How can I read DRM-protected (Digital Rights Management) eBooks on a tolino eReader?
+In order to read eBooks that are available as .acsm files on your tolino eReader, you need to install Adobe Digital Editions (ADE) on your computer. Adobe Digital Editions (ADE) is free software that allows you to easily and conveniently transfer Adobe DRM protected content to your tolino eReader.
+Adding books using Adobe Digital Editions:
+Install Adobe Digital Editions: Download and install ADE on your computer.
+Login to Adobe: Create or login to your Adobe account.
+Authorize your computer: Connect your computer to ADE to download books to your eReader.
+Add books using ADE: Add books to your eReader using ADE.
+Step 1 of 4: Install Adobe Digital Editions:
+Download Adobe Digital Editions (ADE) to your PC or Macintosh and run the installation program on your computer. Find the correct installation file here:  https://www.adobe.com/de/solutions/eBooks/digital-editions/download.html
+Step 2 of 4: Login to Adobe:
+If you don't have an Adobe account, head to www.adobe.com and create a free account. If you already have an Adobe account, skip to step 3.
+Step 3 of 4: Authorize your computer
+To authorize your computer, click on "Help"/"Authorize computer" once you have logged in. Enter your Adobe account (your e-mail address) and your password. Make sure that the "I want to authorize my computer without an ID" checkbox is not selected. Click "Authorize".
+Step 4 of 4: Add books using Adobe Digital Editions
+Connect your tolino eReader to your computer using a USB-C cable, then tap "Connect" on your tolino eReader. When you have opened the Adobe Digital Editions program, your tolino eReader will be displayed under "Devices" in the menu bar. To authorize your tolino eReader, select "Authorize device" in device settings. Select the book you want and drag it to the tolino eReader's bookshelf. Now disconnect your tolino eReader from the PC and unplug the USB-C cable from your tolino eReader. The book will now appear in your eReader library. To view books you have added, go to  “My Books” on your tolino eReader. When you select the “Imported” filter, you will see any books added using Adobe Digital Editions.
+Note: Your tolino eReader can only be authorized via Adobe Digital Editions. To check whether authorization has been successful, tap  “More” and select “Settings”. Under “Accounts”, you will see your Adobe ID under “Adobe”.
+2.9. How can I read eBooks and texts on other devices (synchronization)?
+You can log in to up to five devices with your user account. You can also synchronize your reading statuses between registered devices. The tolino eReader will do this automatically for you when you close an eBook on your tolino eReader. Please note that an internet connection must be available on both end devices for automatic synchronization to be successful. Synchronization can also be initiated manually at any time. Simply tap the circle icon with the arrow in the right-hand corner of your "My books" view or on your homescreen. You will still need to make sure that your device is connected to an active internet connection.
+2.10. How do I organize my eBooks into collections?
+Books can be organized into a list or "collection" on your tolino eReader.
+You could create a collection of books by your favorite author or a favorite genre or topic, for example. Collections allow you to find eBooks you have grouped together. The collections you have created will also be displayed in tolino apps and the webreader.
+Create a collection:
+To create a collection,  tap "My Books" on your homescreen, then tap "Collections". To create a collection, simply tap on the 3 dots in the top right corner and select "New collection". Next, give your collection a name. You can then select the books you want to add to this collection.
+Add or remove books from your collection:
+From your homescreen , tap "My Books" and go to the "Collections" tab. To edit a collection, tap and hold the name of the collection. A new menu will open where you can select "Edit", and there are also other options available from this menu.
+To add a book, tap "Add books". You will see all available books in your library. Use the plus sign  to add a book to your collection. To remove a book, uncheck the  tick next to the title.
+Rename or delete a collection
+On your homescreen , tap "My Books" and go to the "Collections" tab. Press and hold the name of the collection you wish to edit. A new menu will open with the options "Rename" or "Delete".
+Tip:
+Use our sorting features:
+Collection name
+Number of books
+Creation date
+to adjust the order your collections are displayed in.
+2.11. Which eBook formats can I read on my tolino eReader?
+Your tolino eReader supports the most common ebook formats.
+Books: EPUB, EPUB2, EPUB3, PDF, reflowable (FXL) and MOBI
+Documents: PDF
+Images: Jpeg, GIF, PNG, BMP
+Text: TXT
+Comic Books: CBZ and CBR
+3. FAQ Screenreader
+3.1. 1. What is required to use the Screen Reader function?
+To use the screen reader, you will need both a Bluetooth audio device (e.g., a speaker or headphones) and a Bluetooth keyboard.
+3.2. How do I activate the Screenreader?
+To turn on the screen reader:
+On the eReader Homescreen, tap the "Menu" icon at the bottom right.
+Navigate to "Settings."
+Select "Accessibility."
+Turn on the "Screen Reader" program.
+Tip: You can also activate the screen reader using a keyboard shortcut: Press Alt + Windows + S (for Windows keyboards) or Alt + Command + S (for Mac keyboards).
+3.3. How do I navigate the reading experience with the Screen Reader?
+To control the reading experience with the screen reader:
+Press Ctrl + T on your keyboard to start reading aloud.
+Use the arrow keys on your keyboard to turn pages.
+Press Ctrl + T on your keyboard to stop reading aloud.
+Press Ctrl + Q on your keyboard to return to the "My Books" overview.
+3.4. How do I navigate through my books with the Screen Reader?
+To navigate your book library with the screen reader:
+Use the arrow keys on your keyboard to select a book.
+Press the Spacebar to download or open a book. (This may take some time, depending on the book's size)
+3.5. How do I set up Bluetooth devices (audio device and keyboard) with my eReader?
+To pair your Bluetooth devices:
+On the eReader Home screen, tap the "Menu" icon at the bottom right.
+Navigate to "Settings."
+Select "Bluetooth."
+Turn on Bluetooth.
+Put your Bluetooth audio device into pairing mode.
+Once your audio device is detected by your eReader, tap its entry to start the pairing process.
+If your Bluetooth keyboard is in pairing mode, simply tap its entry on the screen to begin pairing.
+4. General (tolino shine 5. generation)
+4.1. Activating Large Print Mode on Your tolino eReader
+If you prefer larger text within the screen menus, you can easily activate Large Print Mode in a few simple steps.
+From the Home screen, tap the "More" menu option.
+Navigate to the "Settings" menu.
+Within the "Accessibility" menu, you can adjust the display size and text to 150% or 200%.
+Upon selecting either option, all descriptions and menu items will immediately be displayed in a larger font size.
+4.2. Activating Large Print Mode on Your tolino eReader
+If you prefer larger text within the screen menus, you can easily activate Large Print Mode in a few simple steps.
+From the Home screen, tap the "More" menu option.
+Navigate to the "Settings" menu.
+Within the "Accessibility" menu, you can adjust the display size and text to 150% or 200%.
+Upon selecting either option, all descriptions and menu items will immediately be displayed in a larger font size.
+4.3. Adjusting Screen Brightness
+To adjust the brightness of your screen, please tap the sun icon located on the main screen. You can then adjust the desired brightness by sliding the control to the left or right.
+Furthermore, you can customize the color temperature of your screen using the Smart Light function. The available color range extends from amber candle light, suitable for nighttime reading, to bright white sunlight for daytime use
+Viewing Accessibility Status, Features, and Notices for a Book
+To view accessibility information for a specific book, please tap the "My Books" menu option on your Home screen.
+Beneath each book cover, you will find three small dots that provide access to further functions and information pertaining to that book. To view the desired accessibility details, tap "View Details."
+In addition to a brief summary, you will find further information under the "Details" section. Please note that the availability of this information is dependent on the data provided by the publisher
+4.4. How can I customize the tolino background that appears when my screen is in sleep mode?
+You can change the wallpaper that appears when your tolino eReader is in sleep mode. To do this, go to "More"  and then "Energy Saving & Pin Code". In the "Sleep screen" section, you will see the following options:
+Show current book
+View current book cover in full screen
+Show info panel on book covers in full screen (only when full screen is activated)
+Charging indicator
+If you have not made a selection, the tolino face will be displayed in sleep mode.
+4.5. How can I perform a software update on my tolino eReader?
+Update your tolino eReader regularly to get the latest features. To check if you have the latest version, synchronize your tolino eReader by tapping the    icon in the menu.
+If a software update is available, a notification will pop up asking you whether you want to carry out the update. The scale of a software update may vary and it might take some time to be download and install the update.
+You can also perform a manual check for a software update. From your homescreen, go to "More"  and tap "Settings". In the "Device Information" menu, you can search using the "Check for Updates" option.
+Tip: Before updating your reader, make sure it is fully charged.
+4.6. How do I reset my tolino eReader to factory settings?
+To reset your tolino eReader to factory settings, go to the “More” menu on your tolino eReader's homepage  and select “Settings.” In “Device Information,” under “Advanced,” you will find the “Reset to Factory Settings” function. Tap “Reset” to reset your tolino eReader to factory settings.
+Please note:
+Any books you have downloaded will be deleted from the device. These can be downloaded once more from the tolino Cloud after the reset is complete.
+Any files you added via your computer will be deleted.
+All bookmarks and annotations that you have made in your books since the last synchronization of your tolino eReader will be lost.
+4.7. How many eBooks can I store on my eReader?
+Depending on your tolino's model and storage space, you can store approx. 12,000 eBooks or 75 audiobooks onyour tolino eReader.
+When the storage capacity is full, you can delete eBooks stored on your tolino eReader without having to get rid of them entirely. Your books will remain in the tolino cloud and can be downloaded again at any time. Books that are stored on your tolino eReader's memory can also be backed up to the tolino Cloud or copied to your computer via a USB connection.
+4.8. Is my tolino eReader waterproof?
+Your tolino eReader has been tested and certified as waterproof under certain conditions. It can be immersed in 2 meters of freshwater for up to 1 hour.
+To ensure an optimal reading experience, the screen of your tolino eReader and your hands should be dry during use. If the screen gets wet, simply wipe with a dry cloth. The screen may not respond as expected if it is wet or under water.
+If your tolino eReader:
+- salt water
+- soapy water
+- chlorinated water from a swimming pool
+gets wet, rinse it immediately with freshwater and dry it before use.
+More tips:
+Dry the USB port before connecting the USB charger to your tolino eReader.
+Avoid exposing your eReader to strong jets of water, such as waterfalls or waves.
+Do not charge your tolino eReader while in or near water, or in areas with high humidity.
+Your tolino eReader will not float.
+Do not immerse your tolino eReader in water for longer than we recommend.
+Do not immerse your tolino eReader in salt water, soapy water or chlorinated water.
+Please note that your tolino eReader is not dust or sand proof.
+4.9. What are my warranty entitlements for my tolino eReader?
+The scope of the tolino eReader's warranty
+If your tolino eReader experiences a manufacturing-related material and/or processing defect (hereinafter "defect") within the first 12 or 24 months (depending on the device) from the date of purchase from a dealer, you are entitled to claim warranty service from Longshine Technologie GmbH. The provision of warranty services does not extend the entire warranty period.
+The tolino eReader warranty
+Longshine will honor their warranty obligation for defects by repairing a defective reader free of charge or by replacing it with one that is free from defects. Any replaced parts or readers become the property of Longshine Technologie GmbH.
+Warranty exclusions
+The warranty does not cover optional accessories or defects caused by improper handling, operating errors or external influences. The warranty also excludes any consumables or wearing parts, such as batteries that cease to function solely due to regular usage. This warranty does not cover any costs for modifications or adjustments to the reader that are necessary to adapt it to the national, technical or safety requirements of a country where the reader is intended to be used but was not originally purchased.
+Enforcing a tolino eReader warranty
+To claim the warranty for your tolino eReader, you will need the proof of purchase (invoice, receipt) showing the date of purchase and the reader model. You must notify Longshine Technologie GmbH of the reader's defect within the warranty period.
+You will find the contact details for Longshine Technologie GmbH in the text below.
+Data backup
+If you send your tolino eReader back to the manufacturer, no guarantees can be provided for the data stored on the reader. We therefore recommend that you backup your data before sending in your tolino eReader.
+For any additional questions about the warranty services for your tolino, please contact your book store's customer service department.
+Contact the warranty provider and manufacturer of the tolino eReader (Germany, Austria, Switzerland):
+Address:
+Longshine Technologie GmbH
+An der Strusbek 9
+22926 Ahrensburg
+Telephone:
++49 (0) 4102/492233
++49 (0) 4102/40109
+E-mail:
+tolino@longshine.de
+4.10. What can I do if my eReader has been lost or stolen?
+Please contact the customer service department of your tolino bookseller. They can block your tolino eReader and your tolino account.
+4.11. Where do I go to install a dictionary on my tolino eReader?
+Your tolino eReader contains several different dictionaries that you can choose to add or remove. To download a dictionary, tap the
+“More” menu on your homescreen and then “Settings”. In the “Language & Dictionaries” menu, tap “Edit” under “Installed dictionaries”. You will now see a list of available dictionaries. To add a dictionary, mark it with the plus sign To remove a dictionary, remove the  check mark next to the dictionary you want to remove and tap "Save".
+4.12. Where do I go to set up my PIN code?
+You can protect your tolino eReader against unauthorized access with a PIN code.
+To do this, click on  "More" and tap "Settings". Under "Energy saving & PIN code", you can turn on your PIN code and set a unique 4-digit PIN. Once you have set your PIN code, you will only be able to access your tolino eReader with your PIN code. You can change your PIN or turn it off by tapping "Change PIN".
+If you have forgotten your PIN, tap the prompt "Forgot your PIN? - Log out". Click confirm in the dialog box that appears.
+Note: Any previous reads, highlights, or annotations since your last sync will be lost.
+5. Getting started (tolino shine 5. generation)
+5.1. How do I connect my tolino eReader to the web?
+Connect your tolino eReader to the internet free of charge via a wireless network (WLAN) or use one of the numerous hotspots provided by Deutsche Telekom AG.
+Connect to WiFi:
+From the top menu bar, tap the  icon and turn on your WiFi connection. Once you have turned your WiFi on, your tolino eReader will recognize any available wireless networks in your area. Next, tap on your preferred network to select it. If the chosen network is encrypted with a password, a dialog box will appear. Enter the correct password using this box. Once you have confirmed your password by tapping "Connect", your tolino eReader will connect to the web via WiFi. When you are successfully connected to the new WiFi network, it will be added to your list of recognized networks.
+If your WLAN network is not displayed in the list of wireless networks, please open the WLAN menu. You can find this under "More", then  "Settings". Search for a network using the Search option, add a network manually, or manage your saved networks.
+Connect via HotSpot:
+If you don't have access to a WiFi network, use the tolino eReader to connect to one of the numerous Deutsche Telekom AG hotspots in Germany free of charge. These are internet access points that are available in multiple public locations, such as airports, certain ICE trains, and marked telephone booths. An overview of the available Telekom HotSpots can be found here (link missing). Your device will connect automatically as soon as it is near to a hotspot and your WLAN is switched on.
+Please note:
+To use Deutsche Telekom's hotspots free of charge, you must be registered and logged in to your tolino book store. If you are not registered and logged in to your tolino book store and want to surf the internet using your tolino eReader, costs for WLAN usage may increase when you enter your name, address, credit or banking details, for example.
+5.2. How do I log in to my book store from my tolino eReader?
+First, connect to your WiFi network. Then tap “Register now” or open the main menu from the homepage of your tolino eReader by tapping the icon  “More” and selecting  “Settings”. Next, tap “Accounts” and select the option “Register now”. You will be redirected to your tolino book store login page where you need to enter your username and password.Please note: If you purchased your tolino eReader from a tolino book store, it will default to the book store's own shop. If you hold an account with another tolino Allianz book store, you can easily combine the tolino libraries from both shops using the tolino library link
+5.3. Your homescreen at a glance
+Upper menu bar:
+Time
+Family Sharing
+Brightness
+WiFi status
+Battery status
+Synchronization
+Search
+The top third of your homescreen:
+The last 4 books you opened are displayed here.
+The middle third of your homescreen:
+Looking to go on a new literary adventure? Browse your personal recommendations here.
+The bottom third of your homescreen:
+Discover more exciting books in your tolino book store. You can also access your reading settings here.
+The bottom menu bar:
+Home
+My books
+Shop
+More (main menu)
+6. Read Aloud Function (Text-to-Speech)
+6.1. How do I stop the Read Aloud function?
+To stop the Read Aloud function:
+*   Tap the center of the page to open the Reading Menu.
+*   Tap the "3-dot" icon in the top right corner.
+*   Select "Stop Reading Aloud."
+6.2. How do I use the Read Aloud function for eBooks
+To activate the Read Aloud function within an eBook:
+*   Tap the center of the page to open the Reading Menu.
+*   Tap the "3-dot" icon in the top right corner.
+*   Select "Read Aloud."
+7. tolino cloud (tolino shine 5. generation)
+7.1. How can I link the eBooks I have from other book stores to my tolino library (library linking)?
+If you have purchased eBooks from multiple tolino partners, you can link your tolino libraries. This will allow you to manage and read your eBooks from a single location. You can easily link and manage your registered readers yourself.
+About the tolino webreader:
+Please log in to your tolino book store via a browser on your PC and then open the tolino webreader.
+In "My accounts", select the "Library link" option.
+To connect, select the desired tolino retailer from the list of available tolino book stores you have an account with and click the "Link" button to the right of the book store's logo.
+To link your existing customer account with the additional tolino book store account, you now need to log in with your details.
+By entering your login details, you are confirming that you the owner of this customer account.
+Once confirmed, the two tolino libraries are linked and you can load your previously purchased eBooks into your existing tolino library via the tolino Cloud.
+About the tolino app:
+Download the tolino app from the Google Play or your App Store.
+Select your country and then your tolino book store.
+Log in using your tolino book store details.
+Tap the 3 dots at the bottom right to open the main menu.
+In "My accounts", select the "Library link" option.
+To connect, select the desired tolino retailer from the list of available tolino book stores you have an account with and click the "Link" button to the right of the book store's logo.
+To link your existing customer account with the selected additional tolino bookseller account, you must now log in with your access data.
+By entering your book store details, you are confirming that you the owner of this customer account.
+Once confirmed, the two tolino libraries are linked and you can load your previously purchased eBooks into your existing tolino library via the tolino Cloud.
+7.2. How do I set up Family Sharing on my tolino eReader?
+Select the menu "More" and then go to "Settings" in the "Accounts" submenu. Tap on "View" under "My Family". If you have not yet set up Family Sharing, you will be automatically prompted to create a Family. First, you will need to assign a name so that your family members recognize you. Next, hand your device to the person you want to invite to join your Family. They can then select their book store and enter their login details. This is necessary to connect the two accounts. The invitee must then choose a name. Take your device back and enjoy sharing your first book with your family member.
+7.3. Where can I find more information about “Family Sharing”?
+Detailed information about “Family Sharing” can be found here: https://mytolino.de/faq-gruppe/faq-family-sharing/
+7.4. Where can I find the books and audio books that a family member has shared with me?
+Tap on the Family Sharing icon from the start screen or use the “Family Sharing” filter in “My Books”.
+9. Troubleshooting (tolino shine 5. Generation)
+9.1.  I can't open my ebook, what should I do?
+If you cannot open a book on your tolino eReader, try the following steps in the order provided.
+Please check your internet connection. An internet connection is required to open a book on your tolino eReader for the first time, automatically saving it to your end device.
+Remove the eBook from your tolino eReader and download it once more.
+If you are still unable to open the book, please contact your tolino book store.
+9.2. I'm having problems connecting my tolino eReader to the computer. What can I do?
+If you cannot charge your tolino eReader or connect it to your computer via a USB cable, follow these steps to solve the problem.
+Check whether the USB port is defective and try another USB port on your PC.
+Check whether your USB cable is defective and try a different cable.
+Use a different USB port on your computer.
+Check to see if the connection port of the tolino eReader is dirty and clean it if necessary.
+Open the device manager on your PC and check whether the tolino eReader is displayed. If it is, check whether you need to install a new driver.
+Update your tolino eReader software
+Restart your computer
+Test the connection to a different computer
+If the above steps are unsuccessful, please reset your tolino eReader to factory settings.
+9.3. I'm having problems logging in, what should I do?
+If you are having problems logging in on your tolino eReader, we advise you repeat the login process using your computer. If you are still unable to login, it may be that the server is undergoing maintenance and that there are some connectivity issues. If you are still unable to connect after waiting for some time, please contact the customer service team of the book store from which you purchased your tolino eReader.
+9.4. I'm having problems with my WiFi connection, what can I do?
+There are a number of potential reasons if you are having problems connecting your tolino eReader to a WLAN. We have put together some initial help and guidance here to rule out the most common reasons for issues, so that you can try to solve your WLAN problems yourself. Please check the following:
+1. Are you attempting to connect your tolino to the wrong WLAN?
+Check that you have selected the correct wireless network connection. Please also make sure that you have deactivated the WLAN for all computers or devices in your WLAN network security settings. Ideally, you should also test your data on another device, e.g. a smartphone. If you manage to connect your other device without issue, then there must a different reason for the problem you are experiencing.
+2. Is the WiFi signal too weak or is the WiFi unstable?
+In large residential buildings with thick walls and without WLAN repeaters, the signal strength may be too weak or unstable to establish a WLAN connection where you are. Make sure the signal quality and availability at your location is sufficient. Try moving to a new location and moving closer to the router.
+3. Are you using an outdated WLAN encryption method e.g. WPA1/2 with TKIP or WEP?
+To safeguard your WiFi network's security and prevent unauthorized access, there are various types of encryption that are configured on your router. Encryption protocols have evolved over time, meaning that some encryption methods are now classified as insecure or out-of-date. Our tolino eReaders only support up-to-date and entirely secure encryption methods. It is therefore no longer possible to connect to a WLAN that uses the outdated TKIP encryption method after updating to software version 11.2.2. Please check the encryption protocols of your WLAN if you cannot connect your tolino to your WLAN. Your WLAN encryption should be set to WPA1/2 CCMP(AES).
+4. My WLAN network is not displayed in the drop-down list. What should I do?
+Sometimes, networks do not appear in the list because they are hidden. To manually add a network that you cannot see on your tolino eReader, tap "Add network" at the bottom of the drop-down list and then enter the network name, encryption method and password for the connection.
+5. Does your WLAN name or password contain any umlauts or diacritics?
+Diacritics are letters with accents, tildes or dots, e.g. â, é, ő. Characters such as this and umlauts in WLAN names (SSID) or passwords can cause problems when establishing a connection. Depending on the type of umlaut encoding on your specific router, your tolino eReader may not able to access the WLAN.
+9.5. My book store is not available, what should I do?
+Your book store's server may undergo maintenance once in a while and this will make it temporarily unavailable. We suggest trying again later. If the issue persists, please contact your book store's customer service department.
+9.6. My tolino eReader isn't responding. How do I carry out a reset?
+In rare cases, the screen may freeze and your tolino eReader may no longer respond. If this happens, please perform a reset.
+Connect your tolino eReader to a computer or an external charger. Press and hold the power button until the words "Turn off" appears on the screen and then release the power button. Press and hold the power button until the power indicator (the LED, top right) flashes rapidly. This can take up to 30 seconds.
+When the power indicator light stops flashing and remains constant, release the power button. Your tolino eReader will now restart.
+Please note that performing a reset will delete all content stored locally on your tolino eReader and you will need to log in to your customer account once again.
+9.7. What should I do if a software update doesn’t work?
+If you have any problems updating the software, we recommend that you reset your reader.
+Alternatively, you can also perform the update manually. You can find the appropriate update file here: https://mytolino.de/software-updates-tolino-ereader/
+To avoid any issues, you should only manually install updates from your computer in exceptional cases. If you need to install a software update on your tolino eReader without a WiFi connection, please proceed as follows:
+Click the download button and save the file with the name update.zip to your desktop. Please note that the file will only be recognized as an update file by your tolino eReader with this file name.
+Connect your tolino eReader to the computer using the supplied USB-C cable and open the directory view of the tolino eReader in File Explorer.
+Now copy the file update.zip from your desktop or individual storage location to the ".kobo" directory of your tolino eReader.
+Then disconnect the USB connection by ejecting the tolino eReader from the PC.
+The update will start automatically.
+Tip: To view the “.kobo” directory on your PC,you need to activate the “Show hidden folders” option on your PC.
+9.8. When I open my eBook, I get the error message "This eBook is DRM protected..." What should I do?
+To protect copyrighted content, many eBooks are protected with DRM (Digital Rights Management). To read this content, you need an Adobe user account (Adobe ID).
+Please follow the instructions in chapter  How can I read DRM-protected eBooks on a tolino eReader?
+The brand tolino
+The world of tolino
+The new tolino ereaders
+Around tolino
+tolino webreader
+tolino app
+Services & help
+eReader help
+tolino app help
+Software updates
+For Business Partners
+Sales & cooperation
+Selfpublishing with tolino
+Download tolino app from the App Store:
+Google Play Store
+Apple App Store
+Keep in touch with tolino:
+Facebook
+Instagram
+Twitter
+Youtube
+Imprint
+Privacy Policy
+Open Source
+Cookie Settings
+© tolino media GmbH & Co. KG 				All rights reserved

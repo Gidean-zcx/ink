@@ -1,0 +1,13 @@
+Ideas for custom shortcuts on iPhone or iPad
+To identify tasks to run using shortcuts, observe how you use your Apple devices throughout the day. It’s obvious that tasks you do multiple times a day are ideal shortcut candidates. However, there are many more opportunities: What task is taking too long? What can’t you do in the app you’re currently working in? What’s just too much trouble to bother with? You’ll start to recognize these moments as opportunities to create shortcuts (especially once you’ve reviewed the actions available in the Shortcuts app).
+Consider the following:
+If you’re a student: Create shortcuts to manage homework and exam reminders, study with flashcards, generate example problems, or translate text between languages.
+If you commute daily: Create shortcuts to see transit times, review your meetings for the day, or hear top news headlines read aloud.
+If you’re health-conscious: Create shortcuts for logging what you eat and drink, your exercise activity, your sleep, or your reproductive health.
+If you’re an avid music listener: Create shortcuts to play your favorite playlists, add songs to playlists, pull up lyrics, or share your favorite songs.
+If you love eating out, grabbing coffee, or visiting pubs: Create shortcuts to find directions to nearby venues, invite friends along, make reservations, calculate tips, place orders over the phone, or log your opinions.
+If you often communicate with friends and loved ones: Create shortcuts to send templated text messages, edit your photos, quickly place phone or FaceTime calls, or create and share GIFs or photo collages.
+If you share expenses with friends or like to spend money: Create shortcuts to send or request payments using Apple Pay or another cash app.
+Tasks that involve too many taps on your iPhone or iPad are also ideal candidates for shortcuts. Truly useful automations significantly reduce the number of steps that are required to reach your goal.
+A third-party app that doesn’t quite meet your needs is another ideal candidate for automation. By building a shortcut that integrates with the third-party app, you’re not confined to the choices offered by the app developers, and you can create a more personalized tool.
+Tip: You can add shortcuts suggested by other apps as actions in your custom shortcuts. For more information, see Navigate the action list in Shortcuts on iPhone or iPad.

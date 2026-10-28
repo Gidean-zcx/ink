@@ -1,0 +1,14 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M015-04,M-015,准备离线内容,D2,E-RDD-01,分区开关、缓存清理、单篇缓存例外,下载中断、容量不足、平台构建,not_observed,false,cases/M-015-readwise.md,2026-10-26
+F-M015-05,M-015,浏览后返回阅读位置,D2,E-RDD-01,最远进度与最后位置；X改进度,判定阈值、跨端冲突、原句位置,not_observed,false,cases/M-015-readwise.md,2026-10-26
+F-M015-06,M-015,删除后恢复,D2,E-RDD-01,原删除设备；正文和批注一起恢复,移动端Search/View入口差异、清空后的处理,not_observed,false,cases/M-015-readwise.md,2026-10-26
+F-M015-07,M-015,搜索范围变化,D2,E-RDD-04,在线全Library、离线本机；Feed不全文索引,索引延迟、迁入后失败、搜索排序,not_observed,false,cases/M-015-readwise.md,2026-10-26
+F-M015-08,M-015,全库问答与动作,D2,E-RDD-02,逐工具权限、确认、Remember,全部工具、执行失败、部分成功、撤回,not_observed,false,cases/M-015-readwise.md,2026-10-26
+F-M015-09,M-015,技能与会话,D2,E-RDD-02,作用范围、侧栏展开、移动端清除与网页历史,模型错误、历史删除传播、移动端构建,not_observed,false,cases/M-015-readwise.md,2026-10-26
+F-M015-10,M-015,临时解释或存入笔记,D2,E-RDD-03,查看、复制、保存、关闭分开,断网错误、连续选词、保存失败,not_observed,false,cases/M-015-readwise.md,2026-10-26
+F-M015-11,M-015,导出不同数据对象,D2,E-RDD-05,笔记、CSV、OPML、ZIP；异步邮件,文件结构、恢复一致性、链接失效重试,not_observed,false,cases/M-015-readwise.md,2026-10-26
+F-M015-12,M-015,保存筛选与分组,D2,E-RDD-06,web/mobile保存查询、RSS分组,无效查询、重命名冲突、删除引用,not_observed,false,cases/M-015-readwise.md,2026-10-26
+F-M044-03,M-044,稍后读、继续与归档,D2,E-IND-01;E-INCD-13,源历史从首次采集起；取消订阅后个人保存/标签条目仍在，普通历史有源仍有读者条件。,精确进度、个人误删、最后订阅读者、跨端冲突及完整备份,not_observed,false,cases/M-044-inoreader.md,2026-10-27
+F-M044-04,M-044,摘要转全文,D2,E-IND-02,按需抓取、Pro存储、失败退回摘要,正文更新和批注定位、失败提示,not_observed,false,cases/M-044-inoreader.md,2026-10-26
+F-M044-05,M-044,离线准备和恢复同步,D2,E-IND-03,移动Pro、条目标记、重连同步,半下载、磁盘满、并发修改冲突,not_observed,false,cases/M-044-inoreader.md,2026-10-26
+F-M044-06,M-044,文章听读与混合队列,D2,E-IND-04,服务端生成、锁屏、译文朗读、日配额,离线音频、强退重启、跨端断点,not_observed,false,cases/M-044-inoreader.md,2026-10-26

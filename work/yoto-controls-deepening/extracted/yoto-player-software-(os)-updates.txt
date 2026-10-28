@@ -1,0 +1,200 @@
+
+What's new in the latest Yoto OS release!
+
+
+Tip: you can check which Yoto OS version your player is running in the Yoto app by going to Account and tapping the Settings icon next to your player 
+
+
+Latest releases
+
+
+Yoto OS v2.23.3 (10th December 2025)
+Improvements to power consumption when a device is in deep sleep mode
+Note: This OS version is currently available only on the latest production batch of players, where the underlying issue has been fixed. There are no changes for earlier devices which are running v2.23.2.
+Yoto OS v2.23.2 (29th September 2025)
+Improved setup when connecting to new Wi-Fi network
+Battery saver display will no longer dim during FF/RW
+Improved Right Hand Button behaviour when pausing and when player is offline
+Fixed issue for players reporting incorrect charge status with underpowered chargers
+Nightlight brightness amount is saved & recalled correctly (Yoto Player 3rd Generation only)
+Yoto OS v2.22.6 (21st July 2025)
+Supported lowering brightness when idle and disconnected from Wi-Fi
+Fixed a memory management issue which was causing NFC failures
+Yoto OS v2.22.5 (23rd June 2025)
+Added support for dynamic icons in the Weather App
+Support for the Yoto Developer Program - to find out more visit https://yoto.dev/
+Fix for Animated Icons
+Yoto OS v2.22.4 (4th June 2025)
+Implemented Fast Forward/Rewind - simply hold down the left or right buttons while playing audio to start scrubbing forwards or backwards!
+Fixed issue with out-of-date Yoto Daily episodes
+Fixed playback issues with Yoto Radio
+Fixed issue where Yoto BT headphone - and + buttons do not skip track/chapters
+Improved internal tools to support customers
+Fixed Right Hand Button content ejecting when a player moves between Day/Night mode
+Improved card deletion to free space
+Fixed nightlight brightness not adjusting while audio is playing
+Yoto OS v2.21.9 (7th April 2025)
+Fixed an issue where Yoto Daily wouldn't show today's date
+Improvements for Right Hand Button behaviour
+Improvements to collecting Player crashes and performance
+Fixed issue playing non downloaded gif content
+Fixed Headphone port failure/crash
+Fixed issue where plays from the app initially trigger the last-played track
+Fixed issue where first card insert is not registered and idle screen locks up
+Other minor bugfixes and improvements
+Yoto OS v2.21.4 (19th February 2025)
+Improvements for Bluetooth Headphones
+Volume limit now applies when changing volume from headphones
+Fixed Pre/Next buttons from Bluetooth Headphones
+Improvements to audio playback
+Improved playback reporting to the app
+Support for Opus audio codec
+Improved retry logic for failed downloads
+Various fixes for bugs and crashes
+Yoto OS v2.19.8 (20th December 2024)
+Improvements to Mini Fast/Slow Charging
+Yoto OS v2.19.6 (14th November 2024)
+Fixed crash for out-of-date podcasts
+Fixed crash while sending download errors
+Fixed crash in rare cases during a shutdown
+Fixed crash in rare cases on very slow Wi-Fi networks
+Fixed chapter selection on Interactive Content (Earth Explorers and Disney Quiz) 
+Fixed issue ignoring player commands
+Fixed icon-free cards showing the clock rather than the generic card icon
+Improvements to download retry and reporting
+Improvements to remove stale (un-listened to) content
+Yoto OS v2.18.4 (27th August 2024)
+Improved handling of Players experiencing SD issues
+Improvements to Battery Power and Charging Performance
+Improved error and crash reporting
+Improved delay when playing cards with many chapters
+Fixes for card reader issues
+Fixed playback issue on cards with no icons
+Fixed incorrect Podcast episodes bring triggered from App
+Yoto OS v2.17.13 (24th June 2024)
+Fixed deep sleep issue when Yoto Mini is at lowest battery
+Yoto OS v2.17.11 (12th June 2024)
+Improved handling of Players experiencing SD issues
+Improved charging rate for Mini (2024 edition)
+Improved error and crash reporting
+Yoto OS v2.17.5-5 (8th May 2024)
+Added support for Maths: Phase 2 card
+Yoto OS v2.17.5 (8th April 2024)
+Added support for Yoto Mini Smart Cable
+Battery and Charging optimizations
+Power Consumption reductions
+Implemented significant increase to Download Speeds on V2, V3 and Mini
+Fixed Bluetooth related crash
+Fixed Mini no always waking from deep sleep
+Various bug fixes and reliability improvements
+Yoto OS v2.15.16 (11th March 2024)
+Fixed audio playback issues
+Fixed an issue with pairing Bluetooth Headphones
+Fixed an issue with Minis powering off after an update
+Dark images now display correctly when a Player is on low brightness
+Improvements to Mini Display
+Battery Optimizations
+Bug fixes and reliability improvements
+Yoto OS v2.15.6-1 (18th December 2023)
+Fixed an issue preventing alarms working correctly
+Battery Optimizations
+Remove the need to wait for low battery devices to charge before switching on
+Show full battery notification when charging is finished
+Yoto OS v2.15.4 (17th October 2023)
+Battery Optimizations
+Yoto Radio is now faster to start playing 
+General bug fixes and improvements
+Yoto OS v2.14.7 (25th September 2023)
+Fix pause icon showing while content playing in some instances
+Fix for temperature reporting on the first status message
+Alarms: automatic timeout after 5 minutes
+Alarms: a new field within the app can set alarms as enabled/disabled
+Improvements to Wi-Fi reliability
+Improvements to storage reliability
+General bug fixes and improvements
+Yoto OS V.2.13.9 (27th June 2023)
+Improvements to localization. Don’t play English instructions for devices being used in non-anglophone countries.
+Added support for HLS-DASH streams, such as the new BBC Radio streams
+Improvements to the responsiveness of the devices
+Improvements to audio playback through Bluetooth headphones
+Bug fixes and minor improvements
+Support added for our third generation player!
+Yoto OS V.2.12.12 (3rd May 2023)
+Audio playback improvements
+General bug fixes and minor improvements
+Yoto OS V.2.11.1 (18th January 2023)
+Prevent screen turning from off during pairing process
+Improvements to testing framework
+Fixed issue with wired headphones playing over volume limit when Bluetooth headphones are also connected
+aw881xx watchdog timeout workaround for Mini player
+UX improvements for the Bluetooth menu
+Bluetooth: fix enabling Bluetooth for the first time
+Yoto OS v2.10.7 (21st November 2022)
+Optimize Wi-Fi power consumption when disconnected
+Optimize NFC power consumption when auto power-off is enabled
+Fix audio synchronization of startup jingle sound and animation
+Improve power consumption after shutdown on Mini (fix headphone power management logic)
+Support for MVP alarm functionality
+Any button press can be used to cancel a sounding alarm
+Fix nightlight brightness not changing while playing content
+Yoto OS v2.9.13 (20th October 2022)
+Fixed issue with the right button not cancelling setup mode
+Fixed issue with audio not always playing on wired headphones
+Prevent OS freeze with Bluetooth headphones (support available in Beta only)
+Fix bug with wired headphones detection and audio routing
+Don't trigger Wi-Fi setup when entering factory reset mode
+Show eject icon when trying to trigger Wi-Fi setup whilst card inserted
+Prevent crackle on Player when switching to BT mode
+Fix for playback of certain podcasts that were causing a crash
+Yoto OS v2.8.6 (17th August 2022)
+Fixed issue with BT audio playing from speakers when headphones are connected
+Fixed Yoto face logo being shown rather than time when removing a card
+Fixed crackling fire icon not being shown
+Pause and resume audio coming soon:
+Fix for pause/resume icon not being cleared when content stopped from the app
+Fixed audio playback issue and pause icon disappearing when device moved from dock while paused
+Yoto OS v2.7.24 (28th Jun 2022)
+Behind the scene system updates for upcoming Bluetooth headphones support on Yoto Mini 
+Pause and resume audio playback (without removing card) - coming soon
+Resume podcast streams from last played position (where supported by podcast publisher)
+Mini - fixed screen flicker seen across Yoto OS restarts
+Improvements to SD card reliability
+Player - improved protection against crashes on low battery
+Yoto OS v2.6.4221 (28th Mar 2022)
+Mini - Fix for occasional odd speaker noise
+Mini - Reduced volume on lowest settings
+During Wi-Fi setup always turn on display (even if turned off in Player settings)
+Player - improved responsiveness on card insertion
+Improved battery life when out of reach of recognized Wi-Fi network
+Fix unexpected auto power-off in BT speaker mode
+Fix crash when Wi-Fi drops at point of Yoto Radio starting to play
+Yoto OS v2.6.3966 (24th Jan 2022)
+Fixes issue with card playback sometimes not starting automatically after power up
+Couple of minor improvements and bug fixes
+Yoto OS v2.6.3881 (13th Jan 2022)
+Faster initial update on App-Player connection
+Updated Yoto Mini battery profile for more accurate readings
+Yoto OS v2.6.3866 (30th Nov 2021)
+Improves stability of audio playback from SD card
+Yoto OS v2.6.3859 (17th Nov 2021)
+Provide information on currently playing card (coming soon to Yoto App)
+Refreshed sun and moon icons for clock
+Updated audio prompts
+Improved performance when content is not available on SD card
+Fix for chapter number sometimes remaining overlaid on clock display
+Improved battery level indicators
+Wake-up Player display when Player settings are changed in Yoto App
+Yoto OS v2.6.3818 (1st Nov 2021)
+Under-the-hood improvements for features coming to the Yoto app later this year
+Battery saver - display automatically wakes up on track change
+Player will now automatically return to sun/moon clock 15 minutes after playback of a card has stopped
+ Yoto OS v2.5.3280(1st Jul 2021)
+Fixes issue with Player Wi-Fi Setup failing when in proximity of WPA3 Wi-Fi networks
+ Yoto OS v2.5.3233(23rd Jun 2021)
+Support Wi-Fi set up connecting to mobile hotspot without need for a second mobile to run the Yoto App
+Fix for low volume when using headphones issue
+Updated night light red colour to new Tambourine Red to match Adventure Jacket colour
+Improvements to Yoto Player setup user flows
+More responsive volume control
+Fixed an issue where cached content wouldn’t play in offline mode
+Various bug fixes and performance improvements

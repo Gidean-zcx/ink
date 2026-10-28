@@ -1,0 +1,155 @@
+[
+  {
+    "class": "page-header-inner-logo-link",
+    "href": "/en",
+    "title": "",
+    "url": "https://help.ground.news/en"
+  },
+  {
+    "class": "page-header-inner-title",
+    "href": "/en",
+    "title": "Ground News Help Center",
+    "url": "https://help.ground.news/en"
+  },
+  {
+    "type": "button",
+    "class": "kb-button primary",
+    "href": "/en/contact-us",
+    "title": "Contact Us",
+    "url": "https://help.ground.news/en/contact-us"
+  },
+  {
+    "id": "moreResultsLink",
+    "type": "button",
+    "class": "kb-button secondary",
+    "href": "/en/search",
+    "title": "More results",
+    "url": "https://help.ground.news/en/search"
+  },
+  {
+    "href": "https://ground.news/privacy-policy",
+    "title": "Privacy Policy",
+    "url": "https://ground.news/privacy-policy"
+  },
+  {
+    "href": "#where_to_find_the_sort_and_filter_tool",
+    "class": "navigation-item indent-2",
+    "title": "Where to Find the Sort and Filter Tool",
+    "url": "https://help.ground.news/en/articles/6049857#where_to_find_the_sort_and_filter_tool"
+  },
+  {
+    "href": "#sorting_options",
+    "class": "navigation-item indent-2",
+    "title": "Sorting Options",
+    "url": "https://help.ground.news/en/articles/6049857#sorting_options"
+  },
+  {
+    "href": "#filtering_options",
+    "class": "navigation-item indent-2",
+    "title": "Filtering Options",
+    "url": "https://help.ground.news/en/articles/6049857#filtering_options"
+  },
+  {
+    "href": "#resetting_filters",
+    "class": "navigation-item indent-2",
+    "title": "Resetting Filters",
+    "url": "https://help.ground.news/en/articles/6049857#resetting_filters"
+  },
+  {
+    "href": "#example_find_news_from_a_particular_perspective",
+    "class": "navigation-item indent-2",
+    "title": "Example: Find News from a Particular Perspective",
+    "url": "https://help.ground.news/en/articles/6049857#example_find_news_from_a_particular_perspective"
+  },
+  {
+    "href": "/en",
+    "title": "Home",
+    "url": "https://help.ground.news/en"
+  },
+  {
+    "href": "/en/categories/2272897-advanced-browsing-tools",
+    "title": "Advanced Browsing Tools",
+    "url": "https://help.ground.news/en/categories/2272897-advanced-browsing-tools"
+  },
+  {
+    "href": "/en/categories/2272897-compare-analyze-news-coverage",
+    "title": "Compare & Analyze News Coverage",
+    "url": "https://help.ground.news/en/categories/2272897-compare-analyze-news-coverage"
+  },
+  {
+    "href": "https://usw2.frontkb-cdn.com/attachments/7440402/17473/9707efe1-3f0c-45ad-b7aa-28df5eca3ecb.png",
+    "class": "knowledge-base-image-expand-link",
+    "data-lightbox": "9707efe1-3f0c-45ad-b7aa-28df5eca3ecb",
+    "title": "",
+    "url": "https://usw2.frontkb-cdn.com/attachments/7440402/17473/9707efe1-3f0c-45ad-b7aa-28df5eca3ecb.png"
+  },
+  {
+    "href": "https://usw2.frontkb-cdn.com/attachments/7440402/17473/fa003e80-9909-47a5-8c12-faef38755cf7.png",
+    "class": "knowledge-base-image-expand-link",
+    "data-lightbox": "fa003e80-9909-47a5-8c12-faef38755cf7",
+    "title": "",
+    "url": "https://usw2.frontkb-cdn.com/attachments/7440402/17473/fa003e80-9909-47a5-8c12-faef38755cf7.png"
+  },
+  {
+    "target": "_self",
+    "rel": "noopener noreferrer nofollow",
+    "class": "kb-link kb-link",
+    "href": "/en/articles/5224577",
+    "title": "How to Filter for High-Factuality News Sources",
+    "url": "https://help.ground.news/en/articles/5224577"
+  },
+  {
+    "target": "_self",
+    "rel": "noopener noreferrer nofollow",
+    "class": "kb-link kb-link",
+    "href": "/en/articles/3523713",
+    "title": "here",
+    "url": "https://help.ground.news/en/articles/3523713"
+  },
+  {
+    "target": "_self",
+    "rel": "noopener noreferrer nofollow",
+    "class": "kb-link kb-link",
+    "href": "/en/articles/7212801",
+    "title": "Check out our Universal Source Filters on Ground News Web here.",
+    "url": "https://help.ground.news/en/articles/7212801"
+  },
+  {
+    "target": "_self",
+    "rel": "noopener noreferrer nofollow",
+    "class": "kb-link kb-link",
+    "href": "mailto:feedback@ground.news",
+    "title": "feedback@ground.news",
+    "url": "mailto:feedback@ground.news"
+  },
+  {
+    "href": "https://twitter.com/Ground_app",
+    "title": "",
+    "url": "https://twitter.com/Ground_app"
+  },
+  {
+    "href": "https://ca.linkedin.com/company/groundnews",
+    "title": "",
+    "url": "https://ca.linkedin.com/company/groundnews"
+  },
+  {
+    "href": "https://www.instagram.com/groundnews/",
+    "title": "",
+    "url": "https://www.instagram.com/groundnews/"
+  },
+  {
+    "href": "https://ground.news/refund-policy",
+    "title": "Refund and Cancellation Policy",
+    "url": "https://ground.news/refund-policy"
+  },
+  {
+    "href": "https://ground.news/terms-and-conditions",
+    "title": "Terms and Conditions",
+    "url": "https://ground.news/terms-and-conditions"
+  },
+  {
+    "href": "https://about.ground.news/privacy-policy",
+    "title": "Privacy Policy",
+    "url": "https://about.ground.news/privacy-policy"
+  }
+]

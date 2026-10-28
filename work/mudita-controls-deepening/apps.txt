@@ -1,0 +1,191 @@
+
+ Does Mudita Kompakt Support Third-Party Apps? 
+Skip to content
+ Store
+ Special Deals
+ Phones
+ Alarm Clocks
+ Watches & Straps
+ Accessories
+ Lifestyle
+ Outlet
+ Spare Parts
+ Products
+ Phones
+ Mudita Kompakt
+ Mudita Pure
+ Watches
+ Mudita Moment Automatic
+ Mudita Element Automatic
+ Mudita Radiant Automatic
+ Alarm Clocks
+ Mudita Bell 2
+ Mudita Harmony 2
+Meditation
+ Mudita Oasis
+Desktop App
+ Mudita Center
+ Community
+ Blog
+ Forum
+ Resources
+ Support
+English
+English
+Polish
+ All
+ Articles
+Recent Searches
+ Clear all
+No recent searches
+ Popular Articles
+Articles
+ View all
+Topics
+ View all
+Tickets
+ View all
+Sorry! nothing found for 
+ Store
+Special Deals
+Phones
+Alarm Clocks
+Watches & Straps
+Accessories
+Lifestyle
+Outlet
+Spare Parts
+ Products
+ Phones
+Mudita Kompakt
+Mudita Pure
+ Watches
+Mudita Moment Automatic
+Mudita Element Automatic
+Mudita Radiant Automatic
+ Alarm Clocks
+Mudita Bell 2
+Mudita Harmony 2
+ Meditation
+Mudita Oasis
+ Desktop App
+Mudita Center
+ Community
+Blog
+Forum
+Resources
+ Support
+ Solution home
+ Knowledge Base
+ Mudita Kompakt FAQ
+ Does Mudita Kompakt Support Third-Party Apps?
+ Modified on: Sat, 3 Oct, 2026 at 8:46 AM
+The Mudita Kompakt is a minimalist phone that comes with a selection of apps developed specifically for this device and its E-ink display. While it's technically possible to manually install third-party apps, please keep in mind that sideloaded apps are not optimized for the Kompakt and might not always work as intended.
+MuditaOS K
+Mudita is responsible for the software and hardware of the Mudita Kompakt as installed by us (MuditaOS K package). At the moment, there is no app store available on the device.
+MuditaOS K is based on the Android Open Source Project (AOSP), which makes it possible for users with the necessary technical skills to install Android APK files manually. However, we do advise caution due to the following:
+Apps that are not specifically designed for our E-ink screen may be inconvenient to use.
+Sideloaded apps could occasionally display errors due to limited integration with MuditaOS K.
+MuditaOS K is designed to run without and does not support Google Services. Sideloaded apps that depend on Google Services likely won't be able to work correctly.
+Since MuditaOS K does not include an APK loader, sideloading requires a computer with appropriate software connected to Mudita Kompakt via a USB-C cable.
+While sideloading will not harm the device and any resulting issues can be resolved by restoring factory settings, it is not covered by the warranty. For example, if a sideloaded app causes unexpected battery drain or other performance issues, these would not qualify for warranty claims.
+How to Sideload Apps on the Kompakt
+If you're aware of the risks of sideloading third-party apps and want to try it, you can do so through our desktop application Mudita Center (download here). Please note that this possibility was added in MuditaOS version 1.2.0. If your Kompakt is still runnning on an older system version, please make sure to update it first before proceeding with the sideloading process.
+Here is how to sideload an app step by step:
+Connect your Kompakt to Mudita Center and click on "Manage Files" in the menu on the left. Next, click on "App Installers" on the file manager screen.
+Click the "Add App Files" button in the top right corner and select the APK (app installer) file that you want to add.You need to find the APK file online and download it first. For security reasons, please make sure to only download APKs from reliable sources.
+Once your APK file is visible under "App Installers", click on the file on the list that you want to install.
+Select "I understand and accept this risk", then click "Continue Install".
+Wait for the installation to complete. The app will then appear on the Kompakt and be ready to use.
+Examples of Sideloaded Apps Performance
+To learn more about what to expect from the performance of certain third-party apps on the Kompakt, you can reference the following 
+You can find more detailed guide at : Installing third-party apps via Mudita Center
+Uninstalling sideloaded apps:
+  At the moment, Mudita Kompakt doesn’t include a built-in option to uninstall sideloaded apps directly on the device or via Mudita Center.
+  If you decide to explore third-party apps, it’s worth knowing that managing them (including removing them later) may require an additional step.
+  One option is to perform a factory reset, which will remove all sideloaded apps at once. However, please keep in mind that this will also erase user data stored on the device, so it should be treated as a last resort.
+  Many members of the Mudita community have found a simpler workaround. A commonly recommended approach, shared for example on Mudita Forum, is to use the Aurora Store. This app allows you to both install and uninstall applications on Mudita Kompakt in a more convenient way.
+To get started, you can sideload Aurora Store using Mudita Center, following the same steps described above in this guide. Once installed, it can act as a lightweight app manager for any additional apps you choose to use.
+  As always, we recommend installing only apps you trust and keeping your setup simple, so your Mudita Kompakt stays focused on what matters most. 
+Was this article helpful?
+ No
+ Yes
+That’s Great!
+Thank you for your feedback
+Sorry! We couldn't be helpful
+Thank you for your feedback
+ Your e-mail address
+ *
+Let us know how can we improve this article! *
+ Need more information
+ Difficult to understand
+ Inaccurate/irrelevant content
+ Missing/broken link
+ Select at least one of the reasons
+ Please give your comments
+ CAPTCHA verification is required.
+ Cancel
+ Send
+Feedback sent
+We appreciate your effort and will try to fix the article
+Articles in this folder 
+ Mudita Kompakt: Global or North American?
+ Does Mudita Kompakt Support Third-Party Apps?
+ Does Mudita Kompakt Support RCS Messaging?
+ Does Mudita Kompakt Have a Messaging App Like WhatsApp or Signal?
+You may like to read 
+ Does Mudita Kompakt Have a Messaging App Like WhatsApp or Signal?
+ Can I Listen to Music on Mudita Pure? What About Streaming Apps?
+ How Does GPS Work on the Mudita Kompakt?
+ Does Mudita Kompakt Support RCS Messaging?
+ Installing third-party apps via Mudita Center
+ Does Mudita Kompakt Support Video Recording and Playback?
+ Mudita Center 3.1.0
+ Does Mudita Pure Feature GPS and Maps?
+ Does Mudita Kompakt Support Speech-to-Text?
+ What Makes the Mudita Pure Secure?
+ X
+ 0 of 0
+ Store
+Phones
+Alarm Clocks
+Watches & Straps
+Accessories
+Spare Parts
+Lifestyle
+Outlet
+Special Deals
+ Products
+Mudita Kompakt
+Mudita Pure
+Mudita Bell
+Mudita Bell 2
+Mudita Harmony
+Mudita Harmony 2
+Mudita Element Automatic
+Mudita Radiant Automatic
+Mudita Moment Automatic
+Mudita Oasis
+Mudita Center
+ Support
+Knowledge Base
+User Guides & Warranties
+Orders & Shipping
+Software Release Notes
+Returns
+ Legal
+POIG
+Privacy Policy
+Privacy Policy Cookies
+Terms & Conditions
+Terms of Sale
+Compliance & Certifications
+ About Us
+Manifesto
+Team
+Career
+Contact
+Media
+MMD
+For Retailers
+ 2026 © Mudita All images and content may not be used without permission. Mudita® are registered trademarks of Mudita Sp. z o. o., registered in the EU.

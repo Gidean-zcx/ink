@@ -1,0 +1,24 @@
+{
+  "id": "buxtne",
+  "type": "FORBIDDEN_COMMENT",
+  "title": "自定义“单词书”",
+  "description": "自定义“单词书”",
+  "content_html": "<div class=\"kraft-content\" style=\"width:100%;padding:16px;color:#333;font-size:16px;line-height:1.75;letter-spacing:1px;word-spacing:0;word-break:break-word;background-color:#fff;overflow:hidden\"><h4 style=\"margin:0;padding:7px 0;font-weight:bold;font-size:16px\"><span>自定义“单词书”</span></h4><p style=\"margin:0;padding:0;line-height:1.75;text-align:start;letter-spacing:normal;word-spacing:0px\"><span>同学们可以将扇贝阅读、单词例句、单词大师等单词添加到生词本，同时支持批量上传单词，形成你的专属自定义“单词书”。</span></p><p style=\"margin:0;padding:0;line-height:1.75;text-align:start;letter-spacing:normal;word-spacing:0px\"><span>1、如何使用自定义“单词书”？</span></p><p style=\"margin:0;padding:0;line-height:1.75;text-align:start;letter-spacing:normal;word-spacing:0px\"><span>同学们</span><strong><span>自主添加的单词</span></strong><span>统一进入生词本，点击“我的”-“生词本”即可开始学习。生词本的学习流程和单词书的学习流程是一致的，在出词逻辑上，生词本依据艾宾浩斯遗忘曲线会优先安排学习添加时间早及熟悉程度低的单词。</span></p><p style=\"margin:0;padding:0;line-height:1.75;text-align:start;letter-spacing:normal;word-spacing:0px\"><span>2、如何批量添加单词丰富“单词书”？</span></p><p style=\"margin:0;padding:0;line-height:1.75;text-align:start;letter-spacing:normal;word-spacing:0px\"><span>APP暂不支持生词本“批量添加单词”功能，同学们可使用网页版的</span><strong><span>批量添加单词</span></strong><span>功能。批量添加时，每次最多可添加10个单词，每天最多添加50个单词。</span></p><p style=\"margin:0;padding:0;line-height:1.75;text-align:start;letter-spacing:normal;word-spacing:0px\"><span>每天添加单词上限为2000个，包括</span><strong><span>批量添加的单词</span></strong><span> 和 </span><strong><span>自主添加的单词</span></strong><span>。</span></p><p style=\"margin:0;padding:0;line-height:1.75;text-align:start;letter-spacing:normal;word-spacing:0px\"><span>3、学习自定义“单词书”同样支持打卡！</span></p><p style=\"margin:0;padding:0;line-height:1.75;text-align:start;letter-spacing:normal;word-spacing:0px\"><span>生词本学习单词数量≥5，即可打卡 。也就是说同学们每天不学单词书，只学习生词本中的单词也是可以打卡的。</span></p></div>",
+  "content_json": "[{\"type\":\"h4\",\"children\":[{\"text\":\"自定义“单词书”\"}]},{\"type\":\"p\",\"textAlign\":\"start\",\"letterSpacing\":\"normal\",\"wordSpacing\":\"0px\",\"children\":[{\"text\":\"同学们可以将扇贝阅读、单词例句、单词大师等单词添加到生词本，同时支持批量上传单词，形成你的专属自定义“单词书”。\"}]},{\"type\":\"p\",\"textAlign\":\"start\",\"letterSpacing\":\"normal\",\"wordSpacing\":\"0px\",\"children\":[{\"text\":\"1、如何使用自定义“单词书”？\"}]},{\"type\":\"p\",\"textAlign\":\"start\",\"letterSpacing\":\"normal\",\"wordSpacing\":\"0px\",\"children\":[{\"text\":\"同学们\"},{\"text\":\"自主添加的单词\",\"bold\":true},{\"text\":\"统一进入生词本，点击“我的”-“生词本”即可开始学习。生词本的学习流程和单词书的学习流程是一致的，在出词逻辑上，生词本依据艾宾浩斯遗忘曲线会优先安排学习添加时间早及熟悉程度低的单词。\"}]},{\"type\":\"p\",\"textAlign\":\"start\",\"letterSpacing\":\"normal\",\"wordSpacing\":\"0px\",\"children\":[{\"text\":\"2、如何批量添加单词丰富“单词书”？\"}]},{\"type\":\"p\",\"textAlign\":\"start\",\"letterSpacing\":\"normal\",\"wordSpacing\":\"0px\",\"children\":[{\"text\":\"APP暂不支持生词本“批量添加单词”功能，同学们可使用网页版的\"},{\"text\":\"批量添加单词\",\"bold\":true},{\"text\":\"功能。批量添加时，每次最多可添加10个单词，每天最多添加50个单词。\"}]},{\"type\":\"p\",\"textAlign\":\"start\",\"letterSpacing\":\"normal\",\"wordSpacing\":\"0px\",\"children\":[{\"text\":\"每天添加单词上限为2000个，包括\"},{\"text\":\"批量添加的单词\",\"bold\":true},{\"text\":\" 和 \"},{\"text\":\"自主添加的单词\",\"bold\":true},{\"text\":\"。\"}]},{\"type\":\"p\",\"textAlign\":\"start\",\"letterSpacing\":\"normal\",\"wordSpacing\":\"0px\",\"children\":[{\"text\":\"3、学习自定义“单词书”同样支持打卡！\"}]},{\"type\":\"p\",\"textAlign\":\"start\",\"letterSpacing\":\"normal\",\"wordSpacing\":\"0px\",\"children\":[{\"text\":\"生词本学习单词数量≥5，即可打卡 。也就是说同学们每天不学单词书，只学习生词本中的单词也是可以打卡的。\"}]}]",
+  "like_num": 0,
+  "comment_num": 0,
+  "assign_date": "2021-06-28T16:00:00+00:00",
+  "order_type": "COMMEND",
+  "reply_push_url": "",
+  "weight": 1000,
+  "allow_comment": false,
+  "is_send": false,
+  "column_id": "onnjg",
+  "cover_url": "",
+  "is_like": false,
+  "column": {
+    "name": "官网帮助-单词书"
+  },
+  "tags": [],
+  "redirect_url": "https://web.shanbay.com/op/articles/buxtne?shanbay_immersive_mode=true"
+}

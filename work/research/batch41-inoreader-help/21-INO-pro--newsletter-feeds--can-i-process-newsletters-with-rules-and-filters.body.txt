@@ -1,0 +1,1 @@
+Yes. Newsletter feeds behave like regular feeds and support automation tools.

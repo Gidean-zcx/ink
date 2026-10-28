@@ -1,0 +1,122 @@
+[
+  {
+    "article_id": "9841769585856405",
+    "tile": 1,
+    "y": 0,
+    "height": 3600,
+    "path": "work/douyin-controls-deepening/raw/guide-9841769585856405-01.png",
+    "sha256": "ee97470ac898858e5fc917180d4f31ccce44d191c1043ff4b88e78745ebdf733"
+  },
+  {
+    "article_id": "9841769585856405",
+    "tile": 2,
+    "y": 3400,
+    "height": 3600,
+    "path": "work/douyin-controls-deepening/raw/guide-9841769585856405-02.png",
+    "sha256": "22802a894a56bc230bb5d2e097984308af771d81778b4f0b813f84c3e30b35e3"
+  },
+  {
+    "article_id": "9841769585856405",
+    "tile": 3,
+    "y": 6800,
+    "height": 3600,
+    "path": "work/douyin-controls-deepening/raw/guide-9841769585856405-03.png",
+    "sha256": "4a6a75c275e141e52e129aaca59e2ba81ed671eadeb0cc895c040af86fede82a"
+  },
+  {
+    "article_id": "9841769585856405",
+    "tile": 4,
+    "y": 10200,
+    "height": 3600,
+    "path": "work/douyin-controls-deepening/raw/guide-9841769585856405-04.png",
+    "sha256": "5ae5486ea28bed8a27a173fc46d477770749d5a1b0ed0a30aa0d748b8b76f98b"
+  },
+  {
+    "article_id": "9841769585856405",
+    "tile": 5,
+    "y": 13600,
+    "height": 3600,
+    "path": "work/douyin-controls-deepening/raw/guide-9841769585856405-05.png",
+    "sha256": "068cecbaa87790189dd93b0ee2b0ca1e7354fd507cdba3d0d121520a3b0cb229"
+  },
+  {
+    "article_id": "9841769585856405",
+    "tile": 6,
+    "y": 17000,
+    "height": 3600,
+    "path": "work/douyin-controls-deepening/raw/guide-9841769585856405-06.png",
+    "sha256": "15a15fa079ed40282d81c36ebf5c1aaff23f6b5546573c4a1073d5ee6972368f"
+  },
+  {
+    "article_id": "9841769585856405",
+    "tile": 7,
+    "y": 20400,
+    "height": 3600,
+    "path": "work/douyin-controls-deepening/raw/guide-9841769585856405-07.png",
+    "sha256": "cd5d2065ecf230326aedbf0574da162d7cd5d78715981ff9b9ef9684129fe1f9"
+  },
+  {
+    "article_id": "9841769585856405",
+    "tile": 8,
+    "y": 23800,
+    "height": 3600,
+    "path": "work/douyin-controls-deepening/raw/guide-9841769585856405-08.png",
+    "sha256": "2b4615c63a3a5e844fe0786692cd784402fc6a3cb6f91fae24bd3dc74f4b2a2e"
+  },
+  {
+    "article_id": "9841769585856405",
+    "tile": 9,
+    "y": 27200,
+    "height": 1698,
+    "path": "work/douyin-controls-deepening/raw/guide-9841769585856405-09.png",
+    "sha256": "5c650c55a69c09ae0e554e93bf66bd41e12d4de8ec5c42cb4c078ee7f60eb900"
+  },
+  {
+    "article_id": "5411770782085474",
+    "tile": 1,
+    "y": 0,
+    "height": 2600,
+    "path": "work/douyin-controls-deepening/raw/guide-5411770782085474-01.png",
+    "sha256": "cb1497eda31320c90f865a14997ab53fab40bc2082f01d64eb1990709676d136"
+  },
+  {
+    "article_id": "5411770782085474",
+    "tile": 2,
+    "y": 2400,
+    "height": 2600,
+    "path": "work/douyin-controls-deepening/raw/guide-5411770782085474-02.png",
+    "sha256": "5455230f3ecfa334ca879e3d5beb2d0675c1f5de3016b5d73d05651c9afc350c"
+  },
+  {
+    "article_id": "5411770782085474",
+    "tile": 3,
+    "y": 4800,
+    "height": 2600,
+    "path": "work/douyin-controls-deepening/raw/guide-5411770782085474-03.png",
+    "sha256": "517afa26a80a07ca2581ccb234cee24ab0274f18487146563ff93a6610404b40"
+  },
+  {
+    "article_id": "5411770782085474",
+    "tile": 4,
+    "y": 7200,
+    "height": 2600,
+    "path": "work/douyin-controls-deepening/raw/guide-5411770782085474-04.png",
+    "sha256": "89b6d0b3d3a7ffa5755a50e6e9cb1d13f09aba4adb9ac97da7bda8b923ea3509"
+  },
+  {
+    "article_id": "5411770782085474",
+    "tile": 5,
+    "y": 9600,
+    "height": 2600,
+    "path": "work/douyin-controls-deepening/raw/guide-5411770782085474-05.png",
+    "sha256": "28a0d49378a34d959e4299c49cf46fe32fc59f4ceb64c5f530ba45e009e6a9ae"
+  },
+  {
+    "article_id": "5411770782085474",
+    "tile": 6,
+    "y": 12000,
+    "height": 1950,
+    "path": "work/douyin-controls-deepening/raw/guide-5411770782085474-06.png",
+    "sha256": "32cc1adbfef99e77727e341a319385191d151f3003985f78b67672193f4be893"
+  }
+]

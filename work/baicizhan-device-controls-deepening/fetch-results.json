@@ -1,0 +1,28 @@
+[
+  {
+    "name": "01-official-home",
+    "url": "https://danciji.baicizhan.com/",
+    "method": "GET; requests; timeout=(5,18); one attempt; no account interface",
+    "status": 200,
+    "final_url": "https://danciji.baicizhan.com/",
+    "path": "work/baicizhan-device-controls-deepening/01-official-home.html",
+    "sha256": "47e7718d62b9b0e94707740198d4335181cfc730842a884da62d26845e41e828",
+    "bytes": 55044,
+    "links": 22,
+    "scripts": 15,
+    "images": 65
+  },
+  {
+    "name": "02-52audio-ace-max",
+    "url": "https://www.52audio.com/archives/239551.html",
+    "method": "GET; requests; timeout=(5,18); one attempt; no account interface",
+    "status": 200,
+    "final_url": "https://www.52audio.com/archives/239551.html",
+    "path": "work/baicizhan-device-controls-deepening/02-52audio-ace-max.html",
+    "sha256": "12fd996dcc2af3cdf35f8eaf894a74163db488d1e14f6580a03c0d29b55519fb",
+    "bytes": 99802,
+    "links": 111,
+    "scripts": 2,
+    "images": 88
+  }
+]

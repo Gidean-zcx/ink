@@ -1,0 +1,11 @@
+Add Markers to Recordings
+Add markers to voice memos and conference recordings to highlight important moments.
+Try it out
+On the note-taking screen, touch
+>
+to begin recording.
+Touch
+to add markers to your audio track. To stop recording, touch
+.
+Note
+Touch a marker to jump directly to that point in the recording, or touch and hold down on a marker to drag or delete it.

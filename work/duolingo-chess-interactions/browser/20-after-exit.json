@@ -1,0 +1,201 @@
+{
+  "name": "20-after-exit",
+  "at": "2026-10-27T02:06:21.293328+00:00",
+  "url": "https://www.duolingo.com/learn",
+  "title": "Duolingo - The world’s most popular way to learn",
+  "text": "LEARN\nMATCHES\nLEADERBOARDS\nQUESTS\nSHOP\nPROFILE\nMORE\n0\n500\n5\nUnlock Leaderboards!\nComplete 3 more lessons to start competing\nDaily Quests\nVIEW ALL\nEarn 10 XP\n0 / 10\n0 / 10\nCreate a profile to save your progress!\nCREATE A PROFILE\nSIGN IN\nABOUT\nBLOG\nSTORE\nEFFICACY\nCAREERS\nINVESTORS\nTERMS\nPRIVACY\nHow much chess do you know?\nHow much chess do you know?\nI’m a total beginner\nI could use a refresher\nI’m ready for tactics\nMy Elo rating is 500 to 800\nMy Elo rating is 800 to 1000\nMy Elo rating is 1000+\nCONTINUE",
+  "controls": [
+    {
+      "tag": "A",
+      "text": "",
+      "aria": null,
+      "test": null,
+      "type": "",
+      "disabled": null
+    },
+    {
+      "tag": "A",
+      "text": "LEARN",
+      "aria": null,
+      "test": "home-nav",
+      "type": "",
+      "disabled": null
+    },
+    {
+      "tag": "A",
+      "text": "MATCHES",
+      "aria": null,
+      "test": "chess-matches-nav",
+      "type": "",
+      "disabled": null
+    },
+    {
+      "tag": "A",
+      "text": "LEADERBOARDS",
+      "aria": null,
+      "test": "leaderboard-nav",
+      "type": "",
+      "disabled": null
+    },
+    {
+      "tag": "A",
+      "text": "QUESTS",
+      "aria": null,
+      "test": "quests-nav",
+      "type": "",
+      "disabled": null
+    },
+    {
+      "tag": "A",
+      "text": "SHOP",
+      "aria": null,
+      "test": "shop-nav",
+      "type": "",
+      "disabled": null
+    },
+    {
+      "tag": "A",
+      "text": "PROFILE",
+      "aria": null,
+      "test": "profile-tab",
+      "type": "",
+      "disabled": null
+    },
+    {
+      "tag": "SPAN",
+      "text": "MORE",
+      "aria": null,
+      "test": null,
+      "type": null,
+      "disabled": null
+    },
+    {
+      "tag": "SPAN",
+      "text": "",
+      "aria": null,
+      "test": null,
+      "type": null,
+      "disabled": null
+    },
+    {
+      "tag": "SPAN",
+      "text": "0",
+      "aria": null,
+      "test": null,
+      "type": null,
+      "disabled": null
+    },
+    {
+      "tag": "SPAN",
+      "text": "500",
+      "aria": null,
+      "test": null,
+      "type": null,
+      "disabled": null
+    },
+    {
+      "tag": "SPAN",
+      "text": "5",
+      "aria": null,
+      "test": null,
+      "type": null,
+      "disabled": null
+    },
+    {
+      "tag": "A",
+      "text": "VIEW ALL",
+      "aria": null,
+      "test": null,
+      "type": "",
+      "disabled": null
+    },
+    {
+      "tag": "BUTTON",
+      "text": "CREATE A PROFILE",
+      "aria": null,
+      "test": "create-profile-juicy",
+      "type": "submit",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "SIGN IN",
+      "aria": null,
+      "test": "sign-in-juicy",
+      "type": "submit",
+      "disabled": false
+    },
+    {
+      "tag": "A",
+      "text": "ABOUT",
+      "aria": null,
+      "test": null,
+      "type": "",
+      "disabled": null
+    },
+    {
+      "tag": "A",
+      "text": "BLOG",
+      "aria": null,
+      "test": null,
+      "type": "",
+      "disabled": null
+    },
+    {
+      "tag": "A",
+      "text": "STORE",
+      "aria": null,
+      "test": null,
+      "type": "",
+      "disabled": null
+    },
+    {
+      "tag": "A",
+      "text": "EFFICACY",
+      "aria": null,
+      "test": null,
+      "type": "",
+      "disabled": null
+    },
+    {
+      "tag": "A",
+      "text": "CAREERS",
+      "aria": null,
+      "test": null,
+      "type": "",
+      "disabled": null
+    },
+    {
+      "tag": "A",
+      "text": "INVESTORS",
+      "aria": null,
+      "test": null,
+      "type": "",
+      "disabled": null
+    },
+    {
+      "tag": "A",
+      "text": "TERMS",
+      "aria": null,
+      "test": null,
+      "type": "",
+      "disabled": null
+    },
+    {
+      "tag": "A",
+      "text": "PRIVACY",
+      "aria": null,
+      "test": null,
+      "type": "",
+      "disabled": null
+    },
+    {
+      "tag": "BUTTON",
+      "text": "CONTINUE",
+      "aria": null,
+      "test": "funboarding-continue-button",
+      "type": "submit",
+      "disabled": true
+    }
+  ]
+}

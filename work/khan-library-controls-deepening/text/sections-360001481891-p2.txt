@@ -1,0 +1,24 @@
+Home and Parent Resources – Khan Academy (https://khankids.zendesk.com/hc/en-us/sections/360001481891-Home-and-Parent-Resources?page=2)
+citeturn959view0 [wordlim: 200] Crawled: last month; Content type: text/html; Source: click({"ref_id":"turn958view0","id":32}); Total lines: 22
+L0: 【0†Skip to main content】
+L1: 
+L2: 【1†Submit a request】
+L3: 
+L4: [Input][Input: Search]
+L5: 
+L6: # Home and Parent Resources
+L7: 
+L8: Frequently asked questions about setting up your account on Khan Academy Kids
+L9: 
+L10:   * 【2†How do I delete an app and re-download?】
+L11:   * 【3†Get ready for school with Khan Academy Kids】
+L12:   * 【4†How do I restart my device?】
+L13:   * 【5†Why can't I hear the sound?】
+L14:   * 【6†What if my child is entering 3rd grade or above?】
+L15: 
+L16:   * 【7†« First】
+L17:   * 【7†‹ Previous】
+L18: 
+L19: 【8†Khan Academy】
+L20: 
+L21: 【9†Powered by Zendesk†www.zendesk.com】

@@ -1,0 +1,4 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M064-13,M-064,按手册两条路径安装应用,D2,E-IBCD-01,印刷17：预装商店内检索/下载/安装，或浏览器官网取包→返回桌面下载管理→点已下载应用安装,未示安装成功/权限拒绝/取消/失败；现版商店及兼容性未知；未安装,static_reference_only,false,cases/M-064-ibasso.md,2026-10-27
+F-M064-14,M-064,从系统应用页卸载指定应用,D2,E-IBCD-01,印刷18：桌面Settings→Apps→选应用→Uninstall；文字终点为删除App，静态图只到App info,确认/取消、预装应用限制、卸载后的离线文件/歌单/账号数据与重装恢复未知,static_reference_only,false,cases/M-064-ibasso.md,2026-10-27
+F-M064-15,M-064,选择USB用途为外接设备供电,D2,E-IBCD-01,印刷20：连接设备→下拉通知栏底部USB项→选择用途并启用对连接设备充电；正文描述开始对外供电,仅文字步骤，无USB选项截图；结束/拔线、低电量、支持设备、电流及文件/DAC同时启用未知,static_reference_only,false,cases/M-064-ibasso.md,2026-10-27

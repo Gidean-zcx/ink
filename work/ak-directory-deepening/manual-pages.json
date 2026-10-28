@@ -1,0 +1,367 @@
+[
+  {
+    "file_page": 1,
+    "printed_page": 0,
+    "text": "INSTRUCTION BOOK\nSR35\nUser Guide\n"
+  },
+  {
+    "file_page": 2,
+    "printed_page": 1,
+    "text": "CONTENTS\nPackage Contents\nProduct Overview\nPower Management\nCharging\nConnections\nFirmware Updates\n02\n03\n05\n06\n07\n12\nGetting Started _01\nBasic Operations\nHome Screen\nMenu Category Screen\nMain Menu Screen\nMusic Player Screen\nNotification Bar\nUsing Open APP Service \nAK CONNECT\nAK File Drop\nListening to Music\nPlaylist Management\nReplayGain\nUSB DAC Installation\nHow to Use USB Audio\nCD Ripping\nAK CD-Player\nCar Mode\nBookmark Function\nFavorites Function\nSettings\nConnecting to Wi-Fi\nUsing Bluetooth\nEqualizer Setup\nUsing the Device _02\nPrecautions\nTroubleshooting\nCopyright\nCertifications\nRegistered Trademarks\nDisclaimers\nSpecifications\n13\n17\n18\n20\n21\n24\n27\n28\n33\n35\n38\n41\n42\n43\n44\n46\n47\n48\n49\n50\n58\n59\n62\n64\n66\n67\n68\n70\n71\n72\nMiscellaneous _03\n"
+  },
+  {
+    "file_page": 3,
+    "printed_page": 2,
+    "text": "SR35\nUser Guide\nContents may be changed without prior notice to improve the \nperformance or quality of the product.\nPackage \nContents\nGetting Started   02\nProtective Film: Protect the device and its screen.\nmicroSD Card Slot Cover: The cover is used to protect the \nmicroSD card slot when not in use. It is installed in the \nproduct by default.\nUSB Type-C Cable: For charging and data transfer.\nQuick Start Guide: Basic overview of device functionality.\nWarranty Card: Provides warranty details for your device. \nMaintain a copy of this card as it may be required for future \ntechnical support requests.  \nUser Guide: The User Guide can be downloaded from the \nAstell&Kern website.\n[http://www.astellnkern.com > Support > Download]\nQuick Start Guide\n& Warranty Card\nUSB Type-C Cable\nmicroSD Card\n Slot Cover\nProtective Film\n"
+  },
+  {
+    "file_page": 4,
+    "printed_page": 3,
+    "text": "Getting Started   03\nUser Guide\nThe appearance of the product, as well as the printed and \nengraved information, may vary depending on the model.\nProduct \nOverview\nUSB Type-C Port\nPower\nPrevious/Rewind\nLCD Touchscreen\n2.5mm Balanced Port\n4.4mm Balanced Port\nVolume\n3.5mm Unbalanced Port\nHome Button\nNext/Fast-Forward\nPlay/Pause\nmicroSD Card Slot\n"
+  },
+  {
+    "file_page": 5,
+    "printed_page": 4,
+    "text": "Power:       - Power symbol. \nShort press - Turns the screen on or off.\nPress and hold - Turns the device on or off.\nVolume: Turn the wheel to adjust the playback output volume \nlevel.\n4.4mm Balanced Port:            - 4.4mm Balanced Port symbol.\nFor audio output, connect earphones or headphones that \nutilize a 4.4mm jack.\n2.5mm Balanced Port:            - 2.5mm Balanced Port symbol.\nFor audio output, connect earphones or headphones that \nutilize a 2.5mm jack.\nLED Indicator: Displays information through light based on \nthe track currently playing and the current volume level.\n3.5mm Unbalanced Port:        - 3.5mm Unbalanced.\nFor audio output, connect earphones or headphones that\nutilize a 3.5mm jack. \nPrevious/Rewind:\nShort press - Play the previous song or restart the current \nsong.  \nPress and hold - Rewind the current song.\nPlay/Pause: Play or pause the current song.\nLCD Touchscreen: Display screen with touch control features.\nNext/Fast-Forward: \nShort press - Play the next song.\nPress and hold - Fast-forward the current song.\nHome Button: Press to return to the Home Screen.\nmicroSD Card Slot:       - microSD Card Slot symbol. \nInsert a microSD card to access its files.\nUSB Type-C Port: For charging and data transfer.\nUser Guide\nGetting Started   04\n"
+  },
+  {
+    "file_page": 6,
+    "printed_page": 5,
+    "text": "Getting Started   05\nUser Guide\nResetting the device will not affect stored data or time settings. Do \nnot use the reset function while the product is in use. Doing so may \ncorrupt the data on the device. \nThis device has an automatic timeout feature to save battery power. \nThe screen will turn off if there is no user input during the period \ndefined in [Menu - Settings - Timer Settings - Screen Timeout]. (See \nPage 55)\nReset Function\n1. In case of unexpected device failure or freeze, press and \n \nhold [Power] for 7 seconds to force a shutdown. The device\n \ncan then be restarted after the shutdown is complete.\nTurning the Screen On/Off\n1. While the screen is on, press the [Power] button to turn \n \noff the screen.\n2. Press [Power] button again to turn it on.\nThis device has an automatic shutdown feature to save battery \npower. The device will turn off if there is no user input during the \nperiod defined in [Menu - Settings - Timer Settings - Auto Power \nOff] (See Page 55)\nPowering the Device On/Off\n1. Press and hold the [Power] button to turn on the device.\n2. While the device is on, press and hold the [Power] button \n \nto shut down the device. A confirmation message \n \nwill appear.\n3. Press [OK] to turn off the device.\nPower \nManage- \nment\n"
+  },
+  {
+    "file_page": 7,
+    "printed_page": 6,
+    "text": "User Guide\nGetting Started   06\nCharging via USB Wall Adapter\n1. Commercially available 5V 2A output adapters may be used \n \nfor charging.\nCharging\nCharging time:  Approx. 2.5 hours (Fully discharged, Power-off, 5V \n2A adapter)\nUsing a 9V or 12V adapter will not charge the device and may cause \nmalfunctions.\nThe manufacturer shall not be responsible for problems caused by \nthe use of adapters that do not adhere to the recommended \nspecifications.\n"
+  },
+  {
+    "file_page": 8,
+    "printed_page": 7,
+    "text": "Getting Started   07\nUser Guide\nConnec-\ntions\n3.5mm Unbalanced Port\n1. Connect earphones or headphones to the 3.5mm \n \nunbalanced port.\nOR\n2.5/4.4mm Balanced Port\n1. Connect earphones or headphones that support a 2.5mm \n \nor 4.4mm headphone jack to the 2.5mm or 4.4mm balanced \n \nport. \nOR\n"
+  },
+  {
+    "file_page": 9,
+    "printed_page": 8,
+    "text": "Getting Started   08\nUser Guide\nConnecting to a Computer\n1. Turn on the device and your computer.\n2. Use the USB Type-C cable to connect the device to a computer \n \nin accordance with settings in [Menu - Settings - USB Mode].\n \n   [Default] Media Device (USB Drive): Transfer files from a \n \n   computer to the device.\n \n   DAC Input: Listen to music on a connected computer\n \n   through the device. (See Page 42)\nMac users need to download and install Android File Transfer from \nthe Astell&Kern website. [http://www.astellnkern.com > Support > \nDownload]\nFor an optimal connection, quit any unnecessary programs before \nconnecting the device to the computer.\nDo not use cables other than the USB Type-C cable provided with the \ndevice. Doing so may cause malfunctions.\nUse USB 2.0 only on Mac.\nType-C-to-Type-C cable is recommended when connecting with a \nMAC that supports Type-C port.\nWhen a USB connection is established while playing a DSD or DXD \nfile, a mode selection pop-up box will appear with the following \noptions:\n External device connection: Connect the player to the computer to\n transfer files, USB DAC for audio playback or CD Ripper connection.\n Charge device: Charge the device.\n"
+  },
+  {
+    "file_page": 10,
+    "printed_page": 9,
+    "text": "Getting Started   09\nUser Guide\nCopy Files (Folders) to the Device\n1. To copy files/folders from your computer, select the desired \n \nfiles/folders and drag & drop them into the device folder.\nEnsure the USB Type-C cable is properly connected.\nTurning off the device, computer or disconnecting the USB Type-C \ncable while copying or moving files/folders may corrupt files or \ndevice memory.\nFile transfer speeds may be affected by the computer and/or the OS\nenvironment. \n"
+  },
+  {
+    "file_page": 11,
+    "printed_page": 10,
+    "text": "Getting Started   10\nUser Guide\nDelete Files (or Folders) from the Device\n1. Select the file/folder to delete, right-click the mouse, and \n \nthen select [Delete].\n2. Select [Yes] in the [Confirm File/Folder Deletion] window \n \nto delete the selected files/folders.\nDisconnecting from the Computer\n1. Disconnect the USB Type-C cable after the transfer between \n \nthe device and computer is complete.\nDisconnecting the device from the computer during a file transfer  \nmay corrupt data on the device.\n"
+  },
+  {
+    "file_page": 12,
+    "printed_page": 11,
+    "text": "Maximum Capacity: 1TB\nNotes on Inserting a microSD Card \n Do not force the microSD card into the slot. Doing so may cause \n malfunction of the product and damage to the card.\n Do not repeatedly insert/remove the microSD card.\n If not inserted properly, the microSD card may cause product \n malfunctions and may become lodged in the product.\nNotes on Removing a microSD Card \n Be sure to safely remove the microSD card from the device.\n Not following the proper procedure may corrupt data and cause \n serious damage to the both the card and device.\n Do not remove the microSD card during use. Doing so may cause \n malfunction, delete data and damage the microSD card.\nRecommended microSD Cards\nSAMSUNG, SANDISK\nInsert/Remove a microSD Card\n1. Refer to the diagram and gently \n \ninsert a microSD card into the \n \nmicroSD card slot.\n2. To safely remove a microSD card,\n \non the Home Screen, select \n \n[Safely remove SD card] from the \n \nNotification Bar or select \n \n[Unmount SD card] from\n \n[Menu - Settings - System\n \nInformation].\n3. Gently press the microSD card in\n \nto unlock and release it from the \n \nslot.\nGetting Started   11\nUser Guide\n"
+  },
+  {
+    "file_page": 13,
+    "printed_page": 12,
+    "text": "Notes on Using a microSD Card \n If the microSD card is not recognized or functions improperly, \n format the card, preferably in the FAT32 system.\n Using cards other than the recommended microSD card types \n may cause malfunctions.\n A microSD card is not included in the product package. Please \n purchase separately.\nFor Wi-Fi connections, see Page 58.\nThe firmware update may not start if the battery level is too low. \n(A minimum battery level of 20% is required.)\nDo not disconnect from the wireless network while downloading the \nupdate file. Doing so may cause data corruption and/or damage to \nthe system.\nIf an error occurs or the notice in the Notification Bar disappears \nduring an update, download the firmware update again through  \n[Menu - Settings - Update - System].\nMoving to another screen during a file download will cancel the \ndownload.\nWi-Fi Update / OTA (Over-the-Air)\n1. Connect to a wireless network.\n2. If a new firmware update is available, the screen will \n \ndisplay a Firmware Update Guide window.\n3. Select [Update].\n4. Follow the on-screen instructions to proceed with the \n \nfirmware update.\nFirmware\nUpdates\nGetting Started   12\nUser Guide\n"
+  },
+  {
+    "file_page": 14,
+    "printed_page": 13,
+    "text": "Basic\nOperations\nLCD Touchscreen\n1. This device features an LCD touchscreen that allows you \n \nto perform operations by touch.\n \nUse the touchscreen to access various features on the \n \ndevice.\nTo prevent damage to the screen, do not use a sharp object or \nexcessive force.\nUsing the Device   13\nUser Guide\nReturn to the Home Screen\nHome Screen\n1. Press [      ] at any time to return to the Home Screen.\n"
+  },
+  {
+    "file_page": 15,
+    "printed_page": 14,
+    "text": "Using the Device   14\nUser Guide\nMenu Category Screen\n1. Swipe the screen in the [right      left] direction, or press \n \n[        ] in the upper right to move to the Menu Category \n \nScreen.\nFrom the Home Screen, swipe your finger to the left, right, \nup or down from any edge of the touchscreen to access display \nmenus. Each side of the Home Screen will activate a different \ndisplay menu. \nMusic files extracted using the AK CD-Ripper accessory that are \nstored in the Ripping folder of the internal memory will be displayed \nin the CD library menu. \n"
+  },
+  {
+    "file_page": 16,
+    "printed_page": 15,
+    "text": "Notification Bar\n1. From the top edge of the touchscreen, swipe your finger \n \ndown to display the Notification Bar.\nUsing the Device   15\nUser Guide\n"
+  },
+  {
+    "file_page": 17,
+    "printed_page": 16,
+    "text": "Using the Device   16\nUser Guide\nMini Player Screen\n1. Swipe up or tap on the Mini Player Screen to expand to the \n \nMusic Player Screen. \n2. Swipe down or press [      ] in the upper left to collapse the \n \nMusic Player Screen.\n"
+  },
+  {
+    "file_page": 18,
+    "printed_page": 17,
+    "text": "Using the Device   17\nUser Guide\nHome\nScreen\n1\n2\n4\n5\n3\nGo to the Main Menu.\nPress on an album image to go to \nthat album.\nPress [       ] in the upper right to go \nto the menu category screen.\nUse the bottom bar to go to other \nalbums.\nGo to the playback screen by \noperating the Mini Player Screen.\nMenu \nAlbum Cover\nMenu \nCategory\nAlbum \nSeek Bar\nMusic Player \nScreen\n1 \n2  \n3 \n4 \n5\n"
+  },
+  {
+    "file_page": 19,
+    "printed_page": 18,
+    "text": "Using the Device   18\nUser Guide\nMenu \nCategory \nScreen\n1\n2\n5\n6\n3\n10\n7\n11\n9\n8\n4\nGo to the Main Menu.\nSwipe left and right to switch \nbetween categories.\nChanges the order of the Home \nscreen settings or menu categories.\nPlay all songs in the selected \ncategory.\nDisplay the playlist in the current \ncategory.\nA mini player screen for the \ncurrent song.\nMenu \nCategory\n \nHome/Category \nSetting\nPlay All \nMusic List\n \nMusic Player \nScreen\n1 \n2  \n2-1  \n3  \n4 \n5 \n"
+  },
+  {
+    "file_page": 20,
+    "printed_page": 19,
+    "text": "Using the Device   19\nView the service app list and install\n/run apps.\nEnter keywords to display a list of \nsongs with the search terms in \ntheir names.\nServices\nSearch\n \n6 \n7 \nUser Guide\nDisplay the editing options for \nthe playlist.\nSet the sort options for the playlist.\nGo to the More menu for the \nselected song. Different items are \ndisplayed depending on the \nselected category.\n      : Add the selected song to play \n      next\n      : Add the selected song to play \n      last\n      : Add the selected song to the \n      playlist\n      : Delete the selected song\nReturn to the previous screen.\nEdit Mode \nSort\nMore\n \nPrevious \nScreen\n8 \n9\n10 \n11\n"
+  },
+  {
+    "file_page": 21,
+    "printed_page": 20,
+    "text": "Using the Device   20\nUser Guide\n3\n1\n2\n4\n5\nEnable/disable AK Connect and set \nthe library and speaker options.\nView the service app list and install\n/run apps.\nSet the EQ, Power, and more.\nClose the menu list and display \nthe previous screen.\nShow various settings menus.\nAK CONNECT\n \nServices\n \nKey Settings \nClose Menu\n \nSettings \n1 \n2  \n3 \n4 \n5 \nMain\nMenu\nScreen\n"
+  },
+  {
+    "file_page": 22,
+    "printed_page": 21,
+    "text": "Using the Device   21\nUser Guide\nMusic \nPlayer\nScreen\nReturn to the previous screen.\nDisplays album cover of current song. \nTap image to view the song lyrics. \nDisplays the artist info.\nSong title information. File name \nis displayed when the title is \nunavailable.\nAdd or remove song from Favorites.\nDisplay the current play time.\nPrevious\nAlbum Cover\nArtist\nTitle\nFavorites \nCurrent Play Time\n1\n2 \n3  \n4 \n5 \n6\n2\n5\n1\n9\n11\n12\n13\n15\n8\n14\n16\n10\n17\n3\n4\n7\n6\n"
+  },
+  {
+    "file_page": 23,
+    "printed_page": 22,
+    "text": "Using the Device   22\nUser Guide\nPress [       ] to set the Repeat mode.\n      : Repeat entire playlist.\n      : Repeat current track.\n      : Repeat mode off.\nShort press: Play the previous \nsong or restart the current song.\nPress and hold: Rewind the current \nsong.\nDisplay the current playlist.\nSet the speaker options through AK \nConnect.\nDisplays the bit rate and sampling \nfrequency data.\nGo to the More menu for the current \nsong.\nAdd to Playlist: Add the current song \nto the playlist\nGo to Album: Go to the album that \ncontains the current song\nGo to Artist: Go to the artist menu \nfor the current song\nGo to Folder: Go to the folder that \ncontains the current song\nFile Info: Display current song \ninformation\nShows the current track playback \nprogress. Drag the Playback Progress \nBar to move to the desired track time.\nRepeat Mode\nPrevious/ \nRewind\nNow Playing\nMy Device\nFormat \nInformation\nMore \nPlayback \nProgress Bar\n7 \n \n8 \n  \n9 \n10 \n11 \n12 \n13 \n"
+  },
+  {
+    "file_page": 24,
+    "printed_page": 23,
+    "text": "Using the Device   23\nIndicates the song’s total duration. \nPress to switch from elapsed time \nto remaining time.\nPress [        ] to set track sequence \nfor playback.\n        : Shuffle mode on.\n        : Shuffle mode off.\nUser Guide\nSong Duration\nShuffle Mode\n14 \n15\nShort press: Play the next song. \nPress and hold: Fast-forward the \ncurrent song.\nPlay or pause the current song.\nNext/FF\nPlay/Pause\n16 \n17\n"
+  },
+  {
+    "file_page": 25,
+    "printed_page": 24,
+    "text": "Using the Device   24\nUser Guide\nNotifi-\ncation \nBar\n14\n15\n1\n2\n3\n4\n5\n6\n8\n7\n9\n10\n11\n12\n13\n"
+  },
+  {
+    "file_page": 26,
+    "printed_page": 25,
+    "text": "Using the Device   25\nPress [       ] to turn Wi-Fi on/off.\nPress [    ] to turn Bluetooth on/\noff.\nChange the DAC operating mode.\nPress [        ] to turn the EQ on/\noff. The most recent EQ settings \nare applied by default.\nChange to the desired AMP mode.\nPress [            ] to turn Car Mode \non/off.\nPress [          ] to turn Gapless\nPlayback on/off.\nPress [        ] to turn Wheel lock \non/off. When turned on, the \nvolume wheel will be disabled \nwhen the screen is locked.\nPress [       ] to turn ReplayGain \non/off. When enabled, a uniform \nvolume level will be applied.\nPress [         ] to turn line-out on\n/off.\nPress [       ] to turn AK Connect \non/off.\nUser Guide\nWi-Fi  \nBluetooth \nDAC\nEQ \n \nAMP\nCar Mode \nGapless \nPlayback \nWheel Lock \nReplayGain\nLine-out \nAK CONNECT \n1  \n2\n \n3\n4 \n5 \n6\n \n7 \n8 \n9 \n10 \n11\n"
+  },
+  {
+    "file_page": 27,
+    "printed_page": 26,
+    "text": "Using the Device   26\nLong-press an icon [         /         /         /         /         /           /         /         /         \n       /        ] to navigate to the corresponding full settings menu screen.\nUser Guide\nWirelessly upload or download \nfiles to and from devices on \nthe same network (PC, tablet, \nsmartphone, etc.) using the \nSR35 via an FTP program.\nPress [        ] to display the \nfull settings menu.\nUse the adjustment bar to \ncontrol the display brightness.\nDevice notifications are \ndisplayed in this area.\nAK File Drop\n \nSettings \nBrightness\nNotifications\nDisplay\n12 \n \n \n13 \n \n14\n \n15\n"
+  },
+  {
+    "file_page": 28,
+    "printed_page": 27,
+    "text": "Using the Device   27\nUser Guide\nThe Open APP Service enables the user to install specific \nAPK music streaming apps to the device.\nYou can download the desired APK from the Service menu.\nUsing \nOpen APP \nService\nThe source of the app you are trying to install is unknown. Be aware that \nif the app is installed, the device may be damaged and personal data \ncompromised. Depending on the APP, some functions may not work.\nRestrictions may apply to the use of the open app that can be installed \nand used for each product due to S/W version, etc. This is not a product \nissue, and cannot be a reason for refund or exchange.\nIf you install an app from an unknown source, despite this warning, the \ncompany is not responsible for any damages to the device and data \nresulting from the app’s installation, and downloading and installing \nsuch apps may limit the scope of after-sales services provided under the \nmanufacturer warranty.\nFor more information and full instructions on how to install music \nstreaming services, please visit the Astell&Kern website \n[http://www.astellnkern.com > Support > FAQ > Using Open APP Service].\n"
+  },
+  {
+    "file_page": 29,
+    "printed_page": 28,
+    "text": "Using the Device   28\nUser Guide\nAccess and play back music files stored on a computer, NAS \ndrive or AK Device on the same network, as well as output \nsound through compatible speakers with AK Connect.\nAK Connect is available on your AK device and also available \nas an app for your smartphone or tablet via Apple’s App store \nor Google Play Store.\nAK \nCONNECT\nUsing AK Connect to Link Music Libraries/Speakers\n1. Turn on the music library device\n \nand/or speaker and AK player. \n2. Connect all devices to the same \n \nWi-Fi network.\n3. Turn on the AK CONNECT feature \n \nby pressing and holding [       ] in the \n \nNotification Bar or selecting [Menu-\n \nSettings-AK CONNECT].\n4. Select the library or speaker to use.\n5. A list of libraries / speakers that \n \nare on the same network with the\n \nAK player will be displayed.\n6. Select a library / speaker to \n \nconnect.\n"
+  },
+  {
+    "file_page": 30,
+    "printed_page": 29,
+    "text": "Using the Device   29\nUser Guide\nFor Wi-Fi connections, see Page 58.\nTap the [         ] button at the top left of the screen while connecting \nto the speaker to cancel the connection.\n7. After selecting a library / speaker, \n \nselect a category from the menu \n \nto display the corresponding music \n \nlist.\n"
+  },
+  {
+    "file_page": 31,
+    "printed_page": 30,
+    "text": "Using the Device   30\nUser Guide\nStreaming Music from Your Library\n1. Select a category from the library \n \nmenu to see your list of music.\n2. Select a song to begin streaming.\nDownloading Music from Your Library\n1. Select a category from the library \n \nmenu to see your list of music.\n2. Press [       ] button at the upper \n \nright corner of the music list.\n3. Select the desired music and \n \npress [       ] to initiate the \n \ndownload.\n \n   The song will be saved in the \n \n   location set in Settings > Download.\n \n   A message on the Notification \n \n   Bar will indicate when the \n \n   download is complete.\nTap [      ] to the right of the playlist to select the position in the queue \nfor the selected song or download the song directly.\nDepending on network conditions, song loading may be slow and \nstreaming may stutter.\nUsing a library for other processes can slow down the response \ntime of the library.\nIf you stream and download at the same time, it may slow the device’s \nresponse time depending on the speed of the Wi-Fi network or server.\nTo stop a download in progress, tap the notification in the Notification \nBar to go to  the download screen. Then, select the items to pause or delete.\n"
+  },
+  {
+    "file_page": 32,
+    "printed_page": 31,
+    "text": "Using the Device   31\nUser Guide\nSR35\nAK Connect Usage Examples\nCase 1\nLIBRARY\nSPEAKER\nAK T1\nCase 2\nAK500N\nLIBRARY\nREMOTE\nSPEAKER\nAK T1\nSR35\n"
+  },
+  {
+    "file_page": 33,
+    "printed_page": 32,
+    "text": "Using the Device   32\nUser Guide\nCase 3\nREMOTE & LIBRARY\nSR35\nSPEAKER\nAK500N\nCase 4\nLIBRARY\nSPEAKER\nAK T1\nSR35\nAK500N\nREMOTE\n"
+  },
+  {
+    "file_page": 34,
+    "printed_page": 33,
+    "text": "Using the Device   33\nUser Guide\nCase 5\nSPEAKER\nAK T1\nLIBRARY\nSR35\nor\nREMOTE\nAK Connect APP\nAK500N\nLIBRARY\nPC/TABLET/\nSMARTPHONE\nWirelessly upload or download files to and from devices on \nthe same network (PC, tablet, smartphone, etc.) using the \nSR35 via an FTP program.\nAK File \nDrop\nFTP CONNECT (DOWN/UPLOAD)\nSR35\n"
+  },
+  {
+    "file_page": 35,
+    "printed_page": 34,
+    "text": "Using the Device   34\nUser Guide\nUsing AK File Drop\n1. Connect the SR35 and the desired \n \ndevice to the same network, and \n \nenable the AK File Drop feature on \n \nthe SR35.\n2. Enter the address, ID, and password \n \ndisplayed on the SR35 into the \n \nFTP program of the device to be \n \nconnected.\n3. Use the connected device to \n \ndownload or upload the desired \n \nfile(s).\nYou can connect without logging in via anonymous FTP, but only \ndownloads will be enabled.\nAK File Drop can be added to the notification panel.\n"
+  },
+  {
+    "file_page": 36,
+    "printed_page": 35,
+    "text": "Using the Device   35\nTurn the [Volume] wheel to adjust the volume.\nPress [    ] during playback to pause and [    ] to resume \nplayback.\nPress [      /     ] during playback for the previous/next track.\nPress and hold [     /     ] to rewind/fast-forward the track.\nDrag the indicator on the Playback Progress Bar to a desired \nlocation of a track during playback.\nTap [      ] in the upper right corner to display the current \nplaylist.\nTap the album art to view the lyrics.\nTap [      ] to add the current song to Favorites.\nPress [       ] to set the Repeat mode.\n      : Repeat entire playlist.\n      : Repeat current track.\n      : Repeat mode off.\nPress [        ] to set track sequence for playback.\n      : Shuffle mode on.\n      : Shuffle mode off.\nUser Guide\nListening \nto Music\nSelecting Music\n1. Select a category from the Menu Category Screen to \n \ndisplay the corresponding music list.\n2. Select a song from the list to begin playback.\nListening to Music\nSelect [Folder] to search music by folder.\nContinuous Playing Time: Approx. 20 hours (Music: FLAC,16bit, \n44.1kHz, Unbalanced, Volume 50, EQ Off, LCD Off, Dual-DAC, Normal Gain) \nSupported Formats: PCM [8~384kHz(8/16/24/32bit)]\nDSD [2.8MHz/5.6MHz/11.2MHz]\n"
+  },
+  {
+    "file_page": 37,
+    "printed_page": 36,
+    "text": "Using the Device   36\n Tap [     ] to enter the More menu for the current song.\n Add to Playlist: Add the current song to the playlist\n Go to Album: Go to the album that contains the current song\n Go to Artist: Go to the artist menu for the current song\n Go to Folder: Go to the folder that contains the current song\n File Info: Display current song information\nPlaylist Screen\n Tap [     ] to enter the More menu for the selected song.\n Different items are displayed depending on the selected \n category.\n Adding to the current playlist\n       : Add the selected song to play next\n       : Add the selected song to play last\n       : Add the selected song to the playlist\n       : Delete the selected song\n Tap [       ] to add all songs in the selected category to the \n playlist and play them immediately.\n Tap [     ] to edit the sort order for the playlist.\n Tap [       ] in the upper right corner to open the Edit mode.\n Different items are displayed depending on the selected \n category.\n       : Select / deselect entire list\n       : Add the selected list at the top / bottom / after the \n         current song of Now Playing\n       : Add selected list to a playlist\n       : Delete selected list\n       : Changing the playlist name (in the Play menu)\n       : Changing the album image (in the CD library)\n Close: Exit Edit mode\nUser Guide\n"
+  },
+  {
+    "file_page": 38,
+    "printed_page": 37,
+    "text": "Using the Device   37\n \nIf you tap [      ] in the [Songs/Albums/Artists/MQS] category \n \nand enter keywords in the input window, a list of items \n \nwith the search terms in their names will be displayed.\n \n    In the search results screen, tap [      ] in the upper right \n \n    corner to play a song or add it to the playlist.\n \nSelect the [Folder] category to check the internal / external \n \nmemory capacity and number of files / folders.\n \n    Tap [    ] in the folder list to play/add to the bookmarks/\n \n    copy/move/remove the selected folder.\n \n    Tap [    ] in the file list to play/copy/move/edit tags for/\n \n    remove the selected file.\n \n    You can also move/copy/remove files or folders by \n \n    tapping [       ] at the top of the Folder category.\n \nIn the [MQS] category, the MQS tab shows MQA files and \n \nPCM files of 24 bits or more, and the DSD tab shows DSD \n \nfiles.\n \n    MQS: MQA [44.1-768kHz(24bit)]\n \n    MQS: PCM [8~384kHz(24/32bit)]\n \n    DSD: DSD [2.8/5.6/11.2MHz]\n \nTap [      ] in the [Artist] category to sort the list of artists/\n \nalbum artists.\n \nAfter selecting [ALBUM] or [CD LIBRARY] category, press \n \n[       /       /       ] at the top to sort by different viewing options.\n \nClick [      ] to the right of the category to display the \n \nplayback settings.\nUser Guide\n"
+  },
+  {
+    "file_page": 39,
+    "printed_page": 38,
+    "text": "Using the Device   38\nPlaylist \nManage-\nment\nCreating a Playlist\n1. From the Menu Category Screen, \n \nselect the [Playlist] category to \n \ndisplay the playlists.\n2. Select [ + ] in the upper right corner \n \nof the screen.\n3. Enter a name for the playlist and \n \nthen press [Add] to create a new \n \nplaylist.\nAdding a Song to a Playlist\n1. Press [Playlists] to display the \n \nlist of playlists.\n2. Select a playlist and press\n \n[       ] to display a list of songs \n \nby album.\n3. Select a song and press [Complete] \n \nto add the song to the selected \n \nplaylist.\nUser Guide\n"
+  },
+  {
+    "file_page": 40,
+    "printed_page": 39,
+    "text": "Using the Device   39\nUser Guide\nRemoving a Song from a Playlist\n1. Press [Playlists] to display the \n \nlist of playlists.\n2. Select the playlist to edit.\n3. Press [       ] at the top, then select \n the song you want to delete from \n the playlist.\n4. Press [       ] on top of the screen.\n5. Press [DELETE] to remove the \n \nsong from the selected playlist.\nPlaying a Playlist\n1. Select the desired playlist for \n \nplayback.\n2. Press [       ] at the top right of the \n \nscreen to play the entire playlist.\n3. To playback part of the playlist or \n \nadd it to a current Now Playing \n \nplaylist, press [       ] at the top of \n \nthe playlist, select the music you \n \nwant to play and press [       ] to \n \nadd the selected list to the top / \n \nbottom / after the current song \n \nof Now Playing.\nThis action will only remove the song from the selected playlist, not \nthe memory.\n"
+  },
+  {
+    "file_page": 41,
+    "printed_page": 40,
+    "text": "Using the Device   40\n1. Press [Playlists] to view the \n \nplaylists, then press [       ].\n2. Select the playlist to be deleted.\n3. Press [      ] at the top of the screen.\n4. Press [DELETE] to delete the \n \nselected playlist.\n1. Press [Playlists] to view the \n \nplaylists, then press [       ].\n2. Select a playlist to be renamed.\n3. Press [      ] at the top of the \n \nscreen to display the RENAME \n \nwindow.\n4. Enter a name for the playlist and \n \nthen press [RENAME] to confirm \n \nthe change.\nUser Guide\nRenaming a Playlist\nDeleting a Playlist\n"
+  },
+  {
+    "file_page": 42,
+    "printed_page": 41,
+    "text": "Using the Device   41\nUser Guide\nReplay\nGain\nCalibrate Loudness\n1. Select [       ] at the top of the music \n \nlist. \n \n2. Select the desired music from the \n \nmusic list, then press [    ] at the \n \ntop to start the calibration process. \n \n3. [    ] will be displayed for the songs \n \nthat have been calibrated in the \n \nplaylist.\n4. ReplayGain can be turned on/off \n \nby clicking [     ] on the notification \n \nbar screen or in [Menu-Settings-\n \nReplayGain].\nYou can calibrate the loudness in the Albums, Playlists, or Folders \nmenu.\nReplayGain is only supported on 24bit/192kHz or lower formats.\n"
+  },
+  {
+    "file_page": 43,
+    "printed_page": 42,
+    "text": "Using the Device   42\nUser Guide\nPlayback is unavailable when settings exceed the supported formats. \nThe Previous, Play, and Next buttons are unavailable when connected \nas  a USB DAC.\nPlayback may stutter when computer performance is slow or the \nUSB connection is experiencing heavy usage.\nThere may be issues with audio-to-video synchronization during \nvideo playback depending on the sound quality and operating environment.\nVolume cannot be adjusted via the Windows volume control. The \nvolume wheel on the device or volume control on the appropriate \nprogram must be used to adjust the volume.\nInstall a dedicated driver to use the AK device as a USB DAC.\nThe driver file is located in SR35\\Internal_Storage\\SR35_Contents \n\\Driver. \nUSB DAC\nInstallation\nThe USB DAC function allows the device to be recognized \nas a sound card on a computer. Music from the computer is \nplayed through the device’s headphone port for an enhanced \nlistening experience.\nUSB DAC Specifications\n \nSupported OS\n \n   Windows 10/11 (32/64bit) \n \n   MAC OS 10.7(Lion) or later\n \nUSB DAC Support Specifications\n \n   Supported Formats: PCM [8~384kHz(8/16/24/32bit)] \n \n                                        DSD [2.8MHz/5.6MHz/11.2MHz]\n \nControl the volume with the AK device’s volume wheel.\n"
+  },
+  {
+    "file_page": 44,
+    "printed_page": 43,
+    "text": "Using the Device   43\nUser Guide\nHow to \nUse USB \nAudio\nConnect the device to a portable amp or DAC using USB Audio Out.\nHow to Connect a Portable USB DAC\n1. Connect the portable USB DAC to the AK device’s USB \n \nType-C port with a dedicated cable.\n2. Check the connected messages in the Notifications Display.\n3. After connection, the function is automatically enabled, allowing you \n \nto listen to music through the portable USB DAC’s audio output jack.\nHow to Change USB Audio DSD Output Type\nYou can change the type of DSD data that is outputted through \nthe USB audio out.\n1. Select a DSD output type in [Menu - Settings - USB Audio].\n \n   PCM : DSD audio is converted into PCM before being \n \n              outputted through the USB audio out.\n \n   DoP : DSD audio is converted into DoP before being\n \n              outputted through the USB audio out.\n \n   MQA : Optional activation of S/W MQA decoding.\n \n              Options may differ depending on the connected external \n \n              device. Please refer to the specifications of each device.\nThe USB Type-C cable that comes packaged with the device is only \nto be used for computer data transfer or to charge the device.\nThe type of dedicated cable needed to connect to the portable DAC \nvaries; please refer to USB DAC manufacturer instructions for \ncorrect cable type.\nA USB DAC cable is not included with the device and must be \npurchased separately.  \nDepending on the OTG cable used, the connection may be unstable.\nWhen a USB connection is established while playing a DSD or DXD \nfile, a mode selection pop-up box will appear with the following options:\n External device connection: Connect the player to the computer to\n transfer files, USB DAC for audio playback or CD Ripper connection.\n Charge device: Charge the device.\n"
+  },
+  {
+    "file_page": 45,
+    "printed_page": 44,
+    "text": "Using the Device   44\nUser Guide\nThe portable USB DAC must be able to receive digital input through \nthe micro-USB's OTG.\nAudio output may vary widely depending on the digital input specs \nof the portable USB DAC used. This is not a defect in the device \noutput and not a reason for exchange or refund.\nWhen using DoP as a DSD output type, no sound may be outputted \nexcept noise depending on the portable USB DAC.\nCD \nRipping\nCDs can be ripped directly to the device using the AK CD-\nRIPPER (sold separately).\nConnecting the AK CD-RIPPER\n1. Connecting the Type-C USB Port of SR35 and the AK CD \n \nripper with a dedicated cable allows you to select the \n \nfunction you want to use on the Notifications Display.\n2. When a function is automatically selected in the settings, \n \nthe function will be executed.\nAutomatically select the CD ripper function.\n1. Select the function to automatically execute in [Menu-\n \nSettings-CD Ripper-Default run]. \n2. Select the [CD Player] / [CD Ripping] function.\n3. When [Ask every time] is selected, the function selection \n \npopup will be displayed each time a CD is inserted.\nThe USB Type-C cable provided with the device is to be used to \nconnect to the computer or to charge the product.\nDepending on the CD-Ripper model the dedicated USB Type-C OTG \ncable may not be provided in the product package.\nDepending on the OTG cable used, the connection may be unstable.\nWhen a USB connection is established while playing a DSD or DXD \nfile, a mode selection pop-up box will appear with the following options:\n External device connection: Connect the player to the computer to\n transfer files, USB DAC for audio playback or CD Ripper connection.\n Charge device: Charge the device.\n"
+  },
+  {
+    "file_page": 46,
+    "printed_page": 45,
+    "text": "Using the Device   45\nUser Guide\nCD Ripping Results\n \n   : Indicates that CD ripping is complete, or that CD ripping \n \n     was successfully completed after correcting an error \n \n     via error correction.\n \n   : Indicates that the song currently being ripped can be \n \n     canceled by user.\n \n   : Indicates that CD ripping failed due to an error that \n \n     can’t be corrected, such as a scratched CD, or that CD \n \n     ripping was canceled by user.\nTo search the Gracenote database, the device must be connected to \nWi-Fi.  Database access time may vary depending on the network \nenvironment.\nPlease note that metadata for certain CDs may not be available on \nthe Gracenote database.\nYou cannot access the Home Screen while  CD ripping is in progress.\nThe AK Connect service will be disabled during CD ripping. The \nservice will automatically restart when CD ripping is completed.  \nMusic playback is disabled during ripping.\nYou can select the ripping speed from the Menu > Settings > CD \nRipper menu, and depending on the ripping speed selected, noise \nmay occur when ripping is performed.\nSeveral attempts at correction will be made for data with errors \nwhen the feature is enabled under [Menu - Settings - CD Ripping - \nError Correction]. Please note that the CD ripping speed will be \naffected when this feature is enabled.\nCD Ripping\n1. Select the ripping function in [Menu-Settings-CD Ripper-\n \nDefault run-CD Ripping].\n2. Connect the AK CD-Ripper to the device and select CD \n \nRipping if not set as the default run function.\n3. Insert a CD and metadata (ID3 tags) for the inserted CD \n \nwill be retrieved via Gracenote if Wi-Fi is turned on.\n4. CD ripping will begin automatically after the metadata has \n \nbeen downloaded.\n5. When finished, press [OK] when prompted to complete the \n \nautomatic CD ripping process.\n"
+  },
+  {
+    "file_page": 47,
+    "printed_page": 46,
+    "text": "Using the Device   46\nUser Guide\nAK CD-\nPlayer\nUsing the AK CD-Player Function\n1. Connect the AK CD-Ripper to the device and select CD \n \nPlayer if not set as the default run function.\n2. After inserting the CD, select the function you want to use \n \nin the Notifications Display.\n3. When a function is automatically selected in the settings, \n \nthe function will be executed.\nThe USB Type-C cable provided with the device is to be used to \nconnect to the computer or to charge the product.\nDepending on the CD-Ripper model the dedicated USB Type-C OTG \ncable may not be provided in the product package.\nDepending on the OTG cable used, the connection may be unstable.\nTo search the Gracenote database, the device must be connected to \nWi-Fi.  Database access time may vary depending on the network \nenvironment.\nPlease note that metadata for certain CDs may not be available on \nthe Gracenote database.\nGeneral audio CD and MQA-CD playback is supported, but MP3-CD \nwon't play.\n"
+  },
+  {
+    "file_page": 48,
+    "printed_page": 47,
+    "text": "Using the Device   47\nUser Guide\nCar Mode\nExit car mode.\nPlay or pause music.\nDisplay current playlist.\nSwitch the screen orientation to \nhorizontal mode/vertical mode.\nExit\nPlay/Pause\nPlaylist\nScreen Rotation\n1\n2  \n3\n4\n1\n2\n3\n4\n"
+  },
+  {
+    "file_page": 49,
+    "printed_page": 48,
+    "text": "Using the Device   48\nUser Guide\nBookmark \nFunction\nAllows user to select up to five folders for display on the top \nof the screen.\nSetting a bookmark\nUp to 5 bookmarks can be set.\n1. Tap [    ] to the right of the \n \ndesired folder in the playlist \n \nto add a bookmark.\nDeleting Bookmarks\n1. Pressing [       ] on the left of the bookmarked folder will \n \nremove it from the bookmark.\n"
+  },
+  {
+    "file_page": 50,
+    "printed_page": 49,
+    "text": "Using the Device   49\nUser Guide\n1. Tap [      ] on the playback screen \n \nto add the current song to \n \nFavorites or remove it from the list.\n2. From the Home Screen, swipe\n \n[Right      Left] direction to display \n \nthe Menu Category Screen.\n \nPress [Favorites] to display the \n \nlist of favorite songs.\nFavorites \nFunction\nFavorites function allows users to mark a currently playing \nsong as a favorite and add it to the Favorites folder.\nSetting favorites\n"
+  },
+  {
+    "file_page": 51,
+    "printed_page": 50,
+    "text": "Using the Device   50\nUser Guide\nSettings\nThe settings menu allows users to customize the device. \nThe settings menu may vary depending on the firmware \nversion.\nSetup\n1. Select [Main Menu - Settings] or select [        ] from the \n \nNotification Bar menu.\n2. Select the feature to view setting options.\nWi-Fi\n \nChange wireless network settings and turn Wi-Fi on/off.\nBluetooth Codec\n \nWhen Bluetooth is activated, the applicable codec can be \n \nset.\nSee page 58 for more information on connecting to Wi-Fi.\nReconnect the Bluetooth device to apply the changed settings. If a \ncodec is not supported by the connected device, the player will \nautomatically select another supported codec.\nBluetooth\n \nConfigures two-way Bluetooth (RX/TX) to listen to music \n \nwirelessly using a device that supports Bluetooth.\nSee page 59 for more information on using Bluetooth.\n"
+  },
+  {
+    "file_page": 52,
+    "printed_page": 51,
+    "text": "Using the Device   51\nUser Guide\nAK CONNECT\n \nTurn AK Connect on/off and set AK Connect options.\nAK File Drop\n \nEnables or disables AK File Drop.\nRoon Ready\n \nEnable Roon Ready support.\nThe DAC filter is only applied to PCM formats below 24-bit/192kHz \nand is not supported in MQA and DSD formats.\nDAC\n \nDAC Mode: Set the DAC operating mode to Dual / Quad.\n \nDAC Filter: Set the filter according to the user's \n \npreferences.\nAMP\n \nChange the AMP output to Normal / High.\n"
+  },
+  {
+    "file_page": 53,
+    "printed_page": 52,
+    "text": "Using the Device   52\nUser Guide\nLine Out\n \nSet the voltage value generated when Line Out is activated.\nDo not use earphones with the Line Out feature enabled. Doing so \nmay cause permanent hearing loss.\nGapless\n \nPlays the next song without any interruption.      \n \n   Gapless playback is only supported between two files \n \n   with identical bit rates, sample rates, and channels.\nSupported Formats for EQ: PCM [8 ~ 192kHz(8/16/24bit)]\nWhen Wi-Fi is connected, other EQs can be added as default without \nprior notice.\nUsing the equalizer may negatively affect device performance. \nSee pages 62 - 63 for more information on using the equalizer.\nEqualizer\n \nSet the equalizer according to the user's preferences.  \n \n   USER EQ: Adjust the frequencies according to the user's \n \n   preferences.\n \nUser EQ files saved with the EQ Sync feature can be shared \n \nwith other devices of the same model.\n \n   If you copy the Computer - SR35 - Internal Storage - \n \n   EQlists - User EQ.dat file to the EQlists folder of another \n \n   device, you can have the same settings in that device.\nThe User EQ.dat will not display in the SR35, however it can be \nviewed when connected to the computer.\nUp to 20 User EQs can be displayed.\n"
+  },
+  {
+    "file_page": 54,
+    "printed_page": 53,
+    "text": "Using the Device   53\nUser Guide\nUSB Mode\n \nMedia Device (USB Drive): When connected to a computer, \n \ndevice appears as a removable drive.\n \nDAC Input: Output sound from a connected computer to the device.\nCD Ripper\n \nSet the automatic CD ripping function as well as the file \n \nformat and ripping speed.\nPlayback Settings\n \nSet how to add a song to Now Playing when a song is \n selected from a music list.\nReplayGain\n \nSet a consistent volume playback level between tracks.\nNotification Panel\n \nAdd, delete, or reorganize Quick Settings buttons on the \n \nnotification bar. Drag and drop icons to add quick settings \n \nbuttons or change the preferred order. \nLR Balance\n \nAdjust the left-right balance for earphones/headphones.\n"
+  },
+  {
+    "file_page": 55,
+    "printed_page": 54,
+    "text": "Using the Device   54\nUser Guide\nCar Mode\n \nTurn car mode on/off.\n \nSet the default screen mode to landscape or portrait.\nBluetooth functionality cannot be used while USB audio is being \nused.\nUSB Audio\n \nSelect the type of DSD sound being outputted through \n \nUSB Audio Out to a connected portable DAC.\n \nEnable/Disable MQA decoding software.\nScreen Brightness\n \nAdjust screen brightness settings.\nVolume Limit\n \nDisplays a warning when the volume reaches a certain \n \nlevel and sets related options.\nDate & Time\n \nSet the current date and time.\nDevice Name\n \nSet the name of the device.\n \n   The maximum name length is 50 characters.\n"
+  },
+  {
+    "file_page": 56,
+    "printed_page": 55,
+    "text": "Using the Device   55\nUser Guide\nInput Method\n \nKeyboard: Select a language for the keyboard.\n \n   Supported languages are English, Korean, Japanese, \n    Chinese (Simplified/Traditional), French, Russian, \n    German, and Spanish.\nSupported languages  may vary depending on your location.\nLanguage\n \nSelect the display language.\n \n   Supported languages are English, Korean, Japanese, \n \n   French, Russian, German, and Spanish.\nTimer Settings\n \nAuto Power Off: The device will automatically power off after \n \nthe selected amount of time of no user and device activity.\n \nScreen Timeout: The screen will turn off after the selected \n \namount of time of no user activity.\n \nSleep Timer: After a set amount of time, playback will stop, \n \nand the device will turn off according to the time set in \n \n[Auto Power Off].\n"
+  },
+  {
+    "file_page": 57,
+    "printed_page": 56,
+    "text": "Using the Device   56\nUser Guide\nDownloads\n \nSelect a folder for downloaded files to be saved by default.\nUpdate\n \nSystem Update: Update the device when a new firmware \n \nversion is available.\n \nApplication Update: Update the default applications when \n \nnew versions are available.\n \nAutomatic updates for Open APP applications are not \n \navailable through the Settings Menu of the device. \nWhen using AK Connect to download music, if the  [Default folder] is \nselected in Settings, downloading will automatically begin to the \npre-set Downloads folder.\nWhen [Select Folder] is selected, the user is prompted to choose a \ndownload folder each time a file is downloaded. \nSystem Information\n \nSystem Information: View model number, firmware version, \n \nMAC address and memory usage information. The microSD \n \ncard can be mounted/dismounted and data can be deleted.\n \nLegal information: Check open source licenses and regulations.\nFormatting the microSD card will delete all data on the memory \ncard. Be sure to backup any important files before formatting.\nWhen formatting the microSD card on a computer, use of the FAT32 \nsystem is recommended.\n"
+  },
+  {
+    "file_page": 58,
+    "printed_page": 57,
+    "text": "Using the Device   57\nUser Guide\nSystem Reset\n \nInitialize Media Scan: Resets and rescans the internal database. \n \nDatabase initialization time may vary depending on the \n \nnumber of files stored on the device.\n \nSettings Reset: Resets all user settings back to the default settings. \n \nFactory Data Reset: Deletes all user data and resets all \n \nuser settings back to the default setting.\n"
+  },
+  {
+    "file_page": 59,
+    "printed_page": 58,
+    "text": "Using the Device   58\nUser Guide\nConnecting  \nto Wi-Fi\n2. Select the desired AP to connect to \n \nthe wireless network.\n \n    Additional information such as \n \n    Wi-Fi password may be required \n \n    depending on Wi-Fi settings.\nConnecting to a Wi-Fi Network\n1. Press and hold [      ] from the\n \nNotification Bar or select [Menu\n \n- Settings - Wi-Fi] to display a \n \nlist of available Wi-Fi networks.\nNetworks requiring browser or other additional certifications are \nnot supported.\nWi-Fi Channels 1 through 13 supported, except in the USA, channels\n12 and 13 are disabled.\n"
+  },
+  {
+    "file_page": 60,
+    "printed_page": 59,
+    "text": "Using the Device   59\nUser Guide\nUsing\nBluetooth\nConfigures two-way Bluetooth (RX/TX) to listen to music \nwirelessly using a device that supports Bluetooth.\nTurning Bluetooth On/Off\nA Bluetooth device must be paired \nwith the device prior to use. \nRefer to the Bluetooth device's \ninstruction manual for details.\n1. Select [      ] from the Notification \n \nBar menu or select [On/Off] from \n \n[Menu - Settings - Bluetooth].\nBluetooth Pairing\n1. In the Settings Menu, select the appropriate Bluetooth \n \ndevice from the list of available devices.\nDisconnect a Bluetooth Device\n1. Press the connected Bluetooth \n \ndevice and confirm the message \n \nprompt to disconnect the device.\n"
+  },
+  {
+    "file_page": 61,
+    "printed_page": 60,
+    "text": "Using the Device   60\nUser Guide\nRemoving a Bluetooth Pairing\n1. Press [       ] to the right of the \n \npaired device to go to settings.\n2. Select [Remove] to complete \n \nthe process.\nUsing Bluetooth Sink Mode\nSimilar to connecting to a Bluetooth speaker from a \nsmartphone, music being played on an external device can \nbe played on the SR35 by connecting to the SR35 from \nthe external device.\n1. Enable Bluetooth Sink Mode.\n2. Search for and connect to the \n \nSR35 from the Bluetooth \n \nmenu of the external device.\nSOURCE DEVICE\nSR35\nOR\nBLUETOOTH SPEAKER\nDEVICE\n"
+  },
+  {
+    "file_page": 62,
+    "printed_page": 61,
+    "text": "Using the Device   61\nUser Guide\n3. Music will be outputted through \n \nthe SR35 when played on the \n \nconnected device.\nWhen Bluetooth Sink Mode is enabled, any device currently connected \nwill be disconnected.\nThe Bluetooth codec can be set on the source device playing music.\nBluetooth Support Specifications\n Profile: A2DP, AVRCP\n Supported Codecs: Qualcomm® aptX™ HD, LDAC, AAC, SBC\n Device performance may be affected during Hi-Res playback.\nDo not turn off the device while connected to Bluetooth.\nTurn the Bluetooth device off then on in case of issue.\nPairing methods may differ for each individual Bluetooth device. \nAlways refer to the respective instruction manual for details.\nWhen connecting the product to a Bluetooth device, the distance \nbetween the two must be within 20 cm.\nAudio quality will degrade with longer distances and the pairing may \ndisconnect at a distance of 2 m (6.5 ft.) or more. (Distances may vary \ndepending on device and environment.)\nCrosstalk may be heard while using Bluetooth.\nFor multipoint devices, make the necessary connections prior to use.\nMalfunction, noise, and other undesirable effects may occur due to the \ndevice's battery level and the environment.\n If signal interference affects data transmission. (e.g., holding \n the device while wearing a Bluetooth device, holding the device \n while holding another electronic device, etc.)\n If the device or Bluetooth headset's radio transmitters are \n touching parts of the body.\n If the transmission strength is affected by walls, corners, \n partitions, etc.\n If devices using the same frequencies cause interference. (e.g., \n medical devices, microwave ovens, Wi-Fi, etc.)\n \nAreas with an excessive amount of interference or weak signals. \n (e.g., elevators, underground, etc.)\n"
+  },
+  {
+    "file_page": 63,
+    "printed_page": 62,
+    "text": "Using the Device   62\nUser Guide\n3. Enter a name for the custom\n \nEQ settings and select [SAVE].\nEqualizer Setup\n1. Press and hold [  \n] on the \n \nNotification Bar or turn on \n \n[Menu - Settings - Equalizer].\n2. Press [Normal EQ], then select [+]. \nEqualizer\nSetup\n"
+  },
+  {
+    "file_page": 64,
+    "printed_page": 63,
+    "text": "Using the Device   63\nUser Guide\n4. Adjust the frequencies up and \n \ndown according to the user's \n \npreferences.\n5. The number values at the lower \n \nleft corner of the screen can be \n \nadjusted for fine-tuning.\n6. Press the [Advanced] tab on the \n \ntop to display PEQ settings screen. \n \nAdjust Freq/Gain/Q.\n"
+  },
+  {
+    "file_page": 65,
+    "printed_page": 64,
+    "text": "Miscellaneous   64\nUser Guide\nPre\nCautions\nDevice\nWhen a plug is inserted into the unbalanced, balanced, or \nUSB port, do not apply any force or impact to the plug.\nDo not insert any metal objects (coins, hairpins, etc.) or \nflammable debris into the device.\nDo not put heavy objects on the device.\nIf the device gets wet (rain, water, chemicals, medicine, \ncosmetics, sweat, moisture, etc.), allow the device to dry \nthoroughly before powering on. (Damage may not be \nrepairable, however if deemed repairable, any damage \ndue to liquid exposure will be repaired for an additional \nfee even if the device is under warranty.) \nAvoid exposing the device to direct sunlight or extreme \ntemperatures (0℃ - +40℃) such as the \ninside of a car during the summer.\nDo not store or use in hot and humid places such as saunas. \nAvoid places with excessive dust or smoke.\nDo not use for extended periods on blankets, electric \nblankets, or carpet.\nDo not place near a fire or in a microwave.\nNever disassemble, repair, or alter the product. \nDo not store for extended periods in a confined space with \nthe power on.\nDo not place the device near magnetic objects (magnets, \ntelevisions, monitors, speakers, etc.).\nDo not let chemicals or detergents come in contact with \nthe product since they may damage the surface and paint.\nDo not drop or expose the product to strong impacts \n(places where there is strong vibration, etc.).\nDo not press multiple buttons simultaneously.\nDo not disconnect the USB Type-C cable during data transfer.\nWhen connecting the device to a computer with the USB \nType-C cable, use a USB port on the back of the computer \nfor best results.\n"
+  },
+  {
+    "file_page": 66,
+    "printed_page": 65,
+    "text": "Miscellaneous   65\nUser Guide\nOther\nDo not use earphones/headphones or use the device while \noperating any type of vehicle. It is not only dangerous, \nbut may be a violation of the law in certain regions.\nDo not use the product during physical activities (driving, \nwalking, hiking, etc.).\nAlways use in a safe environment to avoid the risk of an \naccident. \nWhen using the device while moving, make sure the area \nis free of obstacles.\nAvoid using the device during thunderstorms to reduce \nthe possibility of electric shock.\nIf there is a ringing in the ears, reduce the volume or stop \nusing the device.\nDo not listen to music at excessive volumes for extended periods. \nDo not use earphones/headphones at excessive volumes.\nMake sure that the headphone/earphone does not get stuck \nin another object or get caught between other objects.\nDo not sleep with earphones in your ears or leave them in \nfor extended periods.\nConnecting the cable to a defective or damaged USB port \non a computer may damage the device.\nDisplaying one image for an extended period may cause \nscreen burn-in (afterimage).\nUsing poor quality protective films or adhesive stickers \non the screen may cause damage.\nDo not insert any foreign objects into the device ports. \nThe device may become warm while playing and charging, \nso handle it carefully.\nProduct’s corners may be sharp, so handle carefully.\n"
+  },
+  {
+    "file_page": 67,
+    "printed_page": 66,
+    "text": "Miscellaneous   66\nUser Guide\n1. The device won't turn on.\n \n   The battery may need to be recharged. Charge the device \n \n   for at least one hour and try again.\n \n   Reset the device. (See Page 5)\n2. The device will not charge when connected to a computer \n \nvia USB cable.\n \n   Connect to the computer using the provided USB Type-C \n \n   cable. Charging may not occur depending on the condition \n \n   and specifications of your computer.\n \n   (In this case, charging via computer is not recommended.)\n \n   Connect the device to a USB wall adapter using the provided \n \n   USB Type-C cable to charge directly from a wall outlet.\n3. The computer won't recognize the device or an error \n \noccurs when connected.\n \n   Use a USB port on the back of the computer.\n \n   Check if the USB Type-C cable is connected correctly.\n \n   For Mac, check to ensure the MTP program is installed \n \n   properly.\n \n   Check if the device connects properly on a different computer.\n4. The screen turns off repeatedly.\n \n   The screen turns off automatically after a defined period \n \n   to reduce battery consumption. Set the time at [Menu- \n \n   Settings - Timer Settings - Screen Timeout].\n5. The screen does not display images properly.\n \n   Check the screen for debris.\n6. There is no sound or there is static/interference.\n \n   Check that the volume setting is above [0].\n \n   Check that the earphones are plugged in properly and \n \n   make sure nothing is obstructing the port connection. \n \n   Verify that the music file is not corrupt.\n \n   Verify that the audio settings have been set properly. \n \n   (Balanced out, line out, etc.)\nTrouble- \nshooting\nSolutions to Common Issues\n"
+  },
+  {
+    "file_page": 68,
+    "printed_page": 67,
+    "text": "Miscellaneous   67\nUser Guide\n7. A file does not play or the product becomes unstable \n \nwhen a certain file is played.\n \n   File may be damaged or corrupt if the following occurs: \n \n      Playback stops or freezes.\n \n      Device may act erratically or freeze.\n \n      File may sound different on another device. \n \n      There may be a difference in the performance of \n \n      playback or other functions.\n \n      There may be differences in the file specs.\n \n   Converting the file to a different format or use of a different \n \n   file is recommended.\nCopyright\nDreamus Company retains the rights to patents, trademarks, \ncopyrights, and other intellectual property rights related to \nthis manual. No contents of this user manual may be \nduplicated or reproduced in any format or by any means \nwithout the prior approval of Dreamus Company.\nUsing or reproducing, in whole or part, the contents of this \ndocument is subject to penalties. Software, audio, video, \nand any other copyrighted contents are protected in \naccordance with relevant copyright laws.\nThe user accepts all legal responsibility for the unauthorized \nreproduction or distribution of the copyrighted contents from \nthis product.\nCompanies, organizations, products, people, and events used \nin the examples are fictional. Dreamus Company has no \nintention to be associated with any company, institution, \nproduct, person, or incident through this instruction book, \nand no such inference should be made. It is the responsibility \nof the user to comply with applicable copyright laws.\nCopyright © Dreamus Company. All Rights Reserved. \n"
+  },
+  {
+    "file_page": 69,
+    "printed_page": 68,
+    "text": "Miscellaneous   68\nUser Guide\nCertifica- \ntions\nKC / FCC / CE / TELEC\nClass B Device (Communication equipment for residential \nuse): This is a Class B Device and is registered for EMC \nrequirements for residential use. This device can be used in \nresidential areas and all other areas.\nCheck information about KC/FCC/CE TELEC certification at \n[settings - system information - regulations]\nInstruction \nof E-Label\nYou can view the FCC ID of the device. To view the FCC ID,\ntap Settings → System Information → Regulatory\nFCC ID: QMDPPS31\nThis device complies with Part 15 of the FCC Rules, Operation is \nsubject to the following two conditions: (1) this device may not cause \nharmful interference, and (2) this device must accept any \ninterference received, including interference that may cause \nundesired operation.\nFCC Caution: Any changes or modifications not expressly \napproved by the party responsible for compliance could void \nthe user's authority to operate this equipment.\n"
+  },
+  {
+    "file_page": 70,
+    "printed_page": 69,
+    "text": "Miscellaneous   69\nUser Guide\n(b) For a Class B digital device or peripheral, the instructions furnished \nto the user shall include the following or similar statement, placed in a \nprominent location in the text of the manual: NOTE: This equipment\nhas been tested and found to comply with the limits for a Class B \ndigital device, pursuant to part 15 of the FCC Rules. These limits are \ndesigned to provide reasonable protection against harmful interference \nin a residential installation.\nThis equipment generates, uses and can radiate radio frequency \nenergy and, if not installed and used in accordance with the \ninstructions, may cause harmful interference to radio communications. \nHowever, there is no guarantee that interference will not occur in a \nparticular installation. If this equipment does cause harmful \ninterference to radio or television reception, which can be determined \nby turning the equipment off and on, the user is encouraged to try to \ncorrect the interference by one or more of the following measures:\n- Reorient or relocate the receiving antenna.\n- Increase the separation between the equipment and receiver.\n- Connect the equipment into an outlet on a circuit different from that \n to which the receiver is connected.\n- Consult the dealer or an experienced radio/TV technician for help.\nBody-Worn Operation\nThis device was tested for typical body-worn operations with the back \nof the portable music player kept 5mm from the body. To maintain \ncompliance requirements, use only belt-clips, holsters or similar \naccessories that maintain a 5mm separation distance between the \nuser’s body and the back of the portable music player, including the \nantenna. The use of belt-clips, holsters and similar accessories should \nnot contain metallic components in its assembly. The use of \naccessories that do not satisfy these requirements may not comply\nwith CE RF exposure requirements and should be avoided.\nBody-worn accessory exposure conditions “Specific information must \nbe included in the operating manuals to enable users to select\nbody-worn accessories that meet the minimum test separation \ndistance requirements. Users must be fully informed of\nthe operating requirements and restrictions, to the extent that the \ntypical user can easily understand the information, to acquire the \nrequired body-worn accessories to maintain compliance. Instructions \non how to place and orient a device in body-worn accessories, in \naccordance with the test results, should also be included in the user \ninstructions. All supported body-worn accessory operating \nconfigurations must be clearly disclosed to users through conspicuous \ninstructions in the user guide and user manual to ensure unsupported \noperations are avoided. All body-worn accessories containing metallic \ncomponents must be tested for compliance and clearly identified in the \noperating manual. The instruction must inform users to avoid using \nother body-worn accessories containing metallic components to\nensure RF exposure compliance.”\n"
+  },
+  {
+    "file_page": 71,
+    "printed_page": 70,
+    "text": "Miscellaneous   70\nUser Guide\nMQA (Master Quality Authenticated)\nMQA is an award-winning British technology that delivers the sound \nof the original master recording. The master MQA file is fully \nauthenticated and is small enough to stream or download. Visit \nmqa.co.uk for more information.\nAstell&Kern SR35 includes MQA technology, which enables you to \nplay back MQA audio files and streams, delivering the sound of the \noriginal master recording.\nThe SR35 Now Playing status shows a green or blue light to indicate \nthat the unit is decoding and playing a MQA stream or file, and \ndenotes provenance to ensure that the sound is identical to that of \nthe source material. A blue light indicates it is playing a MQA Studio \nfile, which has either been approved in the studio by the \nartist/producer or has been verified by the copyright owner.\nMQA and the Sound Wave Device are registered trademarks of MQA \nLimited.© 2016\nRegistered\nTrademarks\nWindows 10, Windows 11, and Windows Media Player are \nregistered trademarks of Microsoft Corp.\nQualcomm aptX is a product of Qualcomm Technologies, Inc. \nand/or its subsidiaries.\nQualcomm is a trademark of Qualcomm Incorporated, registered \nin the United States and other countries. \naptX is a trademark of Qualcomm Technologies International, \nLtd., registered in the United States and other countries.\nLDAC and LDAC logo are trademarks of Sony Corporation.\n"
+  },
+  {
+    "file_page": 72,
+    "printed_page": 71,
+    "text": "Miscellaneous   71\nUser Guide\nDisclai- \nmers\nThe manufacturer, importer, and distributor shall not be liable \nfor damages including accidental and personal injury due to \nthe improper use or operation of this product. The information \nin this user manual was written based on current product \nspecifications. The manufacturer, Dreamus Company, regularly \nadds new features via OTA updates and will continue to apply new \ntechnologies in the future. Product specifications may be changed \nwithout prior notice. There is no warranty against data loss due to \nthe use of this product.\nCAUTION\nRISK OF EXPLOSION IF BATTERY IS REPLACED\nBY AN INCORRECT TYPE.\nDISPOSE OF USED BATTERIES ACCORDING\nTO THE INSTRUCTIONS\nThe device must be used a minimum of 5mm away from the body in \nnormal use conditions.\nThe excessive sound pressure from earphones and headphones can \ncause hearing loss.\n"
+  },
+  {
+    "file_page": 73,
+    "printed_page": 72,
+    "text": "Miscellaneous   72\nUser Guide\nSpecifi- \ncations\nSR35\nPPS31\nAluminum\n3.6inch 720x1280 Touch Display\nWAV, FLAC, WMA, MP3, OGG, APE, AAC, ALAC, AIFF,\nDFF, DSF, MQA\nServices (Tidal Masters), Local files, External USB, MQA-CD(ripped)\nPCM : 8kHz ~ 384kHz (8/16/24/32bits per Sample)\nDSD Native: DSD64(1bit 2.8MHz), Stereo /\nDSD128(1bit 5.6MHz), Stereo / DSD256(1bit 11.2MHz), Stereo\nQuad-Core\nCIRRUS LOGIC CS43198 x4 (Quad-DAC)\n[High] Unbalanced 3.1Vrms / Balanced 6.0Vrms\n[Normal] Unbalanced 2.1Vrms / Balanced 4.0Vrms\nSupport up to 32bit / 384kHz Bit to Bit playback\nUSB Type-C\nUnbalanced Out (3.5mm), Balanced Out (2.5mm, only 4-pole supported / \n4.4mm, only 5-pole supported)\n802.11 a/b/g/n/ac (2.4/5GHz)\nV5.0 (A2DP, AVRCP, Qualcomm® aptX™HD, LDAC)\n2.51\" (64mm)[W] x 4.26\" (108.3mm)[H] x 0.63\" (16.1mm)[D]\nabout 6.52oz (185g)\nFirmware Upgrade : OTA (Over-The-Air)\nBody 10g SAR[W/Kg]_WLAN 2.4GHz: 0.082\n±0.012dB (Condition : 20Hz~20kHz) Unbalanced, \n±0.011dB (Condition : 20Hz~20kHz) Balanced, \n±0.125dB  (Condition : 20Hz~70kHz)  Unbalanced,\n±0.126  (Condition : 20Hz~70kHz)  Balanced\n127dB @ 1kHz, Unbalanced / 130dB @ 1kHz, Balanced\n-133dB @ 1kHz, Unbalanced / -145dB @ 1kHz, Balanced\n0.0005% @ 1kHz, Unbalanced / 0.0006% @ 1kHz, Balanced\n0.0002%, 800Hz 10kHz (4:1), Unbalanced / Balanced\n3.5mm(0.7ohm), 2.5mm(1.7ohm), 4.4mm(1.6ohm)\n25ps(Typ)\n70ps\n64GB\nmicroSD (Max. 1TB) x1\n3,150mAh 3.7V Li-Polymer\nWindows 10,11(32bit/64bit) / MAX OS X 10.7\nGeneral Specifications\nProduct Name\nModel\nBody Material\nDisplay\nSupported Audio \nFormats\nMQA playback\nSampling Rate\nCPU\nDAC\nOutput level\nDecoding\nInput\nOutputs\nWi-Fi\nBluetooth\nDimensions\nWeight\nFeature Enhancements\nSAR\nAudio Specifications\nFrequency Response\nS/N\nCrosstalk\nTHD+N\nIMD SMPTE\nOutput Impedance\nClock Jitter\nReference Clock Jitter\nMemory\nBuilt-in Memory\nExternal Memory\nBattery\nCapacity\nSupported OS\nSupported OS\n"
+  }
+]

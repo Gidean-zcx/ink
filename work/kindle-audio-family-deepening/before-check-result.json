@@ -1,0 +1,9 @@
+{
+  "status": "PASS",
+  "newE": 10,
+  "newF": 11,
+  "oldF": 6,
+  "images": 11,
+  "formal_files": 17,
+  "existing_inventory": 58
+}

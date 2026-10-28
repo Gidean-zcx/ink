@@ -1,0 +1,743 @@
+{
+  "name": "08-back-to-finder",
+  "url": "https://mytolino.de/onleihe-bibliothek-auswaehlen/",
+  "title": "Bibliotheksfinder - mytolino",
+  "utc": "2026-10-26T18:38:08.547019+00:00",
+  "text": "Aabenraa (Zentralbücherei Apenrade)\nAachen (Bücherinsel Eilendorf)\nAachen (Bücherinsel Laurensberg)\nAachen (Bücherinsel St. Donatus)\nAachen (Bücherinsel St. Jakob)\nAachen (Bücherinsel Vaalserquartier)\nAachen (Religionspädagogische Medienstelle / Diözesanbibliothek)\nAachen (Schulbücherei Pius-Gymnasium)\nAachen (Stadtbibliothek Aachen)\nAadorf (Gemeinde- und Schulbibliothek Aadorf)\nAalen (Stadtbibliothek im Torhaus)\nAarau (Aargauer Kantonsbibliothek)\nAarau (Alte Kantonsschule Aarau)\nAarau (Kantonale Schule für Berufsbildung)\nAarau (Mediothek Neue Kantonsschule Aarau)\nAarburg (Stadtbibliothek Aarburg)\nAbensberg (Stadtbücherei Abensberg)\nAbstatt (Mediathek Abstatt)\nAbtsgmünd (Bibliothek in der Zehntscheuer)\nAchern (Stadtbibliothek Achern)\nAchim (Stadtbibliothek Achim)\nAdelsheim (Stadtbücherei Adelsheim)\nAdenau (Stadtbücherei Adenau)\nAdendorf (Bücherei am Rathausplatz Adendorf)\nAdliswil (Bibliothek Adliswil)\nAdlkofen (Gemeindebücherei Adlkofen)\nAerzen (Bücherei Aerzen)\nAesch ZH (Gemeindebibliothek Aesch)\nAeugst a. A. (Bibliothek Aeugst a.A.)\nAffalterbach (Ortsbücherei Affalterbach)\nAffing (Affinger Bücherstüberl)\nAffoltern am Albis (Regionalbibliothek Affoltern am Albis)\nAglasterhausen (DIE BÜCHEREI St. Matthäus Aglasterhausen)\nAhaus (Stadtbibliothek Ahaus)\nAhlen (Stadtbücherei Ahlen)\nAhrensbök (Gemeindebücherei Ahrensbök)\nAhrensburg (Stadtbücherei Ahrensburg)\nAichach (Stadtbücherei Aichach)\nAichtal (Stadtbücherei Aichtal)\nAichwald (Bücherei Aichwald)",
+  "buttons": [
+    {
+      "text": "\n\n  \n          .da-icon-filler {        fill: #ffffff;      }\n  \n  \n  \n  \n   \n      \n      \n    \n\n",
+      "aria": "Barrierefreiheit-Einstellungen öffnen",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "\n                    \n                        \n                        \n                    \n                ",
+      "aria": "Schließt das Tool",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "Zurücksetzen",
+      "aria": "Alle Einstellungen zurücksetzen",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "-",
+      "aria": "Schriftgröße verringern",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "+",
+      "aria": "Schriftgröße erhöhen",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "Zurücksetzen",
+      "aria": "Schriftgröße zurücksetzen",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "-",
+      "aria": "Zeilenabstand verringern",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "+",
+      "aria": "Zeilenabstand erhöhen",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "Zurücksetzen",
+      "aria": "Zeilenabstände zurücksetzen",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "-",
+      "aria": null,
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "+",
+      "aria": null,
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "Zurücksetzen",
+      "aria": "Inhaltsgröße zurücksetzen",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "-",
+      "aria": "Wortabstand verringern",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "+",
+      "aria": "Wortabstand erhöhen",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "Zurücksetzen",
+      "aria": "Wortabstand zurücksetzen",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "\n                        \n                            \n                            \n                        \n                        Schwarz / weiß\n                    ",
+      "aria": "Schwarz weiß Modus",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "\n                        \n                            \n                            \n                        \n                        Bilder ausblenden\n                    ",
+      "aria": null,
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "\n                        \n                            \n                            \n                        \n                        Maus Hervorhebung\n                    ",
+      "aria": "den Inhalt unter der Maus hervorheben",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "\n                        \n                            \n                            \n                        \n                        Einfache Schrift\n                    ",
+      "aria": "Ändern der Schriftart in eine einfache Schriftart",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "\n                        \n                            \n                            \n                        \n                        Animationen stoppen\n                    ",
+      "aria": "Deaktiviert Animationen",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "\n                        \n                            \n                            \n                        \n                        Ton stummschalten\n                    ",
+      "aria": null,
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "\n                        \n                            \n                        \n                        Lichtbalken\n                    ",
+      "aria": "Schwarze Balken hinzufügen, um nur den Inhalt unter der Maus zu fokussieren",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "\n                        \n                            \n                            \n                        \n                        Lupe\n                    ",
+      "aria": "Vergrößerung des Inhalts unter der Maus",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "-",
+      "aria": "Zeichenabstand verringern",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "+",
+      "aria": "Zeichenabstand erhöhen",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "Zurücksetzen",
+      "aria": "Zeichenabstände zurücksetzen",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "\n                        \n                            \n                            \n                        \n                        Link Hervorhebung\n                    ",
+      "aria": null,
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "\n                        \n                            \n                            \n                        Großer Zeiger\n                    ",
+      "aria": null,
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "\n                    \n                        \n                        \n                    \n\n                        Virtuelle Tastatur\n                        ",
+      "aria": "Aktiviert eine virtuele Tastatur als Eingabehilfe",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "\n                        \n                            \n                            \n                        \n                        Sättigung\n                    ",
+      "aria": "Sättigung erhöhen",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "\n                        \n                            \n                            \n                        \n                        Kontrast\n                    ",
+      "aria": "Kontrast erhöhen",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "\n                        \n                            \n                            \n                        Video\n                    ",
+      "aria": "Videos pausieren",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "",
+      "aria": "Hintergrundfarbe in schwarz ändern",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "",
+      "aria": "Hintergrundfarbe in weiß ändern",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "",
+      "aria": "Hintergrundfarbe in orange ändern",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "",
+      "aria": "Hintergrundfarbe in grün ändern",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "",
+      "aria": "Hintergrundfarbe in rot ändern",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "",
+      "aria": "Hintergrundfarbe in blau ändern",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "",
+      "aria": "Hintergrundfarbe in lila ändern",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "",
+      "aria": "Hintergrundfarbe in gelb ändern",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "Zurücksetzen",
+      "aria": "Hintergrundfarbe zurücksetzen",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "",
+      "aria": "Textfarbe in schwarz ändern",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "",
+      "aria": "Textfarbe in weiß ändern",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "",
+      "aria": "Textfarbe in orange ändern",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "",
+      "aria": "Textfarbe in grün ändern",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "",
+      "aria": "Textfarbe in rot ändern",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "",
+      "aria": "Textfarbe in blau ändern",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "",
+      "aria": "Textfarbe in lila ändern",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "",
+      "aria": "Textfarbe in gelb ändern",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "Zurücksetzen",
+      "aria": "Textfarbe zurücksetzen",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "",
+      "aria": "Linkfarbe in schwarz ändern",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "",
+      "aria": "Linkfarbe in weiß ändern",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "",
+      "aria": "Linkfarbe in orange ändern",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "",
+      "aria": "Linkfarbe in grün ändern",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "",
+      "aria": "Linkfarbe in rot ändern",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "",
+      "aria": "Linkfarbe in blau ändern",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "",
+      "aria": "Linkfarbe in lila ändern",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "",
+      "aria": "Linkfarbe in gelb ändern",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "Zurücksetzen",
+      "aria": "Link-Farbe zurücksetzen",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "",
+      "aria": "Titelfarbe in schwarz ändern",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "",
+      "aria": "Titelfarbe in weiß ändern",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "",
+      "aria": "Titelfarbe in orange ändern",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "",
+      "aria": "Titelfarbe in grün ändern",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "",
+      "aria": "Titelfarbe in rot ändern",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "",
+      "aria": "Titelfarbe in blau ändern",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "",
+      "aria": "Titelfarbe in lila ändern",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "",
+      "aria": "Titelfarbe in gelb ändern",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "Zurücksetzen",
+      "aria": "Titelfarbe zurücksetzen",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "Schließen",
+      "aria": "Schließt das Tool",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "Zurücksetzen",
+      "aria": "Alle Einstellungen zurücksetzen",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "Widget ausblenden",
+      "aria": null,
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "\n                        Abbrechen\n                    ",
+      "aria": null,
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "\n                        Bestätigen\n                    ",
+      "aria": null,
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "Aabenraa (Zentralbücherei Apenrade)",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "Aachen (Bücherinsel Eilendorf)",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "Aachen (Bücherinsel Laurensberg)",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "Aachen (Bücherinsel St. Donatus)",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "Aachen (Bücherinsel St. Jakob)",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "Aachen (Bücherinsel Vaalserquartier)",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "Aachen (Religionspädagogische Medienstelle / Diözesanbibliothek)",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "Aachen (Schulbücherei Pius-Gymnasium)",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "Aachen (Stadtbibliothek Aachen)",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "Aadorf (Gemeinde- und Schulbibliothek Aadorf)",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "Aalen (Stadtbibliothek im Torhaus)",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "Aarau (Aargauer Kantonsbibliothek)",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "Aarau (Alte Kantonsschule Aarau)",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "Aarau (Kantonale Schule für Berufsbildung)",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "Aarau (Mediothek Neue Kantonsschule Aarau)",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "Aarburg (Stadtbibliothek Aarburg)",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "Abensberg (Stadtbücherei Abensberg)",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "Abstatt (Mediathek Abstatt)",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "Abtsgmünd (Bibliothek in der Zehntscheuer)",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "Achern (Stadtbibliothek Achern)",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "Achim (Stadtbibliothek Achim)",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "Adelsheim (Stadtbücherei Adelsheim)",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "Adenau (Stadtbücherei Adenau)",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "Adendorf (Bücherei am Rathausplatz Adendorf)",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "Adliswil (Bibliothek Adliswil)",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "Adlkofen (Gemeindebücherei Adlkofen)",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "Aerzen (Bücherei Aerzen)",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "Aesch ZH (Gemeindebibliothek Aesch)",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "Aeugst a. A. (Bibliothek Aeugst a.A.)",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "Affalterbach (Ortsbücherei Affalterbach)",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "Affing (Affinger Bücherstüberl)",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "Affoltern am Albis (Regionalbibliothek Affoltern am Albis)",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "Aglasterhausen (DIE BÜCHEREI St. Matthäus Aglasterhausen)",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "Ahaus (Stadtbibliothek Ahaus)",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "Ahlen (Stadtbücherei Ahlen)",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "Ahrensbök (Gemeindebücherei Ahrensbök)",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "Ahrensburg (Stadtbücherei Ahrensburg)",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "Aichach (Stadtbücherei Aichach)",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "Aichtal (Stadtbücherei Aichtal)",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "Aichwald (Bücherei Aichwald)",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "x",
+      "aria": "Schließen",
+      "test": null,
+      "visible": false
+    }
+  ],
+  "inputs": [
+    {
+      "type": "range",
+      "placeholder": "",
+      "value": "0",
+      "visible": false
+    },
+    {
+      "type": "range",
+      "placeholder": "",
+      "value": "0",
+      "visible": false
+    },
+    {
+      "type": "range",
+      "placeholder": "",
+      "value": "0",
+      "visible": false
+    },
+    {
+      "type": "range",
+      "placeholder": "",
+      "value": "0",
+      "visible": false
+    },
+    {
+      "type": "range",
+      "placeholder": "",
+      "value": "0",
+      "visible": false
+    },
+    {
+      "type": "text",
+      "placeholder": "Ort oder Name der Bibliothek eingeben",
+      "value": "Hamburg",
+      "visible": true
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "checked_on": "2026-10-27",
+  "inventory_id": "I-M038-139",
+  "url": "https://support.tonies.com/hc/en-gb/articles/29036585437714-How-much-help-will-my-child-need-with-playing-a-Tonieplay-game",
+  "method": "single_anonymous_curl_GET",
+  "http_status": 403,
+  "response_marker": "cf-mitigated: challenge",
+  "response_date": "Tue, 27 Oct 2026 04:37:18 GMT",
+  "body_read": false,
+  "overall_command_exit": 1,
+  "local_failure": "Shell read parsing trailing empty redirect field returned nonzero after the request; status TSV remained header-only. Root normalized existing raw metadata without a new request.",
+  "other_candidates_requested": false,
+  "raw_files": {
+    "work/research/batch38-tonieplay/raw/29036585437714.headers": "cd0a7342217881d119e8ed0bab725ae9f7313870a49110f28b62d98a9a9b3550",
+    "work/research/batch38-tonieplay/raw/29036585437714.html": "fc914d8ec91ebaabeea2b0c925c9c601adc8bb776804d19206a077ef0c111c96",
+    "work/research/batch38-tonieplay/raw/29036585437714.meta": "8d8623626d723095dceaea0cb085fc07fe4c267bcc5357a5600f96f4d0dbec36"
+  }
+}

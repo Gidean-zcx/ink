@@ -1,0 +1,1218 @@
+{
+  "origin_trace_sha256": "112e4db50e1d23e60028c11f9bae401bd3514df6e8f5a75fed6e8b8974f1a4b0",
+  "context_metadata": {
+    "version": 10,
+    "type": "context-options",
+    "origin": "library",
+    "browserName": "chromium",
+    "playwrightVersion": "1.64.0-beta-1791568591000",
+    "options": {
+      "viewport": {
+        "width": 1280,
+        "height": 950
+      },
+      "selectorEngines": [],
+      "acceptDownloads": "accept"
+    },
+    "platform": "linux",
+    "wallTime": 1793029214330,
+    "monotonicTime": 1694.952,
+    "sdkLanguage": "python",
+    "testIdAttributeName": "data-testid"
+  },
+  "actions": [
+    {
+      "method": "goto",
+      "class_name": "Frame",
+      "params": {
+        "url": "https://www.timeforkids.com/k1/spotlight-on-plants-k1/",
+        "waitUntil": "domcontentloaded",
+        "timeout": 45000
+      },
+      "start_ms": 2036.982,
+      "end_ms": 2966.242,
+      "error": null
+    },
+    {
+      "method": "waitForTimeout",
+      "class_name": "Frame",
+      "params": {
+        "waitTimeout": 2500
+      },
+      "start_ms": 2974.188,
+      "end_ms": 5474.983,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 5483.556,
+      "end_ms": 5802.394,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": "internal:role=button[name=\"Listen to audio\"s]",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 22940.349,
+      "end_ms": 23463.008,
+      "error": null
+    },
+    {
+      "method": "waitForTimeout",
+      "class_name": "Frame",
+      "params": {
+        "waitTimeout": 2000
+      },
+      "start_ms": 23467.179,
+      "end_ms": 25467.367,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 25469.301,
+      "end_ms": 25677.422,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": "#playPauseBtn",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 80628.814,
+      "end_ms": 80730.968,
+      "error": null
+    },
+    {
+      "method": "waitForTimeout",
+      "class_name": "Frame",
+      "params": {
+        "waitTimeout": 200
+      },
+      "start_ms": 80737.418,
+      "end_ms": 80938.896,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 80973.063,
+      "end_ms": 81192.939,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 108949.084,
+      "end_ms": 109362.327,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": "#speedNav",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 109619.444,
+      "end_ms": 109760.471,
+      "error": null
+    },
+    {
+      "method": "waitForTimeout",
+      "class_name": "Frame",
+      "params": {
+        "waitTimeout": 200
+      },
+      "start_ms": 109762.394,
+      "end_ms": 109962.242,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 109964.035,
+      "end_ms": 110437.347,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": "internal:role=button[name=\"Pause\"s]",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 129074.096,
+      "end_ms": 129148.125,
+      "error": null
+    },
+    {
+      "method": "waitForTimeout",
+      "class_name": "Frame",
+      "params": {
+        "waitTimeout": 300
+      },
+      "start_ms": 129149.499,
+      "end_ms": 129450.449,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 129454.294,
+      "end_ms": 129615.694,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": "internal:role=button[name=\"Play\"s]",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 149204.455,
+      "end_ms": 149294.512,
+      "error": null
+    },
+    {
+      "method": "waitForTimeout",
+      "class_name": "Frame",
+      "params": {
+        "waitTimeout": 2500
+      },
+      "start_ms": 149296.841,
+      "end_ms": 151798.856,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": "internal:role=button[name=\"Pause\"s]",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 151800.577,
+      "end_ms": 156808.487,
+      "error": {
+        "message": "Timeout 5000ms exceeded.",
+        "stack": "TimeoutError: Timeout 5000ms exceeded.\n    at _ProgressController.run (/home/workspace/reader/work/research/tools/browser/playwright/driver/package/lib/coreBundle.js:13004:32)\n    at DispatcherConnection.dispatch (/home/workspace/reader/work/research/tools/browser/playwright/driver/package/lib/coreBundle.js:20191:44)",
+        "name": "TimeoutError"
+      }
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 374327.317,
+      "end_ms": 375927.114,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": "internal:role=button[name=\"Play\"s]",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 403220.628,
+      "end_ms": 404040.367,
+      "error": null
+    },
+    {
+      "method": "waitForTimeout",
+      "class_name": "Frame",
+      "params": {
+        "waitTimeout": 1800
+      },
+      "start_ms": 404044.204,
+      "end_ms": 405845.882,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 405849.214,
+      "end_ms": 406337.897,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": "internal:role=button[name=\"Pause\"s]",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 406805.771,
+      "end_ms": 406865.802,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 406867.615,
+      "end_ms": 407295.748,
+      "error": null
+    },
+    {
+      "method": "waitForTimeout",
+      "class_name": "Frame",
+      "params": {
+        "waitTimeout": 1500
+      },
+      "start_ms": 407385.505,
+      "end_ms": 408886.753,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 408888.349,
+      "end_ms": 409162.063,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": "#speedNav",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 416492.441,
+      "end_ms": 416560.324,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": "internal:role=button[name=\"1.25x speed\"s]",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 416564.37,
+      "end_ms": 421565.937,
+      "error": {
+        "message": "Timeout 5000ms exceeded.",
+        "stack": "TimeoutError: Timeout 5000ms exceeded.\n    at _ProgressController.run (/home/workspace/reader/work/research/tools/browser/playwright/driver/package/lib/coreBundle.js:13004:32)\n    at DispatcherConnection.dispatch (/home/workspace/reader/work/research/tools/browser/playwright/driver/package/lib/coreBundle.js:20191:44)",
+        "name": "TimeoutError"
+      }
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": "#speedNav",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 455847.869,
+      "end_ms": 455877.307,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 455884.154,
+      "end_ms": 456166.276,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": "internal:role=button[name=\"1.25x speed\"s]",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 463986.509,
+      "end_ms": 468986.967,
+      "error": {
+        "message": "Timeout 5000ms exceeded.",
+        "stack": "TimeoutError: Timeout 5000ms exceeded.\n    at _ProgressController.run (/home/workspace/reader/work/research/tools/browser/playwright/driver/package/lib/coreBundle.js:13004:32)\n    at DispatcherConnection.dispatch (/home/workspace/reader/work/research/tools/browser/playwright/driver/package/lib/coreBundle.js:20191:44)",
+        "name": "TimeoutError"
+      }
+    },
+    {
+      "method": "hover",
+      "class_name": "Frame",
+      "params": {
+        "selector": "#speedNav",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 485533.458,
+      "end_ms": 485573.816,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 485579.093,
+      "end_ms": 485873.581,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": "#speedNav",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 497732.11,
+      "end_ms": 497908.175,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 497949.83,
+      "end_ms": 498251.524,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": "internal:role=radio[name=\"1.25x speed\"s]",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 507110.453,
+      "end_ms": 507149.249,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 507151.985,
+      "end_ms": 507466.591,
+      "error": null
+    },
+    {
+      "method": "focus",
+      "class_name": "Frame",
+      "params": {
+        "selector": "#progressRange",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 507528.075,
+      "end_ms": 507535.849,
+      "error": null
+    },
+    {
+      "method": "press",
+      "class_name": "Frame",
+      "params": {
+        "selector": "#progressRange",
+        "key": "Enter",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 507543.054,
+      "end_ms": 507572.596,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 507574.122,
+      "end_ms": 507835.391,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": "#audioCloseBtn",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 507906.72,
+      "end_ms": 507951.61,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 507952.996,
+      "end_ms": 508209.342,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": "internal:role=button[name=\"Listen to audio\"s]",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 508410.845,
+      "end_ms": 508479.034,
+      "error": null
+    },
+    {
+      "method": "waitForTimeout",
+      "class_name": "Frame",
+      "params": {
+        "waitTimeout": 1200
+      },
+      "start_ms": 508480.51,
+      "end_ms": 509682.327,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 509684.409,
+      "end_ms": 509898.638,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": "internal:role=button[name=\"Pause\"s]",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 510062.838,
+      "end_ms": 510119.097,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 510122.298,
+      "end_ms": 510372.716,
+      "error": null
+    },
+    {
+      "method": "reload",
+      "class_name": "Page",
+      "params": {
+        "waitUntil": "domcontentloaded",
+        "timeout": 45000
+      },
+      "start_ms": 518760.686,
+      "end_ms": 519799.099,
+      "error": null
+    },
+    {
+      "method": "waitForTimeout",
+      "class_name": "Frame",
+      "params": {
+        "waitTimeout": 1300
+      },
+      "start_ms": 519804.986,
+      "end_ms": 521105.056,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 521106.746,
+      "end_ms": 521400.594,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": "internal:role=button[name=\"Listen to audio\"s]",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 521743.276,
+      "end_ms": 521838.916,
+      "error": null
+    },
+    {
+      "method": "waitForTimeout",
+      "class_name": "Frame",
+      "params": {
+        "waitTimeout": 1000
+      },
+      "start_ms": 521841.192,
+      "end_ms": 522841.704,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 522843.889,
+      "end_ms": 523063.86,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": "internal:role=button[name=\"Pause\"s]",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 523209.102,
+      "end_ms": 523250.334,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 523251.831,
+      "end_ms": 523479.325,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": "internal:role=link[name=\"En Espanol\"s]",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 523553.265,
+      "end_ms": 524183.402,
+      "error": null
+    },
+    {
+      "method": "waitForTimeout",
+      "class_name": "Frame",
+      "params": {
+        "waitTimeout": 1500
+      },
+      "start_ms": 524187.426,
+      "end_ms": 525687.811,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 525689.435,
+      "end_ms": 525866.07,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": "internal:role=button[name=\"Listen to audio\"s]",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 552744.92,
+      "end_ms": 552784.959,
+      "error": null
+    },
+    {
+      "method": "waitForTimeout",
+      "class_name": "Frame",
+      "params": {
+        "waitTimeout": 1600
+      },
+      "start_ms": 552787.458,
+      "end_ms": 554387.793,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 554390.529,
+      "end_ms": 554614.801,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": "internal:role=button[name=\"Pause\"s]",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 554726.238,
+      "end_ms": 554795.439,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 554798.614,
+      "end_ms": 555131.292,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": "internal:role=link[name=\"In English\"s]",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 555349.746,
+      "end_ms": 555919.492,
+      "error": null
+    },
+    {
+      "method": "waitForTimeout",
+      "class_name": "Frame",
+      "params": {
+        "waitTimeout": 1200
+      },
+      "start_ms": 555926.766,
+      "end_ms": 557127.507,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": "internal:role=button[name=\"Listen to audio\"s]",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 557129.116,
+      "end_ms": 557228.332,
+      "error": null
+    },
+    {
+      "method": "waitForTimeout",
+      "class_name": "Frame",
+      "params": {
+        "waitTimeout": 1000
+      },
+      "start_ms": 557232.124,
+      "end_ms": 558232.457,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": "internal:role=button[name=\"Pause\"s]",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 558235.3,
+      "end_ms": 558300.397,
+      "error": null
+    },
+    {
+      "method": "focus",
+      "class_name": "Frame",
+      "params": {
+        "selector": "#progressRange",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 558302.223,
+      "end_ms": 558314.321,
+      "error": null
+    },
+    {
+      "method": "press",
+      "class_name": "Frame",
+      "params": {
+        "selector": "#progressRange",
+        "key": "Enter",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 558315.929,
+      "end_ms": 558330.784,
+      "error": null
+    },
+    {
+      "method": "press",
+      "class_name": "Frame",
+      "params": {
+        "selector": "#progressRange",
+        "key": "Enter",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 558332.508,
+      "end_ms": 558343.217,
+      "error": null
+    },
+    {
+      "method": "press",
+      "class_name": "Frame",
+      "params": {
+        "selector": "#progressRange",
+        "key": "Enter",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 558344.826,
+      "end_ms": 558356.592,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": "#speedNav",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 558357.995,
+      "end_ms": 558396.428,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": "internal:role=radio[name=\"1.25x speed\"s]",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 558397.99,
+      "end_ms": 558445.508,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 558447.075,
+      "end_ms": 558648.165,
+      "error": null
+    },
+    {
+      "method": "reload",
+      "class_name": "Page",
+      "params": {
+        "waitUntil": "domcontentloaded",
+        "timeout": 45000
+      },
+      "start_ms": 558797.498,
+      "end_ms": 559365.402,
+      "error": null
+    },
+    {
+      "method": "waitForTimeout",
+      "class_name": "Frame",
+      "params": {
+        "waitTimeout": 1000
+      },
+      "start_ms": 559367.297,
+      "end_ms": 560367.187,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": "internal:role=button[name=\"Listen to audio\"s]",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 560368.934,
+      "end_ms": 560445.157,
+      "error": null
+    },
+    {
+      "method": "waitForTimeout",
+      "class_name": "Frame",
+      "params": {
+        "waitTimeout": 1000
+      },
+      "start_ms": 560447.116,
+      "end_ms": 561447.82,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": "internal:role=button[name=\"Pause\"s]",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 561449.497,
+      "end_ms": 561496.449,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 561498.965,
+      "end_ms": 561700.166,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": "internal:role=link[name=\"Search\"s]",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 587817.243,
+      "end_ms": 587892.168,
+      "error": null
+    },
+    {
+      "method": "waitForTimeout",
+      "class_name": "Frame",
+      "params": {
+        "waitTimeout": 1200
+      },
+      "start_ms": 587894.186,
+      "end_ms": 589094.849,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 589097.163,
+      "end_ms": 589194.328,
+      "error": null
+    },
+    {
+      "method": "fill",
+      "class_name": "Frame",
+      "params": {
+        "selector": "internal:attr=[placeholder=\"Search for articles\"i]",
+        "value": "plants",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 624501.526,
+      "end_ms": 624540.802,
+      "error": null
+    },
+    {
+      "method": "press",
+      "class_name": "Frame",
+      "params": {
+        "selector": "internal:attr=[placeholder=\"Search for articles\"i]",
+        "key": "Enter",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 624544.078,
+      "end_ms": 625156.214,
+      "error": null
+    },
+    {
+      "method": "waitForTimeout",
+      "class_name": "Frame",
+      "params": {
+        "waitTimeout": 1800
+      },
+      "start_ms": 625161.334,
+      "end_ms": 626961.768,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 626966.579,
+      "end_ms": 627255.68,
+      "error": null
+    },
+    {
+      "method": "fill",
+      "class_name": "Frame",
+      "params": {
+        "selector": "internal:attr=[placeholder=\"Search for articles\"i]",
+        "value": "zzqvnonexistent",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 669920.094,
+      "end_ms": 669975.254,
+      "error": {
+        "message": "Error: strict mode violation: get_by_placeholder(\"Search for articles\") resolved to 2 elements:\n    1) <input type=\"text\" name=\"text\" placeholder=\"Search for articles\"/> aka get_by_role(\"banner\").get_by_placeholder(\"Search for articles\")\n    2) <input name=\"text\" type=\"search\" value=\"plants\" placeholder=\"Search for articles\" class=\"c-page-editions__search-field search\"/> aka get_by_role(\"searchbox\", name=\"Search for articles\")\n",
+        "stack": "Error: Error: strict mode violation: get_by_placeholder(\"Search for articles\") resolved to 2 elements:\n    1) <input type=\"text\" name=\"text\" placeholder=\"Search for articles\"/> aka get_by_role(\"banner\").get_by_placeholder(\"Search for articles\")\n    2) <input name=\"text\" type=\"search\" value=\"plants\" placeholder=\"Search for articles\" class=\"c-page-editions__search-field search\"/> aka get_by_role(\"searchbox\", name=\"Search for articles\")\n\n    at CRExecutionContext.evaluateWithArguments (/home/workspace/reader/work/research/tools/browser/playwright/driver/package/lib/coreBundle.js:36974:17)\n    at async LongStandingScope._race (/home/workspace/reader/work/research/tools/browser/playwright/driver/package/lib/coreBundle.js:3619:18)\n    at async evaluateExpression (/home/workspace/reader/work/research/tools/browser/playwright/driver/package/lib/coreBundle.js:20623:12)\n    at async getResult (/home/workspace/reader/work/research/tools/browser/playwright/driver/package/lib/coreBundle.js:22084:33)\n    at async FrameSelectors._callOnSelectorInternal (/home/workspace/reader/work/research/tools/browser/playwright/driver/package/lib/coreBundle.js:22112:16)\n    at async FrameSelectors.callOnSelectorHandle (/home/workspace/reader/work/research/tools/browser/playwright/driver/package/lib/coreBundle.js:22132:25)\n    at async /home/workspace/reader/work/research/tools/browser/playwright/driver/package/lib/coreBundle.js:25330:28\n    at async _Frame.retryWithProgressAndTimeouts (/home/workspace/reader/work/research/tools/browser/playwright/driver/package/lib/coreBundle.js:25301:29)\n    at async _Frame.retryWithProgressAndBackoff (/home/workspace/reader/work/research/tools/browser/playwright/driver/package/lib/coreBundle.js:25285:16)\n    at async _Frame.fill (/home/workspace/reader/work/research/tools/browser/playwright/driver/package/lib/coreBundle.js:25412:27)",
+        "name": "Error"
+      }
+    },
+    {
+      "method": "fill",
+      "class_name": "Frame",
+      "params": {
+        "selector": "internal:role=searchbox[name=\"Search for articles\"s]",
+        "value": "zzqvnonexistent",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 688358.035,
+      "end_ms": 688471.591,
+      "error": null
+    },
+    {
+      "method": "press",
+      "class_name": "Frame",
+      "params": {
+        "selector": "internal:role=searchbox[name=\"Search for articles\"s]",
+        "key": "Enter",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 688486.032,
+      "end_ms": 689428.105,
+      "error": null
+    },
+    {
+      "method": "waitForTimeout",
+      "class_name": "Frame",
+      "params": {
+        "waitTimeout": 1500
+      },
+      "start_ms": 689443.563,
+      "end_ms": 690949.206,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 691021.283,
+      "end_ms": 691674.764,
+      "error": null
+    },
+    {
+      "method": "fill",
+      "class_name": "Frame",
+      "params": {
+        "selector": "internal:role=searchbox[name=\"Search for articles\"s]",
+        "value": "",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 726429.055,
+      "end_ms": 726504.552,
+      "error": null
+    },
+    {
+      "method": "press",
+      "class_name": "Frame",
+      "params": {
+        "selector": "internal:role=searchbox[name=\"Search for articles\"s]",
+        "key": "Enter",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 726506.206,
+      "end_ms": 727078.878,
+      "error": null
+    },
+    {
+      "method": "waitForTimeout",
+      "class_name": "Frame",
+      "params": {
+        "waitTimeout": 1200
+      },
+      "start_ms": 727083.189,
+      "end_ms": 728283.389,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 728291.393,
+      "end_ms": 728678.715,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": "internal:role=link[name=\"Spotlight on Plants\"s]",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 729061.278,
+      "end_ms": 729683.774,
+      "error": null
+    },
+    {
+      "method": "waitForTimeout",
+      "class_name": "Frame",
+      "params": {
+        "waitTimeout": 1200
+      },
+      "start_ms": 729686.385,
+      "end_ms": 730886.343,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 730889.637,
+      "end_ms": 731218.601,
+      "error": null
+    }
+  ]
+}

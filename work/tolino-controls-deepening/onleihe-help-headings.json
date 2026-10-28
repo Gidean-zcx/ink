@@ -1,0 +1,71 @@
+[
+  {
+    "title": "Produkte",
+    "tag": "h2"
+  },
+  {
+    "title": "Vorteile",
+    "tag": "h2"
+  },
+  {
+    "title": "News I Events",
+    "tag": "h2"
+  },
+  {
+    "title": "tolino Sleepscreens",
+    "tag": "h3"
+  },
+  {
+    "title": "tolino Lesetipps",
+    "tag": "h3"
+  },
+  {
+    "title": "tolino eBook-Bestseller",
+    "tag": "h3"
+  },
+  {
+    "title": "tolino EN eBook-Bestseller",
+    "tag": "h3"
+  },
+  {
+    "title": "Presse",
+    "tag": "h2"
+  },
+  {
+    "title": "Service",
+    "tag": "h2"
+  },
+  {
+    "title": "Anleitungen | eReader",
+    "tag": "h3"
+  },
+  {
+    "title": "Anleitungen | tolino tab",
+    "tag": "h3"
+  },
+  {
+    "title": "Current Category: FAQ",
+    "tag": "h3"
+  },
+  {
+    "title": "FAQ | eReader & Zubehör",
+    "tag": "h4"
+  },
+  {
+    "title": "Current Category: FAQ | Onleihe",
+    "tag": "h4"
+  },
+  {
+    "title": "Onleihe auf tolino eReader einrichten",
+    "tag": "h1",
+    "class": "entry-title"
+  },
+  {
+    "title": "Holen Sie sich die App:",
+    "tag": "h3"
+  },
+  {
+    "title": "Bleiben Sie in Kontakt mit uns:",
+    "tag": "h3"
+  }
+]

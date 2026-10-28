@@ -1,0 +1,21 @@
+{
+  "order": 9,
+  "entry_id": "INO-basic--saved-read-later--can-i-receive-reminders-about-saved-articles",
+  "title": "Can I receive reminders about saved articles?",
+  "url": "https://www.inoreader.com/help/basic/saved-read-later/can-i-receive-reminders-about-saved-articles",
+  "checked_on": "2026-10-27",
+  "http_status": 200,
+  "final_url": "https://www.inoreader.com/help/basic/saved-read-later/can-i-receive-reminders-about-saved-articles",
+  "acquisition": "one_anonymous_normal_GET",
+  "raw_path": "work/research/batch41-inoreader-help/09-INO-basic--saved-read-later--can-i-receive-reminders-about-saved-articles.html",
+  "headers_path": "work/research/batch41-inoreader-help/09-INO-basic--saved-read-later--can-i-receive-reminders-about-saved-articles.headers.json",
+  "raw_sha256": "05385c28b9e69c257db487d7f8ad0999959a3ddbaeb631ac23cb651deb4f7f12",
+  "bytes": 142990,
+  "status": "body_obtained",
+  "body_status": "extracted_not_yet_root_read",
+  "body_path": "work/research/batch41-inoreader-help/09-INO-basic--saved-read-later--can-i-receive-reminders-about-saved-articles.body.txt",
+  "body_sha256": "e8f58ca39dc72556d8a11b427427567fde86a7819fb8156df7310eb1ac0ab6c3",
+  "body_chars": 104,
+  "links": [],
+  "images": []
+}

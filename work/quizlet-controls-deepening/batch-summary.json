@@ -1,0 +1,17 @@
+{
+  "new_E": 17,
+  "new_F": 3,
+  "old_flows_with_proposals": [
+    "02",
+    "04",
+    "07",
+    "08"
+  ],
+  "old_field_proposals": 16,
+  "inventory_parents": 4,
+  "inventory_articles": 64,
+  "inventory_partial_topics": 24,
+  "visual_observed": false,
+  "hands_on": false,
+  "new_formal_artifacts": 0
+}

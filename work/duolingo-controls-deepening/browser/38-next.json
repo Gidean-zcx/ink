@@ -1,0 +1,58 @@
+{
+  "name": "38-next",
+  "url": "https://www.duolingo.com/lesson",
+  "title": "Duolingo - Learn French with lessons that work",
+  "utc": "2026-10-26T17:53:43.497520+00:00",
+  "text": "4\nNEW WORD\nWrite this in English\nMadame, un thé ?\ntea\nsir\nMa'am\nsome\nSKIP\nCHECK",
+  "buttons": [
+    {
+      "text": "",
+      "aria": null,
+      "test": "quit-button",
+      "visible": true
+    },
+    {
+      "text": "",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "tea",
+      "aria": null,
+      "test": "tea-challenge-tap-token",
+      "visible": true
+    },
+    {
+      "text": "sir",
+      "aria": null,
+      "test": "sir-challenge-tap-token",
+      "visible": true
+    },
+    {
+      "text": "Ma'am",
+      "aria": null,
+      "test": "Ma'am-challenge-tap-token",
+      "visible": true
+    },
+    {
+      "text": "some",
+      "aria": null,
+      "test": "some-challenge-tap-token",
+      "visible": true
+    },
+    {
+      "text": "SKIP",
+      "aria": null,
+      "test": "player-skip",
+      "visible": true
+    },
+    {
+      "text": "CHECK",
+      "aria": null,
+      "test": "player-next",
+      "visible": true
+    }
+  ],
+  "inputs": []
+}

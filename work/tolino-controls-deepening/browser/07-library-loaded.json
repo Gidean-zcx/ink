@@ -1,0 +1,28 @@
+{
+  "name": "07-library-loaded",
+  "url": "https://meine.onleihe.de/welcome",
+  "title": "Willkommen | Onleihe",
+  "utc": "2026-10-26T18:37:51.468855+00:00",
+  "text": "Herzlich willkommen in der Onleihe – deine digitale Bibliothek!\nBitte wähle zuerst deine Bibliothek aus, um dich anmelden und die Inhalte nutzen zu können.\nMeine Bibliothek wählen\n\nHilfe zur Onleihe\n© 2026 divibib | Onleihe Version 3.17.0\nImpressum\nDatenschutz\nDiese Website verwendet Cookies\nDiese Website verwendet Cookies - nähere Informationen dazu und zu Deinen Rechten als Benutzer findest du in unserer \nDatenschutzerklärung\n. Klicke auf \"Alle akzeptieren\", um Cookies zu akzeptieren und direkt unsere Website besuchen zu können.\n\nNotwendig\n\nStatistik\nNur Notwendige\nAlle akzeptieren\nImpressum\nDatenschutz",
+  "buttons": [
+    {
+      "text": "Meine Bibliothek wählen",
+      "aria": "Meine Bibliothek wählen",
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "Nur Notwendige",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "Alle akzeptieren",
+      "aria": null,
+      "test": null,
+      "visible": true
+    }
+  ],
+  "inputs": []
+}

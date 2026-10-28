@@ -1,0 +1,410 @@
+{
+  "name": "10-selection",
+  "at": "2026-10-26T20:53:25.237024+00:00",
+  "url": "https://cdn.britannica.com/11/288011-184-BF60C826/default.html?autoplay=1",
+  "text": "slide: HClue1\nBack\nPause / Play audio\nBack\nMusic\nMute label audio\nSee clue\nnotepad icon 1\nFirefighter\nCrossing guard\nMail carrier\nLibrarian\nDoctor\nFood truck worker\nConstruction worker\nPolice officer",
+  "controls": [
+    {
+      "tag": "BUTTON",
+      "text": "Back",
+      "aria": "Back",
+      "title": "",
+      "id": "acc-5o4a8xtIf6l",
+      "visible": true
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Pause / Play audio",
+      "aria": "Pause / Play audio",
+      "title": "",
+      "id": "acc-6r4B0mnNHyQ",
+      "visible": true
+    },
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": "Magnifying glass",
+      "title": "",
+      "id": "acc-6HlTFodyDRQ",
+      "visible": true
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Back",
+      "aria": "Back",
+      "title": "",
+      "id": "acc-5kIoxHHTYZS",
+      "visible": true
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Music",
+      "aria": "Music",
+      "title": "",
+      "id": "acc-6FzmYTuQMzs",
+      "visible": true
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Mute label audio",
+      "aria": "Mute label audio",
+      "title": "",
+      "id": "acc-650vPcrVfLv",
+      "visible": true
+    },
+    {
+      "tag": "BUTTON",
+      "text": "See clue",
+      "aria": "See clue",
+      "title": "",
+      "id": "acc-60cvmCQLPll",
+      "visible": true
+    },
+    {
+      "tag": "BUTTON",
+      "text": "notepad icon 1",
+      "aria": "notepad icon 1",
+      "title": "",
+      "id": "acc-5a4YMHy1trf",
+      "visible": true
+    },
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": "notepad icon 1",
+      "title": "",
+      "id": "acc-5pqQ1aXi3LT",
+      "visible": true
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Firefighter",
+      "aria": "Firefighter",
+      "title": "",
+      "id": "acc-5myfPPBJ81G",
+      "visible": true
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Crossing guard",
+      "aria": "Crossing guard",
+      "title": "",
+      "id": "acc-5wnLmQBHySk",
+      "visible": true
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Mail carrier",
+      "aria": "Mail carrier",
+      "title": "",
+      "id": "acc-5VssPTAj7BU",
+      "visible": true
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Librarian",
+      "aria": "Librarian",
+      "title": "",
+      "id": "acc-6ar9PDOOxMO",
+      "visible": true
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Doctor",
+      "aria": "Doctor",
+      "title": "",
+      "id": "acc-5eOtzYfpi7S",
+      "visible": true
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Food truck worker",
+      "aria": "Food truck worker",
+      "title": "",
+      "id": "acc-5lRcMM9S5St",
+      "visible": true
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Construction worker",
+      "aria": "Construction worker",
+      "title": "",
+      "id": "acc-6S4qyh60cYS",
+      "visible": true
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Police officer",
+      "aria": "Police officer",
+      "title": "",
+      "id": "acc-5hxI0OKDJs9",
+      "visible": true
+    },
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": null,
+      "title": "",
+      "id": "",
+      "visible": false
+    }
+  ],
+  "media": [
+    {
+      "tag": "VIDEO",
+      "paused": true,
+      "time": 0,
+      "duration": 0.04644,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "VIDEO",
+      "paused": true,
+      "time": 0,
+      "duration": 0.04644,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 0.1945,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 0.1945,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 0.1945,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 0.1945,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 0.1945,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 0.1945,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 0.1945,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 0.1945,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 0.1945,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 0.1945,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 0.1945,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 0.1945,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 1.359501,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 0.962177,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 0.689524,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 1.100635,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 1.439637,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 1.188299,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 1.241361,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 1.448617,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 2.635465,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 2.635465,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 2.635465,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 2.635465,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 2.635465,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 2.635465,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 2.635465,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 10.282041,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 6.343039,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 6.319909,
+      "ended": false,
+      "error": null
+    }
+  ]
+}

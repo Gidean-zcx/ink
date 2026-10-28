@@ -1,0 +1,66 @@
+[
+  {
+    "flow_id": "F-M022-01",
+    "source_batch": "docs/research/interaction-library/batches/vocab-coverage.csv",
+    "field": "evidence_ids",
+    "before": "E-BCZH-02",
+    "after": "E-BCZH-02;E-BDCQ-01",
+    "reason": "E-BDCQ-01仅限定型号适用性，不提供Mini/Max操作；旧任务深度不变"
+  },
+  {
+    "flow_id": "F-M022-01",
+    "source_batch": "docs/research/interaction-library/batches/vocab-coverage.csv",
+    "field": "gaps",
+    "before": "型号映射、解锁后状态",
+    "after": "型号映射、解锁后状态、长按冲突未知；dcj2的扫描笔圆键1秒不是Mini锁定操作证据",
+    "reason": "E-BDCQ-01仅限定型号适用性，不提供Mini/Max操作；旧任务深度不变"
+  },
+  {
+    "flow_id": "F-M022-01",
+    "source_batch": "docs/research/interaction-library/batches/vocab-coverage.csv",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27",
+    "reason": "E-BDCQ-01仅限定型号适用性，不提供Mini/Max操作；旧任务深度不变"
+  },
+  {
+    "flow_id": "F-M022-02",
+    "source_batch": "docs/research/interaction-library/batches/vocab-coverage.csv",
+    "field": "evidence_ids",
+    "before": "E-BCZH-03;E-BDCD-01",
+    "after": "E-BCZH-03;E-BDCD-01;E-BDCQ-01",
+    "reason": "E-BDCQ-01仅限定型号适用性，不提供Mini/Max操作；旧任务深度不变"
+  },
+  {
+    "flow_id": "F-M022-02",
+    "source_batch": "docs/research/interaction-library/batches/vocab-coverage.csv",
+    "field": "gaps",
+    "before": "官方按键规则、长短按及状态作用、进入/答错/误斩撤销/结束、第二页、复习与同步影响未知；固件和 App 构建未知",
+    "after": "官方按键规则、长短按及状态作用、进入/答错/误斩撤销/结束、第二页、复习与同步影响未知；固件和App构建未知；dcj2超级单词机帮助不能补Max流程",
+    "reason": "E-BDCQ-01仅限定型号适用性，不提供Mini/Max操作；旧任务深度不变"
+  },
+  {
+    "flow_id": "F-M022-03",
+    "source_batch": "docs/research/interaction-library/batches/vocab-coverage.csv",
+    "field": "evidence_ids",
+    "before": "E-BCZH-01;E-BCDVC-01;E-BCDVC-02",
+    "after": "E-BCZH-01;E-BCDVC-01;E-BCDVC-02;E-BDCQ-01",
+    "reason": "E-BDCQ-01仅限定型号适用性，不提供Mini/Max操作；旧任务深度不变"
+  },
+  {
+    "flow_id": "F-M022-03",
+    "source_batch": "docs/research/interaction-library/batches/vocab-coverage.csv",
+    "field": "gaps",
+    "before": "历史型号适用性、首次绑定、缓存、取消/断网、同步对象/冲突与恢复未知",
+    "after": "历史型号适用性、首次绑定、缓存、取消/断网、同步对象/冲突与恢复未知；dcj2离线打卡/收藏/解绑条款未证实适用Mini/Max",
+    "reason": "E-BDCQ-01仅限定型号适用性，不提供Mini/Max操作；旧任务深度不变"
+  },
+  {
+    "flow_id": "F-M022-03",
+    "source_batch": "docs/research/interaction-library/batches/vocab-coverage.csv",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27",
+    "reason": "E-BDCQ-01仅限定型号适用性，不提供Mini/Max操作；旧任务深度不变"
+  }
+]

@@ -1,0 +1,22 @@
+{
+  "name": "08-after-source",
+  "url": "https://www.duolingo.com/welcome?welcomeStep=learningReason",
+  "title": "Duolingo - Learn French with lessons that work",
+  "utc": "2026-10-26T17:40:19.954216+00:00",
+  "text": "Why are you learning French?\nWhy are you learning French?\nPrepare for travel\nConnect with people\nSpend time productively\nSupport my education\nJust for fun\nBoost my career\nOther\nCONTINUE",
+  "buttons": [
+    {
+      "text": "",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "CONTINUE",
+      "aria": null,
+      "test": "funboarding-continue-button",
+      "visible": true
+    }
+  ],
+  "inputs": []
+}

@@ -1,0 +1,16 @@
+{
+  "source_home_url": "https://www.xiaoyuanyingjian.com/#/S6",
+  "source_frontend_path": "work/learning-hardware/official-main.js",
+  "source_frontend_sha256": "f3e9acdba2af4c5de5cd342a81d0300d57c5748d868c75338b98d1f112d092ec",
+  "extraction_pattern": "https://[^\" ]*smart_camera_pc_1715653479252[^\" ]*\\.mp4",
+  "media_url": "https://solar-online.fbcontent.cn/megrez-online/megrez-alkaid/public/20240514/smart_camera_pc_1715653479252_8b72001-136b-1cc-bff8-c24c56f63bb.mp4",
+  "capture_policy": {
+    "anonymous": true,
+    "muted": true,
+    "audio_listened": false,
+    "mp4_downloaded": false,
+    "max_seek_points": 8,
+    "continuous_observation": false,
+    "product_operation": false
+  }
+}

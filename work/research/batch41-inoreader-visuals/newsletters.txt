@@ -1,0 +1,196 @@
+Newsletters - read email newsletters in your RSS reader | Inoreader
+inoreader-logo
+Start 15-Day Trial
+Home
+Features
+Enterprise
+Pricing
+Blog
+Contact
+RSS tools
+Free tools
+Feed validatorValidate a feed for errors
+Podcast validatorGet a podcast listed everywhere
+Feed analyticsSee how a feed performs
+Feed finderFind the feeds of any website
+OPML checkerCheck and repair an OPML export
+All RSS tools
+Feed validator
+Inoreader fetches the feed the way a reader does, reports what is wrong and tells you exactly what to change.
+Open the validator
+Podcast validator
+Inoreader fetches a podcast feed, its newest episode files and the artwork, and checks everything Apple Podcasts, Spotify and the apps require.
+Open the podcast validator
+Feed analytics
+See how many Inoreader readers follow a feed, how it ranks in its topic and how reliably it delivers new posts.
+Open feed analytics
+Feed finder
+Paste a website's address and Inoreader lists the feeds it publishes, for you to copy or follow in one click.
+Open the finder
+OPML checker
+Upload an OPML export and see which of its feeds still work, which fail, which moved and which are listed twice.
+Open the checker
+All RSS tools →
+Sign in
+Create account
+Features
+/
+Newsletters
+Read your newsletters in Inoreader
+Inoreader gives each newsletter an email address of its own, and every issue arrives as an article next to the sites you follow. You read, search and organize newsletters the same way as the rest of your feeds.
+See pricing
+ProPro includes 20 newsletter feeds, and more are available as an add-on.
+TeamTeam and Team Intelligence plans include newsletter feeds, pooled across the team.
+Keep newsletters out of your inbox
+When you move a newsletter to Inoreader, it gets an email address that belongs to one feed in your account. You subscribe with that address on the sender's site, and from then on every issue arrives in that feed instead of your inbox. Your inbox stays free for mail from people, and the newsletters wait until you have time for them.
+An address for each newsletter
+Every newsletter feed has its own address, so newsletters never mix and you can stop one without touching the others.
+Filters and rules
+Filters keep the issues that mention what you care about, and rules can tag, save, forward or summarize them as they arrive.
+Search across every issue
+Search finds a sentence from an issue you read months ago, which no inbox does well.
+Newsletters next to your feeds
+Newsletters share one list with the sites, podcasts and channels you follow, and email digests can include them too.
+Set it up in a minute
+Open Add feed and choose Newsletter.
+Give the feed the newsletter's name and create it. Inoreader shows you the address it made for the feed.
+Subscribe on the sender's site with that address, then confirm the subscription from the first email, which arrives in the new feed.
+Read the issues as articles. You can put the feed in a folder, filter it and add rules, just as with any other feed.
+Use cases
+A calmer inbox
+Move every newsletter to Inoreader and keep your inbox for mail that needs an answer. You read the issues when it suits you, not when they arrive.
+Industry monitoring
+Filter trade newsletters for a competitor or a product name, and let a rule forward the matching issue to your team the same morning.
+A searchable archive
+Keep years of issues from the newsletters you trust in one place, where you can find any of them in seconds.
+Unsubscribe in one click
+Unfollow a newsletter feed and its address stops accepting mail, which is the quickest way to unsubscribe from anything. The issues you collected stay for 90 days in case you change your mind.
+Frequently asked questions
+How do I turn a newsletter into an RSS feed?
+Create a newsletter feed in Inoreader and subscribe to the newsletter with the address it gives you. Every issue the sender mails then arrives as an article in that feed. The feed works like any other feed, and it has an RSS output if you want one.
+Does the newsletter still reach my inbox?
+Only if your own address stays subscribed as well. Most people subscribe with the Inoreader address alone, so their inbox stays clear and the newsletter waits with the rest of their reading.
+Can I use one address for several newsletters?
+You can, but one address per newsletter keeps them apart. Each newsletter then has its own feed, folder, filters and rules, and unfollowing one never affects the others.
+Can rules and filters work on newsletters?
+Yes. A newsletter feed is a feed like any other, so filters keep or hide issues by keyword, rules tag, save, forward or summarize them, and search finds them later.
+What happens when I unfollow a newsletter feed?
+Its address stops accepting mail. The issues you collected are kept for 90 days, so nothing is lost if you follow the newsletter again within that time. After 90 days they are deleted.
+How many newsletter feeds do I get?
+The Pro plan includes 20, and you can add more. Team and Team Intelligence plans include newsletter feeds, shared across the whole team.
+Related features
+Rules
+Automate what happens to every new article
+Filters
+Read only the articles you want
+Email digests
+Send the articles that matter to anyone by email
+Help center
+What are newsletter feeds?
+How do I subscribe to a newsletter with Inoreader?
+Can I process newsletters with rules and filters?
+What happens if I unfollow a newsletter feed?
+Blog
+A better way to keep up with newsletters
+Declutter Your Inbox. Subscribe to Email Newsletters Straight Into Inoreader
+Build your own newsfeed
+Ready to give it a go?
+Start a 14-day trial, no credit card required.
+Create account
+With Inoreader, content comes to you the minute it's available.
+Follow websites, social media feeds, podcasts, blogs, and newsletters. Enjoy what's important to you, all in one place.
+With Inoreader, content comes to you the minute it's available.
+Follow websites, social media feeds, podcasts, blogs, and newsletters. Enjoy what's important to you, all in one place.
+Create account
+Product
+Features
+Pricing
+Enterprise
+Mobile apps
+Browser extension
+Inoreader alternatives
+RSS tools
+All tools
+Feed finder
+Feed analytics
+Top RSS feeds
+Feed validator
+Podcast validator
+Feed viewer
+OPML checker
+Company
+About us
+Blog
+Help center
+Developer portal
+Contact us
+Brand portal
+Service status
+Legal
+Terms of Service
+Privacy Policy
+Security commitment
+© 2026 Innologica Ltd
+We use cookies to enhance your Inoreader experience. By using our website, you agree to our use of cookies.
+Access cookie settings
+OK, I agree
+×
+Sign in
+Use a different account
+Sign in with a passkey
+Other sign-in methods
+Change user
+Passkey sign-in was canceled or couldn't be completed.
+Don't have a passkey yet? Sign in with your password first, then add one in your account settings.
+Sign in
+Email address:
+Please enter Email
+Password
+Please enter password
+Remember me
+Forgot password?
+Sign in
+Sign in with a passkey
+Passkey sign-in was canceled or couldn't be completed
+Don't have a passkey yet? Sign in with your password first, then add one in your account settings.
+Or simply sign in with:
+New to Inoreader? Create an account
+Create account
+With Inoreader, content comes to you.
+Sign up to browse more than 5 000 000 sources and build the ultimate newsfeed!
+Create account
+Don't have an account?
+Create one now
+×
+Create account
+Email address
+Please enter email
+Password
+Please enter password
+Create account
+Or simply sign in with:
+Already have an account? Sign in.
+Sign in
+Already have an account?
+Enter your profile and access your feeds now.
+Sign in
+Already have an account?
+Sign in
+×
+Request Quote
+Name
+Please enter name
+Email
+Please provide valid email
+Company                    Optional
+Industry                    Optional
+Select from listMedia and PublishingPharmaceuticalsCybersecurityTelecommunicationsIT and SoftwareFinance and BankingTransport and LogisticsMarketing and PRPublic AuthoritiesInternational OrganizationsResearchEducation ServicesOther
+Position                    Optional
+Message
+Please enter message
+I understand and accept the Inoreader Privacy
+Policy
+You must accept the privacy policy
+Send message
+Thank you for your query. Our team will review the details and get back to you shortly.
+Go to homepage

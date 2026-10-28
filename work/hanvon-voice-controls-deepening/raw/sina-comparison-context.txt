@@ -1,0 +1,162 @@
+汉王N10 Pro二代对比科大讯飞X3 Pro_原创_新浪众测
+IMAGE 1 {'src': 'http://n.sinaimg.cn/tech/zcapp2018/zclogo.png?v=3.9.60', 'alt': '科技众测'}
+首页
+试用
+原创
+专题
+话题
+商城
+商务合作
+投稿
+搜索
+IMAGE 2 {'src': '/static/images/app/app_new.png', 'width': '36', 'height': '22'}
+APP
+IMAGE 3 {'src': '/static/images/pc-user.png', 'class': 'login-pic'}
+登录
+注册
+IMAGE 4 {'src': 'https://zhongces3.sina.com.cn/products/202510/5662e29dd5e6bc5da3ae29a83776dd71.jpeg'}
+汉王N10 Pro二代对比科大讯飞X3 Pro
+IMAGE 5 {'title': 'MoresureMoresure', 'alt': 'MoresureMoresure', 'width': '30', 'height': '30', 'src': 'https://tvax4.sinaimg.cn/crop.0.0.1500.1500.50/91511281ly8fv3lgqkie6j215o15o4ie.jpg?KID=imgbed,tva&Expires=1793074775&ssig=f9xFyKJBaY'}
+MoresureMoresure
+2025-11-04 12:08
+如今电纸书已经全面升级成办公本了，在高端电纸书市场里，汉王和科大讯飞是绝对的巨头，以汉王N10Pro二代为例，出色的显示效果、智能化系统、强劲的硬件配置加上丰富的AI功能，可以称得上是全能型选手，不少网友选购2500-4000价位的智能电纸书产品，会纠结汉王N10 Pro二代、科大讯飞X3 Pro两个型号，下文就来帮大家做个详细对比。
+外观对比
+IMAGE 6 {'class': 'zc_paste_img', 'src': 'https://zhongces3.sina.com.cn/product/20251030/65e8f87700056042c468aa381e9630f8.jpeg', 'alt': '汉王N10 Pro二代对比科大讯飞X3 Pro_新浪众测'}
+不得不感叹墨水屏办公本的发展十分迅速，汉王N10 Pro二代和科大讯飞X3 Pro机身都十分轻薄，汉王N10 Pro二代偏方正，科大讯飞X3 Pro偏细长，汉王N10 Pro二代重量约409g，科大讯飞X3 Pro重量约418g，差距不是很大。
+IMAGE 7 {'class': 'zc_paste_img', 'src': 'https://zhongces3.sina.com.cn/product/20251030/e27098d6cdffe2f884a72844804507ac.jpeg', 'alt': '汉王N10 Pro二代对比科大讯飞X3 Pro_新浪众测'}
+IMAGE 8 {'class': 'zc_paste_img', 'src': 'https://zhongces3.sina.com.cn/product/20251030/2d0e63dd7bcfd3fc37da527e6dc39799.jpeg', 'alt': '汉王N10 Pro二代对比科大讯飞X3 Pro_新浪众测'}
+汉王N10 Pro二代左侧有一排物理按键，部分支持自定义操作，屏幕可以使用电磁笔实现触控功能，科大讯飞X3 Pro正面完全舍弃了物理按键，可直接触摸操作，也支持电磁笔。
+IMAGE 9 {'class': 'zc_paste_img', 'src': 'https://zhongces3.sina.com.cn/product/20251030/9b6cb6c502a222489f3f5fb5dc0c4e29.jpeg', 'alt': '汉王N10 Pro二代对比科大讯飞X3 Pro_新浪众测'}
+裸机背面可以看到汉王N10 Pro二代使用金属背板，带有细腻的纹理，触感非常好，科大讯飞X3 Pro背部使用肤感拓印背板，一体性不错，其上方还有摄像头。
+IMAGE 10 {'class': 'zc_paste_img', 'src': 'https://zhongces3.sina.com.cn/product/20251030/cc8f4b2502aeccab169c101e6da8a2f8.jpeg', 'alt': '汉王N10 Pro二代对比科大讯飞X3 Pro_新浪众测'}
+汉王N10 Pro二代搭载自研8192级压感B6数字电磁笔，不用充电就可以直接使用，其笔身有三个物理按键，科大讯飞X3 Pro搭载使用弹性纤维笔尖的4096级压感Wacom磁吸电磁笔，其笔身有一个物理按键，两款电磁笔顶部都有橡皮擦功能，很明显汉王的电磁笔性能更强功能更多。
+IMAGE 11 {'class': 'zc_paste_img', 'src': 'https://zhongces3.sina.com.cn/product/20251030/afa7e3dea4fb628cb47cfd498084a241.jpeg', 'alt': '汉王N10 Pro二代对比科大讯飞X3 Pro_新浪众测'}
+IMAGE 12 {'class': 'zc_paste_img', 'src': 'https://zhongces3.sina.com.cn/product/20251030/f21a2c97f30a2413fbb4d174d4a25aab.jpeg', 'alt': '汉王N10 Pro二代对比科大讯飞X3 Pro_新浪众测'}
+汉王N10 Pro二代的保护套使用半包设计，主要用来保护屏幕，科大讯飞X3 Pro的保护套则使用全包设计，两款保护套均可收纳电磁笔，汉王N10 Pro二代完全体重量约504g，而科大讯飞X3 Pro则有566g，个人还是更喜欢轻薄一些的汉王N10 Pro二代。
+屏显效果
+IMAGE 13 {'class': 'zc_paste_img', 'src': 'https://zhongces3.sina.com.cn/product/20251030/a6f82e4ab07d6f451540886e66205a6d.jpeg', 'alt': '汉王N10 Pro二代对比科大讯飞X3 Pro_新浪众测'}
+汉王N10 Pro二代和科大讯飞X3 Pro的屏幕尺寸分别为10.3英寸和10.65英寸，因为汉王N10 Pro二代使用白色边框，而科大讯飞X3 Pro屏幕下方有一个白色导航条，实际观感两款屏幕尺寸差不多。
+IMAGE 14 {'class': 'zc_paste_img', 'src': 'https://zhongces3.sina.com.cn/product/20251030/303e19320f2f829d5bdd0a791e9bf79f.jpeg', 'alt': '汉王N10 Pro二代对比科大讯飞X3 Pro_新浪众测'}
+清晰度方面，两款产品的PPI均达到了300，可以说是视网膜级别，显示文字完全看不到锯齿，看小说、PDF文档等均可实现真实纸张般效果，不过仔细看，可以发现汉王N10 Pro二代的底色会更白一些，黑白对比度更好，原因是其使用【减屏层】设计，通过去除电容层和导光板，可以使墨水屏上层屏幕厚度减少31%，从而使得白色更白，看起来更清晰。
+IMAGE 15 {'class': 'zc_paste_img', 'src': 'https://zhongces3.sina.com.cn/product/20251030/fb85d093a22be98a9e5af5a7b87a9cfe.jpeg', 'alt': '汉王N10 Pro二代对比科大讯飞X3 Pro_新浪众测'}
+对比下面漫画显示效果，两款产品均支持256级灰阶显示，明暗过渡均无断层现象，汉王N10 Pro二代底色更白，看起来会更通透一些，仔细看龙卷衣服，N10 Pro二代显然更立体感，科大讯飞X3 Pro画面有点雾蒙蒙的感觉。
+IMAGE 16 {'class': 'zc_paste_img', 'src': 'https://zhongces3.sina.com.cn/product/20251030/751e94764908bab08049866b07f74d94.gif', 'alt': '汉王N10 Pro二代对比科大讯飞X3 Pro_新浪众测'}
+两款产品都具备快速刷新模式和常规模式，追求极致显示效果的话，我一般还是建议使用常规模式，也就是一页一刷新，这里对比下两者刷新速度，可以看到汉王N10 Pro二代十分跟手，基本是笔尖抬起的瞬间就有响应，而科大讯飞X3 Pro有明显的滞后感，在显示均无残留的情况下，科大讯飞X3 Pro的表现有点让人失望。
+语音转写
+IMAGE 17 {'class': 'zc_paste_img', 'src': 'https://zhongces3.sina.com.cn/product/20251030/ec788f16efcf3ee1a2f1d78ce213fa81.jpeg', 'alt': '汉王N10 Pro二代对比科大讯飞X3 Pro_新浪众测'}
+IMAGE 18 {'class': 'zc_paste_img', 'src': 'https://zhongces3.sina.com.cn/product/20251030/e12e541153e402e287a3ba5c738bdf5e.jpeg', 'alt': '汉王N10 Pro二代对比科大讯飞X3 Pro_新浪众测'}
+语音转写方面，两款墨水屏办公本可识别语言如上，汉王N10 Pro二代支持外语更多，而科大讯飞支持少数民族语更多，算是互有胜负。
+IMAGE 19 {'class': 'zc_paste_img', 'src': 'https://zhongces3.sina.com.cn/product/20251030/82fec65d54976b3a4c85c0b3da12d647.jpeg', 'alt': '汉王N10 Pro二代对比科大讯飞X3 Pro_新浪众测'}
+IMAGE 20 {'class': 'zc_paste_img', 'src': 'https://zhongces3.sina.com.cn/product/20251030/13b18ff337a89c7da60fc98ccc8839fa.jpeg', 'alt': '汉王N10 Pro二代对比科大讯飞X3 Pro_新浪众测'}
+这里以一段中文演讲对比汉王N10 Pro二代和科大讯飞X3 Pro语言识别正确率，可以看到科大讯飞X3 Pro会将一段话自行分段，不过段落并不准确，而单段落分句以及转写文字准确率，科大讯飞X3 Pro比汉王N10 Pro二代还是稍弱一些，部分语气词和重复字眼会被省略，而汉王N10 Pro二代则会根据录音把所有词组完全转写出来。
+IMAGE 21 {'class': 'zc_paste_img', 'src': 'https://zhongces3.sina.com.cn/product/20251030/f1322d1e6b6bc361c12b2c838ec738e8.jpeg', 'alt': '汉王N10 Pro二代对比科大讯飞X3 Pro_新浪众测'}
+IMAGE 22 {'class': 'zc_paste_img', 'src': 'https://zhongces3.sina.com.cn/product/20251030/b7aa42070b9ff95c41158e623ead99f9.jpeg', 'alt': '汉王N10 Pro二代对比科大讯飞X3 Pro_新浪众测'}
+汉王N10 Pro二代和科大讯飞X3 Pro均支持离线转写功能，初次使用需要下载离线转写资源包，后续在无网络的情况下就能使用转写功能了，当然有网络的话还是优先使用在线转写，结合云端处理准确度会更高，而且转写服务不限时长不限字数不收费。
+会议纪要
+IMAGE 23 {'class': 'zc_paste_img', 'src': 'https://zhongces3.sina.com.cn/product/20251030/fbdda98893cdfdd19f1f5ed5b6dfa677.gif', 'alt': '汉王N10 Pro二代对比科大讯飞X3 Pro_新浪众测'}
+职场人士或者学生党参与各种会议讲座的话，通常都是一两个小时以上，长篇大论后续手动整理纲要是非常麻烦的一件事，而墨水屏办公本可以自动帮你生成会议纪要，简单校对即可成稿。在会议纪要生成速度上，汉王N10 Pro二代可以说是占据绝对优势，如上慢一步操作汉王N10 Pro二代情况下，其生成速度也比科大讯飞X3 Pro快一大截。
+IMAGE 24 {'class': 'zc_paste_img', 'src': 'https://zhongces3.sina.com.cn/product/20251030/c876f6ee67974e946459d1a10fd5b46d.jpeg', 'alt': '汉王N10 Pro二代对比科大讯飞X3 Pro_新浪众测'}
+IMAGE 25 {'class': 'zc_paste_img', 'src': 'https://zhongces3.sina.com.cn/product/20251030/307688ee51641e42f4dfd6ec73981517.jpeg', 'alt': '汉王N10 Pro二代对比科大讯飞X3 Pro_新浪众测'}
+再对比下两款产品会议纪要的可读性和可编辑性，可以很明显的看到汉王N10 Pro二代条理性更强，演讲的内容一目了然。
+IMAGE 26 {'class': 'zc_paste_img', 'src': 'https://zhongces3.sina.com.cn/product/20251030/76d0a6adf80a63cf55589b6bd8f82670.jpeg', 'alt': '汉王N10 Pro二代对比科大讯飞X3 Pro_新浪众测'}
+再来看下汉王N10 Pro二代的语稿整理和科大讯飞X3 Pro的会议整理对比，科大讯飞X3 Pro的会议整理更像是会议纪要，提炼出来演讲的重点，我觉得和会议纪要功能完全可以合并。而汉王N10 Pro二代的语稿整理则是把原英文内容整理成更通顺的中文，查阅起来会更顺畅。
+IMAGE 27 {'class': 'zc_paste_img', 'src': 'https://zhongces3.sina.com.cn/product/20251030/de10a733ebdb5ff189ed9070a9c149d6.jpeg', 'alt': '汉王N10 Pro二代对比科大讯飞X3 Pro_新浪众测'}
+这里需要强调下，科大讯飞X3 Pro的AI功能主要是针对中文录音转写内容来处理的，有一定局限性，针对外语的话建议转写模式就选择翻译，而汉王N10 Pro二代可以直接处理英文，不用翻译，通过语稿整理也能获取中文稿件，相对更好用。
+AI助手
+IMAGE 28 {'class': 'zc_paste_img', 'src': 'https://zhongces3.sina.com.cn/product/20251030/db960cc33af9748716b4ef5758da22b4.jpeg', 'alt': '汉王N10 Pro二代对比科大讯飞X3 Pro_新浪众测'}
+汉王接入了DeepSeek、千问等大模型，在对话问答、内容创作、会议纪要、阅读理解等场景使用比较方便，AI助手还可以针对对话进行推理解答，在创作方面可以和生成文章、大纲、周报等，可有效提升办公效率。
+IMAGE 29 {'class': 'zc_paste_img', 'src': 'https://zhongces3.sina.com.cn/product/20251030/792101d51db6ab185423d2c187b2141f.jpeg', 'alt': '汉王N10 Pro二代对比科大讯飞X3 Pro_新浪众测'}
+科大讯飞内置了星火认知大模型，语音转写、智能分段确实强，AI功能也包含了各类文章生成、周报、PPT大纲等。
+系统
+IMAGE 30 {'class': 'zc_paste_img', 'src': 'https://zhongces3.sina.com.cn/product/20251030/5ed17c2da24e9fa202d3150a0afb7470.jpeg', 'alt': '汉王N10 Pro二代对比科大讯飞X3 Pro_新浪众测'}
+汉王N10 Pro和科大讯飞X3 Pro的内置商城均可下载第三方软件，比较常用的微信读书都是有的，不同之处是，科大讯飞X3 Pro的第三方软件数量30款左右，并且不支持自行安装非商城内的第三方软件，而汉王N10 Pro的第三方软件数量近百款，支持安装非商城内的第三方软件，开放系统可玩性更高。
+IMAGE 31 {'class': 'zc_paste_img', 'src': 'https://zhongces3.sina.com.cn/product/20251030/29c5bd06bfd9c9698a8b40bfcfea80e0.jpeg', 'alt': '汉王N10 Pro二代对比科大讯飞X3 Pro_新浪众测'}
+还有一点，汉王N10 Propro二代内置超1300本精品书籍，总价值过万，每月有40种免费期刊可随时阅读，资源更丰富，更适合喜欢墨水屏阅读的用户。
+总结
+汉王N10Pro二代功在屏幕显示、屏幕响应、转写能力、会议纪要功能、应用生态以及电磁笔方面有不小优势，其内置6500mAh还可实现超长续航，价格方面，参与政府补贴的话，含皮套版本在2700元左右，性价比非常高。科大讯飞X3 Pro转写识别能力也不错，但是部分功能锁中文，对于外语场景用户来说可能会不太方便，配置上，科大讯飞X3 Pro有500W后置扫描摄像头、支持指纹识别、支持震动、支持手触，细节功能更丰富。价格方面，参与政府补贴的话，含皮套版本价格在3700元左右。总的来说，两款产品功能方面有非常大的重叠，差异点也非常明显，结合售价来看，不知道各位更倾向于哪款？
+（声明: 本文著作权归作者本人和新浪众测共同所有，未经许可不得转载。本文仅代表作者观点，不代表新浪众测立场。）
+0
+0
+一直申请不到试用资格？
+投稿优质的原创内容会增加试用机会哦~
+去投稿
+我要投稿
+原创推荐
+IMAGE 32 {'src': 'https://zhongces3.sina.com.cn/products/202609/90a94daaa95a0601668eb538d0dec413.jpeg', 'alt': '乔思伯X400CG+TM360+安耐美白金竞蝠PK1000W', 'style': 'width:120px; height:80px;'}
+乔思伯X400CG+TM360+安耐美白金竞蝠PK1000W
+09-28
+IMAGE 33 {'alt': 'MoresureMoresure', 'width': '30', 'height': '30', 'src': 'https://tvax4.sinaimg.cn/crop.0.0.1500.1500.50/91511281ly8fv3lgqkie6j215o15o4ie.jpg?KID=imgbed,tva&Expires=1793074775&ssig=f9xFyKJBaY'}
+MoresureMoresure
+IMAGE 34 {'src': 'https://zhongces3.sina.com.cn/products/202609/1aa0366bbd4d3ecfd94ec1cf12d0edd8.jpeg', 'alt': '32G大内存省心之选，华硕天选7X台式机评测', 'style': 'width:120px; height:80px;'}
+32G大内存省心之选，华硕天选7X台式机评测
+09-24
+IMAGE 35 {'alt': 'MoresureMoresure', 'width': '30', 'height': '30', 'src': 'https://tvax4.sinaimg.cn/crop.0.0.1500.1500.50/91511281ly8fv3lgqkie6j215o15o4ie.jpg?KID=imgbed,tva&Expires=1793074775&ssig=f9xFyKJBaY'}
+MoresureMoresure
+IMAGE 36 {'src': 'https://zhongces3.sina.com.cn/products/202609/9a78dab4817c5e6b43f9355c377e8e9e.jpeg', 'alt': '七彩虹iGame X870E VULCAN W OC V14白火神', 'style': 'width:120px; height:80px;'}
+七彩虹iGame X870E VULCAN W OC V14白火神
+09-24
+IMAGE 37 {'alt': 'MoresureMoresure', 'width': '30', 'height': '30', 'src': 'https://tvax4.sinaimg.cn/crop.0.0.1500.1500.50/91511281ly8fv3lgqkie6j215o15o4ie.jpg?KID=imgbed,tva&Expires=1793074775&ssig=f9xFyKJBaY'}
+MoresureMoresure
+最新试用
+最新任务
+IMAGE 38 {'src': 'https://zhongces3.sina.com.cn/products/202206/31545dadb4c7ee799fdecaaa0b08af2c.png', 'alt': '618买什么了！', 'style': 'width:120px; height:80px;'}
+618买什么了！
+奖品：新浪众测积分
+关于我们
+商务合作
+商家报名
+用户条款
+网站地图
+新手指南
+RSS
+友情链接申请说明：
+1. 新浪众测愿意与各大网站交换友情链接，如您有交换需求，请先在贵网站做好新浪众测友情链接。
+链接文字：新浪众测
+链接地址：
+http://zhongce.sina.com.cn
+2.
+                                                    做好链接后，请将贵网站的名称、链接地址等信息通过邮件方式发给我们。
+Email :
+zhongce@staff.sina.com.cn
+3.
+                                                    已开通本站友情链接且内容健康，符合本站友情链接要求的网站，经新浪众测管理员严格审核后我们将在三个工作日内做好贵站的链接，谢谢！
+友情链接
+IMAGE 39 {'src': 'http://n.sinaimg.cn/tech/zcapp2018/edit_cover.png'}
+新浪科技
+黑猫投诉
+新浪数码
+新浪手机
+新浪家电
+新浪新闻
+TechWeb
+融360
+IT之家
+去哪儿网
+手机中国
+泡泡网
+IT168
+梦芭莎
+设计癖
+电脑报
+凯撒旅游
+国美买手机
+极客网
+赛普健身
+一带一路
+和讯科技
+快科技
+泪雪网
+TOM生活
+关注官方微博
+微博
+关注官方微信
+IMAGE 40 {'src': '/static/images/weixin.jpg?v=2.46', 'width': '112', 'height': '112'}
+Copyright © 1996-2026 SINA Corporation, All Rights Reserved 新浪公司   版权所有
+下载App
+分享
+商务合作
+返回
+IMAGE 41 {'src': 'http://n.sinaimg.cn/tech/zcapp2018/erm_x2.png', 'alt': ''}
+微博
+QQ空间
+微信

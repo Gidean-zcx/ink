@@ -1,0 +1,60 @@
+[
+  {
+    "flow_id": "F-M008-03",
+    "before": {
+      "flow_id": "F-M008-03",
+      "product_id": "M-008",
+      "task": "录音→分角色→纪要（D1）",
+      "depth": "D1",
+      "evidence_ids": "E-HANV-03;E-HVCD-01;E-HVCD-02",
+      "known_branches": "作者列灵动条语音转写入口及离线转写模式；只有入口/能力描述，未证明离线生成纪要或音频、转写、摘要共同保存。",
+      "gaps": "开启离线模式的菜单、录音停/继续、锁屏后台、说话人改名、原音回听、AI联网失败、原稿追溯及导出。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-008-hanvon.md",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "flow_id": "F-M008-03",
+      "product_id": "M-008",
+      "task": "录音→分角色→纪要（D1）",
+      "depth": "D1",
+      "evidence_ids": "E-HANV-03;E-HVCD-01;E-HVCD-02;E-HVVC-01;E-HVVC-02",
+      "known_branches": "作者报告入口/离线资源条件；静态图补语言、分角色、离线/转在线、暂停/结束、连接等待及纪要重新生成/分享入口；未执行。",
+      "gaps": "离线资源下载/取消、说话人纠正、结束/锁屏保存、AI失败重试、重生成覆盖、原音定位及分享导出结果仍缺；不能由图推断纪要离线。",
+      "visual_status": "static_reference_only",
+      "hands_on": "false",
+      "case_path": "cases/M-008-hanvon.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "flow_id": "F-M022-03",
+    "before": {
+      "flow_id": "F-M022-03",
+      "product_id": "M-022",
+      "task": "离线与再联网",
+      "depth": "D1",
+      "evidence_ids": "E-BCZH-01;E-BCDVC-01;E-BCDVC-02;E-BDCQ-01",
+      "known_branches": "现Mini/Max离线及多端宣传D1；2022型号未知的计划下发/同步确认/切书局部D2",
+      "gaps": "历史型号适用性、首次绑定、缓存、取消/断网、同步对象/冲突与恢复未知；dcj2离线打卡/收藏/解绑条款未证实适用Mini/Max",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-022-baicizhan-device.md",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "flow_id": "F-M022-03",
+      "product_id": "M-022",
+      "task": "离线与再联网",
+      "depth": "D1",
+      "evidence_ids": "E-BCZH-01;E-BCDVC-01;E-BCDVC-02;E-BDCQ-01;E-BCLV-01",
+      "known_branches": "Mini/Max仍宣传D1；2022型号未知文档与视频抽样补手机计划、设备锁屏/首页、同步0%、词书类别及末段词卡，未抽到同步确认/完成回执。",
+      "gaps": "历史型号/构建、绑定、同步对象/冲突、取消/断网及恢复未知；末段词卡不证明传入词本一致或离线资源完整；dcj2仍不适用。",
+      "visual_status": "static_official_images_only",
+      "hands_on": "false",
+      "case_path": "cases/M-022-baicizhan-device.md",
+      "checked_on": "2026-10-27"
+    }
+  }
+]

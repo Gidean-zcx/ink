@@ -1,0 +1,177 @@
+=== PDF PAGE 18 ===
+Related Topic
+Connecting via Wi-Fi/Connecting using a USB cable
+Connecting via Bluetooth
+Setting up the Digital Paper App
+4-597-942-19(1)
+Copyright 2016 Sony Corporation
+: Note to sync 
+: Unread document/note
+: Folder 
+: Folder to sync
+Right-click on an item to display a menu of available operations based on the situation.
+When you double-click on a folder name, the display switches to that folder.
+Folders are only displayed when the Digital Paper App is in Folder view.
+*
+18
+
+=== PDF PAGE 19 ===
+Help Guide
+Digital Paper System
+DPT-RP1/DPT-CP1
+Connecting via Wi-Fi/Connecting using a USB cable
+After the Digital Paper has been paired with the Digital Paper App, documents can be transferred and otherwise
+operated, by connecting the Digital Paper to the computer. For how to pair with the Digital Paper App, see the links in
+“Related Topics.” There are three ways to connect to a computer: “connect via Wi-Fi,” “connect via the supplied USB
+cable,” and “connect via Bluetooth®.” This section explains how to connect via Wi-Fi and connect via the supplied USB
+cable. For how to connect via Bluetooth, see the links in “Related Topics.”
+To connect via Wi-Fi
+To connect using a USB cable
+Connect the supplied USB cable to the micro USB connector on the Digital Paper and to a USB connector on the
+computer.
+Press the 
+ (home) button on the Digital Paper, and tap [Settings].
+1
+Tap [Wi-Fi] to add a check mark.
+2
+Tap [Wi-Fi Settings] and then the SSID of the desired Wi-Fi network from the [Network List].
+If the desired Wi-Fi network is not displayed, tap [Update Network List] or perform the following to add a Wi-Fi
+network.
+Tap [Settings] — [Wi-Fi Settings] — [Add Network Manually] in that order.
+* The “802.1xEAP(AES)” authentication network cannot be configured on the Digital Paper. To configure,
+please add a Wi-Fi network with the Digital Paper App.
+Use the Digital Paper App. For details, see the links in “Related Topics.”
+If you want to connect the Digital Paper to a computer while the device is in sleep mode, set [Keep Wi-Fi On
+During Sleep] to either [Always enabled] or [Enabled only when plugged in].
+3
+Connect the computer to the same network as the Digital Paper.
+Communication is not possible if you connect the computer and the Digital Paper to different networks.
+4
+19
+
+=== PDF PAGE 20 ===
+To check the connection status
+Launch the Digital Paper App on the computer. If [Connected] is displayed in the upper left portion of the screen, the
+Digital Paper and the computer are properly connected.
+Hint
+When removing the USB cable, close the Digital Paper App before doing so.
+Related Topic
+Connecting via Bluetooth
+Connecting a second and subsequent Digital Paper
+Setting up the Digital Paper App
+Changing the Digital Paper settings using the Digital Paper App
+4-597-942-19(1)
+Copyright 2016 Sony Corporation
+20
+
+=== PDF PAGE 21 ===
+Help Guide
+Digital Paper System
+DPT-RP1/DPT-CP1
+Connecting via Bluetooth
+To make a Bluetooth connection with your computer, you must first complete Bluetooth pairing (device registration).
+Once pairing is complete, you can operate the Digital Paper from your computer the next time you use the Digital Paper
+if the Bluetooth function of the Digital Paper is turned on. (When the Digital Paper App is launched, Windows can
+automatically connect to the Bluetooth-paired Digital Paper.) 
+Perform the steps below to pair.
+To connect to the Digital Paper from your computer
+For Windows 
+When setting [Bluetooth automatic connection] on the Digital Paper App to on: 
+Automatically connects to the Bluetooth-paired Digital Paper when the Digital Paper App is launched. 
+When setting [Bluetooth automatic connection] on the Digital Paper App to off: 
+Click [Bluetooth automatic connection] on the screen of the Digital Paper App to connect the Digital Paper.
+For Mac 
+It is unavailable to connect via Bluetooth automatically. Connect via Bluetooth using the Mac OS function. For details,
+refer to the operating instructions of the Mac.
+Notes on Bluetooth auto connection (Windows)
+Press the
+ (home) button and tap [Settings].
+1
+Tap [Bluetooth] to add a check mark.
+2
+Tap [Bluetooth Settings] — [Bluetooth Pairing] to change the Digital Paper to pairing standby mode.
+3
+Turn on the Bluetooth function on the computer and operate the computer to complete the device
+registration of the Digital Paper.
+For details, see the instruction manual for your computer.
+4
+Tap [Close] in the [Bluetooth Pairing...] dialog box on the Digital Paper to close.
+5
+21
+
+=== PDF PAGE 22 ===
+If the Digital Paper is automatically connected to the computer via Bluetooth when the computer and other devices
+are connected via Bluetooth as an access point, the other devices are disconnected from the computer. When the
+computer and other devices keep connecting via Bluetooth, set [Settings]－[Bluetooth automatic connection] of the
+Digital Paper App to off.
+When multiple Digital Papers are connected via Bluetooth, Bluetooth connection cannot be performed. Only the
+Bluetooth-paired Digital Paper can be connected.
+Hint
+If [Disabled] is set for [Keep Bluetooth Connection On During Sleep] on the Digital Paper, the Bluetooth connection is
+disconnected when the Digital Paper goes into sleep mode. After the Digital Paper is awaken from sleep mode, it will need to be
+manually reconnected (unless [Bluetooth automatic connection] is set to on when using a Windows computer).
+If you want to maintain the Bluetooth connection even when the Digital Paper goes into sleep mode, change the setting to
+[Settings] — [Bluetooth Settings] — [Keep Bluetooth Connection On During Sleep] on the Digital Paper.
+If your computer enters sleep or hibernate mode, or is turned off, the Bluetooth connection with the Digital Paper is disconnected.
+After resuming or restarting the computer, reconnect. (When your computer is a Windows computer and [Bluetooth automatic
+connection] is set to on, reconnection is not required.)
+4-597-942-19(1)
+Copyright 2016 Sony Corporation
+22
+
+=== PDF PAGE 23 ===
+Help Guide
+Digital Paper System
+DPT-RP1/DPT-CP1
+Connecting a second and subsequent Digital Paper
+Multiple Digital Paper devices can be registered to 1 user account.
+To switch the Digital Paper displayed on the Digital Paper App
+Select Digital Paper to be used via [Tools] - [Switch Digital Paper], and click [Switch].
+Note
+When multiple Digital Paper devices will be registered, files cannot be transferred at the same time. Transfer the files by
+switching the Digital Paper devices that are displayed on Digital Paper App one by one.
+Related Topic
+Connecting via Wi-Fi/Connecting using a USB cable
+Connecting via Bluetooth
+4-597-942-19(1)
+Copyright 2016 Sony Corporation
+Click [Tools] - [Switch Digital Paper] in the menu bar of the Digital Paper App.
+1
+Click [Add] and connect Digital Paper.
+2
+23
+
+=== PDF PAGE 24 ===
+Help Guide
+Digital Paper System
+DPT-RP1/DPT-CP1
+Transferring a document from a computer
+Use the Digital Paper App to transfer documents. Only PDF files can be transferred to the Digital Paper.
+Note
+If the Wi-Fi function or Bluetooth function is turned off or the USB cable is removed during the transfer, the data may be
+corrupted.
+The maximum file size for transfers is 1 GB per file.
+Data cannot be transferred while [All documents] is selected on the Digital Paper App or while search results are being displayed.
+Click [Folders] and open a folder on your Digital Paper to transfer.
+Hint
+Files can also be transferred by clicking [Transfer documents to Digital Paper] on the Digital Paper App.
+The amount of free space on the Digital Paper is displayed in the top left of the Digital Paper App screen.
+Related Topic
+Connecting via Wi-Fi/Connecting using a USB cable
+Connecting via Bluetooth
+Transferring a document to a computer
+Syncing the Digital Paper with a computer
+Changing the organization of documents/folders on the Digital Paper
+Using the print operation to transfer and display data on the Digital Paper
+4-597-942-19(1)
+Copyright 2016 Sony Corporation
+Connect the computer to the Digital Paper.
+1
+Launch the Digital Paper App on the computer.
+2
+Click [Folders] and open a folder on your Digital Paper (transfer destination).
+3
+Select a file/folder on your computer, then drag-and-drop it into the Digital Paper App.
+Multiple files/folders can be selected and transferred together.
+4
+24

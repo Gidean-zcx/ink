@@ -1,0 +1,30 @@
+[
+  {
+    "url": "https://www.iriver.jp/upload/images/FAQ/OPEN%20APK/AK1006978.jpg",
+    "status": 200,
+    "path": "work/research/batch51-integration/ak-images/AK1006978.jpg",
+    "bytes": 153340,
+    "sha256": "063a6b22a96f24572cd8e6721e6ff31d0f5b8692d3d8f498f4f7b64fa8ce81a6"
+  },
+  {
+    "url": "https://www.iriver.jp/upload/images/FAQ/OPEN%20APK/AK1006979.jpg",
+    "status": 200,
+    "path": "work/research/batch51-integration/ak-images/AK1006979.jpg",
+    "bytes": 169475,
+    "sha256": "11e6c63568eac493b167993d3c64ce78d44cbd48e0f4086b47427b1afd1f03ff"
+  },
+  {
+    "url": "https://www.iriver.jp/upload/images/FAQ/OPEN%20APK/AK1006980.jpg",
+    "status": 200,
+    "path": "work/research/batch51-integration/ak-images/AK1006980.jpg",
+    "bytes": 154828,
+    "sha256": "4c75330e0e03785a8a0f565669123f8c43426b5c2a249ccd989f8b76c389a184"
+  },
+  {
+    "url": "https://www.iriver.jp/upload/images/FAQ/OPEN%20APK/AK1006981.jpg",
+    "status": 200,
+    "path": "work/research/batch51-integration/ak-images/AK1006981.jpg",
+    "bytes": 142863,
+    "sha256": "f3ff02c2ed9f3391be75d796cc166247cb750966c692505e0d32b7f8baa0d930"
+  }
+]

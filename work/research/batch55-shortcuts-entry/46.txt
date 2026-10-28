@@ -1,0 +1,16 @@
+Copyright
+Shortcuts User Guide for iPhone and iPad Copyright © 2026 Apple Inc. All rights reserved.
+Apple, the Apple logo, AirDrop, Apple Books, Apple Pay, Apple Pencil, Apple Pencil Pro, Apple TV, Apple Watch, CarPlay, FaceTime, Handoff, HomePod, iPad, iPadOS, iPhone, iTunes, Mac, MacBook, MacBook Pro, macOS, Pages, Safari, Siri, Spotlight, Swift, and Touch Bar are trademarks of Apple Inc., registered in the U.S. and other countries and regions.
+Apple Intelligence is a trademark of Apple Inc.
+App Store, iCloud, iCloud Drive, and iTunes Store are service marks of Apple Inc., registered in the U.S. and other countries and regions.
+Apple Inc.
+One Apple Park Way
+Cupertino, CA 95014
+apple.com
+IOS is a trademark or registered trademark of Cisco in the U.S. and other countries and is used under license.
+The Bluetooth® word mark and logos are registered trademarks owned by Bluetooth SIG, Inc. and any use of such marks by Apple is under license.
+Java is a registered trademark of Oracle and/or its affiliates.
+UNIX® is a registered trademark of The Open Group.
+Other company and product names and logos mentioned herein may be trademarks of their respective companies.
+Every effort has been made to ensure that the information in this manual is accurate. Apple is not responsible for printing or clerical errors.
+Some apps are not available in all areas. App availability is subject to change.

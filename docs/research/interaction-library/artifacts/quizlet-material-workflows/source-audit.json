@@ -1,0 +1,146 @@
+{
+  "checked_on": "2026-10-27",
+  "sources": [
+    {
+      "evidence_id": "E-QZMW-01",
+      "title": "Create flashcard sets directly in Claude",
+      "url": "https://help.quizlet.com/hc/en-us/articles/49258738112525-Create-flashcard-sets-directly-in-Claude",
+      "body_locator": "L19–41",
+      "body_read_by_root": true,
+      "raw_work_path": "work/research/batch52-integration/quizlet-pages-01.txt",
+      "raw_sha256": "1f92f2c3d960da21cdef7f2ebac092c10c82ef781584e39f9f6fdd3fa056c2a3",
+      "raw_capture_kind": "web_tool_response_text_not_source_HTML",
+      "inventory_order": 2,
+      "flow_ids": [
+        "F-M021-01"
+      ],
+      "hands_on": false,
+      "visual_observed": false
+    },
+    {
+      "evidence_id": "E-QZMW-02",
+      "title": "Creating a set by scanning a document",
+      "url": "https://help.quizlet.com/hc/en-us/articles/360030936511-Creating-a-set-by-scanning-a-document",
+      "body_locator": "L17–75",
+      "body_read_by_root": true,
+      "raw_work_path": "work/research/batch52-integration/quizlet-pages-01.txt",
+      "raw_sha256": "1f92f2c3d960da21cdef7f2ebac092c10c82ef781584e39f9f6fdd3fa056c2a3",
+      "raw_capture_kind": "web_tool_response_text_not_source_HTML",
+      "inventory_order": 12,
+      "flow_ids": [
+        "F-M021-03"
+      ],
+      "hands_on": false,
+      "visual_observed": false
+    },
+    {
+      "evidence_id": "E-QZMW-03",
+      "title": "Trouble copying and saving a set",
+      "url": "https://help.quizlet.com/hc/en-us/articles/360036242411-Trouble-copying-and-saving-a-set",
+      "body_locator": "L17–20",
+      "body_read_by_root": true,
+      "raw_work_path": "work/research/batch52-integration/quizlet-pages-01.txt",
+      "raw_sha256": "1f92f2c3d960da21cdef7f2ebac092c10c82ef781584e39f9f6fdd3fa056c2a3",
+      "raw_capture_kind": "web_tool_response_text_not_source_HTML",
+      "inventory_order": 18,
+      "flow_ids": [
+        "F-M021-04"
+      ],
+      "hands_on": false,
+      "visual_observed": false
+    },
+    {
+      "evidence_id": "E-QZMW-04",
+      "title": "Combining flashcard sets",
+      "url": "https://help.quizlet.com/hc/en-us/articles/360029638892-Combining-flashcard-sets",
+      "body_locator": "L17–35",
+      "body_read_by_root": true,
+      "raw_work_path": "work/research/batch52-integration/quizlet-pages-01.txt",
+      "raw_sha256": "1f92f2c3d960da21cdef7f2ebac092c10c82ef781584e39f9f6fdd3fa056c2a3",
+      "raw_capture_kind": "web_tool_response_text_not_source_HTML",
+      "inventory_order": 19,
+      "flow_ids": [
+        "F-M021-04"
+      ],
+      "hands_on": false,
+      "visual_observed": false
+    },
+    {
+      "evidence_id": "E-QZMW-05",
+      "title": "Create flashcard sets directly in ChatGPT",
+      "url": "https://help.quizlet.com/hc/en-us/articles/44716146144909-Create-flashcard-sets-directly-in-ChatGPT",
+      "body_locator": "L19–35",
+      "body_read_by_root": true,
+      "raw_work_path": "work/research/batch52-integration/quizlet-pages-02.txt",
+      "raw_sha256": "a4850001669eb76991e3c6ebf347f1cea5be4069f1cd10ecc058e5a007ff5dc8",
+      "raw_capture_kind": "web_tool_response_text_not_source_HTML",
+      "inventory_order": 44,
+      "flow_ids": [
+        "F-M021-01"
+      ],
+      "hands_on": false,
+      "visual_observed": false
+    },
+    {
+      "evidence_id": "E-QZMW-06",
+      "title": "Using error checking options (UK)",
+      "url": "https://help.quizlet.com/hc/en-us/articles/360048331232-Using-error-checking-options-UK",
+      "body_locator": "L27–153",
+      "body_read_by_root": true,
+      "raw_work_path": "work/research/batch52-integration/quizlet-pages-02.txt",
+      "raw_sha256": "a4850001669eb76991e3c6ebf347f1cea5be4069f1cd10ecc058e5a007ff5dc8",
+      "raw_capture_kind": "web_tool_response_text_not_source_HTML",
+      "inventory_order": 63,
+      "flow_ids": [
+        "F-M021-08"
+      ],
+      "hands_on": false,
+      "visual_observed": false
+    },
+    {
+      "evidence_id": "E-QZMW-07",
+      "title": "Creating flashcard sets",
+      "url": "https://help.quizlet.com/hc/en-us/articles/360029780752-Creating-flashcard-sets",
+      "body_locator": "L19–82",
+      "body_read_by_root": true,
+      "raw_work_path": "work/research/batch52-integration/quizlet-pages-02.txt",
+      "raw_sha256": "a4850001669eb76991e3c6ebf347f1cea5be4069f1cd10ecc058e5a007ff5dc8",
+      "raw_capture_kind": "web_tool_response_text_not_source_HTML",
+      "inventory_order": 8,
+      "flow_ids": [
+        "F-M021-03",
+        "F-M021-05"
+      ],
+      "hands_on": false,
+      "visual_observed": false
+    },
+    {
+      "evidence_id": "E-QZMW-08",
+      "title": "Studying on Quizlet",
+      "url": "https://help.quizlet.com/hc/en-us/articles/360030841732-Studying-on-Quizlet",
+      "body_locator": "L31–89",
+      "body_read_by_root": true,
+      "raw_work_path": "work/research/batch52-integration/quizlet-pages-02.txt",
+      "raw_sha256": "a4850001669eb76991e3c6ebf347f1cea5be4069f1cd10ecc058e5a007ff5dc8",
+      "raw_capture_kind": "web_tool_response_text_not_source_HTML",
+      "inventory_order": 50,
+      "flow_ids": [
+        "F-M021-07",
+        "F-M021-11",
+        "F-M021-12"
+      ],
+      "hands_on": false,
+      "visual_observed": false
+    }
+  ],
+  "directories": {
+    "raw_work_path": "work/research/batch52-integration/quizlet-directories.txt",
+    "sha256": "8e65dbd9a7732c61dbf2833b5297ebb59ddae3aaf1286982fd8922c0df623d81",
+    "titles_checked": 8
+  },
+  "operation": "read_only_public_help",
+  "account_used": false,
+  "images_viewed": false,
+  "limitations": "Official documentation reconstruction only; no account linking, app execution or target device test. Source line numbers belong to the web response.",
+  "root_correction": "UK error checking is original inventory order 63, not helper report order 64; matched exact title before editing."
+}

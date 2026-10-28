@@ -1,0 +1,24 @@
+{
+  "checked_on": "2026-10-27",
+  "browser": "156.0.8078.4",
+  "desktop_viewport": {
+    "width": 1200,
+    "height": 900
+  },
+  "method": "automated_public_browser",
+  "physical_device": false,
+  "site_build": null,
+  "profile_method": "New task-specific desktop-profile directory; two subsequent browser launches reuse it. Mobile uses a new empty context.",
+  "mobile_emulation": {
+    "width": 390,
+    "height": 844,
+    "is_mobile": true,
+    "has_touch": true,
+    "device_scale_factor": 1
+  },
+  "audio_observation": "UI timer, controls, highlight and scrolling only; no audible listening, quality or output-route test",
+  "offline_test": false,
+  "screen_capture_timing": "Screenshot precedes DOM read; advancing timers may differ by 1–2 seconds.",
+  "state_text_scope": "Outer controls and iframe controls; getClientRects does not guarantee viewport intersection. Hidden/offscreen article text was excluded.",
+  "duplicate_screenshots": "Same SHA-256 shares one archived screenshot; raw_screenshot retains the original work filename."
+}

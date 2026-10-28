@@ -1,0 +1,27 @@
+[
+  {
+    "path": "docs/research/interaction-library/cases/M-040-antennapod.md",
+    "sha256": "cb8d9fad2248a19a55367c5a61d2094aabc263933ed4f6c5f36cf49df17c9542",
+    "bytes": 32290
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/antennapod-queue-controls-deepening/source-notes.md",
+    "sha256": "76023a8b5ac6214a62711bd203fd82e176fd5e2bf5a477488dd63445de13cd11",
+    "bytes": 4624
+  },
+  {
+    "path": "docs/research/interaction-library/batches/antennapod-queue-controls-deepening-coverage.csv",
+    "sha256": "9e4adfe9054b5ac6f6c748db7ab98d22d78fb57dd9eb292336d09928590420dc",
+    "bytes": 586
+  },
+  {
+    "path": "docs/research/interaction-library/batches/antennapod-queue-controls-deepening-evidence.jsonl",
+    "sha256": "b74003555c6d654d5a6794da1832663256b70db04cc77b004e50642ae0296bdc",
+    "bytes": 11591
+  },
+  {
+    "path": "docs/research/interaction-library/batches/antennapod-queue-controls-deepening-inventory.csv",
+    "sha256": "679f341ea9da38d487108a25ed13d31909f389c3fd7d72de27df282b1df51e43",
+    "bytes": 67518
+  }
+]

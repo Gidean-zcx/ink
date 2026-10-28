@@ -1,0 +1,8 @@
+How do I generate a summary?
+Open an article and click the Summarize button.
+Related questions
+What are article summaries?
+Can I use custom prompts with summaries?
+Where are summaries stored?
+Can I customize how summaries work?
+Are article summaries available in all plans?

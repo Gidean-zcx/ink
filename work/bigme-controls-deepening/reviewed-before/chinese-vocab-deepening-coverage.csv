@@ -1,0 +1,3 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M016-05,M-016,开启额外拼写题型（2023历史局部）,D2,E-BCD-01,深度模式历史迁移；轻快用户不受影响,构建未知；开关保存/即时生效/现版入口未核实,not_observed,false,cases/M-016-baicizhan.md,2026-10-26
+F-M016-06,M-016,真题查词后收藏（2022历史局部）,D2,E-BCD-02;E-BCD-05,文中义与本文标记词表；批量收藏,App总入口、空表/重复收藏、原句保留、成功反馈与复习启动未知,static_reference_only,false,cases/M-016-baicizhan.md,2026-10-26

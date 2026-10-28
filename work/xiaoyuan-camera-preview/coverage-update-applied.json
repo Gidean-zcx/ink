@@ -1,0 +1,31 @@
+[
+  {
+    "flow_id": "F-M056-01",
+    "before": {
+      "flow_id": "F-M056-01",
+      "product_id": "M-056",
+      "task": "S6 一题选题手写纠错再练结束",
+      "depth": "D1",
+      "evidence_ids": "E-XYHW-01",
+      "known_branches": "已取得官网前端S6六模块目录；页面代际与固件未核定",
+      "gaps": "年级/教材影响资源；题目实际入口、手写识别纠正、提示重试、完成及暂退恢复未知；不能套后续同名S6或旧S2",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-056-xiaoyuan-hardware.md",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "flow_id": "F-M056-01",
+      "product_id": "M-056",
+      "task": "S6 一题选题手写纠错再练结束",
+      "depth": "D1",
+      "evidence_ids": "E-XYHW-01;E-XYCP-01",
+      "known_branches": "原S6前端目录；智慧拍短片抽样见拍照批改入口/取景、另段作文点评；两片段不能串成同一题，非真实操作。",
+      "gaps": "原选题手写链、数学判错/纠正/提示重试/完成及恢复仍缺；官网动画未证准确率/保存，不能套后续S6或E1。",
+      "visual_status": "static_official_images_only",
+      "hands_on": "false",
+      "case_path": "cases/M-056-xiaoyuan-hardware.md",
+      "checked_on": "2026-10-27"
+    }
+  }
+]

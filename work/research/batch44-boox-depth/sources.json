@@ -1,0 +1,273 @@
+[
+  {
+    "id": 10701146091284,
+    "title": "Screensaver",
+    "url": "https://booxsupport.zendesk.com/hc/en-us/articles/10701146091284-Screensaver",
+    "updated_at": "2026-05-25T02:20:37Z",
+    "images": [
+      {
+        "src": "https://booxsupport.zendesk.com/hc/article_attachments/10726276107156",
+        "alt": "2.5-1.jpg"
+      },
+      {
+        "src": "https://booxsupport.zendesk.com/hc/article_attachments/10726306716820",
+        "alt": "2.5-2.jpg"
+      },
+      {
+        "src": "https://booxsupport.zendesk.com/hc/article_attachments/10726306716948",
+        "alt": "2.5-3.jpg"
+      },
+      {
+        "src": "https://booxsupport.zendesk.com/hc/article_attachments/10726276055700",
+        "alt": "2.5-4.jpg"
+      },
+      {
+        "src": "https://booxsupport.zendesk.com/hc/article_attachments/20259903948564",
+        "alt": "O-TUCP-01.jpg"
+      },
+      {
+        "src": "https://booxsupport.zendesk.com/hc/article_attachments/10726306759188",
+        "alt": "2.5-5.jpg"
+      }
+    ],
+    "links": [],
+    "sha256": "25e1081b3a202548871c11d80b0f79703a8e4c4a23e4107cf88ce5939aeaf055"
+  },
+  {
+    "id": 10701108549140,
+    "title": "Home Screen and Dock",
+    "url": "https://booxsupport.zendesk.com/hc/en-us/articles/10701108549140-Home-Screen-and-Dock",
+    "updated_at": "2026-05-24T11:30:17Z",
+    "images": [
+      {
+        "src": "https://booxsupport.zendesk.com/hc/article_attachments/10725493990676",
+        "alt": "1.1-1.jpg"
+      }
+    ],
+    "links": [],
+    "sha256": "a7402830bbf090b062b4d8927e10228df1a616c99b90d60677f669c5d68bfdc7"
+  },
+  {
+    "id": 10701630316436,
+    "title": "Screenshot",
+    "url": "https://booxsupport.zendesk.com/hc/en-us/articles/10701630316436-Screenshot",
+    "updated_at": "2025-06-09T08:20:02Z",
+    "images": [],
+    "links": [
+      {
+        "href": "https://help.boox.com/hc/en-us/articles/25213043150996-Navigate-Your-Device#title8:~:text=take%20a%20screenshot.-,Navigation%20Ball,-The%20Navigation%20Ball",
+        "target": "_blank",
+        "rel": "noopener noreferrer"
+      }
+    ],
+    "sha256": "f9f800310b0af90b21d02f79964ddf9acd4a523c54f96bbb9b338da499b6886c"
+  },
+  {
+    "id": 25403769498004,
+    "title": "Screen Recording",
+    "url": "https://booxsupport.zendesk.com/hc/en-us/articles/25403769498004-Screen-Recording",
+    "updated_at": "2025-06-09T08:20:47Z",
+    "images": [
+      {
+        "src": "https://booxsupport.zendesk.com/hc/article_attachments/25403784340116",
+        "alt": "13.2-1.jpg"
+      }
+    ],
+    "links": [],
+    "sha256": "85a37dd13a949dae3acbf546925f39639ebc0cd6bded49c73603d98388fee065"
+  },
+  {
+    "id": 10701620011540,
+    "title": "Scan Documents App",
+    "url": "https://booxsupport.zendesk.com/hc/en-us/articles/10701620011540-Scan-Documents-App",
+    "updated_at": "2025-06-09T08:19:12Z",
+    "images": [
+      {
+        "src": "https://booxsupport.zendesk.com/hc/article_attachments/10756168603796",
+        "alt": "12.1-1.jpg"
+      }
+    ],
+    "links": [],
+    "sha256": "783e952d2257b94ffca6abf4825f396d697f8f9f8a05dcc4e08b17c5fe34541b"
+  },
+  {
+    "id": 10701172864916,
+    "title": "Display Settings",
+    "url": "https://booxsupport.zendesk.com/hc/en-us/articles/10701172864916-Display-Settings",
+    "updated_at": "2026-10-08T21:10:28Z",
+    "images": [
+      {
+        "src": "https://booxsupport.zendesk.com/hc/article_attachments/10725856751508",
+        "alt": "2.4-1.jpg"
+      }
+    ],
+    "links": [],
+    "sha256": "e8eb9adeb345edcb598ffb973985eba8e4c3e463d272fdf7e6ebacfcd78c6afe"
+  },
+  {
+    "id": 10701109999636,
+    "title": "Volume",
+    "url": "https://booxsupport.zendesk.com/hc/en-us/articles/10701109999636-Volume",
+    "updated_at": "2026-05-18T07:57:10Z",
+    "images": [
+      {
+        "src": "https://booxsupport.zendesk.com/hc/article_attachments/15376514797844",
+        "alt": "2.9-1.gif"
+      },
+      {
+        "src": "https://booxsupport.zendesk.com/hc/article_attachments/25175232660116",
+        "alt": "1.10.jpg"
+      }
+    ],
+    "links": [],
+    "sha256": "b888f3f71c14927ab9d882b7e49f45acee925d42915108045e34d35abd0c4fba"
+  },
+  {
+    "id": 10701622160916,
+    "title": "Screen Mirroring",
+    "url": "https://booxsupport.zendesk.com/hc/en-us/articles/10701622160916-Screen-Mirroring",
+    "updated_at": "2025-06-06T06:34:02Z",
+    "images": [
+      {
+        "src": "https://booxsupport.zendesk.com/hc/article_attachments/27963633161108",
+        "alt": "1.12-1.jpg"
+      },
+      {
+        "src": "https://booxsupport.zendesk.com/hc/article_attachments/27963633162900",
+        "alt": "1.12-2.jpg"
+      },
+      {
+        "src": "https://booxsupport.zendesk.com/hc/article_attachments/27963693945876",
+        "alt": "1.13-3.jpg"
+      }
+    ],
+    "links": [
+      {
+        "href": "https://anydesk.com/",
+        "target": "_blank",
+        "rel": "noopener noreferrer"
+      }
+    ],
+    "sha256": "686d4df91f88ee0f4e74c4a3f9052e70f9e30f45a9450a6f6df3bddd60c33bd4"
+  },
+  {
+    "id": 10701171762452,
+    "title": "Sleep and Battery",
+    "url": "https://booxsupport.zendesk.com/hc/en-us/articles/10701171762452-Sleep-and-Battery",
+    "updated_at": "2025-06-06T06:22:52Z",
+    "images": [],
+    "links": [
+      {
+        "href": "https://help.boox.com/hc/en-us/articles/10701146091284-Desktop-and-Screensaver",
+        "target": "_blank",
+        "rel": "noopener noreferrer"
+      },
+      {
+        "href": "https://help.boox.com/hc/en-us/articles/10701146091284-Desktop-and-Screensaver",
+        "target": "_blank",
+        "rel": "noopener noreferrer"
+      }
+    ],
+    "sha256": "8d966d3ab06d48a43a6087c40c2e1f00e303734f52854bac0ef98240b5a58d14"
+  },
+  {
+    "id": 10701262170644,
+    "title": "App Management Settings",
+    "url": "https://booxsupport.zendesk.com/hc/en-us/articles/10701262170644-App-Management-Settings",
+    "updated_at": "2025-06-06T07:06:48Z",
+    "images": [
+      {
+        "src": "https://booxsupport.zendesk.com/hc/article_attachments/15194698123924",
+        "alt": "5.3-1.jpg"
+      }
+    ],
+    "links": [
+      {
+        "href": "https://help.boox.com/hc/en-us/articles/15194669819796-Work-Profile",
+        "target": "_blank",
+        "rel": "noopener"
+      }
+    ],
+    "sha256": "fbd436111ed975ac0044cd708daf2b85fe946c232505a74cccec4e11b64290e3"
+  },
+  {
+    "id": 25213043150996,
+    "title": "Navigate Your Device",
+    "url": "https://booxsupport.zendesk.com/hc/en-us/articles/25213043150996-Navigate-Your-Device",
+    "updated_at": "2026-05-26T20:22:12Z",
+    "images": [
+      {
+        "src": "https://booxsupport.zendesk.com/hc/article_attachments/25213026594836",
+        "alt": "3.4-1.jpg",
+        "width": "49%"
+      },
+      {
+        "src": "https://booxsupport.zendesk.com/hc/article_attachments/25213043126804",
+        "alt": "3.4-2.jpg",
+        "width": "49%"
+      },
+      {
+        "src": "https://booxsupport.zendesk.com/hc/article_attachments/25213026596756",
+        "alt": "1280X1280 (2).JPEG"
+      },
+      {
+        "src": "https://booxsupport.zendesk.com/hc/article_attachments/25213026596884",
+        "alt": "6ec8b6d3-bb16-4557-b978-c32d0256ceca.jpg"
+      },
+      {
+        "src": "https://booxsupport.zendesk.com/hc/article_attachments/25213043130388",
+        "alt": "1bc0078f-c6cd-48c5-8da1-99bf673fdd0f.jpg"
+      },
+      {
+        "src": "https://booxsupport.zendesk.com/hc/article_attachments/25213026597908",
+        "alt": "63a0f5f0-516d-4622-83e4-f33ccc841046.jpg"
+      },
+      {
+        "src": "https://booxsupport.zendesk.com/hc/article_attachments/25213043131796",
+        "alt": "3.1-1.gif"
+      },
+      {
+        "src": "https://booxsupport.zendesk.com/hc/article_attachments/25213043132820",
+        "alt": "3.1-2.gif"
+      },
+      {
+        "src": "https://booxsupport.zendesk.com/hc/article_attachments/25213026600468",
+        "alt": "3.1-3.gif"
+      },
+      {
+        "src": "https://booxsupport.zendesk.com/hc/article_attachments/27963689756308",
+        "alt": "2.2.gif"
+      },
+      {
+        "src": "https://booxsupport.zendesk.com/hc/article_attachments/25213026601236",
+        "alt": "3.1-4.gif"
+      },
+      {
+        "src": "https://booxsupport.zendesk.com/hc/article_attachments/25213026603924",
+        "alt": "3.2-2.gif"
+      },
+      {
+        "src": "https://booxsupport.zendesk.com/hc/article_attachments/25213043140116",
+        "alt": "3.2-6.gif"
+      },
+      {
+        "src": "https://booxsupport.zendesk.com/hc/article_attachments/25213043141268",
+        "alt": "3.2-7.gif"
+      },
+      {
+        "src": "https://booxsupport.zendesk.com/hc/article_attachments/25213043142164",
+        "alt": "3.2-1.gif"
+      },
+      {
+        "src": "https://booxsupport.zendesk.com/hc/article_attachments/25213026609556",
+        "alt": "6c1cb44b-717a-479c-a093-34709d9a9efb.gif"
+      },
+      {
+        "src": "https://booxsupport.zendesk.com/hc/article_attachments/25213043144596",
+        "alt": "9e5cf4e8-5dcb-493c-8850-b5b18186acb6.jpg"
+      }
+    ],
+    "links": [],
+    "sha256": "a0774a71e268801a6d97fc8654f4169c0006b97677b9e5d3a3eefd9ba5b77b58"
+  }
+]

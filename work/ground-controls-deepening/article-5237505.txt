@@ -1,0 +1,102 @@
+Known Issues & Bug Fixes
+Ground News Help Center
+Contact Us
+How can we help you?
+Results
+No results found
+More results
+We use cookies to analyze website traffic and help improve our visitor experience. Privacy Policy
+Reject
+Accept
+In this articleCurrent Known IssuesCurrent Known Issues (Expanded)Bug: "Edit Bias Rating" Error on Some Android DevicesTemporary FixCurrent StatusBug: "Invalid Login" Error When Using Google Sign-InTemporary FixCurrent StatusBug: Mobile App Not Loading on Some IOS and Android DevicesTemporary FixCurrent StatusBug: Wrong Headline Appearing on Mobile AppsTemporary FixCurrent StatusStill Having Trouble?Related Articles
+Home
+Fix a Problem
+News Feed Issues
+Known Issues & Bug Fixes
+Edited Wednesday, June 17 2026
+This page lists all currently known issues affecting the Ground News platform. Our development team is actively working to resolve these issues. We appreciate your patience as we work to improve your experience.
+If you're experiencing an issue not listed here or if the mentioned workaround does not temporarily resolve your problem, please contact our support team at feedback@ground.news or learn how to report an issue directly from your device here.
+Current Known Issues
+Issue
+Affected Platform
+Temporary Fix
+Current Status
+"Edit Bias Rating" Error on Some Mobile Devices
+Mobile (Android)
+Edit the source Bias Rating from a story page
+Investigating
+"Invalid Login" Error When Using Google Sign-In
+Mobile
+Reinstall the app and sign in again
+Investigating
+Mobile App Not Loading on Some Android and IOS Devices
+Mobile
+Reinstall the app and sign in again
+Investigating
+Wrong Headline Appearing on Some Mobile Devices
+Mobile
+Disable the Compact Cards setting
+Fix in progress
+Current Known Issues (Expanded)
+Bug: "Edit Bias Rating" Error on Some Android Devices
+We’re currently investigating an issue affecting some Android readers where they are unable to edit the Bias Rating for certain sources using our "Edit Bias Rating" feature.
+Temporary Fix
+If you're using our Android mobile app, you can still edit the Bias Rating for a news source:
+From the news source topic page, if a rating already exists
+From a story page, whether or not a rating already exists
+Current Status
+Our team is investigating this issue and working on a fix.
+Bug: "Invalid Login" Error When Using Google Sign-In
+We've investigated an issue affecting some readers where attempting to log in using Google Sign-in results in an error message that says, "Invalid Login"
+Temporary Fix
+If you encounter this issue, we recommend deleting and reinstalling the app, then attempting to sign in with Google again. If the issue persists after reinstalling, please reach out to our team at feedback@ground.news , and we will generate a temporary password for you to sign into your account while we investigate further.
+Current Status
+Our team is actively investigating and working on a fix.
+Bug: Mobile App Not Loading on Some IOS and Android Devices
+We’re currently investigating an issue affecting some readers where the Ground News app does not load properly on launch. The screenshot below shows the error message “Something went wrong” that may appear when the app fails to load.
+Temporary Fix
+If you encounter this issue, try reinstalling the app. To do this:
+Delete the Ground News app from your device.
+Reinstall the Ground News app from the Google Play Store or the Apple App Store.
+Log back into your account.
+This usually resolves the error message and restores normal app performance.
+Current Status
+Our team is investigating this issue and working on a fix.
+Bug: Wrong Headline Appearing on Mobile Apps
+We’re aware of an issue affecting the Compact Card mode on the Ground News iOS and Android Mobile App, where some readers may see a mismatch between the headline displayed on the Story Card and the main story’s headline in the Newsroom. Our development team has identified the cause and is actively working on a fix.
+Temporary Fix
+To avoid this issue in the meantime, you can turn off Compact Card mode by following these steps:
+Open the Ground News app.
+Navigate to Profile.
+Tap on Settings.
+Locate Compact Cards and toggle the setting off.
+Current Status
+Our team is investigating this issue and working on a fix.
+Still Having Trouble?
+If the issue continues after following these steps, our support team may be able to help investigate further. You can contact our support team at feedback@ground.news for assistance and we'd be happy to help.
+Related Articles
+My News Feed Isn't Loading
+My Bias Bar Colors Are Wrong
+Report an Issue
+Need help using Ground News?
+If you have any questions or are experiencing an issue with a feature, setting, or something not working as expected, our team can help investigate and provide support. Learn more about reporting an issue here or email us directly at feedback@ground.news
+Need help with your account or subscription?
+If you have questions about your account, subscription, billing, or payments, our support team is available to help. You can visit your Account page here or email us directly at subscriptions@ground.news
+Help us improve the Help Center
+We’re always working to make the Ground News Help Center more helpful for our readers. If you have suggestions for improving this article or notice something that could be clarified, we welcome your feedback at feedback@ground.news Please keep in mind that feedback submitted directly through Help Center article comments is not monitored for support requests, and we encourage you to contact our support team directly so we can assist you.
+Bug
+Known Issues
+Not Working
+Broken
+Help
+Was this article helpful?
+Yes
+No
+Sorry about that! Care to tell us more?
+What was unhelpful?
+Submit
+Thanks for the feedback!
+There was an issue submitting your feedback
+Please check your connection and try again.
+Cookie preferences
+Refund and Cancellation PolicyTerms and ConditionsPrivacy Policy

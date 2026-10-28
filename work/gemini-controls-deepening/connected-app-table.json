@@ -1,0 +1,1028 @@
+[
+  {
+    "category": "Communication",
+    "cells": [
+      "Contacts: Find, add, edit, and delete your contacts. Learn more.",
+      "Account type: Personal Google Account only\nAges: 18 or over\nLocation: US only\nLanguage: English only\nReview all requirements",
+      "Supported Gemini Apps\nGemini web app at gemini.google.com\nGemini mobile app\nGemini app for Windows\nSupported in\nTasks only"
+    ],
+    "links": [
+      "/gemini/answer/17100956",
+      "/gemini/answer/17100956#reqs",
+      "https://gemini.google.com"
+    ]
+  },
+  {
+    "category": "Communication",
+    "cells": [
+      "Messages: Send text messages with images using your phone’s default messaging app. Learn more.",
+      "Account types: Personal, work, or school Google Account\nAges: 13 or over\nLocations: All countries and territories where the Gemini mobile app is supported\nLanguages: All languages supported by the Gemini mobile app\nReview all requirements",
+      "Supported Gemini Apps\nGemini mobile app on Android devices only\nSupported in\nChats only"
+    ],
+    "links": [
+      "/gemini/answer/15574940",
+      "/gemini/answer/14579026#countries",
+      "/gemini/answer/14579026#languages",
+      "/gemini/answer/15574940#reqs"
+    ]
+  },
+  {
+    "category": "Communication",
+    "cells": [
+      "Phone: Make calls with your device’s calling app. Learn more.",
+      "Account types: Personal, work, or school Google Account\nAges: 13 or over\nLocations: All countries and territories where the Gemini mobile app is supported\nLanguages: All languages supported by the Gemini mobile app\nReview all requirements",
+      "Supported Gemini Apps\nGemini mobile app on Android devices only\nSupported in\nChats only"
+    ],
+    "links": [
+      "/gemini/answer/15575143",
+      "/gemini/answer/14579026#countries",
+      "/gemini/answer/14579026#languages",
+      "/gemini/answer/15575143#reqs"
+    ]
+  },
+  {
+    "category": "Communication",
+    "cells": [
+      "WhatsApp: Make calls and send messages with WhatsApp. Learn more.",
+      "Account types: Personal, work, or school Google Account\nAges: 13 or over\nLocations: All countries and territories where both the Gemini mobile app and WhatsApp app are supported\nLanguages: All languages supported by the Gemini mobile app\nReview all requirements",
+      "Supported Gemini Apps\nGemini mobile app on Android devices only\nSupported in\nChats only"
+    ],
+    "links": [
+      "/gemini/answer/15574928",
+      "/gemini/answer/14579026#languages",
+      "/gemini/answer/15574928#reqs"
+    ]
+  },
+  {
+    "category": "Design & Creativity",
+    "cells": [
+      "Adobe: Work with the Adobe suite of products, like Creative Cloud, Creative Express, Fireflies, Lightroom, and Photoshop.",
+      "Account type: Personal Google Account only\nAges: 18 or over\nLocations: All countries and territories where Gemini Apps and the third-party app are supported\nLanguage: English only",
+      "Supported Gemini Apps\nGemini web app at gemini.google.com\nGemini mobile app\nGemini app for Windows\nSupported in\nChats\nTasks"
+    ],
+    "links": [
+      "https://gemini.google.com"
+    ]
+  },
+  {
+    "category": "Design & Creativity",
+    "cells": [
+      "Canva: Create designs, manage assets, and collaborate in Canva. Learn more.",
+      "Account type: Personal Google Account only\nAges: 13 or over\nLocations: All countries and territories where Gemini Apps and Canva are supported\nLanguage: English only",
+      "Supported Gemini Apps\nGemini web app at gemini.google.com\nGemini mobile app\nGemini app for Windows\nSupported in\nChats\nTasks"
+    ],
+    "links": [
+      "/gemini/answer/17081444",
+      "https://gemini.google.com"
+    ]
+  },
+  {
+    "category": "Design & Creativity",
+    "cells": [
+      "Picsart: Create and edit images, videos, audio tracks, remove or replace backgrounds, upscale resolution, convert raster images to SVG vectors, and manage creative media with Picsart AI models.",
+      "Account type: Personal Google Account only\nAges: 18 or over\nLocations: All countries and territories where Gemini Apps and Picsart are supported\nLanguage: English only",
+      "Supported Gemini Apps\nGemini web app at gemini.google.com\nGemini app for Windows\nSupported in\nChats\nTasks"
+    ],
+    "links": [
+      "https://gemini.google.com"
+    ]
+  },
+  {
+    "category": "Design & Creativity",
+    "cells": [
+      "Squarespace: Design, build, and manage websites and content with Squarespace.",
+      "Account type: Personal Google Account only\nAges: 18 or over\nLocation: US only\nLanguage: English only",
+      "Supported Gemini Apps\nGemini web app at gemini.google.com\nGemini mobile app\nGemini app for Windows\nSupported in\nChats\nTasks"
+    ],
+    "links": [
+      "https://gemini.google.com"
+    ]
+  },
+  {
+    "category": "Design & Creativity",
+    "cells": [
+      "VistaPrint: Create custom merchandise, apparel, and marketing materials with your artwork in VistaPrint. Compare material options and bulk pricing, preview 3D product mockups, and add orders directly to your cart with a checkout link.",
+      "Account type: Personal Google Account only\nAges: 18 or over\nLocations: All countries and territories where Gemini Apps and VistaPrint are supported\nLanguage: English only",
+      "Supported Gemini Apps\nGemini web app at gemini.google.com\nGemini mobile app\nGemini app for Mac\nGemini app for Windows\nSupported in\nChats\nTasks"
+    ],
+    "links": [
+      "https://gemini.google.com"
+    ]
+  },
+  {
+    "category": "Design & Creativity",
+    "cells": [
+      "Webflow: Create and modify your site's visual design, build responsive layouts, and update your CMS content. Add structural elements, edit CSS properties, and adapt your pages across breakpoints.",
+      "Account type: Personal Google Account only\nAges: 18 or over\nLocation: US only\nLanguage: English only",
+      "Supported Gemini Apps\nGemini web app at gemini.google.com\nGemini mobile app\nGemini app for Windows\nSupported in\nChats\nTasks"
+    ],
+    "links": [
+      "https://gemini.google.com"
+    ]
+  },
+  {
+    "category": "Design & Creativity",
+    "cells": [
+      "Wix: Design custom website layouts, add functional widgets, and more. Learn more.",
+      "Account type: Personal Google Account only\nAges: 18 or over\nLocation: All countries and territories where both Gemini Apps and Wix are supported\nLanguage: English only\nReview all requirements",
+      "Supported Gemini Apps\nGemini web app at gemini.google.com\nGemini mobile app\nGemini app for Windows\nSupported in\nChats\nTasks"
+    ],
+    "links": [
+      "/gemini/answer/17081444",
+      "/gemini/answer/17081444#reqs",
+      "https://gemini.google.com"
+    ]
+  },
+  {
+    "category": "Devices & Smart Home",
+    "cells": [
+      "Device assistance (formerly Utilities): Control and manage your Android device and apps. Learn more.",
+      "Account types: Personal, work, or school Google Account\nAges: 13 or over\nLocations: All countries and territories where the Gemini mobile app is supported\nLanguages: All languages supported by the Gemini mobile app",
+      "Supported Gemini Apps\nGemini mobile app on Android devices only\nSupported in\nChats\nGemini Live"
+    ],
+    "links": [
+      "/gemini/answer/15235441",
+      "/gemini/answer/14579026#countries",
+      "/gemini/answer/14579026#languages"
+    ]
+  },
+  {
+    "category": "Devices & Smart Home",
+    "cells": [
+      "Google Home: Control your smart home devices in the Google Home app. Learn more.",
+      "Account type: Personal Google Account only\nAges: 13 or over\nLocations: All countries and territories where both the Gemini mobile app and Google Home are supported\nLanguages: All languages supported by the Gemini mobile app\nReview all requirements",
+      "Supported Gemini Apps\nGemini mobile app only\nSupported in\nChats\nGemini Live"
+    ],
+    "links": [
+      "/gemini/answer/15335456",
+      "/gemini/answer/14579026#languages",
+      "/gemini/answer/15335456#reqs"
+    ]
+  },
+  {
+    "category": "Finance",
+    "cells": [
+      "Experian: Monitor your FICO credit score and inspect credit report factors, like payment history and credit utilization.",
+      "Account type: Personal Google Account only\nAges: 18 or over\nLocation: US only\nLanguage: English only",
+      "Supported Gemini Apps\nGemini web app at gemini.google.com\nGemini mobile app\nGemini app for Windows\nSupported in\nChats\nTasks"
+    ],
+    "links": [
+      "https://gemini.google.com"
+    ]
+  },
+  {
+    "category": "Health",
+    "cells": [
+      "Peloton: Search for and schedule Peloton classes, and create multi-day training plans.",
+      "Account type: Personal Google Account only\nAges: 18 or over\nLocation: US only\nLanguage: English only",
+      "Supported Gemini Apps\nGemini web app at gemini.google.com\nGemini mobile app\nGemini app for Windows\nSupported in\nChats\nTasks"
+    ],
+    "links": [
+      "https://gemini.google.com"
+    ]
+  },
+  {
+    "category": "Health",
+    "cells": [
+      "Zocdoc: Find and book healthcare appointments with Zocdoc.",
+      "Account type: Personal Google Account only\nAges: 18 or over\nLocation: US only\nLanguage: English only",
+      "Supported Gemini Apps\nGemini web app at gemini.google.com\nGemini mobile app\nGemini app for Windows\nSupported in\nChats only"
+    ],
+    "links": [
+      "https://gemini.google.com"
+    ]
+  },
+  {
+    "category": "Lifestyle",
+    "cells": [
+      "Apartment List: Find apartments that match your budget, review available floor plans and pricing, and check available tour times. Filter your search by location, minimum bedrooms, maximum rent, move-in date, pet policy, and amenities.",
+      "Account type: Personal Google Account only\nAges: 18 or over\nLocation: US only\nLanguage: English only",
+      "Supported Gemini Apps\nGemini web app at gemini.google.com\nGemini mobile app\nGemini app for Mac\nGemini app for Windows\nSupported in\nChats\nTasks"
+    ],
+    "links": [
+      "https://gemini.google.com"
+    ]
+  },
+  {
+    "category": "Lifestyle",
+    "cells": [
+      "Apartments.com: Search commercial real estate properties by submarket, building class, square footage, and vacancy. Analyze market trends and historical lease and sales comparables.",
+      "Account type: Personal Google Account only\nAges: 18 or over\nLocation: US only\nLanguage: English only",
+      "Supported Gemini Apps\nGemini web app at gemini.google.com\nGemini mobile app\nGemini app for Windows\nSupported in\nChats\nTasks"
+    ],
+    "links": [
+      "https://gemini.google.com"
+    ]
+  },
+  {
+    "category": "Lifestyle",
+    "cells": [
+      "Find Hub: Keep track of your physical items and easily find where you left them. Save new items, update their storage spots, and quickly recall their exact locations. Learn more.",
+      "Account type: Personal Google Account only\nAges: 13 or over\nLocations: All countries and territories where the Gemini mobile app is supported\nLanguages: All languages supported by the Gemini mobile app\nReview all requirements",
+      "Supported Gemini Apps\nGemini mobile app on Android devices running Android 16 and up\nSupported in\nChats only"
+    ],
+    "links": [
+      "/android/answer/18132896",
+      "/gemini/answer/14579026#countries",
+      "/gemini/answer/14579026#languages",
+      "/android/answer/18132896"
+    ]
+  },
+  {
+    "category": "Lifestyle",
+    "cells": [
+      "Google Play: Find and install apps from the Google Play Store. Learn more.",
+      "Account type: Personal Google Account only\nAges: 18 or over\nLocations: All countries and territories where both the Gemini mobile app and Google Play Store are supported\nLanguages: All languages supported by the Gemini mobile app\nReview all requirements",
+      "Supported Gemini Apps\nGemini mobile app on Android devices only\nSupported in\nChats only"
+    ],
+    "links": [
+      "/gemini/answer/17131257",
+      "/gemini/answer/14579026#languages",
+      "/gemini/answer/17131257#reqs"
+    ]
+  },
+  {
+    "category": "Lifestyle",
+    "cells": [
+      "Instacart: Shop for groceries and household items. Learn more.",
+      "Account type: Personal Google Account only\nAges: 13 or over\nLocation: US only\nLanguage: English only\nReview all requirements",
+      "Supported Gemini Apps\nGemini web app at gemini.google.com\nGemini mobile app\nGemini app for Windows\nGemini in Chrome\nSupported in\nChats\nTasks"
+    ],
+    "links": [
+      "/gemini/answer/17090317",
+      "/gemini/answer/17090317#reqs",
+      "https://gemini.google.com"
+    ]
+  },
+  {
+    "category": "Lifestyle",
+    "cells": [
+      "OpenTable: Find, book, and manage reservations. Learn more.",
+      "Account type: Personal Google Account only\nAges: 18 or over\nLocations: UK and US only\nLanguage: English only",
+      "Supported Gemini Apps\nGemini web app at gemini.google.com\nGemini mobile app\nGemini app for Windows\nSupported in\nChats\nTasks"
+    ],
+    "links": [
+      "/gemini/answer/17090712",
+      "https://gemini.google.com"
+    ]
+  },
+  {
+    "category": "Lifestyle",
+    "cells": [
+      "Zap Imóveis: Search, browse, and compare apartments, houses, and commercial spaces for sale and rent across Brazil. Filter by your preferences like price, neighborhood, and amenities, and get property details and photos.",
+      "Account type: Personal Google Account only\nAges: 18 or over\nLocation: Brazil only\nLanguage: Portuguese only",
+      "Supported Gemini Apps\nGemini web app at gemini.google.com\nGemini mobile app\nGemini app for Mac\nGemini app for Windows\nSupported in\nChats\nTasks"
+    ],
+    "links": [
+      "https://gemini.google.com"
+    ]
+  },
+  {
+    "category": "Lifestyle",
+    "cells": [
+      "Zillow: Find rental properties, review tour schedules, and book tours. Learn more.",
+      "Account type: Personal Google Account only\nAges: 18 or over\nLocation: US only\nLanguage: English only\nReview all requirements",
+      "Supported Gemini Apps\nGemini web app at gemini.google.com\nGemini mobile app\nGemini app for Windows\nSupported in\nChats\nTasks"
+    ],
+    "links": [
+      "/gemini/answer/17187706",
+      "/gemini/answer/17187706#reqs",
+      "https://gemini.google.com"
+    ]
+  },
+  {
+    "category": "Local Services",
+    "cells": [
+      "Angi: Find and hire local home service professionals, repair contractors, plumbers, electricians, roofers, and handymen across Angi's nationwide network.",
+      "Account type: Personal Google Account only\nAges: 18 or over\nLocation: US only\nLanguage: English only",
+      "Supported Gemini Apps\nGemini web app at gemini.google.com\nGemini mobile app\nGemini app for Windows\nSupported in\nChats\nTasks"
+    ],
+    "links": [
+      "https://gemini.google.com"
+    ]
+  },
+  {
+    "category": "Local Services",
+    "cells": [
+      "GetNinjas: Find, compare, and request estimates from verified local professionals for your home repair and freelance service needs. Submit tailored quote requests with your job details and easily track your order status.",
+      "Account type: Personal Google Account only\nAges: 18 or over\nLocation: Brazil only\nLanguage: Portuguese only",
+      "Supported Gemini Apps\nGemini web app at gemini.google.com\nGemini mobile app\nGemini app for Mac\nGemini app for Windows\nSupported in\nChats\nTasks"
+    ],
+    "links": [
+      "https://gemini.google.com"
+    ]
+  },
+  {
+    "category": "Local Services",
+    "cells": [
+      "Homh: Book home services with trusted pros and technicians in plumbing, electrical, and HVAC services. Check your service job status, assigned technician, arrival window, and work order notes. Get past service invoices and notes.",
+      "Account type: Personal Google Account only\nAges: 18 or over\nLocation: US only\nLanguage: English only",
+      "Supported Gemini Apps\nGemini web app at gemini.google.com\nGemini mobile app\nGemini app for Mac\nGemini app for Windows\nSupported in\nChats\nTasks"
+    ],
+    "links": [
+      "https://gemini.google.com"
+    ]
+  },
+  {
+    "category": "Local Services",
+    "cells": [
+      "Thumbtack: Connect with local professionals for home services, repairs, and projects.",
+      "Account type: Personal Google Account only\nAges: 18 or over\nLocation: US only\nLanguage: English only",
+      "Supported Gemini Apps\nGemini web app at gemini.google.com\nGemini mobile app\nGemini app for Windows\nSupported in\nChats\nTasks"
+    ],
+    "links": [
+      "https://gemini.google.com"
+    ]
+  },
+  {
+    "category": "Local Services",
+    "cells": [
+      "Urban Company: Find professionals for home services (like cleaning, repairs, and appliance maintenance) and beauty treatments. Check pricing and availability based on your saved address. Track your upcoming and past bookings, and view assigned professionals.",
+      "Account type: Personal Google Account only\nAges: 18 or over\nLocation: India only\nLanguage: English only",
+      "Supported Gemini Apps\nGemini web app at gemini.google.com\nGemini mobile app\nGemini app for Mac\nGemini app for Windows\nSupported in\nChats\nTasks"
+    ],
+    "links": [
+      "https://gemini.google.com"
+    ]
+  },
+  {
+    "category": "Media",
+    "cells": [
+      "Google Photos: Search for your photos, videos, memories, and more from Google Photos. Learn more.",
+      "Account type: Personal Google Account only\nAges: 18 or over\nLocations: Specific countries and territories where you can connect Google Photos\nLanguages: All languages supported by the Gemini web app\nReview all requirements",
+      "Supported Gemini Apps\nGemini web app at gemini.google.com\nGemini mobile app\nGemini app for Windows\nGemini in Chrome\nSupported in\nChats\nTasks"
+    ],
+    "links": [
+      "/gemini/answer/15734842",
+      "/gemini/answer/15734842#gp_countries",
+      "/gemini/answer/13575153",
+      "/gemini/answer/15734842#reqs",
+      "https://gemini.google.com"
+    ]
+  },
+  {
+    "category": "Media",
+    "cells": [
+      "iHeartRadio: Play, discover, and enjoy your favorite music and podcasts. Learn more.",
+      "Account type: Personal Google Account only\nAges: 13 or over\nLocations: Australia, Mexico, New Zealand, Puerto Rico, and US only\nLanguage: English only\nReview all requirements",
+      "Supported Gemini Apps\nGemini mobile app only\nSupported in\nChats only"
+    ],
+    "links": [
+      "/gemini/answer/15300097",
+      "/gemini/answer/15300097#reqs"
+    ]
+  },
+  {
+    "category": "Media",
+    "cells": [
+      "Pandora: Play your favorite songs and discover playlists for any mood. Learn more.",
+      "Account type: Personal Google Account only\nAges: 13 or over\nLocation: Puerto Rico and US only\nLanguage: English only\nReview all requirements",
+      "Supported Gemini Apps\nGemini mobile app only\nSupported in\nChats only"
+    ],
+    "links": [
+      "/gemini/answer/15300097",
+      "/gemini/answer/15300097#reqs"
+    ]
+  },
+  {
+    "category": "Media",
+    "cells": [
+      "Samsung Gallery: Search for your photos, videos, and albums from Samsung Gallery. Learn more.",
+      "Account type: Personal Google Account only\nAges: 18 or over\nLocations: All countries and territories where both the Gemini mobile app and Samsung Gallery app are supported\nLanguages: All languages supported by the Gemini mobile app\nReview all requirements",
+      "Supported Gemini Apps\nGemini mobile app on Samsung devices running OneUI 8.5 and up\nSupported in\nChats only"
+    ],
+    "links": [
+      "/gemini/answer/15734842?co=GENIE.Platform%3DAndroid&oco=1#connect_ss_gallery",
+      "/gemini/answer/14579026#languages",
+      "/gemini/answer/15734842?co=GENIE.Platform%3DAndroid&oco=1#reqs&connect_ss_gallery"
+    ]
+  },
+  {
+    "category": "Media",
+    "cells": [
+      "Spotify: Play or search for music and podcasts on Spotify. Learn more.",
+      "Account type: Personal Google Account only\nAges: 13 or over\nLocations: All countries and territories where both the Gemini mobile app and Spotify app are supported\nLanguages: All languages supported by the Gemini mobile app\nReview all requirements",
+      "Supported Gemini Apps\nGemini mobile app only\nSupported in\nChats\nGemini Live"
+    ],
+    "links": [
+      "/gemini/answer/15300097",
+      "/gemini/answer/14579026#languages",
+      "/gemini/answer/15300097#reqs"
+    ]
+  },
+  {
+    "category": "Media",
+    "cells": [
+      "TECNO AI Gallery: Search for your photos, videos, and albums from TECNO AI Gallery. Learn more.",
+      "Account type: Personal Google Account only\nAges: 18 or over\nLocations: All countries and territories where both the Gemini mobile app and TECNO AI Gallery app are supported\nLanguage: English only\nReview all requirements",
+      "Supported Gemini Apps\nGemini mobile app on TECNO POVA Curve 2 5G (also known as Tecno LK7) devices running Android 16 and up\nSupported in\nChats only"
+    ],
+    "links": [
+      "/gemini/answer/15734842?co=GENIE.Platform%3DAndroid&oco=1",
+      "/gemini/answer/15734842?co=GENIE.Platform%3DAndroid&oco=1#reqs&connect_tecno_ai_gallery"
+    ]
+  },
+  {
+    "category": "Media",
+    "cells": [
+      "Xiaomi Gallery: Search for your photos, videos, and albums from Xiaomi Gallery. Learn more.",
+      "Account type: Personal Google Account only\nAges: 18 or over\nLocations: All countries and territories where both the Gemini mobile app and Xiaomi Gallery app are supported\nLanguage: English only\nReview all requirements",
+      "Supported Gemini Apps\nXiaomi 17T and 17T Pro devices running Android 16 and up\nSupported in\nChats only"
+    ],
+    "links": [
+      "/gemini/answer/15734842?co=GENIE.Platform%3DAndroid&oco=1",
+      "/gemini/answer/15734842?co=GENIE.Platform%3DAndroid&oco=1#reqs&connect_xiaomi_gallery"
+    ]
+  },
+  {
+    "category": "Media",
+    "cells": [
+      "YouTube Music: Play and discover music, and create custom playlists and radio stations based on mood, activity, artist, and more. Learn more.",
+      "Account types: Personal, work, or school Google Account\nAges: 13 or over\nLocations: All countries and territories where Gemini Apps and YouTube Music are supported\nLanguages: All languages supported by the Gemini web app\nReview all requirements",
+      "Supported Gemini Apps\nGemini web app at gemini.google.com\nGemini mobile app\nGemini app for Windows\nSupported in\nChats\nGemini Live"
+    ],
+    "links": [
+      "/gemini/answer/15237118",
+      "/gemini/answer/13575153",
+      "/gemini/answer/15237118#reqs",
+      "https://gemini.google.com"
+    ]
+  },
+  {
+    "category": "Productivity",
+    "cells": [
+      "Airtable: Search and query your Airtable workspaces, bases, and manage your tables, records, pages, and automation.",
+      "Account type: Personal Google Account only\nAges: 18 or over\nLocation: US only\nLanguage: English only",
+      "Supported Gemini Apps\nGemini web app at gemini.google.com\nGemini mobile app\nGemini app for Windows\nSupported in\nChats\nTasks"
+    ],
+    "links": [
+      "https://gemini.google.com"
+    ]
+  },
+  {
+    "category": "Productivity",
+    "cells": [
+      "Dropbox: Find, summarize, share, and manage your Dropbox files and folders. Learn more.",
+      "Account type: Personal Google Account only\nAges: 18 or over\nLocation: US only\nLanguage: English only\nReview all requirements",
+      "Supported Gemini Apps\nGemini web app at gemini.google.com\nGemini app for Windows\nSupported in\nChats\nTasks"
+    ],
+    "links": [
+      "/gemini/answer/17211088",
+      "/gemini/answer/17211088#reqs",
+      "https://gemini.google.com"
+    ]
+  },
+  {
+    "category": "Productivity",
+    "cells": [
+      "Gemini Notebook: Organize projects into notebooks that you can manage yourself or in a chat or task thread with Gemini. Learn more.",
+      "Account type: Personal Google Account only\nAges: 18 or over\nLocations: All countries and territories where both Gemini Apps and Gemini Notebook are supported\nLanguages: All languages supported by the Gemini web app\nReview all requirements",
+      "Supported Gemini Apps\nGemini web app at gemini.google.com\nGemini mobile app\nGemini app for Windows\nSupported in\nChats\nTasks"
+    ],
+    "links": [
+      "/gemini/answer/16972047",
+      "/gemini/answer/13575153",
+      "/gemini/answer/16972047#reqs",
+      "https://gemini.google.com"
+    ]
+  },
+  {
+    "category": "Productivity",
+    "cells": [
+      "GitHub: Import a GitHub repository to your chat and ask Gemini about its code. Learn more.",
+      "Account types: Personal, work, or school Google Account\nAges: 18 or over\nLocations: All countries and territories where both the Gemini web app and GitHub are supported\nLanguages: All languages supported by the Gemini web app\nReview all requirements",
+      "Supported Gemini Apps\nGemini web app at gemini.google.com\nGemini app for Windows\nSupported in\nChats only"
+    ],
+    "links": [
+      "/gemini/answer/16176929",
+      "/gemini/answer/13575153",
+      "/gemini/answer/16176929#reqs",
+      "https://gemini.google.com"
+    ]
+  },
+  {
+    "category": "Productivity",
+    "cells": [
+      "Google Ads: Get personalized business advice and access content and tools. Learn more.",
+      "Account type: Personal Google Account only\nAges: 18 or over\nLocations: All countries and territories where both Gemini Apps and Google Ads are supported\nLanguage: English only\nReview all requirements",
+      "Supported Gemini Apps\nGemini web app at gemini.google.com\nGemini mobile app\nGemini app for Windows\nSupported in\nChats only"
+    ],
+    "links": [
+      "/gemini/answer/17266651",
+      "/gemini/answer/17266651#reqs",
+      "https://gemini.google.com"
+    ]
+  },
+  {
+    "category": "Productivity",
+    "cells": [
+      "Google Business Profile: Manage your Business Profile on Google and create a Business Notebook with proactive insights. Learn more.",
+      "Account type: Personal Google Account only\nAges: 18 or over\nLocations: All countries and territories where the Gemini web app is supported.\nLanguages: All languages supported by the Gemini web app\nReview all requirements",
+      "Supported Gemini Apps\nGemini web app at gemini.google.com\nGemini app for Windows\nSupported in\nChats only"
+    ],
+    "links": [
+      "/gemini/answer/17142585",
+      "/gemini/answer/13575153",
+      "/gemini/answer/17142585#reqs",
+      "https://gemini.google.com"
+    ]
+  },
+  {
+    "category": "Productivity",
+    "cells": [
+      "Google Classroom: Get quick answers, stay organized, and plan ahead for your classes in Google Classroom. Learn more.",
+      "Account types: Work or school Google Account only\nAges: 18 or over (as designated by your administrator)\nLocations: All countries and territories where Gemini Apps and Google Classroom are supported\nLanguage: English only\nReview all requirements",
+      "Supported Gemini Apps\nGemini web app at gemini.google.com\nGemini mobile app\nGemini app for Windows\nSupported in\nChats only"
+    ],
+    "links": [
+      "/gemini/answer/16865250",
+      "/gemini/answer/16865250#reqs",
+      "https://gemini.google.com"
+    ]
+  },
+  {
+    "category": "Productivity",
+    "cells": [
+      "Google Workspace: Find, manage, and summarize your content across Google Workspace, which includes services like Gmail, Google Calendar, Google Drive, Google Docs, Google Sheets, Google Slides, Google Keep, Google Tasks, Google Chat, and Google Meet. Learn more.",
+      "Account types: Personal, work, or school Google Account\nAges: 13 or over\nLocations: All countries and territories where Gemini Apps and Google Workspace services are supported\nLanguages: All languages supported by the Gemini web app\nReview all requirements",
+      "Supported Gemini Apps\nGemini web app at gemini.google.com\nGemini mobile app\nGemini app for Windows\nGemini in Chrome\nSupported in\nChats\nTasks\nGemini Live"
+    ],
+    "links": [
+      "/gemini/answer/15229592",
+      "/gemini/answer/13575153",
+      "/gemini/answer/15229592#reqs",
+      "https://gemini.google.com"
+    ]
+  },
+  {
+    "category": "Productivity",
+    "cells": [
+      "Granola: Search, summarize, and extract quotes from meeting notes and transcripts in Granola.",
+      "Account type: Personal Google Account only\nAges: 18 or over\nLocation: US only\nLanguage: English only",
+      "Supported Gemini Apps\nGemini web app at gemini.google.com\nGemini mobile app\nGemini app for Windows\nSupported in\nChats\nTasks"
+    ],
+    "links": [
+      "https://gemini.google.com"
+    ]
+  },
+  {
+    "category": "Productivity",
+    "cells": [
+      "HONOR Calendar: Create, find, and edit your events in HONOR Calendar. Learn more.",
+      "Account types: Personal, work, or school Google Account\nAges: 13 or over\nLocations: All countries and territories where both the Gemini mobile app and HONOR Calendar app are supported\nLanguages: All languages supported by the Gemini mobile app\nReview all requirements",
+      "Supported Gemini Apps\nGemini mobile app on Honor Magic V5 devices\nSupported in\nChats\nGemini Live"
+    ],
+    "links": [
+      "/gemini/answer/15305236?co=GENIE.Platform%3DAndroid#honor_calendar",
+      "/gemini/answer/14579026#languages",
+      "/gemini/answer/15305236?co=GENIE.Platform%3DAndroid#reqs&honor_calendar"
+    ]
+  },
+  {
+    "category": "Productivity",
+    "cells": [
+      "HONOR Notes: Create and show your notes and lists in HONOR Notes. Learn more.",
+      "Account types: Personal, work, or school Google Account\nAges: 13 or over\nLocations: All countries and territories where both the Gemini mobile app and HONOR Notes app are supported\nLanguages: All languages supported by the Gemini mobile app\nReview all requirements",
+      "Supported Gemini Apps\nGemini mobile app on Honor Magic V5 devices\nSupported in\nChats\nGemini Live"
+    ],
+    "links": [
+      "/gemini/answer/15230597?co=GENIE.Platform%3DAndroid#connect_honor_notes",
+      "/gemini/answer/14579026#languages",
+      "/gemini/answer/15230597?co=GENIE.Platform%3DAndroid#reqs&connect_honor_notes"
+    ]
+  },
+  {
+    "category": "Productivity",
+    "cells": [
+      "Hootsuite: Analyze your social media performance across all connected platforms, and track metrics, like engagement, reach, impressions, clicks, and follower growth. Discover your top-performing posts, review specific post details, and draft your upcoming posts.",
+      "Account type: Personal Google Account only\nAges: 18 or over\nLocation: US only\nLanguage: English only",
+      "Supported Gemini Apps\nGemini web app at gemini.google.com\nGemini mobile app\nGemini app for Mac\nGemini app for Windows\nSupported in\nChats\nTasks"
+    ],
+    "links": [
+      "https://gemini.google.com"
+    ]
+  },
+  {
+    "category": "Productivity",
+    "cells": [
+      "Lenovo Notes: Create and show your notes and lists in Lenovo Notes. Learn more.",
+      "Account types: Personal, work, or school Google Account\nAges: 13 or over\nLocations: All countries and territories where both the Gemini mobile app and Lenovo Notes app are supported\nLanguages: English, French, German, Italian, Japanese, Portuguese, and Spanish only\nReview all requirements",
+      "Supported Gemini Apps\nGemini mobile app on Lenovo Yoga Tab Plus devices\nSupported in\nChats\nGemini Live"
+    ],
+    "links": [
+      "/gemini/answer/15230597?co=GENIE.Platform%3DAndroid#connect_lenovo_notes",
+      "/gemini/answer/15230597?co=GENIE.Platform%3DAndroid#reqs&connect_lenovo_notes"
+    ]
+  },
+  {
+    "category": "Productivity",
+    "cells": [
+      "Linear: Create, manage, and track issues and project cycles in Linear.",
+      "Account type: Personal Google Account only\nAges: 18 or over\nLocation: US only\nLanguage: English only",
+      "Supported Gemini Apps\nGemini web app at gemini.google.com\nGemini mobile app\nGemini app for Mac\nGemini app for Windows\nSupported in\nChats\nTasks"
+    ],
+    "links": [
+      "https://gemini.google.com"
+    ]
+  },
+  {
+    "category": "Productivity",
+    "cells": [
+      "Mind Space: Search and summarize your saved documents, screenshots, voice notes, and more from Mind Space to get tailored answers and recommendations. Learn more.",
+      "Account type: Personal Google Account only\nAges: 13 or over\nLocations: All countries and territories where both the Gemini mobile app and Mind Space app are supported\nLanguages: All languages supported by the Gemini mobile app\nReview all requirements",
+      "Supported Gemini Apps\nGemini mobile app on OnePlus 13s, OnePlus 15, OnePlus 15R, OPPO Find X9, and OPPO Find X9 Pro devices running Android 16 and up\nSupported in\nChats only"
+    ],
+    "links": [
+      "/gemini/answer/16675209",
+      "/gemini/answer/14579026#languages",
+      "/gemini/answer/16675209#reqs"
+    ]
+  },
+  {
+    "category": "Productivity",
+    "cells": [
+      "Miro: Create new boards, diagrams, and sticky note clusters from prompts, or search and summarize existing Miro boards.",
+      "Account type: Personal Google Account only\nAges: 18 or over\nLocation: US only\nLanguage: English only",
+      "Supported Gemini Apps\nGemini web app at gemini.google.com\nGemini mobile app\nGemini app for Mac\nGemini app for Windows\nSupported in\nChats\nTasks"
+    ],
+    "links": [
+      "https://gemini.google.com"
+    ]
+  },
+  {
+    "category": "Productivity",
+    "cells": [
+      "Monday.com: Track and manage your projects, sales pipelines, and leads from monday.com.",
+      "Account types: Personal, work, or school Google Account\nAges: 18 or over\nLocations: All countries and territories where Gemini Apps and Monday.com are supported\nLanguage: English only",
+      "Supported Gemini Apps\nGemini web app at gemini.google.com\nGemini mobile app\nGemini app for Windows\nSupported in\nChats\nTasks"
+    ],
+    "links": [
+      "https://gemini.google.com"
+    ]
+  },
+  {
+    "category": "Productivity",
+    "cells": [
+      "OnePlus Notes: Create and show your notes and lists in OnePlus Notes. Learn more.",
+      "Account types: Personal, work, or school Google Account\nAges: 13 or over\nLocations: All countries and territories where both the Gemini mobile app and OnePlus Notes app are supported\nLanguages: All languages supported by the Gemini mobile app\nReview all requirements",
+      "Supported Gemini Apps\nGemini mobile app on OnePlus 13S or later devices\nSupported in\nChats\nGemini Live"
+    ],
+    "links": [
+      "/gemini/answer/15230597?co=GENIE.Platform%3DAndroid#connect_oneplus_notes",
+      "/gemini/answer/14579026#languages",
+      "/gemini/answer/15230597?co=GENIE.Platform%3DAndroid#reqs&connect_oneplus_notes"
+    ]
+  },
+  {
+    "category": "Productivity",
+    "cells": [
+      "OPPO Calendar: Create, find, and edit your events in OPPO Calendar. Learn more.",
+      "Account types: Personal, work, or school Google Account\nAges: 13 or over\nLocations: All countries and territories where both the Gemini mobile app and OPPO Calendar app are supported\nLanguages: All languages supported by the Gemini mobile app\nReview all requirements",
+      "Supported Gemini Apps\nGemini mobile app on OPPO Find N5 or later devices\nSupported in\nChats\nGemini Live"
+    ],
+    "links": [
+      "/gemini/answer/15305236?co=GENIE.Platform%3DAndroid#oppo_calendar",
+      "/gemini/answer/14579026#languages",
+      "/gemini/answer/15305236?co=GENIE.Platform%3DAndroid#reqs&oppo_calendar"
+    ]
+  },
+  {
+    "category": "Productivity",
+    "cells": [
+      "OPPO Notes: Create and show your notes and lists in OPPO Notes. Learn more.",
+      "Account types: Personal, work, or school Google Account\nAges: 13 or over\nLocations: All countries and territories where both the Gemini mobile app and OPPO Notes app are supported\nLanguages: All languages supported by the Gemini mobile app\nReview all requirements",
+      "Supported Gemini Apps\nGemini mobile app on OPPO Find N5 or later devices\nSupported in\nChats\nGemini Live"
+    ],
+    "links": [
+      "/gemini/answer/15230597?co=GENIE.Platform%3DAndroid#oppo_notes",
+      "/gemini/answer/14579026#languages",
+      "/gemini/answer/15230597?co=GENIE.Platform%3DAndroid#reqs&oppo_notes"
+    ]
+  },
+  {
+    "category": "Productivity",
+    "cells": [
+      "Otter.ai: Search meeting transcripts for speaker quotes, retrieve summaries and action items, and synthesize themes across multiple calls.",
+      "Account type: Personal Google Account only\nAges: 18 or over\nLocation: US only\nLanguage: English only",
+      "Supported Gemini Apps\nGemini web app at gemini.google.com\nGemini mobile app\nGemini app for Windows\nSupported in\nChats\nTasks"
+    ],
+    "links": [
+      "https://gemini.google.com"
+    ]
+  },
+  {
+    "category": "Productivity",
+    "cells": [
+      "PandaDoc: List, search, create, update, send, and archive documents, manage recipients and field assignments, and interact with document templates.",
+      "Account type: Personal Google Account only\nAges: 18 or over\nLocation: US only\nLanguage: English only",
+      "Supported Gemini Apps\nGemini web app at gemini.google.com\nGemini mobile app\nGemini app for Windows\nSupported in\nChats\nTasks"
+    ],
+    "links": [
+      "https://gemini.google.com"
+    ]
+  },
+  {
+    "category": "Productivity",
+    "cells": [
+      "RD Station CRM: Audit your sales funnel to compute total deal values, prioritize opportunities by lead score and close probability, and schedule follow-up tasks. Identify your stagnant deals, update deal stages and values, and analyze closed-lost reasons to reduce sales friction.",
+      "Account type: Personal Google Account only\nAges: 18 or over\nLocation: Brazil only\nLanguages: English and Portuguese only",
+      "Supported Gemini Apps\nGemini web app at gemini.google.com\nGemini mobile app\nGemini app for Mac\nGemini app for Windows\nSupported in\nChats\nTasks"
+    ],
+    "links": [
+      "https://gemini.google.com"
+    ]
+  },
+  {
+    "category": "Productivity",
+    "cells": [
+      "RD Station Marketing: Audit landing page conversions and monitor email campaign health to track open, click-through, bounce, and unsubscribe rates. Analyze lead distribution across scoring tiers and search active segmentations to identify hot leads ready for sales handoff.",
+      "Account type: Personal Google Account only\nAges: 18 or over\nLocation: Brazil only\nLanguages: English and Portuguese only",
+      "Supported Gemini Apps\nGemini web app at gemini.google.com\nGemini mobile app\nGemini app for Mac\nGemini app for Windows\nSupported in\nChats\nTasks"
+    ],
+    "links": [
+      "https://gemini.google.com"
+    ]
+  },
+  {
+    "category": "Productivity",
+    "cells": [
+      "Samsung Calendar: Create, find, and edit your events in Samsung Calendar. Learn more.",
+      "Account types: Personal, work, or school Google Account\nAges: 13 or over\nLocations: All countries and territories where both the Gemini mobile app and Samsung Calendar app are supported\nLanguages: All languages supported by the Gemini mobile app\nReview all requirements",
+      "Supported Gemini Apps\nGemini mobile app on Galaxy S25 or later devices and select Samsung devices running OneUI7 and later\nSupported in\nChats\nGemini Live"
+    ],
+    "links": [
+      "/gemini/answer/15305236?co=GENIE.Platform%3DAndroid#connect_samsung_calendar",
+      "/gemini/answer/14579026#languages",
+      "/gemini/answer/15305236?co=GENIE.Platform%3DAndroid#reqs&connect_samsung_calendar"
+    ]
+  },
+  {
+    "category": "Productivity",
+    "cells": [
+      "Samsung Notes: Create and show your notes and lists in Samsung Notes. Learn more.",
+      "Account types: Personal, work, or school Google Account\nAges: 13 or over\nLocations: All countries and territories where both the Gemini mobile app and Samsung Notes app are supported\nLanguages: All languages supported by the Gemini mobile app\nReview all requirements",
+      "Supported Gemini Apps\nGemini mobile app on Galaxy S25 or later devices and select Samsung devices running OneUI7 and later\nSupported in\nChats\nGemini Live"
+    ],
+    "links": [
+      "/gemini/answer/15230597?co=GENIE.Platform%3DAndroid#connect_samsung_notes",
+      "/gemini/answer/14579026#languages",
+      "/gemini/answer/15230597?co=GENIE.Platform%3DAndroid#reqs&connect_samsung_notes"
+    ]
+  },
+  {
+    "category": "Productivity",
+    "cells": [
+      "Samsung Reminder: Add, edit, and show your tasks and reminders from Samsung Reminder. Learn more.",
+      "Account types: Personal, work, or school Google Account\nAges: 13 or over\nLocations: All countries and territories where both the Gemini mobile app and Samsung Reminder app are supported\nLanguages: All languages supported by the Gemini mobile app\nReview all requirements",
+      "Supported Gemini Apps\nGemini mobile app on Galaxy S25 or later devices and select Samsung devices running OneUI7 and later\nSupported in\nChats\nGemini Live"
+    ],
+    "links": [
+      "/gemini/answer/15230285?co=GENIE.Platform%3DAndroid#connect_samsung_reminder",
+      "/gemini/answer/14579026#languages",
+      "/gemini/answer/15230285?co=GENIE.Platform%3DAndroid#reqs&connect_samsung_reminder"
+    ]
+  },
+  {
+    "category": "Productivity",
+    "cells": [
+      "Shopify: Manage your Shopify storefront, process your orders, and track your inventory. Create new product listings and update your store settings.",
+      "Account type: Personal Google Account only\nAges: 18 or over\nLocation: US only\nLanguage: English only",
+      "Supported Gemini Apps\nGemini web app at gemini.google.com\nGemini mobile app\nGemini app for Mac\nGemini app for Windows\nSupported in\nChats\nTasks"
+    ],
+    "links": [
+      "https://gemini.google.com"
+    ]
+  },
+  {
+    "category": "Productivity",
+    "cells": [
+      "TECNO Calendar: Create, find, and edit your events in TECNO Calendar. Learn more.",
+      "Account types: Personal, work, or school Google Account\nAges: 13 or over\nLocations: All countries and territories where both the Gemini mobile app and TECNO Calendar app are supported\nLanguages: All languages supported by the Gemini mobile app\nReview all requirements",
+      "Supported Gemini Apps\nGemini mobile app on TECNO POVA 7 5G devices\nSupported in\nChats\nGemini Live"
+    ],
+    "links": [
+      "/gemini/answer/15305236?co=GENIE.Platform%3DAndroid#connect_tecno_calendar",
+      "/gemini/answer/14579026#languages",
+      "/gemini/answer/15305236?co=GENIE.Platform%3DAndroid#reqs&connect_tecno_calendar"
+    ]
+  },
+  {
+    "category": "Productivity",
+    "cells": [
+      "TECNO Notepad: Create and show your notes and lists in TECNO Notepad. Learn more.",
+      "Account types: Personal, work, or school Google Account\nAges: 13 or over\nLocations: All countries and territories where both the Gemini mobile app and TECNO Notepad app are supported\nLanguages: All languages supported by the Gemini mobile app\nReview all requirements",
+      "Supported Gemini Apps\nGemini mobile app on TECNO POVA 7 5G devices\nSupported in\nChats\nGemini Live"
+    ],
+    "links": [
+      "/gemini/answer/15230597?co=GENIE.Platform%3DAndroid#connect_tecno_notepad",
+      "/gemini/answer/14579026#languages",
+      "/gemini/answer/15230597?co=GENIE.Platform%3DAndroid#reqs&connect_tecno_notepad"
+    ]
+  },
+  {
+    "category": "Productivity",
+    "cells": [
+      "vivo Notes: Create and show your notes and lists in Vivo Notes. Learn more.",
+      "Account types: Personal, work, or school Google Account\nAges: 13 or over\nLocations: All countries and territories where both the Gemini mobile app and vivo Notes app are supported\nLanguages: All languages supported by the Gemini mobile app\nReview all requirements",
+      "Supported Gemini Apps\nGemini mobile app on vivo X200 FE, X Fold 5, V60, V60e, or later devices\nSupported in\nChats\nGemini Live"
+    ],
+    "links": [
+      "/gemini/answer/15230597?co=GENIE.Platform%3DAndroid#connect_vivo_notes",
+      "/gemini/answer/14579026#languages",
+      "/gemini/answer/15230597?co=GENIE.Platform%3DAndroid#reqs&connect_vivo_notes"
+    ]
+  },
+  {
+    "category": "Productivity",
+    "cells": [
+      "Wispr AI: Search and summarize your recorded meetings and personal scratchpad notes, including key decisions, action items, and specific transcript ranges. List upcoming meetings and pre-read materials.",
+      "Account type: Personal Google Account only\nAges: 18 or over\nLocations: All countries and territories where Gemini Apps and Wispr AI are supported\nLanguage: English only",
+      "Supported Gemini Apps\nGemini web app at gemini.google.com\nGemini mobile app\nGemini app for Windows\nSupported in\nChats\nTasks"
+    ],
+    "links": [
+      "https://gemini.google.com"
+    ]
+  },
+  {
+    "category": "Productivity",
+    "cells": [
+      "Xero: Monitor your cash flow, track unpaid invoices, check your current bank balances, and more. Inspect your Profit & Loss statements and generate high-level financial summaries with period-over-period comparisons.",
+      "Account type: Personal Google Account only\nAges: 18 or over\nLocations: All countries and territories where Gemini Apps and Xero are supported\nLanguage: English only",
+      "Supported Gemini Apps\nGemini web app at gemini.google.com\nGemini mobile app\nGemini app for Windows\nSupported in\nChats\nTasks"
+    ],
+    "links": [
+      "https://gemini.google.com"
+    ]
+  },
+  {
+    "category": "Productivity",
+    "cells": [
+      "Xiaomi Calendar: Create, find, and edit your events in Xiaomi Calendar. Learn more.",
+      "Account types: Personal, work, or school Google Account\nAges: 13 or over\nLocations: All countries and territories where both the Gemini mobile app and Xiaomi Calendar app are supported\nLanguages: All languages supported by the Gemini mobile app\nReview all requirements",
+      "Supported Gemini Apps\nGemini mobile app on Xiaomi 15 and Xiaomi 15 Pro, Pad 7 and Pad 7 Pro, or later devices\nSupported in\nChats\nGemini Live"
+    ],
+    "links": [
+      "/gemini/answer/15305236?co=GENIE.Platform%3DAndroid#connect_xiaomi_calendar",
+      "/gemini/answer/14579026#languages",
+      "/gemini/answer/15305236?co=GENIE.Platform%3DAndroid#reqs&connect_xiaomi_calendar"
+    ]
+  },
+  {
+    "category": "Productivity",
+    "cells": [
+      "Xiaomi Notes: Create and show your notes and lists in Xiaomi Notes. Learn more.",
+      "Account types: Personal, work, or school Google Account\nAges: 13 or over\nLocations: All countries and territories where both the Gemini mobile app and Xiaomi Notes app are supported\nLanguages: All languages supported by the Gemini mobile app\nReview all requirements",
+      "Supported Gemini Apps\nGemini mobile app on Xiaomi 15 and Xiaomi 15 Pro, Pad 7 and Pad 7 Pro, or later devices\nSupported in\nChats\nGemini Live"
+    ],
+    "links": [
+      "/gemini/answer/15230597?co=GENIE.Platform%3DAndroid#connect_xiaomi_notes",
+      "/gemini/answer/14579026#languages",
+      "/gemini/answer/15230597?co=GENIE.Platform%3DAndroid#reqs&connect_xiaomi_notes"
+    ]
+  },
+  {
+    "category": "Productivity",
+    "cells": [
+      "Zoho Bigin: Inspect pipeline health and identify idle deals, move deals across stages, create contacts and companies from chat context, and schedule sales calls, tasks, and events.",
+      "Account type: Personal Google Account only\nAges: 18 or over\nLocation: India only\nLanguage: English only",
+      "Supported Gemini Apps\nGemini web app at gemini.google.com\nGemini mobile app\nGemini app for Windows\nSupported in\nChats\nTasks"
+    ],
+    "links": [
+      "https://gemini.google.com"
+    ]
+  },
+  {
+    "category": "Productivity",
+    "cells": [
+      "Zoho CRM: Search, create, update, and convert leads, filter and track revenue deals across pipeline stages, and inspect custom module fields and layouts.",
+      "Account type: Personal Google Account only\nAges: 18 or over\nLocation: India only\nLanguage: English only",
+      "Supported Gemini Apps\nGemini web app at gemini.google.com\nGemini mobile app\nGemini app for Windows\nSupported in\nChats\nTasks"
+    ],
+    "links": [
+      "https://gemini.google.com"
+    ]
+  },
+  {
+    "category": "Productivity",
+    "cells": [
+      "Zoho Desk: Monitor open tickets nearing SLA breach limits, audit departmental ticket backlogs, assign or update tickets, draft customer replies, and search Knowledge Base articles.",
+      "Account type: Personal Google Account only\nAges: 18 or over\nLocation: India only\nLanguage: English only",
+      "Supported Gemini Apps\nGemini web app at gemini.google.com\nGemini mobile app\nGemini app for Windows\nSupported in\nChats\nTasks"
+    ],
+    "links": [
+      "https://gemini.google.com"
+    ]
+  },
+  {
+    "category": "Productivity",
+    "cells": [
+      "Zoho Mail: Search emails and threads using natural language filters, draft new messages and replies, create folders and labels to organize mail, and generate inbox summaries highlighting urgent action items.",
+      "Account type: Personal Google Account only\nAges: 18 or over\nLocation: India only\nLanguage: English only",
+      "Supported Gemini Apps\nGemini web app at gemini.google.com\nGemini mobile app\nGemini app for Windows\nSupported in\nChats\nTasks"
+    ],
+    "links": [
+      "https://gemini.google.com"
+    ]
+  },
+  {
+    "category": "Productivity",
+    "cells": [
+      "Zoho Projects: Create and track projects, milestones, task lists, and individual tasks, or auto-generate complete project plans based on historical benchmark projects.",
+      "Account type: Personal Google Account only\nAges: 18 or over\nLocation: India only\nLanguage: English only",
+      "Supported Gemini Apps\nGemini web app at gemini.google.com\nGemini mobile app\nGemini app for Windows\nSupported in\nChats\nTasks"
+    ],
+    "links": [
+      "https://gemini.google.com"
+    ]
+  },
+  {
+    "category": "Travel & Activities",
+    "cells": [
+      "Bandsintown: Find upcoming concerts and music festivals for your favorite artists. Search for events by artist, location, or venue, and get lineups, venue schedules, and official ticket links.",
+      "Account type: Personal Google Account only\nAges: 18 or over\nLocation: US only\nLanguage: English only",
+      "Supported Gemini Apps\nGemini web app at gemini.google.com\nGemini mobile app\nGemini app for Mac\nGemini app for Windows\nSupported in\nChats\nTasks"
+    ],
+    "links": [
+      "https://gemini.google.com"
+    ]
+  },
+  {
+    "category": "Travel & Activities",
+    "cells": [
+      "ClickBus: Search for bus tickets between Brazilian cities and bus terminals by date, departure time window, and seat category. Compare prices, review seat maps, and more. Get a link to reserve your tickets directly with ClickBus.",
+      "Account type: Personal Google Account only\nAges: 18 or over\nLocation: Brazil only\nLanguage: Portuguese only",
+      "Supported Gemini Apps\nGemini web app at gemini.google.com\nGemini mobile app\nGemini app for Mac\nGemini app for Windows\nSupported in\nChats\nTasks"
+    ],
+    "links": [
+      "https://gemini.google.com"
+    ]
+  },
+  {
+    "category": "Travel & Activities",
+    "cells": [
+      "Fever: Find events, activities, and experiences available in your city or around the world. Search for specific entertainment, filter by date range, and sort results by popularity, price, rating, or distance.",
+      "Account type: Personal Google Account only\nAges: 18 or over\nLocation: All countries and territories where both Gemini Apps and Fever are supported\nLanguage: English only",
+      "Supported Gemini Apps\nGemini web app at gemini.google.com\nGemini mobile app\nGemini app for Windows\nSupported in\nChats\nTasks"
+    ],
+    "links": [
+      "https://gemini.google.com"
+    ]
+  },
+  {
+    "category": "Travel & Activities",
+    "cells": [
+      "GetYourGuide: Find, explore, and book tours and local activities.",
+      "Account type: Personal Google Account only\nAges: 18 or over\nLocation: US only\nLanguage: English only",
+      "Supported Gemini Apps\nGemini web app at gemini.google.com\nGemini mobile app\nGemini app for Windows\nSupported in\nChats\nTasks"
+    ],
+    "links": [
+      "https://gemini.google.com"
+    ]
+  },
+  {
+    "category": "Travel & Activities",
+    "cells": [
+      "Localiza: Search for car rentals in Brazil. Find available vehicles, compare rates and categories (such as economy, SUV, and executive), locate pickup and drop-off branches, and transfer your booking details directly to Localiza to complete the reservation.",
+      "Account type: Personal Google Account only\nAges: 18 or over\nLocation: Brazil only\nLanguage: Portuguese only",
+      "Supported Gemini Apps\nGemini web app at gemini.google.com\nGemini mobile app\nGemini app for Windows\nSupported in\nChats\nTasks"
+    ],
+    "links": [
+      "https://gemini.google.com"
+    ]
+  },
+  {
+    "category": "Travel & Activities",
+    "cells": [
+      "SeatGeek: Search for upcoming events by team, artist, venue, or location with date filters. Get ticket listings, ranked by seat location, price, and SeatGeek’s Deal Score, and a link directly to SeatGeek’s checkout to purchase a ticket.",
+      "Account type: Personal Google Account only\nAges: 18 or over\nLocation: US only\nLanguage: English only",
+      "Supported Gemini Apps\nGemini web app at gemini.google.com\nSupported in\nChats\nTasks"
+    ],
+    "links": [
+      "https://gemini.google.com"
+    ]
+  },
+  {
+    "category": "Travel & Activities",
+    "cells": [
+      "Ticketmaster: Search for events and tickets on Ticketmaster.",
+      "Account type: Personal Google Account only\nAges: 18 or over\nLocation: US only\nLanguage: English only",
+      "Supported Gemini Apps\nGemini web app at gemini.google.com\nGemini mobile app\nGemini app for Windows\nSupported in\nChats\nTasks"
+    ],
+    "links": [
+      "https://gemini.google.com"
+    ]
+  },
+  {
+    "category": "Travel & Activities",
+    "cells": [
+      "Viator: Find activities and experiences for your next trip. Learn more.",
+      "Account type: Personal Google Account only\nAges: 18 or over\nLocation: US only\nLanguage: English only\nReview all requirements",
+      "Supported Gemini Apps\nGemini web app at gemini.google.com\nGemini mobile app\nGemini app for Windows\nSupported in\nChats\nTasks"
+    ],
+    "links": [
+      "/gemini/answer/17256222",
+      "/gemini/answer/17256222#reqs",
+      "https://gemini.google.com"
+    ]
+  }
+]

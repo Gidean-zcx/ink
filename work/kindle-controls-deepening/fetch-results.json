@@ -1,0 +1,226 @@
+[
+  {
+    "evidence_id": "E-KDCD-01",
+    "slug": "guide-index",
+    "requested_url": "https://digprjsurvey.amazon.com/csad/help/node/G7N7RPHV2SW8CKBW",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "final_url": "https://digprjsurvey.amazon.com/csad/help/node/G7N7RPHV2SW8CKBW",
+    "headers": {
+      "Last-Modified": null,
+      "ETag": null,
+      "Content-Type": "text/html;charset=UTF-8"
+    },
+    "raw_work_path": "work/kindle-controls-deepening/01-guide-index.html",
+    "raw_sha256": "63557e64c6c5453e6e5bfa99e8e55835834c76242e071478aa1a65a47593f155",
+    "text_characters": 6361
+  },
+  {
+    "evidence_id": "E-KDCD-02",
+    "slug": "scribe-2024",
+    "requested_url": "https://d1ergij2b6wmg5.cloudfront.net/kug/kindle_scribe_2024/v1/en-US/html/kug.html",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "final_url": "https://d1ergij2b6wmg5.cloudfront.net/kug/kindle_scribe_2024/v1/en-US/html/kug.html",
+    "headers": {
+      "Last-Modified": "Mon, 05 Oct 2026 07:48:33 GMT",
+      "ETag": "W/\"732c615e89e84d7206140cf0d429b58d\"",
+      "Content-Type": "text/html"
+    },
+    "raw_work_path": "work/kindle-controls-deepening/02-scribe-2024.html",
+    "raw_sha256": "6122a2ee70cb5748992d93a301a72fc2c76608e3bf2c99dabd732a99595f8815",
+    "text_characters": 116466
+  },
+  {
+    "evidence_id": "E-KDCD-03",
+    "slug": "delete-notebooks",
+    "requested_url": "https://digprjsurvey.amazon.com/csad/help/node/TyR30Qzqu0hGzFbFVx?theme=light",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "final_url": "https://digprjsurvey.amazon.com/csad/help/node/TyR30Qzqu0hGzFbFVx?theme=light",
+    "headers": {
+      "Last-Modified": null,
+      "ETag": null,
+      "Content-Type": "text/html;charset=UTF-8"
+    },
+    "raw_work_path": "work/kindle-controls-deepening/03-delete-notebooks.html",
+    "raw_sha256": "3e17390307f77da6dfdeb0626e27a49d2c4c57728557f823c1125b9723aa2d77",
+    "text_characters": 1181
+  },
+  {
+    "evidence_id": "E-KDCD-04",
+    "slug": "fix-notebooks",
+    "requested_url": "https://digprjsurvey.amazon.com/csad/help/node/TyNFaxgPlqhHz1d4B4?theme=light",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "final_url": "https://digprjsurvey.amazon.com/csad/help/node/TyNFaxgPlqhHz1d4B4?theme=light",
+    "headers": {
+      "Last-Modified": null,
+      "ETag": null,
+      "Content-Type": "text/html;charset=UTF-8"
+    },
+    "raw_work_path": "work/kindle-controls-deepening/04-fix-notebooks.html",
+    "raw_sha256": "3ad400785c7e49181652a63c23b807c47cb6c379979cb0a4c85f9d15cf232715",
+    "text_characters": 1641
+  },
+  {
+    "evidence_id": "E-KDCD-05",
+    "slug": "create-notebooks",
+    "requested_url": "https://digprjsurvey.amazon.com/csad/help/node/TTkdXCk1A3rZ68MXt7",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "final_url": "https://digprjsurvey.amazon.com/csad/help/node/TTkdXCk1A3rZ68MXt7",
+    "headers": {
+      "Last-Modified": null,
+      "ETag": null,
+      "Content-Type": "text/html;charset=UTF-8"
+    },
+    "raw_work_path": "work/kindle-controls-deepening/05-create-notebooks.html",
+    "raw_sha256": "a8d979080f0d75d39adad6ca7ac0077722d06625eae34d2d4b9d9aece9cf392e",
+    "text_characters": 988
+  },
+  {
+    "evidence_id": "E-KDCD-06",
+    "slug": "move-notebooks",
+    "requested_url": "https://digprjsurvey.amazon.com/csad/help/node/TlI0Gva20JDq8Yfc4P",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "final_url": "https://digprjsurvey.amazon.com/csad/help/node/TlI0Gva20JDq8Yfc4P",
+    "headers": {
+      "Last-Modified": null,
+      "ETag": null,
+      "Content-Type": "text/html;charset=UTF-8"
+    },
+    "raw_work_path": "work/kindle-controls-deepening/06-move-notebooks.html",
+    "raw_sha256": "a3c4673f575223dccb90eb522df43384bb8f645dfc322bc9b700e0d0bd484da9",
+    "text_characters": 600
+  },
+  {
+    "evidence_id": "E-KDCD-07",
+    "slug": "multiple-pages",
+    "requested_url": "https://digprjsurvey.amazon.com/csad/help/node/Tq6OTco5USdWqZ91ZH",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "final_url": "https://digprjsurvey.amazon.com/csad/help/node/Tq6OTco5USdWqZ91ZH",
+    "headers": {
+      "Last-Modified": null,
+      "ETag": null,
+      "Content-Type": "text/html;charset=UTF-8"
+    },
+    "raw_work_path": "work/kindle-controls-deepening/07-multiple-pages.html",
+    "raw_sha256": "75339e24b13da244c9ee37d9a92df06ef97fa7dcbdfdaf4e729453e714445d84",
+    "text_characters": 1553
+  },
+  {
+    "evidence_id": "E-KDCD-08",
+    "slug": "writing",
+    "requested_url": "https://digprjsurvey.amazon.com/csad/help/node/T0MT2p2D8t046zUxih",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "final_url": "https://digprjsurvey.amazon.com/csad/help/node/T0MT2p2D8t046zUxih",
+    "headers": {
+      "Last-Modified": null,
+      "ETag": null,
+      "Content-Type": "text/html;charset=UTF-8"
+    },
+    "raw_work_path": "work/kindle-controls-deepening/08-writing.html",
+    "raw_sha256": "34af64bcbecf025ded47093f40bc1a90d3498c4f11ac2275c0edf079f34e7e89",
+    "text_characters": 3309
+  },
+  {
+    "evidence_id": "E-KDCD-09",
+    "slug": "compatibility",
+    "requested_url": "https://digprjsurvey.amazon.com/csad/help/node/TNtSm13k3txFI4EvDV",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "final_url": "https://digprjsurvey.amazon.com/csad/help/node/TNtSm13k3txFI4EvDV",
+    "headers": {
+      "Last-Modified": null,
+      "ETag": null,
+      "Content-Type": "text/html;charset=UTF-8"
+    },
+    "raw_work_path": "work/kindle-controls-deepening/09-compatibility.html",
+    "raw_sha256": "ec4b7ad89ade80605afd94650911934ff126d12089c7b70145ee7d818768607c",
+    "text_characters": 1996
+  },
+  {
+    "evidence_id": "E-KDCD-10",
+    "slug": "share",
+    "requested_url": "https://digprjsurvey.amazon.com/csad/help/node/TJE2UYmdw0ppUuR3Rs",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "final_url": "https://digprjsurvey.amazon.com/csad/help/node/TJE2UYmdw0ppUuR3Rs",
+    "headers": {
+      "Last-Modified": null,
+      "ETag": null,
+      "Content-Type": "text/html;charset=UTF-8"
+    },
+    "raw_work_path": "work/kindle-controls-deepening/10-share.html",
+    "raw_sha256": "c43bef903d02751ec9c0d8fe658b6de744242c11c23998fc9afadf481de5ccd4",
+    "text_characters": 1973
+  },
+  {
+    "evidence_id": "E-KDCD-11",
+    "slug": "sync",
+    "requested_url": "https://digprjsurvey.amazon.com/csad/help/node/GDCAMDFMC2LZP6BR",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "final_url": "https://digprjsurvey.amazon.com/csad/help/node/GDCAMDFMC2LZP6BR",
+    "headers": {
+      "Last-Modified": null,
+      "ETag": null,
+      "Content-Type": "text/html;charset=UTF-8"
+    },
+    "raw_work_path": "work/kindle-controls-deepening/11-sync.html",
+    "raw_sha256": "ef692ffdb1c794a3e50d867bc1b7e105e1b6553e28b5b5d187b4eece6e233b65",
+    "text_characters": 961
+  },
+  {
+    "evidence_id": "E-KDCD-12",
+    "slug": "cloud-drive",
+    "requested_url": "https://digprjsurvey.amazon.com/csad/help/node/TIh9JOMGAKr7bY4zqu",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "final_url": "https://digprjsurvey.amazon.com/csad/help/node/TIh9JOMGAKr7bY4zqu",
+    "headers": {
+      "Last-Modified": null,
+      "ETag": null,
+      "Content-Type": "text/html;charset=UTF-8"
+    },
+    "raw_work_path": "work/kindle-controls-deepening/12-cloud-drive.html",
+    "raw_sha256": "832bd182fb28ffeafa6daac2a72b9f66ffb85aeec6d18a847ac47fdf830e1b7f",
+    "text_characters": 8491
+  },
+  {
+    "evidence_id": "E-KDCD-13",
+    "slug": "quick-notes",
+    "requested_url": "https://digprjsurvey.amazon.com/csad/help/node/T54Isf2DDrox4TckQR",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "final_url": "https://digprjsurvey.amazon.com/csad/help/node/T54Isf2DDrox4TckQR",
+    "headers": {
+      "Last-Modified": null,
+      "ETag": null,
+      "Content-Type": "text/html;charset=UTF-8"
+    },
+    "raw_work_path": "work/kindle-controls-deepening/13-quick-notes.html",
+    "raw_sha256": "10ca87c37650e7d62ef0b29de42235d1610a2da511b6dd413c4d38923d0602d5",
+    "text_characters": 1040
+  },
+  {
+    "evidence_id": "E-KDCD-14",
+    "slug": "download-collections",
+    "requested_url": "https://digprjsurvey.amazon.com/csad/help/node/GQNG5LCNAE6JYM45?searchNodes=GDRLC59WEFZTBPU7&theme=light",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "final_url": "https://digprjsurvey.amazon.com/csad/help/node/GQNG5LCNAE6JYM45?searchNodes=GDRLC59WEFZTBPU7&theme=light",
+    "headers": {
+      "Last-Modified": null,
+      "ETag": null,
+      "Content-Type": "text/html;charset=UTF-8"
+    },
+    "raw_work_path": "work/kindle-controls-deepening/14-download-collections.html",
+    "raw_sha256": "1de6f395dfb6bc11121687ca372b066044762a09441e08f61f46dc73b5ffa147",
+    "text_characters": 556
+  }
+]

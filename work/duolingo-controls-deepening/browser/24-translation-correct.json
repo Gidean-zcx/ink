@@ -1,0 +1,76 @@
+{
+  "name": "24-translation-correct",
+  "url": "https://www.duolingo.com/lesson",
+  "title": "Duolingo - Learn French with lessons that work",
+  "utc": "2026-10-26T17:50:36.873361+00:00",
+  "text": "2 IN A ROW\n4\nNEW WORD\nWrite this in English\nUn thé ?\nA\ntea\nthank you\ntea\nA\nAwesome!\nTOO EASY\nTOO DIFFICULT\nREPORT\nCONTINUE",
+  "buttons": [
+    {
+      "text": "",
+      "aria": null,
+      "test": "quit-button",
+      "visible": true
+    },
+    {
+      "text": "",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "A",
+      "aria": null,
+      "test": "A-challenge-tap-token",
+      "visible": true
+    },
+    {
+      "text": "tea",
+      "aria": null,
+      "test": "tea-challenge-tap-token",
+      "visible": true
+    },
+    {
+      "text": "thank you",
+      "aria": null,
+      "test": "thank you-challenge-tap-token",
+      "visible": true
+    },
+    {
+      "text": "tea",
+      "aria": null,
+      "test": "tea-challenge-tap-token",
+      "visible": true
+    },
+    {
+      "text": "A",
+      "aria": null,
+      "test": "A-challenge-tap-token",
+      "visible": true
+    },
+    {
+      "text": "TOO EASY",
+      "aria": "Too easy",
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "TOO DIFFICULT",
+      "aria": "Too difficult",
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "REPORT",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "CONTINUE",
+      "aria": null,
+      "test": "player-next",
+      "visible": true
+    }
+  ],
+  "inputs": []
+}

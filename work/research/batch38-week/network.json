@@ -1,0 +1,2298 @@
+[
+  {
+    "url": "https://reader.emagazines.com/issue/the-week-junior/october-23-2026?ipt=F0826FC3-4129-46CF-A5F3-FF70A931F1FF",
+    "status": 200,
+    "method": "GET",
+    "type": "document",
+    "context": "desktop"
+  },
+  {
+    "url": "https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css",
+    "status": 200,
+    "method": "GET",
+    "type": "stylesheet",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/bootstrap.min.css",
+    "status": 200,
+    "method": "GET",
+    "type": "stylesheet",
+    "context": "desktop"
+  },
+  {
+    "url": "https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css",
+    "status": 200,
+    "method": "GET",
+    "type": "stylesheet",
+    "context": "desktop"
+  },
+  {
+    "url": "https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css",
+    "status": 200,
+    "method": "GET",
+    "type": "stylesheet",
+    "context": "desktop"
+  },
+  {
+    "url": "https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css",
+    "status": 200,
+    "method": "GET",
+    "type": "stylesheet",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/emf_issue_assets/emf_custom_common.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/rellax.min.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400&display=swap",
+    "status": 200,
+    "method": "GET",
+    "type": "stylesheet",
+    "context": "desktop"
+  },
+  {
+    "url": "https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap",
+    "status": 200,
+    "method": "GET",
+    "type": "stylesheet",
+    "context": "desktop"
+  },
+  {
+    "url": "https://hammerjs.github.io/dist/hammer.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://cdn.jsdelivr.net/npm/sweetalert2@9",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://www.googletagmanager.com/gtag/js?id=G-VWJXMVV0ZC",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0",
+    "status": 200,
+    "method": "GET",
+    "type": "stylesheet",
+    "context": "desktop"
+  },
+  {
+    "url": "https://www.google-analytics.com/g/collect?v=2&tid=G-VWJXMVV0ZC&gtm=45je6an1v881442582za200zd881442582xf1&_p=1793075719369&gcd=13l3l3l3l1l1&npa=0&dma=0&_eu=AEA&ae=a&cid=182241956.1793075720&frm=0&ngs=1&pscdl=noapi&rcb=8&sr=1200x900&uaa=x86&uab=64&uafvl=Not%253AA-Brand%3B8.0.0.0%7CChromium%3B156.0.8078.4%7CHeadlessChrome%3B156.0.8078.4&uam=&uamb=0&uap=Linux&uapv=&uaw=0&ul=en-us&_s=1&tag_exp=115938465~115938469~118897920~118897930~120213116~120385422~120469145~120469153~121246026~121246034~123620775&sid=1793075719&sct=1&seg=0&dl=https%3A%2F%2Freader.emagazines.com%2Fissue%2Fthe-week-junior%2Foctober-23-2026%3Fipt%3DF0826FC3-4129-46CF-A5F3-FF70A931F1FF&dt=The%20Week%20Junior%2C%20October%2023%2C%202026&en=scroll&_fv=1&_nsi=1&_ss=1&epn.percent_scrolled=90&tfd=1164",
+    "status": 204,
+    "method": "POST",
+    "type": "fetch",
+    "context": "desktop"
+  },
+  {
+    "url": "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css",
+    "status": 200,
+    "method": "GET",
+    "type": "stylesheet",
+    "context": "desktop"
+  },
+  {
+    "url": "https://cdn.jsdelivr.net/npm/zoomist@2/zoomist.css",
+    "status": 200,
+    "method": "GET",
+    "type": "stylesheet",
+    "context": "desktop"
+  },
+  {
+    "url": "https://cdn.jsdelivr.net/npm/zoomist@2/zoomist.umd.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://cdn.emagazines.com/digital/The_Week_Junior/20261016/db9028739536c6eff2c46ba4dd5c541e.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/The_Week_Junior/20261016/V5HVU5RVXDOW4OEE4XL25WDXAE.jpg",
+    "status": 200,
+    "method": "GET",
+    "type": "image",
+    "context": "desktop"
+  },
+  {
+    "url": "https://www.gstatic.com/firebasejs/10.13.1/firebase-analytics.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://www.gstatic.com/firebasejs/10.13.1/firebase-messaging.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/The_Week_Junior/20261016/V5HVU5RVXDOW4OEE4XL25WDXAE.jpg",
+    "status": 200,
+    "method": "GET",
+    "type": "image",
+    "context": "desktop"
+  },
+  {
+    "url": "https://firebase.googleapis.com/v1alpha/projects/-/apps/1:231547785401:web:e67f7bd06990f435040b68/webConfig",
+    "status": 200,
+    "method": "GET",
+    "type": "fetch",
+    "context": "desktop"
+  },
+  {
+    "url": "https://www.googletagmanager.com/gtag/js?id=G-GVMN6J471E&cx=c&gtm=4e6an1",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://www.googletagmanager.com/gtag/js?l=dataLayer&id=G-GVMN6J471E",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://reader.emagazines.com/issue/the-week-junior/october-23-2026?arrows=true&disableviewdesktopbutton=true&disablebacktolibrarybutton=true&textView=true&viewMobile=true&ipt=f0826fc3-4129-46cf-a5f3-ff70a931f1ff&ga=off&aid=465e9383-74db-49bd-93bb-d9828c1b0916",
+    "status": 200,
+    "method": "GET",
+    "type": "document",
+    "context": "desktop"
+  },
+  {
+    "url": "https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css",
+    "status": 200,
+    "method": "GET",
+    "type": "stylesheet",
+    "context": "desktop"
+  },
+  {
+    "url": "https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css",
+    "status": 200,
+    "method": "GET",
+    "type": "stylesheet",
+    "context": "desktop"
+  },
+  {
+    "url": "https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/bootstrap.min.css",
+    "status": 200,
+    "method": "GET",
+    "type": "stylesheet",
+    "context": "desktop"
+  },
+  {
+    "url": "https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/rellax.min.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css",
+    "status": 200,
+    "method": "GET",
+    "type": "stylesheet",
+    "context": "desktop"
+  },
+  {
+    "url": "https://cdn.jsdelivr.net/npm/sweetalert2@9",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400&display=swap",
+    "status": 200,
+    "method": "GET",
+    "type": "stylesheet",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/emf_issue_assets/emf_custom_common.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css",
+    "status": 200,
+    "method": "GET",
+    "type": "stylesheet",
+    "context": "desktop"
+  },
+  {
+    "url": "https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap",
+    "status": 200,
+    "method": "GET",
+    "type": "stylesheet",
+    "context": "desktop"
+  },
+  {
+    "url": "https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0",
+    "status": 200,
+    "method": "GET",
+    "type": "stylesheet",
+    "context": "desktop"
+  },
+  {
+    "url": "https://www.google-analytics.com/g/collect?v=2&tid=G-GVMN6J471E&gtm=45je6an1v9195084384za208zb881442582zd881442582xf1&_p=1793075719369&gcd=13l3l3l3l1l1&npa=0&dma=0&_fid=cMwhPMQAy6rAB9B14OkJ17&cid=182241956.1793075720&frm=0&ngs=1&pscdl=noapi&rcb=6&sr=1200x900&uaa=x86&uab=64&uafvl=Not%253AA-Brand%3B8.0.0.0%7CChromium%3B156.0.8078.4%7CHeadlessChrome%3B156.0.8078.4&uam=&uamb=0&uap=Linux&uapv=&uaw=0&ul=en-us&_s=1&tag_exp=115616986~115938465~115938469~118897920~118897930~120213116~120385423~120469145~120469153~121246026~121246034&sid=1793075720&sct=1&seg=0&dl=https%3A%2F%2Freader.emagazines.com%2Fissue%2Fthe-week-junior%2Foctober-23-2026%3Fipt%3DF0826FC3-4129-46CF-A5F3-FF70A931F1FF&dt=The%20Week%20Junior%2C%20October%2023%2C%202026&en=page_view&_fv=1&_ss=1&_ee=1&ep.origin=firebase&tfd=2158",
+    "status": 204,
+    "method": "POST",
+    "type": "fetch",
+    "context": "desktop"
+  },
+  {
+    "url": "https://api.emagazines.com/EmfIssueSettings/null?tokenType=entitlement",
+    "status": 200,
+    "method": "GET",
+    "type": "xhr",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/uploads/weekjrthumb_450bca04-0bcf-4a18-a7c9-c42dab07b214.png",
+    "status": 200,
+    "method": "GET",
+    "type": "image",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/uploads/howler_07566d58-11d2-48f8-bad6-b623be54fd75.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/The_Week_Junior/20261016/af4f5a7635b8dd6e3884e5d7aed87701_thumb.jpg",
+    "status": 200,
+    "method": "GET",
+    "type": "image",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/uploads/233e5101-43e1-4b53-b05b-9c356a6a7a35_imageZoomer.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/uploads/iv-viewer_23a8de4a-15a7-4ab2-a2c2-8fe98d789ca0.css",
+    "status": 200,
+    "method": "GET",
+    "type": "stylesheet",
+    "context": "desktop"
+  },
+  {
+    "url": "https://cdn.emagazines.com/digital/The_Week_Junior/20261016/87f29cb73e89c4a9514702a8fcdbb17a.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/The_Week_Junior/20261016/V5HVU5RVXDOW4OEE4XL25WDXAE.jpg",
+    "status": 200,
+    "method": "GET",
+    "type": "image",
+    "context": "desktop"
+  },
+  {
+    "url": "https://firebaseinstallations.googleapis.com/v1/projects/emagazines-web-push/installations",
+    "status": 200,
+    "method": "POST",
+    "type": "fetch",
+    "context": "desktop"
+  },
+  {
+    "url": "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://www.gstatic.com/firebasejs/10.13.1/firebase-analytics.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://www.gstatic.com/firebasejs/10.13.1/firebase-messaging.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://firebase.googleapis.com/v1alpha/projects/-/apps/1:231547785401:web:e67f7bd06990f435040b68/webConfig",
+    "status": 200,
+    "method": "GET",
+    "type": "fetch",
+    "context": "desktop"
+  },
+  {
+    "url": "https://www.googletagmanager.com/gtag/js?l=dataLayer&id=G-GVMN6J471E",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://api.emagazines.com/EmfIssueSettings/null?tokenType=entitlement",
+    "status": 200,
+    "method": "GET",
+    "type": "xhr",
+    "context": "desktop"
+  },
+  {
+    "url": "https://www.google-analytics.com/g/collect?v=2&tid=G-VWJXMVV0ZC&gtm=45je6an1v881442582za200zd881442582xf1&_p=1793075719369&gcd=13l3l3l3l1l1&npa=0&dma=0&_eu=AAAAAAQ&cid=182241956.1793075720&frm=0&ngs=1&pscdl=noapi&rcb=8&sr=1200x900&uaa=x86&uab=64&uafvl=Not%253AA-Brand%3B8.0.0.0%7CChromium%3B156.0.8078.4%7CHeadlessChrome%3B156.0.8078.4&uam=&uamb=0&uap=Linux&uapv=&uaw=0&ul=en-us&tag_exp=115938465~115938469~118897920~118897930~120213116~120385422~120469145~120469153~121246026~121246034~123620775&dt=The%20Week%20Junior%20%7C%20October%2023%2C%202026%20%7C%20Page%201&dl=https%3A%2F%2Freader.emagazines.com%2Fissue%2Fthe-week-junior%2Foctober-23-2026%2Fcover-3%3Fipt%3DF0826FC3-4129-46CF-A5F3-FF70A931F1FF&dp=%2Fissue%2Fthe-week-junior%2Foctober-23-2026%2Fcover-3&sid=1793075719&sct=1&seg=1&_s=2&tfd=3345",
+    "status": 204,
+    "method": "POST",
+    "type": "fetch",
+    "context": "desktop"
+  },
+  {
+    "url": "https://www.google-analytics.com/g/collect?v=2&tid=G-GVMN6J471E&gtm=45je6an1v9195084384za200zb881442582zd881442582xf1&_p=1793075719369&gcd=13l3l3l3l1l1&npa=0&dma=0&_eu=AAAAAAQ&_fid=cMwhPMQAy6rAB9B14OkJ17&cid=182241956.1793075720&frm=0&ngs=1&pscdl=noapi&rcb=6&sr=1200x900&uaa=x86&uab=64&uafvl=Not%253AA-Brand%3B8.0.0.0%7CChromium%3B156.0.8078.4%7CHeadlessChrome%3B156.0.8078.4&uam=&uamb=0&uap=Linux&uapv=&uaw=0&ul=en-us&tag_exp=115616986~115938465~115938469~118897920~118897930~120213116~120385423~120469145~120469153~121246026~121246034&dt=The%20Week%20Junior%20%7C%20October%2023%2C%202026%20%7C%20Page%201&dl=https%3A%2F%2Freader.emagazines.com%2Fissue%2Fthe-week-junior%2Foctober-23-2026%2Fcover-3%3Fipt%3DF0826FC3-4129-46CF-A5F3-FF70A931F1FF&dp=%2Fissue%2Fthe-week-junior%2Foctober-23-2026%2Fcover-3&sid=1793075720&sct=1&seg=1&_s=2&tfd=7175",
+    "status": 204,
+    "method": "POST",
+    "type": "fetch",
+    "context": "desktop"
+  },
+  {
+    "url": "https://www.google-analytics.com/g/collect?v=2&tid=G-VWJXMVV0ZC&gtm=45je6an1v881442582za200zd881442582xf1&_p=1793075719369&gcd=13l3l3l3l1l1&npa=0&dma=0&_eu=AEAAAAQ&ae=a&cid=182241956.1793075720&frm=0&ngs=1&pscdl=noapi&rcb=8&sr=1200x900&uaa=x86&uab=64&uafvl=Not%253AA-Brand%3B8.0.0.0%7CChromium%3B156.0.8078.4%7CHeadlessChrome%3B156.0.8078.4&uam=&uamb=0&uap=Linux&uapv=&uaw=0&ul=en-us&_s=3&tag_exp=115938465~115938469~118897920~118897930~120213116~120385422~120469145~120469153~121246026~121246034~123620775&dl=https%3A%2F%2Freader.emagazines.com%2Fissue%2Fthe-week-junior%2Foctober-23-2026%2Fcover-3%3Fipt%3DF0826FC3-4129-46CF-A5F3-FF70A931F1FF&dr=https%3A%2F%2Freader.emagazines.com%2Fissue%2Fthe-week-junior%2Foctober-23-2026%3Fipt%3DF0826FC3-4129-46CF-A5F3-FF70A931F1FF&sid=1793075719&sct=1&seg=1&dt=The%20Week%20Junior%2C%20October%2023%2C%202026&en=page_view&_et=976&tfd=8347",
+    "status": 204,
+    "method": "POST",
+    "type": "fetch",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/The_Week_Junior/20261016/U2LPCWTZH5JZFCN2Y3Y7BP544U.jpg",
+    "status": 200,
+    "method": "GET",
+    "type": "image",
+    "context": "desktop"
+  },
+  {
+    "url": "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/fonts/bootstrap-icons.woff2?1fa40e8900654d2863d011707b9fb6f2",
+    "status": 200,
+    "method": "GET",
+    "type": "font",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/The_Week_Junior/20261016/U2LPCWTZH5JZFCN2Y3Y7BP544U.jpg",
+    "status": 200,
+    "method": "GET",
+    "type": "image",
+    "context": "desktop"
+  },
+  {
+    "url": "https://www.google-analytics.com/g/collect?v=2&tid=G-VWJXMVV0ZC&gtm=45je6an1v881442582za200zd881442582xf1&_p=1793075719369&gcd=13l3l3l3l1l1&npa=0&dma=0&_eu=AAAAAAQ&cid=182241956.1793075720&frm=0&ngs=1&pscdl=noapi&rcb=8&sr=1200x900&uaa=x86&uab=64&uafvl=Not%253AA-Brand%3B8.0.0.0%7CChromium%3B156.0.8078.4%7CHeadlessChrome%3B156.0.8078.4&uam=&uamb=0&uap=Linux&uapv=&uaw=0&ul=en-us&tag_exp=115938465~115938469~118897920~118897930~120213116~120385422~120469145~120469153~121246026~121246034~123620775&dt=The%20Week%20Junior%2C%20October%2023%2C%202026&dl=https%3A%2F%2Freader.emagazines.com%2Fissue%2Fthe-week-junior%2Foctober-23-2026%2Fnobel-prizes-for-2026-are-awarded-1%3Fipt%3DF0826FC3-4129-46CF-A5F3-FF70A931F1FF&dp=%2Fissue%2Fthe-week-junior%2Foctober-23-2026%2Fnobel-prizes-for-2026-are-awarded-1&sid=1793075719&sct=1&seg=1&dr=https%3A%2F%2Freader.emagazines.com%2Fissue%2Fthe-week-junior%2Foctober-23-2026%3Fipt%3DF0826FC3-4129-46CF-A5F3-FF70A931F1FF&_s=4&tfd=117138",
+    "status": 204,
+    "method": "POST",
+    "type": "fetch",
+    "context": "desktop"
+  },
+  {
+    "url": "https://www.google-analytics.com/g/collect?v=2&tid=G-GVMN6J471E&gtm=45je6an1v9195084384za200zb881442582zd881442582xf1&_p=1793075719369&gcd=13l3l3l3l1l1&npa=0&dma=0&_eu=AAAAAAQ&_fid=cMwhPMQAy6rAB9B14OkJ17&cid=182241956.1793075720&frm=0&ngs=1&pscdl=noapi&rcb=6&sr=1200x900&uaa=x86&uab=64&uafvl=Not%253AA-Brand%3B8.0.0.0%7CChromium%3B156.0.8078.4%7CHeadlessChrome%3B156.0.8078.4&uam=&uamb=0&uap=Linux&uapv=&uaw=0&ul=en-us&tag_exp=115616986~115938465~115938469~118897920~118897930~120213116~120385423~120469145~120469153~121246026~121246034&dt=The%20Week%20Junior%2C%20October%2023%2C%202026&dl=https%3A%2F%2Freader.emagazines.com%2Fissue%2Fthe-week-junior%2Foctober-23-2026%2Fnobel-prizes-for-2026-are-awarded-1%3Fipt%3DF0826FC3-4129-46CF-A5F3-FF70A931F1FF&dp=%2Fissue%2Fthe-week-junior%2Foctober-23-2026%2Fnobel-prizes-for-2026-are-awarded-1&sid=1793075720&sct=1&seg=1&_s=3&tfd=117226",
+    "status": 204,
+    "method": "POST",
+    "type": "fetch",
+    "context": "desktop"
+  },
+  {
+    "url": "https://fonts.gstatic.com/s/opensans/v44/memvYaGs126MiZpBA-UvWbX2vVnXBbObj2OVTS-muw.woff2",
+    "status": 200,
+    "method": "GET",
+    "type": "font",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/The_Week_Junior/20261016/OW3ESIBCD75LZGVUTV2E7DXENI.jpg",
+    "status": 200,
+    "method": "GET",
+    "type": "image",
+    "context": "desktop"
+  },
+  {
+    "url": "https://www.google-analytics.com/g/collect?v=2&tid=G-VWJXMVV0ZC&gtm=45je6an1v881442582za200zd881442582xf1&_p=1793075719369&gcd=13l3l3l3l1l1&npa=0&dma=0&_eu=AAAAAAQ&cid=182241956.1793075720&frm=0&ngs=1&pscdl=noapi&rcb=8&sr=1200x900&uaa=x86&uab=64&uafvl=Not%253AA-Brand%3B8.0.0.0%7CChromium%3B156.0.8078.4%7CHeadlessChrome%3B156.0.8078.4&uam=&uamb=0&uap=Linux&uapv=&uaw=0&ul=en-us&tag_exp=115938465~115938469~118897920~118897930~120213116~120385422~120469145~120469153~121246026~121246034~123620775&dt=The%20Week%20Junior%2C%20October%2023%2C%202026&dl=https%3A%2F%2Freader.emagazines.com%2Fissue%2Fthe-week-junior%2Foctober-23-2026%2Ftuts-tomb-may-have-hidden-rooms-1%3Fipt%3DF0826FC3-4129-46CF-A5F3-FF70A931F1FF&dp=%2Fissue%2Fthe-week-junior%2Foctober-23-2026%2Ftuts-tomb-may-have-hidden-rooms-1&sid=1793075719&sct=1&seg=1&dr=https%3A%2F%2Freader.emagazines.com%2Fissue%2Fthe-week-junior%2Foctober-23-2026%3Fipt%3DF0826FC3-4129-46CF-A5F3-FF70A931F1FF&_s=5&tfd=226762",
+    "status": 204,
+    "method": "POST",
+    "type": "fetch",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/The_Week_Junior/20261016/a696f15a793f539289bac6f1f0bfbce5_thumb.jpg",
+    "status": 200,
+    "method": "GET",
+    "type": "image",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/The_Week_Junior/20261016/3b918252deb1b8f89120b06cb32246d8_thumb.jpg",
+    "status": 200,
+    "method": "GET",
+    "type": "image",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/The_Week_Junior/20261016/20a51f09d19921149a01f9b08ba7cf20_thumb.jpg",
+    "status": 200,
+    "method": "GET",
+    "type": "image",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/The_Week_Junior/20261016/1fb9ee87a87b2e8f66cf961c67cb534e_thumb.jpg",
+    "status": 200,
+    "method": "GET",
+    "type": "image",
+    "context": "desktop"
+  },
+  {
+    "url": "https://www.google-analytics.com/g/collect?v=2&tid=G-GVMN6J471E&gtm=45je6an1v9195084384za200zb881442582zd881442582xf1&_p=1793075719369&gcd=13l3l3l3l1l1&npa=0&dma=0&_eu=AAAAAAQ&_fid=cMwhPMQAy6rAB9B14OkJ17&cid=182241956.1793075720&frm=0&ngs=1&pscdl=noapi&rcb=6&sr=1200x900&uaa=x86&uab=64&uafvl=Not%253AA-Brand%3B8.0.0.0%7CChromium%3B156.0.8078.4%7CHeadlessChrome%3B156.0.8078.4&uam=&uamb=0&uap=Linux&uapv=&uaw=0&ul=en-us&tag_exp=115616986~115938465~115938469~118897920~118897930~120213116~120385423~120469145~120469153~121246026~121246034&dt=The%20Week%20Junior%2C%20October%2023%2C%202026&dl=https%3A%2F%2Freader.emagazines.com%2Fissue%2Fthe-week-junior%2Foctober-23-2026%2Ftuts-tomb-may-have-hidden-rooms-1%3Fipt%3DF0826FC3-4129-46CF-A5F3-FF70A931F1FF&dp=%2Fissue%2Fthe-week-junior%2Foctober-23-2026%2Ftuts-tomb-may-have-hidden-rooms-1&sid=1793075720&sct=1&seg=1&_s=4&tfd=230788",
+    "status": 204,
+    "method": "POST",
+    "type": "fetch",
+    "context": "desktop"
+  },
+  {
+    "url": "https://www.google-analytics.com/g/collect?v=2&tid=G-VWJXMVV0ZC&gtm=45je6an1v881442582za200zd881442582xf1&_p=1793075719369&gcd=13l3l3l3l1l1&npa=0&dma=0&_eu=AEAAAAQ&ae=a&cid=182241956.1793075720&frm=0&ngs=1&pscdl=noapi&rcb=8&sr=1200x900&uaa=x86&uab=64&uafvl=Not%253AA-Brand%3B8.0.0.0%7CChromium%3B156.0.8078.4%7CHeadlessChrome%3B156.0.8078.4&uam=&uamb=0&uap=Linux&uapv=&uaw=0&ul=en-us&_s=6&tag_exp=115938465~115938469~118897920~118897930~120213116~120385422~120469145~120469153~121246026~121246034~123620775&dl=https%3A%2F%2Freader.emagazines.com%2Fissue%2Fthe-week-junior%2Foctober-23-2026%2Ftuts-tomb-may-have-hidden-rooms-1%3Fipt%3DF0826FC3-4129-46CF-A5F3-FF70A931F1FF&dr=https%3A%2F%2Freader.emagazines.com%2Fissue%2Fthe-week-junior%2Foctober-23-2026%2Fnobel-prizes-for-2026-are-awarded-1%3Fipt%3DF0826FC3-4129-46CF-A5F3-FF70A931F1FF&sid=1793075719&sct=1&seg=1&dt=The%20Week%20Junior%2C%20October%2023%2C%202026&en=page_view&_et=946&tfd=231769",
+    "status": 204,
+    "method": "POST",
+    "type": "fetch",
+    "context": "desktop"
+  },
+  {
+    "url": "https://www.google-analytics.com/g/collect?v=2&tid=G-GVMN6J471E&gtm=45je6an1v9195084384za200zb881442582zd881442582xf1&_p=1793075719369&gcd=13l3l3l3l1l1&npa=0&dma=0&_eu=AAAAAAQ&_fid=cMwhPMQAy6rAB9B14OkJ17&cid=182241956.1793075720&frm=0&ngs=1&pscdl=noapi&rcb=6&sr=1200x900&uaa=x86&uab=64&uafvl=Not%253AA-Brand%3B8.0.0.0%7CChromium%3B156.0.8078.4%7CHeadlessChrome%3B156.0.8078.4&uam=&uamb=0&uap=Linux&uapv=&uaw=0&ul=en-us&_s=5&tag_exp=115616986~115938465~115938469~118897920~118897930~120213116~120385423~120469145~120469153~121246026~121246034&sid=1793075720&sct=1&seg=1&dl=https%3A%2F%2Freader.emagazines.com%2Fissue%2Fthe-week-junior%2Foctober-23-2026%2Ftuts-tomb-may-have-hidden-rooms-1%3Fipt%3DF0826FC3-4129-46CF-A5F3-FF70A931F1FF&dt=The%20Week%20Junior%2C%20October%2023%2C%202026&en=search&_ee=1&ep.origin=firebase&ep.search_term=Nobel&_et=51163&tfd=281984",
+    "status": 204,
+    "method": "POST",
+    "type": "fetch",
+    "context": "desktop"
+  },
+  {
+    "url": "https://www.google-analytics.com/g/collect?v=2&tid=G-VWJXMVV0ZC&gtm=45je6an1v881442582za200zd881442582xf1&_p=1793075719369&gcd=13l3l3l3l1l1&npa=0&dma=0&_eu=AAAAAAQ&cid=182241956.1793075720&frm=0&ngs=1&pscdl=noapi&rcb=8&sr=1200x900&uaa=x86&uab=64&uafvl=Not%253AA-Brand%3B8.0.0.0%7CChromium%3B156.0.8078.4%7CHeadlessChrome%3B156.0.8078.4&uam=&uamb=0&uap=Linux&uapv=&uaw=0&ul=en-us&_s=7&tag_exp=115938465~115938469~118897920~118897930~120213116~120385422~120469145~120469153~121246026~121246034~123620775&sid=1793075719&sct=1&seg=1&dl=https%3A%2F%2Freader.emagazines.com%2Fissue%2Fthe-week-junior%2Foctober-23-2026%2Ftuts-tomb-may-have-hidden-rooms-1%3Fipt%3DF0826FC3-4129-46CF-A5F3-FF70A931F1FF&dr=https%3A%2F%2Freader.emagazines.com%2Fissue%2Fthe-week-junior%2Foctober-23-2026%2Fnobel-prizes-for-2026-are-awarded-1%3Fipt%3DF0826FC3-4129-46CF-A5F3-FF70A931F1FF&dt=The%20Week%20Junior%2C%20October%2023%2C%202026&en=search&_ee=1&ep.search_term=Nobel&_et=50213&tfd=281979",
+    "status": 204,
+    "method": "POST",
+    "type": "fetch",
+    "context": "desktop"
+  },
+  {
+    "url": "https://www.google-analytics.com/g/collect?v=2&tid=G-VWJXMVV0ZC&gtm=45je6an1v881442582za200zd881442582xf1&_p=1793075719369&gcd=13l3l3l3l1l1&npa=0&dma=0&_eu=AAAAAAQ&cid=182241956.1793075720&frm=0&ngs=1&pscdl=noapi&rcb=8&sr=1200x900&uaa=x86&uab=64&uafvl=Not%253AA-Brand%3B8.0.0.0%7CChromium%3B156.0.8078.4%7CHeadlessChrome%3B156.0.8078.4&uam=&uamb=0&uap=Linux&uapv=&uaw=0&ul=en-us&_s=8&tag_exp=115938465~115938469~118897920~118897930~120213116~120385422~120469145~120469153~121246026~121246034~123620775&sid=1793075719&sct=1&seg=1&dl=https%3A%2F%2Freader.emagazines.com%2Fissue%2Fthe-week-junior%2Foctober-23-2026%2Ftuts-tomb-may-have-hidden-rooms-1%3Fipt%3DF0826FC3-4129-46CF-A5F3-FF70A931F1FF&dr=https%3A%2F%2Freader.emagazines.com%2Fissue%2Fthe-week-junior%2Foctober-23-2026%2Fnobel-prizes-for-2026-are-awarded-1%3Fipt%3DF0826FC3-4129-46CF-A5F3-FF70A931F1FF&dt=The%20Week%20Junior%2C%20October%2023%2C%202026&en=search&_ee=1&ep.search_term=Nobel&_et=47604&tfd=329592",
+    "status": 204,
+    "method": "POST",
+    "type": "fetch",
+    "context": "desktop"
+  },
+  {
+    "url": "https://www.google-analytics.com/g/collect?v=2&tid=G-GVMN6J471E&gtm=45je6an1v9195084384za200zb881442582zd881442582xf1&_p=1793075719369&gcd=13l3l3l3l1l1&npa=0&dma=0&_eu=AAAAAAQ&_fid=cMwhPMQAy6rAB9B14OkJ17&cid=182241956.1793075720&frm=0&ngs=1&pscdl=noapi&rcb=6&sr=1200x900&uaa=x86&uab=64&uafvl=Not%253AA-Brand%3B8.0.0.0%7CChromium%3B156.0.8078.4%7CHeadlessChrome%3B156.0.8078.4&uam=&uamb=0&uap=Linux&uapv=&uaw=0&ul=en-us&_s=6&tag_exp=115616986~115938465~115938469~118897920~118897930~120213116~120385423~120469145~120469153~121246026~121246034&sid=1793075720&sct=1&seg=1&dl=https%3A%2F%2Freader.emagazines.com%2Fissue%2Fthe-week-junior%2Foctober-23-2026%2Ftuts-tomb-may-have-hidden-rooms-1%3Fipt%3DF0826FC3-4129-46CF-A5F3-FF70A931F1FF&dt=The%20Week%20Junior%2C%20October%2023%2C%202026&en=search&_ee=1&ep.origin=firebase&ep.search_term=Nobel&_et=47611&tfd=329597",
+    "status": 204,
+    "method": "POST",
+    "type": "fetch",
+    "context": "desktop"
+  },
+  {
+    "url": "https://reader.emagazines.com/issue/the-week-junior/october-23-2026?ipt=F0826FC3-4129-46CF-A5F3-FF70A931F1FF",
+    "status": 200,
+    "method": "GET",
+    "type": "document",
+    "context": "desktop"
+  },
+  {
+    "url": "https://hammerjs.github.io/dist/hammer.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://www.googletagmanager.com/gtag/js?id=G-VWJXMVV0ZC",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css",
+    "status": 200,
+    "method": "GET",
+    "type": "stylesheet",
+    "context": "desktop"
+  },
+  {
+    "url": "https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css",
+    "status": 200,
+    "method": "GET",
+    "type": "stylesheet",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/bootstrap.min.css",
+    "status": 200,
+    "method": "GET",
+    "type": "stylesheet",
+    "context": "desktop"
+  },
+  {
+    "url": "https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css",
+    "status": 200,
+    "method": "GET",
+    "type": "stylesheet",
+    "context": "desktop"
+  },
+  {
+    "url": "https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400&display=swap",
+    "status": 200,
+    "method": "GET",
+    "type": "stylesheet",
+    "context": "desktop"
+  },
+  {
+    "url": "https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css",
+    "status": 200,
+    "method": "GET",
+    "type": "stylesheet",
+    "context": "desktop"
+  },
+  {
+    "url": "https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap",
+    "status": 200,
+    "method": "GET",
+    "type": "stylesheet",
+    "context": "desktop"
+  },
+  {
+    "url": "https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/rellax.min.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/emf_issue_assets/emf_custom_common.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://cdn.jsdelivr.net/npm/sweetalert2@9",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://cdn.emagazines.com/digital/The_Week_Junior/20261016/db9028739536c6eff2c46ba4dd5c541e.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0",
+    "status": 200,
+    "method": "GET",
+    "type": "stylesheet",
+    "context": "desktop"
+  },
+  {
+    "url": "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css",
+    "status": 200,
+    "method": "GET",
+    "type": "stylesheet",
+    "context": "desktop"
+  },
+  {
+    "url": "https://cdn.jsdelivr.net/npm/zoomist@2/zoomist.css",
+    "status": 200,
+    "method": "GET",
+    "type": "stylesheet",
+    "context": "desktop"
+  },
+  {
+    "url": "https://cdn.jsdelivr.net/npm/zoomist@2/zoomist.umd.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://api.emagazines.com/EmfIssueSettings/null?tokenType=entitlement",
+    "status": 200,
+    "method": "GET",
+    "type": "xhr",
+    "context": "desktop"
+  },
+  {
+    "url": "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://www.gstatic.com/firebasejs/10.13.1/firebase-analytics.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://www.gstatic.com/firebasejs/10.13.1/firebase-messaging.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/The_Week_Junior/20261016/V5HVU5RVXDOW4OEE4XL25WDXAE.jpg",
+    "status": 200,
+    "method": "GET",
+    "type": "image",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/The_Week_Junior/20261016/V5HVU5RVXDOW4OEE4XL25WDXAE.jpg",
+    "status": 200,
+    "method": "GET",
+    "type": "image",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/The_Week_Junior/20261016/OW3ESIBCD75LZGVUTV2E7DXENI.jpg",
+    "status": 200,
+    "method": "GET",
+    "type": "image",
+    "context": "desktop"
+  },
+  {
+    "url": "https://firebase.googleapis.com/v1alpha/projects/-/apps/1:231547785401:web:e67f7bd06990f435040b68/webConfig",
+    "status": 200,
+    "method": "GET",
+    "type": "fetch",
+    "context": "desktop"
+  },
+  {
+    "url": "https://www.googletagmanager.com/gtag/js?l=dataLayer&id=G-GVMN6J471E",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://www.googletagmanager.com/gtag/js?id=G-GVMN6J471E&cx=c&gtm=4e6an1",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://www.google-analytics.com/g/collect?v=2&tid=G-VWJXMVV0ZC&gtm=45je6an1v881442582za200zd881442582xf1&_p=1793076103732&gcd=13l3l3l3l1l1&npa=0&dma=0&_eu=AEAAAAQ&ae=a&cid=182241956.1793075720&frm=0&ngs=1&pscdl=noapi&rcb=11&sr=1200x900&uaa=x86&uab=64&uafvl=Not%253AA-Brand%3B8.0.0.0%7CChromium%3B156.0.8078.4%7CHeadlessChrome%3B156.0.8078.4&uam=&uamb=0&uap=Linux&uapv=&uaw=0&ul=en-us&_s=1&tag_exp=115938466~115938469~118897920~118897930~120213116~120385423~120469145~120469153~121246026~121246034~123620777&sid=1793075719&sct=1&seg=1&dl=https%3A%2F%2Freader.emagazines.com%2Fissue%2Fthe-week-junior%2Foctober-23-2026%3Fipt%3DF0826FC3-4129-46CF-A5F3-FF70A931F1FF&dt=The%20Week%20Junior%2C%20October%2023%2C%202026&en=scroll&epn.percent_scrolled=90&_et=26&tfd=3198",
+    "status": 204,
+    "method": "POST",
+    "type": "fetch",
+    "context": "desktop"
+  },
+  {
+    "url": "https://www.google-analytics.com/g/collect?v=2&tid=G-GVMN6J471E&gtm=45je6an1v9195084384za208zb881442582zd881442582xf1&_p=1793076103732&gcd=13l3l3l3l1l1&npa=0&dma=0&_eu=AAAAAAQ&_fid=cMwhPMQAy6rAB9B14OkJ17&cid=182241956.1793075720&frm=0&ngs=1&pscdl=noapi&rcb=14&sr=1200x900&uaa=x86&uab=64&uafvl=Not%253AA-Brand%3B8.0.0.0%7CChromium%3B156.0.8078.4%7CHeadlessChrome%3B156.0.8078.4&uam=&uamb=0&uap=Linux&uapv=&uaw=0&ul=en-us&_s=1&tag_exp=115616985~115938466~115938469~118897920~118897930~120213116~120385422~120469145~120469153~121246026~121246034&sid=1793075720&sct=1&seg=1&dl=https%3A%2F%2Freader.emagazines.com%2Fissue%2Fthe-week-junior%2Foctober-23-2026%3Fipt%3DF0826FC3-4129-46CF-A5F3-FF70A931F1FF&dt=The%20Week%20Junior%2C%20October%2023%2C%202026&en=page_view&_ee=1&ep.origin=firebase&tfd=3326",
+    "status": 204,
+    "method": "POST",
+    "type": "fetch",
+    "context": "desktop"
+  },
+  {
+    "url": "https://reader.emagazines.com/issue/the-week-junior/october-23-2026?arrows=true&disableviewdesktopbutton=true&disablebacktolibrarybutton=true&textView=true&viewMobile=true&ipt=f0826fc3-4129-46cf-a5f3-ff70a931f1ff&ga=off&aid=465e9383-74db-49bd-93bb-d9828c1b0916",
+    "status": 200,
+    "method": "GET",
+    "type": "document",
+    "context": "desktop"
+  },
+  {
+    "url": "https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css",
+    "status": 200,
+    "method": "GET",
+    "type": "stylesheet",
+    "context": "desktop"
+  },
+  {
+    "url": "https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css",
+    "status": 200,
+    "method": "GET",
+    "type": "stylesheet",
+    "context": "desktop"
+  },
+  {
+    "url": "https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/bootstrap.min.css",
+    "status": 200,
+    "method": "GET",
+    "type": "stylesheet",
+    "context": "desktop"
+  },
+  {
+    "url": "https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/rellax.min.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css",
+    "status": 200,
+    "method": "GET",
+    "type": "stylesheet",
+    "context": "desktop"
+  },
+  {
+    "url": "https://cdn.jsdelivr.net/npm/sweetalert2@9",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400&display=swap",
+    "status": 200,
+    "method": "GET",
+    "type": "stylesheet",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/emf_issue_assets/emf_custom_common.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css",
+    "status": 200,
+    "method": "GET",
+    "type": "stylesheet",
+    "context": "desktop"
+  },
+  {
+    "url": "https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap",
+    "status": 200,
+    "method": "GET",
+    "type": "stylesheet",
+    "context": "desktop"
+  },
+  {
+    "url": "https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0",
+    "status": 200,
+    "method": "GET",
+    "type": "stylesheet",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/uploads/weekjrthumb_450bca04-0bcf-4a18-a7c9-c42dab07b214.png",
+    "status": 200,
+    "method": "GET",
+    "type": "image",
+    "context": "desktop"
+  },
+  {
+    "url": "https://cdn.emagazines.com/digital/The_Week_Junior/20261016/87f29cb73e89c4a9514702a8fcdbb17a.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/uploads/howler_07566d58-11d2-48f8-bad6-b623be54fd75.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/The_Week_Junior/20261016/V5HVU5RVXDOW4OEE4XL25WDXAE.jpg",
+    "status": 200,
+    "method": "GET",
+    "type": "image",
+    "context": "desktop"
+  },
+  {
+    "url": "https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/The_Week_Junior/20261016/af4f5a7635b8dd6e3884e5d7aed87701_thumb.jpg",
+    "status": 200,
+    "method": "GET",
+    "type": "image",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/uploads/iv-viewer_23a8de4a-15a7-4ab2-a2c2-8fe98d789ca0.css",
+    "status": 200,
+    "method": "GET",
+    "type": "stylesheet",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/uploads/233e5101-43e1-4b53-b05b-9c356a6a7a35_imageZoomer.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://www.gstatic.com/firebasejs/10.13.1/firebase-analytics.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://www.gstatic.com/firebasejs/10.13.1/firebase-messaging.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://firebase.googleapis.com/v1alpha/projects/-/apps/1:231547785401:web:e67f7bd06990f435040b68/webConfig",
+    "status": 200,
+    "method": "GET",
+    "type": "fetch",
+    "context": "desktop"
+  },
+  {
+    "url": "https://www.googletagmanager.com/gtag/js?l=dataLayer&id=G-GVMN6J471E",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://api.emagazines.com/EmfIssueSettings/null?tokenType=entitlement",
+    "status": 200,
+    "method": "GET",
+    "type": "xhr",
+    "context": "desktop"
+  },
+  {
+    "url": "https://www.google-analytics.com/g/collect?v=2&tid=G-VWJXMVV0ZC&gtm=45je6an1v881442582za200zd881442582xf1&_p=1793076103732&gcd=13l3l3l3l1l1&npa=0&dma=0&_eu=AAAAAAQ&cid=182241956.1793075720&frm=0&ngs=1&pscdl=noapi&rcb=11&sr=1200x900&uaa=x86&uab=64&uafvl=Not%253AA-Brand%3B8.0.0.0%7CChromium%3B156.0.8078.4%7CHeadlessChrome%3B156.0.8078.4&uam=&uamb=0&uap=Linux&uapv=&uaw=0&ul=en-us&tag_exp=115938466~115938469~118897920~118897930~120213116~120385423~120469145~120469153~121246026~121246034~123620777&dt=The%20Week%20Junior%2C%20October%2023%2C%202026&dl=https%3A%2F%2Freader.emagazines.com%2Fissue%2Fthe-week-junior%2Foctober-23-2026%2Ftuts-tomb-may-have-hidden-rooms-1%3Fipt%3DF0826FC3-4129-46CF-A5F3-FF70A931F1FF&dp=%2Fissue%2Fthe-week-junior%2Foctober-23-2026%2Ftuts-tomb-may-have-hidden-rooms-1&sid=1793075719&sct=1&seg=1&_s=2&tfd=4557",
+    "status": 204,
+    "method": "POST",
+    "type": "fetch",
+    "context": "desktop"
+  },
+  {
+    "url": "https://www.google-analytics.com/g/collect?v=2&tid=G-GVMN6J471E&gtm=45je6an1v9195084384za200zb881442582zd881442582xf1&_p=1793076103732&gcd=13l3l3l3l1l1&npa=0&dma=0&_eu=AAAAAAQ&_fid=cMwhPMQAy6rAB9B14OkJ17&cid=182241956.1793075720&frm=0&ngs=1&pscdl=noapi&rcb=14&sr=1200x900&uaa=x86&uab=64&uafvl=Not%253AA-Brand%3B8.0.0.0%7CChromium%3B156.0.8078.4%7CHeadlessChrome%3B156.0.8078.4&uam=&uamb=0&uap=Linux&uapv=&uaw=0&ul=en-us&tag_exp=115616985~115938466~115938469~118897920~118897930~120213116~120385422~120469145~120469153~121246026~121246034&dt=The%20Week%20Junior%2C%20October%2023%2C%202026&dl=https%3A%2F%2Freader.emagazines.com%2Fissue%2Fthe-week-junior%2Foctober-23-2026%2Ftuts-tomb-may-have-hidden-rooms-1%3Fipt%3DF0826FC3-4129-46CF-A5F3-FF70A931F1FF&dp=%2Fissue%2Fthe-week-junior%2Foctober-23-2026%2Ftuts-tomb-may-have-hidden-rooms-1&sid=1793075720&sct=1&seg=1&_s=2&tfd=8328",
+    "status": 204,
+    "method": "POST",
+    "type": "fetch",
+    "context": "desktop"
+  },
+  {
+    "url": "https://www.google-analytics.com/g/collect?v=2&tid=G-VWJXMVV0ZC&gtm=45je6an1v881442582za200zd881442582xf1&_p=1793076103732&gcd=13l3l3l3l1l1&npa=0&dma=0&_eu=AEAAAAQ&ae=a&cid=182241956.1793075720&frm=0&ngs=1&pscdl=noapi&rcb=11&sr=1200x900&uaa=x86&uab=64&uafvl=Not%253AA-Brand%3B8.0.0.0%7CChromium%3B156.0.8078.4%7CHeadlessChrome%3B156.0.8078.4&uam=&uamb=0&uap=Linux&uapv=&uaw=0&ul=en-us&_s=3&tag_exp=115938466~115938469~118897920~118897930~120213116~120385423~120469145~120469153~121246026~121246034~123620777&dl=https%3A%2F%2Freader.emagazines.com%2Fissue%2Fthe-week-junior%2Foctober-23-2026%2Ftuts-tomb-may-have-hidden-rooms-1%3Fipt%3DF0826FC3-4129-46CF-A5F3-FF70A931F1FF&dr=https%3A%2F%2Freader.emagazines.com%2Fissue%2Fthe-week-junior%2Foctober-23-2026%3Fipt%3DF0826FC3-4129-46CF-A5F3-FF70A931F1FF&sid=1793075719&sct=1&seg=1&dt=The%20Week%20Junior%2C%20October%2023%2C%202026&en=page_view&_et=960&tfd=9558",
+    "status": 204,
+    "method": "POST",
+    "type": "fetch",
+    "context": "desktop"
+  },
+  {
+    "url": "https://fonts.gstatic.com/s/opensans/v44/memvYaGs126MiZpBA-UvWbX2vVnXBbObj2OVTS-muw.woff2",
+    "status": 200,
+    "method": "GET",
+    "type": "font",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/uploads/reflow_arrow_left_3eed9c26-6c47-461c-ad6c-b9590dcad241.svg",
+    "status": 200,
+    "method": "GET",
+    "type": "image",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/uploads/reflow_arrow_right_5bf70f1b-712a-4d1a-8e4f-80625351b1ec.svg",
+    "status": 200,
+    "method": "GET",
+    "type": "image",
+    "context": "desktop"
+  },
+  {
+    "url": "https://fonts.gstatic.com/s/nunitosans/v19/pe0AMImSLYBIv1o4X1M8ce2xCx3yop4tQpF_MeTm0lfUVwoNnq4CLz0_kJ3xzA.woff2",
+    "status": 200,
+    "method": "GET",
+    "type": "font",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/The_Week_Junior/20261016/d6419d84-b5ac-4bdd-a2e7-8ce70b875c42.png",
+    "status": 200,
+    "method": "GET",
+    "type": "image",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/The_Week_Junior/20261016/YO2NGTXUXNDCQPGDWGGORCZVMY.jpg",
+    "status": 200,
+    "method": "GET",
+    "type": "image",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/The_Week_Junior/20261016/CWFHMFWUS6NWJBJXIUCZGQKDAM.jpg",
+    "status": 200,
+    "method": "GET",
+    "type": "image",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/The_Week_Junior/20261016/UW2SARAIGYKFGLZE6WEVBX3SCM.jpg",
+    "status": 200,
+    "method": "GET",
+    "type": "image",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/The_Week_Junior/20261016/e30950ed-7077-4802-ada0-575d9ce4456a.png",
+    "status": 200,
+    "method": "GET",
+    "type": "image",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/The_Week_Junior/20261016/3a6c824a-c287-4a73-9995-1d2471fcc659.png",
+    "status": 200,
+    "method": "GET",
+    "type": "image",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/The_Week_Junior/20261016/GMY4GWNWVPK4UKCORP3UKPL77U.jpg",
+    "status": 200,
+    "method": "GET",
+    "type": "image",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/The_Week_Junior/20261016/6792532e-93b0-4d6b-bee8-2aa462867fd3.png",
+    "status": 200,
+    "method": "GET",
+    "type": "image",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/The_Week_Junior/20261016/b720f107-791b-4ea2-a5c0-a997fca8db6f.png",
+    "status": 200,
+    "method": "GET",
+    "type": "image",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/The_Week_Junior/20261016/65b75d92-1233-43c2-bbab-cd2c49d4bafa.png",
+    "status": 200,
+    "method": "GET",
+    "type": "image",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/The_Week_Junior/20261016/KUFNIOJDG6ST5JX4BXGBGHBASQ.jpg",
+    "status": 200,
+    "method": "GET",
+    "type": "image",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/The_Week_Junior/20261016/WN7H76IBD36VMGODW6PH4EHWZA.jpg",
+    "status": 200,
+    "method": "GET",
+    "type": "image",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/The_Week_Junior/20261016/cd714cee-db0a-4e54-a6aa-9ece6df4fe5f.png",
+    "status": 200,
+    "method": "GET",
+    "type": "image",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/The_Week_Junior/20261016/fb2b9c05-d56a-4bf9-b207-87c5afe95030.png",
+    "status": 200,
+    "method": "GET",
+    "type": "image",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/uploads/89a1c36a-66d5-41a1-a264-8d2773b6f34d_Myriad%20Bold.otf",
+    "status": 200,
+    "method": "GET",
+    "type": "font",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/The_Week_Junior/20261016/9e15e430-3bd0-487c-a4f8-25d89a2d151c.png",
+    "status": 200,
+    "method": "GET",
+    "type": "image",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/The_Week_Junior/20260904/12813918-480d-45aa-a5f5-c95e1167323b.png",
+    "status": 200,
+    "method": "GET",
+    "type": "image",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/The_Week_Junior/20261016/d0c6538d-6488-4930-8129-9674028a9bd7.png",
+    "status": 200,
+    "method": "GET",
+    "type": "image",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/The_Week_Junior/20261016/DOJIWTKOXI327FB22Q3JMKHO74.jpg",
+    "status": 200,
+    "method": "GET",
+    "type": "image",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/The_Week_Junior/20261016/ROA24CMWTSMWD4FCAUJ3IOUP6Q.jpg",
+    "status": 200,
+    "method": "GET",
+    "type": "image",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/uploads/9b6b1adc-f844-4e00-a698-7718a25941b0_Myriad%20Condensed.otf",
+    "status": 200,
+    "method": "GET",
+    "type": "font",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/The_Week_Junior/20261016/HTNTKQO77OX2MUEX5QW26R7QUY.jpg",
+    "status": 200,
+    "method": "GET",
+    "type": "image",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/The_Week_Junior/20261016/RYD65BD67AVZZAQJGQEB4DHZ5M.jpg",
+    "status": 200,
+    "method": "GET",
+    "type": "image",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/The_Week_Junior/20261016/JQONZ6KVRIGNLKARB2LQCCBBKE.jpg",
+    "status": 200,
+    "method": "GET",
+    "type": "image",
+    "context": "desktop"
+  },
+  {
+    "url": "https://s3.amazonaws.com/demo.emagazines.com/fonts/FrutigerLTStd-LightCn.otf",
+    "status": 200,
+    "method": "GET",
+    "type": "font",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/uploads/AnyConv.com__FrutigerLTPro-BoldCn_3cd6eee8-abd0-4c64-9846-b66227704df0.otf",
+    "status": 200,
+    "method": "GET",
+    "type": "font",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/uploads/AnyConv.com__AmsiProCondensed-SemiBold_45c6b95f-4d28-4219-94c1-8a96fcff8d02.otf",
+    "status": 200,
+    "method": "GET",
+    "type": "font",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/uploads/AnyConv.com__AmsiProCondensed-Ultra_38e0938d-8586-441d-baea-e2e96c86cc88.otf",
+    "status": 200,
+    "method": "GET",
+    "type": "font",
+    "context": "desktop"
+  },
+  {
+    "url": "https://audio.emagazines.com/the_week_junior_october_23_2026_science_and_technology.af218f17-0fcc-468a-b7ea-4185bf8bc574.mp3",
+    "status": 206,
+    "method": "GET",
+    "type": "media",
+    "context": "desktop"
+  },
+  {
+    "url": "https://audio.emagazines.com/the_week_junior_october_23_2026_science_and_technology.af218f17-0fcc-468a-b7ea-4185bf8bc574.mp3",
+    "status": 206,
+    "method": "GET",
+    "type": "media",
+    "context": "desktop"
+  },
+  {
+    "url": "https://reader.emagazines.com/issue/the-week-junior/october-23-2026?ipt=F0826FC3-4129-46CF-A5F3-FF70A931F1FF",
+    "status": 200,
+    "method": "GET",
+    "type": "document",
+    "context": "desktop"
+  },
+  {
+    "url": "https://hammerjs.github.io/dist/hammer.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css",
+    "status": 200,
+    "method": "GET",
+    "type": "stylesheet",
+    "context": "desktop"
+  },
+  {
+    "url": "https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css",
+    "status": 200,
+    "method": "GET",
+    "type": "stylesheet",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/bootstrap.min.css",
+    "status": 200,
+    "method": "GET",
+    "type": "stylesheet",
+    "context": "desktop"
+  },
+  {
+    "url": "https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css",
+    "status": 200,
+    "method": "GET",
+    "type": "stylesheet",
+    "context": "desktop"
+  },
+  {
+    "url": "https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400&display=swap",
+    "status": 200,
+    "method": "GET",
+    "type": "stylesheet",
+    "context": "desktop"
+  },
+  {
+    "url": "https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css",
+    "status": 200,
+    "method": "GET",
+    "type": "stylesheet",
+    "context": "desktop"
+  },
+  {
+    "url": "https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap",
+    "status": 200,
+    "method": "GET",
+    "type": "stylesheet",
+    "context": "desktop"
+  },
+  {
+    "url": "https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/rellax.min.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/emf_issue_assets/emf_custom_common.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://cdn.emagazines.com/digital/The_Week_Junior/20261016/db9028739536c6eff2c46ba4dd5c541e.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://cdn.jsdelivr.net/npm/sweetalert2@9",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://www.googletagmanager.com/gtag/js?id=G-VWJXMVV0ZC",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0",
+    "status": 200,
+    "method": "GET",
+    "type": "stylesheet",
+    "context": "desktop"
+  },
+  {
+    "url": "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css",
+    "status": 200,
+    "method": "GET",
+    "type": "stylesheet",
+    "context": "desktop"
+  },
+  {
+    "url": "https://cdn.jsdelivr.net/npm/zoomist@2/zoomist.css",
+    "status": 200,
+    "method": "GET",
+    "type": "stylesheet",
+    "context": "desktop"
+  },
+  {
+    "url": "https://cdn.jsdelivr.net/npm/zoomist@2/zoomist.umd.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://www.gstatic.com/firebasejs/10.13.1/firebase-analytics.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://www.gstatic.com/firebasejs/10.13.1/firebase-messaging.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/The_Week_Junior/20261016/V5HVU5RVXDOW4OEE4XL25WDXAE.jpg",
+    "status": 200,
+    "method": "GET",
+    "type": "image",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/The_Week_Junior/20261016/V5HVU5RVXDOW4OEE4XL25WDXAE.jpg",
+    "status": 200,
+    "method": "GET",
+    "type": "image",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/The_Week_Junior/20261016/OW3ESIBCD75LZGVUTV2E7DXENI.jpg",
+    "status": 200,
+    "method": "GET",
+    "type": "image",
+    "context": "desktop"
+  },
+  {
+    "url": "https://firebase.googleapis.com/v1alpha/projects/-/apps/1:231547785401:web:e67f7bd06990f435040b68/webConfig",
+    "status": 200,
+    "method": "GET",
+    "type": "fetch",
+    "context": "desktop"
+  },
+  {
+    "url": "https://www.google-analytics.com/g/collect?v=2&tid=G-VWJXMVV0ZC&gtm=45je6aq0h2v881442582za200zd881442582xf1&_p=1793076647579&gcd=13l3l3l3l1l1&npa=0&dma=0&_eu=AEAAAAQ&ae=a&cid=182241956.1793075720&frm=0&ngs=1&pscdl=noapi&rcb=2&sr=1200x900&uaa=x86&uab=64&uafvl=Not%253AA-Brand%3B8.0.0.0%7CChromium%3B156.0.8078.4%7CHeadlessChrome%3B156.0.8078.4&uam=&uamb=0&uap=Linux&uapv=&uaw=0&ul=en-us&_s=1&tag_exp=115616986~115938466~115938468~118897920~118897930~120213116~120385422~120412528~120420414~120469145~120469153~121246026~121246034~123620777&sid=1793075719&sct=1&seg=1&dl=https%3A%2F%2Freader.emagazines.com%2Fissue%2Fthe-week-junior%2Foctober-23-2026%3Fipt%3DF0826FC3-4129-46CF-A5F3-FF70A931F1FF&dt=The%20Week%20Junior%2C%20October%2023%2C%202026&en=scroll&epn.percent_scrolled=90&_et=22&tfd=2179",
+    "status": 204,
+    "method": "POST",
+    "type": "fetch",
+    "context": "desktop"
+  },
+  {
+    "url": "https://www.googletagmanager.com/gtag/js?l=dataLayer&id=G-GVMN6J471E",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://www.googletagmanager.com/gtag/js?id=G-GVMN6J471E&cx=c&gtm=4e6aq0h2",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://reader.emagazines.com/issue/the-week-junior/october-23-2026?arrows=true&disableviewdesktopbutton=true&disablebacktolibrarybutton=true&textView=true&viewMobile=true&ipt=f0826fc3-4129-46cf-a5f3-ff70a931f1ff&ga=off&aid=465e9383-74db-49bd-93bb-d9828c1b0916",
+    "status": 200,
+    "method": "GET",
+    "type": "document",
+    "context": "desktop"
+  },
+  {
+    "url": "https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css",
+    "status": 200,
+    "method": "GET",
+    "type": "stylesheet",
+    "context": "desktop"
+  },
+  {
+    "url": "https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css",
+    "status": 200,
+    "method": "GET",
+    "type": "stylesheet",
+    "context": "desktop"
+  },
+  {
+    "url": "https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/bootstrap.min.css",
+    "status": 200,
+    "method": "GET",
+    "type": "stylesheet",
+    "context": "desktop"
+  },
+  {
+    "url": "https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/rellax.min.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css",
+    "status": 200,
+    "method": "GET",
+    "type": "stylesheet",
+    "context": "desktop"
+  },
+  {
+    "url": "https://cdn.jsdelivr.net/npm/sweetalert2@9",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400&display=swap",
+    "status": 200,
+    "method": "GET",
+    "type": "stylesheet",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/emf_issue_assets/emf_custom_common.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css",
+    "status": 200,
+    "method": "GET",
+    "type": "stylesheet",
+    "context": "desktop"
+  },
+  {
+    "url": "https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap",
+    "status": 200,
+    "method": "GET",
+    "type": "stylesheet",
+    "context": "desktop"
+  },
+  {
+    "url": "https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0",
+    "status": 200,
+    "method": "GET",
+    "type": "stylesheet",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/uploads/weekjrthumb_450bca04-0bcf-4a18-a7c9-c42dab07b214.png",
+    "status": 200,
+    "method": "GET",
+    "type": "image",
+    "context": "desktop"
+  },
+  {
+    "url": "https://www.google-analytics.com/g/collect?v=2&tid=G-GVMN6J471E&gtm=45je6an1v9195084384za208zb881442582zd881442582xf1&_p=1793076647579&gcd=13l3l3l3l1l1&npa=0&dma=0&_eu=AAAAAAQ&_fid=cMwhPMQAy6rAB9B14OkJ17&cid=182241956.1793075720&frm=0&ngs=1&pscdl=noapi&rcb=11&sr=1200x900&uaa=x86&uab=64&uafvl=Not%253AA-Brand%3B8.0.0.0%7CChromium%3B156.0.8078.4%7CHeadlessChrome%3B156.0.8078.4&uam=&uamb=0&uap=Linux&uapv=&uaw=0&ul=en-us&_s=1&tag_exp=115938466~115938468~118897920~118897930~120213116~120385422~120469145~120469153~121246026~121246034&sid=1793075720&sct=1&seg=1&dl=https%3A%2F%2Freader.emagazines.com%2Fissue%2Fthe-week-junior%2Foctober-23-2026%3Fipt%3DF0826FC3-4129-46CF-A5F3-FF70A931F1FF&dt=The%20Week%20Junior%2C%20October%2023%2C%202026&en=page_view&_ee=1&ep.origin=firebase&tfd=2403",
+    "status": 204,
+    "method": "POST",
+    "type": "fetch",
+    "context": "desktop"
+  },
+  {
+    "url": "https://api.emagazines.com/EmfIssueSettings/null?tokenType=entitlement",
+    "status": 200,
+    "method": "GET",
+    "type": "xhr",
+    "context": "desktop"
+  },
+  {
+    "url": "https://cdn.emagazines.com/digital/The_Week_Junior/20261016/87f29cb73e89c4a9514702a8fcdbb17a.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/uploads/howler_07566d58-11d2-48f8-bad6-b623be54fd75.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/The_Week_Junior/20261016/V5HVU5RVXDOW4OEE4XL25WDXAE.jpg",
+    "status": 200,
+    "method": "GET",
+    "type": "image",
+    "context": "desktop"
+  },
+  {
+    "url": "https://www.google-analytics.com/g/collect?v=2&tid=G-VWJXMVV0ZC&gtm=45je6aq0h2v881442582za200zd881442582xf1&_p=1793076647579&gcd=13l3l3l3l1l1&npa=0&dma=0&_eu=AAAAAAQ&cid=182241956.1793075720&frm=0&ngs=1&pscdl=noapi&rcb=2&sr=1200x900&uaa=x86&uab=64&uafvl=Not%253AA-Brand%3B8.0.0.0%7CChromium%3B156.0.8078.4%7CHeadlessChrome%3B156.0.8078.4&uam=&uamb=0&uap=Linux&uapv=&uaw=0&ul=en-us&tag_exp=115616986~115938466~115938468~118897920~118897930~120213116~120385422~120412528~120420414~120469145~120469153~121246026~121246034~123620777&dt=The%20Week%20Junior%2C%20October%2023%2C%202026&dl=https%3A%2F%2Freader.emagazines.com%2Fissue%2Fthe-week-junior%2Foctober-23-2026%2Ftuts-tomb-may-have-hidden-rooms-1%3Fipt%3DF0826FC3-4129-46CF-A5F3-FF70A931F1FF&dp=%2Fissue%2Fthe-week-junior%2Foctober-23-2026%2Ftuts-tomb-may-have-hidden-rooms-1&sid=1793075719&sct=1&seg=1&_s=2&tfd=3620",
+    "status": 204,
+    "method": "POST",
+    "type": "fetch",
+    "context": "desktop"
+  },
+  {
+    "url": "https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/The_Week_Junior/20261016/af4f5a7635b8dd6e3884e5d7aed87701_thumb.jpg",
+    "status": 200,
+    "method": "GET",
+    "type": "image",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/uploads/233e5101-43e1-4b53-b05b-9c356a6a7a35_imageZoomer.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/uploads/iv-viewer_23a8de4a-15a7-4ab2-a2c2-8fe98d789ca0.css",
+    "status": 200,
+    "method": "GET",
+    "type": "stylesheet",
+    "context": "desktop"
+  },
+  {
+    "url": "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://www.gstatic.com/firebasejs/10.13.1/firebase-analytics.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://www.gstatic.com/firebasejs/10.13.1/firebase-messaging.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://firebase.googleapis.com/v1alpha/projects/-/apps/1:231547785401:web:e67f7bd06990f435040b68/webConfig",
+    "status": 200,
+    "method": "GET",
+    "type": "fetch",
+    "context": "desktop"
+  },
+  {
+    "url": "https://www.googletagmanager.com/gtag/js?l=dataLayer&id=G-GVMN6J471E",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "desktop"
+  },
+  {
+    "url": "https://api.emagazines.com/EmfIssueSettings/null?tokenType=entitlement",
+    "status": 200,
+    "method": "GET",
+    "type": "xhr",
+    "context": "desktop"
+  },
+  {
+    "url": "https://www.google-analytics.com/g/collect?v=2&tid=G-GVMN6J471E&gtm=45je6an1v9195084384za200zb881442582zd881442582xf1&_p=1793076647579&gcd=13l3l3l3l1l1&npa=0&dma=0&_eu=AAAAAAQ&_fid=cMwhPMQAy6rAB9B14OkJ17&cid=182241956.1793075720&frm=0&ngs=1&pscdl=noapi&rcb=11&sr=1200x900&uaa=x86&uab=64&uafvl=Not%253AA-Brand%3B8.0.0.0%7CChromium%3B156.0.8078.4%7CHeadlessChrome%3B156.0.8078.4&uam=&uamb=0&uap=Linux&uapv=&uaw=0&ul=en-us&tag_exp=115938466~115938468~118897920~118897930~120213116~120385422~120469145~120469153~121246026~121246034&dt=The%20Week%20Junior%2C%20October%2023%2C%202026&dl=https%3A%2F%2Freader.emagazines.com%2Fissue%2Fthe-week-junior%2Foctober-23-2026%2Ftuts-tomb-may-have-hidden-rooms-1%3Fipt%3DF0826FC3-4129-46CF-A5F3-FF70A931F1FF&dp=%2Fissue%2Fthe-week-junior%2Foctober-23-2026%2Ftuts-tomb-may-have-hidden-rooms-1&sid=1793075720&sct=1&seg=1&_s=2&tfd=7405",
+    "status": 204,
+    "method": "POST",
+    "type": "fetch",
+    "context": "desktop"
+  },
+  {
+    "url": "https://www.google-analytics.com/g/collect?v=2&tid=G-VWJXMVV0ZC&gtm=45je6aq0h2v881442582za200zd881442582xf1&_p=1793076647579&gcd=13l3l3l3l1l1&npa=0&dma=0&_eu=AEAAAAQ&ae=a&cid=182241956.1793075720&frm=0&ngs=1&pscdl=noapi&rcb=2&sr=1200x900&uaa=x86&uab=64&uafvl=Not%253AA-Brand%3B8.0.0.0%7CChromium%3B156.0.8078.4%7CHeadlessChrome%3B156.0.8078.4&uam=&uamb=0&uap=Linux&uapv=&uaw=0&ul=en-us&_s=3&tag_exp=115616986~115938466~115938468~118897920~118897930~120213116~120385422~120412528~120420414~120469145~120469153~121246026~121246034~123620777&dl=https%3A%2F%2Freader.emagazines.com%2Fissue%2Fthe-week-junior%2Foctober-23-2026%2Ftuts-tomb-may-have-hidden-rooms-1%3Fipt%3DF0826FC3-4129-46CF-A5F3-FF70A931F1FF&dr=https%3A%2F%2Freader.emagazines.com%2Fissue%2Fthe-week-junior%2Foctober-23-2026%3Fipt%3DF0826FC3-4129-46CF-A5F3-FF70A931F1FF&sid=1793075719&sct=1&seg=1&dt=The%20Week%20Junior%2C%20October%2023%2C%202026&en=page_view&_et=949&tfd=8623",
+    "status": 204,
+    "method": "POST",
+    "type": "fetch",
+    "context": "desktop"
+  },
+  {
+    "url": "https://assets.emagazines.com/The_Week_Junior/20261016/HOIYEUW6WG4PREJAWBWLGISG3A.jpg",
+    "status": 200,
+    "method": "GET",
+    "type": "image",
+    "context": "desktop"
+  },
+  {
+    "url": "https://reader.emagazines.com/issue/the-week-junior/october-23-2026?ipt=F0826FC3-4129-46CF-A5F3-FF70A931F1FF",
+    "status": 200,
+    "method": "GET",
+    "type": "document",
+    "context": "mobile-emulation"
+  },
+  {
+    "url": "https://hammerjs.github.io/dist/hammer.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "mobile-emulation"
+  },
+  {
+    "url": "https://www.googletagmanager.com/gtag/js?id=G-VWJXMVV0ZC",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "mobile-emulation"
+  },
+  {
+    "url": "https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css",
+    "status": 200,
+    "method": "GET",
+    "type": "stylesheet",
+    "context": "mobile-emulation"
+  },
+  {
+    "url": "https://assets.emagazines.com/bootstrap.min.css",
+    "status": 200,
+    "method": "GET",
+    "type": "stylesheet",
+    "context": "mobile-emulation"
+  },
+  {
+    "url": "https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css",
+    "status": 200,
+    "method": "GET",
+    "type": "stylesheet",
+    "context": "mobile-emulation"
+  },
+  {
+    "url": "https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css",
+    "status": 200,
+    "method": "GET",
+    "type": "stylesheet",
+    "context": "mobile-emulation"
+  },
+  {
+    "url": "https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css",
+    "status": 200,
+    "method": "GET",
+    "type": "stylesheet",
+    "context": "mobile-emulation"
+  },
+  {
+    "url": "https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400&display=swap",
+    "status": 200,
+    "method": "GET",
+    "type": "stylesheet",
+    "context": "mobile-emulation"
+  },
+  {
+    "url": "https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap",
+    "status": 200,
+    "method": "GET",
+    "type": "stylesheet",
+    "context": "mobile-emulation"
+  },
+  {
+    "url": "https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "mobile-emulation"
+  },
+  {
+    "url": "https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "mobile-emulation"
+  },
+  {
+    "url": "https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "mobile-emulation"
+  },
+  {
+    "url": "https://assets.emagazines.com/emf_issue_assets/emf_custom_common.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "mobile-emulation"
+  },
+  {
+    "url": "https://assets.emagazines.com/rellax.min.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "mobile-emulation"
+  },
+  {
+    "url": "https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "mobile-emulation"
+  },
+  {
+    "url": "https://cdn.jsdelivr.net/npm/sweetalert2@9",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "mobile-emulation"
+  },
+  {
+    "url": "https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0",
+    "status": 200,
+    "method": "GET",
+    "type": "stylesheet",
+    "context": "mobile-emulation"
+  },
+  {
+    "url": "https://www.google-analytics.com/g/collect?v=2&tid=G-VWJXMVV0ZC&gtm=45je6an1v881442582za200zd881442582xf1&_p=1793076742356&gcd=13l3l3l3l1l1&npa=0&dma=0&_eu=AEA&ae=a&cid=1970095721.1793076743&frm=0&ngs=1&pscdl=noapi&rcb=9&sr=390x844&uaa=x86&uab=64&uafvl=Not%253AA-Brand%3B8.0.0.0%7CChromium%3B156.0.8078.4%7CHeadlessChrome%3B156.0.8078.4&uam=&uamb=0&uap=Linux&uapv=&uaw=0&ul=en-us&_s=1&tag_exp=115938466~115938468~118897920~118897930~120213116~120385422~120412528~120469145~120469153~121246026~121246034&sid=1793076742&sct=1&seg=0&dl=https%3A%2F%2Freader.emagazines.com%2Fissue%2Fthe-week-junior%2Foctober-23-2026%3Fipt%3DF0826FC3-4129-46CF-A5F3-FF70A931F1FF&dt=The%20Week%20Junior%2C%20October%2023%2C%202026&en=scroll&_fv=1&_nsi=1&_ss=1&epn.percent_scrolled=90&tfd=1023",
+    "status": 204,
+    "method": "POST",
+    "type": "fetch",
+    "context": "mobile-emulation"
+  },
+  {
+    "url": "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css",
+    "status": 200,
+    "method": "GET",
+    "type": "stylesheet",
+    "context": "mobile-emulation"
+  },
+  {
+    "url": "https://cdn.jsdelivr.net/npm/zoomist@2/zoomist.css",
+    "status": 200,
+    "method": "GET",
+    "type": "stylesheet",
+    "context": "mobile-emulation"
+  },
+  {
+    "url": "https://cdn.jsdelivr.net/npm/zoomist@2/zoomist.umd.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "mobile-emulation"
+  },
+  {
+    "url": "https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "mobile-emulation"
+  },
+  {
+    "url": "https://cdn.emagazines.com/digital/The_Week_Junior/20261016/db9028739536c6eff2c46ba4dd5c541e.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "mobile-emulation"
+  },
+  {
+    "url": "https://assets.emagazines.com/The_Week_Junior/20261016/V5HVU5RVXDOW4OEE4XL25WDXAE.jpg",
+    "status": 200,
+    "method": "GET",
+    "type": "image",
+    "context": "mobile-emulation"
+  },
+  {
+    "url": "https://www.gstatic.com/firebasejs/10.13.1/firebase-analytics.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "mobile-emulation"
+  },
+  {
+    "url": "https://www.gstatic.com/firebasejs/10.13.1/firebase-messaging.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "mobile-emulation"
+  },
+  {
+    "url": "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "mobile-emulation"
+  },
+  {
+    "url": "https://assets.emagazines.com/The_Week_Junior/20261016/V5HVU5RVXDOW4OEE4XL25WDXAE.jpg",
+    "status": 200,
+    "method": "GET",
+    "type": "image",
+    "context": "mobile-emulation"
+  },
+  {
+    "url": "https://firebase.googleapis.com/v1alpha/projects/-/apps/1:231547785401:web:e67f7bd06990f435040b68/webConfig",
+    "status": 200,
+    "method": "GET",
+    "type": "fetch",
+    "context": "mobile-emulation"
+  },
+  {
+    "url": "https://www.googletagmanager.com/gtag/js?id=G-GVMN6J471E&cx=c&gtm=4e6an1",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "mobile-emulation"
+  },
+  {
+    "url": "https://reader.emagazines.com/issue/the-week-junior/october-23-2026?arrows=true&disableviewdesktopbutton=true&disablebacktolibrarybutton=true&textView=true&viewMobile=true&ipt=f0826fc3-4129-46cf-a5f3-ff70a931f1ff&ga=off&aid=465e9383-74db-49bd-93bb-d9828c1b0916",
+    "status": 200,
+    "method": "GET",
+    "type": "document",
+    "context": "mobile-emulation"
+  },
+  {
+    "url": "https://www.googletagmanager.com/gtag/js?l=dataLayer&id=G-GVMN6J471E",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "mobile-emulation"
+  },
+  {
+    "url": "https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css",
+    "status": 200,
+    "method": "GET",
+    "type": "stylesheet",
+    "context": "mobile-emulation"
+  },
+  {
+    "url": "https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "mobile-emulation"
+  },
+  {
+    "url": "https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css",
+    "status": 200,
+    "method": "GET",
+    "type": "stylesheet",
+    "context": "mobile-emulation"
+  },
+  {
+    "url": "https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "mobile-emulation"
+  },
+  {
+    "url": "https://assets.emagazines.com/bootstrap.min.css",
+    "status": 200,
+    "method": "GET",
+    "type": "stylesheet",
+    "context": "mobile-emulation"
+  },
+  {
+    "url": "https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "mobile-emulation"
+  },
+  {
+    "url": "https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "mobile-emulation"
+  },
+  {
+    "url": "https://assets.emagazines.com/rellax.min.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "mobile-emulation"
+  },
+  {
+    "url": "https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css",
+    "status": 200,
+    "method": "GET",
+    "type": "stylesheet",
+    "context": "mobile-emulation"
+  },
+  {
+    "url": "https://cdn.jsdelivr.net/npm/sweetalert2@9",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "mobile-emulation"
+  },
+  {
+    "url": "https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400&display=swap",
+    "status": 200,
+    "method": "GET",
+    "type": "stylesheet",
+    "context": "mobile-emulation"
+  },
+  {
+    "url": "https://assets.emagazines.com/emf_issue_assets/emf_custom_common.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "mobile-emulation"
+  },
+  {
+    "url": "https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css",
+    "status": 200,
+    "method": "GET",
+    "type": "stylesheet",
+    "context": "mobile-emulation"
+  },
+  {
+    "url": "https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap",
+    "status": 200,
+    "method": "GET",
+    "type": "stylesheet",
+    "context": "mobile-emulation"
+  },
+  {
+    "url": "https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0",
+    "status": 200,
+    "method": "GET",
+    "type": "stylesheet",
+    "context": "mobile-emulation"
+  },
+  {
+    "url": "https://assets.emagazines.com/uploads/weekjrthumb_450bca04-0bcf-4a18-a7c9-c42dab07b214.png",
+    "status": 200,
+    "method": "GET",
+    "type": "image",
+    "context": "mobile-emulation"
+  },
+  {
+    "url": "https://www.google-analytics.com/g/collect?v=2&tid=G-GVMN6J471E&gtm=45je6an1v9195084384za208zb881442582zd881442582xf1&_p=1793076742356&gcd=13l3l3l3l1l1&npa=0&dma=0&_fid=cJZ__3MljO19u9kAXyhXoQ&cid=1970095721.1793076743&frm=0&ngs=1&pscdl=noapi&rcb=7&sr=390x844&uaa=x86&uab=64&uafvl=Not%253AA-Brand%3B8.0.0.0%7CChromium%3B156.0.8078.4%7CHeadlessChrome%3B156.0.8078.4&uam=&uamb=0&uap=Linux&uapv=&uaw=0&ul=en-us&_s=1&tag_exp=115938466~115938469~118897920~118897930~120213116~120385422~120469145~120469153~121246026~121246034&sid=1793076743&sct=1&seg=0&dl=https%3A%2F%2Freader.emagazines.com%2Fissue%2Fthe-week-junior%2Foctober-23-2026%3Fipt%3DF0826FC3-4129-46CF-A5F3-FF70A931F1FF&dt=The%20Week%20Junior%2C%20October%2023%2C%202026&en=page_view&_fv=1&_ss=1&_ee=1&ep.origin=firebase&tfd=2105",
+    "status": 204,
+    "method": "POST",
+    "type": "fetch",
+    "context": "mobile-emulation"
+  },
+  {
+    "url": "https://assets.emagazines.com/uploads/howler_07566d58-11d2-48f8-bad6-b623be54fd75.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "mobile-emulation"
+  },
+  {
+    "url": "https://cdn.emagazines.com/digital/The_Week_Junior/20261016/87f29cb73e89c4a9514702a8fcdbb17a.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "mobile-emulation"
+  },
+  {
+    "url": "https://assets.emagazines.com/The_Week_Junior/20261016/V5HVU5RVXDOW4OEE4XL25WDXAE.jpg",
+    "status": 200,
+    "method": "GET",
+    "type": "image",
+    "context": "mobile-emulation"
+  },
+  {
+    "url": "https://api.emagazines.com/EmfIssueSettings/null?tokenType=entitlement",
+    "status": 200,
+    "method": "GET",
+    "type": "xhr",
+    "context": "mobile-emulation"
+  },
+  {
+    "url": "https://firebaseinstallations.googleapis.com/v1/projects/emagazines-web-push/installations",
+    "status": 200,
+    "method": "POST",
+    "type": "fetch",
+    "context": "mobile-emulation"
+  },
+  {
+    "url": "https://www.google-analytics.com/g/collect?v=2&tid=G-VWJXMVV0ZC&gtm=45je6an1v881442582za200zd881442582xf1&_p=1793076742356&gcd=13l3l3l3l1l1&npa=0&dma=0&_eu=AAAAAAQ&cid=1970095721.1793076743&frm=0&ngs=1&pscdl=noapi&rcb=9&sr=390x844&uaa=x86&uab=64&uafvl=Not%253AA-Brand%3B8.0.0.0%7CChromium%3B156.0.8078.4%7CHeadlessChrome%3B156.0.8078.4&uam=&uamb=0&uap=Linux&uapv=&uaw=0&ul=en-us&tag_exp=115938466~115938468~118897920~118897930~120213116~120385422~120412528~120469145~120469153~121246026~121246034&dt=The%20Week%20Junior%20%7C%20October%2023%2C%202026%20%7C%20Page%201&dl=https%3A%2F%2Freader.emagazines.com%2Fissue%2Fthe-week-junior%2Foctober-23-2026%2Fcover-3%3Fipt%3DF0826FC3-4129-46CF-A5F3-FF70A931F1FF&dp=%2Fissue%2Fthe-week-junior%2Foctober-23-2026%2Fcover-3&sid=1793076742&sct=1&seg=1&_s=2&tfd=3257",
+    "status": 204,
+    "method": "POST",
+    "type": "fetch",
+    "context": "mobile-emulation"
+  },
+  {
+    "url": "https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "mobile-emulation"
+  },
+  {
+    "url": "https://assets.emagazines.com/The_Week_Junior/20261016/af4f5a7635b8dd6e3884e5d7aed87701_thumb.jpg",
+    "status": 200,
+    "method": "GET",
+    "type": "image",
+    "context": "mobile-emulation"
+  },
+  {
+    "url": "https://assets.emagazines.com/uploads/233e5101-43e1-4b53-b05b-9c356a6a7a35_imageZoomer.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "mobile-emulation"
+  },
+  {
+    "url": "https://assets.emagazines.com/uploads/iv-viewer_23a8de4a-15a7-4ab2-a2c2-8fe98d789ca0.css",
+    "status": 200,
+    "method": "GET",
+    "type": "stylesheet",
+    "context": "mobile-emulation"
+  },
+  {
+    "url": "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "mobile-emulation"
+  },
+  {
+    "url": "https://www.gstatic.com/firebasejs/10.13.1/firebase-analytics.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "mobile-emulation"
+  },
+  {
+    "url": "https://www.gstatic.com/firebasejs/10.13.1/firebase-messaging.js",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "mobile-emulation"
+  },
+  {
+    "url": "https://firebase.googleapis.com/v1alpha/projects/-/apps/1:231547785401:web:e67f7bd06990f435040b68/webConfig",
+    "status": 200,
+    "method": "GET",
+    "type": "fetch",
+    "context": "mobile-emulation"
+  },
+  {
+    "url": "https://www.googletagmanager.com/gtag/js?l=dataLayer&id=G-GVMN6J471E",
+    "status": 200,
+    "method": "GET",
+    "type": "script",
+    "context": "mobile-emulation"
+  },
+  {
+    "url": "https://api.emagazines.com/EmfIssueSettings/null?tokenType=entitlement",
+    "status": 200,
+    "method": "GET",
+    "type": "xhr",
+    "context": "mobile-emulation"
+  },
+  {
+    "url": "https://www.google-analytics.com/g/collect?v=2&tid=G-GVMN6J471E&gtm=45je6an1v9195084384za200zb881442582zd881442582xf1&_p=1793076742356&gcd=13l3l3l3l1l1&npa=0&dma=0&_eu=AAAAAAQ&_fid=cJZ__3MljO19u9kAXyhXoQ&cid=1970095721.1793076743&frm=0&ngs=1&pscdl=noapi&rcb=7&sr=390x844&uaa=x86&uab=64&uafvl=Not%253AA-Brand%3B8.0.0.0%7CChromium%3B156.0.8078.4%7CHeadlessChrome%3B156.0.8078.4&uam=&uamb=0&uap=Linux&uapv=&uaw=0&ul=en-us&tag_exp=115938466~115938469~118897920~118897930~120213116~120385422~120469145~120469153~121246026~121246034&dt=The%20Week%20Junior%20%7C%20October%2023%2C%202026%20%7C%20Page%201&dl=https%3A%2F%2Freader.emagazines.com%2Fissue%2Fthe-week-junior%2Foctober-23-2026%2Fcover-3%3Fipt%3DF0826FC3-4129-46CF-A5F3-FF70A931F1FF&dp=%2Fissue%2Fthe-week-junior%2Foctober-23-2026%2Fcover-3&sid=1793076743&sct=1&seg=1&_s=2&tfd=7122",
+    "status": 204,
+    "method": "POST",
+    "type": "fetch",
+    "context": "mobile-emulation"
+  },
+  {
+    "url": "https://www.google-analytics.com/g/collect?v=2&tid=G-VWJXMVV0ZC&gtm=45je6an1v881442582za200zd881442582xf1&_p=1793076742356&gcd=13l3l3l3l1l1&npa=0&dma=0&_eu=AEAAAAQ&ae=a&cid=1970095721.1793076743&frm=0&ngs=1&pscdl=noapi&rcb=9&sr=390x844&uaa=x86&uab=64&uafvl=Not%253AA-Brand%3B8.0.0.0%7CChromium%3B156.0.8078.4%7CHeadlessChrome%3B156.0.8078.4&uam=&uamb=0&uap=Linux&uapv=&uaw=0&ul=en-us&_s=3&tag_exp=115938466~115938468~118897920~118897930~120213116~120385422~120412528~120469145~120469153~121246026~121246034&dl=https%3A%2F%2Freader.emagazines.com%2Fissue%2Fthe-week-junior%2Foctober-23-2026%2Fcover-3%3Fipt%3DF0826FC3-4129-46CF-A5F3-FF70A931F1FF&dr=https%3A%2F%2Freader.emagazines.com%2Fissue%2Fthe-week-junior%2Foctober-23-2026%3Fipt%3DF0826FC3-4129-46CF-A5F3-FF70A931F1FF&sid=1793076742&sct=1&seg=1&dt=The%20Week%20Junior%2C%20October%2023%2C%202026&en=page_view&_et=984&tfd=8258",
+    "status": 204,
+    "method": "POST",
+    "type": "fetch",
+    "context": "mobile-emulation"
+  },
+  {
+    "url": "https://fonts.gstatic.com/s/opensans/v44/memvYaGs126MiZpBA-UvWbX2vVnXBbObj2OVTS-muw.woff2",
+    "status": 200,
+    "method": "GET",
+    "type": "font",
+    "context": "mobile-emulation"
+  },
+  {
+    "url": "https://assets.emagazines.com/The_Week_Junior/20261016/OW3ESIBCD75LZGVUTV2E7DXENI.jpg",
+    "status": 200,
+    "method": "GET",
+    "type": "image",
+    "context": "mobile-emulation"
+  },
+  {
+    "url": "https://www.google-analytics.com/g/collect?v=2&tid=G-VWJXMVV0ZC&gtm=45je6an1v881442582za200zd881442582xf1&_p=1793076742356&gcd=13l3l3l3l1l1&npa=0&dma=0&_eu=AAAAAAQ&cid=1970095721.1793076743&frm=0&ngs=1&pscdl=noapi&rcb=9&sr=390x844&uaa=x86&uab=64&uafvl=Not%253AA-Brand%3B8.0.0.0%7CChromium%3B156.0.8078.4%7CHeadlessChrome%3B156.0.8078.4&uam=&uamb=0&uap=Linux&uapv=&uaw=0&ul=en-us&tag_exp=115938466~115938468~118897920~118897930~120213116~120385422~120412528~120469145~120469153~121246026~121246034&dt=The%20Week%20Junior%2C%20October%2023%2C%202026&dl=https%3A%2F%2Freader.emagazines.com%2Fissue%2Fthe-week-junior%2Foctober-23-2026%2Ftuts-tomb-may-have-hidden-rooms-1%3Fipt%3DF0826FC3-4129-46CF-A5F3-FF70A931F1FF&dp=%2Fissue%2Fthe-week-junior%2Foctober-23-2026%2Ftuts-tomb-may-have-hidden-rooms-1&sid=1793076742&sct=1&seg=1&dr=https%3A%2F%2Freader.emagazines.com%2Fissue%2Fthe-week-junior%2Foctober-23-2026%3Fipt%3DF0826FC3-4129-46CF-A5F3-FF70A931F1FF&_s=4&tfd=42721",
+    "status": 204,
+    "method": "POST",
+    "type": "fetch",
+    "context": "mobile-emulation"
+  }
+]

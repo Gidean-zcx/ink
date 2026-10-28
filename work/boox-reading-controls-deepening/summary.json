@@ -1,0 +1,15 @@
+{
+  "new_e": 13,
+  "new_f": 5,
+  "old_f": 2,
+  "old_f_fields": 8,
+  "old_e_captures": 2,
+  "articles_read": 10,
+  "original_article_rows": 59,
+  "new_control_rows": 68,
+  "inventory_rows": 127,
+  "actual_images": 4,
+  "body_network_requests": 0,
+  "image_network_requests": 4,
+  "hands_on": false
+}

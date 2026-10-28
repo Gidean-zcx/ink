@@ -1,0 +1,62 @@
+[
+  {
+    "evidence_id": "E-BXRD-10",
+    "article_id": 10701497927316,
+    "image_number": 2,
+    "observed_on": "2026-10-27",
+    "actual_view": "view_image",
+    "raw_work_path": "work/boox-reading-controls-deepening/raw/library-scan.jpg",
+    "raw_sha256": "ca5a1051603cde55ef83b70150598f8a55e0240f3853142df6674a562c329ae3",
+    "archived_artifact": "artifacts/boox-reading-controls-deepening/library-scan.jpg",
+    "sha256": "ca5a1051603cde55ef83b70150598f8a55e0240f3853142df6674a562c329ae3",
+    "hands_on": false,
+    "continuous_sequence": false,
+    "model_build_unconfirmed": true,
+    "note": "扫描模式菜单可见New Bookshelf/Manage Library/Filter and Sort/List Mode等；未触发操作"
+  },
+  {
+    "evidence_id": "E-BXRD-11",
+    "article_id": 10701578837268,
+    "image_number": 10,
+    "observed_on": "2026-10-27",
+    "actual_view": "view_image",
+    "raw_work_path": "work/boox-reading-controls-deepening/raw/notes-page-manager.png",
+    "raw_sha256": "089285229033c6d565e943bd546493cc136fe02ee23b471e93d5c23c26114d09",
+    "archived_artifact": "artifacts/boox-reading-controls-deepening/notes-page-manager.png",
+    "sha256": "089285229033c6d565e943bd546493cc136fe02ee23b471e93d5c23c26114d09",
+    "hands_on": false,
+    "continuous_sequence": false,
+    "model_build_unconfirmed": true,
+    "note": "Outline示例列表与页码、三点菜单可见；没有复制移动删除结果"
+  },
+  {
+    "evidence_id": "E-BXRD-12",
+    "article_id": 10701578837268,
+    "image_number": 13,
+    "observed_on": "2026-10-27",
+    "actual_view": "view_image",
+    "raw_work_path": "work/boox-reading-controls-deepening/raw/notes-layers.png",
+    "raw_sha256": "964f0841729cd1dd9de8c729de6c981b795ff42a9ee3dec92ef8aacdc8c84e9a",
+    "archived_artifact": "artifacts/boox-reading-controls-deepening/notes-layers.png",
+    "sha256": "964f0841729cd1dd9de8c729de6c981b795ff42a9ee3dec92ef8aacdc8c84e9a",
+    "hands_on": false,
+    "continuous_sequence": false,
+    "model_build_unconfirmed": true,
+    "note": "普通层/模板层及新增、眼睛、锁、垃圾桶可见；锁行为正文未说明"
+  },
+  {
+    "evidence_id": "E-BXRD-13",
+    "article_id": 25400769451540,
+    "image_number": 2,
+    "observed_on": "2026-10-27",
+    "actual_view": "view_image",
+    "raw_work_path": "work/boox-reading-controls-deepening/raw/epub-more-settings.png",
+    "raw_sha256": "bd070475b2dce000ea5c15535470b922513698b50afbed7391132098444a919c",
+    "archived_artifact": "artifacts/boox-reading-controls-deepening/epub-more-settings.png",
+    "sha256": "bd070475b2dce000ea5c15535470b922513698b50afbed7391132098444a919c",
+    "hands_on": false,
+    "continuous_sequence": false,
+    "model_build_unconfirmed": true,
+    "note": "Copy to对话框有For this book only及Cancel/OK；示例Bold选中非默认，未确认或取消"
+  }
+]

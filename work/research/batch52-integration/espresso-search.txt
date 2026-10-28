@@ -1,0 +1,483 @@
+Blocked by robots.txt
+The following domains cannot be accessed (non-retryable error): economist.com--------------------------------------------------------------------------------
+Economist.com - Special Access Instructions for eBooks & Online Newspapers - Research Guides at Dickinson College (https://libguides.dickinson.edu/specialaccess/Economist)
+citeturn1079search0 [wordlim: 200] Crawled: today;   * Podcasts and audio versions of stories ... After downloading the app, login to the app through "settings" ... To download the app, search "Economist Espresso" in the App Store or Google Play, or visit: https://subscribenow.economist.com/student.
+
+## Economist.com special features
+
+After setting up your individual account, you may take advantage of these features and content included with the library subscription:
+
+  * The World Ahead 
+  * 1843 Magazine
+  * Briefings and special reports
+  * Data journalism (Daily Chart in the "Home" section, Graphic Detail in the "Weekly" section)
+  * Podcasts and audio versions of stories
+  * Newsletters (select by setting your preferences at 'my.economist.com')
+  * Live digital events
+  * "The Economist" app is available for iOS (App Store) or Android (Google Play). After downloading the app, login to the app through "settings"
+
+## Economist "Espresso" App
+
+Espresso, The Economists short-form, daily news app, is now available to students aged 16 and older at no cost. Espresso can be accessed via iPhone or Android smartphones. Students will be prompted to verify their student status when signing up through the third-party service SheerID.
+
+To download the app, search "Economist Espresso" in the App Store or Google Play, or visit: https://subscribenow.economist.com/student.
+
+Espresso from The Economist includes:
+
+  * A brief, concise summary of global news
+  * Four full-length articles from The Economist per week
+  * Access to the Intelligence podcast
+  * Weekly quizzes and crosswords
+  * Audio for most articles--------------------------------------------------------------------------------
+The Economist app not working? crashes or has problems? | 2026 Solutions (https://justuseapp.com/en/app/1239397626/the-economist/problems)
+citeturn1079search1 [wordlim: 200] Published: 2 months ago; Crawled: last month; - Audio playlist is always ordered in the way The Economist is and cannot be arranged to user's priority. ... Image: Economist Espresso messages.notwork
+﻿ The Economist app not working? crashes or has problems? | 2026 Solutions
+
+# The Economist Status
+
+Last Updated on 2026-08-18 by The Economist
+
+
+I have a problem with The Economist
+
+Are you having issues? Select the issue you are having below and provide feedback to The Economist.
+
+[Input] [Input] [Input] [Input] [Button: Not working]
+
+[Input] [Input] [Input] [Input] [Button: Crashes ]
+
+[Input] [Input] [Input] [Input] [Button: Connection ]
+
+[Input] [Input] [Input] [Input] [Button: Login ]
+
+[Input] [Input] [Input] [Input] [Button: Account ]
+
+[Input] [Input] [Input] [Input] [Button: Screen ]
+
+Something else...
+
+
+👨🏻‍👩🏻‍👦🏻‍👦🏻
+13 User reports:
+App has problems
+
+ User reports 13
+
+### 13 Problems reported in the last 24 hours
+
+Most reported problems
+
+Crashes
+
+37.5%
+
+Not working
+
+31.3%
+
+Something else
+
+18.8%
+
+Login
+
+6.3%
+
+#### Summary of The Economist Problems 🔥
+
+- Excess of ads despite paying the full price.
+
+- Espresso is gone.
+
+- Audio playlist is always ordered in the way The Economist is and cannot be arranged to user's priority.
+--------------------------------------------------------------------------------
+‎The Economist: News & Analysis - Ratings & Reviews - App Store (https://apps.apple.com/ca/app/the-economist-news-analysis/id1239397626?platform=iphone&see-all=reviews)
+citeturn1079search2 [wordlim: 200] Crawled: 3 weeks ago; The Espresso section is missing from the app (accessing from iPhone SE in Canada). ... Please go to Settings → About and hold down on the version number to reset the cache. ... Not a lot of liberty for a liberal magazine.- audio player crashes iOS 14- audio player often does not remember playback position- cannot easily bring up audio player- audio cannot easily resume without opening the appPLEASE bring back the mp3 download for the audio edition. ... You can listen to our shows on Apple Podcasts, Spotify, The Economist app, economist.com—along with other popular platforms that support a private RSS feed.
+# Poor customer support (updated)
+
+    1.     2.     3.     4.     5. 2018-08-08
+
+Tanmoy Roy
+
+The content is good and the app is fine except - it has a bug and when I tried to point it out, I received poor responses from customer support. The Espresso section is missing from the app (accessing from iPhone SE in Canada). I pointed it out with all the details about the app three times but the customer support team kept assuming I am wrong (I have the wrong app or that I don’t have the latest version, etc.). Despite me trying to explain they kept assuming I have the wrong info. I was only trying to help but it doesn’t look it I could.Update: clearing cache process (as described by customer support with a reply to my rating) didn’t work.
+
+Developer Response 2018-07-31
+
+Please go to Settings → About and hold down on the version number to reset the cache. You should see Espresso appear after this.
+
+  * ### What happened
+
+    1.     2.     3.     4.     5. 2025-03-29
+
+Mike Latondresse
+
+Obviously they didn’t like me still using the classic version reader and cut me off when I tried to download the current issue. --------------------------------------------------------------------------------
+How can I download the weekly edition? (https://myaccount.economist.com/s/article/How-can-I-download-the-weekly-edition-and-manage-storage-on-the-app)
+citeturn1079search3 [wordlim: 200] Published: 4 months ago; Crawled: 1.1 years ago; How can I download the weekly edition on the app? ... You can do this automatically from the Download new editions toggle in the Settings menu. ... We are currently working on adding an option to download text and images without audio.
+
+# How can I download the weekly edition?
+
+How can I download the weekly edition on the app?
+
+There are two options available to download the weekly edition onto your device—make sure you are using the most up to date version of the app (v4.30+) to access these features. 
+
+ 
+
+You can do this automatically from the Download new editions toggle in the Settings menu. This will happen overnight on a Thursday, and download all content from the most recent edition. This will include audio and text to allow you to read and listen. You must have background app refresh switched on to allow the app to download overnight.
+
+ 
+
+If you do not wish to enable the automatic download, you can manually download each edition of your choice by going to the Weekly tab and tapping Download edition. For other week’s, go to the Weekly tab and tap Browse editions in the top right corner. This will show all editions in reverse date order. Click on your edition of choice and then Download edition to start the download. You can simultaneously download multiple editions. 
+
+ 
+How many downloaded editions can I keep on my device?
+The app will store up to eight editions on your device. If more than eight editions are downloaded, the edition that was downloaded first will be overwritten.
+To view the downloaded editions, go to the Weekly tab and select Browse editions in the top right corner. This will show all editions in reverse date order. A downloaded edition can be identified by the presence of a download icon (down arrow). To delete an edition, click into the edition and tap Delete. 
+We are currently working on adding an option to download text and images without audio. 
+
+Jun 4, 2026
+
+Still have questions? We would be happy to help. Contact our dedicated service team through phone or live chat.--------------------------------------------------------------------------------
+‎The Economist: News & Analysis App - App Store (https://apps.apple.com/ca/app/the-economist-news-analysis/id1239397626?platform=watch)
+citeturn1079search4 [wordlim: 200] Crawled: last month; For 20 years I have enjoyed reading the Economist but consistently found the user interface to be wanting. ... The Espresso section is missing from the app (accessing from iPhone SE in Canada). ... Please go to Settings → About and hold down on the version number to reset the cache. ...   * We've added a sleep timer to the audio player, added select and zoom for weekly edition covers and added playback speed controls to our vertical video player.
+I pointed it out with all the details about the app three times but the customer support team kept assuming I am wrong (I have the wrong app or that I don’t have the latest version, etc.). Despite me trying to explain they kept assuming I have the wrong info. I was only trying to help but it doesn’t look it I could.Update: clearing cache process (as described by customer support with a reply to my rating) didn’t work.
+
+Developer Response
+
+Please go to Settings → About and hold down on the version number to reset the cache. You should see Espresso appear after this.
+
+# Poor customer support (updated)
+
+    1.     2.     3.     4.     5. 2018-08-08
+
+Tanmoy Roy
+
+The content is good and the app is fine except - it has a bug and when I tried to point it out, I received poor responses from customer support. The Espresso section is missing from the app (accessing from iPhone SE in Canada). I pointed it out with all the details about the app three times but the customer support team kept assuming I am wrong (I have the wrong app or that I don’t have the latest version, etc.). Despite me trying to explain they kept assuming I have the wrong info. I was only trying to help but it doesn’t look it I could.Update: clearing cache process (as described by customer support with a reply to my rating) didn’t work.
+
+Developer Response 2018-07-31
+
+Please go to Settings → About and hold down on the version number to reset the cache. You should see Espresso appear after this.
+
+  * ### What happened
+
+    1.     2.     3.     4.     5. 2025-03-29
+
+Mike Latondresse
+
+Obviously they didn’t like me still using the classic version reader and cut me off when I tried to download the current issue. If I use the new reader it works but it is as if the art work is done by People Magazine plus I am on a one month trial so I have lost 9 months of my original subscription. I have been a subscriber for 40+ years but not sure I will renew.
+
+--------------------------------------------------------------------------------
+The Economist app not working? crashes or has problems? | 2026 Solutions (https://justuseapp.com/en/app/1239397626/the-economist-news-analysis/problems)
+citeturn1079search5 [wordlim: 200] Crawled: 2 weeks ago; - Audio playlist is always ordered in the way The Economist is and cannot be arranged to user's priority. ... On android, goto Settings » Apps or Manage Apps tab. ... Image: Economist Espresso messages.notwork
+
+- Excess of ads despite paying the full price.
+
+- Espresso is gone.
+
+- Audio playlist is always ordered in the way The Economist is and cannot be arranged to user's priority.
+
+### 📋 3 Reported Issues:
+
+C
+
+Colin Jones 2023-12-10
+
+I have not received your issue for 12 December. Pease advise. Colin Jones
+
+D
+
+Daniel Wilson 2023-05-07
+
+We are receiving THREE copies of the magazine! We only want one. How can we make this stop? All three are addressed exactly the same: Daniel Wilson 13396 Ecton Trail Bagley, MN 56621
+
+S
+
+Simon Landy 2022-05-24
+
+1. New app doesn't scroll properly and sometimes freezes. 2. Unlike with legacy app, when returning to app I am taken to the contents page, not where I left off. 3. Unlike with legacy app, articles don't fully download on opening so that right-hand cursor has to readjust during read.
+
+Showing 1-3 of 3 reported issues:
+
+#### Have a Problem with The Economist: News & Analysis? Report Issue
+
+[Input: Your Name *]
+
+[Input] [Input] [Input] [Input] [Input]
+
+SOLVE
+
+## Common The Economist Problems & Solutions. --------------------------------------------------------------------------------
+The Economist weekly UK issue App for iPhone and iPad | appstor.io (https://economist-iphone-uk.appstor.io/)
+citeturn1079search6 [wordlim: 200] Crawled: 3 weeks ago; You can manage auto-renew of your subscription from your iTunes account settings at any time, but must be turned off at least 24 hours before the end of the current period to avoid being charged again. ... Audio Content At The Economist, we’re prioritising the health and well-being of our staff which means there will be delay in publishing the audio edition to the app and website.
+Make sense of it all with The Economist.
+
+SUBSCRIBING IN-APP
+
+• Purchase a quarterly subscription to the full edition of The Economist for USD $45.99 or an annual subscription for USD $189.99.
+
+• Subscribe annually, quarterly or buy a single issue. You will be charged in your local currency at the prevailing exchange rate as defined by iTunes.
+
+• Payment is charged to your iTunes account upon confirmation of purchase.
+
+• Annual and quarterly subscriptions automatically renew. You can manage auto-renew of your subscription from your iTunes account settings at any time, but must be turned off at least 24 hours before the end of the current period to avoid being charged again.
+
+• The app may offer a free trial. At the end of the free trial period, the full price of the subscription will be charged thereafter. Cancellations must occur 24 hours before the end of the subscription period to avoid being charged. Visit http://support.apple.com/kb/ht4098 for more information.
+
+ALSO AVAILABLE ON IPAD
+
+Simply search for The Economist in the App Store to download the app for free.
+
+Please note that this app requires iOS 8.0 and above. We recommend you update to the latest version of iOS to receive the best possible experience.
+
+What's New · 4.4.3
+
+Audio Content At The Economist, we’re prioritising the health and well-being of our staff which means there will be delay in publishing the audio edition to the app and website. We expect the audio content to be published, at the latest, by 10pm UK Time on Thursdays. For more information, please see our regularly updated FAQs for COVID-19 in settings, FAQ
+
+Image: The Economist weekly UK issue app icon
+
+The Economist weekly UK issue
+
+free
+
+Download on the App Store
+
+At a glance
+
+Price free
+
+Version 4.4.3
+
+Ratings & Reviews
+
+## What people think
+
+Community pulse
+
+appstor.io readers
+
+Information
+
+## The details
+
+Provider The Economist
+
+Category News
+
+Version 4.4.3
+
+Price free
+
+English--------------------------------------------------------------------------------
+The Economist - News, Podcasts App Reviews & Download - News App Rankings! (https://appsrankings.com/app/1239397626/the-economist-news-podcasts)
+citeturn1079search7 [wordlim: 200] Published: 8.5 years ago; Crawled: last month; Only “allowing all” frees you from having to reapply your settings each usage. ... App comments only - The Economist is very good and useful as ever, but two problems have emerged recently with the app regarding audio: - the in-app controls are very slow to respond - swiping up to switch apps from the Economist audio menu very often causes the track to switch to the World This Week / first track. ... I mostly use this app for the audio and I’d Economist even more if the two followings were possible. ... It’d be nice if the espresso morning briefing had a play button so that I could listen to that as audio as well.
+Ian Canberra
+
+Economist audio. Most readers are very good - reading at a moderate pace that enables detail of reports to be easily absorbed. However, one of your female readers reads much too fast - I find I can’t absorb details of complex reports when she is reading them. App would be perfect if she could be persuaded to reduce her reading pace.
+
+Applecarplayuser
+
+Apple Car play app. This feedback relates to the Apple Car Play screen for the Economist app: A recent update replaced the forward one article/back one article buttons with forward/back 10 seconds. I find the new setup frustrating because there are some articles I’d like to skip and would appreciate you changing it back to the way it was.
+
+Stressed Chef
+
+App needs some bug fixes. App comments only - The Economist is very good and useful as ever, but two problems have emerged recently with the app regarding audio: - the in-app controls are very slow to respond - swiping up to switch apps from the Economist audio menu very often causes the track to switch to the World This Week / first track. Espresso514
+
+Great content but sluggish app. I tried reading an article today. Crashed 4 times before I gave up. Tried cancelling my subscription and the website was defective, had to chat for 15 minutes to get it done. I’m out. Old- The content is worth the subscription, but this is by far the worst news app. It keeps on freezing, lagging and crashing. To the point where I hesitate renewing my subscription.
+
+Frustrated Beaver
+
+Why is it so laggy?. I’m paying nearly $30 CAD for this subscription. There is absolutely no reason for this app to still be so laggy. Why do I have to click a link on the app 10 times before it moves to the next article? :( I love you guys I just wanna see you succeed. :((
+
+^*|*|*|*|*|*^
+
+When the next update?. App crashes non-stop. Impossible to read a full article. This is becoming ridiculous.
+
+Fantastic ;)
+
+Annoyingly pauses audio on opening. The Economist is a global treasure as a publication, but the app leaves much to be desired. One annoyance as of June 2024 is that the app pauses any playing audio when it is opened. --------------------------------------------------------------------------------
+Espresso from The Economist 3.21.0 APK Download by The Economist Newspaper - APKMirror (https://www.apkmirror.com/apk/the-economist-newspaper-limited/the-economist-espresso-daily-news/the-economist-espresso-daily-news-3-21-0-release/)
+citeturn1079search8 [wordlim: 200] Published: 2.6 years ago; Crawled: 4 days ago; Share your feedback with the team by emailing espresso-app@economist.com ... You can listen to the audio versions of articles or stretch your mind with enjoyable extras such as facts, charts and a daily quiz. ... • You can cancel at any time by going to My account in Settings and selecting • Manage my subscription and following the instructions
+
+# Espresso from The Economist 3.21.0
+
+### By The Economist Newspaper
+
+  *   *   *   * ### What's new in Espresso from The Economist 3.21.0
+
+Energise your world
+
+This update includes an update to our typeface, making for a more enjoyable reading experience.
+
+Share your feedback with the team by emailing espresso-app@economist.com
+
+Best wishes,
+The Espresso team
+
+### About Espresso from The Economist 3.21.0
+
+Espresso from The Economist is the faster, smarter way to know the news. Power through the world’s top stories in the time it takes to have a cup of coffee, with incisive analysis updated throughout the day. Manage your time effectively with a concise global summary, a personalised selection of longer reads from The Economist and easily absorbable extras.
+
+Espresso is well-balanced to complement your lifestyle. You can listen to the audio versions of articles or stretch your mind with enjoyable extras such as facts, charts and a daily quiz.
+
+Try Espresso today free for seven days. Subscriptions start from just £7.99/$7.99/€12.99 per month.
+--------------------------------------------------------------------------------
+‎Espresso: World news in a shot App - App Store (https://apps.apple.com/in/app/espresso-world-news-in-a-shot/id896628003)
+citeturn1079search9 [wordlim: 200] Crawled: last month; What you’ll get: - Top stories for quick analysis - “The World in Brief” news summary updated three times a day - Five bite-size articles offering finishable 1 minute reads - Audio versions of articles to enjoy hands-free - Daily podcasts and short videos offering fresh perspectives on current events - A zingy blend of Figure of the day, Quote of the day and Chart of the day - Selected news stories from the weekly edition in the “For you” tab Features: - Time to read highlighted on each article - Adjustable text size - Personalize your topic preferences - Dark mode for more comfortable reading - Mobile and tablet-compatible - Enable notifications Topics covered: - The Americas - Asia - China - Britain - Business - Middle East - Africa - Finance - Economics - Science - Technology - Culture - People - Coronavirus - US Elections - Editor’s Picks Full terms of use can be found at https://www.economistgroup.com/terms-of-use Our privacy policy can be found at https://www.economistgroup.com/privacy-policy ...   * Energise your world This update includes some fixes to improve app stability and performance Share your feedback with the team by emailing espresso-app@economist.com Best wishes, The Espresso team
+
+# 
+
+Espresso: World news in a shot
+
+Quick daily news reporting
+
+Free · In-App Purchases
+
+Share
+
+  * 890 Ratings 4.8
+
+  * Age Rating 16+ Years
+
+  * Category News
+
+  * Developer The Economist
+
+  * Language EN English
+
+  * Size 59.3 MB
+
+  *   * Image
+
+  * Image
+
+  * Image
+
+  * Image
+
+  * Image
+
+  *   *   * iPhone, iPad
+
+Espresso from The Economist is the faster, smarter way to know the news. Power through the world’s top stories in the time it takes to have a cup of coffee, with incisive analysis updated throughout the day. The Espresso app is now free for students. Here is what people say about Espresso: “If all you have each day is a few minutes and you're tired of the 24hrs news cycle mostly regurgitating the same info all day everyday, the Espresso helps distil the cacophony of news each day into a single powerful update.” What you’ll get: - Top stories for quick analysis - “The World in Brief” news summary updated three times a day - Five bite-size articles offering finishable 1 minute reads - Audio versions of articles to enjoy hands-free - Daily podcasts and short videos offering fresh perspectives on current events - A zingy blend of Figure of the day, Quote of the day and Chart of the day - Selected news stories from the weekly edition in the “For you” tab Features: - Time to read highlighted on each article - Adjustable text size - Personalize your topic preferences - Dark mode for more comfortable reading - Mobile and tablet-compatible - Enable notifications Topics covered: - The Americas - Asia - China - Britain - Business - Middle East - Africa - Finance - Economics - Science - Technology - Culture - People - Coronavirus - US Elections - Editor’s Picks Full terms of use can be found at https://www.economistgroup.com/terms-of-use Our privacy policy can be found at https://www.economistgroup.com/privacy-policy
+
+Ratings & Reviews
+
+  * 4.8
+
+out of 5
+
+890 Ratings
+
+  * ### Excellent coverage. More options would be nice!
+
+    1.     2.     3.     4.     5. 01/08/2019
+
+Inapis
+
+No complains about quality of content.What I’d like is more options on what topics are delivered in the daily briefing as well as letting me choose the time of notification. Even though it’s espresso I don’t read it first thing in the morning. I read it when the day is over and having a notification at my time lets me be consistent in checking the app.
+
+--------------------------------------------------------------------------------
+Espresso: World news in a shot Positive Reviews & Comments (https://appsupports.co/896628003/espresso-world-news-in-a-shot/positive-reviews)
+citeturn1079search10 [wordlim: 200] Crawled: last month; Image: Espresso: World news in a shot App Positive Reviews The Economist ... My only issue is that the largest text size you can select in settings is still rather small. ... I find that the speakers for the audio version are not of the same high caliber as those for The Economist; and listening to the repetitive bore of the daily quiz, combined to having to listen to who the weekly winners are is a major distraction.
+Finally, there are different versions floating around in the App Store, so you have to be careful about which one you are getting. My advice: stick to the print edition. (IF it ever shows up on the front doorstep, it’s a great read!). AllTheGoodNicknamesreGone Version: 1.8.6
+
+✓ Quick for a busy lifestyle I used to read the whole Economist but I switched jobs and didn’t have the time anymore. This is great. I still get updates on the most important stuff. I feel like I’m still connected to what’s going on in the world.. Amber5176 Version: 3.37.0
+
+✓ No longer able to increase the speed of the audio version As always, this is only a review of the app. If I could rate the economist it would get a 6 out of 5. Unfortunately I noticed that the iPhone app no longer supports the 1.5x and 2x speed listening option. Please bring this back!. Bcr-abl Version: 1.5.4
+
+✓ Forced to write a review!! I could not seem to avoid writing this review! Hopefully I can now return to the App and read my quote of the day. Hopefully the quote of the day has not been hijacked by a marketing executive. 😬. Always concerned Version: 1.9.8
+
+✓ Short and sweet The skill of the economist is mirrored in the brevity of the articles on key issues of the day. The Saturday ventures away from the serious stuff (even when the Brexiteers are pushing May and the UK over a cliff, is a welcome diversion. Trtaveller Version: 1.5.16
+
+✓ Love the morning update - voice audio would be great though Loving the quick morning update but would be great if there was an audio version so I can listen in the car rather than having to read everything. Keep up the good work.. Aislinnkate Version: 1.5.9
+
+✓ Sum & Substance Everything written is a punchy Clear summary with complexities boiled down to their sum and substance 👌. The Big Yin, Downunder Version: 1.5.16
+
+✓ A little slow to load but otherwise good The content is relevant and delivered in just the right bite size. Unlike the main Economist app which has terrible user experience this one works well.. Bigcheesemooncake Version: 1.5.9
+
+✓ No longer works on my iPhone In the past I read espresso every morning. I find that the speakers for the audio version are not of the same high caliber as those for The Economist; and listening to the repetitive bore of the daily quiz, combined to having to listen to who the weekly winners are is a major distraction. As a result, I now prefer reading the Espresso rather than listening to it.. Don Pedro 1492 Version: 3.26.0
+
+✓ Written and audio options I like listening to the World in Brief while waking up in bed. The audio option is not updated frequently enough so I often have to listen to yesterday’s news even though the app written content has been updated. Also main articles on the app often do not have an audio option. If the FT can do it so can the Economist.. Bonzo Doodah 5 Version: 2.14.0
+
+✓ Great quick summary I also susbscribe to the weekly edition but especially with fast changing news, like Ukraine, wonderful to get a reliably honest coherent updated account from Espresso. Chirembanz Version: 2.5
+
+✓ Excellent News Pick-Me-Up Source The Economist Expresso provides shots of today’s news and information to help you get a good feel of what’s going on around the world. I can quickly read it and eventually dive further into a particular topic later. Great news source!. OneofakindAlways Version: 1.9.6
+
+--------------------------------------------------------------------------------
+Economist - Digital News - Research and Course Guides at University of St. Thomas (https://libguides.stthomas.edu/digitalnews/economist)
+citeturn1079search11 [wordlim: 200] Crawled: 2 weeks ago; You can access The Economist for free by visiting the site via the link below. ...     * Image: Mobile app available
+    * Image: Audio resources available ... To log in, go to Menu > Settings > Log in, and enter your St.
+
+# Digital News: Economist
+
+Image: The Economist
+
+###### 
+
+### ECONOMIST.COM ACCESS
+
+You can access The Economist for free by visiting the site via the link below.
+
+  * Economist, The This link opens in a new window
+
+    * Image: Mobile app available
+    * Image: Audio resources available
+
+University-wide subscription to the digital edition of the esteemed British newsweekly. Includes current and prior coverage back to 1997; see the separate Economist Historical Archive for coverage back to 1843.
+
+### Web login via Single Sign On
+
+Enter your stthomas.edu email address on the institutional login page (do not click the blue Log in button). You will automatically be redirected to the St. Thomas Single Sign-On login page if you don't already have an active session.
+
+Image: Economist institution login screen with an X over the Login button
+
+On subsequent visits from the same browser, navigate directly to economist.com
+
+### Mobile App login
+
+Our subscription includes access to Economist podcasts and other digital content available via the Economist mobile apps. To log in, go to Menu > Settings > Log in, and enter your St. Thomas email address when prompted. Note: There is no need to enter a password on the login page--instead, you should automatically be redirected to UST Single Sign-On.
+
+### Web login via Single Sign On
+
+Enter your stthomas.edu email address on the institutional login page (do not click the blue Log in button). You will automatically be redirected to the St. Thomas Single Sign-On login page if you don't already have an active session.
+
+Image: Economist institution login screen with an X over the Login button
+
+### Mobile App login
+
+Our subscription includes access to Economist podcasts and other digital content available via the Economist mobile apps. To log in, go to Menu > Settings > Log in, and enter your St. Thomas email address when prompted. Note: There is no need to enter a password on the login page--instead, you should automatically be redirected to UST Single Sign-On.--------------------------------------------------------------------------------
+The Economist - October 27, 2018  USA (https://akerscloud.diskstation.me/Books-Mags/Business%20%26%20Money%20Books%20Collection/The%20Economist%20-%20October%2027%2C%202018%20%20USA.pdf)
+citeturn1079search12 [wordlim: 200] Published: 8.0 years ago; A smartphone mockup centered on a red background shows The Economist app screen with the heading “This week,” a cover image titled “China v America,” the article title “The next recession,” date “Oct 19th 2019,” buttons “Stream audio” and “Download audio,” a “Previous editions” row, a red strip labeled “The world this week,” and a bottom tab bar with icons/labels for “The Economist,” “This week,” “Bookmarks,” and “Settings.”
+The new Economist app.
+
+<visual_element id="e1">
+A smartphone mockup centered on a red background shows The Economist app screen with the heading “This week,” a cover image titled “China v America,” the article title “The next recession,” date “Oct 19th 2019,” buttons “Stream audio” and “Download audio,” a “Previous editions” row, a red strip labeled “The world this week,” and a bottom tab bar with icons/labels for “The Economist,” “This week,” “Bookmarks,” and “Settings.”
+</visual_element>
+
+Redesigned for bigger thinking.
+
+Curated morning briefings, bookmarks to revisit articles and the full edition each week with audio versions to listen to on the go. With the new Economist app for iOS, getting a global perspective has never been more convenient.
+
+Morning briefings · Audio articles · Bookmarks · Timed reads
+
+Free for subscribers.  
+Download today from the App Store.  
+Yet to subscribe? Visit economist.com/redesigned  
+to get your first 12 weeks for $12.
+
+Launch supported by BRIGHTLINE INITIATIVE--------------------------------------------------------------------------------
+230531_GroupSubs_WelcomePack_SSO.indd (https://lib.auburn.edu/docs/pdf/TheEconomist_WelcomePack_SSO.pdf)
+citeturn1079search13 [wordlim: 200] Published: 3.4 years ago; Crawled: 3.4 years ago; Left phone mockup showing The Economist Home app screen: top label “The world in brief,” a “Top stories” section, and bottom navigation with Home, Weekly, Saved, Explore, Settings. ... Center-right phone mockup showing an Audio player screen with a blue illustration, label “LEADERS,” and the title “The machinery, structure and output of the British state need reform,” plus playback controls and a progress bar.
+--------------------------------------------------------------------------------
+<visual_element id="e1"> (https://manuals.plus/m/023ba355ca22f864ffa6807e3e636d6726cafebd720e3cd49a0ceb0abc59f96c.pdf)
+citeturn1079search14 [wordlim: 200] Published: 3.7 years ago; Crawled: 3.7 years ago; A horizontal sequence of four app-screen mockups showing a “Favorites” feature and how to add items: ... Rightmost dark screen (upright): two items shown side by side, “Espresso” and “Doppio+,” each with a plus button above; a hand cursor points to the plus near “Espresso”; small icons appear along the bottom including a gear/settings icon and a speaker/audio icon.
+--------------------------------------------------------------------------------
+230315_GroupSubs_WelcomePack_EmailDomain.indd (https://www.uni-corvinus.hu/contents/uploads/2024/02/EmailDomain_The-Economist_WelcomePack.pdf)
+citeturn1079search15 [wordlim: 200] Published: 3.6 years ago; Crawled: 3.6 years ago; Left phone mockup showing The Economist Home app screen: “The world in brief” with story tiles including “Elon Musk’s tweeting on trial,” “A musical pioneer reckons with mortality,” and “Daily quiz”; below is “Top stories” with a large photo and headline beginning “How the young spend their…”. Bottom navigation shows Home selected, plus Weekly, Saved, Explore, Settings. ... Center phone mockup showing Audio player screen: title “Audio,” illustration of a globe with an apple, section label “LEADERS,” episode title “Goodbye 1.5°C,” progress bar with times 2:05 and 7:35, and playback controls.
+--------------------------------------------------------------------------------
+How much does the economist app cost (https://img1.wsimg.com/blobby/go/460cb874-093b-4fc3-83f6-1bf0c567c771/downloads/how_much_does_the_economist_app_cost.pdf)
+citeturn1079search16 [wordlim: 200] Crawled: 10 months ago; How much does the economist app cost ... And our podcasts' independent cover and beautifully readable audio versions of the stories provide a distinctive mix of news and analysis to help me understand the events that are shaping the world. ... Get a better experience with the settings for dark mode and the text size.
+--------------------------------------------------------------------------------
+Full Automatic Espresso Machine (https://device.report/m/876b335fc98d46d2e7a26b18a599c7af6eae868dd83cf47ef5895f17dc180e08.pdf)
+citeturn1079search17 [wordlim: 200] Published: 7 months ago; 7  User Settings ... Please follow the steps in the "HomeDirect, Audio Control and ... Full Automatic Espresso Machine with Integrated Milk
+

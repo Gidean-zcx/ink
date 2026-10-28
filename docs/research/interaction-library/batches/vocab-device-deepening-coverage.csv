@@ -1,0 +1,2 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M023-06,M-023,无响应排查与转帮助（MM-WM01）,D2,E-MMDVC-01,长按电源、复位、充电再试、App客服,恢复运行不保证数据恢复；重启/复位后的未同步记录和当前位置未知,not_observed,false,cases/M-023-maimemo-device.md,2026-10-26

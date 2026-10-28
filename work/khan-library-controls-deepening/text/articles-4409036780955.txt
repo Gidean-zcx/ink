@@ -1,0 +1,124 @@
+Learn more about the books in the Khan Academy Kids app – Khan Academy (https://khankids.zendesk.com/hc/en-us/articles/4409036780955-Learn-more-about-the-books-in-the-Khan-Academy-Kids-app)
+citeturn961view0 [wordlim: 200] Crawled: today; Content type: text/html; Source: open({"ref_id":"https://khankids.zendesk.com/hc/en-us/articles/4409036780955-Learn-more-about-the-books-in-the-Khan-Academy-Kids-app","lineno":null}); Total lines: 122
+L0: 【0†Skip to main content】
+L1: 
+L2: 【1†Submit a request】
+L3: 
+L4: [Input][Input] [Input: Search]
+L5: 
+L6: Articles in this section
+L7:   * 【2†Our Accessibility Statement】
+L8:   * 【3†Five ways to use Khan Kids for back to school success】
+L9:   * 【4†Quick start guide for preschool through 2nd grade teachers】
+L10:   * 【5†✨ NEW: Teacher Dashboard on the web】
+L11:   * 【6†✨ NEW: Manage student access to areas of the app】
+L12:   * 【7†Module 1: Setting up a Class Account】
+L13:   * 【8†Learning Topics: Using Khan Academy Kids in Educational Settings】
+L14:   * 【9†Module 2: Using Class Codes】
+L15:   * 【10†Daily Schedules for Ages 2-8】
+L16:   * 【11†Module 3: Assigning lessons】
+L17: 【12†See more】
+L18: # Learn more about the books in the Khan Academy Kids app
+L19: 
+L20:   * February 26, 2026 23:43
+L21:   * Updated
+L22: The Khan Academy Kids app has over 300 books for kids to enjoy and is constantly growing! Our wide variety of fiction texts explore social-emotional topics with cute characters and engaging story lines. There's a whole world of non-fiction texts too, that will tell learners all about animals, space, trucks, insects, and so much more. Click 【13†here】 to learn more about the different types of books that you can find in Khan Academy Kids.
+L23:   * 【14†How to find books in Khan Kids】
+L24:   * 【15†Books with embedded questions】
+L25:   * 【13†Assigning books to your students】
+L26:   * 【13†Overview of different types of books】
+L27:   * 【16†Printable activity packets】
+L28: ### How to find books in Khan Kids
+L29: 
+L30: Students can open Khan Academy Kids to the Home Screen (the page with the big house), and tap the purple book icon that says “Library” in the upper left corner. This will take them to the Library, where they can browse through our full offering of books.
+L31: 
+L32: 【17†Image: studentlibrary.png】
+L33: If you have a 【18†Class Account】, you can access these books from your teacher view. Across the top of the screen, you will see tabs for Letters, Reading, Math, Logic+, Books and Videos. Go to the Books tab and scroll down to view the different sections.
+L34: All the books in the Books tab can be found in the Reading tab as well. Go to the Reading tab and change the gray dropdown menu on the upper right side of the tab. Scroll down until you see a section with books. There are lots of sections, so you might be scrolling for a little while!
+L35: ### Books with embedded questions
+L36: 
+L37: All of our books can be found in both the Books tab and the Reading tab.
+L38: 
+L39: 【19†Image: bookstab.png】  | 【20†Image: readingtab.png】
+L40: 
+L41: When a book is selected from the Books tab, there are two options: Read to Me or Read by Myself. If learners select Read to Me, the story will be read aloud and the text will highlight at the same time. If learners select Read by Myself, there will not be any audio and learners will use the arrows to turn the pages.
+L42: When a book is selected from the Reading tab, it includes interactive elements that make turn the book reading experience into a full lesson. Books in the Reading tab will include questions about the text, prompts to tap images on the screen, and sometimes a book walk at the beginning. Kodi will ask comprehension questions throughout, and she'll ask critical thinking questions too.
+L43: There are often embedded lessons that use the pages of the book to teach things like pronouns, sight words, letter sounds, and more. As kids reach 1st and 2nd grade learning levels, the texts will also include some multiple choice questions.
+L44: ### Assigning books to your students
+L45: 
+L46: If you have a 【18†Class Account】, you can assign books to your students! You can do this in the same way that you'd 【21†assign any lesson】 in the Khan Kids app. Browse through the Books or Reading tab and tap any book to assign! Or, 【22†assign from the Class Report】  in the sections titled Reading Literature and Reading Informational Text. This is a great opportunity to assign a book in the Khan Kids app that is related to a topic you're discussing in class.
+L47: ### Overview of different types of books
+L48: 
+L49: Click on one of the following types of books to read a short description:
+L50: 
+L51: 【23†Non-fiction】  | 【24†Stories with Lessons】  | 【25†Early Readers】
+L52: 【26†National Geographic Young Explorer】  | 【27†Alphabet Books】  |
+L53: 
+L54: ####
+L55: #### Non-fiction
+L56: 
+L57: Our non-fiction texts are created in collaboration with Bellwether Media. Topics include animal groups like cats and dogs, a series on dinosaurs, an exploration of space, and more!
+L58: 
+L59: 【28†Image: bellwether.png】  | 【29†Image: simulator_screenshot_B2F2FA53-698D-45FC-8D23-B13B3E631254.png】
+L60: 
+L61: ####
+L62: 
+L63: #### Stories with Lessons
+L64: #### The adorable characters in these stories make social-emotional topics easy to understand and fun to engage with. T-rex learns it's okay to be himself, even if he likes different things than other carnivores do. Crocodile learns how to cope and be brave without his mom there. Flamingo goes to school for the first time and overcomes his nerves. These relatable emotions and bright illustrations make stories that kids want to read again and again.
+L65: 【30†Image: storieswithlessons.png】  | 【31†Image: gottobeme.png】
+L66: #### Early Readers
+L67: 
+L68: The Khan Kids characters are featured front and center in all of our Early Readers. These books are written so that emergent readers can practice their new skill, and 1st and 2nd graders can start reading at a more advanced level. All along the way, Kodi & friends have tons of adventures and learn some valuable lessons! Look for the Early Readers in the Reading tab to see what lessons are embedded—you'll find sight words, letter sounds, blends, and more.
+L69: 【20†Image: readingtab.png】  | 【32†Image: lookatmymap.png】
+L70: ####
+L71: 
+L72: #### National Geographic Young Explorer
+L73: 
+L74: Kids can start learning about science and research topics with our National Geographic Young Explorer series. This series takes kids around the world, taking a close look at animals, environmental issues, and different climates.
+L75: 
+L76: 【33†Image: natgeo.png】  | 【34†Image: plants.png】
+L77: 
+L78: ####
+L79: #### Alphabet Books
+L80: 
+L81: Scroll down to the very bottom of the Books tab to find a book on each letter in the alphabet! Each book uses words with the letter, and many of them have pictures that kids can move. Can you look in the leaves? Move the leaves to the side to see what's underneath!
+L82: 
+L83: 【35†Image: alphabetbooks.png】  | 【36†Image: lookinleaves.png】
+L84: ### Printable activity packets
+L85: 
+L86: After students read or listen to a book, it's helpful for them to engage in an activity related to what they just read. "Extension activities" can help students remember important plot points, make connections with their own lived experience, and internalize the story's lesson.
+L87: The Khan Academy Kids team has put together three printable packets to accompany books in the Khan Kids app. Each packet includes a coloring page and a writing activity. Click 【37†here】 to download packets for the books Breakfast Time, In Harmony, and Sidewalk Chalk.
+L88: 
+L89: Remember, even students who can't read or write full words can engage in writing prompts! They can draw simple pictures and narrate words for an adult to write on their behalf.
+L90: ### Download printable activity packets
+L91: 
+L92:   * 【38†KhanKids_BreakfastTime_WritingAndColoring.pdf】
+L93: 
+L94: 500 KB 【38†Download】
+L95: 
+L96:   * 【39†KhanKids_InHarmony_WritingAndColoring.pdf】
+L97: 
+L98: 800 KB 【39†Download】
+L99: 
+L100:   * 【40†KhanKids_SidewalkChalk_WritingAndColoring.pdf】
+L101: 
+L102: 400 KB 【40†Download】
+L103: 
+L104: Was this article helpful?
+L105: 
+L106: [Button: Yes] [Button: No]
+L107: 
+L108: 3 out of 3 found this helpful
+L109: 
+L110: Have more questions? 【1†Submit a request】
+L111: 
+L112: 【41†Return to top】
+L113: ## Comments
+L114: 
+L115: 0 comments
+L116: 
+L117: Article is closed for comments.
+L118: 
+L119: 【42†Khan Academy】
+L120: 
+L121: 【43†Powered by Zendesk†www.zendesk.com】

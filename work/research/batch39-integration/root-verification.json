@@ -1,0 +1,38 @@
+{
+  "checked_on": "2026-10-27",
+  "semantic_observations": [
+    "Root viewed Chinese p42: long-press event plus, voice, editable title/all-day/start/end/notes, confirm then calendar diagram.",
+    "Root viewed Chinese p60: Auto Sync switch; 7/3 days and 24 hours; note compulsory by body; selected 7 days not assumed default.",
+    "Root viewed Chinese p66: recipient already present before AI; preview Copy to the mailbox returns composer; Send remains separate.",
+    "Root viewed Chinese p67: two signature entrances but no explicit save/cancel outcome; no persistence claim.",
+    "Root viewed Chinese p52/55: Clear Data vs cache, 4 vs 5 command conflicts persist.",
+    "Root checked original M1 review lines231–235 and247–251; author report only. SR35 printed38–40/file39–41 and printed57/file58 separate internal playlists/database from M3U.",
+    "Root checked prior Week browser audit lines13–16/52–63: within-page iframe state is not persistence; second audio restart result unknown."
+  ],
+  "new_flow_ids": [
+    "F-M007-21",
+    "F-M007-22",
+    "F-M007-23"
+  ],
+  "changed_flow_ids": [
+    "F-M007-03",
+    "F-M007-10",
+    "F-M007-13",
+    "F-M007-14",
+    "F-M007-16",
+    "F-M007-17",
+    "F-M007-18",
+    "F-M007-19",
+    "F-M063-07",
+    "F-M063-10",
+    "F-M065-09"
+  ],
+  "all_old_flow_ids_preserved": true,
+  "requirements_sha256": "e141320e2714df805c009fe64dd92d17decd6429d5728f8ce42d6d868b775087",
+  "limitations": [
+    "Manual diagrams are not actual operation",
+    "New retrieval table contains16 examples only",
+    "No native app/hardware/child effectiveness test",
+    "Generic structure checks do not validate semantic truth"
+  ]
+}

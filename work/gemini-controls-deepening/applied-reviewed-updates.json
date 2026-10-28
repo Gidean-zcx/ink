@@ -1,0 +1,816 @@
+{
+  "flow_changes": [
+    {
+      "id": "F-M042-01",
+      "field": "known_branches",
+      "before": "内容可含截图、文件或 URL。长按建议可改自动提交；自动推断何时读取屏幕的功能另限英语，文本与截图开关分别设置。",
+      "after": "Ask about与其他建议的自动提交不同；当前屏幕/文件上传；文本、截图开关分开，智能屏幕推断限英语"
+    },
+    {
+      "id": "F-M042-01",
+      "field": "gaps",
+      "before": "屏幕外/历史数据覆盖",
+      "after": "屏幕外/历史/完整库覆盖、上传取消及上下文更新；动态共享另见Live任务"
+    },
+    {
+      "id": "F-M042-01",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M042-02",
+      "field": "evidence_ids",
+      "before": "E-GEM-02",
+      "after": "E-GEM-02;E-GECD-01;E-GECD-02"
+    },
+    {
+      "id": "F-M042-02",
+      "field": "known_branches",
+      "before": "可见目录随账户/平台而变；关闭 Keep Activity 后 Android 仍保留部分设备/通信连接器，不能照搬到 iOS/web。",
+      "after": "按账号/平台过滤目录；详情支持/不支持动作；85目录项仅发现；普通连接器Add/Disconnect与自定义应用生命周期分开"
+    },
+    {
+      "id": "F-M042-02",
+      "field": "gaps",
+      "before": "每个连接器全动作及部分失败",
+      "after": "各连接器完整动作、部分失败、返回真实结果；跨App依赖及重试"
+    },
+    {
+      "id": "F-M042-02",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M042-04",
+      "field": "evidence_ids",
+      "before": "E-GEM-03",
+      "after": "E-GEM-03;E-GECD-03;E-GECD-04;E-GECD-06"
+    },
+    {
+      "id": "F-M042-04",
+      "field": "known_branches",
+      "before": "缺这些授权时仍可做其他支持动作，不能理解为全有或全无。已保存密码、重置设备等不在该文档支持范围。",
+      "after": "Google电话/SMS/通讯录/通知权限、连接器开关、锁屏一般回答和免解锁通信分别控制；断开Messages不保证其他读取停止"
+    },
+    {
+      "id": "F-M042-04",
+      "field": "gaps",
+      "before": "拒绝权限后已执行动作",
+      "after": "撤权对正在执行任务与既有数据的影响、确认回执；Allow/Make按钮文案版本差异"
+    },
+    {
+      "id": "F-M042-04",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M010-01",
+      "field": "evidence_ids",
+      "before": "E-PALMA-01;E-PALMA-02",
+      "after": "E-PALMA-01;E-PALMA-02;E-PLCD-01;E-PLCD-03;E-PLCD-04"
+    },
+    {
+      "id": "F-M010-01",
+      "field": "known_branches",
+      "before": "物理事件可映射不同任务；功能存在有据，但设置页面序列未取到。",
+      "after": "Palma 2宣传图有短按/双击/长按三项且例值均None；通用V4.0例值不同，均不能证明出厂默认。通用FAQ要求部分App另开音量翻页。"
+    },
+    {
+      "id": "F-M010-01",
+      "field": "gaps",
+      "before": "精确入口、默认映射、音量/翻页互斥、锁屏/休眠生效；不补成已观察操作。",
+      "after": "本机设置入口、动作列表、按App事件映射、默认值、锁屏/休眠触发及指纹失败；静态图不闭合执行链。"
+    },
+    {
+      "id": "F-M010-01",
+      "field": "visual_status",
+      "before": "not_observed",
+      "after": "static_reference_only"
+    },
+    {
+      "id": "F-M010-01",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M010-02",
+      "field": "evidence_ids",
+      "before": "E-PALMA-04",
+      "after": "E-PALMA-04;E-PALMA-15;E-PLCD-04"
+    },
+    {
+      "id": "F-M010-02",
+      "field": "known_branches",
+      "before": "清通知不同于终止播放/下载；从系统控制回 app 不保证保留页面内部选区。",
+      "after": "通用帮助给双下拉/导航球/导航路径，V4.0图可见手势或导航栏与侧手势入口；回桌面、返回阅读与结束媒体不是同一动作。"
+    },
+    {
+      "id": "F-M010-02",
+      "field": "gaps",
+      "before": "通用帮助在 Palma 2 的菜单位置、媒体通知实际按钮、返回精确位置。",
+      "after": "Palma 2已装版本的入口、默认手势、通知媒体键、退出选区和返回位置；通用图未操作。"
+    },
+    {
+      "id": "F-M010-02",
+      "field": "visual_status",
+      "before": "not_observed",
+      "after": "static_reference_only"
+    },
+    {
+      "id": "F-M010-02",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M010-05",
+      "field": "known_branches",
+      "before": "选词、段落标注与整书进度分别保存；第三方弹出词典需其自身支持。",
+      "after": "通用帮助：Contents→Annotations管理/导出到本地、邮件或其他账户；中央菜单→More→Settings→Annotation Export Settings。不采用该页另列的手写出口。"
+    },
+    {
+      "id": "F-M010-05",
+      "field": "gaps",
+      "before": "关闭浮层/返回后选区位置、词库离线内容、重复词合并。",
+      "after": "Palma 2实际导出格式/路径、覆盖及取消、原书与副本关系、重装恢复；关闭浮层后选区、离线词库及重复词合并。"
+    },
+    {
+      "id": "F-M010-05",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M010-06",
+      "field": "known_branches",
+      "before": "临时历史视图与持久书签不同；不能等同跨 app 或重启恢复。",
+      "after": "通用帮助用页角书签图标空心变实心表示添加，Contents定位；Prev/Next View为文内视图历史，不是跨App/重启恢复。"
+    },
+    {
+      "id": "F-M010-06",
+      "field": "gaps",
+      "before": "EPUB 字号变更后的锚点、书关掉后的历史长度。",
+      "after": "本机当前构建、字号变化后的锚点、关闭书后的历史长度、书签删除与同步冲突。"
+    },
+    {
+      "id": "F-M010-06",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M010-07",
+      "field": "evidence_ids",
+      "before": "E-PALMA-11;E-PALMA-12;E-PALMA-13",
+      "after": "E-PALMA-11;E-PALMA-12;E-PALMA-13;E-PALMA-15;E-BXCD-06;E-BXCD-14;E-PLCD-02;E-PLCD-04"
+    },
+    {
+      "id": "F-M010-07",
+      "field": "known_branches",
+      "before": "有朗读入口、有引擎配置；“暂停后继续哪一句”仍不是官方已证实的状态协议。",
+      "after": "TTS入口/引擎配置与第三方App保活、冻结分开；V4.0通用手册另要求休眠后蓝牙在线播放时保留Wi-Fi/蓝牙/音频，图中音频Pause仅示例。同名帮助Power/Display入口不同。"
+    },
+    {
+      "id": "F-M010-07",
+      "field": "gaps",
+      "before": "锁屏、闹钟、第三方语音来电、蓝牙断连、睡眠定时、离线语音包实际结果。",
+      "after": "本机固件/入口及开关选项、保活/冻结/自启动/休眠优先级；锁屏与返回后的TTS句子、来电/闹钟/蓝牙恢复、离线包和计时结果。"
+    },
+    {
+      "id": "F-M010-07",
+      "field": "visual_status",
+      "before": "not_observed",
+      "after": "static_reference_only"
+    },
+    {
+      "id": "F-M010-07",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M010-08",
+      "field": "evidence_ids",
+      "before": "E-PALMA-14",
+      "after": "E-PALMA-14;E-PLCD-01"
+    },
+    {
+      "id": "F-M010-08",
+      "field": "known_branches",
+      "before": "本地接收和远程推送分开；传输完成后才进入阅读任务。",
+      "after": "LAN Receive与远程Push不同；通用USB排错先检查线/电脑，并在Charging this device via USB中选择File Transfer；未证明传输后自动入库。"
+    },
+    {
+      "id": "F-M010-08",
+      "field": "gaps",
+      "before": "文件重名、错误类型、移 microSD、取消/断点下载与空间不足。",
+      "after": "Palma 2当前USB界面、书架扫描/打开、重名/中断/取消、卡移除及空间不足后的残留。"
+    },
+    {
+      "id": "F-M010-08",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M010-09",
+      "field": "known_branches",
+      "before": "源书、批注/进度、本地备份分开；通用 V4.0 手册“只同步阅读数据”是历史行为，不能覆盖4.1增量。",
+      "after": "通用V4.1+：源文件每份≤200MB；总同步关闭时单书及手动同步不可用；同账号/服务器/目录。booxc含本地书与关联数据，两端均需V4.1+。"
+    },
+    {
+      "id": "F-M010-09",
+      "field": "gaps",
+      "before": "冲突合并、同名重复、两端不同固件；不包括第三方 app 数据。",
+      "after": "Palma 2是否已装适用版本、恢复过程/失败、覆盖与重复名、跨版冲突、删除传播；第三方App数据不在该书库备份承诺内。"
+    },
+    {
+      "id": "F-M010-09",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M010-10",
+      "field": "known_branches",
+      "before": "说明操作语义与导出边界；未将菜单名承诺为 Palma 2 当前可照做路径。",
+      "after": "通用V4.0区分清密码默认设置、书阅读数据、缓存/封面与整机重置；清阅读数据不可恢复，重置清用户数据。阅读锁仅NeoReader有效；Android11锁屏密码说明不套Palma 2。"
+    },
+    {
+      "id": "F-M010-10",
+      "field": "gaps",
+      "before": "Palma 2实机确认、完整删除文件/回收站路径、确认对话框、账号切换与撤销。",
+      "after": "Palma 2现固件菜单/确认、完整删除/回收站、账号切换、备份是否完整和恢复成功；尚无可操作本机恢复指南。"
+    },
+    {
+      "id": "F-M010-10",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M014-01",
+      "field": "known_branches",
+      "before": "字体封面背景可设",
+      "after": "中国区商店8.6.2列版式能力；未取得手机选书/选文操作说明"
+    },
+    {
+      "id": "F-M014-01",
+      "field": "gaps",
+      "before": "查词/划线证据不足，回原文与撤销未知",
+      "after": "查词/划线创建、撤销、回原文及选择范围未知；不以评论或墨水屏规则补手机链"
+    },
+    {
+      "id": "F-M014-01",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M014-02",
+      "field": "known_branches",
+      "before": "epub/txt/pdf及多设备同步声明",
+      "after": "商店列epub/txt/pdf与同步；2024政策区分本地上传、章节记录和分享笔记服务器存储"
+    },
+    {
+      "id": "F-M014-02",
+      "field": "gaps",
+      "before": "导入动作、同步字段、重装恢复",
+      "after": "导入菜单/解析反馈、重复/损坏/取消、逐对象同步、换机重装及原件恢复未知"
+    },
+    {
+      "id": "F-M014-02",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M014-03",
+      "field": "known_branches",
+      "before": "AI摘要/导图/导读/双人讲书",
+      "after": "书童政策只说明输入文本与回答；8.5.1标点停顿/8.5.2外部音乐中断为历史修复声明，8.5.9仅部分音色升级"
+    },
+    {
+      "id": "F-M014-03",
+      "field": "gaps",
+      "before": "入口、来源定位、失败、续播",
+      "after": "AI入口/引用/纠错/保存、听书启停/换声/定时/读听定位、离线与后台恢复均未闭合"
+    },
+    {
+      "id": "F-M014-03",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M014-04",
+      "field": "known_branches",
+      "before": "云端同步完成但书架未刷新",
+      "after": "仅MatePad Paper适配版：同步后切其他页回书架刷新；进度可延迟；桌面/适配App书架和不同文件须分辨"
+    },
+    {
+      "id": "F-M014-04",
+      "field": "gaps",
+      "before": "冲突、文件是否下载、重装恢复",
+      "after": "备份与同步启动入口、原件下载、账号冲突/重复书合并和重装恢复未知；不套手机"
+    },
+    {
+      "id": "F-M014-04",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M014-05",
+      "field": "known_branches",
+      "before": "阅读/笔记模式不同",
+      "after": "仅适配版：三点展开旧笔迹、竖排不显示、PDF原页/重排独立、笔记模式显示；未标构建FAQ称无逐笔撤销"
+    },
+    {
+      "id": "F-M014-05",
+      "field": "gaps",
+      "before": "误擦撤销、导出、跨端复原",
+      "after": "擦除后恢复、导出/跨端原稿、后续版本撤销能力未知；分屏退出不证明保存完成"
+    },
+    {
+      "id": "F-M014-05",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M014-06",
+      "field": "known_branches",
+      "before": "个性化与非个性化栏目区别",
+      "after": "2024政策路径关个性化栏目，保留精选等；关闭推荐不证明清除阅读记录"
+    },
+    {
+      "id": "F-M014-06",
+      "field": "gaps",
+      "before": "当前版本路径、生效时间、跨设备及历史清除",
+      "after": "历史路径未逐OS绑定；8.6.2菜单、生效时间、跨设备及历史清除仍未知"
+    },
+    {
+      "id": "F-M014-06",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    }
+  ],
+  "evidence_changes": [
+    {
+      "id": "E-GEM-01",
+      "field": "additional_captures",
+      "before": null,
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "url": "https://support.google.com/gemini/answer/15850607?hl=en",
+          "raw_work_path": "work/gemini-controls-deepening/raw/screen.html",
+          "raw_sha256": "9c9188d4480c4dda1a687dad6e02ab8be376ea0f05dc9016b6a285de0a31e996",
+          "text_work_path": "work/gemini-controls-deepening/raw/screen.txt",
+          "text_sha256": "58f28ad0eba11d03e24112f23c905ce885a863f2056b6c9649ca134beaf671bf",
+          "capture_method": "public_html_get_and_text_read",
+          "archived_artifact": "artifacts/gemini-controls-deepening/source-notes.md",
+          "sha256": "a4c959f4c4f77f35731c0fb709031a63beb9869b887f8b8efe06eccbe00df2ce",
+          "note": "2026-10-27追加原件；未操作App或取得新视觉记录"
+        }
+      ]
+    },
+    {
+      "id": "E-GEM-02",
+      "field": "additional_captures",
+      "before": null,
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "url": "https://support.google.com/gemini/answer/13695044?co=GENIE.Platform%3DAndroid&hl=en",
+          "raw_work_path": "work/gemini-controls-deepening/raw/connectors.html",
+          "raw_sha256": "a4eb683a1dc0f69783837120dcec71b9d467a0effda41a4b18fd9298b5fdce23",
+          "text_work_path": "work/gemini-controls-deepening/raw/connectors.txt",
+          "text_sha256": "bfc019ea9ecc43a0630fe84bc7e8c3e6eddfaebd502c929c463f7bf0b6b62572",
+          "capture_method": "public_html_get_and_text_read",
+          "archived_artifact": "artifacts/gemini-controls-deepening/source-notes.md",
+          "sha256": "a4c959f4c4f77f35731c0fb709031a63beb9869b887f8b8efe06eccbe00df2ce",
+          "note": "2026-10-27追加原件；未操作App或取得新视觉记录"
+        }
+      ]
+    },
+    {
+      "id": "E-IRD-01",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "capture_url": "https://apps.apple.com/cn/app/id463150061",
+          "checked_on": "2026-10-27",
+          "access_mode": "public_app_store_html_read",
+          "raw_work_path": "work/ireader-controls-deepening/app-store.html",
+          "raw_sha256": "c11853a5986a75b5e8fc2f2227f3f07931d67fda841d374a34e20eddb943abef",
+          "locator": "开发者描述；版本历史primarySubtitle/secondarySubtitle；兼容性",
+          "limitation": "新GET 200；版本8.6.2；用户评论/图片未作为操作依据",
+          "archived_artifact": "artifacts/ireader-controls-deepening/source-notes.md",
+          "sha256": "a39c61c2ea45ed2a9bad9052dd0d45b6a8173ac7c8f3cdaf45f9382779c2c6c2",
+          "hands_on": false,
+          "visual_observed": false,
+          "app_build": "8.6.2",
+          "source_updated_on": "2026-10-22",
+          "http_status": 200,
+          "final_url": "https://apps.apple.com/cn/app/%E6%8E%8C%E9%98%85-%E5%BC%95%E9%A2%86%E5%93%81%E8%B4%A8%E9%98%85%E8%AF%BB/id463150061"
+        }
+      ]
+    },
+    {
+      "id": "E-IRD-03",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "capture_url": "https://consumer.huawei.com/cn/support/content/zh-cn15939571/",
+          "checked_on": "2026-10-27",
+          "access_mode": "local_reread_of_existing_public_artifact",
+          "raw_work_path": "work/research/extension-manuals/huawei-15939571.html",
+          "raw_sha256": "39e7af2a2b8d1c0593ca18b682cdab7d701c99516afeaa5fd10a14caa540068a",
+          "locator": "4类18问；笔迹不可见4子项；派生txt69—157行",
+          "limitation": "未重新GET；同URL既存原件；MatePad Paper适配版而非手机；App构建未知",
+          "archived_artifact": "artifacts/ireader-controls-deepening/source-notes.md",
+          "sha256": "a39c61c2ea45ed2a9bad9052dd0d45b6a8173ac7c8f3cdaf45f9382779c2c6c2",
+          "hands_on": false,
+          "visual_observed": false,
+          "original_capture_on": "2026-10-26"
+        }
+      ]
+    },
+    {
+      "id": "E-IPAD-01",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "capture_url": "https://ah2.ireader.com/fe3/zybook/other/statement/privacyagreement_detail.html",
+          "checked_on": "2026-10-27",
+          "access_mode": "local_reread_of_existing_public_artifact",
+          "raw_work_path": "work/chinese-app-depth/ireader-privacy.html",
+          "raw_sha256": "93d47df113271ae28e807eb354f45b3fac14e09a38dd0e7b79156a46c6226d1b",
+          "locator": "第一节基本/扩展业务2/5/7/8；第五节删除/副本；派生txt28/39—94/169行",
+          "limitation": "未重新GET；2024-06-27政策不代表8.6.2操作；旧顶层第二节定位需修正",
+          "archived_artifact": "artifacts/ireader-controls-deepening/source-notes.md",
+          "sha256": "a39c61c2ea45ed2a9bad9052dd0d45b6a8173ac7c8f3cdaf45f9382779c2c6c2",
+          "hands_on": false,
+          "visual_observed": false,
+          "original_capture_on": "2026-10-26"
+        }
+      ]
+    },
+    {
+      "id": "E-PALMA-01",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "ordinary_anonymous_GET",
+          "http_status": 200,
+          "raw_work_path": "work/palma-controls-deepening/raw/palma-product.html",
+          "raw_sha256": "2f6e635b90945a3693592401e791661795eddbc121306153fa7012626b8cdea8",
+          "extracted_work_path": "work/palma-controls-deepening/raw/palma-product.txt",
+          "extracted_sha256": "ca39983df21e02b02ec9d4dfc7bd7030cf50758340a06d3830b3fb5cc140ceab",
+          "hands_on": false,
+          "visual_observed": false,
+          "archived_artifact": "artifacts/palma-controls-deepening/source-notes.md",
+          "sha256": "ae9ac4b859da5350e40a490fab0122bab465a14962ea9c8da1c0ee644f6d17ef"
+        }
+      ]
+    },
+    {
+      "id": "E-PALMA-02",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "ordinary_anonymous_GET",
+          "http_status": 200,
+          "raw_work_path": "work/palma-controls-deepening/raw/palma-launch.html",
+          "raw_sha256": "dce3f4b0c6a5a16df2d114a3d684dbb7c4afec4126022e45ecdc30f91f0b938c",
+          "extracted_work_path": "work/palma-controls-deepening/raw/palma-launch.txt",
+          "extracted_sha256": "73941722232bc28805e2cd04c226f98edec9d21462fbbe6014e72cdc2284cf28",
+          "hands_on": false,
+          "visual_observed": false,
+          "archived_artifact": "artifacts/palma-controls-deepening/source-notes.md",
+          "sha256": "ae9ac4b859da5350e40a490fab0122bab465a14962ea9c8da1c0ee644f6d17ef"
+        }
+      ]
+    },
+    {
+      "id": "E-PALMA-15",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "ordinary_anonymous_GET",
+          "http_status": 200,
+          "raw_work_path": "work/palma-controls-deepening/raw/mobile-v4-existing.pdf",
+          "raw_sha256": "66a194e882c852677433b96a8d5ac128adf9f9cfb652f73da6738d7f6f937808",
+          "pdf_pages": 103,
+          "pdf_metadata_creation_date": "2024-12-10",
+          "metadata_date_is_not_publication_date": true,
+          "locator": "PDF physical pages; outline73; selected body read; observations separately E-PLCD-04",
+          "hands_on": false,
+          "visual_observed": false,
+          "archived_artifact": "artifacts/palma-controls-deepening/source-notes.md",
+          "sha256": "ae9ac4b859da5350e40a490fab0122bab465a14962ea9c8da1c0ee644f6d17ef"
+        }
+      ]
+    },
+    {
+      "id": "E-PALMA-04",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "local_saved_public_help_body_reread_no_network",
+          "raw_work_path": "work/eink-systems-research/boox-articles.json",
+          "raw_sha256": "a6bbfd6cb4e8ff122152ccac6f0b504608734649ef826877f8024613de275390",
+          "extracted_work_path": "work/palma-controls-deepening/raw/existing-25213043150996.txt",
+          "extracted_sha256": "708d8f29628e628c957dfd37d2b7769f5082add202d6245e41d57a97fbfcd6ad",
+          "locator": "article id25213043150996; conditional context for M-010 Palma 2",
+          "hands_on": false,
+          "visual_observed": false,
+          "archived_artifact": "artifacts/palma-controls-deepening/source-notes.md",
+          "sha256": "ae9ac4b859da5350e40a490fab0122bab465a14962ea9c8da1c0ee644f6d17ef"
+        }
+      ]
+    },
+    {
+      "id": "E-PALMA-09",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "local_saved_public_help_body_reread_no_network",
+          "raw_work_path": "work/eink-systems-research/boox-articles.json",
+          "raw_sha256": "a6bbfd6cb4e8ff122152ccac6f0b504608734649ef826877f8024613de275390",
+          "extracted_work_path": "work/palma-controls-deepening/raw/existing-8569296110100.txt",
+          "extracted_sha256": "41521d4d1f9402f775df838bccb8b7c900ad662cf11afda12b77de1042977aff",
+          "locator": "article id8569296110100; conditional context for M-010 Palma 2",
+          "hands_on": false,
+          "visual_observed": false,
+          "archived_artifact": "artifacts/palma-controls-deepening/source-notes.md",
+          "sha256": "ae9ac4b859da5350e40a490fab0122bab465a14962ea9c8da1c0ee644f6d17ef"
+        }
+      ]
+    },
+    {
+      "id": "E-PALMA-10",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "local_saved_public_help_body_reread_no_network",
+          "raw_work_path": "work/eink-systems-research/boox-articles.json",
+          "raw_sha256": "a6bbfd6cb4e8ff122152ccac6f0b504608734649ef826877f8024613de275390",
+          "extracted_work_path": "work/palma-controls-deepening/raw/existing-10701496119060.txt",
+          "extracted_sha256": "29c23b1d269d28da9cedfbc6f9c46d8da999daed38933a59e1f7515ff78e4cc8",
+          "locator": "article id10701496119060; conditional context for M-010 Palma 2",
+          "hands_on": false,
+          "visual_observed": false,
+          "archived_artifact": "artifacts/palma-controls-deepening/source-notes.md",
+          "sha256": "ae9ac4b859da5350e40a490fab0122bab465a14962ea9c8da1c0ee644f6d17ef"
+        }
+      ]
+    },
+    {
+      "id": "E-PALMA-11",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "local_saved_public_help_body_reread_no_network",
+          "raw_work_path": "work/eink-systems-research/boox-articles.json",
+          "raw_sha256": "a6bbfd6cb4e8ff122152ccac6f0b504608734649ef826877f8024613de275390",
+          "extracted_work_path": "work/palma-controls-deepening/raw/existing-10701495414804.txt",
+          "extracted_sha256": "002755b8200b3601c921aa9948ae149388ceac7aec7cb3a6291b1297eb278309",
+          "locator": "article id10701495414804; conditional context for M-010 Palma 2",
+          "hands_on": false,
+          "visual_observed": false,
+          "archived_artifact": "artifacts/palma-controls-deepening/source-notes.md",
+          "sha256": "ae9ac4b859da5350e40a490fab0122bab465a14962ea9c8da1c0ee644f6d17ef"
+        }
+      ]
+    },
+    {
+      "id": "E-PALMA-12",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "local_saved_public_help_body_reread_no_network",
+          "raw_work_path": "work/eink-systems-research/boox-articles.json",
+          "raw_sha256": "a6bbfd6cb4e8ff122152ccac6f0b504608734649ef826877f8024613de275390",
+          "extracted_work_path": "work/palma-controls-deepening/raw/existing-360031058312.txt",
+          "extracted_sha256": "8c4e9f701cec7e003f295e187927f15cf9eb719dcff3ac3b6e83c8422d0afccc",
+          "locator": "article id360031058312; conditional context for M-010 Palma 2",
+          "hands_on": false,
+          "visual_observed": false,
+          "archived_artifact": "artifacts/palma-controls-deepening/source-notes.md",
+          "sha256": "ae9ac4b859da5350e40a490fab0122bab465a14962ea9c8da1c0ee644f6d17ef"
+        }
+      ]
+    },
+    {
+      "id": "E-PALMA-13",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "local_saved_public_help_body_reread_no_network",
+          "raw_work_path": "work/eink-systems-research/boox-articles.json",
+          "raw_sha256": "a6bbfd6cb4e8ff122152ccac6f0b504608734649ef826877f8024613de275390",
+          "extracted_work_path": "work/palma-controls-deepening/raw/existing-10701262170644.txt",
+          "extracted_sha256": "47278481dc63eee87ff1752e9841be59480d5fa627cc015eff8b41d911e5d321",
+          "locator": "article id10701262170644; conditional context for M-010 Palma 2",
+          "hands_on": false,
+          "visual_observed": false,
+          "archived_artifact": "artifacts/palma-controls-deepening/source-notes.md",
+          "sha256": "ae9ac4b859da5350e40a490fab0122bab465a14962ea9c8da1c0ee644f6d17ef"
+        }
+      ]
+    },
+    {
+      "id": "E-PALMA-14",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "local_saved_public_help_body_reread_no_network",
+          "raw_work_path": "work/eink-systems-research/boox-articles.json",
+          "raw_sha256": "a6bbfd6cb4e8ff122152ccac6f0b504608734649ef826877f8024613de275390",
+          "extracted_work_path": "work/palma-controls-deepening/raw/existing-10701399613076.txt",
+          "extracted_sha256": "b763c232b3204ad1e43cd4aa366331ef4acfd45d62b3c97ee24dd263afc6cb75",
+          "locator": "article id10701399613076; conditional context for M-010 Palma 2",
+          "hands_on": false,
+          "visual_observed": false,
+          "archived_artifact": "artifacts/palma-controls-deepening/source-notes.md",
+          "sha256": "ae9ac4b859da5350e40a490fab0122bab465a14962ea9c8da1c0ee644f6d17ef"
+        }
+      ]
+    },
+    {
+      "id": "E-PALMA-16",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "local_saved_public_help_body_reread_no_network",
+          "raw_work_path": "work/eink-systems-research/boox-articles.json",
+          "raw_sha256": "a6bbfd6cb4e8ff122152ccac6f0b504608734649ef826877f8024613de275390",
+          "extracted_work_path": "work/palma-controls-deepening/raw/existing-25401838386196.txt",
+          "extracted_sha256": "c14abcdc6b38b3ff7d6cdf2a7ba8ad74dbf6caa0bff27541212397e19528747c",
+          "locator": "article id25401838386196; conditional context for M-010 Palma 2",
+          "hands_on": false,
+          "visual_observed": false,
+          "archived_artifact": "artifacts/palma-controls-deepening/source-notes.md",
+          "sha256": "ae9ac4b859da5350e40a490fab0122bab465a14962ea9c8da1c0ee644f6d17ef"
+        }
+      ]
+    },
+    {
+      "id": "E-BXCD-06",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "local_saved_public_help_body_reread_no_network",
+          "raw_work_path": "work/eink-systems-research/boox-articles.json",
+          "raw_sha256": "a6bbfd6cb4e8ff122152ccac6f0b504608734649ef826877f8024613de275390",
+          "extracted_work_path": "work/palma-controls-deepening/raw/existing-10701299044372.txt",
+          "extracted_sha256": "cfa7571014ef29b21ce808c0b041938f47f712506397bf63532b8a48a145117e",
+          "locator": "article id10701299044372; conditional context for M-010 Palma 2",
+          "hands_on": false,
+          "visual_observed": false,
+          "archived_artifact": "artifacts/palma-controls-deepening/source-notes.md",
+          "sha256": "ae9ac4b859da5350e40a490fab0122bab465a14962ea9c8da1c0ee644f6d17ef"
+        }
+      ]
+    },
+    {
+      "id": "E-BXCD-14",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "local_saved_public_help_body_reread_no_network",
+          "raw_work_path": "work/eink-systems-research/boox-articles.json",
+          "raw_sha256": "a6bbfd6cb4e8ff122152ccac6f0b504608734649ef826877f8024613de275390",
+          "extracted_work_path": "work/palma-controls-deepening/raw/existing-10701171762452.txt",
+          "extracted_sha256": "388dde0bbcf2673e6f265b6c22b89b5de72cd8d6fe5dffe00cc96eb84793cf69",
+          "locator": "article id10701171762452; conditional context for M-010 Palma 2",
+          "hands_on": false,
+          "visual_observed": false,
+          "archived_artifact": "artifacts/palma-controls-deepening/source-notes.md",
+          "sha256": "ae9ac4b859da5350e40a490fab0122bab465a14962ea9c8da1c0ee644f6d17ef"
+        }
+      ]
+    },
+    {
+      "id": "E-BXCD-01",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "local_saved_category_index_reread_no_network",
+          "raw_work_path": "work/boox-controls-deepening/epaper-pc-articles.json",
+          "raw_sha256": "02e30182beee444963ce691bbec9523380dcf91000c32685e27bea33f08a2cd8",
+          "locator": "59 articles/14 sections, next_page=null; not Palma 2 model inventory",
+          "hands_on": false,
+          "visual_observed": false,
+          "archived_artifact": "artifacts/palma-controls-deepening/source-notes.md",
+          "sha256": "ae9ac4b859da5350e40a490fab0122bab465a14962ea9c8da1c0ee644f6d17ef"
+        }
+      ]
+    },
+    {
+      "id": "E-IPAD-01",
+      "field": "locator",
+      "before": "第二节2阅读记录、5智能对话、7个性化服务",
+      "after": "第一节内二、扩展业务2阅读记录、5智能对话、7个性化服务；非顶层第二节"
+    }
+  ],
+  "files": [
+    {
+      "path": "docs/research/interaction-library/batches/boox-controls-deepening-evidence.jsonl",
+      "backup": "work/gemini-controls-deepening/reviewed-before/boox-controls-deepening-evidence.jsonl",
+      "before_sha256": "071102a2ed5a538014a90e464721a4c291f34b7703f153f1bad9042e9c008bdf",
+      "after_sha256": "dcde211341ae215cf9e83aec94e22f6d66f2405be2c7e045bda5e311cf699bd9"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/chinese-app-controls-deepening-coverage.csv",
+      "backup": "work/gemini-controls-deepening/reviewed-before/chinese-app-controls-deepening-coverage.csv",
+      "before_sha256": "caa1b3f7648a19fee45c2a583d02ae4500ec0ce53a1f53b85ca9fa6970be686d",
+      "after_sha256": "1a56d2c0074d6f4bb460f40824fa2677eaba1c66716ec04d9afa4d6229f62a37"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/ai-evidence.jsonl",
+      "backup": "work/gemini-controls-deepening/reviewed-before/ai-evidence.jsonl",
+      "before_sha256": "141b7f897b5dcb0c27c98adb6e891ef776ab472a14bf760fc9ba91ca148b0c86",
+      "after_sha256": "904212d039a87fd4493dde5f642e6fc8fdb743f8f5d846fe09a6b198c3b7cc7c"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/eink-systems-coverage.csv",
+      "backup": "work/gemini-controls-deepening/reviewed-before/eink-systems-coverage.csv",
+      "before_sha256": "164e93c8590f40d50a115fe797b7249ab790b7a605b5e9fd48347ab872e3eaba",
+      "after_sha256": "ca1b62ac9acfb1f94abbb96844e48fe6b7044fddf8bc440292d075277b2903a4"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/chinese-apps-evidence.jsonl",
+      "backup": "work/gemini-controls-deepening/reviewed-before/chinese-apps-evidence.jsonl",
+      "before_sha256": "ec2a6f51f3250e3215be13a91449b41f4719bc59e0cb47d8b5dd8bff5443e283",
+      "after_sha256": "c4847754db976f57c2e023384e3cdcbeba3257d49fa61b2931158fd9d8c63af7"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/chinese-apps-coverage.csv",
+      "backup": "work/gemini-controls-deepening/reviewed-before/chinese-apps-coverage.csv",
+      "before_sha256": "ede9875eff73a725da12c2bb73ca6b773bdc8c60a6e491e7d2ad6c18bc8d892b",
+      "after_sha256": "a7b8a481602a73d8b97613d39b927e982ac18c88160d8233b1efb351d056af43"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/chinese-app-controls-deepening-evidence.jsonl",
+      "backup": "work/gemini-controls-deepening/reviewed-before/chinese-app-controls-deepening-evidence.jsonl",
+      "before_sha256": "5fb15c7518bc1e92844271ff62d0cfd2cd2a8e5a847cbba025945294a741520b",
+      "after_sha256": "f777c8a8dd2ad5acf768b9a3c7d7d076aa45b8d8b90098f717466d49b4136b23"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/eink-systems-evidence.jsonl",
+      "backup": "work/gemini-controls-deepening/reviewed-before/eink-systems-evidence.jsonl",
+      "before_sha256": "09a5bb44ac784e5b97e0599b960a5bdf9787c5490521cd1cb1e9a200d632fb91",
+      "after_sha256": "47c4dd5a4ba56b89100ccc6d5391dd777f8d60d46ae45d40c003ab36e3de6c9b"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/ai-coverage.csv",
+      "backup": "work/gemini-controls-deepening/reviewed-before/ai-coverage.csv",
+      "before_sha256": "496ffc1415d676cfb74b4b54a99f19e489bd28b1b789588ce822e8d9cd57f242",
+      "after_sha256": "dcc7c65baae2139fd5e61b1f40f100e0408484e7f62d6fc19e8a31fd962d0e5f"
+    }
+  ],
+  "old_tasks": 17,
+  "old_task_fields": 60,
+  "old_evidence_captures": 19,
+  "old_evidence_other_fields": 1
+}

@@ -1,0 +1,48 @@
+How do I activate Live function on my Creative Tonie? – tonies® Support (https://support.tonies.com/hc/en-us/articles/29036519484562-How-do-I-activate-Live-function-on-my-Creative-Tonie)
+citeturn781search1 [wordlim: 200] Crawled: 4 days ago; When Live function is activated on a Creative Tonie, that will make it so that every new story that is uploaded to that Creative Tonie is placed first in the tracklist and will be played first. ... To activate Live function, you can use either the tonies app or my.tonies.com.
+
+# How do I activate Live function on my Creative Tonie?
+
+When Live function is activated on a Creative Tonie, that will make it so that every new story that is uploaded to that Creative Tonie is placed first in the tracklist and will be played first. This is the easiest way to make sure you can automatically hear the newest stories that have been uploaded to the Creative Tonie. To activate Live function, you can use either the tonies app or my.tonies.com. 
+
+How to activate Live function on your Creative Tonie:
+
+Using the tonies app
+
+  1. Open the tonies app and tap the icon in the bottom right hand corner titled 'Collection'.
+Image: Collection__11_.jpg
+ 
+  2. Tap on the 'Creative Tonies' header.
+Image: CT_Header__8_.jpg
+ 
+  3. Tap on the picture of the Creative Tonie you want to edit.
+Image: Only_CT__3_.jpg
+ 
+  4. Scroll down to the bottom of the page and tap on 'Advanced settings'.
+Image: CT_Advanced__2_.jpg
+ 
+  5. Here you can tap the toggle to turn the Live function on.
+Image: CT_Live.jpg
+ 
+  6. Now, you will just need to sync the Toniebox 1 and Creative Tonie to make sure that they receive the news that changes have been made. To do this, remove any Tonies from the Toniebox 1 and turn on the Toniebox 1. Then, pinch one of the Tonieboxes ears for about three seconds until you hear a sound. The LED will begin flashing blue while your Toniebox 1 establishes a connection with your Wi-Fi. You can then place the Creative Tonie onto the Toniebox 1 when the LED turns solid green and the new changes will be confirmed. Now, any future content uploaded to the Creative Tonie will automatically be placed first in the tracklist and played first.
+
+Using my.tonies.com
+
+  1. Login to your account at my.tonies.com and click the 'Creative Tonies' header.
+Image: deskreorderFAQ1.jpg
+ 
+  2. Click the picture of the Creative Tonie you would like to edit.
+Image: deskreorderFAQ2.jpg
+ 
+  3. Here, you can click the toggle to turn the Live function on.
+Image: liveFunctiondesk1.jpg
+ 
+  4. Once clicked, the toggle should turn green and say 'On'.
+Image: liveFunctiondesk2.jpg
+ 
+  5. To confirm the changes, scroll down on the page and click 'Save Changes'.
+Image: liveFunctiondesk3.jpg
+ 
+  6. Now, you will just need to sync the Toniebox 1 and Creative Tonie to make sure that they receive the news that changes have been made. To do this, remove any Tonies from the Toniebox 1 and turn on the Toniebox 1. Then, pinch one of the Tonieboxes ears for about three seconds until you hear a sound. The LED will begin flashing blue while your Toniebox 1 establishes a connection with your Wi-Fi. You can then place the Creative Tonie onto the Toniebox 1 when the LED turns solid green and the new changes will be confirmed. Now, any future content uploaded to the Creative Tonie will automatically be placed first in the tracklist and played first.
+
+If you run into any trouble with the Live function, send us a message and help will be on the way!

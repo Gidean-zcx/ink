@@ -1,0 +1,33 @@
+inventory_id,product_id,platform_version,function_domain,source_locator,body_status,evidence_ids,flow_ids,remaining_gap,checked_on
+WR-W01,M-013,Web官网现载帮助；文档更新日/构建未知,购买书与会员,FAQ1,body_read,E-WRCD-01,,付费章节末购买范围与App充值分支有正文；支付确认/取消/失败未分析；会员限制仅限该帮助快照,2026-10-27
+WR-W02,M-013,Web官网现载帮助；文档更新日/构建未知,阅读背景,FAQ2,body_read,E-WRCD-01,F-M013-09,持久化与系统主题关系未知,2026-10-27
+WR-W03,M-013,Web官网现载帮助；文档更新日/构建未知,目录/本书搜索,FAQ3,body_read,E-WRCD-01,F-M013-08,结果、无匹配和返回状态未知,2026-10-27
+WR-W04,M-013,Web官网现载帮助；文档更新日/构建未知,书架与私密阅读,FAQ4,body_read,E-WRCD-01,F-M013-03,帮助声称设置在App、Web同步状态；无手机具体入口/冲突恢复，不据此断言现行Web能力,2026-10-27
+WR-S00,M-013,Skill固定提交d98e66e；SKILL1.0.5/README1.0.4；未调用,支持能力父目录,SKILL.md支持的能力8行/7个详细文件,index_and_all_linked_body_read,E-WRD-03;E-WRCD-03;E-WRCD-04,,父目录不是8个已完成任务，不涵盖手机App全功能,2026-10-27
+WR-S01,M-013,Skill固定提交d98e66e；SKILL1.0.5/README1.0.4；未调用,搜索,search.md /store/search,body_read,E-WRD-05,F-M013-03,类别、分页；结果后用户实际跳转未测,2026-10-27
+WR-S02,M-013,Skill固定提交d98e66e；SKILL1.0.5/README1.0.4；未调用,书架,shelf.md /shelf/sync,body_read,E-WRD-04,F-M013-03,只读列表与计数；归档/删除/私密写入无契约,2026-10-27
+WR-S03,M-013,Skill固定提交d98e66e；SKILL1.0.5/README1.0.4；未调用,书籍信息,book.md /book/info,body_read,E-WRD-06,F-M013-04,书籍无权访问/已下架等真实返回未测,2026-10-27
+WR-S04,M-013,Skill固定提交d98e66e；SKILL1.0.5/README1.0.4；未调用,章节目录,book.md /book/chapterinfo,body_read,E-WRD-06,F-M013-04,层级/收费/锚点字段；客户端跳转未知,2026-10-27
+WR-S05,M-013,Skill固定提交d98e66e；SKILL1.0.5/README1.0.4；未调用,阅读位置,book.md /book/getprogress,body_read,E-WRD-06,F-M013-04,100与finishTime条件；无进度写回,2026-10-27
+WR-S06,M-013,Skill固定提交d98e66e；SKILL1.0.5/README1.0.4；未调用,笔记本概览,notes.md /user/notebooks,body_read,E-WRD-07,F-M013-05,计数与内容范围不同,2026-10-27
+WR-S07,M-013,Skill固定提交d98e66e；SKILL1.0.5/README1.0.4；未调用,个人划线,notes.md /book/bookmarklist,body_read,E-WRD-07,F-M013-05,过滤书签；文件保存/回写未知,2026-10-27
+WR-S08,M-013,Skill固定提交d98e66e；SKILL1.0.5/README1.0.4；未调用,个人想法/点评,notes.md /review/list/mine,body_read,E-WRD-07,F-M013-05,游标与非选区点评；不重复加计点评数,2026-10-27
+WR-S09,M-013,Skill固定提交d98e66e；SKILL1.0.5/README1.0.4；未调用,章节热度,notes.md /book/underlines,body_read,E-WRD-07,,有正文但未形成独立任务；只有计数/热度/位置，不含原文,2026-10-27
+WR-S10,M-013,Skill固定提交d98e66e；SKILL1.0.5/README1.0.4；未调用,热门划线,notes.md /book/bestbookmarks,body_read,E-WRD-07,,有正文但未建任务；固定top20无分页，不是用户全部划线,2026-10-27
+WR-S11,M-013,Skill固定提交d98e66e；SKILL1.0.5/README1.0.4；未调用,划线下的想法,notes.md /book/readreviews,body_read,E-WRD-07,,有正文但未建任务；每请求count上限20/各range分页，结束分支未展开,2026-10-27
+WR-S12,M-013,Skill固定提交d98e66e；SKILL1.0.5/README1.0.4；未调用,单条想法详情,notes.md /review/single,body_read,E-WRD-07,,有正文但未建任务；详情/评论/点赞对象，不执行互动,2026-10-27
+WR-S13,M-013,Skill固定提交d98e66e；SKILL1.0.5/README1.0.4；未调用,公开点评,review.md /review/list,body_read,E-WRCD-03,,正文读过未建新F；筛选与游标链可续析；不属于私人笔记,2026-10-27
+WR-S14,M-013,Skill固定提交d98e66e；SKILL1.0.5/README1.0.4；未调用,个性化推荐,discover.md /book/recommend,body_read,E-WRCD-04,F-M013-03,推荐原因和searchIdx，实际推荐不可用情况未测,2026-10-27
+WR-S15,M-013,Skill固定提交d98e66e；SKILL1.0.5/README1.0.4；未调用,相似推荐,discover.md /book/similar,body_read,E-WRCD-04,F-M013-03,首次count/maxIdx必传，继续携sessionId；没有会话失效策略,2026-10-27
+WR-S16,M-013,Skill固定提交d98e66e；SKILL1.0.5/README1.0.4；未调用,阅读统计,readdata.md /readdata/detail,body_read,E-WRD-08,F-M013-06,周期/字段条件已析，离线上传/跨时区规则缺失,2026-10-27
+WR-S17,M-013,Skill固定提交d98e66e；SKILL1.0.5/README1.0.4；未调用,请求/错误/版本,SKILL.md请求格式/通用规则,body_read,E-WRD-03,F-M013-03;F-M013-04;F-M013-05;F-M013-06,只读静态契约，未请求/_list；版本提示不证明升级已完成,2026-10-27
+WR-A01,M-013,中国区iPhone/iPad商店2026-10-27快照；当前10.2.3，按历史版本分列,划线/想法/查词,描述及9.4.0,version_declaration_only,E-WRD-01,F-M013-01,仅功能/优化日志；保存、纠错、撤销未取得,2026-10-27
+WR-A02,M-013,中国区iPhone/iPad商店2026-10-27快照；当前10.2.3，按历史版本分列,导入书字号,10.2.2 2026-09-17,version_declaration_only,E-WRD-01,F-M013-02,单书字号声明；文件选择/解析/重复/失败未取得,2026-10-27
+WR-A03,M-013,中国区iPhone/iPad商店2026-10-27快照；当前10.2.3，按历史版本分列,TTS/有声内容/定时,描述及10.1.1,version_declaration_only,E-WRD-01,F-M013-02,未取得下载、换声、离线、续播和锚点转换操作,2026-10-27
+WR-A04,M-013,中国区iPhone/iPad商店2026-10-27快照；当前10.2.3，按历史版本分列,想法/书评/评论配图,10.2.0 2026-06-30,version_declaration_only,E-WRD-01,F-M013-01,仅日志；添加取消/提交失败未知,2026-10-27
+WR-A05,M-013,中国区iPhone/iPad商店2026-10-27快照；当前10.2.3，按历史版本分列,选中文本反馈,10.2.2 2026-09-17,version_declaration_only,E-WRD-01,F-M013-01,疑似AI文本反馈声明；未提交，受理/撤回未知,2026-10-27
+WR-A06,M-013,中国区iPhone/iPad商店2026-10-27快照；当前10.2.3，按历史版本分列,重新绑定微信,10.1.0 2026-03-27,version_declaration_only,E-WRD-01,,仅日志，不是迁移/合并/恢复保证,2026-10-27
+WR-A07,M-013,中国区iPhone/iPad商店2026-10-27快照；当前10.2.3，按历史版本分列,简繁阅读设置,9.3.0 2025-04-29,version_declaration_only,E-WRD-01,,日志只称工具栏转换；不展开未核按钮/保存机制,2026-10-27
+WR-A08,M-013,2024-06/07历史App；OS/构建未知,AI问书及来源,AI问书能力介绍；3张实际查看图,body_and_static_images_read,E-WRCD-02,F-M013-01,无取消/错误/返回原位；不自动套10.2.3,2026-10-27
+WR-A09,M-013,注销须知；客户端构建未知,注销及等待期撤回,注销须知1—5/7；沿用旧正文,previous_body_only,E-WRD-09,F-M013-07,本轮未重抓；进入路径和备份未知,2026-10-27
+WR-G01,M-013,手机App；未获版本化帮助,备份/恢复/多端冲突,已有Skill只读契约及注销说明边界,gap_not_directory_entry,E-WRD-03;E-WRD-09,,未取得独立备份/回滚帮助；不是断言功能不存在,2026-10-27

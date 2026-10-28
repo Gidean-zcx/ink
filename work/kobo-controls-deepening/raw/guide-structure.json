@@ -1,0 +1,457 @@
+{
+  "links": [
+    {
+      "title": "Supported eReader models",
+      "url": "https://help.kobo.com/hc/en-us/articles/360019127133",
+      "section": "About this guide"
+    },
+    {
+      "title": "eReader features",
+      "url": "https://help.kobo.com/hc/en-us/articles/360019127093",
+      "section": "About this guide"
+    },
+    {
+      "title": "Set up over Wi Fi",
+      "url": "https://help.kobo.com/hc/en-us/articles/360017439594",
+      "section": "Get sta rted"
+    },
+    {
+      "title": "Set up with your computer",
+      "url": "https://help.kobo.com/hc/en-us/articles/360017598633",
+      "section": "Get sta rted"
+    },
+    {
+      "title": "Turn your Kobo eReader on and off",
+      "url": "https://help.kobo.com/hc/en-us/articles/360017477434",
+      "section": "Kobo eReader basics"
+    },
+    {
+      "title": "Charge your Kobo eReader",
+      "url": "https://help.kobo.com/hc/en-us/articles/360017439634",
+      "section": "Kobo eReader basics"
+    },
+    {
+      "title": "Use gestures on the touch screen",
+      "url": "https://help.kobo.com/hc/en-us/articles/360017639973",
+      "section": "Kobo eReader basics"
+    },
+    {
+      "title": "Kobo eReader Home screen",
+      "url": "https://help.kobo.com/hc/en-us/articles/360017640133",
+      "section": "Kobo eReader basics"
+    },
+    {
+      "title": "Reading eBooks",
+      "url": "https://help.kobo.com/hc/en-us/articles/360017640153",
+      "section": "Kobo eReader basics"
+    },
+    {
+      "title": "About the colour screen (select models only)",
+      "url": "https://help.kobo.com/hc/en-us/articles/18025082610071",
+      "section": "Kobo eReader basics"
+    },
+    {
+      "title": "Adjust the screen brightness (select models only)",
+      "url": "https://help.kobo.com/hc/en-us/articles/360017481234",
+      "section": "Kobo eReader basics"
+    },
+    {
+      "title": "Adjust the screen colour temperature (select models only)",
+      "url": "https://help.kobo.com/hc/en-us/articles/360017481174",
+      "section": "Kobo eReader basics"
+    },
+    {
+      "title": "Waterproof your Kobo eReader (select models only)",
+      "url": "https://help.kobo.com/hc/en-us/articles/360017763773",
+      "section": "Kobo eReader basics"
+    },
+    {
+      "title": "Lock the screen orientation (select models only)",
+      "url": "https://help.kobo.com/hc/en-us/articles/360019141453",
+      "section": "Kobo eReader basics"
+    },
+    {
+      "title": "Kobo Elipsa",
+      "url": "https://help.kobo.com/hc/en-us/articles/360053504173",
+      "section": "Use Kobo Stylus to write notes"
+    },
+    {
+      "title": "Kobo Sage",
+      "url": "https://help.kobo.com/hc/en-us/articles/4406285084183",
+      "section": "Use Kobo Stylus to write notes"
+    },
+    {
+      "title": "Kobo Elipsa 2E",
+      "url": "https://help.kobo.com/hc/en-us/articles/12100658162071",
+      "section": "Use Kobo Stylus to write notes"
+    },
+    {
+      "title": "Kobo Libra Colour",
+      "url": "https://help.kobo.com/hc/en-us/articles/17971574287895",
+      "section": "Use Kobo Stylus to write notes"
+    },
+    {
+      "title": "About your Kobo Stylus 2",
+      "url": "https://help.kobo.com/hc/en-us/articles/10733885674391",
+      "section": "Use Kobo Stylus to write notes"
+    },
+    {
+      "title": "About your Kobo Stylus",
+      "url": "https://help.kobo.com/hc/en-us/articles/1500001833421",
+      "section": "Use Kobo Stylus to write notes"
+    },
+    {
+      "title": "Check your Kobo Stylus battery status",
+      "url": "https://help.kobo.com/hc/en-us/articles/1500002996221",
+      "section": "Use Kobo Stylus to write notes"
+    },
+    {
+      "title": "Replace your Kobo Stylus battery",
+      "url": "https://help.kobo.com/hc/en-us/articles/360060438054",
+      "section": "Use Kobo Stylus to write notes"
+    },
+    {
+      "title": "Change your Kobo Stylus tip",
+      "url": "https://help.kobo.com/hc/en-us/articles/360060438294",
+      "section": "Use Kobo Stylus to write notes"
+    },
+    {
+      "title": "Troubleshoot your Kobo Stylus",
+      "url": "https://help.kobo.com/hc/en-us/articles/1500001927422",
+      "section": "Use Kobo Stylus to write notes"
+    },
+    {
+      "title": "Use gestures to edit handwriting",
+      "url": "https://help.kobo.com/hc/en-us/articles/1500001833721",
+      "section": "Use Kobo Stylus to write notes"
+    },
+    {
+      "title": "Use your Kobo eReader as a notebook",
+      "url": "https://help.kobo.com/hc/en-us/articles/360062226733",
+      "section": "Use Kobo Stylus to write notes"
+    },
+    {
+      "title": "Write notes in your book with Kobo Stylus",
+      "url": "https://help.kobo.com/hc/en-us/articles/1500001927562",
+      "section": "Use Kobo Stylus to write notes"
+    },
+    {
+      "title": "Highlight text with your Kobo Stylus",
+      "url": "https://help.kobo.com/hc/en-us/articles/1500001927662",
+      "section": "Use Kobo Stylus to write notes"
+    },
+    {
+      "title": "Kobo Clara 2E",
+      "url": "https://help.kobo.com/hc/en-us/articles/6122943232407",
+      "section": "Listen to a udiobooks on your eReader"
+    },
+    {
+      "title": "Kobo Sage",
+      "url": "https://help.kobo.com/hc/en-us/articles/4406285084183",
+      "section": "Listen to a udiobooks on your eReader"
+    },
+    {
+      "title": "Kobo Libra 2",
+      "url": "https://help.kobo.com/hc/en-us/articles/4406285169175",
+      "section": "Listen to a udiobooks on your eReader"
+    },
+    {
+      "title": "Kobo Elipsa,",
+      "url": "https://help.kobo.com/hc/en-us/articles/360053504173",
+      "section": "Listen to a udiobooks on your eReader"
+    },
+    {
+      "title": "Kobo Elipsa 2E,",
+      "url": "https://help.kobo.com/hc/en-us/articles/12100658162071",
+      "section": "Listen to a udiobooks on your eReader"
+    },
+    {
+      "title": "Kobo Libra Colour",
+      "url": "https://help.kobo.com/hc/en-us/articles/17971574287895",
+      "section": "Listen to a udiobooks on your eReader"
+    },
+    {
+      "title": "Kobo Clara Colour",
+      "url": "https://help.kobo.com/hc/en-us/articles/18001606982679",
+      "section": "Listen to a udiobooks on your eReader"
+    },
+    {
+      "title": "Kobo Clara BW",
+      "url": "https://help.kobo.com/hc/en-us/articles/18499096277015",
+      "section": "Listen to a udiobooks on your eReader"
+    },
+    {
+      "title": "Connect your Bluetooth speaker or headphones",
+      "url": "https://help.kobo.com/hc/en-us/articles/4406292641559",
+      "section": "Listen to a udiobooks on your eReader"
+    },
+    {
+      "title": "Listen to audiobooks",
+      "url": "https://help.kobo.com/hc/en-us/articles/4406292712471",
+      "section": "Listen to a udiobooks on your eReader"
+    },
+    {
+      "title": "Buy audiobooks",
+      "url": "https://help.kobo.com/hc/en-us/articles/4406284744855",
+      "section": "Listen to a udiobooks on your eReader"
+    },
+    {
+      "title": "Find audiobooks",
+      "url": "https://help.kobo.com/hc/en-us/articles/4406284782743",
+      "section": "Listen to a udiobooks on your eReader"
+    },
+    {
+      "title": "Troubleshoot Bluetooth pairing",
+      "url": "https://help.kobo.com/hc/en-us/articles/4406284800023",
+      "section": "Listen to a udiobooks on your eReader"
+    },
+    {
+      "title": "Add a Wi Fi network",
+      "url": "https://help.kobo.com/hc/en-us/articles/360017637233",
+      "section": "Use Wi Fi on your Kobo eReader"
+    },
+    {
+      "title": "Kobo eReader Wi Fi status",
+      "url": "https://help.kobo.com/hc/en-us/articles/360017478134",
+      "section": "Use Wi Fi on your Kobo eReader"
+    },
+    {
+      "title": "Turn off Wi Fi (Airplane mode)",
+      "url": "https://help.kobo.com/hc/en-us/articles/360017478214",
+      "section": "Use Wi Fi on your Kobo eReader"
+    },
+    {
+      "title": "Wi Fi set up tips",
+      "url": "https://help.kobo.com/hc/en-us/articles/360017637193",
+      "section": "Use Wi Fi on your Kobo eReader"
+    },
+    {
+      "title": "Sync your Kobo eReader over Wi Fi",
+      "url": "https://help.kobo.com/hc/en-us/articles/360017513334",
+      "section": "Sync your Kobo eReader"
+    },
+    {
+      "title": "Sync your Kobo eReader with Kobo Desktop",
+      "url": "https://help.kobo.com/hc/en-us/articles/360017478174",
+      "section": "Sync your Kobo eReader"
+    },
+    {
+      "title": "Buy eBooks on your Kobo eReader",
+      "url": "https://help.kobo.com/hc/en-us/articles/360017676913",
+      "section": "Buy eBooks on your Kobo eReader"
+    },
+    {
+      "title": "Add eBooks to your Wishlist",
+      "url": "https://help.kobo.com/hc/en-us/articles/360017513454",
+      "section": "Buy eBooks on your Kobo eReader"
+    },
+    {
+      "title": "View your Wishlist",
+      "url": "https://help.kobo.com/hc/en-us/articles/360017677013",
+      "section": "Buy eBooks on your Kobo eReader"
+    },
+    {
+      "title": "Remove eBooks from your Wishlist",
+      "url": "https://help.kobo.com/hc/en-us/articles/360018778513",
+      "section": "Buy eBooks on your Kobo eReader"
+    },
+    {
+      "title": "See all the books that are on your Kobo eReader",
+      "url": "https://help.kobo.com/hc/en-us/articles/360017990073",
+      "section": "Find eBooks on your Kobo eReader"
+    },
+    {
+      "title": "Search for a book on your Kobo eReader",
+      "url": "https://help.kobo.com/hc/en-us/articles/360017513474",
+      "section": "Find eBooks on your Kobo eReader"
+    },
+    {
+      "title": "Download all your books onto your Kobo eReader",
+      "url": "https://help.kobo.com/hc/en-us/articles/360017605034",
+      "section": "Download and delete eBooks"
+    },
+    {
+      "title": "Delete a book from your Kobo eReader",
+      "url": "https://help.kobo.com/hc/en-us/articles/360017640033",
+      "section": "Download and delete eBooks"
+    },
+    {
+      "title": "Delete all your books from your Kobo eReader",
+      "url": "https://help.kobo.com/hc/en-us/articles/360017481274",
+      "section": "Download and delete eBooks"
+    },
+    {
+      "title": "Turn pages",
+      "url": "https://help.kobo.com/hc/en-us/articles/360017481194",
+      "section": "Read on your Kobo eReader"
+    },
+    {
+      "title": "About the Reading Menu",
+      "url": "https://help.kobo.com/hc/en-us/articles/360020494854",
+      "section": "Read on your Kobo eReader"
+    },
+    {
+      "title": "Adjust the font size and style",
+      "url": "https://help.kobo.com/hc/en-us/articles/360017639913",
+      "section": "Read on your Kobo eReader"
+    },
+    {
+      "title": "Use Dark mode to make reading easier on your eyes",
+      "url": "https://help.kobo.com/hc/en-us/articles/360062231213",
+      "section": "Read on your Kobo eReader"
+    },
+    {
+      "title": "Skip chapters and pages",
+      "url": "https://help.kobo.com/hc/en-us/articles/360017639953",
+      "section": "Read on your Kobo eReader"
+    },
+    {
+      "title": "View the table of contents",
+      "url": "https://help.kobo.com/hc/en-us/articles/360017481254",
+      "section": "Read on your Kobo eReader"
+    },
+    {
+      "title": "Bookmark a page",
+      "url": "https://help.kobo.com/hc/en-us/articles/360017481214",
+      "section": "Read on your Kobo eReader"
+    },
+    {
+      "title": "Highlight text",
+      "url": "https://help.kobo.com/hc/en-us/articles/360017481334",
+      "section": "Read on your Kobo eReader"
+    },
+    {
+      "title": "View highlights",
+      "url": "https://help.kobo.com/hc/en-us/articles/360017640053",
+      "section": "Read on your Kobo eReader"
+    },
+    {
+      "title": "Remove highlights",
+      "url": "https://help.kobo.com/hc/en-us/articles/360017640113",
+      "section": "Read on your Kobo eReader"
+    },
+    {
+      "title": "Add notes to your book",
+      "url": "https://help.kobo.com/hc/en-us/articles/360017639993",
+      "section": "Read on your Kobo eReader"
+    },
+    {
+      "title": "Define words with the dictionary",
+      "url": "https://help.kobo.com/hc/en-us/articles/360017639893",
+      "section": "Read on your Kobo eReader"
+    },
+    {
+      "title": "Add new dictionaries to your Kobo eReader",
+      "url": "https://help.kobo.com/hc/en-us/articles/360017640093",
+      "section": "Read on your Kobo eReader"
+    },
+    {
+      "title": "Translate a word",
+      "url": "https://help.kobo.com/hc/en-us/articles/360017639873",
+      "section": "Read on your Kobo eReader"
+    },
+    {
+      "title": "Mark a book as ‘Finished’",
+      "url": "https://help.kobo.com/hc/en-us/articles/360017481154",
+      "section": "Read on your Kobo eReader"
+    },
+    {
+      "title": "Borrow eBooks from the public library",
+      "url": "https://help.kobo.com/hc/en-us/articles/360017677053",
+      "section": "Borrow eBooks"
+    },
+    {
+      "title": "About the Kobo Desktop app",
+      "url": "https://help.kobo.com/hc/en-us/articles/360017707874",
+      "section": "Apps"
+    },
+    {
+      "title": "Using your Kobo Sage PowerCover",
+      "url": "https://help.kobo.com/hc/en-us/articles/4406292782615",
+      "section": "Accessories"
+    },
+    {
+      "title": "Using your Kobo Elipsa SleepCover",
+      "url": "https://help.kobo.com/hc/en-us/articles/360063757713",
+      "section": "Accessories"
+    },
+    {
+      "title": "Lock your eReader’s screen",
+      "url": "https://help.kobo.com/hc/en-us/articles/360017603674",
+      "section": "Security and privacy"
+    },
+    {
+      "title": "Use Large Print Mode",
+      "url": "https://help.kobo.com/hc/en-us/articles/360019858274",
+      "section": "Accessibility"
+    },
+    {
+      "title": "Use the OpenDyslexic font",
+      "url": "https://help.kobo.com/hc/en-us/articles/360020048733",
+      "section": "Accessibility"
+    },
+    {
+      "title": "About Dark mode",
+      "url": "https://help.kobo.com/hc/en-us/articles/360062231213",
+      "section": "Accessibility"
+    },
+    {
+      "title": "Troubleshoot your Kobo eReader",
+      "url": "https://help.kobo.com/hc/en-us/articles/360017765673",
+      "section": "Troubleshoot your Kobo eReader"
+    },
+    {
+      "title": "Fix common Kobo eReader problems",
+      "url": "https://help.kobo.com/hc/en-us/articles/360017605134",
+      "section": "Troubleshoot your Kobo eReader"
+    },
+    {
+      "title": "Reset your Kobo eReader",
+      "url": "https://help.kobo.com/hc/en-us/articles/360017605114",
+      "section": "Troubleshoot your Kobo eReader"
+    },
+    {
+      "title": "Repair your Kobo eReader",
+      "url": "https://help.kobo.com/hc/en-us/articles/21137184146071",
+      "section": "Repair your Kobo eReader"
+    },
+    {
+      "title": "Visit the Kobo help site",
+      "url": "https://help.kobo.com",
+      "section": "Get help"
+    },
+    {
+      "title": "Safety, regulatory, and warranty information",
+      "url": "https://help.kobo.com/hc/en-us/articles/360019708293",
+      "section": "Safety, legal, and warranty information"
+    },
+    {
+      "title": "View warranty and legal information on your Kobo eReader",
+      "url": "https://help.kobo.com/hc/en-us/articles/360020774573",
+      "section": "Safety, legal, and warranty information"
+    }
+  ],
+  "headings": [
+    "About this guide",
+    "Get sta rted",
+    "Kobo eReader basics",
+    "Use Kobo Stylus to write notes",
+    "Listen to a udiobooks on your eReader",
+    "Use Wi Fi on your Kobo eReader",
+    "Sync your Kobo eReader",
+    "Buy eBooks on your Kobo eReader",
+    "Find eBooks on your Kobo eReader",
+    "Download and delete eBooks",
+    "Read on your Kobo eReader",
+    "Borrow eBooks",
+    "Apps",
+    "Accessories",
+    "Security and privacy",
+    "Accessibility",
+    "Troubleshoot your Kobo eReader",
+    "Repair your Kobo eReader",
+    "Get help",
+    "Safety, legal, and warranty information"
+  ],
+  "images": []
+}

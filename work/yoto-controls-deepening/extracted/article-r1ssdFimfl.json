@@ -1,0 +1,42 @@
+{
+  "id": "6a5de252cbbcf3693a4421eb",
+  "articleId": "6a4e08a3d76963d4aeb423aa",
+  "title": "How much audio fits on a Make Your Own Card?",
+  "body": "<p><strong>The limit for each card is as follows:</strong></p><ul><li>100 tracks per card</li><li style=\"color: rgb(0, 0, 0);\">100 MB / 60 minutes maximum file size of any single track</li><li style=\"color: rgb(0, 0, 0);\">500 MB / 5 hours maximum total file size of the audio content for any one card</li></ul><p><span style=\"color: rgb(0, 0, 0);\">Note: this limit only applies to the playlists created by the user, and does not apply when linking a Yoto Card in your Yoto App library. A Make Your Own card can be linked to any single Yoto Card in your Yoto App.</span></p>",
+  "categories": [
+    {
+      "id": "6a19a59641fb94cd78a45e3e",
+      "knowledgeBase": "69d522fcb7baaa50525b3529"
+    }
+  ],
+  "primaryCategory": "6a19a59641fb94cd78a45e3e",
+  "metaDescription": "The limit for each card is as follows         100 tracks per card  100 MB  60 minutes maximum file size of any single track  500 MB  5 hours maximum total fi",
+  "metaKeywords": [
+    "card",
+    "Yoto",
+    "100",
+    "limit",
+    "MB",
+    "maximum",
+    "file",
+    "size",
+    "single",
+    "Card",
+    "App",
+    "5",
+    "60",
+    "500"
+  ],
+  "metaTitle": "",
+  "lang": "en_gb",
+  "slug": "how-much-audio-fits-on-a-make-your-own-card",
+  "draftSlug": null,
+  "hash": "r1ssdFimfl",
+  "publishedAt": "2026-07-20T08:55:39.343Z",
+  "updatedAt": "2026-07-20T08:55:39.458Z",
+  "createdAt": "2026-07-20T08:54:42.291Z",
+  "href": "/en_gb/how-much-audio-fits-on-a-make-your-own-card-r1ssdFimfl",
+  "tags": [],
+  "knowledgeBases": [],
+  "scope": "public"
+}

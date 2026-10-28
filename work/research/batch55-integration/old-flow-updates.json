@@ -1,0 +1,292 @@
+[
+  {
+    "file": "docs/research/interaction-library/batches/shortcuts-data-flow-coverage.csv",
+    "before": {
+      "flow_id": "F-M043-17",
+      "product_id": "M-043",
+      "task": "跨应用调用并区分成功取消和错误返回",
+      "depth": "D2",
+      "evidence_ids": "E-SCDF-19;E-SCDF-20;E-SCDF-21",
+      "known_branches": "名称/编码文本或剪贴板输入；成功附文本result，取消无输出，错误附errorMessage；目标App须提供scheme。",
+      "gaps": "目标缺失/改名、回调未达或重复、断网、业务结果核对、重试幂等和部分产物",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-043-shortcuts.md",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "flow_id": "F-M043-17",
+      "product_id": "M-043",
+      "task": "跨应用调用并区分成功取消和错误返回",
+      "depth": "D2",
+      "evidence_ids": "E-SCDF-19;E-SCDF-20;E-SCDF-21;E-SCEN-33;E-SCEN-34;E-SCEN-35",
+      "known_branches": "名称/编码文本或剪贴板输入；成功附文本result，取消无输出，错误附errorMessage；目标App须提供scheme。；补打开上次状态、新建编辑器、按名称定位、打开/搜索Gallery的不同URL目的",
+      "gaps": "目标缺失/改名、回调未达或重复、断网、业务结果核对、重试幂等和部分产物；打开与执行及真实写入分开；名称变动/缺目标/重复回调仍缺",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-043-shortcuts.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "file": "docs/research/interaction-library/batches/shortcuts-data-flow-coverage.csv",
+    "before": {
+      "flow_id": "F-M043-18",
+      "product_id": "M-043",
+      "task": "请求API并逐项提取结构化内容",
+      "depth": "D2",
+      "evidence_ids": "E-SCDF-22;E-SCDF-23;E-SCDF-24;E-SCDF-25;E-SCDF-26;E-SCDF-27;E-SCDF-28",
+      "known_branches": "URL端点与方法/请求体分开；识别顶层列表和嵌套字典；先单项取键再遍历。指南另列鉴权及配额限制。",
+      "gaps": "缺键/null/坏JSON、分页、状态码、认证过期、限流/退避、部分写入及重复导入",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-043-shortcuts.md",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "flow_id": "F-M043-18",
+      "product_id": "M-043",
+      "task": "请求API并逐项提取结构化内容",
+      "depth": "D2",
+      "evidence_ids": "E-SCDF-22;E-SCDF-23;E-SCDF-24;E-SCDF-25;E-SCDF-26;E-SCDF-27;E-SCDF-28;E-SCEN-36;E-SCEN-37;E-SCEN-38;E-SCEN-39",
+      "known_branches": "URL端点与方法/请求体分开；识别顶层列表和嵌套字典；先单项取键再遍历。指南另列鉴权及配额限制。；补API列表映射到联系人及UNIX秒例子；宽泛API用途不替代鉴权/配额限制",
+      "gaps": "缺键/null/坏JSON、分页、状态码、认证过期、限流/退避、部分写入及重复导入；字段映射文内疑点、写入去重/部分成功、时间单位校验未实际执行",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-043-shortcuts.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "file": "docs/research/interaction-library/batches/shortcuts-controls-deepening-coverage.csv",
+    "before": {
+      "flow_id": "F-M043-08",
+      "product_id": "M-043",
+      "task": "查看转换对象并回溯来源",
+      "depth": "D2",
+      "evidence_ids": "E-SCCD-05;E-SCCD-06;E-SCDF-05;E-SCDF-08;E-SCDF-09;E-SCDF-10",
+      "known_branches": "另补Magic变量来源选择、特殊参数及Set覆盖/Add追加；Clear移除引用不证明删原对象。普通链完成复位，跨运行存储是另一能力。",
+      "gaps": "转换/缺字段、来源被删、参数引用更新、跨运行存储的键/覆盖/删除/恢复",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-043-shortcuts.md",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "flow_id": "F-M043-08",
+      "product_id": "M-043",
+      "task": "查看转换对象并回溯来源",
+      "depth": "D2",
+      "evidence_ids": "E-SCCD-05;E-SCCD-06;E-SCDF-05;E-SCDF-08;E-SCDF-09;E-SCDF-10;E-SCEN-19;E-SCEN-20;E-SCEN-21",
+      "known_branches": "另补Magic变量来源选择、特殊参数及Set覆盖/Add追加；Clear移除引用不证明删原对象。普通链完成复位，跨运行存储是另一能力。；Open In明确交付副本；剪贴板可Local Only/Expire At，主动转换与自动转换分别处理",
+      "gaps": "转换/缺字段、来源被删、参数引用更新、跨运行存储的键/覆盖/删除/恢复；剪贴板到期不证明其他App副本清除，原件联动和类型损失未知",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-043-shortcuts.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "file": "docs/research/interaction-library/batches/shortcuts-controls-deepening-coverage.csv",
+    "before": {
+      "flow_id": "F-M043-09",
+      "product_id": "M-043",
+      "task": "筛选并限制后续动作的内容",
+      "depth": "D2",
+      "evidence_ids": "E-SCCD-07",
+      "known_branches": "All/Any、排序、数量与变量；连续Find可能筛上一输出，Nothing可重取；大数据执行环境有限制。",
+      "gaps": "空结果、取消、不匹配、实际性能",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-043-shortcuts.md",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "flow_id": "F-M043-09",
+      "product_id": "M-043",
+      "task": "筛选并限制后续动作的内容",
+      "depth": "D2",
+      "evidence_ids": "E-SCCD-07;E-SCEN-30",
+      "known_branches": "All/Any、排序、数量与变量；连续Find可能筛上一输出，Nothing可重取；大数据执行环境有限制。；Find有输入筛上一输出，无输入才向自身App取；Filter处理传入集合",
+      "gaps": "空结果、取消、不匹配、实际性能；实际空输入/空结果及菜单反馈未验证",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-043-shortcuts.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "file": "docs/research/interaction-library/batches/shortcuts-controls-deepening-coverage.csv",
+    "before": {
+      "flow_id": "F-M043-11",
+      "product_id": "M-043",
+      "task": "同步与删除指令配置",
+      "depth": "D2",
+      "evidence_ids": "E-SCCD-08;E-SCCD-15;E-SCCD-16;E-SCCD-19",
+      "known_branches": "26自动化不跨设备同步；27同步到其他设备默认停用；删除跨同账户设备传播。",
+      "gaps": "恢复、并发冲突、迁移执行会话与业务数据",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-043-shortcuts.md",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "flow_id": "F-M043-11",
+      "product_id": "M-043",
+      "task": "同步与删除指令配置",
+      "depth": "D2",
+      "evidence_ids": "E-SCCD-08;E-SCCD-15;E-SCCD-16;E-SCCD-19;E-SCEN-23;E-SCEN-25;E-SCEN-28",
+      "known_branches": "26自动化不跨设备同步；27同步到其他设备默认停用；删除跨同账户设备传播。；自动集合Remove保留All；删自建夹可保留或删内容；排序/复制有同账号传播说明",
+      "gaps": "恢复、并发冲突、迁移执行会话与业务数据；跨端实际生效、删除恢复、副本权限/自动化与业务记录继承未知",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-043-shortcuts.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "file": "docs/research/interaction-library/batches/ai-coverage.csv",
+    "before": {
+      "flow_id": "F-M043-01",
+      "product_id": "M-043",
+      "task": "组装并测试任务",
+      "depth": "D2",
+      "evidence_ids": "E-SCT-01;E-SCT-02;E-SCCD-02;E-SCCD-03;E-SCCD-23;E-SCDF-06;E-SCDF-07",
+      "known_branches": "另补27动作连接线与Show Info；无连接可能不取输入而非错误；Quick Look为链中运行预览，不是无副作用试跑。",
+      "gaps": "生成错误、缺动作、额度耗尽、运行副作用与撤回",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-043-shortcuts.md",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "flow_id": "F-M043-01",
+      "product_id": "M-043",
+      "task": "组装并测试任务",
+      "depth": "D2",
+      "evidence_ids": "E-SCT-01;E-SCT-02;E-SCCD-02;E-SCCD-03;E-SCCD-23;E-SCDF-06;E-SCDF-07;E-SCEN-01;E-SCEN-03;E-SCEN-14;E-SCEN-16;E-SCEN-17;E-SCEN-18;E-SCEN-19;E-SCEN-22",
+      "known_branches": "另补27动作连接线与Show Info；无连接可能不取输入而非错误；Quick Look为链中运行预览，不是无副作用试跑。；补27应用内逐步运行、缺输入/权限提示，以及动作发现/获取转换交付的非强制分类",
+      "gaps": "生成错误、缺动作、额度耗尽、运行副作用与撤回；图片按钮未观察，配置编辑与业务写入分开",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-043-shortcuts.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "file": "docs/research/interaction-library/batches/ai-coverage.csv",
+    "before": {
+      "flow_id": "F-M043-03",
+      "product_id": "M-043",
+      "task": "遇到不适合或缺失的输入",
+      "depth": "D2",
+      "evidence_ids": "E-SCT-04;E-SCDF-01",
+      "known_branches": "27正文核对：输入动作限制类型；缺输入停止回复/询问/剪贴板/继续；Continue保留空输入变量。",
+      "gaps": "各入口空输入实际反馈、权限与取消传播",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-043-shortcuts.md",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "flow_id": "F-M043-03",
+      "product_id": "M-043",
+      "task": "遇到不适合或缺失的输入",
+      "depth": "D2",
+      "evidence_ids": "E-SCT-04;E-SCDF-01;E-SCEN-11;E-SCEN-32",
+      "known_branches": "27正文核对：输入动作限制类型；缺输入停止回复/询问/剪贴板/继续；Continue保留空输入变量。；共享入口开启后链首出现输入定义；类型匹配决定可见性，网页含图时图片指令也可能出现",
+      "gaps": "各入口空输入实际反馈、权限与取消传播；宿主具体交出对象与类型转换未知，隐藏入口不等于动作不存在",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-043-shortcuts.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "file": "docs/research/interaction-library/batches/ai-coverage.csv",
+    "before": {
+      "flow_id": "F-M043-04",
+      "product_id": "M-043",
+      "task": "运行时补齐信息",
+      "depth": "D2",
+      "evidence_ids": "E-SCT-05;E-SCDF-02;E-SCDF-15",
+      "known_branches": "27 Ask for Input输入Done传值；Ask Each Time到该参数步骤才暂停，Done继续；默认值可改。",
+      "gaps": "输入或参数提问取消、等待/锁屏、已执行步骤与恢复",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-043-shortcuts.md",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "flow_id": "F-M043-04",
+      "product_id": "M-043",
+      "task": "运行时补齐信息",
+      "depth": "D2",
+      "evidence_ids": "E-SCT-05;E-SCDF-02;E-SCDF-15;E-SCEN-21;E-SCEN-31",
+      "known_branches": "27 Ask for Input输入Done传值；Ask Each Time到该参数步骤才暂停，Done继续；默认值可改。；组件/手表数字Ask for Input与菜单/Alert可用建议；相机/麦克风/选择器可能需转主App",
+      "gaps": "输入或参数提问取消、等待/锁屏、已执行步骤与恢复；提问类型与运行环境不同，不能承诺所有输入均留在组件",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-043-shortcuts.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "file": "docs/research/interaction-library/batches/ai-coverage.csv",
+    "before": {
+      "flow_id": "F-M043-05",
+      "product_id": "M-043",
+      "task": "授权后再次运行",
+      "depth": "D2",
+      "evidence_ids": "E-SCT-06;E-SCDF-03;E-SCDF-16",
+      "known_branches": "27单次/总是/拒绝及Privacy撤销；脚本总开关与指令-网页许可分别记录；拒绝不证明此前动作回滚。",
+      "gaps": "网页匹配范围、拒绝/撤销后的部分结果、脚本检查与权限缓存",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-043-shortcuts.md",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "flow_id": "F-M043-05",
+      "product_id": "M-043",
+      "task": "授权后再次运行",
+      "depth": "D2",
+      "evidence_ids": "E-SCT-06;E-SCDF-03;E-SCDF-16;E-SCEN-04",
+      "known_branches": "27单次/总是/拒绝及Privacy撤销；脚本总开关与指令-网页许可分别记录；拒绝不证明此前动作回滚。；语音锁屏调用若要打开App，文档要求先解锁",
+      "gaps": "网页匹配范围、拒绝/撤销后的部分结果、脚本检查与权限缓存；取消解锁、先前动作及结果去留未知",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-043-shortcuts.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "file": "docs/research/interaction-library/batches/ai-coverage.csv",
+    "before": {
+      "flow_id": "F-M043-06",
+      "product_id": "M-043",
+      "task": "结束、提前停止并返回",
+      "depth": "D2",
+      "evidence_ids": "E-SCT-07;E-SCCD-20;E-SCCD-21;E-SCDF-04",
+      "known_branches": "27编辑器显示末尾输出；外部运行结束无预览并返回；Stop and Output交回结果，接收上下文决定去向。Alert确认/取消与Notification继续仍分开。",
+      "gaps": "进程终止、停止后对象去留、事务回滚、输出接收及恢复入口",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-043-shortcuts.md",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "flow_id": "F-M043-06",
+      "product_id": "M-043",
+      "task": "结束、提前停止并返回",
+      "depth": "D2",
+      "evidence_ids": "E-SCT-07;E-SCCD-20;E-SCCD-21;E-SCDF-04;E-SCEN-03",
+      "known_branches": "两篇27帮助对编辑器外预览的范围有差异；Stop and Output按接收上下文交结果，Alert确认/取消与Notification继续分开。应用内运行页说末步富内容可预览；既有Completion页称编辑器外无预览，适用范围有文档差异",
+      "gaps": "进程终止、停止后对象去留、事务回滚、输出接收及恢复入口；两页预览条件未统一；停止不提供事务回滚或取消副作用保证",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-043-shortcuts.md",
+      "checked_on": "2026-10-27"
+    }
+  }
+]

@@ -1,0 +1,3 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M065-17,M-065,创建、调整及同型号复制用户EQ,D2,E-AKCD-01;E-AKDD-03,长按通知EQ或Settings/Equalizer启用→Normal EQ/+→命名；正文写SAVE但配图Rename EQ/CHANGE。调频与数值，Advanced调Freq/Gain/Q；EQ Sync所得User EQ.dat可经电脑从EQlists复制到另一SR35同目录。,命名确认图文不一致；EQ Sync生成触发、参数保存时点、预设删除/恢复、重名合并、跨固件共享与第三方app作用域未说明；格式条件只按手册，不代表实测效果。,static_reference_only,false,cases/M-065-astell-kern.md,2026-10-27
+F-M065-18,M-065,校准选曲响度并启停ReplayGain,D2,E-AKCD-01;E-AKDD-03;E-AKCD-11,Albums/Playlists/Folders曲目列表编辑→选曲→校准图标；手册称已校准曲出现标记；通知ReplayGain或Settings/ReplayGain控制启停。官方共用FAQ明确Line Out时不工作。,校准进度/取消/失败、是否改写音频或存数据库、重复校准、重扫后保留、第三方app及实际听感未核；24bit/192kHz以下条件不扩写为全格式支持。,static_reference_only,false,cases/M-065-astell-kern.md,2026-10-27

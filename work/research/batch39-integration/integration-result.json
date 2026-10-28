@@ -1,0 +1,33 @@
+{
+  "new_evidence": [
+    "E-VWCN-01"
+  ],
+  "new_flows": [
+    "F-M007-21",
+    "F-M007-22",
+    "F-M007-23"
+  ],
+  "updated_flows": [
+    "F-M007-03",
+    "F-M007-10",
+    "F-M007-13",
+    "F-M007-14",
+    "F-M007-16",
+    "F-M007-17",
+    "F-M007-18",
+    "F-M007-19",
+    "F-M063-07",
+    "F-M063-10",
+    "F-M065-09"
+  ],
+  "appended_captures": [
+    "E-AK-10",
+    "E-AKCD-01",
+    "E-SHCD-03",
+    "E-VIW-11"
+  ],
+  "manual_inventory_rows": 75,
+  "reference_points": 16,
+  "static_pages_observed": 29,
+  "static_pages_archived": 19
+}

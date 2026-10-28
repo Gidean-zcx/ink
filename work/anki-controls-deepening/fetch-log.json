@@ -1,0 +1,145 @@
+[
+  {
+    "name": "llms.txt",
+    "url": "https://docs.ankiweb.net/llms.txt",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "final_url": "https://docs.ankiweb.net/llms.txt",
+    "content_type": "text/plain; charset=utf-8",
+    "raw_work_path": "work/anki-controls-deepening/llms.txt",
+    "raw_sha256": "37277f3b5505aa8ab28719e28b3ac2bb9217288d8648beb974a93568ba2edbdc",
+    "bytes": 22058
+  },
+  {
+    "name": "misc.md",
+    "url": "https://docs.ankiweb.net/manual/misc.md",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "final_url": "https://docs.ankiweb.net/manual/misc.md",
+    "content_type": "text/markdown; charset=utf-8",
+    "raw_work_path": "work/anki-controls-deepening/misc.md",
+    "raw_sha256": "99a5287b3f03af696710b700e7854b9bbf718acf491cafd989a432f2aeb77c2b",
+    "bytes": 2193
+  },
+  {
+    "name": "errors.md",
+    "url": "https://docs.ankiweb.net/manual/templates/errors.md",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "final_url": "https://docs.ankiweb.net/manual/templates/errors.md",
+    "content_type": "text/markdown; charset=utf-8",
+    "raw_work_path": "work/anki-controls-deepening/errors.md",
+    "raw_sha256": "4f559a6ca6e7109b13fa031201ffa8092ee0072b3d20264630a18d6467766d1c",
+    "bytes": 6277
+  },
+  {
+    "name": "files.md",
+    "url": "https://docs.ankiweb.net/manual/files.md",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "final_url": "https://docs.ankiweb.net/manual/files.md",
+    "content_type": "text/markdown; charset=utf-8",
+    "raw_work_path": "work/anki-controls-deepening/files.md",
+    "raw_sha256": "108e49dc1d26df4623a1fedc6bf1a14ffc065d21b8ca25af148630d59627940f",
+    "bytes": 14172
+  },
+  {
+    "name": "syncing.md",
+    "url": "https://docs.ankiweb.net/manual/syncing.md",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "final_url": "https://docs.ankiweb.net/manual/syncing.md",
+    "content_type": "text/markdown; charset=utf-8",
+    "raw_work_path": "work/anki-controls-deepening/syncing.md",
+    "raw_sha256": "b9f2d7069200c44b339400f839efaeb16a23bd5a97b338020986d1e4ca985c9c",
+    "bytes": 11674
+  },
+  {
+    "name": "backups.md",
+    "url": "https://docs.ankiweb.net/manual/backups.md",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "final_url": "https://docs.ankiweb.net/manual/backups.md",
+    "content_type": "text/markdown; charset=utf-8",
+    "raw_work_path": "work/anki-controls-deepening/backups.md",
+    "raw_sha256": "1f398b3b52d6c53a4e9e8e2ff16134e07c7374f7b8073f9d5fec143f44da3cfb",
+    "bytes": 3700
+  },
+  {
+    "name": "profiles.md",
+    "url": "https://docs.ankiweb.net/manual/profiles.md",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "final_url": "https://docs.ankiweb.net/manual/profiles.md",
+    "content_type": "text/markdown; charset=utf-8",
+    "raw_work_path": "work/anki-controls-deepening/profiles.md",
+    "raw_sha256": "23d6c6434bfde60295c8b874bcb63f007ec61b7be0212df4b4dd5fc964ff1c2f",
+    "bytes": 1939
+  },
+  {
+    "name": "media.md",
+    "url": "https://docs.ankiweb.net/manual/media.md",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "final_url": "https://docs.ankiweb.net/manual/media.md",
+    "content_type": "text/markdown; charset=utf-8",
+    "raw_work_path": "work/anki-controls-deepening/media.md",
+    "raw_sha256": "4151e6313563d44de616562e1d7509a766e788fab606179ef3c381d44332ce5b",
+    "bytes": 3661
+  },
+  {
+    "name": "deck-options.md",
+    "url": "https://docs.ankiweb.net/manual/deck-options.md",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "final_url": "https://docs.ankiweb.net/manual/deck-options.md",
+    "content_type": "text/markdown; charset=utf-8",
+    "raw_work_path": "work/anki-controls-deepening/deck-options.md",
+    "raw_sha256": "2bb7c9f536b4b33a754fa363d75f7625b4001eda260aec92b3f5fe8975a8c2ae",
+    "bytes": 39923
+  },
+  {
+    "name": "changes-2.1.40-49.md",
+    "url": "https://docs.ankiweb.net/releases/changes/changes/2.1.40-49.md",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "final_url": "https://docs.ankiweb.net/releases/changes/changes/2.1.40-49.md",
+    "content_type": "text/markdown; charset=utf-8",
+    "raw_work_path": "work/anki-controls-deepening/changes-2.1.40-49.md",
+    "raw_sha256": "bc0bf8d3db127bd1e0043636026cb311e98ae88b05da960405f9f09aee01222c",
+    "bytes": 21191
+  },
+  {
+    "name": "changes-23.12-plus.md",
+    "url": "https://docs.ankiweb.net/releases/changes/changes/github.md",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "final_url": "https://docs.ankiweb.net/releases/changes/changes/github.md",
+    "content_type": "text/markdown; charset=utf-8",
+    "raw_work_path": "work/anki-controls-deepening/changes-23.12-plus.md",
+    "raw_sha256": "3fffc9d697229aafe7765105ef3ecda5a43a46bbaac7fc001f4a950f738e107e",
+    "bytes": 438
+  },
+  {
+    "name": "missing-media.md",
+    "url": "https://docs.ankiweb.net/faqs/sounds-or-images-have-gone-missing.md",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "final_url": "https://docs.ankiweb.net/faqs/sounds-or-images-have-gone-missing.md",
+    "content_type": "text/markdown; charset=utf-8",
+    "raw_work_path": "work/anki-controls-deepening/missing-media.md",
+    "raw_sha256": "460fac601c6a3cdee8e30e167733601c3cc7020d53a9272d3a970ff7d983f093",
+    "bytes": 2140
+  },
+  {
+    "name": "sync-profiles.md",
+    "url": "https://docs.ankiweb.net/faqs/synchronizing-multiple-profiles.md",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "final_url": "https://docs.ankiweb.net/faqs/synchronizing-multiple-profiles.md",
+    "content_type": "text/markdown; charset=utf-8",
+    "raw_work_path": "work/anki-controls-deepening/sync-profiles.md",
+    "raw_sha256": "200ff921c1fa4c6ec29ff29a2d7e59c8be84a2a404a06f491f0a5d9470e7f48f",
+    "bytes": 1407
+  }
+]

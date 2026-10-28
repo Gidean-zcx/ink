@@ -1,0 +1,25 @@
+{
+  "products": 65,
+  "partial_cases": 65,
+  "flows": 858,
+  "depths": {
+    "D1": 78,
+    "D2": 765,
+    "D4": 15
+  },
+  "evidence": 1425,
+  "distinct_urls": 1257,
+  "static_evidence": 195,
+  "browser_evidence": 18,
+  "new_evidence": 14,
+  "new_flows": 1,
+  "old_flows_updated": 11,
+  "old_fields_updated": 42,
+  "old_evidence_captures": 2,
+  "requirements_unchanged": true,
+  "inventory_files": 73,
+  "inventory_rows": 7132,
+  "inventory_e_refs": 987,
+  "inventory_f_refs": 750,
+  "errors": []
+}

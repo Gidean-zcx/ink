@@ -1,0 +1,38 @@
+Create & add notes in Gemini Notebook
+Important: The Gemini Notebook mobile app does not support note editing at this time. Notes can be viewed, selected, and used for Chat Q&A on mobile. Learn more about the supported features in the Gemini Notebook mobile app.
+You can use notes to capture and organize information, identify key insights and interpretations from your sources, and add your own thoughts.
+Created notes automatically appear in the Sources panel alongside your uploaded sources. This means your notes can be used for Q&A, cited in Chat responses, and included in artifact generation.
+Create new notes
+Write a new note: In the “Sources” panel, select Create note.
+You can write or paste text into this note.
+Save a chat response to notes: If you receive a response that you like, select Save to note.
+Saved response notes are editable once citations are removed.
+Paste copied text as a note: Select Add sources  Copied text. Then paste in your text.
+This will be saved as a new note.
+How notes work as sources
+Q&A grounding: Selected Note sources are used by Chat to answer your questions, just like uploaded sources. Chat responses will include citation chips that link back to the specific passage in your note.
+Artifact generation: Note sources are included when generating Studio artifacts like Audio Overviews, Study Guides, and more.
+Selection controls: Use the checkbox next to each Note source in the Sources panel to include or exclude it from the Chat context. Unchecked Note sources will not be used for Q&A or artifact generation.
+Convert notes in the Studio panel into sources
+Before notes were created as sources, they were created in the Studio panel. These notes still appear in the Studio panel.
+To make them available for Q&A, artifact generation, and citations, convert them to Note sources. Once converted, your notes appear in the Sources panel with a note icon.
+Convert one note
+On your device, open Gemini Notebook.
+In the “Studio” panel, open the note.
+Select Convert.
+Convert all notes at once
+On your device, open Gemini Notebook.
+On any note in the “Studio” panel, select More   Convert all notes to source.
+Export notes as Google Docs
+On your device, open Gemini Notebook.
+In the “Sources” panel, hover over your note.
+Select More    Export to Docs.
+Your note will populate in a new Google Doc file in a new browser tab.
+Any modifications made within the newly created Docs file will not synchronize with your original Gemini Notebook note.
+Sharing permissions will not carry over from Gemini Notebook to the new file.
+Copyright
+Respect copyright laws. Do not share copyrighted content without the necessary rights to do so. It’s our policy to respond to clear notices of alleged copyright infringement. Repeated infringement of intellectual property rights, including copyright, will result in account termination.
+Some of our services, including Gemini Notebook, allow you to generate original content. Google won't claim ownership over that content. If you see a violation of Google's copyright policies, report copyright infringement.
+Related resources
+Create a notebook in Gemini Notebook
+Learn about Gemini Notebook

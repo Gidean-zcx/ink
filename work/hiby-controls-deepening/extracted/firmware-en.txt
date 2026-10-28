@@ -1,0 +1,28 @@
+
+
+Player
+HiBy R3II(2025)
+HiBy R3II(2025) FirmwareOn this page
+HiBy R3II(2025) Firmware
+HiBy_R3II_2025_1.1_202501061153 Firmware​
+HiBy_R3II_2025_1.1_202501061153 Firmware
+Changelog:
+
+Added EQ function;
+
+Added Tidal sound quality options;
+
+Added sampling rate and bit display in the Tidal playback interface;
+
+Fixed USB storage not working on MacOS;
+
+Added dark theme UI;
+
+Fixed several other bugs.
+
+Burn firmware download link:
+https://pan.baidu.com/s/1y_tkrthSX72IV5FYuMQlMw?pwd=u4p1 Extraction code: u4p1
+
+HiBy_R3II_2025_1.0_202411191142 Firmware​
+HiBy_R3II_2025_1.0_202411191142 Firmware
+First version of firmware release

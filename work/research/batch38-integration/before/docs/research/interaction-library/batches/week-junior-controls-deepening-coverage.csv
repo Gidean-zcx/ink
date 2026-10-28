@@ -1,0 +1,7 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M048-05,M-048,公开样刊导航、缩略图与页码跳转,D4,E-WJCD-01;E-WJCD-02,实际1→2、展开/关闭缩略图、14、首页、32；隐藏输入与侧栏遮挡失败留痕。,桌面单次；触摸/缩放、非法页码、断网、前后退与移动端未测。,observed_browser_sequence,true,cases/M-048-week-junior.md,2026-10-26
+F-M048-06,M-048,公开样刊页内搜索与清空,D4,E-WJCD-03,Nobel有5页组；点击Page15后本次仍14；零结果与清空实际观察。,结果未跳转原因未定；逐个命中定位、中文搜索、排名与断网未测。,observed_browser_sequence,true,cases/M-048-week-junior.md,2026-10-26
+F-M048-07,M-048,公开样刊保存位置并重访,D4,E-WJCD-04,手动标记14、浏览回1、同上下文重访14；空上下文从1。,未查存储机制、进程重启、跨设备、自动最后位置、删除/覆盖书签；不代表原生App。,observed_browser_sequence,true,cases/M-048-week-junior.md,2026-10-26
+F-M048-08,M-048,以新闻议题写观点作品,D2,E-WJCD-05;E-WJCD-06,事实支持、反方观点、行动建议和成人校读组成作品路径。,活动面向原产品8–14岁；5–6岁改编、口述、评价标准待研究；未投稿。,static_reference_only,false,cases/M-048-week-junior.md,2026-10-26
+F-M048-09,M-048,围绕读书组织知识问答,D2,E-WJCD-05;E-WJCD-07,每人备题，限时写答、同时揭晓、人工记分和可选换书。,争议答案、难度、年龄差与长期收益未知；不是内置自适应练习。,static_reference_only,false,cases/M-048-week-junior.md,2026-10-26
+F-M048-10,M-048,以线索组织观察和寻物,D2,E-WJCD-05;E-WJCD-08,清单/谜面两种挑战，分组记录发现，时间结束后比较。,活动规则不证明App计时/识别；5–6岁执行难度和学习效果未知。,static_reference_only,false,cases/M-048-week-junior.md,2026-10-26

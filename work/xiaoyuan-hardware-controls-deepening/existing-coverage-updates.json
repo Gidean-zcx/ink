@@ -1,0 +1,130 @@
+[
+  {
+    "flow_id": "F-M056-01",
+    "source_batch": "docs/research/interaction-library/batches/learning-hardware-coverage.csv",
+    "field": "known_branches",
+    "before": "官方能力模块目录",
+    "after": "已取得官网前端S6六模块目录；页面代际与固件未核定",
+    "reason": "复读同源补型号/政策/版本边界；学习主链和深度不变"
+  },
+  {
+    "flow_id": "F-M056-01",
+    "source_batch": "docs/research/interaction-library/batches/learning-hardware-coverage.csv",
+    "field": "gaps",
+    "before": "题目实际入口提示重试与恢复",
+    "after": "年级/教材影响资源；题目实际入口、手写识别纠正、提示重试、完成及暂退恢复未知；不能套后续同名S6或旧S2",
+    "reason": "复读同源补型号/政策/版本边界；学习主链和深度不变"
+  },
+  {
+    "flow_id": "F-M056-01",
+    "source_batch": "docs/research/interaction-library/batches/learning-hardware-coverage.csv",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27",
+    "reason": "复读同源补型号/政策/版本边界；学习主链和深度不变"
+  },
+  {
+    "flow_id": "F-M056-02",
+    "source_batch": "docs/research/interaction-library/batches/learning-hardware-coverage.csv",
+    "field": "gaps",
+    "before": "选级提示纠错重试结束恢复",
+    "after": "选级提示纠错重试结束恢复未知；课程S1/S2/S3不是硬件代际；本轮无新增静态图观察",
+    "reason": "复读同源补型号/政策/版本边界；学习主链和深度不变"
+  },
+  {
+    "flow_id": "F-M056-02",
+    "source_batch": "docs/research/interaction-library/batches/learning-hardware-coverage.csv",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27",
+    "reason": "复读同源补型号/政策/版本边界；学习主链和深度不变"
+  },
+  {
+    "flow_id": "F-M056-03",
+    "source_batch": "docs/research/interaction-library/batches/learning-hardware-coverage.csv",
+    "field": "known_branches",
+    "before": "静态管控选项及开关示例",
+    "after": "前轮静态管控选项及示例；家长iPhone商店1.25.1日期2026-09-25",
+    "reason": "复读同源补型号/政策/版本边界；学习主链和深度不变"
+  },
+  {
+    "flow_id": "F-M056-03",
+    "source_batch": "docs/research/interaction-library/batches/learning-hardware-coverage.csv",
+    "field": "gaps",
+    "before": "完整入口保存生效超时解锁离线",
+    "after": "完整入口保存生效超时解锁离线未知；25条泛化版本记录未补具体硬件行为",
+    "reason": "复读同源补型号/政策/版本边界；学习主链和深度不变"
+  },
+  {
+    "flow_id": "F-M056-03",
+    "source_batch": "docs/research/interaction-library/batches/learning-hardware-coverage.csv",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27",
+    "reason": "复读同源补型号/政策/版本边界；学习主链和深度不变"
+  },
+  {
+    "flow_id": "F-M056-04",
+    "source_batch": "docs/research/interaction-library/batches/learning-hardware-coverage.csv",
+    "field": "known_branches",
+    "before": "示例时间线及家长列表",
+    "after": "前轮示例时间线及家长列表；政策列我的到家庭模块更正信息入口",
+    "reason": "复读同源补型号/政策/版本边界；学习主链和深度不变"
+  },
+  {
+    "flow_id": "F-M056-04",
+    "source_batch": "docs/research/interaction-library/batches/learning-hardware-coverage.csv",
+    "field": "gaps",
+    "before": "数据口径角色权限邀请恢复",
+    "after": "数据口径角色权限邀请恢复未知；共享登录不证明学习状态迁移",
+    "reason": "复读同源补型号/政策/版本边界；学习主链和深度不变"
+  },
+  {
+    "flow_id": "F-M056-04",
+    "source_batch": "docs/research/interaction-library/batches/learning-hardware-coverage.csv",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27",
+    "reason": "复读同源补型号/政策/版本边界；学习主链和深度不变"
+  },
+  {
+    "flow_id": "F-M056-05",
+    "source_batch": "docs/research/interaction-library/batches/learning-hardware-coverage.csv",
+    "field": "gaps",
+    "before": "E1适用性文件限制同步打开打印恢复",
+    "after": "E1适用性文件限制同步打开打印恢复未知；S6小程序上传与家长App政策发送不能拼成已验证全链",
+    "reason": "复读同源补型号/政策/版本边界；学习主链和深度不变"
+  },
+  {
+    "flow_id": "F-M056-05",
+    "source_batch": "docs/research/interaction-library/batches/learning-hardware-coverage.csv",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27",
+    "reason": "复读同源补型号/政策/版本边界；学习主链和深度不变"
+  },
+  {
+    "flow_id": "F-M056-06",
+    "source_batch": "docs/research/interaction-library/batches/learning-hardware-coverage.csv",
+    "field": "known_branches",
+    "before": "确认家庭解绑条件与短信验证码",
+    "after": "注销确认家庭解绑条件与短信验证码；关联产品须分别注销/要求删除；后台备份可延迟到更新时删除",
+    "reason": "复读同源补型号/政策/版本边界；学习主链和深度不变"
+  },
+  {
+    "flow_id": "F-M056-06",
+    "source_batch": "docs/research/interaction-library/batches/learning-hardware-coverage.csv",
+    "field": "gaps",
+    "before": "错误验证码及重新绑定儿童进度",
+    "after": "验证码失败、重新绑定儿童进度未知；客服副本请求未给格式/回灌；后台备份不是用户找回承诺",
+    "reason": "复读同源补型号/政策/版本边界；学习主链和深度不变"
+  },
+  {
+    "flow_id": "F-M056-06",
+    "source_batch": "docs/research/interaction-library/batches/learning-hardware-coverage.csv",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27",
+    "reason": "复读同源补型号/政策/版本边界；学习主链和深度不变"
+  }
+]

@@ -1,0 +1,8 @@
+Modify shortcut colors and icons on iPhone or iPad
+By default, new shortcuts display a shortcut icon and one of 15 colors. You can customize the shortcut’s appearance (the rectangle in your shortcuts collection) by changing its color and giving it an icon more representative of its task.
+In the Shortcuts app on your iPhone or iPad, tap on the shortcut you want to modify.
+Tap the Icon next to the shortcut name, then do any of the following:
+Change the shortcut’s color: Tap a color swatch.
+Change the shortcut’s glyph (icon): Tap an icon.
+To save your changes, tap Done.
+Tip: When you add a shortcut to the Home Screen of your iOS or iPadOS device, you can also use a photo from your photo library as the icon. See Add a shortcut to the Home Screen on iPhone or iPad.

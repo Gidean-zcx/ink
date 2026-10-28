@@ -1,0 +1,10 @@
+{
+  "checked_on": "2026-10-27",
+  "help_requests": 38,
+  "help_http_200": 38,
+  "first_two_original_classification": "worker false-positive challenge/parser failure",
+  "correction": "Root inspected actual h1 and public_help_center_article_body in existing HTML. Global reCAPTCHA script is not a challenge. Reused first two captures without repeat GET; fetched remaining 36 once each.",
+  "original_report_work_path": "work/research/batch41-inoreader-help/worker-results-original.json",
+  "final_work_path": "work/research/batch41-inoreader-help/root-results.json",
+  "account_operations": 0
+}

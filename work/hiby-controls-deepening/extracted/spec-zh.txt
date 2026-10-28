@@ -1,0 +1,83 @@
+
+
+音频播放器
+HiBy R3II(2025)
+HiBy R3II(2025) 规格本页总览
+HiBy R3II(2025) 规格
+硬件平台​
+
+分类芯片
+主控Ingenic X1600E
+内存规格64MB
+存储规格1Gbit
+WiFi2.4GHz
+BluetoothBT 5.0 2402MHz ~ 2480MHz
+LCD360*480（RGB 接口）
+LCD IFRGB
+TF1 Slot(Max. 2T)
+LEDRGB + White
+Battery2000mAh
+PMUAXP2101
+Charger5V@1A
+USBUSB 2.0、Type-C
+按键电源键、上下曲、音量旋钮、播放暂停
+DAC双 ES9219C
+PhoneOut3.5mm
+Balance4.4mm
+
+软件平台​
+
+通用功能​
+
+分类规格
+操作系统HiBy OS(Linux 4.4.94)
+文件系统支持FAT32/exFAT/NTFS
+分区支持MBR/GPT
+远程控制HiByLink
+均衡器（EQ）支持
+MSEB支持
+无线功能DLNA、AirPlay、WiFi传歌
+网络电台支持
+Tidal支持
+Qobuz支持
+HiByLink支持
+BT 发射SBC/AAC/aptX/LDAC/UAT
+USB Audio 输出支持（PCM 48k768k、DSD64DSD256）
+自定义主题支持
+炫彩主题支持
+操作方式触摸、按键
+按键支持上一曲、下一曲、播放暂停、音量按键
+定时关机省电关机、睡眠关机
+充电管理支持
+固件升级TF 卡升级、OTA 升级
+
+输出接口​
+
+输出接口规格
+USBPCM 44.1k~384k、DSD256（DoP）、DSD256（Native）
+蓝牙PCM 44.1k~192k
+模拟PCM 44.1k384k、DSD64DSD256
+
+输出音频规格​
+
+格式采样率
+DSDDSD64~DSD256
+PCM44.1k~384k
+MQA16x
+
+音频文件规格​
+
+音频格式规格
+无损
+DSD(DSF、DFF、SACD(ISO))DSD64/DSD128/DSD256
+WAV384kHz@32bits(MAX)
+FLAC384kHz@32bits(MAX)
+AIFF384kHz@32bits(MAX)
+Apple LossLess384kHz@32bits(MAX)
+WMA LossLess96kHz@24bits(MAX)
+APE Fast/High/Normal384kHz@24bits(MAX)
+APE Extra High192kHz@24bits(MAX)
+APE Insane96kHz@24bits(MAX)
+DXD352.8kHz/24bit
+有损
+MP3，OGG，WMA，AAC等格式

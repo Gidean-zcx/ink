@@ -1,0 +1,10 @@
+{
+  "command": [
+    "diff",
+    "-u",
+    "work/bbdc-controls-deepening/case-before.md",
+    "docs/research/interaction-library/cases/M-018-bbdc.md"
+  ],
+  "exit_code": 1,
+  "meaning": "1 means expected content differences; not failure"
+}

@@ -1,0 +1,23 @@
+How to delete voice recordings?
+Modified on: Sat, 3 Oct, 2026 at 8:41 AM
+ You can delete individual recordings or multiple recordings at the same time
+To delete a single voice recording:
+Tap Apps.
+Tap Recorder.
+Tap the Menu icon.
+Select the recording you want to delete.
+Tap the Bin icon.
+Tap Delete.
+ To delete many voice recordings:
+Tap Apps.
+Tap Recorder.
+Tap the Menu icon.
+Tap the Pencil (Edit) icon.
+Select the check boxes next to the recordings you want to delete.
+Tap Delete.
+Tap Delete again to confirm.
+Was this article helpful?
+ No
+ Yes
+That’s Great!
+Thank you for your feedback

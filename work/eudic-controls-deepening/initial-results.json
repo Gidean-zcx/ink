@@ -1,0 +1,68 @@
+[
+  {
+    "name": "01-index",
+    "url": "https://docs.eudic.net/1/llms.txt",
+    "method": "requests GET timeout=(5,18), one attempt",
+    "status": 200,
+    "final_url": "https://docs.eudic.net/1/llms.txt",
+    "content_type": "text/markdown; charset=utf-8",
+    "raw_work_path": "work/eudic-controls-deepening/01-index.txt",
+    "raw_sha256": "a082bfd1238d77e6ebd5ff928c2f83c52856e9e05012ca1b2c54f38749bd7386",
+    "bytes": 2284
+  },
+  {
+    "name": "02-scheme",
+    "url": "https://docs.eudic.net/1/jin-jie-gong-neng/url-scheme.md",
+    "method": "requests GET timeout=(5,18), one attempt",
+    "status": 200,
+    "final_url": "https://docs.eudic.net/1/jin-jie-gong-neng/url-scheme.md",
+    "content_type": "text/markdown; charset=utf-8",
+    "raw_work_path": "work/eudic-controls-deepening/02-scheme.txt",
+    "raw_sha256": "855e2ae82800b9e570b8fb6e0239ff8b32fae167c9aa3f0474611172d153a577",
+    "bytes": 6299
+  },
+  {
+    "name": "03-library",
+    "url": "https://docs.eudic.net/1/shi-yong-zhi-yin/tian-jia-kuo-chong-ci-ku.md",
+    "method": "requests GET timeout=(5,18), one attempt",
+    "status": 200,
+    "final_url": "https://docs.eudic.net/1/shi-yong-zhi-yin/tian-jia-kuo-chong-ci-ku.md",
+    "content_type": "text/markdown; charset=utf-8",
+    "raw_work_path": "work/eudic-controls-deepening/03-library.txt",
+    "raw_sha256": "46d9c22dbb420a555dd61213983ffbf18729945926f9e6ea328f804e29cc5e1c",
+    "bytes": 1897
+  },
+  {
+    "name": "04-reader",
+    "url": "https://docs.eudic.net/1/jin-jie-gong-neng/wen-jian-yue-du.md",
+    "method": "requests GET timeout=(5,18), one attempt",
+    "status": 200,
+    "final_url": "https://docs.eudic.net/1/jin-jie-gong-neng/wen-jian-yue-du.md",
+    "content_type": "text/markdown; charset=utf-8",
+    "raw_work_path": "work/eudic-controls-deepening/04-reader.txt",
+    "raw_sha256": "5037dca7813882c28a496d26caa2a099f43187ff0ba463eabe6ad081eab05cf0",
+    "bytes": 2148
+  },
+  {
+    "name": "05-api",
+    "url": "http://my.eudic.net/OpenAPI/Doc_Index",
+    "method": "requests GET timeout=(5,18), one attempt",
+    "status": 200,
+    "final_url": "http://my.eudic.net/OpenAPI/Doc_Index",
+    "content_type": "text/html; charset=utf-8",
+    "raw_work_path": "work/eudic-controls-deepening/05-api.html",
+    "raw_sha256": "7fa539a9c397798d8c96ce1a9df2d4bb97d4049218690c4cf547c7e45fd264d3",
+    "bytes": 923
+  },
+  {
+    "name": "06-product",
+    "url": "https://www.eudic.net/v4/en/app/eudic/download",
+    "method": "requests GET timeout=(5,18), one attempt",
+    "status": 200,
+    "final_url": "https://www.eudic.net/v4/en/app/eudic/download",
+    "content_type": "text/html; charset=utf-8",
+    "raw_work_path": "work/eudic-controls-deepening/06-product.html",
+    "raw_sha256": "386c80ff86df81c44c78f5ef4babaa0c8b2ec69aef2d1f00d7475494f21dc1f9",
+    "bytes": 31597
+  }
+]

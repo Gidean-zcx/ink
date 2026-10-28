@@ -1,0 +1,1079 @@
+[
+  {
+    "capture": "01-article-initial",
+    "action": "直接打开公开K–1植物文章，HTTP200",
+    "observed_result": "Read Aloud、西语、打印入口；尚未展开播放器",
+    "url": "https://www.timeforkids.com/k1/spotlight-on-plants-k1/",
+    "captured_at_utc": "2026-10-26T15:40:18.744212+00:00",
+    "raw_image_path": "work/time-controls-deepening/browser/01-article-initial.png",
+    "sha256": "a6dce8f77b7878ef99c3e778bcad14fd7ec8af348720af52739d5c7abdee004f",
+    "image_reviewed": true,
+    "playback_ui": null,
+    "raw_metadata_path": "work/time-controls-deepening/browser/01-article-initial.json",
+    "raw_metadata_sha256": "fc3711990dbe80e0583e94ec8f3b1d26489604a0f0c3cf7b23a33ac3b2c65d9f",
+    "raw_html_sha256": "5353a78fd02919684873c720afe87e8e57c72ac62b893e6a9a54de67d3648431"
+  },
+  {
+    "capture": "02-read-aloud-start",
+    "action": "点击Listen to audio，等2秒",
+    "observed_result": "出现Pause、.9x和0:48；标题/段落高亮，随后页面随进度滚动",
+    "url": "https://www.timeforkids.com/k1/spotlight-on-plants-k1/",
+    "captured_at_utc": "2026-10-26T15:40:38.380422+00:00",
+    "raw_image_path": "work/time-controls-deepening/browser/02-read-aloud-start.png",
+    "sha256": "b94e8476849fe997b7fa2ec5e4dbc43874250aad20254259cee13302feb5f550",
+    "image_reviewed": true,
+    "playback_ui": null,
+    "raw_metadata_path": "work/time-controls-deepening/browser/02-read-aloud-start.json",
+    "raw_metadata_sha256": "6743d397e5dfc215f77823478ad37d4ee077b588ff7df1f98648cc6c9ba33a0b",
+    "raw_html_sha256": "dd73947e9a22bfd0aa3533c0f2cb3700e5bfc1ef901fdb800e0ba32ad3189925",
+    "archived_image": "artifacts/time-controls-deepening/browser/02-read-aloud-start.png"
+  },
+  {
+    "capture": "03-pause",
+    "action": "间隔后点击播放/暂停控件",
+    "observed_result": "实际是Pause、0:49；文件名是当时意图，不能称暂停成功",
+    "url": "https://www.timeforkids.com/k1/spotlight-on-plants-k1/",
+    "captured_at_utc": "2026-10-26T15:41:33.951208+00:00",
+    "raw_image_path": "work/time-controls-deepening/browser/03-pause.png",
+    "sha256": "6638cb1a288908c391aa25ebe7b2257c46d34d134c4e3c6e7dcf85c5d3de4bb5",
+    "image_reviewed": true,
+    "playback_ui": null,
+    "raw_metadata_path": "work/time-controls-deepening/browser/03-pause.json",
+    "raw_metadata_sha256": "7d35750d19ff76cffb47b4470e55f394594763191a9b86ecbbec8935ed2cd374",
+    "raw_html_sha256": "936cb92dd9708aa745b83abe183c53db06ab66bcd51e398a27645278d9191708"
+  },
+  {
+    "capture": "04-pause-later",
+    "action": "再次截帧",
+    "observed_result": "仍Pause，截图0:21、后取DOM0:20，range=60；位置已到后文",
+    "url": "https://www.timeforkids.com/k1/spotlight-on-plants-k1/",
+    "captured_at_utc": "2026-10-26T15:42:02.092200+00:00",
+    "raw_image_path": "work/time-controls-deepening/browser/04-pause-later.png",
+    "sha256": "351ce10664ade9ad10a0033b494f5f0c456bea6ed8d69ed57965b68318f29bb6",
+    "image_reviewed": true,
+    "playback_ui": [
+      {
+        "id": "playPauseBtn",
+        "text": "",
+        "aria": "Pause",
+        "value": "",
+        "min": null,
+        "max": null
+      },
+      {
+        "id": "progressRange",
+        "text": "",
+        "aria": "Playback Position — Enter to skip forward, Shift+Enter to skip back",
+        "value": "60",
+        "min": "0",
+        "max": "100"
+      },
+      {
+        "id": "speedNav",
+        "text": ".9x",
+        "aria": "Change playback speed, currently .9x",
+        "value": "",
+        "min": null,
+        "max": null
+      }
+    ],
+    "raw_metadata_path": "work/time-controls-deepening/browser/04-pause-later.json",
+    "raw_metadata_sha256": "ab079824eb91aab25232a58f6e90acd3dc6a69eddd10d322ff865f91a4558d51",
+    "raw_html_sha256": "d01a578ff713f4e9299a2462d3f6e56d7f6f46f776c4dfdedd9c8bdeaf2be6cb",
+    "archived_image": "artifacts/time-controls-deepening/browser/04-pause-later.png"
+  },
+  {
+    "capture": "05-speed-menu",
+    "action": "点语速入口",
+    "observed_result": "显示.5x/.75x/.9x/1x/1.25x；未选新档位",
+    "url": "https://www.timeforkids.com/k1/spotlight-on-plants-k1/",
+    "captured_at_utc": "2026-10-26T15:42:03.173428+00:00",
+    "raw_image_path": "work/time-controls-deepening/browser/05-speed-menu.png",
+    "sha256": "acb957fd73ab74c38c292ead91c88d40a2017f3b42d1f002788baf5ee76ad888",
+    "image_reviewed": true,
+    "playback_ui": [
+      {
+        "id": "playPauseBtn",
+        "text": "",
+        "aria": "Pause",
+        "value": "",
+        "min": null,
+        "max": null
+      },
+      {
+        "id": "progressRange",
+        "text": "",
+        "aria": "Playback Position — Enter to skip forward, Shift+Enter to skip back",
+        "value": "60",
+        "min": "0",
+        "max": "100"
+      },
+      {
+        "id": "speedNav",
+        "text": ".9x",
+        "aria": "Change playback speed, currently .9x",
+        "value": "",
+        "min": null,
+        "max": null
+      }
+    ],
+    "raw_metadata_path": "work/time-controls-deepening/browser/05-speed-menu.json",
+    "raw_metadata_sha256": "da233dfa6e9d232c071a70f1112c9044396e5601dfec21ce84120f7776bdc347",
+    "raw_html_sha256": "2efa8ff742a8ca5052fc6461527555987ec5507609068ca8460d80ef9250f9fa"
+  },
+  {
+    "capture": "06-paused-confirmed",
+    "action": "点击Pause，等300ms",
+    "observed_result": "显示Play、0:01、range=100；接近末尾，不能分离暂停与自然结束",
+    "url": "https://www.timeforkids.com/k1/spotlight-on-plants-k1/",
+    "captured_at_utc": "2026-10-26T15:42:22.282118+00:00",
+    "raw_image_path": "work/time-controls-deepening/browser/06-paused-confirmed.png",
+    "sha256": "47684bf7921bda191511229b4a29b7a08517e952711291f401c7df3b02f478db",
+    "image_reviewed": true,
+    "playback_ui": [
+      {
+        "id": "playPauseBtn",
+        "text": "",
+        "aria": "Play",
+        "value": "",
+        "min": null,
+        "max": null
+      },
+      {
+        "id": "progressRange",
+        "text": "",
+        "aria": "Playback Position — Enter to skip forward, Shift+Enter to skip back",
+        "value": "100",
+        "min": "0",
+        "max": "100"
+      },
+      {
+        "id": "speedNav",
+        "text": ".9x",
+        "aria": "Change playback speed, currently .9x",
+        "value": "",
+        "min": null,
+        "max": null
+      }
+    ],
+    "raw_metadata_path": "work/time-controls-deepening/browser/06-paused-confirmed.json",
+    "raw_metadata_sha256": "14105513c60ee8528fad48b112ee10317050f5661e6d543d317cdabcbede29fb",
+    "raw_html_sha256": "828a29c27a8aa5adf8db271c0555cdfec4747e0a699e4932f2806f4b0490c52e"
+  },
+  {
+    "capture": "07-after-short-play-attempt",
+    "action": "点击Play后等2.5秒，再找Pause超时，之后截帧",
+    "observed_result": "显示Play、0:49、range=0；没有记录到该次预期暂停，保留失败",
+    "url": "https://www.timeforkids.com/k1/spotlight-on-plants-k1/",
+    "captured_at_utc": "2026-10-26T15:46:28.960201+00:00",
+    "raw_image_path": "work/time-controls-deepening/browser/07-after-short-play-attempt.png",
+    "sha256": "44fb202f7ced90277f9c35fc5f48a7f8a3aa286308c32c23a40881e21e79daa7",
+    "image_reviewed": true,
+    "playback_ui": [
+      {
+        "id": "playPauseBtn",
+        "text": "",
+        "aria": "Play",
+        "value": "",
+        "min": null,
+        "max": null
+      },
+      {
+        "id": "progressRange",
+        "text": "",
+        "aria": "Playback Position — Enter to skip forward, Shift+Enter to skip back",
+        "value": "0",
+        "min": "0",
+        "max": "100"
+      },
+      {
+        "id": "speedNav",
+        "text": ".9x",
+        "aria": "Change playback speed, currently .9x",
+        "value": "",
+        "min": null,
+        "max": null
+      }
+    ],
+    "raw_metadata_path": "work/time-controls-deepening/browser/07-after-short-play-attempt.json",
+    "raw_metadata_sha256": "8eb1dc3d16d598b48d4591941813426f7ec271ff8fa28f68a20877c1fd8547d7",
+    "raw_html_sha256": "6c448eaaf2ef061c0953c3eec594448552d835b0b7f755da05c7ec3f207f8617",
+    "archived_image": "artifacts/time-controls-deepening/browser/07-after-short-play-attempt.png"
+  },
+  {
+    "capture": "08-replay-running",
+    "action": "再次点Play，等1.8秒",
+    "observed_result": "Pause；截图0:47，后取DOM0:46，range=10；自动回到前文",
+    "url": "https://www.timeforkids.com/k1/spotlight-on-plants-k1/",
+    "captured_at_utc": "2026-10-26T15:46:59.335673+00:00",
+    "raw_image_path": "work/time-controls-deepening/browser/08-replay-running.png",
+    "sha256": "0b86ff9e3c6b116ae5f3bf32192035d84442370e03d99cfcdd3238286a6cf0a3",
+    "image_reviewed": true,
+    "playback_ui": [
+      {
+        "id": "playPauseBtn",
+        "text": "",
+        "aria": "Pause",
+        "value": "",
+        "min": null,
+        "max": null
+      },
+      {
+        "id": "progressRange",
+        "text": "",
+        "aria": "Playback Position — Enter to skip forward, Shift+Enter to skip back",
+        "value": "10",
+        "min": "0",
+        "max": "100"
+      },
+      {
+        "id": "speedNav",
+        "text": ".9x",
+        "aria": "Change playback speed, currently .9x",
+        "value": "",
+        "min": null,
+        "max": null
+      }
+    ],
+    "raw_metadata_path": "work/time-controls-deepening/browser/08-replay-running.json",
+    "raw_metadata_sha256": "b543763a0242a60cf67a0af556c97425bab509c3f8fecd9abb4a42907c3d788b",
+    "raw_html_sha256": "739d64e1a317ebefdc968921d6d1ac81e5ca3dc34631273254c022d9a67b1d72"
+  },
+  {
+    "capture": "09-controlled-pause",
+    "action": "立即点击Pause",
+    "observed_result": "Play、0:46、range=10",
+    "url": "https://www.timeforkids.com/k1/spotlight-on-plants-k1/",
+    "captured_at_utc": "2026-10-26T15:46:59.964266+00:00",
+    "raw_image_path": "work/time-controls-deepening/browser/09-controlled-pause.png",
+    "sha256": "e8e444360ba7ecf36ebf3c0f5ff9c1b504a4362b2295178104065174f0b96e8c",
+    "image_reviewed": true,
+    "playback_ui": [
+      {
+        "id": "playPauseBtn",
+        "text": "",
+        "aria": "Play",
+        "value": "",
+        "min": null,
+        "max": null
+      },
+      {
+        "id": "progressRange",
+        "text": "",
+        "aria": "Playback Position — Enter to skip forward, Shift+Enter to skip back",
+        "value": "10",
+        "min": "0",
+        "max": "100"
+      },
+      {
+        "id": "speedNav",
+        "text": ".9x",
+        "aria": "Change playback speed, currently .9x",
+        "value": "",
+        "min": null,
+        "max": null
+      }
+    ],
+    "raw_metadata_path": "work/time-controls-deepening/browser/09-controlled-pause.json",
+    "raw_metadata_sha256": "d9c4681d250152704612862d71efc81cd70a0b7eaa3626cdbb50bcd209e10efb",
+    "raw_html_sha256": "4769ac75f90aa280acc707169d20eb11cf5cb96c02919694170bead04ec8aacc",
+    "archived_image": "artifacts/time-controls-deepening/browser/09-controlled-pause.png"
+  },
+  {
+    "capture": "10-pause-stability",
+    "action": "再等1.5秒",
+    "observed_result": "仍Play、0:46、range=10，暂停状态稳定",
+    "url": "https://www.timeforkids.com/k1/spotlight-on-plants-k1/",
+    "captured_at_utc": "2026-10-26T15:47:01.848267+00:00",
+    "raw_image_path": "work/time-controls-deepening/browser/10-pause-stability.png",
+    "sha256": "e8e444360ba7ecf36ebf3c0f5ff9c1b504a4362b2295178104065174f0b96e8c",
+    "image_reviewed": true,
+    "playback_ui": [
+      {
+        "id": "playPauseBtn",
+        "text": "",
+        "aria": "Play",
+        "value": "",
+        "min": null,
+        "max": null
+      },
+      {
+        "id": "progressRange",
+        "text": "",
+        "aria": "Playback Position — Enter to skip forward, Shift+Enter to skip back",
+        "value": "10",
+        "min": "0",
+        "max": "100"
+      },
+      {
+        "id": "speedNav",
+        "text": ".9x",
+        "aria": "Change playback speed, currently .9x",
+        "value": "",
+        "min": null,
+        "max": null
+      }
+    ],
+    "raw_metadata_path": "work/time-controls-deepening/browser/10-pause-stability.json",
+    "raw_metadata_sha256": "a84167db98934ade3fb2b381d4ff078fb00ff76b8bc366f5cca81c39a76d2313",
+    "raw_html_sha256": "4769ac75f90aa280acc707169d20eb11cf5cb96c02919694170bead04ec8aacc",
+    "archived_image": "artifacts/time-controls-deepening/browser/10-pause-stability.png"
+  },
+  {
+    "capture": "11-speed-menu-reopened",
+    "action": "点击语速并查找button类型1.25x失败后，再点入口",
+    "observed_result": "本帧未见选项；只读结构核对，不作视觉结论",
+    "url": "https://www.timeforkids.com/k1/spotlight-on-plants-k1/",
+    "captured_at_utc": "2026-10-26T15:47:48.915230+00:00",
+    "raw_image_path": "work/time-controls-deepening/browser/11-speed-menu-reopened.png",
+    "sha256": "e8e444360ba7ecf36ebf3c0f5ff9c1b504a4362b2295178104065174f0b96e8c",
+    "image_reviewed": false,
+    "playback_ui": [
+      {
+        "id": "playPauseBtn",
+        "text": "",
+        "aria": "Play",
+        "value": "",
+        "min": null,
+        "max": null
+      },
+      {
+        "id": "progressRange",
+        "text": "",
+        "aria": "Playback Position — Enter to skip forward, Shift+Enter to skip back",
+        "value": "10",
+        "min": "0",
+        "max": "100"
+      },
+      {
+        "id": "speedNav",
+        "text": ".9x",
+        "aria": "Change playback speed, currently .9x",
+        "value": "",
+        "min": null,
+        "max": null
+      }
+    ],
+    "raw_metadata_path": "work/time-controls-deepening/browser/11-speed-menu-reopened.json",
+    "raw_metadata_sha256": "b1dfe121229c5bf33f2988086fcf4299b48b0512101122f086603cae09576e4b",
+    "raw_html_sha256": "4769ac75f90aa280acc707169d20eb11cf5cb96c02919694170bead04ec8aacc"
+  },
+  {
+    "capture": "12-speed-hover",
+    "action": "尝试悬停语速控件",
+    "observed_result": "错误button选择器仍未命中；只读结构核对，不作视觉结论",
+    "url": "https://www.timeforkids.com/k1/spotlight-on-plants-k1/",
+    "captured_at_utc": "2026-10-26T15:48:18.542741+00:00",
+    "raw_image_path": "work/time-controls-deepening/browser/12-speed-hover.png",
+    "sha256": "e8e444360ba7ecf36ebf3c0f5ff9c1b504a4362b2295178104065174f0b96e8c",
+    "image_reviewed": false,
+    "playback_ui": [
+      {
+        "id": "playPauseBtn",
+        "text": "",
+        "aria": "Play",
+        "value": "",
+        "min": null,
+        "max": null
+      },
+      {
+        "id": "progressRange",
+        "text": "",
+        "aria": "Playback Position — Enter to skip forward, Shift+Enter to skip back",
+        "value": "10",
+        "min": "0",
+        "max": "100"
+      },
+      {
+        "id": "speedNav",
+        "text": ".9x",
+        "aria": "Change playback speed, currently .9x",
+        "value": "",
+        "min": null,
+        "max": null
+      }
+    ],
+    "raw_metadata_path": "work/time-controls-deepening/browser/12-speed-hover.json",
+    "raw_metadata_sha256": "34c72a9efa4da8194e97c71effe8757197e8addc4ae2d2a549a84ce05b20c131",
+    "raw_html_sha256": "4769ac75f90aa280acc707169d20eb11cf5cb96c02919694170bead04ec8aacc"
+  },
+  {
+    "capture": "13-speed-menu-current",
+    "action": "再次点击语速；读取实际role",
+    "observed_result": "菜单显示；选项实际role=radio，不是button",
+    "url": "https://www.timeforkids.com/k1/spotlight-on-plants-k1/",
+    "captured_at_utc": "2026-10-26T15:48:30.970152+00:00",
+    "raw_image_path": "work/time-controls-deepening/browser/13-speed-menu-current.png",
+    "sha256": "656ee515a2e7217f874d8ffe8dab7668cbef472c09fe7fc08f0c94360c0f21eb",
+    "image_reviewed": true,
+    "playback_ui": [
+      {
+        "id": "playPauseBtn",
+        "text": "",
+        "aria": "Play",
+        "value": "",
+        "min": null,
+        "max": null
+      },
+      {
+        "id": "progressRange",
+        "text": "",
+        "aria": "Playback Position — Enter to skip forward, Shift+Enter to skip back",
+        "value": "10",
+        "min": "0",
+        "max": "100"
+      },
+      {
+        "id": "speedNav",
+        "text": ".9x",
+        "aria": "Change playback speed, currently .9x",
+        "value": "",
+        "min": null,
+        "max": null
+      }
+    ],
+    "raw_metadata_path": "work/time-controls-deepening/browser/13-speed-menu-current.json",
+    "raw_metadata_sha256": "b4ca6d84d12908b249d72043e0989d2172e70c76273b3d159e651b91bdd71bbe",
+    "raw_html_sha256": "991b7d5c12b26c866eb2182d1d6b959188bc215aba357cbe8f69ea8054ffb281",
+    "archived_image": "artifacts/time-controls-deepening/browser/13-speed-menu-current.png"
+  },
+  {
+    "capture": "14-speed-selected",
+    "action": "点击radio类型1.25x",
+    "observed_result": "语速文字/aria改1.25x；仍Play、range=10、0:46",
+    "url": "https://www.timeforkids.com/k1/spotlight-on-plants-k1/",
+    "captured_at_utc": "2026-10-26T15:48:40.133195+00:00",
+    "raw_image_path": "work/time-controls-deepening/browser/14-speed-selected.png",
+    "sha256": "fe4212f0b7e5a00da97431de6657a1826b58600f2b4c3da4e0e89eb524d5d6b1",
+    "image_reviewed": true,
+    "playback_ui": [
+      {
+        "id": "playPauseBtn",
+        "text": "",
+        "aria": "Play",
+        "value": "",
+        "min": null,
+        "max": null
+      },
+      {
+        "id": "progressRange",
+        "text": "",
+        "aria": "Playback Position — Enter to skip forward, Shift+Enter to skip back",
+        "value": "10",
+        "min": "0",
+        "max": "100"
+      },
+      {
+        "id": "speedNav",
+        "text": "1.25x",
+        "aria": "Change playback speed, currently 1.25x",
+        "value": "",
+        "min": null,
+        "max": null
+      }
+    ],
+    "raw_metadata_path": "work/time-controls-deepening/browser/14-speed-selected.json",
+    "raw_metadata_sha256": "fea911abca7ff41f8a13fbcaef5f7d9f66ca8e4c15d871fb76be39e0fdb02854",
+    "raw_html_sha256": "58deb224ffa9cf2bd52b25167ee0b3009db8f53859c639d103e66b866f58578c",
+    "archived_image": "artifacts/time-controls-deepening/browser/14-speed-selected.png"
+  },
+  {
+    "capture": "15-seek-forward-paused",
+    "action": "聚焦进度条并按Enter",
+    "observed_result": "range从10变20，仍Play；时间文字变0:08，不统一解释为剩余时间",
+    "url": "https://www.timeforkids.com/k1/spotlight-on-plants-k1/",
+    "captured_at_utc": "2026-10-26T15:48:40.506771+00:00",
+    "raw_image_path": "work/time-controls-deepening/browser/15-seek-forward-paused.png",
+    "sha256": "afe1b87932721db6301d218301152f092d2f7616a19f2ae4867c90c826a21259",
+    "image_reviewed": true,
+    "playback_ui": [
+      {
+        "id": "playPauseBtn",
+        "text": "",
+        "aria": "Play",
+        "value": "",
+        "min": null,
+        "max": null
+      },
+      {
+        "id": "progressRange",
+        "text": "",
+        "aria": "Playback Position — Enter to skip forward, Shift+Enter to skip back",
+        "value": "20",
+        "min": "0",
+        "max": "100"
+      },
+      {
+        "id": "speedNav",
+        "text": "1.25x",
+        "aria": "Change playback speed, currently 1.25x",
+        "value": "",
+        "min": null,
+        "max": null
+      }
+    ],
+    "raw_metadata_path": "work/time-controls-deepening/browser/15-seek-forward-paused.json",
+    "raw_metadata_sha256": "88640aaba559faf3bc73bdb3604a02079a53268d9691060bbce58a736839a348",
+    "raw_html_sha256": "c365d1865a29bcf6727e2d7c00465ece0b675d0633a03b8ecd3a7216a45fb99e",
+    "archived_image": "artifacts/time-controls-deepening/browser/15-seek-forward-paused.png"
+  },
+  {
+    "capture": "16-close",
+    "action": "点击关闭播放器",
+    "observed_result": "显示Read Aloud；隐藏DOM仍含旧进度与语速，不能当可见或已持久保存",
+    "url": "https://www.timeforkids.com/k1/spotlight-on-plants-k1/",
+    "captured_at_utc": "2026-10-26T15:48:40.987365+00:00",
+    "raw_image_path": "work/time-controls-deepening/browser/16-close.png",
+    "sha256": "074c61c0be1db4eaeb14acb347df969c5811a2e8247503246b7d6ed05a61b40a",
+    "image_reviewed": true,
+    "playback_ui": [
+      {
+        "id": "playPauseBtn",
+        "text": "\n                \n                    \n                \n                \n                    \n                        \n                            \n                        \n                    \n                \n                \n                    \n                        \n                            \n                                \n                                    \n                                    \n                                \n                            \n                        \n                    \n                \n            ",
+        "aria": "Play",
+        "value": "",
+        "min": null,
+        "max": null
+      },
+      {
+        "id": "progressRange",
+        "text": "",
+        "aria": "Playback Position — Enter to skip forward, Shift+Enter to skip back",
+        "value": "20",
+        "min": "0",
+        "max": "100"
+      },
+      {
+        "id": "speedNav",
+        "text": "1.25x",
+        "aria": "Change playback speed, currently 1.25x",
+        "value": "",
+        "min": null,
+        "max": null
+      }
+    ],
+    "raw_metadata_path": "work/time-controls-deepening/browser/16-close.json",
+    "raw_metadata_sha256": "2c56dd81cf2929002fb2a827bc067fd19388ad569aa1f566a00a9b5aafa51dc2",
+    "raw_html_sha256": "65399b17056105f7f5cf8b2f4ad636db238ce3eb3d1a6446936487ae456dcd01",
+    "archived_image": "artifacts/time-controls-deepening/browser/16-close.png"
+  },
+  {
+    "capture": "17-reopen",
+    "action": "再次点Read Aloud，等1.2秒",
+    "observed_result": "展开并播放，回标题；range=0、.9x、0:48，未延续20/1.25x",
+    "url": "https://www.timeforkids.com/k1/spotlight-on-plants-k1/",
+    "captured_at_utc": "2026-10-26T15:48:42.626695+00:00",
+    "raw_image_path": "work/time-controls-deepening/browser/17-reopen.png",
+    "sha256": "b94e8476849fe997b7fa2ec5e4dbc43874250aad20254259cee13302feb5f550",
+    "image_reviewed": true,
+    "playback_ui": [
+      {
+        "id": "playPauseBtn",
+        "text": "",
+        "aria": "Pause",
+        "value": "",
+        "min": null,
+        "max": null
+      },
+      {
+        "id": "progressRange",
+        "text": "",
+        "aria": "Playback Position — Enter to skip forward, Shift+Enter to skip back",
+        "value": "0",
+        "min": "0",
+        "max": "100"
+      },
+      {
+        "id": "speedNav",
+        "text": ".9x",
+        "aria": "Change playback speed, currently .9x",
+        "value": "",
+        "min": null,
+        "max": null
+      }
+    ],
+    "raw_metadata_path": "work/time-controls-deepening/browser/17-reopen.json",
+    "raw_metadata_sha256": "4575619c0db8b336ad673647bf5bc6a888243e2cdc5b1cde99e0be5d559e69ff",
+    "raw_html_sha256": "31bc96160d3b53642d085747b43f747350eecdb99c14925ce5edb8da2123e2fb",
+    "archived_image": "artifacts/time-controls-deepening/browser/17-reopen.png"
+  },
+  {
+    "capture": "18-reopen-paused",
+    "action": "立即点Pause",
+    "observed_result": "Play、range=0、.9x、0:48",
+    "url": "https://www.timeforkids.com/k1/spotlight-on-plants-k1/",
+    "captured_at_utc": "2026-10-26T15:48:43.095378+00:00",
+    "raw_image_path": "work/time-controls-deepening/browser/18-reopen-paused.png",
+    "sha256": "0bbb25494042b533f21ca338753b6a164e9b2335667724368decb45acb6851cc",
+    "image_reviewed": true,
+    "playback_ui": [
+      {
+        "id": "playPauseBtn",
+        "text": "",
+        "aria": "Play",
+        "value": "",
+        "min": null,
+        "max": null
+      },
+      {
+        "id": "progressRange",
+        "text": "",
+        "aria": "Playback Position — Enter to skip forward, Shift+Enter to skip back",
+        "value": "0",
+        "min": "0",
+        "max": "100"
+      },
+      {
+        "id": "speedNav",
+        "text": ".9x",
+        "aria": "Change playback speed, currently .9x",
+        "value": "",
+        "min": null,
+        "max": null
+      }
+    ],
+    "raw_metadata_path": "work/time-controls-deepening/browser/18-reopen-paused.json",
+    "raw_metadata_sha256": "04283e2a2bd9d8890f556f05d2396911e3c1b9727b7d0337e76301aed6f053a2",
+    "raw_html_sha256": "54dbd64750e5f75cf065c7237392443f1342301bed732cee09254b1811f9bddd"
+  },
+  {
+    "capture": "19-reload-closed",
+    "action": "刷新并等1.3秒",
+    "observed_result": "播放器收起；此前range已是0，单独此帧不能证明丢失非零位置",
+    "url": "https://www.timeforkids.com/k1/spotlight-on-plants-k1/",
+    "captured_at_utc": "2026-10-26T15:48:54.277942+00:00",
+    "raw_image_path": "work/time-controls-deepening/browser/19-reload-closed.png",
+    "sha256": "a6dce8f77b7878ef99c3e778bcad14fd7ec8af348720af52739d5c7abdee004f",
+    "image_reviewed": true,
+    "playback_ui": [
+      {
+        "id": "playPauseBtn",
+        "text": "\n                \n                    \n                \n                \n                    \n                        \n                            \n                        \n                    \n                \n                \n                    \n                        \n                            \n                                \n                                    \n                                    \n                                \n                            \n                        \n                    \n                \n            ",
+        "aria": "Play",
+        "value": "",
+        "min": null,
+        "max": null
+      },
+      {
+        "id": "progressRange",
+        "text": "",
+        "aria": "Playback Position — Enter to skip forward, Shift+Enter to skip back",
+        "value": "0",
+        "min": "0",
+        "max": "100"
+      },
+      {
+        "id": "speedNav",
+        "text": ".9x",
+        "aria": "Change playback speed, currently .9x",
+        "value": "",
+        "min": null,
+        "max": null
+      }
+    ],
+    "raw_metadata_path": "work/time-controls-deepening/browser/19-reload-closed.json",
+    "raw_metadata_sha256": "7c193748a06922b73b7b75866cf33d7c644180aa84c0c10d58418a07e668a7a3",
+    "raw_html_sha256": "fa4f9cc23f8b9b5dbfdd5ec015f811c2c7332c31bf3f139615c3930322ba79fe"
+  },
+  {
+    "capture": "20-reload-play",
+    "action": "点Read Aloud，等1秒",
+    "observed_result": "Pause、range=0、.9x、0:48",
+    "url": "https://www.timeforkids.com/k1/spotlight-on-plants-k1/",
+    "captured_at_utc": "2026-10-26T15:48:55.747998+00:00",
+    "raw_image_path": "work/time-controls-deepening/browser/20-reload-play.png",
+    "sha256": "b94e8476849fe997b7fa2ec5e4dbc43874250aad20254259cee13302feb5f550",
+    "image_reviewed": true,
+    "playback_ui": [
+      {
+        "id": "playPauseBtn",
+        "text": "",
+        "aria": "Pause",
+        "value": "",
+        "min": null,
+        "max": null
+      },
+      {
+        "id": "progressRange",
+        "text": "",
+        "aria": "Playback Position — Enter to skip forward, Shift+Enter to skip back",
+        "value": "0",
+        "min": "0",
+        "max": "100"
+      },
+      {
+        "id": "speedNav",
+        "text": ".9x",
+        "aria": "Change playback speed, currently .9x",
+        "value": "",
+        "min": null,
+        "max": null
+      }
+    ],
+    "raw_metadata_path": "work/time-controls-deepening/browser/20-reload-play.json",
+    "raw_metadata_sha256": "201150efeb1686d8b04fafe67c0022b7680c5e1e26101c13588847c11f0f83d4",
+    "raw_html_sha256": "4a2adfa2bbd4a9d26dd2f3862280e7706411d0d23503698e43587ab7fefe35ae"
+  },
+  {
+    "capture": "21-reload-pause",
+    "action": "点Pause",
+    "observed_result": "Play、range=0、.9x、0:48",
+    "url": "https://www.timeforkids.com/k1/spotlight-on-plants-k1/",
+    "captured_at_utc": "2026-10-26T15:48:56.157316+00:00",
+    "raw_image_path": "work/time-controls-deepening/browser/21-reload-pause.png",
+    "sha256": "0bbb25494042b533f21ca338753b6a164e9b2335667724368decb45acb6851cc",
+    "image_reviewed": true,
+    "playback_ui": [
+      {
+        "id": "playPauseBtn",
+        "text": "",
+        "aria": "Play",
+        "value": "",
+        "min": null,
+        "max": null
+      },
+      {
+        "id": "progressRange",
+        "text": "",
+        "aria": "Playback Position — Enter to skip forward, Shift+Enter to skip back",
+        "value": "0",
+        "min": "0",
+        "max": "100"
+      },
+      {
+        "id": "speedNav",
+        "text": ".9x",
+        "aria": "Change playback speed, currently .9x",
+        "value": "",
+        "min": null,
+        "max": null
+      }
+    ],
+    "raw_metadata_path": "work/time-controls-deepening/browser/21-reload-pause.json",
+    "raw_metadata_sha256": "9b1cb09160ebfb1314c8a0a8e86977cd1e4e2b10cc72b2b50441fbf9403348a4",
+    "raw_html_sha256": "e3a6caecb0168489c78a2ebc22fd3923833b18ff083793169f8bc836d2e1d6dc"
+  },
+  {
+    "capture": "22-spanish",
+    "action": "点En Espanol，等1.5秒",
+    "observed_result": "URL带lang=es，标题/正文为西语，播放器收起；有In English",
+    "url": "https://www.timeforkids.com/k1/spotlight-on-plants-k1/?lang=es",
+    "captured_at_utc": "2026-10-26T15:48:58.632272+00:00",
+    "raw_image_path": "work/time-controls-deepening/browser/22-spanish.png",
+    "sha256": "dec91c5a42130b26edcae488bdc7dbe14611ead3b3c2f48818cc3b615a7f7308",
+    "image_reviewed": true,
+    "playback_ui": [
+      {
+        "id": "playPauseBtn",
+        "text": "\n                \n                    \n                \n                \n                    \n                        \n                            \n                        \n                    \n                \n                \n                    \n                        \n                            \n                                \n                                    \n                                    \n                                \n                            \n                        \n                    \n                \n            ",
+        "aria": "Play",
+        "value": "",
+        "min": null,
+        "max": null
+      },
+      {
+        "id": "progressRange",
+        "text": "",
+        "aria": "Playback Position — Enter to skip forward, Shift+Enter to skip back",
+        "value": "0",
+        "min": "0",
+        "max": "100"
+      },
+      {
+        "id": "speedNav",
+        "text": ".9x",
+        "aria": "Change playback speed, currently .9x",
+        "value": "",
+        "min": null,
+        "max": null
+      }
+    ],
+    "raw_metadata_path": "work/time-controls-deepening/browser/22-spanish.json",
+    "raw_metadata_sha256": "09d7173229f1fb243c89a3b990808904d32e8ea75f7fac50933973edd2c16bf3",
+    "raw_html_sha256": "95924eb979de8d641f28266d2a041e7029879314cd0aaecf29bc229be396f0ea"
+  },
+  {
+    "capture": "23-spanish-play",
+    "action": "在西语页点Read Aloud，等1.6秒",
+    "observed_result": "Pause、0:57、.9x，西语标题高亮；没有实际听音，不能判断声音语种或质量",
+    "url": "https://www.timeforkids.com/k1/spotlight-on-plants-k1/?lang=es",
+    "captured_at_utc": "2026-10-26T15:49:27.299612+00:00",
+    "raw_image_path": "work/time-controls-deepening/browser/23-spanish-play.png",
+    "sha256": "7718558302789fa143990731095c20b722e73c3968eeb1974927e15f63fe958b",
+    "image_reviewed": true,
+    "playback_ui": [
+      {
+        "id": "playPauseBtn",
+        "text": "",
+        "aria": "Pause",
+        "value": "",
+        "min": null,
+        "max": null
+      },
+      {
+        "id": "progressRange",
+        "text": "",
+        "aria": "Playback Position — Enter to skip forward, Shift+Enter to skip back",
+        "value": "0",
+        "min": "0",
+        "max": "100"
+      },
+      {
+        "id": "speedNav",
+        "text": ".9x",
+        "aria": "Change playback speed, currently .9x",
+        "value": "",
+        "min": null,
+        "max": null
+      }
+    ],
+    "raw_metadata_path": "work/time-controls-deepening/browser/23-spanish-play.json",
+    "raw_metadata_sha256": "5f0c781164e8e3347e44f04b631697087f82544429c06953c208664b1b660c6a",
+    "raw_html_sha256": "2629428ae8cb5623358557d1f6f6c8cf74704726cbd10c1b7e88463e5076bc74",
+    "archived_image": "artifacts/time-controls-deepening/browser/23-spanish-play.png"
+  },
+  {
+    "capture": "24-spanish-pause",
+    "action": "点Pause",
+    "observed_result": "Play、0:57、range=0；只核界面状态",
+    "url": "https://www.timeforkids.com/k1/spotlight-on-plants-k1/?lang=es",
+    "captured_at_utc": "2026-10-26T15:49:27.940121+00:00",
+    "raw_image_path": "work/time-controls-deepening/browser/24-spanish-pause.png",
+    "sha256": "bedcf2e1264eaf83dd63d76722659e00ca618105c225c37a681c5e607acc302c",
+    "image_reviewed": true,
+    "playback_ui": [
+      {
+        "id": "playPauseBtn",
+        "text": "",
+        "aria": "Play",
+        "value": "",
+        "min": null,
+        "max": null
+      },
+      {
+        "id": "progressRange",
+        "text": "",
+        "aria": "Playback Position — Enter to skip forward, Shift+Enter to skip back",
+        "value": "0",
+        "min": "0",
+        "max": "100"
+      },
+      {
+        "id": "speedNav",
+        "text": ".9x",
+        "aria": "Change playback speed, currently .9x",
+        "value": "",
+        "min": null,
+        "max": null
+      }
+    ],
+    "raw_metadata_path": "work/time-controls-deepening/browser/24-spanish-pause.json",
+    "raw_metadata_sha256": "6e0224c8c6f212f5b45514856b0614ffe078b32c85a4645f2146c987e1aaf8f1",
+    "raw_html_sha256": "034a4817fdb2f4ac307d5654344e3675485fb2f7a8e99f6a53edc1ba6dca811a"
+  },
+  {
+    "capture": "25-before-reload-nonzero",
+    "action": "点In English，启动后暂停；进度条Enter三次，选择1.25x",
+    "observed_result": "英文URL带lang=en；Play、range=30、1.25x、0:16，建立非零对照",
+    "url": "https://www.timeforkids.com/k1/spotlight-on-plants-k1/?lang=en",
+    "captured_at_utc": "2026-10-26T15:49:31.374223+00:00",
+    "raw_image_path": "work/time-controls-deepening/browser/25-before-reload-nonzero.png",
+    "sha256": "a3bb7773fde0e498b7644854913e6cf96c2ff5f71f8e96e8f43d0eff341f2f09",
+    "image_reviewed": true,
+    "playback_ui": [
+      {
+        "id": "playPauseBtn",
+        "text": "",
+        "aria": "Play",
+        "value": "",
+        "min": null,
+        "max": null
+      },
+      {
+        "id": "progressRange",
+        "text": "",
+        "aria": "Playback Position — Enter to skip forward, Shift+Enter to skip back",
+        "value": "30",
+        "min": "0",
+        "max": "100"
+      },
+      {
+        "id": "speedNav",
+        "text": "1.25x",
+        "aria": "Change playback speed, currently 1.25x",
+        "value": "",
+        "min": null,
+        "max": null
+      }
+    ],
+    "raw_metadata_path": "work/time-controls-deepening/browser/25-before-reload-nonzero.json",
+    "raw_metadata_sha256": "dfac2105a7dcd9d1ca0ae2db24c3bfafed6a74e0e1964c0b35d79a81ae0a81d3",
+    "raw_html_sha256": "ad0a69b951b58978be568040ebeb2f99baabc0a89c23f5e62f3a346eca33cb13",
+    "archived_image": "artifacts/time-controls-deepening/browser/25-before-reload-nonzero.png"
+  },
+  {
+    "capture": "26-after-reload-nonzero",
+    "action": "刷新，再启动1秒并暂停",
+    "observed_result": "Play、range=0、.9x、0:48；非零位置和语速未恢复",
+    "url": "https://www.timeforkids.com/k1/spotlight-on-plants-k1/?lang=en",
+    "captured_at_utc": "2026-10-26T15:49:34.386104+00:00",
+    "raw_image_path": "work/time-controls-deepening/browser/26-after-reload-nonzero.png",
+    "sha256": "0bbb25494042b533f21ca338753b6a164e9b2335667724368decb45acb6851cc",
+    "image_reviewed": true,
+    "playback_ui": [
+      {
+        "id": "playPauseBtn",
+        "text": "",
+        "aria": "Play",
+        "value": "",
+        "min": null,
+        "max": null
+      },
+      {
+        "id": "progressRange",
+        "text": "",
+        "aria": "Playback Position — Enter to skip forward, Shift+Enter to skip back",
+        "value": "0",
+        "min": "0",
+        "max": "100"
+      },
+      {
+        "id": "speedNav",
+        "text": ".9x",
+        "aria": "Change playback speed, currently .9x",
+        "value": "",
+        "min": null,
+        "max": null
+      }
+    ],
+    "raw_metadata_path": "work/time-controls-deepening/browser/26-after-reload-nonzero.json",
+    "raw_metadata_sha256": "a558a1e5afcdb378a9c2b8e9b6858b85fd65aaa761e4099dbb8375d51eccffbf",
+    "raw_html_sha256": "bac135158ce490c87f0bf3e1d8b6c72b5fe985af3ff02ab0dc7eb2508728c24a",
+    "archived_image": "artifacts/time-controls-deepening/browser/26-after-reload-nonzero.png"
+  },
+  {
+    "capture": "27-search-entry",
+    "action": "点Search",
+    "observed_result": "同网址展开全屏输入层；Enter提交提示；HTML中的原文仍在，不代表可见",
+    "url": "https://www.timeforkids.com/k1/spotlight-on-plants-k1/?lang=en",
+    "captured_at_utc": "2026-10-26T15:50:01.902840+00:00",
+    "raw_image_path": "work/time-controls-deepening/browser/27-search-entry.png",
+    "sha256": "0351fed1bcf1d1bb6eccbaea7c5fd06274ce456ecdc1bed54d380828a04f6a2f",
+    "image_reviewed": true,
+    "playback_ui": [
+      {
+        "id": "playPauseBtn",
+        "text": "",
+        "aria": "Play",
+        "value": "",
+        "min": null,
+        "max": null
+      },
+      {
+        "id": "progressRange",
+        "text": "",
+        "aria": "Playback Position — Enter to skip forward, Shift+Enter to skip back",
+        "value": "0",
+        "min": "0",
+        "max": "100"
+      },
+      {
+        "id": "speedNav",
+        "text": ".9x",
+        "aria": "Change playback speed, currently .9x",
+        "value": "",
+        "min": null,
+        "max": null
+      }
+    ],
+    "raw_metadata_path": "work/time-controls-deepening/browser/27-search-entry.json",
+    "raw_metadata_sha256": "48a05822eeb919e3aa461ad8c6d27eff4287ead668e710c24d4085aa1af12975",
+    "raw_html_sha256": "9d07b01e960518e3c8935945c8de1bfff95a5198051cdfffd1572d4e68c50705",
+    "archived_image": "artifacts/time-controls-deepening/browser/27-search-entry.png"
+  },
+  {
+    "capture": "28-search-plants",
+    "action": "输入plants并Enter，等1.8秒",
+    "observed_result": "进入/k1/?text=plants，K–1选中；首条植物、第二条动物等，有Audio/Spanish标识",
+    "url": "https://www.timeforkids.com/k1/?text=plants",
+    "captured_at_utc": "2026-10-26T15:50:40.081388+00:00",
+    "raw_image_path": "work/time-controls-deepening/browser/28-search-plants.png",
+    "sha256": "5e5582010cc3085a4e82621bb786f95fa68eda912f52f3503d352c4ed8418434",
+    "image_reviewed": true,
+    "playback_ui": [],
+    "raw_metadata_path": "work/time-controls-deepening/browser/28-search-plants.json",
+    "raw_metadata_sha256": "366017ff3f364bbb8e1569c042f8ee948cc64fce75fd8214f28b5e4a2986511e",
+    "raw_html_sha256": "0233419ecec5ec28748fe5f2976bcf1566645a2b4fc9aa74eb7352d386e8476e",
+    "archived_image": "artifacts/time-controls-deepening/browser/28-search-plants.png"
+  },
+  {
+    "capture": "29-search-empty",
+    "action": "首次定位两个同placeholder输入失败；改用searchbox输入zzqvnonexistent并Enter，等1.5秒",
+    "observed_result": "URL和搜索框带该字符串，仍有植物/真菌等普通文章；未见明确无结果提示。文件名不代表空结果",
+    "url": "https://www.timeforkids.com/k1/?text=zzqvnonexistent",
+    "captured_at_utc": "2026-10-26T15:51:44.896401+00:00",
+    "raw_image_path": "work/time-controls-deepening/browser/29-search-empty.png",
+    "sha256": "45c571b941b6ccbe20ed5629c30f0f2301d31a0e9c9189d75188b00fb0e16ce0",
+    "image_reviewed": true,
+    "playback_ui": [],
+    "raw_metadata_path": "work/time-controls-deepening/browser/29-search-empty.json",
+    "raw_metadata_sha256": "4fee55afd426f2fcd5780677331bc32ee619dae87653fb4e3b6de80d584b8da8",
+    "raw_html_sha256": "dc80328521cd9959b339f9f8654ea061f912c7cba22493befa88b2e49fd36b80",
+    "archived_image": "artifacts/time-controls-deepening/browser/29-search-empty.png"
+  },
+  {
+    "capture": "30-search-cleared",
+    "action": "清空可见searchbox并Enter，等1.2秒",
+    "observed_result": "URL text为空，K–1保留；首屏植物/真菌",
+    "url": "https://www.timeforkids.com/k1/?text=",
+    "captured_at_utc": "2026-10-26T15:52:21.528424+00:00",
+    "raw_image_path": "work/time-controls-deepening/browser/30-search-cleared.png",
+    "sha256": "82ca480d3524c7baec4708eb7418376b19512765739cd31d43a5fab4f5b2ac9f",
+    "image_reviewed": true,
+    "playback_ui": [],
+    "raw_metadata_path": "work/time-controls-deepening/browser/30-search-cleared.json",
+    "raw_metadata_sha256": "d94abc48ca85a4b40b8c767fceea367b82c0dec1d3b29de616e98c5294850b07",
+    "raw_html_sha256": "e15ccb5de7d1739df050d6422ff68ebc112324277e267db5e294b9b570708eb0",
+    "archived_image": "artifacts/time-controls-deepening/browser/30-search-cleared.png"
+  },
+  {
+    "capture": "31-return-article",
+    "action": "点击植物文章标题，等1.2秒",
+    "observed_result": "回英文正文顶部，播放器收起；未见已读或任务完成记录",
+    "url": "https://www.timeforkids.com/k1/spotlight-on-plants-k1/",
+    "captured_at_utc": "2026-10-26T15:52:24.067455+00:00",
+    "raw_image_path": "work/time-controls-deepening/browser/31-return-article.png",
+    "sha256": "a6dce8f77b7878ef99c3e778bcad14fd7ec8af348720af52739d5c7abdee004f",
+    "image_reviewed": true,
+    "playback_ui": [
+      {
+        "id": "playPauseBtn",
+        "text": "\n                \n                    \n                \n                \n                    \n                        \n                            \n                        \n                    \n                \n                \n                    \n                        \n                            \n                                \n                                    \n                                    \n                                \n                            \n                        \n                    \n                \n            ",
+        "aria": "Play",
+        "value": "",
+        "min": null,
+        "max": null
+      },
+      {
+        "id": "progressRange",
+        "text": "",
+        "aria": "Playback Position — Enter to skip forward, Shift+Enter to skip back",
+        "value": "0",
+        "min": "0",
+        "max": "100"
+      },
+      {
+        "id": "speedNav",
+        "text": ".9x",
+        "aria": "Change playback speed, currently .9x",
+        "value": "",
+        "min": null,
+        "max": null
+      }
+    ],
+    "raw_metadata_path": "work/time-controls-deepening/browser/31-return-article.json",
+    "raw_metadata_sha256": "76833c017d218107e8c2a73e5761cf5e775781541f999e67e0d5acc4efbb97e4",
+    "raw_html_sha256": "9b0da218197894b621d7b0aa2bbeb678c1e2e007ac33f8a2015adf0cb5d3b48a",
+    "archived_image": "artifacts/time-controls-deepening/browser/31-return-article.png"
+  }
+]

@@ -1,0 +1,6 @@
+Use Control Center to run shortcuts
+You can store your most used shortcuts in Control Center for easy and convenient access.
+Add a shortcut to Control Center
+Open Control Center by swiping down from the top right, or swiping up from the bottom (depending on your device).
+Tap at the top left, then tap Add a Control at the bottom.
+Tap Shortcut, tap Choose, then select which shortcut to run.See alsoIntro to variables in Shortcuts on iPhone or iPad

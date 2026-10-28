@@ -1,0 +1,7 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M053-06,M-053,Smart4 Pro 2.5.0按标题或页码定位笔记,D2,E-IHWD-01,页列表/套索标题/页码入口,无标题、错字、删除标题和返回栈,not_observed,false,cases/M-053-ireader-hardware.md,2026-10-26
+F-M053-07,M-053,Smart4 Pro 2.5.0已同步笔记在手机查看,D2,E-IHWD-01,手机掌阅App笔记本入口；已有同步内容为前提,设备上传完整链、账户、冲突、离线、编辑权限,not_observed,false,cases/M-053-ireader-hardware.md,2026-10-26
+F-M053-08,M-053,Smart4 Pro历史2.5.0更新检查入口,D2,E-IHWD-01,联网检查；历史推送范围,安装确认、失败回滚、数据保留及当前推送版本,not_observed,false,cases/M-053-ireader-hardware.md,2026-10-26
+F-M054-06,M-054,墨案2020未标机型指南：传入与加入书架,D1,E-MOD-03;E-MOD-04,历史USB/FTP/多看WLAN分支及蓝牙内部存储books；蓝牙正文明确不加入书架则多看不显示，文件接收与书架条目分开。,机型未知；USB books/FTP book冲突；书架扫描/发现反馈未描述；蓝牙返回顺序未看图确认；拒绝加入后重加、断传/重名/取消/删除恢复未说明。,not_observed,false,cases/M-054-moaan.md,2026-10-27
+F-M054-07,M-054,墨案历史文件整理/APK入口与inkPalm5应用菜单,D1,E-MOD-05;E-MOD-06;E-MOD-14,历史长按复制/剪切正文写到目标文件夹外面粘贴，位置歧义保留；APK三种取得入口与Apps/download路径，不代表安装完成或当前兼容。,文件移动目标位置需对照未看的GIF；机型、覆盖/剪切中断、未知来源权限、安装失败及卸载数据保留未知；不以第三方作者泛称兼容作保证。,not_observed,false,cases/M-054-moaan.md,2026-10-27
+F-M054-08,M-054,墨案2020未标机型指南：整理笔记并导出PDF,D1,E-MOD-08;E-MOD-09;E-MOD-10;E-MOD-15;E-MOD-16,历史新建保存命名或首项日期菜单改名；页码切4/9格；已保存笔记在列表或缩略图模式经省略号导出PDF至Note。W7/W8仍各自仅旧作者线索。,历史指南机型未归属；返回原笔迹、可编辑原稿/导出副本关系、同名覆盖、导出失败和删除/同步恢复未核。,not_observed,false,cases/M-054-moaan.md,2026-10-27

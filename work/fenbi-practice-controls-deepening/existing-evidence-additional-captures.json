@@ -1,0 +1,39 @@
+[
+  {
+    "evidence_id": "E-FBCD-08",
+    "source_batch": "docs/research/interaction-library/batches/fenbi-controls-deepening-evidence.jsonl",
+    "field": "additional_captures",
+    "before_exists": false,
+    "before": [],
+    "after": [
+      {
+        "checked_on": "2026-10-27",
+        "access_mode": "local_reread_existing_origin_html_no_network",
+        "url": "https://kefu.easemob.com/v1/tenants/8342/knowledge/entries/html/50542",
+        "locator": "标题/2020-07-03署名/9项功能目录",
+        "raw_work_path": "work/fenbi-controls-deepening/kb-50542.html",
+        "raw_sha256": "955fba42fe1f2b61d8e2de83d10bbb4cd0a35a62eca2a5248a784270e12a47ee",
+        "archived_artifact": "artifacts/fenbi-practice-controls-deepening/source-notes.md",
+        "sha256": "b4c7d9ee806473d7b10e6692f60b013e5555c94ef670f780331a6cbc0be154e3",
+        "hands_on": false,
+        "visual_observed": false,
+        "note": "仅复读已保存正文并逐项列目录；具体tenant官方反链与各功能结束恢复仍未知"
+      }
+    ],
+    "append": [
+      {
+        "checked_on": "2026-10-27",
+        "access_mode": "local_reread_existing_origin_html_no_network",
+        "url": "https://kefu.easemob.com/v1/tenants/8342/knowledge/entries/html/50542",
+        "locator": "标题/2020-07-03署名/9项功能目录",
+        "raw_work_path": "work/fenbi-controls-deepening/kb-50542.html",
+        "raw_sha256": "955fba42fe1f2b61d8e2de83d10bbb4cd0a35a62eca2a5248a784270e12a47ee",
+        "archived_artifact": "artifacts/fenbi-practice-controls-deepening/source-notes.md",
+        "sha256": "b4c7d9ee806473d7b10e6692f60b013e5555c94ef670f780331a6cbc0be154e3",
+        "hands_on": false,
+        "visual_observed": false,
+        "note": "仅复读已保存正文并逐项列目录；具体tenant官方反链与各功能结束恢复仍未知"
+      }
+    ]
+  }
+]

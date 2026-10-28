@@ -1,0 +1,186 @@
+{
+  "name": "08-start-coordinate",
+  "at": "2026-10-26T20:52:44.765927+00:00",
+  "url": "https://cdn.britannica.com/11/288011-184-BF60C826/default.html?autoplay=1",
+  "text": "slide: Introduction\nBack\nAudio Description Video\nPause / Play / Replay Video\nMusic",
+  "controls": [
+    {
+      "tag": "BUTTON",
+      "text": "Back",
+      "aria": "Back",
+      "title": "",
+      "id": "acc-6BuTeItHNoY",
+      "visible": true
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Audio Description Video",
+      "aria": "Audio Description Video",
+      "title": "",
+      "id": "acc-62FFgw08erd",
+      "visible": true
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Pause / Play / Replay Video",
+      "aria": "Pause / Play / Replay Video",
+      "title": "",
+      "id": "acc-6OelYfzFlWR",
+      "visible": true
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Music",
+      "aria": "Music",
+      "title": "",
+      "id": "acc-6OAdnqNNzNk",
+      "visible": true
+    },
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": "Let’s go!",
+      "title": "",
+      "id": "acc-5y8tOb92PjA",
+      "visible": true
+    },
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": null,
+      "title": "",
+      "id": "",
+      "visible": false
+    }
+  ],
+  "media": [
+    {
+      "tag": "VIDEO",
+      "paused": true,
+      "time": 0,
+      "duration": 0.04644,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "VIDEO",
+      "paused": false,
+      "time": 1.092243,
+      "duration": 19.249002,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 0.1945,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 0.1945,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 0.1945,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 0.1945,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 0.1945,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 0.1945,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 0.1945,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 0.1945,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 0.1945,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 0.1945,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 0.1945,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 0.1945,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 0.1945,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "AUDIO",
+      "paused": true,
+      "time": 0,
+      "duration": 0.1945,
+      "ended": false,
+      "error": null
+    }
+  ]
+}

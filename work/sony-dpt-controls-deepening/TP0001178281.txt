@@ -1,0 +1,42 @@
+Use the Digital Paper App to change the settings of the Digital Paper.
+Connect the computer to the Digital Paper.
+When changing the settings for the Wi-Fi network, please connect via the USB cable.
+Launch the Digital Paper App on the computer.
+Click [Settings], and set the individual items.
+Setting items
+[Paired Digital Paper]
+Display information for the Digital Paper that has been paired. If pairing with a different Digital Paper, click [Re-pair with Digital Paper].
+[Bluetooth automatic connection] (For Windows)
+When launching the Digital Paper App, set whether or not the Bluetooth-paired Digital Paper is automatically connected.
+[Automatic Notification]
+Set whether Digital Paper automatically checks for software update information via the Internet.
+[Automatic sync]
+When using the Digital Paper App, set whether or not the connected Digital Paper is automatically synced.
+[Interval]
+Set the interval to sync automatically.
+[Note template]
+Add a note template to the Digital Paper, delete a template, or change the name of a template.
+[Wi-Fi of the Digital Paper]
+Set whether or not the Digital Paper is connected via Wi-Fi.
+[Saved Wi-Fi networks]
+Add a Wi-Fi network for the Digital Paper to connect to, or edit/delete the settings for a Wi-Fi network that has already been stored.
+A Wi-Fi network can be set only when Wi-Fi is turned on.
+[General Settings]
+Click [Edit] to edit each item.
+[Username]
+The username that is set here will be listed as the author of annotations.
+[Date format]
+Set the display format for the date.
+[Time format]
+Set the display format for the time.
+[Time zone]
+Set the time zone.
+[Auto sleep]
+Set the amount of time before the Digital Paper enters sleep mode.
+Hint
+A maximum of 20 Wi-Fi networks can be stored to a Digital Paper device.
+Digital Paper supports the security methods WPA2-PSK (AES) and 802.1x EAP (TLS/PEAP). See the instruction manual for your wireless router to confirm whether your router supports the same security methods.
+When this device is connected with the Digital Paper App, the time is automatically set.
+Note
+If paired with another Digital Paper, the sync settings are deleted.
+To pair multiple Digital Paper devices with Digital Paper App for a single user account, make sure to set “Connecting a second and subsequent Digital Paper.”

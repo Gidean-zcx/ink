@@ -1,0 +1,12 @@
+Date and time formats in Shortcuts on iPhone or iPad
+The most convenient and simple date formats in Shortcuts are Short, Medium, and Long:
+Short: Displays only numerical values in the result, as 6/1/17.
+Medium: Displays the three-letter abbreviation of the month and doesn’t use slashes, as Jun 1, 2017.
+Long: Displays the full text of month’s name, as June 1, 2017.
+You can also set the date format to None to exclude date information from the result and display only the time.
+Separately, you can choose a Short, Medium, or Long format for the time of day:
+Short: Displays the time in hours and minutes, as 2:41 PM.
+Medium: Displays the time in hours, minutes, and seconds, as 2:41:36 PM.
+Long: Displays the time in hours, minutes, seconds, and time zone, as 2:41:36 PM PST.
+You can also set the time format to None to exclude time information from the result.
+Note: The formats shown above are specific to the English language and may vary by locale.See alsoIntro to how shortcuts work on iPhone and iPad

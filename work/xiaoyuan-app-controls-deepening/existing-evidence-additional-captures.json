@@ -1,0 +1,200 @@
+[
+  {
+    "evidence_id": "E-XYAI-01",
+    "before": [],
+    "after": [
+      {
+        "name": "home",
+        "url": "https://leo.fbcontent.cn/",
+        "checked_on": "2026-10-27",
+        "access_mode": "anonymous_public_GET_no_login",
+        "status": 200,
+        "final_url": "https://leo.fbcontent.cn/",
+        "content_type": "text/html; charset=utf-8",
+        "raw_work_path": "work/xiaoyuan-app-controls-deepening/raw/home.html",
+        "raw_sha256": "a825be84f376f41adb73a8021e8e8488428e9a990545c010b50fc806f0dda913",
+        "bytes": 15418,
+        "text_work_path": "work/xiaoyuan-app-controls-deepening/raw/home.txt",
+        "text_sha256": "1f0353e4afe24280e4507d61a6cd38ae619b75261033895aa0a1b614d9555711",
+        "archived_artifact": "artifacts/xiaoyuan-app-controls-deepening/source-notes.md",
+        "sha256": "306eeaa31d2b56d9912e4bda80c409c39dad23f98c054edd620f9ec4870a825c",
+        "visual_observed": false,
+        "hands_on": false
+      }
+    ]
+  },
+  {
+    "evidence_id": "E-XYAI-02",
+    "before": [],
+    "after": [
+      {
+        "name": "faq",
+        "url": "https://xykspt.yuanfudao.com/faq",
+        "checked_on": "2026-10-27",
+        "access_mode": "anonymous_public_GET_no_login",
+        "status": 200,
+        "final_url": "https://xykspt.yuanfudao.com/faq",
+        "content_type": "text/html; charset=utf-8",
+        "raw_work_path": "work/xiaoyuan-app-controls-deepening/raw/faq.html",
+        "raw_sha256": "ef461ab11668d43877a337fdc71d0542192739114a160bcaa7b06a5a1cf2a3d9",
+        "bytes": 12768,
+        "text_work_path": "work/xiaoyuan-app-controls-deepening/raw/faq.txt",
+        "text_sha256": "db73b42ed1b021ad1b7740d5ca6bd3ddd13207ee836c6f7c5451a48ac3d2b303",
+        "archived_artifact": "artifacts/xiaoyuan-app-controls-deepening/source-notes.md",
+        "sha256": "306eeaa31d2b56d9912e4bda80c409c39dad23f98c054edd620f9ec4870a825c",
+        "visual_observed": false,
+        "hands_on": false
+      }
+    ]
+  },
+  {
+    "evidence_id": "E-XYAI-03",
+    "before": [],
+    "after": [
+      {
+        "name": "child-policy",
+        "url": "https://solar-online.oss-cn-beijing.aliyuncs.com/solar-user-profile/user-privacy-policy/leo-child-privacy-xyks.html",
+        "checked_on": "2026-10-27",
+        "access_mode": "anonymous_public_GET_no_login",
+        "status": 200,
+        "final_url": "https://solar-online.oss-cn-beijing.aliyuncs.com/solar-user-profile/user-privacy-policy/leo-child-privacy-xyks.html",
+        "content_type": "text/html",
+        "raw_work_path": "work/xiaoyuan-app-controls-deepening/raw/child-policy.html",
+        "raw_sha256": "9e64120f998e60a18653b3334eaac684d5d044bcd116b3e1af4c6af4f705adae",
+        "bytes": 167394,
+        "text_work_path": "work/xiaoyuan-app-controls-deepening/raw/child-policy.txt",
+        "text_sha256": "d39fd92ebcf7ddbea90643d404bbc7c9209b8a2f16c39aaf2d81f3ad321b3bf1",
+        "archived_artifact": "artifacts/xiaoyuan-app-controls-deepening/source-notes.md",
+        "sha256": "306eeaa31d2b56d9912e4bda80c409c39dad23f98c054edd620f9ec4870a825c",
+        "visual_observed": false,
+        "hands_on": false
+      }
+    ]
+  },
+  {
+    "evidence_id": "E-XYAI-04",
+    "before": [],
+    "after": [
+      {
+        "name": "privacy",
+        "url": "https://xyks.yuanfudao.com/common/mobile-privacy-policy",
+        "checked_on": "2026-10-27",
+        "access_mode": "anonymous_public_GET_no_login",
+        "status": 200,
+        "final_url": "https://xyks.yuanfudao.com/common/mobile-privacy-policy",
+        "content_type": "text/html; charset=utf-8",
+        "raw_work_path": "work/xiaoyuan-app-controls-deepening/raw/privacy.html",
+        "raw_sha256": "fbd99b065d8a865af18347c339e37009d68f6db65c513c76ff989e16985cbff4",
+        "bytes": 56241,
+        "text_work_path": "work/xiaoyuan-app-controls-deepening/raw/privacy.txt",
+        "text_sha256": "ecee590e0347cdec26c63814197fe6de8ed1e09566ef3f19f8f0ef436bf32407",
+        "archived_artifact": "artifacts/xiaoyuan-app-controls-deepening/source-notes.md",
+        "sha256": "306eeaa31d2b56d9912e4bda80c409c39dad23f98c054edd620f9ec4870a825c",
+        "visual_observed": false,
+        "hands_on": false
+      }
+    ]
+  },
+  {
+    "evidence_id": "E-XYAI-05",
+    "before": [],
+    "after": [
+      {
+        "name": "store",
+        "url": "https://apps.apple.com/cn/app/id1325419855",
+        "checked_on": "2026-10-27",
+        "access_mode": "anonymous_public_GET_no_login",
+        "status": 200,
+        "final_url": "https://apps.apple.com/cn/app/%E5%B0%8F%E7%8C%BFai-%E5%8E%9F-%E5%B0%8F%E7%8C%BF%E5%8F%A3%E7%AE%97-%E6%A3%80%E6%9F%A5%E4%BD%9C%E4%B8%9A%E7%A5%9E%E5%99%A8/id1325419855",
+        "content_type": "text/html",
+        "raw_work_path": "work/xiaoyuan-app-controls-deepening/raw/store.html",
+        "raw_sha256": "85e9f6fbaee2d3f6da23d0931913a11ecfcd89cc8bccff01f475f7c1655c2ae5",
+        "bytes": 847052,
+        "text_work_path": "work/xiaoyuan-app-controls-deepening/raw/store.txt",
+        "text_sha256": "b7974e65681734c25099e0ee2e75b264206ace41eec1878678dce800c4129e64",
+        "archived_artifact": "artifacts/xiaoyuan-app-controls-deepening/source-notes.md",
+        "sha256": "306eeaa31d2b56d9912e4bda80c409c39dad23f98c054edd620f9ec4870a825c",
+        "visual_observed": false,
+        "hands_on": false,
+        "app_build": "3.145.0",
+        "source_updated_on": "2026-10-26",
+        "note": "最新版本datetime；不改旧快照构建，不采用户评论，不当具体功能验证"
+      }
+    ]
+  },
+  {
+    "evidence_id": "E-XYCD-01",
+    "before": [],
+    "after": [
+      {
+        "evidence_id": "E-XYCD-01",
+        "checked_on": "2026-10-27",
+        "access_mode": "prior_local_HTML_reread",
+        "raw_work_path": "work/chinese-app-depth/xiaoyuan-firsthand.html",
+        "raw_sha256": "05ddc2c133e1d3eaebd4b5d021d864555a8160230e7a7d925e74613970edad82",
+        "text_work_path": "work/xiaoyuan-app-controls-deepening/raw/historical-author.txt",
+        "text_sha256": "d5c9855d70cd04e5b80ec8fc411620bfab0502f63fc13847810c1064083a4b67",
+        "archived_artifact": "artifacts/xiaoyuan-app-controls-deepening/source-notes.md",
+        "sha256": "306eeaa31d2b56d9912e4bda80c409c39dad23f98c054edd620f9ec4870a825c",
+        "note": "原HTML本地复读；13小节正文和选图审查，图片另登记派生证据"
+      }
+    ]
+  },
+  {
+    "evidence_id": "E-XYCD-02",
+    "before": [],
+    "after": [
+      {
+        "checked_on": "2026-10-27",
+        "access_mode": "existing_static_image_local_review",
+        "observed_artifact": "artifacts/xiaoyuan-app-controls-deepening/xy-math-error.png",
+        "observed_sha256": "2be47889b74d6efa2b331464bf831ea970cbc17225eccfc1a6143bdfbe5cdff9",
+        "archived_artifact": "artifacts/xiaoyuan-app-controls-deepening/source-notes.md",
+        "sha256": "306eeaa31d2b56d9912e4bda80c409c39dad23f98c054edd620f9ec4870a825c",
+        "raw_work_path": "work/chinese-app-depth/xy-math-error.png",
+        "raw_sha256": "2be47889b74d6efa2b331464bf831ea970cbc17225eccfc1a6143bdfbe5cdff9",
+        "visual_observed": true,
+        "hands_on": false,
+        "note": "旧图重看及正式归档，沿用E，不新增URL/独立来源"
+      }
+    ]
+  },
+  {
+    "evidence_id": "E-XYCD-03",
+    "before": [],
+    "after": [
+      {
+        "checked_on": "2026-10-27",
+        "access_mode": "existing_static_image_local_review",
+        "observed_artifact": "artifacts/xiaoyuan-app-controls-deepening/xy-dictation.png",
+        "observed_sha256": "8c9485a207dce3340613d6948537960d2cba37aad8ce4466551c48fc6327acbd",
+        "archived_artifact": "artifacts/xiaoyuan-app-controls-deepening/source-notes.md",
+        "sha256": "306eeaa31d2b56d9912e4bda80c409c39dad23f98c054edd620f9ec4870a825c",
+        "raw_work_path": "work/chinese-app-depth/xy-dictation.png",
+        "raw_sha256": "8c9485a207dce3340613d6948537960d2cba37aad8ce4466551c48fc6327acbd",
+        "visual_observed": true,
+        "hands_on": false,
+        "note": "旧图重看及正式归档，沿用E，不新增URL/独立来源"
+      }
+    ]
+  },
+  {
+    "evidence_id": "E-XYCD-04",
+    "before": [],
+    "after": [
+      {
+        "checked_on": "2026-10-27",
+        "access_mode": "existing_static_image_local_review",
+        "observed_artifact": "artifacts/xiaoyuan-app-controls-deepening/xy-speaking.png",
+        "observed_sha256": "263c336eb5a03a418dada21a1d28ef3a807117d4c251348a1822639f70666136",
+        "archived_artifact": "artifacts/xiaoyuan-app-controls-deepening/source-notes.md",
+        "sha256": "306eeaa31d2b56d9912e4bda80c409c39dad23f98c054edd620f9ec4870a825c",
+        "raw_work_path": "work/chinese-app-depth/xy-speaking.png",
+        "raw_sha256": "263c336eb5a03a418dada21a1d28ef3a807117d4c251348a1822639f70666136",
+        "visual_observed": true,
+        "hands_on": false,
+        "note": "旧图重看及正式归档，沿用E，不新增URL/独立来源"
+      }
+    ]
+  }
+]

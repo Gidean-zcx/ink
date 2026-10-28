@@ -1,0 +1,19 @@
+How To Manage Location Sharing on Mudita Kompakt
+Modified on: Sat, 3 Oct, 2026 at 8:39 AM
+Kompakt allows you to either turn all location sharing off or on, or manage location sharing for individual apps.
+To turn all location sharing off or on: 
+Press the Control Center button
+Tap Settings icon 
+Tap Location Sharing 
+Tap the Toggle switch to turn location sharing for all apps off or on
+To manage location sharing for individual apps:
+Press the Control Center button
+Tap Settings icon 
+Tap Location Sharing 
+Select the app you want to manage
+Select the level of sharing you want
+Was this article helpful?
+ No
+ Yes
+That’s Great!
+Thank you for your feedback

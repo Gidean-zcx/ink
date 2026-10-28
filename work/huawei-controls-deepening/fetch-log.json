@@ -1,0 +1,86 @@
+[
+  {
+    "file": "support-cn.html",
+    "url": "https://consumer.huawei.com/cn/support/tablets/matepad-paper/",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "final_url": "https://consumer.huawei.com/cn/support/tablets/matepad-paper/",
+    "content_type": "text/html; charset=UTF-8",
+    "raw_work_path": "work/huawei-controls-deepening/support-cn.html",
+    "raw_sha256": "41ac191692025171fe1dbd0bba61a36ca444e4ed75ab99e12c176fa85f41d329",
+    "bytes": 153652,
+    "article_body": false
+  },
+  {
+    "file": "support-en.html",
+    "url": "https://consumer.huawei.com/en/support/tablets/matepad-paper/",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "final_url": "https://consumer.huawei.com/en/support/tablets/matepad-paper/",
+    "content_type": "text/html;charset=UTF-8",
+    "raw_work_path": "work/huawei-controls-deepening/support-en.html",
+    "raw_sha256": "83eccfdf05f5b6310d6ab69197a55b3cbdf79732a60aba84f86e4a730a3c8653",
+    "bytes": 144896,
+    "article_body": false
+  },
+  {
+    "file": "help-15931676.html",
+    "url": "https://consumer.huawei.com/cn/support/content/zh-cn15931676/",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "final_url": "https://consumer.huawei.com/cn/support/content/zh-cn15931676/",
+    "content_type": "text/html; charset=UTF-8",
+    "raw_work_path": "work/huawei-controls-deepening/help-15931676.html",
+    "raw_sha256": "166ce30c41aaec226e183018fb2ffd221af2e95bd2952666f1952af12d38ee43",
+    "bytes": 147473,
+    "article_body": true
+  },
+  {
+    "file": "help-15879275.html",
+    "url": "https://consumer.huawei.com/cn/support/content/zh-cn15879275/",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "final_url": "https://consumer.huawei.com/cn/support/content/zh-cn15879275/",
+    "content_type": "text/html; charset=UTF-8",
+    "raw_work_path": "work/huawei-controls-deepening/help-15879275.html",
+    "raw_sha256": "3df582d497adb827a0fee312e410d0c30564f3074aa4aefa9696776e4125f1bf",
+    "bytes": 137434,
+    "article_body": true
+  },
+  {
+    "file": "help-16009712.html",
+    "url": "https://consumer.huawei.com/cn/support/content/zh-cn16009712/",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "final_url": "https://consumer.huawei.com/cn/support/content/zh-cn16009712/",
+    "content_type": "text/html; charset=UTF-8",
+    "raw_work_path": "work/huawei-controls-deepening/help-16009712.html",
+    "raw_sha256": "433fc20f5b8e2236c51c20be3bcd904bdc00b695494c6f1f0a2d3f6ebaf4a708",
+    "bytes": 143990,
+    "article_body": true
+  },
+  {
+    "file": "help-15898848.html",
+    "url": "https://consumer.huawei.com/cn/support/content/zh-cn15898848/",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "final_url": "https://consumer.huawei.com/cn/support/content/zh-cn15898848/",
+    "content_type": "text/html; charset=UTF-8",
+    "raw_work_path": "work/huawei-controls-deepening/help-15898848.html",
+    "raw_sha256": "78d9e404d78a178836f7a0f173e7a566b79dd9b898b03c09d93b88b211ab3958",
+    "bytes": 143296,
+    "article_body": true
+  },
+  {
+    "file": "help-16086936.html",
+    "url": "https://consumer.huawei.com/cn/support/content/zh-cn16086936/",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "final_url": "https://consumer.huawei.com/cn/support/content/zh-cn16086936/",
+    "content_type": "text/html; charset=UTF-8",
+    "raw_work_path": "work/huawei-controls-deepening/help-16086936.html",
+    "raw_sha256": "9f160be407598807dcf0a04de01cb8eecda77d67c12d8e3e5b4309c25820dcae",
+    "bytes": 138199,
+    "article_body": true
+  }
+]

@@ -1,0 +1,2 @@
+About date and time formatting in Shortcuts on iPhone or iPad
+When building shortcuts, you may encounter situations where you want to format a date into text. Shortcuts offers a Format Date action for this purpose. Additionally, date and time formatting can be set in a variable.See alsoIntro to how shortcuts work on iPhone and iPad

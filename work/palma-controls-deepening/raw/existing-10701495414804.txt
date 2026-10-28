@@ -1,0 +1,28 @@
+In this article, you will learn more about how to check the progress of reading, jump to a specific page, use Text-to-Speech and more settings. All of them are in the
+Progress
+tab at the bottom of NeoReader.
+To access the Progress tab, do the following:
+In NeoReader, tap the center area to display the main menu.
+Tap the
+Progress
+tab.
+Here you can jump to a specific page by dragging the slider, tapping the Previous Chapter / Next Chapter button, or typing in a page number.
+And you can use more features in this tab:
+Prev View & Next View
+: Here you can tap the Prev View button to move one step back to the previously viewed page, or tap the Next View button to move forward to the currently viewed page again. These functions are especially useful when you need to read between two, or even multiple, specific pages repeatedly.
+Text-to-Speech (
+TTS
+)
+: Here you can use the TTS service by Google, Baidu or other engines with your preferred settings.
+Auto Page-Turn
+: Here you can use the Auto Page-Turn function with your preferred settings.
+Thumbnail View
+: Here you can use Thumbnail View to quickly browse the book and locate a specific page.
+Blank Page
+: Here you can add blank pages in PDF documents for taking notes. The pages you added will be embedded in the document, which means you can export a PDF with your notes. You can delete unwanted blank pages in
+Preview
+. In addition, you can also
+delete
+added pages by tapping the icon next to the bookmark.
+Note
+: Only models that support stylus can add blank pages in PDF.

@@ -1,0 +1,6 @@
+Handling timestamps using Format Date in Shortcuts on iPhone or iPad
+Some time and date information in some API responses appear as long numbers with many digits. This is because the time is formatted in UNIX time (or Epoch time), which represents the time as the number of seconds that have elapsed since 00:00:00 UTC, Thursday, January 1, 1970.
+UNIX time is used as a standard for all computers as a way to measure time from the same spot, or the start date of Coordinated Universal Time (UTC), and is also considered the birthday of the UNIX operating system. In Shortcuts, you can convert from the UNIX time format to a more human-readable time format by using the Date, Adjust Date, and Format Date actions.
+The Date action is set to 00:00:00 UTC Jan 1, 1970. Add the UNIX Time variable to the UTC date to get the adjusted date. Next, use Format Date to remove the time component (as they are all 00:00:00).
+Note: Other APIs might use other time formats such as ISO 8601. For more information, see About date and time formatting in Shortcuts on iPhone or iPad.
+Not all apps, services, and content are available in all countries or regions.

@@ -1,0 +1,89 @@
+[
+  {
+    "file": "docs/research/interaction-library/batches/quizlet-controls-deepening-coverage.csv",
+    "before": {
+      "flow_id": "F-M021-12",
+      "product_id": "M-021",
+      "task": "AI Practice Test 生成与作答",
+      "depth": "D2",
+      "evidence_ids": "E-QZCD-16",
+      "known_branches": "资料/卡组→生成→题数题型计时→作答→提交看分数；手机字符限制、地区年龄/套餐条件；标题/权限可改",
+      "gaps": "生成题干和答案校订、重生成覆盖、计时到零、暂停续做及删除恢复未知；不套普通 Test 规则",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-021-quizlet.md",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "flow_id": "F-M021-12",
+      "product_id": "M-021",
+      "task": "AI Practice Test 生成与作答",
+      "depth": "D2",
+      "evidence_ids": "E-QZCD-16;E-QZAS-02",
+      "known_branches": "资料/卡组→生成→题数题型计时→作答→提交看分数；手机字符限制、地区年龄/套餐条件；标题/权限可改；音频帮助明确不能直接由音频生成Practice Tests",
+      "gaps": "生成题干和答案校订、重生成覆盖、计时到零、暂停续做及删除恢复未知；不套普通 Test 规则；不推导通过其他中间对象可绕过此输入限制",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-021-quizlet.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "file": "docs/research/interaction-library/batches/dictionary-coverage.csv",
+    "before": {
+      "flow_id": "F-M021-01",
+      "product_id": "M-021",
+      "task": "AI资料生成与预览校订",
+      "depth": "D2",
+      "evidence_ids": "E-QZLT-01;E-QZMW-01;E-QZMW-05",
+      "known_branches": "Smart Assist手动/AI切换；外部Claude/ChatGPT连接后对话生成翻卡，打开Quizlet进一步编辑学习",
+      "gaps": "生成失败、来源校验；外部AI账户归属、可见性、保存回执、重复请求与断开连接后果未知",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-021-quizlet.md",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "flow_id": "F-M021-01",
+      "product_id": "M-021",
+      "task": "AI资料生成与预览校订",
+      "depth": "D2",
+      "evidence_ids": "E-QZLT-01;E-QZMW-01;E-QZMW-05;E-QZAS-06",
+      "known_branches": "Smart Assist手动/AI切换；外部Claude/ChatGPT连接后对话生成翻卡，打开Quizlet进一步编辑学习；Superhuman Go首次授权，选中文字/文档/符合条件标签页，打开Quizlet进一步处理",
+      "gaps": "生成失败、来源校验；外部AI账户归属、可见性、保存回执、重复请求与断开连接后果未知；标签页资格、授权范围与保存/撤销未知",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-021-quizlet.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "file": "docs/research/interaction-library/batches/dictionary-coverage.csv",
+    "before": {
+      "flow_id": "F-M021-02",
+      "product_id": "M-021",
+      "task": "Study Guide生成与可见性",
+      "depth": "D2",
+      "evidence_ids": "E-QZLT-02;E-QZCD-08",
+      "known_branches": "地区年龄/免费额度；指南与生成卡组各管可见性，卡组设置与年龄例外另有正文",
+      "gaps": "指南正文或生成题目逐项编辑、源更新、重生成覆盖、删指南与卡组的联动/恢复未知",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-021-quizlet.md",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "flow_id": "F-M021-02",
+      "product_id": "M-021",
+      "task": "Study Guide生成与可见性",
+      "depth": "D2",
+      "evidence_ids": "E-QZLT-02;E-QZCD-08;E-QZAS-02",
+      "known_branches": "地区年龄/免费额度；指南与生成卡组各管可见性，卡组设置与年龄例外另有正文；音频录制/上传→处理→指南和卡组；上传中断留本机草稿可继续，错语言需新建重传",
+      "gaps": "指南正文或生成题目逐项编辑、源更新、重生成覆盖、删指南与卡组的联动/恢复未知；录音中断/强退/卸载、逐字转写校订及重建后的旧对象关系未知",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-021-quizlet.md",
+      "checked_on": "2026-10-27"
+    }
+  }
+]

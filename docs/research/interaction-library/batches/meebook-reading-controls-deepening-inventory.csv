@@ -1,0 +1,21 @@
+item_id,product_id,functional_area,evidence_ids,flow_ids,review_status,gap,checked_on
+MRCD-01,M-057,下拉刷新模式,E-MRCD-01,F-M057-07,historical_report_or_project_document_text_only,范围与未核结果见来源摘记；非实机/全功能目录,2026-10-27
+MRCD-02,M-057,顶栏实际模式,E-MRCD-01,F-M057-07,historical_report_or_project_document_text_only,范围与未核结果见来源摘记；非实机/全功能目录,2026-10-27
+MRCD-03,M-057,按App优化与不一致报告,E-MRCD-01,F-M057-07,historical_report_or_project_document_text_only,范围与未核结果见来源摘记；非实机/全功能目录,2026-10-27
+MRCD-04,M-057,Hide Store入口,E-MRCD-01,,historical_report_or_project_document_text_only,范围与未核结果见来源摘记；非实机/全功能目录,2026-10-27
+MRCD-05,M-057,首页样式/Read返回,E-MRCD-01,,historical_report_or_project_document_text_only,范围与未核结果见来源摘记；非实机/全功能目录,2026-10-27
+MRCD-06,M-057,原生Notes范围,E-MRCD-01,F-M057-05,historical_report_or_project_document_text_only,范围与未核结果见来源摘记；非实机/全功能目录,2026-10-27
+MRCD-07,M-057,自制摘录工具排除,E-MRCD-01,F-M057-05,historical_report_or_project_document_text_only,范围与未核结果见来源摘记；非实机/全功能目录,2026-10-27
+MRCD-08,M-057,Wi-Fi地址实例,E-MRCD-01,F-M057-02,historical_report_or_project_document_text_only,范围与未核结果见来源摘记；非实机/全功能目录,2026-10-27
+MRCD-09,M-057,Factory reset两入口,E-MRCD-01,F-M057-06,historical_report_or_project_document_text_only,范围与未核结果见来源摘记；非实机/全功能目录,2026-10-27
+MRCD-10,M-057,语言/设备构建差异,E-MRCD-01,,historical_report_or_project_document_text_only,范围与未核结果见来源摘记；非实机/全功能目录,2026-10-27
+MRCD-11,M-057,按键失效复现步骤,E-MRCD-02,F-M057-04,historical_report_or_project_document_text_only,范围与未核结果见来源摘记；非实机/全功能目录,2026-10-27
+MRCD-12,M-057,92/93与291/292不等同,E-MRCD-02,F-M057-04,historical_report_or_project_document_text_only,范围与未核结果见来源摘记；非实机/全功能目录,2026-10-27
+MRCD-13,M-057,反馈与关闭非代码修复,E-MRCD-02,F-M057-04,historical_report_or_project_document_text_only,范围与未核结果见来源摘记；非实机/全功能目录,2026-10-27
+MRCD-14,M-057,event_map.lua,E-MRCD-03,F-M057-04,historical_report_or_project_document_text_only,范围与未核结果见来源摘记；非实机/全功能目录,2026-10-27
+MRCD-15,M-057,查实际事件键,E-MRCD-03,F-M057-04,historical_report_or_project_document_text_only,范围与未核结果见来源摘记；非实机/全功能目录,2026-10-27
+MRCD-16,M-057,Android厂商差异,E-MRCD-04,F-M057-04,historical_report_or_project_document_text_only,范围与未核结果见来源摘记；非实机/全功能目录,2026-10-27
+MRCD-17,M-057,Home行为范围,E-MRCD-04,F-M057-04,historical_report_or_project_document_text_only,范围与未核结果见来源摘记；非实机/全功能目录,2026-10-27
+MRCD-18,M-057,外部书库打开KOReader,E-MRCD-05,F-M057-05,historical_report_or_project_document_text_only,范围与未核结果见来源摘记；非实机/全功能目录,2026-10-27
+MRCD-19,M-057,前台App限制的外部滑动映射,E-MRCD-05,F-M057-04,historical_report_or_project_document_text_only,范围与未核结果见来源摘记；非实机/全功能目录,2026-10-27
+MRCD-20,M-057,映射保存/复制反向,E-MRCD-05,F-M057-04,historical_report_or_project_document_text_only,范围与未核结果见来源摘记；非实机/全功能目录,2026-10-27

@@ -1,0 +1,43 @@
+In this article, you will learn how to adjust the layout of fixed formats, including PDF, DJVU, CBR, CBZ, PPT, PPTX, etc. You can get a tailored reading experience via settings in the Style tab and Layout tab within NeoReader.
+ 
+ [image:1] 
+ 
+PDF Reading Theme
+In Firmware V4.1, there are five PDF reading themes in NeoReader: Original, Clear View, Scrolling View, Dual-Page View, and Customize. Users can switch between different reading themes with one tap based on their needs.
+Original: Displays the PDF in its original layout, preserving original margins and formatting.
+Clear View: Slightly adjusts the layout and margins to optimize readability.
+Scrolling View: Displays pages in a continuous vertical column. Connecting your device with a mouse, you can scroll with the scroll wheel.
+Dual-Page View: Display two pages side by side.
+Customize: You can define and save your preferred reading settings.
+ 
+Enhance Text/Image
+You can drag the slider or enter a value to bolden or enhance the text and the dark tones of the image.
+ 
+Zoom
+You can customize your reading view by choosing from various zoom modes or adjusting the zoom manually.
+1. Zoom Mode
+Style tab >Select a reading theme > Zoom Mode
+Fit to Screen: Automatically crops the view to fit the full page.
+Fit to Width: Automatically crops the view to fit the screen width.
+Original: Display the PDF in its original layout.
+2. Manual Zoom
+Pinch-to-zoom: Tap the Gestures icon in the Floating Toolbar > Enable Pinch-to-zoom. You can now use two fingers to zoom in/out.
+Marquee Zoom: Tap the Marquee Zoom icon in the Floating Toolbar >Select a specific area to zoom in.
+ 
+Layout
+In Firmware V4.1, the Layout tab within NeoReader appears only when you are reading fixed layout formats like PDF. You can choose different modes or reflow to get a better reading experience. Customize each setting by tapping each mode or reflow again.
+ [image:2] 
+ [image:3] 
+Original: This mode is designed for documents that are already clear and have well-balanced page margins.
+Extract Text: This mode is designed for text-dense documents such as journals, academic papers, and newspapers.
+Comic Mode: This mode is designed for comic or manga files read from right to left.
+Article Mode: This mode is designed for articles with more than one column on a page.
+Crop/Custom: Here you can customize your subpage division settings, such as pages, blocks, or reading order.
+Note: You may need to try different modes or fine-tune the settings to find the best fit for your specific document.
+ 
+PDF OCR
+OCR works in the background while you read PDFs, so you can continue turning pages and annotating without any wait. With Firmware V4.1, Crop OCR has been added alongside the original Page OCR. OCR any selected area without a full-page scan. Extract exactly what you need and then copy, translate, or share the result instantly. Perfect for scanned books, charts, or images with embedded text.
+Online/Offline: Online recognition, limited to English and Chinese, provides higher accuracy with a daily quota of 300 pages. Offline recognition supports 30+ languages with no page limit.
+Format: You can choose the horizontal or vertical layout.
+Page Count: You can select the start and end pages for recognition.
+ [image:4]

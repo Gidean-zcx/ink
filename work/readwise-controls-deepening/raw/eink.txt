@@ -1,0 +1,16 @@
+Using Reader on e-ink devices
+Can I use Reader on my e-ink device?
+You can use Reader on any e-ink device that runs Android and has access to the Google Play Store. This includes devices such as the Daylight Computer or any of the BOOX tablets, as well as a variety of others.
+To install Reader on your device, navigate to the Google Play Store and search for Readwise Reader.
+Does Reader have special settings for e-ink devices?
+If Reader detects that you're using an e-ink device, it will automatically turn on E-ink Mode. This mode includes a handful of settings to optimize Reader's performance and appearance for e-ink.
+Depending on your device, the default settings may be different. For example, the Daylight Computer has a very high refresh rate and therefore doesn't automatically turn off the motion reduction settings.
+To turn E-ink Mode on manually, go to Account Settings > E-ink Mode. From there, you can use the main toggle at the top to turn on or off all of the settings at once. If you'd like to only turn on some of the settings, keep the E-ink Mode toggle off and toggle the other settings as desired.
+Reduce motion — Turns off a number of animations throughout the app to improve performance and reduce e-ink ghosting.
+Reduce page animations — Turns off animations when swiping between pages in paged scroll mode.
+High contrast — Increases the contrast of UI elements to make them more distinct on low-res or grayscale displays.
+Use volume buttons to turn pages — Allows you to use your device's built-in volume buttons to navigate forward and backward while reading.
+Want to elevate books over other content?
+Check out our guide for optimizing your Reader setup so that long-form reading is front and center.
+Why does Reader always need to reload when I open my BOOX?
+By default, BOOX devices "freeze" apps when the device sleeps, which sends Reader back to its home screen and means you have to relaunch the app and navigate back to your reading spot. To keep Reader in memory so it resumes instantly, go to Settings > Apps and Notifications > Freeze Settings and set Readwise Reader to Off.

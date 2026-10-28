@@ -1,0 +1,91 @@
+try{ NetworkTracking.init('/_ui/networks/tracking/NetworkTrackingServlet', 'network', 'null'); }catch(x){}try{ NetworkTracking.logPageView();}catch(x){}(function(UITheme) {
+UITheme.getUITheme = function() {
+return UserContext.uiTheme;
+};
+}(window.UITheme = window.UITheme || {}));
+Login | Forgot Your Password?
+if(!window.sfdcPage) { window.sfdcPage = new ApexDetailPage(); }UserContext.initialize({"ampm":["AM","PM"],"isAccessibleMode":false,"salesforceURL":"https://support.remarkable.com?refURL=http%3A%2F%2Fsupport.remarkable.com%2Farticles%2FKnowledge%2FConvert-to-Notebook","dateFormat":"dd.MM.yyyy","dayPeriods":[],"language":"en_US","locale":"no_NO","enableLoggingInAuraAlohaFrameNavigator":true,"dateTimeFormat":"dd.MM.yyyy, HH:mm","labelLastModified":"1789190098000","today":"26.10.2026, 18:11","userPreferences":[{"index":112,"name":"HideInlineEditSplash","value":false},{"index":114,"name":"OverrideTaskSendNotification","value":false},{"index":115,"name":"DefaultTaskSendNotification","value":false},{"index":119,"name":"HideUserLayoutStdFieldInfo","value":false},{"index":116,"name":"HideRPPWarning","value":false},{"index":87,"name":"HideInlineSchedulingSplash","value":false},{"index":88,"name":"HideCRUCNotification","value":false},{"index":89,"name":"HideNewPLESplash","value":false},{"index":90,"name":"HideNewPLEWarnIE6","value":false},{"index":122,"name":"HideOverrideSharingMessage","value":false},{"index":91,"name":"HideProfileILEWarn","value":false},{"index":93,"name":"HideProfileElvVideo","value":false},{"index":97,"name":"ShowPicklistEditSplash","value":false},{"index":92,"name":"HideDataCategorySplash","value":false},{"index":128,"name":"ShowDealView","value":false},{"index":129,"name":"HideDealViewGuidedTour","value":false},{"index":132,"name":"HideKnowledgeFirstTimeSetupMsg","value":false},{"index":104,"name":"DefaultOffEntityPermsMsg","value":false},{"index":135,"name":"HideNewCsnSplash","value":false},{"index":101,"name":"HideBrowserWarning","value":false},{"index":139,"name":"HideDashboardBuilderGuidedTour","value":false},{"index":140,"name":"HideSchedulingGuidedTour","value":false},{"index":180,"name":"HideReportBuilderGuidedTour","value":false},{"index":183,"name":"HideAssociationQueueCallout","value":false},{"index":194,"name":"HideQTEBanner","value":false},{"index":270,"name":"HideIDEGuidedTour","value":false},{"index":282,"name":"HideQueryToolGuidedTour","value":false},{"index":196,"name":"HideCSIGuidedTour","value":false},{"index":271,"name":"HideFewmetGuidedTour","value":false},{"index":272,"name":"HideEditorGuidedTour","value":false},{"index":205,"name":"HideApexTestGuidedTour","value":false},{"index":206,"name":"HideSetupProfileHeaderTour","value":false},{"index":207,"name":"HideSetupProfileObjectsAndTabsTour","value":false},{"index":213,"name":"DefaultOffArticleTypeEntityPermMsg","value":false},{"index":214,"name":"HideSelfInfluenceGetStarted","value":false},{"index":215,"name":"HideOtherInfluenceGetStarted","value":false},{"index":216,"name":"HideFeedToggleGuidedTour","value":false},{"index":268,"name":"ShowChatterTab178GuidedTour","value":false},{"index":275,"name":"HidePeopleTabDeprecationMsg","value":false},{"index":276,"name":"HideGroupTabDeprecationMsg","value":false},{"index":224,"name":"HideUnifiedSearchGuidedTour","value":false},{"index":226,"name":"ShowDevContextMenu","value":false},{"index":227,"name":"HideWhatRecommenderForActivityQueues","value":false},{"index":228,"name":"HideLiveAgentFirstTimeSetupMsg","value":false},{"index":232,"name":"HideGroupAllowsGuestsMsgOnMemberWidget","value":false},{"index":233,"name":"HideGroupAllowsGuestsMsg","value":false},{"index":234,"name":"HideWhatAreGuestsMsg","value":false},{"index":235,"name":"HideNowAllowGuestsMsg","value":false},{"index":236,"name":"HideSocialAccountsAndContactsGuidedTour","value":false},{"index":237,"name":"HideAnalyticsHomeGuidedTour","value":false},{"index":238,"name":"ShowQuickCreateGuidedTour","value":false},{"index":245,"name":"HideFilePageGuidedTour","value":false},{"index":250,"name":"HideForecastingGuidedTour","value":false},{"index":251,"name":"HideBucketFieldGuide","value":false},{"index":263,"name":"HideSmartSearchCallOut","value":false},{"index":273,"name":"ShowForecastingQuotaAttainment","value":false},{"index":280,"name":"HideForecastingQuotaColumn","value":false},{"index":301,"name":"HideManyWhoGuidedTour","value":false},{"index":298,"name":"HideFileSyncBannerMsg","value":false},{"index":299,"name":"HideTestConsoleGuidedTour","value":false},{"index":302,"name":"HideManyWhoInlineEditTip","value":false},{"index":303,"name":"HideSetupV2WelcomeMessage","value":false},{"index":312,"name":"ForecastingShowQuantity","value":false},{"index":313,"name":"HideDataImporterIntroMsg","value":false},{"index":314,"name":"HideEnvironmentHubLightbox","value":false},{"index":316,"name":"HideSetupV2GuidedTour","value":false},{"index":317,"name":"HideFileSyncMobileDownloadDialog","value":false},{"index":322,"name":"HideEnhancedProfileHelpBubble","value":false},{"index":328,"name":"ForecastingHideZeroRows","value":false},{"index":330,"name":"HideEmbeddedComponentsFeatureCallout","value":false},{"index":341,"name":"HideDedupeMatchResultCallout","value":false},{"index":340,"name":"HideS1BrowserUI","value":true},{"index":346,"name":"HideS1Banner","value":false},{"index":358,"name":"HideEmailVerificationAlert","value":false},{"index":354,"name":"HideLearningPathModal","value":false},{"index":359,"name":"HideAtMentionsHelpBubble","value":false},{"index":368,"name":"LightningExperiencePreferred","value":true},{"index":373,"name":"PreviewLightning","value":false},{"index":281,"name":"HideMSPPopup","value":false}],"networkId":"0DB7Q000000bqvW","uiTheme":"Theme3","uiSkin":"Theme3","userName":"support_web@00d7q000002qcc5uam.org.force.com","userId":"0057Q000006iZrQ","isCurrentlySysAdminSU":false,"renderMode":"RETRO","startOfWeek":"2","vfDomainPattern":"getremarkable--(?:[^.]+).vf.force.com","auraDomain":"getremarkable.lightning.force.com","useNativeAlertConfirmPrompt":false,"orgPreferences":[{"index":257,"name":"TabOrganizer","value":true},{"index":113,"name":"GroupTasks","value":true}],"isDefaultNetwork":false,"timeFormat":"HH:mm"});
+Convert to NotebookPrintable View
+« Go Back
+Information
+Properties
+Information
+Title
+Convert to Notebook
+URL Name
+Convert-to-Notebook
+Summary
+Description
+Import documents as notebooks to add space for your thoughts, edit text, and develop ideas. Works with plain text and Word files, as well as Google Docs.
+This allows you to easily review and refine your work directly on your paper tablet, without the distractions of a computer.
+Now available in beta for Connect subscribers.
+j_id0__SiteTemplate__j_id17__j_id18__j_id25__j_id26__j_id387__0__j_id390__3__j_id398 = window.onload; window.onload=function() { if (j_id0__SiteTemplate__j_id17__j_id18__j_id25__j_id26__j_id387__0__j_id390__3__j_id398!= null) j_id0__SiteTemplate__j_id17__j_id18__j_id25__j_id26__j_id387__0__j_id390__3__j_id398();};
+Time Estimate
+Article Body
+Here's how to use this feature:
+Import via my.remarkable.com
+Go to my.remarkable.com and log in.
+Click My Files in the menu in the upper-left corner.
+Drag a file into the list or click Import and select it.
+You’ll see a new notebook in your library. Open the file to read or edit it on your paper tablet.
+Import from storage integrations on your paper tablet
+You can also import files directly on your paper tablet using storage integrations (such as Google Drive, Dropbox, or OneDrive).
+On your paper tablet, tap the menu in the upper-left corner, then Import files.
+Select your storage integration and browse to the file you want to import.
+Long-press the file to download and import it as an editable notebook.
+Once your file is on your device, you can add space, annotate, and edit text. Great for reviewing reports, plans, or proposals on your paper tablet.
+FAQs
+Which file types are supported?
+You can convert Word documents (.docx), Google Docs, and .txt files to notebooks using this feature.
+Can I add Google Docs?
+Yes, you can import files directly on your paper tablet using integrated cloud storage. Simply tap the menu in the upper-left corner, select Import files, and browse to find the file. Tap it to download and import it as an editable notebook.
+Alternatively, you can open the document on your computer, save it as a .docx file, and import it via my.remarkable.com.
+Will the new notebook keep the formatting of the imported file?
+No, you'll only see formatting that's supported in notebooks. This means that tables, columns, and margins are removed, but all text is kept.
+How can I access this feature?
+You'll need a Connect subscription and software version 3.25 or newer to use Convert to Notebook. Read how to update your paper tablet.
+j_id0__SiteTemplate__j_id17__j_id18__j_id25__j_id26__j_id387__0__j_id390__5__j_id398 = window.onload; window.onload=function() { if (j_id0__SiteTemplate__j_id17__j_id18__j_id25__j_id26__j_id387__0__j_id390__5__j_id398!= null) j_id0__SiteTemplate__j_id17__j_id18__j_id25__j_id26__j_id387__0__j_id390__5__j_id398();};
+Properties
+Article Created Date
+29.10.2025, 12:35
+Last Published Date
+09.02.2026, 12:25
+Override Page Navigation
+Override Page Navigation API Name
+Tile Image URL
+Validation Status
+Not Validated
+Publication Status
+Published
+DesktopContext.pageTitle = "Knowledge: Convert to Notebook";
+document.title = "Knowledge: Convert to Notebook";
+var isModal = false;
+Ext.onReady(function() {
+if (!isModal){
+var propertiesPanel = Ext.query('*[id=j_id0:SiteTemplate:j_id17:j_id18:j_id25:j_id26:articleRendererToolbar] *[id $= :extPanel]')[0];
+if (true) {
+var renderer = new TOCDetailRenderer({elemId:"knowledgeTOCRenderer", height:-110, contentId:'knowledgeTOCRendererContent'});
+if (propertiesPanel) {
+Ext.ComponentMgr.get(propertiesPanel.id).addListener('beforeExpand', function() {
+renderer.height = -190;
+renderer.resize();
+});
+Ext.ComponentMgr.get(propertiesPanel.id).addListener('collapse', function() {
+renderer.height = -110;
+renderer.resize();
+});
+}
+new TOCSectionSelector({menuId:'menu', contentId:'knowledgeTOCRendererContent'});
+}
+ArticleRenderer.registerArticleLinksForConsole();
+}
+else{
+Sfdc.onReady(function(){window.addEventListener("beforeunload", function(){
+if(window.parent.Sfdc.get('ChatterDeflectionModal')){
+Sfdc.Dom.hideByVisibility(window.parent.Sfdc.get('ChatterDeflectionModal'));
+}
+});
+});
+}
+});
+Powered by

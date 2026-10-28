@@ -1,0 +1,268 @@
+[
+  {
+    "capture": "01-initial",
+    "action": "打开官方顺序练习，HTTP200",
+    "observed_result": "匿名页有下载App提示层；背后第1/100题，对错均0",
+    "url": "https://www.jiakaobaodian.com/mnks/exercise/0-car-kemu1.html?id=800500",
+    "captured_at_utc": "2026-10-26T15:13:06.883008+00:00",
+    "raw_image_path": "work/jiakao-controls-deepening/browser/01-initial.png",
+    "sha256": "683cea531db8f6356b96bf61980b3c5c6e1097c7757f07a06c8d8f9036a96235",
+    "image_reviewed": true
+  },
+  {
+    "capture": "02-dismiss-promo",
+    "action": "点击提示层关闭(920,234)",
+    "observed_result": "显示题目、收藏、前后题、详解、答题卡；自动下一题已勾选",
+    "url": "https://www.jiakaobaodian.com/mnks/exercise/0-car-kemu1.html?id=800500",
+    "captured_at_utc": "2026-10-26T15:14:06.714860+00:00",
+    "raw_image_path": "work/jiakao-controls-deepening/browser/02-dismiss-promo.png",
+    "sha256": "c5265dfbb8ff89f06a0f763cbad7ce1b0eb8d0ffd0078ad1bd5cf2ad1e17c864",
+    "image_reviewed": true,
+    "archived_image": "artifacts/jiakao-controls-deepening/browser/02-dismiss-promo.png"
+  },
+  {
+    "capture": "03-wrong-answer",
+    "action": "第1题点B，等700ms",
+    "observed_result": "错题计数1，停留第1题；解析没有自动展开",
+    "url": "https://www.jiakaobaodian.com/mnks/exercise/0-car-kemu1.html?id=800500",
+    "captured_at_utc": "2026-10-26T15:14:33.113792+00:00",
+    "raw_image_path": "work/jiakao-controls-deepening/browser/03-wrong-answer.png",
+    "sha256": "c9acc9ffd33efd74809157ef180b0abcac79cf5caf92bed13a2bfb5600470563",
+    "image_reviewed": true
+  },
+  {
+    "capture": "04-reselect-after-wrong",
+    "action": "同题再点A，等350ms",
+    "observed_result": "首次错答计数未改变，A蓝勾/B红叉",
+    "url": "https://www.jiakaobaodian.com/mnks/exercise/0-car-kemu1.html?id=800500",
+    "captured_at_utc": "2026-10-26T15:15:19.243687+00:00",
+    "raw_image_path": "work/jiakao-controls-deepening/browser/04-reselect-after-wrong.png",
+    "sha256": "9ba6b453a22428ab0ab5fe6452c8465a71f231f0ca788bbfbfccc901fddaa43b",
+    "image_reviewed": true,
+    "archived_image": "artifacts/jiakao-controls-deepening/browser/04-reselect-after-wrong.png"
+  },
+  {
+    "capture": "05-explanation",
+    "action": "点击显示详解",
+    "observed_result": "详解展开，按钮改收起；含说明及法规引用，未审计法律内容",
+    "url": "https://www.jiakaobaodian.com/mnks/exercise/0-car-kemu1.html?id=800500",
+    "captured_at_utc": "2026-10-26T15:15:21.180683+00:00",
+    "raw_image_path": "work/jiakao-controls-deepening/browser/05-explanation.png",
+    "sha256": "20c7416215e73b179902195dfafd3422f1341b8e2897a4fbce6aa69fefbf0331",
+    "image_reviewed": true,
+    "archived_image": "artifacts/jiakao-controls-deepening/browser/05-explanation.png"
+  },
+  {
+    "capture": "06-favorite",
+    "action": "点击收藏",
+    "observed_result": "出现手机号/短信验证码登录框；未登录，收藏成功未验证",
+    "url": "https://www.jiakaobaodian.com/mnks/exercise/0-car-kemu1.html?id=800500",
+    "captured_at_utc": "2026-10-26T15:16:21.570548+00:00",
+    "raw_image_path": "work/jiakao-controls-deepening/browser/06-favorite.png",
+    "sha256": "48c0903a5056d7ef4bfe6abc84d61931c30a874ee369a4d53f388725db60821f",
+    "image_reviewed": true,
+    "archived_image": "artifacts/jiakao-controls-deepening/browser/06-favorite.png"
+  },
+  {
+    "capture": "07-answer-card",
+    "action": "关闭登录框，展开答题卡",
+    "observed_result": "显示1–100题号，第1题红色",
+    "url": "https://www.jiakaobaodian.com/mnks/exercise/0-car-kemu1.html?id=800500",
+    "captured_at_utc": "2026-10-26T15:20:12.494967+00:00",
+    "raw_image_path": "work/jiakao-controls-deepening/browser/07-answer-card.png",
+    "sha256": "1d95c3cf286bd5f07e3fd5bf6150c78860a362242386212b7ef86a98101c2411",
+    "image_reviewed": true,
+    "archived_image": "artifacts/jiakao-controls-deepening/browser/07-answer-card.png"
+  },
+  {
+    "capture": "08-question-two",
+    "action": "点击下一题",
+    "observed_result": "第2/100题；对0/错1；此前展开的详解与答题卡状态仍在",
+    "url": "https://www.jiakaobaodian.com/mnks/exercise/0-car-kemu1.html?id=800900",
+    "captured_at_utc": "2026-10-26T15:20:21.026947+00:00",
+    "raw_image_path": "work/jiakao-controls-deepening/browser/08-question-two.png",
+    "sha256": "1a652f779b702ec2464563f80d2895ac9654c26c03b2aa4a6a5e7ad00fdee92c",
+    "image_reviewed": true
+  },
+  {
+    "capture": "09-correct-auto-next",
+    "action": "第2题选择C，等1200ms",
+    "observed_result": "前进第3题，对1/错1、50%；第2题绿色",
+    "url": "https://www.jiakaobaodian.com/mnks/exercise/0-car-kemu1.html?id=801200",
+    "captured_at_utc": "2026-10-26T15:20:35.092916+00:00",
+    "raw_image_path": "work/jiakao-controls-deepening/browser/09-correct-auto-next.png",
+    "sha256": "5ebe95dd91961026ee099a98102bb20d361802043c5b4279575d25b0ab96d29d",
+    "image_reviewed": true,
+    "archived_image": "artifacts/jiakao-controls-deepening/browser/09-correct-auto-next.png"
+  },
+  {
+    "capture": "10-auto-next-disabled",
+    "action": "取消自动下一题、收起答题卡和详解；定位不存在的A正确超时后，按实际题面点A选项",
+    "observed_result": "对2/错1、67%，仍第3题；错误定位没有作答",
+    "url": "https://www.jiakaobaodian.com/mnks/exercise/0-car-kemu1.html?id=801200",
+    "captured_at_utc": "2026-10-26T15:20:55.783869+00:00",
+    "raw_image_path": "work/jiakao-controls-deepening/browser/10-auto-next-disabled.png",
+    "sha256": "33042c151b96d681a7083da0b224b8fb49b819c0d5c0052052f01c35af98f90c",
+    "image_reviewed": true,
+    "archived_image": "artifacts/jiakao-controls-deepening/browser/10-auto-next-disabled.png"
+  },
+  {
+    "capture": "11-return-answered",
+    "action": "点上一题",
+    "observed_result": "回第2题，已选C与对2/错1仍在，自动下一题未勾选",
+    "url": "https://www.jiakaobaodian.com/mnks/exercise/0-car-kemu1.html?id=800900",
+    "captured_at_utc": "2026-10-26T15:21:02.659853+00:00",
+    "raw_image_path": "work/jiakao-controls-deepening/browser/11-return-answered.png",
+    "sha256": "aae9eb652855fe20f0ee25c78f4065982b0d2028f411fad90d9e90fef43df13f",
+    "image_reviewed": true,
+    "archived_image": "artifacts/jiakao-controls-deepening/browser/11-return-answered.png"
+  },
+  {
+    "capture": "12-reload",
+    "action": "刷新当前带题目ID的网址，等1200ms",
+    "observed_result": "下载提示重现；截图时题面尚未完成，不能据此判断题目丢失",
+    "url": "https://www.jiakaobaodian.com/mnks/exercise/0-car-kemu1.html?id=800900",
+    "captured_at_utc": "2026-10-26T15:21:06.511844+00:00",
+    "raw_image_path": "work/jiakao-controls-deepening/browser/12-reload.png",
+    "sha256": "e1c68f922cdb4e8be5d1cb7a9c62a8cb1ae490a0e1fa690bc83fb059c4309be9",
+    "image_reviewed": true
+  },
+  {
+    "capture": "13-cloud-sync-gate",
+    "action": "关闭下载提示，点击云同步做题进度",
+    "observed_result": "登录框；背后第2题已显示，对错均0，选项次序已改变",
+    "url": "https://www.jiakaobaodian.com/mnks/exercise/0-car-kemu1.html?id=800900",
+    "captured_at_utc": "2026-10-26T15:21:09.486837+00:00",
+    "raw_image_path": "work/jiakao-controls-deepening/browser/13-cloud-sync-gate.png",
+    "sha256": "7a644c55e4adae63cc1f896f3989a8b387fbf5acbc1e96dea2fe0b9c7f4a356b",
+    "image_reviewed": true
+  },
+  {
+    "capture": "14-reload-settled",
+    "action": "关闭登录框，再等1500ms",
+    "observed_result": "仍第2题但无已选项；对错均0，自动下一题恢复勾选；同题驾驶证从C变A",
+    "url": "https://www.jiakaobaodian.com/mnks/exercise/0-car-kemu1.html?id=800900",
+    "captured_at_utc": "2026-10-26T15:21:21.068810+00:00",
+    "raw_image_path": "work/jiakao-controls-deepening/browser/14-reload-settled.png",
+    "sha256": "d62a876355920633e36692693182b5879393f20f4adaa7ba9be936bff45a492a",
+    "image_reviewed": true,
+    "archived_image": "artifacts/jiakao-controls-deepening/browser/14-reload-settled.png"
+  },
+  {
+    "capture": "15-kemu-one-menu",
+    "action": "点小车科目一面包屑",
+    "observed_result": "进入北京科一目录；原顺序页头部是全国，范围变化须保留",
+    "url": "https://www.jiakaobaodian.com/mnks/kemu1/car-beijing.html",
+    "captured_at_utc": "2026-10-26T15:21:44.065750+00:00",
+    "raw_image_path": "work/jiakao-controls-deepening/browser/15-kemu-one-menu.png",
+    "sha256": "828b1c91a007d51ff3cbfbdca65d224c7cb222ccfb35ab6911282eb99a7c4e76",
+    "image_reviewed": true
+  },
+  {
+    "capture": "16-mock-exam-entry",
+    "action": "点目录的模拟考试链接，等1500ms",
+    "observed_result": "当次截图仍为目录，不能声称已开始考试",
+    "url": "https://www.jiakaobaodian.com/mnks/kemu1/car-beijing.html",
+    "captured_at_utc": "2026-10-26T15:21:57.713714+00:00",
+    "raw_image_path": "work/jiakao-controls-deepening/browser/16-mock-exam-entry.png",
+    "sha256": "22b78577f3b812268456a447f52e542c82d076c6330d10094740dfdcf635ff2f",
+    "image_reviewed": true
+  },
+  {
+    "capture": "17-mock-new-tab",
+    "action": "检查上下文页列表并再截帧",
+    "observed_result": "只有原页；文件名沿用当时假设，并非真的打开新标签；此冗余帧未作视觉结论",
+    "url": "https://www.jiakaobaodian.com/mnks/kemu1/car-beijing.html",
+    "captured_at_utc": "2026-10-26T15:22:13.278673+00:00",
+    "raw_image_path": "work/jiakao-controls-deepening/browser/17-mock-new-tab.png",
+    "sha256": "22b78577f3b812268456a447f52e542c82d076c6330d10094740dfdcf635ff2f",
+    "image_reviewed": false
+  },
+  {
+    "capture": "18-mock-after-timeout",
+    "action": "再次点链接仍无跳转；直接打开页面上已有链接，5秒/45秒导航等待超时，随后截帧",
+    "observed_result": "最终已显示北京模拟页及考试规则确认框；45:00。超时不等于内容始终未到",
+    "url": "https://www.jiakaobaodian.com/mnks/exam/car-kemu1-beijing.html",
+    "captured_at_utc": "2026-10-26T15:24:33.481306+00:00",
+    "raw_image_path": "work/jiakao-controls-deepening/browser/18-mock-after-timeout.png",
+    "sha256": "439419329c1c322ce91a03fa6f653bc5a2c11f889dca58f7da042ed09d269b1d",
+    "image_reviewed": true,
+    "archived_image": "artifacts/jiakao-controls-deepening/browser/18-mock-after-timeout.png"
+  },
+  {
+    "capture": "19-mock-start",
+    "action": "点规则框确定，等1200ms",
+    "observed_result": "框关闭，计时44:59，实际倒计时已开始",
+    "url": "https://www.jiakaobaodian.com/mnks/exam/car-kemu1-beijing.html",
+    "captured_at_utc": "2026-10-26T15:24:44.557275+00:00",
+    "raw_image_path": "work/jiakao-controls-deepening/browser/19-mock-start.png",
+    "sha256": "0fb155904f859c00f53fcc68bd2b473cf2f66caddf43d01c26d9f1d31874f05a",
+    "image_reviewed": true,
+    "archived_image": "artifacts/jiakao-controls-deepening/browser/19-mock-start.png"
+  },
+  {
+    "capture": "20-mock-wrong",
+    "action": "第1题点B，等600ms",
+    "observed_result": "第1题红色，自动前进第2题，计时44:53",
+    "url": "https://www.jiakaobaodian.com/mnks/exam/car-kemu1-beijing.html",
+    "captured_at_utc": "2026-10-26T15:24:50.762258+00:00",
+    "raw_image_path": "work/jiakao-controls-deepening/browser/20-mock-wrong.png",
+    "sha256": "56d319f6f66c015b2b53a069b6810b1f5d57a21a8c23d8634ca423e5b45439c6",
+    "image_reviewed": true,
+    "archived_image": "artifacts/jiakao-controls-deepening/browser/20-mock-wrong.png"
+  },
+  {
+    "capture": "21-mock-reselect",
+    "action": "在已经前进的第2题点A，等300ms",
+    "observed_result": "第2题绿色，自动前进第3题；这是第二次独立作答，文件名不代表改答第一题",
+    "url": "https://www.jiakaobaodian.com/mnks/exam/car-kemu1-beijing.html",
+    "captured_at_utc": "2026-10-26T15:24:59.097235+00:00",
+    "raw_image_path": "work/jiakao-controls-deepening/browser/21-mock-reselect.png",
+    "sha256": "fcaaecbd78737d7f72f25eadac4379c3fae0b40c29ed4d31db8787bef4d1d91c",
+    "image_reviewed": true,
+    "archived_image": "artifacts/jiakao-controls-deepening/browser/21-mock-reselect.png"
+  },
+  {
+    "capture": "22-submit-incomplete",
+    "action": "仅作答2题时点交卷",
+    "observed_result": "出现确定/取消确认框，未显示未答数量；计时44:44",
+    "url": "https://www.jiakaobaodian.com/mnks/exam/car-kemu1-beijing.html",
+    "captured_at_utc": "2026-10-26T15:24:59.743233+00:00",
+    "raw_image_path": "work/jiakao-controls-deepening/browser/22-submit-incomplete.png",
+    "sha256": "fa52b0ef3b87e2f4cea4c732286755d15cfa4a9ac9b929fcfda5f00470a69819",
+    "image_reviewed": true,
+    "archived_image": "artifacts/jiakao-controls-deepening/browser/22-submit-incomplete.png"
+  },
+  {
+    "capture": "23-cancel-return-reselect",
+    "action": "取消交卷，上一题回第2题；尝试定位B控件超时后重新截帧",
+    "observed_result": "显示回答正确/正确答案及为什么；选项作答按钮已不在可见控件中，原结果保留",
+    "url": "https://www.jiakaobaodian.com/mnks/exam/car-kemu1-beijing.html",
+    "captured_at_utc": "2026-10-26T15:25:59.020051+00:00",
+    "raw_image_path": "work/jiakao-controls-deepening/browser/23-cancel-return-reselect.png",
+    "sha256": "57cb20c48ae81aba3ab22c3730639b849c6ee5d1d8daec97e7396977ba7ae52a",
+    "image_reviewed": true,
+    "archived_image": "artifacts/jiakao-controls-deepening/browser/23-cancel-return-reselect.png"
+  },
+  {
+    "capture": "24-submitted-result",
+    "action": "再次交卷并确定，等1200ms",
+    "observed_result": "转到考试结果URL，中心内容空白；URL参数含答对1/错1/未答98，不等于可见成绩或云保存",
+    "url": "https://www.jiakaobaodian.com/mnks/award/?params=elapsed%3D87%2Cdadui%3D1%2Cdacuo%3D1%2Cscore%3D1%2CcarType%3Dcar%2Ccourse%3Dkemu1%2Cweida%3D98%2Ccity%3Dbeijing%2Ctype%3D0--6597",
+    "captured_at_utc": "2026-10-26T15:26:12.841002+00:00",
+    "raw_image_path": "work/jiakao-controls-deepening/browser/24-submitted-result.png",
+    "sha256": "7964a8d24a64fc4f263eae9433bc128c238e420ae8b3afe7d34a4473e535b5a0",
+    "image_reviewed": true
+  },
+  {
+    "capture": "25-result-after-wait",
+    "action": "再显式等5秒后截帧",
+    "observed_result": "中心仍空白；没有观察到成绩、分析或再做一套，结算反馈未闭合",
+    "url": "https://www.jiakaobaodian.com/mnks/award/?params=elapsed%3D87%2Cdadui%3D1%2Cdacuo%3D1%2Cscore%3D1%2CcarType%3Dcar%2Ccourse%3Dkemu1%2Cweida%3D98%2Ccity%3Dbeijing%2Ctype%3D0--6597",
+    "captured_at_utc": "2026-10-26T15:26:37.176916+00:00",
+    "raw_image_path": "work/jiakao-controls-deepening/browser/25-result-after-wait.png",
+    "sha256": "05b9102376607e25ab46abe127ca42a05c3fd268d15ecba1df277be31fd0cb4d",
+    "image_reviewed": true,
+    "archived_image": "artifacts/jiakao-controls-deepening/browser/25-result-after-wait.png"
+  }
+]

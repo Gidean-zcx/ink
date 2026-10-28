@@ -1,0 +1,50 @@
+[
+  {
+    "file": "apple.html",
+    "url": "https://apps.apple.com/cn/app/id1139733348",
+    "status": 200,
+    "content_type": "text/html",
+    "bytes": 921225,
+    "sha256": "5c19b57db4cf374704ecda7a85b0e1d243d4658800d5737434734a14ded6069f"
+  },
+  {
+    "file": "operator.html",
+    "url": "https://www.ihuman.com/agreement/privacy/operator.html",
+    "status": 200,
+    "content_type": "text/html; charset=utf-8",
+    "bytes": 10738,
+    "sha256": "7c9d1d615508eec6e59c26706af0b09ba5bb9c201b1f484cf1147843d551597f"
+  },
+  {
+    "file": "official-map.png",
+    "url": "https://www.ihuman.com/agreement/privacy/images/images1.png",
+    "status": 200,
+    "content_type": "image/png",
+    "bytes": 448386,
+    "sha256": "e8a67a68885678eef14b7ff5a6e2e45edc209bb93f2037cbae5e69c258801437"
+  },
+  {
+    "file": "official-settings.png",
+    "url": "https://www.ihuman.com/agreement/privacy/images/images2.png",
+    "status": 200,
+    "content_type": "image/png",
+    "bytes": 97028,
+    "sha256": "b74532c8bccbce52214fd6006c7e39e3aea20bc92c41070eb5e283ebdc631ea1"
+  },
+  {
+    "file": "experience-2018.html",
+    "url": "https://jingyan.baidu.com/article/f54ae2fc6c21ec1e92b849c7.html",
+    "status": 200,
+    "content_type": "text/html; charset=utf-8",
+    "bytes": 73365,
+    "sha256": "686384925221ebb93ca192f1fbeb76f4ad269c2761c21926ea7fb3c7df14dd12"
+  },
+  {
+    "file": "logout-2022.html",
+    "url": "https://jingyan.baidu.com/article/75ab0bcba4d91997874db22b.html",
+    "status": 200,
+    "content_type": "text/html; charset=utf-8",
+    "bytes": 170852,
+    "sha256": "5f05e1116669f24297e810db39f8338ef03a66833e50344e7c0ec8b090adb976"
+  }
+]

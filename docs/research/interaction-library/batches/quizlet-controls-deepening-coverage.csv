@@ -1,0 +1,4 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M021-11,M-021,卡组 Test 作答与结果,D2,E-QZCD-13;E-QZCD-17,选题量/题型→开始→提交后分数/回顾；网站可打印；离开未完成测试不保存；网站单答案评分,漏答确认、超时、改答案、提交后误判按钮、重考和成绩历史未知,not_observed,false,cases/M-021-quizlet.md,2026-10-27
+F-M021-12,M-021,AI Practice Test 生成与作答,D2,E-QZCD-16;E-QZAS-02,资料/卡组→生成→题数题型计时→作答→提交看分数；手机字符限制、地区年龄/套餐条件；标题/权限可改；音频帮助明确不能直接由音频生成Practice Tests,生成题干和答案校订、重生成覆盖、计时到零、暂停续做及删除恢复未知；不套普通 Test 规则；不推导通过其他中间对象可绕过此输入限制,not_observed,false,cases/M-021-quizlet.md,2026-10-27
+F-M021-13,M-021,Progress 与星标定向复习,D2,E-QZCD-14;E-QZCD-15,分组或手动星标→子集→选择活动；星标私有，手机可取消；Progress 对错统计跨端、游戏不计,Mastered 阈值、误判重算、源集修订映射、星标与间隔调度互通未知,not_observed,false,cases/M-021-quizlet.md,2026-10-27

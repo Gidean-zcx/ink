@@ -1,0 +1,10 @@
+This device can use the following PDF form which is made by Adobe Acrobat.
+Checkbox
+Radio buttons
+Dropdown list
+Text field
+List box
+To use the checkbox/radio buttons/dropdown list/list box
+Check the PDF with your finger or pen, or select the item.
+To use the text field
+Tap the text field with your finger or pen, and tap [Save] after inputting letters via keyboard.

@@ -1,0 +1,99 @@
+[
+  {
+    "flow_id": "F-M006-01",
+    "source_batch": "docs/research/interaction-library/batches/reader-coverage.csv",
+    "changes": {
+      "known_branches": {
+        "before": "标题可再套索编辑；主图层限制；p131 Erase Star不擦标题内星标；历史帮助称标记删除不可撤销",
+        "after": "标题可再套索编辑且选区内不可直接书写；关键词可键入Add/选最近项；主图层限制；p131 Erase Star不擦标题内星标；历史帮助称标记删除不可撤销"
+      },
+      "gaps": {
+        "before": "删除标记后的原笔迹、当前版本恢复/星标识别误触未知",
+        "after": "删除标记后的原笔迹、当前版本恢复/星标识别误触未知；改关键词不证明改写原笔迹"
+      },
+      "checked_on": {
+        "before": "2026-10-26",
+        "after": "2026-10-27"
+      }
+    },
+    "replacement_row": {
+      "flow_id": "F-M006-01",
+      "product_id": "M-006",
+      "task": "建立可回找的手写结构",
+      "depth": "D2",
+      "evidence_ids": "E-SUP-01;E-SNCD-02;E-SNCD-06",
+      "known_branches": "标题可再套索编辑且选区内不可直接书写；关键词可键入Add/选最近项；主图层限制；p131 Erase Star不擦标题内星标；历史帮助称标记删除不可撤销",
+      "gaps": "删除标记后的原笔迹、当前版本恢复/星标识别误触未知；改关键词不证明改写原笔迹",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-006-supernote.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "flow_id": "F-M006-08",
+    "source_batch": "docs/research/interaction-library/batches/supernote-controls-deepening-coverage.csv",
+    "changes": {
+      "known_branches": {
+        "before": "Handwriting/Keyword回页，File回最后页；Star按File也不保证星标页；后台识别延后及触摸暂停为文档规则",
+        "after": "Keyword/Star可空查全部；Star输入文件名筛选；Handwriting需识别文本并回页；File/Star按File回最后页；后台识别延后/触摸暂停；3.24.38文字搜索仅日志能力补充"
+      },
+      "gaps": {
+        "before": "3.24.38后文本搜索完整界面、无结果/误识别修正、实际耗时及重启队列未知",
+        "after": "3.24.38后文本框搜索完整界面、无结果/误识别修正、实际耗时及重启队列未知"
+      },
+      "checked_on": {
+        "before": "2026-10-26",
+        "after": "2026-10-27"
+      }
+    },
+    "replacement_row": {
+      "flow_id": "F-M006-08",
+      "product_id": "M-006",
+      "task": "按类别搜索并回到命中内容",
+      "depth": "D2",
+      "evidence_ids": "E-SNCD-02;E-SNCD-04;E-SNCD-05;E-SUP-05",
+      "known_branches": "Keyword/Star可空查全部；Star输入文件名筛选；Handwriting需识别文本并回页；File/Star按File回最后页；后台识别延后/触摸暂停；3.24.38文字搜索仅日志能力补充",
+      "gaps": "3.24.38后文本框搜索完整界面、无结果/误识别修正、实际耗时及重启队列未知",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-006-supernote.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "flow_id": "F-M006-09",
+    "source_batch": "docs/research/interaction-library/batches/supernote-controls-deepening-coverage.csv",
+    "changes": {
+      "evidence_ids": {
+        "before": "E-SNCD-02;E-SNCD-05;E-SNCD-07",
+        "after": "E-SNCD-02;E-SNCD-05;E-SNCD-07;E-SNCD-10"
+      },
+      "known_branches": {
+        "before": "PNG/PDF与识别TXT/DOCX；标准笔记导出时识别；实时识别语言创建后固定；QR/InkHub另列",
+        "after": "PNG/PDF与识别TXT/DOCX；标准笔记导出时识别；实时识别语言创建后固定；QR/InkHub另列；3.28.42称修复隐藏层仍进入TXT/DOCX导出"
+      },
+      "gaps": {
+        "before": "输出目录、重名/取消/存储不足、编辑后结构关系往返与原笔迹回写未知",
+        "after": "其他格式显隐规则、输出目录、重名/取消/存储不足、编辑后结构关系往返与原笔迹回写未知"
+      },
+      "checked_on": {
+        "before": "2026-10-26",
+        "after": "2026-10-27"
+      }
+    },
+    "replacement_row": {
+      "flow_id": "F-M006-09",
+      "product_id": "M-006",
+      "task": "选择笔记页导出交换文件",
+      "depth": "D2",
+      "evidence_ids": "E-SNCD-02;E-SNCD-05;E-SNCD-07;E-SNCD-10",
+      "known_branches": "PNG/PDF与识别TXT/DOCX；标准笔记导出时识别；实时识别语言创建后固定；QR/InkHub另列；3.28.42称修复隐藏层仍进入TXT/DOCX导出",
+      "gaps": "其他格式显隐规则、输出目录、重名/取消/存储不足、编辑后结构关系往返与原笔迹回写未知",
+      "visual_status": "static_reference_only",
+      "hands_on": "false",
+      "case_path": "cases/M-006-supernote.md",
+      "checked_on": "2026-10-27"
+    }
+  }
+]

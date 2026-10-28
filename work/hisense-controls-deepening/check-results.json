@@ -1,0 +1,20 @@
+{
+  "status": "PASS",
+  "mode": "pre_merge_read_only",
+  "new_e": 6,
+  "new_f": 2,
+  "inventory_rows": 114,
+  "old_f_updates": 5,
+  "old_f_changed_fields": 22,
+  "old_e_additional_captures": 4,
+  "observed_static_images": 5,
+  "formal_files": 10,
+  "case_sha256": "71b13b0560a2b58fca080e6096fbf63129b6c6b2a1ff3097f316d3b5803ab897",
+  "manifest_sha256": "bf26e0e0d6b356c39c18a342ab0644faedbfd56e790c8fc511b1f555a4242cfe",
+  "state_changed_by_check": false,
+  "command": "python3 work/hisense-controls-deepening/check.py",
+  "exit_code": 0,
+  "diff_check_exit_code": 0,
+  "first_check_exit_code": 1,
+  "first_check_note": "Validator incorrectly required LF for the existing master CSV; limited that requirement to this batch. Master accepts normal CSV CRLF. No research data changed."
+}

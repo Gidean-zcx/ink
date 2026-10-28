@@ -1,0 +1,2 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M025-05,M-025,历史普通2.0首次联网激活,D2,E-YDCD-02;E-YDCD-03,首次联网；失败重新配网；成功进入首页；不必每次重激活,激活中断/超时/停服；账号依赖；重置后行为；固件未知,static_reference_only,false,cases/M-025-youdao-pen.md,2026-10-26

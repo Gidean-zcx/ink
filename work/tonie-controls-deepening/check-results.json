@@ -1,0 +1,28 @@
+{
+  "evidence": 24,
+  "csv": {
+    "coverage": {
+      "rows": 7,
+      "physical_lf": 8,
+      "literal_backslash_rn": 0,
+      "sha256": "67021e33460a6df1d669433a655da002c61951161320f9d6ae0f2f649699f0fd"
+    },
+    "inventory": {
+      "rows": 150,
+      "physical_lf": 151,
+      "literal_backslash_rn": 0,
+      "sha256": "01826bea4bea85cddf643e4e1621b1b113dfe91222e30ec9fe324af05c6fd760"
+    }
+  },
+  "hands_on": false,
+  "visual_observed": false,
+  "old_rows": {
+    "F-M038-05": "before",
+    "F-M038-06": "before",
+    "F-M038-08": "before",
+    "F-M038-10": "before",
+    "F-M038-11": "before"
+  },
+  "case_flows": 18,
+  "source_files": 32
+}

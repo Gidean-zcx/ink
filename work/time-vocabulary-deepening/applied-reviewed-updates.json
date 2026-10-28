@@ -1,0 +1,464 @@
+{
+  "flow_changes": [
+    {
+      "id": "F-M047-01",
+      "field": "evidence_ids",
+      "before": "E-TFK-02;E-TFK-03;E-TKCD-02;E-TKCD-03",
+      "after": "E-TFK-02;E-TFK-03;E-TKCD-02;E-TKCD-03;E-TKVD-02"
+    },
+    {
+      "id": "F-M047-01",
+      "field": "known_branches",
+      "before": "同篇西语/英文切换；Search展开输入层后进入K–1结果；无意义查询仍见普通文章；清空并从标题返回正文。",
+      "after": "同篇西语/英文切换；Search展开输入层后进入K–1结果；无意义查询仍见普通文章；清空并从标题返回正文。 本轮另实际展开年级→K–1→Science→Next→浏览器返回；成人区出生年月表单未提交，X退出后可再开资源菜单。"
+    },
+    {
+      "id": "F-M047-01",
+      "field": "gaps",
+      "before": "仅桌面匿名该篇；打印、所有年级/主题/分页、已读/精准续读、检索失败原因及课堂分配未知。",
+      "after": "仍未核所有年级/主题、阅读级别、打印/课堂分配/账号与精准续读；Science分页不能证明所有检索正确。"
+    },
+    {
+      "id": "F-M047-01",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M047-03",
+      "field": "task",
+      "before": "分级辅助与分配",
+      "after": "使用词汇辅助并核对分级与分配范围"
+    },
+    {
+      "id": "F-M047-03",
+      "field": "depth",
+      "before": "D1",
+      "after": "D4"
+    },
+    {
+      "id": "F-M047-03",
+      "field": "evidence_ids",
+      "before": "E-TFK-01;E-TFK-03;E-TKD-02",
+      "after": "E-TFK-01;E-TFK-03;E-TKD-02;E-TKD-02;E-TKVD-01"
+    },
+    {
+      "id": "F-M047-03",
+      "field": "known_branches",
+      "before": "只有特定文章有辅助工具；2018年3–4年级文章含静态词汇释义/音频/关闭节点，不套K–1",
+      "after": "D4仅2018 G3–4公开词汇卡：预标词点击/Enter开卡，X关卡；词音关闭后仍推进，重开继续，暂停保持；刷新后回0。年级目录不等于阅读级别。"
+    },
+    {
+      "id": "F-M047-03",
+      "field": "gaps",
+      "before": "实际选级、词汇弹窗交互、课堂分配及结果未知",
+      "after": "未实际听音；词卡不是任意选词词典或生词本，收藏/测验关联未知；本篇未见级别选择器，课堂分配仍仅声明；不泛化K–1或账号。"
+    },
+    {
+      "id": "F-M047-03",
+      "field": "visual_status",
+      "before": "not_observed",
+      "after": "observed_browser_sequence"
+    },
+    {
+      "id": "F-M047-03",
+      "field": "hands_on",
+      "before": "false",
+      "after": "true"
+    },
+    {
+      "id": "F-M047-03",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M065-01",
+      "field": "evidence_ids",
+      "before": "E-AK-02;E-AKCD-01",
+      "after": "E-AK-02;E-AKCD-01;E-AKDD-01;E-AKDD-02"
+    },
+    {
+      "id": "F-M065-01",
+      "field": "known_branches",
+      "before": "Media Device复制后断线；型号手册补通知栏Safely Remove及System Information/Unmount。",
+      "after": "Media Device复制后断线；Safely Remove/Unmount。Folder右侧菜单有文件/目录复制、移动、移除，文件另有edit tags；仅入口明确。关联封面FAQ提嵌图或专辑目录图片后重启/重建，属通用旧文档。"
+    },
+    {
+      "id": "F-M065-01",
+      "field": "gaps",
+      "before": "扫描触发、空库/坏文件、复制取消、同名覆盖、移动后歌单。",
+      "after": "扫描触发、同名/中断、移动后歌单修复；设备端目标选择/确认/撤销、标签保存规则未给。旧封面FAQ的清空歌单复选框不认定SR35现版具备；数据库重扫不保证无损。"
+    },
+    {
+      "id": "F-M065-01",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M065-02",
+      "field": "evidence_ids",
+      "before": "E-AK-02;E-AKCD-01",
+      "after": "E-AK-02;E-AKCD-01;E-AKDD-03"
+    },
+    {
+      "id": "F-M065-02",
+      "field": "known_branches",
+      "before": "队列Next/Last；新建名称Add、加歌Complete；删除成员确认DELETE且不删存储音频。",
+      "after": "Next/Last与持久歌单分开；创建+命名/Add、加曲/Complete。可选部分曲加入Now Playing顶部/底部/当前后；成员DELETE明确不删存储音频。Playlists编辑选歌单→重命名图标→RENAME窗口→命名/RENAME；删除图标→DELETE确认整歌单。"
+    },
+    {
+      "id": "F-M065-02",
+      "field": "gaps",
+      "before": "当前项移除后的播放、撤销、顺序持久化、整歌单删除后的恢复。",
+      "after": "当前项移除后的播放、撤销、队列排序持久化、重名/空名、整歌单恢复与源文件移动后的引用未核；整表删除不可借成员移除说明推定所有数据后果。"
+    },
+    {
+      "id": "F-M065-02",
+      "field": "visual_status",
+      "before": "not_observed",
+      "after": "static_reference_only"
+    },
+    {
+      "id": "F-M065-02",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M065-09",
+      "field": "known_branches",
+      "before": "文件能复制不等于引用可解析；检查引用路径是本研究建议，非已验证恢复。",
+      "after": "共用FAQ声明M3U支持，同时指出Android路径不匹配可能无法识别；本轮复读未新增导入操作证据。"
+    },
+    {
+      "id": "F-M065-09",
+      "field": "gaps",
+      "before": "SR35扫描入口、相对路径支持、编码、重复项、批量修复与重新导入反馈。",
+      "after": "SR35导入/扫描入口、编码、相对路径、重扫去重及批量修复未知；不将FAQ“无规范”措辞当标准事实，仍D1。"
+    },
+    {
+      "id": "F-M065-09",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M065-16",
+      "field": "known_branches",
+      "before": "Mini Player展开/收起；进度条拖动、封面歌词、剩余时间。",
+      "after": "Mini Player上滑/点按展开，下滑/返回收起；拖进度、封面歌词、时长切换。More可回歌曲的Album/Artist/Folder或File Info；Songs/Albums/Artists/MQS分类支持名称关键词检索，结果编辑可播/加入歌单。"
+    },
+    {
+      "id": "F-M065-16",
+      "field": "gaps",
+      "before": "无歌词反馈、定位精度、章节、跨书/重启进度、返回滚动位置；不当持久断点。",
+      "after": "无歌词/空搜索反馈、定位粒度、章节/持久时间书签、重启进度和返回滚动位置未核；分类排序/首页次序只有入口，不推定拖拽或持久化规则。"
+    },
+    {
+      "id": "F-M065-16",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    }
+  ],
+  "evidence_changes": [
+    {
+      "id": "E-YDP-01",
+      "field": "additional_captures",
+      "before": null,
+      "after": [
+        {
+          "capture_kind": "local_reread_of_existing_public_artifact",
+          "original_acquisition_date": "2026-10-26",
+          "checked_on": "2026-10-27",
+          "network_refetched": false,
+          "raw_work_path": "work/dictionary-research/youdao-2.html",
+          "raw_sha256": "bf9cd2c636296688be516c8289fe354b107ac068dcfd1311b00d91985bd3ade2",
+          "locator": "产品标题；使用说明跳转；v2.11资源路径",
+          "archived_artifact": "artifacts/youdao-controls-deepening/source-notes.md",
+          "sha256": "3bacb585e12a97aa6f2bf7d4a9985f521946aeb31ec2ea6375001eb4d85fad67",
+          "hands_on": false,
+          "visual_observed": false
+        },
+        {
+          "capture_kind": "local_reread_of_existing_public_artifact",
+          "original_acquisition_date": "2026-10-26",
+          "checked_on": "2026-10-27",
+          "network_refetched": false,
+          "raw_work_path": "work/dictionary-research/youdao-app.js",
+          "raw_sha256": "c9a7c0e7aaf0965545104d6151bd2dec919683f3cd94a71827044a700e05b7db",
+          "locator": "多行/发音/语音/蓝牙/在线更新宣传模块",
+          "archived_artifact": "artifacts/youdao-controls-deepening/source-notes.md",
+          "sha256": "3bacb585e12a97aa6f2bf7d4a9985f521946aeb31ec2ea6375001eb4d85fad67",
+          "hands_on": false,
+          "visual_observed": false
+        }
+      ]
+    },
+    {
+      "id": "E-YDP-02",
+      "field": "additional_captures",
+      "before": null,
+      "after": [
+        {
+          "capture_kind": "local_reread_of_existing_public_artifact",
+          "original_acquisition_date": "2026-10-26",
+          "checked_on": "2026-10-27",
+          "network_refetched": false,
+          "raw_work_path": "work/youdao-controls-deepening/youdao-2-guide-1.4.5-help.js",
+          "raw_sha256": "406ada5aaa9b207adf8fbf7cf489451fda8128c07d5e501204588ebbb476d99f",
+          "locator": "两个问题：账号登录、查词实时显示；原F02/03已覆盖正常链",
+          "archived_artifact": "artifacts/youdao-controls-deepening/source-notes.md",
+          "sha256": "3bacb585e12a97aa6f2bf7d4a9985f521946aeb31ec2ea6375001eb4d85fad67",
+          "hands_on": false,
+          "visual_observed": false
+        }
+      ]
+    },
+    {
+      "id": "E-YDP-05",
+      "field": "additional_captures",
+      "before": null,
+      "after": [
+        {
+          "capture_kind": "local_reread_of_existing_public_artifact",
+          "original_acquisition_date": "2026-10-26",
+          "checked_on": "2026-10-27",
+          "network_refetched": false,
+          "raw_work_path": "work/dictionary-research/youdao-guide.html",
+          "raw_sha256": "65607488c809b6e8f630d8ca2930d71bd54ed08e46307ad6c6f45f3daa322b60",
+          "locator": "HTML帮助入口/资源清单；原生桥接名不当真实动作",
+          "archived_artifact": "artifacts/youdao-controls-deepening/source-notes.md",
+          "sha256": "3bacb585e12a97aa6f2bf7d4a9985f521946aeb31ec2ea6375001eb4d85fad67",
+          "hands_on": false,
+          "visual_observed": false
+        }
+      ]
+    },
+    {
+      "id": "E-YDCD-02",
+      "field": "additional_captures",
+      "before": null,
+      "after": [
+        {
+          "capture_kind": "local_reread_of_existing_public_artifact",
+          "original_acquisition_date": "2026-10-26",
+          "checked_on": "2026-10-27",
+          "network_refetched": false,
+          "raw_work_path": "work/youdao-device-deepening/gdufs-2.html",
+          "raw_sha256": "7c2fa18793df5348d83f2b7de8ead319f6dbb188876ed903dba953768c0c8525",
+          "locator": "普通2.0标题/正文，激活方式和使用引导图注",
+          "archived_artifact": "artifacts/youdao-controls-deepening/source-notes.md",
+          "sha256": "3bacb585e12a97aa6f2bf7d4a9985f521946aeb31ec2ea6375001eb4d85fad67",
+          "hands_on": false,
+          "visual_observed": false
+        }
+      ]
+    },
+    {
+      "id": "E-AK-12",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "anonymous_public_html_GET",
+          "hands_on": false,
+          "visual_observed": false,
+          "url": "https://www.iriver.jp/support/product_235.php",
+          "http_status": 200,
+          "raw_work_path": "work/ak-directory-deepening/raw/sr35-support.html",
+          "raw_sha256": "4d1e2e1174b32c40f671835cdc4f2437d082bddde1f847b7fa9807c3883f8a32",
+          "extracted_work_path": "work/ak-directory-deepening/raw/sr35-support.txt",
+          "extracted_sha256": "05280fd01e9527f4b6e5993848f42a4a1e08bdb1f6ef96fbd85a3ce24f9e0467",
+          "archived_artifact": "artifacts/ak-directory-deepening/source-notes.md",
+          "sha256": "208461d068269f64ab8668855e1fb1c2103a552b7d7f3bd48330aca1dc6ee99c",
+          "locator": "24 FAQ及9下载条目，仅选择性正文读取"
+        }
+      ]
+    },
+    {
+      "id": "E-AKCD-11",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "anonymous_public_html_GET",
+          "hands_on": false,
+          "visual_observed": false,
+          "url": "https://www.iriver.jp/support/faq_1104.php",
+          "http_status": 200,
+          "raw_work_path": "work/ak-directory-deepening/raw/replaygain.html",
+          "raw_sha256": "93f7cd4546e5747aac70c09342fec9184bb598d2f47cfd001b0fef458a4c99c5",
+          "extracted_work_path": "work/ak-directory-deepening/raw/replaygain.txt",
+          "extracted_sha256": "acacd2182da2033fc22ad386f03a0b40805e2a0ca50f1f4e12e5145a7526aa11",
+          "archived_artifact": "artifacts/ak-directory-deepening/source-notes.md",
+          "sha256": "208461d068269f64ab8668855e1fb1c2103a552b7d7f3bd48330aca1dc6ee99c",
+          "locator": "格式上限、Line Out不工作"
+        }
+      ]
+    },
+    {
+      "id": "E-AK-10",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "anonymous_public_html_GET",
+          "hands_on": false,
+          "visual_observed": false,
+          "url": "https://www.iriver.jp/support/faq_1033.php",
+          "http_status": 200,
+          "raw_work_path": "work/ak-directory-deepening/raw/m3u.html",
+          "raw_sha256": "7dbaa5bf1589006fb1c1223cb608faf358539c14eeb7ff92b602f4170a266857",
+          "extracted_work_path": "work/ak-directory-deepening/raw/m3u.txt",
+          "extracted_sha256": "de40342916e47871008e955f00cd0aac8ec880caa441d686cd26f6509f5e8bba",
+          "archived_artifact": "artifacts/ak-directory-deepening/source-notes.md",
+          "sha256": "208461d068269f64ab8668855e1fb1c2103a552b7d7f3bd48330aca1dc6ee99c",
+          "locator": "支持声明与路径限制；无新导入链"
+        }
+      ]
+    },
+    {
+      "id": "E-AK-04",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "anonymous_public_html_GET",
+          "hands_on": false,
+          "visual_observed": false,
+          "url": "https://www.iriver.jp/support/file_1596.php",
+          "http_status": 200,
+          "raw_work_path": "work/ak-directory-deepening/raw/v122.html",
+          "raw_sha256": "1fdff34d5fe3aecc796398c77ae78d62a1750061934c338bd60fe7fd21d24f8d",
+          "extracted_work_path": "work/ak-directory-deepening/raw/v122.txt",
+          "extracted_sha256": "02fb82072fe5543aff74d5a991dc00e446bb59202118eeb3c1171eaf5783a64d",
+          "archived_artifact": "artifacts/ak-directory-deepening/source-notes.md",
+          "sha256": "208461d068269f64ab8668855e1fb1c2103a552b7d7f3bd48330aca1dc6ee99c",
+          "locator": "创建/更新时间、OTA、锁键与Chrome"
+        }
+      ]
+    },
+    {
+      "id": "E-AKCD-01",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "existing_pdf_reread_PyMuPDF",
+          "hands_on": false,
+          "visual_observed": false,
+          "raw_work_path": "work/ak-controls-deepening/SR35_instruction_book_ENG.pdf",
+          "raw_sha256": "2fc0dd11a7b6babfcc11028e2f1223c16320287f47adb18bb72ae10d97155182",
+          "extracted_work_path": "work/ak-directory-deepening/manual-pages.json",
+          "extracted_sha256": "39b50c61e6ef1ab1bef656830d8f5410a0bc542acde908478f7c0db8a11de89f",
+          "archived_artifact": "artifacts/ak-directory-deepening/source-notes.md",
+          "sha256": "208461d068269f64ab8668855e1fb1c2103a552b7d7f3bd48330aca1dc6ee99c",
+          "locator": "73文件页提取；本批逐条核印刷1目录与8–11、13–26、35–41、49–63及66–67目标正文；其他章节仅目录/旧批依据。新静态观察另见E-AKDD-03。"
+        }
+      ]
+    },
+    {
+      "id": "E-TFK-01",
+      "field": "additional_captures",
+      "before": null,
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "ordinary_public_html_reread",
+          "capture_url": "https://www.timeforkids.com/educators",
+          "raw_work_path": "work/time-vocabulary-deepening/educators.html",
+          "raw_sha256": "68cc02dfa8d9f0fbf8c6be7c3d3beeff29be892ce0d691b4bdfd36fb096ed4c6",
+          "text_work_path": "work/time-vocabulary-deepening/educators.txt",
+          "text_sha256": "e8a3fec65110d2b650e5712efe241434f89e9648d39ed21a7e2a8065a8930a0a",
+          "note_artifact": "artifacts/time-vocabulary-deepening/source-notes.md",
+          "note_sha256": "d3331d4d4e4e75110de17eabf55e665bd0d6ac1c4bd597a26a1edb3767f8c3c0",
+          "note": "核教育权益/分级/样刊目录，不是账号操作。"
+        }
+      ]
+    },
+    {
+      "id": "E-TKD-02",
+      "field": "additional_captures",
+      "before": null,
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "browser_rendered_dom_capture",
+          "capture_url": "https://www.timeforkids.com/g34/food-for-thought/?rl=en-760",
+          "raw_work_path": "work/time-vocabulary-deepening/browser/01-article.html",
+          "raw_sha256": "20b5cab01870e5a58aa8d78366ce40352df36f2a2814c3b11f67680326cfafe4",
+          "note_artifact": "artifacts/time-vocabulary-deepening/source-notes.md",
+          "note_sha256": "d3331d4d4e4e75110de17eabf55e665bd0d6ac1c4bd597a26a1edb3767f8c3c0",
+          "note": "此原件为浏览器渲染DOM，不是原站HTTP原始HTML；实际词卡操作另记E-TKVD-01。"
+        }
+      ]
+    }
+  ],
+  "files": [
+    {
+      "path": "docs/research/interaction-library/batches/hifi-extension-coverage.csv",
+      "backup": "work/time-vocabulary-deepening/reviewed-before/hifi-extension-coverage.csv",
+      "before_sha256": "54992a14abb5c4db4cebd6f034985cd48b98d79e5cd15bfebf8b5219b148d09e",
+      "after_sha256": "2b8c8163d2efda6c394cf22d3a987ca26979bb537b3d9c95ad797ff979c61fe8"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/dictionary-evidence.jsonl",
+      "backup": "work/time-vocabulary-deepening/reviewed-before/dictionary-evidence.jsonl",
+      "before_sha256": "3e0bd3f3ea57464143a6987092761c1f11da6602bd1f5afa2a655d55f5149393",
+      "after_sha256": "935129c980f6e5989e173ad23d387151c5253f71afe6fc28486aa036b5987224"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/hifi-extension-evidence.jsonl",
+      "backup": "work/time-vocabulary-deepening/reviewed-before/hifi-extension-evidence.jsonl",
+      "before_sha256": "ebde5aee5a5c1ece416b2e99aee4fc4528e3c23694ce1ee0173eb7c11f070735",
+      "after_sha256": "6c1a8439a9c0b5241153d8f70b076e81f422a68f49a8c843f29f39ceac82b296"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/youdao-device-deepening-evidence.jsonl",
+      "backup": "work/time-vocabulary-deepening/reviewed-before/youdao-device-deepening-evidence.jsonl",
+      "before_sha256": "6637a3ec401dd37f6e81d85f638ce2bd619e1794b7c13c7be2d78ef289a96cac",
+      "after_sha256": "a799fa1efac8cd921aaa76e352c041792252d63146773dcdc62259cddb78b78f"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/news-coverage.csv",
+      "backup": "work/time-vocabulary-deepening/reviewed-before/news-coverage.csv",
+      "before_sha256": "fd80090fc75e866d4829f2092b40b39d2ed8c2f3bfe0cb5241a2ff173d4d51cf",
+      "after_sha256": "4e7a790d3ee05aba61cfcb7b9ce2011d479be57d2c52fc0ae7161b67eb607d9e"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/news-evidence.jsonl",
+      "backup": "work/time-vocabulary-deepening/reviewed-before/news-evidence.jsonl",
+      "before_sha256": "949d826919b2cd031d1041dccdecd030e33952e400dfd30161631af560538722",
+      "after_sha256": "7bdaef042945d9b25a83c8f8b146405f802d85e0fca8e48c27fc990ebf70168c"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/ak-controls-deepening-evidence.jsonl",
+      "backup": "work/time-vocabulary-deepening/reviewed-before/ak-controls-deepening-evidence.jsonl",
+      "before_sha256": "265dd2095a2427856aff28d0639fd3452095c6513008f48cf1b778def761a77e",
+      "after_sha256": "ebf6ecfab76d4416897338b03afa986dbbee7860781d20f9250d875eb89b6844"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/ak-controls-deepening-coverage.csv",
+      "backup": "work/time-vocabulary-deepening/reviewed-before/ak-controls-deepening-coverage.csv",
+      "before_sha256": "f3dd87f8371b9181de8a63143c857e97a4b563a30e3e1dc5d69b0c2133747e16",
+      "after_sha256": "aaec19fc23fb57618e8ab6bdd11e93d8f8c4ebc8083dbabe6c47ba71e61060a7"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/child-information-deepening-evidence.jsonl",
+      "backup": "work/time-vocabulary-deepening/reviewed-before/child-information-deepening-evidence.jsonl",
+      "before_sha256": "b74e7cb7753a998df4ddf756316965a9db26b4113a8ef66145ddb3da9bfbb225",
+      "after_sha256": "4a19da2250c5fb5998384ab8f450fa8a4ef28f12070124e21e928a16049687a2"
+    }
+  ],
+  "old_tasks": 6,
+  "old_task_fields": 27,
+  "old_evidence_captures": 11
+}

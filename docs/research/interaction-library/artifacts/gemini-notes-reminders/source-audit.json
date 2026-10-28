@@ -1,0 +1,48 @@
+{
+  "checked_on": "2026-10-27",
+  "captures": [
+    {
+      "evidence_id": "E-GENR-01",
+      "title": "笔记与列表",
+      "url": "https://support.google.com/gemini/answer/15230597?co=GENIE.Platform%3DAndroid&hl=en",
+      "raw_work_path": "work/research/batch50-integration/gemini-15230597.txt",
+      "raw_sha256": "fab609b31ad696da056cfc8e11859f4f883ff5175065f3f44f0f58035e82b605",
+      "access_mode": "web_tool_full_article_text_read",
+      "http_status": "not_exposed_by_web_tool",
+      "body_read": true,
+      "visual_observed": false,
+      "hands_on": false
+    },
+    {
+      "evidence_id": "E-GENR-02",
+      "title": "任务与提醒",
+      "url": "https://support.google.com/gemini/answer/15230285?co=GENIE.Platform%3DAndroid&hl=en",
+      "raw_work_path": "work/research/batch50-integration/gemini-15230285.txt",
+      "raw_sha256": "1d5880c9c46dcaccee055f452dab43f85dcf32bb1d50a50107d523228dd1b7a9",
+      "access_mode": "web_tool_full_article_text_read",
+      "http_status": "not_exposed_by_web_tool",
+      "body_read": true,
+      "visual_observed": false,
+      "hands_on": false
+    }
+  ],
+  "failed_sources": [
+    {
+      "url": "https://support.google.com/gemini/answer/15305236?co=GENIE.Platform%3DAndroid&hl=en",
+      "result": "web tool reported HTTP 429; no retry or alternate route",
+      "body_read": false
+    },
+    {
+      "url": "https://support.google.com/gemini/answer/15229592?co=GENIE.Platform%3DAndroid&hl=en",
+      "result": "not accessible via web tool; no body",
+      "body_read": false
+    }
+  ],
+  "discovered_only": [
+    "17094507 Tasks agent workflow",
+    "17094710 Schedules",
+    "17094296 Skills"
+  ],
+  "version_scope": "Android English official help at lookup; installed build unknown",
+  "no_product_actions": true
+}

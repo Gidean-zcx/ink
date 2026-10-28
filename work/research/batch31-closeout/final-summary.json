@@ -1,0 +1,39 @@
+{
+  "markdown_files": 212,
+  "local_links_checked": 1532,
+  "products": 65,
+  "partial_cases": 65,
+  "flows": 860,
+  "depths": {
+    "D2": 767,
+    "D1": 78,
+    "D4": 15
+  },
+  "evidence_records": 1437,
+  "distinct_source_urls": 1269,
+  "static_visual_evidence": 201,
+  "operated_browser_evidence": 18,
+  "errors": [],
+  "batch": 31,
+  "checked_on": "2026-10-27",
+  "status": "batch_complete_goal_active",
+  "new_evidence": 3,
+  "new_flows": 0,
+  "old_flows": 2,
+  "old_fields": 8,
+  "old_evidence_captures": 1,
+  "formal_images": 14,
+  "requirements_sha256": "e141320e2714df805c009fe64dd92d17decd6429d5728f8ce42d6d868b775087",
+  "checks": [
+    {
+      "command": "python3 work/research/interaction-depth/check_docs.py",
+      "exit_code": 0
+    }
+  ],
+  "brief": "docs/briefs/031-sync-readiness-and-ai-results.md",
+  "guide": "docs/research/interaction-library/design-reference-guide.md",
+  "depth_audit": "docs/research/interaction-library/analysis-status.md",
+  "no_new_product_operation": true,
+  "no_continuous_visual_chain": true,
+  "once_only_mutations_complete": true
+}

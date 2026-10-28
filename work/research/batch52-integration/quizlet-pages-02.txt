@@ -1,0 +1,522 @@
+Create flashcard sets directly in ChatGPT – Quizlet Help Center (https://help.quizlet.com/hc/en-us/articles/44716146144909-Create-flashcard-sets-directly-in-ChatGPT)
+citeturn1082view0 [wordlim: 200] Crawled: today; Content type: text/html; Source: click({"ref_id":"turn1080view1","id":14}); Total lines: 79
+L0: 【0†iframe†www.googletagmanager.com】
+L1: 
+L2: 【1†Help center†quizlet.zendesk.com】
+L3: 
+L4: Topics
+L5: 
+L6: Popular Articles
+L7: 
+L8: 【2†Resending a confirmation message】 【3†Changing your username】 【4†Changing your password】 【5†Finding flashcard sets】 【6†Finding your teacher's class】 【7†Browser and device compatibility】
+L9: 
+L10: [Input][Input: Search]
+L11: 
+L12: 【8†Image】   【8†Username】
+L13: # Create flashcard sets directly in ChatGPT
+L14: 
+L15: The Quizlet app in ChatGPT makes it easy to turn a conversation into flashcards in seconds – so you can go from learning something new to studying it effectively without breaking your flow.
+L16: 
+L17: Whether you’re exploring a new topic, preparing for a test, or working through homework, Quizlet meets you right where your learning starts.
+L18: 
+L19: With the Quizlet app in ChatGPT you can:
+L20:   * Use ChatGPT to explore concepts, break down topics, or ask questions
+L21:   * Instantly turn that information into organized flashcards
+L22:   * Continue studying on Quizlet using tools designed for long-term learning and retention
+L23: 
+L24: How it works
+L25:   1. 【9†Connect the Quizlet app in ChatGPT†chatgpt.com】.
+L26:   2. Start your prompt in ChatGPT by typing “@Quizlet” and then the flashcards you need (e.g. “@Quizlet create flashcards for my microbiology exam.”)
+L27:   3. ChatGPT automatically converts your conversation into a complete Quizlet flashcard set
+L28: 
+L29: Once your set is created, you’ll see your flashcards directly in ChatGPT that you can flip through and begin studying.
+L30: When you’re ready to study further, select the option to open your set in Quizlet. From there, you can:
+L31: 
+L32:   * Edit and personalize your flashcards
+L33:   * Study your flashcards in any of the study modes
+L34:   * Practice, review, and build mastery
+L35:   * Share your flashcard set with others
+L36: ### Related Articles
+L37: 
+L38:   * 【10†Studying with Podcasts】
+L39:   * 【11†Studying with Spaced Repetition】
+L40:   * 【12†Using Study with friends】
+L41:   * 【13†Playing Charms】
+L42:   * 【14†Studying with Audio Notes】
+L43:   * 【15†Create flashcard sets directly in ChatGPT】
+L44:   * 【16†Studying with Ask Quizlet】
+L45:   * 【17†Using Quizlet with Superhuman】
+L46:   * 【18†Studying with Answer Streaks】
+L47:   * 【19†Playing a game of Blocks】
+L48:   * 【20†See more】
+L49: ### Can't find what you're looking for?
+L50: 
+L51: 【21†Ask a question】
+L52: 
+L53: Was this article helpful?
+L54: 
+L55: [Button: Yes] [Button: No]
+L56: 
+L57: ##### About us
+L58: 
+L59: 【22†About Quizlet†quizlet.com】 【23†How Quizlet works†quizlet.com】 【24†Careers†quizlet.com】 【25†Advertise with us†quizlet.com】 【26†Get the app†quizlet.com】
+L60: ##### For students
+L61: 
+L62: 【27†Flashcards†quizlet.com】 【28†Test†quizlet.com】 【29†Learn†quizlet.com】 【30†Solutions†quizlet.com】 【31†Modern Learning Lab†quizlet.com】 【32†Quizlet Plus†quizlet.com】 【33†Study Guides†quizlet.com】 【34†Pomodoro timer†quizlet.com】
+L63: 
+L64: ##### For Teachers
+L65: 
+L66: 【35†Live†quizlet.com】 【36†Blog†quizlet.com】 【37†Be the Change†quizlet.com】 【38†Quizlet Plus for teachers†quizlet.com】
+L67: ##### Resources
+L68: 
+L69: 【39†Help center†quizlet.com】 【40†Sign up†quizlet.com】 【41†Honor code†quizlet.com】 【42†Community guidelines†quizlet.com】 【43†Accessibility statement†quizlet.com】 【44†Privacy†quizlet.com】 【45†Your Privacy/Cookies Choices†quizlet.com】 【46†Terms†quizlet.com】 【47†Ad and Cookie Policy†quizlet.com】 【48†Interest-Based Advertising†quizlet.com】 【49†Quizlet for Schools†quizlet.com】 【50†Parents†quizlet.com】
+L70: 
+L71: ##### Language
+L72: 
+L73: English (United States)
+L74: 
+L75: 【51†Image】 【52†Get the app†get.quizlet.com】
+L76: ##### Get the app
+L77: 
+L78: © Quizlet Inc.
+--------------------------------------------------------------------------------
+Using error checking options (UK) – Quizlet Help Center (https://help.quizlet.com/hc/en-us/articles/360048331232-Using-error-checking-options-UK)
+citeturn1082view1 [wordlim: 200] Crawled: 2 days ago; Content type: text/html; Source: click({"ref_id":"turn1080view1","id":33}); Total lines: 197
+L0: 【0†iframe†www.googletagmanager.com】
+L1: 
+L2: 【1†Help center†quizlet.zendesk.com】
+L3: 
+L4: Topics
+L5: 
+L6: Popular Articles
+L7: 
+L8: 【2†Resending a confirmation message】 【3†Changing your username】 【4†Changing your password】 【5†Finding flashcard sets】 【6†Finding your teacher's class】 【7†Browser and device compatibility】
+L9: 
+L10: [Input][Input: Search]
+L11: 
+L12: 【8†Image】   【8†Username】
+L13: # Using error checking options (UK)
+L14: 
+L15: 【8†IOS】 【8†Web】 【8†Android】
+L16: 
+L17: Error checking options let you choose how strictly Quizlet checks your answers so you can focus on understanding concepts at the level that works best for you.
+L18: 
+L19: * * *
+L20: 
+L21: Sections in this article include:
+L22: 
+L23:   * 【9†Error checking options in Learn】
+L24:   * 【10†Error checking options in Test】
+L25: 
+L26: * * *
+L27: ## Error checking options in Learn
+L28: 
+L29: When you’re studying on the website, error checking options are available in sets that have three or more cards and with terms and definitions in English, French, German, or Spanish in Learn.
+L30: 
+L31: Relaxed
+L32: 
+L33:   * The general meaning of your answer is accepted as correct. Synonyms, rephrasing, and typos are also accepted.
+L34:   * This level is selected by default if the set meets the error checking options requirements and both sides are in your default language.
+L35: 
+L36: Moderate
+L37:   * An exact match is required, but minor misspellings such as accent mark errors or missing letters are accepted.
+L38:   * Available when both sides of the set are in the same language and the language is not one that is graded strictly (Chinese, Japanese, math, chemistry, Akkadian, or photo-only sets).
+L39:   * This level is selected by default if Relaxed isn’t available and the set doesn’t default to Strict.
+L40: 
+L41: Strict
+L42:   * An exact match is required. Only small stylistic mistakes like case or punctuation differences are accepted.
+L43:   * Always available.
+L44:   * This level is selected by default if the set has different languages on each side (for example, language learning sets).
+L45: 
+L46: To choose a Error checking option in Learn
+L47: 
+L48:   1. 【11†Log in†quizlet.com】 to your account.
+L49:   2. Open a set.
+L50:   3. Select Learn.
+L51:   4. Select Options.
+L52:   5. Select Error checking options.
+L53:   6. Choose an error checking option.
+L54:   7. Select Save.
+L55: ## Error checking options in Test
+L56: 
+L57: If a set includes terms that have multiple definitions or answers, you can change your error checking settings to require one or all answers in Test.
+L58: 
+L59: To choose a Error checking option in Test
+L60: 
+L61:   1. 【11†Log in†quizlet.com】 to your account.
+L62:   2. Open a set.
+L63:   3. Select Test.
+L64:   4. Select Options.
+L65:   5. Select Error checking options.
+L66:   6. Check Require 1 answer only.
+L67: This will mark answers correct if they contain at least one of the correct options included in a definition.
+L68: Multiple correct answers in a definition must be separated by a comma, slash, or semicolon for single-answer error checking to work.
+L69: ## Settings and options
+L70: 
+L71:   * Single-answer error checking is available for Test.
+L72:   * Once you turn on single-answer error checking for a set, that preference is also set for all other activities. To disable it, click Options and then uncheck Require 1 answer only.
+L73: 
+L74: Error checking options let you choose how strictly Quizlet checks your answers so you can focus on understanding concepts at the level that works best for you.
+L75: 
+L76: * * *
+L77: 
+L78: Sections in this article include:
+L79:   * 【12†Error checking options in Learn】
+L80:   * 【13†Error checking options in Test】
+L81: 
+L82: * * *
+L83: ## Error checking options in Learn
+L84: 
+L85: When you’re studying on the iOS app, error checking options are available in sets that have three or more cards and with terms and definitions in English, French, German, or Spanish in Learn.
+L86: 
+L87: Relaxed
+L88: 
+L89:   * The general meaning of your answer is accepted as correct. Synonyms, rephrasing, and typos are also accepted.
+L90:   * This level is selected by default if the set meets the error checking options requirements and both sides are in your default language.
+L91: 
+L92: Moderate
+L93:   * An exact match is required, but minor misspellings such as accent mark errors or missing letters are accepted.
+L94:   * Available when both sides of the set are in the same language and the language is not one that is graded strictly (Chinese, Japanese, math, chemistry, Akkadian, or photo-only sets).
+L95:   * This level is selected by default if Relaxed isn’t available and the set doesn’t default to Strict.
+L96: 
+L97: Strict
+L98:   * An exact match is required. Only small stylistic mistakes like case or punctuation differences are accepted.
+L99:   * Always available.
+L100:   * This level is selected by default if the set has different languages on each side (for example, language learning sets).
+L101: 
+L102: To choose a Error checking option in Learn
+L103: 
+L104:   1. Open a set.
+L105:   2. Select Learn.
+L106:   3. Select Options.
+L107:   4. Select Error checking options.
+L108:   5. Choose an error checking option.
+L109:   6. Select Done.
+L110: ## Error checking options in Test
+L111: 
+L112: Currently, you can only change your error checking options on the website.
+L113: 
+L114: Error checking options let you choose how strictly Quizlet checks your answers so you can focus on understanding concepts at the level that works best for you.
+L115: 
+L116: * * *
+L117: 
+L118: Sections in this article include:
+L119: 
+L120:   * 【14†Error checking options in Learn】
+L121:   * 【15†Error checking options in Test】
+L122: 
+L123: * * *
+L124: ## Error checking options in Learn
+L125: 
+L126: When you’re studying on the Android app, error checking options are available in sets that have three or more cards and with terms and definitions in English, French, German, or Spanish in Learn.
+L127: 
+L128: Relaxed
+L129: 
+L130:   * The general meaning of your answer is accepted as correct. Synonyms, rephrasing, and typos are also accepted.
+L131:   * This level is selected by default if the set meets the error checking options requirements and both sides are in your default language.
+L132: 
+L133: Moderate
+L134:   * An exact match is required, but minor misspellings such as accent mark errors or missing letters are accepted.
+L135:   * Available when both sides of the set are in the same language and the language is not one that is graded strictly (Chinese, Japanese, math, chemistry, Akkadian, or photo-only sets).
+L136:   * This level is selected by default if Relaxed isn’t available and the set doesn’t default to Strict.
+L137: 
+L138: Strict
+L139:   * An exact match is required. Only small stylistic mistakes like case or punctuation differences are accepted.
+L140:   * Always available.
+L141:   * This level is selected by default if the set has different languages on each side (for example, language learning sets).
+L142: 
+L143: To choose a Error checking option in Learn
+L144: 
+L145:   1. Open a set.
+L146:   2. Select Learn.
+L147:   3. Select Options.
+L148:   4. Select Error checking options.
+L149:   5. Choose an error checking option.
+L150:   6. Select Done.
+L151: ## Error checking options in Test
+L152: 
+L153: Currently, you can only change your error checking options on the website.
+L154: ### Related Articles
+L155: 
+L156:   * 【16†Studying with Podcasts】
+L157:   * 【17†Studying with Spaced Repetition】
+L158:   * 【18†Using Study with friends】
+L159:   * 【19†Playing Charms】
+L160:   * 【20†Studying with Audio Notes】
+L161:   * 【21†Create flashcard sets directly in ChatGPT】
+L162:   * 【22†Studying with Ask Quizlet】
+L163:   * 【23†Using Quizlet with Superhuman】
+L164:   * 【24†Studying with Answer Streaks】
+L165:   * 【25†Playing a game of Blocks】
+L166:   * 【26†See more】
+L167: ### Can't find what you're looking for?
+L168: 
+L169: 【27†Ask a question】
+L170: 
+L171: Was this article helpful?
+L172: 
+L173: [Button: Yes] [Button: No]
+L174: 
+L175: ##### About us
+L176: 
+L177: 【28†About Quizlet†quizlet.com】 【29†How Quizlet works†quizlet.com】 【30†Careers†quizlet.com】 【31†Advertise with us†quizlet.com】 【32†Get the app†quizlet.com】
+L178: ##### For students
+L179: 
+L180: 【33†Flashcards†quizlet.com】 【34†Test†quizlet.com】 【35†Learn†quizlet.com】 【36†Solutions†quizlet.com】 【37†Modern Learning Lab†quizlet.com】 【38†Quizlet Plus†quizlet.com】 【39†Study Guides†quizlet.com】 【40†Pomodoro timer†quizlet.com】
+L181: 
+L182: ##### For Teachers
+L183: 
+L184: 【41†Live†quizlet.com】 【42†Blog†quizlet.com】 【43†Be the Change†quizlet.com】 【44†Quizlet Plus for teachers†quizlet.com】
+L185: ##### Resources
+L186: 
+L187: 【45†Help center†quizlet.com】 【46†Sign up†quizlet.com】 【47†Honor code†quizlet.com】 【48†Community guidelines†quizlet.com】 【49†Accessibility statement†quizlet.com】 【50†Privacy†quizlet.com】 【51†Your Privacy/Cookies Choices†quizlet.com】 【52†Terms†quizlet.com】 【53†Ad and Cookie Policy†quizlet.com】 【54†Interest-Based Advertising†quizlet.com】 【55†Quizlet for Schools†quizlet.com】 【56†Parents†quizlet.com】
+L188: 
+L189: ##### Language
+L190: 
+L191: English (United States)
+L192: 
+L193: 【57†Image】 【58†Get the app†get.quizlet.com】
+L194: ##### Get the app
+L195: 
+L196: © Quizlet Inc.
+--------------------------------------------------------------------------------
+Creating flashcard sets – Quizlet Help Center (https://help.quizlet.com/hc/en-us/articles/360029780752-Creating-flashcard-sets)
+citeturn1082view2 [wordlim: 200] Crawled: today; Content type: text/html; Source: click({"ref_id":"turn1080view0","id":15}); Total lines: 126
+L0: 【0†iframe†www.googletagmanager.com】
+L1: 
+L2: 【1†Help center†quizlet.zendesk.com】
+L3: 
+L4: Topics
+L5: 
+L6: Popular Articles
+L7: 
+L8: 【2†Resending a confirmation message】 【3†Changing your username】 【4†Changing your password】 【5†Finding flashcard sets】 【6†Finding your teacher's class】 【7†Browser and device compatibility】
+L9: 
+L10: [Input][Input: Search]
+L11: 
+L12: 【8†Image】   【8†Username】
+L13: # Creating flashcard sets
+L14: 
+L15: 【8†IOS】 【8†Web】 【8†Android】
+L16: 
+L17: Creating your own flashcard set lets you focus on exactly what you want to learn.*
+L18: 
+L19: To create a flashcard set
+L20:   1. 【9†Log in†quizlet.com】 to your account.
+L21:   2. Select 【10†Image: Create (web)】 Create.
+L22:   3. Select Flashcard set.
+L23:   4. Enter a title for your set.
+L24:   5. Add a term in the first column.
+L25:   6. Add a definition in the second column.
+L26:   7. Select Choose language under the term and definition, if needed.
+L27: Chemistry and Math / Symbols are available in addition to many other languages.
+L28:   8. Select Create to save and publish your set.
+L29: 
+L30: Or, you can save time by 【11†importing your content】!
+L31: Your work is automatically saved while you're creating and editing sets. If you don't publish your set, you can 【12†edit an autosaved draft】 to keep working on it.
+L32: 
+L33: Settings and options
+L34:   * Published sets are public by default, and you can 【13†change a set's visibility】 any time.
+L35:   * Select Choose Language to type with special characters and accents, including Chemistry and Math / Symbols.
+L36:   * Students can select Create and practice to study their new set in 【14†Learn】.
+L37:   * Subscribers to 【15†Quizlet Plus†quizlet.com】 and 【16†Quizlet Plus for teachers†quizlet.com】 can highlight, bold, italicize, or underline text in sets.
+L38: 
+L39: Tips
+L40:   * Take a shortcut to create sets by going to 【17†https://quizlet.new†quizlet.new】.
+L41:   * As you type, you'll see suggested terms that match what you've typed. Turn off suggestions by selecting the Suggestions icon.
+L42:   * You can add images to your terms and definitions by 【18†uploading your own images】 or by 【19†adding images from our free gallery】.
+L43: *Users in certain locations must have their parent confirm their consent via a confirmation email before they can create and edit flashcard sets. Find out more about 【20†younger users' account limitations】.
+L44:   1. Select 【21†Image: Size=Medium (24).png】 Create.
+L45:   2. Select Flashcard set.
+L46:   3. Enter a title for your set.
+L47:   4. Enter a term and definition.
+L48:   5. Choose Select language under the term and definition, if needed.
+L49: Chemistry and Math / Symbols are available in addition to many other languages.
+L50:   6. Select the + to add a new card to the set.
+L51:   7. Select Done to save and publish your set.
+L52: 
+L53: Settings and options
+L54:   * Published sets are public by default, and you can 【13†change a set's visibility】 any time.
+L55:   * Choose Select language to type with special characters and accents, including Chemistry and Math / Symbols.
+L56:   * Subscribers to 【15†Quizlet Plus†quizlet.com】 and 【16†Quizlet Plus for teachers†quizlet.com】 subscribers can highlight, bold, italicize, or underline text in sets.
+L57: 
+L58: Tips
+L59:   * Looking for a shortcut to create sets? Just go to 【17†https://quizlet.new†quizlet.new】.
+L60:   * As you type, you'll see suggested terms that match what you've typed. Turn off suggestions by selecting the Suggestions icon.
+L61:   * You can add a card in the middle of your set, rather than at the bottom, by tapping any card other than the last one and then tapping the +. The new card is added below the card you selected.
+L62:   * You can delete a card by swiping left on it and tapping 【22†Image: Trash_-_Resized.png】 (trash can).
+L63:   * Tap 【23†Image: Image_-_Resized.png】  (image) to add an image to a definition.
+L64: *Users in certain locations must have their parent confirm their consent via a confirmation email before they can create and edit flashcard sets. Find out more about 【20†younger users' account limitations】.
+L65:   1. Select 【21†Image: Size=Medium (24).png】 Create.
+L66:   2. Select Flashcard set.
+L67:   3. Enter a title for your set.
+L68:   4. Enter a term and definition.
+L69:   5. Choose Select language under the term and definition, if needed.
+L70: Chemistry and Math / Symbols are available in addition to many other languages.
+L71:   6. Select the + to add a new card to the set.
+L72:   7. Select Done to save and publish your set.
+L73: 
+L74: Settings and options
+L75:   * Published sets are public by default, and you can 【13†change a set's visibility】 any time.
+L76:   * Choose Select language to type with special characters and accents, including Chemistry and Math / Symbols.
+L77: 
+L78: Tips
+L79:   * You can add a card in the middle of your set, rather than at the bottom, by swiping left any card other than the last one and then tapping the +. The new card is added below the card you selected.
+L80:   * You can delete a card by swiping left on it and tapping 【22†Image: Trash_-_Resized.png】 (trash can).
+L81:   * Tap 【24†Image: Camera_-_Resized.png】  (camera ) to add an image to a definition.
+L82: *Users in certain locations must have their parent confirm their consent via a confirmation email before they can create and edit flashcard sets. Find out more about 【20†younger users' account limitations】.
+L83: ### Related Articles
+L84: 
+L85:   * 【25†Create flashcard sets directly in Claude】
+L86:   * 【26†Studying with Study Groups】
+L87:   * 【27†Creating study sets with Smart Assist】
+L88:   * 【28†Becoming a top creator on Quizlet】
+L89:   * 【29†Studying with Study Guides】
+L90:   * 【30†What are flashcard sets?】
+L91:   * 【31†Creating flashcard sets】
+L92:   * 【32†Adding images to sets from the free gallery】
+L93:   * 【33†Adding your own images to sets】
+L94:   * 【34†Recording custom audio】
+L95:   * 【35†See more】
+L96: ### Can't find what you're looking for?
+L97: 
+L98: 【36†Ask a question】
+L99: 
+L100: Was this article helpful?
+L101: 
+L102: [Button: Yes] [Button: No]
+L103: 
+L104: ##### About us
+L105: 
+L106: 【37†About Quizlet†quizlet.com】 【38†How Quizlet works†quizlet.com】 【39†Careers†quizlet.com】 【40†Advertise with us†quizlet.com】 【41†Get the app†quizlet.com】
+L107: ##### For students
+L108: 
+L109: 【42†Flashcards†quizlet.com】 【43†Test†quizlet.com】 【44†Learn†quizlet.com】 【45†Solutions†quizlet.com】 【46†Modern Learning Lab†quizlet.com】 【47†Quizlet Plus†quizlet.com】 【48†Study Guides†quizlet.com】 【49†Pomodoro timer†quizlet.com】
+L110: 
+L111: ##### For Teachers
+L112: 
+L113: 【50†Live†quizlet.com】 【51†Blog†quizlet.com】 【52†Be the Change†quizlet.com】 【53†Quizlet Plus for teachers†quizlet.com】
+L114: ##### Resources
+L115: 
+L116: 【54†Help center†quizlet.com】 【55†Sign up†quizlet.com】 【56†Honor code†quizlet.com】 【57†Community guidelines†quizlet.com】 【58†Accessibility statement†quizlet.com】 【59†Privacy†quizlet.com】 【60†Your Privacy/Cookies Choices†quizlet.com】 【61†Terms†quizlet.com】 【62†Ad and Cookie Policy†quizlet.com】 【63†Interest-Based Advertising†quizlet.com】 【64†Quizlet for Schools†quizlet.com】 【65†Parents†quizlet.com】
+L117: 
+L118: ##### Language
+L119: 
+L120: English (United States)
+L121: 
+L122: 【66†Image】 【67†Get the app†get.quizlet.com】
+L123: ##### Get the app
+L124: 
+L125: © Quizlet Inc.
+--------------------------------------------------------------------------------
+Studying on Quizlet – Quizlet Help Center (https://help.quizlet.com/hc/en-us/articles/360030841732-Studying-on-Quizlet)
+citeturn1082view3 [wordlim: 200] Crawled: today; Content type: text/html; Source: click({"ref_id":"turn1080view1","id":20}); Total lines: 133
+L0: 【0†iframe†www.googletagmanager.com】
+L1: 
+L2: 【1†Help center†quizlet.zendesk.com】
+L3: 
+L4: Topics
+L5: 
+L6: Popular Articles
+L7: 
+L8: 【2†Resending a confirmation message】 【3†Changing your username】 【4†Changing your password】 【5†Finding flashcard sets】 【6†Finding your teacher's class】 【7†Browser and device compatibility】
+L9: 
+L10: [Input][Input: Search]
+L11: 
+L12: 【8†Image】   【8†Username】
+L13: # Studying on Quizlet
+L14: 
+L15: Study eight different ways with Quizlet! Review with study activities, AI-powered study tools, and step-by-step question and textbook solutions make reviewing any subject engaging and effective. Here's a quick look at all the ways you can study with Quizlet.
+L16: 
+L17: * * *
+L18: 
+L19: Sections in this article include:
+L20: 
+L21:   * 【9†Flashcard sets】
+L22:   * 【10†Diagram sets】
+L23:   * 【11†Study activities】
+L24:   * 【12†Activities】
+L25:   * 【13†Practice Tests】
+L26:   * 【14†Study Guides】
+L27:   * 【15†Expert Solutions】
+L28: 
+L29: * * *
+L30: 
+L31: Flashcard sets
+L32: A flashcard set is a list of terms and definitions or questions and answers. Flashcard sets can include words, images, and audio. You can 【16†upgrade any time†quizlet.com】 to get even more special set creation features, like diagram sets and rich text editing!
+L33: 
+L34: Search for flashcard sets or 【17†create your own】 and 【18†share them】 with your students, classmates, and friends. Quizlet is also a 【19†great resource for teachers†quizlet.com】 looking for new ways to engage students.
+L35: Study any time on the Quizlet website, 【20†iOS app†quizlet.app.link】, and 【21†Android app†quizlet.app.link】.
+L36: 
+L37: Diagram sets
+L38: 
+L39: Diagram sets include an image, map, or diagram that you can label with terms and definitions. Find out more about how to 【22†create a diagram set】.
+L40: 
+L41: Diagram sets are a vailable to 【23†Quizlet Plus†quizlet.com】 and 【19†Quizlet Plus for teachers†quizlet.com】 subscribers.
+L42: 
+L43: Study activities
+L44: 【24†Flashcards】
+L45: Review terms and definitions or questions and answers the way you would with traditional flashcards.
+L46: 
+L47: 【25†Learn 】
+L48: Learn is av ailable to 【23†Quizlet Plus†quizlet.com】 and 【19†Quizlet Plus for teachers†quizlet.com】 subscribers.. If you're not a Quizlet subscriber, you can study with Learn for free for a limited number of rounds per flashcard set.
+L49: Answer questions that get progressively harder. This activity creates a personalized study sequence based on your familiarity with the content and helps you master everything you need to know.
+L50: 
+L51: In Learn, subscribers can use custom study paths, keep track of their Progress, and use smart grading to focus on concepts instead of rote memorization.
+L52: 
+L53: 【26†Write mode】
+L54: Write mode is now part of 【25†Learn mode】. Access it in the Options menu to customize your study session.
+L55: 【27†Spell mode】
+L56: Spell mode is now part of 【25†Learn mode】. Access it in the Options menu to customize your study session.
+L57: 
+L58: 【28†Test】
+L59: Test is a vailable to 【23†Quizlet Plus†quizlet.com】 and 【19†Quizlet Plus for teachers†quizlet.com】 subscribers. If you're not a Quizlet subscriber, you have access to one practice test per flashcard set.
+L60: 
+L61: See how you might perform on a test by quizzing yourself with different question types.
+L62: 
+L63: Activities
+L64: 【29†Blast】
+L65: Players work individually or as teams to match the terms and definitions from flashcard sets. Terms or definitions are displayed on moving asteroids, and players need to be the first to blast the right rock. When time is up, whoever has the most points wins!
+L66: 
+L67: 【30†Blocks 】
+L68: Students answer questions to earn block pieces. Place pieces on the grid to complete rows or columns and earn points. When all three pieces are placed, players will need to answer a question to earn three more. Keep playing until you run out of moves, and try to beat your top score!
+L69: 
+L70: 【31†Match】
+L71: Race against the clock to match terms and definitions as quickly as you can.
+L72: 
+L73: 【32†Gravity】
+L74: Gravity is no longer available. For a timed practice activity, try Match!
+L75: Classic Quizlet Live
+L76: Quizlet Live is our classic classroom game where players work together to correctly match terms and definitions. You can play Classic Live in 【33†Teams】 mode or 【34†Individuals】 mode.
+L77: 
+L78: 【35†Practice Tests】
+L79: Practice Tests generate questions based on your uploaded notes or flashcard sets. Different from 【36†Test】, Practice Tests are powered by AI and transform your study materials into full-length practice tests that simulate a real exam. You can choose the amount of questions you want, the question type, and the time limit. Practice Tests are currently available for study material in the sciences and humanities.
+L80: Practice Tests are available to 【23†Quizlet Plus†quizlet.com】 and 【19†Quizlet Plus for teachers†quizlet.com】 subscribers. If you're not a Quizlet subscriber, you can try Practice Tests for free with limited access.
+L81: 
+L82: 【37†Study Guides】
+L83: 
+L84: Upload or paste your course materials to generate study guides and flashcards with the click of a button. This AI-powered feature makes it easy to tap into the knowledge you create from your own class notes.
+L85: Study Guides are available to 【23†Quizlet Plus†quizlet.com】 and 【19†Quizlet Plus for teachers†quizlet.com】 subscribers. If you're not a Quizlet subscriber, you can try Study Guides for free with limited access.
+L86: 
+L87: 【38†Expert Solutions】
+L88: Quizlet Expert Solutions walk you through step-by-step question and textbook solutions that are written and verified by experts. With easy organization broken down by each textbook and chapter, you can quickly understand the reasons behind the right answers so you can practice and apply the concepts on your own.
+L89: Standard high school–level expert solutions are free for students and teachers. If you're not subscribed to Quizlet, you can also study a limited number of textbook solutions per college-level textbook for free.
+L90: ### Related Articles
+L91: 
+L92:   * 【39†Studying with Podcasts】
+L93:   * 【40†Studying with Spaced Repetition】
+L94:   * 【41†Using Study with friends】
+L95:   * 【42†Playing Charms】
+L96:   * 【43†Studying with Audio Notes】
+L97:   * 【44†Create flashcard sets directly in ChatGPT】
+L98:   * 【45†Studying with Ask Quizlet】
+L99:   * 【46†Using Quizlet with Superhuman】
+L100:   * 【47†Studying with Answer Streaks】
+L101:   * 【30†Playing a game of Blocks】
+L102:   * 【48†See more】
+L103: ### Can't find what you're looking for?
+L104: 
+L105: 【49†Ask a question】
+L106: 
+L107: Was this article helpful?
+

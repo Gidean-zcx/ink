@@ -1,0 +1,341 @@
+[
+  {
+    "block": 5,
+    "index": 0,
+    "url": "https://image.woshipm.com/2025/05/09/1594e038-2cec-11f0-9743-00163e09d72f.png",
+    "artifact": "artifacts/xiaoyuan-app-controls-deepening/practice-05-00.png",
+    "sha256": "4f292c8dda9b489e4aadbccf406202fb5bc83c79175c0a3385316ba2de1ae537",
+    "raw_work_path": "work/xiaoyuan-app-controls-deepening/raw/practice-05-00.png",
+    "observed_on": "2026-10-27"
+  },
+  {
+    "block": 5,
+    "index": 1,
+    "url": "https://image.woshipm.com/2025/05/09/1d2c7ec8-2cec-11f0-adb9-00163e09d72f.png",
+    "artifact": "artifacts/xiaoyuan-app-controls-deepening/practice-05-01.png",
+    "sha256": "66dcc555a53e84aa5e3941d748c33109bc84dfb1dd07ead51194a5efd4adb11b",
+    "raw_work_path": "work/xiaoyuan-app-controls-deepening/raw/practice-05-01.png",
+    "observed_on": "2026-10-27"
+  },
+  {
+    "block": 5,
+    "index": 4,
+    "url": "https://image.woshipm.com/2025/05/09/5d24823c-2cec-11f0-8a1c-00163e09d72f.png",
+    "artifact": "artifacts/xiaoyuan-app-controls-deepening/practice-05-04.png",
+    "sha256": "44954d861413a794ca546caf16b2a13b22feb0527bd861853d9e56dd5402db7a",
+    "raw_work_path": "work/xiaoyuan-app-controls-deepening/raw/practice-05-04.png",
+    "observed_on": "2026-10-27"
+  },
+  {
+    "block": 5,
+    "index": 5,
+    "url": "https://image.woshipm.com/2025/05/09/6fc57d56-2cec-11f0-adb9-00163e09d72f.png",
+    "artifact": "artifacts/xiaoyuan-app-controls-deepening/practice-05-05.png",
+    "sha256": "e6ebb0309f3387df2f6a0b56355459514c5abab9eaf9493b54ae4e38b676c4d4",
+    "raw_work_path": "work/xiaoyuan-app-controls-deepening/raw/practice-05-05.png",
+    "observed_on": "2026-10-27"
+  },
+  {
+    "block": 5,
+    "index": 6,
+    "url": "https://image.woshipm.com/2025/05/09/79f62df2-2cec-11f0-9743-00163e09d72f.png",
+    "artifact": "artifacts/xiaoyuan-app-controls-deepening/practice-05-06.png",
+    "sha256": "6893f46771e01577834d3ae4281cdfe2b711d9053fa4506f6d42b0ed5ade2965",
+    "raw_work_path": "work/xiaoyuan-app-controls-deepening/raw/practice-05-06.png",
+    "observed_on": "2026-10-27"
+  },
+  {
+    "block": 5,
+    "index": 7,
+    "url": "https://image.woshipm.com/2025/05/09/80db5d7c-2cec-11f0-adb9-00163e09d72f.png",
+    "artifact": "artifacts/xiaoyuan-app-controls-deepening/practice-05-07.png",
+    "sha256": "156a393c633934aa4ecfcc2ed8b82d5e3e10b5fe313ee16b2604232480eea5ed",
+    "raw_work_path": "work/xiaoyuan-app-controls-deepening/raw/practice-05-07.png",
+    "observed_on": "2026-10-27"
+  },
+  {
+    "block": 5,
+    "index": 8,
+    "url": "https://image.woshipm.com/2025/05/09/91eddc5c-2cec-11f0-9743-00163e09d72f.png",
+    "artifact": "artifacts/xiaoyuan-app-controls-deepening/practice-05-08.png",
+    "sha256": "072ea939db367aebbca5e9a98984912b9841f37401c5bce4f4a07fd95f0762e2",
+    "raw_work_path": "work/xiaoyuan-app-controls-deepening/raw/practice-05-08.png",
+    "observed_on": "2026-10-27"
+  },
+  {
+    "block": 6,
+    "index": 0,
+    "url": "https://image.woshipm.com/2025/05/09/a4fe1686-2cec-11f0-adb9-00163e09d72f.png",
+    "artifact": "artifacts/xiaoyuan-app-controls-deepening/practice-06-00.png",
+    "sha256": "2769921043718582cbd29238f408d494166014c6cc7c8679195151d0df71df98",
+    "raw_work_path": "work/xiaoyuan-app-controls-deepening/raw/practice-06-00.png",
+    "observed_on": "2026-10-27"
+  },
+  {
+    "block": 7,
+    "index": 0,
+    "url": "https://image.woshipm.com/2025/05/09/ae61a472-2cec-11f0-adb9-00163e09d72f.png",
+    "artifact": "artifacts/xiaoyuan-app-controls-deepening/practice-07-00.png",
+    "sha256": "ffe18a6282397b971a17c43682cc6574cc62e621f8f4c6fe781c2975f2e1b58c",
+    "raw_work_path": "work/xiaoyuan-app-controls-deepening/raw/practice-07-00.png",
+    "observed_on": "2026-10-27"
+  },
+  {
+    "block": 8,
+    "index": 0,
+    "url": "https://image.woshipm.com/2025/05/09/c6ee7df8-2cec-11f0-adb9-00163e09d72f.png",
+    "artifact": "artifacts/xiaoyuan-app-controls-deepening/practice-08-00.png",
+    "sha256": "63490b7c4a6e5ec70cd02847c3eab46ae4bedbe44054a473ef476b13c13b5996",
+    "raw_work_path": "work/xiaoyuan-app-controls-deepening/raw/practice-08-00.png",
+    "observed_on": "2026-10-27"
+  },
+  {
+    "block": 9,
+    "index": 0,
+    "url": "https://image.woshipm.com/2025/05/09/cc58e33c-2cec-11f0-8a1c-00163e09d72f.png",
+    "artifact": "artifacts/xiaoyuan-app-controls-deepening/practice-09-00.png",
+    "sha256": "54ba882430a478935e5dbb72b371d2121bb4b50834beb8ea8a5ce3f91af3f62b",
+    "raw_work_path": "work/xiaoyuan-app-controls-deepening/raw/practice-09-00.png",
+    "observed_on": "2026-10-27"
+  },
+  {
+    "block": 12,
+    "index": 3,
+    "url": "https://image.woshipm.com/2025/05/09/f2d62fec-2cec-11f0-9743-00163e09d72f.png",
+    "artifact": "artifacts/xiaoyuan-app-controls-deepening/practice-12-03.png",
+    "sha256": "6b20b5f66e9500ad2af44dc837648482cb958f8f98c820102852adea7cbd790f",
+    "raw_work_path": "work/xiaoyuan-app-controls-deepening/raw/practice-12-03.png",
+    "observed_on": "2026-10-27"
+  },
+  {
+    "block": 12,
+    "index": 4,
+    "url": "https://image.woshipm.com/2025/05/09/f78171be-2cec-11f0-adb9-00163e09d72f.png",
+    "artifact": "artifacts/xiaoyuan-app-controls-deepening/practice-12-04.png",
+    "sha256": "6afac067264055b9a344c611b3c33d5712bf6b3dadfa377078d1aa529170c012",
+    "raw_work_path": "work/xiaoyuan-app-controls-deepening/raw/practice-12-04.png",
+    "observed_on": "2026-10-27"
+  },
+  {
+    "block": 12,
+    "index": 5,
+    "url": "https://image.woshipm.com/2025/05/09/fb66cebe-2cec-11f0-adb9-00163e09d72f.png",
+    "artifact": "artifacts/xiaoyuan-app-controls-deepening/practice-12-05.png",
+    "sha256": "e67103c729994ec6533b622fb0a35862e5433ef4170df630e83209e84c2c2b02",
+    "raw_work_path": "work/xiaoyuan-app-controls-deepening/raw/practice-12-05.png",
+    "observed_on": "2026-10-27"
+  },
+  {
+    "block": 12,
+    "index": 7,
+    "url": "https://image.woshipm.com/2025/05/09/15b4b308-2ced-11f0-9743-00163e09d72f.png",
+    "artifact": "artifacts/xiaoyuan-app-controls-deepening/practice-12-07.png",
+    "sha256": "712c560c9f78c8f4741999b8b29cc8e21d016f9c1770bd719a0b03fdd13976c0",
+    "raw_work_path": "work/xiaoyuan-app-controls-deepening/raw/practice-12-07.png",
+    "observed_on": "2026-10-27"
+  },
+  {
+    "block": 12,
+    "index": 9,
+    "url": "https://image.woshipm.com/2025/05/11/f90dcdb2-2e5d-11f0-9a62-00163e09d72f.png",
+    "artifact": "artifacts/xiaoyuan-app-controls-deepening/practice-12-09.png",
+    "sha256": "f450bb2496a0f6a5bb66b35ab06cdb833409b46c6ee1af83bfcfe19123ab14c4",
+    "raw_work_path": "work/xiaoyuan-app-controls-deepening/raw/practice-12-09.png",
+    "observed_on": "2026-10-27"
+  },
+  {
+    "block": 13,
+    "index": 0,
+    "url": "https://image.woshipm.com/2025/05/11/07a1854e-2e5e-11f0-b31e-00163e09d72f.png",
+    "artifact": "artifacts/xiaoyuan-app-controls-deepening/practice-13-00.png",
+    "sha256": "76fa3e2132b789ee3aa568c5eb122a710f3773669d672e4f42c80a70fbf9474a",
+    "raw_work_path": "work/xiaoyuan-app-controls-deepening/raw/practice-13-00.png",
+    "observed_on": "2026-10-27"
+  },
+  {
+    "block": 13,
+    "index": 1,
+    "url": "https://image.woshipm.com/2025/05/11/12d452ac-2e5e-11f0-a801-00163e09d72f.png",
+    "artifact": "artifacts/xiaoyuan-app-controls-deepening/practice-13-01.png",
+    "sha256": "4ca045c17dd4bc0ab3d8b156b495f499b792a46333b571af092de918df5e2412",
+    "raw_work_path": "work/xiaoyuan-app-controls-deepening/raw/practice-13-01.png",
+    "observed_on": "2026-10-27"
+  },
+  {
+    "block": 13,
+    "index": 2,
+    "url": "https://image.woshipm.com/2025/05/11/010862ae-2e61-11f0-94f6-00163e09d72f.png",
+    "artifact": "artifacts/xiaoyuan-app-controls-deepening/practice-13-02.png",
+    "sha256": "cdd0c39cd93684e2e02980817079e8ca7796ea7d91e9d393b10db2027c06c986",
+    "raw_work_path": "work/xiaoyuan-app-controls-deepening/raw/practice-13-02.png",
+    "observed_on": "2026-10-27"
+  },
+  {
+    "block": 13,
+    "index": 3,
+    "url": "https://image.woshipm.com/2025/05/11/0781dd40-2e61-11f0-b31e-00163e09d72f.png",
+    "artifact": "artifacts/xiaoyuan-app-controls-deepening/practice-13-03.png",
+    "sha256": "6d887b85073191f6a6533d5f2f705f8681c04cf96feaa80905362a0f4d925a12",
+    "raw_work_path": "work/xiaoyuan-app-controls-deepening/raw/practice-13-03.png",
+    "observed_on": "2026-10-27"
+  },
+  {
+    "block": 13,
+    "index": 4,
+    "url": "https://image.woshipm.com/2025/05/11/12ecfc78-2e61-11f0-b31e-00163e09d72f.png",
+    "artifact": "artifacts/xiaoyuan-app-controls-deepening/practice-13-04.png",
+    "sha256": "898e855cd1741147dc5bb1e2939c51cddcbd981d124512923ca99ac0207c3f73",
+    "raw_work_path": "work/xiaoyuan-app-controls-deepening/raw/practice-13-04.png",
+    "observed_on": "2026-10-27"
+  },
+  {
+    "block": 14,
+    "index": 0,
+    "url": "https://image.woshipm.com/2025/05/11/217bb450-2e61-11f0-94f6-00163e09d72f.png",
+    "artifact": "artifacts/xiaoyuan-app-controls-deepening/practice-14-00.png",
+    "sha256": "ab6c05a27936ec0307c05211c7379798cd5f4784b398105cb01695f7aff88f88",
+    "raw_work_path": "work/xiaoyuan-app-controls-deepening/raw/practice-14-00.png",
+    "observed_on": "2026-10-27"
+  },
+  {
+    "block": 14,
+    "index": 1,
+    "url": "https://image.woshipm.com/2025/05/11/29056dce-2e61-11f0-b31e-00163e09d72f.png",
+    "artifact": "artifacts/xiaoyuan-app-controls-deepening/practice-14-01.png",
+    "sha256": "26c5f5796051f01bb0200c1423a6d4d1e3f4d135165cdd5497d2b25c76d8ac44",
+    "raw_work_path": "work/xiaoyuan-app-controls-deepening/raw/practice-14-01.png",
+    "observed_on": "2026-10-27"
+  },
+  {
+    "block": 14,
+    "index": 2,
+    "url": "https://image.woshipm.com/2025/05/11/3bb92cee-2e61-11f0-b31e-00163e09d72f.png",
+    "artifact": "artifacts/xiaoyuan-app-controls-deepening/practice-14-02.png",
+    "sha256": "a71d6a53158f7c5ee7eb60ae2500ce5137ca579519240d425c96b09fef44d47b",
+    "raw_work_path": "work/xiaoyuan-app-controls-deepening/raw/practice-14-02.png",
+    "observed_on": "2026-10-27"
+  },
+  {
+    "block": 15,
+    "index": 0,
+    "url": "https://image.woshipm.com/2025/05/11/50aa0358-2e61-11f0-b31e-00163e09d72f.png",
+    "artifact": "artifacts/xiaoyuan-app-controls-deepening/practice-15-00.png",
+    "sha256": "a649501afa073e9ee1d9d6fb8f7c701d2fd8fac65fcc822da6a6af8d34a6bbdc",
+    "raw_work_path": "work/xiaoyuan-app-controls-deepening/raw/practice-15-00.png",
+    "observed_on": "2026-10-27"
+  },
+  {
+    "block": 16,
+    "index": 0,
+    "url": "https://image.woshipm.com/2025/05/11/5707adfe-2e61-11f0-b31e-00163e09d72f.png",
+    "artifact": "artifacts/xiaoyuan-app-controls-deepening/practice-16-00.png",
+    "sha256": "6698e379dce46ab19f775134ba3bfdbf34eb3dfa788f7c5382463b5e8356f831",
+    "raw_work_path": "work/xiaoyuan-app-controls-deepening/raw/practice-16-00.png",
+    "observed_on": "2026-10-27"
+  },
+  {
+    "block": 19,
+    "index": 0,
+    "url": "https://image.woshipm.com/2025/05/11/86f05a66-2e61-11f0-b31e-00163e09d72f.png",
+    "artifact": "artifacts/xiaoyuan-app-controls-deepening/practice-19-00.png",
+    "sha256": "0325e6eaffc548c9837135939aec3b4e4f2edef14497a134a62f30c789706b12",
+    "raw_work_path": "work/xiaoyuan-app-controls-deepening/raw/practice-19-00.png",
+    "observed_on": "2026-10-27"
+  },
+  {
+    "block": 19,
+    "index": 1,
+    "url": "https://image.woshipm.com/2025/05/11/9265e0f0-2e61-11f0-94f6-00163e09d72f.png",
+    "artifact": "artifacts/xiaoyuan-app-controls-deepening/practice-19-01.png",
+    "sha256": "58a4bbaa481fd530fa847c0e458b53a2a0329c4caf39404c8c90d23531490d7c",
+    "raw_work_path": "work/xiaoyuan-app-controls-deepening/raw/practice-19-01.png",
+    "observed_on": "2026-10-27"
+  },
+  {
+    "block": 19,
+    "index": 2,
+    "url": "https://image.woshipm.com/2025/05/11/986c2892-2e61-11f0-9a62-00163e09d72f.png",
+    "artifact": "artifacts/xiaoyuan-app-controls-deepening/practice-19-02.png",
+    "sha256": "d1f3aa1e103ef759db29760753b664d720d9e6b7d6c22a78df1a00ef095b8070",
+    "raw_work_path": "work/xiaoyuan-app-controls-deepening/raw/practice-19-02.png",
+    "observed_on": "2026-10-27"
+  },
+  {
+    "block": 19,
+    "index": 3,
+    "url": "https://image.woshipm.com/2025/05/11/a2dff0ba-2e61-11f0-94f6-00163e09d72f.png",
+    "artifact": "artifacts/xiaoyuan-app-controls-deepening/practice-19-03.png",
+    "sha256": "588179d902ca39a340b902cec35c2e0bfddcf39cd05c4b962d04f0e042887b6a",
+    "raw_work_path": "work/xiaoyuan-app-controls-deepening/raw/practice-19-03.png",
+    "observed_on": "2026-10-27"
+  },
+  {
+    "block": 19,
+    "index": 4,
+    "url": "https://image.woshipm.com/2025/05/11/a9bcc728-2e61-11f0-b31e-00163e09d72f.png",
+    "artifact": "artifacts/xiaoyuan-app-controls-deepening/practice-19-04.png",
+    "sha256": "0ade11d1065cd7205c6d2c2353400bb480caebc34bc27af0157334ff285d5eba",
+    "raw_work_path": "work/xiaoyuan-app-controls-deepening/raw/practice-19-04.png",
+    "observed_on": "2026-10-27"
+  },
+  {
+    "block": 19,
+    "index": 5,
+    "url": "https://image.woshipm.com/2025/05/11/d19105c0-2e61-11f0-b31e-00163e09d72f.png",
+    "artifact": "artifacts/xiaoyuan-app-controls-deepening/practice-19-05.png",
+    "sha256": "baf5f2ed001ea0768f977f64c09a75010cedf923de7dcdc8515d0c11506b027c",
+    "raw_work_path": "work/xiaoyuan-app-controls-deepening/raw/practice-19-05.png",
+    "observed_on": "2026-10-27"
+  },
+  {
+    "block": 20,
+    "index": 0,
+    "url": "https://image.woshipm.com/2025/05/11/dbd0c908-2e61-11f0-a801-00163e09d72f.png",
+    "artifact": "artifacts/xiaoyuan-app-controls-deepening/practice-20-00.png",
+    "sha256": "923b0da6ed68e6b5dc991e18ba5ad38c929474602cb9c9036bc530c77224ceb6",
+    "raw_work_path": "work/xiaoyuan-app-controls-deepening/raw/practice-20-00.png",
+    "observed_on": "2026-10-27"
+  },
+  {
+    "block": 21,
+    "index": 0,
+    "url": "https://image.woshipm.com/2025/05/11/e3da5c18-2e61-11f0-a801-00163e09d72f.png",
+    "artifact": "artifacts/xiaoyuan-app-controls-deepening/practice-21-00.png",
+    "sha256": "b2c111251eb00870016f079149c078312e1d9bcd11acfdfa00fcfa728c7f22c7",
+    "raw_work_path": "work/xiaoyuan-app-controls-deepening/raw/practice-21-00.png",
+    "observed_on": "2026-10-27"
+  },
+  {
+    "block": 21,
+    "index": 2,
+    "url": "https://image.woshipm.com/2025/05/11/fb087546-2e61-11f0-b31e-00163e09d72f.png",
+    "artifact": "artifacts/xiaoyuan-app-controls-deepening/practice-21-02.png",
+    "sha256": "38ae1a33e7aafb4058cc643c281b02d0023c267a34b14523719db31bdd0d7df7",
+    "raw_work_path": "work/xiaoyuan-app-controls-deepening/raw/practice-21-02.png",
+    "observed_on": "2026-10-27"
+  },
+  {
+    "evidence_id": "E-XYCD-02",
+    "url": "https://image.woshipm.com/2025/05/09/50fe5bf4-2cec-11f0-9743-00163e09d72f.png",
+    "artifact": "artifacts/xiaoyuan-app-controls-deepening/xy-math-error.png",
+    "sha256": "2be47889b74d6efa2b331464bf831ea970cbc17225eccfc1a6143bdfbe5cdff9",
+    "raw_work_path": "work/chinese-app-depth/xy-math-error.png",
+    "observed_on": "2026-10-27"
+  },
+  {
+    "evidence_id": "E-XYCD-03",
+    "url": "https://image.woshipm.com/2025/05/09/2e86c93e-2ced-11f0-adb9-00163e09d72f.png",
+    "artifact": "artifacts/xiaoyuan-app-controls-deepening/xy-dictation.png",
+    "sha256": "8c9485a207dce3340613d6948537960d2cba37aad8ce4466551c48fc6327acbd",
+    "raw_work_path": "work/chinese-app-depth/xy-dictation.png",
+    "observed_on": "2026-10-27"
+  },
+  {
+    "evidence_id": "E-XYCD-04",
+    "url": "https://image.woshipm.com/2025/05/11/ec906474-2e61-11f0-b31e-00163e09d72f.png",
+    "artifact": "artifacts/xiaoyuan-app-controls-deepening/xy-speaking.png",
+    "sha256": "263c336eb5a03a418dada21a1d28ef3a807117d4c251348a1822639f70666136",
+    "raw_work_path": "work/chinese-app-depth/xy-speaking.png",
+    "observed_on": "2026-10-27"
+  }
+]

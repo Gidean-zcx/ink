@@ -1,0 +1,358 @@
+[
+  {
+    "flow_id": "F-M054-01",
+    "before": {
+      "flow_id": "F-M054-01",
+      "product_id": "M-054",
+      "task": "inkPalm5与inkPalm Plus分型号电源状态",
+      "depth": "D2",
+      "evidence_ids": "E-MOA-01;E-MOD-11;E-MOD-12",
+      "known_branches": "inkPalm5开机5秒/菜单2秒；Plus开机或菜单3秒，菜单含重启；均短按待机",
+      "gaps": "固件构建、首启、阅读/未保存内容恢复、自动休眠",
+      "visual_status": "static_reference_only",
+      "hands_on": "false",
+      "case_path": "cases/M-054-moaan.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M054-01",
+      "product_id": "M-054",
+      "task": "inkPalm5与inkPalm Plus分型号电源状态",
+      "depth": "D2",
+      "evidence_ids": "E-MOA-01;E-MOD-11;E-MOD-12",
+      "known_branches": "inkPalm5开机5秒/菜单2秒；Plus开机或关机/重启菜单3秒，短按待机/唤醒；Plus图示说明充电白灯闪烁、充满常亮。",
+      "gaps": "实际固件、首启、自动休眠、唤醒阅读位置、未保存内容及音频恢复；充电灯不证明系统响应或数据已保存。",
+      "visual_status": "static_reference_only",
+      "hands_on": "false",
+      "case_path": "cases/M-054-moaan.md",
+      "checked_on": "2026-10-27"
+    },
+    "changed_fields": {
+      "known_branches": {
+        "before": "inkPalm5开机5秒/菜单2秒；Plus开机或菜单3秒，菜单含重启；均短按待机",
+        "after": "inkPalm5开机5秒/菜单2秒；Plus开机或关机/重启菜单3秒，短按待机/唤醒；Plus图示说明充电白灯闪烁、充满常亮。"
+      },
+      "gaps": {
+        "before": "固件构建、首启、阅读/未保存内容恢复、自动休眠",
+        "after": "实际固件、首启、自动休眠、唤醒阅读位置、未保存内容及音频恢复；充电灯不证明系统响应或数据已保存。"
+      },
+      "checked_on": {
+        "before": "2026-10-26",
+        "after": "2026-10-27"
+      }
+    }
+  },
+  {
+    "flow_id": "F-M054-02",
+    "before": {
+      "flow_id": "F-M054-02",
+      "product_id": "M-054",
+      "task": "inkPalm5改键线索与inkPalm Plus默认侧键/Logo控制",
+      "depth": "D2",
+      "evidence_ids": "E-MOA-01;E-MOD-12;E-MOD-14",
+      "known_branches": "Plus阅读页翻页/非阅读页音量，Logo默认返回/全刷为文档D2；inkPalm5设置仍部分D1",
+      "gaps": "完整改键保存/冲突/恢复默认；inkPalm5 full swipe译义不能用Plus倒推；用户冲突报告非官方缺陷",
+      "visual_status": "static_reference_only",
+      "hands_on": "false",
+      "case_path": "cases/M-054-moaan.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M054-02",
+      "product_id": "M-054",
+      "task": "inkPalm5改键线索与inkPalm Plus默认侧键/Logo控制",
+      "depth": "D2",
+      "evidence_ids": "E-MOA-01;E-MOD-12;E-MOD-14;E-MOCD-01",
+      "known_branches": "Plus手册默认阅读页侧键翻页/非阅读页音量，Logo点按返回/长按全刷；2022作者照片仅补快捷栏、刷新两选项和取消的可见状态，不闭合切换。",
+      "gaps": "改键保存/冲突/恢复默认、所有第三方阅读App映射、Logo返回后的阅读位置；旧inkPalm5英文译义仍不能用Plus倒推；照片固件未知。",
+      "visual_status": "static_reference_only",
+      "hands_on": "false",
+      "case_path": "cases/M-054-moaan.md",
+      "checked_on": "2026-10-27"
+    },
+    "changed_fields": {
+      "evidence_ids": {
+        "before": "E-MOA-01;E-MOD-12;E-MOD-14",
+        "after": "E-MOA-01;E-MOD-12;E-MOD-14;E-MOCD-01"
+      },
+      "known_branches": {
+        "before": "Plus阅读页翻页/非阅读页音量，Logo默认返回/全刷为文档D2；inkPalm5设置仍部分D1",
+        "after": "Plus手册默认阅读页侧键翻页/非阅读页音量，Logo点按返回/长按全刷；2022作者照片仅补快捷栏、刷新两选项和取消的可见状态，不闭合切换。"
+      },
+      "gaps": {
+        "before": "完整改键保存/冲突/恢复默认；inkPalm5 full swipe译义不能用Plus倒推；用户冲突报告非官方缺陷",
+        "after": "改键保存/冲突/恢复默认、所有第三方阅读App映射、Logo返回后的阅读位置；旧inkPalm5英文译义仍不能用Plus倒推；照片固件未知。"
+      },
+      "checked_on": {
+        "before": "2026-10-26",
+        "after": "2026-10-27"
+      }
+    }
+  },
+  {
+    "flow_id": "F-M054-03",
+    "before": {
+      "flow_id": "F-M054-03",
+      "product_id": "M-054",
+      "task": "连接网络与蓝牙",
+      "depth": "D2",
+      "evidence_ids": "E-MOA-01",
+      "known_branches": "设备设置中的网络设置；WiFi/蓝牙分支",
+      "gaps": "连接成功提示、断开重连、配对失败",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-054-moaan.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M054-03",
+      "product_id": "M-054",
+      "task": "连接网络与蓝牙",
+      "depth": "D2",
+      "evidence_ids": "E-MOA-01;E-MOCD-01",
+      "known_branches": "inkPalm5手册给设备设置中的网络设置及WiFi/蓝牙分支；Plus 2022照片仅可见WiFi/蓝牙快捷项，不补成Plus配网或配对步骤。",
+      "gaps": "各机型连接成功提示、错误密码、断开重连；Plus配对入口、音频路由和睡眠连接未核。",
+      "visual_status": "static_reference_only",
+      "hands_on": "false",
+      "case_path": "cases/M-054-moaan.md",
+      "checked_on": "2026-10-27"
+    },
+    "changed_fields": {
+      "evidence_ids": {
+        "before": "E-MOA-01",
+        "after": "E-MOA-01;E-MOCD-01"
+      },
+      "known_branches": {
+        "before": "设备设置中的网络设置；WiFi/蓝牙分支",
+        "after": "inkPalm5手册给设备设置中的网络设置及WiFi/蓝牙分支；Plus 2022照片仅可见WiFi/蓝牙快捷项，不补成Plus配网或配对步骤。"
+      },
+      "gaps": {
+        "before": "连接成功提示、断开重连、配对失败",
+        "after": "各机型连接成功提示、错误密码、断开重连；Plus配对入口、音频路由和睡眠连接未核。"
+      },
+      "visual_status": {
+        "before": "not_observed",
+        "after": "static_reference_only"
+      },
+      "checked_on": {
+        "before": "2026-10-26",
+        "after": "2026-10-27"
+      }
+    }
+  },
+  {
+    "flow_id": "F-M054-04",
+    "before": {
+      "flow_id": "F-M054-04",
+      "product_id": "M-054",
+      "task": "inkPalm5与inkPalm Plus卡死后分型号重新开机",
+      "depth": "D2",
+      "evidence_ids": "E-MOA-01;E-MOD-12",
+      "known_branches": "均按12秒后释放；inkPalm5再按5秒/Plus3秒；无电与售后分支",
+      "gaps": "不是恢复出厂；未保存内容/文件保留、云备份与更新恢复未知",
+      "visual_status": "static_reference_only",
+      "hands_on": "false",
+      "case_path": "cases/M-054-moaan.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M054-04",
+      "product_id": "M-054",
+      "task": "inkPalm5与inkPalm Plus卡死后分型号重新开机",
+      "depth": "D2",
+      "evidence_ids": "E-MOA-01;E-MOD-12",
+      "known_branches": "均按电源12秒后释放；inkPalm5再按5秒/Plus3秒；仍无解再检查电量/联系售后，属于手册异常处理建议。",
+      "gaps": "无恢复出厂或数据删除步骤；重启是否成功、未保存笔记/文件保留、备份还原及更新失败恢复均未知。",
+      "visual_status": "static_reference_only",
+      "hands_on": "false",
+      "case_path": "cases/M-054-moaan.md",
+      "checked_on": "2026-10-27"
+    },
+    "changed_fields": {
+      "known_branches": {
+        "before": "均按12秒后释放；inkPalm5再按5秒/Plus3秒；无电与售后分支",
+        "after": "均按电源12秒后释放；inkPalm5再按5秒/Plus3秒；仍无解再检查电量/联系售后，属于手册异常处理建议。"
+      },
+      "gaps": {
+        "before": "不是恢复出厂；未保存内容/文件保留、云备份与更新恢复未知",
+        "after": "无恢复出厂或数据删除步骤；重启是否成功、未保存笔记/文件保留、备份还原及更新失败恢复均未知。"
+      },
+      "checked_on": {
+        "before": "2026-10-26",
+        "after": "2026-10-27"
+      }
+    }
+  },
+  {
+    "flow_id": "F-M054-05",
+    "before": {
+      "flow_id": "F-M054-05",
+      "product_id": "M-054",
+      "task": "书籍导入到查词/继续阅读",
+      "depth": "D1",
+      "evidence_ids": "E-MOA-01;E-MOA-02;E-MOD-07;E-MOD-14",
+      "known_branches": "inkPalm5手册及2022用户记录；另附2020未标机型PDF阅读底栏入口，不拼成固定型号完整链",
+      "gaps": "固定机型完整导入开书查词返回续读；历史指南具体步骤仍未归属型号",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-054-moaan.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M054-05",
+      "product_id": "M-054",
+      "task": "书籍导入到查词/继续阅读",
+      "depth": "D1",
+      "evidence_ids": "E-MOA-01;E-MOA-02;E-MOD-07;E-MOD-14",
+      "known_branches": "inkPalm5旧手册/用户记录与Plus短说明书分开；2020未标机型PDF正文仅给点空白区唤出底栏，再找对应图标。",
+      "gaps": "固定机型完整导入开书查词返回续读；PDF批注/裁边/重排后保存、切回原页和返回栈未核，历史指南不能归属Plus/W7/W8。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-054-moaan.md",
+      "checked_on": "2026-10-27"
+    },
+    "changed_fields": {
+      "known_branches": {
+        "before": "inkPalm5手册及2022用户记录；另附2020未标机型PDF阅读底栏入口，不拼成固定型号完整链",
+        "after": "inkPalm5旧手册/用户记录与Plus短说明书分开；2020未标机型PDF正文仅给点空白区唤出底栏，再找对应图标。"
+      },
+      "gaps": {
+        "before": "固定机型完整导入开书查词返回续读；历史指南具体步骤仍未归属型号",
+        "after": "固定机型完整导入开书查词返回续读；PDF批注/裁边/重排后保存、切回原页和返回栈未核，历史指南不能归属Plus/W7/W8。"
+      },
+      "checked_on": {
+        "before": "2026-10-26",
+        "after": "2026-10-27"
+      }
+    }
+  },
+  {
+    "flow_id": "F-M054-06",
+    "before": {
+      "flow_id": "F-M054-06",
+      "product_id": "M-054",
+      "task": "墨案2020未标机型指南：传入与加入书架",
+      "depth": "D1",
+      "evidence_ids": "E-MOD-03;E-MOD-04",
+      "known_branches": "USB/FTP/WLAN/蓝牙；收到文件与加入书架分开",
+      "gaps": "机型归属；books/book冲突、断传、重名、取消",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-054-moaan.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M054-06",
+      "product_id": "M-054",
+      "task": "墨案2020未标机型指南：传入与加入书架",
+      "depth": "D1",
+      "evidence_ids": "E-MOD-03;E-MOD-04",
+      "known_branches": "历史USB/FTP/多看WLAN分支及蓝牙内部存储books；蓝牙正文明确不加入书架则多看不显示，文件接收与书架条目分开。",
+      "gaps": "机型未知；USB books/FTP book冲突；书架扫描/发现反馈未描述；蓝牙返回顺序未看图确认；拒绝加入后重加、断传/重名/取消/删除恢复未说明。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-054-moaan.md",
+      "checked_on": "2026-10-27"
+    },
+    "changed_fields": {
+      "known_branches": {
+        "before": "USB/FTP/WLAN/蓝牙；收到文件与加入书架分开",
+        "after": "历史USB/FTP/多看WLAN分支及蓝牙内部存储books；蓝牙正文明确不加入书架则多看不显示，文件接收与书架条目分开。"
+      },
+      "gaps": {
+        "before": "机型归属；books/book冲突、断传、重名、取消",
+        "after": "机型未知；USB books/FTP book冲突；书架扫描/发现反馈未描述；蓝牙返回顺序未看图确认；拒绝加入后重加、断传/重名/取消/删除恢复未说明。"
+      },
+      "checked_on": {
+        "before": "2026-10-26",
+        "after": "2026-10-27"
+      }
+    }
+  },
+  {
+    "flow_id": "F-M054-07",
+    "before": {
+      "flow_id": "F-M054-07",
+      "product_id": "M-054",
+      "task": "墨案历史文件整理/APK入口与inkPalm5应用菜单",
+      "depth": "D1",
+      "evidence_ids": "E-MOD-05;E-MOD-06;E-MOD-14",
+      "known_branches": "复制/剪切；APK传入或下载；用户报告单应用菜单",
+      "gaps": "旧官网型号未标、权限失败、覆盖与卸载数据",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-054-moaan.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M054-07",
+      "product_id": "M-054",
+      "task": "墨案历史文件整理/APK入口与inkPalm5应用菜单",
+      "depth": "D1",
+      "evidence_ids": "E-MOD-05;E-MOD-06;E-MOD-14",
+      "known_branches": "历史长按复制/剪切正文写到目标文件夹外面粘贴，位置歧义保留；APK三种取得入口与Apps/download路径，不代表安装完成或当前兼容。",
+      "gaps": "文件移动目标位置需对照未看的GIF；机型、覆盖/剪切中断、未知来源权限、安装失败及卸载数据保留未知；不以第三方作者泛称兼容作保证。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-054-moaan.md",
+      "checked_on": "2026-10-27"
+    },
+    "changed_fields": {
+      "known_branches": {
+        "before": "复制/剪切；APK传入或下载；用户报告单应用菜单",
+        "after": "历史长按复制/剪切正文写到目标文件夹外面粘贴，位置歧义保留；APK三种取得入口与Apps/download路径，不代表安装完成或当前兼容。"
+      },
+      "gaps": {
+        "before": "旧官网型号未标、权限失败、覆盖与卸载数据",
+        "after": "文件移动目标位置需对照未看的GIF；机型、覆盖/剪切中断、未知来源权限、安装失败及卸载数据保留未知；不以第三方作者泛称兼容作保证。"
+      },
+      "checked_on": {
+        "before": "2026-10-26",
+        "after": "2026-10-27"
+      }
+    }
+  },
+  {
+    "flow_id": "F-M054-08",
+    "before": {
+      "flow_id": "F-M054-08",
+      "product_id": "M-054",
+      "task": "墨案2020未标机型指南：整理笔记并导出PDF",
+      "depth": "D1",
+      "evidence_ids": "E-MOD-08;E-MOD-09;E-MOD-10;E-MOD-15;E-MOD-16",
+      "known_branches": "命名、页预览、导出Note目录；W7/W8独立目录线索",
+      "gaps": "机型归属、笔迹原稿/导出件、退出保存、覆盖与删除恢复",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-054-moaan.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M054-08",
+      "product_id": "M-054",
+      "task": "墨案2020未标机型指南：整理笔记并导出PDF",
+      "depth": "D1",
+      "evidence_ids": "E-MOD-08;E-MOD-09;E-MOD-10;E-MOD-15;E-MOD-16",
+      "known_branches": "历史新建保存命名或首项日期菜单改名；页码切4/9格；已保存笔记在列表或缩略图模式经省略号导出PDF至Note。W7/W8仍各自仅旧作者线索。",
+      "gaps": "历史指南机型未归属；返回原笔迹、可编辑原稿/导出副本关系、同名覆盖、导出失败和删除/同步恢复未核。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-054-moaan.md",
+      "checked_on": "2026-10-27"
+    },
+    "changed_fields": {
+      "known_branches": {
+        "before": "命名、页预览、导出Note目录；W7/W8独立目录线索",
+        "after": "历史新建保存命名或首项日期菜单改名；页码切4/9格；已保存笔记在列表或缩略图模式经省略号导出PDF至Note。W7/W8仍各自仅旧作者线索。"
+      },
+      "gaps": {
+        "before": "机型归属、笔迹原稿/导出件、退出保存、覆盖与删除恢复",
+        "after": "历史指南机型未归属；返回原笔迹、可编辑原稿/导出副本关系、同名覆盖、导出失败和删除/同步恢复未核。"
+      },
+      "checked_on": {
+        "before": "2026-10-26",
+        "after": "2026-10-27"
+      }
+    }
+  }
+]

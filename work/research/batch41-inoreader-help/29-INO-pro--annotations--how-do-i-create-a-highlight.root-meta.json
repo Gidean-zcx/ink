@@ -1,0 +1,21 @@
+{
+  "order": 29,
+  "entry_id": "INO-pro--annotations--how-do-i-create-a-highlight",
+  "title": "How do I create a highlight?",
+  "url": "https://www.inoreader.com/help/pro/annotations/how-do-i-create-a-highlight",
+  "checked_on": "2026-10-27",
+  "http_status": 200,
+  "final_url": "https://www.inoreader.com/help/pro/annotations/how-do-i-create-a-highlight",
+  "acquisition": "one_anonymous_normal_GET",
+  "raw_path": "work/research/batch41-inoreader-help/29-INO-pro--annotations--how-do-i-create-a-highlight.html",
+  "headers_path": "work/research/batch41-inoreader-help/29-INO-pro--annotations--how-do-i-create-a-highlight.headers.json",
+  "raw_sha256": "e6cf6f36ffb3da45cc24f994cb7cbc816bff8b0690b5934cb8eaf0e469926fa5",
+  "bytes": 146521,
+  "status": "body_obtained",
+  "body_status": "extracted_not_yet_root_read",
+  "body_path": "work/research/batch41-inoreader-help/29-INO-pro--annotations--how-do-i-create-a-highlight.body.txt",
+  "body_sha256": "56bfa5ba9ffcbf6148bdf52f2ed67a440a439a92b2b97b38d794d0252b992cae",
+  "body_chars": 64,
+  "links": [],
+  "images": []
+}

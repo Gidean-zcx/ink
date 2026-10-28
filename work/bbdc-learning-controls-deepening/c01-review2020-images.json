@@ -1,0 +1,212 @@
+[
+  {
+    "class": "logo",
+    "src": "//image.woshipm.com/fp/images/logo.png",
+    "alt": "人人都是产品经理"
+  },
+  {
+    "class": "app-qrcode-img",
+    "src": "https://image.woshipm.com/build/img/footer-appdownload.png"
+  },
+  {
+    "src": "https://image.woshipm.com/VIP.svg",
+    "width": "32"
+  },
+  {
+    "src": "https://image.woshipm.com/2023/05/19/de725b98-f62f-11ed-adbb-00163e0b5ff3.png"
+  },
+  {
+    "width": "24",
+    "src": "https://image.woshipm.com/2023/05/19/dfe517e2-f62d-11ed-bbb6-00163e0b5ff3.png"
+  },
+  {
+    "width": "24",
+    "src": "https://image.woshipm.com/2023/05/19/ebb5071c-f62d-11ed-bbb6-00163e0b5ff3.png"
+  },
+  {
+    "width": "24",
+    "src": "https://image.woshipm.com/2023/05/19/c9756278-f62d-11ed-94e0-00163e0b5ff3.png"
+  },
+  {
+    "width": "24",
+    "src": "https://image.woshipm.com/2023/05/19/f64625a8-f62d-11ed-bbb6-00163e0b5ff3.png"
+  },
+  {
+    "width": "20",
+    "src": "https://image.woshipm.com/2023/05/19/0148a02a-f62e-11ed-96ae-00163e0b5ff3.png"
+  },
+  {
+    "width": "24",
+    "src": "https://image.woshipm.com/2023/05/19/25fc8396-f62e-11ed-adbb-00163e0b5ff3.png"
+  },
+  {
+    "width": "24",
+    "src": "https://image.woshipm.com/2023/05/19/1d4ecd4e-f62e-11ed-adbb-00163e0b5ff3.png"
+  },
+  {
+    "width": "24",
+    "src": "https://image.woshipm.com/2023/05/19/30793c56-f62e-11ed-adbb-00163e0b5ff3.png"
+  },
+  {
+    "width": "24",
+    "src": "https://image.woshipm.com/2023/05/19/15fae604-f62e-11ed-bbb6-00163e0b5ff3.png"
+  },
+  {
+    "width": "24",
+    "src": "https://image.woshipm.com/2023/05/19/0e3283be-f62e-11ed-8df9-00163e0b5ff3.png"
+  },
+  {
+    "src": "https://image.woshipm.com/wp-files/2018/05/aL9UfWTpZOy3qVKJBD80.jpeg!/both/72x72",
+    "alt": "",
+    "height": "36",
+    "width": "36",
+    "class": "avatar"
+  },
+  {
+    "src": "https://static.woshipm.com/tag/1101_1@2x.png ",
+    "width": "16",
+    "@click": "goVip({parentCode: 1100})"
+  },
+  {
+    "data-action": "zoom",
+    "loading": "lazy",
+    "decoding": "async",
+    "class": "aligncenter size-full wp-image-3571250",
+    "src": "https://image.woshipm.com/wp-files/2020/03/3Kx7NkbyJHkQZkUh5Uha.jpg",
+    "alt": "",
+    "width": "800",
+    "height": "450"
+  },
+  {
+    "data-action": "zoom",
+    "loading": "lazy",
+    "decoding": "async",
+    "class": "aligncenter",
+    "src": "https://image.woshipm.com/wp-files/2020/03/OGY6REmH94cEiS7iiyjJ.png",
+    "alt": "",
+    "width": "1088",
+    "height": "370"
+  },
+  {
+    "src": "https://image.woshipm.com/wp-files/2018/05/aL9UfWTpZOy3qVKJBD80.jpeg!/both/150x150",
+    "alt": "",
+    "height": "75",
+    "width": "75",
+    "class": "avatar"
+  },
+  {
+    "src": "https://static.woshipm.com/tag/1101_1@2x.png ",
+    "class": "icon-height20",
+    "@click": "goVip({parentCode: 1100})"
+  },
+  {
+    "class": "cover",
+    "src": "https://image.woshipm.com/2023/04/14/91ec3c2a-da8d-11ed-9485-00163e0b5ff3.jpg!/both/120x80",
+    "alt": "2024-2025年新技术赋能零售升级的14个预测和洞察"
+  },
+  {
+    "class": "cover",
+    "src": "https://image.woshipm.com/2023/04/13/ffdf9b9a-d9ee-11ed-a8b0-00163e0b5ff3.jpg!/both/120x80",
+    "alt": "抖音入局电商平台“小时达”，即时配送开卷！"
+  },
+  {
+    "class": "cover",
+    "src": "https://image.woshipm.com/2023/04/14/ad8e67fa-daa1-11ed-af94-00163e0b5ff3.png!/both/120x80",
+    "alt": "City Walk不就是溜弯儿？"
+  },
+  {
+    "class": "cover",
+    "src": "https://image.woshipm.com/2023/04/13/1358995a-d9eb-11ed-a8b0-00163e0b5ff3.jpg!/both/120x80",
+    "alt": "从哈罗单车上锁聊聊任务链路优化设计的思路"
+  },
+  {
+    "class": "cover",
+    "src": "https://image.yunyingpai.com/wp/2023/12/2ijPRUflGgeLrkyPk0cG.png!/both/120x80",
+    "alt": "OpenAI工程师曝出开发ChatGPT只用8天！长文揭秘谷歌DeepMind等硅谷顶流如何诞生"
+  },
+  {
+    "src": "https://static.qidianla.com/woshipm_def_head_3.jpg?imageView2/1/w/80/h/80/q/100",
+    "alt": "",
+    "height": "40",
+    "width": "40",
+    "class": "avatar"
+  },
+  {
+    "src": "//image.woshipm.com/more.svg",
+    "width": "16"
+  },
+  {
+    "src": "https://static.qidianla.com/woshipm_def_head_2.jpg?imageView2/1/w/80/h/80/q/100",
+    "alt": "",
+    "height": "40",
+    "width": "40",
+    "class": "avatar"
+  },
+  {
+    "src": "//image.woshipm.com/more.svg",
+    "width": "16"
+  },
+  {
+    "src": "https://static.woshipm.com/passport_avatar_wx_20230517143355_6556.jpg?imageView2/1/w/72/h/72/q/100",
+    "alt": "",
+    "height": "36",
+    "width": "36",
+    "class": "avatar"
+  },
+  {
+    "src": "https://static.woshipm.com/tag/1501_1@2x.png ",
+    "width": "16",
+    "@click": "goVip({parentCode: 1500})"
+  },
+  {
+    "src": "//image.woshipm.com/more.svg",
+    "width": "16"
+  },
+  {
+    "src": "https://image.woshipm.com/wp-files/2023/03/ZXmBEIdQxyFSYgI5k24e.png!/both/130x88",
+    "width": "130",
+    "height": "88",
+    "alt": "O2O电商解析丨劳动者资金体系如何赋能劳动者供给？"
+  },
+  {
+    "src": "https://image.woshipm.com/wp-files/2023/02/WyNoHcTQl1Wl8aftTpMY.jpg!/both/130x88",
+    "width": "130",
+    "height": "88",
+    "alt": "抖音超市的尽头，可能是天猫小店"
+  },
+  {
+    "src": "https://image.woshipm.com/2023/04/14/25a4d396-da8e-11ed-b35a-00163e0b5ff3.jpg!/both/130x88",
+    "width": "130",
+    "height": "88",
+    "alt": "这套小红书选品方法论，看完就会！"
+  },
+  {
+    "src": "https://image.woshipm.com/wp-files/2021/10/zUwm4IYjmoiV63Kk9aKQ.png",
+    "alt": "起点课堂",
+    "title": "起点课堂"
+  },
+  {
+    "src": "https://image.yunyingpai.com/wp/2021/12/wyRAfH2rXJha57p06bbQ.png"
+  },
+  {
+    "src": "https://image.woshipm.com/wp-files/2020/05/zHiqREB7rkGZsC6rFerJ.png",
+    "alt": "极验验证"
+  },
+  {
+    "src": "https://image.woshipm.com/wp-files/2020/05/k7Gf25a7GdaoRNLLogCo.png",
+    "alt": "致设计",
+    "title": "致设计"
+  },
+  {
+    "src": "https://image.woshipm.com/wp-files/2020/05/KZTBx2R2UyR2k96mHpa4.png",
+    "alt": "保利威"
+  },
+  {
+    "src": "//image.woshipm.com/wp-files/2020/06/cKMzCQWucvwdFhHVeoib.jpeg",
+    "alt": "公众号"
+  },
+  {
+    "src": "//image.woshipm.com/wp-files/2020/06/PAVQDSOr3b6NRnHyqAVy.jpeg",
+    "alt": "视频号"
+  }
+]

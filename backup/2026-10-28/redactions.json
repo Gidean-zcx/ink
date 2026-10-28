@@ -1,0 +1,12 @@
+{
+  "files": [
+    "work/research/batch40-maimemo/controller-manual.headers.json"
+  ],
+  "fields": [
+    "cookie",
+    "set-cookie",
+    "authorization",
+    "proxy-authorization"
+  ],
+  "reason": "HTTP session metadata is not needed to restore research; original remains local"
+}

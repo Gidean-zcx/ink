@@ -1,0 +1,57 @@
+[
+  {
+    "name": "eddict-download",
+    "url": "https://shanling.com/download/76",
+    "status": 200,
+    "final_url": "https://shanling.com/download/76",
+    "raw_work_path": "work/shanling-controls-deepening/raw/eddict-download.html",
+    "raw_sha256": "a35625e67844af4c021ce6dd6600cc48edeb7ed35f5cdf2d98c32dbd4acb93b6",
+    "extracted_work_path": "work/shanling-controls-deepening/extracted/eddict-download.txt",
+    "extracted_sha256": "fbb1eee239e325a8d7e7dce9eed9795ddb3c9d077e55461bf9162835188da306"
+  },
+  {
+    "name": "mtouch-old",
+    "url": "https://en.shanling.com/article/101376",
+    "status": 403,
+    "route_stopped": true
+  },
+  {
+    "name": "eddict-old",
+    "url": "https://en.shanling.com/article/101309",
+    "status": 403,
+    "route_stopped": true
+  },
+  {
+    "name": "m1plus-v21",
+    "url": "https://en.shanling.com/download/118",
+    "status": 403,
+    "route_stopped": true
+  },
+  {
+    "name": "m1plus-v18",
+    "url": "https://shanling.com/download/134",
+    "status": 200,
+    "final_url": "https://shanling.com/download/134",
+    "raw_work_path": "work/shanling-controls-deepening/raw/m1plus-v18.html",
+    "raw_sha256": "6d99348cf6bc5172d0492a12df57bdf7ab2e61df12c07d49b5d10a5dd1ec82ba",
+    "extracted_work_path": "work/shanling-controls-deepening/extracted/m1plus-v18.txt",
+    "extracted_sha256": "48d7b91b78af63776f4da456c4e7aeb8363bd2f30598fc46b29f92abe8891455"
+  },
+  {
+    "name": "review",
+    "url": "https://www.hifioasis.com/reviews/shanling-m1-plus-review/",
+    "status": 200,
+    "final_url": "https://www.hifioasis.com/reviews/shanling-m1-plus-review/",
+    "raw_work_path": "work/shanling-controls-deepening/raw/review.html",
+    "raw_sha256": "5beab437782037f23bbca2989120f741c27494f866d31469793bc53a150a6f19",
+    "extracted_work_path": "work/shanling-controls-deepening/extracted/review.txt",
+    "extracted_sha256": "19c72b2efc858b91d9190eba659111cef71f76c57c27fcaaa16a9270c3535149"
+  },
+  {
+    "name": "eddict-manual",
+    "url": "https://shanling.com/uploads/image/EddictPlayerAPP.pdf",
+    "status": 200,
+    "raw_work_path": "work/shanling-controls-deepening/raw/EddictPlayerAPP.pdf",
+    "raw_sha256": "a1baaac55b5b5fa1f58b0c8f2bf927e97fc4534a7dccadb886e8d7ba60cba8ff"
+  }
+]

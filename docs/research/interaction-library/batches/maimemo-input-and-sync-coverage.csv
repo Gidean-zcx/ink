@@ -1,0 +1,4 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M017-10,M-017,从图片识词并检查候选,D2,E-MMSC-02,选词页A入口→拍照/选图；静态识别列表/分类/双栏词详情及加入记忆入口；顶部分类与底部当前选取计数不同,相机授权/识别失败/校正/选中后按钮变化/提交成功及持久化未观察,static_official_images_only,false,cases/M-017-maimemo.md,2026-10-27
+F-M017-11,M-017,连接外设并在复习页执行快捷动作,D2,E-MMSC-01,Home+B黄灯配对→系统蓝牙→App连接状态；限定复习页；映射和连接排障、iOS名称问题；兼容版本冲突保留,默认按键表、真实连接/回连、长按连发/休眠首键与误评恢复未观察；PDF页未取得,not_observed,false,cases/M-017-maimemo.md,2026-10-27
+F-M017-12,M-017,核对学习提醒的条件与开关,D2,E-MMSC-03,提前学完且签到当天不提醒；系统通知开关→App学习提醒/系统提醒,时间选择、权限拒绝、到点显示、跨日和补发未观察,not_observed,false,cases/M-017-maimemo.md,2026-10-27

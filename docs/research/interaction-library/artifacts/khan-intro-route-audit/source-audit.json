@@ -1,0 +1,30 @@
+{
+  "checked_on": "2026-10-27",
+  "evidence_id": "E-KHD-04",
+  "url": "https://sites.google.com/khanacademy.org/khanacademykids/getting-students-into-the-app/three-ways-to-play",
+  "page": {
+    "raw_work_path": "work/research/batch53-integration/khan-intro-page.txt",
+    "sha256": "3d404fb9a14fc43d38e05b1223c3e6c2bc223b1fd2404e2122fe78fee91f05f1",
+    "body_read": true
+  },
+  "image_attempts": {
+    "raw_work_path": "work/research/batch53-integration/khan-image-attempts.txt",
+    "sha256": "877a6970835b73a393ecef59bfe95454c31d78ee344ba3c7583eff82ddc7ff4c",
+    "link_ids": [
+      2,
+      4,
+      6
+    ],
+    "results": [
+      403,
+      403,
+      403
+    ],
+    "route_stopped": true
+  },
+  "visual_observed": false,
+  "video_played": false,
+  "video_downloaded": false,
+  "hands_on": false,
+  "correction": "Original E-KHD-04 already read page text; only embedded video remained unread. Helper item 1 is not a globally unread page."
+}

@@ -1,0 +1,7 @@
+Sync shortcuts on iPhone or iPad
+If you’re signed in with your Apple ID on your Apple devices and enable iCloud Sync in the Shortcuts app, you can keep your collection of shortcuts up to date on all of your devices, including your Apple Watch. When you add, change, or remove a shortcut from one of your devices, iCloud ensures that the changes are reflected on your other devices automatically.
+The order of your shortcuts is also kept updated between all of your devices.
+Important: Personal automation shortcuts don’t sync to other devices.
+Turn on iCloud Sync
+On your iPhone or iPad, go to Settings  > Shortcuts.
+Turn on iCloud Sync.

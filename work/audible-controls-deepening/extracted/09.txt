@@ -1,0 +1,278 @@
+Audio quality issues (https://help.audible.com/s/article/title-won-t-play-has-poor-audio-quality)
+citeturn762view1 [wordlim: 200] Crawled: today; Content type: text/html; Source: open({"ref_id":"https://help.audible.com/s/article/title-won-t-play-has-poor-audio-quality","lineno":null}); Total lines: 276
+L0: Loading
+L1: 
+L2: Sorry to interrupt
+L3: 
+L4: Uncaught TypeError: Cannot read properties of null (reading 'style')
+L5: 
+L6: 【0†Refresh】
+L7: 
+L8: Skip to Main Content
+L9: 
+L10: Related topics
+L11: 
+L12: Alexa Ask A Question Fire TV iOS Kindle+3
+L13: ## Audio quality issues
+L14: 
+L15:   * Sep 9, 2026
+L16:   * Knowledge
+L17: 
+L18: Title
+L19: 
+L20: Audio quality issues
+L21: 
+L22: URL Name
+L23: 
+L24: title-won-t-play-has-poor-audio-quality
+L25: 
+L26: Answer
+L27: 
+L28: In this article, you'll find troubleshooting steps for general playback issues by device type.
+L29: 
+L30: In this article:
+L31: 
+L32:   * 【1†Playback issues in the app】
+L33:   * 【2†Playback issues on your Samsung or Pixel device】
+L34:   * 【3†How to fix playback issues on Alexa】
+L35:   * 【4†Playback issues on Fire Tablet】
+L36:   * 【5†Playback issues on Fire TV】
+L37:   * 【6†Playback issues on Cloud Player】
+L38: ## Playback issues in the app
+L39: 
+L40: Update app
+L41: 
+L42: If your title won't play, you may have to update your Audible app.
+L43: 
+L44: To update the Audible app on iOS:
+L45: 
+L46:   1. Open the App Store.
+L47:   2. Select your profile icon.
+L48:   3. Find and select the Audible app.
+L49:   4. Select Update.
+L50:   5. Select Open to view the latest version of the Audible app.
+L51: 
+L52: Note: If you don't see the Audible app, you may need to swipe down to refresh your list of available updates.
+L53: 
+L54: To update the Audible app on Android:
+L55:   1. Open the Google Play Store.
+L56:   2. Select your profile icon.
+L57:   3. Select Manage apps & device.
+L58:   4. Find the Audible app in the Updates pending list.
+L59:   5. Select Update.
+L60: 
+L61: Re-download your title
+L62: 
+L63: If your title is skipping chapters or seems to have missing content, you might have an incomplete download or missing content.
+L64: 
+L65: Step 1: Remove title from device
+L66: 
+L67:   1. Go to your Library.
+L68:   2. Select your title's 3-dot menu.
+L69:   3. Select Remove download.
+L70: 
+L71: Step 2: Re-download your title
+L72:   1. Go to your Library.
+L73:   2. Select your title to re-download.
+L74: 
+L75: Note: Your title will pick up where you left off after you re-download it.
+L76: 
+L77: Listen on another device
+L78: 
+L79: If your title won't play at all, it's possible the issue may be with the device itself and not the Audible app. Try listening to the title using our Cloud Player or another Audible-ready device to see if the issue continues.
+L80:   1. Open the Audible website and sign in.
+L81:   2. From the Library on the site's navigation, select Audiobooks.
+L82:   3. Select Listen now or Play next to the title of your choosing.
+L83:   4. The Cloud Player will appear.
+L84: 
+L85: Change download quality
+L86: 
+L87: If your audio quality is poor or you hear static and background noises, changing the download quality may resolve your problem.
+L88:   1. Go to your Profile.
+L89:   2. Select the Settings gear icon.
+L90:   3. Select Data & Storage.
+L91:   4. Choose between Standard or High.
+L92:   5. Select Library.
+L93:   6. Select the 3-dot menu next to your title.
+L94:   7. Select Remove download.
+L95:   8. Re-download the title to your Audible library.
+L96: ## Playback issues on your Samsung or Pixel device
+L97: 
+L98: If your title won't play when you lock your screen, use another app, or use the timer, then the Android app might be set to "Restricted" in your device's battery settings.
+L99: 
+L100: Update your Samsung battery settings
+L101: 
+L102:   1. Open your device Settings.
+L103:   2. Select Apps.
+L104:   3. Select Audible.
+L105:   4. Select Battery.
+L106:   5. Choose from one of these available options:
+L107:   * Unrestricted: The Audible app will run in the background without any restriction and will continue playing your title until you stop it. This option may increase battery usage.
+L108:   * Optimised: Your device will learn how you use the app and will put the app to sleep based on your usage patterns. Your titles may still occasionally stop until the device learns how you use it.
+L109: 
+L110: Update your Pixel battery settings
+L111: 
+L112: Step 1: Turn on Adaptive battery
+L113:   1. Open your device Settings.
+L114:   2. Select Battery.
+L115:   3. Select Adaptive Preferences.
+L116:   4. Turn on Adaptive Battery.
+L117: 
+L118: Note: When your battery is low, adaptive battery may reduce your device's performance.
+L119: 
+L120: Step 2: Update your battery settings
+L121:   1. From Settings, select Apps.
+L122:   2. Select See all apps.
+L123:   3. Select the Audible app.
+L124:   4. Select Battery.
+L125:   5. Choose from one of these available options:
+L126:      * Unrestricted: The Audible app will run in the background without any restriction and will continue playing your title until you stop it. This option may increase battery usage.
+L127:      * Optimized: Your device will learn how you use the app and will put the app to sleep based on your usage patterns. Your titles may still occasionally stop until the device learns how you use it.
+L128: Note: If you start experiencing excessive battery drain when using the Audible app, please make sure you've updated to the app's latest version.
+L129: ## How to fix playback issues on Alexa
+L130:   * Make sure your device is turned on. There should be a blue light on top.
+L131:   * Make sure your device is connected to your Amazon account.
+L132:   * Check to see if your username for Audible is the same for Amazon. If not, combine your Amazon and Audible accounts and Alexa will play your titles.
+L133:   * Check your Alexa companion app's connection. If there's an error, it could mean your device is unplugged. Make sure it's plugged in and ask Alexa to play your title.
+L134:   * It's possible that your Amazon Family settings may be impacting your ability to hear certain titles. Visit the Manage My Family page on Amazon's website to ensure that your Amazon Family settings are correct.
+L135: Note: Teen profiles don't have access to titles in your Family Library. To remove a teen profile from your Amazon Family, please visit Amazon's Help Center.
+L136: ## Playback issues on Fire Tablet
+L137: 
+L138: If you are experiencing playback issues on your Fire Tablet, please try the troubleshooting options below:
+L139: 
+L140: Reboot the device
+L141: 
+L142: You may need to turn your device off and on again.
+L143: 
+L144:   1. Hold the Power button down for 30 seconds until the device turns off.
+L145:   2. Press the Power button to turn the device back on.
+L146: 
+L147: Remove download and re-download the audiobook
+L148: 
+L149: If you experience playback issues with a title, you may need to delete it and download it again.
+L150:   1. Open the Audible app.
+L151:   2. Select Library.
+L152:   3. Tap and hold down on the cover art of the corrupted audiobook to select.
+L153:   4. Once a checkmark appears in the middle of the title, tap Remove download.
+L154:   5. Once deleted, attempt to re-download.
+L155: 
+L156: Change download quality
+L157: 
+L158: One reason your title won't play is because of the download format. To change the format:
+L159:   1. Open the Audible app.
+L160:   2. Go to your Profile.
+L161:   3. Select the Settings gear icon.
+L162:   4. Select Data & Storage.
+L163:   5. Choose between Standard or High.
+L164:   6. Then delete the title you have downloaded, and re-download the title to your Audible library.
+L165: 
+L166: Force stop the app
+L167: 
+L168: If your title won't play at all, you may have to force stop your Audible app.
+L169:   1. Drag down from the top of the screen and tap the Settings gear icon followed by Apps & Games.
+L170:   2. Tap Manage All Applications followed by Audible Store.
+L171:   3. Tap Force Stop followed by OK.
+L172: 
+L173: Update your device
+L174: 
+L175:   1. Go to the Settings gear icon on your Tablet home page.
+L176:   2. Scroll down to Device Options.
+L177:   3. Select System Updates and select Update.
+L178: ## Playback issues on Fire TV
+L179: 
+L180:   * Check your device's internet connection.
+L181:   * Make sure you're signed in to the correct account.
+L182:   * If your username for Audible isn't the same for Amazon, combine your Amazon and Audible accounts.
+L183:   * Go to your Purchase History page to check that the title you're trying to listen to has a date listed under the Purchased column.
+L184:   * If you use the Fire TV Remote app on your phone, make sure the app is updated to the latest version.
+L185: ## Playback issues on Cloud Player
+L186: 
+L187: If you are experiencing playback issues, something could have happened with your saved browser history that is causing the Cloud Player to not pop up.
+L188: 
+L189: First, make sure you have the latest version of your web browser. If the problem persists, follow the steps below.
+L190: 
+L191: Clear your web history
+L192: 
+L193: Google Chrome:
+L194:   1. Select the more options button in the corner of the browser, followed by More tools and Clear browsing data.
+L195:   2. Place a checkmark in the following boxes: Browsing history, Download history, Cookies and other site and plug-in data, Cached images and files, Hosted app data, Content licenses.
+L196:   3. Select the beginning of time from the drop down menu.
+L197:   4. Select Clear browsing data.
+L198: 
+L199: Safari:
+L200:   1. Select History at the top of Safari, followed by Clear History.
+L201:   2. In the box that pops up, choose all history from the drop-down menu.
+L202:   3. Select Clear History.
+L203:   4. Go back to the Audible website, and attempt to play your audiobook again by selecting Play.
+L204: 
+L205: Firefox:
+L206: 
+L207:   1. Select the menu button in the corner of the browser, followed by History.
+L208:   2. Select Clear Recent History.
+L209:   3. Select all the check boxes and change the "Time range to clear" to Everything.
+L210:   4. Select Clear Now.
+L211: Enabling Auto-Play
+L212: 
+L213: If you are using Safari, you may need to enable Auto-Play to resolve your playback issues.
+L214: 
+L215: Safari:
+L216: 
+L217:   1. Select Safari at the top of the Safari browser while on Audible.com.
+L218:   2. Select Settings for This Website.
+L219:   3. Select Allow All Auto-Play.
+L220: 
+L221: Additionally, you can also press the Pause button after launching the Cloud Player to initiate playback.
+L222: 
+L223: Did this answer your question?
+L224: 
+L225: 【7†Image: Thumbs Up】Like
+L226: 
+L227: 
+L228: 
+L229: 【8†Image: Thumbs Down】Dislike
+L230: 
+L231:  Back to top
+L232: 【9†Image: Share link】 Share link
+L233: 
+L234: 【10†Image: Download PDF】 Download PDF
+L235: ## Need more assistance?
+L236: 
+L237: 【11†Contact us†www.audible.com】
+L238: 
+L239: 
+L240: 
+L241: How satisfied were you with our Help Center today?
+L242: 
+L243: 
+L244: 
+L245: Worst
+L246: 
+L247: 1
+L248: 
+L249: 2
+L250: 
+L251: 3
+L252: 
+L253: 4
+L254: 
+L255: 5
+L256: 
+L257: 6
+L258: 
+L259: 7
+L260: 
+L261: Best
+L262: 
+L263: 
+L264: 
+L265: Region
+L266: 
+L267: United States
+L268: 
+L269: Language
+L270: 
+L271: English
+L272: 
+L273: Loading
+L274: 
+L275: Audio quality issues 【12†Adobe ID Syncing iFrame†audible.demdex.net】

@@ -1,0 +1,2 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M001-09,M-001,整理合集并下载或移除书库内容,D2,E-KDCD-02;E-KDCD-14,合集结构/下载分开，删合集不删书；音频筛选不删除；配套书音频合一条目，文档泛称删书连音频；Quick Archive/Manual Removal,合并音频删除层级/确认/撤销未知；USB无云副本；合集冲突、下载失败与Downloaded措辞冲突保留,not_observed,false,cases/M-001-kindle.md,2026-10-27

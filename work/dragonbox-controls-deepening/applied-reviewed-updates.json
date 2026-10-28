@@ -1,0 +1,1677 @@
+{
+  "checked_on": "2026-10-27",
+  "old_tasks": 19,
+  "old_fields": 75,
+  "old_evidence": 11,
+  "files": [
+    {
+      "path": "docs/research/interaction-library/batches/anki-deepening-coverage.csv",
+      "before_sha256": "79175bc6f5b516aa416cf974d1ac5b7d331453e58880529bce275c4cb9d6b26b",
+      "after_sha256": "f3ad2cbbc613912dc80e487c32527a57127c8bf8eb16f5a32123832667366cec"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/anki-deepening-evidence.jsonl",
+      "before_sha256": "7be69b7ef059f94ea9590606f8c68118e31b54f0261e21ce7e9fdeebc5b9bc9a",
+      "after_sha256": "dd097f6f9deca779186785af6f27b878edc0fdd061befd66f29f24c828152086"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/children-coverage.csv",
+      "before_sha256": "53790421057ee2545c4725b52224a076a08e22d0f05f9f1c5d166ab5d0fb3782",
+      "after_sha256": "40659828882461e3dc696d8f7be29a183affe092c7197fd7fac0b2f5f563b811"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/children-deepening-coverage.csv",
+      "before_sha256": "6842bbba07c95874f33b723f68b81df698edd96bbd74f5c6abd02e3815d7fc76",
+      "after_sha256": "bda9d8f66384bd223ffd83ea41e483c282615f96376f0b803ef86000d8a896f6"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/children-evidence.jsonl",
+      "before_sha256": "74dcf1ca5502214ad93f4820b989ab51a8b6a778cfc01613e961f9de3d278b74",
+      "after_sha256": "33da08fbe25bf3b9f8091849d913d41f10132970be73a469a8eca6aabf64e6a2"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/initial-coverage.csv",
+      "before_sha256": "c73c0c771c781a45a6b517ba87354b1a396f09c6958b0ece31f958704f6fd984",
+      "after_sha256": "e47579de45f8f4cf83d9e5ab91f1fe8bdd124b0894ac78cd448ac176bbab4b87"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/initial-evidence.jsonl",
+      "before_sha256": "7d1a216f03cf46d344dfaeb7578e8a1f1aa71a0367101c285fb043a34b67932c",
+      "after_sha256": "c7ea4d216f4c1f6faf9068a5d1f0159e8bb11353aaaaa609128a989c393ca92c"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/thin-audio-deepening-coverage.csv",
+      "before_sha256": "d9d28badeb528a980ce3f81d38e8a79751c74b141d9f8593f749d28082399782",
+      "after_sha256": "d653f79333439fdcbc023e0a296900b87ae48bc07c0311f25b5998551c6e35e8"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/thin-audio-deepening-evidence.jsonl",
+      "before_sha256": "c60164d3fe7533837e2635356c37d465ced41acbb8bf33487e04bfd30f4b3056",
+      "after_sha256": "6bdbb8d461b2735d3adc4adfdcf4219e2f2046cbc51dbd9243e972d4bce00653"
+    }
+  ],
+  "changes": [
+    {
+      "source": "work/dragonbox-controls-deepening/old-coverage-updates.json",
+      "whole_record": true,
+      "key": "flow_id",
+      "updated_files": [
+        "docs/research/interaction-library/batches/children-coverage.csv"
+      ],
+      "flow_id": "F-M050-01",
+      "before": {
+        "flow_id": "F-M050-01",
+        "product_id": "M-050",
+        "task": "拼图构数与金币解锁",
+        "depth": "D2",
+        "evidence_ids": "E-DRGN-02;E-DRGN-03",
+        "known_branches": "不同数字表示与金币解锁",
+        "gaps": "错误放置提示结算奖励数值与恢复",
+        "visual_status": "static_reference_only",
+        "hands_on": "false",
+        "case_path": "cases/M-050-dragonbox.md",
+        "checked_on": "2026-10-26"
+      },
+      "after": {
+        "flow_id": "F-M050-01",
+        "product_id": "M-050",
+        "task": "拼图构数与金币解锁",
+        "depth": "D2",
+        "evidence_ids": "E-DRGN-02;E-DRGN-03;E-DBCD-01",
+        "known_branches": "旧p5可见数字6空槽、构件及未完成图；四表示与金币用途沿旧指南。教材Quiz气泡不当内置出题或判分。",
+        "gaps": "错放/提示/撤销、最后落位到结算、金币数值/重玩收益与恢复仍未核；静态白线不当动作轨迹。",
+        "visual_status": "static_reference_only",
+        "hands_on": "false",
+        "case_path": "cases/M-050-dragonbox.md",
+        "checked_on": "2026-10-27"
+      },
+      "changed_fields": {
+        "evidence_ids": {
+          "before": "E-DRGN-02;E-DRGN-03",
+          "after": "E-DRGN-02;E-DRGN-03;E-DBCD-01"
+        },
+        "known_branches": {
+          "before": "不同数字表示与金币解锁",
+          "after": "旧p5可见数字6空槽、构件及未完成图；四表示与金币用途沿旧指南。教材Quiz气泡不当内置出题或判分。"
+        },
+        "gaps": {
+          "before": "错误放置提示结算奖励数值与恢复",
+          "after": "错放/提示/撤销、最后落位到结算、金币数值/重玩收益与恢复仍未核；静态白线不当动作轨迹。"
+        },
+        "checked_on": {
+          "before": "2026-10-26",
+          "after": "2026-10-27"
+        }
+      }
+    },
+    {
+      "source": "work/dragonbox-controls-deepening/old-coverage-updates.json",
+      "whole_record": true,
+      "key": "flow_id",
+      "updated_files": [
+        "docs/research/interaction-library/batches/children-coverage.csv"
+      ],
+      "flow_id": "F-M050-02",
+      "before": {
+        "flow_id": "F-M050-02",
+        "product_id": "M-050",
+        "task": "梯子目标数量与障碍",
+        "depth": "D2",
+        "evidence_ids": "E-DRGN-02",
+        "known_branches": "炸弹与奖励位置",
+        "gaps": "碰撞重试成功结算",
+        "visual_status": "static_reference_only",
+        "hands_on": "false",
+        "case_path": "cases/M-050-dragonbox.md",
+        "checked_on": "2026-10-26"
+      },
+      "after": {
+        "flow_id": "F-M050-02",
+        "product_id": "M-050",
+        "task": "梯子目标数量与障碍",
+        "depth": "D2",
+        "evidence_ids": "E-DRGN-02;E-DBCD-01",
+        "known_branches": "旧p8以数轴、70+10+角色和高度说明数量关系；1–100为指南教学范围，非当前App硬上限。",
+        "gaps": "碰撞、生命、重试、成功结算及是否保留奖励；四教学目标不当四关或学习成效。",
+        "visual_status": "static_reference_only",
+        "hands_on": "false",
+        "case_path": "cases/M-050-dragonbox.md",
+        "checked_on": "2026-10-27"
+      },
+      "changed_fields": {
+        "evidence_ids": {
+          "before": "E-DRGN-02",
+          "after": "E-DRGN-02;E-DBCD-01"
+        },
+        "known_branches": {
+          "before": "炸弹与奖励位置",
+          "after": "旧p8以数轴、70+10+角色和高度说明数量关系；1–100为指南教学范围，非当前App硬上限。"
+        },
+        "gaps": {
+          "before": "碰撞重试成功结算",
+          "after": "碰撞、生命、重试、成功结算及是否保留奖励；四教学目标不当四关或学习成效。"
+        },
+        "checked_on": {
+          "before": "2026-10-26",
+          "after": "2026-10-27"
+        }
+      }
+    },
+    {
+      "source": "work/dragonbox-controls-deepening/old-coverage-updates.json",
+      "whole_record": true,
+      "key": "flow_id",
+      "updated_files": [
+        "docs/research/interaction-library/batches/children-coverage.csv"
+      ],
+      "flow_id": "F-M050-03",
+      "before": {
+        "flow_id": "F-M050-03",
+        "product_id": "M-050",
+        "task": "家庭档案创建与管理",
+        "depth": "D2",
+        "evidence_ids": "E-DRGN-04",
+        "known_branches": "订阅与单买差异成人入口",
+        "gaps": "存档同步冲突删除恢复",
+        "visual_status": "not_observed",
+        "hands_on": "false",
+        "case_path": "cases/M-050-dragonbox.md",
+        "checked_on": "2026-10-26"
+      },
+      "after": {
+        "flow_id": "F-M050-03",
+        "product_id": "M-050",
+        "task": "家庭档案创建与管理",
+        "depth": "D2",
+        "evidence_ids": "E-DRGN-04;E-DBCD-03",
+        "known_branches": "Numbers外部管理分两App：Kids的Parents→成人年龄→Profiles→头像/铅笔；Kahoot先激活成人，长按孩子头像→Edit profile→Save或底部Delete Profile。",
+        "gaps": "最终删除确认/保留期/撤销、Numbers存档同步和数据删除范围；Kids免费一档案与旧学习App六档案按计划/入口分开。",
+        "visual_status": "not_observed",
+        "hands_on": "false",
+        "case_path": "cases/M-050-dragonbox.md",
+        "checked_on": "2026-10-27"
+      },
+      "changed_fields": {
+        "evidence_ids": {
+          "before": "E-DRGN-04",
+          "after": "E-DRGN-04;E-DBCD-03"
+        },
+        "known_branches": {
+          "before": "订阅与单买差异成人入口",
+          "after": "Numbers外部管理分两App：Kids的Parents→成人年龄→Profiles→头像/铅笔；Kahoot先激活成人，长按孩子头像→Edit profile→Save或底部Delete Profile。"
+        },
+        "gaps": {
+          "before": "存档同步冲突删除恢复",
+          "after": "最终删除确认/保留期/撤销、Numbers存档同步和数据删除范围；Kids免费一档案与旧学习App六档案按计划/入口分开。"
+        },
+        "checked_on": {
+          "before": "2026-10-26",
+          "after": "2026-10-27"
+        }
+      }
+    },
+    {
+      "source": "work/dragonbox-controls-deepening/old-coverage-updates.json",
+      "whole_record": true,
+      "key": "flow_id",
+      "updated_files": [
+        "docs/research/interaction-library/batches/children-coverage.csv"
+      ],
+      "flow_id": "F-M050-04",
+      "before": {
+        "flow_id": "F-M050-04",
+        "product_id": "M-050",
+        "task": "跨应用家长活动报告",
+        "depth": "D2",
+        "evidence_ids": "E-DRGN-05",
+        "known_branches": "孩子周次套餐限制",
+        "gaps": "Numbers具体字段精确续接",
+        "visual_status": "not_observed",
+        "hands_on": "false",
+        "case_path": "cases/M-050-dragonbox.md",
+        "checked_on": "2026-10-26"
+      },
+      "after": {
+        "flow_id": "F-M050-04",
+        "product_id": "M-050",
+        "task": "跨应用家长活动报告",
+        "depth": "D2",
+        "evidence_ids": "E-DRGN-05",
+        "known_branches": "Profile→Child Activity Dashboard→选孩子；本周/上周、累计主题进度、推荐；学习时间按日更新，免费总时长与套餐详情分开。",
+        "gaps": "Numbers具体准确率/每步事件字段、实时性与精确续关；未看Completed Activities配图，FAQ Settings与步骤Profile层级不同。",
+        "visual_status": "not_observed",
+        "hands_on": "false",
+        "case_path": "cases/M-050-dragonbox.md",
+        "checked_on": "2026-10-27"
+      },
+      "changed_fields": {
+        "known_branches": {
+          "before": "孩子周次套餐限制",
+          "after": "Profile→Child Activity Dashboard→选孩子；本周/上周、累计主题进度、推荐；学习时间按日更新，免费总时长与套餐详情分开。"
+        },
+        "gaps": {
+          "before": "Numbers具体字段精确续接",
+          "after": "Numbers具体准确率/每步事件字段、实时性与精确续关；未看Completed Activities配图，FAQ Settings与步骤Profile层级不同。"
+        },
+        "checked_on": {
+          "before": "2026-10-26",
+          "after": "2026-10-27"
+        }
+      }
+    },
+    {
+      "source": "work/dragonbox-controls-deepening/old-coverage-updates.json",
+      "whole_record": true,
+      "key": "flow_id",
+      "updated_files": [
+        "docs/research/interaction-library/batches/children-deepening-coverage.csv"
+      ],
+      "flow_id": "F-M050-06",
+      "before": {
+        "flow_id": "F-M050-06",
+        "product_id": "M-050",
+        "task": "未完拼图退出与恢复",
+        "depth": "D1",
+        "evidence_ids": "E-DRGD-03;E-DRGN-04",
+        "known_branches": "家庭档案边界；局内状态待核",
+        "gaps": "退出/重开按钮；存档粒度；离线与跨端恢复",
+        "visual_status": "not_observed",
+        "hands_on": "false",
+        "case_path": "cases/M-050-dragonbox.md",
+        "checked_on": "2026-10-26"
+      },
+      "after": {
+        "flow_id": "F-M050-06",
+        "product_id": "M-050",
+        "task": "未完拼图退出与恢复",
+        "depth": "D1",
+        "evidence_ids": "E-DRGD-03;E-DRGN-04;E-DBCD-02",
+        "known_branches": "旧档案和更新记录仍不证明局内续接；Google Play含Offline标签，但没有Numbers专属离线授权/保存步骤。",
+        "gaps": "退出/重开按钮、未完槽位及金币提交时机、离线存档与跨端冲突；不套Kahoot主App离线机制。",
+        "visual_status": "not_observed",
+        "hands_on": "false",
+        "case_path": "cases/M-050-dragonbox.md",
+        "checked_on": "2026-10-27"
+      },
+      "changed_fields": {
+        "evidence_ids": {
+          "before": "E-DRGD-03;E-DRGN-04",
+          "after": "E-DRGD-03;E-DRGN-04;E-DBCD-02"
+        },
+        "known_branches": {
+          "before": "家庭档案边界；局内状态待核",
+          "after": "旧档案和更新记录仍不证明局内续接；Google Play含Offline标签，但没有Numbers专属离线授权/保存步骤。"
+        },
+        "gaps": {
+          "before": "退出/重开按钮；存档粒度；离线与跨端恢复",
+          "after": "退出/重开按钮、未完槽位及金币提交时机、离线存档与跨端冲突；不套Kahoot主App离线机制。"
+        },
+        "checked_on": {
+          "before": "2026-10-26",
+          "after": "2026-10-27"
+        }
+      }
+    },
+    {
+      "source": "work/dragonbox-controls-deepening/old-evidence-additional-captures.json",
+      "whole_record": true,
+      "key": "evidence_id",
+      "updated_files": [
+        "docs/research/interaction-library/batches/children-evidence.jsonl"
+      ],
+      "evidence_id": "E-DRGN-05",
+      "before": {
+        "evidence_id": "E-DRGN-05",
+        "product_id": "M-050",
+        "title": "Child Activity Dashboard",
+        "url": "https://support.kahoot.com/hc/en-us/articles/39935017652125-Child-Activity-Dashboard-your-parent-dashboard-for-Kahoot-Kids",
+        "checked_on": "2026-10-26",
+        "source_type": "official_help",
+        "access_mode": "official_index_text",
+        "version_scope": "Kahoot/Kids cross-app dashboard; Numbers-specific fields untested",
+        "app_build": null,
+        "firmware_version": null,
+        "source_updated_on": null,
+        "locator": "Access; What you see; FAQ",
+        "note": "活动概览不等于能力证明。",
+        "hands_on": false,
+        "visual_observed": false,
+        "archived_artifact": null,
+        "sha256": null,
+        "capture_state": "bibliography_and_short_note_only",
+        "supersedes": null
+      },
+      "after": {
+        "evidence_id": "E-DRGN-05",
+        "product_id": "M-050",
+        "title": "Child Activity Dashboard",
+        "url": "https://support.kahoot.com/hc/en-us/articles/39935017652125-Child-Activity-Dashboard-your-parent-dashboard-for-Kahoot-Kids",
+        "checked_on": "2026-10-26",
+        "source_type": "official_help",
+        "access_mode": "official_index_text",
+        "version_scope": "Kahoot/Kids cross-app dashboard; Numbers-specific fields untested",
+        "app_build": null,
+        "firmware_version": null,
+        "source_updated_on": null,
+        "locator": "Access; What you see; FAQ",
+        "note": "活动概览不等于能力证明。",
+        "hands_on": false,
+        "visual_observed": false,
+        "archived_artifact": null,
+        "sha256": null,
+        "capture_state": "bibliography_and_short_note_only",
+        "supersedes": null,
+        "additional_captures": [
+          {
+            "checked_on": "2026-10-27",
+            "access_mode": "official_search_index_text",
+            "source_updated_on": "2026-10-17",
+            "raw_work_path": "work/dragonbox-controls-deepening/search-profiles.txt",
+            "raw_sha256": "2ecaef1c790e209ba6b4f0662fd391d75475d1fa075cdf7e8dcb67c853bda8be",
+            "locator": "Child Activity Dashboard indexed result; weekly/topic/FAQ sections",
+            "archived_artifact": "artifacts/dragonbox-controls-deepening/source-notes.md",
+            "sha256": "ac0000db47dba4b5206225d17cd95181fa8108daed9be8998e0ef8f100b1683b",
+            "hands_on": false,
+            "visual_observed": false,
+            "access_limitation": "Direct HTTP returned403 and stopped; this is independently returned official indexed text, not origin HTML."
+          }
+        ]
+      }
+    },
+    {
+      "source": "work/hiby-controls-deepening/old-coverage-updates.json",
+      "whole_record": true,
+      "key": "flow_id",
+      "updated_files": [
+        "docs/research/interaction-library/batches/initial-coverage.csv"
+      ],
+      "flow_id": "F-M035-02",
+      "before": {
+        "flow_id": "F-M035-02",
+        "product_id": "M-035",
+        "task": "片段循环与睡眠关机",
+        "depth": "D2",
+        "evidence_ids": "E-HBY-01",
+        "known_branches": "入口由设置启用、计时",
+        "gaps": "非法 A/B、切曲、断电记忆粒度",
+        "visual_status": "not_observed",
+        "hands_on": "false",
+        "case_path": "cases/M-035-hiby.md",
+        "checked_on": "2026-10-26"
+      },
+      "after": {
+        "flow_id": "F-M035-02",
+        "product_id": "M-035",
+        "task": "片段循环与睡眠关机",
+        "depth": "D2",
+        "evidence_ids": "E-HBY-01;E-HBD-03;E-HBCD-01;E-HBCD-02",
+        "known_branches": "睡眠从开关打开计时，重启保留时长但开关关；省电关机需未播、无无线音频、USB未连，FAQ称其时长和开关重启保留。平台中文另列电脑USB/充电大图标界面不响应两类计时关机。",
+        "gaps": "FAQ扫描/格式化重计与任何条件不重计矛盾未解；手册USB进入充电界面与平台电脑USB例外分开保留。A≥B/切曲A-B、计时显示/取消与边界时序未观察。",
+        "visual_status": "not_observed",
+        "hands_on": "false",
+        "case_path": "cases/M-035-hiby.md",
+        "checked_on": "2026-10-27"
+      },
+      "changed_fields": {
+        "evidence_ids": {
+          "before": "E-HBY-01",
+          "after": "E-HBY-01;E-HBD-03;E-HBCD-01;E-HBCD-02"
+        },
+        "known_branches": {
+          "before": "入口由设置启用、计时",
+          "after": "睡眠从开关打开计时，重启保留时长但开关关；省电关机需未播、无无线音频、USB未连，FAQ称其时长和开关重启保留。平台中文另列电脑USB/充电大图标界面不响应两类计时关机。"
+        },
+        "gaps": {
+          "before": "非法 A/B、切曲、断电记忆粒度",
+          "after": "FAQ扫描/格式化重计与任何条件不重计矛盾未解；手册USB进入充电界面与平台电脑USB例外分开保留。A≥B/切曲A-B、计时显示/取消与边界时序未观察。"
+        },
+        "checked_on": {
+          "before": "2026-10-26",
+          "after": "2026-10-27"
+        }
+      }
+    },
+    {
+      "source": "work/hiby-controls-deepening/old-coverage-updates.json",
+      "whole_record": true,
+      "key": "flow_id",
+      "updated_files": [
+        "docs/research/interaction-library/batches/thin-audio-deepening-coverage.csv"
+      ],
+      "flow_id": "F-M035-03",
+      "before": {
+        "flow_id": "F-M035-03",
+        "product_id": "M-035",
+        "task": "入库与扫描 D2",
+        "depth": "D2",
+        "evidence_ids": "E-HBD-01;E-HBD-04",
+        "known_branches": "文件与索引是两层；回 Music 分类查找。",
+        "gaps": "无卡、空间满、扫描取消/完成提示、坏标签处理未说明。",
+        "visual_status": "not_observed",
+        "hands_on": "false",
+        "case_path": "cases/M-035-hiby.md",
+        "checked_on": "2026-10-26"
+      },
+      "after": {
+        "flow_id": "F-M035-03",
+        "product_id": "M-035",
+        "task": "入库与扫描 D2",
+        "depth": "D2",
+        "evidence_ids": "E-HBD-01;E-HBD-04;E-HBCD-01;E-HBCD-02",
+        "known_branches": "自动重扫触发写为检测到卡或插USB；文件/索引仍分层。平台FAQ另给无CUE5800/有CUE6200文件上限及标签排序；不是当前固件实测容量。Wi-Fi传歌仅取得入口、按提示及退出描述，不能视为完成入库。",
+        "gaps": "无卡/空间满/扫描取消完成、坏标签、重扫去重、USB触发时机；无线传歌浏览器地址/上传/落盘目录/成功失败/断线续传未知。",
+        "visual_status": "not_observed",
+        "hands_on": "false",
+        "case_path": "cases/M-035-hiby.md",
+        "checked_on": "2026-10-27"
+      },
+      "changed_fields": {
+        "evidence_ids": {
+          "before": "E-HBD-01;E-HBD-04",
+          "after": "E-HBD-01;E-HBD-04;E-HBCD-01;E-HBCD-02"
+        },
+        "known_branches": {
+          "before": "文件与索引是两层；回 Music 分类查找。",
+          "after": "自动重扫触发写为检测到卡或插USB；文件/索引仍分层。平台FAQ另给无CUE5800/有CUE6200文件上限及标签排序；不是当前固件实测容量。Wi-Fi传歌仅取得入口、按提示及退出描述，不能视为完成入库。"
+        },
+        "gaps": {
+          "before": "无卡、空间满、扫描取消/完成提示、坏标签处理未说明。",
+          "after": "无卡/空间满/扫描取消完成、坏标签、重扫去重、USB触发时机；无线传歌浏览器地址/上传/落盘目录/成功失败/断线续传未知。"
+        },
+        "checked_on": {
+          "before": "2026-10-26",
+          "after": "2026-10-27"
+        }
+      }
+    },
+    {
+      "source": "work/hiby-controls-deepening/old-coverage-updates.json",
+      "whole_record": true,
+      "key": "flow_id",
+      "updated_files": [
+        "docs/research/interaction-library/batches/thin-audio-deepening-coverage.csv"
+      ],
+      "flow_id": "F-M035-04",
+      "before": {
+        "flow_id": "F-M035-04",
+        "product_id": "M-035",
+        "task": "当前队列、加入歌单、删除 D1",
+        "depth": "D1",
+        "evidence_ids": "E-HBD-01",
+        "known_branches": "未证明 Delete 删文件还是引用。",
+        "gaps": "新建/重排/去重、确认/取消、撤销、当前曲删除后选曲未知；不拼造 D2。",
+        "visual_status": "not_observed",
+        "hands_on": "false",
+        "case_path": "cases/M-035-hiby.md",
+        "checked_on": "2026-10-26"
+      },
+      "after": {
+        "flow_id": "F-M035-04",
+        "product_id": "M-035",
+        "task": "当前队列、加入歌单、删除 D1",
+        "depth": "D1",
+        "evidence_ids": "E-HBD-01;E-HBCD-01;E-HBCD-02",
+        "known_branches": "功能菜单仍只列当前列表、加歌单、删除等名称；不能确认Delete对象。FAQ称最近播放只保留50曲、内部歌单/收藏无数量上限，需区别文件扫描上限，均非实测。播放范围另见F10，不能补作编辑队列证据。",
+        "gaps": "新建/重排/去重/批量选择、确认取消、删引用或文件、当前曲删除后选曲和撤销仍未知，维持D1；插图不是删除界面。",
+        "visual_status": "not_observed",
+        "hands_on": "false",
+        "case_path": "cases/M-035-hiby.md",
+        "checked_on": "2026-10-27"
+      },
+      "changed_fields": {
+        "evidence_ids": {
+          "before": "E-HBD-01",
+          "after": "E-HBD-01;E-HBCD-01;E-HBCD-02"
+        },
+        "known_branches": {
+          "before": "未证明 Delete 删文件还是引用。",
+          "after": "功能菜单仍只列当前列表、加歌单、删除等名称；不能确认Delete对象。FAQ称最近播放只保留50曲、内部歌单/收藏无数量上限，需区别文件扫描上限，均非实测。播放范围另见F10，不能补作编辑队列证据。"
+        },
+        "gaps": {
+          "before": "新建/重排/去重、确认/取消、撤销、当前曲删除后选曲未知；不拼造 D2。",
+          "after": "新建/重排/去重/批量选择、确认取消、删引用或文件、当前曲删除后选曲和撤销仍未知，维持D1；插图不是删除界面。"
+        },
+        "checked_on": {
+          "before": "2026-10-26",
+          "after": "2026-10-27"
+        }
+      }
+    },
+    {
+      "source": "work/hiby-controls-deepening/old-coverage-updates.json",
+      "whole_record": true,
+      "key": "flow_id",
+      "updated_files": [
+        "docs/research/interaction-library/batches/thin-audio-deepening-coverage.csv"
+      ],
+      "flow_id": "F-M035-05",
+      "before": {
+        "flow_id": "F-M035-05",
+        "product_id": "M-035",
+        "task": "外部歌单与备份约束 D1",
+        "depth": "D1",
+        "evidence_ids": "E-HBD-03",
+        "known_branches": "歌单引用不是音频副本；CUE/ISO 分轨有解析限制。",
+        "gaps": "未提供设备导入/导出按钮、失败反馈、批量恢复步骤。平台 `b:` 示例不证明本机有第二卡槽。",
+        "visual_status": "not_observed",
+        "hands_on": "false",
+        "case_path": "cases/M-035-hiby.md",
+        "checked_on": "2026-10-26"
+      },
+      "after": {
+        "flow_id": "F-M035-05",
+        "product_id": "M-035",
+        "task": "外部歌单与备份约束 D1",
+        "depth": "D1",
+        "evidence_ids": "E-HBD-03;E-HBCD-02",
+        "known_branches": "平台规定导入导出m3u放playlist_data；支持m3u/m3u8及多种编码，推荐UTF-8 BOM和相对路径。相对路径从歌单所在目录解析；独立搬移后需核查引用。CUE/ISO分轨不在此解析范围。",
+        "gaps": "设备导入导出按钮、错路径提示、重复成员、删除歌单与音频关系、批量恢复未说明。b盘是平台第二卡示例，不能断言本机有第二卡槽。",
+        "visual_status": "not_observed",
+        "hands_on": "false",
+        "case_path": "cases/M-035-hiby.md",
+        "checked_on": "2026-10-27"
+      },
+      "changed_fields": {
+        "evidence_ids": {
+          "before": "E-HBD-03",
+          "after": "E-HBD-03;E-HBCD-02"
+        },
+        "known_branches": {
+          "before": "歌单引用不是音频副本；CUE/ISO 分轨有解析限制。",
+          "after": "平台规定导入导出m3u放playlist_data；支持m3u/m3u8及多种编码，推荐UTF-8 BOM和相对路径。相对路径从歌单所在目录解析；独立搬移后需核查引用。CUE/ISO分轨不在此解析范围。"
+        },
+        "gaps": {
+          "before": "未提供设备导入/导出按钮、失败反馈、批量恢复步骤。平台 `b:` 示例不证明本机有第二卡槽。",
+          "after": "设备导入导出按钮、错路径提示、重复成员、删除歌单与音频关系、批量恢复未说明。b盘是平台第二卡示例，不能断言本机有第二卡槽。"
+        },
+        "checked_on": {
+          "before": "2026-10-26",
+          "after": "2026-10-27"
+        }
+      }
+    },
+    {
+      "source": "work/hiby-controls-deepening/old-coverage-updates.json",
+      "whole_record": true,
+      "key": "flow_id",
+      "updated_files": [
+        "docs/research/interaction-library/batches/thin-audio-deepening-coverage.csv"
+      ],
+      "flow_id": "F-M035-06",
+      "before": {
+        "flow_id": "F-M035-06",
+        "product_id": "M-035",
+        "task": "关机记忆与自动播放 D2",
+        "depth": "D2",
+        "evidence_ids": "E-HBD-01",
+        "known_branches": "手册称记住曲目并继续自动播放。",
+        "gaps": "原文翻译含糊；不能确认秒点、暂停后关机、崩溃/没电、缺卡或蓝牙未连时行为。",
+        "visual_status": "not_observed",
+        "hands_on": "false",
+        "case_path": "cases/M-035-hiby.md",
+        "checked_on": "2026-10-26"
+      },
+      "after": {
+        "flow_id": "F-M035-06",
+        "product_id": "M-035",
+        "task": "关机记忆与自动播放 D2",
+        "depth": "D2",
+        "evidence_ids": "E-HBD-01;E-HBCD-01",
+        "known_branches": "中文同源手册仍只写播放中关机、下次记住歌曲并继续自动播放；未补精确时间点。开关入口与原F保留。",
+        "gaps": "秒点、暂停后关机、崩溃/没电、缺卡和未接耳机时行为均未知；不将曲目记忆当逐书断点。",
+        "visual_status": "not_observed",
+        "hands_on": "false",
+        "case_path": "cases/M-035-hiby.md",
+        "checked_on": "2026-10-27"
+      },
+      "changed_fields": {
+        "evidence_ids": {
+          "before": "E-HBD-01",
+          "after": "E-HBD-01;E-HBCD-01"
+        },
+        "known_branches": {
+          "before": "手册称记住曲目并继续自动播放。",
+          "after": "中文同源手册仍只写播放中关机、下次记住歌曲并继续自动播放；未补精确时间点。开关入口与原F保留。"
+        },
+        "gaps": {
+          "before": "原文翻译含糊；不能确认秒点、暂停后关机、崩溃/没电、缺卡或蓝牙未连时行为。",
+          "after": "秒点、暂停后关机、崩溃/没电、缺卡和未接耳机时行为均未知；不将曲目记忆当逐书断点。"
+        },
+        "checked_on": {
+          "before": "2026-10-26",
+          "after": "2026-10-27"
+        }
+      }
+    },
+    {
+      "source": "work/hiby-controls-deepening/old-evidence-additional-captures.json",
+      "whole_record": true,
+      "key": "evidence_id",
+      "updated_files": [
+        "docs/research/interaction-library/batches/thin-audio-deepening-evidence.jsonl"
+      ],
+      "evidence_id": "E-HBD-01",
+      "before": {
+        "evidence_id": "E-HBD-01",
+        "product_id": "M-035",
+        "title": "R3II 2025 完整目录与指南",
+        "url": "https://guide.hiby.com/en/docs/products/audio_player/hiby_r3ii_2025/guide/",
+        "checked_on": "2026-10-26",
+        "source_type": "official_manual",
+        "access_mode": "opened_text",
+        "version_scope": "HiBy R3II (2025); dynamic model manual, firmware reference 1.1_202501061153; actual firmware unknown",
+        "app_build": null,
+        "firmware_version": null,
+        "source_updated_on": null,
+        "locator": "§1–11；重点 §2、§5、§9、§10；直接 HTML 正文，手册版本/更新日未标明。",
+        "note": "与 E-HBY-01 同一本手册；扩展目录/章节，非独立交叉验证。",
+        "hands_on": false,
+        "visual_observed": false,
+        "archived_artifact": null,
+        "sha256": null,
+        "capture_state": "bibliography_and_short_note_only",
+        "supersedes": null
+      },
+      "after": {
+        "evidence_id": "E-HBD-01",
+        "product_id": "M-035",
+        "title": "R3II 2025 完整目录与指南",
+        "url": "https://guide.hiby.com/en/docs/products/audio_player/hiby_r3ii_2025/guide/",
+        "checked_on": "2026-10-26",
+        "source_type": "official_manual",
+        "access_mode": "opened_text",
+        "version_scope": "HiBy R3II (2025); dynamic model manual, firmware reference 1.1_202501061153; actual firmware unknown",
+        "app_build": null,
+        "firmware_version": null,
+        "source_updated_on": null,
+        "locator": "§1–11；重点 §2、§5、§9、§10；直接 HTML 正文，手册版本/更新日未标明。",
+        "note": "与 E-HBY-01 同一本手册；扩展目录/章节，非独立交叉验证。",
+        "hands_on": false,
+        "visual_observed": false,
+        "archived_artifact": null,
+        "sha256": null,
+        "capture_state": "bibliography_and_short_note_only",
+        "supersedes": null,
+        "additional_captures": [
+          {
+            "url": "https://guide.hiby.com/en/docs/products/audio_player/hiby_r3ii_2025/guide/",
+            "checked_on": "2026-10-27",
+            "raw_work_path": "work/hiby-controls-deepening/raw/manual-en.html",
+            "raw_sha256": "d631a86d1cf1cd41e685034d1c6808efbdea05effc147aaf77452b2d4be27ede",
+            "extracted_work_path": "work/hiby-controls-deepening/extracted/manual-en.txt",
+            "extracted_sha256": "eb5c95421824b5c847e823cbf08d71a42fdf2a5c4be3cd4a629b3c8422c6be36",
+            "access_mode": "anonymous_public_html_GET",
+            "locator": "article正文；章节/设置定位见本批inventory",
+            "archived_artifact": "artifacts/hiby-controls-deepening/source-notes.md",
+            "sha256": "cf50722812021de3a024d49e7fa78a611f4b457fea05b03132ba48738230f946",
+            "hands_on": false,
+            "visual_observed": false
+          }
+        ]
+      },
+      "changed_fields": {
+        "additional_captures": {
+          "before": null,
+          "after": [
+            {
+              "url": "https://guide.hiby.com/en/docs/products/audio_player/hiby_r3ii_2025/guide/",
+              "checked_on": "2026-10-27",
+              "raw_work_path": "work/hiby-controls-deepening/raw/manual-en.html",
+              "raw_sha256": "d631a86d1cf1cd41e685034d1c6808efbdea05effc147aaf77452b2d4be27ede",
+              "extracted_work_path": "work/hiby-controls-deepening/extracted/manual-en.txt",
+              "extracted_sha256": "eb5c95421824b5c847e823cbf08d71a42fdf2a5c4be3cd4a629b3c8422c6be36",
+              "access_mode": "anonymous_public_html_GET",
+              "locator": "article正文；章节/设置定位见本批inventory",
+              "archived_artifact": "artifacts/hiby-controls-deepening/source-notes.md",
+              "sha256": "cf50722812021de3a024d49e7fa78a611f4b457fea05b03132ba48738230f946",
+              "hands_on": false,
+              "visual_observed": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source": "work/hiby-controls-deepening/old-evidence-additional-captures.json",
+      "whole_record": true,
+      "key": "evidence_id",
+      "updated_files": [
+        "docs/research/interaction-library/batches/thin-audio-deepening-evidence.jsonl"
+      ],
+      "evidence_id": "E-HBD-02",
+      "before": {
+        "evidence_id": "E-HBD-02",
+        "product_id": "M-035",
+        "title": "R3II 2025 固件记录",
+        "url": "https://guide.hiby.com/en/docs/products/audio_player/hiby_r3ii_2025/firmware/",
+        "checked_on": "2026-10-26",
+        "source_type": "official_release_notes",
+        "access_mode": "opened_text",
+        "version_scope": "HiBy R3II (2025); dynamic model manual, firmware reference 1.1_202501061153; actual firmware unknown",
+        "app_build": null,
+        "firmware_version": "1.1_202501061153 (listed release; not measured on device)",
+        "source_updated_on": null,
+        "locator": "1.1_202501061153 / 1.0_202411191142；直接正文，未下载固件。",
+        "note": "仅阅读版本记录；未取得用户升级包，Burn firmware 与 .upt 不作等同。",
+        "hands_on": false,
+        "visual_observed": false,
+        "archived_artifact": null,
+        "sha256": null,
+        "capture_state": "bibliography_and_short_note_only",
+        "supersedes": null
+      },
+      "after": {
+        "evidence_id": "E-HBD-02",
+        "product_id": "M-035",
+        "title": "R3II 2025 固件记录",
+        "url": "https://guide.hiby.com/en/docs/products/audio_player/hiby_r3ii_2025/firmware/",
+        "checked_on": "2026-10-26",
+        "source_type": "official_release_notes",
+        "access_mode": "opened_text",
+        "version_scope": "HiBy R3II (2025); dynamic model manual, firmware reference 1.1_202501061153; actual firmware unknown",
+        "app_build": null,
+        "firmware_version": "1.1_202501061153 (listed release; not measured on device)",
+        "source_updated_on": null,
+        "locator": "1.1_202501061153 / 1.0_202411191142；直接正文，未下载固件。",
+        "note": "仅阅读版本记录；未取得用户升级包，Burn firmware 与 .upt 不作等同。",
+        "hands_on": false,
+        "visual_observed": false,
+        "archived_artifact": null,
+        "sha256": null,
+        "capture_state": "bibliography_and_short_note_only",
+        "supersedes": null,
+        "additional_captures": [
+          {
+            "url": "https://guide.hiby.com/en/docs/products/audio_player/hiby_r3ii_2025/firmware/",
+            "checked_on": "2026-10-27",
+            "raw_work_path": "work/hiby-controls-deepening/raw/firmware-en.html",
+            "raw_sha256": "324635ed3c27a01f6ffc0353c860813c65c960be79d34fc456f1109b49e28dc4",
+            "extracted_work_path": "work/hiby-controls-deepening/extracted/firmware-en.txt",
+            "extracted_sha256": "db9295d1a41dbbc880eb261e8118d793bf915d7e4d0908e3c24856ff25fdd607",
+            "access_mode": "anonymous_public_html_GET",
+            "locator": "article正文；章节/设置定位见本批inventory",
+            "archived_artifact": "artifacts/hiby-controls-deepening/source-notes.md",
+            "sha256": "cf50722812021de3a024d49e7fa78a611f4b457fea05b03132ba48738230f946",
+            "hands_on": false,
+            "visual_observed": false
+          }
+        ]
+      },
+      "changed_fields": {
+        "additional_captures": {
+          "before": null,
+          "after": [
+            {
+              "url": "https://guide.hiby.com/en/docs/products/audio_player/hiby_r3ii_2025/firmware/",
+              "checked_on": "2026-10-27",
+              "raw_work_path": "work/hiby-controls-deepening/raw/firmware-en.html",
+              "raw_sha256": "324635ed3c27a01f6ffc0353c860813c65c960be79d34fc456f1109b49e28dc4",
+              "extracted_work_path": "work/hiby-controls-deepening/extracted/firmware-en.txt",
+              "extracted_sha256": "db9295d1a41dbbc880eb261e8118d793bf915d7e4d0908e3c24856ff25fdd607",
+              "access_mode": "anonymous_public_html_GET",
+              "locator": "article正文；章节/设置定位见本批inventory",
+              "archived_artifact": "artifacts/hiby-controls-deepening/source-notes.md",
+              "sha256": "cf50722812021de3a024d49e7fa78a611f4b457fea05b03132ba48738230f946",
+              "hands_on": false,
+              "visual_observed": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source": "work/hiby-controls-deepening/old-evidence-additional-captures.json",
+      "whole_record": true,
+      "key": "evidence_id",
+      "updated_files": [
+        "docs/research/interaction-library/batches/thin-audio-deepening-evidence.jsonl"
+      ],
+      "evidence_id": "E-HBD-03",
+      "before": {
+        "evidence_id": "E-HBD-03",
+        "product_id": "M-035",
+        "title": "X1600 R Player FAQ",
+        "url": "https://guide.hiby.com/en/docs/question/audio_player/x1600_r/",
+        "checked_on": "2026-10-26",
+        "source_type": "official_help",
+        "access_mode": "opened_text",
+        "version_scope": "HiBy R3II (2025); dynamic model manual, firmware reference 1.1_202501061153; actual firmware unknown",
+        "app_build": null,
+        "firmware_version": null,
+        "source_updated_on": null,
+        "locator": "Description 明列本型号；System、Power Supply、Audio、Other；直接正文，跨机型内容限界。",
+        "note": "明确包含本型号的跨机型 FAQ；第二卡槽示例、定时及音效冲突保留。",
+        "hands_on": false,
+        "visual_observed": false,
+        "archived_artifact": null,
+        "sha256": null,
+        "capture_state": "bibliography_and_short_note_only",
+        "supersedes": null
+      },
+      "after": {
+        "evidence_id": "E-HBD-03",
+        "product_id": "M-035",
+        "title": "X1600 R Player FAQ",
+        "url": "https://guide.hiby.com/en/docs/question/audio_player/x1600_r/",
+        "checked_on": "2026-10-26",
+        "source_type": "official_help",
+        "access_mode": "opened_text",
+        "version_scope": "HiBy R3II (2025); dynamic model manual, firmware reference 1.1_202501061153; actual firmware unknown",
+        "app_build": null,
+        "firmware_version": null,
+        "source_updated_on": null,
+        "locator": "Description 明列本型号；System、Power Supply、Audio、Other；直接正文，跨机型内容限界。",
+        "note": "明确包含本型号的跨机型 FAQ；第二卡槽示例、定时及音效冲突保留。",
+        "hands_on": false,
+        "visual_observed": false,
+        "archived_artifact": null,
+        "sha256": null,
+        "capture_state": "bibliography_and_short_note_only",
+        "supersedes": null,
+        "additional_captures": [
+          {
+            "url": "https://guide.hiby.com/en/docs/question/audio_player/x1600_r/",
+            "checked_on": "2026-10-27",
+            "raw_work_path": "work/hiby-controls-deepening/raw/faq-en.html",
+            "raw_sha256": "10cc0e02d3059703e4189b2d9c7e7e4428e350a40358525685ff1b9c5be1555d",
+            "extracted_work_path": "work/hiby-controls-deepening/extracted/faq-en.txt",
+            "extracted_sha256": "6a4582cfd2d65e3517a815698ca91a22658ed7617a46eead933b220e026452de",
+            "access_mode": "anonymous_public_html_GET",
+            "locator": "article正文；章节/设置定位见本批inventory",
+            "archived_artifact": "artifacts/hiby-controls-deepening/source-notes.md",
+            "sha256": "cf50722812021de3a024d49e7fa78a611f4b457fea05b03132ba48738230f946",
+            "hands_on": false,
+            "visual_observed": false
+          }
+        ]
+      },
+      "changed_fields": {
+        "additional_captures": {
+          "before": null,
+          "after": [
+            {
+              "url": "https://guide.hiby.com/en/docs/question/audio_player/x1600_r/",
+              "checked_on": "2026-10-27",
+              "raw_work_path": "work/hiby-controls-deepening/raw/faq-en.html",
+              "raw_sha256": "10cc0e02d3059703e4189b2d9c7e7e4428e350a40358525685ff1b9c5be1555d",
+              "extracted_work_path": "work/hiby-controls-deepening/extracted/faq-en.txt",
+              "extracted_sha256": "6a4582cfd2d65e3517a815698ca91a22658ed7617a46eead933b220e026452de",
+              "access_mode": "anonymous_public_html_GET",
+              "locator": "article正文；章节/设置定位见本批inventory",
+              "archived_artifact": "artifacts/hiby-controls-deepening/source-notes.md",
+              "sha256": "cf50722812021de3a024d49e7fa78a611f4b457fea05b03132ba48738230f946",
+              "hands_on": false,
+              "visual_observed": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source": "work/hiby-controls-deepening/old-evidence-additional-captures.json",
+      "whole_record": true,
+      "key": "evidence_id",
+      "updated_files": [
+        "docs/research/interaction-library/batches/thin-audio-deepening-evidence.jsonl"
+      ],
+      "evidence_id": "E-HBD-04",
+      "before": {
+        "evidence_id": "E-HBD-04",
+        "product_id": "M-035",
+        "title": "USB MassStorage 帮助",
+        "url": "https://guide.hiby.com/en/docs/guides/usb/massstorage/",
+        "checked_on": "2026-10-26",
+        "source_type": "official_help",
+        "access_mode": "opened_text",
+        "version_scope": "HiBy R3II (2025); dynamic model manual, firmware reference 1.1_202501061153; actual firmware unknown",
+        "app_build": null,
+        "firmware_version": null,
+        "source_updated_on": null,
+        "locator": "MacOS、Windows、FAQs；直接正文，型号手册链接的通用资料。",
+        "note": "本轮新增定位；具体已查/未知见 M-035-hiby.md。",
+        "hands_on": false,
+        "visual_observed": false,
+        "archived_artifact": null,
+        "sha256": null,
+        "capture_state": "bibliography_and_short_note_only",
+        "supersedes": null
+      },
+      "after": {
+        "evidence_id": "E-HBD-04",
+        "product_id": "M-035",
+        "title": "USB MassStorage 帮助",
+        "url": "https://guide.hiby.com/en/docs/guides/usb/massstorage/",
+        "checked_on": "2026-10-26",
+        "source_type": "official_help",
+        "access_mode": "opened_text",
+        "version_scope": "HiBy R3II (2025); dynamic model manual, firmware reference 1.1_202501061153; actual firmware unknown",
+        "app_build": null,
+        "firmware_version": null,
+        "source_updated_on": null,
+        "locator": "MacOS、Windows、FAQs；直接正文，型号手册链接的通用资料。",
+        "note": "本轮新增定位；具体已查/未知见 M-035-hiby.md。",
+        "hands_on": false,
+        "visual_observed": false,
+        "archived_artifact": null,
+        "sha256": null,
+        "capture_state": "bibliography_and_short_note_only",
+        "supersedes": null,
+        "additional_captures": [
+          {
+            "url": "https://guide.hiby.com/en/docs/guides/usb/massstorage/",
+            "checked_on": "2026-10-27",
+            "raw_work_path": "work/hiby-controls-deepening/raw/usb-en.html",
+            "raw_sha256": "5d13b45e18c4abfbfb996ee245650668de889020bf2ecec65a6b80327d7d52cb",
+            "extracted_work_path": "work/hiby-controls-deepening/extracted/usb-en.txt",
+            "extracted_sha256": "73e9b32656d66b0feab90397c43445a46474b274590d1af63d3ae4924026c2c7",
+            "access_mode": "anonymous_public_html_GET",
+            "locator": "article正文；章节/设置定位见本批inventory",
+            "archived_artifact": "artifacts/hiby-controls-deepening/source-notes.md",
+            "sha256": "cf50722812021de3a024d49e7fa78a611f4b457fea05b03132ba48738230f946",
+            "hands_on": false,
+            "visual_observed": false
+          }
+        ]
+      },
+      "changed_fields": {
+        "additional_captures": {
+          "before": null,
+          "after": [
+            {
+              "url": "https://guide.hiby.com/en/docs/guides/usb/massstorage/",
+              "checked_on": "2026-10-27",
+              "raw_work_path": "work/hiby-controls-deepening/raw/usb-en.html",
+              "raw_sha256": "5d13b45e18c4abfbfb996ee245650668de889020bf2ecec65a6b80327d7d52cb",
+              "extracted_work_path": "work/hiby-controls-deepening/extracted/usb-en.txt",
+              "extracted_sha256": "73e9b32656d66b0feab90397c43445a46474b274590d1af63d3ae4924026c2c7",
+              "access_mode": "anonymous_public_html_GET",
+              "locator": "article正文；章节/设置定位见本批inventory",
+              "archived_artifact": "artifacts/hiby-controls-deepening/source-notes.md",
+              "sha256": "cf50722812021de3a024d49e7fa78a611f4b457fea05b03132ba48738230f946",
+              "hands_on": false,
+              "visual_observed": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source": "work/anki-controls-deepening/existing-coverage-updates.json",
+      "whole_record": false,
+      "key": "flow_id",
+      "updated_files": [
+        "docs/research/interaction-library/batches/initial-coverage.csv"
+      ],
+      "flow_id": "F-M020-01",
+      "source_batch": "docs/research/interaction-library/batches/initial-coverage.csv",
+      "field": "evidence_ids",
+      "before": "E-ANK-01",
+      "after": "E-ANK-01;E-ANCD-03;E-ANCD-04",
+      "reason": "2026-10-27补机制/恢复分支，原任务与深度不变；待root合并"
+    },
+    {
+      "source": "work/anki-controls-deepening/existing-coverage-updates.json",
+      "whole_record": false,
+      "key": "flow_id",
+      "updated_files": [
+        "docs/research/interaction-library/batches/initial-coverage.csv"
+      ],
+      "flow_id": "F-M020-01",
+      "source_batch": "docs/research/interaction-library/batches/initial-coverage.csv",
+      "field": "known_branches",
+      "before": "评分、到期队列、当日完成",
+      "after": "评分、到期队列、当日完成；v3允许回答/暂埋交错逐步撤销；多数可撤销动作可Redo；2.1.45历史条件",
+      "reason": "2026-10-27补机制/恢复分支，原任务与深度不变；待root合并"
+    },
+    {
+      "source": "work/anki-controls-deepening/existing-coverage-updates.json",
+      "whole_record": false,
+      "key": "flow_id",
+      "updated_files": [
+        "docs/research/interaction-library/batches/initial-coverage.csv"
+      ],
+      "flow_id": "F-M020-01",
+      "source_batch": "docs/research/interaction-library/batches/initial-coverage.csv",
+      "field": "gaps",
+      "before": "误评撤销、插件/调度版本",
+      "after": "学习页Undo/Redo具体入口、撤销后题面、跨同步/重启保存、定点回改旧评分及插件影响未知",
+      "reason": "2026-10-27补机制/恢复分支，原任务与深度不变；待root合并"
+    },
+    {
+      "source": "work/anki-controls-deepening/existing-coverage-updates.json",
+      "whole_record": false,
+      "key": "flow_id",
+      "updated_files": [
+        "docs/research/interaction-library/batches/initial-coverage.csv"
+      ],
+      "flow_id": "F-M020-01",
+      "source_batch": "docs/research/interaction-library/batches/initial-coverage.csv",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27",
+      "reason": "2026-10-27补机制/恢复分支，原任务与深度不变；待root合并"
+    },
+    {
+      "source": "work/anki-controls-deepening/existing-coverage-updates.json",
+      "whole_record": false,
+      "key": "flow_id",
+      "updated_files": [
+        "docs/research/interaction-library/batches/initial-coverage.csv"
+      ],
+      "flow_id": "F-M020-02",
+      "source_batch": "docs/research/interaction-library/batches/initial-coverage.csv",
+      "field": "evidence_ids",
+      "before": "E-ANK-01",
+      "after": "E-ANK-01;E-ANCD-03;E-ANCD-04",
+      "reason": "2026-10-27补机制/恢复分支，原任务与深度不变；待root合并"
+    },
+    {
+      "source": "work/anki-controls-deepening/existing-coverage-updates.json",
+      "whole_record": false,
+      "key": "flow_id",
+      "updated_files": [
+        "docs/research/interaction-library/batches/initial-coverage.csv"
+      ],
+      "flow_id": "F-M020-02",
+      "source_batch": "docs/research/interaction-library/batches/initial-coverage.csv",
+      "field": "known_branches",
+      "before": "恢复期限、对象范围",
+      "after": "暂埋/停用/删除对象不同；v3跨日学习卡可暂埋；2.1.45列删除笔记/暂埋可多步撤销",
+      "reason": "2026-10-27补机制/恢复分支，原任务与深度不变；待root合并"
+    },
+    {
+      "source": "work/anki-controls-deepening/existing-coverage-updates.json",
+      "whole_record": false,
+      "key": "flow_id",
+      "updated_files": [
+        "docs/research/interaction-library/batches/initial-coverage.csv"
+      ],
+      "flow_id": "F-M020-02",
+      "source_batch": "docs/research/interaction-library/batches/initial-coverage.csv",
+      "field": "gaps",
+      "before": "确认对话、Undo、持久保存粒度",
+      "after": "删除确认、当前快捷键、撤销栈跨退出、每种批处理保存粒度；删除日志恢复见F03",
+      "reason": "2026-10-27补机制/恢复分支，原任务与深度不变；待root合并"
+    },
+    {
+      "source": "work/anki-controls-deepening/existing-coverage-updates.json",
+      "whole_record": false,
+      "key": "flow_id",
+      "updated_files": [
+        "docs/research/interaction-library/batches/initial-coverage.csv"
+      ],
+      "flow_id": "F-M020-02",
+      "source_batch": "docs/research/interaction-library/batches/initial-coverage.csv",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27",
+      "reason": "2026-10-27补机制/恢复分支，原任务与深度不变；待root合并"
+    },
+    {
+      "source": "work/anki-controls-deepening/existing-coverage-updates.json",
+      "whole_record": false,
+      "key": "flow_id",
+      "updated_files": [
+        "docs/research/interaction-library/batches/initial-coverage.csv"
+      ],
+      "flow_id": "F-M020-03",
+      "source_batch": "docs/research/interaction-library/batches/initial-coverage.csv",
+      "field": "evidence_ids",
+      "before": "E-ANK-02;E-ANK-03",
+      "after": "E-ANK-02;E-ANK-03;E-ANCD-02",
+      "reason": "2026-10-27补机制/恢复分支，原任务与深度不变；待root合并"
+    },
+    {
+      "source": "work/anki-controls-deepening/existing-coverage-updates.json",
+      "whole_record": false,
+      "key": "flow_id",
+      "updated_files": [
+        "docs/research/interaction-library/batches/initial-coverage.csv"
+      ],
+      "flow_id": "F-M020-03",
+      "source_batch": "docs/research/interaction-library/batches/initial-coverage.csv",
+      "field": "known_branches",
+      "before": "单向同步、合并、媒体、恢复",
+      "after": "单向同步覆盖；合并前取消自动同步、逐顶层组导出apkg再下载/导回；媒体独立合并；自动备份不含媒体；deleted.txt按档案建立版本区分类型列",
+      "reason": "2026-10-27补机制/恢复分支，原任务与深度不变；待root合并"
+    },
+    {
+      "source": "work/anki-controls-deepening/existing-coverage-updates.json",
+      "whole_record": false,
+      "key": "flow_id",
+      "updated_files": [
+        "docs/research/interaction-library/batches/initial-coverage.csv"
+      ],
+      "flow_id": "F-M020-03",
+      "source_batch": "docs/research/interaction-library/batches/initial-coverage.csv",
+      "field": "gaps",
+      "before": "两端测试、失败恢复、版本差异",
+      "after": "实际两端结果、失败中断/重复导回、旧档案日志迁移、笔记日志恢复调度/媒体未知；Network设置名需固定构建",
+      "reason": "2026-10-27补机制/恢复分支，原任务与深度不变；待root合并"
+    },
+    {
+      "source": "work/anki-controls-deepening/existing-coverage-updates.json",
+      "whole_record": false,
+      "key": "flow_id",
+      "updated_files": [
+        "docs/research/interaction-library/batches/initial-coverage.csv"
+      ],
+      "flow_id": "F-M020-03",
+      "source_batch": "docs/research/interaction-library/batches/initial-coverage.csv",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27",
+      "reason": "2026-10-27补机制/恢复分支，原任务与深度不变；待root合并"
+    },
+    {
+      "source": "work/anki-controls-deepening/existing-coverage-updates.json",
+      "whole_record": false,
+      "key": "flow_id",
+      "updated_files": [
+        "docs/research/interaction-library/batches/anki-deepening-coverage.csv"
+      ],
+      "flow_id": "F-M020-07",
+      "source_batch": "docs/research/interaction-library/batches/anki-deepening-coverage.csv",
+      "field": "evidence_ids",
+      "before": "E-AND-06;E-AND-07",
+      "after": "E-AND-06;E-AND-07;E-ANCD-01;E-ANCD-03;E-ANCD-06",
+      "reason": "2026-10-27补机制/恢复分支，原任务与深度不变；待root合并"
+    },
+    {
+      "source": "work/anki-controls-deepening/existing-coverage-updates.json",
+      "whole_record": false,
+      "key": "flow_id",
+      "updated_files": [
+        "docs/research/interaction-library/batches/anki-deepening-coverage.csv"
+      ],
+      "flow_id": "F-M020-07",
+      "source_batch": "docs/research/interaction-library/batches/anki-deepening-coverage.csv",
+      "field": "known_branches",
+      "before": "模板作用于同类型材料；删除字段内容不会立即删除原卡。Deck Override 可改变生成目的地。",
+      "after": "2.1.45+保存类型/导出前阻止部分错误；Browse定位类型→Cards修引用/条件；区分单张与全部cloze空卡；23.12关闭布局页提供保存机会",
+      "reason": "2026-10-27补机制/恢复分支，原任务与深度不变；待root合并"
+    },
+    {
+      "source": "work/anki-controls-deepening/existing-coverage-updates.json",
+      "whole_record": false,
+      "key": "flow_id",
+      "updated_files": [
+        "docs/research/interaction-library/batches/anki-deepening-coverage.csv"
+      ],
+      "flow_id": "F-M020-07",
+      "source_batch": "docs/research/interaction-library/batches/anki-deepening-coverage.csv",
+      "field": "gaps",
+      "before": "共享模板影响预览、删除恢复",
+      "after": "保存/放弃按钮文案、所有CSS/JS错误、删除重复类型的精确对象、取消/Undo后全部恢复范围未知",
+      "reason": "2026-10-27补机制/恢复分支，原任务与深度不变；待root合并"
+    },
+    {
+      "source": "work/anki-controls-deepening/existing-coverage-updates.json",
+      "whole_record": false,
+      "key": "flow_id",
+      "updated_files": [
+        "docs/research/interaction-library/batches/anki-deepening-coverage.csv"
+      ],
+      "flow_id": "F-M020-07",
+      "source_batch": "docs/research/interaction-library/batches/anki-deepening-coverage.csv",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27",
+      "reason": "2026-10-27补机制/恢复分支，原任务与深度不变；待root合并"
+    },
+    {
+      "source": "work/anki-controls-deepening/existing-coverage-updates.json",
+      "whole_record": false,
+      "key": "flow_id",
+      "updated_files": [
+        "docs/research/interaction-library/batches/anki-deepening-coverage.csv"
+      ],
+      "flow_id": "F-M020-10",
+      "source_batch": "docs/research/interaction-library/batches/anki-deepening-coverage.csv",
+      "field": "evidence_ids",
+      "before": "E-AND-09;E-AND-10",
+      "after": "E-AND-09;E-AND-10;E-ANCD-03",
+      "reason": "2026-10-27补机制/恢复分支，原任务与深度不变；待root合并"
+    },
+    {
+      "source": "work/anki-controls-deepening/existing-coverage-updates.json",
+      "whole_record": false,
+      "key": "flow_id",
+      "updated_files": [
+        "docs/research/interaction-library/batches/anki-deepening-coverage.csv"
+      ],
+      "flow_id": "F-M020-10",
+      "source_batch": "docs/research/interaction-library/batches/anki-deepening-coverage.csv",
+      "field": "known_branches",
+      "before": "操作对象不同；删除笔记连带卡片。变更笔记类型不改变调度，但涉及单向同步。Edit / Undo 有最近操作撤销入口。",
+      "after": "卡片/笔记模式及批量对象不同；Edit/Undo入口；2.1.45多数动作多步Undo/Redo，Check Database/不兼容插件可清历史",
+      "reason": "2026-10-27补机制/恢复分支，原任务与深度不变；待root合并"
+    },
+    {
+      "source": "work/anki-controls-deepening/existing-coverage-updates.json",
+      "whole_record": false,
+      "key": "flow_id",
+      "updated_files": [
+        "docs/research/interaction-library/batches/anki-deepening-coverage.csv"
+      ],
+      "flow_id": "F-M020-10",
+      "source_batch": "docs/research/interaction-library/batches/anki-deepening-coverage.csv",
+      "field": "gaps",
+      "before": "多选误改撤销范围、同步冲突",
+      "after": "全部批动作撤销支持、重做入口、跨窗口/同步/退出后的撤销栈、查找替换误操作恢复",
+      "reason": "2026-10-27补机制/恢复分支，原任务与深度不变；待root合并"
+    },
+    {
+      "source": "work/anki-controls-deepening/existing-coverage-updates.json",
+      "whole_record": false,
+      "key": "flow_id",
+      "updated_files": [
+        "docs/research/interaction-library/batches/anki-deepening-coverage.csv"
+      ],
+      "flow_id": "F-M020-10",
+      "source_batch": "docs/research/interaction-library/batches/anki-deepening-coverage.csv",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27",
+      "reason": "2026-10-27补机制/恢复分支，原任务与深度不变；待root合并"
+    },
+    {
+      "source": "work/anki-controls-deepening/existing-coverage-updates.json",
+      "whole_record": false,
+      "key": "flow_id",
+      "updated_files": [
+        "docs/research/interaction-library/batches/anki-deepening-coverage.csv"
+      ],
+      "flow_id": "F-M020-15",
+      "source_batch": "docs/research/interaction-library/batches/anki-deepening-coverage.csv",
+      "field": "evidence_ids",
+      "before": "E-AND-12",
+      "after": "E-AND-12;E-ANCD-06;E-ANCD-07",
+      "reason": "2026-10-27补机制/恢复分支，原任务与深度不变；待root合并"
+    },
+    {
+      "source": "work/anki-controls-deepening/existing-coverage-updates.json",
+      "whole_record": false,
+      "key": "flow_id",
+      "updated_files": [
+        "docs/research/interaction-library/batches/anki-deepening-coverage.csv"
+      ],
+      "flow_id": "F-M020-15",
+      "source_batch": "docs/research/interaction-library/batches/anki-deepening-coverage.csv",
+      "field": "known_branches",
+      "before": "显示计时、记录用时与自动动作分别配置；停止/重进及与语音争用仍缺操作证据。",
+      "after": "23.12+非零停留时间→More/Auto Advance；计时显示/记录和自动动作分开；2025-07-25维护者说明失焦停止的历史防误评机制",
+      "reason": "2026-10-27补机制/恢复分支，原任务与深度不变；待root合并"
+    },
+    {
+      "source": "work/anki-controls-deepening/existing-coverage-updates.json",
+      "whole_record": false,
+      "key": "flow_id",
+      "updated_files": [
+        "docs/research/interaction-library/batches/anki-deepening-coverage.csv"
+      ],
+      "flow_id": "F-M020-15",
+      "source_batch": "docs/research/interaction-library/batches/anki-deepening-coverage.csv",
+      "field": "gaps",
+      "before": "停止、重进、语音冲突",
+      "after": "当前手动停止/重进/跨日、自动评分动作组合、等待音频与焦点恢复；未把历史议题当现版保证",
+      "reason": "2026-10-27补机制/恢复分支，原任务与深度不变；待root合并"
+    },
+    {
+      "source": "work/anki-controls-deepening/existing-coverage-updates.json",
+      "whole_record": false,
+      "key": "flow_id",
+      "updated_files": [
+        "docs/research/interaction-library/batches/anki-deepening-coverage.csv"
+      ],
+      "flow_id": "F-M020-15",
+      "source_batch": "docs/research/interaction-library/batches/anki-deepening-coverage.csv",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27",
+      "reason": "2026-10-27补机制/恢复分支，原任务与深度不变；待root合并"
+    },
+    {
+      "source": "work/anki-controls-deepening/existing-coverage-updates.json",
+      "whole_record": false,
+      "key": "flow_id",
+      "updated_files": [
+        "docs/research/interaction-library/batches/anki-deepening-coverage.csv"
+      ],
+      "flow_id": "F-M020-18",
+      "source_batch": "docs/research/interaction-library/batches/anki-deepening-coverage.csv",
+      "field": "evidence_ids",
+      "before": "E-AND-15",
+      "after": "E-AND-15;E-ANCD-05;E-ANK-02",
+      "reason": "2026-10-27补机制/恢复分支，原任务与深度不变；待root合并"
+    },
+    {
+      "source": "work/anki-controls-deepening/existing-coverage-updates.json",
+      "whole_record": false,
+      "key": "flow_id",
+      "updated_files": [
+        "docs/research/interaction-library/batches/anki-deepening-coverage.csv"
+      ],
+      "flow_id": "F-M020-18",
+      "source_batch": "docs/research/interaction-library/batches/anki-deepening-coverage.csv",
+      "field": "known_branches",
+      "before": "不扫描模板；手工加入媒体后还需核文件名。正文对回收位置的说法需按版本复核，未证明保留期限。",
+      "after": "检查未引用/缺失；模板静态附件须区别；缺失文件从未清空回收站或仍可得共享包复原；删媒体可能传播、全量同步不覆盖媒体方向",
+      "reason": "2026-10-27补机制/恢复分支，原任务与深度不变；待root合并"
+    },
+    {
+      "source": "work/anki-controls-deepening/existing-coverage-updates.json",
+      "whole_record": false,
+      "key": "flow_id",
+      "updated_files": [
+        "docs/research/interaction-library/batches/anki-deepening-coverage.csv"
+      ],
+      "flow_id": "F-M020-18",
+      "source_batch": "docs/research/interaction-library/batches/anki-deepening-coverage.csv",
+      "field": "gaps",
+      "before": "回收位置、期限、格式与损坏恢复",
+      "after": "工具垃圾箱/OS回收站措辞冲突、保留期、清空后恢复、重名替换与断网结果；恢复云端文件取决于尚存",
+      "reason": "2026-10-27补机制/恢复分支，原任务与深度不变；待root合并"
+    },
+    {
+      "source": "work/anki-controls-deepening/existing-coverage-updates.json",
+      "whole_record": false,
+      "key": "flow_id",
+      "updated_files": [
+        "docs/research/interaction-library/batches/anki-deepening-coverage.csv"
+      ],
+      "flow_id": "F-M020-18",
+      "source_batch": "docs/research/interaction-library/batches/anki-deepening-coverage.csv",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27",
+      "reason": "2026-10-27补机制/恢复分支，原任务与深度不变；待root合并"
+    },
+    {
+      "source": "work/anki-controls-deepening/existing-coverage-updates.json",
+      "whole_record": false,
+      "key": "flow_id",
+      "updated_files": [
+        "docs/research/interaction-library/batches/anki-deepening-coverage.csv"
+      ],
+      "flow_id": "F-M020-20",
+      "source_batch": "docs/research/interaction-library/batches/anki-deepening-coverage.csv",
+      "field": "evidence_ids",
+      "before": "E-AND-17",
+      "after": "E-AND-17;E-AND-16",
+      "reason": "2026-10-27补机制/恢复分支，原任务与深度不变；待root合并"
+    },
+    {
+      "source": "work/anki-controls-deepening/existing-coverage-updates.json",
+      "whole_record": false,
+      "key": "flow_id",
+      "updated_files": [
+        "docs/research/interaction-library/batches/anki-deepening-coverage.csv"
+      ],
+      "flow_id": "F-M020-20",
+      "source_batch": "docs/research/interaction-library/batches/anki-deepening-coverage.csv",
+      "field": "known_branches",
+      "before": "学习集合与程序设置分档案，插件共享；多个档案连同一云账户会覆盖数据。不能把档案切换当成同账户多成员同步。",
+      "after": "档案集合/设置分开、插件共享；同账户多档案可覆盖；A逐牌组导出再导入B合并；旧版打不开时回新版执行Downgrade后重试",
+      "reason": "2026-10-27补机制/恢复分支，原任务与深度不变；待root合并"
+    },
+    {
+      "source": "work/anki-controls-deepening/existing-coverage-updates.json",
+      "whole_record": false,
+      "key": "flow_id",
+      "updated_files": [
+        "docs/research/interaction-library/batches/anki-deepening-coverage.csv"
+      ],
+      "flow_id": "F-M020-20",
+      "source_batch": "docs/research/interaction-library/batches/anki-deepening-coverage.csv",
+      "field": "gaps",
+      "before": "多人同步冲突、退出保留、删除恢复",
+      "after": "档案删除确认/回收、导出选项/重名重复、降级可支持的版本及失败恢复；不当权限隔离保证",
+      "reason": "2026-10-27补机制/恢复分支，原任务与深度不变；待root合并"
+    },
+    {
+      "source": "work/anki-controls-deepening/existing-coverage-updates.json",
+      "whole_record": false,
+      "key": "flow_id",
+      "updated_files": [
+        "docs/research/interaction-library/batches/anki-deepening-coverage.csv"
+      ],
+      "flow_id": "F-M020-20",
+      "source_batch": "docs/research/interaction-library/batches/anki-deepening-coverage.csv",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27",
+      "reason": "2026-10-27补机制/恢复分支，原任务与深度不变；待root合并"
+    },
+    {
+      "source": "work/anki-controls-deepening/existing-coverage-updates.json",
+      "whole_record": false,
+      "key": "flow_id",
+      "updated_files": [
+        "docs/research/interaction-library/batches/anki-deepening-coverage.csv"
+      ],
+      "flow_id": "F-M020-21",
+      "source_batch": "docs/research/interaction-library/batches/anki-deepening-coverage.csv",
+      "field": "evidence_ids",
+      "before": "E-AND-18;E-AND-19",
+      "after": "E-AND-18;E-AND-19;E-ANCD-02;E-ANCD-03",
+      "reason": "2026-10-27补机制/恢复分支，原任务与深度不变；待root合并"
+    },
+    {
+      "source": "work/anki-controls-deepening/existing-coverage-updates.json",
+      "whole_record": false,
+      "key": "flow_id",
+      "updated_files": [
+        "docs/research/interaction-library/batches/anki-deepening-coverage.csv"
+      ],
+      "flow_id": "F-M020-21",
+      "source_batch": "docs/research/interaction-library/batches/anki-deepening-coverage.csv",
+      "field": "known_branches",
+      "before": "扩展可随主程序升级失效；文档没有保证删除扩展后恢复其全部数据影响。",
+      "after": "Shift安全启动同时禁插件与自动同步；Check Database查损坏/重建标签；闲置标签清理不随集合同步；检查会清撤销历史的2.1.45边界",
+      "reason": "2026-10-27补机制/恢复分支，原任务与深度不变；待root合并"
+    },
+    {
+      "source": "work/anki-controls-deepening/existing-coverage-updates.json",
+      "whole_record": false,
+      "key": "flow_id",
+      "updated_files": [
+        "docs/research/interaction-library/batches/anki-deepening-coverage.csv"
+      ],
+      "flow_id": "F-M020-21",
+      "source_batch": "docs/research/interaction-library/batches/anki-deepening-coverage.csv",
+      "field": "gaps",
+      "before": "安装和卸载状态、主版本迁移",
+      "after": "固定构建/插件兼容、损坏修复实际结果、检测遗漏、所有故障保存粒度；未执行SQLite修复",
+      "reason": "2026-10-27补机制/恢复分支，原任务与深度不变；待root合并"
+    },
+    {
+      "source": "work/anki-controls-deepening/existing-coverage-updates.json",
+      "whole_record": false,
+      "key": "flow_id",
+      "updated_files": [
+        "docs/research/interaction-library/batches/anki-deepening-coverage.csv"
+      ],
+      "flow_id": "F-M020-21",
+      "source_batch": "docs/research/interaction-library/batches/anki-deepening-coverage.csv",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27",
+      "reason": "2026-10-27补机制/恢复分支，原任务与深度不变；待root合并"
+    },
+    {
+      "source": "work/anki-controls-deepening/additional-captures-updates.json",
+      "whole_record": false,
+      "key": "evidence_id",
+      "updated_files": [
+        "docs/research/interaction-library/batches/anki-deepening-evidence.jsonl"
+      ],
+      "evidence_id": "E-AND-01",
+      "field": "additional_captures",
+      "before": null,
+      "after": [
+        {
+          "capture_kind": "public_http_markdown_body_read",
+          "checked_on": "2026-10-27",
+          "network_refetched": true,
+          "source_url": "https://docs.ankiweb.net/llms.txt",
+          "capture_url": "https://docs.ankiweb.net/llms.txt",
+          "http_status": 200,
+          "locator": "Manual完整页面目录，含平台父子项",
+          "raw_work_path": "work/anki-controls-deepening/llms.txt",
+          "raw_sha256": "37277f3b5505aa8ab28719e28b3ac2bb9217288d8648beb974a93568ba2edbdc",
+          "archived_artifact": "artifacts/anki-controls-deepening/source-notes.md",
+          "sha256": "01498c2eac1b71bf6f2dca8b322ec08f0598b61c0c36e1b012c64cc85860222d",
+          "hands_on": false,
+          "visual_observed": false
+        }
+      ],
+      "reason": "同页HTML/Markdown沿用旧E；补本轮正文采集和哈希，不重复计来源"
+    },
+    {
+      "source": "work/anki-controls-deepening/additional-captures-updates.json",
+      "whole_record": false,
+      "key": "evidence_id",
+      "updated_files": [
+        "docs/research/interaction-library/batches/initial-evidence.jsonl"
+      ],
+      "evidence_id": "E-ANK-02",
+      "field": "additional_captures",
+      "before": null,
+      "after": [
+        {
+          "capture_kind": "public_http_markdown_body_read",
+          "checked_on": "2026-10-27",
+          "network_refetched": true,
+          "source_url": "https://docs.ankiweb.net/manual/syncing",
+          "capture_url": "https://docs.ankiweb.net/manual/syncing.md",
+          "http_status": 200,
+          "locator": "Conflicts；Merging Conflicts；Media",
+          "raw_work_path": "work/anki-controls-deepening/syncing.md",
+          "raw_sha256": "b9f2d7069200c44b339400f839efaeb16a23bd5a97b338020986d1e4ca985c9c",
+          "archived_artifact": "artifacts/anki-controls-deepening/source-notes.md",
+          "sha256": "01498c2eac1b71bf6f2dca8b322ec08f0598b61c0c36e1b012c64cc85860222d",
+          "hands_on": false,
+          "visual_observed": false
+        }
+      ],
+      "reason": "同页HTML/Markdown沿用旧E；补本轮正文采集和哈希，不重复计来源"
+    },
+    {
+      "source": "work/anki-controls-deepening/additional-captures-updates.json",
+      "whole_record": false,
+      "key": "evidence_id",
+      "updated_files": [
+        "docs/research/interaction-library/batches/initial-evidence.jsonl"
+      ],
+      "evidence_id": "E-ANK-03",
+      "field": "additional_captures",
+      "before": null,
+      "after": [
+        {
+          "capture_kind": "public_http_markdown_body_read",
+          "checked_on": "2026-10-27",
+          "network_refetched": true,
+          "source_url": "https://docs.ankiweb.net/manual/backups",
+          "capture_url": "https://docs.ankiweb.net/manual/backups.md",
+          "http_status": 200,
+          "locator": "Creating；Restoring；Deletion log",
+          "raw_work_path": "work/anki-controls-deepening/backups.md",
+          "raw_sha256": "1f398b3b52d6c53a4e9e8e2ff16134e07c7374f7b8073f9d5fec143f44da3cfb",
+          "archived_artifact": "artifacts/anki-controls-deepening/source-notes.md",
+          "sha256": "01498c2eac1b71bf6f2dca8b322ec08f0598b61c0c36e1b012c64cc85860222d",
+          "hands_on": false,
+          "visual_observed": false
+        }
+      ],
+      "reason": "同页HTML/Markdown沿用旧E；补本轮正文采集和哈希，不重复计来源"
+    },
+    {
+      "source": "work/anki-controls-deepening/additional-captures-updates.json",
+      "whole_record": false,
+      "key": "evidence_id",
+      "updated_files": [
+        "docs/research/interaction-library/batches/anki-deepening-evidence.jsonl"
+      ],
+      "evidence_id": "E-AND-12",
+      "field": "additional_captures",
+      "before": null,
+      "after": [
+        {
+          "capture_kind": "public_http_markdown_body_read",
+          "checked_on": "2026-10-27",
+          "network_refetched": true,
+          "source_url": "https://docs.ankiweb.net/manual/deck-options.md",
+          "capture_url": "https://docs.ankiweb.net/manual/deck-options.md",
+          "http_status": 200,
+          "locator": "Auto Advance；Timers",
+          "raw_work_path": "work/anki-controls-deepening/deck-options.md",
+          "raw_sha256": "2bb7c9f536b4b33a754fa363d75f7625b4001eda260aec92b3f5fe8975a8c2ae",
+          "archived_artifact": "artifacts/anki-controls-deepening/source-notes.md",
+          "sha256": "01498c2eac1b71bf6f2dca8b322ec08f0598b61c0c36e1b012c64cc85860222d",
+          "hands_on": false,
+          "visual_observed": false
+        }
+      ],
+      "reason": "同页HTML/Markdown沿用旧E；补本轮正文采集和哈希，不重复计来源"
+    },
+    {
+      "source": "work/anki-controls-deepening/additional-captures-updates.json",
+      "whole_record": false,
+      "key": "evidence_id",
+      "updated_files": [
+        "docs/research/interaction-library/batches/anki-deepening-evidence.jsonl"
+      ],
+      "evidence_id": "E-AND-15",
+      "field": "additional_captures",
+      "before": null,
+      "after": [
+        {
+          "capture_kind": "public_http_markdown_body_read",
+          "checked_on": "2026-10-27",
+          "network_refetched": true,
+          "source_url": "https://docs.ankiweb.net/manual/media.md",
+          "capture_url": "https://docs.ankiweb.net/manual/media.md",
+          "http_status": 200,
+          "locator": "Checking Media；Manually Adding Media",
+          "raw_work_path": "work/anki-controls-deepening/media.md",
+          "raw_sha256": "4151e6313563d44de616562e1d7509a766e788fab606179ef3c381d44332ce5b",
+          "archived_artifact": "artifacts/anki-controls-deepening/source-notes.md",
+          "sha256": "01498c2eac1b71bf6f2dca8b322ec08f0598b61c0c36e1b012c64cc85860222d",
+          "hands_on": false,
+          "visual_observed": false
+        }
+      ],
+      "reason": "同页HTML/Markdown沿用旧E；补本轮正文采集和哈希，不重复计来源"
+    },
+    {
+      "source": "work/anki-controls-deepening/additional-captures-updates.json",
+      "whole_record": false,
+      "key": "evidence_id",
+      "updated_files": [
+        "docs/research/interaction-library/batches/anki-deepening-evidence.jsonl"
+      ],
+      "evidence_id": "E-AND-17",
+      "field": "additional_captures",
+      "before": null,
+      "after": [
+        {
+          "capture_kind": "public_http_markdown_body_read",
+          "checked_on": "2026-10-27",
+          "network_refetched": true,
+          "source_url": "https://docs.ankiweb.net/manual/profiles.md",
+          "capture_url": "https://docs.ankiweb.net/manual/profiles.md",
+          "http_status": 200,
+          "locator": "Profiles；Profiles window",
+          "raw_work_path": "work/anki-controls-deepening/profiles.md",
+          "raw_sha256": "23d6c6434bfde60295c8b874bcb63f007ec61b7be0212df4b4dd5fc964ff1c2f",
+          "archived_artifact": "artifacts/anki-controls-deepening/source-notes.md",
+          "sha256": "01498c2eac1b71bf6f2dca8b322ec08f0598b61c0c36e1b012c64cc85860222d",
+          "hands_on": false,
+          "visual_observed": false
+        }
+      ],
+      "reason": "同页HTML/Markdown沿用旧E；补本轮正文采集和哈希，不重复计来源"
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+[
+  {
+    "key": "manual-index",
+    "url": "https://viwoods.com/pages/user-manuals",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "final_url": "https://viwoods.com/pages/user-manuals",
+    "raw_work_path": "work/viwoods-controls-deepening/raw/manual-index.html",
+    "raw_sha256": "c1cc5a0b660d53185214ea2ca28469571fcc5cd2d5d3ecf790065ba4ff746e55",
+    "extracted_work_path": "work/viwoods-controls-deepening/raw/manual-index.txt",
+    "extracted_sha256": "21f824496960b6f81db3ca1cfaf3b8769cd8b5eeac3616f8953685853298c8a6"
+  },
+  {
+    "key": "update315",
+    "url": "https://viwoods.com/pages/system-update-3-15",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "final_url": "https://viwoods.com/pages/system-update-3-15",
+    "raw_work_path": "work/viwoods-controls-deepening/raw/update315.html",
+    "raw_sha256": "d4c419a1c4425fcc0e654e9ff6eb81a3e970322ff7c6f82ea637bf26bd9ee59d",
+    "extracted_work_path": "work/viwoods-controls-deepening/raw/update315.txt",
+    "extracted_sha256": "b533a8b80d3a318debf59db29b10083d823affa01ba36d8c61fea0275cd29fec"
+  },
+  {
+    "key": "update312",
+    "url": "https://viwoods.com/pages/system-update-3-12",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "final_url": "https://viwoods.com/pages/system-update-3-12",
+    "raw_work_path": "work/viwoods-controls-deepening/raw/update312.html",
+    "raw_sha256": "9ae8464cc53bfa86aced8e6182db2bde66136f1317bc40d8e5630b67236e9258",
+    "extracted_work_path": "work/viwoods-controls-deepening/raw/update312.txt",
+    "extracted_sha256": "0f3c0a0e65f192eef788f80faae2dc302d10c8d563cd064987acbbc37af913df"
+  },
+  {
+    "key": "faq",
+    "url": "https://viwoods.com/pages/frequently-asked-questions-about-viwoods",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "final_url": "https://viwoods.com/pages/frequently-asked-questions-about-viwoods",
+    "raw_work_path": "work/viwoods-controls-deepening/raw/faq.html",
+    "raw_sha256": "e08a7dec39db5a86bd03b2cf82cfbcda2f86d3c4658dc89ee3656661f6407dd0",
+    "extracted_work_path": "work/viwoods-controls-deepening/raw/faq.txt",
+    "extracted_sha256": "1698b3327910dd24293a8939895da8772a458dbef6dc9ea3ac60a3b941c671a7"
+  }
+]

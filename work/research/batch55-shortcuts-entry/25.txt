@@ -1,0 +1,17 @@
+Change the layout of shortcuts on iPhone or iPad
+By default, the Shortcuts app displays shortcuts in a grid view, in the order you create them.
+You can change the view to display your shortcuts in a list. List view lets you easily sort shortcuts by name, action count, and more.
+The View control appears at the top of the screen, and indicates the currently selected view: Grid or List .
+Change views
+In the Shortcuts app on your iOS or iPadOS device, do one of the following:
+Change from grid view to list view: From any screen that displays your shortcuts, tap in the top-right corner, then tap .
+Change from list view to grid view: From any screen that displays your shortcuts, tap in the top-right corner, then tap .
+Sort shortcuts in List view
+When your shortcuts are displayed in list view, you can change their sorting order.
+In the Shortcuts app on your iPhone or iPad, from any screen that displays your shortcuts in List view, tap .
+Choose a sorting method:
+None: Displays shortcuts in the order they were added.
+Name: Displays shortcuts in alphabetical order.
+Action Count: Displays shortcuts according to the number of actions in each.
+Last Modified: Displays shortcuts in the order they were modified.
+Note: You can toggle between ascending and descending order by choosing the same sorting method again.See alsoIntro to how shortcuts work on iPhone and iPad

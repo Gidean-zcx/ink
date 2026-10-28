@@ -1,0 +1,11 @@
+Add a shortcut to the Home Screen on iPhone or iPad
+You can add shortcuts to the Home Screen, and optionally group them into folders.
+In the Shortcuts app on your iPhone or iPad, tap on a shortcut, then tap to open Details.
+Tap Add to Home Screen.
+Optional: To use a custom photo for a Home Screen icon, tap the icon (in the Home Screen Name and Icon area), then choose one of the following:
+Take Photo: Use the camera to take a new photo.
+Choose Photo: Select an existing photo from your Photos library.
+Choose File: Select a photo from the Files app.
+Optional: To change the name that appears on the Home Screen, tap the name (in the Home Screen Name and Icon area), tap , enter a new name, then tap Return.
+Tap Add.
+The shortcut is added to your Home Screen.See alsoIntro to how shortcuts work on iPhone and iPad

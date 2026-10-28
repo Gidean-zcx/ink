@@ -1,0 +1,38 @@
+Filtered Views
+What are Filtered Views?
+The core organizational concept in Reader is what we call a Filtered View. A Filtered View is similar to a query-based search in Gmail like title:Getting Started or author:Paul Graham. Basically, you can think of your Reader account as one flat database of documents and Filtered Views enable you to "filter" those documents based on a variety of different parameters. Every time you click an author name or tag or RSS source in the Reader user interface to see all documents by that author or with that tag or from that RSS source, you are just creating a Filtered View on that parameter.
+The best way to learn how to use Filtered Views is to watch our Reader 202 walkthrough video on Filtered Views.
+You can reference all the different parameters that can be used with Filtered Views (including examples) from this Filtered View guide.
+How do I create groups of documents?
+You can create groups of documents using Filtered Views. Filtered Views enable all kinds of powerful filtering of your documents, but the simplest way to group documents is to tag each document with your desired group name. You can then click this tag to generate a Filtered View for all documents having that tag. You can then save the Filtered View and optionally pin it to the sidebar.
+How do I create a custom filtered view?
+Reader comes with a few default filtered views—like “Recently added” and “Quick reads”, but you can also make your own to better fit your personal needs or preferences.
+Filter by tag or feed source
+On your Manage feeds and Manage tags pages, you can use the Views column to assign tags and feeds to specific views.
+On mobile, you can create a new filtered view from a tag by tapping the Save button in the top right of the tag view.
+Filter by author
+In the Info tab of any document, you can click the name of the author to bring up a filtered view of all the documents by that author in your library. You can then name and save the view for easier future access.
+Filter by query
+You can create filtered views within Reader that will automatically group various sources together based on the query. To do so, click into Manage filtered views, then click the Add filtered view button in the top right.
+Filtered view queries can use a variety of different properties (you can view a full list in our Reader Filtering Guide), including tags and source domains. For example, if you had a tag called "football" and a blog feed from footballnews.com, you could use the following query to group them together in a single saved view:
+tag:football OR (feed:true AND domain:footballnews)
+This would include any articles, videos, or other documents saved to your library which you've tagged "football," as well as any new documents that come into your feed from footballnews.com.
+How do I create a query-based filtered view on mobile?
+To create a filtered view, tap into the Search tab of the Reader app and then tap the + icon. This will ask you to enter a query for the new view. Type in your query and then Show to see the filter. To save it for future use, tap Save and give it a name.
+How do I put an icon in front of a filtered view?
+When saving a Filtered View, if you input an emoji as the first character of the saved name, this emoji will be used as a de facto icon in the left sidebar of the Reader app.
+Can I see how many items are in a filtered view?
+You can enable a "count badge" for any saved Filtered View. The badge will appear on top of the icon in the left sidebar. You can toggle on the count bar by clicking the down arrow next to the view's name in the top header.
+How do I use filtered views?
+The best way to learn how to use Filtered Views is to watch our Reader 202 walkthrough video on Filtered Views. You can reference all the different parameters that can be used with Filtered Views (including examples) from this Filtered View guide.
+How can I see all my tags?
+You can see all your tags from the Manage tags section visible in the top header of the Library section of Reader.
+What does it mean to "split" a view?
+Splitting a view will add tabs within the view that automatically sort documents based on their status. Splitting by Location will use the Inbox/Later/Archive tabs from the main Library view (or Later/Shortlist/Archive, depending on your library configuration). Splitting by Seen will use the Unseen/Seen tabs from the main Feed view.
+On web, you can change the split of any filtered view by clicking into the caret dropdown beside the title of the view, or by pressing \ on your keyboard.
+On mobile, you can do this from the actions menu (...) of the view page.
+How do I add a filtered view to my Home page?
+To add a filtered view to your Home page on web, click Configure in the top right and check the box to the left of the view you want to add. To change the order of the views, click and drag the dots to the right of a views name.
+To remove a view, simply uncheck the box beside its name.
+On mobile, tap the configure icon in the top right, then tap the name of the view you'd like to add. Tap and drag the dots to the right of the view's name to move it up or down in the list.
+To remove a view, tap the red minus icon beside its name.

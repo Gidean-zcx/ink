@@ -1,0 +1,259 @@
+Internal Error ()
+citeturn618view0 [wordlim: 200] Source: open({"ref_id":"turn616view0","lineno":220}); Total lines: 1
+L0: Failed to fetch https://www.ibasso.com/uploadfiles/download/DX180userguide.pdf: (400) Timeout fetching
+--------------------------------------------------------------------------------
+M1 Plus 高清无损音乐播放器_深圳山灵数码科技发展有限公司 (https://www.shanling.com/download/134)
+citeturn618view1 [wordlim: 200] Crawled: today; Content type: text/html; Source: open({"ref_id":"turn616view1","lineno":40}); Redirected to URL: https://shanling.com/download/134; Total lines: 166
+L0:   * 【0†首页】
+L1:   * 【1†产品中心】
+L2:     * 【1†便携播放器】
+L3:     * 【2†蓝牙耳机】
+L4:     * 【3†HIFI耳机】
+L5:     * 【4†解码耳放】
+L6:     * 【5†功放】
+L7:     * 【6†解码器】
+L8:     * 【7†CD播放机】
+L9:     * 【8†HiFi音箱】
+L10:     * 【9†桌面流媒体播放器】
+L11:     * 【10†蓝牙接收器】
+L12:     * 【11†线材及配件】
+L13:   * 【12†服务&支持】
+L14:     * 【12†下载中心】
+L15:       * 【13†便携播放器】
+L16:       * 【14†蓝牙耳机】
+L17:       * 【15†HIFI耳机】
+L18:       * 【16†解码耳放】
+L19:       * 【17†功放】
+L20:       * 【18†解码器】
+L21:       * 【19†CD播放机】
+L22:       * 【20†桌面流媒体播放器】
+L23:       * 【21†其他】
+L24:       * 【22†APP】
+L25:       * 【23†USB 驱动程序】
+L26:     * 【24†售后政策】
+L27:     * 【25†售后申请】
+L28:     * 【26†维修查询】
+L29:     * 【27†常见问题】
+L30:   * 【28†新闻资讯】
+L31:     * 【28†新闻资讯】
+L32:     * 【29†媒体评测】
+L33:     * 【30†视频中心】
+L34:   * 【31†经销代理】
+L35:     * 【31†认证经销商】
+L36:       * 【32†北京】
+L37:       * 【33†重庆】
+L38:       * 【34†福建】
+L39:       * 【35†甘肃】
+L40:       * 【36†广东】
+L41:       * 【37†广西】
+L42:       * 【38†贵州】
+L43:       * 【39†河北】
+L44:       * 【40†河南】
+L45:       * 【41†黑龙江】
+L46:       * 【42†湖北】
+L47:       * 【43†湖南】
+L48:       * 【44†吉林】
+L49:       * 【45†江苏】
+L50:       * 【46†江西】
+L51:       * 【47†辽宁】
+L52:       * 【48†内蒙古】
+L53:       * 【49†宁夏】
+L54:       * 【50†青海】
+L55:       * 【51†山东】
+L56:       * 【52†山西】
+L57:       * 【53†陕西】
+L58:       * 【54†上海】
+L59:       * 【55†四川】
+L60:       * 【56†天津】
+L61:       * 【57†西藏】
+L62:       * 【58†新疆】
+L63:       * 【59†香港】
+L64:       * 【60†云南】
+L65:       * 【61†浙江】
+L66:     * 【62†招商加盟】
+L67:   * 【63†联系我们】
+L68:   * 【64†关于山灵】
+L69:     * 【64†品牌介绍】
+L70:     * 【65†发展历史】
+L71:     * 【66†加入山灵】
+L72:   * 【67†Store†store.shanling.com】
+L73: 您的位置： 【0†首页】
+L74: 
+L75:   * 【12†下载中心】
+L76:   * 【24†售后政策】
+L77:   * 【25†售后申请】
+L78:   * 【26†维修查询】
+L79: 
+L80:   * 【12†便携播放器】
+L81:   * 【68†蓝牙耳机】
+L82:   * 【69†HIFI耳机】
+L83:   * 【70†解码耳放】
+L84:   * 【71†功放】
+L85:   * 【72†解码器】
+L86:   * 【73†CD播放机】
+L87:   * 【74†桌面流媒体播放器】
+L88:   * 【75†其他】
+L89:   * 【76†APP】
+L90:   * 【77†USB 驱动程序】
+L91: 
+L92: 【78†Image】
+L93: ### M1 Plus 高清无损音乐播放器
+L94: 
+L95: 可更新版本
+L96: 
+L97: 【79†下载†pan.baidu.com】 【80†说明书】 【81†USB驱动】
+L98: 
+L99: 提取码: c1nf
+L100: 
+L101: M1 Plus V1.8 系统更新内容
+L102: 1、增加文件夹专辑封面功能；
+L103: 2、蓝牙耳放模式、USB DAC模式和Airplay模式的界面中，增加音频设置功能；
+L104: 3、键盘界面增加部分特殊字符；
+L105: 4、优化部分歌曲文件ID3信息解析不出来的问题；
+L106: 5、优化USB-AUDIO切歌的部分丢音问题；
+L107: 6、优化部分日语显示异常的问题；
+L108: 7、优化HIFI曲库可能导致的不稳定性问题；
+L109: 8、其它优化。
+L110: 
+L111: 一、手动升级
+L112: 1、下载固件压缩包并解压，将升级文件“update.bin”拷贝至内存卡根目录。
+L113: 2、将内存卡插入机器，点击“系统设置”→“系统升级”→“TF 卡升
+L114: 级”，系统确认后，等待系统自行升级即可。
+L115: 二、在线升级
+L116: 1、将TF卡插入机器的卡槽中，确保至少还有200MB的空间剩余；
+L117: 2、连接至有效的WiFi后，点击“系统设置”-“系统升级”-“网络升级”
+L118: 3、等待主机检测，下载固件并更新重启即可。
+L119: ### 产品中心
+L120: 
+L121:   * 【1†便携播放器】
+L122: 
+L123:   * 【3†HIFI耳机】
+L124: 
+L125:   * 【4†便携耳放】
+L126: 
+L127:   * 【5†功放】
+L128: 
+L129:   * 【6†解码器】
+L130: 
+L131:   * 【82†音箱】
+L132: 
+L133:   * 【7†CD播放器】
+L134: 
+L135: ### 服务支持
+L136: 
+L137:   * 【24†售后政策】
+L138: 
+L139:   * 【25†售后申请】
+L140: 
+L141:   * 【12†下载中心】
+L142: 
+L143:   * 【26†维修查询】
+L144: 
+L145: ### 联系我们
+L146: 
+L147:   * 【63†联系我们】
+L148: 
+L149: ### 关于山灵
+L150: 
+L151:   * 【64†品牌介绍】
+L152: 
+L153:   * 【65†发展历史】
+L154: 
+L155:   * 【66†加入山灵】
+L156: 
+L157: 全国服务热线
+L158: 
+L159: 400 630 6778
+L160: 
+L161: 【83†售前†wpa.qq.com】       【84†售后†wpa.qq.com】
+L162: 
+L163: 【85†粤ICP备13024371号†beian.miit.gov.cn】
+L164: 
+L165: Copyright © 2001-2026 ShanLing. All rights reserved.
+--------------------------------------------------------------------------------
+Shenzhen Shanling Digital Techno (https://en.shanling.com/article-M1PlusV18.html)
+citeturn618view2 [wordlim: 200] Crawled: today; Content type: text/html; Source: open({"ref_id":"turn616view2","lineno":34}); Redirected to URL: https://en.shanling.com/article/101463; Total lines: 83
+L0:   * 【0†Home】
+L1:   * 【1†Products】
+L2:     * 【1†All】
+L3:     * 【2†Portable Players】
+L4:     * 【3†Earphones】
+L5:     * 【4†Bluetooth】
+L6:     * 【5†DAC/AMP】
+L7:   * 【6†News】
+L8:     * 【6†NEWS】
+L9:     * 【7†Reviews】
+L10:   * 【8†Downloads】
+L11:     * 【8†All】
+L12:     * 【9†Portable Players】
+L13:     * 【10†Earphones】
+L14:     * 【11†Bluetooth】
+L15:     * 【12†Other Products】
+L16:     * 【13†USB DRIVER】
+L17:     * 【14†DAC/AMP】
+L18:   * 【15†International Sellers】
+L19:   * 【16†Shanling Forum†forum.shanling.com】
+L20:   * 【17†Store†store.shanling.com】
+L21:   * 【18†About Us】
+L22:     * 【18†About Shanling】
+L23:     * 【19†Contact Us】
+L24:     * 【20†Join Us】
+L25:     * 【21†Warranty】
+L26: 【22†中文†shanling.com】
+L27: 
+L28: 【23†Image】
+L29: 
+L30:   * 【5†DAC/AMP】
+L31:   * 【2†Portable Players】
+L32:   * 【3†Earphones】
+L33:   * 【4†Bluetooth】
+L34: ## NEWS
+L35: 
+L36: Latest information from Shanling
+L37: 
+L38: ### M1 Plus & M5 Ultra Firmware Update
+L39: ### 【6†BACK】
+L40: 
+L41: 【24†Jul-06-2026 Launching Shanling Forum! New place for All Shanling】 【24†READ MORE】
+L42: 
+L43: >
+L44: 
+L45: <
+L46: 
+L47: 【1†PRODUCTS】
+L48: 
+L49:   *  【2†  -Portable Players】
+L50: 
+L51:   *  【3†  - Earphones】
+L52: 
+L53:   *  【4†  - Bluetooth】
+L54: 
+L55: 【6†NEWS】
+L56: 
+L57:   * 【7†- Reviews】
+L58: 
+L59: 【15†WHERE TO BUY】
+L60: 
+L61:   * 【15†-Where To Buy】
+L62: 
+L63: 【8†DOWNLOADS】
+L64: 
+L65:   * 【9†- Portable Players】
+L66: 
+L67:   * 【10†- Earphones】
+L68: 
+L69:   * 【11†- Bluetooth】
+L70: 
+L71:   * 【12†- Other Products】
+L72: 
+L73: 【18†ABOUT US】
+L74: 
+L75:   * 【18†- About Shanling】
+L76: 
+L77:   * 【19†- Contact Us】
+L78: 
+L79:   * 【20†- Join Us】
+L80: 
+L81:   * 【21†- Warranty】
+L82: 【25†YOUTUBE†www.youtube.com】
+

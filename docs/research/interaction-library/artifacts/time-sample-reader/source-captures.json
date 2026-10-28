@@ -1,0 +1,29 @@
+{
+  "checked_on": "2026-10-27",
+  "public_sample": "https://reader.emagazines.com/issue/time-for-kids-k-1/may-8-2026?ipt=c8869aa3-8f3d-4699-b112-1d4a6270a953",
+  "discovered_from": "https://www.timeforkids.com/educators/",
+  "reused_evidence": [
+    "E-TFK-01",
+    "E-TFK-04"
+  ],
+  "teacher_raw_path": "work/news-interactions/tfk-teacher.pdf",
+  "teacher_raw_sha256": "849e57011fd382fa8582b4ecf998589d5097877c5bd1fa9f7d0883041ce132a3",
+  "teacher_new_static_pages": [
+    8,
+    9
+  ],
+  "browser_session": {
+    "started": "2026-10-27T07:02:30.927019+00:00",
+    "browser": "156.0.8078.4",
+    "viewport": {
+      "width": 1280,
+      "height": 950
+    },
+    "method": "automated_public_browser",
+    "logged_in": false,
+    "initial_url": "https://www.timeforkids.com/g34/service-stars-packed-with-care-g3/?rl=en-650",
+    "profile": "/home/workspace/reader/work/research/batch43-time-sample/profile",
+    "ended": "2026-10-27T07:12:46.334549+00:00"
+  },
+  "notes": "Public token copied from official sample link. Desktop and mobile article positions have different units. No logged-in/native/device/child/audio-listening test."
+}

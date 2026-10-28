@@ -1,0 +1,11 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M058-10,M-058,按书库或商店范围检索标题作者,D2,E-TOL-01,首页放大镜→下拉选Shop或My Books→输入标题/作者→Go；后者搜索账户及本机内容,空结果提示、去重、全文检索、离线商店回退未核,not_observed,false,cases/M-058-tolino.md,2026-10-27
+F-M058-11,M-058,建立与维护主题收藏集合,D2,E-TOL-02,My Books→Collections→三点New collection→命名选书；长按集合Edit→Add books加号加入/取消勾选移出；长按Rename/Delete；按名称/书数/创建日排序；文档称可在app/web看集合,重名、空集合、删除是否影响书、离线冲突及撤销未核,not_observed,false,cases/M-058-tolino.md,2026-10-27
+F-M058-12,M-058,目录跳转与书签回访,D2,E-TOL-01;E-TLCD-01,阅读页中→滑杆快速翻页，或底部目录→选章；点正文右上加书签可见标记；回访页中→底部纸页图标→Bookmarks，手册第三步措辞不清,书签列表完整顺序、删除/撤销及跳转后回原处未核,static_manual_pages_only,false,cases/M-058-tolino.md,2026-10-27
+F-M058-13,M-058,排版与系统大字分别调整,D2,E-TOL-01;E-TOL-02,阅读页中→文字图标→字体下拉、字号滑杆或加减、行距/边距加减、对齐；点外部回阅读；设置应用后续书；PDF只缩放；系统Accessibility另设150/200%菜单大字,极端字号重排、阅读位置稳定性与格式例外未核,not_observed,false,cases/M-058-tolino.md,2026-10-27
+F-M058-14,M-058,家庭成员建立、按书分享与退出,D2,E-TOL-02;E-TLCD-03,More→Settings→Accounts→My Family View；昵称→设备交给邀请对象选书店并登录→昵称；合资格书长按Share选一个成员，可重复；Info查看访问者；各自进度笔记，完整书库互不可见；成员旁菜单移除，自己菜单离开撤销相互共享访问,未实际建家庭；离线撤权时点、孩子独立账号资格、退出后注释保留和有声书分享当前控件未核,not_observed,false,cases/M-058-tolino.md,2026-10-27
+F-M058-15,M-058,连接同一用户的多个书店书库,D2,E-TOL-02;E-TOL-06,Webreader My Accounts→Library link→选已有账户书店Link→用该店凭证确认；App先选国家/书店再同路径；成功后经cloud载入购买书,地区条件、解除关联、重名去重、不同DRM及认证失败恢复未核；不等同家庭档案,not_observed,false,cases/M-058-tolino.md,2026-10-27
+F-M058-16,M-058,蓝牙键盘辅助读屏与退出阅读,D2,E-TOL-02,需BT音频和键盘；More Settings Accessibility Screen Reader开启或Alt+Windows/Command+S；箭头选书，空格下载/开书；Ctrl+T读/停，箭头翻页，Ctrl+Q回My Books,焦点顺序、断连恢复、首次下载反馈、语音资源离线和儿童操作均未核,not_observed,false,cases/M-058-tolino.md,2026-10-27
+F-M058-17,M-058,自制休眠图启用与撤销,D2,E-TLCD-02,USB连接确认→.kobo/screensaver放PNG/JPEG→安全弹出；Energy saving & PIN中当前书及全屏两项开启，先开一本书再睡眠；多图随机；移除图文件回书封面或关闭两项显示,分辨率/裁切、锁屏信息遮挡、文件损坏与批量同步未核,not_observed,false,cases/M-058-tolino.md,2026-10-27
+F-M058-18,M-058,PIN设置、解锁与遗忘恢复,D2,E-TOL-02,More Settings Energy saving & PIN→设四位码；Change PIN可关闭；忘记密码从PIN提示Log out并确认，退号后重新设置,退出会丢最后同步后阅读进度/批注；尝试次数、锁定时间、未联网恢复未核,not_observed,false,cases/M-058-tolino.md,2026-10-27
+F-M058-19,M-058,公开选馆器搜索、返回与最近项,D4,E-TLCD-04;E-TLCD-05;E-TLCD-07,匿名桌面：选择图书馆→无匹配词空列表→Hamburg两结果→选Bücherhallen Hamburg跳外站welcome仍需选馆→浏览器后退保留词但列表A字头→左上返回→刷新出现最近图书馆；没有登录,只限桌面公开选择器；未借阅、未测跨会话/设备或清数据；无法判定外部重新选馆原因,observed_browser_sequence,true,cases/M-058-tolino.md,2026-10-27

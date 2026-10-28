@@ -1,0 +1,122 @@
+[
+  {
+    "class": "page-header-inner-logo-link",
+    "href": "/en",
+    "title": "",
+    "url": "https://help.ground.news/en"
+  },
+  {
+    "class": "page-header-inner-title",
+    "href": "/en",
+    "title": "Ground News Help Center",
+    "url": "https://help.ground.news/en"
+  },
+  {
+    "type": "button",
+    "class": "kb-button primary",
+    "href": "/en/contact-us",
+    "title": "Contact Us",
+    "url": "https://help.ground.news/en/contact-us"
+  },
+  {
+    "id": "moreResultsLink",
+    "type": "button",
+    "class": "kb-button secondary",
+    "href": "/en/search",
+    "title": "More results",
+    "url": "https://help.ground.news/en/search"
+  },
+  {
+    "href": "https://ground.news/privacy-policy",
+    "title": "Privacy Policy",
+    "url": "https://ground.news/privacy-policy"
+  },
+  {
+    "href": "/en",
+    "title": "Home",
+    "url": "https://help.ground.news/en"
+  },
+  {
+    "href": "/en/categories/2272705-understanding-ground-news",
+    "title": "Understanding Ground News",
+    "url": "https://help.ground.news/en/categories/2272705-understanding-ground-news"
+  },
+  {
+    "href": "/en/categories/2272705-understanding-sources-coverage",
+    "title": "Understanding Sources & Coverage",
+    "url": "https://help.ground.news/en/categories/2272705-understanding-sources-coverage"
+  },
+  {
+    "href": "https://usw2.frontkb-cdn.com/attachments/7440402/17473/aefa11e5-ed43-42de-bdcc-fa7fd4a9c5bb.png",
+    "class": "knowledge-base-image-expand-link",
+    "data-lightbox": "aefa11e5-ed43-42de-bdcc-fa7fd4a9c5bb",
+    "title": "",
+    "url": "https://usw2.frontkb-cdn.com/attachments/7440402/17473/aefa11e5-ed43-42de-bdcc-fa7fd4a9c5bb.png"
+  },
+  {
+    "href": "https://usw2.frontkb-cdn.com/attachments/7440402/17473/1e401b83-2f67-4428-ad5f-bec60c014902.png",
+    "class": "knowledge-base-image-expand-link",
+    "data-lightbox": "1e401b83-2f67-4428-ad5f-bec60c014902",
+    "title": "",
+    "url": "https://usw2.frontkb-cdn.com/attachments/7440402/17473/1e401b83-2f67-4428-ad5f-bec60c014902.png"
+  },
+  {
+    "href": "https://usw2.frontkb-cdn.com/attachments/7440402/17473/a9920757-68bb-4b95-a2f6-e06b9817262d.png",
+    "class": "knowledge-base-image-expand-link",
+    "data-lightbox": "a9920757-68bb-4b95-a2f6-e06b9817262d",
+    "title": "",
+    "url": "https://usw2.frontkb-cdn.com/attachments/7440402/17473/a9920757-68bb-4b95-a2f6-e06b9817262d.png"
+  },
+  {
+    "href": "https://usw2.frontkb-cdn.com/attachments/7440402/17473/d5bb9db9-7d98-43fa-ab92-4947af12f6a7.png",
+    "class": "knowledge-base-image-expand-link",
+    "data-lightbox": "d5bb9db9-7d98-43fa-ab92-4947af12f6a7",
+    "title": "",
+    "url": "https://usw2.frontkb-cdn.com/attachments/7440402/17473/d5bb9db9-7d98-43fa-ab92-4947af12f6a7.png"
+  },
+  {
+    "href": "https://usw2.frontkb-cdn.com/attachments/7440402/17473/9b062c60-ec68-4324-a9de-2abb850977fd.png",
+    "class": "knowledge-base-image-expand-link",
+    "data-lightbox": "9b062c60-ec68-4324-a9de-2abb850977fd",
+    "title": "",
+    "url": "https://usw2.frontkb-cdn.com/attachments/7440402/17473/9b062c60-ec68-4324-a9de-2abb850977fd.png"
+  },
+  {
+    "target": "_self",
+    "rel": "noopener noreferrer nofollow",
+    "class": "kb-link kb-link",
+    "href": "mailto:feedback@ground.news",
+    "title": "feedback@ground.news",
+    "url": "mailto:feedback@ground.news"
+  },
+  {
+    "href": "https://twitter.com/Ground_app",
+    "title": "",
+    "url": "https://twitter.com/Ground_app"
+  },
+  {
+    "href": "https://ca.linkedin.com/company/groundnews",
+    "title": "",
+    "url": "https://ca.linkedin.com/company/groundnews"
+  },
+  {
+    "href": "https://www.instagram.com/groundnews/",
+    "title": "",
+    "url": "https://www.instagram.com/groundnews/"
+  },
+  {
+    "href": "https://ground.news/refund-policy",
+    "title": "Refund and Cancellation Policy",
+    "url": "https://ground.news/refund-policy"
+  },
+  {
+    "href": "https://ground.news/terms-and-conditions",
+    "title": "Terms and Conditions",
+    "url": "https://ground.news/terms-and-conditions"
+  },
+  {
+    "href": "https://about.ground.news/privacy-policy",
+    "title": "Privacy Policy",
+    "url": "https://about.ground.news/privacy-policy"
+  }
+]

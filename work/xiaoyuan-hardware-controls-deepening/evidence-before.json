@@ -1,0 +1,181 @@
+[
+  {
+    "evidence_id": "E-XYHW-01",
+    "product_id": "M-056",
+    "title": "小猿学练机官网：S6/E1 文案、规格和路由",
+    "url": "https://www.xiaoyuanyingjian.com/",
+    "checked_on": "2026-10-26",
+    "source_type": "official_product_frontend",
+    "access_mode": "public_frontend_text_inspection",
+    "version_scope": "China mainland S6/E1; current website, firmware unknown",
+    "app_build": null,
+    "firmware_version": null,
+    "source_updated_on": null,
+    "locator": "Te specs; S6 exercise modules; Rn upload; /S2 and /S6 same component",
+    "note": "Web extraction returned JS shell. Public referenced JS downloaded and Unicode text read; no browser/device task. AI learning device policy in same bundle excluded from ink-device claims.",
+    "hands_on": false,
+    "visual_observed": false,
+    "archived_artifact": null,
+    "sha256": null,
+    "capture_state": "bibliography_short_note_and_temporary_raw",
+    "supersedes": null,
+    "raw_work_path": "work/learning-hardware/official-main.js",
+    "raw_sha256": "f3e9acdba2af4c5de5cd342a81d0300d57c5748d868c75338b98d1f112d092ec",
+    "retrieval_request": "GET https://www.xiaoyuanyingjian.com/static/js/main.12d356ac.chunk.js",
+    "route_scope": [
+      "#/S6",
+      "#/E1",
+      "#/specs?type=E1"
+    ]
+  },
+  {
+    "evidence_id": "E-XYHW-02",
+    "product_id": "M-056",
+    "title": "小猿智能设备 App Store：家长端及四张示意截图",
+    "url": "https://apps.apple.com/cn/app/%E5%B0%8F%E7%8C%BF%E6%99%BA%E8%83%BD%E8%AE%BE%E5%A4%87/id6738277050",
+    "checked_on": "2026-10-26",
+    "source_type": "official_app_store",
+    "access_mode": "opened_text_and_static_images",
+    "version_scope": "China iPhone listing 1.25.1; installed version and paired hardware unknown",
+    "app_build": null,
+    "firmware_version": null,
+    "source_updated_on": null,
+    "locator": "Developer description; duration, answer controls, family list, learning trajectory",
+    "note": "Four static developer compositions viewed; only one retained formally. Sample values are not defaults. Store 1.25.1 date displayed Sep 25 without year on row; no user reviews used.",
+    "hands_on": false,
+    "visual_observed": true,
+    "archived_artifact": "artifacts/learning-hardware/parent-control.webp",
+    "sha256": "81b626d9ff7e57592211365c56e6fc1e88c213501e3b8df28190297d2e45c0f4",
+    "capture_state": "official_static_excerpt_archived",
+    "supersedes": null,
+    "raw_work_path": "work/learning-hardware/parent-store.html",
+    "raw_sha256": "162544016ba0406c2971b779413aecffb33332f438fc64e1a9715845fb1846c6",
+    "visual_scope": "Static official images only; no continuous operation or hands-on",
+    "source_images": [
+      {
+        "path": "work/learning-hardware/parent-shot-1.webp",
+        "url": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/79/a5/e8/79a5e854-a5df-84db-11d7-407e93a57174/1284_2778_5.png/600x1300bb.webp"
+      },
+      {
+        "path": "work/learning-hardware/parent-shot-2.webp",
+        "url": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/84/2a/5c/842a5c70-d773-fa4e-51df-80833b59fc21/1284_2778_6.png/600x1300bb.webp"
+      },
+      {
+        "path": "work/learning-hardware/parent-shot-3.webp",
+        "url": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/3c/07/1c/3c071c5c-c2d3-44fd-4833-35e602b21def/1284_2778_8.png/600x1300bb.webp"
+      },
+      {
+        "path": "work/learning-hardware/parent-shot-4.webp",
+        "url": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/bc/6b/3f/bc6b3faf-41cd-95f2-8dd9-470967668574/1284_2778_7.png/600x1300bb.webp"
+      }
+    ],
+    "raw_image_hashes": {
+      "work/learning-hardware/parent-shot-1.webp": "81b626d9ff7e57592211365c56e6fc1e88c213501e3b8df28190297d2e45c0f4",
+      "work/learning-hardware/parent-shot-2.webp": "cee19f5b4bee69c850daae21274db21e84b49cce4d285bc573324dc243a82a1a",
+      "work/learning-hardware/parent-shot-3.webp": "9f683d5440a2230a05018d6eb7f106e3579471e9851313c0df7bd5984fda4774",
+      "work/learning-hardware/parent-shot-4.webp": "95932e4a001dc356d6811ef2a5ab74eca3648d6bbf58187cca1f81e7b4b77040"
+    }
+  },
+  {
+    "evidence_id": "E-XYHW-03",
+    "product_id": "M-056",
+    "title": "E1 官网课程分龄表及功能目录静态图",
+    "url": "https://www.xiaoyuanyingjian.com/static/media/system-pc.b3ce827d.png",
+    "checked_on": "2026-10-26",
+    "source_type": "official_product_diagram",
+    "access_mode": "downloaded_static_image_viewed",
+    "version_scope": "E1 curriculum levels S1/S2/S3 for ages 3–6; no installed build",
+    "app_build": null,
+    "firmware_version": null,
+    "source_updated_on": null,
+    "locator": "Rows Chinese/English/thinking; S3 column 5–6 years",
+    "note": "S1/S2/S3 here are curriculum levels, not hardware models. Also inspected first-pc directory image; only level table archived.",
+    "hands_on": false,
+    "visual_observed": true,
+    "archived_artifact": "artifacts/learning-hardware/e1-system.png",
+    "sha256": "4a65dbce2ff539ad2ce431437fde368fcde81eea922247873872506ebd941069",
+    "capture_state": "official_static_excerpt_archived",
+    "supersedes": null,
+    "raw_work_path": "work/learning-hardware/e1-system.png",
+    "raw_sha256": "4a65dbce2ff539ad2ce431437fde368fcde81eea922247873872506ebd941069",
+    "visual_scope": "Static official images only; no continuous operation or hands-on",
+    "additional_source_urls": [
+      "https://www.xiaoyuanyingjian.com/static/media/first-pc.1490d1ab.png"
+    ],
+    "additional_raw_files": [
+      {
+        "path": "work/learning-hardware/e1-age.png",
+        "sha256": "885cafe65c2e8755b1a7be79333f07839362527a352fbc4fc82e70fd879f94ed"
+      }
+    ]
+  },
+  {
+    "evidence_id": "E-XYHW-04",
+    "product_id": "M-056",
+    "title": "E1 官网防挫折算法研发反馈示意",
+    "url": "https://www.xiaoyuanyingjian.com/static/media/algorithm-lg.7d0a0988.png",
+    "checked_on": "2026-10-26",
+    "source_type": "official_design_diagram",
+    "access_mode": "downloaded_static_image_viewed",
+    "version_scope": "E1 website diagram; algorithm version unknown",
+    "app_build": null,
+    "firmware_version": null,
+    "source_updated_on": null,
+    "locator": "Teaching goals/content/interaction/incentives; practice count/time/exit/error/next-retention",
+    "note": "Development loop and aggregate metrics, not an observed per-child adaptive task or learning-effect study.",
+    "hands_on": false,
+    "visual_observed": true,
+    "archived_artifact": "artifacts/learning-hardware/e1-antifrustration.png",
+    "sha256": "637272eecd6c6199e78549ca548b664d205906ee55576fd145db9aaf5e2b8952",
+    "capture_state": "official_static_excerpt_archived",
+    "supersedes": null,
+    "raw_work_path": "work/learning-hardware/e1-antifrustration.png",
+    "raw_sha256": "637272eecd6c6199e78549ca548b664d205906ee55576fd145db9aaf5e2b8952",
+    "visual_scope": "Static official images only; no continuous operation or hands-on"
+  },
+  {
+    "evidence_id": "E-XYHW-05",
+    "product_id": "M-056",
+    "title": "小猿智能设备家长端隐私政策",
+    "url": "https://megrez.yuanfudao.com/megrez-parent-web/privacys/privacy",
+    "checked_on": "2026-10-26",
+    "source_type": "official_policy",
+    "access_mode": "downloaded_public_html_text",
+    "version_scope": "Parent software policy, not S6/E1 student firmware manual",
+    "app_build": null,
+    "firmware_version": null,
+    "source_updated_on": "2025-08-15",
+    "locator": "II basic functions; VI account rights",
+    "note": "Linked HTML body declares publication and effective date 2025-08-15. Applies to parent management service; supports files/printing capability but no complete transfer path.",
+    "hands_on": false,
+    "visual_observed": false,
+    "archived_artifact": null,
+    "sha256": null,
+    "capture_state": "bibliography_short_note_and_temporary_raw",
+    "supersedes": null,
+    "raw_work_path": "work/learning-hardware/parent-privacy-body.html",
+    "raw_sha256": "cda62866625f96c6bffbfb25a7c095dbf788e5c1621f47cd118ddc1a161a3b01",
+    "retrieval_request": "GET https://solar-online.fbcontent.cn/megrez-online/megrez-gallery/megrez-resource/1a017eac33f2fb4.html"
+  },
+  {
+    "evidence_id": "E-XYHW-06",
+    "product_id": "M-056",
+    "title": "小猿官方旗舰店系列分类",
+    "url": "https://mall.jd.com/view_search-2998983-51133548-99-1-20-1.html",
+    "checked_on": "2026-10-26",
+    "source_type": "official_storefront",
+    "access_mode": "opened_text",
+    "version_scope": "China mainland storefront; availability not tested",
+    "app_build": null,
+    "firmware_version": null,
+    "source_updated_on": null,
+    "locator": "Series categories S6/S2/E1/S1",
+    "note": "Model disambiguation only; not workflow evidence or pricing advice.",
+    "hands_on": false,
+    "visual_observed": false,
+    "archived_artifact": null,
+    "sha256": null,
+    "capture_state": "bibliography_and_short_note_only",
+    "supersedes": null
+  }
+]

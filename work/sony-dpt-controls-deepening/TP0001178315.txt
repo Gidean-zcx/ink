@@ -1,0 +1,18 @@
+After the Digital Paper has been paired with the Digital Paper App, documents can be transferred and otherwise operated, by connecting the Digital Paper to the computer. For how to pair with the Digital Paper App, see the links in “Related Topics.” There are three ways to connect to a computer: “connect via Wi-Fi,” “connect via the supplied USB cable,” and “connect via Bluetooth®.” This section explains how to connect via Wi-Fi and connect via the supplied USB cable. For how to connect via Bluetooth, see the links in “Related Topics.”
+To connect via Wi-Fi
+Press the  (home) button on the Digital Paper, and tap [Settings].
+Tap [Wi-Fi] to add a check mark.
+Tap [Wi-Fi Settings] and then the SSID of the desired Wi-Fi network from the [Network List].
+If the desired Wi-Fi network is not displayed, tap [Update Network List] or perform the following to add a Wi-Fi network.
+Tap [Settings] — [Wi-Fi Settings] — [Add Network Manually] in that order.
+* The “802.1xEAP(AES)” authentication network cannot be configured on the Digital Paper. To configure, please add a Wi-Fi network  with the Digital Paper App.
+Use the Digital Paper App. For details, see the links in “Related Topics.”
+If you want to connect the Digital Paper to a computer while the device is in sleep mode, set [Keep Wi-Fi On During Sleep] to either [Always enabled] or [Enabled only when plugged in].
+Connect the computer to the same network as the Digital Paper.
+Communication is not possible if you connect the computer and the Digital Paper to different networks.
+To connect using a USB cable
+Connect the supplied USB cable to the micro USB connector on the Digital Paper and to a USB connector on the computer.
+To check the connection status
+Launch the Digital Paper App on the computer. If [Connected] is displayed in the upper left portion of the screen, the Digital Paper and the computer are properly connected.
+Hint
+When removing the USB cable, close the Digital Paper App before doing so.

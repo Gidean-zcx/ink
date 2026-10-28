@@ -1,0 +1,268 @@
+{
+  "headings": [
+    {
+      "level": "h1",
+      "id": "",
+      "title": "Using Reader on e-ink devices"
+    },
+    {
+      "level": "h2",
+      "id": "can-i-use-reader-on-my-e-ink-device",
+      "title": "Can I use Reader on my e-ink device?"
+    },
+    {
+      "level": "h2",
+      "id": "does-reader-have-special-settings-for-e-ink-devices",
+      "title": "Does Reader have special settings for e-ink devices?"
+    },
+    {
+      "level": "h2",
+      "id": "why-does-reader-always-need-to-reload-when-i-open-my-boox",
+      "title": "Why does Reader always need to reload when I open my BOOX?"
+    }
+  ],
+  "links": [
+    {
+      "href": "/",
+      "text": "",
+      "in_article": false
+    },
+    {
+      "href": "/",
+      "text": "",
+      "in_article": false
+    },
+    {
+      "href": "/",
+      "text": "",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs",
+      "text": "Documentation",
+      "in_article": false
+    },
+    {
+      "href": "/reader/guides",
+      "text": "Guides",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs",
+      "text": "What is Reader?",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/migrating-content",
+      "text": "Migrating from Other Apps",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/saving-content",
+      "text": "Saving Content",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/organizing-content",
+      "text": "Organizing Content",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs",
+      "text": "Basics",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/importing-content",
+      "text": "Importing Content",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/adding-new-content",
+      "text": "Adding New Content",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/highlights-tags-notes",
+      "text": "Highlights, Tags, and Notes",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/appearance",
+      "text": "Appearance",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/feed",
+      "text": "Feed",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/email-newsletters",
+      "text": "Email Newsletters",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/navigation",
+      "text": "Navigation",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/searching",
+      "text": "Searching",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/parsing",
+      "text": "Parsing",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/filtered-views",
+      "text": "Filtered Views",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/action-tags",
+      "text": "Action Tags",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/pdfs",
+      "text": "PDFs",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/videos",
+      "text": "Videos",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/text-to-speech",
+      "text": "Text-to-Speech (TTS)",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/exporting",
+      "text": "Exporting",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/sharing",
+      "text": "Sharing",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/daily-digest",
+      "text": "Daily Digest",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/ghostreader",
+      "text": "Ghostreader",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/eink",
+      "text": "E-ink Devices",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/miscellaneous",
+      "text": "Miscellaneous",
+      "in_article": false
+    },
+    {
+      "href": "/",
+      "text": "Home",
+      "in_article": false
+    },
+    {
+      "href": "/reader",
+      "text": "Reader",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs",
+      "text": "Docs",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs",
+      "text": "Faqs",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/eink",
+      "text": "Eink",
+      "in_article": false
+    },
+    {
+      "href": "https://play.google.com/store/apps/details?id=com.readermobile",
+      "text": "Readwise Reader",
+      "in_article": true
+    },
+    {
+      "href": "/reader/guides/workflows/longform-reading",
+      "text": "optimizing your Reader setup",
+      "in_article": true
+    },
+    {
+      "href": "/reader/docs/faqs/ghostreader",
+      "text": "Ghostreader",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/miscellaneous",
+      "text": "Miscellaneous",
+      "in_article": false
+    },
+    {
+      "href": "mailto:hello@readwise.io",
+      "text": "Email Ushello@readwise.io",
+      "in_article": false
+    },
+    {
+      "href": "https://x.com/readwise",
+      "text": "Follow Us@readwise",
+      "in_article": false
+    },
+    {
+      "href": "https://www.reddit.com/r/readwise/",
+      "text": "Ask the CommunityJoin us on Reddit",
+      "in_article": false
+    },
+    {
+      "href": "https://en.wikipedia.org/wiki/Curse_of_knowledge",
+      "text": "Curse of Knowledge",
+      "in_article": false
+    },
+    {
+      "href": "mailto:hello@readwise.io?Subject=Documentation Feedback",
+      "text": "Send Feedback",
+      "in_article": false
+    },
+    {
+      "href": "#can-i-use-reader-on-my-e-ink-device",
+      "text": "Can I use Reader on my e-ink device?",
+      "in_article": false
+    },
+    {
+      "href": "#does-reader-have-special-settings-for-e-ink-devices",
+      "text": "Does Reader have special settings for e-ink devices?",
+      "in_article": false
+    },
+    {
+      "href": "#why-does-reader-always-need-to-reload-when-i-open-my-boox",
+      "text": "Why does Reader always need to reload when I open my BOOX?",
+      "in_article": false
+    }
+  ],
+  "images": [
+    {
+      "src": "/images/eink-mode_boox_annotated.png",
+      "alt": "E-ink Mode settings on BOOX device.",
+      "class": "rounded-lg max-w-[350px] h-auto mx-auto"
+    }
+  ]
+}

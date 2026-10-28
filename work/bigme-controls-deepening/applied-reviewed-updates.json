@@ -1,0 +1,936 @@
+{
+  "flow_changes": [
+    {
+      "id": "F-M011-01",
+      "field": "known_branches",
+      "before": "导航/显示动作，不等于关闭app或清其数据。",
+      "after": "单击/长按各10项映射；底部左/中/右手势各10项；导航、清缓存和全刷语义分开"
+    },
+    {
+      "id": "F-M011-01",
+      "field": "gaps",
+      "before": "PDF p3–7；默认设置是否随固件改变、长按/锁屏响应、误触撤回。",
+      "after": "PDF p3–7；保存/还原、锁屏响应、映射冲突；不从其他固件补双击"
+    },
+    {
+      "id": "F-M011-01",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M011-02",
+      "field": "known_branches",
+      "before": "预设为 Default、Magazine、Comic、Video；保存范围未交代。",
+      "after": "系统右上控制中心→E Ink Center的4预设/Custom与阅读页Refresh Settings分列；App optimization改字号/文本增强/图标及背景"
+    },
+    {
+      "id": "F-M011-02",
+      "field": "gaps",
+      "before": "PDF p9–12；切app是否继承、恢复默认、刷新延迟、残影；不从模式名推断实测速度。",
+      "after": "PDF p11–12/19；系统与书内设置是否同步、逐App保存、恢复默认、光学残影/延迟；21F/S宣传及其他型号80FPS均非实测"
+    },
+    {
+      "id": "F-M011-02",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M011-03",
+      "field": "known_branches",
+      "before": "文件进入书库后仍需阅读器解析；手册提导出/删除标记。",
+      "after": "Books自动扫描；Import→Local从Books/Download或WiFi导入；阅读Settings显示批注/书签导出路径，Contents浏览/导出/删除"
+    },
+    {
+      "id": "F-M011-03",
+      "field": "gaps",
+      "before": "PDF p18–19；WiFi传输地址/配网、空库、重复/坏文件、删除是否确认、标记回收。",
+      "after": "PDF p18–19；传输完成与解析成功分开；重复/坏文件、导出命名与覆盖、删除确认/回收及位置恢复未知"
+    },
+    {
+      "id": "F-M011-03",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M011-06",
+      "field": "known_branches",
+      "before": "只能确认入口与在线服务性质，尚无“暂停→恢复句子”完整流程。",
+      "after": "文本和PDF的Progress都列听书；产品页在线TTS声明；文件名TTS的宣传GIF实际为音乐/词典/字体，不补朗读链"
+    },
+    {
+      "id": "F-M011-06",
+      "field": "gaps",
+      "before": "PDF p20–21；下载/缓存、语言、计时器、关屏、来电、短信提示、蓝牙断开后是否外放。",
+      "after": "PDF p20–21；读听启动、暂停/续句、下载/计时/语音、锁屏/来电/蓝牙断开；无TTS控件实观"
+    },
+    {
+      "id": "F-M011-06",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M011-07",
+      "field": "evidence_ids",
+      "before": "E-BIGME-01;E-BIGME-02",
+      "after": "E-BIGME-01;E-BIGME-02;E-BGCD-02"
+    },
+    {
+      "id": "F-M011-07",
+      "field": "known_branches",
+      "before": "功能已发现，选区→保存→再次定位的连贯行为尚未证实。",
+      "after": "阅读Settings列长按菜单/词典；宣传静态帧可见词典及图标，但选区→保存→再定位链未证实"
+    },
+    {
+      "id": "F-M011-07",
+      "field": "gaps",
+      "before": "PDF p19；词典来源/离线、标记颜色与文字定位、取消选择、导出格式。",
+      "after": "PDF p19与宣传帧2；应用/构建、图标执行语义、词典离线、批注定位/取消/导出仍缺"
+    },
+    {
+      "id": "F-M011-07",
+      "field": "visual_status",
+      "before": "not_observed",
+      "after": "static_reference_only"
+    },
+    {
+      "id": "F-M011-07",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M054-01",
+      "field": "known_branches",
+      "before": "inkPalm5开机5秒/菜单2秒；Plus开机或菜单3秒，菜单含重启；均短按待机",
+      "after": "inkPalm5开机5秒/菜单2秒；Plus开机或关机/重启菜单3秒，短按待机/唤醒；Plus图示说明充电白灯闪烁、充满常亮。"
+    },
+    {
+      "id": "F-M054-01",
+      "field": "gaps",
+      "before": "固件构建、首启、阅读/未保存内容恢复、自动休眠",
+      "after": "实际固件、首启、自动休眠、唤醒阅读位置、未保存内容及音频恢复；充电灯不证明系统响应或数据已保存。"
+    },
+    {
+      "id": "F-M054-01",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M054-02",
+      "field": "evidence_ids",
+      "before": "E-MOA-01;E-MOD-12;E-MOD-14",
+      "after": "E-MOA-01;E-MOD-12;E-MOD-14;E-MOCD-01"
+    },
+    {
+      "id": "F-M054-02",
+      "field": "known_branches",
+      "before": "Plus阅读页翻页/非阅读页音量，Logo默认返回/全刷为文档D2；inkPalm5设置仍部分D1",
+      "after": "Plus手册默认阅读页侧键翻页/非阅读页音量，Logo点按返回/长按全刷；2022作者照片仅补快捷栏、刷新两选项和取消的可见状态，不闭合切换。"
+    },
+    {
+      "id": "F-M054-02",
+      "field": "gaps",
+      "before": "完整改键保存/冲突/恢复默认；inkPalm5 full swipe译义不能用Plus倒推；用户冲突报告非官方缺陷",
+      "after": "改键保存/冲突/恢复默认、所有第三方阅读App映射、Logo返回后的阅读位置；旧inkPalm5英文译义仍不能用Plus倒推；照片固件未知。"
+    },
+    {
+      "id": "F-M054-02",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M054-03",
+      "field": "evidence_ids",
+      "before": "E-MOA-01",
+      "after": "E-MOA-01;E-MOCD-01"
+    },
+    {
+      "id": "F-M054-03",
+      "field": "known_branches",
+      "before": "设备设置中的网络设置；WiFi/蓝牙分支",
+      "after": "inkPalm5手册给设备设置中的网络设置及WiFi/蓝牙分支；Plus 2022照片仅可见WiFi/蓝牙快捷项，不补成Plus配网或配对步骤。"
+    },
+    {
+      "id": "F-M054-03",
+      "field": "gaps",
+      "before": "连接成功提示、断开重连、配对失败",
+      "after": "各机型连接成功提示、错误密码、断开重连；Plus配对入口、音频路由和睡眠连接未核。"
+    },
+    {
+      "id": "F-M054-03",
+      "field": "visual_status",
+      "before": "not_observed",
+      "after": "static_reference_only"
+    },
+    {
+      "id": "F-M054-03",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M054-04",
+      "field": "known_branches",
+      "before": "均按12秒后释放；inkPalm5再按5秒/Plus3秒；无电与售后分支",
+      "after": "均按电源12秒后释放；inkPalm5再按5秒/Plus3秒；仍无解再检查电量/联系售后，属于手册异常处理建议。"
+    },
+    {
+      "id": "F-M054-04",
+      "field": "gaps",
+      "before": "不是恢复出厂；未保存内容/文件保留、云备份与更新恢复未知",
+      "after": "无恢复出厂或数据删除步骤；重启是否成功、未保存笔记/文件保留、备份还原及更新失败恢复均未知。"
+    },
+    {
+      "id": "F-M054-04",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M054-05",
+      "field": "known_branches",
+      "before": "inkPalm5手册及2022用户记录；另附2020未标机型PDF阅读底栏入口，不拼成固定型号完整链",
+      "after": "inkPalm5旧手册/用户记录与Plus短说明书分开；2020未标机型PDF正文仅给点空白区唤出底栏，再找对应图标。"
+    },
+    {
+      "id": "F-M054-05",
+      "field": "gaps",
+      "before": "固定机型完整导入开书查词返回续读；历史指南具体步骤仍未归属型号",
+      "after": "固定机型完整导入开书查词返回续读；PDF批注/裁边/重排后保存、切回原页和返回栈未核，历史指南不能归属Plus/W7/W8。"
+    },
+    {
+      "id": "F-M054-05",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M054-06",
+      "field": "known_branches",
+      "before": "USB/FTP/WLAN/蓝牙；收到文件与加入书架分开",
+      "after": "历史USB/FTP/多看WLAN分支及蓝牙内部存储books；蓝牙正文明确不加入书架则多看不显示，文件接收与书架条目分开。"
+    },
+    {
+      "id": "F-M054-06",
+      "field": "gaps",
+      "before": "机型归属；books/book冲突、断传、重名、取消",
+      "after": "机型未知；USB books/FTP book冲突；书架扫描/发现反馈未描述；蓝牙返回顺序未看图确认；拒绝加入后重加、断传/重名/取消/删除恢复未说明。"
+    },
+    {
+      "id": "F-M054-06",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M054-07",
+      "field": "known_branches",
+      "before": "复制/剪切；APK传入或下载；用户报告单应用菜单",
+      "after": "历史长按复制/剪切正文写到目标文件夹外面粘贴，位置歧义保留；APK三种取得入口与Apps/download路径，不代表安装完成或当前兼容。"
+    },
+    {
+      "id": "F-M054-07",
+      "field": "gaps",
+      "before": "旧官网型号未标、权限失败、覆盖与卸载数据",
+      "after": "文件移动目标位置需对照未看的GIF；机型、覆盖/剪切中断、未知来源权限、安装失败及卸载数据保留未知；不以第三方作者泛称兼容作保证。"
+    },
+    {
+      "id": "F-M054-07",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M054-08",
+      "field": "known_branches",
+      "before": "命名、页预览、导出Note目录；W7/W8独立目录线索",
+      "after": "历史新建保存命名或首项日期菜单改名；页码切4/9格；已保存笔记在列表或缩略图模式经省略号导出PDF至Note。W7/W8仍各自仅旧作者线索。"
+    },
+    {
+      "id": "F-M054-08",
+      "field": "gaps",
+      "before": "机型归属、笔迹原稿/导出件、退出保存、覆盖与删除恢复",
+      "after": "历史指南机型未归属；返回原笔迹、可编辑原稿/导出副本关系、同名覆盖、导出失败和删除/同步恢复未核。"
+    },
+    {
+      "id": "F-M054-08",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M016-01",
+      "field": "evidence_ids",
+      "before": "E-BCZ-01;E-BCZ-02;E-BCZ-03;E-BCD-02;E-BCD-03;E-BCD-04;E-BCD-06;E-BCD-07;E-BCD-08;E-BCD-09",
+      "after": "E-BCZ-01;E-BCZ-02;E-BCZ-03;E-BCD-02;E-BCD-03;E-BCD-04;E-BCD-06;E-BCD-07;E-BCD-08;E-BCD-09;E-BCCD-01;E-BCCD-02"
+    },
+    {
+      "id": "F-M016-01",
+      "field": "known_branches",
+      "before": "历史选书/斩词/单词本计划片段；题型与静态题面",
+      "after": "未标版本帮助补计划换书、已斩列表编辑恢复、资源下载、未同步前清缓存丢记录；完成计划与上传分开，停留10秒仅建议；Q49静态模式图"
+    },
+    {
+      "id": "F-M016-01",
+      "field": "gaps",
+      "before": "现版完整作答链、误判撤销、离线；历史片段构建与执行结果未知",
+      "after": "首学/复习完整错答→提示→再答→完成仍缺；即时误评撤销、恢复后队列/计数、离线题型和断点未知；FAQ无日期/构建且有政策/导入冲突"
+    },
+    {
+      "id": "F-M016-01",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M016-04",
+      "field": "evidence_ids",
+      "before": "E-BCZ-06",
+      "after": "E-BCZ-06;E-BCCD-01"
+    },
+    {
+      "id": "F-M016-04",
+      "field": "known_branches",
+      "before": "页面未显示可申请",
+      "after": "2026-09-04政策：后台完整记录无集中入口，可按账号/类别/时段邮件申请，经核验15工作日内处理或说明；与旧FAQ资料入口/需注销删除说法有差异"
+    },
+    {
+      "id": "F-M016-04",
+      "field": "gaps",
+      "before": "导出格式、恢复、API",
+      "after": "未实际申请；返回格式、导回/恢复、跨身份合并与冲突未知；安全备份不等于用户可恢复副本"
+    },
+    {
+      "id": "F-M016-04",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M016-05",
+      "field": "task",
+      "before": "开启额外拼写题型（2023历史局部）",
+      "after": "学习题型开关（2023及未标版本帮助）"
+    },
+    {
+      "id": "F-M016-05",
+      "field": "evidence_ids",
+      "before": "E-BCD-01",
+      "after": "E-BCD-01;E-BCCD-01"
+    },
+    {
+      "id": "F-M016-05",
+      "field": "known_branches",
+      "before": "深度模式历史迁移；轻快用户不受影响",
+      "after": "2023深度模式迁移公告给拼写设置；Q12另给我→设置→学习设置→增加学习题型开关；两者不自动对应当前构建"
+    },
+    {
+      "id": "F-M016-05",
+      "field": "gaps",
+      "before": "构建未知；开关保存/即时生效/现版入口未核实",
+      "after": "题型完整清单、保存/即时生效/在途队列未知；QA无日期/OS/build；当前官网深度模式与旧公告冲突未解"
+    },
+    {
+      "id": "F-M016-05",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M016-06",
+      "field": "evidence_ids",
+      "before": "E-BCD-02;E-BCD-05",
+      "after": "E-BCD-02;E-BCD-05;E-BCCD-01"
+    },
+    {
+      "id": "F-M016-06",
+      "field": "known_branches",
+      "before": "文中义与本文标记词表；批量收藏",
+      "after": "2022真题文中义、标记词表批量收藏；未标版本Q18另给开始背单词吧下方单词本→学习简单练习，不拼作同版本闭环"
+    },
+    {
+      "id": "F-M016-06",
+      "field": "gaps",
+      "before": "App总入口、空表/重复收藏、原句保留、成功反馈与复习启动未知",
+      "after": "真题总入口、重复/取消收藏、原句保留、成功反馈、练习题型与调度未知；Q18不支持导入说法与功能介绍冲突"
+    },
+    {
+      "id": "F-M016-06",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    }
+  ],
+  "evidence_changes": [
+    {
+      "id": "E-BIGME-01",
+      "field": "additional_captures",
+      "before": null,
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "url": "https://store.bigme.vip/pages/hibreak-pro-landing-page",
+          "archived_artifact": "artifacts/bigme-controls-deepening/source-notes.md",
+          "sha256": "094ca7b500c7d7ce0481eb8649a0ceae425b7698c5cc3f20f0e2defe7c0f4093",
+          "hands_on": false,
+          "capture_method": "public_html_get_and_text_read",
+          "raw_work_path": "work/bigme-controls-deepening/raw/product.html",
+          "raw_sha256": "8dec25fddd952795ba34e9ed8f14bafd5558454b37570a1c1bd1bfec4bf20054",
+          "http_status": 200,
+          "note": "同页规格冲突保留；引用GIF另记E-BGCD-02，不将宣传图当流程"
+        }
+      ]
+    },
+    {
+      "id": "E-BIGME-02",
+      "field": "additional_captures",
+      "before": null,
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "url": "https://device.report/m/f9c833a5a200f1b7aad371249f065497aa4c9e0caf1023379311412b5579ff50.pdf",
+          "archived_artifact": "artifacts/bigme-controls-deepening/source-notes.md",
+          "sha256": "094ca7b500c7d7ce0481eb8649a0ceae425b7698c5cc3f20f0e2defe7c0f4093",
+          "hands_on": false,
+          "capture_method": "public_web_tool_pdf_text_read; direct_download_failed_403_stopped",
+          "http_download_status": 403,
+          "failed_body_work_path": "work/bigme-controls-deepening/raw/manual.pdf",
+          "failed_body_sha256": "885c20651c0793e4431dc2afacc822c4010a0b7b74b9bcd5dc053e42e2e209e3",
+          "pdf_original_archived": false,
+          "note": "同一本26页手册文字复读；13章目录登记、p19–21控件分层；无新PDF静态页或设备操作"
+        }
+      ]
+    },
+    {
+      "id": "E-BGD-01",
+      "field": "additional_captures",
+      "before": null,
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "url": "https://device.report/m/f9c833a5a200f1b7aad371249f065497aa4c9e0caf1023379311412b5579ff50.pdf",
+          "archived_artifact": "artifacts/bigme-controls-deepening/source-notes.md",
+          "sha256": "094ca7b500c7d7ce0481eb8649a0ceae425b7698c5cc3f20f0e2defe7c0f4093",
+          "hands_on": false,
+          "capture_method": "public_web_tool_pdf_text_read; direct_download_failed_403_stopped",
+          "http_download_status": 403,
+          "failed_body_work_path": "work/bigme-controls-deepening/raw/manual.pdf",
+          "failed_body_sha256": "885c20651c0793e4431dc2afacc822c4010a0b7b74b9bcd5dc053e42e2e209e3",
+          "pdf_original_archived": false,
+          "note": "同一本26页手册文字复读；13章目录登记、p19–21控件分层；无新PDF静态页或设备操作"
+        }
+      ]
+    },
+    {
+      "id": "E-BCZ-01",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "capture_url": "https://passport.baicizhan.com/privacy/introductions.html",
+          "checked_on": "2026-10-27",
+          "access_mode": "ordinary_anonymous_GET",
+          "raw_work_path": "work/baicizhan-controls-deepening/introductions.html",
+          "raw_sha256": "beb1c5ff200a793c9f54e186862e108580a7b6dc1f766117307986873d974725",
+          "locator": "功能介绍4标题；能力声明无操作",
+          "archived_artifact": "artifacts/baicizhan-controls-deepening/source-notes.md",
+          "sha256": "a8e593cc3fe506258a61b75de641fcaf7911262ce05759497af43624db551e16",
+          "hands_on": false,
+          "visual_observed": false,
+          "http_status": 200,
+          "final_url": "https://passport.baicizhan.com/privacy/introductions.html",
+          "limitation": "公开HTML正文；未安装、未使用图片/评论补操作"
+        }
+      ]
+    },
+    {
+      "id": "E-BCZ-02",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "capture_url": "https://www.baicizhan.com/",
+          "checked_on": "2026-10-27",
+          "access_mode": "local_reread_of_existing_public_artifact",
+          "raw_work_path": "work/chinese-vocab-deepening/bcz.html",
+          "raw_sha256": "3a2120cedc7054c3f4def68403d8d7d85fab3d386e216a202a6e32229f9a579c",
+          "locator": "官网模式声明；本轮bcz-reused.txt",
+          "archived_artifact": "artifacts/baicizhan-controls-deepening/source-notes.md",
+          "sha256": "a8e593cc3fe506258a61b75de641fcaf7911262ce05759497af43624db551e16",
+          "hands_on": false,
+          "visual_observed": false,
+          "original_capture_on": "2026-10-26",
+          "limitation": "复读已存原件，未再次GET；不能以本轮查阅日冒充页面修订日"
+        }
+      ]
+    },
+    {
+      "id": "E-BCZ-03",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "capture_url": "https://apps.apple.com/cn/app/百词斩-背单词-学英语日语韩语法语/id557545298?platform=watch",
+          "checked_on": "2026-10-27",
+          "access_mode": "ordinary_anonymous_GET",
+          "raw_work_path": "work/baicizhan-controls-deepening/app-store.html",
+          "raw_sha256": "14bd9de382df152a78914bcb6a1e223537ebe8f0b671fb940015e2a15f9330c2",
+          "locator": "TitledParagraph版本7.10.25/2026-10-19；兼容性；本轮version-index.json",
+          "archived_artifact": "artifacts/baicizhan-controls-deepening/source-notes.md",
+          "sha256": "a8e593cc3fe506258a61b75de641fcaf7911262ce05759497af43624db551e16",
+          "hands_on": false,
+          "visual_observed": false,
+          "http_status": 200,
+          "final_url": "https://apps.apple.com/cn/app/%E7%99%BE%E8%AF%8D%E6%96%A9-%E8%83%8C%E5%8D%95%E8%AF%8D-%E5%AD%A6%E8%8B%B1%E8%AF%AD%E6%97%A5%E8%AF%AD%E9%9F%A9%E8%AF%AD%E6%B3%95%E8%AF%AD/id557545298?platform=watch",
+          "limitation": "公开HTML正文；未安装、未使用图片/评论补操作",
+          "app_build": "7.10.25（商店正文，未安装）",
+          "source_updated_on": "2026-10-19"
+        }
+      ]
+    },
+    {
+      "id": "E-BCZ-04",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "capture_url": "https://www.baicizhan.com/information",
+          "checked_on": "2026-10-27",
+          "access_mode": "local_reread_of_existing_public_artifact",
+          "raw_work_path": "work/chinese-vocab-deepening/bcz-info.html",
+          "raw_sha256": "1f27ecfa5fc16d67c5f543197f82eae9e5ddf94a37434dd2cfcb4c1df2eda4f3",
+          "locator": "3.8.3实时同步、边走边听与离线两项；本轮bcz-info-reused.txt",
+          "archived_artifact": "artifacts/baicizhan-controls-deepening/source-notes.md",
+          "sha256": "a8e593cc3fe506258a61b75de641fcaf7911262ce05759497af43624db551e16",
+          "hands_on": false,
+          "visual_observed": false,
+          "original_capture_on": "2026-10-26",
+          "limitation": "复读已存原件，未再次GET；不能以本轮查阅日冒充页面修订日"
+        }
+      ]
+    },
+    {
+      "id": "E-BCZ-06",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "capture_url": "https://passport.baicizhan.com/privacy/privacy.html",
+          "checked_on": "2026-10-27",
+          "access_mode": "ordinary_anonymous_GET",
+          "raw_work_path": "work/baicizhan-controls-deepening/privacy.html",
+          "raw_sha256": "826be3ac31442ba974f792ddc5c61c28b43790c1935eb2dae5ce49e7a9f7fcad",
+          "locator": "更新/生效2026-09-04；查阅复制/删除；privacy.txt322—354行",
+          "archived_artifact": "artifacts/baicizhan-controls-deepening/source-notes.md",
+          "sha256": "a8e593cc3fe506258a61b75de641fcaf7911262ce05759497af43624db551e16",
+          "hands_on": false,
+          "visual_observed": false,
+          "http_status": 200,
+          "final_url": "https://passport.baicizhan.com/privacy/privacy.html",
+          "limitation": "公开HTML正文；未安装、未使用图片/评论补操作",
+          "source_updated_on": "2026-09-04"
+        }
+      ]
+    },
+    {
+      "id": "E-BCD-07",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "capture_url": "https://www.baicizhan.com/little_class/article/925/share_view",
+          "checked_on": "2026-10-27",
+          "access_mode": "local_reread_of_existing_public_artifact",
+          "raw_work_path": "work/chinese-vocab-deepening/bcz-925.html",
+          "raw_sha256": "58b6f4eec1ad799729ca89a11e7537c6fc66ae9e6c6b9b1530d9bb92a036e8c6",
+          "locator": "2023-03-23拼写错误词再出现声明；本轮bcz-925-reused.txt",
+          "archived_artifact": "artifacts/baicizhan-controls-deepening/source-notes.md",
+          "sha256": "a8e593cc3fe506258a61b75de641fcaf7911262ce05759497af43624db551e16",
+          "hands_on": false,
+          "visual_observed": false,
+          "original_capture_on": "2026-10-26",
+          "limitation": "复读已存原件，未再次GET；不能以本轮查阅日冒充页面修订日"
+        }
+      ]
+    },
+    {
+      "id": "E-MOD-01",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "existing_local_official_HTTP_capture_reread",
+          "raw_work_path": "work/moaan-controls-deepening/raw/moaan-guide-index.html",
+          "raw_sha256": "e55d75de41e8328c7b2c0d6aaf36c5969e046f2448c6eda919a9dc0ea284a2b8",
+          "original_work_path": "work/chinese-reader-deepening/moaan-guide-index.html",
+          "source_captured_on": "2026-10-26",
+          "locator": "产品导航、用户指南、公司页脚",
+          "hands_on": false,
+          "visual_observed": false,
+          "note": "本地复读，未重新联网；不更新原采集日期。",
+          "archived_artifact": "artifacts/moaan-controls-deepening/source-notes.md",
+          "sha256": "1e87162de8a6f2fbb64044e1c2547d97401e1fa5b8de2ce206043eed9d66b56b",
+          "audit_artifact": "artifacts/moaan-controls-deepening/source-notes.md",
+          "audit_sha256": "1e87162de8a6f2fbb64044e1c2547d97401e1fa5b8de2ce206043eed9d66b56b"
+        }
+      ]
+    },
+    {
+      "id": "E-MOD-03",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "existing_local_official_HTTP_capture_reread",
+          "raw_work_path": "work/moaan-controls-deepening/raw/moaan-transfer-2020.html",
+          "raw_sha256": "acf75b537ce92a2165fe2c07d9358be02809678e8fa43cbd45426e48b4f0435d",
+          "original_work_path": "work/chinese-reader-deepening/moaan-transfer-2020.html",
+          "source_captured_on": "2026-10-26",
+          "locator": "USB、FTP、多看WLAN",
+          "hands_on": false,
+          "visual_observed": false,
+          "note": "本地复读，未重新联网；不更新原采集日期。",
+          "archived_artifact": "artifacts/moaan-controls-deepening/source-notes.md",
+          "sha256": "1e87162de8a6f2fbb64044e1c2547d97401e1fa5b8de2ce206043eed9d66b56b",
+          "audit_artifact": "artifacts/moaan-controls-deepening/source-notes.md",
+          "audit_sha256": "1e87162de8a6f2fbb64044e1c2547d97401e1fa5b8de2ce206043eed9d66b56b"
+        }
+      ]
+    },
+    {
+      "id": "E-MOD-04",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "existing_local_official_HTTP_capture_reread",
+          "raw_work_path": "work/moaan-controls-deepening/raw/root-moaan-87.html",
+          "raw_sha256": "6e5fa6a9d46f8f59ccecc66072053ec18c84552b3e52c65325b235d7a96d543f",
+          "original_work_path": "work/chinese-reader-deepening/root-moaan-87.html",
+          "source_captured_on": "2026-10-26",
+          "locator": "内部存储books、通知栏打开及加入书架",
+          "hands_on": false,
+          "visual_observed": false,
+          "note": "本地复读，未重新联网；不更新原采集日期。",
+          "archived_artifact": "artifacts/moaan-controls-deepening/source-notes.md",
+          "sha256": "1e87162de8a6f2fbb64044e1c2547d97401e1fa5b8de2ce206043eed9d66b56b",
+          "audit_artifact": "artifacts/moaan-controls-deepening/source-notes.md",
+          "audit_sha256": "1e87162de8a6f2fbb64044e1c2547d97401e1fa5b8de2ce206043eed9d66b56b"
+        }
+      ]
+    },
+    {
+      "id": "E-MOD-10",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "existing_local_official_HTTP_capture_reread",
+          "raw_work_path": "work/moaan-controls-deepening/raw/root-moaan-82.html",
+          "raw_sha256": "7894f00e6cbbbd9a43f7b856c18951cd43f4dc42eeb2396bbcfc3135b5b518f8",
+          "original_work_path": "work/chinese-reader-deepening/root-moaan-82.html",
+          "source_captured_on": "2026-10-26",
+          "locator": "保存笔记缩略图省略号、导出、Note目录",
+          "hands_on": false,
+          "visual_observed": false,
+          "note": "本地复读，未重新联网；不更新原采集日期。",
+          "archived_artifact": "artifacts/moaan-controls-deepening/source-notes.md",
+          "sha256": "1e87162de8a6f2fbb64044e1c2547d97401e1fa5b8de2ce206043eed9d66b56b",
+          "audit_artifact": "artifacts/moaan-controls-deepening/source-notes.md",
+          "audit_sha256": "1e87162de8a6f2fbb64044e1c2547d97401e1fa5b8de2ce206043eed9d66b56b"
+        }
+      ]
+    },
+    {
+      "id": "E-MOD-11",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "existing_local_static_image_reobserved",
+          "raw_work_path": "work/moaan-controls-deepening/raw/inkpalm-plus-b.png",
+          "raw_sha256": "091a998e689dda0622ea93c3fcf31abf8812baae4ae0ee062c97144ae3005064",
+          "original_work_path": "work/chinese-reader-deepening/inkpalm-plus-b.png",
+          "source_captured_on": "2026-10-26",
+          "locator": "01产品介绍、02参数及10生产者",
+          "hands_on": false,
+          "visual_observed": true,
+          "note": "本地复读，未重新联网；不更新原采集日期。",
+          "archived_artifact": "artifacts/chinese-reader-deepening/inkpalm-plus-b.png",
+          "sha256": "091a998e689dda0622ea93c3fcf31abf8812baae4ae0ee062c97144ae3005064",
+          "audit_artifact": "artifacts/moaan-controls-deepening/source-notes.md",
+          "audit_sha256": "1e87162de8a6f2fbb64044e1c2547d97401e1fa5b8de2ce206043eed9d66b56b",
+          "observed_on": "2026-10-27"
+        }
+      ]
+    },
+    {
+      "id": "E-MOD-12",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "existing_local_static_image_reobserved",
+          "raw_work_path": "work/moaan-controls-deepening/raw/inkpalm-plus-c.png",
+          "raw_sha256": "d5fd8a0f63d847d345abac9e0995a83218cb9247759923134499f1ef4a5dd852",
+          "original_work_path": "work/chinese-reader-deepening/inkpalm-plus-c.png",
+          "source_captured_on": "2026-10-26",
+          "locator": "04功能、05异常处理",
+          "hands_on": false,
+          "visual_observed": true,
+          "note": "本地复读，未重新联网；不更新原采集日期。",
+          "archived_artifact": "artifacts/chinese-reader-deepening/inkpalm-plus-c.png",
+          "sha256": "d5fd8a0f63d847d345abac9e0995a83218cb9247759923134499f1ef4a5dd852",
+          "audit_artifact": "artifacts/moaan-controls-deepening/source-notes.md",
+          "audit_sha256": "1e87162de8a6f2fbb64044e1c2547d97401e1fa5b8de2ce206043eed9d66b56b",
+          "observed_on": "2026-10-27"
+        }
+      ]
+    },
+    {
+      "id": "E-MOD-13",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "existing_local_static_image_reobserved",
+          "raw_work_path": "work/moaan-controls-deepening/raw/inkpalm-plus-a.png",
+          "raw_sha256": "00ae755dbad032a799e3821872e9e8d7827a6109f378c33ed34c0a1aba1a674e",
+          "original_work_path": "work/chinese-reader-deepening/inkpalm-plus-a.png",
+          "source_captured_on": "2026-10-26",
+          "locator": "封面型号；07有害物质章节",
+          "hands_on": false,
+          "visual_observed": true,
+          "note": "本地复读，未重新联网；不更新原采集日期。",
+          "archived_artifact": "artifacts/chinese-reader-deepening/inkpalm-plus-a.png",
+          "sha256": "00ae755dbad032a799e3821872e9e8d7827a6109f378c33ed34c0a1aba1a674e",
+          "audit_artifact": "artifacts/moaan-controls-deepening/source-notes.md",
+          "audit_sha256": "1e87162de8a6f2fbb64044e1c2547d97401e1fa5b8de2ce206043eed9d66b56b",
+          "observed_on": "2026-10-27"
+        }
+      ]
+    },
+    {
+      "id": "E-MOD-05",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "url": "http://www.moaansmart.com/?show=88",
+          "checked_on": "2026-10-27",
+          "access_mode": "anonymous_urllib_GET",
+          "status": 200,
+          "final_url": "http://www.moaansmart.com/?show=88",
+          "content_type": "text/html; charset=UTF-8",
+          "raw_work_path": "work/moaan-controls-deepening/raw/moaan-88.html",
+          "raw_sha256": "6fd73bf9358aa1bb614cb86b39a80af6eac5755b361725cc722532ccd881857f",
+          "extracted_work_path": "work/moaan-controls-deepening/raw/moaan-88.txt",
+          "extracted_sha256": "56bd18c4dde1b606bc69fdefde3f33e9129c709481eba624e4f2d275fd7bac18",
+          "locator": "文件管理长按、复制/剪切、目标目录粘贴",
+          "hands_on": false,
+          "visual_observed": false,
+          "archived_artifact": "artifacts/moaan-controls-deepening/source-notes.md",
+          "sha256": "1e87162de8a6f2fbb64044e1c2547d97401e1fa5b8de2ce206043eed9d66b56b",
+          "note": "同URL补原件与散列；2020历史指南型号未知，GIF未看。"
+        }
+      ]
+    },
+    {
+      "id": "E-MOD-06",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "url": "http://www.moaansmart.com/?show=89",
+          "checked_on": "2026-10-27",
+          "access_mode": "anonymous_urllib_GET",
+          "status": 200,
+          "final_url": "http://www.moaansmart.com/?show=89",
+          "content_type": "text/html; charset=UTF-8",
+          "raw_work_path": "work/moaan-controls-deepening/raw/moaan-89.html",
+          "raw_sha256": "9f125b905bd01f39b35657a4b5e43d322e76afddecf789627fcb56ac9751c36c",
+          "extracted_work_path": "work/moaan-controls-deepening/raw/moaan-89.txt",
+          "extracted_sha256": "939dab8143336b1fabd07476bbfe71c767d45680beb2207634aedd103ae1c4b5",
+          "locator": "USB至Apps分类；浏览器至download",
+          "hands_on": false,
+          "visual_observed": false,
+          "archived_artifact": "artifacts/moaan-controls-deepening/source-notes.md",
+          "sha256": "1e87162de8a6f2fbb64044e1c2547d97401e1fa5b8de2ce206043eed9d66b56b",
+          "note": "同URL补原件与散列；2020历史指南型号未知，GIF未看。"
+        }
+      ]
+    },
+    {
+      "id": "E-MOD-07",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "url": "http://www.moaansmart.com/?show=85",
+          "checked_on": "2026-10-27",
+          "access_mode": "anonymous_urllib_GET",
+          "status": 200,
+          "final_url": "http://www.moaansmart.com/?show=85",
+          "content_type": "text/html; charset=UTF-8",
+          "raw_work_path": "work/moaan-controls-deepening/raw/moaan-85.html",
+          "raw_sha256": "7ceef44e1650ee7c0777cae1bd8e892a3e43c4979d225838b7293365c2fcc94f",
+          "extracted_work_path": "work/moaan-controls-deepening/raw/moaan-85.txt",
+          "extracted_sha256": "048d4154927efd03420607b59feb4feec9c046e537c8db10bf01435d07b382b5",
+          "locator": "阅读中点击空白区后的底栏",
+          "hands_on": false,
+          "visual_observed": false,
+          "archived_artifact": "artifacts/moaan-controls-deepening/source-notes.md",
+          "sha256": "1e87162de8a6f2fbb64044e1c2547d97401e1fa5b8de2ce206043eed9d66b56b",
+          "note": "同URL补原件与散列；2020历史指南型号未知，GIF未看。"
+        }
+      ]
+    },
+    {
+      "id": "E-MOD-08",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "url": "http://www.moaansmart.com/?show=84",
+          "checked_on": "2026-10-27",
+          "access_mode": "anonymous_urllib_GET",
+          "status": 200,
+          "final_url": "http://www.moaansmart.com/?show=84",
+          "content_type": "text/html; charset=UTF-8",
+          "raw_work_path": "work/moaan-controls-deepening/raw/moaan-84.html",
+          "raw_sha256": "5fb65d77487ba5a672566f28ebfe7f0027f88cbedd225836a811b1bf665a8a44",
+          "extracted_work_path": "work/moaan-controls-deepening/raw/moaan-84.txt",
+          "extracted_sha256": "b1ba06e8c7b7a88467e86b31aee6bba70264e4d1ca6b99f9f673f3b0f20158ea",
+          "locator": "新建保存命名、左上菜单改名",
+          "hands_on": false,
+          "visual_observed": false,
+          "archived_artifact": "artifacts/moaan-controls-deepening/source-notes.md",
+          "sha256": "1e87162de8a6f2fbb64044e1c2547d97401e1fa5b8de2ce206043eed9d66b56b",
+          "note": "同URL补原件与散列；2020历史指南型号未知，GIF未看。"
+        }
+      ]
+    },
+    {
+      "id": "E-MOD-09",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "url": "http://www.moaansmart.com/?show=83",
+          "checked_on": "2026-10-27",
+          "access_mode": "anonymous_urllib_GET",
+          "status": 200,
+          "final_url": "http://www.moaansmart.com/?show=83",
+          "content_type": "text/html; charset=UTF-8",
+          "raw_work_path": "work/moaan-controls-deepening/raw/moaan-83.html",
+          "raw_sha256": "462130a954b81d38d776a78276ed05c523f638f005cb77f660c81fe1f64532b9",
+          "extracted_work_path": "work/moaan-controls-deepening/raw/moaan-83.txt",
+          "extracted_sha256": "658412f8c7d9f694a5ee873d06e953b29f97297d4bd70a9af62f6a0e1596c650",
+          "locator": "多页笔记的页码与4/9格",
+          "hands_on": false,
+          "visual_observed": false,
+          "archived_artifact": "artifacts/moaan-controls-deepening/source-notes.md",
+          "sha256": "1e87162de8a6f2fbb64044e1c2547d97401e1fa5b8de2ce206043eed9d66b56b",
+          "note": "同URL补原件与散列；2020历史指南型号未知，GIF未看。"
+        }
+      ]
+    },
+    {
+      "id": "E-MOD-05",
+      "field": "locator",
+      "before": "文件管理长按、复制/剪切、目标目录粘贴",
+      "after": "文件管理长按复制/剪切；正文写“目标文件夹外面粘贴”，目标位置有歧义"
+    },
+    {
+      "id": "E-MOD-05",
+      "field": "note",
+      "before": "实际HTTP原址正文读取；HTTPS失败。没有覆盖/取消/中断行为；机型未知。",
+      "after": "实际HTTP原址正文读取；HTTPS失败。正文位置措辞保留，GIF未观看，不确定目录内/外操作；没有覆盖/取消/中断行为，机型未知。"
+    },
+    {
+      "id": "E-MOD-06",
+      "field": "locator",
+      "before": "USB至Apps分类；浏览器至download",
+      "after": "USB传入文件管理器Apps；浏览器下载至download；另列软件名+APK搜索"
+    }
+  ],
+  "files": [
+    {
+      "path": "docs/research/interaction-library/batches/eink-phone-deepening-evidence.jsonl",
+      "backup": "work/bigme-controls-deepening/reviewed-before/eink-phone-deepening-evidence.jsonl",
+      "before_sha256": "bc7de46283a14856850adc01ec2f05e4b12a3afc681074cb3d3b97892a8a9b19",
+      "after_sha256": "2cc2eafb650e9cf153b29398cdc9e705459793e83d62bb399b6e68fc1c3d6f14"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/eink-systems-evidence.jsonl",
+      "backup": "work/bigme-controls-deepening/reviewed-before/eink-systems-evidence.jsonl",
+      "before_sha256": "47c4dd5a4ba56b89100ccc6d5391dd777f8d60d46ae45d40c003ab36e3de6c9b",
+      "after_sha256": "48cad275572d3a32d6592be2702200cf94f721a7d14d43db658d722f0a3296ac"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/chinese-vocab-deepening-coverage.csv",
+      "backup": "work/bigme-controls-deepening/reviewed-before/chinese-vocab-deepening-coverage.csv",
+      "before_sha256": "83931fffc33ffdb642803d2d3ab4e136bd68d7b730b7ea94bdb2f1dbf8d665b4",
+      "after_sha256": "f0894083ff478f181be277cf543984144efccc0e2797a18fccccc6f7d0c8a975"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/chinese-vocab-deepening-evidence.jsonl",
+      "backup": "work/bigme-controls-deepening/reviewed-before/chinese-vocab-deepening-evidence.jsonl",
+      "before_sha256": "c52a080d50183443ef0d2dbc9b6f27e6c79c13cb9174065724e897c9a7796d1b",
+      "after_sha256": "a491a4c89f7aef7ba6e7da2139692d0ed8d09e41dddc5c41a68a0e16e4348b27"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/extended-readers-coverage.csv",
+      "backup": "work/bigme-controls-deepening/reviewed-before/extended-readers-coverage.csv",
+      "before_sha256": "4a838db6d18795fc8bb6ef3a518f8a4a28eb418a2436adc0c6143da8192fb7f1",
+      "after_sha256": "fd8445d65fa87f3c1674d7974e4b33fff122b79d8a50263d81e413fd2c0ac82d"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/vocab-coverage.csv",
+      "backup": "work/bigme-controls-deepening/reviewed-before/vocab-coverage.csv",
+      "before_sha256": "c042ca21eb14be94d668ff1db04ffd788cfaa1f210763a747e0e0e2e729c4a1b",
+      "after_sha256": "d925a5c62c5cf69d5fdfcfd2d75a73d8668144dc505583f626efbe34f7977f4b"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/eink-systems-coverage.csv",
+      "backup": "work/bigme-controls-deepening/reviewed-before/eink-systems-coverage.csv",
+      "before_sha256": "ca1b62ac9acfb1f94abbb96844e48fe6b7044fddf8bc440292d075277b2903a4",
+      "after_sha256": "1cc5c8c74b22ec9bbdd963f6a0a29c2085967c256ca2d76299f5fa6d8c9f70a8"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/chinese-reader-deepening-coverage.csv",
+      "backup": "work/bigme-controls-deepening/reviewed-before/chinese-reader-deepening-coverage.csv",
+      "before_sha256": "0dd522052f01062f068fd57c20227ac4ec373ab48726f5dd45e771763ee2dd21",
+      "after_sha256": "fce71689289a35df9613447ecb2ab3e13ab228451157885b4d581bd7b150919c"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/vocab-evidence.jsonl",
+      "backup": "work/bigme-controls-deepening/reviewed-before/vocab-evidence.jsonl",
+      "before_sha256": "d41587936013da7d86ddf8d83aff1b7407dc29a667211563accf8e9247db5226",
+      "after_sha256": "1260d0d4590447f128c19bf1ebc8497ea94d5552239b2ac024e086d4baf9765f"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/chinese-reader-deepening-evidence.jsonl",
+      "backup": "work/bigme-controls-deepening/reviewed-before/chinese-reader-deepening-evidence.jsonl",
+      "before_sha256": "5483359647e77b5d22dbff3a1e281e2a8dd4b9723cd17283ab6620974dfc35cc",
+      "after_sha256": "16e22fae5b9a1f61a056f656be299b8235fa2b64510dee97b0dca228f2fe0713"
+    }
+  ],
+  "old_tasks": 17,
+  "old_task_fields": 61,
+  "old_evidence_captures": 21,
+  "old_evidence_other_fields": 3
+}

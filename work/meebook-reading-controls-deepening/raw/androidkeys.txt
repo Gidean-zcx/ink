@@ -1,0 +1,1266 @@
+Android tips and tricks · koreader/koreader Wiki · GitHub
+Skip to content
+Navigation Menu
+Sign in
+Appearance settings
+Platform
+AI CODE CREATION
+GitHub Copilot
+Write better code with AI
+GitHub Copilot app
+Direct agents from issue to merge
+MCP Registry
+Integrate external tools
+DEVELOPER WORKFLOWS
+Actions
+Automate any workflow
+Codespaces
+Instant dev environments
+Issues
+Plan and track work
+Code Review
+Manage code changes
+Code Quality
+Enforce quality at merge
+APPLICATION SECURITY
+GitHub Advanced Security
+Find and fix vulnerabilities
+Code security
+Secure your code as you build
+Secret protection
+Stop leaks before they start
+EXPLORE
+Why GitHub
+Documentation
+Blog
+Changelog
+Marketplace
+View all features
+Solutions
+BY COMPANY SIZE
+Enterprises
+Small and medium teams
+Startups
+Nonprofits
+BY USE CASE
+App Modernization
+DevSecOps
+DevOps
+CI/CD
+View all use cases
+BY INDUSTRY
+Healthcare
+Financial services
+Manufacturing
+Government
+See all industries
+View all solutions
+Resources
+EXPLORE BY TOPIC
+AI
+Software Development
+DevOps
+Security
+View all topics
+EXPLORE BY TYPE
+Customer stories
+Events & webinars
+Ebooks & reports
+Business insights
+GitHub Skills
+SUPPORT & SERVICES
+Documentation
+Customer support
+Community forum
+Trust center
+Partners
+View all resources
+Open Source
+COMMUNITY
+GitHub Sponsors
+Fund open source developers
+PROGRAMS
+Security Lab
+Maintainer Community
+GitHub Stars
+Archive Program
+REPOSITORIES
+Topics
+Trending
+Collections
+Enterprise
+ENTERPRISE SOLUTIONS
+Enterprise platform
+AI-powered developer platform
+AVAILABLE ADD-ONS
+GitHub Advanced Security
+Enterprise-grade security features
+Copilot for Business
+Enterprise-grade AI features
+Premium Support
+Enterprise-grade 24/7 support
+Pricing
+Search
+/
+Sign in
+Sign up
+Appearance settings
+You signed in with another tab or window.
+Reload
+to refresh your session.
+You signed out in another tab or window.
+Reload
+to refresh your session.
+You switched accounts on another tab or window.
+Reload
+to refresh your session.
+Dismiss alert
+{{ message }}
+koreader
+koreader
+Repository navigation
+Code
+Issues
+1.3k
+(
+1.3k
+)
+Pull requests
+82
+(
+82
+)
+Discussions
+Actions
+Projects
+Wiki
+Security and quality
+Insights
+More
+items
+Android tips and tricks
+Jump to bottom
+Edit
+New page
+Frans de Jonge edited this page
+Mar 17, 2026
+·
+29 revisions
+Customize keys
+KOReader supports
+keymapping
+. While most phones and tablets use common keycodes defined by AOSP, some "closed-android" E-ink vendors use their own scheme.
+NOTE:
+it is impossible for a non-launcher app to override the behaviour of the home key. The rest of physical/virtual keys can be mapped.
+To know which keycodes are being emitted by your device, please follow
+this link
+.
+Some examples:
+Nook Glowlight 3
+Top keys as page back and bottom keys as page forward (Cf.
+post on MobileRead forums
+):
+return
+{
+   [
+139
+]
+=
+"
+LPgBack
+"
+,
+--
+Nook Left Page Back (left lower button)
+[
+140
+]
+=
+"
+LPgFwd
+"
+,
+--
+Nook Left Page Forward (left upper button)
+[
+141
+]
+=
+"
+LPgFwd
+"
+,
+--
+Nook Right Page Forward (right upper button)
+[
+142
+]
+=
+"
+LPgBack
+"
+,
+--
+Nook Right Page Back (right lower button)
+}
+Tolino
+Direction pad left/right as page back/forward:
+return
+{
+   [
+21
+]
+=
+"
+LPgBack
+"
+,
+   [
+22
+]
+=
+"
+LPgFwd
+"
+,
+}
+Onyx T68 and clones
+Keymap like default reader
+return
+{
+    [
+104
+]
+=
+"
+LPgBack
+"
+,
+    [
+109
+]
+=
+"
+LPgFwd
+"
+,
+    [
+139
+]
+=
+"
+Menu
+"
+,
+}
+Big Me
+Fingerprint button as page forward:
+return
+{
+    [
+139
+]
+=
+"
+LPgFwd
+"
+,
+}
+Customize dictionary list
+Since v2019.11.69 you can customize your third party dictionary list by creating koreader/dictionaries.lua
+Check the
+default list
+and create your own based on your preferences.
+You can also configure an action without a specific package. In that case the application picker will be shown with all the available options.
+example 1: a simple list with 2 dicts, the first one  will show the app picker with all the apps that can manage the "send" action. The second one will open the query in Colordict if the app is installed.
+return
+{
+    {
+"
+Generic
+"
+,
+"
+App picker
+"
+,
+true
+,
+nil
+,
+"
+send
+"
+},
+    {
+"
+ColorDict
+"
+,
+"
+ColorDict
+"
+,
+false
+,
+"
+com.socialnmobile.colordict
+"
+,
+"
+colordict
+"
+},
+}
+example 2: like example 1 but without checking if Colordict is available each time the app runs
+return
+{
+    {
+"
+Generic
+"
+,
+"
+App picker
+"
+,
+true
+,
+nil
+,
+"
+send
+"
+},
+    {
+"
+ColorDict
+"
+,
+"
+ColorDict
+"
+,
+true
+,
+"
+com.socialnmobile.colordict
+"
+,
+"
+colordict
+"
+},
+}
+example 3: open the app picker for each kind of generic intent
+return
+{
+    {
+"
+Send
+"
+,
+"
+App picker (send)
+"
+,
+true
+,
+nil
+,
+"
+send
+"
+},
+    {
+"
+Search
+"
+,
+"
+App picker (search)
+"
+,
+true
+,
+nil
+,
+"
+search
+"
+},
+    {
+"
+TextProcessing
+"
+,
+"
+App picker (text processing)
+"
+,
+true
+,
+nil
+,
+"
+text
+"
+},
+}
+example 4: FOSS dictionary apps
+Some open-source dictionary apps that work with KOReader but aren't in the default list:
+Ciyue
+— a Flutter-based MDict (.mdx) dictionary app (
+F-Droid
+)
+return
+{
+    {
+"
+Ciyue
+"
+,
+"
+Ciyue
+"
+,
+false
+,
+"
+org.eu.mumulhl.ciyue
+"
+,
+"
+send
+"
+},
+}
+ADB Stuff
+Android Debug Bridge (ADB) stands as a multifaceted command-line utility, facilitating seamless communication with your Android device.
+USB Driver Setup
+To enable the USB driver on your device, follow these general steps:
+Connect your Android device to your computer using a USB cable.
+Access the device's settings and navigate to the "Developer Options" section. If "Developer Options" are not visible, go to "About Phone" and tap on the "Build Number" multiple times until you unlock developer access.
+Within "Developer Options," locate and enable the "USB Debugging" feature.
+A prompt may appear on your device asking for permission to enable USB debugging. Allow this access.
+Once USB debugging is enabled, your Android device is ready to communicate with ADB.
+Note: The exact steps may vary slightly depending on your device model and Android version.
+Onyx Devices
+Light drivers, permissions
+For Onyx devices running Android version 11 and above, enabling the Lights driver requires specific steps due to restrictions on non-SDK interfaces:
+Check if the variable is set:
+adb shell settings get global hidden_api_policy
+Set the permission to use non-SDK hidden API:
+adb shell settings put global hidden_api_policy 1
+Execute only if the test fails or if you want to remove the permission:
+adb shell settings delete global hidden_api_policy
+Note: After applying the permission changes in step 2, it is important to close and reopen KOReader for the changes to take effect.
+Tolino B300 devices (Shine 4, Vision 6, Epos 3)
+These devices have a quirk with the E-ink controller: if
+persist.mode.global
+is not
+0
+, the driver will not function correctly. The official Tolino app sets this value to
+8000
+, but this can be reliably set back to
+0
+by going into the AOSP settings, scroll around to trigger a screen refresh, and then launching KOReader.
+Other settings
+Enable USB debugging
+: Apps > top right hamburger icon > App Management > USB Debug Mode: enable
+Enable orientation change within KOReader
+: Apps > top right hamburger icon > App Management > Force to follow system orientation > KOReader: disable
+Home
+|
+Wiki pages
+Pages
+112
+Loading
+Home
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Advanced WiFi control
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Alternate TOC
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Android FAQs
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Android tips and tricks
+Customize keys
+Some examples:
+Nook Glowlight 3
+Tolino
+Onyx T68 and clones
+Big Me
+Customize dictionary list
+example 1: a simple list with 2 dicts, the first one  will show the app picker with all the apps that can manage the "send" action. The second one will open the query in Colordict if the app is installed.
+example 2: like example 1 but without checking if Colordict is available each time the app runs
+example 3: open the app picker for each kind of generic intent
+example 4: FOSS dictionary apps
+ADB Stuff
+USB Driver Setup
+Onyx Devices
+Light drivers, permissions
+Tolino B300 devices (Shine 4, Vision 6, Epos 3)
+Other settings
+Loading
+Auto frontlight
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Auto Standby
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Auto suspend
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Background runner
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Battery statistics
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Bookmarks
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+calibre
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Calibre wireless connection
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Change defaults
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Change Next Page   Previous Page touch targets
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Changelog
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Chinese keyboard
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Clipboard
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Cover browser
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Coverimage
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+deprecated devices
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Development and Debugging on Android
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Dictionary download
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Dictionary support
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+DPI control
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Evernote export
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Extended keyboard   swipe to get new characters
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Extensive footer controls
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Features list
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+File manager
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+File search
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Following links within documents
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Fonts
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Frontlight gesture controller
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Gamepad support
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Getting Started
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Goodreads
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Highlight export
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Hyphenation
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Image Viewer
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+In page footnotes
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Install on Windows with WSL
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Install using Linux container (Docker, Podman
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Install using Linux container (Docker, Podman)
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Installation on Android devices
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Installation on BQ devices
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Installation on Chromebook devices
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Installation on desktop Linux
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Installation on Kindle devices
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Installation on Kobo devices
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Installation on MacOS
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Installation on PocketBook devices
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Installation on reMarkable
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Japanese Support
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Joplin
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Keep alive
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Keyboard navigation
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Keymapping
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+kobolight
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+KOReader Gestures
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+KOReader Screenshots
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+KOReader Wiki CN
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+KOReader手势操作
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+KOReader用户手册
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Light control
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Localization
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Movable UI elements
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+multiswipes
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Nav TOC and page maps
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+News downloader
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Nextcloud notes
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+OPDS support
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+PDF Annotations
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Perception Expander plugin
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Press and hold function
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Profiles
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Progress Status Bars: Main (bottom) and Alternative (Top)
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Progress sync
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Read timer
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+README.html.md
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Reflowing tweaks
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Report a bug
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Screen saver options
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Send2Ebook
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Send2Ebook)=
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Set time and date
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Shell scripts
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Skim document
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+SSH
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Statistics plugin
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Style tweaks
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+System statistics
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Terminal emulator
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Time sync
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Tips and Tricks
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Troubleshooting
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Tweak document settings by directory
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+User patches
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Vignettes around chapter titles
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Virtual keyboard
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Vocabulary builder
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Wallabag
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Which one should I buy?
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+Wikipedia support
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+ZIP
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+云盘存储
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+在Kindle上安装和运行KOReader
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+如何在Kobo上安装KOReader
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+更改默认设置
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+更新日志
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+笔画输入法
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Loading
+进度同步
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+Show 97 more pages…
+Installation
+Changelog
+Install on Android
+Install on Cervantes
+Install on ChromeOS
+Install on Kindle
+Install on Kobo
+Install on PocketBook
+Install on reMarkable
+Install on Desktop Linux
+Install on MacOS
+Install on Windows with WSL
+Install using Linux container (Docker, Podman)
+Usage
+Basic reading controls (click to open)
+Keyboard navigation
+Advanced reading controls (click to open)
+Gestures
+Press and hold
+Frontlight control
+Multiswipe gestures
+Gamepad
+Keymapping
+Extended keyboard
+Tips and Tricks
+Getting started
+Gestures
+Change defaults
+DPI control
+Style tweaks for misbehaving books
+Reflowing tweaks
+Screenshots
+Troubleshooting
+Android tips and tricks
+Features
+Dictionary support
+Highlight export
+OPDS-support
+Progress-sync
+Wikipedia-support
+ZIP file support
+Plugins
+Auto frontlight
+Auto standby
+Auto suspend
+Background runner
+Battery statistics
+Calibre
+Cover browser
+Cover image
+Frontlight gesture controller
+Goodreads (deprecated)
+Highlight exporter
+Japanese Support
+Keep alive
+News downloader
+Perception expander
+Progress sync
+Read timer
+Reading statistics
+Send2Ebook
+SSH
+System statistics
+Terminal emulator
+Time sync
+Vocabulary builder
+Wallabag
+User patches
+Overview
+Installation
+Available patches
+Development
+Building the emulator
+Coding Style
+Development and Debugging on Android
+How to collaborate with Git
+How to port KOReader to other platform
+Remote debugging with gdbserver
+UI Events
+简体中文
+KOReader 手势操作
+KOReader 用户手册
+在 Kindle 上安装和运行 KOReader
+在 Kobo 上安装和运行 KOReader
+更改默认设置
+笔画输入法
+更新日志
+进度同步
+云盘存储
+Clone this wiki locally
+Footer
+© 2026 GitHub, Inc.
+Footer navigation
+Terms
+Privacy
+Security
+Status
+Community
+Docs
+Contact
+Manage cookies
+Do not share my personal information
+You can’t perform that action at this time.

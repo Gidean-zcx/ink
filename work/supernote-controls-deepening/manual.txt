@@ -1,0 +1,4686 @@
+=== PDF 1 ===
+1
+Supernote X2
+User Manual V 3.28.42
+Don't panic
+
+
+=== PDF 2 ===
+2
+Table of Contents
+Table of Contents...................................................................................................................2
+Applicable Models................................................................................................................. 9
+Chapter 1 Quick start...........................................................................................................12
+1.1 Power on and the initial settings..............................................................................12
+1.2 Connect to Wi-Fi...................................................................................................... 13
+1.3 Sign up and log in.....................................................................................................14
+Chapter 2 Gestures and toolbar...........................................................................................17
+2.1 Gestures...................................................................................................................17
+2.2 Eraser/Lasso Gesture................................................................................................22
+2.3 Top menu bar...........................................................................................................24
+2.4 Toolbar.....................................................................................................................26
+2.4.1 Introducing the toolbar................................................................................... 26
+2.4.2 Using the toolbar.............................................................................................29
+2.5 Page number bar......................................................................................................33
+Chapter 3 Basic settings.......................................................................................................36
+3.1 Language, date & time............................................................................................. 36
+3.2 Stylus....................................................................................................................... 39
+3.3 Keyboard..................................................................................................................43
+3.4 Sleep Screen.............................................................................................................45
+3.5 Low power consumption..........................................................................................48
+3.6 Drive.........................................................................................................................50
+3.7 Third party application.............................................................................................54
+
+
+=== PDF 3 ===
+3
+3.8 Custom the sidebar menu........................................................................................55
+3.9 Bluetooth................................................................................................................. 56
+Chapter 4 Handwriting and Drawing....................................................................................58
+4.1 Create a new notebook............................................................................................58
+4.2 Real-time recognition notebooks............................................................................. 59
+4.3 Rename a notebook.................................................................................................61
+4.4 Set cover.................................................................................................................. 62
+4.5 Change templates.................................................................................................... 64
+4.6 Using layers..............................................................................................................65
+4.7 Using headings.........................................................................................................67
+4.8 Using keywords........................................................................................................ 69
+4.9 Using links................................................................................................................71
+4.10 Using text boxes.....................................................................................................74
+4.11 Using stickers......................................................................................................... 76
+4.12 Organize handwriting.............................................................................................77
+4.12.1 Copy/cut/paste handwriting..........................................................................77
+4.12.2 Move handwriting.........................................................................................79
+4.12.3 Zoom in/zoom out handwriting.....................................................................79
+4.12.4 Rotate handwriting........................................................................................80
+4.13 Organize pages.......................................................................................................81
+4.13.1 Delete/insert note pages...............................................................................81
+4.13.2 Copy/move note pages..................................................................................82
+4.13.3 Cut/copy current note page...........................................................................83
+
+
+=== PDF 4 ===
+4
+4.14 . Export & share......................................................................................................84
+Chapter 5 Read.................................................................................................................... 84
+5.1 Import documents................................................................................................... 84
+5.2 Change the fonts......................................................................................................86
+5.3 Adjust screen contrast..............................................................................................87
+5.4 Zoom........................................................................................................................88
+5.5 Trimming..................................................................................................................90
+5.6 Table of Contents and Bookmarks............................................................................91
+5.7 Annotation...............................................................................................................93
+5.8 Highlights and comments.........................................................................................94
+5.9 Export & Share......................................................................................................... 96
+Chapter 6 Digest.................................................................................................................. 97
+6.1 Create new digests...................................................................................................97
+6.2 Organize digests....................................................................................................... 99
+6.3 Import digests........................................................................................................ 100
+6.4 Export digests.........................................................................................................101
+6.5 Annotations............................................................................................................101
+Chapter 7 TXT.................................................................................................................... 102
+Chapter 8 Word................................................................................................................. 103
+8.1 New Word file........................................................................................................ 103
+8.2 Browse Mode.........................................................................................................104
+8.3 Pinch to zoom........................................................................................................ 105
+8.4 Repage view...........................................................................................................105
+
+
+=== PDF 5 ===
+5
+8.5 Editing....................................................................................................................106
+8.6 Proofreader's marks...............................................................................................107
+8.6.1 Delete............................................................................................................108
+8.6.2 Line break......................................................................................................108
+8.6.3 Transpose...................................................................................................... 109
+8.6.4 Insert Handwritten........................................................................................ 109
+8.6.5 Insert space...................................................................................................111
+Chapter 9 To-Do.................................................................................................................112
+9.1 Create tasks............................................................................................................112
+9.2 Organize tasks........................................................................................................ 113
+Chapter 10 Atelier..............................................................................................................113
+10.1 Create drawings................................................................................................... 113
+10.2 Brushes, erasers, and colors.................................................................................114
+10.3 Selection tool....................................................................................................... 115
+10.4 Layers...................................................................................................................116
+10.5 Adjust canvas....................................................................................................... 116
+10.6 Export drawings................................................................................................... 117
+Chapter 11 InkFlow............................................................................................................117
+11.1 Using InkFlow.......................................................................................................118
+11.2 Configure InkFlow................................................................................................ 119
+Chapter 12 InkHub.............................................................................................................119
+Chapter 13 NetVirtualDisk................................................................................................. 122
+Chapter 14 Convenient Features........................................................................................124
+
+
+=== PDF 6 ===
+6
+14.1 Organize files........................................................................................................124
+14.2 Protect files..........................................................................................................128
+14.3 Smart Straight Line...............................................................................................129
+14.4 Star tag.................................................................................................................130
+14.5 Clipboard..............................................................................................................131
+14.6 Browse & Access.................................................................................................. 133
+14.7 Screen mirroring...................................................................................................134
+14.8 Search.................................................................................................................. 135
+14.9 Quick access.........................................................................................................137
+14.10 Recent access.....................................................................................................139
+Chapter 15 Mailbox............................................................................................................139
+15.1 Login.................................................................................................................... 139
+15.2 Settings................................................................................................................ 144
+15.3 Compose..............................................................................................................145
+15.4 Inbox.................................................................................................................... 146
+15.5 Delete Local emails...............................................................................................148
+15.6 Read and Unread..................................................................................................148
+Chapter 16 Calendar.......................................................................................................... 148
+16.1 Manage account...................................................................................................148
+16.2 Settings................................................................................................................ 150
+16.3 Switch view.......................................................................................................... 151
+16.4 Select the date..................................................................................................... 151
+16.5 Using events.........................................................................................................152
+
+
+=== PDF 7 ===
+7
+16.6 Today’s Notes....................................................................................................... 155
+Chapter 17 Basic functions.................................................................................................156
+17.1 USB connection....................................................................................................156
+17.2 USB OTG...............................................................................................................156
+17.3 Wake up from sleep mode................................................................................... 157
+17.4 Reboot/update.....................................................................................................158
+17.5 Backup and Restore..............................................................................................159
+17.6 Reset.................................................................................................................... 161
+17.7 Power off/Shutdown............................................................................................163
+Chapter 18 Privacy and security.........................................................................................164
+18.1 Privacy..................................................................................................................164
+18.1.1 User Experience Project ON/ Off................................................................. 164
+18.2 Security................................................................................................................ 164
+18.2.1 Screen-lock password..................................................................................165
+18.2.2 File password...............................................................................................167
+Chapter 19 Supernote Cloud..............................................................................................171
+19.1 Register and log in................................................................................................171
+19.2 Cloud service........................................................................................................173
+Chapter 20
+Safety............................................................................................................175
+Chapter 21 FAQ and Troubleshooting................................................................................ 177
+Q：How to make custom image templates?..................................................................177
+Q：How to import document customized fonts............................................................ 179
+Q：How to get Supernote Partner APP?........................................................................180
+
+
+=== PDF 8 ===
+8
+Q：What should I do when the device freezes or fails to boot?.................................... 180
+Q：How to eliminate afterimages on note pages or display screen?.............................181
+Copyright........................................................................................................................... 182
+
+
+=== PDF 9 ===
+9
+Applicable Models
+This manual will guide you to use Supernote, and the applicable model is
+Supernote A6 X2 Nomad and Supernote A5 X2 Manta
+Specifications
+Supernote A6 X2 Nomad
+Resolution：1872*1404(300DPI)
+Storage：32GB(Expandable)
+RAM：4GB
+Battery：2700mAh
+Supernote A5 X2 Manta
+Resolution：1920*2560（300DPI）
+Storage：32GB(Expandable)
+RAM：4GB
+Battery：3600mAh
+Structures
+
+
+=== PDF 10 ===
+10
+Supernote A6 X2 Nomad
+1. Power on/off
+2. USB port (type-C)
+3. Battery charge indicator
+4. E Ink Display
+5. Sidebar
+6. Magnetic strip
+7. Pogo pin
+
+
+=== PDF 11 ===
+11
+Supernote A5 X2 Manta
+1. Power on/off
+2. USB port (type-C)
+3. Battery charge indicator
+4. E Ink Display
+5. Sidebar
+6. Rubber foot
+7. Pen loop screw
+8. Pen loop attachment port
+9. Folio unlock switch
+10.Pogo pin
+11.Folio attachment port
+12.Back panel lift slot
+
+
+=== PDF 12 ===
+12
+Chapter 1
+Quick start
+1.1 Power on and the initial settings
+1、Hold the power button on the top right
+corner of device, until the Supernote
+logo appears
+If the device won't power up,( the device
+might need to be charged (Please refer to
+FAQ: Unable to power on or freezing
+problem for help).
+2、After the device has powered up for the first time,please follow the instructions below
+to complete initial settings:
+System languages: English, Japanese, Simplified Chinese and Traditional Chinese
+（Please refer to the chapter Language，date& time for more help）
+Connect to Wi-Fi（Please refer to Connect to Wi-Fi）
+Set date & time（Please refer to the chapter Language，date& time for more help）
+User experience project(Please refer to User experience project on/off）
+Set hand dominance（All Illustrations in this user manual take the right-hand mode
+as an example.）
+
+
+=== PDF 13 ===
+13
+Create your first notebook（Please refer to Create a new notebook）
+1.2 Connect to Wi-Fi
+1、Swipe down from the top of
+the screen to open the top
+menu bar
+Tap “
+Settings”
+Tap “Wi-Fi”
+2、Wi-Fi
+Tap “Wi-Fi ” and turn
+"ON"
+Select a SSID to connect
+(enter password if
+needed)
+Tap “Add network” to
+join a hidden network
+(enter SSID, security and
+password)
+*Note：If the “
+” icon on the top menu bar turns black, it indicates your Supernote
+device has been successfully connected to a Wi-Fi network. Long press the “
+Wi-Fi”
+icon in the top menu bar to access the “Wi-Fi”settings screen.
+
+
+=== PDF 14 ===
+14
+1.3 Sign up and log in
+Sign up
+1、
+Open the top menu bar
+Tap “
+Settings”
+
+Tap“ My account”
+2、
+Sign up
+Tap “Sign up” to create an
+account by phone number
+or email address
+Enter phone number or
+email address and tap
+“Get code”
+Enter the verification code
+you received via SMS or
+email
+Tap “Next”
+
+
+=== PDF 15 ===
+15
+3、
+Set account password
+Enter the password twice
+Tap “Register”
+Log in
+Enter the phone number
+or email address you used
+to create the account
+Enter password
+Tap “Log in”
+Log out
+Tap“ My account”
+Tap “Log out”
+Reset password
+
+
+=== PDF 16 ===
+16
+Tap “Forgot password?”
+Enter your account
+Tap “Verify”
+Enter your new password
+twice
+Tap “Reset”
+*Note：Log in to bind your Supernote device to your account. (Refer to "Register and log
+in supernote cloud" or " Quick log in on Mobile APP " to get more registration methods).
+The device can be only bound to a sole account and you have to reset the device to
+factory settings if you want to switch to another account (Refer to "Reset" to restore
+
+
+=== PDF 17 ===
+17
+factory initialization settings).
+Chapter 2
+Gestures and toolbar
+2.1 Gestures
+Note: The following are examples of right-hand mode
+Activate the sidebar menu
+One-finger slide down on the right sidebar(Right-handed
+Mode);
+One-finger slide down on the left sidebar(Left -handed
+Mode).
+Refresh the screen
+One-finger slide up on the right sidebar(Right-handed Mode);
+One-finger slide up on the left sidebar(Left -handed Mode).
+
+
+=== PDF 18 ===
+18
+Activate the top menu bar
+One-finger swipe down from the top of the screen.
+Undo
+One-finger slide up on the left sidebar(Right-handed Mode).
+One-finger slide up on the right sidebar(left-handed Mode).
+Redo
+One-finger slide down on the left sidebar(Right-handed
+Mode);
+One-finger slide down on the right sidebar(Left-handed
+Mode).
+
+
+=== PDF 19 ===
+19
+Activate the region eraser
+Two-finger press and hold the left sidebar(Right-handed
+Mode);
+Two-finger press and hold the right sidebar(left-handed
+Mode).
+Note:You can customize this gesture and use two fingers to
+press and hold the screen.
+Activate the lasso
+Two-finger press and hold the screen. (You can customize this
+gesture and use two fingers to press and hold the sidebar.)
+Activate the quick page scrolling bar
+Long press on the left sidebar with one finger, then slide up
+or down(Right-handed Mode)
+Long press on the right sidebar with one finger, then slide up
+or down(Left-handed Mode).
+
+
+=== PDF 20 ===
+20
+Turn one Page
+In right-hand mode: When the Quick Page Scrolling Bar is
+displayed, swipe up or down briefly with one finger on the
+left sidebar (swipe distance must be less than 22.55mm).
+In left-hand mode: When the Quick Page Scrolling Bar is
+displayed, swipe up or down briefly with one finger on the
+right sidebar (swipe distance must be less than 22.55mm).
+Turn Multiple Pages
+In right-hand mode: When the Quick Page Scrolling Bar is
+displayed, swipe up or down with one finger on the left
+sidebar for a long distance (swipe distance must be greater
+than 22.5mm)
+In left-hand mode: When the Quick Page Scrolling Bar is
+displayed, swipe up or down with one finger on the right
+sidebar for a long distance (swipe distance must be greater
+than 22.5mm).
+Return to page before jumping
+One-finger swipe up from the top half of the screen.
+
+
+=== PDF 21 ===
+21
+Show and hide the toolbar
+Two-finger double-tap the screen.
+Show and hide the page number bar
+One-finger double-tap the page number bar in blank.
+
+
+=== PDF 22 ===
+22
+2.2 Eraser/Lasso Gesture
+1、Using Gesture
+Press and hold two fingers on
+the screen to quickly activate
+the eraser or lasso in the
+designated area.
+Once activated, use the pen
+to
+perform
+the
+corresponding operation.
+After
+completing
+the
+operation,
+release
+both
+fingers, and the pen will
+automatically revert to the
+previously selected tool.
+
+
+=== PDF 23 ===
+23
+2、Effective area of gestures
+When two fingers are placed
+in the top-left or bottom-left
+corner
+(top-right
+or
+bottom-right
+corner
+in
+left-hand mode) and the pen
+tip is not in that corner, the
+eraser
+gesture
+is
+always
+effective.
+When
+two
+fingers
+are
+positioned to the left of the
+pen
+tip
+(to
+the
+right
+in
+left-hand mode) and are far
+from the pen tip, the eraser
+gesture is effective.
+
+
+=== PDF 24 ===
+24
+3、
+Gesture Guidelines
+When using gestures, ensure
+that: Place two fingers first,
+then the pen. Avoid keeping
+two
+fingers
+too
+close
+together or too far apart. Do
+not move your fingers while
+the gesture is active.
+*Note: The eraser gesture is applicable to Note, Document, Calendar, Atelier, and
+Digest; the lasso gesture is only applicable to Note, Document, and Atelier.
+2.3 Top menu bar
+Icon
+Name
+Description
+Wi-Fi-On
+Enable or disable Wi-Fi connection
+
+
+=== PDF 25 ===
+25
+Wi-Fi-Off
+Bluetooth-On
+Bluetooth-Off
+Enable or disable Bluetooth
+Browse & Access-On
+Browse & Access-Off
+Transfer files by the browser;Supernote and the
+receiving device connected to the same Wi-Fi during
+transfer.
+Screen Mirroring-On
+Screen Mirroring-Off
+Keep Supernote and the receiving device connected
+to the same Wi-Fi during mirroring.
+Auto Rotate-On
+Auto Rotate-Off
+Enable or disable Auto Rotate
+Synchronization
+Tap to activate cloud synchronization; Supports
+Supernote Cloud, Dropbox, Google Drive, OneDrive,
+and private cloud.
+Screenshot
+Take a screenshot of the current screen and save it
+in the /SCREENSHOT folder in PNG format
+Search
+Search files by filename, keyword, star, handwriting,
+or text.
+Settings
+Configure your settings
+
+
+=== PDF 26 ===
+26
+2.4 Toolbar
+2.4.1
+Introducing the toolbar
+
+
+=== PDF 27 ===
+27
+The following mainly introduces the basic tools used in standard notes. Other tools will be
+introduced in the description of the relevant functions. (Note: Illustrations for functions
+introduced in the user manual mainly use the left toolbar as an example.)
+Icon
+Name
+Description
+Back to“ Files”
+Tap to go back to “ Files ”
+Navigation window
+The navigation window in notes consist of keywords, headings
+and stars, which can help you to search related notes quickly.
+The navigation window in documents include table of
+contents, keywords, bookmarks, annotations and stars, which
+can help you to reach your target location within a document
+quickly.
+Needle-point pen
+No stroke effect. Supports adjustable thickness and grayscale.
+Ink pen
+With
+stroke
+effect.
+Supports
+adjustable
+thickness
+and
+grayscale.
+Marker
+Fixed stroke style. Thickness is fixed. Supports adjustable
+grayscale.
+Calligraphy Pen
+With
+stroke
+effect.
+Supports
+adjustable
+thickness
+and
+grayscale.
+Regular eraser
+Allows you to erase specific details or parts of your
+handwriting. Thickness is optional.
+Stroke eraser
+Allows you to erase lines or strokes. Thickness is optional. (This
+
+
+=== PDF 28 ===
+28
+eraser only applies to real-time recognition notes.)
+Region eraser
+Allows you to erase the lines or strokes within a specific area
+you have circled. (You can also slide the pen tip over the lines
+or strokes to quickly erase them.)
+Erase all
+Allows you to erase all the handwriting on the current layer.
+White
+Light grey
+Dark grey
+Black
+Grayscale colors
+Lasso
+After selecting handwritten content, you can resize, rotate,
+move, copy (including across pages), cut, or delete it. It can
+also be set as a heading, keyword, event, task, link, or sticker,
+and recognized as text or Digest.
+Layer
+You can create up to 3 layers on top of the main layer.
+Available only in Standard Notes.
+Undo
+Undo up to the last 20 actions on the current page (excluding
+adding/deleting layers and template changes).
+Redo
+Restore previously undone actions on the current page.
+Export & Share
+You can share notes via QR code, or export them as PNG / PDF
+/ TXT / DOCX, or share NOTE files to InkHub.
+Add
+to
+Quick
+Access
+Add current page or current note/document to Quick Access
+list in the sidebar menu
+One-finger
+swipe Allow one-finger gesture to slide and turn pages
+
+
+=== PDF 29 ===
+29
+page turning
+Two-finger
+swipe
+page turning
+One-finger
+tap
+page turning
+Disable page
+Turning gestures
+Allow two-finger gesture to slide and turn pages
+Allow
+one-finger
+gesture
+to
+tap
+and
+turn
+pages(Applies to Documents only)
+Disable page-turning gestures
+More
+Tap to display additional functions in notes or documents
+Full Screen
+Exit
+Full
+Screen
+Mode
+Tap to enter full screen mode
+Tap to exit full screen mode
+2.4.2
+Using the toolbar
+Hide and display the toolbar
+1、
+Tap "
+" or double tap the
+screen with two fingers to hide
+the fixed or floating toolbar
+
+
+=== PDF 30 ===
+30
+2、
+Tap "
+" or double tap the
+screen with two fingers again to
+display the
+fixed or
+floating
+toolbar
+*Note: You can choose to toggle
+on/off the full screen gesture and
+show/hide the “
+”button by
+going
+to
+Toolbar>More>Gesture
+Settings
+Switch between the fixed and
+floating toolbar
+1、
+Press the fixed toolbar for
+1-2 seconds before an arrow
+shape appears, then drag it as
+the floating toolbar
+
+
+=== PDF 31 ===
+31
+2、
+Drag the floating toolbar to
+the top, bottom, left or right
+edge of the screen to switch to
+the fixed toolbar
+Change
+the
+fixed
+toolbar
+position
+Drag the fixed toolbar to the
+top, bottom, left and right
+edge of the screen, or tap
+“
+”, “
+”, “
+” and
+“
+”to change its position
+Change
+the
+floating
+toolbar
+direction
+
+
+=== PDF 32 ===
+32
+Tap "
+" or drag the
+vertical floating toolbar to
+the top or bottom edge of
+the screen until a dashed
+line indicating the horizontal
+floating toolbar appears
+before releasing it to switch
+(and vice versa)
+Shorten the floating toolbar
+Tap “
+” to shorten the
+floating toolbar
+By default setting, the pen
+and eraser button are the
+ones that appear on the
+shortened floating toolbar
+*Note: To switch to the pen
+and
+lasso
+button,
+go
+to
+Toolbar>More>Preferences
+
+
+=== PDF 33 ===
+33
+2.5 Page number bar
+Introduction of page number bar
+1/1
+Previous page
+Page number
+Next page
+Go to previous page
+Click to enter the page number for page quick jump
+Go to next page
+Hide and display the page number bar
+1、
+Double tap with one finger
+at the page number bar blank
+area to hide it
+
+
+=== PDF 34 ===
+34
+2、
+Double tap with one finger
+again at the page number bar
+area to display it
+*Note: You can move the position
+of page number bar at the top or
+bottom
+of
+the
+screen
+by
+“Toolbar>More>Preferences”；You
+can choose to toggle on/off the
+page number bar gesture by going
+to
+“Toolbar>More>Gesture
+Settings”
+Return to page before jumping
+
+In
+a
+note/document
+you’ve opened
+
+After you use headings,
+stars, links, pages, table
+of
+contents,
+keywords,
+bookmarks, annotations,
+page
+numbers
+or
+searches
+to
+jump
+between pages/files
+
+
+=== PDF 35 ===
+35
+Tap “
+” or swipe up
+from the top half of the
+screen to return to the
+page before jumping
+Tap “
+” to return to
+the original page before
+jumping at once
+
+
+=== PDF 36 ===
+36
+Chapter 3
+Basic settings
+3.1 Language, date & time
+1、Swipe down from the top of the
+screen to open the top menu
+bar
+Tap “
+Settings”
+Tap “Display & input”
+Language
+1、Tap “Language”
+2、Select system language
+
+
+=== PDF 37 ===
+37
+Font
+1、Display & input
+Tap “Font Size”
+2、Font size
+Tap
+to
+choose
+your
+favorable font size
+Date & time
+1、Tap “Date & time”
+2、Network automatic acquisition
+time On/Off
+“Network-provided time”
+(Default On)
+“24-hour format”（Default
+On）
+
+
+=== PDF 38 ===
+38
+3、Set
+time
+and
+time
+zone
+manually
+Tap “Network-provided
+time”and turn "OFF"
+Choose your “Time Zone”
+Tap the date
+Tap“
+”or “
+”slide
+the year and month then
+tap the date
+Tap “OK”
+
+
+=== PDF 39 ===
+39
+Tap the time
+Adjust hr/min/sec
+Tap “OK”
+4、Date format setting
+Tap “Date format” Select
+the format
+Tap “ ”and return
+3.2 Stylus
+Calibration
+
+
+=== PDF 40 ===
+40
+1、Swipe down from the top of the
+screen to open the top menu
+bar
+Tap “
+Settings”
+Tap “Display & input”
+2、Display & input
+Tap “Stylus Settings”
+On the
+“Stylus Settings”
+page,
+tap
+“Start
+Calibration”
+
+
+=== PDF 41 ===
+41
+3、Tap the center of cross marks
+appear on the screen with your
+stylus
+
+
+=== PDF 42 ===
+42
+4、Check the calibration results
+Handwriting in the square
+area
+Tap “OK” if you are satisfied
+with the accuracy, or tap
+“Recalibration” to calibrate
+again
+LAMY Side Button
+1、Tap “LAMY Side Button”
+
+
+=== PDF 43 ===
+43
+2、Choose to activate the region
+eraser or lasso by pressing and
+holding the side button
+3.3 Keyboard
+1、Swipe down from the top of the
+screen to open the top menu bar
+Tap “
+Settings”
+Tap “Display & input”
+Tap “Keyboard”
+2、Or press and hold “
+”on the
+keyboard to enter
+Tap “Keyboard Settings”
+
+
+=== PDF 44 ===
+44
+3、Add a keyboard
+Tap “Add Keyboard”
+Tap “
+Add” (The keyboard
+can switch between up to 7
+languages)
+4、Remove a keyboard
+Tap “
+Remove”
+
+
+=== PDF 45 ===
+45
+5、Using the handwriting keyboard
+Select your frequently used
+handwriting
+recognition
+language in “Keyboard ”.
+You
+can
+repeatedly
+tap
+“
+” until switching to the
+“Handwriting”Keyboard,
+Press and hold “
+” to
+switch
+to
+the
+“Handwriting ”Keyboard
+Or tap “
+” to directly
+enter
+the
+“Handwriting”
+Keyboard.
+3.4 Sleep Screen
+Last Viewed Page
+Swipe down from the top of
+the screen to open the top
+menu
+bar,
+then
+tap
+“Settings”>
+“Display
+&
+Input”.
+
+
+=== PDF 46 ===
+46
+Toggle
+on
+“Last
+Viewed
+Page”
+Images & Quotes
+1、Select an image
+Tap “Images
+& Quotes”>
+“Add Image” to select an
+image.
+
+
+=== PDF 47 ===
+47
+Zoom or move the selected
+image
+on
+the
+preview
+interface.
+Tap “Fill”or “Fit” to adjust
+the display effect of the
+image.
+Tap “Apply” to save the
+changes made.
+2、Adjust an image
+Tap the custom sleep image
+to
+re-enter
+the
+preview
+interface to make changes.
+Tap “
+”to delete the
+custom sleep image.
+
+
+=== PDF 48 ===
+48
+3、Quotes
+Tap “Quotes” and enable
+Quote Carousel.(To do this,
+please
+create
+a
+category
+named Quotes under the
+Categories tab in the Digest
+app.)
+Adjust the quote layout.
+*Note: Only PNG, JPG, JPEG ,WEBP and BMP image formats are supported.
+3.5 Low power consumption
+The following settings can save power consumption of the device.
+Set auto sleep time
+1、Swipe down from the top of the
+screen to open the top menu bar
+Tap “
+Settings”
+Tap “Battery”
+
+
+=== PDF 49 ===
+49
+2、Battery
+Tap “Auto Sleep”
+Select waiting time before
+going to sleep when not in
+use
+Set auto power off time
+Tap “Auto Power Off”
+
+Select waiting time before
+powering off automatically
+when
+not in use
+No load shutdown ON
+Tap “No load shut
+down”and turn "ON"
+
+
+=== PDF 50 ===
+50
+3.6 Drive
+You can choose Supernote Cloud, third-party cloud services, or a private cloud to sync your
+files on Supernote. Supernote Cloud and private cloud support cross-device, multi-terminal
+login synchronization, and allow automatic sync.
+Supernote Cloud
+Swipe down from the top to
+open the top menu bar, then
+tap "Settings" > "Drive" >
+"Supernote
+Cloud"
+in
+sequence.
+For the first-time use, tap
+"Server Location" and select
+an appropriate server.
+
+
+=== PDF 51 ===
+51
+Select the folders you need
+to sync and tap “Save”.
+Swipe down from the top to
+open the top menu bar and
+tap “
+” to sync your files.
+Third-party Cloud Services (Dropbox / Google Drive / OneDrive)
+Using Dropbox as an example:
+Swipe down from the top to
+open the top menu bar, then
+tap
+“Settings
+”
+>
+“Drive”
+>
+“Dropbox”
+>
+Authorize.
+
+
+=== PDF 52 ===
+52
+
+Use your mobile phone to
+scan the QR code, or enter
+the
+following
+URL
+in
+a
+browser on your computer:
+https://bind2dropbox.super
+note.com
+Enter
+the
+random
+code
+displayed on the device to
+obtain authorization.
+After
+logging
+into
+your
+Dropbox
+account
+to
+complete the authorization,
+return to your Supernote
+device to configure the sync
+folders.
+(Note:
+Due
+to
+storage differences between
+third-part cloud services and
+your Supernote device, the
+folder size selection may be
+restricted.)
+
+
+=== PDF 53 ===
+53
+*Note：“
+” The icon is created in the Dropbox
+cloud and represents a folder that has not been
+synced to the device
+Swipe down from the top to
+open the top menu bar and
+tap “
+” to sync your files.
+*Note: Once the folder configuration is complete and you initiate synchronization, the
+system will automatically create a main sync folder named "Supernote" in your cloud.
+Please do not delete, rename, or move this folder.
+Private Cloud
+Swipe down from the top
+open the top menu bar, then
+tap
+“Settings
+”
+>
+“Security
+&
+Privacy”
+in
+sequence.
+Tap “Private Cloud” and
+switch it ON.
+Enter the server address and
+your login credentials. After
+a successful login, you can
+
+
+=== PDF 54 ===
+54
+proceed to configure your
+sync folders.
+Swipe down from the top to
+open the top menu bar and
+tap “
+” to sync your files.
+3.7 Third party application
+Make sure the Wi-Fi is well connected before access.
+1、Swipe down from the top of the
+screen to open the top menu bar
+Tap “
+Settings”
+Tap “Apps”
+2、Third Party Application Store
+Tap “Supernote App Store”
+Select the app, tap
+“Download”. Then tap
+“Open” to use after
+installation
+Installed apps are displayed
+in the sidebar menu.
+
+
+=== PDF 55 ===
+55
+3、Third Party Application
+Management
+Tap “My apps”
+Select the app to uninstall,
+tap “Uninstall”
+3.8 Custom the sidebar menu
+1、Swipe down from the top of the
+screen to open the top menu bar
+Tap “
+Settings”
+Tap “Apps”
+
+
+=== PDF 56 ===
+56
+2、Tap “Customize slidebar”
+3、Select the apps you want to in
+the sidebar menu and sort them
+Tap “
+” to add an app to the
+sidebar menu
+
+Tap “
+” to remove an app
+from the sidebar menu
+Tap up or down arrows to
+rearrange the order of the
+apps
+3.9 Bluetooth
+1、Open the top menu bar
+Tap “
+Settings”
+Tap“My Device”
+Tap“Bluetooth”
+
+
+=== PDF 57 ===
+57
+2、On″Bluetooth″ page
+Turn Bluetooth ON
+Tap“Scan”
+Select
+the
+device
+to
+be
+paired, input pairing code if
+required
+*Note:When reading PDF, EPUB, CBZ, FB2 and XPS documents, you can turn pages using
+Bluetooth. Long press the “
+Bluetooth” icon in the top menu bar to access the
+“Bluetooth”settings screen.
+
+
+=== PDF 58 ===
+58
+Chapter 4
+Handwriting and Drawing
+4.1 Create a new notebook
+1、
+Tap "
+New Note" in the
+sidebar menu
+2、
+Or tap "Files" in the sidebar
+menu to access the "Files"
+page, then tap "
+New
+Note" in any file.
+
+
+=== PDF 59 ===
+59
+3、
+Enter a new name for the
+note or use the default
+name , Select a note type
+and tap “Create”.
+4.2 Real-time recognition notebooks
+This type of note is marked with “
+”in “Files”and supports searching for recognized
+handwritten text, but doesn’t support layers.
+1、
+Create
+a
+real-time
+recognition note
+
+When
+creating
+a
+new
+note, select the note type
+as
+“Real-Time
+Recognition”
+
+Select
+a
+handwriting
+recognition language for
+the note (which cannot be
+changed once the note is
+
+
+=== PDF 60 ===
+60
+created)
+2、
+View recognition results
+Tap “
+” to view the
+recognition results
+Tap
+“
+”
+to
+re-recognize the current
+page
+
+Tap “
+”to view the
+recognition
+progress
+in
+the backend
+3、
+Export recognition results
+
+Tap
+“
+”
+on
+the
+“Recognition
+Results”
+page, or tap “
+Export
+
+
+=== PDF 61 ===
+61
+& Share” on the toolbar
+to export the recognized
+text to TXT or DOCX.
+
+Select formatting
+4、
+Search Handwriting
+
+Tap “
+”
+
+You
+can
+search
+for
+recognized
+handwriting
+on the search page
+Note: The following actions can affect handwriting recognition efficiency: copying,
+pasting, cutting and zooming in/out of handwritten text; copying or moving pages from
+standard notes to real-time recognition notes.
+4.3 Rename a notebook
+1、
+Tap “
+More” on the
+toolbar
+Tap “
+Rename”
+Enter a new name in the
+popup window and tap
+“OK”
+* Note: File names cannot start and end with a space, nor can they contain special
+symbols, such as \/ *:?”< >|.
+
+
+=== PDF 62 ===
+62
+4.4 Set cover
+1、
+Tap “
+More” on the
+toolbar
+Tap “
+Set Cover”
+2、
+Cover setting
+Tap to switch the "select
+note"
+and
+"select
+Image"
+(Images
+are
+all
+Images in My file)
+Tap to select the note
+page or image
+Tap "Apply"
+3、
+Cover adjustment
+Tap to select the note
+page or image
+Tap again to enter the
+preview
+
+
+=== PDF 63 ===
+63
+*Note: Deleting the current cover will restore the default last page as the cover; you can
+select a image from my file as the cover; the cover supports only images in PNG, JPG,
+JPEG WEBP and BMP formats.
+
+
+=== PDF 64 ===
+64
+4.5 Change templates
+Tap “
+Templates”
+Or select one or more
+pages
+on
+the
+“Pages”
+screen
+and
+tap
+“
+Templates”.
+Built-in templates
+Tap on the template to
+apply it
+Image
+Tap
+"Customization"
+or
+select from MyStyle folder
+Tap an image to apply it
+directly as a template.
+
+
+=== PDF 65 ===
+65
+PDF
+Tap
+“Customization”
+to
+select
+directly,
+choose
+from the MyStyle folder,
+or download from InkHub.
+Tap a PDF template to
+select one or more pages
+on the “Pages” screen
+Tap
+“
+Apply
+as
+Template ”(Note:Supports
+navigating between pages
+via the links embedded in
+the original PDF)
+Note: Support importing custom image and PDF templates, please refer to How to make
+a custom note template using images?
+4.6 Using layers
+Layer function is usually applicable for drawing. Apart from the Background layer and the
+
+
+=== PDF 66 ===
+66
+main layer, another three layers can be added.
+Tap “
+Layers”
+The “Main Layer” is The
+“Main Layer” is mainly
+used
+for
+handwriting
+words. It’s the only layer
+where
+you
+can
+set
+headings
+and
+keywords
+for notes, create links and
+calendar events. (Please
+refer to “Using headings”,
+“Using Keywords”, “Using
+links” and “ Recognize
+titles for event ”).
+1、
+Add, delete, show/hide
+To add, delete, show/hide layers
+Tap “
+” to add a layer
+Tap “
+” to delete the
+selected layer
+Tap “
+” to hide a layer
+Tap “
+”to display a
+layer
+
+
+=== PDF 67 ===
+67
+2、
+Adjust the layer sequence
+Tap “
+” or “
+” to
+adjust
+the
+order
+of
+selected layer
+3、
+Rename layer
+Tap "
+"
+Enter a new name in the
+popup window and tap
+“OK”
+to
+rename
+the
+selected layer
+4.7 Using headings
+1、
+Create headings
+Tap “
+Lasso”, select
+handwriting
+content
+by
+drawing a circle around it
+with stylus.
+
+
+=== PDF 68 ===
+68
+Tap “
+”to select a
+heading pattern
+*Note:
+Handwriting
+in
+the
+lassoed heading area cannot be
+performed.
+2、
+Check headings
+Tap
+“
+Navigation
+Window”
+Select “
+Headings”
+
+
+=== PDF 69 ===
+69
+3、
+Delete headings
+Circle a heading with the
+lasso tool or press and
+hold it with the pen, tap
+“
+”.
+You can also tap “
+” on
+the Titles page in the
+navigation Window.
+* Note: The heading function is only available on main layer.
+4.8 Using keywords
+The content written on the note or document page can be identified by circled keywords, so
+as to quickly search for the file pages related to the keywords. Take below "notes" as an
+example:
+1、
+Add keywords
+Lasso
+the
+handwritten
+text you want to create a
+keyword from and tap
+“
+”.
+Or tap “
+More”and
+“
+Add Keyword”.
+
+
+=== PDF 70 ===
+70
+Enter a keyword using the
+keyboard and tap“Add”;
+or
+select
+one
+from
+recently used.
+2、
+Check keywords
+Tap
+“
+Navigation
+Window”
+Select “
+Keywords”
+3、
+Delete keywords
+On the “Keywords” page,
+tap “
+”.
+*Note：Keywords only can be recognized in the main layer.
+
+
+=== PDF 71 ===
+71
+4.9 Using links
+1、
+Insert links
+Lasso
+the
+handwriting
+you need to create a link
+for or tap “
+More”,
+then tap “
+Insert
+Link”
+Select a link style and
+target
+type
+(When
+creating a link from the
+More
+menu,
+you
+can
+choose how the link title
+to be displayed)
+Select a link target
+
+
+=== PDF 72 ===
+72
+2、
+Edit links
+Circle a link with the
+lasso tool or press and
+hold it with the pen,tap
+“
+”.
+3、
+Delete links
+Circle a link with the
+lasso tool or press and
+hold it with the pen,tap
+“
+”.
+
+
+=== PDF 73 ===
+73
+4、
+Navigate using links
+Tap the link to jump to
+the target location
+Tap “
+”or swipe up
+with one finger in the top
+half of the
+screen to
+return
+to
+the
+page(s)
+before jumping step by
+step; tap “
+” to
+return
+to
+the
+original
+page before jumping at
+once
+*Note: Links can only be created and tapped on the visible main layer. （You can only
+create links in notes for now.）
+
+
+=== PDF 74 ===
+74
+4.10 Using text boxes
+1、
+Create text boxes
+
+Tap the “
+Text” tool
+to insert digests, paste
+text, or create a new text
+box.
+
+You can also use the
+“
+Lasso” tool to circle
+handwriting and select
+“
+Recognize as Text”
+to create a text box.
+
+
+=== PDF 75 ===
+75
+2、
+Edit text boxes
+
+Double-tap the text box
+with a finger or long
+press it with the pen to
+enter editing mode.
+
+Alternatively, select the
+text box with the "Lasso
+"
+tool
+and
+tap
+"
+Edit Text" to enter
+editing mode.
+
+While in editing mode,
+you can modify the font
+and size, or apply bold,
+italic, or delete the text.
+3、
+Adjust text boxes
+
+In editing mode, you can
+use the pen to move the
+text box or resize it.
+
+You can also use the
+“
+Lasso”
+tool
+to
+adjust its position or size.
+
+
+=== PDF 76 ===
+76
+4、
+Delete text boxes
+
+After
+selecting
+a
+text
+box, tap“
+Delete”.
+
+You can also delete it
+with the “
+Lasso” tool
+or Eraser tool.
+4.11 Using stickers
+5、
+Create stickers
+Tap "
+Lasso" and
+select
+handwritten
+content by drawing
+a
+circle
+around
+it
+with
+stylus.
+
+Tap "
+New Sticker",
+enter a name, and select
+a collection.
+
+Tap "Create"
+6、
+Organize stickers
+
+Stickers
+can
+be
+categorized
+and
+managed by collections.
+
+Long press a sticker to
+
+
+=== PDF 77 ===
+77
+rename, move, bring to
+front, or delete it.
+7、
+Insert stickers
+
+Tap a sticker to insert it.
+*Note: Currently, only collections exported from this feature can be imported.
+4.12 Organize handwriting
+4.12.1 Copy/cut/paste handwriting
+1、
+Tap "
+Lasso"
+Select
+handwriting
+content
+by
+drawing
+a
+circle
+around
+it
+with
+stylus.
+Tap
+“
+Copy”,
+or
+“
+Cut”
+After that, the lasso icon
+will
+be
+switched
+to
+“
+Paste”
+
+
+=== PDF 78 ===
+78
+2、
+Paste
+copied
+or
+cut
+handwriting to the current
+note
+After
+tapping
+the
+“
+Copy”or “
+Cut”
+icon, stay on the current
+page or jump to another
+page
+from
+the“Pages”screen.
+Or tap “
+Copy to” to
+jump
+to
+the
+“Pages”screen and select
+a target page.
+Tap the screen with stylus
+nib to paste the note
+3、
+Paste
+copied
+or
+cut
+handwriting to a different
+note
+
+Open a different note
+Tap “
+Paste”(skip this
+step if the paste icon is
+already selected)
+Tap the screen with stylus
+
+
+=== PDF 79 ===
+79
+to paste
+*Note: Tap “
+”to clear
+clipboard and the paste icon
+will also switch back to the
+lasso icon.
+4.12.2 Move handwriting
+Tap “
+Lasso”, select
+handwriting content by
+drawing a circle around it
+with stylus.
+Drag
+in
+lasso
+selected
+square region with pen
+nib
+4.12.3 Zoom in/zoom out handwriting
+Tap “
+Lasso”, select
+handwriting content by
+drawing a circle around it
+with stylus.
+In the region selected by
+lasso with pen tip, select
+
+
+=== PDF 80 ===
+80
+the four corners of the
+lasso
+square,
+drag
+it
+outward/inward to zoom
+in and zoom out.
+4.12.4 Rotate handwriting
+Tap “
+Lasso”, select
+handwriting content by
+drawing a circle around it
+with stylus.
+Use pen tip on "
+"
+icon
+of
+lasso
+selected
+region
+to
+rotate
+the
+square angle.
+
+
+=== PDF 81 ===
+81
+4.13 Organize pages
+4.13.1 Delete/insert note pages
+1、
+Delete a note page
+Tap “
+More” on the
+toolbar
+and
+tap
+“
+Delete
+Current
+Page”
+Or tap “
+pages”and
+long press a note page
+until
+the
+function
+bar
+appears. Select the note
+page(s)
+you
+want
+to
+delete
+and
+tap
+“
+Delete”
+2、
+Insert a note page
+Tap “
+More”on the
+toolbar or navigate from
+the top function bar on
+the “Pages” screen.
+Tap “
+Insert Page
+Before” to insert a note
+page before the current
+
+
+=== PDF 82 ===
+82
+page
+Tap “
+Insert Page
+After” to insert a note
+page after the current
+page
+4.13.2 Copy/move note pages
+1、
+Tap “
+Pages”
+Long press a note page
+until
+the
+function
+bar
+appears at the top of the
+screen
+2、
+Select
+note
+page(s)
+to
+copy or move
+Tap
+“
+Copy”
+or
+“
+Move”
+
+
+=== PDF 83 ===
+83
+2、
+“Copy
+to”
+/
+“Move
+to”page
+Stay in the current note
+or select another note
+Tap to select a page to be
+moved or copied
+Select the "Before page"
+or "After page" of the
+target page
+
+Tap“ OK”
+4.13.3 Cut/copy current note page
+Tap “
+More” on the
+toolbar
+Tap
+“
+Cut
+Current
+Page”or “
+Copy Current
+Page”
+Select where to paste the
+cut or copied page in the
+current
+note
+or
+other
+notes
+
+Tap “
+Paste Page” to
+
+
+=== PDF 84 ===
+84
+paste the cut or copied
+page
+4.14. Export & share
+Tap
+“
+Export
+&
+Share”
+and
+select
+the
+pages you want to export
+or share.
+Export as PNG, PDF, TXT,
+or Word.
+You can also share PNG
+or PDF via QR code.
+Or directly share NOTE
+files to InkHub.
+Chapter 5
+Read
+5.1 Import documents
+You can use USB 、Supernote Partner App or Cloud to import PDF and EPUB files to your
+Supernote device.
+Method 1: USB
+1、
+Connect Supernote device to PC with a USB cable
+
+
+=== PDF 85 ===
+85
+2、
+Open the /Supernote disk
+on PC
+Drag the PDF/EPUB files
+from PC to
+Supernote/Document
+directory
+*Note：For iMac, a third party MTP application is required（Please refer to USB
+connection）.
+Method 2: Cloud（The following illustration uses Supernote Cloud as an example）
+1、
+Use the registered account to log in to Supernote Cloud on the computer's browser:
+https://cloud.supernote.com
+2、
+Select “Document”on the
+left side, click “Upload”,
+and select files to upload,
+then click “open” button
+Wait for the completion
+of upload.(Files can also
+be
+uploaded
+via
+Supernote partner App)
+
+
+=== PDF 86 ===
+86
+3、
+Connect your Supernote
+device to Wi-Fi and log in
+with your Cloud Account
+Swipe down from the top
+of the screen to open the
+top menu bar, then tap
+“
+Sync ”
+Wait for the completion
+of upload.
+Method 3：“Browse & Access ”or “Direct Transfer ”feature(Please refer to“Browse &
+Access” and “Direct Transfer”)
+5.2 Change the fonts
+This feature only applies to EPUB and FB2 documents.
+1、
+Open a document ，Tap
+“
+”
+
+
+=== PDF 87 ===
+87
+2、
+Select fonts, size, Row
+spacing and Margin
+Tap “Save”
+*Note: Support document customized font import (please refer to " How to import
+document customized fonts ")
+if you have added handwritten annotation(s) on the EPUB files, then the display settings
+cannot be changed.
+5.3 Adjust screen contrast
+1、
+Open
+a
+document,
+Tap“
+Contrast”
+2、
+Tap
+the
+contrast
+adjustment bar
+
+
+=== PDF 88 ===
+88
+5.4 Zoom
+Supports zooming in and out of PDF, CBZ, XPS, and DOC documents.
+Open
+the
+document,
+pinch
+on
+the
+screen
+with
+two
+fingers
+to
+zoom in and out
+When page size exceeds
+100%, drag two fingers
+on the screen to move
+the page to view the
+content
+After
+the
+page
+is
+zoomed in, the page
+thumbnail
+window
+appears in the upper
+right corner. Move the
+thumbnail window with
+finger,
+the
+page
+will
+move accordingly
+
+
+=== PDF 89 ===
+89
+Click on the screen to
+zoom in "
+" and
+zoom out "
+" to
+zoom in and out of the
+page
+Drag
+the
+thumbnail
+window with finger to
+move the position of
+the thumbnail window
+within the page
+When
+page
+size
+reduced to 100% size,
+the thumbnail window
+disappears
+Tap “
+” to close the
+zoom window.
+Turn
+pages
+or
+start
+zooming again to make
+the
+zoom
+window
+reappear.
+
+
+=== PDF 90 ===
+90
+5.5 Trimming
+The trimming feature only applies to PDF,CBZ and XPS documents.
+1、
+Tap “
+Trim”
+2、
+Auto-trimming effect will
+be displayed on the page
+
+Tap
+“Restore”,
+the
+border of the page will
+be
+recovered,
+While
+Actual size will change
+to Adjust
+
+Adjust
+manually
+by
+moving the bold lines
+
+Tap “OK”
+
+After trimming, the icon
+“
+” on the top
+toolbar becomes “
+”,
+Tap “
+” to undo the
+
+
+=== PDF 91 ===
+91
+trimming
+5.6 Table of Contents and Bookmarks
+1、
+Bookmark
+Tap "
+Add Bookmark
+"
+In
+the“Bookmark
+Added”pop-up box, tap
+Done
+or
+Remove
+as
+soon as you set the
+bookmark name.
+After
+setting
+as
+a
+bookmark,
+Tap
+"
+Remove
+Bookmark", to Remove
+the bookmark of the
+current page
+2、
+Contents
+Tap
+“
+Navigation
+Window”
+Tap “Contents”
+
+
+=== PDF 92 ===
+92
+3、
+Bookmark change name
+and delete
+
+Tap “
+Contents”,
+“
+Bookmarks”
+or
+“
+Annotations” to
+switch views
+Tap “
+Bookmarks” to
+view the bookmarks you
+have added
+
+Select the bookmark,
+tap "
+", enter a new
+bookmark name, then
+tap "Done" to change
+the bookmark name
+
+Tap "
+"
+to delete
+current bookmark
+*Note: If the Contents cannot be obtained for some PDF files, the Contents page will be
+blank.
+
+
+=== PDF 93 ===
+93
+5.7 Annotation
+1、
+Write annotations
+Open a document and
+you can start to annotate
+it with notes or marks.
+2、
+Delete annotations on the
+document pages
+Tap
+“
+Navigation
+Window”
+Tap“
+Annotation”to
+view all the pages with
+annotations
+Long press a thumbnail
+page, select the pages
+with
+annotations
+you
+need to erase, and then
+tap
+“
+Erase
+Annotation”
+Tap
+“Erase”
+in
+the
+pop-up box
+
+
+=== PDF 94 ===
+94
+5.8 Highlights and comments
+This feature only applies to PDFs.
+Highlights
+Select the highlighter and
+draw over text you want
+to highlight with pen.
+Or tap “
+”to select
+text with pen, and then
+select a highlight color or
+underline.
+Comments
+Tap “
+”to select text
+or tap a highlight you
+have created.
+
+Tap “
+”to open the
+comment box to enter
+your
+understanding
+or
+thought
+about
+the
+highlight.
+
+View highlights and comments
+
+
+=== PDF 95 ===
+95
+Tap
+“
+Navigation
+Window”.
+Select “Highlights”.
+
+Edit highlights and comments
+
+Tap a specific highlight
+you have created.
+Tap"
+" and "
+" to
+switch
+between
+the
+"Color" option and the
+"Underline" option.
+Tap “
+”to edit
+a
+specific
+comment
+you
+have added.
+
+Delete highlights and comments
+After
+tapping
+the
+highlighted
+text,
+tap
+“
+”.
+
+In
+the
+Navigation
+Window,
+long
+press
+a
+highlight to bring up the
+top function bar, select
+the highlight(s) you want
+to delete, and then tap
+
+
+=== PDF 96 ===
+96
+“
+Delete”.
+*Note: The default color for exported highlights is yellow.
+5.9 Export & Share
+This function only applies to PDF files.
+Tap "
+Export &
+Share"
+You can select the pages
+to
+export,
+the
+handwriting
+display
+type, and the colors of
+the Niddle Pen and Ink
+Pen.
+
+
+=== PDF 97 ===
+97
+Chapter 6
+Digest
+6.1 Create new digests
+In Documents
+Draw the symbols “[” and
+“]” around text to create
+a digest.
+You can also tap “
+” to
+select
+text,
+then
+tap
+“
+” to create a digest.
+Note: Digest text will be displayed with the “
+” symbol. If a digest has annotations, its
+symbol will change from “
+” to “
+”. You can choose to show or hide these symbols by
+navigating to the Document Toolbar > More > Preferences.
+In Notes
+
+
+=== PDF 98 ===
+98
+Tap “
+Lasso”, then
+circle the content with
+the pen.
+Tap “
+Recognize as
+Digest”.
+Tap “Create”.
+In the Digest app
+
+
+=== PDF 99 ===
+99
+Select the target category
+and
+tap
+“
+New
+Digest”.
+Enter the digest content,
+then tap “Create”.
+6.2 Organize digests
+Digests
+can
+be
+categorized
+and
+managed
+under
+“
+Categories”.
+Long-press a digest to
+move or delete it.
+
+
+=== PDF 100 ===
+100
+6.3 Import digests
+You can import external
+TXT files. (Each digest
+must be separated by a
+blank line.)
+You can also import TXT
+files exported from the
+Digest app (which allows
+you to restore metadata
+such
+as
+the
+source,
+category, and author).
+
+
+=== PDF 101 ===
+101
+6.4 Export digests
+Long press a digest and
+select the digests you
+want to export.
+Choose the export file
+format: PDF or TXT.
+Tap "Export".
+6.5 Annotations
+In documents
+Tap a digest.
+In the annotation area,
+write
+or
+type
+your
+understanding
+or
+thoughts
+about
+the
+digest.
+
+
+=== PDF 102 ===
+102
+In the Digest app
+Tap a digest.
+Write or type content in
+the annotation area.
+A digest with annotations
+will be displayed with the
+symbol “
+”.
+Chapter 7
+TXT
+Open TXT and edit it as
+needed
+Tap “
+” to change the
+font size
+
+
+=== PDF 103 ===
+103
+Scroll up and down to
+browse
+through
+the
+content
+Tap “
+”and “
+”to
+jump to the bottom and
+top of the TXT file
+Note: Using small TXT files that contain no more than 100,000 words is recommended.
+Chapter 8
+Word
+8.1 New Word file
+Tap “
+” to create new
+Word file page
+
+
+=== PDF 104 ===
+104
+8.2 Browse Mode
+Tap the page number area
+to
+display
+or
+hide
+the
+thumbnails
+Tap on a thumbnail on the
+right side to jump to a
+specific target page
+Tap the left/right arrows in
+the page number area or
+simply swipe up or down on
+the screen to turn pages
+
+
+=== PDF 105 ===
+105
+8.3 Pinch to zoom
+Use
+two
+fingers on
+the
+screen to zoom in and out
+8.4 Repage view
+You can switch to the
+Reflow View to view or
+edit Word as needed.
+Tap “
+” to enter the
+reflow view and use the
+pinch to zoom feature to
+rearrange
+the
+text
+layout
+
+
+=== PDF 106 ===
+106
+8.5 Editing
+Keyboard mode for editing
+Tap the area you want to
+edit to bring up the
+keyboard
+Enter
+text
+using
+the
+keyboard
+Handwriting
+mode
+for
+editing
+
+
+=== PDF 107 ===
+107
+Tap “
+Handwriting
+Mode”
+After handwriting text,
+tap “
+” to convert it
+to text.
+Proofread and edit text
+by
+handwriting
+proofreader’s marks
+Tap “
+” to save the
+changes you made to
+the document.
+8.6 Proofreader's marks
+The following handwritten proofreaders’ marks (Delete, Break Line, Transpose and Insert)
+are only valid in handwriting mode.
+
+
+=== PDF 108 ===
+108
+8.6.1
+Delete
+
+Use
+stylus
+to
+draw
+"
+"
+on
+the
+characters
+or
+spaces
+to be deleted, it will be
+automatically
+recognized as a delete
+signal, and the selected
+content will be deleted.
+8.6.2
+Line break
+
+Use stylus to draw "
+"
+from top-down between
+characters or spaces to
+start a new line, it will
+be
+automatically
+recognized
+as
+a
+line
+break signal, and the
+selected content will go
+to the new line.
+
+
+=== PDF 109 ===
+109
+8.6.3
+Transpose
+
+Use
+stylus
+to
+draw
+"
+"
+on
+the
+characters you want to
+transpose.
+It
+will
+be
+automatically recognized
+as a transpose symbol,
+and
+the
+selected
+characters
+will
+be
+transposed.
+8.6.4
+Insert Handwritten
+
+Insert
+content
+between
+characters
+
+Use
+stylus
+to
+draw
+“
+”
+between
+characters
+to
+insert
+content.
+It
+will
+be
+automatically recognized
+as an insert symbol.
+
+After
+handwriting
+text
+
+
+=== PDF 110 ===
+110
+on
+the
+screen,
+tap
+“
+”to convert it to
+text.
+
+Draw
+a
+line
+across
+the
+insert
+mark
+as
+“
+” to cancel the
+inserted content
+Additional ways to insert
+content
+
+Simply
+handwrite
+the
+content
+you
+need
+to
+insert at the end of a
+paragraph
+
+Tap
+“
+”to
+automatically convert it
+to text and append it to
+the end of the current
+paragraph.
+
+
+=== PDF 111 ===
+111
+
+Handwrite the content
+you need to insert in a
+new line
+
+Tap
+“
+”to
+automatically convert it
+to text in a new line.
+8.6.5
+Insert space
+Insert space by space symbol
+
+Draw
+“
+”mark
+with
+stylus
+between
+words that need to be
+inserted into space to be
+recognized
+as
+insert
+space symbol.
+Insert space by insert symbol
+
+To
+insert
+a
+space
+between
+letters
+or
+words, draw "
+"
+and tap "
+".
+
+
+=== PDF 112 ===
+112
+Chapter 9
+To-Do
+9.1 Create tasks
+In Notes
+Tap “
+Lasso” and
+circle
+the
+handwriting
+with the pen.
+Tap “
+New Task”and
+set a due date.
+Tap“Add”.
+In the To-Do App
+Enter the task content
+and set a due date.
+Tap“Add”.
+
+
+=== PDF 113 ===
+113
+9.2 Organize tasks
+Tap
+a
+to-do
+item
+to
+rename, move, set a due
+date, adjust the order, or
+delete a single task.
+Long press a to-do item
+to
+move
+or
+delete
+multiple tasks at once.
+Chapter 10 Atelier
+To use the Atelier drawing app, you need to download it from Settings >Apps > Supernote
+App Store first.
+10.1 Create drawings
+Tap “New Drawing”.
+Enter a file name and set
+the canvas size.
+Tap “Create”.
+
+
+=== PDF 114 ===
+114
+10.2 Brushes, erasers, and colors
+Choose from Pencil, Ink
+Pen, Marker, and Spray.
+Use various erasers or
+full-screen erase.
+Adjust
+the
+brush
+grayscale.
+
+
+=== PDF 115 ===
+115
+10.3 Selection tool
+Select
+rectangular,
+elliptical,
+or
+freeform
+selection.
+Use the selection tool to
+copy, cut, mirror, move,
+rotate, scale, skew, and
+adjust
+proportions
+of
+strokes.
+
+
+=== PDF 116 ===
+116
+10.4 Layers
+Rename,
+reorder,
+or
+merge layers.
+Adjust layer opacity.
+Use the reference image
+to assist drawing.
+10.5 Adjust canvas
+Tap “
+” or “
+” to
+zoom the canvas, or use
+two fingers to pinch.
+Tap the percentage to
+quickly reset to 100%.
+
+
+=== PDF 117 ===
+117
+Use two fingers to drag
+the canvas to move it up,
+down, left, or right.
+10.6 Export drawings
+Export the drawing as a
+PSD or PNG file.
+Chapter 11 InkFlow
+To use the InkFlow app, you need to download it from Settings > Apps > Supernote App
+Store first.
+
+
+=== PDF 118 ===
+118
+11.1 Using InkFlow
+You can use the device as
+a graphics tablet. After
+connecting
+to
+a
+computer,
+your
+operations will sync in
+real time with drawing
+software.
+
+
+=== PDF 119 ===
+119
+11.2 Configure InkFlow
+Set the pen touch area
+according
+to
+the
+computer screen ratio.
+Enable the “Assistive Dot
+Matrix” function.
+Chapter 12 InkHub
+InkHub is a resource library for browsing, downloading, and sharing stickers, templates,
+notes, digests, and drawings.
+Browse Resources
+
+
+=== PDF 120 ===
+120
+You can browse content
+by
+search,
+category,
+popularity,
+download
+count, or latest updates.
+Share Resources
+You
+can
+upload
+local
+resources via the upload
+button in the InkHub by
+selecting them from File
+Manager.
+You
+can
+also
+share
+content to InkHub from
+Notes, Stickers, Excerpts,
+Drawings
+or
+File
+Manager.
+Use Resources
+
+
+=== PDF 121 ===
+121
+Resources
+can
+be
+downloaded
+to
+File
+Manager and used in the
+corresponding apps.
+Stickers and digests can
+be imported directly for
+use.
+
+
+=== PDF 122 ===
+122
+Chapter 13 NetVirtualDisk
+NetVirtualDisk is an assistive app that helps your Supernote connect to and access private
+servers or NAS devices that support the WebDAV protocol. This app uses WebDAV, an open
+standard protocol for creating a “virtual disk” in cyberspace, to let you effortlessly sync files,
+back up data, and access them across devices.(To download the ServerLink app, please go to
+“Settings” > "Apps” > “Supernote App Store".)
+Add your server
+Tap “
+”.
+Enter the server address,
+username,
+and
+password,
+then
+tap
+"Add" to establish the
+connection.
+Manage your files
+1、
+Access your files
+You can browse files on
+the server, then open or
+edit them locally.
+
+
+=== PDF 123 ===
+123
+2、
+Sync your files
+Your Supernote device
+automatically syncs any
+local file changes back to
+the server.
+You can manually upload
+the
+newest
+files
+by
+tapping the "
+Sync"
+button.
+Remove your server
+
+
+=== PDF 124 ===
+124
+Tap “
+Settings”
+Tap “Remove” to remove
+your server.
+*Note: Before clearing the cache or removing a server, please ensure that all files have
+been fully synchronized.
+Chapter 14 Convenient Features
+14.1 Organize files
+You can organize (Rename/copy/move/delete/lock) all your files.
+Create a new folder
+
+
+=== PDF 125 ===
+125
+1、
+In the sidebar menu, tap
+“Files” to access any file;
+if you have opened a
+note/document,
+tap
+“
+”to go back to “Files”
+Tap “
+” to create a
+new folder
+2、
+Enter the name of new
+folder, tap “OK”
+Move/Copy a file or folder
+1、
+In file management page
+Long press the file
+Select the files or folders
+to be moved or copied
+(Multiple
+-Choice
+is
+supported)
+Tap “Move”or “Copy”
+
+
+=== PDF 126 ===
+126
+2、
+On Move to /Copy to
+page
+Select the folder to move
+to/Copy to , tap “Ok”
+Delete a file or folder
+1、
+In file management page
+Long press the file or
+folder
+Select the files or folders
+to be deleted (Multiple
+-Choice is supported)
+Tap “
+Delete”
+Rename a file or a folder
+1、In file management page
+
+Long press the file or
+folder
+
+Select the file or folder
+to
+be
+renamed
+(Only
+single-choice
+is
+supported)
+
+
+=== PDF 127 ===
+127
+
+Tap “Rename”
+2、Rename
+
+Input the new name of
+the folder and tap “OK”
+* Note: File names cannot start and end with a space, nor can they contain special
+symbols, such as \/ *:?”< >|.
+Sort files
+
+Tap “
+” and select
+“Name”, “Time” or
+“Size” to change the sort
+method.
+
+Tap “Ascending”or
+“Descending”to switch
+the sort order.
+File view
+
+
+=== PDF 128 ===
+128
+
+Tap “
+”,
+then tap
+“
+List”, “
+Small Icons” or “
+Large Icons” to switch
+the file view
+14.2 Protect files
+
+Long press on a folders
+or files
+
+Select single or multiple
+folders
+and
+files
+that
+need to be protected on
+the edit page
+
+Tap "
+Lock" or "
+Unlock"
+*Note: The file password must be set for the first use of "Lock", and the file password
+can be turned on and off in "Settings>Security & Privacy".
+File protection is only valid for files on the Supernote device in use, and it is invalid on
+other Supernote devices and external devices.
+
+
+=== PDF 129 ===
+129
+14.3 Smart Straight Line
+8、
+Draw a straight line
+
+Draw a relatively straight
+stroke and hold the pen
+still
+for
+1
+second
+to
+automatically convert it
+into a standard straight
+line.
+9、
+Adjust a straight line
+
+Drag the end point of the
+straight
+line
+to
+any
+position on the current
+page to adjust its length
+and angle.
+
+You may also precisely
+adjust the straight line
+using
+vertical
+and
+horizontal
+snapping,
+template snapping and
+line-to-line snapping.
+
+
+=== PDF 130 ===
+130
+10、Delete a straight line
+
+Select the straight line
+using the lasso tool and
+tap “
+Delete”; or use
+the eraser tool to erase
+it.
+*Note：You can turn on/off “Smart Straight Line”feature in “ Pen Preferences.”
+14.4 Star tag
+1、
+Draw "
+" in one stroke
+on a note/document page
+to create a star, which
+allows you to search for
+the specific page quickly.
+2、
+View pages with the "
+"
+tag
+
+Tap
+“
+Navigation
+Window”
+
+Tap "
+Stars" to view
+pages with this tag
+
+
+=== PDF 131 ===
+131
+3、
+Erase
+pages
+with
+the
+"
+" tag
+
+Select and long press a
+page
+
+Select the pages with the
+"
+" tag you want to
+erase
+
+Tap "
+Erase Star"
+*Note:
+Stars
+within
+headings won’t erased
+*Note：Stars can only be used on the main layer. You can turn on/off star recognition in
+“ Pen Preferences”.
+14.5 Clipboard
+The clipboard function is applicable in Notes, Documents, Settings, File Manager, Digests,
+Mail, Calendar, To-Do, and some third-party apps (text content only).Supports cutting,
+copying and pasting text between Supernote and the desktop Supernote Partner app. (To
+do this, please enable Keyboard Sharing in the desktop Supernote Partner app.)
+Select text
+
+
+=== PDF 132 ===
+132
+Double-tap
+a
+word to
+enter
+text
+selection
+mode.
+Adjust the start and end
+points
+to
+select
+the
+desired text.
+Copy or cut text
+After the action menu
+pops up, tap “Copy” to
+save
+the
+text
+to
+the
+clipboard.
+Tap “Cut” to move the
+text to the clipboard and
+delete it from the original
+location.
+Paste text
+In the target input field
+or
+any
+text-supported
+app,
+Double-tap,
+then
+tap
+“Paste”
+from
+the
+menu.
+The copied or cut text
+will be inserted at the
+
+
+=== PDF 133 ===
+133
+cursor position from the
+clipboard.
+14.6 Browse & Access
+
+Swipe down from the
+top of the screen to
+open the top menu bar
+and tap “
+Browse &
+Access”
+
+Enter the corresponding
+URL
+on
+the
+receiving
+device
+
+On the receiving device,
+click “
+” to upload
+files,
+single-click
+a
+filename
+to
+download
+the
+corresponding
+file
+and click “
+” to
+refresh the webpage.
+
+
+=== PDF 134 ===
+134
+*Note: Keep Supernote and the receiving device connected to the same Wi-Fi during
+transfer.
+14.7 Screen mirroring
+Open the top menu bar,
+tap
+“
+Screen
+Mirroring”
+Enter the corresponding
+URL
+on
+the
+receiving
+device
+On the receiving device,
+tap “
+”and “
+”
+and enter and exit full
+screen; tap “
+” and
+“
+” to rotate right
+and left.
+Note：Keep Supernote and the receiving device connected to the same Wi-Fi during
+mirroring. Hover the pen up to 5mm above the Supernote screen to display a laser
+pointer circle effect.
+
+
+=== PDF 135 ===
+135
+14.8 Search
+Open the top menu bar, tap
+“
+Search”
+Search for files
+Tap a file format and tap
+“
+”.
+Or enter the file name
+and tap “
+”.
+Search for keywords
+
+
+=== PDF 136 ===
+136
+Switch the search target
+to Keyword.
+Tap “
+” directly to
+see the search results
+that
+contain
+all
+the
+keywords
+you
+have
+added.
+Or enter a keyword, and
+tap “
+”.
+Search results for related
+files or pages per input
+keyword
+Search for stars
+Switch the search target
+to Star.
+Tap “
+”directly to see
+the search results that
+contain all the stars you
+have created.
+Or enter a file name, and
+tap “
+”to search for
+
+
+=== PDF 137 ===
+137
+specific files that contain
+stars.
+Search for handwritten text
+Switch the search target
+to Handwriting.
+Enter
+recognized
+handwritten
+text
+from
+real-time
+recognition
+notes.
+Tap “
+”
+14.9 Quick access
+You can add 8 specified pages, notes/documents, or folders that need to be opened
+quickly to the quick access list in the sidebar menu
+1、
+Add items to Quick Access
+Specified
+pages
+and
+notes/documents
+Open a note/document
+page
+Tap “
+”and choose to
+add the current page or
+note/document
+by
+
+
+=== PDF 138 ===
+138
+tapping the “Add”button
+*Note: When open “Current
+Note/Document” via Quick
+Access, it will open to the
+last viewed page by default.
+Folders
+Tap“Files”
+Select a single folder on
+the file editing page
+Tap “
+Add”
+2、
+Open
+items
+in
+Quick
+Access
+Tap the
+Quick
+Access
+item
+on
+the
+sidebar
+menu to open it
+3、
+Remove items from Quick
+Access
+Tap“Remove”in
+a
+specific
+page,
+note/document
+or“Files”.
+
+
+=== PDF 139 ===
+139
+Or long press a Quick
+Access
+item
+in
+the
+sidebar menu, and tap
+“
+Remove”.
+4、
+Reorder items in Quick
+Access
+Long
+press
+a
+Quick
+Access
+item
+in
+the
+sidebar menu.
+Tap “
+”and “
+”to
+adjust its order in the
+Quick Access section.
+14.10 Recent access
+In the sidebar menu, tap the“Recent”tag. This feature enables you to quickly find recent
+visited files. Tap file names on the Recent screen to open files.
+Chapter 15 Mailbox
+Support IMAP type mailbox.
+15.1 Login
+Log in to Gmail
+
+
+=== PDF 140 ===
+140
+Tap “Mail” in the sidebar
+menu
+Select "Gmail" to enter
+the authorization page.
+Use QR code scan or input
+website link
+Input Random code
+Tap "Sign in with Google "
+*Note: The device only supports
+the
+IMAP
+protocol.
+Please
+
+
+=== PDF 141 ===
+141
+ensure your Gmail account has
+IMAP service enabled.
+Log in to Microsoft Exchange or Outlook/Hotmail/Live
+Select
+"Microsoft
+Exchange"
+or
+"Outlook/Hotmail/Live"
+to enter the login page.
+*Note: The device only supports
+the
+IMAP
+protocol.
+Please
+ensure
+your
+Microsoft
+email
+account
+has
+IMAP
+service
+enabled.
+Log in to Other Emails
+
+
+=== PDF 142 ===
+142
+1、
+Login
+Select “Other (IMAP)”
+Enter your email address
+and password
+You
+can
+choose
+to
+remember
+password,
+then tap "Log in"
+Please
+check
+server
+setting if login failed
+
+
+=== PDF 143 ===
+143
+2、
+Mailbox server set up
+Tap “Manual Settings”
+Setting per content (IMAP
+etc.) request of your mail
+server
+Tap “Log in”
+(Please set up this part according
+to
+your
+mailbox
+server
+requirements)
+*Note:
+Click
+"Have
+trouble
+logging in?" to check how to
+obtain authorization code
+Multi-mail account login
+
+
+=== PDF 144 ===
+144
+Tap "
+Add account"
+On the “Add Account”
+page,
+select
+an
+email
+account to log in to
+*Note: The mailbox supports
+max. three mail accounts at the
+same time
+15.2 Settings
+After the mailbox is successfully logged in, you can proceed some basic mailbox settings
+first.
+Set the number of emails to
+sync
+Tap "
+Settings"
+Enter the number of
+emails you want to
+sync for each folder
+(Up to 99 emails)
+
+
+=== PDF 145 ===
+145
+Customized
+Signature
+Setting
+In the signature box,
+enter
+your
+email
+signature
+using
+handwriting input or
+keyboard input.
+You
+can
+choose
+whether
+or
+not
+to
+display
+your
+“Customized
+signature”
+when
+sending emails.
+15.3 Compose
+1、
+Tap "
+Compose "
+By handwriting
+By keyboard input
+
+
+=== PDF 146 ===
+146
+2、
+File attachment
+Tap "
+"
+Select the file you want
+to
+send
+as
+an
+attachment
+and
+tap
+“Add”.
+3、
+Enter
+the
+recipient
+address
+or
+relevant
+information
+Tap“
+”
+*Note: Email attachments have restrictions on the size. It is not recommended to add
+multiple or heavy files (total file size <20M).
+15.4 Inbox
+1、
+Sync emails
+Tap
+“
+”
+to
+manually
+sync
+emails.
+2、
+Check emails
+Swipe up and down
+to view email details
+
+
+=== PDF 147 ===
+147
+Support zoom in/out
+for
+checking
+email
+details
+by
+two
+fingers.
+3、
+Save attachment
+Tap "
+"
+Tap
+"Save"
+in
+the
+attachment list
+As default, the file is
+saved to the relevant
+email account under
+the "INBOX" folder
+
+
+=== PDF 148 ===
+148
+15.5 Delete Local emails
+Long press to select the
+mail to be deleted
+Tap "
+"
+15.6 Read and Unread
+Long
+press
+to
+select
+email(s)
+Tap
+“
+Mark
+as
+Unread” or “
+Mark as
+Read”.
+Chapter 16 Calendar
+In the sidebar menu, tap “Calendar”.
+If it is the first time opening the Calendar, the default
+view
+will be the “Monthly View”.
+16.1 Manage account
+Tap "
+"
+Tap"
+"to
+enter
+authorization page
+
+
+=== PDF 149 ===
+149
+Use QR code scan or
+input website link
+Input Random code
+Get
+and
+input
+Authorization code
+Tap "Authorize "
+
+
+=== PDF 150 ===
+150
+After
+authorization
+is
+completed
+successfully,
+you
+can
+choose
+to
+enable
+Auto-sync
+or
+tap“
+”to manually
+sync your calendar.
+* Note: If Auto-sync is enabled, the calendar will be synced automatically every time a
+calendar event is created, revised or deleted.
+16.2 Settings
+Tap "
+"
+Tap the date square or
+"
+"
+Select the start day of
+the week
+Close
+side
+column
+by
+tapping
+screen
+once
+after
+completion
+of
+settings
+*Note：Please delete ALL handwritings before set up the date.
+
+
+=== PDF 151 ===
+151
+16.3 Switch view
+Tap
+"
+", "
+",
+and
+"
+"to switch
+different calendar views
+Handwritings
+can
+be
+added into monthly and
+weekly calendar views
+16.4 Select the date
+Tap Year/Month on top
+of display
+Select
+"Year"and
+"Month"
+Tap "
+" or slide
+the calendar to switch
+different month
+Tap " Today "to return
+
+
+=== PDF 152 ===
+152
+16.5 Using events
+1、
+Create
+In
+monthly
+or
+weekly
+view
+Tap "
+"
+Input title and details
+Set up the time
+Tap "OK"
+In daily calendar view
+Tap the time slot to input
+Create
+event
+corresponding the time
+slot
+Tap "OK"
+
+
+=== PDF 153 ===
+153
+In the Note app
+tap “
+Lasso”
+Draw a circle to selected
+handwriting
+and
+tap
+“
+New Event”
+Input details and set the
+time
+Tap "OK"
+2、
+Check
+In
+monthly
+or
+weekly
+view
+Select date
+Tap
+date
+square
+or
+bottom-right
+corner
+to
+check all events of the
+day
+
+
+=== PDF 154 ===
+154
+Click
+single
+event
+to
+check details
+In Daily calendar view
+Tap the date to check all
+events of the day
+3、
+Edit, Delete
+Edit
+Tap "
+"
+Open the event page ，
+Re-edit
+
+
+=== PDF 155 ===
+155
+Tap "OK"
+Delete
+
+Tap“
+” in event list
+box or Event details
+Tap
+“Delete”
+in
+event
+edit page
+16.6 Today’s Notes
+In the bottom-left corner
+of
+the
+monthly
+and
+weekly views, you can
+view
+or
+open
+today’s
+notes.
+Tap “
+New Note” to
+create notes for today.
+
+
+=== PDF 156 ===
+156
+Chapter 17 Basic functions
+17.1 USB connection
+You can use USB cable to connect your Supernote device and PC to charge device, organize
+and transfer files.
+Use USB cable to connect your Supernote device to PC.
+For Windows
+Find
+the
+/Supernote
+directory
+Click
+/Supernote,
+then
+you can manipulate all
+the files in the device
+For MAC
+
+MTP tools such as Android File Transfer、openMTP、Commander One are required
+17.2 USB OTG
+USB OTG (On-The-Go) for USB drive and keyboard connection
+
+
+=== PDF 157 ===
+157
+OTG USB drive
+Insert the OTG USB drive
+into the device.
+In
+the
+Supernote
+root
+directory, open the OTG
+USB drive folder to view
+and manage files.
+You can safely remove it
+from
+the
+notification
+shade in the drop-down
+menu or via “Settings >
+System > Storage”.
+*Note：1.Please exit the file before removing the OTG USB drive to prevent data loss.
+2.Do not remove the OTG USB drive while copying, moving, or searching for files to avoid operation failure.
+17.3 Wake up from sleep mode
+Enter sleep mode
+In standby state, the device
+will
+automatically
+enter
+hibernate mode and display
+Sleep
+Screen
+page
+according to the sleep time
+
+
+=== PDF 158 ===
+158
+set by the user (please refer
+to the Sleep Screen, low
+power
+consumption
+setting )
+
+In active state, press the
+power
+button
+to
+enter
+hibernate mode
+Wake up the device
+In hibernate mode, press the power button to go back to the page before hibernation (If
+there is a screen lock password, you need to enter password to wake up the device)
+17.4 Reboot/update
+1、
+Open the top menu bar
+Tap
+“
+Settings”
+Tap “System”
+
+
+=== PDF 159 ===
+159
+Reboot
+2、
+Tap
+“Restart”
+from
+the
+system reboot
+Update
+Tap “Check”
+It will start to download
+firmware if there is a new
+release
+After
+downloading,
+tap
+“Update Now”
+*Note: Please back up your files before updating to avoid losing data by accident.
+17.5 Backup and Restore
+Files
+
+
+=== PDF 160 ===
+160
+Copy your files on your
+Supernote
+to
+another
+storage
+device
+or
+location
+for
+backup
+before restoring them to
+your
+Supernote
+as
+needed.
+Sync your files on your
+Supernote to your cloud
+and download them onto
+your computer/phone for
+backup before restoring
+them to your Supernote
+as needed.
+Digest and To-Do
+Go
+to
+“Settings
+>
+System
+>
+Backup
+&
+Restore” to back up and
+restore digests.
+To
+sync
+digests
+and
+to-dos,
+go
+to
+“My
+Account >Data Sync”.
+Sticker
+
+
+=== PDF 161 ===
+161
+Go
+to
+“Settings
+>
+System > Backup and
+Restore” to back up and
+restore stickers.
+*Note:Currently, backing up and restoring system and application data, personal settings,
+installed applications, and other application data is not supported.
+17.6 Reset
+2、Open the top menu bar
+Tap “
+Settings”
+Tap “System”
+Tap“Factory reset”
+
+
+=== PDF 162 ===
+162
+3、Factory initialization
+Tap “Reset Now”
+*Note: Please back up your files before reset for Reset will erase all data and account
+information you have added in the device.
+
+
+=== PDF 163 ===
+163
+17.7 Power off/Shutdown
+1、Graceful shutdown
+Long press the power
+button (>5 seconds),Tap
+“Power Off”
+*Note：The device is powered off after 10 seconds when you tap “Power Off”)
+2、Forced shutdown
+Long press the power button (>5 seconds) ，then the device shut down
+immediately
+
+
+=== PDF 164 ===
+164
+Chapter 18 Privacy and security
+18.1 Privacy
+User Experience Project only upload the exception log, which can help to diagnose and
+improve Supernote device. Your files on the device will not been uploaded.
+18.1.1 User Experience Project ON/ Off
+1、Open the top menu bar
+Tap
+“
+Settings”
+Tap “Security & Privacy”
+2、You can view《Supernote Privacy
+Policy 》on “Security & Privacy”
+page
+Tap the “User Experience
+Project” to turn it ON/OFF
+18.2 Security
+For security concern, we strongly recommend you to set password to protect your data.
+
+
+=== PDF 165 ===
+165
+18.2.1 Screen-lock password
+1、Set the Screen lock password
+Open the top menu bar，Tap
+“
+Settings” ，Tap
+“Security & Privacy”
+Tap " Screen lock password"
+and turn "ON"
+Enter a 6-digit screen lock
+password
+and
+confirm
+it
+twice
+After setting the password, you need to enter it to unlock when wake-up
+*Note：You are able to unlock the screen via log in Supernote Account if you forget the
+password (Please refer to
+Sign up and log in from device)
+
+
+=== PDF 166 ===
+166
+2、
+Retrieve
+the
+screen-lock
+password
+Tap “Forget Password”
+The
+device
+will
+try
+to
+connect to Wi-Fi
+
+After
+successfully
+connected, the device will
+send a 6-digit verification
+code
+to
+your
+registered
+mobile
+phone
+or
+email
+address
+Type in the verification code
+
+
+=== PDF 167 ===
+167
+you just received
+After successful unlock, it will jump to setting screen-lock password page, where
+you can reset the password
+*Note: If you have not registered an Supernote account, please recall your password
+and try different combinations first; if you still cannot input correct password, please
+contact Supernote Customer Service.
+3、
+Disable
+screen-lock
+password
+Open the top menu bar，Tap
+“
+Settings”
+Tap “Security & Privacy”
+Tap "Screen lock password"
+and turn "OFF"
+Type correct 6-digit
+password to disable
+screen-lock password
+18.2.2 File password
+1、
+Set the File password
+Open the top menu bar，Tap
+“
+Settings
+” ，Tap
+“Security & Privacy”
+
+
+=== PDF 168 ===
+168
+If the file password is not
+set yet, click "
+Lock" in
+Files, and tap "Setup now"
+Tap
+"File
+Password"
+and
+turn "ON"
+Enter 4-16 digits password
+and confirm twice
+Tap "Done"
+After the successful setting, you need to enter the file password when opening
+the locked file and related contents
+*Note：If the password is forgotten, you can unlock via the registered Supernote ID
+(Please refer to Sign up and log in from device).
+
+
+=== PDF 169 ===
+169
+2、
+Retrieve
+the
+lock
+file
+password
+Open the locked file
+password input box in
+"Files"
+Or go to the "Disable file
+password" and "Change File
+Password" column
+Tap “Forget Password”
+The device will try to connect
+to Wi-Fi
+After
+successfully
+connected, the device will
+send a 6-digit verification
+code
+to
+your
+registered
+mobile
+phone
+or
+email
+address
+
+
+=== PDF 170 ===
+170
+Type in the verification code
+you just received
+After unlocking successfully, the page enters the setting file password page, which
+can be reset
+2、
+Disable file password
+Open the top menu bar ，
+Tap “
+Settings ” ，Tap
+“Security & Privacy”
+Tap
+"File
+Password"
+and
+turn
+"OFF"
+Enter the correct password
+Tap "Done" to turn the file
+password off
+
+
+=== PDF 171 ===
+171
+Chapter 19 Supernote Cloud
+Supernote cloud is bound to your Supernote device with sole account. If you have
+registered the cloud service but not log in on Supernote device, your cloud service is still
+not activated.
+19.1 Register and log in
+1、
+Open the
+following web
+page from PC：
+https://cloud.supernote.com
+If you have not registered an
+account, please click
+“Register account”
+
+
+=== PDF 172 ===
+172
+2、
+Email and mobile phone
+number are available for
+registration
+Enter
+email
+address
+or
+mobile phone number
+Set a user name
+Click “Get Code”
+3、
+Enter
+the
+graphic
+verification code and click “Sure”
+
+
+=== PDF 173 ===
+173
+4、
+To
+continue
+on
+the
+registration page：
+Enter the verification code
+you just received from your
+mobile phone or email
+Enter the password twice
+Tick User agreement
+Click “Register”
+*Note：When registration from PC completes, you have to log in from the Supernote
+device to activate your cloud service.
+19.2 Cloud service
+Cloud provides the following main services.
+Organize files：create, rename, move, copy and delete files and folders
+Upload files：Files uploaded from PC to cloud can be synced to the device
+View files：The files and notes on device can be viewed and downloaded from cloud
+after synchronization
+
+
+=== PDF 174 ===
+174
+
+
+=== PDF 175 ===
+175
+Chapter 20 Safety
+Supernote Pen is only used for Supernote device with FeelWrite film
+Please do not use on other devices to avoid scratch or damage
+Screen is fragile, keep away from extrusion, bump, drop sharps
+Keep away from strong magnetic and electrostatic fields to avoid any potential damage
+Disassembly warranty is only valid if internal components are replaced as authorized by
+the official instructions. Unauthorized disassembly will void the warranty.
+Please keep away from severe environments, such like high/low temperatures, dry,
+humidify, smoke and dust
+Do not disassemble,crash,and squeeze Lithium-Ion battery keep away from fire and
+heat
+The device is not waterproof, please avoid water and other liquids
+Keep Dry
+Away from Strong Magnetic and
+Electrostatic Field
+Fragile,No Extrusion
+Disassemble the device properly
+
+
+=== PDF 176 ===
+176
+The Company shall not be liable for damage or deletion of in-flight data due to personal
+abnormal operation or other unexpected circumstances,neither any indirect loss
+
+
+=== PDF 177 ===
+177
+Chapter 21 FAQ and Troubleshooting
+Q：How to make custom image templates?
+A：
+Requirements：
+1.Dimensions:
+1404
+px
+*1872
+px
+for
+Nomad
+and
+1920px
+*
+2560px
+for
+Manta(Recommended)
+2.Format: Support PNG, JPG, JPEG, WEBP and BMP formats.
+3. Image name should not contain special characters (e.g. \ / : * ? " < > | .)
+*Note: In order to show better effect, we suggest not to apply large grey area in this
+image, no optionally change of image or rename of file.
+4. Copy and paste the saved image to /MyStyle directory of Supernote disk. The custom
+templates are to be found from the templates list of Supernote
+
+
+=== PDF 178 ===
+178
+Method：
+Method 1 ：You can use the drawing
+software to create on your PC (e.g.
+Photoshop, PS version is CC2017).
+1 、Click “File”->”New”, to set width,
+height, resolution ratio, color mode and
+background
+2、After setting canvas, draw the template according to personal preferences
+3、Click“File”->“Save” to save the file in
+PNG format to relevant folder
+4 、Copy and paste the saved image to “MyStyle” directory of Supernote. The custom
+templates are to be found from the templates list of Supernote
+
+
+=== PDF 179 ===
+179
+Method 2 ：You can sketch directly on
+Superote device.
+1、Create a new Note file, and draw
+a template
+2、Export it with PNG format
+3、Find the exported file in the “Export\” directory and copy/move it to the
+“Mystyle\” directory.
+Q：How to import document customized fonts
+A：
+1. Connect Supernote device and PC via USB, create a folder named "fonts" under
+
+
+=== PDF 180 ===
+180
+Document directory, then put the fonts to be imported under this folder.
+2. Tap "
+", click the pull-down box to view and select the imported font(s).
+*Note: You can also create a "fonts" folder under Document on Supernote cloud or
+Supernote Partner APP, and import fonts to Supernote device by synchronization.
+Q：How to get Supernote Partner APP?
+A: You can search Supernote Partner Google Play and App Store, or download it directly
+from https://supernote.com
+Android phone
+iphone
+* Stay tuned for the continuous update of the APP.
+Q：What should I do when the device freezes or fails to boot?
+If the display freezes or not respond to touch or stuck when the device is on, please try
+following methods:
+If the device cannot be turned on or gets
+stuck when you are trying
+
+
+=== PDF 181 ===
+181
+Connect the device to USB charger to
+charge
+Waiting for few minutes, you should be able to see Supernote logo on screen or boot
+progress bar of startup, and you can see the LED flash on the top menu bar
+*Note: If you do not see the boot screen within half an hour, please carefully check the
+socket of device, the USB cable and the power adapter. Make sure that all equipment is
+firmly connected, free of debris and not damaged. You may try other USB Type-C cables
+or different power cahrger.
+If the screen freezes or does not respond to touch
+Please try forced reboot. Long-press the power button over 8 seconds, then
+release, then press 8 seconds again until the SUPERNOTE logo appears
+*Note: Forced rebooting the device will not erase the data you saved.
+If above methods cannot help to solve your problem, please contact Supernote Customer
+Service.
+Q：How to eliminate afterimages on note pages or display screen?
+A ：Since afterimage on E-Paper Display is a normal phenomenon, please use refresh
+function by sliding sidebar from bottom-up to clean afterimages of screen anytime you like.
+
+
+=== PDF 182 ===
+182
+Copyright
+Model Supernote A5、Supernote A6、Supernote A5 X 、Supernote A6 X 、Supernote A6 X2
+Nomad、Supernote A5 X2 Manta © 2025 RATTA (US) INC. All Rights Reserved.
+“SUPERNOTE” is a registered trademark of European Union and the United States.
+“Supernote” is a registered trademark of Japan and Hong Kong.
+“超级笔记”、“超级笔记Supernote”is a registered trademark of People’s Republic of China.
+We have made every effort to ensure the accuracy of the information in this manual.
+Availability of the functions and features described here may change in the future.

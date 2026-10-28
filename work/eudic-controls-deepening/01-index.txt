@@ -1,0 +1,26 @@
+# 欧路词典
+
+## 欧路词典
+
+- [软件介绍](https://docs.eudic.net/1/master.md): 欢迎使用欧路词典，在这里，你可以查看各类常见问题和使用指南。
+- [单词查询](https://docs.eudic.net/1/shi-yong-zhi-yin/dan-ci-cha-xun.md)
+- [跨软件取词](https://docs.eudic.net/1/shi-yong-zhi-yin/dan-ci-cha-xun/kua-ruan-jian-qu-ci.md)
+- [笔记和标注](https://docs.eudic.net/1/shi-yong-zhi-yin/dan-ci-cha-xun/bi-ji-he-biao-zhu.md)
+- [发音和跟读](https://docs.eudic.net/1/shi-yong-zhi-yin/dan-ci-cha-xun/fa-yin-he-gen-du.md)
+- [全文搜索](https://docs.eudic.net/1/shi-yong-zhi-yin/dan-ci-cha-xun/quan-wen-sou-suo-1.md)
+- [单词学习](https://docs.eudic.net/1/shi-yong-zhi-yin/untitled-3.md)
+- [算法及设置](https://docs.eudic.net/1/shi-yong-zhi-yin/untitled-3/untitled.md)
+- [回顾练习](https://docs.eudic.net/1/shi-yong-zhi-yin/untitled-3/hui-gu-lian-xi.md)
+- [常见问题](https://docs.eudic.net/1/shi-yong-zhi-yin/untitled-3/untitled-2.md)
+- [解释页面设置](https://docs.eudic.net/1/shi-yong-zhi-yin/jie-shi-ye-mian-she-zhi.md)
+- [添加扩充词库](https://docs.eudic.net/1/shi-yong-zhi-yin/tian-jia-kuo-chong-ci-ku.md)
+- [我的生词本](https://docs.eudic.net/1/shi-yong-zhi-yin/wo-de-sheng-ci-ben.md)
+- [文件阅读](https://docs.eudic.net/1/jin-jie-gong-neng/wen-jian-yue-du.md)
+- [例句卡片](https://docs.eudic.net/1/jin-jie-gong-neng/ka-pian-fu-xi.md)
+- [外接键盘快捷键](https://docs.eudic.net/1/jin-jie-gong-neng/wai-jie-jian-pan-kuai-jie-jian.md)
+- [API & URL Scheme](https://docs.eudic.net/1/jin-jie-gong-neng/url-scheme.md): API 和 URL Scheme 提供了词典与其他软件直接交互的可能性，需要您对软件开发有一定程度的了解。
+- [客户端下载](https://docs.eudic.net/1/hui-yuan-jie-shao/ke-hu-duan-xia-zai.md)
+- [VIP 功能介绍](https://docs.eudic.net/1/hui-yuan-jie-shao/vip-gong-neng-jie-shao.md)
+- [大家如何用](https://docs.eudic.net/1/zhi-yin-wen-dang/da-jia-ru-he-yong.md)
+- [加入内测群](https://docs.eudic.net/1/zhi-yin-wen-dang/gong-jian-she-qun.md)
+- [联系我们](https://docs.eudic.net/1/zhi-yin-wen-dang/lian-xi-wo-men.md): 您可以通过下面的电子邮件和我们取得联系，除特殊的技术问题外，我们会在1-2个工作日给您回复。

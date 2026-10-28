@@ -1,0 +1,159 @@
+[
+  {
+    "file": "docs/research/interaction-library/batches/children-deepening-evidence.jsonl",
+    "before": {
+      "evidence_id": "E-KHD-04",
+      "product_id": "M-030",
+      "title": "Three Ways to Play — official student introduction reference",
+      "url": "https://sites.google.com/khanacademy.org/khanacademykids/getting-students-into-the-app/three-ways-to-play",
+      "checked_on": "2026-10-26",
+      "source_type": "official_training_with_unavailable_embedded_video",
+      "access_mode": "opened_module_text_and_public_html_video_link_only",
+      "version_scope": "Official teacher onboarding; video date and build unknown",
+      "app_build": null,
+      "firmware_version": null,
+      "source_updated_on": null,
+      "locator": "Embedded Student_5Minute_Intro_to_KhanKids.mp4",
+      "note": "可读培训页和视频地址；嵌入视频未能读取，不能用于动作或连续观察。",
+      "hands_on": false,
+      "visual_observed": false,
+      "archived_artifact": null,
+      "sha256": null,
+      "capture_state": "bibliography_and_short_note_only",
+      "supersedes": null,
+      "raw_work_path": "work/children-deepening/khan-intro.html",
+      "access_limitation": "Google Drive video open was unavailable through the web tool; not played or downloaded.",
+      "embedded_media_url": "https://drive.google.com/file/d/1-DE8WB6u4JU7GCeXqH2yMSWzuwYSwcGz/view",
+      "raw_sha256": "a115e524d4746de42a2cefe1bde2ceee0615c7e667d815c0baca0bc55b6a35f2"
+    },
+    "after": {
+      "evidence_id": "E-KHD-04",
+      "product_id": "M-030",
+      "title": "Three Ways to Play — official student introduction reference",
+      "url": "https://sites.google.com/khanacademy.org/khanacademykids/getting-students-into-the-app/three-ways-to-play",
+      "checked_on": "2026-10-26",
+      "source_type": "official_training_with_unavailable_embedded_video",
+      "access_mode": "opened_module_text_and_public_html_video_link_only",
+      "version_scope": "Official teacher onboarding; video date and build unknown",
+      "app_build": null,
+      "firmware_version": null,
+      "source_updated_on": null,
+      "locator": "Embedded Student_5Minute_Intro_to_KhanKids.mp4",
+      "note": "可读培训页和视频地址；嵌入视频未能读取，不能用于动作或连续观察。",
+      "hands_on": false,
+      "visual_observed": false,
+      "archived_artifact": null,
+      "sha256": null,
+      "capture_state": "bibliography_and_short_note_only",
+      "supersedes": null,
+      "raw_work_path": "work/children-deepening/khan-intro.html",
+      "access_limitation": "Google Drive video open was unavailable through the web tool; not played or downloaded.",
+      "embedded_media_url": "https://drive.google.com/file/d/1-DE8WB6u4JU7GCeXqH2yMSWzuwYSwcGz/view",
+      "raw_sha256": "a115e524d4746de42a2cefe1bde2ceee0615c7e667d815c0baca0bc55b6a35f2",
+      "additional_captures": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "opened_text_and_three_image_requests_returned_403",
+          "raw_work_path": "work/research/batch53-integration/khan-intro-page.txt",
+          "raw_sha256": "3d404fb9a14fc43d38e05b1223c3e6c2bc223b1fd2404e2122fe78fee91f05f1",
+          "note": "旧页正文复核，三个图片均403后停止；没有图像/视频观察或新任务",
+          "hands_on": false,
+          "visual_observed": false,
+          "archived_artifact": "artifacts/khan-intro-route-audit/source-notes.md",
+          "sha256": "270c379012602952376a06e772fe9811c71f3ad9e5f52e89a92317a035ba94b3",
+          "artifact_hashes": {
+            "artifacts/khan-intro-route-audit/source-audit.json": "68955668e5479de6327e2cdb0fe469e6f670a701ed7cdc2d325f37a8394d45f5"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "file": "docs/research/interaction-library/batches/quizlet-controls-deepening-evidence.jsonl",
+    "before": {
+      "evidence_id": "E-QZCD-03",
+      "product_id": "M-021",
+      "title": "Studying",
+      "url": "https://help.quizlet.com/hc/en-us/sections/360005938691-Studying",
+      "checked_on": "2026-10-27",
+      "source_type": "official_help_index",
+      "access_mode": "opened_text_via_web_tool",
+      "version_scope": "查阅日 en-US 官方公开帮助；Web/iOS/Android 条件按正文分别解释；精确构建与功能上线日期未知",
+      "app_build": null,
+      "firmware_version": null,
+      "source_updated_on": null,
+      "locator": "Studying：27篇目录",
+      "note": "区分已研究活动与新列出的音频、游戏、社交及外部集成入口。",
+      "hands_on": false,
+      "visual_observed": false,
+      "visual_audit": null,
+      "archived_artifact": null,
+      "sha256": null,
+      "capture_state": "official_web_tool_response_saved_in_work; no_source_HTML; no_images",
+      "raw_capture_kind": "web_tool_response_text; not source HTML; no images observed",
+      "raw_work_path": "work/quizlet-controls-deepening/quizlet-response-05.txt",
+      "raw_sha256": "67ae43e3fa5f44b3a0dcab19506cdda8ad0786bd7a1b9ebc295d31109c30469b",
+      "parsed_text_path": "work/quizlet-controls-deepening/parsed/sections-360005938691.txt",
+      "http_status": null,
+      "supersedes": null,
+      "additional_captures": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "opened_text_via_web_tool",
+          "raw_work_path": "work/research/batch52-integration/quizlet-directories.txt",
+          "raw_sha256": "8e65dbd9a7732c61dbf2833b5297ebb59ddae3aaf1286982fd8922c0df623d81",
+          "note": "重新打开原目录定位八篇文章；不宣称目录全读或新增完整功能",
+          "hands_on": false,
+          "visual_observed": false
+        }
+      ]
+    },
+    "after": {
+      "evidence_id": "E-QZCD-03",
+      "product_id": "M-021",
+      "title": "Studying",
+      "url": "https://help.quizlet.com/hc/en-us/sections/360005938691-Studying",
+      "checked_on": "2026-10-27",
+      "source_type": "official_help_index",
+      "access_mode": "opened_text_via_web_tool",
+      "version_scope": "查阅日 en-US 官方公开帮助；Web/iOS/Android 条件按正文分别解释；精确构建与功能上线日期未知",
+      "app_build": null,
+      "firmware_version": null,
+      "source_updated_on": null,
+      "locator": "Studying：27篇目录",
+      "note": "区分已研究活动与新列出的音频、游戏、社交及外部集成入口。",
+      "hands_on": false,
+      "visual_observed": false,
+      "visual_audit": null,
+      "archived_artifact": null,
+      "sha256": null,
+      "capture_state": "official_web_tool_response_saved_in_work; no_source_HTML; no_images",
+      "raw_capture_kind": "web_tool_response_text; not source HTML; no images observed",
+      "raw_work_path": "work/quizlet-controls-deepening/quizlet-response-05.txt",
+      "raw_sha256": "67ae43e3fa5f44b3a0dcab19506cdda8ad0786bd7a1b9ebc295d31109c30469b",
+      "parsed_text_path": "work/quizlet-controls-deepening/parsed/sections-360005938691.txt",
+      "http_status": null,
+      "supersedes": null,
+      "additional_captures": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "opened_text_via_web_tool",
+          "raw_work_path": "work/research/batch52-integration/quizlet-directories.txt",
+          "raw_sha256": "8e65dbd9a7732c61dbf2833b5297ebb59ddae3aaf1286982fd8922c0df623d81",
+          "note": "重新打开原目录定位八篇文章；不宣称目录全读或新增完整功能",
+          "hands_on": false,
+          "visual_observed": false
+        },
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "opened_text_via_web_tool",
+          "raw_work_path": "work/research/batch53-integration/quizlet-directory.txt",
+          "raw_sha256": "fe257f4d2a230ffa623d73e8c5af78e88d4d1deb3f5195892abbe320631e5ced",
+          "note": "原Studying目录定位八篇未展开正文；不计新增功能目录",
+          "hands_on": false,
+          "visual_observed": false
+        }
+      ]
+    }
+  }
+]

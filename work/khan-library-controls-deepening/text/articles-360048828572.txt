@@ -1,0 +1,78 @@
+Learn more about the Learning Path – Khan Academy (https://khankids.zendesk.com/hc/en-us/articles/360048828572-Learn-more-about-the-Learning-Path)
+citeturn959view2 [wordlim: 200] Crawled: today; Content type: text/html; Source: click({"ref_id":"turn958view1","id":28}); Total lines: 76
+L0: 【0†Skip to main content】
+L1: 
+L2: 【1†Submit a request】
+L3: 
+L4: [Input][Input] [Input: Search]
+L5: 
+L6: Articles in this section
+L7:   * 【2†Our Accessibility Statement】
+L8:   * 【3†Five ways to use Khan Kids for back to school success】
+L9:   * 【4†Quick start guide for preschool through 2nd grade teachers】
+L10:   * 【5†✨ NEW: Teacher Dashboard on the web】
+L11:   * 【6†✨ NEW: Manage student access to areas of the app】
+L12:   * 【7†Module 1: Setting up a Class Account】
+L13:   * 【8†Learning Topics: Using Khan Academy Kids in Educational Settings】
+L14:   * 【9†Module 2: Using Class Codes】
+L15:   * 【10†Daily Schedules for Ages 2-8】
+L16:   * 【11†Module 3: Assigning lessons】
+L17: 【12†See more】
+L18: # Learn more about the Learning Path
+L19: 
+L20:   * February 27, 2026 00:12
+L21:   * Updated
+L22: 
+L23: The Khan Academy Kids Learning Path personalizes the learning experience for every student. Students access the Learning Path by tapping the big play button on The Kids' Club.
+L24: 
+L25: 
+L26: 
+L27: 【13†Image: OlloStudentView.PNG】
+L28: Dynamically adapts to a student’s skill level on each topic: Students are presented with activities, books, educational videos, and creative lessons that allow them to learn each skill at the appropriate level and at their own pace.
+L29: 
+L30:   * Student progression is based on mastery of a topic.
+L31:   * Students will progress quickly if they’ve already mastered a topic. If students need more practice on components of a topic, the program will provide them with more practice lessons. If they are struggling with a concept, the learning path will present more basic lessons with additional scaffolding.
+L32: 
+L33: Rotates through thousands of lessons and books on a variety of subjects: The Learning Path rotates through different subjects with a whole child approach.
+L34:   * English Language Arts (reading, language, writing)
+L35: 
+L36:   * Math
+L37: 
+L38:   * Science (nature and animal books)
+L39: 
+L40:   * Social emotional skills
+L41: 
+L42:   * Approaches to learning (executive function skills, focus, flexible thinking)
+L43: 
+L44:   * Creativity
+L45: 
+L46:   * Physical development (gross motor skills, fine motor skills)
+L47: 
+L48: Sequencing and progression of lessons is based on research on how children develop early literacy and math skills.
+L49:   * The student’s grade level determines the starting point for each subject, but then Learning Path tailors the progression for each student depending on their skill level and performance on each lesson.
+L50:   * All students in Preschool and Kindergarten progress through a sequence of lessons covering letter recognition, letter sounds, single syllable beginning / middle / ending letter sounds, short vowels and long vowel sounds, consonant-vowel-consonant words, and sight words. First graders review these concepts and begin to learn digraphs, blends, and vowel combinations.
+L51: Developed by learning experts: Khan Academy Kids was developed in collaboration with learning experts and teachers from the Stanford Graduate School of Education.
+L52: 
+L53: Aligned with national standards: The lessons cover Common Core State Standards for Math and ELA (Grade 1, Kindergarten) and Head Start Early Learning Outcomes Framework (Preschool Ages 2-4). Teachers can 【14†search for lessons by standards】 in the Khan Academy Kids Search tab.
+L54: Optimized for student engagement: The rotation and variety of subjects as well as the timing and length of the lessons are designed to be developmentally appropriate and to increase student engagement. Lessons increase in length and complexity with age and attention spans. Activities were play-tested extensively by families and teachers.
+L55: 
+L56: 
+L57: 
+L58: Was this article helpful?
+L59: 
+L60: [Button: Yes] [Button: No]
+L61: 
+L62: 4 out of 5 found this helpful
+L63: 
+L64: Have more questions? 【1†Submit a request】
+L65: 
+L66: 【15†Return to top】
+L67: ## Comments
+L68: 
+L69: 0 comments
+L70: 
+L71: Article is closed for comments.
+L72: 
+L73: 【16†Khan Academy】
+L74: 
+L75: 【17†Powered by Zendesk†www.zendesk.com】

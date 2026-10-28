@@ -1,0 +1,287 @@
+{
+  "url": "https://7n.bczcdn.com/editer_uploads/media/202211/75f293134700.mp4",
+  "checked_on": "2026-10-27",
+  "method": "root_normal_browser_media_sample_from_official_article",
+  "audio_observed": false,
+  "product_operated": false,
+  "continuous_observation": false,
+  "frames": [
+    {
+      "requested_seconds": 0,
+      "actual_seconds": 0,
+      "path": "work/bcz-learning-video-preview/frames/000.00s.png",
+      "pixels": [
+        1280,
+        2276
+      ],
+      "sha256": "ec0330d5482168198ad32b6b21f8b843d7475ea70b8966ab8efe80c8eb5f721c"
+    },
+    {
+      "requested_seconds": 5,
+      "actual_seconds": 5,
+      "path": "work/bcz-learning-video-preview/frames/005.00s.png",
+      "pixels": [
+        1280,
+        2276
+      ],
+      "sha256": "1b62b4ae37444f9209ab981e7974a5977df1ee0f0ea800808ea062b384caff34"
+    },
+    {
+      "requested_seconds": 15,
+      "actual_seconds": 15,
+      "path": "work/bcz-learning-video-preview/frames/015.00s.png",
+      "pixels": [
+        1280,
+        2276
+      ],
+      "sha256": "bac5cd2b8f166fc1710a504295aa8e611cd4069d85c33a5c0df1dec6eb0d9941"
+    },
+    {
+      "requested_seconds": 30,
+      "actual_seconds": 30,
+      "path": "work/bcz-learning-video-preview/frames/030.00s.png",
+      "pixels": [
+        1280,
+        2276
+      ],
+      "sha256": "7d3edc8abe8509edfbe2ef99b0dcf43626b9c33757dd2e52eed493af74971502"
+    },
+    {
+      "requested_seconds": 45,
+      "actual_seconds": 45,
+      "path": "work/bcz-learning-video-preview/frames/045.00s.png",
+      "pixels": [
+        1280,
+        2276
+      ],
+      "sha256": "8994458b9bacbc6706ca8a0ea213750c6297888be7c50eae2c9a7e87a4702b57"
+    },
+    {
+      "requested_seconds": 60,
+      "actual_seconds": 60,
+      "path": "work/bcz-learning-video-preview/frames/060.00s.png",
+      "pixels": [
+        1280,
+        2276
+      ],
+      "sha256": "66915afe835ead7b2e9e01305441f536cab8d43d365737c5be064eeecc8aaeb6"
+    },
+    {
+      "requested_seconds": 77.41,
+      "actual_seconds": 77.41,
+      "path": "work/bcz-learning-video-preview/frames/077.41s.png",
+      "pixels": [
+        1280,
+        2276
+      ],
+      "sha256": "bc31b76b3f7f88a80c83ea673e85372ae451fe92cb01ee4ae874106d22e48300"
+    }
+  ],
+  "network": [
+    {
+      "url": "https://7n.bczcdn.com/editer_uploads/media/202211/75f293134700.mp4",
+      "status": 206,
+      "content_type": "application/mp4",
+      "content_range": "bytes 0-86453702/86453703"
+    },
+    {
+      "url": "https://7n.bczcdn.com/editer_uploads/media/202211/75f293134700.mp4",
+      "status": 206,
+      "content_type": "application/mp4",
+      "content_range": "bytes 786432-86453702/86453703"
+    },
+    {
+      "url": "https://7n.bczcdn.com/editer_uploads/media/202211/75f293134700.mp4",
+      "status": 206,
+      "content_type": "application/mp4",
+      "content_range": "bytes 1310720-86453702/86453703"
+    },
+    {
+      "url": "https://7n.bczcdn.com/editer_uploads/media/202211/75f293134700.mp4",
+      "status": 206,
+      "content_type": "application/mp4",
+      "content_range": "bytes 2359296-86453702/86453703"
+    },
+    {
+      "url": "https://7n.bczcdn.com/editer_uploads/media/202211/75f293134700.mp4",
+      "status": 206,
+      "content_type": "application/mp4",
+      "content_range": "bytes 2818048-86453702/86453703"
+    },
+    {
+      "url": "https://7n.bczcdn.com/editer_uploads/media/202211/75f293134700.mp4",
+      "status": 206,
+      "content_type": "application/mp4",
+      "content_range": "bytes 3145728-86453702/86453703"
+    },
+    {
+      "url": "https://7n.bczcdn.com/editer_uploads/media/202211/75f293134700.mp4",
+      "status": 206,
+      "content_type": "application/mp4",
+      "content_range": "bytes 3506176-86453702/86453703"
+    },
+    {
+      "url": "https://7n.bczcdn.com/editer_uploads/media/202211/75f293134700.mp4",
+      "status": 206,
+      "content_type": "application/mp4",
+      "content_range": "bytes 3735552-86453702/86453703"
+    },
+    {
+      "url": "https://7n.bczcdn.com/editer_uploads/media/202211/75f293134700.mp4",
+      "status": 206,
+      "content_type": "application/mp4",
+      "content_range": "bytes 4194304-86453702/86453703"
+    },
+    {
+      "url": "https://7n.bczcdn.com/editer_uploads/media/202211/75f293134700.mp4",
+      "status": 206,
+      "content_type": "application/mp4",
+      "content_range": "bytes 5734400-86453702/86453703"
+    },
+    {
+      "url": "https://7n.bczcdn.com/editer_uploads/media/202211/75f293134700.mp4",
+      "status": 206,
+      "content_type": "application/mp4",
+      "content_range": "bytes 6127616-86453702/86453703"
+    },
+    {
+      "url": "https://7n.bczcdn.com/editer_uploads/media/202211/75f293134700.mp4",
+      "status": 206,
+      "content_type": "application/mp4",
+      "content_range": "bytes 7798784-86453702/86453703"
+    },
+    {
+      "url": "https://7n.bczcdn.com/editer_uploads/media/202211/75f293134700.mp4",
+      "status": 206,
+      "content_type": "application/mp4",
+      "content_range": "bytes 15499264-86453702/86453703"
+    },
+    {
+      "url": "https://7n.bczcdn.com/editer_uploads/media/202211/75f293134700.mp4",
+      "status": 206,
+      "content_type": "application/mp4",
+      "content_range": "bytes 17596416-86453702/86453703"
+    },
+    {
+      "url": "https://7n.bczcdn.com/editer_uploads/media/202211/75f293134700.mp4",
+      "status": 206,
+      "content_type": "application/mp4",
+      "content_range": "bytes 18579456-86453702/86453703"
+    },
+    {
+      "url": "https://7n.bczcdn.com/editer_uploads/media/202211/75f293134700.mp4",
+      "status": 206,
+      "content_type": "application/mp4",
+      "content_range": "bytes 19759104-86453702/86453703"
+    },
+    {
+      "url": "https://7n.bczcdn.com/editer_uploads/media/202211/75f293134700.mp4",
+      "status": 206,
+      "content_type": "application/mp4",
+      "content_range": "bytes 32407552-86453702/86453703"
+    },
+    {
+      "url": "https://7n.bczcdn.com/editer_uploads/media/202211/75f293134700.mp4",
+      "status": 206,
+      "content_type": "application/mp4",
+      "content_range": "bytes 33849344-86453702/86453703"
+    },
+    {
+      "url": "https://7n.bczcdn.com/editer_uploads/media/202211/75f293134700.mp4",
+      "status": 206,
+      "content_type": "application/mp4",
+      "content_range": "bytes 33980416-86453702/86453703"
+    },
+    {
+      "url": "https://7n.bczcdn.com/editer_uploads/media/202211/75f293134700.mp4",
+      "status": 206,
+      "content_type": "application/mp4",
+      "content_range": "bytes 34275328-86453702/86453703"
+    },
+    {
+      "url": "https://7n.bczcdn.com/editer_uploads/media/202211/75f293134700.mp4",
+      "status": 206,
+      "content_type": "application/mp4",
+      "content_range": "bytes 34537472-86453702/86453703"
+    },
+    {
+      "url": "https://7n.bczcdn.com/editer_uploads/media/202211/75f293134700.mp4",
+      "status": 206,
+      "content_type": "application/mp4",
+      "content_range": "bytes 48103424-86453702/86453703"
+    },
+    {
+      "url": "https://7n.bczcdn.com/editer_uploads/media/202211/75f293134700.mp4",
+      "status": 206,
+      "content_type": "application/mp4",
+      "content_range": "bytes 65044480-86453702/86453703"
+    },
+    {
+      "url": "https://7n.bczcdn.com/editer_uploads/media/202211/75f293134700.mp4",
+      "status": 206,
+      "content_type": "application/mp4",
+      "content_range": "bytes 66355200-86453702/86453703"
+    },
+    {
+      "url": "https://7n.bczcdn.com/editer_uploads/media/202211/75f293134700.mp4",
+      "status": 206,
+      "content_type": "application/mp4",
+      "content_range": "bytes 66420736-86453702/86453703"
+    },
+    {
+      "url": "https://7n.bczcdn.com/editer_uploads/media/202211/75f293134700.mp4",
+      "status": 206,
+      "content_type": "application/mp4",
+      "content_range": "bytes 66486272-86453702/86453703"
+    },
+    {
+      "url": "https://7n.bczcdn.com/editer_uploads/media/202211/75f293134700.mp4",
+      "status": 206,
+      "content_type": "application/mp4",
+      "content_range": "bytes 67010560-86453702/86453703"
+    },
+    {
+      "url": "https://7n.bczcdn.com/editer_uploads/media/202211/75f293134700.mp4",
+      "status": 206,
+      "content_type": "application/mp4",
+      "content_range": "bytes 67895296-86453702/86453703"
+    },
+    {
+      "url": "https://7n.bczcdn.com/editer_uploads/media/202211/75f293134700.mp4",
+      "status": 206,
+      "content_type": "application/mp4",
+      "content_range": "bytes 83099648-86453702/86453703"
+    },
+    {
+      "url": "https://7n.bczcdn.com/editer_uploads/media/202211/75f293134700.mp4",
+      "status": 206,
+      "content_type": "application/mp4",
+      "content_range": "bytes 84901888-86453702/86453703"
+    },
+    {
+      "url": "https://7n.bczcdn.com/editer_uploads/media/202211/75f293134700.mp4",
+      "status": 206,
+      "content_type": "application/mp4",
+      "content_range": "bytes 85360640-86453702/86453703"
+    },
+    {
+      "url": "https://7n.bczcdn.com/editer_uploads/media/202211/75f293134700.mp4",
+      "status": 206,
+      "content_type": "application/mp4",
+      "content_range": "bytes 85491712-86453702/86453703"
+    },
+    {
+      "url": "https://7n.bczcdn.com/editer_uploads/media/202211/75f293134700.mp4",
+      "status": 206,
+      "content_type": "application/mp4",
+      "content_range": "bytes 85917696-86453702/86453703"
+    }
+  ],
+  "browser": "156.0.8078.4",
+  "metadata": {
+    "duration": 78.414033,
+    "width": 720,
+    "height": 1280,
+    "error": null
+  }
+}

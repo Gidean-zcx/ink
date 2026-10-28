@@ -1,0 +1,24 @@
+HELP CENTER
+ACCOUNT MANAGEMENT
+What to do if your data was compromised
+You may have received an email alerting you about a data breach outside of Duolingo that included your personal information. This email is legitimate and we strongly urge you to take action in order to secure your data.
+The tool we use to detect data breaches
+We detect data breaches through an automated search of Have I Been Pwned, a website that allows users to check if their personal information has been compromised in data breaches. More details about how Have I Been Pwned works:
+“Pwned Passwords are hundreds of millions of real world passwords previously exposed in data breaches. This exposure makes them unsuitable for ongoing use as they’re at much greater risk of being used to take over other accounts. They’re searchable online below as well as being downloadable for use in other online systems.”
+Duolingo utilizes this website as a tool to uphold online security by conducting a search each time a user logs in. We use the hashed version of the password for the search to ensure the plain password is not exposed. If we discover that a user’s password has been detected in a data breach on another platform, it indicates potential security risks to the account. In such cases, users should take necessary actions to safeguard their accounts, such as updating passwords.
+What to do now
+If you received an email about a breach or suspect that your data was compromised, you should protect your account by resetting to a strong, unique password here: https://www.duolingo.com/forgot_password
+In the Duolingo app, you can change your password by following these steps:
+1. Tap the Profile tab
+2. Tap Settings (gear icon)
+3. Tap Profile
+4. Change password
+Why am I getting the email when I did not log in
+If you did not log in but received an email about a breach, it means that your account has been accessed by an unauthorized user who used a password of yours that was shared across different platforms, one or more of which experienced a data breach. To protect your account, follow the “What to do now” section above to reset your password.
+Relevant Articles
+How do I change my username or email address?
+How do I find, follow, and block users on Duolingo?
+How do I remove or reset a course?
+I’m having trouble accessing my account.
+How do I delete my account and access my data?
+I want to submit a bug report

@@ -1,0 +1,128 @@
+[
+  {
+    "class": "page-header-inner-logo-link",
+    "href": "/en",
+    "title": "",
+    "url": "https://help.ground.news/en"
+  },
+  {
+    "class": "page-header-inner-title",
+    "href": "/en",
+    "title": "Ground News Help Center",
+    "url": "https://help.ground.news/en"
+  },
+  {
+    "type": "button",
+    "class": "kb-button primary",
+    "href": "/en/contact-us",
+    "title": "Contact Us",
+    "url": "https://help.ground.news/en/contact-us"
+  },
+  {
+    "id": "moreResultsLink",
+    "type": "button",
+    "class": "kb-button secondary",
+    "href": "/en/search",
+    "title": "More results",
+    "url": "https://help.ground.news/en/search"
+  },
+  {
+    "href": "https://ground.news/privacy-policy",
+    "title": "Privacy Policy",
+    "url": "https://ground.news/privacy-policy"
+  },
+  {
+    "class": "kb-category-card",
+    "href": "/en/categories/2273089-getting-started",
+    "target": "_self",
+    "rel": "noreferrer",
+    "title": "Getting StartedNew to Ground News? Learn how to explore news coverage, get the most out of your subscription, and install Ground News across your devices.\n\n\n 7 articles",
+    "url": "https://help.ground.news/en/categories/2273089-getting-started"
+  },
+  {
+    "class": "kb-category-card",
+    "href": "/en/categories/2272705-understanding-ground-news",
+    "target": "_self",
+    "rel": "noreferrer",
+    "title": "Understanding Ground NewsLearn how Ground News works, including bias ratings, blindspots, and how we help readers compare news coverage.\n\n\n 9 articles",
+    "url": "https://help.ground.news/en/categories/2272705-understanding-ground-news"
+  },
+  {
+    "class": "kb-category-card",
+    "href": "/en/categories/2272769-personalize-your-news-feed",
+    "target": "_self",
+    "rel": "noreferrer",
+    "title": "Personalize Your News FeedCustomize your news experience by following topics, adjusting notifications, and tailoring your feed to the stories that matter most to you.\n\n\n 10 articles",
+    "url": "https://help.ground.news/en/categories/2272769-personalize-your-news-feed"
+  },
+  {
+    "class": "kb-category-card",
+    "href": "/en/categories/2272897-advanced-browsing-tools",
+    "target": "_self",
+    "rel": "noreferrer",
+    "title": "Advanced Browsing ToolsExplore our advanced tools that help you filter sources, translate articles, and fully customize how you read the news.\n\n\n 10 articles",
+    "url": "https://help.ground.news/en/categories/2272897-advanced-browsing-tools"
+  },
+  {
+    "class": "kb-category-card",
+    "href": "/en/categories/2272833-manage-your-account-subscription",
+    "target": "_self",
+    "rel": "noreferrer",
+    "title": "Manage Your Account & SubscriptionLearn how to manage your account settings, subscription details, billing, and plan features.\n\n\n 2 categories\n\n\n 17 articles",
+    "url": "https://help.ground.news/en/categories/2272833-manage-your-account-subscription"
+  },
+  {
+    "class": "kb-category-card",
+    "href": "/en/categories/2272961-fix-a-problem",
+    "target": "_self",
+    "rel": "noreferrer",
+    "title": "Fix a ProblemTroubleshoot common issues with your news feed or account, and find solutions to get back to reading.\n\n\n 6 articles",
+    "url": "https://help.ground.news/en/categories/2272961-fix-a-problem"
+  },
+  {
+    "class": "kb-category-card",
+    "href": "/en/categories/2273025-share-your-feedback",
+    "target": "_self",
+    "rel": "noreferrer",
+    "title": "Share Your FeedbackHave a suggestion or noticed something that could be improved? Learn how to report issues and share feedback with our team.\n\n\n 1 category\n\n\n 2 articles",
+    "url": "https://help.ground.news/en/categories/2273025-share-your-feedback"
+  },
+  {
+    "class": "kb-category-card",
+    "href": "/en/categories/2358337-partner-with-us",
+    "target": "_self",
+    "rel": "noreferrer",
+    "title": "Partner With UsLearn more about our partnership program for content creators and how to apply to be our partners\n\n\n 4 articles",
+    "url": "https://help.ground.news/en/categories/2358337-partner-with-us"
+  },
+  {
+    "href": "https://twitter.com/Ground_app",
+    "title": "",
+    "url": "https://twitter.com/Ground_app"
+  },
+  {
+    "href": "https://ca.linkedin.com/company/groundnews",
+    "title": "",
+    "url": "https://ca.linkedin.com/company/groundnews"
+  },
+  {
+    "href": "https://www.instagram.com/groundnews/",
+    "title": "",
+    "url": "https://www.instagram.com/groundnews/"
+  },
+  {
+    "href": "https://ground.news/refund-policy",
+    "title": "Refund and Cancellation Policy",
+    "url": "https://ground.news/refund-policy"
+  },
+  {
+    "href": "https://ground.news/terms-and-conditions",
+    "title": "Terms and Conditions",
+    "url": "https://ground.news/terms-and-conditions"
+  },
+  {
+    "href": "https://about.ground.news/privacy-policy",
+    "title": "Privacy Policy",
+    "url": "https://about.ground.news/privacy-policy"
+  }
+]

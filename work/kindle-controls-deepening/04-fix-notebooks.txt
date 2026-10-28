@@ -1,0 +1,24 @@
+Fix Issues with Notebooks on Kindle Scribe
+en_US
+Fix Issues with Notebooks on Kindle Scribe
+Deleted Notebooks still appearing on device, page numbers not displayed, template changed, disappeared, or isn’t getting updated.
+Make sure you're connected to the internet on your Kindle Scribe and Kindle app so notebook content reflects the latest edits made on your Kindle Scribe when opening it on your Kindle app or phone.
+If you still can't access the latest updates:
+Try refreshing/reopening the notebook in the app.
+Try manually syncing your Kindle Scribe by tapping on Sync in the Quick Actions menu. Wait a few seconds for the content to be updated.
+Refresh the Notebook tab view.
+Delete the notebook on Kindle Scribe again, then sync.
+Close and reopen the notebook.
+If you have another Kindle Scribe device registered to the same Amazon account, check that notebooks and folders haven’t been deleted from that device.
+If your notebook template changed, disappeared or isn’t showing properly, select the template that you want for your notebook again, then close and reopen the notebook.
+If the issue with a template persists, remove the notebook from the device and download it again.
+If the page number isn't displayed on your notebook, tap on the bottom left-hand corner to turn on the page number display.
+Kindle Scribe doesn’t support copy/pasting images, bookmarking specific pages, and creating a table of content in notebooks at this time.
+For more help, go to:
+Create a Folder or Notebook on Kindle Scribe
+Delete a Folder or Notebook on Kindle Scribe
+Move a Notebook on Kindle Scribe
+en_US
+US
+Cpiu6TFOuXpU4ymOzD
+TyNFaxgPlqhHz1d4B4

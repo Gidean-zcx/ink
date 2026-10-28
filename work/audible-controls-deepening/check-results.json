@@ -1,0 +1,45 @@
+{
+  "status": "pass",
+  "new_evidence": 23,
+  "new_flows": 3,
+  "old_updates": 11,
+  "case_flows": 14,
+  "inventory_rows": 53,
+  "inventory_status": {
+    "body_read_partial_task": 21,
+    "index_only": 22,
+    "official_search_body_partial": 1,
+    "setting_listed_not_full_options": 9
+  },
+  "hashed_work_files": 35,
+  "raw_http_files_are_shells": true,
+  "visual_observed": false,
+  "hands_on": false,
+  "old_rows_state": {
+    "F-M039-01": "before",
+    "F-M039-02": "before",
+    "F-M039-03": "before",
+    "F-M039-04": "before",
+    "F-M039-05": "before",
+    "F-M039-06": "before",
+    "F-M039-07": "before",
+    "F-M039-08": "before",
+    "F-M039-09": "before",
+    "F-M039-10": "before",
+    "F-M039-11": "before"
+  },
+  "csv_newlines": [
+    {
+      "file": "audible-controls-deepening-coverage.csv",
+      "physical_LF": 4,
+      "physical_CRLF": 0,
+      "literal_backslash_r_backslash_n": 0
+    },
+    {
+      "file": "audible-controls-deepening-inventory.csv",
+      "physical_LF": 54,
+      "physical_CRLF": 0,
+      "literal_backslash_r_backslash_n": 0
+    }
+  ]
+}

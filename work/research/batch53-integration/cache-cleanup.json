@@ -1,0 +1,232 @@
+{
+  "target": "work/research/batch38-week/desktop-profile/Default/Code Cache",
+  "reason": "Low disk space; remove only regenerable code cache from inactive research browser",
+  "active_browser_processes": [],
+  "deleted_cache_files": {
+    "js/1e64137bf8e1561b_0": {
+      "bytes": 9369,
+      "sha256": "302bcb534c770ddc89f293128d0d5ac722d9741faabdd05210cd842833b3f752"
+    },
+    "js/541343ae3197e198_0": {
+      "bytes": 258,
+      "sha256": "9641a4ba455bd92ea383271d0fd932bad41ac881fc0c542a2c8e8c7c41b7380b"
+    },
+    "js/a6dae82bdb75ddb4_0": {
+      "bytes": 31128,
+      "sha256": "becec9da9b4f0340336964b58b2e042886fe9ad629595c0f7c444ecaff65cbee"
+    },
+    "js/77d902a72247789a_0": {
+      "bytes": 245,
+      "sha256": "f0803cc6e118d05f0e9d7a2302a557aff78e7ebc2f03eb1a979efc1d8a04efa8"
+    },
+    "js/ea52f8ffe16347aa_0": {
+      "bytes": 465512,
+      "sha256": "402df22a759dd36d67db3d43b21c72910f1a78517e5f13e51f9a292614e6a779"
+    },
+    "js/6acc7fce6cdcb208_0": {
+      "bytes": 736544,
+      "sha256": "580d6bceac97e08237e327a8f927bb393a400d86ffe380f42e2eb6a4438f5a3c"
+    },
+    "js/6e71b46662a63735_0": {
+      "bytes": 1157,
+      "sha256": "876a1d23d4ff3cb62fddf75e34e7c238eca498f54d5450c53a9a658fbe90e2d5"
+    },
+    "js/index": {
+      "bytes": 24,
+      "sha256": "fbcfe23a2ecb82b7100c50811691dde0a33aa3da8d176be9882a9db485dc0f2d"
+    },
+    "js/728ef4585d415c89_0": {
+      "bytes": 299,
+      "sha256": "2da0466a7c88cb6532e01740b11e5d82a18c7558af87efa985d37f023d89d917"
+    },
+    "js/a65e8e36c6de47e8_0": {
+      "bytes": 253,
+      "sha256": "9258711ccc8241687fbfbfee4ca436492f19cfb96a998447c2fa32103be3e007"
+    },
+    "js/3a6ac91fdbedfd82_0": {
+      "bytes": 281,
+      "sha256": "804d0f03c719e6c5c56c9209a30912c5ae93b02ddfaaeae5b0f398808347bae2"
+    },
+    "js/8b47a8d9d6103c07_0": {
+      "bytes": 159056,
+      "sha256": "0bf943a82012ed6217cd0e628fbf24155ee033b26643ff4521a1ce953ff434d1"
+    },
+    "js/3be49443c89238a4_0": {
+      "bytes": 12111,
+      "sha256": "30069ed001e892a8b6aaa036fa354699dce087d5fa9ab93d7cb5a8706e323497"
+    },
+    "js/2c6a3d2bb0f2700e_0": {
+      "bytes": 4898,
+      "sha256": "98429759b2fa983d8f74876b779458d30b077d1d42eed7647148ce12be2a65d8"
+    },
+    "js/7551a1200728c7e3_0": {
+      "bytes": 1387784,
+      "sha256": "f09dbdd332054d56e8e6510e664ff662b602f58f1a8f619d3a89c93f88d5ed1c"
+    },
+    "js/ad4b00953522d576_0": {
+      "bytes": 55504,
+      "sha256": "7e6b2444201b62567b3613ae09bd3629c2e9977ca70851a17057f6a6f3f9d8a8"
+    },
+    "js/cf7a97f61b3e2a19_0": {
+      "bytes": 220,
+      "sha256": "79da8d0778939e8a6970936bd9cd84fc1cee863ddbf48ad4cdcd5613591bdf77"
+    },
+    "js/daf3db6c2c526e17_0": {
+      "bytes": 228,
+      "sha256": "b4c365651896a687d2844e2c10f535a06d40735c8fc5d2abdb3f1827a5f7cfbd"
+    },
+    "js/9dfda5275d6acacf_0": {
+      "bytes": 244,
+      "sha256": "d1cb03dcdfcc5b9409e18fe1dae7dc09fd53af379047d0212b2dadd754e48b35"
+    },
+    "js/bcf198fc281e7ca4_0": {
+      "bytes": 53832,
+      "sha256": "3e1b52b2ecf6103f5ed05ae9fd66d81f8a01a77a85f7c5bbb4fb893248a45662"
+    },
+    "js/f5b189ab5b87988b_0": {
+      "bytes": 59760,
+      "sha256": "24ab064fd9ec5e69681312a8f4732a06f6be647c70a87abd3dbe43fc15aafe21"
+    },
+    "js/3ac9e33ed891ecf7_0": {
+      "bytes": 250,
+      "sha256": "aa5bb29c976d15466c63d86a6b95ef10fe685573e94de8dd1b6d5a12585b5606"
+    },
+    "js/a5c0cf999bf6a10b_0": {
+      "bytes": 10803,
+      "sha256": "531dfe63de59d900bfacf4af58dba77a30f4995b982e2b28553f5ba46f3cc06e"
+    },
+    "js/1b9395599a18fb43_0": {
+      "bytes": 250,
+      "sha256": "e0ba01d83e927b6e83d35ad18f4b2e34a4e03fa99317404c3cecfc7085353947"
+    },
+    "js/36045c59136864f9_0": {
+      "bytes": 250,
+      "sha256": "6584960d5ef1fb2c04ab6a9335318d2cf98093abd410bd4c2570c86666da1134"
+    },
+    "js/a24a18b1b6cc6f29_0": {
+      "bytes": 254,
+      "sha256": "852053a3d3bb427e9021157378b81426c64631f0e47f73127a1aa001302d5a70"
+    },
+    "js/72cd9d13fdedbdf2_0": {
+      "bytes": 227,
+      "sha256": "1ef011610ec56ecff000a8b742b70eaded653954674344129cc5d8ea4012a0e3"
+    },
+    "js/ad4b8db5e536cdcd_0": {
+      "bytes": 16928,
+      "sha256": "3e409e0f5a3a4f3e7b001e2b5cb3300df44a5d775ca9c3dba5c47d2ba37f25e7"
+    },
+    "js/70b345937211eeba_0": {
+      "bytes": 18848,
+      "sha256": "bf13e7da739e4596c77478315d7b3ff6473d72a8a6bd5cc42a9d2b49521881fb"
+    },
+    "js/eea928c6ab3bd484_0": {
+      "bytes": 153416,
+      "sha256": "126f9569cc3ea74ae01ed994ce8063397843c78c4ad312472f69d438c16cfb48"
+    },
+    "js/5859b827e989f99c_0": {
+      "bytes": 797464,
+      "sha256": "430a056e60f16a90abb62109a9c547fb3899e4e9bf52ba016e9549fd75ff1dbf"
+    },
+    "js/665619fd9357ff8e_0": {
+      "bytes": 526384,
+      "sha256": "3707add476d3e160005f75820c623b5debad570aac453038900784f68095d562"
+    },
+    "js/4fd1dd1d602f92a8_0": {
+      "bytes": 54776,
+      "sha256": "a83927a52797dfb0f432447a16d8e25773c92107ab1e72fd18817c82c8527b85"
+    },
+    "js/8ca43f61ef9a689e_0": {
+      "bytes": 11971,
+      "sha256": "451002e26fdc827f9ceefccb363aefdf4413d16824cf86a1a02dd7d0cae90fbb"
+    },
+    "js/ef4b3f84957964af_0": {
+      "bytes": 12550,
+      "sha256": "c22cd43cabba3a922033096c09513d94ff6d6e62d278bd51b3d3f8cf4f7466dc"
+    },
+    "wasm/index": {
+      "bytes": 24,
+      "sha256": "fbcfe23a2ecb82b7100c50811691dde0a33aa3da8d176be9882a9db485dc0f2d"
+    },
+    "js/index-dir/the-real-index": {
+      "bytes": 864,
+      "sha256": "70f4d902b3d0cb46339f6c683a422b920672dec2c5fbd6a4016da88534357903"
+    },
+    "wasm/index-dir/the-real-index": {
+      "bytes": 48,
+      "sha256": "6bd2ddf8d548f9b1346f0cc0a87434e914d272ee0ff28d7ef5cd0aef9960ab10"
+    }
+  },
+  "retained_profile_files": {
+    "Default/Cookies": "3e7b9e12b3481c104d29c39bee8915c7a40f2195af244ab8d7780bc019872a35",
+    "Default/DIPS": "b4c042fd4ba32e8a1089f99358d9303b1b6531ec076883c9d56de8a8cb32484c",
+    "Default/declarative_performance_observer.db-journal": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "Default/Cookies-journal": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "Default/declarative_performance_observer.db": "eda4c9567974174f08a1dbcd8badf4d6199a7e9a8b78b8826548f49e20e7badf",
+    "Default/WebStorage/QuotaManager-journal": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "Default/WebStorage/QuotaManager": "8e97829742b1b22c8c9a3fd7d560d870a929082e0dca697aa18ad8fb01d2f730",
+    "Default/Session Storage/MANIFEST-000007": "bd9fdb8273c0ee6509341a313730c9eec0d3c08aa3f6c0df2418945a7a751266",
+    "Default/Session Storage/LOCK": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "Default/Session Storage/000009.log": "d870e1252f1ea20c8af43b6222f0f64b69f6cd20600472a4ffce9d662460a6c6",
+    "Default/Session Storage/CURRENT": "8af72f43857550b01eab1019335772b367a17a9884a7a759fdf4fe6f272b90aa",
+    "Default/Session Storage/LOG.old": "8d99c5049937db8e4fbe93db8cda51e501f4f35671ce11314bc26ad07e1bfb2c",
+    "Default/Session Storage/LOG": "b8f8cb1e5bc2616fdfed53981971153fa028bb7afb8f4380654bd145497a362c",
+    "Default/Session Storage/000005.ldb": "0d7252a9e3ca126d1f55236b2908d5fbcb0d370b11ef352b84f0ddf529f9f287",
+    "Default/GPUCache/data_3": "e09f42c398d688dce168570291f1f92d079987deda3099a34adb9e8c0522b30c",
+    "Default/GPUCache/index": "1263d618e5676227f4e6361c938050b5c004d9404e0369845a58a21d90bdde64",
+    "Default/GPUCache/data_2": "ec1702806f4cc7c42a82fc2b38e89835fde7c64bb32060e0823c9077ca92efb7",
+    "Default/GPUCache/data_0": "d6a5fe39cd672781b256e0e3102f7022635f1d4bb7cfcc90a80fffe4d0f3877e",
+    "Default/GPUCache/data_1": "58f9c0a2be0e8b462439899d5952e22582a9c0ebcbfe6a59d9e071bfa69d9651",
+    "Default/shared_proto_db/MANIFEST-000007": "556a515b30c9d4b40da30e301e545241d980dbc3a5c77cdb65ec4cc83edcd84a",
+    "Default/shared_proto_db/LOCK": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "Default/shared_proto_db/000009.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "Default/shared_proto_db/CURRENT": "8af72f43857550b01eab1019335772b367a17a9884a7a759fdf4fe6f272b90aa",
+    "Default/shared_proto_db/LOG.old": "421b727990abc5fc4ddb45d90e0c5a701d57e12903ecddccb388443cf03961f9",
+    "Default/shared_proto_db/LOG": "867bf28c2b4efac81793df34546701a8230eee307e73bf0f1aece4da7e937c6c",
+    "Default/DawnGraphiteCache/data_3": "e09f42c398d688dce168570291f1f92d079987deda3099a34adb9e8c0522b30c",
+    "Default/DawnGraphiteCache/index": "ace634790262cbd91a9e3987c9b8e9abfc6abae28db1a4081a38f86aaff306e3",
+    "Default/DawnGraphiteCache/data_2": "ec1702806f4cc7c42a82fc2b38e89835fde7c64bb32060e0823c9077ca92efb7",
+    "Default/DawnGraphiteCache/data_0": "d6a5fe39cd672781b256e0e3102f7022635f1d4bb7cfcc90a80fffe4d0f3877e",
+    "Default/DawnGraphiteCache/data_1": "78826f86f082f3b1ef91d8096cd17bbfa67a65736f7b0eea5b436f3baf9053a7",
+    "Default/PersistentOriginTrials/LOCK": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "Default/PersistentOriginTrials/LOG.old": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "Default/PersistentOriginTrials/LOG": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "Default/DawnWebGPUCache/data_3": "e09f42c398d688dce168570291f1f92d079987deda3099a34adb9e8c0522b30c",
+    "Default/DawnWebGPUCache/index": "9c2c9b33d097ac88027c166c6631479af1972ab66193519c6e8239da307005db",
+    "Default/DawnWebGPUCache/data_2": "ec1702806f4cc7c42a82fc2b38e89835fde7c64bb32060e0823c9077ca92efb7",
+    "Default/DawnWebGPUCache/data_0": "d6a5fe39cd672781b256e0e3102f7022635f1d4bb7cfcc90a80fffe4d0f3877e",
+    "Default/DawnWebGPUCache/data_1": "c47546fa1fdc9fb203bbb7c5c3245d9b7803e88df90488157a0f262960a0697e",
+    "Default/Shared Dictionary/db-journal": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "Default/Shared Dictionary/db": "0d6287fecedbc44ed9f51ded9de88629ec9f385ecff5da9a34e47e96fd5a9cba",
+    "Default/Local Storage/leveldb/MANIFEST-000007": "c70b0ef3680c73807118221adda4aa9ba48c73e77dffab70cfbcbbf0ec7598a2",
+    "Default/Local Storage/leveldb/LOCK": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "Default/Local Storage/leveldb/000009.log": "d870e1252f1ea20c8af43b6222f0f64b69f6cd20600472a4ffce9d662460a6c6",
+    "Default/Local Storage/leveldb/CURRENT": "8af72f43857550b01eab1019335772b367a17a9884a7a759fdf4fe6f272b90aa",
+    "Default/Local Storage/leveldb/LOG.old": "b7ec10d0c543e1c0044700b643c54d0e0e1602ee145e659a35a77e124e82b62e",
+    "Default/Local Storage/leveldb/LOG": "2aa01c4acfa0c7f9cab3aecfbc56d1f7299086c348dd95fd98808c9e9f701007",
+    "Default/Local Storage/leveldb/000005.ldb": "0f7ea5b03cf73edeb1c0b5d3d08af99294c23a0388b4d2025fc20714fe0c9bd9",
+    "Default/shared_proto_db/metadata/MANIFEST-000007": "d61e161a4f092557e70b2759eb763486dd075158fa3dc2c32d80e5671f968df3",
+    "Default/shared_proto_db/metadata/000008.ldb": "67f0b3d8136fa9fb97ca633440637fca67936bad66966073422f5f4d86cfbf98",
+    "Default/shared_proto_db/metadata/LOCK": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "Default/shared_proto_db/metadata/000009.log": "fc35b0b1de3aeac40415a4f28a9f9630e0fccc6c1f218ab3a717e1fbdff918c3",
+    "Default/shared_proto_db/metadata/CURRENT": "8af72f43857550b01eab1019335772b367a17a9884a7a759fdf4fe6f272b90aa",
+    "Default/shared_proto_db/metadata/LOG.old": "62d49885012ea3610ae9c41ee8f543db7564222f0c515adc6e627057732a5d1d",
+    "Default/shared_proto_db/metadata/LOG": "872fa0cb158bfc0ba0be63043a1d2eaea8ab4c5425dfdbe3be83fd9d9db97fdc",
+    "Default/shared_proto_db/metadata/000005.ldb": "4882e92d6495cf3775c526f98f2fe6bed6120c7d04c1cee3c9c4825a574d6e4a",
+    "Default/Shared Dictionary/cache/index": "fbcfe23a2ecb82b7100c50811691dde0a33aa3da8d176be9882a9db485dc0f2d",
+    "Default/Shared Dictionary/cache/index-dir/the-real-index": "55ddb269cb7f5038b0c62208668ae5a78e8dbfb52323faba13f1ee245a3de913",
+    "Default/IndexedDB/https_reader.emagazines.com_0.indexeddb.leveldb/LOCK": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "Default/IndexedDB/https_reader.emagazines.com_0.indexeddb.leveldb/000023.ldb": "927e8612eb771cbcd2280e8e94007d6e334155458e8b4ad26d1630ac7860d58e",
+    "Default/IndexedDB/https_reader.emagazines.com_0.indexeddb.leveldb/CURRENT": "f6a28e2e41d451b4de8597a14916d7a3058ebdd8046a89109658321142660d69",
+    "Default/IndexedDB/https_reader.emagazines.com_0.indexeddb.leveldb/000020.ldb": "f7cb283cddaa12b3737296945bec42ce727d86b5e656483958553dcea54e9677",
+    "Default/IndexedDB/https_reader.emagazines.com_0.indexeddb.leveldb/LOG.old": "562b8ae33c30cb624336aaf1743f56c89373c1e1cddddbfd4ceb497758964194",
+    "Default/IndexedDB/https_reader.emagazines.com_0.indexeddb.leveldb/LOG": "23d22086c104f40e00a133f5ea590261f4e843c9562406c955d32fe23d2542fc",
+    "Default/IndexedDB/https_reader.emagazines.com_0.indexeddb.leveldb/000005.ldb": "163022b4034f0b456c85e68a909be51f78f647b4a12fe1af5ff90acc64aa0116",
+    "Default/IndexedDB/https_reader.emagazines.com_0.indexeddb.leveldb/000021.log": "e386326611d44e85125511d830c8c63c3171aae2a512133d7c426934f61f70ee",
+    "Default/IndexedDB/https_reader.emagazines.com_0.indexeddb.leveldb/MANIFEST-000015": "bd05f30bbf5048ba1a84014ddf1306ddcc50737ca19ac1fa8f817920c6f438dc"
+  },
+  "retained_profile_unchanged": true,
+  "formal_evidence_deleted": false,
+  "bytes_before": 4091904,
+  "bytes_after": 8802304,
+  "deleted_bytes": 4584014
+}

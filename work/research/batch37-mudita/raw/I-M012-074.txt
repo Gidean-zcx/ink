@@ -1,0 +1,12 @@
+Does Mudita Kompakt Have a Messaging App Like WhatsApp or Signal?
+Modified on: Sat, 3 Oct, 2026 at 8:37 AM
+The initial release of Mudita Kompakt does not include a dedicated messaging app like WhatsApp or Signal. The Kompakt does have a built-in app for core SMS and MMS messaging support, with free software updates planned for future enhancements.
+While we’re exploring options for adding messaging functionalities in future updates, this will depend on technical feasibility and user feedback.
+Third-Party Messaging Apps
+There is no app store on the Mudita Kompakt to install third-party apps. If you’re considering sideloading them, please refer to the following article to learn about important details regarding compatibility with MuditaOS K and E-ink screen performance:
+Does Mudita Kompakt Support Third-Party Apps?
+Was this article helpful?
+No
+Yes
+That’s Great!
+Thank you for your feedback

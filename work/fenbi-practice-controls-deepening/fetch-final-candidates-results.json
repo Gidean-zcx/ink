@@ -1,0 +1,42 @@
+[
+  {
+    "file": "work/fenbi-practice-controls-deepening/raw/c05-wrong2019.html",
+    "url": "https://jingyan.baidu.com/article/d2b1d102e627605c7e37d4e0.html",
+    "final_url": "https://jingyan.baidu.com/article/d2b1d102e627605c7e37d4e0.html",
+    "status": 200,
+    "bytes": 67506,
+    "sha256": "fdc4e0225fa02fe2dfeff8bd11f03840544265918e75fc97f14ef4b3635e511c",
+    "content_type": "text/html; charset=utf-8",
+    "redirects": []
+  },
+  {
+    "file": "work/fenbi-practice-controls-deepening/raw/c06-quick2022.html",
+    "url": "https://jingyan.baidu.com/article/6dad5075034816e023e36ef8.html",
+    "final_url": "https://jingyan.baidu.com/article/6dad5075034816e023e36ef8.html",
+    "status": 200,
+    "bytes": 161156,
+    "sha256": "edc91a8b95057d4d6ab839ea8db4cd9f0826146d03e2a7bc421961eb95d8bb2d",
+    "content_type": "text/html; charset=utf-8",
+    "redirects": []
+  },
+  {
+    "file": "work/fenbi-practice-controls-deepening/raw/c07-print2020.html",
+    "url": "https://jingyan.baidu.com/article/495ba84133796979b20ede4a.html",
+    "final_url": "https://jingyan.baidu.com/article/495ba84133796979b20ede4a.html",
+    "status": 200,
+    "bytes": 177468,
+    "sha256": "5cf975d8fd809adf4aba9ecf4e2d55b1f3bf1924e282d9c42d1b8a10671e83ea",
+    "content_type": "text/html; charset=utf-8",
+    "redirects": []
+  },
+  {
+    "file": "work/fenbi-practice-controls-deepening/raw/c08-mock2020.html",
+    "url": "https://jingyan.baidu.com/article/6b97984d773fd15da3b0bf2e.html",
+    "final_url": "https://jingyan.baidu.com/article/6b97984d773fd15da3b0bf2e.html",
+    "status": 200,
+    "bytes": 67944,
+    "sha256": "2eb08d051af73edf2afc15f1e4a2fc1df9adaeff95d7811ba53a1a4987b23845",
+    "content_type": "text/html; charset=utf-8",
+    "redirects": []
+  }
+]

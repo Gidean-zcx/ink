@@ -1,0 +1,5 @@
+http_code=200
+url_effective=https://www.baicizhan.com/little_class/article/892/share_view
+content_type=text/html; charset=utf-8
+size_download=30023
+num_redirects=0

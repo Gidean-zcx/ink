@@ -1,0 +1,63 @@
+Watch any keyword, brand or topic across the web
+Turn a search into a feed, and every new article that matches it is delivered to you as it is published. The matches can come from every public source Inoreader follows or only from your own account.
+See pricing
+ProPro includes 30 monitoring feeds, and more are available as an add-on.
+TeamTeam and Team Intelligence plans include monitoring feeds, pooled across the team.
+Find coverage beyond the sources you know
+Following feeds covers the sources you know, and a monitoring feed covers the ones you do not. It turns a search into a feed that Inoreader fills as new matches are published.
+Millions of sources
+The feed is filled from every public feed Inoreader follows: websites, blogs, news sources and newsletters in many languages.
+Precise queries
+Match a word, a phrase or several combined with "all", "any" and "none" groups, and limit the query to titles or to a language.
+Searches in your own account
+Instead of the public index, watch your own feeds, a folder, your tags, saved articles, annotations and uploads.
+Folders, filters and rules
+Put it in a folder, filter it, run rules on it and search it later.
+Create a monitoring feed
+Open Add feed and choose Monitoring feed. You can also run an article search and click the plus button next to the query to save it.
+Build the query from the keywords and phrases to match, using "all", "any" and "none" groups. If you want, limit it to titles or to a language.
+Choose the scope, either all public feeds Inoreader follows or only your own account.
+Review the matching articles and create the feed.
+When a match should reach someone at once, add a rule for alerts or forwarding. If the results drift over time, edit the query.
+Use cases
+Brand and competitor monitoring
+Create a feed for each brand name, each product and each competitor. A rule pushes every new match to the communications team's channel, and everyone else gets a weekly digest. When a publisher revises an article about you, its edit history shows what changed.
+Research on a topic
+Create a feed for a disease, a regulation, a technology or a region. It collects articles from sources you would not have found on your own, and you can still search them months later.
+Mentions of your own content
+Watch your company, your authors or your campaign names across the public index, the way media monitoring services do, but inside the reader you already use.
+Build alerts on a monitoring feed
+Alerts and monitoring in Inoreader are built on monitoring feeds. The feed collects the articles, rules decide what to do with each match, and digests summarize the day.
+Frequently asked questions
+What is a monitoring feed?
+It is a feed built from a search query. You write a query with keywords, a brand, a competitor or a phrase, and Inoreader turns it into a feed. The feed collects every new article that matches, from the moment you create it and for as long as you keep it.
+Where does it search?
+You choose. It can search all the public feeds Inoreader follows, which means millions of websites, blogs and news sources in many languages. Or it can search only inside your own account, including your feeds, folders, tags, saved items, annotations and uploads.
+How is it different from Google Alerts?
+It searches feeds, not web pages, so it catches articles as they are published rather than when a crawler finds them. The results arrive as a feed you can filter, tag, forward, automate and search, not as an email. You can also edit the query at any time without starting over.
+Can I get an alert when something new matches?
+Yes. Add a rule to the monitoring feed, and it sends a push notification, a desktop alert, an email or a message to a Team channel, Slack, Microsoft Teams or a webhook the moment an article arrives.
+Can I refine the query later?
+Yes. Right-click the feed and edit the search query. The feed keeps its history and collects the articles that match the new query from then on.
+How many monitoring feeds do I get?
+The Pro plan includes 30 monitoring feeds, and more are available as an add-on. Team and Team Intelligence plans include monitoring feeds too, pooled across the whole team.
+Related features
+Rules
+Automate what happens to every new article
+Filters
+Read only the articles you want
+Newsletters
+Read your newsletters in Inoreader
+Help center
+What are monitoring feeds?
+How do I create a monitoring feed?
+Can monitoring feeds track content beyond my account?
+Can monitoring feeds track content from my account?
+Can I edit a monitoring feed later?
+Blog
+Introducing mentions, redesigned search and smarter monitoring feeds
+Stay in the know with monitoring feeds
+Build your own newsfeed
+Ready to give it a go?
+Start a 14-day trial, no credit card required.
+Create account

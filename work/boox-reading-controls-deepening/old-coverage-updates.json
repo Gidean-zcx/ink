@@ -1,0 +1,96 @@
+[
+  {
+    "flow_id": "F-M004-09",
+    "before": {
+      "flow_id": "F-M004-09",
+      "product_id": "M-004",
+      "task": "写笔记、改笔画、保留输出",
+      "depth": "D2",
+      "evidence_ids": "E-BOOX-16;E-BXCD-13",
+      "known_branches": "Exit保存并返回Notepad View；More内Save手动保存，两入口不合并；Page-帮助称不能撤销",
+      "gaps": "Home/切App/系统回收是否持久保存、断电写入、.note往返、删整本恢复未知",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-004-boox-neoreader.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M004-09",
+      "product_id": "M-004",
+      "task": "写笔记、改笔画、保留输出",
+      "depth": "D2",
+      "evidence_ids": "E-BOOX-16;E-BXCD-13;E-BXRD-11;E-BXRD-12",
+      "known_branches": "Exit保存回列表；More/Save手动保存，Page-不可撤销。当前帮助补页管理侧栏/全屏区别、最多新增5图层、全层擦除保留模板、套索跨层选择及移层；不据此倒填全部4.1.2控件。",
+      "gaps": "Home/切App/断电保存、.note回导、页/层/对象其他删除的确认与撤销未知；跨层选择是否含隐藏/锁定层、图层锁效果及新工具本机适用未核。",
+      "visual_status": "static_reference_only",
+      "hands_on": "false",
+      "case_path": "cases/M-004-boox-neoreader.md",
+      "checked_on": "2026-10-27"
+    },
+    "changed_fields": {
+      "evidence_ids": {
+        "before": "E-BOOX-16;E-BXCD-13",
+        "after": "E-BOOX-16;E-BXCD-13;E-BXRD-11;E-BXRD-12"
+      },
+      "known_branches": {
+        "before": "Exit保存并返回Notepad View；More内Save手动保存，两入口不合并；Page-帮助称不能撤销",
+        "after": "Exit保存回列表；More/Save手动保存，Page-不可撤销。当前帮助补页管理侧栏/全屏区别、最多新增5图层、全层擦除保留模板、套索跨层选择及移层；不据此倒填全部4.1.2控件。"
+      },
+      "gaps": {
+        "before": "Home/切App/系统回收是否持久保存、断电写入、.note往返、删整本恢复未知",
+        "after": "Home/切App/断电保存、.note回导、页/层/对象其他删除的确认与撤销未知；跨层选择是否含隐藏/锁定层、图层锁效果及新工具本机适用未核。"
+      },
+      "visual_status": {
+        "before": "not_observed",
+        "after": "static_reference_only"
+      },
+      "checked_on": {
+        "before": "2026-10-26",
+        "after": "2026-10-27"
+      }
+    }
+  },
+  {
+    "flow_id": "F-M004-10",
+    "before": {
+      "flow_id": "F-M004-10",
+      "product_id": "M-004",
+      "task": "手写转文字并保留录音线索",
+      "depth": "D2",
+      "evidence_ids": "E-BOOX-16;E-BOOX-02",
+      "known_branches": "识别文本、墨迹与录音属于不同数据；V4.1 Infinite Notes 是另一种画布，可用 Pin 定位。",
+      "gaps": "是否每次原位替换、录音与笔画逐时对齐、来电/锁屏中断、识别离线条件。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-004-boox-neoreader.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M004-10",
+      "product_id": "M-004",
+      "task": "手写转文字并保留录音线索",
+      "depth": "D2",
+      "evidence_ids": "E-BOOX-16;E-BOOX-02",
+      "known_branches": "识别文本、墨迹与录音分开；More/Recorder标记与管理不等于笔画时间对齐。V4.1 Infinite Notes可双指拖画布、空白长按Pin并从三点改名/删；Smart Scribe帮助限部分机型。",
+      "gaps": "Smart Scribe/新套索识别的本机适用、原位替换/撤回、录音笔画对齐、锁屏/来电中断、语言包离线条件仍未知。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-004-boox-neoreader.md",
+      "checked_on": "2026-10-27"
+    },
+    "changed_fields": {
+      "known_branches": {
+        "before": "识别文本、墨迹与录音属于不同数据；V4.1 Infinite Notes 是另一种画布，可用 Pin 定位。",
+        "after": "识别文本、墨迹与录音分开；More/Recorder标记与管理不等于笔画时间对齐。V4.1 Infinite Notes可双指拖画布、空白长按Pin并从三点改名/删；Smart Scribe帮助限部分机型。"
+      },
+      "gaps": {
+        "before": "是否每次原位替换、录音与笔画逐时对齐、来电/锁屏中断、识别离线条件。",
+        "after": "Smart Scribe/新套索识别的本机适用、原位替换/撤回、录音笔画对齐、锁屏/来电中断、语言包离线条件仍未知。"
+      },
+      "checked_on": {
+        "before": "2026-10-26",
+        "after": "2026-10-27"
+      }
+    }
+  }
+]

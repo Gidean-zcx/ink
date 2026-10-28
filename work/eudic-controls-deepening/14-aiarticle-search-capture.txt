@@ -1,0 +1,22 @@
+Acquisition: manual retention of already displayed web search tool result, turn793search0, 2026-10-27. This is NOT source HTML. The subsequent direct HTTP GET returned 429 and that route was stopped. No images were opened. Search crawler age is not publication date; the URL query timestamp is not a verified publication date.
+Title: 「AI短文助记」功能升级，选择生词本单词，智能串联成短文
+URL: https://static-main.frdic.com/mediapool/6f3dddb6-1baf-11ee-80ea-005056866eda/data/jt/7ad34c36-fa9a-4c9f-8bc0-4ff2b6c76c64.htm?_=20230706115426946&share_desc=%E9%80%89%E6%8B%A9%E7%94%9F%E8%AF%8D%E6%9C%AC%E5%8D%95%E8%AF%8D%EF%BC%8C%E6%99%BA%E8%83%BD%E4%B8%B2%E8%81%94%E6%88%90%E7%9F%AD%E6%96%87&share_title=%F0%9F%93%9C%E3%80%8CAI%E7%9F%AD%E6%96%87%E5%8A%A9%E8%AE%B0%E3%80%8D%E5%8A%9F%E8%83%BD%E5%8D%87%E7%BA%A7&show_native_share=true
+Metadata shown by tool: Crawled: 2.8 years ago; wordlim 200.
+Relevant tool-rendered body retained verbatim below; headings and missing image markers are not image observation:
+
+欧路词典和每日英语听力App均已上线「AI短文助记」功能，现在起，向所有VIP用户免费开放使用~
+让 AI 串联起你生词本中的重点单词，快速生成短小精悍的趣味双语短文，帮助你在真实语境中巩固单词记忆💪
+如何使用？
+打开〖欧路词典〗-〖生词笔记〗页面；
+或〖每日英语听力〗-〖账号〗-〖生词本〗页面；
+打开〖我的生词本〗，点击右上角三点，即可使用「AI短文助记」功能。
+选择你需要的重点单词，让 AI 根据选中的单词生成文章。为保证文章质量，建议一次不超过10个单词哦~
+Image
+选择文章风格和字数，智能创作趣味双语短文。
+生成出的文章支持一键导出PDF文件及精美长图，方便你归纳整理，进行后续的学习。
+还可一键导出音频，边听边学，记忆更牢靠💪
+😲 PS：
+在〖欧路词典〗-〖学习〗页面，完成今日份背单词打卡任务，同样也可使用「AI短文助记」功能，来巩固记忆当天所学的单词。
+Image
+是不是迫不及待想去试试看啦？赶快将〖欧路词典〗和〖每日英语听力〗升级至最新版本，体验一下吧~
+欢迎大家积极试用，遇到任何问题，都可以在〖账号〗-〖帮助与反馈〗-〖意见反馈〗中告诉我们😘

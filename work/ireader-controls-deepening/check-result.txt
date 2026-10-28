@@ -1,0 +1,4 @@
+Command: python3 work/ireader-controls-deepening/check.py
+Exit status: 0
+245 PASS; 0 new E/F; 45 inventory; 18 old F fields; 3 E captures; 1 E locator correction
+Final run followed the F-M014-06 scope correction and neutral case handoff wording requested by root. Do not rerun after old rows are merged.

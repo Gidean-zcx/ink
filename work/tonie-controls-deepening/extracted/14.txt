@@ -1,0 +1,58 @@
+How do I manage Household members permissions? – tonies® Support (https://support.tonies.com/hc/en-us/articles/29036509409170-How-do-I-manage-Household-members-permissions)
+citeturn771search0 [wordlim: 200] Crawled: last week; # How do I manage Household members permissions? ... If a member does not see a Creative Tonie in their account, they may not have been given permission to view/edit that specific Creative Tonie.
+
+# How do I manage Household members permissions?
+
+The Household Owner can always manage and change the permissions of all other Household members. If a member does not see a Creative Tonie in their account, they may not have been given permission to view/edit that specific Creative Tonie. The Household Owner can manage the permissions using the tonies app or on my.tonies.com. For a walkthrough of this process, follow through the steps below:
+
+How to manage Household members permissions:
+
+Using the tonies app
+
+  1. Open the tonies app and tap your profile picture in the top-right side of the screen.
+Image: Profile.jpg
+ 
+  2. Tap 'Household'.
+Image: Permissions_Step_2.jpg
+ 
+  3. Tap on the member whose permissions you would like to edit.
+Image: Permissions_Step_3.jpg
+ 
+  4. Tap on 'Membership'.
+Image: Permissions_Step_4.jpg
+ 
+  5. Here you can choose between making the member a 'Full member' or a 'Creative Tonie member'.
+A Full member can edit and add content to all Creative Tonies in the Household. They can also manage/change Toniebox 1 and Member settings.
+A Creative Tonie member can only add content onto Creative Tonies that they have been given specific permission to add to.
+Image: Permissions_Step_5.jpg
+ 
+  6. If you choose to make them a Creative Tonie member, you will need to select which specific Creative Tonies you want them to be able to access and add content onto. To do this, go back to the Household members page and tap on the settings icon on the right-hand side of the screen.
+Image: Permissions_Step_6.jpg
+ 
+  7. This will display a list of each available Creative Tonie in the Household. Tap on the small circle next to the Creative Tonie(s) you want to give the member access to. A green checkmark should appear confirming that they have been given access. Any Creative Tonies that do not have a green checkmark are not able to be viewed and edited by that member.
+Image: Permissions_Step_7.jpg
+ 
+  8. The member should now see any new changes reflected in their account in the tonies app or my.tonies.com.
+
+Using my.tonies.com
+
+  1. Login to your account at my.tonies.com and click to open the 'Members' header.
+Image: PermissionsComp1.jpg
+ 
+  2. Click on the name of the member whose permissions you would like to edit.
+Image: PermissionsComp2.jpg
+ 
+  3. Here you can choose between making the member a 'Full member' or a 'Creative Tonie user'.
+A Full member can edit and add content to all Creative Tonies in the Household. They can also manage/change Toniebox 1 and Member settings.
+A Creative Tonie member can only add content onto Creative Tonies that they have been given specific permission to add to.
+Image: PermissionsComp3.jpg
+ 
+  4. If you choose to make them a Creative Tonie member, you will need to select which specific Creative Tonies you want them to be able to access and add content onto. To do this, click on the checkbox next to the picture of the Creative Tonie you want to give them access to. A checkmark should appear confirming that they have been given access. Any Creative Tonies that do not have a checkmark next to them are not able to be viewed and edited by that member.
+Image: PermissionsComp4.jpg
+ 
+  5. Once you have finished selecting which Creative Tonies you would like the member to have access to, click 'Save Changes' to confirm the changes.
+Image: PermissionsComp5.jpg
+ 
+  6. The member should now see any new changes reflected in their account in the tonies app or my.tonies.com.
+ 
+If you run into any trouble during this process, send us a message and we would be happy to help!

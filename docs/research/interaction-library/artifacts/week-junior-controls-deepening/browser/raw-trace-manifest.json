@@ -1,0 +1,14 @@
+[
+  {
+    "path": "work/week-junior-controls-deepening/browser/trace.zip",
+    "sha256": "a192400b1470cd40eaa7ae336cf33fa4afdc112d43d9a929094a703ddc8a438e",
+    "bytes": 56861091,
+    "formal_action_log": "artifacts/week-junior-controls-deepening/browser/trace-actions.json"
+  },
+  {
+    "path": "work/week-junior-controls-deepening/browser/fresh-context-trace.zip",
+    "sha256": "52e5a2eb00ed0645d9ee00115474d5bb04fa24397b2d9a8056d73efab26f773b",
+    "bytes": 8173974,
+    "formal_action_log": "artifacts/week-junior-controls-deepening/browser/fresh-context-trace-actions.json"
+  }
+]

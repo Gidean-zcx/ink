@@ -1,0 +1,10 @@
+HELP CENTER
+USING DUOLINGO
+Does Duolingo use any open source libraries?
+Yes. You can view our open source attributions and learn more from this page.
+Relevant Articles
+Why did my course change?
+What is a streak?
+What are leaderboards and leagues?
+How does matchmaking work in Duolingo Chess?
+I want to submit a bug report

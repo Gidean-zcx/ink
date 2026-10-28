@@ -1,0 +1,414 @@
+[
+  {
+    "pdf_page": 1,
+    "text": "Mobile ePaper Series\nUniversal User Manual\nV4.0\nOnyx International Inc.\nwww.boox.com\n"
+  },
+  {
+    "pdf_page": 2,
+    "text": "1.Copyright Declaration\nOnyx International Inc. reserves\nthe right to make changes to the\nproduct specifications and\ncontents contained in the Quick\nStart Guide and User Manual\nwithout prior notice.\n1. All book images in this manual\nare for display only, not\npre-installed books;\n2. Due to differences in hardware\nand software versions, some\nfeatures or interfaces on your\n"
+  },
+  {
+    "pdf_page": 3,
+    "text": "BOOX may differ from those\ndescribed in the manual. The\nactual functionality and interface\nare subject to the final products.\n"
+  },
+  {
+    "pdf_page": 4,
+    "text": "2.Safety Guide\nPlease read the following safety\ninstructions before use. If you\nencounter any technical difficulties,\nplease contact your BOOX retailer,\nor call the official after-sales hotline\nat 4008-400-014 or 4008-860-830\nfor assistance.\nFragile Screen Protection\nThe E-ink screen is very fragile.\nPlease do not directly hit, squeeze,\noppress the screen, or drop it from a\nhigh place onto a hard surface. If the\ndisplay screen is broken, please stop\nusing it and contact our customer\n"
+  },
+  {
+    "pdf_page": 5,
+    "text": "service or other qualified\nprofessionals for replacement. Do\nnot disassemble and replace it by\nyourself.\nQualified Accessories\nOnly batteries, chargers and other\naccessories that meet the safety\nstandards of this equipment are\nallowed to be used. For details,\nplease refer to the product\nspecifications. Use of incompatible\naccessories will result in damage to\nthe device at your own risk.\n"
+  },
+  {
+    "pdf_page": 6,
+    "text": "Keep away from strong\nmagnets\\static electricity\nPlease keep away from strong\nmagnetic and electrostatic\nenvironment to avoid abnormal\nwriting on the electromagnetic\nscreen or damage to other electronic\nparts.\nKeep away from liquids\nThis device is not waterproof. Do not\nexpose it to a humid environment or\nuse it in the rain. Please keep it away\nfrom any corrosive liquids.\n"
+  },
+  {
+    "pdf_page": 7,
+    "text": "Do not dismantle the device\nThe battery of this device cannot be\nreplaced. Please do not disassemble\nit by yourself to avoid damage to the\nstructure or screen.\nUsing environment\nThe environment temperature range\nof using this device is 0°C-50°C.\nPlease do not use it continuously in\nhigh temperature or low temperature\nenvironment.\n"
+  },
+  {
+    "pdf_page": 8,
+    "text": "We are not responsible for the\ndamage or loss of data in the\nequipment caused by human\nabnormal operation or unexpected\ncircumstances, nor for other indirect\nlosses caused thereby.\nIf you need to return to the factory for\nrepair, please back up important\ndata by yourself. We are not\nresponsible for data loss caused by\nrepairing or replacing parts or\nupdating the system.\n"
+  },
+  {
+    "pdf_page": 9,
+    "text": "3.Quick Start\n3.1 Home Screen\n"
+  },
+  {
+    "pdf_page": 10,
+    "text": "Control Center\nPull down from the right side of the\nSystem Bar or tap to expand.\nThe Centre includes some frequently\nused\nfunctions\nsuch\nas\nVolume\n"
+  },
+  {
+    "pdf_page": 11,
+    "text": "settings,\nFront\nLight\nadjustment\n(some models do not support this).\nTap the “Edit” icon in the top right\ncorner to\nadd/remove/ reorganize\nfunction tiles.\n"
+  },
+  {
+    "pdf_page": 12,
+    "text": "Notification Center\nPull down from the left side of the\nSystem Bar or tap to expand.\n"
+  },
+  {
+    "pdf_page": 13,
+    "text": "3.2 E-Ink Center (App\nOptimization)\nIt can be called from the Control\nCentre or swiping up from the\nbottom.\nThis function is mainly used to\noptimize the display effect of\nthird-party apps.\n"
+  },
+  {
+    "pdf_page": 14,
+    "text": "Refresh Modes\nYou can preset different refresh\nmodes for different apps.\nHD: Good display effect, suitable for\ngeneral text reading.\nBalanced: Heavier ghosting, suitable\nfor quickly skimming through images\nand text.\nFast: Heavy detail loss, suitable for\nbrowsing webpages.\nUltrafast: Heavier detail loss,\nsuitable for playing videos.\n"
+  },
+  {
+    "pdf_page": 15,
+    "text": "Dark Color Enhancement\nThis function turns darker colors to\nblack and is generally used for\nenhancing foreground colors, or\nlight-colored pages, such as colorful\nicons, and low-quality scanned\nPDFs.\n"
+  },
+  {
+    "pdf_page": 16,
+    "text": "Light Color Filter\nThis function turns light page colors\nto white and is normally used to\nwhiten the background colors.\nHigh Contrast\nWhen an App is using\nBalanced/Fast/Ultra-fast refresh\nmodes (non-HD modes), some\ninterface lines or colors may appear\nweakened. You can enable “High\nContrast” on the E Ink panel to\nenhance page display quality.\n"
+  },
+  {
+    "pdf_page": 17,
+    "text": "More Settings\nCustomize more optimization\nsettings for a better user experience\nby going to E Ink Center/ App\nOptimization or long-press an app’s\nicon to choose “ Optimize”.\n"
+  },
+  {
+    "pdf_page": 18,
+    "text": "Display\nDPI Setting: Adjust the overall size of\nthe\napp\ninterface,\nwith\na\nrecommended range of 280-350.\nUse app ’ s original DPI: For some\napps,\nreducing\nthe\nDPI\nto\nthe\nminimum value may still result in an\nedge cut-off. In such cases, you can\nrestore to the app ’ s original DPI\nvalue.\nAnti-aliasing: Make the text edge\nsharper\nCloud Optimization: Some apps have\nbeen optimized for better\nperformance. Obtain the\n"
+  },
+  {
+    "pdf_page": 19,
+    "text": "optimization with just one click after\nconnecting to the internet.\nReset All: All optimization settings\nwill be reset.\nMaster Switch: The main switch.\nAfter it is turned off, some\noptimization effects will be canceled,\nbut the configuration will not be\nreset.\n"
+  },
+  {
+    "pdf_page": 20,
+    "text": "Color\nAdd Text Outline\nSome text may be invisible due to the\nbackground bleach. Add strokes to\ntext can make the text visible again.\nRecommended value: 1.\n"
+  },
+  {
+    "pdf_page": 21,
+    "text": "Background Color\nThis is to bleach a large area of the\nbackground color. It is\nrecommended to use this setting\ntogether with text enhancement and\nIcon Colors. Otherwise, the text and\nsmall icons on the background will\nnot be visible.\nIcon Color\nGenerally, this is to darken the colors\nof some small colorful icons in the\nmenu.\nCover Color\nGenerally, this is to darken the colors\n"
+  },
+  {
+    "pdf_page": 22,
+    "text": "of large cover-style icons.\nWebpage Text Size\nThis is for the embedded WebView\ninterface. When the DPI adjustment\nis invalid, you can try to adjust the\nfont size of the webpage\nWebpage Text Color\nWhen bleaching does not work, you\ncan try to adjust the webpage colors.\n"
+  },
+  {
+    "pdf_page": 23,
+    "text": "Embolden Webpage Text\nWhen some fonts cannot be\nemboldened, you can try to\nembolden the webpage text.\nOthers\nStay active in the background\nThis is for the apps that are\ncontinuously running in the\n"
+  },
+  {
+    "pdf_page": 24,
+    "text": "background, such as Alarms,\nNotifications, Download. You can\nstop the apps running.\nForce to follow system orientation\nSome APPs lock the direction. When\nthe system rotates, if the APP cannot\nfollow the rotation, forced rotation\ncan be used;\nForced rotation may cause some\ninterfaces to fail to display normally.\nFor such APP, it is recommended to\nturn off forced rotation and use the\noriginal direction.\n"
+  },
+  {
+    "pdf_page": 25,
+    "text": "4.ONYX APPS\n4.1 Library\nThe Library allows you to switch\nbetween Recent, Bookshelves,\nStorage, Favorites, and Cloud\nStorage.\n"
+  },
+  {
+    "pdf_page": 26,
+    "text": "Library List Settings\nYou can customize the number and\norder of library list icons in the\ndropdown menu ‘More’- Library\nSettings - Library List Settings.”\n"
+  },
+  {
+    "pdf_page": 27,
+    "text": "Cloud Storage\nYou can bind third-party Cloud\nStorage services and notes app\naccounts, then download\ndocuments from Cloud Storage or\n"
+  },
+  {
+    "pdf_page": 28,
+    "text": "upload local documents. Additionally,\nyou can export document’s\nannotation, highlight, and\nhandwritten notes to apps.\nAfter embedding data to PDF\ndocuments, you can upload the PDF\ndocuments back to the original folder\nin the Cloud Storage. Other formats\ncurrently do not support this feature.\nTo sync reading data, please log in to\nyour ONYX Account.\n"
+  },
+  {
+    "pdf_page": 29,
+    "text": "Sub-bookshelf for Cloud Storage\nAfter a Cloud Storage account is\nbound,\na\nbookshelf\nwill\nbe\nautomatically created in the Library\nwhen you download books from the\nCloud Storage for the first time.\nAll\nbooks\ndownloaded\nfrom\nthe\nCloud Storage will be automatically\nplaced in this bookshelf for easy\naccess and reading.\n"
+  },
+  {
+    "pdf_page": 30,
+    "text": "Book Property\nLong press a book cover to check\nbook-related information, including\ntitle, author, format, size, reading\nprogress, Open with, Lock, Rename,\nMove, Custom Cover, Delete，Share\nand Copy to Cloud Storage.\n"
+  },
+  {
+    "pdf_page": 31,
+    "text": "Clear settings\nYou can clear password, reading\ndata, cache, and book cover.\nClear password default settings\nOnly clear the default settings of\nlocked documents or documents\nwith their own passwords, and will\nnot clear the relevant passwords.\nClear reading data\nAll personal data of the selected\nbook will be cleared. The data\n"
+  },
+  {
+    "pdf_page": 32,
+    "text": "cannot be recovered after being\ncleared.\nPlease perform this action carefully!\nLock\nAdd lock to document (reading\npasswords) to protect personal\nreading data.\n"
+  },
+  {
+    "pdf_page": 33,
+    "text": "The password is used to open books\nin NeoReader. When the documents\nare exported or copied to other\ndevices or other apps, the password\nwill not be valid anymore.\nThe digital password only supports\nsetting one password. After setting\nthe digital password for the first time,\nyou do not need to set it again if you\nuse the digital password for other\ndocuments. You only need to add\nlocks to other documents.\nThe reading password cannot be\nretrieved. If you forget your reading\n"
+  },
+  {
+    "pdf_page": 34,
+    "text": "password, you can only reset the\npassword through Onyx Account\n(only Mobile phone and Email login\nmethods supported).\nIf you use this password by default,\nyou can add password directly to\nother documents after setting it for\nthe first time. In this case, you do not\nneed choose to add locks every\ntime.\n"
+  },
+  {
+    "pdf_page": 35,
+    "text": "ONYX Sync\nYou can sync reading data to the\nONYX Account to view reading\nprogress and other reading data\nacross devices.\nThe Sync Switch is enabled by\ndefault, but you can turn it off if no\ndocuments need to be synced. To\ndisable sync for individual\ndocuments, please long-press the\n"
+  },
+  {
+    "pdf_page": 36,
+    "text": "book cover to go to the ONYX Sync\nsetting page and turn off the Sync\nSwitch.\nNote: Only reading data can be\nsynced. Users must manually add\nthe source documents to the same\npath on different devices for sync to\nwork.\nOther Sync\nYou can export reading data to a\nlinked third-party cloud storage\naccount. The Cloud Storage that\ndoes not support this feature will not\nappear in the list here.\n"
+  },
+  {
+    "pdf_page": 37,
+    "text": "Reading Statistics\nThis summarizes your personal\nreading statistics, including Today’s\nReading Time, Read Books, Finished\nBooks, Total Reading Time, Marks\nand Annotations.\n"
+  },
+  {
+    "pdf_page": 38,
+    "text": "If you do not want to use reading\nstatistics, you can turn it off from\nLibrary Settings. After it is off, the\nreading statistics icon in the Library\nwill not show anymore\nLibrary Settings\nHere you can set the ONYX Sync\nAccount, adjust library list settings,\nUse title names for Library books,\nenable Reading Statistics, and set\nauto-scan path.\nThe preset scan paths include\nfolders Books and Shops in the\nStorage.\n"
+  },
+  {
+    "pdf_page": 39,
+    "text": "You can customize the scan path\nand choose to auto-scan the\nspecified path.\n"
+  },
+  {
+    "pdf_page": 40,
+    "text": "4.2 NeoReader\nTap the center of the screen to bring\nup the reading menu. You can switch\nbetween multiple documents, and\nselect related functions.\n"
+  },
+  {
+    "pdf_page": 41,
+    "text": "Floating Toolbar\nBy default, the Floating Toolbar is\ncollapsed to the right edge. When it\nis expanded, long press the Toolbar\nto drag it to anywhere you want on\nthe screen. It can be collapsed to the\nsides to avoid covering text during\nreading.\nYou can customize the Floating\nToolbar and add your frequently\nused tool icons to the toolbar.\n"
+  },
+  {
+    "pdf_page": 42,
+    "text": "When\ntext\nis\nselected,\nthe\npre-installed\ndictionary\nwill\nbe\npopped up for word lookup, with the\nONYX dictionary set as the default\noption.\n"
+  },
+  {
+    "pdf_page": 43,
+    "text": "Tap on a blank area to exit the\ndictionary interface. If having\ninstalled third-party dictionaries, you\ncan choose your desired dictionary\nfrom the dropdown list in the\ndictionary.\n"
+  },
+  {
+    "pdf_page": 44,
+    "text": "OCR\nOnly support images on formats\nincluding PDF、CBR、CBZ、DJVU、\nPNG.\n"
+  },
+  {
+    "pdf_page": 45,
+    "text": "Selecting the right layout (horizontal\nor vertical layout) can improve\nrecognition accuracy. After\nrecognition, long press any text to\nadd marks or look up dictionaries.\nCheck all recognized pages from\nContents/Bookmarks where you can\nquickly locate and jump to the\nrelevant pages. Tap the OCR icon on\nthe upper right corner to clear OCR\ncontent.\n"
+  },
+  {
+    "pdf_page": 46,
+    "text": "Reading Menu at the bottom (PDF)\nThe menu includes Contents,\nProgress, Style, Contrast,\nNavigation, and Split View.\n"
+  },
+  {
+    "pdf_page": 47,
+    "text": "Contents\nThis section includes TOC,\nBookmarks, Annotations, and\nHandwriting.\n"
+  },
+  {
+    "pdf_page": 48,
+    "text": "TOC supports a 3-level structure.\nThe current page is underlined in the\nTOC. Tap each content to jump to\nthe corresponding page. Tap any\narea outside of the Contents\ninterface to exit.\nBookmarks\nWhen reading a book, you can tap\nthe Bookmark icon on the upper right\ncorner to bookmark the current page.\nTap the icon again if you want to\nun-bookmark the page.\nCheck all bookmarks at\nContents/Bookmark. Tap each\n"
+  },
+  {
+    "pdf_page": 49,
+    "text": "bookmark to jump to the\ncorresponding page. You can also\ndelete bookmarks here.\nAnnotations\nAll highlighted, underlined, and\nannotated contents are shown in\nContents/Annotations. You can\ncheck, edit, and delete all relevant\ncontent here.\nTap each content to jump to the\ncorresponding page. All contents\nunder Annotations can be exported\nin txt format. The default saving path\nfor the exported contents is Storage/\nnote/ a file with the same name as\n"
+  },
+  {
+    "pdf_page": 50,
+    "text": "the original document.\nHandwritten (synced from another\nBOOX device)\nThis model does not support a stylus,\nonly those handwritten you wrote\nand\nsynced\non\nanother\nBOOX\ndevice will be displayed here.\n"
+  },
+  {
+    "pdf_page": 51,
+    "text": "Progress\nHere it shows a chapter name of the\ncurrent document (if no chapter\nname, the document name will be\nshown), progressing page number,\nPrevious/Next chapter, page\nnumber, Automatic Page-turns,\nRedo and Undo, etc.\n"
+  },
+  {
+    "pdf_page": 52,
+    "text": "Style\nPage\nDisplay:\nYou\ncan\nswitch\nbetween\nSingle-page\nView,\nScrolling View.\nZoom: You can zoom in/out the\nwhole page, zoom in the marquee\narea, or pinch-to-zoom any area\nyou want.\nCrop: Fit Screen (crop all margins);\nFit\nWidth\n(Crop\nleft\nand\nright\n"
+  },
+  {
+    "pdf_page": 53,
+    "text": "margins); Marquee\nCrop(Manually\nselect crop area)\nMargin: This is for the margin you\nwant to keep for automatic crop. You\ncan adjust it to the size you want.\nIn zoom-in status, when the\nzoomed-in page exceeds the\nscreen area, you can drag the page\naround to check different areas. A\nsingle tap only turns sub-pages.\nTap the Virtual Buttons to turn the\nwhole page.\n"
+  },
+  {
+    "pdf_page": 54,
+    "text": "Contrast\nBold: only embolden text in PDF\nSharpen Img: Make blur image\nsharper\nWatermark Bleaching: Bleach the\nlight-color images or background on\nthe page\nDark Color Enhancement: Adjust for\nthe whole page or only the text,\nmaking the display darker.\n"
+  },
+  {
+    "pdf_page": 55,
+    "text": "Image Smoothing: Optimize the\ndisplay effect of pictures with\ngradient colors.\nReflow\nOnly apply to PDF\\DJVU\\CBR\\CBZ\nin scanned version and text-based\nversion.\nScanned Version\nYou can adjust Text Direction,\n"
+  },
+  {
+    "pdf_page": 56,
+    "text": "Spacing, Alignment, Font Size,\nColumns, Tilting Correction.\nText-based version\nApply to digital or OCRed PDF. After\nbeing reflowed, the document can\nuse flow-document functions.\n"
+  },
+  {
+    "pdf_page": 57,
+    "text": "Reading Menu at the bottom (Free\nFlow Documents)\nThe\nmenu\nincludes\nContents,\nProgress, Style, Split View, Refresh\nSettings.\nV3 Engine\nThe menu includes Contents,\nProgress, Format, Contrast, and\nSplit View and supports free-flow\nformats such as\nePub\\mobi\\azw3\\txt\\word\\jeb\\html\n"
+  },
+  {
+    "pdf_page": 58,
+    "text": "Progress\nWhen opening a document for the\nfirst time, or after adjusting font, size,\nspacing, or other style settings, the\ndocument will be re-paginated. You\ncan view the pagination progress in\nthe Menu > Progress. You will only\nbe able to drag the progress bar to\njump\nbetween\npages\nonce\nthe\nprogress bar has fully loaded.\n"
+  },
+  {
+    "pdf_page": 59,
+    "text": "Style\nThe\noriginal\nappearance\nof\nthe\ndocument is used by default. There\nare\nmultiple\npreset\nappearances\navailable to choose from. You can\napply\ndifferent\nappearances\nto\ndifferent\ndocuments\nfor\ndifferent\nstyling.\nA\nmodified\nstyle\nwill\nbe\nmarked with an asterisk (*) in the top\nright corner.\n"
+  },
+  {
+    "pdf_page": 60,
+    "text": "Custom Appearance\nTap\nthe\ncurrently\napplied\nappearance\nto\nenter\na\ncustom\ninterface,\nwhere\nyou\ncan\nmodify\nvarious document settings, including\nfont,\nsize,\nspacing,\nmargins,\nand\ncontrast.\n"
+  },
+  {
+    "pdf_page": 61,
+    "text": "Font Settings\nYou can set different fonts for titles\nand\nbody\ntext.\nIf\nany\nfonts\nare\nmissing in the selected title or body\ntext, the ‘Supplementary Font’ will\nautomatically replace them.\nCustom fonts can also be imported\nby placing font files in the directory of\nStorage/fonts.\nYou\ncan\nview\nthe\ncustom fonts from the imported list.\n"
+  },
+  {
+    "pdf_page": 62,
+    "text": "Refresh\nThe black and white models support\nHD,\nRegal\nand\nBalanced\nrefresh\nmodes\nThe color models support Regal and\nBalanced refresh modes\nFull refresh （Deep ）: When pages\nwith\nmany\nimages\nand\ndarker\nbackgrounds,\nthis\nfeature\nhelps\nreduce ghosting during page turns.\n"
+  },
+  {
+    "pdf_page": 63,
+    "text": "Settings\nPlease go to reading menu / More /\nSettings for more settings, including\nGlobal\nSettings,\nPDF\nSettings,\nTouch Settings, Annotation Export\n"
+  },
+  {
+    "pdf_page": 64,
+    "text": "Settings,\nScreenshot\nSettings,\nFloating Toolbar Settings, Dictionary\nSettings,\nOther\nSettings,\nand\nVersion Number.\n"
+  },
+  {
+    "pdf_page": 65,
+    "text": "4.3 Store\nIn the language of non-Chinese, the\nStore is offering free publications\nE-books from the Internet.\n"
+  },
+  {
+    "pdf_page": 66,
+    "text": "Book Detail\nClick a book cover to open up book\ndetail. The specific book information.\nClick “Full Edition Download” to\ndownload the book, then you can\nsee this book cover in Library .\n"
+  },
+  {
+    "pdf_page": 67,
+    "text": "4.4 Storage\nRecent Files\nThe recent files are sorted by time in\ndescending order by default and\ngrouped by date automatically.\n"
+  },
+  {
+    "pdf_page": 68,
+    "text": "Storage\nHere includes the storage path and\ndocument categories. All files are\nsorted automatically into different\n"
+  },
+  {
+    "pdf_page": 69,
+    "text": "categories by type, but the files’\noriginal storage location does not\nchange.\nOTG External Flash Drives\nThis device supports Type-C OTG\nflash drives. After a flash drive is\ninserted, the flash drive will be\nautomatically recognized and loaded\nas a storage. OTG devices require a\npower supply and will increase\nbattery consumption\n"
+  },
+  {
+    "pdf_page": 70,
+    "text": "Low storage warning\nPlease make sure of leaving at least\n300MB of storage for normal system\nrunning and relevant data storage.\nWhen the storage is lower than\n300MB, the system bar will show a\nwarning icon for “insufficient\nstorage”.\n"
+  },
+  {
+    "pdf_page": 71,
+    "text": "4.5 NaviBall\nTap\nthe\nNaviBall\nto\nexpand\nor\ncontract it. Its default display style is\nfan-shaped.\nYou\ncan\nchange\nto\n"
+  },
+  {
+    "pdf_page": 72,
+    "text": "other styles (Horizontal Style and\nVertical Style) from the settings. You\ncan\nalso\nset\nits\nopacity\nby\npercentage. You can pin any buttons\nwhich will always show on the top.\nYou can customize each button's\nfunction. The available functions\ninclude some system functions,\nswitching apps, and app\noptimization.\n"
+  },
+  {
+    "pdf_page": 73,
+    "text": "4.6 Dictionary\nWhen you open Dict App for the\nfirst time and there is no dictionary\ninstalled, there will be a notice to lead\nyou\nto\nlocal\ndownloads,\nwhich\n"
+  },
+  {
+    "pdf_page": 74,
+    "text": "require a Wi-Fi connection. Word\npronunciation requires dictionaries\nwith voice files and TTS is currently\nnot supported.\nYou can import your own dictionary\nfiles and save them to the\ndesignated storage path:\nsdcard\\dicts\\XXX;\nIn dictionary Settings/Preferred\nDictionary Setting, you can check all\navailable dictionaries. Up to 20\ndictionaries are supported.\n"
+  },
+  {
+    "pdf_page": 75,
+    "text": "4.7 Ai Assistant\nYou can enable this feature from the\n[Control Centre], or from the app list,\nor from NaviBall.\n"
+  },
+  {
+    "pdf_page": 76,
+    "text": "Each topic allows for multiple rounds\nof dialogue.\nThere are different AI models\navailable. You can select the model\nyou prefer from the dropdown menu\nlocated on the top right corner.\nAll responses are generated by AI\nand are for reference only.\n"
+  },
+  {
+    "pdf_page": 77,
+    "text": "4.8 PushRead\nAside from Onyx Push, you can use\nRSS and OPDS in PushRead\n"
+  },
+  {
+    "pdf_page": 78,
+    "text": "Onyx Push\nYou can push webpages to your\nBOOX via Push in push.boox.com or\nBOOX Assistant and read on your\nBOOX. If you use PushRead for the\nfirst time, you need to log in to the\nsame Onyx account on both\npush.boox.com or BOOX Assistant\nand your BOOX.\nRSS\\OPDS Subscription\nYou can add Subscription from the\nDirectory dropdown menu. In the\nPublic Source list, select the desired\nsubscription\nsource,\nor\nyou\ncan\n"
+  },
+  {
+    "pdf_page": 79,
+    "text": "manual input other valid RSS/OPDS\naddress in the Custom field.\n"
+  },
+  {
+    "pdf_page": 80,
+    "text": "The webpages in PushRead\nrequires internet to load for the first\ntime. After being loaded, it can be\nread offline.\nThe default layout is Web Mode (the\noriginal webpage’s layout). Tap the\ncenter of the screen to bring out the\nmenu where you can switch to\nReading Mode, change font size,\nand fully refresh the screen.\n"
+  },
+  {
+    "pdf_page": 81,
+    "text": "5.System Settings\n5.1 Onyx Account\nSupport multiple accounts and\nswitching between accounts.\n"
+  },
+  {
+    "pdf_page": 82,
+    "text": "You can switch between accounts\nfrom the account list.\nOnly account information is kept.\nAfter switching between accounts,\nyou need to log in accounts again. If\ndifferent accounts use different\nservers, the servers will be switched\nwhen you log in to another account.\n5.2\nWLAN\nWhen you turn WLAN on, the device\nwill search all available Wi-Fi.\nChoose the Wi-Fi you want to use,\nand enter required information such\nas password to connect to Wi-Fi. Or\n"
+  },
+  {
+    "pdf_page": 83,
+    "text": "turn Wi-Fi on and off from Control\nCenter.\n5.3 Bluetooth Settings\nTurn\nBluetooth\non\nand\nsearch\nnearby available Bluetooth devices.\nSend connection request. Only when\nboth\ndevices\nare\nconnected,\nBluetooth will work.\n5.4 Network and Connection\nHere includes Flight Mode, Hotspot\nand Tethering settings, App Data\nUsage, Screen Cast, Printing, VPN,\nand Private DNS.\n"
+  },
+  {
+    "pdf_page": 84,
+    "text": "5.5 Accounts\nHere you can manage App Accounts,\nNotes\nSync\nAccounts,\nand\nDocs\nSync Accounts.\n"
+  },
+  {
+    "pdf_page": 85,
+    "text": "5.6 Kids Mode\nYou can enable it from System\nSetting page or Control Center.\n"
+  },
+  {
+    "pdf_page": 86,
+    "text": "5.7 Smart Button\nYou can access the custom function\nby short-pressing,double-clicking\nor long-pressing the smart button.\n"
+  },
+  {
+    "pdf_page": 87,
+    "text": "5.8 Apps and Notifications\nHere includes Application\nmanagement, Permission\nmanagement, Notification\nmanagement, Default app, App\n"
+  },
+  {
+    "pdf_page": 88,
+    "text": "Startup, App Refresh Mode, Store\nSettings, Freeze Settings, Reset App\nOptimization Tutorial, and Reset all\napp optimization.\nApp Startup\nOnly for auto-starting apps. If\nenabled, it may increase memory\nusage and power consumption.\nThe app itself must have the function\nof monitoring system to\nautomatically start up. After\ninstalling the APK, you need to\nmanually open the app to run it once;\nAfter the startup is successful, it only\nruns in the background and will not\nbe displayed in the recent running\n"
+  },
+  {
+    "pdf_page": 89,
+    "text": "tasks;\nFreeze Settings\nYou can freeze third-party apps\nhere. Freezing apps that are running\nin the background can reduce power\nconsumption.\n"
+  },
+  {
+    "pdf_page": 90,
+    "text": "5.9 Desktop & Screensaver\nYou can set Home Screen, choose\nto lock the desktop layout, and\nenable Smart Assistant. Only one\npower-off image can be used.\n"
+  },
+  {
+    "pdf_page": 91,
+    "text": "5.10 Display\nFont Style\nYou can set imported font for system\nfont.\n"
+  },
+  {
+    "pdf_page": 92,
+    "text": "Please be aware that the font files\ncan take some system storage, so it\nis\nnot\nadvisable\nto\nimport\nexcessively large font packages.\nSome third-party font files may lack\ncertain characters, which could lead\nto garbled text or display issues.\nPlease ensure that the font files are\nok before importing them.\n5.11 Sound\nYou can set volume, ringtone, mute,\nand Do not disturb.\n"
+  },
+  {
+    "pdf_page": 93,
+    "text": "5.12 Location Info\nYou can enable“Access my location\ninformation”, and “Location\nPermission.\n5.13 Password & Security\nSupport 4 to 16-digit Lock-Screen\n"
+  },
+  {
+    "pdf_page": 94,
+    "text": "password.\nAndroid 11 does not support\nresetting password. Please keep\nyour password safe.\n5.14 Power\nThis includes battery usage\ninformation, auto sleep and\nshutdown time settings, delays in\ndisconnecting wireless\nconnection,etc.\nIf\nyou\nwant\nto\ncontinue\nusing\nBluetooth\ndevices\nto\nplay\nonline\naudio content after the device enters\nSleep mode, please turn on the WiFi,\nBluetooth, and audio switches after\n"
+  },
+  {
+    "pdf_page": 95,
+    "text": "Auto sleep;\n"
+  },
+  {
+    "pdf_page": 96,
+    "text": "5.15 Storage\nHere you can check the usage of the\nStorage.\n"
+  },
+  {
+    "pdf_page": 97,
+    "text": "5.16 System Navigation\nYou can choose system navigation\nmethod, either by Gestures or by\nNavigation Bar.\n"
+  },
+  {
+    "pdf_page": 98,
+    "text": "5.17 More Settings\nHere\nincludes\nSystem\nUpdate,\nLanguage and Input, Date and Time,\nNavigation\nBall,\nScreenshots,\nScreen\nRecording,\nAccessibility,\n"
+  },
+  {
+    "pdf_page": 99,
+    "text": "Calibration, USB Debug Mode, and\nReset Device.\nSystem Update\nUpgrade checks the local package\nfirst\nthen\nonline\npackage\nwith\na\n"
+  },
+  {
+    "pdf_page": 100,
+    "text": "network connection. Upgrade pause\nand\nbreakpoint\ndownload\nare\nallowed.\nPlease ensure the device has more\nthan\n20%\npower\nand\nsufficient\ncapacity before the update.\n"
+  },
+  {
+    "pdf_page": 101,
+    "text": "Reset Device\nNote: when resetting device, you will\nclear all user data. Please back up\nyour data in advance and operate\nthis carefully.\n"
+  },
+  {
+    "pdf_page": 102,
+    "text": "5.18 Feedback\nWelcome to submit any technical\nproblem or advice to us.\nThis\nfunction\ncollects\nsystem\ninformation for problem judgment.\nAnd Onyx shall never disclose users’\ndevice information.\n"
+  },
+  {
+    "pdf_page": 103,
+    "text": "7.Thank you for your support\nThank you very much for your\nsupport. More product-related\ninformation can be found on our\nofficial website: www.boox.com\nIf you have any questions, please\ncontact us by email:\nsupport@boox.com\n"
+  }
+]

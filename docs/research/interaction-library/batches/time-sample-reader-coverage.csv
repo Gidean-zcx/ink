@@ -1,0 +1,2 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M047-06,M-047,K–1整期样刊选文听读与保存位置恢复,D4,E-TKSM-01,四页边界;菜单末页;显式保存;Mobile view新标签;文章目录;暂停/倍速/关闭重开;刷新重置;窄屏重排;同资料目录浏览器重启恢复保存页,未实际听音;无触屏/儿童/Plus;搜索下载打印/离线/媒体结束/账号同步/刷机恢复未测;翻页瞬态与页码单位需区分,observed_browser_sequence,true,cases/M-047-time-for-kids.md,2026-10-27

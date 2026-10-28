@@ -1,0 +1,20 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M002-01,M-002,查词与返回,D2,E-KOB-01,格式/书籍例外,查询历史、精确机型、视觉反馈,not_observed,false,cases/M-002-kobo.md,2026-10-26
+F-M002-02,M-002,选区、高亮与笔记,D2,E-KOB-02;E-KOB-03,自动高亮、撤销、第三方书删除,取消/撤销全流程、离线、冲突,not_observed,false,cases/M-002-kobo.md,2026-10-26
+F-M002-03,M-002,同步后导出批注,D2,E-KOB-04,内容资格、格式、文件保留期,失败/等待/重新生成、具体版本,not_observed,false,cases/M-002-kobo.md,2026-10-26
+F-M015-01,M-015,订阅与处理 Feed,D2,E-RDW-01,不同视图 seen、部分正文,视图切换、解析失败、重复导入,not_observed,false,cases/M-015-readwise.md,2026-10-26
+F-M015-02,M-015,听读与双向定位,D2,E-RDW-02,暂停/停止、滚动分离、离线,强退/重启/换设备、加载失败,not_observed,false,cases/M-015-readwise.md,2026-10-26
+F-M015-03,M-015,批注与标签,D2,E-RDW-03,自动高亮、定位失败、标签层级,重定位、内容更新、完整返回流程,not_observed,false,cases/M-015-readwise.md,2026-10-26
+F-M020-01,M-020,回忆与自评,D2,E-ANK-01,评分、到期队列、当日完成,误评撤销、插件/调度版本,not_observed,false,cases/M-020-anki.md,2026-10-26
+F-M020-02,M-020,暂埋、停用与删除,D2,E-ANK-01,恢复期限、对象范围,确认对话、Undo、持久保存粒度,not_observed,false,cases/M-020-anki.md,2026-10-26
+F-M020-03,M-020,同步与备份恢复,D2,E-ANK-02;E-ANK-03,单向同步、合并、媒体、恢复,两端测试、失败恢复、版本差异,not_observed,false,cases/M-020-anki.md,2026-10-26
+F-M030-01,M-030,自主读听与阅读课,D2,E-KHK-01;E-KHCD-03,Books/Reading、朗读/自主读,中途切换、具体题型与提示,not_observed,false,cases/M-030-khan-kids.md,2026-10-27
+F-M030-02,M-030,路线、进度与中断,D2,E-KHK-02;E-KHK-03;E-KHCD-03,级别/档案、奖励、下一课,奖励数值、失败重试、课内保存,not_observed,false,cases/M-030-khan-kids.md,2026-10-27
+F-M030-03,M-030,寻找离线活动,D2,E-KHK-04,指定离线范围、初次联网,资源准备、退出重开、失败提示,not_observed,false,cases/M-030-khan-kids.md,2026-10-26
+F-M035-01,M-035,全局快捷面板,D2,E-HBY-01,长短按、可配置手势,手势冲突、锁屏、延迟与反馈,not_observed,false,cases/M-035-hiby.md,2026-10-26
+F-M035-02,M-035,片段循环与睡眠关机,D2,E-HBY-01,入口由设置启用、计时,非法 A/B、切曲、断电记忆粒度,not_observed,false,cases/M-035-hiby.md,2026-10-26
+F-M037-01,M-037,准备离线故事,D2,E-YOT-01,下载状态、缓存淘汰、网络条件,正文归档、型号、完成/失败状态,not_observed,false,cases/M-037-yoto.md,2026-10-26
+F-M037-02,M-037,睡眠计时,D2,E-YOT-02,换内容不重置,重启/跨设备/后台状态,not_observed,false,cases/M-037-yoto.md,2026-10-26
+F-M037-03,M-037,播放卡顿排查,D2,E-YOT-01;E-YOT-03,网络、队列、下载时机冲突,冲突原因、实际错误提示与恢复,not_observed,false,cases/M-037-yoto.md,2026-10-26
+F-M044-01,M-044,过滤与去重,D2,E-INO-01;E-INCD-02;E-INCD-03;E-INCD-04,新增6小时至1个月比较窗口、当天移除量及开关；50合并额度与FAQ50+10有文案冲突。,旧条目回看/恢复、停用后范围、误去重、配额冲突的账号验证,not_observed,false,cases/M-044-inoreader.md,2026-10-27
+F-M044-02,M-044,条件规则试跑与故障检查,D2,E-INO-02;E-INCD-02;E-INCD-06;E-INCD-07;E-INCD-33,帮助明确Run rule会执行邮件/导出等动作，修订旧预览概括；查启用/范围/条件/日志/连接。,功能页preview措辞冲突；级联、重复发送、部分失败、撤回和循环未测,not_observed,false,cases/M-044-inoreader.md,2026-10-27

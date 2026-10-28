@@ -1,0 +1,33 @@
+{
+  "name": "59-ticked-line-feedback",
+  "at": "2026-10-27T06:40:45.819836+00:00",
+  "url": "https://www.duolingo.com/lesson/unit/1/level/1",
+  "title": "Duolingo - The world’s most popular way to learn",
+  "text": "8 IN A ROW\nAnswer\non\nthe\nline\nAnswer on the line\n2\n+\n5\n=\n1\n2+5=\nAwesome!\nREPORT\nCONTINUE",
+  "controls": [
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": null,
+      "test": "quit-button",
+      "type": "submit",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "REPORT",
+      "aria": null,
+      "test": null,
+      "type": "submit",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "CONTINUE",
+      "aria": null,
+      "test": "player-next",
+      "type": "submit",
+      "disabled": false
+    }
+  ]
+}

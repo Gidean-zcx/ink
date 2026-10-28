@@ -1,0 +1,33 @@
+{
+  "name": "24-after-first-error",
+  "at": "2026-10-27T06:29:30.130510+00:00",
+  "url": "https://www.duolingo.com/lesson/unit/1/level/1",
+  "title": "Duolingo - The world’s most popular way to learn",
+  "text": "Follow\nthe\npattern\nFollow the pattern\n2\n+\n1\n2+1\n3\n3\n3\n+\n1\n3+1\n4\n4\n4\n+\n1\n4+1\n?\n?\n0\n0\n5\n5\nTOOLKIT\nCHECK",
+  "controls": [
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": null,
+      "test": "quit-button",
+      "type": "submit",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "TOOLKIT",
+      "aria": null,
+      "test": null,
+      "type": "submit",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "CHECK",
+      "aria": null,
+      "test": "player-next",
+      "type": "submit",
+      "disabled": false
+    }
+  ]
+}

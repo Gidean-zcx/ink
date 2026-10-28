@@ -1,0 +1,7 @@
+Using Dictionaries in Shortcuts on iPhone or iPad
+In addition to APIs, dictionaries can also be a useful way to work with structured data in your shortcuts. Use dictionaries in the following ways:
+Enter text, numbers, values, dictionaries, or lists into a Dictionary action to manually create a dictionary for use in your shortcuts.
+Use the Get Dictionary from Input action to turn text containing JSON or .plist data into a dictionary item.
+Create a JSON dictionary without coding it manually by entering all of the values into a Dictionary action and copying the results.
+Use the Dictionary Magic Variable to extract a set of values repeatedly throughout a shortcut.
+Use a dictionary to make a rich display of data in a Choose from List action, which displays the keys as menu options and the keys’ values as a preview. When you choose a key, the action passes the corresponding value into the next action.See alsoIntro to how shortcuts work on iPhone and iPad

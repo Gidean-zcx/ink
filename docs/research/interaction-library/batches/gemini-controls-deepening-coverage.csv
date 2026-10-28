@@ -1,0 +1,6 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M042-07,M-042,依据上下文选择对象并拨号,D2,E-GECD-03;E-GECD-06,请求或@Phone→连接提示→默认通信路由；可用前文对象；不支持Live或接听/拒接,拨出确认、号码歧义、双SIM、失败/挂断/重试与返回位置,not_observed,false,cases/M-042-gemini.md,2026-10-27
+F-M042-08,M-042,起草修改并发送消息,D2,E-GECD-04;E-GECD-06,起草→修改→发送请求；同联系人上次应用/系统默认SMS；图片与通知回复条件分开,实际发送回执、确认取消、重复发送/离线重试、送达与撤回,not_observed,false,cases/M-042-gemini.md,2026-10-27
+F-M042-09,M-042,语音会话暂停、共享与接续,D2,E-GECD-05;E-GECD-06,Live/左滑进入；Hold/Mute/End分开；后台通知返回；锁屏与共享停止、恢复各有条件,断网/进程终止/重启续接、音频冲突；原生控件与实际状态未观察,not_observed,false,cases/M-042-gemini.md,2026-10-27
+F-M042-10,M-042,Live中执行并撤销应用动作,D2,E-GECD-05;E-GEM-02;E-GENR-01;E-GENR-02,未连接先到设置连接，再回Live重复请求；前台可Undo，后台与三星应用例外需目标App编辑；专门帮助也明确Live后台所建笔记/动作不能由Gemini Undo，可经回复链接回目标对象编辑,撤销时限、复合任务部分成功、重复请求幂等与目标对象回执；专门帮助没有证明写前确认，撤销通知与写前批准分开,not_observed,false,cases/M-042-gemini.md,2026-10-27
+F-M042-11,M-042,添加和撤销自定义应用接入,D2,E-GECD-02,Web添加MCP链接，@调用；停用/解除授权/移除分开；解除仍留目录，移除同时解除；写入人工确认声明,授权失败/凭据失效、确认卡与取消、部分写入、撤权后服务端副本和重连状态,not_observed,false,cases/M-042-gemini.md,2026-10-27

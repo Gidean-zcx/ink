@@ -1,0 +1,4 @@
+Use the Show Alert action in a shortcut on iPhone or iPad
+The Show Alert action presents an arbitrary dialog at runtime. The dialog contains a title, a description, a Done button (to continue the shortcut run), and an optional Cancel button (to stop the shortcut run). Use Show Alert to share information with the user, provide warning messages, pause the shortcut at a specific point, and so on.
+Show Alert is especially useful for displaying information in the Shortcuts widget or on Apple Watch. For example, you can create a shortcut that determines sunrise and sunset times and displays an alert that includes a summary.
+You can also use the Show Alert action to debug shortcuts when you’re not getting your intended shortcut result. By passing content into Show Alert, you can preview the output of the previous action at a certain point in a shortcut, then cancel the shortcut, if necessary.See alsoIntro to variables in Shortcuts on iPhone or iPad

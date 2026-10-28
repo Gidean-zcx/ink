@@ -1,0 +1,191 @@
+Spotlights - color the keywords that matter in every article | Inoreader
+inoreader-logo
+Start 15-Day Trial
+Home
+Features
+Enterprise
+Pricing
+Blog
+Contact
+RSS tools
+Free tools
+Feed validatorValidate a feed for errors
+Podcast validatorGet a podcast listed everywhere
+Feed analyticsSee how a feed performs
+Feed finderFind the feeds of any website
+OPML checkerCheck and repair an OPML export
+All RSS tools
+Feed validator
+Inoreader fetches the feed the way a reader does, reports what is wrong and tells you exactly what to change.
+Open the validator
+Podcast validator
+Inoreader fetches a podcast feed, its newest episode files and the artwork, and checks everything Apple Podcasts, Spotify and the apps require.
+Open the podcast validator
+Feed analytics
+See how many Inoreader readers follow a feed, how it ranks in its topic and how reliably it delivers new posts.
+Open feed analytics
+Feed finder
+Paste a website's address and Inoreader lists the feeds it publishes, for you to copy or follow in one click.
+Open the finder
+OPML checker
+Upload an OPML export and see which of its feeds still work, which fail, which moved and which are listed twice.
+Open the checker
+All RSS tools →
+Sign in
+Create account
+Features
+/
+Spotlights
+Make the names you care about stand out
+When you scan hundreds of headlines a day, the ones that matter should jump out. Pick the terms you watch, give each group a color, and Inoreader marks them everywhere you read.
+Create a free account
+FreeSpotlights are free on every plan.
+TeamTeam plans add Team spotlights that admins share with every member.
+Color the words you care about
+A spotlight colors the words you care about wherever they appear, so the articles that matter catch your eye as you scroll past hundreds of others.
+A color for each group
+Create one spotlight for your company and its products, another for your competitors and a third for the people you follow, each with its own color.
+Feeds, folders and articles
+The terms are colored in your feeds, folders, saved articles and tags, and inside the article when you open it.
+Highlighting without filtering
+Spotlights change how fast you read, not what you read. Nothing is reordered, and you can switch a spotlight off when a project ends.
+Team spotlights
+On Team plans, admins share spotlights with every member, so the whole team sees the same terms in the same colors.
+Create a spotlight
+Open Automate, then Spotlights, and click Create spotlight.
+Name the spotlight, add a description if you like, and pick a color.
+List the words and phrases to mark, and set a term to match case when capitalization matters.
+Save it, and the terms are colored in your article lists and inside articles straight away.
+Use cases
+Following a market at a glance
+Give your company, your competitors and your customers a color each, and see who is in the news as you scroll through a busy industry folder.
+Reading for a project
+Collect the names, products and technical terms of a project in one spotlight, so the relevant passages stand out in long articles.
+A shared vocabulary for a team
+On a Team plan, an admin creates spotlights for the clients and topics the team covers, and every member sees them marked the same way.
+Frequently asked questions
+What is a spotlight?
+A spotlight is a named group of words or phrases with a color of its own. Wherever one of those terms appears in Inoreader, in a list of articles or inside an article, it is shown in that color.
+How do I create one?
+Open Automate, then Spotlights, and click Create spotlight. Give it a name and, if you like, a description, pick one of ten colors and list the terms you want marked.
+Does a spotlight hide or remove articles?
+No. A spotlight only colors the terms it contains and changes nothing about which articles you see. To keep or remove articles by keyword, use a filter.
+Can a term match only with the exact capitalization?
+Yes. Each term can be set to match case, which helps with short names and acronyms that are also ordinary words.
+How do Team spotlights work?
+Team admins can make a spotlight visible to all Team members. Each member decides whether to show Team spotlights, and when a term is in both a personal and a Team spotlight, the Team spotlight's color is used.
+Is there a limit?
+No. Spotlights are free on every plan, and you can create as many as you need and turn each one on or off at any time.
+Related features
+Filters
+Read only the articles you want
+Monitoring feeds
+Watch any keyword, brand or topic across the web
+Annotations
+Highlight and annotate what you read
+Help center
+What are spotlights?
+How do I create a spotlight?
+What are spotlights useful for?
+What are Team spotlights?
+Build your own newsfeed
+Ready to give it a go?
+Start a 14-day trial, no credit card required.
+Create account
+With Inoreader, content comes to you the minute it's available.
+Follow websites, social media feeds, podcasts, blogs, and newsletters. Enjoy what's important to you, all in one place.
+With Inoreader, content comes to you the minute it's available.
+Follow websites, social media feeds, podcasts, blogs, and newsletters. Enjoy what's important to you, all in one place.
+Create account
+Product
+Features
+Pricing
+Enterprise
+Mobile apps
+Browser extension
+Inoreader alternatives
+RSS tools
+All tools
+Feed finder
+Feed analytics
+Top RSS feeds
+Feed validator
+Podcast validator
+Feed viewer
+OPML checker
+Company
+About us
+Blog
+Help center
+Developer portal
+Contact us
+Brand portal
+Service status
+Legal
+Terms of Service
+Privacy Policy
+Security commitment
+© 2026 Innologica Ltd
+We use cookies to enhance your Inoreader experience. By using our website, you agree to our use of cookies.
+Access cookie settings
+OK, I agree
+×
+Sign in
+Use a different account
+Sign in with a passkey
+Other sign-in methods
+Change user
+Passkey sign-in was canceled or couldn't be completed.
+Don't have a passkey yet? Sign in with your password first, then add one in your account settings.
+Sign in
+Email address:
+Please enter Email
+Password
+Please enter password
+Remember me
+Forgot password?
+Sign in
+Sign in with a passkey
+Passkey sign-in was canceled or couldn't be completed
+Don't have a passkey yet? Sign in with your password first, then add one in your account settings.
+Or simply sign in with:
+New to Inoreader? Create an account
+Create account
+With Inoreader, content comes to you.
+Sign up to browse more than 5 000 000 sources and build the ultimate newsfeed!
+Create account
+Don't have an account?
+Create one now
+×
+Create account
+Email address
+Please enter email
+Password
+Please enter password
+Create account
+Or simply sign in with:
+Already have an account? Sign in.
+Sign in
+Already have an account?
+Enter your profile and access your feeds now.
+Sign in
+Already have an account?
+Sign in
+×
+Request Quote
+Name
+Please enter name
+Email
+Please provide valid email
+Company                    Optional
+Industry                    Optional
+Select from listMedia and PublishingPharmaceuticalsCybersecurityTelecommunicationsIT and SoftwareFinance and BankingTransport and LogisticsMarketing and PRPublic AuthoritiesInternational OrganizationsResearchEducation ServicesOther
+Position                    Optional
+Message
+Please enter message
+I understand and accept the Inoreader Privacy
+Policy
+You must accept the privacy policy
+Send message
+Thank you for your query. Our team will review the details and get back to you shortly.
+Go to homepage

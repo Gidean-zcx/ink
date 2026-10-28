@@ -1,0 +1,45 @@
+{
+  "path": "work/children-interactions/dragon-guide.pdf",
+  "sha256": "def05eb635f225863d354b03913228a94896ca382aa50b4e3cf956239e451605",
+  "parser": "PyMuPDF 2.0",
+  "page_count": 9,
+  "pages": [
+    {
+      "file_page": 1,
+      "text_start": "The \ngame about\nNumber\nSense!\n"
+    },
+    {
+      "file_page": 2,
+      "text_start": "It is an intuitive understanding  \nof what numbers are, \nhow they work \nand what you can do with them.\nIt is fundamental"
+    },
+    {
+      "file_page": 3,
+      "text_start": "The powers of fhe Nooms\nThe Nooms can be manipulated in many different ways.\nJust like the numbers they represent!\nThe N"
+    },
+    {
+      "file_page": 4,
+      "text_start": "The sandbox\nThe sandbox allows your child to play freely with the Nooms.\nIt’s the perfect place for kids to get to know "
+    },
+    {
+      "file_page": 5,
+      "text_start": "<\nThe puzzles\nThis gameplay guides your child´s learning by challenging \nthem to use  different math strategies  to solv"
+    },
+    {
+      "file_page": 6,
+      "text_start": "<\n4 types \nof piece slots\nThe puzzles\n... have 3 pedagogical goals. \n 1   For your child to perform  thousands  of addit"
+    },
+    {
+      "file_page": 7,
+      "text_start": "<\nThe Ladder\nThis activity challenges your child to stack Nooms in order to \nreach a star in the sky.\nKids will have to "
+    },
+    {
+      "file_page": 8,
+      "text_start": "<\nThe Ladder\n...introduces 4 pedagogical goals.\n 3   For your child to explore\nadditions with numbers\nbetween 1 and 100."
+    },
+    {
+      "file_page": 9,
+      "text_start": "DragonBox Numbers gives \nyour child a great foundation \nfor future math learning\nNinjas\nOver\n250\npuzzles!\n<\nCute\nanimals"
+    }
+  ],
+  "note": "Read text/page tree only, no new image observation. file(1) heuristic reported 8; resolved PDF parser reports actual page count."
+}

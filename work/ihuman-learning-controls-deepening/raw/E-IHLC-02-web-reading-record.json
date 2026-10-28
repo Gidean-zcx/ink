@@ -1,0 +1,18 @@
+{
+  "evidence_id": "E-IHLC-02",
+  "url": "https://post.smzdm.com/p/aoo8one6/",
+  "web_response_reference": "turn972view1",
+  "response_kind": "web_open_extracted_article_text",
+  "title": "孩子识字敏感期，懒家长如何助力？",
+  "publisher_account": "晞爸买买买",
+  "published_as_shown": "2020-04-25 15:08:34",
+  "location": "web response lines98–176, 软件概况/玩认练写/关于软件设置",
+  "short_verbatim_excerpt": "点击后分别展示了古代“雨”字的写法，以及笔画顺序、总笔画数",
+  "body_read": true,
+  "original_html_archived": false,
+  "direct_get_status": 200,
+  "direct_get_body": "TencentCaptcha/WafCaptcha challenge, not article",
+  "images_viewed": false,
+  "video_viewed": false,
+  "capture_limitation": "网页工具已返回正文；直接GET只有1697字节验证壳后停止，没有执行验证或换身份。此JSON仅记录工具结果的定位和短摘，不是完整原网页。"
+}

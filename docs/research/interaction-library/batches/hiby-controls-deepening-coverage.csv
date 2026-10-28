@@ -1,0 +1,2 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M035-10,M-035,选择播放范围与跨目录/专辑连续播放,D2,E-HBD-01;E-HBCD-01;E-HBD-03;E-HBCD-02,列表/单曲循环/随机/列表循环及跨目录/专辑条件保留。无缝开关是另一设置：平台FAQ限PCM相同采样切换，DSD无效；不把播放范围扩大解释为任意音频无停顿。,顺序播放术语/跳目录时模式失效、手动切曲、缺文件及随机恢复仍未知；相同采样未细分所有参数，与跨组/A-B/计时叠加无实证；不是队列编辑任务。,not_observed,false,cases/M-035-hiby.md,2026-10-27

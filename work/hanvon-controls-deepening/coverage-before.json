@@ -1,0 +1,80 @@
+[
+  {
+    "flow_id": "F-M008-01",
+    "product_id": "M-008",
+    "task": "读文档后批注并分享（D1）",
+    "depth": "D1",
+    "evidence_ids": "E-HANV-03",
+    "known_branches": "能力终点明确，原稿与输出副本关系未知。",
+    "gaps": "选页/批量、导出路径、隐藏层、撤销、覆盖/取消。",
+    "visual_status": "not_observed",
+    "hands_on": "false",
+    "case_path": "cases/M-008-hanvon.md",
+    "checked_on": "2026-10-26"
+  },
+  {
+    "flow_id": "F-M008-02",
+    "product_id": "M-008",
+    "task": "扫描PDF转为适读内容（D1）",
+    "depth": "D1",
+    "evidence_ids": "E-HANV-03",
+    "known_branches": "重新显示与生成新文件不能混为一谈。",
+    "gaps": "语言、联网条件、识别错误修订、原PDF保留、恢复原版式。",
+    "visual_status": "not_observed",
+    "hands_on": "false",
+    "case_path": "cases/M-008-hanvon.md",
+    "checked_on": "2026-10-26"
+  },
+  {
+    "flow_id": "F-M008-03",
+    "product_id": "M-008",
+    "task": "录音→分角色→纪要（D1）",
+    "depth": "D1",
+    "evidence_ids": "E-HANV-03",
+    "known_branches": "不能推定转写、纪要、原声总是一起保存或一起删除。",
+    "gaps": "说话人修正、暂停/锁屏、断网后AI、原音回听、改指令、导出格式。",
+    "visual_status": "not_observed",
+    "hands_on": "false",
+    "case_path": "cases/M-008-hanvon.md",
+    "checked_on": "2026-10-26"
+  },
+  {
+    "flow_id": "F-M008-04",
+    "product_id": "M-008",
+    "task": "多端流转同一份材料（D1）",
+    "depth": "D1",
+    "evidence_ids": "E-HANV-03",
+    "known_branches": "“传输”“多端同步”不能自动解释为冲突合并。",
+    "gaps": "云离线、重名、版本、删除、取消和回滚；是否需要付费。",
+    "visual_status": "not_observed",
+    "hands_on": "false",
+    "case_path": "cases/M-008-hanvon.md",
+    "checked_on": "2026-10-26"
+  },
+  {
+    "flow_id": "F-M008-05",
+    "product_id": "M-008",
+    "task": "阅读页准备听书：静态设置",
+    "depth": "D1",
+    "evidence_ids": "E-HND-01;E-HND-02",
+    "known_branches": "声音、音量、语速和定时入口",
+    "gaps": "启动后、计时到期、锁屏和续播未知",
+    "visual_status": "static_reference_only",
+    "hands_on": "false",
+    "case_path": "cases/M-008-hanvon.md",
+    "checked_on": "2026-10-26"
+  },
+  {
+    "flow_id": "F-M008-06",
+    "product_id": "M-008",
+    "task": "阅读分屏：静态配置",
+    "depth": "D1",
+    "evidence_ids": "E-HND-01;E-HND-03",
+    "known_branches": "类型、位置、方向；取消/确定按钮",
+    "gaps": "进入、选择内容、实际布局和退出后状态未知",
+    "visual_status": "static_reference_only",
+    "hands_on": "false",
+    "case_path": "cases/M-008-hanvon.md",
+    "checked_on": "2026-10-26"
+  }
+]

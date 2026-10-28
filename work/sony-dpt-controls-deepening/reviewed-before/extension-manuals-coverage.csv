@@ -1,0 +1,37 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M059-01,M-059,阅读中打开主页,D2,E-DPT-01;E-DPT-10,再按 Home 或点菜单外返回；菜单是覆盖阅读内容的浮层。,菜单实际触控与状态保持,static_manual_pages_only,false,cases/M-059-sony-dpt.md,2026-10-26
+F-M059-02,M-059,打印方式传入资料,D2,E-DPT-02,文件进入 Received；这不是设备直接解析原网页/Office。旧系统列表需单独复核。,新系统兼容性、失败恢复,not_observed,false,cases/M-059-sony-dpt.md,2026-10-26
+F-M059-03,M-059,比较两份文档,D2,E-DPT-03,另一文档须出现在最近/同目录列表；可恢复上次组合，或选择某一侧退回单文档。,快速列表外文档与恢复,not_observed,false,cases/M-059-sony-dpt.md,2026-10-26
+F-M059-04,M-059,查看一本书的双页,D2,E-DPT-04,与两文档并排不同；双页下不能创建关联笔记，也不能跨两页画连续笔迹。,不同PDF和返回位置,not_observed,false,cases/M-059-sony-dpt.md,2026-10-26
+F-M059-05,M-059,建立可回到原文的笔记,D2,E-DPT-05,每文档一个关联笔记；新建替代时旧笔记转为独立笔记。官方 App 移动或改笔记名仍保留关系。,原文删除、重命名与跨软件关系,not_observed,false,cases/M-059-sony-dpt.md,2026-10-26
+F-M059-06,M-059,剪贴手写内容,D2,E-DPT-06,选择及粘贴模式不能翻页；只可粘贴一次。重启丢失剪贴内容，翻到别页会重置撤销/重做。,剪贴取消与重启实测,not_observed,false,cases/M-059-sony-dpt.md,2026-10-26
+F-M059-07,M-059,找手写标记,D2,E-DPT-07;E-DPT-08,同页多个命中合并；电脑端同类搜索按文档合并，双击交给电脑 PDF 阅读器。识别成功率未测。,漏检和实际定位,not_observed,false,cases/M-059-sony-dpt.md,2026-10-26
+F-M059-08,M-059,同步电脑与设备,D2,E-DPT-09,双方同一 PDF 都修改时，设备版本保留原名、电脑版本另存；删除会传播。仅指定目录的 PDF。,多端并发/传输中断,not_observed,false,cases/M-059-sony-dpt.md,2026-10-26
+F-M059-09,M-059,停止同步某个目录,D2,E-DPT-09,只解除关系，已有双方文件不删；同步正在进行时不能改该配置。,取消配置实际回执,not_observed,false,cases/M-059-sony-dpt.md,2026-10-26
+F-M059-10,M-059,复制重要文件作为备份,D2,E-DPT-01,这是文件复制流程；不能据此承诺恢复账号、设置、临时剪贴或全部阅读历史。传输中断可能损坏文件。,设置/历史/账号恢复范围,not_observed,false,cases/M-059-sony-dpt.md,2026-10-26
+F-M060-01,M-060,阅读中清除残影,D2,E-QUA-01,触发一次黑白反转刷新；不是无闪烁高帧率承诺。,显示时延、残影量化,not_observed,false,cases/M-060-quaderno.md,2026-10-26
+F-M060-02,M-060,快速翻页后停下,D2,E-QUA-01,左右开本改变翻页方向；是否准确停到目标页尚未实测。,连续翻页误停,not_observed,false,cases/M-060-quaderno.md,2026-10-26
+F-M060-03,M-060,用原资料遮挡自测,D2,E-QUA-01;E-QUA-04,同文档并排、缩略页、放大时不可用；休眠后退出暗记。没有依据认为会记录答题成绩或安排复习。,成绩/复习计划无证据，模式恢复实测,static_manual_pages_only,false,cases/M-060-quaderno.md,2026-10-26
+F-M060-04,M-060,删除后恢复文件,D2,E-QUA-01,恢复到原目录；目录已不存在会重建，同名冲突要求改名。站内容量超 1GB 时询问永久删除或取消；电脑 App 不能操作该回收站。,回收站满与同名恢复实测,not_observed,false,cases/M-060-quaderno.md,2026-10-26
+F-M060-05,M-060,Windows USB 传入,D2,E-QUA-01,导入完成后暂存区原条目消失；不要把这个变化当作资料丢失。macOS 用配套 App。,重复文件与中断,not_observed,false,cases/M-060-quaderno.md,2026-10-26
+F-M060-06,M-060,创建可回退的备份,D2,E-QUA-01,保存为带日期 ZIP，同日另编号；回收站不包含在内。备份目录不能同时设为同步目录。,备份失败及范围验证,not_observed,false,cases/M-060-quaderno.md,2026-10-26
+F-M060-07,M-060,恢复旧备份,D2,E-QUA-01,恢复会删除备份之后新增数据；创建/修改时间变为导入时间，浏览时间重置。先传出新资料是官方建议。,覆盖确认与中断恢复,not_observed,false,cases/M-060-quaderno.md,2026-10-26
+F-M060-08,M-060,同步双方改动,D2,E-QUA-01,双方都编辑会留两份；单边删除通常传播，但另一边已有修改时保留修改版。不是所有冲突都由“删除优先”解决。,冲突回执和重复重试,not_observed,false,cases/M-060-quaderno.md,2026-10-26
+F-M061-01,M-061,切换刷新与灯光,D2,E-HWP-01,普通模式优先画质，官方说明某些 app 可能卡顿/闪屏；一键刷新处理当前残影。未给出 60fps 结论。,逐app持久性和实际刷新,not_observed,false,cases/M-061-huawei-paper.md,2026-10-26
+F-M061-02,M-061,从另一台设备取书,D2,E-HWP-02;E-HWP-03,对端限所列 HarmonyOS 2/3 支持机型；看不到书时官方建议重开两端 Wi-Fi/蓝牙。只是导入，不足以证明全量进度同步。,重连失败、重复导入和进度,not_observed,false,cases/M-061-huawei-paper.md,2026-10-26
+F-M061-03,M-061,在阅读页直接批注,D2,E-HWP-04,弹窗提示当前工具，点空白继续。华为阅读支持按步撤销/恢复；不能套给掌阅。,跨app模式及笔迹保存,not_observed,false,cases/M-061-huawei-paper.md,2026-10-26
+F-M061-04,M-061,改变 PDF 排版,D2,E-HWP-05,扫描/纯图片不支持该重排；重排态不能批注、划线或全文搜索。页面原文写“epu”，未据此断言导出了标准 EPUB 文件。,重排状态持久性与位置,not_observed,false,cases/M-061-huawei-paper.md,2026-10-26
+F-M061-05,M-061,把语音笔记转为文字,D2,E-HWP-06,时长不足会提示购买；生成的文字和原录音是两个对象，转写失败恢复尚不清楚。,时长不足/网络中断恢复,not_observed,false,cases/M-061-huawei-paper.md,2026-10-26
+F-M061-06,M-061,导出录音资料,D2,E-HWP-07,HarmonyOS 2.1 说明笔记 app 不支持原录音导出；不能把“可导出笔记”理解成录音也在内。,录音对象备份恢复,not_observed,false,cases/M-061-huawei-paper.md,2026-10-26
+F-M061-07,M-061,全屏阅读打开系统栏,D2,E-HWP-08,需要区分全屏 app 与系统手势的响应层；未测试触发范围。,触发范围与误触,not_observed,false,cases/M-061-huawei-paper.md,2026-10-26
+F-M061-08,M-061,分屏笔记触发了截屏,D2,E-HWP-08,禁止手写时笔被当作手指，同一手势会截屏。阅读菜单自己的返回入口又不同。,焦点/禁止手写模式实测,not_observed,false,cases/M-061-huawei-paper.md,2026-10-26
+F-M061-09,M-061,旋转后找不到原阅读页,D2,E-HWP-08,往返旋转可能逐渐偏移，不能把页码视为跨排版稳定定位。,跨布局稳定定位,not_observed,false,cases/M-061-huawei-paper.md,2026-10-26
+F-M061-10,M-061,找回看似丢失的笔迹,D2,E-HWP-08,竖排不显示手写；PDF 重排前后笔迹相互独立。与华为阅读重排限制不是同一条规则。,跨设备笔迹恢复,not_observed,false,cases/M-061-huawei-paper.md,2026-10-26
+F-M062-01,M-062,从阅读进入系统控制,D2,E-LNP-01;E-LNP-04,阅读区横向划动用于翻页；图示明确区分起点，没有给出触发阈值。,实际手势阈值与误触,static_manual_pages_only,false,cases/M-062-lenovo-paper.md,2026-10-26
+F-M062-02,M-062,传入本地文件,D2,E-LNP-01,不等于开启云同步；取消/中断及重复文件策略未说明。,重复、中断与取消,not_observed,false,cases/M-062-lenovo-paper.md,2026-10-26
+F-M062-03,M-062,录音时记笔记并回看,D2,E-LNP-01,回放可显示对应手写内容，播放需蓝牙音频；删除某段后关系如何变化未知。,删除录音后关系和精确定位,not_observed,false,cases/M-062-lenovo-paper.md,2026-10-26
+F-M062-04,M-062,从阅读选词求助,D2,E-LNP-01,搜索、翻译和朗读需网络；未证明整本听书或读听断点同步。,整本听书/跨端断点,not_observed,false,cases/M-062-lenovo-paper.md,2026-10-26
+F-M062-05,M-062,进入对照学习模式,D2,E-LNP-01,要求 WLAN 与 Lenovo ID；该模式不支持记笔记。模式退出及恢复位置未知。,退出后恢复位置,not_observed,false,cases/M-062-lenovo-paper.md,2026-10-26
+F-M062-06,M-062,将资料带到 Google Drive,D2,E-LNP-02,FAQ 明确这不是 Drive 双向同步；书库副本如启用联想云，会进入另一套同步。,副本关系、授权失败,not_observed,false,cases/M-062-lenovo-paper.md,2026-10-26
+F-M062-07,M-062,把笔记同步到联想云,D2,E-LNP-02,云空间有期限/购买条件；不是整个设备镜像。同步冲突、账号退出与恢复覆盖未知。,过期/满空间/冲突和恢复,not_observed,false,cases/M-062-lenovo-paper.md,2026-10-26
+F-M062-08,M-062,重置前检查资料,D2,E-LNP-01,指南说明清除内部数据；开了云同步不等于最近编辑已上传，完成后如何恢复仍需独立验证。,重置后实际恢复范围,not_observed,false,cases/M-062-lenovo-paper.md,2026-10-26

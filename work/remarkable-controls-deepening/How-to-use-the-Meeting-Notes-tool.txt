@@ -1,0 +1,32 @@
+Our Create meeting note feature makes it easy to prepare for meetings by creating prefilled notes with details from your calendar. This lets you stay present, capture important ideas, and stay organized by quickly returning to your notes after meetings.
+To use this feature, you need an active Connect subscription, a Google or Outlook calendar, and software 3.27 on your paper tablet. See how to update your device to the latest version.
+Setting up
+You can set up your calendar integration by following these steps:
+1. Go to my.remarkable.com and log in to your account.
+2. Select Integrations in the menu in the upper-left corner.
+3. Select Add next to either Google or Outlook and follow the instructions to connect your account.
+Note that you can only connect one calendar service (either Google or Outlook) at a time. Once connected, a calendar icon will appear in My files on your paper tablet.
+How to create a meeting note
+When your calendar is linked, you can view upcoming meetings and create notes directly from the home screen:
+1. In My files, tap the calendar icon in the bottom toolbar.
+2. You’ll see a list of upcoming meetings.
+3. Tap a meeting in the list to create a new notebook.
+The notebook will automatically include the meeting title, date, attendees, and any agenda items from the invite.
+If you’re creating a note for a recurring meeting series, the page will be added to the existing notebook for that series so your notes stay together.
+If you’ve moved a meeting notebook to Trash, you can easily restore it. Just tap the associated calendar event to return it to My files and open the relevant page.
+Organizing and finding your notes
+New notes are saved to a dedicated folder named Meetings Notes. You can move this folder or the individual notebooks by long-pressing them and tapping Move in the top toolbar.
+To find your notes later, you can check the folder for recent notes or search for meeting titles.
+FAQs
+Which calendars can I use?
+This feature supports Google and Outlook calendars. Outlook requires an active Microsoft 365 account.
+Can I edit meeting details on my paper tablet?
+No, you can’t edit the actual calendar event. You can, however, edit the text within the meeting note once it's created. To change the meeting details you need to edit the original calendar event.
+How far ahead can I see my meetings?
+The menu shows up to five upcoming events within the next 10 hours.
+Is my calendar information stored on my paper tablet?
+No, your device only uses this information temporarily to show your upcoming meetings. However, once you create a meeting note, the details added to that notebook are permanently saved.
+Can I use shared or additional calendars?
+Currently, only your main calendar is supported. Additional, shared, or subscribed calendars will not show up in your list of upcoming events.
+Why did my recurring meeting start a new notebook?
+If you make changes to an ongoing meeting series in Outlook, it sometimes creates a completely new series. Your paper tablet will recognize this as a new event and start a separate notebook for it.

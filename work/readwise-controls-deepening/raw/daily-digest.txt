@@ -1,0 +1,10 @@
+Daily Digest
+What is the Daily Digest?
+The Daily Digest collects an assortment of documents from your Feed and your Saved for Later and presents them to you in an easily-scrollable format to help you triage your feed and rediscover documents you might have forgotten about.
+Where can I find the Daily Digest?
+On mobile, you can find the Daily Digest at the top of your Home section. Currently the web version of the app doesn't have the same scrollable format for reviewing your Daily Digest, but you can add a section to your Home screen by clicking into the Configure dropdown in the top right corner and selecting "Today's Daily Digest." This will display all the same documents that you would see when scrolling through the Digest on your mobile device.
+How do I disable the Daily Digest?
+You can disable the Daily Digest and its emails by navigating to your Account Settings and toggling off Enable Daily Digest.
+What is the "1" badge on my app icon?
+The Reader badge on iOS appears when you haven't viewed your Daily Digest for the day. Once you've viewed the Digest, the icon badge should disappear. Since it only represents the current day's Digest, it will never be a number larger than one.
+If you'd like to keep the Daily Digest as an option in the app but you don't want to see the badge, you can disable badge notifications for Reader in the system settings of your device.

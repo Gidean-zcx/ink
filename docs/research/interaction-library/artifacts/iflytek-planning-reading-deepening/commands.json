@@ -1,0 +1,38 @@
+[
+  {
+    "command": "page.get_by_text('查看更多',exact=True).nth(1).click(); page.get_by_text('学习机T20 Pro',exact=True).click(); page.get_by_text('学习机T30Pro',exact=True).click(); page.get_by_text('确认',exact=True).click(); page.wait_for_timeout(500); capture('02-t30pro-directory'); open_title('小学语文讯飞书城','03-bookstore-open'); overview('bookstore')",
+    "started": 1793059781.8040128,
+    "status": "ok",
+    "finished": 1793059810.7366514
+  },
+  {
+    "command": "open_title('小学语文同步学习','04-chinese-sync-open'); overview('chinese-sync')",
+    "started": 1793059921.111845,
+    "status": "ok",
+    "finished": 1793059946.7680874
+  },
+  {
+    "command": "open_title('小学自定义学习计划','05-custom-plan-open'); overview('custom-plan')",
+    "started": 1793060145.427777,
+    "status": "ok",
+    "finished": 1793060165.2899466
+  },
+  {
+    "command": "open_title('小学语文看图背诗','06-poem-open'); overview('poem')",
+    "started": 1793060205.707639,
+    "status": "ok",
+    "finished": 1793060222.440206
+  },
+  {
+    "command": "sample('poem-extra',[32,65,78,93]); open_title('小学自定义学习计划','07-custom-plan-extra'); sample('custom-plan-extra',[65,76,90,121])",
+    "started": 1793060290.2211282,
+    "status": "ok",
+    "finished": 1793060302.1000938
+  },
+  {
+    "command": "open_title('小学语文同步学习','08-chinese-sync-extra'); sample('chinese-sync-extra',[75,120,135]); open_title('小学语文讯飞书城','09-bookstore-extra'); sample('bookstore-extra',[60,75,92,200])",
+    "started": 1793060421.524576,
+    "status": "ok",
+    "finished": 1793060438.5636609
+  }
+]

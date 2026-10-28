@@ -1,0 +1,276 @@
+inventory_id,domain,item,source_url,locator,coverage_status,evidence_ids,flow_ids,gap
+I-QCD-001,PDF目录L1,目次,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p2; outline#1,catalogued_only,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-002,PDF目录L2,本書をお読みになる前に,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p7; outline#2,body_read_not_closed,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-003,PDF目录L3,安全にお使いいただくために,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p7; outline#3,body_read_not_closed,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-004,PDF目录L3,使用許諾契約書,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p7; outline#4,body_read_not_closed,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-005,PDF目录L3,保証書について,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p7; outline#5,body_read_not_closed,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-006,PDF目录L3,有寿命部品について,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p7; outline#6,body_read_not_closed,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-007,PDF目录L3,消耗品について,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p7; outline#7,body_read_not_closed,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-008,PDF目录L3,24時間以上の連続使用について,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p8; outline#8,body_read_not_closed,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-009,PDF目录L3,データのバックアップについて,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p8; outline#9,body_read_not_closed,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-010,PDF目录L3,無線LANについて 5GHz帯のチャンネルについて,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p8; outline#10,body_read_not_closed,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-011,PDF目录L3,無線の周波数について,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p8; outline#11,body_read_not_closed,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-012,PDF目录L3,海外での使用について,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p9; outline#12,catalogued_only,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-013,PDF目录L3,輸出について,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p9; outline#13,catalogued_only,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-014,PDF目录L3,本製品のハイセイフティ用途での使用について,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p9; outline#14,catalogued_only,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-015,PDF目录L3,本書の表記,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p9; outline#15,catalogued_only,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-016,PDF目录L3,商標および著作権,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p11; outline#16,catalogued_only,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-017,PDF目录L2,安全上のご注意,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p12; outline#17,catalogued_only,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-018,PDF目录L2,使用上のご注意,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p14; outline#18,catalogued_only,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-019,PDF目录L3,取り扱い上の注意,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p14; outline#19,catalogued_only,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-020,PDF目录L1,お使いになる前に,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p17; outline#20,catalogued_only,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-021,PDF目录L2,1. 初期設定,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p18; outline#21,body_read_not_closed,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-022,PDF目录L2,2. 各部名称,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p19; outline#22,catalogued_only,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-023,PDF目录L3,クアデルノ,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p19; outline#23,catalogued_only,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-024,PDF目录L3,スタイラスペン,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p20; outline#24,task_partially_analysed,E-QUA-01,F-M060-12,仅关联对应分支，不表示整节闭合或实操
+I-QCD-025,PDF目录L2,3. セキュリティについて,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p21; outline#25,body_read_not_closed,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-026,PDF目录L3,画面ロックをかける,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p21; outline#26,body_read_not_closed,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-027,PDF目录L3,FeliCa カードや対応機器で画面ロックを解除する,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p21; outline#27,body_read_not_closed,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-028,PDF目录L2,4. バージョンの確認方法,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p23; outline#28,body_read_not_closed,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-029,PDF目录L3,クアデルノの本体ソフトウェアバージョンを確認する,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p23; outline#29,body_read_not_closed,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-030,PDF目录L3,QUADERNO PC Appのバージョンを確認する,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p23; outline#30,body_read_not_closed,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-031,PDF目录L2,5. ドキュメントを転送する,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p24; outline#31,catalogued_only,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-032,PDF目录L3,QUADERNO PC Appでドキュメントを転送する,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p24; outline#32,catalogued_only,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-033,PDF目录L3,USB ケーブルを接続してドキュメントを転送する（Windowsのみ）,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p24; outline#33,task_partially_analysed,E-QUA-01,F-M060-05,仅关联对应分支，不表示整节闭合或实操
+I-QCD-034,PDF目录L2,6. スマートフォン連携,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p25; outline#34,task_partially_analysed,E-QUA-01,F-M060-09,仅关联对应分支，不表示整节闭合或实操
+I-QCD-035,PDF目录L3,QUADERNO Mobile Appのインストール方法,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p25; outline#35,task_partially_analysed,E-QUA-01,F-M060-09,仅关联对应分支，不表示整节闭合或实操
+I-QCD-036,PDF目录L3,QUADERNO Mobile Appのヘルプガイド,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p25; outline#36,task_partially_analysed,E-QUA-01,F-M060-09,仅关联对应分支，不表示整节闭合或实操
+I-QCD-037,PDF目录L2,7. クアデルノのファイルを復元させるために,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p26; outline#37,task_partially_analysed,E-QUA-01,F-M060-06,仅关联对应分支，不表示整节闭合或实操
+I-QCD-038,PDF目录L2,8. スケジュールフォーマットを活用する,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p27; outline#38,catalogued_only,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-039,PDF目录L3,スケジュールフォーマットを入手する,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p27; outline#39,catalogued_only,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-040,PDF目录L3,スケジュールフォーマットを使いこなす,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p27; outline#40,catalogued_only,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-041,PDF目录L2,9. テンプレートを活用する,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p29; outline#41,catalogued_only,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-042,PDF目录L3,テンプレートを入手する,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p29; outline#42,catalogued_only,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-043,PDF目录L3,テンプレートを取り込む,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p29; outline#43,catalogued_only,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-044,PDF目录L1,クアデルノの使い方,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p30; outline#44,catalogued_only,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-045,PDF目录L2,1. 基本機能について,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p31; outline#45,body_read_not_closed,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-046,PDF目录L3,電源ボタンで操作する,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p31; outline#46,body_read_not_closed,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-047,PDF目录L3,ホームメニュー,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p32; outline#47,catalogued_only,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-048,PDF目录L3,バッテリーについて,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p33; outline#48,catalogued_only,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-049,PDF目录L3,ドキュメント画面,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p34; outline#49,task_partially_analysed,E-QUA-01,F-M060-11,仅关联对应分支，不表示整节闭合或实操
+I-QCD-050,PDF目录L2,2. スリープについて,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p36; outline#50,body_read_not_closed,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-051,PDF目录L3,スリープにする,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p36; outline#51,body_read_not_closed,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-052,PDF目录L3,復帰する,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p36; outline#52,body_read_not_closed,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-053,PDF目录L3,スリープ画面を設定する,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p36; outline#53,body_read_not_closed,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-054,PDF目录L2,3. 画面をリフレッシュする,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p37; outline#54,task_partially_analysed,E-QUA-01,F-M060-01,仅关联对应分支，不表示整节闭合或实操
+I-QCD-055,PDF目录L3,リフレッシュする,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p37; outline#55,task_partially_analysed,E-QUA-01,F-M060-01,仅关联对应分支，不表示整节闭合或实操
+I-QCD-056,PDF目录L2,4. ドキュメントを開く,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p38; outline#56,selected_body_pages_read_task_partial,E-QUA-01,F-M060-22,本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留
+I-QCD-057,PDF目录L3,ドキュメント一覧から開く,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p38; outline#57,selected_body_pages_read_task_partial,E-QUA-01,F-M060-22,本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留
+I-QCD-058,PDF目录L3,フォルダーから選択して開く,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p38; outline#58,selected_body_pages_read_task_partial,E-QUA-01,F-M060-22,本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留
+I-QCD-059,PDF目录L3,ドキュメントを切り替える,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p39; outline#59,selected_body_pages_read_task_partial,E-QUA-01,F-M060-22,本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留
+I-QCD-060,PDF目录L2,5. フォルダーの作成と名称変更／複製／移動／削除,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p41; outline#60,selected_body_pages_read_task_partial,E-QUA-01,F-M060-20,本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留
+I-QCD-061,PDF目录L3,フォルダーを作成する,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p41; outline#61,selected_body_pages_read_task_partial,E-QUA-01,F-M060-20,本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留
+I-QCD-062,PDF目录L3,フォルダーの名称変更／複製／移動／削除をする,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p41; outline#62,selected_body_pages_read_task_partial,E-QUA-01,F-M060-20,本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留
+I-QCD-063,PDF目录L2,6. ドキュメントの名称変更／複製／移動／削除,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p43; outline#63,selected_body_pages_read_task_partial,E-QUA-01,F-M060-20;F-M060-04,本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留
+I-QCD-064,PDF目录L3,ドキュメント画面から操作する,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p43; outline#64,selected_body_pages_read_task_partial,E-QUA-01,F-M060-20;F-M060-04,本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留
+I-QCD-065,PDF目录L3,「フォルダーから探す」から操作する,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p44; outline#65,selected_body_pages_read_task_partial,E-QUA-01,F-M060-20;F-M060-04,本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留
+I-QCD-066,PDF目录L3,「一覧から探す」から操作する,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p45; outline#66,selected_body_pages_read_task_partial,E-QUA-01,F-M060-20;F-M060-04,本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留
+I-QCD-067,PDF目录L3,「ごみ箱」フォルダーを操作する,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p46; outline#67,selected_body_pages_read_task_partial,E-QUA-01,F-M060-04,本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留
+I-QCD-068,PDF目录L2,7. ドキュメントを読む,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p48; outline#68,body_read_not_closed,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-069,PDF目录L3,ページ位置表示でページを切り替える,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p48; outline#69,body_read_not_closed,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-070,PDF目录L3,ページをめくる,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p49; outline#70,task_partially_analysed,E-QUA-01,F-M060-02,仅关联对应分支，不表示整节闭合或实操
+I-QCD-071,PDF目录L3,ページ一覧を表示してページを切り替える,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p50; outline#71,catalogued_only,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-072,PDF目录L3,ページを指定して表示する,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p51; outline#72,body_read_not_closed,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-073,PDF目录L3,左右のページを見開きで表示する,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p51; outline#73,body_read_not_closed,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-074,PDF目录L3,左右にドキュメントを並べて表示する,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p52; outline#74,body_read_not_closed,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-075,PDF目录L3,画面を拡大する,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p53; outline#75,catalogued_only,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-076,PDF目录L2,8. お気に入りのドキュメントを登録する,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p55; outline#76,body_read_not_closed,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-077,PDF目录L3,お気に入りを登録する,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p55; outline#77,body_read_not_closed,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-078,PDF目录L3,お気に入りを解除する,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p55; outline#78,body_read_not_closed,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-079,PDF目录L2,9. 検索する,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p57; outline#79,task_partially_analysed,E-QUA-01,F-M060-11,仅关联对应分支，不表示整节闭合或实操
+I-QCD-080,PDF目录L3,ドキュメント内を検索する,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p57; outline#80,task_partially_analysed,E-QUA-01,F-M060-11,仅关联对应分支，不表示整节闭合或实操
+I-QCD-081,PDF目录L3,ドキュメントを検索する,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p59; outline#81,task_partially_analysed,E-QUA-01,F-M060-11,仅关联对应分支，不表示整节闭合或实操
+I-QCD-082,PDF目录L2,10. ドキュメントに書く,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p60; outline#82,body_read_not_closed,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-083,PDF目录L3,ペン先の位置を調整する,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p60; outline#83,body_read_not_closed,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-084,PDF目录L3,ドキュメントに直接手書きをする,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p61; outline#84,task_partially_analysed,E-QUA-01,F-M060-12,仅关联对应分支，不表示整节闭合或实操
+I-QCD-085,PDF目录L3,消しゴムを使う,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p63; outline#85,task_partially_analysed,E-QUA-01,F-M060-12,仅关联对应分支，不表示整节闭合或实操
+I-QCD-086,PDF目录L3,ハイライトを付ける,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p65; outline#86,task_partially_analysed,E-QUA-01,F-M060-12,仅关联对应分支，不表示整节闭合或实操
+I-QCD-087,PDF目录L3,手書きをコピー／切り取り／貼り付けする,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p66; outline#87,task_partially_analysed,E-QUA-01,F-M060-12,仅关联对应分支，不表示整节闭合或实操
+I-QCD-088,PDF目录L3,書き込み一覧を表示する,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p66; outline#88,task_partially_analysed,E-QUA-01,F-M060-11,仅关联对应分支，不表示整节闭合或实操
+I-QCD-089,PDF目录L3,書き込みの編集を制限する,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p67; outline#89,task_partially_analysed,E-QUA-01,F-M060-12,仅关联对应分支，不表示整节闭合或实操
+I-QCD-090,PDF目录L2,11. 暗記モードを使用する,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p68; outline#90,task_partially_analysed,E-QUA-01,F-M060-03,仅关联对应分支，不表示整节闭合或实操
+I-QCD-091,PDF目录L3,暗記ポイントを作成する,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p68; outline#91,task_partially_analysed,E-QUA-01,F-M060-03,仅关联对应分支，不表示整节闭合或实操
+I-QCD-092,PDF目录L3,暗記モードで暗記する,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p68; outline#92,task_partially_analysed,E-QUA-01,F-M060-03,仅关联对应分支，不表示整节闭合或实操
+I-QCD-093,PDF目录L2,12. ノートを活用する,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p70; outline#93,task_partially_analysed,E-QUA-01,F-M060-13,仅关联对应分支，不表示整节闭合或实操
+I-QCD-094,PDF目录L3,ノートを新規に作成する,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p70; outline#94,task_partially_analysed,E-QUA-01,F-M060-13,仅关联对应分支，不表示整节闭合或实操
+I-QCD-095,PDF目录L3,ノートを開く,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p70; outline#95,task_partially_analysed,E-QUA-01,F-M060-13,仅关联对应分支，不表示整节闭合或实操
+I-QCD-096,PDF目录L3,開いているドキュメントのサイドノートを作成する,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p71; outline#96,task_partially_analysed,E-QUA-01,F-M060-13,仅关联对应分支，不表示整节闭合或实操
+I-QCD-097,PDF目录L3,サイドノートを開く,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p71; outline#97,task_partially_analysed,E-QUA-01,F-M060-13,仅关联对应分支，不表示整节闭合或实操
+I-QCD-098,PDF目录L3,ノートにページを追加／削除する,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p72; outline#98,task_partially_analysed,E-QUA-01,F-M060-13,仅关联对应分支，不表示整节闭合或实操
+I-QCD-099,PDF目录L3,ノートのテンプレートを設定する,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p72; outline#99,task_partially_analysed,E-QUA-01,F-M060-13,仅关联对应分支，不表示整节闭合或实操
+I-QCD-100,PDF目录L2,13. パソコン（Windows）とクアデルノでドキュメントを転送する,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p73; outline#100,task_partially_analysed,E-QUA-01,F-M060-05,仅关联对应分支，不表示整节闭合或实操
+I-QCD-101,PDF目录L3,パソコンからドキュメントを転送する,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p73; outline#101,task_partially_analysed,E-QUA-01,F-M060-05,仅关联对应分支，不表示整节闭合或实操
+I-QCD-102,PDF目录L3,パソコンへドキュメントを転送する,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p73; outline#102,body_read_not_closed,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-103,PDF目录L3,ノートのテンプレートを取り込む,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p74; outline#103,body_read_not_closed,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-104,PDF目录L2,14. 楽譜を見る,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p76; outline#104,catalogued_only,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-105,PDF目录L3,Bluetooth フットペダルを接続する,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p76; outline#105,catalogued_only,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-106,PDF目录L3,ページ送り順を設定する,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p77; outline#106,catalogued_only,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-107,PDF目录L2,15. クアデルノで設定を変更する,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p78; outline#107,body_read_not_closed,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-108,PDF目录L3,ワイヤレス,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p78; outline#108,body_read_not_closed,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-109,PDF目录L3,システム,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p79; outline#109,body_read_not_closed,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-110,PDF目录L2,16. ScanSnapから取り込む,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p82; outline#110,task_partially_analysed,E-QUA-01,F-M060-14,仅关联对应分支，不表示整节闭合或实操
+I-QCD-111,PDF目录L3,Wi-Fiで接続する,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p82; outline#111,task_partially_analysed,E-QUA-01,F-M060-14,仅关联对应分支，不表示整节闭合或实操
+I-QCD-112,PDF目录L3,取り込む,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p83; outline#112,task_partially_analysed,E-QUA-01,F-M060-14,仅关联对应分支，不表示整节闭合或实操
+I-QCD-113,PDF目录L2,17. クアデルノの本体ソフトウェアのアップデート,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p87; outline#113,body_read_not_closed,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-114,PDF目录L3,アップデートするうえでの注意事項,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p87; outline#114,body_read_not_closed,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-115,PDF目录L3,アップデートする,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p87; outline#115,body_read_not_closed,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-116,PDF目录L1,QUADERNO PC Appの使い方,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p88; outline#116,catalogued_only,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-117,PDF目录L2,1. QUADERNO PC Appの画面,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p89; outline#117,selected_body_pages_read_task_partial,E-QUA-01,F-M060-19;F-M060-18,本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留
+I-QCD-118,PDF目录L2,2. パソコンにQUADERNO PC Appをインストールする,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p91; outline#118,selected_body_pages_read_task_partial,E-QUA-01,F-M060-19,本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留
+I-QCD-119,PDF目录L2,3. パソコンとクアデルノを接続する,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p92; outline#119,selected_body_pages_read_task_partial,E-QUA-01,F-M060-19,本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留
+I-QCD-120,PDF目录L3,USB ケーブルで接続する,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p92; outline#120,selected_body_pages_read_task_partial,E-QUA-01,F-M060-19,本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留
+I-QCD-121,PDF目录L3,Wi-Fiで接続する,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p92; outline#121,selected_body_pages_read_task_partial,E-QUA-01,F-M060-19,本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留
+I-QCD-122,PDF目录L3,Bluetoothで接続する,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p93; outline#122,selected_body_pages_read_task_partial,E-QUA-01,F-M060-19,本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留
+I-QCD-123,PDF目录L3,接続状態を確認する,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p94; outline#123,selected_body_pages_read_task_partial,E-QUA-01,F-M060-19,本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留
+I-QCD-124,PDF目录L2,4. ドキュメントを転送する,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p95; outline#124,body_read_not_closed,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-125,PDF目录L3,パソコンからドキュメントを転送する,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p95; outline#125,body_read_not_closed,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-126,PDF目录L3,印刷機能を利用してクアデルノに転送・表示する,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p95; outline#126,body_read_not_closed,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-127,PDF目录L3,パソコンへドキュメントを転送する,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p96; outline#127,body_read_not_closed,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-128,PDF目录L2,5. バックアップする,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p97; outline#128,task_partially_analysed,E-QUA-01,F-M060-06,仅关联对应分支，不表示整节闭合或实操
+I-QCD-129,PDF目录L3,バックアップする,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p97; outline#129,task_partially_analysed,E-QUA-01,F-M060-06,仅关联对应分支，不表示整节闭合或实操
+I-QCD-130,PDF目录L3,バックアップをインポートする,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p97; outline#130,task_partially_analysed,E-QUA-01,F-M060-07,仅关联对应分支，不表示整节闭合或实操
+I-QCD-131,PDF目录L3,バックアップデータを削除する,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p98; outline#131,body_read_not_closed,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-132,PDF目录L2,6. クアデルノとパソコンを同期する,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p99; outline#132,task_partially_analysed,E-QUA-01,F-M060-08,仅关联对应分支，不表示整节闭合或实操
+I-QCD-133,PDF目录L3,同期するうえでのご注意,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p100; outline#133,task_partially_analysed,E-QUA-01,F-M060-08,仅关联对应分支，不表示整节闭合或实操
+I-QCD-134,PDF目录L3,同期するパソコンのフォルダーを設定する,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p100; outline#134,task_partially_analysed,E-QUA-01,F-M060-08,仅关联对应分支，不表示整节闭合或实操
+I-QCD-135,PDF目录L3,同期したフォルダー内の内容を更新する,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p100; outline#135,task_partially_analysed,E-QUA-01,F-M060-08,仅关联对应分支，不表示整节闭合或实操
+I-QCD-136,PDF目录L3,同期設定を解除する,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p100; outline#136,task_partially_analysed,E-QUA-01,F-M060-08,仅关联对应分支，不表示整节闭合或实操
+I-QCD-137,PDF目录L2,7. QUADERNO PC Appで検索する,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p101; outline#137,body_read_not_closed,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-138,PDF目录L3,ドキュメントやフォルダーを検索する,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p101; outline#138,body_read_not_closed,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-139,PDF目录L3,特定のマークを書き込んだドキュメントを検索する,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p101; outline#139,body_read_not_closed,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-140,PDF目录L2,8. クアデルノのドキュメント／フォルダー構成を変更する,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p102; outline#140,body_read_not_closed,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-141,PDF目录L3,変更するうえでのご注意,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p102; outline#141,body_read_not_closed,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-142,PDF目录L3,変更方法,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p102; outline#142,body_read_not_closed,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-143,PDF目录L2,9. ノートのテンプレートを追加／削除／名称変更する,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p103; outline#143,selected_body_pages_read_task_partial,E-QUA-01,F-M060-21,本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留
+I-QCD-144,PDF目录L2,10. パソコンでドキュメントを表示する,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p104; outline#144,selected_body_pages_read_task_partial,E-QUA-01,F-M060-18,本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留
+I-QCD-145,PDF目录L2,11. 複数のクアデルノを操作する,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p105; outline#145,selected_body_pages_read_task_partial,E-QUA-01,F-M060-19,本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留
+I-QCD-146,PDF目录L3,2台目のクアデルノをペアリングする,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p105; outline#146,selected_body_pages_read_task_partial,E-QUA-01,F-M060-19,本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留
+I-QCD-147,PDF目录L3,複数のクアデルノを切り替えて使う,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p105; outline#147,selected_body_pages_read_task_partial,E-QUA-01,F-M060-19,本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留
+I-QCD-148,PDF目录L3,ペアリングを解除する,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p105; outline#148,selected_body_pages_read_task_partial,E-QUA-01,F-M060-19,本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留
+I-QCD-149,PDF目录L2,12. QUADERNO PC Appで設定を変更する,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p106; outline#149,body_read_not_closed,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-150,PDF目录L3,設定項目,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p106; outline#150,body_read_not_closed,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-151,PDF目录L2,13. QUADERNO PC Appをアップデートする,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p108; outline#151,catalogued_only,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-152,PDF目录L3,アップデートするうえでの注意事項,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p108; outline#152,catalogued_only,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-153,PDF目录L3,アップデート通知,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p108; outline#153,catalogued_only,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-154,PDF目录L3,手動でアップデートする,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p109; outline#154,catalogued_only,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-155,PDF目录L2,14. QUADERNO PC Appからクアデルノ本体ソフトウェアをアップデート する,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p110; outline#155,body_read_not_closed,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-156,PDF目录L3,アップデートするうえでの注意事項,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p110; outline#156,body_read_not_closed,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-157,PDF目录L3,アップデート通知,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p110; outline#157,body_read_not_closed,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-158,PDF目录L3,手動でアップデートする,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p111; outline#158,body_read_not_closed,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-159,PDF目录L1,トラブルシューティング,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p112; outline#159,catalogued_only,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-160,PDF目录L2,1. クアデルノのトラブル,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p113; outline#160,body_read_not_closed,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-161,PDF目录L3,電源が入らない,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p113; outline#161,body_read_not_closed,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-162,PDF目录L3,充電ができない,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p113; outline#162,body_read_not_closed,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-163,PDF目录L3,バッテリーの消費が早く感じる,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p113; outline#163,body_read_not_closed,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-164,PDF目录L3,画面が表示されるまで時間がかかる,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p114; outline#164,body_read_not_closed,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-165,PDF目录L3,画面が表示されない,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p114; outline#165,body_read_not_closed,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-166,PDF目录L3,タッチパネルの反応が遅い,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p114; outline#166,body_read_not_closed,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-167,PDF目录L3,ホームメニューのWi-Fiのアイコンを押しても反応しない,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p114; outline#167,body_read_not_closed,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-168,PDF目录L3,画面に以前に表示されていた画像が薄く残る,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p114; outline#168,body_read_not_closed,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-169,PDF目录L3,本体ソフトウェアをアップデートしたら、「今回の本体ソフトウェア向けにデー タ変換を行う必要があります。」と表示されるようになった,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p115; outline#169,task_partially_analysed,E-QUA-01,F-M060-15,仅关联对应分支，不表示整节闭合或实操
+I-QCD-170,PDF目录L2,2. スタイラスペンのトラブル,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p116; outline#170,catalogued_only,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-171,PDF目录L3,スタイラスペンの操作ができない,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p116; outline#171,catalogued_only,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-172,PDF目录L3,ペン先と実際に書かれた位置がずれる,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p116; outline#172,catalogued_only,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-173,PDF目录L3,スタイラスペンの芯がすり減ったときは,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p116; outline#173,catalogued_only,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-174,PDF目录L2,3. ネットワークのトラブル,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p118; outline#174,body_read_not_closed,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-175,PDF目录L3,Wi-Fiネットワークの設定／接続ができない,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p118; outline#175,body_read_not_closed,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-176,PDF目录L3,Wi-Fiネットワークの接続が突然できなくなった,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p118; outline#176,body_read_not_closed,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-177,PDF目录L3,Bluetoothの接続が突然できなくなった,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p119; outline#177,body_read_not_closed,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-178,PDF目录L2,4. ドキュメントのトラブル,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p120; outline#178,body_read_not_closed,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-179,PDF目录L3,ドキュメントを表示できない,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p120; outline#179,body_read_not_closed,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-180,PDF目录L3,文字が表示されない,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p120; outline#180,body_read_not_closed,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-181,PDF目录L3,ドキュメントの操作ができない（ペン操作、タップ操作などができない）,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p120; outline#181,task_partially_analysed,E-QUA-01,F-M060-12,仅关联对应分支，不表示整节闭合或实操
+I-QCD-182,PDF目录L3,書き込みができない,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p120; outline#182,task_partially_analysed,E-QUA-01,F-M060-12,仅关联对应分支，不表示整节闭合或实操
+I-QCD-183,PDF目录L3,書き込みの編集や削除ができない,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p120; outline#183,task_partially_analysed,E-QUA-01,F-M060-12,仅关联对应分支，不表示整节闭合或实操
+I-QCD-184,PDF目录L3,「フォルダーから探す」のメニューに「ドキュメントを復元」と表示されている,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p121; outline#184,task_partially_analysed,E-QUA-01,F-M060-16,仅关联对应分支，不表示整节闭合或实操
+I-QCD-185,PDF目录L2,5. パソコンとの接続に関するトラブル,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p122; outline#185,catalogued_only,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-186,PDF目录L3,パソコンにクアデルノが認識されない,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p122; outline#186,catalogued_only,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-187,PDF目录L3,パソコンからクアデルノにドキュメントを転送できない,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p123; outline#187,body_read_not_closed,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-188,PDF目录L3,パソコンからクアデルノのごみ箱を見つけられない,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p123; outline#188,task_partially_analysed,E-QUA-01,F-M060-04,仅关联对应分支，不表示整节闭合或实操
+I-QCD-189,PDF目录L3,エラーメッセージが表示された,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p123; outline#189,body_read_not_closed,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-190,PDF目录L3,バックアップが作成できない,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p123; outline#190,task_partially_analysed,E-QUA-01,F-M060-06,仅关联对应分支，不表示整节闭合或实操
+I-QCD-191,PDF目录L3,バックアップデータが表示されない,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p123; outline#191,task_partially_analysed,E-QUA-01,F-M060-07,仅关联对应分支，不表示整节闭合或实操
+I-QCD-192,PDF目录L2,6. ScanSnapから取り込むときのトラブル,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p124; outline#192,task_partially_analysed,E-QUA-01,F-M060-14,仅关联对应分支，不表示整节闭合或实操
+I-QCD-193,PDF目录L3,ScanSnap本体の「Scan」ボタンを押してしまった,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p124; outline#193,task_partially_analysed,E-QUA-01,F-M060-14,仅关联对应分支，不表示整节闭合或实操
+I-QCD-194,PDF目录L3,「本機のWi-Fiがオフになっています」というエラーメッセージが表示された,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p124; outline#194,task_partially_analysed,E-QUA-01,F-M060-14,仅关联对应分支，不表示整节闭合或实操
+I-QCD-195,PDF目录L3,接続中にクアデルノで操作しない状態が続くと、ScanSnapとの接続が切断され る,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p124; outline#195,task_partially_analysed,E-QUA-01,F-M060-14,仅关联对应分支，不表示整节闭合或实操
+I-QCD-196,PDF目录L3,接続したいScanSnapが「接続可能なScanSnap一覧」に表示されない,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p124; outline#196,task_partially_analysed,E-QUA-01,F-M060-14,仅关联对应分支，不表示整节闭合或实操
+I-QCD-197,PDF目录L2,7. ログファイルの保存,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p125; outline#197,catalogued_only,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-198,PDF目录L3,ログファイルの設定,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p125; outline#198,catalogued_only,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-199,PDF目录L2,8. お手入れ,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p126; outline#199,catalogued_only,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-200,PDF目录L3,クアデルノのお手入れ,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p126; outline#200,catalogued_only,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-201,PDF目录L3,ペンのお手入れ,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p126; outline#201,catalogued_only,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-202,PDF目录L2,9. アルコール消毒について,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p127; outline#202,catalogued_only,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-203,PDF目录L3,用意するもの,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p127; outline#203,catalogued_only,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-204,PDF目录L3,お手入れ方法,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p127; outline#204,catalogued_only,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-205,PDF目录L3,消毒薬によるお手入れの後は,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p128; outline#205,catalogued_only,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-206,PDF目录L3,消毒薬の影響について,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p128; outline#206,catalogued_only,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-207,PDF目录L1,仕様一覧,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p129; outline#207,catalogued_only,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-208,PDF目录L2,1. クアデルノ,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p130; outline#208,catalogued_only,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-209,PDF目录L2,2. スタイラスペン,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p132; outline#209,catalogued_only,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-210,PDF目录L2,3. その他の仕様,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p133; outline#210,body_read_not_closed,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-211,PDF目录L3,サポートしているファイル形式,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p133; outline#211,body_read_not_closed,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-212,PDF目录L3,QUADERNO PC Appの動作条件,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p133; outline#212,body_read_not_closed,E-QUA-01,,目录已核；未形成完整任务链，正文读取范围见read-pages.json
+I-QCD-213,本体设置条目,Wi-Fi,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p78,body_read_not_closed,E-QUA-01,,设置说明已读；未观察实际菜单/确认/错误
+I-QCD-214,本体设置条目,Wi-Fi設定,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p78,body_read_not_closed,E-QUA-01,,设置说明已读；未观察实际菜单/确认/错误
+I-QCD-215,本体设置条目,Wi-Fi設定/スリープ中にWi-Fi接続を維持,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p78,body_read_not_closed,E-QUA-01,,设置说明已读；未观察实际菜单/确认/错误
+I-QCD-216,本体设置条目,Wi-Fi設定/手動でネットワークを追加,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p78,body_read_not_closed,E-QUA-01,,设置说明已读；未观察实际菜单/确认/错误
+I-QCD-217,本体设置条目,Wi-Fi設定/ネットワーク一覧を更新,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p78,body_read_not_closed,E-QUA-01,,设置说明已读；未观察实际菜单/确认/错误
+I-QCD-218,本体设置条目,Wi-Fi設定/ネットワーク一覧,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p78,body_read_not_closed,E-QUA-01,,设置说明已读；未观察实际菜单/确认/错误
+I-QCD-219,本体设置条目,Bluetooth,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p78,body_read_not_closed,E-QUA-01,,设置说明已读；未观察实际菜单/确认/错误
+I-QCD-220,本体设置条目,Bluetooth設定,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p78,body_read_not_closed,E-QUA-01,,设置说明已读；未观察实际菜单/确认/错误
+I-QCD-221,本体设置条目,Bluetooth設定/本機にBluetooth機器を追加,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p78,body_read_not_closed,E-QUA-01,,设置说明已读；未观察实际菜单/确认/错误
+I-QCD-222,本体设置条目,Bluetooth設定/Bluetoothペアリングを待ち受け,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p78,body_read_not_closed,E-QUA-01,,设置说明已读；未观察实际菜单/确认/错误
+I-QCD-223,本体设置条目,Bluetooth設定/Bluetooth Low Energy(BLE)設定,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p78,body_read_not_closed,E-QUA-01,,设置说明已读；未观察实际菜单/确认/错误
+I-QCD-224,本体设置条目,Bluetooth設定/スリープ中にBluetooth接続を維持,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p78,body_read_not_closed,E-QUA-01,,设置说明已读；未观察实际菜单/确认/错误
+I-QCD-225,本体设置条目,Bluetooth設定/すべてのBluetooth機器とのペアリング情報を削除,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p78,body_read_not_closed,E-QUA-01,,设置说明已读；未观察实际菜单/确认/错误
+I-QCD-226,本体设置条目,NFC,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p78,body_read_not_closed,E-QUA-01,,设置说明已读；未观察实际菜单/确认/错误
+I-QCD-227,本体设置条目,Wi-Fiアクセスポイントを起動,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p78,task_partially_analysed,E-QUA-01,F-M060-09,设置说明已读；未观察实际菜单/确认/错误
+I-QCD-228,本体设置条目,Wi-Fiアクセスポイント情報,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p79,task_partially_analysed,E-QUA-01,F-M060-09,设置说明已读；未观察实际菜单/确认/错误
+I-QCD-229,本体设置条目,本体設定,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p79,body_read_not_closed,E-QUA-01,,设置说明已读；未观察实际菜单/确认/错误
+I-QCD-230,本体设置条目,本体設定/ペン先の位置調整,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p79,body_read_not_closed,E-QUA-01,,设置说明已读；未观察实际菜单/确认/错误
+I-QCD-231,本体设置条目,本体設定/ペンの機能設定,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p79,task_partially_analysed,E-QUA-01,F-M060-12,设置说明已读；未观察实际菜单/确认/错误
+I-QCD-232,本体设置条目,本体設定/書き込みの編集制限,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p79,task_partially_analysed,E-QUA-01,F-M060-12,设置说明已读；未观察实际菜单/确认/错误
+I-QCD-233,本体设置条目,本体設定/ノートのテンプレート,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p79,task_partially_analysed,E-QUA-01,F-M060-13,设置说明已读；未观察实际菜单/确认/错误
+I-QCD-234,本体设置条目,本体設定/画面ロック,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p79,body_read_not_closed,E-QUA-01,,设置说明已读；未观察实际菜单/确认/错误
+I-QCD-235,本体设置条目,画面ロック/画面ロック,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p79,body_read_not_closed,E-QUA-01,,设置说明已读；未观察实际菜单/确认/错误
+I-QCD-236,本体设置条目,画面ロック/ロックパスワードの変更,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p79,body_read_not_closed,E-QUA-01,,设置说明已读；未观察实际菜单/确认/错误
+I-QCD-237,本体设置条目,画面ロック/ロック解除に使用するNFCカードの設定,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p79,body_read_not_closed,E-QUA-01,,设置说明已读；未观察实际菜单/确认/错误
+I-QCD-238,本体设置条目,オートスリープ,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p80,body_read_not_closed,E-QUA-01,,设置说明已读；未观察实际菜单/确认/错误
+I-QCD-239,本体设置条目,オートスリープ/有効・無効,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p80,body_read_not_closed,E-QUA-01,,设置说明已读；未观察实际菜单/确认/错误
+I-QCD-240,本体设置条目,オートスリープ/オートスリープまでの時間,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p80,body_read_not_closed,E-QUA-01,,设置说明已读；未观察实际菜单/确认/错误
+I-QCD-241,本体设置条目,スリープ画面設定,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p80,body_read_not_closed,E-QUA-01,,设置说明已读；未观察实际菜单/确认/错误
+I-QCD-242,本体设置条目,スリープ画面設定/標準,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p80,body_read_not_closed,E-QUA-01,,设置说明已读；未观察实际菜单/确认/错误
+I-QCD-243,本体设置条目,スリープ画面設定/選択したページ,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p80,body_read_not_closed,E-QUA-01,,设置说明已读；未观察实际菜单/确认/错误
+I-QCD-244,本体设置条目,スリープ画面設定/スリープ前の画面,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p80,body_read_not_closed,E-QUA-01,,设置说明已读；未观察实际菜单/确认/错误
+I-QCD-245,本体设置条目,日付と時刻,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p80,body_read_not_closed,E-QUA-01,,设置说明已读；未观察实际菜单/确认/错误
+I-QCD-246,本体设置条目,日付と時刻/日付と時刻を設定,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p80,body_read_not_closed,E-QUA-01,,设置说明已读；未观察实际菜单/确认/错误
+I-QCD-247,本体设置条目,日付と時刻/日付表示形式,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p80,body_read_not_closed,E-QUA-01,,设置说明已读；未观察实际菜单/确认/错误
+I-QCD-248,本体设置条目,日付と時刻/時刻表示形式,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p80,body_read_not_closed,E-QUA-01,,设置说明已读；未观察实际菜单/确认/错误
+I-QCD-249,本体设置条目,日付と時刻/タイムゾーン,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p80,body_read_not_closed,E-QUA-01,,设置说明已读；未观察实际菜单/确认/错误
+I-QCD-250,本体设置条目,連携サーバー設定,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p80,body_read_not_closed,E-QUA-01,,设置说明已读；未观察实际菜单/确认/错误
+I-QCD-251,本体设置条目,すべてのドキュメントを削除,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p80,body_read_not_closed,E-QUA-01,,设置说明已读；未观察实际菜单/确认/错误
+I-QCD-252,本体设置条目,本機を初期化,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p80,body_read_not_closed,E-QUA-01,,设置说明已读；未观察实际菜单/确认/错误
+I-QCD-253,本体设置条目,この機器について,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p81,body_read_not_closed,E-QUA-01,,设置说明已读；未观察实际菜单/确认/错误
+I-QCD-254,本体设置条目,この機器について/機器情報,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p81,body_read_not_closed,E-QUA-01,,设置说明已读；未观察实际菜单/确认/错误
+I-QCD-255,本体设置条目,この機器について/使用許諾契約書,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p81,body_read_not_closed,E-QUA-01,,设置说明已读；未观察实际菜单/确认/错误
+I-QCD-256,本体设置条目,認証情報,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p81,body_read_not_closed,E-QUA-01,,设置说明已读；未观察实际菜单/确认/错误
+I-QCD-257,笔侧键/尾键可分配选项,ボールペン(color1),https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p79,task_partially_analysed,E-QUA-01,F-M060-12,列表与默认值有文档；逐个键映射未实操
+I-QCD-258,笔侧键/尾键可分配选项,ボールペン(color2),https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p79,task_partially_analysed,E-QUA-01,F-M060-12,列表与默认值有文档；逐个键映射未实操
+I-QCD-259,笔侧键/尾键可分配选项,ボールペン(color3),https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p79,task_partially_analysed,E-QUA-01,F-M060-12,列表与默认值有文档；逐个键映射未实操
+I-QCD-260,笔侧键/尾键可分配选项,消しゴム,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p79,task_partially_analysed,E-QUA-01,F-M060-12,列表与默认值有文档；逐个键映射未实操
+I-QCD-261,笔侧键/尾键可分配选项,マーカー,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p79,task_partially_analysed,E-QUA-01,F-M060-12,列表与默认值有文档；逐个键映射未实操
+I-QCD-262,笔侧键/尾键可分配选项,ハイライト,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p79,task_partially_analysed,E-QUA-01,F-M060-12,列表与默认值有文档；逐个键映射未实操
+I-QCD-263,笔侧键/尾键可分配选项,範囲選択,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p79,task_partially_analysed,E-QUA-01,F-M060-12,列表与默认值有文档；逐个键映射未实操
+I-QCD-264,笔侧键/尾键可分配选项,拡大,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p79,task_partially_analysed,E-QUA-01,F-M060-12,列表与默认值有文档；逐个键映射未实操
+I-QCD-265,笔侧键/尾键可分配选项,無効,https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf,PDF/印刷p79,task_partially_analysed,E-QUA-01,F-M060-12,列表与默认值有文档；逐个键映射未实操
+I-QCD-266,Mobile目录分类,クアデルノへファイルを入れる,https://www.fmworld.net/digital-paper/mobileapp/helpguide/,3个目录类,catalogued_only,E-QCD-01,,分类不算任务
+I-QCD-267,Mobile目录分类,クアデルノからファイルを取り出す,https://www.fmworld.net/digital-paper/mobileapp/helpguide/,3个目录类,catalogued_only,E-QCD-01,,分类不算任务
+I-QCD-268,Mobile目录分类,クアデルノとスマートフォンの接続方法を確認する,https://www.fmworld.net/digital-paper/mobileapp/helpguide/,3个目录类,catalogued_only,E-QCD-01,,分类不算任务
+I-QCD-269,Mobile帮助文章,手机连接方式与切后台断开条件,https://www.fmworld.net/digital-paper/mobileapp/helpguide/contents/QHG00001.html,QHG00001,task_partially_analysed,E-QCD-02,F-M060-09,官方共用帮助无构建/日期；版本与真实设备表现未核
+I-QCD-270,Mobile帮助文章,NFC辅助直连与首次认证,https://www.fmworld.net/digital-paper/mobileapp/helpguide/contents/QHG00002.html,QHG00002,task_partially_analysed,E-QCD-03,F-M060-09,官方共用帮助无构建/日期；版本与真实设备表现未核
+I-QCD-271,Mobile帮助文章,手动Wi-Fi直连与首次认证,https://www.fmworld.net/digital-paper/mobileapp/helpguide/contents/QHG00003.html,QHG00003,task_partially_analysed,E-QCD-04,F-M060-09,官方共用帮助无构建/日期；版本与真实设备表现未核
+I-QCD-272,Mobile帮助文章,同一接入点连接与首次认证,https://www.fmworld.net/digital-paper/mobileapp/helpguide/contents/QHG00004.html,QHG00004,task_partially_analysed,E-QCD-05,F-M060-09,官方共用帮助无构建/日期；版本与真实设备表现未核
+I-QCD-273,Mobile帮助文章,手机单文件传入,https://www.fmworld.net/digital-paper/mobileapp/helpguide/contents/QHG00005.html,QHG00005,task_partially_analysed,E-QCD-06,F-M060-09,官方共用帮助无构建/日期；版本与真实设备表现未核
+I-QCD-274,Mobile帮助文章,暂存预约与批量传入,https://www.fmworld.net/digital-paper/mobileapp/helpguide/contents/QHG00006.html,QHG00006,task_partially_analysed,E-QCD-07,F-M060-09,官方共用帮助无构建/日期；版本与真实设备表现未核
+I-QCD-275,Mobile帮助文章,设备文档传出手机,https://www.fmworld.net/digital-paper/mobileapp/helpguide/contents/QHG00007.html,QHG00007,task_partially_analysed,E-QCD-08,F-M060-10,官方共用帮助无构建/日期；版本与真实设备表现未核

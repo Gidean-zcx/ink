@@ -1,0 +1,7 @@
+Multiple Digital Paper devices can be registered to 1 user account.
+Click [Tools] - [Switch Digital Paper] in the menu bar of the Digital Paper App.
+Click [Add] and connect Digital Paper.
+To switch the Digital Paper displayed on the Digital Paper App
+Select Digital Paper to be used via [Tools] - [Switch Digital Paper], and click [Switch].
+Note
+When multiple Digital Paper devices will be registered, files cannot be transferred at the same time. Transfer the files by switching the Digital Paper devices that are displayed on Digital Paper App one by one.

@@ -1,0 +1,183 @@
+[
+  {
+    "evidence_id": "E-AK-12",
+    "field": "additional_captures",
+    "before": [],
+    "after": [
+      {
+        "checked_on": "2026-10-27",
+        "access_mode": "anonymous_public_html_GET",
+        "hands_on": false,
+        "visual_observed": false,
+        "url": "https://www.iriver.jp/support/product_235.php",
+        "http_status": 200,
+        "raw_work_path": "work/ak-directory-deepening/raw/sr35-support.html",
+        "raw_sha256": "4d1e2e1174b32c40f671835cdc4f2437d082bddde1f847b7fa9807c3883f8a32",
+        "extracted_work_path": "work/ak-directory-deepening/raw/sr35-support.txt",
+        "extracted_sha256": "05280fd01e9527f4b6e5993848f42a4a1e08bdb1f6ef96fbd85a3ce24f9e0467",
+        "archived_artifact": "artifacts/ak-directory-deepening/source-notes.md",
+        "sha256": "208461d068269f64ab8668855e1fb1c2103a552b7d7f3bd48330aca1dc6ee99c",
+        "locator": "24 FAQ及9下载条目，仅选择性正文读取"
+      }
+    ],
+    "append": {
+      "checked_on": "2026-10-27",
+      "access_mode": "anonymous_public_html_GET",
+      "hands_on": false,
+      "visual_observed": false,
+      "url": "https://www.iriver.jp/support/product_235.php",
+      "http_status": 200,
+      "raw_work_path": "work/ak-directory-deepening/raw/sr35-support.html",
+      "raw_sha256": "4d1e2e1174b32c40f671835cdc4f2437d082bddde1f847b7fa9807c3883f8a32",
+      "extracted_work_path": "work/ak-directory-deepening/raw/sr35-support.txt",
+      "extracted_sha256": "05280fd01e9527f4b6e5993848f42a4a1e08bdb1f6ef96fbd85a3ce24f9e0467",
+      "archived_artifact": "artifacts/ak-directory-deepening/source-notes.md",
+      "sha256": "208461d068269f64ab8668855e1fb1c2103a552b7d7f3bd48330aca1dc6ee99c",
+      "locator": "24 FAQ及9下载条目，仅选择性正文读取"
+    }
+  },
+  {
+    "evidence_id": "E-AKCD-11",
+    "field": "additional_captures",
+    "before": [],
+    "after": [
+      {
+        "checked_on": "2026-10-27",
+        "access_mode": "anonymous_public_html_GET",
+        "hands_on": false,
+        "visual_observed": false,
+        "url": "https://www.iriver.jp/support/faq_1104.php",
+        "http_status": 200,
+        "raw_work_path": "work/ak-directory-deepening/raw/replaygain.html",
+        "raw_sha256": "93f7cd4546e5747aac70c09342fec9184bb598d2f47cfd001b0fef458a4c99c5",
+        "extracted_work_path": "work/ak-directory-deepening/raw/replaygain.txt",
+        "extracted_sha256": "acacd2182da2033fc22ad386f03a0b40805e2a0ca50f1f4e12e5145a7526aa11",
+        "archived_artifact": "artifacts/ak-directory-deepening/source-notes.md",
+        "sha256": "208461d068269f64ab8668855e1fb1c2103a552b7d7f3bd48330aca1dc6ee99c",
+        "locator": "格式上限、Line Out不工作"
+      }
+    ],
+    "append": {
+      "checked_on": "2026-10-27",
+      "access_mode": "anonymous_public_html_GET",
+      "hands_on": false,
+      "visual_observed": false,
+      "url": "https://www.iriver.jp/support/faq_1104.php",
+      "http_status": 200,
+      "raw_work_path": "work/ak-directory-deepening/raw/replaygain.html",
+      "raw_sha256": "93f7cd4546e5747aac70c09342fec9184bb598d2f47cfd001b0fef458a4c99c5",
+      "extracted_work_path": "work/ak-directory-deepening/raw/replaygain.txt",
+      "extracted_sha256": "acacd2182da2033fc22ad386f03a0b40805e2a0ca50f1f4e12e5145a7526aa11",
+      "archived_artifact": "artifacts/ak-directory-deepening/source-notes.md",
+      "sha256": "208461d068269f64ab8668855e1fb1c2103a552b7d7f3bd48330aca1dc6ee99c",
+      "locator": "格式上限、Line Out不工作"
+    }
+  },
+  {
+    "evidence_id": "E-AK-10",
+    "field": "additional_captures",
+    "before": [],
+    "after": [
+      {
+        "checked_on": "2026-10-27",
+        "access_mode": "anonymous_public_html_GET",
+        "hands_on": false,
+        "visual_observed": false,
+        "url": "https://www.iriver.jp/support/faq_1033.php",
+        "http_status": 200,
+        "raw_work_path": "work/ak-directory-deepening/raw/m3u.html",
+        "raw_sha256": "7dbaa5bf1589006fb1c1223cb608faf358539c14eeb7ff92b602f4170a266857",
+        "extracted_work_path": "work/ak-directory-deepening/raw/m3u.txt",
+        "extracted_sha256": "de40342916e47871008e955f00cd0aac8ec880caa441d686cd26f6509f5e8bba",
+        "archived_artifact": "artifacts/ak-directory-deepening/source-notes.md",
+        "sha256": "208461d068269f64ab8668855e1fb1c2103a552b7d7f3bd48330aca1dc6ee99c",
+        "locator": "支持声明与路径限制；无新导入链"
+      }
+    ],
+    "append": {
+      "checked_on": "2026-10-27",
+      "access_mode": "anonymous_public_html_GET",
+      "hands_on": false,
+      "visual_observed": false,
+      "url": "https://www.iriver.jp/support/faq_1033.php",
+      "http_status": 200,
+      "raw_work_path": "work/ak-directory-deepening/raw/m3u.html",
+      "raw_sha256": "7dbaa5bf1589006fb1c1223cb608faf358539c14eeb7ff92b602f4170a266857",
+      "extracted_work_path": "work/ak-directory-deepening/raw/m3u.txt",
+      "extracted_sha256": "de40342916e47871008e955f00cd0aac8ec880caa441d686cd26f6509f5e8bba",
+      "archived_artifact": "artifacts/ak-directory-deepening/source-notes.md",
+      "sha256": "208461d068269f64ab8668855e1fb1c2103a552b7d7f3bd48330aca1dc6ee99c",
+      "locator": "支持声明与路径限制；无新导入链"
+    }
+  },
+  {
+    "evidence_id": "E-AK-04",
+    "field": "additional_captures",
+    "before": [],
+    "after": [
+      {
+        "checked_on": "2026-10-27",
+        "access_mode": "anonymous_public_html_GET",
+        "hands_on": false,
+        "visual_observed": false,
+        "url": "https://www.iriver.jp/support/file_1596.php",
+        "http_status": 200,
+        "raw_work_path": "work/ak-directory-deepening/raw/v122.html",
+        "raw_sha256": "1fdff34d5fe3aecc796398c77ae78d62a1750061934c338bd60fe7fd21d24f8d",
+        "extracted_work_path": "work/ak-directory-deepening/raw/v122.txt",
+        "extracted_sha256": "02fb82072fe5543aff74d5a991dc00e446bb59202118eeb3c1171eaf5783a64d",
+        "archived_artifact": "artifacts/ak-directory-deepening/source-notes.md",
+        "sha256": "208461d068269f64ab8668855e1fb1c2103a552b7d7f3bd48330aca1dc6ee99c",
+        "locator": "创建/更新时间、OTA、锁键与Chrome"
+      }
+    ],
+    "append": {
+      "checked_on": "2026-10-27",
+      "access_mode": "anonymous_public_html_GET",
+      "hands_on": false,
+      "visual_observed": false,
+      "url": "https://www.iriver.jp/support/file_1596.php",
+      "http_status": 200,
+      "raw_work_path": "work/ak-directory-deepening/raw/v122.html",
+      "raw_sha256": "1fdff34d5fe3aecc796398c77ae78d62a1750061934c338bd60fe7fd21d24f8d",
+      "extracted_work_path": "work/ak-directory-deepening/raw/v122.txt",
+      "extracted_sha256": "02fb82072fe5543aff74d5a991dc00e446bb59202118eeb3c1171eaf5783a64d",
+      "archived_artifact": "artifacts/ak-directory-deepening/source-notes.md",
+      "sha256": "208461d068269f64ab8668855e1fb1c2103a552b7d7f3bd48330aca1dc6ee99c",
+      "locator": "创建/更新时间、OTA、锁键与Chrome"
+    }
+  },
+  {
+    "evidence_id": "E-AKCD-01",
+    "field": "additional_captures",
+    "before": [],
+    "after": [
+      {
+        "checked_on": "2026-10-27",
+        "access_mode": "existing_pdf_reread_PyMuPDF",
+        "hands_on": false,
+        "visual_observed": false,
+        "raw_work_path": "work/ak-controls-deepening/SR35_instruction_book_ENG.pdf",
+        "raw_sha256": "2fc0dd11a7b6babfcc11028e2f1223c16320287f47adb18bb72ae10d97155182",
+        "extracted_work_path": "work/ak-directory-deepening/manual-pages.json",
+        "extracted_sha256": "39b50c61e6ef1ab1bef656830d8f5410a0bc542acde908478f7c0db8a11de89f",
+        "archived_artifact": "artifacts/ak-directory-deepening/source-notes.md",
+        "sha256": "208461d068269f64ab8668855e1fb1c2103a552b7d7f3bd48330aca1dc6ee99c",
+        "locator": "73文件页提取；本批逐条核印刷1目录与8–11、13–26、35–41、49–63及66–67目标正文；其他章节仅目录/旧批依据。新静态观察另见E-AKDD-03。"
+      }
+    ],
+    "append": {
+      "checked_on": "2026-10-27",
+      "access_mode": "existing_pdf_reread_PyMuPDF",
+      "hands_on": false,
+      "visual_observed": false,
+      "raw_work_path": "work/ak-controls-deepening/SR35_instruction_book_ENG.pdf",
+      "raw_sha256": "2fc0dd11a7b6babfcc11028e2f1223c16320287f47adb18bb72ae10d97155182",
+      "extracted_work_path": "work/ak-directory-deepening/manual-pages.json",
+      "extracted_sha256": "39b50c61e6ef1ab1bef656830d8f5410a0bc542acde908478f7c0db8a11de89f",
+      "archived_artifact": "artifacts/ak-directory-deepening/source-notes.md",
+      "sha256": "208461d068269f64ab8668855e1fb1c2103a552b7d7f3bd48330aca1dc6ee99c",
+      "locator": "73文件页提取；本批逐条核印刷1目录与8–11、13–26、35–41、49–63及66–67目标正文；其他章节仅目录/旧批依据。新静态观察另见E-AKDD-03。"
+    }
+  }
+]

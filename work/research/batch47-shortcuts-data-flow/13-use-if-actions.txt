@@ -1,0 +1,15 @@
+Use If actions in Shortcuts on iPhone or iPad
+Use the If action (also known as a conditional) to set up a shortcut that checks for certain conditions and operates differently depending on which condition is met. If actions give you the flexibility to set up different paths that your actions can take depending on conditions that are known only when the shortcut runs.
+Simply put, the If action lets you express the following in a shortcut: If a condition is true do this; otherwise do that. A different series of actions is run for each result.
+You can use the If action to test whether content that’s passed into the action as input meets a certain condition. For example, you could use the If action to verify that a webpage fetched from a previous action contains the word “goetta.”
+You can use Otherwise If to add additional logic to your If action by specificing another If condition. To add an Otherwise If, Tap the If statement, then choose “Add Otherwise If”
+Note: If you’re unfamiliar with the concept of inputs and outputs, see Intro to how shortcuts work on iPhone and iPad.
+When placed in your shortcut, the If action includes three markers (tags in the shortcut editor): If (input), Otherwise, and End If.
+In the If marker, you can configure the Input and Condition parameters. Tap the Input parameter to choose a variable. (The content of this variable will be used for the If comparison.) Then tap Condition to choose a condition. (The available conditions are dependent on the type of input.) Text inputs have conditions such as “is,” “is not,” and “contains.” Number inputs have conditions such as “is greater than,” “is less than,” or “is between.”
+Note: An If action will attempt to set the Input parameter to the output of an action placed before it.
+Tap the input variable to show an editor where you can make changes to the variable. To remove the variable and choose a different input, tap Clear.
+Inside the variable editor, you can choose a value to compare. For example, for a Weather Conditions variable, you can choose the High temperature. For more information, see Adjust variables in Shortcuts on iPhone or iPad.
+Because the If action has two possible outcomes—the condition is true or the condition is false—you can place actions in two paths. When the shortcut runs, a true condition causes the input to be passed to the first action just after If, while a false condition causes the input to be passed into the first action after the Otherwise marker.
+The last action to produce output in the If case or Otherwise case passes its content through the End If marker as output (available to retrieve as an “If Result” Magic Variable). This means that the last action in each path of the If action affects the output of the action as a whole.
+To add multiple conditions to a single If action, tap , tap Condition, then add your additional conditions.
+When an If action has multiple conditions, you can tap Any or All to specify whether the If Action requires all or only some conditions to be met.

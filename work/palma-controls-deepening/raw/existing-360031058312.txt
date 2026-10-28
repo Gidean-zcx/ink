@@ -1,0 +1,3 @@
+Step 1. You shall download the TTS engine, such as Speech Recognition & Synthesis, from the Google Play Store on your BOOX device.
+Step 2. Secondly, you shall go to the Settings > Language & Input > Text-to-Speech (TTS) Output to set the speech rate.
+Step 3. And you could download the specific language package for your use, or click the settings button framed in red below to further customize the TTS settings as you like.

@@ -1,0 +1,60 @@
+Filtering For High-Factuality News Sources
+Ground News Help Center
+Contact Us
+How can we help you?
+Results
+No results found
+More results
+We use cookies to analyze website traffic and help improve our visitor experience. Privacy Policy
+Reject
+Accept
+In this articleUnderstanding Factuality RatingsHow to Filter for High-Factuality News SourcesGround News Mobile App (iOS and Android)Ground News WebsiteHow to Learn More About a Specific Source's Factuality Rating
+Home
+Advanced Browsing Tools
+Compare & Analyze News Coverage
+Filtering For High-Factuality News Sources
+Edited Wednesday, April 15 2026
+Understanding Factuality Ratings
+Ground News provides factuality ratings to indicate the reliability of news sources based on their historical reporting practices. It’s important to note that these ratings apply to the news sources as a whole, not individual articles.
+The factuality rating reflects a source’s history of reporting, including whether it has framed details to fit a particular narrative. Typically:
+Center sources are the most likely to have high factuality ratings.
+Partisan sources, whether left or right-leaning, tend to have lower factuality ratings due to tendencies such as omitting context, biased framing, or sourcing their information from poorly rated or unverified sources.
+These ratings are not determined by our team but come from three independent organizations. Ground News averages these ratings to provide an objective score. Ratings can change over time based on a source’s reporting behaviour. In other words, if a source improves its practices, its factuality rating may increase, and vice versa.
+You can read more about our rating methodology here: Ground News Rating System
+How to Filter for High-Factuality News Sources
+Ground News Mobile App (iOS and Android)
+Open the app and navigate to a news story.
+Scroll to the Full Coverage carousel (where different sources covering the same story are displayed) OR Select the Full Coverage tab at the top of the story page
+Under the Full Coverage section, scroll to the left until you see the Factuality tab, then tap on the tab
+Select the Factuality ratings to prioritize sources with those factuality ratings.
+If you're looking for High or Very High Factuality sources, adjust the factuality filter settings accordingly. Then, tap Show Results at the bottom of the screen.
+(Click on the image to expand)
+Ground News Website
+Go to Ground News and navigate to any news story.
+Find the Full Coverage section to view multiple sources reporting on the same event.
+Click on the “Sort & Filter” icon and locate the “Factuality” drop-down menu.
+If you're looking for High or Very High Factuality sources, adjust the factuality filter settings accordingly.
+(Click on the image to expand)
+Check out our Universal Source Filters on Ground News Web here.
+How to Learn More About a Specific Source's Factuality Rating
+You can also check the factuality rating of an individual source by visiting its dedicated source page:
+For example, visit a new source's interest page on Ground News by using the search bar.
+Click on the organizations next to the rating to view more details on the rationale behind the score.
+(Click on the image to expand)
+Your feedback matters, and we want to hear from you. If you have any further questions, feedback, or suggestions, please don't hesitate to reach out to us at feedback@ground.news
+We hope this article was helpful! If you have any concerns about this article and would like to leave a comment, we welcome your feedback – but please keep in mind feedback that is submitted on a Help Center article will not be responded to by our team. If you have an issue you would like resolved by our team, please contact the email address above.
+High Factuality
+Filters
+Filter Factuality Ratings
+Sort and Filter
+Was this article helpful?
+Yes
+No
+Sorry about that! Care to tell us more?
+What was unhelpful?
+Submit
+Thanks for the feedback!
+There was an issue submitting your feedback
+Please check your connection and try again.
+Cookie preferences
+Refund and Cancellation PolicyTerms and ConditionsPrivacy Policy

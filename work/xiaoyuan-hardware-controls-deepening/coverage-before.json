@@ -1,0 +1,80 @@
+[
+  {
+    "flow_id": "F-M056-01",
+    "product_id": "M-056",
+    "task": "S6 一题选题手写纠错再练结束",
+    "depth": "D1",
+    "evidence_ids": "E-XYHW-01",
+    "known_branches": "官方能力模块目录",
+    "gaps": "题目实际入口提示重试与恢复",
+    "visual_status": "not_observed",
+    "hands_on": "false",
+    "case_path": "cases/M-056-xiaoyuan-hardware.md",
+    "checked_on": "2026-10-26"
+  },
+  {
+    "flow_id": "F-M056-02",
+    "product_id": "M-056",
+    "task": "E1 识字与分级阅读",
+    "depth": "D1",
+    "evidence_ids": "E-XYHW-01;E-XYHW-03;E-XYHW-04",
+    "known_branches": "课程分龄S3为5至6岁",
+    "gaps": "选级提示纠错重试结束恢复",
+    "visual_status": "static_official_images_only",
+    "hands_on": "false",
+    "case_path": "cases/M-056-xiaoyuan-hardware.md",
+    "checked_on": "2026-10-26"
+  },
+  {
+    "flow_id": "F-M056-03",
+    "product_id": "M-056",
+    "task": "家长时间及答案限制",
+    "depth": "D1",
+    "evidence_ids": "E-XYHW-02;E-XYHW-05",
+    "known_branches": "静态管控选项及开关示例",
+    "gaps": "完整入口保存生效超时解锁离线",
+    "visual_status": "static_official_images_only",
+    "hands_on": "false",
+    "case_path": "cases/M-056-xiaoyuan-hardware.md",
+    "checked_on": "2026-10-26"
+  },
+  {
+    "flow_id": "F-M056-04",
+    "product_id": "M-056",
+    "task": "轨迹查看与家庭协作",
+    "depth": "D1",
+    "evidence_ids": "E-XYHW-02;E-XYHW-05",
+    "known_branches": "示例时间线及家长列表",
+    "gaps": "数据口径角色权限邀请恢复",
+    "visual_status": "static_official_images_only",
+    "hands_on": "false",
+    "case_path": "cases/M-056-xiaoyuan-hardware.md",
+    "checked_on": "2026-10-26"
+  },
+  {
+    "flow_id": "F-M056-05",
+    "product_id": "M-056",
+    "task": "导入文档及发送打印",
+    "depth": "D1",
+    "evidence_ids": "E-XYHW-01;E-XYHW-05",
+    "known_branches": "小程序输入及Word图片PDF",
+    "gaps": "E1适用性文件限制同步打开打印恢复",
+    "visual_status": "not_observed",
+    "hands_on": "false",
+    "case_path": "cases/M-056-xiaoyuan-hardware.md",
+    "checked_on": "2026-10-26"
+  },
+  {
+    "flow_id": "F-M056-06",
+    "product_id": "M-056",
+    "task": "家长账号注销",
+    "depth": "D2",
+    "evidence_ids": "E-XYHW-05",
+    "known_branches": "确认家庭解绑条件与短信验证码",
+    "gaps": "错误验证码及重新绑定儿童进度",
+    "visual_status": "not_observed",
+    "hands_on": "false",
+    "case_path": "cases/M-056-xiaoyuan-hardware.md",
+    "checked_on": "2026-10-26"
+  }
+]

@@ -1,0 +1,127 @@
+# M-012 Mudita Kompakt：通信、离线开关与系统恢复
+
+查阅：2026-10-27；旧批为 2026-10-26。本例只研究 **Mudita Kompakt**，不套用 Mudita Pure 的桌面短信/设置备份。英语文档；地区、SIM、运营商和安装构建均未实际选定。无登录、安装、拨号、发送、刷机或设备操作；`hands_on=false`。10 条任务最高 D2；两张官方静态参考图不算连续操作。
+
+## 型号和版本边界
+
+- 系统基线取已发布 **MuditaOS K 1.6.1**：官方 1.6 条目解释 1.6.0 曾限量推送后暂停，附件实际说明 1.6.1；条目修改于 2026-10-13。6 页附件仍题为 K 1.6，标注变化日期 2026-08-24，两日期不合并。（E-MDCD-03/04）
+- 12 页官方手册未标 OS；PDF 创建元数据 2026-01-27 只作文件线索。10 月帮助说明具体路径，但没有证明全部截图/菜单来自 1.6.1。手册整册目录和现行支持目录均已登记，不宣称已取得一本覆盖每个 app 的完整操作手册。（E-MDCD-01/02）
+- 桌面版本参照 **Mudita Center 4.0.0** 已发布说明；现行帮助及安装截图的确切构建未知。K 1.2.0 是侧载加入的系统门槛；Center 产品页仍以 3.1.0 介绍侧载，并不把那段旧文案当桌面当前版本。（E-MDCD-13/19/20）
+- K 1.4 的锁屏音乐/文件夹等改进保留为历史 D1；K 2.0 IFA 预告不当成已交付卸载或同步能力。（E-MUD-11/12）
+
+## 功能目录与覆盖
+
+[逐条功能目录](../artifacts/mudita-controls-deepening/function-inventory.csv) 包含手册 15 项、帮助文章 81 项（10 类指南 55、FAQ 24、Center 2）及 K 1.6 附件 15 个功能域，共 111 行。每行标明正文已读、只读目录或旧批正文，关联 F/E 与缺口；这是目录条数，不是 111 条完成流程。
+
+| 功能域 | 官方目录/页码 | 已关联任务或证据 | 未闭合部分 |
+| --- | --- | --- | --- |
+| 开机/SIM/语言/键盘 | 手册 p2；Setup 6 项 | F09 更新；E-MDCD-01/02/15 | 初次配置、SIM2/eSIM切换、语言变更的退出和错误 |
+| 实体键/导航/无障碍/电池 | 手册 p2–4、p9；System 6 项 | F01/04/09；电源、音量、离线开关和三导航图标 | 指纹/锁屏恢复、截图、亮度刷新、按 app 优化未闭合 |
+| 通话/SMS/MMS | Calling & Messaging 7 项；1.6 Phone/SMS | F01–03；E-MDCD-03–06/22 | 通话打断音乐、接听/拒接全过程、未送达重试 |
+| 日历/闹钟/笔记/地图/天气 | Organization 9 项；附件 p1–6 | 目录和变化已读；备份范围见 F10 | app 内完整增改删/返回；地图离线暂停仅发布说明 |
+| 联系人/导入 | Contacts 2、导入 6、Center 管理 1 | F01 取联系人；目录 E-MDCD-02 | 去重、覆盖、CSV错误与多来源冲突 |
+| 录音 | 录制/收听/删除 3 项；附件 p5 | 仅目录与修复说明；Offline+限制见F05 | 来电中断、保存/未保存、转出与恢复 |
+| 文件/阅读/音乐/相机 | 文件 7 项；K1.4发布说明 | F06/07；E-MUD-08–11、E-MDCD-11 | 阅读位置/标记、音乐队列/断点、摄像头返回未闭合 |
+| 应用布局/侧载/卸载 | Privacy 3 项；FAQ安装/第三方app | F08；E-MDCD-12–14 | 后台、权限、更新覆盖、崩溃后的单应用修复 |
+| 连接/离线/蓝牙 | Connectivity 6 项；Offline+ FAQ | F05；蓝牙入口已读 E-MDCD-21 | 输出切换、耳机断开/来电路由；Wi-Fi/热点/漫游正文未核 |
+| 更新/恢复/备份 | Setup更新、System重置、FAQ启动循环、Center备份 | F09/10；E-MDCD-15–20 | 无损回滚、备份合并/覆盖、跨版本和中断 |
+| 硬件/法律/其他FAQ | 手册 p5–12；FAQ24条逐项登记 | 手册完整目录；RCS无支持由明确FAQ支持 | 运营商兼容、SAR/性能等非本批操作结论；未读FAQ不据标题断言 |
+
+手册全部 15 个目录项（保留原章节定位）：Get Started 2；Charging and Turning on 2；Offline+ 3；Navigate the Apps 3；Accessibility 4；Mudita Center 5；Important Safety and Legal Information 5；Safety Instructions 5；Frequency Bands and Power Output 7；Charging and Battery Information 9；Regulatory Information 10；Before you use Kompakt 12；Cleaning, Storage and Maintenance 12；Guarantee Information 12；Contact Details 12。（E-MDCD-01）
+
+## 已有任务补证（保持原编号）
+
+| F 编号 | 入口和操作 | 反馈、数据、退出与限制 | 证据 |
+| --- | --- | --- | --- |
+| F-M012-01 向联系人打电话 | Phone → Contacts → 联系人 → Call；新号码走 Phone → Dial → 输入 → Call。来电阻止：Block 图标 → Block number。Control Center → Settings → Accessibility 可选电源键结束通话。 | 1.6.1修复旧记录误算未接来电、锁屏/主页计数不同。普通接听/拒接入口及占线/无服务未闭合；阻止号码不等同仅拒接一次。媒体暂停/自动续播无证据。 | E-MUD-01/03；E-MDCD-01/03/04/05 |
+| F-M012-02 写短信与图片消息 | 联系人：SMS → Pencil → 对象 → 输入 → Send；新号码：SMS → Plus → 号码 → send to:号码 → 输入 → Send。MMS从 SMS → Plus → 选联系人/输入号码 → Image → 选图 → Send。键盘不出现时点输入光标。 | 同一现行帮助仍有Pencil/Plus区别，不能归因于已知版本。发送不证明送达/已读；草稿、离线重试和图片失败未知。明确无RCS是FAQ结论。 | E-MUD-04/05/06；E-MDCD-06/22 |
+| F-M012-03 删除对话 | SMS → Pencil → 勾选会话 → Delete → 再次Delete。 | 二次确认作用于对话；未见撤销、单条删除或附件保留规则。备份恢复也未证明能只找回某条会话。 | E-MUD-07；E-MDCD-06 |
+| F-M012-04 调音量与进入控制中心 | 导航图标分返回/主页/Control Center。控制中心铃铛下滑条、物理音量键均调主音量；Settings → Sound有特定用途滑条。铃铛、滑条到底、长按音量减到底或Sound → Silent Mode可静音。 | Sound → Advance管按键/锁屏/充电/触摸提示音。K1.6另加通知振动开关，但不证明其与静音、闹钟的优先级。默认音量记忆、各应用媒体焦点未知。 | E-MUD-01/02；E-MDCD-01/04/07/08 |
+| F-M012-05 开启深度离线 | 飞行模式：Control Center → 飞机图标切换；Offline+：左侧开关向下，向上恢复完整功能。 | 飞行模式允许重新开蓝牙。Offline+中GSM/三麦克风硬件停用，相机/Wi-Fi/蓝牙软件停用；不能紧急呼叫。1.6.1不再每次退出都要SIM PIN，仅重启后立即退出的例外保留。播放是否继续、补收短信和重连耗时未测。 | E-MUD-01；E-MDCD-01/03/09/10 |
+| F-M012-06 从电脑准备书和音乐 | Center连接 → Your Kompakt → Manage Files → 类型 → Add file → 选择/确认。另一个USB文件可见性分支：接电脑 → Control Center → Settings → Connected Devices → USB Preferences → File Transfer。 | 未接电脑时USB Preferences不显示；No data transfer停止暴露文件。这个USB分支未被认定为Center的必需前置。旧帮助的格式筛选不保证解析成功；容量、重复与断线半成品未知。 | E-MUD-08/09；E-MDCD-11 |
+| F-M012-07 从电脑删除文件 | Center相应类型 → 选文件 → Delete → Delete file。 | 删除已安装应用的APK包不会卸载应用（F08）；不能据文件删除推出笔记/播放记录一起消失。未查回收站和单文件恢复。 | E-MUD-10；E-MDCD-12/13/16 |
+
+音频相关只取得两段局部事实：历史 K1.4 描述锁屏播放/暂停及跳曲；当前蓝牙帮助为可发现外设 → Control Center → Settings → Connected Devices → Pair new device → 选设备 → Pair（出现“Bluetooth is on”提示可关闭）。这些均不证明来电抢占后何时恢复、耳机切换保存哪个位置，也不据 Android 底座推断音焦点实现。（E-MUD-11、E-MDCD-21）
+
+K1.6 Phone 另列语音信箱通知：部分支持MWI的网络在应用/最近通话显示，其他网络仍用短信；拨号长按1可呼叫，未配置号码时提示，可到应用设置配置。仅登记版本化分支，不额外计F；运营商状态未实测。（E-MDCD-04 p4）
+
+## 新增独立任务
+
+### F-M012-08 安装应用并区分隐藏、删除安装包与卸载
+
+前提为Kompakt系统至少K1.2.0、电脑Center和USB-C。Manage Files → App installers → Add file → 选择APK → 确认传入 → 点击该APK → 接受风险并确认安装。帮助完成步骤允许关闭窗口后使用；实际查看的单帧显示完成标志、Close及可断开设备提示，未观察前面的传入/安装过程。（E-MDCD-12/13）
+
+安装包与应用是两个对象：帮助明确安装后可删APK而不影响应用；Center4.0发布说明给APK“已安装/待安装”状态。隐藏是另一路径：Control Center → Settings → App layout → 开关 → 可Preview → 返回箭头保存退出；不据隐藏推定卸载或清数据。（E-MDCD-12/14/20）
+
+2026-10-03官方FAQ明确设备和Center均无内置卸载侧载应用的选项；恢复出厂可一起移除并清用户数据（F09）。FAQ提到社区第三方管理器，但本批未安装/核查，不能替代官方内置流程。无Google Services、无机内APK loader，应用不一定兼容；安装失败、更新覆盖、权限撤销和后台规则仍未知。K2.0预告不填这些缺口。（E-MDCD-13；E-MUD-12）
+
+### F-M012-09 更新系统及失败后的恢复出厂分支
+
+联网后可从Control Center顶部更新通知 → Update → 如出现许可则勾选/Agree → 自动下载和配置 → Restart phone；手查为Control Center → Settings → About → Software Update。失败帮助依次建议重试、检查稳定联网/移动数据下载许可、重启，再把恢复出厂作为最后手段；仍失败联系支持。没有证明中途断电会自动回滚。（E-MDCD-15）
+
+能进入设置时：Control Center → Settings → System → Factory Reset → Factory Reset → 最终Factory Reset；完成后重启进入设置流程，数据清空但OS版本不变。因此“恢复出厂”不能写成降回旧固件。（E-MDCD-16）
+
+启动循环的独立入口：关机 → Power+音量加到Select Boot Mode → 音量加选Recovery、音量减确认 → 机器人画面按住Power并点一次音量加 → Recovery中音量上下选Wipe data/factory reset、Power确认 → 等待。两层菜单的确认键不同；会清空未备份数据，文档未给保留资料路径或恢复耗时。未执行。（E-MDCD-17）
+
+### F-M012-10 创建加密备份并选择恢复
+
+Center连接后Your Kompakt → Overview → Create backup → 再确认；可设置密码、Confirm passcode后输入，也可Skip password。密码确认后不能更改。恢复：Overview → Restore from backup → 选列表项 → Restore from backup → 如加密则输入密码 → Confirm；无密码则跳过这步。密码遗失无找回/更改方式。Center → Settings → Backup显示电脑本地路径；例示路径不当所有系统固定目录。（E-MDCD-18）
+
+数据范围分版本：产品页Kompakt段列联系人、通话记录、消息、闹钟、笔记；Center4.0.0增加日历事件。产品页把媒体管理另列，并给Pure单列含settings的备份，不能据此将Kompakt称为整机镜像。第三方app及数据、媒体、MMS附件、SIM/eSIM或系统设置是否包含，未得到完整清单。还缺恢复时覆盖/合并、损坏备份、断线回滚、跨版本及最后完成反馈。（E-MDCD-19/20）
+
+## 实际观察及数据状态
+
+只实际查看两张单帧：[手册p3导航/离线开关](../artifacts/mudita-controls-deepening/manual-p03.png)和[官方安装完成图](../artifacts/mudita-controls-deepening/install-complete.png)。第一张是手册插图，第二张是官方帮助中的桌面窗口，均无可确认构建号；不据图内样例容量/应用名作性能或兼容结论。PDF其余页及帮助为文本阅读，不标视觉观察。原件/哈希见新证据批的raw字段，正式图与目录长期保存在artifacts。无连续画面、时间戳、耗时或复现次数。
+
+## 与本项目关系（推断）
+
+实体Offline+能让通信与采集状态可见，但它同时切断电话与麦克风，与R-012常驻唤醒、R-013来电可达存在取舍。G-001若借鉴，应先明确何种状态仍可唤醒/来电，而非只复制开关。
+
+F08的安装包/应用/图标分离，以及F10的有限数据备份，对G-002和Plus的动作命名有启发：AI应区分隐藏、删源文件、卸载、清数据和恢复，提示准确受影响对象。这里没有证明Kompakt具备统一AI读写或自动恢复接口；其Android侧载也不代表Plus可直接执行APK。5–6岁自主读听仍缺误触删除恢复、音频中断及权限控制实证；成人通信/阅读也需这些操作测试。
+
+## 下一项最小核查
+
+固定地区SIM和K1.6.1设备，记录音乐/阅读→来电→接听/拒接→返回、Offline+切回后的补收与播放位置；核短信两个新建入口、草稿和离线发送。之后仅用测试数据验证Center4.0备份类别与恢复覆盖方式。当前均未做；目录中未读项明确保留，不把缺资料写成不支持。
+
+## 来源
+
+
+- E-MUD-01：[官方英文简明手册](https://assets.ctfassets.net/isxmxtc67n72/3biBEzYwk8UjSapgvMB461/b6ade0485fba2625382f44aca0fd0b51/ENG_Mudita_Kompakt_Manual_Online_04.pdf)，第 2–4 页，来自官方 Quick Start 下载链接。
+- E-MUD-02：[基础设置](https://www.mudita.com/products/phones/mudita-kompakt/quick-start/basic-settings-and-customization/)。
+- E-MUD-03：[拨打电话](https://mudita.com/products/phones/mudita-kompakt/quick-start/calling/)。
+- E-MUD-04：[联系人短信](https://mudita.com/products/phones/mudita-kompakt/quick-start/messaging/)。
+- E-MUD-05：[新号码短信](https://mudita.com/products/phones/mudita-kompakt/quick-start/messaging/send-sms-to-new-number/)，官方索引正文。
+- E-MUD-06：[MMS 附件流程](https://www.mudita.com/products/phones/mudita-kompakt/quick-start/messaging/send-mms-to-contact/)，官方索引正文。
+- E-MUD-07：[删除会话](https://mudita.com/products/phones/mudita-kompakt/quick-start/messaging/delete-conversations/)。
+- E-MUD-08：[传入电子书](https://support.mudita.com/en/support/solutions/articles/77000596832-how-to-transfer-e-books-to-kompakt-)，更新 2026-09-17。
+- E-MUD-09：[传入音乐](https://mudita.com/products/phones/mudita-kompakt/quick-start/managing-files/transfer-music-to-kompakt/)，官方索引正文。
+- E-MUD-10：[删除文件](https://www.mudita.com/products/phones/mudita-kompakt/quick-start/managing-files/delete-files-from-kompakt/)，官方索引正文。
+- E-MUD-11：[1.4 发布说明](https://mudita.com/about/media/muditaos-k-1-4-0-released-with-many-improvements-for-kompakt/)。
+- E-MUD-12：[2.0 预告](https://mudita.com/community/blog/muditaos-k-2-0-at-ifa-2026-a-first-look-at-whats-coming/?tags=e+ink+technology%2Cmudita+kompakt%2Cmudita+backstage)，不作为已发布操作依据。
+- E-MUD-13：[官方对 Center 侧载的说明](https://mudita.com/community/blog/why-mudita-kompakt-is-considered-a-flexible-minimalist-phone/)，功能发现，未验证所有兼容性。
+- E-MUD-14：[1.6 官方发布条目](https://support.mudita.com/en/support/solutions/articles/77000598634-muditaos-k-1-6)，旧批仅登记条目；本轮 E-MDCD-03/04 已读取正文与英文附件。
+
+本轮补证（均查阅于2026-10-27；原件/哈希见结构化批次）：
+
+- E-MDCD-01：[官方 Kompakt 英文手册：整册目录与实体导航](https://assets.ctfassets.net/isxmxtc67n72/3biBEzYwk8UjSapgvMB461/b6ade0485fba2625382f44aca0fd0b51/ENG_Mudita_Kompakt_Manual_Online_04.pdf)；TOC p4; pp2–5; p9; observed illustration p3。
+- E-MDCD-02：[官方 Kompakt 指南、FAQ、Center 目录快照](https://support.mudita.com/en/support/solutions/folders/77000329481)；10 how-to folders / 55 articles; FAQ 24; Center 2。
+- E-MDCD-03：[MuditaOS K 1.6：1.6.1 发布范围与修复](https://support.mudita.com/en/support/solutions/articles/77000598634-muditaos-k-1-6)；Why 1.6.1; key fixes。
+- E-MDCD-04：[K 1.6 英文发布附件（入口说明对应1.6.1）](https://support.mudita.com/helpdesk/attachments/77279297918)；pp1–6; 15 section headings; Phone p4; Maps p3。
+- E-MDCD-05：[拨号、联系人与来电阻止](https://support.mudita.com/en/support/solutions/articles/77000579064-how-to-make-calls-and-manage-emergency-number-on-mudita-kompakt)；Call a contact / new number / block incoming call。
+- E-MDCD-06：[短信、图片消息与会话删除](https://support.mudita.com/en/support/solutions/articles/77000579754-how-to-send-sms-and-mms-messages-on-mudita-kompakt)；SMS contact/new number; MMS; delete conversations。
+- E-MDCD-07：[主音量、功能音量与提示音](https://support.mudita.com/en/support/solutions/articles/77000579749-how-to-manage-volume-levels-on-mudita-kompakt)；main volume; silent; Sound > Advance。
+- E-MDCD-08：[静音：控制中心与设置入口](https://support.mudita.com/en/support/solutions/articles/77000596914-how-to-put-kompakt-in-silent-mode-)；Method 1 / Method 2。
+- E-MDCD-09：[Offline+ 与飞行模式开关](https://support.mudita.com/en/support/solutions/articles/77000579070-how-to-use-offline-and-airplane-mode-on-mudita-kompakt)；Airplane / Offline+ / full function。
+- E-MDCD-10：[Offline+ 硬件/软件停用边界](https://support.mudita.com/en/support/solutions/articles/77000577366-is-mudita-kompakt-offline-more-secure-than-airplane-mode-)；What is the difference?。
+- E-MDCD-11：[USB 文件不可见及禁用数据传输](https://support.mudita.com/en/support/solutions/articles/77000580051-how-to-enable-and-disable-usb-file-transfer-on-mudita-kompakt)；File Transfer / No data transfer。
+- E-MDCD-12：[Center 安装第三方 APK 与完成提示](https://support.mudita.com/en/support/solutions/articles/77000595285-installing-third-party-apps-via-mudita-center)；Steps1–10; observed Step9 image。
+- E-MDCD-13：[第三方应用前提及当前卸载限制](https://support.mudita.com/en/support/solutions/articles/77000577356-does-mudita-kompakt-support-third-party-apps-)；How to Sideload / Uninstalling。
+- E-MDCD-14：[隐藏/显示应用图标与保存退出](https://support.mudita.com/en/support/solutions/articles/77000579751-how-to-unhide-or-hide-app-icons-on-mudita-kompakt)；App layout / Preview / Back arrow。
+- E-MDCD-15：[系统升级入口与失败处理](https://support.mudita.com/en/support/solutions/articles/77000579066-how-to-do-system-updates-on-mudita-kompakt)；update notification / manual check / fails。
+- E-MDCD-16：[设置内恢复出厂](https://support.mudita.com/en/support/solutions/articles/77000579068-how-to-do-a-factory-reset-on-mudita-kompakt)；Warning; reset steps。
+- E-MDCD-17：[启动循环：Recovery 恢复出厂](https://support.mudita.com/en/support/solutions/articles/77000586371-what-to-do-when-the-mudita-kompakt-is-stuck-in-a-loop-when-it-starts-up-)；Factory reset procedure。
+- E-MDCD-18：[Center 创建/恢复备份及密码](https://support.mudita.com/en/support/solutions/articles/77000579156-how-to-create-and-restore-mudita-kompakt-data-backups-with-mudita-center)；create / restore / find backup file。
+- E-MDCD-19：[Mudita Center 的 Kompakt 备份范围](https://mudita.com/products/software-apps/mudita-center/)；Mudita Kompakt > Backup & Restore; separate media section。
+- E-MDCD-20：[Mudita Center 4.0.0 发布说明](https://support.mudita.com/en/support/solutions/articles/77000594959-mudita-center-4-0-0)；backup and restore; APK statuses。
+- E-MDCD-21：[蓝牙配对入口](https://support.mudita.com/en/support/solutions/articles/77000579073-how-to-connect-devices-using-bluetooth-to-mudita-kompakt)；Connect a device。
+- E-MDCD-22：[Kompakt 的 RCS 边界](https://support.mudita.com/en/support/solutions/articles/77000597865-does-mudita-kompakt-support-rcs-messaging-)；FAQ answer。

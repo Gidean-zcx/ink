@@ -1,0 +1,22 @@
+item_id,product_id,functional_domain,public_material_scope,evidence_ids,source_locator,flow_ids,review_status,version_scope,remaining_gap,checked_on,new_visual_observation
+FBPC-I01,M-032,用户报告,四方块下真实目录项,E-FBCD-08,唯一正文段,,body_read_directory_only,2020-07-03历史署名粉笔托管帮助；构建/系统未知；具体tenant官方反链未核,生成条件/空数据/删除影响,2026-10-27,false
+FBPC-I02,M-032,练习历史,四方块下真实目录项,E-FBCD-08,唯一正文段,,body_read_directory_only,2020-07-03历史署名粉笔托管帮助；构建/系统未知；具体tenant官方反链未核,未交卷是否进入/继续入口/重做覆盖,2026-10-27,false
+FBPC-I03,M-032,我的错题,四方块下真实目录项,E-FBCD-08,唯一正文段,F-M032-04,body_read_directory_only,2020-07-03历史署名粉笔托管帮助；构建/系统未知；具体tenant官方反链未核,清理确认/误删恢复/统计重算,2026-10-27,false
+FBPC-I04,M-032,我的笔记,四方块下真实目录项,E-FBCD-08,唯一正文段,,body_read_directory_only,2020-07-03历史署名粉笔托管帮助；构建/系统未知；具体tenant官方反链未核,编辑保存/撤销/同步,2026-10-27,false
+FBPC-I05,M-032,资料缓存,四方块下真实目录项,E-FBCD-08,唯一正文段,F-M032-10,body_read_directory_only,2020-07-03历史署名粉笔托管帮助；构建/系统未知；具体tenant官方反链未核,只知导出后查看；缓存清理/离线范围,2026-10-27,false
+FBPC-I06,M-032,我的收藏,四方块下真实目录项,E-FBCD-08,唯一正文段,F-M032-05,body_read_directory_only,2020-07-03历史署名粉笔托管帮助；构建/系统未知；具体tenant官方反链未核,保存回执/去重/取消与同步,2026-10-27,false
+FBPC-I07,M-032,会员周报,四方块下真实目录项,E-FBCD-08,唯一正文段,,body_read_directory_only,2020-07-03历史署名粉笔托管帮助；构建/系统未知；具体tenant官方反链未核,生成频率/权限过期/历史,2026-10-27,false
+FBPC-I08,M-032,我的1对1,四方块下真实目录项,E-FBCD-08,唯一正文段,,body_read_directory_only,2020-07-03历史署名粉笔托管帮助；构建/系统未知；具体tenant官方反链未核,课后数据/作业恢复，超行测题库主链,2026-10-27,false
+FBPC-I09,M-032,我的体系课,四方块下真实目录项,E-FBCD-08,唯一正文段,,body_read_directory_only,2020-07-03历史署名粉笔托管帮助；构建/系统未知；具体tenant官方反链未核,课表/课程完成，超行测题库主链,2026-10-27,false
+FBPC-I10,M-032,错题时间/题型选择,2022行测作者文字入口,E-FBPC-03,方法1—3,F-M032-04,historical_author_text_partial,小米11/MIUI12.0.0.1/8.0.1均作者自报未官方核,筛选结果/空列表/跨日边界,2026-10-27,false
+FBPC-I11,M-032,错题重答反馈,2019作者文字分支,E-FBPC-01,方法3—6,F-M032-04,historical_author_claim_not_current_rule,2019-01-12；科目/系统/构建未知,未看答案状态；移出回执/撤销/重答记录,2026-10-27,false
+FBPC-I12,M-032,四方块入口,仅方法1静态入口图,E-FBPC-01,方法1图片,F-M032-04,static_reference_only,作者更新2019-01-12，科目及构建不可见,主体被模糊；不证明答题反馈,2026-10-27,true
+FBPC-I13,M-032,快速练习漏答确认,2022文字：未全部答完交卷,E-FBPC-02,方法1—4,F-M032-09,historical_author_text_partial,荣耀30/magic UI2.0.0/6.16.25作者自报；科目地区未知,弹窗原文/取消/确认后的报告/恢复,2026-10-27,false
+FBPC-I14,M-032,快速练习报告解析,2019旧静态图覆盖,E-FBCD-07,四2.2第二图,F-M032-09,prior_static_observation_not_repeated,iOS6.8.8/国考；2019-06-24,不能用2022文字补成同一会话,2026-10-27,false
+FBPC-I15,M-032,模考报名/补练,官方FAQ正文已读旧证据,E-FENB-03;E-FBCD-03,参加/岗位/错过/往期报告,F-M032-01;F-M032-02,prior_body_mapping,内容记录2024-09-10；无App构建,本轮无新当前交卷/后台/断网证据,2026-10-27,false
+FBPC-I16,M-032,真题选择与解析,北京备考文章,E-FENB-07,地区/年份/解析,F-M032-03,developer_editorial_claim_only,构建未知；北京行测,选项/改选/交卷成功未核,2026-10-27,false
+FBPC-I17,M-032,套卷计时,备考文章声明,E-FENB-08;E-FBCD-06,计时用法,F-M032-06,developer_editorial_claim_only,2026-09-21文章；无构建,暂停/超时/后台保存；不引用快速练习确认代替,2026-10-27,false
+FBPC-I18,M-032,课程离线/PC机考,客户端目录旧快照,E-FENB-01;E-FENB-02;E-FBCD-01;E-FBCD-02,下载页/开发者说明,F-M032-08,prior_developer_claim_mapping,2026-10-26渠道快照；不重新声称当前,题库草稿离线未知,2026-10-27,false
+FBPC-I19,M-032,错题导出/纸面回录,2020托管帮助,E-FBCD-10;E-FBCD-12,导出/资料缓存/扫一扫,F-M032-10,prior_body_mapping,2020旧限额；构建未知,普通套卷下载不能等同错题导出；格式/失败/重复回录未知,2026-10-27,false
+FBPC-I20,M-032,搜题,关键词/图片入口,E-FBCD-11,行测搜题,,prior_body_partial,2020-07-06旧帮助,结果/无匹配/识别错误未闭合,2026-10-27,false
+FBPC-I21,M-032,公基结果解析课,独立旧科目,E-FENB-04,结果/解析课,F-M032-07,out_of_primary_exam_scope,事业单位公基；不可迁移行测,本轮不扩科目,2026-10-27,false

@@ -1,0 +1,66 @@
+Summarize and analyze the news you follow with AI
+Inoreader Intelligence summarizes articles, answers your questions about them and writes reports over whole folders. It works only on the sources you choose and runs on OpenAI, Mistral or Anthropic, with your own key if you want.
+See pricing
+ProPro includes summaries, mentions, suggested tags and transcripts. Reports and your own API key come with the Intelligence reports add-on.
+Team IntelligenceTeam Intelligence plans include reports, automated reports and your own API key for the whole team.
+Use AI on the sources you follow
+Inoreader Intelligence lets you use AI on the articles you already collect. It helps you get through them faster, and you still choose every source.
+Summaries and questions
+Click Summarize under any article for a summary, pick a predefined prompt, or ask your own question about the text. Rules can summarize new articles as they arrive, and digests can summarize a whole issue.
+Mentions
+Inoreader recognizes the companies, products, places and people in each article. Each mention has a page with its coverage over time and can become a monitoring feed with one click.
+Reports over many articles
+Run a prompt over a folder, a tag, a monitoring feed or a Team channel to summarize, compare, find trends or extract facts. Automated reports run daily or weekly and arrive as new articles.
+Your choice of AI
+Choose OpenAI, Mistral AI or Anthropic. With the Intelligence reports add-on or a Team Intelligence plan, you can use your own key and model.
+Start with one article
+Open an article and click Summarize, or click the arrow next to it to choose a prompt or ask a question of your own.
+Hover over a mention at the top of the article to search for it, follow it or open its details page.
+To create a report, select the articles or pick a source, choose a prompt and generate the report. To get a report on a schedule, set it up under Automate, Automated reports.
+Under Preferences > Intelligence, choose the AI platform, the summary language and your persona. If your plan allows it, connect your own key there as well.
+Use cases
+A morning briefing for your team
+Set up an automated report over your monitoring feeds that runs every day at 8 a.m. and follows the format your team agreed on.
+Tracking a company by name
+Follow a competitor as a mention across every public feed. You see a trend line of its coverage, and a common word in its name does not bring in false matches.
+Getting through a long read
+Ask for the key points of a 6,000-word piece, then ask a question about the part that matters to you. The answer comes from the text of the article.
+You decide what you read
+The AI never chooses what appears in your feeds. It works only on the articles your sources bring in. Suggested tags, transcripts of podcast and video episodes and article versions are available when you want them.
+Frequently asked questions
+What does Intelligence do with an article?
+It summarizes the article, runs prompts on it and answers your questions about it. Click Summarize under the title for a summary, or choose one of the predefined prompts, such as key points, a translation of the gist or an explanation, or write a prompt of your own. Summaries stay with the article and are searchable, and you can pin and reorder the prompts.
+What are Intelligence reports?
+A report analyzes many articles at once. You choose a folder, a tag, a monitoring feed or a Team channel, and a predefined or custom prompt that summarizes, compares perspectives, finds trends or extracts facts. Automated reports run on a schedule and arrive as new articles, which you can annotate, share or export.
+What are mentions?
+Mentions are the companies, products, places and public figures identified in each article, and they are shown at the top of it. Each mention has a page with its coverage trend and latest articles. You can search for a mention, follow it as a monitoring feed or use it as a condition in a rule or filter, so Apple the company is kept apart from Apple the fruit. For now, mentions are generated for articles in English, French and German.
+Which AI does Inoreader use?
+OpenAI by default. You can switch to Mistral AI or Anthropic under Preferences > Intelligence. With the Intelligence reports add-on or a Team Intelligence plan, you can connect your own API key and pick the model, and a team can set a default for everyone and let members switch.
+What is sent to the AI provider?
+Only public article data, which means the title, date, source, author and text. Nothing about you is sent, your data is not used for training, and AI never filters or changes your feeds and articles. Innologica, the company behind Inoreader, is ISO 27001 certified and GDPR compliant.
+What are the limits?
+Pro and Custom plans include 1 million Intelligence tokens a month per account. Team plans pool 5 or 10 million tokens a month across the whole team, depending on the plan. You can see your usage under Preferences > Billing and usage, and you can buy more tokens at any time.
+Related features
+Monitoring feeds
+Watch any keyword, brand or topic across the web
+Rules
+Automate what happens to every new article
+Email digests
+Send the articles that matter to anyone by email
+Help center
+What are article summaries?
+Can I use custom prompts with summaries?
+What are Intelligence reports?
+What are automated reports?
+What are mentions?
+Which AI platforms does Inoreader support?
+Is my personal data shared with AI providers?
+Blog
+Introducing mentions, redesigned search and smarter monitoring feeds
+Choose your AI platform for Intelligence features
+Automated Intelligence reports for insights delivered to you
+Inoreader Intelligence and article summaries are here!
+Build your own newsfeed
+Ready to give it a go?
+Start a 14-day trial, no credit card required.
+Create account

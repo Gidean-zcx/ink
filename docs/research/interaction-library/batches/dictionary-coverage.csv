@@ -1,0 +1,34 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M021-01,M-021,AI资料生成与预览校订,D2,E-QZLT-01;E-QZMW-01;E-QZMW-05;E-QZAS-06,Smart Assist手动/AI切换；外部Claude/ChatGPT连接后对话生成翻卡，打开Quizlet进一步编辑学习；Superhuman Go首次授权，选中文字/文档/符合条件标签页，打开Quizlet进一步处理,生成失败、来源校验；外部AI账户归属、可见性、保存回执、重复请求与断开连接后果未知；标签页资格、授权范围与保存/撤销未知,not_observed,false,cases/M-021-quizlet.md,2026-10-27
+F-M021-02,M-021,Study Guide生成与可见性,D2,E-QZLT-02;E-QZCD-08;E-QZAS-02,地区年龄/免费额度；指南与生成卡组各管可见性，卡组设置与年龄例外另有正文；音频录制/上传→处理→指南和卡组；上传中断留本机草稿可继续，错语言需新建重传,指南正文或生成题目逐项编辑、源更新、重生成覆盖、删指南与卡组的联动/恢复未知；录音中断/强退/卸载、逐字转写校订及重建后的旧对象关系未知,not_observed,false,cases/M-021-quizlet.md,2026-10-27
+F-M021-03,M-021,学习资料输入与结构化导入,D2,E-QZLT-03;E-QZMW-02;E-QZMW-07,文本分隔符/语言；手动两列/插卡；移动扫描框词后人工配对、键盘校订、至少两卡，预览删除后确认,空行、重复及失败；相机拒绝、无字/错行、取消重扫、扫描草稿与最终提交时点未知,not_observed,false,cases/M-021-quizlet.md,2026-10-27
+F-M021-04,M-021,学习集编辑复制导出,D2,E-QZLT-04;E-QZLT-11;E-QZLT-12;E-QZCD-05;E-QZCD-06;E-QZCD-07;E-QZCD-08;E-QZMW-03;E-QZMW-04;E-QZMS-05;E-QZMS-07;E-QZMS-08,已有编辑/删除/可见性分支；高级内容复制受限；网站合并可临时学习或保存新集，原集保留，保存后手机可学习编辑；Editable by与Visible to入口分开；密码可改、移动确认；访问失败分登录/密码/私有/未发布,误删撤销/并发编辑/隐藏找回/删除确认；合并去重、进度星标映射、源更新、重试与撤销未知；编辑与查看权限联动、撤权/旧密码生效及旧副本影响未知,not_observed,false,cases/M-021-quizlet.md,2026-10-27
+F-M021-05,M-021,草稿中断恢复,D2,E-QZLT-05;E-QZMW-07;E-QZMS-05,创建页自动草稿与显式发布分开；既有断网警告/退出账号丢弃规则；不将普通草稿规则套外部AI或扫描；跨端找不到先核是否发布，不能把未发布草稿当已同步,进程终止、系统重启及编辑冲突的保存边界未知；发布后可见时点与同步失败界面未知,not_observed,false,cases/M-021-quizlet.md,2026-10-27
+F-M021-06,M-021,翻卡与会话返回,D2,E-QZLT-13,手机X保存、本地进度,跨设备断点,not_observed,false,cases/M-021-quizlet.md,2026-10-26
+F-M021-07,M-021,Learn目标题型及书写纠错,D2,E-QZLT-06;E-QZCD-09;E-QZCD-10;E-QZCD-11;E-QZCD-12,有限免费轮次；Write两轮及重输，Spell错字高亮/拼读/重试，每题或词正确两次结束；路径开始才保存；重学清除Learn进度,普通Learn中断/跨日队列、重置撤销及对其他模式影响未知；Study path设置与重置帮助的Android范围不一致,not_observed,false,cases/M-021-quizlet.md,2026-10-27
+F-M021-08,M-021,评分选项与连胜误判,D2,E-QZLT-07;E-QZLT-08;E-QZCD-09;E-QZCD-17;E-QZMW-06,原US/连胜误判分支保留；UK文档列Learn三级默认语言条件、网站保存/手机完成；Test单答案设置仅网站，作用于同集其他活动,地区/构建实际边界、中文数学等例外、历史成绩回算和调度影响未知；不将Learn/Write误判按钮套到Test,not_observed,false,cases/M-021-quizlet.md,2026-10-27
+F-M021-09,M-021,网站间隔复习,D2,E-QZLT-09,四档自评、日新增量,误评撤销,not_observed,false,cases/M-021-quizlet.md,2026-10-26
+F-M021-10,M-021,移动离线与同步,D2,E-QZLT-10;E-QZLT-13,灰标题、下载移除、重连,精确同步字段,not_observed,false,cases/M-021-quizlet.md,2026-10-26
+F-M024-01,M-024,实体键查词与返回,D2,E-CASIO-02;E-CASIO-03;E-CASIO-04;E-CASIO-12;E-CASIO-13,候选提前选、窗口返回,词典差异,static_manual_pages_only,false,cases/M-024-casio.md,2026-10-26
+F-M024-02,M-024,拼写纠错与词条切换,D2,E-CASIO-01;E-CASIO-02;E-CASIO-04;E-CACD-07,模糊/通配符及SHIFT；无命中检查连字符/空格与&；问号星号不能混用，HOME多词典部分不可用,完整无命中界面和跳查返回栈未观察；归一化规则依查询类型,not_observed,false,cases/M-024-casio.md,2026-10-27
+F-M024-03,M-024,历史查询与删除,D2,E-CASIO-08,1000上限、当前/全部,撤销,not_observed,false,cases/M-024-casio.md,2026-10-26
+F-M024-04,M-024,原文标记与生词本遮挡,D2,E-CASIO-05;E-CASIO-09;E-CACD-03,色标/CHECK可切换；12本各300条、每词10处；单条直删与批量确认；便笺可同词组合,任意外部原句、满额提示、误删撤销和组合删除联动未知,not_observed,false,cases/M-024-casio.md,2026-10-27
+F-M024-05,M-024,手写背诵卡创建练习,D2,E-CASIO-06;E-CASIO-09;E-CACD-02,看/听与返回原文；本机6本各100卡；语音单独保存后仍须保存整卡；编辑保存及单卡/批量删除,满额/撤销/导出/调度未知；手册171页最后删除选项标签与说明范围冲突，未选定其实际行为,static_manual_pages_only,false,cases/M-024-casio.md,2026-10-27
+F-M024-06,M-024,内置课本听说拼写,D2,E-CASIO-07,无法识别重录、退出重答,完成与掌握,not_observed,false,cases/M-024-casio.md,2026-10-26
+F-M024-07,M-024,内置同步练错题,D2,E-CASIO-07,错题筛选、删除进度,误判修正,not_observed,false,cases/M-024-casio.md,2026-10-26
+F-M024-08,M-024,联网下载与本地资源,D2,E-CASIO-01;E-CASIO-10;E-CASIO-11;E-CACD-07,网络重搜及2026-12-31 17:00停下载；卡读失败先回书库关机、拔卡等约10秒重插；2至3次仍失败换卡,下载失败/导入仍未知；他机认证卡不等于可迁移备份；没有把换卡当数据恢复,not_observed,false,cases/M-024-casio.md,2026-10-27
+F-M024-09,M-024,合盖中断恢复,D2,E-CASIO-01;E-CASIO-09;E-CACD-07,语音播放器合盖续播且播放时不自动关机；无线连接时自动关机为6分钟；低电量可退到语言设置,未保存内容与异常掉电恢复未知；合盖续用不等于复位或备份恢复,not_observed,false,cases/M-024-casio.md,2026-10-27
+F-M025-01,M-025,印刷扫描查词与翻译,D2,E-YDP-01;E-YDCD-01;E-YDCD-04,按压笔头启动采集；向右匀速直线滑扫；识别/翻译显示与语音合成；多行仅声明,进入扫描前页面；抬笔/取消及返回；错词校订；词典切换；多行追加；收藏练习；固件未知,static_reference_only,false,cases/M-025-youdao-pen.md,2026-10-26
+F-M025-02,M-025,扫码登录绑定,D2,E-YDP-02;E-YDP-05,成功身份反馈,过期码与切换账号,not_observed,false,cases/M-025-youdao-pen.md,2026-10-26
+F-M025-03,M-025,查词实时显示及重连,D2,E-YDP-02,蓝牙失败、5分钟断开,真正同步范围,not_observed,false,cases/M-025-youdao-pen.md,2026-10-26
+F-M025-04,M-025,统计词单与提醒,D1,E-YDP-03;E-YDP-04,连续使用定义、解绑文案,实际功能、题型、服务现状,not_observed,false,cases/M-025-youdao-pen.md,2026-10-26
+F-M026-01,M-026,查询纠错与回调,D2,E-EUD-01;E-EUD-16;E-EUD-18,通配符、删历史、iOS回调；上一词与返回搜索分开；context查询仅传参,触屏误识别校订、清历史撤销、回调失败与context持久保存未知,not_observed,false,cases/M-026-eudic.md,2026-10-27
+F-M026-02,M-026,文档导入查词标注,D2,E-EUD-02;E-EUD-12,平台格式、点击模式,原句入词本闭环,not_observed,false,cases/M-026-eudic.md,2026-10-26
+F-M026-03,M-026,笔记与原声例句卡,D2,E-EUD-03;E-EUD-04;E-EUD-16;E-EUD-17,编辑、循环间隔；iOS外接键盘新建笔记，保存退出与不保存退出分开,触屏保存/撤销、书籍原句关联、跨端编辑冲突未知,not_observed,false,cases/M-026-eudic.md,2026-10-27
+F-M026-04,M-026,生词分组播放同步,D2,E-EUD-05;E-EUD-08;E-EUD-17,分组、排序、自建词本；iOS外接键盘解释页Command+A加入生词本,触屏加词按钮、重复词、同步完成与冲突；默认分组在快捷键路径的表现未知,not_observed,false,cases/M-026-eudic.md,2026-10-27
+F-M026-05,M-026,正式学习与测试,D2,E-EUD-06;E-EUD-08;E-EUD-09;E-EUD-12,错题回卡片、配置算法；旧帮助新词配额不含复习，完成后追加新词及提前未来任务条件,当前FSRS/各平台构建对应、跨日恢复、现版任务追加反馈未知,not_observed,false,cases/M-026-eudic.md,2026-10-27
+F-M026-06,M-026,回顾练习与错误列表,D2,E-EUD-07,10词结果、不改正式进度,新列表入口版本,not_observed,false,cases/M-026-eudic.md,2026-10-26
+F-M026-07,M-026,重学恢复提醒与备份,D2,E-EUD-08;E-EUD-12,误掌握重学、Android周期备份,旧Android周期本地备份的恢复入口、覆盖冲突及新版撤回调度细节未知；不同于云同步,not_observed,false,cases/M-026-eudic.md,2026-10-27
+F-M026-08,M-026,发音与跟读反馈,D2,E-EUD-11,发音库排序、重试,录音及离线,not_observed,false,cases/M-026-eudic.md,2026-10-26
+F-M026-09,M-026,词库与离线资源导入,D2,E-EUD-10,配套资源文件、离线发音,破损与覆盖,not_observed,false,cases/M-026-eudic.md,2026-10-26
+F-M026-10,M-026,新版导出撤回同步能力,D1,E-EUD-12;E-EUCD-01;E-EUCD-02,旧帮助限制修正；官网新日志分端摘要有撤回/导出线索，未取得完整正文,摘要时间不等于功能发布日期；对应构建、菜单、撤回/恢复范围仍缺,not_observed,false,cases/M-026-eudic.md,2026-10-27

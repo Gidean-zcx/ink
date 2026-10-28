@@ -1,0 +1,45 @@
+{
+  "checked_on": "2026-10-27",
+  "candidate_limit": 6,
+  "candidates_checked": 5,
+  "search_queries": [
+    "洪恩识字 使用体验 玩 认 练 读 答错 复习",
+    "洪恩识字 教程 学习设置 复习 错字 官方",
+    "洪恩识字 产品体验 错误 游戏 2019 2020 玩 认 练 写",
+    "site:ihuman.com 识字 家长指南 教程 使用"
+  ],
+  "candidates": [
+    {
+      "candidate": 1,
+      "url": "https://www.palmviewpri.moe.edu.sg/files/For%20Parents%20%282023%29/A%20sharing%20on%20the%20learning%20of%20Chinese%20characters%20Combined.pdf",
+      "result": "web open 404; stopped",
+      "adopted": false
+    },
+    {
+      "candidate": 2,
+      "url": "https://post.smzdm.com/p/arz6epzx/",
+      "result": "web open 400 Timeout fetching; stopped",
+      "adopted": false
+    },
+    {
+      "candidate": 3,
+      "url": "https://www.bilibili.com/opus/425918819985666271",
+      "result": "web extracted full article readable; direct GET412; stopped route",
+      "adopted": "historical author text only E-IHLC-01"
+    },
+    {
+      "candidate": 4,
+      "url": "https://post.smzdm.com/p/aoo8one6/",
+      "result": "web extracted full article readable; direct GET200 captcha shell; stopped route",
+      "adopted": "historical author text only E-IHLC-02"
+    },
+    {
+      "candidate": 5,
+      "url": "https://h5static1.ihumand.com/website/pc/cn/shizi/assets/media/cn_video.198bceb2.mp4",
+      "source_page": "https://www.ihuman.com/shizi/",
+      "result": "Playwright browser executable missing before network request; exit1; no retry/download/frames/audio",
+      "adopted": false
+    }
+  ],
+  "excluded_index_only": "转载2018旧文、下载站、未披露构建/原图的营销比较未升级为新证据；旧403图片未重试"
+}

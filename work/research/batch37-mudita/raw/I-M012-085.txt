@@ -1,0 +1,18 @@
+Mudita Kompakt Possible SIM Card Configurations
+Modified on: Sat, 3 Oct, 2026 at 8:38 AM
+The Mudita Kompakt features a dual-SIM tray with one dedicated SIM card slot and another hybrid slot that can house either a second SIM card or MicroSD memory card. The phone can also have one eSIM phone number installed on it, which deactivates the second SIM card slot if used. However, a MicroSD card would still work, even with an eSIM number installed.
+Possible SIM Configurations:
+SIM (single or dual)
+eSIM (single)
+SIM + eSIM (one each)
+SIM + SD card (one each)
+eSIM + SD card (one each)
+SIM + eSIM + SD card (one each)
+Supported Card Formats:
+SIM card format: nano-SIM (4FF)
+SD card format: microSD
+Was this article helpful?
+No
+Yes
+That’s Great!
+Thank you for your feedback

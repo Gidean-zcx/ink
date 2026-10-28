@@ -1,0 +1,3 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M055-09,M-055,Hi Reader非锁屏时按键启动指定应用,D2,E-HSCD-01;E-HSCD-03,2023作者拍到机内指南：设置→墨智键→短按/双击墨智键可重设启动应用；非锁屏时用对应按法启动所设App。引导页另有查看全部功能入口。,候选App列表、选择/保存确认、默认映射、启动失败、切回原书、锁屏是否有其他动作均未核；未实际按键。,static_reference_only,false,cases/M-055-hisense.md,2026-10-27
+F-M055-10,M-055,Hi Reader从当前界面生成截屏便笺,D2,E-HSCD-02;E-HSCD-03,机内指南将截屏便笺放在下拉快捷开关：点它截取当前界面，并在水墨屏截屏便笺中出现。另一照片有截屏便笺管理入口，未点击。,格式、文件位置、识字/编辑、管理项重开/导出/删除、隐私内容限制、失败/重复/重启保持未知；不能等同文章收藏或语音速记。,static_reference_only,false,cases/M-055-hisense.md,2026-10-27

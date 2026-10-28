@@ -1,0 +1,7 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M036-11,M-036,按分类边界设置随机、重复及播放范围,D2,E-SYCD-02,All range 仍受入口影响：随机模式从专辑进入时按专辑推进；要全曲随机/循环需从 All songs 进入。歌单/收藏仅播所选项；搜索结果点曲只播该曲，均不会因 All range 扩成全库。,切换范围是否立即改写当前队列、重启保留、空列表反馈未核。,not_observed,false,cases/M-036-sony.md,2026-10-27
+F-M036-12,M-036,制作并显示随曲歌词,D2,E-SYCD-03;E-SYCD-04,LRC 上限512 KB；歌词依附音频文件，不是播放器内时间点书签。,错误时间标记/编码的具体提示、点击歌词跳转、歌词滚动与关闭返回状态未说明；不据此宣称可逐句寻位。,not_observed,false,cases/M-036-sony.md,2026-10-27
+F-M036-13,M-036,使用USB DAC并尝试恢复后台无声,D2,E-SYCD-05;E-SYCD-06,输入灯绿=PCM、蓝=DSD、熄灭=未检测信号；显示格式信息。启用期间不能本机播歌或传文件，也不能无线听；本机音效仍应用。其他音视频App令DAC屏退后台后可能无声，返回 WALKMAN Home → Music player 显示DAC屏可能恢复。,恢复仅为官方条件性建议，未实测；切回本地后断点、音频焦点、驱动报错及视频音画同步未验证。,static_manual_pages_only,false,cases/M-036-sony.md,2026-10-27
+F-M036-14,M-036,准备、弹出与更换microSD并辨认丢失的状态,D2,E-SYCD-07;E-SYCD-08,移卡时官方把当前播放内容信息、位置、队列曲目/顺序列为deleted，把卡内曲目/专辑/歌单收藏及卡内曲目的歌单登记信息列为disappear。这里不能推定删除了音频文件或重插必然恢复关联。,重新插卡后哪些关联恢复、当前播放来自内存时的影响范围、格式化确认文案、损坏卡错误未知；大量数据建库约10分钟以上只是官方估计。,static_manual_pages_only,false,cases/M-036-sony.md,2026-10-27
+F-M036-15,M-036,操作不稳时选择重启，并辨清恢复出厂的另一结果,D2,E-SYCD-09;E-SYCD-10,重启不删数据和配对信息。恢复出厂删除内存音乐/照片、机上Google信息及下载App，结束自动重启并恢复预装内容；界面可能随系统版变化。,不把“不删数据”推成播放断点必保留；清除中断、卡数据影响、账号重新绑定及完整恢复流程未核。,not_observed,false,cases/M-036-sony.md,2026-10-27
+F-M036-16,M-036,将设备曲目传回电脑留存,D2,E-SYCD-11;E-SYCD-10;E-SONY-09,保存的是所选音乐内容；传输时不可拔线。清除前可从Detailed song information的File location确认原文件位置。此流程不等于收藏、队列、账号或App整机备份。,导出覆盖冲突、半途取消、完整性校验、播放列表/元数据的恢复范围未说明。,not_observed,false,cases/M-036-sony.md,2026-10-27

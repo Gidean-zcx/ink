@@ -1,0 +1,960 @@
+{
+  "origin_trace_sha256": "102071499652ffe425b934e6f27e66599b14ca7fe4fe1b54d1dac45ce8d7c632",
+  "context_metadata": {
+    "version": 10,
+    "type": "context-options",
+    "origin": "library",
+    "browserName": "chromium",
+    "playwrightVersion": "1.64.0-beta-1791568591000",
+    "options": {
+      "viewport": {
+        "width": 1280,
+        "height": 950
+      },
+      "selectorEngines": [],
+      "acceptDownloads": "accept"
+    },
+    "platform": "linux",
+    "wallTime": 1793045365605,
+    "monotonicTime": 677.022,
+    "sdkLanguage": "python",
+    "testIdAttributeName": "data-testid"
+  },
+  "actions": [
+    {
+      "method": "goto",
+      "class_name": "Frame",
+      "params": {
+        "url": "https://www.timeforkids.com/g34/food-for-thought/?rl=en-760",
+        "waitUntil": "domcontentloaded",
+        "timeout": 45000
+      },
+      "start_ms": 6923.772,
+      "end_ms": 7914.757,
+      "error": null
+    },
+    {
+      "method": "waitForTimeout",
+      "class_name": "Frame",
+      "params": {
+        "waitTimeout": 1500
+      },
+      "start_ms": 7926.973,
+      "end_ms": 9428.363,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 9432.072,
+      "end_ms": 9694.343,
+      "error": null
+    },
+    {
+      "method": "scrollIntoViewIfNeeded",
+      "class_name": "ElementHandle",
+      "params": {
+        "timeout": 4987
+      },
+      "start_ms": 52234.426,
+      "end_ms": 52251.271,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 52255.071,
+      "end_ms": 52468.458,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": ".powerword >> nth=0",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 52525.012,
+      "end_ms": 52601.75,
+      "error": null
+    },
+    {
+      "method": "waitForTimeout",
+      "class_name": "Frame",
+      "params": {
+        "waitTimeout": 300
+      },
+      "start_ms": 52604.409,
+      "end_ms": 52904.967,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 52907.391,
+      "end_ms": 53006.141,
+      "error": null
+    },
+    {
+      "method": "keyboardPress",
+      "class_name": "Page",
+      "params": {
+        "key": "Escape"
+      },
+      "start_ms": 64794.653,
+      "end_ms": 64801.287,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 64807.812,
+      "end_ms": 64935.219,
+      "error": null
+    },
+    {
+      "method": "mouseClick",
+      "class_name": "Page",
+      "params": {
+        "x": 485.59375,
+        "y": 454.328125
+      },
+      "start_ms": 84195.586,
+      "end_ms": 84208.958,
+      "error": null
+    },
+    {
+      "method": "waitForTimeout",
+      "class_name": "Frame",
+      "params": {
+        "waitTimeout": 1800
+      },
+      "start_ms": 84215.236,
+      "end_ms": 86018.009,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 86019.635,
+      "end_ms": 86118.161,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": ".definition:visible button.close",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 86172.329,
+      "end_ms": 86212.44,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 86214.712,
+      "end_ms": 86330.682,
+      "error": null
+    },
+    {
+      "method": "waitForTimeout",
+      "class_name": "Frame",
+      "params": {
+        "waitTimeout": 1200
+      },
+      "start_ms": 86378.05,
+      "end_ms": 87579.901,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 87587.753,
+      "end_ms": 87684.015,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": ".powerword >> nth=0",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 98418.441,
+      "end_ms": 98484.845,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 98488.33,
+      "end_ms": 98692.138,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": ".definition:visible button.close",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 98892.805,
+      "end_ms": 98930.134,
+      "error": null
+    },
+    {
+      "method": "press",
+      "class_name": "Frame",
+      "params": {
+        "selector": ".powerword >> nth=1",
+        "key": "Enter",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 98933.326,
+      "end_ms": 98948.461,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 98954.562,
+      "end_ms": 99132.731,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": ".powerword >> nth=1",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 105816.989,
+      "end_ms": 105847.242,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 105850.076,
+      "end_ms": 106002.953,
+      "error": null
+    },
+    {
+      "method": "mouseClick",
+      "class_name": "Page",
+      "params": {
+        "x": 618.59375,
+        "y": 639.125
+      },
+      "start_ms": 106141.095,
+      "end_ms": 106154.152,
+      "error": null
+    },
+    {
+      "method": "waitForTimeout",
+      "class_name": "Frame",
+      "params": {
+        "waitTimeout": 1200
+      },
+      "start_ms": 106155.729,
+      "end_ms": 107357.968,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 107360.502,
+      "end_ms": 107516.026,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": ".definition:visible button.close",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 107570.535,
+      "end_ms": 107592.179,
+      "error": null
+    },
+    {
+      "method": "waitForTimeout",
+      "class_name": "Frame",
+      "params": {
+        "waitTimeout": 1000
+      },
+      "start_ms": 107593.43,
+      "end_ms": 108594.293,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 108595.97,
+      "end_ms": 108689.796,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": ".powerword >> nth=1",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 124214.412,
+      "end_ms": 124304.308,
+      "error": null
+    },
+    {
+      "method": "mouseClick",
+      "class_name": "Page",
+      "params": {
+        "x": 618.59375,
+        "y": 639.125
+      },
+      "start_ms": 124365.889,
+      "end_ms": 124375.003,
+      "error": null
+    },
+    {
+      "method": "waitForTimeout",
+      "class_name": "Frame",
+      "params": {
+        "waitTimeout": 700
+      },
+      "start_ms": 124380.384,
+      "end_ms": 125084.352,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 125086.472,
+      "end_ms": 125192.541,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": ".definition:visible button.close",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 125302.492,
+      "end_ms": 125400.467,
+      "error": null
+    },
+    {
+      "method": "waitForTimeout",
+      "class_name": "Frame",
+      "params": {
+        "waitTimeout": 700
+      },
+      "start_ms": 125407.68,
+      "end_ms": 126109.443,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 126114.726,
+      "end_ms": 126224.921,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": ".powerword >> nth=1",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 126344.665,
+      "end_ms": 126401.115,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 126408.877,
+      "end_ms": 126540.951,
+      "error": null
+    },
+    {
+      "method": "mouseClick",
+      "class_name": "Page",
+      "params": {
+        "x": 618.59375,
+        "y": 639.125
+      },
+      "start_ms": 126702.934,
+      "end_ms": 126706.878,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 126708.579,
+      "end_ms": 126824.33,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": "internal:role=heading[name=\"A Trip Around the World\"i]",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 126926.467,
+      "end_ms": 126976.737,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 126980.27,
+      "end_ms": 127094.37,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": ".definition:visible button.close",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 163809.411,
+      "end_ms": 163840.418,
+      "error": null
+    },
+    {
+      "method": "reload",
+      "class_name": "Page",
+      "params": {
+        "waitUntil": "domcontentloaded",
+        "timeout": 45000
+      },
+      "start_ms": 163842.028,
+      "end_ms": 164291.077,
+      "error": null
+    },
+    {
+      "method": "waitForTimeout",
+      "class_name": "Frame",
+      "params": {
+        "waitTimeout": 1200
+      },
+      "start_ms": 164294.999,
+      "end_ms": 165495.221,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": ".powerword >> nth=1",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 165497.717,
+      "end_ms": 165599.261,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 165601.397,
+      "end_ms": 165730.161,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": ".definition:visible button.close",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 165796.818,
+      "end_ms": 165822.728,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": ".c-header__hamburger",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 165823.896,
+      "end_ms": 165908.485,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 165910.686,
+      "end_ms": 166060.476,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": ".top-level.articles-grade",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 175823.417,
+      "end_ms": 175869.685,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 175875.28,
+      "end_ms": 176041.497,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": "internal:role=link[name=\"Grades K-1 Articles\"s]",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 176145.999,
+      "end_ms": 176842.053,
+      "error": null
+    },
+    {
+      "method": "waitForTimeout",
+      "class_name": "Frame",
+      "params": {
+        "waitTimeout": 1000
+      },
+      "start_ms": 177372.62,
+      "end_ms": 178373.566,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 178375.661,
+      "end_ms": 178626.92,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": ".c-header__hamburger",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 178901.952,
+      "end_ms": 178958.206,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": ".top-level.topics",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 178966.069,
+      "end_ms": 179104.905,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 179110.725,
+      "end_ms": 179275.757,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": "internal:role=link[name=\"Science\"s] >> nth=0",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 209913.935,
+      "end_ms": 210694.497,
+      "error": null
+    },
+    {
+      "method": "waitForTimeout",
+      "class_name": "Frame",
+      "params": {
+        "waitTimeout": 1000
+      },
+      "start_ms": 211024.254,
+      "end_ms": 212025.668,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 212027.095,
+      "end_ms": 212203.722,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": "internal:role=link[name=\"Next\"s]",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 238023.98,
+      "end_ms": 238617.51,
+      "error": null
+    },
+    {
+      "method": "waitForTimeout",
+      "class_name": "Frame",
+      "params": {
+        "waitTimeout": 800
+      },
+      "start_ms": 238723.02,
+      "end_ms": 239523.37,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 239525.173,
+      "end_ms": 239790.269,
+      "error": null
+    },
+    {
+      "method": "goBack",
+      "class_name": "Page",
+      "params": {
+        "waitUntil": "domcontentloaded",
+        "timeout": 45000
+      },
+      "start_ms": 240037.076,
+      "end_ms": 240615.501,
+      "error": null
+    },
+    {
+      "method": "waitForTimeout",
+      "class_name": "Frame",
+      "params": {
+        "waitTimeout": 500
+      },
+      "start_ms": 240617.64,
+      "end_ms": 241117.359,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 241119.125,
+      "end_ms": 241242.688,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": ".c-header__hamburger",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 241412.385,
+      "end_ms": 241498.433,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 241508.095,
+      "end_ms": 241633.644,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": "internal:role=link[name=\"For Grown-ups\"s]",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 249848.235,
+      "end_ms": 249916.266,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 249920.303,
+      "end_ms": 250038.188,
+      "error": null
+    },
+    {
+      "method": "keyboardPress",
+      "class_name": "Page",
+      "params": {
+        "key": "Escape"
+      },
+      "start_ms": 257726.775,
+      "end_ms": 257732.03,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 257734.304,
+      "end_ms": 257973.199,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": ".c-header__close_btn",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 271141.088,
+      "end_ms": 271169.855,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 271171.2,
+      "end_ms": 271462.676,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": ".c-header__hamburger",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 272075.155,
+      "end_ms": 272116.82,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": ".top-level.resource-spotlight",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 272120.186,
+      "end_ms": 272247.234,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 272249.909,
+      "end_ms": 272477.276,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class_name": "Frame",
+      "params": {
+        "selector": ".c-header__close_btn",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 272638.087,
+      "end_ms": 272693.861,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class_name": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 272696.085,
+      "end_ms": 272981.133,
+      "error": null
+    }
+  ]
+}

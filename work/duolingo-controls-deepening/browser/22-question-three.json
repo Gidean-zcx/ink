@@ -1,0 +1,52 @@
+{
+  "name": "22-question-three",
+  "url": "https://www.duolingo.com/lesson",
+  "title": "Duolingo - Learn French with lessons that work",
+  "utc": "2026-10-26T17:44:47.321294+00:00",
+  "text": "4\nNEW WORD\nWrite this in English\nUn thé ?\nthank you\ntea\nA\nSKIP\nCHECK\nRemember that you can always hover over words to see what they mean.",
+  "buttons": [
+    {
+      "text": "",
+      "aria": null,
+      "test": "quit-button",
+      "visible": true
+    },
+    {
+      "text": "",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "thank you",
+      "aria": null,
+      "test": "thank you-challenge-tap-token",
+      "visible": true
+    },
+    {
+      "text": "tea",
+      "aria": null,
+      "test": "tea-challenge-tap-token",
+      "visible": true
+    },
+    {
+      "text": "A",
+      "aria": null,
+      "test": "A-challenge-tap-token",
+      "visible": true
+    },
+    {
+      "text": "SKIP",
+      "aria": null,
+      "test": "player-skip",
+      "visible": true
+    },
+    {
+      "text": "CHECK",
+      "aria": null,
+      "test": "player-next",
+      "visible": true
+    }
+  ],
+  "inputs": []
+}

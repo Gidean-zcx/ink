@@ -1,0 +1,3 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M048-11,M-048,公开样刊版面放大、平移与返回,D4,E-WJCD-02,第2页Zoom→加号放大→鼠标拖动→X回适页第2页，画面和控件实际观察。,缩小/滑块、触摸缩放、全屏、倍率持久化及电子纸性能未测。,observed_browser_sequence,true,cases/M-048-week-junior.md,2026-10-27
+F-M048-12,M-048,公开样刊重排听读UI、关闭与接续,D4,E-WJCD-02;E-WJCD-04,耳机开重排/计时，高亮/滚动；暂停、1.5x、再播放；2:52暂停后同页关闭再开自动续放，关闭播放器保留正文；第二次浏览器重启无耳机入口，定位超时。,只观察UI未听声音；同页iframe保留不等于持久化，重启音频恢复未知；跨文章/用户/断网/来电/睡眠、精确音文对齐与音量未测。,observed_browser_sequence,true,cases/M-048-week-junior.md,2026-10-27

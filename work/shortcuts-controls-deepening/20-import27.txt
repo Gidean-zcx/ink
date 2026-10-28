@@ -1,0 +1,21 @@
+Add import questions to shared shortcuts on iPhone or iPad
+If your shared shortcut includes steps that contain personal information, such as addresses, contacts, phone numbers, or the name of a playlist, you can add import questions to those specific fields of the shortcut. If an import question is present for a field, your personal information is not shared—that field is cleared when the shortcut is shared. When the recipient runs the shortcut, they’re presented with the import questions. When the questions are answered, the shortcut is populated with the user’s own information.
+For example, the Home ETA shortcut (available in the Gallery) includes an import question that asks, “What is your home street address?”
+Add import questions
+In the Shortcuts app  on your iPhone or iPad, tap  on a shortcut, then tap .
+At the top of the screen, tap Setup.
+Tap Add New Question.
+Tap an available parameter, then tap the parameter name again in the Import Questions area.
+Enter your question in the Question Text field.
+You can add as many import questions as needed, and each question is asked in order when the shortcut is run.
+Optional: Tap the Default Answer field, then enter a setting option or message.
+Tap , then tap Done.
+Tip: When you’ve added import questions, you can test them: Repeat step 1 above, tap Customize Shortcut, then run through each import question, ensuring that each makes sense and works as intended. Keep in mind that answers you provide overwrite the previous configuration.
+Remove import questions
+In the Shortcuts app  on your iPhone or iPad, tap  on a shortcut, then tap .
+At the top of the screen, tap Setup.
+Tap , then tap Delete.
+Reorder import questions
+In the Shortcuts app  on your iPhone or iPad, tap  on a shortcut, then tap .
+At the top of the screen, tap Setup.
+Drag  next to the question you want to move.See alsoIntro to how shortcuts work on iPhone and iPad

@@ -1,0 +1,2 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M001-09,M-001,整理合集并下载或移除书库内容,D2,E-KDCD-02;E-KDCD-14,2024指南：Library创建合集→命名→勾选→Done；合集菜单可增删成员，Back/Home退出。合集删除同步但不删内容；合集内项目需另行Download all items。本地移除与永久删除分开，USB文件无云副本。,删除确认/撤销、下载失败/部分成功、跨端合集冲突未知；指南Downloaded选取/取消选取措辞内部不一致，不能据此拼造准确筛选状态,not_observed,false,cases/M-001-kindle.md,2026-10-27

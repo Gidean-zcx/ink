@@ -1,0 +1,32 @@
+[
+  {
+    "name": "faq",
+    "url": "https://mytolino.com/faq-group/tolino-shine-5-generation-en/page/2/",
+    "final_url": "https://mytolino.com/faq-group/tolino-shine-5-generation-en/page/2/",
+    "status": 200,
+    "raw_work_path": "work/tolino-controls-deepening/faq.html",
+    "raw_sha256": "0609e0aa9964f39343e60fe9628aeca11b961ceffa6a93e9eed33a2862cee638",
+    "bytes": 128710,
+    "parsed_text_path": "work/tolino-controls-deepening/faq.txt"
+  },
+  {
+    "name": "landing",
+    "url": "https://mytolino.com/faq-group/tolino-shine-5-gen-en/",
+    "final_url": "https://mytolino.com/faq-group/tolino-shine-5-gen-en/",
+    "status": 200,
+    "raw_work_path": "work/tolino-controls-deepening/landing.html",
+    "raw_sha256": "6a0a22562a17da5344d2e418c293f5d97d27d3c458463cff0e1e2081be315736",
+    "bytes": 53294,
+    "parsed_text_path": "work/tolino-controls-deepening/landing.txt"
+  },
+  {
+    "name": "updates",
+    "url": "https://mytolino.com/software-updates-for-tolino-ereaders/",
+    "final_url": "https://mytolino.com/software-updates-for-tolino-ereaders/",
+    "status": 200,
+    "raw_work_path": "work/tolino-controls-deepening/updates.html",
+    "raw_sha256": "9875445c4715f2b75086c1d74efd6282bad4c08474c1a0d5bb61a35719418b74",
+    "bytes": 86271,
+    "parsed_text_path": "work/tolino-controls-deepening/updates.txt"
+  }
+]

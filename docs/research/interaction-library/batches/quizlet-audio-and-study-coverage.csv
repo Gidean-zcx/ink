@@ -1,0 +1,7 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M021-18,M-021,生成音频节目并从资料库找回,D2,E-QZAS-01,资料来源/提示→生成→Library；公开节目分享；源错误不自动纠正,播放控件、离线/断点、默认可见性、重生成和删源联动未知,not_observed,false,cases/M-021-quizlet.md,2026-10-27
+F-M021-19,M-021,Ask Quizlet解释、建议动作及会话中断,D2,E-QZAS-03,首页/集页进入、输入/上传、追问及建议动作；最小化保持、离开重置；US14岁及以上,真实动作回执、引文、对话与卡组持久化、刷新/退出恢复和撤销未知,not_observed,false,cases/M-021-quizlet.md,2026-10-27
+F-M021-20,M-021,Charms匹配、答题加步与结束,D2,E-QZAS-05,至少六词对；同色匹配、问题元素→答对加步、错不加步；步耗尽结束；选项/教程入口,初始步数、错题解释/重试、结算画面、暂停恢复/保存、黑白可区分性未知,not_observed,false,cases/M-021-quizlet.md,2026-10-27
+F-M021-21,M-021,共享学习会话加入与群组结果,D2,E-QZAS-04,公开卡组选六模式、分享/加入/完成/结果；匿名一次；成员可见最新结果；不同模式统计不同,移除成员/撤回、旧成绩保留、改私有、断线恢复、同步或异步规则未知,not_observed,false,cases/M-021-quizlet.md,2026-10-27
+F-M021-22,M-021,教材解答定位与AI追加帮助,D2,E-QZAS-07,教材/题目搜索、章页题定位、目录换题；App扫描、题文修正、近期Solutions；部分解答可用AI解释,无结果/拒权、答案纠错、历史保留、练习保存和专家核验范围未知,not_observed,false,cases/M-021-quizlet.md,2026-10-27
+F-M021-23,M-021,限定资料范围的关键词查找,D2,E-QZAS-08,网站Library选Recent或Created范围、输入词/短语、返回包含内容的卡组；手机用浏览器,零结果、分词/语言、精确匹配、单卡定位、删除后索引更新未知,not_observed,false,cases/M-021-quizlet.md,2026-10-27

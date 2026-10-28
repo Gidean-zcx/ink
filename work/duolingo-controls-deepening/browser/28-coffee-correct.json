@@ -1,0 +1,76 @@
+{
+  "name": "28-coffee-correct",
+  "url": "https://www.duolingo.com/lesson",
+  "title": "Duolingo - Learn French with lessons that work",
+  "utc": "2026-10-26T17:51:14.574312+00:00",
+  "text": "3 IN A ROW\n4\nWrite this in English\nUn café ?\nA\ncoffee\ncoffee\nhello\nA\nGreat job!\nTOO EASY\nTOO DIFFICULT\nREPORT\nCONTINUE",
+  "buttons": [
+    {
+      "text": "",
+      "aria": null,
+      "test": "quit-button",
+      "visible": true
+    },
+    {
+      "text": "",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "A",
+      "aria": null,
+      "test": "A-challenge-tap-token",
+      "visible": true
+    },
+    {
+      "text": "coffee",
+      "aria": null,
+      "test": "coffee-challenge-tap-token",
+      "visible": true
+    },
+    {
+      "text": "coffee",
+      "aria": null,
+      "test": "coffee-challenge-tap-token",
+      "visible": true
+    },
+    {
+      "text": "hello",
+      "aria": null,
+      "test": "hello-challenge-tap-token",
+      "visible": true
+    },
+    {
+      "text": "A",
+      "aria": null,
+      "test": "A-challenge-tap-token",
+      "visible": true
+    },
+    {
+      "text": "TOO EASY",
+      "aria": "Too easy",
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "TOO DIFFICULT",
+      "aria": "Too difficult",
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "REPORT",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "CONTINUE",
+      "aria": null,
+      "test": "player-next",
+      "visible": true
+    }
+  ],
+  "inputs": []
+}

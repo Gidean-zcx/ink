@@ -1,0 +1,25 @@
+{
+  "date": "2026-10-28",
+  "workspace_writes": "not applied: filesystem has zero available bytes",
+  "staging_is_volatile": true,
+  "files": [
+    "README.md",
+    "docs/briefs/056-eink-ui-interaction.md",
+    "docs/briefs/README.md",
+    "docs/ideas.md",
+    "docs/research/eink-high-refresh.md",
+    "docs/research/eink-ui-interaction.md",
+    "docs/research/interaction-library/design-reference-guide.md"
+  ],
+  "local_links_checked": 412,
+  "errors": [],
+  "requirements_sha256": "e141320e2714df805c009fe64dd92d17decd6429d5728f8ce42d6d868b775087",
+  "raw_source_sha256": {
+    "epd_refresh.cc": "6a7c8fe433d8381c32a3a8c0974cb89ad0f0f2a887a5549f667553d033554876",
+    "highlevel.c": "8f2df6802e95e56d2408aeae418a339f64f155dddba9f7a7bac3125d278e3c24",
+    "lv_adapter_epdiy.cc": "b2acd7b7f3873c842ebd5b8590611e0c37e5796ae0715073bfddf81d8e6d4072",
+    "metalio_display_setup.cc": "e68aed554387fb30a9f8fa5e72d603df29978cfc6b5609788eb65f02260dbfaf",
+    "epd_highlevel.h": "1e70c7d7f7119454a3f8d6ab004ae33a4f37c079805473216ede4d92fb6d2567",
+    "my_waveform.c": "c25796c1f9e55d6f3a90a407bafe6151abc4d0efd43bdcb9dc2c594114f51869"
+  }
+}

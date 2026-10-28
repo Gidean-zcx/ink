@@ -1,0 +1,28 @@
+{
+  "name": "20-next-question",
+  "url": "https://www.duolingo.com/lesson",
+  "title": "Duolingo - Learn French with lessons that work",
+  "utc": "2026-10-26T17:44:30.656222+00:00",
+  "text": "4\nNEW WORD\nWhich one of these is “tea”?\nthé\n1\ncafé\n2\ncroissant\n3\nSKIP\nCHECK",
+  "buttons": [
+    {
+      "text": "",
+      "aria": null,
+      "test": "quit-button",
+      "visible": true
+    },
+    {
+      "text": "SKIP",
+      "aria": null,
+      "test": "player-skip",
+      "visible": true
+    },
+    {
+      "text": "CHECK",
+      "aria": null,
+      "test": "player-next",
+      "visible": true
+    }
+  ],
+  "inputs": []
+}

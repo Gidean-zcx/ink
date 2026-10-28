@@ -1,0 +1,416 @@
+{
+  "origin_trace_sha256": "a192400b1470cd40eaa7ae336cf33fa4afdc112d43d9a929094a703ddc8a438e",
+  "context_metadata": {
+    "version": 10,
+    "type": "context-options",
+    "origin": "library",
+    "browserName": "chromium",
+    "playwrightVersion": "1.64.0-beta-1791568591000",
+    "options": {
+      "viewport": {
+        "width": 1200,
+        "height": 900
+      },
+      "selectorEngines": [],
+      "acceptDownloads": "accept"
+    },
+    "platform": "linux",
+    "wallTime": 1793026048189,
+    "monotonicTime": 4393.188,
+    "sdkLanguage": "python",
+    "testIdAttributeName": "data-testid"
+  },
+  "actions": [
+    {
+      "method": "goto",
+      "class": "Frame",
+      "params": {
+        "url": "https://reader.emagazines.com/issue/the-week-junior/october-23-2026?ipt=F0826FC3-4129-46CF-A5F3-FF70A931F1FF",
+        "waitUntil": "domcontentloaded",
+        "timeout": 60000
+      },
+      "start_ms": 4638.808,
+      "end_ms": 7247.791,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 30000
+      },
+      "start_ms": 13194.087,
+      "end_ms": 13570.557,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class": "Frame",
+      "params": {
+        "selector": "internal:role=button[name=\"Next page\"s]",
+        "strict": true,
+        "timeout": 30000
+      },
+      "start_ms": 40058.252,
+      "end_ms": 40340.423,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 30000
+      },
+      "start_ms": 41851.983,
+      "end_ms": 42457.489,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class": "Frame",
+      "params": {
+        "selector": "internal:role=button[name=\"Show page thumbnails\"s]",
+        "strict": true,
+        "timeout": 30000
+      },
+      "start_ms": 73052.036,
+      "end_ms": 73315.307,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 30000
+      },
+      "start_ms": 74038.827,
+      "end_ms": 74969.343,
+      "error": null
+    },
+    {
+      "method": "fill",
+      "class": "Frame",
+      "params": {
+        "selector": "internal:role=spinbutton[name=\"Go to page number\"i]",
+        "value": "14",
+        "strict": true,
+        "timeout": 30000
+      },
+      "start_ms": 95305.533,
+      "end_ms": 125512.531,
+      "error": {
+        "message": "Timeout 30000ms exceeded.",
+        "stack": "TimeoutError: Timeout 30000ms exceeded.\n    at _ProgressController.run (/home/workspace/reader/work/research/tools/browser/playwright/driver/package/lib/coreBundle.js:13004:32)\n    at DispatcherConnection.dispatch (/home/workspace/reader/work/research/tools/browser/playwright/driver/package/lib/coreBundle.js:20191:44)",
+        "name": "TimeoutError"
+      }
+    },
+    {
+      "method": "screenshot",
+      "class": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 30000
+      },
+      "start_ms": 150950.183,
+      "end_ms": 151277.993,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class": "Frame",
+      "params": {
+        "selector": "internal:role=button[name=\"Toggle navigation\"s]",
+        "strict": true,
+        "timeout": 30000
+      },
+      "start_ms": 174423.619,
+      "end_ms": 204479.891,
+      "error": {
+        "message": "Timeout 30000ms exceeded.",
+        "stack": "TimeoutError: Timeout 30000ms exceeded.\n    at _ProgressController.run (/home/workspace/reader/work/research/tools/browser/playwright/driver/package/lib/coreBundle.js:13004:32)\n    at DispatcherConnection.dispatch (/home/workspace/reader/work/research/tools/browser/playwright/driver/package/lib/coreBundle.js:20191:44)",
+        "name": "TimeoutError"
+      }
+    },
+    {
+      "method": "screenshot",
+      "class": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 224707.684,
+      "end_ms": 225471.665,
+      "error": null
+    },
+    {
+      "method": "fill",
+      "class": "Frame",
+      "params": {
+        "selector": "#pageNumberInput",
+        "value": "14",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 248861.222,
+      "end_ms": 249085.575,
+      "error": null
+    },
+    {
+      "method": "press",
+      "class": "Frame",
+      "params": {
+        "selector": "#pageNumberInput",
+        "key": "Enter",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 249197.879,
+      "end_ms": 249530.733,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 251569.611,
+      "end_ms": 252078.363,
+      "error": null
+    },
+    {
+      "method": "fill",
+      "class": "Frame",
+      "params": {
+        "selector": "#searchInput",
+        "value": "Nobel",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 279627.468,
+      "end_ms": 279851.672,
+      "error": null
+    },
+    {
+      "method": "press",
+      "class": "Frame",
+      "params": {
+        "selector": "#searchInput",
+        "key": "Enter",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 279950.744,
+      "end_ms": 280207.37,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 282089.689,
+      "end_ms": 282451.356,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class": "Frame",
+      "params": {
+        "selector": "internal:text=\"Page 15:\"i",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 303633.129,
+      "end_ms": 303963.653,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 305272.906,
+      "end_ms": 305793.201,
+      "error": null
+    },
+    {
+      "method": "fill",
+      "class": "Frame",
+      "params": {
+        "selector": "#searchInput",
+        "value": "zzqzxq-no-such-term",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 317628.542,
+      "end_ms": 317918.29,
+      "error": null
+    },
+    {
+      "method": "press",
+      "class": "Frame",
+      "params": {
+        "selector": "#searchInput",
+        "key": "Enter",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 318050.523,
+      "end_ms": 318324.295,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 319616.933,
+      "end_ms": 320152.215,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class": "Frame",
+      "params": {
+        "selector": "internal:role=button[name=\"Clear search\"s]",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 339891.453,
+      "end_ms": 340242.819,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class": "Frame",
+      "params": {
+        "selector": "internal:role=button[name=\"Save my place\"s]",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 340904.028,
+      "end_ms": 341444.303,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 342429.919,
+      "end_ms": 343148.273,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class": "Frame",
+      "params": {
+        "selector": "internal:role=button[name=\"Go to first page\"s]",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 372303.748,
+      "end_ms": 372636.853,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 373946.917,
+      "end_ms": 374758.699,
+      "error": null
+    },
+    {
+      "method": "goto",
+      "class": "Frame",
+      "params": {
+        "url": "https://reader.emagazines.com/issue/the-week-junior/october-23-2026?ipt=F0826FC3-4129-46CF-A5F3-FF70A931F1FF",
+        "waitUntil": "domcontentloaded",
+        "timeout": 30000
+      },
+      "start_ms": 376606.372,
+      "end_ms": 379505.022,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 382693.552,
+      "end_ms": 383037.234,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class": "Frame",
+      "params": {
+        "selector": "internal:role=button[name=\"Go to last page\"s]",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 451802.594,
+      "end_ms": 452594.299,
+      "error": null
+    },
+    {
+      "method": "screenshot",
+      "class": "Page",
+      "params": {
+        "fullPage": false,
+        "type": "png",
+        "timeout": 5000
+      },
+      "start_ms": 454178.188,
+      "end_ms": 455102.488,
+      "error": null
+    },
+    {
+      "method": "click",
+      "class": "Frame",
+      "params": {
+        "selector": "internal:role=button[name=\"Previous page\"s]",
+        "strict": true,
+        "timeout": 5000
+      },
+      "start_ms": 477648.783,
+      "end_ms": 482769.889,
+      "error": {
+        "message": "Timeout 5000ms exceeded.",
+        "stack": "TimeoutError: Timeout 5000ms exceeded.\n    at _ProgressController.run (/home/workspace/reader/work/research/tools/browser/playwright/driver/package/lib/coreBundle.js:13004:32)\n    at DispatcherConnection.dispatch (/home/workspace/reader/work/research/tools/browser/playwright/driver/package/lib/coreBundle.js:20191:44)",
+        "name": "TimeoutError"
+      }
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+[
+  {
+    "name": "reader-demo",
+    "url": "https://cdn.shopify.com/s/files/1/0629/1311/8387/files/782_782.gif?v=1735471462",
+    "status": 200,
+    "raw_work_path": "work/bigme-controls-deepening/raw/reader-demo.gif",
+    "raw_sha256": "30073bef324d28dbd8e3995eb21954c3b0755b0d22a212d5a6f3653a0b51fd28",
+    "bytes": 253284,
+    "content_type": "image/gif",
+    "probe_exit": 0,
+    "probe": {
+      "programs": [],
+      "streams": [
+        {
+          "width": 782,
+          "height": 782,
+          "duration": "1.000000",
+          "nb_frames": "5"
+        }
+      ]
+    }
+  },
+  {
+    "name": "tts-demo",
+    "url": "https://cdn.shopify.com/s/files/1/0629/1311/8387/files/782_782-_TTS_3.gif?v=1736236732",
+    "status": 200,
+    "raw_work_path": "work/bigme-controls-deepening/raw/tts-demo.gif",
+    "raw_sha256": "f1f27c93f0a8958c086b7ce7e7da52ddb9121aa3a12cab00abe07c7936ad14e3",
+    "bytes": 117808,
+    "content_type": "image/gif",
+    "probe_exit": 0,
+    "probe": {
+      "programs": [],
+      "streams": [
+        {
+          "width": 782,
+          "height": 782,
+          "duration": "3.000000",
+          "nb_frames": "3"
+        }
+      ]
+    }
+  }
+]

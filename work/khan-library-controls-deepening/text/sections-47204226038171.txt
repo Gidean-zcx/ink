@@ -1,0 +1,22 @@
+Camp Khan Kids – Khan Academy (https://khankids.zendesk.com/hc/en-us/sections/47204226038171-Camp-Khan-Kids)
+citeturn958view5 [wordlim: 200] Crawled: 6 days ago; Content type: text/html; Source: open({"ref_id":"https://khankids.zendesk.com/hc/en-us/sections/47204226038171-Camp-Khan-Kids","lineno":null}); Total lines: 20
+L0: 【0†Skip to main content】
+L1: 
+L2: 【1†Submit a request】
+L3: 
+L4: [Input][Input: Search]
+L5: # Camp Khan Kids
+L6: 
+L7:   * 【2†2025: Sign up for Camp Khan Kids!】
+L8:   * 【3†2025: Camp Khan Kids Art Show】
+L9:   * 【4†2025: Camp Khan Kids Supply List】
+L10:   * 【5†2025: Camp Khan Kids: Wonderful Wings Week】
+L11:   * 【6†2025: Camp Khan Kids: Travel the World Week】
+L12:   * 【7†2025: Camp Khan Kids: Friendship Week】
+L13:   * 【8†2025: Camp Khan Kids: Arts & Crafts Week】
+L14:   * 【9†2024: Camp Khan Kids Art Show】
+L15:   * 【10†2023: Camp Khan Kids Art Show】
+L16: 
+L17: 【11†Khan Academy】
+L18: 
+L19: 【12†Powered by Zendesk†www.zendesk.com】

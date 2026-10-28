@@ -1,0 +1,41 @@
+Use Apple Intelligence in Shortcuts on iPhone or iPad
+You can create more powerful shortcuts than ever with Apple Intelligence. Intelligent actions in shortcuts can summarize text, create images, or tap directly into Apple Intelligence or Extension models to provide responses that feed into your shortcut.
+Note: Apple Intelligence on iOS 27 or later is available on an Apple Intelligence-enabled iPhone 15 Pro, iPhone 15 Pro Max, or iPhone 16 model or later. Apple Intelligence on iPadOS 27 or later is available on an Apple Intelligence-enabled iPad mini (A17 Pro) and iPad models with M1 or later. Apple Intelligence is not available in all languages or regions. Usage limits may apply.*
+Find Apple Intelligence shortcuts
+If you’re looking for new shortcuts to add to your collection, or if you want to see what’s possible and how particular Apple Intelligence shortcuts are built, check out the Apple Intelligence category in the Shortcuts Gallery.
+Go to the Shortcuts app  on your iPhone or iPad.
+Tap Gallery, then tap  [IMAGE: the Create Shortcut button]  on a shortcut in the Apple Intelligence category to add it to your collection.
+Use a model to build custom shortcuts
+You can create your own custom shortcuts that use an Apple Intelligence model—either on-device or Private Cloud Compute—or ChatGPT to handle simple or complex requests in your shortcuts. You can use a model to provide input to an action, parse the output of an action, and more.
+You can choose from the following models:
+On-Device: Uses the on-device Apple Intelligence model to handle simple requests without the need for a network connection. This model is ideal for straightforward requests or simple conversions.
+Cloud: Uses Apple’s Private Cloud Compute to handle complex requests while protecting your privacy.
+Cloud Pro: Uses Apple’s Private Cloud Compute to handle complex requests while protecting your privacy. This model has extended context and is suitable for even larger and more complex tasks than Cloud.
+Extension Model: Uses ChatGPT to handle your requests.
+To get started, try out something similar to the following:
+Go to the Shortcuts app  on your iPhone or iPad.
+Tap  [IMAGE: the Create Shortcut button] .
+Tip: Tap the Apple Intelligence category, then choose a specific intelligent action.
+Search for an action, then tap it to add it to your shortcut.
+For example, search for Get Current Weather, then tap it. If Shortcuts prompts you for access to your location, tap Allow Access.
+Search for the Use Model action, then choose a model.
+For example, choose On-Device.
+In the text field below “Use Model,” enter your prompt.
+For example, enter “Write a concise, funny summary of today’s weather with emoji.”
+If you’d like to be able to interact with the model to further refine your request, tap the arrow next to “Use model,” then tap the Follow Up checkbox.
+To add another action, search for it, then tap it to add it.
+For example, search Show Content, tap it, then select Response.
+To test your new shortcut, tap  [IMAGE: the Play button] .
+Your shortcut is saved automatically. To learn about the different ways you can run your shortcut, see Launch a shortcut from another app on iPhone or iPad.
+Use Broad World Knowledge with Cloud and Cloud Pro
+You can access broad world knowledge to inform and expand your usage of the Cloud and Cloud Pro models with current events and real-world context.
+Go to the Shortcuts app  on your iPhone or iPad.
+Tap  [IMAGE: the Create Shortcut button] .
+Search for the Use Model action, then choose Cloud or Cloud Pro.
+Tap  [IMAGE: Show More button] , then tap use Broad World Knowledge.
+Learn more about input, Follow Up, and output
+Here are some details about using the Use Model action:
+The text input into models can include variables, outputs from previous actions, calendar events, reminders, photos, and more.
+If you select Follow Up, when you run the shortcut, it shows you the model’s response and allows you to refine your input before the final response is passed to the next action. For example, you could make additional requests or provide more information.
+The output responses are automatically optimized for the actions they’re passed to. You can also specify how the response is output: When you add the Use Model action, tap the Output pop-up menu and choose an option.
+*Apple Intelligence is available with Siri and device language set to Chinese (Simplified), Chinese (Traditional), Danish, Dutch, English, French, German, Italian, Japanese, Korean, Norwegian, Portuguese, Spanish, Swedish, Turkish, or Vietnamese. Some features may not be available in all regions or languages. Some devices may not be available in all regions. Siri AI is available in beta in iOS 27, iPadOS 27, macOS 27, watchOS 27, and visionOS 27 and requires an Apple Intelligence–enabled device set to a supported language. Available in English to start. Siri AI will not be initially available in the EU on iOS, iPadOS, and watchOS. Certain Apple Intelligence features that rely on server-side models are subject to daily usage limits, including but not limited to Siri AI, Intelligent Photo Editing Tools, Image Playground, and AFM 3 Cloud models in Shortcuts. Daily limits may vary by feature, request complexity, system demand, system policies, and other factors. Expanded access to such features will be available for a fee in the future. Use of these features is subject to the Apple Intelligence Terms and Conditions. Learn more at apple.com/apple-intelligence.See alsoIntro to how shortcuts work on iPhone and iPad

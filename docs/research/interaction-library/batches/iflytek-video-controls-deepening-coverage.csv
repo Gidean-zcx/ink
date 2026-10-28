@@ -1,0 +1,4 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M027-16,M-027,按需求找题、挑题及选择阶段测模式,D2,E-IFVC-02,分类/筛选与AI找题分开；候选勾选/取消→去作答；考试倒计时、练习未作答不入错题；答后图谱可进弱项,剪辑跳过完整交卷；找题来源/生成方式、空结果/误匹配、超时/漏答确认/排名/重做/恢复未知,static_reference_only,false,cases/M-027-iflytek-learning.md,2026-10-27
+F-M027-17,M-027,英语分级选读、页内求助及跟读,D2,E-IFVC-03,定级说明/报告→分级书目；精读读练玩、泛读词义卡/收下；句级录音/回放、跟读句数、末页完成入口和报告分别,定级测量/评分准确度未知；错答/提示/重录/保存/完成点击后计数、离线与读听恢复未观察；样例不是固定周目标,static_reference_only,false,cases/M-027-iflytek-learning.md,2026-10-27
+F-M027-18,M-027,选音频播放并配置早晚听,D2,E-IFVC-04,学习工具→听一听→分类/专辑/条目；播放器/历史/收藏分别；早晚听选时间/场景/重复/时长/章节并有提交；浮条暂停/结束,未听音或操作设备；定时提交回执/取消/休眠唤醒/离线/AI打断与秒级断点未知；历史不证明续播,static_reference_only,false,cases/M-027-iflytek-learning.md,2026-10-27

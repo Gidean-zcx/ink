@@ -1,0 +1,4 @@
+Testing your actions in Shortcuts on iPhone or iPad
+Organizing actions in a thoughtful sequence is key to building a successful shortcut. However, as you add a sequence of actions and test the shortcut, you may find that the result is not what you expect, or you may encounter an error.
+Figuring out the right sequence for your goal may require experimentation and frequent testing.
+Tip: As you build a shortcut, it may be helpful to add a Quick Look action between your actions. When you run the shortcut, the Quick Look action helps you identify what content (such as text or images) flows between actions. This allows you to catch and prevent issues or error messages that may occur in subsequent steps in the shortcut.See alsoIdeas for custom shortcuts on iPhone or iPad

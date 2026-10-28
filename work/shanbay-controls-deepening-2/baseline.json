@@ -1,0 +1,7 @@
+{
+  "cases/M-019-shanbay.md": "ff325f9f71265f3057cd41a5309764d5c4c75e790605bcecfe6e470e13877949",
+  "batches/vocab-evidence.jsonl": "54419a919e3bed81f8ff7c963afa68d596e686a9d2aa8c5a1d86e5119dac2a0f",
+  "batches/vocab-coverage.csv": "014fc22234c9962a6aebc7c9cde89c6072c2d81068c0f3257a334461e861d3f4",
+  "batches/shanbay-controls-deepening-evidence.jsonl": "a130bb610f69a8690fc9945af25eae26f3e0f53033960eec923ae79d28f56b01",
+  "batches/shanbay-controls-deepening-coverage.csv": "c477efe10fe7ac5a08665e891dd2394746c95135b350436e565d7ec298d0149f"
+}

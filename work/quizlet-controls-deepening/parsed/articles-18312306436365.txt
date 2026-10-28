@@ -1,0 +1,81 @@
+【0†iframe†www.googletagmanager.com】
+
+【1†Help center†quizlet.zendesk.com】
+
+Topics
+
+Popular Articles
+
+【2†Resending a confirmation message】 【3†Changing your username】 【4†Changing your password】 【5†Finding flashcard sets】 【6†Finding your teacher's class】 【7†Browser and device compatibility】
+
+[Input][Input: Search]
+
+【8†Image】   【8†Username】
+# Studying with Study Guides
+
+【8†IOS】 【8†Web】 【8†Android】
+
+Upload or paste your course materials to generate a study guide equipped with an outline, flashcard set, and more with just the click of a button. You can edit and tailor your study guide to fit your study needs. This AI-powered feature makes it easy to tap into the knowledge you create from your own class notes and dive even deeper.
+
+Study guides are available for users who use Quizlet in English, French, or German and are:
+  * 14 years or older in the United Kingdom and the United States
+  * 15 years or older in Australia
+  * 16 years or older in Canada, Ireland, and New Zealand
+  * 18 years or older in Denmark, Finland, France, Germany, India, Israel, Malaysia, the Netherlands, Norway, the Philippines, Singapore, South Africa, Sweden, and U.S. territories
+
+Free users can generate study guides for free with limited access. Quizlet Plus and Unlimited Subscribers have unlimited access.
+
+To create a study guide
+  1. 【9†Log in†quizlet.com】 to your account.
+  2. Select Generate.
+  3. Select Study guide.
+  4. Upload your notes by pasting them in or uploading a file.
+  5. Select Start transforming.
+  6. Start studying!
+
+Settings and options
+
+  * Select 【10†Image: Size=Small (16)@3x.png】(More) to edit your study guide’s title, change who can see your study guide, view your original upload, or delete your study guide.
+  * For generated flashcard sets, go to the set to 【11†change the set’s visibility】.
+
+Tips
+  * Find the study guides you created by selecting Your library and Study guides.
+  * Select 【12†Image: Share - Resized.png】 (share) to share your study guide.
+
+  1. 【9†Log in†quizlet.com】 to your account.
+  2. Select Create.
+  3. Select Study guide.
+  4. Upload your notes by recording audio, taking a photo, pasting text, or selecting a file.
+  5. Select Start transforming.
+  6. Start studying!
+
+Settings and options
+  * Select 【13†Image: Settings gear - Resized.png】 (Settings) to edit your study guide’s title, change who can see your study guide, or delete your study guide.
+  * For generated flashcard sets, go to the set to change the set’s visibility.
+
+Tips
+
+  * Find the study guides you've created by selecting Your library and Study guides.
+  * Select 【12†Image: Share - Resized.png】 (share) to share your study guide.
+  1. 【9†Log in†quizlet.com】 to your account.
+  2. Select Create.
+  3. Select Study guide.
+  4. Upload your notes by taking a photo of them, pasting them in, or uploading a file.
+  5. Select Start transforming.
+  6. Start studying!
+
+Settings and options
+
+  * Select 【13†Image: Settings gear - Resized.png】 (Settings) to edit your study guide’s title, change who can see your study guide, or delete your study guide.
+  * For generated flashcard sets, go to the set to change the set’s visibility.
+
+Tips
+  * Find the study guides you’ve created by selecting Your library and Study guides.
+  * Select 【12†Image: Share - Resized.png】 (share) to share your study guide.
+### Related Articles
+
+  * 【14†Create flashcard sets directly in Claude】
+  * 【15†Studying with Study Groups】
+  * 【16†Creating study sets with Smart Assist】
+  * 【17†Becoming a top creator on Quizlet】
+  * 【18†Studying with Study Guides】

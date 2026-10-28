@@ -1,0 +1,2 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M052-07,M-052,申请个人信息副本的政策路径,D2,E-TT-01,我的→设置→隐私设置→个人信息下载；申请需邮箱，文档称发送下载链接；拒绝邮箱可能无法服务,身份验证/确认、等待与重试、文件格式/覆盖范围/链接有效期未知；副本不是可导回备份；未申请或接收,not_observed,false,cases/M-052-toutiao.md,2026-10-27

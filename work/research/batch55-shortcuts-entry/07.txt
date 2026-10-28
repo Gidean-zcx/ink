@@ -1,0 +1,6 @@
+Run shortcuts with the Action button
+On supported models (iPhone 15 Pro or later), iPhone has an Action button in place of the Ring/Silent switch. You can choose which function you want the Action button to perform when you press it, including running a shortcut.
+Configure the Action button to run a shortcut
+On supported models, go to Settings > Action Button.
+An image of the side of the iPhone appears with icons representing actions you can assign to the Action button.
+Swipe to Shortcut, tap Choose a Shortcut, then select a shortcut.See alsoIntro to variables in Shortcuts on iPhone or iPad

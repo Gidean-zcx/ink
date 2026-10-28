@@ -1,0 +1,6 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M060-18,M-060,使用PC App传入、传出并区分临时预览,D2,E-QGNT-01;E-QUA-01,Gen.2文件夹视图拖入/取出，打印先在电脑转PDF到Received；传出中断再传加(1)；Gen.3C电脑双击只读临时副本在App退出删除,两代分别查页；同名传入、取消残留、完整性、接收端持久保存未实测,not_observed,false,cases/M-060-quaderno.md,2026-10-27
+F-M060-19,M-060,连接已配对设备并核对或切换目标,D2,E-QUA-01;E-QGNT-01,Gen.3C已配对后USB/同Wi-Fi/受支持BT连接与PC状态核对；按ID切换/加配/解除；Gen.2故障核目标ID/时钟等,首次配对后半只写按提示；支持平台/BLE条件保留；解除授权的数据作用和中断恢复未核,not_observed,false,cases/M-060-quaderno.md,2026-10-27
+F-M060-20,M-060,按入口整理文件及目录,D2,E-QUA-01;E-QGNT-01,设备阅读/总列表复制在同目录，文件夹入口可选目的地；Gen.3C文件夹新建与移动；Gen.2PC内复制不跨电脑剪贴板,同名、取消、批量部分失败以及文件改名后side note/同步关系需分别验证,not_observed,false,cases/M-060-quaderno.md,2026-10-27
+F-M060-21,M-060,在PC App添加、改名或删除笔记模板,D2,E-QUA-01,Gen.3C设置→模板→添加→选PDF/命名→OK；删除确认，改名OK；多页仅第一页，加密PDF不可,同名冲突、删除对既有笔记影响、导出/恢复未核,not_observed,false,cases/M-060-quaderno.md,2026-10-27
+F-M060-22,M-060,从书库和阅读页快速列表切换资料,D2,E-QUA-01,Gen.3C总列表按类型/排序找文档，文件夹按路径打开；阅读页快速列表切同目录/最近/收藏,空结果、排序保存、返回原进度、异常/重启及统计语义未核,not_observed,false,cases/M-060-quaderno.md,2026-10-27

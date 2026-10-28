@@ -1,0 +1,48 @@
+[
+  {
+    "evidence_id": "E-BCZH-01",
+    "source_batch": "docs/research/interaction-library/batches/vocab-evidence.jsonl",
+    "field": "additional_captures",
+    "before": [],
+    "after": [
+      {
+        "capture_url": "https://danciji.baicizhan.com/",
+        "checked_on": "2026-10-27",
+        "original_capture_on": "2026-10-27",
+        "access_mode": "local_reread_of_existing_public_artifact",
+        "raw_work_path": "work/baicizhan-device-controls-deepening/01-official-home.html",
+        "raw_sha256": "47e7718d62b9b0e94707740198d4335181cfc730842a884da62d26845e41e828",
+        "locator": "Mini/Max/系列功能正文；旧links.json的22个href；无新增界面观察",
+        "limitation": "未重新GET或看图；保持原型号、来源等级及失败路径边界",
+        "archived_artifact": "artifacts/baicizhan-device-controls-deepening-2/source-notes.md",
+        "sha256": "101dae305557f5f02ddcb23f17edf95d2d80cc3856c790f4600f1d5a9d49996a",
+        "hands_on": false,
+        "visual_observed": false
+      }
+    ],
+    "reason": "同URL旧原件复读，不新增编号"
+  },
+  {
+    "evidence_id": "E-BDCD-01",
+    "source_batch": "docs/research/interaction-library/batches/baicizhan-device-controls-deepening-evidence.jsonl",
+    "field": "additional_captures",
+    "before": [],
+    "after": [
+      {
+        "capture_url": "https://www.52audio.com/archives/239551.html",
+        "checked_on": "2026-10-27",
+        "original_capture_on": "2026-10-27",
+        "access_mode": "local_reread_of_existing_public_artifact",
+        "raw_work_path": "work/baicizhan-device-controls-deepening/02-52audio-ace-max.html",
+        "raw_sha256": "12fd996dcc2af3cdf35f8eaf894a74163db488d1e14f6580a03c0d29b55519fb",
+        "locator": "原件开箱正文，派生txt68—88行；按键/接口/复位孔描述，不推恢复功能",
+        "limitation": "未重新GET或看图；保持原型号、来源等级及失败路径边界",
+        "archived_artifact": "artifacts/baicizhan-device-controls-deepening-2/source-notes.md",
+        "sha256": "101dae305557f5f02ddcb23f17edf95d2d80cc3856c790f4600f1d5a9d49996a",
+        "hands_on": false,
+        "visual_observed": false
+      }
+    ],
+    "reason": "同URL旧原件复读，不新增编号"
+  }
+]

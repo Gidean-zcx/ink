@@ -1,0 +1,152 @@
+[
+  {
+    "path": "work/palma-controls-deepening/raw/existing-10701171762452.txt",
+    "bytes": 1392,
+    "sha256": "388dde0bbcf2673e6f265b6c22b89b5de72cd8d6fe5dffe00cc96eb84793cf69"
+  },
+  {
+    "path": "work/palma-controls-deepening/raw/existing-10701262170644.txt",
+    "bytes": 1730,
+    "sha256": "47278481dc63eee87ff1752e9841be59480d5fa627cc015eff8b41d911e5d321"
+  },
+  {
+    "path": "work/palma-controls-deepening/raw/existing-10701299044372.txt",
+    "bytes": 3443,
+    "sha256": "cfa7571014ef29b21ce808c0b041938f47f712506397bf63532b8a48a145117e"
+  },
+  {
+    "path": "work/palma-controls-deepening/raw/existing-10701399613076.txt",
+    "bytes": 1671,
+    "sha256": "b763c232b3204ad1e43cd4aa366331ef4acfd45d62b3c97ee24dd263afc6cb75"
+  },
+  {
+    "path": "work/palma-controls-deepening/raw/existing-10701495414804.txt",
+    "bytes": 1534,
+    "sha256": "002755b8200b3601c921aa9948ae149388ceac7aec7cb3a6291b1297eb278309"
+  },
+  {
+    "path": "work/palma-controls-deepening/raw/existing-10701496119060.txt",
+    "bytes": 1012,
+    "sha256": "29c23b1d269d28da9cedfbc6f9c46d8da999daed38933a59e1f7515ff78e4cc8"
+  },
+  {
+    "path": "work/palma-controls-deepening/raw/existing-25213043150996.txt",
+    "bytes": 5655,
+    "sha256": "708d8f29628e628c957dfd37d2b7769f5082add202d6245e41d57a97fbfcd6ad"
+  },
+  {
+    "path": "work/palma-controls-deepening/raw/existing-25401838386196.txt",
+    "bytes": 3445,
+    "sha256": "c14abcdc6b38b3ff7d6cdf2a7ba8ad74dbf6caa0bff27541212397e19528747c"
+  },
+  {
+    "path": "work/palma-controls-deepening/raw/existing-360031058312.txt",
+    "bytes": 425,
+    "sha256": "8c4e9f701cec7e003f295e187927f15cf9eb719dcff3ac3b6e83c8422d0afccc"
+  },
+  {
+    "path": "work/palma-controls-deepening/raw/existing-8569254233620.txt",
+    "bytes": 1073,
+    "sha256": "85d5951147daac9a4b7fb4d53597921e02ea5ed254aca1caf47f656e3f5e4aec"
+  },
+  {
+    "path": "work/palma-controls-deepening/raw/existing-8569296110100.txt",
+    "bytes": 4530,
+    "sha256": "41521d4d1f9402f775df838bccb8b7c900ad662cf11afda12b77de1042977aff"
+  },
+  {
+    "path": "work/palma-controls-deepening/raw/existing-8569506159124.txt",
+    "bytes": 4456,
+    "sha256": "748d81f6a4268a2e4223c0cc1f0ec0e757610931582310ab806d5731e4bbed1e"
+  },
+  {
+    "path": "work/palma-controls-deepening/raw/manual-metadata.json",
+    "bytes": 529,
+    "sha256": "b68765c4dc95f9d07234712ff249cd762d8d658e1f30bd761cf1c7b075386be1"
+  },
+  {
+    "path": "work/palma-controls-deepening/raw/manual-outline.json",
+    "bytes": 3543,
+    "sha256": "19f87f4091e81fe913e7d9c8dd100453af0466fedc6c02767599f830a2244873"
+  },
+  {
+    "path": "work/palma-controls-deepening/raw/manual-thread.html",
+    "bytes": 5919,
+    "sha256": "fb2c1868a18f588912187a63f1fd0d23173711ffa0522eee25748bed9f05686a"
+  },
+  {
+    "path": "work/palma-controls-deepening/raw/mobile-manual.html",
+    "bytes": 5919,
+    "sha256": "fb2c1868a18f588912187a63f1fd0d23173711ffa0522eee25748bed9f05686a"
+  },
+  {
+    "path": "work/palma-controls-deepening/raw/mobile-v4-existing.pdf",
+    "bytes": 5145628,
+    "sha256": "66a194e882c852677433b96a8d5ac128adf9f9cfb652f73da6738d7f6f937808"
+  },
+  {
+    "path": "work/palma-controls-deepening/raw/mobile-v4-existing.txt",
+    "bytes": 25900,
+    "sha256": "34915c713b540bdad6a394555ebcd6f3f2332aa13eb8f28133b0dd2380d1196e"
+  },
+  {
+    "path": "work/palma-controls-deepening/raw/mobile-v4-p001.png",
+    "bytes": 23981,
+    "sha256": "ade9afa1624d2c790a7162613814ec70c2f688277b1cd886bff144433add90b8"
+  },
+  {
+    "path": "work/palma-controls-deepening/raw/mobile-v4-p086.png",
+    "bytes": 28419,
+    "sha256": "c02f6894c4c51444cf44bc3e083166a85aac30c2e5647fd7dc8c6ea81b41de5f"
+  },
+  {
+    "path": "work/palma-controls-deepening/raw/mobile-v4-p095.png",
+    "bytes": 13247,
+    "sha256": "95eec91988821cdd2073106bf838aa89a4aff5256f80a6ef02f7216acf76e414"
+  },
+  {
+    "path": "work/palma-controls-deepening/raw/mobile-v4-p097.png",
+    "bytes": 22601,
+    "sha256": "5df48b76d8e3cafa15f48e16cbdc2ca40af6f294b54360bdc886be5b879f9663"
+  },
+  {
+    "path": "work/palma-controls-deepening/raw/mobile-v4-pages.json",
+    "bytes": 29196,
+    "sha256": "86a976b31bcf518a449ee09bd944f0806120946628c574354460dab728b85107"
+  },
+  {
+    "path": "work/palma-controls-deepening/raw/palma-launch.html",
+    "bytes": 449308,
+    "sha256": "dce3f4b0c6a5a16df2d114a3d684dbb7c4afec4126022e45ecdc30f91f0b938c"
+  },
+  {
+    "path": "work/palma-controls-deepening/raw/palma-launch.links.json",
+    "bytes": 3219,
+    "sha256": "e6fbce78cb3a721da8d5f23d82b3a875227243f9b0f63a64b2148e129af85ab2"
+  },
+  {
+    "path": "work/palma-controls-deepening/raw/palma-launch.txt",
+    "bytes": 6890,
+    "sha256": "73941722232bc28805e2cd04c226f98edec9d21462fbbe6014e72cdc2284cf28"
+  },
+  {
+    "path": "work/palma-controls-deepening/raw/palma-product.html",
+    "bytes": 532877,
+    "sha256": "2f6e635b90945a3693592401e791661795eddbc121306153fa7012626b8cdea8"
+  },
+  {
+    "path": "work/palma-controls-deepening/raw/palma-product.links.json",
+    "bytes": 3090,
+    "sha256": "191247773b3a8aa255576f89a710a1a440955c322bbe7bbbc28ad75ee4683d83"
+  },
+  {
+    "path": "work/palma-controls-deepening/raw/palma-product.txt",
+    "bytes": 11491,
+    "sha256": "ca39983df21e02b02ec9d4dfc7bd7030cf50758340a06d3830b3fb5cc140ceab"
+  },
+  {
+    "path": "work/palma-controls-deepening/raw/palma2-smart-button.jpg",
+    "bytes": 63053,
+    "sha256": "0031c40c6ecde6ec2a85dd3dfb29fcd97be59a11cba2085d00dee6bae270d4d8"
+  }
+]

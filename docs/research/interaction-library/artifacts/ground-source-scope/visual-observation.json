@@ -1,0 +1,16 @@
+{
+  "checked_on": "2026-10-27",
+  "evidence_id": "E-GNRS-02",
+  "image": {
+    "url": "https://usw2.frontkb-cdn.com/attachments/7440402/17473/ad731a92-a1ff-4fb9-bbd8-be77198d761d.png",
+    "status": 200,
+    "path": "work/research/batch41-ground/tiers-reference.png",
+    "sha256": "bd154efba276c9c5a10e44de00e3f181e66084f52561705338e50afaae04f151",
+    "bytes": 45370,
+    "visual_observed": true,
+    "archived_artifact": "artifacts/ground-source-scope/tiers-reference.png"
+  },
+  "observation": "Vantage/Premium对照表，所有权项与My News Bias范围不同；是套餐概览图，没有可操作控件或状态变化。",
+  "limits": "图片版本未知；正文仍含移动版即将推出的旧措辞，不能当当前权益实测；来源数量/无限额度是厂商宣称。",
+  "hands_on": false
+}

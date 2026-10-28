@@ -1,0 +1,21 @@
+{
+  "order": 19,
+  "entry_id": "INO-pro--newsletter-feeds--what-are-newsletter-feeds",
+  "title": "What are newsletter feeds?",
+  "url": "https://www.inoreader.com/help/pro/newsletter-feeds/what-are-newsletter-feeds",
+  "checked_on": "2026-10-27",
+  "http_status": 200,
+  "final_url": "https://www.inoreader.com/help/pro/newsletter-feeds/what-are-newsletter-feeds",
+  "acquisition": "one_anonymous_normal_GET",
+  "raw_path": "work/research/batch41-inoreader-help/19-INO-pro--newsletter-feeds--what-are-newsletter-feeds.html",
+  "headers_path": "work/research/batch41-inoreader-help/19-INO-pro--newsletter-feeds--what-are-newsletter-feeds.headers.json",
+  "raw_sha256": "aa6d2efb767b84871a30fe6a67f265be1d9947a49fac0fed2008b6df962aec8c",
+  "bytes": 146691,
+  "status": "body_obtained",
+  "body_status": "extracted_not_yet_root_read",
+  "body_path": "work/research/batch41-inoreader-help/19-INO-pro--newsletter-feeds--what-are-newsletter-feeds.body.txt",
+  "body_sha256": "c8efe14bf889f083b2ee004a3f87816f5ca32f8d1f672ff22abf787b04f3589e",
+  "body_chars": 90,
+  "links": [],
+  "images": []
+}

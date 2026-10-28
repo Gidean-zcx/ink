@@ -1,0 +1,5 @@
+Use the Ask Each Time variable in a shortcut on iPhone or iPad
+The Ask Each Time variable allows you to adjust the parameters of an action at runtime. Using the Ask Each Time variable, you can wait to decide how an action should operate until the shortcut is run.
+As your shortcut runs, each action is completed until the shortcut reaches an action that contains an Ask Each Time variable. At that point, the shortcut pauses, prompting you to update the action’s parameters. When you select Done, the shortcut continues its run.
+Using the Ask Each Time variable on a parameter can be helpful for adjusting options on the fly, such as the Value in the Log Health Sample action.
+See Use variables in Shortcuts on iPhone or iPad.

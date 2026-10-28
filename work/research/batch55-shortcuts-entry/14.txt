@@ -1,0 +1,8 @@
+Run shortcuts by tapping the back of your iPhone
+The Back Tap Accessibility action lets you run a shortcut when you double-tap or triple-tap the back of your phone. See Adjust how iPhone responds to your touch. If you need to pass items on your device’s screen to your shortcut, see Receive onscreen items from other apps.
+On your iPhone, go to Settings > Accessibility > Touch.
+Scroll down, then select Back Tap.
+Select either Double Tap or Triple Tap.
+Scroll down to the Shortcuts area, then choose a shortcut.
+Tap Back Tap to apply the setting.
+Double-tap or triple-tap the back of your phone to run the shortcut.See alsoIntro to how shortcuts work on iPhone and iPad

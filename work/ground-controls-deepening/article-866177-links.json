@@ -1,0 +1,120 @@
+[
+  {
+    "class": "page-header-inner-logo-link",
+    "href": "/en",
+    "title": "",
+    "url": "https://help.ground.news/en"
+  },
+  {
+    "class": "page-header-inner-title",
+    "href": "/en",
+    "title": "Ground News Help Center",
+    "url": "https://help.ground.news/en"
+  },
+  {
+    "type": "button",
+    "class": "kb-button primary",
+    "href": "/en/contact-us",
+    "title": "Contact Us",
+    "url": "https://help.ground.news/en/contact-us"
+  },
+  {
+    "id": "moreResultsLink",
+    "type": "button",
+    "class": "kb-button secondary",
+    "href": "/en/search",
+    "title": "More results",
+    "url": "https://help.ground.news/en/search"
+  },
+  {
+    "href": "https://ground.news/privacy-policy",
+    "title": "Privacy Policy",
+    "url": "https://ground.news/privacy-policy"
+  },
+  {
+    "href": "#key_features",
+    "class": "navigation-item indent-2",
+    "title": "Key Features",
+    "url": "https://help.ground.news/en/articles/866177#key_features"
+  },
+  {
+    "href": "#how_to_create_a_custom_feed",
+    "class": "navigation-item indent-2",
+    "title": "How to Create a Custom Feed",
+    "url": "https://help.ground.news/en/articles/866177#how_to_create_a_custom_feed"
+  },
+  {
+    "href": "#custom_feed_with_an_example",
+    "class": "navigation-item indent-2",
+    "title": "Custom Feed (With an Example)",
+    "url": "https://help.ground.news/en/articles/866177#custom_feed_with_an_example"
+  },
+  {
+    "href": "/en",
+    "title": "Home",
+    "url": "https://help.ground.news/en"
+  },
+  {
+    "href": "/en/categories/2272769-personalize-your-news-feed",
+    "title": "Personalize Your News Feed",
+    "url": "https://help.ground.news/en/categories/2272769-personalize-your-news-feed"
+  },
+  {
+    "href": "/en/categories/2272769-customize-your-news-feed",
+    "title": "Customize Your News Feed",
+    "url": "https://help.ground.news/en/categories/2272769-customize-your-news-feed"
+  },
+  {
+    "target": "_self",
+    "rel": "noopener noreferrer nofollow",
+    "class": "kb-link kb-link",
+    "href": "https://ground.news/login",
+    "title": "Sign in to your Ground News account",
+    "url": "https://ground.news/login"
+  },
+  {
+    "href": "https://usw2.frontkb-cdn.com/attachments/7440402/17473/532b9112-c68d-4e86-bc3e-7c705fa075bf.png",
+    "class": "knowledge-base-image-expand-link",
+    "data-lightbox": "532b9112-c68d-4e86-bc3e-7c705fa075bf",
+    "title": "",
+    "url": "https://usw2.frontkb-cdn.com/attachments/7440402/17473/532b9112-c68d-4e86-bc3e-7c705fa075bf.png"
+  },
+  {
+    "target": "_self",
+    "rel": "noopener noreferrer nofollow",
+    "class": "kb-link kb-link",
+    "href": "mailto:feedback@ground.news",
+    "title": "feedback@ground.news",
+    "url": "mailto:feedback@ground.news"
+  },
+  {
+    "href": "https://twitter.com/Ground_app",
+    "title": "",
+    "url": "https://twitter.com/Ground_app"
+  },
+  {
+    "href": "https://ca.linkedin.com/company/groundnews",
+    "title": "",
+    "url": "https://ca.linkedin.com/company/groundnews"
+  },
+  {
+    "href": "https://www.instagram.com/groundnews/",
+    "title": "",
+    "url": "https://www.instagram.com/groundnews/"
+  },
+  {
+    "href": "https://ground.news/refund-policy",
+    "title": "Refund and Cancellation Policy",
+    "url": "https://ground.news/refund-policy"
+  },
+  {
+    "href": "https://ground.news/terms-and-conditions",
+    "title": "Terms and Conditions",
+    "url": "https://ground.news/terms-and-conditions"
+  },
+  {
+    "href": "https://about.ground.news/privacy-policy",
+    "title": "Privacy Policy",
+    "url": "https://about.ground.news/privacy-policy"
+  }
+]

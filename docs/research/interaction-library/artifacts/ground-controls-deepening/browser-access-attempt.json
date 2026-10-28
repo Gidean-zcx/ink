@@ -1,0 +1,10 @@
+{
+  "checked_on": "2026-10-27",
+  "url": "https://ground.news/search",
+  "method": "Playwright Chromium156.0.8078.4 Linux1280x950 en-US anonymous",
+  "navigation_status": 403,
+  "session_exit": 0,
+  "product_actions": 0,
+  "screenshots": 0,
+  "note": "Stopped on403; no bypass, authentication, retry or product interaction. No D4 evidence created."
+}

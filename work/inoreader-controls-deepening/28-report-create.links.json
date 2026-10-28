@@ -1,0 +1,610 @@
+[
+  {
+    "href": "/",
+    "text": "inoreader-logo"
+  },
+  {
+    "href": "/signup",
+    "text": "Start 15-Day Trial"
+  },
+  {
+    "href": "/",
+    "text": "Home"
+  },
+  {
+    "href": "/features/",
+    "text": "Features"
+  },
+  {
+    "href": "/enterprise",
+    "text": "Enterprise"
+  },
+  {
+    "href": "/pricing",
+    "text": "Pricing"
+  },
+  {
+    "href": "/blog/",
+    "text": "Blog"
+  },
+  {
+    "href": "/contact",
+    "text": "Contact"
+  },
+  {
+    "href": "/rss-tools",
+    "text": "RSS tools"
+  },
+  {
+    "href": "/rss-feed-validator",
+    "text": "Feed validatorValidate a feed for errors"
+  },
+  {
+    "href": "/podcast-feed-validator",
+    "text": "Podcast validatorGet a podcast listed everywhere"
+  },
+  {
+    "href": "/feed-analytics",
+    "text": "Feed analyticsSee how a feed performs"
+  },
+  {
+    "href": "/rss-feed-finder",
+    "text": "Feed finderFind the feeds of any website"
+  },
+  {
+    "href": "/opml-checker",
+    "text": "OPML checkerCheck and repair an OPML export"
+  },
+  {
+    "href": "/rss-tools",
+    "text": "All RSS tools"
+  },
+  {
+    "href": "/rss-feed-validator",
+    "text": "Open the validator"
+  },
+  {
+    "href": "/podcast-feed-validator",
+    "text": "Open the podcast validator"
+  },
+  {
+    "href": "/feed-analytics",
+    "text": "Open feed analytics"
+  },
+  {
+    "href": "/rss-feed-finder",
+    "text": "Open the finder"
+  },
+  {
+    "href": "/opml-checker",
+    "text": "Open the checker"
+  },
+  {
+    "href": "/rss-tools",
+    "text": "All RSS tools →"
+  },
+  {
+    "href": "https://apps.apple.com/app/apple-store/id892355414?pt=32204000&ct=inoreader_internal&mt=8",
+    "text": ""
+  },
+  {
+    "href": "https://play.google.com/store/apps/details?id=com.innologica.inoreader",
+    "text": ""
+  },
+  {
+    "href": "/cs/help/intelligence/intelligence-reports/how-do-i-create-an-intelligence-report",
+    "text": "Čeština"
+  },
+  {
+    "href": "/help/intelligence/intelligence-reports/how-do-i-create-an-intelligence-report",
+    "text": "English"
+  },
+  {
+    "href": "/es/help/intelligence/intelligence-reports/how-do-i-create-an-intelligence-report",
+    "text": "Español"
+  },
+  {
+    "href": "/fr/help/intelligence/intelligence-reports/how-do-i-create-an-intelligence-report",
+    "text": "Français"
+  },
+  {
+    "href": "/it/help/intelligence/intelligence-reports/how-do-i-create-an-intelligence-report",
+    "text": "Italiano"
+  },
+  {
+    "href": "/hu/help/intelligence/intelligence-reports/how-do-i-create-an-intelligence-report",
+    "text": "Magyar"
+  },
+  {
+    "href": "/nl/help/intelligence/intelligence-reports/how-do-i-create-an-intelligence-report",
+    "text": "Nederlands"
+  },
+  {
+    "href": "/pl/help/intelligence/intelligence-reports/how-do-i-create-an-intelligence-report",
+    "text": "Polski"
+  },
+  {
+    "href": "/sk/help/intelligence/intelligence-reports/how-do-i-create-an-intelligence-report",
+    "text": "Slovenčina"
+  },
+  {
+    "href": "/bg/help/intelligence/intelligence-reports/how-do-i-create-an-intelligence-report",
+    "text": "Български"
+  },
+  {
+    "href": "/uk/help/intelligence/intelligence-reports/how-do-i-create-an-intelligence-report",
+    "text": "Українська"
+  },
+  {
+    "href": "/fa/help/intelligence/intelligence-reports/how-do-i-create-an-intelligence-report",
+    "text": "پارسی"
+  },
+  {
+    "href": "/zh-hans/help/intelligence/intelligence-reports/how-do-i-create-an-intelligence-report",
+    "text": "中文(简体)"
+  },
+  {
+    "href": "/ja/help/intelligence/intelligence-reports/how-do-i-create-an-intelligence-report",
+    "text": "日本語"
+  },
+  {
+    "href": "/login",
+    "text": "Sign in"
+  },
+  {
+    "href": "/signup",
+    "text": "Create account"
+  },
+  {
+    "href": "/cs/help/intelligence/intelligence-reports/how-do-i-create-an-intelligence-report",
+    "text": "Čeština"
+  },
+  {
+    "href": "/help/intelligence/intelligence-reports/how-do-i-create-an-intelligence-report",
+    "text": "English"
+  },
+  {
+    "href": "/es/help/intelligence/intelligence-reports/how-do-i-create-an-intelligence-report",
+    "text": "Español"
+  },
+  {
+    "href": "/fr/help/intelligence/intelligence-reports/how-do-i-create-an-intelligence-report",
+    "text": "Français"
+  },
+  {
+    "href": "/it/help/intelligence/intelligence-reports/how-do-i-create-an-intelligence-report",
+    "text": "Italiano"
+  },
+  {
+    "href": "/hu/help/intelligence/intelligence-reports/how-do-i-create-an-intelligence-report",
+    "text": "Magyar"
+  },
+  {
+    "href": "/nl/help/intelligence/intelligence-reports/how-do-i-create-an-intelligence-report",
+    "text": "Nederlands"
+  },
+  {
+    "href": "/pl/help/intelligence/intelligence-reports/how-do-i-create-an-intelligence-report",
+    "text": "Polski"
+  },
+  {
+    "href": "/sk/help/intelligence/intelligence-reports/how-do-i-create-an-intelligence-report",
+    "text": "Slovenčina"
+  },
+  {
+    "href": "/bg/help/intelligence/intelligence-reports/how-do-i-create-an-intelligence-report",
+    "text": "Български"
+  },
+  {
+    "href": "/uk/help/intelligence/intelligence-reports/how-do-i-create-an-intelligence-report",
+    "text": "Українська"
+  },
+  {
+    "href": "/fa/help/intelligence/intelligence-reports/how-do-i-create-an-intelligence-report",
+    "text": "پارسی"
+  },
+  {
+    "href": "/zh-hans/help/intelligence/intelligence-reports/how-do-i-create-an-intelligence-report",
+    "text": "中文(简体)"
+  },
+  {
+    "href": "/ja/help/intelligence/intelligence-reports/how-do-i-create-an-intelligence-report",
+    "text": "日本語"
+  },
+  {
+    "href": "/help",
+    "text": "Help center"
+  },
+  {
+    "href": "/help/intelligence/article-summaries",
+    "text": "Article summaries"
+  },
+  {
+    "href": "/help/intelligence/intelligence-reports",
+    "text": "Intelligence reports"
+  },
+  {
+    "href": "/help/intelligence/suggested-tags",
+    "text": "Suggested tags"
+  },
+  {
+    "href": "/help/intelligence/mentions",
+    "text": "Mentions"
+  },
+  {
+    "href": "/help/intelligence/podcast-and-video-enhancements",
+    "text": "Podcast and video enhancements"
+  },
+  {
+    "href": "/help/intelligence/intelligence-usage",
+    "text": "Intelligence usage"
+  },
+  {
+    "href": "/help/intelligence/intelligence-reports",
+    "text": "Back"
+  },
+  {
+    "href": "/help/intelligence/intelligence-reports/what-are-intelligence-reports",
+    "text": "What are Intelligence reports?"
+  },
+  {
+    "href": "/help/intelligence/intelligence-reports/what-can-intelligence-reports-be-used-for",
+    "text": "What can Intelligence reports be used for?"
+  },
+  {
+    "href": "/help/intelligence/intelligence-reports/where-can-i-find-saved-intelligence-reports",
+    "text": "Where can I find saved Intelligence reports?"
+  },
+  {
+    "href": "/help/intelligence/intelligence-reports/can-i-search-through-intelligence-reports",
+    "text": "Can I search through Intelligence reports?"
+  },
+  {
+    "href": "/help/intelligence/intelligence-reports/can-i-share-intelligence-reports",
+    "text": "Can I share Intelligence reports?"
+  },
+  {
+    "href": "/help/intelligence/intelligence-reports/what-are-automated-reports",
+    "text": "What are automated reports?"
+  },
+  {
+    "href": "/help/intelligence/intelligence-reports/how-do-i-create-an-automated-report",
+    "text": "How do I create an automated report?"
+  },
+  {
+    "href": "/help/intelligence/intelligence-reports/how-can-i-create-a-weekly-overview-of-a-monitored-topic",
+    "text": "How can I create a weekly overview of a monitored topic?"
+  },
+  {
+    "href": "/help/intelligence/intelligence-reports/should-i-use-an-intelligence-report-or-an-email-digest",
+    "text": "Should I use an Intelligence report or an email digest?"
+  },
+  {
+    "href": "/help/intelligence/intelligence-reports/are-intelligence-reports-available-in-all-plans",
+    "text": "Are Intelligence reports available in all plans?"
+  },
+  {
+    "href": "/signup",
+    "text": "Create account"
+  },
+  {
+    "href": "/features",
+    "text": "Features"
+  },
+  {
+    "href": "/pricing",
+    "text": "Pricing"
+  },
+  {
+    "href": "/enterprise",
+    "text": "Enterprise"
+  },
+  {
+    "href": "/apps",
+    "text": "Mobile apps"
+  },
+  {
+    "href": "/rss-reader-extension",
+    "text": "Browser extension"
+  },
+  {
+    "href": "/alternatives",
+    "text": "Inoreader alternatives"
+  },
+  {
+    "href": "/rss-tools",
+    "text": "All tools"
+  },
+  {
+    "href": "/rss-feed-finder",
+    "text": "Feed finder"
+  },
+  {
+    "href": "/feed-analytics",
+    "text": "Feed analytics"
+  },
+  {
+    "href": "/rss-feeds",
+    "text": "Top RSS feeds"
+  },
+  {
+    "href": "/rss-feed-validator",
+    "text": "Feed validator"
+  },
+  {
+    "href": "/podcast-feed-validator",
+    "text": "Podcast validator"
+  },
+  {
+    "href": "/rss-feed-viewer",
+    "text": "Feed viewer"
+  },
+  {
+    "href": "/opml-checker",
+    "text": "OPML checker"
+  },
+  {
+    "href": "/about-us",
+    "text": "About us"
+  },
+  {
+    "href": "/blog/",
+    "text": "Blog"
+  },
+  {
+    "href": "/help",
+    "text": "Help center"
+  },
+  {
+    "href": "/developers",
+    "text": "Developer portal"
+  },
+  {
+    "href": "/contact",
+    "text": "Contact us"
+  },
+  {
+    "href": "/brand-portal",
+    "text": "Brand portal"
+  },
+  {
+    "href": "https://status.inoreader.com",
+    "text": "Service status"
+  },
+  {
+    "href": "/tos",
+    "text": "Terms of Service"
+  },
+  {
+    "href": "/privacy_policy",
+    "text": "Privacy Policy"
+  },
+  {
+    "href": "/security_commitment",
+    "text": "Security commitment"
+  },
+  {
+    "href": "https://apps.apple.com/app/apple-store/id892355414?pt=32204000&ct=inoreader_internal&mt=8",
+    "text": ""
+  },
+  {
+    "href": "https://play.google.com/store/apps/details?id=com.innologica.inoreader",
+    "text": ""
+  },
+  {
+    "href": "/cs/help/intelligence/intelligence-reports/how-do-i-create-an-intelligence-report",
+    "text": "Čeština"
+  },
+  {
+    "href": "/help/intelligence/intelligence-reports/how-do-i-create-an-intelligence-report",
+    "text": "English"
+  },
+  {
+    "href": "/es/help/intelligence/intelligence-reports/how-do-i-create-an-intelligence-report",
+    "text": "Español"
+  },
+  {
+    "href": "/fr/help/intelligence/intelligence-reports/how-do-i-create-an-intelligence-report",
+    "text": "Français"
+  },
+  {
+    "href": "/it/help/intelligence/intelligence-reports/how-do-i-create-an-intelligence-report",
+    "text": "Italiano"
+  },
+  {
+    "href": "/hu/help/intelligence/intelligence-reports/how-do-i-create-an-intelligence-report",
+    "text": "Magyar"
+  },
+  {
+    "href": "/nl/help/intelligence/intelligence-reports/how-do-i-create-an-intelligence-report",
+    "text": "Nederlands"
+  },
+  {
+    "href": "/pl/help/intelligence/intelligence-reports/how-do-i-create-an-intelligence-report",
+    "text": "Polski"
+  },
+  {
+    "href": "/sk/help/intelligence/intelligence-reports/how-do-i-create-an-intelligence-report",
+    "text": "Slovenčina"
+  },
+  {
+    "href": "/bg/help/intelligence/intelligence-reports/how-do-i-create-an-intelligence-report",
+    "text": "Български"
+  },
+  {
+    "href": "/uk/help/intelligence/intelligence-reports/how-do-i-create-an-intelligence-report",
+    "text": "Українська"
+  },
+  {
+    "href": "/fa/help/intelligence/intelligence-reports/how-do-i-create-an-intelligence-report",
+    "text": "پارسی"
+  },
+  {
+    "href": "/zh-hans/help/intelligence/intelligence-reports/how-do-i-create-an-intelligence-report",
+    "text": "中文(简体)"
+  },
+  {
+    "href": "/ja/help/intelligence/intelligence-reports/how-do-i-create-an-intelligence-report",
+    "text": "日本語"
+  },
+  {
+    "href": "https://innologica.com/",
+    "text": "© 2026 Innologica Ltd"
+  },
+  {
+    "href": "/cs/help/intelligence/intelligence-reports/how-do-i-create-an-intelligence-report",
+    "text": "Čeština"
+  },
+  {
+    "href": "/help/intelligence/intelligence-reports/how-do-i-create-an-intelligence-report",
+    "text": "English"
+  },
+  {
+    "href": "/es/help/intelligence/intelligence-reports/how-do-i-create-an-intelligence-report",
+    "text": "Español"
+  },
+  {
+    "href": "/fr/help/intelligence/intelligence-reports/how-do-i-create-an-intelligence-report",
+    "text": "Français"
+  },
+  {
+    "href": "/it/help/intelligence/intelligence-reports/how-do-i-create-an-intelligence-report",
+    "text": "Italiano"
+  },
+  {
+    "href": "/hu/help/intelligence/intelligence-reports/how-do-i-create-an-intelligence-report",
+    "text": "Magyar"
+  },
+  {
+    "href": "/nl/help/intelligence/intelligence-reports/how-do-i-create-an-intelligence-report",
+    "text": "Nederlands"
+  },
+  {
+    "href": "/pl/help/intelligence/intelligence-reports/how-do-i-create-an-intelligence-report",
+    "text": "Polski"
+  },
+  {
+    "href": "/sk/help/intelligence/intelligence-reports/how-do-i-create-an-intelligence-report",
+    "text": "Slovenčina"
+  },
+  {
+    "href": "/bg/help/intelligence/intelligence-reports/how-do-i-create-an-intelligence-report",
+    "text": "Български"
+  },
+  {
+    "href": "/uk/help/intelligence/intelligence-reports/how-do-i-create-an-intelligence-report",
+    "text": "Українська"
+  },
+  {
+    "href": "/fa/help/intelligence/intelligence-reports/how-do-i-create-an-intelligence-report",
+    "text": "پارسی"
+  },
+  {
+    "href": "/zh-hans/help/intelligence/intelligence-reports/how-do-i-create-an-intelligence-report",
+    "text": "中文(简体)"
+  },
+  {
+    "href": "/ja/help/intelligence/intelligence-reports/how-do-i-create-an-intelligence-report",
+    "text": "日本語"
+  },
+  {
+    "href": "https://www.inoreader.com/blog/feed",
+    "text": ""
+  },
+  {
+    "href": "https://www.youtube.com/@Inoreader",
+    "text": ""
+  },
+  {
+    "href": "https://www.facebook.com/Inoreader/",
+    "text": ""
+  },
+  {
+    "href": "https://www.linkedin.com/company/inoreader",
+    "text": ""
+  },
+  {
+    "href": "https://x.com/Inoreader",
+    "text": ""
+  },
+  {
+    "href": "https://mastodon.social/@Inoreader",
+    "text": ""
+  },
+  {
+    "href": "https://bsky.app/profile/inoreader.com",
+    "text": ""
+  },
+  {
+    "href": "/cookie_use",
+    "text": "Access cookie settings"
+  },
+  {
+    "href": "javascript:void(0);",
+    "text": "OK, I agree"
+  },
+  {
+    "href": "javascript:void(0)",
+    "text": "Use a different account"
+  },
+  {
+    "href": "/forgot-password",
+    "text": "Forgot password?"
+  },
+  {
+    "href": "javascript:void(0)",
+    "text": ""
+  },
+  {
+    "href": "javascript:void(0)",
+    "text": ""
+  },
+  {
+    "href": "/sso",
+    "text": ""
+  },
+  {
+    "href": "/signup?sendback=",
+    "text": "Create an account"
+  },
+  {
+    "href": "/signup",
+    "text": "Create account"
+  },
+  {
+    "href": "/signup",
+    "text": "Create one now"
+  },
+  {
+    "href": "javascript:void(0)",
+    "text": ""
+  },
+  {
+    "href": "javascript:void(0)",
+    "text": ""
+  },
+  {
+    "href": "/sso",
+    "text": ""
+  },
+  {
+    "href": "/login?sendback=",
+    "text": "Sign in."
+  },
+  {
+    "href": "/login",
+    "text": "Sign in"
+  },
+  {
+    "href": "/login",
+    "text": "Sign in"
+  },
+  {
+    "href": "/tos",
+    "text": "Inoreader Privacy\n                                Policy"
+  },
+  {
+    "href": "/",
+    "text": "Go to homepage"
+  }
+]

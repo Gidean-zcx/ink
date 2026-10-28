@@ -1,0 +1,11 @@
+Why is my rule not triggering?
+Check that the rule is enabled, its trigger applies to the relevant source or event, and the article meets its conditions. Review the rule’s matches in the dashboard or rule log. If an action uses a connected service, make sure that service is still connected to your Inoreader account.
+Related questions
+What are rules?
+Where can I create and manage rules?
+What can trigger a rule?
+What conditions can rules use?
+What actions can rules perform?
+Can one rule perform multiple actions?
+Can I test a rule before saving it?
+How many rules are included in Pro plans?

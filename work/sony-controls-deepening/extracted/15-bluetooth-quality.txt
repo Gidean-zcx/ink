@@ -1,0 +1,15 @@
+Configuring the Bluetooth function
+You can select the combination of codecs and preferences for Bluetooth streaming.
+Swipe the [WALKMAN Home] screen upwards on the player.
+Tap the menu items in the following order.
+[Settings] － [Connected devices] － [Connection preferences] － [Bluetooth].
+Tap [Wireless playback quality], and then select the desired item.
+Note
+The setting for [Wireless playback quality] will take effect starting the next time the player establishes a Bluetooth connection.
+The setting for [Wireless playback quality] may not be effective depending on the settings of the Bluetooth device.
+The contents of the Help Guide may be subject to change without notice due to updates to the product's specifications.
+Go to Page Top
+Related Topic
+Connecting the player to an unpaired Bluetooth device for the first time
+Connecting the player to a paired Bluetooth device
+Notes on the Bluetooth function

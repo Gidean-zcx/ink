@@ -1,0 +1,69 @@
+Kindle Personal Document File Types That Support Notes
+en_US
+Kindle Personal Document File Types That Support Notes
+Discover which Send to Kindle file types are compatible with Kindle formats and notes for your Kindle E-Reader and Kindle applications.
+Note: You can write directly on the page in PDF documents on Kindle Scribe and stylus-supported Android and iOS devices or write on the page in other personal documents imported through the
+Send to Kindle service. Handwriting isn't supported in PDF documents loaded via USB-C or previously sent to your library before 11/11/2022.
+Handwriting features aren't supported in EPUB comics, Manga, and children's books currently.
+Table 1.
+Documents Imported with Send to Kindle
+Device or App
+BMP, DOC, DOCX, EPUB, GIF, HTM, HTML, JPG, JPEG, PDF (adjustable layout), PNG, RTF, TXT
+Kindle Scribe
+Handwritten sticky notes
+Text notes
+Active canvas
+Highlights
+Underlines
+Outlines
+Margin side panel
+Other Kindle E-readers
+Highlights
+Text notes
+Kindle for iOS (non-stylus supported)
+Handwritten sticky notes (read/delete)
+Text notes
+Active canvas (read/delete)
+Highlights
+Underlines
+Outlines
+Kindle for Android (stylus supported)
+Handwritten sticky notes
+Text notes
+Active canvas
+Margin side panel
+Highlights
+Underlines
+Outlines
+Kindle for Android (non-stylus supported)
+Handwritten sticky notes (read/delete)
+Text notes
+Active canvas (read/delete)
+Highlights
+Underlines
+Outlines
+Kindle app on Fire Tablet(stylus supported)
+Handwritten sticky notes
+Text notes
+Active canvas
+Margin side panel
+Highlights
+Underlines
+Outlines
+Kindle app on Fire Tablet (non-stylus supported )
+Handwritten sticky notes (read only)
+Text notes
+Highlights
+Kindle for Mac
+Kindle for PC
+Text notes
+Highlights
+Kindle for Web
+N/A (personal documents aren’t supported yet)
+For more help, go to:
+Tips about Converting Personal Documents to a Kindle Format
+Learn About Sending Documents to Your Kindle Library (including supported file types)
+en_US
+US
+Cpiu6TFOuXpU4ymOzD
+TNtSm13k3txFI4EvDV

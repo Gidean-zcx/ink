@@ -1,0 +1,152 @@
+[
+  {
+    "flow_id": "F-M045-01",
+    "before": {
+      "flow_id": "F-M045-01",
+      "product_id": "M-045",
+      "task": "一日简报读完",
+      "depth": "D1",
+      "evidence_ids": "E-ESPR-01;E-ESPR-02",
+      "known_branches": "内容或权限可用性未实测",
+      "gaps": "精确入口与已读结算返回",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-045-espresso.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M045-01",
+      "product_id": "M-045",
+      "task": "一日简报读完（历史链与现版分开）",
+      "depth": "D2",
+      "evidence_ids": "E-ESPR-01;E-ESPR-02;E-ESD-01;E-ESCD-01;E-ESCD-02",
+      "known_branches": "2017作者点文/滑动/勾选至结束页；2025机构图仅支持Today栏目和勾的外观，当前主链仍未核",
+      "gaps": "历史已读触发与跳读、当前末篇结束、日期更新/离线及跨端恢复",
+      "visual_status": "historical_and_institutional_static_images_only",
+      "hands_on": "false",
+      "case_path": "cases/M-045-espresso.md",
+      "checked_on": "2026-10-27"
+    },
+    "reason": "补历史作者使用链、机构静态控件及版本条件；现版主链未知，沿用原任务"
+  },
+  {
+    "flow_id": "F-M045-02",
+    "before": {
+      "flow_id": "F-M045-02",
+      "product_id": "M-045",
+      "task": "主题偏好与每周深读",
+      "depth": "D2",
+      "evidence_ids": "E-ESPR-01;E-ESPR-02;E-ESD-02",
+      "known_branches": "机构指南 Settings 到 For you；不证明改每日短报",
+      "gaps": "选项、确认、生效与当前平台构建",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-045-espresso.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M045-02",
+      "product_id": "M-045",
+      "task": "主题偏好与每周深读",
+      "depth": "D2",
+      "evidence_ids": "E-ESPR-01;E-ESPR-02;E-ESD-02;E-ESCD-01",
+      "known_branches": "机构指南Settings改主题；HKU图For you周长文卡/时间/四个位置点；不证明改每日短报",
+      "gaps": "主题完整选项、确认、更新生效与当前构建；卡片手势和跨端同步",
+      "visual_status": "institutional_static_images_only",
+      "hands_on": "false",
+      "case_path": "cases/M-045-espresso.md",
+      "checked_on": "2026-10-27"
+    },
+    "reason": "补历史作者使用链、机构静态控件及版本条件；现版主链未知，沿用原任务"
+  },
+  {
+    "flow_id": "F-M045-03",
+    "before": {
+      "flow_id": "F-M045-03",
+      "product_id": "M-045",
+      "task": "文章听读与翻译",
+      "depth": "D1",
+      "evidence_ids": "E-ESPR-02;E-ESD-01",
+      "known_branches": "静态图可见阅读时间与音频入口、时长；翻译为能力声明",
+      "gaps": "播放结果、暂停结束、精确返回恢复与语言入口",
+      "visual_status": "static_official_images_only",
+      "hands_on": "false",
+      "case_path": "cases/M-045-espresso.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M045-03",
+      "product_id": "M-045",
+      "task": "文章听读与翻译",
+      "depth": "D1",
+      "evidence_ids": "E-ESPR-02;E-ESD-01;E-ESCD-01",
+      "known_branches": "文章/周长文静态音频入口；本地商店历史3.31四语言实验、3.32译文显示修订；不证明中文音频",
+      "gaps": "播放/暂停/结束、精确返回与断点；译文入口、范围、回原文位置和当前实验状态",
+      "visual_status": "official_and_institutional_static_images_only",
+      "hands_on": "false",
+      "case_path": "cases/M-045-espresso.md",
+      "checked_on": "2026-10-27"
+    },
+    "reason": "补历史作者使用链、机构静态控件及版本条件；现版主链未知，沿用原任务"
+  },
+  {
+    "flow_id": "F-M045-04",
+    "before": {
+      "flow_id": "F-M045-04",
+      "product_id": "M-045",
+      "task": "机构登录及学生资格",
+      "depth": "D2",
+      "evidence_ids": "E-ESPR-04;E-ESPR-03",
+      "known_branches": "机构特定账号和16岁以上资格",
+      "gaps": "通用新用户错误恢复及当前界面",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-045-espresso.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M045-04",
+      "product_id": "M-045",
+      "task": "机构登录及学生资格",
+      "depth": "D2",
+      "evidence_ids": "E-ESPR-04;E-ESPR-03;E-ESCD-01",
+      "known_branches": "ACG机构账号路径与HKU学生自建账号分开；HKU指引该路径不选SSO；16+资格仍依原优惠条款",
+      "gaps": "机构/学生权益冲突、登录失败/恢复、服务到期与当前通用流程",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-045-espresso.md",
+      "checked_on": "2026-10-27"
+    },
+    "reason": "补历史作者使用链、机构静态控件及版本条件；现版主链未知，沿用原任务"
+  },
+  {
+    "flow_id": "F-M045-07",
+    "before": {
+      "flow_id": "F-M045-07",
+      "product_id": "M-045",
+      "task": "设置显示与通知",
+      "depth": "D2",
+      "evidence_ids": "E-ESD-02",
+      "known_branches": "机构指南 Settings 选项",
+      "gaps": "保存、通知系统权限、跨重启状态",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-045-espresso.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M045-07",
+      "product_id": "M-045",
+      "task": "设置显示与通知",
+      "depth": "D2",
+      "evidence_ids": "E-ESD-02;E-ESD-01;E-ESCD-01",
+      "known_branches": "机构指南Settings列显示/通知选项；HKU只见Settings底栏；历史通知/无障碍改进声明不证明菜单结果",
+      "gaps": "字号档位、主题默认/跟随系统、通知权限与保存/跨重启状态",
+      "visual_status": "settings_entry_static_only",
+      "hands_on": "false",
+      "case_path": "cases/M-045-espresso.md",
+      "checked_on": "2026-10-27"
+    },
+    "reason": "补历史作者使用链、机构静态控件及版本条件；现版主链未知，沿用原任务"
+  }
+]

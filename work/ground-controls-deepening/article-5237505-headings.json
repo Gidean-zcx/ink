@@ -1,0 +1,78 @@
+[
+  {
+    "tag": "h1",
+    "title": "Known Issues & Bug Fixes"
+  },
+  {
+    "tag": "h2",
+    "title": "Current Known Issues"
+  },
+  {
+    "tag": "h2",
+    "title": "Current Known Issues (Expanded)"
+  },
+  {
+    "tag": "h3",
+    "title": "Bug: \"Edit Bias Rating\" Error on Some Android Devices"
+  },
+  {
+    "tag": "h3",
+    "title": "Temporary Fix"
+  },
+  {
+    "tag": "h3",
+    "title": "Current Status"
+  },
+  {
+    "tag": "h3",
+    "title": "Bug: \"Invalid Login\" Error When Using Google Sign-In"
+  },
+  {
+    "tag": "h3",
+    "title": "Temporary Fix"
+  },
+  {
+    "tag": "h3",
+    "title": "Current Status"
+  },
+  {
+    "tag": "h3",
+    "title": "Bug: Mobile App Not Loading on Some IOS and Android Devices"
+  },
+  {
+    "tag": "h3",
+    "title": "Temporary Fix"
+  },
+  {
+    "tag": "h3",
+    "title": "Current Status"
+  },
+  {
+    "tag": "h3",
+    "title": "Bug: Wrong Headline Appearing on Mobile Apps"
+  },
+  {
+    "tag": "h3",
+    "title": "Temporary Fix"
+  },
+  {
+    "tag": "h3",
+    "title": "Current Status"
+  },
+  {
+    "tag": "h2",
+    "title": "Still Having Trouble?"
+  },
+  {
+    "tag": "h2",
+    "title": "Related Articles"
+  },
+  {
+    "tag": "h2",
+    "title": "Was this article helpful?"
+  },
+  {
+    "tag": "h2",
+    "title": "Thanks for the feedback!"
+  }
+]

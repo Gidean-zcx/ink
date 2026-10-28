@@ -1,0 +1,432 @@
+[
+  {
+    "evidence_id": "E-IFVC-01",
+    "title": "小学数学AI同步精准学",
+    "url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E6%95%B0%E5%AD%A6AI%E5%90%8C%E6%AD%A5%E7%B2%BE%E5%87%86%E5%AD%A6.mp4",
+    "help_player_url": "https://xxj.xunfei.cn/h5-help/#/play?bgc=https%3A%2F%2Fk12-swift.xunfeixxj.com%2Fxxjserver%2Fwx%2Fh5%2Fhelp%2Fvideo%2F%E5%B0%8F%E6%95%B0AI%E5%90%8C%E6%AD%A5%E7%B2%BE%E5%87%86%E5%AD%A6.jpg&video=https%3A%2F%2Fk12-swift.xunfeixxj.com%2Fxxjserver%2Fwx%2Fh5%2Fhelp%2Fvideo%2F%E5%B0%8F%E5%AD%A6%E6%95%B0%E5%AD%A6AI%E5%90%8C%E6%AD%A5%E7%B2%BE%E5%87%86%E5%AD%A6.mp4&videoName=%E5%B0%8F%E5%AD%A6%E6%95%B0%E5%AD%A6AI%E5%90%8C%E6%AD%A5%E7%B2%BE%E5%87%86%E5%AD%A6&productName=%E5%AD%A6%E4%B9%A0%E6%9C%BAT30Pro&moduleType=introduce&productId=2e5298d3%2FAISTUDY_SU30_T30PRO",
+    "duration_seconds": 125.28,
+    "native_dimensions": [
+      1920,
+      1080
+    ],
+    "selected_frames": [
+      {
+        "path": "artifacts/iflytek-video-controls-deepening/video-01-020s.png",
+        "sha256": "2d94da24be5a1488600da832eb18bba9136c1d9802c4504a68e075ded056d91f",
+        "position_seconds": 20,
+        "source_url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E6%95%B0%E5%AD%A6AI%E5%90%8C%E6%AD%A5%E7%B2%BE%E5%87%86%E5%AD%A6.mp4",
+        "actual_pixels": [
+          1280,
+          720
+        ],
+        "observed_on": "2026-10-27",
+        "method": "browser_seek_paused_element_screenshot",
+        "product_hands_on": false,
+        "audio_observed": false
+      },
+      {
+        "path": "artifacts/iflytek-video-controls-deepening/video-01-040s.png",
+        "sha256": "f81538969dca2ef2cd476d658bf8a105866c635bd7173fb2b232d5cbc5db7cd3",
+        "position_seconds": 40,
+        "source_url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E6%95%B0%E5%AD%A6AI%E5%90%8C%E6%AD%A5%E7%B2%BE%E5%87%86%E5%AD%A6.mp4",
+        "actual_pixels": [
+          1280,
+          720
+        ],
+        "observed_on": "2026-10-27",
+        "method": "browser_seek_paused_element_screenshot",
+        "product_hands_on": false,
+        "audio_observed": false
+      },
+      {
+        "path": "artifacts/iflytek-video-controls-deepening/video-01-070s.png",
+        "sha256": "71c01b1e1f098af1083bf032a6830f48d38c8cebe694de12c2f1a52a7406e564",
+        "position_seconds": 70,
+        "source_url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E6%95%B0%E5%AD%A6AI%E5%90%8C%E6%AD%A5%E7%B2%BE%E5%87%86%E5%AD%A6.mp4",
+        "actual_pixels": [
+          1280,
+          720
+        ],
+        "observed_on": "2026-10-27",
+        "method": "browser_seek_paused_element_screenshot",
+        "product_hands_on": false,
+        "audio_observed": false
+      },
+      {
+        "path": "artifacts/iflytek-video-controls-deepening/video-01-080s.png",
+        "sha256": "86da4e54b4df6ba71338595f65972f0b40d22b67832ee214832f4b311d7a7e0e",
+        "position_seconds": 80,
+        "source_url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E6%95%B0%E5%AD%A6AI%E5%90%8C%E6%AD%A5%E7%B2%BE%E5%87%86%E5%AD%A6.mp4",
+        "actual_pixels": [
+          1280,
+          720
+        ],
+        "observed_on": "2026-10-27",
+        "method": "browser_seek_paused_element_screenshot",
+        "product_hands_on": false,
+        "audio_observed": false
+      },
+      {
+        "path": "artifacts/iflytek-video-controls-deepening/video-01-090s.png",
+        "sha256": "402f9ac5247f21c5a80732b2fdcbc6d852a42e90c1697c99f6ebc6ad27a9dfaf",
+        "position_seconds": 90,
+        "source_url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E6%95%B0%E5%AD%A6AI%E5%90%8C%E6%AD%A5%E7%B2%BE%E5%87%86%E5%AD%A6.mp4",
+        "actual_pixels": [
+          1280,
+          720
+        ],
+        "observed_on": "2026-10-27",
+        "method": "browser_seek_paused_element_screenshot",
+        "product_hands_on": false,
+        "audio_observed": false
+      },
+      {
+        "path": "artifacts/iflytek-video-controls-deepening/video-01-094s.png",
+        "sha256": "f81ebca40bac770e11c71c609064896850ba24d177596be1a27005e13dfe7951",
+        "position_seconds": 94,
+        "source_url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E6%95%B0%E5%AD%A6AI%E5%90%8C%E6%AD%A5%E7%B2%BE%E5%87%86%E5%AD%A6.mp4",
+        "actual_pixels": [
+          1280,
+          720
+        ],
+        "observed_on": "2026-10-27",
+        "method": "browser_seek_paused_element_screenshot",
+        "product_hands_on": false,
+        "audio_observed": false
+      },
+      {
+        "path": "artifacts/iflytek-video-controls-deepening/video-01-110s.png",
+        "sha256": "2b0c0a9ced82ef13ae179d8c04e716cd71f83467fb074b2addee60a6b776c808",
+        "position_seconds": 110,
+        "source_url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E6%95%B0%E5%AD%A6AI%E5%90%8C%E6%AD%A5%E7%B2%BE%E5%87%86%E5%AD%A6.mp4",
+        "actual_pixels": [
+          1280,
+          720
+        ],
+        "observed_on": "2026-10-27",
+        "method": "browser_seek_paused_element_screenshot",
+        "product_hands_on": false,
+        "audio_observed": false
+      },
+      {
+        "path": "artifacts/iflytek-video-controls-deepening/video-01-114s.png",
+        "sha256": "7792ba2709cada8574417ac274113a058b936d565782fbc9b8a819c143c41020",
+        "position_seconds": 114,
+        "source_url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E6%95%B0%E5%AD%A6AI%E5%90%8C%E6%AD%A5%E7%B2%BE%E5%87%86%E5%AD%A6.mp4",
+        "actual_pixels": [
+          1280,
+          720
+        ],
+        "observed_on": "2026-10-27",
+        "method": "browser_seek_paused_element_screenshot",
+        "product_hands_on": false,
+        "audio_observed": false
+      }
+    ]
+  },
+  {
+    "evidence_id": "E-IFVC-02",
+    "title": "小数AI组卷阶段测",
+    "url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E6%95%B0AI%E7%BB%84%E5%8D%B7%E9%98%B6%E6%AE%B5%E6%B5%8B.mp4",
+    "help_player_url": "https://xxj.xunfei.cn/h5-help/#/play?bgc=https%3A%2F%2Fk12-swift.xunfeixxj.com%2Fxxjserver%2Fwx%2Fh5%2Fhelp%2Fvideo%2F%E5%B0%8F%E6%95%B0AI%E7%BB%84%E5%8D%B7%E9%98%B6%E6%AE%B5%E6%B5%8B.jpg&video=https%3A%2F%2Fk12-swift.xunfeixxj.com%2Fxxjserver%2Fwx%2Fh5%2Fhelp%2Fvideo%2F%E5%B0%8F%E6%95%B0AI%E7%BB%84%E5%8D%B7%E9%98%B6%E6%AE%B5%E6%B5%8B.mp4&videoName=%E5%B0%8F%E6%95%B0AI%E7%BB%84%E5%8D%B7%E9%98%B6%E6%AE%B5%E6%B5%8B&productName=%E5%AD%A6%E4%B9%A0%E6%9C%BAT30Pro&moduleType=introduce&productId=2e5298d3%2FAISTUDY_SU30_T30PRO",
+    "duration_seconds": 123.28,
+    "native_dimensions": [
+      1920,
+      1080
+    ],
+    "selected_frames": [
+      {
+        "path": "artifacts/iflytek-video-controls-deepening/video-02-035s.png",
+        "sha256": "c3d0fa413cbcb5b01866f18bcee3327a164e70207fb5487ece3c24f4cba21fc3",
+        "position_seconds": 35,
+        "source_url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E6%95%B0AI%E7%BB%84%E5%8D%B7%E9%98%B6%E6%AE%B5%E6%B5%8B.mp4",
+        "actual_pixels": [
+          1280,
+          720
+        ],
+        "observed_on": "2026-10-27",
+        "method": "browser_seek_paused_element_screenshot",
+        "product_hands_on": false,
+        "audio_observed": false
+      },
+      {
+        "path": "artifacts/iflytek-video-controls-deepening/video-02-073s.png",
+        "sha256": "a4530a55eb41e57cccf65ba31a7b4eb323f62ce1dcc511acfb3109abee3573f2",
+        "position_seconds": 73,
+        "source_url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E6%95%B0AI%E7%BB%84%E5%8D%B7%E9%98%B6%E6%AE%B5%E6%B5%8B.mp4",
+        "actual_pixels": [
+          1280,
+          720
+        ],
+        "observed_on": "2026-10-27",
+        "method": "browser_seek_paused_element_screenshot",
+        "product_hands_on": false,
+        "audio_observed": false
+      },
+      {
+        "path": "artifacts/iflytek-video-controls-deepening/video-02-085s.png",
+        "sha256": "168de2fb51e6b1cb0948ba67660dc42f29e6e97bdb67e047fceadd162b763128",
+        "position_seconds": 85,
+        "source_url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E6%95%B0AI%E7%BB%84%E5%8D%B7%E9%98%B6%E6%AE%B5%E6%B5%8B.mp4",
+        "actual_pixels": [
+          1280,
+          720
+        ],
+        "observed_on": "2026-10-27",
+        "method": "browser_seek_paused_element_screenshot",
+        "product_hands_on": false,
+        "audio_observed": false
+      },
+      {
+        "path": "artifacts/iflytek-video-controls-deepening/video-02-080s.png",
+        "sha256": "4d96bb4f150cc3e9de5cc1c445ea1ec77c08b5843ec5850dc7001ddb04db10d2",
+        "position_seconds": 80,
+        "source_url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E6%95%B0AI%E7%BB%84%E5%8D%B7%E9%98%B6%E6%AE%B5%E6%B5%8B.mp4",
+        "actual_pixels": [
+          1280,
+          720
+        ],
+        "observed_on": "2026-10-27",
+        "method": "browser_seek_paused_element_screenshot",
+        "product_hands_on": false,
+        "audio_observed": false
+      },
+      {
+        "path": "artifacts/iflytek-video-controls-deepening/video-02-090s.png",
+        "sha256": "05e1319e1572db4c0216b004357e61cdc936298164ffe312277e26f1ae2c5767",
+        "position_seconds": 90,
+        "source_url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E6%95%B0AI%E7%BB%84%E5%8D%B7%E9%98%B6%E6%AE%B5%E6%B5%8B.mp4",
+        "actual_pixels": [
+          1280,
+          720
+        ],
+        "observed_on": "2026-10-27",
+        "method": "browser_seek_paused_element_screenshot",
+        "product_hands_on": false,
+        "audio_observed": false
+      },
+      {
+        "path": "artifacts/iflytek-video-controls-deepening/video-02-100s.png",
+        "sha256": "bcdf951c43f5e9258fdaba4e8b3809e301792a69cb953094cac8b15f154d65c2",
+        "position_seconds": 100,
+        "source_url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E6%95%B0AI%E7%BB%84%E5%8D%B7%E9%98%B6%E6%AE%B5%E6%B5%8B.mp4",
+        "actual_pixels": [
+          1280,
+          720
+        ],
+        "observed_on": "2026-10-27",
+        "method": "browser_seek_paused_element_screenshot",
+        "product_hands_on": false,
+        "audio_observed": false
+      }
+    ]
+  },
+  {
+    "evidence_id": "E-IFVC-03",
+    "title": "小学英语分级阅读",
+    "url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E8%8B%B1%E8%AF%AD%E5%88%86%E7%BA%A7%E9%98%85%E8%AF%BB.mp4",
+    "help_player_url": "https://xxj.xunfei.cn/h5-help/#/play?bgc=https%3A%2F%2Fk12-swift.xunfeixxj.com%2Fxxjserver%2Fwx%2Fh5%2Fhelp%2Fvideo%2F%E5%B0%8F%E5%AD%A6%E8%8B%B1%E8%AF%AD%E5%88%86%E7%BA%A7%E9%98%85%E8%AF%BB.jpg&video=https%3A%2F%2Fk12-swift.xunfeixxj.com%2Fxxjserver%2Fwx%2Fh5%2Fhelp%2Fvideo%2F%E5%B0%8F%E5%AD%A6%E8%8B%B1%E8%AF%AD%E5%88%86%E7%BA%A7%E9%98%85%E8%AF%BB.mp4&videoName=%E5%B0%8F%E5%AD%A6%E8%8B%B1%E8%AF%AD%E5%88%86%E7%BA%A7%E9%98%85%E8%AF%BB&productName=%E5%AD%A6%E4%B9%A0%E6%9C%BAT30Pro&moduleType=introduce&productId=2e5298d3%2FAISTUDY_SU30_T30PRO",
+    "duration_seconds": 172.833333,
+    "native_dimensions": [
+      1920,
+      1080
+    ],
+    "selected_frames": [
+      {
+        "path": "artifacts/iflytek-video-controls-deepening/video-03-030s.png",
+        "sha256": "84cd55e216c04a0dfa559f83ceca902fc52354e64066a7ebd49bc3a90fdee1c5",
+        "position_seconds": 30,
+        "source_url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E8%8B%B1%E8%AF%AD%E5%88%86%E7%BA%A7%E9%98%85%E8%AF%BB.mp4",
+        "actual_pixels": [
+          1280,
+          720
+        ],
+        "observed_on": "2026-10-27",
+        "method": "browser_seek_paused_element_screenshot",
+        "product_hands_on": false,
+        "audio_observed": false
+      },
+      {
+        "path": "artifacts/iflytek-video-controls-deepening/video-03-035s.png",
+        "sha256": "b5a64aafe4cc726c21d9bde0e21e742086ccf203d9684153291466fe28a33cbe",
+        "position_seconds": 35,
+        "source_url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E8%8B%B1%E8%AF%AD%E5%88%86%E7%BA%A7%E9%98%85%E8%AF%BB.mp4",
+        "actual_pixels": [
+          1280,
+          720
+        ],
+        "observed_on": "2026-10-27",
+        "method": "browser_seek_paused_element_screenshot",
+        "product_hands_on": false,
+        "audio_observed": false
+      },
+      {
+        "path": "artifacts/iflytek-video-controls-deepening/video-03-070s.png",
+        "sha256": "19d6037d9e7c60387e625549fe9464a53401be325a45e833bedeeab67bcb5e25",
+        "position_seconds": 70,
+        "source_url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E8%8B%B1%E8%AF%AD%E5%88%86%E7%BA%A7%E9%98%85%E8%AF%BB.mp4",
+        "actual_pixels": [
+          1280,
+          720
+        ],
+        "observed_on": "2026-10-27",
+        "method": "browser_seek_paused_element_screenshot",
+        "product_hands_on": false,
+        "audio_observed": false
+      },
+      {
+        "path": "artifacts/iflytek-video-controls-deepening/video-03-080s.png",
+        "sha256": "db10997205d5945a19115a6b7c9599bad90502cf14174190187df6692b3c82ab",
+        "position_seconds": 80,
+        "source_url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E8%8B%B1%E8%AF%AD%E5%88%86%E7%BA%A7%E9%98%85%E8%AF%BB.mp4",
+        "actual_pixels": [
+          1280,
+          720
+        ],
+        "observed_on": "2026-10-27",
+        "method": "browser_seek_paused_element_screenshot",
+        "product_hands_on": false,
+        "audio_observed": false
+      },
+      {
+        "path": "artifacts/iflytek-video-controls-deepening/video-03-105s.png",
+        "sha256": "a1b01642ff04d0e58451630a373bf21106c6a3185f0d6877243bd5d46aa21e3d",
+        "position_seconds": 105,
+        "source_url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E8%8B%B1%E8%AF%AD%E5%88%86%E7%BA%A7%E9%98%85%E8%AF%BB.mp4",
+        "actual_pixels": [
+          1280,
+          720
+        ],
+        "observed_on": "2026-10-27",
+        "method": "browser_seek_paused_element_screenshot",
+        "product_hands_on": false,
+        "audio_observed": false
+      },
+      {
+        "path": "artifacts/iflytek-video-controls-deepening/video-03-127s.png",
+        "sha256": "35520b2e2afc573869e4113d903f2d0af313d1a307a753da06dc9170164db059",
+        "position_seconds": 127,
+        "source_url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E8%8B%B1%E8%AF%AD%E5%88%86%E7%BA%A7%E9%98%85%E8%AF%BB.mp4",
+        "actual_pixels": [
+          1280,
+          720
+        ],
+        "observed_on": "2026-10-27",
+        "method": "browser_seek_paused_element_screenshot",
+        "product_hands_on": false,
+        "audio_observed": false
+      },
+      {
+        "path": "artifacts/iflytek-video-controls-deepening/video-03-140s.png",
+        "sha256": "b722266d37c2f645977d50aab5f5491e8263dbbb029ca512402ac356cfdbeb2b",
+        "position_seconds": 140,
+        "source_url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E8%8B%B1%E8%AF%AD%E5%88%86%E7%BA%A7%E9%98%85%E8%AF%BB.mp4",
+        "actual_pixels": [
+          1280,
+          720
+        ],
+        "observed_on": "2026-10-27",
+        "method": "browser_seek_paused_element_screenshot",
+        "product_hands_on": false,
+        "audio_observed": false
+      },
+      {
+        "path": "artifacts/iflytek-video-controls-deepening/video-03-150s.png",
+        "sha256": "083133416acb1adc796661b17f1378e0b75e5874839b57c4254f6780aa7c8fe0",
+        "position_seconds": 150,
+        "source_url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E8%8B%B1%E8%AF%AD%E5%88%86%E7%BA%A7%E9%98%85%E8%AF%BB.mp4",
+        "actual_pixels": [
+          1280,
+          720
+        ],
+        "observed_on": "2026-10-27",
+        "method": "browser_seek_paused_element_screenshot",
+        "product_hands_on": false,
+        "audio_observed": false
+      },
+      {
+        "path": "artifacts/iflytek-video-controls-deepening/video-03-155s.png",
+        "sha256": "ff5ea7d8ba38a4b97894ad2ff56814773f3fe350656659609d68c285411afc7d",
+        "position_seconds": 155,
+        "source_url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E8%8B%B1%E8%AF%AD%E5%88%86%E7%BA%A7%E9%98%85%E8%AF%BB.mp4",
+        "actual_pixels": [
+          1280,
+          720
+        ],
+        "observed_on": "2026-10-27",
+        "method": "browser_seek_paused_element_screenshot",
+        "product_hands_on": false,
+        "audio_observed": false
+      }
+    ]
+  },
+  {
+    "evidence_id": "E-IFVC-04",
+    "title": "听一听",
+    "url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%90%AC%E4%B8%80%E5%90%AC.mp4",
+    "help_player_url": "https://xxj.xunfei.cn/h5-help/#/play?bgc=https%3A%2F%2Fk12-swift.xunfeixxj.com%2Fxxjserver%2Fwx%2Fh5%2Fhelp%2Fvideo%2F%E5%90%AC%E4%B8%80%E5%90%AC.jpg&video=https%3A%2F%2Fk12-swift.xunfeixxj.com%2Fxxjserver%2Fwx%2Fh5%2Fhelp%2Fvideo%2F%E5%90%AC%E4%B8%80%E5%90%AC.mp4&videoName=%E5%90%AC%E4%B8%80%E5%90%AC&productName=%E5%AD%A6%E4%B9%A0%E6%9C%BAT30Pro&moduleType=introduce&productId=2e5298d3%2FAISTUDY_SU30_T30PRO",
+    "duration_seconds": 89.233333,
+    "native_dimensions": [
+      1920,
+      1080
+    ],
+    "selected_frames": [
+      {
+        "path": "artifacts/iflytek-video-controls-deepening/video-04-040s.png",
+        "sha256": "62feb26ad238def6de5abed5675902cd02f0178c5f342282f6ae0fc4043f9ac0",
+        "position_seconds": 40,
+        "source_url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%90%AC%E4%B8%80%E5%90%AC.mp4",
+        "actual_pixels": [
+          1280,
+          720
+        ],
+        "observed_on": "2026-10-27",
+        "method": "browser_seek_paused_element_screenshot",
+        "product_hands_on": false,
+        "audio_observed": false
+      },
+      {
+        "path": "artifacts/iflytek-video-controls-deepening/video-04-060s.png",
+        "sha256": "4fc9ebdfd1b920a15ae047be6c66e7f6b582278a9f57c57bf3f795df58b70d1e",
+        "position_seconds": 60,
+        "source_url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%90%AC%E4%B8%80%E5%90%AC.mp4",
+        "actual_pixels": [
+          1280,
+          720
+        ],
+        "observed_on": "2026-10-27",
+        "method": "browser_seek_paused_element_screenshot",
+        "product_hands_on": false,
+        "audio_observed": false
+      },
+      {
+        "path": "artifacts/iflytek-video-controls-deepening/video-04-074s.png",
+        "sha256": "157a2ca111c29053b0adde01ef5fc92c53ac1c9ceac612562ad4e82d7bd9c64a",
+        "position_seconds": 74,
+        "source_url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%90%AC%E4%B8%80%E5%90%AC.mp4",
+        "actual_pixels": [
+          1280,
+          720
+        ],
+        "observed_on": "2026-10-27",
+        "method": "browser_seek_paused_element_screenshot",
+        "product_hands_on": false,
+        "audio_observed": false
+      },
+      {
+        "path": "artifacts/iflytek-video-controls-deepening/video-04-080s.png",
+        "sha256": "5703cafda966febd999e9bba63c68b07e4ef69f78c61ce753f2cc1e9f2274cb5",
+        "position_seconds": 80,
+        "source_url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%90%AC%E4%B8%80%E5%90%AC.mp4",
+        "actual_pixels": [
+          1280,
+          720
+        ],
+        "observed_on": "2026-10-27",
+        "method": "browser_seek_paused_element_screenshot",
+        "product_hands_on": false,
+        "audio_observed": false
+      }
+    ]
+  }
+]

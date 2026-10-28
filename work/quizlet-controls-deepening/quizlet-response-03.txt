@@ -1,0 +1,474 @@
+Accessing and sharing – Quizlet Help Center (https://help.quizlet.com/hc/en-us/sections/360005877232-Accessing-and-sharing)
+citeturn765view0 [wordlim: 200] Crawled: today; Content type: text/html; Source: open({"ref_id":"https://help.quizlet.com/hc/en-us/sections/360005877232-Accessing-and-sharing","lineno":null}); Total lines: 51
+L0: 【0†iframe†www.googletagmanager.com】
+L1: 
+L2: 【1†Help center†quizlet.zendesk.com】
+L3: 
+L4: Topics
+L5: 
+L6: Popular Articles
+L7: 
+L8: 【2†Resending a confirmation message】 【3†Changing your username】 【4†Changing your password】 【5†Finding flashcard sets】 【6†Finding your teacher's class】 【7†Browser and device compatibility】
+L9: 
+L10: [Input][Input: Search]
+L11: 
+L12: 【8†Image】   【8†Username】
+L13: # Accessing and sharing
+L14: 
+L15: * * *
+L16: 
+L17:   * 【5†Finding flashcard sets】
+L18:   * 【6†Finding your teacher's class】
+L19:   * 【9†Navigating your home feed on mobile devices】
+L20:   * 【10†Trouble accessing a set】
+L21:   * 【11†Sharing sets and folders】
+L22:   * 【12†Changing a set's editing permissions】
+L23:   * 【13†Changing a set's visibility】
+L24:   * 【14†Protecting a set with a password】
+L25:   * 【15†Exporting your sets】
+L26:   * 【16†Embedding sets】
+L27:   * 【17†Studying offline with Quizlet mobile apps】
+L28:   * 【18†Dropping a class】
+L29: ##### About us
+L30: 
+L31: 【19†About Quizlet†quizlet.com】 【20†How Quizlet works†quizlet.com】 【21†Careers†quizlet.com】 【22†Advertise with us†quizlet.com】 【23†Get the app†quizlet.com】
+L32: 
+L33: ##### For students
+L34: 
+L35: 【24†Flashcards†quizlet.com】 【25†Test†quizlet.com】 【26†Learn†quizlet.com】 【27†Solutions†quizlet.com】 【28†Modern Learning Lab†quizlet.com】 【29†Quizlet Plus†quizlet.com】 【30†Study Guides†quizlet.com】 【31†Pomodoro timer†quizlet.com】
+L36: ##### For Teachers
+L37: 
+L38: 【32†Live†quizlet.com】 【33†Blog†quizlet.com】 【34†Be the Change†quizlet.com】 【35†Quizlet Plus for teachers†quizlet.com】
+L39: ##### Resources
+L40: 
+L41: 【36†Help center†quizlet.com】 【37†Sign up†quizlet.com】 【38†Honor code†quizlet.com】 【39†Community guidelines†quizlet.com】 【40†Accessibility statement†quizlet.com】 【41†Privacy†quizlet.com】 【42†Your Privacy/Cookies Choices†quizlet.com】 【43†Terms†quizlet.com】 【44†Ad and Cookie Policy†quizlet.com】 【45†Interest-Based Advertising†quizlet.com】 【46†Quizlet for Schools†quizlet.com】 【47†Parents†quizlet.com】
+L42: 
+L43: ##### Language
+L44: 
+L45: English (United States)
+L46: 
+L47: 【48†Image】 【49†Get the app†get.quizlet.com】
+L48: ##### Get the app
+L49: 
+L50: © Quizlet Inc.
+--------------------------------------------------------------------------------
+Removing sets from your Recent activity feed – Quizlet Help Center (https://help.quizlet.com/hc/en-us/articles/360029004272-Removing-sets-from-your-Recent-activity-feed)
+citeturn765view1 [wordlim: 200] Crawled: today; Content type: text/html; Source: open({"ref_id":"https://help.quizlet.com/hc/en-us/articles/360029004272-Removing-sets-from-your-Recent-activity-feed","lineno":null}); Total lines: 73
+L0: 【0†iframe†www.googletagmanager.com】
+L1: 
+L2: 【1†Help center†quizlet.zendesk.com】
+L3: 
+L4: Topics
+L5: 
+L6: Popular Articles
+L7: 
+L8: 【2†Resending a confirmation message】 【3†Changing your username】 【4†Changing your password】 【5†Finding flashcard sets】 【6†Finding your teacher's class】 【7†Browser and device compatibility】
+L9: 
+L10: [Input][Input: Search]
+L11: 
+L12: 【8†Image】   【8†Username】
+L13: # Removing sets from your Recent activity feed
+L14: 
+L15: 【8†IOS】 【8†Web】 【8†Android】
+L16: 
+L17: Your Recent activity feed shows sets that have been added to your classes or that you have studied recently.
+L18: 
+L19: To remove a set from your Recent activity feed
+L20:   1. 【9†Log in†quizlet.com】 to your account.
+L21:   2. Select Your library.
+L22:   3. Select Flashcard sets.
+L23:   4. Select Studied from the dropdown menu.
+L24:   5. Select 【10†Image: More_menu_-_iOS_-_Resized.png】 (More menu) by the title of the set you want to hide.
+L25:   6. Select Remove.
+L26:   7. Select Hide this set.
+L27: 
+L28: You can’t remove sets from your feed on the iOS app. Instead, you can log in to your account from your mobile browser app and then follow 【11†these instructions】 for removing sets on the website.
+L29: You can’t remove sets from your feed on the Android app. Instead, you can log in to your account from your mobile browser app and then follow 【11†these instructions】 for removing sets on the website.
+L30: ### Related Articles
+L31: 
+L32:   * 【12†Create flashcard sets directly in Claude】
+L33:   * 【13†Studying with Study Groups】
+L34:   * 【14†Creating study sets with Smart Assist】
+L35:   * 【15†Becoming a top creator on Quizlet】
+L36:   * 【16†Studying with Study Guides】
+L37:   * 【17†What are flashcard sets?】
+L38:   * 【18†Creating flashcard sets】
+L39:   * 【19†Adding images to sets from the free gallery】
+L40:   * 【20†Adding your own images to sets】
+L41:   * 【21†Recording custom audio】
+L42:   * 【22†See more】
+L43: ### Can't find what you're looking for?
+L44: 
+L45: 【23†Ask a question】
+L46: 
+L47: Was this article helpful?
+L48: 
+L49: [Button: Yes] [Button: No]
+L50: 
+L51: ##### About us
+L52: 
+L53: 【24†About Quizlet†quizlet.com】 【25†How Quizlet works†quizlet.com】 【26†Careers†quizlet.com】 【27†Advertise with us†quizlet.com】 【28†Get the app†quizlet.com】
+L54: ##### For students
+L55: 
+L56: 【29†Flashcards†quizlet.com】 【30†Test†quizlet.com】 【31†Learn†quizlet.com】 【32†Solutions†quizlet.com】 【33†Modern Learning Lab†quizlet.com】 【34†Quizlet Plus†quizlet.com】 【35†Study Guides†quizlet.com】 【36†Pomodoro timer†quizlet.com】
+L57: 
+L58: ##### For Teachers
+L59: 
+L60: 【37†Live†quizlet.com】 【38†Blog†quizlet.com】 【39†Be the Change†quizlet.com】 【40†Quizlet Plus for teachers†quizlet.com】
+L61: ##### Resources
+L62: 
+L63: 【41†Help center†quizlet.com】 【42†Sign up†quizlet.com】 【43†Honor code†quizlet.com】 【44†Community guidelines†quizlet.com】 【45†Accessibility statement†quizlet.com】 【46†Privacy†quizlet.com】 【47†Your Privacy/Cookies Choices†quizlet.com】 【48†Terms†quizlet.com】 【49†Ad and Cookie Policy†quizlet.com】 【50†Interest-Based Advertising†quizlet.com】 【51†Quizlet for Schools†quizlet.com】 【52†Parents†quizlet.com】
+L64: 
+L65: ##### Language
+L66: 
+L67: English (United States)
+L68: 
+L69: 【53†Image】 【54†Get the app†get.quizlet.com】
+L70: ##### Get the app
+L71: 
+L72: © Quizlet Inc.
+--------------------------------------------------------------------------------
+Studying with Write mode – Quizlet Help Center (https://help.quizlet.com/hc/en-us/articles/360030990531-Studying-with-Write-mode)
+citeturn765view2 [wordlim: 200] Crawled: today; Content type: text/html; Source: click({"ref_id":"turn751view2","id":26}); Total lines: 124
+L0: 【0†iframe†www.googletagmanager.com】
+L1: 
+L2: 【1†Help center†quizlet.zendesk.com】
+L3: 
+L4: Topics
+L5: 
+L6: Popular Articles
+L7: 
+L8: 【2†Resending a confirmation message】 【3†Changing your username】 【4†Changing your password】 【5†Finding flashcard sets】 【6†Finding your teacher's class】 【7†Browser and device compatibility】
+L9: 
+L10: [Input][Input: Search]
+L11: 
+L12: 【8†Image】   【8†Username】
+L13: # Studying with Write mode
+L14: 
+L15: 【8†IOS】 【8†Web】 【8†Android】
+L16: 
+L17: Write mode measures how well you know your study material and keeps track of what you miss so you can focus on improving later in your study session.
+L18: 
+L19: To study with Write mode
+L20: 
+L21:   1. 【9†Log in†quizlet.com】 to your account.
+L22:   2. Open a set.
+L23:   3. Select Learn.
+L24:   4. Select Options.
+L25:   5. Select Start next to Write mode.
+L26:   6. Enter the correct response.
+L27:   7. Select Answer.
+L28:   8. Answer each question once to finish the first round.
+L29: Once you finish the first round, Write mode starts a second round that focuses on questions you missed the first time. To finish a full round of Write mode and see your results, you'll need to answer each question correctly twice.
+L30: 
+L31: Settings and options
+L32:   * Open the Options menu to disable audio, study starred terms, or start over.
+L33:   * Choose whether you'd like to answer with terms, definitions, or a specific language (if applicable) under Answer with.
+L34:   * 【10†Quizlet Plus subscribers†quizlet.com】 can turn on 【11†smart grading】. Smart grading uses natural language processing to understand the meaning of your answers and gives you credit for understanding the concept, not the exact way it's worded.
+L35: 
+L36: Tips
+L37:   * Not sure of an answer? Select Don't know to reveal the correct response.
+L38:   * Make a spelling error? Select Override: I was correct and the answer will be marked as correct.
+L39: 
+L40: Write mode measures how well you know your study material and keeps track of what you miss so you can focus on improving later in your study session.
+L41: 
+L42: To study with Write mode
+L43:   1. Open a set.
+L44:   2. Select Learn.
+L45:   3. Select Options.
+L46:   4. Select Write.
+L47:   5. Enter the correct response.
+L48:   6. Select the Arrow on your keyboard.
+L49:   7. Answer each question in your set once to finish the first round.
+L50: 
+L51: Once you finish the first round, Write mode will start a second round that focuses on questions you missed the first time. To finish a full round of Write mode and see your results, you'll need to answer each question correctly twice.
+L52: 
+L53: Settings and options
+L54:   * Choose whether you'd like to answer with terms, definitions, or a specific language (if applicable) by selecting the Options menu.
+L55:   * 【10†Quizlet Plus subscribers†quizlet.com】 can turn on 【12†smart grading】. Smart grading uses natural language processing to understand the meaning of your answers and gives you credit for understanding the concept, not the exact way it's worded.
+L56: 
+L57: Tips
+L58:   * Make a spelling error? Tap I was correct and the answer will be marked as correct.
+L59:   * Not sure of an answer? Tap Don't know to reveal the correct response. If you get an answer wrong, you'll need to type it again to progress.
+L60: 
+L61: Write mode measures how well you know your study material and keeps track of what you miss so you can focus on improving later in your study session.
+L62: 
+L63: To study with Write mode
+L64:   1. Open a set.
+L65:   2. Select Learn.
+L66:   3. Select Options.
+L67:   4. Select Write.
+L68:   5. Enter the correct response.
+L69:   6. Select the Arrow on your keyboard.
+L70:   7. Answer each question in your set once to finish the first round.
+L71: 
+L72: Once you finish the first round, Write mode will start a second round that focuses on questions you missed the first time. To finish a full round of Write mode and see your results, you'll need to answer each question correctly twice.
+L73: 
+L74: Settings and options
+L75:   * Choose whether you'd like to answer with terms, definitions, or a specific language (if applicable) by selecting the Options menu.
+L76:   * 【10†Quizlet Plus subscribers†quizlet.com】 can turn on 【12†smart grading】. Smart grading uses natural language processing to understand the meaning of your answers and gives you credit for understanding the concept, not the exact way it's worded.
+L77: 
+L78: Tips
+L79:   * Make a spelling error? Tap I was correct and the answer will be marked as correct.
+L80:   * Not sure of an answer? Tap Don't know to reveal the correct response. If you get an answer wrong, you'll need to type it again to progress.
+L81: ### Related Articles
+L82: 
+L83:   * 【13†Studying with Podcasts】
+L84:   * 【14†Studying with Spaced Repetition】
+L85:   * 【15†Using Study with friends】
+L86:   * 【16†Playing Charms】
+L87:   * 【17†Studying with Audio Notes】
+L88:   * 【18†Create flashcard sets directly in ChatGPT】
+L89:   * 【19†Studying with Ask Quizlet】
+L90:   * 【20†Using Quizlet with Superhuman】
+L91:   * 【21†Studying with Answer Streaks】
+L92:   * 【22†Playing a game of Blocks】
+L93:   * 【23†See more】
+L94: ### Can't find what you're looking for?
+L95: 
+L96: 【24†Ask a question】
+L97: 
+L98: Was this article helpful?
+L99: 
+L100: [Button: Yes] [Button: No]
+L101: 
+L102: ##### About us
+L103: 
+L104: 【25†About Quizlet†quizlet.com】 【26†How Quizlet works†quizlet.com】 【27†Careers†quizlet.com】 【28†Advertise with us†quizlet.com】 【29†Get the app†quizlet.com】
+L105: ##### For students
+L106: 
+L107: 【30†Flashcards†quizlet.com】 【31†Test†quizlet.com】 【32†Learn†quizlet.com】 【33†Solutions†quizlet.com】 【34†Modern Learning Lab†quizlet.com】 【35†Quizlet Plus†quizlet.com】 【36†Study Guides†quizlet.com】 【37†Pomodoro timer†quizlet.com】
+L108: 
+L109: ##### For Teachers
+L110: 
+L111: 【38†Live†quizlet.com】 【39†Blog†quizlet.com】 【40†Be the Change†quizlet.com】 【41†Quizlet Plus for teachers†quizlet.com】
+L112: ##### Resources
+L113: 
+L114: 【42†Help center†quizlet.com】 【43†Sign up†quizlet.com】 【44†Honor code†quizlet.com】 【45†Community guidelines†quizlet.com】 【46†Accessibility statement†quizlet.com】 【47†Privacy†quizlet.com】 【48†Your Privacy/Cookies Choices†quizlet.com】 【49†Terms†quizlet.com】 【50†Ad and Cookie Policy†quizlet.com】 【51†Interest-Based Advertising†quizlet.com】 【52†Quizlet for Schools†quizlet.com】 【53†Parents†quizlet.com】
+L115: 
+L116: ##### Language
+L117: 
+L118: English (United States)
+L119: 
+L120: 【54†Image】 【55†Get the app†get.quizlet.com】
+L121: ##### Get the app
+L122: 
+L123: © Quizlet Inc.
+--------------------------------------------------------------------------------
+Studying with Spell mode – Quizlet Help Center (https://help.quizlet.com/hc/en-us/articles/360030645752-Studying-with-Spell-mode)
+citeturn765view3 [wordlim: 200] Crawled: today; Content type: text/html; Source: click({"ref_id":"turn751view2","id":24}); Total lines: 86
+L0: 【0†iframe†www.googletagmanager.com】
+L1: 
+L2: 【1†Help center†quizlet.zendesk.com】
+L3: 
+L4: Topics
+L5: 
+L6: Popular Articles
+L7: 
+L8: 【2†Resending a confirmation message】 【3†Changing your username】 【4†Changing your password】 【5†Finding flashcard sets】 【6†Finding your teacher's class】 【7†Browser and device compatibility】
+L9: 
+L10: [Input][Input: Search]
+L11: 
+L12: 【8†Image】   【8†Username】
+L13: # Studying with Spell mode
+L14: 
+L15: 【8†IOS】 【8†Web】 【8†Android】
+L16: 
+L17: Spell mode is now a part of Learn, which is available to 【9†Quizlet Plus†quizlet.com】 and 【10†Quizlet Plus for teachers†quizlet.com】 subscribers. If you are not a Quizlet subscriber, you can study with Learn for free for a limited number of rounds per study set.
+L18: 
+L19: Spell mode helps you practice spelling terms by prompting you to type what you hear.
+L20: 
+L21: To study with Spell mode
+L22:   1. 【11†Log in†quizlet.com】 to your account.
+L23:   2. Open a set.
+L24:   3. Select Learn.
+L25:   4. Select Options.
+L26:   5. Select Start next to Spell mode.
+L27:   6. Listen for the term or definition.
+L28:   7. Enter the correct spelling.
+L29: 
+L30: To finish a round of Spell mode and see your results, you'll need to spell each word correctly twice.
+L31: 
+L32: Settings and options
+L33:   * If you misspelled a word, the letters you missed will be highlighted and the word will be spelled out for you. Then, you can try it again.
+L34:   * You can slow down the audio by selecting Options, then Advanced text to speech, and choosing Slow.
+L35:   * To hear a term again, click the Speaker.
+L36: 
+L37: Tips
+L38: 
+L39: This mode works well for studying a new language in one of the 18 available languages, or for practicing your spelling and pronunciation in your own language.
+L40: Spell mode is currently available on the Quizlet website only. To study with Spell mode on a mobile device, you'll need to log in to your account on your device's browser.
+L41: 
+L42: Spell mode is currently available on the Quizlet website only. To study with Spell mode on a mobile device, you'll need to log in to your account on your device's browser.
+L43: ### Related Articles
+L44: 
+L45:   * 【12†Studying with Podcasts】
+L46:   * 【13†Studying with Spaced Repetition】
+L47:   * 【14†Using Study with friends】
+L48:   * 【15†Playing Charms】
+L49:   * 【16†Studying with Audio Notes】
+L50:   * 【17†Create flashcard sets directly in ChatGPT】
+L51:   * 【18†Studying with Ask Quizlet】
+L52:   * 【19†Using Quizlet with Superhuman】
+L53:   * 【20†Studying with Answer Streaks】
+L54:   * 【21†Playing a game of Blocks】
+L55:   * 【22†See more】
+L56: ### Can't find what you're looking for?
+L57: 
+L58: 【23†Ask a question】
+L59: 
+L60: Was this article helpful?
+L61: 
+L62: [Button: Yes] [Button: No]
+L63: 
+L64: ##### About us
+L65: 
+L66: 【24†About Quizlet†quizlet.com】 【25†How Quizlet works†quizlet.com】 【26†Careers†quizlet.com】 【27†Advertise with us†quizlet.com】 【28†Get the app†quizlet.com】
+L67: ##### For students
+L68: 
+L69: 【29†Flashcards†quizlet.com】 【30†Test†quizlet.com】 【31†Learn†quizlet.com】 【32†Solutions†quizlet.com】 【33†Modern Learning Lab†quizlet.com】 【34†Quizlet Plus†quizlet.com】 【35†Study Guides†quizlet.com】 【36†Pomodoro timer†quizlet.com】
+L70: 
+L71: ##### For Teachers
+L72: 
+L73: 【37†Live†quizlet.com】 【38†Blog†quizlet.com】 【39†Be the Change†quizlet.com】 【40†Quizlet Plus for teachers†quizlet.com】
+L74: ##### Resources
+L75: 
+L76: 【41†Help center†quizlet.com】 【42†Sign up†quizlet.com】 【43†Honor code†quizlet.com】 【44†Community guidelines†quizlet.com】 【45†Accessibility statement†quizlet.com】 【46†Privacy†quizlet.com】 【47†Your Privacy/Cookies Choices†quizlet.com】 【48†Terms†quizlet.com】 【49†Ad and Cookie Policy†quizlet.com】 【50†Interest-Based Advertising†quizlet.com】 【51†Quizlet for Schools†quizlet.com】 【52†Parents†quizlet.com】
+L77: 
+L78: ##### Language
+L79: 
+L80: English (United States)
+L81: 
+L82: 【53†Image】 【54†Get the app†get.quizlet.com】
+L83: ##### Get the app
+L84: 
+L85: © Quizlet Inc.
+--------------------------------------------------------------------------------
+Changing a set's visibility – Quizlet Help Center (https://help.quizlet.com/hc/en-us/articles/360030255191)
+citeturn765view4 [wordlim: 200] Crawled: today; Content type: text/html; Source: click({"ref_id":"turn755view4","id":23}); Redirected to URL: https://help.quizlet.com/hc/en-us/articles/360030255191-Changing-a-set-s-visibility; Total lines: 125
+L0: 【0†iframe†www.googletagmanager.com】
+L1: 
+L2: 【1†Help center†quizlet.zendesk.com】
+L3: 
+L4: Topics
+L5: 
+L6: Popular Articles
+L7: 
+L8: 【2†Resending a confirmation message】 【3†Changing your username】 【4†Changing your password】 【5†Finding flashcard sets】 【6†Finding your teacher's class】 【7†Browser and device compatibility】
+L9: 
+L10: [Input][Input: Search]
+L11: 
+L12: 【8†Image】   【8†Username】
+L13: # Changing a set's visibility
+L14: 
+L15: 【8†IOS】 【8†Web】 【8†Android】
+L16: 
+L17: Quizlet flashcard sets are public by default*, and you can adjust your set's visibility.
+L18: 
+L19: To change a set's visibility
+L20:   1. 【9†Log in†quizlet.com】 to your account.
+L21:   2. Select Your library.
+L22:   3. Select Flashcard sets.
+L23:   4. Select Created from the drop-down menu.
+L24:   5. Open the set you want to change.
+L25:   6. Select 【10†Image: More_menu_-_iOS_-_Resized.png】 (more menu).
+L26:   7. Select 【11†Image: Edit_-_Resized.png】 (edit).
+L27:   8. At the top of the set page, select the visibility label.
+L28:   9. Choose the new visibility setting.
+L29:   10. Select Save.
+L30:   11. Select Done.
+L31: 
+L32: Who can see your sets
+L33:   * Everyone
+L34: Your set is public, meaning anyone can see it. It even shows up in search engine results.
+L35:   * Certain classes
+L36: Your set can only be viewed by people in classes you've created or administered.
+L37:   * People with a password
+L38: Your set can only be seen by people who have the password.
+L39:   * Just me
+L40: Your set is private and is only visible to you.
+L41: *If you're under the required age, you can only create private sets until you reach your region's age of consent. From then on, any new sets will be public by default. You can then update the visibility of any sets that were created before. Find out more about 【12†younger users' account limitations】.
+L42:   1. Select Library.
+L43:   2. Select Created from the drop-down menu.
+L44:   3. Open the set you want to change.
+L45:   4. Select 【13†Image: More_menu_-_iOS_-_Resized.png】 (More menu).
+L46:   5. Select 【14†Image: Edit_-_Resized.png】 Edit set.
+L47:   6. Select the Settings gear.
+L48:   7. Select Visible to.
+L49:   8. Choose who can see your set.
+L50:   9. Select Done.
+L51: 
+L52: Who can see your sets
+L53:   * Everyone
+L54: Your set is public, meaning anyone can see it. It even shows up in search engine results.
+L55:   * Certain classes
+L56: Your set can only be viewed by people in classes you've created or administer.
+L57:   * People with a password
+L58: Your set can only be seen by people who have the password.
+L59:   * Just me
+L60: Your set is private and is only visible to you.
+L61: *If you're under the required age, you can only create private sets until you reach your region's age of consent. From then on, any new sets will be public by default. You can then update the visibility of any sets that were created before. Find out more about 【12†younger users' account limitations】.
+L62:   1. Select Library.
+L63:   2. Select Created from the drop-down menu.
+L64:   3. Open the set you want to change.
+L65:   4. Select 【13†Image: More_menu_-_iOS_-_Resized.png】 (More menu).
+L66:   5. Select 【14†Image: Edit_-_Resized.png】 Edit set.
+L67:   6. Select the Settings gear.
+L68:   7. Select Visible to.
+L69:   8. Choose who can see your set.
+L70:   9. Select Done.
+L71: 
+L72: Who can see your sets
+L73:   * Everyone
+L74: Your set is public, meaning anyone can see it. It even shows up in search engine results.
+L75:   * Certain classes
+L76: Your set can only be viewed by people in classes you've created or administer.
+L77:   * People with a password
+L78: Your set can only be seen by people who have the password.
+L79:   * Just me
+L80: Your set is private and is only visible to you.
+L81: *If you're under the required age, you can only create private sets until you reach your region's age of consent. From then on, any new sets will be public by default. You can then update the visibility of any sets that were created before. Find out more about 【12†younger users' account limitations】.
+L82: ### Related Articles
+L83: 
+L84:   * 【5†Finding flashcard sets】
+L85:   * 【6†Finding your teacher's class】
+L86:   * 【15†Navigating your home feed on mobile devices】
+L87:   * 【16†Trouble accessing a set】
+L88:   * 【17†Sharing sets and folders】
+L89:   * 【18†Changing a set's editing permissions】
+L90:   * 【19†Changing a set's visibility】
+L91:   * 【20†Protecting a set with a password】
+L92:   * 【21†Exporting your sets】
+L93:   * 【22†Embedding sets】
+L94:   * 【23†See more】
+L95: ### Can't find what you're looking for?
+L96: 
+L97: 【24†Ask a question】
+L98: 
+L99: Was this article helpful?
+L100: 
+L101: [Button: Yes] [Button: No]
+L102: 
+L103: ##### About us
+L104: 
+L105: 【25†About Quizlet†quizlet.com】 【26†How Quizlet works†quizlet.com】 【27†Careers†quizlet.com】 【28†Advertise with us†quizlet.com】 【29†Get the app†quizlet.com】
+L106: ##### For students
+L107: 
+L108: 【30†Flashcards†quizlet.com】 【31†Test†quizlet.com】 【32†Learn†quizlet.com】 【33†Solutions†quizlet.com】 【34†Modern Learning Lab†quizlet.com】 【35†Quizlet Plus†quizlet.com】 【36†Study Guides†quizlet.com】 【37†Pomodoro timer†quizlet.com】
+L109: 
+L110: ##### For Teachers
+L111: 
+L112: 【38†Live†quizlet.com】 【39†Blog†quizlet.com】 【40†Be the Change†quizlet.com】 【41†Quizlet Plus for teachers†quizlet.com】
+L113: ##### Resources
+L114: 
+L115: 【42†Help center†quizlet.com】 【43†Sign up†quizlet.com】 【44†Honor code†quizlet.com】 【45†Community guidelines†quizlet.com】 【46†Accessibility statement†quizlet.com】 【47†Privacy†quizlet.com】 【48†Your Privacy/Cookies Choices†quizlet.com】 【49†Terms†quizlet.com】 【50†Ad and Cookie Policy†quizlet.com】 【51†Interest-Based Advertising†quizlet.com】 【52†Quizlet for Schools†quizlet.com】 【53†Parents†quizlet.com】
+L116: 
+L117: ##### Language
+L118: 
+L119: English (United States)
+L120: 
+L121: 【54†Image】 【55†Get the app†get.quizlet.com】
+L122: ##### Get the app
+L123: 
+L124: © Quizlet Inc.
+

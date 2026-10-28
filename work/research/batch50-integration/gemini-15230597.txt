@@ -1,0 +1,267 @@
+Capture your ideas & notes with Gemini Apps - Android phone & tablet - Gemini Apps Help (https://support.google.com/gemini/answer/15230597?co=GENIE.Platform%3DAndroid&hl=en)
+citeturn1076view0 [wordlim: 200] Crawled: today; Content type: text/html; Source: open({"ref_id":"turn1075view0","lineno":18}); Total lines: 265
+L0: 【0†Gemini Apps Help】
+L1: 
+L2: [Input: Describe your issue]
+L3: 
+L4: 【1†Sign in†accounts.google.com】
+L5: 
+L6: Send feedback on...
+L7: 
+L8: [Input]
+L9: 
+L10: This help content & information
+L11: 
+L12: [Input]
+L13: 
+L14: General Help Center experience
+L15: 
+L16: [Button: Close][Button: Next]
+L17: # Capture your ideas & notes with Gemini Apps
+L18: 
+L19: You can ask Gemini Apps to create and show your notes and lists in Google Keep, HONOR Notes, Lenovo Notes, OnePlus Notes, OPPO Notes, Samsung Notes, TECNO Notepad, vivo Notes, and Xiaomi Notes. You can also ask them to add items to existing lists in Google Keep.
+L20: ## What you need
+L21: 
+L22: To connect your notes and lists apps to Gemini Apps, you need to:
+L23: 
+L24:   * Be signed in to the Gemini app. 【2†Learn how to sign in to Gemini Apps】.
+L25: 
+L26:   * Have 【3†Keep Activity†myactivity.google.com】 on. Gemini can’t connect to these apps when this setting is off.
+L27: 
+L28: Important:
+L29:   * The supported notes and lists apps aren't available in Gemini in Google Messages.
+L30:   * Gemini Apps can hallucinate responses or provide outdated information. To check the information, click and review the sources listed after the response.
+L31: ## Connect your notes & lists to Gemini Apps
+L32: 
+L33: Connect Google Keep
+L34: 
+L35: To work with your notes and lists from Google Keep in Gemini Apps, Google Workspace must be connected to Gemini Apps.
+L36:   1. On your phone or tablet, open the Gemini mobile app 【4†Image†lh3.googleusercontent.com】 or go to 【5†gemini.google.com†gemini.google.com】.
+L37:   2. Make sure you’re signed in to the same account you use with Google Workspace.
+L38:   3. Ask the Gemini app to create or find a list from Google Keep.
+L39:      * Tip: To tell Gemini Apps to specifically use Google Keep, add `@Google Keep` to your prompt.
+L40:   4. If Google Workspace isn’t connected, you’ll get the option to connect it.
+L41:   5. Follow the on-screen instructions.
+L42: Connect HONOR Notes
+L43: 
+L44: Important: The Gemini mobile app supports the HONOR Notes app only on Honor Magic V5 devices, and only if the HONOR Notes app is installed on your device. This app is connected by default on the supported HONOR device.
+L45:   1. Open the Gemini mobile app 【4†Image†lh3.googleusercontent.com】.
+L46:   2. Ask the Gemini app to create or find a note in HONOR Notes.
+L47:      * Tip: To tell the Gemini app to specifically use HONOR Notes, add `@HONOR Notes` to your prompt.
+L48:   3. If you disconnected the HONOR Notes app, you’ll get the option to connect it again.
+L49:   4. Follow the on-screen instructions.
+L50: 
+L51: Connect Lenovo Notes
+L52: Important: The Gemini mobile app supports the Lenovo Notes app only on the Lenovo Yoga Tab Plus devices, and only if the Lenovo Notes app is installed on your device. This app is connected by default on the supported Lenovo device. The Lenovo Notes connected app is only available in English, French, German, Italian, Japanese, Portuguese, and Spanish.
+L53:   1. Open the Gemini mobile app 【4†Image†lh3.googleusercontent.com】.
+L54:   2. Ask the Gemini app to create or find a note in Lenovo Notes.
+L55:      * Tip: To tell the Gemini app to specifically use Lenovo Notes, add `@Lenovo Notes` to your prompt.
+L56:   3. If you disconnected the Lenovo Notes app, you’ll get the option to connect it again.
+L57:   4. Follow the on-screen instructions.
+L58: 
+L59: Connect OnePlus Notes
+L60: Important: The Gemini mobile app supports the OnePlus Notes app only on the OnePlus 13S or later devices, and only if the OnePlus Notes app is installed on your device. This app is connected by default on supported OnePlus devices.
+L61:   1. Open the Gemini mobile app 【4†Image†lh3.googleusercontent.com】.
+L62:   2. Ask the Gemini app to create or find a note in OnePlus Notes.
+L63:      * Tip: To tell the Gemini app to specifically use OnePlus Notes, add `@OnePlus` Notes to your prompt.
+L64:   3. If you disconnected the OnePlus Notes app, you’ll get the option to connect it again.
+L65:   4. Follow the on-screen instructions.
+L66: 
+L67: Connect OPPO Notes
+L68: Important: The Gemini mobile app supports the OPPO Notes app only on the OPPO Find N5 or later devices, and only if the OPPO Notes app is installed on your device. This app is connected by default on supported OPPO devices.
+L69:   1. Open the Gemini mobile app 【4†Image†lh3.googleusercontent.com】.
+L70:   2. Ask the Gemini app to create or find a note in OPPO Notes.
+L71:      * Tip: To tell the Gemini app to specifically use OPPO Notes, add `@OPPO Notes` to your prompt.
+L72:   3. If you disconnected the OPPO Notes app, you’ll get the option to connect it again.
+L73:   4. Follow the on-screen instructions.
+L74: 
+L75: Connect Samsung Notes
+L76: Important: The Gemini mobile app supports the Samsung Notes app only on the Galaxy S25 or later and select Samsung devices running OneUI7 and later, and only if the Samsung Notes app is installed on your device. This app is connected by default on supported Samsung devices.
+L77:   1. Open the Gemini mobile app 【4†Image†lh3.googleusercontent.com】.
+L78:   2. Ask the Gemini app to create or find a note in Samsung Notes.
+L79:      * Tip: To tell the Gemini app to specifically use Samsung Notes, add `@Samsung Notes` to your prompt.
+L80:   3. If you disconnected the Samsung Notes app, you’ll get the option to connect it again.
+L81:   4. Follow the on-screen instructions.
+L82: 
+L83: For the best Gemini experience ensure your Google app is updated to the latest version.
+L84: 
+L85: Connect TECNO Notepad
+L86: Important: The Gemini mobile app supports the TECNO Notepad app only on TECNO POVA 7 5G devices, and only if the TECNO Notepad app is installed on your device. This app is connected by default on the supported TECNO device.
+L87:   1. Open the Gemini mobile app 【4†Image†lh3.googleusercontent.com】.
+L88:   2. Ask the Gemini app to create or find a note in TECNO Notepad.
+L89:      * Tip: To tell the Gemini app to specifically use TECNO Notepad, add `@TECNO Notepad` to your prompt.
+L90:   3. If you disconnected the TECNO Notepad app, you’ll get the option to connect it again.
+L91:   4. Follow the on-screen instructions.
+L92: 
+L93: Connect vivo Notes
+L94: Important: The Gemini mobile app supports the vivo Notes app only on the vivo X200 FE, X Fold 5, V60, V60e, or later devices, and only if the vivo Notes app is installed on your device. This app is connected by default on supported vivo devices.
+L95:   1. Open the Gemini mobile app 【4†Image†lh3.googleusercontent.com】.
+L96:   2. Ask the Gemini app to create or find a note in vivo Notes.
+L97:      * Tip: To tell the Gemini app to specifically use vivo Notes, add `@vivo Notes` to your prompt.
+L98:   3. If you disconnected the vivo Notes app, you’ll get the option to connect it again.
+L99:   4. Follow the on-screen instructions.
+L100: 
+L101: Connect Xiaomi Notes
+L102: Important: The Gemini mobile app supports the Xiaomi Notes app only on Xiaomi 15 and Xiaomi 15 Pro, Pad 7 and Pad 7 Pro, or later devices, and only if the Xiaomi Notes app is installed on your device. This app is connected by default on supported Xiaomi devices.
+L103:   1. Open the Gemini mobile app 【4†Image†lh3.googleusercontent.com】.
+L104:   2. Ask the Gemini app to create or find a note in Xiaomi Notes.
+L105:      * Tip: To tell the Gemini app to specifically use Xiaomi Notes, add `@Xiaomi Notes` to your prompt.
+L106:   3. If you disconnected the Xiaomi Notes app, you’ll get the option to connect it again.
+L107:   4. Follow the on-screen instructions.
+L108: 
+L109: Tips:
+L110:   * You can disconnect these apps anytime in your Connected Apps settings. 【6†Learn how to manage Connected Apps in Gemini】.
+L111:   * If you connect multiple notes and lists apps, the Gemini app defaults to the last one it accessed. To manage a different app, you can specify it in your prompt by adding `@` and selecting the app.
+L112:   * You can also manage your calendar events for some apps in your Gemini Live chats. 【7†Learn how to use Connected Apps in Live chats】.
+L113:   * You can also say 'Hey Google' to ask Gemini to use a connected app. If "Hey Google" doesn’t work, 【8†check if “Hey Google” and Voice Match are set up】.
+L114: ### What Gemini Apps can’t do
+L115: 
+L116: Gemini Apps can’t perform certain actions in your notes and lists apps for you, like:
+L117: 
+L118:   * Share notes and lists
+L119:   * View images and drawings
+L120:   * Add an image
+L121: 
+L122: In addition, Gemini Apps can’t currently modify a note or delete notes and lists in Samsung Notes or Xiaomi notes. Gemini Apps also can’t delete a shared note owned by someone else.
+L123: ## Create a note or list
+L124: 
+L125: Create notes & lists by giving specific details
+L126: 
+L127:   * Create a note called [note name]
+L128:   * Create a list called [list name] with [item 1, item 2, …]
+L129: 
+L130: Create notes & lists based on your conversation
+L131: 
+L132: You can ask Gemini Apps to perform a task and create a note or list. For example:
+L133:   * Recommend some activities for [event] and save this to Keep.
+L134:   * Make an outline for [topic].
+L135: 【9†Image: After Gemini's response:†lh3.googleusercontent.com】 @Google Keep save this.
+L136:   * Tell me what steps I need to take to [goal or task]. Then create a list in Keep.
+L137:   * Find a recipe for [dish] and create a list of the ingredients in Keep.
+L138: 
+L139: Tips:
+L140:   * To create a note in Google Keep, you can add “Save this to Keep” or “@Google Keep save this.” Or, to create a list in Google Keep, add “Create a list in Keep” or “Create a list of the [items, steps, ingredients, …] in Keep.”
+L141:   * To create a note in another app, you can add “Save this to @[app name]” or “@[app name] save this.”
+L142: ## Add item to an existing list in Google Keep
+L143: 
+L144: Add item to an existing list
+L145: 
+L146:   * Add [item 1, item 2, …] to my list called [list name]
+L147:   * Include [item 1, item 2, …] to [list name] list
+L148: 
+L149: Tip: On supported Samsung mobile devices, the Gemini mobile app can add an item to an existing list in the Samsung Reminder app if the app is connected in your Connected Apps settings.
+L150: 
+L151: Add item to an existing list based on your conversation
+L152: You can ask Gemini Apps to perform a task and add an item to an existing list in Google Keep. For example:
+L153: 
+L154:   * What materials will I need for [activity or task]?
+L155: 【9†Image: After Gemini's response:†lh3.googleusercontent.com】 Add this to my [list name] list.
+L156:   * Find me a recipe for [dish] and save the ingredients to Keep.
+L157: Tip: To undo an action, select Undo in the confirmation notification, or open and edit the list linked below the response. If you created a note with Gemini Live on in the background, Gemini can’t undo the note.
+L158: ## Get content from your notes & lists
+L159: 
+L160: Find content from your notes & lists
+L161: 
+L162:   * Do I have any notes related to [topic]?
+L163:   * Find my [list name] list
+L164:   * Show all my lists about [task, event, goal, …]
+L165: 
+L166: Use your notes & lists in your conversation
+L167: 
+L168: You can use your notes or lists to ask Gemini Apps to perform a task. For example:
+L169: 
+L170:   * Help me create a [song, story, …] based on my Keep note called [note name]
+L171:   * Suggest a [dish, activity, …] from the items in my [list name] list
+L172: ## How your data is handled
+L173: 
+L174: Learn more about 【10†how your data is handled when Gemini works with Connected Apps】.
+L175: 
+L176: ## Related resources
+L177: 
+L178:   * 【11†Use & manage Connected Apps in Gemini】
+L179:   * 【12†Gemini Apps Privacy Hub】
+L180:   * 【13†Connect Google Workspace apps & services to Gemini Apps】
+L181:   * 【14†Create & manage your calendar events with Gemini Apps】
+L182:   * 【15†Capture your tasks & reminders with Gemini Apps】
+L183: 
+L184: 【16†Android phone & tablet】 【17†Computer】【18†iPhone & iPad】
+L185: 
+L186: [Select]
+L187: 
+L188: ## Need more help?
+L189: ### Try these next steps:
+L190: 
+L191: 【19†Post to the help community Get answers from community members】
+L192: 
+L193: true
+L194: ## 【20†Productivity】
+L195: 
+L196:   * 1 of 11
+L197: 
+L198: 【21†Connect the Google Workspace app to Gemini Apps】
+L199:   * 2 of 11
+L200: 
+L201: 【22†Create & manage your calendar events with Gemini Apps】
+L202:   * 3 of 11
+L203: 
+L204: 【23†Capture your tasks & reminders with Gemini Apps】
+L205:   * 4 of 11
+L206: 
+L207: 【24†Capture your ideas & notes with Gemini Apps】
+L208:   * 5 of 11
+L209: 
+L210: 【25†Import a GitHub repository & ask about it in the Gemini web app】
+L211:   * 6 of 11
+L212: 
+L213: 【26†Ask for info & tailored responses using your content from Mind Space in the Gemini mobile app】
+L214:   * 7 of 11
+L215: 【27†Ask about your Google Classroom assignments, classes & more in Gemini Apps】
+L216:   * 8 of 11
+L217: 
+L218: 【28†Create designs & build websites with your creative apps in Gemini Apps】
+L219:   * 9 of 11
+L220: 
+L221: 【29†Manage your Business Profile on Google with the Gemini web app】
+L222:   * 10 of 11
+L223: 
+L224: 【30†Get personalized Google Ads advice with Gemini Apps】
+L225:   * 11 of 11
+L226: 
+L227: 【31†Manage files & folders in your Dropbox in Gemini Apps】
+L228: 
+L229: Search
+L230: 
+L231: Clear search
+L232: 
+L233: Close search
+L234: 
+L235: Main menu
+L236: 
+L237: 4453398504487160393
+L238: 
+L239: true
+L240: 
+L241: Search Help Center
+L242: 
+L243: false
+L244: 
+L245: true
+L246: 
+L247: true
+L248: true
+L249: 
+L250: true
+L251: 
+L252: true
+L253: 
+L254: 5295044
+L255: 
+L256: false
+L257: 
+L258: false
+L259: 
+L260: false
+L261: 
+L262: false
+L263: 
+L264: false

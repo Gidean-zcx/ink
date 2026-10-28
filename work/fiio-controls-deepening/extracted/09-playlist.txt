@@ -1,0 +1,34 @@
+How to create external m3u playlists for FiiO M3K/M5/M6/M7/M9/M11/JM21/M21 using foobar?How to import the the m3u playlist?
+修改于 星期四, 六月 12, 2025 在 11:19 AM
+Video help for M3K/M5：https://www.youtube.com/watch?v=NwxLxOm2H9Y
+Video help for M21/JM21/M6/M7/M9/M11/M11Pro/M15/M11 Plus LTD： https://youtu.be/WKLDPGYmi_A
+Note: The external playlists are only accessible through "folder", but not " playlist" section.
+In this method, for the music files in SD cards, the external playlists have to be placed in the SD card.
+For music files in internal storage, the external playlists have to be placed in the internal storage.
+Preparation:
+1. Download link of foobar2000: Click here
+(Or you could download the latest version in the website instead. The opeation are similar. )
+2. Please Connect the M3K/M5/M6/M7/M9/M11/M21/JM21 to the computer in storage mode first.
+（>>>More information about accessing the internal storage/SD card after connecting the M6/M7/M9/M11player to the computer: Click here)
+Detailed operation:
+1. Add the music files/folders to the root directory of internal storage/SD card of the M player.
+2018-12-22 16:12 Upload
+Download attachments(63.9 KB)
+2. Add the same music files/folders in local disk of your computer to the now playing playlist of foobar2000.
+3. Choose file-save playlist in the foobar and save the playlist in the desktop of the computer.
+Note: For M3K/M5, please save the playlist to the root directory of the M3K/M5. No need to go on working the following step!!
+Disonnect the M3K/M5 with the computer. Form file browser, you could find the m3u playlist.
+4. Open the playlist via Note pad:
+1)If you are creating the Playlist for music files in internal storage, please replace the 'drive letter'(C/D/E/F) of the playlist to '/storage/emulated/0/',
+2) If you are creating the Playlist for music files in external sd card, please replace the 'drive letter' (C/D/E/F)of the playlist to '/storage/external_sd/', like this:
+(For M11, the path should be '/storage/external_sd1/' or '/storage/external_sd2/')
+Please remember to replace the'\' with the'/' as well: After finishing replacing the drive letter, please save the playlist:
+5. Copy the playlist to the root directory of the internal storage(for 4-1)/external sd card(for 4-2)
+6.Disonnect the M21/JM21/M6/M7/M9/M11 with the computer.
+Enter FiiO Music-folder and choose the playlist to select the music file you want to play now.
+How to import the the m3u playlist:
+1. Open a M3u playlist in local music-folder and click the tick icon in the top right corner:
+2. Click select all then playlist icon:
+3. Create a new playlist or select a playlist to add this songs:
+4. Go back to playlist page to check:
+

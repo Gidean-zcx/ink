@@ -1,0 +1,12 @@
+{
+  "new_E": 2,
+  "new_F": 0,
+  "old_F_rows": 2,
+  "old_F_fields": 8,
+  "old_E_additional_capture_rows": 1,
+  "inventory_rows": 36,
+  "new_visual_observations": 0,
+  "candidates_checked": 5,
+  "case_depths_unchanged": true,
+  "product_or_account_state_changed": false
+}

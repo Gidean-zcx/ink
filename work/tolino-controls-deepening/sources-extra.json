@@ -1,0 +1,22 @@
+[
+  {
+    "name": "family",
+    "url": "https://mytolino.de/faq-gruppe/faq-family-sharing/",
+    "final_url": "https://mytolino.de/faq-gruppe/faq-family-sharing/",
+    "status": 200,
+    "raw_work_path": "work/tolino-controls-deepening/family.html",
+    "raw_sha256": "a42474e891605e849676b62c63ae742fa8e5c2b7cd0370e42d2aa070b927575c",
+    "bytes": 83695,
+    "parsed_text_path": "work/tolino-controls-deepening/family.txt"
+  },
+  {
+    "name": "faq-de",
+    "url": "https://mytolino.de/faq-gruppe/tolino-shine-5-generation/",
+    "final_url": "https://mytolino.de/faq-gruppe/tolino-shine-5-generation/",
+    "status": 200,
+    "raw_work_path": "work/tolino-controls-deepening/faq-de.html",
+    "raw_sha256": "afd665dcc57a0bdd22545cac7ea746e83d6c36d0c157e7bcc4fdbb196f2b7057",
+    "bytes": 158920,
+    "parsed_text_path": "work/tolino-controls-deepening/faq-de.txt"
+  }
+]

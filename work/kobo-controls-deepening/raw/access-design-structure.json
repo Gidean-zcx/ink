@@ -1,0 +1,72 @@
+{
+  "links": [
+    {
+      "title": "Dark Mode",
+      "url": "https://help.kobo.com/hc/articles/360062231213-About-Dark-mode",
+      "section": "Kobo offers several ways to improve visual comfort choices:"
+    },
+    {
+      "title": "OpenDyslexic",
+      "url": "https://help.kobo.com/hc/en-us/articles/360020048733",
+      "section": "Kobo offers several ways to improve visual comfort choices:"
+    },
+    {
+      "title": "front size, margins, and line spacing.",
+      "url": "https://help.kobo.com/hc/articles/360017639913",
+      "section": "Kobo offers several ways to improve visual comfort choices:"
+    },
+    {
+      "title": "Comfort light Pro",
+      "url": "https://help.kobo.com/hc/articles/360017481174",
+      "section": "Kobo offers several ways to improve visual comfort choices:"
+    },
+    {
+      "title": "Large Print Mode",
+      "url": "https://help.kobo.com/hc/articles/360019858274",
+      "section": "Kobo offers several ways to improve visual comfort choices:"
+    },
+    {
+      "title": "Bluetooth",
+      "url": "https://help.kobo.com/hc/articles/4406292641559",
+      "section": "Listening to Kobo Audiobooks is flexible and accessible:"
+    },
+    {
+      "title": "Adjust volume and playback speed, play, pause, rewind, or fast forward",
+      "url": "https://help.kobo.com/hc/articles/360018108653",
+      "section": "Listening to Kobo Audiobooks is flexible and accessible:"
+    },
+    {
+      "title": "Touch the screen to open eBook pages, select items and more.",
+      "url": "https://help.kobo.com/hc/articles/360017639973-Use-gestures-on-the-touch-screen",
+      "section": "Kobo eReaders are designed to not require extra force:"
+    },
+    {
+      "title": "Privacy Policy",
+      "url": "https://authorize.kobo.com/terms/privacypolicy",
+      "section": "Your privacy is important."
+    },
+    {
+      "title": "You can set your sleep timer from 5 to 60 minutes or turn it off completely",
+      "url": "https://help.kobo.com/hc/articles/360017439614-Make-your-Kobo-eReader-turn-off-sooner",
+      "section": "Kobo eReaders give you time to interact at your own pace:"
+    },
+    {
+      "title": "Kobo Help articles",
+      "url": "https://help.kobo.com/",
+      "section": "Kobo eReaders work with common assistive tools:"
+    }
+  ],
+  "headings": [
+    "An overview of the accessibility tools and settings available to help create a comfortable and inclusive reading experience.",
+    "Kobo eReaders don’t rely on colour alone to show important information or actions.",
+    "Kobo offers several ways to improve visual comfort choices:",
+    "Listening to Kobo Audiobooks is flexible and accessible:",
+    "Kobo eReaders are designed for simple and comfortable use:",
+    "Kobo eReaders are designed to not require extra force:",
+    "Kobo eReaders use e-ink screens, designed to minimize flashing.",
+    "Your privacy is important.",
+    "Kobo eReaders give you time to interact at your own pace:",
+    "Kobo eReaders work with common assistive tools:"
+  ],
+  "images": []
+}

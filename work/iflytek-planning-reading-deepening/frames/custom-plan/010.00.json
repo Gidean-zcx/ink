@@ -1,0 +1,21 @@
+{
+  "url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E8%87%AA%E5%AE%9A%E4%B9%89%E5%AD%A6%E4%B9%A0%E8%AE%A1%E5%88%92.mp4",
+  "duration": 129.766667,
+  "position": 10,
+  "width": 1920,
+  "height": 1080,
+  "paused": true,
+  "muted": true,
+  "readyState": 4,
+  "requested": 10,
+  "path": "work/iflytek-planning-reading-deepening/frames/custom-plan/010.00.png",
+  "sha256": "41a809e039945848ce325f5091c8475798c51d16ecf66b574e2f2018afefdd80",
+  "actual_pixels": [
+    1280,
+    720
+  ],
+  "help_player_url": "https://xxj.xunfei.cn/h5-help/#/play?bgc=https%3A%2F%2Fk12-swift.xunfeixxj.com%2Fxxjserver%2Fwx%2Fh5%2Fhelp%2Fvideo%2F%E5%B0%8F%E5%AD%A6%E8%87%AA%E5%AE%9A%E4%B9%89%E5%AD%A6%E4%B9%A0%E8%AE%A1%E5%88%92.jpg&video=https%3A%2F%2Fk12-swift.xunfeixxj.com%2Fxxjserver%2Fwx%2Fh5%2Fhelp%2Fvideo%2F%E5%B0%8F%E5%AD%A6%E8%87%AA%E5%AE%9A%E4%B9%89%E5%AD%A6%E4%B9%A0%E8%AE%A1%E5%88%92.mp4&videoName=%E5%B0%8F%E5%AD%A6%E8%87%AA%E5%AE%9A%E4%B9%89%E5%AD%A6%E4%B9%A0%E8%AE%A1%E5%88%92&productName=%E5%AD%A6%E4%B9%A0%E6%9C%BAT30Pro&moduleType=introduce&productId=2e5298d3%2FAISTUDY_SU30_T30PRO",
+  "method": "official_help_video_browser_seek_and_element_screenshot",
+  "audio_observed": false,
+  "product_hands_on": false
+}

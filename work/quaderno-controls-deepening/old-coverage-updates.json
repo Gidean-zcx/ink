@@ -1,0 +1,217 @@
+[
+  {
+    "flow_id": "F-M060-04",
+    "before": {
+      "flow_id": "F-M060-04",
+      "product_id": "M-060",
+      "task": "删除后恢复文件",
+      "depth": "D2",
+      "evidence_ids": "E-QUA-01",
+      "known_branches": "恢复到原目录；目录已不存在会重建，同名冲突要求改名。站内容量超 1GB 时询问永久删除或取消；电脑 App 不能操作该回收站。",
+      "gaps": "回收站满与同名恢复实测",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-060-quaderno.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M060-04",
+      "product_id": "M-060",
+      "task": "删除后恢复文件",
+      "depth": "D2",
+      "evidence_ids": "E-QUA-01",
+      "known_branches": "设备删除后回收站还原；1GB以上阈值提供直接永久删除或取消。回收站内不能打开文件/查看子文件夹，需先还原；PC App删除及特定同步删除不入回收站。原目录重建/同名改名沿用。",
+      "gaps": "未测阈值/同名恢复；永久删除、笔记删页和特定旧固件修复不受此链保证。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-060-quaderno.md",
+      "checked_on": "2026-10-27"
+    },
+    "changed_fields": {
+      "known_branches": {
+        "before": "恢复到原目录；目录已不存在会重建，同名冲突要求改名。站内容量超 1GB 时询问永久删除或取消；电脑 App 不能操作该回收站。",
+        "after": "设备删除后回收站还原；1GB以上阈值提供直接永久删除或取消。回收站内不能打开文件/查看子文件夹，需先还原；PC App删除及特定同步删除不入回收站。原目录重建/同名改名沿用。"
+      },
+      "gaps": {
+        "before": "回收站满与同名恢复实测",
+        "after": "未测阈值/同名恢复；永久删除、笔记删页和特定旧固件修复不受此链保证。"
+      },
+      "checked_on": {
+        "before": "2026-10-26",
+        "after": "2026-10-27"
+      }
+    }
+  },
+  {
+    "flow_id": "F-M060-05",
+    "before": {
+      "flow_id": "F-M060-05",
+      "product_id": "M-060",
+      "task": "Windows USB 传入",
+      "depth": "D2",
+      "evidence_ids": "E-QUA-01",
+      "known_branches": "导入完成后暂存区原条目消失；不要把这个变化当作资料丢失。macOS 用配套 App。",
+      "gaps": "重复文件与中断",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-060-quaderno.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M060-05",
+      "product_id": "M-060",
+      "task": "Windows USB 传入",
+      "depth": "D2",
+      "evidence_ids": "E-QUA-01",
+      "known_branches": "Windows MTP的Import暂存由设备目标目录导入后消失；不得删除或重命名Import/Export/Template。macOS走PC App，不能移植MTP步骤；PC App再传回电脑的重名编号规则不套到本入口。",
+      "gaps": "本入口同名碰撞、复制未完就导入、拔线损坏及重试仍未说明；不借PC App规则填补。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-060-quaderno.md",
+      "checked_on": "2026-10-27"
+    },
+    "changed_fields": {
+      "known_branches": {
+        "before": "导入完成后暂存区原条目消失；不要把这个变化当作资料丢失。macOS 用配套 App。",
+        "after": "Windows MTP的Import暂存由设备目标目录导入后消失；不得删除或重命名Import/Export/Template。macOS走PC App，不能移植MTP步骤；PC App再传回电脑的重名编号规则不套到本入口。"
+      },
+      "gaps": {
+        "before": "重复文件与中断",
+        "after": "本入口同名碰撞、复制未完就导入、拔线损坏及重试仍未说明；不借PC App规则填补。"
+      },
+      "checked_on": {
+        "before": "2026-10-26",
+        "after": "2026-10-27"
+      }
+    }
+  },
+  {
+    "flow_id": "F-M060-06",
+    "before": {
+      "flow_id": "F-M060-06",
+      "product_id": "M-060",
+      "task": "创建可回退的备份",
+      "depth": "D2",
+      "evidence_ids": "E-QUA-01",
+      "known_branches": "保存为带日期 ZIP，同日另编号；回收站不包含在内。备份目录不能同时设为同步目录。",
+      "gaps": "备份失败及范围验证",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-060-quaderno.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M060-06",
+      "product_id": "M-060",
+      "task": "创建可回退的备份",
+      "depth": "D2",
+      "evidence_ids": "E-QUA-01",
+      "known_branches": "USB备份ZIP、同日编号、排除回收站；备份与同步目录分开。手册要求保存盘及App安装盘各有至少相当于数据总量的空间（目安）；中途拔线会失败。备份改名后不在列表显示（手册口径）。",
+      "gaps": "空间阈值/失败回执未实测；不保证失败残留ZIP可用。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-060-quaderno.md",
+      "checked_on": "2026-10-27"
+    },
+    "changed_fields": {
+      "known_branches": {
+        "before": "保存为带日期 ZIP，同日另编号；回收站不包含在内。备份目录不能同时设为同步目录。",
+        "after": "USB备份ZIP、同日编号、排除回收站；备份与同步目录分开。手册要求保存盘及App安装盘各有至少相当于数据总量的空间（目安）；中途拔线会失败。备份改名后不在列表显示（手册口径）。"
+      },
+      "gaps": {
+        "before": "备份失败及范围验证",
+        "after": "空间阈值/失败回执未实测；不保证失败残留ZIP可用。"
+      },
+      "checked_on": {
+        "before": "2026-10-26",
+        "after": "2026-10-27"
+      }
+    }
+  },
+  {
+    "flow_id": "F-M060-07",
+    "before": {
+      "flow_id": "F-M060-07",
+      "product_id": "M-060",
+      "task": "恢复旧备份",
+      "depth": "D2",
+      "evidence_ids": "E-QUA-01",
+      "known_branches": "恢复会删除备份之后新增数据；创建/修改时间变为导入时间，浏览时间重置。先传出新资料是官方建议。",
+      "gaps": "覆盖确认与中断恢复",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-060-quaderno.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M060-07",
+      "product_id": "M-060",
+      "task": "恢复旧备份",
+      "depth": "D2",
+      "evidence_ids": "E-QUA-01",
+      "known_branches": "导入备份覆盖备份后新增数据，创建/修改时间改为导入时间、浏览时间重置；Samples及其中内容不导入。确认后才执行；中途拔线会失败，官方建议先导出新增资料。",
+      "gaps": "中断后的设备部分状态、自动回滚/续传、改名备份如何重新索引均未知。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-060-quaderno.md",
+      "checked_on": "2026-10-27"
+    },
+    "changed_fields": {
+      "known_branches": {
+        "before": "恢复会删除备份之后新增数据；创建/修改时间变为导入时间，浏览时间重置。先传出新资料是官方建议。",
+        "after": "导入备份覆盖备份后新增数据，创建/修改时间改为导入时间、浏览时间重置；Samples及其中内容不导入。确认后才执行；中途拔线会失败，官方建议先导出新增资料。"
+      },
+      "gaps": {
+        "before": "覆盖确认与中断恢复",
+        "after": "中断后的设备部分状态、自动回滚/续传、改名备份如何重新索引均未知。"
+      },
+      "checked_on": {
+        "before": "2026-10-26",
+        "after": "2026-10-27"
+      }
+    }
+  },
+  {
+    "flow_id": "F-M060-08",
+    "before": {
+      "flow_id": "F-M060-08",
+      "product_id": "M-060",
+      "task": "同步双方改动",
+      "depth": "D2",
+      "evidence_ids": "E-QUA-01",
+      "known_branches": "双方都编辑会留两份；单边删除通常传播，但另一边已有修改时保留修改版。不是所有冲突都由“删除优先”解决。",
+      "gaps": "冲突回执和重复重试",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-060-quaderno.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M060-08",
+      "product_id": "M-060",
+      "task": "同步双方改动",
+      "depth": "D2",
+      "evidence_ids": "E-QUA-01",
+      "known_branches": "双方改同PDF时设备版保留原名、电脑版另名；一边删另一边改则保留修改版。只同步目录下PDF和含PDF目录；解除同步不删文件。特定PC/同步删除绕过回收站；同步中不能用笔。",
+      "gaps": "冲突命名细节/回执/重复重试未知；电脑同步目录改名或移动会解除绑定，重设前不能视作继续同步。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-060-quaderno.md",
+      "checked_on": "2026-10-27"
+    },
+    "changed_fields": {
+      "known_branches": {
+        "before": "双方都编辑会留两份；单边删除通常传播，但另一边已有修改时保留修改版。不是所有冲突都由“删除优先”解决。",
+        "after": "双方改同PDF时设备版保留原名、电脑版另名；一边删另一边改则保留修改版。只同步目录下PDF和含PDF目录；解除同步不删文件。特定PC/同步删除绕过回收站；同步中不能用笔。"
+      },
+      "gaps": {
+        "before": "冲突回执和重复重试",
+        "after": "冲突命名细节/回执/重复重试未知；电脑同步目录改名或移动会解除绑定，重设前不能视作继续同步。"
+      },
+      "checked_on": {
+        "before": "2026-10-26",
+        "after": "2026-10-27"
+      }
+    }
+  }
+]

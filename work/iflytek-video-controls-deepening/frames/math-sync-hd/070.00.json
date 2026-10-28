@@ -1,0 +1,17 @@
+{
+  "url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E6%95%B0%E5%AD%A6AI%E5%90%8C%E6%AD%A5%E7%B2%BE%E5%87%86%E5%AD%A6.mp4",
+  "duration": 125.28,
+  "position": 70,
+  "width": 1920,
+  "height": 1080,
+  "paused": true,
+  "muted": true,
+  "readyState": 4,
+  "requested": 70,
+  "path": "work/iflytek-video-controls-deepening/frames/math-sync-hd/070.00.png",
+  "sha256": "71c01b1e1f098af1083bf032a6830f48d38c8cebe694de12c2f1a52a7406e564",
+  "method": "official_help_video_browser_seek_and_element_screenshot",
+  "device_scale_factor": 3,
+  "audio_observed": false,
+  "product_hands_on": false
+}

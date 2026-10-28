@@ -1,0 +1,355 @@
+{
+  "name": "07-after-short-play-attempt",
+  "captured_at": "2026-10-26T15:46:28.960201+00:00",
+  "url": "https://www.timeforkids.com/k1/spotlight-on-plants-k1/",
+  "title": "TIME for Kids | Spotlight on Plants | K-1",
+  "text": "Skip to main content\nSearch\nScience  Nature\nSpotlight on Plants\nOctober 16, 2026\nTIME for Kids\n0:49\n.9x\n  En Espanol  Print\nUNSAL—500PX/GETTY IMAGES\n\nPlants are living things. Like animals, they grow and change. Plants can move, too. They move differently from how we move. Read on to learn about plants.\n\nPlants move.\nMIRZA NASRIN—GETTY IMAGES\n\nTheir roots move to find water. Their flowers turn toward the sun. This is a queen of the night. It closes to protect itself from the sun.\n\nPlants need energy.\nTHE BURTONS—GETTY IMAGES\n\nThey do not eat. They make their own food. This is called photosynthesis. They use sunlight, water, and air.\n\nPlants grow.\nWAVIPICTURE/GETTY IMAGES\n\nThey get bigger over time. Some plants get very big. This is a sapling. It will grow into a tall oak tree.\n\nPlants reproduce.\nTHANASIS—GETTY IMAGES\n\nPlants grow from seeds. Apple trees blossom. The flowers turn into fruit. There are seeds inside. These can grow new trees.\n\nMore from Science\nNature\nFungus\nOctober 16, 2026\n\nFungus is a living thing. Some fungus looks like a plant. It is not. Fungus is its own group. Mold and mushrooms are two types. Fungus grows in damp places (above). Most fungi do not grow tall. But they can…\n\nAudio\nAnimals\nInsect Insider\nOctober 9, 2026\n\nInsects are animals. They have six legs. They have three body parts. Insects are living things. They move and eat. They grow and reproduce. Insects move. They fly or crawl. Many have wings. This is a grasshopper. Its powerful legs…\n\nAudio\nSpanish\nAnimals\nButterfly Changes\nOctober 9, 2026\n\nSome insects go through a big change. It is called metamorphosis. Butterflies go through metamorphosis. Here are the stages. 1. Egg An adult butterfly lays eggs (above). They will hatch in about four days. 2. Larva A larva hatches from…\n\nAudio\nAnimals\nAll About Animals\nOctober 2, 2026\n\nAnimals are living things. Every animal moves and grows. Every animal gets its energy from food. People are animals too. Which other animals do you know? Animals move. Animals can move by themselves. They can walk, fly, or slither. This…\n\nAudio\nSpanish\nShare a Link\nClick the icon above to copy the url link to your clipboard.\nPaste the link into the location in which you share assignments with students. Examples might include, but are not limited to Canvas, Schoology and Edmodo.\n\n\nGoogle Classroom\nClick on the icon above to share the article with a class in your Google Classroom.\nChoose an action. Options might include creating an assignment or asking a question.\nCONTACT US\nPRIVACY POLICY\nTERMS OF SERVICE\nSUBSCRIBE\nCLASSROOM INTERNATIONAL\n© 2026 TIME USA, LLC. All Rights Reserved.\nPowered by WordPress.com VIP",
+  "controls": [
+    {
+      "tag": "A",
+      "text": "Skip to main content",
+      "aria": null,
+      "title": "",
+      "href": "https://www.timeforkids.com/k1/spotlight-on-plants-k1/#main-content",
+      "id": "",
+      "type": ""
+    },
+    {
+      "tag": "A",
+      "text": "",
+      "aria": null,
+      "title": "",
+      "href": "https://www.timeforkids.com/?u=",
+      "id": "",
+      "type": ""
+    },
+    {
+      "tag": "A",
+      "text": "Search",
+      "aria": null,
+      "title": "",
+      "href": "https://www.timeforkids.com/k1/",
+      "id": "",
+      "type": ""
+    },
+    {
+      "tag": "A",
+      "text": "",
+      "aria": null,
+      "title": "",
+      "href": "",
+      "id": "main-content",
+      "type": ""
+    },
+    {
+      "tag": "A",
+      "text": "Science",
+      "aria": null,
+      "title": "",
+      "href": "https://www.timeforkids.com/k1/sections/science/",
+      "id": "",
+      "type": ""
+    },
+    {
+      "tag": "A",
+      "text": "Nature",
+      "aria": null,
+      "title": "",
+      "href": "https://www.timeforkids.com/k1/topics/nature/",
+      "id": "",
+      "type": ""
+    },
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": "Play",
+      "title": "",
+      "href": null,
+      "id": "playPauseBtn",
+      "type": "button"
+    },
+    {
+      "tag": "INPUT",
+      "text": "",
+      "aria": "Playback Position — Enter to skip forward, Shift+Enter to skip back",
+      "title": "",
+      "href": null,
+      "id": "progressRange",
+      "type": "range"
+    },
+    {
+      "tag": "BUTTON",
+      "text": ".9x",
+      "aria": "Change playback speed, currently .9x",
+      "title": "",
+      "href": null,
+      "id": "speedNav",
+      "type": "button"
+    },
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": "Adjust volume",
+      "title": "",
+      "href": null,
+      "id": "volumeNavBtn",
+      "type": "button"
+    },
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": "Close audio player",
+      "title": "",
+      "href": null,
+      "id": "audioCloseBtn",
+      "type": "button"
+    },
+    {
+      "tag": "A",
+      "text": "En Espanol",
+      "aria": null,
+      "title": "",
+      "href": "https://www.timeforkids.com/k1/spotlight-on-plants-k1/?lang=es",
+      "id": "",
+      "type": ""
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Print",
+      "aria": null,
+      "title": "",
+      "href": null,
+      "id": "",
+      "type": "submit"
+    },
+    {
+      "tag": "A",
+      "text": "",
+      "aria": null,
+      "title": "",
+      "href": "https://www.timeforkids.com/k1/fungus-k1/",
+      "id": "",
+      "type": ""
+    },
+    {
+      "tag": "A",
+      "text": "Nature",
+      "aria": null,
+      "title": "",
+      "href": "https://www.timeforkids.com/k1/topics/nature/",
+      "id": "",
+      "type": ""
+    },
+    {
+      "tag": "A",
+      "text": "Fungus",
+      "aria": null,
+      "title": "",
+      "href": "https://www.timeforkids.com/k1/fungus-k1/",
+      "id": "",
+      "type": ""
+    },
+    {
+      "tag": "A",
+      "text": "Fungus is a living thing. Some fungus looks like a plant. It is not. Fungus is its own group. Mold and mushrooms are two types. Fungus grows in damp places (above). Most fungi do not grow tall. But they can…",
+      "aria": null,
+      "title": "",
+      "href": "https://www.timeforkids.com/k1/fungus-k1/",
+      "id": "",
+      "type": ""
+    },
+    {
+      "tag": "A",
+      "text": "",
+      "aria": null,
+      "title": "",
+      "href": "https://www.timeforkids.com/k1/insect-insider-k1/",
+      "id": "",
+      "type": ""
+    },
+    {
+      "tag": "A",
+      "text": "Animals",
+      "aria": null,
+      "title": "",
+      "href": "https://www.timeforkids.com/k1/topics/animals/",
+      "id": "",
+      "type": ""
+    },
+    {
+      "tag": "A",
+      "text": "Insect Insider",
+      "aria": null,
+      "title": "",
+      "href": "https://www.timeforkids.com/k1/insect-insider-k1/",
+      "id": "",
+      "type": ""
+    },
+    {
+      "tag": "A",
+      "text": "Insects are animals. They have six legs. They have three body parts. Insects are living things. They move and eat. They grow and reproduce. Insects move. They fly or crawl. Many have wings. This is a grasshopper. Its powerful legs…",
+      "aria": null,
+      "title": "",
+      "href": "https://www.timeforkids.com/k1/insect-insider-k1/",
+      "id": "",
+      "type": ""
+    },
+    {
+      "tag": "A",
+      "text": "",
+      "aria": null,
+      "title": "",
+      "href": "https://www.timeforkids.com/k1/butterfly-changes-k1/",
+      "id": "",
+      "type": ""
+    },
+    {
+      "tag": "A",
+      "text": "Animals",
+      "aria": null,
+      "title": "",
+      "href": "https://www.timeforkids.com/k1/topics/animals/",
+      "id": "",
+      "type": ""
+    },
+    {
+      "tag": "A",
+      "text": "Butterfly Changes",
+      "aria": null,
+      "title": "",
+      "href": "https://www.timeforkids.com/k1/butterfly-changes-k1/",
+      "id": "",
+      "type": ""
+    },
+    {
+      "tag": "A",
+      "text": "Some insects go through a big change. It is called metamorphosis. Butterflies go through metamorphosis. Here are the stages. 1. Egg An adult butterfly lays eggs (above). They will hatch in about four days. 2. Larva A larva hatches from…",
+      "aria": null,
+      "title": "",
+      "href": "https://www.timeforkids.com/k1/butterfly-changes-k1/",
+      "id": "",
+      "type": ""
+    },
+    {
+      "tag": "A",
+      "text": "",
+      "aria": null,
+      "title": "",
+      "href": "https://www.timeforkids.com/k1/all-about-animals-k1/",
+      "id": "",
+      "type": ""
+    },
+    {
+      "tag": "A",
+      "text": "Animals",
+      "aria": null,
+      "title": "",
+      "href": "https://www.timeforkids.com/k1/topics/animals/",
+      "id": "",
+      "type": ""
+    },
+    {
+      "tag": "A",
+      "text": "All About Animals",
+      "aria": null,
+      "title": "",
+      "href": "https://www.timeforkids.com/k1/all-about-animals-k1/",
+      "id": "",
+      "type": ""
+    },
+    {
+      "tag": "A",
+      "text": "Animals are living things. Every animal moves and grows. Every animal gets its energy from food. People are animals too. Which other animals do you know? Animals move. Animals can move by themselves. They can walk, fly, or slither. This…",
+      "aria": null,
+      "title": "",
+      "href": "https://www.timeforkids.com/k1/all-about-animals-k1/",
+      "id": "",
+      "type": ""
+    },
+    {
+      "tag": "A",
+      "text": "",
+      "aria": null,
+      "title": "Close",
+      "href": "https://www.timeforkids.com/k1/spotlight-on-plants-k1/#",
+      "id": "",
+      "type": ""
+    },
+    {
+      "tag": "A",
+      "text": "CONTACT US",
+      "aria": null,
+      "title": "",
+      "href": "https://www.timeforkids.com/contact-us/",
+      "id": "",
+      "type": ""
+    },
+    {
+      "tag": "A",
+      "text": "PRIVACY POLICY",
+      "aria": null,
+      "title": "",
+      "href": "https://www.timeforkids.com/privacy-policy/",
+      "id": "",
+      "type": ""
+    },
+    {
+      "tag": "A",
+      "text": "TERMS OF SERVICE",
+      "aria": null,
+      "title": "",
+      "href": "https://www.timeforkids.com/terms-of-service/",
+      "id": "",
+      "type": ""
+    },
+    {
+      "tag": "A",
+      "text": "SUBSCRIBE",
+      "aria": null,
+      "title": "",
+      "href": "https://get.timeforkids.com/servlet/OrdersGateway?cds_mag_code=TFK&cds_page_id=282171&cds_response_key=CI1GPKFC1",
+      "id": "",
+      "type": ""
+    },
+    {
+      "tag": "A",
+      "text": "CLASSROOM INTERNATIONAL",
+      "aria": null,
+      "title": "",
+      "href": "https://get.timeforkids.com/servlet/OrdersGateway?cds_mag_code=TFK&cds_page_id=282171&cds_response_key=II1GPKFC1",
+      "id": "",
+      "type": ""
+    }
+  ],
+  "media": [],
+  "frames": [
+    "https://www.timeforkids.com/k1/spotlight-on-plants-k1/",
+    "about:blank"
+  ],
+  "playback_ui": [
+    {
+      "id": "playPauseBtn",
+      "text": "",
+      "aria": "Play",
+      "value": "",
+      "min": null,
+      "max": null
+    },
+    {
+      "id": "progressRange",
+      "text": "",
+      "aria": "Playback Position — Enter to skip forward, Shift+Enter to skip back",
+      "value": "0",
+      "min": "0",
+      "max": "100"
+    },
+    {
+      "id": "speedNav",
+      "text": ".9x",
+      "aria": "Change playback speed, currently .9x",
+      "value": "",
+      "min": null,
+      "max": null
+    }
+  ]
+}

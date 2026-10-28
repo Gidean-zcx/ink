@@ -1,0 +1,15 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M031-05,M-031,路线选课、复习与课程更新,D2,E-DUCD-02;E-DUCD-20,点节点看主题/进入、已完成节点回访、指南、返回当前节点；课程更新可能重定位,历史2022路线与当前构建差异，更新后逐题迁移、跳级、重试和跨端未知,not_observed,false,cases/M-031-duolingo-adventures.md,2026-10-27
+F-M031-06,M-031,按技能主动选择练习,D2,E-DUCD-24;E-DUCD-18,底栏杠铃或三点菜单；Mistakes/Words/Speak/Listen；其他内容依课程与套餐,具体错题选择、同题重试/解释/保存、结束和离线未知；不自动覆盖Adventures,not_observed,false,cases/M-031-duolingo-adventures.md,2026-10-27
+F-M031-07,M-031,Energy消耗与补充,D2,E-DUCD-19;E-DUCD-13,课程消耗、连对补充、末尾错题不消耗、等待或广告/宝石补充；灰度范围,精确阈值/耗尽中断/广告失败与当前端范围未知；桌面课另见实际Hearts,not_observed,false,cases/M-031-duolingo-adventures.md,2026-10-27
+F-M031-08,M-031,连续天数、冻结和修复,D2,E-DUCD-03,每日课延续；冻结须提前；修复另走商店；提醒可设时,冻结容量、修复资格/价格、时区跨日与离线补计未知；网页货币文案可能滞后,not_observed,false,cases/M-031-duolingo-adventures.md,2026-10-27
+F-M031-09,M-031,每日/月任务和个人成就,D1,E-DUCD-21;E-DUCD-23,每日任务先易后难、月挑战任务制及个人纪录的设计说明,当前任务清单、达成结算、领取/过期、难度层级及真实学习收益未知；不能由设计博文重建全链,not_observed,false,cases/M-031-duolingo-adventures.md,2026-10-27
+F-M031-10,M-031,好友合作任务和退出,D2,E-DUCD-22;E-DUCD-08,移动端互相关注/当周活跃后配对、五天目标；预写提醒/赠礼；General可关闭,博文当前配对选项、退出当周奖励和未完成处理未知；没有发送消息/礼物,not_observed,false,cases/M-031-duolingo-adventures.md,2026-10-27
+F-M031-11,M-031,排行榜参与、通知与退出,D2,E-DUCD-04;E-DUCD-08,每周XP升降、设备时区倒计时；通知关闭与私密退出区分；未满13岁无社交,精确名次阈值、并列/作弊/离线补分、公开切回后状态未知；未操作,not_observed,false,cases/M-031-duolingo-adventures.md,2026-10-27
+F-M031-12,M-031,移除并重新开始课程,D2,E-DUCD-09;E-DUCD-02;E-DUCD-10,Manage courses确认删除课程进度/XP；不可撤销；连续天数和名次不变；基础语言先切正确,删除确认画面、跨端并发和恢复失败未测；重新定级如何抵扣旧内容未知,not_observed,false,cases/M-031-duolingo-adventures.md,2026-10-27
+F-M031-13,M-031,导出个人数据与撤回删除请求,D2,E-DUCD-11,Data Vault副本最多30天；删除邮件确认后7天可取消；订阅另处理,导出内容格式/回导、服务处理失败、取消后的可见反馈未核；未请求导出或删除,not_observed,false,cases/M-031-duolingo-adventures.md,2026-10-27
+F-M031-14,M-031,家庭计划加入、移除与个人进度,D2,E-DUCD-14,管理者邀请五人、接受才加入；活跃付费到期前不能加入；进出不影响个人进度/连续天数,邀请失效/拒绝、跨设备或孩子管理权限、移除后缓存权益未知；未发邀请/购买,not_observed,false,cases/M-031-duolingo-adventures.md,2026-10-27
+F-M031-15,M-031,关注、屏蔽和恢复社交,D2,E-DUCD-08;E-DUCD-04,查看好友→用户→屏蔽确认/解除；关注发送通知；私密、年龄和验证邮箱影响资格,屏蔽对旧合作任务/排行影响、解除后是否自动重新关注未知；未联系他人,not_observed,false,cases/M-031-duolingo-adventures.md,2026-10-27
+F-M031-16,M-031,匿名选择课程和学习目标,D4,E-DUCD-25;E-DUCX-02;E-DUMA-04,公开Web选法语、来源/动机/基础、5分钟目标和从零开始进入首课；未提交身份；另实际从Chess页选零基础、5分钟、从零开始；课后Later跳过注册。；Math补Student/练习目的/Other/5分钟/Grade 2进入；退出后只重选身份和年级。,不同选择/回退、儿童与中文母语、正式账号及原生端未核；匿名会建立临时服务端状态。；Math引导PATCH422具体字段未知，不认定偏好已保存；Math Coach与跳级未执行。,observed_browser_sequence,true,cases/M-031-duolingo-adventures.md,2026-10-27
+F-M031-17,M-031,首课错答、词义提示、听力暂缓与结束尝试,D4,E-DUCD-26,实际答错5→4心、悬停词义提示、正确反馈；不能听时提示15分钟后恢复；最后跳回学习页未见结算,未观察课末错题重做/奖励/完成状态；单个桌面样本未耗尽Hearts、实际听音、验证儿童适配或长期掌握,observed_browser_sequence,true,cases/M-031-duolingo-adventures.md,2026-10-27
+F-M031-18,M-031,课中退出提示与保留当前题,D4,E-DUCD-27;E-DUCX-02;E-DUMA-04,课中X→警告→Keep learning回原题；第二次进入答一题后X→End session回学习页/基础选择；Chess首题取一星后X直接离开，无语言课确认；同会话重进首题初盘。；Math选中未提交时X直退引导，重进换题且进度条为空；完成后目标页刷新进入新题，未答X回学习页。,棋课其余题和正式账号退出规则、跨进程/设备、离线恢复未知；法语课先前未结算原因仍缺。；Math未提交选择未恢复；正式账户、断网、跨进程与跨设备仍未知，不改其他模式范围。,observed_browser_sequence,true,cases/M-031-duolingo-adventures.md,2026-10-27

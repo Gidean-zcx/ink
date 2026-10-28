@@ -1,0 +1,18 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M059-11,M-059,传入PDF并传回电脑,D2,E-DPT-01;E-DPCD-08;E-DPCD-09,只传PDF、单文件≤1GB；All documents/搜索结果页不能作为传入位置；断开连接可能损坏数据，空间不足先查容量。,同名覆盖/取消/部分失败回执、当前系统兼容性和恢复未测。,not_observed,false,cases/M-059-sony-dpt.md,2026-10-27
+F-M059-12,M-059,整理文件且识别同步关系变化,D2,E-DPT-01;E-DPCD-11,PC App剪贴只在App内，不等于电脑文件剪贴；同步目录改名或移动会删除同步配置，继续同步须重设。删除入口已知，确认与回收未见。,同名冲突、误删恢复、原文改名对side-note影响不补推。,not_observed,false,cases/M-059-sony-dpt.md,2026-10-27
+F-M059-13,M-059,定位正文并回到跳转前页面,D2,E-DPT-01;E-DPCD-04;E-DPCD-15;E-DPCD-34,大小写不区分；手写与图片内文字不可搜。普通划页不生成跳转历史；无PDF书签时目录按钮不出现。,无命中界面、搜索跳转是否计入同一历史、跨书/重启历史未知。,static_manual_pages_only,false,cases/M-059-sony-dpt.md,2026-10-27
+F-M059-14,M-059,放大批注与缩略页跳转,D2,E-DPT-01;E-DPCD-13;E-DPCD-14,放大可写/擦/高亮但不可翻页；工具圈选放大不能再次改比例，须退出重选。缩略通常16页，并排状态9页。,手势误触、退出定位和实际延迟未测；不把pinch与圈选限制合成一条。,not_observed,false,cases/M-059-sony-dpt.md,2026-10-27
+F-M059-15,M-059,写画、高亮、整笔画擦除与撤销,D2,E-DPT-01;E-DPCD-17;E-DPCD-18;E-DPCD-19;E-DPCD-32;E-DPCD-34,写完即保存；擦中部分线会去掉整条线，不是像素擦除。换页清撤销。扫描图/图片文字/手写不能文本高亮；低笔电、正在保存或PC操作可阻止批注。,断电持久化、笔画识别边界、部分失败和跨重启撤销未测。,static_manual_pages_only,false,cases/M-059-sony-dpt.md,2026-10-27
+F-M059-16,M-059,从批注列表回访并处理不可编辑,D2,E-DPT-01;E-DPCD-20;E-DPCD-21;E-DPCD-33,DPT-S1便笺/书签不随关闭限制变可编辑；受保护文档/低空间只读、低笔电、PC正操作也是不同原因。条目多可能慢，无计时实测。,只读提示精确样式、解锁后的可编辑范围及导出互操作未测。,not_observed,false,cases/M-059-sony-dpt.md,2026-10-27
+F-M059-17,M-059,创建独立笔记并增删页,D2,E-DPT-01;E-DPCD-24;E-DPCD-25,PDF带笔记属性；即使原文打开，从Home创建也不形成关联。Delete Current Page后手册说不能恢复；双页视图不可增删页。,删页确认、满空间、恢复备份后特殊属性与删除撤销均未实测。,not_observed,false,cases/M-059-sony-dpt.md,2026-10-27
+F-M059-18,M-059,添加PDF模板并选择默认模板,D2,E-DPT-01;E-DPCD-12;E-DPCD-26,多页PDF只取第一页；密码保护PDF不能加入；模板不是原多页资料的完整导入。,删模板对既有笔记、重复命名/失败和多端同步未知。,not_observed,false,cases/M-059-sony-dpt.md,2026-10-27
+F-M059-19,M-059,填写PDF表单,D2,E-DPT-01;E-DPCD-23,支持五类表单对象；文本框明确保存按钮，不能由手写即时保存规则代替。,校验失败、取消、提交到服务器、签名/脚本及导出兼容未说明。,not_observed,false,cases/M-059-sony-dpt.md,2026-10-27
+F-M059-20,M-059,在电脑只读查看设备文档,D2,E-DPT-01;E-DPCD-16,文件临时放在电脑，关闭Digital Paper App时删除；不是Transfer导出或独立备份。,阅读器仍开时删除反馈、缓存残留、另存和修改回传未知。,not_observed,false,cases/M-059-sony-dpt.md,2026-10-27
+F-M059-21,M-059,把设备画面显示到电脑,D2,E-DPT-01;E-DPCD-10,该入口显示设备屏幕并可保存图像；蓝牙比USB/Wi-Fi慢是手册定性说明。,保存图像控件/格式、刷新率、远程操作和停止步骤未由指南证明。,not_observed,false,cases/M-059-sony-dpt.md,2026-10-27
+F-M059-22,M-059,校准笔触位置,D2,E-DPT-01;E-DPCD-22,第一次描线抬笔才显示；确认页仍偏移可Recalibrate返回校正并再验，不能把未落笔显示当笔失效。,取消、校准保存范围和儿童握姿适配未测。,not_observed,false,cases/M-059-sony-dpt.md,2026-10-27
+F-M059-23,M-059,设置锁屏并用已登记卡片解锁,D2,E-DPT-01;E-DPCD-02;E-DPCD-03,只登记一张；换卡先注销。唤醒可密码或登记FeliCa解锁；注销需密码。忘记密码的手册服务移除会清全部文档，费用/现今可用性未核。,错误次数、卡丢失后的实际回执、锁屏时PC访问范围未知。,not_observed,false,cases/M-059-sony-dpt.md,2026-10-27
+F-M059-24,M-059,连接电脑并在休眠后恢复连接,D2,E-DPT-01;E-DPCD-05;E-DPCD-06;E-DPCD-07;E-DPCD-30;E-DPCD-28,Wi-Fi/蓝牙各有睡眠保持设置；Windows可自动蓝牙重连，Mac需系统操作。多设备用Tools→Switch Digital Paper→Add/Switch，不能同时传文件；Re-pair另机可能删除原同步设置。,首次向导每屏、锁屏下访问、当前OS支持和失败回滚未知；多设备数量与并发说明不相互替代。,not_observed,false,cases/M-059-sony-dpt.md,2026-10-27
+F-M059-25,M-059,检查更新与核对设备版本,D2,E-DPT-01;E-DPCD-29;E-DPCD-28,固件早于1.2先升级PC App再升设备；自动通知可配置，通知不是已升级。,当前可下载版本、向导细节、升级失败/回退和数据保留没有实测。,not_observed,false,cases/M-059-sony-dpt.md,2026-10-27
+F-M059-26,M-059,按文件信息检索资料,D2,E-DPT-01,设备查文件名/标题/作者；PC还查文件夹名，结果双击文件夹展开、文档交电脑PDF阅读器；不是全文OCR检索。,匹配规则、无结果反馈、范围和跨语言检索未测。,not_observed,false,cases/M-059-sony-dpt.md,2026-10-27
+F-M059-27,M-059,无响应时复位并辨认数据风险,D2,E-DPT-01;E-DPCD-31;E-DPCD-27,指南明确复位可能丢设置、批注和笔记。另一个Initialize Digital Paper菜单清存储、恢复默认并自动关机，不能与普通复位视为同一动作。,复位实际损失范围、初始化确认、自动备份和恢复均未验证。,not_observed,false,cases/M-059-sony-dpt.md,2026-10-27

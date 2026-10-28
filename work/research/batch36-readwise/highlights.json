@@ -1,0 +1,74 @@
+[
+  {
+    "id": "101",
+    "text": "Synthetic highlight A: a learner explains an idea before receiving feedback.",
+    "note": "Synthetic note: ask for an example.",
+    "book_id": 1,
+    "source_title": "Synthetic Learning Notes",
+    "source_author": "Research fixture",
+    "url": "https://example.invalid/a"
+  },
+  {
+    "id": "102",
+    "text": "Synthetic highlight B: a later attempt can distinguish recognition from recall.",
+    "note": "",
+    "book_id": 1,
+    "source_title": "Synthetic Learning Notes",
+    "source_author": "Research fixture",
+    "url": "https://example.invalid/a"
+  },
+  {
+    "id": "201",
+    "text": "Synthetic highlight C: compare evidence from independent news sources.",
+    "note": "Synthetic note: a related idea, not a proven conclusion.",
+    "book_id": 2,
+    "source_title": "Synthetic News Notes",
+    "source_author": "Research fixture",
+    "url": "https://example.invalid/b"
+  },
+  {
+    "id": "202",
+    "text": "Synthetic highlight D: record a correction separately from the original report.",
+    "note": "",
+    "book_id": 2,
+    "source_title": "Synthetic News Notes",
+    "source_author": "Research fixture",
+    "url": "https://example.invalid/b"
+  },
+  {
+    "id": "301",
+    "text": "Synthetic singleton highlight E: one book has only one retained highlight.",
+    "note": "",
+    "book_id": 3,
+    "source_title": "Synthetic Single Source",
+    "source_author": "Research fixture",
+    "url": "https://example.invalid/c"
+  },
+  {
+    "id": "401",
+    "text": "识字练习先尝试再提示",
+    "note": "Synthetic short Chinese content.",
+    "book_id": 4,
+    "source_title": "Synthetic Short Source",
+    "source_author": "Research fixture",
+    "url": ""
+  },
+  {
+    "id": "101",
+    "text": "Synthetic duplicate highlight with a changed note is placed after the first.",
+    "note": "This is intentionally a second version.",
+    "book_id": 1,
+    "source_title": "Synthetic Learning Notes",
+    "source_author": "Research fixture",
+    "url": ""
+  },
+  {
+    "id": "501",
+    "text": "Finished Document: synthetic activity marker excluded by the renderer.",
+    "note": "",
+    "book_id": 5,
+    "source_title": "Synthetic Activity",
+    "source_author": "Research fixture",
+    "url": ""
+  }
+]

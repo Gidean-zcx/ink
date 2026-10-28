@@ -1,0 +1,609 @@
+The Economist Developer PortalThe Economist Developer Portal
+for developers
+Economist Proopen_in_newSyndicationopen_in_newEIU APIopen_in_newGet help
+Menu
+Overview
+API Reference
+/v1/auth/login
+/v1/articles
+/v1/articles/id
+/v1/sections
+/v1/tags
+/v1/the-world-in-brief
+Errors
+Schemas
+Economist Proopen_in_new
+Syndicationopen_in_new
+EIU APIopen_in_new
+Get help
+Overview
+The Economist Content API provides authenticated access to Economist articles, sections, and tags for Economist Pro clients. This document is for developers integrating with the API.
+Base URL:
+https://api.economist.com/eco/content/all/b2b-content-api
+Versioning is done via route prefixing (e.g., /v1/... ) to ensure backward compatibility.
+Authentication
+The B2B Content API uses API keys to authenticate requests. You can get your API key by contacting The Economist Pro Operations Team (economistpro@economist.com).
+Your API keys carry many privileges, so be sure to keep them secure! Do not share your secret API keys in publicly accessible areas such as GitHub, client-side code, and so forth.
+All API requests must be made over HTTPS. Calls made over plain HTTP will fail. API requests without authentication will also fail.
+Endpoint
+You can authenticate by sending a POST request to the following login endpoint.
+POST /v1/auth/login
+Request
+Define the client_id and client_secret in the request body to obtain a JWT token.
+{
+"client_id": "your-client-id",
+"client_secret": "your-client-secret"
+}
+Response
+The response will include a JWT token that you can use for subsequent requests.
+{
+"metadata": {
+"request_id": "7779ee23b8451d335128f04901b13506"
+},
+"data": {
+"access_token": "<JWT-TOKEN>",
+"expires_in": 86400,
+"token_type": "Bearer"
+}
+}
+When it expires, the token will no longer be valid, and you will need to authenticate again to obtain a new token.
+The expires_in field indicates the number of seconds until the token expires (in this case, 86400 seconds or 24 hours).
+Usage
+Add the token to the Authorization header of all subsequent requests:
+Authorization: Bearer YOUR_ACCESS_TOKEN
+Metadata
+The metadata object provides additional contextual information about the API response. It includes details such as filtering parameter and a unique request identifier useful for debugging and support.
+Notes
+Not all endpoints include all fields. For example, /v1/sectionsand /v1/tags typically only return request_id.
+request_id should always be included when contacting support.
+Example Metadata Format
+{
+"metadata": {
+"start": "2025-05-21",
+"end": "2025-06-20",
+"filters": {
+"sections": ["leaders", "britain", "the-world-this-week"],
+"tags": ["artificial-intelligence"]
+},
+"request_id": "7779ee23b8451d335128f04901b13506"
+}
+}
+Attributes
+start (string) :The start date of the data range used in the request, formatted asYYYY-MM-DD.end (string) :The end date of the data range used in the request, formatted asYYYY-MM-DD.filters (object) :An object containing any filters applied to the request. This may include:filters.sections (array | string) :An array of section slugs that were filtered in the request.filters.tags (array | string) :An array of tag slugs that were filtered in the request.request_id (string) :Each API request returns a unique request_id in the response metadata. This ID can be used for debugging and support purposes. If you encounter an error, please provide this ID when contacting support.
+Pagination Response
+The Economist Content API uses cursor-based pagination for endpoints that return collections of data, such as /v1/articles and /v1/tags. This method provides clear, bidirectional navigation and consistent handling of large result sets, especially as the dataset changes over time.
+Notes
+You can page forward and backward through results using cursor tokens, after_cursor and before_cursor.
+The response includes:
+has_next_page and has_previous_page (booleans)
+next_cursor and previous_cursor (opaque strings)
+Cursors are opaque and must not be manipulated
+Always check has_next_page and has_previous_page to determine if further requests are needed
+Request Parameter
+after_cursor (string) optional:The cursor token to start returning results after. If not provided, results start from the beginning.before_cursor (string) optional:The cursor token to start returning results before. If not provided, results end at the last item.
+Response
+{
+"data": [ ... ],
+"metadata": { ... },
+"pagination": {
+"has_next_page": true,
+"has_previous_page": true,
+"next_cursor": "a16fa874-0002-4507-bbc0-d1ac9f3ae14a",
+"previous_cursor": "c56d46f4-f603-4a37-af4f-50a10a6a528c"
+}
+}
+Attributes
+pagination (object) :An object containing pagination information:pagination.has_next_page (boolean) :Indicates if there are more results available after the current page.pagination.has_previous_page (boolean) :Indicates if there are results available before the current page.pagination.next_cursor (string) :An opaque string token to use for fetching the next page of results. If there are no more results, this will be null.pagination.previous_cursor (string) :An opaque string token to use for fetching the previous page of results.
+Rate Limiting
+The Economist Content API enforces a global rate limit of 10 requests per second (RPS) per client. Clients should implement retry logic with exponential backoff to avoid service disruption.
+Entitlements
+The Economist Content API enforces entitlement-based access control. This means that each authenticated client can only access the content (e.g., sections, articles) they have been explicitly authorized to view, based on a contractual agreement with The Economist.
+Entitlements are evaluated at runtime and apply to:
+Section-level access for /v1/articles
+Section visibility in /v1/sections
+The World in Brief visibility in /v1/the-world-in-brief
+How Entitlements Work
+When a client authenticates using /v1/auth/login, their access rights are internally resolved and applied to every subsequent request.
+All responses from content endpoints are automatically filtered to include only data the client is entitled to.
+If a client tries to access or filter by an unauthorized section, the API will reject the request with a 403 Forbidden error.
+Unauthorized Access Example
+If a client includes a section they are not entitled to, the API returns:
+403 Forbidden
+{
+"errors": [
+{
+"error": "unauthorized",
+"error_description": "You are not authorized to access one or more requested sections"
+}
+],
+"metadata": {
+"request_id": "7779ee23b8451d335128f04901b13506"
+}
+}
+Example
+Section Filtering Within Entitlements
+Suppose a client is entitled to the following sections:
+leaders
+britain
+the-world-this-week
+They may request
+All articles from their accessible sections:
+GET /v1/articles
+Articles only from the leaders section:
+GET /v1/articles?sections=leaders
+Articles from leaders and britain:
+GET /v1/articles?sections=leaders,britain
+But this request will fail if they include a section like business that they are not entitled to:
+GET /v1/articles?sections=leaders,business
+→ 403 Forbidden
+Images
+The B2B Content API can include image components in article responses for clients with image entitlements. Image components provide access to charts, tables, maps, and infographics that accompany articles.
+Image Entitlements
+Not all clients are entitled to images. Image access depends on your specific agreement with The Economist. If you do not have image entitlements, image components will not appear in API responses.
+Signed Image URLs
+All image URLs provided by the API are signed with cryptographic signatures. This means:
+URLs cannot be modified—any changes to the URL will invalidate the signature
+URLs have a fixed expiry time—they will stop working after 30 days. Treat these URLs as short-lived and do not persist or rely on them beyond their validity window. When rendering or otherwise using an image, you should obtain or refresh the URL from the API (for example, on page load or on a cache miss), and re-fetch a new URL if an existing one fails or returns an expired/forbidden response.
+URLs are client-specific—each URL is tied to your client identifier, allowing The Economist to assess usage and ensure proper access control
+Image Types
+Clients with image entitlements will receive the following image types:
+CHART — Data visualizations and charts
+TABLE — Tabular data visualizations
+MAP — Geographic maps
+INFOGRAPHIC — Infographic images
+Best Practices
+When integrating images into your application, we recommend the following approach:
+Server-side rendering: Access image URLs when rendering pages on the server side, so the URLs are not exposed in client-side code. This is the preferred approach.
+Direct embedding: If server-side rendering is not possible, you can embed the URLs directly in your HTML as image elements.
+URL expiration: Be aware that image URLs expire. Implement a mechanism to refresh URLs periodically by re-fetching the article content from the API.
+Self-hosting: While it is possible to download and self-host images depending on your CMS workflow, we prefer that clients use the provided URLs directly to ensure proper usage tracking and access control.
+Example Image Component
+Image components appear in the body array of article responses. Here is an example:
+{
+"type": "IMAGE",
+"imageType": "CHART",
+"height": 1163,
+"width": 1080,
+"credit": "Source: The Economist Data Team",
+"caption": {
+"text": "Global GDP growth projections for 2025-2026"
+},
+"url": "https://client-images.economist.com/20251213_IBC542.jpg?client=sample-client&exp=1764938643&sig=..."
+}
+Endpoints Overview
+Below is a quick reference summary of each available endpoint:
+EndpointMethodDescription
+/v1/auth/loginPOSTAuthenticates a client and returns a Bearer token for use in subsequent requests
+/v1/articlesGETReturns a paginated list of articles. Supports filters by tag, section, and date
+/v1/articles/{id}GETRetrieves full content of a single article by its ID
+/v1/sectionsGETReturns all sections that can be used to filter articles
+/v1/tagsGETReturns all tags that can be used to filter articles
+/v1/the-world-in-briefGETReturns The World in Brief content
+/v1/auth/login
+See above under Authentication.
+/v1/articles
+GET /v1/articles
+Fetches a list of articles. Supports filters like start_date, end_date, sections, and tags.
+Parameters
+NameTypeDescription
+start_datestringFilter by start date (YYYY-MM-DD). Should be used with end_date for explicit date range queries.
+end_datestringFilter by end date (YYYY-MM-DD). Should be used with start_date for explicit date range queries.
+sectionsstring[]Slugs of sections to include. Cannot be used with tags. Recommended for historical data.
+tagsstring[]Slugs of tags to include. Cannot be used with sections.
+before_cursorstringCursor for previous items pagination
+after_cursorstringCursor for next items pagination
+page_sizestringPage size limit (min: 1, max: 100)
+Filtering with sections or tags
+You cannot filter by both sections and tags in the same request. Attempting to use both filters will result in a 400 Bad Request error.
+We recommend filtering by sections as they are historically populated for all articles, providing more comprehensive and reliable results. Tags may not be available for all historical content.
+Where tags are present on older articles, they were generated automatically and may use a different naming convention from editorial tags on recent content (for example cs-poland versus poland). See Tags for guidance on normalizing historic tag slugs in your application.
+Sections or tags can be provided as a comma-separated list of slugs, e.g. ?tags=britain,world. If no filters are applied, all articles will be returned.
+Filtering with date ranges
+Always specify both start_date and end_date parameters explicitly when filtering articles by publication date. This ensures predictable, unambiguous results.
+For example, to get the last 3 months of articles, calculate both dates explicitly. For instance, if today is October 31st 2025 use start_date=2025-07-31 and end_date=2025-10-31 to retrieve all articles from July 31st 2025 to October 31st 2025.
+Example Response
+{
+"data": [
+{
+"id": "dc0ce3aa-5580-4ae1-bd87-481f3cfb1cb0",
+"datePublished": "2025-06-19T12:57:42Z",
+"dateFirstPublished": "2025-06-19T12:57:40.329Z",
+"headline": "Biotech is coming to Wales",
+"url": "https://www.economist.com/britain/2025/06/19/biotech-is-coming-to-wales",
+"tags": [
+{
+"slug": "britain",
+"name": "Britain"
+},
+{
+"slug": "world",
+"name": "World"
+}
+],
+"section": {
+"slug": "britain",
+"name": "Britain"
+},
+"brand": "ECONOMIST"
+}
+],
+"metadata": {
+"end": "2025-06-20",
+"filters": {
+"sections": [
+"leaders",
+"britain",
+"the-world-this-week"
+],
+"tags": []
+},
+"request_id": "eb6d584163a933438d92b009d6323f1e",
+"start": "2025-05-21"
+},
+"pagination": {
+"has_next_page": true,
+"has_previous_page": true,
+"next_cursor": "c56d46f4-f603-4a37-af4f-50a10a6a528c",
+"previous_cursor": "c56d46f4-f603-4a37-af4f-50a10a6a528c"
+}
+}
+/v1/articles/{id}
+GET /v1/articles/{id}
+Fetch a full article by its ID, including body content. ID is the UUID of the article.
+Example Response
+{
+"metadata": {
+"request_id": "b3b46f08a20eee4ec2852d4028084662"
+},
+"data": {
+"id": "905fb73b-b04a-4b8a-b0ea-bddf8976594d",
+"datePublished": "2025-12-19T08:53:42Z",
+"dateFirstPublished": "2025-12-17T17:59:18.83Z",
+"headline": "All sides have learned a lot from Extinction Rebellion’s co-founder ",
+"rubric": "Call it the Roger Hallam extended universe ",
+"tags": [
+{
+"slug": "britain",
+"name": "Britain"
+},
+{
+"slug": "world",
+"name": "World"
+},
+],
+"body": [
+{
+"type": "PARAGRAPH",
+"content": "Splat! The first protester smeared a tray of apple crumble onto the case containing the Crown Jewels in the Tower of London. Next came the custard. Slop! Then the earnest slogan, from two nervous activists: “Democracy has crumbled!” Then the demands to camera: introduce a House of the People, with people appointed at random and the promise that Take Back Power, the custard-chucking protest group, will be doing this all again soon.",
+"html": "<span data-caps="initial">S</span><small>plat! The</small> first protester smeared a tray of apple crumble onto the case containing the Crown Jewels in the Tower of London. Next came the custard. Slop! Then the earnest slogan, from two nervous activists: “Democracy has crumbled!” Then the demands to camera: introduce a House of the People, with people appointed at random and the promise that Take Back Power, the custard-chucking protest group, will be doing this all again soon."
+},
+{
+"type": "PARAGRAPH",
+"content": "If it felt familiar, it should. The aims were new but the methods were old. Extinction Rebellion activists caked Shell’s headquarters in graffiti and blocked junctions in central London. Just Stop Oil, another protest group, encouraged its activists to hurl tomato soup on paintings by Vincent van Gogh. Insulate Britain, possibly the first civil-resistance movement dedicated to lobbying for lagging, blocked roads. In some cases, even the phone number supplied to curious journalists is the same.",
+"html": "If it felt familiar, it should. The aims were new but the methods were old. Extinction Rebellion activists caked Shell’s headquarters in graffiti and blocked junctions in central London. Just Stop Oil, another protest group, encouraged its activists to hurl tomato soup on paintings by Vincent van Gogh. Insulate Britain, possibly the first civil-resistance movement dedicated to lobbying for lagging, blocked roads. In some cases, even the phone number supplied to curious journalists is the same."
+},
+{
+"type": "PARAGRAPH",
+"content": "Call it the Roger Hallam extended universe. A co-founder of the likes of Extinction Rebellion and Just Stop Oil, Mr Hallam has spent much of the past decade helping organise civil disobedience in Britain. Eventually, the law caught up with him. The activist gave a pep talk to people planning to block the M25, London’s orbital motorway, which was recorded and then handed to the police. Mr Hallam gave the court a two-hour lecture; the judge gave him five years. Now, sporting an electronic tag, Mr Hallam is free and cheering on the custard-hurlers if not doing it himself. Why listen to a 59-year-old man fresh out of hmp Wayland?",
+"html": "Call it the Roger Hallam extended universe. A co-founder of the likes of Extinction Rebellion and Just Stop Oil, Mr Hallam has spent much of the past decade helping organise civil disobedience in Britain. Eventually, the law caught up with him. The activist gave a pep talk to people planning to block the <small>M</small>25, London’s orbital motorway, which was recorded and then handed to the police. Mr Hallam gave the court a two-hour lecture; the judge gave him five years. Now, sporting an electronic tag, Mr Hallam is free and cheering on the custard-hurlers if not doing it himself. Why listen to a 59-year-old man fresh out of <small>hmp</small> Wayland?"
+},
+{
+"type": "PARAGRAPH",
+"content": "Plenty of other people have. In Mr Hallam’s telling, the more activists sent to prison the better. What was once a fringe tactic is now a core strategy across the left. Pro-Palestine activists turn up en masse outside Parliament holding signs saying “I oppose genocide. I support Palestine Action”, a pro-Palestine group that vandalised a military base and which the British government places in the same category as al-Qaeda. The protesters knew it would result in arrest. So far, 2,700 people have been arrested. Mass arrest has become the omnistrategy for the omnicause.",
+"html": "Plenty of other people have. In Mr Hallam’s telling, the more activists sent to prison the better. What was once a fringe tactic is now a core strategy across the left. Pro-Palestine activists turn up en masse outside Parliament holding signs saying “I oppose genocide. I support Palestine Action”, a pro-Palestine group that vandalised a military base and which the British government places in the same category as al-Qaeda. The protesters knew it would result in arrest. So far, 2,700 people have been arrested. Mass arrest has become the omnistrategy for the omnicause."
+}
+],
+"section": {
+"slug": "britain",
+"name": "Britain"
+},
+"brand": "ECONOMIST",
+"url": "https://www.economist.com/britain/2025/12/17/all-sides-have-learned-a-lot-from-extinction-rebellions-co-founder"
+}
+}
+/v1/sections
+GET /v1/sections
+Retrieves all content sections that the authenticated client is entitled to access. A section typically represents a high-level editorial category (e.g., “leaders”, “britain”, “business”). These sections can be used to filter content when querying articles via /v1/articles.
+This endpoint requires authentication and reflects the access entitlements associated with the client’s credentials.
+Notes:
+The slug is used as a query parameter when filtering articles (e.g., ?sections=leaders)
+The name is a human-readable label suitable for UI display
+Example Response
+{
+"data": [
+{
+"slug": "leaders",
+"name": "Leaders"
+},
+{
+"slug": "britain",
+"name": "Britain"
+},
+{
+"slug": "the-world-this-week",
+"name": "The world this week"
+}
+],
+"metadata": {
+"request_id": "b42a5327e3bf93392c8bae2b26229a2d"
+}
+}
+/v1/tags
+GET /v1/tags
+Retrieves all tags available in the system. Tags represent topical classifications that can be used to refine article queries (e.g., “Artificial intelligence”, “Politics”, “Finance”). These tags are used with the /v1/articles endpoint to filter results.
+This endpoint supports pagination and requires a valid Bearer token.
+Notes
+slug values are used in query strings for /v1/articles (e.g., ?tags=technology)
+name provides a display-friendly version of the tag on editorial content; on older generated tags it often mirrors the slug (e.g. cs-poland)
+Historical articles may return generated tags with a cs- prefix on the slug (e.g. cs-poland), while newer editorial tags use slugs without that prefix (e.g. poland) and a human-readable name. To compare or merge tags across eras in your application, remove the cs- prefix from generated slugs. Use slugs as returned when calling the API.
+Parameters
+NameTypeDescription
+before_cursorstringCursor for previous items pagination
+after_cursorstringCursor for next items pagination
+page_sizestringPage size limit (min: 1, max: 100)
+Example Response
+{
+"data": [
+{
+"slug": "1843",
+"name": "1843"
+},
+{
+"slug": "afghanistan",
+"name": "Afghanistan"
+},
+{
+"slug": "africa",
+"name": "Africa"
+},
+{
+"slug": "agriculture",
+"name": "Agriculture"
+},
+{
+"slug": "argentina",
+"name": "Argentina"
+},
+{
+"slug": "artificial-intelligence",
+"name": "Artificial intelligence"
+},
+{
+"slug": "asia",
+"name": "Asia"
+},
+{
+"slug": "a-to-zs",
+"name": "A-to-Zs"
+},
+{
+"slug": "australia",
+"name": "Australia"
+},
+{
+"slug": "back-story",
+"name": "Back Story"
+}
+],
+"metadata": {
+"request_id": "87c0a514bb019f2d2589ce5569def869"
+},
+"pagination": {
+"has_next_page": true,
+"has_previous_page": true,
+"next_cursor": "c56d46f4-f603-4a37-af4f-50a10a6a528c",
+"previous_cursor": "c56d46f4-f603-4a37-af4f-50a10a6a528c"
+}
+}
+/v1/the-world-in-brief
+GET /v1/the-world-in-brief
+Retrieves the latest The World in Brief for today's date.
+The World in Brief is The Economist's news service. It allows readers to catch up quickly on the global stories that matter, with updates appearing throughout the day.
+The content is made up of several short paragraphs ("Gobbets") with the latest from around the world, and longer, but still bitesize, articles ("Chunks") covering what is happening today.
+Time zone based delivery
+The World in Brief is delivered based on the time zone configured during onboarding. The API determines "today's date"        using your configured local time zone.
+When you make a request, the API:
+Determines the current date in your configured time zone
+Attempts to retrieve The World in Brief for that date
+If today's edition is not yet available, automatically falls back to the previous day's edition
+This means clients in different time zones will receive the edition corresponding to their local date. For example, a client in New York requesting at 11 PM EST on January 1st will receive January 1st's edition, while a client in Tokyo requesting at 1 AM JST on January 2nd will receive January 2nd's edition.
+Example Response
+{
+"metadata": {
+"request_id": "8f5c7d508aba14516204f7709c346100"
+},
+"data": {
+"id": "865664dc-9581-46e6-9dbe-1281d652a3c7",
+"datePublished": "2025-11-27T15:18:03Z",
+"dateFirstPublished": "2025-11-27T00:00:00Z",
+"url": "https://www.economist.com/the-world-in-brief",
+"components": [
+{
+"id": "cd047d69-2083-4c3f-9d0e-27b9aafeab7b",
+"type": "GOBBETS",
+"headline": "Catch up: shooting of National Guard; fire in Hong Kong ",
+"gobbets": [
+{
+"type": "PARAGRAPH",
+"content": "Donald Trump described the shooting of two members of the National Guard near the White House as an “act of terror”. The attacker was shot by another Guard member and is in hospital under police custody. He is believed to be a refugee from Afghanistan; the administration has since suspended the processing of immigration requests from Afghans. The guardsmen are in critical condition.",
+"html": "<b>Donald Trump</b> described the shooting of two members of the <b>National Guard</b> near the White House as an “act of terror”. The attacker was shot by another Guard member and is in hospital under police custody. He is believed to be a refugee from Afghanistan; the administration has since suspended the processing of immigration requests from Afghans. The <a href=\"https://www.economist.com/united-states/2025/11/16/can-donald-trump-deploy-the-national-guard-whenever-he-likes\">guardsmen</a> are in critical condition."
+},
+{
+"type": "PARAGRAPH",
+"content": "John Lee, Hong Kong’s chief executive, said the city’s government would create a HK$300m ($39m) aid fund for the housing estate ravaged by a fire. It will also give HK$10,000 to each household. At least 75 people died. Dozens are unaccounted for. Police arrested three men from a construction company that was renovating the buildings on suspicion of manslaughter.",
+"html": "John Lee, <b>Hong Kong’s</b> chief executive, said the city’s government would create a <small>HK</small>$300m ($39m) aid fund for the housing estate ravaged by a fire. It will also give <small>HK</small>$10,000 to each household. At least 75 people died. Dozens are unaccounted for. Police arrested three men from a construction company that was renovating the buildings on suspicion of manslaughter."
+},
+{
+"type": "PARAGRAPH",
+"content": "Emmanuel Macron, France’s president, announced plans for a voluntary military service for young people, as he warned of growing threats to European security. The scheme will begin next year and aims to recruit 10,000 volunteers by 2030 to serve on French soil. The French parliament will have powers to make the service obligatory in a “moment of major crisis”.",
+"html": "Emmanuel Macron, <b>France’s </b>president, announced plans for a voluntary <b>military service</b> for young people, as he warned of <a href=\"https://www.economist.com/the-world-ahead/2025/11/10/bogged-down-in-ukraine-russia-is-meddling-elsewhere\">growing threats</a> to European security. The scheme will begin next year and aims to recruit 10,000 volunteers by 2030 to serve on French soil. The French parliament will have powers to make the service obligatory in a “moment of major crisis”."
+},
+{
+"type": "PARAGRAPH",
+"content": "Taiwan announced plans for an additional $40bn in defence spending. Lai Ching-te, the president, said China had increased military drills and “grey-zone harassment”, and strengthened its campaign of “infiltration and influence”. With concerns growing in Taiwan over America’s commitment to its protection, Mr Lai has pledged to increase the defence budget to more than 5% of GDP by 2030.",
+"html": "<b>Taiwan</b> announced plans for an additional $40bn in defence spending. <b>Lai Ching-te</b>, the president, said China had increased military drills and <a href=\"https://www.economist.com/podcasts/2024/06/04/chinas-grey-zone-tactics-against-taiwan\">“grey-zone harassment”</a>, and strengthened its campaign of “infiltration and influence”. With concerns growing in <a href=\"https://www.economist.com/leaders/2025/11/13/the-hidden-risks-in-taiwans-boom\">Taiwan</a> over America’s commitment to its protection, Mr Lai has pledged to increase the defence budget to more than 5% of <small>GDP</small> by 2030."
+},
+{
+"type": "PARAGRAPH",
+"content": "S&P Global downgraded its rating of USDT, a stablecoin issued by Tether that is pegged to the dollar, to its lowest level. The agency said some of USDT’s reserves consist of high-risk assets, including Bitcoin. It also criticised Tether for a lack of transparency. S&P warned that such vulnerabilities increase the risk of the coin breaking its peg.",
+"html": "<small>S</small>&<small>P</small> Global downgraded its rating of <b><small>USDT</small></b>, a <a href=\"https://www.economist.com/finance-and-economics/2025/02/23/stablecoins-the-real-crypto-craze\">stablecoin</a> issued by <b>Tether </b>that is pegged to the dollar, to its lowest level. The agency said some of <small>USDT</small>’s reserves consist of high-risk assets, including Bitcoin. It also criticised Tether for a lack of transparency. <small>S</small>&<small>P</small> warned that such vulnerabilities increase the risk of the coin breaking its peg."
+},
+{
+"type": "PARAGRAPH",
+"content": "Army officers seized power in Guinea-Bissau, deposing President Umaro Sissoco Embaló, a day before provisional results of a presidential election were due. They immediately suspended the election process. The opposition claimed that Mr Embaló staged the putsch because he was losing. The west African country has experienced four successful coups since independence in 1974.",
+"html": "Army officers seized power in <b>Guinea-Bissau</b>, deposing President Umaro Sissoco Embaló, a day before provisional results of a presidential election were due. They immediately suspended the election process. The opposition claimed that Mr Embaló staged the putsch because he was losing. The west African country has experienced four successful <a href=\"https://www.economist.com/middle-east-and-africa/2022/02/03/guinea-bissau-sees-off-an-attempted-coup\">coups</a> since independence in 1974."
+},
+{
+"type": "PARAGRAPH",
+"content": "SK Hynix, a South Korean tech giant, released a brand of potato chips designed to resemble the high-bandwidth memory chips the firm produces. The company said the honey and banana-flavoured snack is geared toward making chips (of the silicon variety) “more relatable to the public”. They will be stocked by 7-Eleven, a supermarket chain collaborating with SK Hynix.",
+"html": "<b><small>SK</small> Hynix</b>, a South Korean tech giant, released a brand of potato chips designed to resemble the high-bandwidth memory chips the firm produces. The company said the honey and banana-flavoured snack is geared toward making chips (of the silicon variety) “more relatable to the public”. They will be stocked by 7-Eleven, a supermarket chain collaborating with <small>SK</small> Hynix."
+},
+{
+"type": "PARAGRAPH",
+"content": "Figure of the Day: 1.3 quadrillion, the number of AI tokens Google says its systems use each month. Read the full story here.",
+"html": "<b>Figure of the Day:</b> 1.3 quadrillion, the number of <small>AI </small>tokens Google says its systems use each month. <a href=\"https://www.economist.com/business/2025/11/23/ai-tokens-are-surging-but-are-profits\">Read the full story here</a>."
+},
+{
+"type": "PARAGRAPH",
+"content": "When did George Osborne, Britain’s chancellor U-turn on his “pasty tax”? When did “The Truman Show” come out? Play Dateline, The Economist‘s history quiz, to test your historical knowledge.",
+"html": "<i>When did George Osborne, Britain’s chancellor U-turn on his “pasty tax”? When did “The Truman Show” come out? <a href=\"https://www.economist.com/interactive/dateline-history-quiz-game\">Play Dateline</a>, </i>The Economist<i>‘s history quiz, to test your historical knowledge.</i>"
+}
+]
+},
+{
+"id": "f008642c-0a10-47d6-88b3-acc7867a297d",
+"type": "CHUNK",
+"headline": "Turkey with a side of terbium",
+"components": [
+{
+"type": "PARAGRAPH",
+"content": "Many Americans prefer a dollop of cranberry sauce and a slice of pumpkin pie at Thanksgiving. Scott Bessent, America’s treasury secretary, is more demanding. He has asked for generous helpings of terbium, dysprosium and other rare earths that China, the dominant producer, subjected to export controls this year. These elements, crucial in high-tech manufacturing, are China’s most powerful weapon in its economic rivalry with America.",
+"html": "Many Americans prefer a dollop of cranberry sauce and a slice of pumpkin pie at Thanksgiving. Scott Bessent, America’s treasury secretary, is more demanding. He has asked for generous helpings of terbium, dysprosium and other <a href=\"https://www.economist.com/the-world-ahead/2025/11/12/the-rare-earth-industry-needs-more-than-trumpian-deals\">rare earths</a> that China, the dominant producer, subjected to export controls this year. These elements, crucial in high-tech manufacturing, are China’s most powerful weapon in its economic rivalry with America."
+},
+{
+"type": "PARAGRAPH",
+"content": "At a meeting with President Donald Trump last month, Xi Jinping, China’s leader, agreed to delay new controls on five rare earths (announced on October 9th) for a year. According to the Americans, China also agreed to issue “general licences” for other rare earths subject to earlier controls. It might, for example, let exporters sell these items for a year, rather than requiring a separate licence for each shipment. Mr Bessent hoped the details of those licences would be finalised by Thanksgiving. But that dish may need longer in the oven.",
+"html": "At a <a href=\"https://www.economist.com/china/2025/10/30/donald-trump-and-xi-jinping-agree-to-a-trade-truce\">meeting with President Donald Trump</a> last month, Xi Jinping, China’s leader, agreed to delay new controls on five rare earths (announced on October 9th) for a year. According to the Americans, China also agreed to issue “general licences” for other rare earths subject to earlier controls. It might, for example, let exporters sell these items for a year, rather than requiring a separate licence for each shipment. Mr Bessent hoped the details of those licences would be finalised by Thanksgiving. But that dish may need longer in the oven."
+}
+]
+},
+{
+"id": "e2bd2bbc-271a-420d-b10b-49d020c15de9",
+"type": "CHUNK",
+"headline": "America’s airlines’ record-busting holiday season",
+"components": [
+{
+"type": "PARAGRAPH",
+"content": "Thanksgiving travel is set for a record year. America’s commercial airlines expect an unprecedented 31m passengers over the holiday, according to Airlines for America, a trade group. American Airlines will operate nearly 81,000 flights between November 20th and December 2nd, up 5% from last year, while United Airlines is anticipating its busiest-ever Thanksgiving, with 6.6m passengers.",
+"html": "Thanksgiving travel is set for a record year. America’s <a href=\"https://www.economist.com/business/2025/07/22/airlines-favourite-new-pricing-trick\">commercial airlines</a> expect an unprecedented 31m passengers over the holiday, according to Airlines for America, a trade group. American Airlines will operate nearly 81,000 flights between November 20th and December 2nd, up 5% from last year, while United Airlines is anticipating its busiest-ever Thanksgiving, with 6.6m passengers."
+},
+{
+"type": "PARAGRAPH",
+"content": "The surge is a boost for airlines following a challenging year. They are still reeling from the government shutdown, which worsened staff shortages, particularly of air-traffic controllers, and caused widespread flight disruption.",
+"html": "The surge is a boost for airlines following a challenging year. They are still reeling from the <a href=\"https://www.economist.com/finance-and-economics/2025/11/09/the-problem-with-americas-shutdown-economy\">government shutdown</a>, which worsened staff shortages, particularly of air-traffic controllers, and caused widespread flight disruption."
+},
+{
+"type": "PARAGRAPH",
+"content": "Meanwhile ballooning costs are eroding margins. Larger airlines now rely heavily on loyalty programmes: the roughly $2.1bn that American Express, a credit-card giant, paid Delta between April and June was equivalent to the airline’s entire operating profit in the quarter. But others, such as American and Southwest, are struggling to contain expenses. At least the holiday rush will help to replenish airline coffers.",
+"html": "Meanwhile ballooning costs are eroding margins. Larger airlines now rely heavily on <a href=\"https://www.economist.com/business/2025/08/06/how-loyalty-programmes-are-keeping-americas-airlines-aloft\">loyalty programmes</a>: the roughly $2.1bn that American Express, a credit-card giant, paid Delta between April and June was equivalent to the airline’s entire operating profit in the quarter. But others, such as American and Southwest, are struggling to contain expenses. At least the holiday rush will help to replenish airline coffers."
+}
+]
+},
+{
+"id": "a5385eb0-8a9f-4ac5-a4ae-3c015f0260d3",
+"type": "CHUNK",
+"headline": "Britain’s obsession with immigration",
+"components": [
+{
+"type": "PARAGRAPH",
+"content": "Britain’s Office for National Statistics released its figures for migration on Thursday. Annual net migration, the measure that Britons follow most closely, plunged to 204,000 in the year to June, down by two-thirds from 649,000 the previous year. The factors that caused a surge in net migration in previous years are no longer as potent. Few Hong Kongers or Ukrainians are arriving these days, and the government has become stingy with work visas.",
+"html": "Britain’s Office for National Statistics released its figures for migration on Thursday. Annual net migration, the measure that Britons follow most closely, plunged to 204,000 in the year to June, down by two-thirds from 649,000 the previous year. The factors that caused a surge in net migration in previous years are no longer as potent. Few Hong Kongers or Ukrainians are arriving these days, and the government has become <a href=\"https://www.economist.com/britain/2025/05/12/britains-experiment-with-liberal-immigration-policies-is-over\">stingy with work visas</a>."
+},
+{
+"type": "PARAGRAPH",
+"content": "Will Britons notice the new numbers, or believe them? Monthly polling by Ipsos shows that they see immigration as the most important issue facing the country, by a large margin. The British public’s concerns about immigration may be primarily aimed at asylum-seekers, a group that the government is now trying hard to deter, including by copying tough policies from Denmark. But their numbers are not falling yet.",
+"html": "Will Britons notice the new numbers, or believe them? Monthly polling by Ipsos shows that they see immigration as the most important issue facing the country, by a large margin. The British public’s concerns about immigration may be primarily aimed at asylum-seekers, a group that the government is now trying hard to deter, including by <a href=\"https://www.economist.com/britain/2025/11/20/will-britain-copy-asylum-policy-from-a-place-with-poor-integration\">copying tough policies from Denmark</a>. But their numbers are not falling yet."
+}
+]
+},
+{
+"id": "6e442d4e-2a8f-4cd6-92fe-dddb20bf88ca",
+"type": "CHUNK",
+"headline": "France’s budget goes to the Senate",
+"components": [
+{
+"type": "PARAGRAPH",
+"content": "The French government’s scramble to get a budget for 2026 through parliament continues on Thursday, when the bill goes to the Senate. On November 21st the lower house overwhelmingly rejected the version that its own legislators had amended with a raft of extra taxes. Even the centrist parties belonging to the minority government of Sébastien Lecornu, the prime minister, voted against it or abstained. As a result, the Senate will look at Mr Lecornu’s original, unamended draft. The deadline for the lower house to hold a final vote is December 23rd.",
+"html": "The French government’s scramble to get a <a href=\"https://www.economist.com/europe/2025/10/30/frances-finance-minister-on-how-to-pass-a-budget\">budget</a> for 2026 through parliament continues on Thursday, when the bill goes to the Senate. On November 21st the lower house overwhelmingly rejected the version that its own legislators had amended with a raft of extra taxes. Even the centrist parties belonging to the minority government of Sébastien Lecornu, the prime minister, voted against it or abstained. As a result, the Senate will look at Mr Lecornu’s original, unamended draft. The deadline for the lower house to hold a final vote is December 23rd."
+},
+{
+"type": "PARAGRAPH",
+"content": "If Mr Lecornu cannot get agreement in parliament, he may either force through the budget using a constitutional provision, or roll over this year’s budget via a special law. Either would put his government’s survival on the line. Rolling over the budget would avoid a government shutdown, but not allow for new spending. This could affect several of President Emmanuel Macron’s policies, not least his plan to reintroduce military service on a voluntary basis.",
+"html": "If Mr Lecornu cannot get agreement in parliament, he may either force through the budget using a constitutional provision, or roll over this year’s budget via a special law. Either would put his government’s survival on the line. Rolling over the budget would avoid a government shutdown, but not allow for new spending. This could affect several of <a href=\"https://www.economist.com/the-world-ahead/2025/11/12/emmanuel-macron-faces-a-very-difficult-year\">President Emmanuel Macron’s policies</a>, not least his plan to reintroduce military service on a voluntary basis."
+}
+]
+},
+{
+"id": "272962ac-d3da-4fe9-bcba-02803faa47a1",
+"type": "CHUNK",
+"headline": "Turner & Constable: Rivals & Originals",
+"components": [
+{
+"type": "PARAGRAPH",
+"content": "They were famous artistic rivals. “Fire and water” is how one critic described their distinct painting styles in 1831, “one all heat, the other all humidity”. Another noted that J.M.W. Turner’s sublime visions were like “gold” and John Constable’s bucolic scenes were like “silver”. Now, some 250 years after their births, the painters are going head-to-head once more.",
+"html": "They were famous artistic rivals. “Fire and water” is how one critic described their distinct painting styles in 1831, “one all heat, the other all humidity”. Another noted that J.M.W. Turner’s sublime visions were like “gold” and John Constable’s bucolic scenes were like “silver”. Now, some 250 years after their births, the painters are going head-to-head once more."
+},
+{
+"type": "PARAGRAPH",
+"content": "“Turner and Constable”, which opens at the Tate Britain in London on Thursday, gathers more than 190 paintings and drawings by the English artists. Early watercolours, sketchbooks and magnificent canvases will go on display. The show does not decree who was the better painter, but instead draws out the men’s similarities. Turner and Constable were both preoccupied with light, for instance, and spent years figuring out how to capture it with layers of oil paint. Most importantly, they both shaped landscape art by creating works that are worthy of fame and attention, even centuries later.",
+"html": "“Turner and Constable”, which opens at the Tate Britain in London on Thursday, gathers more than 190 <a href=\"https://www.economist.com/finance-and-economics/2025/08/14/what-630000-paintings-say-about-the-world-economy\">paintings</a> and drawings by the English artists. Early watercolours, sketchbooks and magnificent canvases will go on display. The show does not decree who was the better painter, but instead draws out the men’s similarities. Turner and Constable were both preoccupied with light, for instance, and spent years figuring out how to capture it with layers of oil paint. Most importantly, they both shaped landscape art by creating works that are worthy of fame and attention, even centuries later."
+}
+]
+}
+]
+}
+}
+Sample curl Commands
+Authenticate and Get JWT Token
+curl -X POST https://api.economist.com/eco/content/all/b2b-content-api/v1/auth/login \
+-H "Content-Type: application/json" \
+-d '{
+"client_id": "your-client-id",
+"client_secret": "your-client-secret"
+}'
+Get List of Articles
+curl -X GET "https://api.economist.com/eco/content/all/b2b-content-api/v1/articles" \
+-H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+With filters:
+curl -X GET "https://api.economist.com/eco/content/all/b2b-content-api/v1/articles?sections=leaders&start_date=2025-06-01&end_date=2025-09-01" \
+-H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+Get articles from the last 3 months (specifying both start and end dates):
+curl -X GET "https://api.economist.com/eco/content/all/b2b-content-api/v1/articles?start_date=2025-07-28&end_date=2025-10-28" \
+-H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+Get a Single Article by ID
+curl -X GET "https://api.economist.com/eco/content/all/b2b-content-api/v1/articles/ARTICLE_ID" \
+-H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+Get Entitled Sections
+curl -X GET "https://api.economist.com/eco/content/all/b2b-content-api/v1/sections" \
+-H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+Get Available Tags (Paginated)
+curl -X GET "https://api.economist.com/eco/content/all/b2b-content-api/v1/tags?page_size=5" \
+-H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+With pagination cursor:
+curl -X GET "https://api.economist.com/eco/content/all/b2b-content-api/v1/tags?after_cursor=abc123" \
+-H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+Get The World in Brief
+curl -X GET "https://api.economist.com/eco/content/all/b2b-content-api/v1/the-world-in-brief" \
+-H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+Economist ProSyndicationEIU API
+To enhance your experience and ensure our website runs smoothly, we use cookies and similar technologies.
+Manage cookies
+Terms of use
+Privacy
+Cookie Policy
+Accessibility
+Modern Slavery Statement
+Sitemap
+California Consumer Privacy Act (CCPA) Opt-Out IconYour Privacy Choices
+Registered in England and Wales. No. 236383 | Registered office: The Adelphi, 1-11 John Adam Street, London, WC2N 6HT | VAT Reg No: GB 340 436 876
+© The Economist Newspaper Limited 2026

@@ -1,0 +1,32 @@
+Tap anywhere on the screen of an open document to display the tool bar.
+(quick access list)
+Select and display a document from Recently Read or another document from the current folder.
+(Table of Contents)
+Display PDF bookmarks as a table of contents.
+This icon does not appear if you open a PDF without bookmarks.
+Jump to history
+When you move a page from the table of contents, page specified by [Page Jump], or link in the document, the previously opened page number is displayed under . Tap  to jump to the page.
+When you tap  to display the history page, the page number before returning is displayed under .
+You can move to the history page with  (back) /  (forward).
+Swiping a page does not display a history.
+Page position indicator
+Tap along the line to change page.
+(Paste)
+Paste the handwriting that you selected with Copy/Cut.
+This icon does not appear if Copy/Cut has not been selected.
+(pen settings)
+Set the [Pen Color], [Pen Thickness], or [Eraser Size].
+(zoom in)
+Zoom in on part of a document.
+(search)
+Search for the entered text or for the handwritten mark that you select.
+(option)
+Display a menu of available operations based on the situation.
+Filename
+To hide the tool bar
+Tap an area outside of the tool bar.
+About the table of contents screen
+(a): Expand and display all the contents.
+(b): Collapse all the contents.
+(c): Expand and display the hierarchy contents.
+(d): Collapse the contents.

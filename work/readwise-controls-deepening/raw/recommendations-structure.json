@@ -1,0 +1,263 @@
+{
+  "headings": [
+    {
+      "level": "h1",
+      "id": "",
+      "title": "How to get reading recommendations with the Readwise MCP"
+    },
+    {
+      "level": "h2",
+      "id": "get-recommendations-from-your-library",
+      "title": "Get recommendations from your library"
+    },
+    {
+      "level": "h2",
+      "id": "refine-your-recommendations-with-filters",
+      "title": "Refine your recommendations with filters"
+    },
+    {
+      "level": "h2",
+      "id": "take-action-on-whats-recommended",
+      "title": "Take action on what's recommended"
+    },
+    {
+      "level": "h2",
+      "id": "look-beyond-your-library",
+      "title": "Look beyond your library"
+    },
+    {
+      "level": "h2",
+      "id": "build-recurring-recommendation-workflows",
+      "title": "Build recurring recommendation workflows"
+    },
+    {
+      "level": "h2",
+      "id": "faqs",
+      "title": "FAQs"
+    },
+    {
+      "level": "h3",
+      "id": "why-didnt-the-recommendations-include-articles-i-know-i-have-saved",
+      "title": "Why didn't the recommendations include articles I know I have saved?"
+    },
+    {
+      "level": "h3",
+      "id": "can-i-undo-a-tag-or-move-that-the-mcp-made",
+      "title": "Can I undo a tag or move that the MCP made?"
+    },
+    {
+      "level": "h3",
+      "id": "why-cant-my-ai-access-my-reader-docs",
+      "title": "Why can't my AI access my Reader docs?"
+    }
+  ],
+  "links": [
+    {
+      "href": "/",
+      "text": "",
+      "in_article": false
+    },
+    {
+      "href": "/",
+      "text": "",
+      "in_article": false
+    },
+    {
+      "href": "/",
+      "text": "",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs",
+      "text": "Documentation",
+      "in_article": false
+    },
+    {
+      "href": "/reader/guides",
+      "text": "Guides",
+      "in_article": false
+    },
+    {
+      "href": "/reader/guides/filtering/syntax-guide",
+      "text": "Syntax Guide",
+      "in_article": false
+    },
+    {
+      "href": "/reader/guides/filtering/query-examples",
+      "text": "Filter Library",
+      "in_article": false
+    },
+    {
+      "href": "/reader/guides/filtering/default-views",
+      "text": "Default Views",
+      "in_article": false
+    },
+    {
+      "href": "/reader/guides/ghostreader/overview",
+      "text": "Overview",
+      "in_article": false
+    },
+    {
+      "href": "/reader/guides/ghostreader/global",
+      "text": "Global Ghostreader",
+      "in_article": false
+    },
+    {
+      "href": "/reader/guides/ghostreader/chat",
+      "text": "Chat",
+      "in_article": false
+    },
+    {
+      "href": "/reader/guides/ghostreader/quick-lookup",
+      "text": "Quick Lookup",
+      "in_article": false
+    },
+    {
+      "href": "/reader/guides/ghostreader/default-prompts",
+      "text": "Default Prompts",
+      "in_article": false
+    },
+    {
+      "href": "/reader/guides/ghostreader/custom-prompts",
+      "text": "Custom Prompts",
+      "in_article": false
+    },
+    {
+      "href": "/reader/guides/ghostreader/prompt-library",
+      "text": "Prompt Library",
+      "in_article": false
+    },
+    {
+      "href": "/reader/guides/ghostreader/reference",
+      "text": "Reference",
+      "in_article": false
+    },
+    {
+      "href": "/reader/guides/ghostreader/tips-tricks",
+      "text": "Tips & Tricks",
+      "in_article": false
+    },
+    {
+      "href": "/",
+      "text": "Home",
+      "in_article": false
+    },
+    {
+      "href": "/reader",
+      "text": "Reader",
+      "in_article": false
+    },
+    {
+      "href": "/reader/guides",
+      "text": "Guides",
+      "in_article": false
+    },
+    {
+      "href": "/reader/guides/workflows",
+      "text": "Workflows",
+      "in_article": false
+    },
+    {
+      "href": "/reader/guides/workflows/recommendations",
+      "text": "Recommendations",
+      "in_article": false
+    },
+    {
+      "href": "/tools/mcp",
+      "text": "Readwise MCP",
+      "in_article": true
+    },
+    {
+      "href": "/tools/mcp",
+      "text": "Readwise MCP",
+      "in_article": true
+    },
+    {
+      "href": "/tools/mcp",
+      "text": "MCP setup page",
+      "in_article": true
+    },
+    {
+      "href": "/reader/guides/workflows/longform-reading",
+      "text": "Long-form Reading",
+      "in_article": false
+    },
+    {
+      "href": "mailto:hello@readwise.io",
+      "text": "Email Ushello@readwise.io",
+      "in_article": false
+    },
+    {
+      "href": "https://x.com/readwise",
+      "text": "Follow Us@readwise",
+      "in_article": false
+    },
+    {
+      "href": "https://www.reddit.com/r/readwise/",
+      "text": "Ask the CommunityJoin us on Reddit",
+      "in_article": false
+    },
+    {
+      "href": "https://en.wikipedia.org/wiki/Curse_of_knowledge",
+      "text": "Curse of Knowledge",
+      "in_article": false
+    },
+    {
+      "href": "mailto:hello@readwise.io?Subject=Documentation Feedback",
+      "text": "Send Feedback",
+      "in_article": false
+    },
+    {
+      "href": "#get-recommendations-from-your-library",
+      "text": "Get recommendations from your library",
+      "in_article": false
+    },
+    {
+      "href": "#refine-your-recommendations-with-filters",
+      "text": "Refine your recommendations with filters",
+      "in_article": false
+    },
+    {
+      "href": "#take-action-on-whats-recommended",
+      "text": "Take action on what's recommended",
+      "in_article": false
+    },
+    {
+      "href": "#look-beyond-your-library",
+      "text": "Look beyond your library",
+      "in_article": false
+    },
+    {
+      "href": "#build-recurring-recommendation-workflows",
+      "text": "Build recurring recommendation workflows",
+      "in_article": false
+    },
+    {
+      "href": "#faqs",
+      "text": "FAQs",
+      "in_article": false
+    },
+    {
+      "href": "#why-didnt-the-recommendations-include-articles-i-know-i-have-saved",
+      "text": "Why didn't the recommendations include articles I know I have saved?",
+      "in_article": false
+    },
+    {
+      "href": "#can-i-undo-a-tag-or-move-that-the-mcp-made",
+      "text": "Can I undo a tag or move that the MCP made?",
+      "in_article": false
+    },
+    {
+      "href": "#why-cant-my-ai-access-my-reader-docs",
+      "text": "Why can't my AI access my Reader docs?",
+      "in_article": false
+    }
+  ],
+  "images": [
+    {
+      "src": "/images/claude-recs-example.gif",
+      "alt": "Use Claude to get reading recommendations from your Reader library.",
+      "class": "rounded-lg max-h-[500px] w-auto mx-auto"
+    }
+  ]
+}

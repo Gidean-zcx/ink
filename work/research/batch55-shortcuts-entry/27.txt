@@ -1,0 +1,4 @@
+Rename shortcuts on iPhone or iPad
+In the Shortcuts app on your iPhone or iPad, tap on the shortcut you want to rename.
+Tap the down arrow next to the shortcut name, then tap Rename.
+Type a new name, then tap Done.See alsoUse Siri to run shortcuts with your voice

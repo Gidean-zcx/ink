@@ -1,0 +1,14 @@
+{
+  "result": "PASS",
+  "new_E": 5,
+  "new_F": 2,
+  "new_D1": 1,
+  "new_D2": 1,
+  "inventory": 27,
+  "old_F": 5,
+  "old_fields": 19,
+  "old_E": 1,
+  "archived_images": 2,
+  "viewed_pages": 3,
+  "hands_on": false
+}

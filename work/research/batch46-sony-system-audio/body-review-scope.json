@@ -1,0 +1,397 @@
+{
+  "read_pages": [
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    53,
+    54,
+    55,
+    56,
+    57,
+    58,
+    59,
+    60,
+    61,
+    62,
+    63,
+    64,
+    65,
+    71,
+    72,
+    73,
+    74,
+    75,
+    76,
+    77,
+    78,
+    79,
+    80,
+    81,
+    82,
+    83,
+    84,
+    85,
+    86,
+    92,
+    107,
+    108,
+    113,
+    114,
+    126,
+    127
+  ],
+  "selected": [
+    {
+      "inventory_id": "I-M036-004",
+      "item": "Configuring the initial setup",
+      "pages": [
+        11,
+        12
+      ],
+      "prior_status": "directory_only_not_task_complete"
+    },
+    {
+      "inventory_id": "I-M036-005",
+      "item": "Turning the power on",
+      "pages": [
+        13
+      ],
+      "prior_status": "directory_only_not_task_complete"
+    },
+    {
+      "inventory_id": "I-M036-006",
+      "item": "Turning the power off",
+      "pages": [
+        14
+      ],
+      "prior_status": "directory_only_not_task_complete"
+    },
+    {
+      "inventory_id": "I-M036-007",
+      "item": "Preventing unintentional operations (HOLD)",
+      "pages": [
+        15
+      ],
+      "prior_status": "partial_documented"
+    },
+    {
+      "inventory_id": "I-M036-008",
+      "item": "Charging the battery",
+      "pages": [
+        16
+      ],
+      "prior_status": "directory_only_not_task_complete"
+    },
+    {
+      "inventory_id": "I-M036-009",
+      "item": "Extending the battery lifespan",
+      "pages": [
+        17
+      ],
+      "prior_status": "directory_only_not_task_complete"
+    },
+    {
+      "inventory_id": "I-M036-010",
+      "item": "Reducing the battery consumption",
+      "pages": [
+        18
+      ],
+      "prior_status": "directory_only_not_task_complete"
+    },
+    {
+      "inventory_id": "I-M036-011",
+      "item": "Notes on charging the battery",
+      "pages": [
+        19,
+        20
+      ],
+      "prior_status": "directory_only_not_task_complete"
+    },
+    {
+      "inventory_id": "I-M036-014",
+      "item": "Parts and controls",
+      "pages": [
+        25,
+        26
+      ],
+      "prior_status": "directory_only_not_task_complete"
+    },
+    {
+      "inventory_id": "I-M036-015",
+      "item": "[WALKMAN Home] screen",
+      "pages": [
+        27,
+        28
+      ],
+      "prior_status": "directory_only_not_task_complete"
+    },
+    {
+      "inventory_id": "I-M036-016",
+      "item": "Android Home screen",
+      "pages": [
+        29,
+        30
+      ],
+      "prior_status": "directory_only_not_task_complete"
+    },
+    {
+      "inventory_id": "I-M036-017",
+      "item": "Displaying the All Apps screen",
+      "pages": [
+        31
+      ],
+      "prior_status": "directory_only_not_task_complete"
+    },
+    {
+      "inventory_id": "I-M036-018",
+      "item": "Displaying Quick Settings panel",
+      "pages": [
+        32
+      ],
+      "prior_status": "directory_only_not_task_complete"
+    },
+    {
+      "inventory_id": "I-M036-019",
+      "item": "Switching the home screen",
+      "pages": [
+        33
+      ],
+      "prior_status": "directory_only_not_task_complete"
+    },
+    {
+      "inventory_id": "I-M036-020",
+      "item": "How to use the various screens of “Music player”",
+      "pages": [
+        34,
+        35,
+        36,
+        37
+      ],
+      "prior_status": "partial_documented"
+    },
+    {
+      "inventory_id": "I-M036-026",
+      "item": "List of icons displayed in the status bar",
+      "pages": [
+        53,
+        54
+      ],
+      "prior_status": "directory_only_not_task_complete"
+    },
+    {
+      "inventory_id": "I-M036-027",
+      "item": "Setting the screen lock",
+      "pages": [
+        55
+      ],
+      "prior_status": "directory_only_not_task_complete"
+    },
+    {
+      "inventory_id": "I-M036-028",
+      "item": "Adjusting the volume",
+      "pages": [
+        56,
+        57
+      ],
+      "prior_status": "directory_only_not_task_complete"
+    },
+    {
+      "inventory_id": "I-M036-029",
+      "item": "Volume operation in compliance with Directives",
+      "pages": [
+        58
+      ],
+      "prior_status": "directory_only_not_task_complete"
+    },
+    {
+      "inventory_id": "I-M036-030",
+      "item": "Preparing music content",
+      "pages": [
+        59,
+        60,
+        61
+      ],
+      "prior_status": "directory_only_not_task_complete"
+    },
+    {
+      "inventory_id": "I-M036-031",
+      "item": "Purchasing High-Resolution Audio content by using a computer",
+      "pages": [
+        62
+      ],
+      "prior_status": "directory_only_not_task_complete"
+    },
+    {
+      "inventory_id": "I-M036-032",
+      "item": "Installing Music Center for PC (Windows)",
+      "pages": [
+        63
+      ],
+      "prior_status": "directory_only_not_task_complete"
+    },
+    {
+      "inventory_id": "I-M036-033",
+      "item": "Transferring content from a Windows computer using Music Center for PC",
+      "pages": [
+        64,
+        65
+      ],
+      "prior_status": "directory_only_not_task_complete"
+    },
+    {
+      "inventory_id": "I-M036-036",
+      "item": "Transferring content using Mac computer",
+      "pages": [
+        71
+      ],
+      "prior_status": "directory_only_not_task_complete"
+    },
+    {
+      "inventory_id": "I-M036-037",
+      "item": "Adding lyric information using a computer",
+      "pages": [
+        72,
+        73
+      ],
+      "prior_status": "partial_documented"
+    },
+    {
+      "inventory_id": "I-M036-038",
+      "item": "Notes on transferring content from a computer",
+      "pages": [
+        74
+      ],
+      "prior_status": "directory_only_not_task_complete"
+    },
+    {
+      "inventory_id": "I-M036-039",
+      "item": "Connecting the player to a Wi-Fi network",
+      "pages": [
+        75,
+        76
+      ],
+      "prior_status": "directory_only_not_task_complete"
+    },
+    {
+      "inventory_id": "I-M036-040",
+      "item": "Setting up a Google Account",
+      "pages": [
+        77
+      ],
+      "prior_status": "directory_only_not_task_complete"
+    },
+    {
+      "inventory_id": "I-M036-041",
+      "item": "Purchasing music content from online music services by using the player",
+      "pages": [
+        78,
+        79
+      ],
+      "prior_status": "directory_only_not_task_complete"
+    },
+    {
+      "inventory_id": "I-M036-042",
+      "item": "Purchasing High-Resolution Audio content by using the player",
+      "pages": [
+        80
+      ],
+      "prior_status": "directory_only_not_task_complete"
+    },
+    {
+      "inventory_id": "I-M036-043",
+      "item": "Installing apps to enjoy online music services",
+      "pages": [
+        81
+      ],
+      "prior_status": "directory_only_not_task_complete"
+    },
+    {
+      "inventory_id": "I-M036-044",
+      "item": "Enjoying the 360 Reality Audio service",
+      "pages": [
+        82,
+        83
+      ],
+      "prior_status": "directory_only_not_task_complete"
+    },
+    {
+      "inventory_id": "I-M036-045",
+      "item": "Notes on Wi-Fi connections",
+      "pages": [
+        84,
+        85
+      ],
+      "prior_status": "directory_only_not_task_complete"
+    },
+    {
+      "inventory_id": "I-M036-046",
+      "item": "Notes on security when connecting to the internet",
+      "pages": [
+        86
+      ],
+      "prior_status": "directory_only_not_task_complete"
+    },
+    {
+      "inventory_id": "I-M036-049",
+      "item": "Obtaining lyric information",
+      "pages": [
+        92
+      ],
+      "prior_status": "directory_only_not_task_complete"
+    },
+    {
+      "inventory_id": "I-M036-058",
+      "item": "Notes on the Bluetooth function",
+      "pages": [
+        107,
+        108
+      ],
+      "prior_status": "directory_only_not_task_complete"
+    },
+    {
+      "inventory_id": "I-M036-061",
+      "item": "Structure of the folders to be imported to “Music player”",
+      "pages": [
+        113,
+        114
+      ],
+      "prior_status": "directory_only_not_task_complete"
+    },
+    {
+      "inventory_id": "I-M036-069",
+      "item": "Checking information on the player",
+      "pages": [
+        126
+      ],
+      "prior_status": "directory_only_not_task_complete"
+    },
+    {
+      "inventory_id": "I-M036-070",
+      "item": "Updating the system software",
+      "pages": [
+        127
+      ],
+      "prior_status": "directory_only_not_task_complete"
+    }
+  ]
+}

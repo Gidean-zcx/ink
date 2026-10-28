@@ -1,0 +1,28 @@
+HELP CENTER
+ACCOUNT MANAGEMENT
+How do I remove or reset a course?
+What does it mean to remove a course?
+Removing a course means erasing all of your learning progress and all of the XP you earned in that course, and this erasure cannot be undone. You can always add back a course later, but you’ll have to start the course from the beginning or retake a placement test. Removing a course won’t change your streak or leaderboard rank.
+What does it mean to reset a course?
+To reset a course, you can remove the course then add it back so you can start fresh.
+How do I remove a course?
+On the Duolingo app (iOS or Android):
+Open the Duolingo app
+Go to your Profile
+Tap Settings (gear icon)
+Tap “Manage courses”
+Tap the course you’d like to remove and confirm
+On your web browser (desktop):
+Sign in to your “Duolingo account” via web browser
+Click your profile picture at the top of the home screen, and choose “Settings”
+In the Settings page menu, click “Manage courses”
+Click the course you’d like to remove and confirm
+What if I have courses in multiple base languages?
+If you have courses in multiple base languages, you will need to switch to the specific course before removing it. For example, if you are learning Spanish from English as well as Spanish from German, and want to remove the Spanish-from-German course, you’ll need to make sure that’s selected as your current course (from the flag icon at the top of the home screen). Then you can follow the steps above to remove the course.
+Relevant Articles
+How do I change my username or email address?
+How do I find, follow, and block users on Duolingo?
+I’m having trouble accessing my account.
+How do I delete my account and access my data?
+What to do if your data was compromised
+I want to submit a bug report

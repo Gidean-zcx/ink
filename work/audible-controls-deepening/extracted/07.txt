@@ -1,0 +1,156 @@
+Learn about Read & Listen (https://help.audible.com/s/article/listen-with-whispersync-for-voice?language=en_US)
+citeturn761view3 [wordlim: 200] Crawled: today; Content type: text/html; Source: open({"ref_id":"https://help.audible.com/s/article/listen-with-whispersync-for-voice?language=en_US","lineno":null}); Total lines: 154
+L0: Loading
+L1: 
+L2: Sorry to interrupt
+L3: 
+L4: Uncaught TypeError: Cannot read properties of null (reading 'style')
+L5: 
+L6: 【0†Refresh】
+L7: 
+L8: Skip to Main Content
+L9: 
+L10: Related topics
+L11: 
+L12: Accessibility Android Cloud Player iOS Kindle+2
+L13: ## Learn about Read & Listen
+L14: 
+L15:   * Oct 1, 2026
+L16:   * Knowledge
+L17: 
+L18: Title
+L19: 
+L20: Learn about Read & Listen
+L21: 
+L22: URL Name
+L23: 
+L24: listen-with-whispersync-for-voice
+L25: 
+L26: Answer
+L27: 
+L28: Read & Listen is a feature that keeps track of where you are when you switch between the audiobook and Kindle eBook. It was formerly called Whispersync for Voice. If your position isn't syncing, check your app player settings and make sure 【1†sync listening position】 is turned on.
+L29: When you have Read & Listen supported versions of both the audiobook and Kindle eBook, you can access additional features:
+L30: 
+L31:   * 【2†Immersion reading】 lets you read and listen at the same time. The text highlights as the narrator reads. You will need both the audiobook and the Kindle eBook to access this feature.
+L32:   * 【3†Page Sync】 lets you switch between reading a print book and listening to the audiobook without losing your place.
+L33: 
+L34: In this article:
+L35:   * 【4†Which devices are supported?】
+L36:   * 【5†How do I use Read & Listen?】
+L37:   * 【6†How do I know if a title has Read & Listen?】
+L38:   * 【7†What does the Read & Listen badge mean?】
+L39:   * 【8†How do I switch between reading and listening?】
+L40:   * 【9†Is there a way to manually sync titles?】
+L41:   * 【10†What happens to your Audible title when you return its companion Kindle eBook?】
+L42: ## Which devices are supported?
+L43: 
+L44: The following devices support switching between reading and listening:
+L45: 
+L46:   * Audible apps (Android, iOS).
+L47:   * Fire Tablet FOS8 and above.
+L48:   * Kindle Ereader devices from 2022 and above.
+L49:   * Kindle Apps (Android, iOS, Fire Tablet, PC).
+L50: 
+L51: For more information about Kindle devices, please visit 【11†Kindle Help Center†www.amazon.com】.
+L52: ## How do I use Read & Listen?
+L53: 
+L54: To use Read & Listen, you'll need both the audiobook and Kindle eBook in your Audible and Kindle libraries. To learn how to get the Audible audiobook, visit 【12†Buy an audiobook】.
+L55: ## How do I know if a title has Read & Listen?
+L56: 
+L57: The product details for a title will say Read & Listen (formerly "Whispersync for Voice-ready") if this feature is available. You can also look for the option to add Audible narration on the Kindle eBook page in Amazon.
+L58: If you own an eligible title, you'll see a "Read & Listen" badge next to the cover in the Audible app. You'll also be able to use the Read & Listen filter in your Audible app's Library to find titles you already have access to that are Read & Listen ready.
+L59: ## What does the Read & Listen badge mean?
+L60: 
+L61: The Read & Listen badge means the title supports position syncing across your devices. When you own both the audiobook and Kindle eBook for a Read & Listen title, you can:
+L62: 
+L63:   * Switch between listening on Audible and reading on Kindle without losing your place.
+L64:   * Use Immersion reading to read and listen at the same time in the Audible app.
+L65: 
+L66: To learn more about reading and listening at the same time, see 【2†Learn about immersion reading】.
+L67: ## How do I switch between reading and listening?
+L68: 
+L69: If you own the Kindle eBook companion for your audiobook, you can easily switch between listening on Audible and reading on Kindle without losing your place.
+L70: 
+L71: Notes:
+L72: 
+L73:   * On the Audible app, you can read while listening to a title or just listening.
+L74:   * On the Kindle app, you can read and listen, read the eBook, or just listen to audiobooks if you own both formats.
+L75: 
+L76: Switch to Listen from your Kindle app
+L77:   1. From your Kindle book, select the 3-dot More menu.
+L78:   2. Select Listen on Audible.
+L79:   3. Confirm you'd like to open the Audible app.
+L80: 
+L81: Switch to Read & Listen from your Audible app
+L82: 
+L83:   1. While playing a title, use the toggle above the cover image to switch between Listen and Read & Listen.
+L84: 
+L85: For more support with the Kindle app, please visit 【13†Kindle Help Center†www.amazon.com】.
+L86: ## Is there a way to manually sync titles?
+L87: 
+L88: Yes, you can sync Kindle and Audible. Read & Listen titles will normally sync in your Audible or Kindle app automatically. If it doesn't, you can manually sync your position as long as your device is connected to the internet.
+L89: 
+L90:   1. Go to your Profile.
+L91:   2. Select the Settings gear icon.
+L92:   3. Select Player.
+L93:   4. Scroll down and toggle the Sync device position slider off, then on again.
+L94: ## What happens to your Audible title when you return its companion Kindle eBook?
+L95: When you buy an Audible title at a lower price through the Add Narration offer, the audiobook and Kindle eBook are linked. The "Add Narration" offer gives you savings when you buy an audiobook along with the matching Kindle eBook. If you later make an eligible return of that Kindle eBook, Audible will automatically give you a refund for the Audible title and remove it from your Library. The refund will be sent back to the payment method you used. You will get a notification when this happens.
+L96: Learn more about returning a Kindle Book order on the 【13†Kindle Help Center†www.amazon.com】.
+L97: 
+L98: Note: Since this is a 1-Click purchase on Amazon, you can only purchase the eBook and audiobook together with your credit card.
+L99: 
+L100: Did this answer your question?
+L101: 
+L102: 【14†Image: Thumbs Up】Like
+L103: 
+L104: 
+L105: 
+L106: 【15†Image: Thumbs Down】Dislike
+L107: 
+L108:  Back to top
+L109: 
+L110: 【16†Image: Share link】 Share link
+L111: 
+L112: 【17†Image: Download PDF】 Download PDF
+L113: ## Need more assistance?
+L114: 
+L115: 【18†Contact us†www.audible.com】
+L116: 
+L117: 
+L118: 
+L119: How satisfied were you with our Help Center today?
+L120: 
+L121: 
+L122: 
+L123: Worst
+L124: 
+L125: 1
+L126: 
+L127: 2
+L128: 
+L129: 3
+L130: 
+L131: 4
+L132: 
+L133: 5
+L134: 
+L135: 6
+L136: 
+L137: 7
+L138: 
+L139: Best
+L140: 
+L141: 
+L142: 
+L143: Region
+L144: 
+L145: United States
+L146: 
+L147: Language
+L148: 
+L149: English
+L150: 
+L151: Loading
+L152: 
+L153: Learn about Read & Listen 【19†Adobe ID Syncing iFrame†audible.demdex.net】

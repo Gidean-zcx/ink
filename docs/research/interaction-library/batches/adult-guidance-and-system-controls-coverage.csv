@@ -1,0 +1,15 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M012-17,M-012,完成首次设置,D2,E-MKRD-17,电源开机→语言/Wi-Fi→六位密码两次→按振动录指纹→可跳过教程→若有更新则更新并重启。,无网/取消/密码或指纹失败、更新中断与原数据迁移未知。,not_observed,false,cases/M-012-mudita.md,2026-10-27
+F-M012-18,M-012,更改系统语言并添加键盘布局,D2,E-MKRD-19,System→Language and Keyboard；System Language选语言后Confirm；Keyboard Settings另选Layout和Language，经Back回上级后Add。,默认输入法切换、移除布局、取消与重启保留未知。,not_observed,false,cases/M-012-mudita.md,2026-10-27
+F-M012-19,M-012,配置SIM/eSIM并确认模式切换,D2,E-MKRD-18;E-MKRD-20;E-MKRD-21;E-MKRD-76;E-MKRD-85,SIM Cards中扫码/手输激活码→接受策略→Add；立即启用或两次确认Switch mode会重启。About可查卡槽号码；eSIM与SIM2互斥而可保留SD。,两篇帮助对先安装或先切模式存在顺序疑点；激活失败、卡默认选择与配置删除未知。,not_observed,false,cases/M-012-mudita.md,2026-10-27
+F-M012-20,M-012,从主页日期创建日历事件,D2,E-MKRD-29,切月→选日→＋→填标题与起止时间→Create。,创建回执、提醒/重复、跨日校验、编辑删除与同步恢复未知。,not_observed,false,cases/M-012-mudita.md,2026-10-27
+F-M012-21,M-012,创建、修改、删除和贪睡闹钟,D2,E-MKRD-30;E-MKRD-34;E-MKRD-35;E-MKRD-36;E-MKRD-37,首个Create an Alarm/后续＋→时间及名称、铃声、重复→Create；点时间编辑后Save；铅笔→删除；响铃手动Snooze固定五分钟。,删除只在提示时确认；隐藏图标入口表述不一；关闭响铃、贪睡上限、离线/重启唤醒与持久状态未知。,not_observed,false,cases/M-012-mudita.md,2026-10-27
+F-M012-22,M-012,下载地区地图供离线查看并删除地图包,D2,E-MKRD-32,Maps→Manage Maps→搜索或All Maps选地区→Download；文档承诺下载后离线搜索/查看；Edit→目标删除→Delete Map。,下载进度/校验、暂停/断网续传、存储不足、版本更新与路线导航未给出。,not_observed,false,cases/M-012-mudita.md,2026-10-27
+F-M012-23,M-012,选择天气地点并处理定位等待,D2,E-MKRD-33;E-MKRD-89,Menu→铅笔→默认地点→搜地点或Use current location→Done；权限开启后仍可能等GPS和App刷新。,许可成功不等于已定位/天气已更新；缓存时间、无位置回退、手动刷新和错误状态未知。,not_observed,false,cases/M-012-mudita.md,2026-10-27
+F-M012-24,M-012,拍照并在相册查看,D2,E-MKRD-55;E-MKRD-75,取景→拍照；Image图标→选照片。设备灰阶显示而传至电脑可见彩色；官方建议拍摄时多保持静止。,快门即时反馈、抖动/保存失败、删除恢复、拍摄时长未观察；视频限制仅FAQ范围。,not_observed,false,cases/M-012-mudita.md,2026-10-27
+F-M012-25,M-012,截取当前画面并找到截图,D2,E-MKRD-55;E-MKRD-62;E-MKRD-86;E-MKRD-50,电源加音量减；文档称自动保存且无屏幕提示；到相册查找，USB传出时截图目录为Pictures。,未按键实测；组合键识别、锁屏/权限、失败回执、文件命名与重复截图未知。,not_observed,false,cases/M-012-mudita.md,2026-10-27
+F-M012-26,M-012,连接或共享网络并控制蜂窝数据,D2,E-MKRD-66;E-MKRD-68;E-MKRD-69;E-MKRD-70;E-MKRD-93,Wi-Fi选网输密码Connect；共享当前网先验PIN/指纹。热点设名称/至少八位密码/安全项后开关启停，控制中心也可开关；蜂窝数据和漫游分别开关。,错误密码、认证取消、路由/并发、切网后下载、后台重连和实际连通结果未核。,not_observed,false,cases/M-012-mudita.md,2026-10-27
+F-M012-27,M-012,查看电池状态并设置充电上限,D2,E-MKRD-61,查看容量、循环、制造及初用信息；Stop charging at 80%开关在80%/100%之间选上限。,设置回执与实际充电终止分开，阈值滞后、重启保留和充电方式适用范围未知。,not_observed,false,cases/M-012-mudita.md,2026-10-27
+F-M030-14,M-030,与成人设定目标并用纸面表记录努力,D2,E-KHAT-04;E-KHAT-11,目标模板有三行自填目标和周一至周五格；每天记录是否为目标努力，五页只换角色插画。,不是App自动记录、评分或奖励；缺目标难度调整、漏一天处理与实际家庭效果。,static_official_images_only,false,cases/M-030-khan-kids.md,2026-10-27
+F-M030-15,M-030,参加成人组织的周活动并以贴纸和证书庆祝,D2,E-KHAT-05;E-KHAT-12;E-KHAT-13,成人选分配课程/自由活动/书籍；儿童每完成活动手工记贴纸或画形状，额外可叠贴；周末统计及纸面证书庆祝。,活动计数不代表答对/独立掌握；非内置自动成就、非当前比赛，未验证5–6岁家庭适配。,static_official_images_only,false,cases/M-030-khan-kids.md,2026-10-27
+F-M030-16,M-030,教师预览、安排和修改指定课程,D2,E-KHAT-08;E-KHAT-09;E-KHAT-10,从Library/报告/标准搜索选课→可Preview→选学生与日期→Save；学生在日期到达时见Library爱心。Assignments按日期管理；完成人数泡泡到报告再编辑，删除可作用单课或整日。,自动归档默认两周可调但不等于删除历史；X关闭的保存语义、发布回执、取消/撤销、重复分配及离线恢复未观察。,static_official_images_only,false,cases/M-030-khan-kids.md,2026-10-27

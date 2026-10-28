@@ -1,0 +1,21 @@
+{
+  "order": 35,
+  "entry_id": "INO-pro--offline-mode--what-can-i-make-available-offline",
+  "title": "What can I make available offline?",
+  "url": "https://www.inoreader.com/help/pro/offline-mode/what-can-i-make-available-offline",
+  "checked_on": "2026-10-27",
+  "http_status": 200,
+  "final_url": "https://www.inoreader.com/help/pro/offline-mode/what-can-i-make-available-offline",
+  "acquisition": "one_anonymous_normal_GET",
+  "raw_path": "work/research/batch41-inoreader-help/35-INO-pro--offline-mode--what-can-i-make-available-offline.html",
+  "headers_path": "work/research/batch41-inoreader-help/35-INO-pro--offline-mode--what-can-i-make-available-offline.headers.json",
+  "raw_sha256": "acca6b16755da5d21f2d98776acf5be20e59272fc2bf88c52af4d7451e269a0f",
+  "bytes": 146793,
+  "status": "body_obtained",
+  "body_status": "extracted_not_yet_root_read",
+  "body_path": "work/research/batch41-inoreader-help/35-INO-pro--offline-mode--what-can-i-make-available-offline.body.txt",
+  "body_sha256": "db22eac41c2ad092e2499abdb28219f7d2053e78e5d93dd444eae13673bf7991",
+  "body_chars": 65,
+  "links": [],
+  "images": []
+}

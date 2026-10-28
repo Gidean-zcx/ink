@@ -1,0 +1,9 @@
+Run shortcuts from the Search screen on your iPhone or iPad
+Using search, you can quickly locate and open a shortcut without having to open the Shortcuts app.
+On the Home Screen of your iPhone or iPad, swipe down from the center.
+Type the name of a shortcut in the search field.
+A list of results forms as you type. You may need to scroll to locate your shortcuts. Each shortcut result displays the icon and name of the shortcut.
+Tap the shortcut, then do one of the following:
+Tap “Run,” then follow any additional onscreen instructions.
+Tap the shortcut to open the Shortcuts app, then tap to run the shortcut.
+Tap to dismiss the shortcut.See alsoIntro to how shortcuts work on iPhone and iPad

@@ -1,0 +1,673 @@
+Lenovo Smart Paper (Lenovo SP101FU): Frequently Asked Questions (FAQs) - Lenovo Support AG (https://support.lenovo.com/ag/en/solutions/ht514875-lenovo-smart-paper-lenovo-sp101fu-frequently-asked-questions-faqs)
+citeturn848search0 [wordlim: 200] Published: 3.7 years ago; Crawled: 5 months ago; You could download or import APK files and then install apps by yourself. ... And then view notes and e-books on Lenovo Smart Paper companion app from Android, iOS and Windows device.
+
+10. What apps and functions come preinstalled on Lenovo Smart Paper?
+
+Preinstalled apps on Lenovo Smart Paper include but may differ based on country:
+
+  * Ebooks.com App
+  * Calendar
+  * Calculator
+  * Clock
+  * Email
+  * Document support: Epub, PDF, TXT, Microsoft Office
+  * Convert handwriting to text
+  * Record live dictation (Paid service, and this function is supported on Lenovo Smart Paper companion app)
+  * Search all handwritten notes and content
+
+[Back] to the list
+
+11. Can I download other apps to the Lenovo Smart Paper?
+
+Yes. You could download or import APK files and then install apps by yourself. But Lenovo Smart Paper is made for handwriting and reading books, third-party apps may not perform well on Lenovo Smart Paper.
+
+[Back] to the list
+
+12. Where can I find the operation system version of my Lenovo Smart Paper?
+
+Tap on the Menu icon located on the top left of the screen, then select Settings > General > About device > Software version.
+
+[Back] to the list
+
+13. How to adjust the brightness on Lenovo Smart Paper?
+
+You can change the device brightness under Settings > Display or from the quick setting which is the page pulled from the top. At this location, you can also enable the Adaptive brightness function, set the display color temperature, and select a suitable screen refresh mode.
+
+
+Image: 48
+
+[Back] to the list
+
+49. How does the Lenovo cloud sync function work?
+
+Cloud sync is a convenient way to back up your files and cross-device reading.
+
+First,
+
+To use cloud service, ensure you have effective cloud storage. 1. Each Lenovo Smart Paper device can activate free 5GB/3month cloud storage only one chance under Settings > Lenovo ID (logged in) > Cloud sync page. 2. And you could purchase to update the cloud service on the Lenovo Smart Paper companion app from Android or Windows devices.
+
+Second,
+
+Sync the notes and documents manually on Lenovo Smart Paper device ( sync manually is a faster way than auto sync). And then view notes and e-books on Lenovo Smart Paper companion app from Android, iOS and Windows device.
+
+Smart Paper devices support automatic synchronization and manual synchronization. Both synchronization methods require Smart Paper devices to be connected to the network, and the cloud space is valid.
+
+Automatic synchronization: Log in with Lenovo account on the Lenovo Smart Paper and enable Cloud sync. When the screen is locked and connected to the Internet, files can be synchronized automatically.
+
+Manual synchronization: To synchronize the file immediately, click the button in the upper right corner of the page where the file is located.
+
+Image: Sync
+
+Synchronization in Smart Paper App: From Smart Paper app, you can import files in specific formats (including ePub, PDF, txt, doc/docx, ppt/pptx, xls/xlxs). After import, the files can be automatically synchronized to the cloud, and can also be updated on Android and iOS. Click the button below on windows to synchronize cloud files.
+
+--------------------------------------------------------------------------------
+Lenovo Smart Paper (Lenovo SP101FU): Frequently Asked Questions (FAQs) - Lenovo Support LB (https://support.lenovo.com/lb/en/solutions/ht514875-lenovo-smart-paper-lenovo-sp101fu-frequently-asked-questions-faqs)
+citeturn848search1 [wordlim: 200] Published: 3.7 years ago; Crawled: 4 months ago; You could download or import APK files and then install apps by yourself. ... First download Lenovo Smart Paper App to android device from Play Store or to Windows device from Microsoft store, then can buy cloud services in Lenovo Smart Paper App.
+  6. How much does the Lenovo Smart Paper weigh?
+  7. What USB does the Lenovo Smart Paper use?
+  8. What accessories does Lenovo Smart Paper have?
+  9. What comes with the Lenovo Smart Paper box?
+
+### Lenovo Smart Paper Software Related FAQs
+
+  10. What apps and functions come preinstalled on Lenovo Smart Paper?
+  11. Can I download other apps to the Lenovo Smart Paper?
+  12. Where can I find the operation system version of the Lenovo Smart Paper?
+  13. How to adjust the brightness on Lenovo Smart Paper?
+  14. How to find the serial number (S/N) of the Lenovo Smart Paper?
+  15. How do I reset my Lenovo Smart Paper to factory settings?
+  16. Information about device name
+  17. How to turn off Lenovo User Experience Program?
+  18. How to check for new system updates on my Lenovo Smart Paper?
+  19. Where can I check app information?
+  20. Where can I check my Lenovo Smart Paper remaining storage?
+1. What colors does the Lenovo Smart Paper come in?
+
+The Lenovo Smart Paper comes in storm grey only.
+
+[Back] to the list
+
+2. What is the size of the Lenovo Smart Paper?
+
+The Lenovo Smart Paper measures 195mm x 226mm x 5.5mm (height x width x thickness).
+
+[Back] to the list
+
+3. What is the size of the Lenovo Smart Paper display?
+
+The Lenovo Smart Paper has a 10.3 inches screen size.
+
+[Back] to the list
+
+4. Can I use an external SD card in the Lenovo Smart Paper?
+
+No.
+
+[Back] to the list
+
+5. What is the battery capacity of the Lenovo Smart Paper?
+
+The Lenovo Smart Paper has a 3500mAh integrated battery.
+
+[Back] to the list
+
+6. How much does the Lenovo Smart Paper weigh?
+
+The Lenovo Smart Paper weighs 408g.
+
+[Back] to the list
+
+7. What USB does the Lenovo Smart Paper use?
+
+The Lenovo Smart Paper has a USB Type-C port used for data transfer and charging.
+
+[Back] to the list
+
+8. What accessories does Lenovo Smart Paper have?
+
+Lenovo Smart Paper Pen and Lenovo Smart Paper Folio Case are the available accessories for Lenovo Smart Paper.
+
+[Back] to the list
+
+9. What comes with the Lenovo Smart Paper box?
+
+Below are the items you’ll find in the Lenovo Smart Paper box:
+
+  * Lenovo Smart Paper
+  * Lenovo Smart Paper Pen
+  * Lenovo Smart Paper Folio Case
+  * Adapter and USB Cable
+  * Warranty Card
+  * Quick Start Guide & Safety, Warranty Manual
+  * Marketing Label
+  * Main Product Label
+  * Main Product Package Paper
+
+[Back] to the list
+
+10. What apps and functions come preinstalled on Lenovo Smart Paper?
+
+Preinstalled apps on Lenovo Smart Paper include but may differ based on country:
+
+  * Ebooks.com App
+  * Calendar
+  * Calculator
+  * Clock
+  * Email
+  * Document support: Epub, PDF, TXT, Microsoft Office
+  * Convert handwriting to text
+  * Record live dictation (Paid service, and this function is supported on Lenovo Smart Paper companion app)
+  * Search all handwritten notes and content
+
+[Back] to the list
+
+11. Can I download other apps to the Lenovo Smart Paper?
+
+Yes. You could download or import APK files and then install apps by yourself. But Lenovo Smart Paper is made for handwriting and reading books, third-party apps may not perform well on Lenovo Smart Paper.
+
+[Back] to the list
+
+12. Where can I find the operation system version of my Lenovo Smart Paper?
+
+Tap on the Menu icon located on the top left of the screen, then select Settings > General > About device > Software version.
+
+[Back] to the list
+
+13. How to adjust the brightness on Lenovo Smart Paper?
+
+You can change the device brightness under Settings > Display or from the quick setting which is the page pulled from the top. At this location, you can also enable the Adaptive brightness function, set the display color temperature, and select a suitable screen refresh mode.
+
+[Back] to the list
+
+14. How to find the serial number (S/N) of the Lenovo Smart Paper?
+
+Tap on the Menu icon located on the top left of the screen, then select Settings > General > About device > Serial number.
+
+[Back] to the list
+
+15. How do I reset my Lenovo Smart Paper to factory settings?
+
+A factory reset will erase all personal data from the Lenovo Smart Paper. Back up your data before proceeding. Factory Reset can be done under Settings > Factory Reset.
+
+[Back] to the list
+
+16. Information about device name
+
+Your device name is visible to apps on your device. It may also be seen by other people when you connect to Bluetooth devices or connect to a WLAN network.
+
+[Back] to the list
+
+17. How to turn off Lenovo User Experience Program?
+
+Enabling the User Experience Program will allow Lenovo to collect some information about your use of the Lenovo Smart Paper product and applications.
+
+[Back] to the list
+
+18. How to check for new system updates on my Lenovo Smart Paper?
+
+Go to Settings > General > System updates.
+
+[Back] to the list
+
+19. Where can I check the app information?
+
+You can check app information under Settings > General > App info. At this location, you can also open/disable/force-stop an app or clear its storage or cache.
+
+[Back] to the list
+
+20. Where can I check my Lenovo Smart Paper remaining storage?
+
+Go to Settings > General > Storage.
+
+[Back] to the list
+
+21. How to edit the date and time on my Lenovo Smart Paper?
+
+Go to Settings > General > Date & time. You can change the time format (12-hour or 24-hour format), Time zone, etc. at this location.
+
+[Back] to the list
+
+22. How to change my device system language?
+
+Go to Settings > General > Languages.
+
+[Back] to the list
+
+23. Where can I find tips on how to use the Lenovo Smart Paper?
+
+Go to Settings > Help > Tutorial.
+
+[Back] to the list
+
+24. What are the available accessibility functions?
+
+You can change the dominant hand (left or right) and font size under Accessibility. Go to Settings > Accessibility.
+
+[Back] to the list
+
+25. Can I set the Lenovo Smart Paper to auto-power off after a period of inactivity?
+
+Yes. This can be done under Settings > Battery.
+
+[Back] to the list
+
+26. Where can I set up a password to unlock the screen?
+
+Yes. This can be done under Settings > Security > Password.
+
+[Back] to the list
+
+27. Can I change my screen lock content to other than the default wallpaper?
+
+Yes. You can change the screen saver to wallpaper. This can be configured under Settings.
+
+[Back] to the list
+
+28. Where can I adjust the sound volume when playing a recording?
+
+The Lenovo Smart Paper does not have speakers to support sound playing. However, you can play sound from the device via Bluetooth speaker or headset. The sound volume can be adjusted under Settings > Sound and quick settings page pulled from the top.
+
+[Back] to the list
+
+29. How to remove a preinstalled app?
+
+Once WPS office has been removed, there is no other way to reinstall it, because it’s a customized app. The other apps cannot be removed or hidden on Lenovo Smart Paper.
+
+[Back] to the list
+
+30. Can I connect Lenovo Smart Paper to keyboard or other devices via Bluetooth?
+
+Currently, Lenovo Smart Paper can only connect with Bluetooth audio device, like Bluetooth headset and Bluetooth speaker. And Lenovo Smart Paper will support connecting with other smart devices and Bluetooth keyboard in the update version.
+
+[Back] to the list
+
+31. Can I upload a local document to the Lenovo Smart Paper?
+
+There are three ways to download books to the Lenovo Smart Paper:
+
+  1. Download from the pre-installed ebook app store.
+  2. Download from the Email app.
+  3. Transfer locally via the USB-C type port. Bluetooth transfer and import manually will be supported in a near update version. Please stay tuned.
+
+[Back] to the list
+
+32. What should I do if all the files disappeared suddenly?
+
+All the files are not deleted from your device, and they are hidden mainly because of Lenovo account. When this happen, please check if your Lenovo account is still logged in under Settings > Lenovo ID. Log in the same Lenovo account, and then all the files will be recovered right away.
+
+[Back] to the list
+
+33. How can I copy and paste my writes from one notebook to another notebook?
+
+Lenovo Smart Paper can only copy and paste your writes in the same notebook. And Lenovo Smart Paper team will strive to achieve it in the future version.
+
+[Back] to the list
+
+34. Who can I contact if I have issues or suggestions during the use?
+
+Please send email to smartpaper@lenovo.com if you have any questions. We will reply within 3 working days.
+
+[Back] to the list
+
+35. What is the size of the Lenovo Smart Paper Pen?
+
+145mm x 8mm
+
+[Back] to the list
+
+36. How much does the Lenovo Smart Paper Pen weigh?
+
+2) Pay for cloud services. First download Lenovo Smart Paper App to android device from Play Store or to Windows device from Microsoft store, then can buy cloud services in Lenovo Smart Paper App. Note: It can’t be bought in IOS device or Smart Paper device. Paid services available in the APP include: 1. Cloud Storage 2. Translation 3. Speak 4. Audio to text The following describes the purchase process. The Lenovo Smart Paper application on the PC is used as a reference.
+
+Step 1: Select the icon.
+
+Image: My device
+Step 2: Select the required services and products then pay for them. After the payment is successful, refresh the page, and the available amount of cloud space and related services will be refreshed. Tips: Payment is bundled with Google pay and Microsoft Pay.
+
+Image: 46-1
+
+Image: 47-2
+
+[Back] to the list
+
+46. What files can be stored in the cloud space and how to upload and download them?
+
+File Types to be stored in the Cloud On Smart Paper devices:
+
+  * note files stored under "Notebook" in the left column of the main page
+  * read files imported and stored in Library and files stored in specific formats (including ePub, PDF, txt, doc/docx, ppt/pptx, xls/xlxs) in My device can be synchronized to the cloud
+
+
+The payment was successful, but the cloud space is not displayed correctly, you can follow the below process:
+
+1) Check the status of the Lenovo ID account. If the Lenovo ID being used was created earlier, the account may be inactive. The inactive account will affect the correct display of the cloud space. Therefore, go to the website to manually activate the account, and then check whether the cloud space is normal after activation. Log in at https://passport.lenovo.com/home-page/, then click on Not activated.
+
+Image: Information
+
+2) If the user's account status is normal, you can send the information of the purchase order (better if there is a picture), purchase date, country, and purchased products to smartpaper@lenovo.com, which will reply as soon as possible.
+
+[Back] to the list
+
+51. How does Google Drive work on Smart Paper?
+
+1. The Google Drive app on Lenovo Smart Paper supports various document formats, including PDF, TXT, EPUB, DOCX/DOC, XLSX/XLS, and PPTX/PPT. You can tap the file to download, read, and make annotations. Note: With the latest software release, you can now open downloaded documents directly on your Lenovo Smart Paper instead of having to navigate to the Download folder.
+2. If you wish to read the downloaded documents in the Library, you can press and hold on the document from Google Drive, then choose Copy. If Cloud Sync is enabled, documents saved to Library will also be synchronized to the cloud as well.
+3. You can use the Share function to convert your entire notebook or select pages to PDF format and upload them to a designated folder on Google Drive. You can send e-books to Google Drive by using the Share function.
+4. Lenovo Smart Paper does not support syncing documents to Google Drive. You can sync your notes and e-books to the Lenovo cloud service, or manually send the documents to Google Drive using the Share function.
+
+
+--------------------------------------------------------------------------------
+Lenovo Smart Paper (Lenovo SP101FU): Frequently Asked Questions (FAQs) - Lenovo Support IN (https://support.lenovo.com/in/en/solutions/ht514875-lenovo-smart-paper-lenovo-sp101fu-frequently-asked-questions-faqs)
+citeturn848search2 [wordlim: 200] Published: 3.7 years ago; Crawled: 2 days ago; First download Lenovo Smart Paper App to android device from Play Store or to Windows device from Microsoft store, then can buy cloud services in Lenovo Smart Paper App.
+Yes. This can be done under Settings > Battery.
+
+[Back] to the list
+
+26. Where can I set up a password to unlock the screen?
+
+Yes. This can be done under Settings > Security > Password.
+
+[Back] to the list
+
+27. Can I change my screen lock content to other than the default wallpaper?
+
+Yes. You can change the screen saver to wallpaper. This can be configured under Settings.
+
+[Back] to the list
+
+28. Where can I adjust the sound volume when playing a recording?
+
+The Lenovo Smart Paper does not have speakers to support sound playing. However, you can play sound from the device via Bluetooth speaker or headset. The sound volume can be adjusted under Settings > Sound and quick settings page pulled from the top.
+
+[Back] to the list
+
+29. How to remove a preinstalled app?
+
+Once WPS office has been removed, there is no other way to reinstall it, because it’s a customized app. The other apps cannot be removed or hidden on Lenovo Smart Paper.
+
+[Back] to the list
+
+30. Can I connect Lenovo Smart Paper to keyboard or other devices via Bluetooth?
+
+Currently, Lenovo Smart Paper can only connect with Bluetooth audio device, like Bluetooth headset and Bluetooth speaker. And Lenovo Smart Paper will support connecting with other smart devices and Bluetooth keyboard in the update version.
+
+[Back] to the list
+
+31. Can I upload a local document to the Lenovo Smart Paper?
+
+There are three ways to download books to the Lenovo Smart Paper:
+
+  1. Download from the pre-installed ebook app store.
+  2. Download from the Email app.
+  3. Transfer locally via the USB-C type port. Bluetooth transfer and import manually will be supported in a near update version. Please stay tuned.
+
+[Back] to the list
+
+32. What should I do if all the files disappeared suddenly?
+
+All the files are not deleted from your device, and they are hidden mainly because of Lenovo account. When this happen, please check if your Lenovo account is still logged in under Settings > Lenovo ID. Log in the same Lenovo account, and then all the files will be recovered right away.
+
+[Back] to the list
+
+33. How can I copy and paste my writes from one notebook to another notebook?
+
+Lenovo Smart Paper can only copy and paste your writes in the same notebook. And Lenovo Smart Paper team will strive to achieve it in the future version.
+
+  1. Open System settings, and log in to Lenovo account.
+  2. Click Cloud sync.
+  3. Make sure the device is connected to internet. On the Cloud sync page, tap Active cloud storage.
+
+Then cloud storage will be activated. Tips: If there is no “Active cloud storage” button in “Cloud sync” page, please send the device SN to smartpaper@lenovo.com.
+
+2) Pay for cloud services. First download Lenovo Smart Paper App to android device from Play Store or to Windows device from Microsoft store, then can buy cloud services in Lenovo Smart Paper App. Note: It can’t be bought in IOS device or Smart Paper device. Paid services available in the APP include: 1. Cloud Storage 2. Translation 3. Speak 4. Audio to text The following describes the purchase process. The Lenovo Smart Paper application on the PC is used as a reference.
+
+Step 1: Select the icon.
+
+Image: My device
+Step 2: Select the required services and products then pay for them. After the payment is successful, refresh the page, and the available amount of cloud space and related services will be refreshed. Tips: Payment is bundled with Google pay and Microsoft Pay.
+
+Image: 46-1
+
+Image: 47-2
+
+[Back] to the list
+
+46. What files can be stored in the cloud space and how to upload and download them?
+
+File Types to be stored in the Cloud On Smart Paper devices:
+
+  * note files stored under "Notebook" in the left column of the main page
+  * read files imported and stored in Library and files stored in specific formats (including ePub, PDF, txt, doc/docx, ppt/pptx, xls/xlxs) in My device can be synchronized to the cloud
+
+You can also import files from Lenovo Smart Paper app, including ePub, PDF, txt, doc/docx, ppt/pptx, and xls/xlxs. These file formats can be synchronized to the cloud. Other formats cannot be synchronized. Smart Paper devices support automatic synchronization and manual synchronization. Both synchronization methods require Smart Paper devices to be connected to the network, and the cloud space is valid.
+
+Log in with Lenovo account on the Lenovo Smart Paper and enable Cloud sync. When the screen is locked and connected to the Internet, files can be synchronized automatically.
+
+--------------------------------------------------------------------------------
+Lenovo Papel Inteligente (Lenovo SP101FU): Preguntas Frecuentes (FAQs) - Lenovo Support MX (https://support.lenovo.com/mx/es/solutions/ht514875-lenovo-smart-paper-lenovo-sp101fu-frequently-asked-questions-faqs)
+citeturn848search3 [wordlim: 200] Published: 3.2 years ago; Crawled: 5 months ago; Puede descargar o importar archivos APK y luego instalar aplicaciones por su cuenta. ... Actualmente, el Lenovo Smart Paper solo puede conectarse a dispositivos de audio Bluetooth, como auriculares y altavoces Bluetooth.
+[Volver] a la lista
+
+11. ¿Puedo descargar otras aplicaciones en el Lenovo Smart Paper?
+
+Sí. Puede descargar o importar archivos APK y luego instalar aplicaciones por su cuenta. Pero el Lenovo Smart Paper está diseñado para la escritura a mano y la lectura de libros, las aplicaciones de terceros pueden no funcionar bien en el Lenovo Smart Paper.
+
+[Volver] a la lista
+
+12. ¿Dónde puedo encontrar la versión del sistema operativo de mi Lenovo Smart Paper?
+
+Toque el ícono de menú ubicado en la parte superior izquierda de la pantalla, luego seleccione Configuración > General > Acerca del dispositivo > Versión del software.
+
+[Volver] a la lista
+
+13. ¿Cómo ajustar el brillo en el Lenovo Smart Paper?
+
+Puede cambiar el brillo del dispositivo en Configuración > Pantalla o desde la configuración rápida que es la página que se despliega desde la parte superior. En esta ubicación, también puede habilitar la función de brillo adaptativo, establecer la temperatura de color de la pantalla y seleccionar un modo de actualización de pantalla adecuado.
+  1. Abra la configuración del sistema e inicie sesión en la cuenta de Lenovo.
+  2. Haga clic en Sincronización en la nube.
+  3. Asegúrese de que el dispositivo esté conectado a Internet. En la página de Sincronización en la nube, toque Almacenamiento en la nube activo.
+
+Entonces se activará el almacenamiento en la nube. Consejos: Si no hay un botón de "Almacenamiento en la nube activo" en la página de "Sincronización en la nube", envíe el SN del dispositivo a smartpaper@lenovo.com.
+
+2) Pagar por los servicios en la nube. Primero descargue la aplicación Lenovo Smart Paper en el dispositivo android desde Play Store o en el dispositivo Windows desde Microsoft Store, luego podrá comprar servicios en la nube en la aplicación Lenovo Smart Paper. Nota: No se puede comprar en dispositivos IOS o en dispositivos Smart Paper. Los servicios de pago disponibles en la APP incluyen: 1. Almacenamiento en la nube 2. Traducción 3. Hablar 4. Audio a texto A continuación se describe el proceso de compra. La aplicación Lenovo Smart Paper en la PC se utiliza como referencia.
+1. La aplicación Google Drive en el Smart Paper Lenovo admite varios formatos de documentos, incluyendo PDF, TXT, EPUB, DOCX/DOC, XLSX/XLS y PPTX/PPT. Puedes tocar el archivo para descargarlo, leerlo y hacer anotaciones. Nota: Con la última versión del software, ahora puedes abrir documentos descargados directamente en tu Smart Paper Lenovo en lugar de tener que navegar a la carpeta de Descargas.
+2. Si deseas leer los documentos descargados en la Biblioteca, puedes presionar y mantener el documento desde Google Drive, luego elegir Copiar. Si la Sincronización en la Nube está habilitada, los documentos guardados en la Biblioteca también se sincronizarán en la nube.
+3. Puedes usar la función Compartir para convertir todo tu notebook o seleccionar páginas a formato PDF y subirlas a una carpeta designada en Google Drive. Puedes enviar libros electrónicos a Google Drive utilizando la función Compartir.
+4. El Smart Paper Lenovo no admite la sincronización de documentos a Google Drive. Puedes sincronizar tus notas y libros electrónicos al servicio en la nube Lenovo, o enviar manualmente los documentos a Google Drive utilizando la función Compartir.
+
+[Volver] a la lista
+
+ID del documento:HT514875
+
+Fecha de publicación original:02/09/2023
+
+Fecha de última modificación:07/02/2025--------------------------------------------------------------------------------
+Lenovo Smart Paper (Lenovo SP101FU): Frequently Asked Questions (FAQs) - Lenovo Support VG (https://support.lenovo.com/vg/en/solutions/ht514875-lenovo-smart-paper-lenovo-sp101fu-frequently-asked-questions-faqs)
+citeturn848search4 [wordlim: 200] Published: 3.7 years ago; Crawled: 4 months ago; What is the size of the Lenovo Smart Paper display?
+  3. What is the size of the Lenovo Smart Paper display?
+  4. Can I use an external SD card in the Lenovo Smart Paper?
+  5. What is the battery capacity of the Lenovo Smart Paper?
+  6. How much does the Lenovo Smart Paper weigh?
+  7. What USB does the Lenovo Smart Paper use?
+  8. What accessories does Lenovo Smart Paper have?
+  9. What comes with the Lenovo Smart Paper box?
+
+### Lenovo Smart Paper Software Related FAQs
+
+  10. What apps and functions come preinstalled on Lenovo Smart Paper?
+  11. Can I download other apps to the Lenovo Smart Paper?
+  12. Where can I find the operation system version of the Lenovo Smart Paper?
+  13. How to adjust the brightness on Lenovo Smart Paper?
+  14. How to find the serial number (S/N) of the Lenovo Smart Paper?
+  15. How do I reset my Lenovo Smart Paper to factory settings?
+  16. Information about device name
+  17. How to turn off Lenovo User Experience Program?
+  18. How to check for new system updates on my Lenovo Smart Paper?
+  19. Where can I check app information?
+  20. Where can I check my Lenovo Smart Paper remaining storage?
+  21. How to edit the date and time on my Lenovo Smart Paper?
+  22. How to change my device system language?
+  23. Where can I find tips on how to use the Lenovo Smart Paper?
+  24. What are the available accessibility functions?
+  25.  Can I set the Lenovo Smart Paper to power off after a period of inactivity?
+  26. Where can I set up a password to unlock the screen?
+  27. Can I change my screen lock content to other than the default wallpaper?
+  28. Where can I adjust the sound volume when playing a recording?
+  29. How to remove a preinstalled app?
+  30. Can I connect Lenovo Smart Paper to keyboard or other devices via Bluetooth?
+  31. Can I upload a local document to the Lenovo Smart Paper?
+  32. What should I do if all the files disappeared suddenly?
+  33. How can I copy and paste my writes from one notebook to another notebook?
+  34. Who can I contact if I have issues or suggestions during use?
+
+[Back] to the list
+
+14. How to find the serial number (S/N) of the Lenovo Smart Paper?
+
+Tap on the Menu icon located on the top left of the screen, then select Settings > General > About device > Serial number.
+
+[Back] to the list
+
+15. How do I reset my Lenovo Smart Paper to factory settings?
+
+A factory reset will erase all personal data from the Lenovo Smart Paper. Back up your data before proceeding. Factory Reset can be done under Settings > Factory Reset.
+
+[Back] to the list
+
+16. Information about device name
+
+Your device name is visible to apps on your device. It may also be seen by other people when you connect to Bluetooth devices or connect to a WLAN network.
+
+[Back] to the list
+
+17. How to turn off Lenovo User Experience Program?
+
+Enabling the User Experience Program will allow Lenovo to collect some information about your use of the Lenovo Smart Paper product and applications.
+
+[Back] to the list
+
+18. How to check for new system updates on my Lenovo Smart Paper?
+
+Go to Settings > General > System updates.
+
+[Back] to the list
+
+19. Where can I check the app information?
+
+You can check app information under Settings > General > App info. At this location, you can also open/disable/force-stop an app or clear its storage or cache.
+
+[Back] to the list
+
+20. Where can I check my Lenovo Smart Paper remaining storage?
+
+Go to Settings > General > Storage.
+
+[Back] to the list
+
+21. How to edit the date and time on my Lenovo Smart Paper?
+
+Go to Settings > General > Date & time. You can change the time format (12-hour or 24-hour format), Time zone, etc. at this location.
+
+[Back] to the list
+
+22. How to change my device system language?
+
+Go to Settings > General > Languages.
+
+[Back] to the list
+
+23. Where can I find tips on how to use the Lenovo Smart Paper?
+
+Go to Settings > Help > Tutorial.
+
+[Back] to the list
+
+24. What are the available accessibility functions?
+
+You can change the dominant hand (left or right) and font size under Accessibility. Go to Settings > Accessibility.
+
+[Back] to the list
+
+25. Can I set the Lenovo Smart Paper to auto-power off after a period of inactivity?
+
+--------------------------------------------------------------------------------
+Smart Paper (SP101FU): Domande Frequenti (FAQ) - Lenovo Support GA (https://support.lenovo.com/ga/it/solutions/ht514875-lenovo-smart-paper-lenovo-sp101fu-frequently-asked-questions-faqs)
+citeturn848search5 [wordlim: 200] Published: 3.7 years ago; Crawled: 4 months ago; Puoi scaricare o importare file APK e poi installare le app da solo. ... Prima scarica l'app Lenovo Smart Paper sul dispositivo android dal Play Store o sul dispositivo Windows dal Microsoft Store, quindi puoi acquistare i servizi cloud nell'app Lenovo Smart Paper.
+[Indietro] all'elenco
+
+11. Posso scaricare altre app sullo Lenovo Smart Paper?
+
+Sì. Puoi scaricare o importare file APK e poi installare le app da solo. Ma lo Lenovo Smart Paper è progettato per la scrittura a mano e la lettura di libri, le app di terze parti potrebbero non funzionare bene sullo Lenovo Smart Paper.
+
+[Indietro] all'elenco
+
+12. Dove posso trovare la versione del sistema operativo del mio Lenovo Smart Paper?
+
+Fai clic sull'icona del Menu situata in alto a sinistra dello schermo, quindi seleziona Impostazioni > Generale > Informazioni sul dispositivo > Versione software.
+
+[Indietro] all'elenco
+
+13. Come regolare la luminosità sullo Lenovo Smart Paper?
+
+Puoi cambiare la luminosità del dispositivo sotto Impostazioni > Display o dal menu rapido che si apre tirando giù la pagina dall'alto. In questo luogo, puoi anche abilitare la funzione di luminosità adattiva, impostare la temperatura del colore del display e selezionare una modalità di aggiornamento dello schermo adatta.
+--------------------------------------------------------------------------------
+Lenovo Smart Paper (Lenovo SP101FU): Frequently Asked Questions (FAQs) - Lenovo Support MS (https://support.lenovo.com/ms/en/solutions/ht514875)
+citeturn848search6 [wordlim: 200] Published: 3.7 years ago; Crawled: 5 months ago; The Google Drive app on Lenovo Smart Paper supports various document formats, including PDF, TXT, EPUB, DOCX/DOC, XLSX/XLS, and PPTX/PPT.
+
+[Back] to the list
+
+51. How does Google Drive work on Smart Paper?
+
+1. The Google Drive app on Lenovo Smart Paper supports various document formats, including PDF, TXT, EPUB, DOCX/DOC, XLSX/XLS, and PPTX/PPT. You can tap the file to download, read, and make annotations. Note: With the latest software release, you can now open downloaded documents directly on your Lenovo Smart Paper instead of having to navigate to the Download folder.
+2. If you wish to read the downloaded documents in the Library, you can press and hold on the document from Google Drive, then choose Copy. If Cloud Sync is enabled, documents saved to Library will also be synchronized to the cloud as well.
+3. You can use the Share function to convert your entire notebook or select pages to PDF format and upload them to a designated folder on Google Drive. You can send e-books to Google Drive by using the Share function.
+4. Lenovo Smart Paper does not support syncing documents to Google Drive. You can sync your notes and e-books to the Lenovo cloud service, or manually send the documents to Google Drive using the Share function.
+
+[Back] to the list
+
+[Input][Input]
+
+Document ID:HT514875
+
+Original Publish Date:02/10/2023
+
+--------------------------------------------------------------------------------
+Lenovo ورق ذكي (Lenovo SP101FU): الأسئلة المتكررة (FAQs) - Lenovo Support GA (https://support.lenovo.com/ga/ar/solutions/ht514875-lenovo-smart-paper-lenovo-sp101fu-frequently-asked-questions-faqs)
+citeturn848search7 [wordlim: 200] Published: 3.7 years ago; Crawled: 5 months ago; هل يمكنني تنزيل تطبيقات أخرى على ورق ذكي Lenovo؟ ... يمكنك تنزيل أو استيراد ملفات APK ثم تثبيت التطبيقات بنفسك.
+[عودة] إلى القائمة
+
+11. هل يمكنني تنزيل تطبيقات أخرى على ورق ذكي Lenovo؟
+
+نعم. يمكنك تنزيل أو استيراد ملفات APK ثم تثبيت التطبيقات بنفسك. لكن ورق ذكي Lenovo مصمم للكتابة اليدوية وقراءة الكتب، وقد لا تعمل التطبيقات الخارجية بشكل جيد على ورق ذكي Lenovo.
+
+[عودة] إلى القائمة
+
+12. أين يمكنني العثور على إصدار نظام التشغيل الخاص بورق ذكي Lenovo؟
+
+اضغط على أيقونة القائمة الموجودة في أعلى يسار الشاشة، ثم اختر الإعدادات > عام > حول الجهاز > إصدار البرمجيات.
+
+[عودة] إلى القائمة
+
+13. كيف يمكنني ضبط السطوع على ورق ذكي Lenovo؟
+
+يمكنك تغيير سطوع الجهاز تحت الإعدادات > العرض أو من الإعداد السريع الذي يتم سحبه من الأعلى. --------------------------------------------------------------------------------
+Lenovo Smart Paper (Lenovo SP101FU): Frequently Asked Questions (FAQs) - Lenovo Support CA (https://support.lenovo.com/ca/en/solutions/ht514875-lenovo-smart-paper-lenovo-sp101fu-frequently-asked-questions-faqs)
+citeturn848search8 [wordlim: 200] Published: 3.7 years ago; Crawled: 3 weeks ago; 
+Document ID:HT514875
+
+Original Publish Date:02/10/2023
+
+Last Modified Date:07/20/2026--------------------------------------------------------------------------------
+Lenovo Smart Paper (Lenovo SP101FU): Frequently Asked Questions (FAQs) - Lenovo Support BB (https://support.lenovo.com/bb/en/solutions/ht514875)
+citeturn848search9 [wordlim: 200] Published: 3.7 years ago; Crawled: 4 months ago; 
+Document ID:HT514875
+
+Original Publish Date:02/10/2023
+
+Last Modified Date:06/26/2025--------------------------------------------------------------------------------
+Lenovo Smart Paper (Lenovo SP101FU): Frequently Asked Questions (FAQs) - Lenovo Support BM (https://support.lenovo.com/bm/en/solutions/ht514875-lenovo-smart-paper-lenovo-sp101fu-frequently-asked-questions-faqs)
+citeturn848search10 [wordlim: 200] Published: 3.7 years ago; Crawled: 4 months ago; What is the size of the Lenovo Smart Paper display?
+--------------------------------------------------------------------------------
+Lenovo Papel Inteligente (Lenovo SP101FU): Preguntas Frecuentes (FAQs) - Lenovo Support SV (https://support.lenovo.com/sv/es/solutions/ht514875-lenovo-smart-paper-lenovo-sp101fu-frequently-asked-questions-faqs)
+citeturn848search11 [wordlim: 200] Published: 3.2 years ago; Crawled: 5 months ago; ¿Qué incluye la caja del Lenovo Smart Paper?
+

@@ -1,0 +1,147 @@
+[
+  {
+    "flow_id": "F-M009-01",
+    "before": {
+      "flow_id": "F-M009-01",
+      "product_id": "M-009",
+      "task": "电脑书籍/文档入库",
+      "depth": "D2",
+      "evidence_ids": "E-IFLYO-02",
+      "known_branches": "Office入口只显示文件，不保留文件夹展示。",
+      "gaps": "重名覆盖、扫描刷新、上传取消/断线、页码保持。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-009-iflytek-office.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M009-01",
+      "product_id": "M-009",
+      "task": "电脑书籍/文档入库",
+      "depth": "D2",
+      "evidence_ids": "E-IFLYO-02;E-IXCD-01",
+      "known_branches": "历史手册区分讯飞阅读/office文档及TF路径；后续未标版本帮助概括内部共享存储；手机上传后须设备下载。",
+      "gaps": "版本目录差异、重名覆盖、索引刷新、断线；Office帮助不展示文件夹。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-009-iflytek-office.md",
+      "checked_on": "2026-10-26"
+    }
+  },
+  {
+    "flow_id": "F-M009-02",
+    "before": {
+      "flow_id": "F-M009-02",
+      "product_id": "M-009",
+      "task": "云盘/邮件资料送入阅读",
+      "depth": "D2",
+      "evidence_ids": "E-IFLYO-02",
+      "known_branches": "下载到设备与编辑云端原文件不是同一动作。",
+      "gaps": "双向回传、授权失效、删除缓存与云文件、网络中断。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-009-iflytek-office.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M009-02",
+      "product_id": "M-009",
+      "task": "云盘/邮件资料送入阅读",
+      "depth": "D2",
+      "evidence_ids": "E-IFLYO-02;E-IXCD-01",
+      "known_branches": "云盘按格式下载归类；邮件附件另有本地目录，不能当云原件编辑。",
+      "gaps": "双向回传、授权失效、删除缓存与云文件、网络中断。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-009-iflytek-office.md",
+      "checked_on": "2026-10-26"
+    }
+  },
+  {
+    "flow_id": "F-M009-04",
+    "before": {
+      "flow_id": "F-M009-04",
+      "product_id": "M-009",
+      "task": "把笔记连同需要的文本带到PC",
+      "depth": "D2",
+      "evidence_ids": "E-IFLYO-01",
+      "known_branches": "MP3与Word/PDF是不同出口；写作插入音频需PC，手机不支持。",
+      "gaps": "加入文本具体按钮、重复同步、导出与原笔记可编辑性。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-009-iflytek-office.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M009-04",
+      "product_id": "M-009",
+      "task": "把笔记连同需要的文本带到PC",
+      "depth": "D2",
+      "evidence_ids": "E-IFLYO-01;E-IXCD-01",
+      "known_branches": "历史上传读写客与后续帮助先加入笔记的前提分别保留；写作录音PC出口不同。",
+      "gaps": "加入文本具体按钮、重复同步、导出与原笔记可编辑性。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-009-iflytek-office.md",
+      "checked_on": "2026-10-26"
+    }
+  },
+  {
+    "flow_id": "F-M009-06",
+    "before": {
+      "flow_id": "F-M009-06",
+      "product_id": "M-009",
+      "task": "分享/导出失败后定位",
+      "depth": "D2",
+      "evidence_ids": "E-IFLYO-01",
+      "known_branches": "邮件播放链接不等于取得音频文件。",
+      "gaps": "链接期限/权限、取消、保真、是否保留原声；不承诺永久可用。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-009-iflytek-office.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M009-06",
+      "product_id": "M-009",
+      "task": "分享/导出失败后定位",
+      "depth": "D2",
+      "evidence_ids": "E-IFLYO-01;E-IXCD-01",
+      "known_branches": "邮件播放链接不等于音频文件；导出说明不证明识别在设备本地完成。",
+      "gaps": "链接期限/权限、取消、保真、是否保留原声；不承诺永久可用。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-009-iflytek-office.md",
+      "checked_on": "2026-10-26"
+    }
+  },
+  {
+    "flow_id": "F-M009-07",
+    "before": {
+      "flow_id": "F-M009-07",
+      "product_id": "M-009",
+      "task": "控制自动同步（条件D2）",
+      "depth": "D2",
+      "evidence_ids": "E-IFLYO-04",
+      "known_branches": "自动开关与单本上传分开；同讯飞账号才能多端访问。",
+      "gaps": "旧X2固件菜单、关闭前已上传数据是否保留、登出可见性/冲突。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-009-iflytek-office.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M009-07",
+      "product_id": "M-009",
+      "task": "控制自动上传",
+      "depth": "D2",
+      "evidence_ids": "E-IFLYO-04;E-IXCD-01;E-IXCD-07",
+      "known_branches": "历史开关在编辑退出时触发；手动上传、加密后云删除与自动上传分开；上传触发不等于服务器完成。",
+      "gaps": "现版菜单、上传失败/排队、关闭前云副本、同步冲突。",
+      "visual_status": "static_manual_pages_only",
+      "hands_on": "false",
+      "case_path": "cases/M-009-iflytek-office.md",
+      "checked_on": "2026-10-26"
+    }
+  }
+]

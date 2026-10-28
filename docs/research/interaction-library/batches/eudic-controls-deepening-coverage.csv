@@ -1,0 +1,4 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M026-11,M-026,跨软件选择文本并查词翻译,D2,E-EUD-14,iOS默认翻译18.4+与分享；Android浮窗权限、框选和展开；旧LightPeek限制,权限拒绝、弹窗关闭、回来源位置、误识别与词本原句保存未知,not_observed,false,cases/M-026-eudic.md,2026-10-27
+F-M026-12,M-026,建立词库全文索引后查询,D2,E-EUD-15,启用索引→后台建立→完成状态→全文搜索；显示词库开关,强退、索引失败/重建、更新删除资源后处理和空结果未知,not_observed,false,cases/M-026-eudic.md,2026-10-27
+F-M026-13,M-026,整理解释页词典与定位内容,D2,E-EUD-16,自动展开数量、排序隐藏、目录与解释内搜索、字体主题,误隐藏恢复、配置持久化/跨端、冲突、搜索空结果未知,not_observed,false,cases/M-026-eudic.md,2026-10-27

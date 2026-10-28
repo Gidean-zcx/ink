@@ -1,0 +1,23 @@
+[
+  {
+    "path": "docs/research/interaction-library/batches/audible-controls-deepening-inventory.csv",
+    "rows_before": 53,
+    "rows_after": 54,
+    "old_rows_updated": 23,
+    "new_rows": 1
+  },
+  {
+    "path": "docs/research/interaction-library/batches/yoto-controls-deepening-inventory.csv",
+    "rows_before": 123,
+    "rows_after": 123,
+    "old_rows_updated": 2,
+    "new_rows": 0
+  },
+  {
+    "path": "docs/research/interaction-library/batches/tonie-controls-deepening-inventory.csv",
+    "rows_before": 150,
+    "rows_after": 150,
+    "old_rows_updated": 5,
+    "new_rows": 0
+  }
+]

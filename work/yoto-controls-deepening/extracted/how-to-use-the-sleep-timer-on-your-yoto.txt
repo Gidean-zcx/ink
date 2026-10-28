@@ -1,0 +1,17 @@
+
+The Sleep Timer feature is perfect for bedtimes, but it can be useful for other situations too!
+
+
+To set your player to stop playing after a set time, simply follow these simple steps: 
+1) Tap the “now playing” bar at the base of the screen to open the Maxi Player view.
+
+2) Tap the ‘moon and stars’ icon at the top of the screen.
+
+3) Set your time.
+
+4) Once the timer has elapsed, your player will stop playing. 
+
+
+
+Don’t worry if you’ve changed cards or played something different while the timer is running, it will keep running until it runs out, or until you set it to 'off'.
+To set your sleep timer off, simply tap the moon and stars icon again and select ‘off’.

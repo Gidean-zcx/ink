@@ -1,0 +1,150 @@
+{
+  "name": "13-new-context",
+  "url": "https://reader.emagazines.com/issue/the-week-junior/october-23-2026/cover-3?ipt=F0826FC3-4129-46CF-A5F3-FF70A931F1FF",
+  "title": "The Week Junior, October 23, 2026",
+  "text": "1 / 32",
+  "buttons": [
+    {
+      "text": "OPT-IN",
+      "aria": null,
+      "title": "",
+      "id": "opt-in-button"
+    },
+    {
+      "text": "NOT NOW",
+      "aria": null,
+      "title": "",
+      "id": "opt-in-dismiss-button"
+    },
+    {
+      "text": "",
+      "aria": "Toggle navigation",
+      "title": "",
+      "id": "sidebar-toggle-button"
+    },
+    {
+      "text": "",
+      "aria": "Clear search",
+      "title": "",
+      "id": ""
+    },
+    {
+      "text": "",
+      "aria": "Show page thumbnails",
+      "title": "",
+      "id": ""
+    },
+    {
+      "text": "",
+      "aria": "Save my place",
+      "title": "",
+      "id": ""
+    },
+    {
+      "text": "",
+      "aria": "Go to first page",
+      "title": "",
+      "id": "goToFrontButton"
+    },
+    {
+      "text": "",
+      "aria": "Go to last page",
+      "title": "",
+      "id": "goToEndButton"
+    },
+    {
+      "text": "",
+      "aria": "Zoom in on content",
+      "title": "Zoom",
+      "id": ""
+    },
+    {
+      "text": "\n                            \n                            ",
+      "aria": "Listen to audio version",
+      "title": "Listen",
+      "id": "leftAudio"
+    },
+    {
+      "text": "\n                    ",
+      "aria": "Zoom in on content",
+      "title": "Zoom",
+      "id": ""
+    },
+    {
+      "text": "\n                            \n                            ",
+      "aria": "Listen to audio version",
+      "title": "Listen",
+      "id": "rightAudio"
+    },
+    {
+      "text": "\n                ",
+      "aria": null,
+      "title": "",
+      "id": ""
+    },
+    {
+      "text": "",
+      "aria": "Previous page",
+      "title": "",
+      "id": "main-swiper-button-prev"
+    },
+    {
+      "text": "",
+      "aria": "Next page",
+      "title": "",
+      "id": ""
+    },
+    {
+      "text": "\n    Open modal\n",
+      "aria": "Open PDF download modal",
+      "title": "",
+      "id": ""
+    },
+    {
+      "text": "×",
+      "aria": "Close download modal",
+      "title": "",
+      "id": ""
+    },
+    {
+      "text": "\n                    Close\n                ",
+      "aria": "Close modal",
+      "title": "",
+      "id": ""
+    },
+    {
+      "text": "Close",
+      "aria": null,
+      "title": "",
+      "id": "textViewCloseButton"
+    },
+    {
+      "text": "Close\n                            ",
+      "aria": "Close share dialog",
+      "title": "",
+      "id": ""
+    },
+    {
+      "text": "\n                            Copy & Close\n                        ",
+      "aria": "Copy link to clipboard and close dialog",
+      "title": "",
+      "id": "shareLinkCloseButton"
+    }
+  ],
+  "inputs": [
+    {
+      "type": "text",
+      "placeholder": "Search",
+      "aria": "Search magazine content",
+      "value": "",
+      "id": "searchInput"
+    },
+    {
+      "type": "number",
+      "placeholder": "1",
+      "aria": "Go to page number",
+      "value": "1",
+      "id": "pageNumberInput"
+    }
+  ]
+}

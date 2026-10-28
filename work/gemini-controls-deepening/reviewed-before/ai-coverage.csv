@@ -1,0 +1,20 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M041-01,M-041,找到并选入学习资料,D2,E-NBL-01;E-NBCD-02;E-NBCD-03,保留Fast/Deep Research任务；本地资料Add sources导入。超过500000词、上传200MB或PDF复制保护可失败；YouTube取字幕、音频取转写；重复去重未说明。,重复导入识别、错误页与保留部分数据、全格式保真未知,not_observed,false,cases/M-041-notebooklm.md,2026-10-26
+F-M041-02,M-041,更新来源并识别失效,D2,E-NBL-01;E-NBCD-02;E-NBCD-04,Drive打开来源可手动sync，帮助亦述自动更新；失权/被删来源仍占额度但不参与新问答/产物，可请求访问或移除。取消勾选只确证范围选择，不等同删除；原Drive文件不受编辑/删除。,手动删除入口/确认/恢复、重复合并、旧产物是否随来源更新未知；创建帮助关于unselect/remove措辞需实核,not_observed,false,cases/M-041-notebooklm.md,2026-10-26
+F-M041-03,M-041,从答案回查原文,D2,E-NBL-03,引用可随保存的回答保留；这提供核对入口，不保证回答正确。帮助内“仅用来源”与实验性无来源研究分属不同段落，不能合成一项绝对承诺。,矛盾来源处理、引用精度,not_observed,false,cases/M-041-notebooklm.md,2026-10-26
+F-M041-04,M-041,生成并完成一次卡片/测验,D2,E-NBL-02;E-NBCD-05,前后箭头导航、Hint/Explain、自评和结果重练；卡片可重启、打乱、删卡和CSV下载。自评记录不证明掌握；未见题干/答案文本编辑或评分撤销步骤。,逐题文本校订、评分撤销、删卡确认/恢复、自动间隔复习规则未知,not_observed,false,cases/M-041-notebooklm.md,2026-10-26
+F-M041-05,M-041,中断后继续学习,D2,E-NBL-04;E-NBL-07;E-NBCD-05;E-NBCD-12,当前帮助也述离开后继续进度；2026-03-20旧证据保留单卡/单题删除与重练历史范围，本轮该发布页HTTP429未复取。Android同步延迟建议退出重开，不保证冲突合并。,多端冲突优先级、删题恢复、精确断点及重练是否重置历史成绩未知,not_observed,false,cases/M-041-notebooklm.md,2026-10-26
+F-M041-06,M-041,听摘要并插入问题,D2,E-NBL-05;E-NBCD-12,原英语互动流程保留；Android可后台听，Studio音频Download或左滑下载后在首页Downloaded找回离线音频；离线缓存不能当作设备文件导出。,中文互动、精确续播位置、缓存清理后的恢复及离线互动未知,not_observed,false,cases/M-041-notebooklm.md,2026-10-26
+F-M041-07,M-041,保存自己的知识笔记,D2,E-NBL-06;E-NBCD-06;E-NBCD-03,新笔记属于Sources，勾选后参加问答/生成；旧Studio笔记Convert或批量Convert；笔记More导出新Docs，修改不回同步且权限不继承。FAQ明确已删除笔记不能恢复；移动端只读/选取/问答。,移除引用后可追溯性、删除确认、笔记变更是否更新旧产物未知,not_observed,false,cases/M-041-notebooklm.md,2026-10-26
+F-M042-01,M-042,就眼前内容问 AI,D2,E-GEM-01,内容可含截图、文件或 URL。长按建议可改自动提交；自动推断何时读取屏幕的功能另限英语，文本与截图开关分别设置。,屏幕外/历史数据覆盖,not_observed,false,cases/M-042-gemini.md,2026-10-26
+F-M042-02,M-042,发现并调用应用动作,D2,E-GEM-02,可见目录随账户/平台而变；关闭 Keep Activity 后 Android 仍保留部分设备/通信连接器，不能照搬到 iOS/web。,每个连接器全动作及部分失败,not_observed,false,cases/M-042-gemini.md,2026-10-26
+F-M042-03,M-042,修改闹钟和计时状态,D2,E-GEM-03,时钟实现按厂家/Google/第三方不同；停响、停用、删除不是同一动作。具体失败反馈与确认卡尚未观察。,重复对象、确认与错误回执,not_observed,false,cases/M-042-gemini.md,2026-10-26
+F-M042-04,M-042,取得并撤销设备权限,D2,E-GEM-03,缺这些授权时仍可做其他支持动作，不能理解为全有或全无。已保存密码、重置设备等不在该文档支持范围。,拒绝权限后已执行动作,not_observed,false,cases/M-042-gemini.md,2026-10-26
+F-M042-05,M-042,让 AI 代做一项 app 任务,D2,E-GEM-04,可在后台推进；若有 Connected App 会优先使用。尚未完成的订单可能已经留下购物车内容，停止不等于撤销全部修改。,实际支持名单、部分修改与重试,not_observed,false,cases/M-042-gemini.md,2026-10-26
+F-M042-06,M-042,查看、停止与接管,D2,E-GEM-04;E-GEM-05,Pixel 10、Galaxy S26 在所查说明中只能停止，不能照搬新设备的接管行为。两份官方索引的支持设备/地区列表不同，不能拼成通用承诺。,不同设备接管、取消后的持久状态,not_observed,false,cases/M-042-gemini.md,2026-10-26
+F-M043-01,M-043,组装并测试任务,D2,E-SCT-01;E-SCT-02;E-SCCD-02;E-SCCD-03;E-SCCD-23,27可自然语言生成后修改/运行；动作Info可看输入输出，App Shortcuts可嵌入；编辑撤销不代表执行副作用回滚。,生成错误、缺动作、额度耗尽、运行副作用与撤回,not_observed,false,cases/M-043-shortcuts.md,2026-10-27
+F-M043-02,M-043,从眼前内容开始,D2,E-SCT-03;E-SCCD-22;E-SCCD-24,受支持App当前项目作为第一步输入；27更新声明更结构化，仍非任意页面全部数据。,各App实际字段、空页面、屏幕外数据与读取失败,not_observed,false,cases/M-043-shortcuts.md,2026-10-27
+F-M043-03,M-043,遇到不适合或缺失的输入,D2,E-SCT-04,可停止并回复、另询输入、取剪贴板或继续；继续时变量可为空。必须区分“不显示入口”与“运行后没输入”。,缺输入实际反馈,not_observed,false,cases/M-043-shortcuts.md,2026-10-26
+F-M043-04,M-043,运行时补齐信息,D2,E-SCT-05,输入传下一动作或保留为变量；可有默认值、按类型选择键盘。取消的后续状态尚未核实。,取消输入后的链状态,not_observed,false,cases/M-043-shortcuts.md,2026-10-26
+F-M043-05,M-043,授权后再次运行,D2,E-SCT-06,总是允许后不再每次弹出；授权范围按指令记录。文档未证明拒绝后一律回滚之前动作。,拒绝后的部分结果,not_observed,false,cases/M-043-shortcuts.md,2026-10-26
+F-M043-06,M-043,结束、提前停止并返回,D2,E-SCT-07;E-SCCD-20;E-SCCD-21,原输出/返回语义保留；Show Alert的Done继续、Cancel可停止；Show Notification发出即继续，不能当已确认。,进程终止、停止后的对象去留、事务回滚、恢复入口,not_observed,false,cases/M-043-shortcuts.md,2026-10-27

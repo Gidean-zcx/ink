@@ -1,0 +1,19 @@
+Variable types used in Shortcuts on iPhone or iPad
+In the shortcut editor, variables are shown as blue pill-shaped tokens. Many actions already contain default variables. You can modify these variables or add your own variables to customize actions.
+There are three types of variables in Shortcuts: Magic Variables, special variables, and manual variables.
+Magic Variables
+In every shortcut, each action’s output is available as a Magic Variable. Unlike manual variables (described below), Magic Variables don’t require you to save the output of an action for later use—simply select the output of any action to use it as a variable in any subsequent action. Magic Variables are visually useful as well, displaying the icon of the action from which they’re generated.
+Making the variables truly magic, however, is your ability to change the variable type—simply tap a Magic Variable to change its format, and to specify which of its details to use. For more information, see Adjust variables in Shortcuts on iPhone or iPad.
+In most cases, using Magic Variables simplifies building shortcuts and is preferable to manually creating variables. For example, if you want to use static text or a number, add the Text action or Number, then recall the Text or Number output later in the shortcut as a Magic Variable.
+Special variables
+Special variables are variables that you can add to a text field or to a parameter setting (for example, to replace a parameter setting with the Ask Each Time variable). Special variables are applied from a contextual menu that appears when you touch and hold a text field or parameter control. Some of the more common special variables include the following:
+Ask Each Time: Prompts you to enter text in its place when the shortcut is run.
+Clipboard: Inserts what you’ve most recently copied at the time the shortcut runs.
+Current Date: Inserts today’s date and time, formatted to your preference.
+Shortcut Input: Grabs the input that was passed into the beginning of the shortcut (applicable for shortcuts that are set to run in another app).
+For more information, see Add a special variable to an action.
+Manual variables
+Manual variables allow you to hold a value that might change later (for example, the current time) and add information to an existing variable. For example, you could append the current date to content received as input in the workflow.
+Unlike Magic Variables and special variables, you add manual variables using an action: the Set Variable action or the Add to Variable action. Set Variable allows you to set a new variable for the first time or overwrite a previously stored variable. Add to Variable allows you to add multiple pieces of content to the same variable by appending to the variable each time the shortcut runs, storing the data as an ordered list.
+Setting variables manually tends to lengthen shortcuts and make them harder to read. In most cases, manual variables are unnecessary—Magic Variables and special variables do much of the same work more concisely. For example, you can replicate most of the Add to Variable functionality by placing variables into a List action and retrieving the variables later.
+For more information, see Add a manual variable to an action.

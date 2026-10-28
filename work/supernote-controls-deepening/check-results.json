@@ -1,0 +1,11 @@
+{
+  "new_evidence": 11,
+  "new_flows": 4,
+  "old_flow_update_suggestions": 6,
+  "toc_rows": 140,
+  "viewed_static_pages": 4,
+  "duplicate_new_prefix_in_batches": false,
+  "hands_on": false,
+  "status": "PASS",
+  "scope": "documentation/schema/references/local hashes; no live product test or exhaustive remote link revalidation"
+}

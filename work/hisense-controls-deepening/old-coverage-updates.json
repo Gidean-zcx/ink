@@ -1,0 +1,245 @@
+[
+  {
+    "flow_id": "F-M055-01",
+    "before": {
+      "flow_id": "F-M055-01",
+      "product_id": "M-055",
+      "task": "A9阅读主任务及通信/音频范围",
+      "depth": "D1",
+      "evidence_ids": "E-HIS-01;E-HSD-08",
+      "known_branches": "阅读手机型号与容量固定；官方页面现下架",
+      "gaps": "导入开书、查词划线、音频、实体键、同步恢复",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-055-hisense.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M055-01",
+      "product_id": "M-055",
+      "task": "A9阅读主任务及通信/音频范围",
+      "depth": "D1",
+      "evidence_ids": "E-HIS-01;E-HSD-08",
+      "known_branches": "A9原版官方容量/阅读手机定位沿用旧采集；2022评测仅列四刷新模式、安装App与多种锁屏主题，未给主链操作。",
+      "gaps": "导入开书、查词划线、音频/通话打断、锁屏恢复、后台与同步恢复仍缺固定构建证据；不借Hi Reader机内引导补A9。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-055-hisense.md",
+      "checked_on": "2026-10-27"
+    },
+    "changed_fields": {
+      "known_branches": {
+        "before": "阅读手机型号与容量固定；官方页面现下架",
+        "after": "A9原版官方容量/阅读手机定位沿用旧采集；2022评测仅列四刷新模式、安装App与多种锁屏主题，未给主链操作。"
+      },
+      "gaps": {
+        "before": "导入开书、查词划线、音频、实体键、同步恢复",
+        "after": "导入开书、查词划线、音频/通话打断、锁屏恢复、后台与同步恢复仍缺固定构建证据；不借Hi Reader机内引导补A9。"
+      },
+      "checked_on": {
+        "before": "2026-10-26",
+        "after": "2026-10-27"
+      }
+    }
+  },
+  {
+    "flow_id": "F-M055-05",
+    "before": {
+      "flow_id": "F-M055-05",
+      "product_id": "M-055",
+      "task": "TOUCH阅读/音乐导航与侧键",
+      "depth": "D1",
+      "evidence_ids": "E-HSD-01;E-HSD-06",
+      "known_branches": "前置：2021年原版TOUCH、具体固件未知；路径：体验文列阅读/音乐/应用/设置四入口；默认墨智键短按刷新、双击读书、长按速记；另报告拷贝本地音乐后可播放。；状态：只到入口与局部反馈，未取得传输模式、扫描、队列和退出完整链。官方USB DAC为功能声明。",
+      "gaps": "文件目录、播放顺序、断点、锁屏控制、外放/有线/蓝牙切换、DAC退出与音频中断未知。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-055-hisense.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M055-05",
+      "product_id": "M-055",
+      "task": "TOUCH阅读/音乐导航与侧键",
+      "depth": "D1",
+      "evidence_ids": "E-HSD-01;E-HSD-06;E-HSCD-06",
+      "known_branches": "普通TOUCH与2021西安博物院联名款分开：新作者称删阅读标签，应用/设置标签保留，音乐标签进入播放器；三键导航在具体App内出现。只是入口与局部观察。",
+      "gaps": "联名款与黛青SKU构建关系、编辑保存/重加标签、后台管理结果、USB入库/队列/断点、输出切换与DAC退出未知；删标签不证明卸载或数据删除。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-055-hisense.md",
+      "checked_on": "2026-10-27"
+    },
+    "changed_fields": {
+      "evidence_ids": {
+        "before": "E-HSD-01;E-HSD-06",
+        "after": "E-HSD-01;E-HSD-06;E-HSCD-06"
+      },
+      "known_branches": {
+        "before": "前置：2021年原版TOUCH、具体固件未知；路径：体验文列阅读/音乐/应用/设置四入口；默认墨智键短按刷新、双击读书、长按速记；另报告拷贝本地音乐后可播放。；状态：只到入口与局部反馈，未取得传输模式、扫描、队列和退出完整链。官方USB DAC为功能声明。",
+        "after": "普通TOUCH与2021西安博物院联名款分开：新作者称删阅读标签，应用/设置标签保留，音乐标签进入播放器；三键导航在具体App内出现。只是入口与局部观察。"
+      },
+      "gaps": {
+        "before": "文件目录、播放顺序、断点、锁屏控制、外放/有线/蓝牙切换、DAC退出与音频中断未知。",
+        "after": "联名款与黛青SKU构建关系、编辑保存/重加标签、后台管理结果、USB入库/队列/断点、输出切换与DAC退出未知；删标签不证明卸载或数据删除。"
+      },
+      "checked_on": {
+        "before": "2026-10-26",
+        "after": "2026-10-27"
+      }
+    }
+  },
+  {
+    "flow_id": "F-M055-06",
+    "before": {
+      "flow_id": "F-M055-06",
+      "product_id": "M-055",
+      "task": "Hi Reader速记从录入到收起",
+      "depth": "D2",
+      "evidence_ids": "E-HSD-05",
+      "known_branches": "前置：原版、评测所述墨智键映射；路径：长按墨智键启动灵感速记→松开结束录音→短按收起并保存。；状态：文中称语音可转文字，终点是便签收起/保存；没有原音频去向说明。",
+      "gaps": "联网/账号/费用、转写失败、原音与文本关联、重开/修改/导出、误松手、后台打断未知。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-055-hisense.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M055-06",
+      "product_id": "M-055",
+      "task": "Hi Reader速记从录入到收起",
+      "depth": "D2",
+      "evidence_ids": "E-HSD-05;E-HSCD-01;E-HSCD-04",
+      "known_branches": "2022评测给长按录入、松开结束、短按收起保存；2023机内引导另说明按已配置按法启动后可新建/查看/删除。速记照片有录入状态和操作图标，未触发。",
+      "gaps": "两年资料未标构建，不拼同一操作链；转写网络/账号/失败、原音与文字、查看/删除具体步骤及恢复、分享/软盘图标效果未核。",
+      "visual_status": "static_reference_only",
+      "hands_on": "false",
+      "case_path": "cases/M-055-hisense.md",
+      "checked_on": "2026-10-27"
+    },
+    "changed_fields": {
+      "evidence_ids": {
+        "before": "E-HSD-05",
+        "after": "E-HSD-05;E-HSCD-01;E-HSCD-04"
+      },
+      "known_branches": {
+        "before": "前置：原版、评测所述墨智键映射；路径：长按墨智键启动灵感速记→松开结束录音→短按收起并保存。；状态：文中称语音可转文字，终点是便签收起/保存；没有原音频去向说明。",
+        "after": "2022评测给长按录入、松开结束、短按收起保存；2023机内引导另说明按已配置按法启动后可新建/查看/删除。速记照片有录入状态和操作图标，未触发。"
+      },
+      "gaps": {
+        "before": "联网/账号/费用、转写失败、原音与文本关联、重开/修改/导出、误松手、后台打断未知。",
+        "after": "两年资料未标构建，不拼同一操作链；转写网络/账号/失败、原音与文字、查看/删除具体步骤及恢复、分享/软盘图标效果未核。"
+      },
+      "visual_status": {
+        "before": "not_observed",
+        "after": "static_reference_only"
+      },
+      "checked_on": {
+        "before": "2026-10-26",
+        "after": "2026-10-27"
+      }
+    }
+  },
+  {
+    "flow_id": "F-M055-07",
+    "before": {
+      "flow_id": "F-M055-07",
+      "product_id": "M-055",
+      "task": "Hi Reader文章收藏到离线内容",
+      "depth": "D2",
+      "evidence_ids": "E-HSD-05",
+      "known_branches": "前置：原版；来源为支持智慧识屏的app，文章以微信等为例；路径：双指长按文章→智慧识屏卡片→收藏。；状态：文中称页面存到本地、可离线阅读；未给重新打开的入口。",
+      "gaps": "不是所有app保证；完整性、重复收藏、登录墙、图片、删除/恢复和跨设备同步未知。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-055-hisense.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M055-07",
+      "product_id": "M-055",
+      "task": "Hi Reader文章收藏到离线内容",
+      "depth": "D2",
+      "evidence_ids": "E-HSD-05;E-HSCD-02;E-HSCD-03",
+      "known_branches": "2022评测为支持的App双指长按识屏后收藏、声称存本地；2023设置照片可见全局收藏管理，控制引导另列收藏文章。截图便笺是另一入口。",
+      "gaps": "管理入口未点击，未观察收藏项重开/删除/恢复；App资格、离线首次抓取、图片完整性、重复及同步仍未知；两年资料构建未知，不拼同一操作链。",
+      "visual_status": "static_reference_only",
+      "hands_on": "false",
+      "case_path": "cases/M-055-hisense.md",
+      "checked_on": "2026-10-27"
+    },
+    "changed_fields": {
+      "evidence_ids": {
+        "before": "E-HSD-05",
+        "after": "E-HSD-05;E-HSCD-02;E-HSCD-03"
+      },
+      "known_branches": {
+        "before": "前置：原版；来源为支持智慧识屏的app，文章以微信等为例；路径：双指长按文章→智慧识屏卡片→收藏。；状态：文中称页面存到本地、可离线阅读；未给重新打开的入口。",
+        "after": "2022评测为支持的App双指长按识屏后收藏、声称存本地；2023设置照片可见全局收藏管理，控制引导另列收藏文章。截图便笺是另一入口。"
+      },
+      "gaps": {
+        "before": "不是所有app保证；完整性、重复收藏、登录墙、图片、删除/恢复和跨设备同步未知。",
+        "after": "管理入口未点击，未观察收藏项重开/删除/恢复；App资格、离线首次抓取、图片完整性、重复及同步仍未知；两年资料构建未知，不拼同一操作链。"
+      },
+      "visual_status": {
+        "before": "not_observed",
+        "after": "static_reference_only"
+      },
+      "checked_on": {
+        "before": "2026-10-26",
+        "after": "2026-10-27"
+      }
+    }
+  },
+  {
+    "flow_id": "F-M055-08",
+    "before": {
+      "flow_id": "F-M055-08",
+      "product_id": "M-055",
+      "task": "Hi Reader选词/批注工具栏",
+      "depth": "D1",
+      "evidence_ids": "E-HSD-05",
+      "known_branches": "前置：原版评测中的阅读界面，阅读引擎未明确；路径：长按字句可调出划线、批注、复制、搜索/百科/词典菜单。；状态：仅确定菜单；选择→写注释→保存→再次定位→返回的链仍缺。",
+      "gaps": "词典来源/离线、选区移动、取消、书签关联、导出与删除标记未知。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-055-hisense.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M055-08",
+      "product_id": "M-055",
+      "task": "Hi Reader选词/批注工具栏",
+      "depth": "D1",
+      "evidence_ids": "E-HSD-05;E-HSCD-05",
+      "known_branches": "2022作者长按文字调工具栏；照片可见选区、划线/批注/复制/搜索/词典/百科，所示词典结果注明汉语大词典。",
+      "gaps": "单帧不闭合选词→保存→重开；词典切换/离线、查询失败、标注取消/导出/删除及返回位置未知。",
+      "visual_status": "static_reference_only",
+      "hands_on": "false",
+      "case_path": "cases/M-055-hisense.md",
+      "checked_on": "2026-10-27"
+    },
+    "changed_fields": {
+      "evidence_ids": {
+        "before": "E-HSD-05",
+        "after": "E-HSD-05;E-HSCD-05"
+      },
+      "known_branches": {
+        "before": "前置：原版评测中的阅读界面，阅读引擎未明确；路径：长按字句可调出划线、批注、复制、搜索/百科/词典菜单。；状态：仅确定菜单；选择→写注释→保存→再次定位→返回的链仍缺。",
+        "after": "2022作者长按文字调工具栏；照片可见选区、划线/批注/复制/搜索/词典/百科，所示词典结果注明汉语大词典。"
+      },
+      "gaps": {
+        "before": "词典来源/离线、选区移动、取消、书签关联、导出与删除标记未知。",
+        "after": "单帧不闭合选词→保存→重开；词典切换/离线、查询失败、标注取消/导出/删除及返回位置未知。"
+      },
+      "visual_status": {
+        "before": "not_observed",
+        "after": "static_reference_only"
+      },
+      "checked_on": {
+        "before": "2026-10-26",
+        "after": "2026-10-27"
+      }
+    }
+  }
+]

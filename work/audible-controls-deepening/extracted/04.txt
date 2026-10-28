@@ -1,0 +1,178 @@
+Download titles (https://help.audible.com/s/article/download-titles)
+citeturn761view0 [wordlim: 200] Crawled: today; Content type: text/html; Source: open({"ref_id":"https://help.audible.com/s/article/download-titles","lineno":null}); Total lines: 176
+L0: Loading
+L1: 
+L2: Sorry to interrupt
+L3: 
+L4: This page has an error. You might just need to refresh it. [Cannot read properties of undefined (reading 'bind')]
+L5: 
+L6: 【0†Refresh】
+L7: 
+L8: Skip to Main Content
+L9: 
+L10: Related topics
+L11: 
+L12: Android Ask A Question Downloads Fire TV iOS+3
+L13: ## Download titles
+L14: 
+L15:   * Sep 3, 2026
+L16:   * Knowledge
+L17: 
+L18: Title
+L19: 
+L20: Download titles
+L21: 
+L22: URL Name
+L23: 
+L24: download-titles
+L25: 
+L26: Answer
+L27: 
+L28: You can listen to Audible offline by downloading your audiobooks, podcasts, and Originals to your computer or Audible app. Keep in mind that you can only download titles you've purchased with an Audible credit or a credit card to your computer.
+L29: 
+L30: In this article:
+L31:   * 【1†How do I download titles in the app?】
+L32:   * 【2†How do I download podcast episodes in the app?】
+L33:   * 【3†How do I download titles on my Apple Watch?】
+L34:   * 【4†How do I download my Audible audiobooks onto my Fire Tablet?】
+L35:   * 【5†Can I download or stream Audible audiobooks on one of my Fire TV devices?】
+L36:   * 【6†How can I stream or download Audible titles on desktop?】
+L37: ## How do I download titles in the app?
+L38: 
+L39: Using the 3-dot More menu:
+L40: 
+L41:   1. Open the Audible app.
+L42:   2. Select Library.
+L43:   3. Select All Titles
+L44:   4. Locate the title you want to download.
+L45:   5. Select the 3-dot More menu next to the title.
+L46:   6. Select Download.
+L47: 
+L48: Using select and hold:
+L49: 
+L50:   1. Open the Audible app.
+L51:   2. Select Library.
+L52:   3. Select All Titles
+L53:   4. Locate the title you want to download.
+L54:   5. Select and hold the title you want to download.
+L55:   6. Select Download.
+L56: Once it's done downloading, you can listen offline.
+L57: 
+L58: Notes:
+L59: 
+L60:   * Make sure you have a stable Wi-Fi connection and enough extra space on your device before downloading.
+L61:   * If you run into any trouble with finding your titles, 【7†try refreshing your Library】.
+L62:   * There is no bulk download option currently available. Titles can only be downloaded one at a time in the app.
+L63: ## How do I download podcast episodes in the app?
+L64: 
+L65: Using the 3-dot More menu:
+L66: 
+L67:   1. Open the Audible app.
+L68:   2. Select Library.
+L69:   3. Select Podcasts.
+L70:   4. Select the podcast you want to listen to.
+L71:   5. Locate the episode you want to download.
+L72:   6. Select the 3-dot More menu next to the episode.
+L73:   7. Select Download.
+L74: 
+L75: Using select and hold:
+L76:   1. Open the Audible app.
+L77:   2. Select Library.
+L78:   3. Select Podcasts.
+L79:   4. Select the podcast you want to listen to.
+L80:   5. Locate the episode you want to download.
+L81:   6. Select and hold the episode.
+L82:   7. Select Download.
+L83: ## How do I download titles on my Apple Watch?
+L84: 
+L85:   1. Pair your Bluetooth headphones to your Apple Watch.
+L86:   2. Open the Audible app on your Apple Watch.
+L87:   3. Select Manage Library.
+L88:   4. Sort by Title to see all titles in your library.
+L89:   5. Go back to the Library.
+L90:   6. Select the title you want to download.
+L91: 
+L92: The title will begin streaming immediately and will download in the background for offline listening once complete.
+L93: 
+L94: If your title is not downloading when selecting it, you need to enable the downloads:
+L95:   1. Select the title you want to download.
+L96:   2. In the player, select the 3-dot More menu.
+L97:   3. Select Data & storage.
+L98:   4. Select Stream & download to enable the downloads.
+L99: ## How do I download my Audible audiobooks onto my Fire Tablet?
+L100: 
+L101: For Fire OS 8 and above
+L102: 
+L103:   1. Select the Audible app.
+L104:   2. Select the main menu.
+L105:   3. Select Library.
+L106:   4. Select the cover art of the title to be downloaded (make sure to turn your Wi-Fi on).
+L107:   5. You should see your downloaded title under the Downloaded tab.
+L108: 
+L109: Note: Audible does not support devices with FireOS 7 and below versions.
+L110: ## Can I download or stream Audible audiobooks on one of my Fire TV devices?
+L111: 
+L112: When you install the Audible app to one of your Fire TV devices, the titles in your Library don't need to be downloaded.
+L113: ## How can I stream or download Audible titles on desktop?
+L114: 
+L115: You can listen to the titles in your library by using the Cloud Player from any supported browser. If you have access to a computer running Windows 10 or 11, you can use AudibleSync to download titles and sync them to compatible MP3 players or accessibility devices.
+L116: 
+L117: To listen to and download audiobooks on a macOS computer, visit 【8†Listen on your macOS device.】
+L118: 
+L119: Notes:
+L120:   * 【9†AudibleSync】 does not support bulk downloads. Titles can only be downloaded individually.
+L121: 
+L122: Did this answer your question?
+L123: 
+L124: 【10†Image: Thumbs Up】Like
+L125: 
+L126: 
+L127: 
+L128: 【11†Image: Thumbs Down】Dislike
+L129: 
+L130:  Back to top
+L131: 
+L132: 【12†Image: Share link】 Share link
+L133: 
+L134: 【13†Image: Download PDF】 Download PDF
+L135: ## Need more assistance?
+L136: 
+L137: 【14†Contact us†www.audible.com】
+L138: 
+L139: 
+L140: 
+L141: How satisfied were you with our Help Center today?
+L142: 
+L143: 
+L144: 
+L145: Worst
+L146: 
+L147: 1
+L148: 
+L149: 2
+L150: 
+L151: 3
+L152: 
+L153: 4
+L154: 
+L155: 5
+L156: 
+L157: 6
+L158: 
+L159: 7
+L160: 
+L161: Best
+L162: 
+L163: 
+L164: 
+L165: Region
+L166: 
+L167: United States
+L168: 
+L169: Language
+L170: 
+L171: English
+L172: 
+L173: Loading
+L174: 
+L175: Download titles 【15†Adobe ID Syncing iFrame†audible.demdex.net】

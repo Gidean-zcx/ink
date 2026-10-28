@@ -1,0 +1,43 @@
+[
+  {
+    "file": "work/fenbi-practice-controls-deepening/raw/c01-review2019.html",
+    "url": "https://www.woshipm.com/evaluating/3139083.html",
+    "final_url": "https://www.woshipm.com/evaluating/3139083.html",
+    "status": 200,
+    "bytes": 160538,
+    "sha256": "9a081fe53b97554eda34857ed0c1715e2ce06ba992c49d6a35d6b1d88e6bc32e",
+    "content_type": "text/html; charset=UTF-8",
+    "redirects": []
+  },
+  {
+    "file": "work/fenbi-practice-controls-deepening/raw/c02-review2020.html",
+    "url": "https://www.woshipm.com/evaluating/3331984.html",
+    "final_url": "https://www.woshipm.com/evaluating/3331984.html",
+    "status": 200,
+    "bytes": 97124,
+    "sha256": "f6881e45a5de13df9cf22d14743f89d847cf2128bae9aeea815c7bc9bc2d68b8",
+    "content_type": "text/html; charset=UTF-8",
+    "redirects": []
+  },
+  {
+    "file": "work/fenbi-practice-controls-deepening/raw/c03-baidu.html",
+    "url": "https://jingyan.baidu.com/article/ca00d56c28bc50a89eebcff4.html",
+    "final_url": "https://jingyan.baidu.com/article/ca00d56c28bc50a89eebcff4.html",
+    "status": 200,
+    "bytes": 63755,
+    "sha256": "20cf76d540141672c1f5cbdf1903bbe66bfe509cdcd63c87467d74e8c7644e3c",
+    "content_type": "text/html; charset=utf-8",
+    "redirects": []
+  },
+  {
+    "file": "work/fenbi-practice-controls-deepening/raw/c04-bili.html",
+    "url": "https://www.bilibili.com/read/cv33546391/",
+    "final_url": "https://www.bilibili.com/read/cv33546391/",
+    "status": 412,
+    "bytes": 3400,
+    "sha256": "e7badcc8c88ee24673ace7d93d15543ef41a0f6db1f93d17a2b1fe8ef6d8ee01",
+    "content_type": "text/html",
+    "redirects": [],
+    "stop": "HTTP refusal; no retry or alternate route"
+  }
+]

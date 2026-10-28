@@ -1,0 +1,4 @@
+Use another app’s URL scheme in Shortcuts on iPhone or iPad
+Shortcuts also has the ability to integrate with other apps via their URL schemes. If you want to use an app that has URL schemes but isn’t currently supported with a built-in action, you can construct the URLs manually using the URL action and launch them using the Open URLs action or the Open X-Callback URL action.
+Note: Many URL schemes can be hard to implement and debug. The schemes often include a variety of parameters and require text to be URL-encoded which can be difficult to read. That said, exploring URL schemes does provide a deeper range of customization beyond the built-in apps included in Shortcuts.
+Contact the developers of your favorite apps to see if they currently use a URL scheme, or ask them to implement URL schemes so you can automate their app in Shortcuts.See alsoIntro to how shortcuts work on iPhone and iPad

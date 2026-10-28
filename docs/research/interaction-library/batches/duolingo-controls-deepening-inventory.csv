@@ -1,0 +1,27 @@
+entry_id,parent_id,entry_type,title,url,evidence_ids,related_flow_ids,review_status,gaps,checked_on
+M031-HG1,,help_group,Using Duolingo,https://www.duolingo.com/help,E-DUCD-01,,index_only,父分类不是独立功能；组内正文逐项登记,2026-10-27
+M031-HG2,,help_group,Account Management,https://www.duolingo.com/help,E-DUCD-01,,index_only,父分类不是独立功能；组内正文逐项登记,2026-10-27
+M031-HG3,,help_group,Subscription & Payments,https://www.duolingo.com/help,E-DUCD-01,,index_only,父分类不是独立功能；组内正文逐项登记,2026-10-27
+M031-H01,M031-HG1,help_article,Why did my course change?,https://www.duolingo.com/help/why-did-my-course-change,E-DUCD-02,F-M031-05;F-M031-12,text_read_partial_task_analysis,正文可读不等于当前界面/全部分支已核；见关联任务，未映射处本批只登记范围,2026-10-27
+M031-H02,M031-HG1,help_article,What is a streak?,https://www.duolingo.com/help/what-is-a-streak,E-DUCD-03,F-M031-08,text_read_partial_task_analysis,正文可读不等于当前界面/全部分支已核；见关联任务，未映射处本批只登记范围,2026-10-27
+M031-H03,M031-HG1,help_article,What are leaderboards and leagues?,https://www.duolingo.com/help/leaderboards-and-league,E-DUCD-04,F-M031-11;F-M031-15,text_read_partial_task_analysis,正文可读不等于当前界面/全部分支已核；见关联任务，未映射处本批只登记范围,2026-10-27
+M031-H04,M031-HG1,help_article,Does Duolingo use any open source libraries?,https://www.duolingo.com/help/open-source-libraries,E-DUCD-05,,text_read_no_task_reconstruction,正文可读不等于当前界面/全部分支已核；见关联任务，未映射处本批只登记范围,2026-10-27
+M031-H05,M031-HG1,help_article,How does matchmaking work in Duolingo Chess?,https://www.duolingo.com/help/chess-matchmaking,E-DUCD-06,,text_read_no_task_reconstruction,正文可读不等于当前界面/全部分支已核；见关联任务，未映射处本批只登记范围,2026-10-27
+M031-H06,M031-HG2,help_article,How do I change my username or email address?,https://www.duolingo.com/help/change-my-username-email-address,E-DUCD-07,,text_read_no_task_reconstruction,正文可读不等于当前界面/全部分支已核；见关联任务，未映射处本批只登记范围,2026-10-27
+M031-H07,M031-HG2,help_article,"How do I find, follow, and block users on Duolingo?",https://www.duolingo.com/help/find-follow-and-block-users,E-DUCD-08,F-M031-10;F-M031-11;F-M031-15,text_read_partial_task_analysis,正文可读不等于当前界面/全部分支已核；见关联任务，未映射处本批只登记范围,2026-10-27
+M031-H08,M031-HG2,help_article,How do I remove or reset a course?,https://www.duolingo.com/help/remove-or-reset-a-course,E-DUCD-09,F-M031-12,text_read_partial_task_analysis,正文可读不等于当前界面/全部分支已核；见关联任务，未映射处本批只登记范围,2026-10-27
+M031-H09,M031-HG2,help_article,I’m having trouble accessing my account.,https://www.duolingo.com/help/trouble-accessing-my-account,E-DUCD-10,F-M031-12,text_read_partial_task_analysis,正文可读不等于当前界面/全部分支已核；见关联任务，未映射处本批只登记范围,2026-10-27
+M031-H10,M031-HG2,help_article,How do I delete my account and access my data?,https://www.duolingo.com/help/delete-my-account-and-data,E-DUCD-11,F-M031-13,text_read_partial_task_analysis,正文可读不等于当前界面/全部分支已核；见关联任务，未映射处本批只登记范围,2026-10-27
+M031-H11,M031-HG2,help_article,What to do if your data was compromised,https://www.duolingo.com/help/what-to-do-if-your-data-was-compromised,E-DUCD-12,,text_read_no_task_reconstruction,正文可读不等于当前界面/全部分支已核；见关联任务，未映射处本批只登记范围,2026-10-27
+M031-H12,M031-HG3,help_article,What is Super Duolingo and how do I subscribe?,https://www.duolingo.com/help/super-duolingo,E-DUCD-13,F-M031-07,text_read_partial_task_analysis,正文可读不等于当前界面/全部分支已核；见关联任务，未映射处本批只登记范围,2026-10-27
+M031-H13,M031-HG3,help_article,Family Plan,https://www.duolingo.com/help/family-plan,E-DUCD-14,F-M031-14,text_read_partial_task_analysis,正文可读不等于当前界面/全部分支已核；见关联任务，未映射处本批只登记范围,2026-10-27
+M031-H14,M031-HG3,help_article,How do I cancel my Super Duolingo subscription?,https://www.duolingo.com/help/cancel-my-super-duolingo-subscription,E-DUCD-15,,text_read_no_task_reconstruction,正文可读不等于当前界面/全部分支已核；见关联任务，未映射处本批只登记范围,2026-10-27
+M031-H15,M031-HG3,help_article,How do I request a refund?,https://www.duolingo.com/help/how-do-I-request-a-refund,E-DUCD-16,,text_read_no_task_reconstruction,正文可读不等于当前界面/全部分支已核；见关联任务，未映射处本批只登记范围,2026-10-27
+M031-H16,M031-HG3,help_article,How do I use a promo code?,https://www.duolingo.com/help/use-a-promo-code,E-DUCD-17,,text_read_no_task_reconstruction,正文可读不等于当前界面/全部分支已核；见关联任务，未映射处本批只登记范围,2026-10-27
+M031-H17,M031-HG3,help_article,What is Duolingo Max?,https://www.duolingo.com/help/what-is-duolingo-max,E-DUCD-18,F-M031-06,text_read_partial_task_analysis,正文可读不等于当前界面/全部分支已核；见关联任务，未映射处本批只登记范围,2026-10-27
+M031-B19,,supplementary_blog,Energy规则及推出范围,https://blog.duolingo.com/duolingo-energy/,E-DUCD-19,F-M031-07,dated_article_text_read,非帮助目录条目；日期/灰度/平台范围及操作缺口见案例,2026-10-27
+M031-B20,,supplementary_blog,历史学习路线重构,https://blog.duolingo.com/new-duolingo-home-screen-design/,E-DUCD-20,F-M031-05,dated_article_text_read,非帮助目录条目；日期/灰度/平台范围及操作缺口见案例,2026-10-27
+M031-B21,,supplementary_blog,学习代理指标、任务和奖励调整,https://blog.duolingo.com/time-spent-learning-well/,E-DUCD-21,F-M031-09,dated_article_text_read,非帮助目录条目；日期/灰度/平台范围及操作缺口见案例,2026-10-27
+M031-B22,,supplementary_blog,好友任务与退出,https://blog.duolingo.com/friends-quests/,E-DUCD-22,F-M031-10,dated_article_text_read,非帮助目录条目；日期/灰度/平台范围及操作缺口见案例,2026-10-27
+M031-B23,,supplementary_blog,个人纪录与成就,https://blog.duolingo.com/achievement-badges/,E-DUCD-23,F-M031-09,dated_article_text_read,非帮助目录条目；日期/灰度/平台范围及操作缺口见案例,2026-10-27
+M031-B24,,supplementary_blog,按技能主动练习,https://blog.duolingo.com/guide-to-duolingo-practice-hub/,E-DUCD-24,F-M031-06,dated_article_text_read,非帮助目录条目；日期/灰度/平台范围及操作缺口见案例,2026-10-27

@@ -1,0 +1,21 @@
+{
+  "order": 30,
+  "entry_id": "INO-pro--annotations--how-do-i-add-a-note-to-a-highlight",
+  "title": "How do I add a note to a highlight?",
+  "url": "https://www.inoreader.com/help/pro/annotations/how-do-i-add-a-note-to-a-highlight",
+  "checked_on": "2026-10-27",
+  "http_status": 200,
+  "final_url": "https://www.inoreader.com/help/pro/annotations/how-do-i-add-a-note-to-a-highlight",
+  "acquisition": "one_anonymous_normal_GET",
+  "raw_path": "work/research/batch41-inoreader-help/30-INO-pro--annotations--how-do-i-add-a-note-to-a-highlight.html",
+  "headers_path": "work/research/batch41-inoreader-help/30-INO-pro--annotations--how-do-i-add-a-note-to-a-highlight.headers.json",
+  "raw_sha256": "83dd506b79eb7c3afeeb37526d12784fa808cd8f1de061e4b16c40fef3c71db1",
+  "bytes": 146971,
+  "status": "body_obtained",
+  "body_status": "extracted_not_yet_root_read",
+  "body_path": "work/research/batch41-inoreader-help/30-INO-pro--annotations--how-do-i-add-a-note-to-a-highlight.body.txt",
+  "body_sha256": "71a53b59a2530dddb650b45d504eb373188d0c8fd938f1bf0bad8ee01436b87b",
+  "body_chars": 48,
+  "links": [],
+  "images": []
+}

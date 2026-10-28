@@ -1,0 +1,260 @@
+[
+  {
+    "flow_id": "F-M012-01",
+    "before": {
+      "flow_id": "F-M012-01",
+      "product_id": "M-012",
+      "task": "向联系人打电话",
+      "depth": "D2",
+      "evidence_ids": "E-MUD-01;E-MUD-03;E-MDCD-01;E-MDCD-03;E-MDCD-04;E-MDCD-05",
+      "known_branches": "新增拨号和来电阻止入口；电源结束通话为可选设置；1.6.1修正未接来电计数。",
+      "gaps": "接听/拒接、占线、无服务、SIM选择与音乐打断恢复未知",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-012-mudita.md",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "flow_id": "F-M012-01",
+      "product_id": "M-012",
+      "task": "向联系人打电话",
+      "depth": "D2",
+      "evidence_ids": "E-MUD-01;E-MUD-03;E-MDCD-01;E-MDCD-03;E-MDCD-04;E-MDCD-05;E-MACD-01;E-MACD-10",
+      "known_branches": "原拨号/来电阻止保留；增加隐藏/非联系人号码来电和消息阻止、手动名单及减号解封；与删除联系人不同。",
+      "gaps": "接听/拒接、占线/无服务/SIM选择、媒体打断、阻止反馈及解封后补收未知。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-012-mudita.md",
+      "checked_on": "2026-10-27"
+    },
+    "changed_fields": {
+      "evidence_ids": {
+        "before": "E-MUD-01;E-MUD-03;E-MDCD-01;E-MDCD-03;E-MDCD-04;E-MDCD-05",
+        "after": "E-MUD-01;E-MUD-03;E-MDCD-01;E-MDCD-03;E-MDCD-04;E-MDCD-05;E-MACD-01;E-MACD-10"
+      },
+      "known_branches": {
+        "before": "新增拨号和来电阻止入口；电源结束通话为可选设置；1.6.1修正未接来电计数。",
+        "after": "原拨号/来电阻止保留；增加隐藏/非联系人号码来电和消息阻止、手动名单及减号解封；与删除联系人不同。"
+      },
+      "gaps": {
+        "before": "接听/拒接、占线、无服务、SIM选择与音乐打断恢复未知",
+        "after": "接听/拒接、占线/无服务/SIM选择、媒体打断、阻止反馈及解封后补收未知。"
+      }
+    }
+  },
+  {
+    "flow_id": "F-M012-02",
+    "before": {
+      "flow_id": "F-M012-02",
+      "product_id": "M-012",
+      "task": "写短信与图片消息",
+      "depth": "D2",
+      "evidence_ids": "E-MUD-04;E-MUD-05;E-MUD-06;E-MDCD-06;E-MDCD-22",
+      "known_branches": "同页联系人Pencil/新号码Plus差异仍在；键盘光标补救；RCS明确不支持。",
+      "gaps": "草稿保留、离线重试、送达/已读、MMS失败未知",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-012-mudita.md",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "flow_id": "F-M012-02",
+      "product_id": "M-012",
+      "task": "写短信与图片消息",
+      "depth": "D2",
+      "evidence_ids": "E-MUD-04;E-MUD-05;E-MUD-06;E-MDCD-06;E-MDCD-22;E-MACD-02;E-MACD-03;E-MACD-04;E-MACD-05",
+      "known_branches": "四个拆页与原汇总重复；Pencil/Plus差异仍在；新号码MMS先Send to确认收件人再Image；Send不证明送达或建联系人。",
+      "gaps": "草稿保留/取消、离线重试、送达/已读、MMS失败与附件保留未知。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-012-mudita.md",
+      "checked_on": "2026-10-27"
+    },
+    "changed_fields": {
+      "evidence_ids": {
+        "before": "E-MUD-04;E-MUD-05;E-MUD-06;E-MDCD-06;E-MDCD-22",
+        "after": "E-MUD-04;E-MUD-05;E-MUD-06;E-MDCD-06;E-MDCD-22;E-MACD-02;E-MACD-03;E-MACD-04;E-MACD-05"
+      },
+      "known_branches": {
+        "before": "同页联系人Pencil/新号码Plus差异仍在；键盘光标补救；RCS明确不支持。",
+        "after": "四个拆页与原汇总重复；Pencil/Plus差异仍在；新号码MMS先Send to确认收件人再Image；Send不证明送达或建联系人。"
+      },
+      "gaps": {
+        "before": "草稿保留、离线重试、送达/已读、MMS失败未知",
+        "after": "草稿保留/取消、离线重试、送达/已读、MMS失败与附件保留未知。"
+      }
+    }
+  },
+  {
+    "flow_id": "F-M012-06",
+    "before": {
+      "flow_id": "F-M012-06",
+      "product_id": "M-012",
+      "task": "从电脑准备书和音乐",
+      "depth": "D2",
+      "evidence_ids": "E-MUD-08;E-MUD-09;E-MDCD-11",
+      "known_branches": "Center传入沿用；USB文件不可见另走Connected Devices > USB Preferences > File Transfer；未连接不显示入口；No data transfer收回文件访问。",
+      "gaps": "不假设Center依赖MTP；重复文件、容量不足、中断半成品、解析与位置保留未知",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-012-mudita.md",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "flow_id": "F-M012-06",
+      "product_id": "M-012",
+      "task": "从电脑准备书和音乐",
+      "depth": "D2",
+      "evidence_ids": "E-MUD-08;E-MUD-09;E-MDCD-11;E-MACD-12",
+      "known_branches": "Center Music/Add file/确认复制；不支持格式不可选或上传。USB文件可见性另走USB Preferences，未连接不显示；No data transfer收回访问。",
+      "gaps": "不假设Center依赖MTP；未给完整格式清单；重复、容量/断线、解码、入库反馈和断点未知。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-012-mudita.md",
+      "checked_on": "2026-10-27"
+    },
+    "changed_fields": {
+      "evidence_ids": {
+        "before": "E-MUD-08;E-MUD-09;E-MDCD-11",
+        "after": "E-MUD-08;E-MUD-09;E-MDCD-11;E-MACD-12"
+      },
+      "known_branches": {
+        "before": "Center传入沿用；USB文件不可见另走Connected Devices > USB Preferences > File Transfer；未连接不显示入口；No data transfer收回文件访问。",
+        "after": "Center Music/Add file/确认复制；不支持格式不可选或上传。USB文件可见性另走USB Preferences，未连接不显示；No data transfer收回访问。"
+      },
+      "gaps": {
+        "before": "不假设Center依赖MTP；重复文件、容量不足、中断半成品、解析与位置保留未知",
+        "after": "不假设Center依赖MTP；未给完整格式清单；重复、容量/断线、解码、入库反馈和断点未知。"
+      }
+    }
+  },
+  {
+    "flow_id": "F-M012-07",
+    "before": {
+      "flow_id": "F-M012-07",
+      "product_id": "M-012",
+      "task": "从电脑删除文件",
+      "depth": "D2",
+      "evidence_ids": "E-MUD-10;E-MDCD-12;E-MDCD-13;E-MDCD-16",
+      "known_branches": "普通文件删除沿用；已安装应用不会随APK安装包删除；卸载限制详F08，清空恢复出厂详F09。",
+      "gaps": "图书笔记/历史依赖、回收站、单项恢复未知",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-012-mudita.md",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "flow_id": "F-M012-07",
+      "product_id": "M-012",
+      "task": "从电脑删除文件",
+      "depth": "D2",
+      "evidence_ids": "E-MUD-10;E-MDCD-12;E-MDCD-13;E-MDCD-16;E-MACD-13",
+      "known_branches": "Center类别选文件；顶部减号样式复选框全选；Delete/Delete file。删APK不卸载应用；类别文案Manage与传入Manage Files分别保留。",
+      "gaps": "删除后的回收/单项恢复、图书笔记和播放历史依赖、断线结果未知。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-012-mudita.md",
+      "checked_on": "2026-10-27"
+    },
+    "changed_fields": {
+      "evidence_ids": {
+        "before": "E-MUD-10;E-MDCD-12;E-MDCD-13;E-MDCD-16",
+        "after": "E-MUD-10;E-MDCD-12;E-MDCD-13;E-MDCD-16;E-MACD-13"
+      },
+      "known_branches": {
+        "before": "普通文件删除沿用；已安装应用不会随APK安装包删除；卸载限制详F08，清空恢复出厂详F09。",
+        "after": "Center类别选文件；顶部减号样式复选框全选；Delete/Delete file。删APK不卸载应用；类别文案Manage与传入Manage Files分别保留。"
+      },
+      "gaps": {
+        "before": "图书笔记/历史依赖、回收站、单项恢复未知",
+        "after": "删除后的回收/单项恢复、图书笔记和播放历史依赖、断线结果未知。"
+      }
+    }
+  },
+  {
+    "flow_id": "F-M012-08",
+    "before": {
+      "flow_id": "F-M012-08",
+      "product_id": "M-012",
+      "task": "安装应用并区分隐藏、删除安装包与卸载",
+      "depth": "D2",
+      "evidence_ids": "E-MDCD-12;E-MDCD-13;E-MDCD-14;E-MDCD-16;E-MDCD-20",
+      "known_branches": "Center安装完成弹窗；APK可删但应用保留；隐藏图标返回保存；当前帮助无内置单应用卸载。",
+      "gaps": "不保证应用兼容；更新覆盖、权限撤销、后台/崩溃与数据保留未知。",
+      "visual_status": "static_reference_only",
+      "hands_on": "false",
+      "case_path": "cases/M-012-mudita.md",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "flow_id": "F-M012-08",
+      "product_id": "M-012",
+      "task": "安装应用并区分隐藏、删除安装包与卸载",
+      "depth": "D2",
+      "evidence_ids": "E-MDCD-12;E-MDCD-13;E-MDCD-14;E-MDCD-16;E-MDCD-20;E-MACD-15",
+      "known_branches": "Center安装完成弹窗；APK可删但应用保留；隐藏图标返回保存；当前帮助无内置单应用卸载。 定位的全局/逐App入口另见F15，不能当全部应用权限已核。",
+      "gaps": "兼容性、覆盖更新、后台/崩溃与数据保留未知；定位等级/撤销结果及其他权限仍缺。",
+      "visual_status": "static_reference_only",
+      "hands_on": "false",
+      "case_path": "cases/M-012-mudita.md",
+      "checked_on": "2026-10-27"
+    },
+    "changed_fields": {
+      "evidence_ids": {
+        "before": "E-MDCD-12;E-MDCD-13;E-MDCD-14;E-MDCD-16;E-MDCD-20",
+        "after": "E-MDCD-12;E-MDCD-13;E-MDCD-14;E-MDCD-16;E-MDCD-20;E-MACD-15"
+      },
+      "known_branches": {
+        "before": "Center安装完成弹窗；APK可删但应用保留；隐藏图标返回保存；当前帮助无内置单应用卸载。",
+        "after": "Center安装完成弹窗；APK可删但应用保留；隐藏图标返回保存；当前帮助无内置单应用卸载。 定位的全局/逐App入口另见F15，不能当全部应用权限已核。"
+      },
+      "gaps": {
+        "before": "不保证应用兼容；更新覆盖、权限撤销、后台/崩溃与数据保留未知。",
+        "after": "兼容性、覆盖更新、后台/崩溃与数据保留未知；定位等级/撤销结果及其他权限仍缺。"
+      }
+    }
+  },
+  {
+    "flow_id": "F-M012-09",
+    "before": {
+      "flow_id": "F-M012-09",
+      "product_id": "M-012",
+      "task": "更新系统及失败后的恢复出厂分支",
+      "depth": "D2",
+      "evidence_ids": "E-MDCD-03;E-MDCD-15;E-MDCD-16;E-MDCD-17",
+      "known_branches": "自动通知或手查；下载配置后重启；失败先排查；设置与Recovery两种清空入口，OS版本不回退。",
+      "gaps": "安装中断、回滚、锁屏凭据失败、清空后SIM/eSIM细项未核。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-012-mudita.md",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "flow_id": "F-M012-09",
+      "product_id": "M-012",
+      "task": "更新系统及失败后的恢复出厂分支",
+      "depth": "D2",
+      "evidence_ids": "E-MDCD-03;E-MDCD-15;E-MDCD-16;E-MDCD-17;E-MACD-17",
+      "known_branches": "自动通知或手查；下载配置后重启；失败先排查；设置与Recovery两种清空入口，OS版本不回退。 忘PIN/图案FAQ也指向Recovery清空，未备份资料丢失。",
+      "gaps": "安装中断/回滚、重置后SIM/eSIM细项及备份覆盖恢复未知；没有无损找回口令依据。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-012-mudita.md",
+      "checked_on": "2026-10-27"
+    },
+    "changed_fields": {
+      "evidence_ids": {
+        "before": "E-MDCD-03;E-MDCD-15;E-MDCD-16;E-MDCD-17",
+        "after": "E-MDCD-03;E-MDCD-15;E-MDCD-16;E-MDCD-17;E-MACD-17"
+      },
+      "known_branches": {
+        "before": "自动通知或手查；下载配置后重启；失败先排查；设置与Recovery两种清空入口，OS版本不回退。",
+        "after": "自动通知或手查；下载配置后重启；失败先排查；设置与Recovery两种清空入口，OS版本不回退。 忘PIN/图案FAQ也指向Recovery清空，未备份资料丢失。"
+      },
+      "gaps": {
+        "before": "安装中断、回滚、锁屏凭据失败、清空后SIM/eSIM细项未核。",
+        "after": "安装中断/回滚、重置后SIM/eSIM细项及备份覆盖恢复未知；没有无损找回口令依据。"
+      }
+    }
+  }
+]

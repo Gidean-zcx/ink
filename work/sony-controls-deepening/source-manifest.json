@@ -1,0 +1,182 @@
+[
+  {
+    "name": "01-index",
+    "url": "https://helpguide.sony.net/dmp/1301/v1/en/index.html",
+    "final_url": "https://helpguide.sony.net/dmp/1301/v1/en/index.html",
+    "http_status": 200,
+    "path": "work/sony-controls-deepening/raw/01-index.html",
+    "sha256": "cad6387cb1c97ce376ea1abe50425b55034116857b7cc05b9e866eb0d7a2b4e1",
+    "bytes": 15255,
+    "fetched_on": "2026-10-27"
+  },
+  {
+    "name": "02-playback-methods",
+    "url": "https://helpguide.sony.net/dmp/1301/v1/en/contents/TP1000733513.html",
+    "final_url": "https://helpguide.sony.net/dmp/1301/v1/en/contents/TP1000733513.html",
+    "http_status": 200,
+    "path": "work/sony-controls-deepening/raw/02-playback-methods.html",
+    "sha256": "baaad7d70278391df341b65e4f98ada066d2427d3a7c2a40dc07810515225f2e",
+    "bytes": 19674,
+    "fetched_on": "2026-10-27"
+  },
+  {
+    "name": "03-lyric-file",
+    "url": "https://helpguide.sony.net/dmp/1301/v1/en/contents/TP1000733592.html",
+    "final_url": "https://helpguide.sony.net/dmp/1301/v1/en/contents/TP1000733592.html",
+    "http_status": 200,
+    "path": "work/sony-controls-deepening/raw/03-lyric-file.html",
+    "sha256": "f096a0c7a4a0f620967eadb2aba514f9e4d56d0fa7bd986faad752f67e38c6f0",
+    "bytes": 18380,
+    "fetched_on": "2026-10-27"
+  },
+  {
+    "name": "04-display-lyrics",
+    "url": "https://helpguide.sony.net/dmp/1301/v1/en/contents/TP1000733549.html",
+    "final_url": "https://helpguide.sony.net/dmp/1301/v1/en/contents/TP1000733549.html",
+    "http_status": 200,
+    "path": "work/sony-controls-deepening/raw/04-display-lyrics.html",
+    "sha256": "12d1adb4673c5b70f6f6764b8b880c1b588528c04321ff10f832fecac73e791d",
+    "bytes": 14914,
+    "fetched_on": "2026-10-27"
+  },
+  {
+    "name": "05-usb-dac",
+    "url": "https://helpguide.sony.net/dmp/1301/v1/en/contents/TP1000729844.html",
+    "final_url": "https://helpguide.sony.net/dmp/1301/v1/en/contents/TP1000729844.html",
+    "http_status": 200,
+    "path": "work/sony-controls-deepening/raw/05-usb-dac.html",
+    "sha256": "868d97bbca175e2628b8cccc822496beb3f5d259c4c9a37c4d9a7fc28e5d2ce4",
+    "bytes": 20140,
+    "fetched_on": "2026-10-27"
+  },
+  {
+    "name": "06-dac-screen",
+    "url": "https://helpguide.sony.net/dmp/1301/v1/en/contents/TP1000731800.html",
+    "final_url": "https://helpguide.sony.net/dmp/1301/v1/en/contents/TP1000731800.html",
+    "http_status": 200,
+    "path": "work/sony-controls-deepening/raw/06-dac-screen.html",
+    "sha256": "65fd59408dcc6794843c35354abf460b5dd3fc7a85c73965185da99f8350e20a",
+    "bytes": 16268,
+    "fetched_on": "2026-10-27"
+  },
+  {
+    "name": "07-microsd",
+    "url": "https://helpguide.sony.net/dmp/1301/v1/en/contents/TP1000733525.html",
+    "final_url": "https://helpguide.sony.net/dmp/1301/v1/en/contents/TP1000733525.html",
+    "http_status": 200,
+    "path": "work/sony-controls-deepening/raw/07-microsd.html",
+    "sha256": "14ed300f0d823c1071b491ef0a52db27d04a745224dc103eceef3e4041e0ab6d",
+    "bytes": 19284,
+    "fetched_on": "2026-10-27"
+  },
+  {
+    "name": "08-format-card",
+    "url": "https://helpguide.sony.net/dmp/1301/v1/en/contents/TP1000733595.html",
+    "final_url": "https://helpguide.sony.net/dmp/1301/v1/en/contents/TP1000733595.html",
+    "http_status": 200,
+    "path": "work/sony-controls-deepening/raw/08-format-card.html",
+    "sha256": "43f1936ebe8eb254b79f2c1cab20cc40bece9ca8c26bb8b6280308f45b704e95",
+    "bytes": 16300,
+    "fetched_on": "2026-10-27"
+  },
+  {
+    "name": "09-restart",
+    "url": "https://helpguide.sony.net/dmp/1301/v1/en/contents/TP1000733532.html",
+    "final_url": "https://helpguide.sony.net/dmp/1301/v1/en/contents/TP1000733532.html",
+    "http_status": 200,
+    "path": "work/sony-controls-deepening/raw/09-restart.html",
+    "sha256": "60c1043478c15c9a83bc50a06b926329412a10bb18e5accd48f76f580d7eb7a0",
+    "bytes": 15399,
+    "fetched_on": "2026-10-27"
+  },
+  {
+    "name": "10-format-player",
+    "url": "https://helpguide.sony.net/dmp/1301/v1/en/contents/TP1000733530.html",
+    "final_url": "https://helpguide.sony.net/dmp/1301/v1/en/contents/TP1000733530.html",
+    "http_status": 200,
+    "path": "work/sony-controls-deepening/raw/10-format-player.html",
+    "sha256": "ca5fd9c1a744d50d13b8b7074e7fb91b82b8c0f5901bdc7c31a1206ce5a62ef8",
+    "bytes": 17171,
+    "fetched_on": "2026-10-27"
+  },
+  {
+    "name": "11-export-pc",
+    "url": "https://helpguide.sony.net/dmp/1301/v1/en/contents/TP1000733563.html",
+    "final_url": "https://helpguide.sony.net/dmp/1301/v1/en/contents/TP1000733563.html",
+    "http_status": 200,
+    "path": "work/sony-controls-deepening/raw/11-export-pc.html",
+    "sha256": "766002d1c743b3162399cd68605b337fa59b528958ad4e980a58b9fd8451e9f6",
+    "bytes": 18867,
+    "fetched_on": "2026-10-27"
+  },
+  {
+    "name": "12-library",
+    "url": "https://helpguide.sony.net/dmp/1301/v1/en/contents/TP1000733528.html",
+    "final_url": "https://helpguide.sony.net/dmp/1301/v1/en/contents/TP1000733528.html",
+    "http_status": 200,
+    "path": "work/sony-controls-deepening/raw/12-library.html",
+    "sha256": "dbb85cea84649afc606e3aa4ee979458af7c4ad816c3901b537dc20dc28ff27c",
+    "bytes": 24559,
+    "fetched_on": "2026-10-27"
+  },
+  {
+    "name": "13-queue",
+    "url": "https://helpguide.sony.net/dmp/1301/v1/en/contents/TP1000733551.html",
+    "final_url": "https://helpguide.sony.net/dmp/1301/v1/en/contents/TP1000733551.html",
+    "http_status": 200,
+    "path": "work/sony-controls-deepening/raw/13-queue.html",
+    "sha256": "259cc36bdfb83e3f953b670a84679b2065ae3977cd8c1903767830757dfad1d6",
+    "bytes": 20392,
+    "fetched_on": "2026-10-27"
+  },
+  {
+    "name": "14-bluetooth-first",
+    "url": "https://helpguide.sony.net/dmp/1301/v1/en/contents/TP1000733596.html",
+    "final_url": "https://helpguide.sony.net/dmp/1301/v1/en/contents/TP1000733596.html",
+    "http_status": 200,
+    "path": "work/sony-controls-deepening/raw/14-bluetooth-first.html",
+    "sha256": "f497da1035a1fadc65254c05cf9f7a83619d3739408b0bed2e923fbbae532455",
+    "bytes": 20487,
+    "fetched_on": "2026-10-27"
+  },
+  {
+    "name": "15-bluetooth-quality",
+    "url": "https://helpguide.sony.net/dmp/1301/v1/en/contents/TP1000733244.html",
+    "final_url": "https://helpguide.sony.net/dmp/1301/v1/en/contents/TP1000733244.html",
+    "http_status": 200,
+    "path": "work/sony-controls-deepening/raw/15-bluetooth-quality.html",
+    "sha256": "0f4db3786fd20759df1cc5bcab4a30e0247f624d22509436be8a60d6725157bc",
+    "bytes": 15672,
+    "fetched_on": "2026-10-27"
+  },
+  {
+    "name": "16-streaming",
+    "url": "https://helpguide.sony.net/dmp/1301/v1/en/contents/TP1000735013.html",
+    "final_url": "https://helpguide.sony.net/dmp/1301/v1/en/contents/TP1000735013.html",
+    "http_status": 200,
+    "path": "work/sony-controls-deepening/raw/16-streaming.html",
+    "sha256": "b3124bfcb9c3fb0f32b2d89a4876e1501b999aa3aeba646e86ce41452fc90752",
+    "bytes": 15404,
+    "fetched_on": "2026-10-27"
+  },
+  {
+    "name": "17-playback-screen",
+    "url": "https://helpguide.sony.net/dmp/1301/v1/en/contents/TP1000733553.html",
+    "final_url": "https://helpguide.sony.net/dmp/1301/v1/en/contents/TP1000733553.html",
+    "http_status": 200,
+    "path": "work/sony-controls-deepening/raw/17-playback-screen.html",
+    "sha256": "da0dfb22420c40011f5314b01d6367eb53c2de6a2d3499cfad3aefcd1f3e5988",
+    "bytes": 22104,
+    "fetched_on": "2026-10-27"
+  },
+  {
+    "name": "18-settings",
+    "url": "https://helpguide.sony.net/dmp/1301/v1/en/contents/TP1000733588.html",
+    "final_url": "https://helpguide.sony.net/dmp/1301/v1/en/contents/TP1000733588.html",
+    "http_status": 200,
+    "path": "work/sony-controls-deepening/raw/18-settings.html",
+    "sha256": "65cbecd8203a64ce03d8147fb4afa362b88aa14526976e3d1cab3f2648a72aa8",
+    "bytes": 16340,
+    "fetched_on": "2026-10-27"
+  }
+]

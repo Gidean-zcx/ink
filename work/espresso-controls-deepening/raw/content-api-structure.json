@@ -1,0 +1,418 @@
+{
+  "headings": [
+    {
+      "tag": "h1",
+      "text": "Overview",
+      "id": null
+    },
+    {
+      "tag": "h3",
+      "text": "Base URL:",
+      "id": null
+    },
+    {
+      "tag": "h1",
+      "text": "Authentication",
+      "id": null
+    },
+    {
+      "tag": "h2",
+      "text": "Endpoint",
+      "id": null
+    },
+    {
+      "tag": "h3",
+      "text": "Request",
+      "id": null
+    },
+    {
+      "tag": "h3",
+      "text": "Response",
+      "id": null
+    },
+    {
+      "tag": "h3",
+      "text": "Usage",
+      "id": null
+    },
+    {
+      "tag": "h1",
+      "text": "Metadata",
+      "id": null
+    },
+    {
+      "tag": "h3",
+      "text": "Notes",
+      "id": null
+    },
+    {
+      "tag": "h2",
+      "text": "Example Metadata Format",
+      "id": null
+    },
+    {
+      "tag": "h3",
+      "text": "Attributes",
+      "id": null
+    },
+    {
+      "tag": "h1",
+      "text": "Pagination Response",
+      "id": null
+    },
+    {
+      "tag": "h2",
+      "text": "Notes",
+      "id": null
+    },
+    {
+      "tag": "h2",
+      "text": "Request Parameter",
+      "id": null
+    },
+    {
+      "tag": "h2",
+      "text": "Response",
+      "id": null
+    },
+    {
+      "tag": "h3",
+      "text": "Attributes",
+      "id": null
+    },
+    {
+      "tag": "h1",
+      "text": "Rate Limiting",
+      "id": null
+    },
+    {
+      "tag": "h1",
+      "text": "Entitlements",
+      "id": null
+    },
+    {
+      "tag": "h2",
+      "text": "How Entitlements Work",
+      "id": null
+    },
+    {
+      "tag": "h2",
+      "text": "Unauthorized Access Example",
+      "id": null
+    },
+    {
+      "tag": "h2",
+      "text": "Example",
+      "id": null
+    },
+    {
+      "tag": "h3",
+      "text": "Section Filtering Within Entitlements",
+      "id": null
+    },
+    {
+      "tag": "h1",
+      "text": "Images",
+      "id": "Images"
+    },
+    {
+      "tag": "h2",
+      "text": "Image Entitlements",
+      "id": null
+    },
+    {
+      "tag": "h2",
+      "text": "Signed Image URLs",
+      "id": null
+    },
+    {
+      "tag": "h2",
+      "text": "Image Types",
+      "id": null
+    },
+    {
+      "tag": "h2",
+      "text": "Best Practices",
+      "id": null
+    },
+    {
+      "tag": "h2",
+      "text": "Example Image Component",
+      "id": null
+    },
+    {
+      "tag": "h1",
+      "text": "Endpoints Overview",
+      "id": null
+    },
+    {
+      "tag": "h2",
+      "text": "/v1/auth/login",
+      "id": null
+    },
+    {
+      "tag": "h2",
+      "text": "/v1/articles",
+      "id": null
+    },
+    {
+      "tag": "h3",
+      "text": "Parameters",
+      "id": null
+    },
+    {
+      "tag": "h3",
+      "text": "Filtering with sections or tags",
+      "id": null
+    },
+    {
+      "tag": "h3",
+      "text": "Filtering with date ranges",
+      "id": null
+    },
+    {
+      "tag": "h3",
+      "text": "Example Response",
+      "id": null
+    },
+    {
+      "tag": "h2",
+      "text": "/v1/articles/{id}",
+      "id": null
+    },
+    {
+      "tag": "h3",
+      "text": "Example Response",
+      "id": null
+    },
+    {
+      "tag": "h2",
+      "text": "/v1/sections",
+      "id": null
+    },
+    {
+      "tag": "h3",
+      "text": "Notes:",
+      "id": null
+    },
+    {
+      "tag": "h3",
+      "text": "Example Response",
+      "id": null
+    },
+    {
+      "tag": "h2",
+      "text": "/v1/tags",
+      "id": null
+    },
+    {
+      "tag": "h3",
+      "text": "Notes",
+      "id": null
+    },
+    {
+      "tag": "h3",
+      "text": "Parameters",
+      "id": null
+    },
+    {
+      "tag": "h3",
+      "text": "Example Response",
+      "id": null
+    },
+    {
+      "tag": "h2",
+      "text": "/v1/the-world-in-brief",
+      "id": null
+    },
+    {
+      "tag": "h3",
+      "text": "Time zone based delivery",
+      "id": null
+    },
+    {
+      "tag": "h3",
+      "text": "Example Response",
+      "id": null
+    },
+    {
+      "tag": "h1",
+      "text": "Sample curl Commands",
+      "id": null
+    },
+    {
+      "tag": "h2",
+      "text": "Authenticate and Get JWT Token",
+      "id": null
+    },
+    {
+      "tag": "h2",
+      "text": "Get List of Articles",
+      "id": null
+    },
+    {
+      "tag": "h2",
+      "text": "Get a Single Article by ID",
+      "id": null
+    },
+    {
+      "tag": "h2",
+      "text": "Get Entitled Sections",
+      "id": null
+    },
+    {
+      "tag": "h2",
+      "text": "Get Available Tags (Paginated)",
+      "id": null
+    },
+    {
+      "tag": "h2",
+      "text": "Get The World in Brief",
+      "id": null
+    }
+  ],
+  "links": [
+    {
+      "href": "/",
+      "text": "for developers"
+    },
+    {
+      "href": "https://www.economist.com/pro",
+      "text": "Economist Proopen_in_new"
+    },
+    {
+      "href": "https://www.economist.com/syndication",
+      "text": "Syndicationopen_in_new"
+    },
+    {
+      "href": "https://developer.eiu.com/",
+      "text": "EIU APIopen_in_new"
+    },
+    {
+      "href": "/get-help",
+      "text": "Get help"
+    },
+    {
+      "href": "#",
+      "text": "Overview"
+    },
+    {
+      "href": "/docs/v1/auth/login",
+      "text": "/v1/auth/login"
+    },
+    {
+      "href": "/docs/v1/articles",
+      "text": "/v1/articles"
+    },
+    {
+      "href": "/docs/v1/articles/id",
+      "text": "/v1/articles/id"
+    },
+    {
+      "href": "/docs/v1/sections",
+      "text": "/v1/sections"
+    },
+    {
+      "href": "/docs/v1/tags",
+      "text": "/v1/tags"
+    },
+    {
+      "href": "/docs/v1/the-world-in-brief",
+      "text": "/v1/the-world-in-brief"
+    },
+    {
+      "href": "/docs/v1/errors",
+      "text": "Errors"
+    },
+    {
+      "href": "/docs/schemas",
+      "text": "Schemas"
+    },
+    {
+      "href": "https://www.economist.com/pro",
+      "text": "Economist Proopen_in_new"
+    },
+    {
+      "href": "https://www.economist.com/syndication",
+      "text": "Syndicationopen_in_new"
+    },
+    {
+      "href": "https://developer.eiu.com/",
+      "text": "EIU APIopen_in_new"
+    },
+    {
+      "href": "/get-help",
+      "text": "Get help"
+    },
+    {
+      "href": "mailto:economistpro@economist.com",
+      "text": "economistpro@economist.com"
+    },
+    {
+      "href": "/docs/v1/tags",
+      "text": "Tags"
+    },
+    {
+      "href": "https://www.economist.com/pro",
+      "text": "Economist Pro"
+    },
+    {
+      "href": "https://www.economist.com/syndication",
+      "text": "Syndication"
+    },
+    {
+      "href": "https://developer.eiu.com/",
+      "text": "EIU API"
+    },
+    {
+      "href": "https://www.economistgroup.com/terms-of-use",
+      "text": "Terms of use"
+    },
+    {
+      "href": "https://www.economistgroup.com/privacy-policy",
+      "text": "Privacy"
+    },
+    {
+      "href": "https://www.economistgroup.com/cookies-policy",
+      "text": "Cookie Policy"
+    },
+    {
+      "href": "https://www.economistgroup.com/accessibility-policy",
+      "text": "Accessibility"
+    },
+    {
+      "href": "https://www.economistgroup.com/esg/modern-slavery-act-statement",
+      "text": "Modern Slavery Statement"
+    },
+    {
+      "href": "https://www.economist.com/sitemap",
+      "text": "Sitemap"
+    },
+    {
+      "href": "https://www.economist.com/privacyportal",
+      "text": "Your Privacy Choices"
+    }
+  ],
+  "images": [
+    {
+      "alt": "Economist Logo",
+      "width": "160",
+      "height": "80",
+      "decoding": "async",
+      "data-nimg": "1",
+      "class": "logo_logoDesktop__w8Ttx",
+      "style": "color:transparent",
+      "src": "/logo-red.svg"
+    },
+    {
+      "alt": "Economist Logo",
+      "width": "56",
+      "height": "56",
+      "decoding": "async",
+      "data-nimg": "1",
+      "class": "logo_logoMobile__pJZc1",
+      "style": "color:transparent",
+      "src": "/monogram-square-red.svg"
+    }
+  ]
+}

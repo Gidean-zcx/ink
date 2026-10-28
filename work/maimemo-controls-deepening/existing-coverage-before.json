@@ -1,0 +1,93 @@
+[
+  {
+    "flow_id": "F-M017-01",
+    "product_id": "M-017",
+    "task": "选词到当日学习",
+    "depth": "D2",
+    "evidence_ids": "E-MMO-01;E-MMO-02;E-MMO-03",
+    "known_branches": "认识/模糊/忘记、跨书共享",
+    "gaps": "释义显隐、误评撤销、完成页",
+    "visual_status": "not_observed",
+    "hands_on": "false",
+    "case_path": "cases/M-017-maimemo.md",
+    "checked_on": "2026-10-26"
+  },
+  {
+    "flow_id": "F-M017-02",
+    "product_id": "M-017",
+    "task": "变更学习负荷",
+    "depth": "D2",
+    "evidence_ids": "E-MMO-02;E-MMO-03",
+    "known_branches": "追加新词即时学",
+    "gaps": "当前小组如何重算",
+    "visual_status": "not_observed",
+    "hands_on": "false",
+    "case_path": "cases/M-017-maimemo.md",
+    "checked_on": "2026-10-26"
+  },
+  {
+    "flow_id": "F-M017-03",
+    "product_id": "M-017",
+    "task": "建立云词本",
+    "depth": "D2",
+    "evidence_ids": "E-MMO-04",
+    "known_branches": "章节、词形、版本入口",
+    "gaps": "未命中、重复、保存失败",
+    "visual_status": "not_observed",
+    "hands_on": "false",
+    "case_path": "cases/M-017-maimemo.md",
+    "checked_on": "2026-10-26"
+  },
+  {
+    "flow_id": "F-M017-04",
+    "product_id": "M-017",
+    "task": "换设备与重装",
+    "depth": "D2",
+    "evidence_ids": "E-MMO-05;E-MMO-06",
+    "known_branches": "上传/下载、自动同步、离线",
+    "gaps": "冲突、回滚、完成提示",
+    "visual_status": "not_observed",
+    "hands_on": "false",
+    "case_path": "cases/M-017-maimemo.md",
+    "checked_on": "2026-10-26"
+  },
+  {
+    "flow_id": "F-M017-05",
+    "product_id": "M-017",
+    "task": "熟知与移出记忆",
+    "depth": "D2",
+    "evidence_ids": "E-MMO-03;E-MMO-07",
+    "known_branches": "熟知/不想背/删除不可撤销",
+    "gaps": "暂停与误评恢复",
+    "visual_status": "not_observed",
+    "hands_on": "false",
+    "case_path": "cases/M-017-maimemo.md",
+    "checked_on": "2026-10-26"
+  },
+  {
+    "flow_id": "F-M017-06",
+    "product_id": "M-017",
+    "task": "学习好友",
+    "depth": "D2",
+    "evidence_ids": "E-MMO-08",
+    "known_branches": "过期、权限、延迟、删除",
+    "gaps": "现版视觉与数据延迟",
+    "visual_status": "not_observed",
+    "hands_on": "false",
+    "case_path": "cases/M-017-maimemo.md",
+    "checked_on": "2026-10-26"
+  },
+  {
+    "flow_id": "F-M017-07",
+    "product_id": "M-017",
+    "task": "外部资料入库",
+    "depth": "D1",
+    "evidence_ids": "E-MMO-09",
+    "known_branches": "个人凭据/第三方授权",
+    "gaps": "接口实测、失败、限流、幂等",
+    "visual_status": "not_observed",
+    "hands_on": "false",
+    "case_path": "cases/M-017-maimemo.md",
+    "checked_on": "2026-10-26"
+  }
+]

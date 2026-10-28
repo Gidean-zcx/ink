@@ -1,0 +1,263 @@
+Manage your Library (https://help.audible.com/s/article/manage-your-library)
+citeturn757view3 [wordlim: 200] Crawled: today; Content type: text/html; Source: open({"ref_id":"https://help.audible.com/s/article/manage-your-library","lineno":null}); Total lines: 261
+L0: Loading
+L1: 
+L2: Sorry to interrupt
+L3: 
+L4: Uncaught TypeError: Cannot read properties of null (reading 'style')
+L5: 
+L6: 【0†Refresh】
+L7: 
+L8: Skip to Main Content
+L9: 
+L10: Related topics
+L11: 
+L12: Android Downloads iOS Library Library issues+3
+L13: ## Manage your Library
+L14: 
+L15:   * Sep 9, 2026
+L16:   * Knowledge
+L17: 
+L18: Title
+L19: 
+L20: Manage your Library
+L21: 
+L22: URL Name
+L23: 
+L24: manage-your-library
+L25: 
+L26: Answer
+L27: 
+L28: Your Library is the place to go when you'd like to listen to any audiobook you've added or purchased, or when you want to catch up on a podcast you chose to follow. From here, you can easily keep track of which titles you've started and have yet to listen to. You can also view and manage your 【1†Wish List】 and 【2†Lists】 from your desktop and in-app Library.
+L29: 
+L30: In this article:
+L31:   * 【3†How can I access my Library?】
+L32:   * 【4†How can I use my Library?】
+L33:   * 【5†How do I add audiobooks to my Library?】
+L34:   * 【6†How do I remove audiobooks from my Library?】
+L35:   * 【7†How do I delete a downloaded audiobook from my device?】
+L36:   * 【8†How do I delete audiobooks from my Library?】
+L37:   * 【9†How do I refresh my app Library?】
+L38:   * 【10†How can I remove podcasts from my Library?】
+L39: ## How can I access my Library?
+L40: 
+L41: In the app
+L42: 
+L43:   1. Open the Audible app and sign in.
+L44:   2. Select Library in the bottom navigation.
+L45: 
+L46: On mobile web
+L47: 
+L48:   1. Go to the Audible site and sign in.
+L49:   2. Select the main menu.
+L50:   3. Select Library.
+L51: 
+L52: On desktop
+L53: 
+L54:   1. Go to the Audible site and sign in.
+L55:   2. Select Library in the site navigation.
+L56: ## How can I use my Library?
+L57: 
+L58: In the app
+L59: 
+L60: There are several ways you can view and sort titles in your in-app Library. At the very top of the screen, you'll find your main sections—Audiobooks, Podcasts, Wish List, Lists, Authors, Series, and Genres. Simply swipe left on the screen to view them all.
+L61: 
+L62: Your in-app Library also features filters, which allow you to see all of your titles at once or only those that are Not started, In progress, Downloaded, and Finished.
+L63: ### Use the In your library filter in catalog search
+L64: 
+L65: When searching in the Audible app, you can use the In your library filter to narrow search results to titles in your Library only.
+L66: 
+L67:   1. Open the Audible app.
+L68:   2. Search for the title you are looking for.
+L69:   3. Select In your library from the suggestions that appear to find titles you own.
+L70: 
+L71: Use this option to find titles that you own and are no longer available in the Audible catalog.
+L72: 
+L73: On desktop
+L74: There are several ways you can view and sort titles in your Library on desktop and mobile web. At the very top of the page, you'll find your main sections—All, Audiobooks, Podcasts, Wish List, Collections, and Authors.
+L75: 
+L76: Your web Library also features filters, which allow you to see all of your titles at once or only those that are Finished and Unfinished.
+L77: ## How do I add audiobooks to my Library?
+L78: 
+L79: Titles you purchase with a credit or credit card will automatically show up in your Library, and you can easily add included titles via the site or app.
+L80: 
+L81: In the app
+L82: 
+L83:   1. Open the Audible app and sign in.
+L84:   2. Search for the title you're interested in adding to your Library.
+L85:   3. Select the title to go to its detail page.
+L86:   4. Select Add to Library.
+L87: 
+L88: On desktop
+L89:   1. Go to the Audible site and sign in.
+L90:   2. Go to 'Find your next great listen'
+L91:   3. Select the title and go to its detail page.
+L92:   4. Select Add to Library.
+L93: 
+L94: From the search results on desktop
+L95: 
+L96:   1. Go to 'Find your next great listen'
+L97:   2. Search for the title you want
+L98:   3. On the search results, select Add to Library next to the title you want.
+L99: 
+L100: From the Wish List on desktop
+L101: 
+L102:   1. Go to Wish list
+L103:   2. Locate the title you want
+L104:   3. Select Add to Library next to the title.
+L105: 
+L106: On Mobile
+L107:   1. Search for the title you want
+L108:   2. Select the title you want
+L109:   3. Select Add to Library.
+L110: 
+L111: From the Wish List on Mobile
+L112: 
+L113:   1. Select the main menu
+L114:   2. Select Wish list
+L115:   3. Select the title you want
+L116:   4. Select Add to Library.
+L117: ## How do I remove audiobooks from my Library?
+L118: 
+L119: On desktop
+L120: 
+L121:   1. Go to the Audible Site
+L122:   2. Select to Library
+L123:   3. Select the title you want  to remove
+L124:   4. Select Remove
+L125: 
+L126: In the app
+L127: 
+L128: Remove a specific title
+L129: 
+L130:   1. Go to your Library.
+L131:   2. Find the title you'd like to remove.
+L132:   3. Select the 3-dot More menu.
+L133:   4. Select Remove from Library.
+L134: 
+L135: Remove multiple titles
+L136:   1. Go to your Library.
+L137:   2. Select Select.
+L138:   3. Pick the titles you'd like to remove by selecting the boxes.
+L139:   4. Select Remove from Library.
+L140: 
+L141: Note: Removing titles from your Library doesn't permanently delete them. The titles you purchase with a credit or credit card are yours to keep.
+L142: ## How do I delete a downloaded audiobook from my device?
+L143: 
+L144: If you'd like to free up space on your device without removing a title from your Library, you can delete the download file.
+L145: 
+L146: In the app
+L147: 
+L148:   1. Open the Audible app.
+L149:   2. Select Library.
+L150:   3. Find the title you want to remove from your device.
+L151:   4. Select the 3-dot More menu.
+L152:   5. Select Remove download.
+L153: 
+L154: Delete multiple downloaded titles:
+L155:   1. Open the Audible app.
+L156:   2. Select Library
+L157:   3. Choose Select.
+L158:   4. Pick the titles you would like to delete by selecting the boxes
+L159:   5. Select Remove Download.
+L160: 
+L161: Note: Removing a download from your device does not remove the title from your Library. You can re-download it at any time.
+L162: ## How do I delete audiobooks from my Library?
+L163: 
+L164: You can only permanently delete audiobooks through the Amazon website or by contacting Customer Support.
+L165: 
+L166:   1. Go to 【11†Manage Your Content and Devices†www.amazon.com】 on Amazon.
+L167:   2. Filter by Content.
+L168:   3. Choose the audiobook you want to delete and select Delete.
+L169:   4. Confirm by selecting Yes, delete permanently.
+L170: 
+L171: Note: Once you permanently delete titles from your account, you won't be able to access them again in your Library or on any device.
+L172: ## How do I refresh my app Library?
+L173: 
+L174: To ensure that your app Library refreshes, you must have the latest version of the app installed on your device. To learn how, go to App 【12†Keeps Crashing】.
+L175: 
+L176: To refresh the app Library, please follow these steps:
+L177: 
+L178: In the app
+L179: 
+L180:   1. Open the Audible app.
+L181:   2. Select Profile.
+L182:   3. Select the Settings gear.
+L183:   4. Select Library.
+L184:   5. Select Refresh Library.
+L185: Note: If you're using an older device that doesn't support the latest version of the app, you can continue to listen to all of your audiobooks on another compatible device or in the Audible Cloud Player.
+L186: ## How can I remove podcasts from my Library?
+L187: 
+L188: To remove a podcast from your Library, follow these steps:
+L189: 
+L190: Using the 3-dot menu:
+L191: 
+L192:   1. Open the Audible app.
+L193:   2. Select Library.
+L194:   3. Select Podcasts.
+L195:   4. Select the 3-dot menu of the podcast you want to remove.
+L196:   5. Select Unfollow.
+L197: 
+L198: Using select and hold:
+L199: 
+L200:   1. Open the Audible app.
+L201:   2. Select Library.
+L202:   3. Select Podcasts.
+L203:   4. Tap and hold the podcast you want to remove.
+L204:   5. Select Unfollow.
+L205: The podcast has been removed and will no longer show in your Library.
+L206: 
+L207: Did this answer your question?
+L208: 
+L209: 【13†Image: Thumbs Up】Like
+L210: 
+L211: 
+L212: 
+L213: 【14†Image: Thumbs Down】Dislike
+L214: 
+L215:  Back to top
+L216: 
+L217: 【15†Image: Share link】 Share link
+L218: 
+L219: 【16†Image: Download PDF】 Download PDF
+L220: ## Need more assistance?
+L221: 
+L222: 【17†Contact us†www.audible.com】
+L223: 
+L224: 
+L225: 
+L226: How satisfied were you with our Help Center today?
+L227: 
+L228: 
+L229: 
+L230: Worst
+L231: 
+L232: 1
+L233: 
+L234: 2
+L235: 
+L236: 3
+L237: 
+L238: 4
+L239: 
+L240: 5
+L241: 
+L242: 6
+L243: 
+L244: 7
+L245: 
+L246: Best
+L247: 
+L248: 
+L249: 
+L250: Region
+L251: 
+L252: United States
+L253: 
+L254: Language
+L255: 
+L256: English
+L257: 
+L258: Loading
+L259: 
+L260: Manage your Library 【18†Adobe ID Syncing iFrame†audible.demdex.net】

@@ -1,0 +1,40 @@
+{
+  "name": "56-confirm-exit",
+  "url": "https://www.duolingo.com/lesson",
+  "title": "Duolingo - Learn French with lessons that work",
+  "utc": "2026-10-26T17:59:58.315598+00:00",
+  "text": "4\nNEW WORD\nWhich one of these is “tea”?\nthé\n1\ncroissant\n2\ncafé\n3\nSKIP\nCHECK\nWait, don’t go! You’ll lose your progress if you quit now\nKEEP LEARNING\nEND SESSION",
+  "buttons": [
+    {
+      "text": "",
+      "aria": null,
+      "test": "quit-button",
+      "visible": true
+    },
+    {
+      "text": "SKIP",
+      "aria": null,
+      "test": "player-skip",
+      "visible": true
+    },
+    {
+      "text": "CHECK",
+      "aria": null,
+      "test": "player-next",
+      "visible": true
+    },
+    {
+      "text": "KEEP LEARNING",
+      "aria": null,
+      "test": "notification-button",
+      "visible": true
+    },
+    {
+      "text": "END SESSION",
+      "aria": null,
+      "test": "notification-drawer-no-thanks-button",
+      "visible": true
+    }
+  ],
+  "inputs": []
+}

@@ -1,0 +1,6 @@
+Use the Show Notification action in a shortcut on iPhone or iPad
+The Show Notification action creates a system notification. Show Notification runs instantly and continues to the next action (unlike the Show Alert action, which pauses the shortcut).
+Media that’s passed into the notification is displayed in a rich preview, such as an image or a Maps location.
+When the Current Track shortcut (shown above) is run, the title, artist, album name, and album art of the currently playing artist are displayed in a notification.
+Note: To display album artwork in the notification, the song or album must be added to your music library.See alsoIntro to variables in Shortcuts on iPhone or iPad
+Not all apps, services, and content are available in all countries or regions.

@@ -1,0 +1,176 @@
+[
+  {
+    "flow_id": "F-M001-01",
+    "before": {
+      "flow_id": "F-M001-01",
+      "product_id": "M-001",
+      "task": "查词再复习",
+      "depth": "D2",
+      "evidence_ids": "E-KDL-01;E-KDCD-01;E-KDCD-02",
+      "known_branches": "2024在线指南补明确路径：正文查词→阅读菜单Vocabulary Builder→Words/Books→Flashcards→See Definition→Exit Flashcards。Learning显示学习/掌握统计，但正文未给标记掌握或撤销按钮；关闭自动收词后新查询不入本。",
+      "gaps": "掌握标记/误标撤销、删词恢复、跨端同步与复习调度未知；Word Wise有内容语言条件",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-001-kindle.md",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "flow_id": "F-M001-01",
+      "product_id": "M-001",
+      "task": "查词再复习",
+      "depth": "D2",
+      "evidence_ids": "E-KDL-01;E-KDCD-01;E-KDCD-02",
+      "known_branches": "查词自动入本与关闭；词义卡/例句/Flashcards；Word Wise提示密度/多义词反馈及中英文提示独立",
+      "gaps": "误标掌握/撤销与复习调度未知；中文提示不证明中文TTS或教学适龄",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-001-kindle.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "flow_id": "F-M001-02",
+    "before": {
+      "flow_id": "F-M001-02",
+      "product_id": "M-001",
+      "task": "临时翻找再回原处",
+      "depth": "D2",
+      "evidence_ids": "E-KDL-01;E-KDCD-02",
+      "known_branches": "Page Flip预览后Back to page/loc重定位原阅读点，点预览页才跳转；历史箭头在退出书籍后清空；不能把预览位置当持久阅读进度。",
+      "gaps": "不同格式可用导航、跨会话返回栈、断电恢复位置未知",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-001-kindle.md",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "flow_id": "F-M001-02",
+      "product_id": "M-001",
+      "task": "临时翻找再回原处",
+      "depth": "D2",
+      "evidence_ids": "E-KDL-01;E-KDCD-02;E-KDAF-06",
+      "known_branches": "预览/点页跳转/Back原位；Go To历史退出书后清；脚注预览与跳到注释分开",
+      "gaps": "静态三页与返回按钮；退出/断电/跨端历史恢复未知，不当连续视觉链",
+      "visual_status": "static_official_images_only",
+      "hands_on": "false",
+      "case_path": "cases/M-001-kindle.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "flow_id": "F-M001-03",
+    "before": {
+      "flow_id": "F-M001-03",
+      "product_id": "M-001",
+      "task": "在书中写批注",
+      "depth": "D2",
+      "evidence_ids": "E-KDL-02;E-KDL-03;E-KDCD-08;E-KDCD-09",
+      "known_branches": "画布框可调整；删除需指针选框→垃圾桶→确认。便签X关闭自动保存；工具可隐藏再显示。USB PDF及2022-11-11前已传入库的PDF不支持该手写路径；漫画/儿童EPUB不泛化。",
+      "gaps": "最低固件、删除画布后恢复、PDF变更对笔迹锚点影响未知；手机手写与同步帮助范围差异未解",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-001-kindle.md",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "flow_id": "F-M001-03",
+      "product_id": "M-001",
+      "task": "在书中写批注",
+      "depth": "D2",
+      "evidence_ids": "E-KDL-02;E-KDL-03;E-KDCD-02;E-KDCD-08;E-KDCD-09;E-KDAF-08",
+      "known_branches": "画布确认/取消及整块删除；便签X保存；页边栏宽/停靠/覆盖，关后便签显示；笔迹Undo/Redo与剪贴板分别",
+      "gaps": "工具条静态非笔迹执行；整体删除/内容更新锚点与跨端恢复未知；页边栏关闭不等于删除",
+      "visual_status": "static_official_images_only",
+      "hands_on": "false",
+      "case_path": "cases/M-001-kindle.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "flow_id": "F-M001-04",
+    "before": {
+      "flow_id": "F-M001-04",
+      "product_id": "M-001",
+      "task": "创建并整理笔记页与文件夹",
+      "depth": "D2",
+      "evidence_ids": "E-KDL-04;E-KDCD-05;E-KDCD-06;E-KDCD-07",
+      "known_branches": "Notebook页+新建文件夹/笔记本，至少需100MB空闲才能保存新对象/笔迹；整本More→Move选文件夹或Notebook顶层，书与个人文档不能混入。页多选Add逐页后加页，Move选页间位置，X退多选；2025+才另列Duplicate与跨本移页。",
+      "gaps": "删除单页确认/撤销、空间不足实际提示和未保存笔迹、跨本移动断网冲突未知",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-001-kindle.md",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "flow_id": "F-M001-04",
+      "product_id": "M-001",
+      "task": "创建并整理笔记页与文件夹",
+      "depth": "D2",
+      "evidence_ids": "E-KDL-04;E-KDCD-02;E-KDCD-05;E-KDCD-06;E-KDCD-07",
+      "known_branches": "100MB与关闭保存；概览单点选择/再点打开，Back回原页，多选X回概览；模板选页/全本；2025+复制/跨本移页另列",
+      "gaps": "空间不足实际提示、删除页确认/恢复、模板更换数据保护未知；不把2025+套2024",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-001-kindle.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "flow_id": "F-M001-06",
+    "before": {
+      "flow_id": "F-M001-06",
+      "product_id": "M-001",
+      "task": "同步并排查缺失",
+      "depth": "D2",
+      "evidence_ids": "E-KDL-06;E-KDL-07;E-KDCD-03;E-KDCD-04;E-KDCD-11",
+      "known_branches": "联网Sync备份；关闭Sync不能云下载/备份/永久删除。缺失先核同账号设备删除；模板问题重选→重开，仍异常时移除本地后重下载。More的Remove download保留云对象；Permanently delete影响所有设备且不能恢复。；已作为附件发送给Alexa的副本另行保留，不随Kindle永久删除自动清除。",
+      "gaps": "本地未同步笔迹保护、误删确认、冲突优先级、删除文件夹内对象范围未知；跨端手写支持文档冲突保留",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-001-kindle.md",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "flow_id": "F-M001-06",
+      "product_id": "M-001",
+      "task": "同步并排查缺失",
+      "depth": "D2",
+      "evidence_ids": "E-KDL-06;E-KDL-07;E-KDCD-02;E-KDCD-03;E-KDCD-04;E-KDCD-11",
+      "known_branches": "联网Sync云备份；移除下载/永久删除对象不同；Alexa附件单独副本；重启保内容，出厂重置清本地与设置后重注册",
+      "gaps": "未同步笔迹、USB文件备份、跨端冲突及整机恢复未知；云下载不等于恢复本地全部状态",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-001-kindle.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "flow_id": "F-M001-09",
+    "before": {
+      "flow_id": "F-M001-09",
+      "product_id": "M-001",
+      "task": "整理合集并下载或移除书库内容",
+      "depth": "D2",
+      "evidence_ids": "E-KDCD-02;E-KDCD-14",
+      "known_branches": "2024指南：Library创建合集→命名→勾选→Done；合集菜单可增删成员，Back/Home退出。合集删除同步但不删内容；合集内项目需另行Download all items。本地移除与永久删除分开，USB文件无云副本。",
+      "gaps": "删除确认/撤销、下载失败/部分成功、跨端合集冲突未知；指南Downloaded选取/取消选取措辞内部不一致，不能据此拼造准确筛选状态",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-001-kindle.md",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "flow_id": "F-M001-09",
+      "product_id": "M-001",
+      "task": "整理合集并下载或移除书库内容",
+      "depth": "D2",
+      "evidence_ids": "E-KDCD-02;E-KDCD-14",
+      "known_branches": "合集结构/下载分开，删合集不删书；音频筛选不删除；配套书音频合一条目，文档泛称删书连音频；Quick Archive/Manual Removal",
+      "gaps": "合并音频删除层级/确认/撤销未知；USB无云副本；合集冲突、下载失败与Downloaded措辞冲突保留",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-001-kindle.md",
+      "checked_on": "2026-10-27"
+    }
+  }
+]

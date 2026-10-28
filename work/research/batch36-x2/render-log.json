@@ -1,0 +1,20 @@
+[
+  {
+    "file_page": 9,
+    "printed_page": 5,
+    "path": "work/research/batch36-x2/X2-file-9.png",
+    "sha256": "03efdd6ece2ba5622be28e57810964f762fda4d139f736e582b5e6238a2434fd"
+  },
+  {
+    "file_page": 33,
+    "printed_page": 29,
+    "path": "work/research/batch36-x2/X2-file-33.png",
+    "sha256": "ef348cedaa10fea778f3fe5ef9600399fb4c2bc756a9243f0926053c773bc83e"
+  },
+  {
+    "file_page": 51,
+    "printed_page": 47,
+    "path": "work/research/batch36-x2/X2-file-51.png",
+    "sha256": "0edeb26cb73fb55c28b84f5d429a1444c54af31518188758e74af01420cd8b3d"
+  }
+]

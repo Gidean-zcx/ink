@@ -1,0 +1,26 @@
+[
+  {
+    "evidence_id": "E-XYHW-01",
+    "source_batch": "docs/research/interaction-library/batches/learning-hardware-evidence.jsonl",
+    "field": "version_scope",
+    "before": "China mainland S6/E1; current website, firmware unknown",
+    "after": "China mainland S6/E1 as represented in captured main.12d356ac.chunk.js; page release/generation and firmware unknown",
+    "reason": "保留来源快照代际与版本日期范围"
+  },
+  {
+    "evidence_id": "E-XYHW-02",
+    "source_batch": "docs/research/interaction-library/batches/learning-hardware-evidence.jsonl",
+    "field": "source_updated_on",
+    "before": null,
+    "after": "2026-09-25",
+    "reason": "保留来源快照代际与版本日期范围"
+  },
+  {
+    "evidence_id": "E-XYHW-02",
+    "source_batch": "docs/research/interaction-library/batches/learning-hardware-evidence.jsonl",
+    "field": "note",
+    "before": "Four static developer compositions viewed; only one retained formally. Sample values are not defaults. Store 1.25.1 date displayed Sep 25 without year on row; no user reviews used.",
+    "after": "Four static developer compositions viewed in prior capture; only one retained formally. Sample values are not defaults. Original date row showed Sep 25 without year; fresh 2026-10-27 HTML time datetime confirms 2026-09-25 for 1.25.1. Twenty-five version notes are generic; no specific hardware repair inferred. No new images or user reviews used.",
+    "reason": "保留来源快照代际与版本日期范围"
+  }
+]

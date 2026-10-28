@@ -1,0 +1,346 @@
+[
+  {
+    "flow_id": "F-M026-01",
+    "field": "evidence_ids",
+    "before": "E-EUD-01",
+    "after": "E-EUD-01;E-EUD-16;E-EUD-18",
+    "reason": "2026-10-27补证或修正原行过期缺口；稳定任务不改编号",
+    "file": "docs/research/interaction-library/batches/dictionary-coverage.csv"
+  },
+  {
+    "flow_id": "F-M026-01",
+    "field": "known_branches",
+    "before": "通配符、删历史、iOS回调",
+    "after": "通配符、删历史、iOS回调；上一词与返回搜索分开；context查询仅传参",
+    "reason": "2026-10-27补证或修正原行过期缺口；稳定任务不改编号",
+    "file": "docs/research/interaction-library/batches/dictionary-coverage.csv"
+  },
+  {
+    "flow_id": "F-M026-01",
+    "field": "gaps",
+    "before": "常规返回和撤销",
+    "after": "触屏误识别校订、清历史撤销、回调失败与context持久保存未知",
+    "reason": "2026-10-27补证或修正原行过期缺口；稳定任务不改编号",
+    "file": "docs/research/interaction-library/batches/dictionary-coverage.csv"
+  },
+  {
+    "flow_id": "F-M026-01",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27",
+    "reason": "2026-10-27补证或修正原行过期缺口；稳定任务不改编号",
+    "file": "docs/research/interaction-library/batches/dictionary-coverage.csv"
+  },
+  {
+    "flow_id": "F-M026-03",
+    "field": "evidence_ids",
+    "before": "E-EUD-03;E-EUD-04",
+    "after": "E-EUD-03;E-EUD-04;E-EUD-16;E-EUD-17",
+    "reason": "2026-10-27补证或修正原行过期缺口；稳定任务不改编号",
+    "file": "docs/research/interaction-library/batches/dictionary-coverage.csv"
+  },
+  {
+    "flow_id": "F-M026-03",
+    "field": "known_branches",
+    "before": "编辑、循环间隔",
+    "after": "编辑、循环间隔；iOS外接键盘新建笔记，保存退出与不保存退出分开",
+    "reason": "2026-10-27补证或修正原行过期缺口；稳定任务不改编号",
+    "file": "docs/research/interaction-library/batches/dictionary-coverage.csv"
+  },
+  {
+    "flow_id": "F-M026-03",
+    "field": "gaps",
+    "before": "书籍原句关联",
+    "after": "触屏保存/撤销、书籍原句关联、跨端编辑冲突未知",
+    "reason": "2026-10-27补证或修正原行过期缺口；稳定任务不改编号",
+    "file": "docs/research/interaction-library/batches/dictionary-coverage.csv"
+  },
+  {
+    "flow_id": "F-M026-03",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27",
+    "reason": "2026-10-27补证或修正原行过期缺口；稳定任务不改编号",
+    "file": "docs/research/interaction-library/batches/dictionary-coverage.csv"
+  },
+  {
+    "flow_id": "F-M026-04",
+    "field": "evidence_ids",
+    "before": "E-EUD-05;E-EUD-08",
+    "after": "E-EUD-05;E-EUD-08;E-EUD-17",
+    "reason": "2026-10-27补证或修正原行过期缺口；稳定任务不改编号",
+    "file": "docs/research/interaction-library/batches/dictionary-coverage.csv"
+  },
+  {
+    "flow_id": "F-M026-04",
+    "field": "known_branches",
+    "before": "分组、排序、自建词本",
+    "after": "分组、排序、自建词本；iOS外接键盘解释页Command+A加入生词本",
+    "reason": "2026-10-27补证或修正原行过期缺口；稳定任务不改编号",
+    "file": "docs/research/interaction-library/batches/dictionary-coverage.csv"
+  },
+  {
+    "flow_id": "F-M026-04",
+    "field": "gaps",
+    "before": "加词按钮和冲突",
+    "after": "触屏加词按钮、重复词、同步完成与冲突；默认分组在快捷键路径的表现未知",
+    "reason": "2026-10-27补证或修正原行过期缺口；稳定任务不改编号",
+    "file": "docs/research/interaction-library/batches/dictionary-coverage.csv"
+  },
+  {
+    "flow_id": "F-M026-04",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27",
+    "reason": "2026-10-27补证或修正原行过期缺口；稳定任务不改编号",
+    "file": "docs/research/interaction-library/batches/dictionary-coverage.csv"
+  },
+  {
+    "flow_id": "F-M026-05",
+    "field": "evidence_ids",
+    "before": "E-EUD-06;E-EUD-09;E-EUD-12",
+    "after": "E-EUD-06;E-EUD-08;E-EUD-09;E-EUD-12",
+    "reason": "2026-10-27补证或修正原行过期缺口；稳定任务不改编号",
+    "file": "docs/research/interaction-library/batches/dictionary-coverage.csv"
+  },
+  {
+    "flow_id": "F-M026-05",
+    "field": "known_branches",
+    "before": "错题回卡片、配置算法",
+    "after": "错题回卡片、配置算法；旧帮助新词配额不含复习，完成后追加新词及提前未来任务条件",
+    "reason": "2026-10-27补证或修正原行过期缺口；稳定任务不改编号",
+    "file": "docs/research/interaction-library/batches/dictionary-coverage.csv"
+  },
+  {
+    "flow_id": "F-M026-05",
+    "field": "gaps",
+    "before": "新版算法对应",
+    "after": "当前FSRS/各平台构建对应、跨日恢复、现版任务追加反馈未知",
+    "reason": "2026-10-27补证或修正原行过期缺口；稳定任务不改编号",
+    "file": "docs/research/interaction-library/batches/dictionary-coverage.csv"
+  },
+  {
+    "flow_id": "F-M026-05",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27",
+    "reason": "2026-10-27补证或修正原行过期缺口；稳定任务不改编号",
+    "file": "docs/research/interaction-library/batches/dictionary-coverage.csv"
+  },
+  {
+    "flow_id": "F-M026-07",
+    "field": "gaps",
+    "before": "撤回调度细节",
+    "after": "旧Android周期本地备份的恢复入口、覆盖冲突及新版撤回调度细节未知；不同于云同步",
+    "reason": "2026-10-27补证或修正原行过期缺口；稳定任务不改编号",
+    "file": "docs/research/interaction-library/batches/dictionary-coverage.csv"
+  },
+  {
+    "flow_id": "F-M026-07",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27",
+    "reason": "2026-10-27补证或修正原行过期缺口；稳定任务不改编号",
+    "file": "docs/research/interaction-library/batches/dictionary-coverage.csv"
+  },
+  {
+    "flow_id": "F-M026-10",
+    "field": "evidence_ids",
+    "before": "E-EUD-12",
+    "after": "E-EUD-12;E-EUCD-01;E-EUCD-02",
+    "reason": "2026-10-27补证或修正原行过期缺口；稳定任务不改编号",
+    "file": "docs/research/interaction-library/batches/dictionary-coverage.csv"
+  },
+  {
+    "flow_id": "F-M026-10",
+    "field": "known_branches",
+    "before": "旧帮助限制修正",
+    "after": "旧帮助限制修正；官网新日志分端摘要有撤回/导出线索，未取得完整正文",
+    "reason": "2026-10-27补证或修正原行过期缺口；稳定任务不改编号",
+    "file": "docs/research/interaction-library/batches/dictionary-coverage.csv"
+  },
+  {
+    "flow_id": "F-M026-10",
+    "field": "gaps",
+    "before": "准确构建与操作路径",
+    "after": "摘要时间不等于功能发布日期；对应构建、菜单、撤回/恢复范围仍缺",
+    "reason": "2026-10-27补证或修正原行过期缺口；稳定任务不改编号",
+    "file": "docs/research/interaction-library/batches/dictionary-coverage.csv"
+  },
+  {
+    "flow_id": "F-M026-10",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27",
+    "reason": "2026-10-27补证或修正原行过期缺口；稳定任务不改编号",
+    "file": "docs/research/interaction-library/batches/dictionary-coverage.csv"
+  },
+  {
+    "flow_id": "F-M036-03",
+    "field": "evidence_ids",
+    "before": "E-SONY-01;E-SONY-02",
+    "after": "E-SONY-01;E-SONY-02;E-SYCD-12;E-SYCD-17",
+    "file": "docs/research/interaction-library/batches/audio-coverage.csv"
+  },
+  {
+    "flow_id": "F-M036-03",
+    "field": "known_branches",
+    "before": "当前曲目与所在分类构成后续浏览/播放上下文。",
+    "after": "曲库分类图标可长按拖动；Options可选显示项或重置默认分类。播放页标题/作者/专辑或Search related可回相关内容；返回滚动状态未知。",
+    "file": "docs/research/interaction-library/batches/audio-coverage.csv"
+  },
+  {
+    "flow_id": "F-M036-03",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27",
+    "file": "docs/research/interaction-library/batches/audio-coverage.csv"
+  },
+  {
+    "flow_id": "F-M036-04",
+    "field": "evidence_ids",
+    "before": "E-SONY-02",
+    "after": "E-SONY-02;E-SYCD-13",
+    "file": "docs/research/interaction-library/batches/audio-coverage.csv"
+  },
+  {
+    "flow_id": "F-M036-04",
+    "field": "known_branches",
+    "before": "分别表示插到当前曲之后、末尾追加或替换整个队列；移出列表与文件删除分开。",
+    "after": "插到下一首、追加、替换队列与移出单项分开；播放页右滑到队列，Options的Add to playlist保存整队列，单项菜单只加入该曲。电脑导入歌单不能作为追加目标。",
+    "file": "docs/research/interaction-library/batches/audio-coverage.csv"
+  },
+  {
+    "flow_id": "F-M036-04",
+    "field": "gaps",
+    "before": "替换是否确认/可撤销；重复项、当前项被移除、重启保留。",
+    "after": "替换是否确认/可撤销；重复项、当前项被移除、重启保留；整队列保存后的重复处理未核。",
+    "file": "docs/research/interaction-library/batches/audio-coverage.csv"
+  },
+  {
+    "flow_id": "F-M036-04",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27",
+    "file": "docs/research/interaction-library/batches/audio-coverage.csv"
+  },
+  {
+    "flow_id": "F-M036-07",
+    "field": "evidence_ids",
+    "before": "E-SONY-09",
+    "after": "E-SONY-09;E-SYCD-07",
+    "file": "docs/research/interaction-library/batches/audio-coverage.csv"
+  },
+  {
+    "flow_id": "F-M036-07",
+    "field": "known_branches",
+    "before": "收藏可存三类对象；官方明确收藏信息不能导入电脑。",
+    "after": "收藏可存曲目/专辑/歌单；收藏信息不能导入电脑。移卡时卡上对象的收藏信息会disappear，原文未说明重插恢复；不可据此推定音频被删。",
+    "file": "docs/research/interaction-library/batches/audio-coverage.csv"
+  },
+  {
+    "flow_id": "F-M036-07",
+    "field": "gaps",
+    "before": "换卡/重建数据库后的收藏、误取消恢复、不同成员收藏隔离。",
+    "after": "重插卡/重建数据库后的收藏、误取消恢复、不同成员收藏隔离。",
+    "file": "docs/research/interaction-library/batches/audio-coverage.csv"
+  },
+  {
+    "flow_id": "F-M036-07",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27",
+    "file": "docs/research/interaction-library/batches/audio-coverage.csv"
+  },
+  {
+    "flow_id": "F-M036-08",
+    "field": "task",
+    "before": "口袋盲操、防误按与精确寻位",
+    "after": "口袋盲操、防误按与寻位",
+    "file": "docs/research/interaction-library/batches/audio-coverage.csv"
+  },
+  {
+    "flow_id": "F-M036-08",
+    "field": "evidence_ids",
+    "before": "E-SONY-02;E-SONY-03;E-SONY-04",
+    "after": "E-SONY-02;E-SONY-03;E-SONY-04;E-SYCD-17",
+    "file": "docs/research/interaction-library/batches/audio-coverage.csv"
+  },
+  {
+    "flow_id": "F-M036-08",
+    "field": "known_branches",
+    "before": "锁实体键、关屏、锁屏认证、暂停四者不同；松开 HOLD 恢复按键。",
+    "after": "锁实体键、关屏、锁屏认证、暂停四者不同；松开HOLD恢复按键。长按媒体键快退/进须在播放中；官方提示已播时间和时间条可能不准确。",
+    "file": "docs/research/interaction-library/batches/audio-coverage.csv"
+  },
+  {
+    "flow_id": "F-M036-08",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27",
+    "file": "docs/research/interaction-library/batches/audio-coverage.csv"
+  },
+  {
+    "flow_id": "F-M036-09",
+    "field": "task",
+    "before": "蓝牙回连与出口相关音效",
+    "after": "蓝牙配对/回连、音质设置与出口相关音效",
+    "file": "docs/research/interaction-library/batches/audio-coverage.csv"
+  },
+  {
+    "flow_id": "F-M036-09",
+    "field": "evidence_ids",
+    "before": "E-SONY-11;E-SONY-12",
+    "after": "E-SONY-11;E-SONY-12;E-SYCD-14;E-SYCD-15;E-SYCD-16;E-SYCD-05",
+    "file": "docs/research/interaction-library/batches/audio-coverage.csv"
+  },
+  {
+    "flow_id": "F-M036-09",
+    "field": "known_branches",
+    "before": "配对记录不等于连接成功；Sound adjustment app 与 Music player 共享音效数值。USB 音频输出禁用这些音效；蓝牙也有功能/地区例外。",
+    "after": "首次Pair new device选设备/所需密钥；超时重试，恢复出厂后重配。Wireless playback quality下次连接才生效且受接收端影响。USB音频输出的音效限制不能套USB-DAC输入；后者应用本机音效。High-Res streaming在系统Sound中配置第三方App，兼容性非全覆盖。",
+    "file": "docs/research/interaction-library/batches/audio-coverage.csv"
+  },
+  {
+    "flow_id": "F-M036-09",
+    "field": "gaps",
+    "before": "断连后是否暂停、接有线优先级、重新连是否自动出声。",
+    "after": "断连后是否暂停、接有线优先级、重新连是否自动出声；第三方App后台/音频焦点/离线授权未核。",
+    "file": "docs/research/interaction-library/batches/audio-coverage.csv"
+  },
+  {
+    "flow_id": "F-M036-09",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27",
+    "file": "docs/research/interaction-library/batches/audio-coverage.csv"
+  },
+  {
+    "flow_id": "F-M036-10",
+    "field": "evidence_ids",
+    "before": "E-SONY-10;E-SONY-13",
+    "after": "E-SONY-10;E-SONY-13;E-SYCD-12;E-SYCD-18",
+    "file": "docs/research/interaction-library/batches/audio-coverage.csv"
+  },
+  {
+    "flow_id": "F-M036-10",
+    "field": "known_branches",
+    "before": "删除曲目不同于移出队列/歌单/收藏；数据库更新和重建也不是同一操作。",
+    "after": "默认索引范围含内存Music与Download、卡Music及已注册文件夹；可用曲库更新按钮或Options→Settings→Update database。Rebuild只证实菜单存在，未获其作用差异。",
+    "file": "docs/research/interaction-library/batches/audio-coverage.csv"
+  },
+  {
+    "flow_id": "F-M036-10",
+    "field": "gaps",
+    "before": "删除确认、文件回收/撤销、重建会否清收藏/歌单；这些帮助页未交代。",
+    "after": "删除确认、文件回收/撤销、Update/Rebuild对收藏/歌单的具体影响未知；不可把两个名称视为已验证的数据行为。",
+    "file": "docs/research/interaction-library/batches/audio-coverage.csv"
+  },
+  {
+    "flow_id": "F-M036-10",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27",
+    "file": "docs/research/interaction-library/batches/audio-coverage.csv"
+  }
+]

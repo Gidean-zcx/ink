@@ -1,0 +1,102 @@
+[
+  {
+    "name": "web-entry.js",
+    "url": "https://cdn.weread.qq.com/web/wrweb-next/_nuxt/C_fW_JUQ.js",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "final_url": "https://cdn.weread.qq.com/web/wrweb-next/_nuxt/C_fW_JUQ.js",
+    "bytes": 664821,
+    "raw_work_path": "work/weread-controls-deepening/web-entry.js",
+    "raw_sha256": "5026291bf1a7cd968ce07ec4b5d42f94ffc49ff7b85d5065f41b65c7b19e3ad7"
+  },
+  {
+    "name": "appstore.html",
+    "url": "https://apps.apple.com/cn/app/id952059546",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "final_url": "https://apps.apple.com/cn/app/%E5%BE%AE%E4%BF%A1%E8%AF%BB%E4%B9%A6/id952059546",
+    "bytes": 1091419,
+    "raw_work_path": "work/weread-controls-deepening/appstore.html",
+    "raw_sha256": "a6121bbc1bf47883dd30e3d8be7cf54d3d7493c8f392f85cff41e68f4e4bc0d0"
+  },
+  {
+    "name": "homepage.html",
+    "url": "https://weread.qq.com/",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "final_url": "https://weread.qq.com/",
+    "bytes": 807649,
+    "raw_work_path": "work/weread-controls-deepening/homepage.html",
+    "raw_sha256": "64dd03ca8670ac06e79dfad921f438d50b4e07473b03972677618bbbab2ef1dc"
+  },
+  {
+    "name": "ai-rag.html",
+    "url": "https://developer.cloud.tencent.com/article/2433150",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "final_url": "https://developer.cloud.tencent.com/article/2433150",
+    "bytes": 128811,
+    "raw_work_path": "work/weread-controls-deepening/ai-rag.html",
+    "raw_sha256": "465d18a923998c8f637beb6714d21b166ed249581804395748e6a0bb3d0f64dd"
+  },
+  {
+    "name": "review.md",
+    "url": "https://raw.githubusercontent.com/Tencent/WeChatReading/d98e66ee60a8c7bcd35da549d0643c4470439643/skills/review.md",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "final_url": "https://raw.githubusercontent.com/Tencent/WeChatReading/d98e66ee60a8c7bcd35da549d0643c4470439643/skills/review.md",
+    "bytes": 4164,
+    "raw_work_path": "work/weread-controls-deepening/review.md",
+    "raw_sha256": "8a86c3a70b05900b408ebec554de0e4177e9f0c8105f8d7e33ada693fd13a31f"
+  },
+  {
+    "name": "discover.md",
+    "url": "https://raw.githubusercontent.com/Tencent/WeChatReading/d98e66ee60a8c7bcd35da549d0643c4470439643/skills/discover.md",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "final_url": "https://raw.githubusercontent.com/Tencent/WeChatReading/d98e66ee60a8c7bcd35da549d0643c4470439643/skills/discover.md",
+    "bytes": 3684,
+    "raw_work_path": "work/weread-controls-deepening/discover.md",
+    "raw_sha256": "81817b64669596dee8c168cce2d5dd0c8ccc13524ca6d5dec3224acca674b7a3"
+  },
+  {
+    "name": "author.html",
+    "url": "https://developer.cloud.tencent.com/user/1920198",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "final_url": "https://developer.cloud.tencent.com/user/1920198",
+    "bytes": 144035,
+    "raw_work_path": "work/weread-controls-deepening/author.html",
+    "raw_sha256": "7ffc2af8d67475be10c5b4adf6f5d2477b2aeaba4f5e7f4ae1ba433c0832f4ee"
+  },
+  {
+    "name": "ai-entry.jpg",
+    "url": "https://developer.qcloudimg.com/http-save/yehe-1920198/d96def10e5ee4b5d9dac45a0180444d1.jpg",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "final_url": "https://developer.qcloudimg.com/http-save/yehe-1920198/d96def10e5ee4b5d9dac45a0180444d1.jpg",
+    "bytes": 252519,
+    "raw_work_path": "work/weread-controls-deepening/ai-entry.jpg",
+    "raw_sha256": "73c62fe09714d808f1039fb7607d108eec87c1f3e92f7c3e5488e726d9e1d779"
+  },
+  {
+    "name": "ai-citations.jpg",
+    "url": "https://developer.qcloudimg.com/http-save/yehe-1920198/306b66945599a14d56f79608071efbd9.jpg",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "final_url": "https://developer.qcloudimg.com/http-save/yehe-1920198/306b66945599a14d56f79608071efbd9.jpg",
+    "bytes": 182791,
+    "raw_work_path": "work/weread-controls-deepening/ai-citations.jpg",
+    "raw_sha256": "719779a935fb8db2f8026dc0b9ad25e8ae1f691411f7ae99ec1fc47f6b717889"
+  },
+  {
+    "name": "ai-selection.png",
+    "url": "https://developer.qcloudimg.com/http-save/yehe-1920198/255680d8155539d3a0b50e8776bab732.png",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "final_url": "https://developer.qcloudimg.com/http-save/yehe-1920198/255680d8155539d3a0b50e8776bab732.png",
+    "bytes": 215408,
+    "raw_work_path": "work/weread-controls-deepening/ai-selection.png",
+    "raw_sha256": "b54658ec4346689bb94dc6cd0aa48ca9e06db1bf3d6686fdbe7542e63f06c8ca"
+  }
+]

@@ -1,0 +1,8 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M061-11,M-061,新建、移动与分享笔记,D2,E-HWCD-02,CN笔记右上新建→选模板/手写；套索移动、转文本插入；单篇图/PDF分享；多篇勾选后按提示分享；CA同ID另有保存后Move分类,保存按钮/取消、分类创建与误移撤销、重名/失败分享、各格式可编辑性/录音是否包含未知,not_observed,false,cases/M-061-huawei-paper.md,2026-10-27
+F-M061-12,M-061,录音中标记并回听定位,D2,E-HWCD-03;E-HWP-06;E-HWP-07,NZ Wi-Fi4+64笔记页麦克风→圆形录音→打标→方形停止；点标记跳音频时间，长按移动/删除,系统构建/国内对应、离开与中断保存、删除标记撤销、音频跟随笔迹/转写句子及跨设备恢复未知,static_reference_only,false,cases/M-061-huawei-paper.md,2026-10-27
+F-M061-13,M-061,排查笔记同步与看似丢失,D2,E-HWCD-04;E-HWCD-11,同账号/前台联网、版本/容量/电量；Paper在应用管理强停后重开；单篇改一笔返回重试；颜色灰度相近可致贴纸不可见,排查不保证成功；冲突覆盖、删除回收、录音/标签备份、等待时长；4.2背景不可套Paper系统,not_observed,false,cases/M-061-huawei-paper.md,2026-10-27
+F-M061-14,M-061,通过华为分享发送文件,D2,E-HWCD-05,两端开启华为分享→发送端长按文件分享/电脑拖到目标→接收端接收；应用分享另有限制,完成回执/目标目录、拒绝/取消、断线续传、同名覆盖、接收后进书架未知,not_observed,false,cases/M-061-huawei-paper.md,2026-10-27
+F-M061-15,M-061,已协同时在电脑读写本机文件,D2,E-HWCD-06,以多屏协同已连接为前置；电脑此电脑→本机盘符→分类文件夹；可作为附件或将编辑文件存回,首次连接/电脑版本、读写权限、断连保存、缓存副本和编辑冲突未知；不当备份,not_observed,false,cases/M-061-huawei-paper.md,2026-10-27
+F-M061-16,M-061,调整PDF显示并还原裁边,D2,E-HWCD-07,中央调工具→剪刀进入裁边/拖框/保存且影响各页；两页取大页/等分取第一页；再次裁边可还原；对比度与去水印开关,保存/还原精确按钮、源PDF是否改写、导出效果、笔迹位置、关闭书籍后持久性未知,static_reference_only,false,cases/M-061-huawei-paper.md,2026-10-27
+F-M061-17,M-061,使用系统手势与悬浮导航,D2,E-HWCD-08;E-HWCD-09,区域Wi-Fi4+64：设置手势→边缘返回/底部上滑主页/停顿最近任务；悬浮球单击展开、长按移动，闲置超5秒贴边,区域帮助系统未标；最近任务关闭/锁定、误触、跨App位置与重启保存未知；非隔空操作,not_observed,false,cases/M-061-huawei-paper.md,2026-10-27

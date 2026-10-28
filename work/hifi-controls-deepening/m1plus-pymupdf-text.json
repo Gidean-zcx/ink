@@ -1,0 +1,98 @@
+[
+  {
+    "pdf_page": 1,
+    "text": "M1PlusM1Plus\n  快速入门指南\n   Quick Start Guide"
+  },
+  {
+    "pdf_page": 2,
+    "text": ""
+  },
+  {
+    "pdf_page": 3,
+    "text": "                        简体中文\n\n安全指示\n\n1. 不可自行开启本机进行维修、拆卸或改造。\n\n2. 请不要在特别热、冷、多尘或潮湿的环境中使用本产品， 也不\n 要放在有液体的地方。\n\n3. 充电时机器有轻微发热，属正常现象。\n\n4. 使用时不要让产品摔落，或与硬物摩擦撞击，否则会导致播放\n 器表面磨花，电池脱落，数据丢失或其它硬件损坏，不要剧烈\n 震动或撞击，防止不正确使用而损伤本产品。\n\n5. 请调节适当音量欣赏音乐，以免损伤您的听觉和音响系统，在\n 插入耳机前，请先将音量调小，不要长时间使用耳机。\n\n6. 不要使用化学剂或清洁剂清洁本产品，这样会损伤产品表面和\n 腐蚀喷漆。\n\n7. 本产品在格式化或上传/下载过程中不要突然断开连接，否则可\n 能导致程序出错。\n\n8. USB只用于数据传输或者充电，请尽量避免边充电边使用。\n\n9. 当长期没有使用产品时，需要对产品定期充电，以保证电池寿命。\n\n10. 电池更换不当会有爆炸危险，只能用同类型或等效类型的电池。\n\n11. 电池不得暴露在诸如日照、火烤或类似过热环境中。\n\n12. 使用电源适配器，应购买获得CCC认证并满足标准要求。\n\n  执行标准: GB4943.1-2022"
+  },
+  {
+    "pdf_page": 4,
+    "text": "环保支持\n\n      产品中有害物质的名称和含量\n\n                有害物质\n 零部件名称  铅  汞  镉 六价铬 多溴联苯 多溴二苯醚\n                 (Pb)   (Hg)   (Cd)    (Cr,VI)    (PBB)         (PBDE )\n\n 金属部件\n    PCBA\n 塑胶部件\n  电池\n  显示屏\n  充电线\n\n本表格依据SJ/T 11364的规定编制。\n○：表示该有毒有害物质在该部件所有均质材料中的含量不超过在\n   GB/T 26572标准规定的限量要求。\n\nX：表示该有害物质至少在该部件的某一均质材料中的含量超出\n   GB/T 26572标准规定的限量要求。\n本表中标有\"X\" 的所有部件都符合欧盟RoHS 2.0法规要求。"
+  },
+  {
+    "pdf_page": 5,
+    "text": "部件名称\n\n Micro SD卡插口                        Type-C USB\n                                                                                 microSD          USB/DAC     数据接口\n\n    氛围灯    3.2英寸触摸屏 ( 320 x 480 )\n    电源/锁屏键  音量控制旋钮\n                                                                                                                                                                           上一曲选择键                                                                                                                                                                 播放/暂停键                                                                                                                                                      下一曲选择键\n\n\n\n\n\n                                                                           BAL\n\n\n\n   3.5mm耳机/线路输出/   4.4mm平衡耳机输出\n  数字同轴输出\n\n\n     3.5mm数字同轴\n    信号输出插头     地   信号"
+  },
+  {
+    "pdf_page": 6,
+    "text": "操作及接口说明\n\n开机/关机/锁屏\n\n1. 开机: 长按电源键保持2秒，开机界面亮起后再亮氛围灯(氛围灯\n 颜色可在 \"系统设置 - 显示 - 氛围灯调节\"里进行变换)。\n\n2. 关机: 长按 电源键 2秒，显示屏显示确认机关提示框，点击\"确定\"\n 即可关闭机器。\n\n3. 锁屏: 在开机状态下，短按电源键进入锁屏状态，显示屏自动关\n 闭，再按一次恢复唤醒状态，显示屏点亮。\n\n上一曲/下一曲/播放及暂停\n\n1. 上一曲     : 短按为选择上一曲并播放。在播放状态下，长按为\n 快退功能。\n\n2. 下一曲     : 短按为选择下一曲并播放。在播放状态下，长按为\n 快进功能。\n\n3. 播放及暂停键     : 短按 为播放或暂停功能。\n\n音量控制\n\n顺时针方向旋转旋钮为增加音量，逆时针方向旋转为减小音量。\n\n充 电\n\n推荐使用DC5V 2A适配器充电，连接USB线充电时显示屏显示 电 池\n充电图标及电量，充电时指示灯为红色。"
+  },
+  {
+    "pdf_page": 7,
+    "text": "Micro SD卡插口\n\n1. 请使用标准Micro SD 卡，最大支持2TB容量。\n\n2. 将Micro SD 卡按指示方向装入卡槽并轻 轻按 下即可，再次按下\n 即可将卡取出。\n\n耳机输出接口\n\n本机配备了3.5mm单端耳机接口和4.4mm平衡耳机接口，请根据\n耳机插头选择合适的耳机接口聆听音乐。\n\nUSB接口\n\n1. 数据传输至MicroSD卡\n\n   a. 在显示屏顶部向下滑动可快速查看菜单栏，将\"USB AUDIO/\n   USB存储/USB DAC\"三种模式切换在\"USB存储\"状态。\n\n  b. 连接电脑后，即可将所需的文件复制到 MicroSD卡上。\n\n   c. 断开电脑连接后， 在主界面中点击\" 更新曲库\"并选 择立即 扫\n   描音乐，可使MicroSD卡的歌曲在\"所有歌曲\" 目录中显示。\n\n2. 作为USB DAC\n\n   a. 在显示屏顶部向下滑动可快速查看菜单栏，将\"USB AUDIO/\n   USB存储/USB DAC\"三种模式切换在\"USB DAC\"状态。\n\n  b. 连接电脑后，请将USB驱动安装至电脑上(MAC电脑免\"          \"            安 装\n   驱动)。\n\nUSB驱动程序下载方式：\n\n请登录官网www.shanling.com并 进入下载中心，对应产品型号\n进行下载。"
+  },
+  {
+    "pdf_page": 8,
+    "text": "固件升级\n\n1. 进行固件升级时请确保机器的电量充足，以免升级失败。\n\n2. 升级过程中请不要操作机器。\n\nOTA在线升级\n\n打开WiFi 功能并连接到可用网络，前往\"系统设置 - 系统升级 - 网络\n升级\"进行更新。\n\nMicro SD卡升级\n\n1. 请在山灵官网 - 下载中心 - M1 Plus产品页面下载固件升级程序，\n 将新固件拷贝到机器TF卡根目录下。\n\n2. 前往\"系统设置 - 系统升级 - TF卡升级\"并选择\"确定\"即可进行升\n 级。"
+  },
+  {
+    "pdf_page": 9,
+    "text": "常见问题\n\n1. 推荐使用DC5V 2A适配器，使用适配器电压过高可能会损坏机器。\n\n2. 无法开机时，有可能电池电量过低或耗尽，请充电后再开机。\n\n3. 机器使用出现故障或死机时，请长按电源键约10秒强制关机，\"       \"\n 然后再正常开机。\n\n4. 耳机有杂音，耳机输出接口有可能接触不牢靠，请重新拔插复位。\n\n5. 无法输出，请尝试使用原装或合适的音频连接线，并确保输出 正\n 常。\n\n\n\n随机附件\n\n快速入门指南：1份\n\n保修卡：1份\n\nUSB A转Type-C线：1根\n\n前保护膜：1张"
+  },
+  {
+    "pdf_page": 10,
+    "text": "                                         ENGLISH\n\nSecurity Instructions\n\n1. Don't repair, disassemble or modify the device without permission.\n\n2. Please don't use this device in extremely hot, cold, dusty or humid\n   circumstances. Avoid any exposure to liquids.\n\n3. This device might get warm during charging.\n\n4. Prevent device from falling, friction, or crashing against hard objects\n  during use, otherwise surface scratch, battery disconnection, data\n   loss or other hardware damages will be caused. Please also avoid\n   violent vibration or impact.\n\n5. Please enjoy the music in a proper volume to avoid impairing your\n   hearing and damaging the sound system. Before plugging your\n  headphones into the device, please firstly turn down the volume.\n\n6. Don't clean this device with chemicals or detergents, otherwise its\n   surface and top coating may be damaged.\n\n7. Don't disconnect this device during formatting or transferring files.\n   otherwise, a program error may occur.\n\n8. The USB port is only for data transmission or charging. Please try to\n  avoid using this device when it is charging.\n\n9. When this device is not in use, please charge it regularly to guarantee\n   battery life.\n\n10. Please replace the battery only with ones of the same type as the\n    original ones, as improper replacement will bring the risk of explosion.\n\n11. Never expose battery to  sunlight,  fire or other extremely hot\n    circumstances."
+  },
+  {
+    "pdf_page": 11,
+    "text": "Names of Parts\n\n Micro SD card slot                           Type-C USB data port\n\n                                                                                 microSD          USB/DAC\n\n\n     Indicator Light       3.2 inch touch screen (320 x 480)\n             Volume         Power/Lock                control                                                                                                                                                                                                                               Previous     button           wheel                                                                                                             Next                                                                                                                                                                                                                                                                                                      Play/Pause                                                                                                                                                                                                                                                                                        selection\n                                                                                                                                                                                                                                                      selection      button                                                                                                                                                                                           button\n\n\n\n\n\n                                                                           BAL                                                                                                                                                                    button\n\n\n\n      3.5mm Headphone/     4.4mm Balanced\n        Line output/           Headphone output\n         Coaxial SPDIF Output\n\n         Pinout for 3.5mm\n        Coax output      Ground         Signal"
+  },
+  {
+    "pdf_page": 12,
+    "text": "Operation Instructions\n\nPower ON / OFF / Screen Locking\n\n1. Power on: Press and hold the wheel for 2 seconds. Screen will wake\n  up and the Indicator Light will light up. (You can change the color of\n   light at \"System Setting - Display - Atmosphere Lamp Settings\")\n\n2. Power off: Press and hold power button for 2 seconds, until device\n  displays power off confirmation windows. Click on \"Enter\" to power\n   off the device.\n\n3. Screen lock: while the device is powered on, short press power button\n   to lock screen and turn off display. Press power button again to\n  unlock device.\n\nPrevious / Next / Play & Pause\n\n1. Previous      : Short press to jump to previous song or to beginning of\n  current song. Long press for fast rewind in currently playing song.\n\n2. Next     : Short press to jump to next song. Long press to fast forward in\n   currently playing song.\n\n3. Play & pause buttons     : short press to play or pause playback.\n\n\nVolume Control\n\nTurn the wheel clockwise to increase the volume, turn the wheel\ncounterclockwise to decrease the volume."
+  },
+  {
+    "pdf_page": 13,
+    "text": "Charging\n\nIt is recommended to use DC5V 2A adapter for charging. The charging\nicon and the battery level will be displayed on the LCD display when the\ndevice is charging with the USB cable, The status indicator lights up red\nwhile charging.\n\nMicro SD Card Port\n\n1. The port is only for the standard Micro SD card and supports a\n  capacity up to 2TB.\n\n2. Insert the Micro SD card into the card slot in the indicated direction\n  and press it gently until it locks inside. Press again to remove the card.\n\nHeadphone Output Interface\n\nDevice  offer industry-standard 3.5mm single-ended and Balanced\n4.4mm connectors. Please use 4.4mm output only with headphones\nwith proper balanced wiring.\n\n\nUSB Port\n\n1. Data Transport to MicroSD Card\n\n   a. Swipe down to view quick access menu,  it includes \"USB\n    AUDIO/USB Storage/USB DAC\" switch. Make sure it's set to \"USB\n      Storage\".\n\n   b. After connecting to a computer, you can simply copy all the needed\n      files to MicroSD Card.  It will show up as a new drive on the\n    computer."
+  },
+  {
+    "pdf_page": 14,
+    "text": "   c. Click on the \"Update Library\" and click on \"Scan music now\", device\n      will scan all the files and view them in\"All Songs\" tab.\n\n2. Using player as USB DAC\n\n   a. Swipe down to view quick access menu,  it includes \"USB\n    AUDIO/USB Storage/USB DAC\" switch. Make sure it's set to \"USB\n     DAC\".\n\n   b. Install the USB Driver on the computer before connecting player\n      (Drivers only needed for Windows).\n\nUSB drivers download:\n\nVisit download section on our official website to downloads the latest\nUSB drivers for your device: en.shanling.com\n\n\nFirmware Update\n\n1. When updating the firmware, please make sure that device is fully\n  charged.\n\n2. Do not do operate the device during the update process.\n\nOver-the-Air Update\n\n1. Turn on WiFi in the player and connect to an available network.\n\n2. In the \"System Setting\", select \"System Update\" - \"Network Update\" to\n  update latest firmware automatically."
+  },
+  {
+    "pdf_page": 15,
+    "text": "Micro SD Card Update\n\n1. Please download the firmware update from the Shanling official\n   website-. Copy the latest firmware file to the card, it must be placed\n   into the root directory of the card.\n\n2. In the \"System Setting\", select \"System Update\" - \"TF card update\".\n  Update selection box will appear, press \"Enter\", latest firmware will be\n  update automatically.\n\n\nCommon Problems\n\n1. It is recommended to use DC5V 2A adapter. Using the adapter with\n  higher voltage may damage M1 Plus.\n\n2. Unable to start M1 Plus , it may be caused by low power or exhausted\n   battery, please recharge and then start up again.\n\n3. If the device is not responsive, press down the power button for 10\n  seconds. This should force the device to shut down. Then power it on\n  again.\n\n4. If there is noise from headphones, headphone's output interface may\n  not be connected correctly, please try to insert it again.\n\n5. When there is no sound, try to use different pair of headphones or\n   different cable and make sure the system volume is set correctly."
+  },
+  {
+    "pdf_page": 16,
+    "text": "Qualcomm aptX is a product of Qualcomm Technologies, Inc. and/or its\nsubsidiaries.\nQualcomm is a trademark of Qualcomm Incorporated, registered in the\nUnited States and other countries. aptX is a trademark of Qualcomm\nTechnologies International, Ltd., registered in the United States and\nother countries.\n\n\n\nAttached Accessories\n\n Quick start guide: 1\n\n Warranty card: 1\n\nUSB A to Type-C cable: 1\n\n Front protective film: 1"
+  },
+  {
+    "pdf_page": 17,
+    "text": "                         日本語\n\n安全にご使用いただくために\n\n1. デバイスを修理、分解、改造しないでください。\n\n2. このデバイスを極端に暑い、寒い、ほこりの多い、または湿気の多\n い環境で使用しないでください。液体にさらさないでください。\n\n3. 本機は充電中にある程度熱を発しますが極端に熱くならない限り正\n 常です。\n\n4. 精密機器となりますので激しい振動や衝撃を与えないようご注意く\n ださい。\n\n5. お客様の聴力を守るため、また本機や接続機器の故障を防ぐために\n 適切な音量で音楽をお楽しみください。本機にイヤホンを接続する\n 前にボリュームを下げてください。\n\n6. 本機の表面やコーティングが破損する恐れがありますので薬品や洗\n 剤を使用しての清掃は行わないでください。\n\n7. プログラムエラーが発生する恐れがありますのでMicroSDカード\n のフォーマット中や本機のシステムアップデート中にデバイス、\n MicroSDカードの抜き差しを行わないでください。\n\n8. USBポートはデータの送信または充電に使用します。充電の際には\n 本機を使用せず充電のみを行ってください。\n\n9. 本機を長期間に渡りご使用いただかない場合にもバッテリー保護の\n ため定期的に充電を行うようにしてください。\n\n10. 規格外のバッテリーへの交換は爆発等の危険があるため絶 対 に行\n  わないでください。\n\n11. バッテリーを炎の中へ投入、直射日光が当たる場所や高温環境で\n の放置は危険ですので絶対に行わないでください。"
+  },
+  {
+    "pdf_page": 18,
+    "text": "各部の名称\n\n  MicroSDカー                        Type-C USBポート\n  ドスロット                                   microSD          USB/DAC\n\nインジケーター   3.2インチタッチスクリーン( 320 x 480 )\nランプ\n\n                                                                                                                                                                           曲戻しボタン      電源/ロックボタン                                                                                                                                                                                                                       再生/停止ボタン                                                                                                                                                      曲送りボタン\n\n\n\n\n\n                                                                           BAL                              ボリュームコントロールホイール\n\n\n  3.5mmフォン/ライン/   4.4mmバランス出力端子\n  同軸デジタル出力端子\n\n\n  同軸デジタル出力用\n  プラグ-ピンアサイン    GND   信号"
+  },
+  {
+    "pdf_page": 19,
+    "text": "操作方法\n\n電源のオン/オフとスクリーンロック\n\n1. 電源オン: ホイールを2秒間押し続けると、画面が起動し、イ\n ンジケーターランプが点灯します。(システム設定-ディスプレ\n イ-ランプ設定 で光の色を変更できます。）\n\n2. 電源のオフ: 電源ボタンを二秒間押し続けると、電源メニュー\n が表示されます。確認画面で\"はい\"をタッチしてデバイスの電\n 源をOFFにします。\n\n3. 画面ロック: デバイスの電源がオンの状態で電源ボタンを短時\n 間押すと、画面がロックされディスプレイは消灯します。こ\n の状態で再度電源ボタンを短時間押すと、ロック状態は解除\n されます。\n\n曲戻し、曲送りボタンと再生/停止ボタン\n\n1. 曲戻しボタン     : 短く押すと前の曲に戻り、長押しすると早\n 戻しを行えます。\n\n2. 曲送りボタン     : 短く押すと次の曲に移り、長押しすると早\n 送りを行えます。\n\n3. 再生/停止ボタン     : 音楽再生中に短く押す事で一時停止しま\n す。\n\n音量調整\n\nホイールを時計回りに回すと音量が上がり、反時計回りに回す\nと音量が下がります。"
+  },
+  {
+    "pdf_page": 20,
+    "text": "充電\n\n充電にはDC5V,2Aアダプタを使用することを推奨します。充電が\n開始されると充電アイコンとバッテリー残量がディスプレイに\n表示されます。バッテリー充電中はステータスインジケーター\nが赤く点灯し。\n\nMicroSDカードスロット\n\n1. MicroSDカード専用のスロットで最大2TBのMicroSDカー ド ま\n でサポートしています。\n\n2. MicroSDカードをカードスロットに所定の向きで挿入しロッ\n クされるまで軽く押します。もう一度押すとカードが取り外\n されます。\n\nヘッドホンジャック\n\n本製品には3.5mmのステレオミニ端子と4.4mmのバランスヘッ\nドホン端子が備わっています。\n\n\nUSBポート\n\n1. MicroSDカードへのデータ転送\n\n   a. 本体タッチスクリーンを下にスワイプしてクイックアクセ\n  スメニューを表示すると、サブメニュースイッチが表示さ\n   れます。USBモードが\"USBメモリ\"に設定されていること\n  を確認してください。"
+  },
+  {
+    "pdf_page": 21,
+    "text": "   b. パソコンに接続しMicroSDカード内の楽曲を管理するこ と\n  ができます。\n\n   c. 必要なファイルのコピーが完了した後にメニュー内の\"ライ\n  ブラリ更新\"をクリックし、\"更新\"をクリックしてください。\n   MicroSDカード内の楽曲のスキャンを開始します。\n\n2. DACモード\n\n   a. 本体タッチスクリーンを下にスワイプしてクイックアクセ\n  スメニューを表示すると、サブメニュースイッチが表示さ\n  れます。DACモードをご利用の際には、USBモードを\n    \"USB DAC\"に設定してください。\n\n   b. 本機を接続する前にパソコンにUSBドライバのインスト ー\n   ルを行ってください(Mac PCの場合、追加のドライバは必\n  要ありません)。\n\nUSBドライバのダウンロード\n\nhttps://en.shanling.comからモデルごとに対応するUSBドライ\nバをダウンロードできます。\n\n\nファームウェアアップデート\n\n1. ファームウェアアップデートを行う場合、アップデートの 失\n 敗を防ぐため充電が十分されている事を確認してください。\n\n2. アップデート中は製品の操作は行わないでください。"
+  },
+  {
+    "pdf_page": 22,
+    "text": "OTAオンラインアップデート\n\nはじめにWIFI機能を有効にして、製品を利用可能なネットワー\nクに接続してください。「設定」から「アップデート」-「ネッ\nトワークアップデート」と操作を進め、画面の指示に従ってア\nップデートをしてください。\n\nMicroSDカードを使用したアップデート\n\n1. https://en. shanli ng.comからアップデート用のファイルをダ\n ウンロードして、MicroSDカードのルートディレクトリに配\n 置してください。\n\n2. 「設定」から「アップデート」-「ローカルアップデート」と\n 操作を進め、画面の指示に従ってアップデートをしてくださ\n い。\n\n\nトラブルシューティング\n\n1. DC5V,2Aのアダプタを使用することを推奨します。 高電圧の\n アダプタを使用すると本機が破損する恐れがあります。\n\n2. 起動できないとき、バッテリー残量が少ない、もしくは0にな\n っている可能性があります。充電後、再起動してください。\n\n3. 動作が不安定なときや操作を受け付けなくなったときは、電源\n ボタンを10秒間長押しして強制終了してください。"
+  },
+  {
+    "pdf_page": 23,
+    "text": "4. ヘッドホンからノイズが出るとき、ヘッドホンジャックにプ\n ラグが正しく挿入されていない可能性があります。再度ヘッ\n ドホンを接続し直してください。\n\n5. 音が出ないとき、別のヘッドホンまたはケーブルを使用して\n 音量が正しく設定されているか、正常に出力されているかを\n 確認してください。また音楽ファイルが正常かを確認してく\n ださい。\n\n\n技術証明\n\nM1 Plusはディスプレイ上に本製品の技術証明情報を表示してい\nます。「設定」から「技術証明」を選択することで確認すること\nが可能です。\n\n\n付属品\n\nクイックスタートガイド1枚\n\n保証書1枚\n\nUSB A to Type-Cケーブル1本\n\n前面保護フィルム1枚"
+  },
+  {
+    "pdf_page": 24,
+    "text": "                       山灵微信                          山灵微博\n\n\n      微信公众号    微博公众号\n\n\n\n公司名称/Company: 深圳山灵数码科技发展有限公司\n                 Shenzhen Shanling Digital Technology\n                 Development Co.,Ltd.\n\n公司地址/Address  : 深圳市南山区蛇口赤湾一路10号\n                   No.10, Chiwan 1 Road, Shekou Nanshan\n                       District of Shenzhen City, China.\n\nQQ群/QQ Group:     667914815; 303983891; 554058348\n服务热线/Telephone:  400-630- 6 778\n电子邮件/E-mail:     info@shanling.com\n官网/Official Website: www.shanling.com\n\n工作时间 (周一至周五 ): 08 : 00-12 : 00; 13 : 30-17 : 30\n\n\n 由于产品不断改进,各项规格及设计随时更改,恕不另行通知。\n\n  Due to continuous improvement, every specification and design is subject to\n  change at any time without further notice."
+  }
+]

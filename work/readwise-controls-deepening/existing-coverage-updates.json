@@ -1,0 +1,234 @@
+[
+  {
+    "flow_id": "F-M015-03",
+    "before": {
+      "flow_id": "F-M015-03",
+      "product_id": "M-015",
+      "task": "批注与标签",
+      "depth": "D2",
+      "evidence_ids": "E-RDW-03",
+      "known_branches": "自动高亮、定位失败、标签层级",
+      "gaps": "重定位、内容更新、完整返回流程",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-015-readwise.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M015-03",
+      "product_id": "M-015",
+      "task": "批注与标签",
+      "depth": "D2",
+      "evidence_ids": "E-RDW-03;E-RDD-06;E-RWCD-03",
+      "known_branches": "网页列表T/文内Shift+T标文档，选高亮T标高亮；Enter确认关闭，Ctrl/Cmd+Enter确认留菜单。Action Tag置于note影响Readwise：.h1标题、.c1/.c2合并；旧锚点失败仍从Notebook查回。",
+      "gaps": "标签不互相继承；合并/删除、锚点修复、离线冲突、Action Tag更新回滚未核；不是全部高亮自动制题。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-015-readwise.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "flow_id": "F-M015-05",
+    "before": {
+      "flow_id": "F-M015-05",
+      "product_id": "M-015",
+      "task": "浏览后返回阅读位置",
+      "depth": "D2",
+      "evidence_ids": "E-RDD-01",
+      "known_branches": "最远进度与最后位置；X改进度",
+      "gaps": "判定阈值、跨端冲突、原句位置",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-015-readwise.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M015-05",
+      "product_id": "M-015",
+      "task": "浏览后返回阅读位置",
+      "depth": "D2",
+      "evidence_ids": "E-RDD-01;E-RWCD-14",
+      "known_branches": "最远进度与最后位置分开；网页箭头/手机Return返回，手机X重设当前位置。网页Shift+R重设可能暂显灰色0%，持续阅读后更新；关闭Return indicator只隐藏按钮仍跟踪。 默认视图可选Currently reading以进入最近文档，非精确音频断点证明。",
+      "gaps": "实际阅读判定阈值、刷新/跨端并发、音频与文本锚点、重设失败及误关按钮恢复未核。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-015-readwise.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "flow_id": "F-M015-06",
+    "before": {
+      "flow_id": "F-M015-06",
+      "product_id": "M-015",
+      "task": "删除后恢复",
+      "depth": "D2",
+      "evidence_ids": "E-RDD-01",
+      "known_branches": "原删除设备；正文和批注一起恢复",
+      "gaps": "移动端Search/View入口差异、清空后的处理",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-015-readwise.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M015-06",
+      "product_id": "M-015",
+      "task": "删除后恢复",
+      "depth": "D2",
+      "evidence_ids": "E-RDD-01",
+      "known_branches": "More/Delete或网页D删除；原设备Trash恢复批注。网页Z可逐步撤销近几项、iOS系统摇动或部分toast可撤销；批量恢复Restore all，移动Search/View措辞差异保留。",
+      "gaps": "撤销深度/时限/重启、Android通用Undo、永久清空、换设备恢复、更新文章后旧批注与版本冲突未知；即时撤销不等同备份。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-015-readwise.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "flow_id": "F-M015-08",
+    "before": {
+      "flow_id": "F-M015-08",
+      "product_id": "M-015",
+      "task": "全库问答与动作",
+      "depth": "D2",
+      "evidence_ids": "E-RDD-02",
+      "known_branches": "逐工具权限、确认、Remember",
+      "gaps": "全部工具、执行失败、部分成功、撤回",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-015-readwise.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M015-08",
+      "product_id": "M-015",
+      "task": "全库问答与动作",
+      "depth": "D2",
+      "evidence_ids": "E-RDD-02;E-RWCD-13",
+      "known_branches": "Global网页/桌面启用后问答带段落引用；读写工具分组、每工具允许/确认/禁用。确认卡Remember加Approve/Deny将该工具后续权限改为允许/禁用；静态卡未展开详情。",
+      "gaps": "文档只举工具类别不是完整工具清单；拒绝后对话、部分成功/取消/重试、并发状态、失败回滚与移动全库能力未核。",
+      "visual_status": "static_reference_only",
+      "hands_on": "false",
+      "case_path": "cases/M-015-readwise.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "flow_id": "F-M015-09",
+    "before": {
+      "flow_id": "F-M015-09",
+      "product_id": "M-015",
+      "task": "技能与会话",
+      "depth": "D2",
+      "evidence_ids": "E-RDD-02",
+      "known_branches": "作用范围、侧栏展开、移动端清除与网页历史",
+      "gaps": "模型错误、历史删除传播、移动端构建",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-015-readwise.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M015-09",
+      "product_id": "M-015",
+      "task": "技能与会话",
+      "depth": "D2",
+      "evidence_ids": "E-RDD-02;E-RWCD-13",
+      "known_branches": "技能编辑名称/描述/指令/作用域/模型，斜杠触发；文内会话可展开同聊天，菜单新建/改名/复制/删除/检索历史。静态空表Save灰显；移动清除聊天仍可能在网页历史。",
+      "gaps": "未填表；保存校验、技能加载与模型上下文成本、触发歧义、删除与跨端历史一致性未知；空表灰显不证明具体必填规则。",
+      "visual_status": "static_reference_only",
+      "hands_on": "false",
+      "case_path": "cases/M-015-readwise.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "flow_id": "F-M015-11",
+    "before": {
+      "flow_id": "F-M015-11",
+      "product_id": "M-015",
+      "task": "导出不同数据对象",
+      "depth": "D2",
+      "evidence_ids": "E-RDD-05",
+      "known_branches": "笔记、CSV、OPML、ZIP；异步邮件",
+      "gaps": "文件结构、恢复一致性、链接失效重试",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-015-readwise.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M015-11",
+      "product_id": "M-015",
+      "task": "导出不同数据对象",
+      "depth": "D2",
+      "evidence_ids": "E-RDD-05;E-RWCD-08;E-RWCD-11",
+      "known_branches": "Notebook笔记、账户CSV/OPML/内容ZIP分开；完整包邮件异步。网页Shift+D导出带批注PDF；Print with annotations调用浏览器打印，未实际输出。",
+      "gaps": "完整账户回导、ZIP进度/失败、文字视图高亮在PDF出口中的位置、外部PDF批注往返和第三方删改同步未核。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-015-readwise.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "flow_id": "F-M015-12",
+    "before": {
+      "flow_id": "F-M015-12",
+      "product_id": "M-015",
+      "task": "保存筛选与分组",
+      "depth": "D2",
+      "evidence_ids": "E-RDD-06",
+      "known_branches": "web/mobile保存查询、RSS分组",
+      "gaps": "无效查询、重命名冲突、删除引用",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-015-readwise.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M015-12",
+      "product_id": "M-015",
+      "task": "保存筛选与分组",
+      "depth": "D2",
+      "evidence_ids": "E-RDD-06;E-RWCD-12",
+      "known_branches": "命名保存查询；可从标签/作者/源建立视图；按Location或Seen分栏、启计数及在Home配置排序。移动Feed文件夹选源Next创建，之后Done确认增减；视图是查询而非内容副本。",
+      "gaps": "计数范围、空/错误查询、重名/删视图、移出结果后的当前阅读状态、跨端排序和批量恢复未知。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-015-readwise.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "flow_id": "F-M015-02",
+    "before": {
+      "flow_id": "F-M015-02",
+      "product_id": "M-015",
+      "task": "听读与双向定位",
+      "depth": "D2",
+      "evidence_ids": "E-RDW-02",
+      "known_branches": "暂停/停止、滚动分离、离线",
+      "gaps": "强退/重启/换设备、加载失败",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-015-readwise.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M015-02",
+      "product_id": "M-015",
+      "task": "听读与双向定位",
+      "depth": "D2",
+      "evidence_ids": "E-RDW-02;E-RWCD-14",
+      "known_branches": "暂停/停止、滚动分离、离线 长文模式顶端改为Aa，More/Listen using text-to-speech进入听读；不是播放能力被移除。",
+      "gaps": "强退/重启/换设备、加载失败",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-015-readwise.md",
+      "checked_on": "2026-10-27"
+    }
+  }
+]

@@ -1,0 +1,4979 @@
+[
+  {
+    "name": "01-chess-home",
+    "at": "2026-10-27T02:00:47.763995+00:00",
+    "url": "https://www.duolingo.com/chess",
+    "title": "Duolingo Chess - Play Games - Learn Chess Online - For Free",
+    "text": "SITE LANGUAGE: ENGLISH\nLearn chess the Duolingo way\n\nJoin millions learning chess on the world’s #1 learning app.\n\nSTART PLAYING\nI ALREADY HAVE AN ACCOUNT\nBITE-SIZED LEARNING\nChess for the rest of us\n\nLearn the game one piece, one puzzle, one tactic at a time.\n\nSTART PLAYING\nPURE DELIGHT\nSolve puzzles to level up\n\nThe most delightful chess puzzles you’ve ever played, with real learning value.\n\nSTART PLAYING\nREALISTIC BOT\nThe most human bot ever\n\nOur bot, Oscar, is trained on real matches, so he plays just like the real thing.\n\nSTART PLAYING\nREALTIME MATCHES\nPlay against other learners\n\nWith millions of learners worldwide, you can play someone at your level, anytime.\n\nSTART PLAYING\nFrequently Asked Questions\nDoes Duolingo teach chess?\nWhat platforms is Duolingo Chess available on?\nIs Duolingo Chess free?\nIs Duolingo Chess good for complete beginners?\nDo I need a Duolingo account to play chess?\nDoes Duolingo Chess use spaced repetition?\nReady to make your move?\nSTART PLAYING\nDUOLINGO\nABOUT\nCAREERS\nAPPS\nINVESTORS\nHELP\nTERMS\nPRIVACY",
+    "controls": [
+      {
+        "tag": "A",
+        "text": "",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "SITE LANGUAGE: ENGLISH",
+        "aria": null,
+        "test": null,
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "A",
+        "text": "START PLAYING",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "I ALREADY HAVE AN ACCOUNT",
+        "aria": null,
+        "test": null,
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "A",
+        "text": "START PLAYING",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "START PLAYING",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "START PLAYING",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "START PLAYING",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "DIV",
+        "text": "Does Duolingo teach chess?",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "DIV",
+        "text": "What platforms is Duolingo Chess available on?",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "DIV",
+        "text": "Is Duolingo Chess free?",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "DIV",
+        "text": "Is Duolingo Chess good for complete beginners?",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "DIV",
+        "text": "Do I need a Duolingo account to play chess?",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "DIV",
+        "text": "Does Duolingo Chess use spaced repetition?",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "START PLAYING",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "DUOLINGO",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "ABOUT",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "CAREERS",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "APPS",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "INVESTORS",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "HELP",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "TERMS",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "PRIVACY",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      }
+    ]
+  },
+  {
+    "name": "02-account-condition",
+    "at": "2026-10-27T02:01:13.236470+00:00",
+    "url": "https://www.duolingo.com/chess",
+    "title": "Duolingo Chess - Play Games - Learn Chess Online - For Free",
+    "text": "SITE LANGUAGE: ENGLISH\nLearn chess the Duolingo way\n\nJoin millions learning chess on the world’s #1 learning app.\n\nSTART PLAYING\nI ALREADY HAVE AN ACCOUNT\nBITE-SIZED LEARNING\nChess for the rest of us\n\nLearn the game one piece, one puzzle, one tactic at a time.\n\nSTART PLAYING\nPURE DELIGHT\nSolve puzzles to level up\n\nThe most delightful chess puzzles you’ve ever played, with real learning value.\n\nSTART PLAYING\nREALISTIC BOT\nThe most human bot ever\n\nOur bot, Oscar, is trained on real matches, so he plays just like the real thing.\n\nSTART PLAYING\nREALTIME MATCHES\nPlay against other learners\n\nWith millions of learners worldwide, you can play someone at your level, anytime.\n\nSTART PLAYING\nFrequently Asked Questions\nDoes Duolingo teach chess?\nWhat platforms is Duolingo Chess available on?\nIs Duolingo Chess free?\nIs Duolingo Chess good for complete beginners?\nDo I need a Duolingo account to play chess?\nYou’ll be able to try the Duolingo chess course without creating an account. However, in order to save your progress and build a daily learning habit, you’ll need to register for an account. It’s free and easy!\nDoes Duolingo Chess use spaced repetition?\nReady to make your move?\nSTART PLAYING\nDUOLINGO\nABOUT\nCAREERS\nAPPS\nINVESTORS\nHELP\nTERMS\nPRIVACY",
+    "controls": [
+      {
+        "tag": "A",
+        "text": "",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "SITE LANGUAGE: ENGLISH",
+        "aria": null,
+        "test": null,
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "A",
+        "text": "START PLAYING",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "I ALREADY HAVE AN ACCOUNT",
+        "aria": null,
+        "test": null,
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "A",
+        "text": "START PLAYING",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "START PLAYING",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "START PLAYING",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "START PLAYING",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "DIV",
+        "text": "Does Duolingo teach chess?",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "DIV",
+        "text": "What platforms is Duolingo Chess available on?",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "DIV",
+        "text": "Is Duolingo Chess free?",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "DIV",
+        "text": "Is Duolingo Chess good for complete beginners?",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "DIV",
+        "text": "Do I need a Duolingo account to play chess?\nYou’ll be able to try the Duolingo chess course without creating an account. However, in order to save your progress and build a daily learning habit, you’ll need to register for an account. It’s free and easy!",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "Duolingo chess course",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "DIV",
+        "text": "Does Duolingo Chess use spaced repetition?",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "START PLAYING",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "DUOLINGO",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "ABOUT",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "CAREERS",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "APPS",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "INVESTORS",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "HELP",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "TERMS",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "PRIVACY",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      }
+    ]
+  },
+  {
+    "name": "03-onboarding",
+    "at": "2026-10-27T02:01:44.938140+00:00",
+    "url": "https://www.duolingo.com/welcome",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "CONTINUE",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": null,
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "CONTINUE",
+        "aria": null,
+        "test": "funboarding-continue-button",
+        "type": "submit",
+        "disabled": true
+      }
+    ]
+  },
+  {
+    "name": "04-welcome-ready",
+    "at": "2026-10-27T02:02:03.022683+00:00",
+    "url": "https://www.duolingo.com/welcome",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "Hi there! I’m Duo!\nHi there! I’m Duo!\nCONTINUE",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": null,
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "CONTINUE",
+        "aria": null,
+        "test": "funboarding-continue-button",
+        "type": "submit",
+        "disabled": false
+      }
+    ]
+  },
+  {
+    "name": "05-welcome-next",
+    "at": "2026-10-27T02:02:35.123019+00:00",
+    "url": "https://www.duolingo.com/welcome",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "Let’s get this party started!\nLet’s get this party started!\nCONTINUE",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": null,
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "CONTINUE",
+        "aria": null,
+        "test": "funboarding-continue-button",
+        "type": "submit",
+        "disabled": false
+      }
+    ]
+  },
+  {
+    "name": "06-chess-level",
+    "at": "2026-10-27T02:03:14.328466+00:00",
+    "url": "https://www.duolingo.com/welcome",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "CONTINUE",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": null,
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "CONTINUE",
+        "aria": null,
+        "test": "funboarding-continue-button",
+        "type": "submit",
+        "disabled": true
+      }
+    ]
+  },
+  {
+    "name": "07-ready",
+    "at": "2026-10-27T02:03:38.579233+00:00",
+    "url": "https://www.duolingo.com/welcome?welcomeStep=hdyhau",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "How did you hear about Duolingo?\nHow did you hear about Duolingo?\nNews/article/blog\nFacebook/Instagram\nX (Twitter)\nTV\nHP\nGoogle Search\nYouTube\nTinder\nFriends/family\nTikTok\nOther\nCONTINUE",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": null,
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "CONTINUE",
+        "aria": null,
+        "test": "funboarding-continue-button",
+        "type": "submit",
+        "disabled": true
+      }
+    ]
+  },
+  {
+    "name": "08-learning-reason",
+    "at": "2026-10-27T02:03:46.793404+00:00",
+    "url": "https://www.duolingo.com/welcome?welcomeStep=proficiency",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "How much chess do you know?\nHow much chess do you know?\nI’m a total beginner\nI could use a refresher\nI’m ready for tactics\nMy Elo rating is 500 to 800\nMy Elo rating is 800 to 1000\nMy Elo rating is 1000+\nCONTINUE",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": null,
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "CONTINUE",
+        "aria": null,
+        "test": "funboarding-continue-button",
+        "type": "submit",
+        "disabled": true
+      }
+    ]
+  },
+  {
+    "name": "09-beginner",
+    "at": "2026-10-27T02:04:12.536967+00:00",
+    "url": "https://www.duolingo.com/welcome?welcomeStep=dailyGoal",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "What’s your daily learning goal?\nWhat’s your daily learning goal?\n5 min / day\nCasual\n10 min / day\nRegular\n15 min / day\nSerious\n20 min / day\nIntense\nCONTINUE",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": null,
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "CONTINUE",
+        "aria": null,
+        "test": "funboarding-continue-button",
+        "type": "submit",
+        "disabled": true
+      }
+    ]
+  },
+  {
+    "name": "10-goal-feedback",
+    "at": "2026-10-27T02:04:20.703703+00:00",
+    "url": "https://www.duolingo.com/welcome?welcomeStep=choosePath",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "Now let’s find the best place to start!\nNow let’s find the best place to start!\nStart from scratch\nTake the easiest lesson of the Chess course\nPlay a chess match\nA match with our adaptive bot, Oscar\nCONTINUE",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": null,
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "CONTINUE",
+        "aria": null,
+        "test": "funboarding-continue-button",
+        "type": "submit",
+        "disabled": true
+      }
+    ]
+  },
+  {
+    "name": "11-before-lesson",
+    "at": "2026-10-27T02:04:29.123487+00:00",
+    "url": "https://www.duolingo.com/welcome?welcomeStep=choosePath",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "It can be hard to stay motivated…\nIt can be hard to stay motivated…\nCONTINUE",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": null,
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "CONTINUE",
+        "aria": null,
+        "test": "funboarding-continue-button",
+        "type": "submit",
+        "disabled": false
+      }
+    ]
+  },
+  {
+    "name": "12-motivation",
+    "at": "2026-10-27T02:04:40.762336+00:00",
+    "url": "https://www.duolingo.com/welcome?welcomeStep=choosePath",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "…so Duolingo is designed to be fun like a game!\n…so Duolingo is designed to be fun like a game!\nCONTINUE",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": null,
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "CONTINUE",
+        "aria": null,
+        "test": "funboarding-continue-button",
+        "type": "submit",
+        "disabled": false
+      }
+    ]
+  },
+  {
+    "name": "13-lesson-load",
+    "at": "2026-10-27T02:04:50.442889+00:00",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "LOADING...",
+    "controls": []
+  },
+  {
+    "name": "14-first-task",
+    "at": "2026-10-27T02:04:57.632969+00:00",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "5\nNEW PIECE\nSolve the puzzle\nThe rook moves in straight lines. Capture the stars.\nHINT",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Previous move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Next move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      }
+    ]
+  },
+  {
+    "name": "15-diagonal-attempt",
+    "at": "2026-10-27T02:05:19.292054+00:00",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "5\nNEW PIECE\nSolve the puzzle\nThe rook moves in straight lines. Capture the stars.\nHINT",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Previous move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Next move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      }
+    ]
+  },
+  {
+    "name": "16-first-star",
+    "at": "2026-10-27T02:05:26.242585+00:00",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "5\nNEW PIECE\nSolve the puzzle\nThe rook moves in straight lines. Capture the stars.\nHINT",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Previous move",
+        "test": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Next move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      }
+    ]
+  },
+  {
+    "name": "17-previous-move",
+    "at": "2026-10-27T02:05:47.254311+00:00",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "5\nNEW PIECE\nSolve the puzzle\nThe rook moves in straight lines. Capture the stars.\nHINT",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Previous move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Next move",
+        "test": null,
+        "type": "button",
+        "disabled": false
+      }
+    ]
+  },
+  {
+    "name": "18-next-move",
+    "at": "2026-10-27T02:05:55.863216+00:00",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "5\nNEW PIECE\nSolve the puzzle\nThe rook moves in straight lines. Capture the stars.\nHINT",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Previous move",
+        "test": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Next move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      }
+    ]
+  },
+  {
+    "name": "19-exit-confirm",
+    "at": "2026-10-27T02:05:56.824779+00:00",
+    "url": "https://www.duolingo.com/learn",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "LEARN\nMATCHES\nLEADERBOARDS\nQUESTS\nSHOP\nPROFILE\nMORE\n0\n500\n5\nUnlock Leaderboards!\nComplete 3 more lessons to start competing\nDaily Quests\nVIEW ALL\nEarn 10 XP\n0 / 10\n0 / 10\nCreate a profile to save your progress!\nCREATE A PROFILE\nSIGN IN\nABOUT\nBLOG\nSTORE\nEFFICACY\nCAREERS\nINVESTORS\nTERMS\nPRIVACY\nHow much chess do you know?\nHo\nI’m a total beginner\nI could use a refresher\nI’m ready for tactics\nMy Elo rating is 500 to 800\nMy Elo rating is 800 to 1000\nMy Elo rating is 1000+\nCONTINUE",
+    "controls": [
+      {
+        "tag": "A",
+        "text": "",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "LEARN",
+        "aria": null,
+        "test": "home-nav",
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "MATCHES",
+        "aria": null,
+        "test": "chess-matches-nav",
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "LEADERBOARDS",
+        "aria": null,
+        "test": "leaderboard-nav",
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "QUESTS",
+        "aria": null,
+        "test": "quests-nav",
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "SHOP",
+        "aria": null,
+        "test": "shop-nav",
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "PROFILE",
+        "aria": null,
+        "test": "profile-tab",
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "SPAN",
+        "text": "MORE",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "SPAN",
+        "text": "",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "SPAN",
+        "text": "0",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "SPAN",
+        "text": "500",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "SPAN",
+        "text": "5",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "VIEW ALL",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "CREATE A PROFILE",
+        "aria": null,
+        "test": "create-profile-juicy",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "SIGN IN",
+        "aria": null,
+        "test": "sign-in-juicy",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "A",
+        "text": "ABOUT",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "BLOG",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "STORE",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "EFFICACY",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "CAREERS",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "INVESTORS",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "TERMS",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "PRIVACY",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "CONTINUE",
+        "aria": null,
+        "test": "funboarding-continue-button",
+        "type": "submit",
+        "disabled": true
+      }
+    ]
+  },
+  {
+    "name": "20-after-exit",
+    "at": "2026-10-27T02:06:21.293328+00:00",
+    "url": "https://www.duolingo.com/learn",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "LEARN\nMATCHES\nLEADERBOARDS\nQUESTS\nSHOP\nPROFILE\nMORE\n0\n500\n5\nUnlock Leaderboards!\nComplete 3 more lessons to start competing\nDaily Quests\nVIEW ALL\nEarn 10 XP\n0 / 10\n0 / 10\nCreate a profile to save your progress!\nCREATE A PROFILE\nSIGN IN\nABOUT\nBLOG\nSTORE\nEFFICACY\nCAREERS\nINVESTORS\nTERMS\nPRIVACY\nHow much chess do you know?\nHow much chess do you know?\nI’m a total beginner\nI could use a refresher\nI’m ready for tactics\nMy Elo rating is 500 to 800\nMy Elo rating is 800 to 1000\nMy Elo rating is 1000+\nCONTINUE",
+    "controls": [
+      {
+        "tag": "A",
+        "text": "",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "LEARN",
+        "aria": null,
+        "test": "home-nav",
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "MATCHES",
+        "aria": null,
+        "test": "chess-matches-nav",
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "LEADERBOARDS",
+        "aria": null,
+        "test": "leaderboard-nav",
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "QUESTS",
+        "aria": null,
+        "test": "quests-nav",
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "SHOP",
+        "aria": null,
+        "test": "shop-nav",
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "PROFILE",
+        "aria": null,
+        "test": "profile-tab",
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "SPAN",
+        "text": "MORE",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "SPAN",
+        "text": "",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "SPAN",
+        "text": "0",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "SPAN",
+        "text": "500",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "SPAN",
+        "text": "5",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "VIEW ALL",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "CREATE A PROFILE",
+        "aria": null,
+        "test": "create-profile-juicy",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "SIGN IN",
+        "aria": null,
+        "test": "sign-in-juicy",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "A",
+        "text": "ABOUT",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "BLOG",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "STORE",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "EFFICACY",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "CAREERS",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "INVESTORS",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "TERMS",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "PRIVACY",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "CONTINUE",
+        "aria": null,
+        "test": "funboarding-continue-button",
+        "type": "submit",
+        "disabled": true
+      }
+    ]
+  },
+  {
+    "name": "21-reentry-path",
+    "at": "2026-10-27T02:06:23.887273+00:00",
+    "url": "https://www.duolingo.com/learn",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "LEARN\nMATCHES\nLEADERBOARDS\nQUESTS\nSHOP\nPROFILE\nMORE\n0\n500\n5\nUnlock Leaderboards!\nComplete 3 more lessons to start competing\nDaily Quests\nVIEW ALL\nEarn 10 XP\n0 / 10\n0 / 10\nCreate a profile to save your progress!\nCREATE A PROFILE\nSIGN IN\nABOUT\nBLOG\nSTORE\nEFFICACY\nCAREERS\nINVESTORS\nTERMS\nPRIVACY\nNow let’s find the best place to start!\nNow let’s find the best place to start!\nI’m a total beginner\nI could use a refresher\nI’m ready for tactics\nMy Elo rating is 500 to 800\nMy Elo rating is 800 to 1000\nMy Elo rating is 1000+\nStart from scratch\nTake the easiest lesson of the Chess course\nPlay a chess match\nA match with our adaptive bot, Oscar\nCONTINUE",
+    "controls": [
+      {
+        "tag": "A",
+        "text": "",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "LEARN",
+        "aria": null,
+        "test": "home-nav",
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "MATCHES",
+        "aria": null,
+        "test": "chess-matches-nav",
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "LEADERBOARDS",
+        "aria": null,
+        "test": "leaderboard-nav",
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "QUESTS",
+        "aria": null,
+        "test": "quests-nav",
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "SHOP",
+        "aria": null,
+        "test": "shop-nav",
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "PROFILE",
+        "aria": null,
+        "test": "profile-tab",
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "SPAN",
+        "text": "MORE",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "SPAN",
+        "text": "",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "SPAN",
+        "text": "0",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "SPAN",
+        "text": "500",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "SPAN",
+        "text": "5",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "VIEW ALL",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "CREATE A PROFILE",
+        "aria": null,
+        "test": "create-profile-juicy",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "SIGN IN",
+        "aria": null,
+        "test": "sign-in-juicy",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "A",
+        "text": "ABOUT",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "BLOG",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "STORE",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "EFFICACY",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "CAREERS",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "INVESTORS",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "TERMS",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "PRIVACY",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "CONTINUE",
+        "aria": null,
+        "test": "funboarding-continue-button",
+        "type": "submit",
+        "disabled": true
+      }
+    ]
+  },
+  {
+    "name": "22-reentry-task",
+    "at": "2026-10-27T02:06:37.462991+00:00",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "5\nNEW PIECE\nSolve the puzzle\nThe rook moves in straight lines. Capture the stars.\nHINT",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Previous move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Next move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      }
+    ]
+  },
+  {
+    "name": "23-puzzle-completed",
+    "at": "2026-10-27T02:06:48.180922+00:00",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "5\nNEW PIECE\nSolve the puzzle\nThe rook moves in straight lines. Capture the stars.\nHINT\nGood job!\nCONTINUE",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Previous move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Next move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      },
+      {
+        "tag": "BUTTON",
+        "text": "CONTINUE",
+        "aria": null,
+        "test": "player-next",
+        "type": "submit",
+        "disabled": false
+      }
+    ]
+  },
+  {
+    "name": "24-next-puzzle",
+    "at": "2026-10-27T02:07:13.206979+00:00",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "5\nSolve the puzzle\nThe rook moves in straight lines. Cap\nHINT",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Previous move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Next move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      }
+    ]
+  },
+  {
+    "name": "25-off-target-move",
+    "at": "2026-10-27T02:07:48.711006+00:00",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "5\nSolve the puzzle\nThe rook moves in straight lines. Capture the stars.\nHINT",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Previous move",
+        "test": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Next move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      }
+    ]
+  },
+  {
+    "name": "26-star-from-detour",
+    "at": "2026-10-27T02:07:57.351781+00:00",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "5\nSolve the puzzle\nThe rook moves in straight lines. Capture the stars.\nHINT",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Previous move",
+        "test": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Next move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      }
+    ]
+  },
+  {
+    "name": "27-second-star",
+    "at": "2026-10-27T02:08:12.522976+00:00",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "5\nSolve the puzzle\nThe rook moves in straight lines. Capture the stars.\nHINT",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Previous move",
+        "test": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Next move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      }
+    ]
+  },
+  {
+    "name": "28-detour-two",
+    "at": "2026-10-27T02:08:13.707016+00:00",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "5\nSolve the puzzle\nThe rook moves in straight lines. Capture the stars.\nHINT",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Previous move",
+        "test": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Next move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      }
+    ]
+  },
+  {
+    "name": "29-second-puzzle-complete",
+    "at": "2026-10-27T02:08:15.446509+00:00",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "2 IN A ROW\n5\nSolve the puzzle\nThe rook lo\nHINT\nAwesome!\nCONTINUE",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Previous move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Next move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      },
+      {
+        "tag": "BUTTON",
+        "text": "CONTINUE",
+        "aria": null,
+        "test": "player-next",
+        "type": "submit",
+        "disabled": false
+      }
+    ]
+  },
+  {
+    "name": "30-third-puzzle",
+    "at": "2026-10-27T02:08:26.597582+00:00",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "5\nSolve the puzzle\nIf the path is clear, a rook can move any number of squar\nHINT",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Previous move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Next move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      }
+    ]
+  },
+  {
+    "name": "31-far-star",
+    "at": "2026-10-27T02:08:43.252983+00:00",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "5\nSolve the puzzle\nIf the path is clear, a rook can move any number of squares.\nHINT",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Previous move",
+        "test": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Next move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      }
+    ]
+  },
+  {
+    "name": "32-pass-middle-star",
+    "at": "2026-10-27T02:08:44.717062+00:00",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "5\nSolve the puzzle\nIf the path is clear, a rook can move any number of squares.\nHINT",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Previous move",
+        "test": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Next move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      }
+    ]
+  },
+  {
+    "name": "33-third-complete",
+    "at": "2026-10-27T02:08:56.446218+00:00",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "5\nSolve the puzzle\nIf the path is clear, a rook can move any number of squares.\nHINT",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Previous move",
+        "test": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Next move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      }
+    ]
+  },
+  {
+    "name": "34-nearest-star",
+    "at": "2026-10-27T02:09:15.515397+00:00",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "5\nSolve the puzzle\nIf the path is clear, a rook can move any number of squares.\nHINT",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Previous move",
+        "test": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Next move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      }
+    ]
+  },
+  {
+    "name": "35-third-complete",
+    "at": "2026-10-27T02:09:17.199071+00:00",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "3 IN A ROW\n5\nSolve the puzzle\nIf the path is clear, a rook can move any number of squares.\nHINT\nNice job!\nCONTINUE",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Previous move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Next move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      },
+      {
+        "tag": "BUTTON",
+        "text": "CONTINUE",
+        "aria": null,
+        "test": "player-next",
+        "type": "submit",
+        "disabled": false
+      }
+    ]
+  },
+  {
+    "name": "36-fourth-puzzle",
+    "at": "2026-10-27T02:09:37.042612+00:00",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "5\nSolve the puzzle\nNow capture the stars in 3 moves.\nHINT",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Previous move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Next move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      }
+    ]
+  },
+  {
+    "name": "37-constrained-wrong-order",
+    "at": "2026-10-27T02:09:55.213900+00:00",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "4\nSolve the puzzle\nNow capture the stars in 3 moves.\nHINT\nYou’ll run out of moves\nCONTINUE",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Previous move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Next move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      },
+      {
+        "tag": "BUTTON",
+        "text": "CONTINUE",
+        "aria": null,
+        "test": "player-next",
+        "type": "submit",
+        "disabled": false
+      }
+    ]
+  },
+  {
+    "name": "38-after-wrong",
+    "at": "2026-10-27T02:10:18.540348+00:00",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "4\nSolve the puzzle\nNow capture the stars in 3 moves.\nHINT",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Previous move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Next move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      }
+    ]
+  },
+  {
+    "name": "39-constrained-hint",
+    "at": "2026-10-27T02:10:25.893104+00:00",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "4\nSolve the puzzle\nNow capture the stars in 3 moves.\nHINT",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Previous move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Next move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      }
+    ]
+  },
+  {
+    "name": "40-hint-off",
+    "at": "2026-10-27T02:10:34.971972+00:00",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "4\nSolve the puzzle\nNow capture the stars in 3 moves.\nHINT",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Previous move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Next move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      }
+    ]
+  },
+  {
+    "name": "41-first-correct-star",
+    "at": "2026-10-27T02:10:36.210963+00:00",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "4\nSolve the puzzle\nNow capture the stars in 3 moves.\nHINT",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Previous move",
+        "test": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Next move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      }
+    ]
+  },
+  {
+    "name": "42-second-correct-star",
+    "at": "2026-10-27T02:10:37.601984+00:00",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "4\nSolve the puzzle\nNow capture the stars in 3 moves.\nHINT",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Previous move",
+        "test": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Next move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      }
+    ]
+  },
+  {
+    "name": "43-retry-correct",
+    "at": "2026-10-27T02:10:39.336509+00:00",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "4\nSolve the puzzle\nNow capture the stars in 3 moves.\nHINT\nNice!\nCONTINUE",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Previous move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Next move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      },
+      {
+        "tag": "BUTTON",
+        "text": "CONTINUE",
+        "aria": null,
+        "test": "player-next",
+        "type": "submit",
+        "disabled": false
+      }
+    ]
+  },
+  {
+    "name": "44-fifth-puzzle",
+    "at": "2026-10-27T02:10:50.267074+00:00",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "4\nSolve the puzzle\nNow capture the stars in 3 moves.\nHINT",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Previous move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Next move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      }
+    ]
+  },
+  {
+    "name": "45-hint-waited",
+    "at": "2026-10-27T02:10:59.308306+00:00",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "4\nSolve the puzzle\nNow capture the stars in 3 moves.\nHINT",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Previous move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Next move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      }
+    ]
+  },
+  {
+    "name": "46-fifth-first-move",
+    "at": "2026-10-27T02:11:07.534959+00:00",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "4\nSolve the puzzle\nNow capture the stars in 3 moves.\nHINT",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Previous move",
+        "test": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Next move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      }
+    ]
+  },
+  {
+    "name": "47-fifth-first-star",
+    "at": "2026-10-27T02:11:09.720494+00:00",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "4\nSolve the puzzle\nNow capture the stars in 3 moves.\nHINT",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Previous move",
+        "test": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Next move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      }
+    ]
+  },
+  {
+    "name": "48-fifth-complete",
+    "at": "2026-10-27T02:11:11.457979+00:00",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "4\nSolve the puzzle\nNow capture the stars in 3 moves.\nHINT\nGreat!\nCONTINUE",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Previous move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Next move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      },
+      {
+        "tag": "BUTTON",
+        "text": "CONTINUE",
+        "aria": null,
+        "test": "player-next",
+        "type": "submit",
+        "disabled": false
+      }
+    ]
+  },
+  {
+    "name": "49-sixth-puzzle",
+    "at": "2026-10-27T02:11:19.592268+00:00",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "4\nNEW PIECE\nSolve the puzzle\nThe bishop moves diagonally.\nHINT",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Previous move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Next move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      }
+    ]
+  },
+  {
+    "name": "50-bishop-first",
+    "at": "2026-10-27T02:11:35.967132+00:00",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "4\nNEW PIECE\nSolve the puzzle\nThe bishop moves diagonally.\nHINT",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Previous move",
+        "test": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Next move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      }
+    ]
+  },
+  {
+    "name": "51-bishop-complete",
+    "at": "2026-10-27T02:11:37.637966+00:00",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "2 IN A ROW\n4\nNEW PIECE\nSolve the puzzle\nThe bishop moves diagonally.\nHINT\nGreat!\nCONTINUE",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Previous move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Next move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      },
+      {
+        "tag": "BUTTON",
+        "text": "CONTINUE",
+        "aria": null,
+        "test": "player-next",
+        "type": "submit",
+        "disabled": false
+      }
+    ]
+  },
+  {
+    "name": "52-seventh-puzzle",
+    "at": "2026-10-27T02:11:40.135266+00:00",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "4\nSolve the puzzle\nWith a clear path, bishops can also move any distance.\nHINT",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Previous move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Next move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      }
+    ]
+  },
+  {
+    "name": "53-bishop-middle",
+    "at": "2026-10-27T02:12:11.543524+00:00",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "4\nSolve the puzzle\nWith a clear path, bishops can also move any distance.\nHINT",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Previous move",
+        "test": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Next move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      }
+    ]
+  },
+  {
+    "name": "54-bishop-corner",
+    "at": "2026-10-27T02:12:12.651968+00:00",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "4\nSolve the puzzle\nWith a clear path, bishops can also move any distance.\nHINT",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Previous move",
+        "test": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Next move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      }
+    ]
+  },
+  {
+    "name": "55-seventh-complete",
+    "at": "2026-10-27T02:12:14.271064+00:00",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "3 IN A ROW\n4\nSolve the puzzle\nWith a clear path, bishops can also move any distance.\nHINT\nAmazing!\nCONTINUE",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Previous move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Next move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      },
+      {
+        "tag": "BUTTON",
+        "text": "CONTINUE",
+        "aria": null,
+        "test": "player-next",
+        "type": "submit",
+        "disabled": false
+      }
+    ]
+  },
+  {
+    "name": "56-eighth-puzzle",
+    "at": "2026-10-27T02:12:16.754581+00:00",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "4\nSolve the puzzle\nCapture the stars in 3 moves.\nHINT",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Previous move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Next move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      }
+    ]
+  },
+  {
+    "name": "57-bishop-low",
+    "at": "2026-10-27T02:12:30.154462+00:00",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "4\nSolve the puzzle\nCapture the stars in 3 moves.\nHINT",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Previous move",
+        "test": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Next move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      }
+    ]
+  },
+  {
+    "name": "58-bishop-right",
+    "at": "2026-10-27T02:12:31.406375+00:00",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "4\nSolve the puzzle\nCapture the stars in 3 moves.\nHINT",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Previous move",
+        "test": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Next move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      }
+    ]
+  },
+  {
+    "name": "59-eighth-complete",
+    "at": "2026-10-27T02:12:33.002966+00:00",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "4 IN A ROW\n4\nSolve the puzzle\nCapture the stars in 3 moves.\nHINT\nGood job!\nCONTINUE",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Previous move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Next move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      },
+      {
+        "tag": "BUTTON",
+        "text": "CONTINUE",
+        "aria": null,
+        "test": "player-next",
+        "type": "submit",
+        "disabled": false
+      }
+    ]
+  },
+  {
+    "name": "60-next-state",
+    "at": "2026-10-27T02:12:35.369531+00:00",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "4\nSolve the puzzle\nCapture the stars in 3 moves.\nHINT",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Previous move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Next move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      }
+    ]
+  },
+  {
+    "name": "61-ninth-first",
+    "at": "2026-10-27T02:12:57.938988+00:00",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "4\nSolve the puzzle\nCapture the stars in 3 moves.\nHINT",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Previous move",
+        "test": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Next move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      }
+    ]
+  },
+  {
+    "name": "62-ninth-star",
+    "at": "2026-10-27T02:12:59.229913+00:00",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "4\nSolve the puzzle\nCapture the stars in 3 moves.\nHINT",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Previous move",
+        "test": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Next move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      }
+    ]
+  },
+  {
+    "name": "63-ninth-complete",
+    "at": "2026-10-27T02:13:00.741291+00:00",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "5 IN A ROW\n4\nSolve the puzzle\nCapture the stars in 3 moves.\nHINT\nGood job!\nCONTINUE",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Previous move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Next move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      },
+      {
+        "tag": "BUTTON",
+        "text": "CONTINUE",
+        "aria": null,
+        "test": "player-next",
+        "type": "submit",
+        "disabled": false
+      }
+    ]
+  },
+  {
+    "name": "64-next-state",
+    "at": "2026-10-27T02:13:03.191765+00:00",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "4\nSolve the puzzle\nWith your rook and bishop, capture the stars in 3 moves.\nHINT",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Previous move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Next move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      }
+    ]
+  },
+  {
+    "name": "65-combination-one",
+    "at": "2026-10-27T02:13:21.774027+00:00",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "4\nSolve the puzzle\nWith your rook and bishop, capture the stars in 3 moves.\nHINT",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Previous move",
+        "test": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Next move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      }
+    ]
+  },
+  {
+    "name": "66-combination-two",
+    "at": "2026-10-27T02:13:23.097061+00:00",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "4\nSolve the puzzle\nWith your rook and bishop, capture the stars in 3 moves.\nHINT",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Previous move",
+        "test": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Next move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      }
+    ]
+  },
+  {
+    "name": "67-tenth-complete",
+    "at": "2026-10-27T02:13:24.549931+00:00",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "6 IN A ROW\n4\nSolve the puzzle\nWith your rook and bishop, capture the stars in 3 moves.\nHINT\nGreat job!\nCONTINUE",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Previous move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Next move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      },
+      {
+        "tag": "BUTTON",
+        "text": "CONTINUE",
+        "aria": null,
+        "test": "player-next",
+        "type": "submit",
+        "disabled": false
+      }
+    ]
+  },
+  {
+    "name": "68-after-tenth",
+    "at": "2026-10-27T02:13:27.065779+00:00",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "4\nSolve the puzzle\nWith your rook and bishop, capture the stars in 3 moves.\nHINT",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Previous move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Next move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      }
+    ]
+  },
+  {
+    "name": "69-last-rook",
+    "at": "2026-10-27T02:13:47.337953+00:00",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "4\nSolve the puzzle\nWith your rook and bishop, capture the stars in 3 moves.\nHINT",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Previous move",
+        "test": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Next move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      }
+    ]
+  },
+  {
+    "name": "70-last-bishop-one",
+    "at": "2026-10-27T02:13:48.561597+00:00",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "4\nSolve the puzzle\nWith your rook and bishop, capture the stars in 3 moves.\nHINT",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Previous move",
+        "test": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Next move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      }
+    ]
+  },
+  {
+    "name": "71-last-correct",
+    "at": "2026-10-27T02:13:50.148448+00:00",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "7 IN A ROW\n4\nSolve the puzzle\nYou move with grace.\nHINT\nAmazing!\nCONTINUE",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "quit-button",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Previous move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Next move",
+        "test": null,
+        "type": "button",
+        "disabled": true
+      },
+      {
+        "tag": "BUTTON",
+        "text": "CONTINUE",
+        "aria": null,
+        "test": "player-next",
+        "type": "submit",
+        "disabled": false
+      }
+    ]
+  },
+  {
+    "name": "72-lesson-result",
+    "at": "2026-10-27T02:13:53.045706+00:00",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "Lesson Complete!\nTOTAL XP\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\nCONTINUE",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "CONTINUE",
+        "aria": null,
+        "test": "player-next",
+        "type": "submit",
+        "disabled": false
+      }
+    ]
+  },
+  {
+    "name": "73-result-settled",
+    "at": "2026-10-27T02:14:19.933223+00:00",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "Lesson Complete!\nTOTAL XP\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\nGREAT!\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n%\nCONTINUE",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "CONTINUE",
+        "aria": null,
+        "test": "player-next",
+        "type": "submit",
+        "disabled": false
+      }
+    ]
+  },
+  {
+    "name": "74-after-result",
+    "at": "2026-10-27T02:14:22.060186+00:00",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "day streak\nTu\nW\nTh\nF\nSa\nBut your streak will reset if you don’t practice tomorrow. Watch out!\nCONTINUE",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "CONTINUE",
+        "aria": null,
+        "test": "player-next",
+        "type": "submit",
+        "disabled": false
+      }
+    ]
+  },
+  {
+    "name": "75-after-streak",
+    "at": "2026-10-27T02:14:32.154060+00:00",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "Let’s commit to learning with a Streak Goal!\nLet’s commit to learning with a Streak Goal!\n7\n7 day streak\nGood\n14 day streak\nGreat\n30 day streak\nIncredible\n50 day streak\nUnstoppable\nI CAN DO IT!",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "I CAN DO IT!",
+        "aria": null,
+        "test": "player-next",
+        "type": "submit",
+        "disabled": false
+      }
+    ]
+  },
+  {
+    "name": "76-streak-goal-selected",
+    "at": "2026-10-27T02:15:36.462961+00:00",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "You’ll be 2x more likely to complete the course!\nYou’ll be 2x more likely to complete the course!\n7\n7 day streak\nGood\n14 day streak\nGreat\n30 day streak\nIncredible\n50 day streak\nUnstoppable\nI CAN DO IT!",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "I CAN DO IT!",
+        "aria": null,
+        "test": "player-next",
+        "type": "submit",
+        "disabled": false
+      }
+    ]
+  },
+  {
+    "name": "77-next-after-goal",
+    "at": "2026-10-27T02:15:38.513973+00:00",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "All Daily Quests complete!\nEarn 10 XP\n10 / 10\n10 / 10\nCONTINUE",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "CONTINUE",
+        "aria": null,
+        "test": "player-next",
+        "type": "submit",
+        "disabled": false
+      }
+    ]
+  },
+  {
+    "name": "78-after-quests",
+    "at": "2026-10-27T02:15:51.386352+00:00",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "You earned 5 gems!\nNice job reaching your daily goal!\nCONTINUE",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "CONTINUE",
+        "aria": null,
+        "test": "player-next",
+        "type": "submit",
+        "disabled": false
+      }
+    ]
+  },
+  {
+    "name": "79-after-reward",
+    "at": "2026-10-27T02:16:06.049941+00:00",
+    "url": "https://www.duolingo.com/lesson",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "Time to create a profile!\n\nCreate a profile to save your progress and continue learning for free.\n\nCREATE A PROFILE\nLATER",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "CREATE A PROFILE",
+        "aria": null,
+        "test": "create-profile",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "LATER",
+        "aria": null,
+        "test": "create-profile-later",
+        "type": "submit",
+        "disabled": false
+      }
+    ]
+  },
+  {
+    "name": "80-returned-path",
+    "at": "2026-10-27T02:16:15.834268+00:00",
+    "url": "https://www.duolingo.com/learn",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "LEARN\nMATCHES\nLEADERBOARDS\nQUESTS\nSHOP\nPROFILE\nMORE\n1\n505\n4\nUnlock Leaderboards!\nComplete 2 more lessons to start competing\nDaily Quests\nVIEW ALL\nEarn 10 XP\n10 / 10\n10 / 10\nCreate a profile to save your progress!\nCREATE A PROFILE\nSIGN IN\nABOUT\nBLOG\nSTORE\nEFFICACY\nCAREERS\nINVESTORS\nTERMS\nPRIVACY\nSECTION 1, UNIT 1\nMove your pieces\nSTART\nCapture and attack pieces\nJUMP HERE?\n\nUP NEXT\n\nSection 2\nJUMP HERE?",
+    "controls": [
+      {
+        "tag": "A",
+        "text": "",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "LEARN",
+        "aria": null,
+        "test": "home-nav",
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "MATCHES",
+        "aria": null,
+        "test": "chess-matches-nav",
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "LEADERBOARDS",
+        "aria": null,
+        "test": "leaderboard-nav",
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "QUESTS",
+        "aria": null,
+        "test": "quests-nav",
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "SHOP",
+        "aria": null,
+        "test": "shop-nav",
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "PROFILE",
+        "aria": null,
+        "test": "profile-tab",
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "SPAN",
+        "text": "MORE",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "SPAN",
+        "text": "",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "SPAN",
+        "text": "1",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "SPAN",
+        "text": "505",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "SPAN",
+        "text": "4",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "VIEW ALL",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "CREATE A PROFILE",
+        "aria": null,
+        "test": "create-profile-juicy",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "SIGN IN",
+        "aria": null,
+        "test": "sign-in-juicy",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "A",
+        "text": "ABOUT",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "BLOG",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "STORE",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "EFFICACY",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "CAREERS",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "INVESTORS",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "TERMS",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "PRIVACY",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "SECTION 1, UNIT 1",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "DIV",
+        "text": "",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "skill-path-level-0 skill-path-level-chess_skill",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "DIV",
+        "text": "START",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "skill-path-level-1 skill-path-level-chess_skill",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "DIV",
+        "text": "",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "skill-path-level-2 skill-path-level-chess_practice",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Chest",
+        "test": null,
+        "type": "submit",
+        "disabled": true
+      },
+      {
+        "tag": "DIV",
+        "text": "",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "skill-path-level-4 skill-path-level-chess_skill",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "DIV",
+        "text": "",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "skill-path-level-5 skill-path-level-chess_skill",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "DIV",
+        "text": "",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "skill-path-level-6 skill-path-level-chess_practice",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Chest",
+        "test": null,
+        "type": "submit",
+        "disabled": true
+      },
+      {
+        "tag": "DIV",
+        "text": "",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "skill-path-level-8 skill-path-level-chess_skill",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "DIV",
+        "text": "",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "skill-path-level-9 skill-path-level-chess_skill",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "DIV",
+        "text": "",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "skill-path-level-10 skill-path-level-chess_unit_review",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "A",
+        "text": "JUMP HERE?",
+        "aria": "Jump to Unit 2",
+        "test": "skill-path-state-unit_test skill-path-unit-test-1",
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "DIV",
+        "text": "",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "skill-path-level-1 skill-path-level-chess_skill",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "DIV",
+        "text": "",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "skill-path-level-2 skill-path-level-chess_skill",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "DIV",
+        "text": "",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "skill-path-level-3 skill-path-level-chess_match",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Chest",
+        "test": null,
+        "type": "submit",
+        "disabled": true
+      },
+      {
+        "tag": "DIV",
+        "text": "",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "skill-path-level-5 skill-path-level-chess_practice",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "DIV",
+        "text": "",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "skill-path-level-6 skill-path-level-chess_skill",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "DIV",
+        "text": "",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "skill-path-level-7 skill-path-level-chess_skill",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Chest",
+        "test": null,
+        "type": "submit",
+        "disabled": true
+      },
+      {
+        "tag": "DIV",
+        "text": "",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "skill-path-level-9 skill-path-level-chess_skill",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "DIV",
+        "text": "",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "skill-path-level-10 skill-path-level-chess_practice",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "DIV",
+        "text": "",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "skill-path-level-11 skill-path-level-chess_match",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "DIV",
+        "text": "",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "skill-path-level-12 skill-path-level-chess_unit_review",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "JUMP HERE?",
+        "aria": null,
+        "test": null,
+        "type": "submit",
+        "disabled": false
+      }
+    ]
+  },
+  {
+    "name": "81-refreshed-path",
+    "at": "2026-10-27T02:16:28.442018+00:00",
+    "url": "https://www.duolingo.com/learn",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "LEARN\nMATCHES\nLEADERBOARDS\nQUESTS\nSHOP\nPROFILE\nMORE\n1\n505\n4\nUnlock Leaderboards!\nComplete 2 more lessons to start competing\nDaily Quests\nVIEW ALL\nEarn 10 XP\n10 / 10\n10 / 10\nCreate a profile to save your progress!\nCREATE A PROFILE\nSIGN IN\nABOUT\nBLOG\nSTORE\nEFFICACY\nCAREERS\nINVESTORS\nTERMS\nPRIVACY\nSECTION 1, UNIT 1\nMove your pieces\nSTART\nCapture and attack pieces\nJUMP HERE?\n\nUP NEXT\n\nSection 2\nJUMP HERE?",
+    "controls": [
+      {
+        "tag": "A",
+        "text": "",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "LEARN",
+        "aria": null,
+        "test": "home-nav",
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "MATCHES",
+        "aria": null,
+        "test": "chess-matches-nav",
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "LEADERBOARDS",
+        "aria": null,
+        "test": "leaderboard-nav",
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "QUESTS",
+        "aria": null,
+        "test": "quests-nav",
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "SHOP",
+        "aria": null,
+        "test": "shop-nav",
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "PROFILE",
+        "aria": null,
+        "test": "profile-tab",
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "SPAN",
+        "text": "MORE",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "SPAN",
+        "text": "",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "SPAN",
+        "text": "1",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "SPAN",
+        "text": "505",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "SPAN",
+        "text": "4",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "VIEW ALL",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "CREATE A PROFILE",
+        "aria": null,
+        "test": "create-profile-juicy",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "SIGN IN",
+        "aria": null,
+        "test": "sign-in-juicy",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "A",
+        "text": "ABOUT",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "BLOG",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "STORE",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "EFFICACY",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "CAREERS",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "INVESTORS",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "TERMS",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "PRIVACY",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "SECTION 1, UNIT 1",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "DIV",
+        "text": "",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "skill-path-level-0 skill-path-level-chess_skill",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "DIV",
+        "text": "START",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "skill-path-level-1 skill-path-level-chess_skill",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "DIV",
+        "text": "",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "skill-path-level-2 skill-path-level-chess_practice",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Chest",
+        "test": null,
+        "type": "submit",
+        "disabled": true
+      },
+      {
+        "tag": "DIV",
+        "text": "",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "skill-path-level-4 skill-path-level-chess_skill",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "DIV",
+        "text": "",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "skill-path-level-5 skill-path-level-chess_skill",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "DIV",
+        "text": "",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "skill-path-level-6 skill-path-level-chess_practice",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Chest",
+        "test": null,
+        "type": "submit",
+        "disabled": true
+      },
+      {
+        "tag": "DIV",
+        "text": "",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "skill-path-level-8 skill-path-level-chess_skill",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "DIV",
+        "text": "",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "skill-path-level-9 skill-path-level-chess_skill",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "DIV",
+        "text": "",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "skill-path-level-10 skill-path-level-chess_unit_review",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "A",
+        "text": "JUMP HERE?",
+        "aria": "Jump to Unit 2",
+        "test": "skill-path-state-unit_test skill-path-unit-test-1",
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "DIV",
+        "text": "",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "skill-path-level-1 skill-path-level-chess_skill",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "DIV",
+        "text": "",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "skill-path-level-2 skill-path-level-chess_skill",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "DIV",
+        "text": "",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "skill-path-level-3 skill-path-level-chess_match",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Chest",
+        "test": null,
+        "type": "submit",
+        "disabled": true
+      },
+      {
+        "tag": "DIV",
+        "text": "",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "skill-path-level-5 skill-path-level-chess_practice",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "DIV",
+        "text": "",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "skill-path-level-6 skill-path-level-chess_skill",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "DIV",
+        "text": "",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "skill-path-level-7 skill-path-level-chess_skill",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Chest",
+        "test": null,
+        "type": "submit",
+        "disabled": true
+      },
+      {
+        "tag": "DIV",
+        "text": "",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "skill-path-level-9 skill-path-level-chess_skill",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "DIV",
+        "text": "",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "skill-path-level-10 skill-path-level-chess_practice",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "DIV",
+        "text": "",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "skill-path-level-11 skill-path-level-chess_match",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "DIV",
+        "text": "",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "skill-path-level-12 skill-path-level-chess_unit_review",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "JUMP HERE?",
+        "aria": null,
+        "test": null,
+        "type": "submit",
+        "disabled": false
+      }
+    ]
+  },
+  {
+    "name": "82-first-node-card",
+    "at": "2026-10-27T02:16:29.637529+00:00",
+    "url": "https://www.duolingo.com/learn",
+    "title": "Duolingo - The world’s most popular way to learn",
+    "text": "LEARN\nMATCHES\nLEADERBOARDS\nQUESTS\nSHOP\nPROFILE\nMORE\n1\n505\n4\nUnlock Leaderboards!\nComplete 2 more lessons to start competing\nDaily Quests\nVIEW ALL\nEarn 10 XP\n10 / 10\n10 / 10\nCreate a profile to save your progress!\nCREATE A PROFILE\nSIGN IN\nABOUT\nBLOG\nSTORE\nEFFICACY\nCAREERS\nINVESTORS\nTERMS\nPRIVACY\nSECTION 1, UNIT 1\nMove your pieces\nMove your rook and bishop\nPRACTICE +5 XP\nCapture and attack pieces\nJUMP HERE?\n\nUP NEXT\n\nSection 2\nJUMP HERE?",
+    "controls": [
+      {
+        "tag": "A",
+        "text": "",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "LEARN",
+        "aria": null,
+        "test": "home-nav",
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "MATCHES",
+        "aria": null,
+        "test": "chess-matches-nav",
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "LEADERBOARDS",
+        "aria": null,
+        "test": "leaderboard-nav",
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "QUESTS",
+        "aria": null,
+        "test": "quests-nav",
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "SHOP",
+        "aria": null,
+        "test": "shop-nav",
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "PROFILE",
+        "aria": null,
+        "test": "profile-tab",
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "SPAN",
+        "text": "MORE",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "SPAN",
+        "text": "",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "SPAN",
+        "text": "1",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "SPAN",
+        "text": "505",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "SPAN",
+        "text": "4",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "VIEW ALL",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "CREATE A PROFILE",
+        "aria": null,
+        "test": "create-profile-juicy",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "SIGN IN",
+        "aria": null,
+        "test": "sign-in-juicy",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "A",
+        "text": "ABOUT",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "BLOG",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "STORE",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "EFFICACY",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "CAREERS",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "INVESTORS",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "TERMS",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "PRIVACY",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "A",
+        "text": "SECTION 1, UNIT 1",
+        "aria": null,
+        "test": null,
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "DIV",
+        "text": "",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "skill-path-level-0 skill-path-level-chess_skill",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "A",
+        "text": "PRACTICE +5 XP",
+        "aria": null,
+        "test": "skill-path-state-passed skill-path-unit-test-0",
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "DIV",
+        "text": "",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "skill-path-level-1 skill-path-level-chess_skill",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "DIV",
+        "text": "",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "skill-path-level-2 skill-path-level-chess_practice",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Chest",
+        "test": null,
+        "type": "submit",
+        "disabled": true
+      },
+      {
+        "tag": "DIV",
+        "text": "",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "skill-path-level-4 skill-path-level-chess_skill",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "DIV",
+        "text": "",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "skill-path-level-5 skill-path-level-chess_skill",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "DIV",
+        "text": "",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "skill-path-level-6 skill-path-level-chess_practice",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Chest",
+        "test": null,
+        "type": "submit",
+        "disabled": true
+      },
+      {
+        "tag": "DIV",
+        "text": "",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "skill-path-level-8 skill-path-level-chess_skill",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "DIV",
+        "text": "",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "skill-path-level-9 skill-path-level-chess_skill",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "DIV",
+        "text": "",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "skill-path-level-10 skill-path-level-chess_unit_review",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "A",
+        "text": "JUMP HERE?",
+        "aria": "Jump to Unit 2",
+        "test": "skill-path-state-unit_test skill-path-unit-test-1",
+        "type": "",
+        "disabled": null
+      },
+      {
+        "tag": "DIV",
+        "text": "",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "skill-path-level-1 skill-path-level-chess_skill",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "DIV",
+        "text": "",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "skill-path-level-2 skill-path-level-chess_skill",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "DIV",
+        "text": "",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "skill-path-level-3 skill-path-level-chess_match",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Chest",
+        "test": null,
+        "type": "submit",
+        "disabled": true
+      },
+      {
+        "tag": "DIV",
+        "text": "",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "skill-path-level-5 skill-path-level-chess_practice",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "DIV",
+        "text": "",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "skill-path-level-6 skill-path-level-chess_skill",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "DIV",
+        "text": "",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "skill-path-level-7 skill-path-level-chess_skill",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": "Chest",
+        "test": null,
+        "type": "submit",
+        "disabled": true
+      },
+      {
+        "tag": "DIV",
+        "text": "",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "skill-path-level-9 skill-path-level-chess_skill",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "DIV",
+        "text": "",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "skill-path-level-10 skill-path-level-chess_practice",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "DIV",
+        "text": "",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "skill-path-level-11 skill-path-level-chess_match",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "DIV",
+        "text": "",
+        "aria": null,
+        "test": null,
+        "type": null,
+        "disabled": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "aria": null,
+        "test": "skill-path-level-12 skill-path-level-chess_unit_review",
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "JUMP HERE?",
+        "aria": null,
+        "test": null,
+        "type": "submit",
+        "disabled": false
+      }
+    ]
+  }
+]

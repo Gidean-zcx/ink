@@ -1,0 +1,20 @@
+Manage Multiple Notebook Pages on Kindle Scribe
+en_US
+Manage Multiple Notebook Pages on Kindle Scribe
+To multiselect notebook pages and perform bulk actions, use Select in the top toolbar of the notebooks overview. You can also long-press on notebook pages.
+To open notebook overview, select the multipage icon  in the top toolbar. While in multiselect view, all the pages that you select show a checkmark in their top-left corner.
+To add a page after the selected page, select Add in the top toolbar. If you have multiple pages selected, this feature adds a page after every selected page. You can also add a page after the last notebook page using the large plus page-like icon .
+To delete selected pages, use Delete in the top toolbar.
+To move selected pages, use Move. To place them, select the vertical lines between any two pages.
+To share selected pages, use Share. You can choose to share the currently selected pages, or the entire notebook.
+You can share your handwritten notes as is. The email sent contains a PDF with your notes attached.
+You can also convert your handwritten notes to text and share them. The email sent contains a TXT file, along with a PDF of your handwritten notes.
+On Kindle Scribe models released in 2025 and later:
+To create a duplicate of any selected page, use Duplicate in the top toolbar.
+To move a page or a copy of a page to another notebook, use Move in the top toolbar.
+To exit multiselect view, use the
+X in the top-right corner to go back to notebook overview.
+en_US
+US
+Cpiu6TFOuXpU4ymOzD
+Tq6OTco5USdWqZ91ZH

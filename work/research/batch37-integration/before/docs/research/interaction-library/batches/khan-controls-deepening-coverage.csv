@@ -1,0 +1,6 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M030-07,M-030,画图、录故事并保存作品,D2,E-KHCD-01;E-KHCD-03,背景/贴纸/画笔、撤销、录音停止回放、绿色勾存Gallery,权限拒绝、退出未保存、覆盖、可编辑数据与同步未知,not_observed,false,cases/M-030-khan-kids.md,2026-10-27
+F-M030-08,M-030,将Gallery作品导出到设备,D2,E-KHCD-02,Enable export后逐作品箭头，预期保存到相册,文件格式、动画音频范围、拒绝反馈、重复导出和回导未知,not_observed,false,cases/M-030-khan-kids.md,2026-10-27
+F-M030-09,M-030,家长账户下新增、编辑及删除儿童档案,D2,E-KHCD-07;E-KLCD-04;E-KLCD-05;E-KLCD-06,新增同旧；成人区My Account编辑名字/头像；Enable Delete后头像X删除，清进度及路线历史,编辑保存回执、误删撤销、作品去留、账号整体删除及跨端冲突未知,not_observed,false,cases/M-030-khan-kids.md,2026-10-27
+F-M030-10,M-030,退出账户与找回邮件密码登录,D2,E-KHCD-08;E-KHCD-09;E-KLCD-07;E-KLCD-09,家庭/课堂/Clever退出不同；单设备重置后逐台登录；邮件账号保留进度是官方说明非恢复实测,未同步数据、过期链接和作品恢复未知；重装页iOS旧菜单/Android仅卸载，不证明完整恢复,not_observed,false,cases/M-030-khan-kids.md,2026-10-27
+F-M030-11,M-030,家长与教师控制可访问区域,D2,E-KHCD-04;E-KHCD-05;E-KHCD-06,家长可隐藏Home等；教师作业优先；ON/OFF文档冲突,默认值、作用范围、实际开关方向、系统退出与同步未知,not_observed,false,cases/M-030-khan-kids.md,2026-10-27

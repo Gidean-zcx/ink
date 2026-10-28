@@ -1,0 +1,29 @@
+Meebook M7
+M7: MEEBOOK-V1.5.3-2023092114
+New functions:
+1. Added automatic screen rotation function;
+2. Added Bluetooth automatic shutdown function;
+3. Added function of synchronizing reading records in “JD Bookstore” application;
+4. Added function of long pressing page turning key to rotate the vertical screen 180 degrees;
+Optimizations:
+1. Optimize the wallpaper function;
+2. Optimize the Bluetooth (transfer) function;
+3. Optimize some UI translations in different languages;
+4. Optimize image brightness adjustment for the third-party application;
+5. Fixed the bug that incomplete display of folder names in the reader
+M7: MEEBOOK-V1.5.2
+New Functions：
+1. Added custom function on long pressing page turnning key (set at the User Settings-Device Settings) ;
+2. Added scrolling display when using page turning key in the third-party applications (set by long pressing the third-party application icon for optimization) ;
+Optimizations:
+1. Optimized the picture display effect of WeChat reading application;
+2. Fixed the problem that device cannot be turned off after it is set as automatically turned off;
+3. Fixed the problem that page turnning key is invalid when used in KOReader application;
+4. Fixed the problem that some punctuation marks of book are displayed incorrectly;
+5. Fixed the problem that some books are crashed when open;
+6. Fixed the problem that incomplete display of books in the Books folder when books stored in MicroSD card;
+7. Fixed the problem that preinstalled or copied books cannot be opened correctly;
+8. Fixed the problem that after adjusting brightness in the third-party application, the front light flickers when clock wallpaper is refreshed;
+9. Fixed the problem that when warm and cold light are turnned on at the same time, the front light display incorrectly after device wake up;
+10. Fixed the problem that device gets hot and power consumption is abnormal during some using cases;
+11. Fixed the problem that there are a small probability of Wi-Fi unabling to be connected;

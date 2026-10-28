@@ -1,0 +1,46 @@
+Class and Teacher Resources – Khan Academy (https://khankids.zendesk.com/hc/en-us/sections/360008453772-Class-and-Teacher-Resources)
+citeturn958view1 [wordlim: 200] Crawled: 4 days ago; Content type: text/html; Source: open({"ref_id":"https://khankids.zendesk.com/hc/en-us/sections/360008453772-Class-and-Teacher-Resources","lineno":null}); Total lines: 44
+L0: 【0†Skip to main content】
+L1: 
+L2: 【1†Submit a request】
+L3: 
+L4: [Input][Input: Search]
+L5: # Class and Teacher Resources
+L6: 
+L7: Manage a class roster, create assignments, and view student progress
+L8:   * 【2†Our Accessibility Statement】
+L9:   * 【3†Five ways to use Khan Kids for back to school success】
+L10:   * 【4†Quick start guide for preschool through 2nd grade teachers】
+L11:   * 【5†✨ NEW: Teacher Dashboard on the web】
+L12:   * 【6†✨ NEW: Manage student access to areas of the app】
+L13:   * 【7†Module 1: Setting up a Class Account】
+L14:   * 【8†Learning Topics: Using Khan Academy Kids in Educational Settings】
+L15:   * 【9†Module 2: Using Class Codes】
+L16:   * 【10†Daily Schedules for Ages 2-8】
+L17:   * 【11†Module 3: Assigning lessons】
+L18:   * 【12†Module 4: Viewing student progress】
+L19:   * 【13†How to use creative tools inside the Khan Kids app】
+L20:   * 【14†Get your account ready for the new school year】
+L21:   * 【15†Downloadable Zoom backgrounds with Khan Kids characters】
+L22:   * 【16†Using Khan Kids with Clever: Enable Class Codes】
+L23:   * 【17†FAQ: How do I use a Class Code to sign in?】
+L24:   * 【18†FAQ: How do I sign out?】
+L25:   * 【19†FAQ: How do I turn off videos and coloring ?】
+L26:   * 【20†FAQ: How do I add another class?】
+L27:   * 【21†FAQ: How do I change a student’s independent learning level on a Class Account?】
+L28:   * 【22†FAQ: How do I add/remove students from a Class Account?】
+L29:   * 【23†FAQ: How do I assign lessons by standard?】
+L30:   * 【24†FAQ: Why am I experiencing internet connection issues?】
+L31:   * 【25†Getting Started Email Series for Teachers】
+L32:   * 【26†Accelerating Early Literacy through Family Partnership】
+L33:   * 【27†When to use Khan Academy v. Khan Kids】
+L34:   * 【28†Learn more about the Learning Path】
+L35:   * 【29†Learn more about the books in the Khan Academy Kids app】
+L36:   * 【30†New sight word videos】
+L37:   * 【31†Khan Academy Kids for Clever teachers】
+L38:   * 【32†Next ›】
+L39:   * 【32†Last »】
+L40: 
+L41: 【33†Khan Academy】
+L42: 
+L43: 【34†Powered by Zendesk†www.zendesk.com】

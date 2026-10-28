@@ -1,0 +1,201 @@
+{
+  "name": "02-account-condition",
+  "at": "2026-10-27T02:01:13.236470+00:00",
+  "url": "https://www.duolingo.com/chess",
+  "title": "Duolingo Chess - Play Games - Learn Chess Online - For Free",
+  "text": "SITE LANGUAGE: ENGLISH\nLearn chess the Duolingo way\n\nJoin millions learning chess on the world’s #1 learning app.\n\nSTART PLAYING\nI ALREADY HAVE AN ACCOUNT\nBITE-SIZED LEARNING\nChess for the rest of us\n\nLearn the game one piece, one puzzle, one tactic at a time.\n\nSTART PLAYING\nPURE DELIGHT\nSolve puzzles to level up\n\nThe most delightful chess puzzles you’ve ever played, with real learning value.\n\nSTART PLAYING\nREALISTIC BOT\nThe most human bot ever\n\nOur bot, Oscar, is trained on real matches, so he plays just like the real thing.\n\nSTART PLAYING\nREALTIME MATCHES\nPlay against other learners\n\nWith millions of learners worldwide, you can play someone at your level, anytime.\n\nSTART PLAYING\nFrequently Asked Questions\nDoes Duolingo teach chess?\nWhat platforms is Duolingo Chess available on?\nIs Duolingo Chess free?\nIs Duolingo Chess good for complete beginners?\nDo I need a Duolingo account to play chess?\nYou’ll be able to try the Duolingo chess course without creating an account. However, in order to save your progress and build a daily learning habit, you’ll need to register for an account. It’s free and easy!\nDoes Duolingo Chess use spaced repetition?\nReady to make your move?\nSTART PLAYING\nDUOLINGO\nABOUT\nCAREERS\nAPPS\nINVESTORS\nHELP\nTERMS\nPRIVACY",
+  "controls": [
+    {
+      "tag": "A",
+      "text": "",
+      "aria": null,
+      "test": null,
+      "type": "",
+      "disabled": null
+    },
+    {
+      "tag": "BUTTON",
+      "text": "SITE LANGUAGE: ENGLISH",
+      "aria": null,
+      "test": null,
+      "type": "submit",
+      "disabled": false
+    },
+    {
+      "tag": "A",
+      "text": "START PLAYING",
+      "aria": null,
+      "test": null,
+      "type": "",
+      "disabled": null
+    },
+    {
+      "tag": "BUTTON",
+      "text": "I ALREADY HAVE AN ACCOUNT",
+      "aria": null,
+      "test": null,
+      "type": "submit",
+      "disabled": false
+    },
+    {
+      "tag": "A",
+      "text": "START PLAYING",
+      "aria": null,
+      "test": null,
+      "type": "",
+      "disabled": null
+    },
+    {
+      "tag": "A",
+      "text": "START PLAYING",
+      "aria": null,
+      "test": null,
+      "type": "",
+      "disabled": null
+    },
+    {
+      "tag": "A",
+      "text": "START PLAYING",
+      "aria": null,
+      "test": null,
+      "type": "",
+      "disabled": null
+    },
+    {
+      "tag": "A",
+      "text": "START PLAYING",
+      "aria": null,
+      "test": null,
+      "type": "",
+      "disabled": null
+    },
+    {
+      "tag": "DIV",
+      "text": "Does Duolingo teach chess?",
+      "aria": null,
+      "test": null,
+      "type": null,
+      "disabled": null
+    },
+    {
+      "tag": "DIV",
+      "text": "What platforms is Duolingo Chess available on?",
+      "aria": null,
+      "test": null,
+      "type": null,
+      "disabled": null
+    },
+    {
+      "tag": "DIV",
+      "text": "Is Duolingo Chess free?",
+      "aria": null,
+      "test": null,
+      "type": null,
+      "disabled": null
+    },
+    {
+      "tag": "DIV",
+      "text": "Is Duolingo Chess good for complete beginners?",
+      "aria": null,
+      "test": null,
+      "type": null,
+      "disabled": null
+    },
+    {
+      "tag": "DIV",
+      "text": "Do I need a Duolingo account to play chess?\nYou’ll be able to try the Duolingo chess course without creating an account. However, in order to save your progress and build a daily learning habit, you’ll need to register for an account. It’s free and easy!",
+      "aria": null,
+      "test": null,
+      "type": null,
+      "disabled": null
+    },
+    {
+      "tag": "A",
+      "text": "Duolingo chess course",
+      "aria": null,
+      "test": null,
+      "type": "",
+      "disabled": null
+    },
+    {
+      "tag": "DIV",
+      "text": "Does Duolingo Chess use spaced repetition?",
+      "aria": null,
+      "test": null,
+      "type": null,
+      "disabled": null
+    },
+    {
+      "tag": "A",
+      "text": "START PLAYING",
+      "aria": null,
+      "test": null,
+      "type": "",
+      "disabled": null
+    },
+    {
+      "tag": "A",
+      "text": "DUOLINGO",
+      "aria": null,
+      "test": null,
+      "type": "",
+      "disabled": null
+    },
+    {
+      "tag": "A",
+      "text": "ABOUT",
+      "aria": null,
+      "test": null,
+      "type": "",
+      "disabled": null
+    },
+    {
+      "tag": "A",
+      "text": "CAREERS",
+      "aria": null,
+      "test": null,
+      "type": "",
+      "disabled": null
+    },
+    {
+      "tag": "A",
+      "text": "APPS",
+      "aria": null,
+      "test": null,
+      "type": "",
+      "disabled": null
+    },
+    {
+      "tag": "A",
+      "text": "INVESTORS",
+      "aria": null,
+      "test": null,
+      "type": "",
+      "disabled": null
+    },
+    {
+      "tag": "A",
+      "text": "HELP",
+      "aria": null,
+      "test": null,
+      "type": "",
+      "disabled": null
+    },
+    {
+      "tag": "A",
+      "text": "TERMS",
+      "aria": null,
+      "test": null,
+      "type": "",
+      "disabled": null
+    },
+    {
+      "tag": "A",
+      "text": "PRIVACY",
+      "aria": null,
+      "test": null,
+      "type": "",
+      "disabled": null
+    }
+  ]
+}

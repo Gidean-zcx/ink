@@ -1,0 +1,105 @@
+{
+  "name": "01-k1-sample-initial",
+  "at": "2026-10-27T07:07:29.366658+00:00",
+  "url": "https://reader.emagazines.com/issue/time-for-kids-k-1/may-8-2026/cover?ipt=c8869aa3-8f3d-4699-b112-1d4a6270a953",
+  "title": "TIME for Kids K-1, May 8, 2026",
+  "text": "1 / 4",
+  "controls": [
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": "Toggle navigation",
+      "test": null,
+      "type": "button",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": "Save my place",
+      "test": null,
+      "type": "button",
+      "disabled": false
+    },
+    {
+      "tag": "A",
+      "text": "",
+      "aria": "Download PDF issue",
+      "test": null,
+      "type": "",
+      "disabled": null
+    },
+    {
+      "tag": "A",
+      "text": "",
+      "aria": "View mobile version",
+      "test": null,
+      "type": "",
+      "disabled": null
+    },
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": "Go to first page",
+      "test": null,
+      "type": "button",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": "Go to last page",
+      "test": null,
+      "type": "button",
+      "disabled": false
+    },
+    {
+      "tag": "A",
+      "text": "",
+      "aria": null,
+      "test": null,
+      "type": "",
+      "disabled": null
+    },
+    {
+      "tag": "A",
+      "text": "",
+      "aria": null,
+      "test": null,
+      "type": "",
+      "disabled": null
+    },
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": "Zoom in on content",
+      "test": null,
+      "type": "button",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": "Enter full screen mode",
+      "test": null,
+      "type": "button",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": "Previous page",
+      "test": null,
+      "type": "button",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": "Next page",
+      "test": null,
+      "type": "button",
+      "disabled": false
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "status": "passed",
+  "reason": "Root continuation after worker entry_id assumption failed; correct per-file keys used once; no route cascade",
+  "inventories": [
+    {
+      "path": "inventories/M009-X2-manual-inventory.csv",
+      "key": "entry_id",
+      "before": 64,
+      "after": 64,
+      "new_ids": []
+    },
+    {
+      "path": "batches/moaan-controls-deepening-inventory.csv",
+      "key": "inventory_id",
+      "before": 82,
+      "after": 82,
+      "new_ids": []
+    },
+    {
+      "path": "batches/readwise-ai-workflows-inventory.csv",
+      "key": "entry_id",
+      "before": 14,
+      "after": 15,
+      "new_ids": [
+        "M015-RWSK-15"
+      ]
+    }
+  ],
+  "owning_records_match": true,
+  "requirements_sha256": "e141320e2714df805c009fe64dd92d17decd6429d5728f8ce42d6d868b775087",
+  "scoped_depth_flags_match": true,
+  "asset_files_checked": 33,
+  "links_checked": true,
+  "limitation": "Mechanical identity, references and hashes; not validation of all competitor facts, original products or runtime behavior"
+}

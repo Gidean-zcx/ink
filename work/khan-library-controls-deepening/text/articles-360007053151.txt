@@ -1,0 +1,65 @@
+Why can't I hear the sound? – Khan Academy (https://khankids.zendesk.com/hc/en-us/articles/360007053151-Why-can-t-I-hear-the-sound)
+citeturn961view1 [wordlim: 200] Crawled: 2 weeks ago; Content type: text/html; Source: click({"ref_id":"turn959view0","id":5}); Total lines: 63
+L0: 【0†Skip to main content】
+L1: 
+L2: 【1†Submit a request】
+L3: 
+L4: [Input][Input] [Input: Search]
+L5: 
+L6: Articles in this section
+L7:   * 【2†Our Accessibility Statement】
+L8:   * 【3†Get in touch!】
+L9:   * 【4†Welcome to Khan Academy Kids】
+L10:   * 【5†Parent and Home Account Users: Getting Started and creating an account with Khan Academy Kids】
+L11:   * 【6†How do I set up an account?】
+L12:   * 【7†How do I verify my email?】
+L13:   * 【8†List of resources for parents】
+L14:   * 【9†Printable activities for parents and teachers】
+L15:   * 【10†Weekly Planners for Ages 2-8】
+L16:   * 【11†How does the learning level adjust and how do I view my child's progress?】
+L17: 【12†See more】
+L18: # Why can't I hear the sound?
+L19: 
+L20:   * February 27, 2026 00:11
+L21:   * Updated
+L22: ## If you cannot hear sound in the app, first check the following on your device:
+L23: 
+L24: 1. Mute: Make sure the device is not muted. Sometimes videos or music in other apps still play, even on mute, so the mute settings are important to double check.
+L25: 
+L26:   * For iPhone, make sure the orange dot is not showing on the side of the device.
+L27:   * For iPad, go to 【13†Control Center†support.apple.com】 and make sure the bell icon is not selected. If the bell icon is crossed out, this will mute the app.
+L28: 【14†Image: iphone6-ringer-silent.png】【15†Image: iPad_Settings.jpg】
+L29: 
+L30: 2. Side switch settings / Lock rotation: If you are using an iPad with a side switch, and do not get sound even after moving the side switch, check the setting for the side switch (on older versions of iOS, go to Settings > General > Lock Rotation / Mute) and ensure that lock rotation is not selected for for the side switch.
+L31: 
+L32: 3. Volume: Check the volume buttons to make sure the sound is turned up when you are in the app.
+L33: 4. Bluetooth: Try turning bluetooth off to make sure sound is not being routed to external audio output. To test, go to Settings > Bluetooth and toggle to off. Or for iPad, go to Control Center and make sure the bluetooth icon (shown above) is not selected.
+L34: ## If the steps above do not bring back sound on the app, please proceed with the following:
+L35: 
+L36: 4. Verify device volume: Verify that the volume works by running a sound test. For iOS devices, go to Settings > Sounds and move the Ringer and Alerts slider up and down. If you do hear sound, follow 【16†these steps to resolve sound on Apple devices†support.apple.com】.
+L37: 
+L38: 5. Volume limit: For iOS devices, go to Settings > Music > Volume Limit to check if a volume limit is set for the device.
+L39: 6. Headphones: If you can hear sound through headphones but not through the device's speakers, try clearing the debris in the headphone jack or a 【17†few tips from this video†www.youtube.com】.
+L40: 
+L41: 7. Control Center: Check audio output in the iOS Control Center by swiping up on the home screen. Ensure that audio output for music is not headed outbound to bluetooth, airplay or external speakers. More information about managing audio from the control center is provided 【13†here†support.apple.com】.
+L42: 8. Mute audio test: From your device, open your browser and link to this 【18†Google Doodle sound game†www.google.com】. If you tap and play the game and do not hear sound, your device is muted. Please follow the steps in the first section to unmute the device.
+L43: 
+L44: 9. Reboot: Power off and 【19†restart†support.apple.com】 the device, or try resetting to factory defaults.
+L45: 
+L46: Was this article helpful?
+L47: 
+L48: [Button: Yes] [Button: No]
+L49: 
+L50: 6 out of 10 found this helpful
+L51: 
+L52: Have more questions? 【1†Submit a request】
+L53: 【20†Return to top】
+L54: ## Comments
+L55: 
+L56: 0 comments
+L57: 
+L58: Article is closed for comments.
+L59: 
+L60: 【21†Khan Academy】
+L61: 
+L62: 【22†Powered by Zendesk†www.zendesk.com】

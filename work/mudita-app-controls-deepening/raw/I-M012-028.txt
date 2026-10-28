@@ -1,0 +1,15 @@
+How to Send an MMS Message to a New Number?
+Modified on: Sat, 3 Oct, 2026 at 8:38 AM
+Sending an MMS message to a new number on your Kompakt is quick and easy. You can attach a photo and send it even if the recipient is not saved in your contacts
+Open the SMS app.
+Tap the Plus icon to create a new message.
+Enter the recipient's phone number.
+Tap Send to: [phone number] to confirm the recipient.
+Tap the Image icon to attach a photo.
+Select the image you want to send.
+Tap Send to send your MMS message.
+Was this article helpful?
+ No
+ Yes
+That’s Great!
+Thank you for your feedback

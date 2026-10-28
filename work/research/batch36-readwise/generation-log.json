@@ -1,0 +1,17 @@
+{
+  "command": [
+    "python3",
+    "/home/workspace/reader/work/research/batch36-readwise/build_graph.py",
+    "--highlights",
+    "/home/workspace/reader/work/research/batch36-readwise/highlights.json",
+    "--connections",
+    "/home/workspace/reader/work/research/batch36-readwise/connections.json",
+    "--output",
+    "/home/workspace/reader/work/research/batch36-readwise/synthetic-graph.html"
+  ],
+  "exit_code": 0,
+  "stdout": "Highlights: 5, Sources: 2, Cross-connections: 1\nWritten to /home/workspace/reader/work/research/batch36-readwise/synthetic-graph.html\n{\"highlights\": 5, \"sources\": 2, \"connections\": 1, \"path\": \"/home/workspace/reader/work/research/batch36-readwise/synthetic-graph.html\"}\n",
+  "stderr": "",
+  "synthetic_only": true,
+  "source_sha256": "cd8130937fd1cdaf43cf9be3d690ac7b91484c183e20e54d416ac83321ff8881"
+}

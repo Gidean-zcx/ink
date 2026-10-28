@@ -1,0 +1,30 @@
+[
+  {
+    "path": "docs/research/interaction-library/cases/M-054-moaan.md",
+    "sha256": "f9992c1a2cb850e290c4257415e78b974abfa5f9f662cbce5a9f1d9f5a518b26"
+  },
+  {
+    "path": "docs/research/interaction-library/batches/moaan-controls-deepening-evidence.jsonl",
+    "sha256": "66e8c92011ca4b5e19b0506ad301d307a06b0f516df127d0c53144c390f81468"
+  },
+  {
+    "path": "docs/research/interaction-library/batches/moaan-controls-deepening-coverage.csv",
+    "sha256": "aa0cf671b21fa0390e9b0cfb58c6cecf3a0d7df66eaad894707f17ea224f6025"
+  },
+  {
+    "path": "docs/research/interaction-library/batches/moaan-controls-deepening-inventory.csv",
+    "sha256": "6d7766dbb4b774dbc02de4a6063f949b1e1212ed859bb2a98781b0c9d1395c39"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/moaan-controls-deepening/plus-quick-panel.jpg",
+    "sha256": "8bf0f72f6a219b4b469500019ea5b703d39cf4a4262241da711481a3560e4fd0"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/moaan-controls-deepening/plus-refresh-panel.jpg",
+    "sha256": "e7b7e620c0e20761c99b16ba8228bcdfb19fa104916179d40074b76732029481"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/moaan-controls-deepening/source-notes.md",
+    "sha256": "1e87162de8a6f2fbb64044e1c2547d97401e1fa5b8de2ce206043eed9d66b56b"
+  }
+]

@@ -1,0 +1,30 @@
+Use Repeat actions in Shortcuts on iPhone or iPad
+The Repeat action and the Repeat with Each action allow you to run a group of actions in a shortcut multiple times in a row.
+Using the Repeat action
+When you add a Repeat action to your shortcut, the action includes two markers: Repeat and End Repeat. Place the actions that you want to repeat between the Repeat and End Repeat markers, then specify the number of times you want the action to repeat. When the shortcut runs, the actions placed between the markers loop the number of times that you specify.
+For example, a repeat loop that contains a Vibrate Device action set to Repeat 3 Times vibrates your iOS device three times when the shortcut is run.
+You can place unlimited actions inside of a repeat loop. The actions run in order (from top to bottom), and when the last action is reached, the shortcut loops back to the first action, then runs again (the specified number of times).
+Tip: You can place Repeat actions inside each other in your shortcut: In the shortcut editor, drag a second Repeat action so that it overlaps the lower portion of the first Repeat action. The second Repeat action is nested (indented) under the first Repeat action.
+About data flow in a Repeat action
+For each iteration of a repeat loop, the last action’s output is gathered into a list, and that list becomes the output of the Repeat action as a whole.
+For example, a Repeat action that runs four times and contains a Get Latest Photos action outputs the most recent photo saved to Photos in each iteration of the loop. After all four iterations run, the outputs are gathered together, and a list of four identical photos is created. The four photos become the output of the Repeat action as a whole, and are then passed to the next action after the repeat loop.
+To learn more about the flow of inputs and outputs, see Intro to how shortcuts work on iPhone and iPad.
+Tip: Touch and hold the Repeat variable to set the number of repetitions to a variable. For example, if you add the Ask Each Time variable to the Repeat variable in the Repeat action, you’ll be asked to choose how many times the loop should repeat when the shortcut is run.
+Using the Repeat with Each action
+The Repeat with Each action takes a list of items as its input and then runs the same group of actions one time for each item in the list. This is useful if you’re working with multiple files or with multiple pieces of content. This type of loop repeats until every item that was passed into the Repeat with Each action iterates.
+For example, if you have a Get Upcoming Events action set to retrieve the next four upcoming Calendar events and you place a Repeat with Each action after the action, the repeat loop runs four times and each iteration receives one of the Calendar events as input.
+When you add a Repeat with Each action to your shortcut, the action includes two markers: Repeat with Each and End Repeat.
+At the end of the repeat loop, the output passed to the End Repeat marker during each iteration is gathered together and passed as the output of the Repeat with Each action as a whole.
+The Repeat Item variable
+The Repeat with Each action offers a special variable for tracking the current item: Repeat Item. The Repeat Item variable updates with each iteration of the loop, containing the item passed as input for that iteration.
+For example, if you pass 10 Calendar items into a Repeat with Each action, the Repeat Item variable represents one of the Calendar events in each iteration as the shortcut loops through each Calendar item.
+Note: If you’ve placed a Repeat with Each action inside another Repeat with Each action, the variable name changes to Repeat Item 1 to represent the inner repeat item, to Repeat Item 2 for the deeper loop, and so on.
+The Repeat Index variable
+All repeat loops offer a special variable called Repeat Index, which is used to keep track of the current iteration of the loop. The Repeat Index variable contains the number of times a loop has been repeated so far, starting at 1 for the first iteration of the loop and incrementing by one each time. The second time a loop runs, the Repeat Index is 2. The third time a loop runs, the Repeat Index is 3, and so on.
+Note: If you’ve placed a Repeat action inside another Repeat action (created nested repeat loops), the inner Repeat action’s variable name changes to Repeat Index 2. An additional nested Repeat action would offer a Repeat Index 3 variable, and so on.
+For more information, see Use variables in Shortcuts on iPhone or iPad.
+Create infinite loops
+Although Shortcuts doesn’t offer an action to repeatedly run a group of actions forever, you can emulate this behavior by using the Run Shortcut action. The Run Shortcut action allows you to run one shortcut inside of another. Configure the Run Shortcut action to run the same shortcut that it’s contained within, and the shortcut runs from start to finish repeatedly until you stop the shortcut.
+Test the output
+When you’re learning to work with Repeat and Repeat with Each, it’s helpful to test the results that are produced after the End Repeat marker to ensure that the content is what you intended. Place a Quick Look action after the End Repeat marker to preview the items that are output by the repeat loop.
+You can also place a Show Alert action after the End Repeat marker and insert a Repeat Results Magic Variable in the message box to display text that has been output by the loop. If you’re testing a loop that’s in the middle of a long shortcut, it’s helpful to use a Show Alert action to preview results, because you can include a Cancel button in the alert to end the shortcut at that point in the loop.

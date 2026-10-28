@@ -1,0 +1,14 @@
+How to Send SMS Messages to a Contact?
+Modified on: Sat, 3 Oct, 2026 at 8:37 AM
+Sending SMS messages on your Kompakt is simple and allows you to quickly start conversations with your contacts or new numbers
+Tap SMS.
+Tap the Pencil icon to create a new message.
+Select the contact you want to message.
+Enter your message in the text field.
+Tap the Send icon to send the message.
+If the keyboard does not appear, tap the blinking cursor to activate it.
+Was this article helpful?
+ No
+ Yes
+That’s Great!
+Thank you for your feedback

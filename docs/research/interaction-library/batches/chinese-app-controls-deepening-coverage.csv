@@ -1,0 +1,4 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M028-05,M-028,字词听写：在线、纸笔、自由输入及结果,D2,E-XYCD-01;E-XYCD-03;E-XYAC-06;E-XYAC-12,中文提交前清写、提交后正确写法/下一项；课文/范围与声音/间隔/次数/顺序；纸笔和自由输入；英文只横屏输入局部,撤回、误判修订、强退恢复未知；中文错误规则不套英文；完成数非答对数,static_reference_only,false,cases/M-028-xiaoyuan-ai.md,2026-10-27
+F-M028-06,M-028,单词跟读：历史失败分支,D2,E-XYCD-01;E-XYCD-04;E-XYAC-13,示范/录音与单词星级结果；作者述首次失败重试再次前进；句子/情景仅入口,评分阈值、噪声漏录、录音回放内容/保存与中断未知；拼图题号不连续,static_reference_only,false,cases/M-028-xiaoyuan-ai.md,2026-10-27
+F-M014-06,M-014,手机关闭个性化推荐：历史政策路径,D2,E-IPAD-01,2024政策路径关个性化栏目，保留精选等；关闭推荐不证明清除阅读记录,历史路径未逐OS绑定；8.6.2菜单、生效时间、跨设备及历史清除仍未知,not_observed,false,cases/M-014-ireader.md,2026-10-27

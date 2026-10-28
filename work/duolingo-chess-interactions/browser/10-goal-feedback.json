@@ -1,0 +1,25 @@
+{
+  "name": "10-goal-feedback",
+  "at": "2026-10-27T02:04:20.703703+00:00",
+  "url": "https://www.duolingo.com/welcome?welcomeStep=choosePath",
+  "title": "Duolingo - The world’s most popular way to learn",
+  "text": "Now let’s find the best place to start!\nNow let’s find the best place to start!\nStart from scratch\nTake the easiest lesson of the Chess course\nPlay a chess match\nA match with our adaptive bot, Oscar\nCONTINUE",
+  "controls": [
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": null,
+      "test": null,
+      "type": "submit",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "CONTINUE",
+      "aria": null,
+      "test": "funboarding-continue-button",
+      "type": "submit",
+      "disabled": true
+    }
+  ]
+}

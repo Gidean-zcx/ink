@@ -1,0 +1,23 @@
+To make a Bluetooth connection with your computer, you must first complete Bluetooth pairing (device registration). Once pairing is complete, you can operate the Digital Paper from your computer the next time you use the Digital Paper if the Bluetooth function of the Digital Paper is turned on.  (When the Digital Paper App is launched, Windows can automatically connect to the Bluetooth-paired Digital Paper.)
+Perform the steps below to pair.
+Press the (home) button and tap [Settings].
+Tap [Bluetooth] to add a check mark.
+Tap [Bluetooth Settings] — [Bluetooth Pairing] to change the Digital Paper to pairing standby mode.
+Turn on the Bluetooth function on the computer and operate the computer to complete the device registration of the Digital Paper.
+For details, see the instruction manual for your computer.
+Tap [Close] in the [Bluetooth Pairing...] dialog box on the Digital Paper to close.
+To connect to the Digital Paper from your computer
+For Windows
+When setting [Bluetooth automatic connection] on the Digital Paper App to on:
+Automatically connects to the Bluetooth-paired Digital Paper when the Digital Paper App is launched.
+When setting [Bluetooth automatic connection] on the Digital Paper App to off:
+Click [Bluetooth automatic connection] on the screen of the Digital Paper App to connect the Digital Paper.
+For Mac
+It is unavailable to connect via Bluetooth automatically. Connect via Bluetooth using the Mac OS function. For details, refer to the operating instructions of the Mac.
+Notes on Bluetooth auto connection (Windows)
+If the Digital Paper is automatically connected to the computer via Bluetooth when the computer and other devices are connected via Bluetooth as an access point, the other devices are disconnected from the computer. When the computer and other devices keep connecting via Bluetooth, set [Settings]－[Bluetooth automatic connection] of the Digital Paper App to off.
+When multiple Digital Papers are connected via Bluetooth, Bluetooth connection cannot be performed. Only the Bluetooth-paired Digital Paper can be connected.
+Hint
+If [Disabled] is set for [Keep Bluetooth Connection On During Sleep] on the Digital Paper, the Bluetooth connection is disconnected when the Digital Paper goes into sleep mode. After the Digital Paper is awaken from sleep mode, it will need to be manually reconnected (unless [Bluetooth automatic connection] is set to on when using a Windows computer).
+If you want to maintain the Bluetooth connection even when the Digital Paper goes into sleep mode, change the setting to [Settings] — [Bluetooth Settings] — [Keep Bluetooth Connection On During Sleep] on the Digital Paper.
+If your computer enters sleep or hibernate mode, or is turned off, the Bluetooth connection with the Digital Paper is disconnected. After resuming or restarting the computer, reconnect. (When your computer is a Windows computer and [Bluetooth automatic connection] is set to on, reconnection is not required.)

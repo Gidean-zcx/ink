@@ -1,0 +1,11 @@
+{
+  "status": "PASS",
+  "new_evidence": 14,
+  "new_flows": 0,
+  "old_flow_updates": 7,
+  "directory_articles": 59,
+  "directory_sections": 14,
+  "static_images": 4,
+  "hands_on": false,
+  "scope": "schema/IDs/local paths/hashes; no product operation or exhaustive remote-link revalidation"
+}

@@ -1,0 +1,58 @@
+[
+  {
+    "article_id": 10701497927316,
+    "image_number": 2,
+    "url": "https://booxsupport.zendesk.com/hc/article_attachments/25400385712276",
+    "checked_on": "2026-10-27",
+    "method": "anonymous_ordinary_GET_once",
+    "actual_view": false,
+    "status": 200,
+    "final_url": "https://booxsupport.zendesk.com/hc/article_attachments/25400385712276",
+    "content_type": "image/jpeg",
+    "raw_work_path": "work/boox-reading-controls-deepening/raw/library-scan.jpg",
+    "raw_sha256": "ca5a1051603cde55ef83b70150598f8a55e0240f3853142df6674a562c329ae3",
+    "bytes": 363781
+  },
+  {
+    "article_id": 10701578837268,
+    "image_number": 10,
+    "url": "https://booxsupport.zendesk.com/hc/article_attachments/40687025430292",
+    "checked_on": "2026-10-27",
+    "method": "anonymous_ordinary_GET_once",
+    "actual_view": false,
+    "status": 200,
+    "final_url": "https://booxsupport.zendesk.com/hc/article_attachments/40687025430292",
+    "content_type": "image/png",
+    "raw_work_path": "work/boox-reading-controls-deepening/raw/notes-page-manager.png",
+    "raw_sha256": "089285229033c6d565e943bd546493cc136fe02ee23b471e93d5c23c26114d09",
+    "bytes": 1199680
+  },
+  {
+    "article_id": 10701578837268,
+    "image_number": 13,
+    "url": "https://booxsupport.zendesk.com/hc/article_attachments/40687065448468",
+    "checked_on": "2026-10-27",
+    "method": "anonymous_ordinary_GET_once",
+    "actual_view": false,
+    "status": 200,
+    "final_url": "https://booxsupport.zendesk.com/hc/article_attachments/40687065448468",
+    "content_type": "image/png",
+    "raw_work_path": "work/boox-reading-controls-deepening/raw/notes-layers.png",
+    "raw_sha256": "964f0841729cd1dd9de8c729de6c981b795ff42a9ee3dec92ef8aacdc8c84e9a",
+    "bytes": 494599
+  },
+  {
+    "article_id": 25400769451540,
+    "image_number": 2,
+    "url": "https://booxsupport.zendesk.com/hc/article_attachments/40686663742996",
+    "checked_on": "2026-10-27",
+    "method": "anonymous_ordinary_GET_once",
+    "actual_view": false,
+    "status": 200,
+    "final_url": "https://booxsupport.zendesk.com/hc/article_attachments/40686663742996",
+    "content_type": "image/png",
+    "raw_work_path": "work/boox-reading-controls-deepening/raw/epub-more-settings.png",
+    "raw_sha256": "bd070475b2dce000ea5c15535470b922513698b50afbed7391132098444a919c",
+    "bytes": 1144355
+  }
+]

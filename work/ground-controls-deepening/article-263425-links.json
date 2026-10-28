@@ -1,0 +1,271 @@
+[
+  {
+    "class": "page-header-inner-logo-link",
+    "href": "/en",
+    "title": "",
+    "url": "https://help.ground.news/en"
+  },
+  {
+    "class": "page-header-inner-title",
+    "href": "/en",
+    "title": "Ground News Help Center",
+    "url": "https://help.ground.news/en"
+  },
+  {
+    "type": "button",
+    "class": "kb-button primary",
+    "href": "/en/contact-us",
+    "title": "Contact Us",
+    "url": "https://help.ground.news/en/contact-us"
+  },
+  {
+    "id": "moreResultsLink",
+    "type": "button",
+    "class": "kb-button secondary",
+    "href": "/en/search",
+    "title": "More results",
+    "url": "https://help.ground.news/en/search"
+  },
+  {
+    "href": "https://ground.news/privacy-policy",
+    "title": "Privacy Policy",
+    "url": "https://ground.news/privacy-policy"
+  },
+  {
+    "href": "#how_to_fix_the_issue",
+    "class": "navigation-item indent-2",
+    "title": "How to Fix the Issue",
+    "url": "https://help.ground.news/en/articles/263425#how_to_fix_the_issue"
+  },
+  {
+    "href": "#check_your_ground_news_edition_web_readers",
+    "class": "navigation-item indent-3",
+    "title": "Check Your Ground News Edition (Web Readers)",
+    "url": "https://help.ground.news/en/articles/263425#check_your_ground_news_edition_web_readers"
+  },
+  {
+    "href": "#set_up_your_account_preferences_web_readers",
+    "class": "navigation-item indent-3",
+    "title": "Set Up Your Account Preferences (Web Readers)",
+    "url": "https://help.ground.news/en/articles/263425#set_up_your_account_preferences_web_readers"
+  },
+  {
+    "href": "#change_the_bias_bar_color_scheme_mobile_app_readers",
+    "class": "navigation-item indent-3",
+    "title": "Change the Bias Bar Color Scheme (Mobile App Readers)",
+    "url": "https://help.ground.news/en/articles/263425#change_the_bias_bar_color_scheme_mobile_app_readers"
+  },
+  {
+    "href": "#still_having_trouble",
+    "class": "navigation-item indent-2",
+    "title": "Still Having Trouble?",
+    "url": "https://help.ground.news/en/articles/263425#still_having_trouble"
+  },
+  {
+    "href": "#related_articles",
+    "class": "navigation-item indent-2",
+    "title": "Related Articles",
+    "url": "https://help.ground.news/en/articles/263425#related_articles"
+  },
+  {
+    "href": "/en",
+    "title": "Home",
+    "url": "https://help.ground.news/en"
+  },
+  {
+    "href": "/en/categories/2272961-fix-a-problem",
+    "title": "Fix a Problem",
+    "url": "https://help.ground.news/en/categories/2272961-fix-a-problem"
+  },
+  {
+    "href": "/en/categories/2272961-news-feed-issues",
+    "title": "News Feed Issues",
+    "url": "https://help.ground.news/en/categories/2272961-news-feed-issues"
+  },
+  {
+    "target": "_self",
+    "rel": "noopener noreferrer nofollow",
+    "class": "kb-link kb-link",
+    "href": "https://ground.news/login",
+    "title": "Sign into your account on our website",
+    "url": "https://ground.news/login"
+  },
+  {
+    "href": "https://usw2.frontkb-cdn.com/attachments/7440402/17473/e36129da-afdf-48de-985e-da9955f58d6a.png",
+    "class": "knowledge-base-image-expand-link",
+    "data-lightbox": "e36129da-afdf-48de-985e-da9955f58d6a",
+    "title": "",
+    "url": "https://usw2.frontkb-cdn.com/attachments/7440402/17473/e36129da-afdf-48de-985e-da9955f58d6a.png"
+  },
+  {
+    "target": "_self",
+    "rel": "noopener noreferrer nofollow",
+    "class": "kb-link kb-link",
+    "href": "/en/articles/1001537",
+    "title": "Follow Relevant News For Your Region",
+    "url": "https://help.ground.news/en/articles/1001537"
+  },
+  {
+    "target": "_self",
+    "rel": "noopener noreferrer nofollow",
+    "class": "kb-link kb-link",
+    "href": "https://ground.news/login",
+    "title": "Sign into your account on our website",
+    "url": "https://ground.news/login"
+  },
+  {
+    "target": "_self",
+    "rel": "noopener noreferrer nofollow",
+    "class": "kb-link kb-link",
+    "href": "https://ground.news/account/account-information",
+    "title": "My Account",
+    "url": "https://ground.news/account/account-information"
+  },
+  {
+    "href": "https://usw2.frontkb-cdn.com/attachments/7440402/17473/3eba22f7-45fb-462b-912e-3882aa905381.png",
+    "class": "knowledge-base-image-expand-link",
+    "data-lightbox": "3eba22f7-45fb-462b-912e-3882aa905381",
+    "title": "",
+    "url": "https://usw2.frontkb-cdn.com/attachments/7440402/17473/3eba22f7-45fb-462b-912e-3882aa905381.png"
+  },
+  {
+    "target": "_self",
+    "rel": "noopener noreferrer nofollow",
+    "class": "kb-link kb-link",
+    "href": "https://ground.news/account/preferences",
+    "title": "Preferences",
+    "url": "https://ground.news/account/preferences"
+  },
+  {
+    "href": "https://usw2.frontkb-cdn.com/attachments/7440402/17473/a89b2b82-63d2-4b7d-9d84-ee799462e307.png",
+    "class": "knowledge-base-image-expand-link",
+    "data-lightbox": "a89b2b82-63d2-4b7d-9d84-ee799462e307",
+    "title": "",
+    "url": "https://usw2.frontkb-cdn.com/attachments/7440402/17473/a89b2b82-63d2-4b7d-9d84-ee799462e307.png"
+  },
+  {
+    "href": "https://usw2.frontkb-cdn.com/attachments/7440402/17473/227356b2-f491-49eb-9ca3-b126e5f3554e.png",
+    "class": "knowledge-base-image-expand-link",
+    "data-lightbox": "227356b2-f491-49eb-9ca3-b126e5f3554e",
+    "title": "",
+    "url": "https://usw2.frontkb-cdn.com/attachments/7440402/17473/227356b2-f491-49eb-9ca3-b126e5f3554e.png"
+  },
+  {
+    "target": "_self",
+    "rel": "noopener noreferrer nofollow",
+    "class": "kb-link kb-link",
+    "href": "mailto:feedback@ground.news",
+    "title": "feedback@ground.news",
+    "url": "mailto:feedback@ground.news"
+  },
+  {
+    "target": "_self",
+    "rel": "noopener noreferrer nofollow",
+    "class": "kb-link kb-link",
+    "href": "/en/articles/5237505",
+    "title": "Known Issues & Bug Fixes",
+    "url": "https://help.ground.news/en/articles/5237505"
+  },
+  {
+    "target": "_self",
+    "rel": "noopener noreferrer nofollow",
+    "class": "kb-link kb-link",
+    "href": "/en/articles/245249",
+    "title": "How Do I Read the Ground News Bias Bar?",
+    "url": "https://help.ground.news/en/articles/245249"
+  },
+  {
+    "target": "_self",
+    "rel": "noopener noreferrer nofollow",
+    "class": "kb-link kb-link",
+    "href": "https://ground.news/bias-bar",
+    "title": "Learn more about the Ground News Bias Bar",
+    "url": "https://ground.news/bias-bar"
+  },
+  {
+    "target": "_self",
+    "rel": "noopener noreferrer nofollow",
+    "class": "kb-link kb-link",
+    "href": "https://ground.news/rating-system",
+    "title": "About Our Ratings",
+    "url": "https://ground.news/rating-system"
+  },
+  {
+    "target": "_self",
+    "rel": "noopener noreferrer nofollow",
+    "class": "kb-link kb-link",
+    "href": "/en/articles/9683777",
+    "title": "Report an Issue",
+    "url": "https://help.ground.news/en/articles/9683777"
+  },
+  {
+    "target": "_self",
+    "rel": "noopener noreferrer nofollow",
+    "class": "kb-link kb-link",
+    "href": "/en/articles/9683777",
+    "title": "Learn more about reporting an issue here",
+    "url": "https://help.ground.news/en/articles/9683777"
+  },
+  {
+    "target": "_self",
+    "rel": "noopener noreferrer nofollow",
+    "class": "kb-link kb-link",
+    "href": "mailto:feedback@ground.news",
+    "title": "feedback@ground.news",
+    "url": "mailto:feedback@ground.news"
+  },
+  {
+    "target": "_self",
+    "rel": "noopener noreferrer nofollow",
+    "class": "kb-link kb-link",
+    "href": "https://ground.news/account/account-information",
+    "title": "visit your Account page here",
+    "url": "https://ground.news/account/account-information"
+  },
+  {
+    "target": "_self",
+    "rel": "noopener noreferrer nofollow",
+    "class": "kb-link kb-link",
+    "href": "mailto:subscriptions@ground.news",
+    "title": "subscriptions@ground.news",
+    "url": "mailto:subscriptions@ground.news"
+  },
+  {
+    "target": "_self",
+    "rel": "noopener noreferrer nofollow",
+    "class": "kb-link kb-link",
+    "href": "mailto:feedback@ground.news",
+    "title": "feedback@ground.news",
+    "url": "mailto:feedback@ground.news"
+  },
+  {
+    "href": "https://twitter.com/Ground_app",
+    "title": "",
+    "url": "https://twitter.com/Ground_app"
+  },
+  {
+    "href": "https://ca.linkedin.com/company/groundnews",
+    "title": "",
+    "url": "https://ca.linkedin.com/company/groundnews"
+  },
+  {
+    "href": "https://www.instagram.com/groundnews/",
+    "title": "",
+    "url": "https://www.instagram.com/groundnews/"
+  },
+  {
+    "href": "https://ground.news/refund-policy",
+    "title": "Refund and Cancellation Policy",
+    "url": "https://ground.news/refund-policy"
+  },
+  {
+    "href": "https://ground.news/terms-and-conditions",
+    "title": "Terms and Conditions",
+    "url": "https://ground.news/terms-and-conditions"
+  },
+  {
+    "href": "https://about.ground.news/privacy-policy",
+    "title": "Privacy Policy",
+    "url": "https://about.ground.news/privacy-policy"
+  }
+]

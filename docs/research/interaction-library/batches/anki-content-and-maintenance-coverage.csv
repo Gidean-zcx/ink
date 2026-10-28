@@ -1,0 +1,4 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M020-23,M-020,制作公式卡并准备跨端媒体,D2,E-ANCM-19,字段输入TeX→选中→MathJax inline→Cards预览；式内换行用Shift+Enter。LaTeX另由桌面生成媒体，可Check Media批量预生成再同步；网页/移动端仅显示已有图片。,当前构建默认生成开关、渲染错误/缺图/同步中断及遮挡冲突未实测；公式显示不证明自动判题，Plus运行时与预处理方案未定。,not_observed,false,cases/M-020-anki.md,2026-10-27
+F-M020-24,M-020,把客户端连接到自托管同步服务,D2,E-ANCM-23,服务端配置独立用户和集合/媒体目录；客户端Preferences指定URL、AnkiWeb account填该服务凭据；各端实际同步建立副本，不手工复制客户端数据目录。,未部署或验证登录/同步。客户端升级可能要求同步服务升级；UI仍称AnkiWeb，URL子路径需尾斜杠。备份保留、版本恢复和整机恢复不在此功能证明范围。,not_observed,false,cases/M-020-anki.md,2026-10-27
+F-M020-25,M-020,分享题库并发布后续修订,D2,E-ANCM-25;E-ANCM-02;E-AND-04;E-AND-16,公开：同步后网页牌组Share，更新需同原名称/路径；私享：导出单牌组apkg且不含调度，再交给接收者导入。既有接收者需重新下载导入，新包删除项不会自动删其卡。,分享页确认、撤回影响、更新冲突/媒体缺失未实测；包导入策略以客户端版本为准，公开分发与家庭个人进度同步不同。,not_observed,false,cases/M-020-anki.md,2026-10-27

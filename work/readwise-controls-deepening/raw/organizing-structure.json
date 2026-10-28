@@ -1,0 +1,423 @@
+{
+  "headings": [
+    {
+      "level": "h1",
+      "id": "",
+      "title": "Organizing Content"
+    },
+    {
+      "level": "h2",
+      "id": "tags",
+      "title": "Tags"
+    },
+    {
+      "level": "h3",
+      "id": "add-tags-on-web",
+      "title": "Add tags on web"
+    },
+    {
+      "level": "h3",
+      "id": "add-tags-on-mobile",
+      "title": "Add tags on mobile"
+    },
+    {
+      "level": "h2",
+      "id": "filtered-views",
+      "title": "Filtered Views"
+    },
+    {
+      "level": "h3",
+      "id": "create-a-filtered-view-on-web",
+      "title": "Create a filtered view on web"
+    },
+    {
+      "level": "h3",
+      "id": "create-a-filtered-view-on-mobile",
+      "title": "Create a filtered view on mobile"
+    },
+    {
+      "level": "h2",
+      "id": "rss-folders",
+      "title": "RSS Folders"
+    },
+    {
+      "level": "h3",
+      "id": "create-rss-folders-on-web",
+      "title": "Create RSS folders on web"
+    },
+    {
+      "level": "h3",
+      "id": "create-rss-folders-on-mobile",
+      "title": "Create RSS folders on mobile"
+    }
+  ],
+  "links": [
+    {
+      "href": "/",
+      "text": "",
+      "in_article": false
+    },
+    {
+      "href": "/",
+      "text": "",
+      "in_article": false
+    },
+    {
+      "href": "/",
+      "text": "",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs",
+      "text": "Documentation",
+      "in_article": false
+    },
+    {
+      "href": "/reader/guides",
+      "text": "Guides",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs",
+      "text": "What is Reader?",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/migrating-content",
+      "text": "Migrating from Other Apps",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/saving-content",
+      "text": "Saving Content",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/organizing-content",
+      "text": "Organizing Content",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs",
+      "text": "Basics",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/importing-content",
+      "text": "Importing Content",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/adding-new-content",
+      "text": "Adding New Content",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/highlights-tags-notes",
+      "text": "Highlights, Tags, and Notes",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/appearance",
+      "text": "Appearance",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/feed",
+      "text": "Feed",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/email-newsletters",
+      "text": "Email Newsletters",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/navigation",
+      "text": "Navigation",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/searching",
+      "text": "Searching",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/parsing",
+      "text": "Parsing",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/filtered-views",
+      "text": "Filtered Views",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/action-tags",
+      "text": "Action Tags",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/pdfs",
+      "text": "PDFs",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/videos",
+      "text": "Videos",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/text-to-speech",
+      "text": "Text-to-Speech (TTS)",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/exporting",
+      "text": "Exporting",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/sharing",
+      "text": "Sharing",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/daily-digest",
+      "text": "Daily Digest",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/ghostreader",
+      "text": "Ghostreader",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/eink",
+      "text": "E-ink Devices",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/miscellaneous",
+      "text": "Miscellaneous",
+      "in_article": false
+    },
+    {
+      "href": "/",
+      "text": "Home",
+      "in_article": false
+    },
+    {
+      "href": "/reader",
+      "text": "Reader",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs",
+      "text": "Docs",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/organizing-content",
+      "text": "Organizing Content",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/saving-content",
+      "text": "saved a lot of content",
+      "in_article": true
+    },
+    {
+      "href": "#filtered-views",
+      "text": "filtered view",
+      "in_article": true
+    },
+    {
+      "href": "/reader/guides/filtering/syntax-guide",
+      "text": "query syntax guide",
+      "in_article": true
+    },
+    {
+      "href": "/reader/guides/filtering/query-examples",
+      "text": "query examples",
+      "in_article": true
+    },
+    {
+      "href": "https://read.readwise.io/views",
+      "text": "Manage views page",
+      "in_article": true
+    },
+    {
+      "href": "/reader/guides/filtering/query-examples",
+      "text": "filter query",
+      "in_article": true
+    },
+    {
+      "href": "https://read.readwise.io/tags",
+      "text": "Tags",
+      "in_article": true
+    },
+    {
+      "href": "/reader/guides/filtering/query-examples",
+      "text": "filter query",
+      "in_article": true
+    },
+    {
+      "href": "https://read.readwise.io/feed/sources",
+      "text": "Manage feeds page",
+      "in_article": true
+    },
+    {
+      "href": "/reader/docs/saving-content",
+      "text": "Saving Content",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs",
+      "text": "Basics",
+      "in_article": false
+    },
+    {
+      "href": "mailto:hello@readwise.io",
+      "text": "Email Ushello@readwise.io",
+      "in_article": false
+    },
+    {
+      "href": "https://x.com/readwise",
+      "text": "Follow Us@readwise",
+      "in_article": false
+    },
+    {
+      "href": "https://www.reddit.com/r/readwise/",
+      "text": "Ask the CommunityJoin us on Reddit",
+      "in_article": false
+    },
+    {
+      "href": "https://en.wikipedia.org/wiki/Curse_of_knowledge",
+      "text": "Curse of Knowledge",
+      "in_article": false
+    },
+    {
+      "href": "mailto:hello@readwise.io?Subject=Documentation Feedback",
+      "text": "Send Feedback",
+      "in_article": false
+    },
+    {
+      "href": "#tags",
+      "text": "Tags",
+      "in_article": false
+    },
+    {
+      "href": "#add-tags-on-web",
+      "text": "Add tags on web",
+      "in_article": false
+    },
+    {
+      "href": "#add-tags-on-mobile",
+      "text": "Add tags on mobile",
+      "in_article": false
+    },
+    {
+      "href": "#filtered-views",
+      "text": "Filtered Views",
+      "in_article": false
+    },
+    {
+      "href": "#create-a-filtered-view-on-web",
+      "text": "Create a filtered view on web",
+      "in_article": false
+    },
+    {
+      "href": "#create-a-filtered-view-on-mobile",
+      "text": "Create a filtered view on mobile",
+      "in_article": false
+    },
+    {
+      "href": "#rss-folders",
+      "text": "RSS Folders",
+      "in_article": false
+    },
+    {
+      "href": "#create-rss-folders-on-web",
+      "text": "Create RSS folders on web",
+      "in_article": false
+    },
+    {
+      "href": "#create-rss-folders-on-mobile",
+      "text": "Create RSS folders on mobile",
+      "in_article": false
+    }
+  ],
+  "images": [
+    {
+      "src": "/images/click-tag_web.gif",
+      "alt": "Click a tag name to display all documents.",
+      "class": "rounded-lg max-h-[400px] w-auto mx-auto"
+    },
+    {
+      "src": "/images/add-highlight-tag_web.png",
+      "alt": "Add a tag to a highlight on web.",
+      "class": "rounded-lg max-h-[300px] w-auto mx-auto"
+    },
+    {
+      "src": "/images/add-highlight-tag.jpeg",
+      "alt": "Add highlight tags from the annotation menu.",
+      "class": "rounded-lg max-h-[300px] w-auto mx-auto"
+    },
+    {
+      "src": "/images/create-new-tag_mobile.jpeg",
+      "alt": "Create a new tag on mobile.",
+      "class": "rounded-lg max-h-[300px] w-auto mx-auto"
+    },
+    {
+      "src": "/images/create-filtered-view_web.gif",
+      "alt": "Create a new filtered view in Reader on web.",
+      "class": "rounded-lg max-h-[400px] w-auto mx-auto"
+    },
+    {
+      "src": "/images/add-filtered-view_web.png",
+      "alt": "Add a filtered view in the Reader web app.",
+      "class": "rounded-lg max-h-[400px] w-auto mx-auto"
+    },
+    {
+      "src": "/images/add-tags-to-view_web.gif",
+      "alt": "Add multiple tags to a new view.",
+      "class": "rounded-lg max-h-[400px] w-auto mx-auto"
+    },
+    {
+      "src": "/images/new-view_mobile.gif",
+      "alt": "Create a new filtered view on mobile.",
+      "class": "rounded-lg max-h-[600px] w-auto mx-auto"
+    },
+    {
+      "src": "/images/manage-folders-dropdown_web.png",
+      "alt": "Add RSS feeds to folders.",
+      "class": "rounded-lg max-h-[400px] w-auto mx-auto"
+    },
+    {
+      "src": "/images/add-feed-to-folder_web.gif",
+      "alt": "Drag and drop feeds onto sidebar folders.",
+      "class": "rounded-lg max-h-[400px] w-auto mx-auto"
+    },
+    {
+      "src": "/images/new-rss-folder_mobile.gif",
+      "alt": "Add a new RSS folder on mobile.",
+      "class": "rounded-lg max-w-[350px] h-auto mx-auto"
+    },
+    {
+      "src": "/images/feed-sidebar_mobile.jpeg",
+      "alt": "Tap to open the feed sidebar menu.",
+      "class": "rounded-lg max-w-[350px] h-auto mx-auto"
+    },
+    {
+      "src": "/images/folder-view_add-feeds_mobile.gif",
+      "alt": "Add feed to a folder from the feed view.",
+      "class": "rounded-lg max-w-[350px] h-auto mx-auto -mt-4"
+    },
+    {
+      "src": "/images/feed-view_add-to-folder_mobile.gif",
+      "alt": "Add feed to a folder from the folder view.",
+      "class": "rounded-lg max-w-[350px] h-auto mx-auto -mt-4"
+    }
+  ]
+}

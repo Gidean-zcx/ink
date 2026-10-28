@@ -1,0 +1,4 @@
+Set whether to select a template when you create a new note or to use a specific template without the option to select.
+Press the
+(home) button, and tap [Settings].
+Tap [System Settings] — [Note Template], then tap either your desired template or [Select template every time note is created].

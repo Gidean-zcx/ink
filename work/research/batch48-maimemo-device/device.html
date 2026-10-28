@@ -1,0 +1,596 @@
+<!DOCTYPE html><html lang="zh" dir="ltr" data-theme="dark" data-has-toc data-has-sidebar class="astro-ktgw73xx"> <head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><title>墨墨单词机 | 墨墨百科</title><link rel="canonical" href="https://memodocs.maimemo.com/docs/support_wordmachine/"/><link rel="sitemap" href="/sitemap-index.xml"/><link rel="stylesheet" href="/katex@0.16.22/katex.min.css"/><link rel="shortcut icon" href="/custom-favicon.png" type="image/png"/><meta name="generator" content="Astro v5.16.4"/><meta name="generator" content="Starlight v0.37.0"/><meta property="og:title" content="墨墨单词机"/><meta property="og:type" content="article"/><meta property="og:url" content="https://memodocs.maimemo.com/docs/support_wordmachine/"/><meta property="og:locale" content="zh"/><meta property="og:description" content="墨墨单词机使用说明。"/><meta property="og:site_name" content="墨墨百科"/><meta name="twitter:card" content="summary_large_image"/><meta name="description" content="墨墨单词机使用说明。"/><script>
+	window.StarlightThemeProvider = (() => {
+		const storedTheme =
+			typeof localStorage !== 'undefined' && localStorage.getItem('starlight-theme');
+		const theme =
+			storedTheme ||
+			(window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+		document.documentElement.dataset.theme = theme === 'light' ? 'light' : 'dark';
+		return {
+			updatePickers(theme = storedTheme || 'auto') {
+				document.querySelectorAll('starlight-theme-select').forEach((picker) => {
+					const select = picker.querySelector('select');
+					if (select) select.value = theme;
+					/** @type {HTMLTemplateElement | null} */
+					const tmpl = document.querySelector(`#theme-icons`);
+					const newIcon = tmpl && tmpl.content.querySelector('.' + theme);
+					if (newIcon) {
+						const oldIcon = picker.querySelector('svg.label-icon');
+						if (oldIcon) {
+							oldIcon.replaceChildren(...newIcon.cloneNode(true).childNodes);
+						}
+					}
+				});
+			},
+		};
+	})();
+</script><template id="theme-icons"><svg aria-hidden="true" class="light astro-2k72nljx" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M5 12a1 1 0 0 0-1-1H3a1 1 0 0 0 0 2h1a1 1 0 0 0 1-1Zm.64 5-.71.71a1 1 0 0 0 0 1.41 1 1 0 0 0 1.41 0l.71-.71A1 1 0 0 0 5.64 17ZM12 5a1 1 0 0 0 1-1V3a1 1 0 0 0-2 0v1a1 1 0 0 0 1 1Zm5.66 2.34a1 1 0 0 0 .7-.29l.71-.71a1 1 0 1 0-1.41-1.41l-.66.71a1 1 0 0 0 0 1.41 1 1 0 0 0 .66.29Zm-12-.29a1 1 0 0 0 1.41 0 1 1 0 0 0 0-1.41l-.71-.71a1.004 1.004 0 1 0-1.43 1.41l.73.71ZM21 11h-1a1 1 0 0 0 0 2h1a1 1 0 0 0 0-2Zm-2.64 6A1 1 0 0 0 17 18.36l.71.71a1 1 0 0 0 1.41 0 1 1 0 0 0 0-1.41l-.76-.66ZM12 6.5a5.5 5.5 0 1 0 5.5 5.5A5.51 5.51 0 0 0 12 6.5Zm0 9a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7Zm0 3.5a1 1 0 0 0-1 1v1a1 1 0 0 0 2 0v-1a1 1 0 0 0-1-1Z"/></svg><svg aria-hidden="true" class="dark astro-2k72nljx" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21.64 13a1 1 0 0 0-1.05-.14 8.049 8.049 0 0 1-3.37.73 8.15 8.15 0 0 1-8.14-8.1 8.59 8.59 0 0 1 .25-2A1 1 0 0 0 8 2.36a10.14 10.14 0 1 0 14 11.69 1 1 0 0 0-.36-1.05Zm-9.5 6.69A8.14 8.14 0 0 1 7.08 5.22v.27a10.15 10.15 0 0 0 10.14 10.14 9.784 9.784 0 0 0 2.1-.22 8.11 8.11 0 0 1-7.18 4.32v-.04Z"/></svg><svg aria-hidden="true" class="auto astro-2k72nljx" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21 14h-1V7a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v7H3a1 1 0 0 0-1 1v2a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-2a1 1 0 0 0-1-1ZM6 7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7H6V7Zm14 10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-1h16v1Z"/></svg></template><link rel="stylesheet" href="/_astro/print.DNXP8c50.css" media="print"><link rel="stylesheet" href="/_astro/_slug_.H3z55WGS.css"><script type="module" src="/_astro/page.B1D-nYk3.js"></script></head> <body class="astro-ktgw73xx"> <a href="#_top" class="astro-hhjbwzum">跳转到内容</a>  <div class="page sl-flex astro-yx2vn6bl"> <header class="header astro-yx2vn6bl"><div class="header astro-boj2slit"> <div class="title-wrapper sl-flex astro-boj2slit"> <a href="/" class="site-title sl-flex astro-3alfeyam">  <img class="light:sl-hidden print:hidden astro-3alfeyam" alt="logo" src="/_astro/custom-logo.ZIeHkx7m.png" width="160" height="160"> <img class="dark:sl-hidden print:block astro-3alfeyam" alt="logo" src="/_astro/custom-logo.ZIeHkx7m.png" width="160" height="160"> <span class="astro-3alfeyam" translate="no"> 墨墨百科 </span> </a>  </div> <div class="sl-flex print:hidden astro-boj2slit"> <site-search class="astro-boj2slit astro-cmey2so3" data-translations="{&#34;placeholder&#34;:&#34;搜索&#34;}"> <button data-open-modal disabled aria-label="搜索" aria-keyshortcuts="Control+K" class="astro-cmey2so3"> <svg aria-hidden="true" class="astro-cmey2so3 astro-2k72nljx" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21.71 20.29 18 16.61A9 9 0 1 0 16.61 18l3.68 3.68a.999.999 0 0 0 1.42 0 1 1 0 0 0 0-1.39ZM11 18a7 7 0 1 1 0-14 7 7 0 0 1 0 14Z"/></svg> <span class="sl-hidden md:sl-block astro-cmey2so3" aria-hidden="true">搜索</span> <kbd class="sl-hidden md:sl-flex astro-cmey2so3" style="display: none;"> <kbd class="astro-cmey2so3">Ctrl</kbd><kbd class="astro-cmey2so3">K</kbd> </kbd> </button> <dialog style="padding:0" aria-label="搜索" class="astro-cmey2so3"> <div class="dialog-frame sl-flex astro-cmey2so3">  <button data-close-modal class="sl-flex md:sl-hidden astro-cmey2so3"> 取消 </button> <div class="search-container astro-cmey2so3"> <div id="starlight__search" class="astro-cmey2so3"></div> </div> </div> </dialog> </site-search>  <script>
+	(() => {
+		const openBtn = document.querySelector('button[data-open-modal]');
+		const shortcut = openBtn?.querySelector('kbd');
+		if (!openBtn || !(shortcut instanceof HTMLElement)) return;
+		const platformKey = shortcut.querySelector('kbd');
+		if (platformKey && /(Mac|iPhone|iPod|iPad)/i.test(navigator.platform)) {
+			platformKey.textContent = '⌘';
+			openBtn.setAttribute('aria-keyshortcuts', 'Meta+K');
+		}
+		shortcut.style.display = '';
+	})();
+</script> <script type="module" src="/_astro/Search.astro_astro_type_script_index_0_lang.DMZ5WJ-J.js"></script>   </div> <div class="sl-hidden md:sl-flex print:hidden right-group astro-boj2slit"> <div class="sl-flex social-icons astro-boj2slit">  </div> <starlight-theme-select>  <label style="--sl-select-width: 6.25em" class="astro-fyexl3qd"> <span class="sr-only astro-fyexl3qd">选择主题</span> <svg aria-hidden="true" class="icon label-icon astro-fyexl3qd astro-2k72nljx" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21 14h-1V7a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v7H3a1 1 0 0 0-1 1v2a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-2a1 1 0 0 0-1-1ZM6 7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7H6V7Zm14 10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-1h16v1Z"/></svg> <select autocomplete="off" class="astro-fyexl3qd"> <option value="dark" class="astro-fyexl3qd">深色</option><option value="light" class="astro-fyexl3qd">浅色</option><option value="auto" selected class="astro-fyexl3qd">自动</option> </select> <svg aria-hidden="true" class="icon caret astro-fyexl3qd astro-2k72nljx" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M17 9.17a1 1 0 0 0-1.41 0L12 12.71 8.46 9.17a1 1 0 1 0-1.41 1.42l4.24 4.24a1.002 1.002 0 0 0 1.42 0L17 10.59a1.002 1.002 0 0 0 0-1.42Z"/></svg> </label>  </starlight-theme-select>  <script>
+	StarlightThemeProvider.updatePickers();
+</script> <script type="module">const r="starlight-theme",o=e=>e==="auto"||e==="dark"||e==="light"?e:"auto",c=()=>o(typeof localStorage<"u"&&localStorage.getItem(r));function n(e){typeof localStorage<"u"&&localStorage.setItem(r,e==="light"||e==="dark"?e:"")}const l=()=>matchMedia("(prefers-color-scheme: light)").matches?"light":"dark";function t(e){StarlightThemeProvider.updatePickers(e),document.documentElement.dataset.theme=e==="auto"?l():e,n(e)}matchMedia("(prefers-color-scheme: light)").addEventListener("change",()=>{c()==="auto"&&t("auto")});class s extends HTMLElement{constructor(){super(),t(c()),this.querySelector("select")?.addEventListener("change",a=>{a.currentTarget instanceof HTMLSelectElement&&t(o(a.currentTarget.value))})}}customElements.define("starlight-theme-select",s);</script> <script type="module">class s extends HTMLElement{constructor(){super();const e=this.querySelector("select");e&&(e.addEventListener("change",t=>{t.currentTarget instanceof HTMLSelectElement&&(window.location.pathname=t.currentTarget.value)}),window.addEventListener("pageshow",t=>{if(!t.persisted)return;const n=e.querySelector("option[selected]")?.index;n!==e.selectedIndex&&(e.selectedIndex=n??0)}))}}customElements.define("starlight-lang-select",s);</script> </div> </div> </header> <nav class="sidebar print:hidden astro-yx2vn6bl" aria-label="主要"> <starlight-menu-button class="print:hidden astro-uwrf32oq"> <button aria-expanded="false" aria-label="菜单" aria-controls="starlight__sidebar" class="sl-flex md:sl-hidden astro-uwrf32oq"> <svg aria-hidden="true" class="open-menu astro-uwrf32oq astro-2k72nljx" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M3 8h18a1 1 0 1 0 0-2H3a1 1 0 0 0 0 2Zm18 8H3a1 1 0 0 0 0 2h18a1 1 0 0 0 0-2Zm0-5H3a1 1 0 0 0 0 2h18a1 1 0 0 0 0-2Z"/></svg> <svg aria-hidden="true" class="close-menu astro-uwrf32oq astro-2k72nljx" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="m13.41 12 6.3-6.29a1.004 1.004 0 1 0-1.42-1.42L12 10.59l-6.29-6.3a1.004 1.004 0 0 0-1.42 1.42l6.3 6.29-6.3 6.29a1 1 0 0 0 0 1.42.998.998 0 0 0 1.42 0l6.29-6.3 6.29 6.3a.999.999 0 0 0 1.42 0 1 1 0 0 0 0-1.42L13.41 12Z"/></svg> </button> </starlight-menu-button> <script type="module">class s extends HTMLElement{constructor(){super(),this.btn=this.querySelector("button"),this.btn.addEventListener("click",()=>this.toggleExpanded());const t=this.closest("nav");t&&t.addEventListener("keyup",e=>this.closeOnEscape(e))}setExpanded(t){this.setAttribute("aria-expanded",String(t)),document.body.toggleAttribute("data-mobile-menu-expanded",t)}toggleExpanded(){this.setExpanded(this.getAttribute("aria-expanded")!=="true")}closeOnEscape(t){t.code==="Escape"&&(this.setExpanded(!1),this.btn.focus())}}customElements.define("starlight-menu-button",s);</script>   <div id="starlight__sidebar" class="sidebar-pane astro-yx2vn6bl"> <div class="sidebar-content sl-flex astro-yx2vn6bl"> <sl-sidebar-state-persist data-hash="0000000" class="astro-2xitmveu"> <script aria-hidden="true">
+		(() => {
+			try {
+				if (!matchMedia('(min-width: 50em)').matches) return;
+				/** @type {HTMLElement | null} */
+				const target = document.querySelector('sl-sidebar-state-persist');
+				const state = JSON.parse(sessionStorage.getItem('sl-sidebar-state') || '0');
+				if (!target || !state || target.dataset.hash !== state.hash) return;
+				window._starlightScrollRestore = state.scroll;
+				customElements.define(
+					'sl-sidebar-restore',
+					class SidebarRestore extends HTMLElement {
+						connectedCallback() {
+							try {
+								const idx = parseInt(this.dataset.index || '');
+								const details = this.closest('details');
+								if (details && typeof state.open[idx] === 'boolean') details.open = state.open[idx];
+							} catch {}
+						}
+					}
+				);
+			} catch {}
+		})();
+	</script>  <ul class="top-level astro-z2zdus5w"> <li class="astro-z2zdus5w"> <a href="/docs/index" aria-current="false" class="large astro-z2zdus5w"> <span class="astro-z2zdus5w">首页</span>  </a> </li><li class="astro-z2zdus5w"> <details open class="astro-z2zdus5w"> <summary class="astro-z2zdus5w"> <div class="group-label astro-z2zdus5w"> <a aria-current="false" class="large astro-z2zdus5w" href="/docs/memo">墨墨背单词</a>  </div> <svg aria-hidden="true" class="caret astro-z2zdus5w astro-2k72nljx" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <ul class="astro-z2zdus5w"> <li class="astro-z2zdus5w"> <details class="astro-z2zdus5w"> <summary class="astro-z2zdus5w"> <div class="group-label astro-z2zdus5w"> <a aria-current="false" class="astro-z2zdus5w" href="/docs/memo-get-started">快速上手</a>  </div> <svg aria-hidden="true" class="caret astro-z2zdus5w astro-2k72nljx" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <ul class="astro-z2zdus5w"> <li class="astro-z2zdus5w"> <a href="/docs/PulqwOB1xi5jV0kb8Y1cPE7ZnKc" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">每日学习量</span>  </a> </li><li class="astro-z2zdus5w"> <details class="astro-z2zdus5w"> <summary class="astro-z2zdus5w"> <div class="group-label astro-z2zdus5w"> <a aria-current="false" class="astro-z2zdus5w" href="/docs/I4FxwHbgqiboqmklZHbczSaVnne">超级释义</a>  </div> <svg aria-hidden="true" class="caret astro-z2zdus5w astro-2k72nljx" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <ul class="astro-z2zdus5w"> <li class="astro-z2zdus5w"> <a href="/docs/AXhuwXpfFibceakKPpdc6VbVnFc" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">超级释义功能介绍</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/TrSUwLo8wiwrUtkkmSBcMipgncb" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">超级释义 - 考点义项</span>  </a> </li> </ul>  </details> </li><li class="astro-z2zdus5w"> <a href="/docs/OxvKwPNcTi8PR4k6Xzyc8Ad5nMd" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">墨墨口袋手柄 / 外设功能</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/support_wordmachine" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">墨墨单词机</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/memo-get-started-harmonyos" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w"> 鸿蒙版本特色功能介绍</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/Uv65whPGIih1x2kMNOCc99k4nUe" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">筛选 释义 / 助记 / 例句 内容标签</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/QKUlwb6qTiLtzvk49BGc1ZVFnqg" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">云词本</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/YGRKwwq9Li4VNAk8OeFcng4onie" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">学习好友</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/QbA7wb0gKiTSSyk66RzcYJxln3g" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">导出 PDF</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/OPLXw0KlkiaSUDkN69ScWREfnhc" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">单词机</span>  </a> </li> </ul>  </details> </li><li class="astro-z2zdus5w"> <details class="astro-z2zdus5w"> <summary class="astro-z2zdus5w"> <div class="group-label astro-z2zdus5w"> <a aria-current="false" class="astro-z2zdus5w" href="/docs/memo-faq">常见问题</a>  </div> <svg aria-hidden="true" class="caret astro-z2zdus5w astro-2k72nljx" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <ul class="astro-z2zdus5w"> <li class="astro-z2zdus5w"> <a href="/docs/GKfswhD6Ei4TdMk0naQcfMBtnJg" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">一些基础使用小技巧</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/Ok6YwF2X7iJZvvkCunjcmWwLnzb" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">认识 / 模糊 / 忘记 / 熟知该如何选择？对单词下一次出现有什么影响？</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/TXhHwrM8Ei5QKjk562mcq8uInef" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">为什么不设定固定的每日新学单词量？</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/Y0iDwaZYeixhnzkuqJRcOEt6ncc" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">如何更换单词书进行学习？</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/TJDKwbRRfi1prCktSXPcDQjrnJf" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">更换学习设备时，如何将学习数据从 A 设备同步到 B 设备？</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/IAdywC1b0if5N4knUqocOxphnwr" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">已选单词列表左侧的饼状图是什么意思？</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/WVyFwrbiXiexP7k6N7gcYY0Vnzh" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">有补签卡但无法使用是怎么回事？为什么没有补签卡按钮？</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/Nw46wDLqRiLbpikFsxNcONXCnfc" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">墨墨支持离线学习吗？</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/SAWgwCEyZimLSRkZv98cqglEnUg" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">为什么墨墨没有提醒我学习？</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/Ai7rwDzjpi9RelkODxmcGcPnncA" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">当天签到总是失败如何处理？</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/KE8ZwhQ8UikDpKkeEggcKYgcnsd" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">如何重置学习数据？</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/RPC9w0jZFi4K4Qk5BlrcgBcNnWg" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">应用好评操作指南 - 找不到评论？</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/SFzIwQTQniAAP2kZzggcgdNNntb" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">iOS 单词不发音</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/XMenwad9oiNVWAktTqOca6dKnqc" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">断签问题</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/memo-web_study" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">墨墨背单词网页版</span>  </a> </li> </ul>  </details> </li> </ul>  </details> </li><li class="astro-z2zdus5w"> <details open class="astro-z2zdus5w"> <summary class="astro-z2zdus5w"> <div class="group-label astro-z2zdus5w"> <a aria-current="false" class="large astro-z2zdus5w" href="/docs/markji">墨墨记忆卡</a>  </div> <svg aria-hidden="true" class="caret astro-z2zdus5w astro-2k72nljx" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <ul class="astro-z2zdus5w"> <li class="astro-z2zdus5w"> <details class="astro-z2zdus5w"> <summary class="astro-z2zdus5w"> <div class="group-label astro-z2zdus5w"> <a aria-current="false" class="astro-z2zdus5w" href="/docs/markji-announcement">墨墨记忆卡 官方公告</a>  </div> <svg aria-hidden="true" class="caret astro-z2zdus5w astro-2k72nljx" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <ul class="astro-z2zdus5w"> <li class="astro-z2zdus5w"> <a href="/docs/markji-announcement-260811" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">260811：墨墨记忆卡 关于“充电计划”推出的预告 🔋</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/markji-announcement-260630" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">260630：墨墨记忆卡 专业版权益再升级，学习 100% Free！ 📢</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/markji-announcement-260529" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">260529：墨墨记忆卡 “学习 0 消耗”新模式探索及首批试点牌组 📢</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/markji-announcement-260514" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">260514：墨墨记忆卡  商业模式迁移思路前瞻 📢</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/markji-announcement-260414" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">260414：墨墨记忆卡 打击侵权行为及捍卫创作者版权的声明 📢</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/markji-announcement-260413" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">260413：墨墨记忆卡 创作福利发放及精选牌组制卡指南 📢</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/markji-announcement-260320" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">260320：墨墨记忆卡 5.0 版本“每日学习量”设置更新的预告 📢</span>  </a> </li> </ul>  </details> </li><li class="astro-z2zdus5w"> <details class="astro-z2zdus5w"> <summary class="astro-z2zdus5w"> <div class="group-label astro-z2zdus5w"> <a aria-current="false" class="astro-z2zdus5w" href="/docs/markji-help">墨墨记忆卡 使用答疑</a>  </div> <svg aria-hidden="true" class="caret astro-z2zdus5w astro-2k72nljx" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <ul class="astro-z2zdus5w"> <li class="astro-z2zdus5w"> <a href="/docs/markji-help-260929" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">260929：墨墨记忆卡 暂停复习功能逻辑 及 复习压力过大如何处理？</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/markji-help-260928" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">260928：墨墨记忆卡 学习收藏牌组 有可能被创作者剔除吗？</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/markji-help-260924" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">260924：墨墨记忆卡 学习零消耗公益计划如何申请？</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/markji-help-260923" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">260923：墨墨记忆卡 如何导入 Anki 牌组（.apkg 文件）？</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/markji-help-260918" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">260918：墨墨记忆卡 牌组更新逻辑解答（修改保留/删除影响） </span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/markji-help-260917" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">260917：墨墨记忆卡 新学卡片如何选择“认识”“忘记”？</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/markji-help-260915" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">260915：墨墨记忆卡 如何批量导入图片制卡？</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/markji-help-260914" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">260914：墨墨记忆卡 卡片堆积太多/复习压力大 如何解决？</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/markji-help-260910" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">260910：墨墨记忆卡 关于创作者若干问题解答</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/markji-help-260903" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">260903：墨墨记忆卡 如何适配班级管理（小组学习）？</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/markji-help-260902-03" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">260902：墨墨记忆卡 APP 和 电脑网页 内容不一样怎么办？</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/markji-help-260902-02" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">260902：墨墨记忆卡 收藏牌组内容有错误怎么办？</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/markji-help-260902-01" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">260902：墨墨记忆卡 如何进行新学复习？</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/markji-help-260901" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">260901：墨墨记忆卡 优秀牌组制作方法 及 收益途径</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/markji-help-260826" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">260826：墨墨记忆卡 显示容量满了应该怎么办？ </span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/markji-help-260729" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">260811：墨墨记忆卡 如何进行精选牌组自荐?</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/markji-help-260810" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">260810：墨墨记忆卡 关于墨墨记忆卡专业版若干问题解答</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/markji-help-260731" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">260731：墨墨记忆卡 牌组空间大小限制说明 </span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/markji-help-260729" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">260729：墨墨记忆卡 Anki 卡片导入墨墨出现乱码的解决方案</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/markji-help-260726" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">260726：墨墨记忆卡 关于 AI 制卡工具选择（豆包专业版太贵） </span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/markji-help-260722" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">260722：墨墨记忆卡 答案线限制说明 及 单卡片多知识点制卡方法 </span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/markji-help-260720" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">260720：墨墨记忆卡 关于 Anki 牌组导入/图片批量导入方法</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/markji-help-260709" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">260709：墨墨记忆卡 开放 API 支持什么功能？能否 AI 自动制卡？ </span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/markji-help-260702" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">260702：墨墨记忆卡 关于原创作者知识产权的保护</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/markji-help-260623" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">260623：墨墨记忆卡 如何将 Anki 牌组转到墨墨记忆卡上使用？ </span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/markji-help-260615" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">260615：墨墨记忆卡 批量制卡文本导入的语法问题</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/markji-help-260614" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">260614：墨墨记忆卡 显示答案按钮如何开启？ </span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/markji-help-260608" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">260608：墨墨记忆卡 填空卡片答案及反馈交互逻辑说明</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/markji-help-260605" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">260605：墨墨记忆卡 咨询墨墨记忆卡全免费改版上线时间</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/markji-help-260603" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">260603：墨墨记忆卡 批量编辑语音相关及立即同步内容修改</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/markji-help-260529" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">260529：墨墨记忆卡 卡片大量逾期堆积如何处理？ </span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/markji-help-260519" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">260519：墨墨记忆卡 如果导入 .apkg，说是文件太大了 </span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/markji-help-260515" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">260515：墨墨记忆卡 终身会员如何升级？</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/markji-help-260509" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">260509：墨墨记忆卡 学习收藏牌组消耗减免是什么意思？ </span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/markji-help-260508" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">260508：墨墨记忆卡 关于专业版生成语音次数说明</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/markji-help-260417" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">260417：墨墨记忆卡 关于下面3个按钮，忘记，认识都是怎么点击</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/markji-help-260414" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">260414：墨墨记忆卡 牌组学习消耗设置问题 </span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/markji-help-260409" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">260409：墨墨记忆卡 关于重新学习数据付费相关回复</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/markji-help-260408" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">260408：墨墨记忆卡 如何让好友免费学习共享牌组</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/markji-help-260407" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">260407：墨墨记忆卡 制卡时如何实现批量编辑</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/markji-help-260330" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">260330：墨墨记忆卡 每日学习数量不对？重置学习要花钱怎么办？</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/markji-help-260327" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">260327：墨墨记忆卡 关于编辑与补充收藏牌组的说明及建议方案</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/markji-help-260320" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">260320：墨墨记忆卡 卡片复习安排与复习间隔太长</span>  </a> </li><li class="astro-z2zdus5w"> <details class="astro-z2zdus5w"> <summary class="astro-z2zdus5w"> <div class="group-label astro-z2zdus5w"> <a aria-current="false" class="astro-z2zdus5w" href="/docs/markji-help-2025">2025 墨墨记忆卡 使用答疑合集</a>  </div> <svg aria-hidden="true" class="caret astro-z2zdus5w astro-2k72nljx" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <ul class="astro-z2zdus5w"> <li class="astro-z2zdus5w"> <a href="/docs/markji-help-251230" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">251230：墨墨记忆卡 卡片编辑理工科相关公式技巧</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/markji-help-251203" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">251203：墨墨记忆卡 考前冲刺 练习模式 提前复习</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/markji-help-251202" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">251202：墨墨记忆卡 操作失误添加了部分无需背诵的内容</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/markji-help-251124" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">251124：墨墨记忆卡 收藏牌组是否支持自由编辑 增删改</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/markji-help-251118" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">251118：墨墨记忆卡 如何保证每日固定的新学量</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/markji-help-251117" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">251117：墨墨记忆卡 补签页面在哪里？补签卡如何使用？</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/markji-help-251116" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">251116：墨墨记忆卡 终身会员升级攻略及牌组推荐</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/markji-help-251113" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">251113：墨墨记忆卡 专业版权限限制说明</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/markji-help-251112" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">251112：墨墨记忆卡 专业版额外赠送记忆币说明</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/markji-help-25111103" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">251111：墨墨记忆卡 如何将牌组移动到另一个文件夹？</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/markji-help-25111102" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">251111：墨墨记忆卡 收藏牌组学习者自行修改与更新相关逻辑</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/markji-help-25111101" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">251111：墨墨记忆卡 学习收藏牌组在原作者删除后会消失吗？</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/markji-help-251111" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">251111：墨墨记忆卡 已学习卡片复习安排逻辑</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/markji-help-251105" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">251105：墨墨记忆卡 专业版记忆币减免说明</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/markji-help-251023" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">251023：墨墨记忆卡 新学完成后多轮复习的使用逻辑</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/markji-help-251020" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">251020：墨墨记忆卡 软件服务稳定性及商业模式说明</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/markji-help-251014" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">251014：墨墨记忆卡 长期备考策略及短期冲刺技巧 </span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/markji-help-25101301" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">251013：墨墨记忆卡 如何实现暂停复习某个牌组</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/markji-help-251013" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">251013：墨墨记忆卡 熟知规划逻辑与每日学习量逻辑</span>  </a> </li> </ul>  </details> </li> </ul>  </details> </li> </ul>  </details> </li><li class="astro-z2zdus5w"> <details open class="astro-z2zdus5w"> <summary class="astro-z2zdus5w"> <div class="group-label astro-z2zdus5w"> <a aria-current="false" class="large astro-z2zdus5w" href="/docs/algorithm-intro">墨墨记忆算法</a>  </div> <svg aria-hidden="true" class="caret astro-z2zdus5w astro-2k72nljx" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <ul class="astro-z2zdus5w"> <li class="astro-z2zdus5w"> <details class="astro-z2zdus5w"> <summary class="astro-z2zdus5w"> <div class="group-label astro-z2zdus5w"> <a aria-current="false" class="astro-z2zdus5w" href="/docs/paper">墨墨论文</a>  </div> <svg aria-hidden="true" class="caret astro-z2zdus5w astro-2k72nljx" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <ul class="astro-z2zdus5w"> <li class="astro-z2zdus5w"> <a href="/docs/2022_KDD" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">优化间隔重复调度的随机最短路径算法</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/2023_TKDE" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">通过捕捉记忆动态，优化间隔重复调度</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/dataset" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">MaiMemo 间隔重复记忆行为开源数据集</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/2021_study" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">MaiMemo 记忆算法研究 2021</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/2025_experiment" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">MaiMemo Memory Algorithm Experiment 2025 - Preliminary Report</span>  </a> </li> </ul>  </details> </li><li class="astro-z2zdus5w"> <details class="astro-z2zdus5w"> <summary class="astro-z2zdus5w"> <div class="group-label astro-z2zdus5w"> <a aria-current="false" class="astro-z2zdus5w" href="/docs/science-popularization">记忆科普</a>  </div> <svg aria-hidden="true" class="caret astro-z2zdus5w astro-2k72nljx" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <ul class="astro-z2zdus5w"> <li class="astro-z2zdus5w"> <a href="/docs/markji-mmx-vs-anki-fsrs" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">【墨墨科普】到底选择墨墨记忆卡的 MMX，还是 Anki 的 FSRS 学习外语？</span>  </a> </li> </ul>  </details> </li><li class="astro-z2zdus5w"> <details class="astro-z2zdus5w"> <summary class="astro-z2zdus5w"> <div class="group-label astro-z2zdus5w"> <a aria-current="false" class="astro-z2zdus5w" href="/docs/classics">经典文献</a>  </div> <svg aria-hidden="true" class="caret astro-z2zdus5w astro-2k72nljx" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <ul class="astro-z2zdus5w"> <li class="astro-z2zdus5w"> <details class="astro-z2zdus5w"> <summary class="astro-z2zdus5w"> <div class="group-label astro-z2zdus5w"> <a aria-current="false" class="astro-z2zdus5w" href="/docs/ebbinghaus-memory">记忆：对实验心理学的贡献</a>  </div> <svg aria-hidden="true" class="caret astro-z2zdus5w astro-2k72nljx" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <ul class="astro-z2zdus5w"> <li class="astro-z2zdus5w"> <a href="/docs/ebbinghaus-memory-preface" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">作者序言</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/ebbinghaus-memory-knowledge-of-memory" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">第一章 我们关于记忆的知识</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/ebbinghaus-memory-research-methodology" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">第二章 扩展我们关于记忆知识的可能性</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/ebbinghaus-memory-nonsense-syllables-memory-experiment" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">第三章 研究方法</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/ebbinghaus-memory-data-validity-and-error-law" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">第四章 所获平均值的效用</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/ebbinghaus-memory-list-length-learning-curve" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">第五章 学习音节序列的速度作为其长度的函数</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/ebbinghaus-memory-repetition-retention-function" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">第六章 保持作为重复次数的函数</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/ebbinghaus-memory-forgetting-curve-and-retention" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">第七章 保持与遗忘作为时间的函数</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/ebbinghaus-memory-spaced-repetition-learning-efficiency" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">第八章 保持作为重复学习的函数</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/ebbinghaus-memory-remote-associative-strength" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">第九章 保持作为系列成员前后顺序的函数</span>  </a> </li> </ul>  </details> </li> </ul>  </details> </li><li class="astro-z2zdus5w"> <details class="astro-z2zdus5w"> <summary class="astro-z2zdus5w"> <div class="group-label astro-z2zdus5w"> <a aria-current="false" class="astro-z2zdus5w" href="/docs/glossary">术语表</a>  </div> <svg aria-hidden="true" class="caret astro-z2zdus5w astro-2k72nljx" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <ul class="astro-z2zdus5w"> <li class="astro-z2zdus5w"> <a href="/docs/BMMS" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">BMMS</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/FCM" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">FCM</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/FSR" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">FSR</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/FM" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">FM</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/FVI" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">FVI</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/MM" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">MM</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/MMX" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">MMX</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/MMDB" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">MMDB</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/MRL" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">MRL</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/WCR" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">WCR</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/WDR" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">WDR</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/ebbinghaus_schedule" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">艾宾浩斯记忆法</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/testing_effect" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">测试效应</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/long-term_memory" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">长期记忆</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/spaced_repetition" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">间隔重复</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/spacing_effect" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">间隔效应</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/user_review_logs" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">认知过程历史记录</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/retrieval_practice" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">提取练习</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/forgetting_point" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">遗忘临界点</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/forgetting_curve" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">遗忘曲线</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/active_recall" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">主动回忆</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/fm_percentage" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">熟知度</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/memory_durability" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">记忆持久度</span>  </a> </li> </ul>  </details> </li><li class="astro-z2zdus5w"> <a href="/docs/maimemo-algorithm-updates" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">MM 记忆算法更新日志</span>  </a> </li> </ul>  </details> </li><li class="astro-z2zdus5w"> <details open class="astro-z2zdus5w"> <summary class="astro-z2zdus5w"> <div class="group-label astro-z2zdus5w"> <a aria-current="false" class="large astro-z2zdus5w" href="/docs/product-log">产品更新日志</a>  </div> <svg aria-hidden="true" class="caret astro-z2zdus5w astro-2k72nljx" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <ul class="astro-z2zdus5w"> <li class="astro-z2zdus5w"> <a href="/docs/product-log-memo-ios" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">墨墨背单词 - iOS</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/product-log-memo-android" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">墨墨背单词 - Android</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/product-log-memo-harmonyos" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">墨墨背单词 - HarmonyOS</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/product-log-memo-web" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">墨墨背单词 - Web</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/product-log-markji" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">墨墨记忆卡 - iOS Android Web</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/product-log-open-platform" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">墨墨开放平台</span>  </a> </li> </ul>  </details> </li><li class="astro-z2zdus5w"> <details open class="astro-z2zdus5w"> <summary class="astro-z2zdus5w"> <div class="group-label astro-z2zdus5w"> <a aria-current="false" class="large astro-z2zdus5w" href="/docs/open">开放平台</a>  </div> <svg aria-hidden="true" class="caret astro-z2zdus5w astro-2k72nljx" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <ul class="astro-z2zdus5w"> <li class="astro-z2zdus5w"> <a href="/docs/PNvOw2E1AivPtlkRlQgce1W1n2c" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">墨墨开放 API 功能介绍</span>  </a> </li><li class="astro-z2zdus5w"> <a href="/docs/open-terms" aria-current="false" class="astro-z2zdus5w"> <span class="astro-z2zdus5w">墨墨开放平台服务协议</span>  </a> </li> </ul>  </details> </li> </ul>   <script aria-hidden="true">
+		(() => {
+			const scroller = document.getElementById('starlight__sidebar');
+			if (!window._starlightScrollRestore || !scroller) return;
+			scroller.scrollTop = window._starlightScrollRestore;
+			delete window._starlightScrollRestore;
+		})();
+	</script> </sl-sidebar-state-persist>  <div class="md:sl-hidden"> <!-- <MobileMenuFooter {...Astro.props} /> --> </div> </div> </div> </nav> <div class="main-frame astro-yx2vn6bl">  <script type="module">const a=document.getElementById("starlight__sidebar"),n=a?.querySelector("sl-sidebar-state-persist"),o="sl-sidebar-state",i=()=>{let t=[];const e=n?.dataset.hash||"";try{const s=sessionStorage.getItem(o),r=JSON.parse(s||"{}");Array.isArray(r.open)&&r.hash===e&&(t=r.open)}catch{}return{hash:e,open:t,scroll:a?.scrollTop||0}},c=t=>{try{sessionStorage.setItem(o,JSON.stringify(t))}catch{}},d=()=>c(i()),l=(t,e)=>{const s=i();s.open[e]=t,c(s)};n?.addEventListener("click",t=>{if(!(t.target instanceof Element))return;const e=t.target.closest("summary")?.closest("details");if(!e)return;const s=e.querySelector("sl-sidebar-restore"),r=parseInt(s?.dataset.index||"");isNaN(r)||l(!e.open,r)});addEventListener("visibilitychange",()=>{document.visibilityState==="hidden"&&d()});addEventListener("pageHide",d);</script> <div class="lg:sl-flex astro-yvtwewox"> <aside class="right-sidebar-container print:hidden astro-yvtwewox"> <div class="right-sidebar astro-yvtwewox"> <div class="lg:sl-hidden astro-xgysujrx"><mobile-starlight-toc data-min-h="2" data-max-h="3" class="astro-kxodqznw"><nav aria-labelledby="starlight__on-this-page--mobile" class="astro-kxodqznw"><details id="starlight__mobile-toc" class="astro-kxodqznw"><summary id="starlight__on-this-page--mobile" class="sl-flex astro-kxodqznw"><span class="toggle sl-flex astro-kxodqznw">本页内容<svg aria-hidden="true" class="caret astro-kxodqznw astro-2k72nljx" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></span><span class="display-current astro-kxodqznw"></span></summary><div class="dropdown astro-kxodqznw"><ul class="isMobile astro-tjr5oomc" style="--depth: 0;"> <li class="astro-tjr5oomc" style="--depth: 0;"> <a href="#_top" class="astro-tjr5oomc" style="--depth: 0;"> <span class="astro-tjr5oomc" style="--depth: 0;">概述</span> </a>  </li><li class="astro-tjr5oomc" style="--depth: 0;"> <a href="#1常见问题--快速上手" class="astro-tjr5oomc" style="--depth: 0;"> <span class="astro-tjr5oomc" style="--depth: 0;">1、常见问题 / 快速上手</span> </a> <ul class="isMobile astro-tjr5oomc" style="--depth: 1;"> <li class="astro-tjr5oomc" style="--depth: 1;"> <a href="#q1墨墨单词机如何进行开机激活与网络绑定" class="astro-tjr5oomc" style="--depth: 1;"> <span class="astro-tjr5oomc" style="--depth: 1;">Q1：墨墨单词机如何进行开机激活与网络绑定？</span> </a>  </li><li class="astro-tjr5oomc" style="--depth: 1;"> <a href="#q2如何在单词机上更换想要背诵的词书" class="astro-tjr5oomc" style="--depth: 1;"> <span class="astro-tjr5oomc" style="--depth: 1;">Q2：如何在单词机上更换想要背诵的词书？</span> </a>  </li><li class="astro-tjr5oomc" style="--depth: 1;"> <a href="#q3如何让-app-和单词机只学同一本书" class="astro-tjr5oomc" style="--depth: 1;"> <span class="astro-tjr5oomc" style="--depth: 1;">Q3：如何让 APP 和单词机只学同一本书？</span> </a>  </li><li class="astro-tjr5oomc" style="--depth: 1;"> <a href="#q4如何调整每日学习量或修改复习新学分开模式" class="astro-tjr5oomc" style="--depth: 1;"> <span class="astro-tjr5oomc" style="--depth: 1;">Q4：如何调整每日学习量，或修改复习/新学分开模式？</span> </a>  </li><li class="astro-tjr5oomc" style="--depth: 1;"> <a href="#q5如何切换英中或中英背词模式" class="astro-tjr5oomc" style="--depth: 1;"> <span class="astro-tjr5oomc" style="--depth: 1;">Q5：如何切换“英中”或“中英”背词模式？</span> </a>  </li><li class="astro-tjr5oomc" style="--depth: 1;"> <a href="#q6背词时遇到已经掌握的词熟知词或不想背的词如何处理" class="astro-tjr5oomc" style="--depth: 1;"> <span class="astro-tjr5oomc" style="--depth: 1;">Q6：背词时遇到已经掌握的词（熟知词）或不想背的词，如何处理？</span> </a>  </li><li class="astro-tjr5oomc" style="--depth: 1;"> <a href="#q7换书后为什么显示新书籍里有-已学熟知不想背暂停收藏-的单词" class="astro-tjr5oomc" style="--depth: 1;"> <span class="astro-tjr5oomc" style="--depth: 1;">Q7：换书后，为什么显示新书籍里有 已学/熟知/不想背/暂停/收藏 的单词？</span> </a>  </li><li class="astro-tjr5oomc" style="--depth: 1;"> <a href="#q8如何移出记忆如何清空单词数据如何重置" class="astro-tjr5oomc" style="--depth: 1;"> <span class="astro-tjr5oomc" style="--depth: 1;">Q8：如何移出记忆？如何清空单词数据？如何重置？</span> </a>  </li><li class="astro-tjr5oomc" style="--depth: 1;"> <a href="#q9单词机屏幕卡住按键无响应或死机怎么办" class="astro-tjr5oomc" style="--depth: 1;"> <span class="astro-tjr5oomc" style="--depth: 1;">Q9：单词机屏幕卡住、按键无响应或死机怎么办？</span> </a>  </li><li class="astro-tjr5oomc" style="--depth: 1;"> <a href="#q10单词机支持签到功能吗" class="astro-tjr5oomc" style="--depth: 1;"> <span class="astro-tjr5oomc" style="--depth: 1;">Q10：单词机支持签到功能吗？</span> </a>  </li><li class="astro-tjr5oomc" style="--depth: 1;"> <a href="#q11单词机支持蓝牙耳机吗" class="astro-tjr5oomc" style="--depth: 1;"> <span class="astro-tjr5oomc" style="--depth: 1;">Q11：单词机支持蓝牙耳机吗？</span> </a>  </li><li class="astro-tjr5oomc" style="--depth: 1;"> <a href="#q12单词机如何使用云词本" class="astro-tjr5oomc" style="--depth: 1;"> <span class="astro-tjr5oomc" style="--depth: 1;">Q12：单词机如何使用云词本</span> </a>  </li><li class="astro-tjr5oomc" style="--depth: 1;"> <a href="#q13单词机支持什么功能" class="astro-tjr5oomc" style="--depth: 1;"> <span class="astro-tjr5oomc" style="--depth: 1;">Q13：单词机支持什么功能？</span> </a>  </li><li class="astro-tjr5oomc" style="--depth: 1;"> <a href="#q14单词机是否支持离线使用" class="astro-tjr5oomc" style="--depth: 1;"> <span class="astro-tjr5oomc" style="--depth: 1;">Q14：单词机是否支持离线使用</span> </a>  </li><li class="astro-tjr5oomc" style="--depth: 1;"> <a href="#q15单词机与-app-端的学习数据是否同步" class="astro-tjr5oomc" style="--depth: 1;"> <span class="astro-tjr5oomc" style="--depth: 1;">Q15：单词机与 App 端的学习数据是否同步</span> </a>  </li><li class="astro-tjr5oomc" style="--depth: 1;"> <a href="#q16单词机学习是否需要单词上限" class="astro-tjr5oomc" style="--depth: 1;"> <span class="astro-tjr5oomc" style="--depth: 1;">Q16：单词机学习是否需要单词上限</span> </a>  </li><li class="astro-tjr5oomc" style="--depth: 1;"> <a href="#q17-找不到绑定入口" class="astro-tjr5oomc" style="--depth: 1;"> <span class="astro-tjr5oomc" style="--depth: 1;">Q17： 找不到绑定入口</span> </a>  </li><li class="astro-tjr5oomc" style="--depth: 1;"> <a href="#q18-如何进行系统升级" class="astro-tjr5oomc" style="--depth: 1;"> <span class="astro-tjr5oomc" style="--depth: 1;">Q18： 如何进行系统升级</span> </a>  </li><li class="astro-tjr5oomc" style="--depth: 1;"> <a href="#q19-单词机为什么会闪黑屏" class="astro-tjr5oomc" style="--depth: 1;"> <span class="astro-tjr5oomc" style="--depth: 1;">Q19： 单词机为什么会闪黑屏</span> </a>  </li><li class="astro-tjr5oomc" style="--depth: 1;"> <a href="#q20--如何重置单词机" class="astro-tjr5oomc" style="--depth: 1;"> <span class="astro-tjr5oomc" style="--depth: 1;">Q20：  如何重置单词机</span> </a>  </li> </ul>  </li><li class="astro-tjr5oomc" style="--depth: 0;"> <a href="#2单词机介绍" class="astro-tjr5oomc" style="--depth: 0;"> <span class="astro-tjr5oomc" style="--depth: 0;">2、单词机介绍</span> </a> <ul class="isMobile astro-tjr5oomc" style="--depth: 1;"> <li class="astro-tjr5oomc" style="--depth: 1;"> <a href="#1产品信息" class="astro-tjr5oomc" style="--depth: 1;"> <span class="astro-tjr5oomc" style="--depth: 1;">1、产品信息</span> </a>  </li><li class="astro-tjr5oomc" style="--depth: 1;"> <a href="#2快速指南" class="astro-tjr5oomc" style="--depth: 1;"> <span class="astro-tjr5oomc" style="--depth: 1;">2、快速指南</span> </a>  </li><li class="astro-tjr5oomc" style="--depth: 1;"> <a href="#3绑定激活" class="astro-tjr5oomc" style="--depth: 1;"> <span class="astro-tjr5oomc" style="--depth: 1;">3、绑定激活</span> </a>  </li><li class="astro-tjr5oomc" style="--depth: 1;"> <a href="#4核心功能" class="astro-tjr5oomc" style="--depth: 1;"> <span class="astro-tjr5oomc" style="--depth: 1;">4、核心功能</span> </a>  </li><li class="astro-tjr5oomc" style="--depth: 1;"> <a href="#5更多功能" class="astro-tjr5oomc" style="--depth: 1;"> <span class="astro-tjr5oomc" style="--depth: 1;">5、更多功能</span> </a>  </li><li class="astro-tjr5oomc" style="--depth: 1;"> <a href="#6按键介绍" class="astro-tjr5oomc" style="--depth: 1;"> <span class="astro-tjr5oomc" style="--depth: 1;">6、按键介绍</span> </a>  </li><li class="astro-tjr5oomc" style="--depth: 1;"> <a href="#7安全及注意事项" class="astro-tjr5oomc" style="--depth: 1;"> <span class="astro-tjr5oomc" style="--depth: 1;">7、安全及注意事项</span> </a>  </li><li class="astro-tjr5oomc" style="--depth: 1;"> <a href="#8帮助与反馈" class="astro-tjr5oomc" style="--depth: 1;"> <span class="astro-tjr5oomc" style="--depth: 1;">8、帮助与反馈</span> </a>  </li> </ul>  </li> </ul> </div></details></nav></mobile-starlight-toc><script type="module" src="/_astro/MobileTableOfContents.astro_astro_type_script_index_0_lang.C181hMzK.js"></script></div><div class="right-sidebar-panel sl-hidden lg:sl-block astro-xgysujrx"><div class="sl-container astro-xgysujrx"><starlight-toc data-min-h="2" data-max-h="3"><nav aria-labelledby="starlight__on-this-page"><h2 id="starlight__on-this-page">本页内容</h2><ul class="astro-tjr5oomc" style="--depth: 0;"> <li class="astro-tjr5oomc" style="--depth: 0;"> <a href="#_top" class="astro-tjr5oomc" style="--depth: 0;"> <span class="astro-tjr5oomc" style="--depth: 0;">概述</span> </a>  </li><li class="astro-tjr5oomc" style="--depth: 0;"> <a href="#1常见问题--快速上手" class="astro-tjr5oomc" style="--depth: 0;"> <span class="astro-tjr5oomc" style="--depth: 0;">1、常见问题 / 快速上手</span> </a> <ul class="astro-tjr5oomc" style="--depth: 1;"> <li class="astro-tjr5oomc" style="--depth: 1;"> <a href="#q1墨墨单词机如何进行开机激活与网络绑定" class="astro-tjr5oomc" style="--depth: 1;"> <span class="astro-tjr5oomc" style="--depth: 1;">Q1：墨墨单词机如何进行开机激活与网络绑定？</span> </a>  </li><li class="astro-tjr5oomc" style="--depth: 1;"> <a href="#q2如何在单词机上更换想要背诵的词书" class="astro-tjr5oomc" style="--depth: 1;"> <span class="astro-tjr5oomc" style="--depth: 1;">Q2：如何在单词机上更换想要背诵的词书？</span> </a>  </li><li class="astro-tjr5oomc" style="--depth: 1;"> <a href="#q3如何让-app-和单词机只学同一本书" class="astro-tjr5oomc" style="--depth: 1;"> <span class="astro-tjr5oomc" style="--depth: 1;">Q3：如何让 APP 和单词机只学同一本书？</span> </a>  </li><li class="astro-tjr5oomc" style="--depth: 1;"> <a href="#q4如何调整每日学习量或修改复习新学分开模式" class="astro-tjr5oomc" style="--depth: 1;"> <span class="astro-tjr5oomc" style="--depth: 1;">Q4：如何调整每日学习量，或修改复习/新学分开模式？</span> </a>  </li><li class="astro-tjr5oomc" style="--depth: 1;"> <a href="#q5如何切换英中或中英背词模式" class="astro-tjr5oomc" style="--depth: 1;"> <span class="astro-tjr5oomc" style="--depth: 1;">Q5：如何切换“英中”或“中英”背词模式？</span> </a>  </li><li class="astro-tjr5oomc" style="--depth: 1;"> <a href="#q6背词时遇到已经掌握的词熟知词或不想背的词如何处理" class="astro-tjr5oomc" style="--depth: 1;"> <span class="astro-tjr5oomc" style="--depth: 1;">Q6：背词时遇到已经掌握的词（熟知词）或不想背的词，如何处理？</span> </a>  </li><li class="astro-tjr5oomc" style="--depth: 1;"> <a href="#q7换书后为什么显示新书籍里有-已学熟知不想背暂停收藏-的单词" class="astro-tjr5oomc" style="--depth: 1;"> <span class="astro-tjr5oomc" style="--depth: 1;">Q7：换书后，为什么显示新书籍里有 已学/熟知/不想背/暂停/收藏 的单词？</span> </a>  </li><li class="astro-tjr5oomc" style="--depth: 1;"> <a href="#q8如何移出记忆如何清空单词数据如何重置" class="astro-tjr5oomc" style="--depth: 1;"> <span class="astro-tjr5oomc" style="--depth: 1;">Q8：如何移出记忆？如何清空单词数据？如何重置？</span> </a>  </li><li class="astro-tjr5oomc" style="--depth: 1;"> <a href="#q9单词机屏幕卡住按键无响应或死机怎么办" class="astro-tjr5oomc" style="--depth: 1;"> <span class="astro-tjr5oomc" style="--depth: 1;">Q9：单词机屏幕卡住、按键无响应或死机怎么办？</span> </a>  </li><li class="astro-tjr5oomc" style="--depth: 1;"> <a href="#q10单词机支持签到功能吗" class="astro-tjr5oomc" style="--depth: 1;"> <span class="astro-tjr5oomc" style="--depth: 1;">Q10：单词机支持签到功能吗？</span> </a>  </li><li class="astro-tjr5oomc" style="--depth: 1;"> <a href="#q11单词机支持蓝牙耳机吗" class="astro-tjr5oomc" style="--depth: 1;"> <span class="astro-tjr5oomc" style="--depth: 1;">Q11：单词机支持蓝牙耳机吗？</span> </a>  </li><li class="astro-tjr5oomc" style="--depth: 1;"> <a href="#q12单词机如何使用云词本" class="astro-tjr5oomc" style="--depth: 1;"> <span class="astro-tjr5oomc" style="--depth: 1;">Q12：单词机如何使用云词本</span> </a>  </li><li class="astro-tjr5oomc" style="--depth: 1;"> <a href="#q13单词机支持什么功能" class="astro-tjr5oomc" style="--depth: 1;"> <span class="astro-tjr5oomc" style="--depth: 1;">Q13：单词机支持什么功能？</span> </a>  </li><li class="astro-tjr5oomc" style="--depth: 1;"> <a href="#q14单词机是否支持离线使用" class="astro-tjr5oomc" style="--depth: 1;"> <span class="astro-tjr5oomc" style="--depth: 1;">Q14：单词机是否支持离线使用</span> </a>  </li><li class="astro-tjr5oomc" style="--depth: 1;"> <a href="#q15单词机与-app-端的学习数据是否同步" class="astro-tjr5oomc" style="--depth: 1;"> <span class="astro-tjr5oomc" style="--depth: 1;">Q15：单词机与 App 端的学习数据是否同步</span> </a>  </li><li class="astro-tjr5oomc" style="--depth: 1;"> <a href="#q16单词机学习是否需要单词上限" class="astro-tjr5oomc" style="--depth: 1;"> <span class="astro-tjr5oomc" style="--depth: 1;">Q16：单词机学习是否需要单词上限</span> </a>  </li><li class="astro-tjr5oomc" style="--depth: 1;"> <a href="#q17-找不到绑定入口" class="astro-tjr5oomc" style="--depth: 1;"> <span class="astro-tjr5oomc" style="--depth: 1;">Q17： 找不到绑定入口</span> </a>  </li><li class="astro-tjr5oomc" style="--depth: 1;"> <a href="#q18-如何进行系统升级" class="astro-tjr5oomc" style="--depth: 1;"> <span class="astro-tjr5oomc" style="--depth: 1;">Q18： 如何进行系统升级</span> </a>  </li><li class="astro-tjr5oomc" style="--depth: 1;"> <a href="#q19-单词机为什么会闪黑屏" class="astro-tjr5oomc" style="--depth: 1;"> <span class="astro-tjr5oomc" style="--depth: 1;">Q19： 单词机为什么会闪黑屏</span> </a>  </li><li class="astro-tjr5oomc" style="--depth: 1;"> <a href="#q20--如何重置单词机" class="astro-tjr5oomc" style="--depth: 1;"> <span class="astro-tjr5oomc" style="--depth: 1;">Q20：  如何重置单词机</span> </a>  </li> </ul>  </li><li class="astro-tjr5oomc" style="--depth: 0;"> <a href="#2单词机介绍" class="astro-tjr5oomc" style="--depth: 0;"> <span class="astro-tjr5oomc" style="--depth: 0;">2、单词机介绍</span> </a> <ul class="astro-tjr5oomc" style="--depth: 1;"> <li class="astro-tjr5oomc" style="--depth: 1;"> <a href="#1产品信息" class="astro-tjr5oomc" style="--depth: 1;"> <span class="astro-tjr5oomc" style="--depth: 1;">1、产品信息</span> </a>  </li><li class="astro-tjr5oomc" style="--depth: 1;"> <a href="#2快速指南" class="astro-tjr5oomc" style="--depth: 1;"> <span class="astro-tjr5oomc" style="--depth: 1;">2、快速指南</span> </a>  </li><li class="astro-tjr5oomc" style="--depth: 1;"> <a href="#3绑定激活" class="astro-tjr5oomc" style="--depth: 1;"> <span class="astro-tjr5oomc" style="--depth: 1;">3、绑定激活</span> </a>  </li><li class="astro-tjr5oomc" style="--depth: 1;"> <a href="#4核心功能" class="astro-tjr5oomc" style="--depth: 1;"> <span class="astro-tjr5oomc" style="--depth: 1;">4、核心功能</span> </a>  </li><li class="astro-tjr5oomc" style="--depth: 1;"> <a href="#5更多功能" class="astro-tjr5oomc" style="--depth: 1;"> <span class="astro-tjr5oomc" style="--depth: 1;">5、更多功能</span> </a>  </li><li class="astro-tjr5oomc" style="--depth: 1;"> <a href="#6按键介绍" class="astro-tjr5oomc" style="--depth: 1;"> <span class="astro-tjr5oomc" style="--depth: 1;">6、按键介绍</span> </a>  </li><li class="astro-tjr5oomc" style="--depth: 1;"> <a href="#7安全及注意事项" class="astro-tjr5oomc" style="--depth: 1;"> <span class="astro-tjr5oomc" style="--depth: 1;">7、安全及注意事项</span> </a>  </li><li class="astro-tjr5oomc" style="--depth: 1;"> <a href="#8帮助与反馈" class="astro-tjr5oomc" style="--depth: 1;"> <span class="astro-tjr5oomc" style="--depth: 1;">8、帮助与反馈</span> </a>  </li> </ul>  </li> </ul> </nav></starlight-toc><script type="module" src="/_astro/TableOfContents.astro_astro_type_script_index_0_lang.CKWWgpjV.js"></script></div></div> </div> </aside> <div class="main-pane astro-yvtwewox">  <main data-pagefind-body class="astro-ktgw73xx" lang="zh-CN" dir="ltr">    <div class="content-panel astro-g77chmeb"> <div class="sl-container astro-g77chmeb"> <h1 id="_top" class="astro-iebbweuz">墨墨单词机</h1>  </div> </div>  <div class="content-panel astro-g77chmeb"> <div class="sl-container astro-g77chmeb"> <div class="sl-markdown-content"> <div class="block-page">
+  <h2 class="block-text block-heading block-heading-2 block-item" id="1常见问题--快速上手"><span>1、常见问题 / 快速上手</span></h2>
+  <div class="block-item block-grid flex gap-3 columns-4" column-size="4">
+    <div class="block-item block-grid-column" width-ratio="25" style="flex: 0 1 25%">
+      <div class="block-item block-view">
+        <div class="block-item block-file"><video class="block-file-video aspect-video w-full" controls src="https://memodocs-files.maimemo.com/static/clz1duta9002y10hatanjkmqe/assets/files/ZzwCbzhqKoGYC7xvH4UcVHv7nFU" data-file-name="飞书20260917-110339.mo.mp4"></video></div>
+      </div>
+    </div>
+    <div class="block-item block-grid-column" width-ratio="25" style="flex: 0 1 25%">
+      <p class="block-text block-item"><span></span></p>
+    </div>
+    <div class="block-item block-grid-column" width-ratio="25" style="flex: 0 1 25%">
+      <p class="block-text block-item"><span></span></p>
+    </div>
+    <div class="block-item block-grid-column" width-ratio="25" style="flex: 0 1 25%">
+      <p class="block-text block-item"><span></span></p>
+    </div>
+  </div>
+  <h3 class="block-text block-heading block-heading-3 block-item" id="q1墨墨单词机如何进行开机激活与网络绑定"><span>Q1：墨墨单词机如何进行开机激活与网络绑定？</span></h3>
+  <div class="block-item block-quote-container">
+    <p class="block-text block-item"><span>单词机首次绑定激活请按以下步骤操作：</span></p>
+    <ol>
+      <li class="block-text block-item"><span class="font-bold">开机解锁</span><span>：长按单词机右上方【电源键】开机并解锁屏幕；</span></li>
+      <li class="block-text block-item"><span class="font-bold">准备网络</span><span>：请确保手机连接至 </span><span class="font-bold">2.4GHz 频段的 Wi-Fi</span><span>（如无路由器，也可开启手机 2.4G 个人热点）；</span></li>
+      <li class="block-text block-item"><span class="font-bold">App 扫码绑定</span><span>：打开手机「墨墨背单词 App」（</span><span class="feishu-bg-color-4">请先升级到 5.5.96 或以上版本</span><span>），依次点击【我的】页面 ➔ 右上角【单词机图标】 ➔ 选择【绑定单词机】，扫描单词机屏幕上的二维码即可完成绑定。</span></li>
+    </ol>
+    <p class="block-text block-item"><span class="italic">温馨提示：绑定成功后设备将自动同步词书数据，过程需数分钟，请确保蓝牙及网络连接稳定，切勿中途退出。</span></p>
+  </div>
+  <p class="block-text block-item"><span></span></p>
+  <h3 class="block-text block-heading block-heading-3 block-item" id="q2如何在单词机上更换想要背诵的词书"><span>Q2：如何在单词机上更换想要背诵的词书？</span></h3>
+  <div class="block-item block-quote-container">
+    <p class="block-text block-item"><span>更换词书需在手机端进行设置：</span></p>
+    <ol>
+      <li class="block-text block-item"><span>打开手机「墨墨背单词 App」，点击进入【我的】页面；</span></li>
+      <li class="block-text block-item"><span>点击右上角【单词机图标】进入设备管理页面，选择【更换词书】并挑选您需要学习的词书；</span></li>
+      <li class="block-text block-item"><span>选定后，单词机会自动同步新词书内容。同步期间请保持设备与手机的网络/蓝牙连接通畅。</span></li>
+    </ol>
+  </div>
+  <p class="block-text block-item"><span></span></p>
+  <h3 class="block-text block-heading block-heading-3 block-item" id="q3如何让-app-和单词机只学同一本书"><span>Q3：如何让 APP 和单词机只学同一本书？</span></h3>
+  <div class="block-item block-quote-container">
+    <p class="block-text block-item"><span>🌟 温馨提示：墨墨背单词 App 支持多本词书同时学习，而单词机仅支持单本词书学习。</span></p>
+    <p class="block-text block-item"><span class="font-bold">更改【单词机】词书:</span></p>
+    <ol>
+      <li class="block-text block-item"><span>打开「墨墨背单词 APP」进入【我的】➔【单词机】，点击【更换词书】选择书籍完成换书；</span></li>
+      <li class="block-text block-item"><span>「单词机」连接 Wi-Fi 后，进入【设置】➔【资源更新】即可。</span></li>
+    </ol>
+    <p class="block-text block-item"><span class="font-bold">更改【App】词书：</span></p>
+    <ol>
+      <li class="block-text block-item"><span>进入【选词】，在书籍列表找到「单词机当前正在学的书籍」，该书籍右侧【...】选择【学此词书】；</span></li>
+      <li class="block-text block-item"><span>在【选词】页面，点击当前书籍右侧【...】选择【只背此书 - 移出记忆】；</span></li>
+      <li class="block-text block-item"><span>进入【我的】➔【单词机】，点击【合并数据】；</span></li>
+      <li class="block-text block-item"><span>使用「单词机」连接 Wi-Fi 后，进入【设置】➔【同步数据】即可。</span></li>
+    </ol>
+  </div>
+  <p class="block-text block-item"><span></span></p>
+  <h3 class="block-text block-heading block-heading-3 block-item" id="q4如何调整每日学习量或修改复习新学分开模式"><span>Q4：如何调整每日学习量，或修改复习/新学分开模式？</span></h3>
+  <div class="block-item block-quote-container">
+    <p class="block-text block-item"><span>可以直接在单词机上进行调整：</span></p>
+    <ul>
+      <li class="block-text block-item"><span class="font-bold">调整学习量</span><span>：</span>
+        <ul class="block-item block-sub">
+          <li class="block-text block-item"><span>若为</span><span class="font-bold">合并模式</span><span>：在「词书总览」页面，按【↑ / ↓】方向键即可增加或减少「每日学习量」；</span></li>
+          <li class="block-text block-item"><span>若为</span><span class="font-bold">分开模式</span><span>：在「词书总览」页面，按【← / →】方向键即可调整「新学量」。</span></li>
+        </ul>
+      </li>
+      <li class="block-text block-item"><span class="font-bold">切换合并/分开模式</span><span>：</span>
+        <ul class="block-item block-sub">
+          <li class="block-text block-item"><span>在单词机主界面，进入【设置】 ➔ 【学习设置】 ➔ 【每日复习量和新学量】进行切换设置。</span></li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+  <p class="block-text block-item"><span></span></p>
+  <h3 class="block-text block-heading block-heading-3 block-item" id="q5如何切换英中或中英背词模式"><span>Q5：如何切换“英中”或“中英”背词模式？</span></h3>
+  <div class="block-item block-quote-container">
+    <p class="block-text block-item"><span>切换学习模式的路径为：</span></p>
+    <ul>
+      <li class="block-text block-item"><span>在单词机主界面，依次进入【设置】 ➔ 【学习设置】 ➔ 【记忆模式】，即可根据您的习惯自由选择「英中模式」或「中英模式」。</span></li>
+    </ul>
+  </div>
+  <p class="block-text block-item"><span></span></p>
+  <h3 class="block-text block-heading block-heading-3 block-item" id="q6背词时遇到已经掌握的词熟知词或不想背的词如何处理"><span>Q6：背词时遇到已经掌握的词（熟知词）或不想背的词，如何处理？</span></h3>
+  <div class="block-item block-quote-container">
+    <p class="block-text block-item"><span>可以在背词过程中通过</span><span class="font-bold">长按</span><span>对应按键进行标记：</span></p>
+    <ul>
+      <li class="block-text block-item"><span class="font-bold">标记为熟知（不再安排复习）</span><span>：长按【 〇 】键；</span></li>
+      <li class="block-text block-item"><span class="font-bold">标记为不想背（移出学习规划）</span><span>：长按【 ✕ 】键；</span></li>
+      <li class="block-text block-item"><span class="font-bold">添加至收藏</span><span>：长按【 △ 】键。</span></li>
+    </ul>
+    <p class="block-text block-item"><span class="font-bold">若不小心误标，如何恢复？</span></p>
+    <ul>
+      <li class="block-text block-item"><span>请前往【主菜单】 ➔ 【单词回顾】 ➔ 进入对应单词的【单词详情页】，再次</span><span class="font-bold">长按</span><span>对应的按键即可取消该标记。</span></li>
+    </ul>
+  </div>
+  <p class="block-text block-item"><span></span></p>
+  <h3 class="block-text block-heading block-heading-3 block-item" id="q7换书后为什么显示新书籍里有-已学熟知不想背暂停收藏-的单词"><span>Q7：换书后，为什么显示新书籍里有 已学/熟知/不想背/暂停/收藏 的单词？</span></h3>
+  <div class="block-item block-quote-container">
+    <p class="block-text block-item"><span>这是因为在单词机换书后，当新书籍的词汇中包含上本书已学的单词，依然会保留并显示该单词的学习状态。</span></p>
+    <p class="block-text block-item"><span class="font-bold">如需清空单词状态：</span><span>可在单词机或 APP 里对/熟知/不想背/暂停/收藏的单词进行取消标记（APP 操作后记得同步至单词机哦~）</span></p>
+    <p class="block-text block-item"><span class="font-bold">如需移除单词记忆数据，可查看下面 Q8 的操作。</span></p>
+  </div>
+  <p class="block-text block-item"><span></span></p>
+  <h3 class="block-text block-heading block-heading-3 block-item" id="q8如何移出记忆如何清空单词数据如何重置"><span>Q8：如何移出记忆？如何清空单词数据？如何重置？</span></h3>
+  <div class="block-item block-quote-container">
+    <p class="block-text block-item"><span>🌟 温馨提示：当前版本单词机只支持词书里的单词设置为【不想背】，暂不支持把已学单词【移出记忆】，所以移出记忆、清空单词数据、重置单词数据操作需在 APP 里完成。</span></p>
+    <p class="block-text block-item"><span class="font-bold">单个单词移出记忆【无等级限制】：</span></p>
+    <p class="block-text block-item"><span>在 APP 复习页面或单个单词详情页的右上角 “…” 更多按钮，选择【移出记忆】，该单词的记忆数据会被清除。</span></p>
+    <p class="block-text block-item"><span class="font-bold">批量移出单词 【 LVL 13 等级】：</span></p>
+    <p class="block-text block-item"><span>墨墨等级达到 LVL 13 级后，在 APP 单词列表点击右下角“菜单”选择 【批量移出】，勾选要移出的单词后确定即可清除记忆。</span></p>
+    <p class="block-text block-item"><span class="font-bold">清空整本书学习数据【无等级限制】：</span></p>
+    <p class="block-text block-item"><span>在 APP 选词页面，可选择一本简单词书（如小学某词书）或直接换书，点击书籍右侧按钮 【学此词书】，待其显示在 【正在学的词书】 栏目后，点击右侧 【只背此书】，根据弹窗提示选择【移出记忆】并确定，可将词书以外的已学单词全部清空记忆。</span></p>
+    <p class="block-text block-item"><span class="font-bold">完成以上操作后，需同步至单词机：</span></p>
+    <ol>
+      <li class="block-text block-item"><span>打「APP」进入【我的】➔【单词机】，点击【合并数据】；</span></li>
+      <li class="block-text block-item"><span>使用「单词机」连接 Wi-Fi 后，进入【设置】➔【同步数据】即可。</span></li>
+    </ol>
+  </div>
+  <p class="block-text block-item"><span></span></p>
+  <h3 class="block-text block-heading block-heading-3 block-item" id="q9单词机屏幕卡住按键无响应或死机怎么办"><span>Q9：单词机屏幕卡住、按键无响应或死机怎么办？</span></h3>
+  <div class="block-item block-quote-container">
+    <p class="block-text block-item"><span>遇到设备无响应时，请按以下步骤排查：</span></p>
+    <ol>
+      <li class="block-text block-item"><span class="font-bold">尝试强制重启</span><span>：长按右上角【电源键】10 秒以上尝试重启；</span></li>
+      <li class="block-text block-item"><span class="font-bold">硬件复位</span><span>：如电源键无反应，请使用取卡针轻按机身底部的【复位孔（Reset）】进行系统重置恢复；</span></li>
+      <li class="block-text block-item"><span class="font-bold">检查电量</span><span>：请使用 5V⎓1A 的 CCC 认证适配器及标配 Type-C 数据线充电 30 分钟后再试。</span></li>
+    </ol>
+    <p class="block-text block-item"><span class="italic">若以上操作均无法解决，请在「墨墨背单词 App」内联系人工客服为您处理售后。</span></p>
+  </div>
+  <p class="block-text block-item"><span></span></p>
+  <h3 class="block-text block-heading block-heading-3 block-item" id="q10单词机支持签到功能吗"><span>Q10：单词机支持签到功能吗？</span></h3>
+  <div class="block-item block-quote-container">
+    <p class="block-text block-item"><span>单词机支持 OTA 固件升级，未来会通过固件升级支持在线签到功能</span></p>
+  </div>
+  <p class="block-text block-item"><span></span></p>
+  <h3 class="block-text block-heading block-heading-3 block-item" id="q11单词机支持蓝牙耳机吗"><span>Q11：单词机支持蓝牙耳机吗？</span></h3>
+  <div class="block-item block-quote-container">
+    <p class="block-text block-item"><span>单词机支持 OTA 固件升级，未来会通过固件升级支持蓝牙耳机功能</span></p>
+  </div>
+  <p class="block-text block-item"><span></span></p>
+  <h3 class="block-text block-heading block-heading-3 block-item" id="q12单词机如何使用云词本"><span>Q12：单词机如何使用云词本</span></h3>
+  <p class="block-text block-item"><span class="font-bold">1、确认 app 版本</span></p>
+  <div class="block-item block-grid flex gap-3 columns-2" column-size="2">
+    <div class="block-item block-grid-column" width-ratio="50" style="flex: 0 1 50%">
+      <p class="block-text block-item"><span>在“我的”页面，底部进行确认
+
+安卓：5.6.06 及以上
+</span><span>iOS：5.60.7 及以上</span></p>
+      <p class="block-text indent-level-NoIndent block-item"><span></span></p>
+      <p class="block-text block-item"><span></span></p>
+    </div>
+    <div class="block-item block-grid-column" width-ratio="50" style="flex: 0 1 50%"><img src="https://memodocs-files.maimemo.com/static/clz1duta9002y10hatanjkmqe/assets/files/NgGgbPGOFoOJHRxfFfucGBJ5nIe?imageMogr2/thumbnail/!1200x" src-width="1064" src-height="513" align="center">
+      <p class="block-text block-item"><span></span></p>
+    </div>
+  </div>
+  <p class="block-text block-item"><span class="font-bold">2、进入单词机页面换书</span></p>
+  <div class="block-item block-grid flex gap-3 columns-3" column-size="3">
+    <div class="block-item block-grid-column" width-ratio="33" style="flex: 0 1 33%"><img src="https://memodocs-files.maimemo.com/static/clz1duta9002y10hatanjkmqe/assets/files/X5RWbJhH4ofH8xx9R8QcOHwKnLh?imageMogr2/thumbnail/!1200x" src-width="1080" src-height="2340" align="center"></div>
+    <div class="block-item block-grid-column" width-ratio="33" style="flex: 0 1 33%"><img src="https://memodocs-files.maimemo.com/static/clz1duta9002y10hatanjkmqe/assets/files/YdicbpWFkou3Texefbmc5D2ZnPb?imageMogr2/thumbnail/!1200x" src-width="1080" src-height="2340" align="center"></div>
+    <div class="block-item block-grid-column" width-ratio="33" style="flex: 0 1 33%"><img src="https://memodocs-files.maimemo.com/static/clz1duta9002y10hatanjkmqe/assets/files/XMuNb6DHNorcHTxCHincPOnjnCh?imageMogr2/thumbnail/!1200x" src-width="1080" src-height="2340" align="center"></div>
+  </div>
+  <p class="block-text block-item"><span class="font-bold">3、单词机中进行学习同步</span></p>
+  <h3 class="block-text block-heading block-heading-3 block-item" id="q13单词机支持什么功能"><span>Q13：单词机支持什么功能？</span></h3>
+  <p class="block-text block-item"><span>「墨墨单词机」是由「墨墨背单词」App 团队推出的离线单词记忆设备，该设备基于墨墨独家的记忆模式、内容数据与算法能力，给用户提供高效、无干扰的学习体验。</span></p>
+  <p class="block-text block-item"><span>主要功能点包括：单词复习（支持 中英 - 英中）、单词回顾、随身听、学习数据展示等功能，且支持 OTA 系统更新，未来会提供更多的功能支持。</span></p>
+  <h3 class="block-text block-heading block-heading-3 block-item" id="q14单词机是否支持离线使用"><span>Q14：单词机是否支持离线使用</span></h3>
+  <p class="block-text block-item"><span>首次配对时需要联网激活并下载数据，后续可以离线使用。但为确保学习数据的完整性仍建议您定期联网同步数据呢。</span></p>
+  <h3 class="block-text block-heading block-heading-3 block-item" id="q15单词机与-app-端的学习数据是否同步"><span>Q15：单词机与 App 端的学习数据是否同步</span></h3>
+  <p class="block-text block-item"><span>单词机与 App 账号内的学习数据可以进行双向同步的，单词机升级到 1.0.36 及以上版本后，在设置页面即可进行同步</span></p>
+  <h3 class="block-text block-heading block-heading-3 block-item" id="q16单词机学习是否需要单词上限"><span>Q16：单词机学习是否需要单词上限</span></h3>
+  <p class="block-text block-item"><span>单词机内的学习不需要单词上限呢，但当您同步数据到 App 端后，仍以 App 端的单词上限为准。</span></p>
+  <h3 class="block-text block-heading block-heading-3 block-item" id="q17-找不到绑定入口"><span>Q17： 找不到绑定入口</span></h3>
+  <p class="block-text block-item"><span>目前产品处于公测阶段，您需要在表单中填写您的 UID 后显示绑定入口，填写成功后重启 App 即可 </span><span>https://maimemo.feishu.cn/share/base/form/shrcnofk4nTxpQeXBM7I4BXZgFg</span><span>
+</span><span class="font-bold">[重要]</span><span>首次使用时强烈建议先进行一次系统升级</span></p>
+  <h3 class="block-text block-heading block-heading-3 block-item" id="q18-如何进行系统升级"><span>Q18： 如何进行系统升级</span></h3>
+  <p class="block-text block-item"><span>存在更新时，长按电源键开机后静置等待 30s 左右即可收到更新弹窗。</span></p>
+  <h3 class="block-text block-heading block-heading-3 block-item" id="q19-单词机为什么会闪黑屏"><span>Q19： 单词机为什么会闪黑屏</span></h3>
+  <p class="block-text block-item"><span> 基于墨水屏特性，操作多次后屏幕会进行刷新操作来减少残影，这是墨水屏设备的正常工作方式</span></p>
+  <h3 class="block-text block-heading block-heading-3 block-item" id="q20--如何重置单词机"><span>Q20：  如何重置单词机</span></h3>
+  <p class="block-text block-item"><span>您可在单词机设置界面的账号管理中进行解除绑定，注意⚠️：若存在未同步的数据时，会造成数据丢失，请谨慎操作。</span></p>
+  <h2 class="block-text block-heading block-heading-2 block-item" id="2单词机介绍"><span>2、单词机介绍</span></h2>
+  <h3 class="block-text block-heading block-heading-3 block-item" id="1产品信息"><span>1、产品信息</span></h3>
+  <p class="block-text block-item"><span>产品名称：墨墨单词机  </span></p>
+  <p class="block-text block-item"><span>产品型号：MM-WM01  </span></p>
+  <p class="block-text block-item"><span>充电接口：Type-C  </span></p>
+  <p class="block-text block-item"><span>产品尺寸：97.6 × 94.35 × 12.51 mm  </span></p>
+  <p class="block-text block-item"><span>电池容量：750 mAh  </span></p>
+  <p class="block-text block-item"><span>输入：5 V⎓1 A  </span></p>
+  <p class="block-text block-item"><span>包装内含：单词机 ×1、充电线 ×1、说明书 ×1  </span></p>
+  <p class="block-text block-item"><span class="italic">注：本产品将持续迭代优化，实物与示意图可能存在</span><span>细微差别，</span><span class="italic">请以实物为准。</span></p>
+  <p class="block-text block-item"><span></span></p>
+  <h3 class="block-text block-heading block-heading-3 block-item" id="2快速指南"><span>2、快速指南</span></h3>
+  <table>
+    <colgroup>
+      <col width="402">
+      <col width="141">
+      <col width="315">
+    </colgroup>
+    <tbody><tr>
+      <td rowspan="11">
+        <div class="block-table-cell"><img src="https://memodocs-files.maimemo.com/static/clz1duta9002y10hatanjkmqe/assets/files/H7w3bibIPoaE6MxPTmDc12apnCo?imageMogr2/thumbnail/!1200x" src-width="2937" src-height="2418" align="center">
+          <p class="block-text block-item"><span></span></p>
+        </div>
+      </td>
+      <td>
+        <div class="block-table-cell">
+          <p class="block-text block-item"><span class="font-bold">模块</span></p>
+        </div>
+      </td>
+      <td>
+        <div class="block-table-cell">
+          <p class="block-text block-item"><span class="font-bold">功能</span></p>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <div class="block-table-cell">
+          <p class="block-text block-item"><span>电源键  </span></p>
+          <p class="block-text block-item"><span></span></p>
+        </div>
+      </td>
+      <td>
+        <div class="block-table-cell">
+          <ul>
+            <li class="block-text block-item"><span>长按开机 / 解锁 / 关机</span></li>
+            <li class="block-text block-item"><span>短按锁屏</span></li>
+            <li class="block-text block-item"><span>积木装饰卡槽  </span></li>
+          </ul>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <div class="block-table-cell">
+          <p class="block-text block-item"><span>积木装饰卡槽  </span></p>
+        </div>
+      </td>
+      <td>
+        <div class="block-table-cell">
+          <ul>
+            <li class="block-text block-item"><span>DIY 积木装饰搭配</span></li>
+          </ul>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <div class="block-table-cell">
+          <p class="block-text block-item"><span>记忆反馈按钮  </span></p>
+        </div>
+      </td>
+      <td>
+        <div class="block-table-cell">
+          <ul>
+            <li class="block-text block-item"><span>短按进行记忆反馈：认识 / 模糊 / 忘记</span></li>
+            <li class="block-text block-item"><span>长按设置单词状态：熟知 / 收藏 / 不想背</span></li>
+          </ul>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <div class="block-table-cell">
+          <p class="block-text block-item"><span>发音键  </span></p>
+        </div>
+      </td>
+      <td>
+        <div class="block-table-cell">
+          <ul>
+            <li class="block-text block-item"><span>播放单词/例句发音  </span></li>
+            <li class="block-text block-item"><span>长按调节音量</span></li>
+          </ul>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <div class="block-table-cell">
+          <p class="block-text block-item"><span>返回键  </span></p>
+        </div>
+      </td>
+      <td>
+        <div class="block-table-cell">
+          <ul>
+            <li class="block-text block-item"><span>长按返回上一个单词  </span></li>
+            <li class="block-text block-item"><span>短按退出当前模式  </span></li>
+          </ul>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <div class="block-table-cell">
+          <p class="block-text block-item"><span>圆形方向键  </span></p>
+        </div>
+      </td>
+      <td>
+        <div class="block-table-cell">
+          <ul>
+            <li class="block-text block-item"><span>翻页/浏览/选择  </span></li>
+            <li class="block-text block-item"><span>左右键切换发音内容  </span></li>
+          </ul>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <div class="block-table-cell">
+          <p class="block-text block-item"><span>确认键  </span></p>
+        </div>
+      </td>
+      <td>
+        <div class="block-table-cell">
+          <ul>
+            <li class="block-text block-item"><span>短按确认  </span></li>
+            <li class="block-text block-item"><span>随身听模式中用于播放/暂停  </span></li>
+          </ul>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <div class="block-table-cell">
+          <p class="block-text block-item"><span>挂绳孔  </span></p>
+        </div>
+      </td>
+      <td>
+        <div class="block-table-cell">
+          <p class="block-text block-item"><span>/</span></p>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <div class="block-table-cell">
+          <p class="block-text block-item"><span>充电口/耳机口  </span></p>
+        </div>
+      </td>
+      <td>
+        <div class="block-table-cell">
+          <ul>
+            <li class="block-text block-item"><span>支持 Type-C充电线和有线耳机  </span></li>
+          </ul>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <div class="block-table-cell">
+          <p class="block-text block-item"><span>复位孔  </span></p>
+        </div>
+      </td>
+      <td>
+        <div class="block-table-cell">
+          <ul>
+            <li class="block-text block-item"><span>无响应时，轻按复位键进行恢复</span></li>
+          </ul>
+        </div>
+      </td>
+    </tr>
+    </tbody><tbody></tbody>
+  </table>
+  <p class="block-text block-item"><span></span></p>
+  <h3 class="block-text block-heading block-heading-3 block-item" id="3绑定激活"><span>3、绑定激活</span></h3>
+  <div class="block-item block-grid flex gap-3 columns-2" column-size="2">
+    <div class="block-item block-grid-column" width-ratio="70" style="flex: 0 1 70%">
+      <p class="block-text block-item"><span class="font-bold">STEP 1：下载「墨墨背单词 App」，注册账号  </span></p>
+      <p class="block-text block-item"><span>扫描右侧二维码，或者在手机应用市场上搜索「墨墨背单词」，下载最新版 App，并注册墨墨背单词账号。  </span></p>
+      <p class="block-text block-item"><span></span></p>
+    </div>
+    <div class="block-item block-grid-column" width-ratio="30" style="flex: 0 1 30%"><img src="https://memodocs-files.maimemo.com/static/clz1duta9002y10hatanjkmqe/assets/files/TaJKbJ6UhozeayxfgOfcTaGVnKb?imageMogr2/thumbnail/!1200x" src-width="654" src-height="654"></div>
+  </div>
+  <p class="block-text block-item"><span></span></p>
+  <p class="block-text block-item"><span class="font-bold">STEP 2：单词机的账号绑定与网络连接  </span></p>
+  <ol>
+    <li class="block-text block-item"><span>准备好 2.4 GHz（频段）的 Wi-Fi，支持手机热点；  </span></li>
+    <li class="block-text block-item"><span>长按单词机右上方「电源键」，将单词机开机并解锁；  </span></li>
+    <li class="block-text block-item"><span>在手机上打开「墨墨背单词 App」，点击【我的页面 - 右上角单词机图标 - 绑定单词机】，扫描单词机上的二维码，根据页面提示完成绑定和联网。  </span>
+      <div class="block-item block-sub"><img src="https://memodocs-files.maimemo.com/static/clz1duta9002y10hatanjkmqe/assets/files/OaFnbgLAgoaEARx25R4cnkAWn4e?imageMogr2/thumbnail/!1200x" src-width="2475" src-height="570" align="center">
+        <p class="block-text block-item"><span></span></p>
+      </div>
+    </li>
+  </ol>
+  <p class="block-text block-item"><span class="italic">温馨提示：绑定成功后</span><span>，单词机将自动同步词书数据，过程可能持续数分钟，请保持蓝牙、Wi-Fi 连接正常，切勿中途断开。</span></p>
+  <p class="block-text block-item"><span></span></p>
+  <h3 class="block-text block-heading block-heading-3 block-item" id="4核心功能"><span>4、核心功能</span></h3>
+  <h4 class="block-text block-heading block-heading-4 block-item" id="1-记忆算法"><span>1. 【记忆算法】</span></h4>
+  <p class="block-text block-item"><span>墨墨记忆算法是基于心理学中的「间隔重复」理论，并结合大数据统计优化而成的记忆体系，通过海量真实记忆数据，精准评估单词难度和个人记忆能力，从而为用户定制更优复习时间，减少复习压力，提升抗遗忘效率。  </span></p>
+  <p class="block-text block-item"><span></span></p>
+  <p class="block-text block-item"><span>了解更多记忆算法内容详见：  </span></p>
+  <p class="block-text block-item"><span>https://memodocs.maimemo.com/docs/2021_study  </span></p>
+  <p class="block-text block-item"><span></span></p><img src="https://memodocs-files.maimemo.com/static/clz1duta9002y10hatanjkmqe/assets/files/MeHabtl0UomeNvxERbKcp8j4nsb?imageMogr2/thumbnail/!1200x" src-width="2475" src-height="897" align="center">
+  <p class="block-text text-center block-item"><span class="italic">墨墨记忆算法核心学术论文，发表于数据挖掘顶会 ACM SIGKDD、期刊 IEEE TKDE：  </span></p>
+  <p class="block-text text-center block-item"><span class="italic">A Stochastic Shortest Path Algorithm for Optimizing Spaced Repetition Scheduling  </span></p>
+  <p class="block-text text-center block-item"><span class="italic">Optimizing Spaced Repetition Schedule by Capturing the Dynamics of Memory  </span><span>
+
+</span></p>
+  <p class="block-text block-item"><span></span></p>
+  <h4 class="block-text block-heading block-heading-4 block-item" id="2-今日复习"><span>2. 【今日复习】</span></h4>
+  <p class="block-text block-item"><span>用户可选择两种学习模式：英中模式和中英模式。英中模式侧重根据英文回忆中文释义，中英模式侧重根据中文回忆英文单词，从不同方向加深记忆。  </span></p><img src="https://memodocs-files.maimemo.com/static/clz1duta9002y10hatanjkmqe/assets/files/KGAubyc41otahOxwug6c9cKfn8b?imageMogr2/thumbnail/!1200x" src-width="2475" src-height="870" align="center">
+  <p class="block-text block-item"><span></span></p>
+  <p class="block-text block-item"><span>每次复习时，用户将对单词进行记忆反馈：认识 / 模糊 / 忘记。墨墨记忆算法会结合反馈结果，自动安排后续复习时间，降低熟悉单词的复习频率，让易遗忘单词及时重复出现，从而达到更高效的抗遗忘效果。  </span></p><img src="https://memodocs-files.maimemo.com/static/clz1duta9002y10hatanjkmqe/assets/files/O2znbFLtHohtXLxqFr3cgyGGnFf?imageMogr2/thumbnail/!1200x" src-width="1661" src-height="512" align="center">
+  <p class="block-text block-item"><span></span></p>
+  <p class="block-text block-item"><span>复习页面会集中展示单词的核心学习内容，帮助用户在复习时快速回忆和理解。页面内容包括单词、音标和发音，方便用户掌握单词读音；同时提供单词例句，帮助用户理解单词在语境中的用法；还会展示单词助记，通过记忆提示辅助用户加深印象，提高复习效率。  </span></p>
+  <p class="block-text block-item"><span></span></p>
+  <p class="block-text block-item"><span class="italic">调整学习模式路径：在单词机主界面，找到【设置 - 学习设置 - 记忆模式】，即可调整。</span></p>
+  <p class="block-text block-item"><span></span></p>
+  <h4 class="block-text block-heading block-heading-4 block-item" id="3-词书总览"><span>3. 【词书总览】</span></h4>
+  <p class="block-text block-item"><span>词书总览可查看当前学习词书的整体情况，包括词书单词详情、学习进度和相关学习数据，方便了解自己的背词状态。还可根据个人学习节奏，调整每日学习量、复习和新学为合并 / 分开。设置后，系统会按照新的学习量安排每日任务。  </span></p><img src="https://memodocs-files.maimemo.com/static/clz1duta9002y10hatanjkmqe/assets/files/LUrNbVo6Qon4kfxBXoXcyxLEnph?imageMogr2/thumbnail/!1200x" src-width="1448" src-height="512" align="center">
+  <p class="block-text block-item"><span></span></p>
+  <p class="block-text block-item"><span>调整学习量路径：  </span></p>
+  <p class="block-text block-item"><span>合并模式下，在「词书总览」页面【点击 ↑、↓ 按键】调整「每日学习量」；  </span></p>
+  <p class="block-text block-item"><span>分开模式下，在「词书总览」页面【点击 ←、→ 按键】调整「新学量」。  </span></p><img src="https://memodocs-files.maimemo.com/static/clz1duta9002y10hatanjkmqe/assets/files/TXCDbKU4Ho4TuuxqafZcUYCWneg?imageMogr2/thumbnail/!1200x" src-width="1661" src-height="512" align="center">
+  <p class="block-text block-item"><span></span></p>
+  <p class="block-text block-item"><span>修改复习和新学「合并 / 分开」路径：在单词机主界面，找到【设置 - 学习设置 - 每日学习量和新学量】 ，即可调整。  </span></p><img src="https://memodocs-files.maimemo.com/static/clz1duta9002y10hatanjkmqe/assets/files/KYKtbzvvGoGn9Px149QcXrhenre?imageMogr2/thumbnail/!1200x" src-width="1960" src-height="512" align="center">
+  <p class="block-text block-item"><span></span></p>
+  <p class="block-text block-item"><span>更改书籍：打开「墨墨背单词 App」，进入【我的页面 - 右上角单词机图标】，在单词机设置页找到「更换词书」即可换书。  </span></p>
+  <p class="block-text block-item"><span></span></p>
+  <h4 class="block-text block-heading block-heading-4 block-item" id="4-随身听"><span>4. 【随身听】</span></h4>
+  <p class="block-text block-item"><span>该功能通过播放单词内容的方式，让用户在聆听中回顾单词，帮助用户利用碎片时间进行复习，加深对单词内容的印象。</span></p><img src="https://memodocs-files.maimemo.com/static/clz1duta9002y10hatanjkmqe/assets/files/GykAb0clio1k3txu7Stch2AznWg?imageMogr2/thumbnail/!1200x" src-width="1448" src-height="512" align="center">
+  <p class="block-text block-item"><span></span></p>
+  <h3 class="block-text block-heading block-heading-3 block-item" id="5更多功能"><span>5、更多功能</span></h3>
+  <h4 class="block-text block-heading block-heading-4 block-item" id="1-遗忘曲线"><span>1. 【遗忘曲线】</span></h4><img src="https://memodocs-files.maimemo.com/static/clz1duta9002y10hatanjkmqe/assets/files/EyVvbpSTMor7Cgx8nfac49vPnfb?imageMogr2/thumbnail/!1200x" src-width="1134" src-height="759">
+  <p class="block-text block-item"><span>根据用户对单词的记忆反馈，结合墨墨记忆算法，生成个人遗忘曲线统计图，帮助用户了解自己的记忆变化和遗忘规律。  </span></p>
+  <p class="block-text block-item"><span>坚持使用墨墨的时间越久，系统积累的学习数据越丰富，遗忘曲线统计也会越精准，从而为后续复习安排提供更可靠的参考。  </span></p>
+  <p class="block-text block-item"><span></span></p>
+  <h4 class="block-text block-heading block-heading-4 block-item" id="2-学习情况"><span>2. 【学习情况】</span></h4><img src="https://memodocs-files.maimemo.com/static/clz1duta9002y10hatanjkmqe/assets/files/LpySbxDk0oPTvixGdE3cd2mEn5e?imageMogr2/thumbnail/!1200x" src-width="1134" src-height="759">
+  <p class="block-text block-item"><span>该功能会统计用户当日对单词的记忆反馈，包括认识、模糊、忘记三种情况。  </span></p>
+  <p class="block-text block-item"><span>通过统计图可直观查看当天学习单词的掌握分布，了解自己的记忆状态和复习效果。  </span></p>
+  <p class="block-text block-item"><span></span></p>
+  <h4 class="block-text block-heading block-heading-4 block-item" id="3-记忆持久度"><span>3. 【记忆持久度】</span></h4><img src="https://memodocs-files.maimemo.com/static/clz1duta9002y10hatanjkmqe/assets/files/OfzNbiocEodBmaxTwuUcKvCCnTb?imageMogr2/thumbnail/!1200x" src-width="1134" src-height="759">
+  <p class="block-text block-item"><span>该功能会根据用户已规划学习的单词，统计单词的记忆持久度，并以统计图形式展示不同持久度档位下的单词数量分布。  </span></p>
+  <p class="block-text block-item"><span>通过该统计图可以直观了解已规划单词在不同记忆持久度区间中的分布情况。  </span></p>
+  <p class="block-text block-item"><span></span></p>
+  <h4 class="block-text block-heading block-heading-4 block-item" id="4-单词回顾"><span>4. 【单词回顾】</span></h4><img src="https://memodocs-files.maimemo.com/static/clz1duta9002y10hatanjkmqe/assets/files/JOdjbMXhHo5nLjxychGcULuEn7g?imageMogr2/thumbnail/!1200x" src-width="1134" src-height="759">
+  <p class="block-text block-item"><span>该功能用于对已规划的单词进行回顾复习，帮助用户在正式复习之外再次熟悉单词内容。  </span></p>
+  <p class="block-text block-item"><span>回顾过程中不会记入单词反馈数据，不影响后续复习安排。目前单词机提供三种回顾模式：中英、英中、随身听，用户可以根据自己的复习习惯选择不同方式进行单词回顾。  </span></p>
+  <p class="block-text block-item"><span></span></p>
+  <h4 class="block-text block-heading block-heading-4 block-item" id="5-设置单词状态"><span>5. 【设置单词状态】</span></h4>
+  <p class="block-text block-item"><span>用户可在「复习页面」/「回顾页面」/「单词详情页」通过长按反馈按钮设置单词状态：  </span></p>
+  <div class="block-item block-grid flex gap-3 columns-4" column-size="4">
+    <div class="block-item block-grid-column" width-ratio="25" style="flex: 0 1 25%"><img src="https://memodocs-files.maimemo.com/static/clz1duta9002y10hatanjkmqe/assets/files/I0RebDYTMog1ApxVXjEcDXfBnkf?imageMogr2/thumbnail/!1200x" src-width="665" src-height="512" align="center"></div>
+    <div class="block-item block-grid-column" width-ratio="25" style="flex: 0 1 25%"><img src="https://memodocs-files.maimemo.com/static/clz1duta9002y10hatanjkmqe/assets/files/ZrPRbAJUmomTdOxHwbscDQtUnNd?imageMogr2/thumbnail/!1200x" src-width="665" src-height="512" align="center"></div>
+    <div class="block-item block-grid-column" width-ratio="25" style="flex: 0 1 25%"><img src="https://memodocs-files.maimemo.com/static/clz1duta9002y10hatanjkmqe/assets/files/Ksmvbyhlwo1zwfxasIBccokin8e?imageMogr2/thumbnail/!1200x" src-width="665" src-height="512" align="center"></div>
+    <div class="block-item block-grid-column" width-ratio="25" style="flex: 0 1 25%"><img src="https://memodocs-files.maimemo.com/static/clz1duta9002y10hatanjkmqe/assets/files/SG5vbMERFoGUhuxjNJWcKbIHnae?imageMogr2/thumbnail/!1200x" src-width="665" src-height="512" align="center"></div>
+  </div>
+  <p class="block-text block-item"><span></span></p>
+  <p class="block-text block-item"><span>标识熟知：长按「 〇 」按钮可将单词标识为「熟知单词」，标识为熟知的单词将不会再次安排复习。已熟知的单词在「单词详情页」长按「 〇 」按钮取消熟知。  </span></p><img src="https://memodocs-files.maimemo.com/static/clz1duta9002y10hatanjkmqe/assets/files/HYsfb7gaCo11YcxxgxxcUAnpnTh?imageMogr2/thumbnail/!1200x" src-width="773" src-height="512">
+  <p class="block-text block-item"><span></span></p>
+  <p class="block-text block-item"><span>添加收藏：长按「 △ 」按钮可将单词添加到「我的收藏」，已收藏的单词长按「△」按钮取消收藏。  </span></p><img src="https://memodocs-files.maimemo.com/static/clz1duta9002y10hatanjkmqe/assets/files/XsnvbTsYDoZ5RAx5zPgchnQBnHg?imageMogr2/thumbnail/!1200x" src-width="773" src-height="512">
+  <p class="block-text block-item"><span></span></p>
+  <p class="block-text block-item"><span>标记不想背：长按「 X 」按钮可将单词标识为「不想背」，不想背的单词在选词时将不会被选入学习规划。已不想背的单词在「单词详情页」长按「 X 」按钮取消不想背。  </span></p><img src="https://memodocs-files.maimemo.com/static/clz1duta9002y10hatanjkmqe/assets/files/KoaTb61LXoXRTSxxDrOcsZ9VnPs?imageMogr2/thumbnail/!1200x" src-width="773" src-height="512">
+  <p class="block-text block-item"><span></span></p>
+  <p class="block-text block-item"><span>复习页面【主菜单 - 今日复习】；回顾页面【主菜单 - 单词回顾】；单词详情页【主菜单 - 单词回顾 - 今日已学 / 我的收藏 / 全部词汇 - 按 进入单词详情页】。</span></p>
+  <p class="block-text block-item"><span></span></p>
+  <h3 class="block-text block-heading block-heading-3 block-item" id="6按键介绍"><span>6、按键介绍</span></h3>
+  <p class="block-text block-item"><span></span></p>
+  <p class="block-text block-item"><span class="font-bold">方向键  ↑ ↓ ← →</span></p>
+  <ul>
+    <li class="block-text block-item"><span>用于浏览 / 翻页 / 选择  </span></li>
+    <li class="block-text block-item"><span>← → 键可切换发音内容</span></li>
+  </ul>
+  <p class="block-text block-item"><span></span></p>
+  <p class="block-text block-item"><span class="font-bold">认识 〇  </span></p>
+  <ul>
+    <li class="block-text block-item"><span>记忆反馈「认识」  </span></li>
+    <li class="block-text block-item"><span>长按标记熟知 / 取消熟知  </span></li>
+    <li class="block-text block-item"><span>在单词列表中，按键 〇   × 切换前后单词  </span></li>
+  </ul>
+  <p class="block-text block-item"><span></span></p>
+  <p class="block-text block-item"><span class="font-bold">模糊 △</span></p>
+  <ul>
+    <li class="block-text block-item"><span>记忆反馈「模糊」  </span></li>
+    <li class="block-text block-item"><span>长按添加收藏 / 取消收藏  </span></li>
+  </ul>
+  <p class="block-text block-item"><span></span></p>
+  <p class="block-text block-item"><span class="font-bold">忘记 X  </span></p>
+  <ul>
+    <li class="block-text block-item"><span>记忆反馈「忘记」  </span></li>
+    <li class="block-text block-item"><span>长按标记不想背 / 取消不想背  </span></li>
+    <li class="block-text block-item"><span>在单词列表中，按键  〇 / X  切换前后单词  </span></li>
+  </ul>
+  <p class="block-text block-item"><span></span></p>
+  <p class="block-text block-item"><span class="font-bold">发音  </span></p>
+  <ul>
+    <li class="block-text block-item"><span>短按播放单词 / 例句发音  </span></li>
+    <li class="block-text block-item"><span>长按调节音量</span></li>
+    <li class="block-text block-item"><span>随身听中点击后重播当前单词内容  </span></li>
+  </ul>
+  <p class="block-text block-item"><span></span></p>
+  <p class="block-text block-item"><span class="font-bold">返回</span><span>  </span></p>
+  <ul>
+    <li class="block-text block-item"><span>短按退出当前模式  </span></li>
+    <li class="block-text block-item"><span>长按返回上一个单词  </span></li>
+  </ul>
+  <p class="block-text block-item"><span></span></p>
+  <p class="block-text block-item"><span class="font-bold">确认</span><span>  </span></p>
+  <ul>
+    <li class="block-text block-item"><span>用于确认 / 进入  </span></li>
+    <li class="block-text block-item"><span>随身听中，用作暂停、播放朗读  </span></li>
+  </ul>
+  <p class="block-text block-item"><span></span></p>
+  <h3 class="block-text block-heading block-heading-3 block-item" id="7安全及注意事项"><span>7、安全及注意事项</span></h3>
+  <ol>
+    <li class="block-text block-item"><span>本产品适用的工作温度为 0℃ 至 55 ℃，请勿在温度过高或过低的环境下使用本产品。  </span></li>
+    <li class="block-text block-item"><span>本产品为精密电子产品，请勿在过度潮湿或可能会导致本产品进水的环境下使用，以免影响正常使用。  </span></li>
+    <li class="block-text block-item"><span>请勿摔、打、刺、挤或接触腐蚀性液体。若出现异味或功能异常，请立即停用并联系售后处理。  </span></li>
+    <li class="block-text block-item"><span>请勿自行拆卸产品或更换电池。电池更换不当可能导致爆炸、起火或受伤。如需更换，请联系售后并由专业人员使用同类型或等效电池更换。  </span></li>
+    <li class="block-text block-item"><span>请勿自行拆卸改装或维修本产品。未经授权操作可能导致产品损坏、人身伤害，并影响安全性、功能及保修。  </span></li>
+    <li class="block-text block-item"><span>充电时请配套使用获得 CCC 认证并满足标准要求的电源适配器。插拔充电线时请勿用力拉扯、弯折或强行插拔，以免损坏充电口。请勿使用破损、磨损或异常发热的充电线及电源适配器。  </span></li>
+  </ol><img src="https://memodocs-files.maimemo.com/static/clz1duta9002y10hatanjkmqe/assets/files/W5JjbDjS1ogwOZxmD9Ecdfvinkc?imageMogr2/thumbnail/!1200x" src-width="2673" src-height="1632" align="center">
+  <p class="block-text block-item"><span class="font-bold">本表格依据 SJ/T 11364 的规定编制</span></p>
+  <p class="block-text block-item"><span>○：表示该物质在该部件所有均质材料中的含量在 GB/T26572 规定的限量要求下。</span></p>
+  <p class="block-text block-item"><span> X：表示该物质至少在该部件的某一均质材料中的含量超过 CGB/T26572 规定的限量要求。</span></p>
+  <p class="block-text block-item"><span></span></p>
+  <h3 class="block-text block-heading block-heading-3 block-item" id="8帮助与反馈"><span>8、帮助与反馈</span></h3>
+  <p class="block-text block-item"><span></span></p>
+  <p class="block-text block-item"><span class="italic">温馨提示：单词机会通过 OTA 进行软件升级。升级后，部分界面样式、功能名称或操作路径可能有所调整，请以设备当前版本的实际显示为准。</span></p>
+  <p class="block-text block-item"><span></span></p>
+  <h4 class="block-text block-heading block-heading-4 block-item" id="常见问题"><span>常见问题</span></h4>
+  <p class="block-text block-item"><span>如果在使用过程中遇到问题，或想反馈单词机的使用体验，可打开「墨墨背单词 App」，进入【我的 - 右上角耳机图标】，在帮助与反馈页面查阅相关内容。  </span></p>
+  <p class="block-text block-item"><span></span></p>
+  <h4 class="block-text block-heading block-heading-4 block-item" id="获取帮助"><span>获取帮助</span></h4>
+  <p class="block-text block-item"><span>如需进一步协助，可打开「墨墨背单词 App」，进入【我的 - 右上角耳机图标 - 联系客服】，联系墨墨客服获取帮助。  </span></p>
+</div> </div> <footer class="sl-flex astro-4omocvey"> <div class="meta sl-flex astro-4omocvey">   </div> <div class="pagination-links print:hidden astro-a6g3mvpu" dir="ltr">   </div>   </footer>  </div> </div>   </main> </div> </div>  </div> </div>  </body></html><script src="/prism.js"></script>

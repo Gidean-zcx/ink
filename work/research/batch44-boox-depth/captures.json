@@ -1,0 +1,150 @@
+{
+  "checked_on": "2026-10-27",
+  "host": "booxsupport.zendesk.com",
+  "max_bytes_per_file": 3145728,
+  "stopped_host": false,
+  "records": [
+    {
+      "name": "home",
+      "attachment_id": "10725493990676",
+      "url": "https://booxsupport.zendesk.com/hc/article_attachments/10725493990676",
+      "request_attempted": true,
+      "status": 200,
+      "final_url": "https://booxsupport.zendesk.com/hc/article_attachments/10725493990676",
+      "redirect_history": [],
+      "content_type": "image/jpeg",
+      "content_length_header": "188317",
+      "bytes_received": 188317,
+      "saved": true,
+      "failure": null,
+      "bytes": 188317,
+      "sha256": "239d7b8fc1560807591d481f7c02c56dc07e212766e003a56514d45a858b5e51",
+      "local_path": "work/research/batch44-boox-depth/images/home.jpg"
+    },
+    {
+      "name": "screen-record",
+      "attachment_id": "25403784340116",
+      "url": "https://booxsupport.zendesk.com/hc/article_attachments/25403784340116",
+      "request_attempted": true,
+      "status": 200,
+      "final_url": "https://booxsupport.zendesk.com/hc/article_attachments/25403784340116",
+      "redirect_history": [],
+      "content_type": "image/jpeg",
+      "content_length_header": "165100",
+      "bytes_received": 165100,
+      "saved": true,
+      "failure": null,
+      "bytes": 165100,
+      "sha256": "575deec83ec0e8460aca3dbc9d6c7f948486f66b078f6f939589ca7cf6b83ed5",
+      "local_path": "work/research/batch44-boox-depth/images/screen-record.jpg"
+    },
+    {
+      "name": "volume",
+      "attachment_id": "25175232660116",
+      "url": "https://booxsupport.zendesk.com/hc/article_attachments/25175232660116",
+      "request_attempted": true,
+      "status": 200,
+      "final_url": "https://booxsupport.zendesk.com/hc/article_attachments/25175232660116",
+      "redirect_history": [],
+      "content_type": "image/jpeg",
+      "content_length_header": "326114",
+      "bytes_received": 326114,
+      "saved": true,
+      "failure": null,
+      "bytes": 326114,
+      "sha256": "5e16b6ee8f0fd0fd532d498bc7baf0a7413f4a52b8bcb2a5609688c8acf1f3e1",
+      "local_path": "work/research/batch44-boox-depth/images/volume.jpg"
+    },
+    {
+      "name": "screensaver-types",
+      "attachment_id": "10726276107156",
+      "url": "https://booxsupport.zendesk.com/hc/article_attachments/10726276107156",
+      "request_attempted": true,
+      "status": 200,
+      "final_url": "https://booxsupport.zendesk.com/hc/article_attachments/10726276107156",
+      "redirect_history": [],
+      "content_type": "image/jpeg",
+      "content_length_header": "164851",
+      "bytes_received": 164851,
+      "saved": true,
+      "failure": null,
+      "bytes": 164851,
+      "sha256": "fae41d5c31af195fc58fc9aebc83dffbe0c77a0c5122c73176fd5520a8447b63",
+      "local_path": "work/research/batch44-boox-depth/images/screensaver-types.jpg"
+    },
+    {
+      "name": "screensaver-images",
+      "attachment_id": "10726306716820",
+      "url": "https://booxsupport.zendesk.com/hc/article_attachments/10726306716820",
+      "request_attempted": true,
+      "status": 200,
+      "final_url": "https://booxsupport.zendesk.com/hc/article_attachments/10726306716820",
+      "redirect_history": [],
+      "content_type": "image/jpeg",
+      "content_length_header": "129013",
+      "bytes_received": 129013,
+      "saved": true,
+      "failure": null,
+      "bytes": 129013,
+      "sha256": "c03c9b8127d881c260589f821a7b23082f4e88fd753ff97e420c4cd4b47e36af",
+      "local_path": "work/research/batch44-boox-depth/images/screensaver-images.jpg"
+    },
+    {
+      "name": "mirror-step",
+      "attachment_id": "27963633162900",
+      "url": "https://booxsupport.zendesk.com/hc/article_attachments/27963633162900",
+      "request_attempted": true,
+      "status": 200,
+      "final_url": "https://booxsupport.zendesk.com/hc/article_attachments/27963633162900",
+      "redirect_history": [],
+      "content_type": "image/jpeg",
+      "content_length_header": "309687",
+      "bytes_received": 309687,
+      "saved": true,
+      "failure": null,
+      "bytes": 309687,
+      "sha256": "1b5046a0fc79e6f12a2bde2d224c41030dcff2d77b8b890279e8c11ebe8933cd",
+      "local_path": "work/research/batch44-boox-depth/images/mirror-step.jpg"
+    },
+    {
+      "name": "mirror-browser",
+      "attachment_id": "27963693945876",
+      "url": "https://booxsupport.zendesk.com/hc/article_attachments/27963693945876",
+      "request_attempted": true,
+      "status": 200,
+      "final_url": "https://booxsupport.zendesk.com/hc/article_attachments/27963693945876",
+      "redirect_history": [],
+      "content_type": "image/jpeg",
+      "content_length_header": "177188",
+      "bytes_received": 177188,
+      "saved": true,
+      "failure": null,
+      "bytes": 177188,
+      "sha256": "42c1bc6ba4de5982ddc3a0e9a81083c654824f2cb59128517d50f4b18c275d4f",
+      "local_path": "work/research/batch44-boox-depth/images/mirror-browser.jpg"
+    }
+  ],
+  "local_source_hits": {
+    "10725493990676": [
+      "work/eink-systems-research/boox-articles.json"
+    ],
+    "25403784340116": [
+      "work/eink-systems-research/boox-articles.json"
+    ],
+    "25175232660116": [
+      "work/eink-systems-research/boox-articles.json"
+    ],
+    "10726276107156": [
+      "work/eink-systems-research/boox-articles.json"
+    ],
+    "10726306716820": [
+      "work/eink-systems-research/boox-articles.json"
+    ],
+    "27963633162900": [
+      "work/eink-systems-research/boox-articles.json"
+    ],
+    "27963693945876": [
+      "work/eink-systems-research/boox-articles.json"
+    ]
+  }
+}

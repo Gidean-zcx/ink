@@ -1,0 +1,21 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M009-09,M-009,新建写作并用标题找回页面,D2,E-IXCD-01,首页标题不能删；菜单搜索覆盖文本及手写转写结果，可定位页。手机读写客云图片或华为分享可供写作插图，电磁笔长按可删插图。,自动保存时机、识别错字、删标题是否影响链接、误删页恢复。插图完整接收/插入控件和云原图删除范围未知。,not_observed,false,cases/M-009-iflytek-office.md,2026-10-27
+F-M009-10,M-009,输入文字并修正识别结果,D2,E-IXCD-01,自由笔迹、识别文字及键盘输入是不同内容状态；圈选删除和换行有不同结果。,误判笔势撤销、光标焦点、离线语音和网络故障。,not_observed,false,cases/M-009-iflytek-office.md,2026-10-26
+F-M009-11,M-009,写作中插入原声再继续录制,D2,E-IXCD-01;E-IFLYO-01,完成录音与保存整篇分开；与会议记录模式出口不同。,删除块是否同步删原音/转写、翻页后继续录制指向哪段、跨app中断。,not_observed,false,cases/M-009-iflytek-office.md,2026-10-26
+F-M009-12,M-009,记录会议、回听纠错并补转断网部分,D2,E-IXCD-01;E-IXCD-02;E-IXCD-03;E-IXCD-04,多人模式仅智能识别可用；语言及词库选择持久保存。专注模式隐藏转写。断网补转依赖云上传，不证明离线本地识别。记录也可插入读写客/华为分享图片，长按删除。,修改后时间对齐、重复更新覆盖、上传失败重试、强退恢复、说话人改名精确入口。图片接收与插入确认、删除关联云原图未知。,static_manual_pages_only,false,cases/M-009-iflytek-office.md,2026-10-27
+F-M009-13,M-009,为笔记加密并恢复访问,D2,E-IXCD-01;E-IXCD-05,手册规定停止上传且删除已有云副本；笔记密码不同于锁屏密码。,离线时云删除何时执行、删除哪些副本、取消加密后重传、验证码失效及分享链接是否撤销。,static_manual_pages_only,false,cases/M-009-iflytek-office.md,2026-10-26
+F-M009-14,M-009,阅读、跳转与保留段落标记,D2,E-IXCD-01,PDF进度显示缩略图，重排格式松开滑块后跳转；摘录显示下划线，点回手写笔记。PDF批注可保存到PDF并经邮件/读写客分享；看批注按含笔迹页面汇集并支持排序。,临时跳转返回栈、重排后锚点、删书与批注关系。手册左右滑动方向表述需实机确认。保存覆盖原件还是副本、上传失败及批注保真未知。,not_observed,false,cases/M-009-iflytek-office.md,2026-10-27
+F-M009-15,M-009,从阅读切入听书并回到原文,D2,E-IXCD-01;E-IXCD-06,手册说明听书模式不能批注，需先暂停；返回阅读没有证明停止音频或保存断点。,当前语音/离线包、锁屏及退出后续播、计时选项、睡眠/来电打断。,static_manual_pages_only,false,cases/M-009-iflytek-office.md,2026-10-26
+F-M009-16,M-009,调整PDF视图与批注能力,D2,E-IXCD-01,省电模式不支持批注；PDF对比度/加粗不同于可重排格式的字号。,取消裁切/复原、原PDF是否改写、批注锚点、模式切换保存与真实残影。,not_observed,false,cases/M-009-iflytek-office.md,2026-10-26
+F-M009-17,M-009,切换账号与处理离线笔记,D2,E-IXCD-01;E-IXCD-07,菜单称注销但文意是登出；旧账号设置恢复出厂模式，不等于整机恢复出厂或删除账号。,两账号同名数据冲突、合并后归属、共享文件隔离、云端退出状态。,static_manual_pages_only,false,cases/M-009-iflytek-office.md,2026-10-26
+F-M009-18,M-009,编写邮件、留草稿和处理附件,D2,E-IXCD-01,草稿、废弃、删邮件与删下载附件分属不同对象；已删除目录支持彻底删除。批量删除先长按选邮件，可取消勾选；全选限当前页。已删除目录仍可查看/回复/转发。,发送失败/重试重复、服务器与设备删除传播、恢复邮件入口；QQ/网易/iCloud当前授权流程未核。,not_observed,false,cases/M-009-iflytek-office.md,2026-10-27
+F-M009-19,M-009,按日期找回笔记并写日程,D2,E-IXCD-01,日历是笔记日期索引及手写日程，不证明已具备结构化提醒或待办完成状态。,跨日移动、提醒、同步到外部日历、误删恢复。,not_observed,false,cases/M-009-iflytek-office.md,2026-10-26
+F-M009-20,M-009,投屏分享当前页面,D2,E-IXCD-01,两个投屏路径前提不同；仅显示输出，不等于电脑可控制设备。,停止投屏、切网重连、录音音频是否输出、密码笔记遮蔽。,not_observed,false,cases/M-009-iflytek-office.md,2026-10-26
+F-M009-21,M-009,恢复出厂设置,D1,E-IXCD-01,恢复出厂与退出账号的保留范围不同；没有给出备份恢复完整流程。,确认页和取消路径、TF卡/云副本范围、账号重登后的恢复完整性。,not_observed,false,cases/M-009-iflytek-office.md,2026-10-26
+F-M009-22,M-009,检查固件或应用更新,D2,E-IXCD-01,下载升级包不等于已完成安装；固件和应用更新都在手册描述范围。,安装确认、重启、失败回滚、刷机后数据、当前服务可达性。,not_observed,false,cases/M-009-iflytek-office.md,2026-10-26
+F-M009-23,M-009,新闻与手机网文进入收藏（D1）,D1,E-IXCD-01,跨模块内容流转有据；手册所谓永久保存不当服务承诺。,频道编辑、朗读控制、采集正文范围、失效网页、去重/来源保留。,not_observed,false,cases/M-009-iflytek-office.md,2026-10-26
+F-M009-24,M-009,安装和管理应用（D1）,D1,E-IXCD-01,能力存在不证明任意APK兼容，也不证明AI可读取/操作第三方app。,当前商店列表、权限、安装失败、卸载数据保留和重装恢复。,not_observed,false,cases/M-009-iflytek-office.md,2026-10-26
+F-M007-14,M-007,新建及修改Daily日历事件,D2,E-VICD-01;E-VICD-03;E-VICD-04,日历事件与手写任务/笔记不同；Cancel入口可见，未执行。,时段冲突、时区、提醒、重复事件、删除恢复和当前构建变化。,static_manual_pages_only,false,cases/M-007-viwoods.md,2026-10-26
+F-M007-15,M-007,绑定日历并处理解除绑定,D2,E-VICD-01;E-VICD-05,企业Outlook需管理员授权；失败建议重试。此解绑规则不代表原生Viwoods Cloud数据规则。,授权回调、冲突优先级、离线删除传播、解绑前提示及远端是否保留。,static_manual_pages_only,false,cases/M-007-viwoods.md,2026-10-26
+F-M007-16,M-007,从第三方云导入或导出可编辑笔记,D2,E-VICD-01;E-VICD-06;E-VICD-07,首个账号默认同步目标；note仅AiPaper能打开编辑，且各应用note格式不能互导，需回到对应应用。,PDF与note信息损失、同名覆盖、媒体是否随包、导出失败、重新安装后的完整恢复。,static_manual_pages_only,false,cases/M-007-viwoods.md,2026-10-26
+F-M007-17,M-007,选择第三方云的同步对象与格式,D2,E-VICD-01;E-VICD-08,Google Drive/OneDrive/Dropbox与V3.15新增原生云分别研究；同步按钮不证明双向合并或独立历史备份。,调度/自动触发、进度与失败、取消、删除传播、目录多选含义与账号切换。,static_manual_pages_only,false,cases/M-007-viwoods.md,2026-10-26

@@ -1,0 +1,17 @@
+{
+  "name": "03-bookstore-open",
+  "url": "https://xxj.xunfei.cn/h5-help/#/play?bgc=https%3A%2F%2Fk12-swift.xunfeixxj.com%2Fxxjserver%2Fwx%2Fh5%2Fhelp%2Fvideo%2F%E5%B0%8F%E5%AD%A6%E8%AF%AD%E6%96%87%E8%AE%AF%E9%A3%9E%E4%B9%A6%E5%9F%8E.jpg&video=https%3A%2F%2Fk12-swift.xunfeixxj.com%2Fxxjserver%2Fwx%2Fh5%2Fhelp%2Fvideo%2F%E5%B0%8F%E5%AD%A6%E8%AF%AD%E6%96%87%E8%AE%AF%E9%A3%9E%E4%B9%A6%E5%9F%8E.mp4&videoName=%E5%B0%8F%E5%AD%A6%E8%AF%AD%E6%96%87%E8%AE%AF%E9%A3%9E%E4%B9%A6%E5%9F%8E&productName=%E5%AD%A6%E4%B9%A0%E6%9C%BAT30Pro&moduleType=introduce&productId=2e5298d3%2FAISTUDY_SU30_T30PRO",
+  "text": "",
+  "sha256": "e807ed9fdbf539cfcbfc8719b4d275827549b1851314493e819bd92ba1f1853b",
+  "videos": [
+    {
+      "src": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E8%AF%AD%E6%96%87%E8%AE%AF%E9%A3%9E%E4%B9%A6%E5%9F%8E.mp4",
+      "duration": 209.4,
+      "time": 0.022438,
+      "paused": true,
+      "readyState": 4,
+      "width": 1920,
+      "height": 1080
+    }
+  ]
+}

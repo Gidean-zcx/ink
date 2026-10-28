@@ -1,0 +1,284 @@
+Firmware - eReader.co.th
+Skip to content
+Main Menu
+Home
+Explore
+Location
+eReader Tips
+Payment
+Firmware
+FAQ
+Contact
+Buy eReader
+Buy eReader
+Update Note
+Firmware Changelog Update in Meebook / Likebook
+Firmware Update
+Meebook Series
+Update Note ของ Firmware เวอร์ชั่นต่างๆ ของ Meebook และ Likebook
+Meebook G7S
+G7S-MEEBOOK-V2.0.0-2025122912
+Optimizations:
+1. Optimized the button functions;
+2. Optimized the reading functions;
+3. Optimized the system stability;
+4. Optimized some UI elements of system;
+5. Fixed the problem of Google Play Books app crashing
+P.S. If any abnormal ghost displays after upgrade, please restart the device again.
+Meebook P78
+MEEBOOK-V1.5.2-2023082212
+New functions:
+1. Added native “JD Bookstore” application support into firmware system;
+2. Added more display styles to wallpaper setting;
+3. Added fast refresh mode to the system refresh settings;
+4. Added writing brush style to the Notepad;
+5. Added closing function to the sleep mode of leather case;
+6. Added closing function to the return key;
+7. Added .MDX format support to the dictionary;
+Optimizations:
+1. Optimized the function of replacing system fonts;
+2. Fixed the bug that some punctuation marks of book are displayed incorrectly;
+3. Fixed the bug that when set in day mode, front light may flash if it is set under the multi-modulation setting;
+4. Fixed the bug that some book covers cannot be displayed on “Library” correctly;
+5. Fixed the bug that incomplete display of books on “Library” when books stored in the microSD card;
+MEEBOOK-Q78-V1.4.0-2022123017
+New functions:
+1. Add split view and related functions
+2. Support scroll reading in PDF reading
+3. Add a refresh setting for main interface
+4. Support cloud drive of the third party for exporting (Currently support: Google Drive, DropBox and Baidu Netdisk, and will gradually increase more in the future)
+Optimizations:
+1. Optimize system stability
+2. Optimize the slow loading when large file opened at the file manager
+3. Correct the direction of reading progress bar when the book is turned at left
+4. Fixed a bug of abnormal segmentation/ display of some books
+5. Fixed a bug that MEE OS cannot save the font setting after font switching between Simplified Chinese and Traditional Chinese
+6. Update the native App store
+MEEBOOK V1.3.0-2022071517
+New Functions:
+1.Adding
+256grayscale
+display mode
+2.Adding system font adjustment function
+3.Support to set
+bookcover
+which read recently as the
+wallpaper
+Optimizations:
+1.Improve system stability to be more stable
+2.Fix the bug: after notes exporting under the double page, there is no menu bar to enter again
+3.Fix the bug: after deleting all notes under the double page, there is no menu bar to enter again
+4.Fix the bug: abnormally stuck when exporting notes under double pages
+5.Fix the bug: abnormal contrast when reading under the Arabic language
+6.Fix the bug: device crush when using QR code to share notes
+7.Optimize the problem of abnormal display of annotations from some books
+8.Optimize the problem when pressing the power button too quickly
+9.Optimize the handwriting experience of third-party applications (The latest version of WPS)
+MEEBOOK V1.2.0-2022051811
+Optimization：
+1.
+Optimize the running stability of WIFI
+2. Optimize the full brush effect for Zreader
+3.Fix the bug of abnormal running on third-party applications
+4.Optimize the supported format for dictionary
+5.Fix the bug of page turning struck on Zreader
+6.Optimize the handwriting experience on the third party applications, including OneNote and WPS
+7.Fix the bug of language setting crush
+8.Fix the bug of return last progress on Zreader.
+9.Fix the bug of optimized suspension ball transparency Settings failure after rebooting.
+New Functions：
+1. Add the hidden function for local “Notepad”app from the User Settings
+2.Support more cloud platforms on file management such as“Google Drive”
+3.Support to export underline when exporting the PDF text notes
+4. Zreader support more online translation applications.
+Meebook P10 Pro
+MEEBOOK-V1.5.2-2023083115
+New functions:
+1. Added native “JD Bookstore” application support into firmware system;
+2. Added more display styles to wallpaper setting;
+3. Added fast refresh mode to the system refresh settings;
+4. Added writing brush style to the Notepad;
+5. Added closing function to the sleep mode of leather case;
+6. Added closing function to the return key;
+7. Added .MDX format support to the dictionary;
+Optimizations:
+1. Optimized the function of replacing system fonts;
+2. Fixed the bug that some punctuation marks of book are displayed incorrectly;
+3. Fixed the bug that when set in day mode, front light may flash if it is set under the multi-modulation setting;
+4. Fixed the bug that some book covers cannot be displayed on “Library” correctly;
+5. Fixed the bug that incomplete display of books on “Library” when books stored in the microSD card;
+MEEBOOK-V1.4.0-2023010415
+New functions:
+1. Add split view and related functions
+2. Support scroll reading in PDF reading
+3. Add a refresh setting for main interface
+4. Support cloud drive of the third party for exporting (Currently support: Google Drive, DropBox and Baidu Netdisk, and will gradually increase more in the future)
+Optimizations:
+1. Optimize system stability
+2. Optimize the slow loading when large file opened at the file manager
+3. Correct the direction of reading progress bar when the book is turned at left
+4. Fixed a bug of abnormal segmentation/ display of some books
+5. Fixed a bug that MEE OS cannot save the font setting after font switching between Simplified Chinese and Traditional Chinese
+6. Update the native App store
+MEEBOOK V1.3.1-2022080311
+pdating contents:
+Optimizations:
+1.Improve system stability to be more stable
+2.Optimize the problem that the notes in PDF text are not displayed
+3.Optimize the abnormal display of pictures in some books
+MEEBOOK V1.3.0-2022071118
+New Functions:
+1.Adding
+256grayscale
+display mode
+2.Adding system font adjustment function
+3.Support to set
+bookcover
+which read recently as the
+wallpaper
+Optimizations:
+1.Improve system stability to be more stable
+2.Fix the bug: after notes exporting under the double page, there is no menu bar to enter again
+3.Fix the bug: after deleting all notes under the double page, there is no menu bar to enter again
+4.Fix the bug: abnormally stuck when exporting notes under double pages
+5.Fix the bug: abnormal contrast when reading under the Arabic language
+6.Fix the bug: device crush when using QR code to share notes
+7.Optimize the problem of abnormal display of annotations from some books
+8.Optimize the problem when pressing the power button too quickly
+9.Optimize the handwriting experience of third-party applications (The latest version of WPS)
+Meebook P6
+MEEBOOK-v1.4.0-2023030619
+New functions:
+1. Add 256 gray level for screen display mode
+2. Update the native app store
+3. Add cloud drive support for the third party app (including Dropbox, OneDrive)
+Optimizations:
+1. Optimize the system stability
+2. Fix the bug that inaccurate word selection after openning the top status bar in ZReader
+3. Fix the bug that crash happen when opening some books
+4. Speed up the file manager deleting files
+MEEBOOK V1.4.0-2022122018
+New functions:
+1. Support system font adjustment
+2. Support scroll reading in PDF
+3. Add a refresh setting of main interface in the system
+4. Add cloud drive of the third party for exporting (Currently support: Google Drive and Baidu Netdisk, and will gradually increase more in the future)
+5. Add a function of system gesture operation
+Optimizations:
+1. Optimize the slow loading when large file opened at the file manager
+2. Fixed a crashing bug happened in few operation when reading PDF
+3. Correct the direction of reading progress bar when the book is turned at left
+4. Fixed a bug of abnormal segmentation/ display of some books
+5. Fixed a bug of no searching word by dictionaries when set under non-Chinese language
+6. Fixed a bug that MEE OS cannot save the font setting after font switching between Simplified Chinese and Traditional Chinese.
+Meebook M6
+MEEBOOK-V1.5.3-2023092110
+Update log:
+New functions:
+1. Added Regal refresh mode;
+2. Added manual screen rotation function;
+3. Added Bluetooth automatic shutdown function;
+4. Added function of synchronizing reading records in “JD Bookstore” application;
+Optimizations:
+1. Optimize the wallpaper function;
+2. Optimize the Bluetooth (transfer) function;
+3. Optimize some UI translations in different languages;
+4. Optimize main UI on hidden “Bookstore” module function;
+5. Optimize image brightness adjustment for the third-party application;
+6. Fixed the bug that incomplete display of folder names in the reader
+Remark: You are advised to restart the device after updated successfully！ （Twice Restarting）
+MEEBOOK-V1.5.2-2023081616
+New functions:
+1. Add split view and related functions;
+2. Support scroll reading in PDF reading;
+3. Add a refresh setting for main interface;
+4. Support cloud drive of the third party for exporting (Currently support: Google Drive, DropBox and Baidu Netdisk, and will gradually increase more in the future) ;
+Optimizations:
+1. Optimize system stability;
+2. Optimize the slow loading when large file opened at the file manager;
+3. Correct the direction of reading progress bar when the book is turned at left;
+4. Fixed a bug of abnormal segmentation/ display of some books;
+5. Fixed a bug that MEE OS cannot save the font setting after font switching between Simplified Chinese and Traditional Chinese;
+6. Update the native App store
+MEEBOOK-V1.4.1-2023042717
+New Functions & Optimizations:
+1. Solved the problem of device freezing or restarting accidentally.
+2. Solved the problem of misoperation of gesture control.
+3. Solved the problem that apps downloaded in “MYKET” cannot be installed correctly.
+4. Support to read directly by native reader when ebooks stored in the “Download”folder.
+5. Updated the login authorization method for “Youdao cloud” apps.
+6. Solved the problem that after gesture control switching, books keep loading when reopen.
+7. Optimized the UI of “Cloud Drive”.
+8. Solved the problem that files cannot be deleted if downloaded at the “Cloud Drive” app.
+9. Optimized the function of system fonts adjustment.
+10. Optimized the function of using book cover as wallpaper.
+11. Added .MDX format for dictionary support.
+12. Added functions for the contrast adjustment.
+MEEBOOK-V1.4.0-2023031019
+New functions:
+1. Added the function of turning off returning of home button
+2. Added the function of turning off sleeping of leather case
+Optimizations:
+1. Improve the brightness of front light
+2. Optimize the flashing of page turning in top speed mode
+3. Optimize the flashing of underline in regal mode
+4. Solve the stuck problem during using
+Meebook M7
+M7: MEEBOOK-V1.5.3-2023092114
+New functions:
+1. Added automatic screen rotation function;
+2. Added Bluetooth automatic shutdown function;
+3. Added function of synchronizing reading records in “JD Bookstore” application;
+4. Added function of long pressing page turning key to rotate the vertical screen 180 degrees;
+Optimizations:
+1. Optimize the wallpaper function;
+2. Optimize the Bluetooth (transfer) function;
+3. Optimize some UI translations in different languages;
+4. Optimize image brightness adjustment for the third-party application;
+5. Fixed the bug that incomplete display of folder names in the reader
+M7: MEEBOOK-V1.5.2
+New Functions：
+1. Added custom function on long pressing page turnning key (set at the User Settings-Device Settings) ;
+2. Added scrolling display when using page turning key in the third-party applications (set by long pressing the third-party application icon for optimization) ;
+Optimizations:
+1. Optimized the picture display effect of WeChat reading application;
+2. Fixed the problem that device cannot be turned off after it is set as automatically turned off;
+3. Fixed the problem that page turnning key is invalid when used in KOReader application;
+4. Fixed the problem that some punctuation marks of book are displayed incorrectly;
+5. Fixed the problem that some books are crashed when open;
+6. Fixed the problem that incomplete display of books in the Books folder when books stored in MicroSD card;
+7. Fixed the problem that preinstalled or copied books cannot be opened correctly;
+8. Fixed the problem that after adjusting brightness in the third-party application, the front light flickers when clock wallpaper is refreshed;
+9. Fixed the problem that when warm and cold light are turnned on at the same time, the front light display incorrectly after device wake up;
+10. Fixed the problem that device gets hot and power consumption is abnormal during some using cases;
+11. Fixed the problem that there are a small probability of Wi-Fi unabling to be connected;
+ติดต่อ Facebook
+ติดต่อ Line Official
+สั่งซื้อผ่าน LazMall
+สั่งซื้อผ่าน Shopee
+บริษัทที่เป็นตัวแทนนำเข้าและจัดจำหน่ายเครื่องอ่านหนังสืออิเล็กทรอนิกส์ eBook Reader ในประเทศไทย
+Follow Us
+Facebook
+Twitter
+Youtube
+Customer Service
+Contact Us
+FAQ
+Payment Method
+Privacy
+Privacy Policy
+Terms & Conditions
+Return & Refund Policy
+Contact Info
+Address
+288/155 Sriwiang Rd.
+Robwiang, Mueng Chaing Rai
+Chaing Rai
+57000
+Phone
+086-925-8383
+Email
+kindlethailand@gmail.com
+Copyright © 2026 eReader.co.th
+Powered by eReader.co.th
+Scroll to Top

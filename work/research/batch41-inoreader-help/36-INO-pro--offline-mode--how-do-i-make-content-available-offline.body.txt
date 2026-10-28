@@ -1,0 +1,2 @@
+Open the section’s properties and enable offline access. On iOS, swipe right on the section to find Offline settings. On Android, long-press the section.
+Download the content while connected to the internet and check the offline indicators before traveling. Changes made offline sync when your device reconnects.

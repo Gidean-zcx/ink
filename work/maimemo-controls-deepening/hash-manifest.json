@@ -1,0 +1,102 @@
+[
+  {
+    "path": "docs/research/interaction-library/cases/M-017-maimemo.md",
+    "sha256": "c415c18695d99d210be1f5067900379b29f6e533e0467692e2a23120947a4bbc"
+  },
+  {
+    "path": "docs/research/interaction-library/batches/maimemo-controls-deepening-evidence.jsonl",
+    "sha256": "1d605b85f7baee551d5450d4fb4abeaca6cdb71afad3ff324913250d8ae36722"
+  },
+  {
+    "path": "docs/research/interaction-library/batches/maimemo-controls-deepening-coverage.csv",
+    "sha256": "d3eca83ae7d859dadeaa64e534f7b8f5b0451b0a9f8de89979b06f61bf33ff03"
+  },
+  {
+    "path": "docs/research/interaction-library/batches/maimemo-controls-deepening-inventory.csv",
+    "sha256": "bce07eb8a436b6718c4b93d7495dbc440cd3898272f1382def10ba6eaafd0088"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/maimemo-controls-deepening/source-notes.md",
+    "sha256": "f88276f946a06a916e9dab6c2e52b57b7a6581411de63f313dfb95b16d5864fe"
+  },
+  {
+    "path": "work/maimemo-controls-deepening/09-exam.html",
+    "sha256": "ab4ab09fef4ca05801a0dd8df039c9d4868a2c0dc25ec32608cdfb1a32ef0654"
+  },
+  {
+    "path": "work/maimemo-controls-deepening/06-checkin-error.html",
+    "sha256": "881fbb376092fc2c019188a212ef8e913108efe937c0c38f0a49c47844d31024"
+  },
+  {
+    "path": "work/maimemo-controls-deepening/12-api-site.html",
+    "sha256": "10d3b33c7faf9439ab277b8a003d1c6aa16af1ea350fe1b8f4f34f861fcb70da"
+  },
+  {
+    "path": "work/maimemo-controls-deepening/15-harmony.html",
+    "sha256": "827004a00ed16f42f0eb4fd30358c6c3fdbef55c4f28d1a5adb0a86bb3bec926"
+  },
+  {
+    "path": "work/maimemo-controls-deepening/11-open.html",
+    "sha256": "93c3a0de167fb1b8d5fa386cb10ab3a63cd29a53490e3e9f65115aca44d45748"
+  },
+  {
+    "path": "work/maimemo-controls-deepening/17-ios.html",
+    "sha256": "b47ffb479cc5d2a274cdf894e723ed2f39cc3a5609bc3a56e303f5fb2a2e5414"
+  },
+  {
+    "path": "work/maimemo-controls-deepening/08-super.html",
+    "sha256": "03d119e8655a6840b3cfe852b11ead801edc209c8ad2fb526733f9236b557e8c"
+  },
+  {
+    "path": "work/maimemo-controls-deepening/01-start.html",
+    "sha256": "c7f8f15d2f6aaa9e008618c951df710ae61c0089e65466382f67cc1ccf179e6b"
+  },
+  {
+    "path": "work/maimemo-controls-deepening/03-daily.html",
+    "sha256": "5324d945bb304f2090379b6e8696ef4598f055a4e6ba3b400b27041fb4edc3a8"
+  },
+  {
+    "path": "work/maimemo-controls-deepening/19-newload.html",
+    "sha256": "80849fcc90dc6cc2e2bfbd19fc4492c2a3bd17e78dfb65e170030ab3dbcf657b"
+  },
+  {
+    "path": "work/maimemo-controls-deepening/14-ios-audio.html",
+    "sha256": "58ece7edbcf2869543506717a5e03c62780c0186661d14531dd8aa7509a8c7b3"
+  },
+  {
+    "path": "work/maimemo-controls-deepening/04-pie.html",
+    "sha256": "d67510c2833474a5b9a68d2fac32fc37668dd3aa360ffbd2816c8ad23f327153"
+  },
+  {
+    "path": "work/maimemo-controls-deepening/02-basics.html",
+    "sha256": "d98fb4cdb3ad397ce3ee59957235b6ede4c35d07ca9056b2f992746e51f4f428"
+  },
+  {
+    "path": "work/maimemo-controls-deepening/10-pdf.html",
+    "sha256": "bdfc64a77df400002deb1a3b10d52af84f73fd166155a5f710784629e6d522b9"
+  },
+  {
+    "path": "work/maimemo-controls-deepening/07-filter.html",
+    "sha256": "98ec1dc1b41822b190966995426ff9627d94aa869284addcbbbd95c678fe1937"
+  },
+  {
+    "path": "work/maimemo-controls-deepening/05-makeup.html",
+    "sha256": "f26ea45dc498a004c0bb3e6e13d73147643babb4433df7c654fbb7fa6909a6a6"
+  },
+  {
+    "path": "work/maimemo-controls-deepening/18-rating.html",
+    "sha256": "29dfccf2eec08b6e7bb6a232d878f903750c70cc7dbc2d4dd5c8563603d3b508"
+  },
+  {
+    "path": "work/maimemo-controls-deepening/13-streak.html",
+    "sha256": "d1614fd5ff4a5b638a285547286eda96bcaee4be29a2d70bcdd89c7d080330c0"
+  },
+  {
+    "path": "work/maimemo-controls-deepening/16-api_bundle.yaml",
+    "sha256": "8612a857ee586d588cf1a826fa71721c6e10ca1c1a6593a8873e075fed58f7bc"
+  },
+  {
+    "path": "work/maimemo-controls-deepening/existing-coverage-updates.csv",
+    "sha256": "ca4d543f857112277edd3e6fe7782bc7793cae400dce46ef29cccc74644e869c"
+  }
+]

@@ -1,0 +1,22 @@
+Can I Share My Mudita Kompakt's Internet Connection (Tethering) with Other Devices?
+Modified on: Sat, 3 Oct, 2026 at 8:41 AM
+Yes, you can set up a hot spot to be able to share your internet connection (tethering).
+How to create a hotspot
+Hotspots allow other devices to use Kompakt’s Wi-Fi or data when they are tethered.
+To create a hotspot:
+Press the Control Center button
+Tap Settings icon
+Tap Network and Internet
+Tap Hotspot and Tethering
+Tap Wi-Fi Hotspot
+You can edit the name, password* and security settings for the hotspot
+To turn on the hotspot Tap the Toggle Switch near the top of the screen 
+*The password must be 8 or more characters long
+You can also turn the hotspot on and off from the Control Center: 
+Press the Control Center button
+Tap Hotspot icon which is above the Airplane icon
+Was this article helpful?
+No
+Yes
+That’s Great!
+Thank you for your feedback

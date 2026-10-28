@@ -1,0 +1,317 @@
+{
+  "evidence_id": "E-VWCN-01",
+  "checked_on": "2026-10-27",
+  "source_url": "https://cdn.shopify.com/s/files/1/0729/7368/0674/files/User_Manual_CN-0305.pdf?v=1789609108",
+  "source_revision": "2025-06-11",
+  "pdf_metadata_creation_modification": "2026-09-17T01:30:05Z; not revision or firmware",
+  "source_pdf_sha256": "7ca80582c8397a42263774528e8dabcd1356076fb76997e6600702db79ca3dc5",
+  "text_read_file_pages": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49,
+    50,
+    51,
+    52,
+    53,
+    54,
+    55,
+    56,
+    57,
+    58,
+    59,
+    60,
+    61,
+    62,
+    63,
+    64,
+    65,
+    66,
+    67,
+    68,
+    69,
+    70,
+    71,
+    72,
+    73,
+    74,
+    75
+  ],
+  "visual_observed_file_pages": [
+    1,
+    2,
+    13,
+    23,
+    26,
+    27,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    51,
+    52,
+    55,
+    57,
+    58,
+    59,
+    60,
+    63,
+    64,
+    65,
+    66,
+    67,
+    69,
+    70,
+    71,
+    73,
+    74
+  ],
+  "archived_file_pages": [
+    1,
+    2,
+    23,
+    26,
+    27,
+    42,
+    43,
+    52,
+    55,
+    57,
+    58,
+    60,
+    63,
+    64,
+    65,
+    66,
+    67,
+    71,
+    73
+  ],
+  "hands_on": false,
+  "visual_kind": "selected_static_manual_pages",
+  "page_numbering": "one-based PDF file pages",
+  "note": "All 75 extracted text pages read; only listed 29 images viewed. 19 representative images archived; no continuous video, account, mail, sync or device operations.",
+  "observations": [
+    {
+      "file_page": 1,
+      "raw_work_path": "work/research/batch39-viwoods/cn-01.png",
+      "raw_sha256": "b227826e22ab2029d9686a9d8886aee416b5537e569a855a87f4ddab51167eb7",
+      "archived_artifact": "artifacts/viwoods-chinese-workflows/cn-01.png"
+    },
+    {
+      "file_page": 2,
+      "raw_work_path": "work/research/batch39-viwoods/cn-02.png",
+      "raw_sha256": "1c5346eeea3a20ca3776a43d3b126bff05415fde71523eb68508cbe2764bb174",
+      "archived_artifact": "artifacts/viwoods-chinese-workflows/cn-02.png"
+    },
+    {
+      "file_page": 13,
+      "raw_work_path": "work/research/batch39-viwoods/cn-13.png",
+      "raw_sha256": "4c8a9fe4075209108b8d23917c4e916733366b70038fb2bb95b8d38d4922b24d",
+      "archived_artifact": null
+    },
+    {
+      "file_page": 23,
+      "raw_work_path": "work/research/batch39-viwoods/cn-23.png",
+      "raw_sha256": "44fb35e60236a896418bc42d8886f3083b883b26619c009bff8745f7b013770f",
+      "archived_artifact": "artifacts/viwoods-chinese-workflows/cn-23.png"
+    },
+    {
+      "file_page": 26,
+      "raw_work_path": "work/research/batch39-viwoods/cn-26.png",
+      "raw_sha256": "dfd208dd208dd6e2e7c383316dd64f461332d294e74cbfa6d395aba52145b365",
+      "archived_artifact": "artifacts/viwoods-chinese-workflows/cn-26.png"
+    },
+    {
+      "file_page": 27,
+      "raw_work_path": "work/research/batch39-viwoods/cn-27.png",
+      "raw_sha256": "8a7dc445046409713343be709bf3282b1fe1e6ac73f561796fb594469656aa1b",
+      "archived_artifact": "artifacts/viwoods-chinese-workflows/cn-27.png"
+    },
+    {
+      "file_page": 40,
+      "raw_work_path": "work/research/batch39-viwoods/cn-40.png",
+      "raw_sha256": "953047f9e5bce6d381031734c0170fe0b9e605197fda2f6c8444b9f2bd262947",
+      "archived_artifact": null
+    },
+    {
+      "file_page": 41,
+      "raw_work_path": "work/research/batch39-viwoods/cn-41.png",
+      "raw_sha256": "bffabb4ab175e8109409cb47954f4ee88880ee749030d7a6d1954cebddc6122c",
+      "archived_artifact": null
+    },
+    {
+      "file_page": 42,
+      "raw_work_path": "work/research/batch39-viwoods/cn-42.png",
+      "raw_sha256": "6d7c585e40d8852162d0c682258e38f8a597bb8971617ad528e30e626f3b1ff9",
+      "archived_artifact": "artifacts/viwoods-chinese-workflows/cn-42.png"
+    },
+    {
+      "file_page": 43,
+      "raw_work_path": "work/research/batch39-viwoods/cn-43.png",
+      "raw_sha256": "9667e5b4b3f64e6c33d495c9bbc1594cda9a6eff4ab265fc3b9d5566c2e06f98",
+      "archived_artifact": "artifacts/viwoods-chinese-workflows/cn-43.png"
+    },
+    {
+      "file_page": 44,
+      "raw_work_path": "work/research/batch39-viwoods/cn-44.png",
+      "raw_sha256": "972a2954a7d0584bee8bba41a419487d0dc9c8738ed8cf9188161f0e036ff6f6",
+      "archived_artifact": null
+    },
+    {
+      "file_page": 45,
+      "raw_work_path": "work/research/batch39-viwoods/cn-45.png",
+      "raw_sha256": "4c41546edd27929ab601f2157e58e934f612a997a5049a7169d2910224683368",
+      "archived_artifact": null
+    },
+    {
+      "file_page": 51,
+      "raw_work_path": "work/research/batch39-viwoods/cn-51.png",
+      "raw_sha256": "734c326e2424b86f20ccbac35912826e84cf29c17d63b82103bbe6f85c66524c",
+      "archived_artifact": null
+    },
+    {
+      "file_page": 52,
+      "raw_work_path": "work/research/batch39-viwoods/cn-52.png",
+      "raw_sha256": "23130fa023b91bac5dbfc95af0ec053b01fff053eb7dfa69f4a4adfcb53b8019",
+      "archived_artifact": "artifacts/viwoods-chinese-workflows/cn-52.png"
+    },
+    {
+      "file_page": 55,
+      "raw_work_path": "work/research/batch39-viwoods/cn-55.png",
+      "raw_sha256": "1ef1b77260ede88be50ec5dc39ababe68b2882de24368a0526e9c05d9055aac8",
+      "archived_artifact": "artifacts/viwoods-chinese-workflows/cn-55.png"
+    },
+    {
+      "file_page": 57,
+      "raw_work_path": "work/research/batch39-viwoods/cn-57.png",
+      "raw_sha256": "b2fccd4252168cda7c9e9cf48ed629615ce81ea7a6fac02787174a280a93e8c8",
+      "archived_artifact": "artifacts/viwoods-chinese-workflows/cn-57.png"
+    },
+    {
+      "file_page": 58,
+      "raw_work_path": "work/research/batch39-viwoods/cn-58.png",
+      "raw_sha256": "ad279d4fb024f5aa48427240d0db5269d7408699c6ccf60a22901e363c4035ef",
+      "archived_artifact": "artifacts/viwoods-chinese-workflows/cn-58.png"
+    },
+    {
+      "file_page": 59,
+      "raw_work_path": "work/research/batch39-viwoods/cn-59.png",
+      "raw_sha256": "f3c9237fe0ee434d5ffa075da0d2353e5b625c116e9b77cdb0c1d5b2bf850e32",
+      "archived_artifact": null
+    },
+    {
+      "file_page": 60,
+      "raw_work_path": "work/research/batch39-viwoods/cn-60.png",
+      "raw_sha256": "93a0148dca7dce0f365a21d2b32c8df48c4424587ebca475f256bdbe2668b8f8",
+      "archived_artifact": "artifacts/viwoods-chinese-workflows/cn-60.png"
+    },
+    {
+      "file_page": 63,
+      "raw_work_path": "work/research/batch39-viwoods/cn-63.png",
+      "raw_sha256": "6212c3664e0fdd2c0fc8996855d7c6df043237d0e88744340fffde4962caeb23",
+      "archived_artifact": "artifacts/viwoods-chinese-workflows/cn-63.png"
+    },
+    {
+      "file_page": 64,
+      "raw_work_path": "work/research/batch39-viwoods/cn-64.png",
+      "raw_sha256": "d63e87a983ea01723ef035f107c9ad241406f86956a9aea20b426b3487b4f5d8",
+      "archived_artifact": "artifacts/viwoods-chinese-workflows/cn-64.png"
+    },
+    {
+      "file_page": 65,
+      "raw_work_path": "work/research/batch39-viwoods/cn-65.png",
+      "raw_sha256": "1c4ce8014ee7f6f272013e6cfe465062b57008bd174c54cb1359ecf016dfd1b0",
+      "archived_artifact": "artifacts/viwoods-chinese-workflows/cn-65.png"
+    },
+    {
+      "file_page": 66,
+      "raw_work_path": "work/research/batch39-viwoods/cn-66.png",
+      "raw_sha256": "51a5f85e7700c1ae9cf902d227ce3d909ef233231d108f3382e846fded1b23b3",
+      "archived_artifact": "artifacts/viwoods-chinese-workflows/cn-66.png"
+    },
+    {
+      "file_page": 67,
+      "raw_work_path": "work/research/batch39-viwoods/cn-67.png",
+      "raw_sha256": "16ede007b3e35f0896d1dfdc86b8d27df8ad0a2e267a9ba8e14e95d65df67b36",
+      "archived_artifact": "artifacts/viwoods-chinese-workflows/cn-67.png"
+    },
+    {
+      "file_page": 69,
+      "raw_work_path": "work/research/batch39-viwoods/cn-69.png",
+      "raw_sha256": "c7695a0c26091ed4e315f68ebaed2ba661705a684fad72933ef2a006419910c9",
+      "archived_artifact": null
+    },
+    {
+      "file_page": 70,
+      "raw_work_path": "work/research/batch39-viwoods/cn-70.png",
+      "raw_sha256": "c9c1db32393fb6b7aaac8e1ff087a97fe79d05255e11b9da95bd27983b407a7b",
+      "archived_artifact": null
+    },
+    {
+      "file_page": 71,
+      "raw_work_path": "work/research/batch39-viwoods/cn-71.png",
+      "raw_sha256": "3b7febdf940814eb5b839fc23d9eeddd3eb5113e5f84a5a11f6c5ee9e6e659f5",
+      "archived_artifact": "artifacts/viwoods-chinese-workflows/cn-71.png"
+    },
+    {
+      "file_page": 73,
+      "raw_work_path": "work/research/batch39-viwoods/cn-73.png",
+      "raw_sha256": "1286ad6105ed666bbd2bf8c2aeaebfa536cf325c8ff95fab61c349e9a8b48b43",
+      "archived_artifact": "artifacts/viwoods-chinese-workflows/cn-73.png"
+    },
+    {
+      "file_page": 74,
+      "raw_work_path": "work/research/batch39-viwoods/cn-74.png",
+      "raw_sha256": "b1b47dc71eff3a686c1b75ed01068e20451aa6506da951e78994a2b8cff108b0",
+      "archived_artifact": null
+    }
+  ]
+}

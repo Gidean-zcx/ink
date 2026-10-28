@@ -1,0 +1,22 @@
+[
+  {
+    "key": "plus-quick-panel",
+    "url": "https://p7.itc.cn/q_70/images01/20220530/1e57b2c830e44ebc9bd0de045b3571cf.jpeg",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "content_type": "image/jpeg",
+    "final_url": "https://p7.itc.cn/q_70/images01/20220530/1e57b2c830e44ebc9bd0de045b3571cf.jpeg",
+    "raw_work_path": "work/moaan-controls-deepening/raw/plus-quick-panel.jpg",
+    "raw_sha256": "8bf0f72f6a219b4b469500019ea5b703d39cf4a4262241da711481a3560e4fd0"
+  },
+  {
+    "key": "plus-refresh-panel",
+    "url": "https://p2.itc.cn/q_70/images01/20220530/5f4187359b5b4feb9463dd75956a06dc.jpeg",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "content_type": "image/jpeg",
+    "final_url": "https://p2.itc.cn/q_70/images01/20220530/5f4187359b5b4feb9463dd75956a06dc.jpeg",
+    "raw_work_path": "work/moaan-controls-deepening/raw/plus-refresh-panel.jpg",
+    "raw_sha256": "e7b7e620c0e20761c99b16ba8228bcdfb19fa104916179d40074b76732029481"
+  }
+]

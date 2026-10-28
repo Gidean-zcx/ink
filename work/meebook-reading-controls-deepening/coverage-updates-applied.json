@@ -1,0 +1,118 @@
+[
+  {
+    "flow_id": "F-M057-02",
+    "before": {
+      "flow_id": "F-M057-02",
+      "product_id": "M-057",
+      "task": "局域网传书",
+      "depth": "D2",
+      "evidence_ids": "E-MEE-03",
+      "known_branches": "同一路由器；应用页WiFi传书→按地址/二维码指引；未证明跨网传输",
+      "gaps": "身份验证、成功/失败反馈、取消、半文件、重试去重及内容打开；原PDF未取得",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-057-meebook.md",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "flow_id": "F-M057-02",
+      "product_id": "M-057",
+      "task": "局域网传书",
+      "depth": "D2",
+      "evidence_ids": "E-MEE-03;E-MRCD-01",
+      "known_branches": "指南的同局域网入口与2024作者Wi-Fi Book Transfer实例分开；私网地址是实例，不是通用固定地址。",
+      "gaps": "认证、完成/失败、取消、半文件及重复导入未知；作者可传文件不证明书架索引或原生进度同步。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-057-meebook.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "flow_id": "F-M057-04",
+    "before": {
+      "flow_id": "F-M057-04",
+      "product_id": "M-057",
+      "task": "翻页键长按和第三方应用适配",
+      "depth": "D2",
+      "evidence_ids": "E-MEE-04",
+      "known_branches": "V1.5.2用户设置/设备设置长按键配置及App图标长按优化滚动；V1.5.3另声明自动旋转和长按竖屏180°",
+      "gaps": "两版长按动作组合/优先级、默认键值、实际App接收、冲突恢复；A2条件归属和菜单未知",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-057-meebook.md",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "flow_id": "F-M057-04",
+      "product_id": "M-057",
+      "task": "翻页键长按和第三方应用适配",
+      "depth": "D2",
+      "evidence_ids": "E-MEE-04;E-MRCD-02;E-MRCD-03;E-MRCD-04;E-MRCD-05",
+      "known_branches": "历史系统长按/应用优化入口沿旧日志；2026.07.1个案按键无翻页，经成员给应用内映射后作者反馈有帮助。项目Wiki说明事件映射文件；外部滑动映射是另一作者自配方案。",
+      "gaps": "系统固件/实际键码、92/93与291/292关系、完整前后配置/重启加载、旋转冲突和全App效果未核；issue关闭不是通用兼容保证。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-057-meebook.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "flow_id": "F-M057-05",
+    "before": {
+      "flow_id": "F-M057-05",
+      "product_id": "M-057",
+      "task": "读书与同步/导出",
+      "depth": "D1",
+      "evidence_ids": "E-MEE-03;E-MEE-04",
+      "known_branches": "商店/Google Play仅安装声明；V1.5.3京东读书记录同步仅归该App，不扩展到其他App/原生书",
+      "gaps": "原生进度/章节/书签/批注导出、安装卸载数据、账号网络条件与跨App统一同步",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-057-meebook.md",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "flow_id": "F-M057-05",
+      "product_id": "M-057",
+      "task": "读书与同步/导出",
+      "depth": "D1",
+      "evidence_ids": "E-MEE-03;E-MEE-04;E-MRCD-01;E-MRCD-05",
+      "known_branches": "京东记录同步仅旧日志声明；2024作者原生Notes范围、第三方自制摘录工具和另一作者的外部书库/KOReader组合分别记录，不当统一同步。",
+      "gaps": "安装完整提示、同步触发/完成、原生批注导出、跨App/账户/断网恢复仍未核；其他App可打开书不证明共享进度。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-057-meebook.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "flow_id": "F-M057-06",
+    "before": {
+      "flow_id": "F-M057-06",
+      "product_id": "M-057",
+      "task": "后台管理与恢复",
+      "depth": "D1",
+      "evidence_ids": "E-MEE-03;E-MEE-04",
+      "known_branches": "顶栏任务管理清任务；应用页Snow进入后台启动管理，两者效果分开；送修前备份要求没有备份工具/步骤",
+      "gaps": "单项后台控制、确认/撤销、冻结重开与未保存内容、音频/重启断点、更新回滚/重置恢复；历史修复未复现",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-057-meebook.md",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "flow_id": "F-M057-06",
+      "product_id": "M-057",
+      "task": "后台管理与恢复",
+      "depth": "D1",
+      "evidence_ids": "E-MEE-03;E-MEE-04;E-MRCD-01",
+      "known_branches": "清任务与Snow后台入口沿旧指南；2024作者补设置页箭头→Factory reset或Android Settings→System→Reset options两个入口，未展示执行。",
+      "gaps": "单项控制/撤销、冻结后重开、重置确认/数据删除范围/恢复均未核；不能用找到重置入口代表完成恢复任务。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-057-meebook.md",
+      "checked_on": "2026-10-27"
+    }
+  }
+]

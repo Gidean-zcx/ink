@@ -1,0 +1,20 @@
+{
+  "order": 1,
+  "entry_id": "INO-basic--article-view--what-layout-options-are-available",
+  "title": "What layout options are available?",
+  "url": "https://www.inoreader.com/help/basic/article-view/what-layout-options-are-available",
+  "checked_on": "2026-10-27",
+  "http_status": 200,
+  "acquisition": "existing_worker_raw_no_new_GET",
+  "raw_path": "work/research/batch41-inoreader-help/01-INO-basic--article-view--what-layout-options-are-available.html",
+  "prior_classification": "worker false-positive challenge: global reCAPTCHA script; root confirmed actual article body",
+  "raw_sha256": "ca7d1011945dbb3ccdb5bdd93f75c086cef0df21ee542c903f27e07f4ccd84fb",
+  "bytes": 142164,
+  "status": "body_obtained",
+  "body_status": "extracted_not_yet_root_read",
+  "body_path": "work/research/batch41-inoreader-help/01-INO-basic--article-view--what-layout-options-are-available.body.txt",
+  "body_sha256": "2a07d758812d1b7143cff52d283fd7b22de08842500e3f2865635de1fea0c810",
+  "body_chars": 48,
+  "links": [],
+  "images": []
+}

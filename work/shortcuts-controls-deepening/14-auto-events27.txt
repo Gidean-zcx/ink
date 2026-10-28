@@ -1,0 +1,41 @@
+Event triggers in Shortcuts on iPhone or iPad
+Use an event trigger to run an automation at a specific time of day, when you use an alarm on your phone, or when you do an Apple Watch workout.
+The Time of Day trigger has the following options:
+Sunrise: Triggers your automation at sunrise, as determined by your current location in the Weather app.
+Sunset: Triggers your automation at sunset, as determined by your current location in the Weather app.
+Tip: If you select Sunrise or Sunset, you can set the automation to run 15 minutes, 30 minutes, 45 minutes, 1 hour, 2 hours, 3 hours, or 4 hours, before or after.
+Time of Day: Triggers your automation at a specific time, determined by the option you choose from the list.
+Repeat: Select which day or days you want your automation to run.
+Daily: Triggers your automation every day.
+Weekly: Triggers your automation on the selected days.
+Monthly: Triggers your automation on the selected day of the month.
+The Alarm trigger has the following options:
+Is Snoozed: Triggers your automation when you snooze the selected alarm.
+Is Stopped: Triggers your automation when you stop the selected alarm.
+Alarms: Select from the following options:
+Any: Triggers your automation when any active alarm goes off in the Clock app.
+Existing:  Triggers your automation when a specific alarm goes off in the Clock app. (After you select this option, select an alarm from the list of alarms you’ve saved in the Clock app.)
+Wake-up: Triggers your automation at your wake-up time, as set in the Bedtime category of the Clock app.
+The Sleep trigger has the following options:
+Wind Down Begins: Triggers your automation when you’re winding down for bed.
+Bedtime Begins: Triggers your automation when it’s time for bed.
+Waking Up: Triggers your automation when the Wake Up alarm goes off.
+Note: To use Sleep triggers, you set up a sleep schedule in the Health app. See Health App in the iPhone User Guide.
+The Keyboard trigger has the following options:
+Connected: Triggers when an external keyboard is connected.
+Disconnected: Triggers when an external keyboard is disconnected.
+Connected or Disconnected: Triggers when an external keyboard is connected or disconnected.
+The Screenshot trigger has the following options:
+Photos: Triggers when a screenshot is saved to the Photos app.
+Files: Triggers when a screenshot is saved to the Files app.
+Clipboard: Triggers when a screenshot is saved to the Clipboard.
+The Notification trigger has the following options:
+App: Specify the app a notification will be received from.
+Add Filter: Specify the Message, Subtitle, or Title to filter for a notification event.
+The Apple Watch Workout trigger has the following options:
+Workout Type: Tap this option, then choose one or more workout types to launch your automation (or choose Any Workout).
+When Workout: Choose when in your workout you want to run your automation. There are three options: Start, End, or Starts or Ends (triggers the automation at the start and end of your workout).
+Note: To use Apple Watch Workout triggers, you need to pair your iPhone with an Apple Watch.
+The Sound Recognition trigger has one option:
+Sound: Tap this option, then choose a sound to trigger your automation.
+Note: To use Sound Recognition triggers, you need enable Sound Recognition in the Settings app.See alsoUse variables in Shortcuts on iPhone or iPad

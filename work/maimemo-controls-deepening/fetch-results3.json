@@ -1,0 +1,32 @@
+[
+  {
+    "name": "17-ios",
+    "url": "https://memodocs.maimemo.com/docs/product-log-memo-ios",
+    "method": "requests GET timeout=(5,18), one attempt",
+    "status": 200,
+    "final_url": "https://memodocs.maimemo.com/docs/product-log-memo-ios",
+    "raw_work_path": "work/maimemo-controls-deepening/17-ios.html",
+    "raw_sha256": "b47ffb479cc5d2a274cdf894e723ed2f39cc3a5609bc3a56e303f5fb2a2e5414",
+    "bytes": 123803
+  },
+  {
+    "name": "18-rating",
+    "url": "https://memodocs.maimemo.com/docs/Ok6YwF2X7iJZvvkCunjcmWwLnzb/",
+    "method": "requests GET timeout=(5,18), one attempt",
+    "status": 200,
+    "final_url": "https://memodocs.maimemo.com/docs/Ok6YwF2X7iJZvvkCunjcmWwLnzb/",
+    "raw_work_path": "work/maimemo-controls-deepening/18-rating.html",
+    "raw_sha256": "29dfccf2eec08b6e7bb6a232d878f903750c70cc7dbc2d4dd5c8563603d3b508",
+    "bytes": 57889
+  },
+  {
+    "name": "19-newload",
+    "url": "https://memodocs.maimemo.com/docs/TXhHwrM8Ei5QKjk562mcq8uInef",
+    "method": "requests GET timeout=(5,18), one attempt",
+    "status": 200,
+    "final_url": "https://memodocs.maimemo.com/docs/TXhHwrM8Ei5QKjk562mcq8uInef",
+    "raw_work_path": "work/maimemo-controls-deepening/19-newload.html",
+    "raw_sha256": "80849fcc90dc6cc2e2bfbd19fc4492c2a3bd17e78dfb65e170030ab3dbcf657b",
+    "bytes": 56456
+  }
+]

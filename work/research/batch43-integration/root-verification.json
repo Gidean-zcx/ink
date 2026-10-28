@@ -1,0 +1,25 @@
+{
+  "states": 23,
+  "commands": 25,
+  "research_command_errors": 2,
+  "new_screens_reviewed": 15,
+  "additional_static_pages_reviewed": [
+    8,
+    9
+  ],
+  "flows": 931,
+  "evidence": 1636,
+  "rp": 56,
+  "new_files": 30,
+  "modified_files": 15,
+  "deleted_files": 0,
+  "requirements_sha256": "e141320e2714df805c009fe64dd92d17decd6429d5728f8ce42d6d868b775087",
+  "browser_session_exit": 0,
+  "semantic_review": "Root inspected selected screens, compared action trace, corrected transient screenshot names and 0-based command indices; teacher cover/issue and pp8/9 matched; bounds preserved.",
+  "limitations": [
+    "23 states include initial G3 side check; 25 commands include reads/captures",
+    "Network listeners incomplete for initial mobile new tab",
+    "No audible listening, child, touch, native or Plus tests",
+    "All65 products partial; goal remains active"
+  ]
+}

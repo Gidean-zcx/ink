@@ -1,0 +1,10 @@
+How do I add a feed?
+Click Add feed in the tab bar, enter a source name or URL, and follow the on-screen instructions.
+Related questions
+What is a feed?
+What types of sources can I follow?
+Can I import feeds from another RSS reader?
+Can I discover new sources in Inoreader?
+Where can I see all articles from my feeds together?
+Why can’t Inoreader find a feed for a website?
+Why has a feed stopped updating?

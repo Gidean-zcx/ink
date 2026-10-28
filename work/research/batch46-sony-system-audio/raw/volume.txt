@@ -1,0 +1,40 @@
+Adjusting the volume
+Adjust the volume for “Music player”.
+Press or hold down the +/– (volume) buttons ().
+To adjust the volume with the volume dialog
+Turn on the screen of the player.
+Press the +/– (volume) buttons () to display the volume panel.
+Tap the volume scale or the digits on the volume panel to display the volume dialog.
+Volume knob
++/– (volume)
+Turn the volume knob () to adjust the volume.
+You can also tap or hold down +/– (volume) () to adjust the volume.
+Hint
+You can also display the volume dialog from the Quick Settings panel. On the [WALKMAN Home] screen, swipe down on the status bar. Then, tap the volume icon in the Quick Settings panel.
+Note
+The volume level may be too high or too low when you listen to music using an app other than “Music player”. In this case, adjust the volume according to the following procedure.
+Tap (Setting) on the volume panel, and adjust the volume level for [Media volume].
+Then, adjust the volume with the +/– (volume) buttons () or the volume dialog.
+The volume level of “Music player” may be too high or too low if you have adjusted the volume while you used another app. In this case, adjust the volume with the +/– (volume) buttons () or the volume dialog.
+You cannot adjust the volume with the volume dialog in the following cases. Adjust the volume using the connected device.
+When sound is output through a Bluetooth device that is connected to the player.
+When sound is output through a USB device that is connected to the player.
+Limiting the volume
+The AVLS (Automatic Volume Limiter System) function reduces the risk of damage to ears from loud volumes. Using AVLS limits the maximum volume.
+AVLS has the following features.
+AVLS limits the volume to a certain level.
+AVLS prevents disturbances to others caused by loud volumes.
+AVLS reduces risks that occur when you cannot hear ambient sound.
+AVLS allows you to listen at a more comfortable volume.
+Swipe the [WALKMAN Home] screen upwards.
+Tap the menu items in the following order.
+[Settings] － [Sound].
+Tap the [AVLS (volume limit)] switch.
+Note
+AVLS (volume limit) is not effective in the following cases.
+When sound is output through a Bluetooth device that is connected to the player.
+When sound is output through a USB device that is connected to the player.
+The contents of the Help Guide may be subject to change without notice due to updates to the product's specifications.
+Go to Page Top
+Related Topic
+Volume operation in compliance with Directives

@@ -1,0 +1,28 @@
+Create contacts from data in Shortcuts on iPhone or iPad
+You can use data from an API to create calendar events, contacts, notes, and more. This example demonstrates how to create contacts from the Typicode API. Creating contacts using the Add to Contacts action requires a first and last name. You will need to use the Split Text action to separate the user’s names in the API data.
+Split text into a list
+In the Shortcuts app on your iPhone or iPad, add a Repeat with Each action after the Get Contents of URL action.
+Add a Get Dictionary Value action inside the Repeat with Each action, then set the key to name.
+Add a Split Text action after the Get Diction Value action, then set the input to the Dictionary Value and the delimiter to Spaces.
+The Split Text action will create a list of items based on the delimiter. In this case, the contact’s first name is the first item in the list and their surname is the last item in the list.
+Add two Get Item from List actions. Set the first action to get the First Item and the second action to get the Last Item. For both actions use a magic variable of the output of the Split Text action.
+Create a contact
+In the Shortcuts app on your iPhone or iPad, add a Get Dictionary Value action after the Split Text actions, then set the key to phone and the Dictionary to the Repeat Item.
+Add an Add New Contact action after the last Get Dictionary Value action.
+At this point you have the following actions:
+URL
+Get Contents of URL
+Repeat with Each
+Get Value for name in Repeat Item
+Split Dictionary Value by Spaces
+Get First Item from Split Text
+Get Last Item from Split Text
+Get Value for phone in Repeat Item
+Add Contact
+End Repeat
+In the Add Contact action, set the First Name to the Magic Variable of the first Split Text action and the Last Name to the Magic Variable of the second Split Text action.
+From the Show More menu, set Phone Number to the Magic Variable of the Get Value for phone action.
+Turn off Show Compose Sheet.
+Tap to run the shortcut and create contacts from the API.
+WARNING: Running this shortcut will create contacts on your device. Add a note to the contacts to make removing them easier.See alsoIntro to how shortcuts work on iPhone and iPad
+Not all apps, services, and content are available in all countries or regions.

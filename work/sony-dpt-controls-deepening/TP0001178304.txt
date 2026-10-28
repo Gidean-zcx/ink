@@ -1,0 +1,1 @@
+If the screen is not appearing and does not react to the power button, pen, or other operations, reset the Digital Paper. Use a thin item, such as a pin or paper clip, to press the RESET (reset) button (b). Then, press the  (power) button (a) to turn the power back on. Be aware that resetting the Digital Paper may erase device settings, document annotations, and note contents.

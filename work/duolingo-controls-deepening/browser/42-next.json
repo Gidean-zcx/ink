@@ -1,0 +1,28 @@
+{
+  "name": "42-next",
+  "url": "https://www.duolingo.com/lesson",
+  "title": "Duolingo - Learn French with lessons that work",
+  "utc": "2026-10-26T17:54:15.252459+00:00",
+  "text": "4\nSelect the correct meaning\nplease\n1\ns'il vous plaît\n2\nthé\n3\ncafé\nSKIP\nCHECK",
+  "buttons": [
+    {
+      "text": "",
+      "aria": null,
+      "test": "quit-button",
+      "visible": true
+    },
+    {
+      "text": "SKIP",
+      "aria": null,
+      "test": "player-skip",
+      "visible": true
+    },
+    {
+      "text": "CHECK",
+      "aria": null,
+      "test": "player-next",
+      "visible": true
+    }
+  ],
+  "inputs": []
+}

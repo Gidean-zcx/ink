@@ -1,0 +1,60 @@
+[
+  {
+    "evidence_id": "E-DPT-09",
+    "capture": {
+      "checked_on": "2026-10-27",
+      "access_mode": "ordinary_public_html_body",
+      "capture_url": "https://helpguide.sony.net/dpt/rp1/v1/en/contents/TP0001273119.html",
+      "raw_work_path": "work/sony-dpt-controls-deepening/TP0001273119.html",
+      "raw_sha256": "187256cd04f8229a274f08c695de9c4ae515cfbd8a28541c6b32c98a02e5172f",
+      "text_work_path": "work/sony-dpt-controls-deepening/TP0001273119.txt",
+      "text_sha256": "67fb208c5fbd2e3effbae3d7e2747c297cf8502d8de33ecc44676846e89c9a19",
+      "note": "普通GET200；首次article提取漏step-list，已离线按id_content修正；无产品操作。",
+      "note_artifact": "artifacts/sony-dpt-controls-deepening/source-notes.md",
+      "note_sha256": "0e07de84eb69df306728ffd47c75395a55ca1083b7d10bc8028ab6385b2f614f"
+    }
+  },
+  {
+    "evidence_id": "E-DPT-06",
+    "capture": {
+      "checked_on": "2026-10-27",
+      "access_mode": "ordinary_public_html_body",
+      "capture_url": "https://helpguide.sony.net/dpt/rp1/v1/en/contents/TP0001273124.html",
+      "raw_work_path": "work/sony-dpt-controls-deepening/TP0001273124.html",
+      "raw_sha256": "509c0b28c187544d0d74689e3e3d22d21020d532c6623998340d00256a5ed760",
+      "text_work_path": "work/sony-dpt-controls-deepening/TP0001273124.txt",
+      "text_sha256": "3c29d5d9dd23a5c6e8c64eecd2638dcd2055018172ed2e24a4f5219353c5705e",
+      "note": "普通GET200；首次article提取漏step-list，已离线按id_content修正；无产品操作。",
+      "note_artifact": "artifacts/sony-dpt-controls-deepening/source-notes.md",
+      "note_sha256": "0e07de84eb69df306728ffd47c75395a55ca1083b7d10bc8028ab6385b2f614f"
+    }
+  },
+  {
+    "evidence_id": "E-DPT-05",
+    "capture": {
+      "checked_on": "2026-10-27",
+      "access_mode": "ordinary_public_html_body",
+      "capture_url": "https://helpguide.sony.net/dpt/rp1/v1/en/contents/TP0001178284.html",
+      "raw_work_path": "work/sony-dpt-controls-deepening/TP0001178284.html",
+      "raw_sha256": "3747e98a9d009edd19643ee387d41dae0baa4a887e6b9901b61a4055e0981241",
+      "text_work_path": "work/sony-dpt-controls-deepening/TP0001178284.txt",
+      "text_sha256": "09d40f912f7fd2336b1958c133eaef413ae5734fdb11b21cf7ae1822a59bbfed",
+      "note": "普通GET200；首次article提取漏step-list，已离线按id_content修正；无产品操作。",
+      "note_artifact": "artifacts/sony-dpt-controls-deepening/source-notes.md",
+      "note_sha256": "0e07de84eb69df306728ffd47c75395a55ca1083b7d10bc8028ab6385b2f614f"
+    }
+  },
+  {
+    "evidence_id": "E-DPT-01",
+    "capture": {
+      "checked_on": "2026-10-27",
+      "access_mode": "existing_pdf_reread_and_catalog_reconstructed",
+      "capture_url": "https://helpguide.sony.net/dpt/rp1/v1/en/print.pdf",
+      "raw_work_path": "work/research/extension-manuals/sony-dpt.pdf",
+      "raw_sha256": "41a4a31fef1f37b6868f8d151d4df9a20449b303704008af8faaa046492fef65",
+      "note": "按目录核读正文6–95页；法律/规格仅背景。新增目录与任务不表示当前实机测试；p15/56另静态证据，p61仅work。",
+      "note_artifact": "artifacts/sony-dpt-controls-deepening/source-notes.md",
+      "note_sha256": "0e07de84eb69df306728ffd47c75395a55ca1083b7d10bc8028ab6385b2f614f"
+    }
+  }
+]

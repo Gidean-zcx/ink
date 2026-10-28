@@ -1,0 +1,10 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M021-24,M-021,给词卡添加图片和自定义语音,D2,E-QZMS-01;E-QZMS-02;E-QZMS-03;E-QZMS-22,图库/自有图和平台卡面范围；按住空格录音、松开回放、重录/删除与整集保存；旧式故障排查,取消、替换/重录撤销、局部与整集提交时点、拒权后草稿与离线,not_observed,false,cases/M-021-quizlet.md,2026-10-27
+F-M021-25,M-021,创建图像位置标注练习,D2,E-QZMS-04,网站一图加点/词及可选释义，至少两点保存；模糊文字、移除点；手机学已有图示,图替换/点位重排、模糊撤销、错误输入与同步；MBP原文格式未验证,not_observed,false,cases/M-021-quizlet.md,2026-10-27
+F-M021-26,M-021,创建文件夹和标签并归集材料,D2,E-QZMS-09;E-QZMS-10,网站从内容加入、手机筛选高亮后完成；文件夹内建标签、内容Saved选择；可见性和年龄条件,删夹/移除内容、标签重名/嵌套/迁移、空夹和混合对象权限、撤销同步,not_observed,false,cases/M-021-quizlet.md,2026-10-27
+F-M021-27,M-021,分享学习内容与嵌入学习活动,D2,E-QZMS-06;E-QZMS-20,分享链接/渠道按身份平台；密码另传；网站选活动复制HTML，嵌入可切模式或回原集,公开/密码措辞范围、收件访问与撤销、外部身份/进度、源权限变化,not_observed,false,cases/M-021-quizlet.md,2026-10-27
+F-M021-28,M-021,搜索和筛选公开学习集,D2,E-QZMS-17,按主题和作者搜索；词数/作者类型/内容筛选，网站另列学校课程；点标题学习，编辑他人集另复制,排序、零结果、筛选反馈、质量校验和来源版本；不等于个人库关键词查找,not_observed,false,cases/M-021-quizlet.md,2026-10-27
+F-M021-29,M-021,申请加入及退出教师班级,D2,E-QZMS-18;E-QZMS-21,找教师/班级后申请，教师接受才可访问私有集；退出和手机确认；所有者不能退出；误退管理员可加回,等待/拒绝/撤回、重加后的进度/资料恢复、权限时点与所有者删除后果,not_observed,false,cases/M-021-quizlet.md,2026-10-27
+F-M021-30,M-021,建立Study Group并管理成员关系,D2,E-QZMS-11,公开集建组/命名/分享邀请；登录接受；加集、切组、离组，最多8人；Track Progress看卡分类,满员、拒绝/撤回、离组后记录、实时状态；与Study with friends关系未明,not_observed,false,cases/M-021-quizlet.md,2026-10-27
+F-M021-31,M-021,提交修改并查看学习集评分,D2,E-QZMS-13;E-QZMS-14;E-QZMS-15,网站留评分/提交、改评分/提交；可改不可删、不能关闭；作者看总体且无通知,刻度、取消/重复提交、历史、聚合更新时间及评分身份,not_observed,false,cases/M-021-quizlet.md,2026-10-27
+F-M021-32,M-021,移动首页推荐与学习入口,D1,E-QZMS-19;E-QZMS-23,问答后个性化首页；Study Bites、进度卡及推荐；已学习才激活短活动；学校/课程设置有地区条件,首次问答、短活动启动/结束、推荐理由/控制、跳回位置及偏好生效未闭合,not_observed,false,cases/M-021-quizlet.md,2026-10-27

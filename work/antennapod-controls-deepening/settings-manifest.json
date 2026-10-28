@@ -1,0 +1,72 @@
+[
+  {
+    "raw_work_path": "work/antennapod-controls-deepening/src/app/src/main/java/de/danoeh/antennapod/ui/screen/preferences/UserInterfacePreferencesFragment.java",
+    "raw_sha256": "dcc2a2bf7ece08309e9be768e8262589abad285baffc1a1217e25db65f00cc89",
+    "source_url": "https://github.com/AntennaPod/AntennaPod/blob/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/app/src/main/java/de/danoeh/antennapod/ui/screen/preferences/UserInterfacePreferencesFragment.java"
+  },
+  {
+    "raw_work_path": "work/antennapod-controls-deepening/src/storage/preferences/src/main/java/de/danoeh/antennapod/storage/preferences/UserPreferences.java",
+    "raw_sha256": "2ad61f7569ae27f403f1c31ffcbda7752ba440a778e351a3c28b71c27e546430",
+    "source_url": "https://github.com/AntennaPod/AntennaPod/blob/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/storage/preferences/src/main/java/de/danoeh/antennapod/storage/preferences/UserPreferences.java"
+  },
+  {
+    "raw_work_path": "work/antennapod-controls-deepening/src/ui/i18n/src/main/res/values/strings.xml",
+    "raw_sha256": "fbe52dcd492a8d059b039c0a7ac02baba79b2d4017b1cc9b1335270de5484fdc",
+    "source_url": "https://github.com/AntennaPod/AntennaPod/blob/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/ui/i18n/src/main/res/values/strings.xml"
+  },
+  {
+    "raw_work_path": "work/antennapod-controls-deepening/src/ui/preferences/src/main/res/xml/preferences.xml",
+    "raw_sha256": "bd3191593331c58836c6ffc2a7c08f14bef9157b39aa2502c98c232d623dfb65",
+    "source_url": "https://github.com/AntennaPod/AntennaPod/blob/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/ui/preferences/src/main/res/xml/preferences.xml"
+  },
+  {
+    "raw_work_path": "work/antennapod-controls-deepening/src/ui/preferences/src/main/res/xml/preferences_about.xml",
+    "raw_sha256": "8f77ac453eb8f52b9f8bebae798bc3d77baac216d6830fa229d86a73c1f87c6e",
+    "source_url": "https://github.com/AntennaPod/AntennaPod/blob/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/ui/preferences/src/main/res/xml/preferences_about.xml"
+  },
+  {
+    "raw_work_path": "work/antennapod-controls-deepening/src/ui/preferences/src/main/res/xml/preferences_auto_deletion.xml",
+    "raw_sha256": "3324054006d7d15879070c16791f9086dfac94f84c2df06bef148f350204b5f7",
+    "source_url": "https://github.com/AntennaPod/AntennaPod/blob/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/ui/preferences/src/main/res/xml/preferences_auto_deletion.xml"
+  },
+  {
+    "raw_work_path": "work/antennapod-controls-deepening/src/ui/preferences/src/main/res/xml/preferences_autodownload.xml",
+    "raw_sha256": "329d7058f7315b32efa05f718464f79ab2621bbb9bbad7187e256e3439f8052a",
+    "source_url": "https://github.com/AntennaPod/AntennaPod/blob/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/ui/preferences/src/main/res/xml/preferences_autodownload.xml"
+  },
+  {
+    "raw_work_path": "work/antennapod-controls-deepening/src/ui/preferences/src/main/res/xml/preferences_downloads.xml",
+    "raw_sha256": "2c69a3ee59d76e2b50728b51c0c265bfc32554dea958c2913153eee338431ad1",
+    "source_url": "https://github.com/AntennaPod/AntennaPod/blob/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/ui/preferences/src/main/res/xml/preferences_downloads.xml"
+  },
+  {
+    "raw_work_path": "work/antennapod-controls-deepening/src/ui/preferences/src/main/res/xml/preferences_import_export.xml",
+    "raw_sha256": "6bde949c1bee02a80d090adaf9841dea94915d52611338dab09af6044b1a6213",
+    "source_url": "https://github.com/AntennaPod/AntennaPod/blob/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/ui/preferences/src/main/res/xml/preferences_import_export.xml"
+  },
+  {
+    "raw_work_path": "work/antennapod-controls-deepening/src/ui/preferences/src/main/res/xml/preferences_notifications.xml",
+    "raw_sha256": "83cf697121467137e1726b1743f0a3d2a064ea5694e1272f4c29b3a03de43831",
+    "source_url": "https://github.com/AntennaPod/AntennaPod/blob/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/ui/preferences/src/main/res/xml/preferences_notifications.xml"
+  },
+  {
+    "raw_work_path": "work/antennapod-controls-deepening/src/ui/preferences/src/main/res/xml/preferences_playback.xml",
+    "raw_sha256": "72d53f56a92c211739c3d33c9ad5d2c6d65a703de807d9c19c187bffa8562d8d",
+    "source_url": "https://github.com/AntennaPod/AntennaPod/blob/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/ui/preferences/src/main/res/xml/preferences_playback.xml"
+  },
+  {
+    "raw_work_path": "work/antennapod-controls-deepening/src/ui/preferences/src/main/res/xml/preferences_swipe.xml",
+    "raw_sha256": "77647f24feae0cc1a96840170a2fbfb50cbe63041d93346aff6e98f9fe2208fb",
+    "source_url": "https://github.com/AntennaPod/AntennaPod/blob/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/ui/preferences/src/main/res/xml/preferences_swipe.xml"
+  },
+  {
+    "raw_work_path": "work/antennapod-controls-deepening/src/ui/preferences/src/main/res/xml/preferences_synchronization.xml",
+    "raw_sha256": "41ab93c0480071e98c0e89f598631746c4a0ea4ef9a635e146db820fc1ac246e",
+    "source_url": "https://github.com/AntennaPod/AntennaPod/blob/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/ui/preferences/src/main/res/xml/preferences_synchronization.xml"
+  },
+  {
+    "raw_work_path": "work/antennapod-controls-deepening/src/ui/preferences/src/main/res/xml/preferences_user_interface.xml",
+    "raw_sha256": "3de46be5a5fb60b3e117874dffa2276d2838613e1a2c4af3fa4319937c4d5164",
+    "source_url": "https://github.com/AntennaPod/AntennaPod/blob/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/ui/preferences/src/main/res/xml/preferences_user_interface.xml"
+  }
+]

@@ -1,0 +1,39 @@
+Adding lyric information using a computer
+You can input lyrics to a text file (an LRC file). Transfer both the text file (LRC file) and the music file to the player.
+Creating lyrics in a text file (LRC file)
+Open the [Notepad] in Windows Accessories.
+Enter the lyrics into [Notepad].
+Play the track and enter the time to display each line of text.
+You can enter the time information to the left of each line of text in the following format.
+Minutes:seconds:hundredths of a second (*1)
+Time information must be entered in chronological order.
+You can separate seconds and hundredths of a second using a period instead of a colon.
+*1 You can omit hundredths of a second.
+Save the file.
+Select [UTF-8] as the character encoding.
+Set the same file name as the music file.
+Set [.lrc] as the extension.
+The maximum file size is 512 KB.
+If a text line cannot fit on the screen, it will be wrapped.
+The number of lines of text that can be displayed simultaneously depends on the model.
+CR, CRLF, and LF line breaks are all recognized.
+Blank text lines will be skipped.
+Connect the player to the computer via USB.
+Open [File Explorer], and then select the [WALKMAN] folder.
+Create a new folder in the [Music] folder under [Internal shared storage]. Then, drag-and-drop both the music file and the LRC file into the new folder to transfer them.
+You can also transfer music files to a microSD card.
+Select the folder with the name of the microSD card instead of [Internal shared storage].
+Hint
+You can also transfer the files to the folders registered to [Folders to be imported] in “Music player”.
+The following numbers of characters are recommended when you display lyrics on “Music player”.
+Single-byte characters (for example, alphanumeric characters): 40 characters per line.
+2-byte characters (for example, Chinese characters): 20 characters per line.
+Save the LRC files in the same folder as the music files. The LRC files will be transferred to the player when the music files are transferred.
+On a Mac computer, you can create lyrics using “TextEdit” and other text editors. Follow the same procedure as that described above to enter the lyrics or time information in the “Plain text” setting.
+Copyright notice
+When you create LRC files using copyrighted materials authored by others, the LRC files are limited to private use only. Use of LRC files for other purposes requires the permission of the copyright holders.
+The contents of the Help Guide may be subject to change without notice due to updates to the product's specifications.
+Go to Page Top
+Related Topic
+Obtaining lyric information
+Displaying lyrics

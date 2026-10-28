@@ -1,0 +1,40 @@
+[
+  {
+    "evidence_id": "E-MDCD-04",
+    "expected_url": "https://support.mudita.com/helpdesk/attachments/77279297918",
+    "before_additional_captures": [],
+    "append_additional_captures": [
+      {
+        "checked_on": "2026-10-27",
+        "access_mode": "existing_local_source_text_reread_no_network",
+        "locator": "PDF p2 Contacts; p4 Notes; p5 SMS/Voice Recorder; local text reread only",
+        "raw_work_path": "work/mudita-controls-deepening/release-1.6.pdf",
+        "raw_sha256": "0667012d506810e4972a53d8e8c62c43a9e744fd4b55ea37cbb91a8d05fba3d9",
+        "hands_on": false,
+        "visual_observed": false,
+        "note": "本轮复读旧原件；没有新请求或新修订；限定与新帮助对照见独立摘记。",
+        "archived_artifact": "artifacts/mudita-app-controls-deepening/source-notes.md",
+        "sha256": "50b3015be7094b8d6931c95d659e8e90a7a1092257f8e09c786753bbce301727"
+      }
+    ]
+  },
+  {
+    "evidence_id": "E-MDCD-06",
+    "expected_url": "https://support.mudita.com/en/support/solutions/articles/77000579754-how-to-send-sms-and-mms-messages-on-mudita-kompakt",
+    "before_additional_captures": [],
+    "append_additional_captures": [
+      {
+        "checked_on": "2026-10-27",
+        "access_mode": "existing_local_source_text_reread_no_network",
+        "locator": "Send SMS/MMS contact/new number; delete conversations; compare dedicated articles",
+        "raw_work_path": "work/mudita-controls-deepening/messaging.html",
+        "raw_sha256": "d85170331c357d81a246c897961a471e6a676a62591e5042714b6012f1ec11ee",
+        "hands_on": false,
+        "visual_observed": false,
+        "note": "本轮复读旧原件；没有新请求或新修订；限定与新帮助对照见独立摘记。",
+        "archived_artifact": "artifacts/mudita-app-controls-deepening/source-notes.md",
+        "sha256": "50b3015be7094b8d6931c95d659e8e90a7a1092257f8e09c786753bbce301727"
+      }
+    ]
+  }
+]

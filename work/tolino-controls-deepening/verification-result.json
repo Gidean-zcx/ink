@@ -1,0 +1,18 @@
+{
+  "new_evidence": 27,
+  "new_tasks": 23,
+  "new_D2": 22,
+  "new_D4": 1,
+  "old_tasks_amended": 21,
+  "old_fields_amended": 83,
+  "rechecked_existing_evidence": 6,
+  "inventories": 26,
+  "inventory_rows": 2286,
+  "new_inventory_rows": 491,
+  "new_archived_manual_pages": 8,
+  "browser_captures": 10,
+  "reviewed_browser_frames": 7,
+  "archived_browser_images": 6,
+  "new_device_operations": 0,
+  "errors": []
+}

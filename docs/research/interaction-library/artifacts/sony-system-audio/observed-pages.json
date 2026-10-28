@@ -1,0 +1,93 @@
+[
+  {
+    "evidence_id": "E-SYSA-05",
+    "pdf_page": 27,
+    "printed_page": 27,
+    "observed_on": "2026-10-27",
+    "actual_view": "view_image",
+    "hands_on": false,
+    "continuous_sequence": false,
+    "raw_work_path": "work/research/batch46-sony-system-audio/manual-p27.png",
+    "archived_artifact": "artifacts/sony-system-audio/manual-p27.png",
+    "sha256": "2d98e46e4b03013fd2ee7deaca3089a4e738924ab308903e006b0812787e9a0b",
+    "note": "WALKMAN主页示例：音乐小组件的封面区域与前曲/播放/后曲按钮分列；底部三键和Dock。未实际点封面或播放，示例曲目不当用户内容。"
+  },
+  {
+    "evidence_id": "E-SYSA-05",
+    "pdf_page": 29,
+    "printed_page": 29,
+    "observed_on": "2026-10-27",
+    "actual_view": "view_image",
+    "hands_on": false,
+    "continuous_sequence": false,
+    "raw_work_path": "work/research/batch46-sony-system-audio/manual-p29.png",
+    "archived_artifact": "artifacts/sony-system-audio/manual-p29.png",
+    "sha256": "44ee52ff6010b954c7490fefe4bc680e9bdc1759b3833614da775a76ea798473",
+    "note": "Android主页示例含Google搜索条、应用图标、Dock和三键。正文仍称Home去WALKMAN，与33页可设主主页有范围差异；不猜其当前配置。搜索条麦克风图标不证明系统AI。"
+  },
+  {
+    "evidence_id": "E-SYSA-05",
+    "pdf_page": 32,
+    "printed_page": 32,
+    "observed_on": "2026-10-27",
+    "actual_view": "view_image",
+    "hands_on": false,
+    "continuous_sequence": false,
+    "raw_work_path": "work/research/batch46-sony-system-audio/manual-p32.png",
+    "archived_artifact": "artifacts/sony-system-audio/manual-p32.png",
+    "sha256": "78076abc1f78f9e2d1cbb4af2f7d2b4bc3825193d0faadf6a77e0765499d9f10",
+    "note": "纯文字步骤页，没有实际快捷面板截图。点按开关与长按设置是文字说明；音量项为打开对话框，不能笼统当音量开关。"
+  },
+  {
+    "evidence_id": "E-SYSA-05",
+    "pdf_page": 53,
+    "printed_page": 53,
+    "observed_on": "2026-10-27",
+    "actual_view": "view_image",
+    "hands_on": false,
+    "continuous_sequence": false,
+    "raw_work_path": "work/research/batch46-sony-system-audio/manual-p53.png",
+    "archived_artifact": "artifacts/sony-system-audio/manual-p53.png",
+    "sha256": "feb61d7092ec0ae39cb640b2598596e08f8ea44c3fc3bf886f9cddb596bd078a",
+    "note": "播放页状态栏静态示例及图标表；列数据库更新、卡已挂载、HOLD、蓝牙/Wi-Fi连接、电量和Battery Care。没有观察图标出现/消失，也不由卡挂载推文件索引完成。"
+  },
+  {
+    "evidence_id": "E-SYSA-05",
+    "pdf_page": 56,
+    "printed_page": 56,
+    "observed_on": "2026-10-27",
+    "actual_view": "view_image",
+    "hands_on": false,
+    "continuous_sequence": false,
+    "raw_work_path": "work/research/batch46-sony-system-audio/manual-p56.png",
+    "archived_artifact": "artifacts/sony-system-audio/manual-p56.png",
+    "sha256": "121a076415b25cd726884dcfa802bf9f87858e279ff6f79222e472c1581e9206",
+    "note": "实体音量键示意及旋钮对话框；示例值68、旋钮和加减控件。68不当默认、分贝或儿童适宜值；未拖动或听音。"
+  },
+  {
+    "evidence_id": "E-SYSA-05",
+    "pdf_page": 57,
+    "printed_page": 57,
+    "observed_on": "2026-10-27",
+    "actual_view": "view_image",
+    "hands_on": false,
+    "continuous_sequence": false,
+    "raw_work_path": "work/research/batch46-sony-system-audio/manual-p57.png",
+    "archived_artifact": "artifacts/sony-system-audio/manual-p57.png",
+    "sha256": "60b245168d630e080d695199ca34e641e1ee4e260bab9cfdd7bc66e9dca9bb13",
+    "note": "正文及内嵌设置图标，说明其他App音量、蓝牙/USB输出与AVLS例外；没有AVLS开关实际界面或开关结果。"
+  },
+  {
+    "evidence_id": "E-SYSA-05",
+    "pdf_page": 113,
+    "printed_page": 113,
+    "observed_on": "2026-10-27",
+    "actual_view": "view_image",
+    "hands_on": false,
+    "continuous_sequence": false,
+    "raw_work_path": "work/research/batch46-sony-system-audio/manual-p113.png",
+    "archived_artifact": "artifacts/sony-system-audio/manual-p113.png",
+    "sha256": "584dcfc0fb336368dc4713f271aa3eb53c52c78c4a116b50d27c0d833270ee8f",
+    "note": "内部存储目录图示包含Music/Download、m3u/lrc及不识别的根下音乐文件。图根名sdcard处在Internal memory说明下，不能凭名称当物理卡；不是文件管理器实拍。"
+  }
+]

@@ -1,0 +1,47 @@
+Help, I Can't Reset My Password
+Ground News Help Center
+Contact Us
+How can we help you?
+Results
+No results found
+More results
+We use cookies to analyze website traffic and help improve our visitor experience. Privacy Policy
+Reject
+Accept
+Home
+Manage Your Account & Subscription
+Account Questions
+Account Password Support
+Help, I Can't Reset My Password
+Edited Monday, March 9 2026
+Trouble with the password reset links often happens if you originally signed up via a Social Login Method but still tap the "Forgot password" button. The login methods we provide are Google, Facebook, and Apple. In this case, please try signing in via the Social login.
+For Gmail accounts: If you're using a Gmail (Google email) to log into Ground News and you're unable to reset your password, you may need to use the google authenticator to log in.
+You can find the option to "Continue with Google" when you're logging in, and there you'll enter in your gmail email and its associated password.
+For Apple ID accounts: If you're using an Apple ID to log into Ground News and you're unable to reset your password, you may need to use the "Sign in via Apple ID" option.
+You can find the option to "Continue with Apple ID" when you're logging in.
+I am not receiving my password reset link
+Please contact the feedback@ground.news team for support.
+The password reset link says it has timed out
+Please contact the feedback@ground.news team for support.
+I am not using either Gmail or Apple ID, but I am still not receiving the reset email
+Sometimes the security settings on your email inbox prevent the password reset email coming through. Remember to check your spam/junk folders first, but if it is still not there, consider whitelisting passwords@ground.news as an approved sender.
+Here’s an article describing how to whitelist a sender in some common email clients.
+If you have tried these troubleshooting steps but still cannot access your account, please reach out to our team at feedback@ground.news and our team would be happy to help you.
+We hope this article was helpful! If you have any concerns about this article and would like to leave a comment, we welcome your feedback – but please keep in mind feedback that is submitted on a Help Center article will not be responded to by our team. If you have an issue you would like resolved by our team, please contact feedback@ground.news
+Social login website.png
+107.3KB
+Social Login Mobile app.jpeg
+198.6KB
+reset password
+not working
+Was this article helpful?
+Yes
+No
+Sorry about that! Care to tell us more?
+What was unhelpful?
+Submit
+Thanks for the feedback!
+There was an issue submitting your feedback
+Please check your connection and try again.
+Cookie preferences
+Refund and Cancellation PolicyTerms and ConditionsPrivacy Policy

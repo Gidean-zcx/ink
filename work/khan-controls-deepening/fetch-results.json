@@ -1,0 +1,72 @@
+[
+  {
+    "key": "01-create",
+    "url": "https://khankids.zendesk.com/hc/en-us/articles/21188738836763-How-to-use-creative-tools-inside-the-Khan-Kids-app",
+    "error": "HTTP Error 403: Forbidden"
+  },
+  {
+    "key": "02-export",
+    "url": "https://khankids.zendesk.com/hc/en-us/articles/6477686235419-How-do-I-save-artwork-from-the-Gallery",
+    "error": "HTTP Error 403: Forbidden"
+  },
+  {
+    "key": "03-library",
+    "url": "https://khankids.zendesk.com/hc/en-us/articles/4403657703821-Find-books-and-lessons-in-the-Khan-Kids-Library",
+    "error": "HTTP Error 403: Forbidden"
+  },
+  {
+    "key": "04-progress",
+    "url": "https://khankids.zendesk.com/hc/en-us/articles/360041615571-How-does-the-learning-level-adjust-and-how-do-I-view-my-child-s-progress",
+    "error": "HTTP Error 403: Forbidden"
+  },
+  {
+    "key": "05-hide-faq",
+    "url": "https://khankids.zendesk.com/hc/en-us/articles/13849896234395-FAQ-How-do-I-turn-off-videos-and-coloring",
+    "error": "HTTP Error 403: Forbidden"
+  },
+  {
+    "key": "06-manage-access",
+    "url": "https://khankids.zendesk.com/hc/en-us/articles/17031195532059--NEW-Manage-student-access-to-areas-of-the-app",
+    "error": "HTTP Error 403: Forbidden"
+  },
+  {
+    "key": "07-add-user",
+    "url": "https://khankids.zendesk.com/hc/en-us/articles/360006538192-How-do-I-add-a-new-user",
+    "error": "HTTP Error 403: Forbidden"
+  },
+  {
+    "key": "08-sign-out",
+    "url": "https://khankids.zendesk.com/hc/en-us/articles/360043669551-FAQ-How-do-I-sign-out",
+    "error": "HTTP Error 403: Forbidden"
+  },
+  {
+    "key": "09-password",
+    "url": "https://khankids.zendesk.com/hc/en-us/articles/360007054191-How-do-I-set-up-reset-or-manage-a-password",
+    "error": "HTTP Error 403: Forbidden"
+  },
+  {
+    "key": "10-parent",
+    "url": "https://khankids.zendesk.com/hc/en-us/articles/360006764812-Parent-Guide-Using-Khan-Academy-Kids-at-Home",
+    "error": "HTTP Error 403: Forbidden"
+  },
+  {
+    "key": "11-design",
+    "url": "https://blog.khanacademy.org/supporting-english-language-acquisition-with-khan-academy-kids/",
+    "final_url": "https://blog.khanacademy.org/supporting-english-language-acquisition-with-khan-academy-kids/",
+    "status": 200,
+    "path": "work/khan-controls-deepening/11-design.html",
+    "sha256": "f5cf41df4c232f18fbd4b0a75a298da0a9fd0b9b401e5a844ae147552dd66010",
+    "article_chars": 0,
+    "images": 0
+  },
+  {
+    "key": "12-sections",
+    "url": "https://khankids.zendesk.com/api/v2/help_center/en-us/sections.json?per_page=100",
+    "final_url": "https://khankids.zendesk.com/api/v2/help_center/en-us/sections.json?per_page=100",
+    "status": 200,
+    "path": "work/khan-controls-deepening/12-sections.json",
+    "sha256": "56baffa85bdbda0a375fbbb98f481f82b89ae7e5cab17fb707fc3e1432b74131",
+    "article_chars": 0,
+    "images": 0
+  }
+]

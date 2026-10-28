@@ -1,0 +1,380 @@
+{
+  "checked_on": "2026-10-27",
+  "sources": [
+    {
+      "evidence_id": "E-QZMS-01",
+      "title": "Adding images to sets from the free gallery",
+      "url": "https://help.quizlet.com/hc/en-us/articles/360029814512-Adding-images-to-sets-from-the-free-gallery",
+      "entry_url": "https://help.quizlet.com/hc/en-us/articles/360029814512-Adding-images-to-sets-from-the-free-gallery",
+      "body_locator": "L17–45",
+      "body_read_by_root": true,
+      "raw_work_path": "work/research/batch54-integration/quizlet-pages-01.txt",
+      "raw_sha256": "d0ea2541cc3d973b585b9a84b535f012cbf06c6b790ac3a29a160b909d6a2092",
+      "raw_capture_kind": "web_tool_response_text_not_source_HTML",
+      "flow_ids": [
+        "F-M021-24"
+      ],
+      "hands_on": false,
+      "visual_observed": false
+    },
+    {
+      "evidence_id": "E-QZMS-02",
+      "title": "Adding your own images to sets",
+      "url": "https://help.quizlet.com/hc/en-us/articles/360030154311-Adding-your-own-images-to-sets",
+      "entry_url": "https://help.quizlet.com/hc/en-us/articles/360030154311-Adding-your-own-images-to-sets",
+      "body_locator": "L17–65",
+      "body_read_by_root": true,
+      "raw_work_path": "work/research/batch54-integration/quizlet-pages-01.txt",
+      "raw_sha256": "d0ea2541cc3d973b585b9a84b535f012cbf06c6b790ac3a29a160b909d6a2092",
+      "raw_capture_kind": "web_tool_response_text_not_source_HTML",
+      "flow_ids": [
+        "F-M021-24"
+      ],
+      "hands_on": false,
+      "visual_observed": false
+    },
+    {
+      "evidence_id": "E-QZMS-03",
+      "title": "Recording custom audio",
+      "url": "https://help.quizlet.com/hc/en-us/articles/360029769792-Recording-custom-audio",
+      "entry_url": "https://help.quizlet.com/hc/en-us/articles/360029769792-Recording-custom-audio",
+      "body_locator": "L17–47",
+      "body_read_by_root": true,
+      "raw_work_path": "work/research/batch54-integration/quizlet-pages-01.txt",
+      "raw_sha256": "d0ea2541cc3d973b585b9a84b535f012cbf06c6b790ac3a29a160b909d6a2092",
+      "raw_capture_kind": "web_tool_response_text_not_source_HTML",
+      "flow_ids": [
+        "F-M021-24"
+      ],
+      "hands_on": false,
+      "visual_observed": false
+    },
+    {
+      "evidence_id": "E-QZMS-04",
+      "title": "Creating diagram sets",
+      "url": "https://help.quizlet.com/hc/en-us/articles/360029631292-Creating-diagram-sets",
+      "entry_url": "https://help.quizlet.com/hc/en-us/articles/360029631292-Creating-diagram-sets",
+      "body_locator": "L17–48",
+      "body_read_by_root": true,
+      "raw_work_path": "work/research/batch54-integration/quizlet-pages-01.txt",
+      "raw_sha256": "d0ea2541cc3d973b585b9a84b535f012cbf06c6b790ac3a29a160b909d6a2092",
+      "raw_capture_kind": "web_tool_response_text_not_source_HTML",
+      "flow_ids": [
+        "F-M021-25"
+      ],
+      "hands_on": false,
+      "visual_observed": false
+    },
+    {
+      "evidence_id": "E-QZMS-05",
+      "title": "Trouble accessing a set",
+      "url": "https://help.quizlet.com/hc/en-us/articles/360029768352-Trouble-accessing-a-set",
+      "entry_url": "https://help.quizlet.com/hc/en-us/articles/360029768352-Trouble-accessing-a-set",
+      "body_locator": "L15–21",
+      "body_read_by_root": true,
+      "raw_work_path": "work/research/batch54-integration/quizlet-pages-02.txt",
+      "raw_sha256": "37bdd104a5f7894677574243c8b7c9de671efb1b3543d07fbb3f673fecd87b50",
+      "raw_capture_kind": "web_tool_response_text_not_source_HTML",
+      "flow_ids": [
+        "F-M021-04",
+        "F-M021-05"
+      ],
+      "hands_on": false,
+      "visual_observed": false
+    },
+    {
+      "evidence_id": "E-QZMS-06",
+      "title": "Sharing sets and folders",
+      "url": "https://help.quizlet.com/hc/en-us/articles/360030254831-Sharing-sets-and-folders",
+      "entry_url": "https://help.quizlet.com/hc/en-us/articles/360030254831-Sharing-sets-and-folders",
+      "body_locator": "L17–52",
+      "body_read_by_root": true,
+      "raw_work_path": "work/research/batch54-integration/quizlet-pages-02.txt",
+      "raw_sha256": "37bdd104a5f7894677574243c8b7c9de671efb1b3543d07fbb3f673fecd87b50",
+      "raw_capture_kind": "web_tool_response_text_not_source_HTML",
+      "flow_ids": [
+        "F-M021-27"
+      ],
+      "hands_on": false,
+      "visual_observed": false
+    },
+    {
+      "evidence_id": "E-QZMS-07",
+      "title": "Changing a set's editing permissions",
+      "url": "https://help.quizlet.com/hc/en-us/articles/360037864311-Changing-a-set-s-editing-permissions",
+      "entry_url": "https://help.quizlet.com/hc/en-us/articles/360037864311-Changing-a-set-s-editing-permissions",
+      "body_locator": "L17–76",
+      "body_read_by_root": true,
+      "raw_work_path": "work/research/batch54-integration/quizlet-pages-02.txt",
+      "raw_sha256": "37bdd104a5f7894677574243c8b7c9de671efb1b3543d07fbb3f673fecd87b50",
+      "raw_capture_kind": "web_tool_response_text_not_source_HTML",
+      "flow_ids": [
+        "F-M021-04"
+      ],
+      "hands_on": false,
+      "visual_observed": false
+    },
+    {
+      "evidence_id": "E-QZMS-08",
+      "title": "Protecting a set with a password",
+      "url": "https://help.quizlet.com/hc/en-us/articles/360029771292-Protecting-a-set-with-a-password",
+      "entry_url": "https://help.quizlet.com/hc/en-us/articles/360029771292-Protecting-a-set-with-a-password",
+      "body_locator": "L17–65",
+      "body_read_by_root": true,
+      "raw_work_path": "work/research/batch54-integration/quizlet-pages-02.txt",
+      "raw_sha256": "37bdd104a5f7894677574243c8b7c9de671efb1b3543d07fbb3f673fecd87b50",
+      "raw_capture_kind": "web_tool_response_text_not_source_HTML",
+      "flow_ids": [
+        "F-M021-04"
+      ],
+      "hands_on": false,
+      "visual_observed": false
+    },
+    {
+      "evidence_id": "E-QZMS-09",
+      "title": "Organizing study content with tags",
+      "url": "https://help.quizlet.com/hc/en-us/articles/37762790252941-Organizing-study-content-with-tags",
+      "entry_url": "https://help.quizlet.com/hc/en-us/articles/37762790252941-Organizing-study-content-with-tags",
+      "body_locator": "L15–36",
+      "body_read_by_root": true,
+      "raw_work_path": "work/research/batch54-integration/quizlet-pages-03.txt",
+      "raw_sha256": "b608b99c2e06075d38238aeb9c19e66fa95525f8d4ace1c11085de1fa654479f",
+      "raw_capture_kind": "web_tool_response_text_not_source_HTML",
+      "flow_ids": [
+        "F-M021-26"
+      ],
+      "hands_on": false,
+      "visual_observed": false
+    },
+    {
+      "evidence_id": "E-QZMS-10",
+      "title": "Organizing study content with folders",
+      "url": "https://help.quizlet.com/hc/en-us/articles/360030986151-Organizing-study-content-with-folders",
+      "entry_url": "https://help.quizlet.com/hc/en-us/articles/360030986151-Organizing-study-content-with-folders",
+      "body_locator": "L17–76",
+      "body_read_by_root": true,
+      "raw_work_path": "work/research/batch54-integration/quizlet-pages-03.txt",
+      "raw_sha256": "b608b99c2e06075d38238aeb9c19e66fa95525f8d4ace1c11085de1fa654479f",
+      "raw_capture_kind": "web_tool_response_text_not_source_HTML",
+      "flow_ids": [
+        "F-M021-26"
+      ],
+      "hands_on": false,
+      "visual_observed": false
+    },
+    {
+      "evidence_id": "E-QZMS-11",
+      "title": "Studying with Study Groups",
+      "url": "https://help.quizlet.com/hc/en-us/articles/39890856206733-Studying-with-Study-Groups",
+      "entry_url": "https://help.quizlet.com/hc/en-us/articles/39890856206733-Studying-with-Study-Groups",
+      "body_locator": "L15–47",
+      "body_read_by_root": true,
+      "raw_work_path": "work/research/batch54-integration/quizlet-pages-03.txt",
+      "raw_sha256": "b608b99c2e06075d38238aeb9c19e66fa95525f8d4ace1c11085de1fa654479f",
+      "raw_capture_kind": "web_tool_response_text_not_source_HTML",
+      "flow_ids": [
+        "F-M021-30"
+      ],
+      "hands_on": false,
+      "visual_observed": false
+    },
+    {
+      "evidence_id": "E-QZMS-12",
+      "title": "Becoming a top creator on Quizlet",
+      "url": "https://help.quizlet.com/hc/en-us/articles/20961378604429-Becoming-a-top-creator-on-Quizlet",
+      "entry_url": "https://help.quizlet.com/hc/en-us/articles/20961378604429-Becoming-a-top-creator-on-Quizlet",
+      "body_locator": "L15–17",
+      "body_read_by_root": true,
+      "raw_work_path": "work/research/batch54-integration/quizlet-pages-03.txt",
+      "raw_sha256": "b608b99c2e06075d38238aeb9c19e66fa95525f8d4ace1c11085de1fa654479f",
+      "raw_capture_kind": "web_tool_response_text_not_source_HTML",
+      "flow_ids": [],
+      "hands_on": false,
+      "visual_observed": false
+    },
+    {
+      "evidence_id": "E-QZMS-13",
+      "title": "Rating a set",
+      "url": "https://help.quizlet.com/hc/en-us/articles/360038516272-Rating-a-set",
+      "entry_url": "https://help.quizlet.com/hc/en-us/articles/360038516272-Rating-a-set",
+      "body_locator": "L15–23",
+      "body_read_by_root": true,
+      "raw_work_path": "work/research/batch54-integration/quizlet-pages-04.txt",
+      "raw_sha256": "00b492e6d1013a1a55caafd645a328fc641534d08d45c0313aedbaab4542b1db",
+      "raw_capture_kind": "web_tool_response_text_not_source_HTML",
+      "flow_ids": [
+        "F-M021-31"
+      ],
+      "hands_on": false,
+      "visual_observed": false
+    },
+    {
+      "evidence_id": "E-QZMS-14",
+      "title": "Changing a rating on a set",
+      "url": "https://help.quizlet.com/hc/en-us/articles/360038900411-Changing-a-rating-on-a-set",
+      "entry_url": "https://help.quizlet.com/hc/en-us/articles/360038900411-Changing-a-rating-on-a-set",
+      "body_locator": "L15–22",
+      "body_read_by_root": true,
+      "raw_work_path": "work/research/batch54-integration/quizlet-pages-04.txt",
+      "raw_sha256": "00b492e6d1013a1a55caafd645a328fc641534d08d45c0313aedbaab4542b1db",
+      "raw_capture_kind": "web_tool_response_text_not_source_HTML",
+      "flow_ids": [
+        "F-M021-31"
+      ],
+      "hands_on": false,
+      "visual_observed": false
+    },
+    {
+      "evidence_id": "E-QZMS-15",
+      "title": "Viewing your sets' ratings",
+      "url": "https://help.quizlet.com/hc/en-us/articles/360038900751-Viewing-your-sets-ratings",
+      "entry_url": "https://help.quizlet.com/hc/en-us/articles/360038900751-Viewing-your-sets-ratings",
+      "body_locator": "L15–20",
+      "body_read_by_root": true,
+      "raw_work_path": "work/research/batch54-integration/quizlet-pages-04.txt",
+      "raw_sha256": "00b492e6d1013a1a55caafd645a328fc641534d08d45c0313aedbaab4542b1db",
+      "raw_capture_kind": "web_tool_response_text_not_source_HTML",
+      "flow_ids": [
+        "F-M021-31"
+      ],
+      "hands_on": false,
+      "visual_observed": false
+    },
+    {
+      "evidence_id": "E-QZMS-16",
+      "title": "What are flashcard sets?",
+      "url": "https://help.quizlet.com/hc/en-us/articles/360032006352-What-are-flashcard-sets",
+      "entry_url": "https://help.quizlet.com/hc/en-us/articles/360032006352-What-are-flashcard-sets",
+      "body_locator": "L15–33",
+      "body_read_by_root": true,
+      "raw_work_path": "work/research/batch54-integration/quizlet-pages-04.txt",
+      "raw_sha256": "00b492e6d1013a1a55caafd645a328fc641534d08d45c0313aedbaab4542b1db",
+      "raw_capture_kind": "web_tool_response_text_not_source_HTML",
+      "flow_ids": [],
+      "hands_on": false,
+      "visual_observed": false
+    },
+    {
+      "evidence_id": "E-QZMS-17",
+      "title": "Finding flashcard sets",
+      "url": "https://help.quizlet.com/hc/en-us/articles/360029772872-Finding-flashcard-sets",
+      "entry_url": "https://help.quizlet.com/hc/en-us/articles/360029772872-Finding-flashcard-sets",
+      "body_locator": "L17–63",
+      "body_read_by_root": true,
+      "raw_work_path": "work/research/batch54-integration/quizlet-pages-05.txt",
+      "raw_sha256": "54e56084b80d2539a64a6fd8e219ada20990df825c7873bf47a292d3e91ae7fa",
+      "raw_capture_kind": "web_tool_response_text_not_source_HTML",
+      "flow_ids": [
+        "F-M021-28"
+      ],
+      "hands_on": false,
+      "visual_observed": false
+    },
+    {
+      "evidence_id": "E-QZMS-18",
+      "title": "Finding your teacher's class",
+      "url": "https://help.quizlet.com/hc/en-us/articles/360030764951-Finding-your-teacher-s-class",
+      "entry_url": "https://help.quizlet.com/hc/en-us/articles/360030764951-Finding-your-teacher-s-class",
+      "body_locator": "L17–52",
+      "body_read_by_root": true,
+      "raw_work_path": "work/research/batch54-integration/quizlet-pages-05.txt",
+      "raw_sha256": "54e56084b80d2539a64a6fd8e219ada20990df825c7873bf47a292d3e91ae7fa",
+      "raw_capture_kind": "web_tool_response_text_not_source_HTML",
+      "flow_ids": [
+        "F-M021-29"
+      ],
+      "hands_on": false,
+      "visual_observed": false
+    },
+    {
+      "evidence_id": "E-QZMS-19",
+      "title": "Navigating your home feed on mobile devices",
+      "url": "https://help.quizlet.com/hc/en-us/articles/38999971996301-Navigating-your-home-feed-on-mobile-devices",
+      "entry_url": "https://help.quizlet.com/hc/en-us/articles/38999971996301-Navigating-your-home-feed-on-mobile-devices",
+      "body_locator": "L15–39",
+      "body_read_by_root": true,
+      "raw_work_path": "work/research/batch54-integration/quizlet-pages-05.txt",
+      "raw_sha256": "54e56084b80d2539a64a6fd8e219ada20990df825c7873bf47a292d3e91ae7fa",
+      "raw_capture_kind": "web_tool_response_text_not_source_HTML",
+      "flow_ids": [
+        "F-M021-32"
+      ],
+      "hands_on": false,
+      "visual_observed": false
+    },
+    {
+      "evidence_id": "E-QZMS-20",
+      "title": "Embedding sets",
+      "url": "https://help.quizlet.com/hc/en-us/articles/360032935851-Embedding-sets",
+      "entry_url": "https://help.quizlet.com/hc/en-us/articles/360032935851-Embedding-sets",
+      "body_locator": "L17–34",
+      "body_read_by_root": true,
+      "raw_work_path": "work/research/batch54-integration/quizlet-pages-06.txt",
+      "raw_sha256": "9eec9efe0d49bb8ed3e80ec7c1a9c8a923ccffacff9731c4b9e9e0d15fb32bf7",
+      "raw_capture_kind": "web_tool_response_text_not_source_HTML",
+      "flow_ids": [
+        "F-M021-27"
+      ],
+      "hands_on": false,
+      "visual_observed": false
+    },
+    {
+      "evidence_id": "E-QZMS-21",
+      "title": "Dropping a class",
+      "url": "https://help.quizlet.com/hc/en-us/articles/360031518251-Dropping-a-class",
+      "entry_url": "https://help.quizlet.com/hc/en-us/articles/360031518251-Dropping-a-class",
+      "body_locator": "L17–43",
+      "body_read_by_root": true,
+      "raw_work_path": "work/research/batch54-integration/quizlet-pages-06.txt",
+      "raw_sha256": "9eec9efe0d49bb8ed3e80ec7c1a9c8a923ccffacff9731c4b9e9e0d15fb32bf7",
+      "raw_capture_kind": "web_tool_response_text_not_source_HTML",
+      "flow_ids": [
+        "F-M021-29"
+      ],
+      "hands_on": false,
+      "visual_observed": false
+    },
+    {
+      "evidence_id": "E-QZMS-22",
+      "title": "Troubleshooting custom audio recording",
+      "url": "https://help.quizlet.com/hc/en-us/articles/360030842071-Troubleshooting-custom-audio-recording",
+      "entry_url": "https://help.quizlet.com/hc/en-us/articles/360030842071",
+      "body_locator": "L17–48",
+      "body_read_by_root": true,
+      "raw_work_path": "work/research/batch54-integration/quizlet-pages-06.txt",
+      "raw_sha256": "9eec9efe0d49bb8ed3e80ec7c1a9c8a923ccffacff9731c4b9e9e0d15fb32bf7",
+      "raw_capture_kind": "web_tool_response_text_not_source_HTML",
+      "flow_ids": [
+        "F-M021-24"
+      ],
+      "hands_on": false,
+      "visual_observed": false
+    },
+    {
+      "evidence_id": "E-QZMS-23",
+      "title": "Updating your school information",
+      "url": "https://help.quizlet.com/hc/en-us/articles/360032561391-Updating-your-school-information",
+      "entry_url": "https://help.quizlet.com/hc/en-us/articles/360032561391",
+      "body_locator": "L17–69",
+      "body_read_by_root": true,
+      "raw_work_path": "work/research/batch54-integration/quizlet-pages-06.txt",
+      "raw_sha256": "9eec9efe0d49bb8ed3e80ec7c1a9c8a923ccffacff9731c4b9e9e0d15fb32bf7",
+      "raw_capture_kind": "web_tool_response_text_not_source_HTML",
+      "flow_ids": [
+        "F-M021-32"
+      ],
+      "hands_on": false,
+      "visual_observed": false
+    }
+  ],
+  "original_directory_articles_read_this_batch": 21,
+  "linked_articles_read": 2,
+  "directories": {
+    "raw_work_path": "work/research/batch54-integration/quizlet-directories.txt",
+    "sha256": "41c8e2ed54645e09f9ae19449febdf036964196999e145e167640b845d89dc0e"
+  },
+  "account_used": false,
+  "images_viewed": false,
+  "operation": "public_help_reading_only",
+  "limitations": "No actual app or account operation; background pages not independent tasks, personalized home remains D1"
+}

@@ -1,0 +1,2 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M047-05,M-047,从文章查找配套纸面测验并核对版本,D2,E-TKD-02;E-TKVD-03,文章末Assessment→两页G3–4测验→按当期封面故事圈选与开放回答；答案指向教师订阅指南。网页与试卷日期不同；题4人名未在所取网页找到。,未取教师答案/当期完整纸刊，不能保证每题有足够依据；无软件作答评分、错误反馈、保存或儿童验证。,not_observed,false,cases/M-047-time-for-kids.md,2026-10-27

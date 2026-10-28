@@ -1,0 +1,7 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M063-09,M-063,找回播放页、歌词与曲目信息,D2,E-SHCD-03,评测记载Now Playing和歌词/信息切换、返回图标；作者自报V2.1。,缺歌词、长信息、返回筛选位置；AB/速度仅入口。,not_observed,false,cases/M-063-shanling.md,2026-10-26
+F-M063-10,M-063,外部M3U歌单导入,D2,E-SHCD-03,音频先在卡、A:\引用、_explaylist_data及Playlist/Import playlist；作者观察。,相对路径/M3U8、重复导入、失效项和换卡；非当前固件实测。,not_observed,false,cases/M-063-shanling.md,2026-10-26
+F-M064-09,M-064,播放视图与曲目信息,D2,E-IBCD-01;E-IBCD-03,封面手势切曲；Music/Settings入口；缩略图返回、Info展开/收回。,Info Delete对象、原筛选/滚动位置、当前构建差异。,static_reference_only,false,cases/M-064-ibasso.md,2026-10-26
+F-M064-10,M-064,编辑与停用EQ滤波器,D2,E-IBCD-01;E-IBCD-10,GEQ/PEQ从响应曲线进入；PEQ逐滤波器编辑及On/Off。,保存/重置、模式间持久化、跨app范围及音质未验证。,static_reference_only,false,cases/M-064-ibasso.md,2026-10-26
+F-M064-11,M-064,进入与退出USB DAC,D2,E-IBCD-05;E-IBCD-07,图示确认/取消、Charging mode和Back To DAP Mode；仅静态。,电脑输出选择、断线、后台干扰、音量与原曲恢复。,static_reference_only,false,cases/M-064-ibasso.md,2026-10-26
+F-M064-12,M-064,模拟输出与同轴分支,D2,E-IBCD-01;E-IBCD-06,Output设置；PO耳机/LO外放；手册说明同轴接入关闭phone/line输出。,实际切换反馈、拔同轴恢复、USB/蓝牙同时接入及音量。,static_reference_only,false,cases/M-064-ibasso.md,2026-10-26

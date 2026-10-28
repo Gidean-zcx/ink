@@ -1,0 +1,20 @@
+[
+  {
+    "key": "zhihu-compare",
+    "url": "https://zhuanlan.zhihu.com/p/1905680180795639326",
+    "http_status": 403,
+    "result": "access_denied_stopped",
+    "raw_work_path": "work/hanvon-controls-deepening/raw/zhihu-compare.html",
+    "raw_sha256": "29e1d21dd69d42d9fc9f7bddefb11309e0ea415a9b3801bb1c3ceeee7985dc61"
+  },
+  {
+    "key": "smzdm-user",
+    "url": "https://post.smzdm.com/p/ak3z4588/",
+    "http_status": 200,
+    "result": "captcha_only_no_article_stopped",
+    "raw_work_path": "work/hanvon-controls-deepening/raw/smzdm-user.html",
+    "raw_sha256": "ff9c58f37a6a88883f57fb0bb55673b6ea43ca7da2ad89ede5277817b93041b7",
+    "text_bytes": 0,
+    "note": "本地HTML有TencentCaptcha及/WafCaptcha POST脚本；均未执行。"
+  }
+]

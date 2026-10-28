@@ -1,0 +1,14 @@
+How To Change the Screen Time Out Delay on Mudita Kompakt
+Modified on: Sat, 3 Oct, 2026 at 8:35 AM
+To save power and to keep your phone secure, Kompakt’s screen will sleep after set time delay.
+To change the screen timeout delay:
+Press the Control Center button
+Tap Settings icon
+Tap Display
+Tap Screen Timeout
+Select the time delay you want
+Was this article helpful?
+ No
+ Yes
+That’s Great!
+Thank you for your feedback

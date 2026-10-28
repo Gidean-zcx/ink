@@ -1,0 +1,27 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M013-01,M-013,手机阅读、查词、划线与AI问书,D1,E-WRD-01,书籍详情可进入AI问书,选区、查词结果、写笔记、撤销和回原位,not_observed,false,cases/M-013-weread.md,2026-10-26
+F-M013-02,M-013,听书与导入书阅读,D1,E-WRD-01,导入书可独立字号；定时听书已公告,格式导入链、离线、读听位置映射,not_observed,false,cases/M-013-weread.md,2026-10-26
+F-M013-03,M-013,Skill搜索与书架读取,D2,E-WRD-02;E-WRD-03;E-WRD-04;E-WRD-05,内容类别、分页、空数据、链接回App,是否覆盖所有私有内容和写动作,not_observed,false,cases/M-013-weread.md,2026-10-26
+F-M013-04,M-013,Skill阅读位置与章节读取,D2,E-WRD-03;E-WRD-06,0/1—99/100进度,写入位置、读听切换与更新冲突,not_observed,false,cases/M-013-weread.md,2026-10-26
+F-M013-05,M-013,Skill划线与想法整理导出,D2,E-WRD-03;E-WRD-07,书签仅统计；两种游标；想法未必含原文,导出文件保存、修改回写、删除撤销,not_observed,false,cases/M-013-weread.md,2026-10-26
+F-M013-06,M-013,Skill周期阅读统计,D2,E-WRD-03;E-WRD-08,默认月；统计口径与排行可缺省,离线记录补传、分项保真,not_observed,false,cases/M-013-weread.md,2026-10-26
+F-M013-07,M-013,注销等待期与撤回,D2,E-WRD-09,15天内登录撤回；最终注销不可恢复,进入注销页面路径、备份完整性,not_observed,false,cases/M-013-weread.md,2026-10-26
+F-M014-01,M-014,手机阅读、查词和划线,D1,E-IRD-01,字体封面背景可设,查词/划线证据不足，回原文与撤销未知,not_observed,false,cases/M-014-ireader.md,2026-10-26
+F-M014-02,M-014,手机本地文件与同步,D1,E-IRD-01;E-IPAD-01,epub/txt/pdf及多设备同步声明,导入动作、同步字段、重装恢复,not_observed,false,cases/M-014-ireader.md,2026-10-26
+F-M014-03,M-014,手机AI辅助与听书,D1,E-IRD-01;E-IRD-02;E-IPAD-01,AI摘要/导图/导读/双人讲书,入口、来源定位、失败、续播,not_observed,false,cases/M-014-ireader.md,2026-10-26
+F-M014-04,M-014,墨水屏版书架同步后刷新,D2,E-IRD-03,云端同步完成但书架未刷新,冲突、文件是否下载、重装恢复,not_observed,false,cases/M-014-ireader.md,2026-10-26
+F-M014-05,M-014,墨水屏版PDF笔迹重新显示,D2,E-IRD-03,阅读/笔记模式不同,误擦撤销、导出、跨端复原,not_observed,false,cases/M-014-ireader.md,2026-10-26
+F-M032-01,M-032,行测模考报名与岗位锁定,D2,E-FENB-03;E-FBCD-03;E-FBCD-07,FAQ通用卷、岗位导入与锁定；2019图有职位编辑/报名结果；无法入场或答题仅引导客服,现行构建入口、报名失败、答题与交卷恢复；FAQ内容时间非版本,static_reference_only,false,cases/M-032-fenbi.md,2026-10-26
+F-M032-02,M-032,错过行测模考后补练及看报告,D2,E-FENB-03;E-FBCD-03;E-FBCD-09,补练有分无职位排名；2020托管帮助：年份/国省考季→折线场次→查看报告,具体托管租户官方反链；当前入口、空报告/失败、考中恢复与补交,not_observed,false,cases/M-032-fenbi.md,2026-10-26
+F-M032-03,M-032,北京行测真题选择到解析,D1,E-FENB-07,地区和年份选择,答案修改、交卷、即时错误反馈,not_observed,false,cases/M-032-fenbi.md,2026-10-26
+F-M032-04,M-032,错题重做与人工移出,D1,E-FENB-05;E-FENB-06;E-FBCD-04;E-FBCD-05;E-FBCD-08,备考文章声明自动汇集、筛选/重做/归因/移除；2020四方块目录与2026我的入口并列,控件与执行结果未核；清理确认/误删恢复/统计重算、首次与历次答案口径、同步,not_observed,false,cases/M-032-fenbi.md,2026-10-26
+F-M032-05,M-032,收藏疑难题并回看,D1,E-FENB-06;E-FBCD-05;E-FBCD-08,文章声明练习页或我的收藏；2020托管目录按考试类别列我的收藏,收藏保存反馈、取消与撤销、重复与同步；当前构建与具体租户官方反链,not_observed,false,cases/M-032-fenbi.md,2026-10-26
+F-M032-06,M-032,套卷计时与提交后耗时,D1,E-FENB-08;E-FBCD-06,计时模式/模块耗时是备考文章声明；不可暂停未证为技术规则,现行套卷答题卡、改选/跳题、确认/漏题/超时、后台/断网与重复提交,not_observed,false,cases/M-032-fenbi.md,2026-10-26
+F-M032-07,M-032,公基模考交卷后结果与解析课,D2,E-FENB-04,个人分先出、整体分后出；解析课另购,行测是否相同、付费退款与断流,not_observed,false,cases/M-032-fenbi.md,2026-10-26
+F-M032-08,M-032,课程离线与PC机考范围,D1,E-FENB-01;E-FENB-02;E-FBCD-01;E-FBCD-02,课程离线；商店iOS6.19.9与下载页6.19.7并存；PC版本独立,题库/草稿离线、缓存清理及端间进度同步,not_observed,false,cases/M-032-fenbi.md,2026-10-26
+F-M033-01,M-033,小车科一练习与错误反馈,D4,E-JKB-02;E-JKB-03;E-JKCD-01,网页错答停留、解析手动展开；改点正确不改首次记录；正确自动前进可取消；返回保留当次选答。,只核匿名顺序网页三题；App题型、声音、错题集合再练、离线及更多分支未知。,observed_browser_sequence,true,cases/M-033-jiakaobaodian.md,2026-10-26
+F-M033-02,M-033,错题与收藏再练,D1,E-JKB-02;E-JKB-03;E-JKB-04;E-JKCD-02,错题/收藏入口；匿名网页点收藏出现登录框，未完成收藏。,登录后加入/移出、错题再练、撤销与题目更新未知；入口前置观察不等于收藏链完成。,not_observed,false,cases/M-033-jiakaobaodian.md,2026-10-26
+F-M033-03,M-033,Web计时模拟与交卷,D4,E-JKB-05;E-JKCD-04,北京匿名模拟页倒计时运行；错/对均前进；交卷通用确认可取消；返回已答题显示结果；确认后结果中心空白。,未见成绩/复盘/再做一套；完整100题、到零、中断恢复、记录保存与App未知。,observed_browser_sequence,true,cases/M-033-jiakaobaodian.md,2026-10-26
+F-M033-04,M-033,App上传并在Web看云端记录,D2,E-JKB-04;E-JKCD-02,原文档App同步→立即同步→Web返回查看；匿名网页点云同步实际先要求登录。,未登录或同步；成功提示、冲突、重装后恢复仍未知。,not_observed,false,cases/M-033-jiakaobaodian.md,2026-10-26
+F-M033-05,M-033,App AI讲解与陪练,D1,E-JKB-01,开发者公告AI陪练/错题分析,生成入口、引用、错误反馈和保存,not_observed,false,cases/M-033-jiakaobaodian.md,2026-10-26
+F-M033-06,M-033,题库更新与版本边界,D1,E-JKB-01;E-JKB-02,App版本与题库更新分开,更新下载/回滚/旧题ID迁移,not_observed,false,cases/M-033-jiakaobaodian.md,2026-10-26

@@ -1,0 +1,5 @@
+[
+  {
+    "command_error": "Locator.evaluate: TypeError: Cannot read properties of undefined (reading 'slice')\n    at eval (eval at evaluate (:370:30), <anonymous>:1:215)\n    at Array.map (<anonymous>)\n    at eval (eval at evaluate (:370:30), <anonymous>:1:117)\n    at UtilityScript.evaluate (<anonymous>:377:18)\n    at UtilityScript.<anonymous> (<anonymous>:1:44)"
+  }
+]

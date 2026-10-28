@@ -1,0 +1,37 @@
+item_id,product_id,functional_domain,public_material_scope,evidence_ids,source_locator,flow_ids,review_status,version_scope,remaining_gap,checked_on,new_visual_observation
+IHLC-I01,M-029,主线地图,当前三阶段内容,E-IHCD-01,开发者说明/分阶与生活应用,F-M029-01,developer_claim_only,CN iOS4.5.2开发者说明（2026-10-26旧快照）；与3.0.1静态图分别使用,解锁、手动选字与返回,2026-10-27,false
+IHLC-I02,M-029,教材选择,年级/书册/课文,E-IHD-01;E-IHCD-01,开发者说明/部编版,F-M029-04,developer_claim_only,CN iOS4.5.2开发者说明（2026-10-26旧快照）；与3.0.1静态图分别使用,控件、换教材进度,2026-10-27,false
+IHLC-I03,M-029,玩,互动引入,E-IHCD-01,五步学习,F-M029-01,developer_claim_only,CN iOS4.5.2开发者说明（2026-10-26旧快照）；与3.0.1静态图分别使用,同字启动/退出/重试,2026-10-27,false
+IHLC-I04,M-029,认,字形字义,E-IHCD-01,五步学习,F-M029-01,developer_claim_only,CN iOS4.5.2开发者说明（2026-10-26旧快照）；与3.0.1静态图分别使用,逐字页面/求助返回,2026-10-27,false
+IHLC-I05,M-029,练,辨形/听音找字/看字找音,E-IHCD-01,五步学习,F-M029-01,developer_claim_only,CN iOS4.5.2开发者说明（2026-10-26旧快照）；与3.0.1静态图分别使用,错选提示/再答次数,2026-10-27,false
+IHLC-I06,M-029,写,运笔与笔画纠错,E-IHCD-01,五步学习/AI辅助,F-M029-01,developer_claim_only,CN iOS4.5.2开发者说明（2026-10-26旧快照）；与3.0.1静态图分别使用,容错/示范/无法完成出口,2026-10-27,false
+IHLC-I07,M-029,说,字到词句表达,E-IHCD-01,五步学习,F-M029-01,developer_claim_only,CN iOS4.5.2开发者说明（2026-10-26旧快照）；与3.0.1静态图分别使用,录音提交/拒绝权限/评分,2026-10-27,false
+IHLC-I08,M-029,每日回顾,已学字再次练习,E-IHCD-01,五步学习,F-M029-01,developer_claim_only,CN iOS4.5.2开发者说明（2026-10-26旧快照）；与3.0.1静态图分别使用,触发、必做/跳过与恢复,2026-10-27,false
+IHLC-I09,M-029,阶段检测,阶段题组,E-IHCD-01,五步学习,F-M029-01,developer_claim_only,CN iOS4.5.2开发者说明（2026-10-26旧快照）；与3.0.1静态图分别使用,数量、判分、错误回流,2026-10-27,false
+IHLC-I10,M-029,趣味挑战,已学字练习,E-IHCD-01,五步学习,F-M029-01,developer_claim_only,CN iOS4.5.2开发者说明（2026-10-26旧快照）；与3.0.1静态图分别使用,入口/结束与奖励,2026-10-27,false
+IHLC-I11,M-029,整课测验,单字后核查整课,E-IHD-01;E-IHCD-01,部编版,F-M029-04,developer_claim_only,CN iOS4.5.2开发者说明（2026-10-26旧快照）；与3.0.1静态图分别使用,测验选项/结算/补练,2026-10-27,false
+IHLC-I12,M-029,子集绘本,目标字与开始阅读,E-IHD-02,官网原创子集绘本图,F-M029-01,prior_static_entry_only,官方页面日期/平台/构建未定；按来源限定；非当前实测,逐页/音频/解锁/断点,2026-10-27,false
+IHLC-I13,M-029,生活中的汉字,生活主题,E-IHCD-01,分阶与生活应用,,developer_claim_only,CN iOS4.5.2开发者说明（2026-10-26旧快照）；与3.0.1静态图分别使用,主题选择/内容边界,2026-10-27,false
+IHLC-I14,M-029,偏旁部首,专项内容,E-IHCD-01,分阶与生活应用,,developer_claim_only,CN iOS4.5.2开发者说明（2026-10-26旧快照）；与3.0.1静态图分别使用,入口/练习/完成,2026-10-27,false
+IHLC-I15,M-029,笔画知识,专项内容,E-IHCD-01,分阶与生活应用,,developer_claim_only,CN iOS4.5.2开发者说明（2026-10-26旧快照）；与3.0.1静态图分别使用,查询/练习衔接,2026-10-27,false
+IHLC-I16,M-029,趣味成语,专项内容,E-IHCD-01,分阶与生活应用,,developer_claim_only,CN iOS4.5.2开发者说明（2026-10-26旧快照）；与3.0.1静态图分别使用,入口/题型/退出,2026-10-27,false
+IHLC-I17,M-029,拍照识字,历史版本能力声明,E-IHUM-02,2025-06-25日志,,developer_claim_only,官方页面日期/平台/构建未定；按来源限定；非当前实测,相机权限/识别错字/回源,2026-10-27,false
+IHLC-I18,M-029,AI学伴,伴学声明,E-IHUM-01;E-IHCD-01,官网/AI辅助,,developer_claim_only,CN iOS4.5.2开发者说明（2026-10-26旧快照）；与3.0.1静态图分别使用,输入/反馈/退出与数据保存,2026-10-27,false
+IHLC-I19,M-029,使用时长,家长节奏,E-IHCD-01,家长管理,F-M029-02,developer_claim_only,CN iOS4.5.2开发者说明（2026-10-26旧快照）；与3.0.1静态图分别使用,到时反馈/延长/离线,2026-10-27,false
+IHLC-I20,M-029,每日识字目标,家长节奏,E-IHCD-01,家长管理,F-M029-02,developer_claim_only,CN iOS4.5.2开发者说明（2026-10-26旧快照）；与3.0.1静态图分别使用,可选范围/变更生效,2026-10-27,false
+IHLC-I21,M-029,识字速度,家长节奏,E-IHCD-01,家长管理,F-M029-02,developer_claim_only,CN iOS4.5.2开发者说明（2026-10-26旧快照）；与3.0.1静态图分别使用,作用范围/保存,2026-10-27,false
+IHLC-I22,M-029,教学环节,关闭游戏历史路径,E-IHCD-01,2020-05-04官方回复,F-M029-02,historical_instruction,2020-05-04官方回复；当时构建/平台未知,现行入口/正在学的字是否改变,2026-10-27,false
+IHLC-I23,M-029,环节跳过,是否允许跳过,E-IHCD-01,2020-05-04官方回复/家长管理,F-M029-02,historical_instruction,2020-05-04官方回复；当时构建/平台未知,关闭跳过与退出课程的区别,2026-10-27,false
+IHLC-I24,M-029,识字报告,学习情况,E-IHCD-01;E-IHCD-02,家长管理/3.0.1设置图,F-M029-03,claim_and_prior_static_entry,CN iOS4.5.2开发者说明（2026-10-26旧快照）；与3.0.1静态图分别使用,报告计数与真实掌握/导出范围,2026-10-27,false
+IHLC-I25,M-029,字库打印,纸面练习,E-IHCD-01,家长管理,,developer_claim_only,CN iOS4.5.2开发者说明（2026-10-26旧快照）；与3.0.1静态图分别使用,选字/格式/打印确认,2026-10-27,false
+IHLC-I26,M-029,离线缓存,3.0.1页签,E-IHCD-02,旧设置图,,prior_static_entry_only,3.0.1官方静态图；平台/日期未知,缓存对象/下载/过期/离线进度,2026-10-27,false
+IHLC-I27,M-029,音乐与基地开关,3.0.1可见控件,E-IHCD-02,旧设置图,,prior_static_entry_only,3.0.1官方静态图；平台/日期未知,作用范围/生效与恢复,2026-10-27,false
+IHLC-I28,M-029,检查更新,3.0.1入口,E-IHCD-02,旧设置图,,prior_static_entry_only,3.0.1官方静态图；平台/日期未知,升级/取消/回退未知未执行,2026-10-27,false
+IHLC-I29,M-029,开始诊断,3.0.1入口,E-IHCD-02,旧设置图,,prior_static_entry_only,3.0.1官方静态图；平台/日期未知,结果/异常/修复动作,2026-10-27,false
+IHLC-I30,M-029,账户中心/退出登录,3.7.2历史路径,E-IHCD-04,2022教程,F-M029-05,historical_text_images_refused,2022作者自报iPhone12/iOS15.6/3.7.2,确认/退出后保留/重登恢复,2026-10-27,false
+IHLC-I31,M-029,个人资料副本,隐私中心下载,E-IHUM-03;E-IHUM-04;E-IHCD-02,隐私中心/旧设置图,F-M029-03,official_instruction,官方页面日期/平台/构建未定；按来源限定；非当前实测,图片副本不是进度恢复,2026-10-27,false
+IHLC-I32,M-029,反馈,首页右上我要反馈,E-IHD-03,官方反馈指引,,official_instruction_entry_only,官方页面日期/平台/构建未定；按来源限定；非当前实测,提交/回执/当前入口未执行,2026-10-27,false
+IHLC-I33,M-029,注销账号,内容删除或匿名化政策,E-IHUM-04,政策4.4–4.5,,policy_scope_only,官方页面日期/平台/构建未定；按来源限定；非当前实测,不等同删除单孩子或重置进度,2026-10-27,false
+IHLC-I34,M-029,历史二字练习,听音选字三次正确,E-IHLC-01,2020课程体验/二,F-M029-01,historical_author_text_only,2020作者报道；平台/构建未知,错误/退出未描述；非当前通用阈值,2026-10-27,false
+IHLC-I35,M-029,历史雨字辅助,古字/笔顺入口,E-IHLC-02,2020写环节/雨,F-M029-01,historical_author_text_only,2020作者报道；平台/构建未知,入口位置和效果未视觉核验,2026-10-27,false
+IHLC-I36,M-029,历史强制任务,作者启用的配置,E-IHLC-02,2020复习与软件设置,F-M029-02,historical_author_text_only,2020作者报道；平台/构建未知,开关路径/保存/失败；不作默认,2026-10-27,false

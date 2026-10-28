@@ -1,0 +1,11 @@
+Search for a string of text within the document that is currently being displayed on the Digital Paper.
+Tap anywhere on the screen of a document to display the tool bar.
+Tap  (search) in the upper right of the document screen.
+Tap the [Search Text] tab — the search term input field. Then use the keyboard to enter a string of text, and tap [Search].
+Tap one of the search results.
+The page that you tapped will be displayed.
+To close the search results list
+Tap an area outside of the search screen.
+Note
+There is no differentiation between upper case and lower case letters.
+Handwritten text and text that is embedded in an image cannot be searched.

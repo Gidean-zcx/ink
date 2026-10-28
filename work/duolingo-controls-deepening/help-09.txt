@@ -1,0 +1,17 @@
+HELP CENTER
+ACCOUNT MANAGEMENT
+I’m having trouble accessing my account.
+I forgot my password.
+If you forgot your password and need a new one, tap “Forgot password” on the login screen in the app, or visit http://duolingo.com/forgot_password and enter the email address associated with your Duolingo account.
+If you originally signed up with Google or Facebook, you’ll need to supply the email associated with your Google or Facebook account instead.
+We’ll send you a link to that email address, which will enable you to create a new password for your account. Be sure to check your spam folder if you do not see the reset email in your inbox!
+If you signed up with an inaccurate email address, you will not be able to change your password.
+I’m logged in, but it looks like my progress is gone.
+If you have successfully signed in but your progress does not look the same, you may have accidentally created a second account while attempting to access your original account. Please log out, and retry the above steps using any other email address you may have used to create your correct account.
+Relevant Articles
+How do I change my username or email address?
+How do I find, follow, and block users on Duolingo?
+How do I remove or reset a course?
+How do I delete my account and access my data?
+What to do if your data was compromised
+I want to submit a bug report

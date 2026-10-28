@@ -1,0 +1,2 @@
+What is Magic sorting?
+Magic sorting is a Pro feature that ranks articles based on their popularity and your reading habits. It prioritizes content from feeds you read more frequently, helping you find articles that are more likely to interest you.

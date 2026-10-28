@@ -1,0 +1,116 @@
+[
+  {
+    "class": "page-header-inner-logo-link",
+    "href": "/en",
+    "title": "",
+    "url": "https://help.ground.news/en"
+  },
+  {
+    "class": "page-header-inner-title",
+    "href": "/en",
+    "title": "Ground News Help Center",
+    "url": "https://help.ground.news/en"
+  },
+  {
+    "type": "button",
+    "class": "kb-button primary",
+    "href": "/en/contact-us",
+    "title": "Contact Us",
+    "url": "https://help.ground.news/en/contact-us"
+  },
+  {
+    "id": "moreResultsLink",
+    "type": "button",
+    "class": "kb-button secondary",
+    "href": "/en/search",
+    "title": "More results",
+    "url": "https://help.ground.news/en/search"
+  },
+  {
+    "href": "https://ground.news/privacy-policy",
+    "title": "Privacy Policy",
+    "url": "https://ground.news/privacy-policy"
+  },
+  {
+    "href": "/en",
+    "title": "Home",
+    "url": "https://help.ground.news/en"
+  },
+  {
+    "href": "/en/categories/2272833-manage-your-account-subscription",
+    "title": "Manage Your Account & Subscription",
+    "url": "https://help.ground.news/en/categories/2272833-manage-your-account-subscription"
+  },
+  {
+    "class": "article-card",
+    "href": "/en/articles/6692033",
+    "data-edited": "1781047548044",
+    "title": "Link Multiple Sign-In Options To Your AccountEdited Wednesday, June 10 2026You can now  link multiple sign-in methods to your Ground News account  directly from the website. This gives you more flexibility and convenience whe...",
+    "url": "https://help.ground.news/en/articles/6692033"
+  },
+  {
+    "class": "article-card",
+    "href": "/en/articles/245697",
+    "data-edited": "1773033482272",
+    "title": "I Can't Remember My Login DetailsEdited Monday, March 9 2026If you’re having trouble signing into your account because you forgot your login details, there are a few ways to regain access to your account. The t...",
+    "url": "https://help.ground.news/en/articles/245697"
+  },
+  {
+    "class": "article-card",
+    "href": "/en/articles/245633",
+    "data-edited": "1773033408285",
+    "title": "Reset My PasswordEdited Monday, March 9 2026On the  sign in screen,  type in the email address that is connected to your account and then hit  \"Forgot your password?\".  You will receive a passwo...",
+    "url": "https://help.ground.news/en/articles/245633"
+  },
+  {
+    "class": "article-card",
+    "href": "/en/articles/335041",
+    "data-edited": "1773033445451",
+    "title": "Help, I Can't Reset My PasswordEdited Monday, March 9 2026Trouble with the password reset links often happens if you originally signed up via a Social Login Method but still tap the \"Forgot password\" button. ...",
+    "url": "https://help.ground.news/en/articles/335041"
+  },
+  {
+    "class": "article-card",
+    "href": "/en/articles/334913",
+    "data-edited": "1785266043933",
+    "title": "I Want To Delete My Account DataEdited Tuesday, July 28 2026To delete your Ground News data, please follow the steps below: First, log out of the platform on all of your devices. You can sign out via the Accoun...",
+    "url": "https://help.ground.news/en/articles/334913"
+  },
+  {
+    "class": "article-card",
+    "href": "/en/articles/1476737",
+    "data-edited": "1740694725993",
+    "title": "Ground News Privacy Policy FAQEdited Thursday, February 27 2025No, Ground News does not sell or rent user data to third parties. As a subscription-based service, our revenue comes from people who have decided to u...",
+    "url": "https://help.ground.news/en/articles/1476737"
+  },
+  {
+    "href": "https://twitter.com/Ground_app",
+    "title": "",
+    "url": "https://twitter.com/Ground_app"
+  },
+  {
+    "href": "https://ca.linkedin.com/company/groundnews",
+    "title": "",
+    "url": "https://ca.linkedin.com/company/groundnews"
+  },
+  {
+    "href": "https://www.instagram.com/groundnews/",
+    "title": "",
+    "url": "https://www.instagram.com/groundnews/"
+  },
+  {
+    "href": "https://ground.news/refund-policy",
+    "title": "Refund and Cancellation Policy",
+    "url": "https://ground.news/refund-policy"
+  },
+  {
+    "href": "https://ground.news/terms-and-conditions",
+    "title": "Terms and Conditions",
+    "url": "https://ground.news/terms-and-conditions"
+  },
+  {
+    "href": "https://about.ground.news/privacy-policy",
+    "title": "Privacy Policy",
+    "url": "https://about.ground.news/privacy-policy"
+  }
+]

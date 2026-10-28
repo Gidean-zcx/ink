@@ -1,0 +1,3 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M032-09,M-032,历史快速练习：2019国考结果解析与2022漏答确认（分材料）,D2,E-FBCD-07;E-FBPC-02,2019国考iOS6.8.8静态图：答题卡交卷入口、报告及全部/错题解析；2022作者自报6.16.25文字：快速练习未全部答完交卷有确认，科目/地区未知，未看图,两材料不得拼成同一会话或套当前App；2022无弹窗原文/取消结果/交卷后状态；2019未见改选跳题确认，返回目标未知；超时后台断网恢复均未知,static_reference_only,false,cases/M-032-fenbi.md,2026-10-27
+F-M032-10,M-032,历史行测错题导出与纸面作答回录,D2,E-FBCD-10;E-FBCD-12,2020托管帮助；按考点或近一周；旧会员300题/非会员5题；缓存查看与扫码回录,具体租户官方反链；当前限额；格式/失败/空数据/重复回录计分,not_observed,false,cases/M-032-fenbi.md,2026-10-26

@@ -1,0 +1,64 @@
+{
+  "exec_session": 11064,
+  "exit_code": 143,
+  "termination_cause": "unknown",
+  "process_recheck": "ps found no supplement_capture_once or Chromium process",
+  "result_json_written": false,
+  "network_log_persisted": false,
+  "frames": [
+    {
+      "requested_seconds": 20,
+      "actual_seconds": null,
+      "path": "work/bcz-learning-video-preview/frames/020.00s.png",
+      "pixels": [
+        1280,
+        2276
+      ],
+      "sha256": "01a04c10ee00dbd8baf48556600689da82e6a594e51d9c66b9b2f7d9c064e019",
+      "observed_by_root": true
+    },
+    {
+      "requested_seconds": 25,
+      "actual_seconds": null,
+      "path": "work/bcz-learning-video-preview/frames/025.00s.png",
+      "pixels": [
+        1280,
+        2276
+      ],
+      "sha256": "ec60a16eb1fa59af9b51453d4e2291d115fdcc858247ca72f5b8c3aefd134875",
+      "observed_by_root": true
+    },
+    {
+      "requested_seconds": 34,
+      "actual_seconds": null,
+      "path": "work/bcz-learning-video-preview/frames/034.00s.png",
+      "pixels": [
+        1280,
+        2276
+      ],
+      "sha256": "9eeec055225eee15f3d8cef09a7e3b2d77926d5cdff896a29637ebbce87aaf1c",
+      "observed_by_root": true
+    },
+    {
+      "requested_seconds": 38,
+      "actual_seconds": null,
+      "path": "work/bcz-learning-video-preview/frames/038.00s.png",
+      "pixels": [
+        1280,
+        2276
+      ],
+      "sha256": "df800660b056c38010691d7d7bd777ee98920933313d707cce5e0963789e7925",
+      "observed_by_root": true
+    }
+  ],
+  "remaining_requested_seconds": [
+    42,
+    50,
+    55,
+    63,
+    66,
+    70,
+    74
+  ],
+  "restarted": false
+}

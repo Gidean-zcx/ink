@@ -1,0 +1,2 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M033-07,M-033,匿名网页刷新与练习状态恢复,D4,E-JKCD-03,同题ID网址保留题目位置；刷新后计数/选答清空、自动下一题重新勾选；选项字母映射改变。,单次桌面网页；存储机制、断网、进程重启、多端及App恢复未知。,observed_browser_sequence,true,cases/M-033-jiakaobaodian.md,2026-10-26

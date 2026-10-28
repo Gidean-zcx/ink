@@ -1,0 +1,14 @@
+How to Switch Between SIM 2 and eSIM Mode?
+Modified on: Sat, 3 Oct, 2026 at 8:34 AM
+To switch between SIM 2 and eSIM mode:
+Open Control Center and tap Settings.
+Go to Network & Internet > SIM Cards.
+Tap Switch mode.
+Tap Switch mode again to confirm.
+Kompakt will restart automatically to apply the change.
+Note: If you haven't set up an eSIM yet, install it before switching modes.
+Was this article helpful?
+No
+Yes
+That’s Great!
+Thank you for your feedback

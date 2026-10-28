@@ -1,0 +1,106 @@
+item_id,product_id,item,source_locator,evidence_ids,flow_ids,status,gap,checked_on
+DYCD-001,M-051,进入未成年人模式,child guide section,E-DYCD-03,,section_parent,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-002,M-051,健康使用,child guide section,E-DYCD-03,,section_parent,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-003,M-051,优质陪伴,child guide section,E-DYCD-03,,section_parent,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-004,M-051,亲子护航,child guide section,E-DYCD-03,,section_parent,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-005,M-051,退出未成年人模式,child guide section,E-DYCD-03,,section_parent,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-006,M-051,我侧栏入口,tiles01–02,E-DYCD-03,F-M051-07,static_guide_control,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-007,M-051,首页更多入口,tiles01–02,E-DYCD-03,F-M051-07,static_guide_control,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-008,M-051,搜索模式名入口,tiles01–02,E-DYCD-03,F-M051-07,static_guide_control,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-009,M-051,开启弹窗/X/不再提醒,tiles01–02,E-DYCD-03,F-M051-07,static_guide_control,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-010,M-051,时间管理与时间锁入口,tiles02–03,E-DYCD-03,F-M051-08,static_guide_control,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-011,M-051,上学日时长,tiles02–03,E-DYCD-03,F-M051-08,static_guide_control,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-012,M-051,休息日时长,tiles02–03,E-DYCD-03,F-M051-08,static_guide_control,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-013,M-051,日超限密码提示,tiles02–03,E-DYCD-03,F-M051-08,static_guide_control,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-014,M-051,夜间限制与密码冲突,tiles02–03,E-DYCD-03,F-M051-08,static_guide_control,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-015,M-051,视力保护入口,tiles03–04,E-DYCD-03,,static_guide_control,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-016,M-051,蓝光弱化开关,tiles03–04,E-DYCD-03,,static_guide_control,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-017,M-051,护眼提醒开关/了解更多,tiles03–04,E-DYCD-03,,static_guide_control,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-018,M-051,服务热线支持入口,tiles03–04,E-DYCD-03,,static_guide_control,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-019,M-051,AI笔记入口/摘要/章节,tiles04–05,E-DYCD-03,F-M051-06,static_guide_control,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-020,M-051,创作者订阅/订阅频道,tiles04–06,E-DYCD-03,F-M051-09,static_guide_control,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-021,M-051,适龄内容1–18岁/完成/X,tiles04–06,E-DYCD-03,F-M051-09,static_guide_control,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-022,M-051,文本搜索入口,tiles04–06,E-DYCD-03,F-M051-09,static_guide_control,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-023,M-051,语音搜索声明,tiles04–06,E-DYCD-03,F-M051-09,static_guide_control,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-024,M-051,搜索建议/换一换,tiles04–06,E-DYCD-03,F-M051-09,static_guide_control,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-025,M-051,发现全部频道入口,tiles04–06,E-DYCD-03,F-M051-09,static_guide_control,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-026,M-051,陪伴周刊期刊卡片,tiles04–06,E-DYCD-03,F-M051-09,static_guide_control,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-027,M-051,家长发起扫码绑定,tiles07–08,E-DYCD-03,F-M051-05,static_guide_control,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-028,M-051,孩子三页权限说明,tiles07–08,E-DYCD-03,F-M051-05,static_guide_control,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-029,M-051,协议/接受申请,tiles07–08,E-DYCD-03,F-M051-05,static_guide_control,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-030,M-051,近7日使用统计,tiles07–08,E-DYCD-03,F-M051-05,static_guide_control,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-031,M-051,未成年人模式开关,tiles07–08,E-DYCD-03,F-M051-05,static_guide_control,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-032,M-051,家长时间锁,tiles07–08,E-DYCD-03,F-M051-05,static_guide_control,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-033,M-051,家长订阅管理/取消订阅,tiles07–08,E-DYCD-03,F-M051-05,static_guide_control,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-034,M-051,解除绑定按钮,tiles07–08,E-DYCD-03,F-M051-05,static_guide_control,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-035,M-051,最多3个孩子示图,tiles07–08,E-DYCD-03,F-M051-05,static_guide_control,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-036,M-051,首页左上关闭,tiles08–09,E-DYCD-03,F-M051-07,static_guide_control,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-037,M-051,我左上关闭,tiles08–09,E-DYCD-03,F-M051-07,static_guide_control,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-038,M-051,校验密码/成年自动退出声明,tiles08–09,E-DYCD-03,F-M051-07,static_guide_control,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-039,M-051,推荐,child tile06 全部频道,E-DYCD-03,F-M051-09,visible_channel_only,22个可见频道；非现版完整目录，未逐一进入,2026-10-27
+DYCD-040,M-051,陪伴周刊,child tile06 全部频道,E-DYCD-03,F-M051-09,visible_channel_only,22个可见频道；非现版完整目录，未逐一进入,2026-10-27
+DYCD-041,M-051,院士说,child tile06 全部频道,E-DYCD-03,F-M051-09,visible_channel_only,22个可见频道；非现版完整目录，未逐一进入,2026-10-27
+DYCD-042,M-051,公开课,child tile06 全部频道,E-DYCD-03,F-M051-09,visible_channel_only,22个可见频道；非现版完整目录，未逐一进入,2026-10-27
+DYCD-043,M-051,科普中国,child tile06 全部频道,E-DYCD-03,F-M051-09,visible_channel_only,22个可见频道；非现版完整目录，未逐一进入,2026-10-27
+DYCD-044,M-051,学科知识,child tile06 全部频道,E-DYCD-03,F-M051-09,visible_channel_only,22个可见频道；非现版完整目录，未逐一进入,2026-10-27
+DYCD-045,M-051,代码世界,child tile06 全部频道,E-DYCD-03,F-M051-09,visible_channel_only,22个可见频道；非现版完整目录，未逐一进入,2026-10-27
+DYCD-046,M-051,动物世界,child tile06 全部频道,E-DYCD-03,F-M051-09,visible_channel_only,22个可见频道；非现版完整目录，未逐一进入,2026-10-27
+DYCD-047,M-051,科学探秘,child tile06 全部频道,E-DYCD-03,F-M051-09,visible_channel_only,22个可见频道；非现版完整目录，未逐一进入,2026-10-27
+DYCD-048,M-051,放映厅,child tile06 全部频道,E-DYCD-03,F-M051-09,visible_channel_only,22个可见频道；非现版完整目录，未逐一进入,2026-10-27
+DYCD-049,M-051,美食,child tile06 全部频道,E-DYCD-03,F-M051-09,visible_channel_only,22个可见频道；非现版完整目录，未逐一进入,2026-10-27
+DYCD-050,M-051,国学文化,child tile06 全部频道,E-DYCD-03,F-M051-09,visible_channel_only,22个可见频道；非现版完整目录，未逐一进入,2026-10-27
+DYCD-051,M-051,文学艺术,child tile06 全部频道,E-DYCD-03,F-M051-09,visible_channel_only,22个可见频道；非现版完整目录，未逐一进入,2026-10-27
+DYCD-052,M-051,走进太空,child tile06 全部频道,E-DYCD-03,F-M051-09,visible_channel_only,22个可见频道；非现版完整目录，未逐一进入,2026-10-27
+DYCD-053,M-051,十万好奇,child tile06 全部频道,E-DYCD-03,F-M051-09,visible_channel_only,22个可见频道；非现版完整目录，未逐一进入,2026-10-27
+DYCD-054,M-051,云逛馆,child tile06 全部频道,E-DYCD-03,F-M051-09,visible_channel_only,22个可见频道；非现版完整目录，未逐一进入,2026-10-27
+DYCD-055,M-051,才艺,child tile06 全部频道,E-DYCD-03,F-M051-09,visible_channel_only,22个可见频道；非现版完整目录，未逐一进入,2026-10-27
+DYCD-056,M-051,绘画,child tile06 全部频道,E-DYCD-03,F-M051-09,visible_channel_only,22个可见频道；非现版完整目录，未逐一进入,2026-10-27
+DYCD-057,M-051,体育运动,child tile06 全部频道,E-DYCD-03,F-M051-09,visible_channel_only,22个可见频道；非现版完整目录，未逐一进入,2026-10-27
+DYCD-058,M-051,萌宠,child tile06 全部频道,E-DYCD-03,F-M051-09,visible_channel_only,22个可见频道；非现版完整目录，未逐一进入,2026-10-27
+DYCD-059,M-051,益智玩具,child tile06 全部频道,E-DYCD-03,F-M051-09,visible_channel_only,22个可见频道；非现版完整目录，未逐一进入,2026-10-27
+DYCD-060,M-051,环游世界,child tile06 全部频道,E-DYCD-03,F-M051-09,visible_channel_only,22个可见频道；非现版完整目录，未逐一进入,2026-10-27
+DYCD-061,M-051,名师学者,child tile06 陪伴周刊,E-DYCD-03,F-M051-09,visible_category_only,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-062,M-051,趣味科普,child tile06 陪伴周刊,E-DYCD-03,F-M051-09,visible_category_only,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-063,M-051,前沿科技,child tile06 陪伴周刊,E-DYCD-03,F-M051-09,visible_category_only,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-064,M-051,兴趣探索,child tile06 陪伴周刊,E-DYCD-03,F-M051-09,visible_category_only,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-065,M-051,人文通识,child tile06 陪伴周刊,E-DYCD-03,F-M051-09,visible_category_only,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-066,M-051,空中课堂,child tile06 陪伴周刊,E-DYCD-03,F-M051-09,visible_category_only,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-067,M-051,家庭生活,child tile06 陪伴周刊,E-DYCD-03,F-M051-09,visible_category_only,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-068,M-051,网络素养,child tile06 陪伴周刊,E-DYCD-03,F-M051-09,visible_category_only,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-069,M-051,正反馈指导,adult guide section/tool,E-DYCD-04,,section_parent,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-070,M-051,负反馈指导,adult guide section/tool,E-DYCD-04,,section_parent,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-071,M-051,使用管理助手,adult guide section/tool,E-DYCD-04,,section_parent,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-072,M-051,AI抖音求真,adult guide section/tool,E-DYCD-04,,section_parent,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-073,M-051,官方信息验证助手,adult guide section/tool,E-DYCD-04,,section_parent,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-074,M-051,看完/点赞等推荐指导非效果证据,adult tiles01–03,E-DYCD-04,F-M051-01,static_guide_control,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-075,M-051,评论输入示意,adult tiles01–03,E-DYCD-04,F-M051-01,static_guide_control,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-076,M-051,收藏星标,adult tiles01–03,E-DYCD-04,F-M051-01,static_guide_control,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-077,M-051,新建收藏夹名称/公开/取消/确认,adult tiles01–03,E-DYCD-04,F-M051-01,static_guide_control,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-078,M-051,搜索用户/关注,adult tiles01–03,E-DYCD-04,F-M051-01,static_guide_control,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-079,M-051,关键词搜索及结果分类,adult tiles01–03,E-DYCD-04,F-M051-01,static_guide_control,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-080,M-051,滑走负信号,adult tiles03–04,E-DYCD-04,F-M051-02,static_guide_control,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-081,M-051,长按不感兴趣,adult tiles03–04,E-DYCD-04,F-M051-02,static_guide_control,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-082,M-051,长按举报入口,adult tiles03–04,E-DYCD-04,F-M051-02,static_guide_control,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-083,M-051,长按倍速控件,adult tiles03–04,E-DYCD-04,F-M051-02,static_guide_control,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-084,M-051,长按清屏入口,adult tiles03–04,E-DYCD-04,F-M051-02,static_guide_control,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-085,M-051,长按稍后再看入口,adult tiles03–04,E-DYCD-04,F-M051-02,static_guide_control,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-086,M-051,主页更多/拉黑,adult tile04,E-DYCD-04,F-M051-10,static_guide_control,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-087,M-051,助手入口,adult tile05,E-DYCD-04,F-M051-03,static_guide_control,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-088,M-051,探索更多确认/取消,adult tile05,E-DYCD-04,F-M051-03,static_guide_control,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-089,M-051,类别减少/默认/增加,adult tile05,E-DYCD-04,F-M051-03,static_guide_control,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-090,M-051,关键词填写,adult tile05,E-DYCD-04,F-M051-03,static_guide_control,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-091,M-051,永久/短期屏蔽/提交,adult tile05,E-DYCD-04,F-M051-03,static_guide_control,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-092,M-051,视频求真链接,adult tile05,E-DYCD-04,F-M051-11,static_guide_control,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-093,M-051,搜索事件词求真卡,adult tile05,E-DYCD-04,F-M051-11,static_guide_control,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-094,M-051,核查结果/事件脉络示意,adult tile05,E-DYCD-04,F-M051-11,static_guide_control,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-095,M-051,搜索官方客服/立即咨询/验证助手,adult tiles05–06,E-DYCD-04,,static_guide_control,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-096,M-051,短信/电话/网址/邮箱/账号/活动,adult tiles05–06,E-DYCD-04,,static_guide_control,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-097,M-051,动态口令/失效记录,adult tiles05–06,E-DYCD-04,,static_guide_control,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-098,M-051,助手内容管理/时间管理标签,15710 op15,E-DYCD-01,F-M051-03,static_guide_control,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-099,M-051,近期类别色环,15710 op15,E-DYCD-01,F-M051-03,static_guide_control,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-100,M-051,恢复默认按钮,15710 op15,E-DYCD-01,F-M051-03,static_guide_control,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-101,M-051,类别选择/X/去调节,15710 op15,E-DYCD-01,F-M051-03,static_guide_control,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-102,M-051,观看历史侧栏入口,3111768381106164 op7,E-DYCD-02,F-M051-01,entry_only,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-103,M-051,离线缓存侧栏入口,3111768381106164 op7,E-DYCD-02,F-M051-01,entry_only,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-104,M-051,稍后再看侧栏入口,3111768381106164 op7,E-DYCD-02,F-M051-01,entry_only,仅图文；结果、取消和恢复待核,2026-10-27
+DYCD-105,M-051,探索风格宣传插画,15710 op4,E-DOUY-03,,excluded_illustration,已看，非真实界面；不补操作,2026-10-27

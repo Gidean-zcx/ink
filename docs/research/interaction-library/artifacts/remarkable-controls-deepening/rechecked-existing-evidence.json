@@ -1,0 +1,67 @@
+[
+  {
+    "evidence_id": "E-RMK-02",
+    "checked_on": "2026-10-27",
+    "key": "Release-notes-overview",
+    "url": "https://support.remarkable.com/articles/Knowledge/Release-notes-overview",
+    "final_url": "https://support.remarkable.com/articles/Knowledge/Release-notes-overview",
+    "status": 200,
+    "body_chars": 19841,
+    "richtext_blocks": 2,
+    "published_raw": "23.10.2026, 07:36",
+    "raw_work_path": "work/remarkable-controls-deepening/Release-notes-overview.html",
+    "raw_sha256": "9c9880532766a27b125604493d0afe01fd7110604e2a4e4eca83915684c97300"
+  },
+  {
+    "evidence_id": "E-RMK-03",
+    "checked_on": "2026-10-27",
+    "key": "Pair-your-reMarkable-with-the-cloud",
+    "url": "https://support.remarkable.com/articles/Knowledge/Pair-your-reMarkable-with-the-cloud",
+    "final_url": "https://support.remarkable.com/articles/Knowledge/Pair-your-reMarkable-with-the-cloud",
+    "status": 200,
+    "body_chars": 3330,
+    "richtext_blocks": 2,
+    "published_raw": "21.01.2026, 17:13",
+    "raw_work_path": "work/remarkable-controls-deepening/Pair-your-reMarkable-with-the-cloud.html",
+    "raw_sha256": "e20fb8f082cf46a1264ff8419f0501cf49d728da6961c4d03ce6897f413e7815"
+  },
+  {
+    "evidence_id": "E-RMK-11",
+    "checked_on": "2026-10-27",
+    "key": "Convert-handwritten-notes-into-text",
+    "url": "https://support.remarkable.com/articles/Knowledge/Convert-handwritten-notes-into-text",
+    "final_url": "https://support.remarkable.com/articles/Knowledge/Convert-handwritten-notes-into-text",
+    "status": 200,
+    "body_chars": 2929,
+    "richtext_blocks": 2,
+    "published_raw": "04.09.2026, 09:33",
+    "raw_work_path": "work/remarkable-controls-deepening/Convert-handwritten-notes-into-text.html",
+    "raw_sha256": "b65decc5db4777220aa3fe0590a246ae4ef793c6e1ffddac6438df8e4b72e054"
+  },
+  {
+    "evidence_id": "E-RMK-12",
+    "checked_on": "2026-10-27",
+    "key": "Tags",
+    "url": "https://support.remarkable.com/articles/Knowledge/Tags",
+    "final_url": "https://support.remarkable.com/articles/Knowledge/Tags",
+    "status": 200,
+    "body_chars": 2207,
+    "richtext_blocks": 2,
+    "published_raw": "04.09.2026, 09:20",
+    "raw_work_path": "work/remarkable-controls-deepening/Tags.html",
+    "raw_sha256": "ca018b3a0ffeba1eaa2898256566df9132cdc37867f6c9c8f72c034480fa03bc"
+  },
+  {
+    "evidence_id": "E-RMK-18",
+    "checked_on": "2026-10-27",
+    "key": "Create-a-link",
+    "url": "https://support.remarkable.com/articles/Knowledge/Create-a-link",
+    "final_url": "https://support.remarkable.com/articles/Knowledge/Create-a-link",
+    "status": 200,
+    "body_chars": 1425,
+    "richtext_blocks": 2,
+    "published_raw": "06.05.2026, 18:12",
+    "raw_work_path": "work/remarkable-controls-deepening/Create-a-link.html",
+    "raw_sha256": "89a0e112e1454e7ea4003f204ac2bbdd674c279e2109d96ab14c0102a5356c1f"
+  }
+]

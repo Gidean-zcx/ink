@@ -1,0 +1,49 @@
+Sleep Light with Timer & Sunrise Alarm guide – tonies® Support (https://support.tonies.com/hc/en-gb/articles/29255589102866-Sleep-Light-with-Timer-Sunrise-Alarm-guide)
+citeturn775search5 [wordlim: 200] Crawled: last week; Tap the button “Sleep Timer with Light” (small stopwatch icon) and scroll down to “Set time & Sunrise Alarm”. ... Set the time and activate “Sunrise Alarm”.
+
+# Sleep Light with Timer & Sunrise Alarm guide
+
+The Sleep Light with Timer helps little ones drift off with a soft, adjustable glow and a customisable timer. The Sunrise Alarm wakes them up with energising light and sound, staying gently lit until the alarm sounds. 
+
+Please note: As the Sunrise Alarm requires connection to the charger it is only available in 3+ mode.
+Let's take a look at some of the top troubleshooting tips for both features.
+
+How to turn on the sleep timer?
+
+Via the tonies® app:
+
+  1. Locate your Toniebox 2 under "Mine" in the tonies® app
+  2. With your Toniebox 2 online, go to “Sleep Timer with Light” (small stopwatch icon).
+  3. Select how long the Toniebox 2 continues playing before it switches off (5 minutes - 1 hour).
+  4. Once chosen, the button shows the remaining time and the light ring switches to an orange light.
+  5. You can restart the timer, stop it, or switch off the Toniebox 2 immediately.
+
+Via the ears:
+
+  1. Squeeze both ears for 5 seconds, the light ring will slowly turn orange. Default timer out of the box is 30 mins, editable via app. The Toniebox 2 will remember your last sleep timer setting configuration and use this next time you squeeze both ears for 5 seconds.
+  2. To turn off, squeeze both ears for 5 seconds until the orange light disappears, you hear a ding, and the light ring is green again.
+
+You can set this every night before bed as part of your routine via the app with your sleepy little one.
+
+How do I turn on the Sunrise Alarm?
+
+  1. Locate your Toniebox 2 under "Mine" in the tonies® app
+  2. With your Toniebox 2 online, go to “Sleep Timer with Light” (small stopwatch icon).
+  3. Tap the button “Sleep Timer with Light” (small stopwatch icon) and scroll down to “Set time & Sunrise Alarm”.
+  4. Set the time and activate “Sunrise Alarm”. Adjust the volume, add a tone (tap on “Tone” to open the selection), and include a sunrise light if you want to.
+
+Important note: 
+
+  * To make sure the Sunrise Alarm works, don’t leave a Tonie playing on top of the Toniebox 2 as then the alarm will not sound.
+  * To make sure that the alarm works as intended, the Toniebox 2 must have enough charge to last until the alarm sounds. If the battery runs out, the Sunrise Alarm won’t start.
+
+How do I adjust the Bedtime & Sleep Light preferences? (Volume and Light)
+
+Volume and brightness of the orange Sleep Light are adjustable during bedtime mode. These settings become active as soon as the Sleep Timer is running or you have activated the Sunrise Alarm
+
+  1. Tap on “Settings” (top right-hand corner) and scroll to “Bedtime & Sleep Light”.
+  2. Tap on “Preferences” and change the settings as desired.
+
+How long will the Sleep Light with Timer stay on for?
+
+The Sleep Light will stay on through out the night or until the timer ends. If you do not want this, you can dim or disable the light in the tonies® app.

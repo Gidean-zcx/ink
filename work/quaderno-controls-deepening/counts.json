@@ -1,0 +1,18 @@
+{
+  "new_evidence": 9,
+  "new_flows": 8,
+  "old_flow_updates": 5,
+  "old_flow_changed_fields": 15,
+  "old_evidence_captures": 3,
+  "inventory_rows": 275,
+  "inventory_domains": {
+    "PDF目录L1": 6,
+    "PDF目录L2": 55,
+    "PDF目录L3": 151,
+    "本体设置条目": 44,
+    "笔侧键/尾键可分配选项": 9,
+    "Mobile目录分类": 3,
+    "Mobile帮助文章": 7
+  },
+  "read_body_pages": 76
+}

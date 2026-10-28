@@ -1,0 +1,13 @@
+How to Share Your Wi-Fi Password?
+Modified on: Sat, 3 Oct, 2026 at 8:34 AM
+Open Control Center and tap Settings.
+Navigate to Network & Internet > Wi-Fi.
+Tap the Wi-Fi network you're currently using.
+Select Share.
+Confirm your identity with your fingerprint or PIN.
+The Wi-Fi QR code and password will appear. Scan the QR code with the other device or enter the password manually.
+Was this article helpful?
+No
+Yes
+That’s Great!
+Thank you for your feedback

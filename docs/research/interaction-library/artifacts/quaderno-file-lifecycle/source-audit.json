@@ -1,0 +1,160 @@
+{
+  "checked_on": "2026-10-27",
+  "evidence_ids": [
+    "E-QGNT-01",
+    "E-QUA-01"
+  ],
+  "captures": [
+    {
+      "key": "gen2-transfers",
+      "pdf": "work/research/extension-manuals/quaderno-gen2.pdf",
+      "pdf_sha256": "7bedbd0094f1b4471c7fe2049dd9d379bb09ac4485765d1aafb267dfc474d870",
+      "pages_extracted": [
+        85,
+        86,
+        87,
+        88,
+        89,
+        90,
+        91,
+        92
+      ],
+      "text": "work/research/batch51-integration/gen2-transfers.txt",
+      "text_sha256": "dcf96cf678a56656ae2261ebb1f95b1e8c670925b8b98b5f3fcf5643069390f7",
+      "reading_status": "root_read_full_extracted_page_text_no_image_or_ui_operation"
+    },
+    {
+      "key": "gen2-delete-failures",
+      "pdf": "work/research/extension-manuals/quaderno-gen2.pdf",
+      "pdf_sha256": "7bedbd0094f1b4471c7fe2049dd9d379bb09ac4485765d1aafb267dfc474d870",
+      "pages_extracted": [
+        35,
+        36,
+        37,
+        38,
+        39,
+        110,
+        111,
+        112,
+        113
+      ],
+      "text": "work/research/batch51-integration/gen2-delete-failures.txt",
+      "text_sha256": "1446317198dcca45b7341dee6273c308bab10241c3f3d14d5e8aa0752e89a520",
+      "reading_status": "root_read_full_extracted_page_text_no_image_or_ui_operation"
+    },
+    {
+      "key": "gen3c-connection",
+      "pdf": "work/research/extension-manuals/quaderno-gen3c.pdf",
+      "pdf_sha256": "d7248dfc9cd602139f4a5dddf03c33809b02b00d9f13601cf73f17ad1b8ac5f4",
+      "pages_extracted": [
+        89,
+        90,
+        91,
+        92,
+        93,
+        94
+      ],
+      "text": "work/research/batch51-integration/gen3c-connection.txt",
+      "text_sha256": "f48f20a41c99624b84f471305585236e6802acd1115d110eb43d4a4366c3b88d",
+      "reading_status": "root_read_full_extracted_page_text_no_image_or_ui_operation"
+    },
+    {
+      "key": "gen3c-file-management",
+      "pdf": "work/research/extension-manuals/quaderno-gen3c.pdf",
+      "pdf_sha256": "d7248dfc9cd602139f4a5dddf03c33809b02b00d9f13601cf73f17ad1b8ac5f4",
+      "pages_extracted": [
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        103,
+        104,
+        105
+      ],
+      "text": "work/research/batch51-integration/gen3c-file-management.txt",
+      "text_sha256": "3724292cb819e80d11c63fe91637f033b3f76a3a96fa9658dc419b9051a2bfd6",
+      "reading_status": "root_read_full_extracted_page_text_no_image_or_ui_operation"
+    }
+  ],
+  "gen2_pages_this_batch": [
+    35,
+    36,
+    37,
+    38,
+    39,
+    85,
+    86,
+    87,
+    88,
+    89,
+    90,
+    91,
+    92,
+    110,
+    111,
+    112,
+    113
+  ],
+  "gen3c_pages_this_batch": [
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    89,
+    90,
+    91,
+    92,
+    93,
+    94,
+    103,
+    104,
+    105
+  ],
+  "gen2_explicit_full_body_pages_in_batches50_51": [
+    1,
+    27,
+    35,
+    36,
+    37,
+    38,
+    39,
+    51,
+    52,
+    53,
+    54,
+    55,
+    56,
+    57,
+    85,
+    86,
+    87,
+    88,
+    89,
+    90,
+    91,
+    92,
+    110,
+    111,
+    112,
+    113,
+    124
+  ],
+  "gen2_identity_only_pages": [
+    120
+  ],
+  "historical_scope": "Gen.3C prior76-page body_read_for_this_batch is not a global union; old p68/69 visual evidence remains. No worldwide unread-page count inferred.",
+  "hands_on": false,
+  "visual_observed": false,
+  "source_identity": "Gen.2 B6FK-5131-08 Z0/Z0-02 and Gen.3C B5FL-2101-02 Z0/Z0-02; issued2025-04; installed builds unknown",
+  "network_access": "none for PDFs; existing files reused"
+}

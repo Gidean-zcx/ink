@@ -1,0 +1,313 @@
+Empty search results
+No results were found for the provided queries--------------------------------------------------------------------------------
+Using grading options (US) – Quizlet Help Center (https://help.quizlet.com/hc/en-us/articles/360048313652-Using-grading-options-US)
+citeturn768view0 [wordlim: 200] Crawled: today; Content type: text/html; Source: open({"ref_id":"https://help.quizlet.com/hc/en-us/articles/360048313652-Using-grading-options-US","lineno":null}); Total lines: 198
+L0: 【0†iframe†www.googletagmanager.com】
+L1: 
+L2: 【1†Help center†quizlet.zendesk.com】
+L3: 
+L4: Topics
+L5: 
+L6: Popular Articles
+L7: 
+L8: 【2†Resending a confirmation message】 【3†Changing your username】 【4†Changing your password】 【5†Finding flashcard sets】 【6†Finding your teacher's class】 【7†Browser and device compatibility】
+L9: 
+L10: [Input][Input: Search]
+L11: 
+L12: 【8†Image】   【8†Username】
+L13: # Using grading options (US)
+L14: 
+L15: 【8†IOS】 【8†Web】 【8†Android】
+L16: 
+L17: Grading options let you choose how strictly Quizlet checks your answers so you can focus on understanding concepts at the level that works best for you.
+L18: 
+L19: * * *
+L20: 
+L21: Sections in this article include:
+L22: 
+L23:   * 【9†Grading options in Learn】
+L24:   * 【10†Grading options in Test】
+L25: 
+L26: * * *
+L27: ## Grading options in Learn
+L28: 
+L29: When you’re studying on the website, grading options are available in sets that have three or more cards and with terms and definitions in English, French, German, or Spanish in Learn.
+L30: 
+L31: Relaxed
+L32: 
+L33:   * The general meaning of your answer is accepted as correct. Synonyms, rephrasing, and typos are also accepted.
+L34:   * This level is selected by default if the set meets the grading options requirements and both sides are in your default language.
+L35: 
+L36: Moderate
+L37:   * An exact match is required, but minor misspellings such as accent mark errors or missing letters are accepted.
+L38:   * Available when both sides of the set are in the same language and the language is not one that is graded strictly (Chinese, Japanese, math, chemistry, Akkadian, or photo-only sets).
+L39:   * This level is selected by default if Relaxed isn’t available and the set doesn’t default to Strict.
+L40: 
+L41: Strict
+L42:   * An exact match is required. Only small stylistic mistakes like case or punctuation differences are accepted.
+L43:   * Always available.
+L44:   * This level is selected by default if the set has different languages on each side (for example, language learning sets).
+L45: 
+L46: To choose a Grading option in Learn
+L47: 
+L48:   1. 【11†Log in†quizlet.com】 to your account.
+L49:   2. Open a set.
+L50:   3. Select Learn.
+L51:   4. Select Options.
+L52:   5. Select Grading options.
+L53:   6. Choose a grading option.
+L54:   7. Select Save.
+L55: ## Grading options in Test
+L56: 
+L57: If a set includes terms that have multiple definitions or answers, you can change your grading settings to require one or all answers in Test.
+L58: 
+L59: To choose a Grading option in Test
+L60: 
+L61:   1. 【11†Log in†quizlet.com】 to your account.
+L62:   2. Open a set.
+L63:   3. Select Test.
+L64:   4. Select Options.
+L65:   5. Select Grading options.
+L66:   6. Check Require 1 answer only.
+L67: This will mark answers correct if they contain at least one of the correct options included in a definition.
+L68: Multiple correct answers in a definition must be separated by a comma, slash, or semicolon for single-answer grading to work.
+L69: ## Settings and options
+L70: 
+L71:   * Single-answer grading is available for Test.
+L72:   * Once you turn on single-answer grading for a set, that preference is also set for all other activities. To disable it, click Options and then uncheck Require 1 answer only.
+L73: 
+L74: Grading options let you choose how strictly Quizlet checks your answers so you can focus on understanding concepts at the level that works best for you.
+L75: 
+L76: * * *
+L77: 
+L78: Sections in this article include:
+L79:   * 【12†Grading options in Learn】
+L80:   * 【13†Grading options in Test】
+L81: 
+L82: * * *
+L83: ## Grading options in Learn
+L84: 
+L85: When you’re studying on the iOS app, grading options are available in sets that have three or more cards and with terms and definitions in English, French, German, or Spanish in Learn.
+L86: 
+L87: Relaxed
+L88: 
+L89:   * The general meaning of your answer is accepted as correct. Synonyms, rephrasing, and typos are also accepted.
+L90:   * This level is selected by default if the set meets the grading options requirements and both sides are in your default language.
+L91: 
+L92: Moderate
+L93:   * An exact match is required, but minor misspellings such as accent mark errors or missing letters are accepted.
+L94:   * Available when both sides of the set are in the same language and the language is not one that is graded strictly (Chinese, Japanese, math, chemistry, Akkadian, or photo-only sets).
+L95:   * This level is selected by default if Relaxed isn’t available and the set doesn’t default to Strict.
+L96: 
+L97: Strict
+L98:   * An exact match is required. Only small stylistic mistakes like case or punctuation differences are accepted.
+L99:   * Always available.
+L100:   * This level is selected by default if the set has different languages on each side (for example, language learning sets).
+L101: 
+L102: To choose a Grading option in Learn
+L103: 
+L104:   1. Open a set.
+L105:   2. Select Learn.
+L106:   3. Select Options.
+L107:   4. Select Grading options.
+L108:   5. Choose a grading option.
+L109:   6. Select Done.
+L110: ## Grading options in Test
+L111: 
+L112: Currently, you can only change your grading options on the website.
+L113: 
+L114: Grading options let you choose how strictly Quizlet checks your answers so you can focus on understanding concepts at the level that works best for you.
+L115: 
+L116: * * *
+L117: 
+L118: Sections in this article include:
+L119: 
+L120:   * 【14†Grading options in Learn】
+L121:   * 【15†Grading options in Test】
+L122: 
+L123: * * *
+L124: ## Grading options in Learn
+L125: 
+L126: When you’re studying on the Android app, grading options are available in sets that have three or more cards and with terms and definitions in English, French, German, or Spanish in Learn.
+L127: 
+L128: Relaxed
+L129: 
+L130:   * The general meaning of your answer is accepted as correct. Synonyms, rephrasing, and typos are also accepted.
+L131:   * This level is selected by default if the set meets the grading options requirements and both sides are in your default language.
+L132: 
+L133: Moderate
+L134:   * An exact match is required, but minor misspellings such as accent mark errors or missing letters are accepted.
+L135:   * Available when both sides of the set are in the same language and the language is not one that is graded strictly (Chinese, Japanese, math, chemistry, Akkadian, or photo-only sets).
+L136:   * This level is selected by default if Relaxed isn’t available and the set doesn’t default to Strict.
+L137: 
+L138: Strict
+L139:   * An exact match is required. Only small stylistic mistakes like case or punctuation differences are accepted.
+L140:   * Always available.
+L141:   * This level is selected by default if the set has different languages on each side (for example, language learning sets).
+L142: 
+L143: To choose a Grading option in Learn
+L144: 
+L145:   1. Open a set.
+L146:   2. Select Learn.
+L147:   3. Select Options.
+L148:   4. Select Grading options.
+L149:   5. Choose a grading option.
+L150:   6. Select Done.
+L151: ## Grading options in Test
+L152: 
+L153: Currently, you can only change your grading options on the website.
+L154: 
+L155: ### Related Articles
+L156: 
+L157:   * 【16†Studying with Podcasts】
+L158:   * 【17†Studying with Spaced Repetition】
+L159:   * 【18†Using Study with friends】
+L160:   * 【19†Playing Charms】
+L161:   * 【20†Studying with Audio Notes】
+L162:   * 【21†Create flashcard sets directly in ChatGPT】
+L163:   * 【22†Studying with Ask Quizlet】
+L164:   * 【23†Using Quizlet with Superhuman】
+L165:   * 【24†Studying with Answer Streaks】
+L166:   * 【25†Playing a game of Blocks】
+L167:   * 【26†See more】
+L168: ### Can't find what you're looking for?
+L169: 
+L170: 【27†Ask a question】
+L171: 
+L172: Was this article helpful?
+L173: 
+L174: [Button: Yes] [Button: No]
+L175: 
+L176: ##### About us
+L177: 
+L178: 【28†About Quizlet†quizlet.com】 【29†How Quizlet works†quizlet.com】 【30†Careers†quizlet.com】 【31†Advertise with us†quizlet.com】 【32†Get the app†quizlet.com】
+L179: ##### For students
+L180: 
+L181: 【33†Flashcards†quizlet.com】 【34†Test†quizlet.com】 【35†Learn†quizlet.com】 【36†Solutions†quizlet.com】 【37†Modern Learning Lab†quizlet.com】 【38†Quizlet Plus†quizlet.com】 【39†Study Guides†quizlet.com】 【40†Pomodoro timer†quizlet.com】
+L182: 
+L183: ##### For Teachers
+L184: 
+L185: 【41†Live†quizlet.com】 【42†Blog†quizlet.com】 【43†Be the Change†quizlet.com】 【44†Quizlet Plus for teachers†quizlet.com】
+L186: ##### Resources
+L187: 
+L188: 【45†Help center†quizlet.com】 【46†Sign up†quizlet.com】 【47†Honor code†quizlet.com】 【48†Community guidelines†quizlet.com】 【49†Accessibility statement†quizlet.com】 【50†Privacy†quizlet.com】 【51†Your Privacy/Cookies Choices†quizlet.com】 【52†Terms†quizlet.com】 【53†Ad and Cookie Policy†quizlet.com】 【54†Interest-Based Advertising†quizlet.com】 【55†Quizlet for Schools†quizlet.com】 【56†Parents†quizlet.com】
+L189: 
+L190: ##### Language
+L191: 
+L192: English (United States)
+L193: 
+L194: 【57†Image】 【58†Get the app†get.quizlet.com】
+L195: ##### Get the app
+L196: 
+L197: © Quizlet Inc.
+--------------------------------------------------------------------------------
+Editing draft sets – Quizlet Help Center (https://help.quizlet.com/hc/en-us/articles/360029768912-Editing-draft-sets)
+citeturn768view1 [wordlim: 200] Crawled: today; Content type: text/html; Source: open({"ref_id":"https://help.quizlet.com/hc/en-us/articles/360029768912-Editing-draft-sets","lineno":null}); Total lines: 107
+L0: 【0†iframe†www.googletagmanager.com】
+L1: 
+L2: 【1†Help center†quizlet.zendesk.com】
+L3: 
+L4: Topics
+L5: 
+L6: Popular Articles
+L7: 
+L8: 【2†Resending a confirmation message】 【3†Changing your username】 【4†Changing your password】 【5†Finding flashcard sets】 【6†Finding your teacher's class】 【7†Browser and device compatibility】
+L9: 
+L10: [Input][Input: Search]
+L11: 
+L12: 【8†Image】   【8†Username】
+L13: # Editing draft sets
+L14: 
+L15: 【8†IOS】 【8†Web】 【8†Android】
+L16: 
+L17: Quizlet automatically saves your work as you create or edit a set. Unpublished sets are saved as drafts that only you can see.
+L18: 
+L19: To open and edit a draft set
+L20:   1. 【9†Log in†quizlet.com】 to your account.
+L21:   2. Select Your library.
+L22:   3. Select Flashcard sets.
+L23:   4. Select a draft set in the In Progress section.
+L24:   5. You can keep working on the set, discard it by clicking the pop-up window in the bottom left, or publish it by selecting Create.
+L25: If you discard a draft, it can't be restored :(
+L26: Published sets are available on any of your devices, but drafts don't sync across the Quizlet website and the mobile apps. That means that if you made a draft set on the website, you won't be able to see it in the app and vice versa. It's best to publish your sets first so you can edit them anywhere.
+L27: 
+L28: Settings and options
+L29: 
+L30: Subscribers to 【10†Quizlet Plus†quizlet.com】 and 【11†Quizlet Plus for teachers†quizlet.com】 subscribers can highlight, bold, italicize, or underline text in sets.
+L31: 
+L32: Tips
+L33:   * If you're going to work on a set for a long time, it's best to save it every now and then.
+L34:   * If you lose your internet connection and Quizlet can't save your work, you'll see a warning icon next to any terms that haven't been saved. If this happens, keep the page open so Quizlet can save your terms once you reconnect.
+L35:   * You can see how many terms have been successfully autosaved at the top of the page.
+L36:   1. Select Your Library.
+L37:   2. Go to Flashcard sets
+L38:   3. Select a draft set in the In Progress section.
+L39:   4. You can keep working on the set or publish it by selecting Done.
+L40: 
+L41: Published sets are available on any of your devices, but drafts don't sync across the Quizlet website and the mobile apps. That means that if you made a draft set on the website, you won't be able to see it in the app and vice versa. It's best to publish your sets first so you can edit them anywhere.
+L42: If you've created a draft set on the iOS or Android app and then log out of your account before publishing it, your drafts will be discarded. Discarded drafts can't be restored :(
+L43: 
+L44: Settings and options
+L45: 
+L46: Subscribers to 【10†Quizlet Plus†quizlet.com】 and 【11†Quizlet Plus for teachers†quizlet.com】 subscribers can highlight, bold, italicize, or underline text in sets.
+L47: 
+L48: Tips
+L49:   * If you're going to work on a set for a long time, it's best to save it every now and then.
+L50:   * If you lose your internet connection and Quizlet can't save your work, you'll see a warning icon next to any terms that haven't been saved. If this happens, keep the page open so Quizlet can save your terms once you reconnect.
+L51:   * You can see how many terms have been successfully autosaved at the top of the page.
+L52:   1. Select Your Library.
+L53:   2. Go to Flashcard sets
+L54:   3. Select a draft set in the In Progress section.
+L55:   4. You can keep working on the set or publish it by selecting Done.
+L56: 
+L57: Published sets are available on any of your devices, but drafts don't sync across the Quizlet website and the mobile apps. That means that if you made a draft set on the website, you won't be able to see it in the app and vice versa. It's best to publish your sets first so you can edit them anywhere.
+L58: If you've created a draft set on the iOS or Android app and then log out of your account before publishing it, your drafts will be discarded. Discarded drafts can't be restored :(
+L59: 
+L60: Tips
+L61:   * If you're going to work on a set for a long time, it's best to save it every now and then.
+L62:   * If you lose your internet connection and Quizlet can't save your work, you'll see a warning icon next to any terms that haven't been saved. If this happens, keep the page open so Quizlet can save your terms once you reconnect.
+L63:   * You can see how many terms have been successfully autosaved at the top of the page.
+L64: ### Related Articles
+L65: 
+L66:   * 【12†Create flashcard sets directly in Claude】
+L67:   * 【13†Studying with Study Groups】
+L68:   * 【14†Creating study sets with Smart Assist】
+L69:   * 【15†Becoming a top creator on Quizlet】
+L70:   * 【16†Studying with Study Guides】
+L71:   * 【17†What are flashcard sets?】
+L72:   * 【18†Creating flashcard sets】
+L73:   * 【19†Adding images to sets from the free gallery】
+L74:   * 【20†Adding your own images to sets】
+L75:   * 【21†Recording custom audio】
+L76:   * 【22†See more】
+L77: ### Can't find what you're looking for?
+L78: 
+L79: 【23†Ask a question】
+L80: 
+L81: Was this article helpful?
+L82: 
+L83: [Button: Yes] [Button: No]
+L84: 
+L85: ##### About us
+L86: 
+L87: 【24†About Quizlet†quizlet.com】 【25†How Quizlet works†quizlet.com】 【26†Careers†quizlet.com】 【27†Advertise with us†quizlet.com】 【28†Get the app†quizlet.com】
+L88: ##### For students
+L89: 
+L90: 【29†Flashcards†quizlet.com】 【30†Test†quizlet.com】 【31†Learn†quizlet.com】 【32†Solutions†quizlet.com】 【33†Modern Learning Lab†quizlet.com】 【34†Quizlet Plus†quizlet.com】 【35†Study Guides†quizlet.com】 【36†Pomodoro timer†quizlet.com】
+L91: 
+L92: ##### For Teachers
+L93: 
+L94: 【37†Live†quizlet.com】 【38†Blog†quizlet.com】 【39†Be the Change†quizlet.com】 【40†Quizlet Plus for teachers†quizlet.com】
+L95: ##### Resources
+L96: 
+L97: 【41†Help center†quizlet.com】 【42†Sign up†quizlet.com】 【43†Honor code†quizlet.com】 【44†Community guidelines†quizlet.com】 【45†Accessibility statement†quizlet.com】 【46†Privacy†quizlet.com】 【47†Your Privacy/Cookies Choices†quizlet.com】 【48†Terms†quizlet.com】 【49†Ad and Cookie Policy†quizlet.com】 【50†Interest-Based Advertising†quizlet.com】 【51†Quizlet for Schools†quizlet.com】 【52†Parents†quizlet.com】
+L98: 
+L99: ##### Language
+L100: 
+L101: English (United States)
+L102: 
+L103: 【53†Image】 【54†Get the app†get.quizlet.com】
+L104: ##### Get the app
+L105: 
+L106: © Quizlet Inc.
+

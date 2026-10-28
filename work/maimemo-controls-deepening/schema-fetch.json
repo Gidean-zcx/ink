@@ -1,0 +1,9 @@
+{
+  "url": "https://open.maimemo.com/api_bundle.yaml",
+  "http_status": 200,
+  "discovered_via": "12-api-site.html elements-api apiDescriptionUrl",
+  "method": "one read-only request for public schema; no API invocation",
+  "raw_work_path": "work/maimemo-controls-deepening/16-api_bundle.yaml",
+  "raw_sha256": "8612a857ee586d588cf1a826fa71721c6e10ca1c1a6593a8873e075fed58f7bc",
+  "bytes": 104606
+}

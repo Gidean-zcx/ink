@@ -1,0 +1,54 @@
+{
+  "date": "2026-10-27",
+  "requirements_unchanged": true,
+  "requirements_sha256": "e141320e2714df805c009fe64dd92d17decd6429d5728f8ce42d6d868b775087",
+  "new_evidence": 7,
+  "new_flows": 3,
+  "changed_old_flows": [
+    "F-M017-01",
+    "F-M017-02",
+    "F-M017-04",
+    "F-M017-07"
+  ],
+  "reused_source": "E-MMDVC-03 Android App changelog; old product M-023 preserved; related M-017 added",
+  "khan": {
+    "section_gets": 2,
+    "http_statuses": [
+      403,
+      403
+    ],
+    "target_article_gets": 0,
+    "target_body_unread": 10
+  },
+  "root_checks": [
+    "Re-read controller/harmony/Web/reminder main text",
+    "Re-read relevant terms §7 and Web/Android date entries",
+    "Re-viewed harmony04/05/09; all9 viewed earlier in this batch",
+    "Locally checked both Khan headers HTTP403 and challenge title",
+    "Source URL dedupe assertion against prior master succeeded",
+    "Corrected stale broad answer-display gap in F01 before final merge"
+  ],
+  "new_product_operations": 0,
+  "new_visual_sources": 1,
+  "new_static_images": 9,
+  "reference_points": 26,
+  "limitations": [
+    "No actual native App, controller, watch or E-Ink hardware operations",
+    "Feishu PDF viewer shell only; no PDF body/pages",
+    "Terms selected sections, not full legal review",
+    "All65 product groups remain partial"
+  ],
+  "checks": {
+    "merge_batches_exit": 0,
+    "check_docs_exit": 0,
+    "git_diff_check_exit": 0
+  },
+  "formal_changes": {
+    "added": 18,
+    "modified": 20,
+    "deleted": 0
+  },
+  "root_final_set_and_reference_checks": "passed: old IDs retained; exact 3F/7E; 26 RP references/bases/assets valid; 38 frozen files hashes match",
+  "worker_validation_path": "work/research/batch40-integration/validation.md",
+  "worker_validation_sha256": "c6e9ecd041068287f9a801c41f1af920ab4f0c958e77bfd4d1d70af20b867bd9"
+}

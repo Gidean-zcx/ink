@@ -1,0 +1,90 @@
+[
+  {
+    "file": "sony-dpt.pdf",
+    "url": "https://helpguide.sony.net/dpt/rp1/v1/en/print.pdf",
+    "final_url": "https://helpguide.sony.net/dpt/rp1/v1/en/print.pdf",
+    "status": 200,
+    "bytes": 1992320,
+    "sha256": "41a4a31fef1f37b6868f8d151d4df9a20449b303704008af8faaa046492fef65"
+  },
+  {
+    "file": "quaderno-gen2.pdf",
+    "url": "https://www.fmworld.net/digital-paper/support/download/pdf/B6FK5131.pdf",
+    "final_url": "https://www.fmworld.net/digital-paper/support/download/pdf/B6FK5131.pdf",
+    "status": 200,
+    "bytes": 12153098,
+    "sha256": "7bedbd0094f1b4471c7fe2049dd9d379bb09ac4485765d1aafb267dfc474d870"
+  },
+  {
+    "file": "quaderno-gen3c.pdf",
+    "url": "https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf",
+    "final_url": "https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf",
+    "status": 200,
+    "bytes": 12391496,
+    "sha256": "d7248dfc9cd602139f4a5dddf03c33809b02b00d9f13601cf73f17ad1b8ac5f4"
+  },
+  {
+    "file": "huawei-15881454.html",
+    "url": "https://consumer.huawei.com/cn/support/content/zh-cn15881454/",
+    "final_url": "https://consumer.huawei.com/cn/support/content/zh-cn15881454/",
+    "status": 200,
+    "bytes": 145232,
+    "sha256": "804ffa2ed9395ab2f9dd3eca8abfbd1b5c06f50a38a98da2d0403f2bb2d35b1d"
+  },
+  {
+    "file": "huawei-15939571.html",
+    "url": "https://consumer.huawei.com/cn/support/content/zh-cn15939571/",
+    "final_url": "https://consumer.huawei.com/cn/support/content/zh-cn15939571/",
+    "status": 200,
+    "bytes": 159818,
+    "sha256": "39e7af2a2b8d1c0593ca18b682cdab7d701c99516afeaa5fd10a14caa540068a"
+  },
+  {
+    "file": "huawei-15879064.html",
+    "url": "https://consumer.huawei.com/cn/support/content/zh-cn15879064/",
+    "final_url": "https://consumer.huawei.com/cn/support/content/zh-cn15879064/",
+    "status": 200,
+    "bytes": 141322,
+    "sha256": "b29d7cb385135aea149af99d631986928a5818dcc77ff7f0bf19387aafcd7f6a"
+  },
+  {
+    "file": "huawei-15898323.html",
+    "url": "https://consumer.huawei.com/cn/support/content/zh-cn15898323/",
+    "final_url": "https://consumer.huawei.com/cn/support/content/zh-cn15898323/",
+    "status": 200,
+    "bytes": 140178,
+    "sha256": "06382a780fb8ed1bb454fe005f823586b250e3350edbc29597250f658b70af10"
+  },
+  {
+    "file": "huawei-15898388.html",
+    "url": "https://consumer.huawei.com/cn/support/content/zh-cn15898388/",
+    "final_url": "https://consumer.huawei.com/cn/support/search/?from=knowledge",
+    "status": 200,
+    "bytes": 149262,
+    "sha256": "53df1311fca59901f80ac4152bc62a9b59f9525eaa2222cb69d0731fe85ff4d4"
+  },
+  {
+    "file": "huawei-15960354.html",
+    "url": "https://consumer.huawei.com/cn/support/content/zh-cn15960354/",
+    "final_url": "https://consumer.huawei.com/cn/support/content/zh-cn15960354/",
+    "status": 200,
+    "bytes": 138686,
+    "sha256": "dc93e05606d5967b1999b52f3a9f731542e483e4c194e88a6fe7d5ff72d03771"
+  },
+  {
+    "file": "huawei-15881450.html",
+    "url": "https://consumer.huawei.com/cn/support/content/zh-cn15881450/",
+    "final_url": "https://consumer.huawei.com/cn/support/content/zh-cn15881450/",
+    "status": 200,
+    "bytes": 142461,
+    "sha256": "a294ab313716089f53e17702a7565d4821f9b33fa2888f7b8ea67a85d8813600"
+  },
+  {
+    "file": "huawei-15881453.html",
+    "url": "https://consumer.huawei.com/cn/support/content/zh-cn15881453/",
+    "final_url": "https://consumer.huawei.com/cn/support/content/zh-cn15881453/",
+    "status": 200,
+    "bytes": 145421,
+    "sha256": "e608ca4cc9d36d0325e8d1576669691a6ad63fb13abdd83acaea3a242799b954"
+  }
+]

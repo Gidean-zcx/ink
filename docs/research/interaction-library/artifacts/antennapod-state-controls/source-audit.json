@@ -1,0 +1,266 @@
+{
+  "checked_on": "2026-10-27",
+  "commit": "175e5ef8fe3e125a5014d70ef0c57cf85661c71b",
+  "source_build": "3.12.3, versionCode 3120395; no installed APK",
+  "new_sources": [
+    {
+      "path": "work/research/batch49-antennapod-state/EpisodeItemListAdapter.java",
+      "repo_path": "app/src/main/java/de/danoeh/antennapod/ui/episodeslist/EpisodeItemListAdapter.java",
+      "url": "https://raw.githubusercontent.com/AntennaPod/AntennaPod/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/app/src/main/java/de/danoeh/antennapod/ui/episodeslist/EpisodeItemListAdapter.java",
+      "source_url": "https://github.com/AntennaPod/AntennaPod/blob/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/app/src/main/java/de/danoeh/antennapod/ui/episodeslist/EpisodeItemListAdapter.java",
+      "final_url": "https://raw.githubusercontent.com/AntennaPod/AntennaPod/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/app/src/main/java/de/danoeh/antennapod/ui/episodeslist/EpisodeItemListAdapter.java",
+      "status": 200,
+      "bytes": 8051,
+      "sha256": "46f8b51cf3f7eb5e84d79335cd0c686f4920928183b72578629cb916a64e59a7",
+      "git_blob_sha": "7ebd031db38088261b3f7d3e20efc0513eccb638",
+      "evidence_id": "E-APST-01",
+      "title": "单集长按菜单与多选",
+      "locator": "80–135;185–230：长按、点击、多选入口及选中顺序"
+    },
+    {
+      "path": "work/research/batch49-antennapod-state/AllEpisodesFragment.java",
+      "repo_path": "app/src/main/java/de/danoeh/antennapod/ui/screen/AllEpisodesFragment.java",
+      "url": "https://raw.githubusercontent.com/AntennaPod/AntennaPod/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/app/src/main/java/de/danoeh/antennapod/ui/screen/AllEpisodesFragment.java",
+      "source_url": "https://github.com/AntennaPod/AntennaPod/blob/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/app/src/main/java/de/danoeh/antennapod/ui/screen/AllEpisodesFragment.java",
+      "final_url": "https://raw.githubusercontent.com/AntennaPod/AntennaPod/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/app/src/main/java/de/danoeh/antennapod/ui/screen/AllEpisodesFragment.java",
+      "status": 200,
+      "bytes": 5993,
+      "sha256": "d0a3239620428b7cc134f2536321446790d28d30d9c3335ea0cdb081f7acf795",
+      "git_blob_sha": "4450c5117025e964b7e8f815061a311870a06b5f",
+      "evidence_id": "E-APST-02",
+      "title": "全部单集筛选与回读",
+      "locator": "31–132：入口、偏好、收藏范围、分页和空结果"
+    },
+    {
+      "path": "work/research/batch49-antennapod-state/FeedItemlistFragment.java",
+      "repo_path": "app/src/main/java/de/danoeh/antennapod/ui/screen/feed/FeedItemlistFragment.java",
+      "url": "https://raw.githubusercontent.com/AntennaPod/AntennaPod/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/app/src/main/java/de/danoeh/antennapod/ui/screen/feed/FeedItemlistFragment.java",
+      "source_url": "https://github.com/AntennaPod/AntennaPod/blob/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/app/src/main/java/de/danoeh/antennapod/ui/screen/feed/FeedItemlistFragment.java",
+      "final_url": "https://raw.githubusercontent.com/AntennaPod/AntennaPod/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/app/src/main/java/de/danoeh/antennapod/ui/screen/feed/FeedItemlistFragment.java",
+      "status": 200,
+      "bytes": 34613,
+      "sha256": "2acdc7de4b69c2833e5030db95853b86ca944f38c4e9cabc1681cd77f99c8429",
+      "git_blob_sha": "cba25f59ab42a4419ac6b53589a233a6c9bd2cc8",
+      "evidence_id": "E-APST-03",
+      "title": "单播客筛选与重载",
+      "locator": "390–397;510–540;576–581;658–690：入口资格、事件重载及错误路径"
+    },
+    {
+      "path": "work/research/batch49-antennapod-state/TagSettingsDialog.java",
+      "repo_path": "app/src/main/java/de/danoeh/antennapod/ui/screen/feed/preferences/TagSettingsDialog.java",
+      "url": "https://raw.githubusercontent.com/AntennaPod/AntennaPod/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/app/src/main/java/de/danoeh/antennapod/ui/screen/feed/preferences/TagSettingsDialog.java",
+      "source_url": "https://github.com/AntennaPod/AntennaPod/blob/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/app/src/main/java/de/danoeh/antennapod/ui/screen/feed/preferences/TagSettingsDialog.java",
+      "final_url": "https://raw.githubusercontent.com/AntennaPod/AntennaPod/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/app/src/main/java/de/danoeh/antennapod/ui/screen/feed/preferences/TagSettingsDialog.java",
+      "status": 200,
+      "bytes": 7049,
+      "sha256": "5aacfb3062a690ce38d397008b834553b3ff6641de03765d6c7bf104801d55ce",
+      "git_blob_sha": "74e53d2afc390d25a4cb69726473957acc3b0cbe",
+      "evidence_id": "E-APST-04",
+      "title": "标签编辑与共同标签",
+      "locator": "44–160：临时列表、取消/OK、共同集合与逐项提交"
+    },
+    {
+      "path": "work/research/batch49-antennapod-state/LocalDeleteModal.java",
+      "repo_path": "app/src/main/java/de/danoeh/antennapod/ui/view/LocalDeleteModal.java",
+      "url": "https://raw.githubusercontent.com/AntennaPod/AntennaPod/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/app/src/main/java/de/danoeh/antennapod/ui/view/LocalDeleteModal.java",
+      "source_url": "https://github.com/AntennaPod/AntennaPod/blob/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/app/src/main/java/de/danoeh/antennapod/ui/view/LocalDeleteModal.java",
+      "final_url": "https://raw.githubusercontent.com/AntennaPod/AntennaPod/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/app/src/main/java/de/danoeh/antennapod/ui/view/LocalDeleteModal.java",
+      "status": 200,
+      "bytes": 1233,
+      "sha256": "ffda513d66739bcafb6828b9486cbf266429d3c9ff86563f03ef6529f6fd4d3c",
+      "git_blob_sha": "b4eab4e3cb3965a6d80e19bd15ede5f0c0769a13",
+      "evidence_id": "E-APST-05",
+      "title": "本地文件删除警告",
+      "locator": "11–34：选择含本地源时警告、确认/取消"
+    },
+    {
+      "path": "work/research/batch49-antennapod-state/FeedPreferences.java",
+      "repo_path": "model/src/main/java/de/danoeh/antennapod/model/feed/FeedPreferences.java",
+      "url": "https://raw.githubusercontent.com/AntennaPod/AntennaPod/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/model/src/main/java/de/danoeh/antennapod/model/feed/FeedPreferences.java",
+      "source_url": "https://github.com/AntennaPod/AntennaPod/blob/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/model/src/main/java/de/danoeh/antennapod/model/feed/FeedPreferences.java",
+      "final_url": "https://raw.githubusercontent.com/AntennaPod/AntennaPod/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/model/src/main/java/de/danoeh/antennapod/model/feed/FeedPreferences.java",
+      "status": 200,
+      "bytes": 9461,
+      "sha256": "27c108d851908f4cf501e439175453ab4108d82087b6203c8c21606b3b7ad2a1",
+      "git_blob_sha": "2d649e5059faf639d76c7b59e8ac36a65d8ef168",
+      "evidence_id": "E-APST-06",
+      "title": "标签数据表达",
+      "locator": "16–18;305–311：保留标签、集合及序列化"
+    },
+    {
+      "path": "work/research/batch49-antennapod-state/PodDBAdapter.java",
+      "repo_path": "storage/database/src/main/java/de/danoeh/antennapod/storage/database/PodDBAdapter.java",
+      "url": "https://raw.githubusercontent.com/AntennaPod/AntennaPod/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/storage/database/src/main/java/de/danoeh/antennapod/storage/database/PodDBAdapter.java",
+      "source_url": "https://github.com/AntennaPod/AntennaPod/blob/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/storage/database/src/main/java/de/danoeh/antennapod/storage/database/PodDBAdapter.java",
+      "final_url": "https://raw.githubusercontent.com/AntennaPod/AntennaPod/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/storage/database/src/main/java/de/danoeh/antennapod/storage/database/PodDBAdapter.java",
+      "status": 200,
+      "bytes": 72890,
+      "sha256": "74e39999e4857b9a445a7bf01bc0580e6846ead85c9cf48eef84f001df5dbd36",
+      "git_blob_sha": "22a5eb9e9bc7bcd8623b12180361b5a7d0a36854",
+      "evidence_id": "E-APST-07",
+      "title": "队列/标签/过滤的写入与查询",
+      "locator": "493–525;891–913;1011–1025;1119–1148：数据库对象及事务/异常边界"
+    },
+    {
+      "path": "work/research/batch49-antennapod-state/ConfirmationDialog.java",
+      "repo_path": "ui/common/src/main/java/de/danoeh/antennapod/ui/common/ConfirmationDialog.java",
+      "url": "https://raw.githubusercontent.com/AntennaPod/AntennaPod/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/ui/common/src/main/java/de/danoeh/antennapod/ui/common/ConfirmationDialog.java",
+      "source_url": "https://github.com/AntennaPod/AntennaPod/blob/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/ui/common/src/main/java/de/danoeh/antennapod/ui/common/ConfirmationDialog.java",
+      "final_url": "https://raw.githubusercontent.com/AntennaPod/AntennaPod/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/ui/common/src/main/java/de/danoeh/antennapod/ui/common/ConfirmationDialog.java",
+      "status": 200,
+      "bytes": 1881,
+      "sha256": "cfed0dba646d279fe95529bccf4970d421d8894558321deeae3d0e80051a7062",
+      "git_blob_sha": "8acedc7d34ac35e3e5c84d338b20eac8c41200eb",
+      "evidence_id": "E-APST-08",
+      "title": "通用确认与取消",
+      "locator": "23–52：确认回调、取消及取消监听"
+    },
+    {
+      "path": "work/research/batch49-antennapod-state/AllEpisodesFilterDialog.java",
+      "repo_path": "app/src/main/java/de/danoeh/antennapod/ui/AllEpisodesFilterDialog.java",
+      "url": "https://raw.githubusercontent.com/AntennaPod/AntennaPod/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/app/src/main/java/de/danoeh/antennapod/ui/AllEpisodesFilterDialog.java",
+      "source_url": "https://github.com/AntennaPod/AntennaPod/blob/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/app/src/main/java/de/danoeh/antennapod/ui/AllEpisodesFilterDialog.java",
+      "final_url": "https://raw.githubusercontent.com/AntennaPod/AntennaPod/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/app/src/main/java/de/danoeh/antennapod/ui/AllEpisodesFilterDialog.java",
+      "status": 200,
+      "bytes": 1041,
+      "sha256": "0d261c77bc19adc3ee26c7087d5ba28b0674c8e53f0dc4cd3104b7532e523325",
+      "git_blob_sha": "d3464cd542024572853aa53770323a98df042abc",
+      "evidence_id": "E-APST-09",
+      "title": "全局筛选变化事件",
+      "locator": "10–32：选项变化事件，不另等Confirm"
+    },
+    {
+      "path": "work/research/batch49-antennapod-state/FeedItemFilterDialog.java",
+      "repo_path": "app/src/main/java/de/danoeh/antennapod/ui/FeedItemFilterDialog.java",
+      "url": "https://raw.githubusercontent.com/AntennaPod/AntennaPod/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/app/src/main/java/de/danoeh/antennapod/ui/FeedItemFilterDialog.java",
+      "source_url": "https://github.com/AntennaPod/AntennaPod/blob/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/app/src/main/java/de/danoeh/antennapod/ui/FeedItemFilterDialog.java",
+      "final_url": "https://raw.githubusercontent.com/AntennaPod/AntennaPod/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/app/src/main/java/de/danoeh/antennapod/ui/FeedItemFilterDialog.java",
+      "status": 200,
+      "bytes": 953,
+      "sha256": "fa4ad1d0a3510159d798cb6746ecdde1fe2774a8daf70afbb425e80137b10644",
+      "git_blob_sha": "cce78013a85c3b70c449fb0855a842b448801dff",
+      "evidence_id": "E-APST-10",
+      "title": "单播客过滤写入入口",
+      "locator": "10–27：feed ID和每次选择写入请求"
+    },
+    {
+      "path": "work/research/batch49-antennapod-state/EpisodesListFragment.java",
+      "repo_path": "app/src/main/java/de/danoeh/antennapod/ui/episodeslist/EpisodesListFragment.java",
+      "url": "https://raw.githubusercontent.com/AntennaPod/AntennaPod/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/app/src/main/java/de/danoeh/antennapod/ui/episodeslist/EpisodesListFragment.java",
+      "source_url": "https://github.com/AntennaPod/AntennaPod/blob/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/app/src/main/java/de/danoeh/antennapod/ui/episodeslist/EpisodesListFragment.java",
+      "final_url": "https://raw.githubusercontent.com/AntennaPod/AntennaPod/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/app/src/main/java/de/danoeh/antennapod/ui/episodeslist/EpisodesListFragment.java",
+      "status": 200,
+      "bytes": 18770,
+      "sha256": "da5bebb036e79af824bd0ec19dd566b7e025e8892a8dcea565932d8db8fd634a",
+      "git_blob_sha": "6bd71bb188b9afa6bfc9cc98fb53490e3c45c118",
+      "evidence_id": "E-APST-11",
+      "title": "列表生命周期与加载结果",
+      "locator": "84–107;200–205;388–426：事件注册、空列表、重载与错误"
+    },
+    {
+      "path": "work/research/batch49-antennapod-state/FeedItemFilter.java",
+      "repo_path": "model/src/main/java/de/danoeh/antennapod/model/feed/FeedItemFilter.java",
+      "url": "https://raw.githubusercontent.com/AntennaPod/AntennaPod/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/model/src/main/java/de/danoeh/antennapod/model/feed/FeedItemFilter.java",
+      "source_url": "https://github.com/AntennaPod/AntennaPod/blob/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/model/src/main/java/de/danoeh/antennapod/model/feed/FeedItemFilter.java",
+      "final_url": "https://raw.githubusercontent.com/AntennaPod/AntennaPod/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/model/src/main/java/de/danoeh/antennapod/model/feed/FeedItemFilter.java",
+      "status": 200,
+      "bytes": 6203,
+      "sha256": "201d762a425d8f0d6e55db3d9d228713474a0efe0e391e6ee469a25993d6d0ba",
+      "git_blob_sha": "70f4f08ba61c4d113cd719d8a09a732c7b36f884",
+      "evidence_id": "E-APST-12",
+      "title": "过滤对象与范围标记",
+      "locator": "30–101：状态常量、条件构造和读取，不涵盖全部matches实现"
+    },
+    {
+      "path": "work/research/batch49-antennapod-state/DBReader.java",
+      "repo_path": "storage/database/src/main/java/de/danoeh/antennapod/storage/database/DBReader.java",
+      "url": "https://raw.githubusercontent.com/AntennaPod/AntennaPod/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/storage/database/src/main/java/de/danoeh/antennapod/storage/database/DBReader.java",
+      "source_url": "https://github.com/AntennaPod/AntennaPod/blob/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/storage/database/src/main/java/de/danoeh/antennapod/storage/database/DBReader.java",
+      "final_url": "https://raw.githubusercontent.com/AntennaPod/AntennaPod/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/storage/database/src/main/java/de/danoeh/antennapod/storage/database/DBReader.java",
+      "status": 200,
+      "bytes": 33216,
+      "sha256": "240c26934c7adee8c664b3f875134f6f290dc4bc4ba8e1189748b9972182e697",
+      "git_blob_sha": "b6b09a6acb82b12c8a146c6173967d322ed01941",
+      "evidence_id": "E-APST-13",
+      "title": "单集与单播客结果回读",
+      "locator": "129–148;223–264;330–355：读取条件、计数及单源状态范围"
+    },
+    {
+      "path": "work/research/batch49-antennapod-state/FeedMultiSelectActionHandler.java",
+      "repo_path": "app/src/main/java/de/danoeh/antennapod/ui/screen/subscriptions/FeedMultiSelectActionHandler.java",
+      "url": "https://raw.githubusercontent.com/AntennaPod/AntennaPod/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/app/src/main/java/de/danoeh/antennapod/ui/screen/subscriptions/FeedMultiSelectActionHandler.java",
+      "source_url": "https://github.com/AntennaPod/AntennaPod/blob/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/app/src/main/java/de/danoeh/antennapod/ui/screen/subscriptions/FeedMultiSelectActionHandler.java",
+      "final_url": "https://raw.githubusercontent.com/AntennaPod/AntennaPod/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/app/src/main/java/de/danoeh/antennapod/ui/screen/subscriptions/FeedMultiSelectActionHandler.java",
+      "status": 200,
+      "bytes": 8523,
+      "sha256": "81f3664dc1e67fe00a561066f1e677c033ab6136a5957c2f56a53258c2389766",
+      "git_blob_sha": "fe07f3307a837fdf01104b591c361e432aac0cdc",
+      "evidence_id": "E-APST-14",
+      "title": "订阅批量标签入口",
+      "locator": "34–68;152–159：空选返回、标签操作分派及偏好集合"
+    }
+  ],
+  "reused_sources": {
+    "E-APCD-03": [
+      {
+        "raw_work_path": "work/antennapod-controls-deepening/src/storage/preferences/src/main/java/de/danoeh/antennapod/storage/preferences/UserPreferences.java",
+        "raw_sha256": "2ad61f7569ae27f403f1c31ffcbda7752ba440a778e351a3c28b71c27e546430",
+        "locator": "885–892：全局过滤SharedPreferences读取/写入"
+      },
+      {
+        "raw_work_path": "work/antennapod-controls-deepening/src/ui/i18n/src/main/res/values/strings.xml",
+        "raw_sha256": "fbe52dcd492a8d059b039c0a7ac02baba79b2d4017b1cc9b1335270de5484fdc",
+        "locator": "314/417/440/826：本地删除、清队列、空筛选、共同标签文案"
+      }
+    ],
+    "E-APCD-13": [
+      {
+        "raw_work_path": "work/antennapod-controls-deepening/src/app/src/main/java/de/danoeh/antennapod/ui/screen/subscriptions/FeedMenuHandler.java",
+        "raw_sha256": "835f7ee2df02b36e017301325d5754eb271f30204f613c1b814607a3e2665443",
+        "locator": "59–61：单订阅标签入口"
+      },
+      {
+        "raw_work_path": "work/antennapod-controls-deepening/src/app/src/main/java/de/danoeh/antennapod/ui/screen/subscriptions/SubscriptionFragment.java",
+        "raw_sha256": "0d35a96da963bd24f39653fe879527290c302e5cc05638145407a2cc7cac643f",
+        "locator": "192–229：批量标签入口及已有标签浏览"
+      }
+    ],
+    "E-APCD-14": [
+      {
+        "raw_work_path": "work/antennapod-controls-deepening/src/storage/database/src/main/java/de/danoeh/antennapod/storage/database/DBWriter.java",
+        "raw_sha256": "f51bd0cb6b14d4242776d157d224aa11f48d689c7553e50a80edd0d3c1e55523",
+        "locator": "55–167;455–522;569–631;812–821;920–930：异步请求、媒体删除、队列、偏好与过滤写入"
+      }
+    ],
+    "E-APQD-04": [
+      {
+        "raw_work_path": "work/antennapod-queue-controls-deepening/raw/QueueFragment.java",
+        "raw_sha256": "fee6c7b93713ea45c5f679407cc15efaa1dd7346147806e987ebe3c04399f87f",
+        "locator": "137–172;299–312;438–487：队列事件、清空确认、多选结束"
+      }
+    ],
+    "E-APQD-05": [
+      {
+        "raw_work_path": "work/antennapod-queue-controls-deepening/raw/EpisodeMultiSelectActionHandler.java",
+        "raw_sha256": "5191c537e483a5bbfbc5925d8c5bd1bf6fec11a6b4e79bb8bcc1c6f2b2b48996",
+        "locator": "39–56;152–169;212–231：本地删除警告分派、数量及移动"
+      }
+    ],
+    "E-APQD-06": [
+      {
+        "raw_work_path": "work/antennapod-queue-controls-deepening/raw/ItemFilterDialog.java",
+        "raw_sha256": "0f5304d91f1e71640bd4a3a4f8ecc2eaa9cd8e6fc30eeceff1001f5e78b03d05",
+        "locator": "36–77;101–122：变化、确认、Reset；与新调用方连接"
+      }
+    ],
+    "E-APQD-07": [
+      {
+        "raw_work_path": "work/antennapod-queue-controls-deepening/raw/FeedItemFilterQuery.java",
+        "raw_sha256": "02f43983c4adde37fbc7b9b8d7896f8ccae59d73c935714bd4d8fbd2fe7b7e65",
+        "locator": "23–103：AND条件、状态回退及字段含义"
+      }
+    ]
+  },
+  "method": "targeted static read; raw Git blob identities checked; no build/install/product execution or visual observation",
+  "source_index_path": "work/antennapod-controls-deepening/tree.json"
+}

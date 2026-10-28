@@ -1,0 +1,154 @@
+Listen on a browser (https://help.audible.com/s/article/listen-on-a-browser?language=en_US)
+citeturn770view1 [wordlim: 200] Crawled: today; Content type: text/html; Source: open({"ref_id":"https://help.audible.com/s/article/listen-on-a-browser?language=en_US","lineno":48}); Total lines: 152
+L0: Loading
+L1: 
+L2: Sorry to interrupt
+L3: 
+L4: This page has an error. You might just need to refresh it. [Cannot read properties of undefined (reading 'bind')]
+L5: 
+L6: 【0†Refresh】
+L7: 
+L8: Skip to Main Content
+L9: 
+L10: Related topics
+L11: 
+L12: Ask A Question Cloud Player Listening Ways to listen Windows
+L13: ## Listen on a browser
+L14: 
+L15:   * Aug 27, 2026
+L16:   * Knowledge
+L17: 
+L18: Title
+L19: 
+L20: Listen on a browser
+L21: 
+L22: URL Name
+L23: 
+L24: listen-on-a-browser
+L25: 
+L26: Answer
+L27: 
+L28: You can listen to Audible on your laptop or computer with the Audible Cloud Player. Since there's no 【1†Audible app for PC】, the Cloud Player makes it easy to enjoy your titles on Windows, Mac, or any other computer.
+L29: 
+L30: Why you'll love the Cloud Player:
+L31:   * Pick up right where you left off 【2†across all your devices】.
+L32:   * Start listening right away — no downloads needed.
+L33:   * No extra software to install.
+L34: 
+L35: What you need is the latest version of one of these browsers:
+L36: 
+L37:   * Google Chrome
+L38:   * Mozilla Firefox
+L39:   * Apple Safari
+L40:   * Microsoft Edge
+L41: 
+L42: Note: The Audible Cloud Player lets you stream and listen to your titles as long as you're connected to the internet. To listen offline, visit 【3†Download titles】.
+L43: 
+L44: In this article:
+L45:   * 【4†How do I listen to a title on my desktop browser?】
+L46:   * 【5†How do I listen on my mobile browser?】
+L47:   * 【6†How to fix the Cloud Player when it won’t load?】
+L48: ## How do I listen to a title on my desktop browser?
+L49: 
+L50:   1. Open the 【7†Audible†www.audible.com】 site and sign in.
+L51:   2. Select 【8†Library†www.audible.com】 from the site's navigation.
+L52:   3. Select Listen now next to the title of your choosing.
+L53:   4. The Cloud Player will appear.
+L54: ## How do I listen on my mobile browser?
+L55: 
+L56: You can also use the Cloud Player on your phone or tablet's mobile browser.
+L57: 
+L58:   1. Go to 【9†Audible.com†audible.com】 from your mobile device
+L59:   2. Select the main menu
+L60:   3. Select Library
+L61:   4. Select the title you want to listen to
+L62: 
+L63: The Cloud Player will appear.
+L64: ## How to fix the Cloud Player when it won’t load?
+L65: 
+L66: If your Cloud Player doesn't load when you try to listen on a browser, it may be due to an issue with your browsing history.
+L67: 
+L68: Note: make sure you're using the latest version of your browser.
+L69: ### How to clear your history in Google Chrome:
+L70: 
+L71:   1. Select Chrome from the main navigation.
+L72:   2. Select Clear Browsing Data.
+L73:   3. Select the Advanced tab.
+L74:   4. From the Time range drop-down menu, select All time.
+L75:   5. Check the following boxes:
+L76:     1. Browsing history
+L77:     2. Download history
+L78:     3. Cookies and other site data
+L79:     4. Cached images and files
+L80:   6. Select Clear data.
+L81: ### How to clear your history in Safari:
+L82: 
+L83:   1. Select History from the main navigation.
+L84:   2. Select Clear History.
+L85:   3. From the Clear drop-down menu, select all history.
+L86:   4. Select Clear History.
+L87: ### How to clear your history in Firefox:
+L88: 
+L89:   1. Select History in the main navigation.
+L90:   2. Select Clear Recent History.
+L91:   3. Change the option from “Last hour” to Everything in the “Time range to clear” drop-down menu.
+L92:   4. Check the following boxes in the pop-up:
+L93:     1. Browsing & download history
+L94:     2. Cookies
+L95:     3. Cache
+L96:     4. Form & search history
+L97:   5. Select OK.
+L98: 
+L99: Did this answer your question?
+L100: 
+L101: 【10†Image: Thumbs Up】Like
+L102: 
+L103: 
+L104: 
+L105: 【11†Image: Thumbs Down】Dislike
+L106: 
+L107:  Back to top
+L108: 【12†Image: Share link】 Share link
+L109: 
+L110: 【13†Image: Download PDF】 Download PDF
+L111: ## Need more assistance?
+L112: 
+L113: 【14†Contact us†www.audible.com】
+L114: 
+L115: 
+L116: 
+L117: How satisfied were you with our Help Center today?
+L118: 
+L119: 
+L120: 
+L121: Worst
+L122: 
+L123: 1
+L124: 
+L125: 2
+L126: 
+L127: 3
+L128: 
+L129: 4
+L130: 
+L131: 5
+L132: 
+L133: 6
+L134: 
+L135: 7
+L136: 
+L137: Best
+L138: 
+L139: 
+L140: 
+L141: Region
+L142: 
+L143: United States
+L144: 
+L145: Language
+L146: 
+L147: English
+L148: 
+L149: Loading
+L150: 
+L151: Listen on a browser 【15†Adobe ID Syncing iFrame†audible.demdex.net】

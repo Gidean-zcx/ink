@@ -1,0 +1,527 @@
+[
+  {
+    "at": "2026-10-27T07:02:37.705175+00:00",
+    "url": "https://www.timeforkids.com/g34/service-stars-packed-with-care-g3/",
+    "status": 200,
+    "resource_type": "document",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T07:02:37.933348+00:00",
+    "url": "https://cdn.cookielaw.org/consent/f38b90f5-9280-47c2-8495-ac6bf7d7dd64/f38b90f5-9280-47c2-8495-ac6bf7d7dd64.json",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T07:02:38.269557+00:00",
+    "url": "https://geolocation.onetrust.com/cookieconsentpub/v1/geo/location",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T07:02:38.450515+00:00",
+    "url": "https://www.google-analytics.com/j/collect",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T07:02:38.545861+00:00",
+    "url": "https://cdn.cookielaw.org/consent/f38b90f5-9280-47c2-8495-ac6bf7d7dd64/14423911-994d-4cc0-92ef-8133ad94e00c/en.json",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T07:02:38.811085+00:00",
+    "url": "https://cdn.cookielaw.org/scripttemplates/202210.1.0/assets/otFlat.json",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T07:02:38.812424+00:00",
+    "url": "https://cdn.cookielaw.org/scripttemplates/202210.1.0/assets/v2/otPcCenter.json",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T07:02:38.813320+00:00",
+    "url": "https://cdn.cookielaw.org/scripttemplates/202210.1.0/assets/otCommonStyles.css",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T07:02:38.817277+00:00",
+    "url": "https://www.google-analytics.com/g/collect",
+    "status": 204,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T07:02:38.870945+00:00",
+    "url": "https://analytics.google.com/g/collect",
+    "status": 204,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T07:02:38.880914+00:00",
+    "url": "https://analytics.google.com/g/collect",
+    "status": 204,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T07:02:39.569954+00:00",
+    "url": "https://api.readalong.ai/api/getcontent",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T07:02:40.179267+00:00",
+    "url": "https://api.readalong.ai/api/readalongevent",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T07:07:25.611629+00:00",
+    "url": "https://analytics.google.com/g/collect",
+    "status": 204,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T07:07:26.183387+00:00",
+    "url": "https://reader.emagazines.com/issue/time-for-kids-k-1/may-8-2026",
+    "status": 200,
+    "resource_type": "document",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T07:07:26.693277+00:00",
+    "url": "https://www.google-analytics.com/g/collect",
+    "status": 204,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T07:07:27.405300+00:00",
+    "url": "https://firebase.googleapis.com/v1alpha/projects/-/apps/1:231547785401:web:e67f7bd06990f435040b68/webConfig",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T07:07:27.628589+00:00",
+    "url": "https://www.google-analytics.com/g/collect",
+    "status": 204,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T07:07:27.744340+00:00",
+    "url": "https://api.emagazines.com/EmfIssueSettings/null",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T07:07:27.786641+00:00",
+    "url": "https://reader.emagazines.com/issue/time-for-kids-k-1/may-8-2026",
+    "status": 200,
+    "resource_type": "document",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T07:07:28.082647+00:00",
+    "url": "https://firebase.googleapis.com/v1alpha/projects/-/apps/1:231547785401:web:e67f7bd06990f435040b68/webConfig",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T07:07:28.144725+00:00",
+    "url": "https://firebaseinstallations.googleapis.com/v1/projects/emagazines-web-push/installations",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T07:07:28.147542+00:00",
+    "url": "https://api.emagazines.com/EmfIssueSettings/null",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T07:07:28.886095+00:00",
+    "url": "https://www.google-analytics.com/g/collect",
+    "status": 204,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T07:07:48.447154+00:00",
+    "url": "https://www.google-analytics.com/g/collect",
+    "status": 204,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T07:07:48.448773+00:00",
+    "url": "https://www.google-analytics.com/g/collect",
+    "status": 204,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T07:08:07.833365+00:00",
+    "url": "https://www.google-analytics.com/g/collect",
+    "status": 204,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T07:08:07.836112+00:00",
+    "url": "https://www.google-analytics.com/g/collect",
+    "status": 204,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T07:08:32.429616+00:00",
+    "url": "https://www.google-analytics.com/g/collect",
+    "status": 204,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T07:08:42.494208+00:00",
+    "url": "https://www.google-analytics.com/g/collect",
+    "status": 204,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T07:08:42.495983+00:00",
+    "url": "https://www.google-analytics.com/g/collect",
+    "status": 204,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T07:08:44.461771+00:00",
+    "url": "https://reader.emagazines.com/issue/time-for-kids-k-1/may-8-2026/saving-sea-turtles",
+    "status": 200,
+    "resource_type": "document",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T07:08:45.177166+00:00",
+    "url": "https://api.emagazines.com/EmfIssueSettings/null",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T07:08:45.231892+00:00",
+    "url": "https://firebase.googleapis.com/v1alpha/projects/-/apps/1:231547785401:web:e67f7bd06990f435040b68/webConfig",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T07:08:45.400455+00:00",
+    "url": "https://www.google-analytics.com/g/collect",
+    "status": 204,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T07:08:45.431376+00:00",
+    "url": "https://reader.emagazines.com/issue/time-for-kids-k-1/may-8-2026/saving-sea-turtles",
+    "status": 200,
+    "resource_type": "document",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T07:08:45.450224+00:00",
+    "url": "https://www.google-analytics.com/g/collect",
+    "status": 204,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T07:08:45.782323+00:00",
+    "url": "https://firebase.googleapis.com/v1alpha/projects/-/apps/1:231547785401:web:e67f7bd06990f435040b68/webConfig",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T07:08:45.786022+00:00",
+    "url": "https://api.emagazines.com/EmfIssueSettings/null",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T07:09:03.180554+00:00",
+    "url": "https://www.google-analytics.com/g/collect",
+    "status": 204,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T07:09:03.183318+00:00",
+    "url": "https://www.google-analytics.com/g/collect",
+    "status": 204,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T07:10:07.866215+00:00",
+    "url": "https://www.google-analytics.com/g/collect",
+    "status": 204,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T07:10:07.906540+00:00",
+    "url": "https://www.google-analytics.com/g/collect",
+    "status": 204,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T07:10:07.912218+00:00",
+    "url": "https://www.google-analytics.com/g/collect",
+    "status": 204,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T07:10:07.914641+00:00",
+    "url": "https://www.google-analytics.com/g/collect",
+    "status": 204,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T07:10:26.665101+00:00",
+    "url": "https://www.google-analytics.com/g/collect",
+    "status": 204,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T07:10:26.666610+00:00",
+    "url": "https://www.google-analytics.com/g/collect",
+    "status": 204,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T07:10:27.701580+00:00",
+    "url": "https://reader.emagazines.com/issue/time-for-kids-k-1/may-8-2026/saving-sea-turtles",
+    "status": 200,
+    "resource_type": "document",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T07:10:28.379092+00:00",
+    "url": "https://api.emagazines.com/EmfIssueSettings/null",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T07:10:28.386381+00:00",
+    "url": "https://firebase.googleapis.com/v1alpha/projects/-/apps/1:231547785401:web:e67f7bd06990f435040b68/webConfig",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T07:10:28.491585+00:00",
+    "url": "https://www.google-analytics.com/g/collect",
+    "status": 204,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T07:10:28.575997+00:00",
+    "url": "https://www.google-analytics.com/g/collect",
+    "status": 204,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T07:10:44.227525+00:00",
+    "url": "https://www.google-analytics.com/g/collect",
+    "status": 204,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T07:10:44.229875+00:00",
+    "url": "https://www.google-analytics.com/g/collect",
+    "status": 204,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T07:10:49.707889+00:00",
+    "url": "https://www.google-analytics.com/g/collect",
+    "status": 204,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T07:10:49.710797+00:00",
+    "url": "https://www.google-analytics.com/g/collect",
+    "status": 204,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T07:11:14.004571+00:00",
+    "url": "https://www.google-analytics.com/g/collect",
+    "status": 204,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T07:11:14.838598+00:00",
+    "url": "https://www.google-analytics.com/g/collect",
+    "status": 204,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T07:11:14.851710+00:00",
+    "url": "https://www.google-analytics.com/g/collect",
+    "status": 204,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T07:11:18.587001+00:00",
+    "url": "https://www.google-analytics.com/g/collect",
+    "status": 204,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T07:11:39.933590+00:00",
+    "url": "https://www.google-analytics.com/g/collect",
+    "status": 204,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T07:11:39.936997+00:00",
+    "url": "https://www.google-analytics.com/g/collect",
+    "status": 204,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T07:11:39.941312+00:00",
+    "url": "https://www.google-analytics.com/g/collect",
+    "status": 204,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T07:11:39.943404+00:00",
+    "url": "https://www.google-analytics.com/g/collect",
+    "status": 204,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T07:12:05.732453+00:00",
+    "url": "https://reader.emagazines.com/issue/time-for-kids-k-1/may-8-2026",
+    "status": 200,
+    "resource_type": "document",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T07:12:06.631955+00:00",
+    "url": "https://firebase.googleapis.com/v1alpha/projects/-/apps/1:231547785401:web:e67f7bd06990f435040b68/webConfig",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T07:12:06.760041+00:00",
+    "url": "https://www.google-analytics.com/g/collect",
+    "status": 204,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T07:12:06.785553+00:00",
+    "url": "https://reader.emagazines.com/issue/time-for-kids-k-1/may-8-2026",
+    "status": 200,
+    "resource_type": "document",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T07:12:06.865467+00:00",
+    "url": "https://www.google-analytics.com/g/collect",
+    "status": 204,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T07:12:06.878629+00:00",
+    "url": "https://api.emagazines.com/EmfIssueSettings/null",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T07:12:07.071784+00:00",
+    "url": "https://firebase.googleapis.com/v1alpha/projects/-/apps/1:231547785401:web:e67f7bd06990f435040b68/webConfig",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T07:12:07.119076+00:00",
+    "url": "https://api.emagazines.com/EmfIssueSettings/null",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T07:12:08.127588+00:00",
+    "url": "https://www.google-analytics.com/g/collect",
+    "status": 204,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T07:12:46.574267+00:00",
+    "url": "https://www.google-analytics.com/g/collect",
+    "status": 204,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T07:12:46.588135+00:00",
+    "url": "https://www.google-analytics.com/g/collect",
+    "status": 204,
+    "resource_type": "fetch",
+    "method": "POST"
+  }
+]

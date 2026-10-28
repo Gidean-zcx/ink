@@ -1,0 +1,6 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M021-14,M-021,Match配对、计时与重开,D2,E-QZGM-01,集→Match→开始；每局6对，错配加1秒，配完看分；手机Options重开、图示集配对类型。,重开确认、退出/断线恢复、历史分数及套餐未核。,not_observed,false,cases/M-021-quizlet.md,2026-10-27
+F-M021-15,M-021,Blocks答题换拼块与结束,D2,E-QZGM-02,至少6对；3块放完答题取得新块，成行/列得分，无步结束；可换题、只学星标、改题型。,错答/换题代价、取消/棋盘恢复、最高分保存和具体资格未实测。,not_observed,false,cases/M-021-quizlet.md,2026-10-27
+F-M021-16,M-021,Blast单人与多人模式入口及规则,D2,E-QZGM-03,root正文含学生/教师Web主持多人、单人集→Blast→Play；主持设置速度/选项/时长，玩家匹配目标计分，计时结束；地区/英语集限制。,与早先搜索teacher-only摘要冲突；版本、错误反馈、提前结束/重连、同分/历史成绩及套餐未核。,not_observed,false,cases/M-021-quizlet.md,2026-10-27
+F-M021-17,M-021,加入Classic Live并等主持开始,D2,E-QZGM-04,浏览器代码→Join→名字→Next；App登录从Search/Play Quizlet Live加入，可扫QR；主持开始。,无效码、游客资格、重名、取消/重连、实际答题/结算未核；仅en-AU帮助。,not_observed,false,cases/M-021-quizlet.md,2026-10-27
+F-M031-19,M-031,国际象棋入门解谜、纠错与课后结算,D4,E-DUCX-01;E-DUCX-02,匿名棋课11题面；自由移动与3步约束不同，错序5→4心、同题重置、提示开关、重试成功；结算20XP/92%、任务/奖励；Later后刷新保留当前字段。,7天目标PUT403，保存未证；提示完整表达、评分公式、清存储/跨进程/账号恢复、完整课程/对局及儿童学习效果未核。,observed_browser_sequence,true,cases/M-031-duolingo-adventures.md,2026-10-27

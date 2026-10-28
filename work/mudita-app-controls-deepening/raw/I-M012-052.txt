@@ -1,0 +1,15 @@
+How to Transfer Music to Kompakt?
+Modified on: Sat, 3 Oct, 2026 at 8:36 AM
+You can easily transfer music to your Kompakt using Mudita Center. Follow the steps below to upload your audio files
+Open Mudita Center and connect your Kompakt to your computer.
+Under Your Kompakt, click Manage Files.
+Select the Music tab.
+Click Add file.
+Browse your computer and select the audio files you want to upload.
+Confirm the transfer to copy the selected music files to your Kompakt.
+Important: If a file format is not supported by Kompakt, you won't be able to select or upload it
+Was this article helpful?
+ No
+ Yes
+That’s Great!
+Thank you for your feedback

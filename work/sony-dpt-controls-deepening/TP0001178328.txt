@@ -1,0 +1,8 @@
+You can search for a page by displaying a list of 16 pages on a single screen.
+Tap anywhere on the screen of a document to display the tool bar.
+Tap  (option) in the upper right of the document screen — [Page Thumbnails].
+To return the display to normal size
+Tap any one of the pages.
+Hint
+When switching from documents that are being displayed side-by-side, nine pages are displayed in the list.
+When you pinch in on the screen while displaying a document, the page thumbnails can be displayed.

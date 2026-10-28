@@ -1,0 +1,5 @@
+Use the Ask for Input action in a shortcut on iPhone or iPad
+Ask for Input is a powerful action that lets you enter information at the time your shortcut is run. The action presents a dialog that asks a question. When you enter the answer and tap Done, the data is passed into the next action or is stored as a Magic Variable to be retrieved later.
+Ask for Input supports the entry of words, dates, or numbers, and the keyboard adapts to each input type. Additionally, Ask for Input allows you to specify a default value that prefills the dialog. When you run the shortcut, you can adjust the prefilled information.
+The Ask for Input action works well with “logging” shortcuts, such as shortcuts that log health data or create journal entries.
+Tip: Use an Ask for Input action that’s set to Number to quickly enter numbers in the Shortcuts widget or on your Apple Watch with the numeric keypad.

@@ -1,0 +1,14 @@
+{
+  "new_evidence": 48,
+  "raw_source_records_checked": 61,
+  "static_images": [
+    "E-MDCD-01",
+    "E-MDCD-12"
+  ],
+  "inventories": 14,
+  "inventory_rows": 880,
+  "new_directory_rows": 225,
+  "new_tasks": 9,
+  "existing_tasks_updated": 11,
+  "errors": []
+}

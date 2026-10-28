@@ -1,0 +1,313 @@
+{
+  "headings": [
+    {
+      "level": "h1",
+      "id": "",
+      "title": "Saving Content to Reader"
+    },
+    {
+      "level": "h2",
+      "id": "save-from-the-web-with-the-browser-extension",
+      "title": "Save from the web with the browser extension"
+    },
+    {
+      "level": "h3",
+      "id": "browser-extension-features",
+      "title": "Browser extension features"
+    },
+    {
+      "level": "h2",
+      "id": "save-on-mobile-with-your-devices-share-menu",
+      "title": "Save on mobile with your device's share menu"
+    },
+    {
+      "level": "h3",
+      "id": "mobile-share-menu-features",
+      "title": "Mobile share menu features"
+    }
+  ],
+  "links": [
+    {
+      "href": "/",
+      "text": "",
+      "in_article": false
+    },
+    {
+      "href": "/",
+      "text": "",
+      "in_article": false
+    },
+    {
+      "href": "/",
+      "text": "",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs",
+      "text": "Documentation",
+      "in_article": false
+    },
+    {
+      "href": "/reader/guides",
+      "text": "Guides",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs",
+      "text": "What is Reader?",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/migrating-content",
+      "text": "Migrating from Other Apps",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/saving-content",
+      "text": "Saving Content",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/organizing-content",
+      "text": "Organizing Content",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs",
+      "text": "Basics",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/importing-content",
+      "text": "Importing Content",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/adding-new-content",
+      "text": "Adding New Content",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/highlights-tags-notes",
+      "text": "Highlights, Tags, and Notes",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/appearance",
+      "text": "Appearance",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/feed",
+      "text": "Feed",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/email-newsletters",
+      "text": "Email Newsletters",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/navigation",
+      "text": "Navigation",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/searching",
+      "text": "Searching",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/parsing",
+      "text": "Parsing",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/filtered-views",
+      "text": "Filtered Views",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/action-tags",
+      "text": "Action Tags",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/pdfs",
+      "text": "PDFs",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/videos",
+      "text": "Videos",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/text-to-speech",
+      "text": "Text-to-Speech (TTS)",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/exporting",
+      "text": "Exporting",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/sharing",
+      "text": "Sharing",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/daily-digest",
+      "text": "Daily Digest",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/ghostreader",
+      "text": "Ghostreader",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/eink",
+      "text": "E-ink Devices",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/miscellaneous",
+      "text": "Miscellaneous",
+      "in_article": false
+    },
+    {
+      "href": "/",
+      "text": "Home",
+      "in_article": false
+    },
+    {
+      "href": "/reader",
+      "text": "Reader",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs",
+      "text": "Docs",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/saving-content",
+      "text": "Saving Content",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/migrating-content",
+      "text": "Migrating from Other Apps",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/organizing-content",
+      "text": "Organizing Content",
+      "in_article": false
+    },
+    {
+      "href": "mailto:hello@readwise.io",
+      "text": "Email Ushello@readwise.io",
+      "in_article": false
+    },
+    {
+      "href": "https://x.com/readwise",
+      "text": "Follow Us@readwise",
+      "in_article": false
+    },
+    {
+      "href": "https://www.reddit.com/r/readwise/",
+      "text": "Ask the CommunityJoin us on Reddit",
+      "in_article": false
+    },
+    {
+      "href": "https://en.wikipedia.org/wiki/Curse_of_knowledge",
+      "text": "Curse of Knowledge",
+      "in_article": false
+    },
+    {
+      "href": "mailto:hello@readwise.io?Subject=Documentation Feedback",
+      "text": "Send Feedback",
+      "in_article": false
+    },
+    {
+      "href": "#save-from-the-web-with-the-browser-extension",
+      "text": "Save from the web with the browser extension",
+      "in_article": false
+    },
+    {
+      "href": "#browser-extension-features",
+      "text": "Browser extension features",
+      "in_article": false
+    },
+    {
+      "href": "#save-on-mobile-with-your-devices-share-menu",
+      "text": "Save on mobile with your device's share menu",
+      "in_article": false
+    },
+    {
+      "href": "#mobile-share-menu-features",
+      "text": "Mobile share menu features",
+      "in_article": false
+    }
+  ],
+  "images": [
+    {
+      "src": "/images/save-to-reader_web.gif",
+      "alt": "Save articles to Reader with the browser extension.",
+      "class": "rounded-lg max-h-[400px] w-auto mx-auto"
+    },
+    {
+      "src": "/images/extension-features_shadow.png",
+      "alt": "Annotated screenshot of Reader browser extension options.",
+      "class": "rounded-lg w-full h-auto mx-auto"
+    },
+    {
+      "src": "/images/extension-features_open.gif",
+      "alt": "Open article in Reader from extension.",
+      "class": "rounded-lg max-h-[400px] w-auto mx-auto -mt-4"
+    },
+    {
+      "src": "/images/extension-features_autohighlight.gif",
+      "alt": "Toggle autohighlighting on or off.",
+      "class": "rounded-lg max-h-[400px] w-auto mx-auto -mt-4"
+    },
+    {
+      "src": "/images/extension-features_tags.gif",
+      "alt": "Tag an article from the Reader extension.",
+      "class": "rounded-lg max-h-[400px] w-auto mx-auto -mt-4"
+    },
+    {
+      "src": "/images/extension-features_note.gif",
+      "alt": "Add a document note to an article.",
+      "class": "rounded-lg max-h-[400px] w-auto mx-auto -mt-4"
+    },
+    {
+      "src": "/images/extension-features_triage.gif",
+      "alt": "Move an article between Library sections.",
+      "class": "rounded-lg max-h-[400px] w-auto mx-auto -mt-4"
+    },
+    {
+      "src": "/images/extension-features_hide.gif",
+      "alt": "Hide the Reader extension from the current page.",
+      "class": "rounded-lg max-h-[400px] w-auto mx-auto -mt-4"
+    },
+    {
+      "src": "/images/save-to-reader_mobile_sm.gif",
+      "alt": "Save articles to your Reader account using the Safari share sheet.",
+      "class": "rounded-lg max-w-[350px] h-auto mx-auto"
+    },
+    {
+      "src": "/images/annotated-share-sheet_mobile.jpeg",
+      "alt": "Annotated screenshot of Reader's mobile share menu.",
+      "class": "rounded-lg max-h-[600px] w-auto mx-auto"
+    },
+    {
+      "src": "/images/share-sheet_shortlist.png",
+      "alt": "Share sheet options when Library is set to Shortlist configuration.",
+      "class": "rounded-lg max-h-[300px] w-auto mx-auto -mt-4"
+    }
+  ]
+}

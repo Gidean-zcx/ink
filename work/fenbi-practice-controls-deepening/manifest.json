@@ -1,0 +1,226 @@
+{
+  "product_id": "M-032",
+  "checked_on": "2026-10-27",
+  "frozen": true,
+  "excludes": [
+    "manifest.json (self)",
+    "precheck-result.json (output)"
+  ],
+  "files": [
+    {
+      "path": "docs/research/interaction-library/artifacts/fenbi-practice-controls-deepening/historical-menu-entry.jpg",
+      "sha256": "9ece924a058ccaade2ccbf44db0b6ded9f8b47008819edc5b4374ffc06619cfe",
+      "bytes": 104508
+    },
+    {
+      "path": "docs/research/interaction-library/artifacts/fenbi-practice-controls-deepening/source-notes.md",
+      "sha256": "b4c7d9ee806473d7b10e6692f60b013e5555c94ef670f780331a6cbc0be154e3",
+      "bytes": 3666
+    },
+    {
+      "path": "docs/research/interaction-library/artifacts/fenbi-practice-controls-deepening/static-observation-log.md",
+      "sha256": "51161bbd5446151c554c73523997350c728f9de019c7bbc135eb6c1cafadd823",
+      "bytes": 898
+    },
+    {
+      "path": "docs/research/interaction-library/batches/fenbi-practice-controls-deepening-coverage.csv",
+      "sha256": "aa0cf671b21fa0390e9b0cfb58c6cecf3a0d7df66eaad894707f17ea224f6025",
+      "bytes": 107
+    },
+    {
+      "path": "docs/research/interaction-library/batches/fenbi-practice-controls-deepening-evidence.jsonl",
+      "sha256": "baea54a68f959c734caff476a97027c641ad0bb7c98cf92499f11a5f9eaccba9",
+      "bytes": 3911
+    },
+    {
+      "path": "docs/research/interaction-library/batches/fenbi-practice-controls-deepening-inventory.csv",
+      "sha256": "1ba7bcab68f90db56725b3844fff44ef4a2f0c1aa3f031f6c2c99ca21d9e60c6",
+      "bytes": 5309
+    },
+    {
+      "path": "docs/research/interaction-library/cases/M-032-fenbi.md",
+      "sha256": "bc1a0278d87013d59c964e4c8e33355e5945e6a2f4f65f83f0ec4f6060d7f1c1",
+      "bytes": 19420
+    },
+    {
+      "path": "work/fenbi-practice-controls-deepening/HANDOFF.md",
+      "sha256": "d871e4d6b9b92cee70c3158a3e3c24cc6f899f65f18bbd2818da3de15795e9de",
+      "bytes": 6192
+    },
+    {
+      "path": "work/fenbi-practice-controls-deepening/baseline.json",
+      "sha256": "0430e5f2e1742f2395d4919726c8b09cd2c23b35835b315b9368fcf826bb7fdf",
+      "bytes": 24278
+    },
+    {
+      "path": "work/fenbi-practice-controls-deepening/candidate-register.json",
+      "sha256": "7c12701e8f219eebbf0cdf607dbf99a09b0aa1615e5c0947e75b964e58f0879d",
+      "bytes": 4967
+    },
+    {
+      "path": "work/fenbi-practice-controls-deepening/case-before.md",
+      "sha256": "24f7cc25c6fa11cd46ab4bc4a25767645b3dee367330b924761e7610edea0faf",
+      "bytes": 16606
+    },
+    {
+      "path": "work/fenbi-practice-controls-deepening/commands.md",
+      "sha256": "1acec0a4a378d9ffab04faa358d99567824da6b8ae51ef5f26c9e4ac193841e8",
+      "bytes": 5627
+    },
+    {
+      "path": "work/fenbi-practice-controls-deepening/existing-coverage-updates.json",
+      "sha256": "28991677f37d4dbcc926592e6c041511b6091554c951448f8f629bcb800476da",
+      "bytes": 4325
+    },
+    {
+      "path": "work/fenbi-practice-controls-deepening/existing-evidence-additional-captures.json",
+      "sha256": "b0a8666688ae1f3588b8075ac5843859b8fd858d01d71bd669af1f56c9ae2c3c",
+      "bytes": 1867
+    },
+    {
+      "path": "work/fenbi-practice-controls-deepening/extract.py",
+      "sha256": "4346146063549943252344312c6f0039b7fe8b400ddbd74e89bcd87e4dc4452d",
+      "bytes": 901
+    },
+    {
+      "path": "work/fenbi-practice-controls-deepening/fetch-candidates-results.json",
+      "sha256": "3528ca4f3d9ddc5f6a668a057d65b38b3c0abba38cd062c250a427b26bd01dbf",
+      "bytes": 1678
+    },
+    {
+      "path": "work/fenbi-practice-controls-deepening/fetch-candidates.py",
+      "sha256": "0a615d0eab5cdeec8283b4d9cb823bceb1be0f9708a40e08b439a90cc7493d89",
+      "bytes": 1379
+    },
+    {
+      "path": "work/fenbi-practice-controls-deepening/fetch-final-candidates-results.json",
+      "sha256": "88ed97dbd6bac459d931961fac74e0c0f32a73eaadaa32b692b743cb12aa1033",
+      "bytes": 1752
+    },
+    {
+      "path": "work/fenbi-practice-controls-deepening/fetch-final-candidates.py",
+      "sha256": "ca8ccc5eb23912e130fce32e4380d73ccea99cdb8d208a17ce40b408f6b8a192",
+      "bytes": 1445
+    },
+    {
+      "path": "work/fenbi-practice-controls-deepening/fetch-images-results.json",
+      "sha256": "3ebb7706acba818ebe9f2237a369400bd5893ac9a1e42aaf0513575c4f9a4b9f",
+      "bytes": 968
+    },
+    {
+      "path": "work/fenbi-practice-controls-deepening/fetch-images.py",
+      "sha256": "e0ed6874b65d335951ee6e8120992ce98df36ae8e8f1e803ab588af6d75c667f",
+      "bytes": 964
+    },
+    {
+      "path": "work/fenbi-practice-controls-deepening/image-directory.json",
+      "sha256": "a8494ac4440752d9512545fa4df365f17aed95e294d0cb8a060329791515e280",
+      "bytes": 10380
+    },
+    {
+      "path": "work/fenbi-practice-controls-deepening/precheck.py",
+      "sha256": "105e71903093846481b81edb661e7d12acaeb3f6566661a1f0f39b977ceb3120",
+      "bytes": 5167
+    },
+    {
+      "path": "work/fenbi-practice-controls-deepening/raw/c01-review2019.html",
+      "sha256": "9a081fe53b97554eda34857ed0c1715e2ce06ba992c49d6a35d6b1d88e6bc32e",
+      "bytes": 160538
+    },
+    {
+      "path": "work/fenbi-practice-controls-deepening/raw/c01-review2019.txt",
+      "sha256": "346338e96688b4d6356995bf6f42af6d76fc01555dbac6d86fedacd6e165a250",
+      "bytes": 34466
+    },
+    {
+      "path": "work/fenbi-practice-controls-deepening/raw/c02-review2020.html",
+      "sha256": "f6881e45a5de13df9cf22d14743f89d847cf2128bae9aeea815c7bc9bc2d68b8",
+      "bytes": 97124
+    },
+    {
+      "path": "work/fenbi-practice-controls-deepening/raw/c02-review2020.txt",
+      "sha256": "4787956436da248c66c5cc4082b124816f08aed8a9a920d6043bfd9e3c7edc03",
+      "bytes": 15860
+    },
+    {
+      "path": "work/fenbi-practice-controls-deepening/raw/c03-baidu.html",
+      "sha256": "20cf76d540141672c1f5cbdf1903bbe66bfe509cdcd63c87467d74e8c7644e3c",
+      "bytes": 63755
+    },
+    {
+      "path": "work/fenbi-practice-controls-deepening/raw/c03-baidu.txt",
+      "sha256": "b5eb24ab3bd9004800a1cffad695efadd261cbec71d9c9f502840129a1a3d94e",
+      "bytes": 2170
+    },
+    {
+      "path": "work/fenbi-practice-controls-deepening/raw/c04-bili.html",
+      "sha256": "e7badcc8c88ee24673ace7d93d15543ef41a0f6db1f93d17a2b1fe8ef6d8ee01",
+      "bytes": 3400
+    },
+    {
+      "path": "work/fenbi-practice-controls-deepening/raw/c04-bili.txt",
+      "sha256": "3f4ef95de586f06f96738ca03b5a506a19e51aab5896da57f8d7b4d357fe8ae3",
+      "bytes": 285
+    },
+    {
+      "path": "work/fenbi-practice-controls-deepening/raw/c05-wrong2019-img1.jpg",
+      "sha256": "9ece924a058ccaade2ccbf44db0b6ded9f8b47008819edc5b4374ffc06619cfe",
+      "bytes": 104508
+    },
+    {
+      "path": "work/fenbi-practice-controls-deepening/raw/c05-wrong2019-img4.jpg",
+      "sha256": "c7fdbb15b4f6f81c1f7bd05442f213a8d25a90effe55b6705fce730af3f1aab3",
+      "bytes": 101
+    },
+    {
+      "path": "work/fenbi-practice-controls-deepening/raw/c05-wrong2019.html",
+      "sha256": "fdc4e0225fa02fe2dfeff8bd11f03840544265918e75fc97f14ef4b3635e511c",
+      "bytes": 67506
+    },
+    {
+      "path": "work/fenbi-practice-controls-deepening/raw/c05-wrong2019.txt",
+      "sha256": "c6fd555d8aeb605b09cf8b889d4cf5757c8b8bb2a390d381e397eb6daf464979",
+      "bytes": 2588
+    },
+    {
+      "path": "work/fenbi-practice-controls-deepening/raw/c06-quick2022.html",
+      "sha256": "edc91a8b95057d4d6ab839ea8db4cd9f0826146d03e2a7bc421961eb95d8bb2d",
+      "bytes": 161156
+    },
+    {
+      "path": "work/fenbi-practice-controls-deepening/raw/c06-quick2022.txt",
+      "sha256": "24459af8b230df9a226f0201f04d47af697282ae4a69c21873e5dc7ed4a50abe",
+      "bytes": 3025
+    },
+    {
+      "path": "work/fenbi-practice-controls-deepening/raw/c07-print2020.html",
+      "sha256": "5cf975d8fd809adf4aba9ecf4e2d55b1f3bf1924e282d9c42d1b8a10671e83ea",
+      "bytes": 177468
+    },
+    {
+      "path": "work/fenbi-practice-controls-deepening/raw/c07-print2020.txt",
+      "sha256": "3ebca1f1474fe181efd62a7235f5d78c69f1d0b4bedac75265780fd987c22715",
+      "bytes": 3559
+    },
+    {
+      "path": "work/fenbi-practice-controls-deepening/raw/c08-mock2020.html",
+      "sha256": "2eb08d051af73edf2afc15f1e4a2fc1df9adaeff95d7811ba53a1a4987b23845",
+      "bytes": 67944
+    },
+    {
+      "path": "work/fenbi-practice-controls-deepening/raw/c08-mock2020.txt",
+      "sha256": "2b3e7ff82a913489274f30a1810b0071fed1d339768fdcffc4728d97f298c39f",
+      "bytes": 2194
+    },
+    {
+      "path": "work/fenbi-practice-controls-deepening/raw/old-E-FBCD-08-local-text.txt",
+      "sha256": "9fad93c297e7bdc3c7cee1eccdc50391582da6e8339d382a6e8c883319cb4440",
+      "bytes": 470
+    },
+    {
+      "path": "work/fenbi-practice-controls-deepening/write-batch.py",
+      "sha256": "c4fffe71c420351b7643b42b6991ad93c2a43cc8a3bda4b5ed51289690a9d7cf",
+      "bytes": 20761
+    }
+  ]
+}

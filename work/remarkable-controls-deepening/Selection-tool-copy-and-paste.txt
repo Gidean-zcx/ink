@@ -1,0 +1,25 @@
+Use the selection tool to rotate, move, scale, copy, cut, paste, and convert handwritten content on your reMarkable.
+Move an object by using your Marker to draw a line around the handwritten notes or drawing you’d like to relocate. Tap and hold inside the selected area and drag the object to where you want it. Tap outside the selected area to complete the action.
+Scale an object by using your Marker to draw a line around the content you’d like to edit. Tap and hold one of the corners and drag it to adjust the size. Tap outside the selected area to complete the action.
+Rotate an object by using your Marker to draw a line around the content you’d like to edit. Tap and hold the circle at the top of the selected area and drag it clockwise or counterclockwise to rotate. Tap outside the selected area to complete the action.
+Copy an object by using your Marker to draw a line around your content. Tap the copy button under the selected area to create a copy, then tap with your Marker where you want to place the copy. Complete the action by tapping outside the selected area.
+Cut an object by using your Marker to draw a line around your content. Tap the cut button under the selected area, then tap with your Marker where you want to place it.
+After you have copied or cut content, you can paste it on any page, within any notebook or document.
+The selection will remain on your clipboard and can be pasted repeatedly until you tap the Clear clipboard button at the bottom of the screen.
+To mirror a selection, tap and hold a corner of the selected area and resize it past its opposite border to flip the content over. This can be done both horizontally and vertically.
+Convert notes to text with the selection tool
+You can convert handwritten notes to typed text using the selection tool. Here’s how:
+Open the document with the handwritten notes you’d like to convert.
+Tap the selection tool and select your handwritten notes with your Marker.
+Tap the handwriting conversion button.
+Place the text cursor by tapping the display with your Marker.
+Tap the paste button to paste the converted text. You can edit this text with the on-screen keyboard, with Type Folio, or in the mobile and desktop apps with a Connect subscription.
+You can also convert text and paste it in other documents:
+Tap the selection tool and select your handwritten notes with your Marker.
+Tap the handwriting conversion button.
+Close the document and open the document you want to paste the text into.
+Tap the text button.
+Tap the text cursor with a finger, then tap the paste button.
+Read more about converting handwritten notes to typed text
+Select and edit handwritten text in the desktop app
+When using the desktop app, you can edit handwritten notes or sketches with the selection tool. Click Selection tool in the upper-right corner, select your handwritten content, then move, scale, rotate, delete, or copy.

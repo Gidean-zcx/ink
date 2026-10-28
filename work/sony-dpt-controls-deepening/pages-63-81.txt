@@ -1,0 +1,528 @@
+=== PDF PAGE 63 ===
+Help Guide
+Digital Paper System
+DPT-RP1/DPT-CP1
+Creating a new note
+There are two types of notes: “standalone notes” and “side-notes on documents.” This section explains how to create a
+standalone note. For how to create a side-note, see the links in “Related Topics.”
+Hint
+Notes are created as PDF files and can be handled the same way as documents. After creation, the Digital Paper App can be
+used to move the note to a different folder or change the file name.
+Note
+Even when a document is open, performing the steps above will not create a side-note on the document.
+Related Topic
+Adding/editing a note template
+Creating a side-note on an open document
+Changing the organization of documents/folders on the Digital Paper
+Selecting defaults for the note template
+4-597-942-19(1)
+Copyright 2016 Sony Corporation
+Press the 
+
+(home) button, and tap [Create&#010;New Note].
+1
+Select a template, and tap [OK].
+A note is made in the Note folder under a file name that combines the name of the template with the date of
+creation.
+2
+63
+
+=== PDF PAGE 64 ===
+Help Guide
+Digital Paper System
+DPT-RP1/DPT-CP1
+Opening a note
+Hint
+Notes are documents (PDF files) marked with special attributes. As with documents, notes can also be opened from the All
+Documents list or the quick access list.
+Related Topic
+Opening a side-note
+Opening a document
+Selecting and opening from a folder
+Opening a different document from the quick access list
+4-597-942-19(1)
+Copyright 2016 Sony Corporation
+Press the 
+
+(home) button, and tap [All Notes].
+1
+Tap the note you want to display.
+2
+64
+
+=== PDF PAGE 65 ===
+Help Guide
+Digital Paper System
+DPT-RP1/DPT-CP1
+Creating a side-note on an open document
+There are two types of notes: “standalone notes” and “side-notes on documents.” This section explains how to create a
+side-note on a document. For how to create a standalone note, see the links in “Related Topics.”
+Hint
+When a one-to-one relationship is made between a side-note and a document, simply select 
+ (option) — [Open Side-Note] on
+the screen of the document to display the side-note alongside the document. This is convenient for displaying a note without
+have to find it in a list.
+To change the side that the document and the side-note are displayed on
+Tap 
+
+(option) — [Swap Screens].
+To display only one document
+Tap 
+ (option) on either the left or right, and then tap [Display This Document Only].
+Note
+When the document and side-note are displayed side-by-side, the document cannot be rotated.
+The document and side-note cannot be displayed top and bottom.
+When you press the 
+
+(home) button and tap [Create&#010;New Note], a standalone note is created, not a side-note.
+A side-note cannot be created in a note.
+Hint
+Only one side-note can be created per document. When you want to create a side-note to replace the existing side-note, after
+displaying the existing side-note in side-by-side format with the document, tap 
+ (option) — [Create a New Side-Note for This
+Document]. The old side-note will become a standalone note.
+Side-notes are created as PDF files and can be handled the same way as documents. After creation, the relationship between
+the document and the side-note will be retained, even if the Digital Paper App is used to move the document or the side-note to
+another folder or to change the file name of the side-note.
+Related Topic
+Adding/editing a note template
+Tap anywhere on the screen of a document to display the tool bar.
+1
+Tap 
+ (option) in the upper right of the document screen — [Create a New Side-Note for This Document].
+2
+Select a template, and tap [OK].
+The document and side-note are displayed side-by-side.
+The side-note is given the same file name as the document with “_Note” attached to the end, and it is located in the
+same folder as the document.
+3
+65
+
+=== PDF PAGE 66 ===
+Displaying documents side-by-side
+Changing the organization of documents/folders on the Digital Paper
+Creating a new note
+Selecting defaults for the note template
+4-597-942-19(1)
+Copyright 2016 Sony Corporation
+66
+
+=== PDF PAGE 67 ===
+Help Guide
+Digital Paper System
+DPT-RP1/DPT-CP1
+Opening a side-note
+Hint
+Side-notes are documents (PDF files) marked with special attributes. As with documents and standalone notes, they can be
+opened independently.
+Related Topic
+Opening a note
+Opening a document
+Selecting and opening from a folder
+Opening a different document from the quick access list
+4-597-942-19(1)
+Copyright 2016 Sony Corporation
+Tap anywhere on the screen of a document to display the tool bar.
+1
+Tap 
+ (option) in the upper right of the document screen — [Open Side-Note].
+2
+67
+
+=== PDF PAGE 68 ===
+Help Guide
+Digital Paper System
+DPT-RP1/DPT-CP1
+Adding/deleting a page from a note
+To add a page after the final page
+On the final page of the note, swipe (move your finger) in the direction that would take you to the next page.
+Note
+After a page is deleted, it cannot be returned.
+Pages cannot be added/deleted when viewing the document as a two-page spread.
+4-597-942-19(1)
+Copyright 2016 Sony Corporation
+Tap anywhere on the screen of a document to display the tool bar.
+1
+Tap 
+ (option) in the upper right of the document screen — [Insert New Page] or [Delete Current Page].
+When you tap [Insert New Page], one page is inserted before the page that is currently being displayed.
+2
+68
+
+=== PDF PAGE 69 ===
+Help Guide
+Digital Paper System
+DPT-RP1/DPT-CP1
+Selecting defaults for the note template
+Set whether to select a template when you create a new note or to use a specific template without the option to select.
+Related Topic
+Adding/editing a note template
+4-597-942-19(1)
+Copyright 2016 Sony Corporation
+Press the 
+
+(home) button, and tap [Settings].
+1
+Tap [System Settings] — [Note Template], then tap either your desired template or [Select template every
+time note is created].
+2
+69
+
+=== PDF PAGE 70 ===
+Help Guide
+Digital Paper System
+DPT-RP1/DPT-CP1
+Adding/editing a note template
+Using the Digital Paper App, you can add a note template to the Digital Paper. You can also delete templates and
+change their names.
+To add a note template
+Click [Add] under [Note template]. 
+Click [Select file], and then select the PDF file you want to use as a template from your computer. Enter a name for the
+template, then click [OK].
+To delete a note template
+Select a template, and click [Delete].
+To change the name of a template
+Select a template, and click [Rename]. Then enter a name for the template, and click [OK].
+Note
+PDF files that are password protected cannot be added as templates.
+Hint
+For PDF files that have multiple pages, only the first page will be registered as a template.
+Related Topic
+Selecting defaults for the note template
+4-597-942-19(1)
+Copyright 2016 Sony Corporation
+Connect the computer to the Digital Paper.
+1
+Launch the Digital Paper App on the computer.
+2
+Click [Settings] to display the [Settings] screen.
+3
+70
+
+=== PDF PAGE 71 ===
+Help Guide
+Digital Paper System
+DPT-RP1/DPT-CP1
+Changing the settings on the Digital Paper
+Setting items
+[Wi-Fi]
+Switch the Wi-Fi function On/Off.
+[Wi-Fi Settings]
+[Keep Wi-Fi On During Sleep]
+When [Always enabled] or [Enabled only when plugged in] is selected, the Wi-Fi connection is maintained even
+when the Digital Paper enters sleep mode, and documents can be transferred and operated from the Digital
+Paper App.
+[Wi-Fi Frequency Bands]
+Select the frequency of the Wi-Fi network that you want to use with the Digital Paper.
+[Add Network Manually]
+Add a Wi-Fi network.
+[Update Network List]
+Update the [Network List].
+[Network List]
+View the list of Wi-Fi networks. 
+Tap the SSID that is currently connected to display the [Link Speed], [Frequency], and other connection
+information.
+[Bluetooth] 
+Switch the Bluetooth function On/Off.
+[Bluetooth Settings] 
+[Bluetooth Pairing] 
+Enter standby mode for Bluetooth pairing.
+[Keep Bluetooth Connection On During Sleep] 
+When [Always enabled] or [Enabled only when plugged in] is selected, the Bluetooth connection is maintained
+even when the Digital Paper enters sleep mode, and documents can be transferred and operated from the Digital
+Paper App.
+[Delete Pairing Information for All Bluetooth Devices] 
+Delete the paring information of all paired Bluetooth devices.
+[NFC]
+Switch the NFC function On/Off.
+[Start Wi-Fi Access Point] 
+Make this device function as a Wi-Fi access point.
+[Wi-Fi Access Point Information] 
+Display/edit the SSID and password when this device is used as a Wi-Fi access point.
+[System Settings]
+[Pen Calibration]
+Set the way you hold the pen, and correct any displacement between where the pen touches the screen and
+where the writing appears.
+[Pen Color]
+Select the pen color combination ([Blue / Red] or [Black / Red]) for handwriting on a document.
+Press the 
+
+(home) button, and tap [Settings].
+1
+Set the individual items.
+2
+71
+
+=== PDF PAGE 72 ===
+[Limit Editing Annotations]
+Annotations that were made to a document outside of your Digital Paper cannot be edited.
+[Note Template]
+Set whether to select a template each time a new note is created, or to use a specific template by default--without
+the option to select--whenever a new note is created.
+[Screen Lock]
+[Screen Lock]
+Set a screen lock on the Digital Paper by setting a lock password between 4 to 20 alphanumeric characters
+and symbols in length.
+[Change Lock Password]
+Change the lock password for the Digital Paper.
+[NFC Card Lock Release Settings]
+Register a FeliCa card, FeliCa-compatible mobile phone, smartphone, etc., which can then be used to disable
+the screen lock on the Digital Paper.
+[Control Server Settings] 
+Settings for linking Digital Paper to a system.
+[Initialize Digital Paper]
+Initialize the system storage, and return all settings to their factory defaults. After initialization is complete, the
+Digital Paper will automatically turn off.
+[About This Device]
+[Device Details]
+Display the amount of available space in system storage, the [Software Version], [Device ID], [MAC Address],
+and [Bluetooth Address].
+[End User License Agreement]
+Display the software’s End User License Agreement. Be sure to read this before use.
+[Regulatory Information]
+Display the VCCI mark based on the rules for voluntary control measures and the marks and registration numbers for
+the radio wave/radio communication industry acts.
+Related Topic
+Connecting via Wi-Fi/Connecting using a USB cable
+Connecting via Bluetooth
+Selecting defaults for the note template
+Setting the screen lock
+Adding/editing a note template
+Calibrating the pen
+4-597-942-19(1)
+Copyright 2016 Sony Corporation
+72
+
+=== PDF PAGE 73 ===
+Help Guide
+Digital Paper System
+DPT-RP1/DPT-CP1
+Changing the Digital Paper settings using the Digital Paper App
+Use the Digital Paper App to change the settings of the Digital Paper.
+Setting items
+[Paired Digital Paper]
+Display information for the Digital Paper that has been paired. If pairing with a different Digital Paper, click [Re-pair
+with Digital Paper].
+[Bluetooth automatic connection] (For Windows) 
+When launching the Digital Paper App, set whether or not the Bluetooth-paired Digital Paper is automatically
+connected.
+[Automatic Notification] 
+Set whether Digital Paper automatically checks for software update information via the Internet.
+[Automatic sync] 
+When using the Digital Paper App, set whether or not the connected Digital Paper is automatically synced.
+[Interval] 
+Set the interval to sync automatically.
+[Note template]
+Add a note template to the Digital Paper, delete a template, or change the name of a template.
+[Wi-Fi of the Digital Paper] 
+Set whether or not the Digital Paper is connected via Wi-Fi.
+[Saved Wi-Fi networks]
+Add a Wi-Fi network for the Digital Paper to connect to, or edit/delete the settings for a Wi-Fi network that has
+already been stored. 
+A Wi-Fi network can be set only when Wi-Fi is turned on.
+[General Settings]
+Click [Edit] to edit each item.
+[Username]
+The username that is set here will be listed as the author of annotations.
+[Date format]
+Set the display format for the date.
+[Time format]
+Set the display format for the time.
+[Time zone]
+Set the time zone.
+[Auto sleep]
+Set the amount of time before the Digital Paper enters sleep mode.
+Hint
+A maximum of 20 Wi-Fi networks can be stored to a Digital Paper device.
+Connect the computer to the Digital Paper.
+When changing the settings for the Wi-Fi network, please connect via the USB cable.
+1
+Launch the Digital Paper App on the computer.
+2
+Click [Settings], and set the individual items.
+3
+73
+
+=== PDF PAGE 74 ===
+Digital Paper supports the security methods WPA2-PSK (AES) and 802.1x EAP (TLS/PEAP). See the instruction manual for your
+wireless router to confirm whether your router supports the same security methods.
+When this device is connected with the Digital Paper App, the time is automatically set.
+Note
+If paired with another Digital Paper, the sync settings are deleted.
+To pair multiple Digital Paper devices with Digital Paper App for a single user account, make sure to set “Connecting a second
+and subsequent Digital Paper.”
+Related Topic
+Connecting via Wi-Fi/Connecting using a USB cable
+Connecting via Bluetooth
+Connecting a second and subsequent Digital Paper
+4-597-942-19(1)
+Copyright 2016 Sony Corporation
+74
+
+=== PDF PAGE 75 ===
+Help Guide
+Digital Paper System
+DPT-RP1/DPT-CP1
+Updating the software
+Information on software updates for the Digital Paper and the Digital Paper App is checked automatically via the Internet.
+When update information is found, a message appears on the screen of the Digital Paper App, and you can choose
+whether to update. When updating the software of the Digital Paper, use the supplied USB cable to connect the
+computer to the Digital Paper.
+Note
+For customers using the firmware earlier than Ver. 1.2, make sure to update the Digital Paper App and then update the firmware
+of the Digital Paper.
+For how to update, see the following;
+https://www.sony.net/dpapp/
+To update the software, connecting the computer to the internet is required.
+If you have skipped an update or want to manually check the update information, follow the steps below.
+To check the software version of the Digital Paper
+Press the 
+ (home) button on the Digital Paper, and tap [Settings] — [About This Device] — [Device Details].
+To check the software version of the Digital Paper App
+For Windows
+From the menu bar of the Digital Paper App, click [Help] — [About Digital Paper App].
+For Mac
+From the menu bar of the Digital Paper App, click [Digital Paper App] — [About Digital Paper App].
+4-597-942-19(1)
+Copyright 2016 Sony Corporation
+Use the supplied USB cable to connect the computer to the Digital Paper.
+1
+Connect the computer to the Internet, and launch the Digital Paper App.
+2
+From the menu bar click [Help] — [Software update], and follow the screen to update.
+3
+75
+
+=== PDF PAGE 76 ===
+Help Guide
+Digital Paper System
+DPT-RP1/DPT-CP1
+Setting up the Digital Paper App
+To transfer documents to the Digital Paper, it is necessary to install the dedicated app, “Digital Paper App,” onto your
+computer and to set up a connection (perform pairing) between the Digital Paper and the Digital Paper App on the
+computer.
+By installing the Digital Paper App onto multiple computers in your home or office, you can pair multiple computers
+with a single Digital Paper device. If one computer is set up with multiple user accounts, each user account must be
+paired separately.
+The Digital Paper App for a single user account can be paired with multiple Digital Paper devices. For information on
+how to pair with the Digital Paper App, see the links in “Related Topic.”
+76
+
+=== PDF PAGE 77 ===
+When multiple user accounts are set to a computer, make sure to set “Connecting a second and subsequent Digital
+Paper” for each user account.
+  
+If you skipped pairing during the initial setup or if you want to install the Digital Paper App onto a different computer,
+follow the steps below.
+Related Topic
+Connecting a second and subsequent Digital Paper
+4-597-942-19(1)
+Copyright 2016 Sony Corporation
+Turn on the computer and connect it to the Internet.
+If the Digital Paper App has already been installed on the computer, steps 1 and 2 are not necessary. Please
+proceed to step 3.
+1
+Download the Digital Paper App from the customer support website, and install it onto the computer.
+2
+Launch the Digital Paper App, and use the supplied USB cable to connect the computer to the Digital
+Paper.
+The [Connect to Digital Paper] screen is displayed.
+3
+Follow the screen of the Digital Paper App, and pair the Digital Paper device with the Digital Paper App.
+4
+If a software update is available for the Digital Paper, perform the update.
+5
+77
+
+=== PDF PAGE 78 ===
+Help Guide
+Digital Paper System
+DPT-RP1/DPT-CP1
+Cannot turn on the power
+If the charge indicator blinks three times in red when the 
+
+(power) button is pressed, the battery is depleted.
+Connect the Digital Paper to a computer using the supplied USB cable to charge it.
+When the battery is entirely empty, the Digital Paper cannot turn on. If you connect the Digital Paper to a computer
+using the supplied USB cable and charge it, the Digital Paper will turn on.
+When the power does not turn on, even when the Digital Paper is connected via the supplied USB cable for charging,
+press the 
+ (power) button. When the battery is entirely empty, it may take five to ten minutes from the time that
+charging begins for the power to turn on.
+When the Digital Paper experiences condensation, the power may not turn on. Wait a few hours, and then turn it on.
+4-597-942-19(1)
+Copyright 2016 Sony Corporation
+78
+
+=== PDF PAGE 79 ===
+Help Guide
+Digital Paper System
+DPT-RP1/DPT-CP1
+Cannot charge the Digital Paper
+Please use the supplied USB cable for charging. If you use a USB cable other than the one supplied, the
+performance and safety are not guaranteed.
+Use the supplied USB cable to connect the computer directly to the Digital Paper. If connecting to the computer
+through a USB hub, functionality is not guaranteed.
+When connected to a computer for charging, make sure that the computer is turned on. If the computer is off, the
+Digital Paper cannot be charged. If the power is on but the computer is in sleep mode, standby mode, or hibernation,
+the Digital Paper cannot be charged. Make sure that the computer will not enter any sort of sleep mode while
+charging.
+When charging the Digital Paper from a laptop computer, it is necessary for the laptop to have a sufficient electrical
+supply. Please charge the Digital Paper while also charging the notebook computer.
+Charge within the recommended temperature range of 5 °C to 35 °C (41 °F to 95 °F). When the Digital Paper is
+outside of the recommended temperature range and cannot be charged, remove the USB cable from the Digital
+Paper. Wait until the temperature is within the recommended range before reconnecting the USB cable and charging.
+4-597-942-19(1)
+Copyright 2016 Sony Corporation
+79
+
+=== PDF PAGE 80 ===
+Help Guide
+Digital Paper System
+DPT-RP1/DPT-CP1
+The battery seems to drain quickly
+Check whether the battery finished charging completely. Press the 
+
+(home) button to display the battery icon in
+the top right corner of the home menu. When the icon changes from 
+ to 
+, charging is complete.
+When using the Digital Paper in an ambient temperature lower than 5 °C (41°F), the battery may drain quickly, but
+this is not a malfunction.
+The battery drains even when the Digital Paper is in sleep mode. We recommend turning the power completely off
+when not in use.
+Even when the power is off, if the Digital Paper is left alone for an extended period of time, the battery will drain.
+Charge the Digital Paper before use.
+Turn off the Wi-Fi function when you are not using the network. Press the 
+
+(home) button and tap [Settings],
+then tap [Wi-Fi] to remove the check mark.
+Turn off the Bluetooth function when you are not using a Bluetooth connection. Press the 
+ (home) button and
+tap [Settings], then tap [Bluetooth] to remove the check mark.
+If your Digital Paper is connected to a computer that is in sleep mode, standby mode, or hibernation, the battery will
+drain without charging. Make sure that the computer will not enter any sort of sleep mode.
+Battery life varies depending on frequency of use, device settings, and usage environment.
+Under the following conditions, the battery will drain more quickly.
+Frequent handwriting.
+Frequent highlighting.
+Frequently searching for documents.
+Displaying documents which contain large image files.
+Using the Digital Paper while [Wi-Fi] is set to On. Or, setting up the Wi-Fi connection to remain connected during
+sleep mode.
+Selecting [Wi-Fi Settings] within [Settings], and then leaving the display on [Network List].
+Using the Digital Paper while [Bluetooth] is set to On. Or, setting up the Bluetooth connection to remain during
+sleep mode.
+4-597-942-19(1)
+Copyright 2016 Sony Corporation
+80
+
+=== PDF PAGE 81 ===
+Help Guide
+Digital Paper System
+DPT-RP1/DPT-CP1
+It takes time for a screen to be displayed
+When using the Digital Paper in a cold environment, it may take time for the display to function.
+4-597-942-19(1)
+Copyright 2016 Sony Corporation
+81

@@ -1,0 +1,21 @@
+{
+  "order": 13,
+  "entry_id": "INO-basic--web-pages--is-the-browser-extension-available-on-mobile",
+  "title": "How can I save web pages on mobile?",
+  "url": "https://www.inoreader.com/help/basic/web-pages/is-the-browser-extension-available-on-mobile",
+  "checked_on": "2026-10-27",
+  "http_status": 200,
+  "final_url": "https://www.inoreader.com/help/basic/web-pages/is-the-browser-extension-available-on-mobile",
+  "acquisition": "one_anonymous_normal_GET",
+  "raw_path": "work/research/batch41-inoreader-help/13-INO-basic--web-pages--is-the-browser-extension-available-on-mobile.html",
+  "headers_path": "work/research/batch41-inoreader-help/13-INO-basic--web-pages--is-the-browser-extension-available-on-mobile.headers.json",
+  "raw_sha256": "f7f926ce4576ae69ca0f93dfb4c9b1515632a846703d5105ed3a3da59356b207",
+  "bytes": 142135,
+  "status": "body_obtained",
+  "body_status": "extracted_not_yet_root_read",
+  "body_path": "work/research/batch41-inoreader-help/13-INO-basic--web-pages--is-the-browser-extension-available-on-mobile.body.txt",
+  "body_sha256": "568dddebe2579ded5f45f8142b4a6a3d7b88b547929913d196b1b09e8f0c969c",
+  "body_chars": 314,
+  "links": [],
+  "images": []
+}

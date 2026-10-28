@@ -1,0 +1,17 @@
+{
+  "markdown_files": 233,
+  "local_links_checked": 1757,
+  "products": 65,
+  "partial_cases": 65,
+  "flows": 920,
+  "depths": {
+    "D2": 827,
+    "D1": 77,
+    "D4": 16
+  },
+  "evidence_records": 1577,
+  "distinct_source_urls": 1409,
+  "static_visual_evidence": 215,
+  "operated_browser_evidence": 19,
+  "errors": []
+}

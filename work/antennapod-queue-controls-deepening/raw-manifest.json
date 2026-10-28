@@ -1,0 +1,72 @@
+[
+  {
+    "path": "work/antennapod-queue-controls-deepening/raw/DownloadLogAdapter.java",
+    "sha256": "3b2ee8ab167a695edfe230246ac0d11b9825b72ad006f0aa069e0668beadb339",
+    "bytes": 6388
+  },
+  {
+    "path": "work/antennapod-queue-controls-deepening/raw/DownloadLogDetailsDialog.java",
+    "sha256": "23f8c9e73259280560c002ed308e2065b4bf3c0ea23c505503a76b0c641ad53e",
+    "bytes": 7695
+  },
+  {
+    "path": "work/antennapod-queue-controls-deepening/raw/EpisodeMultiSelectActionHandler.java",
+    "sha256": "5191c537e483a5bbfbc5925d8c5bd1bf6fec11a6b4e79bb8bcc1c6f2b2b48996",
+    "bytes": 10478
+  },
+  {
+    "path": "work/antennapod-queue-controls-deepening/raw/FeedItemFilterQuery.java",
+    "sha256": "02f43983c4adde37fbc7b9b8d7896f8ccae59d73c935714bd4d8fbd2fe7b7e65",
+    "bytes": 4830
+  },
+  {
+    "path": "work/antennapod-queue-controls-deepening/raw/ItemFilterDialog.java",
+    "sha256": "0f5304d91f1e71640bd4a3a4f8ecc2eaa9cd8e6fc30eeceff1001f5e78b03d05",
+    "bytes": 5131
+  },
+  {
+    "path": "work/antennapod-queue-controls-deepening/raw/QueueFragment.java",
+    "sha256": "fee6c7b93713ea45c5f679407cc15efaa1dd7346147806e987ebe3c04399f87f",
+    "bytes": 30764
+  },
+  {
+    "path": "work/antennapod-queue-controls-deepening/raw/multiple-queues.html",
+    "sha256": "c84944245a8c6235d4f35b337bc55f0ab49a3475fb31c19b22c59f2f0fdf429e",
+    "bytes": 22085
+  },
+  {
+    "path": "work/antennapod-queue-controls-deepening/raw/multiple-queues.txt",
+    "sha256": "61b5c3431347536bea0b0cb348c4ae5dac94ceb9181d1661be848f0eeb305175",
+    "bytes": 201
+  },
+  {
+    "path": "work/antennapod-queue-controls-deepening/raw/refreshing-podcasts.html",
+    "sha256": "8c26a9e58a3e02530bbc0270f5e972ce4f5815fcc6a23960c2fe2748656151e2",
+    "bytes": 23301
+  },
+  {
+    "path": "work/antennapod-queue-controls-deepening/raw/refreshing-podcasts.txt",
+    "sha256": "6d1867b44287dcba1506ac30a41b25337ad2178c91fa5532d69a027e5be5932e",
+    "bytes": 893
+  },
+  {
+    "path": "work/antennapod-queue-controls-deepening/raw/subscription-groups.html",
+    "sha256": "a24bca2652a8397c11d17aafe6322da14b61ed09d12db28ffad0bf6c6f96a2df",
+    "bytes": 23091
+  },
+  {
+    "path": "work/antennapod-queue-controls-deepening/raw/subscription-groups.txt",
+    "sha256": "2f0476b31fb8d05e9052794ab8c46def49dd19be1b45c9fa83d92de91905aee8",
+    "bytes": 485
+  },
+  {
+    "path": "work/antennapod-controls-deepening/src/app/src/main/java/de/danoeh/antennapod/ui/screen/subscriptions/SubscriptionFragment.java",
+    "sha256": "0d35a96da963bd24f39653fe879527290c302e5cc05638145407a2cc7cac643f",
+    "bytes": 24834
+  },
+  {
+    "path": "work/antennapod-controls-deepening/tree.json",
+    "sha256": "e327534010535b53d23f8c8bebc88a4de23a8e2176ed4bc82644d394aa709a78",
+    "bytes": 533914
+  }
+]
