@@ -4,6 +4,21 @@
   - 证据：E‑KBD‑35（Use Readwise to view and manage your annotations）
   - 覆盖：F‑M002‑02 追加 E‑KBD‑35；在 `cases/M‑002-kobo.md` 的“对象边界”中明确第三方查看/管理与设备内编辑、Kobo 网页导出为不同对象
 
+## 本批新增（2026-10-28—第三方证据·第六批）
+
+- QUADERNO（M‑060，Gen.2 手册派生补强）
+  - 证据：E‑QGNT‑02（Restore 覆盖与时间戳重置）、E‑QGNT‑03（Trash 约束）
+  - 覆盖：F‑M060‑07 追加 E‑QGNT‑02；F‑M060‑04 追加 E‑QGNT‑03；`cases/M‑060-quaderno.md` 已在相应F行补注
+- Sony DPT（M‑059，1.6 指南派生补强）
+  - 证据：E‑DPCD‑35（换页清空撤销历史）
+  - 覆盖：F‑M059‑06 追加 E‑DPCD‑35；`cases/M‑059-sony-dpt.md` 相应F行补注
+- Lenovo Smart Paper（M‑062，UM927222 指南补强）
+  - 证据：E‑LNCD‑02（Trash 与永久删除边界说明）
+  - 覆盖：F‑M062‑13 追加 E‑LNCD‑02；`cases/M‑062-lenovo-paper.md` “删除/撤销与恢复”补注
+- Astell&Kern SR35（M‑065，手册索引与章节补强）
+  - 证据：E‑AKCD‑12（Timer/ReplayGain 说明与 Line Out 例外）
+  - 覆盖：F‑M065‑13 追加 E‑AKCD‑12；`cases/M‑065-astell-kern.md` 相应F行补注
+
 ### 下一批（第三方证据·第六批，候选）
 
 - Britannica（M‑049）/TIME for Kids（M‑047）：如出现覆盖“保存/分享/翻译/失败‑恢复”的新官方条目，优先补入 D2 证据
