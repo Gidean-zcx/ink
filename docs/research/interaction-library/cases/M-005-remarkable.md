@@ -114,3 +114,8 @@
 对G-002的候选启发：页面相似不代表数据联动——日历笔记是副本，分享网页不随设备修改，投屏是单文档呈现。AI执行前后需能够说明修改哪个对象、是否传播、如何恢复；这只是从竞品得到的设计问题，还未确定本项目接口或账户方案。对G-001，网页导入路径可帮助积累主题资料，但文章内容质量与转换可读性仍须评估，不能用成功上传替代学习收益。
 
 补充证据链接及版本、原件散列见[来源记录](../artifacts/remarkable-controls-deepening/source-notes.md)与[原有来源复查](../artifacts/remarkable-controls-deepening/rechecked-existing-evidence.json)。所有新增任务均D2；只有原指南一张静态页，没有新增设备/网页产品实操。
+
+## 本批第三方证据补充（2026-10-28·第八批）
+
+- 新增 E-RMCD-16（Send by email）：My files 长按或页概览 → Send by email；格式 PDF/PNG/SVG 或纯键入“Text in email”；发件人 my@remarkable.com；需 Wi-Fi 与配对账户。
+- 新增 E-RMCD-17（Trouble sharing files via email）：>25MB 不可邮件、垃圾箱/过滤、Google 区域屏蔽则邮件与云同步不可用；大文件改 USB 或官方 app。未发信、未测地区。
