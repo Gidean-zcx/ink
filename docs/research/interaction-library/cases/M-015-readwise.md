@@ -118,3 +118,31 @@
 ### 关系图的实现与样本核查（2026-10-27）
 
 [E-RWGR-01源码与本地样本审计](../artifacts/readwise-graph-renderer/source-notes.md)补过滤、来源计数、选中/筛选、两种退出、重载和窄屏范围。未修改官方生成器，输入全部为合成数据；本地示例运行不等于Reader原生App或真实AI执行。F-M015-33仍D2，hands_on=false。原工作流的未运行结论保留在原采集记录中，辅助渲染器已读/已运行的范围以本次审计为准。
+
+## 结构化竞分（2026-10-28）
+
+- 交互（关键控件）
+  - 阅读/定位：Return indicator、Currently reading、Shift+R 重设、音量键翻页（F-M015-05/16）
+  - 听读与分离：Listen using TTS、暂停/停止、滚动分离、离线限制（F-M015-02/04）
+  - 批注/标签：高亮、Action Tags、问答卡（F-M015-03/19）
+  - 搜索与组织：Better Search、Filtered Views、Folders（F-M015-04/07/12）
+  - AI：Global Ghostreader、工具/技能、外部AI工作流（F-M015-08～10、F-M015-26～35）
+  - 导出/分享：PDF/CSV/ZIP、Public link/Bundle（F-M015-11/23/24）
+
+- 信息架构（对象/层级/状态）
+  - 对象：Library/Feed、Document、Highlight/Note、Annotation PDF、Card、Skill/Tool、Persona、Bundle
+  - 状态：Most progressed vs Last opened、Seen vs Read、Saved/Later/Archive、Shared:true、E-ink Mode（F-M015-05/12/23/16）
+  - 视图：长文/分页、文字视图 vs 原PDF、字幕文本（F-M015-15/20/21）
+
+- 关键任务流（D2）
+  - “收集/整理→阅读/听读→批注→继续/归档→回顾/导出”：F-M015-01/02/03/05/11
+  - “搜索/筛选→保存视图→Digest/节奏控制”：F-M015-07/12/13/14/25
+  - “AI 解释/问答→报告/洞察→外部工具处理”：F-M015-08/15/26～35
+
+- 失败与恢复（已知/未知）
+  - 已知：Return indicator 可隐藏但仍跟踪；Seen 不等于读完；重复保存按URL去重；阅读/音频位置是不同语义（F-M015-05/01/18）
+  - 未知：跨设备/强退/断网后的精确恢复；批注锚点修复/合并与PDF往返；AI 取消/失败/回滚与配额用尽（F-M015-02/03/20/26）
+
+- 对 E-Ink4 Plus / 5–6 岁儿童 & 成人家庭（推断）
+  - 启发：把“阅读位置”“音频位置”“最远进度/最后位置”分离建模；E-ink Mode 的动画/对比/翻页映射可借鉴（F-M015-05/16）
+  - 风险：分页/长文与原版/文字视图在墨水屏上切换成本高；AI 工具的权限/副作用需强反馈；听读断点/缓存容量与儿童纯听/读听切换仍无证据（F-M015-02/15/20/26）
