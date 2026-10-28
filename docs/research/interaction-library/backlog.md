@@ -79,6 +79,16 @@
 - Anki（M-020）：新增“结构化竞分（2026‑10‑28）”，明确笔记/卡片/牌组/选项/过滤牌组与档案/同步/媒体的对象分离，Undo/Redo 与 Check Database/插件清栈的恢复边界，导出（.apkg 合并 vs .colpkg 替换）与自动备份无媒体的恢复语义；新增 RP‑M020‑01/02/03。
 - Quizlet（M-021）：新增“结构化竞分（2026‑10‑28）”，明确原始资料/草稿/发布集、Study Guide/Practice Test 与学习模式（Flashcards/Learn/SR/Test/Practice Test/游戏）的对象分离；补充 RP‑M021‑31（Flashcards 会话不跨端）、RP‑M021‑32（Test 未完成不保存），与既有 RP‑M021‑01～30 共同锚定对象与恢复语义。
 
+## 本批新增（2026-10-28—阅读器/办公电子纸集群）
+
+- BOOX NeoReader（M‑004）：新增“结构化竞分（2026‑10‑28）”；新增 RP‑M004‑11/12（对象分离；Page‑与图层/显隐/撤销边界）。
+- reMarkable（M‑005）：新增“结构化竞分（2026‑10‑28）”；新增 RP‑M005‑01/02（整页/选区转换差异；Trash 30天与单页删除）。
+- Supernote（M‑006）：新增“结构化竞分（2026‑10‑28）”；新增 RP‑M006‑01/02（对象/层/撤销边界；Digest备份 vs Cloud 同步）。
+- Sony DPT（M‑059）：新增“结构化竞分（2026‑10‑28）”；新增 RP‑M059‑01/02/03（关联关系；剪贴/撤销；同步解除）。
+- QUADERNO（M‑060）：新增“结构化竞分（2026‑10‑28）”；新增 RP‑M060‑15 等（预约/只读预览非持久；回收站/删除范围；撤销清栈）。
+- HUAWEI MatePad Paper（M‑061）：新增“结构化竞分（2026‑10‑28）”；新增 RP‑M061‑01/02（录音/转写/导出分离；重排与批注位置）。
+- Lenovo Smart Paper（M‑062）：新增“结构化竞分（2026‑10‑28）”；新增 RP‑M062‑01/02/03（Drive导出 vs Lenovo Cloud 同步；Note replay；Trash范围）。
+
 ## 下一批（候选）
 
 - 系统 AI 集群：`M-041 NotebookLM / M-042 Gemini Notebook` 以对象/产物/撤销/权限为主的“结构化竞分”；D2 为主，出现公开可操作最小 D4 再升级。
@@ -101,12 +111,13 @@
 
 - 内容/阅读/学习：M‑031 Duolingo Adventures；M‑047 TIME for Kids；M‑048 The Week Junior；M‑049 Britannica
 - 设备/系统：M‑004 BOOX NeoReader；M‑005 reMarkable；M‑006 Supernote；M‑009 讯飞办公本 X2；M‑010 BOOX Palma；M‑011 Bigme；M‑012 Mudita；M‑013 微信读书；M‑014 掌阅 App；M‑016 百词斩 App；M‑022 百词斩设备；M‑023 墨墨设备；M‑027 讯飞学习机；M‑028 小猿 AI；M‑029 洪恩；M‑032 粉笔；M‑034 FiiO；M‑035 HiBy；M‑036 Sony Walkman；M‑053 掌阅硬件；M‑054 墨案；M‑055 海信；M‑056 小猿硬件；M‑057 Meebook；M‑058 Tolino；M‑059 Sony DPT；M‑060 QUADERNO；M‑061 华为电子纸；M‑062 联想电子纸；M‑063 山灵；M‑064 iBasso；M‑065 Astell&Kern
+- 设备/系统：M‑009 讯飞办公本 X2；M‑010 BOOX Palma；M‑011 Bigme；M‑012 Mudita；M‑013 微信读书；M‑014 掌阅 App；M‑016 百词斩 App；M‑022 百词斩设备；M‑023 墨墨设备；M‑027 讯飞学习机；M‑028 小猿 AI；M‑029 洪恩；M‑032 粉笔；M‑034 FiiO；M‑035 HiBy；M‑036 Sony Walkman；M‑053 掌阅硬件；M‑054 墨案；M‑055 海信；M‑056 小猿硬件；M‑057 Meebook；M‑058 Tolino；M‑063 山灵；M‑064 iBasso；M‑065 Astell&Kern
 - 家庭音频：M‑037 Yoto；M‑038 Tonie
 - 新闻/工具：M‑052 今日头条；M‑051 抖音；M‑040 AntennaPod；M‑043 Shortcuts
 
 ### 下一批（优先聚类）
 
-- 阅读器/办公电子纸集群：`M‑004/005/006/059/060/061/062`（对象：文件/笔记/导出副本/云连接；分支：删除/回收/离线/重启恢复）。若本批后仍有容量，则自上而下补入“结构化竞分（2026‑10‑28）”与对应 RP；否则保留以上精确清单为下一批目标。
+- 若继续本轮容量允许：从“仍缺清单”顶部开始补“结构化竞分（2026‑10‑28）”（优先 M‑031/M‑047/M‑048/M‑049），保持 D2；否则以上清单即为下一批目标。
 
 ## 先补什么
 
