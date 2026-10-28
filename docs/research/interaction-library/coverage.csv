@@ -21,7 +21,7 @@ F-M001-18,M-001,下拉快捷设置、全局显示与联网,D2,E-KDCD-02;E-KDAF-0
 F-M001-19,M-001,按内容类型放大阅读与返回,D2,E-KDCD-02;E-KDAF-05,部分儿童书Text Pop-Up滑动换段、双击正常；漫画Panel View/部分先启用；图像放大、表格平移缩放与X返回,支持书籍各异；漫画退出/跨页状态及误触恢复未全列；点击区示意不证明这些模式实操或60fps,static_official_images_only,false,cases/M-001-kindle.md,2026-10-27
 F-M001-20,M-001,查看人物线索与前情回顾,D2,E-KDCD-02,长按人物/地点→X-Ray，时间轴超过最远阅读默认隐藏，可显示全部；库长按/书内菜单Recaps，系列前情与Story So Far分开,地区/英文/书籍资格；无条目不等于故障；剧透边界、回顾更新、返回位置、来源和AI生成方式未验证,not_observed,false,cases/M-001-kindle.md,2026-10-27
 F-M002-01,M-002,查词与返回,D2,E-KOB-01,格式/书籍例外,查询历史、精确机型、视觉反馈,not_observed,false,cases/M-002-kobo.md,2026-10-26
-F-M002-02,M-002,选区、高亮与笔记,D2,E-KOB-02;E-KOB-03;E-KBCD-07,自动高亮/撤销及第三方书删除；通用手势页明确PDF和漫画不能按此长按方式选文本。,格式例外不等于不支持手写；取消/撤销全链、离线、冲突及当前N428构建未测。,not_observed,false,cases/M-002-kobo.md,2026-10-27
+F-M002-02,M-002,选区、高亮与笔记,D2,E-KOB-02;E-KOB-03;E-KBCD-07;E-KBD-35,自动高亮/撤销及第三方书删除；通用手势页明确PDF和漫画不能按此长按方式选文本；Readwise 为第三方查看/管理批注服务。,格式例外不等于不支持手写；取消/撤销全链、离线、冲突及当前N428构建未测；第三方连接不等于设备内编辑或Kobo导出。,not_observed,false,cases/M-002-kobo.md,2026-10-27
 F-M002-03,M-002,同步后导出批注,D2,E-KOB-04,内容资格、格式、文件保留期,失败/等待/重新生成、具体版本,not_observed,false,cases/M-002-kobo.md,2026-10-26
 F-M002-04,M-002,USB 导入自有 EPUB/PDF,D2,E-KBD-04;E-KBD-20,非保护文件、USB检测与本地范围,导入中断、重复和损坏文件,not_observed,false,cases/M-002-kobo.md,2026-10-26
 F-M002-05,M-002,Google Drive 传书及撤权,D2,E-KBD-05,目录、刷新、下载与解除共享,代码过期、同名替换、失败重试,not_observed,false,cases/M-002-kobo.md,2026-10-26
