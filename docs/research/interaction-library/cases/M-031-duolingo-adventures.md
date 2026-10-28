@@ -210,6 +210,7 @@ Math Coach、跳主题、其他年级/几何/时钟等仍只有部分文档或�
   - 错误→情境澄清→再试（D2）：角色以澄清语句提示继续沟通；未证提示层级与最终接受条件（F‑M031‑02）。
   - 主课最小链（D4 限网页样本）：错答扣心→词义提示→继续作答→尝试退出/返回学习页（F‑M031‑16/17/18）。
   - 数学/棋课（D4 限网页样本）：同题重试或课末订正→结算→刷新/返回学习页状态（F‑M031‑19/20）。
+  - 本批补充 D4 审计（2026‑10‑28）：Chess 退出/重进与最小结算，Math 结算后刷新与路径页状态。见 `../artifacts/duolingo-chess-interactions/2026-10-28-browser-operation-audit.md`、`../artifacts/duolingo-math-interactions/2026-10-28-browser-operation-audit.md`（RP‑M031‑14/15）。
   - Practice 回访（D2）：可回访“已有内容”，未证恢复点、成绩改写与列表规则（F‑M031‑04）。
 - 失败与恢复边界
   - Adventures：退出/保存/恢复级别未知；不得把主课网页的确认对话框外推到 Adventures（RP‑M031‑13）。

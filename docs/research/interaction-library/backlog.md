@@ -53,11 +53,25 @@
 - The Week Junior US（M‑048，公开样刊）：补充“文章页刷新→位置/视图重置”“目录返回→再入同文章→从首章开始”。见 `artifacts/week-junior-controls-deepening/2026-10-28-browser-operation-audit.md`；将新增 RP‑M048‑05/06 与 `evidence.jsonl`/`coverage.csv` 对应更新。
   - 共同限制：仅公开网页，零副作用；不主张设备原生、登录后或订阅平台保存；离线/跨设备仍待补。
 
+## 本批新增（2026-10-28—D4 公网页补证·第二批）
+
+- TIME for Kids（M‑047，K–1 公开样刊）：补充“文章页刷新→默认视图与起始；目录返回→再入同文→起始”。见 `artifacts/time-sample-reader/2026-10-28-browser-operation-audit.md`；新增 RP‑M047‑08；`evidence.jsonl` 追加 E‑TKSM‑02；`coverage.csv` 为 F‑M047‑06 追加证据ID。
+- Duolingo（M‑031，Chess/Math 匿名网页）：补充“Chess 退出/重进与最小结算”“Math 结算后刷新与路径页状态”。见 `artifacts/duolingo-chess-interactions/2026-10-28-browser-operation-audit.md`、`artifacts/duolingo-math-interactions/2026-10-28-browser-operation-audit.md`；新增 RP‑M031‑14/15；`evidence.jsonl` 追加 E‑DUCX‑03、E‑DUMA‑05；`coverage.csv` 为 F‑M031‑19/20 追加证据ID。
+- Britannica（M‑049，其他预览类型）：本轮未取得 Community Helpers 之外的公开交互预览；记录目录区 429 与未能操作的事实（E‑BRCD‑09），不升级为 D4。
+- 共同限制：公共网页与零副作用前提；不声称设备原生/登录后/订阅保存；离线/跨设备/清缓存另列未知。
+
 ## 下一批（2026-10-28—D4 公网页补证·第二批，候选）
 
 - TIME for Kids：同一期内再取一条最小链（刷新/书签/重启的对照），或另一篇公开文章的朗读/搜索/刷新复位。
 - Duolingo（Chess/Math 公网页匿名）：围绕“错误→提示→重试→结算→退出/重进/刷新”再补一条最小链（不含登录/购买）。
 - Britannica：选择不同交互类型的另一个公开预览；若出现离线/刷新失败分支，按 D4 记录具体现象与未知。
+
+## 下一批（2026-10-28—D4 公网页补证·第三批，候选）
+
+- Espresso（M‑045）：若出现有效公开样刊/演示，尝试“显式书签/刷新复位/重启回位”的最小链；否则继续 D2 证据收敛。
+- AntennaPod（M‑040）：匿名网页可操作范围内，尝试“订阅→仅入队/不下载→清除/恢复”的最小 D4；否则补 D2 失败/离线分支官方口径。
+- Ground News（M‑046）：若公开网页可操作，尝试“过滤→清除/撤销→刷新/返回”的最小链；403 路线不绕行。
+- Britannica（M‑049）：继续监测可公开交互预览；一旦出现不同类型，优先最小 D4。
 
 ## 本批新增（2026-10-28—音频听书·Audible）
 

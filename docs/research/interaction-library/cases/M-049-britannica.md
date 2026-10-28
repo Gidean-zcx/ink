@@ -104,6 +104,7 @@ F-M049-01/02 是据手册构造的完整**任务意图**：带问题找条目→
   - Early：六类入口/关键词→短段文章→段首朗读/逐词高亮→原生英/西语切换（F‑M049‑02）。
   - 保存与引用（D2）：保存需登录 My Britannica；机译版本可能禁用保存/引用/发送（F‑M049‑03）。
   - 公开预览互动（D4 限一例）：错答→Try again/See clue→再答对→回顾与 Start Again；Back 恢复上题讲解（F‑M049‑05；RP‑M049‑01/02/03）。
+  - 本批记录（2026‑10‑28）：尝试查找 Community Helpers 之外的交互预览未果；目录区仍见429，未模拟离线/弱网。见 `../artifacts/britannica-controls-deepening/2026-10-28-other-previews-notes.md`（E‑BRCD‑09，非 D4 操作）。
 - 本批补充 D4 审计（2026‑10‑28）：Start Again 回到首题；Back→讲解稳定→Next。见补充审计文件：`../artifacts/britannica-controls-deepening/2026-10-28-browser-operation-audit.md`（参考点 RP‑M049‑04/05）。
 - 失败与恢复边界
   - 翻译后工具禁用：Google 版本属外层翻译，若干工具可能不可用（E‑BRIT‑04）；不得把“翻成中文后朗读/保存”当作已证能力。
