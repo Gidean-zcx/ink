@@ -142,6 +142,23 @@ F08的安装包/应用/图标分离，以及F10的有限数据备份，对G-002�
 - E-MUD-13：[官方对 Center 侧载的说明](https://mudita.com/community/blog/why-mudita-kompakt-is-considered-a-flexible-minimalist-phone/)，功能发现，未验证所有兼容性。
 - E-MUD-14：[1.6 官方发布条目](https://support.mudita.com/en/support/solutions/articles/77000598634-muditaos-k-1-6)，旧批仅登记条目；本轮 E-MDCD-03/04 已读取正文与英文附件。
 
+## 结构化竞分（2026-10-28）
+
+- 对象/信息架构
+  - 通话/短信/MMS 对话、联系人（机内/Center）、录音原音/回放/删除、Notes 条目、文件（音乐/照片/电子书）、系统开关（飞行/Offline+）、网络（Wi‑Fi/蓝牙/热点/蜂窝/漫游）、应用（安装包APK/已安装App/图标隐藏）、备份（Center数据集/加密口令）与系统更新/恢复出厂为不同对象（F‑M012‑01…27）。
+- 关键任务流（已证与限制，D2）
+  - 通信与阻止：拨号/短信/MMS/删除对话/阻止与解封（F‑M012‑01/02/03）。
+  - 控制中心与离线：音量/静音、飞行与Offline+（硬件/软件停用边界）（F‑M012‑04/05）。
+  - 传入/删除文件与Center备份：Center 管理文件；加密备份/恢复（F‑M012‑06/07/10）。
+  - 应用生命周期：侧载、隐藏/显示、无法直接卸载的官方边界（F‑M012‑08）。
+  - 系统维护：更新与恢复出厂（设置/Recovery 两路）（F‑M012‑09）。
+  - 实用工具：联系人导入、Notes、Recorder、指纹、日历/闹钟、地图/天气、相机/截图、网络与充电上限（F‑M012‑11…27）。
+- 失败与恢复边界
+  - Offline+ 影响通信与采集；补收/重连未证。侧载与卸载限制、备份范围与覆盖/合并、Recovery 清空不可逆（分支已明示）。
+  - 截图无提示、地图离线与GPS/天气更新为不同状态；来电/锁屏/蓝牙中断的恢复未证。
+- 对 E‑Ink4 Plus 与 5–6 岁+成人家庭的启发与风险
+  - 启发：把“通信/文件/应用/系统/备份/网络/离线”拆分；显式“对象与动作”的作用范围。
+  - 风险：把“隐藏图标”当卸载；把“加密备份”当整机镜像；把“飞行模式”当Offline+安全。
 本轮补证（均查阅于2026-10-27；原件/哈希见结构化批次）：
 
 - E-MDCD-01：[官方 Kompakt 英文手册：整册目录与实体导航](https://assets.ctfassets.net/isxmxtc67n72/3biBEzYwk8UjSapgvMB461/b6ade0485fba2625382f44aca0fd0b51/ENG_Mudita_Kompakt_Manual_Online_04.pdf)；TOC p4; pp2–5; p9; observed illustration p3。
