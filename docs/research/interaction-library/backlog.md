@@ -9,6 +9,36 @@
   - Khan Kids：固定同构建与同书，记录Books vs. Reading 的读听切换/提示/退出/回位（D2→D3可行则升级）；保持“下一课≠原题续做”的边界。
   - DragonBox Numbers：在Puzzle与Ladder/Run分支下补“错放/提示/撤销/重试/结算/恢复”的文档证据与缺口声明；若发现可公开演示，再做D3/D4。
 - 索引同步：新增 RP‑M030‑01/02、RP‑M050‑01/02 已入 `reference-points.csv`；如取得新D4，补 `evidence.jsonl` 与 `coverage.csv` 的 task_depths 与 observed_browser_sequence。
+### 2026-10-28：新增两条可复查 D4 证据链（公开网页）
+
+- 学习链（5–6 岁适龄，公开可操作）：Britannica Community Helpers 预览。已覆盖“错答 →（提示/讲解）→ 重试正确 → 收束（开放问题）→ 中断/重入”。见：
+  - 审计与截图：`docs/research/interaction-library/artifacts/britannica-controls-deepening/browser-operation-audit.md`
+  - 覆盖台账：`F-M049-05`（D4）
+  - 交叉引用：`RP-M049-01/02/03`
+  - 待补：离线/网络失败、订阅版与账号保存、重复错答的差异、触屏与键盘无障碍
+
+- 阅读/听读链（K–1）：TIME for Kids 样刊文章与整期样刊。已覆盖“显式页书签 → 同页关闭重开 → 刷新复位/倍速复位 → 浏览器重启回页码（音频跨进程未取得） → 窄屏视口”。见：
+  - 审计与截图：`docs/research/interaction-library/artifacts/time-controls-deepening/browser-operation-audit.md`、`docs/research/interaction-library/artifacts/time-sample-reader/browser-operation-audit.md`
+  - 覆盖台账：`F-M047-06` 等（D4）
+  - 交叉引用：`RP-M047-01/02/03/04/05/06`
+  - 待补：实际声音/对齐、断网/来电、跨设备/账户与清站点数据后的恢复
+
+### 2026-10-28：下一批聚焦（个人新闻/阅读聚合）
+
+优先顺序（理由：服务 G-001 的“个人新闻”，且与 R-018/021 的可恢复节奏与 AI 可操作对象直接相关）：
+1) Inoreader（M-044）— 由 D2 文档链转向最小 D4：仅限公开或演示环境下的“零副作用”链路（如目录→只读过滤→清除），不登录不外发；若无法取得 D4，则补全文档证据到 Filters/Rules 撤销、级联与历史回看范围的官方口径差异。
+2) Readwise Reader（M-015）— 固定设备构建后的小样本“阅读/听读/位置”对齐与 E-ink Mode 实测方案；当次仍不可实测时，先补“位置语义/视图切换/导出对象”的官方证据与限制。
+3) Ground News（M-046）— 继续 D2 深化：全局默认与事件内过滤的冲突优先级、收藏/已读撤销、统计更新延迟的官方证据；如搜索 403 仍在，则不做 D4 试点。
+
+交付物（每批）：
+- 结构化竞分小节（交互/IA/关键任务流/失败与恢复/对 E-Ink4 Plus 与 5–6 岁/成人的启发与风险）
+- 覆盖/参考点/证据表更新；可复查入口与限制明确
+
+## 下一批（计划 2026-10-28）
+
+- 儿童学习链与交互游戏（Khan Kids、DragonBox Numbers、Duolingo 主学习的特定子链）
+  - 目标：把“错误→提示→重试→结算→中断/恢复”的最小 D4 样例扩展到至少一条新子链；若公开可操作不足，则补强 D2（官方操作文档与限制）
+  - 交付：各案例“结构化竞分”小节、coverage/reference-points 更新、明确失败/离线/刷新分支的证据或未知
 
 ## 先补什么
 
