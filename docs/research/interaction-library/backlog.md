@@ -91,6 +91,12 @@
 - Khan Kids（M‑030）：App 场景，公开网页无可匿名运行的读听/练习链（E‑KHAT‑14）。
 - Readwise/Reader（M‑015）：Reader 与账户需登录，公开网页无可匿名读链（E‑RWCD‑20）。
 
+## 本批新增（2026-10-28—第三方证据·第一批）
+
+- Economist Espresso（M‑045）：官方产品页与应用说明补证 Today/For you 分离与平台范围（E‑ESPR‑05/06）；F‑M045‑01/02/03 补入证据。
+- Ground News（M‑046）：方法论与阅读/离线说明补证（E‑GRCD‑18/19）；F‑M046‑01/11 补入证据。
+- AntennaPod（M‑040）：Wiki Sleep timer / Backup 与文档主页索引补证（E‑APCD‑20/21/22）；F‑M040‑08/12/03/07 补入证据。
+
 ## 下一批（2026-10-28—D4 公网页补证·第五批，候选）
 
 - 具备公开 D4 潜力的继续监测：Britannica 其他交互预览、TIME for Kids 新样刊/级别、The Week Junior 新一期样刊。
