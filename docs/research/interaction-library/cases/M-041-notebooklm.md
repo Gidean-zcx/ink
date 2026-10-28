@@ -24,6 +24,23 @@
 
 本案例现有 13F，均为 **D2 文档流程**，不代表每个任务的全部分支完整；7 个旧 F 保留，新增 6 个独立产物任务。原件与 SHA-256 记录在新证据的 `raw_work_path/raw_sha256`；没有将 work 原件填入正式 `archived_artifact`，没有把 HTML 抓取当视觉观察。
 
+## 结构化竞分（2026-10-28）
+
+- 对象/产物边界：
+  - 来源与选中范围：Add/Select 的勾选决定问答/生成参与集合；Unselect 与 Remove/失效删除为不同动作（F‑M041‑01/02）。
+  - 产物与版本：Cards/Quizzes、Audio(Overview/Interactive)、Mind Map、Reports(Interactive/Document)、Data Tables、Slide Deck、Infographic、Video Overview 各自为独立产物；修订/再生通常生成新版本而非原地覆盖（F‑M041‑04～13）。
+  - 导出副本：Notes→Export to Docs、Data Tables→Export to Sheets、Slides→PDF/PPTX、Infographic→PNG 等导出为“外部副本”，不回同步且不继承原笔记本权限（F‑M041‑07/10/11/12）。
+- 撤销/删除与恢复：
+  - Notes FAQ 明确“删除后不可恢复”；信息图/幻灯片/视频等“删除令旧链接失效”，未见统一回收站（F‑M041‑07/11/12/13）。
+  - 幻灯片仅支持“单页删除后 Restore slide”这一局部恢复；生成后的整套回滚与跨版本恢复未见（F‑M041‑11）。
+- 权限与限制：
+  - 18+ 与英语限制适用于部分 Interactive/Ultra/Cinematic；移动端不支持多类 Studio 生成；通知需浏览器许可（F‑M041‑06/09/11/13）。
+  - Docs/Sheets 导出副本权限独立于原本；分享链接需相应笔记本权限（F‑M041‑07/09/10/12）。
+- 学习/评测语义：
+  - 自评 Got it/Missed it 与“掌握”不同；支持错题重练与打乱，但未见逐题文字编辑/自评撤销（F‑M041‑04/05）。
+- 对 E‑Ink4 Plus 与 5–6 岁+成人家庭的启发：
+  - 把“来源集合/生成配置/产物版本/导出副本/学习进度”建模为不同对象；“删除/导出成功/通知送达”不等于可恢复或已核对正确性。
+
 ## 任务流程
 
 | F 编号 | 前置、入口与操作 | 反馈、数据变化与分支 | 证据 |
