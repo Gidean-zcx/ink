@@ -4,6 +4,21 @@
 
 本案例含19项任务，其中设备及账户任务来自D2文档/静态页；**唯一D4是桌面匿名公开图书馆选择器**，不代表T302实机、账号登录或借阅已验证。[逐条目录](../batches/tolino-controls-deepening-inventory.csv)与[来源摘记](../artifacts/tolino-controls-deepening/source-notes.md)保留父项、重复问题和未深读条目，不是全功能完成率。
 
+### 本批第三方证据补充（2026-10-28）
+
+- 新增 E‑TLCD‑08：PIN 与忘记 PIN 的官方帮助条目；hands_on=false。
+- 新增 E‑TLCD‑09：恢复出厂设置/专用 USB 步骤（更新页章节）；hands_on=false。
+- 新增 E‑TLCD‑10：Onleihe/DRM/Reader code 与最低版本边界；hands_on=false。
+  - 覆盖台账：F‑M058‑18 补 E‑TLCD‑08；F‑M058‑07 补 E‑TLCD‑09；F‑M058‑08 补 E‑TLCD‑10。
+
+（续）本批新增条目：
+
+- 新增 E‑TLCD‑11：Onleihe 借阅/阅读/归还（tolino 指南，长按封面或三点菜单归还）；hands_on=false。
+- 新增 E‑TLCD‑12：Onleihe 错误分组入口（按国家）；hands_on=false。
+- 新增 E‑TLCD‑13：W_ADEPT_CORE_NO_LOAN_TOKENS_FOUND 处理条目（授权/到期/校时/再次传输）；hands_on=false。
+- 新增 E‑TLCD‑14/15：PIN 错误次数不限、不触发锁死；“PIN 忘记→Abmelden”提示丢失自上次同步以来更改；hands_on=false。
+  - 覆盖台账：F‑M058‑08 追加 E‑TLCD‑11/12/13；F‑M058‑18 追加 E‑TLCD‑14/15。
+
 ## 已有任务的分支补强
 
 | 任务 | 条件、动作和数据变化 | 缺口与证据 |

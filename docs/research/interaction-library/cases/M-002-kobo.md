@@ -10,6 +10,7 @@
 
 - 对象边界（导出/本地副本/云条目/阅读点/音频点）：
   - 导出：账户网站的 Export annotations 生成 PDF/HTML/TXT/Markdown，并在“网站 Annotations 区”保留30天；不是原书批注30天后消失（F‑M002‑03；E‑KOB‑04）。
+  - 第三方：Readwise 查看/管理批注属于第三方服务范畴，连接后在 Readwise 端操作，不等同于设备内编辑或 Kobo 网站导出（E‑KBD‑35）。
   - 本地副本 vs 账户条目：Remove download 清本机；Remove from My Books 影响账户条目；Archive/Restore 在账户层恢复条目（F‑M002‑19；E‑KBD‑24/25）。
   - 云盘连接：Google Drive/Dropbox 断开共享后，已下载本机副本仍在；非双向同步（F‑M002‑05/06；E‑KBD‑05/06/07）。
   - 阅读位置：预览/Back to page 与目录跳章不等于永久阅读点；书签列表单独保存（F‑M002‑10/26；E‑KBD‑12、E‑KBCD‑03）。

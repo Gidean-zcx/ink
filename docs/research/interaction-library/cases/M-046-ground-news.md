@@ -254,6 +254,9 @@ D2；E-GRCD-02、E-GRND-03。缺口：未打开机构详情/实际点击；平�
 
 - 信息架构（对象/层级/状态）
   - 对象：事件（event）/报道（story）/来源（outlet）/专题流（custom feed）/评级（bias/factuality/ownership）
+  - 本批第三方证据补充：`E‑GRCD‑18/19` 用于佐证“偏向/事实性/所有权方法论与阅读入口/离线说明”的官方口径。
+
+本批补充记录（2026‑10‑28）：匿名网页未取得“筛选→清除/撤销→刷新/返回”的稳定可操作闭环；见 `../artifacts/ground-news-controls-deepening/2026-10-28-browser-operation-audit.md`（E‑GRCD‑18）。保持 D2，并注明“为何无 D4”（需登录/有状态环境）。
   - 状态：偏向条/事实性评分基于“媒体整体”，非逐篇；过滤条件有“全局默认”与“事件内临时”两层（F-M046-01/10/22）
   - 地域：Edition 与 Bias Bar 颜色独立设置（F-M046-05/18）
 

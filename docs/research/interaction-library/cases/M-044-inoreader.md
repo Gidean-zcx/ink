@@ -1,6 +1,21 @@
 # M-044 Inoreader：来源、阅读状态、新闻更正与自动处理
 
-查阅：2026-10-27；旧批为10月26日。以公开英文网页帮助、功能页中的具体步骤及2026官方发布说明为依据，分别标web、移动端和套餐条件；未固定实际App构建或账号地区。**17条任务均D2文档重建，无登录、规则执行、AI生成或App操作。**此前两张编辑历史图，加本批12张官方静态图共14张；没有操作图内控件，不算连续流程。本批另读原目录38篇帮助及4个博客/功能来源；短FAQ不逐篇另算新任务。
+查阅：2026-10-27；旧批为10月26日。以公开英文网页帮助、功能页中的具体步骤及2026官方发布说明为依据，分别标web、移动端和套餐条件；未固定实际App构建或账号地区。**17条任务均D2文档重建，无登录、规则执行、AI生成或App操作。**此前两张编辑历史图，加本批12张官方静态图共14张；没有操作图内控件，不算连续流程。本批另读原目录38篇帮助及4个博客/功能来源；短FAQ不逐篇另算新任务。另：2026‑10‑28匿名网页未取得只读演示以形成“过滤→清除/撤销→刷新/返回”闭环，暂不做 D4；见 `../artifacts/inoreader-controls-deepening/2026-10-28-public-web-operability.md`（E‑INRS‑45）。
+
+### 本批第三方证据补充（2026-10-28）
+
+- 新增 E‑INCD‑34：Mark all as read 与撤销范围的官方帮助口径；hands_on=false。
+- 新增 E‑INCD‑35：Rules 日志与 Run rule 副作用（执行动作而非纯预览）的官方帮助；hands_on=false。
+  - 覆盖台账：F‑M044‑16 补 E‑INCD‑34；F‑M044‑02 补 E‑INCD‑35。
+
+（续）开发者 API 相关官方证据：
+
+- 新增 E‑INAPI‑01：OAuth 2.0 与权限范围（read / read write）；hands_on=false。
+- 新增 E‑INAPI‑02：edit‑tag（按篇 read/unread/star/label；firstitemmsec 限制）；hands_on=false。
+- 新增 E‑INAPI‑03：mark‑all‑as‑read（按流标已读，ts 界）；hands_on=false。
+- 新增 E‑INAPI‑04：subscription/edit（unsubscribe 取消关注关系）；hands_on=false。
+- 新增 E‑INAPI‑05：导出格式范围（OPML/输出流）；hands_on=false。
+  - 覆盖台账：新增 F‑M044‑18“开发者API的导出/删除/撤销边界（范围声明）”并挂接上述证据。
 
 ## 功能目录和适用范围
 

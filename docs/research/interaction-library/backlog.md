@@ -1,3 +1,70 @@
+## 本批新增（2026-10-28—第三方证据·第八批）
+
+- HiSense（M‑055）：现行官网产品页作代际边界
+  - 证据：E‑HSD‑11（Hi Reader 2026 产品详情 283.html）、E‑HSD‑12（A10/HNR667N 产品页 PDF 清单）
+  - 覆盖：F‑M055‑01 追加；不把 2026/A10 菜单套入历史 A9/TOUCH/原版 Hi Reader
+- iReader 硬件（M‑053）：USB 传输官方教程标题
+  - 证据：E‑IHWD‑08（玩机攻略第5期 USB 传输，pagelist 元数据）
+  - 覆盖：F‑M053‑01 追加；未播放
+- reMarkable（M‑005）：邮件导出与失败口径
+  - 证据：E‑RMCD‑16（Send by email）、E‑RMCD‑17（Trouble sharing files via email）
+  - 覆盖：F‑M005‑10 追加
+- 掌阅 App（M‑014）：注销账号政策路径
+  - 证据：E‑IPAD‑02（同隐私政策 URL，第五节（五））
+  - 覆盖：F‑M014‑02 追加
+- Bigme（M‑011）：黑白版 SKU 页 OCR/TTS/翻译/批注声明
+  - 证据：E‑BIGME‑04
+  - 覆盖：F‑M011‑05/06/07 追加
+
+### 下一批（第三方证据·第八批后）
+
+硬扫描后：公开官网/帮助/商店/FAQ 仍可匿名取得的薄点，主要剩登录墙、机内帮助或需 D4/实机（B 站正文 412、海信历史型号无专册下载、汉王下载空页）。下一批若无新公开条目则 STOP，不编造文档。
+
+## 本批新增（2026-10-28—第三方证据·第七批）
+
+- iReader 硬件（M‑053）：补“手写本导出”官方教程定位
+  - 证据：E‑IHWD‑07（玩机攻略第14期：手写本‑如何导出笔记本，官方B站合集索引）
+  - 覆盖/案例：在 `cases/M‑053-ireader-hardware.md` 记录“本批第三方证据补充”，不新增F，保持 hands_on=false 与对象/权限口径
+- 小猿学练硬件（M‑056）：补“账号注销/删除/权利”官方协议条款
+  - 证据：E‑XYCP‑06（小猿智能设备用户服务协议 2024‑11‑29）
+  - 覆盖/案例：F‑M056‑06 追加 E‑XYCP‑06；在 `cases/M‑056-xiaoyuan-hardware.md` 补“本批第三方证据补充（注销政策补强）”
+- Meebook（M‑057）：补官方地区站完整手册（含多种文件传输/资源/安全说明）
+  - 证据：E‑MEE‑05（MEEBOOK M7 官方使用手册 v1.0.1）
+  - 覆盖/案例：F‑M057‑01/02 追加 E‑MEE‑05；在 `cases/M‑057-meebook.md` 记“本批第三方证据补充”
+
+### 下一批（第三方证据·第七批，候选）
+
+- Britannica（M‑049）/TIME for Kids（M‑047）：继续仅在出现“保存/分享/翻译/失败‑恢复”新官方条目时补入
+- iReader 硬件（M‑053）：若出现“出厂重置/云同步/删除与恢复”官方帮助，再补对象/权限/失败‑恢复口径
+- Meebook（M‑057）：若取得中文官网专册或机内帮助，再补“导入/索引/打开/删除/恢复”的流程证据
+- HiSense（M‑055）：若出现旧型号专册或FAQ，补“阅读/锁屏/速记/收藏/便笺”的对象与失败‑恢复条目；售后政策不替代交互流程
+## 本批新增（2026-10-28—第三方证据·第五批）
+
+- Kobo（M‑002）：补充第三方批注管理服务（Readwise）官方帮助
+  - 证据：E‑KBD‑35（Use Readwise to view and manage your annotations）
+  - 覆盖：F‑M002‑02 追加 E‑KBD‑35；在 `cases/M‑002-kobo.md` 的“对象边界”中明确第三方查看/管理与设备内编辑、Kobo 网页导出为不同对象
+
+## 本批新增（2026-10-28—第三方证据·第六批）
+
+- QUADERNO（M‑060，Gen.2 手册派生补强）
+  - 证据：E‑QGNT‑02（Restore 覆盖与时间戳重置）、E‑QGNT‑03（Trash 约束）
+  - 覆盖：F‑M060‑07 追加 E‑QGNT‑02；F‑M060‑04 追加 E‑QGNT‑03；`cases/M‑060-quaderno.md` 已在相应F行补注
+- Sony DPT（M‑059，1.6 指南派生补强）
+  - 证据：E‑DPCD‑35（换页清空撤销历史）
+  - 覆盖：F‑M059‑06 追加 E‑DPCD‑35；`cases/M‑059-sony-dpt.md` 相应F行补注
+- Lenovo Smart Paper（M‑062，UM927222 指南补强）
+  - 证据：E‑LNCD‑02（Trash 与永久删除边界说明）
+  - 覆盖：F‑M062‑13 追加 E‑LNCD‑02；`cases/M‑062-lenovo-paper.md` “删除/撤销与恢复”补注
+- Astell&Kern SR35（M‑065，手册索引与章节补强）
+  - 证据：E‑AKCD‑12（Timer/ReplayGain 说明与 Line Out 例外）
+  - 覆盖：F‑M065‑13 追加 E‑AKCD‑12；`cases/M‑065-astell-kern.md` 相应F行补注
+
+### 下一批（第三方证据·第六批，候选）
+
+- Britannica（M‑049）/TIME for Kids（M‑047）：如出现覆盖“保存/分享/翻译/失败‑恢复”的新官方条目，优先补入 D2 证据
+- iReader 硬件（M‑053）：若找到“导出/云同步/出厂重置/删除与恢复”官方帮助，再补对象/权限/失败‑恢复的口径
+- Astell&Kern SR35（M‑065）：补充歌单/M3U 与 ReplayGain/EQ Sync 的官方范围澄清（仅限官方手册/FAQ）
+- Lenovo Smart Paper（M‑062）：如有新增“回收站/备份/恢复/账户可见性”官方条目，补入并与现有 E‑LNP‑02 区分作用域
 # 竞品研究缺口与后续取证
 
 更新：2026-10-27。准确登记数量与当前案例见 [案例与覆盖索引](case-index.md)，逐流程的未解决分支见 [coverage.csv](coverage.csv)。**全部产品完整功能清单仍未核定；已查看静态图不等于连续流程或亲自操作。** 这些数量是覆盖台账，不是市场穷尽率或研究质量评分。
@@ -46,6 +113,108 @@
 - Khan Kids：同构建同书的 Books vs. Reading 读听切换与回位记录（若取得连续视觉则升级 D3；否则保持 D2 并列未知）。
 - DragonBox Numbers：在 Puzzle 与 Ladder/Run 下继续收敛“错放→提示→撤销→重试→结算→恢复”的证据与缺口；当前仍以文档与静态图为主。
 - 索引同步：如出现新 D4，更新 `coverage.csv` task_depths 与 `evidence.jsonl`；否则继续增加 `reference-points.csv` 的边界锚点。
+
+## 本批新增（2026-10-28—D4 公网页补证·第一批）
+
+- Britannica School（M‑049，Early 公开预览）：补充“Start Again→回到首题”“Back→讲解稳定→Next”两条可复查子链（一次序列）。见 `artifacts/britannica-controls-deepening/2026-10-28-browser-operation-audit.md`；`reference-points.csv` 已新增 RP‑M049‑04/05；后续在 `coverage.csv` 补入 E‑BRCD‑08 引用。
+- The Week Junior US（M‑048，公开样刊）：补充“文章页刷新→位置/视图重置”“目录返回→再入同文章→从首章开始”。见 `artifacts/week-junior-controls-deepening/2026-10-28-browser-operation-audit.md`；将新增 RP‑M048‑05/06 与 `evidence.jsonl`/`coverage.csv` 对应更新。
+  - 共同限制：仅公开网页，零副作用；不主张设备原生、登录后或订阅平台保存；离线/跨设备仍待补。
+
+## 本批新增（2026-10-28—D4 公网页补证·第二批）
+
+- TIME for Kids（M‑047，K–1 公开样刊）：补充“文章页刷新→默认视图与起始；目录返回→再入同文→起始”。见 `artifacts/time-sample-reader/2026-10-28-browser-operation-audit.md`；新增 RP‑M047‑08；`evidence.jsonl` 追加 E‑TKSM‑02；`coverage.csv` 为 F‑M047‑06 追加证据ID。
+- Duolingo（M‑031，Chess/Math 匿名网页）：补充“Chess 退出/重进与最小结算”“Math 结算后刷新与路径页状态”。见 `artifacts/duolingo-chess-interactions/2026-10-28-browser-operation-audit.md`、`artifacts/duolingo-math-interactions/2026-10-28-browser-operation-audit.md`；新增 RP‑M031‑14/15；`evidence.jsonl` 追加 E‑DUCX‑03、E‑DUMA‑05；`coverage.csv` 为 F‑M031‑19/20 追加证据ID。
+- Britannica（M‑049，其他预览类型）：本轮未取得 Community Helpers 之外的公开交互预览；记录目录区 429 与未能操作的事实（E‑BRCD‑09），不升级为 D4。
+- 共同限制：公共网页与零副作用前提；不声称设备原生/登录后/订阅保存；离线/跨设备/清缓存另列未知。
+
+## 下一批（2026-10-28—D4 公网页补证·第二批，候选）
+
+- TIME for Kids：同一期内再取一条最小链（刷新/书签/重启的对照），或另一篇公开文章的朗读/搜索/刷新复位。
+- Duolingo（Chess/Math 公网页匿名）：围绕“错误→提示→重试→结算→退出/重进/刷新”再补一条最小链（不含登录/购买）。
+- Britannica：选择不同交互类型的另一个公开预览；若出现离线/刷新失败分支，按 D4 记录具体现象与未知。
+
+## 下一批（2026-10-28—D4 公网页补证·第三批，候选）
+
+- Espresso（M‑045）：若出现有效公开样刊/演示，尝试“显式书签/刷新复位/重启回位”的最小链；否则继续 D2 证据收敛。
+- AntennaPod（M‑040）：匿名网页可操作范围内，尝试“订阅→仅入队/不下载→清除/恢复”的最小 D4；否则补 D2 失败/离线分支官方口径。
+- Ground News（M‑046）：若公开网页可操作，尝试“过滤→清除/撤销→刷新/返回”的最小链；403 路线不绕行。
+- Britannica（M‑049）：继续监测可公开交互预览；一旦出现不同类型，优先最小 D4。
+
+## 本批新增（2026-10-28—D4 公网页补证·第三批）
+
+- Economist Espresso（M‑045）：未找到可匿名进入的当日样刊；仅补充公开网页的对象边界与“为何无 D4”。见 `artifacts/espresso-controls-deepening/2026-10-28-browser-operation-audit.md`；evidence.jsonl: E‑ESCD‑04。
+- AntennaPod（M‑040）：产品为 Android 原生应用，无 Web 端可操作最小链；仅补“Web 不可操作”的记录。见 `artifacts/antennapod-controls-deepening/2026-10-28-browser-operation-audit.md`；evidence.jsonl: E‑APCD‑19。
+- Ground News（M‑046）：匿名网页未取得“筛选→清除/撤销→刷新/返回”闭环；仅补“匿名不可形成 D4”的记录。见 `artifacts/ground-news-controls-deepening/2026-10-28-browser-operation-audit.md`；evidence.jsonl: E‑GRCD‑18。
+
+## 下一批（2026-10-28—D4 公网页补证·第四批，候选）
+
+- 继续监测：Tolino 公开选馆/阅读演示（若出现，最小 D4）；Britannica 其他预览类型；TIME for Kids 其他级别/样刊。
+- 新补：新闻/工具剩余（如 Inoreader M‑044 在公开演示环境下的“只读过滤→清除”最小链）；系统 AI（若 NotebookLM/Gemini 出现公开可操作最小演示）。
+
+## 本批新增（2026-10-28—D4 公网页补证·第四批·快速尝试）
+
+- Inoreader（M‑044）：未发现只读演示或匿名可形成“过滤→清除/撤销→刷新/返回”闭环，暂不做 D4（E‑INRS‑45）。
+- Quizlet（M‑021）：匿名仅可能翻卡，Learn/Test/游戏通常需登录，未形成 D4（E‑QZMS‑24）。
+- Khan Kids（M‑030）：App 场景，公开网页无可匿名运行的读听/练习链（E‑KHAT‑14）。
+- Readwise/Reader（M‑015）：Reader 与账户需登录，公开网页无可匿名读链（E‑RWCD‑20）。
+
+## 本批新增（2026-10-28—第三方证据·第一批）
+
+- Economist Espresso（M‑045）：官方产品页与应用说明补证 Today/For you 分离与平台范围（E‑ESPR‑05/06）；F‑M045‑01/02/03 补入证据。
+- Ground News（M‑046）：方法论与阅读/离线说明补证（E‑GRCD‑18/19）；F‑M046‑01/11 补入证据。
+- AntennaPod（M‑040）：Wiki Sleep timer / Backup 与文档主页索引补证（E‑APCD‑20/21/22）；F‑M040‑08/12/03/07 补入证据。
+
+## 本批新增（2026-10-28—第三方证据·第二批）
+
+- PocketBook（M‑003）：补入手册条目作为对象/权限/恢复的官方口径
+  - E‑PBCD‑08 Maintenance/Factory reset；E‑PBCD‑09 Accounts→Dropbox；E‑PBCD‑10 Device PIN Code
+  - 覆盖：F‑M003‑16、F‑M003‑04/24、F‑M003‑11 追加证据
+- Tolino（M‑058）：补入 PIN/重置/Onleihe‑DRM 边界帮助
+  - E‑TLCD‑08 PIN 与忘记 PIN；E‑TLCD‑09 恢复出厂设置/专用 USB；E‑TLCD‑10 Onleihe/Reader code/最低版本
+  - 覆盖：F‑M058‑18、F‑M058‑07、F‑M058‑08 追加证据
+- Inoreader（M‑044）余项：补入“批量已读撤销范围 / Rules 试跑副作用”官方帮助
+  - E‑INCD‑34 Mark all as read 撤销范围；E‑INCD‑35 Rules 日志与副作用
+  - 覆盖：F‑M044‑16、F‑M044‑02 追加证据
+- Britannica（M‑049）与 TIME for Kids（M‑047）：当前官方材料已较充足，且前批已补多处 D2/可复查 D4 网页证据；本批略过，后续如发现“对象/权限/失败‑恢复”仍有缺口，再补入官方条目。
+
+## 本批新增（2026-10-28—第三方证据·第三批）
+
+- PocketBook（M‑003）：Send‑to／Cloud‑Dropbox 冲突边界补证
+  - 证据：E‑PBCD‑11（Send‑to 向导/白名单/Receive files now）、E‑PBCD‑12（Cloud 删除语义＋Dropbox 仅应用目录）、E‑PBTO‑01（EULA 条款）
+  - 覆盖：F‑M003‑06 补 E‑PBCD‑11/E‑PBTO‑01；F‑M003‑04/24 追加 E‑PBCD‑12
+- Tolino（M‑058）：Onleihe 借阅失败/归还与 PIN 锁定口径补证
+  - 证据：E‑TLCD‑11/12/13（Onleihe 借阅/错误分组/具体错误）；E‑TLCD‑14/15（PIN 错误次数不限/Abmelden 丢失范围）
+  - 覆盖：F‑M058‑08 追加 E‑TLCD‑11/12/13；F‑M058‑18 追加 E‑TLCD‑14/15
+- Inoreader（M‑044）：API 导出/删除/撤销范围（官方开发者文档）
+  - 证据：E‑INAPI‑01/02/03/04/05（OAuth 范围；edit‑tag；mark‑all‑as‑read；subscription/edit；OPML/输出）
+  - 覆盖：新增 F‑M044‑18 并挂接上述证据
+- Britannica/TIME：未发现新的官方条目覆盖“保存/分享/翻译/失败‑恢复”缺口，本批略过。
+
+## 本批新增（2026-10-28—第三方证据·第四批）
+
+- Quizlet（M‑021）：保存/分享/家长限制与撤销/重置口径
+  - 证据：E‑QZCD‑06（删除集不可恢复）、E‑QZCD‑08（可见性/年龄例外）、E‑QZMS‑06（分享仅公开；密码集需另发密码）、E‑QZMS‑08（密码保护）、E‑QZMS‑26（未成年账户限制/家长同意）、E‑QZLT‑14（Learn 重置进度）
+  - 覆盖：F‑M021‑07 追加 E‑QZLT‑14；新增 F‑M021‑33“未成年账户限制与保存/分享边界”并挂接 E‑QZMS‑26
+- Readwise Reader（M‑015）、BOOX（M‑004）、reMarkable（M‑005）：当前官方材料已较充足，定位到导出/删除/位置/撤销/云同步口径（见既有 E‑RDD/E‑RWCD/E‑BOOX/E‑RMK/E‑RMCD 系列）；本批略过，以保持“广度优先”。
+
+### 下一批（第三方证据·第三批，候选）
+
+- Britannica（M‑049）/TIME for Kids（M‑047）：若出现新官方帮助涵盖“保存/分享权限、翻译限制、失败与恢复”，补入对应 D2 证据。
+- PocketBook（M‑003）：补“Send‑to‑PocketBook 服务条款/限额、Cloud 与 Dropbox 冲突/删除传播、错误码”条目。
+- Tolino（M‑058）：补“Onleihe 借阅失败码/续借/归还边界、PIN 多次失败与锁定时间、恢复流程回执”条目。
+- Inoreader（M‑044）：补“API 数据导出/删除范围、撤销/历史重算口径差异、过滤记录内容结构”条目；若出现只读演示再尝试最小 D4。
+
+## 下一批（第三方证据·第四批，候选）
+
+- 优先补未厚实产品（按 coverage.csv 标“not_observed/static_reference_only”且证据稀少者），示例：
+  - Readwise Reader（M‑015）：官方导出/删除/位置语义条目
+  - Quizlet（M‑021）：官方“保存/分享/家长控制/撤销”条目
+  - BOOX（M‑004）/reMarkable（M‑005）：官方“导出/撤销/回滚/云同步边界”条目
+
+## 下一批（2026-10-28—D4 公网页补证·第五批，候选）
+
+- 具备公开 D4 潜力的继续监测：Britannica 其他交互预览、TIME for Kids 新样刊/级别、The Week Junior 新一期样刊。
+- 如出现可公开演示的 Inoreader 只读过滤或 Ground News 匿名筛选闭环，优先最小 D4；否则转向其他具备公开样刊/演示的阅读/杂志类。***
 
 ## 本批新增（2026-10-28—音频听书·Audible）
 

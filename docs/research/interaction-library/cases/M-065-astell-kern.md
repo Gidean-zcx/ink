@@ -59,7 +59,7 @@ D1/D2文档研究。上批已实际查看印刷24、30、48、59、60页静态�
 | F-M065-10 | 升级与锁键版本核对 | V1.22发布要求备份、电量>50%、空间>500MB；Settings/Update/System update。旧手册Wheel Lock控制熄屏音量轮；V1.22扩展侧键/All Lock。 | 发布页说更新初始化用户设置；不能拿旧手册20%门槛替代版本专用条件。现版开关图、逐键行为、数据保留及更新中断回退未知。 | E-AK-03；E-AK-04；E-AKCD-01；E-AKCD-04 |
 | F-M065-11 | 无响应恢复 | 电源约7秒强制关闭，再启动。 | 文档秒数，非实测；不是恢复出厂。写入期间后果、最后进度及冻结原因待查。 | E-AK-11 |
 | F-M065-12 | 从AK Connect库下载（D2） | 同网并选定库；分类中点歌为流播，编辑图标→选曲→下载箭头为下载。Settings/Downloads可预设目录或每次选目录；完成由通知栏消息表明。点下载通知进入管理，选择暂停或删除项。 | 下载管理删除项的部分文件清理范围未明；断网续传、重名覆盖、下载后离线回查未知。选外部扬声器的连接取消入口在库/扬声器页，不能当下载取消。 | E-AK-02；E-AKCD-01；E-AKCD-03 |
-| F-M065-13 | 设置睡眠停止与自动关机（D2文档） | Main Menu/Settings/Timer Settings，分别设置Sleep Timer、Auto Power Off、Screen Timeout。Sleep到时停止播放，关机按Auto Power Off；息屏为另一计时。 | 不概括成“睡眠计时到点立刻关机”。时长范围、确认/取消、操作是否重计、锁屏/重启保留和其他app适用范围未给出。 | E-AKCD-01 |
+| F-M065-13 | 设置睡眠停止与自动关机（D2文档） | Main Menu/Settings/Timer Settings，分别设置Sleep Timer、Auto Power Off、Screen Timeout。Sleep到时停止播放，关机按Auto Power Off；息屏为另一计时。 | 不概括成“睡眠计时到点立刻关机”。时长范围、确认/取消、操作是否重计、锁屏/重启保留和其他app适用范围未给出。 | E-AKCD-01；E-AKCD-12 |
 | F-M065-14 | 电脑音频进入SR35（D2文档） | Settings/USB Mode选DAC Input→USB连接电脑，手册描述其作为声卡。SR35官方驱动页列Windows10/11；Mac无需安装该驱动。音量由设备轮或播放程序控制，手册说Windows系统音量不可调。 | 模式内Previous/Play/Next不可用；未执行驱动。超过手册格式范围不可播；重采样、电脑声卡选择、热插拔、退出与原曲恢复未知。不是SR35向外接DAC输出。 | E-AKCD-01；E-AKCD-07 |
 | F-M065-15 | 蓝牙发射、断开与移除配对（D2） | Settings/Bluetooth开启→在可用设备列表选耳机/音箱；点已连设备弹断开确认；设备右侧信息按钮→Remove移除配对。改变Bluetooth Codec后需重连，不支持时回落兼容编码。 | 断开连接与删除配对记录分开。图中CANCEL仅为可见选项，未触发；配对拒绝、断连续播/音量及外设多点切换未知。 | E-AKCD-01；E-AKCD-05；E-AKCD-06 |
 | F-M065-16 | 返回播放页、曲内定位与来源导航（D2文档） | Mini Player展开/收起；拖进度、封面歌词、时长切换。More可去当前曲的Album/Artist/Folder或File Info；Songs/Albums/Artists/MQS按名称关键词搜索，结果可播/加入歌单。 | 视图/检索不构成持久断点。无歌词/空搜索反馈、精确粒度、章节、重启保存、原滚动位置未知；分类排序与首页次序只有入口，不补拖拽/保存规则。 | E-AKCD-01 |
