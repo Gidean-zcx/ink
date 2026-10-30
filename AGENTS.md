@@ -15,6 +15,11 @@
 - 将新想法与结论维护在 docs/ideas.md；将明确需求维护在 docs/requirements.md；将外部调研维护在 docs/research/。保留发生变化的关键判断及原因。
 - 需要临时分析或下载资料时使用 work/，正式资料按主题保存。仅文档修改做文件和链接检查，不创建无意义的测试或先行搭建完整工具链。
 
+## 跨会话接续
+
+- 新会话先查看仓库最新版本的 README.md、docs/project.md 和 docs/requirements.md，再按当前话题读取 docs/ideas.md 与对应调研；检查相关未结 Issue / PR，避免重复记录或覆盖其他会话的更新。
+- docs/project.md 是持续协作入口。讨论完成后将有价值的原始想法、条件、结论与状态写入对应文件；只有远端写入成功并核对后，才报告“已保存”，并给出文件或提交链接。未来用户提供新想法时继续执行，不把持续协作理解为无人触发的定时研究。
+
 ## Codex and OpenCode hybrid routing
 
 以下保留用户提供的协作路由要求：

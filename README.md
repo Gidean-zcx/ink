@@ -2,13 +2,13 @@
 
 基于 [CloudZao E-Ink4 Plus](https://github.com/CloudZao/Metalio-E-INK4-Plus)，探索供本人和子女使用的 AI 原生个人设备：阅读、学习、听书、日常工具，以及具备相应硬件条件时的短信和通话。暂称“家庭 AI 手机”。
 
-项目建立于 2026-10-26，位于 /home/workspace/reader。
+项目建立于 2026-10-26。云端仓库为 [Gidean-zcx/ink](https://github.com/Gidean-zcx/ink)，项目资料沿用 reader 名称。后续零散想法与需求从[云端协作入口](docs/project.md)持续接续。
 
 ## 两个核心目标
 
 用户已明确：把原来刷消遣 app 的时间转成高价值信息获取与知识、能力增长；同时提供系统级原生 AI first，使所有系统/app 行为、数据以及任意场景和页面都能被 AI 操作或获取。
 
-两个目标记录为 [G-001、G-002](/home/workspace/reader/docs/requirements.md)，用于评估全部功能。当前增加成人/儿童学习动力、游戏互动、个人新闻及儿童新闻/百科研究；具体玩法与新闻形态保持候选。
+两个目标记录为 [G-001、G-002](docs/requirements.md)，用于评估全部功能。当前增加成人/儿童学习动力、游戏互动、个人新闻及儿童新闻/百科研究；具体玩法与新闻形态保持候选。
 
 已知儿童使用者为 5–6 岁，识字能力可以、可独立阅读，用户希望提供听书。儿童原型据此探索自主读、纯听和读听切换，具体交互仍待讨论。
 
@@ -20,26 +20,28 @@
 
 ## 项目资料
 
+- [云端协作入口](docs/project.md)：当前状态、资料位置，以及新想法和新需求的接续方式。
+
 后续设计优先从[按问题查竞品依据](docs/research/interaction-library/design-reference-guide.md)进入，再查具体任务、证据与缺口；不必按时间顺序读完简报。
 
-- [第五十六期：墨水屏怎样做到操作顺畅](/home/workspace/reader/docs/briefs/056-eink-ui-interaction.md)：官方文档与 Plus 固定源码交叉核查；区分输入、可见、可读和完成，比较手势、分页、AI 分段及儿童互动。
-- [第五十五期：全局入口与执行环境](/home/workspace/reader/docs/briefs/055-global-entry-and-execution-context.md)：快捷指令补语音/按键/组件、共享输入、提醒回访与配置组织；修正预览范围，新增14条设计参考。
+- [第五十六期：墨水屏怎样做到操作顺畅](docs/briefs/056-eink-ui-interaction.md)：官方文档与 Plus 固定源码交叉核查；区分输入、可见、可读和完成，比较手势、分页、AI 分段及儿童互动。
+- [第五十五期：全局入口与执行环境](docs/briefs/055-global-entry-and-execution-context.md)：快捷指令补语音/按键/组件、共享输入、提醒回访与配置组织；修正预览范围，新增14条设计参考。
 - [全部研究简报](docs/briefs/README.md)：历史发现与变更，按时间查阅。
-- [竞品交互资料库](/home/workspace/reader/docs/research/interaction-library/README.md)：65 组已知目录，含逐产品案例、任务覆盖、来源与静态摘页、按设计问题检索；当前数量统一见 [案例索引](/home/workspace/reader/docs/research/interaction-library/case-index.md)。已新增公开样刊网页的有限实际操作记录；尚无手机或电子纸实机操作。
-- [想法记录](/home/workspace/reader/docs/ideas.md)：保存原始想法及逐条讨论结果。
-- [需求与边界](/home/workspace/reader/docs/requirements.md)：区分已经明确的要求和仍待了解的信息。
-- [CloudZao 硬件与源码](/home/workspace/reader/docs/research/cloudzao.md)：板卡差异、固定提交的驱动抽查、通信能力边界。
-- [Plus 蜂窝通信与社区固件](/home/workspace/reader/docs/research/eink4-plus-cellular.md)：NT26、短信/通话条件、原理图证据缺口与固件目录。
-- [数据备份、同步与账户](/home/workspace/reader/docs/research/data-backup-sync.md)：系统统一备份、整机/按 app 恢复、卸载和刷机的数据边界。
-- [墨水屏高刷调研](/home/workspace/reader/docs/research/eink-high-refresh.md)：PaperBoyS3、60Hz 的含义、迁移条件与估算。
-- [AI 原生与应用平台调研](/home/workspace/reader/docs/research/ai-native-platform.md)：系统能力、动态应用、渐进式披露、语音和内容导入。
-- [竞品研究总览](/home/workspace/reader/docs/research/competitor-landscape.md)：跨品类研究入口与早期场景记录。
-- [跨品类竞品矩阵](/home/workspace/reader/docs/research/market-competitor-matrix.md)：43 组产品/服务的功能依据、可借鉴点和依赖；待补品牌另列。
-- [功能机会与完整场景](/home/workspace/reader/docs/research/cross-category-opportunities.md)：新增 16 项候选及八种场景比较，产品价值与 Plus 实现条件分别讨论。
-- [成人与儿童学习动力研究](/home/workspace/reader/docs/research/learning-engagement.md)：研究依据、游戏策划、字节系公开机制、连续学习与能力成就；C-025～C-028。
-- [个人新闻与儿童发现研究](/home/workspace/reader/docs/research/personal-news.md)：编辑简报、订阅与来源对照、可解释的价值标准、新闻与百科；C-029～C-032。
-- [固件功能分类与候选池](/home/workspace/reader/docs/research/firmware-feature-landscape.md)：官方/社区功能、运行位置、来源及可借鉴点；建议与需求分开。
-- [协作约定](/home/workspace/reader/AGENTS.md)：让后续讨论延续当前阶段和协作方式。
+- [竞品交互资料库](docs/research/interaction-library/README.md)：65 组已知目录，含逐产品案例、任务覆盖、来源与静态摘页、按设计问题检索；当前数量统一见 [案例索引](docs/research/interaction-library/case-index.md)。已新增公开样刊网页的有限实际操作记录；尚无手机或电子纸实机操作。
+- [想法记录](docs/ideas.md)：保存原始想法及逐条讨论结果。
+- [需求与边界](docs/requirements.md)：区分已经明确的要求和仍待了解的信息。
+- [CloudZao 硬件与源码](docs/research/cloudzao.md)：板卡差异、固定提交的驱动抽查、通信能力边界。
+- [Plus 蜂窝通信与社区固件](docs/research/eink4-plus-cellular.md)：NT26、短信/通话条件、原理图证据缺口与固件目录。
+- [数据备份、同步与账户](docs/research/data-backup-sync.md)：系统统一备份、整机/按 app 恢复、卸载和刷机的数据边界。
+- [墨水屏高刷调研](docs/research/eink-high-refresh.md)：PaperBoyS3、60Hz 的含义、迁移条件与估算。
+- [AI 原生与应用平台调研](docs/research/ai-native-platform.md)：系统能力、动态应用、渐进式披露、语音和内容导入。
+- [竞品研究总览](docs/research/competitor-landscape.md)：跨品类研究入口与早期场景记录。
+- [跨品类竞品矩阵](docs/research/market-competitor-matrix.md)：43 组产品/服务的功能依据、可借鉴点和依赖；待补品牌另列。
+- [功能机会与完整场景](docs/research/cross-category-opportunities.md)：新增 16 项候选及八种场景比较，产品价值与 Plus 实现条件分别讨论。
+- [成人与儿童学习动力研究](docs/research/learning-engagement.md)：研究依据、游戏策划、字节系公开机制、连续学习与能力成就；C-025～C-028。
+- [个人新闻与儿童发现研究](docs/research/personal-news.md)：编辑简报、订阅与来源对照、可解释的价值标准、新闻与百科；C-029～C-032。
+- [固件功能分类与候选池](docs/research/firmware-feature-landscape.md)：官方/社区功能、运行位置、来源及可借鉴点；建议与需求分开。
+- [协作约定](AGENTS.md)：让后续讨论延续当前阶段和协作方式。
 
 ## 如何推进
 

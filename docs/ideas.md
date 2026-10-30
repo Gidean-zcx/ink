@@ -149,6 +149,17 @@
 
 资料：[第六期简报](/home/workspace/reader/docs/briefs/006-interaction-research-depth.md)、[交互资料库](/home/workspace/reader/docs/research/interaction-library/README.md)、[横向问题比较](/home/workspace/reader/docs/research/interaction-library/comparison.md)、[逐产品缺口](/home/workspace/reader/docs/research/interaction-library/backlog.md)。
 
+## 2026-10-30：通话、短信待办与平台输入法
+
+以下四条从 [Issue #3](https://github.com/Gidean-zcx/ink/issues/3) 归档。该 Issue 记录的来源为用户 2026-10-30 对话；本次保留原始想法及原有条件性判断，未重新核验硬件、接口或实机能力，未升格为已确认需求。
+
+| 想法 | 用户表达及用途 | 状态 | 原记录中的判断与条件 |
+| --- | --- | --- | --- |
+| I-023 通话录音纪要与待办 | 若开启通话录音，通话后自动整理纪要，并弹出待办，用户可选加入日程、备忘录等。 | 用户想法；未升格为需求。 | **有条件可行**（沿用 Issue 判断，未复验）。录音权限、合规告知、ASR，以及用户确认后再写日程，均是需满足的条件。 |
+| I-024 短信自动待办 | 短信同样自动分析并提取待办，弹出确认是否加入日程、备忘录。 | 用户想法；未升格为需求。 | **有条件可行**（沿用 Issue 判断，未复验）。短信权限、误报控制和用户确认待核查。 |
+| I-025 平台级 IME | 自研智能嵌入式系统内做一等公民输入法服务，统一 TextField、全局 IME 与候选栏；用户侧等同系统输入法，不必追求 Android 第三方 IME 插件。 | 用户想法／讨论结论；具体实现未定。 | **有条件可行**（沿用 Issue 判断，未复验）。取决于自研框架是否统一控件与输入协议。 |
+| I-026 LLM 输入联想 | 输入法接入 LLM 做智能提示：本地拼音、词频优先，云端或端侧 LLM 补联想；需开关、脱敏、离线降级。 | 用户想法；未升格为需求。 | **有条件可行**（沿用 Issue 判断，未复验）。联网、延迟、隐私与成本待定。 |
+
 ## 后续记录方式
 
 当前持续目标（2026-10-26）：用户要求“完成目前已知产品的详细分析”。记为 **I-022**，承接 R-004；覆盖全部已知目录及此前点名待补系列，不能只完成首批七个案例。研究验收与进行中状态见 [详细分析审计](/home/workspace/reader/docs/research/interaction-library/analysis-status.md)。此指令扩大研究完成范围，没有授权提前进入全系统设计。
