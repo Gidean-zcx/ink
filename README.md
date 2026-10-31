@@ -21,6 +21,7 @@
 ## 项目资料
 
 - [云端协作入口](docs/project.md)：当前状态、资料位置，以及新想法和新需求的接续方式。
+- [有限算力下的调度与体验](docs/research/system-scheduling-and-experience.md)：2026-10-31 补充；联合考虑 CPU、内存、音频、刷新、IO 和多任务流程，保留源码证据与实机验证边界。
 
 后续设计优先从[按问题查竞品依据](docs/research/interaction-library/design-reference-guide.md)进入，再查具体任务、证据与缺口；不必按时间顺序读完简报。
 
