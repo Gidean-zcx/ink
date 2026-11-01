@@ -1,1 +1,0 @@
-A feature that lets you access selected content in the Inoreader mobile apps without an internet connection.
