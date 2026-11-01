@@ -33,11 +33,11 @@
 | 账号、墨案助手、同步 | 官方助手服务协议；历史传输指南 | E-MOD-17；F-M054-06部分 | 协议仅界定账号/服务，不是同步操作手册；配对、配额、注销/恢复、删除联动未查 |
 | 卡死、更新与恢复 | 两型号异常处理；inkPalm5 OTA提醒 | F-M054-04；E-MOA-01、E-MOD-12 | 不等于恢复出厂；更新失败/降级/重装、云本地备份均未知 |
 
-逐项[来源/控件目录](/home/workspace/reader/docs/research/interaction-library/batches/moaan-controls-deepening-inventory.csv)共82条：Plus短说明书27条、官网历史目录/分支17条、2022 Plus作者文字/静态控件26条、其他型号边界6条及未闭合任务6条。父章节和子控件明确关联，不按行数计算任务或完整率。旧原件复读、正文、图片、未重取的旧记录和缺口分别标注。
+逐项[来源/控件目录](../batches/moaan-controls-deepening-inventory.csv)共82条：Plus短说明书27条、官网历史目录/分支17条、2022 Plus作者文字/静态控件26条、其他型号边界6条及未闭合任务6条。父章节和子控件明确关联，不按行数计算任务或完整率。旧原件复读、正文、图片、未重取的旧记录和缺口分别标注。
 
 Plus三图的印刷章节逐项为：01产品介绍、02基本参数、03配件清单、04功能介绍、05异常处理、06注意事项、07产品中有害物质的名称及含量、08保修说明、09非保修条例、10联系我们；另有封面和未编号保修卡。a承载封面/07，b承载01/02/08—10，c承载03—06/保修卡，**章节号不是页码，没有PDF页序**。这只是短说明书，不是全系统菜单；保修与合规章节只作目录，不作当前政策结论。
 
-2022年“竖锯评测”自报使用Plus，给亮屏时顶部下拉的说明。实际查看两张文章照片：快捷栏有网络/刷新等控件，刷新弹窗可见普通、快速和取消。照片中的普通项选中不证明默认值；未看到切换、取消或返回的连续过程，不据两张不同时刻的照片计时。自动调节框的存在不说明传感器或算法；“加速”“省电模式”未取得下级帮助。E-MOCD-01。照片及[观察审计](/home/workspace/reader/docs/research/interaction-library/artifacts/moaan-controls-deepening/source-notes.md)仅补D1界面线索。
+2022年“竖锯评测”自报使用Plus，给亮屏时顶部下拉的说明。实际查看两张文章照片：快捷栏有网络/刷新等控件，刷新弹窗可见普通、快速和取消。照片中的普通项选中不证明默认值；未看到切换、取消或返回的连续过程，不据两张不同时刻的照片计时。自动调节框的存在不说明传感器或算法；“加速”“省电模式”未取得下级帮助。E-MOCD-01。照片及[观察审计](../artifacts/moaan-controls-deepening/source-notes.md)仅补D1界面线索。
 
 ## 既有任务：保留ID并拆分型号
 
@@ -85,15 +85,15 @@ W7与W8保持独立：W7的2021用户文只补手写/阅读及导出能力目录
 - E-MOD-08：[笔记重命名](http://www.moaansmart.com/?show=84)，HTTP正文。
 - E-MOD-09：[笔记预览](http://www.moaansmart.com/?show=83)，HTTP正文。
 - E-MOD-10：[笔记导出PDF](http://www.moaansmart.com/?show=82)，HTTP正文。
-- E-MOD-11：[Plus中文产品/参数图](https://raw.githubusercontent.com/panicopticon/MoaanInkPalmPlusRoot/ca9246421618d51dd1fe9ab9883e7c564a3dd471/manual/cn/b_cn.png)，图页01/02/08—10；[归档](/home/workspace/reader/docs/research/interaction-library/artifacts/chinese-reader-deepening/inkpalm-plus-b.png)。
-- E-MOD-12：[Plus中文功能/异常图](https://raw.githubusercontent.com/panicopticon/MoaanInkPalmPlusRoot/ca9246421618d51dd1fe9ab9883e7c564a3dd471/manual/cn/c_cn.png)，图页03—06；[归档](/home/workspace/reader/docs/research/interaction-library/artifacts/chinese-reader-deepening/inkpalm-plus-c.png)。
-- E-MOD-13：[Plus中文封面](https://raw.githubusercontent.com/panicopticon/MoaanInkPalmPlusRoot/ca9246421618d51dd1fe9ab9883e7c564a3dd471/manual/cn/a_cn.png)，[归档](/home/workspace/reader/docs/research/interaction-library/artifacts/chinese-reader-deepening/inkpalm-plus-a.png)；同一手册保存件，不当三份独立验证。
+- E-MOD-11：[Plus中文产品/参数图](https://raw.githubusercontent.com/panicopticon/MoaanInkPalmPlusRoot/ca9246421618d51dd1fe9ab9883e7c564a3dd471/manual/cn/b_cn.png)，图页01/02/08—10；[归档](../artifacts/chinese-reader-deepening/inkpalm-plus-b.png)。
+- E-MOD-12：[Plus中文功能/异常图](https://raw.githubusercontent.com/panicopticon/MoaanInkPalmPlusRoot/ca9246421618d51dd1fe9ab9883e7c564a3dd471/manual/cn/c_cn.png)，图页03—06；[归档](../artifacts/chinese-reader-deepening/inkpalm-plus-c.png)。
+- E-MOD-13：[Plus中文封面](https://raw.githubusercontent.com/panicopticon/MoaanInkPalmPlusRoot/ca9246421618d51dd1fe9ab9883e7c564a3dd471/manual/cn/a_cn.png)，[归档](../artifacts/chinese-reader-deepening/inkpalm-plus-a.png)；同一手册保存件，不当三份独立验证。
 - E-MOD-14：[inkPalm5原作者系统对比](https://post.smzdm.com/p/aqmg6o9k/)，2022-12-11，只取“墨案迷你阅inkpalm5——系统”部分；第三方观察，不采其他机型能力。
 - E-MOD-15：[W7原作者记录](https://post.smzdm.com/p/a8559q7l/)，2021-06-01，借机观察；只作目录线索。
 - E-MOD-16：[W8上手文章](https://post.smzdm.com/p/akkm9evr/)，搜索索引正文；直接打开超时，未看文内图片，固件未知。
 - E-MOD-17：[墨案助手服务协议](https://platform.moaansmart.com/assistant-service-agreement.html)，仅作账号/在线服务范围依据，无登录验证。
 
-- E-MOCD-01：[Plus原作者2022上手文章](https://www.sohu.com/a/552509726_254916)，署名竖锯评测，2022-05-30；正文HTTP200，固件未知。实际只看[快捷栏照片](/home/workspace/reader/docs/research/interaction-library/artifacts/moaan-controls-deepening/plus-quick-panel.jpg)与[刷新弹窗照片](/home/workspace/reader/docs/research/interaction-library/artifacts/moaan-controls-deepening/plus-refresh-panel.jpg)，不计连续操作。
+- E-MOCD-01：[Plus原作者2022上手文章](https://www.sohu.com/a/552509726_254916)，署名竖锯评测，2022-05-30；正文HTTP200，固件未知。实际只看[快捷栏照片](../artifacts/moaan-controls-deepening/plus-quick-panel.jpg)与[刷新弹窗照片](../artifacts/moaan-controls-deepening/plus-refresh-panel.jpg)，不计连续操作。
 
 ## 2026-10-27：历史教程媒体补看
 

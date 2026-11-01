@@ -35,7 +35,7 @@ D1/D2文档研究。上批已实际查看印刷24、30、48、59、60页静态�
 
 ### 2026-10-27逐条台账与适用范围
 
-[目录台账](/home/workspace/reader/docs/research/interaction-library/batches/ak-directory-deepening-inventory.csv)共 **202条**：印刷目录36、设置标题30、设置明列子项23、编号界面项54、操作菜单项26、型号支持FAQ24、下载索引9。层级间有明确交叉，不是202项独立功能或已完成流程。36个目录起页来自已看印刷1；所有页码均为印刷页，文件页加1。
+[目录台账](../batches/ak-directory-deepening-inventory.csv)共 **202条**：印刷目录36、设置标题30、设置明列子项23、编号界面项54、操作菜单项26、型号支持FAQ24、下载索引9。层级间有明确交叉，不是202项独立功能或已完成流程。36个目录起页来自已看印刷1；所有页码均为印刷页，文件页加1。
 
 菜单/设置正文重点复读8–11、13–26、35–41、49–63与66–67；其他章节只保留目录或旧批分析。目录中的Troubleshooting起于66，正文延续至67，不能因Copyright也从67开始而漏掉坏文件分支。SR35日区索引的24条FAQ不等于24篇本轮全文已读；共用旧封面FAQ虽被型号页链接，其数据库更新与清空歌单界面仍不直接套到V1.22。[E-AK-12；E-AKCD-01；E-AKDD-01/02/03]
 
@@ -108,11 +108,11 @@ F18已补校准入口与标记，失败/恢复仍缺；Line Out例外有共用FA
 | E-AK-11 | [强制关闭FAQ](https://www.iriver.jp/support/faq_1029.php) | 原文档证据，无实机操作。 |
 | E-AK-12 | [SR35日本型号支持页](https://www.iriver.jp/support/product_235.php) | 本次核对手册、V1.22、驱动与共用FAQ关联。 |
 | E-AKCD-01 | [官方英文原PDF](https://cdn.astellnkern.com/bbs/download/202305/20230503165340_8b122109-9c25-4ef8-8ecc-69290747288f.pdf) | HTTP200、73文件页；PyMuPDF目录和操作正文。印刷1目录、3–63操作、66故障；未证明V1.22原样。 |
-| E-AKCD-02 | 同原PDF印刷48/文件49 | [书签摘页](/home/workspace/reader/docs/research/interaction-library/artifacts/ak-controls-deepening/sr35-printed-48.png)：Add Bookmark及Bookmarked示意。 |
-| E-AKCD-03 | 同原PDF印刷30/文件31 | [网络下载摘页](/home/workspace/reader/docs/research/interaction-library/artifacts/ak-controls-deepening/sr35-printed-30.png)。 |
-| E-AKCD-04 | 同原PDF印刷24/文件25 | [通知栏摘页](/home/workspace/reader/docs/research/interaction-library/artifacts/ak-controls-deepening/sr35-printed-24.png)：历史布局。 |
-| E-AKCD-05 | 同原PDF印刷59/文件60 | [蓝牙连接摘页](/home/workspace/reader/docs/research/interaction-library/artifacts/ak-controls-deepening/sr35-printed-59.png)：断开确认示意，不是本次配对。 |
-| E-AKCD-06 | 同原PDF印刷60/文件61 | [配对移除与Sink摘页](/home/workspace/reader/docs/research/interaction-library/artifacts/ak-controls-deepening/sr35-printed-60.png)。 |
+| E-AKCD-02 | 同原PDF印刷48/文件49 | [书签摘页](../artifacts/ak-controls-deepening/sr35-printed-48.png)：Add Bookmark及Bookmarked示意。 |
+| E-AKCD-03 | 同原PDF印刷30/文件31 | [网络下载摘页](../artifacts/ak-controls-deepening/sr35-printed-30.png)。 |
+| E-AKCD-04 | 同原PDF印刷24/文件25 | [通知栏摘页](../artifacts/ak-controls-deepening/sr35-printed-24.png)：历史布局。 |
+| E-AKCD-05 | 同原PDF印刷59/文件60 | [蓝牙连接摘页](../artifacts/ak-controls-deepening/sr35-printed-59.png)：断开确认示意，不是本次配对。 |
+| E-AKCD-06 | 同原PDF印刷60/文件61 | [配对移除与Sink摘页](../artifacts/ak-controls-deepening/sr35-printed-60.png)。 |
 | E-AKCD-07 | [SR35 Windows USB DAC驱动说明](https://www.iriver.jp/support/file_1504.php)，2023-05-10 | 只读说明；Windows10/11、Mac驱动条件；未下载或运行驱动。 |
 | E-AKCD-08 | [BT Sink与SCMS-T](https://www.iriver.jp/support/faq_1046.php) | 型号支持页关联共用FAQ；无日期/构建，无当前服务验证。 |
 | E-AKCD-09 | [USB-C耳机/无线路输入功放限制](https://www.iriver.jp/support/faq_1107.php) | 型号支持页关联共用FAQ；不当外接DAC通用兼容表。 |
@@ -121,13 +121,13 @@ F18已补校准入口与标记，失败/恢复仍缺；Line Out例外有共用FA
 
 ### 本批新增与复读
 
-[正式短摘记](/home/workspace/reader/docs/research/interaction-library/artifacts/ak-directory-deepening/source-notes.md)与[结构化证据](/home/workspace/reader/docs/research/interaction-library/batches/ak-directory-deepening-evidence.jsonl)。2026-10-27沿用E-AKCD-01本地原件，复读E-AK-12型号索引、E-AK-04日区V1.22、E-AK-10 M3U、E-AKCD-11 ReplayGain；复抓仅追加采集建议，不再创建同正文E。
+[正式短摘记](../artifacts/ak-directory-deepening/source-notes.md)与[结构化证据](../batches/ak-directory-deepening-evidence.jsonl)。2026-10-27沿用E-AKCD-01本地原件，复读E-AK-12型号索引、E-AK-04日区V1.22、E-AK-10 M3U、E-AKCD-11 ReplayGain；复抓仅追加采集建议，不再创建同正文E。
 
 | E | 来源及定位 | 证据边界 |
 | --- | --- | --- |
 | E-AKDD-01 | [封面显示与数据库更新FAQ](https://www.iriver.jp/support/faq_965.php) | 共用AK70及第二代后系列，SR35支持页关联；旧UI图片未查看，未当SR35现版。 |
 | E-AKDD-02 | [封面大小FAQ](https://www.iriver.jp/support/faq_1035.php) | 共用容量/像素条件；非格式兼容或耗时测试。 |
-| E-AKDD-03 | 同E-AKCD-01原PDF；[目录1](/home/workspace/reader/docs/research/interaction-library/artifacts/ak-directory-deepening/sr35-printed-1.png)、[歌单40](/home/workspace/reader/docs/research/interaction-library/artifacts/ak-directory-deepening/sr35-printed-40.png)、[校准41](/home/workspace/reader/docs/research/interaction-library/artifacts/ak-directory-deepening/sr35-printed-41.png)、[EQ62](/home/workspace/reader/docs/research/interaction-library/artifacts/ak-directory-deepening/sr35-printed-62.png)、[EQ63](/home/workspace/reader/docs/research/interaction-library/artifacts/ak-directory-deepening/sr35-printed-63.png) | 五页本轮实际静态查看；文件页分别2/41/42/63/64。图文差异保留；没有实机验证。 |
+| E-AKDD-03 | 同E-AKCD-01原PDF；[目录1](../artifacts/ak-directory-deepening/sr35-printed-1.png)、[歌单40](../artifacts/ak-directory-deepening/sr35-printed-40.png)、[校准41](../artifacts/ak-directory-deepening/sr35-printed-41.png)、[EQ62](../artifacts/ak-directory-deepening/sr35-printed-62.png)、[EQ63](../artifacts/ak-directory-deepening/sr35-printed-63.png) | 五页本轮实际静态查看；文件页分别2/41/42/63/64。图文差异保留；没有实机验证。 |
 
 ## 2026-10-27续查：旧安装照片与版本表
 

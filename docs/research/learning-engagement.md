@@ -2,7 +2,7 @@
 
 查阅日期：2026-10-26。关联 G-001、G-002、R-014～R-016、R-019，H-001、H-002。本轮依据论文原文、官方产品说明与算法公示；没有实机体验、家庭学习实验或 Plus 性能验证。产品宣传、研究结论和本项目建议分别标注。
 
-后续深度补充：[Anki 评分、暂缓与恢复](/home/workspace/reader/docs/research/interaction-library/cases/M-020-anki.md)、[Khan Kids 阅读入口、进阶与中断](/home/workspace/reader/docs/research/interaction-library/cases/M-030-khan-kids.md)。它们是选定任务的文档重建；完整游戏循环、提示顺序、奖励数值与儿童实际反应仍见 [逐产品待查项](/home/workspace/reader/docs/research/interaction-library/backlog.md)，不能由本专题的机制介绍推定已研究。
+后续深度补充：[Anki 评分、暂缓与恢复](interaction-library/cases/M-020-anki.md)、[Khan Kids 阅读入口、进阶与中断](interaction-library/cases/M-030-khan-kids.md)。它们是选定任务的文档重建；完整游戏循环、提示顺序、奖励数值与儿童实际反应仍见 [逐产品待查项](interaction-library/backlog.md)，不能由本专题的机制介绍推定已研究。
 
 ## 用户意图与初步判断
 
@@ -17,7 +17,7 @@
 
 ### 家庭信息补充：5–6 岁，可独立阅读
 
-2026-10-26 用户补充：孩子识字能力可以，能够独立阅读，有听书功能会更好。来源为用户答复，见 [I-020](/home/workspace/reader/docs/ideas.md)。以下是据此调整的候选体验，未新增学习效果证据：
+2026-10-26 用户补充：孩子识字能力可以，能够独立阅读，有听书功能会更好。来源为用户答复，见 [I-020](../ideas.md)。以下是据此调整的候选体验，未新增学习效果证据：
 
 | 方式 | 候选体验 | 需要保持的连续性 |
 | --- | --- | --- |
@@ -27,7 +27,7 @@
 
 游戏原型可使用文字线索、路线选择、物品分配和简短推理。阅读难度、数学水平与英语基础分别了解，不由年龄和能独立阅读自动推定。成就仍可围绕独立读完、解释清楚、解决新问题展开。
 
-听书与续播已是 R-018；点字朗读、逐句跟读、同步高亮和发音评分不是本次自动新增的要求。系统 AI 可研究“刚才那句话是什么意思”，先定位当前读/听内容，再解释并返回原处；这些行为仍需验证。相关定位问题见 [读听与故事断点](/home/workspace/reader/docs/research/ai-native-platform.md)。
+听书与续播已是 R-018；点字朗读、逐句跟读、同步高亮和发音评分不是本次自动新增的要求。系统 AI 可研究“刚才那句话是什么意思”，先定位当前读/听内容，再解释并返回原处；这些行为仍需验证。相关定位问题见 [读听与故事断点](ai-native-platform.md)。
 
 ## 研究依据能支持什么
 

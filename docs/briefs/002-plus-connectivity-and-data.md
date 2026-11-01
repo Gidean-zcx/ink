@@ -28,9 +28,9 @@
 
 沿无名科技论坛和固件入口，找到 [CloudZao Burner](https://burner.cloudzao.com/)中的“布丁”，作者 paouke，v0.1.0 测试版。简介列有电话、短信和蜂窝网络，但同时写明短信发送仍在诊断。
 
-它适配的是 **普通 E-Ink4 / ESP32-S3**，不是已确认的 Plus 固件。它能作为功能探索的线索；本轮没有拿到该条目对应源码，也没有验证短信接收、双向通话或 Plus 移植。不能因其存在就承诺可直接复用，也不能因为它尚有问题而否定硬件可开发性。[目录来源摘录](/home/workspace/reader/docs/research/sources/2026-10-26-cloudzao-firmware-catalog.json)
+它适配的是 **普通 E-Ink4 / ESP32-S3**，不是已确认的 Plus 固件。它能作为功能探索的线索；本轮没有拿到该条目对应源码，也没有验证短信接收、双向通话或 Plus 移植。不能因其存在就承诺可直接复用，也不能因为它尚有问题而否定硬件可开发性。[目录来源摘录](../research/sources/2026-10-26-cloudzao-firmware-catalog.json)
 
-Plus 分类另有 RickyOS、kiikoread、CrossLink 等；本轮检查的 13 个条目说明未证明完整短信/通话。有些固件限定 Plus 的板卡/面板版本，后续仍需精确对应。详细检索范围和固定代码入口见 [通信调研](/home/workspace/reader/docs/research/eink4-plus-cellular.md)。
+Plus 分类另有 RickyOS、kiikoread、CrossLink 等；本轮检查的 13 个条目说明未证明完整短信/通话。有些固件限定 Plus 的板卡/面板版本，后续仍需精确对应。详细检索范围和固定代码入口见 [通信调研](../research/eink4-plus-cellular.md)。
 
 ## 备份：整机和按 app 可以同时成立
 
@@ -50,7 +50,7 @@ Plus 分类另有 RickyOS、kiikoread、CrossLink 等；本轮检查的 13 个�
 2. 卸载 app 与清除其个人数据分开，重新安装后可恢复；保留多久、是否自动保留仍待定。
 3. 同步之外保留历史版本，避免误删在设备与服务器间传播后无处找回。
 
-整片 Flash 镜像可以辅助工程救援，但不会涵盖独立 TF 卡，不适合作为唯一用户备份。离线新产生且尚未备份的数据也无法保证全擦后找回；界面应让人看到最近可恢复的时间点。[数据保护调研与官方依据](/home/workspace/reader/docs/research/data-backup-sync.md)
+整片 Flash 镜像可以辅助工程救援，但不会涵盖独立 TF 卡，不适合作为唯一用户备份。离线新产生且尚未备份的数据也无法保证全擦后找回；界面应让人看到最近可恢复的时间点。[数据保护调研与官方依据](../research/data-backup-sync.md)
 
 ## 账户：先解决“是谁的数据、刷机后怎么取回”
 

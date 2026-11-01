@@ -4,6 +4,21 @@
 
 项目建立于 2026-10-26。云端仓库为 [Gidean-zcx/ink](https://github.com/Gidean-zcx/ink)，项目资料沿用 reader 名称。后续零散想法与需求从[云端协作入口](docs/project.md)持续接续。
 
+## 现在从这里开始（2026-11-01）
+
+项目已从“收集想法与调研”（S0，已完成）进入**产品定义与系统需求**阶段。完整流程和当前位置见 [开发流程](docs/process.md)。
+
+| 想知道 | 看这里 |
+| --- | --- |
+| 整个流程怎么走、现在在哪一步 | [开发流程](docs/process.md) |
+| 产品给谁用、首版做什么（A/B/C 三个方案） | [产品定义 PRD](docs/product/prd.md) |
+| 每个功能做到什么程度算合格 | [系统需求 SRS](docs/system/srs.md) |
+| 系统怎么分层、设备与服务器怎么分工 | [架构方案](docs/system/architecture.md) |
+| 最大的技术风险和实机验证计划 | [风险与验证](docs/system/risks-and-spikes.md) |
+| 需要用户拍板的事项与推荐 | [决策记录](docs/decisions/README.md)；可点选的[交互式决策板](https://claude.ai/artifact/RWnCX8AyAbyqArc7D9Wsft)（源文件 [docs/decision-board.html](docs/decision-board.html)） |
+
+下方是 S0 阶段的原始说明与调研索引，作为参考库保留。
+
 ## 两个核心目标
 
 用户已明确：把原来刷消遣 app 的时间转成高价值信息获取与知识、能力增长；同时提供系统级原生 AI first，使所有系统/app 行为、数据以及任意场景和页面都能被 AI 操作或获取。

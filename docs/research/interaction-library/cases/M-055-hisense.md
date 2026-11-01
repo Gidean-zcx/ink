@@ -16,7 +16,7 @@
 
 ## 功能目录与覆盖
 
-尚未核定三款的完整系统功能目录。下表是按研究任务域建立的覆盖索引；“待查”不是功能否定。不存在一本已取得的共同“海信墨水屏手册”，不能伪造统一章节号。新[逐项来源/控件目录](/home/workspace/reader/docs/research/interaction-library/batches/hisense-controls-deepening-inventory.csv)分别登记文章目录、实看控件、旧线索和缺口；父子项不作任务数。
+尚未核定三款的完整系统功能目录。下表是按研究任务域建立的覆盖索引；“待查”不是功能否定。不存在一本已取得的共同“海信墨水屏手册”，不能伪造统一章节号。新[逐项来源/控件目录](../batches/hisense-controls-deepening-inventory.csv)分别登记文章目录、实看控件、旧线索和缺口；父子项不作任务数。
 
 | 功能域 | A9 | TOUCH原版 | Hi Reader原版 | 主要缺口 |
 | --- | --- | --- | --- | --- |
@@ -97,15 +97,15 @@ F-M055-01—08保留；新增09/10来自照片中的机内说明。D2只表示�
 | E-HSD-09 | [DealiAxy：Hi Reader开箱](https://sblt.deali.cn/blog/eink-hisense-hi-reader) | 2023-11-02，作者一手开箱；“进入系统/桌面”文字。原轮图片未加载；本轮从HTML公开地址取得并实看三张，衍生记录见E-HSCD-01—03。后段TOUCH Lite/A9和传闻仍不采。 |
 
 
-本批图像和来源身份审计见[独立摘记](/home/workspace/reader/docs/research/interaction-library/artifacts/hisense-controls-deepening/source-notes.md)。五张图片无PDF页号、未组成连续操作，机内文字所在照片也不等于取得完整手册：
+本批图像和来源身份审计见[独立摘记](../artifacts/hisense-controls-deepening/source-notes.md)。五张图片无PDF页号、未组成连续操作，机内文字所在照片也不等于取得完整手册：
 
 | E编号 | 图像/新来源 | 定位 |
 | --- | --- | --- |
-| E-HSCD-01 | [墨智键引导照片](/home/workspace/reader/docs/research/interaction-library/artifacts/hisense-controls-deepening/hireader-key-guide.webp) | E-HSD-09“进入系统”；非锁屏启动与配置入口 |
-| E-HSCD-02 | [水墨屏控制引导照片](/home/workspace/reader/docs/research/interaction-library/artifacts/hisense-controls-deepening/hireader-screen-guide.webp) | E-HSD-09“进入系统”；当前应用/截屏便笺 |
-| E-HSCD-03 | [设置入口照片](/home/workspace/reader/docs/research/interaction-library/artifacts/hisense-controls-deepening/hireader-settings.webp) | E-HSD-09“设置界面”，原版Hi Reader段 |
-| E-HSCD-04 | [速记照片](/home/workspace/reader/docs/research/interaction-library/artifacts/hisense-controls-deepening/hireader-note.jpeg) | E-HSD-05第三部分；00:01为图中状态，不是本项目计时 |
-| E-HSCD-05 | [选词照片](/home/workspace/reader/docs/research/interaction-library/artifacts/hisense-controls-deepening/hireader-selection.jpeg) | E-HSD-05第三部分；未转录文学正文 |
+| E-HSCD-01 | [墨智键引导照片](../artifacts/hisense-controls-deepening/hireader-key-guide.webp) | E-HSD-09“进入系统”；非锁屏启动与配置入口 |
+| E-HSCD-02 | [水墨屏控制引导照片](../artifacts/hisense-controls-deepening/hireader-screen-guide.webp) | E-HSD-09“进入系统”；当前应用/截屏便笺 |
+| E-HSCD-03 | [设置入口照片](../artifacts/hisense-controls-deepening/hireader-settings.webp) | E-HSD-09“设置界面”，原版Hi Reader段 |
+| E-HSCD-04 | [速记照片](../artifacts/hisense-controls-deepening/hireader-note.jpeg) | E-HSD-05第三部分；00:01为图中状态，不是本项目计时 |
+| E-HSCD-05 | [选词照片](../artifacts/hisense-controls-deepening/hireader-selection.jpeg) | E-HSD-05第三部分；未转录文学正文 |
 | E-HSCD-06 | [马马马不前：TOUCH主观使用体验](https://www.bilibili.com/read/cv13411020/) | 2021-10-01，联名款，第四节；只读文字，未看图片/视频 |
 
 ## 结构化竞分（2026-10-28）

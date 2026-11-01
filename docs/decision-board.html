@@ -1,0 +1,346 @@
+<title>ink 决策板</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;900&family=Noto+Sans+SC:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a single reading column like an e-paper page; a stage strip on top, decision "sheets" below, each with tappable option tiles. */
+:root {
+  --paper: #e8eae5;      /* e-paper grey with a slight green bias */
+  --sheet: #f4f5f1;
+  --ink: #1b1d1a;
+  --ink-2: #4a4f48;
+  --rule: #c7cbc2;
+  --accent: #1f5a6b;     /* deep ink-blue, like a bookplate stamp */
+  --accent-soft: #d6e3e5;
+  --ok: #2f6b3a; --ok-soft: #dbe9dc;
+  --warn: #8a5a12; --warn-soft: #f1e5cc;
+  --display: "Noto Serif SC", "Songti SC", "SimSun", serif;
+  --body: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --paper: #171916; --sheet: #20231f; --ink: #e6e8e2; --ink-2: #a9aea5; --rule: #3a3e37;
+  --accent: #7fb6c4; --accent-soft: #24393f; --ok: #8cc496; --ok-soft: #22362a; --warn: #e0b46a; --warn-soft: #3b3020;
+  color-scheme: dark } }
+:root[data-theme="dark"] {
+  --paper: #171916; --sheet: #20231f; --ink: #e6e8e2; --ink-2: #a9aea5; --rule: #3a3e37;
+  --accent: #7fb6c4; --accent-soft: #24393f; --ok: #8cc496; --ok-soft: #22362a; --warn: #e0b46a; --warn-soft: #3b3020;
+  color-scheme: dark }
+body { background: var(--paper); color: var(--ink); font-family: var(--body); font-size: 15px; line-height: 1.65; }
+.wrap { max-width: 920px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 28px 64px; display: grid; gap: 28px; }
+h1 { font-family: var(--display); font-weight: 900; font-size: clamp(30px, 6vw, 46px); line-height: 1.15; margin: 0; letter-spacing: .02em; text-wrap: balance; }
+h2 { font-family: var(--display); font-weight: 600; font-size: 21px; margin: 0; text-wrap: balance; }
+h3 { font-size: 17px; margin: 0; font-weight: 700; text-wrap: balance; }
+p { margin: 0; }
+.lede { color: var(--ink-2); max-width: 62ch; }
+.mono { font-family: var(--mono); font-size: 12px; letter-spacing: .04em; }
+header { display: grid; gap: 10px; }
+.meta { display: flex; flex-wrap: wrap; gap: 8px 18px; color: var(--ink-2); }
+
+/* stage strip */
+.stages { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 4px; }
+.stage { padding: 10px 8px; border-top: 4px solid var(--rule); display: grid; gap: 2px; min-width: 0; }
+.stage b { font-size: 13px; line-height: 1.3; }
+.stage span { font-size: 11px; color: var(--ink-2); }
+.stage.done { border-color: var(--ink); }
+.stage.now { border-color: var(--accent); background: var(--accent-soft); }
+@media (max-width: 640px) { .stages { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+
+.tally { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.chip { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; padding: 2px 10px; border-radius: 999px; border: 1px solid var(--rule); white-space: nowrap; }
+.chip.wait { background: var(--warn-soft); color: var(--warn); border-color: transparent; }
+.chip.tent { background: var(--accent-soft); color: var(--accent); border-color: transparent; }
+.chip.done { background: var(--ok-soft); color: var(--ok); border-color: transparent; }
+.sync { font-size: 12px; color: var(--ink-2); }
+
+.filters { display: flex; gap: 6px; flex-wrap: wrap; }
+.filters button { font: inherit; font-size: 13px; padding: 4px 12px; border-radius: 999px; border: 1px solid var(--rule); background: transparent; color: var(--ink); cursor: pointer; }
+.filters button[aria-pressed="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+
+.list { display: grid; gap: 18px; }
+.dec { background: var(--sheet); border: 1px solid var(--rule); padding: 18px 18px 16px; display: grid; gap: 12px; }
+.dec-head { display: flex; flex-wrap: wrap; gap: 6px 12px; align-items: baseline; }
+.dec-head .mono { color: var(--accent); }
+.dec-head h3 { flex: 1 1 260px; min-width: 0; }
+.why { color: var(--ink-2); font-size: 14px; }
+.opts { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 8px; }
+.opt { text-align: left; font: inherit; color: var(--ink); background: var(--paper); border: 1.5px solid var(--rule); padding: 10px 12px; cursor: pointer; display: grid; gap: 4px; min-width: 0; }
+.opt:hover { border-color: var(--ink-2); }
+.opt:focus-visible, .filters button:focus-visible, textarea:focus-visible, .save:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.opt[aria-pressed="true"] { border-color: var(--ink); background: var(--sheet); box-shadow: inset 4px 0 0 var(--ink); }
+.opt .name { font-weight: 700; font-size: 14px; display: flex; gap: 6px; align-items: baseline; flex-wrap: wrap; }
+.opt .rec { font-size: 11px; color: var(--accent); border: 1px solid var(--accent); padding: 0 6px; border-radius: 3px; font-weight: 500; }
+.opt .desc { font-size: 13px; color: var(--ink-2); line-height: 1.55; }
+.foot { display: flex; flex-wrap: wrap; gap: 8px; align-items: flex-start; }
+.foot textarea { flex: 1 1 280px; min-width: 0; font: inherit; font-size: 13px; background: var(--paper); color: var(--ink); border: 1px solid var(--rule); padding: 6px 8px; resize: vertical; min-height: 36px; }
+.save { font: inherit; font-size: 13px; padding: 6px 14px; background: var(--ink); color: var(--paper); border: 0; cursor: pointer; }
+.save[disabled] { opacity: .45; cursor: default; }
+.status-line { font-size: 12px; color: var(--ink-2); flex-basis: 100%; }
+.link { color: var(--accent); }
+
+/* roadmap grid */
+.road { overflow-x: auto; border: 1px solid var(--rule); background: var(--sheet); }
+.road table { border-collapse: collapse; width: 100%; min-width: 620px; font-size: 13px; }
+.road th, .road td { padding: 7px 10px; border-bottom: 1px solid var(--rule); text-align: left; vertical-align: top; }
+.road thead th { font-family: var(--mono); font-weight: 500; font-size: 12px; color: var(--ink-2); }
+.road td.v { text-align: center; }
+.dot { display: inline-block; width: 12px; height: 12px; border-radius: 50%; background: var(--ink); }
+.dot.lite { background: transparent; border: 2px solid var(--ink-2); }
+.legend { display: flex; gap: 16px; flex-wrap: wrap; font-size: 12px; color: var(--ink-2); align-items: center; }
+section { display: grid; gap: 12px; }
+pre.mermaid { background: var(--sheet); border: 1px solid var(--rule); padding: 12px; overflow-x: auto; margin: 0; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="mono" style="color:var(--accent)">INK · 家庭 AI 墨水屏设备 · E-INK4 PLUS</div>
+    <h1>ink 决策板</h1>
+    <p class="lede">把项目从“零散想法和竞品调研”推进到可用产品时，需要你拍板的事情都在这里。每项都给了方案和推荐；你不选的可逆事项，我按推荐“暂定”继续推进。点选方案后会自动保存，下次对话我能读到。</p>
+    <div class="meta mono"><span>更新 2026-11-01</span><span>仓库 Gidean-zcx/ink · docs/decisions</span></div>
+  </header>
+
+  <section aria-labelledby="stage-h">
+    <h2 id="stage-h">走到哪一步了</h2>
+    <div class="stages" role="list">
+      <div class="stage done" role="listitem"><b>S0 探索调研</b><span>已完成</span></div>
+      <div class="stage now" role="listitem"><b>S1 产品定义</b><span>草案 · 待选 D-01</span></div>
+      <div class="stage now" role="listitem"><b>S2 系统需求</b><span>草案 · 指标待校准</span></div>
+      <div class="stage now" role="listitem"><b>S3 架构验证</b><span>方案已比 · 缺实物</span></div>
+      <div class="stage" role="listitem"><b>S4 详细设计</b><span>未开始</span></div>
+      <div class="stage" role="listitem"><b>S5 迭代开发</b><span>未开始</span></div>
+      <div class="stage" role="listitem"><b>S6 自用测试</b><span>未开始</span></div>
+      <div class="stage" role="listitem"><b>S7 发布运维</b><span>未开始</span></div>
+    </div>
+  </section>
+
+  <section aria-labelledby="dec-h">
+    <h2 id="dec-h">需要你决定的事</h2>
+    <div class="tally" id="tally"></div>
+    <div class="filters" role="group" aria-label="筛选">
+      <button type="button" data-f="all" aria-pressed="true">全部</button>
+      <button type="button" data-f="wait">只看必须你定的</button>
+      <button type="button" data-f="open">还没选的</button>
+    </div>
+    <p class="sync" id="sync">正在连接保存服务…</p>
+    <div class="list" id="list"></div>
+  </section>
+
+  <section aria-labelledby="road-h">
+    <h2 id="road-h">按推荐方案 A 的版本路线</h2>
+    <p class="lede">v0.1 是看不见功能的“底座”，v0.2 是第一个每天能用的版本。D-01 选 B 或 C 时，学习或通信那几行会提前。</p>
+    <div class="legend"><span><i class="dot"></i> 本版交付</span><span><i class="dot lite"></i> 本版先做简化版或设计</span></div>
+    <div class="road"><table>
+      <thead><tr><th>功能</th><th>v0.1 底座</th><th>v0.2 首个自用</th><th>v0.3 学习</th><th>v0.4 通信与扩展</th></tr></thead>
+      <tbody id="road"></tbody>
+    </table></div>
+  </section>
+
+  <section aria-labelledby="arch-h">
+    <h2 id="arch-h">推荐架构一眼看</h2>
+    <p class="lede">设备做“瘦而快的终端”：显示、输入、音频、本地数据和执行动作。吃算力的 AI 编排、书籍转换、新闻采编、TTS 放在家庭中枢服务器，它同时承担本来就要做的账户和备份。</p>
+<pre class="mermaid">
+flowchart LR
+  subgraph D["设备 E-Ink4 Plus"]
+    A["内置 app"] --> C["能力目录"]
+    S["系统壳 · AI 键"] --> C
+    C --> V["系统服务 · 刷新调度"]
+    V --> R["驱动"]
+  end
+  subgraph H["家庭中枢"]
+    U["账户 · 备份"]
+    G["AI 编排"]
+    P["内容管线"]
+  end
+  D <--> H
+  G --> M["模型 API"]
+  P --> N["书源 · 新闻 · 百科"]
+</pre>
+  </section>
+</div>
+
+<script>
+const DECISIONS = [
+  { id:"D-00", title:"你手上有 E-Ink4 Plus 实物吗？", kind:"wait",
+    why:"所有技术验证（刷新速度、音频并发、内存、4G 短信）都必须在实物上跑。涉及采购，所以不会替你暂定。",
+    opts:[
+      {k:"have", name:"已有实物", desc:"在备注里写上板子版本（丝印 V1.x）、是否装 4G 模组、有没有 TF 卡。我就从点亮新工程开始。"},
+      {k:"buy", name:"还没有，准备买", desc:"我整理一份购买时要确认的版本和配件清单（4G 模组、电池、TF 卡）。"},
+      {k:"later", name:"先不买", desc:"先做中枢服务器、交互原型和电脑上的模拟器，硬件验证往后放。"}
+    ]},
+  { id:"D-01", title:"第一个能每天用的版本做什么", kind:"tent", rec:"A",
+    why:"需求池里有 29 条要求，一块单片机不能同时做完。首版决定先打通哪条路。",
+    opts:[
+      {k:"A", name:"A · AI 阅读与听书", desc:"底座 + 读、听、个人报纸、AI 问答、备忘、备份。风险最低，最直接替代刷手机，孩子能听故事。"},
+      {k:"B", name:"B · 家庭学习伙伴", desc:"A 的读听 + 背单词、刷题、儿童学习游戏。价值高，但内容和题库是主要成本。"},
+      {k:"C", name:"C · AI 极简手机", desc:"底座 + 短信、通话、待办提取。4G 子型号和通话音频都没确认，风险最高。"}
+    ]},
+  { id:"D-02", title:"首版怎么算成功", kind:"tent", rec:"default",
+    why:"给“成功”一个能检验的数字，自用一个月后才知道方向对不对。",
+    opts:[
+      {k:"default", name:"按建议的数字", desc:"本人每周 ≥ 5 小时读/听/学且觉得比刷手机值；孩子每周 ≥ 4 次自主听读；AI 跨 app 动作成功率 ≥ 90%。"},
+      {k:"adjust", name:"我想改数字", desc:"在备注里写你的标准。"},
+      {k:"none", name:"先不设", desc:"做出来用着再说。缺点是很难判断该不该继续加功能。"}
+    ]},
+  { id:"D-03", title:"孩子和你怎么分设备", kind:"tent", rec:"one",
+    why:"影响账户、进度归属和儿童模式的设计。",
+    opts:[
+      {k:"one", name:"先一台，儿童模式切换", desc:"下拉控制中心一键切换，进度分开存。成本最低。"},
+      {k:"two", name:"一人一台", desc:"各自独立，最省心，但要两套硬件。"},
+      {k:"shared", name:"共用一台，登录切换成员", desc:"像家庭电脑的多用户，切换稍麻烦。"}
+    ]},
+  { id:"D-04", title:"AI 在哪里运行", kind:"tent", rec:"hub",
+    why:"512 KB 内存装不下长对话和多步任务；API 密钥放在设备上也不安全。",
+    opts:[
+      {k:"device", name:"设备直连模型 API", desc:"少一台服务器，但上下文、儿童策略、预算控制都塞进固件，改一次要刷机。"},
+      {k:"hub", name:"经家庭中枢服务器", desc:"设备只发意图和当前页面快照，中枢编排。模型、提示词随时改，顺带复用账户和备份。"},
+      {k:"mix", name:"混合", desc:"翻页、播放这类简单指令设备本地处理，其余走中枢。可以作为中枢方案的后续增强。"}
+    ]},
+  { id:"D-05", title:"断网时必须能用什么", kind:"tent", rec:"rlw",
+    why:"决定本地要缓存多少内容、语音怎么降级。",
+    opts:[
+      {k:"rl", name:"读和听已下载内容 + 备忘", desc:"最小离线集。"},
+      {k:"rlw", name:"再加单词复习", desc:"复习计划在本地算，适合通勤等弱网场景。"},
+      {k:"all", name:"尽量全部", desc:"包括本地语音识别，内存和存储压力大，体验也会打折。"}
+    ]},
+  { id:"D-06", title:"设备系统从哪里起步", kind:"tent", rec:"port",
+    why:"决定前期多久能看到东西，以及以后架构是否受上游限制。",
+    opts:[
+      {k:"fork", name:"在上游固件上改", desc:"最快点亮，但上游是“语音助手 + 页面”结构，和能力目录、资源准入冲突。"},
+      {k:"scratch", name:"全新从零写", desc:"最干净，但屏幕、触摸、音频、4G 全部重做。"},
+      {k:"port", name:"新工程 + 移植驱动", desc:"新建 ESP-IDF 工程，按固定提交移植板级与驱动，上层全部新写。符合你说的“吸收原理和可复用驱动”。"}
+    ]},
+  { id:"D-07", title:"用哪家模型和语音服务，每月预算多少", kind:"wait",
+    why:"涉及花钱，所以不替你暂定。中枢会做成可切换供应商。",
+    opts:[
+      {k:"cheap", name:"省钱优先", desc:"国内或开源托管模型为主，每月约几十元量级。"},
+      {k:"quality", name:"质量优先", desc:"主力用一线大模型，摘要和分类用便宜模型，每月约一两百元量级。"},
+      {k:"custom", name:"我有指定", desc:"在备注里写供应商、预算上限或已有的 API 账号。"}
+    ]},
+  { id:"D-08", title:"app 怎么实现（以及“动态安装”）", kind:"tent", rec:"staged",
+    why:"你要求 app 可动态安装；单片机上有几种做法，代价差别很大。",
+    opts:[
+      {k:"staged", name:"分阶段：内置 → 声明式页面 → 脚本", desc:"首版 app 编进固件但每个都带能力清单；v0.3 中枢可下发页面；v0.4 验证 Lua/WASM 后实现真正安装。"},
+      {k:"script", name:"一开始就上脚本运行时", desc:"动态安装来得早，但要先确认 S31 上的内存和速度，前期进度慢。"},
+      {k:"elf", name:"原生 ELF 动态加载", desc:"性能最好，但一个 app 崩溃会拖垮整机。"}
+    ]},
+  { id:"D-09", title:"服务器放哪里", kind:"tent", rec:"vps",
+    why:"中枢服务器承担账户、备份和 AI。真正购买前会再问你。",
+    opts:[
+      {k:"vps", name:"云服务器 VPS", desc:"设备走 4G 也能访问，部署简单，月费低。"},
+      {k:"nas", name:"家里的 NAS / 小主机", desc:"数据在家，但要内网穿透；家里断网时出门就用不了。"},
+      {k:"baas", name:"托管后端服务", desc:"账户和存储现成，AI 编排仍要自己写，被平台绑定。"}
+    ]},
+  { id:"D-10", title:"界面框架", kind:"tent", rec:"lvgl",
+    why:"决定排版、控件、输入法要自己写多少。",
+    opts:[
+      {k:"lvgl", name:"LVGL 9 + 墨水屏适配层", desc:"上游已用，控件和中文输入有基础；需要关掉 LCD 式动画，自写脏区合并和波形选择。"},
+      {k:"own", name:"自研轻量渲染器", desc:"完全按墨水屏设计，但排版、控件、输入法都要从头做。"}
+    ]},
+  { id:"D-11", title:"仓库里 1.2 GB 的原始调研素材怎么处理", kind:"wait",
+    why:"work/ 目录的截图、网页快照被提交进了主仓库，克隆一次 2 GB。涉及删除，所以不替你暂定；历史记录无论如何都会保留。",
+    opts:[
+      {k:"keep", name:"原样保留", desc:"不动。缺点是每次克隆都很慢。"},
+      {k:"archive", name:"移到单独的归档仓库", desc:"主仓库只留索引和正式文档，素材另存 ink-research-archive，链接互通。"},
+      {k:"index", name:"只留索引，素材打包放 Release", desc:"最轻，但浏览单张截图不方便。"}
+    ]}
+];
+const ROAD = [
+  ["显示驱动 · 刷新调度 · 输入 · 电源", [2,0,0,0]],
+  ["系统壳：主页、下拉控制中心、手势", [2,0,0,0]],
+  ["能力目录（G-002 的基础）", [2,0,0,0]],
+  ["阅读器 · 书架 · AI 找书", [0,2,0,0]],
+  ["听书 · 儿童故事续播 · 读听切换", [0,2,0,0]],
+  ["AI 键 · 语音 · 带页面上下文问答", [0,2,0,0]],
+  ["个人报纸（有终点）", [0,2,0,0]],
+  ["账户 · 自动备份 · 整机恢复", [0,2,1,0]],
+  ["备忘 · 提醒", [0,2,0,0]],
+  ["单词复习 · 刷题 · 题库导入", [0,0,2,0]],
+  ["儿童识字 / 数学游戏 · 儿童百科", [0,0,2,0]],
+  ["平台输入法 · LLM 联想", [0,1,2,0]],
+  ["短信 · 待办提取", [0,0,0,2]],
+  ["通话 · 通话纪要", [0,0,0,2]],
+  ["动态安装 app", [1,0,1,2]]
+];
+
+const state = {}; // id -> {choice, note, at}
+let db = null, filter = "all";
+const $ = s => document.querySelector(s);
+
+function statusOf(d) {
+  const s = state[d.id];
+  if (s && s.choice) return {cls:"done", text:"已选"};
+  return d.kind === "wait" ? {cls:"wait", text:"待你选"} : {cls:"tent", text:"暂定为推荐"};
+}
+
+function renderRoad() {
+  $("#road").innerHTML = ROAD.map(([name, vs]) =>
+    `<tr><td>${name}</td>${vs.map(v => `<td class="v">${v===2?'<i class="dot" aria-label="交付"></i>':v===1?'<i class="dot lite" aria-label="简化"></i>':''}</td>`).join("")}</tr>`).join("");
+}
+
+function renderTally() {
+  const total = DECISIONS.length;
+  const chosen = DECISIONS.filter(d => state[d.id]?.choice).length;
+  const wait = DECISIONS.filter(d => d.kind === "wait" && !state[d.id]?.choice).length;
+  $("#tally").innerHTML = `<span class="chip done">已选 ${chosen} / ${total}</span><span class="chip wait">必须你定 ${wait}</span><span class="chip tent">暂定按推荐 ${DECISIONS.filter(d=>d.kind!=="wait"&&!state[d.id]?.choice).length}</span>`;
+}
+
+function esc(t){ return String(t ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+
+function render() {
+  renderTally();
+  const list = DECISIONS.filter(d => filter === "all" || (filter === "wait" && d.kind === "wait") || (filter === "open" && !state[d.id]?.choice));
+  $("#list").innerHTML = list.map(d => {
+    const s = state[d.id] || {}, st = statusOf(d);
+    const picked = s.choice || (d.kind !== "wait" ? d.rec : null);
+    const when = s.at ? new Date(s.at).toLocaleString("zh-CN", {month:"numeric", day:"numeric", hour:"2-digit", minute:"2-digit"}) : "";
+    return `<article class="dec" data-id="${d.id}">
+      <div class="dec-head"><span class="mono">${d.id}</span><h3>${d.title}</h3><span class="chip ${st.cls}">${st.text}</span></div>
+      <p class="why">${d.why}</p>
+      <div class="opts" role="group" aria-label="${d.title}">
+        ${d.opts.map(o => `<button type="button" class="opt" data-k="${o.k}" aria-pressed="${picked===o.k}">
+          <span class="name">${o.name}${d.rec===o.k?'<span class="rec">推荐</span>':''}</span>
+          <span class="desc">${o.desc}</span></button>`).join("")}
+      </div>
+      <div class="foot">
+        <textarea id="note-${d.id}" rows="1" placeholder="补充说明（可选）：例如板子版本、预算、你的顾虑">${esc(s.note)}</textarea>
+        <button type="button" class="save" data-save ${db ? "" : "disabled"}>保存备注</button>
+        <span class="status-line">${s.choice ? `你选了「${esc(d.opts.find(o=>o.k===s.choice)?.name || s.choice)}」${when ? " · " + when : ""}` : d.kind === "wait" ? "等你选择；我先做不依赖它的工作。" : "你没选时，我按推荐继续，随时可改。"}</span>
+      </div>
+    </article>`;
+  }).join("");
+}
+
+async function save(id, patch) {
+  const next = { ...(state[id] || {}), ...patch, at: Date.now() };
+  state[id] = next; render();
+  if (!db) { $("#sync").textContent = "当前无法保存到云端，选择只在本页可见；可以直接在对话里告诉我。"; return; }
+  try { await db.collection("decisions").doc(id).set(next); $("#sync").textContent = "已保存。下次对话我会读取这些选择。"; }
+  catch (e) { $("#sync").textContent = "保存失败（" + (e && e.code || "未知") + "），可以直接在对话里告诉我你的选择。"; }
+}
+
+document.addEventListener("click", e => {
+  const f = e.target.closest(".filters button");
+  if (f) { filter = f.dataset.f; document.querySelectorAll(".filters button").forEach(b => b.setAttribute("aria-pressed", b === f)); render(); return; }
+  const card = e.target.closest(".dec"); if (!card) return;
+  const id = card.dataset.id;
+  const opt = e.target.closest(".opt");
+  if (opt) { save(id, { choice: opt.dataset.k, note: card.querySelector("textarea").value }); return; }
+  if (e.target.closest("[data-save]")) save(id, { note: card.querySelector("textarea").value });
+});
+
+renderRoad(); render();
+
+(async () => {
+  try { db = await window.claude?.use?.("db"); } catch { db = null; }
+  if (!db) { $("#sync").textContent = "当前无法连接保存服务，选择不会保存；可以直接在对话里告诉我。"; render(); return; }
+  const timer = setTimeout(() => { $("#sync").textContent = "保存服务暂时连不上，已有的选择可能不是最新。"; }, 10000);
+  db.collection("decisions").onSnapshot(snap => {
+    for (const doc of snap.docs) state[doc.id] = { ...doc.data() };
+    if (!snap.metadata.fromCache) { clearTimeout(timer); if ($("#sync").textContent.startsWith("正在")) $("#sync").textContent = "点选方案即保存。"; }
+    render();
+  }, err => { clearTimeout(timer); $("#sync").textContent = "保存服务出错（" + err.code + "），可以直接在对话里告诉我。"; });
+  render();
+})();
+</script>

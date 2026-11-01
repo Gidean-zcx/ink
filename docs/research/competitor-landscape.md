@@ -4,20 +4,20 @@
 
 ## 当前研究入口：已经扩大到跨品类市场
 
-最新要求是进一步深入每个功能的交互，并保留可复用证据。现有广度盘点没有达到这一深度，新增 [竞品交互资料库](/home/workspace/reader/docs/research/interaction-library/README.md)与 [第六期简报](/home/workspace/reader/docs/briefs/006-interaction-research-depth.md)：统一目录、逐任务流程、证据编号和缺口，不将文档分析写成实际体验。
+最新要求是进一步深入每个功能的交互，并保留可复用证据。现有广度盘点没有达到这一深度，新增 [竞品交互资料库](interaction-library/README.md)与 [第六期简报](../briefs/006-interaction-research-depth.md)：统一目录、逐任务流程、证据编号和缺口，不将文档分析写成实际体验。
 
 用户进一步明确：所有阅读器、墨水屏平板/手机，以及百词斩、单词卡、电子词典、HiFi 播放器等均应作为竞品，不能只围绕二次开发固件。已据此调整 R-004，建立：
 
-- [跨品类竞品矩阵](/home/workspace/reader/docs/research/market-competitor-matrix.md)：13 类、43 组产品/服务，逐项来源、可吸收体验和条件；未取得充分材料的品牌另列待补。
-- [跨品类功能与场景](/home/workspace/reader/docs/research/cross-category-opportunities.md)：C-009～C-024 候选，内容/学习/音频/记录/系统操作的联系。
-- [第四期简报](/home/workspace/reader/docs/briefs/004-cross-category-competitors.md)：面向产品讨论的主要发现。
-- [学习动力与游戏策划专题](/home/workspace/reader/docs/research/learning-engagement.md)：成人与儿童两版研究，增加游戏、学习机、抖音与头条的机制比较。
-- [个人新闻与儿童发现专题](/home/workspace/reader/docs/research/personal-news.md)：编辑简报、RSS、事件来源对照、儿童新闻和百科。
-- [第五期简报](/home/workspace/reader/docs/briefs/005-learning-news-ai-first.md)：按最新 G-001、G-002 评估学习收益、信息价值和系统 AI 全场景能力。
+- [跨品类竞品矩阵](market-competitor-matrix.md)：13 类、43 组产品/服务，逐项来源、可吸收体验和条件；未取得充分材料的品牌另列待补。
+- [跨品类功能与场景](cross-category-opportunities.md)：C-009～C-024 候选，内容/学习/音频/记录/系统操作的联系。
+- [第四期简报](../briefs/004-cross-category-competitors.md)：面向产品讨论的主要发现。
+- [学习动力与游戏策划专题](learning-engagement.md)：成人与儿童两版研究，增加游戏、学习机、抖音与头条的机制比较。
+- [个人新闻与儿童发现专题](personal-news.md)：编辑简报、RSS、事件来源对照、儿童新闻和百科。
+- [第五期简报](../briefs/005-learning-news-ai-first.md)：按最新 G-001、G-002 评估学习收益、信息价值和系统 AI 全场景能力。
 
 43 组是第四期主矩阵的统计；新增交互资料库已将后续专题的 9 组对象分配 M-044～M-052，统一为 52 组目录。组内仍可能含系列/多个平台，需要继续拆型号；不代表 52 个完整交互案例。
 
-下方保留第一轮九组参考及三种早期场景，作为研究历史和部分依据；它们不构成竞品全集，也不限制后续产品范围。[社区固件研究](/home/workspace/reader/docs/research/firmware-feature-landscape.md)保留为实现线索，不再作为主要产品样本。
+下方保留第一轮九组参考及三种早期场景，作为研究历史和部分依据；它们不构成竞品全集，也不限制后续产品范围。[社区固件研究](firmware-feature-landscape.md)保留为实现线索，不再作为主要产品样本。
 
 访问边界：驾考宝典官网本次直接读取超时、自动链接请求受限，该条目仅依据官方站点的搜索索引摘要记录公开导航中的练习模式；不据此判断实际功能质量或题库可获取性。其余竞品所引页面已读取。
 
@@ -49,7 +49,7 @@
 | 内容深度 | 识别、例子、听说与简单练习 | 专题、错题、考试目标 | 需要掌握程度和内容结构，不能仅换皮肤。 |
 | 退出与恢复 | 一键暂停、下次接续 | 保留会话和任务位置 | 依靠稳定进度记录，不能只靠 AI 记住聊天。 |
 
-用户后续明确孩子 5–6 岁、可独立阅读，并偏好听书；具体内容难度、英语/数学水平与共享设备/一人一机仍未知，不预设账号结构和课程大纲。更新的儿童体验见 [学习专题](/home/workspace/reader/docs/research/learning-engagement.md)。
+用户后续明确孩子 5–6 岁、可独立阅读，并偏好听书；具体内容难度、英语/数学水平与共享设备/一人一机仍未知，不预设账号结构和课程大纲。更新的儿童体验见 [学习专题](learning-engagement.md)。
 
 ## 可以讨论的三种学习原型
 
@@ -73,7 +73,7 @@
 
 ## 调研后的建议与空白
 
-同日新增 [官方与社区固件专题](/home/workspace/reader/docs/research/firmware-feature-landscape.md)：盘点 39 个目录条目，提炼更贴近目标硬件的内容导入、语音记录、进度、轻量游戏和安装管理。它补充实现线索，不替代这里的产品体验比较，也没有验证儿童学习效果。
+同日新增 [官方与社区固件专题](firmware-feature-landscape.md)：盘点 39 个目录条目，提炼更贴近目标硬件的内容导入、语音记录、进度、轻量游戏和安装管理。它补充实现线索，不替代这里的产品体验比较，也没有验证儿童学习效果。
 
 - 建议先做共同的内容、学习记录和播放基础，再组合不同引导方式；暂不按儿童/成人开发完全独立的系统。
 - 趣味学习可用情境、选择和语音实现，不把 60fps 动画当作所有儿童场景的前置条件；高刷仍作为独立目标研究。

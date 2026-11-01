@@ -2,7 +2,7 @@
 
 查阅日期：2026-10-26。关联 G-001、G-002、R-015、R-020、H-006。范围是产品模式与内容选择研究，没有建设采集服务、确定订阅源或启动自动推送。
 
-后续交互补充：[Inoreader 的过滤、去重与规则](/home/workspace/reader/docs/research/interaction-library/cases/M-044-inoreader.md)、[Reader 的订阅处理与听读定位](/home/workspace/reader/docs/research/interaction-library/cases/M-015-readwise.md)。这些是文档级任务分析，尚无实际使用；有限简报、来源比较和儿童新闻的界面细节见 [逐产品待查项](/home/workspace/reader/docs/research/interaction-library/backlog.md)。
+后续交互补充：[Inoreader 的过滤、去重与规则](interaction-library/cases/M-044-inoreader.md)、[Reader 的订阅处理与听读定位](interaction-library/cases/M-015-readwise.md)。这些是文档级任务分析，尚无实际使用；有限简报、来源比较和儿童新闻的界面细节见 [逐产品待查项](interaction-library/backlog.md)。
 
 ## 已明确的意图
 
@@ -90,7 +90,7 @@
 
 ## 与系统级 AI first 相连
 
-在新闻详情、目录、听读或百科页，唤醒 AI 后都应能指代“这段”“刚才那条”“这个图”，并取得当前对象、原文位置、出处、时间和相关操作。该覆盖目标来自 G-002，具体表示方式见 [AI 平台研究](/home/workspace/reader/docs/research/ai-native-platform.md)。
+在新闻详情、目录、听读或百科页，唤醒 AI 后都应能指代“这段”“刚才那条”“这个图”，并取得当前对象、原文位置、出处、时间和相关操作。该覆盖目标来自 G-002，具体表示方式见 [AI 平台研究](ai-native-platform.md)。
 
 候选任务示例：
 

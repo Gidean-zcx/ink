@@ -27,7 +27,7 @@
 
 表中E简写保留各自前缀：SHAN为初批，SHCD为上轮，SLCD为本次。目录出现不提高任务覆盖等级。
 
-本批[逐条台账](/home/workspace/reader/docs/research/interaction-library/batches/shanling-controls-deepening-inventory.csv)有**114行**：M1快速指南22个章节/说明域、11个部件标签、5个FAQ；作者自报V2.1的评测目录39项；共用Eddict手册21个章节域、12个App本地设置、下载页4个范围项。译文合并定位，父级/标签单列便于检索；114不是功能完成数。官方M1指南、商业评测、伴随App目录分别标注，不合成一份“当前M1全菜单”。本批没有新增F，只补F01/08/10。
+本批[逐条台账](../batches/shanling-controls-deepening-inventory.csv)有**114行**：M1快速指南22个章节/说明域、11个部件标签、5个FAQ；作者自报V2.1的评测目录39项；共用Eddict手册21个章节域、12个App本地设置、下载页4个范围项。译文合并定位，父级/标签单列便于检索；114不是功能完成数。官方M1指南、商业评测、伴随App目录分别标注，不合成一份“当前M1全菜单”。本批没有新增F，只补F01/08/10。
 
 | 本轮优先问题 | 补到的依据 | 仍不能下的结论 |
 | --- | --- | --- |
@@ -63,7 +63,7 @@
 - 英文p12要求双方蓝牙和Wi-Fi打开，中文p6先讲蓝牙，再称Wi-Fi模式同理；旧M1评测报告两无线不能同时打开。本文不把共用英文前提直接作为M1必做步骤，也不据评测报告解释硬件原因。[E-SLCD-02；E-SHCD-03]
 - 中文p5“电脑传歌”段与手机段内容重复；英文p12给出同网后电脑浏览器打开App所示地址的步骤。它没有给M1设备自己的网页入口/保存目录。DLNA选择媒体渲染设备与SyncLink控制设备本地音乐不同；p13无线投屏明确以streamer示例说明，不能补成M1镜像操作。[E-SLCD-02]
 
-本次实际查看[App手册p12](/home/workspace/reader/docs/research/interaction-library/artifacts/shanling-controls-deepening/eddict-v12-p12.png)和[p15](/home/workspace/reader/docs/research/interaction-library/artifacts/shanling-controls-deepening/eddict-v12-p15.png)：前者展示Controller开关及已连接/已配对/可用分组，示例连接SCD3.3；后者同时显示App计时/Resume等设置和“对连接设备无影响”的正文，下方USB授权示例是UA7。**都不是M1 Plus界面观察**，不能用来证明该机配对、权限或DAC连接成功。完整范围摘记见[本批短摘记](/home/workspace/reader/docs/research/interaction-library/artifacts/shanling-controls-deepening/source-notes.md)。
+本次实际查看[App手册p12](../artifacts/shanling-controls-deepening/eddict-v12-p12.png)和[p15](../artifacts/shanling-controls-deepening/eddict-v12-p15.png)：前者展示Controller开关及已连接/已配对/可用分组，示例连接SCD3.3；后者同时显示App计时/Resume等设置和“对连接设备无影响”的正文，下方USB授权示例是UA7。**都不是M1 Plus界面观察**，不能用来证明该机配对、权限或DAC连接成功。完整范围摘记见[本批短摘记](../artifacts/shanling-controls-deepening/source-notes.md)。
 
 ## 修正、分支与剩余未知
 
@@ -96,7 +96,7 @@
 | E-SHAN-02 | [英文下载页 V2.1](https://en.shanling.com/download/118) | 发布日期未明；更新/本地升级。 |
 | E-SHAN-03 | [英文固件更新](https://en.shanling.com/article/101223) | V2.1 OTA及失败分支。 |
 | E-SHAN-04 | [M1 Plus 官方介绍](https://newen.shanling.com/article-IntroM1Plus.html) | 网络能力仅D1。 |
-| E-SHCD-01 | [中国站同型号快速指南](https://shanling.com/uploads/image/M1_Plus-V1.0.pdf)，文件5–9、11–15 | HTTP200下载；PyMuPDF全文及单帧查看；[第5页](/home/workspace/reader/docs/research/interaction-library/artifacts/hifi-controls-deepening/m1plus-pdf-05.png)。日期/固件未知。 |
+| E-SHCD-01 | [中国站同型号快速指南](https://shanling.com/uploads/image/M1_Plus-V1.0.pdf)，文件5–9、11–15 | HTTP200下载；PyMuPDF全文及单帧查看；[第5页](../artifacts/hifi-controls-deepening/m1plus-pdf-05.png)。日期/固件未知。 |
 | E-SHCD-02 | [中国站 M1 Plus 下载页](https://shanling.com/download/134)，V1.8 | 官方网页正文；含空间条件和旧版更新项，不替代英文V2.1。 |
 | E-SHCD-03 | [HiFi Oasis M1 Plus Review](https://www.hifioasis.com/reviews/shanling-m1-plus-review/)，2025-09-11，页面更新2026-05-11 | HiFi-Dawson自述购机；有佣金链接。只读作者正文；MTouch OS and UI、Syncing Music & Playlists；Overall User Experience 自报已升级V2.1，截图未逐项核版。 |
 | E-SHCD-04 | [Kajetblog M1 Plus 体验](https://kajetblog.com/m1-plus/)，2025-02-03 | 作者かじかじ，标PR:MUSIN；SyncLink/AirPlay。iPhone15Pro，Eddict/固件未知；作者观察，不是本项目。 |

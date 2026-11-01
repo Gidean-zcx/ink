@@ -52,7 +52,7 @@ E-IHWD-01来自“掌阅iReader官方账号”发布的B站**简介正文索引*
 
 空书架、重复导入、损坏文件、OCR低置信度、误划线撤销、离线AI、同步冲突、删后恢复与账户退出均缺同型号证据。Smart2.4中字体、云空间和应用相关功能名称有助于定位资料，但适配范围不清，不能用于填满三条机型线。2022官方教程提到笔记导出渠道；需要Smart4 Pro的实际导出菜单及目标文件验证后才能升级覆盖。
 
-Tango 2详情第1/2图仅做**单帧静态观察**：第1图明确命名并画出侧键；第2图可见文件管理、换机助手2.0、录音、词典、应用市场等入口。图中多设备配置未逐项注明，不证明功能切换成功。原Ocean三张观察继续有效：[PDF](/home/workspace/reader/docs/research/interaction-library/artifacts/extended-readers/ireader-ocean4-2025-detail-16.jpg)、[手势](/home/workspace/reader/docs/research/interaction-library/artifacts/extended-readers/ireader-ocean4-2025-detail-20.jpg)、[按键](/home/workspace/reader/docs/research/interaction-library/artifacts/extended-readers/ireader-ocean4-2025-detail-26.jpg)。没有D3/D4。
+Tango 2详情第1/2图仅做**单帧静态观察**：第1图明确命名并画出侧键；第2图可见文件管理、换机助手2.0、录音、词典、应用市场等入口。图中多设备配置未逐项注明，不证明功能切换成功。原Ocean三张观察继续有效：[PDF](../artifacts/extended-readers/ireader-ocean4-2025-detail-16.jpg)、[手势](../artifacts/extended-readers/ireader-ocean4-2025-detail-20.jpg)、[按键](../artifacts/extended-readers/ireader-ocean4-2025-detail-26.jpg)。没有D3/D4。
 
 下一证据按分支获取：Ocean4长续航版2025的“关于设备+机内帮助”确认构建；Smart4 Pro用已有短笔记验证同步状态、断网和删除；Tango原代、Tango 2与2 Pro分别取得按键/传书/应用/听读帮助。没有合法公开手册的部分保留待查，不从购物图或后代固件推定。
 
@@ -67,8 +67,8 @@ Tango 2详情第1/2图仅做**单帧静态观察**：第1图明确命名并画�
 - E-IHW-05：[2021官方技巧条目](https://www.bilibili.com/video/BV1eR4y1s7JR/)，只读元信息，未用于2025机型操作。
 - E-IHWD-01：[官方SmartOS2.5更新简介](https://www.bilibili.com/video/BV1v7f7YhEGn/)，2025-01-24；型号名单及六组更新段落，搜索索引正文；直接访问412。
 - E-IHWD-02：[Tango 2系列认证店](https://detail.youzan.com/show/goods?alias=36489xybpq8pfjz&from_source=gbox_seo)，店铺身份及系列标题，不使用价格/库存作结论。
-- E-IHWD-03：[Tango 2封面原图](https://img01.yzcdn.cn/upload_files/2025/10/15/Fgpc1ircRrX5ieoOC_Nvyk-drM4I.jpg)；[归档](/home/workspace/reader/docs/research/interaction-library/artifacts/chinese-reader-deepening/tango2-cover.jpg)。
-- E-IHWD-04：[Tango系列桌面示意](https://img01.yzcdn.cn/upload_files/2025/10/15/FsUtGYW9nh-ONoxBPQUPH7bVCC_p.jpg)；[归档](/home/workspace/reader/docs/research/interaction-library/artifacts/chinese-reader-deepening/tango2-overview.jpg)。
+- E-IHWD-03：[Tango 2封面原图](https://img01.yzcdn.cn/upload_files/2025/10/15/Fgpc1ircRrX5ieoOC_Nvyk-drM4I.jpg)；[归档](../artifacts/chinese-reader-deepening/tango2-cover.jpg)。
+- E-IHWD-04：[Tango系列桌面示意](https://img01.yzcdn.cn/upload_files/2025/10/15/FsUtGYW9nh-ONoxBPQUPH7bVCC_p.jpg)；[归档](../artifacts/chinese-reader-deepening/tango2-overview.jpg)。
 - E-IHWD-05：[官方笔记导出教程简介](https://www.bilibili.com/video/BV1xt4y1K78M/)，2022-11-06；机型未知，只保留历史目录。
 - E-IHWD-06：[官方SmartOS2.4更新简介](https://www.bilibili.com/video/BV1DQSKYKECB/)，2024-11-20；未取得适配名单，不据其升级型号流程。
 

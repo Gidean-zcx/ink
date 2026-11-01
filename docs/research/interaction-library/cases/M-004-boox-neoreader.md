@@ -27,7 +27,7 @@
 | Notes | 笔画编辑、页删除、录音入口、识别、导出、账号可见性 | 本机全部画笔/模板参数、隐藏或锁定层的作用范围、冲突合并、录音与手写对齐 |
 | 数据 | BOOXDrop、本地备份、源文件与阅读数据同步、第三方云 | 断线重试、同名文件、移路径后的关联、回收站/版本历史 |
 
-前批逐条登记公开 **User Guide (ePaper Tablet PCs)** 的 **14 节、59 篇**，见[目录 CSV](/home/workspace/reader/docs/research/interaction-library/artifacts/boox-controls-deepening/functional-inventory.csv)。API 分页已结束，条目数与各节一致；“59 篇”是公开帮助文章数，不是本机完整功能数或已验证任务数。Notes／阅读数据有同名导向文章，保留文章 ID，不人为合并计数。[E-BXCD-01]
+前批逐条登记公开 **User Guide (ePaper Tablet PCs)** 的 **14 节、59 篇**，见[目录 CSV](../artifacts/boox-controls-deepening/functional-inventory.csv)。API 分页已结束，条目数与各节一致；“59 篇”是公开帮助文章数，不是本机完整功能数或已验证任务数。Notes／阅读数据有同名导向文章，保留文章 ID，不人为合并计数。[E-BXCD-01]
 
 第28批复用该原件，完整阅读其中10篇正文；[阅读与笔记目录CSV](../batches/boox-reading-controls-deepening-inventory.csv)保留59篇文章，并列68个正文标题或控件组，共127行。文章与子项有包含关系；这些行不是127个功能或完成任务。正文未重新联网获取，仍是前批采集版本；该批只新取4张官方静态附件并实际查看。
 
@@ -131,7 +131,7 @@ Notes 的 Exit 保存并回笔记列表，More → Save 手动保存，Page- 不
 
 前批只读官方正文及公开API原文，并实际查看四张共用帮助静态图：控制中心、App Optimization 的 Display 页、Apps & Notifications、NeoReader Refresh。**图中型号／固件不明，未识别为 Note Air5 C，不能证明 V4.1.2 的布局或默认值**。全程 hands_on=false，无连续视觉流程、D4 或耗时测量；菜单中的 AI/智能词也不能证明 G-002 全系统访问。
 
-前批静态图与取证摘要见[资料](/home/workspace/reader/docs/research/interaction-library/artifacts/boox-controls-deepening/source-notes.md)。前三图是共用设备示意，第四图可见 Regal／Speed、Normal／Deep、频率与 Apply to All Documents。只记录控件存在，不推断点击效果。正式归档使用相对资料库路径；API 原件在 work，以 raw_work_path/raw_sha256 记录。
+前批静态图与取证摘要见[资料](../artifacts/boox-controls-deepening/source-notes.md)。前三图是共用设备示意，第四图可见 Regal／Speed、Normal／Deep、频率与 Apply to All Documents。只记录控件存在，不推断点击效果。正式归档使用相对资料库路径；API 原件在 work，以 raw_work_path/raw_sha256 记录。
 
 以下为推断：对 Plus，最值得复用的是 **内容身份、阅读状态、关联笔记、可恢复输出分开建模**，以及“旁路查阅 → 回原位置”的显式入口。大屏双窗不适合直接缩到小屏，可探索原文与解释/笔记间保留锚点的单页切换。对 5–6 岁，长按、拖选区、两层同步开关可能需要更简单的可见入口；对成人学习，原文引用和独立笔记之间的关系应可查询。R-018 仍需要专门验证听读断点，G-002 需要暴露文件来源、选区、同步开关与删除作用范围，而不是只提供 AI 聊天按钮。
 

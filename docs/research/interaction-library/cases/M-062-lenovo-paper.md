@@ -39,7 +39,7 @@
 
 ## 静态观察、差异与推断
 
-[官方指南第 8 页](/home/workspace/reader/docs/research/interaction-library/artifacts/extension/lenovo-p8.png)已实际查看，四组示意区分顶边、底边、侧边和页面内部的划动。布局可作参考，但手势冲突、墨水屏残影和触控延迟未观察。
+[官方指南第 8 页](../artifacts/extension/lenovo-p8.png)已实际查看，四组示意区分顶边、底边、侧边和页面内部的划动。布局可作参考，但手势冲突、墨水屏残影和触控延迟未观察。
 
 FAQ 允许导入 APK，并提醒第三方 app 适配不保证；它还说明定制 WPS 卸载后不能按普通方式重装。此处反映应用生命周期的差别，不能推出所有 APK 和数据均可通过同一机制恢复。[E-LNP-02]
 

@@ -99,8 +99,8 @@
 新增证据：
 
 - E-DAD-01：[Practice 官方指南](https://blog.duolingo.com/guide-to-duolingo-practice-hub/)，Target skills in the Practice tab／Other content；公开正文及 HTML 日期元数据。
-- E-DAD-02：[2024 Adventures 介绍与三屏静态图](https://blog.duolingo.com/adventures/)，`EN_Adventures_UIscreens.png`；实际查看并归档[静态图](/home/workspace/reader/docs/research/interaction-library/artifacts/children-loop-deepening/duo-adventure-static.png)，限定 E-DUOA-01，不是新独立来源。
-- E-DAD-03：[官方 2026-05-04 8-K 附件](https://investors.duolingo.com/static-files/ac220d7c-e313-4049-b309-1095fd24a86f)，文件第 9 页／股东信页内第 4 页；同一 Q1 股东信的可获取副本，限定 E-DUOA-02。仅归档必要的[第 9 页渲染](/home/workspace/reader/docs/research/interaction-library/artifacts/children-loop-deepening/duo-q1-2026-8k-p9.png)，完整 PDF 留在临时 work。
+- E-DAD-02：[2024 Adventures 介绍与三屏静态图](https://blog.duolingo.com/adventures/)，`EN_Adventures_UIscreens.png`；实际查看并归档[静态图](../artifacts/children-loop-deepening/duo-adventure-static.png)，限定 E-DUOA-01，不是新独立来源。
+- E-DAD-03：[官方 2026-05-04 8-K 附件](https://investors.duolingo.com/static-files/ac220d7c-e313-4049-b309-1095fd24a86f)，文件第 9 页／股东信页内第 4 页；同一 Q1 股东信的可获取副本，限定 E-DUOA-02。仅归档必要的[第 9 页渲染](../artifacts/children-loop-deepening/duo-q1-2026-8k-p9.png)，完整 PDF 留在临时 work。
 
 ## 2026-10-27：将主学习应用纳入同一产品，保留模式区别
 
