@@ -13,7 +13,10 @@
 | 整个流程怎么走、现在在哪一步 | [开发流程](docs/process.md) |
 | 产品给谁用、首版做什么（A/B/C 三个方案） | [产品定义 PRD](docs/product/prd.md) |
 | 每个功能做到什么程度算合格 | [系统需求 SRS](docs/system/srs.md) |
-| 系统怎么分层、设备与服务器怎么分工 | [架构方案](docs/system/architecture.md) |
+| 用户到底要什么、底座必须承接什么 | [需求深读](docs/product/needs-analysis.md) |
+| **第一版底座怎么设计（当前核心文档）** | [底座设计](docs/system/foundation.md)；可点选的[底座地图](https://claude.ai/artifact/KvJAr2ZS9MZNvHu9RqcZRz)（源文件 [docs/foundation-map.html](docs/foundation-map.html)） |
+| 同类设备怎么建、我们借什么避什么 | [架构对标](docs/research/architecture-benchmarks.md)、[底座专题研究](docs/research/foundation/README.md) |
+| 系统怎么分层、设备与服务器怎么分工（第一轮方向） | [架构方案](docs/system/architecture.md) |
 | 最大的技术风险和实机验证计划 | [风险与验证](docs/system/risks-and-spikes.md) |
 | 需要用户拍板的事项与推荐 | [决策记录](docs/decisions/README.md)；可点选的[交互式决策板](https://claude.ai/artifact/RWnCX8AyAbyqArc7D9Wsft)（源文件 [docs/decision-board.html](docs/decision-board.html)） |
 

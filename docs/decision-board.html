@@ -98,16 +98,16 @@ pre.mermaid { background: var(--sheet); border: 1px solid var(--rule); padding: 
     <div class="mono" style="color:var(--accent)">INK · 家庭 AI 墨水屏设备 · E-INK4 PLUS</div>
     <h1>ink 决策板</h1>
     <p class="lede">把项目从“零散想法和竞品调研”推进到可用产品时，需要你拍板的事情都在这里。每项都给了方案和推荐；你不选的可逆事项，我按推荐“暂定”继续推进。点选方案后会自动保存，下次对话我能读到。</p>
-    <div class="meta mono"><span>更新 2026-11-01</span><span>仓库 Gidean-zcx/ink · docs/decisions</span></div>
+    <div class="meta mono"><span>更新 2026-11-01 · 第一轮已全部选择，第二轮为底座层面</span><span>仓库 Gidean-zcx/ink · docs/decisions</span></div>
   </header>
 
   <section aria-labelledby="stage-h">
     <h2 id="stage-h">走到哪一步了</h2>
     <div class="stages" role="list">
       <div class="stage done" role="listitem"><b>S0 探索调研</b><span>已完成</span></div>
-      <div class="stage now" role="listitem"><b>S1 产品定义</b><span>草案 · 待选 D-01</span></div>
+      <div class="stage done" role="listitem"><b>S1 产品定义</b><span>首版方案 A 已定</span></div>
       <div class="stage now" role="listitem"><b>S2 系统需求</b><span>草案 · 指标待校准</span></div>
-      <div class="stage now" role="listitem"><b>S3 架构验证</b><span>方案已比 · 缺实物</span></div>
+      <div class="stage now" role="listitem"><b>S3 架构验证</b><span>底座设计 v1 · 12 月初到货</span></div>
       <div class="stage" role="listitem"><b>S4 详细设计</b><span>未开始</span></div>
       <div class="stage" role="listitem"><b>S5 迭代开发</b><span>未开始</span></div>
       <div class="stage" role="listitem"><b>S6 自用测试</b><span>未开始</span></div>
@@ -244,6 +244,53 @@ const DECISIONS = [
       {k:"keep", name:"原样保留", desc:"不动。缺点是每次克隆都很慢。"},
       {k:"archive", name:"移到单独的归档仓库", desc:"主仓库只留索引和正式文档，素材另存 ink-research-archive，链接互通。"},
       {k:"index", name:"只留索引，素材打包放 Release", desc:"最轻，但浏览单张截图不方便。"}
+    ]},
+  { id:"D-12", title:"第二轮 · 设备与中枢之间用什么协议", kind:"tent", rec:"profile",
+    why:"上游固件已是 xiaozhi 派生的 MCP 设备链路（只开放 3 个工具）；MCP 规范 2026-07-28 又有破坏性修订。",
+    opts:[
+      {k:"profile", name:"沿用 xiaozhi 信封的 MCP 形状私有协议", desc:"复用上游传输与 MCP 骨架，扩展页面快照、事件、确认、声明式页面；版本自管，中枢对外再提供标准 MCP。"},
+      {k:"full", name:"设备实现完整标准 MCP", desc:"标准，但规范还在变，固件要跟着升级；音频、快照、确认仍要另行定义。"},
+      {k:"custom", name:"完全自定义（二进制）", desc:"最省带宽，但不能复用上游代码与开源实验台；8 KB 级 JSON 在 4G 上约一个往返，暂无必要。"}
+    ]},
+  { id:"D-13", title:"第二轮 · 设备本地数据怎么存", kind:"tent", rec:"log",
+    why:"FAT 原地写断电会坏（CrossPoint 的真实事故）；现有 ESP32 的 SQLite 移植关闭了刷盘，且不支持 RISC-V 编译参数。",
+    opts:[
+      {k:"log", name:"内部 Flash 掉电安全日志 + TF 卡放内容", desc:"用户状态按成员写追加日志与快照（LittleFS），书、音频、缓存放 TF 卡；历史查询走中枢副本。"},
+      {k:"sqlite", name:"设备上用 SQLite", desc:"查询灵活，但要自己移植并解决掉电安全；内部 RAM 本就紧张。"},
+      {k:"files", name:"普通文件", desc:"最简单，但要逐个解决断电、并发与压缩问题。"}
+    ]},
+  { id:"D-14", title:"第二轮 · 家庭中枢怎么起步", kind:"tent", rec:"python",
+    why:"开源 xiaozhi 服务端（MIT）能马上测语音时延，但它按设备而不是按成员存记忆，也没有备份与内容管线。",
+    opts:[
+      {k:"python", name:"自建 Python 中枢，开源服务端只作时延实验台", desc:"Python 的语音、模型、文档转换生态最全；结构按底座设计 §9。"},
+      {k:"fork", name:"在 xiaozhi 服务端上改", desc:"起步最快，但成员、备份、内容管线都要大改，且其自述未通过安全测评。"},
+      {k:"ts", name:"TypeScript 自建", desc:"MCP 与网页生态好，文档转换与语音工具稍弱。"}
+    ]},
+  { id:"D-15", title:"第二轮 · 书籍在哪里转换和排版", kind:"tent", rec:"hub",
+    why:"上游原厂把 EPUB/PDF 转换放在电脑端；CrossPoint 在设备上解析 EPUB 但拒绝 PDF。",
+    opts:[
+      {k:"hub", name:"中枢转换为设备格式，设备断行分页", desc:"设备只做中文断行与分页并缓存；可换字号；中枢还能生成只含所用字形的子集字库。"},
+      {k:"device", name:"设备直接解析 EPUB", desc:"不依赖中枢，但内部内存与复杂度压力大，PDF 仍做不了。"},
+      {k:"prepage", name:"中枢按字号预先分页", desc:"设备最省事，但换字号要重新下载，离线时不能改。"}
+    ]},
+  { id:"D-16", title:"第二轮 · 切换成员时怎么验证", kind:"tent", rec:"adultpin",
+    why:"共用一台设备（D-03）；孩子识字，只放一个按钮挡不住；声纹不可靠，不能作为授权。",
+    opts:[
+      {k:"adultpin", name:"成人需要 PIN，孩子直接进入", desc:"孩子拿起就能用，进不了成人空间。"},
+      {k:"none", name:"都不验证", desc:"最方便，但孩子能看到成人的书、笔记与 AI 记录。"},
+      {k:"allpin", name:"每个人都要 PIN", desc:"最严格，5–6 岁孩子使用门槛高。"}
+    ]},
+  { id:"D-17", title:"第二轮 · 首版怎么唤起语音", kind:"tent", rec:"ptt",
+    why:"本地唤醒词在 S31 上未验证，常听还会耗电并有隐私顾虑。",
+    opts:[
+      {k:"ptt", name:"只用 AI 键按住说话", desc:"响应确定、省电、孩子也容易理解；唤醒词以后再加。"},
+      {k:"wake", name:"加唤醒词", desc:"免按键，但要先验证 S31 上的本地唤醒、回声与功耗。"}
+    ]},
+  { id:"D-18", title:"第二轮 · 仓库历史要不要彻底瘦身", kind:"tent", rec:"keep",
+    why:"原始素材已移到归档分支（PR #5），但旧提交里仍有这些文件，完整克隆仍然大。",
+    opts:[
+      {k:"keep", name:"暂不改写历史", desc:"日常用只克隆 main 分支即可；不影响其他分支。"},
+      {k:"rewrite", name:"改写历史彻底移除", desc:"体积真正变小，但会改变所有提交编号、影响所有已有分支，不可逆。"}
     ]}
 ];
 const ROAD = [

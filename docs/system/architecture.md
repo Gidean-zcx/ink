@@ -1,5 +1,7 @@
 # 系统架构方案 v0.1
 
+> 2026-11-01 更新：本文是第一轮的方向性方案，用户已按此完成 D-04～D-10 选择。深化后的设计（含竞品与平台研究依据）见 [v0.1 底座设计](foundation.md)，以后者为准。
+
 起草：2026-11-01。阶段：S3 架构与技术验证。依据：[硬件与源码](../research/cloudzao.md)、[调度专题](../research/system-scheduling-and-experience.md)、[AI 平台](../research/ai-native-platform.md)、[备份与账户](../research/data-backup-sync.md)、[墨水屏 UI](../research/eink-ui-interaction.md)。本文给出各项关键决策的方案对比与推荐；推荐方案在用户选择前标为“暂定”，可逆，见[决策记录](../decisions/README.md)。没有实机验证。
 
 ## 1. 先认清硬件的“体量”
