@@ -1,0 +1,21 @@
+{
+  "order": 21,
+  "entry_id": "INO-pro--newsletter-feeds--can-i-process-newsletters-with-rules-and-filters",
+  "title": "Can I process newsletters with rules and filters?",
+  "url": "https://www.inoreader.com/help/pro/newsletter-feeds/can-i-process-newsletters-with-rules-and-filters",
+  "checked_on": "2026-10-27",
+  "http_status": 200,
+  "final_url": "https://www.inoreader.com/help/pro/newsletter-feeds/can-i-process-newsletters-with-rules-and-filters",
+  "acquisition": "one_anonymous_normal_GET",
+  "raw_path": "work/research/batch41-inoreader-help/21-INO-pro--newsletter-feeds--can-i-process-newsletters-with-rules-and-filters.html",
+  "headers_path": "work/research/batch41-inoreader-help/21-INO-pro--newsletter-feeds--can-i-process-newsletters-with-rules-and-filters.headers.json",
+  "raw_sha256": "6aab932fffdd7bd155499bbade554f67796ffbb9bafb48c4507eace69d857c3e",
+  "bytes": 148407,
+  "status": "body_obtained",
+  "body_status": "extracted_not_yet_root_read",
+  "body_path": "work/research/batch41-inoreader-help/21-INO-pro--newsletter-feeds--can-i-process-newsletters-with-rules-and-filters.body.txt",
+  "body_sha256": "d2ff9ffcd5b2ae22e6689140b09f23443eedfc09e3c9e6c7c962efe0d90beb23",
+  "body_chars": 77,
+  "links": [],
+  "images": []
+}

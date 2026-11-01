@@ -1,0 +1,62 @@
+The reMarkable web app lets you access and manage your reMarkable files from a supported web browser, without installing the desktop or mobile app.
+Use the web app to upload and view files, organize your library, and present content from your paper tablet with Screen Share.
+Go to app.remarkable.com and log in with your reMarkable account to get started.
+With the reMarkable web app, you can:
+Access your files: Open and view files in your reMarkable library directly from your browser.
+Upload files: Add PDF, EPUB, JPG, and PNG files to your library.
+Organize your library: Browse and manage files using My files, Shared links, Favorites, and Trash.
+Present with Screen Share: Display content from your paper tablet on a computer or phone using your browser.
+Convert files to notebooks with Connect: Import supported PDF and Microsoft Word (DOCX) files as editable notebooks.
+Changes to your library sync across your reMarkable account and connected devices.
+Access the web app
+Go to app.remarkable.com.
+Log in with your reMarkable account.
+Your recent files appear on the Home screen. Select My files to browse your library.
+Select a file to open and view it in your browser.
+Upload files
+You can upload supported files from your computer to your reMarkable library:
+Go to app.remarkable.com and log in.
+Drag and drop a file into the upload area on the Home screen, or select browse your files.
+Select the file you want to upload.
+Once the file has uploaded and synced, it will appear in your reMarkable library and on your connected paper tablet.
+The maximum file size for transfer using the web app is 100 MB.
+Import PDFs
+You can upload PDFs to your reMarkable library using the standard upload option. With a Connect subscription, you can also use Convert to Notebook to import supported PDFs as editable notebooks.
+Go to app.remarkable.com and log in.
+Drag and drop your PDF into the upload area, or select browse your files.
+Choose Convert to Notebook, when available, to import the PDF as an editable notebook.
+Once the file has synced, open it from your library or paper tablet.
+Import Word documents with Connect
+With a Connect subscription, you can import Microsoft Word (DOCX) files and convert them into editable notebooks.
+Go to app.remarkable.com and log in.
+Drag and drop a DOCX file into the upload area, or select browse your files.
+The document is converted into an editable notebook.
+Once the file has synced, open it from your library or paper tablet.
+Organize your files
+Select My files to browse and organize your reMarkable library. You can also access:
+Shared links for content you've shared using a link.
+Favorites for files and folders you've marked as favorites.
+Trash for deleted content.
+Present with Screen Share
+Screen Share lets you display content from your paper tablet in the web app.
+Go to app.remarkable.com and log in.
+Select Screen Share from the side menu.
+On your paper tablet, open the file you want to present.
+Tap the three-dot menu, then tap Share.
+Tap Present with Screen Share.
+Content from your paper tablet will appear in the web app on your computer or phone.
+Limitations
+The maximum file size for transfer using the web app is 100 MB.
+You need an internet connection and must be logged in to your reMarkable account to access your synced library.
+Convert to Notebook requires a Connect subscription.
+Some features available in the reMarkable desktop or mobile apps may not be available in the web app.
+Newly uploaded files and changes need to sync before they appear on your connected devices.
+Frequently Asked Questions
+Why can't I see a file I uploaded on my paper tablet?
+Make sure your paper tablet is connected to the internet and logged in to the same reMarkable account as the web app. It may take a short time for newly uploaded files to sync and appear.
+Why can't I see changes I made in the web app on my paper tablet?
+Check that both your paper tablet and the web app are connected to the internet and using the same reMarkable account. Changes need to sync before they appear across your devices.
+Why can't I upload a file?
+Check that the file is a supported format and doesn't exceed the 100 MB maximum file size for transfer using the web app. Also make sure you have a stable internet connection.
+Why don't I see Convert to Notebook?
+Convert to Notebook requires a Connect subscription and is only available for supported file types. Make sure you're logged in to the reMarkable account associated with your Connect subscription.

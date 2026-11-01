@@ -1,0 +1,12 @@
+How to snooze an alarm?
+Modified on: Thu, 17 Sep, 2026 at 1:21 PM
+The snooze function on Mudita Kompakt uses a fixed 5-minute interval and is not automatic
+Snooze an alarm
+Wait until the alarm starts ringing.
+Tap Snooze on the screen.
+The alarm will ring again after 5 minutes.
+Was this article helpful?
+No
+Yes
+That’s Great!
+Thank you for your feedback

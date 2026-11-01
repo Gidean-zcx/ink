@@ -1,0 +1,65 @@
+Sort and Filter News Sources
+Ground News Help Center
+Contact Us
+How can we help you?
+Results
+No results found
+More results
+We use cookies to analyze website traffic and help improve our visitor experience. Privacy Policy
+Reject
+Accept
+In this articleWhere to Find the Sort and Filter ToolSorting OptionsFiltering OptionsResetting FiltersExample: Find News from a Particular Perspective
+Home
+Advanced Browsing Tools
+Compare & Analyze News Coverage
+Sort and Filter News Sources
+Edited Monday, March 9 2026
+Ground News offers several tools to help you customize how you view and compare news coverage. Sorting and filtering sources can help you explore diverse perspectives and understand how different sources cover the same story.
+One of our most powerful features is the Sort and Filter tool, which becomes available once you've clicked into a story. This tool helps you change the order in which sources appear and filter them based on specific characteristics.
+Where to Find the Sort and Filter Tool
+On the website: After clicking into a story, you'll see the Sort and Filter icon at the top-right corner of the Full Coverage Carousel.
+(Click on the image to expand)
+On the app: Tap into any story and you'll see the Sort and Filter icon at the top-right corner of the Full Coverage Carousel.
+(Click on the image to expand)
+Sorting Options
+When viewing a story’s Full Coverage, Ground News allows you to sort the list of sources based on what matters most to you:
+Bias – See coverage from sources with an available bias rating.
+Factuality – Highlight sources with an available factuality rating.
+Latest – Sort by the most recent publication date.
+Alphabetical – View sources in alphabetical order.
+Filtering Options
+You can also filter the list of sources to refine what you see based on:
+Bias – Show only Left, Center, or Right-leaning sources to focus on coverage from a particular political perspective.
+Factuality – Filter sources by their factual reporting rating (High, Mixed, or Low). Learn more here: How to Filter for High-Factuality News Sources
+Ownership – View coverage based on the type of media ownership, such as corporate, government-funded, or independently owned outlets.
+Locality – Highlight sources that are local to the region or country where the story is unfolding.
+Paywall – Choose whether to include or exclude sources that are behind a soft or hard paywall. Subscribers can also use our in-app universal paywall toggle to hide paywalled sources across the app.  Learn more about how to enable this setting here.
+Check out our Universal Source Filters on Ground News Web here.
+Resetting Filters
+To return to the full, unfiltered list of sources, simply clear your filters by tapping the “Clear” button or by navigating to a new story, which resets the filter settings.
+Example: Find News from a Particular Perspective
+Want to explore how a specific group of outlets is covering a story? You can use the Sort and Filter tool to zero in on coverage from a particular viewpoint.
+For example, if you're interested in how right-leaning outlets with a high factuality rating are reporting a story, simply:
+Click into a story.
+Tap the Sort and Filter icon.
+Under the Bias section, toggle on Right-leaning sources.
+Under the Factuality section, toggle High or Very High factuality-rated sources.
+Finally, select the "Show Result(s)" button.
+You’ll now see only the sources that match both criteria. This is a great way to understand how news is framed across the spectrum.
+You can mix and match any combination, as long as coverage is available, such as Left + Mixed Factuality or Center + Independent Ownership, to get a more nuanced view of how different outlets are reporting the same story.
+Your feedback matters, and we want to hear from you. If you have any questions, suggestions, or thoughts about your Vantage experience, please don't hesitate to reach out to us at feedback@ground.news . We value your input and are committed to continuously enhancing your news-reading experience.
+We hope this article was helpful! If you have any concerns about this article and would like to leave a comment, we welcome your feedback – but please keep in mind feedback that is submitted on a Help Center article will not be responded to by our team. If you have an issue you would like resolved by our team, please contact the email address above.
+Sort and Filter Tool
+Bias Filters
+Factuality Filters
+Was this article helpful?
+Yes
+No
+Sorry about that! Care to tell us more?
+What was unhelpful?
+Submit
+Thanks for the feedback!
+There was an issue submitting your feedback
+Please check your connection and try again.
+Cookie preferences
+Refund and Cancellation PolicyTerms and ConditionsPrivacy Policy

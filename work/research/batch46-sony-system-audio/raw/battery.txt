@@ -1,0 +1,23 @@
+Reducing the battery consumption
+You can reduce the battery consumption by using the player in the following manner.
+The battery life depends on usage conditions. For details on the battery life, see [Battery life].
+Turn off the power manually when you do not use the player.
+Turn off apps when you are not using them.
+Set [Auto power off]. The player will turn off automatically if you do not operate the player for a certain period of time after you pause playback.
+Swipe the [WALKMAN Home] screen upwards. Tap the menu items in the following order.
+[Settings] － [Battery] － [Auto power off].
+To prevent battery deterioration, if you do not operate the player for 72 hours, the player will turn off automatically even when [Auto power off] is [Off].
+Adjust the screen brightness.
+Turn off all sound adjustments.
+Turn off the Bluetooth function when you are not using it.
+Turn off the Wi-Fi function when you are not using it.
+The contents of the Help Guide may be subject to change without notice due to updates to the product's specifications.
+Go to Page Top
+Related Topic
+Charging the battery
+Turning the power off
+Sound adjustment screens for “Music player”
+Connecting the player to a Wi-Fi network
+Notes on the built-in battery
+Displaying lyrics
+Battery life

@@ -1,0 +1,57 @@
+[
+  {
+    "key": "helpix",
+    "url": "https://www.helpix.ru/opinion/202409/60517-meebook_m7.html",
+    "checked_on": "2026-10-27",
+    "method": "ordinary_anonymous_GET",
+    "status": 200,
+    "final_url": "https://www.helpix.ru/opinion/202409/60517-meebook_m7.html",
+    "path": "work/meebook-reading-controls-deepening/raw/helpix.html",
+    "sha256": "21b12572285be57fac2dd51c0aa1bc5f5f724755e5e92391dceabcaa2c0e0639",
+    "text_chars": 59795
+  },
+  {
+    "key": "issue16100",
+    "url": "https://github.com/koreader/koreader/issues/16100",
+    "checked_on": "2026-10-27",
+    "method": "ordinary_anonymous_GET",
+    "status": 200,
+    "final_url": "https://github.com/koreader/koreader/issues/16100",
+    "path": "work/meebook-reading-controls-deepening/raw/issue16100.html",
+    "sha256": "452981eda2b81b755e0e27e991fffc498e11646cfa19c8af60b921c8f9aac83b",
+    "text_chars": 4386
+  },
+  {
+    "key": "androidkeys",
+    "url": "https://github.com/koreader/koreader/wiki/Android-tips-and-tricks",
+    "checked_on": "2026-10-27",
+    "method": "ordinary_anonymous_GET",
+    "status": 200,
+    "final_url": "https://github.com/koreader/koreader/wiki/Android-tips-and-tricks",
+    "path": "work/meebook-reading-controls-deepening/raw/androidkeys.html",
+    "sha256": "5d2e2ccd801b13f1c805cba8c6da79f17187e5ac8fbb826bf8c7b6df0bb802d0",
+    "text_chars": 18640
+  },
+  {
+    "key": "keymapping",
+    "url": "https://github.com/koreader/koreader/wiki/Keymapping",
+    "checked_on": "2026-10-27",
+    "method": "ordinary_anonymous_GET",
+    "status": 200,
+    "final_url": "https://github.com/koreader/koreader/wiki/Keymapping",
+    "path": "work/meebook-reading-controls-deepening/raw/keymapping.html",
+    "sha256": "c9b51614f3dbd6559101624dbe1e05ff353d08c584c8a56b793c89ec72981f3c",
+    "text_chars": 18299
+  },
+  {
+    "key": "reddit",
+    "url": "https://www.reddit.com/r/eink/comments/1825l9d/meebook_m7_review_my_optimizations/",
+    "checked_on": "2026-10-27",
+    "method": "ordinary_anonymous_GET",
+    "status": 403,
+    "final_url": "https://www.reddit.com/r/eink/comments/1825l9d/meebook_m7_review_my_optimizations/",
+    "path": "work/meebook-reading-controls-deepening/raw/reddit.html",
+    "sha256": "dc131f91303300301ab1b23a7e3b0a084b9e325b318b2722d00fc637247b8b7a",
+    "stopped": "refusal; no retry"
+  }
+]

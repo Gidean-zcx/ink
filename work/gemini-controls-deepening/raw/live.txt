@@ -1,0 +1,274 @@
+Talk naturally with Gemini Live - Android phone & tablet - Gemini Apps Help       Skip to main content
+Gemini Apps Help
+Sign in
+Google Help
+Help Center
+Community
+Gemini Apps
+Privacy Policy
+Terms of Service
+Submit feedback
+Send feedback on...
+This help content & information
+General Help Center experience
+CloseNext
+Help Center
+Community
+Privacy Hub
+Gemini Apps
+Talk naturally with Gemini Live
+With Gemini Live, you can have a natural, free-flowing conversation with Gemini. You can even interrupt it like when you want to add more details or change the topic of the conversation. With Gemini Live, you can:
+Talk back and forth: Talk to Gemini without typing, and Gemini will respond back verbally.
+Brainstorm ideas out loud: Ask for a gift idea, to plan an event, or to make a business plan.
+Explore: Uncover more details about topics that interest you.
+Practice aloud: Rehearse for important moments in a more natural and conversational way.
+Important: We’re gradually releasing updates to Gemini Live, so the latest changes might not be available to you just yet.
+What you need
+An Android phone or tablet.
+The Gemini mobile app, or Gemini as your mobile assistant.
+For now, Gemini Live isn’t available in the Gemini web app or Gemini in Google messages.
+A personal Google account that you manage on your own or a work or school Google account with access to Gemini Apps.
+The latest version of the Google App. Learn how to update apps on Android.
+Be over 13 (or the applicable age in your country).
+To use this feature, you must be signed in to Gemini Apps. Learn how to sign in to Gemini Apps.
+Important:
+The Gemini mobile app doesn’t currently support Farsi. Learn more about Gemini mobile app availability.
+For now, Gems can't be used with Gemini Live.
+Before you use Gemini Live
+Respect others’ privacy and ask permission before recording or including them in a Live chat.
+Learn how Google works with Gemini Live data.
+Go Live with Gemini
+On your Android phone or tablet, open the Gemini mobile app .
+You can also go Live by saying “Hey Google, let’s talk Live” or “Hey Google, let’s talk.”
+At the bottom, tap Live  or swipe left.
+For your first time, follow any on-screen instructions.
+Start talking.
+Tips:
+To turn off the mic, tap Hold  or End .
+You can also start a Live chat on your Pixel Buds by saying “Hey Google, let’s talk.” Learn more about Gemini on Pixel Buds.
+You can also stream video and share your screen.
+To turn your camera on, tap Turn on video streaming . Learn more about video streaming.
+To share your screen, tap Turn on screen sharing . Learn more about screen sharing.
+Examples
+I’m about to interview my first big guest for a podcast, and want to make sure I don’t mess up. Any last minute tips?
+So my friend is really tough to shop for. Can you help me think of a gift?
+What’s the best way to kickstart my day and feel super productive? I’ve got a big meeting coming up and want to be on top of my game.
+Your Gemini Live data
+Learn more about how Google works with Gemini Live data.
+Manage your Live chat with Gemini
+Put Live on hold & resume the Live chat
+To put the Live chat on hold, tap Hold . This turns off the mic.
+To resume the Live chat, tap Live .
+Mute a Live chat
+Mute a Live chat to turn off your microphone but allow Gemini to keep speaking. This keeps your Live session active, letting you resume the conversation without losing context. This differs from ending a chat, which closes the session and provides a transcript.
+To mute a Live chat: When Live is active, tap Mute .
+To unmute a Live chat: Go back to your Live chat, then tap Unmute .
+Tip: When your Live chat is muted, your device’s microphone is muted but your video or screen continues to be shared.
+Exit or resume a Live chat & review the transcript
+To exit the Live chat and review the transcript, tap End  or swipe right.
+To resume a previous Live chat, open the chat and tap Live  or swipe left.
+Switch between Live and non-Live chat modes
+You can seamlessly switch an ongoing conversation between Live (voice) and non-Live (text) modes without needing to start a new chat.
+To switch to non-Live (text) mode: In an active Live chat, tap End .
+To switch back to Live (voice) mode: In a non-Live chat, tap Live .
+Share your camera or screen with Live
+Share your camera in Live
+In your Live chat, you can turn on your camera to show Gemini what you see and talk about it.
+To share your camera on, tap Camera .
+To stop sharing your camera, tap Camera .
+To switch between your front and rear camera, tap Switch to rear or front camera .
+When your camera automatically turns off
+When your camera is on in a Live chat, the camera automatically turns off if:
+Live is put on hold. If you continue your Live chat, the camera automatically turns back on.
+You leave the Gemini mobile app. The camera doesn’t automatically turn back on when you return to the app.
+Your screen locks. The camera doesn’t automatically turn back on when you unlock your screen.
+Share your device’s screen in Live
+Important: To share your screen, you must turn on notifications for Gemini Live on your device.
+You can share and get help with what’s on your device’s screen. When you share your screen, your full screen is shared with Gemini.
+Share your screen
+There are 2 ways to share your device’s screen:
+On the Live screen in the Gemini mobile app, tap Turn on screen sharing  and follow the onscreen instructions.
+Outside of the Gemini mobile app, open Gemini by saying “Hey Google” or by touch, and tap Share screen with Live and follow the onscreen instructions.
+“Share screen with Live” might not be available when another feature is shown that’s more helpful.
+Stop sharing your screen
+There are 2 ways to stop sharing your screen:
+Go back to the Gemini mobile app, then and tap Turn off screen sharing .
+From the top edge of your screen, swipe down, then on the “Screen Sharing” card, tap Stop sharing.
+When screen sharing automatically stops
+When you’re sharing your screen, if Live is put on hold or you lock your screen, screen sharing automatically stops. Screen sharing doesn’t automatically resume when you continue your Live chat or unlock your screen. To resume it, you need to share your screen again.
+Use Guided Vision in Live
+When you share your camera in Live, you can get audio cues to help with things like reading a small label or understanding what’s around you. Learn more about using Guided Vision.
+Use Connected Apps & services in Gemini Live chats
+Gemini Live can use some Connected Apps and other services integrated with Gemini chats to help you with tasks like adding an event to your calendar and searching for recommended restaurants nearby.
+Connected Apps & integrated services that can be used in Gemini Live chats
+Important:
+Support for Connected Apps in Gemini Live is being released gradually and may not be available to you yet.
+If you’re signed in to a work or school Google Account, only Google Calendar, Google Keep, and Google Tasks can currently be used in Gemini Live chats.
+The following Connected Apps and integrated services are available in your Gemini Live chats:
+Device assistance
+Google Calendar
+Google Home
+Google Hotels
+Google Flights
+Google Tasks
+Google Keep
+Google Workspace
+HONOR Calendar
+HONOR Notes
+Image generation
+Lenovo Notes
+OnePlus Notes
+OPPO Calendar
+OPPO Notes
+Samsung Calendar
+Samsung Notes
+Samsung Reminder
+Shopping
+Spotify
+TECNO Calendar
+TECNO Notepad
+Vivo Notes
+Xiaomi Calendar
+Xiaomi Notes
+YouTube
+YouTube Music
+Also, Gemini can automatically use public information from Google Maps in your Live chats.
+Connect an app
+If you’re signed in to a personal Google Account
+If the app you ask Gemini to use isn't connected, you will need to connect the app in your Connected Apps settings. Learn how to connect or disconnect an app.
+After you connect the app, open Gemini Live and repeat your prompt.
+If you’re signed in to a work or school Google Account
+To use supported apps in your Live chats, the apps must first be enabled by your account’s Workspace administrator. Learn more about using apps with a work or school account.
+Undo an action
+If Gemini Live is open on your screen: Tap Undo or ask Gemini to undo the action.
+If Gemini Live is on in the background: For now, you can’t undo an action. If you need to change something, you can edit the event or action in the app.
+For now, you can’t undo an action with Samsung apps. You can still edit the event or action in the app.
+Personalize your experience in Gemini Live
+Important: This feature is only available in English in the US.
+To get more helpful, tailored responses, Gemini can use memories of your past chats and info from some Connected Apps. Gemini Live follows the same permissions that you choose when you chat with Gemini.
+Let Gemini use the memory of past Gemini chats
+On your phone or tablet, open your Gemini mobile app .
+On the left, tap Menu   Settings & help .
+Tap Personal intelligence   Connected apps. .
+Turn Memory off  or on .
+Choose which Connected Apps are connected to Gemini
+On your phone or tablet, open the Gemini mobile app .
+Tap  Menu    Settings .
+Tap Personal intelligence  Connected apps.
+Find the app you want to connect or disconnect.
+To connect an app, turn it on .
+To disconnect an app, turn it off .
+Follow any on-screen instructions.
+Use Live in the background
+Talk to Gemini in the background
+Important: To talk to Gemini in the background, you must turn on notifications for Gemini Live on your device.
+You can use your phone and other apps while you’re Live with Gemini.
+To put Live in the background: from the bottom edge of your screen, swipe up.
+To go back to Live in fullscreen: from the top edge of your screen, swipe down and tap the “Live with Gemini” card.
+Continue your Live chat on lock screen
+Important: You can’t start Gemini Live on a locked screen. You need to unlock your phone to start it.
+If Gemini on lock screen is on, you can continue your Live chat after you lock your phone. If Gemini on lock screen is off, when you lock your phone, Live is put on hold. Learn how to turn on Gemini on lock screen.
+When you’re in a Live chat with your phone locked:
+To go back to Live in fullscreen: on the lock screen, tap the Live with Gemini notification and unlock your phone.
+To exit Live: on the lock screen, expand the “Live with Gemini” notification and tap End Live mode.
+Tip: If your chat is put on hold or ends while your phone is locked, you’ll need to unlock your phone to continue the Live chat.
+Manage settings
+Change Gemini’s voice
+Important: The option to change Gemini’s voice isn’t available in some languages. Learn how to change Gemini's display language.
+This voice setting applies to all Gemini Apps features. It’s used in Gemini Live and features where Gemini Apps respond verbally, like when you tap Listen  next to a response.
+Open your Gemini mobile app .
+At the  left, tap Menu   your Profile picture or initial  Settings  Gemini’s Voice.
+To hear a voice, tap a voice name.
+Tap Confirm.
+Turn Interrupt Live responses on or off
+While Gemini is talking, you can interrupt it by talking. To turn this feature off:
+Open the Gemini mobile app .
+At the  left, tap Menu   your Profile picture or initial  Settings.
+Turn Interrupt Live responses on or off.
+Tip: If you turn off interrupt Live responses, you can still interrupt Gemini by tapping the screen.
+Turn on notifications for Gemini Live
+To use Gemini Live in the background or while your device is locked, Live with Gemini notifications must be on.
+On your Android phone or tablet, open your device’s Settings app.
+Tap Notifications  App notifications  Google.
+Turn on All Google Notifications if it’s off.
+Turn on Live with Gemini if it’s off.
+Turn on captions for Gemini Live
+You can turn on captions for your Gemini Live conversations. If you turn on captions, all of your Gemini Live conversations will have captions until you turn the setting off.
+Open the Gemini mobile app .
+At the bottom, tap Live  or swipe left to start a Live chat.
+At the top right, tap Turn captions on .
+Change caption size and style
+In the Gemini mobile app , at the left, tap Menu   your Profile picture or initial  Settings  Caption preferences  Caption size and style.
+Choose how you want to change captions for Live:
+To change the caption size, tap Caption size and select a size.
+To change the caption style, tap Caption style and select a style.
+Tips:
+To change the language for your captions, learn how to change Gemini's display language.
+You can also turn captions in Caption preferences in your Gemini app settings.
+Related resources
+Get started with the Gemini mobile app
+What you can do with your Gemini mobile app
+Change Gemini's voice
+Gemini Apps Privacy Hub
+Android phone & tablet iPhone & iPad
+More
+Need more help?
+Try these next steps:
+Post to the help community    Get answers from community members
+true
+Help
+1 of 14
+Get started with the Gemini mobile app
+2 of 14
+What you can do with your Gemini mobile app
+3 of 14
+Gemini mobile app availability
+4 of 14
+How your Gemini mobile app can help when your phone is locked
+5 of 14
+Talk naturally with Gemini Live
+6 of 14
+Manage or delete the Gemini app on your Android device
+7 of 14
+Use Gemini on your headphones
+8 of 14
+Use screen actions to chat with the Gemini mobile app
+9 of 14
+Add & customize your Gemini widget
+10 of 14
+Use Gemini on your smartwatch
+11 of 14
+Ask Gemini to handle your multi-step tasks in select Android apps
+12 of 14
+Get Started with Gemini Go
+13 of 14
+Ask Gemini to handle your everyday phone calls
+14 of 14
+Get audio descriptions with Guided Vision in Gemini Live
+©2026 Google
+Privacy Policy
+Terms of Service
+Language   Afrikaans‎azərbaycan‎bosanski‎català‎dansk‎Deutsch‎eesti‎English (United Kingdom)‎español‎español (Latinoamérica)‎euskara‎Filipino‎français‎français (Canada)‎galego‎hrvatski‎Indonesia‎isiZulu‎italiano‎Kiswahili‎latviešu‎lietuvių‎magyar‎Melayu‎Nederlands‎norsk‎o‘zbek‎polski‎português‎português (Brasil)‎română‎shqip‎slovenčina‎slovenščina‎suomi‎svenska‎Tiếng Việt‎Türkçe‎íslenska‎čeština‎Ελληνικά‎беларуская‎български‎македонски‎монгол‎русский‎српски‎українська‎қазақ тілі‎հայերեն‎‏עברית‏اردو‏العربية‏فارسیनेपाली‎मराठी‎हिन्दी‎অসমীয়া‎বাংলা‎ਪੰਜਾਬੀ‎ଓଡ଼ିଆ‎தமிழ்‎తెలుగు‎ไทย‎ລາວ‎ქართული‎አማርኛ‎ខ្មែរ‎中文（简体）‎中文（繁體）‎中文（香港）‎日本語‎한국어‎ English‎
+Enable Dark Mode
+Send feedback on...
+This help content & information General Help Center experience
+Search
+Clear search
+Close search
+Google apps
+Main menu
+10916453193508502345
+true
+Search Help Center
+false
+true
+true
+true
+true
+true
+5295044
+false
+false
+false
+false
+false

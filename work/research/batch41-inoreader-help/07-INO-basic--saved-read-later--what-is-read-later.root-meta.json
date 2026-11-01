@@ -1,0 +1,21 @@
+{
+  "order": 7,
+  "entry_id": "INO-basic--saved-read-later--what-is-read-later",
+  "title": "What is Read later?",
+  "url": "https://www.inoreader.com/help/basic/saved-read-later/what-is-read-later",
+  "checked_on": "2026-10-27",
+  "http_status": 200,
+  "final_url": "https://www.inoreader.com/help/basic/saved-read-later/what-is-read-later",
+  "acquisition": "one_anonymous_normal_GET",
+  "raw_path": "work/research/batch41-inoreader-help/07-INO-basic--saved-read-later--what-is-read-later.html",
+  "headers_path": "work/research/batch41-inoreader-help/07-INO-basic--saved-read-later--what-is-read-later.headers.json",
+  "raw_sha256": "a95f28e565ae308b6d13b00273ce505a68e202de28465f6bcd87580e5db88968",
+  "bytes": 140818,
+  "status": "body_obtained",
+  "body_status": "extracted_not_yet_root_read",
+  "body_path": "work/research/batch41-inoreader-help/07-INO-basic--saved-read-later--what-is-read-later.body.txt",
+  "body_sha256": "a565acc8d54deceb4ad8f44c10730a58d4c2906e42270ee3b0a07213900cc8b9",
+  "body_chars": 80,
+  "links": [],
+  "images": []
+}

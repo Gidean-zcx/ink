@@ -1,0 +1,38 @@
+[
+  {
+    "file": "2018-proposal-image-1.jpg",
+    "url": "https://exp-picture.cdn.bcebos.com/e076d77622bc7dc5d6797feb5e460596b91429b6.jpg",
+    "status": 200,
+    "type": "image/jpeg",
+    "bytes": 316297,
+    "sha256": "cb8fe7b558b75d50a2e656cf1aeed07383787f64387690bc70d359018240ac0b"
+  },
+  {
+    "file": "2018-proposal-image-2.jpg",
+    "url": "https://exp-picture.cdn.bcebos.com/b442d6d246fe474ee19d670bb0ef354f51b81fb6.jpg",
+    "status": 403,
+    "type": "application/json; charset=utf-8",
+    "bytes": 101
+  },
+  {
+    "file": "2022-logout-1.jpg",
+    "url": "https://exp-picture.cdn.bcebos.com/304f0999e92abab87299af494814f1c594eea170.jpg",
+    "status": 403,
+    "type": "application/json; charset=utf-8",
+    "bytes": 101
+  },
+  {
+    "file": "2022-logout-2.jpg",
+    "url": "https://exp-picture.cdn.bcebos.com/bbf95c406afec314c21c5059cac1b727ad539c70.jpg",
+    "status": 403,
+    "type": "application/json; charset=utf-8",
+    "bytes": 101
+  },
+  {
+    "file": "2022-logout-3.jpg",
+    "url": "https://exp-picture.cdn.bcebos.com/16d8f72abab842405b2706a37ac595ee40c19e70.jpg",
+    "status": 403,
+    "type": "application/json; charset=utf-8",
+    "bytes": 101
+  }
+]

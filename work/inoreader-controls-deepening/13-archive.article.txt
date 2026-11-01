@@ -1,0 +1,55 @@
+Find any article your feeds ever published
+Inoreader keeps every article of the feeds you follow, long after the publisher's own feed has moved on. You can scroll back through a feed's history or find an article from years ago with a search.
+Create a free account
+FreeThe archive of your feeds is free on every plan.
+ProPro adds search across all public feeds.
+Read and search the full history of your feeds
+Most feeds list only their latest items, and most readers keep only what they have shown you. Inoreader keeps the articles themselves, from the day it first fetches a feed.
+History before you subscribed
+When you subscribe, the feed's history is already there for you to scroll through and search, including what it published before you followed it.
+Permanent storage
+Articles do not age out. A post from years ago is as easy to find as one from this morning.
+Search and save old articles
+Find an old article with a keyword, then tag it, save it, have it read aloud or export it.
+Find an old article
+Open a feed and scroll past its latest items. Older articles load as you go, back to the first one Inoreader collected.
+Search the feed, the folder or your whole account for a phrase you remember. The result can be years old.
+Tag or save the articles that matter, so they stay in your account even if you later unfollow their feed.
+Use cases
+Research across years
+Keep the whole output of a blog or a journal in one place and search it, including what it published before you subscribed.
+Finding an article you half remember
+Search for a phrase you recall and find the piece from eighteen months ago.
+A record of coverage
+Keep a monitoring feed or a news folder as the history of a topic, and export it when the project ends.
+Keep what matters
+The archive belongs to the feed, so everyone who follows it reads the same history. When you want an article in your own collection, save it or tag it, and it stays with you even if you unfollow the feed.
+Frequently asked questions
+How far back does a feed go?
+A feed's articles are kept from the day Inoreader first saw the feed. For most feeds, that is years before you subscribed, because someone else was already following them. New articles are added as they are published, and nothing is dropped because it is old.
+Can I read articles the feed no longer lists?
+Yes. A publisher's feed usually holds the last ten or twenty items, but Inoreader holds everything it has collected, so you can read the feed's history by scrolling or with search.
+Is the archive searchable?
+Yes. Search covers every article of your feeds, whatever its age, by keyword, phrase and operators. On Pro, filters narrow the results by time and language.
+Do I need to save articles to keep them?
+No. Every article of the feeds you follow stays in Inoreader whether you read it or not. Save or tag an article only when you want it in your own collection, for example so that it stays with you after you unfollow its feed.
+Can I take it with me?
+Yes. On Pro, you can export any folder or tag as an output feed. You can also save articles as PDF and export your subscriptions as OPML at any time.
+If I unfollow a feed, does it keep its history?
+The articles stay in Inoreader as long as the feed has readers, and if you follow it again, its history is back. Articles you tagged or saved stay in your account either way.
+Related features
+Search
+Find any article in your feeds and beyond
+Folders and tags
+Organize your feeds and the articles you keep
+Full content
+Read the whole article instead of the snippet
+Help center
+How do I search for articles in Inoreader?
+Can I search within a specific feed or folder?
+Blog
+An upgraded and faster search
+Build your own newsfeed
+Ready to give it a go?
+Start a 14-day trial, no credit card required.
+Create account

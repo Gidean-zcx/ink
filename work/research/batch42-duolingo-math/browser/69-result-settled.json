@@ -1,0 +1,17 @@
+{
+  "name": "69-result-settled",
+  "at": "2026-10-27T06:42:41.340485+00:00",
+  "url": "https://www.duolingo.com/lesson/unit/1/level/1",
+  "title": "Duolingo - The world’s most popular way to learn",
+  "text": "Lesson Complete!\nTOTAL XP\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\nGOOD!\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n%\nCONTINUE",
+  "controls": [
+    {
+      "tag": "BUTTON",
+      "text": "CONTINUE",
+      "aria": null,
+      "test": "player-next",
+      "type": "submit",
+      "disabled": false
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+[
+  {
+    "tag": "h1",
+    "title": "My News Feed Isn't Loading"
+  },
+  {
+    "tag": "h2",
+    "title": "How to Fix the Issue"
+  },
+  {
+    "tag": "h3",
+    "title": "Disable VPN or Ad Blocker"
+  },
+  {
+    "tag": "h3",
+    "title": "Switch to a Stronger Network"
+  },
+  {
+    "tag": "h3",
+    "title": "Reinstall the Mobile App"
+  },
+  {
+    "tag": "h2",
+    "title": "Still Having Trouble?"
+  },
+  {
+    "tag": "h2",
+    "title": "Related Articles"
+  },
+  {
+    "tag": "h2",
+    "title": "Was this article helpful?"
+  },
+  {
+    "tag": "h2",
+    "title": "Thanks for the feedback!"
+  }
+]

@@ -1,0 +1,50 @@
+Add extra security by enabling a passcode for your device. You will be asked for your passcode when the device is turned on or awakened from sleep mode. If you need to change or disable your passcode for any reason, it can be reset by going to Settings > Security and then tapping Change passcode.
+However, after several incorrect passcode attempts, you'll get a lockout timer that will prevent you from trying again. The lockout timer also increases for each failed attempt, to a maximum of one hour.
+If you try the wrong passcode too many times, then you'll be able to reset the passcode or factory reset your device.
+Add passcode on the reMarkable paper tablet
+Go to Settings.
+Tap Security and toggle Passcode to On.
+Choose between four, six or eight digits.
+Enter the new passcode.
+Verify the new passcode. If the passcodes don't match, you have to try again.
+For reMarkable Paper Pro, Paper Pro Move, and Paper Pure users, once you have verified your passcode, you will receive a recovery code. Make sure to write this down somewhere safe, as you will need to use this code if you ever forget your passcode and need to reset it.
+Change or remove a passcode
+Go to Settings and tap Security.
+Tap on Change passcode or toggle Passcode to Off.
+Enter your old passcode.
+Forgotten passcode (reMarkable Paper Pro, Paper Pro Move, and Paper Pure)
+Learn how to reset your passcode if you've been locked out of your device.
+The security passcode on your reMarkable can be reset from the Security settings menu. There is a limited number of attempts to try unlocking your device if you've forgotten your passcode. After several incorrect passcode attempts, you'll trigger a lockout timer that will prevent you from trying again for a short while. The lockout duration increases for each failed attempt, to a maximum of one hour.
+If you enter the wrong passcode several times, you can reset your device by following the instructions on your reMarkable and using your recovery code.
+If you've forgotten your passcode, here's how to reset it:
+After several incorrect passcode attempts, an option that says "swipe to unlock" will appear at the bottom of your screen. Swipe this and then press Reset passcode.
+Input your recovery code, that you received when you set up your passcode.
+Your old passcode has been reset. Enter a new passcode on your reMarkable.
+In case you do not remember your recovery code, do not have it written down or saved, and do not have a photo of it, you will have to factory reset the device. All files that were synced to a reMarkable cloud account previously will be synced back onto the device after the factory reset if you pair it with the same account. If you're still having problems resetting your passcode, please contact our support team for help.
+Forgotten passcode (reMarkable 1 and 2)
+Learn how to reset your passcode if you've been locked out of your device.
+The security passcode on your reMarkable can be reset from the Security settings menu. There is a limited number of attempts to try unlocking your device if you've forgotten your passcode. After several incorrect passcode attempts, you'll trigger a lockout timer that will prevent you from trying again for a short while. The lockout duration increases for each failed attempt, to a maximum of one hour.
+If you enter the wrong passcode several times, you can reset your device by following the instructions on your reMarkable and logging in on my.remarkable.com.
+If you've forgotten your passcode, here's how to reset it:
+After several incorrect passcode attempts, an option that says "swipe to unlock" will appear at the bottom of your screen. Swipe this and then press Reset passcode.
+Follow the instructions on your device, and go to my.remarkable.com on your computer and log in to your account.
+You should see a banner at the top of your account where you will approve the reset.
+Your old passcode has been reset. Enter a new passcode on your reMarkable.
+The only way to reset the passcode of a paired reMarkable 1 or 2 is by using the account it is paired with (a factory reset option will not appear). In case you do not have access to the account, the rest is unexpectedly stopped, or if you're still having problems resetting your passcode, please contact our support team for help.
+Unable to enter or reset your passcode
+If you can't enter your passcode or the passcode reset screen isn't responding as expected, first perform a hard reset of your paper tablet. This can resolve temporary software issues that may prevent you from entering or resetting your passcode.
+To perform a hard reset:
+Hold down the Power Button for 15 seconds.
+Release for 3 seconds.
+Hold it back down for 2 seconds.
+Wait for the device to restart.
+Once the device has restarted, try entering your passcode or resetting it again.
+If you're still unable to enter or reset your passcode after restarting the device, continue with the troubleshooting steps above. If the issue persists, contact Support for further assistance.
+Reset reMarkable account
+Reset reMarkable account
+1.  Open my.remarkable.com.
+2. Enter your email address and click Continue.
+3. Click Forgot password?
+4.  Enter your email address. Follow the instructions found in the email to reset your password.
+If you have registered a reMarkable user account by using a Google account, Apple ID, or a Facebook account, you will not be able to reset your password through email. Sign in with your Google or Facebook account, or Continue with Apple in order to access your reMarkable account.
+If you are still experiencing issues with your device, please contact us here.

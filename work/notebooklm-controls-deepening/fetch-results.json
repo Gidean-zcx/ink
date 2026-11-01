@@ -1,0 +1,178 @@
+[
+  {
+    "evidence_id": "E-NBCD-01",
+    "slug": "directory",
+    "requested_url": "https://support.google.com/notebooklm/?hl=en",
+    "checked_on": "2026-10-26",
+    "status": 200,
+    "final_url": "https://support.google.com/gemininotebook/?hl=en",
+    "redirects": [
+      {
+        "status": 301,
+        "url": "https://support.google.com/notebooklm/?hl=en"
+      }
+    ],
+    "raw_work_path": "work/notebooklm-controls-deepening/01-directory.html",
+    "raw_sha256": "e225b4b17e86b73c030266e42ae4cc8cdd9a438c00c6f922fbb37ff08f0bd8e9",
+    "text_characters": 1131
+  },
+  {
+    "evidence_id": "E-NBCD-02",
+    "slug": "sources",
+    "requested_url": "https://support.google.com/gemininotebook/answer/16215270?hl=en",
+    "checked_on": "2026-10-26",
+    "status": 200,
+    "final_url": "https://support.google.com/gemininotebook/answer/16215270?hl=en",
+    "redirects": [],
+    "raw_work_path": "work/notebooklm-controls-deepening/02-sources.html",
+    "raw_sha256": "06a206d1320207d8a3e2e1ac609456473a5708effbfd59a116f8e2b2a20420b9",
+    "text_characters": 10137
+  },
+  {
+    "evidence_id": "E-NBCD-03",
+    "slug": "faq",
+    "requested_url": "https://support.google.com/gemininotebook/answer/16269187?hl=en",
+    "checked_on": "2026-10-26",
+    "status": 200,
+    "final_url": "https://support.google.com/gemininotebook/answer/16269187?hl=en",
+    "redirects": [],
+    "raw_work_path": "work/notebooklm-controls-deepening/03-faq.html",
+    "raw_sha256": "7ca76c8b1f9f8ee3c4b97dfd92a47567fab5e702a5dfacc5883f5612c07ba422",
+    "text_characters": 4295
+  },
+  {
+    "evidence_id": "E-NBCD-04",
+    "slug": "create",
+    "requested_url": "https://support.google.com/gemininotebook/answer/16206563?hl=en",
+    "checked_on": "2026-10-26",
+    "status": 200,
+    "final_url": "https://support.google.com/gemininotebook/answer/16206563?hl=en",
+    "redirects": [],
+    "raw_work_path": "work/notebooklm-controls-deepening/04-create.html",
+    "raw_sha256": "bab78ea339538dbcdfa552c327710dd98d8ac6485e0336ea4a4b991897749187",
+    "text_characters": 9417
+  },
+  {
+    "evidence_id": "E-NBCD-05",
+    "slug": "cards",
+    "requested_url": "https://support.google.com/gemininotebook/answer/16958963?hl=en",
+    "checked_on": "2026-10-26",
+    "status": 200,
+    "final_url": "https://support.google.com/gemininotebook/answer/16958963?hl=en",
+    "redirects": [],
+    "raw_work_path": "work/notebooklm-controls-deepening/05-cards.html",
+    "raw_sha256": "6e609d9dd03f87319582317f5144ed7295a5a7cd7a15db4f348856de1c0a3f5c",
+    "text_characters": 2362
+  },
+  {
+    "evidence_id": "E-NBCD-06",
+    "slug": "notes",
+    "requested_url": "https://support.google.com/gemininotebook/answer/16262519?hl=en",
+    "checked_on": "2026-10-26",
+    "status": 200,
+    "final_url": "https://support.google.com/gemininotebook/answer/16262519?hl=en",
+    "redirects": [],
+    "raw_work_path": "work/notebooklm-controls-deepening/06-notes.html",
+    "raw_sha256": "21803268f0e71019d411fcd58fee048c595b095a5591d237c265ad282ff83113",
+    "text_characters": 3164
+  },
+  {
+    "evidence_id": "E-NBCD-07",
+    "slug": "mindmap",
+    "requested_url": "https://support.google.com/gemininotebook/answer/16212283?hl=en",
+    "checked_on": "2026-10-26",
+    "status": 200,
+    "final_url": "https://support.google.com/gemininotebook/answer/16212283?hl=en",
+    "redirects": [],
+    "raw_work_path": "work/notebooklm-controls-deepening/07-mindmap.html",
+    "raw_sha256": "b2c3e3c08898e06d6bdf45683a47c3e6451c833044a66f23a3caa505b7aed7b7",
+    "text_characters": 2837
+  },
+  {
+    "evidence_id": "E-NBCD-08",
+    "slug": "reports",
+    "requested_url": "https://support.google.com/gemininotebook/answer/18323649?hl=en",
+    "checked_on": "2026-10-26",
+    "status": 200,
+    "final_url": "https://support.google.com/gemininotebook/answer/18323649?hl=en",
+    "redirects": [],
+    "raw_work_path": "work/notebooklm-controls-deepening/08-reports.html",
+    "raw_sha256": "29edb5e3a6e3f6334f8ea235559501fc8aafdd3ae9bbf8c7e0f689cacab1425d",
+    "text_characters": 2754
+  },
+  {
+    "evidence_id": "E-NBCD-09",
+    "slug": "infographic",
+    "requested_url": "https://support.google.com/gemininotebook/answer/16758265?hl=en",
+    "checked_on": "2026-10-26",
+    "status": 200,
+    "final_url": "https://support.google.com/gemininotebook/answer/16758265?hl=en",
+    "redirects": [],
+    "raw_work_path": "work/notebooklm-controls-deepening/09-infographic.html",
+    "raw_sha256": "a70212ecfc0e937e22c0dcfc174d60c92908df93445f4538da117e89adb1eb27",
+    "text_characters": 3774
+  },
+  {
+    "evidence_id": "E-NBCD-10",
+    "slug": "slides",
+    "requested_url": "https://support.google.com/gemininotebook/answer/16757456?hl=en",
+    "checked_on": "2026-10-26",
+    "status": 200,
+    "final_url": "https://support.google.com/gemininotebook/answer/16757456?hl=en",
+    "redirects": [],
+    "raw_work_path": "work/notebooklm-controls-deepening/10-slides.html",
+    "raw_sha256": "6c08765f5e51bb4fbb80c840d695ce6a18e9f4cbaa21287c1f8f7b56786334a8",
+    "text_characters": 6930
+  },
+  {
+    "evidence_id": "E-NBCD-11",
+    "slug": "video",
+    "requested_url": "https://support.google.com/gemininotebook/answer/16454555?hl=en",
+    "checked_on": "2026-10-26",
+    "status": 200,
+    "final_url": "https://support.google.com/gemininotebook/answer/16454555?hl=en",
+    "redirects": [],
+    "raw_work_path": "work/notebooklm-controls-deepening/11-video.html",
+    "raw_sha256": "5a3c5d9025025ec0e952b8c62b272c498e1d4693b21e62884661c2808e7135a5",
+    "text_characters": 7899
+  },
+  {
+    "evidence_id": "E-NBCD-12",
+    "slug": "mobile",
+    "requested_url": "https://support.google.com/gemininotebook/answer/16296687?hl=en&co=GENIE.Platform%3DAndroid",
+    "checked_on": "2026-10-26",
+    "status": 200,
+    "final_url": "https://support.google.com/gemininotebook/answer/16296687?hl=en&co=GENIE.Platform%3DAndroid",
+    "redirects": [],
+    "raw_work_path": "work/notebooklm-controls-deepening/12-mobile.html",
+    "raw_sha256": "107e44539a1dab80712ec7aeab03ad93cea4b6e3612e068288e876c7794932bf",
+    "text_characters": 12219
+  },
+  {
+    "evidence_id": "E-NBCD-13",
+    "slug": "tables-release",
+    "requested_url": "https://workspaceupdates.googleblog.com/2025/12/transform-sources-structured-data-tables-notebooklm.html",
+    "checked_on": "2026-10-26",
+    "status": 200,
+    "final_url": "https://workspaceupdates.googleblog.com/2025/12/transform-sources-structured-data-tables-notebooklm.html",
+    "redirects": [],
+    "raw_work_path": "work/notebooklm-controls-deepening/13-tables-release.html",
+    "raw_sha256": "2d8d930e993052d2cb47ab511b8a480db2ad9c4d00944f6173753bcc34b9138d",
+    "text_characters": 2047
+  },
+  {
+    "evidence_id": "E-NBCD-14",
+    "slug": "learning-release",
+    "requested_url": "https://workspaceupdates.googleblog.com/2026/03/new-ways-to-customize-and-interact-with-your-content-in-NotebookLM.html",
+    "checked_on": "2026-10-26",
+    "status": 429,
+    "final_url": "https://www.google.com/sorry/index?continue=https://workspaceupdates.googleblog.com/2026/03/new-ways-to-customize-and-interact-with-your-content-in-NotebookLM.html&q=EgQrp8dfGKDr_dYGIi3IaHfA2mxiTaigK9bB7HU1H9OQ72bYu7UUUVGyLIMSuqLiMTQ58coAQnZhLw8yAnJSWgFDYO78hIW_1Mn9bA",
+    "redirects": [
+      {
+        "status": 302,
+        "url": "https://workspaceupdates.googleblog.com/2026/03/new-ways-to-customize-and-interact-with-your-content-in-NotebookLM.html"
+      }
+    ],
+    "stopped": true
+  }
+]

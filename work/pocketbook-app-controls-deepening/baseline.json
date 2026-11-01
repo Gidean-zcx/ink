@@ -1,0 +1,11 @@
+{
+  "case_sha256": "2e1a70bc1541a4f41ca097bee98a9503f6f087e44bf8e925e912ade931a46e13",
+  "old_e": 12,
+  "old_f": 9,
+  "reverse_refs": [],
+  "original_inventory_sha256": "5489405b3b33cc6a46ff378710510a5f400a8b78c81630964c7602709fa01b29",
+  "original_inventory_lf": 66,
+  "original_inventory_literal_crlf": 0,
+  "original_inventory_dictreader_rows": 65,
+  "normalized_rows": 65
+}

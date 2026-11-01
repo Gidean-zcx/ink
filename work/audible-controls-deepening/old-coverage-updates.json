@@ -1,0 +1,376 @@
+[
+  {
+    "flow_id": "F-M039-01",
+    "changes": {
+      "evidence_ids": {
+        "before": "E-AUD-01;E-AUD-09",
+        "after": "E-AUD-01;E-AUD-09;E-AUCD-02;E-AUCD-03"
+      },
+      "known_branches": {
+        "before": "书库成员、下载状态、听读状态不同；“进行中”不证明已经离线可用。",
+        "after": "顶部类型横滑；搜索可用In your library找已购但退出目录的书；mini player/锁屏恢复。"
+      },
+      "gaps": {
+        "before": "筛选保持、空库引导、两个设备同时播放的冲突顺序。",
+        "after": "空库、筛选保持、两端同时播放冲突未验证。"
+      },
+      "checked_on": {
+        "before": "2026-10-26",
+        "after": "2026-10-27"
+      }
+    },
+    "replacement_row": {
+      "flow_id": "F-M039-01",
+      "product_id": "M-039",
+      "task": "找到并继续一本书",
+      "depth": "D2",
+      "evidence_ids": "E-AUD-01;E-AUD-09;E-AUCD-02;E-AUCD-03",
+      "known_branches": "顶部类型横滑；搜索可用In your library找已购但退出目录的书；mini player/锁屏恢复。",
+      "gaps": "空库、筛选保持、两端同时播放冲突未验证。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-039-audible.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "flow_id": "F-M039-02",
+    "changes": {
+      "evidence_ids": {
+        "before": "E-AUD-02",
+        "after": "E-AUD-02;E-AUCD-04;E-AUCD-19;E-AUCD-21;E-AUCD-22"
+      },
+      "known_branches": {
+        "before": "下载到本设备；不推定缓存可移给别的播放器。",
+        "after": "手机单本下载完成后离线；Cloud仍需联网；Standard月选和包含目录受资格限制，下载不等于永久访问。"
+      },
+      "gaps": {
+        "before": "进度/取消/断点续传、离线授权检查周期、下载不全时可播放范围。",
+        "after": "离线授权检查周期、暂停取消下载、断点续传、下载不全可播放范围未知。"
+      },
+      "checked_on": {
+        "before": "2026-10-26",
+        "after": "2026-10-27"
+      }
+    },
+    "replacement_row": {
+      "flow_id": "F-M039-02",
+      "product_id": "M-039",
+      "task": "下载后无网收听",
+      "depth": "D2",
+      "evidence_ids": "E-AUD-02;E-AUCD-04;E-AUCD-19;E-AUCD-21;E-AUCD-22",
+      "known_branches": "手机单本下载完成后离线；Cloud仍需联网；Standard月选和包含目录受资格限制，下载不等于永久访问。",
+      "gaps": "离线授权检查周期、暂停取消下载、断点续传、下载不全可播放范围未知。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-039-audible.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "flow_id": "F-M039-03",
+    "changes": {
+      "evidence_ids": {
+        "before": "E-AUD-05;E-AUD-08",
+        "after": "E-AUD-05;E-AUD-08;E-AUCD-02;E-AUCD-13;E-AUCD-15;E-AUCD-17"
+      },
+      "known_branches": {
+        "before": "单书速度跨 app 保存；默认速度可按设备不同。音频章节可能与纸书/电子书不一致。",
+        "after": "Player三点或Profile设置可进入控制选项；章节/速度边界保持；Car Mode有X退出，历史帮助单列。"
+      },
+      "gaps": {
+        "before": "跳转前位置撤销、章节改版映射、调速对计时显示的影响。",
+        "after": "跳转撤销、具体跳秒范围、定制保存、通用封面手势与路由恢复未知。"
+      },
+      "checked_on": {
+        "before": "2026-10-26",
+        "after": "2026-10-27"
+      }
+    },
+    "replacement_row": {
+      "flow_id": "F-M039-03",
+      "product_id": "M-039",
+      "task": "按章跳转和调速度",
+      "depth": "D2",
+      "evidence_ids": "E-AUD-05;E-AUD-08;E-AUCD-02;E-AUCD-13;E-AUCD-15;E-AUCD-17",
+      "known_branches": "Player三点或Profile设置可进入控制选项；章节/速度边界保持；Car Mode有X退出，历史帮助单列。",
+      "gaps": "跳转撤销、具体跳秒范围、定制保存、通用封面手势与路由恢复未知。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-039-audible.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "flow_id": "F-M039-04",
+    "changes": {
+      "evidence_ids": {
+        "before": "E-AUD-03",
+        "after": "E-AUD-03;E-AUCD-05"
+      },
+      "known_branches": {
+        "before": "片段限定 5–44 秒且同时产生书签；不是音频导出。列表可只播 Clip 或 Start in Player 从此继续；删除需再次确认。",
+        "after": "保留5–44秒/附带书签；时长编辑段未单列保存，笔记段有Save；二次删除及Clip/Start in Player分开。"
+      },
+      "gaps": {
+        "before": "默认 30 秒取当前点前后何种范围、离线编辑同步、笔记冲突/导出。",
+        "after": "默认30秒范围、离线同步、导出、关联书签删除和取消编辑未知。"
+      },
+      "checked_on": {
+        "before": "2026-10-26",
+        "after": "2026-10-27"
+      }
+    },
+    "replacement_row": {
+      "flow_id": "F-M039-04",
+      "product_id": "M-039",
+      "task": "标记值得重听的一段并加笔记",
+      "depth": "D2",
+      "evidence_ids": "E-AUD-03;E-AUCD-05",
+      "known_branches": "保留5–44秒/附带书签；时长编辑段未单列保存，笔记段有Save；二次删除及Clip/Start in Player分开。",
+      "gaps": "默认30秒范围、离线同步、导出、关联书签删除和取消编辑未知。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-039-audible.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "flow_id": "F-M039-05",
+    "changes": {
+      "evidence_ids": {
+        "before": "E-AUD-03",
+        "after": "E-AUD-03;E-AUCD-05;E-AUCD-19"
+      },
+      "known_branches": {
+        "before": "片段与书签有不同入口；网页不能创建/管理音频片段。",
+        "after": "播客Bookmarks & Notes与Cloud主菜单Bookmarks分别进入；笔记保存、单项Delete需确认；网页不支持片段管理。"
+      },
+      "gaps": {
+        "before": "删除片段与关联书签是否同删、跨端时间点精度、取消编辑的保留范围。",
+        "after": "书签/片段互删、离线编辑与跨端冲突未知；不把网页书签当离线音频。"
+      },
+      "checked_on": {
+        "before": "2026-10-26",
+        "after": "2026-10-27"
+      }
+    },
+    "replacement_row": {
+      "flow_id": "F-M039-05",
+      "product_id": "M-039",
+      "task": "播客书签与回到原文",
+      "depth": "D2",
+      "evidence_ids": "E-AUD-03;E-AUCD-05;E-AUCD-19",
+      "known_branches": "播客Bookmarks & Notes与Cloud主菜单Bookmarks分别进入；笔记保存、单项Delete需确认；网页不支持片段管理。",
+      "gaps": "书签/片段互删、离线编辑与跨端冲突未知；不把网页书签当离线音频。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-039-audible.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "flow_id": "F-M039-06",
+    "changes": {
+      "evidence_ids": {
+        "before": "E-AUD-06",
+        "after": "E-AUD-06;E-AUCD-14"
+      },
+      "known_branches": {
+        "before": "用户队列和 Recommended titles 预览开关不同；预览只在没有排队下一本时出现。",
+        "after": "补齐Profile > Settings > Player；Up next排队与Recommended预览分别开关，无下一本才播预览。"
+      },
+      "gaps": {
+        "before": "队列重启/跨端保存、重复加入、末本离线失败时是否跳过。",
+        "after": "队列持久化/同步、重复加入、未下载下一本失败行为未知。"
+      },
+      "checked_on": {
+        "before": "2026-10-26",
+        "after": "2026-10-27"
+      }
+    },
+    "replacement_row": {
+      "flow_id": "F-M039-06",
+      "product_id": "M-039",
+      "task": "排好下一本并控制自动延续",
+      "depth": "D2",
+      "evidence_ids": "E-AUD-06;E-AUCD-14",
+      "known_branches": "补齐Profile > Settings > Player；Up next排队与Recommended预览分别开关，无下一本才播预览。",
+      "gaps": "队列持久化/同步、重复加入、未下载下一本失败行为未知。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-039-audible.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "flow_id": "F-M039-07",
+    "changes": {
+      "evidence_ids": {
+        "before": "E-AUD-04",
+        "after": "E-AUD-04;E-AUCD-12"
+      },
+      "known_branches": {
+        "before": "到时停止音频；摇动开关在 Player → Timer。iOS 17+ Live Activity 可显示剩余时间，取决于权限。",
+        "after": "计时可被新时长覆盖；渐弱起30秒内摇动延期；iOS17+ Live Activity可在权限下看倒计时。"
+      },
+      "gaps": {
+        "before": "换书/暂停/系统杀后台后计时规则、误摇动、闹钟/通话优先级。",
+        "after": "暂停/换书/强退/重启计时是否继续及闹钟来电优先级未知。"
+      },
+      "checked_on": {
+        "before": "2026-10-26",
+        "after": "2026-10-27"
+      }
+    },
+    "replacement_row": {
+      "flow_id": "F-M039-07",
+      "product_id": "M-039",
+      "task": "睡眠计时与延期",
+      "depth": "D2",
+      "evidence_ids": "E-AUD-04;E-AUCD-12",
+      "known_branches": "计时可被新时长覆盖；渐弱起30秒内摇动延期；iOS17+ Live Activity可在权限下看倒计时。",
+      "gaps": "暂停/换书/强退/重启计时是否继续及闹钟来电优先级未知。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-039-audible.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "flow_id": "F-M039-08",
+    "changes": {
+      "evidence_ids": {
+        "before": "E-AUD-07",
+        "after": "E-AUD-07;E-AUCD-16"
+      },
+      "known_branches": {
+        "before": "日志可用于找回有意收听起点；官方不提供日志导出，亦可清历史。",
+        "after": "书内Listen Log与标题Listening History分开；网页姓名 > Listen History > Remove仅移除历史条目；无导出。"
+      },
+      "gaps": {
+        "before": "日志保留范围、跨设备汇总、清除确认/恢复；日志不是理解程度证明。",
+        "after": "历史清除确认/撤销、保留期、跨设备汇总与清除后同步未知。"
+      },
+      "checked_on": {
+        "before": "2026-10-26",
+        "after": "2026-10-27"
+      }
+    },
+    "replacement_row": {
+      "flow_id": "F-M039-08",
+      "product_id": "M-039",
+      "task": "找回误拖/睡着后的位置",
+      "depth": "D2",
+      "evidence_ids": "E-AUD-07;E-AUCD-16",
+      "known_branches": "书内Listen Log与标题Listening History分开；网页姓名 > Listen History > Remove仅移除历史条目；无导出。",
+      "gaps": "历史清除确认/撤销、保留期、跨设备汇总与清除后同步未知。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-039-audible.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "flow_id": "F-M039-09",
+    "changes": {
+      "evidence_ids": {
+        "before": "E-AUD-01",
+        "after": "E-AUD-01;E-AUCD-07"
+      },
+      "known_branches": {
+        "before": "同步的是进度，不等于下载文件/整个设置镜像。",
+        "after": "普通进度同步与Read & Listen双格式配对分开；手动重新同步需联网；两文档分别称Sync listening position/Sync device position。"
+      },
+      "gaps": {
+        "before": "离线两端各听后谁胜出、回退是否需确认、账号切换如何处理本机进度。",
+        "after": "离线并发进度冲突、标记/笔记合并、回退确认与全设置同步未知。"
+      },
+      "checked_on": {
+        "before": "2026-10-26",
+        "after": "2026-10-27"
+      }
+    },
+    "replacement_row": {
+      "flow_id": "F-M039-09",
+      "product_id": "M-039",
+      "task": "换设备续听与纠正同步",
+      "depth": "D2",
+      "evidence_ids": "E-AUD-01;E-AUCD-07",
+      "known_branches": "普通进度同步与Read & Listen双格式配对分开；手动重新同步需联网；两文档分别称Sync listening position/Sync device position。",
+      "gaps": "离线并发进度冲突、标记/笔记合并、回退确认与全设置同步未知。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-039-audible.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "flow_id": "F-M039-10",
+    "changes": {
+      "evidence_ids": {
+        "before": "E-AUD-09",
+        "after": "E-AUD-09;E-AUCD-03;E-AUCD-06;E-AUCD-08;E-AUCD-23"
+      },
+      "known_branches": {
+        "before": "清下载不移出书库，可重下；永久删除后所有设备都不能从书库访问。",
+        "after": "移除下载、移出书库、Hidden移回、永久删除、退还分层；Hidden > Remove from list恢复可见性；普通清单删除不可恢复但不据此推断删书。"
+      },
+      "gaps": {
+        "before": "片段/笔记在移除后的保留、删除撤销、会员退订/目录轮换对离线文件影响。",
+        "after": "加入Hidden入口、移除后的笔记/片段、永久删除补救与本机离线撤权时点未知。"
+      },
+      "checked_on": {
+        "before": "2026-10-26",
+        "after": "2026-10-27"
+      }
+    },
+    "replacement_row": {
+      "flow_id": "F-M039-10",
+      "product_id": "M-039",
+      "task": "清空间、移出书库与永久删除",
+      "depth": "D2",
+      "evidence_ids": "E-AUD-09;E-AUCD-03;E-AUCD-06;E-AUCD-08;E-AUCD-23",
+      "known_branches": "移除下载、移出书库、Hidden移回、永久删除、退还分层；Hidden > Remove from list恢复可见性；普通清单删除不可恢复但不据此推断删书。",
+      "gaps": "加入Hidden入口、移除后的笔记/片段、永久删除补救与本机离线撤权时点未知。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-039-audible.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "flow_id": "F-M039-11",
+    "changes": {
+      "evidence_ids": {
+        "before": "E-AUD-10;E-AUD-11",
+        "after": "E-AUD-10;E-AUD-11;E-AUCD-06;E-AUCD-09;E-AUCD-18;E-AUCD-20"
+      },
+      "known_branches": {
+        "before": "更新/刷新/重下载/换市场各作用不同；会员包含目录可能轮换。",
+        "after": "不同步/缺书先刷新与核市场；重下保进度；Android电池限制排查；重装帮助明确下载及Finished标记需重建。"
+      },
+      "gaps": {
+        "before": "来电结束后实际自动恢复、具体系统版本、下载失败重试和错误码；没有实测。",
+        "after": "来电实际恢复、清缓存/清存储分开影响、未同步笔记/片段、具体系统/构建未知。"
+      },
+      "checked_on": {
+        "before": "2026-10-26",
+        "after": "2026-10-27"
+      }
+    },
+    "replacement_row": {
+      "flow_id": "F-M039-11",
+      "product_id": "M-039",
+      "task": "缺章、播放停顿或找不到书",
+      "depth": "D2",
+      "evidence_ids": "E-AUD-10;E-AUD-11;E-AUCD-06;E-AUCD-09;E-AUCD-18;E-AUCD-20",
+      "known_branches": "不同步/缺书先刷新与核市场；重下保进度；Android电池限制排查；重装帮助明确下载及Finished标记需重建。",
+      "gaps": "来电实际恢复、清缓存/清存储分开影响、未同步笔记/片段、具体系统/构建未知。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-039-audible.md",
+      "checked_on": "2026-10-27"
+    }
+  }
+]

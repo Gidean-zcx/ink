@@ -1,0 +1,39 @@
+> For the complete documentation index, see [llms.txt](https://docs.eudic.net/1/llms.txt). Markdown versions of documentation pages are available by appending `.md` to page URLs; this page is available as [Markdown](https://docs.eudic.net/1/jin-jie-gong-neng/url-scheme.md).
+
+# API & URL Scheme
+
+API 和 URL Scheme 提供了词典与其他软件直接交互的可能性，需要您对软件开发有一定程度的了解。
+
+### API
+
+欧路词典提供了调用方便的 API。
+
+详情可见： <http://my.eudic.net/OpenAPI/Doc_Index>
+
+如果您在使用时遇到问题，欢迎[联系我们](/1/zhi-yin-wen-dang/lian-xi-wo-men.md)。
+
+## URL Scheme
+
+### 欧路词典
+
+<table data-header-hidden data-search="false"><thead><tr><th>url</th><th> 行为</th></tr></thead><tbody><tr><td>url</td><td> 行为</td></tr><tr><td>eudic://</td><td>启动《欧路词典》</td></tr><tr><td>eudic://dict/test</td><td>打开App查询单词 test 的释义</td></tr><tr><td>eudic://dict/test?context=This%20is%20a%20test</td><td>查询单词test的解释（包含上下文）</td></tr><tr><td>eudic://peek/test</td><td>浮窗显示单词test的释义<strong>（安卓）</strong></td></tr><tr><td>eudic://wiki/test</td><td>查询单词 test 的百科释义</td></tr><tr><td>eudic://dailyword</td><td>进入每日一句并发音</td></tr><tr><td>eudic://camera</td><td>进入相机取词</td></tr><tr><td>eudic://recite</td><td>进入单词复习</td></tr><tr><td>eudic://transcribe?mode=microphone&#x26;srcLang=<strong>en</strong>&#x26;targetLang=<strong>zh-CN</strong></td><td>进入同传并开启话筒录音<strong>（iOS）</strong></td></tr><tr><td>eudic://transcribe?mode=system&#x26;srcLang=<strong>en</strong>&#x26;targetLang=<strong>zh-CN</strong></td><td>进入同传并开启系统录音<strong>（iOS）</strong></td></tr></tbody></table>
+
+### 法语助手
+
+<table data-header-hidden data-search="false"><thead><tr><th>url</th><th> 行为</th></tr></thead><tbody><tr><td>url</td><td> 行为</td></tr><tr><td>eudic-fr://</td><td>启动《法语助手》</td></tr><tr><td>eudic-fr://dict/test</td><td>打开App查询单词 test 的释义</td></tr><tr><td>eudic-fr://dict/test?context=This%20is%20a%20test</td><td>查询单词test的解释（包含上下文）</td></tr><tr><td>eudic-fr://peek/test</td><td>浮窗显示单词test的释义<strong>（安卓）</strong></td></tr><tr><td>eudic-fr://wiki/test</td><td>查询单词 test 的百科释义</td></tr><tr><td>eudic-fr://dailyword</td><td>进入每日一句并发音</td></tr><tr><td>eudic-fr://camera</td><td>进入相机取词</td></tr><tr><td>eudic-fr://recite</td><td>进入单词复习</td></tr><tr><td>eudic-fr://transcribe?mode=microphone&#x26;srcLang=<strong>fr</strong>&#x26;targetLang=<strong>zh-CN</strong></td><td>进入同传并开启话筒录音<strong>（iOS）</strong></td></tr><tr><td>eudic-fr://transcribe?mode=system&#x26;srcLang=<strong>fr</strong>&#x26;targetLang=<strong>zh-CN</strong></td><td>进入同传并开启系统录音<strong>（iOS）</strong></td></tr></tbody></table>
+
+### 西班牙语助手
+
+<table data-header-hidden data-search="false"><thead><tr><th>url</th><th> 行为</th></tr></thead><tbody><tr><td>url</td><td> 行为</td></tr><tr><td>eudic-es://</td><td>启动《西班牙语助手》</td></tr><tr><td>eudic-es://dict/test</td><td>打开App查询单词 test 的释义</td></tr><tr><td>eudic-es://dict/test?context=This%20is%20a%20test</td><td>查询单词test的解释（包含上下文）</td></tr><tr><td>eudic-es://peek/test</td><td>浮窗显示单词test的释义<strong>（安卓）</strong></td></tr><tr><td>eudic-es://wiki/test</td><td>查询单词 test 的百科释义</td></tr><tr><td>eudic-es://dailyword</td><td>进入每日一句并发音</td></tr><tr><td>eudic-es://camera</td><td>进入相机取词</td></tr><tr><td>eudic-es://recite</td><td>进入单词复习</td></tr><tr><td>eudic-es://transcribe?mode=microphone&#x26;srcLang=<strong>es</strong>&#x26;targetLang=<strong>zh-CN</strong></td><td>进入同传并开启话筒录音<strong>（iOS）</strong></td></tr><tr><td>eudic-es://transcribe?mode=system&#x26;srcLang=<strong>es</strong>&#x26;targetLang=<strong>zh-CN</strong></td><td>进入同传并开启系统录音<strong>（iOS）</strong></td></tr></tbody></table>
+
+‌
+
+### 德语助手
+
+<table data-header-hidden data-search="false"><thead><tr><th>url</th><th> 行为</th></tr></thead><tbody><tr><td>url</td><td> 行为</td></tr><tr><td>eudic-de://</td><td>启动《德语助手》</td></tr><tr><td>eudic-de://dict/test</td><td>打开App查询单词 test 的释义</td></tr><tr><td>eudic-de://dict/test?context=This%20is%20a%20test</td><td>查询单词test的解释（包含上下文）</td></tr><tr><td>eudic-de://peek/test</td><td>浮窗显示单词test的释义<strong>（安卓）</strong></td></tr><tr><td>eudic-de://wiki/test</td><td>查询单词 test 的百科释义</td></tr><tr><td>eudic-de://dailyword</td><td>进入每日一句并发音</td></tr><tr><td>eudic-de://camera</td><td>进入相机取词</td></tr><tr><td>eudic-de://recite</td><td>进入单词复习</td></tr><tr><td>eudic-de://transcribe?mode=microphone&#x26;srcLang=<strong>de</strong>&#x26;targetLang=<strong>zh-CN</strong></td><td>进入同传并开启话筒录音<strong>（iOS）</strong></td></tr><tr><td>eudic-de://transcribe?mode=system&#x26;srcLang=<strong>de</strong>&#x26;targetLang=<strong>zh-CN</strong></td><td>进入同传并开启系统录音<strong>（iOS）</strong></td></tr></tbody></table>
+
+{% hint style="info" %}
+同传 URL Scheme 支持设置源语言和目标语言，只需将 URL 中加粗的语言参数替换为对应的语言代码即可。具体参数如下：
+{% endhint %}
+
+<table data-header-hidden data-search="false"><thead><tr><th>描述</th><th>语言参数值</th></tr></thead><tbody><tr><td>描述</td><td>语言参数值</td></tr><tr><td>简体中文</td><td>zh-CN</td></tr><tr><td>繁体中文</td><td>zh-TW</td></tr><tr><td>英文</td><td>en</td></tr><tr><td>法语</td><td>fr</td></tr><tr><td>德语</td><td>de</td></tr><tr><td>西班牙语</td><td>es</td></tr><tr><td>意大利语</td><td>it</td></tr><tr><td>葡萄牙语</td><td>pt</td></tr><tr><td>俄语</td><td>ru</td></tr><tr><td>日语</td><td>ja</td></tr><tr><td>韩语</td><td>ko</td></tr></tbody></table>

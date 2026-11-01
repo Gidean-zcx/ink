@@ -1,0 +1,101 @@
+[
+  {
+    "evidence_id": "E-SHCD-01",
+    "field": "additional_captures",
+    "before": [],
+    "after": [
+      {
+        "checked_on": "2026-10-27",
+        "access_mode": "existing_pdf_reread_PyMuPDF",
+        "hands_on": false,
+        "visual_observed": false,
+        "archived_artifact": "artifacts/shanling-controls-deepening/source-notes.md",
+        "sha256": "5d794e2c78b2f52c0d1fc727be6921d60b32ee02942cd3324fbc1d189b4476e2",
+        "raw_work_path": "work/hifi-controls-deepening/M1_Plus-V1.0.pdf",
+        "raw_sha256": "9e6810edca745df4ea7e0b0dc825ddc7d796a45006f62552f9250b65b3bec9f6",
+        "locator": "24页完整文本复读；本批不重复旧5/6页观察；目录台账按实际章节，不按PDF页N书签充数"
+      }
+    ],
+    "append": {
+      "checked_on": "2026-10-27",
+      "access_mode": "existing_pdf_reread_PyMuPDF",
+      "hands_on": false,
+      "visual_observed": false,
+      "archived_artifact": "artifacts/shanling-controls-deepening/source-notes.md",
+      "sha256": "5d794e2c78b2f52c0d1fc727be6921d60b32ee02942cd3324fbc1d189b4476e2",
+      "raw_work_path": "work/hifi-controls-deepening/M1_Plus-V1.0.pdf",
+      "raw_sha256": "9e6810edca745df4ea7e0b0dc825ddc7d796a45006f62552f9250b65b3bec9f6",
+      "locator": "24页完整文本复读；本批不重复旧5/6页观察；目录台账按实际章节，不按PDF页N书签充数"
+    }
+  },
+  {
+    "evidence_id": "E-SHCD-02",
+    "field": "additional_captures",
+    "before": [],
+    "after": [
+      {
+        "checked_on": "2026-10-27",
+        "access_mode": "anonymous_public_html_GET",
+        "hands_on": false,
+        "visual_observed": false,
+        "archived_artifact": "artifacts/shanling-controls-deepening/source-notes.md",
+        "sha256": "5d794e2c78b2f52c0d1fc727be6921d60b32ee02942cd3324fbc1d189b4476e2",
+        "url": "https://shanling.com/download/134",
+        "status": 200,
+        "raw_work_path": "work/shanling-controls-deepening/raw/m1plus-v18.html",
+        "raw_sha256": "6d99348cf6bc5172d0492a12df57bdf7ab2e61df12c07d49b5d10a5dd1ec82ba",
+        "extracted_work_path": "work/shanling-controls-deepening/extracted/m1plus-v18.txt",
+        "extracted_sha256": "48d7b91b78af63776f4da456c4e7aeb8363bd2f30598fc46b29f92abe8891455"
+      }
+    ],
+    "append": {
+      "checked_on": "2026-10-27",
+      "access_mode": "anonymous_public_html_GET",
+      "hands_on": false,
+      "visual_observed": false,
+      "archived_artifact": "artifacts/shanling-controls-deepening/source-notes.md",
+      "sha256": "5d794e2c78b2f52c0d1fc727be6921d60b32ee02942cd3324fbc1d189b4476e2",
+      "url": "https://shanling.com/download/134",
+      "status": 200,
+      "raw_work_path": "work/shanling-controls-deepening/raw/m1plus-v18.html",
+      "raw_sha256": "6d99348cf6bc5172d0492a12df57bdf7ab2e61df12c07d49b5d10a5dd1ec82ba",
+      "extracted_work_path": "work/shanling-controls-deepening/extracted/m1plus-v18.txt",
+      "extracted_sha256": "48d7b91b78af63776f4da456c4e7aeb8363bd2f30598fc46b29f92abe8891455"
+    }
+  },
+  {
+    "evidence_id": "E-SHCD-03",
+    "field": "additional_captures",
+    "before": [],
+    "after": [
+      {
+        "checked_on": "2026-10-27",
+        "access_mode": "anonymous_public_html_GET",
+        "hands_on": false,
+        "visual_observed": false,
+        "archived_artifact": "artifacts/shanling-controls-deepening/source-notes.md",
+        "sha256": "5d794e2c78b2f52c0d1fc727be6921d60b32ee02942cd3324fbc1d189b4476e2",
+        "url": "https://www.hifioasis.com/reviews/shanling-m1-plus-review/",
+        "status": 200,
+        "raw_work_path": "work/shanling-controls-deepening/raw/review.html",
+        "raw_sha256": "5beab437782037f23bbca2989120f741c27494f866d31469793bc53a150a6f19",
+        "extracted_work_path": "work/shanling-controls-deepening/extracted/review.txt",
+        "extracted_sha256": "19c72b2efc858b91d9190eba659111cef71f76c57c27fcaaa16a9270c3535149"
+      }
+    ],
+    "append": {
+      "checked_on": "2026-10-27",
+      "access_mode": "anonymous_public_html_GET",
+      "hands_on": false,
+      "visual_observed": false,
+      "archived_artifact": "artifacts/shanling-controls-deepening/source-notes.md",
+      "sha256": "5d794e2c78b2f52c0d1fc727be6921d60b32ee02942cd3324fbc1d189b4476e2",
+      "url": "https://www.hifioasis.com/reviews/shanling-m1-plus-review/",
+      "status": 200,
+      "raw_work_path": "work/shanling-controls-deepening/raw/review.html",
+      "raw_sha256": "5beab437782037f23bbca2989120f741c27494f866d31469793bc53a150a6f19",
+      "extracted_work_path": "work/shanling-controls-deepening/extracted/review.txt",
+      "extracted_sha256": "19c72b2efc858b91d9190eba659111cef71f76c57c27fcaaa16a9270c3535149"
+    }
+  }
+]

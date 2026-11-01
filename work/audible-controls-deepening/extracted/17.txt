@@ -1,0 +1,58 @@
+Listen in the car (https://help.audible.com/s/article/listen-in-the-car?language=en_US)
+citeturn767view1 [wordlim: 200] Crawled: today; Content type: text/html; Source: open({"ref_id":"https://help.audible.com/s/article/listen-in-the-car?language=en_US","lineno":120}); Total lines: 262
+L107: ## How do I listen in Car Mode?
+L108: 
+L109: Car Mode is a feature in the Audible app for both iOS and Android. It provides a simplified listening experience including hands-free voice controls. There are only four buttons on the screen:
+L110: 
+L111:   * Alexa tap to talk
+L112:   * Play/Pause
+L113:   * Go Back 30 Seconds
+L114:   * Add a Bookmark
+L115: 
+L116: Note: For hands-free listening on the go, you can also use your voice with Alexa or Siri to control Audible. Turn on voice controls and try saying "Go back 3 minutes."
+L117: 
+L118: Turn on Car Mode
+L119:   1. Open your player in the app.
+L120:   2. Select the Car Mode icon.
+L121: 
+L122: Turn off Car Mode
+L123: 
+L124:   1. Select the X to exit Car Mode.
+L125: 
+L126: Turn on Automatic Car Mode
+L127: 
+L128: Automatic Car Mode is available in the Audible app for iOS and Android. When it's on, Car Mode will launch in your player whenever your phone connects to your car via Bluetooth.
+L129: 
+L130: Note: You can also turn this feature off anytime from the same Player settings.
+L131:   1. Go to your Profile.
+L132:   2. Select the Settings gear icon.
+L133:   3. Select Player.
+L134:   4. Turn on Automatic Car Mode.
+L135: ## How do I listen with Waze?
+L136: 
+L137: The Audible app for both iOS and Android is compatible with any Waze version 4.69 or higher.
+L138: 
+L139: Allow Waze integration in the Audible app
+L140: 
+L141:   1. Go to your Profile.
+L142:   2. Select the Settings gear icon.
+L143:   3. Select Connect to other apps.
+L144:   4. Toggle on Waze integration.
+L145: 
+L146: Allow Audible integration in the Waze app
+L147: 
+L148:   1. Open Waze.
+L149:   2. Go to Settings.
+L150:   3. Select Audio player.
+L151:   4. Toggle on Show on the map.
+L152: 
+L153: How to play titles in the Waze app
+L154: You can skip forward and back, play, and pause your Audible titles within the Waze app.
+L155: 
+L156:   1. Open Waze.
+L157:   2. Select the Audio player icon.
+L158:   3. Select Audible and allow it to connect to Audible.
+L159:   4. Select Show list to view your 8 most recent titles.
+L160:   5. To listen to other titles, select Open Audible.
+L161: 
+L162: Note: If you need additional support using the Waze app, please visit the 【9†Waze Help Center†support.google.com】.

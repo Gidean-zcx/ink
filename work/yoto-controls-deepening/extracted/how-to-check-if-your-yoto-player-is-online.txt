@@ -1,0 +1,32 @@
+
+There are several reasons why you may need to know if your player is currently online.
+
+
+Downloading content to the player
+The player needs to be online to download and store locally the audio content for each card. So to play a card for the first time, your player needs to be online.
+
+
+Streaming content
+Some cards or content, like radio, always need a connection to play, so if your player is offline, this content won't work.
+
+
+Adding new Wi-Fi details
+If you want to add new Wi-Fi details to your player, so it can access another network, you can only do this if your player is offline.
+
+
+How to tell if your player is online
+When your player is online, the sun or moon icon will be displayed (depending on whether your Yoto is currently in 'day' mode or 'night' mode), and the time will be displayed in red. 
+
+If the time is displayed in white, this means Yoto Player is currently offline.
+
+ 
+Some other icons you may see, and what they mean
+The green Yoto Face icon means that your player is connected to Wi-Fi but not connected to the internet - this can happen if your internet connection is down.
+
+When the white Yoto Face icon doesn't go away, it means that your player is offline, and it can’t see what the time is  - please follow the setup flow in the Yoto app to get your player online.
+
+
+
+Click here for more information on all the display icons and what they mean.
+
+

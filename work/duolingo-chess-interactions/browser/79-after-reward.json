@@ -1,0 +1,25 @@
+{
+  "name": "79-after-reward",
+  "at": "2026-10-27T02:16:06.049941+00:00",
+  "url": "https://www.duolingo.com/lesson",
+  "title": "Duolingo - The world’s most popular way to learn",
+  "text": "Time to create a profile!\n\nCreate a profile to save your progress and continue learning for free.\n\nCREATE A PROFILE\nLATER",
+  "controls": [
+    {
+      "tag": "BUTTON",
+      "text": "CREATE A PROFILE",
+      "aria": null,
+      "test": "create-profile",
+      "type": "submit",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "LATER",
+      "aria": null,
+      "test": "create-profile-later",
+      "type": "submit",
+      "disabled": false
+    }
+  ]
+}

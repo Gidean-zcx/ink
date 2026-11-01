@@ -1,0 +1,37 @@
+[
+  {
+    "path": "docs/research/interaction-library/cases/M-063-shanling.md",
+    "bytes": 17434,
+    "sha256": "525678f210c2f94b83e687c8e528ae38ffa377c3e2e2697fc83a55fa9136e67a"
+  },
+  {
+    "path": "docs/research/interaction-library/batches/shanling-controls-deepening-coverage.csv",
+    "bytes": 107,
+    "sha256": "aa0cf671b21fa0390e9b0cfb58c6cecf3a0d7df66eaad894707f17ea224f6025"
+  },
+  {
+    "path": "docs/research/interaction-library/batches/shanling-controls-deepening-evidence.jsonl",
+    "bytes": 4422,
+    "sha256": "fc5392388922a1a58996a843cca3fcff91a63aa1ba462a0b238392245b0f16c9"
+  },
+  {
+    "path": "docs/research/interaction-library/batches/shanling-controls-deepening-inventory.csv",
+    "bytes": 31539,
+    "sha256": "7612ba06c4e8d35bff24bd164a912ce0800740986f6efce7e162c3b93918cd05"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/shanling-controls-deepening/eddict-v12-p12.png",
+    "bytes": 158154,
+    "sha256": "33b8807ec4a28313d48d57e74e0985c83b883df1af17e54a1e2b9cd4f14f9630"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/shanling-controls-deepening/eddict-v12-p15.png",
+    "bytes": 125247,
+    "sha256": "7a5a0d00c438ae71a4298cfa9ca1ecba8dc76e2ab1e148cef616f9088d1164b0"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/shanling-controls-deepening/source-notes.md",
+    "bytes": 2879,
+    "sha256": "5d794e2c78b2f52c0d1fc727be6921d60b32ee02942cd3324fbc1d189b4476e2"
+  }
+]

@@ -1,0 +1,92 @@
+[
+  {
+    "index": 1,
+    "url": "https://memodocs-files.maimemo.com/static/clz1duta9002y10hatanjkmqe/assets/files/W8G0bggUboEtREx2IydcItxAnTZ?imageMogr2/thumbnail/!1200x",
+    "status": 200,
+    "content_type": "image/jpeg",
+    "path": "work/research/batch40-maimemo/harmony-01.jpg",
+    "bytes": 14062,
+    "sha256": "8e4889daf64481d8f47a5a93317472b93e1bc2551664a9db0668a236c8a64cf8",
+    "visual_observed": false
+  },
+  {
+    "index": 2,
+    "url": "https://memodocs-files.maimemo.com/static/clz1duta9002y10hatanjkmqe/assets/files/WytdbqCpro2kMexs9yfcguE3nCh?imageMogr2/thumbnail/!1200x",
+    "status": 200,
+    "content_type": "image/jpeg",
+    "path": "work/research/batch40-maimemo/harmony-02.jpg",
+    "bytes": 22282,
+    "sha256": "97feed78242407e9178e2540898a7e2447d0ce597d56246dc50f39ffd0da4b72",
+    "visual_observed": false
+  },
+  {
+    "index": 3,
+    "url": "https://memodocs-files.maimemo.com/static/clz1duta9002y10hatanjkmqe/assets/files/F2dgbsm8RoS1MMxSvhwc7nV4njg?imageMogr2/thumbnail/!1200x",
+    "status": 200,
+    "content_type": "image/jpeg",
+    "path": "work/research/batch40-maimemo/harmony-03.jpg",
+    "bytes": 45555,
+    "sha256": "1b809a26b03c96c778fd3d4fa7cebc4a1f13ba598dbce20d3b1145385b7fe3d8",
+    "visual_observed": false
+  },
+  {
+    "index": 4,
+    "url": "https://memodocs-files.maimemo.com/static/clz1duta9002y10hatanjkmqe/assets/files/MHUTbA6LzoTbHpxssmfcTaF7nZg?imageMogr2/thumbnail/!1200x",
+    "status": 200,
+    "content_type": "image/jpeg",
+    "path": "work/research/batch40-maimemo/harmony-04.jpg",
+    "bytes": 164887,
+    "sha256": "20dec62e7fa4f095634367ceb656f16acb20e3d528e4b975c150d9bb4377b88e",
+    "visual_observed": false
+  },
+  {
+    "index": 5,
+    "url": "https://memodocs-files.maimemo.com/static/clz1duta9002y10hatanjkmqe/assets/files/PxyTbOxBioxbWyx3CddcdeW0nxd?imageMogr2/thumbnail/!1200x",
+    "status": 200,
+    "content_type": "image/jpeg",
+    "path": "work/research/batch40-maimemo/harmony-05.jpg",
+    "bytes": 232339,
+    "sha256": "e128d9088ab688c011e80b591f7466fa90708d4eff7e0254f8c38066f913f336",
+    "visual_observed": false
+  },
+  {
+    "index": 6,
+    "url": "https://memodocs-files.maimemo.com/static/clz1duta9002y10hatanjkmqe/assets/files/IipJbeRjMoH32hxDcsgcNxnVnGh?imageMogr2/thumbnail/!1200x",
+    "status": 200,
+    "content_type": "image/png",
+    "path": "work/research/batch40-maimemo/harmony-06.png",
+    "bytes": 78293,
+    "sha256": "f307be9a03239cda48a8500935e7513bfe57de287c1d347b11fad031adaaf173",
+    "visual_observed": false
+  },
+  {
+    "index": 7,
+    "url": "https://memodocs-files.maimemo.com/static/clz1duta9002y10hatanjkmqe/assets/files/WwCMbfXXnoph2pxDqgscFP38nib?imageMogr2/thumbnail/!1200x",
+    "status": 200,
+    "content_type": "image/png",
+    "path": "work/research/batch40-maimemo/harmony-07.png",
+    "bytes": 129736,
+    "sha256": "f6e7205b4e0725d4a51138b5e3d1effe24ff3a845bb7e73a01b7020a32122c6e",
+    "visual_observed": false
+  },
+  {
+    "index": 8,
+    "url": "https://memodocs-files.maimemo.com/static/clz1duta9002y10hatanjkmqe/assets/files/Xk5ub3bEnoYsE6xPPD9cEUOWnPd?imageMogr2/thumbnail/!1200x",
+    "status": 200,
+    "content_type": "image/png",
+    "path": "work/research/batch40-maimemo/harmony-08.png",
+    "bytes": 172533,
+    "sha256": "261b7fc320186a7cf8bfef6c99cda532900dcd2a26f910d32a60d96a4a7dc23f",
+    "visual_observed": false
+  },
+  {
+    "index": 9,
+    "url": "https://memodocs-files.maimemo.com/static/clz1duta9002y10hatanjkmqe/assets/files/RhQXbGGoHobmhYxH1WIczBt2nog?imageMogr2/thumbnail/!1200x",
+    "status": 200,
+    "content_type": "image/jpeg",
+    "path": "work/research/batch40-maimemo/harmony-09.jpg",
+    "bytes": 52610,
+    "sha256": "af5b00fbbf93c78e10cbb5e4bb91bee853bf0645e4feb8b32963c1cf4eb4248c",
+    "visual_observed": false
+  }
+]

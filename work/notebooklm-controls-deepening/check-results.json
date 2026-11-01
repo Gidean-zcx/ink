@@ -1,0 +1,24 @@
+{
+  "status": "PASS",
+  "new_evidence": 13,
+  "new_flows": 6,
+  "case_flows": 13,
+  "case_evidence": 20,
+  "inventory_rows": 19,
+  "old_flow_changes": 6,
+  "old_field_changes": 18,
+  "old_batches_unchanged": true,
+  "visual_observed": false,
+  "hands_on": false,
+  "fetch_statuses": {
+    "200": 13,
+    "429_stopped": 1
+  },
+  "files": {
+    "docs/research/interaction-library/cases/M-041-notebooklm.md": "21b21d17fc1ccc655f25b71c8c5c380ddcada0432573b06d48d2f096d3fc956b",
+    "docs/research/interaction-library/batches/notebooklm-controls-deepening-evidence.jsonl": "fc2e332be4ca09f294b606e30563a59efb557a3dd573f0d8232c4a561df4e3bc",
+    "docs/research/interaction-library/batches/notebooklm-controls-deepening-coverage.csv": "bef9adf1b8de6ddd663f5c31f64af69607d650569f700a2b731592a9c761239b",
+    "docs/research/interaction-library/batches/notebooklm-controls-deepening-inventory.csv": "886833a763d2c5aa050bbf7463ecd1d9603d28fad98b2167bd907b698199618e",
+    "work/notebooklm-controls-deepening/existing-coverage-updates.csv": "b0a42e3678bd6ce098d806762f6c90f472546e742e96968e4d32cf32c849a689"
+  }
+}

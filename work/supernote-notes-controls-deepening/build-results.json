@@ -1,0 +1,17 @@
+{
+  "new_evidence": 0,
+  "new_flows": 5,
+  "old_flow_rows": 3,
+  "old_flow_fields": 10,
+  "old_evidence_capture_rows": 2,
+  "inventory_rows": 140,
+  "body_read_this_batch": 29,
+  "new_static_pages": [
+    65,
+    66,
+    75,
+    83,
+    153
+  ],
+  "external_state_changed": false
+}

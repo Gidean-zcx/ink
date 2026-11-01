@@ -1,0 +1,48 @@
+
+
+
+Only twice: when you first set it up, and the first time you play each card. Once a card has downloaded, it plays anywhere - car, campsite, Grandma’s - no internet needed.
+
+The exception - audio that needs to be streamed over Wi-Fi by nature, like radio stations and podcasts, always needs your player to be online.
+
+
+When your player needs to be online
+
+
+Setting up:  your player connects to Wi-Fi as part of setup. 
+The first play of any card: the audio streams from our servers while your player downloads it in the background, so you’ll need a solid connection.
+Radio stations and podcasts: cards linked to these stream continuously, so they won’t play offline.
+Playing to your player from the app: both your phone and your player need to be online.
+
+
+When your player does not need to be online
+
+
+Any card that’s finished downloading plays straight from your player’s built-in storage - completely offline.
+On your phone, it’s simpler still: if your phone has internet (Wi-Fi or mobile data), the app can play anything in your library, including radio, podcasts and cards that haven’t downloaded to the player yet.
+
+
+How do I download audio before a trip?
+
+
+First, connect your player to Wi-Fi and plug it in to charge. You can check its connection in the Yoto App.
+To start downloading audio:
+
+On any Yoto Player or Yoto Mini: Insert each Yoto Card and let it play for a few seconds.
+
+On a Yoto Player 4th Gen or Yoto Mini 4th Gen: You can also download titles that are already in your Yoto Library by adding them to a Green Button playlist. Some titles purchased as physical cards will only appear in your Library after you’ve inserted the card once. [Learn how to use the Green Button.]
+Once you’ve added your Green Button titles or played each card for a few seconds, remove any card and leave the player switched on, plugged in and idle while the downloads complete. Leaving it overnight before a trip works a treat.
+To check your downloads, open the Yoto App, go to Settings, select your player and tap Audio Download Status. You’ll see which titles have downloaded and which are still waiting.
+
+
+Got more than one Yoto player?
+
+
+All the cards in your library download to each of your players:
+
+If your library fits within a player’s storage, everything downloads.
+
+If your library is bigger than a player’s storage, the least-played cards make room for the most popular ones, worked out per player. Nothing leaves your app library, and any card re-downloads when you play it online. 
+
+
+Related help: How much audio can my Yoto player store?; Playing your first Yoto Card.

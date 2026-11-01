@@ -1,0 +1,69 @@
+Khan Academy Kids - Three Ways to Play (https://sites.google.com/khanacademy.org/khanacademykids/getting-students-into-the-app/three-ways-to-play)
+citeturn1087view0 [wordlim: 200] Crawled: today; Content type: text/html; Source: open({"ref_id":"https://sites.google.com/khanacademy.org/khanacademykids/getting-students-into-the-app/three-ways-to-play","lineno":null}); Total lines: 66
+L0: [Input]
+L1: 
+L2: Search this site
+L3: 
+L4: Embedded Files
+L5: 
+L6: Skip to main content
+L7: 
+L8: Skip to navigation
+L9: 
+L10: 【0†Khan Academy Kids】
+L11: # Three Ways to Play
+L12: 
+L13: 【1†Image】
+L14: 
+L15: Khan Academy Kids is designed for students to use independently
+L16: 
+L17: Kodi the bear welcomes kids when they first open the app and acts as a guide throughout their learning journey. With the help of Kodi, kids as young as two years old can use the app on their own.
+L18: 
+L19:   * Kodi teaches basic tech skills, like tapping and dragging.
+L20: 
+L21:   * Kodi promotes critical thinking, asking kids questions to extend their learning.
+L22:   * Kodi provides hints when kids need additional help and emphasizes key learning points.
+L23: ##
+L24: 
+L25: There are three different ways that students can use the app
+L26: 
+L27: Depending on your implementation model you may just use one mode, or a combination of all three.
+L28: ##
+L29: 
+L30: Option 1: The Personalized Learning Path
+L31: 
+L32: 【2†Image】
+L33: 
+L34: Tap the "PLAY" button at the center of the club house to get started.
+L35: 
+L36: The Learning Path dynamically adapts to the level of each student, adjusting based on student scores. Subjects rotate to keep kids engaged. Based on student scores, the app will adjust the level and amount of practice students receive.
+L37: 
+L38: 【3†Image】
+L39: ##
+L40: 
+L41: Option 2: Teacher Assignments
+L42: 
+L43: 【4†Image】
+L44: 
+L45: Create assignments that align with concepts you’re teaching in class. You can assign to a single student or a group of students to meet different learning needs. You can also assign to the whole class to support direct instruction.
+L46: 
+L47: You can learn more about assigning lessons 【5†here】.
+L48: ##
+L49: 
+L50: Option 3: Student-directed learning in the Library
+L51: 
+L52: 【6†Image】
+L53: 
+L54: The Library has hundreds of lessons, books, videos, and coloring pages for students to explore independently.  Students can navigate across domains using the tabs at the top of the screen. You can turn the Coloring and Videos tabs off, if students find them distracting.
+L55: 
+L56: To learn more about the content we cover, go 【7†here】.
+L57: ##
+L58: 
+L59: You can use this video where we walk you through the student experience to introduce Khan Academy Kids.  A great way to start their learning!
+L60: 
+L61: 【8†Image†www.gstatic.com】Student_5Minute_Intro_to_KhanKids.mp4
+L62: 
+L63: Page updated
+L64: 
+L65: Report abuse
+

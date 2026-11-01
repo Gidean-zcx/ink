@@ -1,0 +1,33 @@
+> For the complete documentation index, see [llms.txt](https://docs.eudic.net/1/llms.txt). Markdown versions of documentation pages are available by appending `.md` to page URLs; this page is available as [Markdown](https://docs.eudic.net/1/shi-yong-zhi-yin/wo-de-sheng-ci-ben.md).
+
+# 我的生词本
+
+![](https://3412199665-files.gitbook.io/~/files/v0/b/gitbook-legacy-files/o/assets%2F-Mgyh1kdOQ5JH6pNTt27%2F-Mi5qU5ds9iXuu6L2ig5%2F-Mi5qoYe7ytt095FMKy7%2F6.png?alt=media\&token=aa188146-24e2-4142-b483-d352c7e94744)
+
+常言道：**温故而知新**。&#x5728;**【生词笔记】**&#x9875;面中，您可以统一浏览已添加的**生词**和**例句卡片**，以达到巩固记忆的目的。欧路词典专为您设计了**生词卡片播放**功能，方便您随时随地、边听边学。
+
+## 如何同步生词本？
+
+* &#x5728;**【生词笔记】**&#x9875;面中下拉刷新或点击页面右上角三点设置中&#x7684;**【在线同步】**，即可同步生词本数据。
+* 学习记录同步功能可以把您的生词本、笔记、高亮标记保存到云端，避免丢失或更换设备时，失去这些重要的记录。&#x20;
+* 同步功能也可以帮助您在不同设备中，共享自己的学习记录。&#x20;
+
+## 如何查看或编辑生词本分组？&#x20;
+
+* 点击软件下&#x65B9;**【生词笔记】**-界面最上&#x65B9;**【点击切换】**，即可看到自己的生词本分组。&#x20;
+* 点&#x51FB;**【编辑生词本分组】**，即可创建生词本分组。
+* 点击您的生词本名称即可设置默认添加的生词本分组。&#x20;
+
+## 如何给生词排序？
+
+目前软件支持按添加时间排列、按字母排列、按单词等级排列。点&#x51FB;**【生词笔记】**-**【点击切换】**&#x5373;可设置。
+
+![](https://3412199665-files.gitbook.io/~/files/v0/b/gitbook-legacy-files/o/assets%2F-Mgyh1kdOQ5JH6pNTt27%2F-MhXIjRXBto7CxMDM_YG%2F-MhXIkQtMTFXSU8hNX_E%2F1.png?alt=media\&token=dddfbd47-8d03-4240-963a-5a6a388129b6)
+
+## 如何播放生词卡片？
+
+点&#x51FB;**【生词笔记】**&#x9875;面右上角&#x7684;**【播放】**&#x56FE;标，即可顺序播放并浏览您的生词/例句卡片。
+
+卡片播放时，点击卡片右上角的【循环 | 间隔】按钮，即可自定义卡片的循环次数和间隔时间，您也可以按照自身需求，选择开启或关闭 **逐字母拼读单词**、**播放单词中文解释**、**播放原声例句** 等功能，从而获得更好的使用体验。
+
+![](https://3412199665-files.gitbook.io/~/files/v0/b/gitbook-legacy-files/o/assets%2F-Mgyh1kdOQ5JH6pNTt27%2F-Mi5xLeJVR0B81QC6xPP%2F-Mi5xqvpaJGZPSGehoUd%2F4%206.png?alt=media\&token=9b637137-592e-41b9-81e9-fbf9aaba2cf1)

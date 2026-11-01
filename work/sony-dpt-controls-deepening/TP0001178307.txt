@@ -1,0 +1,6 @@
+Change the settings so that annotations that were made to a document outside of your Digital Paper cannot be edited.
+Press the
+(home) button, and tap [Settings].
+Tap [System Settings] — [Limit Editing Annotations] — [Enable].
+Note
+The handwritten sticky notes, text sticky notes, and bookmarks that were added to a document using the former model, “DPT-S1,” cannot be edited regardless of the [Limit Editing Annotations] setting.

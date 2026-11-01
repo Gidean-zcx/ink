@@ -1,0 +1,114 @@
+[
+  {
+    "flow_id": "F-M064-01",
+    "source_batch": "docs/research/interaction-library/batches/hifi-extension-coverage.csv",
+    "field": "evidence_ids",
+    "before": "E-IBA-01;E-IBA-02;E-IBCD-04",
+    "after": "E-IBA-01;E-IBA-02;E-IBCD-04;E-IBCD-01",
+    "reason": "旧任务补机制/版本边界，不改编号/深度；仅建议root合并"
+  },
+  {
+    "flow_id": "F-M064-01",
+    "source_batch": "docs/research/interaction-library/batches/hifi-extension-coverage.csv",
+    "field": "known_branches",
+    "before": "扫描静态图补位置/Start/过滤/M3U；Position定位文件非时间点。",
+    "after": "补USB复制/历史Mac MTP条件；Music左向右开分类/文件/底部搜索；All Music按Title/Album/Artist/Time/Folder排序；Position定位当前文件，目录Return逐级返回；关键词范围为曲目/专辑/艺人",
+    "reason": "旧任务补机制/版本边界，不改编号/深度；仅建议root合并"
+  },
+  {
+    "flow_id": "F-M064-01",
+    "source_batch": "docs/research/interaction-library/batches/hifi-extension-coverage.csv",
+    "field": "gaps",
+    "before": "扫描标签冲突保留；授权、完成/取消、重复与路径修复。",
+    "after": "Time排序语义、ID3编辑/标签冲突、空结果/搜索历史清除；授权、完成/取消、重复和路径修复；不由当前50曲清单推断时间断点",
+    "reason": "旧任务补机制/版本边界，不改编号/深度；仅建议root合并"
+  },
+  {
+    "flow_id": "F-M064-01",
+    "source_batch": "docs/research/interaction-library/batches/hifi-extension-coverage.csv",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27",
+    "reason": "旧任务补机制/版本边界，不改编号/深度；仅建议root合并"
+  },
+  {
+    "flow_id": "F-M064-06",
+    "source_batch": "docs/research/interaction-library/batches/hifi-extension-coverage.csv",
+    "field": "evidence_ids",
+    "before": "E-IBA-02;E-IBCD-08",
+    "after": "E-IBA-02;E-IBCD-08;E-IBDC-01",
+    "reason": "旧任务补机制/版本边界，不改编号/深度；仅建议root合并"
+  },
+  {
+    "flow_id": "F-M064-06",
+    "source_batch": "docs/research/interaction-library/batches/hifi-extension-coverage.csv",
+    "field": "known_branches",
+    "before": "历史手册D2为操作重计/到时关机；1.04.237分列系统定时关机和Mango变化，原文暂时播放疑误；1.05.273新增始终有效。",
+    "after": "历史手册操作重计/到时关机；CN1.04.237系统定时与Mango变化分列且暂时播放疑误保留；JP MUSIN v1.04明确Mango计时停止播放；CN1.05.273新增始终有效仅声明",
+    "reason": "旧任务补机制/版本边界，不改编号/深度；仅建议root合并"
+  },
+  {
+    "flow_id": "F-M064-06",
+    "source_batch": "docs/research/interaction-library/batches/hifi-extension-coverage.csv",
+    "field": "gaps",
+    "before": "当前Mango结束动作、两计时关系、始终有效含义/完整交互未知；不得概括现版操作重计。",
+    "after": "JP区域解释不自动统一CN；当前Mango结束动作/反馈、两计时关系、始终有效和操作重计规则仍缺完整链",
+    "reason": "旧任务补机制/版本边界，不改编号/深度；仅建议root合并"
+  },
+  {
+    "flow_id": "F-M064-06",
+    "source_batch": "docs/research/interaction-library/batches/hifi-extension-coverage.csv",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27",
+    "reason": "旧任务补机制/版本边界，不改编号/深度；仅建议root合并"
+  },
+  {
+    "flow_id": "F-M064-09",
+    "source_batch": "docs/research/interaction-library/batches/hifi-controls-deepening-coverage.csv",
+    "field": "known_branches",
+    "before": "封面手势切曲；Music/Settings入口；缩略图返回、Info展开/收回。",
+    "after": "封面切曲、Music/Settings入口；Music子页缩略图回播放、Return逐页返回；Info点上半部收回；Recent Play限最近50曲，ID3年份仅显示",
+    "reason": "旧任务补机制/版本边界，不改编号/深度；仅建议root合并"
+  },
+  {
+    "flow_id": "F-M064-09",
+    "source_batch": "docs/research/interaction-library/batches/hifi-controls-deepening-coverage.csv",
+    "field": "gaps",
+    "before": "Info Delete对象、原筛选/滚动位置、当前构建差异。",
+    "after": "Info与曲库Delete对象；原筛选/滚动位置、历史清除、跨会话时间点；只读标签不等于编辑ID3",
+    "reason": "旧任务补机制/版本边界，不改编号/深度；仅建议root合并"
+  },
+  {
+    "flow_id": "F-M064-09",
+    "source_batch": "docs/research/interaction-library/batches/hifi-controls-deepening-coverage.csv",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27",
+    "reason": "旧任务补机制/版本边界，不改编号/深度；仅建议root合并"
+  },
+  {
+    "flow_id": "F-M064-10",
+    "source_batch": "docs/research/interaction-library/batches/hifi-controls-deepening-coverage.csv",
+    "field": "known_branches",
+    "before": "GEQ/PEQ从响应曲线进入；PEQ逐滤波器编辑及On/Off。",
+    "after": "GEQ5预设+自定义/10段；PEQ每设置最多6滤波器、8类型；Fc33–16000Hz/Gain−20–20dB/Q0.3–20；低通/高通/全通/Band/Notch的Gain不生效；逐项On/Off",
+    "reason": "旧任务补机制/版本边界，不改编号/深度；仅建议root合并"
+  },
+  {
+    "flow_id": "F-M064-10",
+    "source_batch": "docs/research/interaction-library/batches/hifi-controls-deepening-coverage.csv",
+    "field": "gaps",
+    "before": "保存/重置、模式间持久化、跨app范围及音质未验证。",
+    "after": "越界输入/校验反馈、保存/重置、模式间持久化、跨app范围及音质未验证",
+    "reason": "旧任务补机制/版本边界，不改编号/深度；仅建议root合并"
+  },
+  {
+    "flow_id": "F-M064-10",
+    "source_batch": "docs/research/interaction-library/batches/hifi-controls-deepening-coverage.csv",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27",
+    "reason": "旧任务补机制/版本边界，不改编号/深度；仅建议root合并"
+  }
+]

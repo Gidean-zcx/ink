@@ -1,0 +1,17 @@
+How To Create a Calendar Event on Mudita Kompakt
+Modified on: Sat, 3 Oct, 2026 at 8:40 AM
+To create a calendar event:
+Tap today's date on the home screen*
+Tap the left and right arrows to select the month
+Tap the Day you want your event on
+Tap the Plus icon
+Tap Add Title to customize the even name
+Tap the up and down arrows to select the start time
+Tap the up and down arrows to select the end time
+Tap Create
+*You can also unhide the app icon to enable access by tapping Apps > Calendar 
+Was this article helpful?
+No
+Yes
+That’s Great!
+Thank you for your feedback

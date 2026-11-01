@@ -1,0 +1,217 @@
+{
+  "name": "00-math-landing",
+  "at": "2026-10-27T06:22:45.483798+00:00",
+  "url": "https://www.duolingo.com/math",
+  "title": "Duolingo Math - Learn Math For Free - Grades 2–12",
+  "text": "SITE LANGUAGE: ENGLISH\nMath is hard, so we made it fun.\nGET STARTED\nI ALREADY HAVE AN ACCOUNT\nA math tutor in your pocket\n\nA built-in tutor helps motivate kids to keep learning with tips and support.\n\nGET STARTED\nMath kids want to do\n\nKids learn in an engaging way, with bite-size lessons that don’t feel like school.\n\nGET STARTED\nStep-by-step math help\n\nGuided lessons break down math problems into simple steps.\n\nGET STARTED\nMath for all grades\n\nOur standards-aligned course is built by learning experts for elementary, middle, and high school students.\n\nArithmetic\nGeometry\nPre-Algebra\nAlgebra I\nAlgebra II\nStatistics\nCalculus\nLinear Algebra\nFrequently asked questions\nIs Duolingo Math free?\nIs Duolingo Math safe for my child to use?\nIs Duolingo Math aligned to any Common Core standards?\nCan Duolingo Math help my child do well in school?\nWhat grade levels does Duolingo Math cover?\nDoes Duolingo Math offer a math tutor?\nCan my child jump to a specific Math topic or grade-level?\nCan I use this app on my device?\nHow do I switch between Math and my language course on Duolingo?\nWhat languages is Duolingo Math available in?\nReady to build your math confidence?\nGET STARTED\nDUOLINGO\nABOUT\nCAREERS\nAPPS\nINVESTORS\nHELP\nTERMS\nPRIVACY",
+  "controls": [
+    {
+      "tag": "A",
+      "text": "",
+      "aria": null,
+      "test": null,
+      "type": "",
+      "disabled": null
+    },
+    {
+      "tag": "BUTTON",
+      "text": "SITE LANGUAGE: ENGLISH",
+      "aria": null,
+      "test": null,
+      "type": "submit",
+      "disabled": false
+    },
+    {
+      "tag": "A",
+      "text": "GET STARTED",
+      "aria": null,
+      "test": null,
+      "type": "",
+      "disabled": null
+    },
+    {
+      "tag": "BUTTON",
+      "text": "I ALREADY HAVE AN ACCOUNT",
+      "aria": null,
+      "test": null,
+      "type": "submit",
+      "disabled": false
+    },
+    {
+      "tag": "A",
+      "text": "GET STARTED",
+      "aria": null,
+      "test": null,
+      "type": "",
+      "disabled": null
+    },
+    {
+      "tag": "A",
+      "text": "GET STARTED",
+      "aria": null,
+      "test": null,
+      "type": "",
+      "disabled": null
+    },
+    {
+      "tag": "A",
+      "text": "GET STARTED",
+      "aria": null,
+      "test": null,
+      "type": "",
+      "disabled": null
+    },
+    {
+      "tag": "DIV",
+      "text": "Is Duolingo Math free?",
+      "aria": null,
+      "test": null,
+      "type": null,
+      "disabled": null
+    },
+    {
+      "tag": "DIV",
+      "text": "Is Duolingo Math safe for my child to use?",
+      "aria": null,
+      "test": null,
+      "type": null,
+      "disabled": null
+    },
+    {
+      "tag": "DIV",
+      "text": "Is Duolingo Math aligned to any Common Core standards?",
+      "aria": null,
+      "test": null,
+      "type": null,
+      "disabled": null
+    },
+    {
+      "tag": "DIV",
+      "text": "Can Duolingo Math help my child do well in school?",
+      "aria": null,
+      "test": null,
+      "type": null,
+      "disabled": null
+    },
+    {
+      "tag": "DIV",
+      "text": "What grade levels does Duolingo Math cover?",
+      "aria": null,
+      "test": null,
+      "type": null,
+      "disabled": null
+    },
+    {
+      "tag": "DIV",
+      "text": "Does Duolingo Math offer a math tutor?",
+      "aria": null,
+      "test": null,
+      "type": null,
+      "disabled": null
+    },
+    {
+      "tag": "DIV",
+      "text": "Can my child jump to a specific Math topic or grade-level?",
+      "aria": null,
+      "test": null,
+      "type": null,
+      "disabled": null
+    },
+    {
+      "tag": "DIV",
+      "text": "Can I use this app on my device?",
+      "aria": null,
+      "test": null,
+      "type": null,
+      "disabled": null
+    },
+    {
+      "tag": "DIV",
+      "text": "How do I switch between Math and my language course on Duolingo?",
+      "aria": null,
+      "test": null,
+      "type": null,
+      "disabled": null
+    },
+    {
+      "tag": "DIV",
+      "text": "What languages is Duolingo Math available in?",
+      "aria": null,
+      "test": null,
+      "type": null,
+      "disabled": null
+    },
+    {
+      "tag": "A",
+      "text": "GET STARTED",
+      "aria": null,
+      "test": null,
+      "type": "",
+      "disabled": null
+    },
+    {
+      "tag": "A",
+      "text": "DUOLINGO",
+      "aria": null,
+      "test": null,
+      "type": "",
+      "disabled": null
+    },
+    {
+      "tag": "A",
+      "text": "ABOUT",
+      "aria": null,
+      "test": null,
+      "type": "",
+      "disabled": null
+    },
+    {
+      "tag": "A",
+      "text": "CAREERS",
+      "aria": null,
+      "test": null,
+      "type": "",
+      "disabled": null
+    },
+    {
+      "tag": "A",
+      "text": "APPS",
+      "aria": null,
+      "test": null,
+      "type": "",
+      "disabled": null
+    },
+    {
+      "tag": "A",
+      "text": "INVESTORS",
+      "aria": null,
+      "test": null,
+      "type": "",
+      "disabled": null
+    },
+    {
+      "tag": "A",
+      "text": "HELP",
+      "aria": null,
+      "test": null,
+      "type": "",
+      "disabled": null
+    },
+    {
+      "tag": "A",
+      "text": "TERMS",
+      "aria": null,
+      "test": null,
+      "type": "",
+      "disabled": null
+    },
+    {
+      "tag": "A",
+      "text": "PRIVACY",
+      "aria": null,
+      "test": null,
+      "type": "",
+      "disabled": null
+    }
+  ]
+}

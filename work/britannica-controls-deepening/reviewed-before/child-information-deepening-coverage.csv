@@ -1,0 +1,6 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M049-05,M-049,Early互动：说明、点选与收束,D2,E-BRED-01,目录/文章两种入口；音频与描述开关,题目错误反馈、暂停位置、关闭恢复未知,static_manual_pages_only,false,cases/M-049-britannica.md,2026-10-26
+F-M049-06,M-049,成人组织回收主题：共读、互动、应用与讲解,D2,E-BRED-02,成人组织；配套分层纸面任务,非自动课程；软件评分、账号掌握状态未知,not_observed,false,cases/M-049-britannica.md,2026-10-26
+F-M047-04,M-047,公开文章朗读控制、关闭与刷新恢复,D4,E-TFK-03;E-TKD-01;E-TKCD-01;E-TKCD-02,运行/暂停、高亮与自动滚动；5档语速菜单，实际选1.25x；Enter改进度；暂停位置保持，关闭重开与非零刷新对照均回起始/.9x。,未实际听音；声音语种/质量/同步精度、离线/失败重试/音量/跨设备未知；仅单篇匿名网页，日志错误未定位。,observed_browser_sequence,true,cases/M-047-time-for-kids.md,2026-10-26
+F-M008-05,M-008,阅读页准备听书：静态设置,D1,E-HND-01;E-HND-02,声音、音量、语速和定时入口,启动后、计时到期、锁屏和续播未知,static_reference_only,false,cases/M-008-hanvon.md,2026-10-26
+F-M008-06,M-008,阅读分屏：静态配置,D1,E-HND-01;E-HND-03,类型、位置、方向；取消/确定按钮,进入、选择内容、实际布局和退出后状态未知,static_reference_only,false,cases/M-008-hanvon.md,2026-10-26

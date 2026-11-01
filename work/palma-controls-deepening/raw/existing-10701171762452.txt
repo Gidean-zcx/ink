@@ -1,0 +1,29 @@
+The BOOX Tab Series devices consumes more power than typical BOOX devices due to an increased performance and efficiency. As a result, they are equipped with a larger battery than typical BOOX devices. Please also use them reasonably to save power. In this article, you will learn how to enter Sleep Mode, shut down the device, check the battery status and manage the battery power.
+Sleep Mode
+To enter or exit Sleep Mode, simply press the Power Button on your device. The device will consume extremely low power and display the screensaver in Sleep Mode. Please refer to the
+Desktop and Screensaver
+page for more info.
+Shutdown
+To turn on the device, simply press and hold the Power Button. To turn off the device, press and hold the Power Button and then tap
+Power off
+. The device will consume almost no power and display the shutdown image after shutdown. Please refer to the
+Desktop and Screensaver
+page for more info.
+Advanced Power Settings
+For advanced power settings including Auto Sleep and Auto Shutdown, please go to
+Settings
+>
+Display
+.
+Battery Management
+Using third-party apps, front lights or WiFi / Bluetooth connection may consume more power than usual. You can go to
+Settings
+>
+Power
+and check your battery status regularly.
+Note:
+It is recommended to keep the
+Immediately
+option for
+Delay disconnection after into Sleep mode
+setting to avoid unnecessary power consumption.

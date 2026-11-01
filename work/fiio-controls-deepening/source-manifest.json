@@ -1,0 +1,127 @@
+[
+  {
+    "name": "01-index",
+    "url": "https://www.fiio.com/jm21_faq",
+    "path": "work/fiio-controls-deepening/raw/faq-index.html",
+    "sha256": "33dd23421d5d3d40fdf676c52f6ac743152c876f7c1d86361b7982fb85bcbcd4",
+    "http_status": 200,
+    "checked_on": "2026-10-27"
+  },
+  {
+    "name": "02-manual-link",
+    "url": "https://www.fiio.com/newsinfo/984177.html",
+    "final_url": "https://www.fiio.com/newsinfo/984177.html",
+    "path": "work/fiio-controls-deepening/raw/02-manual-link.html",
+    "sha256": "16f49a0de5f5653666007fd0a7a488fb18344383854b70c06ac716d8e61dcb7e",
+    "http_status": 200,
+    "checked_on": "2026-10-27"
+  },
+  {
+    "name": "03-modes",
+    "url": "https://www.fiio.com/newsinfo/984182.html",
+    "final_url": "https://www.fiio.com/newsinfo/984182.html",
+    "path": "work/fiio-controls-deepening/raw/03-modes.html",
+    "sha256": "f3c55fc8c6d0a809841851d452a221772b4bea6ad9f36b0076786d9224c4a77d",
+    "http_status": 200,
+    "checked_on": "2026-10-27"
+  },
+  {
+    "name": "04-dac",
+    "url": "https://www.fiio.com/newsinfo/984183.html",
+    "final_url": "https://www.fiio.com/newsinfo/984183.html",
+    "path": "work/fiio-controls-deepening/raw/04-dac.html",
+    "sha256": "4c5c0ed10396a11eff8e50d34e1f0c44978ea3c3b6f35f228897296008c37733",
+    "http_status": 200,
+    "checked_on": "2026-10-27"
+  },
+  {
+    "name": "05-bt-receiver",
+    "url": "https://www.fiio.com/newsinfo/984184.html",
+    "final_url": "https://www.fiio.com/newsinfo/984184.html",
+    "path": "work/fiio-controls-deepening/raw/05-bt-receiver.html",
+    "sha256": "dce004e0150dc71dd7c394e34ffc7e180a265c8b12cdf1ea247a5c2c299636eb",
+    "http_status": 200,
+    "checked_on": "2026-10-27"
+  },
+  {
+    "name": "06-airplay",
+    "url": "https://www.fiio.com/newsinfo/984191.html",
+    "final_url": "https://www.fiio.com/newsinfo/984191.html",
+    "path": "work/fiio-controls-deepening/raw/06-airplay.html",
+    "sha256": "2a76a074df161bacc472cc7d5b4ec731c22b3ee33d344cb78b160ecb1c2579cd",
+    "http_status": 200,
+    "checked_on": "2026-10-27"
+  },
+  {
+    "name": "07-cast",
+    "url": "https://www.fiio.com/newsinfo/1063630.html",
+    "final_url": "https://www.fiio.com/newsinfo/1063630.html",
+    "path": "work/fiio-controls-deepening/raw/07-cast.html",
+    "sha256": "b5c33a0f1eda0126f8a4efac494eca391a6390d8547eefee8113273dd3d8a8d7",
+    "http_status": 200,
+    "checked_on": "2026-10-27"
+  },
+  {
+    "name": "08-card",
+    "url": "https://www.fiio.com/newsinfo/1070933.html",
+    "final_url": "https://www.fiio.com/newsinfo/1070933.html",
+    "path": "work/fiio-controls-deepening/raw/08-card.html",
+    "sha256": "233690d5a440362c0cc887ce6ef4dc0a19794e5d8767fc8b841d242ad9dc219c",
+    "http_status": 200,
+    "checked_on": "2026-10-27"
+  },
+  {
+    "name": "09-playlist",
+    "url": "https://fiiosupport.freshdesk.com/support/solutions/articles/69000869676-how-to-create-external-m3u-playlists-for-fiio-m3k-m5-m6-m7-m9-m11-jm21-m21-using-foobar-how-to-import",
+    "final_url": "https://fiiosupport.freshdesk.com/support/solutions/articles/69000869676-how-to-create-external-m3u-playlists-for-fiio-m3k-m5-m6-m7-m9-m11-jm21-m21-using-foobar-how-to-import",
+    "path": "work/fiio-controls-deepening/raw/09-playlist.html",
+    "sha256": "eb4a5acaafcb3f91ff753e1c5f60c8edba1cc89c37ec8aa64aab3f0ab580c123",
+    "http_status": 200,
+    "checked_on": "2026-10-27"
+  },
+  {
+    "name": "10-lyrics",
+    "url": "https://www.fiio.com/newsinfo/984196.html",
+    "final_url": "https://www.fiio.com/newsinfo/984196.html",
+    "path": "work/fiio-controls-deepening/raw/10-lyrics.html",
+    "sha256": "bda72489875ec98a2cd48ed7831664e72916d307404e3aef8e0bd4fb1abb5c94",
+    "http_status": 200,
+    "checked_on": "2026-10-27"
+  },
+  {
+    "name": "11-update",
+    "url": "https://www.fiio.com/newsinfo/984180.html",
+    "final_url": "https://www.fiio.com/newsinfo/984180.html",
+    "path": "work/fiio-controls-deepening/raw/11-update.html",
+    "sha256": "bc20ce948d4beffe070768dbcced0d16d4013633e13b7b6f2a4e46249276ed3c",
+    "http_status": 200,
+    "checked_on": "2026-10-27"
+  },
+  {
+    "name": "12-product",
+    "url": "https://www.fiio.com/jm21",
+    "final_url": "https://www.fiio.com/jm21",
+    "path": "work/fiio-controls-deepening/raw/12-product.html",
+    "sha256": "9fb7b8877e95ef1b90fa018b438ddc9c5383d0147e17f4ec90fcf28f3a3ecd42",
+    "http_status": 200,
+    "checked_on": "2026-10-27"
+  },
+  {
+    "name": "13-app-changelog",
+    "url": "https://forum.fiio.com/note/showNoteContent.do?id=202105071626425774349",
+    "final_url": "https://forum.fiio.com/note/showNoteContent.do?id=202105071626425774349",
+    "path": "work/fiio-controls-deepening/raw/13-app-changelog.html",
+    "sha256": "650159fcdfac132d93618a409e86a9973dc2fb25e1ab1a1b0a94d63d44555f91",
+    "http_status": 200,
+    "checked_on": "2026-10-27"
+  },
+  {
+    "name": "14-audio",
+    "url": "https://www.fiio.com/newsinfo/984193.html",
+    "final_url": "https://www.fiio.com/newsinfo/984193.html",
+    "path": "work/fiio-controls-deepening/raw/14-audio.html",
+    "sha256": "8ca96cacc1dae40147373d4d73a5a3ada8c0bc99961543b0ec7eb94b16ac8f68",
+    "http_status": 200,
+    "checked_on": "2026-10-27"
+  }
+]

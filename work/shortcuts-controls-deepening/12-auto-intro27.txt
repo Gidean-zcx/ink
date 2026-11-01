@@ -1,0 +1,4 @@
+Intro to shortcuts with automations on iPhone or iPad
+Shortcuts with automations provide a way to run actions based on events such as time of day, arrival at a location, or the opening of an app.
+After you create a new shortcut and add an automation, when an event occurs you’ll receive a notification asking you to run the automation. You can also enable an automation to run without asking.
+Automation shortcuts are specific to a device. The automation will be backed up to iCloud but will sync to other devices with the automation disabled.

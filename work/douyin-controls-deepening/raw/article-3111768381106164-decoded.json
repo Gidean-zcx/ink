@@ -1,0 +1,151 @@
+{
+  "_deltas": {
+    "0": {
+      "ops": [
+        {
+          "attributes": {
+            "align": "left",
+            "lmkr": "1"
+          },
+          "insert": "*"
+        },
+        {
+          "insert": "近日，抖音未成年人模式产品能力再升级，“亲子护航”能力优化上线，同时全新推出“AI笔记”功能，立足家庭协同监护与知识价值转化两大核心维度，抖音致力为未成年人营造安全、优质有温度的网络成长空间。\n"
+        },
+        {
+          "attributes": {
+            "lmkr": "1",
+            "heading": "h3"
+          },
+          "insert": "*"
+        },
+        {
+          "attributes": {
+            "bold": "true"
+          },
+          "insert": "亲子护航 守护成长"
+        },
+        {
+          "insert": "\n"
+        },
+        {
+          "insert": "升级后的“亲子护航”功能，家长可以通过抖音“我—个人页侧边栏—未成年人模式—亲子护航”路径进入。进入后，选择“绑定孩子并开启”，即可通过扫描二维码确认的方式发起亲子账号绑定；孩子同步会接收到相关确认信息，在核实家长身份并签署《亲子护航服务协议》后，点击“接受申请”即可完成绑定。\n"
+        },
+        {
+          "attributes": {
+            "lmkr": "1",
+            "align": "center"
+          },
+          "insert": "*"
+        },
+        {
+          "attributes": {
+            "image": "true",
+            "uuid": "8b8bb538-6ad0-4edd-8e58-d3ac166b26ed",
+            "src": "https://lf3-static.bytednsdoc.com/obj/eden-cn/ylaulj_azbya_upfbvk/ljhwZthlaukjlkulzlp/file/15341768381014013"
+          },
+          "insert": " "
+        },
+        {
+          "insert": "\n"
+        },
+        {
+          "attributes": {
+            "lmkr": "1",
+            "align": "center"
+          },
+          "insert": "*"
+        },
+        {
+          "attributes": {
+            "image": "true",
+            "uuid": "8ca8edf0-661d-45aa-9315-c1218a6a5fb5",
+            "src": "https://lf3-static.bytednsdoc.com/obj/eden-cn/ylaulj_azbya_upfbvk/ljhwZthlaukjlkulzlp/file/5671768381014389"
+          },
+          "insert": " "
+        },
+        {
+          "insert": "\n"
+        },
+        {
+          "insert": "围绕家庭监护的实际需求，平台为家长提供三项协同能力：一是模式灵活切换，可按需开关未成年人模式，匹配孩子不同年龄阶段的上网场景；二是时长智能管控，不仅能查看近7天内特定范围的使用记录、设置单日使用时长上限（超时需家长解锁），还能自动开启夜间“防沉迷守护”，每日22时至次日6时强制关闭使用权限；三是协助管理订阅账号，可查看并管理孩子在未成年人模式下订阅的创作者列表，引导孩子选择适龄优质内容。\n"
+        },
+        {
+          "attributes": {
+            "lmkr": "1",
+            "align": "center"
+          },
+          "insert": "*"
+        },
+        {
+          "attributes": {
+            "image": "true",
+            "uuid": "95015507-2c6e-4fa2-b0d0-8560590ef67e",
+            "src": "https://lf3-static.bytednsdoc.com/obj/eden-cn/ylaulj_azbya_upfbvk/ljhwZthlaukjlkulzlp/file/92231768380105919"
+          },
+          "insert": " "
+        },
+        {
+          "insert": "\n"
+        },
+        {
+          "insert": "“亲子护航”功能以“轻量管理 温情陪伴”为理念，打造平等、尊重的协同守护体系，通过智能识别与柔性引导，有效缓解家长对孩子用网安全的焦虑，守护未成年人成长过程中的独立意识与探索需求，让监护不再是单向的约束，而是双向的理解与支持。\n"
+        },
+        {
+          "attributes": {
+            "lmkr": "1",
+            "heading": "h3"
+          },
+          "insert": "*"
+        },
+        {
+          "attributes": {
+            "bold": "true"
+          },
+          "insert": "AI笔记 陪伴学习"
+        },
+        {
+          "insert": "\n"
+        },
+        {
+          "insert": "抖音依托平台丰富的知识科普内容，将AI技术与学习场景深度融合，推出“AI笔记”功能。在一些知识类、科普类视频的标题结尾处，可直接点击“AI笔记”按钮，一键唤起智能总结服务。AI会根据未成年人的年龄设定和阅读习惯，生成适配性强的知识点总结，方便学习和理解。\n"
+        },
+        {
+          "insert": "该功能还可解决“记笔记分心”的难题，观看院士科普、名师公开课等视频时，无需手动记录，即可自动提炼核心内容；同时实现章节精准定位，将长视频课程拆解为细分章节，孩子可通过笔记知识点快速跳转对应片段，大幅提升知识点获取效率。\n"
+        },
+        {
+          "attributes": {
+            "lmkr": "1",
+            "align": "center"
+          },
+          "insert": "*"
+        },
+        {
+          "attributes": {
+            "image": "true",
+            "uuid": "c84f9c6d-dc60-4639-bbed-a8fcc099a779",
+            "src": "https://lf3-static.bytednsdoc.com/obj/eden-cn/ylaulj_azbya_upfbvk/ljhwZthlaukjlkulzlp/file/14851768381425142"
+          },
+          "insert": " "
+        },
+        {
+          "insert": "\n"
+        },
+        {
+          "insert": "“AI笔记”功能的上线，搭建起“优质内容输入—智能工具赋能—知识高效沉淀”的全链路学习闭环。它以AI技术为纽带，让未成年人在浏览优质内容的同时高效留存知识，真正实现了数字空间里的“沉浸式学习”与“陪伴式成长”。\n"
+        },
+        {
+          "insert": "\n"
+        },
+        {
+          "insert": "此次未成年人模式产品能力升级上线，是平台对于未成年人网络保护理念从“被动防御”迈向“主动陪伴”的实践落地。“亲子护航”以协同守护模式，尽量以柔性方式兼顾亲子间的监护和尊重；“AI笔记”则通过智能高效工具，提炼平台优质知识内容亮点，转化为孩子可理解、可吸收的成长养分。\n"
+        },
+        {
+          "insert": "未来，抖音将持续以技术为纽带，搭建优质又有温度的网络成长空间，让平台成为未成年人探索世界、追逐梦想的坚实后盾。\n"
+        }
+      ],
+      "zoneId": "0",
+      "zoneType": "Z"
+    }
+  }
+}

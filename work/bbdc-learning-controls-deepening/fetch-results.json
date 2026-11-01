@@ -1,0 +1,26 @@
+[
+  {
+    "path": "work/bbdc-learning-controls-deepening/raw/c01-review2020.html",
+    "url": "https://www.woshipm.com/evaluating/3548342.html",
+    "final_url": "https://www.woshipm.com/evaluating/3548342.html",
+    "status": 200,
+    "bytes": 101977,
+    "sha256": "58824b00d62dbe1a7b27669dddc39f111b43b056a69f824eda5d4974f4075784"
+  },
+  {
+    "path": "work/bbdc-learning-controls-deepening/raw/c03-paper2022.pdf",
+    "url": "https://pdf.hanspub.org/ae20220700000_69509379.pdf",
+    "final_url": "https://pdf.hanspub.org/ae20220700000_69509379.pdf",
+    "status": 200,
+    "bytes": 586106,
+    "sha256": "de8f31eac97e927fa4b5a8943d85609757fe0456b41e33617d48f2d503519d0a"
+  },
+  {
+    "path": "work/bbdc-learning-controls-deepening/raw/c04-review2021.html",
+    "url": "https://www.woshipm.com/evaluating/4425622.html",
+    "final_url": "https://www.woshipm.com/evaluating/4425622.html",
+    "status": 200,
+    "bytes": 139706,
+    "sha256": "f421f35afd9d1c6aa0be73be8840341a587d15737e0b8c4cb42bdbb6c444d1d2"
+  }
+]

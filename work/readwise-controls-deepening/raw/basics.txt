@@ -1,0 +1,76 @@
+Basics
+How do I get started with Reader?
+Reader is a cross-platform reading application with a web app (read.readwise.io), mobile apps for iOS and Android, desktop apps for Mac and Windows, and browser extensions for Chrome, Chromium-based browsers (Edge, Brave, Arc, etc.), Firefox, and Safari.
+The best way to get started using Reader is to navigate to read.readwise.io and read the Getting Started with Reader article inserted into your Library by default. From there, we recommend you navigate to different sections of the app based on the type of content you read. For example, if you read PDFs, click on the PDF section and you'll see instructions in the right sidebar for how to upload those files.
+(On mobile, you can find these sections by tapping the Views icon in the bottom navigation bar.)
+Alternatively, you can also watch our community manager Erin's short walkthrough video to get up and running with Reader as quickly as possible.
+How do I find the Reader web app in my browser?
+On web, go to read.readwise.io. Note that Reader and Readwise use the same account and authentication.
+How do I log into Reader?
+Reader uses your Readwise account for authentication. If you're not redirected automatically, make sure you're logged into Readwise on any browser you're using with Reader.
+What's the relationship between Reader and Readwise? Are they automatically connected?
+You can think of Reader as another reading app that integrates with Readwise (albeit seamlessly because they share a database). Every highlight you make in Reader instantly syncs with Readwise and then from Readwise to your note-taking apps.
+What is the business model of Readwise? If I start using Reader, how do I know you won't disappear on me?
+We've been working on Readwise since 2017 and, in 2018, we decided to fund the business through consumer software-as-a-service rather than raising venture capital (more here: Why We're Bootstrapping Readwise). We're a sustainable company with a long-term mission of improving the practice of reading through software by an order of magnitude. We're not going anywhere, but it's a fair question considering the many startups that raised venture capital during the peak markets of 2020/2021 and are now zombies.
+What is the pricing of Reader?
+The annual subscription cost of Reader (plus Readwise!) is $9.99/month (USD). For monthly subscribers, it's $12.99/month (USD). You can learn more about Reader's pricing and what's included on our pricing page.
+Note that if you subscribed prior to February 18, 2024, you're locked into our legacy pricing for as long as you maintain your subscription.
+Can I use Reader offline?
+Reader works offline on both web and mobile. On web, so long as you have read.readwise.io open before you go offline, Reader will continue to work and any changes you make (e.g. new highlights) will sync once you come back online. Alternatively, you can install the Reader desktop app, which will open and work offline.
+On mobile, so long as you open the app for at least a few moments before you go offline, the full text of your documents will be cached and Reader will work offline.
+Can I select which documents are cached for offline reading?
+The selective offline caching feature allows you to choose which sections of your account are downloaded to your device's local storage for offline use. You can find the option in your Account tab under Offline documents.
+In the Offline documents menu, you can select which sections of your account you would like to be cached for offline use. By default, the Feed is turned off and not cached, since this is the most common cause of app size bloat among our users.
+Turning off a given section of your documents will remove the cached files for those documents.
+To download the files for a section that was turned off, turn the toggle on. You might need to wait for a few moments as the files download, but you'll be able to see the progress in the bar below the toggle.
+Utilizing these options will help you manage the file size of the Reader app on your device, as well as ensure that the full text of the documents you want to read are available for the next time you go offline.
+Note that individual documents will still be cached when you open them. This may result in unexpected numbers on the caching screen, e.g. "10/300 downloaded" for a section that is turned off.
+Does Reader have a Command Palette?
+Reader has a Command Palette on web (Cmd/Ctrl + K) which contains virtually any action you can take in the application. The Command Palette is a great way to find out if actions you're looking to take exist and, if so, what keyboard shortcut you can use to access them.
+Does Reader use keyboard shortcuts or hotkeys?
+On web, Reader is fully keyboard shortcut driven, including while reading documents. Most shortcuts are shown in hover tooltips in the user interface, but you can additionally open the Command Palette (Cmd/Ctrl + K) or use the ? shortcut to pull up a reference.
+Note that if you use a Magic Keyboard with iPad, we recommend using the Reader web app in iOS Safari to have access to keyboard shortcuts.
+What do the colored dots on documents mean?
+The small dots that appear on document thumbnails in the list view are status indicators. On web, Reader uses three colors:
+Dark blue — The document is unseen (you haven't opened it yet, or you've manually marked it as unseen). This appears on articles, emails, PDFs, and other manually saved content.
+Teal — The document is unseen and comes from an RSS feed. The distinct color lets you tell feed items apart from the rest of your library at a glance.
+Green — The document has been saved to your library more than once.
+Once you open a document, the dot will disappear.
+What do the colors on the progress bar mean?
+Reader tracks two separate positions in every document: your reading progress (the furthest point you've actually read) and your last location (wherever you last were, even if you were just scrolling). The progress bar displays both, using multiple colors.
+The blue-to-purple gradient shows your reading progress.
+A darker grey segment appears when you've scrolled or skimmed ahead of your reading progress without stopping to read.
+The small grey dot marks your last location. It only appears when your last location is behind your furthest read point, which is why some documents in your list show a dot and others don't.
+The remaining light grey track is the unread portion of the document.
+Reader measures your reading pace to tell the difference between reading and skimming. If you scroll through a document quickly, only your last location moves, and your reading progress stays put until you slow down and read steadily from a single location. Reading progress also never moves backward, so scrolling up to reread an earlier section won't lower your percentage.
+In the mobile app, the same progress bar appears as a thin line above the bottom toolbar while you read.
+How do I return to my previous location after skimming ahead or backward?
+Whenever your current location differs from your reading progress, Reader offers a one-tap way back.
+On web or in the desktop app, a round arrow button appears in the bottom right corner of the reading view. Click it to jump back to your reading position. The arrow flips to point toward your reading position, whether you've skimmed ahead or scrolled back.
+In the mobile app, a Return to [X]% button appears near the bottom of the reading view. Tap it to jump back to your reading position, or tap the X to dismiss it and set your reading progress to your current location instead.
+On web, you can also set your reading progress to your current location by pressing shift + R or choosing Reset reading progress from the document's actions menu (...). The progress bar may briefly display as grey and say 0%, but once you've stayed at your location or continued reading at a steady pace for a few moments, the bar will turn blue again and match your position.
+Can I hide the return button in the mobile app?
+You can hide the return button by navigating to the Account tab, opening your settings, and turning off the Return indicator toggle in the Reading View section. This only hides the button, and Reader will still track your reading progress and last location as usual.
+Can I undo an accidental action?
+You can use the undo feature to restore a deleted highlight or note, undo bulk actions, and much more.
+On web, you can trigger the undo function by pressing Z on your keyboard. Pressing multiple times will step back through the last few actions you've taken.
+On mobile, when using an iOS device, you can use the operating system's built-in "shake to undo" feature. If shaking to undo isn't working for you, check that the feature is turned on in your device's Settings > Accessibility > Touch.
+Additionally, many actions will be followed by a pop-up "toast" dialog to confirm what's been done, and that dialog will often include an undo button. Clicking or tapping it will immediately revert the action.
+How can I delete unwanted documents?
+On web, there are two ways to delete a document. You can either click into the More actions (...) menu and select Delete document, or you can use the keyboard shortcut D.
+On mobile, tap into the More actions (...) menu and select Delete document at the bottom of the sheet.
+Can I restore documents that I've previously deleted?
+You can restore deleted documents from the Trash section of your account. Items you've deleted will stay in the Trash until you choose to recover them or empty your Trash.
+Restoring a document will return it to your Library and restore any highlights or notes you might have made.
+The Trash is device-specific, so deleted documents must be restored from the same device (e.g. web browser, mobile device, etc) where they were originally deleted.
+To restore a document on web or in the desktop app:
+Navigate to the Trash in the left sidebar below the Pinned section.
+Hover over the document you'd like to restore, then click the Restore document icon that appears.
+To restore a document in the mobile app:
+Navigate to the Search tab and scroll to the bottom of the page.
+Below your Filtered Views, tap into the Trash view under Deleted documents.
+Tap the title of the document you'd like to restore, then select Restore Document from the Actions menu.
+I bulk deleted a bunch of documents and now I want them back. Can I restore all of my deleted items?
+If you used a bulk action to delete an entire list of documents at once but then decided you actually wanted to be a bit more discerning than such wanton removal, it's no fun to  restore those documents one at a time.
+To restore all of your documents on web, click into the Trash in the left hand sidebar, then click Restore all in the lower left corner.
+On mobile, tap into the View tab and scroll to the bottom to find the Trash. Then tap Restore all in the lower left.

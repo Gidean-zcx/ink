@@ -1,0 +1,38 @@
+[
+  {
+    "evidence_id": "E-GEM-01",
+    "before": null,
+    "after": [
+      {
+        "checked_on": "2026-10-27",
+        "url": "https://support.google.com/gemini/answer/15850607?hl=en",
+        "raw_work_path": "work/gemini-controls-deepening/raw/screen.html",
+        "raw_sha256": "9c9188d4480c4dda1a687dad6e02ab8be376ea0f05dc9016b6a285de0a31e996",
+        "text_work_path": "work/gemini-controls-deepening/raw/screen.txt",
+        "text_sha256": "58f28ad0eba11d03e24112f23c905ce885a863f2056b6c9649ca134beaf671bf",
+        "capture_method": "public_html_get_and_text_read",
+        "archived_artifact": "artifacts/gemini-controls-deepening/source-notes.md",
+        "sha256": "a4c959f4c4f77f35731c0fb709031a63beb9869b887f8b8efe06eccbe00df2ce",
+        "note": "2026-10-27追加原件；未操作App或取得新视觉记录"
+      }
+    ]
+  },
+  {
+    "evidence_id": "E-GEM-02",
+    "before": null,
+    "after": [
+      {
+        "checked_on": "2026-10-27",
+        "url": "https://support.google.com/gemini/answer/13695044?co=GENIE.Platform%3DAndroid&hl=en",
+        "raw_work_path": "work/gemini-controls-deepening/raw/connectors.html",
+        "raw_sha256": "a4eb683a1dc0f69783837120dcec71b9d467a0effda41a4b18fd9298b5fdce23",
+        "text_work_path": "work/gemini-controls-deepening/raw/connectors.txt",
+        "text_sha256": "bfc019ea9ecc43a0630fe84bc7e8c3e6eddfaebd502c929c463f7bf0b6b62572",
+        "capture_method": "public_html_get_and_text_read",
+        "archived_artifact": "artifacts/gemini-controls-deepening/source-notes.md",
+        "sha256": "a4c959f4c4f77f35731c0fb709031a63beb9869b887f8b8efe06eccbe00df2ce",
+        "note": "2026-10-27追加原件；未操作App或取得新视觉记录"
+      }
+    ]
+  }
+]

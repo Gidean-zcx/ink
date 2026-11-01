@@ -1,0 +1,26 @@
+[
+  [
+    "01-index",
+    "https://docs.eudic.net/1/llms.txt"
+  ],
+  [
+    "02-scheme",
+    "https://docs.eudic.net/1/jin-jie-gong-neng/url-scheme.md"
+  ],
+  [
+    "03-library",
+    "https://docs.eudic.net/1/shi-yong-zhi-yin/tian-jia-kuo-chong-ci-ku.md"
+  ],
+  [
+    "04-reader",
+    "https://docs.eudic.net/1/jin-jie-gong-neng/wen-jian-yue-du.md"
+  ],
+  [
+    "05-api",
+    "http://my.eudic.net/OpenAPI/Doc_Index"
+  ],
+  [
+    "06-product",
+    "https://www.eudic.net/v4/en/app/eudic/download"
+  ]
+]

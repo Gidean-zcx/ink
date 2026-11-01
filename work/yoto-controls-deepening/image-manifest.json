@@ -1,0 +1,18 @@
+[
+  {
+    "name": "alarm-list.jpg",
+    "url": "https://attachments.gorgias.help/uploads.gorgias.io/Aa90l7EQnv7JWorj/EN_3_Alarms-b02d0318-79c2-463b-986a-b332454a2f9c.jpg",
+    "http_status": 403,
+    "access_state": "stopped_after_denial",
+    "file_saved": false,
+    "visual_observed": false
+  },
+  {
+    "name": "alarm-toggle.jpg",
+    "url": "https://attachments.gorgias.help/uploads.gorgias.io/Aa90l7EQnv7JWorj/EN_Toggle-b253a4a2-bdf1-4a98-8c6b-e91be1a91842.jpg",
+    "http_status": 403,
+    "access_state": "stopped_after_denial",
+    "file_saved": false,
+    "visual_observed": false
+  }
+]

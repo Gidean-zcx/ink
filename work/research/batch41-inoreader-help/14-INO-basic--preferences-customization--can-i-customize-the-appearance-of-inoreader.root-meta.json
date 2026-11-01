@@ -1,0 +1,21 @@
+{
+  "order": 14,
+  "entry_id": "INO-basic--preferences-customization--can-i-customize-the-appearance-of-inoreader",
+  "title": "Can I customize the appearance of Inoreader?",
+  "url": "https://www.inoreader.com/help/basic/preferences-customization/can-i-customize-the-appearance-of-inoreader",
+  "checked_on": "2026-10-27",
+  "http_status": 200,
+  "final_url": "https://www.inoreader.com/help/basic/preferences-customization/can-i-customize-the-appearance-of-inoreader",
+  "acquisition": "one_anonymous_normal_GET",
+  "raw_path": "work/research/batch41-inoreader-help/14-INO-basic--preferences-customization--can-i-customize-the-appearance-of-inoreader.html",
+  "headers_path": "work/research/batch41-inoreader-help/14-INO-basic--preferences-customization--can-i-customize-the-appearance-of-inoreader.headers.json",
+  "raw_sha256": "7650ec05a77b246a624dc9d18e99c3d168301bc2450c81fc662b4a22c67fb0ce",
+  "bytes": 142917,
+  "status": "body_obtained",
+  "body_status": "extracted_not_yet_root_read",
+  "body_path": "work/research/batch41-inoreader-help/14-INO-basic--preferences-customization--can-i-customize-the-appearance-of-inoreader.body.txt",
+  "body_sha256": "e64d068329f4eaeea15f81dd81127eef1225da238d6cfbe9f11e2cc102fb9e78",
+  "body_chars": 87,
+  "links": [],
+  "images": []
+}

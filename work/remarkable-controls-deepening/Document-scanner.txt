@@ -1,0 +1,13 @@
+Create PDFs by converting photos from your smartphone.
+What you need to get started
+Your paper tablet
+A smartphone with the reMarkable mobile app
+Access to Wi-Fi
+How to use the document scanner
+In the mobile app, tap Create new.
+Tap Scanned document.
+Hover over the document you’d like to scan.
+Once you see a blue light, the document has been scanned, and you have the option to save it.
+Choose to add additional scans to your PDF, or navigate to My files to find your PDF.
+Filtering options
+After performing a scan, you can add filters to an image before importing it as a PDF to your account. Applying these filters correctly affects how the document appears on your device; we recommend that you avoid filters on pages containing mostly images. The black and white filter is optimal for pages containing mostly text.

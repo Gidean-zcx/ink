@@ -1,0 +1,171 @@
+
+ Mudita Center 4.0.0 
+Skip to content
+ Store
+ Special Deals
+ Phones
+ Alarm Clocks
+ Watches & Straps
+ Accessories
+ Lifestyle
+ Outlet
+ Spare Parts
+ Products
+ Phones
+ Mudita Kompakt
+ Mudita Pure
+ Watches
+ Mudita Moment Automatic
+ Mudita Element Automatic
+ Mudita Radiant Automatic
+ Alarm Clocks
+ Mudita Bell 2
+ Mudita Harmony 2
+Meditation
+ Mudita Oasis
+Desktop App
+ Mudita Center
+ Community
+ Blog
+ Forum
+ Resources
+ Support
+English
+English
+Polish
+ All
+ Articles
+Recent Searches
+ Clear all
+No recent searches
+ Popular Articles
+Articles
+ View all
+Topics
+ View all
+Tickets
+ View all
+Sorry! nothing found for 
+ Store
+Special Deals
+Phones
+Alarm Clocks
+Watches & Straps
+Accessories
+Lifestyle
+Outlet
+Spare Parts
+ Products
+ Phones
+Mudita Kompakt
+Mudita Pure
+ Watches
+Mudita Moment Automatic
+Mudita Element Automatic
+Mudita Radiant Automatic
+ Alarm Clocks
+Mudita Bell 2
+Mudita Harmony 2
+ Meditation
+Mudita Oasis
+ Desktop App
+Mudita Center
+ Community
+Blog
+Forum
+Resources
+ Support
+ Solution home
+ Software Release Notes
+ Mudita Center Software Release Notes
+ Mudita Center 4.0.0
+ Modified on: Thu, 17 Sep, 2026 at 1:12 PM
+With this release, the Mudita Center introduces below changes:
+The users will be able to download or delete a photo from the preview screen. 
+In the backup and restore feature we added the Calendar events.
+In the files manager the Apk files now have the status showing if the application is already installed or ready for install.
+When sending the customer support ticket, the user is now able to download the log file that is attached to the ticket by default.
+Coming with the MuditaOS K 1.5.0 - In the Contacts, we added the dedicated section to identify and merge the duplicated contacts.
+We also have rebuild the application from scratch, so the code is based on the newest solutions providing stable and improved support for new operating systems, native support for MacOS with M series chips, improved Kompakt interface that allows faster data transfer, and some small interface improvements.
+Was this article helpful?
+ No
+ Yes
+That’s Great!
+Thank you for your feedback
+Sorry! We couldn't be helpful
+Thank you for your feedback
+ Your e-mail address
+ *
+Let us know how can we improve this article! *
+ Need more information
+ Difficult to understand
+ Inaccurate/irrelevant content
+ Missing/broken link
+ Select at least one of the reasons
+ Please give your comments
+ CAPTCHA verification is required.
+ Cancel
+ Send
+Feedback sent
+We appreciate your effort and will try to fix the article
+Articles in this folder 
+ Mudita Center 4.0.0
+ Mudita Center 3.2.0
+ Mudita Center 3.1.0
+ Mudita Center 3.0.0
+You may like to read 
+ What Is the Desktop App Mudita Center For?
+ Where Can I Download Mudita Center?
+ Connecting a Mudita Pure or Harmony to Mudita Center
+ Updating Mudita Center
+ Mudita Center 2.1.0
+ Mudita Center 2.2.5
+ Updating the Software of Mudita Harmony and Mudita Harmony 2
+ Mudita Center 3.2.0
+ How to Check What OS Version is Currently Installed on Your Mudita Pure?
+ Mudita Center 2.5.0
+ X
+ 0 of 0
+ Store
+Phones
+Alarm Clocks
+Watches & Straps
+Accessories
+Spare Parts
+Lifestyle
+Outlet
+Special Deals
+ Products
+Mudita Kompakt
+Mudita Pure
+Mudita Bell
+Mudita Bell 2
+Mudita Harmony
+Mudita Harmony 2
+Mudita Element Automatic
+Mudita Radiant Automatic
+Mudita Moment Automatic
+Mudita Oasis
+Mudita Center
+ Support
+Knowledge Base
+User Guides & Warranties
+Orders & Shipping
+Software Release Notes
+Returns
+ Legal
+POIG
+Privacy Policy
+Privacy Policy Cookies
+Terms & Conditions
+Terms of Sale
+Compliance & Certifications
+ About Us
+Manifesto
+Team
+Career
+Contact
+Media
+MMD
+For Retailers
+ 2026 © Mudita All images and content may not be used without permission. Mudita® are registered trademarks of Mudita Sp. z o. o., registered in the EU.

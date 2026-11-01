@@ -1,0 +1,70 @@
+[
+  {
+    "path": "docs/research/interaction-library/cases/M-001-kindle.md",
+    "sha256": "8b14c0601413a6390d6b66f26fa82944f63cb99e7d70b243792e8bad4c8cf268"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/kindle-audio-family-deepening/assistive-controls.png",
+    "sha256": "cf8c6a9df11b3ab4184008aba170004fc7c38e39319787e9a60b41e015065b9d"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/kindle-audio-family-deepening/assistive-setting.png",
+    "sha256": "6082f552f7806c2b3631061abfa2a2707adbf4ddca6268b119694bdb51474f53"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/kindle-audio-family-deepening/audible.png",
+    "sha256": "44495c6d5edb2c03233ef33191809699ff36d059d23de82101bbf2c77a2a0922"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/kindle-audio-family-deepening/home.png",
+    "sha256": "98af5417ded8f1f71cf96ebe2b7b601bdb27b9bdfab724e4f6626c097e3255d3"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/kindle-audio-family-deepening/landscape.png",
+    "sha256": "30cd7f95047c153d59c01cd5b2895b3f0b2eec34f18ebcc22e1b15ecee8bba86"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/kindle-audio-family-deepening/pageflip.png",
+    "sha256": "a23e07116c48ac4b33ea50d6b87f8823a15a4fd346f1a175c274ec62f53dee1f"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/kindle-audio-family-deepening/portrait.png",
+    "sha256": "1e931d98fdee578207abb29ac7e0056b8b716c56096aaca066bd49c72107201a"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/kindle-audio-family-deepening/progress.png",
+    "sha256": "d68057599ad41f29ea1f5e96e7267e70ab60d484602d59069b6fb3da778f0b5e"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/kindle-audio-family-deepening/reading.png",
+    "sha256": "4653376390a8592949df4920fa3f9390bd07f1ad3028d7bcfda43c7374cc1d17"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/kindle-audio-family-deepening/source-notes.md",
+    "sha256": "90b7a8fea030817a03f73d452cfbdabcbb1138c1d363bea58bab3e478397915b"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/kindle-audio-family-deepening/themes.png",
+    "sha256": "f8b4a8cfbc9685f57126a765e51ed34311d8734631c3e75af1fac5e464480386"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/kindle-audio-family-deepening/writing.png",
+    "sha256": "a9fecddd1fb5d3e42ee93ea00404ea6ddfebb05131b7f2db39022b1ccb9bd583"
+  },
+  {
+    "path": "docs/research/interaction-library/batches/kindle-audio-family-deepening-coverage.csv",
+    "sha256": "d7c61e870fc3b2ef0955df2072b332e061c5bf5e58b110468b4117e42b41e8c0"
+  },
+  {
+    "path": "docs/research/interaction-library/batches/kindle-audio-family-deepening-evidence.jsonl",
+    "sha256": "fec88c658476bd9f94460ad44354db50ea6dccc9718373135fbdfac8d652cf81"
+  },
+  {
+    "path": "docs/research/interaction-library/batches/kindle-audio-family-deepening-inventory.csv",
+    "sha256": "757a1f9a0445cc398e43f3e9671bd05f725aca67a2180a9ff9380c3bf3b65041"
+  },
+  {
+    "path": "docs/research/interaction-library/batches/kindle-controls-deepening-inventory.csv",
+    "sha256": "340996e6e15852d0499e04ce7f121dc559d412faaaecfce271c3b884167d1766"
+  }
+]

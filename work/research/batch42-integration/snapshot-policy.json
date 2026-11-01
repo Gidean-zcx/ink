@@ -1,0 +1,6 @@
+{
+  "all_formal_hashes": 1303,
+  "copied_text_and_metadata_files": 705,
+  "media_not_duplicated": "Existing formal media retain their manifest hashes; before copies only made on actual modification.",
+  "partial_snapshot_attempt": "Removed incomplete copy before recreating text/metadata baseline."
+}

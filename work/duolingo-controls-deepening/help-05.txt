@@ -1,0 +1,11 @@
+HELP CENTER
+USING DUOLINGO
+How does matchmaking work in Duolingo Chess?
+When you opt into live matchmaking in Duolingo Chess, we try to find a balanced opponent as quickly as possible. We start by looking for another Duolingo learner within ±50 of your rating and gradually expand this window as needed to avoid long waiting times.
+In certain cases, for example if you’re new to Duolingo Chess, we may strictly pair you with learners with a lower rating (within -50) or with a bot. This helps new learners build confidence before facing tougher opponents. However, learners with a rating of 700 or higher are not paired with bots.
+Relevant Articles
+Why did my course change?
+What is a streak?
+What are leaderboards and leagues?
+Does Duolingo use any open source libraries?
+I want to submit a bug report

@@ -1,0 +1,451 @@
+Using Study with friends – Quizlet Help Center (https://help.quizlet.com/hc/en-us/articles/48158602540685-Using-Study-with-friends)
+citeturn1085view0 [wordlim: 200] Crawled: yesterday; Content type: text/html; Source: click({"ref_id":"turn1083view0","id":11}); Total lines: 134
+L0: 【0†iframe†www.googletagmanager.com】
+L1: 
+L2: 【1†Help center†quizlet.zendesk.com】
+L3: 
+L4: Topics
+L5: 
+L6: Popular Articles
+L7: 
+L8: 【2†Resending a confirmation message】 【3†Changing your username】 【4†Changing your password】 【5†Finding flashcard sets】 【6†Finding your teacher's class】 【7†Browser and device compatibility】
+L9: 
+L10: [Input][Input: Search]
+L11: 
+L12: 【8†Image】   【8†Username】
+L13: # Using Study with friends
+L14: 
+L15: 【8†IOS】 【8†Web】 【8†Android】
+L16: 
+L17: Study with friends lets you turn any public set into a shared study session with your friends or study group. Pick a set, choose a study mode, and share a link. Everyone who joins studies the same material and can see what the group is missing, so you know what to focus on next.
+L18: Study with friends works with 【9†Flashcards】, 【10†Learn】, 【11†Test】, 【12†Match】, 【13†Blast】, and 【14†Blocks】. The set must be public to start a session. Friends can join using a link, and they don’t need an account to try it out.
+L19: ## How your info is shared
+L20: 
+L21: When you study together, your latest results are visible to everyone else in the same session. This includes your score and the terms you got right or missed. Other participants can see how your results compare to the group’s, and you can see theirs. No one outside the session can see your results.
+L22: ## Starting a Study with friends session
+L23: 
+L24:   1. Open a public flashcard set.
+L25:   2. Select Study with friends.
+L26:   3. Choose the study mode you want your group to complete.
+L27:   4. Share the link with your friends. You can copy it, send it in a group chat, share it as a QR code, or send it by email.
+L28:   5. Once others join and study, you’ll all see how your results compare on the group results screen.
+L29: ## Joining a session a friend sent you
+L30: 
+L31:   1. Open the link your friend shared.
+L32:   2. If you’re signed in, select Start studying to join.
+L33:   3. If you’re not signed in, you can complete one session without creating an account. After that, you’ll be asked to sign up to keep studying with friends.
+L34:   4. Study the flashcard set in the mode your friend chose. Once you’re done, you’ll see how you and the group did.
+L35: ## What you’ll see after studying
+L36:   * Who has studied so far: The number of people who have joined and completed the session.
+L37:   * Individual and group results: A summary of your latest score and the group’s results for comparison. Results vary by study mode:
+L38:     * Learn, Flashcards, and Test: Insights into which terms you and the group have mastered and which terms still need work.
+L39:     * Blocks and Blast: A leaderboard with scores and insights into which terms you and the group have mastered and which terms still need work.
+L40:     * Match: A leaderboard with scores
+L41: Study with friends lets you turn any public set into a shared study session with your friends or study group. Pick a set, choose a study mode, and share a link. Everyone who joins studies the same material and can see what the group is missing, so you know what to focus on next.
+L42: 
+L43: Study with friends works with 【9†Flashcards】, 【10†Learn】, 【11†Test】, 【12†Match】, 【13†Blast】, and 【14†Blocks】. The set must be public to start a session. Friends can join using a link, and they don’t need an account to try it out.
+L44: ## How your info is shared
+L45: 
+L46: When you study together, your latest results are visible to everyone else in the same session. This includes your score and the terms you got right or missed. Other participants can see how your results compare to the group’s, and you can see theirs. No one outside the session can see your results.
+L47: ## Starting a Study with friends session
+L48: 
+L49:   1. Open a public flashcard set.
+L50:   2. Select Study with friends.
+L51:   3. Choose the study mode you want your group to complete.
+L52:   4. Share the link with your friends. You can copy it, send it in a group chat, share it as a QR code, or send it by email.
+L53:   5. Once others join and study, you’ll all see how your results compare on the group results screen.
+L54: ## Joining a session a friend sent you
+L55: 
+L56:   1. Open the link your friend shared.
+L57:   2. If you’re signed in, select Start studying to join.
+L58:   3. If you’re not signed in, you can complete one session without creating an account. After that, you’ll be asked to sign up to keep studying with friends.
+L59:   4. Study the flashcard set in the mode your friend chose. Once you’re done, you’ll see how you and the group did.
+L60: ## What you’ll see after studying
+L61:   * Who has studied so far: The number of people who have joined and completed the session.
+L62:   * Individual and group results: A summary of your latest score and the group’s results for comparison. Results vary by study mode:
+L63:     * Learn, Flashcards, and Test: Insights into which terms you and the group have mastered and which terms still need work.
+L64:     * Blocks and Blast: A leaderboard with scores and insights into which terms you and the group have mastered and which terms still need work.
+L65:     * Match: A leaderboard with scores
+L66: Study with friends lets you turn any public set into a shared study session with your friends or study group. Pick a set, choose a study mode, and share a link. Everyone who joins studies the same material and can see what the group is missing, so you know what to focus on next.
+L67: 
+L68: Study with friends works with 【9†Flashcards】, 【10†Learn】, 【11†Test】, 【12†Match】, 【13†Blast】, and 【14†Blocks】. The set must be public to start a session. Friends can join using a link, and they don’t need an account to try it out.
+L69: ## How your info is shared
+L70: 
+L71: When you study together, your latest results are visible to everyone else in the same session. This includes your score and the terms you got right or missed. Other participants can see how your results compare to the group’s, and you can see theirs. No one outside the session can see your results.
+L72: ## Starting a Study with friends session
+L73: 
+L74:   1. Open a public flashcard set.
+L75:   2. Select Study with friends.
+L76:   3. Choose the study mode you want your group to complete.
+L77:   4. Share the link with your friends. You can copy it, send it in a group chat, share it as a QR code, or send it by email.
+L78:   5. Once others join and study, you’ll all see how your results compare on the group results screen.
+L79: ## Joining a session a friend sent you
+L80: 
+L81:   1. Open the link your friend shared.
+L82:   2. If you’re signed in, select Start studying to join.
+L83:   3. If you’re not signed in, you can complete one session without creating an account. After that, you’ll be asked to sign up to keep studying with friends.
+L84:   4. Study the flashcard set in the mode your friend chose. Once you’re done, you’ll see how you and the group did.
+L85: ## What you’ll see after studying
+L86:   * Who has studied so far: The number of people who have joined and completed the session.
+L87:   * Individual and group results: A summary of your latest score and the group’s results for comparison. Results vary by study mode:
+L88:     * Learn, Flashcards, and Test: Insights into which terms you and the group have mastered and which terms still need work.
+L89:     * Blocks and Blast: A leaderboard with scores and insights into which terms you and the group have mastered and which terms still need work.
+L90:     * Match: A leaderboard with scores
+L91: ### Related Articles
+L92: 
+L93:   * 【15†Studying with Podcasts】
+L94:   * 【16†Studying with Spaced Repetition】
+L95:   * 【17†Using Study with friends】
+L96:   * 【18†Playing Charms】
+L97:   * 【19†Studying with Audio Notes】
+L98:   * 【20†Create flashcard sets directly in ChatGPT】
+L99:   * 【21†Studying with Ask Quizlet】
+L100:   * 【22†Using Quizlet with Superhuman】
+L101:   * 【23†Studying with Answer Streaks】
+L102:   * 【14†Playing a game of Blocks】
+L103:   * 【24†See more】
+L104: ### Can't find what you're looking for?
+L105: 
+L106: 【25†Ask a question】
+L107: 
+L108: Was this article helpful?
+L109: 
+L110: [Button: Yes] [Button: No]
+L111: 
+L112: ##### About us
+L113: 
+L114: 【26†About Quizlet†quizlet.com】 【27†How Quizlet works†quizlet.com】 【28†Careers†quizlet.com】 【29†Advertise with us†quizlet.com】 【30†Get the app†quizlet.com】
+L115: ##### For students
+L116: 
+L117: 【31†Flashcards†quizlet.com】 【32†Test†quizlet.com】 【33†Learn†quizlet.com】 【34†Solutions†quizlet.com】 【35†Modern Learning Lab†quizlet.com】 【36†Quizlet Plus†quizlet.com】 【37†Study Guides†quizlet.com】 【38†Pomodoro timer†quizlet.com】
+L118: 
+L119: ##### For Teachers
+L120: 
+L121: 【39†Live†quizlet.com】 【40†Blog†quizlet.com】 【41†Be the Change†quizlet.com】 【42†Quizlet Plus for teachers†quizlet.com】
+L122: ##### Resources
+L123: 
+L124: 【43†Help center†quizlet.com】 【44†Sign up†quizlet.com】 【45†Honor code†quizlet.com】 【46†Community guidelines†quizlet.com】 【47†Accessibility statement†quizlet.com】 【48†Privacy†quizlet.com】 【49†Your Privacy/Cookies Choices†quizlet.com】 【50†Terms†quizlet.com】 【51†Ad and Cookie Policy†quizlet.com】 【52†Interest-Based Advertising†quizlet.com】 【53†Quizlet for Schools†quizlet.com】 【54†Parents†quizlet.com】
+L125: 
+L126: ##### Language
+L127: 
+L128: English (United States)
+L129: 
+L130: 【55†Image】 【56†Get the app†get.quizlet.com】
+L131: ##### Get the app
+L132: 
+L133: © Quizlet Inc.
+--------------------------------------------------------------------------------
+Playing Charms – Quizlet Help Center (https://help.quizlet.com/hc/en-us/articles/47712424067341-Playing-Charms)
+citeturn1085view1 [wordlim: 200] Crawled: today; Content type: text/html; Source: click({"ref_id":"turn1083view0","id":12}); Total lines: 114
+L0: 【0†iframe†www.googletagmanager.com】
+L1: 
+L2: 【1†Help center†quizlet.zendesk.com】
+L3: 
+L4: Topics
+L5: 
+L6: Popular Articles
+L7: 
+L8: 【2†Resending a confirmation message】 【3†Changing your username】 【4†Changing your password】 【5†Finding flashcard sets】 【6†Finding your teacher's class】 【7†Browser and device compatibility】
+L9: 
+L10: [Input][Input: Search]
+L11: 
+L12: 【8†Image】   【8†Username】
+L13: # Playing Charms
+L14: 
+L15: 【8†IOS】 【8†Web】 【8†Android】
+L16: 
+L17: In a game of Charms, users match charms to earn points and answer questions from their study set to earn additional moves. The game ends when all moves have been used.
+L18: 
+L19: You can start a game of Charms on any study set that includes at least six terms and definitions.
+L20: 
+L21: To start a game of Charms
+L22:   1. 【9†Log in†quizlet.com】 to your account.
+L23:   2. Open a study set.
+L24:   3. Select Charms.
+L25:   4. Select Start.
+L26:   5. Match three or more charms of the same color to clear them from the board and earn points.
+L27:   6. Match a Question charm to answer a question from your study set.
+L28:      * Answer correctly to earn the number of additional moves shown on the Question charm.
+L29:      * Incorrect answers don't earn additional moves.
+L30:   7. Continue matching charms and answering questions until you run out of moves.
+L31: 
+L32: Tips
+L33:   * You can select Options to adjust Answer with, Grading Options, and Text to Speech settings.
+L34:   * Select How to Play to follow a tutorial and get additional game tips.
+L35: 
+L36: In a game of Charms, users match charms to earn points and answer questions from their study set to earn additional moves. The game ends when all moves have been used.
+L37: 
+L38: You can start a game of Charms on any study set that includes at least six terms and definitions.
+L39: 
+L40: To start a game of Charms
+L41:   1. Open a study set.
+L42:   2. Select Charms.
+L43:   3. Select Start.
+L44:   4. Match three or more charms of the same color to clear them from the board and earn points.
+L45:   5. Match a Question charm to answer a question from your study set.
+L46:      * Answer correctly to earn the number of additional moves shown on the Question charm.
+L47:      * Incorrect answers don't earn additional moves.
+L48:   6. Continue matching charms and answering questions until you run out of moves.
+L49: 
+L50: Tips
+L51:   * You can select Options to adjust Answer with, Grading Options, and Text to Speech settings.
+L52:   * Select How to Play to follow a tutorial and get additional game tips.
+L53: 
+L54: In a game of Charms, users match charms to earn points and answer questions from their study set to earn additional moves. The game ends when all moves have been used.
+L55: 
+L56: You can start a game of Charms on any study set that includes at least six terms and definitions.
+L57: 
+L58: To start a game of Charms
+L59:   1. Open a study set.
+L60:   2. Select Charms.
+L61:   3. Select Start.
+L62:   4. Match three or more charms of the same color to clear them from the board and earn points.
+L63:   5. Match a Question charm to answer a question from your study set.
+L64:      * Answer correctly to earn the number of additional moves shown on the Question charm.
+L65:      * Incorrect answers don't earn additional moves.
+L66:   6. Continue matching charms and answering questions until you run out of moves.
+L67: 
+L68: Tips
+L69:   * You can select Options to adjust Answer with, Grading Options, and Text to Speech settings.
+L70:   * Select How to Play to follow a tutorial and get additional game tips
+L71: ### Related Articles
+L72: 
+L73:   * 【10†Studying with Podcasts】
+L74:   * 【11†Studying with Spaced Repetition】
+L75:   * 【12†Using Study with friends】
+L76:   * 【13†Playing Charms】
+L77:   * 【14†Studying with Audio Notes】
+L78:   * 【15†Create flashcard sets directly in ChatGPT】
+L79:   * 【16†Studying with Ask Quizlet】
+L80:   * 【17†Using Quizlet with Superhuman】
+L81:   * 【18†Studying with Answer Streaks】
+L82:   * 【19†Playing a game of Blocks】
+L83:   * 【20†See more】
+L84: ### Can't find what you're looking for?
+L85: 
+L86: 【21†Ask a question】
+L87: 
+L88: Was this article helpful?
+L89: 
+L90: [Button: Yes] [Button: No]
+L91: 
+L92: ##### About us
+L93: 
+L94: 【22†About Quizlet†quizlet.com】 【23†How Quizlet works†quizlet.com】 【24†Careers†quizlet.com】 【25†Advertise with us†quizlet.com】 【26†Get the app†quizlet.com】
+L95: ##### For students
+L96: 
+L97: 【27†Flashcards†quizlet.com】 【28†Test†quizlet.com】 【29†Learn†quizlet.com】 【30†Solutions†quizlet.com】 【31†Modern Learning Lab†quizlet.com】 【32†Quizlet Plus†quizlet.com】 【33†Study Guides†quizlet.com】 【34†Pomodoro timer†quizlet.com】
+L98: 
+L99: ##### For Teachers
+L100: 
+L101: 【35†Live†quizlet.com】 【36†Blog†quizlet.com】 【37†Be the Change†quizlet.com】 【38†Quizlet Plus for teachers†quizlet.com】
+L102: ##### Resources
+L103: 
+L104: 【39†Help center†quizlet.com】 【40†Sign up†quizlet.com】 【41†Honor code†quizlet.com】 【42†Community guidelines†quizlet.com】 【43†Accessibility statement†quizlet.com】 【44†Privacy†quizlet.com】 【45†Your Privacy/Cookies Choices†quizlet.com】 【46†Terms†quizlet.com】 【47†Ad and Cookie Policy†quizlet.com】 【48†Interest-Based Advertising†quizlet.com】 【49†Quizlet for Schools†quizlet.com】 【50†Parents†quizlet.com】
+L105: 
+L106: ##### Language
+L107: 
+L108: English (United States)
+L109: 
+L110: 【51†Image】 【52†Get the app†get.quizlet.com】
+L111: ##### Get the app
+L112: 
+L113: © Quizlet Inc.
+--------------------------------------------------------------------------------
+Using Quizlet with Superhuman – Quizlet Help Center (https://help.quizlet.com/hc/en-us/articles/41655677850509-Using-Quizlet-with-Superhuman)
+citeturn1085view2 [wordlim: 200] Crawled: today; Content type: text/html; Source: click({"ref_id":"turn1083view0","id":16}); Total lines: 75
+L0: 【0†iframe†www.googletagmanager.com】
+L1: 
+L2: 【1†Help center†quizlet.zendesk.com】
+L3: 
+L4: Topics
+L5: 
+L6: Popular Articles
+L7: 
+L8: 【2†Resending a confirmation message】 【3†Changing your username】 【4†Changing your password】 【5†Finding flashcard sets】 【6†Finding your teacher's class】 【7†Browser and device compatibility】
+L9: 
+L10: [Input][Input: Search]
+L11: 
+L12: 【8†Image】   【8†Username】
+L13: # Using Quizlet with Superhuman
+L14: 
+L15: Superhuman was previously known as Grammarly
+L16: 
+L17: Quizlet now integrates with Superhuman’s writing intelligence features, making it simple for learners to turn their written content into study materials. Through the Quizlet Agent in Superhuman Go, students can convert notes, essays, or study materials into Quizlet flashcards in seconds, helping them study more efficiently and keep their workflow in one place.
+L18: 
+L19: When using Superhuman Go, students can:
+L20:   * Generate customized Quizlet flashcards from written text.
+L21:   * Continue into Quizlet to view, edit, or expand the full study set.
+L22:   * Move from writing to studying without switching between tools.
+L23: 
+L24: How to use Quizlet with Superhuman Go
+L25: 
+L26: To create flashcards with the Quizlet Agent:
+L27:   1. While writing or editing in Superhuman Go, open the Agent bar.
+L28:   2. Select or add the Quizlet agent.
+L29:   3. If connecting the agent for the first time, authorize access to your Quizlet account when prompted.
+L30:   4. Ask the agent to create a flashcard set from your selected study materials. You can choose highlighted text, a whole document, or eligible open tabs.
+L31:   5. Select the generated flashcards to continue into Quizlet, where you can view the full set and start studying with Quizlet study modes like 【9†Learn】, 【10†Flashcards】, and 【11†Test】.
+L32: ### Related Articles
+L33: 
+L34:   * 【12†Studying with Podcasts】
+L35:   * 【13†Studying with Spaced Repetition】
+L36:   * 【14†Using Study with friends】
+L37:   * 【15†Playing Charms】
+L38:   * 【16†Studying with Audio Notes】
+L39:   * 【17†Create flashcard sets directly in ChatGPT】
+L40:   * 【18†Studying with Ask Quizlet】
+L41:   * 【19†Using Quizlet with Superhuman】
+L42:   * 【20†Studying with Answer Streaks】
+L43:   * 【21†Playing a game of Blocks】
+L44:   * 【22†See more】
+L45: ### Can't find what you're looking for?
+L46: 
+L47: 【23†Ask a question】
+L48: 
+L49: Was this article helpful?
+L50: 
+L51: [Button: Yes] [Button: No]
+L52: 
+L53: ##### About us
+L54: 
+L55: 【24†About Quizlet†quizlet.com】 【25†How Quizlet works†quizlet.com】 【26†Careers†quizlet.com】 【27†Advertise with us†quizlet.com】 【28†Get the app†quizlet.com】
+L56: ##### For students
+L57: 
+L58: 【29†Flashcards†quizlet.com】 【30†Test†quizlet.com】 【31†Learn†quizlet.com】 【32†Solutions†quizlet.com】 【33†Modern Learning Lab†quizlet.com】 【34†Quizlet Plus†quizlet.com】 【35†Study Guides†quizlet.com】 【36†Pomodoro timer†quizlet.com】
+L59: 
+L60: ##### For Teachers
+L61: 
+L62: 【37†Live†quizlet.com】 【38†Blog†quizlet.com】 【39†Be the Change†quizlet.com】 【40†Quizlet Plus for teachers†quizlet.com】
+L63: ##### Resources
+L64: 
+L65: 【41†Help center†quizlet.com】 【42†Sign up†quizlet.com】 【43†Honor code†quizlet.com】 【44†Community guidelines†quizlet.com】 【45†Accessibility statement†quizlet.com】 【46†Privacy†quizlet.com】 【47†Your Privacy/Cookies Choices†quizlet.com】 【48†Terms†quizlet.com】 【49†Ad and Cookie Policy†quizlet.com】 【50†Interest-Based Advertising†quizlet.com】 【51†Quizlet for Schools†quizlet.com】 【52†Parents†quizlet.com】
+L66: 
+L67: ##### Language
+L68: 
+L69: English (United States)
+L70: 
+L71: 【53†Image】 【54†Get the app†get.quizlet.com】
+L72: ##### Get the app
+L73: 
+L74: © Quizlet Inc.
+--------------------------------------------------------------------------------
+Studying with Quizlet Expert Solutions – Quizlet Help Center (https://help.quizlet.com/hc/en-us/articles/5649137275789-Studying-with-Quizlet-Expert-Solutions)
+citeturn1085view3 [wordlim: 200] Crawled: yesterday; Content type: text/html; Source: click({"ref_id":"turn1083view0","id":21}); Total lines: 116
+L0: 【0†iframe†www.googletagmanager.com】
+L1: 
+L2: 【1†Help center†quizlet.zendesk.com】
+L3: 
+L4: Topics
+L5: 
+L6: Popular Articles
+L7: 
+L8: 【2†Resending a confirmation message】 【3†Changing your username】 【4†Changing your password】 【5†Finding flashcard sets】 【6†Finding your teacher's class】 【7†Browser and device compatibility】
+L9: 
+L10: [Input][Input: Search]
+L11: 
+L12: 【8†Image】   【8†Username】
+L13: # Studying with Quizlet Expert Solutions
+L14: 
+L15: 【8†IOS】 【8†Web】 【8†Android】
+L16: 
+L17: Quizlet Expert Solutions walk you through step-by-step question and textbook solutions that are written and verified by experts. With easy organization broken down by each textbook and chapter, you can quickly understand the reasons behind the right answers so you can practice and apply the concepts on your own.
+L18: Standard high school–level expert solutions are free for students and teachers. If you're not subscribed to Quizlet, you can also study a limited number of textbook solutions per college-level textbook for free. Anyone with a Quizlet Plus subscription can study with college prep–level and higher education expert solutions.
+L19: 
+L20: To find an expert solution
+L21:   1. 【9†Log in†quizlet.com】 to your account.
+L22:   2. Select Your Library on the left side panel.
+L23:   3. Select Expert Solutions.
+L24:   4. Enter a textbook title or question in the search field.
+L25:   5. Select the textbook or question.
+L26:   6. Select a chapter, page, and exercise for textbooks to review the solution.
+L27: 
+L28: Select Table of contents to move to different exercises in the same textbook.
+L29: 
+L30: To find a textbook
+L31:   1. Select 【10†Image: Search_-_Resized.png】 (search).
+L32:   2. Select Scan a textbook or question.
+L33:   3. Grant the Quizlet app access to your device's camera.
+L34:   4. Scan your textbook's barcode.
+L35: 
+L36: To find a question
+L37: 
+L38:   1. Select 【10†Image: Search_-_Resized.png】 (search).
+L39:   2. Select Scan a textbook or question.
+L40:   3. Grant the Quizlet app access to your device's camera.
+L41:   4. Select Search to continue, or select Edit to update the text.
+L42: 
+L43: Tips
+L44:   * Depending on the type of solution you're studying, you can select options like the following to get help from our AI features:
+L45:     * Explain this step
+L46:     * Define a concept
+L47:     * Provide alternate explanation
+L48:     * Generate a practice problem
+L49:     * Teach me something new
+L50:   * If you’re viewing considerably high volumes of expert solutions, you may be limited for security purposes. You can take a study break and return to view more solutions the next day to stay on track!
+L51:   1. Select 【10†Image: Search_-_Resized.png】(search).
+L52:   2. Enter a textbook title or question in the search field.
+L53:   3. Select Search on your keyboard.
+L54:   4. Select Textbooks or Questions.
+L55:   5. Select the textbook or question.
+L56:   6. Select a chapter, page, and exercise for textbooks to review the solution.
+L57: 
+L58: You can see solutions you've viewed recently by selecting Solutions.
+L59: 
+L60: Tips
+L61: If you’re viewing considerably high volumes of expert solutions, you may be limited for security purposes. You can take a study break and return to view more solutions the next day to stay on track!
+L62:   1. Select 【10†Image: Search_-_Resized.png】(search).
+L63:   2. Enter a textbook title or question in the search field.
+L64:   3. Select 【10†Image: Search_-_Resized.png】(search).
+L65:   4. Select Textbooks or Questions.
+L66:   5. Select the textbook or question.
+L67:   6. Select a chapter, page, and exercise for textbooks to review the solution.
+L68: 
+L69: You can see solutions you've viewed recently by selecting Solutions.
+L70: 
+L71: Tips
+L72: If you’re viewing considerably high volumes of expert solutions, you may be limited for security purposes. You can take a study break and return to view more solutions the next day to stay on track!
+L73: ### Related Articles
+L74: 
+L75:   * 【11†Studying with Podcasts】
+L76:   * 【12†Studying with Spaced Repetition】
+L77:   * 【13†Using Study with friends】
+L78:   * 【14†Playing Charms】
+L79:   * 【15†Studying with Audio Notes】
+L80:   * 【16†Create flashcard sets directly in ChatGPT】
+L81:   * 【17†Studying with Ask Quizlet】
+L82:   * 【18†Using Quizlet with Superhuman】
+L83:   * 【19†Studying with Answer Streaks】
+L84:   * 【20†Playing a game of Blocks】
+L85:   * 【21†See more】
+L86: ### Can't find what you're looking for?
+L87: 
+L88: 【22†Ask a question】
+L89: 
+L90: Was this article helpful?
+L91: 
+L92: [Button: Yes] [Button: No]
+L93: 
+L94: ##### About us
+L95: 
+L96: 【23†About Quizlet†quizlet.com】 【24†How Quizlet works†quizlet.com】 【25†Careers†quizlet.com】 【26†Advertise with us†quizlet.com】 【27†Get the app†quizlet.com】
+L97: ##### For students
+L98: 
+L99: 【28†Flashcards†quizlet.com】 【29†Test†quizlet.com】 【30†Learn†quizlet.com】 【31†Solutions†quizlet.com】 【32†Modern Learning Lab†quizlet.com】 【33†Quizlet Plus†quizlet.com】 【34†Study Guides†quizlet.com】 【35†Pomodoro timer†quizlet.com】
+L100: 
+L101: ##### For Teachers
+L102: 
+L103: 【36†Live†quizlet.com】 【37†Blog†quizlet.com】 【38†Be the Change†quizlet.com】 【39†Quizlet Plus for teachers†quizlet.com】
+L104: ##### Resources
+L105: 
+L106: 【40†Help center†quizlet.com】 【41†Sign up†quizlet.com】 【42†Honor code†quizlet.com】 【43†Community guidelines†quizlet.com】 【44†Accessibility statement†quizlet.com】 【45†Privacy†quizlet.com】 【46†Your Privacy/Cookies Choices†quizlet.com】 【47†Terms†quizlet.com】 【48†Ad and Cookie Policy†quizlet.com】 【49†Interest-Based Advertising†quizlet.com】 【50†Quizlet for Schools†quizlet.com】 【51†Parents†quizlet.com】
+L107: 
+L108: ##### Language
+L109: 
+L110: English (United States)
+L111: 
+L112: 【52†Image】 【53†Get the app†get.quizlet.com】
+L113: ##### Get the app
+L114: 
+L115: © Quizlet Inc.
+

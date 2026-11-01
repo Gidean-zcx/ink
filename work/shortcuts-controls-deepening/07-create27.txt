@@ -1,0 +1,30 @@
+Create a custom shortcut on iPhone or iPad
+Create or edit a shortcut with Apple Intelligence
+With Apple Intelligence, you can create a custom shortcut just by describing what you want.
+On models that support Apple Intelligence, in the Shortcuts app  on your iPhone or iPad, tap  [IMAGE: the Add button] .
+An empty, untitled shortcut appears in the shortcut editor.
+Describe in normal language what you would like the shortcut to do. The Shortcuts app creates and names a shortcut based on your input.
+To test your new shortcut, tap  [IMAGE: The Run button] . To stop the shortcut, tap  [IMAGE: The Stop button] .
+You can describe a change or hit edit to modify the contents directly.
+Note: Apple Intelligence on iOS 27 or later is available on an Apple Intelligence-enabled iPhone 15 Pro, iPhone 15 Pro Max, or iPhone 16 model or later. Apple Intelligence on iPadOS 27 or later is available on an Apple Intelligence-enabled iPad mini (A17 Pro) and iPad models with M1 or later. Apple Intelligence is not available in all languages or regions. Usage limits may apply.*
+Create a new shortcut
+In the Shortcuts app  on your iPhone or iPad, tap  [IMAGE: the Add button] .
+An empty, untitled shortcut appears in the shortcut editor.
+Tap New Shortcut, tap Rename, type the name of your shortcut, then tap  [IMAGE: The back button] .
+Tap Add Action.
+A list of action categories appears.
+Tap a category (such as Media or Web), then tap an action in the list to add it to your shortcut.
+Note: You may have to scroll to see all the available actions in a category.
+You can also touch and hold an action in the list, then drag it to the position you want in the shortcut editor.
+To add another action, swipe up on the search field at the bottom of the screen, then choose an action.
+Tip: When you add another action, the action category you previously chose from opens. To return to the list of all action categories, tap Done.
+When you’re finished adding actions to your workflow, tap Done.
+The shortcut is added to your shortcuts collection, in both the All Shortcuts and My Shortcuts categories.
+For information on customizing the appearance of your new shortcut (the rectangle in your shortcuts collection), see Modify shortcut colors and icons.
+To test your new shortcut, tap . To stop the shortcut, tap .
+Tip: You can also create a new shortcut by touching and holding the Shortcuts app icon on the Home Screen of your device and then tapping Create Shortcut.
+For information on rearranging your shortcuts collection, see Reorder shortcuts on iPhone or iPad.
+Undo or redo steps while composing your shortcut
+In the Shortcuts app, tap  or  in the shortcut editor to undo or redo your steps.
+You can also tap  [IMAGE: the Close button] on an action to remove it from the shortcut editor.
+*Apple Intelligence is available with Siri and device language set to Chinese (Simplified), Chinese (Traditional), Danish, Dutch, English, French, German, Italian, Japanese, Korean, Norwegian, Portuguese, Spanish, Swedish, Turkish, or Vietnamese. Some features may not be available in all regions or languages. Some devices may not be available in all regions. Siri AI is available in beta in iOS 27, iPadOS 27, macOS 27, watchOS 27, and visionOS 27 and requires an Apple Intelligence–enabled device set to a supported language. Available in English to start. Siri AI will not be initially available in the EU on iOS, iPadOS, and watchOS. Certain Apple Intelligence features that rely on server-side models are subject to daily usage limits, including but not limited to Siri AI, Intelligent Photo Editing Tools, Image Playground, and AFM 3 Cloud models in Shortcuts. Daily limits may vary by feature, request complexity, system demand, system policies, and other factors. Expanded access to such features will be available for a fee in the future. Use of these features is subject to the Apple Intelligence Terms and Conditions. Learn more at apple.com/apple-intelligence.

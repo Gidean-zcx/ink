@@ -1,0 +1,53 @@
+Connecting the player to an unpaired Bluetooth device for the first time
+The BLUETOOTH® function enables wireless connections between devices. The devices need to support Bluetooth wireless technology. A wireless connection is possible at a range of up to 10 meters (32.8 feet) in an open area.
+You can listen to music wirelessly by connecting the player to a Bluetooth device such as headphones or speakers.
+When you connect Bluetooth devices wirelessly for the first time, the devices must be registered to each other. This registration is called “pairing”. Once the player and the device are paired, you can easily connect the devices in the future. The following instructions are a basic step-by-step procedure for connecting the player and a Bluetooth device.
+Turn on the Bluetooth function on the Bluetooth device.
+Swipe the [WALKMAN Home] screen upwards on the player.
+Tap the menu items in the following order.
+[Settings] － [Connected devices] － [Pair new device].
+A list of the connectable devices will appear on the screen.
+Tap the name of the Bluetooth device.
+If you are required to enter a passkey while pairing, check and enter the passkey for the Bluetooth device. For details on the passkey for the Bluetooth device, refer to the manual of the device.
+When the connection is established, the name of the connected device appears under [Connected devices].
+Instructional video
+There is an instructional video for the following operations.
+Pairing a Bluetooth device for the first time.
+Connecting to a paired Bluetooth device.
+Visit the following link.
+https://rd1.sony.net/help/dmp/mov0012/h_zz/
+To disconnect from a paired Bluetooth device
+Swipe the [WALKMAN Home] screen upwards.
+Tap the menu items in the following order.
+[Settings] － [Connected devices].
+Tap the settings icon next to the name of the device to disconnect.
+Hint
+You can pair the player with only one Bluetooth device at a time. To pair with multiple Bluetooth devices, repeat the procedure in this topic for each device.
+You can erase a registered Bluetooth device. On the list of devices under [Connected devices], tap the settings icon next to the name of the Bluetooth device that you want to erase.
+The passkey may also be called a “passcode”, “PIN code”, “PIN number”, or “password”.
+The player stays connected to the Bluetooth device until you turn off the Bluetooth function. To conserve the battery power, turn off the Bluetooth function or disconnect the player from the paired Bluetooth device.
+Note
+Pairing information is deleted in the following situations. Pair the devices again.
+One or both of the devices are reset to the factory settings.
+Pairing information is deleted from the devices, such as when the devices are repaired.
+The battery life becomes considerably shorter when the Bluetooth function is active.
+If pairing times out before it is finished, perform the pairing procedure again.
+If sound is interrupted or skips during a Bluetooth connection, try the following.
+Place the player and the Bluetooth device closer together.
+Select [SBC-Connection pref.] for [Wireless playback quality].
+Swipe the [WALKMAN Home] screen upwards.
+Tap the menu items in the following order.
+[Settings] － [Connected devices] － [Connection preferences] － [Bluetooth] － [Wireless playback quality] － [SBC-Connection pref.].
+A Bluetooth connection is terminated automatically in the following cases:
+The battery of the player has run out.
+The player is turned off.
+When there is an active Bluetooth connection, the following sound adjustments are disabled.
+DC Phase Linearizer
+Vinyl Processor
+In certain countries and regions, [Dynamic Normalizer] is disabled when there is an active Bluetooth connection.
+The contents of the Help Guide may be subject to change without notice due to updates to the product's specifications.
+Go to Page Top
+Related Topic
+Connecting the player to a paired Bluetooth device
+Configuring the Bluetooth function
+Notes on the Bluetooth function

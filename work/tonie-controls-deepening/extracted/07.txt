@@ -1,0 +1,66 @@
+Tonieplay - Troubleshooting Tips – tonies® Support (https://support.tonies.com/hc/en-gb/articles/29255022702354-Tonieplay-Troubleshooting-Tips)
+citeturn778search2 [wordlim: 200] Crawled: last week; Let's take a look at some of the most common Tonieplay troubleshooting tips, to get your adventure off to a great start! ... If you experience further issues, reach out to our Customer Happiness team and we’ll be able to support you further.
+
+# Tonieplay - Troubleshooting Tips
+
+Image
+
+Let's take a look at some of the most common Tonieplay troubleshooting tips, to get your adventure off to a great start!
+
+Tonieplay game taking too long to download
+
+When you place a Tonieplay game on your Toniebox 2 for the very first time, it needs to download the game before the fun can begin. This usually takes up to 30 minutes, but depending on the size of the game and your Wi-Fi speed this could take an hour or more. 
+
+Note that our longer games, like Quizzles, will take the longest time to download.
+
+While you wait, keep an eye on the green progress bar on the Dynamic Light Ring – that’s your Toniebox 2 showing you how far along the download is. As soon as it’s complete, your game will start automatically. Next time you play, it will begin right away, even without Wi-Fi – just like a regular Tonie.
+
+If the download doesn’t seem to be moving along and your Toniebox 2 feels a little “stuck,” simply remove the game disc, restart the Toniebox 2, and try again.
+
+Tonieplay disc not detected
+
+The Tonieplay Discs are really strong and will likely be detected as you’re placing them on top of your Toniebox 2.
+
+If you do have issues, please check that the disc is pressed down onto the top of the Toniebox 2 correctly.
+
+If you continue to experience issues, take the Tonieplay disc off, reset your Toniebox 2 and try again.
+
+If you experience further issues, reach out to our Customer Happiness team and we’ll be able to support you further.
+
+The Light Ring is stuck flashing white
+
+If your Toniebox 2 Light Ring keeps flashing white during a play session, all you need to do is remove both the Tonieplay disc and Tonieplay Controller from the Toniebox 2, wait a moment before replacing both and then start again!
+
+Tonieplay Not Recognised
+
+If your Tonieplay disc is not recognised by the Toniebox 2, try the following steps:
+
+Wait a moment – Sometimes the Toniebox 2 just needs a little time to catch up and download any necessary updates or content.
+
+Restart the Toniebox 2 – If the disc is still not recognised, restart the device and try again.
+
+Factory reset – If the issue persists, perform a full factory reset on your Toniebox 2 and then try using the Tonieplay disc again.
+
+Tonieplay game card not recognised
+
+We’re sorry to hear you’re having trouble with your Tonieplay game cards! Don’t worry - we’ll help you get back on track.
+
+Sometimes a simple restart solves the issue:
+
+  * Make sure your Toniebox 2 is on and unplugged.
+  * Squeeze both ears until the Toniebox enters the sleep light with timer setting.
+  * Keep squeezing until it restarts (this can take 20-60 seconds).
+  * You’ll know it worked when you see the Welcome Lights show.
+
+Once your Toniebox 2 has restarted, wait a minute before trying your Tonieplay game again.
+
+If the issue continues, try a factory reset:
+
+  * Turn on your Toniebox 2 and wait for the light ring to turn green.
+  * Ensure it is not plugged in to power.
+  * Turn it upside down and press both ears for 5 seconds until you hear a sound signal.
+  * Turn it back upright - the light ring will glow white.
+  * Press and hold the small ear to start the reset.
+  * Follow the prompts until the Toniebox 2 confirms the reset is complete.
+
+If you have any other issues with , send us a message and we will be there to help!

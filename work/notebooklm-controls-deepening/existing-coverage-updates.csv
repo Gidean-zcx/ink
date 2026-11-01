@@ -1,0 +1,19 @@
+flow_id,field,before,after,reason
+F-M041-01,evidence_ids,E-NBL-01,E-NBL-01;E-NBCD-02;E-NBCD-03,本轮只读官方补证；D2/未实操/未视觉观察状态不变；旧batch与master由root合并
+F-M041-01,known_branches,Deep Research 可后台执行后选入报告/来源；取消会丢弃未导入结果，超限可能只导入部分。该深研入口另有 18+ 条件。,保留Fast/Deep Research任务；本地资料Add sources导入。超过500000词、上传200MB或PDF复制保护可失败；YouTube取字幕、音频取转写；重复去重未说明。,本轮只读官方补证；D2/未实操/未视觉观察状态不变；旧batch与master由root合并
+F-M041-01,gaps,重复/超限实际反馈、资料准确性,重复导入识别、错误页与保留部分数据、全格式保真未知,本轮只读官方补证；D2/未实操/未视觉观察状态不变；旧batch与master由root合并
+F-M041-02,evidence_ids,E-NBL-01,E-NBL-01;E-NBCD-02;E-NBCD-04,本轮只读官方补证；D2/未实操/未视觉观察状态不变；旧batch与master由root合并
+F-M041-02,known_branches,失去 Drive 查看权限时来源不可用且仍占额度；网页导入不包含嵌入媒体。不能将全部来源理解为永久本地副本。,Drive打开来源可手动sync，帮助亦述自动更新；失权/被删来源仍占额度但不参与新问答/产物，可请求访问或移除。取消勾选只确证范围选择，不等同删除；原Drive文件不受编辑/删除。,本轮只读官方补证；D2/未实操/未视觉观察状态不变；旧batch与master由root合并
+F-M041-02,gaps,原文变更后旧产物是否更新,手动删除入口/确认/恢复、重复合并、旧产物是否随来源更新未知；创建帮助关于unselect/remove措辞需实核,本轮只读官方补证；D2/未实操/未视觉观察状态不变；旧batch与master由root合并
+F-M041-04,evidence_ids,E-NBL-02,E-NBL-02;E-NBCD-05,本轮只读官方补证；D2/未实操/未视觉观察状态不变；旧batch与master由root合并
+F-M041-04,known_branches,结束看结果并重练；卡片可只练错项、打乱、删卡或下载 CSV，部分书源限制下载。题目生成和掌握评价是两种数据。,前后箭头导航、Hint/Explain、自评和结果重练；卡片可重启、打乱、删卡和CSV下载。自评记录不证明掌握；未见题干/答案文本编辑或评分撤销步骤。,本轮只读官方补证；D2/未实操/未视觉观察状态不变；旧batch与master由root合并
+F-M041-04,gaps,逐题编辑、评分撤销、自动复习规则,逐题文本校订、评分撤销、删卡确认/恢复、自动间隔复习规则未知,本轮只读官方补证；D2/未实操/未视觉观察状态不变；旧batch与master由root合并
+F-M041-05,evidence_ids,E-NBL-04;E-NBL-07,E-NBL-04;E-NBL-07;E-NBCD-05;E-NBCD-12,本轮只读官方补证；D2/未实操/未视觉观察状态不变；旧batch与master由root合并
+F-M041-05,known_branches,2026-03-20 发布说明明确跨会话保存进度、结果页重练及删除单卡/单题；并非本项目测试。不能套用到早期上线时的行为。,当前帮助也述离开后继续进度；2026-03-20旧证据保留单卡/单题删除与重练历史范围，本轮该发布页HTTP429未复取。Android同步延迟建议退出重开，不保证冲突合并。,本轮只读官方补证；D2/未实操/未视觉观察状态不变；旧batch与master由root合并
+F-M041-05,gaps,多端冲突、删题恢复、精确断点,多端冲突优先级、删题恢复、精确断点及重练是否重置历史成绩未知,本轮只读官方补证；D2/未实操/未视觉观察状态不变；旧batch与master由root合并
+F-M041-06,evidence_ids,E-NBL-05,E-NBL-05;E-NBCD-12,本轮只读官方补证；D2/未实操/未视觉观察状态不变；旧batch与master由root合并
+F-M041-06,known_branches,回答后继续原音频。互动目前文档限英语；生成音频不是原书逐字朗读，分享链接也不让别人直接加入互动。,原英语互动流程保留；Android可后台听，Studio音频Download或左滑下载后在首页Downloaded找回离线音频；离线缓存不能当作设备文件导出。,本轮只读官方补证；D2/未实操/未视觉观察状态不变；旧batch与master由root合并
+F-M041-06,gaps,中文互动、断网、真实恢复位置,中文互动、精确续播位置、缓存清理后的恢复及离线互动未知,本轮只读官方补证；D2/未实操/未视觉观察状态不变；旧batch与master由root合并
+F-M041-07,evidence_ids,E-NBL-06,E-NBL-06;E-NBCD-06;E-NBCD-03,本轮只读官方补证；D2/未实操/未视觉观察状态不变；旧batch与master由root合并
+F-M041-07,known_branches,选中笔记会参与后续问答/生成；回答笔记移除引用后可编辑。导出 Docs 是新副本，不回同步，分享权限不继承；移动端目前不支持笔记编辑。,新笔记属于Sources，勾选后参加问答/生成；旧Studio笔记Convert或批量Convert；笔记More导出新Docs，修改不回同步且权限不继承。FAQ明确已删除笔记不能恢复；移动端只读/选取/问答。,本轮只读官方补证；D2/未实操/未视觉观察状态不变；旧batch与master由root合并
+F-M041-07,gaps,移除引用后可追溯性、删除恢复,移除引用后可追溯性、删除确认、笔记变更是否更新旧产物未知,本轮只读官方补证；D2/未实操/未视觉观察状态不变；旧batch与master由root合并

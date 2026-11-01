@@ -1,0 +1,19 @@
+{
+  "status": "PASS",
+  "mode": "pre_merge_read_only",
+  "new_e": 14,
+  "new_f": 3,
+  "old_f": 10,
+  "old_f_fields": 51,
+  "old_e_additional_captures": 4,
+  "inventory_rows": 578,
+  "actually_viewed_static_pages": 68,
+  "new_archived_pages": 13,
+  "formal_files": 19,
+  "case_sha256": "34d716ee72e2308a4fbc17ba8a36b562f232f670119ef433d6fa54187d0037fe",
+  "manifest_sha256": "2efe8a7c54ce14a5963e893d2b9a1ed19e176f781ddbf1e43e157bc86beb56a7",
+  "state_changed_by_check": false,
+  "command": "python3 work/viwoods-controls-deepening/check.py",
+  "exit_code": 0,
+  "diff_check_exit_code": 0
+}

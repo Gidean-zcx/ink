@@ -1,0 +1,186 @@
+<!DOCTYPE html><html lang=en><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"><link rel=icon href=https://shared.ydstatic.com/images/favicon.ico><meta name=description content=""><meta name=keywords content=有道词典笔、有道翻译王、有道翻译蛋、有道云笔、有道打印机、词典笔、翻译机、翻译蛋、云笔、打印机、有道词典><title>有道词典笔</title><script src=https://cdn.bootcss.com/vConsole/3.3.0/vconsole.min.js></script><script>(function (doc, win) {
+      var docEl = doc.documentElement,
+              resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
+              recalc = function () {
+                var clientWidth = docEl.clientWidth > 750 ? 749 : docEl.clientWidth ;
+                if (!clientWidth) return;
+                docEl.style.fontSize = clientWidth / 750 * 100 + 'px';
+              };
+      if (!doc.addEventListener) return;
+      doc.addEventListener('DOMContentLoaded', recalc, false);
+      win.addEventListener(resizeEvt, recalc, false);
+    })(document, window);</script><script src=https://shared.ydstatic.com/js/ydk/ydk-1.5.0-min.js></script><style>.skeleton-block[data-v-14cf3c32] {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  padding: 16px;
+  background: #f7f7f7;
+  position: relative;
+}
+.skeleton-block img[data-v-14cf3c32] {
+  display: block;
+  width: 100%;
+  margin-bottom: 16px;
+}
+.skeleton-block .skeleton-item[data-v-14cf3c32] {
+  width: 100%;
+  margin-bottom: 16px;
+}
+.skeleton-block .loader[data-v-14cf3c32] {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -35px;
+  margin-left: -35px;
+  width: 70px;
+  height: 70px;
+  display: -webkit-flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+.skeleton-block .loader .loader-30[data-v-14cf3c32] {
+  height: 100%;
+}
+.skeleton-block .loader .loader-30 div[data-v-14cf3c32]:nth-child(1) {
+  width: 50px;
+  height: 50px;
+  border: 10px solid #67c23a;
+  background: transparent;
+  border-radius: 50%;
+  opacity: 0.3;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.skeleton-block .loader .loader-30 div[data-v-14cf3c32]:nth-child(2) {
+  width: 10px;
+  height: 10px;
+  background: #67c23a;
+  position: absolute;
+  border-radius: 50%;
+  left: 35px;
+  -webkit-transform-origin: 0 35px;
+  -webkit-animation: loader30-data-v-14cf3c32 1s infinite linear;
+}
+@-webkit-keyframes loader30-data-v-14cf3c32 {
+0% {
+    -webkit-transform: rotate(0deg);
+}
+100% {
+    -webkit-transform: rotate(360deg);
+}
+}
+
+
+/*# sourceMappingURL=skeleton-index_dict.css.map*/</style><link href=css/chunk-3734dbd6.7d24e1c6.css rel=prefetch><link href=css/chunk-499cb83a.f5d48bf2.css rel=prefetch><link href=css/chunk-5ecff3f7.b8ac1aa6.css rel=prefetch><link href=css/chunk-6b47e0f2.23c33beb.css rel=prefetch><link href=css/chunk-765953b6.53927948.css rel=prefetch><link href=css/chunk-c0cee0c4.33c586a3.css rel=prefetch><link href=css/chunk-f5a293f4.b696cb4c.css rel=prefetch><link href=js/chunk-1e6087cc.fd6584f6.js rel=prefetch><link href=js/chunk-2d0bddc9.dd0dd66b.js rel=prefetch><link href=js/chunk-3734dbd6.bc9f5bab.js rel=prefetch><link href=js/chunk-499cb83a.aa2bedfb.js rel=prefetch><link href=js/chunk-5ecff3f7.3b6e38a0.js rel=prefetch><link href=js/chunk-6b47e0f2.2e744c90.js rel=prefetch><link href=js/chunk-765953b6.d88b018a.js rel=prefetch><link href=js/chunk-c0cee0c4.3f896728.js rel=prefetch><link href=js/chunk-f5a293f4.1ba83d13.js rel=prefetch><link href=css/chunk-vendors.6dc57fe0.css rel=preload as=style><link href=css/index_dict.8594ed4c.css rel=preload as=style><link href=js/chunk-vendors.c77f3e81.js rel=preload as=script><link href=js/index_dict.693522d9.js rel=preload as=script><link href=css/chunk-vendors.6dc57fe0.css rel=stylesheet><link href=css/index_dict.8594ed4c.css rel=stylesheet></head><body><script>// 在 ydk.config 执行前，所有其它的 ydk api 都不会真正被调用
+  // 这里是一个简单的配置，其它 API list 请参考详细文档
+  ydk.config({
+    debug: false,
+    jsApiList: [
+      'stopPageLoading',
+      'toast',
+      'request',
+      'setMenus',
+      'onMenuClick',
+      'checkJsApi',
+      'share',
+      'scanLogin',
+      'weekWords',
+      'wordBooks',
+      'realTimeDisplay',
+      'wordBookRemind',
+      'getDeviceSN',
+      'linkStatusChange',
+      'getWeekNotice',
+      'setWeekNotice',
+      'getLinkStatus',
+      'setPageConfig',
+      'showError',
+      'shareSnapshot',
+      'pageLoaded',
+      'isLogin',
+      'onUnbind'
+    ]
+  });
+  window.ydk.extend({
+    scanLogin: function(params) {
+      ydk._invoke('scanLogin', params, params)
+    },
+    weekWords: function(params) {
+      ydk._invoke('weekWords', params, params)
+    },
+    wordBooks: function(params) {
+      ydk._invoke('wordBooks', params, params)
+    },
+    wordBookRemind: function(params) {
+      ydk._invoke('wordBookRemind', params, params)
+    },
+    getDeviceSN: function(params) {
+      ydk._invoke('getDeviceSN', params, params)
+    },
+    realTimeDisplay: function(params) {
+      ydk._invoke('realTimeDisplay', params, params)
+    },
+    getWeekNotice: function(params) {
+      ydk._invoke('getWeekNotice', params, params)
+    },
+    setWeekNotice: function(params) {
+      ydk._invoke('setWeekNotice', params, params)
+    },
+    setMenus: function (params) {
+      ydk._invoke('setMenus', params, params);
+    },
+    stopPageLoading: function (params) {
+      ydk._invoke('stopPageLoading', params, params);
+    },
+    onMenuClick: function (params) {
+      ydk._on("onMenuClick", params, params);
+    },
+    request: function(params) {
+      ydk._invoke('request', params, params)
+    },
+    setPageConfig: function(params) {
+      ydk._invoke('setPageConfig', params, params)
+    },
+    showError: function(params) {
+      ydk._invoke('showError', params, params)
+    },
+    shareSnapshot: function(params) {
+      ydk._invoke('shareSnapshot', params, params)
+    },
+    pageLoaded: function(params) {
+      ydk._invoke('pageLoaded', params, params)
+    },
+    linkStatusChange: function(params) {
+      ydk._on('linkStatusChange', {}, params)
+    },
+    getLinkStatus: function(params) {
+      ydk._invoke('getLinkStatus', params, params)
+    },
+    onUnbind: function(params) {
+      ydk._invoke('onUnbind', params, params)
+    },
+  });
+  window.ydk.setMenus({
+    menus: [
+      {
+        title: '使用说明',
+        icon: 'https://shared.ydstatic.com/market/souti/dict_pen_sync/dict/1.4.1/dist/ic_nav_applet_more_info_light.png',
+        darkIcon: 'https://shared.ydstatic.com/market/souti/dict_pen_sync/dict/1.4.1/dist/ic_nav_applet_more_info_dark.png',
+      }
+    ]
+  })</script><div id=app><div data-server-rendered=true class=skeleton-wrapper data-v-14cf3c32><section class=skeleton-block data-v-14cf3c32><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2aWV3Qm94PSIwIDAgMTA4MCAyNjEiPjxkZWZzPjxwYXRoIGlkPSJiIiBkPSJNMCAwaDEwODB2MjYwSDB6Ii8+PGZpbHRlciBpZD0iYSIgd2lkdGg9IjIwMCUiIGhlaWdodD0iMjAwJSIgeD0iLTUwJSIgeT0iLTUwJSIgZmlsdGVyVW5pdHM9Im9iamVjdEJvdW5kaW5nQm94Ij48ZmVPZmZzZXQgZHk9Ii0xIiBpbj0iU291cmNlQWxwaGEiIHJlc3VsdD0ic2hhZG93T2Zmc2V0T3V0ZXIxIi8+PGZlQ29sb3JNYXRyaXggaW49InNoYWRvd09mZnNldE91dGVyMSIgdmFsdWVzPSIwIDAgMCAwIDAuOTMzMzMzMzMzIDAgMCAwIDAgMC45MzMzMzMzMzMgMCAwIDAgMCAwLjkzMzMzMzMzMyAwIDAgMCAxIDAiLz48L2ZpbHRlcj48L2RlZnM+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgwIDEpIj48dXNlIGZpbGw9IiMwMDAiIGZpbHRlcj0idXJsKCNhKSIgeGxpbms6aHJlZj0iI2IiLz48dXNlIGZpbGw9IiNGRkYiIHhsaW5rOmhyZWY9IiNiIi8+PHBhdGggZmlsbD0iI0Y2RjZGNiIgZD0iTTIzMCA0NGg1MzN2NDZIMjMweiIvPjxyZWN0IHdpZHRoPSIxNzIiIGhlaWdodD0iMTcyIiB4PSIzMCIgeT0iNDQiIGZpbGw9IiNGNkY2RjYiIHJ4PSI0Ii8+PHBhdGggZmlsbD0iI0Y2RjZGNiIgZD0iTTIzMCAxMThoMzY5djMwSDIzMHpNMjMwIDE4MmgzMjN2MzBIMjMwek04MTIgMTE1aDIzOHYzOUg4MTJ6TTgwOCAxODRoMjQydjMwSDgwOHpNOTE3IDQ4aDEzM3YzN0g5MTd6Ii8+PC9nPjwvc3ZnPg==" data-v-14cf3c32><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2aWV3Qm94PSIwIDAgMTA4MCAyNjEiPjxkZWZzPjxwYXRoIGlkPSJiIiBkPSJNMCAwaDEwODB2MjYwSDB6Ii8+PGZpbHRlciBpZD0iYSIgd2lkdGg9IjIwMCUiIGhlaWdodD0iMjAwJSIgeD0iLTUwJSIgeT0iLTUwJSIgZmlsdGVyVW5pdHM9Im9iamVjdEJvdW5kaW5nQm94Ij48ZmVPZmZzZXQgZHk9Ii0xIiBpbj0iU291cmNlQWxwaGEiIHJlc3VsdD0ic2hhZG93T2Zmc2V0T3V0ZXIxIi8+PGZlQ29sb3JNYXRyaXggaW49InNoYWRvd09mZnNldE91dGVyMSIgdmFsdWVzPSIwIDAgMCAwIDAuOTMzMzMzMzMzIDAgMCAwIDAgMC45MzMzMzMzMzMgMCAwIDAgMCAwLjkzMzMzMzMzMyAwIDAgMCAxIDAiLz48L2ZpbHRlcj48L2RlZnM+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgwIDEpIj48dXNlIGZpbGw9IiMwMDAiIGZpbHRlcj0idXJsKCNhKSIgeGxpbms6aHJlZj0iI2IiLz48dXNlIGZpbGw9IiNGRkYiIHhsaW5rOmhyZWY9IiNiIi8+PHBhdGggZmlsbD0iI0Y2RjZGNiIgZD0iTTIzMCA0NGg1MzN2NDZIMjMweiIvPjxyZWN0IHdpZHRoPSIxNzIiIGhlaWdodD0iMTcyIiB4PSIzMCIgeT0iNDQiIGZpbGw9IiNGNkY2RjYiIHJ4PSI0Ii8+PHBhdGggZmlsbD0iI0Y2RjZGNiIgZD0iTTIzMCAxMThoMzY5djMwSDIzMHpNMjMwIDE4MmgzMjN2MzBIMjMwek04MTIgMTE1aDIzOHYzOUg4MTJ6TTgwOCAxODRoMjQydjMwSDgwOHpNOTE3IDQ4aDEzM3YzN0g5MTd6Ii8+PC9nPjwvc3ZnPg==" data-v-14cf3c32><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2aWV3Qm94PSIwIDAgMTA4MCAyNjEiPjxkZWZzPjxwYXRoIGlkPSJiIiBkPSJNMCAwaDEwODB2MjYwSDB6Ii8+PGZpbHRlciBpZD0iYSIgd2lkdGg9IjIwMCUiIGhlaWdodD0iMjAwJSIgeD0iLTUwJSIgeT0iLTUwJSIgZmlsdGVyVW5pdHM9Im9iamVjdEJvdW5kaW5nQm94Ij48ZmVPZmZzZXQgZHk9Ii0xIiBpbj0iU291cmNlQWxwaGEiIHJlc3VsdD0ic2hhZG93T2Zmc2V0T3V0ZXIxIi8+PGZlQ29sb3JNYXRyaXggaW49InNoYWRvd09mZnNldE91dGVyMSIgdmFsdWVzPSIwIDAgMCAwIDAuOTMzMzMzMzMzIDAgMCAwIDAgMC45MzMzMzMzMzMgMCAwIDAgMCAwLjkzMzMzMzMzMyAwIDAgMCAxIDAiLz48L2ZpbHRlcj48L2RlZnM+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgwIDEpIj48dXNlIGZpbGw9IiMwMDAiIGZpbHRlcj0idXJsKCNhKSIgeGxpbms6aHJlZj0iI2IiLz48dXNlIGZpbGw9IiNGRkYiIHhsaW5rOmhyZWY9IiNiIi8+PHBhdGggZmlsbD0iI0Y2RjZGNiIgZD0iTTIzMCA0NGg1MzN2NDZIMjMweiIvPjxyZWN0IHdpZHRoPSIxNzIiIGhlaWdodD0iMTcyIiB4PSIzMCIgeT0iNDQiIGZpbGw9IiNGNkY2RjYiIHJ4PSI0Ii8+PHBhdGggZmlsbD0iI0Y2RjZGNiIgZD0iTTIzMCAxMThoMzY5djMwSDIzMHpNMjMwIDE4MmgzMjN2MzBIMjMwek04MTIgMTE1aDIzOHYzOUg4MTJ6TTgwOCAxODRoMjQydjMwSDgwOHpNOTE3IDQ4aDEzM3YzN0g5MTd6Ii8+PC9nPjwvc3ZnPg==" data-v-14cf3c32><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2aWV3Qm94PSIwIDAgMTA4MCAyNjEiPjxkZWZzPjxwYXRoIGlkPSJiIiBkPSJNMCAwaDEwODB2MjYwSDB6Ii8+PGZpbHRlciBpZD0iYSIgd2lkdGg9IjIwMCUiIGhlaWdodD0iMjAwJSIgeD0iLTUwJSIgeT0iLTUwJSIgZmlsdGVyVW5pdHM9Im9iamVjdEJvdW5kaW5nQm94Ij48ZmVPZmZzZXQgZHk9Ii0xIiBpbj0iU291cmNlQWxwaGEiIHJlc3VsdD0ic2hhZG93T2Zmc2V0T3V0ZXIxIi8+PGZlQ29sb3JNYXRyaXggaW49InNoYWRvd09mZnNldE91dGVyMSIgdmFsdWVzPSIwIDAgMCAwIDAuOTMzMzMzMzMzIDAgMCAwIDAgMC45MzMzMzMzMzMgMCAwIDAgMCAwLjkzMzMzMzMzMyAwIDAgMCAxIDAiLz48L2ZpbHRlcj48L2RlZnM+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgwIDEpIj48dXNlIGZpbGw9IiMwMDAiIGZpbHRlcj0idXJsKCNhKSIgeGxpbms6aHJlZj0iI2IiLz48dXNlIGZpbGw9IiNGRkYiIHhsaW5rOmhyZWY9IiNiIi8+PHBhdGggZmlsbD0iI0Y2RjZGNiIgZD0iTTIzMCA0NGg1MzN2NDZIMjMweiIvPjxyZWN0IHdpZHRoPSIxNzIiIGhlaWdodD0iMTcyIiB4PSIzMCIgeT0iNDQiIGZpbGw9IiNGNkY2RjYiIHJ4PSI0Ii8+PHBhdGggZmlsbD0iI0Y2RjZGNiIgZD0iTTIzMCAxMThoMzY5djMwSDIzMHpNMjMwIDE4MmgzMjN2MzBIMjMwek04MTIgMTE1aDIzOHYzOUg4MTJ6TTgwOCAxODRoMjQydjMwSDgwOHpNOTE3IDQ4aDEzM3YzN0g5MTd6Ii8+PC9nPjwvc3ZnPg==" data-v-14cf3c32><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2aWV3Qm94PSIwIDAgMTA4MCAyNjEiPjxkZWZzPjxwYXRoIGlkPSJiIiBkPSJNMCAwaDEwODB2MjYwSDB6Ii8+PGZpbHRlciBpZD0iYSIgd2lkdGg9IjIwMCUiIGhlaWdodD0iMjAwJSIgeD0iLTUwJSIgeT0iLTUwJSIgZmlsdGVyVW5pdHM9Im9iamVjdEJvdW5kaW5nQm94Ij48ZmVPZmZzZXQgZHk9Ii0xIiBpbj0iU291cmNlQWxwaGEiIHJlc3VsdD0ic2hhZG93T2Zmc2V0T3V0ZXIxIi8+PGZlQ29sb3JNYXRyaXggaW49InNoYWRvd09mZnNldE91dGVyMSIgdmFsdWVzPSIwIDAgMCAwIDAuOTMzMzMzMzMzIDAgMCAwIDAgMC45MzMzMzMzMzMgMCAwIDAgMCAwLjkzMzMzMzMzMyAwIDAgMCAxIDAiLz48L2ZpbHRlcj48L2RlZnM+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgwIDEpIj48dXNlIGZpbGw9IiMwMDAiIGZpbHRlcj0idXJsKCNhKSIgeGxpbms6aHJlZj0iI2IiLz48dXNlIGZpbGw9IiNGRkYiIHhsaW5rOmhyZWY9IiNiIi8+PHBhdGggZmlsbD0iI0Y2RjZGNiIgZD0iTTIzMCA0NGg1MzN2NDZIMjMweiIvPjxyZWN0IHdpZHRoPSIxNzIiIGhlaWdodD0iMTcyIiB4PSIzMCIgeT0iNDQiIGZpbGw9IiNGNkY2RjYiIHJ4PSI0Ii8+PHBhdGggZmlsbD0iI0Y2RjZGNiIgZD0iTTIzMCAxMThoMzY5djMwSDIzMHpNMjMwIDE4MmgzMjN2MzBIMjMwek04MTIgMTE1aDIzOHYzOUg4MTJ6TTgwOCAxODRoMjQydjMwSDgwOHpNOTE3IDQ4aDEzM3YzN0g5MTd6Ii8+PC9nPjwvc3ZnPg==" data-v-14cf3c32><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2aWV3Qm94PSIwIDAgMTA4MCAyNjEiPjxkZWZzPjxwYXRoIGlkPSJiIiBkPSJNMCAwaDEwODB2MjYwSDB6Ii8+PGZpbHRlciBpZD0iYSIgd2lkdGg9IjIwMCUiIGhlaWdodD0iMjAwJSIgeD0iLTUwJSIgeT0iLTUwJSIgZmlsdGVyVW5pdHM9Im9iamVjdEJvdW5kaW5nQm94Ij48ZmVPZmZzZXQgZHk9Ii0xIiBpbj0iU291cmNlQWxwaGEiIHJlc3VsdD0ic2hhZG93T2Zmc2V0T3V0ZXIxIi8+PGZlQ29sb3JNYXRyaXggaW49InNoYWRvd09mZnNldE91dGVyMSIgdmFsdWVzPSIwIDAgMCAwIDAuOTMzMzMzMzMzIDAgMCAwIDAgMC45MzMzMzMzMzMgMCAwIDAgMCAwLjkzMzMzMzMzMyAwIDAgMCAxIDAiLz48L2ZpbHRlcj48L2RlZnM+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgwIDEpIj48dXNlIGZpbGw9IiMwMDAiIGZpbHRlcj0idXJsKCNhKSIgeGxpbms6aHJlZj0iI2IiLz48dXNlIGZpbGw9IiNGRkYiIHhsaW5rOmhyZWY9IiNiIi8+PHBhdGggZmlsbD0iI0Y2RjZGNiIgZD0iTTIzMCA0NGg1MzN2NDZIMjMweiIvPjxyZWN0IHdpZHRoPSIxNzIiIGhlaWdodD0iMTcyIiB4PSIzMCIgeT0iNDQiIGZpbGw9IiNGNkY2RjYiIHJ4PSI0Ii8+PHBhdGggZmlsbD0iI0Y2RjZGNiIgZD0iTTIzMCAxMThoMzY5djMwSDIzMHpNMjMwIDE4MmgzMjN2MzBIMjMwek04MTIgMTE1aDIzOHYzOUg4MTJ6TTgwOCAxODRoMjQydjMwSDgwOHpNOTE3IDQ4aDEzM3YzN0g5MTd6Ii8+PC9nPjwvc3ZnPg==" data-v-14cf3c32></section></div></div><script>var _rlog = _rlog || []
+  _rlog.push(['_setAccount', 'dict_app_embedded_wap'])
+  _rlog.push(['_addPost', 'activity', 'pen_linkage'])
+  _rlog.push(["_setAutoPageview" , false])</script><script defer src=https://shared.ydstatic.com/js/rlog/v1.js></script><script src=js/chunk-vendors.c77f3e81.js></script><script src=js/index_dict.693522d9.js></script></body></html>

@@ -1,0 +1,65 @@
+Help center
+How can we help you?
+Basic
+Getting started
+Account & login
+Feeds & sources
+Search
+Folders
+Tags
+Dashboards
+Article view
+Saved & Read later
+Archive
+Web pages
+Spotlights
+Preferences & customization
+Syncing & mobile apps
+Pro
+Global search
+Monitoring feeds
+Web feeds
+Track changes
+Boosted feeds
+Social feeds
+YouTube
+Podcasts
+Newsletter feeds
+Password-protected feeds
+Rules
+Filters
+Bulk actions
+Article translations
+Text-to-speech
+File uploads
+Annotations
+Offline mode
+Magic sorting
+Secure image proxy
+Custom CSS
+Integrations
+Output feeds
+API access
+Intelligence
+Article summaries
+Intelligence reports
+Suggested tags
+Mentions
+Podcast and video enhancements
+Intelligence usage
+Teams
+Getting started
+Team dashboards
+Team folders
+Team filters
+Team channels
+Email digests
+Team tags
+Team spotlights
+Team file uploads
+Highlights, notes & comments
+Activity & collaboration
+Access, limits & plans
+Account & login
+Subscriptions
+Billing & subscriptions

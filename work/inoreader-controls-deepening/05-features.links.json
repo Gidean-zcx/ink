@@ -1,0 +1,774 @@
+[
+  {
+    "href": "/",
+    "text": "inoreader-logo"
+  },
+  {
+    "href": "/signup",
+    "text": "Start 15-Day Trial"
+  },
+  {
+    "href": "/",
+    "text": "Home"
+  },
+  {
+    "href": "/features/",
+    "text": "Features"
+  },
+  {
+    "href": "/enterprise",
+    "text": "Enterprise"
+  },
+  {
+    "href": "/pricing",
+    "text": "Pricing"
+  },
+  {
+    "href": "/blog/",
+    "text": "Blog"
+  },
+  {
+    "href": "/contact",
+    "text": "Contact"
+  },
+  {
+    "href": "/rss-tools",
+    "text": "RSS tools"
+  },
+  {
+    "href": "/rss-feed-validator",
+    "text": "Feed validatorValidate a feed for errors"
+  },
+  {
+    "href": "/podcast-feed-validator",
+    "text": "Podcast validatorGet a podcast listed everywhere"
+  },
+  {
+    "href": "/feed-analytics",
+    "text": "Feed analyticsSee how a feed performs"
+  },
+  {
+    "href": "/rss-feed-finder",
+    "text": "Feed finderFind the feeds of any website"
+  },
+  {
+    "href": "/opml-checker",
+    "text": "OPML checkerCheck and repair an OPML export"
+  },
+  {
+    "href": "/rss-tools",
+    "text": "All RSS tools"
+  },
+  {
+    "href": "/rss-feed-validator",
+    "text": "Open the validator"
+  },
+  {
+    "href": "/podcast-feed-validator",
+    "text": "Open the podcast validator"
+  },
+  {
+    "href": "/feed-analytics",
+    "text": "Open feed analytics"
+  },
+  {
+    "href": "/rss-feed-finder",
+    "text": "Open the finder"
+  },
+  {
+    "href": "/opml-checker",
+    "text": "Open the checker"
+  },
+  {
+    "href": "/rss-tools",
+    "text": "All RSS tools →"
+  },
+  {
+    "href": "https://apps.apple.com/app/apple-store/id892355414?pt=32204000&ct=inoreader_internal&mt=8",
+    "text": ""
+  },
+  {
+    "href": "https://play.google.com/store/apps/details?id=com.innologica.inoreader",
+    "text": ""
+  },
+  {
+    "href": "/cs/features",
+    "text": "Čeština"
+  },
+  {
+    "href": "/features",
+    "text": "English"
+  },
+  {
+    "href": "/es/features",
+    "text": "Español"
+  },
+  {
+    "href": "/fr/features",
+    "text": "Français"
+  },
+  {
+    "href": "/it/features",
+    "text": "Italiano"
+  },
+  {
+    "href": "/hu/features",
+    "text": "Magyar"
+  },
+  {
+    "href": "/nl/features",
+    "text": "Nederlands"
+  },
+  {
+    "href": "/pl/features",
+    "text": "Polski"
+  },
+  {
+    "href": "/sk/features",
+    "text": "Slovenčina"
+  },
+  {
+    "href": "/bg/features",
+    "text": "Български"
+  },
+  {
+    "href": "/uk/features",
+    "text": "Українська"
+  },
+  {
+    "href": "/fa/features",
+    "text": "پارسی"
+  },
+  {
+    "href": "/zh-hans/features",
+    "text": "中文(简体)"
+  },
+  {
+    "href": "/ja/features",
+    "text": "日本語"
+  },
+  {
+    "href": "/login",
+    "text": "Sign in"
+  },
+  {
+    "href": "/signup",
+    "text": "Create account"
+  },
+  {
+    "href": "/cs/features",
+    "text": "Čeština"
+  },
+  {
+    "href": "/features",
+    "text": "English"
+  },
+  {
+    "href": "/es/features",
+    "text": "Español"
+  },
+  {
+    "href": "/fr/features",
+    "text": "Français"
+  },
+  {
+    "href": "/it/features",
+    "text": "Italiano"
+  },
+  {
+    "href": "/hu/features",
+    "text": "Magyar"
+  },
+  {
+    "href": "/nl/features",
+    "text": "Nederlands"
+  },
+  {
+    "href": "/pl/features",
+    "text": "Polski"
+  },
+  {
+    "href": "/sk/features",
+    "text": "Slovenčina"
+  },
+  {
+    "href": "/bg/features",
+    "text": "Български"
+  },
+  {
+    "href": "/uk/features",
+    "text": "Українська"
+  },
+  {
+    "href": "/fa/features",
+    "text": "پارسی"
+  },
+  {
+    "href": "/zh-hans/features",
+    "text": "中文(简体)"
+  },
+  {
+    "href": "/ja/features",
+    "text": "日本語"
+  },
+  {
+    "href": "/features",
+    "text": "Discover"
+  },
+  {
+    "href": "/features/consume",
+    "text": "Consume"
+  },
+  {
+    "href": "/features/distribute",
+    "text": "Distribute"
+  },
+  {
+    "href": "/blog/2020/10/first-steps-with-inoreader-adding-feeds.html",
+    "text": ""
+  },
+  {
+    "href": "/blog/2020/10/first-steps-with-inoreader-adding-feeds.html",
+    "text": "Follow websites and creators"
+  },
+  {
+    "href": "/blog/2020/10/first-steps-with-inoreader-adding-feeds.html",
+    "text": "Read more"
+  },
+  {
+    "href": "/features/monitoring-feeds",
+    "text": ""
+  },
+  {
+    "href": "/features/monitoring-feeds",
+    "text": "Monitoring feeds"
+  },
+  {
+    "href": "/features/monitoring-feeds",
+    "text": "Read more"
+  },
+  {
+    "href": "/blog/2021/02/how-to-implement-social-media-listening-for-your-business.html",
+    "text": ""
+  },
+  {
+    "href": "/blog/2021/02/how-to-implement-social-media-listening-for-your-business.html",
+    "text": "Social listening"
+  },
+  {
+    "href": "/blog/2021/02/how-to-implement-social-media-listening-for-your-business.html",
+    "text": "Read more"
+  },
+  {
+    "href": "/blog/2023/06/360-brand-monitoring-for-your-business.html",
+    "text": "Read more"
+  },
+  {
+    "href": "/features/newsletters",
+    "text": "Read more"
+  },
+  {
+    "href": "/features/search",
+    "text": "Read more"
+  },
+  {
+    "href": "/features/google-news",
+    "text": "Read more"
+  },
+  {
+    "href": "/features/youtube",
+    "text": "Read more"
+  },
+  {
+    "href": "/features/find-feeds",
+    "text": "Read more"
+  },
+  {
+    "href": "/blog/2015/02/save-web-pages-straight-to-inoreader.html",
+    "text": "Read more"
+  },
+  {
+    "href": "/features/web-feeds",
+    "text": "Read more"
+  },
+  {
+    "href": "/blog/2020/08/inoreaders-browser-extension-got-a-big-update-today.html",
+    "text": "Read more"
+  },
+  {
+    "href": "/features/find-feeds",
+    "text": "Find RSS feeds to followFind the sources worth following"
+  },
+  {
+    "href": "/features/google-news",
+    "text": "Google News feedsFollow any topic on Google News"
+  },
+  {
+    "href": "/features/mentions",
+    "text": "MentionsFollow companies, people and places instead of keywords"
+  },
+  {
+    "href": "/features/monitoring-feeds",
+    "text": "Monitoring feedsWatch any keyword, brand or topic across the web"
+  },
+  {
+    "href": "/features/newsletters",
+    "text": "NewslettersRead your newsletters in Inoreader"
+  },
+  {
+    "href": "/features/password-protected-feeds",
+    "text": "Password-protected feedsFollow feeds that need a login"
+  },
+  {
+    "href": "/features/search",
+    "text": "SearchFind any article in your feeds and beyond"
+  },
+  {
+    "href": "/features/web-feeds",
+    "text": "Web feedsFollow any website, even without a feed"
+  },
+  {
+    "href": "/features/youtube",
+    "text": "YouTubeFollow YouTube channels in your RSS reader"
+  },
+  {
+    "href": "/features/annotations",
+    "text": "AnnotationsHighlight and annotate what you read"
+  },
+  {
+    "href": "/features/archive",
+    "text": "Article archiveFind any article your feeds ever published"
+  },
+  {
+    "href": "/features/article-edits",
+    "text": "Article edit historySee what changed after an article was published"
+  },
+  {
+    "href": "/features/boosted-feeds",
+    "text": "Boosted feedsGet your most important feeds every 10 minutes"
+  },
+  {
+    "href": "/features/custom-css",
+    "text": "Custom CSSMake Inoreader look exactly the way you want"
+  },
+  {
+    "href": "/features/dashboards",
+    "text": "DashboardsSee what is new on a single screen"
+  },
+  {
+    "href": "/features/filters",
+    "text": "FiltersRead only the articles you want"
+  },
+  {
+    "href": "/features/folders-and-tags",
+    "text": "Folders and tagsOrganize your feeds and the articles you keep"
+  },
+  {
+    "href": "/features/full-content",
+    "text": "Full contentRead the whole article instead of the snippet"
+  },
+  {
+    "href": "/features/intelligence",
+    "text": "Inoreader IntelligenceSummarize and analyze the news you follow with AI"
+  },
+  {
+    "href": "/features/offline-mode",
+    "text": "Offline modeKeep reading without a connection"
+  },
+  {
+    "href": "/features/podcasts",
+    "text": "PodcastsListen to podcasts in your RSS reader"
+  },
+  {
+    "href": "/features/push-notifications",
+    "text": "Push notificationsGet notified about the articles that cannot wait"
+  },
+  {
+    "href": "/features/read-later",
+    "text": "Read laterSave articles and read them when you have time"
+  },
+  {
+    "href": "/features/rules",
+    "text": "RulesAutomate what happens to every new article"
+  },
+  {
+    "href": "/features/secure-image-proxy",
+    "text": "Secure image proxyKeep the images in articles from tracking you"
+  },
+  {
+    "href": "/features/spotlights",
+    "text": "SpotlightsMake the names you care about stand out"
+  },
+  {
+    "href": "/features/text-to-speech",
+    "text": "Text-to-speechListen to any article"
+  },
+  {
+    "href": "/features/translations",
+    "text": "TranslationsRead any feed in your language"
+  },
+  {
+    "href": "/features/api",
+    "text": "APIConnect your own apps and scripts to Inoreader"
+  },
+  {
+    "href": "/features/email-digests",
+    "text": "Email digestsSend the articles that matter to anyone by email"
+  },
+  {
+    "href": "/features/integrations",
+    "text": "IntegrationsSend your articles to the tools you work in"
+  },
+  {
+    "href": "/features/outgoing-feeds",
+    "text": "Output feeds and HTML clipsPublish the articles you collect as a feed or on your site"
+  },
+  {
+    "href": "/features/save-to-services",
+    "text": "Save to other servicesSave any article to your notes app, bookmarks or cloud drive"
+  },
+  {
+    "href": "/features/teams",
+    "text": "TeamsShare one set of sources with your whole team"
+  },
+  {
+    "href": "/features",
+    "text": "Discover"
+  },
+  {
+    "href": "/features/consume",
+    "text": "Consume"
+  },
+  {
+    "href": "/features/distribute",
+    "text": "Distribute"
+  },
+  {
+    "href": "/signup",
+    "text": "Create account"
+  },
+  {
+    "href": "/signup",
+    "text": "Create account"
+  },
+  {
+    "href": "/features",
+    "text": "Features"
+  },
+  {
+    "href": "/pricing",
+    "text": "Pricing"
+  },
+  {
+    "href": "/enterprise",
+    "text": "Enterprise"
+  },
+  {
+    "href": "/apps",
+    "text": "Mobile apps"
+  },
+  {
+    "href": "/rss-reader-extension",
+    "text": "Browser extension"
+  },
+  {
+    "href": "/alternatives",
+    "text": "Inoreader alternatives"
+  },
+  {
+    "href": "/rss-tools",
+    "text": "All tools"
+  },
+  {
+    "href": "/rss-feed-finder",
+    "text": "Feed finder"
+  },
+  {
+    "href": "/feed-analytics",
+    "text": "Feed analytics"
+  },
+  {
+    "href": "/rss-feeds",
+    "text": "Top RSS feeds"
+  },
+  {
+    "href": "/rss-feed-validator",
+    "text": "Feed validator"
+  },
+  {
+    "href": "/podcast-feed-validator",
+    "text": "Podcast validator"
+  },
+  {
+    "href": "/rss-feed-viewer",
+    "text": "Feed viewer"
+  },
+  {
+    "href": "/opml-checker",
+    "text": "OPML checker"
+  },
+  {
+    "href": "/about-us",
+    "text": "About us"
+  },
+  {
+    "href": "/blog/",
+    "text": "Blog"
+  },
+  {
+    "href": "/help",
+    "text": "Help center"
+  },
+  {
+    "href": "/developers",
+    "text": "Developer portal"
+  },
+  {
+    "href": "/contact",
+    "text": "Contact us"
+  },
+  {
+    "href": "/brand-portal",
+    "text": "Brand portal"
+  },
+  {
+    "href": "https://status.inoreader.com",
+    "text": "Service status"
+  },
+  {
+    "href": "/tos",
+    "text": "Terms of Service"
+  },
+  {
+    "href": "/privacy_policy",
+    "text": "Privacy Policy"
+  },
+  {
+    "href": "/security_commitment",
+    "text": "Security commitment"
+  },
+  {
+    "href": "https://apps.apple.com/app/apple-store/id892355414?pt=32204000&ct=inoreader_internal&mt=8",
+    "text": ""
+  },
+  {
+    "href": "https://play.google.com/store/apps/details?id=com.innologica.inoreader",
+    "text": ""
+  },
+  {
+    "href": "/cs/features",
+    "text": "Čeština"
+  },
+  {
+    "href": "/features",
+    "text": "English"
+  },
+  {
+    "href": "/es/features",
+    "text": "Español"
+  },
+  {
+    "href": "/fr/features",
+    "text": "Français"
+  },
+  {
+    "href": "/it/features",
+    "text": "Italiano"
+  },
+  {
+    "href": "/hu/features",
+    "text": "Magyar"
+  },
+  {
+    "href": "/nl/features",
+    "text": "Nederlands"
+  },
+  {
+    "href": "/pl/features",
+    "text": "Polski"
+  },
+  {
+    "href": "/sk/features",
+    "text": "Slovenčina"
+  },
+  {
+    "href": "/bg/features",
+    "text": "Български"
+  },
+  {
+    "href": "/uk/features",
+    "text": "Українська"
+  },
+  {
+    "href": "/fa/features",
+    "text": "پارسی"
+  },
+  {
+    "href": "/zh-hans/features",
+    "text": "中文(简体)"
+  },
+  {
+    "href": "/ja/features",
+    "text": "日本語"
+  },
+  {
+    "href": "https://innologica.com/",
+    "text": "© 2026 Innologica Ltd"
+  },
+  {
+    "href": "/cs/features",
+    "text": "Čeština"
+  },
+  {
+    "href": "/features",
+    "text": "English"
+  },
+  {
+    "href": "/es/features",
+    "text": "Español"
+  },
+  {
+    "href": "/fr/features",
+    "text": "Français"
+  },
+  {
+    "href": "/it/features",
+    "text": "Italiano"
+  },
+  {
+    "href": "/hu/features",
+    "text": "Magyar"
+  },
+  {
+    "href": "/nl/features",
+    "text": "Nederlands"
+  },
+  {
+    "href": "/pl/features",
+    "text": "Polski"
+  },
+  {
+    "href": "/sk/features",
+    "text": "Slovenčina"
+  },
+  {
+    "href": "/bg/features",
+    "text": "Български"
+  },
+  {
+    "href": "/uk/features",
+    "text": "Українська"
+  },
+  {
+    "href": "/fa/features",
+    "text": "پارسی"
+  },
+  {
+    "href": "/zh-hans/features",
+    "text": "中文(简体)"
+  },
+  {
+    "href": "/ja/features",
+    "text": "日本語"
+  },
+  {
+    "href": "https://www.inoreader.com/blog/feed",
+    "text": ""
+  },
+  {
+    "href": "https://www.youtube.com/@Inoreader",
+    "text": ""
+  },
+  {
+    "href": "https://www.facebook.com/Inoreader/",
+    "text": ""
+  },
+  {
+    "href": "https://www.linkedin.com/company/inoreader",
+    "text": ""
+  },
+  {
+    "href": "https://x.com/Inoreader",
+    "text": ""
+  },
+  {
+    "href": "https://mastodon.social/@Inoreader",
+    "text": ""
+  },
+  {
+    "href": "https://bsky.app/profile/inoreader.com",
+    "text": ""
+  },
+  {
+    "href": "/cookie_use",
+    "text": "Access cookie settings"
+  },
+  {
+    "href": "javascript:void(0);",
+    "text": "OK, I agree"
+  },
+  {
+    "href": "javascript:void(0)",
+    "text": "Use a different account"
+  },
+  {
+    "href": "/forgot-password",
+    "text": "Forgot password?"
+  },
+  {
+    "href": "javascript:void(0)",
+    "text": ""
+  },
+  {
+    "href": "javascript:void(0)",
+    "text": ""
+  },
+  {
+    "href": "/sso",
+    "text": ""
+  },
+  {
+    "href": "/signup?sendback=",
+    "text": "Create an account"
+  },
+  {
+    "href": "/signup",
+    "text": "Create account"
+  },
+  {
+    "href": "/signup",
+    "text": "Create one now"
+  },
+  {
+    "href": "javascript:void(0)",
+    "text": ""
+  },
+  {
+    "href": "javascript:void(0)",
+    "text": ""
+  },
+  {
+    "href": "/sso",
+    "text": ""
+  },
+  {
+    "href": "/login?sendback=",
+    "text": "Sign in."
+  },
+  {
+    "href": "/login",
+    "text": "Sign in"
+  },
+  {
+    "href": "/login",
+    "text": "Sign in"
+  },
+  {
+    "href": "/tos",
+    "text": "Inoreader Privacy\n                                Policy"
+  },
+  {
+    "href": "/",
+    "text": "Go to homepage"
+  }
+]

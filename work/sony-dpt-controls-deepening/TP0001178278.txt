@@ -1,0 +1,60 @@
+Press the
+(home) button, and tap [Settings].
+Set the individual items.
+Setting items
+[Wi-Fi]
+Switch the Wi-Fi function On/Off.
+[Wi-Fi Settings]
+[Keep Wi-Fi On During Sleep]
+When [Always enabled] or [Enabled only when plugged in] is selected, the Wi-Fi connection is maintained even when the Digital Paper enters sleep mode, and documents can be transferred and operated from the Digital Paper App.
+[Wi-Fi Frequency Bands]
+Select the frequency of the Wi-Fi network that you want to use with the Digital Paper.
+[Add Network Manually]
+Add a Wi-Fi network.
+[Update Network List]
+Update the [Network List].
+[Network List]
+View the list of Wi-Fi networks.
+Tap the SSID that is currently connected to display the [Link Speed], [Frequency], and other connection information.
+[Bluetooth]
+Switch the Bluetooth function On/Off.
+[Bluetooth Settings]
+[Bluetooth Pairing]
+Enter standby mode for Bluetooth pairing.
+[Keep Bluetooth Connection On During Sleep]
+When [Always enabled] or [Enabled only when plugged in] is selected, the Bluetooth connection is maintained even when the Digital Paper enters sleep mode, and documents can be transferred and operated from the Digital Paper App.
+[Delete Pairing Information for All Bluetooth Devices]
+Delete the paring information of all paired Bluetooth devices.
+[NFC]
+Switch the NFC function On/Off.
+[Start Wi-Fi Access Point]
+Make this device function as a Wi-Fi access point.
+[Wi-Fi Access Point Information]
+Display/edit the SSID and password when this device is used as a Wi-Fi access point.
+[System Settings]
+[Pen Calibration]
+Set the way you hold the pen, and correct any displacement between where the pen touches the screen and where the writing appears.
+[Pen Color]
+Select the pen color combination ([Blue / Red] or [Black / Red]) for handwriting on a document.
+[Limit Editing Annotations]
+Annotations that were made to a document outside of your Digital Paper cannot be edited.
+[Note Template]
+Set whether to select a template each time a new note is created, or to use a specific template by default--without the option to select--whenever a new note is created.
+[Screen Lock]
+[Screen Lock]
+Set a screen lock on the Digital Paper by setting a lock password between 4 to 20 alphanumeric characters and symbols in length.
+[Change Lock Password]
+Change the lock password for the Digital Paper.
+[NFC Card Lock Release Settings]
+Register a FeliCa card, FeliCa-compatible mobile phone, smartphone, etc., which can then be used to disable the screen lock on the Digital Paper.
+[Control Server Settings]
+Settings for linking Digital Paper to a system.
+[Initialize Digital Paper]
+Initialize the system storage, and return all settings to their factory defaults. After initialization is complete, the Digital Paper will automatically turn off.
+[About This Device]
+[Device Details]
+Display the amount of available space in system storage, the [Software Version], [Device ID], [MAC Address], and [Bluetooth Address].
+[End User License Agreement]
+Display the software’s End User License Agreement. Be sure to read this before use.
+[Regulatory Information]
+Display the VCCI mark based on the rules for voluntary control measures and the marks and registration numbers for the radio wave/radio communication industry acts.

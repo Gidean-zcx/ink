@@ -1,0 +1,118 @@
+Chinese Parent Guide: 家长指南: 开始使用可汗学院儿童版 – Khan Academy (https://khankids.zendesk.com/hc/en-us/articles/4457349308059-Chinese-Parent-Guide-%E5%AE%B6%E9%95%BF%E6%8C%87%E5%8D%97-%E5%BC%80%E5%A7%8B%E4%BD%BF%E7%94%A8%E5%8F%AF%E6%B1%97%E5%AD%A6%E9%99%A2%E5%84%BF%E7%AB%A5%E7%89%88)
+citeturn959view7 [wordlim: 200] Crawled: 2 days ago; Content type: text/html; Source: click({"ref_id":"turn958view3","id":4}); Total lines: 116
+L0: 【0†Skip to main content】
+L1: 
+L2: 【1†Submit a request】
+L3: 
+L4: [Input][Input] [Input: Search]
+L5: 
+L6: Articles in this section
+L7:   * 【2†Ukrainian Parent Guide: Довідник для батьків: Початок роботи з Khan Academy Kids】
+L8:   * 【3†Spanish Parent Guide: Guía para Padres: Empezando con Khan Academy Kids】
+L9:   * 【4†Chinese Parent Guide: 家长指南: 开始使用可汗学院儿童版】
+L10:   * 【5†Polish Parent Guide: Poradnik dla Rodziców: Pierwsze Kroki z Khan Academy Kids】
+L11:   * 【6†Brazilian Portuguese Parent Guide: Guia para pais: primeiros passos no Khan Academy Kids】
+L12:   * 【7†Spanish books | Libros en español】
+L13:   * 【8†Korean Parent Guide: 학부모 가이드: Khan Academy Kids 시작하기】
+L14:   * 【9†French Parent Guide: Guide parent: Comment utiliser Khan Academy Kids】
+L15:   * 【10†Armenian Parent Guide: Ուղեցույց ծնողների համար: Սկսիր «Khan Academy Kids»-ի հետ】
+L16:   * 【11†Bulgarian Parent Guide: Ръководство за родители: Запознаване с Khan Academy Kids】
+L17: 【12†See more】
+L18: # Chinese Parent Guide: 家长指南: 开始使用可汗学院儿童版
+L19: 
+L20:   * February 23, 2026 17:23
+L21:   * Updated
+L22: 
+L23: 【13†可汗学院儿童版†learn.khanacademy.org】 是适用于2-8岁儿童的免费的、有趣的教育应用程序。 它包含了数学、阅读、写作、逻辑、社交情感发展和创造性游的内容。 这个应用程序目前只有英文版，它包含了符合国家教育标准的从学前到2年级的数以千计的内容。
+L24: 
+L25: 打开应用程序来找到有趣的游戏，帮助儿童学习字母、数字、形状、颜色和社交技能。 然后会遇到多彩的动物人物，它们会引导儿童走上个性化的学习旅途，鼓励思考、学习和创造力。
+L26: ## 开始使用可汗学院儿童版，请遵循以下步骤：
+L27:   1. 要使用这个应用，家长将需要一个智能手机或平板电脑，可以访问互联网和电子邮件地址。 需要一个电子邮件帐户，从而用户不会因为删除应用程序或切换设备而失去学习进度。 对于访问应用程序内的大多数学习内容而言，接入互联网是必需的，但也有一些部分可以离线查阅。
+L28:   2. 在您的智能手机或平板电脑上下载免费的 可汗学院儿童版。 可汗学院儿童版可以从 【14†Apple†apps.apple.com】, 【15†Google Play†play.google.com】 或 【16†Amazon†www.amazon.com】 应用商店下载。
+L29:   3. 打开您设备上的可汗学院儿童版
+L30:   4. 选择注册
+L31:   5. 输入您的电子邮件地址，然后点击下一步。
+L32:   6. 一封验证邮件将会从“khankids@khanacademy.org”发送到您的电子邮件帐户。
+L33:   7. 打开来自"khankids@khanacademy.org"的电子邮件，然后点击蓝色"验证电子邮件"按钮。
+L34:   8. 返回应用并点击下一步创建一个用户帐户。
+L35:   9. 输入你孩子的名字、年龄和头像后，你就准备好了可以开始使用这个应用程序了！
+L36: 【17†Image: Home.png】
+L37: ## 点击绿色按钮开始学习之路
+L38: 
+L39: 在主屏幕上，点击大的绿色箭头开始个性化学习之路。 和Kodi一起聆听，学习，它是我们的学习指南角色，它总是可以帮忙。 儿童可以点击Kodi来重复每项活动内容的说明。
+L40: 
+L41: #### 学习之路适合你孩子的进度，提供各种不同的课程。 每组课程适合相应的年龄，根据孩子的级别分成5-20分钟的间隔。
+L42: 
+L43: ## 点击主屏幕上的紫色图书图标来打开资料库应用
+L44: 
+L45: 儿童可以访问资料库，从数以千计的儿童的书籍、视频和活动中选择。 通过点击主屏幕左上角的紫色图书图标来找到图书馆。
+L46: 
+L47: 【18†Image: Zendesk_Library.png】
+L48: 
+L49: #### 书籍
+L50: 
+L51: 资料库中包含了根据可汗学院儿童版内的多彩人物来编写的原创故事书。 连同我们杰出的出版伙伴贝尔韦瑟媒体(Bellwether Media)和国家地理提供的非小说类自然主题书籍。 每本书都有 朗读 和 自我阅读两种方式，父母和孩子可以独立或一起阅读。
+L52: #### 视频
+L53: 
+L54: 探索资料库的视频和逻辑部分，伴随着最喜欢的歌曲来唱歌或者跳舞。 滚动浏览经典曲目，如头、肩、膝盖和脚趾，快乐，你知道的，或者小鲨鱼-所有这些都由超级简单歌曲Super Simple Songs提供。 我们还有来自Alo Gives的瑜伽视频，用来促进注意力和运动。 正如Kodi所说的那样，现在是让我们的身体运动运动的时候了！
+L55: 
+L56: #### 创建
+L57: 
+L58: 鼓励在绘画、色彩和讲故事等活动中展示创造性。 点击资料库中的创建选项卡并选择一个背景来装饰。 添加颜色、标签和文字来制作场景，然后录制您的声音来讲您自己的故事。
+L59: 
+L60: #### 字母
+L61: 
+L62: #### 和小象 Ollo 一起学习字母、发音和单词。 打开资料库中的字母选项卡来找到小写字母、大写字母的课程 首字母发音、末字母发音、元音发音和CVC (辅音-元音-辅音)单词
+L63: 
+L64: #### 数学
+L65: 
+L66: #### 准备好来做算术了吗？ 让我们和小鸟Peck一起学习算术吧！ 打开资料库中的数学选项卡来查找关于物体计数、比较数字、分组、添加、减去、方程、词问题等等不同的活动。
+L67: 
+L68: #### 阅读
+L69: #### Reya 红熊猫喜欢阅读. 打开可汗学院儿童版资料库中的阅读选项卡，寻找包含基础技能的课程，如图书的节选， 教学大纲、节奏和对立面等。 继续通过不同年龄层次来学习拼写规则、语句的构成部分(名词、动词和副词)、词汇、语法和句子结构。
+L70: 
+L71: #### 逻辑 +
+L72: 
+L73: #### 访问资料库中的 Sandy 的逻辑+ 选项卡来通过记忆游戏，灵活的思考练习，以及分组、分类和遵循指导等内容来培养批判性思维技能。 对幼儿园和年轻人来说，有一些社会情感活动，来覆盖关于关系、情感、表情表达、模式和感情等部分的内容。
+L74: 
+L75: #### 在资料库中查看进度
+L76: 
+L77: 在资料库中，您可以看到您的孩子已经完成了哪些活动。 彩色检查标记显示出您的孩子在某个主题上的进度。
+L78: 
+L79: 【19†Image: Progress_checkmarks.png】
+L80: 
+L81: 当你的孩子直接从资料库里完成某项活动后，或者当你的孩子完成包含在资料库里的学习之路上活动，检查标记就会出现。 资料馆提供数学、阅读、视频和逻辑+类别的从学前教育到二年级的不同学习水平的内容。
+L82: ## 点击动物图标来玩帽子、虫子和玩具
+L83: 
+L84: 【20†Image: IMG_0236_copy.PNG】
+L85: 
+L86: 点击主屏幕底部的每个角色图标，来访问可汗学院儿童版里的不同人物。 看看他们的房间，玩玩他们的玩具，看看他们的收藏随着孩子在应用中的学习进度逐渐丰富。
+L87: 
+L88:   * 点击小象Ollo图标来玩浴室玩具。
+L89:   * 点击红熊猫Reya图标看看它的虫子收藏
+L90:   * 点击小鸟Peck的图标来装点他的壁橱
+L91:   * 点击小狗Sandy的图标来演奏她的乐器
+L92:   * 点击小熊Kodi图标来尝试选择不同颜色的帽子
+L93: ### 在线和离线使用可汗学院儿童版
+L94: 
+L95: 需要互联网连接，才能访问可汗学院儿童版的所有学习内容。 但我们也有一个 【21†应用程序的特殊部分】 (英文)，叫做Kodi的衣柜，它可以离线使用。 在这里，即使没有互联网连接，年轻学生都可以随时随地使用可汗学院的儿童版内容。
+L96: 
+L97: Was this article helpful?
+L98: 
+L99: [Button: Yes] [Button: No]
+L100: 
+L101: 12 out of 12 found this helpful
+L102: 
+L103: Have more questions? 【1†Submit a request】
+L104: 
+L105: 【22†Return to top】
+L106: 
+L107: ## Comments
+L108: 
+L109: 0 comments
+L110: 
+L111: Article is closed for comments.
+L112: 
+L113: 【23†Khan Academy】
+L114: 
+L115: 【24†Powered by Zendesk†www.zendesk.com】

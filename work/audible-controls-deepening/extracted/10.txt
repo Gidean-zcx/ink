@@ -1,0 +1,125 @@
+Learn about immersion reading (https://help.audible.com/s/article/learn-about-immersion-reading)
+citeturn762view2 [wordlim: 200] Crawled: yesterday; Content type: text/html; Source: click({"ref_id":"turn754view1","id":2}); Total lines: 123
+L0: Loading
+L1: 
+L2: Sorry to interrupt
+L3: 
+L4: Uncaught TypeError: Cannot read properties of null (reading 'style')
+L5: 
+L6: 【0†Refresh】
+L7: 
+L8: Skip to Main Content
+L9: 
+L10: Related topics
+L11: 
+L12: Accessibility Android iOS Kindle Listening Ways to listen
+L13: ## Learn about immersion reading
+L14: 
+L15:   * Oct 12, 2026
+L16:   * Knowledge
+L17: 
+L18: Title
+L19: 
+L20: Learn about immersion reading
+L21: 
+L22: URL Name
+L23: 
+L24: learn-about-immersion-reading
+L25: 
+L26: Answer
+L27: 
+L28: Immersion reading lets you read and listen to a book at the same time. The text highlights as the narrator reads, so you can follow along in the Kindle eBook while listening to the audiobook. This feature is available for titles that support 【1†Read & Listen】.
+L29: 
+L30: Note: Immersion reading uses the professional narrator from your audiobook, not text-to-speech.
+L31: In this article:
+L32: 
+L33:   * 【2†What is immersion reading?】
+L34:   * 【3†What do I need to use immersion reading?】
+L35:   * 【4†Which devices support immersion reading?】
+L36:   * 【5†How do I start immersion reading?】
+L37:   * 【6†How do I customize my reading experience?】
+L38: ## What is immersion reading?
+L39: 
+L40: Immersion reading shows you the Kindle eBook text with words highlighted as the audiobook plays. It helps you follow along and stay focused while listening. You can see the text on your screen and hear the narrator at the same time.
+L41: ## What do I need to use immersion reading?
+L42: 
+L43: To use immersion reading, you need:
+L44: 
+L45:   * Both the 【1†Read & Listen】 supported versions of the audiobook and Kindle eBook for the same title.
+L46:   * An internet connection: the eBook text loads from the internet in the Audible app.
+L47: 
+L48: Note: Some pages are saved so you can still see them without an internet connection.
+L49: ## Which devices support immersion reading?
+L50: 
+L51: The following devices support immersion reading:
+L52: 
+L53:   * Audible Mobile Apps (Android, iOS).
+L54:   * Fire Tablet FOS8 and above.
+L55:   * Audible Apps on iPad and Android Tablets.
+L56:   * Audible App for macOS.
+L57: ## How do I start immersion reading?
+L58: 
+L59:   1. Open an audiobook with a 【1†Read & Listen】 badge in the Audible app.
+L60:   2. While playing a title, use the toggle above the cover image to switch from Listen to Read & Listen.
+L61:   3. Follow along with the highlighted text while you listen.
+L62: ## How do I customize my reading experience?
+L63: 
+L64: You can change the following settings while using immersion reading:
+L65: 
+L66:   * Font style: Choose a font that's easy for you to read.
+L67:   * Text size: Use the slider to make text bigger or smaller.
+L68:   * Theme: Switch between light or dark mode.
+L69:   * Playback speed: Speed up or slow down how fast the narrator reads.
+L70:   * Chapter navigation: Use the menu to jump between chapters.
+L71: 
+L72: Did this answer your question?
+L73: 
+L74: 【7†Image: Thumbs Up】Like
+L75: 【8†Image: Thumbs Down】Dislike
+L76: 
+L77:  Back to top
+L78: 
+L79: 【9†Image: Share link】 Share link
+L80: 
+L81: 【10†Image: Download PDF】 Download PDF
+L82: ## Need more assistance?
+L83: 
+L84: 【11†Contact us†www.audible.com】
+L85: 
+L86: 
+L87: 
+L88: How satisfied were you with our Help Center today?
+L89: 
+L90: 
+L91: 
+L92: Worst
+L93: 
+L94: 1
+L95: 
+L96: 2
+L97: 
+L98: 3
+L99: 
+L100: 4
+L101: 
+L102: 5
+L103: 
+L104: 6
+L105: 
+L106: 7
+L107: 
+L108: Best
+L109: 
+L110: 
+L111: 
+L112: Region
+L113: 
+L114: United States
+L115: 
+L116: Language
+L117: 
+L118: English
+L119: 
+L120: Loading
+L121: 
+L122: Learn about immersion reading 【12†Adobe ID Syncing iFrame†audible.demdex.net】

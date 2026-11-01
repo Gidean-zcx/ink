@@ -1,0 +1,21 @@
+{
+  "order": 16,
+  "entry_id": "INO-basic--preferences-customization--can-i-export-my-subscriptions-and-content",
+  "title": "Can I export my subscriptions and content?",
+  "url": "https://www.inoreader.com/help/basic/preferences-customization/can-i-export-my-subscriptions-and-content",
+  "checked_on": "2026-10-27",
+  "http_status": 200,
+  "final_url": "https://www.inoreader.com/help/basic/preferences-customization/can-i-export-my-subscriptions-and-content",
+  "acquisition": "one_anonymous_normal_GET",
+  "raw_path": "work/research/batch41-inoreader-help/16-INO-basic--preferences-customization--can-i-export-my-subscriptions-and-content.html",
+  "headers_path": "work/research/batch41-inoreader-help/16-INO-basic--preferences-customization--can-i-export-my-subscriptions-and-content.headers.json",
+  "raw_sha256": "80246277b0fe51dd9c8f2d0191cff3bf6414b33d957b383d280f71373e7dfd44",
+  "bytes": 142635,
+  "status": "body_obtained",
+  "body_status": "extracted_not_yet_root_read",
+  "body_path": "work/research/batch41-inoreader-help/16-INO-basic--preferences-customization--can-i-export-my-subscriptions-and-content.body.txt",
+  "body_sha256": "b3dbec7ea57f66547da5f875786de11a3fc79563aaf918de1c77d0c789299ec3",
+  "body_chars": 66,
+  "links": [],
+  "images": []
+}

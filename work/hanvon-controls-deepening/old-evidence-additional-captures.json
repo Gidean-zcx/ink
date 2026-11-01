@@ -1,0 +1,44 @@
+[
+  {
+    "evidence_id": "E-HANV-03",
+    "url": "https://www.hanwang.com.cn/index.php?a=show&c=index&catid=66&id=399&m=content",
+    "before_additional_captures": [],
+    "append_additional_captures": [
+      {
+        "checked_on": "2026-10-27",
+        "access_mode": "local_saved_source_reread_no_network",
+        "locator": "N10 Pro二代能力段，止于Clear6 Turbo标题",
+        "raw_work_path": "work/ai-notebooks-research/hanv399.html",
+        "raw_sha256": "328baec8de537c41ed0a9828c9f959cd84330a66bf68aef889ee5da264b40ebb",
+        "extracted_work_path": "work/ai-notebooks-research/hanv399.txt",
+        "extracted_sha256": "e3cd0dadebb8cc5ac612738ab64c631861d64a9a1aa30446b44c24e67324168b",
+        "hands_on": false,
+        "visual_observed": false,
+        "archived_artifact": "artifacts/hanvon-controls-deepening/source-notes.md",
+        "sha256": "4ec7c13d411bc28e15da4ab4cfbb2e5a21e89b5eed5f3a70c651c0ecdef05660",
+        "note": "复读旧原件，不新增URL证据；本次未重新查看配图。"
+      }
+    ]
+  },
+  {
+    "evidence_id": "E-HND-01",
+    "url": "https://best.pconline.com.cn/yuanchuang/31096910.html",
+    "before_additional_captures": [],
+    "append_additional_captures": [
+      {
+        "checked_on": "2026-10-27",
+        "access_mode": "local_saved_source_reread_no_network",
+        "locator": "已存HTML本地提取，阅读/全局批注/分屏/网盘段",
+        "raw_work_path": "work/child-information-deepening/hanvon-review.html",
+        "raw_sha256": "bb960e513f3b9db260253c950015fd42d107fa8dda3945f238180789b4fbe1a0",
+        "extracted_work_path": "work/hanvon-controls-deepening/raw/old-review.txt",
+        "extracted_sha256": "baa4503fef9809d7fbff00ca766f9d3e13bf4363af198732c457f08d5c3aaee5",
+        "hands_on": false,
+        "visual_observed": false,
+        "archived_artifact": "artifacts/hanvon-controls-deepening/source-notes.md",
+        "sha256": "4ec7c13d411bc28e15da4ab4cfbb2e5a21e89b5eed5f3a70c651c0ecdef05660",
+        "note": "复读旧原件，不新增URL证据；本次未重新查看配图。"
+      }
+    ]
+  }
+]

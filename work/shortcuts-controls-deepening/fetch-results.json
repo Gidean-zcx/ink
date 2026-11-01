@@ -1,0 +1,218 @@
+[
+  {
+    "key": "01-guide26",
+    "url": "https://support.apple.com/guide/shortcuts/welcome/9.0/ios/26",
+    "final_url": "https://support.apple.com/guide/shortcuts/welcome/9.0/ios/26",
+    "status": 200,
+    "raw_work_path": "work/shortcuts-controls-deepening/01-guide26.html",
+    "raw_sha256": "14aa163a5b1b60fee2176af94e24dddfc2365e08f1672bfc874e867ac181b1f5"
+  },
+  {
+    "key": "02-model26",
+    "url": "https://support.apple.com/guide/shortcuts/tpg3vrvwmclv/9.0/ios/26",
+    "final_url": "https://support.apple.com/guide/shortcuts/welcome/ios",
+    "status": 200,
+    "raw_work_path": "work/shortcuts-controls-deepening/02-model26.html",
+    "raw_sha256": "4fd08a3dcde4e4b644f88ea01cc5b862a913beb9e01e340d9485b0cabb47cfa1"
+  },
+  {
+    "key": "03-model27",
+    "url": "https://support.apple.com/guide/shortcuts/tpg3vrvwmclv/10.0/ios/27",
+    "final_url": "https://support.apple.com/guide/shortcuts/use-apple-intelligence-in-shortcuts-tpg3vrvwmclv/10.0/ios/27",
+    "status": 200,
+    "raw_work_path": "work/shortcuts-controls-deepening/03-model27.html",
+    "raw_sha256": "2cf074dc9b73d2bafdbb638f184ede48d83d5f9d41b2ac78c9aedf3c23be2d68"
+  },
+  {
+    "key": "04-sync26",
+    "url": "https://support.apple.com/guide/shortcuts/apdb3a4240b0/9.0/ios/26",
+    "final_url": "https://support.apple.com/guide/shortcuts/sync-shortcuts-apdb3a4240b0/9.0/ios/26",
+    "status": 200,
+    "raw_work_path": "work/shortcuts-controls-deepening/04-sync26.html",
+    "raw_sha256": "2248a98f8a3c9c6e4e1432482ca4751d860a77a1a0487c32a52629b312a40d9b"
+  },
+  {
+    "key": "05-sync27",
+    "url": "https://support.apple.com/guide/shortcuts/apdb3a4240b0/10.0/ios/27",
+    "final_url": "https://support.apple.com/guide/shortcuts/sync-shortcuts-apdb3a4240b0/10.0/ios/27",
+    "status": 200,
+    "raw_work_path": "work/shortcuts-controls-deepening/05-sync27.html",
+    "raw_sha256": "e03b29da925c7708867bb025be12521afc475fca33e75e14b1715268462354ad"
+  },
+  {
+    "key": "06-guide27",
+    "url": "https://support.apple.com/guide/shortcuts/welcome/10.0/ios/27",
+    "final_url": "https://support.apple.com/guide/shortcuts/welcome/10.0/ios/27",
+    "status": 200,
+    "raw_work_path": "work/shortcuts-controls-deepening/06-guide27.html",
+    "raw_sha256": "33eabd6b6901533839d3ad53b490c39383901ac4acc6011d9c634ecfa5307b73"
+  },
+  {
+    "key": "07-create27",
+    "url": "https://support.apple.com/guide/shortcuts/apd84c576f8c/10.0/ios/27",
+    "final_url": "https://support.apple.com/guide/shortcuts/create-a-custom-shortcut-apd84c576f8c/10.0/ios/27",
+    "status": 200,
+    "raw_work_path": "work/shortcuts-controls-deepening/07-create27.html",
+    "raw_sha256": "30f39042c1e274bee20e8880d47a2a95e5f9699d25dc354aff9e5786dabd3217"
+  },
+  {
+    "key": "08-actions27",
+    "url": "https://support.apple.com/guide/shortcuts/apdc33e4f4da/10.0/ios/27",
+    "final_url": "https://support.apple.com/guide/shortcuts/navigate-the-action-list-apdc33e4f4da/10.0/ios/27",
+    "status": 200,
+    "raw_work_path": "work/shortcuts-controls-deepening/08-actions27.html",
+    "raw_sha256": "e1602f5d0b2f0839d6169d28581be4b34f9b43c7fc0635f1aeda9ad1b7a2aa6d"
+  },
+  {
+    "key": "09-graph27",
+    "url": "https://support.apple.com/guide/shortcuts/apd4618db957/10.0/ios/27",
+    "final_url": "https://support.apple.com/guide/shortcuts/the-content-graph-engine-apd4618db957/10.0/ios/27",
+    "status": 200,
+    "raw_work_path": "work/shortcuts-controls-deepening/09-graph27.html",
+    "raw_sha256": "b851f8e8274343e7f6609947c4b97607fa7ee8dd8a3354fea20f4ba5e0edd325"
+  },
+  {
+    "key": "10-variable27",
+    "url": "https://support.apple.com/guide/shortcuts/apda36b9018b/10.0/ios/27",
+    "final_url": "https://support.apple.com/guide/shortcuts/adjust-variables-apda36b9018b/10.0/ios/27",
+    "status": 200,
+    "raw_work_path": "work/shortcuts-controls-deepening/10-variable27.html",
+    "raw_sha256": "08404bdefb16ba2ec06382fce2a163cad6f49ab67a6950acebaa6dcca700f181"
+  },
+  {
+    "key": "11-filter27",
+    "url": "https://support.apple.com/guide/shortcuts/apdbdab3433f/10.0/ios/27",
+    "final_url": "https://support.apple.com/guide/shortcuts/add-filter-parameters-apdbdab3433f/10.0/ios/27",
+    "status": 200,
+    "raw_work_path": "work/shortcuts-controls-deepening/11-filter27.html",
+    "raw_sha256": "dc8e9c1f6308231a2674cc02e18bbbb7eec158900a4b9bf638cb830ebd8bc93f"
+  },
+  {
+    "key": "12-auto-intro27",
+    "url": "https://support.apple.com/guide/shortcuts/apd690170742/10.0/ios/27",
+    "final_url": "https://support.apple.com/guide/shortcuts/intro-to-automation-shortcuts-apd690170742/10.0/ios/27",
+    "status": 200,
+    "raw_work_path": "work/shortcuts-controls-deepening/12-auto-intro27.html",
+    "raw_sha256": "30149cc939ce36a9b08ec74a82252d2e2fce0449926cb336a24b07623d995488"
+  },
+  {
+    "key": "13-auto-add27",
+    "url": "https://support.apple.com/guide/shortcuts/apdfbdbd7123/10.0/ios/27",
+    "final_url": "https://support.apple.com/guide/shortcuts/add-automations-apdfbdbd7123/10.0/ios/27",
+    "status": 200,
+    "raw_work_path": "work/shortcuts-controls-deepening/13-auto-add27.html",
+    "raw_sha256": "dd633902cf00cc8d9b264370df0569d448515971091d74cb1bf7926b25f4ba79"
+  },
+  {
+    "key": "14-auto-events27",
+    "url": "https://support.apple.com/guide/shortcuts/apd932ff833f/10.0/ios/27",
+    "final_url": "https://support.apple.com/guide/shortcuts/event-triggers-apd932ff833f/10.0/ios/27",
+    "status": 200,
+    "raw_work_path": "work/shortcuts-controls-deepening/14-auto-events27.html",
+    "raw_sha256": "9870bb8615da56aa27f345019218acaa901a1336812411a20d25c97de8a2a776"
+  },
+  {
+    "key": "15-auto-travel27",
+    "url": "https://support.apple.com/guide/shortcuts/apd8ebfc4e8e/10.0/ios/27",
+    "final_url": "https://support.apple.com/guide/shortcuts/travel-triggers-apd8ebfc4e8e/10.0/ios/27",
+    "status": 200,
+    "raw_work_path": "work/shortcuts-controls-deepening/15-auto-travel27.html",
+    "raw_sha256": "01830631a3083bb4e5725af167bbeb0b85dd80cd6ce68867e158a70833298a1d"
+  },
+  {
+    "key": "16-auto-comms27",
+    "url": "https://support.apple.com/guide/shortcuts/apdd711f9dff/10.0/ios/27",
+    "final_url": "https://support.apple.com/guide/shortcuts/communication-triggers-apdd711f9dff/10.0/ios/27",
+    "status": 200,
+    "raw_work_path": "work/shortcuts-controls-deepening/16-auto-comms27.html",
+    "raw_sha256": "14616ece8aa92a971f5d725139cb2bcfbda2e9ab62e59a1699d74de1d2b4e3e0"
+  },
+  {
+    "key": "17-auto-settings27",
+    "url": "https://support.apple.com/guide/shortcuts/apde31e9638b/10.0/ios/27",
+    "final_url": "https://support.apple.com/guide/shortcuts/setting-triggers-apde31e9638b/10.0/ios/27",
+    "status": 200,
+    "raw_work_path": "work/shortcuts-controls-deepening/17-auto-settings27.html",
+    "raw_sha256": "c3677cca4351e4ead09ccd6e4cfdf7e1c5bb37ae2a310ccf70c54b61bd3e62af"
+  },
+  {
+    "key": "18-auto-transaction27",
+    "url": "https://support.apple.com/guide/shortcuts/apd65c67538a/10.0/ios/27",
+    "final_url": "https://support.apple.com/guide/shortcuts/transaction-trigger-apd65c67538a/10.0/ios/27",
+    "status": 200,
+    "raw_work_path": "work/shortcuts-controls-deepening/18-auto-transaction27.html",
+    "raw_sha256": "1912cfdb8487aca40a764b65667112a6a9eb0df905b908232b4f6affebcd18b1"
+  },
+  {
+    "key": "19-share27",
+    "url": "https://support.apple.com/guide/shortcuts/apdf01f8c054/10.0/ios/27",
+    "final_url": "https://support.apple.com/guide/shortcuts/share-shortcuts-apdf01f8c054/10.0/ios/27",
+    "status": 200,
+    "raw_work_path": "work/shortcuts-controls-deepening/19-share27.html",
+    "raw_sha256": "8478cb95c97f1a6151de845da84dbf573602b99eb4ddf379b1710a0522b3760c"
+  },
+  {
+    "key": "20-import27",
+    "url": "https://support.apple.com/guide/shortcuts/apdf330fd3a0/10.0/ios/27",
+    "final_url": "https://support.apple.com/guide/shortcuts/add-import-questions-to-shared-shortcuts-apdf330fd3a0/10.0/ios/27",
+    "status": 200,
+    "raw_work_path": "work/shortcuts-controls-deepening/20-import27.html",
+    "raw_sha256": "12c7bda836d810c928079b2ab1cdc7fe4f12a494349c7b44520d55a9b21136e6"
+  },
+  {
+    "key": "21-delete27",
+    "url": "https://support.apple.com/guide/shortcuts/apd096cd65c6/10.0/ios/27",
+    "final_url": "https://support.apple.com/guide/shortcuts/delete-shortcuts-apd096cd65c6/10.0/ios/27",
+    "status": 200,
+    "raw_work_path": "work/shortcuts-controls-deepening/21-delete27.html",
+    "raw_sha256": "d0a0921e490bcf815bd857caaf528127321ceb90217662aa69e82d76a68b70f6"
+  },
+  {
+    "key": "22-alert27",
+    "url": "https://support.apple.com/guide/shortcuts/apdb9661c761/10.0/ios/27",
+    "final_url": "https://support.apple.com/guide/shortcuts/use-the-show-alert-action-apdb9661c761/10.0/ios/27",
+    "status": 200,
+    "raw_work_path": "work/shortcuts-controls-deepening/22-alert27.html",
+    "raw_sha256": "cb58d89dd72dd8af21b37d96cf6c35b263eef3448a179c75daa1c2371a51f835"
+  },
+  {
+    "key": "23-notification27",
+    "url": "https://support.apple.com/guide/shortcuts/apd2175adcab/10.0/ios/27",
+    "final_url": "https://support.apple.com/guide/shortcuts/use-the-show-notification-action-apd2175adcab/10.0/ios/27",
+    "status": 200,
+    "raw_work_path": "work/shortcuts-controls-deepening/23-notification27.html",
+    "raw_sha256": "0026b117edeaf4ddb1f56df946b86098e088b2b681e82f562c20adf90156e536"
+  },
+  {
+    "key": "24-receive27",
+    "url": "https://support.apple.com/guide/shortcuts/apd350ce757a/10.0/ios/27",
+    "final_url": "https://support.apple.com/guide/shortcuts/receive-onscreen-items-apd350ce757a/10.0/ios/27",
+    "status": 200,
+    "raw_work_path": "work/shortcuts-controls-deepening/24-receive27.html",
+    "raw_sha256": "11e5bbfca5659d14eafdc12b63f621beec3b5a1b8d7389dbe65bd461e8a2386f"
+  },
+  {
+    "key": "25-app-shortcuts27",
+    "url": "https://support.apple.com/guide/shortcuts/apd43295406d/10.0/ios/27",
+    "final_url": "https://support.apple.com/guide/shortcuts/run-app-shortcuts-apd43295406d/10.0/ios/27",
+    "status": 200,
+    "raw_work_path": "work/shortcuts-controls-deepening/25-app-shortcuts27.html",
+    "raw_sha256": "20cb7d76ae622082872f34d61c2b72c37c057c99288adf9f9775d1785319d986"
+  },
+  {
+    "key": "26-release27",
+    "url": "https://support.apple.com/en-us/149045",
+    "final_url": "https://support.apple.com/en-us/149045",
+    "status": 200,
+    "raw_work_path": "work/shortcuts-controls-deepening/26-release27.html",
+    "raw_sha256": "7a7c317f8c9e7952d9f51636e48d72991bc64e37a5b863f392ddf3ff428530cc"
+  },
+  {
+    "key": "27-release26",
+    "url": "https://support.apple.com/en-us/123075",
+    "final_url": "https://support.apple.com/en-us/123075",
+    "status": 200,
+    "raw_work_path": "work/shortcuts-controls-deepening/27-release26.html",
+    "raw_sha256": "b8e9fdfedd08f73ffd3392ddfd0cdd589595a884327040af5ef5f75e3c539a7e"
+  }
+]

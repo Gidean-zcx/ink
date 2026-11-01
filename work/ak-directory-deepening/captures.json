@@ -1,0 +1,62 @@
+[
+  {
+    "name": "sr35-support",
+    "url": "https://www.iriver.jp/support/product_235.php",
+    "effective_url": "https://www.iriver.jp/support/product_235.php",
+    "http_status": 200,
+    "checked_on": "2026-10-27",
+    "raw_work_path": "work/ak-directory-deepening/raw/sr35-support.html",
+    "raw_sha256": "4d1e2e1174b32c40f671835cdc4f2437d082bddde1f847b7fa9807c3883f8a32",
+    "encoding": "utf-8"
+  },
+  {
+    "name": "replaygain",
+    "url": "https://www.iriver.jp/support/faq_1104.php",
+    "effective_url": "https://www.iriver.jp/support/faq_1104.php",
+    "http_status": 200,
+    "checked_on": "2026-10-27",
+    "raw_work_path": "work/ak-directory-deepening/raw/replaygain.html",
+    "raw_sha256": "93f7cd4546e5747aac70c09342fec9184bb598d2f47cfd001b0fef458a4c99c5",
+    "encoding": "utf-8"
+  },
+  {
+    "name": "album-art",
+    "url": "https://www.iriver.jp/support/faq_965.php",
+    "effective_url": "https://www.iriver.jp/support/faq_965.php",
+    "http_status": 200,
+    "checked_on": "2026-10-27",
+    "raw_work_path": "work/ak-directory-deepening/raw/album-art.html",
+    "raw_sha256": "3b42dc8677755292d4780d0b28668ab14364feaf592884bc771fcc756384ff12",
+    "encoding": "utf-8"
+  },
+  {
+    "name": "art-size",
+    "url": "https://www.iriver.jp/support/faq_1035.php",
+    "effective_url": "https://www.iriver.jp/support/faq_1035.php",
+    "http_status": 200,
+    "checked_on": "2026-10-27",
+    "raw_work_path": "work/ak-directory-deepening/raw/art-size.html",
+    "raw_sha256": "90bb74086a63e37b33ff800c6f722f783d0dfc040f0bdb54ad6b4c19e0d7358c",
+    "encoding": "utf-8"
+  },
+  {
+    "name": "m3u",
+    "url": "https://www.iriver.jp/support/faq_1033.php",
+    "effective_url": "https://www.iriver.jp/support/faq_1033.php",
+    "http_status": 200,
+    "checked_on": "2026-10-27",
+    "raw_work_path": "work/ak-directory-deepening/raw/m3u.html",
+    "raw_sha256": "7dbaa5bf1589006fb1c1223cb608faf358539c14eeb7ff92b602f4170a266857",
+    "encoding": "utf-8"
+  },
+  {
+    "name": "v122",
+    "url": "https://www.iriver.jp/support/file_1596.php",
+    "effective_url": "https://www.iriver.jp/support/file_1596.php",
+    "http_status": 200,
+    "checked_on": "2026-10-27",
+    "raw_work_path": "work/ak-directory-deepening/raw/v122.html",
+    "raw_sha256": "1fdff34d5fe3aecc796398c77ae78d62a1750061934c338bd60fe7fd21d24f8d",
+    "encoding": "utf-8"
+  }
+]

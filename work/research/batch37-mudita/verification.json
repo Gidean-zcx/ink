@@ -1,0 +1,1770 @@
+{
+  "task": "Fetch the 46 Mudita inventory rows with reading_status=index_only",
+  "checked_on": "2026-10-27",
+  "input": "docs/research/interaction-library/batches/mudita-app-controls-deepening-inventory.csv",
+  "prior_audit": "No exact candidate URL/article ID was a primary evidence URL in docs/research/interaction-library/evidence.jsonl; old work files contained directory/index or cross-link mentions only; work/mudita-controls-deepening/fetch-log.jsonl contained no rejection for these 46 URLs.",
+  "command": "python3 work/research/batch37-mudita/fetch_articles.py",
+  "exit_status": 0,
+  "counts": {
+    "candidate_count": 46,
+    "attempted": 46,
+    "readable": 46,
+    "shell_or_unreadable": 0,
+    "http_errors": 0,
+    "skipped": 0
+  },
+  "request_policy": "Sequential ordinary anonymous GET, one attempt per URL, 30 s timeout; no login, protocol/identity fallback, retry, image/video download, or article action.",
+  "state_changed": "Created work/research/batch37-mudita only; no docs files edited by this task.",
+  "result_records": [
+    {
+      "inventory_id": "I-M012-017",
+      "title": "Mudita Kompakt Initial Setup",
+      "url": "https://support.mudita.com/en/support/solutions/articles/77000579071-mudita-kompakt-initial-setup",
+      "checked_on": "2026-10-27",
+      "requested_at_utc": "2026-10-27T04:13:26.673389+00:00",
+      "request_method": "ordinary anonymous GET; one attempt; sequential; 30s timeout; no authentication or protocol fallback",
+      "http_status": 200,
+      "final_url": "https://support.mudita.com/en/support/solutions/articles/77000579071-mudita-kompakt-initial-setup",
+      "redirected": false,
+      "bytes": 318671,
+      "html_sha256": "a785c90b7b881ecd4dfa7bbfea99bb970b069d7512ea4f4ac977baf1fb1feb84",
+      "html_path": "work/research/batch37-mudita/raw/I-M012-017.html",
+      "text_path": "work/research/batch37-mudita/raw/I-M012-017.txt",
+      "images_path": "work/research/batch37-mudita/raw/I-M012-017.images.json",
+      "text_sha256": "a049446a304596c375cea8faf06c0f04d8a416292525a3141da73a3d04b5796d",
+      "text_chars": 903,
+      "image_url_count": 8,
+      "extraction_boundary": "Modified on: ... Sorry!",
+      "body_readable": true,
+      "result": "readable_body",
+      "source_modified_text": "Modified on: Sat, 3 Oct, 2026 at 8:42 AM"
+    },
+    {
+      "inventory_id": "I-M012-018",
+      "title": "How To Find Your Phone Number on Mudita Kompakt",
+      "url": "https://support.mudita.com/en/support/solutions/articles/77000579078-how-to-find-your-phone-number-on-mudita-kompakt",
+      "checked_on": "2026-10-27",
+      "requested_at_utc": "2026-10-27T04:13:27.276640+00:00",
+      "request_method": "ordinary anonymous GET; one attempt; sequential; 30s timeout; no authentication or protocol fallback",
+      "http_status": 200,
+      "final_url": "https://support.mudita.com/en/support/solutions/articles/77000579078-how-to-find-your-phone-number-on-mudita-kompakt",
+      "redirected": false,
+      "bytes": 317509,
+      "html_sha256": "4878e087a0008b7cfeae7fbc60f84e96336e2cca9bf7d7059d5c7145d046f4f3",
+      "html_path": "work/research/batch37-mudita/raw/I-M012-018.html",
+      "text_path": "work/research/batch37-mudita/raw/I-M012-018.txt",
+      "images_path": "work/research/batch37-mudita/raw/I-M012-018.images.json",
+      "text_sha256": "5cc380ab36b3de9aef4a2c9fb380c70f799ae8435e23c8777856a049c424bdfa",
+      "text_chars": 471,
+      "image_url_count": 8,
+      "extraction_boundary": "Modified on: ... Sorry!",
+      "body_readable": true,
+      "result": "readable_body",
+      "source_modified_text": "Modified on: Sat, 3 Oct, 2026 at 8:35 AM"
+    },
+    {
+      "inventory_id": "I-M012-019",
+      "title": "How To Manage Language and Keyboard Layout on Mudita Kompakt",
+      "url": "https://support.mudita.com/en/support/solutions/articles/77000579750-how-to-manage-language-and-keyboard-layout-on-mudita-kompakt",
+      "checked_on": "2026-10-27",
+      "requested_at_utc": "2026-10-27T04:13:27.636047+00:00",
+      "request_method": "ordinary anonymous GET; one attempt; sequential; 30s timeout; no authentication or protocol fallback",
+      "http_status": 200,
+      "final_url": "https://support.mudita.com/en/support/solutions/articles/77000579750-how-to-manage-language-and-keyboard-layout-on-mudita-kompakt",
+      "redirected": false,
+      "bytes": 319106,
+      "html_sha256": "eb88980da523df2b0bb3f484eaea3141ca77cc314a9f547481c81a6d0dca08e2",
+      "html_path": "work/research/batch37-mudita/raw/I-M012-019.html",
+      "text_path": "work/research/batch37-mudita/raw/I-M012-019.txt",
+      "images_path": "work/research/batch37-mudita/raw/I-M012-019.images.json",
+      "text_sha256": "8dd41937096efd2e1539a29ff8d8f54bb42e99958b43645f20dfea663087126f",
+      "text_chars": 702,
+      "image_url_count": 8,
+      "extraction_boundary": "Modified on: ... Sorry!",
+      "body_readable": true,
+      "result": "readable_body",
+      "source_modified_text": "Modified on: Sat, 3 Oct, 2026 at 8:42 AM"
+    },
+    {
+      "inventory_id": "I-M012-020",
+      "title": "How To Add SIM Cards and eSIM to Mudita Kompakt",
+      "url": "https://support.mudita.com/en/support/solutions/articles/77000579077-how-to-add-sim-cards-and-esim-to-mudita-kompakt",
+      "checked_on": "2026-10-27",
+      "requested_at_utc": "2026-10-27T04:13:28.255317+00:00",
+      "request_method": "ordinary anonymous GET; one attempt; sequential; 30s timeout; no authentication or protocol fallback",
+      "http_status": 200,
+      "final_url": "https://support.mudita.com/en/support/solutions/articles/77000579077-how-to-add-sim-cards-and-esim-to-mudita-kompakt",
+      "redirected": false,
+      "bytes": 319377,
+      "html_sha256": "2a6824c476b0b14b9db131c2c94fe4d5bedb053d190def7efa05819e4754328e",
+      "html_path": "work/research/batch37-mudita/raw/I-M012-020.html",
+      "text_path": "work/research/batch37-mudita/raw/I-M012-020.txt",
+      "images_path": "work/research/batch37-mudita/raw/I-M012-020.images.json",
+      "text_sha256": "51482bd38073ccb2b840546e26345bfb8770b98ca3714c0c4743f43314582a33",
+      "text_chars": 1072,
+      "image_url_count": 8,
+      "extraction_boundary": "Modified on: ... Sorry!",
+      "body_readable": true,
+      "result": "readable_body",
+      "source_modified_text": "Modified on: Sat, 3 Oct, 2026 at 8:44 AM"
+    },
+    {
+      "inventory_id": "I-M012-021",
+      "title": "How to Switch Between SIM 2 and eSIM Mode?",
+      "url": "https://support.mudita.com/en/support/solutions/articles/77000596911-how-to-switch-between-sim-2-and-esim-mode-",
+      "checked_on": "2026-10-27",
+      "requested_at_utc": "2026-10-27T04:13:29.349262+00:00",
+      "request_method": "ordinary anonymous GET; one attempt; sequential; 30s timeout; no authentication or protocol fallback",
+      "http_status": 200,
+      "final_url": "https://support.mudita.com/en/support/solutions/articles/77000596911-how-to-switch-between-sim-2-and-esim-mode-",
+      "redirected": false,
+      "bytes": 317333,
+      "html_sha256": "0162864ea0a0081a33625267e6c0869917f2bd8a172acfd275516d56d6d876da",
+      "html_path": "work/research/batch37-mudita/raw/I-M012-021.html",
+      "text_path": "work/research/batch37-mudita/raw/I-M012-021.txt",
+      "images_path": "work/research/batch37-mudita/raw/I-M012-021.images.json",
+      "text_sha256": "672862d183a0077a8ad3d50081ed6ca6e63999aec38c7a6433a32ba8bcd40052",
+      "text_chars": 457,
+      "image_url_count": 8,
+      "extraction_boundary": "Modified on: ... Sorry!",
+      "body_readable": true,
+      "result": "readable_body",
+      "source_modified_text": "Modified on: Sat, 3 Oct, 2026 at 8:34 AM"
+    },
+    {
+      "inventory_id": "I-M012-029",
+      "title": "How To Create a Calendar Event on Mudita Kompakt",
+      "url": "https://support.mudita.com/en/support/solutions/articles/77000579943-how-to-create-a-calendar-event-on-mudita-kompakt",
+      "checked_on": "2026-10-27",
+      "requested_at_utc": "2026-10-27T04:13:30.358688+00:00",
+      "request_method": "ordinary anonymous GET; one attempt; sequential; 30s timeout; no authentication or protocol fallback",
+      "http_status": 200,
+      "final_url": "https://support.mudita.com/en/support/solutions/articles/77000579943-how-to-create-a-calendar-event-on-mudita-kompakt",
+      "redirected": false,
+      "bytes": 318456,
+      "html_sha256": "76dbf9ba307b9682d45cbad92779518dac5e6e607f7afe4311cd11b50efbc65b",
+      "html_path": "work/research/batch37-mudita/raw/I-M012-029.html",
+      "text_path": "work/research/batch37-mudita/raw/I-M012-029.txt",
+      "images_path": "work/research/batch37-mudita/raw/I-M012-029.images.json",
+      "text_sha256": "ce113dd8ac815b15463db78ea6479166aceb511eb5b16f915ddf34ca2ff51124",
+      "text_chars": 566,
+      "image_url_count": 8,
+      "extraction_boundary": "Modified on: ... Sorry!",
+      "body_readable": true,
+      "result": "readable_body",
+      "source_modified_text": "Modified on: Sat, 3 Oct, 2026 at 8:40 AM"
+    },
+    {
+      "inventory_id": "I-M012-030",
+      "title": "How To Manage Alarms on Mudita Kompakt",
+      "url": "https://support.mudita.com/en/support/solutions/articles/77000579944-how-to-manage-alarms-on-mudita-kompakt",
+      "checked_on": "2026-10-27",
+      "requested_at_utc": "2026-10-27T04:13:31.391331+00:00",
+      "request_method": "ordinary anonymous GET; one attempt; sequential; 30s timeout; no authentication or protocol fallback",
+      "http_status": 200,
+      "final_url": "https://support.mudita.com/en/support/solutions/articles/77000579944-how-to-manage-alarms-on-mudita-kompakt",
+      "redirected": false,
+      "bytes": 319285,
+      "html_sha256": "e48eada351aaa775e1a8d23ed571c07139ccc374a0afb201d61f509577cdfdee",
+      "html_path": "work/research/batch37-mudita/raw/I-M012-030.html",
+      "text_path": "work/research/batch37-mudita/raw/I-M012-030.txt",
+      "images_path": "work/research/batch37-mudita/raw/I-M012-030.images.json",
+      "text_sha256": "c02282159da2886d8d92aeaa0abba06d28edd268be62e4e3acb4c80a0364cf38",
+      "text_chars": 1006,
+      "image_url_count": 8,
+      "extraction_boundary": "Modified on: ... Sorry!",
+      "body_readable": true,
+      "result": "readable_body",
+      "source_modified_text": "Modified on: Sat, 3 Oct, 2026 at 8:45 AM"
+    },
+    {
+      "inventory_id": "I-M012-032",
+      "title": "How To Download and Delete Maps on Mudita Kompakt",
+      "url": "https://support.mudita.com/en/support/solutions/articles/77000579952-how-to-download-and-delete-maps-on-mudita-kompakt",
+      "checked_on": "2026-10-27",
+      "requested_at_utc": "2026-10-27T04:13:31.800644+00:00",
+      "request_method": "ordinary anonymous GET; one attempt; sequential; 30s timeout; no authentication or protocol fallback",
+      "http_status": 200,
+      "final_url": "https://support.mudita.com/en/support/solutions/articles/77000579952-how-to-download-and-delete-maps-on-mudita-kompakt",
+      "redirected": false,
+      "bytes": 318692,
+      "html_sha256": "4c3b3a630696f39094227412515f88106ee4d53a15dca53e78af8720fb5c3a92",
+      "html_path": "work/research/batch37-mudita/raw/I-M012-032.html",
+      "text_path": "work/research/batch37-mudita/raw/I-M012-032.txt",
+      "images_path": "work/research/batch37-mudita/raw/I-M012-032.images.json",
+      "text_sha256": "ed3269e8f4f815db3261fac6bcbc762d6baca36dd67308811a4740e650331900",
+      "text_chars": 830,
+      "image_url_count": 8,
+      "extraction_boundary": "Modified on: ... Sorry!",
+      "body_readable": true,
+      "result": "readable_body",
+      "source_modified_text": "Modified on: Sat, 3 Oct, 2026 at 8:42 AM"
+    },
+    {
+      "inventory_id": "I-M012-033",
+      "title": "How To Use the Weather App on Mudita Kompakt",
+      "url": "https://support.mudita.com/en/support/solutions/articles/77000579967-how-to-use-the-weather-app-on-mudita-kompakt",
+      "checked_on": "2026-10-27",
+      "requested_at_utc": "2026-10-27T04:13:32.287748+00:00",
+      "request_method": "ordinary anonymous GET; one attempt; sequential; 30s timeout; no authentication or protocol fallback",
+      "http_status": 200,
+      "final_url": "https://support.mudita.com/en/support/solutions/articles/77000579967-how-to-use-the-weather-app-on-mudita-kompakt",
+      "redirected": false,
+      "bytes": 318174,
+      "html_sha256": "5fc1a9f40bf8680bc3e361876f1075b46128431f52eb0994c7b8904c7658cdfd",
+      "html_path": "work/research/batch37-mudita/raw/I-M012-033.html",
+      "text_path": "work/research/batch37-mudita/raw/I-M012-033.txt",
+      "images_path": "work/research/batch37-mudita/raw/I-M012-033.images.json",
+      "text_sha256": "73d7512d3a8a5196a86b60b457f21fed88ef0fb0711f9f47ceab1ee3274357be",
+      "text_chars": 593,
+      "image_url_count": 8,
+      "extraction_boundary": "Modified on: ... Sorry!",
+      "body_readable": true,
+      "result": "readable_body",
+      "source_modified_text": "Modified on: Sat, 3 Oct, 2026 at 8:40 AM"
+    },
+    {
+      "inventory_id": "I-M012-034",
+      "title": "How to create an alarm?",
+      "url": "https://support.mudita.com/en/support/solutions/articles/77000596886-how-to-create-an-alarm-",
+      "checked_on": "2026-10-27",
+      "requested_at_utc": "2026-10-27T04:13:32.765032+00:00",
+      "request_method": "ordinary anonymous GET; one attempt; sequential; 30s timeout; no authentication or protocol fallback",
+      "http_status": 200,
+      "final_url": "https://support.mudita.com/en/support/solutions/articles/77000596886-how-to-create-an-alarm-",
+      "redirected": false,
+      "bytes": 317296,
+      "html_sha256": "86c2df728bbbb531577ed474f45c846cac77e88fa07408287bfea0c6d1105d85",
+      "html_path": "work/research/batch37-mudita/raw/I-M012-034.html",
+      "text_path": "work/research/batch37-mudita/raw/I-M012-034.txt",
+      "images_path": "work/research/batch37-mudita/raw/I-M012-034.images.json",
+      "text_sha256": "8d6f52cb0e0d270d6fe1573aba6397f0a749510a4c7d8073a5035cfe5d10def5",
+      "text_chars": 589,
+      "image_url_count": 8,
+      "extraction_boundary": "Modified on: ... Sorry!",
+      "body_readable": true,
+      "result": "readable_body",
+      "source_modified_text": "Modified on: Sat, 3 Oct, 2026 at 8:36 AM"
+    },
+    {
+      "inventory_id": "I-M012-035",
+      "title": "How to edit an alarm?",
+      "url": "https://support.mudita.com/en/support/solutions/articles/77000596887-how-to-edit-an-alarm-",
+      "checked_on": "2026-10-27",
+      "requested_at_utc": "2026-10-27T04:13:33.401619+00:00",
+      "request_method": "ordinary anonymous GET; one attempt; sequential; 30s timeout; no authentication or protocol fallback",
+      "http_status": 200,
+      "final_url": "https://support.mudita.com/en/support/solutions/articles/77000596887-how-to-edit-an-alarm-",
+      "redirected": false,
+      "bytes": 317350,
+      "html_sha256": "63cc991f739bc45d38fbf20c68ec166aa4a4ab9bcef9f6f9fee6585d8fd4e8f8",
+      "html_path": "work/research/batch37-mudita/raw/I-M012-035.html",
+      "text_path": "work/research/batch37-mudita/raw/I-M012-035.txt",
+      "images_path": "work/research/batch37-mudita/raw/I-M012-035.images.json",
+      "text_sha256": "7802cd0b0f657087775aeb5f6f3912fbd1cc3ea7897a65e14babcde601f00b84",
+      "text_chars": 648,
+      "image_url_count": 8,
+      "extraction_boundary": "Modified on: ... Sorry!",
+      "body_readable": true,
+      "result": "readable_body",
+      "source_modified_text": "Modified on: Sat, 3 Oct, 2026 at 8:36 AM"
+    },
+    {
+      "inventory_id": "I-M012-036",
+      "title": "How to delete an alarm?",
+      "url": "https://support.mudita.com/en/support/solutions/articles/77000596888-how-to-delete-an-alarm-",
+      "checked_on": "2026-10-27",
+      "requested_at_utc": "2026-10-27T04:13:34.424623+00:00",
+      "request_method": "ordinary anonymous GET; one attempt; sequential; 30s timeout; no authentication or protocol fallback",
+      "http_status": 200,
+      "final_url": "https://support.mudita.com/en/support/solutions/articles/77000596888-how-to-delete-an-alarm-",
+      "redirected": false,
+      "bytes": 317073,
+      "html_sha256": "899d328ac087d74ade176412c7652d06ee11a786f651a692355bedb9aacf88b1",
+      "html_path": "work/research/batch37-mudita/raw/I-M012-036.html",
+      "text_path": "work/research/batch37-mudita/raw/I-M012-036.txt",
+      "images_path": "work/research/batch37-mudita/raw/I-M012-036.images.json",
+      "text_sha256": "56f3227eb5e3b524c499e42966348d4fe9e4500b966c5d7574dbb5b4c671ec29",
+      "text_chars": 560,
+      "image_url_count": 8,
+      "extraction_boundary": "Modified on: ... Sorry!",
+      "body_readable": true,
+      "result": "readable_body",
+      "source_modified_text": "Modified on: Sat, 3 Oct, 2026 at 8:35 AM"
+    },
+    {
+      "inventory_id": "I-M012-037",
+      "title": "How to snooze an alarm?",
+      "url": "https://support.mudita.com/en/support/solutions/articles/77000596890-how-to-snooze-an-alarm-",
+      "checked_on": "2026-10-27",
+      "requested_at_utc": "2026-10-27T04:13:35.937485+00:00",
+      "request_method": "ordinary anonymous GET; one attempt; sequential; 30s timeout; no authentication or protocol fallback",
+      "http_status": 200,
+      "final_url": "https://support.mudita.com/en/support/solutions/articles/77000596890-how-to-snooze-an-alarm-",
+      "redirected": false,
+      "bytes": 316697,
+      "html_sha256": "8221ff2a34d02cfaad0765bb306b6c5b3e003b6b65d9b817b3880989217ebc0d",
+      "html_path": "work/research/batch37-mudita/raw/I-M012-037.html",
+      "text_path": "work/research/batch37-mudita/raw/I-M012-037.txt",
+      "images_path": "work/research/batch37-mudita/raw/I-M012-037.images.json",
+      "text_sha256": "533ad8dd25d9dd64d132fb192e86fc9a08225ca373d6016f9814c9da58c70229",
+      "text_chars": 353,
+      "image_url_count": 8,
+      "extraction_boundary": "Modified on: ... Sorry!",
+      "body_readable": true,
+      "result": "readable_body",
+      "source_modified_text": "Modified on: Thu, 17 Sep, 2026 at 1:21 PM"
+    },
+    {
+      "inventory_id": "I-M012-038",
+      "title": "How to Import Contacts from Outlook to Your Kompakt?",
+      "url": "https://support.mudita.com/en/support/solutions/articles/77000596781-how-to-import-contacts-from-outlook-to-your-kompakt-",
+      "checked_on": "2026-10-27",
+      "requested_at_utc": "2026-10-27T04:13:36.548604+00:00",
+      "request_method": "ordinary anonymous GET; one attempt; sequential; 30s timeout; no authentication or protocol fallback",
+      "http_status": 200,
+      "final_url": "https://support.mudita.com/en/support/solutions/articles/77000596781-how-to-import-contacts-from-outlook-to-your-kompakt-",
+      "redirected": false,
+      "bytes": 318105,
+      "html_sha256": "2371ccc28efe6757879e9c5340c01e0ac221cbccae73bb9ebc286ea3d52794f1",
+      "html_path": "work/research/batch37-mudita/raw/I-M012-038.html",
+      "text_path": "work/research/batch37-mudita/raw/I-M012-038.txt",
+      "images_path": "work/research/batch37-mudita/raw/I-M012-038.images.json",
+      "text_sha256": "2f831ff834ba75005d42f8bf477a58b42075f95d4b469b946ecbfef65b4a4f4f",
+      "text_chars": 1060,
+      "image_url_count": 8,
+      "extraction_boundary": "Modified on: ... Sorry!",
+      "body_readable": true,
+      "result": "readable_body",
+      "source_modified_text": "Modified on: Sat, 3 Oct, 2026 at 8:39 AM"
+    },
+    {
+      "inventory_id": "I-M012-039",
+      "title": "How to import contacts from Google?",
+      "url": "https://support.mudita.com/en/support/solutions/articles/77000596782-how-to-import-contacts-from-google-",
+      "checked_on": "2026-10-27",
+      "requested_at_utc": "2026-10-27T04:13:37.415938+00:00",
+      "request_method": "ordinary anonymous GET; one attempt; sequential; 30s timeout; no authentication or protocol fallback",
+      "http_status": 200,
+      "final_url": "https://support.mudita.com/en/support/solutions/articles/77000596782-how-to-import-contacts-from-google-",
+      "redirected": false,
+      "bytes": 317936,
+      "html_sha256": "4b75c261bd781311f8ffc5a95230af7577a5e7b72b550ed55fb9fdbbf89b83a3",
+      "html_path": "work/research/batch37-mudita/raw/I-M012-039.html",
+      "text_path": "work/research/batch37-mudita/raw/I-M012-039.txt",
+      "images_path": "work/research/batch37-mudita/raw/I-M012-039.images.json",
+      "text_sha256": "2ab5c7a2ea3d63a07f812fca605b9ba951d4ab606cdd375b59d319d023c0b872",
+      "text_chars": 1049,
+      "image_url_count": 8,
+      "extraction_boundary": "Modified on: ... Sorry!",
+      "body_readable": true,
+      "result": "readable_body",
+      "source_modified_text": "Modified on: Sat, 3 Oct, 2026 at 8:39 AM"
+    },
+    {
+      "inventory_id": "I-M012-040",
+      "title": "How to import contacts from CSV file or vCard?",
+      "url": "https://support.mudita.com/en/support/solutions/articles/77000596784-how-to-import-contacts-from-csv-file-or-vcard-",
+      "checked_on": "2026-10-27",
+      "requested_at_utc": "2026-10-27T04:13:37.802899+00:00",
+      "request_method": "ordinary anonymous GET; one attempt; sequential; 30s timeout; no authentication or protocol fallback",
+      "http_status": 200,
+      "final_url": "https://support.mudita.com/en/support/solutions/articles/77000596784-how-to-import-contacts-from-csv-file-or-vcard-",
+      "redirected": false,
+      "bytes": 318390,
+      "html_sha256": "334a8d44b4af4c7999974f304d3a4e43a936b6b2c52e2402dcfac200618cf7ca",
+      "html_path": "work/research/batch37-mudita/raw/I-M012-040.html",
+      "text_path": "work/research/batch37-mudita/raw/I-M012-040.txt",
+      "images_path": "work/research/batch37-mudita/raw/I-M012-040.images.json",
+      "text_sha256": "1792096399fb389f994115385b54ad2eb23a5d4f9a62e06e495b49ae672bedfd",
+      "text_chars": 1201,
+      "image_url_count": 8,
+      "extraction_boundary": "Modified on: ... Sorry!",
+      "body_readable": true,
+      "result": "readable_body",
+      "source_modified_text": "Modified on: Sat, 3 Oct, 2026 at 8:40 AM"
+    },
+    {
+      "inventory_id": "I-M012-041",
+      "title": "How to Create a vCard (VCF File) Using iCloud?",
+      "url": "https://support.mudita.com/en/support/solutions/articles/77000596789-how-to-create-a-vcard-vcf-file-using-icloud-",
+      "checked_on": "2026-10-27",
+      "requested_at_utc": "2026-10-27T04:13:38.363908+00:00",
+      "request_method": "ordinary anonymous GET; one attempt; sequential; 30s timeout; no authentication or protocol fallback",
+      "http_status": 200,
+      "final_url": "https://support.mudita.com/en/support/solutions/articles/77000596789-how-to-create-a-vcard-vcf-file-using-icloud-",
+      "redirected": false,
+      "bytes": 317965,
+      "html_sha256": "025407192e66bac9e58e7ed2f0e7fa10a8208535bdbd948bda8a6587b39a2797",
+      "html_path": "work/research/batch37-mudita/raw/I-M012-041.html",
+      "text_path": "work/research/batch37-mudita/raw/I-M012-041.txt",
+      "images_path": "work/research/batch37-mudita/raw/I-M012-041.images.json",
+      "text_sha256": "9e2b7d4b3d0f6dab31dd7b4401b43e1bbfd716df48a232b7137668329befb335",
+      "text_chars": 833,
+      "image_url_count": 8,
+      "extraction_boundary": "Modified on: ... Sorry!",
+      "body_readable": true,
+      "result": "readable_body",
+      "source_modified_text": "Modified on: Sat, 3 Oct, 2026 at 8:38 AM"
+    },
+    {
+      "inventory_id": "I-M012-042",
+      "title": "How to create a CSV or vCard using Google Account?",
+      "url": "https://support.mudita.com/en/support/solutions/articles/77000596790-how-to-create-a-csv-or-vcard-using-google-account-",
+      "checked_on": "2026-10-27",
+      "requested_at_utc": "2026-10-27T04:13:38.999928+00:00",
+      "request_method": "ordinary anonymous GET; one attempt; sequential; 30s timeout; no authentication or protocol fallback",
+      "http_status": 200,
+      "final_url": "https://support.mudita.com/en/support/solutions/articles/77000596790-how-to-create-a-csv-or-vcard-using-google-account-",
+      "redirected": false,
+      "bytes": 318028,
+      "html_sha256": "7261bb6289da039cc1cc2be8fbcdbcee143b8e8aa20df23bbbf76357b5fcb94b",
+      "html_path": "work/research/batch37-mudita/raw/I-M012-042.html",
+      "text_path": "work/research/batch37-mudita/raw/I-M012-042.txt",
+      "images_path": "work/research/batch37-mudita/raw/I-M012-042.images.json",
+      "text_sha256": "502deb2f99ad3527de91d1d9e27e22064feaff76013871d444f13389e38e55e4",
+      "text_chars": 771,
+      "image_url_count": 8,
+      "extraction_boundary": "Modified on: ... Sorry!",
+      "body_readable": true,
+      "result": "readable_body",
+      "source_modified_text": "Modified on: Sat, 3 Oct, 2026 at 8:38 AM"
+    },
+    {
+      "inventory_id": "I-M012-043",
+      "title": "How to Create a CSV File Using Outlook?",
+      "url": "https://support.mudita.com/en/support/solutions/articles/77000596791-how-to-create-a-csv-file-using-outlook-",
+      "checked_on": "2026-10-27",
+      "requested_at_utc": "2026-10-27T04:13:39.315888+00:00",
+      "request_method": "ordinary anonymous GET; one attempt; sequential; 30s timeout; no authentication or protocol fallback",
+      "http_status": 200,
+      "final_url": "https://support.mudita.com/en/support/solutions/articles/77000596791-how-to-create-a-csv-file-using-outlook-",
+      "redirected": false,
+      "bytes": 317626,
+      "html_sha256": "407ad70f7de288e2068d5fb3fe9fbfd5c2b92da90c6c9a8a24111fa7fd554690",
+      "html_path": "work/research/batch37-mudita/raw/I-M012-043.html",
+      "text_path": "work/research/batch37-mudita/raw/I-M012-043.txt",
+      "images_path": "work/research/batch37-mudita/raw/I-M012-043.images.json",
+      "text_sha256": "645365df80f4851a21bd8fcf8fc0545db6f09124ce19dd429f483759b99a8978",
+      "text_chars": 498,
+      "image_url_count": 8,
+      "extraction_boundary": "Modified on: ... Sorry!",
+      "body_readable": true,
+      "result": "readable_body",
+      "source_modified_text": "Modified on: Sat, 3 Oct, 2026 at 8:34 AM"
+    },
+    {
+      "inventory_id": "I-M012-050",
+      "title": "How To Transfer Photos from Mudita Kompakt to Your Computer",
+      "url": "https://support.mudita.com/en/support/solutions/articles/77000580582-how-to-transfer-photos-from-mudita-kompakt-to-your-computer",
+      "checked_on": "2026-10-27",
+      "requested_at_utc": "2026-10-27T04:13:39.844082+00:00",
+      "request_method": "ordinary anonymous GET; one attempt; sequential; 30s timeout; no authentication or protocol fallback",
+      "http_status": 200,
+      "final_url": "https://support.mudita.com/en/support/solutions/articles/77000580582-how-to-transfer-photos-from-mudita-kompakt-to-your-computer",
+      "redirected": false,
+      "bytes": 317657,
+      "html_sha256": "840d461447ffb86f031bd7933669146b0277d317bc06843f131055fd62c03d30",
+      "html_path": "work/research/batch37-mudita/raw/I-M012-050.html",
+      "text_path": "work/research/batch37-mudita/raw/I-M012-050.txt",
+      "images_path": "work/research/batch37-mudita/raw/I-M012-050.images.json",
+      "text_sha256": "851cdc633e9fe4765e43c96c5d9e20fbec225f8376b7a4bd749af249a9c63e67",
+      "text_chars": 587,
+      "image_url_count": 8,
+      "extraction_boundary": "Modified on: ... Sorry!",
+      "body_readable": true,
+      "result": "readable_body",
+      "source_modified_text": "Modified on: Sat, 3 Oct, 2026 at 8:36 AM"
+    },
+    {
+      "inventory_id": "I-M012-051",
+      "title": "How to Transfer Photos to Kompakt?",
+      "url": "https://support.mudita.com/en/support/solutions/articles/77000596827-how-to-transfer-photos-to-kompakt-",
+      "checked_on": "2026-10-27",
+      "requested_at_utc": "2026-10-27T04:13:40.461278+00:00",
+      "request_method": "ordinary anonymous GET; one attempt; sequential; 30s timeout; no authentication or protocol fallback",
+      "http_status": 200,
+      "final_url": "https://support.mudita.com/en/support/solutions/articles/77000596827-how-to-transfer-photos-to-kompakt-",
+      "redirected": false,
+      "bytes": 317606,
+      "html_sha256": "ece6080d04068e51caa727c346121c21e9d4da2b8a8523f8c6a12133950760ce",
+      "html_path": "work/research/batch37-mudita/raw/I-M012-051.html",
+      "text_path": "work/research/batch37-mudita/raw/I-M012-051.txt",
+      "images_path": "work/research/batch37-mudita/raw/I-M012-051.images.json",
+      "text_sha256": "4a2c846f393340cc19a77eb8d0f359cf5827ca1fc8afb8cee0461d6aa81c40d8",
+      "text_chars": 540,
+      "image_url_count": 8,
+      "extraction_boundary": "Modified on: ... Sorry!",
+      "body_readable": true,
+      "result": "readable_body",
+      "source_modified_text": "Modified on: Sat, 3 Oct, 2026 at 8:37 AM"
+    },
+    {
+      "inventory_id": "I-M012-055",
+      "title": "How To Use the Camera and Gallery on Mudita Kompakt",
+      "url": "https://support.mudita.com/en/support/solutions/articles/77000579950-how-to-use-the-camera-and-gallery-on-mudita-kompakt",
+      "checked_on": "2026-10-27",
+      "requested_at_utc": "2026-10-27T04:13:41.326209+00:00",
+      "request_method": "ordinary anonymous GET; one attempt; sequential; 30s timeout; no authentication or protocol fallback",
+      "http_status": 200,
+      "final_url": "https://support.mudita.com/en/support/solutions/articles/77000579950-how-to-use-the-camera-and-gallery-on-mudita-kompakt",
+      "redirected": false,
+      "bytes": 318455,
+      "html_sha256": "2d5b161598bdef6900e90410751c297ba27f32aba19cee213f24158912f7cbee",
+      "html_path": "work/research/batch37-mudita/raw/I-M012-055.html",
+      "text_path": "work/research/batch37-mudita/raw/I-M012-055.txt",
+      "images_path": "work/research/batch37-mudita/raw/I-M012-055.images.json",
+      "text_sha256": "4f01964dda0187d9b24178b2aea9fd321557466048fba04cddeecc9141917dd0",
+      "text_chars": 793,
+      "image_url_count": 8,
+      "extraction_boundary": "Modified on: ... Sorry!",
+      "body_readable": true,
+      "result": "readable_body",
+      "source_modified_text": "Modified on: Sat, 3 Oct, 2026 at 8:41 AM"
+    },
+    {
+      "inventory_id": "I-M012-061",
+      "title": "Managing the Battery in the Mudita Kompakt",
+      "url": "https://support.mudita.com/en/support/solutions/articles/77000584800-managing-the-battery-in-the-mudita-kompakt",
+      "checked_on": "2026-10-27",
+      "requested_at_utc": "2026-10-27T04:13:41.937392+00:00",
+      "request_method": "ordinary anonymous GET; one attempt; sequential; 30s timeout; no authentication or protocol fallback",
+      "http_status": 200,
+      "final_url": "https://support.mudita.com/en/support/solutions/articles/77000584800-managing-the-battery-in-the-mudita-kompakt",
+      "redirected": false,
+      "bytes": 318246,
+      "html_sha256": "8d499a5f0495b10f95c6e3d4f78aba814449ce802560a95ce1534623229e7a05",
+      "html_path": "work/research/batch37-mudita/raw/I-M012-061.html",
+      "text_path": "work/research/batch37-mudita/raw/I-M012-061.txt",
+      "images_path": "work/research/batch37-mudita/raw/I-M012-061.images.json",
+      "text_sha256": "dc5ffe2fdc90c1a79d552986ef21161712ac91cc5d0cb92a6b1d4aa0c674fb29",
+      "text_chars": 728,
+      "image_url_count": 8,
+      "extraction_boundary": "Modified on: ... Sorry!",
+      "body_readable": true,
+      "result": "readable_body",
+      "source_modified_text": "Modified on: Sat, 3 Oct, 2026 at 8:41 AM"
+    },
+    {
+      "inventory_id": "I-M012-062",
+      "title": "How to Take a Screenshot?",
+      "url": "https://support.mudita.com/en/support/solutions/articles/77000596861-how-to-take-a-screenshot-",
+      "checked_on": "2026-10-27",
+      "requested_at_utc": "2026-10-27T04:13:42.973279+00:00",
+      "request_method": "ordinary anonymous GET; one attempt; sequential; 30s timeout; no authentication or protocol fallback",
+      "http_status": 200,
+      "final_url": "https://support.mudita.com/en/support/solutions/articles/77000596861-how-to-take-a-screenshot-",
+      "redirected": false,
+      "bytes": 317190,
+      "html_sha256": "7b99facd59d252b26ccacf1c98b0dfb4695f0e8d5d408ad8276a99784289c041",
+      "html_path": "work/research/batch37-mudita/raw/I-M012-062.html",
+      "text_path": "work/research/batch37-mudita/raw/I-M012-062.txt",
+      "images_path": "work/research/batch37-mudita/raw/I-M012-062.images.json",
+      "text_sha256": "885ce0ab2927acaee6961bfd3ef0284e22cee747cd7c62854d3993adc67b2421",
+      "text_chars": 456,
+      "image_url_count": 8,
+      "extraction_boundary": "Modified on: ... Sorry!",
+      "body_readable": true,
+      "result": "readable_body",
+      "source_modified_text": "Modified on: Sat, 3 Oct, 2026 at 8:34 AM"
+    },
+    {
+      "inventory_id": "I-M012-066",
+      "title": "How To Use Wi-Fi and Create a Hotspot on Mudita Kompakt",
+      "url": "https://support.mudita.com/en/support/solutions/articles/77000579072-how-to-use-wi-fi-and-create-a-hotspot-on-mudita-kompakt",
+      "checked_on": "2026-10-27",
+      "requested_at_utc": "2026-10-27T04:13:43.472391+00:00",
+      "request_method": "ordinary anonymous GET; one attempt; sequential; 30s timeout; no authentication or protocol fallback",
+      "http_status": 200,
+      "final_url": "https://support.mudita.com/en/support/solutions/articles/77000579072-how-to-use-wi-fi-and-create-a-hotspot-on-mudita-kompakt",
+      "redirected": false,
+      "bytes": 320319,
+      "html_sha256": "f92ccfd24b1935f8d16c48e8a5663d2d3c748852471e0e54d75b97d0ea54eadc",
+      "html_path": "work/research/batch37-mudita/raw/I-M012-066.html",
+      "text_path": "work/research/batch37-mudita/raw/I-M012-066.txt",
+      "images_path": "work/research/batch37-mudita/raw/I-M012-066.images.json",
+      "text_sha256": "5f704d6ff34a7a4a0caf5382b263157382b0854ad9f700d112f7dd77c469ca67",
+      "text_chars": 1287,
+      "image_url_count": 8,
+      "extraction_boundary": "Modified on: ... Sorry!",
+      "body_readable": true,
+      "result": "readable_body",
+      "source_modified_text": "Modified on: Sat, 3 Oct, 2026 at 8:45 AM"
+    },
+    {
+      "inventory_id": "I-M012-068",
+      "title": "How To Manage Mobile Data and Roaming on Mudita Kompakt",
+      "url": "https://support.mudita.com/en/support/solutions/articles/77000579757-how-to-manage-mobile-data-and-roaming-on-mudita-kompakt",
+      "checked_on": "2026-10-27",
+      "requested_at_utc": "2026-10-27T04:13:43.968379+00:00",
+      "request_method": "ordinary anonymous GET; one attempt; sequential; 30s timeout; no authentication or protocol fallback",
+      "http_status": 200,
+      "final_url": "https://support.mudita.com/en/support/solutions/articles/77000579757-how-to-manage-mobile-data-and-roaming-on-mudita-kompakt",
+      "redirected": false,
+      "bytes": 318653,
+      "html_sha256": "977fe8dceb7f33b3a412367bebee03f0f4ffeace3b6b8b622f49ce86ae03c96b",
+      "html_path": "work/research/batch37-mudita/raw/I-M012-068.html",
+      "text_path": "work/research/batch37-mudita/raw/I-M012-068.txt",
+      "images_path": "work/research/batch37-mudita/raw/I-M012-068.images.json",
+      "text_sha256": "ac69d7f21b57eab253e3752eb029a425831b1595992fe89291775678e1f77206",
+      "text_chars": 932,
+      "image_url_count": 8,
+      "extraction_boundary": "Modified on: ... Sorry!",
+      "body_readable": true,
+      "result": "readable_body",
+      "source_modified_text": "Modified on: Sat, 3 Oct, 2026 at 8:41 AM"
+    },
+    {
+      "inventory_id": "I-M012-069",
+      "title": "How to Share Your Wi-Fi Password?",
+      "url": "https://support.mudita.com/en/support/solutions/articles/77000596896-how-to-share-your-wi-fi-password-",
+      "checked_on": "2026-10-27",
+      "requested_at_utc": "2026-10-27T04:13:44.416716+00:00",
+      "request_method": "ordinary anonymous GET; one attempt; sequential; 30s timeout; no authentication or protocol fallback",
+      "http_status": 200,
+      "final_url": "https://support.mudita.com/en/support/solutions/articles/77000596896-how-to-share-your-wi-fi-password-",
+      "redirected": false,
+      "bytes": 317478,
+      "html_sha256": "83e57db22ce574fc0577e3f3554dc4fdbf22283a69dd127628fed95e2a49dfe0",
+      "html_path": "work/research/batch37-mudita/raw/I-M012-069.html",
+      "text_path": "work/research/batch37-mudita/raw/I-M012-069.txt",
+      "images_path": "work/research/batch37-mudita/raw/I-M012-069.images.json",
+      "text_sha256": "3ed0d9fa620dee4bde7cb4764c1cb72bba0c64ff1557d520e5214e542c32599d",
+      "text_chars": 455,
+      "image_url_count": 8,
+      "extraction_boundary": "Modified on: ... Sorry!",
+      "body_readable": true,
+      "result": "readable_body",
+      "source_modified_text": "Modified on: Sat, 3 Oct, 2026 at 8:34 AM"
+    },
+    {
+      "inventory_id": "I-M012-070",
+      "title": "How to Allow or Stop Downloads Using Mobile Data?",
+      "url": "https://support.mudita.com/en/support/solutions/articles/77000596913-how-to-allow-or-stop-downloads-using-mobile-data-",
+      "checked_on": "2026-10-27",
+      "requested_at_utc": "2026-10-27T04:13:44.909690+00:00",
+      "request_method": "ordinary anonymous GET; one attempt; sequential; 30s timeout; no authentication or protocol fallback",
+      "http_status": 200,
+      "final_url": "https://support.mudita.com/en/support/solutions/articles/77000596913-how-to-allow-or-stop-downloads-using-mobile-data-",
+      "redirected": false,
+      "bytes": 317522,
+      "html_sha256": "bcdd52790774bc4740ded9053829fea9223f373aaa4770b6d769c6f2cbef1069",
+      "html_path": "work/research/batch37-mudita/raw/I-M012-070.html",
+      "text_path": "work/research/batch37-mudita/raw/I-M012-070.txt",
+      "images_path": "work/research/batch37-mudita/raw/I-M012-070.images.json",
+      "text_sha256": "0dc6d81a726b99bcc066d43432b5eae226ad51b22541495f6b241c0196efbe81",
+      "text_chars": 492,
+      "image_url_count": 8,
+      "extraction_boundary": "Modified on: ... Sorry!",
+      "body_readable": true,
+      "result": "readable_body",
+      "source_modified_text": "Modified on: Sat, 3 Oct, 2026 at 8:34 AM"
+    },
+    {
+      "inventory_id": "I-M012-071",
+      "title": "Mudita Kompakt: Global or North American?",
+      "url": "https://support.mudita.com/en/support/solutions/articles/77000577355-mudita-kompakt-global-or-north-american-",
+      "checked_on": "2026-10-27",
+      "requested_at_utc": "2026-10-27T04:13:45.307795+00:00",
+      "request_method": "ordinary anonymous GET; one attempt; sequential; 30s timeout; no authentication or protocol fallback",
+      "http_status": 200,
+      "final_url": "https://support.mudita.com/en/support/solutions/articles/77000577355-mudita-kompakt-global-or-north-american-",
+      "redirected": false,
+      "bytes": 319972,
+      "html_sha256": "95305ef59a6b23fe457d38314647daa95e3c7a502ac25a6cacab4715741c807b",
+      "html_path": "work/research/batch37-mudita/raw/I-M012-071.html",
+      "text_path": "work/research/batch37-mudita/raw/I-M012-071.txt",
+      "images_path": "work/research/batch37-mudita/raw/I-M012-071.images.json",
+      "text_sha256": "9305cabdaf90fd63bce9f627c92a27426e8d94ab67f809bde775850322b225b5",
+      "text_chars": 2458,
+      "image_url_count": 8,
+      "extraction_boundary": "Modified on: ... Sorry!",
+      "body_readable": true,
+      "result": "readable_body",
+      "source_modified_text": "Modified on: Sat, 3 Oct, 2026 at 8:45 AM"
+    },
+    {
+      "inventory_id": "I-M012-074",
+      "title": "Does Mudita Kompakt Have a Messaging App Like WhatsApp or Signal?",
+      "url": "https://support.mudita.com/en/support/solutions/articles/77000577357-does-mudita-kompakt-have-a-messaging-app-like-whatsapp-or-signal-",
+      "checked_on": "2026-10-27",
+      "requested_at_utc": "2026-10-27T04:13:46.228498+00:00",
+      "request_method": "ordinary anonymous GET; one attempt; sequential; 30s timeout; no authentication or protocol fallback",
+      "http_status": 200,
+      "final_url": "https://support.mudita.com/en/support/solutions/articles/77000577357-does-mudita-kompakt-have-a-messaging-app-like-whatsapp-or-signal-",
+      "redirected": false,
+      "bytes": 318094,
+      "html_sha256": "349e88e9e15d5a5978512ff512dc59329f0c3732f637184563fe7047d44d8e51",
+      "html_path": "work/research/batch37-mudita/raw/I-M012-074.html",
+      "text_path": "work/research/batch37-mudita/raw/I-M012-074.txt",
+      "images_path": "work/research/batch37-mudita/raw/I-M012-074.images.json",
+      "text_sha256": "69814dc5e8d931de686f5ae996ca76e5fb9926821657747331f8f00df8ea9413",
+      "text_chars": 899,
+      "image_url_count": 8,
+      "extraction_boundary": "Modified on: ... Sorry!",
+      "body_readable": true,
+      "result": "readable_body",
+      "source_modified_text": "Modified on: Sat, 3 Oct, 2026 at 8:37 AM"
+    },
+    {
+      "inventory_id": "I-M012-075",
+      "title": "Does Mudita Kompakt Support Video Recording and Playback?",
+      "url": "https://support.mudita.com/en/support/solutions/articles/77000577359-does-mudita-kompakt-support-video-recording-and-playback-",
+      "checked_on": "2026-10-27",
+      "requested_at_utc": "2026-10-27T04:13:46.623687+00:00",
+      "request_method": "ordinary anonymous GET; one attempt; sequential; 30s timeout; no authentication or protocol fallback",
+      "http_status": 200,
+      "final_url": "https://support.mudita.com/en/support/solutions/articles/77000577359-does-mudita-kompakt-support-video-recording-and-playback-",
+      "redirected": false,
+      "bytes": 317037,
+      "html_sha256": "ab88751110d4baa80613bbb8b26b8f98d65f357f4b78cb7874e95c5ad3c6aec4",
+      "html_path": "work/research/batch37-mudita/raw/I-M012-075.html",
+      "text_path": "work/research/batch37-mudita/raw/I-M012-075.txt",
+      "images_path": "work/research/batch37-mudita/raw/I-M012-075.images.json",
+      "text_sha256": "12d6e8fef6824231dfda68d9ee6a36083989661c427f81165d2a5028abea9314",
+      "text_chars": 355,
+      "image_url_count": 8,
+      "extraction_boundary": "Modified on: ... Sorry!",
+      "body_readable": true,
+      "result": "readable_body",
+      "source_modified_text": "Modified on: Sat, 3 Oct, 2026 at 8:32 AM"
+    },
+    {
+      "inventory_id": "I-M012-076",
+      "title": "Can I Scan QR Codes with Mudita Kompakt?",
+      "url": "https://support.mudita.com/en/support/solutions/articles/77000577362-can-i-scan-qr-codes-with-mudita-kompakt-",
+      "checked_on": "2026-10-27",
+      "requested_at_utc": "2026-10-27T04:13:47.270029+00:00",
+      "request_method": "ordinary anonymous GET; one attempt; sequential; 30s timeout; no authentication or protocol fallback",
+      "http_status": 200,
+      "final_url": "https://support.mudita.com/en/support/solutions/articles/77000577362-can-i-scan-qr-codes-with-mudita-kompakt-",
+      "redirected": false,
+      "bytes": 317255,
+      "html_sha256": "3a95421e4efc1128a7417ed293840352064f87325becceb16b0d82140fceaf74",
+      "html_path": "work/research/batch37-mudita/raw/I-M012-076.html",
+      "text_path": "work/research/batch37-mudita/raw/I-M012-076.txt",
+      "images_path": "work/research/batch37-mudita/raw/I-M012-076.images.json",
+      "text_sha256": "b220083792a465745ff81cd045123e2b90001573e02c1592e26dfd35d66004fa",
+      "text_chars": 551,
+      "image_url_count": 8,
+      "extraction_boundary": "Modified on: ... Sorry!",
+      "body_readable": true,
+      "result": "readable_body",
+      "source_modified_text": "Modified on: Sat, 3 Oct, 2026 at 8:34 AM"
+    },
+    {
+      "inventory_id": "I-M012-077",
+      "title": "Mudita Kompakt Battery Life",
+      "url": "https://support.mudita.com/en/support/solutions/articles/77000577363-mudita-kompakt-battery-life",
+      "checked_on": "2026-10-27",
+      "requested_at_utc": "2026-10-27T04:13:47.722612+00:00",
+      "request_method": "ordinary anonymous GET; one attempt; sequential; 30s timeout; no authentication or protocol fallback",
+      "http_status": 200,
+      "final_url": "https://support.mudita.com/en/support/solutions/articles/77000577363-mudita-kompakt-battery-life",
+      "redirected": false,
+      "bytes": 316932,
+      "html_sha256": "5176605b04d4ecf0763d29d3a8ad8b3eacbb3367dd58ff6a7bdfa23645e371c3",
+      "html_path": "work/research/batch37-mudita/raw/I-M012-077.html",
+      "text_path": "work/research/batch37-mudita/raw/I-M012-077.txt",
+      "images_path": "work/research/batch37-mudita/raw/I-M012-077.images.json",
+      "text_sha256": "c2dc8c55fa9cb1a9289b2995cf292b3addb010ddb9d02f394a02d312d0da0074",
+      "text_chars": 446,
+      "image_url_count": 8,
+      "extraction_boundary": "Modified on: ... Sorry!",
+      "body_readable": true,
+      "result": "readable_body",
+      "source_modified_text": "Modified on: Sat, 3 Oct, 2026 at 8:33 AM"
+    },
+    {
+      "inventory_id": "I-M012-078",
+      "title": "Does Mudita Kompakt Support Speech-to-Text?",
+      "url": "https://support.mudita.com/en/support/solutions/articles/77000577364-does-mudita-kompakt-support-speech-to-text-",
+      "checked_on": "2026-10-27",
+      "requested_at_utc": "2026-10-27T04:13:48.347260+00:00",
+      "request_method": "ordinary anonymous GET; one attempt; sequential; 30s timeout; no authentication or protocol fallback",
+      "http_status": 200,
+      "final_url": "https://support.mudita.com/en/support/solutions/articles/77000577364-does-mudita-kompakt-support-speech-to-text-",
+      "redirected": false,
+      "bytes": 316774,
+      "html_sha256": "0135637b377383b910154ef5e8c56f523219ce2d3e56081423d3afa90ec8a171",
+      "html_path": "work/research/batch37-mudita/raw/I-M012-078.html",
+      "text_path": "work/research/batch37-mudita/raw/I-M012-078.txt",
+      "images_path": "work/research/batch37-mudita/raw/I-M012-078.images.json",
+      "text_sha256": "85422d6916afdf6b72d9e44a1bb7209b8c6a04635ffb2beec6850ffc0c141d62",
+      "text_chars": 308,
+      "image_url_count": 8,
+      "extraction_boundary": "Modified on: ... Sorry!",
+      "body_readable": true,
+      "result": "readable_body",
+      "source_modified_text": "Modified on: Sat, 3 Oct, 2026 at 8:31 AM"
+    },
+    {
+      "inventory_id": "I-M012-079",
+      "title": "Can the Mudita Kompakt be Rooted?",
+      "url": "https://support.mudita.com/en/support/solutions/articles/77000577365-can-the-mudita-kompakt-be-rooted-",
+      "checked_on": "2026-10-27",
+      "requested_at_utc": "2026-10-27T04:13:48.885950+00:00",
+      "request_method": "ordinary anonymous GET; one attempt; sequential; 30s timeout; no authentication or protocol fallback",
+      "http_status": 200,
+      "final_url": "https://support.mudita.com/en/support/solutions/articles/77000577365-can-the-mudita-kompakt-be-rooted-",
+      "redirected": false,
+      "bytes": 317516,
+      "html_sha256": "cdd2a998d901408765da588b7f22fda1fa0de2d23c057a38017c532ce8cb83a6",
+      "html_path": "work/research/batch37-mudita/raw/I-M012-079.html",
+      "text_path": "work/research/batch37-mudita/raw/I-M012-079.txt",
+      "images_path": "work/research/batch37-mudita/raw/I-M012-079.images.json",
+      "text_sha256": "ab7c1863a40c2a63f3190964d060593af8beeab84fc04ed775b595af688434f9",
+      "text_chars": 847,
+      "image_url_count": 8,
+      "extraction_boundary": "Modified on: ... Sorry!",
+      "body_readable": true,
+      "result": "readable_body",
+      "source_modified_text": "Modified on: Sat, 3 Oct, 2026 at 8:37 AM"
+    },
+    {
+      "inventory_id": "I-M012-081",
+      "title": "Will Mudita Kompakt Be Open-Source?",
+      "url": "https://support.mudita.com/en/support/solutions/articles/77000577367-will-mudita-kompakt-be-open-source-",
+      "checked_on": "2026-10-27",
+      "requested_at_utc": "2026-10-27T04:13:50.403979+00:00",
+      "request_method": "ordinary anonymous GET; one attempt; sequential; 30s timeout; no authentication or protocol fallback",
+      "http_status": 200,
+      "final_url": "https://support.mudita.com/en/support/solutions/articles/77000577367-will-mudita-kompakt-be-open-source-",
+      "redirected": false,
+      "bytes": 317024,
+      "html_sha256": "08b3d8f34fb0fb4441c06e68c264f26c9863367cc59eb8ba016511af240afe76",
+      "html_path": "work/research/batch37-mudita/raw/I-M012-081.html",
+      "text_path": "work/research/batch37-mudita/raw/I-M012-081.txt",
+      "images_path": "work/research/batch37-mudita/raw/I-M012-081.images.json",
+      "text_sha256": "4eca820ac06cbd3f2f6dc409655fc91701efd77b942ae484c9ae32ca6e225457",
+      "text_chars": 480,
+      "image_url_count": 8,
+      "extraction_boundary": "Modified on: ... Sorry!",
+      "body_readable": true,
+      "result": "readable_body",
+      "source_modified_text": "Modified on: Sat, 3 Oct, 2026 at 8:33 AM"
+    },
+    {
+      "inventory_id": "I-M012-082",
+      "title": "What Are the SAR Values for Mudita Kompakt?",
+      "url": "https://support.mudita.com/en/support/solutions/articles/77000577368-what-are-the-sar-values-for-mudita-kompakt-",
+      "checked_on": "2026-10-27",
+      "requested_at_utc": "2026-10-27T04:13:50.867017+00:00",
+      "request_method": "ordinary anonymous GET; one attempt; sequential; 30s timeout; no authentication or protocol fallback",
+      "http_status": 200,
+      "final_url": "https://support.mudita.com/en/support/solutions/articles/77000577368-what-are-the-sar-values-for-mudita-kompakt-",
+      "redirected": false,
+      "bytes": 319390,
+      "html_sha256": "1c6f2195787d03df218f7bfd054f8fbc7103f9b921ef816804a2d385619df33b",
+      "html_path": "work/research/batch37-mudita/raw/I-M012-082.html",
+      "text_path": "work/research/batch37-mudita/raw/I-M012-082.txt",
+      "images_path": "work/research/batch37-mudita/raw/I-M012-082.images.json",
+      "text_sha256": "a3fd6280b73ac241d3b38dfef653dfa2fee5a2057183562847bea7d63e207da8",
+      "text_chars": 2300,
+      "image_url_count": 8,
+      "extraction_boundary": "Modified on: ... Sorry!",
+      "body_readable": true,
+      "result": "readable_body",
+      "source_modified_text": "Modified on: Sat, 3 Oct, 2026 at 8:44 AM"
+    },
+    {
+      "inventory_id": "I-M012-083",
+      "title": "Mudita Kompakt Drop and Scratch Resistance",
+      "url": "https://support.mudita.com/en/support/solutions/articles/77000577371-mudita-kompakt-drop-and-scratch-resistance",
+      "checked_on": "2026-10-27",
+      "requested_at_utc": "2026-10-27T04:13:51.741420+00:00",
+      "request_method": "ordinary anonymous GET; one attempt; sequential; 30s timeout; no authentication or protocol fallback",
+      "http_status": 200,
+      "final_url": "https://support.mudita.com/en/support/solutions/articles/77000577371-mudita-kompakt-drop-and-scratch-resistance",
+      "redirected": false,
+      "bytes": 321101,
+      "html_sha256": "2e69a1afe943f903f7e50e0272d3b3031f160cd82898a7000eb4abe9846d2b45",
+      "html_path": "work/research/batch37-mudita/raw/I-M012-083.html",
+      "text_path": "work/research/batch37-mudita/raw/I-M012-083.txt",
+      "images_path": "work/research/batch37-mudita/raw/I-M012-083.images.json",
+      "text_sha256": "e917cd3ca00fe610ff2def473b57654e388fb5a75056633cd1596ad852b97707",
+      "text_chars": 3378,
+      "image_url_count": 8,
+      "extraction_boundary": "Modified on: ... Sorry!",
+      "body_readable": true,
+      "result": "readable_body",
+      "source_modified_text": "Modified on: Sat, 3 Oct, 2026 at 8:46 AM"
+    },
+    {
+      "inventory_id": "I-M012-084",
+      "title": "Mudita Kompakt Technical Specifications",
+      "url": "https://support.mudita.com/en/support/solutions/articles/77000577372-mudita-kompakt-technical-specifications",
+      "checked_on": "2026-10-27",
+      "requested_at_utc": "2026-10-27T04:13:52.317557+00:00",
+      "request_method": "ordinary anonymous GET; one attempt; sequential; 30s timeout; no authentication or protocol fallback",
+      "http_status": 200,
+      "final_url": "https://support.mudita.com/en/support/solutions/articles/77000577372-mudita-kompakt-technical-specifications",
+      "redirected": false,
+      "bytes": 319814,
+      "html_sha256": "7d395f71c79d3df28c7dc576ee668b26e4a387c98477fb0a36660fa61835cc60",
+      "html_path": "work/research/batch37-mudita/raw/I-M012-084.html",
+      "text_path": "work/research/batch37-mudita/raw/I-M012-084.txt",
+      "images_path": "work/research/batch37-mudita/raw/I-M012-084.images.json",
+      "text_sha256": "193b642396317c28a7dae3cc86a44ccc5f577cbc6d271ecf3c8c428bad126db6",
+      "text_chars": 1212,
+      "image_url_count": 8,
+      "extraction_boundary": "Modified on: ... Sorry!",
+      "body_readable": true,
+      "result": "readable_body",
+      "source_modified_text": "Modified on: Sat, 3 Oct, 2026 at 8:44 AM"
+    },
+    {
+      "inventory_id": "I-M012-085",
+      "title": "Mudita Kompakt Possible SIM Card Configurations",
+      "url": "https://support.mudita.com/en/support/solutions/articles/77000579396-mudita-kompakt-possible-sim-card-configurations",
+      "checked_on": "2026-10-27",
+      "requested_at_utc": "2026-10-27T04:13:53.840497+00:00",
+      "request_method": "ordinary anonymous GET; one attempt; sequential; 30s timeout; no authentication or protocol fallback",
+      "http_status": 200,
+      "final_url": "https://support.mudita.com/en/support/solutions/articles/77000579396-mudita-kompakt-possible-sim-card-configurations",
+      "redirected": false,
+      "bytes": 317774,
+      "html_sha256": "0aa6bc000aa8aaa8a8d6b468d11c78f229d86476ef6844708fdf8f4cbee0a784",
+      "html_path": "work/research/batch37-mudita/raw/I-M012-085.html",
+      "text_path": "work/research/batch37-mudita/raw/I-M012-085.txt",
+      "images_path": "work/research/batch37-mudita/raw/I-M012-085.images.json",
+      "text_sha256": "f953dc9ec18c11d36282830fa99c4431475664af4de290a7f13e8bd00b24112a",
+      "text_chars": 771,
+      "image_url_count": 8,
+      "extraction_boundary": "Modified on: ... Sorry!",
+      "body_readable": true,
+      "result": "readable_body",
+      "source_modified_text": "Modified on: Sat, 3 Oct, 2026 at 8:38 AM"
+    },
+    {
+      "inventory_id": "I-M012-086",
+      "title": "Can the Mudita Kompakt Take Screenshots?",
+      "url": "https://support.mudita.com/en/support/solutions/articles/77000579626-can-the-mudita-kompakt-take-screenshots-",
+      "checked_on": "2026-10-27",
+      "requested_at_utc": "2026-10-27T04:13:54.347659+00:00",
+      "request_method": "ordinary anonymous GET; one attempt; sequential; 30s timeout; no authentication or protocol fallback",
+      "http_status": 200,
+      "final_url": "https://support.mudita.com/en/support/solutions/articles/77000579626-can-the-mudita-kompakt-take-screenshots-",
+      "redirected": false,
+      "bytes": 316935,
+      "html_sha256": "4929415744f54b00f79314994e40f30c20b0a55200614f73b2dc3743fa084a9f",
+      "html_path": "work/research/batch37-mudita/raw/I-M012-086.html",
+      "text_path": "work/research/batch37-mudita/raw/I-M012-086.txt",
+      "images_path": "work/research/batch37-mudita/raw/I-M012-086.images.json",
+      "text_sha256": "8129453e312733bd13cf1af52a1c8bda9d54f410e50590891a3813486bdd2b51",
+      "text_chars": 395,
+      "image_url_count": 8,
+      "extraction_boundary": "Modified on: ... Sorry!",
+      "body_readable": true,
+      "result": "readable_body",
+      "source_modified_text": "Modified on: Sat, 3 Oct, 2026 at 8:33 AM"
+    },
+    {
+      "inventory_id": "I-M012-087",
+      "title": "Can I Transfer Files Between Mudita Kompakt and My Computer?",
+      "url": "https://support.mudita.com/en/support/solutions/articles/77000577360-can-i-transfer-files-between-mudita-kompakt-and-my-computer-",
+      "checked_on": "2026-10-27",
+      "requested_at_utc": "2026-10-27T04:13:55.004983+00:00",
+      "request_method": "ordinary anonymous GET; one attempt; sequential; 30s timeout; no authentication or protocol fallback",
+      "http_status": 200,
+      "final_url": "https://support.mudita.com/en/support/solutions/articles/77000577360-can-i-transfer-files-between-mudita-kompakt-and-my-computer-",
+      "redirected": false,
+      "bytes": 318104,
+      "html_sha256": "96bff0fd902fc4193da1da7af769c8126bfe5873a1bdab413d2ea1d096d73603",
+      "html_path": "work/research/batch37-mudita/raw/I-M012-087.html",
+      "text_path": "work/research/batch37-mudita/raw/I-M012-087.txt",
+      "images_path": "work/research/batch37-mudita/raw/I-M012-087.images.json",
+      "text_sha256": "eea64cd0432c101425af124df29b0d51314b48043485966b614bc33147aaa4be",
+      "text_chars": 1155,
+      "image_url_count": 8,
+      "extraction_boundary": "Modified on: ... Sorry!",
+      "body_readable": true,
+      "result": "readable_body",
+      "source_modified_text": "Modified on: Sat, 3 Oct, 2026 at 8:39 AM"
+    },
+    {
+      "inventory_id": "I-M012-088",
+      "title": "Where Does Mudita Ship the Mudita Kompakt?",
+      "url": "https://support.mudita.com/en/support/solutions/articles/77000581393-where-does-mudita-ship-the-mudita-kompakt-",
+      "checked_on": "2026-10-27",
+      "requested_at_utc": "2026-10-27T04:13:55.373796+00:00",
+      "request_method": "ordinary anonymous GET; one attempt; sequential; 30s timeout; no authentication or protocol fallback",
+      "http_status": 200,
+      "final_url": "https://support.mudita.com/en/support/solutions/articles/77000581393-where-does-mudita-ship-the-mudita-kompakt-",
+      "redirected": false,
+      "bytes": 318767,
+      "html_sha256": "cabdeb4fd7dbd3be51fa984bbbdc52fec428dccc2c9ecc4ea5a7876fdcd4dbc4",
+      "html_path": "work/research/batch37-mudita/raw/I-M012-088.html",
+      "text_path": "work/research/batch37-mudita/raw/I-M012-088.txt",
+      "images_path": "work/research/batch37-mudita/raw/I-M012-088.images.json",
+      "text_sha256": "f255246475d723f1f65dafa29b936ac32b8f64317e7e54542d7dc8adda59b50b",
+      "text_chars": 645,
+      "image_url_count": 8,
+      "extraction_boundary": "Modified on: ... Sorry!",
+      "body_readable": true,
+      "result": "readable_body",
+      "source_modified_text": "Modified on: Sat, 3 Oct, 2026 at 8:41 AM"
+    },
+    {
+      "inventory_id": "I-M012-089",
+      "title": "How Does GPS Work on the Mudita Kompakt?",
+      "url": "https://support.mudita.com/en/support/solutions/articles/77000580502-how-does-gps-work-on-the-mudita-kompakt-",
+      "checked_on": "2026-10-27",
+      "requested_at_utc": "2026-10-27T04:13:56.389169+00:00",
+      "request_method": "ordinary anonymous GET; one attempt; sequential; 30s timeout; no authentication or protocol fallback",
+      "http_status": 200,
+      "final_url": "https://support.mudita.com/en/support/solutions/articles/77000580502-how-does-gps-work-on-the-mudita-kompakt-",
+      "redirected": false,
+      "bytes": 320419,
+      "html_sha256": "178638bba7564c7b5ee7b1c59e4c4f2fbd215b514299858caaf02a7f1edf3b06",
+      "html_path": "work/research/batch37-mudita/raw/I-M012-089.html",
+      "text_path": "work/research/batch37-mudita/raw/I-M012-089.txt",
+      "images_path": "work/research/batch37-mudita/raw/I-M012-089.images.json",
+      "text_sha256": "c9e0d9f277abd7a424865c42410485ce574ae3e4cf14ca342928e1257541350f",
+      "text_chars": 3430,
+      "image_url_count": 8,
+      "extraction_boundary": "Modified on: ... Sorry!",
+      "body_readable": true,
+      "result": "readable_body",
+      "source_modified_text": "Modified on: Sat, 3 Oct, 2026 at 9:49 AM"
+    },
+    {
+      "inventory_id": "I-M012-090",
+      "title": "Is Mudita Kompakt's E-ink display flicker-free?",
+      "url": "https://support.mudita.com/en/support/solutions/articles/77000581908-is-mudita-kompakt-s-e-ink-display-flicker-free-",
+      "checked_on": "2026-10-27",
+      "requested_at_utc": "2026-10-27T04:13:56.992192+00:00",
+      "request_method": "ordinary anonymous GET; one attempt; sequential; 30s timeout; no authentication or protocol fallback",
+      "http_status": 200,
+      "final_url": "https://support.mudita.com/en/support/solutions/articles/77000581908-is-mudita-kompakt-s-e-ink-display-flicker-free-",
+      "redirected": false,
+      "bytes": 316817,
+      "html_sha256": "d8a87515a86a59509248fbe10135faf2ad6afd8b6e3979f85737f56bc1a547bb",
+      "html_path": "work/research/batch37-mudita/raw/I-M012-090.html",
+      "text_path": "work/research/batch37-mudita/raw/I-M012-090.txt",
+      "images_path": "work/research/batch37-mudita/raw/I-M012-090.images.json",
+      "text_sha256": "555959f08d2db266d83ee683127002edcaddd0dda8cc5ecef36bc9325ce2dc15",
+      "text_chars": 279,
+      "image_url_count": 8,
+      "extraction_boundary": "Modified on: ... Sorry!",
+      "body_readable": true,
+      "result": "readable_body",
+      "source_modified_text": "Modified on: Sat, 3 Oct, 2026 at 8:31 AM"
+    },
+    {
+      "inventory_id": "I-M012-093",
+      "title": "Can I Share My Mudita Kompakt's Internet Connection (Tethering) with Other Devices?",
+      "url": "https://support.mudita.com/en/support/solutions/articles/77000586372-can-i-share-my-mudita-kompakt-s-internet-connection-tethering-with-other-devices-",
+      "checked_on": "2026-10-27",
+      "requested_at_utc": "2026-10-27T04:13:57.519477+00:00",
+      "request_method": "ordinary anonymous GET; one attempt; sequential; 30s timeout; no authentication or protocol fallback",
+      "http_status": 200,
+      "final_url": "https://support.mudita.com/en/support/solutions/articles/77000586372-can-i-share-my-mudita-kompakt-s-internet-connection-tethering-with-other-devices-",
+      "redirected": false,
+      "bytes": 319178,
+      "html_sha256": "402bed94ff7eefb06e7907733b26575df2fada8b267f35c265ba8291b712c4b2",
+      "html_path": "work/research/batch37-mudita/raw/I-M012-093.html",
+      "text_path": "work/research/batch37-mudita/raw/I-M012-093.txt",
+      "images_path": "work/research/batch37-mudita/raw/I-M012-093.images.json",
+      "text_sha256": "9caa6937ce37e6e3fe6f3534ba3d4b3ac501b50480f3c5d432b89ce44518c0e0",
+      "text_chars": 878,
+      "image_url_count": 8,
+      "extraction_boundary": "Modified on: ... Sorry!",
+      "body_readable": true,
+      "result": "readable_body",
+      "source_modified_text": "Modified on: Sat, 3 Oct, 2026 at 8:41 AM"
+    }
+  ],
+  "raw_manifest": [
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-017.html",
+      "bytes": 318671,
+      "sha256": "a785c90b7b881ecd4dfa7bbfea99bb970b069d7512ea4f4ac977baf1fb1feb84"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-017.images.json",
+      "bytes": 10437,
+      "sha256": "6f3314bfb62d792421c97856e0df5c8ef7d60e3769073ca7544c43d5f73e202b"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-017.txt",
+      "bytes": 907,
+      "sha256": "a049446a304596c375cea8faf06c0f04d8a416292525a3141da73a3d04b5796d"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-018.html",
+      "bytes": 317509,
+      "sha256": "4878e087a0008b7cfeae7fbc60f84e96336e2cca9bf7d7059d5c7145d046f4f3"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-018.images.json",
+      "bytes": 10456,
+      "sha256": "872630ead2f05ecb7fa52763d42a765e1dc9e08554dee857f93c597c9abbdea1"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-018.txt",
+      "bytes": 475,
+      "sha256": "5cc380ab36b3de9aef4a2c9fb380c70f799ae8435e23c8777856a049c424bdfa"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-019.html",
+      "bytes": 319106,
+      "sha256": "eb88980da523df2b0bb3f484eaea3141ca77cc314a9f547481c81a6d0dca08e2"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-019.images.json",
+      "bytes": 10469,
+      "sha256": "19f672e19808cc197d1edc0788a37c0e1b830c29635c8b9e59664367687e850f"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-019.txt",
+      "bytes": 704,
+      "sha256": "8dd41937096efd2e1539a29ff8d8f54bb42e99958b43645f20dfea663087126f"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-020.html",
+      "bytes": 319377,
+      "sha256": "2a6824c476b0b14b9db131c2c94fe4d5bedb053d190def7efa05819e4754328e"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-020.images.json",
+      "bytes": 10456,
+      "sha256": "f013ed180ab75217b1d101c4d13fbed4a10b77b442c5a5d15b357cb2b718f11e"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-020.txt",
+      "bytes": 1076,
+      "sha256": "51482bd38073ccb2b840546e26345bfb8770b98ca3714c0c4743f43314582a33"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-021.html",
+      "bytes": 317333,
+      "sha256": "0162864ea0a0081a33625267e6c0869917f2bd8a172acfd275516d56d6d876da"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-021.images.json",
+      "bytes": 10451,
+      "sha256": "bc0c3ca1b4f76ff2eea5b8f0f1a7048840f1c044e8172eac15434b8cd1de9855"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-021.txt",
+      "bytes": 459,
+      "sha256": "672862d183a0077a8ad3d50081ed6ca6e63999aec38c7a6433a32ba8bcd40052"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-029.html",
+      "bytes": 318456,
+      "sha256": "76dbf9ba307b9682d45cbad92779518dac5e6e607f7afe4311cd11b50efbc65b"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-029.images.json",
+      "bytes": 10457,
+      "sha256": "bc146585b9c94ca2f85b966ba404f8c0c14c05d84c75b38be3997cda71711cf7"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-029.txt",
+      "bytes": 568,
+      "sha256": "ce113dd8ac815b15463db78ea6479166aceb511eb5b16f915ddf34ca2ff51124"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-030.html",
+      "bytes": 319285,
+      "sha256": "e48eada351aaa775e1a8d23ed571c07139ccc374a0afb201d61f509577cdfdee"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-030.images.json",
+      "bytes": 10447,
+      "sha256": "676984151aeee4de7d7590e831e68998a689b8675e2b714accf74ad284fbd1d0"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-030.txt",
+      "bytes": 1018,
+      "sha256": "c02282159da2886d8d92aeaa0abba06d28edd268be62e4e3acb4c80a0364cf38"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-032.html",
+      "bytes": 318692,
+      "sha256": "4c3b3a630696f39094227412515f88106ee4d53a15dca53e78af8720fb5c3a92"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-032.images.json",
+      "bytes": 10458,
+      "sha256": "4888c71cbc77e6837aca9e621fce9041a95588da21cde8a2d5260ef78b81fde5"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-032.txt",
+      "bytes": 842,
+      "sha256": "ed3269e8f4f815db3261fac6bcbc762d6baca36dd67308811a4740e650331900"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-033.html",
+      "bytes": 318174,
+      "sha256": "5fc1a9f40bf8680bc3e361876f1075b46128431f52eb0994c7b8904c7658cdfd"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-033.images.json",
+      "bytes": 10453,
+      "sha256": "813e1d833554b44ecfa785b4e9059cc60bc2b3be0faab1a6b022bf53a38cc2de"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-033.txt",
+      "bytes": 595,
+      "sha256": "73d7512d3a8a5196a86b60b457f21fed88ef0fb0711f9f47ceab1ee3274357be"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-034.html",
+      "bytes": 317296,
+      "sha256": "86c2df728bbbb531577ed474f45c846cac77e88fa07408287bfea0c6d1105d85"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-034.images.json",
+      "bytes": 10432,
+      "sha256": "93e3301e5155c4a532511ad7592a5248b11c81571fe26331b6a59ae7dc2cec59"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-034.txt",
+      "bytes": 593,
+      "sha256": "8d6f52cb0e0d270d6fe1573aba6397f0a749510a4c7d8073a5035cfe5d10def5"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-035.html",
+      "bytes": 317350,
+      "sha256": "63cc991f739bc45d38fbf20c68ec166aa4a4ab9bcef9f6f9fee6585d8fd4e8f8"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-035.images.json",
+      "bytes": 10430,
+      "sha256": "68e3f71dff0cb2e9a1f35a4344798aeff1dfa3e607d0265cd3672a7d3f8b3ea0"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-035.txt",
+      "bytes": 652,
+      "sha256": "7802cd0b0f657087775aeb5f6f3912fbd1cc3ea7897a65e14babcde601f00b84"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-036.html",
+      "bytes": 317073,
+      "sha256": "899d328ac087d74ade176412c7652d06ee11a786f651a692355bedb9aacf88b1"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-036.images.json",
+      "bytes": 10432,
+      "sha256": "3f5249db74b096127d411a8d4bb30779bb6e2c987c1900ddb63202fcc2b82c34"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-036.txt",
+      "bytes": 564,
+      "sha256": "56f3227eb5e3b524c499e42966348d4fe9e4500b966c5d7574dbb5b4c671ec29"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-037.html",
+      "bytes": 316697,
+      "sha256": "8221ff2a34d02cfaad0765bb306b6c5b3e003b6b65d9b817b3880989217ebc0d"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-037.images.json",
+      "bytes": 10432,
+      "sha256": "24c96bcd01be1cb94960f28adcfb999f972497afa66857fa407be46d34429e98"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-037.txt",
+      "bytes": 355,
+      "sha256": "533ad8dd25d9dd64d132fb192e86fc9a08225ca373d6016f9814c9da58c70229"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-038.html",
+      "bytes": 318105,
+      "sha256": "2371ccc28efe6757879e9c5340c01e0ac221cbccae73bb9ebc286ea3d52794f1"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-038.images.json",
+      "bytes": 10461,
+      "sha256": "e7e36f7a459cb471e7b09b5d9997b6575d70a8089f4fdb8f5b3f39c192760729"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-038.txt",
+      "bytes": 1062,
+      "sha256": "2f831ff834ba75005d42f8bf477a58b42075f95d4b469b946ecbfef65b4a4f4f"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-039.html",
+      "bytes": 317936,
+      "sha256": "4b75c261bd781311f8ffc5a95230af7577a5e7b72b550ed55fb9fdbbf89b83a3"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-039.images.json",
+      "bytes": 10444,
+      "sha256": "792baa111405b3db92094c25030afe53de62887d87a70fb2450418a83454af6f"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-039.txt",
+      "bytes": 1051,
+      "sha256": "2ab5c7a2ea3d63a07f812fca605b9ba951d4ab606cdd375b59d319d023c0b872"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-040.html",
+      "bytes": 318390,
+      "sha256": "334a8d44b4af4c7999974f304d3a4e43a936b6b2c52e2402dcfac200618cf7ca"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-040.images.json",
+      "bytes": 10455,
+      "sha256": "16760218eaad707d5b16c497035c8760869c8555381ba64db8966eb9a1f006c4"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-040.txt",
+      "bytes": 1203,
+      "sha256": "1792096399fb389f994115385b54ad2eb23a5d4f9a62e06e495b49ae672bedfd"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-041.html",
+      "bytes": 317965,
+      "sha256": "025407192e66bac9e58e7ed2f0e7fa10a8208535bdbd948bda8a6587b39a2797"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-041.images.json",
+      "bytes": 10453,
+      "sha256": "99bff35a907a4cf6569637e384ccedc8c98a8d630d784183a4109837150d7aa0"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-041.txt",
+      "bytes": 835,
+      "sha256": "9e2b7d4b3d0f6dab31dd7b4401b43e1bbfd716df48a232b7137668329befb335"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-042.html",
+      "bytes": 318028,
+      "sha256": "7261bb6289da039cc1cc2be8fbcdbcee143b8e8aa20df23bbbf76357b5fcb94b"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-042.images.json",
+      "bytes": 10459,
+      "sha256": "d228be6b92aed733b2b3164e10ae62724ee05df8ddaae413264f03ae9780837b"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-042.txt",
+      "bytes": 773,
+      "sha256": "502deb2f99ad3527de91d1d9e27e22064feaff76013871d444f13389e38e55e4"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-043.html",
+      "bytes": 317626,
+      "sha256": "407ad70f7de288e2068d5fb3fe9fbfd5c2b92da90c6c9a8a24111fa7fd554690"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-043.images.json",
+      "bytes": 10448,
+      "sha256": "e51c64dd3cbea62a7cbf918dacbad961f6f5f8bfea7d943db7f0c6e8a0af2409"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-043.txt",
+      "bytes": 500,
+      "sha256": "645365df80f4851a21bd8fcf8fc0545db6f09124ce19dd429f483759b99a8978"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-050.html",
+      "bytes": 317657,
+      "sha256": "840d461447ffb86f031bd7933669146b0277d317bc06843f131055fd62c03d30"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-050.images.json",
+      "bytes": 10468,
+      "sha256": "9b6dd122cbf94b12bce782e679cc2cc67991c179ed458a17d770486c69132127"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-050.txt",
+      "bytes": 591,
+      "sha256": "851cdc633e9fe4765e43c96c5d9e20fbec225f8376b7a4bd749af249a9c63e67"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-051.html",
+      "bytes": 317606,
+      "sha256": "ece6080d04068e51caa727c346121c21e9d4da2b8a8523f8c6a12133950760ce"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-051.images.json",
+      "bytes": 10443,
+      "sha256": "3edc29a7610e54c1b0400f99831d0bc1f3a07a2685fcf0fdb48d752ec5f79808"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-051.txt",
+      "bytes": 542,
+      "sha256": "4a2c846f393340cc19a77eb8d0f359cf5827ca1fc8afb8cee0461d6aa81c40d8"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-055.html",
+      "bytes": 318455,
+      "sha256": "2d5b161598bdef6900e90410751c297ba27f32aba19cee213f24158912f7cbee"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-055.images.json",
+      "bytes": 10460,
+      "sha256": "8df72c4e0cd54cceb330c20f19e7b05ea699c083e34d25cafe0c8555d0633eaa"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-055.txt",
+      "bytes": 797,
+      "sha256": "4f01964dda0187d9b24178b2aea9fd321557466048fba04cddeecc9141917dd0"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-061.html",
+      "bytes": 318246,
+      "sha256": "8d499a5f0495b10f95c6e3d4f78aba814449ce802560a95ce1534623229e7a05"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-061.images.json",
+      "bytes": 10451,
+      "sha256": "98e5edf5e5382822f313649646542a29520bb0340cb7115eddf47ae6c19a6899"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-061.txt",
+      "bytes": 730,
+      "sha256": "dc5ffe2fdc90c1a79d552986ef21161712ac91cc5d0cb92a6b1d4aa0c674fb29"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-062.html",
+      "bytes": 317190,
+      "sha256": "7b99facd59d252b26ccacf1c98b0dfb4695f0e8d5d408ad8276a99784289c041"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-062.images.json",
+      "bytes": 10434,
+      "sha256": "d74eec09cef2da854bf931ea61628dcc9c17f165ccc468ba1c035259a0287726"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-062.txt",
+      "bytes": 460,
+      "sha256": "885ce0ab2927acaee6961bfd3ef0284e22cee747cd7c62854d3993adc67b2421"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-066.html",
+      "bytes": 320319,
+      "sha256": "f92ccfd24b1935f8d16c48e8a5663d2d3c748852471e0e54d75b97d0ea54eadc"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-066.images.json",
+      "bytes": 10464,
+      "sha256": "1ad888bdf10219fd6f9685c4e6a27b0c78c88eb12197d773ea35501be03333e8"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-066.txt",
+      "bytes": 1293,
+      "sha256": "5f704d6ff34a7a4a0caf5382b263157382b0854ad9f700d112f7dd77c469ca67"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-068.html",
+      "bytes": 318653,
+      "sha256": "977fe8dceb7f33b3a412367bebee03f0f4ffeace3b6b8b622f49ce86ae03c96b"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-068.images.json",
+      "bytes": 10464,
+      "sha256": "5b8cb943ec1cdb3b226d540a873f102d07ebb4685e4c42b8b2467a24ef2a3583"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-068.txt",
+      "bytes": 934,
+      "sha256": "ac69d7f21b57eab253e3752eb029a425831b1595992fe89291775678e1f77206"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-069.html",
+      "bytes": 317478,
+      "sha256": "83e57db22ce574fc0577e3f3554dc4fdbf22283a69dd127628fed95e2a49dfe0"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-069.images.json",
+      "bytes": 10442,
+      "sha256": "417584ab6ea597f151bf27186baa5a01e3339e6aeeca5922567f4c4bef436871"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-069.txt",
+      "bytes": 457,
+      "sha256": "3ed0d9fa620dee4bde7cb4764c1cb72bba0c64ff1557d520e5214e542c32599d"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-070.html",
+      "bytes": 317522,
+      "sha256": "bcdd52790774bc4740ded9053829fea9223f373aaa4770b6d769c6f2cbef1069"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-070.images.json",
+      "bytes": 10458,
+      "sha256": "349aa8012b33818e4705b97772e23ffd02a24686ee9ab44155d6d718dde99799"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-070.txt",
+      "bytes": 494,
+      "sha256": "0dc6d81a726b99bcc066d43432b5eae226ad51b22541495f6b241c0196efbe81"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-071.html",
+      "bytes": 319972,
+      "sha256": "95305ef59a6b23fe457d38314647daa95e3c7a502ac25a6cacab4715741c807b"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-071.images.json",
+      "bytes": 10449,
+      "sha256": "5efb65bb1913dad99d8eb809ad5230d7b50fa7439135af1c935f998b26039e89"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-071.txt",
+      "bytes": 2460,
+      "sha256": "9305cabdaf90fd63bce9f627c92a27426e8d94ab67f809bde775850322b225b5"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-074.html",
+      "bytes": 318094,
+      "sha256": "349e88e9e15d5a5978512ff512dc59329f0c3732f637184563fe7047d44d8e51"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-074.images.json",
+      "bytes": 10474,
+      "sha256": "c38fcbed5087e735d0773a43b4881b34ee3d1327d12bbab634bf2e464e6c359a"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-074.txt",
+      "bytes": 905,
+      "sha256": "69814dc5e8d931de686f5ae996ca76e5fb9926821657747331f8f00df8ea9413"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-075.html",
+      "bytes": 317037,
+      "sha256": "ab88751110d4baa80613bbb8b26b8f98d65f357f4b78cb7874e95c5ad3c6aec4"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-075.images.json",
+      "bytes": 10466,
+      "sha256": "a3dfcc526ee6f1783472d8da90048d32291913aeb5347e7d8e7ee4754be18937"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-075.txt",
+      "bytes": 357,
+      "sha256": "12d6e8fef6824231dfda68d9ee6a36083989661c427f81165d2a5028abea9314"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-076.html",
+      "bytes": 317255,
+      "sha256": "3a95421e4efc1128a7417ed293840352064f87325becceb16b0d82140fceaf74"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-076.images.json",
+      "bytes": 10449,
+      "sha256": "0c18f19ea838422a87b990d525d0f265074384f84a50ac9be82ee09ba3592bcf"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-076.txt",
+      "bytes": 553,
+      "sha256": "b220083792a465745ff81cd045123e2b90001573e02c1592e26dfd35d66004fa"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-077.html",
+      "bytes": 316932,
+      "sha256": "5176605b04d4ecf0763d29d3a8ad8b3eacbb3367dd58ff6a7bdfa23645e371c3"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-077.images.json",
+      "bytes": 10436,
+      "sha256": "4155ab7b50ffa4c17f6a7af059f8102cb0a850c0c2f1984f5afbce4063454d14"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-077.txt",
+      "bytes": 448,
+      "sha256": "c2dc8c55fa9cb1a9289b2995cf292b3addb010ddb9d02f394a02d312d0da0074"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-078.html",
+      "bytes": 316774,
+      "sha256": "0135637b377383b910154ef5e8c56f523219ce2d3e56081423d3afa90ec8a171"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-078.images.json",
+      "bytes": 10452,
+      "sha256": "34b7bfeabab1bc0169a82c908acb74ef49c63ff41cb8bd6fae84e6fdfe7acb0f"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-078.txt",
+      "bytes": 310,
+      "sha256": "85422d6916afdf6b72d9e44a1bb7209b8c6a04635ffb2beec6850ffc0c141d62"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-079.html",
+      "bytes": 317516,
+      "sha256": "cdd2a998d901408765da588b7f22fda1fa0de2d23c057a38017c532ce8cb83a6"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-079.images.json",
+      "bytes": 10442,
+      "sha256": "43d2cfe8fb1b3800bb0f9d92018dcaa08961db936ae9dea98c8e973325a3eee5"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-079.txt",
+      "bytes": 851,
+      "sha256": "ab7c1863a40c2a63f3190964d060593af8beeab84fc04ed775b595af688434f9"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-081.html",
+      "bytes": 317024,
+      "sha256": "08b3d8f34fb0fb4441c06e68c264f26c9863367cc59eb8ba016511af240afe76"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-081.images.json",
+      "bytes": 10444,
+      "sha256": "3323290ec14d99b85b17eb1a5281c91f44a9048c7f0cf78adb23fe2b46c519d0"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-081.txt",
+      "bytes": 482,
+      "sha256": "4eca820ac06cbd3f2f6dc409655fc91701efd77b942ae484c9ae32ca6e225457"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-082.html",
+      "bytes": 319390,
+      "sha256": "1c6f2195787d03df218f7bfd054f8fbc7103f9b921ef816804a2d385619df33b"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-082.images.json",
+      "bytes": 10452,
+      "sha256": "30f971d7aa78e4af7ea56aa725427bc3a3b5cdee789b03221eae32245447f191"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-082.txt",
+      "bytes": 2302,
+      "sha256": "a3fd6280b73ac241d3b38dfef653dfa2fee5a2057183562847bea7d63e207da8"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-083.html",
+      "bytes": 321101,
+      "sha256": "2e69a1afe943f903f7e50e0272d3b3031f160cd82898a7000eb4abe9846d2b45"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-083.images.json",
+      "bytes": 10451,
+      "sha256": "acfd51b8f9ac24f1acb6fac9dfe0923050bcfc8ec2976819b0e36f0341a5d210"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-083.txt",
+      "bytes": 3384,
+      "sha256": "e917cd3ca00fe610ff2def473b57654e388fb5a75056633cd1596ad852b97707"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-084.html",
+      "bytes": 319814,
+      "sha256": "7d395f71c79d3df28c7dc576ee668b26e4a387c98477fb0a36660fa61835cc60"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-084.images.json",
+      "bytes": 10448,
+      "sha256": "9be3f867ead291e2647b4dfb3ab3b140e42edc4eb73fdd158095230d12c0b18b"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-084.txt",
+      "bytes": 1214,
+      "sha256": "193b642396317c28a7dae3cc86a44ccc5f577cbc6d271ecf3c8c428bad126db6"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-085.html",
+      "bytes": 317774,
+      "sha256": "0aa6bc000aa8aaa8a8d6b468d11c78f229d86476ef6844708fdf8f4cbee0a784"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-085.images.json",
+      "bytes": 10456,
+      "sha256": "2c4da0d096122153cfb69f29d34abdcf97120cad6d707a4a9131e11b7346ad54"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-085.txt",
+      "bytes": 773,
+      "sha256": "f953dc9ec18c11d36282830fa99c4431475664af4de290a7f13e8bd00b24112a"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-086.html",
+      "bytes": 316935,
+      "sha256": "4929415744f54b00f79314994e40f30c20b0a55200614f73b2dc3743fa084a9f"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-086.images.json",
+      "bytes": 10449,
+      "sha256": "28bb6bbf845e6058640658c3866003be0db67e82247debc6ca3c27b18efe9bd6"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-086.txt",
+      "bytes": 397,
+      "sha256": "8129453e312733bd13cf1af52a1c8bda9d54f410e50590891a3813486bdd2b51"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-087.html",
+      "bytes": 318104,
+      "sha256": "96bff0fd902fc4193da1da7af769c8126bfe5873a1bdab413d2ea1d096d73603"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-087.images.json",
+      "bytes": 10469,
+      "sha256": "2346df839391a40c905b813a6c107f93a9a30f9cd451d63d7c15e194e09123b7"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-087.txt",
+      "bytes": 1157,
+      "sha256": "eea64cd0432c101425af124df29b0d51314b48043485966b614bc33147aaa4be"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-088.html",
+      "bytes": 318767,
+      "sha256": "cabdeb4fd7dbd3be51fa984bbbdc52fec428dccc2c9ecc4ea5a7876fdcd4dbc4"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-088.images.json",
+      "bytes": 10451,
+      "sha256": "bd05687c5919e31e2f7f24812b78f50052b5d4782919288f8046ab681ea77f5c"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-088.txt",
+      "bytes": 647,
+      "sha256": "f255246475d723f1f65dafa29b936ac32b8f64317e7e54542d7dc8adda59b50b"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-089.html",
+      "bytes": 320419,
+      "sha256": "178638bba7564c7b5ee7b1c59e4c4f2fbd215b514299858caaf02a7f1edf3b06"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-089.images.json",
+      "bytes": 10449,
+      "sha256": "39b4ab75eb0d566058458b33ffd8018df3a3f1eb745f59b6ae6fc0660fc0a930"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-089.txt",
+      "bytes": 3450,
+      "sha256": "c9e0d9f277abd7a424865c42410485ce574ae3e4cf14ca342928e1257541350f"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-090.html",
+      "bytes": 316817,
+      "sha256": "d8a87515a86a59509248fbe10135faf2ad6afd8b6e3979f85737f56bc1a547bb"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-090.images.json",
+      "bytes": 10456,
+      "sha256": "1c34553c79072ba9f075e9a7c94e8e09e1f7ba595961668ad814d9aa04db58f6"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-090.txt",
+      "bytes": 283,
+      "sha256": "555959f08d2db266d83ee683127002edcaddd0dda8cc5ecef36bc9325ce2dc15"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-093.html",
+      "bytes": 319178,
+      "sha256": "402bed94ff7eefb06e7907733b26575df2fada8b267f35c265ba8291b712c4b2"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-093.images.json",
+      "bytes": 10490,
+      "sha256": "fa8c301b695ae540682a74c2e7e73db9ca36659cb4665cc041b8d91aabfe403a"
+    },
+    {
+      "path": "work/research/batch37-mudita/raw/I-M012-093.txt",
+      "bytes": 884,
+      "sha256": "9caa6937ce37e6e3fe6f3534ba3d4b3ac501b50480f3c5d432b89ce44518c0e0"
+    }
+  ]
+}

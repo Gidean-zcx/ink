@@ -1,0 +1,57 @@
+[
+  {
+    "path": "work/hanvon-controls-deepening/raw/itsjzx.html",
+    "bytes": 139973,
+    "sha256": "8141902bb602149a6afb83490a947c0fd4fbe5457704116f53eb4f1f9295eeff"
+  },
+  {
+    "path": "work/hanvon-controls-deepening/raw/itsjzx.links.json",
+    "bytes": 1542,
+    "sha256": "a4fbff0e286242339e5a9bdbc2a74cba7d066bf97c4a5920917e3fd8f03e4503"
+  },
+  {
+    "path": "work/hanvon-controls-deepening/raw/itsjzx.txt",
+    "bytes": 13382,
+    "sha256": "b605d35f5ae46efafbb32607b7c41de13adbba4b2380c0a916146e3d1f4e973c"
+  },
+  {
+    "path": "work/hanvon-controls-deepening/raw/old-review.txt",
+    "bytes": 14587,
+    "sha256": "baa4503fef9809d7fbff00ca766f9d3e13bf4363af198732c457f08d5c3aaee5"
+  },
+  {
+    "path": "work/hanvon-controls-deepening/raw/sina-review.html",
+    "bytes": 47133,
+    "sha256": "24062272f14886675c052892fa2fd7b3f75c54aa28fb53a03e5ffc304cbaf99d"
+  },
+  {
+    "path": "work/hanvon-controls-deepening/raw/sina-review.links.json",
+    "bytes": 2235,
+    "sha256": "6891d1d9dfe80d71240632592284c5af6a1e887ad4a1a2acfdb0c6a2133a9e88"
+  },
+  {
+    "path": "work/hanvon-controls-deepening/raw/sina-review.txt",
+    "bytes": 8886,
+    "sha256": "b5485d81d27ba6ae06f68f4d9640cb1f696d0d2575c46bf93928c9a43cd6ffe0"
+  },
+  {
+    "path": "work/hanvon-controls-deepening/raw/smzdm-user.html",
+    "bytes": 1697,
+    "sha256": "ff9c58f37a6a88883f57fb0bb55673b6ea43ca7da2ad89ede5277817b93041b7"
+  },
+  {
+    "path": "work/hanvon-controls-deepening/raw/smzdm-user.links.json",
+    "bytes": 3,
+    "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+  },
+  {
+    "path": "work/hanvon-controls-deepening/raw/smzdm-user.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "work/hanvon-controls-deepening/raw/zhihu-compare.html",
+    "bytes": 650,
+    "sha256": "29e1d21dd69d42d9fc9f7bddefb11309e0ea415a9b3801bb1c3ceeee7985dc61"
+  }
+]

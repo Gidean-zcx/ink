@@ -1,0 +1,54 @@
+[
+  {
+    "slug": "volume",
+    "url": "https://helpguide.sony.net/dmp/1301/v1/en/contents/TP1000733590.html",
+    "status": 200,
+    "final_url": "https://helpguide.sony.net/dmp/1301/v1/en/contents/TP1000733590.html",
+    "raw_path": "work/research/batch46-sony-system-audio/raw/volume.html",
+    "raw_sha256": "6fa3b75a2fb1c484763353fa0ffc11ee5b312d018428fa06b8001a7f5cb5a6a1",
+    "text_path": "work/research/batch46-sony-system-audio/raw/volume.txt",
+    "text_sha256": "12b898687393fc20e017ef6a1a030c8c391e878260949052e91f95ab581086d0",
+    "text_chars": 2479,
+    "last_modified": "Wed, 13 Nov 2024 23:10:09 GMT",
+    "checked_on": "2026-10-27"
+  },
+  {
+    "slug": "battery",
+    "url": "https://helpguide.sony.net/dmp/1301/v1/en/contents/TP1000733557.html",
+    "status": 200,
+    "final_url": "https://helpguide.sony.net/dmp/1301/v1/en/contents/TP1000733557.html",
+    "raw_path": "work/research/batch46-sony-system-audio/raw/battery.html",
+    "raw_sha256": "4771f272980cbad90f6f13e3b0ee806acbf0dcc00f6af71b62dcb27d5b72da36",
+    "text_path": "work/research/batch46-sony-system-audio/raw/battery.txt",
+    "text_sha256": "a9701d546bd460505eb8482007a28918499eff778820ec796d695a41665164e4",
+    "text_chars": 1265,
+    "last_modified": "Wed, 13 Nov 2024 23:10:07 GMT",
+    "checked_on": "2026-10-27"
+  },
+  {
+    "slug": "home",
+    "url": "https://helpguide.sony.net/dmp/1301/v1/en/contents/TP1000735087.html",
+    "status": 200,
+    "final_url": "https://helpguide.sony.net/dmp/1301/v1/en/contents/TP1000735087.html",
+    "raw_path": "work/research/batch46-sony-system-audio/raw/home.html",
+    "raw_sha256": "8c941225d2dbeb2c7192eb1eae2c745428150f6efdaab40d73b9306d6813c517",
+    "text_path": "work/research/batch46-sony-system-audio/raw/home.txt",
+    "text_sha256": "c9a97982861aaaaad5be639197dfed2dae71205fa0e73f0bbb104c96c0419a14",
+    "text_chars": 1164,
+    "last_modified": "Wed, 13 Nov 2024 23:10:10 GMT",
+    "checked_on": "2026-10-27"
+  },
+  {
+    "slug": "downloads",
+    "url": "https://helpguide.sony.net/dmp/1301/v1/en/contents/TP1000733547.html",
+    "status": 200,
+    "final_url": "https://helpguide.sony.net/dmp/1301/v1/en/contents/TP1000733547.html",
+    "raw_path": "work/research/batch46-sony-system-audio/raw/downloads.html",
+    "raw_sha256": "424ca35af9a4ea2c7142a79f67e954b9bdf44f02aad0a9cb942c0a3544ca384b",
+    "text_path": "work/research/batch46-sony-system-audio/raw/downloads.txt",
+    "text_sha256": "02b9b4c02da3993a582ac6e3f38a7fd90e1491585e0076827673d644da30ad0b",
+    "text_chars": 1855,
+    "last_modified": "Wed, 13 Nov 2024 23:10:06 GMT",
+    "checked_on": "2026-10-27"
+  }
+]

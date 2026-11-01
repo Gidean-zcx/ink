@@ -1,0 +1,318 @@
+Playing With Numbers: ‘DragonBox’ and ‘Osmo’ – GeekDad
+Skip to content
+GeekDad
+Raising Geek Generation 2.0
+Gaming
+D&D Adventures
+Family Gamer TV
+GeekDad Approved
+Tabletop Games
+Re-Spawn
+Re-Roll
+Tabletop Game Review Index
+Videogames
+View All in Gaming
+Entertainment
+Books
+Columns
+10 Things Parents
+Architechnologist
+Cosplay Family Spotlight
+DC This Week
+Gadget Bits
+Life of the Party Comic
+Same Geek Channel
+Stack Overflow
+Word Wednesday
+View All in Columns
+Comic Books
+Events
+Birthdays & Anniversaries
+Hacking the Holidays
+People
+Places
+View All in Events
+Geek Culture
+Movies
+Podcasts
+BAFS
+Bounded Enthusiasm
+Bristol Banter
+Dice Section
+Gameroom Junkies
+Great Big Beautiful Podcast
+Hey You Geeks
+Novel Ideas
+Sunday Evening With Captain Owen
+Radio Free Hipster
+The GeekDads
+We Are Entertained
+View All in Podcasts
+Television
+Theater
+Videos
+Web Comics
+View All in Entertainment
+Products
+Apparel
+Audio Gear
+Gadgets
+Gift Guide
+Kickstarter
+Reviews
+Toys
+View All in Products
+Health & Leisure
+Hobbies
+Leisure
+Parenting
+Sports
+Travel
+Projects
+Sports
+Travel
+Science & Tech
+Education
+Electronics
+Engineering
+Robotics
+Science
+Software
+Space & Astronomy
+Internet
+View All in Science & Tech
+Shop
+Daily Deals
+GeekDad Merch
+Info
+About GeekDad
+Advertise on GeekDad
+Crowdfunding Review Guidelines
+PR/Product Review Enquiries
+Privacy Policy
+RSS
+Weather Stations
+Visit GeekMom
+Search for:
+Playing With Numbers: ‘DragonBox’ and ‘Osmo’
+Education
+Videogames
+December 2, 2015
+Jonathan H. Liu
+I’ve covered various ways to
+incorporate STEM education through play
+before, and here are two more math-based apps that I think are outstanding.
+The first is
+DragonBox Numbers
+, by the folks who created the
+groundbreaking algebra game
+that is
+still
+the best educational app I’ve seen. It’s funny, really–they started with algebra, then moved to geometry, and now they’ve got an app for addition and subtraction. Really, though, in the other two apps, you don’t use a lot of numbers–the algebra has been abstracted into symbols, making it easier to grasp the concepts without getting bogged down by the arithmetic.
+My toddler really loves playing “Nooms.” Photo: Jonathan H. Liu
+DragonBox Numbers
+starts off with a very brief tutorial: there are little critters called “Nooms,” and when you feed a Noom to another Noom, they combine and stack up vertically. They get additional eyes, but only up to a point, and they also change color and make different noises depending on what number they are. Swipe across a Noom, and it will cut into smaller numbers.
+There are a few modes of play–Puzzles, Ladder, and Sandbox.
+DragonBox Numbers Puzzles
+The Puzzles give you various shapes that you have to fill in with Nooms, which you get by tapping on a pipe at the top of the screen. Some levels just give you the purple 1-Nooms, but others may give you larger ones that you need to cut down to size. Basically as you drag and drop the Nooms into their places, the image fills in with colors. The introductory puzzles are just abstract shapes, but when you get into the harder puzzles the Nooms may change colors when dropped into place.
+Sometimes you get clues in the spaces–either the Noom’s face or the numeral. Every so often you’ll be asked to trace the number that was just correctly matched. Doing so will give you stars that fill in some extra shapes.
+Every time you finish a puzzle, you get coins–the higher the level, the more coins you get. Coins are then used to unlock further puzzles. Just about everything you do–gaining coins, feeding Nooms to each other, spending coins–is announced by the narrator’s voice, giving you audio feedback about what’s going on.
+DragonBox Numbers Ladders
+The Ladders mode just presents you with a vertical number line and a goal number. Sometimes the goal is presented as a Noom face, and sometimes as a numeral. Your goal is to create Nooms to reach the goal. As you complete levels, you fill in pieces of a picture on the level selection screen. Harder levels have other features on the number line: bombs will explode a Noom if you hit that exact number; up arrows will make a Noom grow.
+The final mode is Sandbox, which just lets you play with Nooms on an empty landscape. There are lines to indicate the 10s increments, but otherwise it’s just a big empty screen with a Noom pipe in the corner.
+I don’t know that
+DragonBox Numbers
+is quite as innovative as
+DragonBox Algebra
+, but it does seem like a more tangible way to learn numbers, counting, addition, and subtraction. My toddler, at age 2, has been able to figure out the app largely on her own. My older kids and I, even though we don’t need practice with single-digit addition, have also enjoyed playing through the puzzles simply because it’s fun to see all the shapes fill in and the image appear.
+Ultimately,
+DragonBox Numbers
+is about developing “number sense,” an intuitive understanding of what numbers
+mean
+. Many of us learned arithmetic by rote memory, and it’s sometimes hard to grasp what’s going on with our kids’ new math techniques. But I can see how a deeper understanding of numbers can serve as a foundation for future mathematics, and I think
+DragonBox Numbers
+does a good job of it.
+Here’s my toddler playing one of the puzzles:
+DragonBox Numbers
+is available for
+iOS
+,
+Android
+, or
+Amazon tablets
+for $7.99.
+And now, on to
+Osmo Numbers
+.
+My older girls really loved Osmo Numbers. Photo: Jonathan H. Liu
+In case you aren’t familiar with Osmo, it’s a really nifty gadget that enables you to combine physical objects with your iPad. You set the iPad (iPad 2 and up or iPad mini) in the base, stick the small mirror over the camera, and the iPad can now look down at the table directly in front of the iPad. There are various apps (and accompanying physical pieces) for playing with
+tangrams
+,
+words
+, and
+drawings
+–even one in which you get to
+play with physics
+by drawing platforms or just putting objects on the table.
+Numbers
+is the latest app in the Osmo library, and it uses two types of number tiles: some have pips (1, 2, and 5) and others have numerals on them (from 0 to 9). The pip tiles are used for the first set of levels, Count, and then the numerals are used for the rest of the levels: Add, Connect, and Multiply.
+Osmo Numbers menu
+The idea is really simple: you pop bubbles by getting the right number on the table in front of the iPad, trying to build up your aquarium with fish and the little crates that appear from time to time. But seeing it in action feels almost magical–you throw a bunch of tiles out there, and the app uses the camera to read them instantly, displaying them on the screen and adding them up (or multiplying, as the case may be).
+Osmo Numbers Count (on left) and Add (on right)
+Each section has 8 levels in it. The easiest level of Count has numbers from 1 to 6, and the hardest covers numbers from 15 to 26. For those, you use the pip tiles and just match the numbers on the bubbles with that many pips. Some levels are restricted to odd or even numbers, and some have all numbers in the range.
+Add uses the numerical tiles, with slightly higher ranges, but works pretty much the same way.
+Each level has three related fish to collect–you’ll have to score a certain number of points before you get a key that unlocks the next level, and hit specific thresholds to release the bigger fish. The level ends when the tank fills up with water–the bigger the bubble, the more water drips into the tank. However, what you’ll discover is that making combos by popping multiple bubbles of the same number prevents the water from dripping in, so after you get past the initial basic concept, you’ll have to be more strategic about which bubbles to pop when in order to collect all the fish.
+There are some special types of bubbles and objects, too: yellow bubbles will zap all the other bubbles of the same number. Bombs blow up nearby bubbles. Pink bubbles stir up some jets that mix everything up. Black warp bubbles suck in whatever’s nearby and spit it out back at the top of the screen. Crates will release fish food or plants for your aquarium.
+Osmo Numbers Connect (left) and Multiply (right)
+As you get deeper into the ocean, you’ll come to Connect and Multiply. One thing I like about the menu is that it branches: after you complete the first two of a type of level, you can either continue on that same type of level, or move on to the next type. So if addition is too simple, you can move down to Multiply without having to finish
+all
+of the Add levels.
+Connect lets you make multi-digit numbers by placing tiles next to each other. Put a 2 and a 5 out there, and it adds up to 7. Line them up next to each other, and you’ve got 25. To further complicate these levels, there’s often a green number (either added or subtracted) that changes after each pop.
+Multiply does just that: numbers lined up with each other are multiplied, but numbers and groups of numbers that are separate get added up. So you can create things like (3 x 5) + (6 x 7) = 57.
+On the menu, each level shows silhouettes of the fish that haven’t been discovered yet–the fish that have been found just swim around on the menu screen freely, which is pretty fun.
+Even though
+Osmo Numbers
+is designed for kids, I’ve found that getting all the fish on the higher levels can be quite challenging, and I admit that I’ve stayed up late after the kids are in bed, trying to get just one more fish.
+The Osmo system is a lot of fun and I’ve enjoyed all of the games they’ve released so far.
+Numbers
+is definitely a highlight that my kids and I have all really liked. If you create a My Osmo account, then you can have multiple profiles on a single device, letting everyone track their progress separately.
+Osmo only works with iPads, and while the apps are free, you will need to purchase a base and the kits. Amazon has the
+“Genius Package” available for $99.99
+, which includes the base,
+Words
+, Tangram, and
+Numbers
+. You can also
+order directly from Osmo’s website
+; if you already had the starter kit and just need
+Numbers
+, it’s available for $29.99.
+Disclosure: I received samples of the apps and products for review.
+Liked it? Take a second to support GeekDad and GeekMom on Patreon!
+Share this:
+Share on Facebook (Opens in new window)
+Facebook
+Share on X (Opens in new window)
+X
+Share on Pinterest (Opens in new window)
+Pinterest
+Share on Tumblr (Opens in new window)
+Tumblr
+Share on LinkedIn (Opens in new window)
+LinkedIn
+Share on Reddit (Opens in new window)
+Reddit
+More
+Share on WhatsApp (Opens in new window)
+WhatsApp
+Share on Telegram (Opens in new window)
+Telegram
+Email a link to a friend (Opens in new window)
+Email
+Print (Opens in new window)
+Print
+Related
+Jonathan H. Liu
+Jonathan H. Liu is a stay-at-home dad in Portland, Oregon, who loves to read, is always up for a board game, and has a bit of a Kickstarter habit.
+I can be reached at jonathan at geekdad dot com.
+Tagged
+Android
+iPad
+Osmo
+Post navigation
+Take a Ride on ‘Toruk’ as ‘Avatar’ and Cirque du Soleil Collide
+Making an Old School Wishlist
+Related Posts
+Teach Your Kids to Code Apps With Pocket Code
+November 30, 2015
+January 15, 2018
+Bernd Grobauer
+Word Nerd: Lightening in a Bottle
+August 15, 2013
+February 19, 2021
+Jim MacQuarrie
+Gameroom Junkies #64 – Gen Con, Pacific Pinball, & VHS Glory
+August 31, 2016
+Preston Burt
+Tabletop Game Review Index
+Get GeekDad via Email
+Enter your email address to subscribe to this blog and receive notifications of new posts by email.
+Email Address
+Subscribe
+Join 524 other subscribers
+Support Us on Patreon
+Support  GeekDad on Patreon!
+Masthead
+Owner/Publisher, Editor-at-Large
+Ken Denmead
+Editor-in-Chief
+Matt Blum
+Managing Editor
+Z
+Associate Editors/GeekMom Partners
+Jenny Bristol
+Senior Editors
+Jonathan H. Liu
+, Patricia Volmer, Sophie Brown
+Associate Publishers*
+David Michael, Gerry Tolbert, Andrew Smith, Ray Wehrs, Joel Becker, Scott Gaeta, Beth Kee, Joey Mills, talkie_tim, Danny Marquardt, Adam Bruski, John Bain, Bill Moore, Adam Frank, Lacey Hays, Peter Morson, James Needham, Matt Fleming, Adam Anderson, Jim Reynolds, Seiler Hagan, Bryan Wade, Petrov Neutrino, Jay Shapiro
+Editor (Emeritus)
+Chris Anderson
+Contributors
+Paul Benson
+,
+Darren Blankenship
+,
+John Booth
+,
+Jenny Bristol
+,
+Rory Bristol
+,
+Robin Brooks
+,
+Tom Fassbender
+,
+Whit Honea
+,
+Rob Huddleston
+,
+Will James
+,
+Michael Knight
+,
+Joey Mills
+,
+Brad Moon
+,
+Anton Olsen
+,
+Skip Owens
+,
+Mariana Ruiz
+,
+Derrick Schneider
+,
+Tony Sims
+,
+Dakster Sullivan
+,
+Mark Vorenkamp
+*Thanks for your
+support on Patreon!
+Privacy & Cookies: This site uses cookies. By continuing to use this website, you agree to their use.
+To find out more, including how to control cookies, see here:
+Cookie Policy
+Get the GeekDad Books!
+Get GeekDad/GeekMom Merch
+Find us on Mastodon
+GeekDad LLC
+|
+Theme: News Vibrant by
+CodeVibrant
+.
+Loading Comments...
+Write a Comment...
+Email (Required)
+Name (Required)
+Website

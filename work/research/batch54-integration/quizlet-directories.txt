@@ -1,0 +1,199 @@
+Creating, editing, and saving sets – Quizlet Help Center (https://help.quizlet.com/hc/en-us/sections/360004698771-Creating-editing-and-saving-sets)
+citeturn1089view0 [wordlim: 200] Crawled: today; Content type: text/html; Source: open({"ref_id":"https://help.quizlet.com/hc/en-us/sections/360004698771-Creating-editing-and-saving-sets","lineno":null}); Total lines: 61
+L0: 【0†iframe†www.googletagmanager.com】
+L1: 
+L2: 【1†Help center†quizlet.zendesk.com】
+L3: 
+L4: Topics
+L5: 
+L6: Popular Articles
+L7: 
+L8: 【2†Resending a confirmation message】 【3†Changing your username】 【4†Changing your password】 【5†Finding flashcard sets】 【6†Finding your teacher's class】 【7†Browser and device compatibility】
+L9: 
+L10: [Input][Input: Search]
+L11: 
+L12: 【8†Image】   【8†Username】
+L13: # Creating, editing, and saving sets
+L14: 
+L15: * * *
+L16:   * 【9†Create flashcard sets directly in Claude】
+L17:   * 【10†Studying with Study Groups】
+L18:   * 【11†Creating study sets with Smart Assist】
+L19:   * 【12†Becoming a top creator on Quizlet】
+L20:   * 【13†Studying with Study Guides】
+L21:   * 【14†What are flashcard sets?】
+L22:   * 【15†Creating flashcard sets】
+L23:   * 【16†Adding images to sets from the free gallery】
+L24:   * 【17†Adding your own images to sets】
+L25:   * 【18†Recording custom audio】
+L26:   * 【19†Creating a set by scanning a document】
+L27:   * 【20†Creating sets by importing content】
+L28:   * 【21†Creating diagram sets】
+L29:   * 【22†Editing sets】
+L30:   * 【23†Editing draft sets】
+L31:   * 【24†Copying and editing a set】
+L32:   * 【25†Trouble copying and saving a set】
+L33:   * 【26†Combining flashcard sets】
+L34:   * 【27†Deleting a set】
+L35:   * 【28†Rating a set】
+L36:   * 【29†Changing a rating on a set】
+L37:   * 【30†Viewing your sets' ratings】
+L38:   * 【31†Removing sets from your Recent activity feed】
+L39: ##### About us
+L40: 
+L41: 【32†About Quizlet†quizlet.com】 【33†How Quizlet works†quizlet.com】 【34†Careers†quizlet.com】 【35†Advertise with us†quizlet.com】 【36†Get the app†quizlet.com】
+L42: 
+L43: ##### For students
+L44: 
+L45: 【37†Flashcards†quizlet.com】 【38†Test†quizlet.com】 【39†Learn†quizlet.com】 【40†Solutions†quizlet.com】 【41†Modern Learning Lab†quizlet.com】 【42†Quizlet Plus†quizlet.com】 【43†Study Guides†quizlet.com】 【44†Pomodoro timer†quizlet.com】
+L46: ##### For Teachers
+L47: 
+L48: 【45†Live†quizlet.com】 【46†Blog†quizlet.com】 【47†Be the Change†quizlet.com】 【48†Quizlet Plus for teachers†quizlet.com】
+L49: ##### Resources
+L50: 
+L51: 【49†Help center†quizlet.com】 【50†Sign up†quizlet.com】 【51†Honor code†quizlet.com】 【52†Community guidelines†quizlet.com】 【53†Accessibility statement†quizlet.com】 【54†Privacy†quizlet.com】 【55†Your Privacy/Cookies Choices†quizlet.com】 【56†Terms†quizlet.com】 【57†Ad and Cookie Policy†quizlet.com】 【58†Interest-Based Advertising†quizlet.com】 【59†Quizlet for Schools†quizlet.com】 【60†Parents†quizlet.com】
+L52: 
+L53: ##### Language
+L54: 
+L55: English (United States)
+L56: 
+L57: 【61†Image】 【62†Get the app†get.quizlet.com】
+L58: ##### Get the app
+L59: 
+L60: © Quizlet Inc.
+--------------------------------------------------------------------------------
+Accessing and sharing – Quizlet Help Center (https://help.quizlet.com/hc/en-us/sections/360005877232-Accessing-and-sharing)
+citeturn1089view1 [wordlim: 200] Crawled: today; Content type: text/html; Source: open({"ref_id":"https://help.quizlet.com/hc/en-us/sections/360005877232-Accessing-and-sharing","lineno":null}); Total lines: 51
+L0: 【0†iframe†www.googletagmanager.com】
+L1: 
+L2: 【1†Help center†quizlet.zendesk.com】
+L3: 
+L4: Topics
+L5: 
+L6: Popular Articles
+L7: 
+L8: 【2†Resending a confirmation message】 【3†Changing your username】 【4†Changing your password】 【5†Finding flashcard sets】 【6†Finding your teacher's class】 【7†Browser and device compatibility】
+L9: 
+L10: [Input][Input: Search]
+L11: 
+L12: 【8†Image】   【8†Username】
+L13: # Accessing and sharing
+L14: 
+L15: * * *
+L16: 
+L17:   * 【5†Finding flashcard sets】
+L18:   * 【6†Finding your teacher's class】
+L19:   * 【9†Navigating your home feed on mobile devices】
+L20:   * 【10†Trouble accessing a set】
+L21:   * 【11†Sharing sets and folders】
+L22:   * 【12†Changing a set's editing permissions】
+L23:   * 【13†Changing a set's visibility】
+L24:   * 【14†Protecting a set with a password】
+L25:   * 【15†Exporting your sets】
+L26:   * 【16†Embedding sets】
+L27:   * 【17†Studying offline with Quizlet mobile apps】
+L28:   * 【18†Dropping a class】
+L29: ##### About us
+L30: 
+L31: 【19†About Quizlet†quizlet.com】 【20†How Quizlet works†quizlet.com】 【21†Careers†quizlet.com】 【22†Advertise with us†quizlet.com】 【23†Get the app†quizlet.com】
+L32: 
+L33: ##### For students
+L34: 
+L35: 【24†Flashcards†quizlet.com】 【25†Test†quizlet.com】 【26†Learn†quizlet.com】 【27†Solutions†quizlet.com】 【28†Modern Learning Lab†quizlet.com】 【29†Quizlet Plus†quizlet.com】 【30†Study Guides†quizlet.com】 【31†Pomodoro timer†quizlet.com】
+L36: ##### For Teachers
+L37: 
+L38: 【32†Live†quizlet.com】 【33†Blog†quizlet.com】 【34†Be the Change†quizlet.com】 【35†Quizlet Plus for teachers†quizlet.com】
+L39: ##### Resources
+L40: 
+L41: 【36†Help center†quizlet.com】 【37†Sign up†quizlet.com】 【38†Honor code†quizlet.com】 【39†Community guidelines†quizlet.com】 【40†Accessibility statement†quizlet.com】 【41†Privacy†quizlet.com】 【42†Your Privacy/Cookies Choices†quizlet.com】 【43†Terms†quizlet.com】 【44†Ad and Cookie Policy†quizlet.com】 【45†Interest-Based Advertising†quizlet.com】 【46†Quizlet for Schools†quizlet.com】 【47†Parents†quizlet.com】
+L42: 
+L43: ##### Language
+L44: 
+L45: English (United States)
+L46: 
+L47: 【48†Image】 【49†Get the app†get.quizlet.com】
+L48: ##### Get the app
+L49: 
+L50: © Quizlet Inc.
+--------------------------------------------------------------------------------
+Studying – Quizlet Help Center (https://help.quizlet.com/hc/en-us/categories/360001601132-Studying)
+citeturn1089view2 [wordlim: 200] Crawled: today; Content type: text/html; Source: open({"ref_id":"https://help.quizlet.com/hc/en-us/categories/360001601132-Studying","lineno":null}); Total lines: 78
+L0: 【0†iframe†www.googletagmanager.com】
+L1: 
+L2: 【1†Help center†quizlet.zendesk.com】
+L3: 
+L4: Topics
+L5: 
+L6: Popular Articles
+L7: 
+L8: 【2†Resending a confirmation message】 【3†Changing your username】 【4†Changing your password】 【5†Finding flashcard sets】 【6†Finding your teacher's class】 【7†Browser and device compatibility】
+L9: 
+L10: [Input][Input: Search]
+L11: 
+L12: 【8†Image】   【8†Username】
+L13: 
+L14: 【9†Image】
+L15: 
+L16: # Studying
+L17: ### Popular Articles
+L18:   * 【2†Resending a confirmation message Users in certain locations must have their parent confirm their consent via a confirmation email before they can cre...】
+L19:   * 【3†Changing your username You can change your username only once.* To change your username Log in to your account. Select your profile image...】
+L20:   * 【4†Changing your password You can change your password from your Settings. To change your password Log in to your account. Select your profi...】
+L21:   * 【5†Finding flashcard sets There are millions of flashcard sets created by students and teachers, which makes it easy to find the right flashcar...】
+L22:   * 【6†Finding your teacher's class To join a class, you'll need to create an account or log in to your existing account. To find your teacher's class ...】
+L23:   * 【7†Browser and device compatibility You can use Quizlet on a wide variety of devices. You can use the official apps for either iOS or Android, and our we...】
+L24: ### Creating, editing, and saving sets
+L25: 
+L26:   * 【10†Create flashcard sets directly in Claude】
+L27:   * 【11†Studying with Study Groups】
+L28:   * 【12†Creating study sets with Smart Assist】
+L29:   * 【13†Becoming a top creator on Quizlet】
+L30:   * 【14†Studying with Study Guides】
+L31:   * 【15†What are flashcard sets?】
+L32: 【16†See all 23 articles】
+L33: ### Accessing and sharing
+L34: 
+L35:   * 【5†Finding flashcard sets】
+L36:   * 【6†Finding your teacher's class】
+L37:   * 【17†Navigating your home feed on mobile devices】
+L38:   * 【18†Trouble accessing a set】
+L39:   * 【19†Sharing sets and folders】
+L40:   * 【20†Changing a set's editing permissions】
+L41: 【21†See all 12 articles】
+L42: ### Studying
+L43: 
+L44:   * 【22†Studying with Podcasts】
+L45:   * 【23†Studying with Spaced Repetition】
+L46:   * 【24†Using Study with friends】
+L47:   * 【25†Playing Charms】
+L48:   * 【26†Studying with Audio Notes】
+L49:   * 【27†Create flashcard sets directly in ChatGPT】
+L50: 【28†See all 27 articles】
+L51: 
+L52: ### Folders
+L53: 
+L54:   * 【29†Organizing study content with tags】
+L55:   * 【30†Organizing study content with folders】
+L56: ##### About us
+L57: 
+L58: 【31†About Quizlet†quizlet.com】 【32†How Quizlet works†quizlet.com】 【33†Careers†quizlet.com】 【34†Advertise with us†quizlet.com】 【35†Get the app†quizlet.com】
+L59: 
+L60: ##### For students
+L61: 
+L62: 【36†Flashcards†quizlet.com】 【37†Test†quizlet.com】 【38†Learn†quizlet.com】 【39†Solutions†quizlet.com】 【40†Modern Learning Lab†quizlet.com】 【41†Quizlet Plus†quizlet.com】 【42†Study Guides†quizlet.com】 【43†Pomodoro timer†quizlet.com】
+L63: ##### For Teachers
+L64: 
+L65: 【44†Live†quizlet.com】 【45†Blog†quizlet.com】 【46†Be the Change†quizlet.com】 【47†Quizlet Plus for teachers†quizlet.com】
+L66: ##### Resources
+L67: 
+L68: 【48†Help center†quizlet.com】 【49†Sign up†quizlet.com】 【50†Honor code†quizlet.com】 【51†Community guidelines†quizlet.com】 【52†Accessibility statement†quizlet.com】 【53†Privacy†quizlet.com】 【54†Your Privacy/Cookies Choices†quizlet.com】 【55†Terms†quizlet.com】 【56†Ad and Cookie Policy†quizlet.com】 【57†Interest-Based Advertising†quizlet.com】 【58†Quizlet for Schools†quizlet.com】 【59†Parents†quizlet.com】
+L69: 
+L70: ##### Language
+L71: 
+L72: English (United States)
+L73: 
+L74: 【60†Image】 【61†Get the app†get.quizlet.com】
+L75: ##### Get the app
+L76: 
+L77: © Quizlet Inc.
+

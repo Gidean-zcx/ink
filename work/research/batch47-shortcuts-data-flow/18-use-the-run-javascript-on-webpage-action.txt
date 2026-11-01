@@ -1,0 +1,19 @@
+Use the Run JavaScript on Webpage action in Shortcuts on iPhone or iPad
+Use the Run JavaScript on Webpage action to retrieve specific data from a website, or to modify the contents of a webpage.
+The Run JavaScript on Webpage action contains a text field where you write your own script. You run the shortcut from the Safari app. Before you can run JavaScript from a shortcut you must turn on Allow Running Scripts. See Advanced Privacy and security settings in Shortcuts on iPhone or iPad.
+Note: You can also use the Run JavaScript on Webpage action in SFSafariViewController. For more information, see the Apple Developer website.
+Create a JavaScript shortcut
+In the Shortcuts app on your iPhone or iPad, tap in the upper-right corner of the screen.
+In the shortcut editor, tap the search field at the bottom of the screen, begin typing “Run JavaScript…” in the search field, then tap the Run JavaScript on Webpage action to add it to the shortcut editor.
+Write your script in the text field in the Run JavaScript on Webpage action.
+Important: In your script, make sure you call the completion handler. For more information, see Run JavaScript on Webpage action output.
+Add any other actions you want to include in the shortcut.
+Tip: To use multiple Run JavaScript on Webpage actions in the same shortcut, make sure each instance of the action has the Safari webpage as its input.
+Tap to open Details, then turn on Show in Share Sheet.
+A new row labeled “Receive” appears. To ensure that the shortcut appears only in Safari, deselect all input types except “Safari webpages.”
+For more information, see Understanding input types.
+Tap Done to return to the shortcut editor, then tap Done again to save the shortcut to your shortcuts collection.
+For more information about working with JavaScript in Shortcuts, see Intro to the Run JavaScript on Webpage action output.
+Run the JavaScript shortcut on a webpage
+In Safari on your iPhone or iPad, tap .
+Tap a shortcut containing the Run JavaScript on Webpage action.

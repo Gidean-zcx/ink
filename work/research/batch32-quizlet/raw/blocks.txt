@@ -1,0 +1,17 @@
+Source: https://help.quizlet.com/hc/en-us/articles/37203179032717-Playing-a-game-of-Blocks
+Retrieved: 2026-10-27
+Access: official Help text returned by public search extraction; not source HTML; HTTP status unavailable
+Title: Playing a game of Blocks
+Platforms shown: iOS, Web, Android
+
+Rule and flow extracted:
+- A set needs at least six terms and definitions.
+- Web: log in -> set -> Blocks -> Play. App text starts from opening a set, then Blocks -> Play.
+- Drag three pieces onto the board; complete rows/columns to earn points.
+- After placing all three pieces, answer a question correctly to receive three more pieces.
+- A question can be refreshed to try another.
+- The game ends when the player runs out of moves; the page frames the result against a top score.
+- Options can restrict study to starred terms and choose the question format.
+- In certain locations, younger users need parental consent confirmed by email before play.
+
+Not stated in the extracted official text: manual quit/cancel behavior; whether refresh has a penalty; wrong-answer feedback; top-score storage/sync/reset; subscription boundary.

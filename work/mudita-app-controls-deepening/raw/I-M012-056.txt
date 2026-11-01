@@ -1,0 +1,26 @@
+How To Add and Delete Fingerprints on Mudita Kompakt
+Modified on: Sat, 3 Oct, 2026 at 8:42 AM
+How to add fingerprints
+Kompakt’s power button contains a fingerprint scanner, letting you unlock you phone quickly without the passcode.
+To add a new fingerprint:
+Press the Control Center button
+Tap Settings icon
+Tap Security
+Tap Manage Fingerprints
+Type your passcode and tap Enter on the keypad
+Tap the Plus icon
+Follow the onscreen instructions*
+*Make sure you place a slightly different part of your finger on the sensor after each vibration
+How to delete fingerprints
+Press the Control Center button
+Tap Settings icon
+Tap Security
+Tap Manage Fingerprints
+Type your passcode and tap Enter on the keypad
+Tap the Bin icon next to the fingerprint you want to delete
+Tap Delete
+Was this article helpful?
+ No
+ Yes
+That’s Great!
+Thank you for your feedback

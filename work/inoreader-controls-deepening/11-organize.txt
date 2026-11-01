@@ -1,0 +1,197 @@
+Folders and tags - organize feeds by topic and articles by subject | Inoreader
+inoreader-logo
+Start 15-Day Trial
+Home
+Features
+Enterprise
+Pricing
+Blog
+Contact
+RSS tools
+Free tools
+Feed validatorValidate a feed for errors
+Podcast validatorGet a podcast listed everywhere
+Feed analyticsSee how a feed performs
+Feed finderFind the feeds of any website
+OPML checkerCheck and repair an OPML export
+All RSS tools
+Feed validator
+Inoreader fetches the feed the way a reader does, reports what is wrong and tells you exactly what to change.
+Open the validator
+Podcast validator
+Inoreader fetches a podcast feed, its newest episode files and the artwork, and checks everything Apple Podcasts, Spotify and the apps require.
+Open the podcast validator
+Feed analytics
+See how many Inoreader readers follow a feed, how it ranks in its topic and how reliably it delivers new posts.
+Open feed analytics
+Feed finder
+Paste a website's address and Inoreader lists the feeds it publishes, for you to copy or follow in one click.
+Open the finder
+OPML checker
+Upload an OPML export and see which of its feeds still work, which fail, which moved and which are listed twice.
+Open the checker
+All RSS tools →
+Sign in
+Create account
+Features
+/
+Folders and tags
+Organize your feeds and the articles you keep
+Folders are for sources, and tags are for articles. Put feeds in folders to read one topic at a time, tag the articles you want to come back to, and let rules and suggested tags do part of the organizing for you.
+Create a free account
+FreeFolders and tags are free.
+ProPro adds magic sorting, suggested tags and an unread duration per folder.
+Use folders for sources and tags for articles
+Folders group the feeds you follow by topic, so you can read one subject at a time. Tags mark the articles you want to keep, from any feed.
+Folders for sources
+Group feeds by topic and read one topic at a time. A feed can be in several folders, and on Pro you can set a folder to keep only today's or this week's unread articles.
+Tags for articles
+Tag an article with a keyboard shortcut and find it under Saved, next to your read-later list. The tag dashboard lets you rename, merge and pin tags, and search can combine several of them.
+Smart sorting
+Sort a folder newest first, oldest first or, on Pro, with magic sorting, which puts the articles other readers found most worth their time at the top. Suggested tags and rules can tag new articles for you.
+Sources for widgets, digests and feeds
+A folder or a tag can become a dashboard widget, an email digest, an output feed for your website or a shared Team folder.
+Get organized
+Create a folder from the top of the sidebar and drag feeds into it. A feed can go into more than one folder.
+Create tags as you read. Click Add tags under an article, or press T, and type the tag.
+To let rules tag for you, create a rule on a folder with a keyword condition and an Assign tag action.
+Manage your tags on the tag dashboard and pin the ones you use to the sidebar. Set a folder's sorting and unread duration in the folder's properties.
+Use cases
+Keeping one beat per folder
+Keep your industry, competitors, customers and regulators in separate folders, and read each one when you have time for it.
+A research archive
+Tag articles by project and by theme so you can search across the tags later. You can also publish a tag as a feed that your team's wiki displays.
+A clean news folder
+Put dozens of news feeds in one folder, set its unread duration to one day and turn on magic sorting. Your morning read then starts with what matters most.
+Frequently asked questions
+What is the difference between a folder and a tag?
+A folder holds feeds, and a tag holds articles. When you open a folder, you read every article from the feeds in it. A tag holds the articles you chose to keep, from any feed. A feed can be in several folders, and an article can have several tags.
+How do I tag an article?
+Click Add tags under the article or press T, then type an existing tag or a new one. With Pro, suggested tags offer tags based on the article's text and your existing tags, and a rule can tag new articles by keyword as they arrive.
+Where do tagged articles go?
+They appear under Saved in the sidebar, next to your read-later list, your annotations and your saved web pages. The tag dashboard lists every tag with its count and lets you rename, merge and pin your tags. The All tagged view combines several tags.
+Can a folder show only recent articles?
+Yes, on Pro. Set a folder's unread duration and the folder keeps only today's or this week's unread articles, so a news folder never piles up.
+What is magic sorting?
+It is a Pro sort order that puts the most popular and relevant articles of a folder first. It ranks them by how other readers of the same feeds engaged with them, and it shows a popularity indicator on each article.
+Can I share a folder or a tag?
+Yes. Any folder or tag can become an RSS or JSON output feed, an HTML clip, a digest or a Team folder, so other people can read what you organize.
+Related features
+Rules
+Automate what happens to every new article
+Filters
+Read only the articles you want
+Dashboards
+See what is new on a single screen
+Help center
+What are folders?
+Can one feed belong to multiple folders?
+What are tags?
+How do I tag an article?
+Can I combine tags when searching?
+What is Magic sorting?
+Blog
+Using Tags: The beginner’s guide to content curation
+Suggested tags and feature improvements
+New Feature: Keep Only Today’s News in a Folder
+Build your own newsfeed
+Ready to give it a go?
+Start a 14-day trial, no credit card required.
+Create account
+With Inoreader, content comes to you the minute it's available.
+Follow websites, social media feeds, podcasts, blogs, and newsletters. Enjoy what's important to you, all in one place.
+With Inoreader, content comes to you the minute it's available.
+Follow websites, social media feeds, podcasts, blogs, and newsletters. Enjoy what's important to you, all in one place.
+Create account
+Product
+Features
+Pricing
+Enterprise
+Mobile apps
+Browser extension
+Inoreader alternatives
+RSS tools
+All tools
+Feed finder
+Feed analytics
+Top RSS feeds
+Feed validator
+Podcast validator
+Feed viewer
+OPML checker
+Company
+About us
+Blog
+Help center
+Developer portal
+Contact us
+Brand portal
+Service status
+Legal
+Terms of Service
+Privacy Policy
+Security commitment
+© 2026 Innologica Ltd
+We use cookies to enhance your Inoreader experience. By using our website, you agree to our use of cookies.
+Access cookie settings
+OK, I agree
+×
+Sign in
+Use a different account
+Sign in with a passkey
+Other sign-in methods
+Change user
+Passkey sign-in was canceled or couldn't be completed.
+Don't have a passkey yet? Sign in with your password first, then add one in your account settings.
+Sign in
+Email address:
+Please enter Email
+Password
+Please enter password
+Remember me
+Forgot password?
+Sign in
+Sign in with a passkey
+Passkey sign-in was canceled or couldn't be completed
+Don't have a passkey yet? Sign in with your password first, then add one in your account settings.
+Or simply sign in with:
+New to Inoreader? Create an account
+Create account
+With Inoreader, content comes to you.
+Sign up to browse more than 5 000 000 sources and build the ultimate newsfeed!
+Create account
+Don't have an account?
+Create one now
+×
+Create account
+Email address
+Please enter email
+Password
+Please enter password
+Create account
+Or simply sign in with:
+Already have an account? Sign in.
+Sign in
+Already have an account?
+Enter your profile and access your feeds now.
+Sign in
+Already have an account?
+Sign in
+×
+Request Quote
+Name
+Please enter name
+Email
+Please provide valid email
+Company                    Optional
+Industry                    Optional
+Select from listMedia and PublishingPharmaceuticalsCybersecurityTelecommunicationsIT and SoftwareFinance and BankingTransport and LogisticsMarketing and PRPublic AuthoritiesInternational OrganizationsResearchEducation ServicesOther
+Position                    Optional
+Message
+Please enter message
+I understand and accept the Inoreader Privacy
+Policy
+You must accept the privacy policy
+Send message
+Thank you for your query. Our team will review the details and get back to you shortly.
+Go to homepage

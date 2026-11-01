@@ -1,0 +1,202 @@
+[
+  {
+    "flow_id": "F-M003-01",
+    "changes": {
+      "evidence_ids": {
+        "old": "E-PBK-01;E-PBK-04",
+        "new": "E-PBK-01;E-PBK-04;E-PBCD-01"
+      },
+      "known_branches": {
+        "old": "主页并列近期内容与商店推荐；不是纯本地书架。",
+        "new": "补Menu键通知栏、长按Home任务管理；13图底栏Settings与21默认文字Notes不一致。"
+      },
+      "gaps": {
+        "old": "见案例的范围/分支/后续观察；未实测",
+        "new": "当前默认布局、手势触发、后台/关闭应用行为及实际安装版本。"
+      }
+    },
+    "replacement_row": {
+      "flow_id": "F-M003-01",
+      "product_id": "M-003",
+      "task": "从主页进入系统控制",
+      "depth": "D2",
+      "evidence_ids": "E-PBK-01;E-PBK-04;E-PBCD-01",
+      "known_branches": "补Menu键通知栏、长按Home任务管理；13图底栏Settings与21默认文字Notes不一致。",
+      "gaps": "当前默认布局、手势触发、后台/关闭应用行为及实际安装版本。",
+      "visual_status": "static_reference_only",
+      "hands_on": "false",
+      "case_path": "cases/M-003-pocketbook.md",
+      "checked_on": "2026-10-26"
+    }
+  },
+  {
+    "flow_id": "F-M003-02",
+    "changes": {
+      "evidence_ids": {
+        "old": "E-PBK-01",
+        "new": "E-PBK-01;E-PBCD-01"
+      },
+      "known_branches": {
+        "old": "模式需显式退出；不能把普通翻页触摸与查词模式混用。",
+        "new": "词典模式需Exit；译文/语境可分别保存、编辑、删除，目录Notes或页边入口。"
+      },
+      "gaps": {
+        "old": "见案例的范围/分支/后续观察；未实测",
+        "new": "缺词/词典下载失败、改后定位与同步冲突；未实测。"
+      }
+    },
+    "replacement_row": {
+      "flow_id": "F-M003-02",
+      "product_id": "M-003",
+      "task": "连续查词并留资料",
+      "depth": "D2",
+      "evidence_ids": "E-PBK-01;E-PBCD-01",
+      "known_branches": "词典模式需Exit；译文/语境可分别保存、编辑、删除，目录Notes或页边入口。",
+      "gaps": "缺词/词典下载失败、改后定位与同步冲突；未实测。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-003-pocketbook.md",
+      "checked_on": "2026-10-26"
+    }
+  },
+  {
+    "flow_id": "F-M003-03",
+    "changes": {
+      "task": {
+        "old": "导出个人批注",
+        "new": "编辑本地注释并导出"
+      },
+      "evidence_ids": {
+        "old": "E-PBK-01;E-PBK-02",
+        "new": "E-PBK-01;E-PBK-02;E-PBCD-02"
+      },
+      "known_branches": {
+        "old": "FAQ 确认可选择目标文件夹；导出格式与可否再次编辑须进一步核对。",
+        "new": "本地Edit comment/Save；多选Export notes至指定路径，默认Library/Notes。"
+      },
+      "gaps": {
+        "old": "见案例的范围/分支/后续观察；未实测",
+        "new": "当前格式和回导编辑仍未知；导出文件不保证随本地修改更新；同名覆盖、取消、恢复。"
+      },
+      "visual_status": {
+        "old": "not_observed",
+        "new": "static_reference_only"
+      }
+    },
+    "replacement_row": {
+      "flow_id": "F-M003-03",
+      "product_id": "M-003",
+      "task": "编辑本地注释并导出",
+      "depth": "D2",
+      "evidence_ids": "E-PBK-01;E-PBK-02;E-PBCD-02",
+      "known_branches": "本地Edit comment/Save；多选Export notes至指定路径，默认Library/Notes。",
+      "gaps": "当前格式和回导编辑仍未知；导出文件不保证随本地修改更新；同名覆盖、取消、恢复。",
+      "visual_status": "static_reference_only",
+      "hands_on": "false",
+      "case_path": "cases/M-003-pocketbook.md",
+      "checked_on": "2026-10-26"
+    }
+  },
+  {
+    "flow_id": "F-M003-04",
+    "changes": {
+      "task": {
+        "old": "准备离线书库",
+        "new": "Cloud同步、离线状态与删除"
+      },
+      "evidence_ids": {
+        "old": "E-PBK-01",
+        "new": "E-PBK-01;E-PBCD-05;E-PBCD-06"
+      },
+      "known_branches": {
+        "old": "离线仅可读本机已有内容；本机删除与云端移除不同，后者手册说明不能恢复。",
+        "new": "虚线仅云端；登录/开关书/收藏合集及手动同步；本机Delete后条目再现、Remove from Cloud不可恢复；服务状态与网络重试。"
+      },
+      "gaps": {
+        "old": "见案例的范围/分支/后续观察；未实测",
+        "new": "条目再现不保证自动重下载；位置仅PDF/EPUB/FB2；冲突/删除确认/他端副本/撤销未知。"
+      },
+      "visual_status": {
+        "old": "not_observed",
+        "new": "static_reference_only"
+      }
+    },
+    "replacement_row": {
+      "flow_id": "F-M003-04",
+      "product_id": "M-003",
+      "task": "Cloud同步、离线状态与删除",
+      "depth": "D2",
+      "evidence_ids": "E-PBK-01;E-PBCD-05;E-PBCD-06",
+      "known_branches": "虚线仅云端；登录/开关书/收藏合集及手动同步；本机Delete后条目再现、Remove from Cloud不可恢复；服务状态与网络重试。",
+      "gaps": "条目再现不保证自动重下载；位置仅PDF/EPUB/FB2；冲突/删除确认/他端副本/撤销未知。",
+      "visual_status": "static_reference_only",
+      "hands_on": "false",
+      "case_path": "cases/M-003-pocketbook.md",
+      "checked_on": "2026-10-26"
+    }
+  },
+  {
+    "flow_id": "F-M003-05",
+    "changes": {
+      "task": {
+        "old": "选择听读方式",
+        "new": "从文本开启、控制与退出TTS"
+      },
+      "evidence_ids": {
+        "old": "E-PBK-01;E-PBK-02;E-PBK-05",
+        "new": "E-PBK-01;E-PBK-02;E-PBCD-04"
+      },
+      "known_branches": {
+        "old": "具体格式的朗读结果待核对；语音包与耳机/音量问题需分别检查。音频速度与音调可分别调。",
+        "new": "阅读菜单Voice；语音、速度、音量、Play/Pause、最小化/Exit；自动翻页及语音包下载。真人有声书移至独立F07。"
+      },
+      "gaps": {
+        "old": "见案例的范围/分支/后续观察；未实测",
+        "new": "最小化后台、退出/换书/重启位置、抢音、语音包失败、DRM/PDF顺序；未实测。"
+      }
+    },
+    "replacement_row": {
+      "flow_id": "F-M003-05",
+      "product_id": "M-003",
+      "task": "从文本开启、控制与退出TTS",
+      "depth": "D2",
+      "evidence_ids": "E-PBK-01;E-PBK-02;E-PBCD-04",
+      "known_branches": "阅读菜单Voice；语音、速度、音量、Play/Pause、最小化/Exit；自动翻页及语音包下载。真人有声书移至独立F07。",
+      "gaps": "最小化后台、退出/换书/重启位置、抢音、语音包失败、DRM/PDF顺序；未实测。",
+      "visual_status": "static_reference_only",
+      "hands_on": "false",
+      "case_path": "cases/M-003-pocketbook.md",
+      "checked_on": "2026-10-26"
+    }
+  },
+  {
+    "flow_id": "F-M003-06",
+    "changes": {
+      "evidence_ids": {
+        "old": "E-PBK-02",
+        "new": "E-PBK-02;E-PBCD-01"
+      },
+      "known_branches": {
+        "old": "注册邮件需检查垃圾箱，发件白名单另需确认；发送附件不等于设备已下载成功。",
+        "new": "型号手册补激活向导、白名单、联网自动接收/Receive files now及Download folder。"
+      },
+      "gaps": {
+        "old": "见案例的范围/分支/后续观察；未实测",
+        "new": "默认SendToPb/Send-to-PocketBook命名差异；未发送；拒收/重名/重试与落地成功待核。"
+      }
+    },
+    "replacement_row": {
+      "flow_id": "F-M003-06",
+      "product_id": "M-003",
+      "task": "从邮件传入文件",
+      "depth": "D2",
+      "evidence_ids": "E-PBK-02;E-PBCD-01",
+      "known_branches": "型号手册补激活向导、白名单、联网自动接收/Receive files now及Download folder。",
+      "gaps": "默认SendToPb/Send-to-PocketBook命名差异；未发送；拒收/重名/重试与落地成功待核。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-003-pocketbook.md",
+      "checked_on": "2026-10-26"
+    }
+  }
+]

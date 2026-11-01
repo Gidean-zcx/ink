@@ -1,0 +1,9 @@
+Displaying lyrics
+Transfer tracks with lyric information to the player. Then, set “Music player” to display lyrics.
+On the playback screen in “Music player”, tap the menu items in the following order.
+(Options) － [Display lyrics].
+The contents of the Help Guide may be subject to change without notice due to updates to the product's specifications.
+Go to Page Top
+Related Topic
+Obtaining lyric information
+Adding lyric information using a computer

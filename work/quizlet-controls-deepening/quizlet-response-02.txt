@@ -1,0 +1,515 @@
+Studying with Practice Tests – Quizlet Help Center (https://help.quizlet.com/hc/en-us/articles/25946589648013-Studying-with-Practice-Tests)
+citeturn759view0 [wordlim: 200] Crawled: today; Content type: text/html; Source: click({"ref_id":"turn751view2","id":19}); Total lines: 126
+L0: 【0†iframe†www.googletagmanager.com】
+L1: 
+L2: 【1†Help center†quizlet.zendesk.com】
+L3: 
+L4: Topics
+L5: 
+L6: Popular Articles
+L7: 
+L8: 【2†Resending a confirmation message】 【3†Changing your username】 【4†Changing your password】 【5†Finding flashcard sets】 【6†Finding your teacher's class】 【7†Browser and device compatibility】
+L9: 
+L10: [Input][Input: Search]
+L11: 
+L12: 【8†Image】   【8†Username】
+L13: # Studying with Practice Tests
+L14: 
+L15: 【8†IOS】 【8†Web】 【8†Android】
+L16: 
+L17: Practice Tests generate questions based on your uploaded notes or flashcard sets. Different from 【9†Test】, Practice Tests are powered by AI and transform your study materials into full-length practice tests that simulate a real exam. You can choose the amount of questions you want, the question type, and the time limit. Practice Tests are currently available for study material in the sciences and humanities.
+L18: 【10†Quizlet Plus†quizlet.com】 and 【11†Quizlet Plus for teachers†quizlet.com】 subscribers with English as their selected language can take practice tests.* Practice test generation is available to subscribers who use Quizlet in English and are:
+L19:   * 14 years or older in the United States
+L20:   * 16 years or older in Australia, Canada, Ireland, New Zealand and the United Kingdom
+L21:   * 18 years or older in Denmark, Finland, France, Germany, India, Israel, Malaysia, the Netherlands, Norway, the Philippines, Singapore, Samoa, South Africa, Sweden and U.S. territories
+L22: 
+L23: If you’re not a Quizlet subscriber, you can use Practice Tests for free with limited access.
+L24: 
+L25: To generate and take a practice test
+L26:   1. 【12†Log in†quizlet.com】 to your account.
+L27:   2. Select Generate.
+L28:   3. Select Practice test.
+L29:   4. Choose flashcard sets or upload your notes by pasting them in or uploading a file.
+L30:   5. Select Start transforming.
+L31:   6. Adjust the amount of questions, question type, and timer if needed.
+L32:   7. Select Take this test.
+L33:   8. Take your test.
+L34:   9. Select Submit test to see your score and review your test.
+L35: 
+L36: Settings and options
+L37:   * Select 【13†Image: Share - Resized.png】 (share) to share your practice test.
+L38:   * Select 【14†Image: Size=Small (16)@3x.png】 (more) to change your practice test's visibility, edit the title, or see your original upload.
+L39: 
+L40: *【15†Younger users】 can take multiple choice practice tests and will need to have a parent confirm their account to access written questions.
+L41: Practice Tests generate questions based on your uploaded notes or flashcard sets. Different from 【9†Test】, Practice Tests are powered by AI and transform your study materials into full-length practice tests that simulate a real exam. You can choose the amount of questions you want, the question type, and the time limit. Practice Tests are currently available for study material in the sciences and humanities.
+L42: 【10†Quizlet Plus†quizlet.com】 and 【11†Quizlet Plus for teachers†quizlet.com】 subscribers with English as their selected language can take practice tests.* Practice test generation is available to subscribers who use Quizlet in English and are:
+L43:   * 14 years or older in the United States
+L44:   * 16 years or older in Australia, Canada, Ireland, New Zealand and the United Kingdom
+L45:   * 18 years or older in Denmark, Finland, France, Germany, India, Israel, Malaysia, the Netherlands, Norway, the Philippines, Singapore, Samoa, South Africa, Sweden and U.S. territories
+L46: 
+L47: If you’re not a Quizlet subscriber, you can use Practice Tests for free with limited access.
+L48: 
+L49: To study with Practice tests
+L50:   1. Select +.
+L51:   2. Select Practice test.
+L52:   3. Upload your notes by pasting text or select a file.
+L53:   4. Select the number of questions.
+L54:   5. Choose multiple-choice or written question types.
+L55:   6. Select Take this test.
+L56: 
+L57: Tips
+L58:   * Find your saved Practice tests in Your library under Practice tests.
+L59:   * When pasting text, ensure it contains at least 300 characters. Written responses cannot exceed 200 characters
+L60:   * Currently, selecting specific sets to convert into practice tests and adding practice tests to folders are only available on the web but will be added to mobile in a future update.
+L61: *【15†Younger users】 can take multiple choice practice tests and will need to have a parent confirm their account to access written questions.
+L62: Practice Tests generate questions based on your uploaded notes or flashcard sets. Different from 【9†Test】, Practice Tests are powered by AI and transform your study materials into full-length practice tests that simulate a real exam. You can choose the amount of questions you want, the question type, and the time limit. Practice Tests are currently available for study material in the sciences and humanities.
+L63: 【10†Quizlet Plus†quizlet.com】 and 【11†Quizlet Plus for teachers†quizlet.com】 subscribers with English as their selected language can take practice tests.* Practice test generation is available to subscribers who use Quizlet in English and are:
+L64:   * 14 years or older in the United States
+L65:   * 16 years or older in Australia, Canada, Ireland, New Zealand and the United Kingdom
+L66:   * 18 years or older in Denmark, Finland, France, Germany, India, Israel, Malaysia, the Netherlands, Norway, the Philippines, Singapore, Samoa, South Africa, Sweden and U.S. territories
+L67: 
+L68: If you’re not a Quizlet subscriber, you can use Practice Tests for free with limited access.
+L69: 
+L70: To study with Practice tests
+L71:   1. Select +.
+L72:   2. Select Practice test.
+L73:   3. Upload your notes by pasting text or select a file.
+L74:   4. Select the number of questions.
+L75:   5. Choose multiple-choice or written question types.
+L76:   6. Select Take this test.
+L77: 
+L78: Tips
+L79:   * Find your saved Practice tests in Your library under Practice tests.
+L80:   * When pasting text, ensure it contains at least 300 characters. Written responses cannot exceed 200 characters
+L81:   * Currently, selecting specific sets to convert into practice tests and adding practice tests to folders are only available on the web but will be added to mobile in a future update.
+L82: *【15†Younger users】 can take multiple choice practice tests and will need to have a parent confirm their account to access written questions.
+L83: ### Related Articles
+L84: 
+L85:   * 【16†Studying with Podcasts】
+L86:   * 【17†Studying with Spaced Repetition】
+L87:   * 【18†Using Study with friends】
+L88:   * 【19†Playing Charms】
+L89:   * 【20†Studying with Audio Notes】
+L90:   * 【21†Create flashcard sets directly in ChatGPT】
+L91:   * 【22†Studying with Ask Quizlet】
+L92:   * 【23†Using Quizlet with Superhuman】
+L93:   * 【24†Studying with Answer Streaks】
+L94:   * 【25†Playing a game of Blocks】
+L95:   * 【26†See more】
+L96: ### Can't find what you're looking for?
+L97: 
+L98: 【27†Ask a question】
+L99: 
+L100: Was this article helpful?
+L101: 
+L102: [Button: Yes] [Button: No]
+L103: 
+L104: ##### About us
+L105: 
+L106: 【28†About Quizlet†quizlet.com】 【29†How Quizlet works†quizlet.com】 【30†Careers†quizlet.com】 【31†Advertise with us†quizlet.com】 【32†Get the app†quizlet.com】
+L107: ##### For students
+L108: 
+L109: 【33†Flashcards†quizlet.com】 【34†Test†quizlet.com】 【35†Learn†quizlet.com】 【36†Solutions†quizlet.com】 【37†Modern Learning Lab†quizlet.com】 【38†Quizlet Plus†quizlet.com】 【39†Study Guides†quizlet.com】 【40†Pomodoro timer†quizlet.com】
+L110: 
+L111: ##### For Teachers
+L112: 
+L113: 【41†Live†quizlet.com】 【42†Blog†quizlet.com】 【43†Be the Change†quizlet.com】 【44†Quizlet Plus for teachers†quizlet.com】
+L114: ##### Resources
+L115: 
+L116: 【45†Help center†quizlet.com】 【46†Sign up†quizlet.com】 【47†Honor code†quizlet.com】 【48†Community guidelines†quizlet.com】 【49†Accessibility statement†quizlet.com】 【50†Privacy†quizlet.com】 【51†Your Privacy/Cookies Choices†quizlet.com】 【52†Terms†quizlet.com】 【53†Ad and Cookie Policy†quizlet.com】 【54†Interest-Based Advertising†quizlet.com】 【55†Quizlet for Schools†quizlet.com】 【56†Parents†quizlet.com】
+L117: 
+L118: ##### Language
+L119: 
+L120: English (United States)
+L121: 
+L122: 【57†Image】 【58†Get the app†get.quizlet.com】
+L123: ##### Get the app
+L124: 
+L125: © Quizlet Inc.
+--------------------------------------------------------------------------------
+Studying most-missed terms with stars – Quizlet Help Center (https://help.quizlet.com/hc/en-us/articles/360031172312-Studying-most-missed-terms-with-stars)
+citeturn759view1 [wordlim: 200] Crawled: today; Content type: text/html; Source: click({"ref_id":"turn751view2","id":27}); Total lines: 93
+L0: 【0†iframe†www.googletagmanager.com】
+L1: 
+L2: 【1†Help center†quizlet.zendesk.com】
+L3: 
+L4: Topics
+L5: 
+L6: Popular Articles
+L7: 
+L8: 【2†Resending a confirmation message】 【3†Changing your username】 【4†Changing your password】 【5†Finding flashcard sets】 【6†Finding your teacher's class】 【7†Browser and device compatibility】
+L9: 
+L10: [Input][Input: Search]
+L11: 
+L12: 【8†Image】   【8†Username】
+L13: # Studying most-missed terms with stars
+L14: 
+L15: 【8†IOS】 【8†Web】 【8†Android】
+L16: 
+L17: As you study, you can star the terms you want to focus on later to make the best use of your study time.
+L18: 
+L19: To star terms from a set page
+L20: 
+L21:   1. 【9†Log in†quizlet.com】 to your account.
+L22:   2. Open a set.
+L23:   3. Select the Star on terms you want to focus on later.
+L24:   4. Select the Starred button to study only starred terms.
+L25:   5. Select Review with an activity to start a session with only starred terms.
+L26: Other people can't see the terms you've starred.
+L27: 
+L28: Settings and options
+L29: 
+L30:   * To star a group of terms all at once, hold the Shift key as you select a star. Keep holding Shift until you select the star of the last term you want to include.
+L31:   * To study all starred terms across all sets at once, you can add all the sets to a folder. Then, select an activity, select Options and select Study starred.
+L32:   1. Open a set.
+L33:   2. Select the Star.
+L34:   3. Select the Study X button next to Study all button to study only starred terms.
+L35:   4. Select Review with an activity to start a session with only starred terms.
+L36: 
+L37: Settings and options
+L38:   * To study starred terms in Flashcards, open a set in that activity and select Options. Turn off Sorting and select Restart Flashcards to star terms.
+L39:   * To unstar a term, select the Star again.
+L40:   * To study all starred terms across all sets at once, you can add all the sets to a folder. Then, open a n activity , select Options and select Study starred.
+L41:   1. Open a set.
+L42:   2. Select the Star.
+L43:   3. Select the Study X button next to Study all button to study only starred terms.
+L44:   4. Select Review with an activity to start a session with only starred terms.
+L45: 
+L46: Settings and options
+L47:   * To study starred terms in Flashcards, open a set in that mode and select Options. Turn off Sorting and select Restart Flashcards to star terms.
+L48:   * To unstar a term, select the Star again.
+L49:   * To study all starred terms across all sets at once, you can add all the sets to a folder. Then, open a n activity, select Options and select Study starred.
+L50: ### Related Articles
+L51: 
+L52:   * 【10†Studying with Podcasts】
+L53:   * 【11†Studying with Spaced Repetition】
+L54:   * 【12†Using Study with friends】
+L55:   * 【13†Playing Charms】
+L56:   * 【14†Studying with Audio Notes】
+L57:   * 【15†Create flashcard sets directly in ChatGPT】
+L58:   * 【16†Studying with Ask Quizlet】
+L59:   * 【17†Using Quizlet with Superhuman】
+L60:   * 【18†Studying with Answer Streaks】
+L61:   * 【19†Playing a game of Blocks】
+L62:   * 【20†See more】
+L63: ### Can't find what you're looking for?
+L64: 
+L65: 【21†Ask a question】
+L66: 
+L67: Was this article helpful?
+L68: 
+L69: [Button: Yes] [Button: No]
+L70: 
+L71: ##### About us
+L72: 
+L73: 【22†About Quizlet†quizlet.com】 【23†How Quizlet works†quizlet.com】 【24†Careers†quizlet.com】 【25†Advertise with us†quizlet.com】 【26†Get the app†quizlet.com】
+L74: ##### For students
+L75: 
+L76: 【27†Flashcards†quizlet.com】 【28†Test†quizlet.com】 【29†Learn†quizlet.com】 【30†Solutions†quizlet.com】 【31†Modern Learning Lab†quizlet.com】 【32†Quizlet Plus†quizlet.com】 【33†Study Guides†quizlet.com】 【34†Pomodoro timer†quizlet.com】
+L77: 
+L78: ##### For Teachers
+L79: 
+L80: 【35†Live†quizlet.com】 【36†Blog†quizlet.com】 【37†Be the Change†quizlet.com】 【38†Quizlet Plus for teachers†quizlet.com】
+L81: ##### Resources
+L82: 
+L83: 【39†Help center†quizlet.com】 【40†Sign up†quizlet.com】 【41†Honor code†quizlet.com】 【42†Community guidelines†quizlet.com】 【43†Accessibility statement†quizlet.com】 【44†Privacy†quizlet.com】 【45†Your Privacy/Cookies Choices†quizlet.com】 【46†Terms†quizlet.com】 【47†Ad and Cookie Policy†quizlet.com】 【48†Interest-Based Advertising†quizlet.com】 【49†Quizlet for Schools†quizlet.com】 【50†Parents†quizlet.com】
+L84: 
+L85: ##### Language
+L86: 
+L87: English (United States)
+L88: 
+L89: 【51†Image】 【52†Get the app†get.quizlet.com】
+L90: ##### Get the app
+L91: 
+L92: © Quizlet Inc.
+--------------------------------------------------------------------------------
+Setting up a study path – Quizlet Help Center (https://help.quizlet.com/hc/en-us/articles/360048314692-Setting-up-a-study-path)
+citeturn759view2 [wordlim: 200] Crawled: yesterday; Content type: text/html; Source: click({"ref_id":"turn751view2","id":34}); Total lines: 101
+L0: 【0†iframe†www.googletagmanager.com】
+L1: 
+L2: 【1†Help center†quizlet.zendesk.com】
+L3: 
+L4: Topics
+L5: 
+L6: Popular Articles
+L7: 
+L8: 【2†Resending a confirmation message】 【3†Changing your username】 【4†Changing your password】 【5†Finding flashcard sets】 【6†Finding your teacher's class】 【7†Browser and device compatibility】
+L9: 
+L10: [Input][Input: Search]
+L11: 
+L12: 【8†Image】   【8†Username】
+L13: # Setting up a study path
+L14: 
+L15: 【8†IOS】 【8†Web】 【8†Android】
+L16: 
+L17: Study paths are available on 【9†Quizlet Plus subscriptions†quizlet.com】.
+L18: 
+L19: With study paths, you get suggestions for the smartest study sequence, adapted to your level, so you can master materials even faster.
+L20: 
+L21: To set up a study path
+L22:   1. 【10†Log in†quizlet.com】 to your account.
+L23:   2. Open a set.
+L24:   3. Select Learn.
+L25:   4. Select how you want to study.
+L26:   5. Select Continue.
+L27:   6. Select Start studying to save your study path.
+L28: If you don’t start studying, your study path will not be saved.
+L29: 
+L30: You can start a study path on any of your sets, and your progress on a study path syncs across the website and mobile apps.
+L31: 
+L32: Study paths are available on 【9†Quizlet Plus subscriptions†quizlet.com】.
+L33: With study paths, you get suggestions for the smartest study sequence, adapted to your level, so you can master materials even faster.
+L34: 
+L35: To set up a study path
+L36: 
+L37:   1. Open a set.
+L38:   2. Select Learn.
+L39:   3. Select a goal.
+L40:   4. Answer the questions.
+L41:   5. Select Start Studying to save your study path.
+L42: If you don’t start studying, your study path will not be saved.
+L43: 
+L44: You can start a study path on any of your sets, and your progress on a study path syncs across the website and mobile apps.
+L45: Study paths are available on 【9†Quizlet Plus subscriptions†quizlet.com】.
+L46: 
+L47: With study paths, you get suggestions for the smartest study sequence, adapted to your level, so you can master materials even faster.
+L48: 
+L49: To set up a study path
+L50: 
+L51:   1. Open a set.
+L52:   2. Select Learn.
+L53:   3. Select a goal.
+L54:   4. Answer the questions.
+L55:   5. Select Start Studying to save your study path.
+L56: If you don’t start studying, your study path will not be saved.
+L57: You can start a study path on any of your sets, and your progress on a study path syncs across the website and mobile apps.
+L58: ### Related Articles
+L59: 
+L60:   * 【11†Studying with Podcasts】
+L61:   * 【12†Studying with Spaced Repetition】
+L62:   * 【13†Using Study with friends】
+L63:   * 【14†Playing Charms】
+L64:   * 【15†Studying with Audio Notes】
+L65:   * 【16†Create flashcard sets directly in ChatGPT】
+L66:   * 【17†Studying with Ask Quizlet】
+L67:   * 【18†Using Quizlet with Superhuman】
+L68:   * 【19†Studying with Answer Streaks】
+L69:   * 【20†Playing a game of Blocks】
+L70:   * 【21†See more】
+L71: ### Can't find what you're looking for?
+L72: 
+L73: 【22†Ask a question】
+L74: 
+L75: Was this article helpful?
+L76: 
+L77: [Button: Yes] [Button: No]
+L78: 
+L79: ##### About us
+L80: 
+L81: 【23†About Quizlet†quizlet.com】 【24†How Quizlet works†quizlet.com】 【25†Careers†quizlet.com】 【26†Advertise with us†quizlet.com】 【27†Get the app†quizlet.com】
+L82: ##### For students
+L83: 
+L84: 【28†Flashcards†quizlet.com】 【29†Test†quizlet.com】 【30†Learn†quizlet.com】 【31†Solutions†quizlet.com】 【32†Modern Learning Lab†quizlet.com】 【33†Quizlet Plus†quizlet.com】 【34†Study Guides†quizlet.com】 【35†Pomodoro timer†quizlet.com】
+L85: 
+L86: ##### For Teachers
+L87: 
+L88: 【36†Live†quizlet.com】 【37†Blog†quizlet.com】 【38†Be the Change†quizlet.com】 【39†Quizlet Plus for teachers†quizlet.com】
+L89: ##### Resources
+L90: 
+L91: 【40†Help center†quizlet.com】 【41†Sign up†quizlet.com】 【42†Honor code†quizlet.com】 【43†Community guidelines†quizlet.com】 【44†Accessibility statement†quizlet.com】 【45†Privacy†quizlet.com】 【46†Your Privacy/Cookies Choices†quizlet.com】 【47†Terms†quizlet.com】 【48†Ad and Cookie Policy†quizlet.com】 【49†Interest-Based Advertising†quizlet.com】 【50†Quizlet for Schools†quizlet.com】 【51†Parents†quizlet.com】
+L92: 
+L93: ##### Language
+L94: 
+L95: English (United States)
+L96: 
+L97: 【52†Image】 【53†Get the app†get.quizlet.com】
+L98: ##### Get the app
+L99: 
+L100: © Quizlet Inc.
+--------------------------------------------------------------------------------
+Creating sets by importing content – Quizlet Help Center (https://help.quizlet.com/hc/en-us/articles/360029977151-Creating-sets-by-importing-content)
+citeturn759view3 [wordlim: 200] Crawled: today; Content type: text/html; Source: click({"ref_id":"turn751view1","id":20}); Total lines: 96
+L0: 【0†iframe†www.googletagmanager.com】
+L1: 
+L2: 【1†Help center†quizlet.zendesk.com】
+L3: 
+L4: Topics
+L5: 
+L6: Popular Articles
+L7: 
+L8: 【2†Resending a confirmation message】 【3†Changing your username】 【4†Changing your password】 【5†Finding flashcard sets】 【6†Finding your teacher's class】 【7†Browser and device compatibility】
+L9: 
+L10: [Input][Input: Search]
+L11: 
+L12: 【8†Image】   【8†Username】
+L13: # Creating sets by importing content
+L14: 
+L15: 【8†IOS】 【8†Web】 【8†Android】
+L16: 
+L17: Quickly create new flashcard sets based on existing notes or documents by importing them right into Quizlet.
+L18: 
+L19: To import your content
+L20: 
+L21:   1. Open or create a word or spreadsheet document.
+L22:   2. Separate terms and definitions with a comma, tab, or dash.
+L23:   3. Separate rows with a semicolon or a new line.
+L24: Each row of your document will become a distinct card.
+L25: 
+L26: Create a set
+L27:   1. 【9†Log in†quizlet.com】 to your account.
+L28:   2. Select Create.
+L29:   3. Select Flashcard set.
+L30:   4. Enter a title for your set.
+L31: 
+L32: Import your text
+L33: 
+L34:   1. Select Import.
+L35:   2. Open your document on your computer, and copy the text.
+L36:   3. Paste the text into the Import field in your browser.
+L37: 
+L38: Save and publish your set
+L39: 
+L40:   1. Select Import to upload your terms and definitions.
+L41:   2. Set the language for your terms and definitions.
+L42:   3. Select Create to save and publish your set.
+L43: 
+L44: Settings and options
+L45: 【10†Quizlet Plus†quizlet.com】 and 【11†Quizlet Plus for teachers†quizlet.com】 subscribers can highlight, bold, italicize, or underline text in sets.
+L46: 
+L47: Tips
+L48: 
+L49: If you have study notes—not a list of terms and definitions—try 【12†creating a study guide】. This feature is powered by AI and generates questions and answers from longer blocks of notes.
+L50: 
+L51: You can currently only import flashcard sets on the website. You can always import content on the Quizlet website and then study it using your iOS app.
+L52: You can currently only import flashcard sets on the website. You can always import content on the Quizlet website and then study it using your Android app.
+L53: ### Related Articles
+L54: 
+L55:   * 【13†Create flashcard sets directly in Claude】
+L56:   * 【14†Studying with Study Groups】
+L57:   * 【15†Creating study sets with Smart Assist】
+L58:   * 【16†Becoming a top creator on Quizlet】
+L59:   * 【17†Studying with Study Guides】
+L60:   * 【18†What are flashcard sets?】
+L61:   * 【19†Creating flashcard sets】
+L62:   * 【20†Adding images to sets from the free gallery】
+L63:   * 【21†Adding your own images to sets】
+L64:   * 【22†Recording custom audio】
+L65:   * 【23†See more】
+L66: ### Can't find what you're looking for?
+L67: 
+L68: 【24†Ask a question】
+L69: 
+L70: Was this article helpful?
+L71: 
+L72: [Button: Yes] [Button: No]
+L73: 
+L74: ##### About us
+L75: 
+L76: 【25†About Quizlet†quizlet.com】 【26†How Quizlet works†quizlet.com】 【27†Careers†quizlet.com】 【28†Advertise with us†quizlet.com】 【29†Get the app†quizlet.com】
+L77: ##### For students
+L78: 
+L79: 【30†Flashcards†quizlet.com】 【31†Test†quizlet.com】 【32†Learn†quizlet.com】 【33†Solutions†quizlet.com】 【34†Modern Learning Lab†quizlet.com】 【35†Quizlet Plus†quizlet.com】 【36†Study Guides†quizlet.com】 【37†Pomodoro timer†quizlet.com】
+L80: 
+L81: ##### For Teachers
+L82: 
+L83: 【38†Live†quizlet.com】 【39†Blog†quizlet.com】 【40†Be the Change†quizlet.com】 【41†Quizlet Plus for teachers†quizlet.com】
+L84: ##### Resources
+L85: 
+L86: 【42†Help center†quizlet.com】 【43†Sign up†quizlet.com】 【44†Honor code†quizlet.com】 【45†Community guidelines†quizlet.com】 【46†Accessibility statement†quizlet.com】 【47†Privacy†quizlet.com】 【48†Your Privacy/Cookies Choices†quizlet.com】 【49†Terms†quizlet.com】 【50†Ad and Cookie Policy†quizlet.com】 【51†Interest-Based Advertising†quizlet.com】 【52†Quizlet for Schools†quizlet.com】 【53†Parents†quizlet.com】
+L87: 
+L88: ##### Language
+L89: 
+L90: English (United States)
+L91: 
+L92: 【54†Image】 【55†Get the app†get.quizlet.com】
+L93: ##### Get the app
+L94: 
+L95: © Quizlet Inc.
+--------------------------------------------------------------------------------
+Studying with Study Guides – Quizlet Help Center (https://help.quizlet.com/hc/en-us/articles/18312306436365-Studying-with-Study-Guides)
+citeturn759view4 [wordlim: 200] Crawled: today; Content type: text/html; Source: click({"ref_id":"turn751view1","id":13}); Total lines: 117
+L0: 【0†iframe†www.googletagmanager.com】
+L1: 
+L2: 【1†Help center†quizlet.zendesk.com】
+L3: 
+L4: Topics
+L5: 
+L6: Popular Articles
+L7: 
+L8: 【2†Resending a confirmation message】 【3†Changing your username】 【4†Changing your password】 【5†Finding flashcard sets】 【6†Finding your teacher's class】 【7†Browser and device compatibility】
+L9: 
+L10: [Input][Input: Search]
+L11: 
+L12: 【8†Image】   【8†Username】
+L13: # Studying with Study Guides
+L14: 
+L15: 【8†IOS】 【8†Web】 【8†Android】
+L16: 
+L17: Upload or paste your course materials to generate a study guide equipped with an outline, flashcard set, and more with just the click of a button. You can edit and tailor your study guide to fit your study needs. This AI-powered feature makes it easy to tap into the knowledge you create from your own class notes and dive even deeper.
+L18: 
+L19: Study guides are available for users who use Quizlet in English, French, or German and are:
+L20:   * 14 years or older in the United Kingdom and the United States
+L21:   * 15 years or older in Australia
+L22:   * 16 years or older in Canada, Ireland, and New Zealand
+L23:   * 18 years or older in Denmark, Finland, France, Germany, India, Israel, Malaysia, the Netherlands, Norway, the Philippines, Singapore, South Africa, Sweden, and U.S. territories
+L24: 
+L25: Free users can generate study guides for free with limited access. Quizlet Plus and Unlimited Subscribers have unlimited access.
+L26: 
+L27: To create a study guide
+L28:   1. 【9†Log in†quizlet.com】 to your account.
+L29:   2. Select Generate.
+L30:   3. Select Study guide.
+L31:   4. Upload your notes by pasting them in or uploading a file.
+L32:   5. Select Start transforming.
+L33:   6. Start studying!
+L34: 
+L35: Settings and options
+L36: 
+L37:   * Select 【10†Image: Size=Small (16)@3x.png】(More) to edit your study guide’s title, change who can see your study guide, view your original upload, or delete your study guide.
+L38:   * For generated flashcard sets, go to the set to 【11†change the set’s visibility】.
+L39: 
+L40: Tips
+L41:   * Find the study guides you created by selecting Your library and Study guides.
+L42:   * Select 【12†Image: Share - Resized.png】 (share) to share your study guide.
+L43: 
+L44:   1. 【9†Log in†quizlet.com】 to your account.
+L45:   2. Select Create.
+L46:   3. Select Study guide.
+L47:   4. Upload your notes by recording audio, taking a photo, pasting text, or selecting a file.
+L48:   5. Select Start transforming.
+L49:   6. Start studying!
+L50: 
+L51: Settings and options
+L52:   * Select 【13†Image: Settings gear - Resized.png】 (Settings) to edit your study guide’s title, change who can see your study guide, or delete your study guide.
+L53:   * For generated flashcard sets, go to the set to change the set’s visibility.
+L54: 
+L55: Tips
+L56: 
+L57:   * Find the study guides you've created by selecting Your library and Study guides.
+L58:   * Select 【12†Image: Share - Resized.png】 (share) to share your study guide.
+L59:   1. 【9†Log in†quizlet.com】 to your account.
+L60:   2. Select Create.
+L61:   3. Select Study guide.
+L62:   4. Upload your notes by taking a photo of them, pasting them in, or uploading a file.
+L63:   5. Select Start transforming.
+L64:   6. Start studying!
+L65: 
+L66: Settings and options
+L67: 
+L68:   * Select 【13†Image: Settings gear - Resized.png】 (Settings) to edit your study guide’s title, change who can see your study guide, or delete your study guide.
+L69:   * For generated flashcard sets, go to the set to change the set’s visibility.
+L70: 
+L71: Tips
+L72:   * Find the study guides you’ve created by selecting Your library and Study guides.
+L73:   * Select 【12†Image: Share - Resized.png】 (share) to share your study guide.
+L74: ### Related Articles
+L75: 
+L76:   * 【14†Create flashcard sets directly in Claude】
+L77:   * 【15†Studying with Study Groups】
+L78:   * 【16†Creating study sets with Smart Assist】
+L79:   * 【17†Becoming a top creator on Quizlet】
+L80:   * 【18†Studying with Study Guides】
+--------------------------------------------------------------------------------
+Removing sets from your Recent activity feed – Quizlet Help Center (https://help.quizlet.com/hc/en-us/articles/360029004272-Removing-sets-from-your-Recent-activity-feed)
+citeturn759view5 [wordlim: 200] Crawled: today; Content type: text/html; Source: click({"ref_id":"turn751view1","id":31}); Total lines: 73
+

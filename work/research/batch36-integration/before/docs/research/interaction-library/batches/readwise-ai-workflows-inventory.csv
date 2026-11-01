@@ -1,0 +1,15 @@
+entry_id,entry_type,title,source_url,evidence_ids,flow_ids,review_status,gap
+M015-RWSK-01,repository_directory,仓库目录,https://github.com/readwiseio/readwise-skills/blob/2d1ce9627c611d24f510dfc2e05a123fa509d2f6/README.md,E-RWSK-01,,正文已读；未执行,固定文件版本；实际授权、工具响应、失败与恢复未核，完整服务器行为未知
+M015-RWSK-02,official_workflow_definition,MCP工具说明,https://github.com/readwiseio/readwise-skills/blob/2d1ce9627c611d24f510dfc2e05a123fa509d2f6/skills/readwise-mcp/SKILL.md,E-RWSK-02,F-M015-26,正文已读；未执行,固定文件版本；实际授权、工具响应、失败与恢复未核，完整服务器行为未知
+M015-RWSK-03,official_workflow_definition,CLI工具说明,https://github.com/readwiseio/readwise-skills/blob/2d1ce9627c611d24f510dfc2e05a123fa509d2f6/skills/readwise-cli/SKILL.md,E-RWSK-03,F-M015-26,正文已读；未执行,固定文件版本；实际授权、工具响应、失败与恢复未核，完整服务器行为未知
+M015-RWSK-04,official_workflow_definition,逐篇筛选,https://github.com/readwiseio/readwise-skills/blob/2d1ce9627c611d24f510dfc2e05a123fa509d2f6/skills/triage/SKILL.md,E-RWSK-04,F-M015-27,正文已读；未执行,固定文件版本；实际授权、工具响应、失败与恢复未核，完整服务器行为未知
+M015-RWSK-05,official_workflow_definition,订阅追读,https://github.com/readwiseio/readwise-skills/blob/2d1ce9627c611d24f510dfc2e05a123fa509d2f6/skills/feed-catchup/SKILL.md,E-RWSK-05,F-M015-28,正文已读；未执行,固定文件版本；实际授权、工具响应、失败与恢复未核，完整服务器行为未知
+M015-RWSK-06,official_workflow_definition,阅读测验,https://github.com/readwiseio/readwise-skills/blob/2d1ce9627c611d24f510dfc2e05a123fa509d2f6/skills/quiz/SKILL.md,E-RWSK-06,F-M015-29,正文已读；未执行,固定文件版本；实际授权、工具响应、失败与恢复未核，完整服务器行为未知
+M015-RWSK-07,official_workflow_definition,读者画像,https://github.com/readwiseio/readwise-skills/blob/2d1ce9627c611d24f510dfc2e05a123fa509d2f6/skills/build-persona/SKILL.md,E-RWSK-07,F-M015-30,正文已读；未执行,固定文件版本；实际授权、工具响应、失败与恢复未核，完整服务器行为未知
+M015-RWSK-08,official_workflow_definition,阅读回顾,https://github.com/readwiseio/readwise-skills/blob/2d1ce9627c611d24f510dfc2e05a123fa509d2f6/skills/reader-recap/SKILL.md,E-RWSK-08,F-M015-31,正文已读；未执行,固定文件版本；实际授权、工具响应、失败与恢复未核，完整服务器行为未知
+M015-RWSK-09,official_workflow_definition,书评草稿,https://github.com/readwiseio/readwise-skills/blob/2d1ce9627c611d24f510dfc2e05a123fa509d2f6/skills/book-review/SKILL.md,E-RWSK-09,F-M015-32,正文已读；未执行,固定文件版本；实际授权、工具响应、失败与恢复未核，完整服务器行为未知
+M015-RWSK-10,official_workflow_definition,高亮关系图,https://github.com/readwiseio/readwise-skills/blob/2d1ce9627c611d24f510dfc2e05a123fa509d2f6/skills/highlight-graph/SKILL.md,E-RWSK-10,F-M015-33,正文已读；未执行,固定文件版本；实际授权、工具响应、失败与恢复未核，完整服务器行为未知
+M015-RWSK-11,official_workflow_definition,阅读活动网页,https://github.com/readwiseio/readwise-skills/blob/2d1ce9627c611d24f510dfc2e05a123fa509d2f6/skills/now-reading-page/SKILL.md,E-RWSK-11,F-M015-34,正文已读；未执行,固定文件版本；实际授权、工具响应、失败与恢复未核，完整服务器行为未知
+M015-RWSK-12,official_workflow_definition,阅读模式洞察,https://github.com/readwiseio/readwise-skills/blob/2d1ce9627c611d24f510dfc2e05a123fa509d2f6/skills/surprise-me/SKILL.md,E-RWSK-12,F-M015-35,正文已读；未执行,固定文件版本；实际授权、工具响应、失败与恢复未核，完整服务器行为未知
+M015-RWSK-13,official_help,CLI只读与认证,https://docs.readwise.io/tools/cli,E-RWSK-13,F-M015-26,正文已读；未执行,TUI例外保留；实际凭据范围、错误回执未核
+M015-RWSK-14,official_help_existing_source,MCP接入与索引,https://docs.readwise.io/tools/mcp,E-RWCD-17,F-M015-26,同来源补读；未连接,全量后增量更新是声明，无可测时延；旧MCP实现不套新服务

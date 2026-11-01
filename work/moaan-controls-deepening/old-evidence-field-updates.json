@@ -1,0 +1,108 @@
+[
+  {
+    "evidence_id": "E-MOD-05",
+    "before": {
+      "evidence_id": "E-MOD-05",
+      "product_id": "M-054",
+      "title": "墨案2020指南：文件移动",
+      "url": "http://www.moaansmart.com/?show=88",
+      "checked_on": "2026-10-26",
+      "source_type": "official_legacy_user_guide",
+      "access_mode": "http_original_text_via_urllib",
+      "version_scope": "Moaan legacy guide dated 2020-06-08; hardware model and firmware unspecified; not attributed to W7/W8/inkPalm",
+      "app_build": null,
+      "firmware_version": null,
+      "source_updated_on": "2020-06-08",
+      "locator": "文件管理长按、复制/剪切、目标目录粘贴",
+      "note": "实际HTTP原址正文读取；HTTPS失败。没有覆盖/取消/中断行为；机型未知。",
+      "hands_on": false,
+      "visual_observed": false,
+      "archived_artifact": null,
+      "sha256": null,
+      "capture_state": "text_only",
+      "supersedes": null
+    },
+    "after": {
+      "evidence_id": "E-MOD-05",
+      "product_id": "M-054",
+      "title": "墨案2020指南：文件移动",
+      "url": "http://www.moaansmart.com/?show=88",
+      "checked_on": "2026-10-26",
+      "source_type": "official_legacy_user_guide",
+      "access_mode": "http_original_text_via_urllib",
+      "version_scope": "Moaan legacy guide dated 2020-06-08; hardware model and firmware unspecified; not attributed to W7/W8/inkPalm",
+      "app_build": null,
+      "firmware_version": null,
+      "source_updated_on": "2020-06-08",
+      "locator": "文件管理长按复制/剪切；正文写“目标文件夹外面粘贴”，目标位置有歧义",
+      "note": "实际HTTP原址正文读取；HTTPS失败。正文位置措辞保留，GIF未观看，不确定目录内/外操作；没有覆盖/取消/中断行为，机型未知。",
+      "hands_on": false,
+      "visual_observed": false,
+      "archived_artifact": null,
+      "sha256": null,
+      "capture_state": "text_only",
+      "supersedes": null
+    },
+    "changed_fields": {
+      "locator": {
+        "before": "文件管理长按、复制/剪切、目标目录粘贴",
+        "after": "文件管理长按复制/剪切；正文写“目标文件夹外面粘贴”，目标位置有歧义"
+      },
+      "note": {
+        "before": "实际HTTP原址正文读取；HTTPS失败。没有覆盖/取消/中断行为；机型未知。",
+        "after": "实际HTTP原址正文读取；HTTPS失败。正文位置措辞保留，GIF未观看，不确定目录内/外操作；没有覆盖/取消/中断行为，机型未知。"
+      }
+    }
+  },
+  {
+    "evidence_id": "E-MOD-06",
+    "before": {
+      "evidence_id": "E-MOD-06",
+      "product_id": "M-054",
+      "title": "墨案2020指南：安装第三方应用",
+      "url": "http://www.moaansmart.com/?show=89",
+      "checked_on": "2026-10-26",
+      "source_type": "official_legacy_user_guide",
+      "access_mode": "http_original_text_via_urllib",
+      "version_scope": "Moaan legacy guide dated 2020-06-08; hardware model and firmware unspecified; not attributed to W7/W8/inkPalm",
+      "app_build": null,
+      "firmware_version": null,
+      "source_updated_on": "2020-06-08",
+      "locator": "USB至Apps分类；浏览器至download",
+      "note": "实际HTTP原址正文读取；HTTPS失败。未验证渠道现状/安装权限；不保证任意APK兼容。",
+      "hands_on": false,
+      "visual_observed": false,
+      "archived_artifact": null,
+      "sha256": null,
+      "capture_state": "text_only",
+      "supersedes": null
+    },
+    "after": {
+      "evidence_id": "E-MOD-06",
+      "product_id": "M-054",
+      "title": "墨案2020指南：安装第三方应用",
+      "url": "http://www.moaansmart.com/?show=89",
+      "checked_on": "2026-10-26",
+      "source_type": "official_legacy_user_guide",
+      "access_mode": "http_original_text_via_urllib",
+      "version_scope": "Moaan legacy guide dated 2020-06-08; hardware model and firmware unspecified; not attributed to W7/W8/inkPalm",
+      "app_build": null,
+      "firmware_version": null,
+      "source_updated_on": "2020-06-08",
+      "locator": "USB传入文件管理器Apps；浏览器下载至download；另列软件名+APK搜索",
+      "note": "实际HTTP原址正文读取；HTTPS失败。未验证渠道现状/安装权限；不保证任意APK兼容。",
+      "hands_on": false,
+      "visual_observed": false,
+      "archived_artifact": null,
+      "sha256": null,
+      "capture_state": "text_only",
+      "supersedes": null
+    },
+    "changed_fields": {
+      "locator": {
+        "before": "USB至Apps分类；浏览器至download",
+        "after": "USB传入文件管理器Apps；浏览器下载至download；另列软件名+APK搜索"
+      }
+    }
+  }
+]

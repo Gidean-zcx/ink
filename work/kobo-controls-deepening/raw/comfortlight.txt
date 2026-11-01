@@ -1,0 +1,24 @@
+With ComfortLight PRO, you can adjust the brightness and colour of the screen. Colours range from an orange candlelight for nighttime reading, to a white sunlight for daytime.
+Note : ComfortLight PRO is only available on:
+Kobo Clara Colour
+Kobo Clara BW
+Kobo Libra Colour
+Kobo Elipsa 2E
+Kobo Clara 2E
+Kobo Sage
+Kobo Libra 2
+Kobo Libra H2O
+Kobo Forma
+Kobo Clara HD
+Kobo Aura H2O Edition 2
+Kobo Aura ONE
+ComfortLight PRO gradually changes the colour of the screen over the course of the day to make reading more comfortable.
+During the day, the screen displays a small amount of blue light. As the day progresses, the light gradually changes to an orange candlelight, and contains less blue. Blue light helps keep you alert during the day, but can also keep you awake at night.
+ComfortLight PRO limits the amount of blue light exposure at night and can help you fall asleep more easily.
+Limiting blue light from the eReader’s screen also makes it more comfortable for your eyes when you read in low light or in the dark
+Go to your Home screen.
+Tap the Brightness icon near the top of the screen. The settings menu will appear.
+Under Brightness, drag the circle icon left or right to adjust the screen's brightness.
+Adjust the screen's colour: To let your eReader automatically adjust the screen colour , tap the circle icon beside Auto so that the circle icon is towards the right . To manually adjust your ComfortLight PRO settings , tap the circle icon beside Auto so that the circle icon is towards the left . Note : When you manually adjust your ComfortLight PRO settings, your eReader will not automatically adjust the screen colour according to the time of day. Adjust the screen's colour : Drag the circle icon towards the sun icon to make the screen glow white for daytime reading. Drag the circle icon towards the moon icon to make the screen glow orange for nighttime reading.
+Beside Bedtime, tap the dropdown arrow.
+Select the time that you'd normally go to sleep.

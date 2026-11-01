@@ -1,0 +1,11 @@
+{
+  "Gen3C_helper_count_corrected": "76 pages is body_read_for_this_batch, not a union of all reads; old p68/69 explicitly observed in E-QUA-04. 58-page complement not treated as globally unread.",
+  "Gen2_identity_only_pages": [
+    120
+  ],
+  "formal_paths_corrected": [
+    "docs/research/interaction-library/artifacts/quaderno-gen2-ink/source-notes.md",
+    "docs/research/interaction-library/cases/M-060-quaderno.md",
+    "docs/research/interaction-library/backlog.md"
+  ]
+}

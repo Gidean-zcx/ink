@@ -1,0 +1,21 @@
+{
+  "order": 17,
+  "entry_id": "INO-basic--syncing-mobile-apps--does-inoreader-sync-across-devices",
+  "title": "Does Inoreader sync across devices?",
+  "url": "https://www.inoreader.com/help/basic/syncing-mobile-apps/does-inoreader-sync-across-devices",
+  "checked_on": "2026-10-27",
+  "http_status": 200,
+  "final_url": "https://www.inoreader.com/help/basic/syncing-mobile-apps/does-inoreader-sync-across-devices",
+  "acquisition": "one_anonymous_normal_GET",
+  "raw_path": "work/research/batch41-inoreader-help/17-INO-basic--syncing-mobile-apps--does-inoreader-sync-across-devices.html",
+  "headers_path": "work/research/batch41-inoreader-help/17-INO-basic--syncing-mobile-apps--does-inoreader-sync-across-devices.headers.json",
+  "raw_sha256": "68907a3ad95af7b22d3fa6b23b62c88b27455d15b43a35004db33d76b0b2b3f9",
+  "bytes": 141265,
+  "status": "body_obtained",
+  "body_status": "extracted_not_yet_root_read",
+  "body_path": "work/research/batch41-inoreader-help/17-INO-basic--syncing-mobile-apps--does-inoreader-sync-across-devices.body.txt",
+  "body_sha256": "19b7f32a12e626fa880be1317677fb13db904528d659ea177c590b0c28326b22",
+  "body_chars": 70,
+  "links": [],
+  "images": []
+}

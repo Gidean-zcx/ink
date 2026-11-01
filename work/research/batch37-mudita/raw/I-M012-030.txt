@@ -1,0 +1,34 @@
+How To Manage Alarms on Mudita Kompakt
+Modified on: Sat, 3 Oct, 2026 at 8:45 AM
+How to create an alarm
+To create your first alarm: 
+Tap the clock on the home screen*
+Tap Create an Alarm
+You can edit name and sound and the days it repeats
+Tap Create
+To add additional alarms: 
+Tap the clock on the home screen*
+Tap the Plus icon 
+You can edit name and sound and the days it repeats
+Tap Create 
+How to edit an alarm 
+Tap the clock on the home screen*
+Tap on the time Alarm you want to edit 
+Edit the time using the up and down arrows or using the keypad
+You can edit name and sound and the days it repeats
+Tap Save
+How to delete an alarm 
+Tap the clock on the home screen*
+Tap the Pencil icon
+Tap the Delete icon 
+How to snooze an alarm
+Snooze is fixed to a 5 minute interval and is not automatic.
+To snooze the alarm:
+Wait until your alarm rings
+Tap Snooze
+*You can also unhide the app icon to enable access by tapping Apps > Alarm
+Was this article helpful?
+No
+Yes
+That’s Great!
+Thank you for your feedback

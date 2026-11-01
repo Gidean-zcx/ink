@@ -1,0 +1,52 @@
+Generate reports in Gemini Notebook
+Generate interactive reports with embedded studio content or structured, text-only documents in Gemini Notebook.
+Important: Reports are AI-generated and may contain inaccuracies or mistakes. Be sure to review generated content for accuracy.
+Generate interactive reports in Gemini Notebook
+Important: This feature is only available on the web. You must be 18 years of age or older to access some content in interactive reports.
+Generate interactive learning overviews
+Go to notebook.google.com.
+Select a notebook. You can:
+Open an existing Gemini Notebook that you have edit access to.
+Create a new one and upload sources.
+In the “Studio” panel, select Reports  Interactive.
+To generate with default settings, under “Template,” select Learning Overview.
+Learn how to customize your generation settings.
+In your generated report, under any suggested artifacts that you want to embed, select Add.
+You can also find the generated artifacts in the studio panel.
+Tip: It may take some time to generate interactive reports and artifacts.
+Generate document reports in Gemini Notebook
+Go to notebook.google.com.
+Select a notebook. You can:
+Open an existing Gemini Notebook that you have edit access to.
+Create a new one and upload sources.
+In the “Studio” panel, select Reports  Document.
+To generate with default settings, select a template or suggested format.
+Learn how to customize your generation settings.
+Customize your generation settings
+Important: This feature is only available on the web.
+Next to the name of the template or suggested format, select Edit .
+Make your changes.
+Select Generate now or Generate later.
+Share your Gemini Notebook reports
+Share a link to your report
+Important: Make sure your notebook is already shared with the recipient or open to anyone with a link, and users have access to the full notebook.
+Go to notebook.google.com.
+In the “Studio” panel of an existing notebook, select your generated report.
+Select Share   Copy link to Report.
+Share your entire notebook
+If you share the notebook that contains your generated reports with others, they can find those reports in the "Studio" panel.
+Learn how to share notebooks privately.
+Learn how to share a public notebook.
+Report a problem with reports shared with you
+If you find content in a shared artifact that you believe violates the law, let us know.
+Open the link to a report shared with you.
+At the top right, select Flag .
+If you get a redirect notice, click the URL.
+Follow the on-screen instructions.
+Learn about other ways to report a problem.
+Related resources
+Create a notebook in Gemini Notebook
+Report a problem
+Use public notebooks and featured notebooks in Gemini Notebook
+Computer Android phone & tabletiPhone & iPad
+More

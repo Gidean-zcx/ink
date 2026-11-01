@@ -1,0 +1,64 @@
+{
+  "name": "26-quit-confirm",
+  "url": "https://www.duolingo.com/lesson",
+  "title": "Duolingo - Learn French with lessons that work",
+  "utc": "2026-10-26T17:50:55.685542+00:00",
+  "text": "4\nWrite this in English\nUn café ?\ncoffee\nhello\nA\nSKIP\nCHECK\nWait, don’t go! You’ll lose your progress if you quit now\nKEEP LEARNING\nEND SESSION",
+  "buttons": [
+    {
+      "text": "",
+      "aria": null,
+      "test": "quit-button",
+      "visible": true
+    },
+    {
+      "text": "",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "coffee",
+      "aria": null,
+      "test": "coffee-challenge-tap-token",
+      "visible": true
+    },
+    {
+      "text": "hello",
+      "aria": null,
+      "test": "hello-challenge-tap-token",
+      "visible": true
+    },
+    {
+      "text": "A",
+      "aria": null,
+      "test": "A-challenge-tap-token",
+      "visible": true
+    },
+    {
+      "text": "SKIP",
+      "aria": null,
+      "test": "player-skip",
+      "visible": true
+    },
+    {
+      "text": "CHECK",
+      "aria": null,
+      "test": "player-next",
+      "visible": true
+    },
+    {
+      "text": "KEEP LEARNING",
+      "aria": null,
+      "test": "notification-button",
+      "visible": true
+    },
+    {
+      "text": "END SESSION",
+      "aria": null,
+      "test": "notification-drawer-no-thanks-button",
+      "visible": true
+    }
+  ],
+  "inputs": []
+}

@@ -1,0 +1,104 @@
+[
+  {
+    "evidence_id": "E-HBCD-04",
+    "before": {
+      "evidence_id": "E-HBCD-04",
+      "product_id": "M-035",
+      "title": "型号指南附带的两张旋钮机身插图：型号身份存疑",
+      "url": "https://guide.hiby.com/en/assets/images/hiby_r3ii_2025_1-d434cfb556f22b75f15d0a04f3549131.png",
+      "related_urls": [
+        "https://guide.hiby.com/en/assets/images/hiby_r3ii_2025_2-1a91d40cbcfec30358d2d124a4107f7a.png"
+      ],
+      "checked_on": "2026-10-27",
+      "source_type": "official_product_illustration",
+      "access_mode": "anonymous_image_GET_and_view_image",
+      "version_scope": "页面称R3II2025；插图本身未能确认2025装配，不能调和按键/旋钮冲突",
+      "app_build": null,
+      "firmware_version": null,
+      "source_updated_on": null,
+      "locator": "型号手册开头两幅产品图；无视频或时间戳",
+      "note": "两图实际查看；均见右侧旋钮与播放控件示意，不是物理设备或连续操作。",
+      "hands_on": false,
+      "visual_observed": true,
+      "observation_type": "static_product_illustrations_only",
+      "observed_image_count": 2,
+      "derived_from": [
+        "E-HBD-01",
+        "E-HBCD-01"
+      ],
+      "raw_work_path": "work/hiby-controls-deepening/raw/product-1.png",
+      "raw_sha256": "df1452475f2b24af6adfd187de6214f9ddde5a99c391a4119f9318cb83933b91",
+      "additional_raw_files": [
+        {
+          "url": "https://guide.hiby.com/en/assets/images/hiby_r3ii_2025_2-1a91d40cbcfec30358d2d124a4107f7a.png",
+          "raw_work_path": "work/hiby-controls-deepening/raw/product-2.png",
+          "raw_sha256": "ce5bc1038a41f76f3c1e5438a8dba7657809e1f8995b1dadfe6f3c49fa77cbc5",
+          "http_status": 200,
+          "checked_on": "2026-10-27"
+        }
+      ],
+      "archived_artifact": "artifacts/hiby-controls-deepening/official-product-1.png",
+      "sha256": "df1452475f2b24af6adfd187de6214f9ddde5a99c391a4119f9318cb83933b91",
+      "rendered_artifacts": [
+        "artifacts/hiby-controls-deepening/official-product-1.png",
+        "artifacts/hiby-controls-deepening/official-product-2.png"
+      ],
+      "artifact_hashes": {
+        "artifacts/hiby-controls-deepening/official-product-1.png": "df1452475f2b24af6adfd187de6214f9ddde5a99c391a4119f9318cb83933b91",
+        "artifacts/hiby-controls-deepening/official-product-2.png": "ce5bc1038a41f76f3c1e5438a8dba7657809e1f8995b1dadfe6f3c49fa77cbc5"
+      },
+      "capture_state": "two_static_images_archived",
+      "supersedes": null
+    },
+    "after": {
+      "evidence_id": "E-HBCD-04",
+      "product_id": "M-035",
+      "title": "型号指南附带的两张旋钮机身插图：型号身份存疑",
+      "url": "https://guide.hiby.com/en/assets/images/hiby_r3ii_2025_1-d434cfb556f22b75f15d0a04f3549131.png",
+      "related_urls": [
+        "https://guide.hiby.com/en/assets/images/hiby_r3ii_2025_2-1a91d40cbcfec30358d2d124a4107f7a.png"
+      ],
+      "checked_on": "2026-10-27",
+      "source_type": "official_product_illustration",
+      "access_mode": "anonymous_image_GET_and_view_image",
+      "version_scope": "页面称R3II2025；插图本身未能确认2025装配，不能调和按键/旋钮冲突",
+      "app_build": null,
+      "firmware_version": null,
+      "source_updated_on": null,
+      "locator": "型号手册开头两幅产品图；无视频或时间戳",
+      "note": "两图实际查看；均见右侧旋钮与播放控件示意，不是物理设备或连续操作。",
+      "hands_on": false,
+      "visual_observed": true,
+      "observation_type": "static_product_illustrations_only",
+      "observed_image_count": 2,
+      "derived_from": "E-HBD-01",
+      "raw_work_path": "work/hiby-controls-deepening/raw/product-1.png",
+      "raw_sha256": "df1452475f2b24af6adfd187de6214f9ddde5a99c391a4119f9318cb83933b91",
+      "additional_raw_files": [
+        {
+          "url": "https://guide.hiby.com/en/assets/images/hiby_r3ii_2025_2-1a91d40cbcfec30358d2d124a4107f7a.png",
+          "raw_work_path": "work/hiby-controls-deepening/raw/product-2.png",
+          "raw_sha256": "ce5bc1038a41f76f3c1e5438a8dba7657809e1f8995b1dadfe6f3c49fa77cbc5",
+          "http_status": 200,
+          "checked_on": "2026-10-27"
+        }
+      ],
+      "archived_artifact": "artifacts/hiby-controls-deepening/official-product-1.png",
+      "sha256": "df1452475f2b24af6adfd187de6214f9ddde5a99c391a4119f9318cb83933b91",
+      "rendered_artifacts": [
+        "artifacts/hiby-controls-deepening/official-product-1.png",
+        "artifacts/hiby-controls-deepening/official-product-2.png"
+      ],
+      "artifact_hashes": {
+        "artifacts/hiby-controls-deepening/official-product-1.png": "df1452475f2b24af6adfd187de6214f9ddde5a99c391a4119f9318cb83933b91",
+        "artifacts/hiby-controls-deepening/official-product-2.png": "ce5bc1038a41f76f3c1e5438a8dba7657809e1f8995b1dadfe6f3c49fa77cbc5"
+      },
+      "capture_state": "two_static_images_archived",
+      "supersedes": null,
+      "corroborating_evidence_ids": [
+        "E-HBCD-01"
+      ]
+    },
+    "reason": "Normalize single-parent derived_from schema; retain Chinese guide as corroborating evidence."
+  }
+]

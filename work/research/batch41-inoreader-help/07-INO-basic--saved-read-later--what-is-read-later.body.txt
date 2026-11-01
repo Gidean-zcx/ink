@@ -1,0 +1,1 @@
+A section inside Saved, where your saved articles are stored for future reading.

@@ -1,0 +1,58 @@
+[
+  {
+    "url": "file:///home/workspace/reader/work/research/batch36-readwise/synthetic-graph.html",
+    "status": 200
+  },
+  {
+    "url": "https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap",
+    "status": 200
+  },
+  {
+    "url": "https://fonts.gstatic.com/s/dmmono/v16/aFTU7PB1QTsUX8KYthqQBA.woff2",
+    "status": 200
+  },
+  {
+    "url": "https://fonts.gstatic.com/s/dmmono/v16/aFTR7PB1QTsUX8KYvumzEYOtbQ.woff2",
+    "status": 200
+  },
+  {
+    "url": "https://unpkg.com/force-graph",
+    "status": 302
+  },
+  {
+    "url": "https://unpkg.com/force-graph@1.52.0/dist/force-graph.min.js",
+    "status": 200
+  },
+  {
+    "url": "https://fonts.gstatic.com/s/crimsonpro/v28/q5uSsoa5M_tv7IihmnkabAReu49Y_Bo-HVKMBi6Ue6s8fNE.woff2",
+    "status": 200
+  },
+  {
+    "url": "https://fonts.gstatic.com/s/crimsonpro/v28/q5uDsoa5M_tv7IihmnkabARboYE.woff2",
+    "status": 200
+  },
+  {
+    "url": "file:///home/workspace/reader/work/research/batch36-readwise/synthetic-graph.html",
+    "status": 200
+  },
+  {
+    "url": "https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap",
+    "status": 200
+  },
+  {
+    "url": "https://unpkg.com/force-graph",
+    "status": 302
+  },
+  {
+    "url": "https://fonts.gstatic.com/s/dmmono/v16/aFTR7PB1QTsUX8KYvumzEYOtbQ.woff2",
+    "status": 200
+  },
+  {
+    "url": "https://fonts.gstatic.com/s/dmmono/v16/aFTU7PB1QTsUX8KYthqQBA.woff2",
+    "status": 200
+  },
+  {
+    "url": "https://unpkg.com/force-graph@1.52.0/dist/force-graph.min.js",
+    "status": 200
+  }
+]

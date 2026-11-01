@@ -1,0 +1,162 @@
+[
+  {
+    "key": "help-01",
+    "title": "Why did my course change?",
+    "product_operated": false,
+    "method": "anonymous_browser_help_article_navigation",
+    "browser": "156.0.8078.4",
+    "index_status": 200,
+    "url": "https://www.duolingo.com/help",
+    "error": "No article navigation"
+  },
+  {
+    "key": "help-02",
+    "title": "What is a streak?",
+    "product_operated": false,
+    "method": "anonymous_browser_help_article_navigation",
+    "browser": "156.0.8078.4",
+    "index_status": 200,
+    "url": "https://www.duolingo.com/help",
+    "error": "No article navigation"
+  },
+  {
+    "key": "help-03",
+    "title": "What are leaderboards and leagues?",
+    "product_operated": false,
+    "method": "anonymous_browser_help_article_navigation",
+    "browser": "156.0.8078.4",
+    "index_status": 200,
+    "url": "https://www.duolingo.com/help",
+    "error": "No article navigation"
+  },
+  {
+    "key": "help-04",
+    "title": "Does Duolingo use any open source libraries?",
+    "product_operated": false,
+    "method": "anonymous_browser_help_article_navigation",
+    "browser": "156.0.8078.4",
+    "index_status": 200,
+    "url": "https://www.duolingo.com/help",
+    "error": "No article navigation"
+  },
+  {
+    "key": "help-05",
+    "title": "How does matchmaking work in Duolingo Chess?",
+    "product_operated": false,
+    "method": "anonymous_browser_help_article_navigation",
+    "browser": "156.0.8078.4",
+    "index_status": 200,
+    "url": "https://www.duolingo.com/help",
+    "error": "No article navigation"
+  },
+  {
+    "key": "help-06",
+    "title": "How do I change my username or email address?",
+    "product_operated": false,
+    "method": "anonymous_browser_help_article_navigation",
+    "browser": "156.0.8078.4",
+    "index_status": 200,
+    "url": "https://www.duolingo.com/help",
+    "error": "No article navigation"
+  },
+  {
+    "key": "help-07",
+    "title": "How do I find, follow, and block users on Duolingo?",
+    "product_operated": false,
+    "method": "anonymous_browser_help_article_navigation",
+    "browser": "156.0.8078.4",
+    "index_status": 200,
+    "url": "https://www.duolingo.com/help",
+    "error": "No article navigation"
+  },
+  {
+    "key": "help-08",
+    "title": "How do I remove or reset a course?",
+    "product_operated": false,
+    "method": "anonymous_browser_help_article_navigation",
+    "browser": "156.0.8078.4",
+    "index_status": 200,
+    "url": "https://www.duolingo.com/help",
+    "error": "No article navigation"
+  },
+  {
+    "key": "help-09",
+    "title": "I’m having trouble accessing my account.",
+    "product_operated": false,
+    "method": "anonymous_browser_help_article_navigation",
+    "browser": "156.0.8078.4",
+    "index_status": 200,
+    "url": "https://www.duolingo.com/help",
+    "error": "No article navigation"
+  },
+  {
+    "key": "help-10",
+    "title": "How do I delete my account and access my data?",
+    "product_operated": false,
+    "method": "anonymous_browser_help_article_navigation",
+    "browser": "156.0.8078.4",
+    "index_status": 200,
+    "url": "https://www.duolingo.com/help",
+    "error": "No article navigation"
+  },
+  {
+    "key": "help-11",
+    "title": "What to do if your data was compromised",
+    "product_operated": false,
+    "method": "anonymous_browser_help_article_navigation",
+    "browser": "156.0.8078.4",
+    "index_status": 200,
+    "url": "https://www.duolingo.com/help",
+    "error": "No article navigation"
+  },
+  {
+    "key": "help-12",
+    "title": "What is Super Duolingo and how do I subscribe?",
+    "product_operated": false,
+    "method": "anonymous_browser_help_article_navigation",
+    "browser": "156.0.8078.4",
+    "index_status": 200,
+    "url": "https://www.duolingo.com/help",
+    "error": "No article navigation"
+  },
+  {
+    "key": "help-13",
+    "title": "Family Plan",
+    "product_operated": false,
+    "method": "anonymous_browser_help_article_navigation",
+    "browser": "156.0.8078.4",
+    "index_status": 200,
+    "url": "https://www.duolingo.com/help",
+    "error": "No article navigation"
+  },
+  {
+    "key": "help-14",
+    "title": "How do I cancel my Super Duolingo subscription?",
+    "product_operated": false,
+    "method": "anonymous_browser_help_article_navigation",
+    "browser": "156.0.8078.4",
+    "index_status": 200,
+    "url": "https://www.duolingo.com/help",
+    "error": "No article navigation"
+  },
+  {
+    "key": "help-15",
+    "title": "How do I request a refund?",
+    "product_operated": false,
+    "method": "anonymous_browser_help_article_navigation",
+    "browser": "156.0.8078.4",
+    "index_status": 200,
+    "url": "https://www.duolingo.com/help",
+    "error": "No article navigation"
+  },
+  {
+    "key": "help-16",
+    "title": "How do I use a promo code?",
+    "product_operated": false,
+    "method": "anonymous_browser_help_article_navigation",
+    "browser": "156.0.8078.4",
+    "index_status": 200,
+    "url": "https://www.duolingo.com/help",
+    "error": "No article navigation"
+  }
+]

@@ -1,0 +1,248 @@
+Generate Video Overviews in Gemini Notebook
+Important: At this time, the Gemini Notebook mobile app may have limitations to this feature. Learn more about the supported features in Gemini Notebook mobile app.
+Video Overviews transform the sources in your notebook into an engaging video. They distill complex information into clear, digestible content, providing a comprehensive and engaging visual deep dive of your material.
+Generate video overviews
+Important: Video overviews, including voices and visuals, are AI-generated and may contain inaccuracies or audio glitches.
+On your device, open Gemini Notebook.
+Open an existing notebook or create a new one with sources.
+Learn how to add or discover new sources for your notebook.
+In the "Studio" panel, select Video Overview.
+Customize your video overview.
+Learn how to customize your Video Overview.
+Select Generate now or Generate later.
+Gemini Notebook may take a while to generate the Video Overview (sometimes, more than 30 minutes). Feel free to come back to your notebook later.
+Co-create video overviews with Gemini Notebook
+Important:
+This feature is only available for Google AI Ultra subscribers.
+Video overviews, including voices and visuals, are AI-generated and may contain inaccuracies or audio glitches.
+Step 1: Open a notebook you have edit access to
+On your device, open Gemini Notebook.
+Open an existing notebook or create a new one with sources.
+Learn how to add or discover new sources for your notebook.
+Step 2: Create your producer notes
+From the “Studio” panel
+In the "Studio" panel, select Video Overview.
+Customize your video overview.
+Learn how to customize your Video Overview.
+Turn on Review producer notes.
+Select Generate now.
+Tip: If you select Generate later, you’ll schedule a generation of the video overview without producer notes.
+From Gemini Notebook chat
+In the chat box, enter a prompt about creating a video overview.
+For example: Create a video summarizing [topic]
+Customize your video overview through the responsive cards that Gemini Notebook returns to you in chat.
+Turn on Review producer notes before final rendering.
+Select Generate.
+Gemini Notebook may take multiple minutes to generate producer notes. You can continue working in your notebook in the meantime.
+Step 3: Generate your video overview
+In the “Studio” panel, next to producer notes that are ready, select Review.
+To refine your producer notes, add all of your feedback at once.
+Select Proceed.
+Important: Once you select Proceed, Gemini Notebook will generate your video overview. You will not be able to further refine your producer notes.
+Gemini Notebook may take a while to generate the Video Overview (sometimes, more than 30 minutes). Feel free to come back to your notebook later.
+(Optional) Customize your Video Overview
+To customize your Video Overviews, specify the following:
+Format: Choose the type of video that works best for you.
+Cinematic: A rich, immersive experience that can unpack the complex ideas of your sources through engaging visuals and storytelling.
+Important: Cinematic Overviews are only available to users ages 18+.
+Explainer: A structured, comprehensive overview that connects the dots within your sources.
+Short: Quickly grasp key concepts from your sources in ~60 second videos.
+Language: Pick from any of our supported languages for your video's narration.
+Cinematic Video Overviews only support English.
+Learn how to set your output language for Video Overviews.
+Visual Style: Select a look for your video (only for 18+ users, excluding Cinematic and Short Video Overviews). You can choose styles in these ways:
+Choose from styles like Classic, Whiteboard, Watercolor, Retro Print, Heritage, Paper-craft, Kawaii, and Anime.
+Let Gemini Notebook auto-select a style for you.
+To generate a custom visual style, choose Custom and input a description.
+(Optional) Steering prompt: Select a suggested topic for the overview to focus on, or provide a custom topic.
+Manage your Video Overview
+To change the playback speed, select a different speed from “1x”.
+Navigate forward or backwards in the video by using the playback slider, or by tapping “rewind” or “skip forward”.
+Enter full screen mode by clicking on the full screen button
+To send feedback, tap “good video” or “bad video”
+Play a Video Overview
+Important: This is only applicable to notebooks that have previously generated Video Overviews.
+Open an existing notebook.
+In the "Studio" panel, select the title of your previously generated Video Overview.
+Once the video player opens, start the Video Overview by hitting “play”
+Tip: to view the prompt used to generate your audio overview, select “View custom prompt” within the three dots menu next to your artifact in the Studio panel.
+Share a Video Overview
+Option 1: Share a link
+Generate a Video Overview.
+In the video player, select Share.
+Confirm that the notebook is shared with the recipient or is made public (open to “Anyone with a link”), and viewers have access to the “full notebook.”
+Copy link to Video Overview to share with recipient.
+Save to apply changes.
+Important:
+Public notebook sharing is only enabled for consumer accounts. It's currently disabled for Workspace Enterprise or Education accounts.
+Only notebook owners and editors can make a  generated video publicly available and manage its access. As an owner or editor, you can turn off public access by selecting a different Notebook access level in the sharing panel.
+Once a video is deleted, any previously generated share link will no longer work.
+Option 2: Share the entire notebook
+Generate a Video Overview.
+Share the full notebook.
+Other users can access the Video Overview in the "Studio" panel.
+Option 3: Download & share the Video Overview
+To download the Video Overview, select Download .
+Share the downloaded video file.
+Tip: Depending on the publisher's content restrictions, you may not be able to download artifacts generated using a notebook that has a Play Books ebook as a source.
+Set your output language for Video Overviews
+Learn how to change your output language in Gemini Notebook.
+Supported languages for Explainer Video Overviews
+Afrikaans
+Albanian
+Amharic
+Arabic (Colloquial Egyptian)
+Arabic (Modern Standard)
+Armenian
+Azerbaijani
+Basque
+Belarusian
+Bengali
+Bulgarian
+Burmese (Myanmar)
+Catalan
+Cebuano
+Chinese (Simplified)
+Chinese (Traditional)
+Croatian
+Czech
+Danish
+Dutch
+English
+Estonian
+Filipino
+Finnish
+French (Canada)
+French (European)
+Galician
+Georgian
+German
+Greek
+Gujarati
+Haitian Creole
+Hebrew
+Hindi
+Hungarian
+Icelandic
+Indonesian
+Italian
+Japanese
+Javanese
+Kannada
+Konkani
+Korean
+Latin
+Latvian
+Lithuanian
+Macedonian
+Maithili
+Malay
+Malayalam
+Marathi
+Nepali
+Norwegian (Bokmål)
+Norwegian (Nynorsk)
+Oriya
+Pashto
+Persian
+Polish
+Portuguese (Brazil)
+Portuguese (Portugal)
+Punjabi
+Romanian
+Russian
+Serbian (Cyrillic)
+Sindhi
+Sinhala
+Slovak
+Slovenian
+Spanish (European)
+Spanish (Latin America)
+Spanish (Mexico)
+Swahili
+Swedish
+Tamil
+Telugu
+Thai
+Turkish
+Ukrainian
+Urdu
+Vietnamese
+Supported languages for Short Video Overviews
+Afrikaans
+Albanian
+Amharic
+Arabic
+Arabic (Colloquial Egyptian)
+Arabic (Modern Standard)
+Armenian
+Azerbaijani
+Basque
+Belarusian
+Bengali
+Bulgarian
+Catalan
+Chinese (Simplified)
+Chinese (Traditional)
+Croatian
+Czech
+Danish
+Dutch
+Estonian
+Filipino
+Finnish
+French
+French (Canada)
+Galician
+Georgian
+German
+Greek
+Gujarati
+Hebrew
+Hindi
+Hungarian
+Icelandic
+Indonesian
+Italian
+Japanese
+Javanese
+Kannada
+Korean
+Lao
+Latvian
+Lithuanian
+Luxembourgish
+Macedonian
+Malagasy
+Malay
+Malayalam
+Marathi
+Mongolian
+Nepali
+Norwegian
+Persian
+Polish
+Portuguese (Brazil)
+Portuguese (Portugal)
+Punjabi
+Romanian
+Russian
+Serbian
+Sinhala
+Slovak
+Slovenian
+Spanish (European)
+Spanish (Latin America)
+Spanish (Mexico)
+Swahili
+Swedish
+Tamil
+Telugu
+Turkish
+Ukrainian
+Urdu
+Vietnamese
+Related resources
+Learn about Gemini Notebook
+Create a notebook in Gemini Notebook
+Add or discover new sources for your Notebook

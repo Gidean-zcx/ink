@@ -1,0 +1,32 @@
+{
+  "checked_on": "2026-10-27",
+  "checks": {
+    "existing_merge_batches_exit": 0,
+    "existing_check_docs_exit": 0,
+    "new_raw_capture_hashes": "46 passed",
+    "requirements_unchanged": true,
+    "old_task_depths_unchanged": true,
+    "new_tasks": [
+      "F-M044-17"
+    ],
+    "new_sources": 46,
+    "new_static_source_records": 4,
+    "new_images_observed": 13,
+    "new_product_operations": 0,
+    "reference_points": 38,
+    "old_reference_points_unchanged": true,
+    "reference_links_valid": true
+  },
+  "formal_change_count": 47,
+  "new_files": 24,
+  "modified_files": 23,
+  "deleted_files": [],
+  "limitations": "Structure/hash checks do not prove complete interaction coverage; all 65 groups remain partial.",
+  "worker_validation": {
+    "path": "work/research/batch41-integration/validation.md",
+    "sha256": "8c40ae1e8427aeba8aae7b0fee82bbc3aa230a36efaf4b03abdee1b3997fd7f2",
+    "root_reviewed": true,
+    "result": "No material issue; final formal manifest matches.",
+    "script_archived": "work/research/batch41-integration/worker-validation-script.py"
+  }
+}

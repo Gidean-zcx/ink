@@ -1,0 +1,19 @@
+[
+  {
+    "evidence_id": "E-BCDVC-01",
+    "before": [],
+    "after": [
+      {
+        "checked_on": "2026-10-27",
+        "access_mode": "anonymous_public_HTML_GET",
+        "http_status": 200,
+        "raw_work_path": "work/bcz-video-locator/article-892.html",
+        "raw_sha256": "0edec306e2f287cb77ce5e6456a5dd5a4f7029ed34f4ab512dc9b55410be6d33",
+        "locator": "HTML 1078/1082/1088; title/date/video source",
+        "note": "原页仍未标具体型号。媒体另记E-BCLV-01；最初未观看描述保留为原采集历史。",
+        "source_notes_path": "artifacts/bcz-learning-video-preview/source-notes.md",
+        "source_notes_sha256": "76eafb2b664be740a8ac1f3e91cd0635bcff869422ccdc49e192101f05c98e0b"
+      }
+    ]
+  }
+]

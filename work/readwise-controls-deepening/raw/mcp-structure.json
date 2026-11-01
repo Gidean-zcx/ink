@@ -1,0 +1,513 @@
+{
+  "headings": [
+    {
+      "level": "h1",
+      "id": "",
+      "title": "Readwise MCP Server"
+    },
+    {
+      "level": "h2",
+      "id": "what-is-the-readwise-mcp",
+      "title": "What is the Readwise MCP?"
+    },
+    {
+      "level": "h2",
+      "id": "connecting-your-ai-app",
+      "title": "Connecting your AI app"
+    },
+    {
+      "level": "h2",
+      "id": "",
+      "title": "Claude Desktop"
+    },
+    {
+      "level": "h2",
+      "id": "",
+      "title": "Claude Code"
+    },
+    {
+      "level": "h2",
+      "id": "",
+      "title": "ChatGPT"
+    },
+    {
+      "level": "h2",
+      "id": "",
+      "title": "Codex"
+    },
+    {
+      "level": "h2",
+      "id": "",
+      "title": "Codex CLI"
+    },
+    {
+      "level": "h2",
+      "id": "",
+      "title": "Cursor"
+    },
+    {
+      "level": "h2",
+      "id": "",
+      "title": "OpenClaw"
+    },
+    {
+      "level": "h2",
+      "id": "",
+      "title": "Perplexity"
+    },
+    {
+      "level": "h2",
+      "id": "",
+      "title": "Other apps"
+    },
+    {
+      "level": "h3",
+      "id": "claude-desktop-chat-and-cowork",
+      "title": "Claude Desktop (Chat & Cowork)"
+    },
+    {
+      "level": "h3",
+      "id": "claude-code",
+      "title": "Claude Code"
+    },
+    {
+      "level": "h3",
+      "id": "chat-gpt",
+      "title": "ChatGPT"
+    },
+    {
+      "level": "h3",
+      "id": "codex",
+      "title": "Codex"
+    },
+    {
+      "level": "h3",
+      "id": "codex-cli",
+      "title": "Codex CLI"
+    },
+    {
+      "level": "h3",
+      "id": "cursor",
+      "title": "Cursor"
+    },
+    {
+      "level": "h3",
+      "id": "open-claw",
+      "title": "OpenClaw"
+    },
+    {
+      "level": "h3",
+      "id": "perplexity",
+      "title": "Perplexity"
+    },
+    {
+      "level": "h3",
+      "id": "other-apps",
+      "title": "Other apps"
+    },
+    {
+      "level": "h2",
+      "id": "what-you-can-do-with-the-readwise-mcp",
+      "title": "What you can do with the Readwise MCP"
+    },
+    {
+      "level": "h3",
+      "id": "reader-mcp-tools",
+      "title": "Reader MCP tools"
+    },
+    {
+      "level": "h3",
+      "id": "readwise-mcp-tools",
+      "title": "Readwise MCP tools"
+    },
+    {
+      "level": "h2",
+      "id": "mcp-faqs",
+      "title": "MCP FAQs"
+    },
+    {
+      "level": "h3",
+      "id": "does-this-access-my-reader-documents-or-just-my-readwise-highlights",
+      "title": "Does this access my Reader documents or just my Readwise highlights?"
+    },
+    {
+      "level": "h3",
+      "id": "how-often-does-the-index-update",
+      "title": "How often does the index update?"
+    },
+    {
+      "level": "h3",
+      "id": "can-i-connect-multiple-ai-apps-at-the-same-time",
+      "title": "Can I connect multiple AI apps at the same time?"
+    },
+    {
+      "level": "h3",
+      "id": "is-this-related-to-the-older-readwise-mcp-server",
+      "title": "Is this related to the older Readwise MCP server?"
+    }
+  ],
+  "links": [
+    {
+      "href": "/",
+      "text": "",
+      "in_article": false
+    },
+    {
+      "href": "/",
+      "text": "",
+      "in_article": false
+    },
+    {
+      "href": "/",
+      "text": "",
+      "in_article": false
+    },
+    {
+      "href": "/",
+      "text": "Get Started",
+      "in_article": false
+    },
+    {
+      "href": "/faqs",
+      "text": "Account FAQs",
+      "in_article": false
+    },
+    {
+      "href": "/changelog",
+      "text": "Changelog",
+      "in_article": false
+    },
+    {
+      "href": "https://blog.readwise.io",
+      "text": "Blog",
+      "in_article": false
+    },
+    {
+      "href": "mailto:hello@readwise.io",
+      "text": "Email Us",
+      "in_article": false
+    },
+    {
+      "href": "/affiliates",
+      "text": "Affiliate Program",
+      "in_article": false
+    },
+    {
+      "href": "/tools",
+      "text": "MCP & CLI Tools",
+      "in_article": false
+    },
+    {
+      "href": "/tools",
+      "text": "Overview",
+      "in_article": false
+    },
+    {
+      "href": "/tools/mcp",
+      "text": "MCP Setup",
+      "in_article": false
+    },
+    {
+      "href": "/tools/cli",
+      "text": "CLI Setup",
+      "in_article": false
+    },
+    {
+      "href": "/tools/examples",
+      "text": "Usage Examples",
+      "in_article": false
+    },
+    {
+      "href": "/",
+      "text": "Home",
+      "in_article": false
+    },
+    {
+      "href": "/tools",
+      "text": "Tools",
+      "in_article": false
+    },
+    {
+      "href": "/tools/mcp",
+      "text": "Mcp",
+      "in_article": false
+    },
+    {
+      "href": "https://readwise.io/mcp",
+      "text": "readwise.io/mcp",
+      "in_article": true
+    },
+    {
+      "href": "https://modelcontextprotocol.io/",
+      "text": "Model Context Protocol (MCP)",
+      "in_article": true
+    },
+    {
+      "href": "#claude-desktop-chat-and-cowork",
+      "text": "Claude Desktop",
+      "in_article": true
+    },
+    {
+      "href": "#claude-code",
+      "text": "Claude Code",
+      "in_article": true
+    },
+    {
+      "href": "#chat-gpt",
+      "text": "ChatGPT",
+      "in_article": true
+    },
+    {
+      "href": "#codex",
+      "text": "Codex",
+      "in_article": true
+    },
+    {
+      "href": "#codex-cli",
+      "text": "Codex CLI",
+      "in_article": true
+    },
+    {
+      "href": "#cursor",
+      "text": "Cursor",
+      "in_article": true
+    },
+    {
+      "href": "#open-claw",
+      "text": "OpenClaw",
+      "in_article": true
+    },
+    {
+      "href": "#perplexity",
+      "text": "Perplexity",
+      "in_article": true
+    },
+    {
+      "href": "#other-apps",
+      "text": "Other apps",
+      "in_article": true
+    },
+    {
+      "href": "https://chatgpt.com/apps/readwise/asdk_app_69a0d0b83b5881919dd5f0e53b525d31",
+      "text": "official App within ChatGPT",
+      "in_article": true
+    },
+    {
+      "href": "cursor://anysphere.cursor-deeplink/mcp/install?name=Readwise&config=eyJ1cmwiOiAiaHR0cHM6Ly9tY3AyLnJlYWR3aXNlLmlvL21jcCJ9",
+      "text": "Add to Cursor",
+      "in_article": true
+    },
+    {
+      "href": "/tools/cli",
+      "text": "Readwise CLI",
+      "in_article": true
+    },
+    {
+      "href": "/downloads/rw-logo_perplexity-mcp.png",
+      "text": "Download Readwise icon",
+      "in_article": true
+    },
+    {
+      "href": "/tools/examples",
+      "text": "usage examples",
+      "in_article": true
+    },
+    {
+      "href": "https://github.com/readwiseio/readwise-skills",
+      "text": "browse pre-built skills on GitHub",
+      "in_article": true
+    },
+    {
+      "href": "mailto:hello@readwise.io",
+      "text": "Email Ushello@readwise.io",
+      "in_article": false
+    },
+    {
+      "href": "https://x.com/readwise",
+      "text": "Follow Us@readwise",
+      "in_article": false
+    },
+    {
+      "href": "https://www.reddit.com/r/readwise/",
+      "text": "Ask the CommunityJoin us on Reddit",
+      "in_article": false
+    },
+    {
+      "href": "https://en.wikipedia.org/wiki/Curse_of_knowledge",
+      "text": "Curse of Knowledge",
+      "in_article": false
+    },
+    {
+      "href": "mailto:hello@readwise.io?Subject=Documentation Feedback",
+      "text": "Send Feedback",
+      "in_article": false
+    },
+    {
+      "href": "#what-is-the-readwise-mcp",
+      "text": "What is the Readwise MCP?",
+      "in_article": false
+    },
+    {
+      "href": "#connecting-your-ai-app",
+      "text": "Connecting your AI app",
+      "in_article": false
+    },
+    {
+      "href": "#claude-desktop-chat-and-cowork",
+      "text": "Claude Desktop (Chat & Cowork)",
+      "in_article": false
+    },
+    {
+      "href": "#claude-code",
+      "text": "Claude Code",
+      "in_article": false
+    },
+    {
+      "href": "#chat-gpt",
+      "text": "ChatGPT",
+      "in_article": false
+    },
+    {
+      "href": "#codex",
+      "text": "Codex",
+      "in_article": false
+    },
+    {
+      "href": "#codex-cli",
+      "text": "Codex CLI",
+      "in_article": false
+    },
+    {
+      "href": "#cursor",
+      "text": "Cursor",
+      "in_article": false
+    },
+    {
+      "href": "#open-claw",
+      "text": "OpenClaw",
+      "in_article": false
+    },
+    {
+      "href": "#perplexity",
+      "text": "Perplexity",
+      "in_article": false
+    },
+    {
+      "href": "#other-apps",
+      "text": "Other apps",
+      "in_article": false
+    },
+    {
+      "href": "#what-you-can-do-with-the-readwise-mcp",
+      "text": "What you can do with the Readwise MCP",
+      "in_article": false
+    },
+    {
+      "href": "#reader-mcp-tools",
+      "text": "Reader MCP tools",
+      "in_article": false
+    },
+    {
+      "href": "#readwise-mcp-tools",
+      "text": "Readwise MCP tools",
+      "in_article": false
+    },
+    {
+      "href": "#mcp-faqs",
+      "text": "MCP FAQs",
+      "in_article": false
+    },
+    {
+      "href": "#does-this-access-my-reader-documents-or-just-my-readwise-highlights",
+      "text": "Does this access my Reader documents or just my Readwise highlights?",
+      "in_article": false
+    },
+    {
+      "href": "#how-often-does-the-index-update",
+      "text": "How often does the index update?",
+      "in_article": false
+    },
+    {
+      "href": "#can-i-connect-multiple-ai-apps-at-the-same-time",
+      "text": "Can I connect multiple AI apps at the same time?",
+      "in_article": false
+    },
+    {
+      "href": "#is-this-related-to-the-older-readwise-mcp-server",
+      "text": "Is this related to the older Readwise MCP server?",
+      "in_article": false
+    }
+  ],
+  "images": [
+    {
+      "src": "/images/mcp_connect-claude_step-1.gif",
+      "alt": "Connectors settings in Claude desktop app.",
+      "class": "rounded-lg max-h-[400px] w-auto shadow-xl mx-auto -mt-4"
+    },
+    {
+      "src": "/images/mcp_connect-claude_step-2.gif",
+      "alt": "Add custom connector in Claude desktop app.",
+      "class": "rounded-lg max-h-[400px] w-auto shadow-xl mx-auto -mt-4"
+    },
+    {
+      "src": "/images/mcp_connect-claude_step-3.gif",
+      "alt": "Custom connector settings in Claude desktop app.",
+      "class": "rounded-lg max-h-[400px] w-auto shadow-xl mx-auto -mt-4"
+    },
+    {
+      "src": "/images/mcp_connect-claude_authorize.gif",
+      "alt": "Authorize Readwise connection in Claude desktop app.",
+      "class": "rounded-lg max-h-[400px] w-auto shadow-xl mx-auto -mt-4"
+    },
+    {
+      "src": "/images/chatgpt-mcp_step1_apps.png",
+      "alt": "ChatGPT Apps in sidebar.",
+      "class": "rounded-lg max-h-[300px] w-auto ml-0"
+    },
+    {
+      "src": "/images/chatgpt-mcp_step2_search.png",
+      "alt": "Search for the Readwise app in ChatGPT.",
+      "class": "rounded-lg max-h-[300px] w-auto ml-0"
+    },
+    {
+      "src": "/images/chatgpt-mcp_step3_connect.png",
+      "alt": "Connect to the Readwise app in ChatGPT.",
+      "class": "rounded-lg max-h-[400px] w-auto ml-0"
+    },
+    {
+      "src": "/images/codex-mcp_step1_plugins.png",
+      "alt": "Codex Plugins in sidebar.",
+      "class": "rounded-lg max-h-[300px] w-auto ml-0"
+    },
+    {
+      "src": "/images/codex-mcp_step2_search.gif",
+      "alt": "Search for the Readwise plugin in Codex.",
+      "class": "rounded-lg max-h-[400px] w-auto ml-0"
+    },
+    {
+      "src": "/images/codex-mcp_step3_add.gif",
+      "alt": "Add the Readwise plugin in Codex.",
+      "class": "rounded-lg max-h-[400px] w-auto ml-0"
+    },
+    {
+      "src": "/images/codex-mcp_step4_install.gif",
+      "alt": "Install and authorize the Readwise plugin in Codex.",
+      "class": "rounded-lg max-h-[400px] w-auto ml-0"
+    },
+    {
+      "src": "/images/perplexity_step1_customize.png",
+      "alt": "Perplexity Customize menu option.",
+      "class": "rounded-lg max-h-[400px] w-auto ml-0"
+    },
+    {
+      "src": "/images/perplexity_step2_connector.png",
+      "alt": "Perplexity custom connector button.",
+      "class": "rounded-lg max-h-[400px] w-auto ml-0"
+    },
+    {
+      "src": "/images/perplexity_step3_add-form.png",
+      "alt": "Perplexity new connector creation form.",
+      "class": "rounded-lg max-w-[350px] h-auto ml-0"
+    }
+  ]
+}

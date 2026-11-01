@@ -1,0 +1,202 @@
+{
+  "articles-360030642972": {
+    "key": "articles-360030642972",
+    "title": "Studying with Test",
+    "url": "https://help.quizlet.com/hc/en-us/articles/360030642972-Studying-with-Test",
+    "raw_work_path": "work/quizlet-controls-deepening/quizlet-response-01.txt",
+    "raw_sha256": "c095e56ef47ce51866c89e3faa1c3f813740aa2f11e477a20a4ce3564240f299",
+    "parsed_text_path": "work/quizlet-controls-deepening/parsed/articles-360030642972.txt",
+    "parsed_lines": 105,
+    "raw_capture_kind": "web_tool_response_text; not source HTML; no images observed"
+  },
+  "articles-360048803491": {
+    "key": "articles-360048803491",
+    "title": "Using Progress for targeted studying",
+    "url": "https://help.quizlet.com/hc/en-us/articles/360048803491-Using-Progress-for-targeted-studying",
+    "raw_work_path": "work/quizlet-controls-deepening/quizlet-response-01.txt",
+    "raw_sha256": "c095e56ef47ce51866c89e3faa1c3f813740aa2f11e477a20a4ce3564240f299",
+    "parsed_text_path": "work/quizlet-controls-deepening/parsed/articles-360048803491.txt",
+    "parsed_lines": 78,
+    "raw_capture_kind": "web_tool_response_text; not source HTML; no images observed"
+  },
+  "articles-360048806511": {
+    "key": "articles-360048806511",
+    "title": "Resetting study path progress",
+    "url": "https://help.quizlet.com/hc/en-us/articles/360048806511-Resetting-study-path-progress",
+    "raw_work_path": "work/quizlet-controls-deepening/quizlet-response-01.txt",
+    "raw_sha256": "c095e56ef47ce51866c89e3faa1c3f813740aa2f11e477a20a4ce3564240f299",
+    "parsed_text_path": "work/quizlet-controls-deepening/parsed/articles-360048806511.txt",
+    "parsed_lines": 85,
+    "raw_capture_kind": "web_tool_response_text; not source HTML; no images observed"
+  },
+  "articles-360030171011": {
+    "key": "articles-360030171011",
+    "title": "Deleting a set",
+    "url": "https://help.quizlet.com/hc/en-us/articles/360030171011-Deleting-a-set",
+    "raw_work_path": "work/quizlet-controls-deepening/quizlet-response-01.txt",
+    "raw_sha256": "c095e56ef47ce51866c89e3faa1c3f813740aa2f11e477a20a4ce3564240f299",
+    "parsed_text_path": "work/quizlet-controls-deepening/parsed/articles-360030171011.txt",
+    "parsed_lines": 87,
+    "raw_capture_kind": "web_tool_response_text; not source HTML; no images observed"
+  },
+  "articles-360030212131": {
+    "key": "articles-360030212131",
+    "title": "Editing sets",
+    "url": "https://help.quizlet.com/hc/en-us/articles/360030212131-Editing-sets",
+    "raw_work_path": "work/quizlet-controls-deepening/quizlet-response-01.txt",
+    "raw_sha256": "c095e56ef47ce51866c89e3faa1c3f813740aa2f11e477a20a4ce3564240f299",
+    "parsed_text_path": "work/quizlet-controls-deepening/parsed/articles-360030212131.txt",
+    "parsed_lines": 148,
+    "raw_capture_kind": "web_tool_response_text; not source HTML; no images observed"
+  },
+  "sections-360005877232": {
+    "key": "sections-360005877232",
+    "title": "Accessing and sharing",
+    "url": "https://help.quizlet.com/hc/en-us/sections/360005877232-Accessing-and-sharing",
+    "raw_work_path": "work/quizlet-controls-deepening/quizlet-response-03.txt",
+    "raw_sha256": "9fbb94049e94716324f279fe49eee72d0f0fddb817039498de06b52d98ce9e83",
+    "parsed_text_path": "work/quizlet-controls-deepening/parsed/sections-360005877232.txt",
+    "parsed_lines": 51,
+    "raw_capture_kind": "web_tool_response_text; not source HTML; no images observed"
+  },
+  "articles-25946589648013": {
+    "key": "articles-25946589648013",
+    "title": "Studying with Practice Tests",
+    "url": "https://help.quizlet.com/hc/en-us/articles/25946589648013-Studying-with-Practice-Tests",
+    "raw_work_path": "work/quizlet-controls-deepening/quizlet-response-02.txt",
+    "raw_sha256": "63bc95df37bf44568db39fa73f4c0b5b6c95789c103c798518c64dbf922a21e1",
+    "parsed_text_path": "work/quizlet-controls-deepening/parsed/articles-25946589648013.txt",
+    "parsed_lines": 126,
+    "raw_capture_kind": "web_tool_response_text; not source HTML; no images observed"
+  },
+  "articles-360031172312": {
+    "key": "articles-360031172312",
+    "title": "Studying most-missed terms with stars",
+    "url": "https://help.quizlet.com/hc/en-us/articles/360031172312-Studying-most-missed-terms-with-stars",
+    "raw_work_path": "work/quizlet-controls-deepening/quizlet-response-02.txt",
+    "raw_sha256": "63bc95df37bf44568db39fa73f4c0b5b6c95789c103c798518c64dbf922a21e1",
+    "parsed_text_path": "work/quizlet-controls-deepening/parsed/articles-360031172312.txt",
+    "parsed_lines": 93,
+    "raw_capture_kind": "web_tool_response_text; not source HTML; no images observed"
+  },
+  "articles-360048314692": {
+    "key": "articles-360048314692",
+    "title": "Setting up a study path",
+    "url": "https://help.quizlet.com/hc/en-us/articles/360048314692-Setting-up-a-study-path",
+    "raw_work_path": "work/quizlet-controls-deepening/quizlet-response-02.txt",
+    "raw_sha256": "63bc95df37bf44568db39fa73f4c0b5b6c95789c103c798518c64dbf922a21e1",
+    "parsed_text_path": "work/quizlet-controls-deepening/parsed/articles-360048314692.txt",
+    "parsed_lines": 101,
+    "raw_capture_kind": "web_tool_response_text; not source HTML; no images observed"
+  },
+  "articles-360029977151": {
+    "key": "articles-360029977151",
+    "title": "Creating sets by importing content",
+    "url": "https://help.quizlet.com/hc/en-us/articles/360029977151-Creating-sets-by-importing-content",
+    "raw_work_path": "work/quizlet-controls-deepening/quizlet-response-02.txt",
+    "raw_sha256": "63bc95df37bf44568db39fa73f4c0b5b6c95789c103c798518c64dbf922a21e1",
+    "parsed_text_path": "work/quizlet-controls-deepening/parsed/articles-360029977151.txt",
+    "parsed_lines": 96,
+    "raw_capture_kind": "web_tool_response_text; not source HTML; no images observed"
+  },
+  "articles-18312306436365": {
+    "key": "articles-18312306436365",
+    "title": "Studying with Study Guides",
+    "url": "https://help.quizlet.com/hc/en-us/articles/18312306436365-Studying-with-Study-Guides",
+    "raw_work_path": "work/quizlet-controls-deepening/quizlet-response-02.txt",
+    "raw_sha256": "63bc95df37bf44568db39fa73f4c0b5b6c95789c103c798518c64dbf922a21e1",
+    "parsed_text_path": "work/quizlet-controls-deepening/parsed/articles-18312306436365.txt",
+    "parsed_lines": 81,
+    "raw_capture_kind": "web_tool_response_text; not source HTML; no images observed"
+  },
+  "articles-360029004272": {
+    "key": "articles-360029004272",
+    "title": "Removing sets from your Recent activity feed",
+    "url": "https://help.quizlet.com/hc/en-us/articles/360029004272-Removing-sets-from-your-Recent-activity-feed",
+    "raw_work_path": "work/quizlet-controls-deepening/quizlet-response-03.txt",
+    "raw_sha256": "9fbb94049e94716324f279fe49eee72d0f0fddb817039498de06b52d98ce9e83",
+    "parsed_text_path": "work/quizlet-controls-deepening/parsed/articles-360029004272.txt",
+    "parsed_lines": 73,
+    "raw_capture_kind": "web_tool_response_text; not source HTML; no images observed"
+  },
+  "articles-360030990531": {
+    "key": "articles-360030990531",
+    "title": "Studying with Write mode",
+    "url": "https://help.quizlet.com/hc/en-us/articles/360030990531-Studying-with-Write-mode",
+    "raw_work_path": "work/quizlet-controls-deepening/quizlet-response-03.txt",
+    "raw_sha256": "9fbb94049e94716324f279fe49eee72d0f0fddb817039498de06b52d98ce9e83",
+    "parsed_text_path": "work/quizlet-controls-deepening/parsed/articles-360030990531.txt",
+    "parsed_lines": 124,
+    "raw_capture_kind": "web_tool_response_text; not source HTML; no images observed"
+  },
+  "articles-360030645752": {
+    "key": "articles-360030645752",
+    "title": "Studying with Spell mode",
+    "url": "https://help.quizlet.com/hc/en-us/articles/360030645752-Studying-with-Spell-mode",
+    "raw_work_path": "work/quizlet-controls-deepening/quizlet-response-03.txt",
+    "raw_sha256": "9fbb94049e94716324f279fe49eee72d0f0fddb817039498de06b52d98ce9e83",
+    "parsed_text_path": "work/quizlet-controls-deepening/parsed/articles-360030645752.txt",
+    "parsed_lines": 86,
+    "raw_capture_kind": "web_tool_response_text; not source HTML; no images observed"
+  },
+  "articles-360030255191": {
+    "key": "articles-360030255191",
+    "title": "Changing a set's visibility",
+    "url": "https://help.quizlet.com/hc/en-us/articles/360030255191-Changing-a-set-s-visibility",
+    "raw_work_path": "work/quizlet-controls-deepening/quizlet-response-03.txt",
+    "raw_sha256": "9fbb94049e94716324f279fe49eee72d0f0fddb817039498de06b52d98ce9e83",
+    "parsed_text_path": "work/quizlet-controls-deepening/parsed/articles-360030255191.txt",
+    "parsed_lines": 125,
+    "raw_capture_kind": "web_tool_response_text; not source HTML; no images observed"
+  },
+  "articles-360048313652": {
+    "key": "articles-360048313652",
+    "title": "Using grading options (US)",
+    "url": "https://help.quizlet.com/hc/en-us/articles/360048313652-Using-grading-options-US",
+    "raw_work_path": "work/quizlet-controls-deepening/quizlet-response-04.txt",
+    "raw_sha256": "48d897399f6ff01f47e643352a006a06f9b13ad4cda13e222109ef67c70854da",
+    "parsed_text_path": "work/quizlet-controls-deepening/parsed/articles-360048313652.txt",
+    "parsed_lines": 198,
+    "raw_capture_kind": "web_tool_response_text; not source HTML; no images observed"
+  },
+  "articles-360029768912": {
+    "key": "articles-360029768912",
+    "title": "Editing draft sets",
+    "url": "https://help.quizlet.com/hc/en-us/articles/360029768912-Editing-draft-sets",
+    "raw_work_path": "work/quizlet-controls-deepening/quizlet-response-04.txt",
+    "raw_sha256": "48d897399f6ff01f47e643352a006a06f9b13ad4cda13e222109ef67c70854da",
+    "parsed_text_path": "work/quizlet-controls-deepening/parsed/articles-360029768912.txt",
+    "parsed_lines": 107,
+    "raw_capture_kind": "web_tool_response_text; not source HTML; no images observed"
+  },
+  "categories-360001601132": {
+    "key": "categories-360001601132",
+    "title": "Studying",
+    "url": "https://help.quizlet.com/hc/en-us/categories/360001601132-Studying",
+    "raw_work_path": "work/quizlet-controls-deepening/quizlet-response-05.txt",
+    "raw_sha256": "67ae43e3fa5f44b3a0dcab19506cdda8ad0786bd7a1b9ebc295d31109c30469b",
+    "parsed_text_path": "work/quizlet-controls-deepening/parsed/categories-360001601132.txt",
+    "parsed_lines": 78,
+    "raw_capture_kind": "web_tool_response_text; not source HTML; no images observed"
+  },
+  "sections-360004698771": {
+    "key": "sections-360004698771",
+    "title": "Creating, editing, and saving sets",
+    "url": "https://help.quizlet.com/hc/en-us/sections/360004698771-Creating-editing-and-saving-sets",
+    "raw_work_path": "work/quizlet-controls-deepening/quizlet-response-05.txt",
+    "raw_sha256": "67ae43e3fa5f44b3a0dcab19506cdda8ad0786bd7a1b9ebc295d31109c30469b",
+    "parsed_text_path": "work/quizlet-controls-deepening/parsed/sections-360004698771.txt",
+    "parsed_lines": 61,
+    "raw_capture_kind": "web_tool_response_text; not source HTML; no images observed"
+  },
+  "sections-360005938691": {
+    "key": "sections-360005938691",
+    "title": "Studying",
+    "url": "https://help.quizlet.com/hc/en-us/sections/360005938691-Studying",
+    "raw_work_path": "work/quizlet-controls-deepening/quizlet-response-05.txt",
+    "raw_sha256": "67ae43e3fa5f44b3a0dcab19506cdda8ad0786bd7a1b9ebc295d31109c30469b",
+    "parsed_text_path": "work/quizlet-controls-deepening/parsed/sections-360005938691.txt",
+    "parsed_lines": 65,
+    "raw_capture_kind": "web_tool_response_text; not source HTML; no images observed"
+  }
+}

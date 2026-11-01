@@ -1,0 +1,47 @@
+[
+  {
+    "evidence_id": "E-BRIT-02",
+    "capture": {
+      "checked_on": "2026-10-27",
+      "capture_url": "https://britannicaeducation.com/wp-content/uploads/2025/10/be-resource-Britannica-School-Guided-Tour_2025-Branding-Interactive.pdf",
+      "access_mode": "local_pdf_reread_no_refetch",
+      "hands_on": false,
+      "note_artifact": "artifacts/britannica-controls-deepening/source-notes.md",
+      "note_sha256": "5cf4205b25fbef32d9dc3160a7063ee34716c4109aafddfe64664f5566fbcfb1",
+      "raw_work_path": "work/news-interactions/brit-school.pdf",
+      "raw_sha256": "ad70683769eb638650ca2675331586beb38651542f1f1cd3b3f18f0d872c895b",
+      "text_work_path": "work/news-interactions/brit-school.txt",
+      "text_sha256": "093b1fa2288a8888d2721521ab370b8f08cb4c942a90c898b2cfad014a22d365"
+    }
+  },
+  {
+    "evidence_id": "E-BRIT-03",
+    "capture": {
+      "checked_on": "2026-10-27",
+      "capture_url": "https://britannicaeducation.com/wp-content/uploads/2025/10/BSchool-early-elementary-GuidedTour-2025-.pdf",
+      "access_mode": "local_pdf_reread_no_refetch",
+      "hands_on": false,
+      "note_artifact": "artifacts/britannica-controls-deepening/source-notes.md",
+      "note_sha256": "5cf4205b25fbef32d9dc3160a7063ee34716c4109aafddfe64664f5566fbcfb1",
+      "raw_work_path": "work/news-interactions/brit-early.pdf",
+      "raw_sha256": "f8967bc5515ca669986919b42caf6b453ba88c4ccc489d25c2dabcab775cc34e",
+      "text_work_path": "work/news-interactions/brit-early.txt",
+      "text_sha256": "ae378a1c75c1131a1bf13ea71a4cf08918194900aceaaf3096e39efaa65a4890"
+    }
+  },
+  {
+    "evidence_id": "E-BRIT-04",
+    "capture": {
+      "checked_on": "2026-10-27",
+      "capture_url": "https://britannicaeducation.com/onboarding/britannica-school/",
+      "access_mode": "ordinary_public_html_read",
+      "hands_on": false,
+      "note_artifact": "artifacts/britannica-controls-deepening/source-notes.md",
+      "note_sha256": "5cf4205b25fbef32d9dc3160a7063ee34716c4109aafddfe64664f5566fbcfb1",
+      "raw_work_path": "work/britannica-controls-deepening/raw/onboarding.html",
+      "raw_sha256": "7dfda083067acefb67923f79198c6ecf0135413f477a0c0a209919c4f01c2b1c",
+      "text_work_path": "work/britannica-controls-deepening/raw/onboarding.txt",
+      "text_sha256": "a3cacaeb7b31fc6b2f58cc7984e80da436d759789f28b16e4e54abeba0910d01"
+    }
+  }
+]

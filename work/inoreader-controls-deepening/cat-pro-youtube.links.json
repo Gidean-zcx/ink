@@ -1,0 +1,654 @@
+[
+  {
+    "href": "/",
+    "text": "inoreader-logo"
+  },
+  {
+    "href": "/signup",
+    "text": "Start 15-Day Trial"
+  },
+  {
+    "href": "/",
+    "text": "Home"
+  },
+  {
+    "href": "/features/",
+    "text": "Features"
+  },
+  {
+    "href": "/enterprise",
+    "text": "Enterprise"
+  },
+  {
+    "href": "/pricing",
+    "text": "Pricing"
+  },
+  {
+    "href": "/blog/",
+    "text": "Blog"
+  },
+  {
+    "href": "/contact",
+    "text": "Contact"
+  },
+  {
+    "href": "/rss-tools",
+    "text": "RSS tools"
+  },
+  {
+    "href": "/rss-feed-validator",
+    "text": "Feed validatorValidate a feed for errors"
+  },
+  {
+    "href": "/podcast-feed-validator",
+    "text": "Podcast validatorGet a podcast listed everywhere"
+  },
+  {
+    "href": "/feed-analytics",
+    "text": "Feed analyticsSee how a feed performs"
+  },
+  {
+    "href": "/rss-feed-finder",
+    "text": "Feed finderFind the feeds of any website"
+  },
+  {
+    "href": "/opml-checker",
+    "text": "OPML checkerCheck and repair an OPML export"
+  },
+  {
+    "href": "/rss-tools",
+    "text": "All RSS tools"
+  },
+  {
+    "href": "/rss-feed-validator",
+    "text": "Open the validator"
+  },
+  {
+    "href": "/podcast-feed-validator",
+    "text": "Open the podcast validator"
+  },
+  {
+    "href": "/feed-analytics",
+    "text": "Open feed analytics"
+  },
+  {
+    "href": "/rss-feed-finder",
+    "text": "Open the finder"
+  },
+  {
+    "href": "/opml-checker",
+    "text": "Open the checker"
+  },
+  {
+    "href": "/rss-tools",
+    "text": "All RSS tools →"
+  },
+  {
+    "href": "https://apps.apple.com/app/apple-store/id892355414?pt=32204000&ct=inoreader_internal&mt=8",
+    "text": ""
+  },
+  {
+    "href": "https://play.google.com/store/apps/details?id=com.innologica.inoreader",
+    "text": ""
+  },
+  {
+    "href": "/cs/help/pro/youtube",
+    "text": "Čeština"
+  },
+  {
+    "href": "/help/pro/youtube",
+    "text": "English"
+  },
+  {
+    "href": "/es/help/pro/youtube",
+    "text": "Español"
+  },
+  {
+    "href": "/fr/help/pro/youtube",
+    "text": "Français"
+  },
+  {
+    "href": "/it/help/pro/youtube",
+    "text": "Italiano"
+  },
+  {
+    "href": "/hu/help/pro/youtube",
+    "text": "Magyar"
+  },
+  {
+    "href": "/nl/help/pro/youtube",
+    "text": "Nederlands"
+  },
+  {
+    "href": "/pl/help/pro/youtube",
+    "text": "Polski"
+  },
+  {
+    "href": "/sk/help/pro/youtube",
+    "text": "Slovenčina"
+  },
+  {
+    "href": "/bg/help/pro/youtube",
+    "text": "Български"
+  },
+  {
+    "href": "/uk/help/pro/youtube",
+    "text": "Українська"
+  },
+  {
+    "href": "/fa/help/pro/youtube",
+    "text": "پارسی"
+  },
+  {
+    "href": "/zh-hans/help/pro/youtube",
+    "text": "中文(简体)"
+  },
+  {
+    "href": "/ja/help/pro/youtube",
+    "text": "日本語"
+  },
+  {
+    "href": "/login",
+    "text": "Sign in"
+  },
+  {
+    "href": "/signup",
+    "text": "Create account"
+  },
+  {
+    "href": "/cs/help/pro/youtube",
+    "text": "Čeština"
+  },
+  {
+    "href": "/help/pro/youtube",
+    "text": "English"
+  },
+  {
+    "href": "/es/help/pro/youtube",
+    "text": "Español"
+  },
+  {
+    "href": "/fr/help/pro/youtube",
+    "text": "Français"
+  },
+  {
+    "href": "/it/help/pro/youtube",
+    "text": "Italiano"
+  },
+  {
+    "href": "/hu/help/pro/youtube",
+    "text": "Magyar"
+  },
+  {
+    "href": "/nl/help/pro/youtube",
+    "text": "Nederlands"
+  },
+  {
+    "href": "/pl/help/pro/youtube",
+    "text": "Polski"
+  },
+  {
+    "href": "/sk/help/pro/youtube",
+    "text": "Slovenčina"
+  },
+  {
+    "href": "/bg/help/pro/youtube",
+    "text": "Български"
+  },
+  {
+    "href": "/uk/help/pro/youtube",
+    "text": "Українська"
+  },
+  {
+    "href": "/fa/help/pro/youtube",
+    "text": "پارسی"
+  },
+  {
+    "href": "/zh-hans/help/pro/youtube",
+    "text": "中文(简体)"
+  },
+  {
+    "href": "/ja/help/pro/youtube",
+    "text": "日本語"
+  },
+  {
+    "href": "/help",
+    "text": "Help center"
+  },
+  {
+    "href": "/help/pro/global-search",
+    "text": "Global search"
+  },
+  {
+    "href": "/help/pro/monitoring-feeds",
+    "text": "Monitoring feeds"
+  },
+  {
+    "href": "/help/pro/web-feeds",
+    "text": "Web feeds"
+  },
+  {
+    "href": "/help/pro/track-changes",
+    "text": "Track changes"
+  },
+  {
+    "href": "/help/pro/boosted-feeds",
+    "text": "Boosted feeds"
+  },
+  {
+    "href": "/help/pro/social-feeds",
+    "text": "Social feeds"
+  },
+  {
+    "href": "/help/pro/youtube",
+    "text": "YouTube"
+  },
+  {
+    "href": "/help/pro/podcasts",
+    "text": "Podcasts"
+  },
+  {
+    "href": "/help/pro/newsletter-feeds",
+    "text": "Newsletter feeds"
+  },
+  {
+    "href": "/help/pro/password-protected-feeds",
+    "text": "Password-protected feeds"
+  },
+  {
+    "href": "/help/pro/rules",
+    "text": "Rules"
+  },
+  {
+    "href": "/help/pro/filters",
+    "text": "Filters"
+  },
+  {
+    "href": "/help/pro/bulk-actions",
+    "text": "Bulk actions"
+  },
+  {
+    "href": "/help/pro/article-translations",
+    "text": "Article translations"
+  },
+  {
+    "href": "/help/pro/text-to-speech",
+    "text": "Text-to-speech"
+  },
+  {
+    "href": "/help/pro/file-uploads",
+    "text": "File uploads"
+  },
+  {
+    "href": "/help/pro/annotations",
+    "text": "Annotations"
+  },
+  {
+    "href": "/help/pro/offline-mode",
+    "text": "Offline mode"
+  },
+  {
+    "href": "/help/pro/magic-sorting",
+    "text": "Magic sorting"
+  },
+  {
+    "href": "/help/pro/secure-image-proxy",
+    "text": "Secure image proxy"
+  },
+  {
+    "href": "/help/pro/custom-css",
+    "text": "Custom CSS"
+  },
+  {
+    "href": "/help/pro/integrations",
+    "text": "Integrations"
+  },
+  {
+    "href": "/help/pro/output-feeds",
+    "text": "Output feeds"
+  },
+  {
+    "href": "/help/pro/api-access",
+    "text": "API access"
+  },
+  {
+    "href": "/help",
+    "text": "Back"
+  },
+  {
+    "href": "/help/pro/youtube/can-i-follow-youtube-channels-and-playlists-in-inoreader",
+    "text": "Can I follow YouTube channels and playlists in Inoreader?"
+  },
+  {
+    "href": "/help/pro/youtube/can-i-sync-my-youtube-subscriptions-with-inoreader",
+    "text": "Can I sync my YouTube subscriptions with Inoreader?"
+  },
+  {
+    "href": "/help/pro/youtube/can-i-hide-youtube-shorts-from-my-folders",
+    "text": "Can I hide YouTube Shorts from my folders?"
+  },
+  {
+    "href": "/signup",
+    "text": "Create account"
+  },
+  {
+    "href": "/features",
+    "text": "Features"
+  },
+  {
+    "href": "/pricing",
+    "text": "Pricing"
+  },
+  {
+    "href": "/enterprise",
+    "text": "Enterprise"
+  },
+  {
+    "href": "/apps",
+    "text": "Mobile apps"
+  },
+  {
+    "href": "/rss-reader-extension",
+    "text": "Browser extension"
+  },
+  {
+    "href": "/alternatives",
+    "text": "Inoreader alternatives"
+  },
+  {
+    "href": "/rss-tools",
+    "text": "All tools"
+  },
+  {
+    "href": "/rss-feed-finder",
+    "text": "Feed finder"
+  },
+  {
+    "href": "/feed-analytics",
+    "text": "Feed analytics"
+  },
+  {
+    "href": "/rss-feeds",
+    "text": "Top RSS feeds"
+  },
+  {
+    "href": "/rss-feed-validator",
+    "text": "Feed validator"
+  },
+  {
+    "href": "/podcast-feed-validator",
+    "text": "Podcast validator"
+  },
+  {
+    "href": "/rss-feed-viewer",
+    "text": "Feed viewer"
+  },
+  {
+    "href": "/opml-checker",
+    "text": "OPML checker"
+  },
+  {
+    "href": "/about-us",
+    "text": "About us"
+  },
+  {
+    "href": "/blog/",
+    "text": "Blog"
+  },
+  {
+    "href": "/help",
+    "text": "Help center"
+  },
+  {
+    "href": "/developers",
+    "text": "Developer portal"
+  },
+  {
+    "href": "/contact",
+    "text": "Contact us"
+  },
+  {
+    "href": "/brand-portal",
+    "text": "Brand portal"
+  },
+  {
+    "href": "https://status.inoreader.com",
+    "text": "Service status"
+  },
+  {
+    "href": "/tos",
+    "text": "Terms of Service"
+  },
+  {
+    "href": "/privacy_policy",
+    "text": "Privacy Policy"
+  },
+  {
+    "href": "/security_commitment",
+    "text": "Security commitment"
+  },
+  {
+    "href": "https://apps.apple.com/app/apple-store/id892355414?pt=32204000&ct=inoreader_internal&mt=8",
+    "text": ""
+  },
+  {
+    "href": "https://play.google.com/store/apps/details?id=com.innologica.inoreader",
+    "text": ""
+  },
+  {
+    "href": "/cs/help/pro/youtube",
+    "text": "Čeština"
+  },
+  {
+    "href": "/help/pro/youtube",
+    "text": "English"
+  },
+  {
+    "href": "/es/help/pro/youtube",
+    "text": "Español"
+  },
+  {
+    "href": "/fr/help/pro/youtube",
+    "text": "Français"
+  },
+  {
+    "href": "/it/help/pro/youtube",
+    "text": "Italiano"
+  },
+  {
+    "href": "/hu/help/pro/youtube",
+    "text": "Magyar"
+  },
+  {
+    "href": "/nl/help/pro/youtube",
+    "text": "Nederlands"
+  },
+  {
+    "href": "/pl/help/pro/youtube",
+    "text": "Polski"
+  },
+  {
+    "href": "/sk/help/pro/youtube",
+    "text": "Slovenčina"
+  },
+  {
+    "href": "/bg/help/pro/youtube",
+    "text": "Български"
+  },
+  {
+    "href": "/uk/help/pro/youtube",
+    "text": "Українська"
+  },
+  {
+    "href": "/fa/help/pro/youtube",
+    "text": "پارسی"
+  },
+  {
+    "href": "/zh-hans/help/pro/youtube",
+    "text": "中文(简体)"
+  },
+  {
+    "href": "/ja/help/pro/youtube",
+    "text": "日本語"
+  },
+  {
+    "href": "https://innologica.com/",
+    "text": "© 2026 Innologica Ltd"
+  },
+  {
+    "href": "/cs/help/pro/youtube",
+    "text": "Čeština"
+  },
+  {
+    "href": "/help/pro/youtube",
+    "text": "English"
+  },
+  {
+    "href": "/es/help/pro/youtube",
+    "text": "Español"
+  },
+  {
+    "href": "/fr/help/pro/youtube",
+    "text": "Français"
+  },
+  {
+    "href": "/it/help/pro/youtube",
+    "text": "Italiano"
+  },
+  {
+    "href": "/hu/help/pro/youtube",
+    "text": "Magyar"
+  },
+  {
+    "href": "/nl/help/pro/youtube",
+    "text": "Nederlands"
+  },
+  {
+    "href": "/pl/help/pro/youtube",
+    "text": "Polski"
+  },
+  {
+    "href": "/sk/help/pro/youtube",
+    "text": "Slovenčina"
+  },
+  {
+    "href": "/bg/help/pro/youtube",
+    "text": "Български"
+  },
+  {
+    "href": "/uk/help/pro/youtube",
+    "text": "Українська"
+  },
+  {
+    "href": "/fa/help/pro/youtube",
+    "text": "پارسی"
+  },
+  {
+    "href": "/zh-hans/help/pro/youtube",
+    "text": "中文(简体)"
+  },
+  {
+    "href": "/ja/help/pro/youtube",
+    "text": "日本語"
+  },
+  {
+    "href": "https://www.inoreader.com/blog/feed",
+    "text": ""
+  },
+  {
+    "href": "https://www.youtube.com/@Inoreader",
+    "text": ""
+  },
+  {
+    "href": "https://www.facebook.com/Inoreader/",
+    "text": ""
+  },
+  {
+    "href": "https://www.linkedin.com/company/inoreader",
+    "text": ""
+  },
+  {
+    "href": "https://x.com/Inoreader",
+    "text": ""
+  },
+  {
+    "href": "https://mastodon.social/@Inoreader",
+    "text": ""
+  },
+  {
+    "href": "https://bsky.app/profile/inoreader.com",
+    "text": ""
+  },
+  {
+    "href": "/cookie_use",
+    "text": "Access cookie settings"
+  },
+  {
+    "href": "javascript:void(0);",
+    "text": "OK, I agree"
+  },
+  {
+    "href": "javascript:void(0)",
+    "text": "Use a different account"
+  },
+  {
+    "href": "/forgot-password",
+    "text": "Forgot password?"
+  },
+  {
+    "href": "javascript:void(0)",
+    "text": ""
+  },
+  {
+    "href": "javascript:void(0)",
+    "text": ""
+  },
+  {
+    "href": "/sso",
+    "text": ""
+  },
+  {
+    "href": "/signup?sendback=",
+    "text": "Create an account"
+  },
+  {
+    "href": "/signup",
+    "text": "Create account"
+  },
+  {
+    "href": "/signup",
+    "text": "Create one now"
+  },
+  {
+    "href": "javascript:void(0)",
+    "text": ""
+  },
+  {
+    "href": "javascript:void(0)",
+    "text": ""
+  },
+  {
+    "href": "/sso",
+    "text": ""
+  },
+  {
+    "href": "/login?sendback=",
+    "text": "Sign in."
+  },
+  {
+    "href": "/login",
+    "text": "Sign in"
+  },
+  {
+    "href": "/login",
+    "text": "Sign in"
+  },
+  {
+    "href": "/tos",
+    "text": "Inoreader Privacy\n                                Policy"
+  },
+  {
+    "href": "/",
+    "text": "Go to homepage"
+  }
+]

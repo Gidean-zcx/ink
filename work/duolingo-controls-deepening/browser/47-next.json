@@ -1,0 +1,46 @@
+{
+  "name": "47-next",
+  "url": "https://www.duolingo.com/lesson",
+  "title": "Duolingo - Learn French with lessons that work",
+  "utc": "2026-10-26T17:56:43.321189+00:00",
+  "text": "4\nNEW WORD\nWrite this in English\nBonjour !\nor\nHello\nSKIP\nCHECK",
+  "buttons": [
+    {
+      "text": "",
+      "aria": null,
+      "test": "quit-button",
+      "visible": true
+    },
+    {
+      "text": "",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "or",
+      "aria": null,
+      "test": "or-challenge-tap-token",
+      "visible": true
+    },
+    {
+      "text": "Hello",
+      "aria": null,
+      "test": "Hello-challenge-tap-token",
+      "visible": true
+    },
+    {
+      "text": "SKIP",
+      "aria": null,
+      "test": "player-skip",
+      "visible": true
+    },
+    {
+      "text": "CHECK",
+      "aria": null,
+      "test": "player-next",
+      "visible": true
+    }
+  ],
+  "inputs": []
+}

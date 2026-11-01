@@ -1,0 +1,48 @@
+What new Tonieplay specific data will we capture? – tonies® Support (https://support.tonies.com/hc/en-gb/articles/29264253409682-What-new-Tonieplay-specific-data-will-we-capture)
+citeturn786view6 [wordlim: 200] Crawled: last month; Content type: text/html; Source: click({"ref_id":"turn775view0","id":15}); Total lines: 46
+L0: 【0†Skip to main content】
+L1: 
+L2: 【1†Contact us】
+L3: 
+L4: [Input] English (United Kingdom)
+L5: 
+L6: Articles in this section
+L7:   * 【2†What is Tonieplay?】
+L8:   * 【3†Tonieplay - Troubleshooting Tips】
+L9:   * 【4†Tonieplay game card not recognised】
+L10:   * 【5†How long does the Toniebox 2 remember your auto-saved status when you remove the disc, take a break or play something else?】
+L11:   * 【6†Can you ever choose the chapter?】
+L12:   * 【7†Can I restart a Tonieplay game?】
+L13:   * 【8†What do I need in order to play a Tonieplay game?】
+L14:   * 【9†What aged children is Tonieplay suitable for?】
+L15:   * 【10†Is Tonieplay compatible with Toniebox 1?】
+L16:   * 【11†Are Tonieplay games multiplayer?】
+L17: 【12†See more】
+L18: # What new Tonieplay specific data will we capture?
+L19: When you use the new function Tonieplay, usage and operation information about the in-game interaction with the Toniebox will be collected. We process the data (e.g. frequency of use of individual games, errors that resulted in termination of use) for the same purpose as we process all other Interaction Data of the Toniebox.
+L20: Please find more information about processing Interaction Data in our Privacy Notice in Section “Data Usage, Toniebox, Tonies, mytonies and the Tonies Account” paragraph 3 and the following.
+L21: 【13†Return to top】
+L22: 
+L23: Return to top
+L24: ## Was this article helpful?
+L25: 
+L26: [Button: Yes] [Button: No]
+L27: 
+L28: 2 out of 5 found this helpful
+L29: 
+L30: Have more questions? 【1†Submit a request】
+L31: 
+L32: ### In this article
+L33: 
+L34: Contents Articles
+L35: 
+L36: ### Title
+L37: 
+L38: [Button: ×]
+L39: 
+L40: 【14†tonies® Support】
+L41: 
+L42:   * 【15†Imprint†login.tonies.com】
+L43:   * 【16†Privacy policy†login.tonies.com】
+L44:   * 【17†Cookie Settings】
+L45:   * © tonies GmbH

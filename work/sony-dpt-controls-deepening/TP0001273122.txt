@@ -1,0 +1,19 @@
+Zoom in on part of a document. While zoomed in, you can write using the pen, delete items written with the pen, and highlight items.
+The following two ways are available to zoom in a document.
+1. Zooming in by pinch-out
+Pinch out on the desired area with two fingers. (Pinch-out)
+Pinching in the zoomed-in screen with two fingers zooms out the document. (Pinch-in)
+Note
+You cannot turn the page while zoomed in.
+2. Zooming in by tapping
+Tap anywhere on the screen of a document to display the toolbar.
+Tap  (zoom in)  in the upper right of the document screen.
+Tap the location you want to zoom into, or use your finger or the pen to encircle the area you want to zoom into.
+The document is zoomed in.
+Note
+You cannot turn the page while zoomed in.
+You cannot zoom again or change the zoom ratio. Cancel zooming and select the part which you want to zoom into again.
+To return to the original size
+Tap [Exit] in the upper right of the document screen.
+Hint
+By dragging while zooming, you can move the displaying part.

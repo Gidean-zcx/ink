@@ -1,0 +1,176 @@
+Transfer Files  - Supernote
+English (US)
+Japanese
+English (US)
+繁體中文
+简体中文
+Support Home
+Contact Us
+English (US)
+Japanese
+English (US)
+繁體中文
+简体中文
+Home
+Organizing & Managing
+Transfer Files
+Learn how to easily transfer and synchronize files across different services and systems, so that your important data are backed up, safe and secure.
+Written by
+James Huang
+Updated at July 15th, 2026
+Contact Us
+If you still have questions or prefer to get help directly from an agent, please submit a request.
+We’ll get back to you as soon as possible.
+Please fill out the contact form below and we will reply as soon as possible.
+title="ReCAPTCHA"
+Getting Started
+Tools & Features
+Organizing & Managing
+Workflow Cases
+What's New
+FAQ
+My Order
+Hardware & Repair
+Changelog
++ More
+Table of Contents
+Transfer files using the cloud services
+Supernote Cloud
+Dropbox
+Google Drive
+Transfer files by email
+Transfer files using a USB Type-C cable
+Transfer files using Browse & Access
+Transfer files using Supernote Linking
+In this article, you'll learn how to quickly transfer files from your Supernote to other devices, such as iPhone, Andriod, PC and Mac, so that you can keep a backup of your important data.
+Transfer files using the cloud services
+Supernote Cloud
+Swipe down from the top of the screen to display the top menu bar.
+Tap the Settings icon.
+Tap
+Drive
+.
+Select
+Supernote Cloud
+.
+Tap anywhere on the Supernote Cloud line to proceed to the next step.
+Select folders you want to sync.
+Tap
+Save
+.
+Swipe down from the top of the screen and tap the sync icon
+in the top menu bar.
+Dropbox
+Swipe down from the top of the screen to display the top menu bar.
+Tap the Settings icon.
+Tap
+Drive
+in the left panel.
+Select
+Dropbox
+.
+Tap
+Authorize
+.
+Follow the onscreen instructions to complete Dropbox authorization.
+Tap anywhere on the Dropbox line to proceed to the next step.
+Tap
+Select Folders to Sync
+.
+Select folders you want to sync by tapping the checkboxes in the top left corner of the folder icons. To select a
+subfolder
+to sync, tap anywhere
+other than the checkbox
+in the folder icon to open the folder and select the checkbox(es) next to the subfolder(s) you want to sync.
+Tap
+Save
+.
+Swipe down from the top of the screen and tap the sync icon
+in the top menu bar.
+Google Drive
+To sync folders to Google Drive, repeat the same steps above used for Dropbox.
+Transfer files by email
+Slide down the sidebar.
+Tap
+Mail
+in the sidebar menu.
+Log in to one of your email accounts.
+Tap
+Compose
+.
+Enter the recipient's email address.
+Add the files you want to transfer as attachments.
+Transfer files using a USB Type-C cable
+Plug your Supernote into any open USB port on your computer.
+Find your Supernote on the computer.
+Drag and drop the files or folders you want to transfer to a destination folder on your computer. You can also do this by copying and pasting files or folders.
+Note:
+For macOS,  an MTP software (e.g.
+OpenMTP
+or
+Android File Transfer
+) is required for your Supernote to show up on your Mac.
+Transfer files using Browse & Access
+Swipe down from the top of the screen and tap the
+Browse & Access
+icon in the top menu bar.
+Navigate to the receiving device and enter in a browser the URL displayed in the popup window.
+Tap
+OK
+in the popup window on Supernote.
+On the receiving device, open a folder.
+Click
+Upload
+to upload files.
+Single-click a file to download it.
+Note:
+Make sure your Supernote and the receiving device are connected to the same Wi-Fi network throughout the whole transfer process.
+Transfer files using Supernote Linking
+Before using this feature, please make sure your Supernote device and phone are connected to the same Wi-Fi and that you've enabled the
+Supernote Linking
+function
+by going to
+Settings > My Device > Supernote Linking
+.
+Navigate to a file on your phone.
+Long press to select it.
+Choose to open it in another app.
+Select the
+Supernote Partner
+app.
+Click
+Transfer
+at the bottom of the phone screen.
+Select your Supernote device in the
+Available devices
+list. (Check the device serial number if there is more than one device that appears in the list.)
+Open your Supernote and confirm the pairing request if the pairing code matches the one that appears on your phone.
+Once your Supernote and phone are paired successfully, the file will start being transferred.
+You will find it in the
+INBOX
+folder after the transfer is completed.
+syncing
+transfer files
+google drive
+dropbox
+supernote cloud
+cloud services
+supernote
+sync files
+synchronization
+sync
+backup
+back up data
+back up files
+Was this article helpful?
+Yes
+No
+Give feedback about this article
+Related Articles
+How to Seamlessly Sync Files between Two Devices
+How to Move Files and Note Pages
+Back Up and Restore Digests
+Copyright © 2026 Ratta Supernote
+Knowledge Base Software powered by Helpjuice
+Close
+Expand

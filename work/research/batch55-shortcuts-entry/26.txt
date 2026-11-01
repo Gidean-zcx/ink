@@ -1,0 +1,7 @@
+Reorder shortcuts on iPhone or iPad
+In addition to adding and organizing shortcuts in the Shortcuts app, you can determine which shortcuts appear in the Shortcuts widget on iPhone or iPad. Shortcuts appear in the same order on your device as they do in the Shortcuts app.
+In the Shortcuts app on your iPhone or iPad, tap Edit.
+Drag one or more shortcuts (colored rectangles) to the locations you want (wait until the rectangles rearrange before you lift your finger).
+Dragging shortcuts into a new category area on the screen adds them to that category. Dragging shortcuts out of a category removes them from that category.
+To finish, tap Done.
+Note: If you’re signed in to your Apple Account, any changes you make in the app are updated on your other Apple devices where you’re signed in to the same Apple Account. For more information, see Sync shortcuts on iPhone or iPad.

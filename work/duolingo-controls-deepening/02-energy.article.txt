@@ -1,0 +1,22 @@
+What’s that pink battery you’re seeing in the app? That’s Energy, a new system designed to power your learning on Duolingo.
+Whether you’re new to the app or a longtime learner, Energy is here to support your learning. While Energy is only available to a small number of users right now, we’re excited to share this update and give you a preview of what to expect.
+Here’s how it works.
+Why did we switch to Energy?
+With our old system, Hearts, each mistake cost 1 heart for free learners. This was not the most effective way to support learning. It could be especially frustrating for beginners, who were still figuring things out and 2X more likely to run out of hearts mid-lesson. That can be really discouraging, especially since mistakes are a natural part of learning!
+Energy is designed to create a more balanced experience for everyone, and our data shows it helps more learners complete lessons.
+So how does the battery work?
+Think of Energy as your learning battery: It powers your learning. You use it to complete lessons, it decreases over time, and you can build it back up by getting answers right.
+You start with full energy
+Each lesson uses a little bit of energy
+You earn energy when you get multiple answers in a row right
+Reviewing your mistakes at the end of a lesson doesn’t use energy
+Energy fully recharges in about a day—just like Hearts
+Running low? You can always watch a rewarded ad to earn back some Energy, or buy an Energy refill using gems.
+How does Energy impact learners?
+With Energy:
+More learners can make progress on Duolingo, especially newer users and less engaged users who previously got stuck on mistakes
+Small wins get rewarded, with bonus energy for things like perfect lessons, adding a friend, and reward chests
+You’ll start each day with a full battery and a fresh chance to grow your skills.
+More to come, but always free
+Our mission is to develop the best education in the world and make it universally available. Energy supports that mission by helping us sustain that model and reach more types of learners, especially those just starting out.
+Like all new features, Energy is being actively tested and will improve over time. Stay tuned as we continue to iterate and find more ways to make Energy more fun, rewarding, and easier to earn.

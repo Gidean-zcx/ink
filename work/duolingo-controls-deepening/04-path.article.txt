@@ -1,0 +1,75 @@
+The new Duolingo home screen experience launched November 1, 2022 for all learners. If you have questions about this change, read on for answers!
+We often hear from learners that they’re not sure whether they’re using Duolingo the “correct” or “best” way. We’re always looking for ways to make language learning easier, and we thought we could do better at guiding learners through lessons!
+Now we’re excited to introduce a change to the home screen that gives you a clear path to follow — so you can be confident that each step you take in Duolingo is truly the best step for reaching your language goals.
+We’ll walk you through what’s changed, explain the science behind the changes, and answer FAQs! And don’t worry: you won't lose any of your hard-earned progress!
+Quick overview: what are the big changes?
+We redesigned the home screen to help you build lasting language skills — and make it easier to reach your goals with a guided path.
+The home screen is now designed as a path that you’ll follow step by step
+One level (each circle in the path) is equivalent to one crown level of a skill on the old home screen
+Lesson content is the same…
+…but now lessons are ordered so that you learn a mix of concepts — we’ve previously recommended this exact learning method, so we made it the default!
+…and lessons are grouped into smaller units
+Practice is built into your path (so you won’t have to worry about jumping around or going back to “cracked” skills)
+We made some of our valuable learning features easier to find!
+For courses with Stories: Our popular short stories are now built into the path, rather than appearing in a separate tab
+For courses with Tips: Tips are now in a “guidebook” for each unit
+When you complete a set of Legendary challenges, your Legendary status will apply to an entire unit, rather than a single skill
+Monthly challenges and Quests (including Friends Quests!) are now accessible from the Quests tab (chest icon) in the bottom menu
+For Super subscribers, Practice Hub is now a tab (barbell icon) in the bottom menu
+You’ll also see more of our cast of quirky characters cheering you along your learning path!
+The science behind the changes
+The new path strategically guides you through course content, and our experts made sure that this new path drew on learning science!
+The right lesson at the right time
+The ordering of lessons in the path is grounded in spaced repetition, a strategy firmly supported by learning science research. Basically, it’s more effective to space out practice for a particular concept than to cram. When you initially learn a concept, you’ll want to revisit it fairly soon after, but then you can gradually expand the time between practice sessions. This strategy helps concepts stick in your memory long-term.
+If you’ve been practicing the “hover method” on Duolingo, the new path will probably feel familiar to you! (Learn more about “hovering” here; it’s sometimes also referred to by Duolingo learners as the “waterfall method.”) But if your approach has been to completely “level up” a skill and turn it gold before moving on to the next one, the new path may feel a bit different. Now you’ll see a mix of lessons, with some that cover brand-new concepts and some that cover previously introduced concepts you need to review.
+In the old home screen:
+Lessons were organized into “skills” (shown below)
+Each skill was made up of 5 “crown levels” (shown below), plus a Legendary Level
+Each level was made up of several lessons
+In the new path:
+A level (circle on the path) is equivalent to 1 crown level of a skill
+Levels from different skills are interspersed throughout the path
+Here’s a generic illustration of how several levels from a single skill might be spaced out in the path:
+This new path looks a bit longer, but it’s all the same content, just organized in a different way. We’re confident that this new method will help you learn more effectively, and we’re excited for you to try it!
+Adding variety to learning
+Stories (for courses where they’re available) are also built into your path. These fun, bite-sized tales are entertaining — but they’re also a powerful learning tool! As you follow the conversation in a story, you read and listen more actively. You encounter new words and get more comfortable figuring things out from context clues. All of this prepares you to be more flexible and confident in real-life conversations.
+We’ve also built practice sessions into your path to ensure you’re regularly revisiting material and maintaining a strong foundation as you move forward on your learning journey. Reviewing concepts and vocabulary is an important part of language learning, but it shouldn’t feel like you’re “going back” to “old” lessons. Practice is also forward progress, and now, it’s built into your daily lessons!
+I still have questions!
+We know change takes some getting used to! We’ve tried to anticipate your questions, and will continue to listen to learner feedback and update this FAQ section as needed.
+Q: Who is this redesign available to? When is it going public to everyone?
+A: On November 1, 2022, this redesigned experience will launch for all learners.
+Q: How was my progress transferred to this new version?
+A: We took care to preserve your hard work! A lot went on behind the scenes, but here’s a quick overview:
+For lessons: All of your progress has been preserved in the path! If there are some skill levels you haven’t yet completed, we may start you off at a spot earlier in the path so you can complete those — then we’ll move you past the lessons that you previously completed.
+For Legendary: We made sure you’ll get credit for your previous Legendary levels. If more than 50% of the levels in a completed unit belong to skills that you previously leveled up to Legendary, we made the entire unit Legendary for you.
+For Stories: Stories are placed in the new path so their content is aligned to the difficulty level of lessons. This means that initially you may see some stories you previously read, but as we’ve said before, practice and review are important to progress!
+Q: What can I do if lessons feel too hard, or if I’m having a busy day and just want something quick to maintain my streak?
+A: If you’re not a Super Duolingo subscriber, you can tap the heart on the top bar of the home screen to access a practice session anytime. For Super subscribers, you can visit the Practice Hub tab to choose from several sets of practice sessions. You can also tap a completed (gold) level in your path to revisit specific content.
+Q: My entire course is completed (gold). What can I do now?
+A: Congratulations on all your hard work, and your willingness to keep up your language learning habit! You can practice by trying the Legendary challenges at the end of each unit.
+If your entire course is Legendary: Congrats on proving you’re a legend! Here are some options to keep learning and practicing:
+Tap a completed (gold) level in your path to revisit specific content
+Review content in unit guidebooks (if they’re available in your course)
+Explore Duolingo podcasts for fascinating, immersive narratives
+Listen to audio lessons if they’re available in your course
+If you’re not a Super Duolingo subscriber, you can tap the heart on the top bar of the home screen to access a practice session anytime
+For Super subscribers, you can visit the Practice Hub tab to choose from several sets of practice sessions
+Ready for a new challenge? Start learning another language!
+Q: Can I still do a Story whenever I want?
+A: Yes, you can tap a completed (gold) story in your path to redo a story.
+Q: Can I go back and revisit specific lessons?
+A: Yes, you can tap a completed (gold) level in your path to revisit specific content.
+Q: What happened to the labels for each circle? How will I know what I’m learning about?
+A: When you tap on a circle (level), you’ll see a popup with information about the lesson topic. You can also look at the header for each unit for information about the new concepts you’ll learn. We revised them to be a bit more descriptive, for example, “get directions” instead of “City 3” and “discuss destinations” instead of “Travel 2.”
+Q: The path seems longer! Did you add a ton of extra lessons?
+A: It is longer, because levels are distributed along the path, instead of wrapped into one single skill. It’s also longer because we added practice sessions and stories into the path.
+Q: Since it’s a long scroll, is there an easier way to move up and down?
+A: If you scroll away from your current spot in the path, you can jump back by tapping the floating arrow button in the bottom right corner. We’re also exploring ways to improve how you can navigate more easily through longer courses.
+Q: What’s with the animations in the path?
+A: At Duolingo, we believe effective learning doesn’t have to be boring! But our characters aren’t only for fun. In our largest courses, our characters’ voices are featured in your speaking and listening exercises. As you listen to their varying voices, you develop flexible listening skills for real-life language situations!
+Q: What happened to conversation mode in Stories?
+A: We removed it for now, but are working on ways to reintroduce it in the new design!
+Q: What happened to crowns?
+A: One level (each circle in the path) is equivalent to 1 crown level of a skill on the old home screen. All of your progress was transferred to the new version, but now instead of crowns to track your progress, you can see how you’re progressing down the path.
+Give it a try!
+Thanks for trying out the new learning path! It represents months of thought and work from our team, and we sincerely believe it’s a step in the right direction for every learner. We hope you love it!

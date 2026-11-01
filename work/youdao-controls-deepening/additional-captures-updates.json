@@ -1,0 +1,99 @@
+[
+  {
+    "evidence_id": "E-YDP-01",
+    "field": "additional_captures",
+    "before": null,
+    "after": [
+      {
+        "capture_kind": "local_reread_of_existing_public_artifact",
+        "original_acquisition_date": "2026-10-26",
+        "checked_on": "2026-10-27",
+        "network_refetched": false,
+        "raw_work_path": "work/dictionary-research/youdao-2.html",
+        "raw_sha256": "bf9cd2c636296688be516c8289fe354b107ac068dcfd1311b00d91985bd3ade2",
+        "locator": "产品标题；使用说明跳转；v2.11资源路径",
+        "archived_artifact": "artifacts/youdao-controls-deepening/source-notes.md",
+        "sha256": "3bacb585e12a97aa6f2bf7d4a9985f521946aeb31ec2ea6375001eb4d85fad67",
+        "hands_on": false,
+        "visual_observed": false
+      },
+      {
+        "capture_kind": "local_reread_of_existing_public_artifact",
+        "original_acquisition_date": "2026-10-26",
+        "checked_on": "2026-10-27",
+        "network_refetched": false,
+        "raw_work_path": "work/dictionary-research/youdao-app.js",
+        "raw_sha256": "c9a7c0e7aaf0965545104d6151bd2dec919683f3cd94a71827044a700e05b7db",
+        "locator": "多行/发音/语音/蓝牙/在线更新宣传模块",
+        "archived_artifact": "artifacts/youdao-controls-deepening/source-notes.md",
+        "sha256": "3bacb585e12a97aa6f2bf7d4a9985f521946aeb31ec2ea6375001eb4d85fad67",
+        "hands_on": false,
+        "visual_observed": false
+      }
+    ],
+    "reason": "本地复读/原件路径保全；不新增事实或任务，不重复编号"
+  },
+  {
+    "evidence_id": "E-YDP-02",
+    "field": "additional_captures",
+    "before": null,
+    "after": [
+      {
+        "capture_kind": "local_reread_of_existing_public_artifact",
+        "original_acquisition_date": "2026-10-26",
+        "checked_on": "2026-10-27",
+        "network_refetched": false,
+        "raw_work_path": "work/youdao-controls-deepening/youdao-2-guide-1.4.5-help.js",
+        "raw_sha256": "406ada5aaa9b207adf8fbf7cf489451fda8128c07d5e501204588ebbb476d99f",
+        "locator": "两个问题：账号登录、查词实时显示；原F02/03已覆盖正常链",
+        "archived_artifact": "artifacts/youdao-controls-deepening/source-notes.md",
+        "sha256": "3bacb585e12a97aa6f2bf7d4a9985f521946aeb31ec2ea6375001eb4d85fad67",
+        "hands_on": false,
+        "visual_observed": false
+      }
+    ],
+    "reason": "本地复读/原件路径保全；不新增事实或任务，不重复编号"
+  },
+  {
+    "evidence_id": "E-YDP-05",
+    "field": "additional_captures",
+    "before": null,
+    "after": [
+      {
+        "capture_kind": "local_reread_of_existing_public_artifact",
+        "original_acquisition_date": "2026-10-26",
+        "checked_on": "2026-10-27",
+        "network_refetched": false,
+        "raw_work_path": "work/dictionary-research/youdao-guide.html",
+        "raw_sha256": "65607488c809b6e8f630d8ca2930d71bd54ed08e46307ad6c6f45f3daa322b60",
+        "locator": "HTML帮助入口/资源清单；原生桥接名不当真实动作",
+        "archived_artifact": "artifacts/youdao-controls-deepening/source-notes.md",
+        "sha256": "3bacb585e12a97aa6f2bf7d4a9985f521946aeb31ec2ea6375001eb4d85fad67",
+        "hands_on": false,
+        "visual_observed": false
+      }
+    ],
+    "reason": "本地复读/原件路径保全；不新增事实或任务，不重复编号"
+  },
+  {
+    "evidence_id": "E-YDCD-02",
+    "field": "additional_captures",
+    "before": null,
+    "after": [
+      {
+        "capture_kind": "local_reread_of_existing_public_artifact",
+        "original_acquisition_date": "2026-10-26",
+        "checked_on": "2026-10-27",
+        "network_refetched": false,
+        "raw_work_path": "work/youdao-device-deepening/gdufs-2.html",
+        "raw_sha256": "7c2fa18793df5348d83f2b7de8ead319f6dbb188876ed903dba953768c0c8525",
+        "locator": "普通2.0标题/正文，激活方式和使用引导图注",
+        "archived_artifact": "artifacts/youdao-controls-deepening/source-notes.md",
+        "sha256": "3bacb585e12a97aa6f2bf7d4a9985f521946aeb31ec2ea6375001eb4d85fad67",
+        "hands_on": false,
+        "visual_observed": false
+      }
+    ],
+    "reason": "本地复读/原件路径保全；不新增事实或任务，不重复编号"
+  }
+]

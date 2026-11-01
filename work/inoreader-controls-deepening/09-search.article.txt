@@ -1,0 +1,61 @@
+Find any article in your feeds and beyond
+Everything you follow is searchable, as far back as it was collected. With Pro, you can also search millions of public sources and turn any search into a feed of new matches.
+See pricing
+FreeSearching everything in your own account is free.
+ProPro adds search across all public feeds indexed by Inoreader, with filters for language, time and match type.
+Search everything you collected
+Inoreader search covers every article of every feed you follow, your tags and saved articles, your notes and highlights, the files you uploaded and the Intelligence reports you generated.
+Search scopes
+The search box at the top of a feed or folder searches inside it. The Search page searches everything, and you pick the scope from a list.
+Millions of public sources
+With Pro, widen the scope to all public feeds Inoreader indexes, or to a featured collection of trusted sources on a topic.
+Precise queries
+Filter by language, time period and title or text. Use phrases, AND, OR and NOT, or mentions of a company, product, place or person, and let the query builder write the query for you.
+Searches as monitoring feeds
+Turn a search into a monitoring feed with one click, and every new match is delivered to you from then on.
+Run a search
+To search inside a feed or folder, type in the search bar at the top of it. To search your whole account, open Search.
+With Pro, switch the scope to all public feeds or to a featured collection to search beyond what you follow.
+Refine the results with the filters, or open the query builder to add phrases, operators and mentions.
+To keep receiving new articles that match, turn the search into a monitoring feed with the button next to the search bar.
+Use cases
+Finding an article you read weeks ago
+Search for a phrase you remember, and Inoreader finds the article in the feed it came from, even when you do not know which feed that was.
+Covering a topic from sources you do not follow yet
+Search every public feed for a term, filter the results to the last week and your language, and follow the best sources you find in the results.
+Researching across your own notes
+Search your highlights, notes and uploaded documents together with the articles they belong to.
+Frequently asked questions
+What does search cover?
+Search covers everything in your account, including your feeds, folders, tags, saved articles, annotations, uploaded files and Intelligence reports, as far back as the articles were collected. With Pro, it also covers every public feed in Inoreader, whether you follow it or not.
+How do I search inside one feed or folder?
+Open the feed or folder and use the search bar at the top. The results are limited to that feed or folder. On the Search page, you can pick the scope from a list instead.
+Can I search feeds I do not follow?
+Yes, with Pro. Choose all public feeds, or one of the featured collections of trusted sources on a topic, and the search runs across millions of articles from the sources Inoreader indexes.
+Which operators and filters are there?
+You can search for exact phrases in quotes, use AND, OR and NOT, and choose whether to search the title or the content. There are also filters for language, time period, match type and order. The query builder offers the same options in a form. In it, you can add a company, product, place or person as a mention instead of a keyword, so a search for Apple the company does not bring back the fruit.
+Can I get new results for a search automatically?
+Yes. Click the button next to the search bar to turn the search into a monitoring feed. You do not have to run the search again. Every new article that matches your query arrives in the feed as it is published, and the feed sits in your account like any other.
+Do the apps search too?
+Yes. The iOS and Android apps search your account and, with Pro, all public feeds, with the same scopes and filters.
+Related features
+Monitoring feeds
+Watch any keyword, brand or topic across the web
+Inoreader Intelligence
+Summarize and analyze the news you follow with AI
+Rules
+Automate what happens to every new article
+Help center
+How do I search for articles in Inoreader?
+Can I search within a specific feed or folder?
+What is Global search?
+Can I filter Global search results?
+Can I combine tags when searching?
+Blog
+Introducing mentions, redesigned search and smarter monitoring feeds
+Discover quality content with our new Global search update
+Making complex searches easy with our new query builder
+Build your own newsfeed
+Ready to give it a go?
+Start a 14-day trial, no credit card required.
+Create account

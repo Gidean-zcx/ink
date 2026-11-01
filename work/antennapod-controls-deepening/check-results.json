@@ -1,0 +1,22 @@
+{
+  "passed": true,
+  "new_E": 18,
+  "new_F": 0,
+  "preserved_case_F": 12,
+  "old_F_updates": [
+    "F-M040-01",
+    "F-M040-02",
+    "F-M040-04",
+    "F-M040-05",
+    "F-M040-07",
+    "F-M040-08",
+    "F-M040-09",
+    "F-M040-11",
+    "F-M040-12"
+  ],
+  "inventory_help": 47,
+  "inventory_settings": 84,
+  "raw_sources_hash_checked": 50,
+  "hands_on": false,
+  "visual_observed": false
+}

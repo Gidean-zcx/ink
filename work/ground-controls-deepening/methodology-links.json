@@ -1,0 +1,816 @@
+[
+  {
+    "class": "sr-only",
+    "href": "#main",
+    "title": "Skip to main content",
+    "url": "https://ground.news/rating-system#main"
+  },
+  {
+    "data-element-id": "sticky-banner-get-started-button",
+    "class": "px-[0.6rem] py-[0.6rem] rounded-lg-s bg-dark-primary text-light-primary text-12 tablet:text-14 whitespace-nowrap",
+    "href": "/subscribe",
+    "title": "Get Started",
+    "url": "https://ground.news/subscribe"
+  },
+  {
+    "id": "browser-extension-top",
+    "class": "py-[5px]",
+    "href": "/extension",
+    "title": "Browser Extension",
+    "url": "https://ground.news/extension"
+  },
+  {
+    "id": "header-logo",
+    "class": "relative cursor-pointer flex items-center my-[5px] mx-auto",
+    "style": "width:4.06rem;height:auto",
+    "aria-label": "Ground News Home",
+    "href": "/",
+    "title": "News Logo",
+    "url": "https://ground.news/"
+  },
+  {
+    "id": "header-logo",
+    "class": "relative cursor-pointer flex items-center my-[5px] mx-auto",
+    "style": "width:4.38rem;height:auto",
+    "aria-label": "Ground News Home",
+    "href": "/",
+    "title": "News Logo",
+    "url": "https://ground.news/"
+  },
+  {
+    "id": "header-navbar-home",
+    "class": "flex gap-[5px] whitespace-nowrap",
+    "href": "/",
+    "title": "Home",
+    "url": "https://ground.news/"
+  },
+  {
+    "id": "header-navbar-my",
+    "class": "flex gap-[5px] whitespace-nowrap",
+    "href": "/my",
+    "title": "For You",
+    "url": "https://ground.news/my"
+  },
+  {
+    "id": "header-navbar-local",
+    "href": "/local",
+    "title": "Local",
+    "url": "https://ground.news/local"
+  },
+  {
+    "id": "header-navbar-blindspot",
+    "href": "/blindspot",
+    "title": "Blindspot",
+    "url": "https://ground.news/blindspot"
+  },
+  {
+    "id": "header-subscribe",
+    "class": "px-[0.7rem] py-[0.7rem] text-16 font-bold rounded-[4px] leading-10 bg-dark-primary flex shrink items-center dark:bg-light-primary text-light-primary dark:text-dark-primary hover:text-light-heavy active:text-light-heavy disabled:opacity-50 hideElementSiteWide v5-legacy-pill-button",
+    "href": "/subscribe",
+    "title": "Subscribe",
+    "url": "https://ground.news/subscribe"
+  },
+  {
+    "id": "header-login",
+    "rel": "nofollow",
+    "class": "gn-secondary-focus-target focus-visible:ring-2 focus-visible:ring-offset-[3px] focus-visible:ring-[color:var(--color-dark-primary)] dark:focus-visible:ring-[color:var(--color-light-primary)] px-[0.7rem] py-[0.7rem] text-16 rounded-[4px] font-bold leading-10 whitespace-nowrap border flex shrink items-center border-dark-primary dark:border-light-primary text-dark-primary dark:text-light-primary hover:text-light-heavy active:text-light-heavy disabled:opacity-50 hideElementSiteWide v5-legacy-pill-button",
+    "href": "/login",
+    "title": "Login",
+    "url": "https://ground.news/login"
+  },
+  {
+    "class": "px-[0.6rem] py-[0.6rem] tablet:w-[6.9rem] desktop:w-[8.8rem] tablet:justify-center text-center tablet:h-[2.8rem] text-16 font-bold rounded-[4px] leading-10 bg-dark-primary flex shrink items-center dark:bg-light-primary text-light-primary dark:text-dark-primary hover:text-light-heavy active:text-light-heavy disabled:opacity-50 v5-legacy-pill-button",
+    "href": "/subscribe",
+    "title": "Subscribe",
+    "url": "https://ground.news/subscribe"
+  },
+  {
+    "id": "header-login",
+    "rel": "nofollow",
+    "class": "gn-secondary-focus-target focus-visible:ring-2 focus-visible:ring-offset-[3px] focus-visible:ring-[color:var(--color-dark-primary)] dark:focus-visible:ring-[color:var(--color-light-primary)] px-[0.7rem] py-[0.6rem] desktop:w-[8.8rem] tablet:w-[6.9rem] text-center tablet:justify-center tablet:h-[2.8rem] text-16 rounded-[4px] font-bold leading-10 whitespace-nowrap border flex shrink items-center border-dark-primary dark:border-light-primary text-dark-primary dark:text-light-primary hover:text-light-heavy active:text-light-heavy disabled:opacity-50 v5-legacy-pill-button",
+    "href": "/login?redirect=/rating-system",
+    "title": "Login",
+    "url": "https://ground.news/login?redirect=/rating-system"
+  },
+  {
+    "class": "underline cursor-pointer",
+    "target": "_blank",
+    "href": "https://www.allsides.com/tools-services",
+    "title": "AllSides Technologies",
+    "url": "https://www.allsides.com/tools-services"
+  },
+  {
+    "class": "underline cursor-pointer",
+    "target": "_blank",
+    "href": "https://www.allsides.com/media-bias/media-bias-rating-methods",
+    "title": "AllSides’ rating methods page",
+    "url": "https://www.allsides.com/media-bias/media-bias-rating-methods"
+  },
+  {
+    "class": "underline cursor-pointer",
+    "href": "/bias-bar",
+    "title": "Bias Bar",
+    "url": "https://ground.news/bias-bar"
+  },
+  {
+    "href": "https://adfontesmedia.com/methodology/?utm_source=SourcePage&utm_medium=OnPageLink",
+    "target": "_blank",
+    "class": "underline",
+    "rel": "noopener",
+    "title": "Ad Fontes Media",
+    "url": "https://adfontesmedia.com/methodology/?utm_source=SourcePage&utm_medium=OnPageLink"
+  },
+  {
+    "href": "https://mediabiasfactcheck.com/methodology/",
+    "target": "_blank",
+    "class": "underline",
+    "rel": "noopener",
+    "title": "Media Bias Fact Check",
+    "url": "https://mediabiasfactcheck.com/methodology/"
+  },
+  {
+    "class": "block desktop:order-2 shrink-0 w-full max-w-xl",
+    "href": "/article/most-americans-now-think-immigration-should-be-decreased-gallup_7a0018",
+    "title": "",
+    "url": "https://ground.news/article/most-americans-now-think-immigration-should-be-decreased-gallup_7a0018"
+  },
+  {
+    "class": "underline cursor-pointer",
+    "href": "/blindspot/about",
+    "title": "Blindspot",
+    "url": "https://ground.news/blindspot/about"
+  },
+  {
+    "class": "text-16 text-light-primary font-normal",
+    "href": "/interest/lula_127ddc",
+    "title": "Lula Da Silva",
+    "url": "https://ground.news/interest/lula_127ddc"
+  },
+  {
+    "class": "text-16 text-light-primary font-normal",
+    "href": "/interest/halloween",
+    "title": "Halloween",
+    "url": "https://ground.news/interest/halloween"
+  },
+  {
+    "class": "text-16 text-light-primary font-normal",
+    "href": "/interest/ai",
+    "title": "Artificial Intelligence",
+    "url": "https://ground.news/interest/ai"
+  },
+  {
+    "class": "text-16 text-light-primary font-normal",
+    "href": "/interest/senate",
+    "title": "Senate",
+    "url": "https://ground.news/interest/senate"
+  },
+  {
+    "class": "text-16 text-light-primary font-normal",
+    "href": "/interest/united-states_b67315",
+    "title": "United States",
+    "url": "https://ground.news/interest/united-states_b67315"
+  },
+  {
+    "class": "apple-app-store app-store-icon ",
+    "href": "https://apps.apple.com/app/apple-store/id1324203419?pt=107503821&ct=unknown&mt=8",
+    "target": "_blank",
+    "id": "",
+    "rel": "noopener",
+    "title": "",
+    "url": "https://apps.apple.com/app/apple-store/id1324203419?pt=107503821&ct=unknown&mt=8"
+  },
+  {
+    "class": "google-play-store play-store-icon",
+    "href": "https://play.google.com/store/apps/details?id=com.checkitt&referrer=utm_source%3Dunknown",
+    "id": "",
+    "title": "",
+    "url": "https://play.google.com/store/apps/details?id=com.checkitt&referrer=utm_source%3Dunknown"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_About",
+    "href": "/about",
+    "title": "About",
+    "url": "https://ground.news/about"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_History",
+    "href": "/history",
+    "title": "History",
+    "url": "https://ground.news/history"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_Mission",
+    "href": "/mission",
+    "title": "Mission",
+    "url": "https://ground.news/mission"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_Blog",
+    "href": "/blog",
+    "title": "Blog",
+    "url": "https://ground.news/blog"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_Testimonials",
+    "href": "/testimonials",
+    "title": "Testimonials",
+    "url": "https://ground.news/testimonials"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_Group-Subscriptions",
+    "href": "/group-subscriptions",
+    "title": "Group Subscriptions",
+    "url": "https://ground.news/group-subscriptions"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_Subscribe",
+    "href": "/subscribe",
+    "title": "Subscribe",
+    "url": "https://ground.news/subscribe"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_Gift",
+    "href": "/gift",
+    "title": "Gift",
+    "url": "https://ground.news/gift"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_Free-Trial",
+    "href": "/free-trial-landing",
+    "title": "Free Trial",
+    "url": "https://ground.news/free-trial-landing"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_Careers",
+    "href": "/careers",
+    "title": "Careers",
+    "url": "https://ground.news/careers"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_Affiliates",
+    "href": "/affiliates",
+    "title": "Affiliates",
+    "url": "https://ground.news/affiliates"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_blank",
+    "id": "footer_Help-Center",
+    "href": "https://help.ground.news",
+    "title": "Help Center",
+    "url": "https://help.ground.news"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_FAQ",
+    "href": "/frequently-asked-questions",
+    "title": "FAQ",
+    "url": "https://ground.news/frequently-asked-questions"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_Contact-Us",
+    "href": "/contact-us",
+    "title": "Contact Us",
+    "url": "https://ground.news/contact-us"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_Media-Bias-Ratings",
+    "href": "/rating-system",
+    "title": "Media Bias Ratings",
+    "url": "https://ground.news/rating-system"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_Ownership-and-Factuality-Ratings",
+    "href": "/rating-system#factualityCategory",
+    "title": "Ownership and Factuality Ratings",
+    "url": "https://ground.news/rating-system#factualityCategory"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_Referral-Code",
+    "href": "/checkout/referral",
+    "title": "Referral Code",
+    "url": "https://ground.news/checkout/referral"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_News-Sources",
+    "href": "/my/discover/source",
+    "title": "News Sources",
+    "url": "https://ground.news/my/discover/source"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_Topics",
+    "href": "/my/discover/topic",
+    "title": "Topics",
+    "url": "https://ground.news/my/discover/topic"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_blank",
+    "id": "footer_Impersonation-Scams",
+    "href": "https://help.ground.news/en/articles/11659713",
+    "title": "Impersonation Scams",
+    "url": "https://help.ground.news/en/articles/11659713"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_App",
+    "href": "/app",
+    "title": "App",
+    "url": "https://ground.news/app"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_Browser-Extension",
+    "href": "/extension",
+    "title": "Browser Extension",
+    "url": "https://ground.news/extension"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_Daily-Newsletter",
+    "href": "/newsletters/daily-ground",
+    "title": "Daily Newsletter",
+    "url": "https://ground.news/newsletters/daily-ground"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_Blindspot-Report-Newsletter",
+    "href": "/newsletters/blindspot-report",
+    "title": "Blindspot Report Newsletter",
+    "url": "https://ground.news/newsletters/blindspot-report"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_Burst-Your-Bubble-Newsletter",
+    "href": "/newsletters/burst-your-bubble",
+    "title": "Burst Your Bubble Newsletter",
+    "url": "https://ground.news/newsletters/burst-your-bubble"
+  },
+  {
+    "class": "apple-app-store app-store-icon ",
+    "href": "https://apps.apple.com/app/apple-store/id1324203419?pt=107503821&ct=unknown&mt=8",
+    "target": "_blank",
+    "id": "",
+    "rel": "noopener",
+    "title": "",
+    "url": "https://apps.apple.com/app/apple-store/id1324203419?pt=107503821&ct=unknown&mt=8"
+  },
+  {
+    "class": "google-play-store play-store-icon",
+    "href": "https://play.google.com/store/apps/details?id=com.checkitt&referrer=utm_source%3Dunknown",
+    "id": "",
+    "title": "",
+    "url": "https://play.google.com/store/apps/details?id=com.checkitt&referrer=utm_source%3Dunknown"
+  },
+  {
+    "href": "https://www.facebook.com/ground.newsapp",
+    "id": "footer_share-facebook",
+    "class": "block p-[1.1rem] min-w-[44px] min-h-[44px] flex items-center justify-center flex-shrink-0",
+    "aria-label": "Visit Ground News on Facebook",
+    "title": "Facebook Icon",
+    "url": "https://www.facebook.com/ground.newsapp"
+  },
+  {
+    "href": "https://twitter.com/Ground_app",
+    "id": "footer_share-twitter",
+    "class": "block p-[1.1rem] min-w-[44px] min-h-[44px] flex items-center justify-center flex-shrink-0",
+    "aria-label": "Visit Ground News on Twitter",
+    "title": "Twitter Icon",
+    "url": "https://twitter.com/Ground_app"
+  },
+  {
+    "href": "https://www.instagram.com/groundnews",
+    "id": "footer_share-instagram",
+    "class": "block p-[1.1rem] min-w-[44px] min-h-[44px] flex items-center justify-center flex-shrink-0",
+    "aria-label": "Visit Ground News on Instagram",
+    "title": "Instagram Icon",
+    "url": "https://www.instagram.com/groundnews"
+  },
+  {
+    "href": "https://www.linkedin.com/company/groundnews",
+    "id": "footer_share-linkedIn",
+    "class": "block p-[1.1rem] min-w-[44px] min-h-[44px] flex items-center justify-center flex-shrink-0",
+    "aria-label": "Visit Ground News on LinkedIn",
+    "title": "LinkedIn Icon",
+    "url": "https://www.linkedin.com/company/groundnews"
+  },
+  {
+    "href": "https://reddit.com/r/News_Blindspot",
+    "id": "footer_share-reddit",
+    "class": "block p-[1.1rem] min-w-[44px] min-h-[44px] flex items-center justify-center flex-shrink-0",
+    "aria-label": "Visit Ground News on Reddit",
+    "title": "Reddit Icon",
+    "url": "https://reddit.com/r/News_Blindspot"
+  },
+  {
+    "class": "hideElementSiteWide min-h-[44px] flex items-center justify-center",
+    "id": "footer_gift",
+    "aria-label": "Gift Ground News subscription",
+    "href": "/gift",
+    "title": "Gift",
+    "url": "https://ground.news/gift"
+  },
+  {
+    "id": "footer_privacy-policy",
+    "class": "min-h-[44px] flex items-center justify-center",
+    "aria-label": "Read our Privacy Policy",
+    "href": "/privacy-policy",
+    "title": "Privacy Policy",
+    "url": "https://ground.news/privacy-policy"
+  },
+  {
+    "id": "footer_terms-and-conditions",
+    "class": "min-h-[44px] flex items-center justify-center",
+    "aria-label": "Read our Terms and Conditions",
+    "href": "/terms-and-conditions",
+    "title": "Terms and Conditions",
+    "url": "https://ground.news/terms-and-conditions"
+  },
+  {
+    "class": "apple-app-store app-store-icon ",
+    "href": "https://apps.apple.com/app/apple-store/id1324203419?pt=107503821&ct=unknown&mt=8",
+    "target": "_blank",
+    "id": "",
+    "rel": "noopener",
+    "title": "",
+    "url": "https://apps.apple.com/app/apple-store/id1324203419?pt=107503821&ct=unknown&mt=8"
+  },
+  {
+    "class": "google-play-store play-store-icon",
+    "href": "https://play.google.com/store/apps/details?id=com.checkitt&referrer=utm_source%3Dunknown",
+    "id": "",
+    "title": "",
+    "url": "https://play.google.com/store/apps/details?id=com.checkitt&referrer=utm_source%3Dunknown"
+  },
+  {
+    "id": "header-trending-Lula da Silva",
+    "data-dd-action-name": "interest-pill-click",
+    "class": "whitespace-nowrap text-ellipsis overflow-hidden ",
+    "href": "/interest/lula_127ddc",
+    "title": "Lula Da Silva",
+    "url": "https://ground.news/interest/lula_127ddc"
+  },
+  {
+    "id": "header-trending-Halloween",
+    "data-dd-action-name": "interest-pill-click",
+    "class": "whitespace-nowrap text-ellipsis overflow-hidden ",
+    "href": "/interest/halloween",
+    "title": "Halloween",
+    "url": "https://ground.news/interest/halloween"
+  },
+  {
+    "id": "header-trending-Artificial Intelligence",
+    "data-dd-action-name": "interest-pill-click",
+    "class": "whitespace-nowrap text-ellipsis overflow-hidden ",
+    "href": "/interest/ai",
+    "title": "Artificial Intelligence",
+    "url": "https://ground.news/interest/ai"
+  },
+  {
+    "id": "header-trending-Senate",
+    "data-dd-action-name": "interest-pill-click",
+    "class": "whitespace-nowrap text-ellipsis overflow-hidden ",
+    "href": "/interest/senate",
+    "title": "Senate",
+    "url": "https://ground.news/interest/senate"
+  },
+  {
+    "id": "header-trending-Wall Street",
+    "data-dd-action-name": "interest-pill-click",
+    "class": "whitespace-nowrap text-ellipsis overflow-hidden ",
+    "href": "/interest/wall-street",
+    "title": "Wall Street",
+    "url": "https://ground.news/interest/wall-street"
+  },
+  {
+    "id": "header-trending-2026 Midterm Elections",
+    "data-dd-action-name": "interest-pill-click",
+    "class": "whitespace-nowrap text-ellipsis overflow-hidden ",
+    "href": "/interest/midterm-elections",
+    "title": "2026 Midterm Elections",
+    "url": "https://ground.news/interest/midterm-elections"
+  },
+  {
+    "id": "header-trending-Republican Party",
+    "data-dd-action-name": "interest-pill-click",
+    "class": "whitespace-nowrap text-ellipsis overflow-hidden ",
+    "href": "/interest/republican-party",
+    "title": "Republican Party",
+    "url": "https://ground.news/interest/republican-party"
+  },
+  {
+    "id": "header-trending-Stock Markets",
+    "data-dd-action-name": "interest-pill-click",
+    "class": "whitespace-nowrap text-ellipsis overflow-hidden ",
+    "href": "/interest/stock-markets",
+    "title": "Stock Markets",
+    "url": "https://ground.news/interest/stock-markets"
+  },
+  {
+    "id": "header-trending-US Politics",
+    "data-dd-action-name": "interest-pill-click",
+    "class": "whitespace-nowrap text-ellipsis overflow-hidden ",
+    "href": "/interest/us-politics_3c3c3c",
+    "title": "US Politics",
+    "url": "https://ground.news/interest/us-politics_3c3c3c"
+  },
+  {
+    "id": "header-trending-European Union",
+    "data-dd-action-name": "interest-pill-click",
+    "class": "whitespace-nowrap text-ellipsis overflow-hidden ",
+    "href": "/interest/european-union",
+    "title": "European Union",
+    "url": "https://ground.news/interest/european-union"
+  },
+  {
+    "id": "header-trending-Democratic Party",
+    "data-dd-action-name": "interest-pill-click",
+    "class": "whitespace-nowrap text-ellipsis overflow-hidden ",
+    "href": "/interest/democratic-party",
+    "title": "Democratic Party",
+    "url": "https://ground.news/interest/democratic-party"
+  },
+  {
+    "id": "header-trending-Election Day",
+    "data-dd-action-name": "interest-pill-click",
+    "class": "whitespace-nowrap text-ellipsis overflow-hidden ",
+    "href": "/interest/election-day",
+    "title": "Election Day",
+    "url": "https://ground.news/interest/election-day"
+  },
+  {
+    "class": "mb-[8px] font-semibold hover:underline text-22",
+    "id": "footer_interest-News",
+    "href": "/",
+    "title": "News",
+    "url": "https://ground.news/"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_Home-Page",
+    "href": "/",
+    "title": "Home Page",
+    "url": "https://ground.news/"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_Local-News",
+    "href": "/local",
+    "title": "Local News",
+    "url": "https://ground.news/local"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_Blindspot-Feed",
+    "href": "/blindspot",
+    "title": "Blindspot Feed",
+    "url": "https://ground.news/blindspot"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_interest-International",
+    "href": "/interest/international",
+    "title": "International",
+    "url": "https://ground.news/interest/international"
+  },
+  {
+    "class": "mb-[8px] font-semibold hover:underline text-22",
+    "id": "footer_interest-International",
+    "href": "/interest/international",
+    "title": "International",
+    "url": "https://ground.news/interest/international"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_interest-North-America",
+    "href": "/interest/north-america",
+    "title": "North America",
+    "url": "https://ground.news/interest/north-america"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_interest-South-America",
+    "href": "/interest/south-america",
+    "title": "South America",
+    "url": "https://ground.news/interest/south-america"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_interest-Europe",
+    "href": "/interest/europe",
+    "title": "Europe",
+    "url": "https://ground.news/interest/europe"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_interest-Asia",
+    "href": "/interest/asia",
+    "title": "Asia",
+    "url": "https://ground.news/interest/asia"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_interest-Australia",
+    "href": "/interest/australia",
+    "title": "Australia",
+    "url": "https://ground.news/interest/australia"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_interest-Africa",
+    "href": "/interest/africa",
+    "title": "Africa",
+    "url": "https://ground.news/interest/africa"
+  },
+  {
+    "class": "mb-[8px] font-semibold hover:underline text-22",
+    "id": "footer_interest-Trending-Internationally",
+    "href": "/interest/international",
+    "title": "Trending Internationally",
+    "url": "https://ground.news/interest/international"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_interest-Lula-Da-Silva",
+    "href": "/interest/lula_127ddc",
+    "title": "Lula Da Silva",
+    "url": "https://ground.news/interest/lula_127ddc"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_interest-Halloween",
+    "href": "/interest/halloween",
+    "title": "Halloween",
+    "url": "https://ground.news/interest/halloween"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_interest-Artificial-Intelligence",
+    "href": "/interest/ai",
+    "title": "Artificial Intelligence",
+    "url": "https://ground.news/interest/ai"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_interest-Senate",
+    "href": "/interest/senate",
+    "title": "Senate",
+    "url": "https://ground.news/interest/senate"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_interest-Wall-Street",
+    "href": "/interest/wall-street",
+    "title": "Wall Street",
+    "url": "https://ground.news/interest/wall-street"
+  },
+  {
+    "class": "mb-[8px] font-semibold hover:underline text-22",
+    "id": "footer_interest-Trending-in-U.S.",
+    "href": "/interest/united-states_b67315",
+    "title": "Trending in U.S.",
+    "url": "https://ground.news/interest/united-states_b67315"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_interest-2026-Midterm-Elections",
+    "href": "/interest/midterm-elections",
+    "title": "2026 Midterm Elections",
+    "url": "https://ground.news/interest/midterm-elections"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_interest-Republican-Party",
+    "href": "/interest/republican-party",
+    "title": "Republican Party",
+    "url": "https://ground.news/interest/republican-party"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_interest-US-Politics",
+    "href": "/interest/us-politics_3c3c3c",
+    "title": "US Politics",
+    "url": "https://ground.news/interest/us-politics_3c3c3c"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_interest-Democratic-Party",
+    "href": "/interest/democratic-party",
+    "title": "Democratic Party",
+    "url": "https://ground.news/interest/democratic-party"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_interest-Halloween",
+    "href": "/interest/halloween",
+    "title": "Halloween",
+    "url": "https://ground.news/interest/halloween"
+  },
+  {
+    "class": "mb-[8px] font-semibold hover:underline text-22",
+    "id": "footer_interest-Trending-in-U.K.",
+    "href": "/interest/united-kingdom",
+    "title": "Trending in U.K.",
+    "url": "https://ground.news/interest/united-kingdom"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_interest-Manchester-United",
+    "href": "/interest/manchester-united",
+    "title": "Manchester United",
+    "url": "https://ground.news/interest/manchester-united"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_interest-Budget",
+    "href": "/interest/budget",
+    "title": "Budget",
+    "url": "https://ground.news/interest/budget"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_interest-Premier-League",
+    "href": "/interest/premier-league_1ae81c",
+    "title": "Premier League",
+    "url": "https://ground.news/interest/premier-league_1ae81c"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_interest-Halloween",
+    "href": "/interest/halloween",
+    "title": "Halloween",
+    "url": "https://ground.news/interest/halloween"
+  },
+  {
+    "class": "mt-[8px] hover:underline text-14",
+    "target": "_self",
+    "id": "footer_interest-Andy-Burnham",
+    "href": "/interest/andy-burnham",
+    "title": "Andy Burnham",
+    "url": "https://ground.news/interest/andy-burnham"
+  }
+]

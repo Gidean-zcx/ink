@@ -1,0 +1,8 @@
+
+Each member of a Family Account can either remove themselves or remove other users.
+To remove a user from a Family Account:
+Open the Yoto App
+Go to the Settings tab
+Tap the three dots menu next to a user
+This will show the menu with the remove options
+Select either Remove from Family Account or Leave this Family Account

@@ -1,0 +1,27 @@
+[
+  {
+    "command": [
+      "python3",
+      "work/palma-controls-deepening/check.py"
+    ],
+    "exit_code": 0,
+    "stdout": "coverage records 0 physical_newlines 1\ninventory records 137 physical_newlines 138\nPASS:4 E(2 generic text+2 static derivatives),0 new F,8 old F/31 fields,14 old E captures,137 inventory; hashes/references/before/CSV checked.\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "git",
+      "diff",
+      "--check",
+      "--",
+      "docs/research/interaction-library/cases/M-010-palma.md",
+      "docs/research/interaction-library/batches/palma-controls-deepening-evidence.jsonl",
+      "docs/research/interaction-library/batches/palma-controls-deepening-coverage.csv",
+      "docs/research/interaction-library/batches/palma-controls-deepening-inventory.csv",
+      "docs/research/interaction-library/artifacts/palma-controls-deepening"
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": ""
+  }
+]

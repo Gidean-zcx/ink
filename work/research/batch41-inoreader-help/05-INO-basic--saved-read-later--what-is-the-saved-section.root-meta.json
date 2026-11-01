@@ -1,0 +1,21 @@
+{
+  "order": 5,
+  "entry_id": "INO-basic--saved-read-later--what-is-the-saved-section",
+  "title": "What is the Saved section?",
+  "url": "https://www.inoreader.com/help/basic/saved-read-later/what-is-the-saved-section",
+  "checked_on": "2026-10-27",
+  "http_status": 200,
+  "final_url": "https://www.inoreader.com/help/basic/saved-read-later/what-is-the-saved-section",
+  "acquisition": "one_anonymous_normal_GET",
+  "raw_path": "work/research/batch41-inoreader-help/05-INO-basic--saved-read-later--what-is-the-saved-section.html",
+  "headers_path": "work/research/batch41-inoreader-help/05-INO-basic--saved-read-later--what-is-the-saved-section.headers.json",
+  "raw_sha256": "ec1fb7544e4c93ef3bf777ccd7e8d5679d5a7884bc43823535f4e2acb368d09b",
+  "bytes": 142210,
+  "status": "body_obtained",
+  "body_status": "extracted_not_yet_root_read",
+  "body_path": "work/research/batch41-inoreader-help/05-INO-basic--saved-read-later--what-is-the-saved-section.body.txt",
+  "body_sha256": "d57dc9ce0cda8226c53c9c17bbbfd8b0a51fe3114017f28974fb5724fc14cd4a",
+  "body_chars": 306,
+  "links": [],
+  "images": []
+}

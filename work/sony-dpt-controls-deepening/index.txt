@@ -1,0 +1,8 @@
+Refer to this manual whenever you are having problems or are uncertain while using the Digital Paper.
+This is the help guide for the Digital Paper firmware Ver. 1.6.
+For customers using the firmware earlier than Ver. 1.2, make sure to update the Digital Paper App to the latest version and then update the firmware of the Digital Paper.
+For the latest version of the Digital Paper App, see the following;
+https://www.sony.net/dpapp/
+The screens and illustrations that appear in this Help Guide may differ from the actual product.
+Changes may be made without prior notice, to improve the design and specifications.
+The illustration of DPT-RP1 is used for the explanations.

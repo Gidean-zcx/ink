@@ -1,0 +1,32 @@
+[
+  {
+    "source": "work/news-interactions/brit-early.pdf",
+    "source_sha256": "f8967bc5515ca669986919b42caf6b453ba88c4ccc489d25c2dabcab775cc34e",
+    "pdf_page": 7,
+    "path": "work/britannica-controls-deepening/raw/brit-early-p7.png",
+    "sha256": "9a88efb076f98dd316d67c8b514301125da107ea73d95ab1b3bf6c1e17e54146",
+    "visual_observed": true,
+    "observed_on": "2026-10-27",
+    "observation": "图片弹层的关闭、Media Details/Sharing Options；视频下载、AD、CC、设置和全屏图标，仅静态可见。"
+  },
+  {
+    "source": "work/news-interactions/brit-school.pdf",
+    "source_sha256": "ad70683769eb638650ca2675331586beb38651542f1f1cd3b3f18f0d872c895b",
+    "pdf_page": 7,
+    "path": "work/britannica-controls-deepening/raw/brit-school-p7.png",
+    "sha256": "1f8c74299e6a4a8eaba7ddcd389a3adad494061a74a6ec9c65d6b7ebb0005032",
+    "visual_observed": true,
+    "observed_on": "2026-10-27",
+    "observation": "四学段Navigator并列；Early英西语与图标组，Elementary级别1/2/3、章节和Cite/Save/Send/Print等，示例非实际当前值。"
+  },
+  {
+    "source": "work/news-interactions/brit-school.pdf",
+    "source_sha256": "ad70683769eb638650ca2675331586beb38651542f1f1cd3b3f18f0d872c895b",
+    "pdf_page": 13,
+    "path": "work/britannica-controls-deepening/raw/brit-school-p13.png",
+    "sha256": "263fa7201a14517cde1710a88154ff8d9ee9a2d3d775f0080a1f4c4b4dcc6251",
+    "visual_observed": true,
+    "observed_on": "2026-10-27",
+    "observation": "Elementary探索入口、新闻Play/Word of the Day/Fun Fact、蝴蝶滑块静态说明、Fundamentals生态区地图；未操作。"
+  }
+]

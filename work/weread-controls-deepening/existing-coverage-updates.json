@@ -1,0 +1,186 @@
+[
+  {
+    "flow_id": "F-M013-01",
+    "source_batch": "docs/research/interaction-library/batches/chinese-apps-coverage.csv",
+    "field": "depth",
+    "before": "D1",
+    "after": "D2",
+    "reason": "本轮公开文档/静态图补原任务；由root核验合并，不修改旧批"
+  },
+  {
+    "flow_id": "F-M013-01",
+    "source_batch": "docs/research/interaction-library/batches/chinese-apps-coverage.csv",
+    "field": "evidence_ids",
+    "before": "E-WRD-01",
+    "after": "E-WRD-01;E-WRD-07;E-WRCD-02",
+    "reason": "本轮公开文档/静态图补原任务；由root核验合并，不修改旧批"
+  },
+  {
+    "flow_id": "F-M013-01",
+    "source_batch": "docs/research/interaction-library/batches/chinese-apps-coverage.csv",
+    "field": "known_branches",
+    "before": "书籍详情可进入AI问书",
+    "after": "仅2024历史AI子链D2：搜索问题→AI问书→回答及来源→文档称可跳书中段落；正文选区入口有静态图",
+    "reason": "本轮公开文档/静态图补原任务；由root核验合并，不修改旧批"
+  },
+  {
+    "flow_id": "F-M013-01",
+    "source_batch": "docs/research/interaction-library/batches/chinese-apps-coverage.csv",
+    "field": "gaps",
+    "before": "选区、查词结果、写笔记、撤销和回原位",
+    "after": "当前版本沿用性、查词结果/划线保存撤销、AI取消失败/返回原位仍未知；2024 OS与构建未给",
+    "reason": "本轮公开文档/静态图补原任务；由root核验合并，不修改旧批"
+  },
+  {
+    "flow_id": "F-M013-01",
+    "source_batch": "docs/research/interaction-library/batches/chinese-apps-coverage.csv",
+    "field": "visual_status",
+    "before": "not_observed",
+    "after": "static_reference_only",
+    "reason": "本轮公开文档/静态图补原任务；由root核验合并，不修改旧批"
+  },
+  {
+    "flow_id": "F-M013-01",
+    "source_batch": "docs/research/interaction-library/batches/chinese-apps-coverage.csv",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27",
+    "reason": "本轮公开文档/静态图补原任务；由root核验合并，不修改旧批"
+  },
+  {
+    "flow_id": "F-M013-02",
+    "source_batch": "docs/research/interaction-library/batches/chinese-apps-coverage.csv",
+    "field": "evidence_ids",
+    "before": "E-WRD-01",
+    "after": "E-WRD-01;E-WRD-08",
+    "reason": "本轮公开文档/静态图补原任务；由root核验合并，不修改旧批"
+  },
+  {
+    "flow_id": "F-M013-02",
+    "source_batch": "docs/research/interaction-library/batches/chinese-apps-coverage.csv",
+    "field": "known_branches",
+    "before": "导入书可独立字号；定时听书已公告",
+    "after": "10.2.2公告导入书独立字号；定时听书公告；读听分项统计为条件字段",
+    "reason": "本轮公开文档/静态图补原任务；由root核验合并，不修改旧批"
+  },
+  {
+    "flow_id": "F-M013-02",
+    "source_batch": "docs/research/interaction-library/batches/chinese-apps-coverage.csv",
+    "field": "gaps",
+    "before": "格式导入链、离线、读听位置映射",
+    "after": "格式导入/重复与失败、离线、续播和读听位置映射；分项字段缺失不代表零",
+    "reason": "本轮公开文档/静态图补原任务；由root核验合并，不修改旧批"
+  },
+  {
+    "flow_id": "F-M013-02",
+    "source_batch": "docs/research/interaction-library/batches/chinese-apps-coverage.csv",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27",
+    "reason": "本轮公开文档/静态图补原任务；由root核验合并，不修改旧批"
+  },
+  {
+    "flow_id": "F-M013-03",
+    "source_batch": "docs/research/interaction-library/batches/chinese-apps-coverage.csv",
+    "field": "evidence_ids",
+    "before": "E-WRD-02;E-WRD-03;E-WRD-04;E-WRD-05",
+    "after": "E-WRD-02;E-WRD-03;E-WRD-04;E-WRD-05;E-WRCD-04",
+    "reason": "本轮公开文档/静态图补原任务；由root核验合并，不修改旧批"
+  },
+  {
+    "flow_id": "F-M013-03",
+    "source_batch": "docs/research/interaction-library/batches/chinese-apps-coverage.csv",
+    "field": "known_branches",
+    "before": "内容类别、分页、空数据、链接回App",
+    "after": "搜索类别/分页/空数据；书架含专辑及文章入口；推荐与相似推荐游标不同，后者显式count/maxIdx并续sessionId",
+    "reason": "本轮公开文档/静态图补原任务；由root核验合并，不修改旧批"
+  },
+  {
+    "flow_id": "F-M013-03",
+    "source_batch": "docs/research/interaction-library/batches/chinese-apps-coverage.csv",
+    "field": "gaps",
+    "before": "是否覆盖所有私有内容和写动作",
+    "after": "是否覆盖所有私有内容和写动作、推荐服务实际可用性；未调用接口",
+    "reason": "本轮公开文档/静态图补原任务；由root核验合并，不修改旧批"
+  },
+  {
+    "flow_id": "F-M013-03",
+    "source_batch": "docs/research/interaction-library/batches/chinese-apps-coverage.csv",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27",
+    "reason": "本轮公开文档/静态图补原任务；由root核验合并，不修改旧批"
+  },
+  {
+    "flow_id": "F-M013-04",
+    "source_batch": "docs/research/interaction-library/batches/chinese-apps-coverage.csv",
+    "field": "known_branches",
+    "before": "0/1—99/100进度",
+    "after": "0/1—99/100进度；输出规则要求100且有finishTime才标读完；目录分层与付费状态",
+    "reason": "本轮公开文档/静态图补原任务；由root核验合并，不修改旧批"
+  },
+  {
+    "flow_id": "F-M013-04",
+    "source_batch": "docs/research/interaction-library/batches/chinese-apps-coverage.csv",
+    "field": "gaps",
+    "before": "写入位置、读听切换与更新冲突",
+    "after": "100但finishTime缺失的真实状态、位置回写、读听切换与同步冲突未知",
+    "reason": "本轮公开文档/静态图补原任务；由root核验合并，不修改旧批"
+  },
+  {
+    "flow_id": "F-M013-04",
+    "source_batch": "docs/research/interaction-library/batches/chinese-apps-coverage.csv",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27",
+    "reason": "本轮公开文档/静态图补原任务；由root核验合并，不修改旧批"
+  },
+  {
+    "flow_id": "F-M013-05",
+    "source_batch": "docs/research/interaction-library/batches/chinese-apps-coverage.csv",
+    "field": "known_branches",
+    "before": "书签仅统计；两种游标；想法未必含原文",
+    "after": "统计含书签而内容排除；reviewCount已含个人点评；notebooks至hasMore=0、mine用synckey；公开点评与个人内容分开",
+    "reason": "本轮公开文档/静态图补原任务；由root核验合并，不修改旧批"
+  },
+  {
+    "flow_id": "F-M013-05",
+    "source_batch": "docs/research/interaction-library/batches/chinese-apps-coverage.csv",
+    "field": "gaps",
+    "before": "导出文件保存、修改回写、删除撤销",
+    "after": "导出文件保存/备份完整性、修改回写、删除撤销；热门top20与热度不替代个人全量",
+    "reason": "本轮公开文档/静态图补原任务；由root核验合并，不修改旧批"
+  },
+  {
+    "flow_id": "F-M013-05",
+    "source_batch": "docs/research/interaction-library/batches/chinese-apps-coverage.csv",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27",
+    "reason": "本轮公开文档/静态图补原任务；由root核验合并，不修改旧批"
+  },
+  {
+    "flow_id": "F-M013-06",
+    "source_batch": "docs/research/interaction-library/batches/chinese-apps-coverage.csv",
+    "field": "known_branches",
+    "before": "默认月；统计口径与排行可缺省",
+    "after": "默认月；固定自然周期拼接，边界无日明细须标近似；自然日日均；时段从6时起，作者时长是格式化字符串",
+    "reason": "本轮公开文档/静态图补原任务；由root核验合并，不修改旧批"
+  },
+  {
+    "flow_id": "F-M013-06",
+    "source_batch": "docs/research/interaction-library/batches/chinese-apps-coverage.csv",
+    "field": "gaps",
+    "before": "离线记录补传、分项保真",
+    "after": "离线补传/时区/分项保真；排行和读听字段可缺省；字段表与全部按秒的概括存在例外",
+    "reason": "本轮公开文档/静态图补原任务；由root核验合并，不修改旧批"
+  },
+  {
+    "flow_id": "F-M013-06",
+    "source_batch": "docs/research/interaction-library/batches/chinese-apps-coverage.csv",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27",
+    "reason": "本轮公开文档/静态图补原任务；由root核验合并，不修改旧批"
+  }
+]

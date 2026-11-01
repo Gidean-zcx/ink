@@ -1,0 +1,17 @@
+How to create an alarm?
+Modified on: Sat, 3 Oct, 2026 at 8:36 AM
+You can create and customize alarms directly on your Mudita Kompakt
+Create your first alarm:
+Tap the clock on the Home screen.
+Tap Create an Alarm.
+Set the desired time.
+(Optional) Edit the alarm name, sound, and repeat schedule.
+Tap Create to save the alarm.
+Access the Alarm app:
+If the Alarm app icon is hidden, you can access it by navigating to: Apps → Alarm
+From there, you can create, edit, enable, disable, or delete your alarms at any time
+Was this article helpful?
+No
+Yes
+That’s Great!
+Thank you for your feedback

@@ -1,0 +1,17 @@
+{
+  "new_evidence": 36,
+  "new_tasks": 16,
+  "old_tasks_amended": 20,
+  "old_fields_amended": 76,
+  "post_review_new_task_title": 1,
+  "distinct_new_raw_files": 39,
+  "rechecked_root_sources": 5,
+  "sony_html_sources": 18,
+  "eudic_work_manifest_files": 30,
+  "inventories": 23,
+  "inventory_rows": 1795,
+  "new_inventory_rows": 241,
+  "new_static_pages": 3,
+  "new_product_operations": 0,
+  "errors": []
+}

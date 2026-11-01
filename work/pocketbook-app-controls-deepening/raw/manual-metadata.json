@@ -1,0 +1,25 @@
+{
+  "original_path": "work/research/interaction-depth/pocketbook-6.10.2854.pdf",
+  "sha256": "87bf56b461cd298b7c53421c5b21f72f1498e4c060d4eea89844545667030101",
+  "page_count": 95,
+  "metadata": {
+    "format": "PDF 1.7",
+    "title": "User Manual",
+    "author": "PocketBook",
+    "subject": "",
+    "keywords": "",
+    "creator": "Typst 0.14.2",
+    "producer": "",
+    "creationDate": "D:20251226144634+02'00",
+    "modDate": "D:20251226144634+02'00",
+    "trapped": "",
+    "encryption": null
+  },
+  "rendered_pages": [
+    29,
+    37,
+    41,
+    76,
+    77
+  ]
+}

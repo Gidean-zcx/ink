@@ -1,0 +1,10 @@
+Handwritten annotations and highlighted sections can be displayed in a list and searched for in pages.
+Tap anywhere on the screen of a document to display the tool bar.
+Tap  (option) in the upper right of the document screen —  [Annotation List].
+Tap the [Handwriting List] tab or the [Highlight List] tab.
+Tap one item from the list.
+The page that you tapped will be displayed.
+To close the annotation list
+Tap an area outside of the annotation list.
+Note
+Depending on the number of annotations within a document, it may take time for the annotation list to appear.

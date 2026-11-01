@@ -1,0 +1,14 @@
+How To Find Your Phone Number on Mudita Kompakt
+Modified on: Sat, 3 Oct, 2026 at 8:35 AM
+You can find the phone numbers for each of your installed SIM cards in the SIM status screen.
+You can find the phone numbers for each of your installed SIM cards in the SIM status screen.
+ 
+Press the Control Center button
+Tap Settings icon
+Tap About
+Tap SIM status (sim slot #) for the SIM you want to view
+Was this article helpful?
+No
+Yes
+That’s Great!
+Thank you for your feedback

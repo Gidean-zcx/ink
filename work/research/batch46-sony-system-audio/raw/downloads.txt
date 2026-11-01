@@ -1,0 +1,25 @@
+Purchasing music content from online music services by using the player
+If you connect the player to a Wi-Fi network, you can purchase music content from online music services. You need to install an online music service app in advance.
+Check the service guide for the provider you use. Each service provider has different downloading procedures, compatible file formats, and payment methods. Note that the provider may choose to suspend or terminate the service without notice.
+Turn on the Wi-Fi function to connect the player to the internet.
+Swipe the [WALKMAN Home] screen upwards, and then tap (Google Play).
+Search for the desired app.
+Follow the onscreen instructions to install the app.
+Launch the app.
+If necessary, follow the instructions from the provider to register an account, select a payment method, and so on.
+Purchase music content.
+On the library screen in “Music player”, tap (Update database).
+Note
+The destination for music downloads differs depending on the online music service. If content is not in one of the following folders, the content will not appear in the library of “Music player”.
+The [Music] folder or the [Download] folder in the internal memory of the player
+The [Music] folder on the microSD card
+The folders registered to [Folders to be imported] in “Music player”
+In this case, perform one of the following methods and then update the database.
+Use the [Files] app to move the content to one of the folders listed above.
+Register the folder that contains the desired content to [Folders to be imported] in “Music player”.
+The contents of the Help Guide may be subject to change without notice due to updates to the product's specifications.
+Go to Page Top
+Related Topic
+Connecting the player to a Wi-Fi network
+Library screen in “Music player”
+Registering or unregistering folders to be imported to “Music player”

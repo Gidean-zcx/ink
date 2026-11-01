@@ -1,0 +1,22 @@
+{
+  "name": "09-after-reason",
+  "url": "https://www.duolingo.com/welcome?welcomeStep=proficiency",
+  "title": "Duolingo - Learn French with lessons that work",
+  "utc": "2026-10-26T17:40:43.952162+00:00",
+  "text": "How much French do you know?\nHow much French do you know?\nI’m new to French\nI know some common words\nI can have basic conversations\nI can talk about various topics\nI can discuss most topics in detail\nCONTINUE",
+  "buttons": [
+    {
+      "text": "",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "CONTINUE",
+      "aria": null,
+      "test": "funboarding-continue-button",
+      "visible": true
+    }
+  ],
+  "inputs": []
+}

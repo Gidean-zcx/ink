@@ -1,0 +1,24 @@
+Discover shortcuts in the Gallery on iPhone or iPad
+If you’re looking for new shortcuts to add to your collection, or if you want to see what’s possible and how particular shortcuts are built, check out the Gallery in the Shortcuts app.
+Open and browse the Gallery
+In the Shortcuts app on your iPhone or iPad, do one of the following:
+iPhone: Tap Gallery at the bottom of the main screen.
+iPad: Swipe from the left edge of the screen, then tap Gallery in the sidebar.
+Curated shortcuts appear organized into category rows (Essentials, Morning Routine, and so on).
+Tap See All to see all the shortcuts in a category.
+Swipe a category row sideways to see other shortcuts in a category.
+Swipe up or down to see more category rows.
+Tip: To open the Gallery from the Home Screen of your device, touch and hold the Shortcuts app icon, then tap Gallery .
+Add a Gallery shortcut to your collection
+In the Shortcuts app Gallery on your iPhone or iPad, tap a shortcut.
+A description of the shortcut appears, along with a preview of its actions.
+Tip: To quickly add a shortcut to your collection, tap .
+To add the shortcut to your collection, tap Add Shortcut or Set Up Shortcut (if there are setup steps).
+For shortcuts with additional setup steps, follow the instructions that appear, then tap Add Shortcut.
+The shortcut is added to your shortcuts collection.
+Search the Gallery
+You can search for additional shortcuts not shown in the Gallery.
+In the Shortcuts app Gallery on your iPhone or iPad, tap at the top of the screen.
+Enter a search term in the search field.
+Shortcuts that match your search term appear below the field.
+To run a shortcut you’ve added from the Gallery, see Run a shortcut from the Shortcuts app on iPhone or iPad.

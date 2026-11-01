@@ -1,0 +1,54 @@
+[
+  {
+    "id": "15710",
+    "title": "抖音推出新版“使用管理助手”",
+    "source_published_on": "2025年05月21日",
+    "url": "https://trust.douyin.com/article/15710",
+    "raw_work_path": "work/feed-interactions/douyin-article-15710.json",
+    "raw_sha256": "4c46503ab0ca200e0c1b30580c3f5161e3411924ac58517c1eed9549014595a6",
+    "decoded_work_path": "work/douyin-controls-deepening/raw/article-15710-decoded.json",
+    "decoded_sha256": "01b5659e35b5367573e31298a54feb2913acedb3a219739393bf41d81e65eb2a",
+    "source_captured_on": "2026-10-26",
+    "checked_on": "2026-10-27",
+    "access_mode": "prior_local_public_API_response_reread_not_refetched"
+  },
+  {
+    "id": "3111768381106164",
+    "title": "抖音亲子护航、AI笔记功能升级上线，携手家长共同守护未成年人成长",
+    "source_published_on": "2026年01月14日",
+    "url": "https://trust.douyin.com/article/3111768381106164",
+    "raw_work_path": "work/feed-interactions/douyin-article-3111768381106164.json",
+    "raw_sha256": "16706c48e6a9524aa1f00dc35763e1f805cc8fae2f41e8355c2b209b0d552b05",
+    "decoded_work_path": "work/douyin-controls-deepening/raw/article-3111768381106164-decoded.json",
+    "decoded_sha256": "70e7f62bbfa1b2f6616368a4d1ad25474f401e3178b1a0bf1ca67051459c7749",
+    "source_captured_on": "2026-10-26",
+    "checked_on": "2026-10-27",
+    "access_mode": "prior_local_public_API_response_reread_not_refetched"
+  },
+  {
+    "id": "9841769585856405",
+    "title": "寒假到了，《抖音未成年人模式使用指南》请查收！",
+    "source_published_on": "2026年01月28日",
+    "url": "https://trust.douyin.com/article/9841769585856405",
+    "raw_work_path": "work/feed-interactions/douyin-article-9841769585856405.json",
+    "raw_sha256": "96d58871f200fab325d1b025827954617770ebf1fb99f0ece81d01c4f04bea5f",
+    "decoded_work_path": "work/douyin-controls-deepening/raw/article-9841769585856405-decoded.json",
+    "decoded_sha256": "80355b01eb1d6a4c32f29e6420592fe233c5b1b824f4a12c35779e61e10a15c6",
+    "source_captured_on": "2026-10-26",
+    "checked_on": "2026-10-27",
+    "access_mode": "prior_local_public_API_response_reread_not_refetched"
+  },
+  {
+    "id": "5411770782085474",
+    "title": "新春将至，一份爸妈拿起来就能看得懂的“算法调教指南”请查收",
+    "source_published_on": "2026年02月11日",
+    "url": "https://trust.douyin.com/article/5411770782085474",
+    "raw_work_path": "work/feed-interactions/douyin-article-5411770782085474.json",
+    "raw_sha256": "dff43ea116ef0e54c6c53c3e85391d865f8328cc1bf2e5901ce63d642298db73",
+    "decoded_work_path": "work/douyin-controls-deepening/raw/article-5411770782085474-decoded.json",
+    "decoded_sha256": "b5530dd206172f4f1548fe099f8b0d89df542c8e2bf2d9a5e618524ee1112a27",
+    "source_captured_on": "2026-10-26",
+    "checked_on": "2026-10-27",
+    "access_mode": "prior_local_public_API_response_reread_not_refetched"
+  }
+]

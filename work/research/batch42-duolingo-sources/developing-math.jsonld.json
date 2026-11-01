@@ -1,0 +1,42 @@
+[
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+      "@type": "Organization",
+      "name": "Duolingo Blog",
+      "url": "https://blog.duolingo.com/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://storage.ghost.io/c/7a/33/7a33d0f4-927d-4fe8-a6bf-96131b5e76d4/content/images/size/w256h256/2020/03/duolingo-touch-icon2-1.png",
+        "width": 60,
+        "height": 60
+      }
+    },
+    "author": {
+      "@type": "Person",
+      "name": "Sammi Siegel",
+      "image": {
+        "@type": "ImageObject",
+        "url": "https://storage.ghost.io/c/7a/33/7a33d0f4-927d-4fe8-a6bf-96131b5e76d4/content/images/size/w1200/2023/02/blogpic.png",
+        "width": 1200,
+        "height": 1600
+      },
+      "url": "https://blog.duolingo.com/author/sammi/",
+      "sameAs": []
+    },
+    "headline": "Teaching Owlgebra: developing math on Duolingo",
+    "url": "https://blog.duolingo.com/developing-math/",
+    "datePublished": "2024-10-18T21:00:00.000Z",
+    "dateModified": "2026-09-18T10:07:13.000Z",
+    "image": {
+      "@type": "ImageObject",
+      "url": "https://storage.ghost.io/c/7a/33/7a33d0f4-927d-4fe8-a6bf-96131b5e76d4/content/images/2024/10/cover_Teaching-Owlgebra-Developing-Math-on-Duolingo-1.png",
+      "width": 900,
+      "height": 600
+    },
+    "keywords": "Math, Engineering, Life at Duolingo, Features",
+    "description": "What’s our formula for creating the math course? We’ll tell you! ",
+    "mainEntityOfPage": "https://blog.duolingo.com/developing-math/"
+  }
+]

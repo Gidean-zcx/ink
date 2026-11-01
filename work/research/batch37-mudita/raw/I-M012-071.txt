@@ -1,0 +1,33 @@
+Mudita Kompakt: Global or North American?
+Modified on: Sat, 3 Oct, 2026 at 8:45 AM
+The North American Kompakt is better optimized to work with US and Canadian carriers, while the global version should do better in other countries around the world.
+However, the global Kompakt will still work in many areas across the USA and Canada. Similarly, the North American version can also be used in various other countries.
+How to Buy Either Version
+In our store, the North American Kompakt is by default limited to purchases from the USA and Canada, with the global version being available for all other countries that we ship to.
+The only way to order the other Kompakt version than the one available in your country is for us to create a custom order for your manually. This is possible if you're aware of the differences and limitations and certain that this version would be better for your use case.
+Once the order is created, you'd get a confirmation email with a payment link to complete the purchase.
+What Is the Difference?
+The two Mudita Kompakt versions differ in terms of some supported network bands.
+Below is a breakdown of all bands supported by each version. Bands that differ between versions are marked in bold.
+Network bands supported by the global Mudita Kompakt:
+2G: 850/900/1800
+3G: B1/5/8
+4G LTE:
+LTE-FDD: B1/3/5/7/8/12/13/18/19/20/26
+LTE-TDD: B34/38/39/40/41
+Network bands supported by the North American Mudita Kompakt:
+2G: 850/900/1900
+3G: B2/4/5/8
+4G LTE:
+LTE-FDD: B2/4/5/7/8/12/13/17/18/19/25/26/66/71
+LTE-TDD: B34/38/40/41
+Which Version to Choose?
+For North American users, we recommend the Mudita Kompakt version optimized for that region. It should provide a better user experience than the global version due to improved network performance in many areas across the USA and Canada.
+For everyone else, the global Mudita Kompakt will be a more optimal choice. It should better match various network bands used in many countries around the world.
+The global Mudita Kompakt is also recommended for people who travel frequently, including those who usually live in the USA or Canada.
+The best way to verify if either version of the Kompakt will work with your carrier is to compare the network bands that the carrier uses in your area with the ones supported by the phone. The phone should be able to connect as long as at there are at least some matching bands.
+Was this article helpful?
+No
+Yes
+That’s Great!
+Thank you for your feedback

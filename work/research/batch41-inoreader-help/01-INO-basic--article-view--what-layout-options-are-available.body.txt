@@ -1,0 +1,1 @@
+List, expanded, column, card, and magazine view.

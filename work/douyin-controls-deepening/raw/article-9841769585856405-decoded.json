@@ -1,0 +1,21 @@
+{
+  "_deltas": {
+    "0": {
+      "ops": [
+        {
+          "insert": " ",
+          "attributes": {
+            "image": "true",
+            "uuid": "fb31d38a-2051-4c8f-bf6d-bb33df8827fa",
+            "src": "https://lf3-static.bytednsdoc.com/obj/eden-cn/ylaulj_azbya_upfbvk/ljhwZthlaukjlkulzlp/file/1351769585837472"
+          }
+        },
+        {
+          "insert": "\n"
+        }
+      ],
+      "zoneId": "0",
+      "zoneType": "Z"
+    }
+  }
+}

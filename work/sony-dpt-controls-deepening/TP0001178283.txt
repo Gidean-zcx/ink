@@ -1,0 +1,8 @@
+Tap anywhere on the screen of a document to display the tool bar.
+Tap  (option) in the upper right of the document screen — [Insert New Page] or [Delete Current Page].
+When you tap [Insert New Page], one page is inserted before the page that is currently being displayed.
+To add a page after the final page
+On the final page of the note, swipe (move your finger) in the direction that would take you to the next page.
+Note
+After a page is deleted, it cannot be returned.
+Pages cannot be added/deleted when viewing the document as a two-page spread.

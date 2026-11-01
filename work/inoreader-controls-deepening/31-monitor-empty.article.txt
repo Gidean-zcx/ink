@@ -1,0 +1,8 @@
+Why is my monitoring feed not finding the articles I expect?
+Review the feed’s saved search query and check whether it searches your account or public feeds. Test a simpler query with one relevant term, then add conditions back gradually. Use an article you expected to appear to check which condition might be excluding it.
+Related questions
+What are monitoring feeds?
+How do I create a monitoring feed?
+Can monitoring feeds track content from my account?
+Can monitoring feeds track content beyond my account?
+Can I edit a monitoring feed later?

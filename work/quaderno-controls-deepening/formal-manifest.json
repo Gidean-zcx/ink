@@ -1,0 +1,42 @@
+[
+  {
+    "path": "docs/research/interaction-library/cases/M-060-quaderno.md",
+    "sha256": "71dc9624f1d7971b35baf856c4f3a6f19fa6cbe9be076890c207ecab790918a3",
+    "bytes": 17513
+  },
+  {
+    "path": "docs/research/interaction-library/batches/quaderno-controls-deepening-coverage.csv",
+    "sha256": "21a48823f54c897461a1b1b30c8a55842eb3e546e2c79cdabd056c3e9f89338c",
+    "bytes": 3817
+  },
+  {
+    "path": "docs/research/interaction-library/batches/quaderno-controls-deepening-evidence.jsonl",
+    "sha256": "a04447eecc6f0a577bb73151f5cd1047f9839a0057d91c6b5ce2e915d4309b7e",
+    "bytes": 11947
+  },
+  {
+    "path": "docs/research/interaction-library/batches/quaderno-controls-deepening-inventory.csv",
+    "sha256": "ccc655ee48d272fc64ba75995f29f510633ffaff4b090c59b36c7a5b5ea255f7",
+    "bytes": 71850
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/quaderno-controls-deepening/gen3c-p57.png",
+    "sha256": "f485d64855a748cac6b5bcad5569a5c6ed34a640c81af6047a09c2def310977d",
+    "bytes": 208408
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/quaderno-controls-deepening/gen3c-p66.png",
+    "sha256": "ea7b8904b1cc03e6572fbbca51de6aa44ce407afe6c9700c497d50d1c3c31125",
+    "bytes": 225507
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/quaderno-controls-deepening/gen3c-p86.png",
+    "sha256": "5a32b3086339cdaaf805069cff2a71a4d196bbacb27a30a707a27117966729ed",
+    "bytes": 110182
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/quaderno-controls-deepening/source-notes.md",
+    "sha256": "4b696f7c102d7c345146f844eeb2b8625e57059b00f953307c41e6f728218753",
+    "bytes": 2692
+  }
+]

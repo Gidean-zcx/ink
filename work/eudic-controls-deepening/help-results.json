@@ -1,0 +1,88 @@
+[
+  {
+    "name": "07-cross",
+    "url": "https://docs.eudic.net/1/shi-yong-zhi-yin/dan-ci-cha-xun/kua-ruan-jian-qu-ci.md",
+    "method": "requests GET timeout=(5,18), one attempt",
+    "status": 200,
+    "final_url": "https://docs.eudic.net/1/shi-yong-zhi-yin/dan-ci-cha-xun/kua-ruan-jian-qu-ci.md",
+    "content_type": "text/markdown; charset=utf-8",
+    "raw_work_path": "work/eudic-controls-deepening/07-cross.txt",
+    "raw_sha256": "96eef09643f9d77f2bdcc9bdb698084fae2788ca62f9620c3c715668055a5226",
+    "bytes": 8322
+  },
+  {
+    "name": "08-fulltext",
+    "url": "https://docs.eudic.net/1/shi-yong-zhi-yin/dan-ci-cha-xun/quan-wen-sou-suo-1.md",
+    "method": "requests GET timeout=(5,18), one attempt",
+    "status": 200,
+    "final_url": "https://docs.eudic.net/1/shi-yong-zhi-yin/dan-ci-cha-xun/quan-wen-sou-suo-1.md",
+    "content_type": "text/markdown; charset=utf-8",
+    "raw_work_path": "work/eudic-controls-deepening/08-fulltext.txt",
+    "raw_sha256": "0cf89c90345c5b504ae73b709d498e602e466d4ac72313fb83785ced1a4c40e8",
+    "bytes": 2122
+  },
+  {
+    "name": "09-display",
+    "url": "https://docs.eudic.net/1/shi-yong-zhi-yin/jie-shi-ye-mian-she-zhi.md",
+    "method": "requests GET timeout=(5,18), one attempt",
+    "status": 200,
+    "final_url": "https://docs.eudic.net/1/shi-yong-zhi-yin/jie-shi-ye-mian-she-zhi.md",
+    "content_type": "text/markdown; charset=utf-8",
+    "raw_work_path": "work/eudic-controls-deepening/09-display.txt",
+    "raw_sha256": "cfa95c1c1e9d4f0c4cd008f9055458cb5adc501407693d01042f341c1a2e8701",
+    "bytes": 3583
+  },
+  {
+    "name": "10-keyboard",
+    "url": "https://docs.eudic.net/1/jin-jie-gong-neng/wai-jie-jian-pan-kuai-jie-jian.md",
+    "method": "requests GET timeout=(5,18), one attempt",
+    "status": 200,
+    "final_url": "https://docs.eudic.net/1/jin-jie-gong-neng/wai-jie-jian-pan-kuai-jie-jian.md",
+    "content_type": "text/markdown; charset=utf-8",
+    "raw_work_path": "work/eudic-controls-deepening/10-keyboard.txt",
+    "raw_sha256": "1f85fab0bf6c31c24fe5c712b5402c41a59c2c493b0f618779872684f05ba209",
+    "bytes": 1227
+  },
+  {
+    "name": "11-learnfaq",
+    "url": "https://docs.eudic.net/1/shi-yong-zhi-yin/untitled-3/untitled-2.md",
+    "method": "requests GET timeout=(5,18), one attempt",
+    "status": 200,
+    "final_url": "https://docs.eudic.net/1/shi-yong-zhi-yin/untitled-3/untitled-2.md",
+    "content_type": "text/markdown; charset=utf-8",
+    "raw_work_path": "work/eudic-controls-deepening/11-learnfaq.txt",
+    "raw_sha256": "ccce5fd6759acac39f4b41dc4a3e29cad9b6361e99e96b96847c47538493430b",
+    "bytes": 5860
+  },
+  {
+    "name": "12-wordbook",
+    "url": "https://docs.eudic.net/1/shi-yong-zhi-yin/wo-de-sheng-ci-ben.md",
+    "method": "requests GET timeout=(5,18), one attempt",
+    "status": 200,
+    "final_url": "https://docs.eudic.net/1/shi-yong-zhi-yin/wo-de-sheng-ci-ben.md",
+    "content_type": "text/markdown; charset=utf-8",
+    "raw_work_path": "work/eudic-controls-deepening/12-wordbook.txt",
+    "raw_sha256": "0a6a9dd66156e5645df60c4b77f5db32bcaccf1261904df1456ab4d1ecde021c",
+    "bytes": 2710
+  },
+  {
+    "name": "13-log",
+    "url": "https://eudic.yuque.com/org-wiki-eudic-fxu2ea/mfxd3t/fuke8887s5mulqyf?singleDoc",
+    "method": "requests GET timeout=(5,18), one attempt",
+    "status": 200,
+    "final_url": "https://eudic.yuque.com/org-wiki-eudic-fxu2ea/mfxd3t/fuke8887s5mulqyf?singleDoc",
+    "content_type": "text/html; charset=utf-8",
+    "raw_work_path": "work/eudic-controls-deepening/13-log.html",
+    "raw_sha256": "bf8c895d4219a43286e115a8f903567ae1553220ebcac0c7d708fc2d5c8dbd54",
+    "bytes": 54380
+  },
+  {
+    "name": "14-aiarticle",
+    "url": "https://static-main.frdic.com/mediapool/6f3dddb6-1baf-11ee-80ea-005056866eda/data/jt/7ad34c36-fa9a-4c9f-8bc0-4ff2b6c76c64.htm?_=20230706115426946&share_desc=%E9%80%89%E6%8B%A9%E7%94%9F%E8%AF%8D%E6%9C%AC%E5%8D%95%E8%AF%8D%EF%BC%8C%E6%99%BA%E8%83%BD%E4%B8%B2%E8%81%94%E6%88%90%E7%9F%AD%E6%96%87&share_title=%F0%9F%93%9C%E3%80%8CAI%E7%9F%AD%E6%96%87%E5%8A%A9%E8%AE%B0%E3%80%8D%E5%8A%9F%E8%83%BD%E5%8D%87%E7%BA%A7&show_native_share=true",
+    "method": "requests GET timeout=(5,18), one attempt",
+    "status": 429,
+    "final_url": "https://static-main.frdic.com/mediapool/6f3dddb6-1baf-11ee-80ea-005056866eda/data/jt/7ad34c36-fa9a-4c9f-8bc0-4ff2b6c76c64.htm?_=20230706115426946&share_desc=%E9%80%89%E6%8B%A9%E7%94%9F%E8%AF%8D%E6%9C%AC%E5%8D%95%E8%AF%8D%EF%BC%8C%E6%99%BA%E8%83%BD%E4%B8%B2%E8%81%94%E6%88%90%E7%9F%AD%E6%96%87&share_title=%F0%9F%93%9C%E3%80%8CAI%E7%9F%AD%E6%96%87%E5%8A%A9%E8%AE%B0%E3%80%8D%E5%8A%9F%E8%83%BD%E5%8D%87%E7%BA%A7&show_native_share=true",
+    "content_type": "text/html",
+    "result": "stopped route; no retry"
+  }
+]

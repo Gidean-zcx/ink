@@ -1,0 +1,14 @@
+Source: https://help.quizlet.com/hc/en-au/articles/360031249731-Helping-players-join-a-game-of-Classic-Quizlet-Live
+Retrieved: 2026-10-27
+Access: official Help text returned by public search extraction; not source HTML; HTTP status unavailable
+Title: Helping players join a game of Classic Quizlet Live
+Platforms shown: iOS, Web, Android
+
+Rule and flow extracted:
+- Browser/computer join: Quizlet Live page -> enter host-shared join code -> Join game -> enter name -> Next.
+- iOS/Android app join: log in -> Search -> Play Quizlet Live -> Join a game -> scan QR or enter code -> enter name -> Next.
+- The host starts after everyone has joined.
+- Teams-mode guidance suggests team members sit together; individuals mode may be used remotely.
+- The text says an account identified as teacher can start Classic Live, while this article's player path is join-focused.
+
+Not stated in the extracted official text: invalid/expired-code feedback; whether browser players must log in; leave/cancel/rejoin behavior; game-end feedback/results; score/history retention; subscription boundary.

@@ -1,0 +1,10 @@
+{
+  "checked_on": "2026-10-27",
+  "before_case_sha256": "931ac002c762be977d93c76b481761a065c6a2fc6a270df1936fa21539203dd1",
+  "json_jsonl_files_scanned": 110,
+  "records_scanned": 2536,
+  "references": [],
+  "migration_required": false,
+  "proposed_action": "No legacy E migration needed: no case/audit/hash dependency found; do not change old E. Future audit references should point to immutable source-notes or raw/archive artifacts, not mutable case.",
+  "legacy_files_written": false
+}

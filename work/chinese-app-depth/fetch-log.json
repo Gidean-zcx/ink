@@ -1,0 +1,34 @@
+[
+  {
+    "path": "work/chinese-app-depth/xy-math-error.png",
+    "url": "https://image.woshipm.com/2025/05/09/50fe5bf4-2cec-11f0-9743-00163e09d72f.png",
+    "final_url": "https://image.woshipm.com/2025/05/09/50fe5bf4-2cec-11f0-9743-00163e09d72f.png",
+    "status": 200,
+    "bytes": 400580,
+    "sha256": "2be47889b74d6efa2b331464bf831ea970cbc17225eccfc1a6143bdfbe5cdff9"
+  },
+  {
+    "path": "work/chinese-app-depth/xy-dictation.png",
+    "url": "https://image.woshipm.com/2025/05/09/2e86c93e-2ced-11f0-adb9-00163e09d72f.png",
+    "final_url": "https://image.woshipm.com/2025/05/09/2e86c93e-2ced-11f0-adb9-00163e09d72f.png",
+    "status": 200,
+    "bytes": 555421,
+    "sha256": "8c9485a207dce3340613d6948537960d2cba37aad8ce4466551c48fc6327acbd"
+  },
+  {
+    "path": "work/chinese-app-depth/xy-speaking.png",
+    "url": "https://image.woshipm.com/2025/05/11/ec906474-2e61-11f0-b31e-00163e09d72f.png",
+    "final_url": "https://image.woshipm.com/2025/05/11/ec906474-2e61-11f0-b31e-00163e09d72f.png",
+    "status": 200,
+    "bytes": 719132,
+    "sha256": "263c336eb5a03a418dada21a1d28ef3a807117d4c251348a1822639f70666136"
+  },
+  {
+    "path": "work/chinese-app-depth/ireader-privacy.html",
+    "url": "https://ah2.ireader.com/fe3/zybook/other/statement/privacyagreement_detail.html",
+    "final_url": "https://ah2.ireader.com/fe3/zybook/other/statement/privacyagreement_detail.html",
+    "status": 200,
+    "bytes": 41151,
+    "sha256": "93d47df113271ae28e807eb354f45b3fac14e09a38dd0e7b79156a46c6226d1b"
+  }
+]

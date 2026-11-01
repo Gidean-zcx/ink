@@ -1,0 +1,13 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M045-07,M-045,设置显示与通知,D2,E-ESD-02;E-ESD-01;E-ESCD-01,机构指南Settings列显示/通知选项；HKU只见Settings底栏；历史通知/无障碍改进声明不证明菜单结果,字号档位、主题默认/跟随系统、通知权限与保存/跨重启状态,static_reference_only,false,cases/M-045-espresso.md,2026-10-27
+F-M046-05,M-046,地区和本地信息入口,D2,E-GND-02;E-GND-03;E-GRCD-09,地区主题按钮；本地手动搜索；覆盖不足补更大地区。地区可能同时改变偏向条配色，但可独立设颜色，不能混为内容过滤。,定位拒绝界面和实际生效,not_observed,false,cases/M-046-ground-news.md,2026-10-27
+F-M046-06,M-046,搜索事件并追踪 In Focus,D2,E-GND-01;E-GRCD-05;E-GRCD-06,标题/关键词/URL找覆盖，来源名找媒体页；In Focus持续更新事件。官方无静态可下载全来源清单，搜索未命中不代表来源永不支持。,检索穷尽/匹配失败提示、事件更新版本/终点、外链返回位置未核,not_observed,false,cases/M-046-ground-news.md,2026-10-27
+F-M046-07,M-046,取消主题关注,D2,E-GND-05,手机 iPad Web 路径；趋势栏不受控,立即重排和同步细节,not_observed,false,cases/M-046-ground-news.md,2026-10-26
+F-M046-08,M-046,减少主题与屏蔽媒体后回改,D2,E-GND-04;E-GND-06;E-GRCD-07,取消不保存，Manage Sources & Topics回改，App屏蔽反映到Web；Positive帮助把Show Me Less写作减少而非完全禁止，实际算法效果未测。,撤回按钮与恢复确认,not_observed,false,cases/M-046-ground-news.md,2026-10-27
+F-M046-09,M-046,建立有条件的专题流,D2,E-GND-07;E-GRCD-07,Web For You Custom Feeds→命名→任一包含/全部包含/任一排除→Confirm刷新。专页称Premium/Vantage，Positive页称Pro+，不统一套餐含义。,编辑/删除、空结果、当前移动是否上线及套餐措辞冲突未核,not_observed,false,cases/M-046-ground-news.md,2026-10-27
+F-M046-10,M-046,设置跨事件默认筛选,D2,E-GND-08;E-GND-09,Web 全局默认；移动付费墙开关,与单事件条件优先级,not_observed,false,cases/M-046-ground-news.md,2026-10-26
+F-M046-11,M-046,翻译与切换阅读视图,D2,E-GND-11;E-GND-12,单篇/自动翻译；External Browser,原文返回、译文保存、加载失败,not_observed,false,cases/M-046-ground-news.md,2026-10-26
+F-M046-12,M-046,收听或观看事件相关节目,D2,E-GND-13,外部平台与可用时间戳,外站权限、中断、返回与续播,not_observed,false,cases/M-046-ground-news.md,2026-10-26
+F-M046-13,M-046,开关每日新闻提醒,D2,E-GND-10,Android/iPhone 路径,精确静默、系统权限、成功反馈,not_observed,false,cases/M-046-ground-news.md,2026-10-26
+F-M046-15,M-046,检视个人信息范围,D1,E-GND-15;E-GND-16,Vantage Web；公开示例字段,真实个人入口、统计阈值、更新和下钻,not_observed,false,cases/M-046-ground-news.md,2026-10-26
+F-M046-16,M-046,辨别账号和渠道以恢复权益,D2,E-GND-17;E-GRCD-13;E-GRCD-15;E-GRCD-16,网站购买须回正确账户/原登录方法；绑定其他登录方式后仍属原账户，不是转移订阅。商店Restore In-App Purchase帮助警告会重启已取消订阅；网站购买用此入口可能持续加载。,恢复是否成功/完整保留未知；不能由邮箱域名推注册方式，不能把Restore当无副作用刷新,not_observed,false,cases/M-046-ground-news.md,2026-10-27

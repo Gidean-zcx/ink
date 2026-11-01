@@ -1,0 +1,393 @@
+Adding images to sets from the free gallery – Quizlet Help Center (https://help.quizlet.com/hc/en-us/articles/360029814512-Adding-images-to-sets-from-the-free-gallery)
+citeturn1090view0 [wordlim: 200] Crawled: today; Content type: text/html; Source: click({"ref_id":"turn1089view0","id":16}); Total lines: 89
+L0: 【0†iframe†www.googletagmanager.com】
+L1: 
+L2: 【1†Help center†quizlet.zendesk.com】
+L3: 
+L4: Topics
+L5: 
+L6: Popular Articles
+L7: 
+L8: 【2†Resending a confirmation message】 【3†Changing your username】 【4†Changing your password】 【5†Finding flashcard sets】 【6†Finding your teacher's class】 【7†Browser and device compatibility】
+L9: 
+L10: [Input][Input: Search]
+L11: 
+L12: 【8†Image】   【8†Username】
+L13: # Adding images to sets from the free gallery
+L14: 
+L15: 【8†IOS】 【8†Web】 【8†Android】
+L16: 
+L17: You can add images to the term and definition side of your flashcards with the free image gallery. Currently, you can only do this on the website and not on a mobile device.
+L18: 
+L19: If you'd like to upload your own images, you can do that with a subscription to 【9†Quizlet Plus†quizlet.com】 or 【10†Quizlet Plus for teachers†quizlet.com】 subscription. Find out more about 【11†uploading your own images】.
+L20: 
+L21: To add images
+L22:   1. 【12†Log in†quizlet.com】 to your account.
+L23:   2. Create a new set or open an existing set.
+L24:   3. Select 【13†Image: More_menu_-_iOS_-_Resized.png】 (more menu).
+L25:   4. Select 【14†Image: Edit_-_Resized.png】 (edit).
+L26:   5. Select 【15†Image: Image_-_Resized.png】  (image)
+L27:   6. Search for an image and select the Arrow.
+L28:   7. Click through the available images using the arrows.
+L29: If you see an image that is irrelevant, inappropriate, low quality, or that violates intellectual property rights, please report it by selecting Report image.
+L30:   8. Select an image to add it to your definition.
+L31: You can study the images you added from the set page, in activities, and in the Quizlet mobile apps.
+L32: 
+L33: To remove images
+L34: 
+L35:   1. Open the set.
+L36:   2. Select 【16†Image: Trash_-_Resized.png】 (trash can) on the image you want to remove.
+L37: 
+L38: Settings and options
+L39: 
+L40:   * Your images will be automatically resized to fit into your set.
+L41:   * Can't see the images you've added? Quizlet may be blocked on your network. 【17†Try these tips】 for a fix.
+L42:   * You can add one image to the term or definition side of a card.
+L43: Currently, you can only add gallery images to your sets on the website. Once you add images, you can study with those images on your mobile device.
+L44: 
+L45: Currently, you can only add gallery images to your sets on the website. Once you add images, you can study with those images on your mobile device.
+L46: ### Related Articles
+L47: 
+L48:   * 【18†Create flashcard sets directly in Claude】
+L49:   * 【19†Studying with Study Groups】
+L50:   * 【20†Creating study sets with Smart Assist】
+L51:   * 【21†Becoming a top creator on Quizlet】
+L52:   * 【22†Studying with Study Guides】
+L53:   * 【23†What are flashcard sets?】
+L54:   * 【24†Creating flashcard sets】
+L55:   * 【25†Adding images to sets from the free gallery】
+L56:   * 【26†Adding your own images to sets】
+L57:   * 【27†Recording custom audio】
+L58:   * 【28†See more】
+L59: ### Can't find what you're looking for?
+L60: 
+L61: 【29†Ask a question】
+L62: 
+L63: Was this article helpful?
+L64: 
+L65: [Button: Yes] [Button: No]
+L66: 
+L67: ##### About us
+L68: 
+L69: 【30†About Quizlet†quizlet.com】 【31†How Quizlet works†quizlet.com】 【32†Careers†quizlet.com】 【33†Advertise with us†quizlet.com】 【34†Get the app†quizlet.com】
+L70: ##### For students
+L71: 
+L72: 【35†Flashcards†quizlet.com】 【36†Test†quizlet.com】 【37†Learn†quizlet.com】 【38†Solutions†quizlet.com】 【39†Modern Learning Lab†quizlet.com】 【40†Quizlet Plus†quizlet.com】 【41†Study Guides†quizlet.com】 【42†Pomodoro timer†quizlet.com】
+L73: 
+L74: ##### For Teachers
+L75: 
+L76: 【43†Live†quizlet.com】 【44†Blog†quizlet.com】 【45†Be the Change†quizlet.com】 【46†Quizlet Plus for teachers†quizlet.com】
+L77: ##### Resources
+L78: 
+L79: 【47†Help center†quizlet.com】 【48†Sign up†quizlet.com】 【49†Honor code†quizlet.com】 【50†Community guidelines†quizlet.com】 【51†Accessibility statement†quizlet.com】 【52†Privacy†quizlet.com】 【53†Your Privacy/Cookies Choices†quizlet.com】 【54†Terms†quizlet.com】 【55†Ad and Cookie Policy†quizlet.com】 【56†Interest-Based Advertising†quizlet.com】 【57†Quizlet for Schools†quizlet.com】 【58†Parents†quizlet.com】
+L80: 
+L81: ##### Language
+L82: 
+L83: English (United States)
+L84: 
+L85: 【59†Image】 【60†Get the app†get.quizlet.com】
+L86: ##### Get the app
+L87: 
+L88: © Quizlet Inc.
+--------------------------------------------------------------------------------
+Adding your own images to sets – Quizlet Help Center (https://help.quizlet.com/hc/en-us/articles/360030154311-Adding-your-own-images-to-sets)
+citeturn1090view1 [wordlim: 200] Crawled: today; Content type: text/html; Source: click({"ref_id":"turn1089view0","id":17}); Total lines: 109
+L0: 【0†iframe†www.googletagmanager.com】
+L1: 
+L2: 【1†Help center†quizlet.zendesk.com】
+L3: 
+L4: Topics
+L5: 
+L6: Popular Articles
+L7: 
+L8: 【2†Resending a confirmation message】 【3†Changing your username】 【4†Changing your password】 【5†Finding flashcard sets】 【6†Finding your teacher's class】 【7†Browser and device compatibility】
+L9: 
+L10: [Input][Input: Search]
+L11: 
+L12: 【8†Image】   【8†Username】
+L13: # Adding your own images to sets
+L14: 
+L15: 【8†IOS】 【8†Web】 【8†Android】
+L16: 
+L17: You can add images to the term and definition side of your flashcards if you are subscribed to 【9†Quizlet Plus†quizlet.com】 or 【10†Quizlet Plus for teachers†quizlet.com】 subscription.*
+L18: 
+L19: You can also 【11†add images from the free image gallery】.
+L20: 
+L21: To upload your images
+L22:   1. 【12†Log in†quizlet.com】 to your account.
+L23:   2. 【13†Create a new set】 or open an existing set.
+L24:   3. Select 【14†Image: Edit_-_Resized.png】 (edit).
+L25:   4. Select 【15†Image: Image_-_Resized.png】 (image)
+L26:   5. Select Upload your own image.
+L27:   6. Select the image to upload from your computer.
+L28: You can upload a JPG, GIF, or PNG up to 3MB.
+L29:   7. Select Open.
+L30: 
+L31: Settings and options
+L32:   * Your images will be automatically resized to fit into your set.
+L33:   * You can add one image to the term or definition side of a card.
+L34: 
+L35: Tips
+L36: 
+L37: You can also drag and drop or copy and paste images into the definition box.
+L38: 
+L39: *If you’re under the required age, you are unable to upload your own images until you reach your region’s age of consent. Find out more about 【16†younger users’ account limitations】.
+L40:   1. 【13†Create a new set】 or open an existing set.
+L41:   2. Select 【17†Image: More_menu_-_iOS_-_Resized.png】 (More menu).
+L42:   3. Choose Edit set.
+L43:   4. Tap the card you'd like to add an image to.
+L44:   5. Select 【15†Image: Image_-_Resized.png】 (image).
+L45:   6. Take a new photo or select one from your camera's library.
+L46: You can upload a JPG, GIF, or PNG up to 3MB.
+L47:   7. Select Done to save.
+L48: 
+L49: Settings and options
+L50:   * Your images will be automatically resized to fit into your set.
+L51:   * You can add one image to the definition side of a card. You can't currently add an image to the term side of a card, but if you want to study the image before the text, you can add images to the definition sides and then study the cards definition-first in any activity.
+L52: *If you’re under the required age, you are unable to upload your own images until you reach your region’s age of consent. Find out more about 【16†younger users’ account limitations】.
+L53:   1. 【13†Create a new set】 or open an existing set.
+L54:   2. Select【18†Image: More_menu_-_Android_-_Resized.png】 (More menu).
+L55:   3. Choose Edit.
+L56:   4. Tap the card you'd like to add an image to.
+L57:   5. Select 【19†Image: Camera_-_Resized.png】 (camera).
+L58:   6. Take a new photo or select one from your camera's library.
+L59: You can upload a JPG, GIF, or PNG up to 3MB.
+L60:   7. Select the Check mark to save.
+L61: 
+L62: Settings and options
+L63:   * Your images will be automatically resized to fit into your set.
+L64:   * You can add one image to the definition side of a card. You can't currently add an image to the term side of a card, but if you want to study the image before the text, you can add images to the definition sides and then study the cards definition-first in any activity.
+L65: *If you’re under the required age, you are unable to upload your own images until you reach your region’s age of consent. Find out more about 【16†younger users’ account limitations】.
+L66: ### Related Articles
+L67: 
+L68:   * 【20†Create flashcard sets directly in Claude】
+L69:   * 【21†Studying with Study Groups】
+L70:   * 【22†Creating study sets with Smart Assist】
+L71:   * 【23†Becoming a top creator on Quizlet】
+L72:   * 【24†Studying with Study Guides】
+L73:   * 【25†What are flashcard sets?】
+L74:   * 【26†Creating flashcard sets】
+L75:   * 【27†Adding images to sets from the free gallery】
+L76:   * 【28†Adding your own images to sets】
+L77:   * 【29†Recording custom audio】
+L78:   * 【30†See more】
+L79: ### Can't find what you're looking for?
+L80: 
+L81: 【31†Ask a question】
+L82: 
+L83: Was this article helpful?
+L84: 
+L85: [Button: Yes] [Button: No]
+L86: 
+L87: ##### About us
+L88: 
+L89: 【32†About Quizlet†quizlet.com】 【33†How Quizlet works†quizlet.com】 【34†Careers†quizlet.com】 【35†Advertise with us†quizlet.com】 【36†Get the app†quizlet.com】
+L90: ##### For students
+L91: 
+L92: 【37†Flashcards†quizlet.com】 【38†Test†quizlet.com】 【39†Learn†quizlet.com】 【40†Solutions†quizlet.com】 【41†Modern Learning Lab†quizlet.com】 【42†Quizlet Plus†quizlet.com】 【43†Study Guides†quizlet.com】 【44†Pomodoro timer†quizlet.com】
+L93: 
+L94: ##### For Teachers
+L95: 
+L96: 【45†Live†quizlet.com】 【46†Blog†quizlet.com】 【47†Be the Change†quizlet.com】 【48†Quizlet Plus for teachers†quizlet.com】
+L97: ##### Resources
+L98: 
+L99: 【49†Help center†quizlet.com】 【50†Sign up†quizlet.com】 【51†Honor code†quizlet.com】 【52†Community guidelines†quizlet.com】 【53†Accessibility statement†quizlet.com】 【54†Privacy†quizlet.com】 【55†Your Privacy/Cookies Choices†quizlet.com】 【56†Terms†quizlet.com】 【57†Ad and Cookie Policy†quizlet.com】 【58†Interest-Based Advertising†quizlet.com】 【59†Quizlet for Schools†quizlet.com】 【60†Parents†quizlet.com】
+L100: 
+L101: ##### Language
+L102: 
+L103: English (United States)
+L104: 
+L105: 【61†Image】 【62†Get the app†get.quizlet.com】
+L106: ##### Get the app
+L107: 
+L108: © Quizlet Inc.
+--------------------------------------------------------------------------------
+Recording custom audio – Quizlet Help Center (https://help.quizlet.com/hc/en-us/articles/360029769792-Recording-custom-audio)
+citeturn1090view2 [wordlim: 200] Crawled: today; Content type: text/html; Source: click({"ref_id":"turn1089view0","id":18}); Total lines: 91
+L0: 【0†iframe†www.googletagmanager.com】
+L1: 
+L2: 【1†Help center†quizlet.zendesk.com】
+L3: 
+L4: Topics
+L5: 
+L6: Popular Articles
+L7: 
+L8: 【2†Resending a confirmation message】 【3†Changing your username】 【4†Changing your password】 【5†Finding flashcard sets】 【6†Finding your teacher's class】 【7†Browser and device compatibility】
+L9: 
+L10: [Input][Input: Search]
+L11: 
+L12: 【8†Image】   【8†Username】
+L13: # Recording custom audio
+L14: 
+L15: 【8†IOS】 【8†Web】 【8†Android】
+L16: 
+L17: If you have a 【9†Quizlet Plus†quizlet.com】 or 【10†Quizlet Plus for teachers†quizlet.com】 subscription, you can add custom audio recordings to your sets on the website.*
+L18: 
+L19: To record
+L20:   1. 【11†Log in†quizlet.com】 to your account.
+L21:   2. Create a new set or open an existing one.
+L22:   3. Select 【12†Image: More_menu_-_iOS_-_Resized.png】 (more menu).
+L23:   4. Select 【13†Image: Edit_-_Resized.png】 (edit).
+L24:   5. Click into the text field and select 【14†Image: Microphone_-_Resized.png】 (microphone).
+L25: If your browser prompts you to grant Quizlet access to your computer's microphone, select Allow.
+L26:   6. Hold the spacebar on your keyboard to start recording.
+L27:   7. Release the spacebar when you're done to save and play back your recording.
+L28:   8. Select Play to hear the recording again, or hold the spacebar to record a new version.
+L29:   9. To delete your recording, select 【15†Image: Trash_-_Resized.png】 (trash can).
+L30:   10. Select Create to save a new set or Done to save an existing set.
+L31: Still can't record? Try these tips to 【16†troubleshoot custom audio recording】.
+L32: 
+L33: Settings and options
+L34: 
+L35: Select Switch to definition or Switch to term to add audio to the other side of the same card.
+L36: 
+L37: Tips
+L38: 
+L39: For the best recording experience, it's best to use the latest version of Google Chrome.
+L40: 
+L41: *If you’re under the required age, you are unable to record your own audio until you reach your region’s age of consent. Find out more about 【17†younger users’ account limitations】.
+L42: Recording custom audio is currently only available on the website. Once you record your audio there, you can listen to it and study with it on your mobile device.
+L43: 
+L44: If you’re under the required age, you are unable to record your own audio until you reach your region’s age of consent. Find out more about 【17†younger users’ account limitations】.
+L45: 
+L46: Recording custom audio is currently only available on the website. Once you record your audio there, you can listen to it and study with it on your mobile device.
+L47: If you’re under the required age, you are unable to record your own audio until you reach your region’s age of consent. Find out more about 【17†younger users’ account limitations】.
+L48: ### Related Articles
+L49: 
+L50:   * 【18†Create flashcard sets directly in Claude】
+L51:   * 【19†Studying with Study Groups】
+L52:   * 【20†Creating study sets with Smart Assist】
+L53:   * 【21†Becoming a top creator on Quizlet】
+L54:   * 【22†Studying with Study Guides】
+L55:   * 【23†What are flashcard sets?】
+L56:   * 【24†Creating flashcard sets】
+L57:   * 【25†Adding images to sets from the free gallery】
+L58:   * 【26†Adding your own images to sets】
+L59:   * 【27†Recording custom audio】
+L60:   * 【28†See more】
+L61: ### Can't find what you're looking for?
+L62: 
+L63: 【29†Ask a question】
+L64: 
+L65: Was this article helpful?
+L66: 
+L67: [Button: Yes] [Button: No]
+L68: 
+L69: ##### About us
+L70: 
+L71: 【30†About Quizlet†quizlet.com】 【31†How Quizlet works†quizlet.com】 【32†Careers†quizlet.com】 【33†Advertise with us†quizlet.com】 【34†Get the app†quizlet.com】
+L72: ##### For students
+L73: 
+L74: 【35†Flashcards†quizlet.com】 【36†Test†quizlet.com】 【37†Learn†quizlet.com】 【38†Solutions†quizlet.com】 【39†Modern Learning Lab†quizlet.com】 【40†Quizlet Plus†quizlet.com】 【41†Study Guides†quizlet.com】 【42†Pomodoro timer†quizlet.com】
+L75: 
+L76: ##### For Teachers
+L77: 
+L78: 【43†Live†quizlet.com】 【44†Blog†quizlet.com】 【45†Be the Change†quizlet.com】 【46†Quizlet Plus for teachers†quizlet.com】
+L79: ##### Resources
+L80: 
+L81: 【47†Help center†quizlet.com】 【48†Sign up†quizlet.com】 【49†Honor code†quizlet.com】 【50†Community guidelines†quizlet.com】 【51†Accessibility statement†quizlet.com】 【52†Privacy†quizlet.com】 【53†Your Privacy/Cookies Choices†quizlet.com】 【54†Terms†quizlet.com】 【55†Ad and Cookie Policy†quizlet.com】 【56†Interest-Based Advertising†quizlet.com】 【57†Quizlet for Schools†quizlet.com】 【58†Parents†quizlet.com】
+L82: 
+L83: ##### Language
+L84: 
+L85: English (United States)
+L86: 
+L87: 【59†Image】 【60†Get the app†get.quizlet.com】
+L88: ##### Get the app
+L89: 
+L90: © Quizlet Inc.
+--------------------------------------------------------------------------------
+Creating diagram sets – Quizlet Help Center (https://help.quizlet.com/hc/en-us/articles/360029631292-Creating-diagram-sets)
+citeturn1090view3 [wordlim: 200] Crawled: today; Content type: text/html; Source: click({"ref_id":"turn1089view0","id":21}); Total lines: 92
+L0: 【0†iframe†www.googletagmanager.com】
+L1: 
+L2: 【1†Help center†quizlet.zendesk.com】
+L3: 
+L4: Topics
+L5: 
+L6: Popular Articles
+L7: 
+L8: 【2†Resending a confirmation message】 【3†Changing your username】 【4†Changing your password】 【5†Finding flashcard sets】 【6†Finding your teacher's class】 【7†Browser and device compatibility】
+L9: 
+L10: [Input][Input: Search]
+L11: 
+L12: 【8†Image】   【8†Username】
+L13: # Creating diagram sets
+L14: 
+L15: 【8†IOS】 【8†Web】 【8†Android】
+L16: 
+L17: Diagram sets include an image labeled with terms and optional definitions. These sets can help you study parts of an image, map, or diagram. Each diagram set is based on one image.
+L18: 
+L19: Diagram sets are available for 【9†Quizlet Plus†quizlet.com】 and 【10†Quizlet Plus for teachers†quizlet.com】 subscribers.
+L20: 
+L21: To create a diagram set
+L22:   1. 【11†Log in†quizlet.com】 to your account.
+L23:   2. Select Create.
+L24:   3. Select Flashcard set.
+L25:   4. Select Create them yourself.
+L26:   5. Select Add diagram.
+L27:   6. Select an image to upload.
+L28: You can upload one JPG, GIF, PNG, TIFF, or MBP image up to 3MB in size.
+L29:   7. Choose a location on your diagram, and click to add a point.
+L30:   8. Enter a term and definition for your point.
+L31: Definitions are optional and can be helpful.
+L32:   9. Select Add to save that point on your image.
+L33:   10. Once you've added all the points you need, click Create to save your diagram and terms.
+L34: You must add at least two points to save.
+L35: Settings and options
+L36: 
+L37: You can blur text by selecting 【12†Image: Edit_-_Resized.png】 (edit) to the right of the image and then selecting the Blur icon on the left. Click and drag over text to blur it.
+L38: 
+L39: Tips
+L40: 
+L41:   * Currently, you can add one diagram image per set.
+L42:   * Remove points by selecting the point and selecting 【13†Image: More_menu_-_iOS_-_Resized.png】 (more menu). Then, select Remove from diagram.
+L43: Currently, you can only create diagram sets on the website. Once you create a diagram set there, you can study it from your iOS app using Learn, Flashcards, Write, Match, or Test mode!
+L44: 
+L45: Diagram sets are available for 【9†Quizlet Plus†quizlet.com】 and 【10†Quizlet Plus for teachers†quizlet.com】 subscribers.
+L46: 
+L47: Currently, you can only create diagram sets on the website. Once you create a diagram set there, you can study it from your Android app using Learn, Flashcards, Write, Match, or Test mode!
+L48: Diagram sets are available for 【9†Quizlet Plus†quizlet.com】 and 【10†Quizlet Plus for teachers†quizlet.com】 subscribers.
+L49: ### Related Articles
+L50: 
+L51:   * 【14†Create flashcard sets directly in Claude】
+L52:   * 【15†Studying with Study Groups】
+L53:   * 【16†Creating study sets with Smart Assist】
+L54:   * 【17†Becoming a top creator on Quizlet】
+L55:   * 【18†Studying with Study Guides】
+L56:   * 【19†What are flashcard sets?】
+L57:   * 【20†Creating flashcard sets】
+L58:   * 【21†Adding images to sets from the free gallery】
+L59:   * 【22†Adding your own images to sets】
+L60:   * 【23†Recording custom audio】
+L61:   * 【24†See more】
+L62: ### Can't find what you're looking for?
+L63: 
+L64: 【25†Ask a question】
+L65: 
+L66: Was this article helpful?
+L67: 
+L68: [Button: Yes] [Button: No]
+L69: 
+L70: ##### About us
+L71: 
+L72: 【26†About Quizlet†quizlet.com】 【27†How Quizlet works†quizlet.com】 【28†Careers†quizlet.com】 【29†Advertise with us†quizlet.com】 【30†Get the app†quizlet.com】
+L73: ##### For students
+L74: 
+L75: 【31†Flashcards†quizlet.com】 【32†Test†quizlet.com】 【33†Learn†quizlet.com】 【34†Solutions†quizlet.com】 【35†Modern Learning Lab†quizlet.com】 【36†Quizlet Plus†quizlet.com】 【37†Study Guides†quizlet.com】 【38†Pomodoro timer†quizlet.com】
+L76: 
+L77: ##### For Teachers
+L78: 
+L79: 【39†Live†quizlet.com】 【40†Blog†quizlet.com】 【41†Be the Change†quizlet.com】 【42†Quizlet Plus for teachers†quizlet.com】
+L80: ##### Resources
+L81: 
+L82: 【43†Help center†quizlet.com】 【44†Sign up†quizlet.com】 【45†Honor code†quizlet.com】 【46†Community guidelines†quizlet.com】 【47†Accessibility statement†quizlet.com】 【48†Privacy†quizlet.com】 【49†Your Privacy/Cookies Choices†quizlet.com】 【50†Terms†quizlet.com】 【51†Ad and Cookie Policy†quizlet.com】 【52†Interest-Based Advertising†quizlet.com】 【53†Quizlet for Schools†quizlet.com】 【54†Parents†quizlet.com】
+L83: 
+L84: ##### Language
+L85: 
+L86: English (United States)
+L87: 
+L88: 【55†Image】 【56†Get the app†get.quizlet.com】
+L89: ##### Get the app
+L90: 
+L91: © Quizlet Inc.
+

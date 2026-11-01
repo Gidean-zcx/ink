@@ -1,0 +1,337 @@
+Handwriting Recognition - Supernote
+English (US)
+Japanese
+English (US)
+繁體中文
+简体中文
+Support Home
+Contact Us
+English (US)
+Japanese
+English (US)
+繁體中文
+简体中文
+Home
+Tools & Features
+Handwriting Recognition
+Learn how to use handwriting recognition to quickly transform handwriting into digital text.
+Written by
+James Huang
+Updated at February 9th, 2026
+Contact Us
+If you still have questions or prefer to get help directly from an agent, please submit a request.
+We’ll get back to you as soon as possible.
+Please fill out the contact form below and we will reply as soon as possible.
+title="ReCAPTCHA"
+Getting Started
+Tools & Features
+Organizing & Managing
+Workflow Cases
+What's New
+FAQ
+My Order
+Hardware & Repair
+Changelog
++ More
+Table of Contents
+Handwriting recognition in notes
+Create a real-time recognition note
+View recognition results
+Export recognition results
+Important notes on how handwriting recognition works
+Handwriting recognition in Word
+How to use handwriting recognition in Word?
+Languages supported for handwriting recognition
+Supernote's handwriting recognition feature is an efficiency and productivity booster. It lets you focus on writing your thoughts without the need to worry about retyping them for reviewing or sharing later.
+Handwriting recognition in notes
+With the release of
+Chauvet 2.7.21
+, we've added the ability to convert handwriting to text in notes.
+To effectively use the handwriting recognition feature in notes, follow the steps below:
+Create a real-time recognition note
+Tap
+New Note
+in the sidebar menu.
+Select
+Real-Time Recognition
+as the type of the new note you are creating.
+If needed, switch to a different handwriting recognition language by tapping the underlined language.(It cannot be changed after the real-time recognition note is created.)
+Write words and the system will recognize them in the background concurrently.
+View recognition results
+Tap
+to view the
+Recognition Results
+.
+If you are not satisfied with the recognition accuracy, tap the
+Re-recognize
+button.
+Tap the
+Queue icon
+to check the recognition progress when you've written multiple pages of notes.
+Export recognition results
+Tap
+on the Recognition Results page.
+Select the export format:
+TXT
+or
+DOCX
+.
+Note:
+In standard notes, you can also tap the
+Export
+icon
+on the toolbar and select
+TXT
+or
+DOCX
+to have them recognized and exported.
+Important notes on how handwriting recognition works
+The button
+on the toolbar: This button is intended solely for switching to handwriting recognition result view mode. It's not meant to trigger handwriting recognition. Once you tap this button, you can expect to see one of these three results:
+You will see the recognized typed text if the handwriting recognition is completed.
+You will see the recognition status shown as “Recognizing” if the handwriting recognition is still in progress.
+You will be prompted to try handwriting more if you handwrote nothing or too few content.
+Queue: Tapping the Queue button will allow you to see the status of the recognition in the current note file. It will be helpful when you've handwritten multiple pages of notes and want to check how things are.
+Background recognition: The current note file must remain open for the background recognition to be triggered. Background recognition will start 30 seconds after the last touch or writing action. Any writing or other actions during background processing will pause the recognition.
+Handwriting search: Only handwriting that has been recognized and converted correctly to digitized text can be searched.
+The Re-recognized button: it will come handy when you are not completely satisfied with the recognition result of the current note page you are on. Tapping it will re-recognize the handwritten notes on this page.
+Handwriting recognition in Word
+The handwriting recognition feature was initially only available in Word documents. It's easy to use with good recognition accuracy and speed. For users who believe the pen is mightier than the keyboard, it comes really handy and delivers a solid writing experience.
+How to use handwriting recognition in Word?
+Tap
+Files
+in the sidebar menu.
+Open a folder you want to store the Word document in.
+Tap the
+New Word
+icon.
+Select the
+handwriting mode
+and start writing words.
+Tap the handwriting recognition icon to have the words converted to typed text.
+Languages supported for handwriting recognition
+English Name
+Native Name
+Language Abbreviation
+Afrikaans
+Afrikaans
+af_ZA
+Albanian
+Shqip
+sq_AL
+Armenian
+Հայերէն
+hy_AM
+Azeri
+Azərbaycan dili
+az_AZ
+Basque
+Euskara
+eu_ES
+Belarusian
+беларуская
+be_BY
+Bosnian
+Bosanski
+bs_BA
+Bulgarian
+български
+bg_BG
+Catalan
+Català
+ca_ES
+Cebuano (Philippines)
+Binisaya
+ceb_PH
+Chinese (Hong Kong)
+繁体中文（香港)
+zh_HK
+Chinese (Simplified)
+简体中文
+zh_CN
+Chinese (Taiwan)
+繁体中文（台湾）
+zh_TW
+Croatian
+Hrvatski
+hr_HR
+Czech
+Čeština
+cs_CZ
+Danish
+Dansk
+da_DK
+Dutch (Belgium)
+Nederlands（België）
+nl_BE
+Dutch (Netherlands)
+Nederlands（Nederland）
+nl_NL
+English (Canada)
+English (Canada)
+en_CA
+English (Philippines)
+English (Philippines)
+en_PH
+English (South Africa)
+English (South Africa)
+en_ZA
+English (United Kingdom)
+English (United Kingdom)
+en_GB
+English (United States)
+English (United States)
+en_US
+Estonian
+Eesti
+et_EE
+Filipino (Philippines)
+Filipino (Pilipinas)
+fil_PH
+Finnish
+Suomi
+fi_FI
+French (Canada)
+Français (Canada)
+fr_CA
+French (France)
+Français (France)
+fr_FR
+Galician
+Galego
+gl_ES
+Georgian
+ქართული
+ka_GE
+German (Austria)
+Deutsch (Österreich)
+de_AT
+German (Germany)
+Deutsch (Deutschland)
+de_DE
+Greek
+Ελληνικά
+el_GR
+Hungarian
+Magyar
+hu_HU
+Icelandic
+íslenska
+is_IS
+Indonesian
+Bahasa Indonesia
+id_ID
+Irish
+Gaeilge
+ga_IE
+Italian
+Italiano
+it_IT
+Japanese
+日本語
+ja_JP
+Kazakh
+қазақ тілі
+kk_KZ
+Korean
+한국어
+ko_KR
+Latvian
+Latviešu
+lv_LV
+Lithuanian
+Lietuvių
+lt_LT
+Macedonian
+Mакедонски
+mk_MK
+Malagasy (Madagascar)
+Malagasy (Madagasikara)
+mg_MG
+Malay
+Bahasa Melayu
+ms_MY
+Mongolian
+Mонгол
+mn_MN
+Norwegian
+Norsk
+no_NO
+Polish
+Polski
+pl_PL
+Portuguese (Brazil)
+Português (Brasil)
+pt_BR
+Portuguese (Portugal)
+Português (Portugal)
+pt_PT
+Romanian
+Română
+ro_RO
+Russian
+Русский
+ru_RU
+Serbian (Cyrillic)
+Cрпски (ћирилица)
+sr_Cyrl_RS
+Serbian (Latin)
+Cрпски (латиница)
+sr_Latn_RS
+Slovak
+Slovenčina
+sk_SK
+Slovenian
+Slovenščina
+sl_SI
+Spanish (Colombia)
+Español (Colombia)
+es_CO
+Spanish (Mexico)
+Español (México)
+es_MX
+Spanish (Spain)
+Español (España)
+es_ES
+Swahili (Tanzania)
+Kiswahili (Tanzania)
+sw_TZ
+Swedish
+Svenska
+sv_SE
+Tatar
+Tatarça
+tt_RU
+Turkish
+Türkçe
+tr_TR
+Ukrainian
+Українська
+uk_UA
+Vietnamese
+Tiếng Việt
+vi_VN
+inputting
+penmanship
+decoding
+recognition
+script
+handwriting recognition
+typed text
+handwriting conversion
+supernote a6 x2 nomad
+supernote a5 x
+supernote a6 x
+Was this article helpful?
+Yes
+No
+Give feedback about this article
+Related Articles
+Screen Mirroring
+Supernote Cloud
+Two-Finger Gesture Eraser/Lasso
+EPUB and PDF Documents
+Copyright © 2026 Ratta Supernote
+Knowledge Base Software powered by Helpjuice
+Close
+Expand

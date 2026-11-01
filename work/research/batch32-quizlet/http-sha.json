@@ -1,0 +1,36 @@
+[
+  {
+    "path": "work/research/batch32-quizlet/raw/blast.txt",
+    "sha256": "b7c48b3c383b36c8e9cbf3ddea5a436cab44ae5d36cb5d72fd57aeef902a7067",
+    "bytes": 1277,
+    "capture": "public_search_extracted_official_help_text",
+    "http_status": null
+  },
+  {
+    "path": "work/research/batch32-quizlet/raw/blocks.txt",
+    "sha256": "99683c1cdf448304b2857336d278ba0aee107c82cd6da3de017b4825def7fee3",
+    "bytes": 1120,
+    "capture": "public_search_extracted_official_help_text",
+    "http_status": null
+  },
+  {
+    "path": "work/research/batch32-quizlet/raw/classic-live-join.txt",
+    "sha256": "0d13950458a0c29af7f711b8848c5d6c6de4fb9e6fa0afaf28c3972afdf2ff20",
+    "bytes": 1081,
+    "capture": "public_search_extracted_official_help_text",
+    "http_status": null
+  },
+  {
+    "path": "work/research/batch32-quizlet/raw/match.txt",
+    "sha256": "2646eed4267d66cf2642a691bbbc2b1c64cfc34049891edf72e3869bab1e924f",
+    "bytes": 966,
+    "capture": "public_search_extracted_official_help_text",
+    "http_status": null
+  },
+  {
+    "path": "work/quizlet-controls-deepening/fetch-probe.json",
+    "sha256": "cc330f85e58081c8ac0b4334077cd144d4b26adf83bd43ba838c38285f668e92",
+    "bytes": 321,
+    "capture": "prior ordinary GET probe; route already stopped after HTTP 403"
+  }
+]

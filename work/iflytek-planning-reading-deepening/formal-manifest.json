@@ -1,0 +1,327 @@
+[
+  {
+    "path": "docs/research/interaction-library/artifacts/boox-reading-controls-deepening/epub-more-settings.png",
+    "bytes": 1144355,
+    "sha256": "bd070475b2dce000ea5c15535470b922513698b50afbed7391132098444a919c"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/boox-reading-controls-deepening/library-scan.jpg",
+    "bytes": 363781,
+    "sha256": "ca5a1051603cde55ef83b70150598f8a55e0240f3853142df6674a562c329ae3"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/boox-reading-controls-deepening/notes-layers.png",
+    "bytes": 494599,
+    "sha256": "964f0841729cd1dd9de8c729de6c981b795ff42a9ee3dec92ef8aacdc8c84e9a"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/boox-reading-controls-deepening/notes-page-manager.png",
+    "bytes": 1199680,
+    "sha256": "089285229033c6d565e943bd546493cc136fe02ee23b471e93d5c23c26114d09"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/boox-reading-controls-deepening/observed-images.json",
+    "bytes": 2836,
+    "sha256": "7556c73adfab72070820f947a87b9dd09ce7ef7743505ac230fbe3fad15ad8c1"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/boox-reading-controls-deepening/source-notes.md",
+    "bytes": 4927,
+    "sha256": "49d6ffbbb7edc9937b3d66b5941d2a95eb47fb72d514071fe3ded09a13bf2dbe"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/iflytek-planning-reading-deepening/02-t30pro-directory.json",
+    "bytes": 1178,
+    "sha256": "4cab13424e2f281e1afba19e757a40635f559b0bb472c98288237e4fcd05df8a"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/iflytek-planning-reading-deepening/02-t30pro-directory.png",
+    "bytes": 197459,
+    "sha256": "d370ec872f4012f2870650c3570335f5c63611c284ca91190d3cc71d0376e8ec"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/iflytek-planning-reading-deepening/commands.json",
+    "bytes": 1665,
+    "sha256": "b0ec66bf1d0aaae42e3e13f016d6f012608f704d408fffd4acfbaebcc0fdc7c1"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/iflytek-planning-reading-deepening/network-events.json",
+    "bytes": 22463,
+    "sha256": "cc8a62b2e8af0275f753a764f5f1b222b27b9daa158eb104fe761fda4a15f907"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/iflytek-planning-reading-deepening/source-notes.md",
+    "bytes": 9194,
+    "sha256": "5cebc6b696f39b969b919d8d36dc637022cfd6195e64e238754ebd49f7fbb650"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/iflytek-planning-reading-deepening/video-01-040.00s.png",
+    "bytes": 441599,
+    "sha256": "926ecba80e8cc08f0f6fb92b57180a74200ee1a71cbd7565e2cb779d37dd4e65"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/iflytek-planning-reading-deepening/video-01-055.00s.png",
+    "bytes": 208893,
+    "sha256": "5d27e2232b15bdba94134b9a27f6187493a8edf8d6a7f150fb4e6de3e4e4d9bf"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/iflytek-planning-reading-deepening/video-01-060.00s.png",
+    "bytes": 524571,
+    "sha256": "fe513a391b94ac8023bcc2160490b6cd0ae4981c06fc48b6442b1d53cf1b7d84"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/iflytek-planning-reading-deepening/video-01-070.00s.png",
+    "bytes": 507502,
+    "sha256": "64d2b7a18757f168fc2b7e144c91d8724800d24bf38720f5a008de1359cdc8bd"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/iflytek-planning-reading-deepening/video-01-075.00s.png",
+    "bytes": 330654,
+    "sha256": "5860763fe8c558ac0ed27cfffcc911860aa4c07148ce80f126b3610e08b0d028"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/iflytek-planning-reading-deepening/video-01-085.00s.png",
+    "bytes": 525456,
+    "sha256": "667a037c9d9e546ca502d435bd7a124261ecf0fc1e9b15fae9e6fe5076477dfd"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/iflytek-planning-reading-deepening/video-01-100.00s.png",
+    "bytes": 351334,
+    "sha256": "77bd867bcde095625aebb3704acebfd2ccf5e19159743996f5d33ba008dbbe17"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/iflytek-planning-reading-deepening/video-01-115.00s.png",
+    "bytes": 882783,
+    "sha256": "d1a0f4eeb89cf04d2bff0aae7cb11d5460f91f77804734aabd2ee6b13da35df1"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/iflytek-planning-reading-deepening/video-01-130.00s.png",
+    "bytes": 339869,
+    "sha256": "3b9c18037926d0bba561f8d7f8ea65a085b5488b900a0eb73fe9027ca93c5755"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/iflytek-planning-reading-deepening/video-01-145.00s.png",
+    "bytes": 397715,
+    "sha256": "14c18cde569a4f2788324277c20ac09bb8d4bee496f3ecc4204f501b3fbb546d"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/iflytek-planning-reading-deepening/video-01-175.00s.png",
+    "bytes": 619082,
+    "sha256": "19f4f954a3073aa614a981f8f76ddfbe72ac91a27b07a9772d593c74c489aaae"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/iflytek-planning-reading-deepening/video-01-200.00s.png",
+    "bytes": 531823,
+    "sha256": "3dcd6c07ac89dbc8116574b7bbaba07f6720c00fbb0bae8bc70430fce03a9878"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/iflytek-planning-reading-deepening/video-02-055.00s.png",
+    "bytes": 999891,
+    "sha256": "cd232d42af17a4bc2bb8962485be8b93e0d4b295a349233a0537068d73bf8155"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/iflytek-planning-reading-deepening/video-02-075.00s.png",
+    "bytes": 327304,
+    "sha256": "6bf2d278f92e996910c316a649bb91918f4dba049772056c79500434bec7c0d4"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/iflytek-planning-reading-deepening/video-02-085.00s.png",
+    "bytes": 248201,
+    "sha256": "d1898dcbad391a2857f2c1a7d4c39a601aa03605c1daf81578a9a2979b48d33d"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/iflytek-planning-reading-deepening/video-02-100.00s.png",
+    "bytes": 209308,
+    "sha256": "2841db8e9d1cdb61597468ca6c96e0e556651ae53075679ad864eeb7244a76e6"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/iflytek-planning-reading-deepening/video-02-115.00s.png",
+    "bytes": 377770,
+    "sha256": "6bf84f6c3da6b577ee3639689065fdbdf2b96ca90282367a2288ce98307bedc5"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/iflytek-planning-reading-deepening/video-02-120.00s.png",
+    "bytes": 237685,
+    "sha256": "9c72fdeabae131ab0b800fd75c43a09ca8462992ada75afbdb9da100cb5e26ed"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/iflytek-planning-reading-deepening/video-02-130.00s.png",
+    "bytes": 197323,
+    "sha256": "b84137fcb988616b5299318336072acb083535fc85486abba2438c68d8b2b38e"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/iflytek-planning-reading-deepening/video-02-135.00s.png",
+    "bytes": 335184,
+    "sha256": "5dac6de590e717ebfb7e2845124799a0189be8845362d0e0d932c51401345c02"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/iflytek-planning-reading-deepening/video-03-025.00s.png",
+    "bytes": 427104,
+    "sha256": "3dc8786a5db9abca392b7b22a93cdb6a63d5e2b14921acc303d08c0fb054d3ff"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/iflytek-planning-reading-deepening/video-03-055.00s.png",
+    "bytes": 382630,
+    "sha256": "d9b2dadfaf06bd2c1e6fc56bbd58208662189f624fed5c0e3f567ed75b0b70c5"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/iflytek-planning-reading-deepening/video-03-065.00s.png",
+    "bytes": 294739,
+    "sha256": "997c85d7b4feef56006f2f7461a44e85fb74dc77a620e23669ba5e2389d70509"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/iflytek-planning-reading-deepening/video-03-076.00s.png",
+    "bytes": 256358,
+    "sha256": "49237008cb8f6fe6eee4c176931b00fac899fe7edbd2290819a97a4604f92d53"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/iflytek-planning-reading-deepening/video-03-090.00s.png",
+    "bytes": 178807,
+    "sha256": "7d258f445b8cea32fd0b5def465bc19f39565dc769063e147bc8252c1a058ec4"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/iflytek-planning-reading-deepening/video-03-100.00s.png",
+    "bytes": 372544,
+    "sha256": "d97627c5089be02e9c4670a8f59b76ada200689cc36c884dc3fca3e504c0cae9"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/iflytek-planning-reading-deepening/video-03-115.00s.png",
+    "bytes": 163807,
+    "sha256": "d7069b5391f07bf4bbf6d9978ad317fe4fc9b562198547d59ee9884194f817a9"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/iflytek-planning-reading-deepening/video-03-121.00s.png",
+    "bytes": 149548,
+    "sha256": "476e7a0863bd545a2414ff05028b0e1f1eec6a91c233eb489d52b1615d29d0e1"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/iflytek-planning-reading-deepening/video-03-127.80s.png",
+    "bytes": 267535,
+    "sha256": "fc867245b28c892e21cc7682a7d45905d5d1be3d0ad511404384c9ec4562a8bc"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/iflytek-planning-reading-deepening/video-04-032.00s.png",
+    "bytes": 454970,
+    "sha256": "6fe14dc7ecde6bb93c999d99358cc1791a0e4ff9ff28813ff76fa927faf9a2f6"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/iflytek-planning-reading-deepening/video-04-040.00s.png",
+    "bytes": 436415,
+    "sha256": "d932b73f38fd86eb0761fef8557a24eaaf9b9a107b1d7d26af8b571b7d2550b0"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/iflytek-planning-reading-deepening/video-04-055.00s.png",
+    "bytes": 565689,
+    "sha256": "226f26c056963382f62184b60e39c13c19436dfaf472e3fcb70bc216afea8f89"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/iflytek-planning-reading-deepening/video-04-070.00s.png",
+    "bytes": 444672,
+    "sha256": "c2a201ccd81f3e28d2049e2acea4731da12d6b27bb44939bb531cdb8b788da3a"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/iflytek-planning-reading-deepening/video-04-085.00s.png",
+    "bytes": 330684,
+    "sha256": "60da99b1b8ef070688939c54da931a4366688638290f2fca43456ffe62b98e8d"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/iflytek-planning-reading-deepening/video-04-093.00s.png",
+    "bytes": 380348,
+    "sha256": "9b4ab4df2ff0bac3bca170d1ce76d0788cf3107d351272fab9a471b67710ad71"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/iflytek-planning-reading-deepening/video-samples.json",
+    "bytes": 26465,
+    "sha256": "147a0af2e098c02dd25a22f8f0054663484527259fa63cd2c36a926ade818bcc"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/ihuman-learning-controls-deepening/source-notes.md",
+    "bytes": 2600,
+    "sha256": "02dd9dcbd3738fb023e1828aa07207249003e9408b75339ca8c3875bcb5c7d7a"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/ihuman-video-preview/030.00.png",
+    "bytes": 409685,
+    "sha256": "9b03deafd2046085275644f1db3de3839f98b50ce38b36bf67948afc10c0c6e9"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/ihuman-video-preview/050.00.png",
+    "bytes": 726612,
+    "sha256": "940495e6a9c3a267a7c17f1edd6f3700ac7c69660255ebd9051b9f2e87fa331a"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/ihuman-video-preview/source-notes.md",
+    "bytes": 1902,
+    "sha256": "2e114f7e0cbb4ec288eecd19ec80949e4d7b331e8ec9f3760efb1d4300dadebe"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/ihuman-video-preview/video-inspection.json",
+    "bytes": 10624,
+    "sha256": "42cd13fb8413a5fa6e4a2a2012003dfd98008045dd9146623112065ef0efc72e"
+  },
+  {
+    "path": "docs/research/interaction-library/batches/boox-reading-controls-deepening-coverage.csv",
+    "bytes": 2403,
+    "sha256": "d64a7764032408e4bcabcde8f16c08ec29041c2bc19dda539b0e931ac5befb57"
+  },
+  {
+    "path": "docs/research/interaction-library/batches/boox-reading-controls-deepening-evidence.jsonl",
+    "bytes": 18182,
+    "sha256": "bb01b786ca893d63712863469de421a768625a736cfb838c799cac09fa020061"
+  },
+  {
+    "path": "docs/research/interaction-library/batches/boox-reading-controls-deepening-inventory.csv",
+    "bytes": 62771,
+    "sha256": "fc1dbb1b312758f2555bcbc411a99d40320143490ebcc92f40410aa4171b9625"
+  },
+  {
+    "path": "docs/research/interaction-library/batches/iflytek-planning-reading-deepening-coverage.csv",
+    "bytes": 2671,
+    "sha256": "a6be51f65790a48a5bd78907b55743ada410bb81febed4b45ba344479a1395ad"
+  },
+  {
+    "path": "docs/research/interaction-library/batches/iflytek-planning-reading-deepening-evidence.jsonl",
+    "bytes": 30207,
+    "sha256": "b7493f43e8b3b8965b1a13ddee1eefd42c0fcd460856025bdcaf13f90a9e0bc2"
+  },
+  {
+    "path": "docs/research/interaction-library/batches/ihuman-learning-controls-deepening-coverage.csv",
+    "bytes": 107,
+    "sha256": "aa0cf671b21fa0390e9b0cfb58c6cecf3a0d7df66eaad894707f17ea224f6025"
+  },
+  {
+    "path": "docs/research/interaction-library/batches/ihuman-learning-controls-deepening-evidence.jsonl",
+    "bytes": 3103,
+    "sha256": "9206034c5bbc88fb5eba3016b3a2f56bf87f20b9b163fa49a63fb50c688ff38b"
+  },
+  {
+    "path": "docs/research/interaction-library/batches/ihuman-learning-controls-deepening-inventory.csv",
+    "bytes": 8282,
+    "sha256": "7dea7eeda1863c9cdaa184b2e6211aa92d854c633cd85f87a130767acf559ce0"
+  },
+  {
+    "path": "docs/research/interaction-library/batches/ihuman-video-preview-evidence.jsonl",
+    "bytes": 1931,
+    "sha256": "8c13a4302e31fef6e23a138775b86a04d49fed143069e96cc17106924e4e2486"
+  },
+  {
+    "path": "docs/research/interaction-library/cases/M-004-boox-neoreader.md",
+    "bytes": 36290,
+    "sha256": "11a8421b29f2e4a9b33a28ab8ec04f441661ab563ea1ef86f15f00fb644ef22d"
+  },
+  {
+    "path": "docs/research/interaction-library/cases/M-027-iflytek-learning.md",
+    "bytes": 21365,
+    "sha256": "2bf9d56049a5964fc57c5c4890839d277d1abc571459a821464ba6bbcc9a3ffc"
+  },
+  {
+    "path": "docs/research/interaction-library/cases/M-029-ihuman.md",
+    "bytes": 22562,
+    "sha256": "c25ca69440bc60a6907dcd19f012ff7f690ce83f50b9dfc35a4a8d3ea97987a1"
+  },
+  {
+    "path": "docs/research/interaction-library/inventories/M027-help-inventory.csv",
+    "bytes": 18460,
+    "sha256": "d074e87b3e5738cf0ee5818dd9327f8a612a01c08b7c89e3c4b31c89c71ea53f"
+  }
+]

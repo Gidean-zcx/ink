@@ -1,0 +1,79 @@
+{
+  "links": [
+    {
+      "title": "colour screen",
+      "url": "https://help.kobo.com/hc/en-us/articles/18025082610071",
+      "section": ""
+    },
+    {
+      "title": "Kobo Stylus 2",
+      "url": "https://help.kobo.com/hc/en-us/articles/10733885674391",
+      "section": ""
+    },
+    {
+      "title": "Kobo Libra Colour user guide",
+      "url": "https://help.kobo.com/hc/en-us/articles/360019123773",
+      "section": "User Guide"
+    },
+    {
+      "title": "Kobo Libra Colour Quick Start Guide",
+      "url": "https://cdn.kobo.com/downloads/magento/userguides/MK-24764-1/QSG/koboLibraColour-QSG-oct3-2023.pdf",
+      "section": "User Guide"
+    },
+    {
+      "title": "Kobo eReader Accessibility Features Software Support",
+      "url": "https://help.kobo.com/hc/en-us/articles/32246787707799",
+      "section": "User Guide"
+    },
+    {
+      "title": "Repair your Kobo Libra Colour",
+      "url": "https://help.kobo.com/hc/en-us/articles/21137184146071",
+      "section": "Learn more about Kobo Libra Colour"
+    },
+    {
+      "title": "About the colour screen",
+      "url": "https://help.kobo.com/hc/en-us/articles/18025082610071",
+      "section": "Learn more about Kobo Libra Colour"
+    },
+    {
+      "title": "About Kobo Stylus 2",
+      "url": "https://help.kobo.com/hc/en-us/articles/10733885674391",
+      "section": "Learn more about Kobo Libra Colour"
+    },
+    {
+      "title": "Find your Kobo eReader model name and number",
+      "url": "https://help.kobo.com/hc/en-us/articles/360017765753",
+      "section": "Not sure which eReader you have?"
+    },
+    {
+      "title": "kobo.com/userguides.",
+      "url": "https://www.kobo.com/p/userguides",
+      "section": "Legal Documents"
+    }
+  ],
+  "headings": [
+    "",
+    "User Guide",
+    "Learn more about Kobo Libra Colour",
+    "Not sure which eReader you have?",
+    "Legal Documents"
+  ],
+  "images": [
+    {
+      "src": "https://help.kobo.com/hc/article_attachments/25990844122007",
+      "alt": "Illustration of a hand writing notes on the Kobo eReader screen using a Kobo Stylus."
+    },
+    {
+      "src": "https://help.kobo.com/hc/article_attachments/25990844120855",
+      "alt": "Kobo eReader with the power button on the side highlighted."
+    },
+    {
+      "src": "https://help.kobo.com/hc/article_attachments/25990808071191",
+      "alt": "Illustration of a hand holding a Kobo eReader pressing the power button on the back of the eReader."
+    },
+    {
+      "src": "https://help.kobo.com/hc/article_attachments/25990808067863",
+      "alt": "Power icon"
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+The BOOX Tab Series devices are equipped with a speaker for audio output. In this article, you will learn how to adjust the volume of your device.
+1. Swipe down from the top right corner to open the Control Center and drag the volume slider.
+2. Long press the volume icon to adjust the volume of specific functions
+3. Tap the Mute button in the Control Center to silence the Ring & Notification Volume
+4. Adjust the volume by setting Side Gestures: Settings＞System Navigation＞Side Gestures

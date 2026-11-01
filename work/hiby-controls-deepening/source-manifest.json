@@ -1,0 +1,1574 @@
+[
+  {
+    "name": "manual-en",
+    "url": "https://guide.hiby.com/en/docs/products/audio_player/hiby_r3ii_2025/guide/",
+    "final_url": "https://guide.hiby.com/en/docs/products/audio_player/hiby_r3ii_2025/guide/",
+    "http_status": 200,
+    "checked_on": "2026-10-27",
+    "raw_work_path": "work/hiby-controls-deepening/raw/manual-en.html",
+    "raw_sha256": "d631a86d1cf1cd41e685034d1c6808efbdea05effc147aaf77452b2d4be27ede",
+    "extracted_work_path": "work/hiby-controls-deepening/extracted/manual-en.txt",
+    "extracted_sha256": "eb5c95421824b5c847e823cbf08d71a42fdf2a5c4be3cd4a629b3c8422c6be36",
+    "headings": [
+      {
+        "level": "h1",
+        "id": null,
+        "text": "HiBy R3II(2025) User Manual"
+      },
+      {
+        "level": "h2",
+        "id": "1-product-introduction",
+        "text": "1. Product introduction​"
+      },
+      {
+        "level": "h2",
+        "id": "2-button-usage-instructions",
+        "text": "2. Button usage instructions​"
+      },
+      {
+        "level": "h2",
+        "id": "3-interface-usage-instructions",
+        "text": "3. Interface usage instructions​"
+      },
+      {
+        "level": "h3",
+        "id": "audio-output-interface",
+        "text": "Audio output interface​"
+      },
+      {
+        "level": "h3",
+        "id": "usb-port",
+        "text": "USB port​"
+      },
+      {
+        "level": "h3",
+        "id": "charging-interface",
+        "text": "Charging interface​"
+      },
+      {
+        "level": "h3",
+        "id": "microsdtf-card-interface",
+        "text": "MicroSD(TF) card interface​"
+      },
+      {
+        "level": "h3",
+        "id": "led-indicator",
+        "text": "LED Indicator​"
+      },
+      {
+        "level": "h2",
+        "id": "4-get-started",
+        "text": "4. Get started​"
+      },
+      {
+        "level": "h3",
+        "id": "first-boot",
+        "text": "First boot​"
+      },
+      {
+        "level": "h3",
+        "id": "status-bar",
+        "text": "Status bar​"
+      },
+      {
+        "level": "h3",
+        "id": "main-interface",
+        "text": "Main interface​"
+      },
+      {
+        "level": "h3",
+        "id": "quick-operation",
+        "text": "Quick operation​"
+      },
+      {
+        "level": "h2",
+        "id": "5-music",
+        "text": "5. Music​"
+      },
+      {
+        "level": "h3",
+        "id": "music-interface",
+        "text": "Music interface​"
+      },
+      {
+        "level": "h3",
+        "id": "import-local-music",
+        "text": "Import local music​"
+      },
+      {
+        "level": "h4",
+        "id": "import-music-via-microsdtf-card",
+        "text": "Import music via MicroSD(TF) card​"
+      },
+      {
+        "level": "h4",
+        "id": "import-music-via-usb",
+        "text": "Import music via USB​"
+      },
+      {
+        "level": "h3",
+        "id": "playback-settings",
+        "text": "Playback settings​"
+      },
+      {
+        "level": "h3",
+        "id": "playback-interface",
+        "text": "Playback interface​"
+      },
+      {
+        "level": "h2",
+        "id": "6-streaming-media",
+        "text": "6. Streaming media​"
+      },
+      {
+        "level": "h3",
+        "id": "tidal",
+        "text": "Tidal​"
+      },
+      {
+        "level": "h3",
+        "id": "qobuz",
+        "text": "Qobuz​"
+      },
+      {
+        "level": "h3",
+        "id": "internet-radio",
+        "text": "Internet radio​"
+      },
+      {
+        "level": "h2",
+        "id": "7-wireless",
+        "text": "7. Wireless​"
+      },
+      {
+        "level": "h3",
+        "id": "bluetooth",
+        "text": "Bluetooth​"
+      },
+      {
+        "level": "h3",
+        "id": "wi-fi",
+        "text": "Wi-Fi​"
+      },
+      {
+        "level": "h3",
+        "id": "hiby-link",
+        "text": "HiBy Link​"
+      },
+      {
+        "level": "h3",
+        "id": "wi-fi-song",
+        "text": "Wi-Fi song​"
+      },
+      {
+        "level": "h3",
+        "id": "dlna",
+        "text": "DLNA​"
+      },
+      {
+        "level": "h3",
+        "id": "airplay",
+        "text": "AirPlay​"
+      },
+      {
+        "level": "h2",
+        "id": "8-e-books",
+        "text": "8. E-books​"
+      },
+      {
+        "level": "h2",
+        "id": "9-usb-audio",
+        "text": "9. USB audio​"
+      },
+      {
+        "level": "h2",
+        "id": "10-system",
+        "text": "10. System​"
+      },
+      {
+        "level": "h2",
+        "id": "11-frequently-asked-questions",
+        "text": "11. Frequently Asked Questions​"
+      }
+    ],
+    "images": [
+      {
+        "src": "/en/assets/images/hiby_r3ii_2025_1-d434cfb556f22b75f15d0a04f3549131.png",
+        "alt": "R3II 2025 Product Picture",
+        "width": "400"
+      },
+      {
+        "src": "/en/assets/images/hiby_r3ii_2025_2-1a91d40cbcfec30358d2d124a4107f7a.png",
+        "alt": "R3II 2025 Product Picture",
+        "width": "400"
+      }
+    ],
+    "links": [
+      "#__docusaurus_skipToContent_fallback",
+      "/en/",
+      "/en/docs/guides/hibymusic/hibymusic_android_guide",
+      "/en/docs/products/audio_player/",
+      "/en/docs/question/common/common",
+      "/en/docs/knowledge/audio/keywords",
+      "#",
+      "/docs/products/audio_player/hiby_r3ii_2025/guide",
+      "/en/docs/products/audio_player/hiby_r3ii_2025/guide",
+      "/ko/docs/products/audio_player/hiby_r3ii_2025/guide",
+      "/en/docs/products/audio_player/",
+      "/en/docs/products/audio_player/hiby_rs2ii/guide",
+      "/en/docs/products/audio_player/hiby_rs8ii/guide",
+      "/en/docs/products/audio_player/hibydigital_m500miku/guide",
+      "/en/docs/products/audio_player/hiby_R4_MIDI/guide",
+      "/en/docs/products/audio_player/hiby_r1_midi/guide",
+      "/en/docs/products/audio_player/hiby_r6proii2025/guide",
+      "/en/docs/products/audio_player/hiby_r3proii/guide",
+      "/en/docs/products/audio_player/hiby_r6promaxtai/guide",
+      "/en/docs/products/audio_player/hiby_r6iii_2025/guide",
+      "/en/docs/products/audio_player/hiby_r6promax/guide",
+      "/en/docs/products/audio_player/hiby_r3ii_2025/guide",
+      "/en/docs/products/audio_player/hiby_r3ii_2025/guide",
+      "/en/docs/products/audio_player/hiby_r3ii_2025/firmware",
+      "/en/docs/products/audio_player/hiby_r3ii_2025/spec",
+      "/en/docs/products/audio_player/hiby_r1/guide",
+      "/en/docs/products/audio_player/hiby_r4_eva/guide",
+      "/en/docs/products/audio_player/hiby_r4/guide",
+      "/en/docs/products/audio_player/hiby_r8ii/guide",
+      "/en/docs/products/audio_player/hibydigital_m300/guide",
+      "/en/docs/products/audio_player/hiby_r3ii/guide",
+      "/en/docs/products/audio_player/hiby_r6proii/guide",
+      "/en/docs/products/audio_player/hiby_r6iii/guide",
+      "/en/docs/products/audio_player/hiby_r2ii/guide",
+      "/en/docs/products/audio_player/hiby_rs8/guide",
+      "/en/docs/products/audio_player/hiby_rs2/guide",
+      "/en/docs/products/audio_player/hiby_rs6/guide",
+      "/en/docs/products/audio_player/hiby_r3pro/guide",
+      "/en/docs/products/audio_player/hiby_r3pro_saber/guide",
+      "/en/docs/products/audio_player/hiby_r6pro/guide",
+      "/en/docs/products/audio_player/hiby_r6/guide",
+      "/en/docs/products/usb_dac/",
+      "/en/docs/products/earphones/hiby_yves+",
+      "/en/docs/products/bt_reciver/",
+      "/en/docs/products/dock/",
+      "/en/docs/products/hifi-accessory-park/",
+      "/en/docs/products/hiby_hibydigital",
+      "/en/",
+      "/en/docs/products/audio_player/",
+      "https://store.hiby.com/",
+      "#1-product-introduction",
+      "#2-button-usage-instructions",
+      "#3-interface-usage-instructions",
+      "#audio-output-interface",
+      "#usb-port",
+      "/en/docs/guides/usb/massstorage",
+      "/en/docs/guides/usb/audio",
+      "#charging-interface",
+      "#microsdtf-card-interface",
+      "#led-indicator",
+      "#4-get-started",
+      "#first-boot",
+      "#status-bar",
+      "#main-interface",
+      "#quick-operation",
+      "#5-music",
+      "#music-interface",
+      "#import-local-music",
+      "#import-music-via-microsdtf-card",
+      "#import-music-via-usb",
+      "/en/docs/guides/usb/massstorage",
+      "https://www.paragon-software.com/home/ntfs-mac//",
+      "https://support-eu.wd.com/app/answers/detailweb/a_id/34871/~/external-drive%3A-paragon-ntfs-driver-for-mac",
+      "#playback-settings",
+      "#playback-interface",
+      "#6-streaming-media",
+      "#tidal",
+      "#qobuz",
+      "#internet-radio",
+      "/en/docs/question/audio_player/x1600_r#how_to_add_network_radio",
+      "https://www.reddit.com/r/Hiby/comments/1ehs278/radiotxt_creator/",
+      "https://customradio.dough10.me",
+      "#7-wireless",
+      "#bluetooth",
+      "/en/docs/knowledge/bluetooth/a2dp_codec",
+      "#wi-fi",
+      "#hiby-link",
+      "#wi-fi-song",
+      "#dlna",
+      "/en/docs/guides/streaming/dlna",
+      "/en/docs/guides/streaming/qplay",
+      "#airplay",
+      "/en/docs/guides/streaming/airplay",
+      "#8-e-books",
+      "#9-usb-audio",
+      "/en/docs/guides/usb/audio",
+      "/en/docs/guides/usb/audio",
+      "#10-system",
+      "#11-frequently-asked-questions",
+      "/en/docs/question/audio_player/x1600_r",
+      "/en/docs/products/audio_player/hiby_r6promax/spec",
+      "/en/docs/products/audio_player/hiby_r3ii_2025/firmware",
+      "#1-product-introduction",
+      "#2-button-usage-instructions",
+      "#3-interface-usage-instructions",
+      "#audio-output-interface",
+      "#usb-port",
+      "#charging-interface",
+      "#microsdtf-card-interface",
+      "#led-indicator",
+      "#4-get-started",
+      "#first-boot",
+      "#status-bar",
+      "#main-interface",
+      "#quick-operation",
+      "#5-music",
+      "#music-interface",
+      "#import-local-music",
+      "#playback-settings",
+      "#playback-interface",
+      "#6-streaming-media",
+      "#tidal",
+      "#qobuz",
+      "#internet-radio",
+      "#7-wireless",
+      "#bluetooth",
+      "#wi-fi",
+      "#hiby-link",
+      "#wi-fi-song",
+      "#dlna",
+      "#airplay",
+      "#8-e-books",
+      "#9-usb-audio",
+      "#10-system",
+      "#11-frequently-asked-questions",
+      "https://www.hiby.com/",
+      "https://weibo.com/u/6190468063",
+      "https://x.com/hiby_music",
+      "https://www.facebook.com/hibycom",
+      "https://www.instagram.com/hibymusic",
+      "https://guide.hiby.com/",
+      "https://guide.hiby.com/en",
+      "https://guide.hiby.com/ko",
+      "https://beian.miit.gov.cn"
+    ]
+  },
+  {
+    "name": "firmware-en",
+    "url": "https://guide.hiby.com/en/docs/products/audio_player/hiby_r3ii_2025/firmware/",
+    "final_url": "https://guide.hiby.com/en/docs/products/audio_player/hiby_r3ii_2025/firmware/",
+    "http_status": 200,
+    "checked_on": "2026-10-27",
+    "raw_work_path": "work/hiby-controls-deepening/raw/firmware-en.html",
+    "raw_sha256": "324635ed3c27a01f6ffc0353c860813c65c960be79d34fc456f1109b49e28dc4",
+    "extracted_work_path": "work/hiby-controls-deepening/extracted/firmware-en.txt",
+    "extracted_sha256": "db9295d1a41dbbc880eb261e8118d793bf915d7e4d0908e3c24856ff25fdd607",
+    "headings": [
+      {
+        "level": "h1",
+        "id": null,
+        "text": "HiBy R3II(2025) Firmware"
+      },
+      {
+        "level": "h2",
+        "id": "hiby_r3ii_2025_11_202501061153-firmware",
+        "text": "HiBy_R3II_2025_1.1_202501061153 Firmware​"
+      },
+      {
+        "level": "h2",
+        "id": "hiby_r3ii_2025_10_202411191142-firmware",
+        "text": "HiBy_R3II_2025_1.0_202411191142 Firmware​"
+      }
+    ],
+    "images": [],
+    "links": [
+      "#__docusaurus_skipToContent_fallback",
+      "/en/",
+      "/en/docs/guides/hibymusic/hibymusic_android_guide",
+      "/en/docs/products/audio_player/",
+      "/en/docs/question/common/common",
+      "/en/docs/knowledge/audio/keywords",
+      "#",
+      "/docs/products/audio_player/hiby_r3ii_2025/firmware",
+      "/en/docs/products/audio_player/hiby_r3ii_2025/firmware",
+      "/ko/docs/products/audio_player/hiby_r3ii_2025/firmware",
+      "/en/docs/products/audio_player/",
+      "/en/docs/products/audio_player/hiby_rs2ii/guide",
+      "/en/docs/products/audio_player/hiby_rs8ii/guide",
+      "/en/docs/products/audio_player/hibydigital_m500miku/guide",
+      "/en/docs/products/audio_player/hiby_R4_MIDI/guide",
+      "/en/docs/products/audio_player/hiby_r1_midi/guide",
+      "/en/docs/products/audio_player/hiby_r6proii2025/guide",
+      "/en/docs/products/audio_player/hiby_r3proii/guide",
+      "/en/docs/products/audio_player/hiby_r6promaxtai/guide",
+      "/en/docs/products/audio_player/hiby_r6iii_2025/guide",
+      "/en/docs/products/audio_player/hiby_r6promax/guide",
+      "/en/docs/products/audio_player/hiby_r3ii_2025/guide",
+      "/en/docs/products/audio_player/hiby_r3ii_2025/guide",
+      "/en/docs/products/audio_player/hiby_r3ii_2025/firmware",
+      "/en/docs/products/audio_player/hiby_r3ii_2025/spec",
+      "/en/docs/products/audio_player/hiby_r1/guide",
+      "/en/docs/products/audio_player/hiby_r4_eva/guide",
+      "/en/docs/products/audio_player/hiby_r4/guide",
+      "/en/docs/products/audio_player/hiby_r8ii/guide",
+      "/en/docs/products/audio_player/hibydigital_m300/guide",
+      "/en/docs/products/audio_player/hiby_r3ii/guide",
+      "/en/docs/products/audio_player/hiby_r6proii/guide",
+      "/en/docs/products/audio_player/hiby_r6iii/guide",
+      "/en/docs/products/audio_player/hiby_r2ii/guide",
+      "/en/docs/products/audio_player/hiby_rs8/guide",
+      "/en/docs/products/audio_player/hiby_rs2/guide",
+      "/en/docs/products/audio_player/hiby_rs6/guide",
+      "/en/docs/products/audio_player/hiby_r3pro/guide",
+      "/en/docs/products/audio_player/hiby_r3pro_saber/guide",
+      "/en/docs/products/audio_player/hiby_r6pro/guide",
+      "/en/docs/products/audio_player/hiby_r6/guide",
+      "/en/docs/products/usb_dac/",
+      "/en/docs/products/earphones/hiby_yves+",
+      "/en/docs/products/bt_reciver/",
+      "/en/docs/products/dock/",
+      "/en/docs/products/hifi-accessory-park/",
+      "/en/docs/products/hiby_hibydigital",
+      "/en/",
+      "/en/docs/products/audio_player/",
+      "#hiby_r3ii_2025_11_202501061153-firmware",
+      "https://pan.baidu.com/s/1y_tkrthSX72IV5FYuMQlMw?pwd=u4p1",
+      "#hiby_r3ii_2025_10_202411191142-firmware",
+      "/en/docs/products/audio_player/hiby_r3ii_2025/guide",
+      "/en/docs/products/audio_player/hiby_r3ii_2025/spec",
+      "#hiby_r3ii_2025_11_202501061153-firmware",
+      "#hiby_r3ii_2025_10_202411191142-firmware",
+      "https://www.hiby.com/",
+      "https://weibo.com/u/6190468063",
+      "https://x.com/hiby_music",
+      "https://www.facebook.com/hibycom",
+      "https://www.instagram.com/hibymusic",
+      "https://guide.hiby.com/",
+      "https://guide.hiby.com/en",
+      "https://guide.hiby.com/ko",
+      "https://beian.miit.gov.cn"
+    ]
+  },
+  {
+    "name": "faq-en",
+    "url": "https://guide.hiby.com/en/docs/question/audio_player/x1600_r/",
+    "final_url": "https://guide.hiby.com/en/docs/question/audio_player/x1600_r/",
+    "http_status": 200,
+    "checked_on": "2026-10-27",
+    "raw_work_path": "work/hiby-controls-deepening/raw/faq-en.html",
+    "raw_sha256": "10cc0e02d3059703e4189b2d9c7e7e4428e350a40358525685ff1b9c5be1555d",
+    "extracted_work_path": "work/hiby-controls-deepening/extracted/faq-en.txt",
+    "extracted_sha256": "6a4582cfd2d65e3517a815698ca91a22658ed7617a46eead933b220e026452de",
+    "headings": [
+      {
+        "level": "h1",
+        "id": null,
+        "text": "HiBy X1600 R Player"
+      },
+      {
+        "level": "h2",
+        "id": "description",
+        "text": "Description​"
+      },
+      {
+        "level": "h2",
+        "id": "system",
+        "text": "System​"
+      },
+      {
+        "level": "h3",
+        "id": "how-to-upgrade-the-player",
+        "text": "How to upgrade the player?​"
+      },
+      {
+        "level": "h3",
+        "id": "what-file-formats-are-supported-for-tfmicrosd-cards",
+        "text": "What file formats are supported for TF/MicroSD cards?​"
+      },
+      {
+        "level": "h3",
+        "id": "what-capacity-is-the-maximum-supported-tfmicrosd-card",
+        "text": "What capacity is the maximum supported TF/MicroSD card?​"
+      },
+      {
+        "level": "h2",
+        "id": "power-supply",
+        "text": "Power Supply​"
+      },
+      {
+        "level": "h3",
+        "id": "sleep-shutdown-definition",
+        "text": "Sleep shutdown definition​"
+      },
+      {
+        "level": "h3",
+        "id": "power-saving-shutdown-definition",
+        "text": "Power saving shutdown definition​"
+      },
+      {
+        "level": "h2",
+        "id": "audio",
+        "text": "Audio​"
+      },
+      {
+        "level": "h3",
+        "id": "album-cover-supports-specifications",
+        "text": "Album cover supports specifications?​"
+      },
+      {
+        "level": "h3",
+        "id": "external-cover-specification-priority",
+        "text": "External cover specification priority?​"
+      },
+      {
+        "level": "h3",
+        "id": "is-there-a-limit-on-the-number-of-files",
+        "text": "Is there a limit on the number of files?​"
+      },
+      {
+        "level": "h3",
+        "id": "song-meta-information-priority",
+        "text": "Song Meta Information Priority​"
+      },
+      {
+        "level": "h3",
+        "id": "limit-the-number-of-recent-playlist-files-saved",
+        "text": "Limit the number of recent playlist files saved​"
+      },
+      {
+        "level": "h3",
+        "id": "description-of-the-limit-number-of-internal-playlists",
+        "text": "Description of the limit number of internal playlists​"
+      },
+      {
+        "level": "h3",
+        "id": "what-music-formats-does-the-x1600-platform-support",
+        "text": "What music formats does the X1600 platform support?​"
+      },
+      {
+        "level": "h3",
+        "id": "which-music-formats-does-the-x1600-platform-cue-support",
+        "text": "Which music formats does the X1600 platform CUE support?​"
+      },
+      {
+        "level": "h3",
+        "id": "does-the-x1600-platform-support-dst-music-files",
+        "text": "Does the X1600 platform support DST music files?​"
+      },
+      {
+        "level": "h3",
+        "id": "what-are-the-track-order-definitions-under-each-list-of-the-x1600-platform",
+        "text": "What are the track order definitions under each list of the X1600 platform?​"
+      },
+      {
+        "level": "h3",
+        "id": "what-should-i-do-if-there-are-garbled-words-in-songs-and-lyrics-solution-and-reasons",
+        "text": "What should I do if there are garbled words in songs and lyrics? Solution and reasons?​"
+      },
+      {
+        "level": "h4",
+        "id": "what-do-the-error-prompts--5--9--11--12--13-mean",
+        "text": "What do the error prompts -5, -9, -11, -12, -13 mean?​"
+      },
+      {
+        "level": "h3",
+        "id": "under-what-circumstances-will-seamless-play-take-effect",
+        "text": "Under what circumstances will seamless play take effect?​"
+      },
+      {
+        "level": "h3",
+        "id": "does-bluetooth-car-support-song-information",
+        "text": "Does Bluetooth car support song information?​"
+      },
+      {
+        "level": "h3",
+        "id": "does-eq-equalizer-support-range-for-sampling-rate",
+        "text": "Does EQ (equalizer) support range for sampling rate?​"
+      },
+      {
+        "level": "h3",
+        "id": "mseb-supports-range-for-sampling-rate",
+        "text": "MSEB supports range for sampling rate?​"
+      },
+      {
+        "level": "h3",
+        "id": "dsd-output-mode-pcmdopnative-function-definition",
+        "text": "DSD output mode (PCM\\DoP\\Native) function definition​"
+      },
+      {
+        "level": "h3",
+        "id": "qobuz-reported-400-error",
+        "text": "Qobuz reported 400 error?​"
+      },
+      {
+        "level": "h3",
+        "id": "usb-dac-input-bluetooth-output-matter-description",
+        "text": "USB DAC input Bluetooth output, matter description:​"
+      },
+      {
+        "level": "h2",
+        "id": "other",
+        "text": "Other​"
+      },
+      {
+        "level": "h3",
+        "id": "how-to-set-up-and-add-dynamic-covers",
+        "text": "How to set up and add dynamic covers?​"
+      },
+      {
+        "level": "h3",
+        "id": "how_to_add_network_radio",
+        "text": "How to add a custom network station?​"
+      },
+      {
+        "level": "h3",
+        "id": "import-and-export-playlist",
+        "text": "Import and export playlist​"
+      },
+      {
+        "level": "h3",
+        "id": "m3u-parsing-processing-logic",
+        "text": "m3u parsing processing logic​"
+      }
+    ],
+    "images": [],
+    "links": [
+      "#__docusaurus_skipToContent_fallback",
+      "/en/",
+      "/en/docs/guides/hibymusic/hibymusic_android_guide",
+      "/en/docs/products/audio_player/",
+      "/en/docs/question/common/common",
+      "/en/docs/knowledge/audio/keywords",
+      "#",
+      "/docs/question/audio_player/x1600_r",
+      "/en/docs/question/audio_player/x1600_r",
+      "/ko/docs/question/audio_player/x1600_r",
+      "/en/docs/question/common/common",
+      "/en/docs/question/audio_player/android_r",
+      "/en/docs/question/audio_player/android_r",
+      "/en/docs/question/audio_player/x1000_r",
+      "/en/docs/question/audio_player/x1600_r",
+      "/en/docs/question/audio_player/android_m",
+      "/en/docs/question/usb_dac/main",
+      "/en/docs/question/bt_reciver/bt_cover_support",
+      "/en/",
+      "#description",
+      "#system",
+      "#how-to-upgrade-the-player",
+      "#what-file-formats-are-supported-for-tfmicrosd-cards",
+      "#what-capacity-is-the-maximum-supported-tfmicrosd-card",
+      "#power-supply",
+      "#sleep-shutdown-definition",
+      "#power-saving-shutdown-definition",
+      "#audio",
+      "#album-cover-supports-specifications",
+      "#external-cover-specification-priority",
+      "#is-there-a-limit-on-the-number-of-files",
+      "#song-meta-information-priority",
+      "#limit-the-number-of-recent-playlist-files-saved",
+      "#description-of-the-limit-number-of-internal-playlists",
+      "#what-music-formats-does-the-x1600-platform-support",
+      "#which-music-formats-does-the-x1600-platform-cue-support",
+      "#does-the-x1600-platform-support-dst-music-files",
+      "#what-are-the-track-order-definitions-under-each-list-of-the-x1600-platform",
+      "#what-should-i-do-if-there-are-garbled-words-in-songs-and-lyrics-solution-and-reasons",
+      "#what-do-the-error-prompts--5--9--11--12--13-mean",
+      "mailto:ringsd@hiby.com",
+      "#under-what-circumstances-will-seamless-play-take-effect",
+      "#does-bluetooth-car-support-song-information",
+      "#does-eq-equalizer-support-range-for-sampling-rate",
+      "#mseb-supports-range-for-sampling-rate",
+      "#dsd-output-mode-pcmdopnative-function-definition",
+      "#qobuz-reported-400-error",
+      "#usb-dac-input-bluetooth-output-matter-description",
+      "#other",
+      "#how-to-set-up-and-add-dynamic-covers",
+      "#how_to_add_network_radio",
+      "https://www.reddit.com/r/Hiby/comments/1ehs278/radiotxt_creator/",
+      "https://customradio.dough10.me",
+      "#import-and-export-playlist",
+      "#m3u-parsing-processing-logic",
+      "/en/docs/question/audio_player/x1000_r",
+      "/en/docs/question/audio_player/android_m",
+      "#description",
+      "#system",
+      "#how-to-upgrade-the-player",
+      "#what-file-formats-are-supported-for-tfmicrosd-cards",
+      "#what-capacity-is-the-maximum-supported-tfmicrosd-card",
+      "#power-supply",
+      "#sleep-shutdown-definition",
+      "#power-saving-shutdown-definition",
+      "#audio",
+      "#album-cover-supports-specifications",
+      "#external-cover-specification-priority",
+      "#is-there-a-limit-on-the-number-of-files",
+      "#song-meta-information-priority",
+      "#limit-the-number-of-recent-playlist-files-saved",
+      "#description-of-the-limit-number-of-internal-playlists",
+      "#what-music-formats-does-the-x1600-platform-support",
+      "#which-music-formats-does-the-x1600-platform-cue-support",
+      "#does-the-x1600-platform-support-dst-music-files",
+      "#what-are-the-track-order-definitions-under-each-list-of-the-x1600-platform",
+      "#what-should-i-do-if-there-are-garbled-words-in-songs-and-lyrics-solution-and-reasons",
+      "#under-what-circumstances-will-seamless-play-take-effect",
+      "#does-bluetooth-car-support-song-information",
+      "#does-eq-equalizer-support-range-for-sampling-rate",
+      "#mseb-supports-range-for-sampling-rate",
+      "#dsd-output-mode-pcmdopnative-function-definition",
+      "#qobuz-reported-400-error",
+      "#usb-dac-input-bluetooth-output-matter-description",
+      "#other",
+      "#how-to-set-up-and-add-dynamic-covers",
+      "#how_to_add_network_radio",
+      "#import-and-export-playlist",
+      "#m3u-parsing-processing-logic",
+      "https://www.hiby.com/",
+      "https://weibo.com/u/6190468063",
+      "https://x.com/hiby_music",
+      "https://www.facebook.com/hibycom",
+      "https://www.instagram.com/hibymusic",
+      "https://guide.hiby.com/",
+      "https://guide.hiby.com/en",
+      "https://guide.hiby.com/ko",
+      "https://beian.miit.gov.cn"
+    ]
+  },
+  {
+    "name": "usb-en",
+    "url": "https://guide.hiby.com/en/docs/guides/usb/massstorage/",
+    "final_url": "https://guide.hiby.com/en/docs/guides/usb/massstorage/",
+    "http_status": 200,
+    "checked_on": "2026-10-27",
+    "raw_work_path": "work/hiby-controls-deepening/raw/usb-en.html",
+    "raw_sha256": "5d13b45e18c4abfbfb996ee245650668de889020bf2ecec65a6b80327d7d52cb",
+    "extracted_work_path": "work/hiby-controls-deepening/extracted/usb-en.txt",
+    "extracted_sha256": "73e9b32656d66b0feab90397c43445a46474b274590d1af63d3ae4924026c2c7",
+    "headings": [
+      {
+        "level": "h1",
+        "id": null,
+        "text": "MassStorage User Manual"
+      },
+      {
+        "level": "h2",
+        "id": "macos",
+        "text": "MacOS​"
+      },
+      {
+        "level": "h2",
+        "id": "windows",
+        "text": "Windows ​"
+      },
+      {
+        "level": "h2",
+        "id": "faqs-on-massstorage-usage",
+        "text": "FAQs on MassStorage Usage​"
+      }
+    ],
+    "images": [],
+    "links": [
+      "#__docusaurus_skipToContent_fallback",
+      "/en/",
+      "/en/docs/guides/hibymusic/hibymusic_android_guide",
+      "/en/docs/products/audio_player/",
+      "/en/docs/question/common/common",
+      "/en/docs/knowledge/audio/keywords",
+      "#",
+      "/docs/guides/usb/massstorage",
+      "/en/docs/guides/usb/massstorage",
+      "/ko/docs/guides/usb/massstorage",
+      "/en/docs/guides/hibymusic/hibymusic_android_guide",
+      "/en/docs/guides/hibycase/hibycast_server_android",
+      "/en/docs/guides/hibyblue/hibyblue_android",
+      "/en/docs/guides/hibylink/hibylink",
+      "/en/docs/guides/usb/audio",
+      "/en/docs/guides/usb/audio",
+      "/en/docs/guides/usb/massstorage",
+      "/en/docs/guides/usb/mtp",
+      "/en/docs/guides/streaming/airplay",
+      "/en/docs/guides/app/",
+      "/en/docs/guides/audioprocess/",
+      "/en/",
+      "#macos",
+      "https://www.paragon-software.com/home/ntfs-mac//",
+      "https://support-eu.wd.com/app/answers/detailweb/a_id/34871/~/external-drive%3A-paragon-ntfs-driver-for-mac",
+      "#windows",
+      "#faqs-on-massstorage-usage",
+      "/en/docs/guides/usb/audio",
+      "/en/docs/guides/usb/mtp",
+      "#macos",
+      "#windows",
+      "#faqs-on-massstorage-usage",
+      "https://www.hiby.com/",
+      "https://weibo.com/u/6190468063",
+      "https://x.com/hiby_music",
+      "https://www.facebook.com/hibycom",
+      "https://www.instagram.com/hibymusic",
+      "https://guide.hiby.com/",
+      "https://guide.hiby.com/en",
+      "https://guide.hiby.com/ko",
+      "https://beian.miit.gov.cn"
+    ]
+  },
+  {
+    "name": "manual-zh",
+    "url": "https://guide.hiby.com/docs/products/audio_player/hiby_r3ii_2025/guide",
+    "final_url": "https://guide.hiby.com/docs/products/audio_player/hiby_r3ii_2025/guide/",
+    "http_status": 200,
+    "checked_on": "2026-10-27",
+    "raw_work_path": "work/hiby-controls-deepening/raw/manual-zh.html",
+    "raw_sha256": "38b541d793b2e7b343591d47ada81e5599c6a43a17e46a0131bd6fa4b654c84c",
+    "extracted_work_path": "work/hiby-controls-deepening/extracted/manual-zh.txt",
+    "extracted_sha256": "a21719acb29ab48ca34cc9f21b6471c5e709472796159ed274858eaafd4bdff6",
+    "headings": [
+      {
+        "level": "h1",
+        "id": null,
+        "text": "HiBy R3II(2025) 说明书"
+      },
+      {
+        "level": "h2",
+        "id": "一产品介绍",
+        "text": "一、产品介绍​"
+      },
+      {
+        "level": "h2",
+        "id": "二按键使用说明",
+        "text": "二、按键使用说明​"
+      },
+      {
+        "level": "h2",
+        "id": "三接口使用说明",
+        "text": "三、接口使用说明​"
+      },
+      {
+        "level": "h3",
+        "id": "音频输出接口",
+        "text": "音频输出接口​"
+      },
+      {
+        "level": "h3",
+        "id": "usb-接口",
+        "text": "USB 接口​"
+      },
+      {
+        "level": "h3",
+        "id": "充电接口",
+        "text": "充电接口​"
+      },
+      {
+        "level": "h3",
+        "id": "microsdtf-卡接口",
+        "text": "MicroSD(TF) 卡接口​"
+      },
+      {
+        "level": "h3",
+        "id": "led-指示灯",
+        "text": "LED 指示灯​"
+      },
+      {
+        "level": "h2",
+        "id": "四开始使用",
+        "text": "四、开始使用​"
+      },
+      {
+        "level": "h3",
+        "id": "首次开机",
+        "text": "首次开机​"
+      },
+      {
+        "level": "h3",
+        "id": "状态栏",
+        "text": "状态栏​"
+      },
+      {
+        "level": "h3",
+        "id": "主界面",
+        "text": "主界面​"
+      },
+      {
+        "level": "h3",
+        "id": "快捷操作",
+        "text": "快捷操作​"
+      },
+      {
+        "level": "h2",
+        "id": "五音乐",
+        "text": "五、音乐​"
+      },
+      {
+        "level": "h3",
+        "id": "音乐界面",
+        "text": "音乐界面​"
+      },
+      {
+        "level": "h3",
+        "id": "导入本地音乐",
+        "text": "导入本地音乐​"
+      },
+      {
+        "level": "h4",
+        "id": "通过-microsdtf-卡导入音乐",
+        "text": "通过 MicroSD(TF) 卡导入音乐​"
+      },
+      {
+        "level": "h4",
+        "id": "通过-usb-导入音乐",
+        "text": "通过 USB 导入音乐​"
+      },
+      {
+        "level": "h3",
+        "id": "播放设置",
+        "text": "播放设置​"
+      },
+      {
+        "level": "h3",
+        "id": "播放界面",
+        "text": "播放界面​"
+      },
+      {
+        "level": "h2",
+        "id": "六流媒体",
+        "text": "六、流媒体​"
+      },
+      {
+        "level": "h3",
+        "id": "tidal",
+        "text": "Tidal​"
+      },
+      {
+        "level": "h3",
+        "id": "qobuz",
+        "text": "Qobuz​"
+      },
+      {
+        "level": "h3",
+        "id": "网络收音机",
+        "text": "网络收音机​"
+      },
+      {
+        "level": "h2",
+        "id": "七无线",
+        "text": "七、无线​"
+      },
+      {
+        "level": "h3",
+        "id": "蓝牙",
+        "text": "蓝牙​"
+      },
+      {
+        "level": "h3",
+        "id": "wi-fi",
+        "text": "Wi-Fi​"
+      },
+      {
+        "level": "h3",
+        "id": "hiby-link",
+        "text": "HiBy Link​"
+      },
+      {
+        "level": "h3",
+        "id": "wi-fi-传歌",
+        "text": "Wi-Fi 传歌​"
+      },
+      {
+        "level": "h3",
+        "id": "dlna",
+        "text": "DLNA​"
+      },
+      {
+        "level": "h3",
+        "id": "airplay",
+        "text": "AirPlay​"
+      },
+      {
+        "level": "h2",
+        "id": "八电子书",
+        "text": "八、电子书​"
+      },
+      {
+        "level": "h2",
+        "id": "九usb-音频",
+        "text": "九、USB 音频​"
+      },
+      {
+        "level": "h2",
+        "id": "十系统设置",
+        "text": "十、系统设置​"
+      },
+      {
+        "level": "h2",
+        "id": "十一常见问题",
+        "text": "十一、常见问题​"
+      }
+    ],
+    "images": [
+      {
+        "src": "/assets/images/hiby_r3ii_2025_1-d434cfb556f22b75f15d0a04f3549131.png",
+        "alt": "R3II 2025 产品图",
+        "width": "400"
+      },
+      {
+        "src": "/assets/images/hiby_r3ii_2025_2-1a91d40cbcfec30358d2d124a4107f7a.png",
+        "alt": "R3II 2025 产品图",
+        "width": "400"
+      }
+    ],
+    "links": [
+      "#__docusaurus_skipToContent_fallback",
+      "/",
+      "/docs/guides/hibymusic/hibymusic_android_guide",
+      "/docs/products/audio_player/",
+      "/docs/question/common/common",
+      "/docs/knowledge/audio/keywords",
+      "#",
+      "/docs/products/audio_player/hiby_r3ii_2025/guide",
+      "/en/docs/products/audio_player/hiby_r3ii_2025/guide",
+      "/ko/docs/products/audio_player/hiby_r3ii_2025/guide",
+      "/docs/products/audio_player/",
+      "/docs/products/audio_player/hiby_rs2ii/guide",
+      "/docs/products/audio_player/hiby_rs8ii/guide",
+      "/docs/products/audio_player/hibydigital_m500miku/guide",
+      "/docs/products/audio_player/hiby_R4_MIDI/guide",
+      "/docs/products/audio_player/hiby_r1_midi/guide",
+      "/docs/products/audio_player/hiby_r6proii2025/guide",
+      "/docs/products/audio_player/hiby_r3proii/guide",
+      "/docs/products/audio_player/hiby_r6promaxtai/guide",
+      "/docs/products/audio_player/hiby_r6iii_2025/guide",
+      "/docs/products/audio_player/hiby_r6promax/guide",
+      "/docs/products/audio_player/hiby_r3ii_2025/guide",
+      "/docs/products/audio_player/hiby_r3ii_2025/guide",
+      "/docs/products/audio_player/hiby_r3ii_2025/firmware",
+      "/docs/products/audio_player/hiby_r3ii_2025/spec",
+      "/docs/products/audio_player/hiby_r1/guide",
+      "/docs/products/audio_player/hiby_r4_eva/guide",
+      "/docs/products/audio_player/hiby_r4/guide",
+      "/docs/products/audio_player/hiby_r8ii/guide",
+      "/docs/products/audio_player/hibydigital_m300/guide",
+      "/docs/products/audio_player/hiby_r3ii/guide",
+      "/docs/products/audio_player/hiby_r6proii/guide",
+      "/docs/products/audio_player/hiby_r6iii/guide",
+      "/docs/products/audio_player/hiby_r2ii/guide",
+      "/docs/products/audio_player/hiby_rs8/guide",
+      "/docs/products/audio_player/hiby_rs2/guide",
+      "/docs/products/audio_player/hiby_rs6/guide",
+      "/docs/products/audio_player/hiby_r3pro/guide",
+      "/docs/products/audio_player/hiby_r3pro_saber/guide",
+      "/docs/products/audio_player/hiby_r6pro/guide",
+      "/docs/products/audio_player/hiby_r6/guide",
+      "/docs/products/usb_dac/",
+      "/docs/products/earphones/hiby_yves+",
+      "/docs/products/bt_reciver/",
+      "/docs/products/dock/",
+      "/docs/products/hifi-accessory-park/",
+      "/docs/products/hiby_hibydigital",
+      "/",
+      "/docs/products/audio_player/",
+      "http://www.hiby.com",
+      "#一产品介绍",
+      "#二按键使用说明",
+      "#三接口使用说明",
+      "#音频输出接口",
+      "#usb-接口",
+      "/docs/guides/usb/massstorage",
+      "/docs/guides/usb/audio",
+      "#充电接口",
+      "#microsdtf-卡接口",
+      "#led-指示灯",
+      "#四开始使用",
+      "#首次开机",
+      "#状态栏",
+      "#主界面",
+      "#快捷操作",
+      "#五音乐",
+      "#音乐界面",
+      "#导入本地音乐",
+      "#通\u0000\u0000过-microsdtf-卡导入音乐",
+      "#通过-usb-导入音乐",
+      "/docs/guides/usb/massstorage",
+      "https://www.paragon-software.com/home/ntfs-mac//",
+      "https://support-eu.wd.com/app/answers/detailweb/a_id/34871/~/external-drive%3A-paragon-ntfs-driver-for-mac",
+      "#播放设置",
+      "#播放界面",
+      "#六流媒体",
+      "#tidal",
+      "#qobuz",
+      "#网络收音机",
+      "/docs/question/audio_player/x1600_r#how_to_add_network_radio",
+      "https://www.reddit.com/r/Hiby/comments/1ehs278/radiotxt_creator/",
+      "https://customradio.dough10.me",
+      "#七无线",
+      "#蓝牙",
+      "/docs/knowledge/bluetooth/a2dp_codec",
+      "#wi-fi",
+      "#hiby-link",
+      "#wi-fi-传歌",
+      "#dlna",
+      "/docs/guides/streaming/dlna",
+      "/docs/guides/streaming/qplay",
+      "#airplay",
+      "/docs/guides/streaming/airplay",
+      "#八电子书",
+      "#九usb-音频",
+      "/docs/guides/usb/audio",
+      "/docs/guides/usb/audio",
+      "#十系统设置",
+      "#十一常见问题",
+      "/docs/question/audio_player/x1600_r",
+      "/docs/products/audio_player/hiby_r6promax/spec",
+      "/docs/products/audio_player/hiby_r3ii_2025/firmware",
+      "#一产品介绍",
+      "#二按键使用说明",
+      "#三接口使用说明",
+      "#音频输出接口",
+      "#usb-接口",
+      "#充电接口",
+      "#microsdtf-卡接口",
+      "#led-指示灯",
+      "#四开始使用",
+      "#首次开机",
+      "#状态栏",
+      "#主界面",
+      "#快捷操作",
+      "#五音乐",
+      "#音乐界面",
+      "#导入本地音乐",
+      "#播放设置",
+      "#播放界面",
+      "#六流媒体",
+      "#tidal",
+      "#qobuz",
+      "#网络收音机",
+      "#七无线",
+      "#蓝牙",
+      "#wi-fi",
+      "#hiby-link",
+      "#wi-fi-传歌",
+      "#dlna",
+      "#airplay",
+      "#八电子书",
+      "#九usb-音频",
+      "#十系统设置",
+      "#十一常见问题",
+      "https://www.hiby.com/",
+      "https://weibo.com/u/6190468063",
+      "https://x.com/hiby_music",
+      "https://www.facebook.com/hibycom",
+      "https://www.instagram.com/hibymusic",
+      "https://guide.hiby.com/",
+      "https://guide.hiby.com/en",
+      "https://guide.hiby.com/ko",
+      "https://beian.miit.gov.cn"
+    ]
+  },
+  {
+    "name": "faq-zh",
+    "url": "https://guide.hiby.com/docs/question/audio_player/x1600_r",
+    "final_url": "https://guide.hiby.com/docs/question/audio_player/x1600_r/",
+    "http_status": 200,
+    "checked_on": "2026-10-27",
+    "raw_work_path": "work/hiby-controls-deepening/raw/faq-zh.html",
+    "raw_sha256": "d132f48295345e8d33eb3a51f2c0cada130e5a2fd7ffc1b8c56f8318dbb96031",
+    "extracted_work_path": "work/hiby-controls-deepening/extracted/faq-zh.txt",
+    "extracted_sha256": "c9869c6af22938401728c93503507dfff7c921451c3802294feb260c924f38d5",
+    "headings": [
+      {
+        "level": "h1",
+        "id": null,
+        "text": "HiBy X1600 R 播放器"
+      },
+      {
+        "level": "h2",
+        "id": "说明",
+        "text": "说明​"
+      },
+      {
+        "level": "h2",
+        "id": "系统",
+        "text": "系统​"
+      },
+      {
+        "level": "h3",
+        "id": "播放器如何升级",
+        "text": "播放器如何升级？​"
+      },
+      {
+        "level": "h3",
+        "id": "支持哪些文件格式的-tfmicrosd-卡",
+        "text": "支持哪些文件格式的 TF/MicroSD 卡？​"
+      },
+      {
+        "level": "h3",
+        "id": "最大支持多大容量的-tfmicrosd-卡",
+        "text": "最大支持多大容量的 TF/MicroSD 卡？​"
+      },
+      {
+        "level": "h2",
+        "id": "电源",
+        "text": "电源​"
+      },
+      {
+        "level": "h3",
+        "id": "睡眠关机定义",
+        "text": "睡眠关机定义​"
+      },
+      {
+        "level": "h3",
+        "id": "省电关机定义",
+        "text": "省电关机定义​"
+      },
+      {
+        "level": "h2",
+        "id": "音频",
+        "text": "音频​"
+      },
+      {
+        "level": "h3",
+        "id": "专辑封面支持规格",
+        "text": "专辑封面支持规格？​"
+      },
+      {
+        "level": "h3",
+        "id": "外置封面规范优先级",
+        "text": "外置封面规范优先级？​"
+      },
+      {
+        "level": "h3",
+        "id": "文件数量有没有限制呢",
+        "text": "\u0000\u0000文件数量有没有限制呢？​"
+      },
+      {
+        "level": "h3",
+        "id": "歌曲-meta-信息优先级",
+        "text": "歌曲 Meta 信息优先级​"
+      },
+      {
+        "level": "h3",
+        "id": "最近播放列表文件保存个数限制",
+        "text": "最近播放列表文件保存个数限制​"
+      },
+      {
+        "level": "h3",
+        "id": "内部播放列表个数限制说明",
+        "text": "内部播放列表个数限制说明​"
+      },
+      {
+        "level": "h3",
+        "id": "x1600-平台支持哪些音乐格式",
+        "text": "X1600 平台支持哪些音乐格式？​"
+      },
+      {
+        "level": "h3",
+        "id": "x1600-平台-cue-支持后缀音乐格式",
+        "text": "X1600 平台 CUE 支持后缀音乐格式？​"
+      },
+      {
+        "level": "h3",
+        "id": "x1600-平台是否支持-dst-音乐文件",
+        "text": "X1600 平台是否支持 DST 音乐文件？​"
+      },
+      {
+        "level": "h3",
+        "id": "x1600-平台各个列表下的曲目顺序定义",
+        "text": "X1600 平台各个列表下的曲目顺序定义？​"
+      },
+      {
+        "level": "h3",
+        "id": "歌曲歌词出现乱码怎么办解决方式和原因",
+        "text": "歌曲、歌词出现乱码怎么办？解决方式和原因？​"
+      },
+      {
+        "level": "h4",
+        "id": "播放歌曲过程中出现错误提示--5-9-11-12--13-分别是什么意思",
+        "text": "播放歌曲过程中出现错误提示 -5，-9，-11，-12, -13 分别是什么意思？​"
+      },
+      {
+        "level": "h3",
+        "id": "无缝播放什么情况下生效",
+        "text": "无缝播放什么情况下生效？​"
+      },
+      {
+        "level": "h3",
+        "id": "蓝牙车载支持歌曲信息吗",
+        "text": "蓝牙车载支持歌曲信息吗？​"
+      },
+      {
+        "level": "h3",
+        "id": "eq均衡器对采样率支持范围",
+        "text": "EQ（均衡器）对采样率支持范围？​"
+      },
+      {
+        "level": "h3",
+        "id": "mseb-对采样率支持范围",
+        "text": "MSEB 对采样率支持范围？​"
+      },
+      {
+        "level": "h3",
+        "id": "dsd输出模式pcmdopnative功能定义",
+        "text": "DSD 输出模式（PCM\\DoP\\Native）功能定义​"
+      },
+      {
+        "level": "h3",
+        "id": "qobuz-报-400-错误",
+        "text": "Qobuz 报 400 错误？​"
+      },
+      {
+        "level": "h3",
+        "id": "usb-dac-输入蓝牙输出事项说明",
+        "text": "USB DAC 输入蓝牙输出，事项说明：​"
+      },
+      {
+        "level": "h2",
+        "id": "其他",
+        "text": "其他​"
+      },
+      {
+        "level": "h3",
+        "id": "如何设置和添加动态封面",
+        "text": "如何设置和添加动态封面？​"
+      },
+      {
+        "level": "h3",
+        "id": "how_to_add_network_radio",
+        "text": "如何添加自定义网络电台？​"
+      },
+      {
+        "level": "h3",
+        "id": "导入导出播放列表",
+        "text": "导入导出播放列表​"
+      },
+      {
+        "level": "h3",
+        "id": "m3u-解析处理逻辑",
+        "text": "m3u 解析处理逻辑​"
+      }
+    ],
+    "images": [],
+    "links": [
+      "#__docusaurus_skipToContent_fallback",
+      "/",
+      "/docs/guides/hibymusic/hibymusic_android_guide",
+      "/docs/products/audio_player/",
+      "/docs/question/common/common",
+      "/docs/knowledge/audio/keywords",
+      "#",
+      "/docs/question/audio_player/x1600_r",
+      "/en/docs/question/audio_player/x1600_r",
+      "/ko/docs/question/audio_player/x1600_r",
+      "/docs/question/common/common",
+      "/docs/question/audio_player/android_r",
+      "/docs/question/audio_player/android_r",
+      "/docs/question/audio_player/x1000_r",
+      "/docs/question/audio_player/x1600_r",
+      "/docs/question/audio_player/android_m",
+      "/docs/question/usb_dac/main",
+      "/docs/question/bt_reciver/bt_cover_support",
+      "/",
+      "#说明",
+      "#系统",
+      "#播放器如何升级",
+      "#支持哪些文件格式的-tfmicrosd-卡",
+      "#最大支持多大容量的-tfmicrosd-卡",
+      "#电源",
+      "#睡眠关机定义",
+      "#省电关机定义",
+      "#音频",
+      "#专辑封面支持规格",
+      "#外置封面规范优先级",
+      "#文件数量有没有限制呢",
+      "#歌曲-meta-信息优先级",
+      "#最近播放列表文件保存个数限制",
+      "#内部播放列表个数限制说明",
+      "#x1600-平台支持哪些音乐格式",
+      "#x1600-平台-cue-支持后缀音乐格式",
+      "#x1600-平台是否支持-dst-音乐文件",
+      "#x1600-平台各个列表下的曲目顺序定义",
+      "#歌曲歌词出现乱码怎么办解决方式和原因",
+      "#播放歌曲过程中出现错误提示--5-9-11-12--13-分别是什么意思",
+      "mailto:ringsd@hiby.com",
+      "#无缝播放什么情况下生效",
+      "#蓝牙车载支持歌曲信息吗",
+      "#eq均衡器对采样率支持范围",
+      "#mseb-对采样率支持范围",
+      "#dsd输出模式pcmdopnative功能定义",
+      "#qobuz-报-400-错误",
+      "#usb-dac-输入蓝牙输出事项说明",
+      "#其他",
+      "#如何设置和添加动态封面",
+      "#how_to_add_network_radio",
+      "https://www.reddit.com/r/Hiby/comments/1ehs278/radiotxt_creator/",
+      "https://customradio.dough10.me",
+      "#导入导出播放列表",
+      "#m3u-解析处理逻辑",
+      "/docs/question/audio_player/x1000_r",
+      "/docs/question/audio_player/android_m",
+      "#说明",
+      "#系统",
+      "#播放器如何升级",
+      "#支持哪些文件格式的-tfmicrosd-卡",
+      "#最大支持多大容量的-tfmicrosd-卡",
+      "#电源",
+      "#睡眠关机定义",
+      "#省电关机定义",
+      "#音频",
+      "#专辑封面支持规格",
+      "#外置封面规范优先级",
+      "#文件数量有没有限制呢",
+      "#歌曲-meta-信息优先级",
+      "#最近播放列表文件保存个数限制",
+      "#内部播放列表个数限制说明",
+      "#x1600-平台支持哪些音乐格式",
+      "#x1600-平台-cue-支持后缀音乐格式",
+      "#x1600-平台是否支持-dst-音乐文件",
+      "#x1600-平台各个列表下的曲目顺序定义",
+      "#歌曲歌词出现乱码怎么办解决方式和原因",
+      "#无缝播放什么情况下生效",
+      "#蓝牙车载支持歌曲信息吗",
+      "#eq均衡器对采样率支持范围",
+      "#mseb-对采样率支持范围",
+      "#dsd输出模式pcmdopnative功能定义",
+      "#qobuz-报-400-错误",
+      "#usb-dac-输入蓝牙输出事项说明",
+      "#其他",
+      "#如何设置和添加动态封面",
+      "#how_to_add_network_radio",
+      "#导入导出播放列表",
+      "#m3u-解析处理逻辑",
+      "https://www.hiby.com/",
+      "https://weibo.com/u/6190468063",
+      "https://x.com/hiby_music",
+      "https://www.facebook.com/hibycom",
+      "https://www.instagram.com/hibymusic",
+      "https://guide.hiby.com/",
+      "https://guide.hiby.com/en",
+      "https://guide.hiby.com/ko",
+      "https://beian.miit.gov.cn"
+    ]
+  },
+  {
+    "name": "store-help",
+    "url": "https://store.hiby.com/apps/help-center",
+    "http_status": 403,
+    "access_mode": "stopped"
+  },
+  {
+    "name": "spec-zh",
+    "url": "https://guide.hiby.com/docs/products/audio_player/hiby_r3ii_2025/spec/",
+    "final_url": "https://guide.hiby.com/docs/products/audio_player/hiby_r3ii_2025/spec/",
+    "http_status": 200,
+    "checked_on": "2026-10-27",
+    "raw_work_path": "work/hiby-controls-deepening/raw/spec-zh.html",
+    "raw_sha256": "f741f4fed613ad0709abf57795962b27e7729f292765fe2ad29db963f4318b2e",
+    "extracted_work_path": "work/hiby-controls-deepening/extracted/spec-zh.txt",
+    "extracted_sha256": "00c65f0e14dca5cf77574a4fc42ac8cfa606eaecc67f2ec02fb4c1b1a52832dc",
+    "headings": [
+      {
+        "level": "h1",
+        "id": null,
+        "text": "HiBy R3II(2025) 规格"
+      },
+      {
+        "level": "h2",
+        "id": "硬件平台",
+        "text": "硬件平台​"
+      },
+      {
+        "level": "h2",
+        "id": "软件平台",
+        "text": "软件平台​"
+      },
+      {
+        "level": "h3",
+        "id": "通用功能",
+        "text": "通用功能​"
+      },
+      {
+        "level": "h3",
+        "id": "输出接口",
+        "text": "输出接口​"
+      },
+      {
+        "level": "h3",
+        "id": "输出音频规格",
+        "text": "输出音频规格​"
+      },
+      {
+        "level": "h3",
+        "id": "音频文件规格",
+        "text": "音频文件规格​"
+      }
+    ],
+    "images": [],
+    "links": [
+      "#__docusaurus_skipToContent_fallback",
+      "/",
+      "/docs/guides/hibymusic/hibymusic_android_guide",
+      "/docs/products/audio_player/",
+      "/docs/question/common/common",
+      "/docs/knowledge/audio/keywords",
+      "#",
+      "/docs/products/audio_player/hiby_r3ii_2025/spec",
+      "/en/docs/products/audio_player/hiby_r3ii_2025/spec",
+      "/ko/docs/products/audio_player/hiby_r3ii_2025/spec",
+      "/docs/products/audio_player/",
+      "/docs/products/audio_player/hiby_rs2ii/guide",
+      "/docs/products/audio_player/hiby_rs8ii/guide",
+      "/docs/products/audio_player/hibydigital_m500miku/guide",
+      "/docs/products/audio_player/hiby_R4_MIDI/guide",
+      "/docs/products/audio_player/hiby_r1_midi/guide",
+      "/docs/products/audio_player/hiby_r6proii2025/guide",
+      "/docs/products/audio_player/hiby_r3proii/guide",
+      "/docs/products/audio_player/hiby_r6promaxtai/guide",
+      "/docs/products/audio_player/hiby_r6iii_2025/guide",
+      "/docs/products/audio_player/hiby_r6promax/guide",
+      "/docs/products/audio_player/hiby_r3ii_2025/guide",
+      "/docs/products/audio_player/hiby_r3ii_2025/guide",
+      "/docs/products/audio_player/hiby_r3ii_2025/firmware",
+      "/docs/products/audio_player/hiby_r3ii_2025/spec",
+      "/docs/products/audio_player/hiby_r1/guide",
+      "/docs/products/audio_player/hiby_r4_eva/guide",
+      "/docs/products/audio_player/hiby_r4/guide",
+      "/docs/products/audio_player/hiby_r8ii/guide",
+      "/docs/products/audio_player/hibydigital_m300/guide",
+      "/docs/products/audio_player/hiby_r3ii/guide",
+      "/docs/products/audio_player/hiby_r6proii/guide",
+      "/docs/products/audio_player/hiby_r6iii/guide",
+      "/docs/products/audio_player/hiby_r2ii/guide",
+      "/docs/products/audio_player/hiby_rs8/guide",
+      "/docs/products/audio_player/hiby_rs2/guide",
+      "/docs/products/audio_player/hiby_rs6/guide",
+      "/docs/products/audio_player/hiby_r3pro/guide",
+      "/docs/products/audio_player/hiby_r3pro_saber/guide",
+      "/docs/products/audio_player/hiby_r6pro/guide",
+      "/docs/products/audio_player/hiby_r6/guide",
+      "/docs/products/usb_dac/",
+      "/docs/products/earphones/hiby_yves+",
+      "/docs/products/bt_reciver/",
+      "/docs/products/dock/",
+      "/docs/products/hifi-accessory-park/",
+      "/docs/products/hiby_hibydigital",
+      "/",
+      "/docs/products/audio_player/",
+      "#硬件平台",
+      "#软件平台",
+      "#通用功能",
+      "#输出接口",
+      "#输出音频规格",
+      "#音频文件规格",
+      "/docs/products/audio_player/hiby_r3ii_2025/firmware",
+      "/docs/products/audio_player/hiby_r1/guide",
+      "#硬件平台",
+      "#软件平台",
+      "#通用功能",
+      "#输出接口",
+      "#输出音频规格",
+      "#音频文件规格",
+      "https://www.hiby.com/",
+      "https://weibo.com/u/6190468063",
+      "https://x.com/hiby_music",
+      "https://www.facebook.com/hibycom",
+      "https://www.instagram.com/hibymusic",
+      "https://guide.hiby.com/",
+      "https://guide.hiby.com/en",
+      "https://guide.hiby.com/ko",
+      "https://beian.miit.gov.cn"
+    ]
+  }
+]

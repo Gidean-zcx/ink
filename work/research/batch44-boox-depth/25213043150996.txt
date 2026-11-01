@@ -1,0 +1,83 @@
+Navigate your tablets through Screen Rotation, Navigation Bar, Gestures, and Navigation Ball.
+Screen Rotation
+The screen of all models can be rotated. If your device is designed with an asymmetric bezel, you can rotate the screen to place the slim side to your dominant hand so the wide side can be held by your non-dominant hand. Auto-rotate is only available for models with G Sensor.
+1. Swipe down from the top right corner to open the Control Center.
+2. Tap the Rotate button in the Shortcut Switches.
+3. Choose the preferred orientation in Manual rotation.
+Smart Assistant
+Smart Assistant is a screen of useful shortcuts on your BOOX Tab Series device.
+How to Access
+Swipe right on the first page of the Home Screen to access Smart Assistant.
+Search Box
+Here you can enter a keyword and directly search on Google.
+Customize Smart Assistant
+You can customize Smart Assistant by tapping the + button on the upper right corner. Here you can toggle the options to show/hide the app widgets in Smart Assistant.
+Enable / Disable Smart Assistant
+To turn on / off Smart Assistant, do the following:
+1. Long press a blank area of the Home Screen to enter Edit Mode.
+2. Tap Desktop Settings.
+3. Toggle on/off Smart Assistant.
+or
+1. Go to the Settings page.
+2. Choose Desktop & Screensaver.
+3. Toggle on/off Smart Assistant.
+System Bar
+The System Bar is an informative area displayed on the top of your device to show time, Bluetooth connection, battery power, etc.
+Control Center
+Control Center can be opened by swiping down from / tapping the right side of the System Bar. This area contains some quick settings for your devices. You can also customize the Shortcut Switches area by tapping the Edit icon in the upper right corner.
+Notification Center
+The Notification Center can be opened by swiping down from / tapping the left side of the System Bar. This area displays notifications from your device and apps. You can also manage notifications or perform Clear All by tapping the recycle bin button from the top right corner.
+Navigation Bar
+Use the navigation bar on the bottom to get quick access to common functions. Do the following to enable and customize the Navigation Bar:
+Settings＞System Navigation＞Navigation Bar＞More Settings
+Note: In some apps where the Navigation Bar is automatically hidden, you will need to swipe up from the bottom to call out the Navigation Bar first.
+Gestures
+Basic Gestures
+Tap: To select an item or choose an option.
+Swipe Left: To go to the next page.
+Swipe Right: To go to the previous page.
+Three-finger Swipe Down: You can take a screenshot by swiping down the screen with three fingers. To enable or disable the gesture, go to Settings > More Settings > Screenshots.
+Long Press: To open a pop-up menu or check the properties of files.
+Bottom Gestures
+Swipe up in different parts from the bottom to perform quick actions. You can customize it by doing the following:
+Settings＞System Navigation＞Bottom Navigation＞More Settings
+Side Gestures
+Side gestures are turned off by default. You can enable and customize them by doing the following:
+Settings＞System Navigation＞Side Gestures
+1. Up-and-down Swipe Gestures
+Swipe up or down on either side of the border to adjust the volume, front light, or contrast settings.
+2. Left-and-right Swipe Gestures
+This part of gestures is turned off by default. You can enable and customize them to perform going back or other actions by swiping inwards on either side of the border.
+Multi-Finger Gestures
+The BOOX Tab Series devices are available with multi-finger gestures. The current firmware includes the three-finger swipe down to take a screenshot. We will introduce more multi-finger gestures in the future.
+To enable/disable quick screenshots by swiping down with three fingers, do the following:
+1. Home Screen > Settings > More Settings > Screenshots.
+2. Toggle on/off Swipe down with three fingers to take a screenshot.
+3. You can also press and hold the Power button and lower Volume button to take a screenshot.
+Navigation Ball
+The Navigation Ball is a system feature that provides quick access to different functions. You can customize up to 9 functions on the Navigation Ball.
+Enable / Disable the Navigation Ball
+There are several ways to turn on / off the Navigation Ball.
+Method 1: Via the Navigation Ball App
+1. In Home Screen, find and open the Navigation Ball app.
+2. Turn on / off "Enable Navigation Ball".
+Method 2: Via the Settings page
+1. In Home Screen, go to Settings > System Settings > Navigation Ball.
+2. Turn on / off "Enable Navigation Ball".
+Method 3: Via the Control Center
+1. Swipe down from the top right corner to open the Control Center.
+2. Find and tap the Navigation Ball button in the Shortcut Switches to turn it on or off.
+Note: If you cannot find the Navigation Ball button on the Control Center, you may do the following:
+1. Swipe down from the top right corner to open the Control Center.
+2. Tap the Edit icon.
+3. Drag and drop the Navigation Ball button to the enabled Shortcut Switches.
+Navigation Ball Gestures
+Tap: Expand or collapse the navigation menu.
+Double Tap: Return to the Home Screen.
+Drag: Move the Navigation Ball.
+Customize the Navigation Ball
+There are 4 ways to customize the Navigation Ball. You can customize the buttons' display style, opacity, and size. You can choose which button to be shown on the menu or pin it as an independent floating button.
+1. Home Screen＞Apps＞Navigation Ball app.
+2. Long press the Navigation Ball button in the Control Center.
+3. Tap the Navigation Ball＞Navigation Ball Settings button.
+4. Home Screen＞Settings > More Settings > NaviBall.

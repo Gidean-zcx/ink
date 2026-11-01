@@ -1,0 +1,49 @@
+{
+  "links": [
+    {
+      "title": "Kobo Libra Colour",
+      "url": "https://help.kobo.com/hc/en-us/articles/17971574287895",
+      "section": ""
+    },
+    {
+      "title": "Kobo Clara Colour",
+      "url": "https://help.kobo.com/hc/en-us/articles/18001606982679",
+      "section": ""
+    },
+    {
+      "title": "About the Reading Menu",
+      "url": "https://help.kobo.com/hc/en-us/articles/360020494854",
+      "section": "Learn more"
+    },
+    {
+      "title": "Adjust font size and change the font style on your Kobo eReader",
+      "url": "https://help.kobo.com/hc/en-us/articles/360017639913",
+      "section": "Learn more"
+    }
+  ],
+  "headings": [
+    "Learn more"
+  ],
+  "images": [
+    {
+      "src": "https://help.kobo.com/hc/article_attachments/25996602656023",
+      "alt": ""
+    },
+    {
+      "src": "https://help.kobo.com/hc/article_attachments/25996602651543",
+      "alt": "Kobo eReader Reading Menu with the gear icon highlighted."
+    },
+    {
+      "src": "https://help.kobo.com/hc/article_attachments/25996616847511",
+      "alt": "Reading Settings menu with the page number of the menu highlighted."
+    },
+    {
+      "src": "https://help.kobo.com/hc/article_attachments/25996616854039",
+      "alt": "Checkbox beside Reduce Rainbow effect option highlighted."
+    },
+    {
+      "src": "https://help.kobo.com/hc/article_attachments/25996602657175",
+      "alt": ""
+    }
+  ]
+}

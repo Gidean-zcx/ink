@@ -1,0 +1,41 @@
+{
+  "checked_on": "2026-10-27",
+  "web_search_queries": [
+    "site.toutiao.com 今日头条 帮助中心 不感兴趣 长按 推荐设置",
+    "site.toutiao.com 今日头条 关注 频道 收藏 历史记录 帮助",
+    "今日头条 官方 不感兴趣 长按 关键词 屏蔽",
+    "site.toutiao.com \"您好，如刷到了\" \"不感兴趣\"",
+    "site.toutiao.com \"帮助\" \"如何收藏\"",
+    "site.toutiao.com \"今日头条官方\" \"长按\" \"不感兴趣\"",
+    "site.toutiao.com \"用户反馈\" \"常见问题\"",
+    "今日头条 \"长按\" \"头条小秘书\" 不感兴趣",
+    "今日头条 \"不感兴趣\" \"官方\" \"屏蔽作者\"",
+    "site.toutiao.com \"头条产品\" \"收藏\"",
+    "今日头条 官方 帮助中心 阅读 历史 收藏",
+    "site.toutiao.com \"不感兴趣\" \"头条产品经理\"",
+    "site.toutiao.com \"收藏夹\" \"头条产品\"",
+    "site.toutiao.com \"长按\" \"今日头条\" \"官方账号\" 不感兴趣",
+    "今日头条帮助中心 官网 反馈 feedback"
+  ],
+  "opened_public_pages": [
+    "https://baike.toutiao.com/detail/195/282/0"
+  ],
+  "stopped_paths": [
+    {
+      "url": "https://www.toutiao.com/",
+      "method": "ordinary GET",
+      "http_status": 200,
+      "result": "JavaScript/ttwid identity bootstrap only; not reader/help body",
+      "action": "no JS or identity call, no retry"
+    },
+    {
+      "url": "https://www.toutiao.com/feedback/",
+      "method": "web tool open",
+      "http_status": null,
+      "result": "URL not accessible via this tool",
+      "action": "stopped; no fallback GET"
+    }
+  ],
+  "excluded": "third-party aggregators, personal tutorials and generic Toutiao articles without official authorship; no remote videos read",
+  "known_prior_product_http_failure": "No matching saved M052 401/403/429 record located; not a claim that all historical access succeeded"
+}

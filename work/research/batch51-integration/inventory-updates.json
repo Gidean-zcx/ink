@@ -1,0 +1,1551 @@
+[
+  {
+    "file": "quaderno-gen2-ink-inventory.csv",
+    "before": {
+      "inventory_id": "I-QGNT-048",
+      "model": "Gen.2 FMVDP41/FMVDP51",
+      "item": "6. ドキュメントの名称変更／複製／移動／削除",
+      "locator": "PDF/print p35; outline level 2",
+      "coverage_status": "toc_extracted_not_reviewed",
+      "evidence_ids": "E-QGNT-01",
+      "flow_ids": "",
+      "gap": "仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作"
+    },
+    "after": {
+      "inventory_id": "I-QGNT-048",
+      "model": "Gen.2 FMVDP41/FMVDP51",
+      "item": "6. ドキュメントの名称変更／複製／移動／削除",
+      "locator": "PDF/print p35; outline level 2",
+      "coverage_status": "selected_body_pages_read_task_partial",
+      "evidence_ids": "E-QGNT-01",
+      "flow_ids": "F-M060-04;F-M060-20",
+      "gap": "本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留"
+    }
+  },
+  {
+    "file": "quaderno-gen2-ink-inventory.csv",
+    "before": {
+      "inventory_id": "I-QGNT-049",
+      "model": "Gen.2 FMVDP41/FMVDP51",
+      "item": "ドキュメント画面から操作する",
+      "locator": "PDF/print p35; outline level 3",
+      "coverage_status": "toc_extracted_not_reviewed",
+      "evidence_ids": "E-QGNT-01",
+      "flow_ids": "",
+      "gap": "仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作"
+    },
+    "after": {
+      "inventory_id": "I-QGNT-049",
+      "model": "Gen.2 FMVDP41/FMVDP51",
+      "item": "ドキュメント画面から操作する",
+      "locator": "PDF/print p35; outline level 3",
+      "coverage_status": "selected_body_pages_read_task_partial",
+      "evidence_ids": "E-QGNT-01",
+      "flow_ids": "F-M060-04;F-M060-20",
+      "gap": "本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留"
+    }
+  },
+  {
+    "file": "quaderno-gen2-ink-inventory.csv",
+    "before": {
+      "inventory_id": "I-QGNT-050",
+      "model": "Gen.2 FMVDP41/FMVDP51",
+      "item": "「フォルダーから探す」から操作する",
+      "locator": "PDF/print p36; outline level 3",
+      "coverage_status": "toc_extracted_not_reviewed",
+      "evidence_ids": "E-QGNT-01",
+      "flow_ids": "",
+      "gap": "仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作"
+    },
+    "after": {
+      "inventory_id": "I-QGNT-050",
+      "model": "Gen.2 FMVDP41/FMVDP51",
+      "item": "「フォルダーから探す」から操作する",
+      "locator": "PDF/print p36; outline level 3",
+      "coverage_status": "selected_body_pages_read_task_partial",
+      "evidence_ids": "E-QGNT-01",
+      "flow_ids": "F-M060-04;F-M060-20",
+      "gap": "本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留"
+    }
+  },
+  {
+    "file": "quaderno-gen2-ink-inventory.csv",
+    "before": {
+      "inventory_id": "I-QGNT-051",
+      "model": "Gen.2 FMVDP41/FMVDP51",
+      "item": "「一覧から探す」から操作する",
+      "locator": "PDF/print p37; outline level 3",
+      "coverage_status": "toc_extracted_not_reviewed",
+      "evidence_ids": "E-QGNT-01",
+      "flow_ids": "",
+      "gap": "仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作"
+    },
+    "after": {
+      "inventory_id": "I-QGNT-051",
+      "model": "Gen.2 FMVDP41/FMVDP51",
+      "item": "「一覧から探す」から操作する",
+      "locator": "PDF/print p37; outline level 3",
+      "coverage_status": "selected_body_pages_read_task_partial",
+      "evidence_ids": "E-QGNT-01",
+      "flow_ids": "F-M060-04;F-M060-20",
+      "gap": "本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留"
+    }
+  },
+  {
+    "file": "quaderno-gen2-ink-inventory.csv",
+    "before": {
+      "inventory_id": "I-QGNT-052",
+      "model": "Gen.2 FMVDP41/FMVDP51",
+      "item": "「ごみ箱」フォルダーを操作する",
+      "locator": "PDF/print p38; outline level 3",
+      "coverage_status": "toc_extracted_not_reviewed",
+      "evidence_ids": "E-QGNT-01",
+      "flow_ids": "",
+      "gap": "仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作"
+    },
+    "after": {
+      "inventory_id": "I-QGNT-052",
+      "model": "Gen.2 FMVDP41/FMVDP51",
+      "item": "「ごみ箱」フォルダーを操作する",
+      "locator": "PDF/print p38; outline level 3",
+      "coverage_status": "selected_body_pages_read_task_partial",
+      "evidence_ids": "E-QGNT-01",
+      "flow_ids": "F-M060-04",
+      "gap": "本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留"
+    }
+  },
+  {
+    "file": "quaderno-gen2-ink-inventory.csv",
+    "before": {
+      "inventory_id": "I-QGNT-109",
+      "model": "Gen.2 FMVDP41/FMVDP51",
+      "item": "4. ドキュメントを転送する",
+      "locator": "PDF/print p85; outline level 2",
+      "coverage_status": "toc_extracted_not_reviewed",
+      "evidence_ids": "E-QGNT-01",
+      "flow_ids": "",
+      "gap": "仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作"
+    },
+    "after": {
+      "inventory_id": "I-QGNT-109",
+      "model": "Gen.2 FMVDP41/FMVDP51",
+      "item": "4. ドキュメントを転送する",
+      "locator": "PDF/print p85; outline level 2",
+      "coverage_status": "selected_body_pages_read_task_partial",
+      "evidence_ids": "E-QGNT-01",
+      "flow_ids": "F-M060-18",
+      "gap": "本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留"
+    }
+  },
+  {
+    "file": "quaderno-gen2-ink-inventory.csv",
+    "before": {
+      "inventory_id": "I-QGNT-110",
+      "model": "Gen.2 FMVDP41/FMVDP51",
+      "item": "パソコンからドキュメントを転送する",
+      "locator": "PDF/print p85; outline level 3",
+      "coverage_status": "toc_extracted_not_reviewed",
+      "evidence_ids": "E-QGNT-01",
+      "flow_ids": "",
+      "gap": "仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作"
+    },
+    "after": {
+      "inventory_id": "I-QGNT-110",
+      "model": "Gen.2 FMVDP41/FMVDP51",
+      "item": "パソコンからドキュメントを転送する",
+      "locator": "PDF/print p85; outline level 3",
+      "coverage_status": "selected_body_pages_read_task_partial",
+      "evidence_ids": "E-QGNT-01",
+      "flow_ids": "F-M060-18",
+      "gap": "本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留"
+    }
+  },
+  {
+    "file": "quaderno-gen2-ink-inventory.csv",
+    "before": {
+      "inventory_id": "I-QGNT-111",
+      "model": "Gen.2 FMVDP41/FMVDP51",
+      "item": "印刷機能を利用してクアデルノに転送・表示する",
+      "locator": "PDF/print p85; outline level 3",
+      "coverage_status": "toc_extracted_not_reviewed",
+      "evidence_ids": "E-QGNT-01",
+      "flow_ids": "",
+      "gap": "仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作"
+    },
+    "after": {
+      "inventory_id": "I-QGNT-111",
+      "model": "Gen.2 FMVDP41/FMVDP51",
+      "item": "印刷機能を利用してクアデルノに転送・表示する",
+      "locator": "PDF/print p85; outline level 3",
+      "coverage_status": "selected_body_pages_read_task_partial",
+      "evidence_ids": "E-QGNT-01",
+      "flow_ids": "F-M060-18",
+      "gap": "本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留"
+    }
+  },
+  {
+    "file": "quaderno-gen2-ink-inventory.csv",
+    "before": {
+      "inventory_id": "I-QGNT-112",
+      "model": "Gen.2 FMVDP41/FMVDP51",
+      "item": "パソコンへドキュメントを転送する",
+      "locator": "PDF/print p86; outline level 3",
+      "coverage_status": "toc_extracted_not_reviewed",
+      "evidence_ids": "E-QGNT-01",
+      "flow_ids": "",
+      "gap": "仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作"
+    },
+    "after": {
+      "inventory_id": "I-QGNT-112",
+      "model": "Gen.2 FMVDP41/FMVDP51",
+      "item": "パソコンへドキュメントを転送する",
+      "locator": "PDF/print p86; outline level 3",
+      "coverage_status": "selected_body_pages_read_task_partial",
+      "evidence_ids": "E-QGNT-01",
+      "flow_ids": "F-M060-18",
+      "gap": "本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留"
+    }
+  },
+  {
+    "file": "quaderno-gen2-ink-inventory.csv",
+    "before": {
+      "inventory_id": "I-QGNT-113",
+      "model": "Gen.2 FMVDP41/FMVDP51",
+      "item": "5. バックアップする",
+      "locator": "PDF/print p87; outline level 2",
+      "coverage_status": "toc_extracted_not_reviewed",
+      "evidence_ids": "E-QGNT-01",
+      "flow_ids": "",
+      "gap": "仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作"
+    },
+    "after": {
+      "inventory_id": "I-QGNT-113",
+      "model": "Gen.2 FMVDP41/FMVDP51",
+      "item": "5. バックアップする",
+      "locator": "PDF/print p87; outline level 2",
+      "coverage_status": "selected_body_pages_read_task_partial",
+      "evidence_ids": "E-QGNT-01",
+      "flow_ids": "F-M060-06;F-M060-07",
+      "gap": "本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留"
+    }
+  },
+  {
+    "file": "quaderno-gen2-ink-inventory.csv",
+    "before": {
+      "inventory_id": "I-QGNT-114",
+      "model": "Gen.2 FMVDP41/FMVDP51",
+      "item": "バックアップする",
+      "locator": "PDF/print p87; outline level 3",
+      "coverage_status": "toc_extracted_not_reviewed",
+      "evidence_ids": "E-QGNT-01",
+      "flow_ids": "",
+      "gap": "仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作"
+    },
+    "after": {
+      "inventory_id": "I-QGNT-114",
+      "model": "Gen.2 FMVDP41/FMVDP51",
+      "item": "バックアップする",
+      "locator": "PDF/print p87; outline level 3",
+      "coverage_status": "selected_body_pages_read_task_partial",
+      "evidence_ids": "E-QGNT-01",
+      "flow_ids": "F-M060-06;F-M060-07",
+      "gap": "本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留"
+    }
+  },
+  {
+    "file": "quaderno-gen2-ink-inventory.csv",
+    "before": {
+      "inventory_id": "I-QGNT-115",
+      "model": "Gen.2 FMVDP41/FMVDP51",
+      "item": "バックアップをインポートする",
+      "locator": "PDF/print p87; outline level 3",
+      "coverage_status": "toc_extracted_not_reviewed",
+      "evidence_ids": "E-QGNT-01",
+      "flow_ids": "",
+      "gap": "仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作"
+    },
+    "after": {
+      "inventory_id": "I-QGNT-115",
+      "model": "Gen.2 FMVDP41/FMVDP51",
+      "item": "バックアップをインポートする",
+      "locator": "PDF/print p87; outline level 3",
+      "coverage_status": "selected_body_pages_read_task_partial",
+      "evidence_ids": "E-QGNT-01",
+      "flow_ids": "F-M060-06;F-M060-07",
+      "gap": "本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留"
+    }
+  },
+  {
+    "file": "quaderno-gen2-ink-inventory.csv",
+    "before": {
+      "inventory_id": "I-QGNT-116",
+      "model": "Gen.2 FMVDP41/FMVDP51",
+      "item": "バックアップデータを削除する",
+      "locator": "PDF/print p88; outline level 3",
+      "coverage_status": "toc_extracted_not_reviewed",
+      "evidence_ids": "E-QGNT-01",
+      "flow_ids": "",
+      "gap": "仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作"
+    },
+    "after": {
+      "inventory_id": "I-QGNT-116",
+      "model": "Gen.2 FMVDP41/FMVDP51",
+      "item": "バックアップデータを削除する",
+      "locator": "PDF/print p88; outline level 3",
+      "coverage_status": "selected_body_pages_read_task_partial",
+      "evidence_ids": "E-QGNT-01",
+      "flow_ids": "F-M060-06",
+      "gap": "本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留"
+    }
+  },
+  {
+    "file": "quaderno-gen2-ink-inventory.csv",
+    "before": {
+      "inventory_id": "I-QGNT-117",
+      "model": "Gen.2 FMVDP41/FMVDP51",
+      "item": "6. クアデルノとパソコンを同期する",
+      "locator": "PDF/print p89; outline level 2",
+      "coverage_status": "toc_extracted_not_reviewed",
+      "evidence_ids": "E-QGNT-01",
+      "flow_ids": "",
+      "gap": "仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作"
+    },
+    "after": {
+      "inventory_id": "I-QGNT-117",
+      "model": "Gen.2 FMVDP41/FMVDP51",
+      "item": "6. クアデルノとパソコンを同期する",
+      "locator": "PDF/print p89; outline level 2",
+      "coverage_status": "selected_body_pages_read_task_partial",
+      "evidence_ids": "E-QGNT-01",
+      "flow_ids": "F-M060-08",
+      "gap": "本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留"
+    }
+  },
+  {
+    "file": "quaderno-gen2-ink-inventory.csv",
+    "before": {
+      "inventory_id": "I-QGNT-118",
+      "model": "Gen.2 FMVDP41/FMVDP51",
+      "item": "同期するうえでのご注意",
+      "locator": "PDF/print p90; outline level 3",
+      "coverage_status": "toc_extracted_not_reviewed",
+      "evidence_ids": "E-QGNT-01",
+      "flow_ids": "",
+      "gap": "仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作"
+    },
+    "after": {
+      "inventory_id": "I-QGNT-118",
+      "model": "Gen.2 FMVDP41/FMVDP51",
+      "item": "同期するうえでのご注意",
+      "locator": "PDF/print p90; outline level 3",
+      "coverage_status": "selected_body_pages_read_task_partial",
+      "evidence_ids": "E-QGNT-01",
+      "flow_ids": "F-M060-08;F-M060-04",
+      "gap": "本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留"
+    }
+  },
+  {
+    "file": "quaderno-gen2-ink-inventory.csv",
+    "before": {
+      "inventory_id": "I-QGNT-119",
+      "model": "Gen.2 FMVDP41/FMVDP51",
+      "item": "同期するパソコンのフォルダーを設定する",
+      "locator": "PDF/print p90; outline level 3",
+      "coverage_status": "toc_extracted_not_reviewed",
+      "evidence_ids": "E-QGNT-01",
+      "flow_ids": "",
+      "gap": "仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作"
+    },
+    "after": {
+      "inventory_id": "I-QGNT-119",
+      "model": "Gen.2 FMVDP41/FMVDP51",
+      "item": "同期するパソコンのフォルダーを設定する",
+      "locator": "PDF/print p90; outline level 3",
+      "coverage_status": "selected_body_pages_read_task_partial",
+      "evidence_ids": "E-QGNT-01",
+      "flow_ids": "F-M060-08;F-M060-04",
+      "gap": "本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留"
+    }
+  },
+  {
+    "file": "quaderno-gen2-ink-inventory.csv",
+    "before": {
+      "inventory_id": "I-QGNT-120",
+      "model": "Gen.2 FMVDP41/FMVDP51",
+      "item": "同期したフォルダー内の内容を更新する",
+      "locator": "PDF/print p90; outline level 3",
+      "coverage_status": "toc_extracted_not_reviewed",
+      "evidence_ids": "E-QGNT-01",
+      "flow_ids": "",
+      "gap": "仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作"
+    },
+    "after": {
+      "inventory_id": "I-QGNT-120",
+      "model": "Gen.2 FMVDP41/FMVDP51",
+      "item": "同期したフォルダー内の内容を更新する",
+      "locator": "PDF/print p90; outline level 3",
+      "coverage_status": "selected_body_pages_read_task_partial",
+      "evidence_ids": "E-QGNT-01",
+      "flow_ids": "F-M060-08;F-M060-04",
+      "gap": "本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留"
+    }
+  },
+  {
+    "file": "quaderno-gen2-ink-inventory.csv",
+    "before": {
+      "inventory_id": "I-QGNT-121",
+      "model": "Gen.2 FMVDP41/FMVDP51",
+      "item": "同期設定を解除する",
+      "locator": "PDF/print p90; outline level 3",
+      "coverage_status": "toc_extracted_not_reviewed",
+      "evidence_ids": "E-QGNT-01",
+      "flow_ids": "",
+      "gap": "仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作"
+    },
+    "after": {
+      "inventory_id": "I-QGNT-121",
+      "model": "Gen.2 FMVDP41/FMVDP51",
+      "item": "同期設定を解除する",
+      "locator": "PDF/print p90; outline level 3",
+      "coverage_status": "selected_body_pages_read_task_partial",
+      "evidence_ids": "E-QGNT-01",
+      "flow_ids": "F-M060-08;F-M060-04",
+      "gap": "本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留"
+    }
+  },
+  {
+    "file": "quaderno-gen2-ink-inventory.csv",
+    "before": {
+      "inventory_id": "I-QGNT-122",
+      "model": "Gen.2 FMVDP41/FMVDP51",
+      "item": "7. QUADERNO PC Appで検索する",
+      "locator": "PDF/print p91; outline level 2",
+      "coverage_status": "toc_extracted_not_reviewed",
+      "evidence_ids": "E-QGNT-01",
+      "flow_ids": "",
+      "gap": "仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作"
+    },
+    "after": {
+      "inventory_id": "I-QGNT-122",
+      "model": "Gen.2 FMVDP41/FMVDP51",
+      "item": "7. QUADERNO PC Appで検索する",
+      "locator": "PDF/print p91; outline level 2",
+      "coverage_status": "selected_body_pages_read_task_partial",
+      "evidence_ids": "E-QGNT-01",
+      "flow_ids": "F-M060-11",
+      "gap": "本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留"
+    }
+  },
+  {
+    "file": "quaderno-gen2-ink-inventory.csv",
+    "before": {
+      "inventory_id": "I-QGNT-123",
+      "model": "Gen.2 FMVDP41/FMVDP51",
+      "item": "ドキュメントやフォルダーを検索する",
+      "locator": "PDF/print p91; outline level 3",
+      "coverage_status": "toc_extracted_not_reviewed",
+      "evidence_ids": "E-QGNT-01",
+      "flow_ids": "",
+      "gap": "仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作"
+    },
+    "after": {
+      "inventory_id": "I-QGNT-123",
+      "model": "Gen.2 FMVDP41/FMVDP51",
+      "item": "ドキュメントやフォルダーを検索する",
+      "locator": "PDF/print p91; outline level 3",
+      "coverage_status": "selected_body_pages_read_task_partial",
+      "evidence_ids": "E-QGNT-01",
+      "flow_ids": "F-M060-11",
+      "gap": "本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留"
+    }
+  },
+  {
+    "file": "quaderno-gen2-ink-inventory.csv",
+    "before": {
+      "inventory_id": "I-QGNT-124",
+      "model": "Gen.2 FMVDP41/FMVDP51",
+      "item": "特定のマークを書き込んだドキュメントを検索する",
+      "locator": "PDF/print p91; outline level 3",
+      "coverage_status": "toc_extracted_not_reviewed",
+      "evidence_ids": "E-QGNT-01",
+      "flow_ids": "",
+      "gap": "仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作"
+    },
+    "after": {
+      "inventory_id": "I-QGNT-124",
+      "model": "Gen.2 FMVDP41/FMVDP51",
+      "item": "特定のマークを書き込んだドキュメントを検索する",
+      "locator": "PDF/print p91; outline level 3",
+      "coverage_status": "selected_body_pages_read_task_partial",
+      "evidence_ids": "E-QGNT-01",
+      "flow_ids": "F-M060-11",
+      "gap": "本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留"
+    }
+  },
+  {
+    "file": "quaderno-gen2-ink-inventory.csv",
+    "before": {
+      "inventory_id": "I-QGNT-125",
+      "model": "Gen.2 FMVDP41/FMVDP51",
+      "item": "8. クアデルノのドキュメント／フォルダー構成を変更する",
+      "locator": "PDF/print p92; outline level 2",
+      "coverage_status": "toc_extracted_not_reviewed",
+      "evidence_ids": "E-QGNT-01",
+      "flow_ids": "",
+      "gap": "仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作"
+    },
+    "after": {
+      "inventory_id": "I-QGNT-125",
+      "model": "Gen.2 FMVDP41/FMVDP51",
+      "item": "8. クアデルノのドキュメント／フォルダー構成を変更する",
+      "locator": "PDF/print p92; outline level 2",
+      "coverage_status": "selected_body_pages_read_task_partial",
+      "evidence_ids": "E-QGNT-01",
+      "flow_ids": "F-M060-20;F-M060-08;F-M060-04",
+      "gap": "本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留"
+    }
+  },
+  {
+    "file": "quaderno-gen2-ink-inventory.csv",
+    "before": {
+      "inventory_id": "I-QGNT-126",
+      "model": "Gen.2 FMVDP41/FMVDP51",
+      "item": "変更するうえでのご注意",
+      "locator": "PDF/print p92; outline level 3",
+      "coverage_status": "toc_extracted_not_reviewed",
+      "evidence_ids": "E-QGNT-01",
+      "flow_ids": "",
+      "gap": "仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作"
+    },
+    "after": {
+      "inventory_id": "I-QGNT-126",
+      "model": "Gen.2 FMVDP41/FMVDP51",
+      "item": "変更するうえでのご注意",
+      "locator": "PDF/print p92; outline level 3",
+      "coverage_status": "selected_body_pages_read_task_partial",
+      "evidence_ids": "E-QGNT-01",
+      "flow_ids": "F-M060-20;F-M060-08;F-M060-04",
+      "gap": "本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留"
+    }
+  },
+  {
+    "file": "quaderno-gen2-ink-inventory.csv",
+    "before": {
+      "inventory_id": "I-QGNT-127",
+      "model": "Gen.2 FMVDP41/FMVDP51",
+      "item": "変更方法",
+      "locator": "PDF/print p92; outline level 3",
+      "coverage_status": "toc_extracted_not_reviewed",
+      "evidence_ids": "E-QGNT-01",
+      "flow_ids": "",
+      "gap": "仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作"
+    },
+    "after": {
+      "inventory_id": "I-QGNT-127",
+      "model": "Gen.2 FMVDP41/FMVDP51",
+      "item": "変更方法",
+      "locator": "PDF/print p92; outline level 3",
+      "coverage_status": "selected_body_pages_read_task_partial",
+      "evidence_ids": "E-QGNT-01",
+      "flow_ids": "F-M060-20;F-M060-08;F-M060-04",
+      "gap": "本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留"
+    }
+  },
+  {
+    "file": "quaderno-gen2-ink-inventory.csv",
+    "before": {
+      "inventory_id": "I-QGNT-163",
+      "model": "Gen.2 FMVDP41/FMVDP51",
+      "item": "4. ドキュメントのトラブル",
+      "locator": "PDF/print p110; outline level 2",
+      "coverage_status": "toc_extracted_not_reviewed",
+      "evidence_ids": "E-QGNT-01",
+      "flow_ids": "",
+      "gap": "仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作"
+    },
+    "after": {
+      "inventory_id": "I-QGNT-163",
+      "model": "Gen.2 FMVDP41/FMVDP51",
+      "item": "4. ドキュメントのトラブル",
+      "locator": "PDF/print p110; outline level 2",
+      "coverage_status": "selected_body_pages_read_task_partial",
+      "evidence_ids": "E-QGNT-01",
+      "flow_ids": "F-M060-12",
+      "gap": "本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留"
+    }
+  },
+  {
+    "file": "quaderno-gen2-ink-inventory.csv",
+    "before": {
+      "inventory_id": "I-QGNT-164",
+      "model": "Gen.2 FMVDP41/FMVDP51",
+      "item": "ドキュメントを表示できない",
+      "locator": "PDF/print p110; outline level 3",
+      "coverage_status": "toc_extracted_not_reviewed",
+      "evidence_ids": "E-QGNT-01",
+      "flow_ids": "",
+      "gap": "仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作"
+    },
+    "after": {
+      "inventory_id": "I-QGNT-164",
+      "model": "Gen.2 FMVDP41/FMVDP51",
+      "item": "ドキュメントを表示できない",
+      "locator": "PDF/print p110; outline level 3",
+      "coverage_status": "selected_body_pages_read_task_partial",
+      "evidence_ids": "E-QGNT-01",
+      "flow_ids": "F-M060-12",
+      "gap": "本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留"
+    }
+  },
+  {
+    "file": "quaderno-gen2-ink-inventory.csv",
+    "before": {
+      "inventory_id": "I-QGNT-165",
+      "model": "Gen.2 FMVDP41/FMVDP51",
+      "item": "文字が表示されない",
+      "locator": "PDF/print p110; outline level 3",
+      "coverage_status": "toc_extracted_not_reviewed",
+      "evidence_ids": "E-QGNT-01",
+      "flow_ids": "",
+      "gap": "仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作"
+    },
+    "after": {
+      "inventory_id": "I-QGNT-165",
+      "model": "Gen.2 FMVDP41/FMVDP51",
+      "item": "文字が表示されない",
+      "locator": "PDF/print p110; outline level 3",
+      "coverage_status": "selected_body_pages_read_task_partial",
+      "evidence_ids": "E-QGNT-01",
+      "flow_ids": "F-M060-12",
+      "gap": "本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留"
+    }
+  },
+  {
+    "file": "quaderno-gen2-ink-inventory.csv",
+    "before": {
+      "inventory_id": "I-QGNT-166",
+      "model": "Gen.2 FMVDP41/FMVDP51",
+      "item": "ドキュメントの操作ができない（ペン操作、タップ操作などができない）",
+      "locator": "PDF/print p110; outline level 3",
+      "coverage_status": "toc_extracted_not_reviewed",
+      "evidence_ids": "E-QGNT-01",
+      "flow_ids": "",
+      "gap": "仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作"
+    },
+    "after": {
+      "inventory_id": "I-QGNT-166",
+      "model": "Gen.2 FMVDP41/FMVDP51",
+      "item": "ドキュメントの操作ができない（ペン操作、タップ操作などができない）",
+      "locator": "PDF/print p110; outline level 3",
+      "coverage_status": "selected_body_pages_read_task_partial",
+      "evidence_ids": "E-QGNT-01",
+      "flow_ids": "F-M060-12",
+      "gap": "本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留"
+    }
+  },
+  {
+    "file": "quaderno-gen2-ink-inventory.csv",
+    "before": {
+      "inventory_id": "I-QGNT-167",
+      "model": "Gen.2 FMVDP41/FMVDP51",
+      "item": "書き込みができない",
+      "locator": "PDF/print p110; outline level 3",
+      "coverage_status": "toc_extracted_not_reviewed",
+      "evidence_ids": "E-QGNT-01",
+      "flow_ids": "",
+      "gap": "仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作"
+    },
+    "after": {
+      "inventory_id": "I-QGNT-167",
+      "model": "Gen.2 FMVDP41/FMVDP51",
+      "item": "書き込みができない",
+      "locator": "PDF/print p110; outline level 3",
+      "coverage_status": "selected_body_pages_read_task_partial",
+      "evidence_ids": "E-QGNT-01",
+      "flow_ids": "F-M060-12",
+      "gap": "本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留"
+    }
+  },
+  {
+    "file": "quaderno-gen2-ink-inventory.csv",
+    "before": {
+      "inventory_id": "I-QGNT-168",
+      "model": "Gen.2 FMVDP41/FMVDP51",
+      "item": "書き込みの編集や削除ができない",
+      "locator": "PDF/print p110; outline level 3",
+      "coverage_status": "toc_extracted_not_reviewed",
+      "evidence_ids": "E-QGNT-01",
+      "flow_ids": "",
+      "gap": "仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作"
+    },
+    "after": {
+      "inventory_id": "I-QGNT-168",
+      "model": "Gen.2 FMVDP41/FMVDP51",
+      "item": "書き込みの編集や削除ができない",
+      "locator": "PDF/print p110; outline level 3",
+      "coverage_status": "selected_body_pages_read_task_partial",
+      "evidence_ids": "E-QGNT-01",
+      "flow_ids": "F-M060-12",
+      "gap": "本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留"
+    }
+  },
+  {
+    "file": "quaderno-gen2-ink-inventory.csv",
+    "before": {
+      "inventory_id": "I-QGNT-169",
+      "model": "Gen.2 FMVDP41/FMVDP51",
+      "item": "「フォルダーから探す」のメニューに「ドキュメントを復元」と表示されている",
+      "locator": "PDF/print p111; outline level 3",
+      "coverage_status": "toc_extracted_not_reviewed",
+      "evidence_ids": "E-QGNT-01",
+      "flow_ids": "",
+      "gap": "仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作"
+    },
+    "after": {
+      "inventory_id": "I-QGNT-169",
+      "model": "Gen.2 FMVDP41/FMVDP51",
+      "item": "「フォルダーから探す」のメニューに「ドキュメントを復元」と表示されている",
+      "locator": "PDF/print p111; outline level 3",
+      "coverage_status": "selected_body_pages_read_task_partial",
+      "evidence_ids": "E-QGNT-01",
+      "flow_ids": "F-M060-16",
+      "gap": "本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留"
+    }
+  },
+  {
+    "file": "quaderno-gen2-ink-inventory.csv",
+    "before": {
+      "inventory_id": "I-QGNT-170",
+      "model": "Gen.2 FMVDP41/FMVDP51",
+      "item": "5. パソコンとの接続に関するトラブル",
+      "locator": "PDF/print p112; outline level 2",
+      "coverage_status": "toc_extracted_not_reviewed",
+      "evidence_ids": "E-QGNT-01",
+      "flow_ids": "",
+      "gap": "仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作"
+    },
+    "after": {
+      "inventory_id": "I-QGNT-170",
+      "model": "Gen.2 FMVDP41/FMVDP51",
+      "item": "5. パソコンとの接続に関するトラブル",
+      "locator": "PDF/print p112; outline level 2",
+      "coverage_status": "selected_body_pages_read_task_partial",
+      "evidence_ids": "E-QGNT-01",
+      "flow_ids": "F-M060-19",
+      "gap": "本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留"
+    }
+  },
+  {
+    "file": "quaderno-gen2-ink-inventory.csv",
+    "before": {
+      "inventory_id": "I-QGNT-171",
+      "model": "Gen.2 FMVDP41/FMVDP51",
+      "item": "パソコンにクアデルノが認識されない",
+      "locator": "PDF/print p112; outline level 3",
+      "coverage_status": "toc_extracted_not_reviewed",
+      "evidence_ids": "E-QGNT-01",
+      "flow_ids": "",
+      "gap": "仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作"
+    },
+    "after": {
+      "inventory_id": "I-QGNT-171",
+      "model": "Gen.2 FMVDP41/FMVDP51",
+      "item": "パソコンにクアデルノが認識されない",
+      "locator": "PDF/print p112; outline level 3",
+      "coverage_status": "selected_body_pages_read_task_partial",
+      "evidence_ids": "E-QGNT-01",
+      "flow_ids": "F-M060-19",
+      "gap": "本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留"
+    }
+  },
+  {
+    "file": "quaderno-gen2-ink-inventory.csv",
+    "before": {
+      "inventory_id": "I-QGNT-172",
+      "model": "Gen.2 FMVDP41/FMVDP51",
+      "item": "パソコンからクアデルノにドキュメントを転送できない",
+      "locator": "PDF/print p113; outline level 3",
+      "coverage_status": "toc_extracted_not_reviewed",
+      "evidence_ids": "E-QGNT-01",
+      "flow_ids": "",
+      "gap": "仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作"
+    },
+    "after": {
+      "inventory_id": "I-QGNT-172",
+      "model": "Gen.2 FMVDP41/FMVDP51",
+      "item": "パソコンからクアデルノにドキュメントを転送できない",
+      "locator": "PDF/print p113; outline level 3",
+      "coverage_status": "selected_body_pages_read_task_partial",
+      "evidence_ids": "E-QGNT-01",
+      "flow_ids": "F-M060-06;F-M060-18;F-M060-19",
+      "gap": "本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留"
+    }
+  },
+  {
+    "file": "quaderno-gen2-ink-inventory.csv",
+    "before": {
+      "inventory_id": "I-QGNT-173",
+      "model": "Gen.2 FMVDP41/FMVDP51",
+      "item": "パソコンからクアデルノのごみ箱を見つけられない",
+      "locator": "PDF/print p113; outline level 3",
+      "coverage_status": "toc_extracted_not_reviewed",
+      "evidence_ids": "E-QGNT-01",
+      "flow_ids": "",
+      "gap": "仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作"
+    },
+    "after": {
+      "inventory_id": "I-QGNT-173",
+      "model": "Gen.2 FMVDP41/FMVDP51",
+      "item": "パソコンからクアデルノのごみ箱を見つけられない",
+      "locator": "PDF/print p113; outline level 3",
+      "coverage_status": "selected_body_pages_read_task_partial",
+      "evidence_ids": "E-QGNT-01",
+      "flow_ids": "F-M060-06;F-M060-18;F-M060-19",
+      "gap": "本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留"
+    }
+  },
+  {
+    "file": "quaderno-gen2-ink-inventory.csv",
+    "before": {
+      "inventory_id": "I-QGNT-174",
+      "model": "Gen.2 FMVDP41/FMVDP51",
+      "item": "エラーメッセージが表示された",
+      "locator": "PDF/print p113; outline level 3",
+      "coverage_status": "toc_extracted_not_reviewed",
+      "evidence_ids": "E-QGNT-01",
+      "flow_ids": "",
+      "gap": "仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作"
+    },
+    "after": {
+      "inventory_id": "I-QGNT-174",
+      "model": "Gen.2 FMVDP41/FMVDP51",
+      "item": "エラーメッセージが表示された",
+      "locator": "PDF/print p113; outline level 3",
+      "coverage_status": "selected_body_pages_read_task_partial",
+      "evidence_ids": "E-QGNT-01",
+      "flow_ids": "F-M060-06;F-M060-18;F-M060-19",
+      "gap": "本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留"
+    }
+  },
+  {
+    "file": "quaderno-gen2-ink-inventory.csv",
+    "before": {
+      "inventory_id": "I-QGNT-175",
+      "model": "Gen.2 FMVDP41/FMVDP51",
+      "item": "バックアップが作成できない",
+      "locator": "PDF/print p113; outline level 3",
+      "coverage_status": "toc_extracted_not_reviewed",
+      "evidence_ids": "E-QGNT-01",
+      "flow_ids": "",
+      "gap": "仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作"
+    },
+    "after": {
+      "inventory_id": "I-QGNT-175",
+      "model": "Gen.2 FMVDP41/FMVDP51",
+      "item": "バックアップが作成できない",
+      "locator": "PDF/print p113; outline level 3",
+      "coverage_status": "selected_body_pages_read_task_partial",
+      "evidence_ids": "E-QGNT-01",
+      "flow_ids": "F-M060-06;F-M060-18;F-M060-19",
+      "gap": "本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留"
+    }
+  },
+  {
+    "file": "quaderno-gen2-ink-inventory.csv",
+    "before": {
+      "inventory_id": "I-QGNT-176",
+      "model": "Gen.2 FMVDP41/FMVDP51",
+      "item": "バックアップデータが表示されない",
+      "locator": "PDF/print p113; outline level 3",
+      "coverage_status": "toc_extracted_not_reviewed",
+      "evidence_ids": "E-QGNT-01",
+      "flow_ids": "",
+      "gap": "仅所列正文页；父项覆盖不能由首页推定，其余未读/未操作"
+    },
+    "after": {
+      "inventory_id": "I-QGNT-176",
+      "model": "Gen.2 FMVDP41/FMVDP51",
+      "item": "バックアップデータが表示されない",
+      "locator": "PDF/print p113; outline level 3",
+      "coverage_status": "selected_body_pages_read_task_partial",
+      "evidence_ids": "E-QGNT-01",
+      "flow_ids": "F-M060-06;F-M060-18;F-M060-19",
+      "gap": "本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留"
+    }
+  },
+  {
+    "file": "ak-directory-deepening-inventory.csv",
+    "before": {
+      "inventory_id": "I-AKDD-170",
+      "domain": "型号支持FAQ",
+      "item": "Open APP Serviceとは",
+      "source_url": "https://www.iriver.jp/support/faq_974.php",
+      "locator": "SR35日区支持索引相应列表",
+      "coverage_status": "prior_evidence_body_not_reread",
+      "evidence_ids": "E-AK-12;E-AK-06",
+      "flow_ids": "F-M065-06",
+      "gap": "本轮只逐条登记标题/关联；未读正文不确认适用、操作或新版条件；未下载软件/驱动/固件"
+    },
+    "after": {
+      "inventory_id": "I-AKDD-170",
+      "domain": "型号支持FAQ",
+      "item": "Open APP Serviceとは",
+      "source_url": "https://www.iriver.jp/support/faq_974.php",
+      "locator": "完整官方帮助正文；2026-10-27复读",
+      "coverage_status": "body_reread_old_model_static",
+      "evidence_ids": "E-AK-12;E-AK-06;E-AKOP-01",
+      "flow_ids": "F-M065-06",
+      "gap": "旧SP1000M静态图不等于SR35当前安装链；取消/失败/重装数据未知"
+    }
+  },
+  {
+    "file": "ak-directory-deepening-inventory.csv",
+    "before": {
+      "inventory_id": "I-AKDD-171",
+      "domain": "型号支持FAQ",
+      "item": "Open APP Service　動作確認アプリバージョンリスト",
+      "source_url": "https://www.iriver.jp/support/faq_1014.php",
+      "locator": "SR35日区支持索引相应列表",
+      "coverage_status": "prior_evidence_body_not_reread",
+      "evidence_ids": "E-AK-12;E-AK-07",
+      "flow_ids": "F-M065-07",
+      "gap": "本轮只逐条登记标题/关联；未读正文不确认适用、操作或新版条件；未下载软件/驱动/固件"
+    },
+    "after": {
+      "inventory_id": "I-AKDD-171",
+      "domain": "型号支持FAQ",
+      "item": "Open APP Service　動作確認アプリバージョンリスト",
+      "source_url": "https://www.iriver.jp/support/faq_1014.php",
+      "locator": "完整官方帮助正文；2026-10-27复读",
+      "coverage_status": "dated_compatibility_body_reread_not_current_test",
+      "evidence_ids": "E-AK-12;E-AK-07",
+      "flow_ids": "F-M065-07",
+      "gap": "表内截至2025-05-01；当前登录/授权/兼容仍未验证，F07保持D1"
+    }
+  },
+  {
+    "file": "quaderno-controls-deepening-inventory.csv",
+    "before": {
+      "inventory_id": "I-QCD-056",
+      "domain": "PDF目录L2",
+      "item": "4. ドキュメントを開く",
+      "source_url": "https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf",
+      "locator": "PDF/印刷p38; outline#56",
+      "coverage_status": "catalogued_only",
+      "evidence_ids": "E-QUA-01",
+      "flow_ids": "",
+      "gap": "目录已核；未形成完整任务链，正文读取范围见read-pages.json"
+    },
+    "after": {
+      "inventory_id": "I-QCD-056",
+      "domain": "PDF目录L2",
+      "item": "4. ドキュメントを開く",
+      "source_url": "https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf",
+      "locator": "PDF/印刷p38; outline#56",
+      "coverage_status": "selected_body_pages_read_task_partial",
+      "evidence_ids": "E-QUA-01",
+      "flow_ids": "F-M060-22",
+      "gap": "本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留"
+    }
+  },
+  {
+    "file": "quaderno-controls-deepening-inventory.csv",
+    "before": {
+      "inventory_id": "I-QCD-057",
+      "domain": "PDF目录L3",
+      "item": "ドキュメント一覧から開く",
+      "source_url": "https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf",
+      "locator": "PDF/印刷p38; outline#57",
+      "coverage_status": "catalogued_only",
+      "evidence_ids": "E-QUA-01",
+      "flow_ids": "",
+      "gap": "目录已核；未形成完整任务链，正文读取范围见read-pages.json"
+    },
+    "after": {
+      "inventory_id": "I-QCD-057",
+      "domain": "PDF目录L3",
+      "item": "ドキュメント一覧から開く",
+      "source_url": "https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf",
+      "locator": "PDF/印刷p38; outline#57",
+      "coverage_status": "selected_body_pages_read_task_partial",
+      "evidence_ids": "E-QUA-01",
+      "flow_ids": "F-M060-22",
+      "gap": "本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留"
+    }
+  },
+  {
+    "file": "quaderno-controls-deepening-inventory.csv",
+    "before": {
+      "inventory_id": "I-QCD-058",
+      "domain": "PDF目录L3",
+      "item": "フォルダーから選択して開く",
+      "source_url": "https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf",
+      "locator": "PDF/印刷p38; outline#58",
+      "coverage_status": "catalogued_only",
+      "evidence_ids": "E-QUA-01",
+      "flow_ids": "",
+      "gap": "目录已核；未形成完整任务链，正文读取范围见read-pages.json"
+    },
+    "after": {
+      "inventory_id": "I-QCD-058",
+      "domain": "PDF目录L3",
+      "item": "フォルダーから選択して開く",
+      "source_url": "https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf",
+      "locator": "PDF/印刷p38; outline#58",
+      "coverage_status": "selected_body_pages_read_task_partial",
+      "evidence_ids": "E-QUA-01",
+      "flow_ids": "F-M060-22",
+      "gap": "本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留"
+    }
+  },
+  {
+    "file": "quaderno-controls-deepening-inventory.csv",
+    "before": {
+      "inventory_id": "I-QCD-059",
+      "domain": "PDF目录L3",
+      "item": "ドキュメントを切り替える",
+      "source_url": "https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf",
+      "locator": "PDF/印刷p39; outline#59",
+      "coverage_status": "catalogued_only",
+      "evidence_ids": "E-QUA-01",
+      "flow_ids": "",
+      "gap": "目录已核；未形成完整任务链，正文读取范围见read-pages.json"
+    },
+    "after": {
+      "inventory_id": "I-QCD-059",
+      "domain": "PDF目录L3",
+      "item": "ドキュメントを切り替える",
+      "source_url": "https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf",
+      "locator": "PDF/印刷p39; outline#59",
+      "coverage_status": "selected_body_pages_read_task_partial",
+      "evidence_ids": "E-QUA-01",
+      "flow_ids": "F-M060-22",
+      "gap": "本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留"
+    }
+  },
+  {
+    "file": "quaderno-controls-deepening-inventory.csv",
+    "before": {
+      "inventory_id": "I-QCD-060",
+      "domain": "PDF目录L2",
+      "item": "5. フォルダーの作成と名称変更／複製／移動／削除",
+      "source_url": "https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf",
+      "locator": "PDF/印刷p41; outline#60",
+      "coverage_status": "catalogued_only",
+      "evidence_ids": "E-QUA-01",
+      "flow_ids": "",
+      "gap": "目录已核；未形成完整任务链，正文读取范围见read-pages.json"
+    },
+    "after": {
+      "inventory_id": "I-QCD-060",
+      "domain": "PDF目录L2",
+      "item": "5. フォルダーの作成と名称変更／複製／移動／削除",
+      "source_url": "https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf",
+      "locator": "PDF/印刷p41; outline#60",
+      "coverage_status": "selected_body_pages_read_task_partial",
+      "evidence_ids": "E-QUA-01",
+      "flow_ids": "F-M060-20",
+      "gap": "本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留"
+    }
+  },
+  {
+    "file": "quaderno-controls-deepening-inventory.csv",
+    "before": {
+      "inventory_id": "I-QCD-061",
+      "domain": "PDF目录L3",
+      "item": "フォルダーを作成する",
+      "source_url": "https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf",
+      "locator": "PDF/印刷p41; outline#61",
+      "coverage_status": "catalogued_only",
+      "evidence_ids": "E-QUA-01",
+      "flow_ids": "",
+      "gap": "目录已核；未形成完整任务链，正文读取范围见read-pages.json"
+    },
+    "after": {
+      "inventory_id": "I-QCD-061",
+      "domain": "PDF目录L3",
+      "item": "フォルダーを作成する",
+      "source_url": "https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf",
+      "locator": "PDF/印刷p41; outline#61",
+      "coverage_status": "selected_body_pages_read_task_partial",
+      "evidence_ids": "E-QUA-01",
+      "flow_ids": "F-M060-20",
+      "gap": "本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留"
+    }
+  },
+  {
+    "file": "quaderno-controls-deepening-inventory.csv",
+    "before": {
+      "inventory_id": "I-QCD-062",
+      "domain": "PDF目录L3",
+      "item": "フォルダーの名称変更／複製／移動／削除をする",
+      "source_url": "https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf",
+      "locator": "PDF/印刷p41; outline#62",
+      "coverage_status": "catalogued_only",
+      "evidence_ids": "E-QUA-01",
+      "flow_ids": "",
+      "gap": "目录已核；未形成完整任务链，正文读取范围见read-pages.json"
+    },
+    "after": {
+      "inventory_id": "I-QCD-062",
+      "domain": "PDF目录L3",
+      "item": "フォルダーの名称変更／複製／移動／削除をする",
+      "source_url": "https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf",
+      "locator": "PDF/印刷p41; outline#62",
+      "coverage_status": "selected_body_pages_read_task_partial",
+      "evidence_ids": "E-QUA-01",
+      "flow_ids": "F-M060-20",
+      "gap": "本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留"
+    }
+  },
+  {
+    "file": "quaderno-controls-deepening-inventory.csv",
+    "before": {
+      "inventory_id": "I-QCD-063",
+      "domain": "PDF目录L2",
+      "item": "6. ドキュメントの名称変更／複製／移動／削除",
+      "source_url": "https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf",
+      "locator": "PDF/印刷p43; outline#63",
+      "coverage_status": "catalogued_only",
+      "evidence_ids": "E-QUA-01",
+      "flow_ids": "",
+      "gap": "目录已核；未形成完整任务链，正文读取范围见read-pages.json"
+    },
+    "after": {
+      "inventory_id": "I-QCD-063",
+      "domain": "PDF目录L2",
+      "item": "6. ドキュメントの名称変更／複製／移動／削除",
+      "source_url": "https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf",
+      "locator": "PDF/印刷p43; outline#63",
+      "coverage_status": "selected_body_pages_read_task_partial",
+      "evidence_ids": "E-QUA-01",
+      "flow_ids": "F-M060-20;F-M060-04",
+      "gap": "本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留"
+    }
+  },
+  {
+    "file": "quaderno-controls-deepening-inventory.csv",
+    "before": {
+      "inventory_id": "I-QCD-064",
+      "domain": "PDF目录L3",
+      "item": "ドキュメント画面から操作する",
+      "source_url": "https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf",
+      "locator": "PDF/印刷p43; outline#64",
+      "coverage_status": "catalogued_only",
+      "evidence_ids": "E-QUA-01",
+      "flow_ids": "",
+      "gap": "目录已核；未形成完整任务链，正文读取范围见read-pages.json"
+    },
+    "after": {
+      "inventory_id": "I-QCD-064",
+      "domain": "PDF目录L3",
+      "item": "ドキュメント画面から操作する",
+      "source_url": "https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf",
+      "locator": "PDF/印刷p43; outline#64",
+      "coverage_status": "selected_body_pages_read_task_partial",
+      "evidence_ids": "E-QUA-01",
+      "flow_ids": "F-M060-20;F-M060-04",
+      "gap": "本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留"
+    }
+  },
+  {
+    "file": "quaderno-controls-deepening-inventory.csv",
+    "before": {
+      "inventory_id": "I-QCD-065",
+      "domain": "PDF目录L3",
+      "item": "「フォルダーから探す」から操作する",
+      "source_url": "https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf",
+      "locator": "PDF/印刷p44; outline#65",
+      "coverage_status": "catalogued_only",
+      "evidence_ids": "E-QUA-01",
+      "flow_ids": "",
+      "gap": "目录已核；未形成完整任务链，正文读取范围见read-pages.json"
+    },
+    "after": {
+      "inventory_id": "I-QCD-065",
+      "domain": "PDF目录L3",
+      "item": "「フォルダーから探す」から操作する",
+      "source_url": "https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf",
+      "locator": "PDF/印刷p44; outline#65",
+      "coverage_status": "selected_body_pages_read_task_partial",
+      "evidence_ids": "E-QUA-01",
+      "flow_ids": "F-M060-20;F-M060-04",
+      "gap": "本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留"
+    }
+  },
+  {
+    "file": "quaderno-controls-deepening-inventory.csv",
+    "before": {
+      "inventory_id": "I-QCD-066",
+      "domain": "PDF目录L3",
+      "item": "「一覧から探す」から操作する",
+      "source_url": "https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf",
+      "locator": "PDF/印刷p45; outline#66",
+      "coverage_status": "catalogued_only",
+      "evidence_ids": "E-QUA-01",
+      "flow_ids": "",
+      "gap": "目录已核；未形成完整任务链，正文读取范围见read-pages.json"
+    },
+    "after": {
+      "inventory_id": "I-QCD-066",
+      "domain": "PDF目录L3",
+      "item": "「一覧から探す」から操作する",
+      "source_url": "https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf",
+      "locator": "PDF/印刷p45; outline#66",
+      "coverage_status": "selected_body_pages_read_task_partial",
+      "evidence_ids": "E-QUA-01",
+      "flow_ids": "F-M060-20;F-M060-04",
+      "gap": "本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留"
+    }
+  },
+  {
+    "file": "quaderno-controls-deepening-inventory.csv",
+    "before": {
+      "inventory_id": "I-QCD-067",
+      "domain": "PDF目录L3",
+      "item": "「ごみ箱」フォルダーを操作する",
+      "source_url": "https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf",
+      "locator": "PDF/印刷p46; outline#67",
+      "coverage_status": "task_partially_analysed",
+      "evidence_ids": "E-QUA-01",
+      "flow_ids": "F-M060-04",
+      "gap": "仅关联对应分支，不表示整节闭合或实操"
+    },
+    "after": {
+      "inventory_id": "I-QCD-067",
+      "domain": "PDF目录L3",
+      "item": "「ごみ箱」フォルダーを操作する",
+      "source_url": "https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf",
+      "locator": "PDF/印刷p46; outline#67",
+      "coverage_status": "selected_body_pages_read_task_partial",
+      "evidence_ids": "E-QUA-01",
+      "flow_ids": "F-M060-04",
+      "gap": "本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留"
+    }
+  },
+  {
+    "file": "quaderno-controls-deepening-inventory.csv",
+    "before": {
+      "inventory_id": "I-QCD-117",
+      "domain": "PDF目录L2",
+      "item": "1. QUADERNO PC Appの画面",
+      "source_url": "https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf",
+      "locator": "PDF/印刷p89; outline#117",
+      "coverage_status": "catalogued_only",
+      "evidence_ids": "E-QUA-01",
+      "flow_ids": "",
+      "gap": "目录已核；未形成完整任务链，正文读取范围见read-pages.json"
+    },
+    "after": {
+      "inventory_id": "I-QCD-117",
+      "domain": "PDF目录L2",
+      "item": "1. QUADERNO PC Appの画面",
+      "source_url": "https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf",
+      "locator": "PDF/印刷p89; outline#117",
+      "coverage_status": "selected_body_pages_read_task_partial",
+      "evidence_ids": "E-QUA-01",
+      "flow_ids": "F-M060-19;F-M060-18",
+      "gap": "本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留"
+    }
+  },
+  {
+    "file": "quaderno-controls-deepening-inventory.csv",
+    "before": {
+      "inventory_id": "I-QCD-118",
+      "domain": "PDF目录L2",
+      "item": "2. パソコンにQUADERNO PC Appをインストールする",
+      "source_url": "https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf",
+      "locator": "PDF/印刷p91; outline#118",
+      "coverage_status": "catalogued_only",
+      "evidence_ids": "E-QUA-01",
+      "flow_ids": "",
+      "gap": "目录已核；未形成完整任务链，正文读取范围见read-pages.json"
+    },
+    "after": {
+      "inventory_id": "I-QCD-118",
+      "domain": "PDF目录L2",
+      "item": "2. パソコンにQUADERNO PC Appをインストールする",
+      "source_url": "https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf",
+      "locator": "PDF/印刷p91; outline#118",
+      "coverage_status": "selected_body_pages_read_task_partial",
+      "evidence_ids": "E-QUA-01",
+      "flow_ids": "F-M060-19",
+      "gap": "本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留"
+    }
+  },
+  {
+    "file": "quaderno-controls-deepening-inventory.csv",
+    "before": {
+      "inventory_id": "I-QCD-119",
+      "domain": "PDF目录L2",
+      "item": "3. パソコンとクアデルノを接続する",
+      "source_url": "https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf",
+      "locator": "PDF/印刷p92; outline#119",
+      "coverage_status": "catalogued_only",
+      "evidence_ids": "E-QUA-01",
+      "flow_ids": "",
+      "gap": "目录已核；未形成完整任务链，正文读取范围见read-pages.json"
+    },
+    "after": {
+      "inventory_id": "I-QCD-119",
+      "domain": "PDF目录L2",
+      "item": "3. パソコンとクアデルノを接続する",
+      "source_url": "https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf",
+      "locator": "PDF/印刷p92; outline#119",
+      "coverage_status": "selected_body_pages_read_task_partial",
+      "evidence_ids": "E-QUA-01",
+      "flow_ids": "F-M060-19",
+      "gap": "本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留"
+    }
+  },
+  {
+    "file": "quaderno-controls-deepening-inventory.csv",
+    "before": {
+      "inventory_id": "I-QCD-120",
+      "domain": "PDF目录L3",
+      "item": "USB ケーブルで接続する",
+      "source_url": "https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf",
+      "locator": "PDF/印刷p92; outline#120",
+      "coverage_status": "catalogued_only",
+      "evidence_ids": "E-QUA-01",
+      "flow_ids": "",
+      "gap": "目录已核；未形成完整任务链，正文读取范围见read-pages.json"
+    },
+    "after": {
+      "inventory_id": "I-QCD-120",
+      "domain": "PDF目录L3",
+      "item": "USB ケーブルで接続する",
+      "source_url": "https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf",
+      "locator": "PDF/印刷p92; outline#120",
+      "coverage_status": "selected_body_pages_read_task_partial",
+      "evidence_ids": "E-QUA-01",
+      "flow_ids": "F-M060-19",
+      "gap": "本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留"
+    }
+  },
+  {
+    "file": "quaderno-controls-deepening-inventory.csv",
+    "before": {
+      "inventory_id": "I-QCD-121",
+      "domain": "PDF目录L3",
+      "item": "Wi-Fiで接続する",
+      "source_url": "https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf",
+      "locator": "PDF/印刷p92; outline#121",
+      "coverage_status": "catalogued_only",
+      "evidence_ids": "E-QUA-01",
+      "flow_ids": "",
+      "gap": "目录已核；未形成完整任务链，正文读取范围见read-pages.json"
+    },
+    "after": {
+      "inventory_id": "I-QCD-121",
+      "domain": "PDF目录L3",
+      "item": "Wi-Fiで接続する",
+      "source_url": "https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf",
+      "locator": "PDF/印刷p92; outline#121",
+      "coverage_status": "selected_body_pages_read_task_partial",
+      "evidence_ids": "E-QUA-01",
+      "flow_ids": "F-M060-19",
+      "gap": "本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留"
+    }
+  },
+  {
+    "file": "quaderno-controls-deepening-inventory.csv",
+    "before": {
+      "inventory_id": "I-QCD-122",
+      "domain": "PDF目录L3",
+      "item": "Bluetoothで接続する",
+      "source_url": "https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf",
+      "locator": "PDF/印刷p93; outline#122",
+      "coverage_status": "catalogued_only",
+      "evidence_ids": "E-QUA-01",
+      "flow_ids": "",
+      "gap": "目录已核；未形成完整任务链，正文读取范围见read-pages.json"
+    },
+    "after": {
+      "inventory_id": "I-QCD-122",
+      "domain": "PDF目录L3",
+      "item": "Bluetoothで接続する",
+      "source_url": "https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf",
+      "locator": "PDF/印刷p93; outline#122",
+      "coverage_status": "selected_body_pages_read_task_partial",
+      "evidence_ids": "E-QUA-01",
+      "flow_ids": "F-M060-19",
+      "gap": "本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留"
+    }
+  },
+  {
+    "file": "quaderno-controls-deepening-inventory.csv",
+    "before": {
+      "inventory_id": "I-QCD-123",
+      "domain": "PDF目录L3",
+      "item": "接続状態を確認する",
+      "source_url": "https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf",
+      "locator": "PDF/印刷p94; outline#123",
+      "coverage_status": "catalogued_only",
+      "evidence_ids": "E-QUA-01",
+      "flow_ids": "",
+      "gap": "目录已核；未形成完整任务链，正文读取范围见read-pages.json"
+    },
+    "after": {
+      "inventory_id": "I-QCD-123",
+      "domain": "PDF目录L3",
+      "item": "接続状態を確認する",
+      "source_url": "https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf",
+      "locator": "PDF/印刷p94; outline#123",
+      "coverage_status": "selected_body_pages_read_task_partial",
+      "evidence_ids": "E-QUA-01",
+      "flow_ids": "F-M060-19",
+      "gap": "本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留"
+    }
+  },
+  {
+    "file": "quaderno-controls-deepening-inventory.csv",
+    "before": {
+      "inventory_id": "I-QCD-143",
+      "domain": "PDF目录L2",
+      "item": "9. ノートのテンプレートを追加／削除／名称変更する",
+      "source_url": "https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf",
+      "locator": "PDF/印刷p103; outline#143",
+      "coverage_status": "catalogued_only",
+      "evidence_ids": "E-QUA-01",
+      "flow_ids": "",
+      "gap": "目录已核；未形成完整任务链，正文读取范围见read-pages.json"
+    },
+    "after": {
+      "inventory_id": "I-QCD-143",
+      "domain": "PDF目录L2",
+      "item": "9. ノートのテンプレートを追加／削除／名称変更する",
+      "source_url": "https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf",
+      "locator": "PDF/印刷p103; outline#143",
+      "coverage_status": "selected_body_pages_read_task_partial",
+      "evidence_ids": "E-QUA-01",
+      "flow_ids": "F-M060-21",
+      "gap": "本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留"
+    }
+  },
+  {
+    "file": "quaderno-controls-deepening-inventory.csv",
+    "before": {
+      "inventory_id": "I-QCD-144",
+      "domain": "PDF目录L2",
+      "item": "10. パソコンでドキュメントを表示する",
+      "source_url": "https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf",
+      "locator": "PDF/印刷p104; outline#144",
+      "coverage_status": "catalogued_only",
+      "evidence_ids": "E-QUA-01",
+      "flow_ids": "",
+      "gap": "目录已核；未形成完整任务链，正文读取范围见read-pages.json"
+    },
+    "after": {
+      "inventory_id": "I-QCD-144",
+      "domain": "PDF目录L2",
+      "item": "10. パソコンでドキュメントを表示する",
+      "source_url": "https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf",
+      "locator": "PDF/印刷p104; outline#144",
+      "coverage_status": "selected_body_pages_read_task_partial",
+      "evidence_ids": "E-QUA-01",
+      "flow_ids": "F-M060-18",
+      "gap": "本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留"
+    }
+  },
+  {
+    "file": "quaderno-controls-deepening-inventory.csv",
+    "before": {
+      "inventory_id": "I-QCD-145",
+      "domain": "PDF目录L2",
+      "item": "11. 複数のクアデルノを操作する",
+      "source_url": "https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf",
+      "locator": "PDF/印刷p105; outline#145",
+      "coverage_status": "catalogued_only",
+      "evidence_ids": "E-QUA-01",
+      "flow_ids": "",
+      "gap": "目录已核；未形成完整任务链，正文读取范围见read-pages.json"
+    },
+    "after": {
+      "inventory_id": "I-QCD-145",
+      "domain": "PDF目录L2",
+      "item": "11. 複数のクアデルノを操作する",
+      "source_url": "https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf",
+      "locator": "PDF/印刷p105; outline#145",
+      "coverage_status": "selected_body_pages_read_task_partial",
+      "evidence_ids": "E-QUA-01",
+      "flow_ids": "F-M060-19",
+      "gap": "本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留"
+    }
+  },
+  {
+    "file": "quaderno-controls-deepening-inventory.csv",
+    "before": {
+      "inventory_id": "I-QCD-146",
+      "domain": "PDF目录L3",
+      "item": "2台目のクアデルノをペアリングする",
+      "source_url": "https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf",
+      "locator": "PDF/印刷p105; outline#146",
+      "coverage_status": "catalogued_only",
+      "evidence_ids": "E-QUA-01",
+      "flow_ids": "",
+      "gap": "目录已核；未形成完整任务链，正文读取范围见read-pages.json"
+    },
+    "after": {
+      "inventory_id": "I-QCD-146",
+      "domain": "PDF目录L3",
+      "item": "2台目のクアデルノをペアリングする",
+      "source_url": "https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf",
+      "locator": "PDF/印刷p105; outline#146",
+      "coverage_status": "selected_body_pages_read_task_partial",
+      "evidence_ids": "E-QUA-01",
+      "flow_ids": "F-M060-19",
+      "gap": "本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留"
+    }
+  },
+  {
+    "file": "quaderno-controls-deepening-inventory.csv",
+    "before": {
+      "inventory_id": "I-QCD-147",
+      "domain": "PDF目录L3",
+      "item": "複数のクアデルノを切り替えて使う",
+      "source_url": "https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf",
+      "locator": "PDF/印刷p105; outline#147",
+      "coverage_status": "catalogued_only",
+      "evidence_ids": "E-QUA-01",
+      "flow_ids": "",
+      "gap": "目录已核；未形成完整任务链，正文读取范围见read-pages.json"
+    },
+    "after": {
+      "inventory_id": "I-QCD-147",
+      "domain": "PDF目录L3",
+      "item": "複数のクアデルノを切り替えて使う",
+      "source_url": "https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf",
+      "locator": "PDF/印刷p105; outline#147",
+      "coverage_status": "selected_body_pages_read_task_partial",
+      "evidence_ids": "E-QUA-01",
+      "flow_ids": "F-M060-19",
+      "gap": "本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留"
+    }
+  },
+  {
+    "file": "quaderno-controls-deepening-inventory.csv",
+    "before": {
+      "inventory_id": "I-QCD-148",
+      "domain": "PDF目录L3",
+      "item": "ペアリングを解除する",
+      "source_url": "https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf",
+      "locator": "PDF/印刷p105; outline#148",
+      "coverage_status": "catalogued_only",
+      "evidence_ids": "E-QUA-01",
+      "flow_ids": "",
+      "gap": "目录已核；未形成完整任务链，正文读取范围见read-pages.json"
+    },
+    "after": {
+      "inventory_id": "I-QCD-148",
+      "domain": "PDF目录L3",
+      "item": "ペアリングを解除する",
+      "source_url": "https://www.fmworld.net/digital-paper/support/download/pdf/B5FL2101.pdf",
+      "locator": "PDF/印刷p105; outline#148",
+      "coverage_status": "selected_body_pages_read_task_partial",
+      "evidence_ids": "E-QUA-01",
+      "flow_ids": "F-M060-19",
+      "gap": "本次核该起页正文，完整页表见quaderno-file-lifecycle/source-audit.json；不将父级整章判为已读；未操作与异常/恢复缺口保留"
+    }
+  }
+]

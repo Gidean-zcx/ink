@@ -1,0 +1,66 @@
+
+Our alarms are perfect for wake-up time, time to go to school, bedtime, but they can be useful for other situations too!
+
+
+To get started, you will need to have the 2.46 version of the Yoto app or above, and Yoto player OS 2.10.7 or above. To set an alarm, simply follow these steps:
+1) Open the Yoto App
+
+2) Go to the Settings tab 
+
+
+
+3) Go to the player settings of the player where you want to play alarms from. Make sure your player is switched on and connected to the internet.
+
+4) In your chosen player settings, go to Alarms > Set an alarm
+
+5) Go to Add an alarm
+
+6) Select your alarm time
+Tap the time
+
+Scroll to your preferred alarm time
+
+7) Select which days you want this alarm to be active for. 
+The default setting is for every day to be selected, if you want your alarm to go off on specific days, tap the ones that don't apply.
+Selected days will show in red and are listed in text underneath 
+
+If you wanted your alarm to only be active Mon-Fri, this is what it would look like
+
+8) Choose a sound for your alarm
+Select from our 7 alarm sounds, tap on each sound to have a 3-second preview on your phone.
+
+9) Select your alarm volume
+You can do this by using the +/- buttons or our volume slider 
+
+Please note, the alarm volume will not exceed your day or night settings. For example, if you set the alarm volume to 16, but your maximum day volume is 10, the alarm will play at a volume of 10.
+10) Want to know what the alarm sounds like on your player? Use the preview on player button and the alarm will play for 10 seconds.
+
+If you want to change any of the settings you have selected, just go back and make adjustments
+11) Once you are happy with your alarm, click Save alarm
+
+12) Press cancel to stop the alarm from being saved.
+
+13) The saved alarm is now visible in the alarms settings. 
+You can have a maximum of 10 alarms per player.
+
+
+From this screen, you will be able to see your alarm time and the days selected. 
+Here is what multiple alarms will look like:
+
+
+14) To edit an alarm, tap on the alarm that you would like to make changes to, make your changes and don't forget to save! 
+
+
+Or cancel if you don't want your changes to be saved.
+
+15) To disable or enable an alarm, tap on the slider to the right of the alarm you would like to disable or enable.
+
+
+
+
+16) To delete an alarm, tap on the alarm you would like to delete, scroll to the bottom and press the delete button. 
+
+
+
+17) Please make sure your player is switched on at the time of the alarm for it to play.
+18) To stop your alarm, press any player button or go to the app to stop it like an ordinary card.

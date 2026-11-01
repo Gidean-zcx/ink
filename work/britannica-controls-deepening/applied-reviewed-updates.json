@@ -1,0 +1,736 @@
+{
+  "flow_changes": [
+    {
+      "id": "F-M049-01",
+      "field": "evidence_ids",
+      "before": "E-BRIT-01;E-BRIT-02;E-BRIT-04",
+      "after": "E-BRIT-01;E-BRIT-02;E-BRIT-04;E-BRCD-04;E-BRCD-02"
+    },
+    {
+      "id": "F-M049-01",
+      "field": "known_branches",
+      "before": "章节词典和可用阅读级别",
+      "after": "学段导航器分别配置；章节/媒体/相关内容、字号与引用；个人级别选择不改变其他用户。主指南p8–9的Library措辞不套School"
+    },
+    {
+      "id": "F-M049-01",
+      "field": "gaps",
+      "before": "精确搜索返回与播放恢复",
+      "after": "真实搜索返回、选级后原段锚点、精确播放恢复；新闻频率冲突未解"
+    },
+    {
+      "id": "F-M049-01",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M049-02",
+      "field": "evidence_ids",
+      "before": "E-BRIT-03",
+      "after": "E-BRIT-03;E-BRCD-01;E-BRCD-04"
+    },
+    {
+      "id": "F-M049-02",
+      "field": "known_branches",
+      "before": "原生英西语与逐词朗读",
+      "after": "六类/关键词、分节与画廊；原生英西语及逐词朗读。Early导航图与Elementary级别工具分开"
+    },
+    {
+      "id": "F-M049-02",
+      "field": "gaps",
+      "before": "自动续节和退出恢复",
+      "after": "自动续节、换语言位置、退出和离线恢复；未验证触屏词典或中文原生内容"
+    },
+    {
+      "id": "F-M049-02",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M049-03",
+      "field": "evidence_ids",
+      "before": "E-BRIT-02;E-BRIT-04",
+      "after": "E-BRIT-02;E-BRIT-04;E-BRCD-04"
+    },
+    {
+      "id": "F-M049-03",
+      "field": "known_branches",
+      "before": "个人账号及翻译禁用工具",
+      "after": "保存需个人账号；教师课程需教师身份，课堂分享取决机构权限；打印工具带引用；机器翻译工具限制仍在"
+    },
+    {
+      "id": "F-M049-03",
+      "field": "gaps",
+      "before": "成功提示删除重名跨设备",
+      "after": "保存成功/重名/删除/冲突和跨端未知；原生西语不等于Google翻译副本"
+    },
+    {
+      "id": "F-M049-03",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M049-04",
+      "field": "known_branches",
+      "before": "订阅必须启用",
+      "after": "Read/Explore/Play/Create需订阅启用；绘画有擦除/重置/打印声明，打印不证明云存储或可再编辑"
+    },
+    {
+      "id": "F-M049-04",
+      "field": "gaps",
+      "before": "题面与画板静态图已看；错答、提示、重试、结算及退出保存未知",
+      "after": "Fundamentals错答/提示/重试/结算及退出保存仍未知；本轮Community Helpers实际预览不是该四模式"
+    },
+    {
+      "id": "F-M049-04",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M049-05",
+      "field": "depth",
+      "before": "D2",
+      "after": "D4"
+    },
+    {
+      "id": "F-M049-05",
+      "field": "evidence_ids",
+      "before": "E-BRED-01",
+      "after": "E-BRED-01;E-BRCD-05;E-BRCD-07"
+    },
+    {
+      "id": "F-M049-05",
+      "field": "known_branches",
+      "before": "目录/文章两种入口；音频与描述开关",
+      "after": "限定Community Helpers公开预览：四道线索、场景选人；一次错答→重试→回看线索→正确解释；第二题Back恢复前题讲解；四项勾选后开放问题，Start Again回标题"
+    },
+    {
+      "id": "F-M049-05",
+      "field": "gaps",
+      "before": "题目错误反馈、暂停位置、关闭恢复未知",
+      "after": "只核一个预览和一次错答；iframe重载回标题，不推广其他场景或账号保存。音频开关/听音/键盘/触屏/断网及学习成效未知"
+    },
+    {
+      "id": "F-M049-05",
+      "field": "visual_status",
+      "before": "static_manual_pages_only",
+      "after": "observed_browser_sequence"
+    },
+    {
+      "id": "F-M049-05",
+      "field": "hands_on",
+      "before": "false",
+      "after": "true"
+    },
+    {
+      "id": "F-M049-05",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M057-01",
+      "field": "known_branches",
+      "before": "Books根目录；文件管理中找回",
+      "after": "Books根目录→文件管理；指南只说明可找回/分类，未覆盖书架索引和打开书的后续步骤"
+    },
+    {
+      "id": "F-M057-01",
+      "field": "gaps",
+      "before": "支持格式/同名处理/中断/书架索引",
+      "after": "支持格式、书架索引、同名处理、中断/半文件、拔线时机及打开结果；原PDF未取得"
+    },
+    {
+      "id": "F-M057-01",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M057-02",
+      "field": "known_branches",
+      "before": "应用页WiFi传书；同路由器",
+      "after": "同一路由器；应用页WiFi传书→按地址/二维码指引；未证明跨网传输"
+    },
+    {
+      "id": "F-M057-02",
+      "field": "gaps",
+      "before": "身份验证、成功反馈、重试去重与取消",
+      "after": "身份验证、成功/失败反馈、取消、半文件、重试去重及内容打开；原PDF未取得"
+    },
+    {
+      "id": "F-M057-02",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M057-03",
+      "field": "known_branches",
+      "before": "Dict和fonts为独立目录；本地书Aa选择字体",
+      "after": "Dict资源与fonts字体分开；词典App查看资源，本地书Aa选择字体确认"
+    },
+    {
+      "id": "F-M057-03",
+      "field": "gaps",
+      "before": "字典格式/查词上下文/生词复习；字体失败回退",
+      "after": "词典格式/离线查词/原句回跳/生词复习；字体失败回退；未核当前构建"
+    },
+    {
+      "id": "F-M057-03",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M057-04",
+      "field": "known_branches",
+      "before": "V1.5.2改长按；应用图标长按优化滚动",
+      "after": "V1.5.2用户设置/设备设置长按键配置及App图标长按优化滚动；V1.5.3另声明自动旋转和长按竖屏180°"
+    },
+    {
+      "id": "F-M057-04",
+      "field": "gaps",
+      "before": "不同App实际可用性、默认键值、冲突恢复",
+      "after": "两版长按动作组合/优先级、默认键值、实际App接收、冲突恢复；A2条件归属和菜单未知"
+    },
+    {
+      "id": "F-M057-04",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M057-05",
+      "field": "known_branches",
+      "before": "日志仅称JD Bookstore阅读记录同步",
+      "after": "商店/Google Play仅安装声明；V1.5.3京东读书记录同步仅归该App，不扩展到其他App/原生书"
+    },
+    {
+      "id": "F-M057-05",
+      "field": "gaps",
+      "before": "原生读书进度、笔记导出、全部App统一同步",
+      "after": "原生进度/章节/书签/批注导出、安装卸载数据、账号网络条件与跨App统一同步"
+    },
+    {
+      "id": "F-M057-05",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M057-06",
+      "field": "known_branches",
+      "before": "任务管理/后台管理；历史多项修复声明",
+      "after": "顶栏任务管理清任务；应用页Snow进入后台启动管理，两者效果分开；送修前备份要求没有备份工具/步骤"
+    },
+    {
+      "id": "F-M057-06",
+      "field": "gaps",
+      "before": "清理任务后状态、刷机/重置恢复、修复复现",
+      "after": "单项后台控制、确认/撤销、冻结重开与未保存内容、音频/重启断点、更新回滚/重置恢复；历史修复未复现"
+    },
+    {
+      "id": "F-M057-06",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M013-01",
+      "field": "depth",
+      "before": "D1",
+      "after": "D2"
+    },
+    {
+      "id": "F-M013-01",
+      "field": "evidence_ids",
+      "before": "E-WRD-01",
+      "after": "E-WRD-01;E-WRD-07;E-WRCD-02"
+    },
+    {
+      "id": "F-M013-01",
+      "field": "known_branches",
+      "before": "书籍详情可进入AI问书",
+      "after": "仅2024历史AI子链D2：搜索问题→AI问书→回答及来源→文档称可跳书中段落；正文选区入口有静态图"
+    },
+    {
+      "id": "F-M013-01",
+      "field": "gaps",
+      "before": "选区、查词结果、写笔记、撤销和回原位",
+      "after": "当前版本沿用性、查词结果/划线保存撤销、AI取消失败/返回原位仍未知；2024 OS与构建未给"
+    },
+    {
+      "id": "F-M013-01",
+      "field": "visual_status",
+      "before": "not_observed",
+      "after": "static_reference_only"
+    },
+    {
+      "id": "F-M013-01",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M013-02",
+      "field": "evidence_ids",
+      "before": "E-WRD-01",
+      "after": "E-WRD-01;E-WRD-08"
+    },
+    {
+      "id": "F-M013-02",
+      "field": "known_branches",
+      "before": "导入书可独立字号；定时听书已公告",
+      "after": "10.2.2公告导入书独立字号；定时听书公告；读听分项统计为条件字段"
+    },
+    {
+      "id": "F-M013-02",
+      "field": "gaps",
+      "before": "格式导入链、离线、读听位置映射",
+      "after": "格式导入/重复与失败、离线、续播和读听位置映射；分项字段缺失不代表零"
+    },
+    {
+      "id": "F-M013-02",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M013-03",
+      "field": "evidence_ids",
+      "before": "E-WRD-02;E-WRD-03;E-WRD-04;E-WRD-05",
+      "after": "E-WRD-02;E-WRD-03;E-WRD-04;E-WRD-05;E-WRCD-04"
+    },
+    {
+      "id": "F-M013-03",
+      "field": "known_branches",
+      "before": "内容类别、分页、空数据、链接回App",
+      "after": "搜索类别/分页/空数据；书架含专辑及文章入口；推荐与相似推荐游标不同，后者显式count/maxIdx并续sessionId"
+    },
+    {
+      "id": "F-M013-03",
+      "field": "gaps",
+      "before": "是否覆盖所有私有内容和写动作",
+      "after": "是否覆盖所有私有内容和写动作、推荐服务实际可用性；未调用接口"
+    },
+    {
+      "id": "F-M013-03",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M013-04",
+      "field": "known_branches",
+      "before": "0/1—99/100进度",
+      "after": "0/1—99/100进度；输出规则要求100且有finishTime才标读完；目录分层与付费状态"
+    },
+    {
+      "id": "F-M013-04",
+      "field": "gaps",
+      "before": "写入位置、读听切换与更新冲突",
+      "after": "100但finishTime缺失的真实状态、位置回写、读听切换与同步冲突未知"
+    },
+    {
+      "id": "F-M013-04",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M013-05",
+      "field": "known_branches",
+      "before": "书签仅统计；两种游标；想法未必含原文",
+      "after": "统计含书签而内容排除；reviewCount已含个人点评；notebooks至hasMore=0、mine用synckey；公开点评与个人内容分开"
+    },
+    {
+      "id": "F-M013-05",
+      "field": "gaps",
+      "before": "导出文件保存、修改回写、删除撤销",
+      "after": "导出文件保存/备份完整性、修改回写、删除撤销；热门top20与热度不替代个人全量"
+    },
+    {
+      "id": "F-M013-05",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M013-06",
+      "field": "known_branches",
+      "before": "默认月；统计口径与排行可缺省",
+      "after": "默认月；固定自然周期拼接，边界无日明细须标近似；自然日日均；时段从6时起，作者时长是格式化字符串"
+    },
+    {
+      "id": "F-M013-06",
+      "field": "gaps",
+      "before": "离线记录补传、分项保真",
+      "after": "离线补传/时区/分项保真；排行和读听字段可缺省；字段表与全部按秒的概括存在例外"
+    },
+    {
+      "id": "F-M013-06",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    }
+  ],
+  "evidence_changes": [
+    {
+      "id": "E-WRD-01",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "capture_url": "https://apps.apple.com/cn/app/id952059546",
+          "final_url": "https://apps.apple.com/cn/app/%E5%BE%AE%E4%BF%A1%E8%AF%BB%E4%B9%A6/id952059546",
+          "access_mode": "public_html_body",
+          "raw_work_path": "work/weread-controls-deepening/appstore.html",
+          "raw_sha256": "a6121bbc1bf47883dd30e3d8be7cf54d3d7493c8f392f85cff41e68f4e4bc0d0",
+          "locator": "10.2.3 HTML time datetime=2026-10-26；10.2.2 datetime=2026-09-17",
+          "app_build": "10.2.3",
+          "source_updated_on": "2026-10-26",
+          "limitation": "日期来自HTML标记；历史日志不证明当前操作链",
+          "archived_artifact": "artifacts/weread-controls-deepening/source-notes.md",
+          "sha256": "7de92903a20630c9c303c128fb53fb9643a68dc6d8f943ee795754750d1af9de",
+          "hands_on": false,
+          "visual_observed": false
+        }
+      ]
+    },
+    {
+      "id": "E-WRD-03",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "capture_url": "https://github.com/Tencent/WeChatReading/blob/d98e66ee60a8c7bcd35da549d0643c4470439643/skills/SKILL.md",
+          "access_mode": "local_reread_of_existing_public_artifact",
+          "raw_work_path": "work/chinese-apps/wrd-SKILL.md",
+          "raw_sha256": "c78981c72ff5940343d641d04912932d7f983b264ed69a799b33c8508c2eccc9",
+          "original_capture_on": "2026-10-26",
+          "locator": "请求格式、鉴权、错误及跳转约定",
+          "limitation": "本轮重读旧固定提交原件，未重新联网取得；API未执行",
+          "auxiliary_original": {
+            "raw_work_path": "work/chinese-apps/wrd-README.md",
+            "raw_sha256": "4865ea7d3b4b73128455b809c9e617f86d3d331efeef041d64e7218b51a8b2d7",
+            "locator": "版本段1.0.4，与SKILL顶部1.0.5不同"
+          },
+          "archived_artifact": "artifacts/weread-controls-deepening/source-notes.md",
+          "sha256": "7de92903a20630c9c303c128fb53fb9643a68dc6d8f943ee795754750d1af9de",
+          "hands_on": false,
+          "visual_observed": false
+        }
+      ]
+    },
+    {
+      "id": "E-WRD-04",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "capture_url": "https://github.com/Tencent/WeChatReading/blob/d98e66ee60a8c7bcd35da549d0643c4470439643/skills/shelf.md",
+          "access_mode": "local_reread_of_existing_public_artifact",
+          "raw_work_path": "work/chinese-apps/wrd-shelf.md",
+          "raw_sha256": "5d5658396dae1d36cec8f2509a82582978e9ecfe9cfe87d8d02ebf3a013ec514",
+          "original_capture_on": "2026-10-26",
+          "locator": "书架对象和数量口径",
+          "limitation": "本轮重读旧固定提交原件，未重新联网取得；API未执行",
+          "archived_artifact": "artifacts/weread-controls-deepening/source-notes.md",
+          "sha256": "7de92903a20630c9c303c128fb53fb9643a68dc6d8f943ee795754750d1af9de",
+          "hands_on": false,
+          "visual_observed": false
+        }
+      ]
+    },
+    {
+      "id": "E-WRD-05",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "capture_url": "https://github.com/Tencent/WeChatReading/blob/d98e66ee60a8c7bcd35da549d0643c4470439643/skills/search.md",
+          "access_mode": "local_reread_of_existing_public_artifact",
+          "raw_work_path": "work/chinese-apps/wrd-search.md",
+          "raw_sha256": "019337ec094bc39a2b12db0cd732eb33a49ace2c42fe6525d8f0a3318b2414d9",
+          "original_capture_on": "2026-10-26",
+          "locator": "scope、分页和结果链接",
+          "limitation": "本轮重读旧固定提交原件，未重新联网取得；API未执行",
+          "archived_artifact": "artifacts/weread-controls-deepening/source-notes.md",
+          "sha256": "7de92903a20630c9c303c128fb53fb9643a68dc6d8f943ee795754750d1af9de",
+          "hands_on": false,
+          "visual_observed": false
+        }
+      ]
+    },
+    {
+      "id": "E-WRD-06",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "capture_url": "https://github.com/Tencent/WeChatReading/blob/d98e66ee60a8c7bcd35da549d0643c4470439643/skills/book.md",
+          "access_mode": "local_reread_of_existing_public_artifact",
+          "raw_work_path": "work/chinese-apps/wrd-book.md",
+          "raw_sha256": "5578ef66944f71e654934f534c388f70ac55d0f2b429dd32c1f8415121e12fe6",
+          "original_capture_on": "2026-10-26",
+          "locator": "基本信息、目录、进度工作流",
+          "limitation": "本轮重读旧固定提交原件，未重新联网取得；API未执行",
+          "archived_artifact": "artifacts/weread-controls-deepening/source-notes.md",
+          "sha256": "7de92903a20630c9c303c128fb53fb9643a68dc6d8f943ee795754750d1af9de",
+          "hands_on": false,
+          "visual_observed": false
+        }
+      ]
+    },
+    {
+      "id": "E-WRD-07",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "capture_url": "https://github.com/Tencent/WeChatReading/blob/d98e66ee60a8c7bcd35da549d0643c4470439643/skills/notes.md",
+          "access_mode": "local_reread_of_existing_public_artifact",
+          "raw_work_path": "work/chinese-apps/wrd-notes.md",
+          "raw_sha256": "b333ce09a32815b23a9dd0dcaeb406039b3d3b531674b331c07f19a283c32b16",
+          "original_capture_on": "2026-10-26",
+          "locator": "笔记口径、列表游标、划线及个人想法",
+          "limitation": "本轮重读旧固定提交原件，未重新联网取得；API未执行",
+          "archived_artifact": "artifacts/weread-controls-deepening/source-notes.md",
+          "sha256": "7de92903a20630c9c303c128fb53fb9643a68dc6d8f943ee795754750d1af9de",
+          "hands_on": false,
+          "visual_observed": false
+        }
+      ]
+    },
+    {
+      "id": "E-WRD-08",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "capture_url": "https://github.com/Tencent/WeChatReading/blob/d98e66ee60a8c7bcd35da549d0643c4470439643/skills/readdata.md",
+          "access_mode": "local_reread_of_existing_public_artifact",
+          "raw_work_path": "work/chinese-apps/wrd-readdata.md",
+          "raw_sha256": "35534d41984199b315f565a0c468346b1115ebfb5a5b09d89685aec9c820434c",
+          "original_capture_on": "2026-10-26",
+          "locator": "统计周期、时长、天数与排行",
+          "limitation": "本轮重读旧固定提交原件，未重新联网取得；API未执行",
+          "archived_artifact": "artifacts/weread-controls-deepening/source-notes.md",
+          "sha256": "7de92903a20630c9c303c128fb53fb9643a68dc6d8f943ee795754750d1af9de",
+          "hands_on": false,
+          "visual_observed": false
+        }
+      ]
+    },
+    {
+      "id": "E-MEE-01",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "source_url": "https://www.haoqingtech.com/",
+          "access_mode": "anonymous_public_html_GET",
+          "http_status": 200,
+          "hands_on": false,
+          "visual_observed": false,
+          "archived_artifact": "artifacts/meebook-controls-deepening/source-notes.md",
+          "sha256": "e096a28910f56b3e5fbbfc8339a089e799fc9b6738f72b060d45c81e304da545",
+          "locator": "厂商联系方式及en1.png型号宣传",
+          "capture_state": "raw_source_in_work_and_short_note_archived",
+          "raw_work_path": "work/meebook-controls-deepening/raw/official.html",
+          "raw_sha256": "517793993ff05808ea982eba377d0140a9a74179aefe030c0109137959c19276",
+          "extracted_work_path": "work/meebook-controls-deepening/raw/official.txt",
+          "extracted_sha256": "8a46d2a5be6808bf99113889f0fb21abc20ba4cbafd8701f130d70301dff905c"
+        }
+      ]
+    },
+    {
+      "id": "E-MEE-02",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "source_url": "https://fccid.io/2A53EMEEBOOKM7/User-Manual/User-Manual-6662213",
+          "access_mode": "web_text_read_then_local_GET_403_stopped",
+          "http_status": 403,
+          "hands_on": false,
+          "visual_observed": false,
+          "archived_artifact": "artifacts/meebook-controls-deepening/source-notes.md",
+          "sha256": "e096a28910f56b3e5fbbfc8339a089e799fc9b6738f72b060d45c81e304da545",
+          "locator": "Document ID6662213；申请人、型号与标题元数据",
+          "capture_state": "web_text_read_but_raw_capture_denied_no_retry",
+          "failed_response_work_path": "work/meebook-controls-deepening/raw/metadata.html",
+          "failed_response_sha256": "f46951a741d217ab40193f7cdb453d41671e3bb30d7a61888ba11f03b0eb7673",
+          "raw_work_path": null,
+          "raw_sha256": null,
+          "note": "此前web工具已读；本地文件只是403响应，不是正文。未重试拒绝路线，无PDF/新图。"
+        }
+      ]
+    },
+    {
+      "id": "E-MEE-03",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "source_url": "https://www.manualslib.com/guide/4006924/meebook-m7-manual.html",
+          "access_mode": "web_text_read_then_local_GET_403_stopped",
+          "http_status": 403,
+          "hands_on": false,
+          "visual_observed": false,
+          "archived_artifact": "artifacts/meebook-controls-deepening/source-notes.md",
+          "sha256": "e096a28910f56b3e5fbbfc8339a089e799fc9b6738f72b060d45c81e304da545",
+          "locator": "Basic operating guidance 1—4、7；Data backups",
+          "capture_state": "web_text_read_but_raw_capture_denied_no_retry",
+          "failed_response_work_path": "work/meebook-controls-deepening/raw/quick.html",
+          "failed_response_sha256": "3483b1775080474fb721d0801cb29ff4c046cc5e4d51711bbca77e80615b27ee",
+          "raw_work_path": null,
+          "raw_sha256": null,
+          "note": "此前web工具已读；本地文件只是403响应，不是正文。未重试拒绝路线，无PDF/新图。"
+        }
+      ]
+    },
+    {
+      "id": "E-MEE-04",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "source_url": "https://ereader.co.th/firmware/",
+          "access_mode": "anonymous_public_html_GET",
+          "http_status": 200,
+          "hands_on": false,
+          "visual_observed": false,
+          "archived_artifact": "artifacts/meebook-controls-deepening/source-notes.md",
+          "sha256": "e096a28910f56b3e5fbbfc8339a089e799fc9b6738f72b060d45c81e304da545",
+          "locator": "Meebook M7小节：V1.5.2；V1.5.3-2023092114",
+          "capture_state": "raw_source_in_work_and_short_note_archived",
+          "raw_work_path": "work/meebook-controls-deepening/raw/firmware.html",
+          "raw_sha256": "5a8a79916d8e0f9940496b7ba044a7cf34e07ae61ff1d2f0d5635a4266eaf099",
+          "extracted_work_path": "work/meebook-controls-deepening/raw/firmware.txt",
+          "extracted_sha256": "66db1872707740ea3bbcb9882bafe4981449469f1a51c12f985cae96bd2a7b56"
+        }
+      ]
+    },
+    {
+      "id": "E-BRIT-02",
+      "field": "additional_captures",
+      "before": null,
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "capture_url": "https://britannicaeducation.com/wp-content/uploads/2025/10/be-resource-Britannica-School-Guided-Tour_2025-Branding-Interactive.pdf",
+          "access_mode": "local_pdf_reread_no_refetch",
+          "hands_on": false,
+          "note_artifact": "artifacts/britannica-controls-deepening/source-notes.md",
+          "note_sha256": "5cf4205b25fbef32d9dc3160a7063ee34716c4109aafddfe64664f5566fbcfb1",
+          "raw_work_path": "work/news-interactions/brit-school.pdf",
+          "raw_sha256": "ad70683769eb638650ca2675331586beb38651542f1f1cd3b3f18f0d872c895b",
+          "text_work_path": "work/news-interactions/brit-school.txt",
+          "text_sha256": "093b1fa2288a8888d2721521ab370b8f08cb4c942a90c898b2cfad014a22d365"
+        }
+      ]
+    },
+    {
+      "id": "E-BRIT-03",
+      "field": "additional_captures",
+      "before": null,
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "capture_url": "https://britannicaeducation.com/wp-content/uploads/2025/10/BSchool-early-elementary-GuidedTour-2025-.pdf",
+          "access_mode": "local_pdf_reread_no_refetch",
+          "hands_on": false,
+          "note_artifact": "artifacts/britannica-controls-deepening/source-notes.md",
+          "note_sha256": "5cf4205b25fbef32d9dc3160a7063ee34716c4109aafddfe64664f5566fbcfb1",
+          "raw_work_path": "work/news-interactions/brit-early.pdf",
+          "raw_sha256": "f8967bc5515ca669986919b42caf6b453ba88c4ccc489d25c2dabcab775cc34e",
+          "text_work_path": "work/news-interactions/brit-early.txt",
+          "text_sha256": "ae378a1c75c1131a1bf13ea71a4cf08918194900aceaaf3096e39efaa65a4890"
+        }
+      ]
+    },
+    {
+      "id": "E-BRIT-04",
+      "field": "additional_captures",
+      "before": null,
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "capture_url": "https://britannicaeducation.com/onboarding/britannica-school/",
+          "access_mode": "ordinary_public_html_read",
+          "hands_on": false,
+          "note_artifact": "artifacts/britannica-controls-deepening/source-notes.md",
+          "note_sha256": "5cf4205b25fbef32d9dc3160a7063ee34716c4109aafddfe64664f5566fbcfb1",
+          "raw_work_path": "work/britannica-controls-deepening/raw/onboarding.html",
+          "raw_sha256": "7dfda083067acefb67923f79198c6ecf0135413f477a0c0a209919c4f01c2b1c",
+          "text_work_path": "work/britannica-controls-deepening/raw/onboarding.txt",
+          "text_sha256": "a3cacaeb7b31fc6b2f58cc7984e80da436d759789f28b16e4e54abeba0910d01"
+        }
+      ]
+    }
+  ],
+  "files": [
+    {
+      "path": "docs/research/interaction-library/batches/chinese-apps-coverage.csv",
+      "backup": "work/britannica-controls-deepening/reviewed-before/chinese-apps-coverage.csv",
+      "before_sha256": "3730840cd55ebd2bf86cf83965d78f397cb51be56d1a0d180840239ba8b5aecd",
+      "after_sha256": "ede9875eff73a725da12c2bb73ca6b773bdc8c60a6e491e7d2ad6c18bc8d892b"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/child-information-deepening-coverage.csv",
+      "backup": "work/britannica-controls-deepening/reviewed-before/child-information-deepening-coverage.csv",
+      "before_sha256": "828c90fb6db57a77f4d7e732dc04febec17e4a676a05b67299036bffa294a6f3",
+      "after_sha256": "51d11355ae118b609c5b64503afec1185576952f20941ed6f64cc547b0bbb567"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/extended-readers-coverage.csv",
+      "backup": "work/britannica-controls-deepening/reviewed-before/extended-readers-coverage.csv",
+      "before_sha256": "d11aac82851d72cb2953e77883c2cfb72e3d3f34b2c030c6a9adb65933251057",
+      "after_sha256": "4a838db6d18795fc8bb6ef3a518f8a4a28eb418a2436adc0c6143da8192fb7f1"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/news-evidence.jsonl",
+      "backup": "work/britannica-controls-deepening/reviewed-before/news-evidence.jsonl",
+      "before_sha256": "7bdaef042945d9b25a83c8f8b146405f802d85e0fca8e48c27fc990ebf70168c",
+      "after_sha256": "7b1859ce95bb99d6ab6da74adadb1a4708a094e131471c5350e55062d0a88668"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/extended-readers-evidence.jsonl",
+      "backup": "work/britannica-controls-deepening/reviewed-before/extended-readers-evidence.jsonl",
+      "before_sha256": "77d55130d115bcd05586758de190f9be79ee80f3e9c1681bd3d3ba49b7782af5",
+      "after_sha256": "13a3644eccb1433578855a6c9b941b69f09b2d9409a238d642857fe9ea5a6624"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/chinese-apps-evidence.jsonl",
+      "backup": "work/britannica-controls-deepening/reviewed-before/chinese-apps-evidence.jsonl",
+      "before_sha256": "6784a1d911aeb6274fc5f87eb1c7bc1415fe08f8040eede2434ec1cdc781b9f7",
+      "after_sha256": "ec2a6f51f3250e3215be13a91449b41f4719bc59e0cb47d8b5dd8bff5443e283"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/news-coverage.csv",
+      "backup": "work/britannica-controls-deepening/reviewed-before/news-coverage.csv",
+      "before_sha256": "4e7a790d3ee05aba61cfcb7b9ce2011d479be57d2c52fc0ae7161b67eb607d9e",
+      "after_sha256": "49ac719fe5bce1077a7517aad499220baf15d055eb551d3299a0782b3ea79bd3"
+    }
+  ],
+  "old_tasks": 17,
+  "old_task_fields": 63,
+  "old_evidence_captures": 14
+}

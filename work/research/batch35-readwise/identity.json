@@ -1,0 +1,24 @@
+{
+  "repository": "readwiseio/readwise-skills",
+  "ref": "master",
+  "commit": "2d1ce9627c611d24f510dfc2e05a123fa509d2f6",
+  "commit_tree": "5142ebc84bcc297f0d4120e5d91d04b061d94324",
+  "existing_tree": "2d1ce9627c611d24f510dfc2e05a123fa509d2f6",
+  "tree_matches": false,
+  "existing_tree_sha256": "2532d835fab25c4dd2d7818c83de98939e472e13ced4d4883e20f5ce44d93121",
+  "commit_date": "2026-06-19T05:27:11Z",
+  "commit_api_capture": {
+    "url": "https://api.github.com/repos/readwiseio/readwise-skills/commits/master",
+    "method": "anonymous_GET_once",
+    "retrieved_utc": "2026-10-27T03:21:03.276144+00:00",
+    "saved_path": "work/research/batch35-readwise/commits-master.json",
+    "status": 200,
+    "final_url": "https://api.github.com/repos/readwiseio/readwise-skills/commits/master",
+    "sha256": "fb9e401c20b52a4b59cb10e4033ceeacd4a8e43b9a03758a48529275f95c8281",
+    "bytes": 5625
+  },
+  "canonical_tree_sha": "5142ebc84bcc297f0d4120e5d91d04b061d94324",
+  "existing_tree_entries_match": true,
+  "existing_tree_header_equals_commit": true,
+  "identity_note": "Existing tree response header equals commit, canonical root tree fetched separately; compare path/type/blob entries instead of equating headers."
+}

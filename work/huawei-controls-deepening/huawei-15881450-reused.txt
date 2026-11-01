@@ -1,0 +1,14 @@
+HUAWEI MatePad Paper华为阅读可导入的文件格式
+目前
+华为阅读
+1.1.25.300及以上版本支持导入的文件格式有：
+EPUB、TXT、PDF、mobi、azw、azw3、doc/docx/rtf、xls/xlsx/et、ppt/pptx/dps、
+FB2、html
+、
+hrc
+，导入的PDF格式的文件大小不能超过
+1G
+，其他文件大小不能超过
+300M
+。
+更多格式持续增加中，敬请期待。

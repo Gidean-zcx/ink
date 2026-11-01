@@ -1,0 +1,62 @@
+[
+  {
+    "evidence_id": "E-APQD-01",
+    "raw_work_path": "work/antennapod-queue-controls-deepening/raw/multiple-queues.html",
+    "locator": "Article body: current multiple-queue limitation",
+    "whole_product_read": false
+  },
+  {
+    "evidence_id": "E-APQD-02",
+    "raw_work_path": "work/antennapod-queue-controls-deepening/raw/subscription-groups.html",
+    "locator": "Article body: tag entry and no tag-based queues",
+    "whole_product_read": false
+  },
+  {
+    "evidence_id": "E-APQD-03",
+    "raw_work_path": "work/antennapod-queue-controls-deepening/raw/refreshing-podcasts.html",
+    "locator": "Article body: global interval and per-feed Keep Updated",
+    "whole_product_read": false
+  },
+  {
+    "evidence_id": "E-APQD-04",
+    "raw_work_path": "work/antennapod-queue-controls-deepening/raw/QueueFragment.java",
+    "locator": "88–137;230–365;419–490;527–728: queue menus, multi-select, ordering, drag write request",
+    "whole_product_read": false
+  },
+  {
+    "evidence_id": "E-APQD-05",
+    "raw_work_path": "work/antennapod-queue-controls-deepening/raw/EpisodeMultiSelectActionHandler.java",
+    "locator": "24–251: selected-item action dispatch and count feedback",
+    "whole_product_read": false
+  },
+  {
+    "evidence_id": "E-APQD-06",
+    "raw_work_path": "work/antennapod-queue-controls-deepening/raw/ItemFilterDialog.java",
+    "locator": "1–122: option callbacks, reset and dismiss",
+    "whole_product_read": false
+  },
+  {
+    "evidence_id": "E-APQD-07",
+    "raw_work_path": "work/antennapod-queue-controls-deepening/raw/FeedItemFilterQuery.java",
+    "locator": "1–103: SQL filter predicate generation",
+    "whole_product_read": false
+  },
+  {
+    "evidence_id": "E-APQD-08",
+    "raw_work_path": "work/antennapod-queue-controls-deepening/raw/DownloadLogAdapter.java",
+    "locator": "28–153: success/error row, retry visibility and dispatch",
+    "whole_product_read": false
+  },
+  {
+    "evidence_id": "E-APQD-09",
+    "raw_work_path": "work/antennapod-queue-controls-deepening/raw/DownloadLogDetailsDialog.java",
+    "locator": "35–168: detail fields, copying and conditional feed navigation",
+    "whole_product_read": false
+  },
+  {
+    "evidence_id": "E-APCD-13",
+    "raw_work_path": "work/antennapod-controls-deepening/src/app/src/main/java/de/danoeh/antennapod/ui/screen/subscriptions/SubscriptionFragment.java",
+    "locator": "SubscriptionFragment 128–230;246–300;335–510",
+    "whole_product_read": false
+  }
+]

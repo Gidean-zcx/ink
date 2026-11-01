@@ -1,0 +1,16 @@
+Source: https://help.quizlet.com/hc/en-us/articles/27393733229965-Playing-a-game-of-Blast
+Retrieved: 2026-10-27
+Access: official Help text returned by public search extraction; not source HTML; HTTP status unavailable
+Title: Playing a game of Blast
+Platforms shown: iOS, Web, Android
+
+Rule and flow extracted:
+- Players individually match terms and definitions shown on moving asteroids; the first to hit the correct asteroid scores, and the highest score wins when time expires.
+- Host eligibility: account identified as teacher; English set with at least six terms and definitions.
+- Host: log in on website -> set -> Blast -> Get Started -> choose prompt/answer combination -> project host screen -> players join at quizlet.live by code/name or app QR -> Create game -> Start game.
+- Players are assigned to groups; the article suggests seating group members together where possible.
+- Options change asteroid speed, number of choices, and game duration.
+- Hosting is website-only; players may join/play on mobile devices.
+- Unavailable in Canada and the United Kingdom; unavailable for diagram sets.
+
+Not stated in the extracted official text: host cancel/early-end controls; disconnect/rejoin; late join; tie handling; retained scores/history; paid subscription boundary.

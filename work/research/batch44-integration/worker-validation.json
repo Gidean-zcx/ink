@@ -1,0 +1,98 @@
+{
+  "status": "PASS",
+  "formal_diff": {
+    "baseline_files": 1375,
+    "current_files": 1388,
+    "added_count": 13,
+    "modified_count": 23,
+    "deleted_count": 0,
+    "added": [
+      "docs/briefs/044-system-controls-and-evidence-scope.md",
+      "docs/briefs/README.md",
+      "docs/research/interaction-library/artifacts/boox-system-content-deepening/booxdrop-cast-browser.jpg",
+      "docs/research/interaction-library/artifacts/boox-system-content-deepening/booxdrop-cast-conditions.jpg",
+      "docs/research/interaction-library/artifacts/boox-system-content-deepening/home-example.jpg",
+      "docs/research/interaction-library/artifacts/boox-system-content-deepening/memo-screensaver-example.jpg",
+      "docs/research/interaction-library/artifacts/boox-system-content-deepening/screen-record-settings.jpg",
+      "docs/research/interaction-library/artifacts/boox-system-content-deepening/screensaver-image-example.jpg",
+      "docs/research/interaction-library/artifacts/boox-system-content-deepening/source-captures.json",
+      "docs/research/interaction-library/artifacts/boox-system-content-deepening/source-notes.md",
+      "docs/research/interaction-library/artifacts/boox-system-content-deepening/volume-channels.jpg",
+      "docs/research/interaction-library/batches/boox-system-content-deepening-coverage.csv",
+      "docs/research/interaction-library/batches/boox-system-content-deepening-evidence.jsonl"
+    ],
+    "modified": [
+      "README.md",
+      "docs/ideas.md",
+      "docs/research/interaction-library/README.md",
+      "docs/research/interaction-library/analysis-status.md",
+      "docs/research/interaction-library/backlog.md",
+      "docs/research/interaction-library/batches/README.md",
+      "docs/research/interaction-library/batches/boox-controls-deepening-evidence.jsonl",
+      "docs/research/interaction-library/batches/boox-reading-controls-deepening-coverage.csv",
+      "docs/research/interaction-library/batches/boox-reading-controls-deepening-inventory.csv",
+      "docs/research/interaction-library/batches/eink-systems-coverage.csv",
+      "docs/research/interaction-library/batches/eink-systems-evidence.jsonl",
+      "docs/research/interaction-library/batches/palma-controls-deepening-inventory.csv",
+      "docs/research/interaction-library/case-index.md",
+      "docs/research/interaction-library/cases/M-004-boox-neoreader.md",
+      "docs/research/interaction-library/cases/M-010-palma.md",
+      "docs/research/interaction-library/catalog.csv",
+      "docs/research/interaction-library/comparison.md",
+      "docs/research/interaction-library/coverage.csv",
+      "docs/research/interaction-library/data-dictionary.md",
+      "docs/research/interaction-library/design-reference-guide.md",
+      "docs/research/interaction-library/evidence.jsonl",
+      "docs/research/interaction-library/inventories/README.md",
+      "docs/research/interaction-library/reference-points.csv"
+    ],
+    "deleted": []
+  },
+  "requirements_sha256": "e141320e2714df805c009fe64dd92d17decd6429d5728f8ce42d6d868b775087",
+  "rp": {
+    "rows": 68,
+    "new_rows": 12,
+    "new_ids": [
+      "RP-M004-01",
+      "RP-M004-02",
+      "RP-M004-03",
+      "RP-M004-04",
+      "RP-M004-05",
+      "RP-M004-06",
+      "RP-M004-07",
+      "RP-M004-08",
+      "RP-M004-09",
+      "RP-M004-10",
+      "RP-M010-01",
+      "RP-M010-02"
+    ],
+    "unique": true,
+    "empty_cells": [],
+    "missing": []
+  },
+  "boox_batch": {
+    "evidence": 25,
+    "flows": 7,
+    "depths": {
+      "D2": 7
+    },
+    "flow_hands_on": {
+      "false": 7
+    },
+    "evidence_hands_on": {
+      "false": 25
+    },
+    "source_articles": 31,
+    "unique_article_ids": 31,
+    "unique_image_artifacts": 7,
+    "image_hash_errors": []
+  },
+  "briefs": {
+    "brief_links": 44,
+    "unique_links": 44,
+    "root_has_044": true,
+    "root_has_043_direct": false,
+    "brief_index_has_043": true
+  },
+  "problems": []
+}

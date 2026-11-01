@@ -1,0 +1,28 @@
+entry_id,entry_type,title,source_url,locator,evidence_ids,flow_ids,review_status,gap
+M050-DBCD-001,historical_guide_page,封面：Number Sense,https://dragonbox.com/attachment/14/download,PDF p1,E-DRGN-02,,本轮文字已读；沿用旧观察范围,页标题不是完整菜单；未固定构建
+M050-DBCD-002,historical_guide_page,Number Sense说明,https://dragonbox.com/attachment/14/download,PDF p2,E-DRGN-02,,本轮文字已读；沿用旧观察范围,页标题不是完整菜单；未固定构建
+M050-DBCD-003,historical_guide_page,The powers of the Nooms,https://dragonbox.com/attachment/14/download,PDF p3,E-DRGN-02,F-M050-07,本轮文字已读；沿用旧观察范围,页标题不是完整菜单；未固定构建
+M050-DBCD-004,historical_guide_page,The sandbox,https://dragonbox.com/attachment/14/download,PDF p4,E-DBCD-01,F-M050-07,本轮文字已读；本轮看静态页,页标题不是完整菜单；未固定构建
+M050-DBCD-005,historical_guide_page,The puzzles,https://dragonbox.com/attachment/14/download,PDF p5,E-DBCD-01,F-M050-01,本轮文字已读；本轮看静态页,页标题不是完整菜单；未固定构建
+M050-DBCD-006,historical_guide_page,Four piece slots and puzzle goals,https://dragonbox.com/attachment/14/download,PDF p6,E-DRGN-02,F-M050-01,本轮文字已读；沿用旧观察范围,页标题不是完整菜单；未固定构建
+M050-DBCD-007,historical_guide_page,The Ladder,https://dragonbox.com/attachment/14/download,PDF p7,E-DRGN-02,F-M050-02,本轮文字已读；沿用旧观察范围,页标题不是完整菜单；未固定构建
+M050-DBCD-008,historical_guide_page,Ladder pedagogical goals,https://dragonbox.com/attachment/14/download,PDF p8,E-DBCD-01,F-M050-02,本轮文字已读；本轮看静态页,页标题不是完整菜单；未固定构建
+M050-DBCD-009,historical_guide_page,产品数量声明,https://dragonbox.com/attachment/14/download,PDF p9,E-DRGN-02,,本轮文字已读；沿用旧观察范围,页标题不是完整菜单；未固定构建
+M050-DBCD-010,store_declared_activity,Sandbox,https://play.google.com/store/apps/details?hl=en_US&id=com.kahoot.numbers,FEATURES,E-DBCD-02,F-M050-07,开发者正文已读,入口/完整错误和恢复不由声明补齐
+M050-DBCD-011,store_declared_activity,Puzzle,https://play.google.com/store/apps/details?hl=en_US&id=com.kahoot.numbers,FEATURES,E-DBCD-02,F-M050-01,开发者正文已读,入口/完整错误和恢复不由声明补齐
+M050-DBCD-012,store_declared_activity,Ladder,https://play.google.com/store/apps/details?hl=en_US&id=com.kahoot.numbers,FEATURES,E-DBCD-02,F-M050-02,开发者正文已读,入口/完整错误和恢复不由声明补齐
+M050-DBCD-013,store_declared_activity,Run,https://play.google.com/store/apps/details?hl=en_US&id=com.kahoot.numbers,FEATURES,E-DBCD-02,F-M050-08,开发者正文已读,入口/完整错误和恢复不由声明补齐
+M050-DBCD-014,related_kids_help_title,Child Activity Dashboard,https://support.kahoot.com/hc/en-us/sections/4412889303699-Kahoot-Kids,5个公开索引标题,E-DBCD-04,F-M050-04,索引标题；相关正文另列E,Kids外部范围，不是Numbers菜单；空映射不当不支持
+M050-DBCD-015,related_kids_help_title,Intro to Kahoot! Kids app,https://support.kahoot.com/hc/en-us/sections/4412889303699-Kahoot-Kids,5个公开索引标题,E-DBCD-04,,索引标题；相关正文另列E,Kids外部范围，不是Numbers菜单；空映射不当不支持
+M050-DBCD-016,related_kids_help_title,"How to create, edit, and delete Kahoot! Kids profiles",https://support.kahoot.com/hc/en-us/sections/4412889303699-Kahoot-Kids,5个公开索引标题,E-DBCD-04,F-M050-03,索引标题；相关正文另列E,Kids外部范围，不是Numbers菜单；空映射不当不支持
+M050-DBCD-017,related_kids_help_title,Kahoot! Kids: How to create and share playlists,https://support.kahoot.com/hc/en-us/sections/4412889303699-Kahoot-Kids,5个公开索引标题,E-DBCD-04,,索引标题；相关正文另列E,Kids外部范围，不是Numbers菜单；空映射不当不支持
+M050-DBCD-018,related_kids_help_title,How to play Kahoot! Kids quiz games,https://support.kahoot.com/hc/en-us/sections/4412889303699-Kahoot-Kids,5个公开索引标题,E-DBCD-04,,索引标题；相关正文另列E,Kids外部范围，不是Numbers菜单；空映射不当不支持
+M050-DBCD-019,related_dashboard_section,How to open the Child Activity Dashboard,https://support.kahoot.com/hc/en-us/articles/39935017652125-Child-Activity-Dashboard-your-parent-dashboard-for-Kahoot-Kids,官方索引正文小节,E-DRGN-05,F-M050-04,索引正文已读；未看配图,非Numbers专属每步统计；未开通邮件
+M050-DBCD-020,related_dashboard_section,Weekly overview,https://support.kahoot.com/hc/en-us/articles/39935017652125-Child-Activity-Dashboard-your-parent-dashboard-for-Kahoot-Kids,官方索引正文小节,E-DRGN-05,F-M050-04,索引正文已读；未看配图,非Numbers专属每步统计；未开通邮件
+M050-DBCD-021,related_dashboard_section,Completed Activities,https://support.kahoot.com/hc/en-us/articles/39935017652125-Child-Activity-Dashboard-your-parent-dashboard-for-Kahoot-Kids,官方索引正文小节,E-DRGN-05,F-M050-04,索引正文已读；未看配图,非Numbers专属每步统计；未开通邮件
+M050-DBCD-022,related_dashboard_section,Topic Progress,https://support.kahoot.com/hc/en-us/articles/39935017652125-Child-Activity-Dashboard-your-parent-dashboard-for-Kahoot-Kids,官方索引正文小节,E-DRGN-05,F-M050-04,索引正文已读；未看配图,非Numbers专属每步统计；未开通邮件
+M050-DBCD-023,related_dashboard_section,Boost Learning,https://support.kahoot.com/hc/en-us/articles/39935017652125-Child-Activity-Dashboard-your-parent-dashboard-for-Kahoot-Kids,官方索引正文小节,E-DRGN-05,F-M050-04,索引正文已读；未看配图,非Numbers专属每步统计；未开通邮件
+M050-DBCD-024,related_dashboard_section,Monthly email report,https://support.kahoot.com/hc/en-us/articles/39935017652125-Child-Activity-Dashboard-your-parent-dashboard-for-Kahoot-Kids,官方索引正文小节,E-DRGN-05,F-M050-04,索引正文已读；未看配图,非Numbers专属每步统计；未开通邮件
+M050-DBCD-025,external_profile_help_section,How to create a child profile,https://support.kahoot.com/hc/en-us/articles/15265266752659-How-to-create-edit-and-delete-Kahoot-Kids-profiles,正文小节,E-DBCD-03,F-M050-03,官方索引正文已读,未执行建档/修改/删除；数据范围未知
+M050-DBCD-026,external_profile_help_section,In the Kahoot! Kids app,https://support.kahoot.com/hc/en-us/articles/15265266752659-How-to-create-edit-and-delete-Kahoot-Kids-profiles,正文小节,E-DBCD-03,F-M050-03,官方索引正文已读,未执行建档/修改/删除；数据范围未知
+M050-DBCD-027,external_profile_help_section,In the Kahoot! app,https://support.kahoot.com/hc/en-us/articles/15265266752659-How-to-create-edit-and-delete-Kahoot-Kids-profiles,正文小节,E-DBCD-03,F-M050-03,官方索引正文已读,未执行建档/修改/删除；数据范围未知

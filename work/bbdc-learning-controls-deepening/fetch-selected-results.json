@@ -1,0 +1,42 @@
+[
+  {
+    "path": "work/bbdc-learning-controls-deepening/raw/c05-agirls2017.html",
+    "url": "https://agirls.aotter.net/post/51654",
+    "final_url": "https://agirls.aotter.net/post/51654",
+    "status": 200,
+    "bytes": 51055,
+    "sha256": "17771d6a7abc1df1c28265859affa7edcd8ad31e767bd958c1eede37123e6444"
+  },
+  {
+    "path": "work/bbdc-learning-controls-deepening/raw/c06-sspai2023.html",
+    "url": "https://sspai.com/post/76700",
+    "final_url": "https://sspai.com/post/76700",
+    "status": 200,
+    "bytes": 113763,
+    "sha256": "d34cd3191ef0e96f5e54cf79381d8a256e92ee7b32b10bd8dc78a8be74136f1f"
+  },
+  {
+    "path": "work/bbdc-learning-controls-deepening/raw/c04-version-table.jpg",
+    "url": "https://image.woshipm.com/wp-files/2021/03/IBhpD694YflEuTpdXgje.jpg",
+    "final_url": "https://image.woshipm.com/wp-files/2021/03/IBhpD694YflEuTpdXgje.jpg",
+    "status": 200,
+    "bytes": 42684,
+    "sha256": "14f9d6e246cc38edf04a9f107da608c04cbb6a48e0aa5ed24406cb772743e8e8"
+  },
+  {
+    "path": "work/bbdc-learning-controls-deepening/raw/c04-flow.jpg",
+    "url": "https://image.woshipm.com/wp-files/2021/03/XK71vXxvHvNW7eF9f3KC.jpg",
+    "final_url": "https://image.woshipm.com/wp-files/2021/03/XK71vXxvHvNW7eF9f3KC.jpg",
+    "status": 200,
+    "bytes": 37482,
+    "sha256": "991ad103c2c640f560ffdf186f2333870f694c077aef81ec54e989522e927f06"
+  },
+  {
+    "path": "work/bbdc-learning-controls-deepening/raw/c04-study-ui.jpg",
+    "url": "https://image.woshipm.com/wp-files/2021/03/uq5tkM7K5trzj74mkE1Y.jpg",
+    "final_url": "https://image.woshipm.com/wp-files/2021/03/uq5tkM7K5trzj74mkE1Y.jpg",
+    "status": 200,
+    "bytes": 24210,
+    "sha256": "e68980d346def4ad4751d70a2353229e5d66bfe3ca81029dff940dc682e7f62c"
+  }
+]

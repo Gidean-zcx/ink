@@ -1,0 +1,21 @@
+In this article, you will learn more about the functions of the Contents tab in NeoReader.
+To access the Contents tab, do the following:
+In NeoReader, tap the center area to display the main menu.
+Tap the
+Contents
+tab.
+TOC (Table of Contents)
+Here you can check and directly jump to a specific chapter or section with the built-in TOC of the book file.
+Bookmarks
+Here you can check, manage or locate your bookmarks in the book.
+To add a bookmark, simply tap the icon on the top right corner of the page. It will be indicated by the hollow bookmark icon turning solid.
+Annotations
+Here you can check, manage or locate your annotations in the book, which include your highlighted, underlined or annotated content.
+To learn how to make annotations, please refer to the
+Take Notes on Books
+page in the Reading chapter.
+Handwriting
+Here you can check, manage or locate your in-book handwritten notes.
+To learn how to make in-book handwritten notes, please refer to the
+Take Notes on Books
+page in the Reading chapter.

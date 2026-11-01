@@ -1,0 +1,25 @@
+Before you start using Screen Share:
+Your paper tablet needs to be paired with the cloud.
+Make sure you have the reMarkable desktop app installed or use the web app by logging in at app.remarkable.com.
+To use Screen Share with the web app, your paper tablet needs to be running software version 3.27 or newer.
+Your paper tablet and desktop can be connected to separate Wi-Fi networks.
+Note: guest networks or Wi-Fi networks using a secure gateway can interfere with Screen Share. Firewall settings on your computer can also prevent Screen Share from working correctly.
+How to present with Screen Share using the web app
+1. Go to app.remarkable.com and log in.
+2. Click Screen Share in the side menu.
+3. On your paper tablet, open the file you want to present.
+4. Tap the three-dot menu on your paper tablet, then tap Share.
+5. Tap Present with Screen Share. Content from your paper tablet is now displayed on your computer or phone.
+How to present with Screen Share via the desktop app
+1. On your paper tablet, open the file you want to present. (Screen Share works in notebooks, PDFs, and ebooks).
+2. Tap the three-dot menu on your paper tablet, then tap Share.
+3. Select Present with Screen Share to get started.
+4. A window will appear in your desktop app asking you to accept the Screen Share invite. Tap Accept to start presenting. You can now share this window in digital meetings or on an external monitor.
+5. To stop Screen Share, tap Stop sharing your screen.
+A guide to the features in Screen Share
+You have a pointer functionality in Screen Share for drawing attention to different parts of the page. When using the web app, click the pencil icon in the upper-left corner to use this feature.
+If you're using the desktop app, hold your Marker tip just above the display and a red dot will appear in your desktop app window.
+Screen Share will not show the My files home screen on your device, only one document at a time. This means that you can switch between documents while sharing your screen without showing your audience any of your private files or notebooks.
+You can switch from portrait to landscape view from your device while Screen Share is active.
+When you're presenting with Screen Share, you can use the highlighter tool to highlight text in yellow, green, or pink. The highlighter will show as different shades of gray on your paper tablet, but appears in color on exported documents and in Screen Share.
+Choose between red and blue when you're using the fineliner, marker or ballpoint pen while presenting with Screen Share.

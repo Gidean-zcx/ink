@@ -1,0 +1,786 @@
+[
+  {
+    "inventory_id": "KLC-I001",
+    "current_label": "无障碍声明",
+    "upstream_title": "Our Accessibility Statement",
+    "original_file": "work/khan-library-controls-deepening/text/sections-360001481891.txt",
+    "locator": "web L8, link 2"
+  },
+  {
+    "inventory_id": "KLC-I002",
+    "current_label": "联系支持",
+    "upstream_title": "Get in touch!",
+    "original_file": "work/khan-library-controls-deepening/text/sections-360001481891.txt",
+    "locator": "web L9, link 3"
+  },
+  {
+    "inventory_id": "KLC-I003",
+    "current_label": "产品欢迎",
+    "upstream_title": "Welcome to Khan Academy Kids",
+    "original_file": "work/khan-library-controls-deepening/text/sections-360001481891.txt",
+    "locator": "web L10, link 4"
+  },
+  {
+    "inventory_id": "KLC-I004",
+    "current_label": "家庭开始指南",
+    "upstream_title": "Parent and Home Account Users: Getting Started and creating an account with Khan Academy Kids",
+    "original_file": "work/khan-library-controls-deepening/text/sections-360001481891.txt",
+    "locator": "web L11, link 5; https://khankids.zendesk.com/hc/en-us/articles/360006764812-Parent-and-Home-Account-Users-Getting-Started-and-creating-an-account-with-Khan-Academy-Kids"
+  },
+  {
+    "inventory_id": "KLC-I005",
+    "current_label": "建账号",
+    "upstream_title": "How do I set up an account?",
+    "original_file": "work/khan-library-controls-deepening/text/sections-360001481891.txt",
+    "locator": "web L12, link 6"
+  },
+  {
+    "inventory_id": "KLC-I006",
+    "current_label": "验证邮箱",
+    "upstream_title": "How do I verify my email?",
+    "original_file": "work/khan-library-controls-deepening/text/sections-360001481891.txt",
+    "locator": "web L13, link 7"
+  },
+  {
+    "inventory_id": "KLC-I007",
+    "current_label": "家长资源表",
+    "upstream_title": "List of resources for parents",
+    "original_file": "work/khan-library-controls-deepening/text/sections-360001481891.txt",
+    "locator": "web L14, link 8"
+  },
+  {
+    "inventory_id": "KLC-I008",
+    "current_label": "可打印活动",
+    "upstream_title": "Printable activities for parents and teachers",
+    "original_file": "work/khan-library-controls-deepening/text/sections-360001481891.txt",
+    "locator": "web L15, link 9"
+  },
+  {
+    "inventory_id": "KLC-I009",
+    "current_label": "每周计划",
+    "upstream_title": "Weekly Planners for Ages 2-8",
+    "original_file": "work/khan-library-controls-deepening/text/sections-360001481891.txt",
+    "locator": "web L16, link 10"
+  },
+  {
+    "inventory_id": "KLC-I010",
+    "current_label": "级别与进度",
+    "upstream_title": "How does the learning level adjust and how do I view my child's progress?",
+    "original_file": "work/khan-library-controls-deepening/text/sections-360001481891.txt",
+    "locator": "web L17, link 11; https://khankids.zendesk.com/hc/en-us/articles/360041615571-How-does-the-learning-level-adjust-and-how-do-I-view-my-child-s-progress"
+  },
+  {
+    "inventory_id": "KLC-I011",
+    "current_label": "阅读学习路径",
+    "upstream_title": "The Path to Reading: What you need to know about how children learn to read",
+    "original_file": "work/khan-library-controls-deepening/text/sections-360001481891.txt",
+    "locator": "web L18, link 12"
+  },
+  {
+    "inventory_id": "KLC-I012",
+    "current_label": "读前准备",
+    "upstream_title": "Pre-literacy: Setting your child up for success",
+    "original_file": "work/khan-library-controls-deepening/text/sections-360001481891.txt",
+    "locator": "web L19, link 13"
+  },
+  {
+    "inventory_id": "KLC-I013",
+    "current_label": "自然拼读",
+    "upstream_title": "Phonics: The building blocks of literacy",
+    "original_file": "work/khan-library-controls-deepening/text/sections-360001481891.txt",
+    "locator": "web L20, link 14"
+  },
+  {
+    "inventory_id": "KLC-I014",
+    "current_label": "阅读理解",
+    "upstream_title": "Comprehension: The ultimate goal of reading",
+    "original_file": "work/khan-library-controls-deepening/text/sections-360001481891.txt",
+    "locator": "web L21, link 15"
+  },
+  {
+    "inventory_id": "KLC-I015",
+    "current_label": "流利阅读",
+    "upstream_title": "Fluency: The key to independent reading",
+    "original_file": "work/khan-library-controls-deepening/text/sections-360001481891.txt",
+    "locator": "web L22, link 16; https://khankids.zendesk.com/hc/en-us/articles/4403706778637-Fluency-The-key-to-independent-reading"
+  },
+  {
+    "inventory_id": "KLC-I016",
+    "current_label": "家长控制",
+    "upstream_title": "How do I access parental controls?",
+    "original_file": "work/khan-library-controls-deepening/text/sections-360001481891.txt",
+    "locator": "web L23, link 17; https://khankids.zendesk.com/hc/en-us/articles/360047566151-How-do-I-access-parental-controls"
+  },
+  {
+    "inventory_id": "KLC-I017",
+    "current_label": "密码管理",
+    "upstream_title": "How do I set up, reset, or manage a password?",
+    "original_file": "work/khan-library-controls-deepening/text/sections-360001481891.txt",
+    "locator": "web L24, link 18; https://khankids.zendesk.com/hc/en-us/articles/360007054191-How-do-I-set-up-reset-or-manage-a-password"
+  },
+  {
+    "inventory_id": "KLC-I018",
+    "current_label": "网络错误",
+    "upstream_title": "How do I resolve the internet connection error?",
+    "original_file": "work/khan-library-controls-deepening/text/sections-360001481891.txt",
+    "locator": "web L25, link 19"
+  },
+  {
+    "inventory_id": "KLC-I019",
+    "current_label": "家庭阅读习惯",
+    "upstream_title": "Literacy Routines: Growing a family of readers",
+    "original_file": "work/khan-library-controls-deepening/text/sections-360001481891.txt",
+    "locator": "web L26, link 20"
+  },
+  {
+    "inventory_id": "KLC-I020",
+    "current_label": "设备兼容",
+    "upstream_title": "Does Khan Academy Kids work with my device?",
+    "original_file": "work/khan-library-controls-deepening/text/sections-360001481891.txt",
+    "locator": "web L27, link 21"
+  },
+  {
+    "inventory_id": "KLC-I021",
+    "current_label": "新增档案",
+    "upstream_title": "How do I add a new user?",
+    "original_file": "work/khan-library-controls-deepening/text/sections-360001481891.txt",
+    "locator": "web L28, link 22; https://khankids.zendesk.com/hc/en-us/articles/360006538192-How-do-I-add-a-new-user"
+  },
+  {
+    "inventory_id": "KLC-I022",
+    "current_label": "西语打印活动",
+    "upstream_title": "Spanish: Actividades Imprimibles Para Padres y Maestros",
+    "original_file": "work/khan-library-controls-deepening/text/sections-360001481891.txt",
+    "locator": "web L29, link 23"
+  },
+  {
+    "inventory_id": "KLC-I023",
+    "current_label": "档案改名",
+    "upstream_title": "How do I change the name of a user?",
+    "original_file": "work/khan-library-controls-deepening/text/sections-360001481891.txt",
+    "locator": "web L30, link 24; https://khankids.zendesk.com/hc/en-us/articles/360006761932-How-do-I-change-the-name-of-a-user"
+  },
+  {
+    "inventory_id": "KLC-I024",
+    "current_label": "西语日程",
+    "upstream_title": "Spanish: Horarios Diarios Para Aprender en Casa",
+    "original_file": "work/khan-library-controls-deepening/text/sections-360001481891.txt",
+    "locator": "web L31, link 25"
+  },
+  {
+    "inventory_id": "KLC-I025",
+    "current_label": "西语家庭学习建议",
+    "upstream_title": "How do I change the avatar for a user?",
+    "original_file": "work/khan-library-controls-deepening/text/sections-360001481891.txt",
+    "locator": "web L32, link 26; https://khankids.zendesk.com/hc/en-us/articles/360007053871-How-do-I-change-the-avatar-for-a-user"
+  },
+  {
+    "inventory_id": "KLC-I026",
+    "current_label": "更换头像",
+    "upstream_title": "Spanish: Consejos rápidos para mantener a tu hijo feliz mientras aprende en casa",
+    "original_file": "work/khan-library-controls-deepening/text/sections-360001481891.txt",
+    "locator": "web L33, link 27"
+  },
+  {
+    "inventory_id": "KLC-I027",
+    "current_label": "删除档案",
+    "upstream_title": "How do I delete a user?",
+    "original_file": "work/khan-library-controls-deepening/text/sections-360001481891.txt",
+    "locator": "web L34, link 28; https://khankids.zendesk.com/hc/en-us/articles/360006763332-How-do-I-delete-a-user"
+  },
+  {
+    "inventory_id": "KLC-I028",
+    "current_label": "转换课堂账号",
+    "upstream_title": "FAQ: How do I convert my account to a Class Account?",
+    "original_file": "work/khan-library-controls-deepening/text/sections-360001481891.txt",
+    "locator": "web L35, link 29"
+  },
+  {
+    "inventory_id": "KLC-I029",
+    "current_label": "离线内容",
+    "upstream_title": "Learn on the go with offline content in Khan Academy Kids",
+    "original_file": "work/khan-library-controls-deepening/text/sections-360001481891.txt",
+    "locator": "web L36, link 30; https://khankids.zendesk.com/hc/en-us/articles/360029139531-Learn-on-the-go-with-offline-content-in-Khan-Academy-Kids"
+  },
+  {
+    "inventory_id": "KLC-I030",
+    "current_label": "背景音乐静音",
+    "upstream_title": "How do I mute the background music?",
+    "original_file": "work/khan-library-controls-deepening/text/sections-360001481891.txt",
+    "locator": "web L37, link 31; https://khankids.zendesk.com/hc/en-us/articles/360006764152-How-do-I-mute-the-background-music"
+  },
+  {
+    "inventory_id": "KLC-I031",
+    "current_label": "无障碍声明",
+    "upstream_title": "Our Accessibility Statement",
+    "original_file": "work/khan-library-controls-deepening/text/sections-360008453772.txt",
+    "locator": "web L8, link 2"
+  },
+  {
+    "inventory_id": "KLC-I032",
+    "current_label": "开学五种用法",
+    "upstream_title": "Five ways to use Khan Kids for back to school success",
+    "original_file": "work/khan-library-controls-deepening/text/sections-360008453772.txt",
+    "locator": "web L9, link 3"
+  },
+  {
+    "inventory_id": "KLC-I033",
+    "current_label": "教师快速开始",
+    "upstream_title": "Quick start guide for preschool through 2nd grade teachers",
+    "original_file": "work/khan-library-controls-deepening/text/sections-360008453772.txt",
+    "locator": "web L10, link 4"
+  },
+  {
+    "inventory_id": "KLC-I034",
+    "current_label": "网页教师面板",
+    "upstream_title": "✨ NEW: Teacher Dashboard on the web",
+    "original_file": "work/khan-library-controls-deepening/text/sections-360008453772.txt",
+    "locator": "web L11, link 5"
+  },
+  {
+    "inventory_id": "KLC-I035",
+    "current_label": "学生区域控制",
+    "upstream_title": "✨ NEW: Manage student access to areas of the app",
+    "original_file": "work/khan-library-controls-deepening/text/sections-360008453772.txt",
+    "locator": "web L12, link 6; https://khankids.zendesk.com/hc/en-us/articles/17031195532059--NEW-Manage-student-access-to-areas-of-the-app"
+  },
+  {
+    "inventory_id": "KLC-I036",
+    "current_label": "课堂账号设置",
+    "upstream_title": "Module 1: Setting up a Class Account",
+    "original_file": "work/khan-library-controls-deepening/text/sections-360008453772.txt",
+    "locator": "web L13, link 7"
+  },
+  {
+    "inventory_id": "KLC-I037",
+    "current_label": "学习主题",
+    "upstream_title": "Learning Topics: Using Khan Academy Kids in Educational Settings",
+    "original_file": "work/khan-library-controls-deepening/text/sections-360008453772.txt",
+    "locator": "web L14, link 8; https://khankids.zendesk.com/hc/en-us/articles/360014856151-Learning-Topics-Using-Khan-Academy-Kids-in-Educational-Settings"
+  },
+  {
+    "inventory_id": "KLC-I038",
+    "current_label": "班级码",
+    "upstream_title": "Module 2: Using Class Codes",
+    "original_file": "work/khan-library-controls-deepening/text/sections-360008453772.txt",
+    "locator": "web L15, link 9"
+  },
+  {
+    "inventory_id": "KLC-I039",
+    "current_label": "每日计划",
+    "upstream_title": "Daily Schedules for Ages 2-8",
+    "original_file": "work/khan-library-controls-deepening/text/sections-360008453772.txt",
+    "locator": "web L16, link 10"
+  },
+  {
+    "inventory_id": "KLC-I040",
+    "current_label": "分配课程",
+    "upstream_title": "Module 3: Assigning lessons",
+    "original_file": "work/khan-library-controls-deepening/text/sections-360008453772.txt",
+    "locator": "web L17, link 11"
+  },
+  {
+    "inventory_id": "KLC-I041",
+    "current_label": "查看学生进度",
+    "upstream_title": "Module 4: Viewing student progress",
+    "original_file": "work/khan-library-controls-deepening/text/sections-360008453772.txt",
+    "locator": "web L18, link 12"
+  },
+  {
+    "inventory_id": "KLC-I042",
+    "current_label": "创作工具",
+    "upstream_title": "How to use creative tools inside the Khan Kids app",
+    "original_file": "work/khan-library-controls-deepening/text/sections-360008453772.txt",
+    "locator": "web L19, link 13; https://khankids.zendesk.com/hc/en-us/articles/21188738836763-How-to-use-creative-tools-inside-the-Khan-Kids-app"
+  },
+  {
+    "inventory_id": "KLC-I043",
+    "current_label": "新学年账号准备",
+    "upstream_title": "Get your account ready for the new school year",
+    "original_file": "work/khan-library-controls-deepening/text/sections-360008453772.txt",
+    "locator": "web L20, link 14"
+  },
+  {
+    "inventory_id": "KLC-I044",
+    "current_label": "会议背景",
+    "upstream_title": "Downloadable Zoom backgrounds with Khan Kids characters",
+    "original_file": "work/khan-library-controls-deepening/text/sections-360008453772.txt",
+    "locator": "web L21, link 15"
+  },
+  {
+    "inventory_id": "KLC-I045",
+    "current_label": "Clever班级码",
+    "upstream_title": "Using Khan Kids with Clever: Enable Class Codes",
+    "original_file": "work/khan-library-controls-deepening/text/sections-360008453772.txt",
+    "locator": "web L22, link 16"
+  },
+  {
+    "inventory_id": "KLC-I046",
+    "current_label": "班级码登录",
+    "upstream_title": "FAQ: How do I use a Class Code to sign in?",
+    "original_file": "work/khan-library-controls-deepening/text/sections-360008453772.txt",
+    "locator": "web L23, link 17"
+  },
+  {
+    "inventory_id": "KLC-I047",
+    "current_label": "退出登录",
+    "upstream_title": "FAQ: How do I sign out?",
+    "original_file": "work/khan-library-controls-deepening/text/sections-360008453772.txt",
+    "locator": "web L24, link 18; https://khankids.zendesk.com/hc/en-us/articles/360043669551-FAQ-How-do-I-sign-out"
+  },
+  {
+    "inventory_id": "KLC-I048",
+    "current_label": "关闭视频涂色",
+    "upstream_title": "FAQ: How do I turn off videos and coloring ?",
+    "original_file": "work/khan-library-controls-deepening/text/sections-360008453772.txt",
+    "locator": "web L25, link 19; https://khankids.zendesk.com/hc/en-us/articles/13849896234395-FAQ-How-do-I-turn-off-videos-and-coloring"
+  },
+  {
+    "inventory_id": "KLC-I049",
+    "current_label": "增加班级",
+    "upstream_title": "FAQ: How do I add another class?",
+    "original_file": "work/khan-library-controls-deepening/text/sections-360008453772.txt",
+    "locator": "web L26, link 20"
+  },
+  {
+    "inventory_id": "KLC-I050",
+    "current_label": "学生学习级别",
+    "upstream_title": "FAQ: How do I change a student’s independent learning level on a Class Account?",
+    "original_file": "work/khan-library-controls-deepening/text/sections-360008453772.txt",
+    "locator": "web L27, link 21"
+  },
+  {
+    "inventory_id": "KLC-I051",
+    "current_label": "增删学生",
+    "upstream_title": "FAQ: How do I add/remove students from a Class Account?",
+    "original_file": "work/khan-library-controls-deepening/text/sections-360008453772.txt",
+    "locator": "web L28, link 22"
+  },
+  {
+    "inventory_id": "KLC-I052",
+    "current_label": "按标准分配",
+    "upstream_title": "FAQ: How do I assign lessons by standard?",
+    "original_file": "work/khan-library-controls-deepening/text/sections-360008453772.txt",
+    "locator": "web L29, link 23"
+  },
+  {
+    "inventory_id": "KLC-I053",
+    "current_label": "网络连接问题",
+    "upstream_title": "FAQ: Why am I experiencing internet connection issues?",
+    "original_file": "work/khan-library-controls-deepening/text/sections-360008453772.txt",
+    "locator": "web L30, link 24"
+  },
+  {
+    "inventory_id": "KLC-I054",
+    "current_label": "教师邮件系列",
+    "upstream_title": "Getting Started Email Series for Teachers",
+    "original_file": "work/khan-library-controls-deepening/text/sections-360008453772.txt",
+    "locator": "web L31, link 25"
+  },
+  {
+    "inventory_id": "KLC-I055",
+    "current_label": "家庭合作识字",
+    "upstream_title": "Accelerating Early Literacy through Family Partnership",
+    "original_file": "work/khan-library-controls-deepening/text/sections-360008453772.txt",
+    "locator": "web L32, link 26"
+  },
+  {
+    "inventory_id": "KLC-I056",
+    "current_label": "主站与Kids区别",
+    "upstream_title": "When to use Khan Academy v. Khan Kids",
+    "original_file": "work/khan-library-controls-deepening/text/sections-360008453772.txt",
+    "locator": "web L33, link 27"
+  },
+  {
+    "inventory_id": "KLC-I057",
+    "current_label": "学习路线",
+    "upstream_title": "Learn more about the Learning Path",
+    "original_file": "work/khan-library-controls-deepening/text/sections-360008453772.txt",
+    "locator": "web L34, link 28; https://khankids.zendesk.com/hc/en-us/articles/360048828572-Learn-more-about-the-Learning-Path"
+  },
+  {
+    "inventory_id": "KLC-I058",
+    "current_label": "书籍说明",
+    "upstream_title": "Learn more about the books in the Khan Academy Kids app",
+    "original_file": "work/khan-library-controls-deepening/text/sections-360008453772.txt",
+    "locator": "web L35, link 29; https://khankids.zendesk.com/hc/en-us/articles/4409036780955-Learn-more-about-the-books-in-the-Khan-Academy-Kids-app"
+  },
+  {
+    "inventory_id": "KLC-I059",
+    "current_label": "常见词视频",
+    "upstream_title": "New sight word videos",
+    "original_file": "work/khan-library-controls-deepening/text/sections-360008453772.txt",
+    "locator": "web L36, link 30"
+  },
+  {
+    "inventory_id": "KLC-I060",
+    "current_label": "Clever教师",
+    "upstream_title": "Khan Academy Kids for Clever teachers",
+    "original_file": "work/khan-library-controls-deepening/text/sections-360008453772.txt",
+    "locator": "web L37, link 31"
+  },
+  {
+    "inventory_id": "KLC-I061",
+    "current_label": "无障碍声明",
+    "upstream_title": "Our Accessibility Statement",
+    "original_file": "work/khan-library-controls-deepening/text/sections-39182012411547.txt",
+    "locator": "web L9, link 2"
+  },
+  {
+    "inventory_id": "KLC-I062",
+    "current_label": "Clever学区指南",
+    "upstream_title": "Quick start guide for district and school administrators (Clever users)",
+    "original_file": "work/khan-library-controls-deepening/text/sections-39182012411547.txt",
+    "locator": "web L10, link 3"
+  },
+  {
+    "inventory_id": "KLC-I063",
+    "current_label": "非Clever技术指南",
+    "upstream_title": "Quick start guide for tech administrators (non-Clever users)",
+    "original_file": "work/khan-library-controls-deepening/text/sections-39182012411547.txt",
+    "locator": "web L11, link 4"
+  },
+  {
+    "inventory_id": "KLC-I064",
+    "current_label": "学校产品",
+    "upstream_title": "✨ NEW: Khan Kids for Schools",
+    "original_file": "work/khan-library-controls-deepening/text/sections-39182012411547.txt",
+    "locator": "web L12, link 5"
+  },
+  {
+    "inventory_id": "KLC-I065",
+    "current_label": "Clever接入",
+    "upstream_title": "Using Khan Kids with Clever",
+    "original_file": "work/khan-library-controls-deepening/text/sections-39182012411547.txt",
+    "locator": "web L13, link 6"
+  },
+  {
+    "inventory_id": "KLC-I066",
+    "current_label": "Chromebook兼容",
+    "upstream_title": "Chromebooks that work with Khan Academy Kids",
+    "original_file": "work/khan-library-controls-deepening/text/sections-39182012411547.txt",
+    "locator": "web L14, link 7"
+  },
+  {
+    "inventory_id": "KLC-I067",
+    "current_label": "管理员面板",
+    "upstream_title": "Admin Dashboard",
+    "original_file": "work/khan-library-controls-deepening/text/sections-39182012411547.txt",
+    "locator": "web L15, link 8"
+  },
+  {
+    "inventory_id": "KLC-I068",
+    "current_label": "乌克兰语家长指南",
+    "upstream_title": "Ukrainian Parent Guide: Довідник для батьків: Початок роботи з Khan Academy Kids",
+    "original_file": "work/khan-library-controls-deepening/text/sections-46978742033051.txt",
+    "locator": "web L6, link 2"
+  },
+  {
+    "inventory_id": "KLC-I069",
+    "current_label": "西班牙语家长指南",
+    "upstream_title": "Spanish Parent Guide: Guía para Padres: Empezando con Khan Academy Kids",
+    "original_file": "work/khan-library-controls-deepening/text/sections-46978742033051.txt",
+    "locator": "web L7, link 3"
+  },
+  {
+    "inventory_id": "KLC-I070",
+    "current_label": "中文家长指南",
+    "upstream_title": "Chinese Parent Guide: 家长指南: 开始使用可汗学院儿童版",
+    "original_file": "work/khan-library-controls-deepening/text/sections-46978742033051.txt",
+    "locator": "web L8, link 4; https://khankids.zendesk.com/hc/en-us/articles/4457349308059-Chinese-Parent-Guide-%E5%AE%B6%E9%95%BF%E6%8C%87%E5%8D%97-%E5%BC%80%E5%A7%8B%E4%BD%BF%E7%94%A8%E5%8F%AF%E6%B1%97%E5%AD%A6%E9%99%A2%E5%84%BF%E7%AB%A5%E7%89%88"
+  },
+  {
+    "inventory_id": "KLC-I071",
+    "current_label": "波兰语家长指南",
+    "upstream_title": "Polish Parent Guide: Poradnik dla Rodziców: Pierwsze Kroki z Khan Academy Kids",
+    "original_file": "work/khan-library-controls-deepening/text/sections-46978742033051.txt",
+    "locator": "web L9, link 5"
+  },
+  {
+    "inventory_id": "KLC-I072",
+    "current_label": "葡语家长指南",
+    "upstream_title": "Brazilian Portuguese Parent Guide: Guia para pais: primeiros passos no Khan Academy Kids",
+    "original_file": "work/khan-library-controls-deepening/text/sections-46978742033051.txt",
+    "locator": "web L10, link 6"
+  },
+  {
+    "inventory_id": "KLC-I073",
+    "current_label": "西班牙语书籍",
+    "upstream_title": "Spanish books | Libros en español",
+    "original_file": "work/khan-library-controls-deepening/text/sections-46978742033051.txt",
+    "locator": "web L11, link 7"
+  },
+  {
+    "inventory_id": "KLC-I074",
+    "current_label": "韩语家长指南",
+    "upstream_title": "Korean Parent Guide: 학부모 가이드: Khan Academy Kids 시작하기",
+    "original_file": "work/khan-library-controls-deepening/text/sections-46978742033051.txt",
+    "locator": "web L12, link 8"
+  },
+  {
+    "inventory_id": "KLC-I075",
+    "current_label": "法语家长指南",
+    "upstream_title": "French Parent Guide: Guide parent: Comment utiliser Khan Academy Kids",
+    "original_file": "work/khan-library-controls-deepening/text/sections-46978742033051.txt",
+    "locator": "web L13, link 9"
+  },
+  {
+    "inventory_id": "KLC-I076",
+    "current_label": "亚美尼亚语家长指南",
+    "upstream_title": "Armenian Parent Guide: Ուղեցույց ծնողների համար: Սկսիր «Khan Academy Kids»-ի հետ",
+    "original_file": "work/khan-library-controls-deepening/text/sections-46978742033051.txt",
+    "locator": "web L14, link 10"
+  },
+  {
+    "inventory_id": "KLC-I077",
+    "current_label": "保加利亚语家长指南",
+    "upstream_title": "Bulgarian Parent Guide: Ръководство за родители: Запознаване с Khan Academy Kids",
+    "original_file": "work/khan-library-controls-deepening/text/sections-46978742033051.txt",
+    "locator": "web L15, link 11"
+  },
+  {
+    "inventory_id": "KLC-I078",
+    "current_label": "土耳其语家长指南",
+    "upstream_title": "Turkish Parent Guide: Veli Rehberi: Khan Academy Kids’i Kullanmaya Nasıl Başlarım?",
+    "original_file": "work/khan-library-controls-deepening/text/sections-46978742033051.txt",
+    "locator": "web L16, link 12"
+  },
+  {
+    "inventory_id": "KLC-I079",
+    "current_label": "捷克语家长指南",
+    "upstream_title": "Czech Parent Guide: Příručka pro rodiče: Začínáme s Khan Academy Kids",
+    "original_file": "work/khan-library-controls-deepening/text/sections-46978742033051.txt",
+    "locator": "web L17, link 13"
+  },
+  {
+    "inventory_id": "KLC-I080",
+    "current_label": "瑞典语家长指南",
+    "upstream_title": "Swedish Parent Guide: Föräldraguide: Kom igång med Khan Academy Kids",
+    "original_file": "work/khan-library-controls-deepening/text/sections-46978742033051.txt",
+    "locator": "web L18, link 14"
+  },
+  {
+    "inventory_id": "KLC-I081",
+    "current_label": "匈牙利语家长指南",
+    "upstream_title": "Hungarian Parent Guide: Szülői útmutató: Első lépések a Khan Academy Kids használatához",
+    "original_file": "work/khan-library-controls-deepening/text/sections-46978742033051.txt",
+    "locator": "web L19, link 15"
+  },
+  {
+    "inventory_id": "KLC-I082",
+    "current_label": "阿塞拜疆语家长指南",
+    "upstream_title": "Azerbaijani Parent Guide: Valideyn Bələdçisi: Khan Academy Kids-dən istifadə etməyə necə başlamaq olar?",
+    "original_file": "work/khan-library-controls-deepening/text/sections-46978742033051.txt",
+    "locator": "web L20, link 16"
+  },
+  {
+    "inventory_id": "KLC-I083",
+    "current_label": "冬季学习",
+    "upstream_title": "Festive winter learning with Khan Academy Kids",
+    "original_file": "work/khan-library-controls-deepening/text/sections-46978591932315.txt",
+    "locator": "web L6, link 2"
+  },
+  {
+    "inventory_id": "KLC-I084",
+    "current_label": "女性主题新书",
+    "upstream_title": "Meet inspiring women in our new books!",
+    "original_file": "work/khan-library-controls-deepening/text/sections-46978591932315.txt",
+    "locator": "web L7, link 3"
+  },
+  {
+    "inventory_id": "KLC-I085",
+    "current_label": "新角色朋友",
+    "upstream_title": "Meet a new set of friends in the Khan Kids app!",
+    "original_file": "work/khan-library-controls-deepening/text/sections-46978591932315.txt",
+    "locator": "web L8, link 4"
+  },
+  {
+    "inventory_id": "KLC-I086",
+    "current_label": "Library目录",
+    "upstream_title": "Find books and lessons in the Khan Kids Library",
+    "original_file": "work/khan-library-controls-deepening/text/sections-46978591932315.txt",
+    "locator": "web L9, link 5; https://khankids.zendesk.com/hc/en-us/articles/4403657703821-Find-books-and-lessons-in-the-Khan-Kids-Library"
+  },
+  {
+    "inventory_id": "KLC-I087",
+    "current_label": "作品导出",
+    "upstream_title": "How do I save artwork from the Gallery?",
+    "original_file": "work/khan-library-controls-deepening/text/sections-46978591932315.txt",
+    "locator": "web L10, link 6; https://khankids.zendesk.com/hc/en-us/articles/6477686235419-How-do-I-save-artwork-from-the-Gallery"
+  },
+  {
+    "inventory_id": "KLC-I088",
+    "current_label": "乐器与昆虫名称",
+    "upstream_title": "Sandy's Instruments and Reya's Bugs",
+    "original_file": "work/khan-library-controls-deepening/text/sections-46978591932315.txt",
+    "locator": "web L11, link 7"
+  },
+  {
+    "inventory_id": "KLC-I089",
+    "current_label": "播客推荐",
+    "upstream_title": "Podcast Recommendations for Kids",
+    "original_file": "work/khan-library-controls-deepening/text/sections-46978591932315.txt",
+    "locator": "web L12, link 8"
+  },
+  {
+    "inventory_id": "KLC-I090",
+    "current_label": "角色介绍",
+    "upstream_title": "Learn more about the characters inside Khan Academy Kids",
+    "original_file": "work/khan-library-controls-deepening/text/sections-46978591932315.txt",
+    "locator": "web L13, link 9"
+  },
+  {
+    "inventory_id": "KLC-I091",
+    "current_label": "识字研究新闻",
+    "upstream_title": "Research from University of Massachusetts Amherst shows Khan Academy Kids boosts pre-literacy skills",
+    "original_file": "work/khan-library-controls-deepening/text/sections-46978591932315.txt",
+    "locator": "web L14, link 10"
+  },
+  {
+    "inventory_id": "KLC-I092",
+    "current_label": "一年级课程",
+    "upstream_title": "New first-grade lessons in Khan Academy Kids!",
+    "original_file": "work/khan-library-controls-deepening/text/sections-46978591932315.txt",
+    "locator": "web L15, link 11"
+  },
+  {
+    "inventory_id": "KLC-I093",
+    "current_label": "歌曲活动",
+    "upstream_title": "Sing, Dance, and Learn with Super Simple Songs and Khan Academy Kids",
+    "original_file": "work/khan-library-controls-deepening/text/sections-46978591932315.txt",
+    "locator": "web L16, link 12"
+  },
+  {
+    "inventory_id": "KLC-I094",
+    "current_label": "2025夏令营报名",
+    "upstream_title": "2025: Sign up for Camp Khan Kids!",
+    "original_file": "work/khan-library-controls-deepening/text/sections-47204226038171.txt",
+    "locator": "web L7, link 2"
+  },
+  {
+    "inventory_id": "KLC-I095",
+    "current_label": "2025作品展",
+    "upstream_title": "2025: Camp Khan Kids Art Show",
+    "original_file": "work/khan-library-controls-deepening/text/sections-47204226038171.txt",
+    "locator": "web L8, link 3"
+  },
+  {
+    "inventory_id": "KLC-I096",
+    "current_label": "2025材料表",
+    "upstream_title": "2025: Camp Khan Kids Supply List",
+    "original_file": "work/khan-library-controls-deepening/text/sections-47204226038171.txt",
+    "locator": "web L9, link 4"
+  },
+  {
+    "inventory_id": "KLC-I097",
+    "current_label": "2025翅膀周",
+    "upstream_title": "2025: Camp Khan Kids: Wonderful Wings Week",
+    "original_file": "work/khan-library-controls-deepening/text/sections-47204226038171.txt",
+    "locator": "web L10, link 5"
+  },
+  {
+    "inventory_id": "KLC-I098",
+    "current_label": "2025世界旅行周",
+    "upstream_title": "2025: Camp Khan Kids: Travel the World Week",
+    "original_file": "work/khan-library-controls-deepening/text/sections-47204226038171.txt",
+    "locator": "web L11, link 6"
+  },
+  {
+    "inventory_id": "KLC-I099",
+    "current_label": "2025友谊周",
+    "upstream_title": "2025: Camp Khan Kids: Friendship Week",
+    "original_file": "work/khan-library-controls-deepening/text/sections-47204226038171.txt",
+    "locator": "web L12, link 7"
+  },
+  {
+    "inventory_id": "KLC-I100",
+    "current_label": "2025手工周",
+    "upstream_title": "2025: Camp Khan Kids: Arts & Crafts Week",
+    "original_file": "work/khan-library-controls-deepening/text/sections-47204226038171.txt",
+    "locator": "web L13, link 8"
+  },
+  {
+    "inventory_id": "KLC-I101",
+    "current_label": "2024作品展",
+    "upstream_title": "2024: Camp Khan Kids Art Show",
+    "original_file": "work/khan-library-controls-deepening/text/sections-47204226038171.txt",
+    "locator": "web L14, link 9"
+  },
+  {
+    "inventory_id": "KLC-I102",
+    "current_label": "2023作品展",
+    "upstream_title": "2023: Camp Khan Kids Art Show",
+    "original_file": "work/khan-library-controls-deepening/text/sections-47204226038171.txt",
+    "locator": "web L15, link 10"
+  },
+  {
+    "inventory_id": "KLC-I103",
+    "current_label": "卸载与重装",
+    "upstream_title": "How do I delete an app and re-download?",
+    "original_file": "work/khan-library-controls-deepening/text/sections-360001481891-p2.txt",
+    "locator": "web L10, link 2; https://khankids.zendesk.com/hc/en-us/articles/360006761532-How-do-I-delete-an-app-and-re-download"
+  },
+  {
+    "inventory_id": "KLC-I104",
+    "current_label": "入学准备",
+    "upstream_title": "Get ready for school with Khan Academy Kids",
+    "original_file": "work/khan-library-controls-deepening/text/sections-360001481891-p2.txt",
+    "locator": "web L11, link 3"
+  },
+  {
+    "inventory_id": "KLC-I105",
+    "current_label": "重启设备",
+    "upstream_title": "How do I restart my device?",
+    "original_file": "work/khan-library-controls-deepening/text/sections-360001481891-p2.txt",
+    "locator": "web L12, link 4"
+  },
+  {
+    "inventory_id": "KLC-I106",
+    "current_label": "无声音",
+    "upstream_title": "Why can't I hear the sound?",
+    "original_file": "work/khan-library-controls-deepening/text/sections-360001481891-p2.txt",
+    "locator": "web L13, link 5; https://khankids.zendesk.com/hc/en-us/articles/360007053151-Why-can-t-I-hear-the-sound"
+  },
+  {
+    "inventory_id": "KLC-I107",
+    "current_label": "三年级以上",
+    "upstream_title": "What if my child is entering 3rd grade or above?",
+    "original_file": "work/khan-library-controls-deepening/text/sections-360001481891-p2.txt",
+    "locator": "web L14, link 6"
+  },
+  {
+    "inventory_id": "KLC-I108",
+    "current_label": "进度报告",
+    "upstream_title": "Progress reports in the Khan Academy Kids app",
+    "original_file": "work/khan-library-controls-deepening/text/sections-360008453772-p2.txt",
+    "locator": "web L9, link 2; https://khankids.zendesk.com/hc/en-us/articles/4403614100109-Progress-reports-in-the-Khan-Academy-Kids-app"
+  },
+  {
+    "inventory_id": "KLC-I109",
+    "current_label": "教师工具",
+    "upstream_title": "All about Teacher Tools in Khan Academy Kids",
+    "original_file": "work/khan-library-controls-deepening/text/sections-360008453772-p2.txt",
+    "locator": "web L10, link 3"
+  },
+  {
+    "inventory_id": "KLC-I110",
+    "current_label": "儿童目标设置",
+    "upstream_title": "Kid-friendly goal setting with Khan Academy Kids",
+    "original_file": "work/khan-library-controls-deepening/text/sections-360008453772-p2.txt",
+    "locator": "web L11, link 4"
+  },
+  {
+    "inventory_id": "KLC-I111",
+    "current_label": "二年级书籍活动",
+    "upstream_title": "Books and activities for second grade",
+    "original_file": "work/khan-library-controls-deepening/text/sections-360008453772-p2.txt",
+    "locator": "web L12, link 5"
+  },
+  {
+    "inventory_id": "KLC-I112",
+    "current_label": "课堂挑战",
+    "upstream_title": "Khan Academy Kids classroom challenge",
+    "original_file": "work/khan-library-controls-deepening/text/sections-360008453772-p2.txt",
+    "locator": "web L13, link 6"
+  }
+]

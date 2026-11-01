@@ -1,0 +1,42 @@
+{
+  "id": "6a5e09615ace70dec856fcd9",
+  "articleId": "6a4e08d6ecfb0e06a4498b7a",
+  "title": "Sound is stuttering or playback isn't working on my Yoto",
+  "body": "<h4 id=\"isPasted\"><span style=\"color: rgb(248, 94, 65);\">Help with common audio playback issues.</span></h4><p><br></p><p>There are two main causes for audio stuttering:</p><p><br></p><p><strong>Connectivity</strong></p><p>If your player is too far away from the Wi-Fi router or internet bandwidth is limited, you may experience audio stuttering while streaming audio.&nbsp;</p><p>This would mostly affect radio playback, or when you play cards for the very first time (before the content has downloaded to the player).</p><p>Solution: Try moving your player closer to your Wi-Fi router&nbsp;</p><p><br></p><p><strong>The player is busy/overloaded</strong></p><p>Your player may be trying to complete too many tasks at once, which may cause audio to start buffering or to start cutting out.&nbsp;</p><p>This can happen in a more obvious way when you first set up your player and try to play several cards in a short period of time.</p><p>Solution: if this continues to happen after playing a new card for the first time, you may need to wait for the content to download fully. Depending on your network speed and the number of cards needing to download, this could take a couple of hours.&nbsp;</p><p>Note: new content will only download when the player is not being used, and has no cards inserted.</p><p>You can check if your player has any remaining content to download by tapping the cog icon next to your player in the Settings tab of the app. If your player still has content to download, it will be listed in the Status section.</p><p><strong>&nbsp;</strong></p><p><strong>If you&#39;ve just unboxed your player and are having playback issues</strong></p><p>This may be because the player has a long queue of audio files that it needs to download before it can smoothly play them from local memory.</p><p>For the best results, take all of your cards and pop them into player one by one. Then remove your final card and leave the player switched on, idle, on charge and online, overnight.&nbsp;</p><p>This will give your player ample time to download all the content, and when you come back to it, the cards should play seamlessly.</p><p><br></p><p>If you&#39;re still experiencing problems, get in touch! Please send us a video of the issue and the registration code of your Yoto player, which is found in the Settings tab.</p>",
+  "categories": [
+    {
+      "id": "6a19a5be6e96d255daa8983f",
+      "knowledgeBase": "69d522fcb7baaa50525b3529"
+    }
+  ],
+  "primaryCategory": "6a19a5be6e96d255daa8983f",
+  "metaDescription": "Help with common audio playback issues    There are two main causes for audio stuttering         Connectivity    If your player is too far away from the WiFi",
+  "metaKeywords": [
+    "player",
+    "download",
+    "audio",
+    "cards",
+    "content",
+    "may",
+    "play",
+    "time",
+    "playback",
+    "first",
+    "can",
+    "will",
+    "issues",
+    "stuttering"
+  ],
+  "metaTitle": "",
+  "lang": "en_gb",
+  "slug": "sound-is-stuttering-or-playback-isn't-working-on-my-yoto",
+  "draftSlug": null,
+  "hash": "BJ1yKYsXMg",
+  "publishedAt": "2026-07-20T11:42:06.911Z",
+  "updatedAt": "2026-07-20T11:42:07.065Z",
+  "createdAt": "2026-07-20T11:41:21.303Z",
+  "href": "/en_gb/sound-is-stuttering-or-playback-isn't-working-on-my-yoto-BJ1yKYsXMg",
+  "tags": [],
+  "knowledgeBases": [],
+  "scope": "public"
+}

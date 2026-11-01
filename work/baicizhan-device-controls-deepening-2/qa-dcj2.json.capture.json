@@ -1,0 +1,11 @@
+{
+  "name": "qa-dcj2.json",
+  "url": "https://assistant.baicizhan.com/feedback_api/get_qa_info?platform=dcj2",
+  "checked_on": "2026-10-27",
+  "access_mode": "ordinary_anonymous_GET",
+  "status": 200,
+  "final_url": "https://assistant.baicizhan.com/feedback_api/get_qa_info?platform=dcj2",
+  "bytes": 11055,
+  "raw_work_path": "work/baicizhan-device-controls-deepening-2/qa-dcj2.json",
+  "raw_sha256": "774b63ea53111bdf9366af03e54563612949813c8266dd7d11da6f1a510c9bd9"
+}

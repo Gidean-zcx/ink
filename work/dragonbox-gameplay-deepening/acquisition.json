@@ -1,0 +1,56 @@
+{
+  "pages": [
+    {
+      "key": "geekdad",
+      "url": "https://geekdad.com/2015/12/dragonbox-osmo-numbers/",
+      "method": "ordinary_anonymous_GET",
+      "date": "2026-10-27",
+      "status": 200,
+      "final_url": "https://geekdad.com/2015/12/dragonbox-osmo-numbers/",
+      "path": "work/dragonbox-gameplay-deepening/raw/geekdad.html",
+      "sha256": "f31fab81a47412088bc37929b23335f7fe425af615deeeafd6d500dc7f97d768"
+    },
+    {
+      "key": "youngminds",
+      "url": "https://www.gamesforyoungminds.com/blog/2018/3/16/dragonbox-numbers",
+      "method": "ordinary_anonymous_GET",
+      "date": "2026-10-27",
+      "status": 200,
+      "final_url": "https://www.gamesforyoungminds.com/blog/2018/3/16/dragonbox-numbers",
+      "path": "work/dragonbox-gameplay-deepening/raw/youngminds.html",
+      "sha256": "50032f0c2ec934b871ed14a97eaca3f0c0c08f5aa1292c20c7b6eddb14c6eccb"
+    }
+  ],
+  "video": {
+    "url": "https://www.youtube.com/watch?v=yxTpyBpVCuA",
+    "method": "single_normal_anonymous_browser_navigation",
+    "audio_observed": false,
+    "product_operated": false,
+    "network": [
+      {
+        "url": "https://www.youtube.com/watch?v=yxTpyBpVCuA",
+        "status": 200
+      },
+      {
+        "url": "https://accounts.google.com/ServiceLogin?service=youtube&uilel=3&passive=true&continue=https%3A%2F%2Fwww.youtube.com%2Fsignin%3Faction_handle_signin%3Dtrue%26app%3Ddesktop%26hl%3Dja%26next%3D%252Fsignin_passive%26feature%3Dpassive&hl=ja",
+        "status": 401
+      }
+    ],
+    "status": 200,
+    "browser": "156.0.8078.4",
+    "title": "- YouTube",
+    "body_excerpt": "JP\nナビゲーションをスキップ\nログイン\nログインして bot ではないことを確認してください\nこれはコミュニティの保護に役立ちます\nログイン\n詳細\nDragonBox Numbers: Run! activity\nDragonBox\nチャンネル登録者数 2450人\nチャンネル登録\n198\n8.3万回視聴  10 年前\nThe Run! activity is a new addition to DragonBox Numbers.\n …\nもっと見る\n\n家庭向けの選択\nお子様や家族向けの、より安全でシンプルな機能をご利用いただけます\n詳細\n16:34\nDragonBox BIG Numbers #1! New releases! Game review!\nНомer_S\n35万\n8 年前\n7:49\nComposing Numbers & Decomposing Numbers! | Mini Math Movies | Scratch Garden\nScratch Garden\n240万\n6 年前\n5:01\n新着\nPebble Planet S2E2: The Deep Sea Elevator | Negative Numbers for Kids\nPebble Planet\n23\n3 時間前\n13:30\n【ドラえもん】時を走れ！タイム借り物競走《公式》\n【公式】ドラえもん / 藤子・F・不二雄チャンネル\n89万\n3 週間前\n4:23\nThird Person Singular ✏️ GRAMMAR & SPELLING for Kids 🔡 Superlexia ⭐ Episode 19\nSmile and Learn - English\n7.5万\n1 年前\n21:33\nMy Little Pony: Friendship is Magic S4 E13 🌈 Simple Ways 💜 MLP FULL EPISODE\nMy Little Pony - Friendship Is Magic\n29万\n1 年前\n11:44\nMath Patterns with Nooms: Simple Counting Puzzles 1 to 10 - DragonBox Numbers (STEM Lab)\nAppysmarts\n592万\n6 年前\n13:05\nMath Antics - Long Division with 2-Digit Divisors\nmathantics\n2800万\n11 年前\n39:05\nOne Syllable Words - Compilation 🐱 | Learn to Read and Spell | Alphablocks\nAlphablocks\n180万\n11 か月前\n14:54\n【お菓子クイズ】このキャラクターは何のお菓子？おなじみキャラ全30問！\nみんなのクイズ広場\n9.9万\n1 か月前\n7:28\nDaily Use English Question Answers for kids | Fun Learning Question Answers | English for beginners\nIntelligent Kids\n139万\n2 年前",
+    "videos": [
+      {
+        "duration": null,
+        "currentTime": 0,
+        "readyState": 0,
+        "paused": true,
+        "width": 0,
+        "height": 0,
+        "error": null
+      }
+    ],
+    "stopped": "bot verification requires sign-in; playback unavailable; no retry, alternate embed, or login"
+  }
+}

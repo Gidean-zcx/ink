@@ -1,0 +1,353 @@
+{
+  "headings": [
+    {
+      "level": "h1",
+      "id": "",
+      "title": "PDFs"
+    },
+    {
+      "level": "h2",
+      "id": "sometimes-pdfs-have-strange-filenames-how-do-i-change-the-name-of-a-pdf",
+      "title": "Sometimes PDFs have strange filenames. How do I change the name of a PDF?"
+    },
+    {
+      "level": "h2",
+      "id": "how-do-i-edit-metadata-on-mobile",
+      "title": "How do I edit metadata on mobile?"
+    },
+    {
+      "level": "h2",
+      "id": "how-do-i-zoom-in-or-out-on-a-pdf",
+      "title": "How do I zoom in or out on a PDF?"
+    },
+    {
+      "level": "h2",
+      "id": "how-do-i-highlight-images-tables-and-figures-in-a-pdf",
+      "title": "How do I highlight images, tables, and figures in a PDF?"
+    },
+    {
+      "level": "h2",
+      "id": "how-do-i-download-and-or-export-a-highlighted-pdf-from-reader",
+      "title": "How do I download and/or export a highlighted PDF from Reader?"
+    },
+    {
+      "level": "h2",
+      "id": "how-do-i-import-highlights-from-a-previously-highlighted-pdf-to-reader",
+      "title": "How do I import highlights from a previously highlighted PDF to Reader?"
+    },
+    {
+      "level": "h2",
+      "id": "how-do-i-highlight-across-pages-inside-a-pdf",
+      "title": "How do I highlight across pages inside a PDF?"
+    },
+    {
+      "level": "h2",
+      "id": "how-do-i-remove-the-random-line-breaks-from-highlights-made-in-a-pdf",
+      "title": "How do I remove the random line breaks from highlights made in a PDF?"
+    },
+    {
+      "level": "h2",
+      "id": "how-do-i-customize-the-appearance-of-a-pdf-while-reading",
+      "title": "How do I customize the appearance of a PDF while reading?"
+    },
+    {
+      "level": "h2",
+      "id": "i-m-using-dark-mode-and-the-images-in-my-pdf-look-strange-how-can-i-fix-it",
+      "title": "I'm using dark mode and the images in my PDF look strange. How can I fix it?"
+    },
+    {
+      "level": "h2",
+      "id": "why-cant-i-see-my-highlights-overlaid-on-the-pdf",
+      "title": "Why can't I see my highlights overlaid on the PDF?"
+    },
+    {
+      "level": "h2",
+      "id": "why-doesnt-the-auto-highlighting-option-appear-when-i-m-reading-a-pdf",
+      "title": "Why doesn't the auto-highlighting option appear when I'm reading a PDF?"
+    }
+  ],
+  "links": [
+    {
+      "href": "/",
+      "text": "",
+      "in_article": false
+    },
+    {
+      "href": "/",
+      "text": "",
+      "in_article": false
+    },
+    {
+      "href": "/",
+      "text": "",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs",
+      "text": "Documentation",
+      "in_article": false
+    },
+    {
+      "href": "/reader/guides",
+      "text": "Guides",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs",
+      "text": "What is Reader?",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/migrating-content",
+      "text": "Migrating from Other Apps",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/saving-content",
+      "text": "Saving Content",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/organizing-content",
+      "text": "Organizing Content",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs",
+      "text": "Basics",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/importing-content",
+      "text": "Importing Content",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/adding-new-content",
+      "text": "Adding New Content",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/highlights-tags-notes",
+      "text": "Highlights, Tags, and Notes",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/appearance",
+      "text": "Appearance",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/feed",
+      "text": "Feed",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/email-newsletters",
+      "text": "Email Newsletters",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/navigation",
+      "text": "Navigation",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/searching",
+      "text": "Searching",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/parsing",
+      "text": "Parsing",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/filtered-views",
+      "text": "Filtered Views",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/action-tags",
+      "text": "Action Tags",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/pdfs",
+      "text": "PDFs",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/videos",
+      "text": "Videos",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/text-to-speech",
+      "text": "Text-to-Speech (TTS)",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/exporting",
+      "text": "Exporting",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/sharing",
+      "text": "Sharing",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/daily-digest",
+      "text": "Daily Digest",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/ghostreader",
+      "text": "Ghostreader",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/eink",
+      "text": "E-ink Devices",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/miscellaneous",
+      "text": "Miscellaneous",
+      "in_article": false
+    },
+    {
+      "href": "/",
+      "text": "Home",
+      "in_article": false
+    },
+    {
+      "href": "/reader",
+      "text": "Reader",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs",
+      "text": "Docs",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs",
+      "text": "Faqs",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/pdfs",
+      "text": "Pdfs",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/action-tags#how-can-i-combine-two-disparate-pieces-of-text-into-a-single-highlight",
+      "text": "inline concatenation",
+      "in_article": true
+    },
+    {
+      "href": "/reader/docs/faqs/action-tags",
+      "text": "Action Tags",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/videos",
+      "text": "Videos",
+      "in_article": false
+    },
+    {
+      "href": "mailto:hello@readwise.io",
+      "text": "Email Ushello@readwise.io",
+      "in_article": false
+    },
+    {
+      "href": "https://x.com/readwise",
+      "text": "Follow Us@readwise",
+      "in_article": false
+    },
+    {
+      "href": "https://www.reddit.com/r/readwise/",
+      "text": "Ask the CommunityJoin us on Reddit",
+      "in_article": false
+    },
+    {
+      "href": "https://en.wikipedia.org/wiki/Curse_of_knowledge",
+      "text": "Curse of Knowledge",
+      "in_article": false
+    },
+    {
+      "href": "mailto:hello@readwise.io?Subject=Documentation Feedback",
+      "text": "Send Feedback",
+      "in_article": false
+    },
+    {
+      "href": "#sometimes-pdfs-have-strange-filenames-how-do-i-change-the-name-of-a-pdf",
+      "text": "Sometimes PDFs have strange filenames. How do I change the name of a PDF?",
+      "in_article": false
+    },
+    {
+      "href": "#how-do-i-edit-metadata-on-mobile",
+      "text": "How do I edit metadata on mobile?",
+      "in_article": false
+    },
+    {
+      "href": "#how-do-i-zoom-in-or-out-on-a-pdf",
+      "text": "How do I zoom in or out on a PDF?",
+      "in_article": false
+    },
+    {
+      "href": "#how-do-i-highlight-images-tables-and-figures-in-a-pdf",
+      "text": "How do I highlight images, tables, and figures in a PDF?",
+      "in_article": false
+    },
+    {
+      "href": "#how-do-i-download-and-or-export-a-highlighted-pdf-from-reader",
+      "text": "How do I download and/or export a highlighted PDF from Reader?",
+      "in_article": false
+    },
+    {
+      "href": "#how-do-i-import-highlights-from-a-previously-highlighted-pdf-to-reader",
+      "text": "How do I import highlights from a previously highlighted PDF to Reader?",
+      "in_article": false
+    },
+    {
+      "href": "#how-do-i-highlight-across-pages-inside-a-pdf",
+      "text": "How do I highlight across pages inside a PDF?",
+      "in_article": false
+    },
+    {
+      "href": "#how-do-i-remove-the-random-line-breaks-from-highlights-made-in-a-pdf",
+      "text": "How do I remove the random line breaks from highlights made in a PDF?",
+      "in_article": false
+    },
+    {
+      "href": "#how-do-i-customize-the-appearance-of-a-pdf-while-reading",
+      "text": "How do I customize the appearance of a PDF while reading?",
+      "in_article": false
+    },
+    {
+      "href": "#i-m-using-dark-mode-and-the-images-in-my-pdf-look-strange-how-can-i-fix-it",
+      "text": "I'm using dark mode and the images in my PDF look strange. How can I fix it?",
+      "in_article": false
+    },
+    {
+      "href": "#why-cant-i-see-my-highlights-overlaid-on-the-pdf",
+      "text": "Why can't I see my highlights overlaid on the PDF?",
+      "in_article": false
+    },
+    {
+      "href": "#why-doesnt-the-auto-highlighting-option-appear-when-i-m-reading-a-pdf",
+      "text": "Why doesn't the auto-highlighting option appear when I'm reading a PDF?",
+      "in_article": false
+    }
+  ],
+  "images": [
+    {
+      "src": "/images/pdf-snapshot_web.gif",
+      "alt": "Using the PDF snapshot tool.",
+      "class": "rounded-lg max-h-[400px] w-auto mx-auto"
+    }
+  ]
+}

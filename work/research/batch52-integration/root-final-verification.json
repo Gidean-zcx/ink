@@ -1,0 +1,41 @@
+{
+  "status": "passed",
+  "flows": 972,
+  "evidence": 1722,
+  "distinct_urls": 1550,
+  "reference_points": 142,
+  "new_flows": 0,
+  "old_flows_updated": 5,
+  "new_help_evidence": 8,
+  "old_directory_captures": 2,
+  "inventory_rows_updated": 8,
+  "requirements_unchanged": true,
+  "new_formal_files": [
+    "docs/briefs/052-study-material-interactions.md",
+    "docs/research/interaction-library/artifacts/quizlet-material-workflows/source-audit.json",
+    "docs/research/interaction-library/artifacts/quizlet-material-workflows/source-notes.md",
+    "docs/research/interaction-library/batches/quizlet-material-workflows-evidence.jsonl"
+  ],
+  "modified_formal_files": [
+    "README.md",
+    "docs/briefs/README.md",
+    "docs/ideas.md",
+    "docs/research/interaction-library/README.md",
+    "docs/research/interaction-library/analysis-status.md",
+    "docs/research/interaction-library/backlog.md",
+    "docs/research/interaction-library/batches/README.md",
+    "docs/research/interaction-library/batches/dictionary-coverage.csv",
+    "docs/research/interaction-library/batches/quizlet-controls-deepening-evidence.jsonl",
+    "docs/research/interaction-library/batches/quizlet-controls-deepening-inventory.csv",
+    "docs/research/interaction-library/case-index.md",
+    "docs/research/interaction-library/cases/M-021-quizlet.md",
+    "docs/research/interaction-library/catalog.csv",
+    "docs/research/interaction-library/coverage.csv",
+    "docs/research/interaction-library/design-reference-guide.md",
+    "docs/research/interaction-library/evidence.jsonl",
+    "docs/research/interaction-library/reference-points.csv",
+    "docs/research/interaction-library/verification-log.md"
+  ],
+  "deleted_formal_files": [],
+  "scope": "Source identity, selected source phrases, stable IDs, derived provenance, changed rows and formal-file consistency; no actual product operation"
+}

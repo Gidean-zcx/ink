@@ -1,0 +1,55 @@
+Custom Web Feeds
+Ground News Help Center
+Contact Us
+How can we help you?
+Results
+No results found
+More results
+We use cookies to analyze website traffic and help improve our visitor experience. Privacy Policy
+Reject
+Accept
+In this articleKey FeaturesHow to Create a Custom FeedCustom Feed (With an Example)
+Home
+Personalize Your News Feed
+Customize Your News Feed
+Custom Web Feeds
+Edited Monday, March 9 2026
+As a subscriber, you can create personalized news feeds focused on the topics or regions that matter most to you. Custom Feeds offer a level of control beyond your For You feed, allowing you to curate mini-feeds tailored to your interests.
+Key Features
+Topic and Location Filters: Customize your feed by selecting the topics or locations you want to follow, and filtering out the ones you don’t.
+Exclusive Access for Subscribers: Available to Premium and Vantage subscribers.
+Web-Only (For Now): Currently available only on Ground Web. App support is coming soon!
+How to Create a Custom Feed
+Sign in to your Ground News account on the website.
+Navigate to the For You tab and select Custom Feeds.
+Click “+ Create New Feed” and give your feed a name.
+Use the filter options to define your feed:
+Include any of these topics – Each story must include at least one selected topic.
+Include all of these topics – Each story must include all selected topics.
+Exclude all of these topics – Stories with any of these topics will be filtered out.
+Click Confirm to save your feed.
+Refresh the page to see your changes reflected.
+Custom Feed (With an Example)
+Let’s say you want to follow stories only about education in the United States. Here's how you can set it up:
+Include ALL of these topics: United States and Education.
+Exclude ALL of these topics: Canada, Asia, Africa, Europe, South America, Australia, and International.
+Using the topic exclusion option ensures your custom feed highlights only stories that match your exact interests.
+Once you're happy with your selections, click Confirm, then refresh your page to see your new feed in action.
+(Click on the image to expand)
+If you have questions, suggestions, or need support setting up your Custom Feeds, reach out to our team at feedback@ground.news . Our team is available to help you get the most out of your news experience.
+We hope this article was helpful! If you have any concerns about this article and would like to leave a comment, we welcome your feedback – but please keep in mind feedback that is submitted on a Help Center article will not be responded to by our team. If you have an issue you would like resolved by our team, please contact the email address above.
+Custom Feeds
+Customize
+News Feed
+Personalized Newsfeed
+Was this article helpful?
+Yes
+No
+Sorry about that! Care to tell us more?
+What was unhelpful?
+Submit
+Thanks for the feedback!
+There was an issue submitting your feedback
+Please check your connection and try again.
+Cookie preferences
+Refund and Cancellation PolicyTerms and ConditionsPrivacy Policy

@@ -1,0 +1,212 @@
+--- PAGE 1 ---
+ 
+ 
+ 
+ 
+ 
+Mudita Kompakt Software 
+Date of change: Monday, August 24, 2026 
+MuditaOS K 1.6 
+The latest update to MuditaOS K (version 1.6) introduces a range of meaningful 
+improvements focused on usability, system stability, and user privacy. Staying true 
+to its minimalist philosophy, Mudita continues to refine the experience while 
+adding features that enhance everyday use.   
+ 
+ 
+MuditaOS K 
+●​ Added security patches, including fixes for vulnerabilities related to privilege 
+escalation, cross-profile information disclosure, media parsing. 
+●​ Added a global "Notification vibration" toggle in the Vibration and Haptic 
+section that lets you turn off vibration for text messages, calendar and 
+third-party alerts with a single switch 
+●​ The documents in the legal section are now displayed with the improved 
+formatting 
+●​ Fixed the save button for hotspot setting without a hotspot name 
+●​ Fixed the possibility to make factory reset with incorrect password 
+●​ Fixed the PIN requirement when restarting phone with Offline+ turned ON 
+●​ Fixed the FCC ID missing name and logo 
+●​ Fixed the keyboard behavior when crash popup is displayed 
+●​ Fixed the Cancel button for double SIM card enabling scenario 
+●​ Fixed the overflow of the optional eSIM deletion option 
+●​ Fixed the screen brightness when the device is turned off and battery 
+charge is 100% 
+●​ Fixed the message after the incorrect PUK attempt 
+●​ Added information about remaining attempts of PUK code 
+ 
+Alarm 
+●​ Added an option to independently enable or disable vibration settings for 
+each individual alarm 
+www.mudita.com 
+
+--- PAGE 2 ---
+ 
+ 
+ 
+ 
+ 
+●​ Fixed an issue that caused inconsistent translation options for the alarm 
+repetition settings across multiple languages 
+●​ Fixed an issue that prevented snoozed alarm notifications from displaying 
+the correct time and alarm name after editing 
+ 
+Calendar 
+●​ Fixed a user interface layout issue where an unnecessary scrollbar would 
+briefly appear on the all-day events list screen 
+ 
+Contacts 
+●​ Fixed an issue in group messaging where selecting a contact unexpectedly 
+forced the active list selection out of view 
+●​ Fixed an error where long-pressing a contact's favorite or edit key displayed 
+an unwanted label 
+●​ Fixed an issue where the recent calls log failed to instantly refresh when a 
+new phone call arrived during active contact detail lookups 
+●​ Fixed a text alignment bug where the empty contact list placeholder 
+header was not properly centered when set to Italian 
+ 
+eSIM 
+●​ Fixed a view refresh issue where deleting an eSIM profile and then locking 
+the phone caused the screen to turn blank 
+ 
+Kompakt Keyboard 
+●​ You can now choose from 38 different keyboard languages 
+●​ New specific keyboard layouts are now available for Danish, Norwegian, 
+Finnish, Swedish, Swiss French, and Latin Serbian 
+●​ Added Cyrillic keyboard layouts for Belarusian, Russian, Ukrainian, 
+Bulgarian, and Serbian languages 
+●​ New configuration toggles are available in the text correction section that 
+grant control over personalized and predictive word suggestions 
+●​ You can now benefit from personalized suggestions that learn your most 
+frequently typed custom words over time 
+www.mudita.com 
+
+--- PAGE 3 ---
+ 
+ 
+ 
+ 
+ 
+●​ You can now choose to see automated next-word suggestions in the 
+suggestion bar to write messages with fewer taps 
+●​ Improved the process for adding, editing, and deleting custom input styles 
+●​ Added a notification prompt to alert you if you try to add a duplicate layout 
+●​ Improved the process of accessing keyboard settings for external keyboards 
+●​ Fixed an issue that caused the scrollbar in the languages list view to update 
+with a brief delay 
+●​ Fixed an issue that caused an empty white background to hide text input 
+sections when an external Bluetooth keyboard was connected 
+●​ Fixed an issue in the keyboard settings where the layout options for Swiss 
+German were missing proper language translations 
+●​ Adjusted asymmetric margins and incorrect element spacing in the 
+keyboard settings 
+ 
+Launcher 
+●​ Added notification about voicemail in MWI operators 
+Maps 
+●​ Added a guided setup flow during first launch to help you enable 
+location permissions and A-GPS for accurate positioning 
+●​ Improved the initial setup flow by guiding you to the manual map 
+selection page if location sharing is denied 
+●​ Improved the setup process by adding map download 
+recommendations tailored to your region when location services are 
+active 
+●​ Added clear notifications during initial setup to inform you when 
+there isn't enough storage space to download a map or when a map 
+download fails due to a missing Wi-Fi or internet connection 
+●​ Added notifications during map setup to clarify that downloads 
+pause when Offline Mode is active 
+●​ Added a badge notification to easily see when an updated version of 
+your downloaded map becomes available 
+www.mudita.com 
+
+--- PAGE 4 ---
+ 
+ 
+ 
+ 
+ 
+●​ Set the default navigation mode to "Driving" 
+●​ Improved the address search feature to accurately find and pinpoint 
+locations regardless of the regional format you type 
+●​ Added a visual area circle on the map to show your approximate 
+location while the app finishes acquiring a precise location signal 
+ 
+Notes 
+●​ You can now create a Task list that allows adding check marks to the 
+items on the list 
+ 
+Onboarding 
+●​ EULA document is now displayed in new format for easier read 
+ 
+Phone 
+●​ You can now view voicemail notifications directly on the Phone app 
+icon and at the top of your recent calls list on supported networks 
+(mainly US networks). If your network does not support this feature, 
+you will continue to receive new voicemail notifications via text 
+message 
+●​ You can now instantly call your voicemail by simply long-pressing the 
+'1' key on the phone dial pad. If a long-press shortcut fails due to an 
+unassigned voicemail number, you will be informed with a clear 
+notification  
+●​ Added an option in the application settings to manually set or 
+update your voicemail number 
+●​ Improved the call log history to automatically refresh and cycle out 
+old entries when reaching maximum capacity limits 
+●​ Fixed an issue where the phone call status icon remained stuck 
+inside the top status bar area even after the call was ended 
+www.mudita.com 
+
+--- PAGE 5 ---
+ 
+ 
+ 
+ 
+ 
+●​ Fixed an issue in the Phone settings menu that prevented modified 
+Quick Message templates from reverting back to defaults 
+●​ Fixed a visual glitch in the recent calls history screen that showed an 
+unnecessary zero before single-digit hours in 12-hour time mode 
+●​ Unified the contact creation menu options for Phone and SMS app 
+ 
+SMS 
+●​ Fixed a text layout issue in group chat participant list where the 
+seventh conversation participant's name was cut off from view 
+●​ Fixed an issue where visual confirmation failed to display when 
+blocking or unblocking message senders who are unsaved in 
+contacts 
+●​ Fixed an issue where conversations displayed phone numbers 
+instead of the contact names saved to SIM memory 
+●​ Fixed an issue where phone number could not be copied via 
+long-press from the number details view 
+●​ Fixed an issue where receiving a group message incorrectly triggered 
+duplicate notifications for subsequent individual text messages 
+ 
+System Update 
+●​ Fixed the incorrect icon in the offline+ modal 
+ 
+Voice Recorder 
+●​ Fixed the polish translation in the message when deleting recording 
+●​ Fixed the save and leave modal alignment 
+ 
+Weather 
+●​ Fixed an issue where the main view would show the wrong error 
+message if a location didn't return a valid name 
+www.mudita.com 
+
+--- PAGE 6 ---
+ 
+ 
+ 
+ 
+ 
+●​ Fixed a network data issue that blocked the Weather interface from 
+syncing current forecast data while using a Bluetooth-tethered 
+internet connection 
+●​ Fixed an issue where high and low temperatures would overlap 
+within the Weather widget 
+●​ Fixed a text layout error where three-digit Fahrenheit temperatures 
+would not display in a single line 
+●​ Fixed missing translations for temperature log abbreviations when 
+the device language is set to Spanish 
+ 
+ 
+www.mudita.com 

@@ -1,0 +1,323 @@
+{
+  "checked_on": "2026-10-27",
+  "network_used": false,
+  "candidate_count": 15,
+  "selection_rule": "Inventory-only or incomplete task with readable local body; prioritized scanner/OCR, recording, app lifecycle, screensaver and controls.",
+  "candidates": [
+    {
+      "product_scope": "M-004 and/or M-010 conditional generic BOOX help",
+      "directory_id": "A-10701146091284",
+      "article_id": "10701146091284",
+      "title": "Screensaver",
+      "url": "https://booxsupport.zendesk.com/hc/en-us/articles/10701146091284-Screensaver",
+      "inventory_coverage": "inventory_only",
+      "existing_evidence_ids": [
+        "E-BXCD-01"
+      ],
+      "existing_flow_ids": [],
+      "inventory_gap": "仅登记目录；该功能入口、状态和异常未重建",
+      "local_source": "work/eink-systems-research/boox-articles.json",
+      "local_locator": "JSON array record id=10701146091284; body length 7268 bytes/chars",
+      "source_updated_on": "2026-05-25T02:20:37Z",
+      "source_edited_at": "2024-04-01T10:14:26Z",
+      "body_readable": true,
+      "body_text_preview": "In this article, you will learn how to set the screensaver and shutdown image for your BOOX Tab Series device. Screensaver In Home Screen, go to Settings > Desktop & Screensaver > Screensaver . Here you can set different kinds of screensavers when the device is in sleep mode. Image Screensaver: Here you can select one or multiple images as the screensaver. W",
+      "version_boundary": "Current generic ePaper Tablet PCs help cache captured 2026-10-26; applicability and exact path on Note Air5 C V4.1.2 and Palma 2 Android 13 remain unverified."
+    },
+    {
+      "product_scope": "M-004 and/or M-010 conditional generic BOOX help",
+      "directory_id": "A-10701108549140",
+      "article_id": "10701108549140",
+      "title": "Home Screen and Dock",
+      "url": "https://booxsupport.zendesk.com/hc/en-us/articles/10701108549140-Home-Screen-and-Dock",
+      "inventory_coverage": "inventory_only",
+      "existing_evidence_ids": [
+        "E-BXCD-01"
+      ],
+      "existing_flow_ids": [],
+      "inventory_gap": "仅登记目录；该功能入口、状态和异常未重建",
+      "local_source": "work/eink-systems-research/boox-articles.json",
+      "local_locator": "JSON array record id=10701108549140; body length 6329 bytes/chars",
+      "source_updated_on": "2026-05-24T11:30:17Z",
+      "source_edited_at": "2024-04-02T10:23:04Z",
+      "body_readable": true,
+      "body_text_preview": "The BOOX Tab Series devices have a redesigned interface for you to enjoy a unique user experience like on a conventional tablet. The Home Screen is an area to display all your apps and widgets on the device, while the Dock can store your frequently used apps. In this article, you will learn how to organize your Home Screen to fit the way you work. Rearrange ",
+      "version_boundary": "Current generic ePaper Tablet PCs help cache captured 2026-10-26; applicability and exact path on Note Air5 C V4.1.2 and Palma 2 Android 13 remain unverified."
+    },
+    {
+      "product_scope": "M-004 and/or M-010 conditional generic BOOX help",
+      "directory_id": "A-10701630316436",
+      "article_id": "10701630316436",
+      "title": "Screenshot",
+      "url": "https://booxsupport.zendesk.com/hc/en-us/articles/10701630316436-Screenshot",
+      "inventory_coverage": "inventory_only",
+      "existing_evidence_ids": [
+        "E-BXCD-01"
+      ],
+      "existing_flow_ids": [],
+      "inventory_gap": "仅登记目录；该功能入口、状态和异常未重建",
+      "local_source": "work/eink-systems-research/boox-articles.json",
+      "local_locator": "JSON array record id=10701630316436; body length 3909 bytes/chars",
+      "source_updated_on": "2025-06-09T08:20:02Z",
+      "source_edited_at": "2024-12-03T08:46:39Z",
+      "body_readable": true,
+      "body_text_preview": "You can do the following to take a screenshot. Method 1: Via the Control Center Swipe down from the top right corner to open the Control Center . Find and tap the Screenshot button in the Shortcut Switches. You can also use the Scrolling Screenshot to capture long web pages. Note: If you cannot find the Screenshot button on the Control Center, you may do the",
+      "version_boundary": "Current generic ePaper Tablet PCs help cache captured 2026-10-26; applicability and exact path on Note Air5 C V4.1.2 and Palma 2 Android 13 remain unverified."
+    },
+    {
+      "product_scope": "M-004 and/or M-010 conditional generic BOOX help",
+      "directory_id": "A-25403769498004",
+      "article_id": "25403769498004",
+      "title": "Screen Recording",
+      "url": "https://booxsupport.zendesk.com/hc/en-us/articles/25403769498004-Screen-Recording",
+      "inventory_coverage": "inventory_only",
+      "existing_evidence_ids": [
+        "E-BXCD-01"
+      ],
+      "existing_flow_ids": [],
+      "inventory_gap": "仅登记目录；该功能入口、状态和异常未重建",
+      "local_source": "work/eink-systems-research/boox-articles.json",
+      "local_locator": "JSON array record id=25403769498004; body length 2492 bytes/chars",
+      "source_updated_on": "2025-06-09T08:20:47Z",
+      "source_edited_at": "2024-04-08T06:30:24Z",
+      "body_readable": true,
+      "body_text_preview": "To start a screen recording, do the following: Swipe down from the top right corner to open the Control Center . Find and tap the Screen Recorder button in the Shortcut Switches. Tap the ⚪ button to start recording. Then tap the ❌ button to end the recording. The recordings will be saved in Storage/Movies/Captures in mp4 format. You can tap the thumbnail to ",
+      "version_boundary": "Current generic ePaper Tablet PCs help cache captured 2026-10-26; applicability and exact path on Note Air5 C V4.1.2 and Palma 2 Android 13 remain unverified."
+    },
+    {
+      "product_scope": "M-004 and/or M-010 conditional generic BOOX help",
+      "directory_id": "A-10701620011540",
+      "article_id": "10701620011540",
+      "title": "Scan Documents App",
+      "url": "https://booxsupport.zendesk.com/hc/en-us/articles/10701620011540-Scan-Documents-App",
+      "inventory_coverage": "other_model_excluded",
+      "existing_evidence_ids": [
+        "E-BXCD-01"
+      ],
+      "existing_flow_ids": [],
+      "inventory_gap": "正文仅列Tab Ultra/Tab Ultra C/Tab Ultra C Pro相机；不并入本机",
+      "local_source": "work/eink-systems-research/boox-articles.json",
+      "local_locator": "JSON array record id=10701620011540; body length 3586 bytes/chars",
+      "source_updated_on": "2025-06-09T08:19:12Z",
+      "source_edited_at": "2024-04-08T06:22:38Z",
+      "body_readable": true,
+      "body_text_preview": "Note: The camera is only available on Tab Ultra, Tab Ultra C, and Tab Ultra C Pro. Tab Ultra, Tab Ultra C, and Tab Ultra C Pro are equipped with an exclusive 16MP rear camera as the Smart Scanner for document scanning, OCR, and other amazing functions. In this article, you will learn more about how to use the built-in Scan Documents app. Step 1: Create a new",
+      "version_boundary": "Current generic ePaper Tablet PCs help cache captured 2026-10-26; applicability and exact path on Note Air5 C V4.1.2 and Palma 2 Android 13 remain unverified."
+    },
+    {
+      "product_scope": "M-004 and/or M-010 conditional generic BOOX help",
+      "directory_id": "A-10701172864916",
+      "article_id": "10701172864916",
+      "title": "Display Settings",
+      "url": "https://booxsupport.zendesk.com/hc/en-us/articles/10701172864916-Display-Settings",
+      "inventory_coverage": "inventory_only",
+      "existing_evidence_ids": [
+        "E-BXCD-01"
+      ],
+      "existing_flow_ids": [],
+      "inventory_gap": "仅登记目录；该功能入口、状态和异常未重建",
+      "local_source": "work/eink-systems-research/boox-articles.json",
+      "local_locator": "JSON array record id=10701172864916; body length 3999 bytes/chars",
+      "source_updated_on": "2026-10-08T21:10:28Z",
+      "source_edited_at": "2024-04-01T10:11:03Z",
+      "body_readable": true,
+      "body_text_preview": "In this article, you will learn how to set up some basic display preference. In Home Screen, go to Settings > Display . Font & Text Size Here you can adjust the system font and text size based on your reading preference. To import fonts , please tap Font＞Import font. Note : Importing fonts is only available in some models. Brightness Here you can slide to ad",
+      "version_boundary": "Current generic ePaper Tablet PCs help cache captured 2026-10-26; applicability and exact path on Note Air5 C V4.1.2 and Palma 2 Android 13 remain unverified."
+    },
+    {
+      "product_scope": "M-004 and/or M-010 conditional generic BOOX help",
+      "directory_id": "A-10701109999636",
+      "article_id": "10701109999636",
+      "title": "Volume",
+      "url": "https://booxsupport.zendesk.com/hc/en-us/articles/10701109999636-Volume",
+      "inventory_coverage": "inventory_only",
+      "existing_evidence_ids": [
+        "E-BXCD-01"
+      ],
+      "existing_flow_ids": [],
+      "inventory_gap": "仅登记目录；该功能入口、状态和异常未重建",
+      "local_source": "work/eink-systems-research/boox-articles.json",
+      "local_locator": "JSON array record id=10701109999636; body length 1450 bytes/chars",
+      "source_updated_on": "2026-05-18T07:57:10Z",
+      "source_edited_at": "2024-04-01T10:45:38Z",
+      "body_readable": true,
+      "body_text_preview": "The BOOX Tab Series devices are equipped with a speaker for audio output. In this article, you will learn how to adjust the volume of your device. 1. Swipe down from the top right corner to open the Control Center and drag the volume slider. 2. Long press the volume icon to adjust the volume of specific functions 3. Tap the Mute button in the Control Center ",
+      "version_boundary": "Current generic ePaper Tablet PCs help cache captured 2026-10-26; applicability and exact path on Note Air5 C V4.1.2 and Palma 2 Android 13 remain unverified."
+    },
+    {
+      "product_scope": "M-004 and/or M-010 conditional generic BOOX help",
+      "directory_id": "A-10701622160916",
+      "article_id": "10701622160916",
+      "title": "Screen Mirroring",
+      "url": "https://booxsupport.zendesk.com/hc/en-us/articles/10701622160916-Screen-Mirroring",
+      "inventory_coverage": "inventory_only",
+      "existing_evidence_ids": [
+        "E-BXCD-01"
+      ],
+      "existing_flow_ids": [],
+      "inventory_gap": "仅登记目录；该功能入口、状态和异常未重建",
+      "local_source": "work/eink-systems-research/boox-articles.json",
+      "local_locator": "JSON array record id=10701622160916; body length 6584 bytes/chars",
+      "source_updated_on": "2025-06-06T06:34:02Z",
+      "source_edited_at": "2024-06-27T07:32:01Z",
+      "body_readable": true,
+      "body_text_preview": "In this article, you will learn how to share the screen of your BOOX device via the built-in Screen Cast tool or a third-party screen mirroring app. Built-in Screen Cast The built-in Screen Cast tool is currently compatible with Windows 10 / 11 only. Before using the Screen Cast tool, you need to check if your PC supports Miracast and do some basic setup by ",
+      "version_boundary": "Current generic ePaper Tablet PCs help cache captured 2026-10-26; applicability and exact path on Note Air5 C V4.1.2 and Palma 2 Android 13 remain unverified."
+    },
+    {
+      "product_scope": "M-004 and/or M-010 conditional generic BOOX help",
+      "directory_id": "A-10701171762452",
+      "article_id": "10701171762452",
+      "title": "Sleep and Battery",
+      "url": "https://booxsupport.zendesk.com/hc/en-us/articles/10701171762452-Sleep-and-Battery",
+      "inventory_coverage": "partially_documented",
+      "existing_evidence_ids": [
+        "E-BXCD-14"
+      ],
+      "existing_flow_ids": [
+        "F-M004-14"
+      ],
+      "inventory_gap": "仅后台问题相关条件，具体型号路径未知",
+      "local_source": "work/eink-systems-research/boox-articles.json",
+      "local_locator": "JSON array record id=10701171762452; body length 3345 bytes/chars",
+      "source_updated_on": "2025-06-06T06:22:52Z",
+      "source_edited_at": "2022-11-10T10:00:48Z",
+      "body_readable": true,
+      "body_text_preview": "The BOOX Tab Series devices consumes more power than typical BOOX devices due to an increased performance and efficiency. As a result, they are equipped with a larger battery than typical BOOX devices. Please also use them reasonably to save power. In this article, you will learn how to enter Sleep Mode, shut down the device, check the battery status and man",
+      "version_boundary": "Current generic ePaper Tablet PCs help cache captured 2026-10-26; applicability and exact path on Note Air5 C V4.1.2 and Palma 2 Android 13 remain unverified."
+    },
+    {
+      "product_scope": "M-004 and/or M-010 conditional generic BOOX help",
+      "directory_id": "A-10701262170644",
+      "article_id": "10701262170644",
+      "title": "App Management Settings",
+      "url": "https://booxsupport.zendesk.com/hc/en-us/articles/10701262170644-App-Management-Settings",
+      "inventory_coverage": "partially_documented",
+      "existing_evidence_ids": [
+        "E-BOOX-22",
+        "E-BXCD-07"
+      ],
+      "existing_flow_ids": [
+        "F-M004-03",
+        "F-M004-14"
+      ],
+      "inventory_gap": "权限/通知/冻结/重置范围；卸载数据未知",
+      "local_source": "work/eink-systems-research/boox-articles.json",
+      "local_locator": "JSON array record id=10701262170644; body length 8058 bytes/chars",
+      "source_updated_on": "2025-06-06T07:06:48Z",
+      "source_edited_at": "2023-04-27T03:28:05Z",
+      "body_readable": true,
+      "body_text_preview": "In this article, you will learn more about the app management settings on your device. To access the app management settings, go to Settings > Apps & Notifications in Home Screen. Application Here you can manage or uninstall your apps. Permission Here you can manage the permission settings of your apps. Notifications Here you can manage the notification sett",
+      "version_boundary": "Current generic ePaper Tablet PCs help cache captured 2026-10-26; applicability and exact path on Note Air5 C V4.1.2 and Palma 2 Android 13 remain unverified."
+    },
+    {
+      "product_scope": "M-004 and/or M-010 conditional generic BOOX help",
+      "directory_id": "A-25213043150996",
+      "article_id": "25213043150996",
+      "title": "Navigate Your Device",
+      "url": "https://booxsupport.zendesk.com/hc/en-us/articles/25213043150996-Navigate-Your-Device",
+      "inventory_coverage": "partially_documented",
+      "existing_evidence_ids": [
+        "E-BOOX-05",
+        "E-BXCD-03"
+      ],
+      "existing_flow_ids": [
+        "F-M004-02"
+      ],
+      "inventory_gap": "路径补强；设备构建仍未知",
+      "local_source": "work/eink-systems-research/boox-articles.json",
+      "local_locator": "JSON array record id=25213043150996; body length 11238 bytes/chars",
+      "source_updated_on": "2026-05-26T20:22:12Z",
+      "source_edited_at": "2024-06-28T03:08:26Z",
+      "body_readable": true,
+      "body_text_preview": "Navigate your tablets through Screen Rotation, Navigation Bar, Gestures, and Navigation Ball. Screen Rotation The screen of all models can be rotated. If your device is designed with an asymmetric bezel, you can rotate the screen to place the slim side to your dominant hand so the wide side can be held by your non-dominant hand. Auto-rotate is only available",
+      "version_boundary": "Current generic ePaper Tablet PCs help cache captured 2026-10-26; applicability and exact path on Note Air5 C V4.1.2 and Palma 2 Android 13 remain unverified."
+    },
+    {
+      "product_scope": "M-010 conditional generic Mobile ePaper manual",
+      "directory_id": "I-PLCD-005",
+      "article_id": null,
+      "title": "Control Center",
+      "url": "https://ebookreader.dk/images/upload/Onyx%20BOOX%20Palma%202%20Pro%20User%20Manual.pdf",
+      "inventory_coverage": "outline_only",
+      "existing_evidence_ids": [
+        "E-PALMA-15"
+      ],
+      "existing_flow_ids": [
+        "F-M010-02"
+      ],
+      "inventory_gap": "书签目录≠正文全读；通用章节不计Palma 2已验证功能",
+      "local_source": "work/palma-controls-deepening/raw/mobile-v4-existing.txt",
+      "local_binary_source": "work/palma-controls-deepening/raw/mobile-v4-existing.pdf",
+      "local_locator": "PDF page 10; extracted text lines 113–117",
+      "source_updated_on": null,
+      "source_edited_at": null,
+      "body_readable": true,
+      "body_text_preview": "Control Center appears in the generic manual home-screen section.",
+      "version_boundary": "Mobile ePaper Series universal V4.0 manual; retailer filename mentions Palma 2 Pro; not proof of Palma 2 applicability or current firmware menus."
+    },
+    {
+      "product_scope": "M-010 conditional generic Mobile ePaper manual",
+      "directory_id": "I-PLCD-026",
+      "article_id": null,
+      "title": "OCR",
+      "url": "https://ebookreader.dk/images/upload/Onyx%20BOOX%20Palma%202%20Pro%20User%20Manual.pdf",
+      "inventory_coverage": "outline_only",
+      "existing_evidence_ids": [
+        "E-PALMA-15"
+      ],
+      "existing_flow_ids": [],
+      "inventory_gap": "书签目录≠正文全读；通用章节不计Palma 2已验证功能",
+      "local_source": "work/palma-controls-deepening/raw/mobile-v4-existing.txt",
+      "local_binary_source": "work/palma-controls-deepening/raw/mobile-v4-existing.pdf",
+      "local_locator": "PDF pages 44–45; extracted text lines 543–559",
+      "source_updated_on": null,
+      "source_edited_at": null,
+      "body_readable": true,
+      "body_text_preview": "OCR supports PDF/CBR/CBZ/DJVU/PNG images; layout affects accuracy; recognized text supports marks/dictionary; OCR can be cleared.",
+      "version_boundary": "Mobile ePaper Series universal V4.0 manual; retailer filename mentions Palma 2 Pro; not proof of Palma 2 applicability or current firmware menus."
+    },
+    {
+      "product_scope": "M-010 conditional generic Mobile ePaper manual",
+      "directory_id": "I-PLCD-061",
+      "article_id": null,
+      "title": "5.9 Desktop & Screensaver",
+      "url": "https://ebookreader.dk/images/upload/Onyx%20BOOX%20Palma%202%20Pro%20User%20Manual.pdf",
+      "inventory_coverage": "outline_only",
+      "existing_evidence_ids": [
+        "E-PALMA-15"
+      ],
+      "existing_flow_ids": [],
+      "inventory_gap": "书签目录≠正文全读；通用章节不计Palma 2已验证功能",
+      "local_source": "work/palma-controls-deepening/raw/mobile-v4-existing.txt",
+      "local_binary_source": "work/palma-controls-deepening/raw/mobile-v4-existing.pdf",
+      "local_locator": "PDF page 90; extracted text lines 1160–1164",
+      "source_updated_on": null,
+      "source_edited_at": null,
+      "body_readable": true,
+      "body_text_preview": "Desktop & Screensaver covers Home Screen, desktop-layout lock, Smart Assistant, and one power-off image.",
+      "version_boundary": "Mobile ePaper Series universal V4.0 manual; retailer filename mentions Palma 2 Pro; not proof of Palma 2 applicability or current firmware menus."
+    },
+    {
+      "product_scope": "M-010 conditional generic Mobile ePaper manual",
+      "directory_id": "I-PLCD-069",
+      "article_id": null,
+      "title": "5.17 More Settings",
+      "url": "https://ebookreader.dk/images/upload/Onyx%20BOOX%20Palma%202%20Pro%20User%20Manual.pdf",
+      "inventory_coverage": "selected_body_read_generic",
+      "existing_evidence_ids": [
+        "E-PALMA-15"
+      ],
+      "existing_flow_ids": [],
+      "inventory_gap": "书签目录≠正文全读；通用章节不计Palma 2已验证功能",
+      "local_source": "work/palma-controls-deepening/raw/mobile-v4-existing.txt",
+      "local_binary_source": "work/palma-controls-deepening/raw/mobile-v4-existing.pdf",
+      "local_locator": "PDF pages 98–99; extracted text lines 1248–1258",
+      "source_updated_on": null,
+      "source_edited_at": null,
+      "body_readable": true,
+      "body_text_preview": "More Settings lists Navigation Ball, Screenshots, Screen Recording, Accessibility, USB Debug and Reset Device.",
+      "version_boundary": "Mobile ePaper Series universal V4.0 manual; retailer filename mentions Palma 2 Pro; not proof of Palma 2 applicability or current firmware menus."
+    }
+  ]
+}

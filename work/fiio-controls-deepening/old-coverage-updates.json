@@ -1,0 +1,331 @@
+[
+  {
+    "flow_id": "F-M034-01",
+    "before": {
+      "flow_id": "F-M034-01",
+      "product_id": "M-034",
+      "task": "将电脑文件放入设备",
+      "depth": "D2",
+      "evidence_ids": "E-FIIO-02",
+      "known_branches": "文件到设备不等于已进入 app 曲库；扫描的当前完整步骤尚未找到。",
+      "gaps": "新增/移动/重复文件的扫描策略；当前 macOS 兼容性；传输取消与索引失败。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-034-fiio.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M034-01",
+      "product_id": "M-034",
+      "task": "将电脑文件放入设备",
+      "depth": "D2",
+      "evidence_ids": "E-FIIO-02;E-FICD-08;E-FICD-15",
+      "known_branches": "文件传入不等于索引完成。卡插入方向按JM21 FAQ为触点向下、推入锁定，再推弹出；不能套用Sony方向。手册空库图出现Scan for music入口，但本轮没有扫描完成流程。",
+      "gaps": "扫描过滤/增量/移动或重复文件策略、弹卡后的队列及歌单状态、当前macOS兼容性、传输取消与索引失败。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-034-fiio.md",
+      "checked_on": "2026-10-27"
+    },
+    "changed_fields": {
+      "evidence_ids": {
+        "before": "E-FIIO-02",
+        "after": "E-FIIO-02;E-FICD-08;E-FICD-15"
+      },
+      "known_branches": {
+        "before": "文件到设备不等于已进入 app 曲库；扫描的当前完整步骤尚未找到。",
+        "after": "文件传入不等于索引完成。卡插入方向按JM21 FAQ为触点向下、推入锁定，再推弹出；不能套用Sony方向。手册空库图出现Scan for music入口，但本轮没有扫描完成流程。"
+      },
+      "gaps": {
+        "before": "新增/移动/重复文件的扫描策略；当前 macOS 兼容性；传输取消与索引失败。",
+        "after": "扫描过滤/增量/移动或重复文件策略、弹卡后的队列及歌单状态、当前macOS兼容性、传输取消与索引失败。"
+      },
+      "checked_on": {
+        "before": "2026-10-26",
+        "after": "2026-10-27"
+      }
+    }
+  },
+  {
+    "flow_id": "F-M034-02",
+    "before": {
+      "flow_id": "F-M034-02",
+      "product_id": "M-034",
+      "task": "找曲、批量处理及进入播放页",
+      "depth": "D2",
+      "evidence_ids": "E-FIIO-01;E-FIIO-11",
+      "known_branches": "收藏、歌单成员和音频文件是不同对象；批量删除是否删文件及确认界面待核。",
+      "gaps": "空库首次引导、扫描过滤、队列插入/替换、去重和撤销。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-034-fiio.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M034-02",
+      "product_id": "M-034",
+      "task": "找曲、批量处理及进入播放页",
+      "depth": "D2",
+      "evidence_ids": "E-FIIO-01;E-FIIO-11;E-FICD-15",
+      "known_branches": "手册给出添加时间/文件名/首字母/年份排序；行菜单图可见Play next（当前曲后播放）与Cancel，批量图可见Select all和Cancel。静态入口不证明取消回滚、重排、持久化或删除对象范围。",
+      "gaps": "扫描过滤、完整队列插入/替换/重排/去重、删除确认/是否删文件、撤销；旧手册界面不当作3.3.4已验证界面。",
+      "visual_status": "static_manual_pages_only",
+      "hands_on": "false",
+      "case_path": "cases/M-034-fiio.md",
+      "checked_on": "2026-10-27"
+    },
+    "changed_fields": {
+      "evidence_ids": {
+        "before": "E-FIIO-01;E-FIIO-11",
+        "after": "E-FIIO-01;E-FIIO-11;E-FICD-15"
+      },
+      "known_branches": {
+        "before": "收藏、歌单成员和音频文件是不同对象；批量删除是否删文件及确认界面待核。",
+        "after": "手册给出添加时间/文件名/首字母/年份排序；行菜单图可见Play next（当前曲后播放）与Cancel，批量图可见Select all和Cancel。静态入口不证明取消回滚、重排、持久化或删除对象范围。"
+      },
+      "gaps": {
+        "before": "空库首次引导、扫描过滤、队列插入/替换、去重和撤销。",
+        "after": "扫描过滤、完整队列插入/替换/重排/去重、删除确认/是否删文件、撤销；旧手册界面不当作3.3.4已验证界面。"
+      },
+      "visual_status": {
+        "before": "not_observed",
+        "after": "static_manual_pages_only"
+      },
+      "checked_on": {
+        "before": "2026-10-26",
+        "after": "2026-10-27"
+      }
+    }
+  },
+  {
+    "flow_id": "F-M034-04",
+    "before": {
+      "flow_id": "F-M034-04",
+      "product_id": "M-034",
+      "task": "切换工作模式并返回",
+      "depth": "D2",
+      "evidence_ids": "E-FIIO-03",
+      "known_branches": "改变整机工作角色；不能把“蓝牙接收”理解为给蓝牙耳机发声。",
+      "gaps": "切换时原曲位置、队列、连接和音量是否保留；退出是否立即出声。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-034-fiio.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M034-04",
+      "product_id": "M-034",
+      "task": "切换工作模式并返回",
+      "depth": "D2",
+      "evidence_ids": "E-FIIO-03;E-FICD-03",
+      "known_branches": "五种工作角色总入口；非Android模式的屏上选择或Settings→Exit返回Android。USB-DAC、AirPlay和蓝牙接收的具体音频目标分别见F11/F12/F15，未作为此处重复任务。",
+      "gaps": "切换时原曲位置、队列、连接和音量是否保留；退出是否立即出声。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-034-fiio.md",
+      "checked_on": "2026-10-27"
+    },
+    "changed_fields": {
+      "evidence_ids": {
+        "before": "E-FIIO-03",
+        "after": "E-FIIO-03;E-FICD-03"
+      },
+      "known_branches": {
+        "before": "改变整机工作角色；不能把“蓝牙接收”理解为给蓝牙耳机发声。",
+        "after": "五种工作角色总入口；非Android模式的屏上选择或Settings→Exit返回Android。USB-DAC、AirPlay和蓝牙接收的具体音频目标分别见F11/F12/F15，未作为此处重复任务。"
+      },
+      "checked_on": {
+        "before": "2026-10-26",
+        "after": "2026-10-27"
+      }
+    }
+  },
+  {
+    "flow_id": "F-M034-06",
+    "before": {
+      "flow_id": "F-M034-06",
+      "product_id": "M-034",
+      "task": "改用外置 DAC 或模拟出口",
+      "depth": "D2",
+      "evidence_ids": "E-FIIO-05;E-FIIO-10",
+      "known_branches": "app 输出选项与系统端口角色共同影响发声；SPDIF 接收端不认 DoP 时 FAQ 建议 D2P。",
+      "gaps": "切出口音量继承、热插拔瞬间声音、失败后的 UI 提示和自动回退。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-034-fiio.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M034-06",
+      "product_id": "M-034",
+      "task": "改用外置 DAC 或模拟出口",
+      "depth": "D2",
+      "evidence_ids": "E-FIIO-05;E-FIIO-10;E-FICD-14;E-FICD-15",
+      "known_branches": "USB输出开关与端口角色影响发声；手册描述蓝牙发射与模拟/同轴间遵循后接入优先。两个模拟口仅写按插入顺序优先，未擅自补先/后规则。LO音量可调开关关闭时为最大固定音量。",
+      "gaps": "切出口音量继承、两个模拟口的明确优先顺序、热插拔瞬间声音、失败UI提示和自动回退；未实测手册优先级。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-034-fiio.md",
+      "checked_on": "2026-10-27"
+    },
+    "changed_fields": {
+      "evidence_ids": {
+        "before": "E-FIIO-05;E-FIIO-10",
+        "after": "E-FIIO-05;E-FIIO-10;E-FICD-14;E-FICD-15"
+      },
+      "known_branches": {
+        "before": "app 输出选项与系统端口角色共同影响发声；SPDIF 接收端不认 DoP 时 FAQ 建议 D2P。",
+        "after": "USB输出开关与端口角色影响发声；手册描述蓝牙发射与模拟/同轴间遵循后接入优先。两个模拟口仅写按插入顺序优先，未擅自补先/后规则。LO音量可调开关关闭时为最大固定音量。"
+      },
+      "gaps": {
+        "before": "切出口音量继承、热插拔瞬间声音、失败后的 UI 提示和自动回退。",
+        "after": "切出口音量继承、两个模拟口的明确优先顺序、热插拔瞬间声音、失败UI提示和自动回退；未实测手册优先级。"
+      },
+      "checked_on": {
+        "before": "2026-10-26",
+        "after": "2026-10-27"
+      }
+    }
+  },
+  {
+    "flow_id": "F-M034-07",
+    "before": {
+      "flow_id": "F-M034-07",
+      "product_id": "M-034",
+      "task": "手机遥控与局域网取曲",
+      "depth": "D2",
+      "evidence_ids": "E-FIIO-08;E-FIIO-09",
+      "known_branches": "Link 是控制连接；DLNA 是读取远端媒体。该 JM21 FAQ 只声明 DLNA 接收，不等于离线下载或云同步。",
+      "gaps": "手机断连是否继续、队列冲突、DLNA 缓存与恢复、Wi-Fi 传歌失败处理。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-034-fiio.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M034-07",
+      "product_id": "M-034",
+      "task": "手机遥控与局域网取曲",
+      "depth": "D2",
+      "evidence_ids": "E-FIIO-08;E-FIIO-09;E-FICD-07;E-FICD-13",
+      "known_branches": "Link是Music遥控，DLNA是远端媒体；另有JM21 FiiO Cast与手机FiiO Control连接路径，失联排查网络/后台服务/IP后可删除旧设备、重启Cast、重加。型号旧FAQ仅接收的DLNA表述与通用App实验发射日志并存，不能断言当前JM21不支持发射。",
+      "gaps": "当前JM21构建DLNA发射入口和支持范围、Cast退出/授权/多客户端/断点、Wi-Fi传歌目标目录与失败处理、远端缓存与队列冲突。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-034-fiio.md",
+      "checked_on": "2026-10-27"
+    },
+    "changed_fields": {
+      "evidence_ids": {
+        "before": "E-FIIO-08;E-FIIO-09",
+        "after": "E-FIIO-08;E-FIIO-09;E-FICD-07;E-FICD-13"
+      },
+      "known_branches": {
+        "before": "Link 是控制连接；DLNA 是读取远端媒体。该 JM21 FAQ 只声明 DLNA 接收，不等于离线下载或云同步。",
+        "after": "Link是Music遥控，DLNA是远端媒体；另有JM21 FiiO Cast与手机FiiO Control连接路径，失联排查网络/后台服务/IP后可删除旧设备、重启Cast、重加。型号旧FAQ仅接收的DLNA表述与通用App实验发射日志并存，不能断言当前JM21不支持发射。"
+      },
+      "gaps": {
+        "before": "手机断连是否继续、队列冲突、DLNA 缓存与恢复、Wi-Fi 传歌失败处理。",
+        "after": "当前JM21构建DLNA发射入口和支持范围、Cast退出/授权/多客户端/断点、Wi-Fi传歌目标目录与失败处理、远端缓存与队列冲突。"
+      },
+      "checked_on": {
+        "before": "2026-10-26",
+        "after": "2026-10-27"
+      }
+    }
+  },
+  {
+    "flow_id": "F-M034-08",
+    "before": {
+      "flow_id": "F-M034-08",
+      "product_id": "M-034",
+      "task": "睡前停止、闲置关机、下次继续",
+      "depth": "D2",
+      "evidence_ids": "E-FIIO-06;E-FIIO-11",
+      "known_branches": "系统计时与 app 停止不是同一层；通用产品页只足以证明记曲目，不证明 JM21 当前构建精确逐书断点。",
+      "gaps": "app timer 的当前入口、换曲是否延时、重启后计时、逐曲时间点与意外断电保存。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-034-fiio.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M034-08",
+      "product_id": "M-034",
+      "task": "睡前停止、闲置关机、下次继续",
+      "depth": "D2",
+      "evidence_ids": "E-FIIO-06;E-FIIO-11;E-FICD-15",
+      "known_branches": "系统关机与App停止/记曲目不同；手册Audio的Auto pause without headphones仅列Android/Pure Music模式无耳机2分钟后暂停，不能推成立即拔耳机暂停或蓝牙断连规则。",
+      "gaps": "App timer当前入口、换曲是否延时、计时重启保留、逐曲时间点与断电保存；无耳机暂停的计时起点/多出口判定未核。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-034-fiio.md",
+      "checked_on": "2026-10-27"
+    },
+    "changed_fields": {
+      "evidence_ids": {
+        "before": "E-FIIO-06;E-FIIO-11",
+        "after": "E-FIIO-06;E-FIIO-11;E-FICD-15"
+      },
+      "known_branches": {
+        "before": "系统计时与 app 停止不是同一层；通用产品页只足以证明记曲目，不证明 JM21 当前构建精确逐书断点。",
+        "after": "系统关机与App停止/记曲目不同；手册Audio的Auto pause without headphones仅列Android/Pure Music模式无耳机2分钟后暂停，不能推成立即拔耳机暂停或蓝牙断连规则。"
+      },
+      "gaps": {
+        "before": "app timer 的当前入口、换曲是否延时、重启后计时、逐曲时间点与意外断电保存。",
+        "after": "App timer当前入口、换曲是否延时、计时重启保留、逐曲时间点与断电保存；无耳机暂停的计时起点/多出口判定未核。"
+      },
+      "checked_on": {
+        "before": "2026-10-26",
+        "after": "2026-10-27"
+      }
+    }
+  },
+  {
+    "flow_id": "F-M034-09",
+    "before": {
+      "flow_id": "F-M034-09",
+      "product_id": "M-034",
+      "task": "无响应或 app 故障",
+      "depth": "D2",
+      "evidence_ids": "E-FIIO-07",
+      "known_branches": "强制重启、清 app 数据、整机清除是不同级别；不能把后两者当作“刷新曲库”。",
+      "gaps": "日志是否含敏感数据、清除后歌单/进度恢复、断电后损坏索引的处理。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-034-fiio.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M034-09",
+      "product_id": "M-034",
+      "task": "无响应或 app 故障",
+      "depth": "D2",
+      "evidence_ids": "E-FIIO-07;E-FICD-15",
+      "known_branches": "重启、清App数据、出厂清除分层。手册System→Reset options另列网络重置、App偏好重置、清全部内存数据；不能以清数据替代扫描。",
+      "gaps": "日志敏感信息、偏好重置完整影响、歌单/进度备份恢复、断电后索引损坏与清除失败未核。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-034-fiio.md",
+      "checked_on": "2026-10-27"
+    },
+    "changed_fields": {
+      "evidence_ids": {
+        "before": "E-FIIO-07",
+        "after": "E-FIIO-07;E-FICD-15"
+      },
+      "known_branches": {
+        "before": "强制重启、清 app 数据、整机清除是不同级别；不能把后两者当作“刷新曲库”。",
+        "after": "重启、清App数据、出厂清除分层。手册System→Reset options另列网络重置、App偏好重置、清全部内存数据；不能以清数据替代扫描。"
+      },
+      "gaps": {
+        "before": "日志是否含敏感数据、清除后歌单/进度恢复、断电后损坏索引的处理。",
+        "after": "日志敏感信息、偏好重置完整影响、歌单/进度备份恢复、断电后索引损坏与清除失败未核。"
+      },
+      "checked_on": {
+        "before": "2026-10-26",
+        "after": "2026-10-27"
+      }
+    }
+  }
+]

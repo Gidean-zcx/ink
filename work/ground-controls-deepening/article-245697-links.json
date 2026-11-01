@@ -1,0 +1,158 @@
+[
+  {
+    "class": "page-header-inner-logo-link",
+    "href": "/en",
+    "title": "",
+    "url": "https://help.ground.news/en"
+  },
+  {
+    "class": "page-header-inner-title",
+    "href": "/en",
+    "title": "Ground News Help Center",
+    "url": "https://help.ground.news/en"
+  },
+  {
+    "type": "button",
+    "class": "kb-button primary",
+    "href": "/en/contact-us",
+    "title": "Contact Us",
+    "url": "https://help.ground.news/en/contact-us"
+  },
+  {
+    "id": "moreResultsLink",
+    "type": "button",
+    "class": "kb-button secondary",
+    "href": "/en/search",
+    "title": "More results",
+    "url": "https://help.ground.news/en/search"
+  },
+  {
+    "href": "https://ground.news/privacy-policy",
+    "title": "Privacy Policy",
+    "url": "https://ground.news/privacy-policy"
+  },
+  {
+    "href": "#resetting_your_password",
+    "class": "navigation-item indent-2",
+    "title": "Resetting Your Password",
+    "url": "https://help.ground.news/en/articles/245697#resetting_your_password"
+  },
+  {
+    "href": "#signed_up_using_google_apple_or_another_social_login",
+    "class": "navigation-item indent-2",
+    "title": "Signed Up Using Google, Apple, or Another Social Login?",
+    "url": "https://help.ground.news/en/articles/245697#signed_up_using_google_apple_or_another_social_login"
+  },
+  {
+    "href": "/en",
+    "title": "Home",
+    "url": "https://help.ground.news/en"
+  },
+  {
+    "href": "/en/categories/2272833-manage-your-account-subscription",
+    "title": "Manage Your Account & Subscription",
+    "url": "https://help.ground.news/en/categories/2272833-manage-your-account-subscription"
+  },
+  {
+    "href": "/en/categories/2273153-account-questions",
+    "title": "Account Questions",
+    "url": "https://help.ground.news/en/categories/2273153-account-questions"
+  },
+  {
+    "href": "/en/categories/2273153-sign-in-login-support",
+    "title": "Sign-In & Login Support",
+    "url": "https://help.ground.news/en/categories/2273153-sign-in-login-support"
+  },
+  {
+    "target": "_self",
+    "rel": "noopener noreferrer nofollow",
+    "class": "kb-link kb-link",
+    "href": "mailto:feedback@ground.news",
+    "title": "feedback@ground.news",
+    "url": "mailto:feedback@ground.news"
+  },
+  {
+    "target": "_self",
+    "rel": "noopener noreferrer nofollow",
+    "class": "kb-link kb-link",
+    "href": "https://ground.news/login",
+    "title": "sign in page",
+    "url": "https://ground.news/login"
+  },
+  {
+    "target": "_self",
+    "rel": "noopener noreferrer nofollow",
+    "class": "kb-link kb-link",
+    "href": "mailto:feedback@ground.news",
+    "title": "feedback@ground.news",
+    "url": "mailto:feedback@ground.news"
+  },
+  {
+    "href": "https://usw2.frontkb-cdn.com/attachments/7440402/17473/09124dd7-dd70-45c0-9e00-bd0ca809ec81.png",
+    "class": "knowledge-base-image-expand-link",
+    "data-lightbox": "09124dd7-dd70-45c0-9e00-bd0ca809ec81",
+    "title": "",
+    "url": "https://usw2.frontkb-cdn.com/attachments/7440402/17473/09124dd7-dd70-45c0-9e00-bd0ca809ec81.png"
+  },
+  {
+    "target": "_self",
+    "rel": "noopener noreferrer nofollow",
+    "class": "kb-link kb-link",
+    "href": "https://ground.news/login",
+    "title": "sign-in page",
+    "url": "https://ground.news/login"
+  },
+  {
+    "target": "_self",
+    "rel": "noopener noreferrer nofollow",
+    "class": "kb-link kb-link",
+    "href": "mailto:feedback@ground.news",
+    "title": "feedback@ground.news",
+    "url": "mailto:feedback@ground.news"
+  },
+  {
+    "href": "https://usw2.frontkb-cdn.com/attachments/7440402/17473/023a40cf-b60e-4c5c-8630-d0cfca8ecb0c.png",
+    "class": "knowledge-base-image-expand-link",
+    "data-lightbox": "023a40cf-b60e-4c5c-8630-d0cfca8ecb0c",
+    "title": "",
+    "url": "https://usw2.frontkb-cdn.com/attachments/7440402/17473/023a40cf-b60e-4c5c-8630-d0cfca8ecb0c.png"
+  },
+  {
+    "target": "_self",
+    "rel": "noopener noreferrer nofollow",
+    "class": "kb-link kb-link",
+    "href": "mailto:feedback@ground.news",
+    "title": "feedback@ground.news",
+    "url": "mailto:feedback@ground.news"
+  },
+  {
+    "href": "https://twitter.com/Ground_app",
+    "title": "",
+    "url": "https://twitter.com/Ground_app"
+  },
+  {
+    "href": "https://ca.linkedin.com/company/groundnews",
+    "title": "",
+    "url": "https://ca.linkedin.com/company/groundnews"
+  },
+  {
+    "href": "https://www.instagram.com/groundnews/",
+    "title": "",
+    "url": "https://www.instagram.com/groundnews/"
+  },
+  {
+    "href": "https://ground.news/refund-policy",
+    "title": "Refund and Cancellation Policy",
+    "url": "https://ground.news/refund-policy"
+  },
+  {
+    "href": "https://ground.news/terms-and-conditions",
+    "title": "Terms and Conditions",
+    "url": "https://ground.news/terms-and-conditions"
+  },
+  {
+    "href": "https://about.ground.news/privacy-policy",
+    "title": "Privacy Policy",
+    "url": "https://about.ground.news/privacy-policy"
+  }
+]

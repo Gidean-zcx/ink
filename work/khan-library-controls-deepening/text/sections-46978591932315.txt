@@ -1,0 +1,22 @@
+News and Announcements – Khan Academy (https://khankids.zendesk.com/hc/en-us/sections/46978591932315-News-and-Announcements)
+citeturn958view4 [wordlim: 200] Crawled: last week; Content type: text/html; Source: open({"ref_id":"https://khankids.zendesk.com/hc/en-us/sections/46978591932315-News-and-Announcements","lineno":null}); Total lines: 20
+L0: 【0†Skip to main content】
+L1: 
+L2: 【1†Submit a request】
+L3: 
+L4: [Input][Input: Search]
+L5: # News and Announcements
+L6:   * 【2†Festive winter learning with Khan Academy Kids】
+L7:   * 【3†Meet inspiring women in our new books!】
+L8:   * 【4†Meet a new set of friends in the Khan Kids app!】
+L9:   * 【5†Find books and lessons in the Khan Kids Library】
+L10:   * 【6†How do I save artwork from the Gallery?】
+L11:   * 【7†Sandy's Instruments and Reya's Bugs】
+L12:   * 【8†Podcast Recommendations for Kids】
+L13:   * 【9†Learn more about the characters inside Khan Academy Kids】
+L14:   * 【10†Research from University of Massachusetts Amherst shows Khan Academy Kids boosts pre-literacy skills】
+L15:   * 【11†New first-grade lessons in Khan Academy Kids!】
+L16:   * 【12†Sing, Dance, and Learn with Super Simple Songs and Khan Academy Kids】
+L17: 【13†Khan Academy】
+L18: 
+L19: 【14†Powered by Zendesk†www.zendesk.com】

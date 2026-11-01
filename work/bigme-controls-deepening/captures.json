@@ -1,0 +1,26 @@
+[
+  {
+    "name": "manual.pdf",
+    "url": "https://device.report/m/f9c833a5a200f1b7aad371249f065497aa4c9e0caf1023379311412b5579ff50.pdf",
+    "checked_on": "2026-10-27",
+    "status": 403,
+    "final_url": "https://device.report/m/f9c833a5a200f1b7aad371249f065497aa4c9e0caf1023379311412b5579ff50.pdf",
+    "content_type": "text/plain",
+    "raw_work_path": "work/bigme-controls-deepening/raw/manual.pdf",
+    "raw_sha256": "885c20651c0793e4431dc2afacc822c4010a0b7b74b9bcd5dc053e42e2e209e3",
+    "bytes": 13,
+    "pdf_header": false
+  },
+  {
+    "name": "product.html",
+    "url": "https://store.bigme.vip/pages/hibreak-pro-landing-page",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "final_url": "https://store.bigme.vip/pages/hibreak-pro-landing-page",
+    "content_type": "text/html; charset=utf-8",
+    "raw_work_path": "work/bigme-controls-deepening/raw/product.html",
+    "raw_sha256": "8dec25fddd952795ba34e9ed8f14bafd5558454b37570a1c1bd1bfec4bf20054",
+    "bytes": 797468,
+    "pdf_header": false
+  }
+]

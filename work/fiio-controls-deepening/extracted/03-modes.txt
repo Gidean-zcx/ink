@@ -1,0 +1,4 @@
+6.How to switch the working mode of the JM21?
+The JM21 has 5 independent working modes: Android mode, Pure Music mode, Bluetooth Receiving mode, USB DAC mode and AirPlay mode. It is defaulted to be the Android mode, which can be switched to other working modes in the drop-down menu.
+If the player is in other modes but not the Android mode, you can switch it to other modes through the selection on the display, or tap Settings->Exit to go back to Android mode.
+ꄘ

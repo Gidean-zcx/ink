@@ -1,0 +1,2 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M025-01,M-025,印刷扫描查词与翻译,D2,E-YDP-01;E-YDCD-01;E-YDCD-04,按压笔头启动采集；向右匀速直线滑扫；识别/翻译显示与语音合成；多行仅声明,进入扫描前页面；抬笔/取消及返回；错词校订；词典切换；多行追加；收藏练习；固件未知,static_reference_only,false,cases/M-025-youdao-pen.md,2026-10-26

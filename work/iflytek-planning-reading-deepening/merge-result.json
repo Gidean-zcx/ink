@@ -1,0 +1,283 @@
+{
+  "old_flows": 4,
+  "old_flow_fields": 16,
+  "old_evidence_captures": 4,
+  "changed_files": {
+    "docs/research/interaction-library/batches/learning-control-deepening-evidence.jsonl": "c5d02998ee2de3c4fed8bc6439102a34b2fe94fcb174f7560e15b2babc392db4",
+    "docs/research/interaction-library/batches/eink-systems-evidence.jsonl": "3d148bde7ceb20c8a6646c43d3d1e6959e204fa4ba3044eb5af81a60b12b98c2",
+    "docs/research/interaction-library/batches/boox-controls-deepening-evidence.jsonl": "a3539284155bbcb7803fa51c066aaf4f998a6d2755e746412f3a8d5331e76e1f",
+    "docs/research/interaction-library/batches/ihuman-controls-deepening-evidence.jsonl": "32d77d9aa80388166b276104fc66860f3043dc8788c0115bd05089be638b83fb",
+    "docs/research/interaction-library/batches/children-coverage.csv": "abdd26d6e730c20fabd6bf91f865baff2c16e6cf2a122b18d01a78206456c35d",
+    "docs/research/interaction-library/batches/eink-systems-coverage.csv": "b23c229ebad74364d28f938a9f794c09ef3088cafba5b6b8d2ea343e6ef85b2d"
+  },
+  "audit": [
+    {
+      "kind": "flow",
+      "id": "F-M004-09",
+      "path": "docs/research/interaction-library/batches/eink-systems-coverage.csv",
+      "before": {
+        "flow_id": "F-M004-09",
+        "product_id": "M-004",
+        "task": "写笔记、改笔画、保留输出",
+        "depth": "D2",
+        "evidence_ids": "E-BOOX-16;E-BXCD-13",
+        "known_branches": "Exit保存并返回Notepad View；More内Save手动保存，两入口不合并；Page-帮助称不能撤销",
+        "gaps": "Home/切App/系统回收是否持久保存、断电写入、.note往返、删整本恢复未知",
+        "visual_status": "not_observed",
+        "hands_on": "false",
+        "case_path": "cases/M-004-boox-neoreader.md",
+        "checked_on": "2026-10-26"
+      },
+      "after": {
+        "flow_id": "F-M004-09",
+        "product_id": "M-004",
+        "task": "写笔记、改笔画、保留输出",
+        "depth": "D2",
+        "evidence_ids": "E-BOOX-16;E-BXCD-13;E-BXRD-11;E-BXRD-12",
+        "known_branches": "Exit保存回列表；More/Save手动保存，Page-不可撤销。当前帮助补页管理侧栏/全屏区别、最多新增5图层、全层擦除保留模板、套索跨层选择及移层；不据此倒填全部4.1.2控件。",
+        "gaps": "Home/切App/断电保存、.note回导、页/层/对象其他删除的确认与撤销未知；跨层选择是否含隐藏/锁定层、图层锁效果及新工具本机适用未核。",
+        "visual_status": "static_reference_only",
+        "hands_on": "false",
+        "case_path": "cases/M-004-boox-neoreader.md",
+        "checked_on": "2026-10-27"
+      }
+    },
+    {
+      "kind": "flow",
+      "id": "F-M004-10",
+      "path": "docs/research/interaction-library/batches/eink-systems-coverage.csv",
+      "before": {
+        "flow_id": "F-M004-10",
+        "product_id": "M-004",
+        "task": "手写转文字并保留录音线索",
+        "depth": "D2",
+        "evidence_ids": "E-BOOX-16;E-BOOX-02",
+        "known_branches": "识别文本、墨迹与录音属于不同数据；V4.1 Infinite Notes 是另一种画布，可用 Pin 定位。",
+        "gaps": "是否每次原位替换、录音与笔画逐时对齐、来电/锁屏中断、识别离线条件。",
+        "visual_status": "not_observed",
+        "hands_on": "false",
+        "case_path": "cases/M-004-boox-neoreader.md",
+        "checked_on": "2026-10-26"
+      },
+      "after": {
+        "flow_id": "F-M004-10",
+        "product_id": "M-004",
+        "task": "手写转文字并保留录音线索",
+        "depth": "D2",
+        "evidence_ids": "E-BOOX-16;E-BOOX-02",
+        "known_branches": "识别文本、墨迹与录音分开；More/Recorder标记与管理不等于笔画时间对齐。V4.1 Infinite Notes可双指拖画布、空白长按Pin并从三点改名/删；Smart Scribe帮助限部分机型。",
+        "gaps": "Smart Scribe/新套索识别的本机适用、原位替换/撤回、录音笔画对齐、锁屏/来电中断、语言包离线条件仍未知。",
+        "visual_status": "not_observed",
+        "hands_on": "false",
+        "case_path": "cases/M-004-boox-neoreader.md",
+        "checked_on": "2026-10-27"
+      }
+    },
+    {
+      "kind": "flow",
+      "id": "F-M029-01",
+      "path": "docs/research/interaction-library/batches/children-coverage.csv",
+      "before": {
+        "flow_id": "F-M029-01",
+        "product_id": "M-029",
+        "task": "单字到子集故事内容循环",
+        "depth": "D1",
+        "evidence_ids": "E-IHUM-01;E-IHUM-02;E-IHD-02;E-IHCD-01;E-IHCD-03",
+        "known_branches": "当前五步声明；2018版练界面仅静态选项/导航；作者示范建议不当实现",
+        "gaps": "现行选课、错答提示/重试、奖励/复习结算、故事解锁及退出恢复",
+        "visual_status": "static_reference_only",
+        "hands_on": "false",
+        "case_path": "cases/M-029-ihuman.md",
+        "checked_on": "2026-10-26"
+      },
+      "after": {
+        "flow_id": "F-M029-01",
+        "product_id": "M-029",
+        "task": "单字到子集故事内容循环",
+        "depth": "D1",
+        "evidence_ids": "E-IHUM-01;E-IHUM-02;E-IHD-02;E-IHCD-01;E-IHCD-03;E-IHLC-01;E-IHLC-02",
+        "known_branches": "当前五步声明；2018练界面仅静态；2020作者各述二字听音选择正常分支、雨字练/写辅助；不当现行阈值或连续观察",
+        "gaps": "当前选课/错答提示/重试/奖励/复习结算/故事解锁/退出恢复；2020材料平台构建未知且图片未核",
+        "visual_status": "static_reference_only",
+        "hands_on": "false",
+        "case_path": "cases/M-029-ihuman.md",
+        "checked_on": "2026-10-27"
+      }
+    },
+    {
+      "kind": "flow",
+      "id": "F-M029-02",
+      "path": "docs/research/interaction-library/batches/children-coverage.csv",
+      "before": {
+        "flow_id": "F-M029-02",
+        "product_id": "M-029",
+        "task": "调节游戏和跳过",
+        "depth": "D2",
+        "evidence_ids": "E-IHUM-02;E-IHCD-01;E-IHCD-02",
+        "known_branches": "2020官方回复关闭游戏与禁止跳过；3.0.1静态设置容器；重置进度回复仅表示考虑",
+        "gaps": "现行入口/验证失败、教学开关保存与课内生效、按孩子分别配置",
+        "visual_status": "static_official_images_only",
+        "hands_on": "false",
+        "case_path": "cases/M-029-ihuman.md",
+        "checked_on": "2026-10-26"
+      },
+      "after": {
+        "flow_id": "F-M029-02",
+        "product_id": "M-029",
+        "task": "调节游戏和跳过",
+        "depth": "D2",
+        "evidence_ids": "E-IHUM-02;E-IHCD-01;E-IHCD-02;E-IHLC-02",
+        "known_branches": "2020官方回复关闭游戏与禁止跳过；3.0.1设置容器；重置进度回复仅表示考虑；2020作者每日五字/强制任务是自身配置非默认",
+        "gaps": "现行入口/验证失败、教学开关保存与课内生效、按孩子分别配置；作者强制任务的具体开关和错误反馈未核",
+        "visual_status": "static_official_images_only",
+        "hands_on": "false",
+        "case_path": "cases/M-029-ihuman.md",
+        "checked_on": "2026-10-27"
+      }
+    },
+    {
+      "kind": "evidence_additional_capture",
+      "id": "E-BOOX-16",
+      "path": "docs/research/interaction-library/batches/eink-systems-evidence.jsonl",
+      "before": [],
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "existing_local_public_help_capture_reread_no_body_network_request",
+          "raw_work_path": "work/boox-controls-deepening/epaper-pc-articles.json",
+          "raw_sha256": "02e30182beee444963ce691bbec9523380dcf91000c32685e27bea33f08a2cd8",
+          "locator": "Article 10701578837268 full body, especially Page Manager/Layers/Lasso/Insert/More; actual images 10 and 13 only",
+          "archived_artifact": "artifacts/boox-reading-controls-deepening/source-notes.md",
+          "sha256": "49d6ffbbb7edc9937b3d66b5941d2a95eb47fb72d514071fe3ded09a13bf2dbe",
+          "hands_on": false,
+          "visual_observed": true,
+          "continuous_sequence": false,
+          "note": "原件采集2026-10-26；本地复读不是新版本或独立互证，help元数据不是固件发行日期。",
+          "visual_audit_path": "artifacts/boox-reading-controls-deepening/observed-images.json"
+        }
+      ]
+    },
+    {
+      "kind": "evidence_additional_capture",
+      "id": "E-BXCD-01",
+      "path": "docs/research/interaction-library/batches/boox-controls-deepening-evidence.jsonl",
+      "before": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "local_saved_category_index_reread_no_network",
+          "raw_work_path": "work/boox-controls-deepening/epaper-pc-articles.json",
+          "raw_sha256": "02e30182beee444963ce691bbec9523380dcf91000c32685e27bea33f08a2cd8",
+          "locator": "59 articles/14 sections, next_page=null; not Palma 2 model inventory",
+          "hands_on": false,
+          "visual_observed": false,
+          "archived_artifact": "artifacts/palma-controls-deepening/source-notes.md",
+          "sha256": "ae9ac4b859da5350e40a490fab0122bab465a14962ea9c8da1c0ee644f6d17ef"
+        }
+      ],
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "local_saved_category_index_reread_no_network",
+          "raw_work_path": "work/boox-controls-deepening/epaper-pc-articles.json",
+          "raw_sha256": "02e30182beee444963ce691bbec9523380dcf91000c32685e27bea33f08a2cd8",
+          "locator": "59 articles/14 sections, next_page=null; not Palma 2 model inventory",
+          "hands_on": false,
+          "visual_observed": false,
+          "archived_artifact": "artifacts/palma-controls-deepening/source-notes.md",
+          "sha256": "ae9ac4b859da5350e40a490fab0122bab465a14962ea9c8da1c0ee644f6d17ef"
+        },
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "existing_local_public_help_capture_reread_no_body_network_request",
+          "raw_work_path": "work/boox-controls-deepening/epaper-pc-articles.json",
+          "raw_sha256": "02e30182beee444963ce691bbec9523380dcf91000c32685e27bea33f08a2cd8",
+          "locator": "Existing 59-article inventory reused; selected ten article bodies read locally; not recaptured category",
+          "archived_artifact": "artifacts/boox-reading-controls-deepening/source-notes.md",
+          "sha256": "49d6ffbbb7edc9937b3d66b5941d2a95eb47fb72d514071fe3ded09a13bf2dbe",
+          "hands_on": false,
+          "visual_observed": false,
+          "continuous_sequence": false,
+          "note": "原件采集2026-10-26；本地复读不是新版本或独立互证，help元数据不是固件发行日期。"
+        }
+      ]
+    },
+    {
+      "kind": "evidence_additional_capture",
+      "id": "E-IHCD-01",
+      "path": "docs/research/interaction-library/batches/ihuman-controls-deepening-evidence.jsonl",
+      "before": [],
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "capture_method": "local_reread_of_2026-10-26_public_html_no_network",
+          "url": "https://apps.apple.com/cn/app/id1139733348",
+          "raw_work_path": "work/ihuman-controls-deepening/apple.html",
+          "raw_sha256": "5c19b57db4cf374704ecda7a85b0e1d243d4658800d5737434734a14ded6069f",
+          "locator": "五步学习/子集绘本/分阶与生活应用/家长管理/AI辅助及2020-05-04回复；只用于新目录，不宣称新版本快照",
+          "archived_artifact": "artifacts/ihuman-learning-controls-deepening/source-notes.md",
+          "sha256": "02dd9dcbd3738fb023e1828aa07207249003e9408b75339ca8c3875bcb5c7d7a",
+          "hands_on": false,
+          "visual_observed": false
+        }
+      ]
+    },
+    {
+      "kind": "evidence_additional_capture",
+      "id": "E-ILD-17",
+      "path": "docs/research/interaction-library/batches/learning-control-deepening-evidence.jsonl",
+      "before": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "anonymous_public_browser_help_model_selection",
+          "raw_work_path": "work/iflytek-video-controls-deepening/browser/04-t30pro-directory.json",
+          "raw_sha256": "0c97b1732308b7d30f6d9d016da33d58d666c83c3c26b00ef6c646f082dc04cb",
+          "archived_artifact": "artifacts/iflytek-video-controls-deepening/source-notes.md",
+          "sha256": "779fb67bc48194cf3ec6b38d09bd1a54eec7c5a9a9cc6cd46dc54c1b7aebc40e",
+          "note": "实际选择T30Pro，34功能标题；四条所选教程另立视频URL证据；不计产品实操",
+          "hands_on": false,
+          "artifact_hashes": {
+            "artifacts/iflytek-video-controls-deepening/04-t30pro-directory.json": "0c97b1732308b7d30f6d9d016da33d58d666c83c3c26b00ef6c646f082dc04cb",
+            "artifacts/iflytek-video-controls-deepening/04-t30pro-directory.png": "9c2656d1ff8f66556cab5146d2f3873375c817327629711cb8e7e395adfdb2c8",
+            "artifacts/iflytek-video-controls-deepening/video-samples.json": "ac833622b81ee6cddbfb82b7ff08e3eeba05563be0de2d29519afac83fdf2c97",
+            "artifacts/iflytek-video-controls-deepening/network-events.json": "f678e1ef6c8533b6dd70e6671676f8a75120a0d21c13c64762221de1bfa30973"
+          }
+        }
+      ],
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "anonymous_public_browser_help_model_selection",
+          "raw_work_path": "work/iflytek-video-controls-deepening/browser/04-t30pro-directory.json",
+          "raw_sha256": "0c97b1732308b7d30f6d9d016da33d58d666c83c3c26b00ef6c646f082dc04cb",
+          "archived_artifact": "artifacts/iflytek-video-controls-deepening/source-notes.md",
+          "sha256": "779fb67bc48194cf3ec6b38d09bd1a54eec7c5a9a9cc6cd46dc54c1b7aebc40e",
+          "note": "实际选择T30Pro，34功能标题；四条所选教程另立视频URL证据；不计产品实操",
+          "hands_on": false,
+          "artifact_hashes": {
+            "artifacts/iflytek-video-controls-deepening/04-t30pro-directory.json": "0c97b1732308b7d30f6d9d016da33d58d666c83c3c26b00ef6c646f082dc04cb",
+            "artifacts/iflytek-video-controls-deepening/04-t30pro-directory.png": "9c2656d1ff8f66556cab5146d2f3873375c817327629711cb8e7e395adfdb2c8",
+            "artifacts/iflytek-video-controls-deepening/video-samples.json": "ac833622b81ee6cddbfb82b7ff08e3eeba05563be0de2d29519afac83fdf2c97",
+            "artifacts/iflytek-video-controls-deepening/network-events.json": "f678e1ef6c8533b6dd70e6671676f8a75120a0d21c13c64762221de1bfa30973"
+          }
+        },
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "anonymous_public_browser_help_model_selection",
+          "raw_work_path": "work/iflytek-planning-reading-deepening/browser/02-t30pro-directory.json",
+          "raw_sha256": "4cab13424e2f281e1afba19e757a40635f559b0bb472c98288237e4fcd05df8a",
+          "archived_artifact": "artifacts/iflytek-planning-reading-deepening/source-notes.md",
+          "sha256": "5cebc6b696f39b969b919d8d36dc637022cfd6195e64e238754ebd49f7fbb650",
+          "note": "再选T30Pro并打开四条新的教程；样本视频另E-IFPR-01至04，不计产品操作",
+          "hands_on": false,
+          "artifact_hashes": {
+            "artifacts/iflytek-planning-reading-deepening/02-t30pro-directory.json": "4cab13424e2f281e1afba19e757a40635f559b0bb472c98288237e4fcd05df8a",
+            "artifacts/iflytek-planning-reading-deepening/02-t30pro-directory.png": "d370ec872f4012f2870650c3570335f5c63611c284ca91190d3cc71d0376e8ec",
+            "artifacts/iflytek-planning-reading-deepening/video-samples.json": "147a0af2e098c02dd25a22f8f0054663484527259fa63cd2c36a926ade818bcc",
+            "artifacts/iflytek-planning-reading-deepening/network-events.json": "cc8a62b2e8af0275f753a764f5f1b222b27b9daa158eb104fe761fda4a15f907",
+            "artifacts/iflytek-planning-reading-deepening/commands.json": "b0ec66bf1d0aaae42e3e13f016d6f012608f704d408fffd4acfbaebcc0fdc7c1"
+          }
+        }
+      ]
+    }
+  ]
+}

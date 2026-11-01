@@ -1,0 +1,42 @@
+An overview of the accessibility tools and settings available to help create a comfortable and inclusive reading experience.
+Kobo eReaders don’t rely on colour alone to show important information or actions.
+We also use:
+Clear text labels for buttons.
+Icons and messages for alerts.
+Filled-in icons and bold text to show which item is selected.
+Example: When the Home tab is selected, it turns red but also shows a filled in icon, bold label, and a top bar so its easy to recognize, even without seeing the colour.
+Kobo offers several ways to improve visual comfort choices:
+Dark Mode
+Adjustable fonts, including OpenDyslexic .
+Adjusting front size, margins, and line spacing.
+Comfort light Pro settings
+Large Print Mode for easier reading navigation
+Example: You can choose from serif or sans-serif fonts, increase font size, or reduce blue light at night using the Auto setting under Natural Light.
+Listening to Kobo Audiobooks is flexible and accessible:
+Connect to Bluetooth headphones or speakers
+Adjust volume and playback speed, play, pause, rewind, or fast forward
+Example: Connect your Bluetooth headphones, adjust the volume to your liking and choose a playback speed that suits your pace. This makes listening more comfortable and accessible.
+Kobo eReaders are designed for simple and comfortable use:
+Large, Touch friendly icons
+Tactile, visible buttons that are placed within easy reach and they are easy to feel and press
+Example: The Kobo eReader has a physical, recessed power on button at the back of the eReader, with an engraved power icon.
+Kobo eReaders are designed to not require extra force:
+Touch the screen to open eBook pages, select items and more.
+Kobo Devices are responsive to light touches.
+The touch screen responds to gentle gestures
+Example: You can turn pages with a gentle tap, swipe smoothly on the touchscreen, and use buttons that are easy to reach with comfort and ease.
+Kobo eReaders use e-ink screens, designed to minimize flashing.
+Screen refresh happens only when needed.
+We minimize fast, repetitive, or high-contrast changes.
+Brightness levels can also be adjusted to suit your needs.
+Example: This helps reduce the risk of triggering photosensitive reactions.
+Your privacy is important.
+Kobo only collects the data needed to support accessibility features. We follow local privacy laws, and full details are available in our Privacy Policy You can also find the policy in your eReader’s Settings menu.
+Kobo eReaders give you time to interact at your own pace:
+No time limits when entering information.
+You can set your sleep timer from 5 to 60 minutes or turn it off completely .
+Example: This ensures you’re never rushed while reading or navigating.
+Kobo eReaders work with common assistive tools:
+Built-in screen reader for menus and books
+Large Print Mode
+If you have questions about using accessibility settings on your Kobo eReader, you can browse more with our Kobo Help articles or contact our Customer Care Team.

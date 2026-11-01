@@ -1,0 +1,151 @@
+{
+  "checked_on": "2026-10-27",
+  "scope": "M056 owned formal/work files and unchanged referenced raw; no master/old batch freeze",
+  "files": [
+    {
+      "path": "docs/research/interaction-library/cases/M-056-xiaoyuan-hardware.md",
+      "bytes": 16395,
+      "sha256": "b28c96eeffc18ed03881871cedaa780697013ade75e49c15a82384eb627005cf"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/xiaoyuan-hardware-controls-deepening-coverage.csv",
+      "bytes": 107,
+      "sha256": "aa0cf671b21fa0390e9b0cfb58c6cecf3a0d7df66eaad894707f17ea224f6025"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/xiaoyuan-hardware-controls-deepening-evidence.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/xiaoyuan-hardware-controls-deepening-inventory.csv",
+      "bytes": 9411,
+      "sha256": "882c7bd92b1d561448575d84d2d01b2e97cc8a5de54eab0964f18650f7d717a1"
+    },
+    {
+      "path": "docs/research/interaction-library/artifacts/xiaoyuan-hardware-controls-deepening/source-notes.md",
+      "bytes": 4147,
+      "sha256": "b23dd9adc9131e36885fe67b7d61f85dbfdffad09b471c5e5fac119cc032c14c"
+    },
+    {
+      "path": "work/xiaoyuan-hardware-controls-deepening/HANDOFF.md",
+      "bytes": 7390,
+      "sha256": "b6054af7a777835fdc533340ffbfd253cbd3b6c02f2b273d73ca2cfa5ce82d4a"
+    },
+    {
+      "path": "work/xiaoyuan-hardware-controls-deepening/baseline.json",
+      "bytes": 37628,
+      "sha256": "c5b9defda179f19e6f42ba408f129943025d10aa03ba629bd888b3899b8d974d"
+    },
+    {
+      "path": "work/xiaoyuan-hardware-controls-deepening/build.py",
+      "bytes": 21077,
+      "sha256": "5c21a8d1a653f22a8dba7a827a5436b60232ce97ff381c6a2ea0a82da4b75ffd"
+    },
+    {
+      "path": "work/xiaoyuan-hardware-controls-deepening/capture.py",
+      "bytes": 1450,
+      "sha256": "21e1e6be1036aac615a91392b43180f3b6715fbd39241e91bfc157a580d6ec35"
+    },
+    {
+      "path": "work/xiaoyuan-hardware-controls-deepening/case-before.md",
+      "bytes": 12792,
+      "sha256": "1c146355b2debb1f8dfd2d0516b1c3302ec72006a3a785a946e4c2cd5a190875"
+    },
+    {
+      "path": "work/xiaoyuan-hardware-controls-deepening/case.diff",
+      "bytes": 18880,
+      "sha256": "5ff05aa531b31a4f02ac2abc0a32b9a874054baf2e77c697df3902ddd31e778f"
+    },
+    {
+      "path": "work/xiaoyuan-hardware-controls-deepening/check.py",
+      "bytes": 5169,
+      "sha256": "a24bd3158a1fa82a4fd5572758f1471f8bac143e5f3842c054a22d60af521547"
+    },
+    {
+      "path": "work/xiaoyuan-hardware-controls-deepening/coverage-before.json",
+      "bytes": 2607,
+      "sha256": "51d1c4f8f9a3fa1df411c53a3762ce50b158bb6d4dd2198ea9db5f624f820a0f"
+    },
+    {
+      "path": "work/xiaoyuan-hardware-controls-deepening/discovery.json",
+      "bytes": 4447,
+      "sha256": "6e7e7f0a18c94e28a66e97a0315e6eb84b76f6f8442130e3039320123e2dbbef"
+    },
+    {
+      "path": "work/xiaoyuan-hardware-controls-deepening/evidence-before.json",
+      "bytes": 8985,
+      "sha256": "22793189859c1d2fccb4b0a07ed86147c4462a570da2b843c45f1c085b3042da"
+    },
+    {
+      "path": "work/xiaoyuan-hardware-controls-deepening/existing-coverage-updates.json",
+      "bytes": 6058,
+      "sha256": "db0628ffb441f5a4a452f263124d354d643380fb69d61c1cfe44d6aecee07e08"
+    },
+    {
+      "path": "work/xiaoyuan-hardware-controls-deepening/existing-evidence-additional-captures.json",
+      "bytes": 3863,
+      "sha256": "a739d5cb2bf473476eaa55512f334460e748a9af8f13e58899c73eb3f90fc2c5"
+    },
+    {
+      "path": "work/xiaoyuan-hardware-controls-deepening/existing-evidence-field-updates.json",
+      "bytes": 1505,
+      "sha256": "079fafd17fa1eaf42e70d24929891703d9d2353a4a881d9648327e8b18809f76"
+    },
+    {
+      "path": "work/xiaoyuan-hardware-controls-deepening/finish.py",
+      "bytes": 4365,
+      "sha256": "22beda4266ac3f040bc61f088a0215579705b73555951c7b16b10314ee3cad78"
+    },
+    {
+      "path": "work/xiaoyuan-hardware-controls-deepening/freeze.py",
+      "bytes": 1050,
+      "sha256": "cea31be39be8ffe8a3ce50ca055480df6a6d6b0ab5cf3e428d537e559a79872c"
+    },
+    {
+      "path": "work/xiaoyuan-hardware-controls-deepening/frontend-locators.json",
+      "bytes": 14611,
+      "sha256": "1d7b7f2c15a9f9970fbd875b7e91832cdddbc41e6a5a8149d953c5b92aa4ca4a"
+    },
+    {
+      "path": "work/xiaoyuan-hardware-controls-deepening/parent-store.html",
+      "bytes": 542346,
+      "sha256": "eb9a6caaa2efc25caaf05036db03983050e21eef75fcd9e42ec2e5c23921de2d"
+    },
+    {
+      "path": "work/xiaoyuan-hardware-controls-deepening/parent-store.html.capture.json",
+      "bytes": 535,
+      "sha256": "d8b318c6dcc2289d2f0ab4958800aab21ae073a74fa2c552900e12b7291b7a99"
+    },
+    {
+      "path": "work/xiaoyuan-hardware-controls-deepening/parent-store.txt",
+      "bytes": 11500,
+      "sha256": "947441fb6a9ad650cda0e38f13a394adfd8548c59ed8b006f1d4b0c6efb44d8b"
+    },
+    {
+      "path": "work/xiaoyuan-hardware-controls-deepening/store-version-index.json",
+      "bytes": 6545,
+      "sha256": "c8bb7acba6d762d44c9f0bde52e77cc68f226c0b99272ae6b561f1404d96e892"
+    },
+    {
+      "path": "work/learning-hardware/official-main.js",
+      "bytes": 474520,
+      "sha256": "f3e9acdba2af4c5de5cd342a81d0300d57c5748d868c75338b98d1f112d092ec"
+    },
+    {
+      "path": "work/learning-hardware/official-main-decoded.txt",
+      "bytes": 270929,
+      "sha256": "54ef8bd4d4b1f10019fe4bdc253aa829900ed21b3ea733f94bb36597bc9b7ee7"
+    },
+    {
+      "path": "work/learning-hardware/parent-privacy-body.html",
+      "bytes": 45366,
+      "sha256": "cda62866625f96c6bffbfb25a7c095dbf788e5c1621f47cd118ddc1a161a3b01"
+    },
+    {
+      "path": "work/learning-hardware/parent-privacy-body.txt",
+      "bytes": 39028,
+      "sha256": "a49e577d776adee680ae5a98a4d6c65b2a3721adf5eb8c06c35936ec53fba127"
+    }
+  ]
+}

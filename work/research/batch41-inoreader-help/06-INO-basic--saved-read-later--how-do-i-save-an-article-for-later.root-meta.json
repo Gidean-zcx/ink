@@ -1,0 +1,21 @@
+{
+  "order": 6,
+  "entry_id": "INO-basic--saved-read-later--how-do-i-save-an-article-for-later",
+  "title": "How do I save an article for later?",
+  "url": "https://www.inoreader.com/help/basic/saved-read-later/how-do-i-save-an-article-for-later",
+  "checked_on": "2026-10-27",
+  "http_status": 200,
+  "final_url": "https://www.inoreader.com/help/basic/saved-read-later/how-do-i-save-an-article-for-later",
+  "acquisition": "one_anonymous_normal_GET",
+  "raw_path": "work/research/batch41-inoreader-help/06-INO-basic--saved-read-later--how-do-i-save-an-article-for-later.html",
+  "headers_path": "work/research/batch41-inoreader-help/06-INO-basic--saved-read-later--how-do-i-save-an-article-for-later.headers.json",
+  "raw_sha256": "6734fc22c99afc3e75b3914b2e559afe2bde6e5539c535c3e76694912c16484e",
+  "bytes": 141940,
+  "status": "body_obtained",
+  "body_status": "extracted_not_yet_root_read",
+  "body_path": "work/research/batch41-inoreader-help/06-INO-basic--saved-read-later--how-do-i-save-an-article-for-later.body.txt",
+  "body_sha256": "4e6fe798b66fda3ad91ca5eff8ff7709e134affa71435337e2b75167bdd5e33c",
+  "body_chars": 59,
+  "links": [],
+  "images": []
+}

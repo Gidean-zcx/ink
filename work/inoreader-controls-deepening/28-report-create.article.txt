@@ -1,0 +1,13 @@
+How do I create an Intelligence report?
+Select multiple articles, click Create Intelligence report, and choose a predefined or custom prompt.
+Related questions
+What are Intelligence reports?
+What can Intelligence reports be used for?
+Where can I find saved Intelligence reports?
+Can I search through Intelligence reports?
+Can I share Intelligence reports?
+What are automated reports?
+How do I create an automated report?
+How can I create a weekly overview of a monitored topic?
+Should I use an Intelligence report or an email digest?
+Are Intelligence reports available in all plans?

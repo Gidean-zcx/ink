@@ -1,0 +1,15 @@
+{
+  "status": "passed",
+  "new_evidence": 6,
+  "new_flows": 1,
+  "case_flows": {
+    "M-022": 3,
+    "M-023": 6
+  },
+  "old_rows_for_root": 6,
+  "new_visuals": 0,
+  "old_vocab_batches_unchanged": true,
+  "hands_on": false,
+  "master_written": false,
+  "product_code_changed": false
+}

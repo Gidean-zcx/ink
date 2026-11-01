@@ -1,0 +1,107 @@
+=== PDF PAGE 26 ===
+Help Guide
+Digital Paper System
+DPT-RP1/DPT-CP1
+Transferring a document to a computer
+Use the Digital Paper App to transfer documents.
+Note
+If the Wi-Fi function or Bluetooth function is turned off or the USB cable is removed during the transfer, the data may be
+corrupted.
+The maximum file size for transfers is 1 GB per file.
+Related Topic
+Connecting via Wi-Fi/Connecting using a USB cable
+Connecting via Bluetooth
+Transferring a document from a computer
+Syncing the Digital Paper with a computer
+Creating a back up
+4-597-942-19(1)
+Copyright 2016 Sony Corporation
+Connect the computer to the Digital Paper.
+1
+Launch the Digital Paper App on the computer.
+2
+Select a file/folder on the Digital Paper via the Digital Paper App.
+Multiple files/folders can be selected and transferred together.
+3
+Click 
+
+(Transfer documents to computer), and select a folder on your computer (transfer destination).
+4
+26
+
+=== PDF PAGE 27 ===
+Help Guide
+Digital Paper System
+DPT-RP1/DPT-CP1
+Creating a back up
+In preparation for the unlikely event that the data on your Digital Paper is accidentally erased or that a malfunction
+causes the data to be deleted or corrupted, be sure to back up all important content to your computer.
+Note
+If the Wi-Fi function or Bluetooth function is turned off or the USB cable is removed during the transfer, the data may be
+corrupted.
+The maximum file size for transfers is 1 GB per file.
+Related Topic
+Connecting via Wi-Fi/Connecting using a USB cable
+Connecting via Bluetooth
+Transferring a document to a computer
+Syncing the Digital Paper with a computer
+4-597-942-19(1)
+Copyright 2016 Sony Corporation
+Connect the computer to the Digital Paper.
+1
+Launch the Digital Paper App on the computer.
+2
+Click [Folders], and open the folder labeled [System storage] at the top of the Digital Paper.
+3
+Select all of the folders and documents within the [System storage] folder.
+4
+Click 
+
+(Transfer documents to computer), and select a folder on your computer (transfer destination).
+5
+27
+
+=== PDF PAGE 28 ===
+Help Guide
+Digital Paper System
+DPT-RP1/DPT-CP1
+Syncing the Digital Paper with a computer
+Using the Digital Paper App, you can sync PDF files within in a specific folder on your computer (a) with those within a
+specific folder on the Digital Paper (b). Content that is added, changed, or deleted is done so on your computer and the
+Digital Paper.
+To update the contents of the synced folder
+Connect the computer and the Digital Paper.
+1
+Launch the Digital Paper App on the computer.
+2
+On the Digital Paper App, select the folder you want to sync and click 
+ (Set sync folder).
+3
+On the folder selection screen, select the folders of the computer.
+When the sync settings are successful, the corresponding folder/document/note icon changes.
+4
+Click 
+ (Sync).
+The specified folder is synced with the Digital Paper.
+5
+28
+
+=== PDF PAGE 29 ===
+Click 
+ (Sync).
+To delete the sync settings
+On the Digital Paper App, right-click the folder configured with the sync settings and click [Delete sync setting].
+Hint
+If separately editing the same PDF file on your computer and the Digital Paper, the PDF file on the Digital Paper is synced on the
+computer and the PDF file on the computer is saved with a different name.
+Even if you delete the sync settings, the folders and files saved on the Digital Paper and computer are not deleted.
+Note
+Only the designated folders — and only the PDF files in those folders — are synced. Folders with no PDF files are not synced.
+Up to 20 folders can be synced.
+You cannot configure or delete the sync settings while syncing.
+Related Topic
+Connecting via Wi-Fi/Connecting using a USB cable
+Connecting via Bluetooth
+4-597-942-19(1)
+Copyright 2016 Sony Corporation
+29

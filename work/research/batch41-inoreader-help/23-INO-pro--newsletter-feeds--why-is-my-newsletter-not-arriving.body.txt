@@ -1,0 +1,1 @@
+Check that the newsletter publisher or your email forwarding rule is using the exact email address of your newsletter feed. Make sure you’re still following the feed in Inoreader and check whether you need to confirm your subscription with the publisher.

@@ -1,0 +1,34 @@
+[
+  {
+    "name": "reading-static.png",
+    "url": "https://cdn.shopify.com/s/files/1/0726/1221/7115/files/ecom-no-replace-dgQy31jzjAic-ft-v1.png?v=1731546398",
+    "status": 200,
+    "bytes": 318,
+    "raw_work_path": "work/bigme-controls-deepening/raw/reading-static.png",
+    "raw_sha256": "848bac86ac3d4cb8e0425633792fdfbd41ee86597866bfe821502ee7d1b65302"
+  },
+  {
+    "name": "reading-settings.png",
+    "url": "https://cdn.shopify.com/s/files/1/0629/1311/8387/files/64.png?v=1735379922",
+    "status": 200,
+    "bytes": 2808,
+    "raw_work_path": "work/bigme-controls-deepening/raw/reading-settings.png",
+    "raw_sha256": "f48d95678b79f9c9b0ae5716fd652e3c71a25bfc57983302e60bc967abbc790e"
+  },
+  {
+    "name": "tts-static.png",
+    "url": "https://cdn.shopify.com/s/files/1/0726/1221/7115/files/ecom-no-replace-nwxwEq4CSCic-ft-v3.png?v=1731546783",
+    "status": 200,
+    "bytes": 866,
+    "raw_work_path": "work/bigme-controls-deepening/raw/tts-static.png",
+    "raw_sha256": "ee1b483b5f461a47704ac018080567c117f23121dcbee631d5d02f5bbeaf7276"
+  },
+  {
+    "name": "annotations.png",
+    "url": "https://cdn.shopify.com/s/files/1/0629/1311/8387/files/65.png?v=1735380046",
+    "status": 200,
+    "bytes": 1405,
+    "raw_work_path": "work/bigme-controls-deepening/raw/annotations.png",
+    "raw_sha256": "e2ce66112bed628694f29b57e2ad9f71c17619f12cf862422ea6c5f191cd2003"
+  }
+]

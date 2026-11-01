@@ -1,0 +1,44 @@
+{
+  "coverage.csv": {
+    "total": 899,
+    "new": 11,
+    "changed": [
+      "F-M015-26"
+    ]
+  },
+  "evidence.jsonl": {
+    "total": 1517,
+    "new": 15,
+    "changed": [
+      "E-RWCD-17"
+    ]
+  },
+  "requirements_unchanged": true,
+  "raw_hashes": {
+    "work/research/batch35-readwise/raw/README.md": "4f4e715c65aa4c68044e588b983ff57ae02b3db2502d2bb8a87bf0d05bc82dd0",
+    "work/research/batch35-readwise/raw/skills/readwise-mcp/SKILL.md": "a72340a2f73f9e10b81551b485be88de4322c22a92b105bf8878e94f63213994",
+    "work/research/batch35-readwise/raw/skills/readwise-cli/SKILL.md": "629f39edbf8e4d342df867f9ad5cafd7e701fc6cfcd888e0085b574e1ff32a4e",
+    "work/research/batch35-readwise/raw/skills/triage/SKILL.md": "24c0f39736de206369693be156318e16b02e5ea32bc656becff5f2fb82110c76",
+    "work/research/batch35-readwise/raw/skills/feed-catchup/SKILL.md": "eb1dff932e2f6a01f100163f6b3e57f5b2a04733e849eb3d42625e9e855ba9ad",
+    "work/research/batch35-readwise/raw/skills/quiz/SKILL.md": "2a7e1214cd591c40484e7a0e749df48fbfbcc6754cbadc8d5dbeae1660e184bd",
+    "work/research/batch35-readwise/raw/skills/build-persona/SKILL.md": "18fdd45d7c34919a5f8ae44ce55e5fdeb7bf08bae789ae7ef4138f1943aea0a1",
+    "work/research/batch35-readwise/raw/skills/reader-recap/SKILL.md": "1034232404d6ba9754dca6d4c745271421539054a199df0d0574a6c1f738b7ef",
+    "work/research/batch35-readwise/raw/skills/book-review/SKILL.md": "0d9375569eb113b6782c7c314420e9b7b5670d245fdf2a3cf984265f4b28a392",
+    "work/research/batch35-readwise/raw/skills/highlight-graph/SKILL.md": "084c3861014f24374d51a0c04cce7f725e5e27d007d35d2944b7681829b0be52",
+    "work/research/batch35-readwise/raw/skills/now-reading-page/SKILL.md": "c92f7e1662c6ab7e5af2cf5c4474fc5b3171a2dc7d8ccfc97b5f1a8cfd4a374b",
+    "work/research/batch35-readwise/raw/skills/surprise-me/SKILL.md": "6d99a54d0da2f7dce18b249c34b9ee0e5e5382462f52be1f1a3db39bfbc71ac3",
+    "work/research/batch35-readwise/web-tool-docs.json": "e0385b7c9ce895e2809cc18a817b391323e39c73085595cc5de189e1f65ea293",
+    "work/research/batch35-xiaoyuan/original-review.html": "3ed3699d72176ef717120a3e1db509a0df1d0155022a10a424923f697b2f1ffc",
+    "work/research/batch35-xiaoyuan/original-review.txt": "b9d4ac1a02e527c1fd16836a4d8098b7b7cbc81bb06a0d1208db6771b0af2c53",
+    "work/research/batch35-xiaoyuan/followup-review.html": "6e7a258dd475f7996bec1f3efa681992dc126ae64c816c436e76a79df513d8f6",
+    "work/research/batch35-xiaoyuan/followup-review.txt": "a7f593de8c5d6ddb486167f1e830db9382506c768ab6d68121db88f419e96242"
+  },
+  "artifact_hashes": {
+    "docs/research/interaction-library/artifacts/readwise-ai-workflows/source-notes.md": "151f5c756ce365487065045a89ee8949fab179285bc34c154cfe6788cb11ca9b",
+    "docs/research/interaction-library/artifacts/xiaoyuan-historical-learning/source-notes.md": "4a1d64ffbde54b15edc987a40f4290e235f4d85d4e74a37382f660ac29e935c0",
+    "docs/research/interaction-library/artifacts/xiaoyuan-historical-learning/clip-1-4.00s.png": "aa2f03c19a61fc600d8c81e2d324b91070e36e36d43d3c7f109317a992d97d56",
+    "docs/research/interaction-library/artifacts/xiaoyuan-historical-learning/clip-2-4.00s.png": "a905ef17afdb6ecf1e46e1e679a9d5f5c84e542660cd6043348658c3576e0527",
+    "docs/research/interaction-library/artifacts/xiaoyuan-historical-learning/clip-3-4.00s.png": "e110e09d23ea57a307bf1927676051d9706dadcac620455fecb2cbb256197a44"
+  },
+  "all_new_flows_D2_no_product_operation": true
+}

@@ -1,0 +1,14 @@
+{
+  "status": "PASS",
+  "check_docs_exit": 0,
+  "markdown_files": 197,
+  "local_links_checked": 1391,
+  "errors": [],
+  "csv_links": 70,
+  "csv_files": 70,
+  "csv_rows": 6946,
+  "git_diff_check_exit": 0,
+  "requirements_unchanged": true,
+  "goal_status": "active",
+  "all_products_partial": true
+}

@@ -1,0 +1,314 @@
+[
+  {
+    "path": "/home/workspace/reader/work/mudita-controls-deepening/quick-start.html",
+    "url": "https://mudita.com/products/phones/mudita-kompakt/quick-start/",
+    "status": 200,
+    "sha256": "de75185ec25f97abbaf5b75ff2188ebd2f30abd3d32e6db84928ca5c473793d8",
+    "bytes": 244926,
+    "relative_raw_path": "work/mudita-controls-deepening/quick-start.html"
+  },
+  {
+    "path": "/home/workspace/reader/work/mudita-controls-deepening/support-index.html",
+    "url": "https://support.mudita.com/en/support/solutions/77000209773",
+    "status": 200,
+    "sha256": "440a851942b91dd6cb5bf886c63186a60dcc524f8565077294cca5b0d1dc1bce",
+    "bytes": 165307,
+    "relative_raw_path": "work/mudita-controls-deepening/support-index.html"
+  },
+  {
+    "path": "/home/workspace/reader/work/mudita-controls-deepening/release-1.6.html",
+    "url": "https://support.mudita.com/en/support/solutions/articles/77000598634-muditaos-k-1-6",
+    "status": 200,
+    "sha256": "784cbfff82c8f7c7c3c5d1ee2bf05d260fd71cf15914b17f94b77bf61dc2086a",
+    "bytes": 323805,
+    "relative_raw_path": "work/mudita-controls-deepening/release-1.6.html"
+  },
+  {
+    "path": "/home/workspace/reader/work/mudita-controls-deepening/manual.pdf",
+    "url": "https://assets.ctfassets.net/isxmxtc67n72/3biBEzYwk8UjSapgvMB461/b6ade0485fba2625382f44aca0fd0b51/ENG_Mudita_Kompakt_Manual_Online_04.pdf",
+    "status": 200,
+    "sha256": "2e72d237dd063b30bc18d325c4fcfcbd69ce1f62c864ed7c878429a7b7a9801e",
+    "bytes": 709163,
+    "relative_raw_path": "work/mudita-controls-deepening/manual.pdf"
+  },
+  {
+    "path": "/home/workspace/reader/work/mudita-controls-deepening/update.html",
+    "url": "https://support.mudita.com/en/support/solutions/articles/77000579066-how-to-do-system-updates-on-mudita-kompakt",
+    "status": 200,
+    "sha256": "b1e00169a08d138299230be1cbd284bcf1524c458b94d00009c2c8b725a8b993",
+    "bytes": 319391,
+    "relative_raw_path": "work/mudita-controls-deepening/update.html"
+  },
+  {
+    "path": "/home/workspace/reader/work/mudita-controls-deepening/factory-reset.html",
+    "url": "https://support.mudita.com/en/support/solutions/articles/77000579068-how-to-do-a-factory-reset-on-mudita-kompakt",
+    "status": 200,
+    "sha256": "91c0ab650aa9efed41808cd6870676fc8e15d90bcfd8ddbffbb5514bf8f6845d",
+    "bytes": 317952,
+    "relative_raw_path": "work/mudita-controls-deepening/factory-reset.html"
+  },
+  {
+    "path": "/home/workspace/reader/work/mudita-controls-deepening/release-1.6.pdf",
+    "url": "https://support.mudita.com/helpdesk/attachments/77279297918",
+    "status": 200,
+    "sha256": "0667012d506810e4972a53d8e8c62c43a9e744fd4b55ea37cbb91a8d05fba3d9",
+    "bytes": 122817,
+    "relative_raw_path": "work/mudita-controls-deepening/release-1.6.pdf"
+  },
+  {
+    "path": "/home/workspace/reader/work/mudita-controls-deepening/how-to-index.html",
+    "url": "https://support.mudita.com/en/support/solutions/folders/77000329481",
+    "status": 200,
+    "sha256": "bcf3db1f1f91e754cf0c76fbbdf5e2a079f39ddd2c6a5a3b6b3913cd78b3dd5c",
+    "bytes": 163358,
+    "relative_raw_path": "work/mudita-controls-deepening/how-to-index.html"
+  },
+  {
+    "path": "/home/workspace/reader/work/mudita-controls-deepening/center-index.html",
+    "url": "https://support.mudita.com/en/support/solutions/folders/77000330324",
+    "status": 200,
+    "sha256": "f685dc363cbd09bf78e06defd3bd9e1e95933d637485c180ffc556b5e1b57cfa",
+    "bytes": 162398,
+    "relative_raw_path": "work/mudita-controls-deepening/center-index.html"
+  },
+  {
+    "path": "/home/workspace/reader/work/mudita-controls-deepening/faq-index.html",
+    "url": "https://support.mudita.com/en/support/solutions/folders/77000330093",
+    "status": 200,
+    "sha256": "02e2e4e880de3248e148f72cbd1e53b48d0e9e39b6dfbd541298953140350bcf",
+    "bytes": 167280,
+    "relative_raw_path": "work/mudita-controls-deepening/faq-index.html"
+  },
+  {
+    "path": "/home/workspace/reader/work/mudita-controls-deepening/backup.html",
+    "url": "https://support.mudita.com/en/support/solutions/articles/77000579156-how-to-create-and-restore-mudita-kompakt-data-backups-with-mudita-center",
+    "status": 200,
+    "sha256": "33b6ee6fc7f281996e43bf75ecce905eb914d19a52d6159b7edb9d33cd03ee13",
+    "bytes": 319237,
+    "relative_raw_path": "work/mudita-controls-deepening/backup.html"
+  },
+  {
+    "path": "/home/workspace/reader/work/mudita-controls-deepening/apps.html",
+    "url": "https://support.mudita.com/en/support/solutions/articles/77000577356-does-mudita-kompakt-support-third-party-apps-",
+    "status": 200,
+    "sha256": "d2c31681f6b58ce29ae30f85a4eb6f220543321b3fe64bb034bb5d1a3a5f6049",
+    "bytes": 322324,
+    "relative_raw_path": "work/mudita-controls-deepening/apps.html"
+  },
+  {
+    "path": "/home/workspace/reader/work/mudita-controls-deepening/install.html",
+    "url": "https://support.mudita.com/en/support/solutions/articles/77000595285-installing-third-party-apps-via-mudita-center",
+    "status": 200,
+    "sha256": "b30940a2618f6ba6f0ff1167812c3c116e8b12605f840707aae45d3ec6f7808b",
+    "bytes": 320729,
+    "relative_raw_path": "work/mudita-controls-deepening/install.html"
+  },
+  {
+    "path": "/home/workspace/reader/work/mudita-controls-deepening/bootloop.html",
+    "url": "https://support.mudita.com/en/support/solutions/articles/77000586371-what-to-do-when-the-mudita-kompakt-is-stuck-in-a-loop-when-it-starts-up-",
+    "status": 200,
+    "sha256": "10efa28640bb7a689ebf9d05ec80907f2c6d48bd15d5285b1f3267aa66d26adc",
+    "bytes": 318199,
+    "relative_raw_path": "work/mudita-controls-deepening/bootloop.html"
+  },
+  {
+    "path": "/home/workspace/reader/work/mudita-controls-deepening/quick-start-data.json",
+    "url": "https://mudita.com/page-data/products/phones/mudita-kompakt/quick-start/page-data.json",
+    "status": 200,
+    "sha256": "821e7777161484b720bda6b7254d46abb9e947e93c9f49fe60ef730194f970c6",
+    "bytes": 78728,
+    "relative_raw_path": "work/mudita-controls-deepening/quick-start-data.json"
+  },
+  {
+    "path": "/home/workspace/reader/work/mudita-controls-deepening/directories/77000333478.html",
+    "url": "https://support.mudita.com/en/support/solutions/folders/77000333478",
+    "status": 200,
+    "sha256": "90aa403b58fc5f0f411af07259e6648594042508dc8ca5c8c564450d5c8b23a8",
+    "bytes": 163182,
+    "relative_raw_path": "work/mudita-controls-deepening/directories/77000333478.html"
+  },
+  {
+    "path": "/home/workspace/reader/work/mudita-controls-deepening/directories/77000333479.html",
+    "url": "https://support.mudita.com/en/support/solutions/folders/77000333479",
+    "status": 200,
+    "sha256": "9327ddf2e15f87ec63b7186712ae67faef467c1e6599ead2df8102018af045fe",
+    "bytes": 163485,
+    "relative_raw_path": "work/mudita-controls-deepening/directories/77000333479.html"
+  },
+  {
+    "path": "/home/workspace/reader/work/mudita-controls-deepening/directories/77000333480.html",
+    "url": "https://support.mudita.com/en/support/solutions/folders/77000333480",
+    "status": 200,
+    "sha256": "7b502af8b869b50825cc4fb5e51c6e9f98b87800d3b2a99bcb01a8a6acbb0a8c",
+    "bytes": 163659,
+    "relative_raw_path": "work/mudita-controls-deepening/directories/77000333480.html"
+  },
+  {
+    "path": "/home/workspace/reader/work/mudita-controls-deepening/directories/77000333481.html",
+    "url": "https://support.mudita.com/en/support/solutions/folders/77000333481",
+    "status": 200,
+    "sha256": "dc840fceb327d16f56ff542c26e0656ef3f7a8adb9f9662caaf9dffcd55ed6d4",
+    "bytes": 163212,
+    "relative_raw_path": "work/mudita-controls-deepening/directories/77000333481.html"
+  },
+  {
+    "path": "/home/workspace/reader/work/mudita-controls-deepening/directories/77000333482.html",
+    "url": "https://support.mudita.com/en/support/solutions/folders/77000333482",
+    "status": 200,
+    "sha256": "4dd890f1bb86319ffaea32225af6f93148622cf65b0b162a97baa43847d71400",
+    "bytes": 162457,
+    "relative_raw_path": "work/mudita-controls-deepening/directories/77000333482.html"
+  },
+  {
+    "path": "/home/workspace/reader/work/mudita-controls-deepening/directories/77000333483.html",
+    "url": "https://support.mudita.com/en/support/solutions/folders/77000333483",
+    "status": 200,
+    "sha256": "89e624955cefdf5b3191e5659dafe4c7ecff90942f6315e1e4fceaec81a75c05",
+    "bytes": 162338,
+    "relative_raw_path": "work/mudita-controls-deepening/directories/77000333483.html"
+  },
+  {
+    "path": "/home/workspace/reader/work/mudita-controls-deepening/directories/77000333484.html",
+    "url": "https://support.mudita.com/en/support/solutions/folders/77000333484",
+    "status": 200,
+    "sha256": "872a9911598469dc36b63386429f1d0c707abeeccd58eb546c2762ed501836dc",
+    "bytes": 163389,
+    "relative_raw_path": "work/mudita-controls-deepening/directories/77000333484.html"
+  },
+  {
+    "path": "/home/workspace/reader/work/mudita-controls-deepening/directories/77000333485.html",
+    "url": "https://support.mudita.com/en/support/solutions/folders/77000333485",
+    "status": 200,
+    "sha256": "55fd2a363e3d5e1465bc1ec8aab181e38f7880eb732b25fb583801bb0a173f47",
+    "bytes": 162625,
+    "relative_raw_path": "work/mudita-controls-deepening/directories/77000333485.html"
+  },
+  {
+    "path": "/home/workspace/reader/work/mudita-controls-deepening/directories/77000333486.html",
+    "url": "https://support.mudita.com/en/support/solutions/folders/77000333486",
+    "status": 200,
+    "sha256": "400816ffe8ca61300dc26848756b4b8ba0c25e795b4538254e2cef6ea4aec531",
+    "bytes": 163100,
+    "relative_raw_path": "work/mudita-controls-deepening/directories/77000333486.html"
+  },
+  {
+    "path": "/home/workspace/reader/work/mudita-controls-deepening/directories/77000333487.html",
+    "url": "https://support.mudita.com/en/support/solutions/folders/77000333487",
+    "status": 200,
+    "sha256": "ee2c8fd6150e010e414f98bdd3e09f65dda72866d823da942715003807927957",
+    "bytes": 163249,
+    "relative_raw_path": "work/mudita-controls-deepening/directories/77000333487.html"
+  },
+  {
+    "path": "/home/workspace/reader/work/mudita-controls-deepening/center4.html",
+    "url": "https://support.mudita.com/en/support/solutions/articles/77000594959-mudita-center-4-0-0",
+    "status": 200,
+    "sha256": "ec7b42c56bb090ca2736bdc04c37fb8b8fb64ab332ed0f2957f8cb8312be63c5",
+    "bytes": 317186,
+    "relative_raw_path": "work/mudita-controls-deepening/center4.html"
+  },
+  {
+    "path": "/home/workspace/reader/work/mudita-controls-deepening/center-product.html",
+    "url": "https://mudita.com/products/software-apps/mudita-center/",
+    "status": 200,
+    "sha256": "e8308343e16ef186b9d562ec3254e75c5e4686b9d4fb609ced74215a50cc285f",
+    "bytes": 326599,
+    "relative_raw_path": "work/mudita-controls-deepening/center-product.html"
+  },
+  {
+    "path": "/home/workspace/reader/work/mudita-controls-deepening/offline-faq.html",
+    "url": "https://support.mudita.com/en/support/solutions/articles/77000577366-is-mudita-kompakt-offline-more-secure-than-airplane-mode-",
+    "status": 200,
+    "sha256": "7b535ee59e4397ff721c97d3b58d2b9f0a612298cf88b5ea0e84d967cee4eb64",
+    "bytes": 317819,
+    "relative_raw_path": "work/mudita-controls-deepening/offline-faq.html"
+  },
+  {
+    "path": "/home/workspace/reader/work/mudita-controls-deepening/rcs.html",
+    "url": "https://support.mudita.com/en/support/solutions/articles/77000597865-does-mudita-kompakt-support-rcs-messaging-",
+    "status": 200,
+    "sha256": "fe1b9b8c3c1654389dbd2e9a569eb9f1d7a26f8d40fc5902efd3132be52f3ddb",
+    "bytes": 317168,
+    "relative_raw_path": "work/mudita-controls-deepening/rcs.html"
+  },
+  {
+    "path": "/home/workspace/reader/work/mudita-controls-deepening/old-release1.4.html",
+    "url": "https://mudita.com/about/media/muditaos-k-1-4-0-released-with-many-improvements-for-kompakt/",
+    "status": 200,
+    "sha256": "7e66bb77a64afd947bc8ec09a105745a711603171699497e72102ea2bd32394f",
+    "bytes": 239575,
+    "relative_raw_path": "work/mudita-controls-deepening/old-release1.4.html"
+  },
+  {
+    "path": "/home/workspace/reader/work/mudita-controls-deepening/calling.html",
+    "url": "https://support.mudita.com/en/support/solutions/articles/77000579064-how-to-make-calls-and-manage-emergency-number-on-mudita-kompakt",
+    "status": 200,
+    "sha256": "a9aea1a901c2b8bd82e198ea73c4d6095d9ac7ddb0a85d69df37542c42222e6b",
+    "bytes": 319655,
+    "relative_raw_path": "work/mudita-controls-deepening/calling.html"
+  },
+  {
+    "path": "/home/workspace/reader/work/mudita-controls-deepening/messaging.html",
+    "url": "https://support.mudita.com/en/support/solutions/articles/77000579754-how-to-send-sms-and-mms-messages-on-mudita-kompakt",
+    "status": 200,
+    "sha256": "d85170331c357d81a246c897961a471e6a676a62591e5042714b6012f1ec11ee",
+    "bytes": 320140,
+    "relative_raw_path": "work/mudita-controls-deepening/messaging.html"
+  },
+  {
+    "path": "/home/workspace/reader/work/mudita-controls-deepening/volume.html",
+    "url": "https://support.mudita.com/en/support/solutions/articles/77000579749-how-to-manage-volume-levels-on-mudita-kompakt",
+    "status": 200,
+    "sha256": "c2bafdf0e711ff28d71c00ff7d2856064860eac543d513917d37817eafb4fdc8",
+    "bytes": 319939,
+    "relative_raw_path": "work/mudita-controls-deepening/volume.html"
+  },
+  {
+    "path": "/home/workspace/reader/work/mudita-controls-deepening/silent.html",
+    "url": "https://support.mudita.com/en/support/solutions/articles/77000596914-how-to-put-kompakt-in-silent-mode-",
+    "status": 200,
+    "sha256": "4be0c94fa7e65dc76216808c117f1f51f1297ae59a6a9c77f370d751f78304f0",
+    "bytes": 317359,
+    "relative_raw_path": "work/mudita-controls-deepening/silent.html"
+  },
+  {
+    "path": "/home/workspace/reader/work/mudita-controls-deepening/offline.html",
+    "url": "https://support.mudita.com/en/support/solutions/articles/77000579070-how-to-use-offline-and-airplane-mode-on-mudita-kompakt",
+    "status": 200,
+    "sha256": "b44a8a652ea7cc950aa4d1c415ac1b37794ba132db1c222140859aebb163a459",
+    "bytes": 318142,
+    "relative_raw_path": "work/mudita-controls-deepening/offline.html"
+  },
+  {
+    "path": "/home/workspace/reader/work/mudita-controls-deepening/usb.html",
+    "url": "https://support.mudita.com/en/support/solutions/articles/77000580051-how-to-enable-and-disable-usb-file-transfer-on-mudita-kompakt",
+    "status": 200,
+    "sha256": "4309e1a87e3b7c19be47ae0ceeaaf89d1c06a5b8f74f766ce34db1b9e6dab756",
+    "bytes": 318528,
+    "relative_raw_path": "work/mudita-controls-deepening/usb.html"
+  },
+  {
+    "path": "/home/workspace/reader/work/mudita-controls-deepening/hidden.html",
+    "url": "https://support.mudita.com/en/support/solutions/articles/77000579751-how-to-unhide-or-hide-app-icons-on-mudita-kompakt",
+    "status": 200,
+    "sha256": "81467b4a142e85b1dd81328b420d08e321ab24fdea3964a08b6e9da051a0b3bb",
+    "bytes": 317547,
+    "relative_raw_path": "work/mudita-controls-deepening/hidden.html"
+  },
+  {
+    "path": "/home/workspace/reader/work/mudita-controls-deepening/bluetooth.html",
+    "url": "https://support.mudita.com/en/support/solutions/articles/77000579073-how-to-connect-devices-using-bluetooth-to-mudita-kompakt",
+    "status": 200,
+    "sha256": "5beaaea52ba4c5226d6967b4ff41e3adf3b39c524113b2a3775ce4f753eb0d51",
+    "bytes": 317992,
+    "relative_raw_path": "work/mudita-controls-deepening/bluetooth.html"
+  },
+  {
+    "path": "/home/workspace/reader/work/mudita-controls-deepening/install-complete.png",
+    "url": "https://s3-eu-central-1.amazonaws.com/euc-cdn.freshdesk.com/data/helpdesk/attachments/production/77263833492/original/xd7U2JioO3IFf6EFwFMbMH4uUMqjRQTQ3A.png?1777019883",
+    "status": 200,
+    "sha256": "bf294a52bbed14dd26ff3cf60b1505460fefcacc0cbdd91e82a888fc4073da8e",
+    "bytes": 184582,
+    "relative_raw_path": "work/mudita-controls-deepening/install-complete.png"
+  }
+]

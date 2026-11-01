@@ -1,0 +1,32 @@
+Intro to the Run JavaScript on Webpage action in Shortcuts on iPhone or iPad
+Nearly all webpages are scripted using JavaScript, a programming language that creates dynamic effects in web browsers, including animations, interactive menus, video playback, and more. Generally, JavaScript isn’t exposed to you as you view a website. However, by building a shortcut that contains the Run JavaScript on Webpage action, and then running the shortcut from the Safari app, you can control a webpage’s JavaScript.
+Shortcuts that run your custom JavaScript on a webpage have myriad uses. For example, you can create shortcuts that retrieve specific data from a webpage and then incorporate that data into a task, such as extracting a class schedule and then adding it to the Calendar app, or exporting the member data of a social media group and then adding that data to a spreadsheet.
+You can also create shortcuts that let you modify a webpage, such as changing the font of the webpage’s text or modifying the speed at which a video plays back. Before you can run JavaScript from a shortcut, you must enable the setting. See Advanced Privacy and security settings in Shortcuts on iPhone or iPad.
+For information on using shortcuts that run JavaScript on a webpage, see Use the Run JavaScript on Webpage action in Shortcuts on iPhone or iPad.
+About retrieving webpage data
+The Run JavaScript on Webpage action lets you retrieve data from a webpage by grabbing all elements that match certain criteria, then iterating through those elements to perform a task with the data (or to inspect the elements further).
+For example, to create a list of every image element on a webpage, use:
+var elements = document.querySelectorAll("img");
+In another example, to retrieve every element with the class “post,” use:
+var elements = document.querySelectorAll(".post");
+When a NodeList is created, you can iterate through the elements (to further filter the elements or add the elements to a data structure) using something like:var elements = ...;for (let element of elements) { // ...}
+For more information on querying webpage results, see https://developer.mozilla.org/Selectors.
+Run JavaScript on Webpage action input
+The input to the Run JavaScript on Webpage action must be an active Safari webpage, which means you must run the shortcut from the share sheet (specifically from Safari, SFSafariViewController, or ASWebAuthenticationSession).
+When a shortcut is run from the share sheet, the input from the Safari app is passed into the first action of your shortcut.
+Although the input into the Run JavaScript on Webpage action must be a Safari webpage, you can insert additional data into the action by using Magic Variables. For example, the Change Video Speed shortcut (available in the Gallery) contains a Run JavaScript on Webpage action that modifies a video on a webpage. The playback rate of the video is controlled by the Speed variable.
+For information on running shortcuts from Safari, see Launch a shortcut from another app on iPhone or iPad.
+Run JavaScript on Webpage action output
+To return data, you must call the completion handler in JavaScript, such as completion(result). Because JavaScript is usually used with asynchronous patterns, the call is intentionally not synchronous. This way, you can finish the action asynchronously. For example, the following is valid:
+Run JavaScript on Webpage action time limit
+Like all JavaScript extensions in Safari, the Run JavaScript on Webpage action is subject to a time limit and should be completed as quickly as possible. JavaScript that uses synchronous functions might not complete in time, including:
+window.alert()
+window.prompt()
+window.confirm()
+Timeouts that last multiple seconds—for example: window.setTimeout(function() { completion(); }, 5000);
+If your JavaScript exceeds the time limit, the shortcut will fail to complete and a JavaScript Timeout error message will appear when you run the shortcut.
+Syntax and Runtime Error Handling
+You can use any syntax that’s supported in Safari to write JavaScript in the Run JavaScript on Webpage action.
+In the Shortcuts app, the Run JavaScript on Webpage action helps you spot errors by doing a basic syntax check before you run the shortcut from the Safari extension.
+As you enter your script in the text field, syntax highlighting helps ensure that your JavaScript is valid. For example, if you forget to include quotation marks at the end of a string, all the text following that string is highlighted.
+If your script’s syntax is valid but contains a runtime error, the Run JavaScript on Webpage action catches and displays the exceptions. For example, if your script references a variable or function that doesn’t exist (such as shortcuts.completion()), an error is displayed at runtime.See alsoAdvanced Privacy and security settings in Shortcuts on iPhone or iPad

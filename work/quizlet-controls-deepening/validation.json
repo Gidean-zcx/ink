@@ -1,0 +1,34 @@
+{
+  "status": "PASS",
+  "new_E": 17,
+  "new_F": 3,
+  "case_total_F": 13,
+  "case_total_E": 30,
+  "depth": "D2 document reconstruction only",
+  "inventory_parents": 4,
+  "inventory_articles": 64,
+  "inventory_partial_topics": 24,
+  "inventory_directory_only_topics": 40,
+  "old_fields": 16,
+  "old_batches_unchanged": {
+    "docs/research/interaction-library/batches/dictionary-evidence.jsonl": true,
+    "docs/research/interaction-library/batches/dictionary-coverage.csv": true
+  },
+  "raw_capture": "5 web-tool response text files; no source HTML; direct request 403 stopped",
+  "raw_hashes": {
+    "work/quizlet-controls-deepening/quizlet-response-01.txt": "c095e56ef47ce51866c89e3faa1c3f813740aa2f11e477a20a4ce3564240f299",
+    "work/quizlet-controls-deepening/quizlet-response-02.txt": "63bc95df37bf44568db39fa73f4c0b5b6c95789c103c798518c64dbf922a21e1",
+    "work/quizlet-controls-deepening/quizlet-response-03.txt": "9fbb94049e94716324f279fe49eee72d0f0fddb817039498de06b52d98ce9e83",
+    "work/quizlet-controls-deepening/quizlet-response-04.txt": "48d897399f6ff01f47e643352a006a06f9b13ad4cda13e222109ef67c70854da",
+    "work/quizlet-controls-deepening/quizlet-response-05.txt": "67ae43e3fa5f44b3a0dcab19506cdda8ad0786bd7a1b9ebc295d31109c30469b"
+  },
+  "output_hashes": {
+    "docs/research/interaction-library/cases/M-021-quizlet.md": "308d8ecb128bfda07e0456ce7f90e3d8fd0f9cbdaadbdec3e9e8051aa2d81bde",
+    "docs/research/interaction-library/batches/quizlet-controls-deepening-evidence.jsonl": "2d7c28dfb077c23c7ca3579c298034b02ccdebb253fb51e4982e5c9c3687b655",
+    "docs/research/interaction-library/batches/quizlet-controls-deepening-coverage.csv": "2f517ddcccab486ed7ff89cb4d543327fc1321986bd0b231ee990efb31555f72",
+    "docs/research/interaction-library/batches/quizlet-controls-deepening-inventory.csv": "070e3b9dcd5ea6b2145d38d465ffab1dddde70bdba73830b76c1b7ed5e9297d1",
+    "work/quizlet-controls-deepening/existing-coverage-updates.csv": "7e6c3e03179fb6acd4d4704d2c3948dbbec95b5fab7ffdd9eddc16e91fb493bd",
+    "work/quizlet-controls-deepening/research-log.md": "9719122676dcd991efaa4f43e3d6a84caa89cc497ea503f765a5a8d22048d81d"
+  },
+  "checks": "JSONL/CSV; E collision; old before values; stable F IDs; evidence references; UTF-8/LF; local links; source phrase checks; hashes; no visual/hands-on claims"
+}

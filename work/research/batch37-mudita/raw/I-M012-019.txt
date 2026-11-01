@@ -1,0 +1,30 @@
+How To Manage Language and Keyboard Layout on Mudita Kompakt
+Modified on: Sat, 3 Oct, 2026 at 8:42 AM
+How to change the system language
+Press the Control Center button
+Tap Settings icon
+Tap System
+Tap Language and Keyboard
+Tap System Language
+Select the language you want to use
+Tap Confirm
+How to change the Keyboard Layout
+Press the Control Center button
+Tap Settings icon
+Tap System
+Tap Language and Keyboard
+Tap Keyboard Settings
+Tap Languages and Styles
+Tap the Plus icon
+Tap Layout
+Select the Layout you want to add
+Tap the Back arrow icon
+Tap Language
+Select the language you want to use
+Tap the Back arrow icon
+Tap Add
+Was this article helpful?
+No
+Yes
+That’s Great!
+Thank you for your feedback

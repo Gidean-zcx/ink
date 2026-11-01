@@ -1,0 +1,39 @@
+Use variables in Shortcuts on iPhone or iPad
+In Shortcuts, you can:
+Place a variable in a text field: For example, you can place a variable in the text field of an email shortcut, letting you choose a specific salutation (such as “Dear Sir” or “Dear Madam”) when you run the shortcut.
+Use a variable to replace an action’s parameter (a setting inside an action): You can embed a variable in an action. For example, you can place an Ask Each Time variable in the Repeat parameter of a Play Music action, letting you choose whether or not to repeat a song when you run the shortcut.
+Variables are represented by blue pill-shaped tokens.
+Add a Magic Variable to an action
+In the Shortcuts app on your iPhone or iPad, tap on the shortcut you want to modify, then tap any text field in an action.
+Note: Not all actions contain text fields.
+The Variables bar and keyboard are displayed.
+Tap Select Variable.
+The shortcut editor displays an alternate view showing each action’s output as a Magic Variable (blue tokens underneath each action).
+Tap the Magic Variable (the blue token under an action) that you want to add to the text field.
+The variable is placed inline in the text field (at the original insertion point). This is where the stored data will be placed when the shortcut is run.
+Add a special variable to an action
+In the Shortcuts app on your iPhone or iPad, tap on the shortcut you want to modify, then do one of the following:
+Add a special variable to a text field: Tap a text field to display the Variables bar and keyboard, then tap one of the special variables.
+The special variable is placed inline in the text field (at the original insertion point).
+Note: You may need to swipe left to see all of the special variables.
+Add a special variable to a parameter: Touch and hold a parameter, then choose a special variable from the list.
+Add a manual variable to an action
+In the Shortcuts app on your iPhone or iPad, tap on the shortcut you want to modify.
+Add a Set Variable action.
+The output of the previous action is stored in the variable.
+Tap the Variable Name field and enter a name for your manual variable.
+Optional: To change the value of the variable, tap the last parameter and choose the content for the manual variable.
+Manual variables should only be used when you need to hold a value that might change or when you need to add to a variable’s value. If you want to use static text or a number, use the Text action or Number action, then recall the Text or Number output later in the shortcut as a Magic Variable.
+Remove a variable
+In the Shortcuts app on your iPhone or iPad, tap on the shortcut you want to modify.
+Do one of the following:
+In a text field: Position the cursor in front of the variable in the text field, then tap in the onscreen keyboard.
+In an action’s parameter: Tap the variable token to select it, then tap Clear.
+Replace a parameter with a variable
+You can replace an action’s parameter (a setting inside an action) with a variable to dynamically switch between the settings of an action while a shortcut is running.
+Important: For parameters with on/off switches, use a 1 or 0 to set the button as active or inactive, respectively.
+In the Shortcuts app on your iPhone or iPad, tap on the shortcut you want to modify.
+In the shortcut editor, tap any parameter name, then choose a replacement variable from the list that appears.
+Note: You may need to touch and hold some parameters to replace them with a variable.
+In this example, the Ask Each Time variable replaces the Repeat parameter in the Play Music action.
+When the shortcut runs, you’re prompted to choose a Repeat parameter.See alsoIntro to how shortcuts work on iPhone and iPad

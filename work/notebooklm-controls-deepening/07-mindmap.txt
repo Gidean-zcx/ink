@@ -1,0 +1,36 @@
+Use Mind Maps in Gemini Notebook
+Important: The Gemini Notebook mobile app does not support this feature at this time. Learn more about the supported features in the Gemini Notebook mobile app.
+Mind Maps in Gemini Notebook visually summarize your uploaded sources, showing main topics and related ideas as a branching diagram.
+When to use Mind Maps
+Get a quick overview: Understand the big picture and key themes of your source material quickly.
+Explore and learn new things easily: Get a clear entry point to new topics, making it easier to understand their main concepts before diving into the details.
+Connect the dots: Visually discover how different ideas relate to each other, and identify links and associations that might not be obvious.
+Organize your thoughts: Use Mind Maps to structure information, to improve how you understand and remember it.
+Generate a Mind Map
+In Gemini Notebook, open an existing notebook.
+Or, create a new notebook and upload sources.
+In the chat, select the Mind Map chip.
+In the “Studio” panel, you can find a new note with your generated Mind Map.
+You can revisit your Mind Map at any time.
+To regenerate, select More   Delete note.
+This restarts the generation process.
+Important: Gemini Notebook can be inaccurate; please double check its responses.
+How to Interact with a Mind Map
+Zoom in or out and scroll: This allows you to navigate different parts of the Mind Map and focus on specific areas.
+Expand or collapse branches: You can expand branches to find more detailed sub-topics or collapse them to get a higher-level view.
+Select nodes to ask questions: Directly select a node in the Mind Map to ask questions in the Gemini Notebook chat about that specific topic.
+Other: To expand or collapse the view , download , or exit , look at the options in the top right corner.
+How to save & share a Mind Map
+Option #1: Generate a Mind Map, then share the entire notebook with another user. They will be able to load the same Mind Map in the Studio panel.
+Option #2: Download the Mind Map by selecting Download within the Mind Map window and share the downloaded file.
+Tip: Depending on the publisher's content restrictions, you may not be able to download artifacts generated using a notebook that has a Play Books ebook as a source.
+Mind Map usage limits
+Usage limits apply to Mind Map creation. Learn more about Gemini Notebook usage limits.
+Provide feedback
+Your feedback helps us improve Mind Maps. To share your feedback, select Good content  or Bad content .
+If you found the Mind Map helpful, select .
+If you found the Mind Map unhelpful, inaccurate, biased, or otherwise problematic, select . Tell us more about your experience and provide additional feedback.
+Related resources
+Create a notebook in Gemini Notebook
+Add or discover new sources for your Notebook
+Use chat in Gemini Notebook

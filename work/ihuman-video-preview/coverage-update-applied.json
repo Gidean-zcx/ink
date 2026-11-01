@@ -1,0 +1,29 @@
+{
+  "flow_id": "F-M029-01",
+  "before": {
+    "flow_id": "F-M029-01",
+    "product_id": "M-029",
+    "task": "单字到子集故事内容循环",
+    "depth": "D1",
+    "evidence_ids": "E-IHUM-01;E-IHUM-02;E-IHD-02;E-IHCD-01;E-IHCD-03;E-IHLC-01;E-IHLC-02",
+    "known_branches": "当前五步声明；2018练界面仅静态；2020作者各述二字听音选择正常分支、雨字练/写辅助；不当现行阈值或连续观察",
+    "gaps": "当前选课/错答提示/重试/奖励/复习结算/故事解锁/退出恢复；2020材料平台构建未知且图片未核",
+    "visual_status": "static_reference_only",
+    "hands_on": "false",
+    "case_path": "cases/M-029-ihuman.md",
+    "checked_on": "2026-10-27"
+  },
+  "after": {
+    "flow_id": "F-M029-01",
+    "product_id": "M-029",
+    "task": "单字到子集故事内容循环",
+    "depth": "D1",
+    "evidence_ids": "E-IHUM-01;E-IHUM-02;E-IHD-02;E-IHCD-01;E-IHCD-03;E-IHLC-01;E-IHLC-02;E-IHVP-01",
+    "known_branches": "当前五步声明；2018练界面仅静态；2020作者各述二字听音选择正常分支、雨字练/写辅助；不当现行阈值或连续观察；官网剪辑30s旧四标签与选择/暂停控件可见，未见答题反馈",
+    "gaps": "当前选课/错答提示/重试/奖励/复习结算/故事解锁/退出恢复；2020材料平台构建未知且图片未核；官网宣传视频不构成现行连续任务",
+    "visual_status": "static_reference_only",
+    "hands_on": "false",
+    "case_path": "cases/M-029-ihuman.md",
+    "checked_on": "2026-10-27"
+  }
+}

@@ -1,0 +1,6 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M030-04,M-030,求助与错后再试,D2,E-KHD-01;E-KHD-03;E-KHCD-10,Kodi 提示；错误反馈；分步示范,触发顺序/次数；示范后操作；结束页,static_reference_only,false,cases/M-030-khan-kids.md,2026-10-27
+F-M030-05,M-030,首次正确奖励与角色收藏入口,D2,E-KHD-01;E-KHD-03;E-KHCD-10,首次正确分支；主页角色房间,错后奖励；发奖阈值；课内退出；重复收益,static_reference_only,false,cases/M-030-khan-kids.md,2026-10-27
+F-M030-06,M-030,Learning Path 中断后按 Play,D2,E-KHD-02,回应用按 Play 进入下一课,未完成课记录；强退/断网；原题重找,not_observed,false,cases/M-030-khan-kids.md,2026-10-26
+F-M050-05,M-050,拼图错放后求助与重试,D1,E-DRGD-01;E-DRGD-02;E-DRGN-02,拼图目标与旧奖励用途；错误分支待核,错放反馈；提示；撤销；重试到结算,not_observed,false,cases/M-050-dragonbox.md,2026-10-26
+F-M050-06,M-050,未完拼图退出与恢复,D1,E-DRGD-03;E-DRGN-04,家庭档案边界；局内状态待核,退出/重开按钮；存档粒度；离线与跨端恢复,not_observed,false,cases/M-050-dragonbox.md,2026-10-26

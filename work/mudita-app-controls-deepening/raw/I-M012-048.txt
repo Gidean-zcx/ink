@@ -1,0 +1,17 @@
+How to Delete Contacts Using Mudita Center?
+Modified on: Sat, 3 Oct, 2026 at 8:37 AM
+You can easily delete contacts from your Kompakt using Mudita Center
+Follow the steps below:
+Open Mudita Center and connect your Kompakt to your computer.
+Under Your Kompakt, click Contacts.
+Hover your mouse over the contact you want to delete.
+Click the checkbox to select the contact.
+Select any additional contacts you want to remove.
+Click Delete.
+Confirm by clicking Delete again.
+Tip: To select all contacts at once, click the minus icon checkbox near the top of the the screen
+Was this article helpful?
+ No
+ Yes
+That’s Great!
+Thank you for your feedback

@@ -1,0 +1,34 @@
+                    E d d i c t P l a y e r
+
+
+  Playback Settings
+
+1. These settings affect behaviour of the app for the local
+   playback.
+
+2. These settings have no impact on the connected Shanling
+   device. ﻿
+
+
+
+
+
+                          USB Exclusive mode
+
+                                      Setting enabling for direct output from the app to the USB DACs,
+                                    avoiding any system processing.
+                                     Also compatible with headphones with USB-C connector.
+
+                                            1. Go to "Playback Settings" > "USB Output".
+
+                                            2. Turn on the "USB Exclusive mode". Adjust other setting
+                                  depending on your needs and your USB DAC.
+
+                                            3. Connect the USB DAC and confirm the pop-up window,
+                                       allowing the app to access the DAC.
+
+
+
+
+
+                                        15

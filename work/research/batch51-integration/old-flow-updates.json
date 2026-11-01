@@ -1,0 +1,263 @@
+[
+  {
+    "owner": "docs/research/interaction-library/batches/extension-manuals-coverage.csv",
+    "before": {
+      "flow_id": "F-M060-04",
+      "product_id": "M-060",
+      "task": "删除后恢复文件",
+      "depth": "D2",
+      "evidence_ids": "E-QUA-01",
+      "known_branches": "设备删除后回收站还原；1GB以上阈值提供直接永久删除或取消。回收站内不能打开文件/查看子文件夹，需先还原；PC App删除及特定同步删除不入回收站。原目录重建/同名改名沿用。",
+      "gaps": "未测阈值/同名恢复；永久删除、笔记删页和特定旧固件修复不受此链保证。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-060-quaderno.md",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "flow_id": "F-M060-04",
+      "product_id": "M-060",
+      "task": "删除后恢复文件",
+      "depth": "D2",
+      "evidence_ids": "E-QUA-01;E-QGNT-01",
+      "known_branches": "设备删除后回收站还原；1GB以上阈值提供直接永久删除或取消。回收站内不能打开文件/查看子文件夹，需先还原；PC App删除及特定同步删除不入回收站。原目录重建/同名改名沿用。；Gen.2 p35–39核三种删除入口、回收站原目录恢复/同名改名；自建同名目录不是系统回收站，PC不能管理回收站",
+      "gaps": "未测阈值/同名恢复；永久删除、笔记删页和特定旧固件修复不受此链保证。；两代按原页区分；设备删除尚占空间、PC及指定同步删除绕过回收站，不保证全部删除可回退",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-060-quaderno.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "owner": "docs/research/interaction-library/batches/extension-manuals-coverage.csv",
+    "before": {
+      "flow_id": "F-M060-06",
+      "product_id": "M-060",
+      "task": "创建可回退的备份",
+      "depth": "D2",
+      "evidence_ids": "E-QUA-01",
+      "known_branches": "USB备份ZIP、同日编号、排除回收站；备份与同步目录分开。手册要求保存盘及App安装盘各有至少相当于数据总量的空间（目安）；中途拔线会失败。备份改名后不在列表显示（手册口径）。",
+      "gaps": "空间阈值/失败回执未实测；不保证失败残留ZIP可用。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-060-quaderno.md",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "flow_id": "F-M060-06",
+      "product_id": "M-060",
+      "task": "创建可回退的备份",
+      "depth": "D2",
+      "evidence_ids": "E-QUA-01;E-QGNT-01",
+      "known_branches": "USB备份ZIP、同日编号、排除回收站；备份与同步目录分开。手册要求保存盘及App安装盘各有至少相当于数据总量的空间（目安）；中途拔线会失败。备份改名后不在列表显示（手册口径）。；Gen.2 p87–88/113核USB、完成提示、日期ZIP、双盘空间及备份目录不得同步；备份文件可选后删除",
+      "gaps": "空间阈值/失败回执未实测；不保证失败残留ZIP可用。；备份删除后的确认/撤销与备份包含设置/关系的完整清单未知",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-060-quaderno.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "owner": "docs/research/interaction-library/batches/extension-manuals-coverage.csv",
+    "before": {
+      "flow_id": "F-M060-07",
+      "product_id": "M-060",
+      "task": "恢复旧备份",
+      "depth": "D2",
+      "evidence_ids": "E-QUA-01",
+      "known_branches": "导入备份覆盖备份后新增数据，创建/修改时间改为导入时间、浏览时间重置；Samples及其中内容不导入。确认后才执行；中途拔线会失败，官方建议先导出新增资料。",
+      "gaps": "中断后的设备部分状态、自动回滚/续传、改名备份如何重新索引均未知。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-060-quaderno.md",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "flow_id": "F-M060-07",
+      "product_id": "M-060",
+      "task": "恢复旧备份",
+      "depth": "D2",
+      "evidence_ids": "E-QUA-01;E-QGNT-01",
+      "known_branches": "导入备份覆盖备份后新增数据，创建/修改时间改为导入时间、浏览时间重置；Samples及其中内容不导入。确认后才执行；中途拔线会失败，官方建议先导出新增资料。；Gen.2 p87独立核确认/完成、删除较新数据、重写创建/修改时间和重置浏览时间，Samples排除",
+      "gaps": "中断后的设备部分状态、自动回滚/续传、改名备份如何重新索引均未知。；不是合并导入；没有断点/所有元数据保留保证",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-060-quaderno.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "owner": "docs/research/interaction-library/batches/extension-manuals-coverage.csv",
+    "before": {
+      "flow_id": "F-M060-08",
+      "product_id": "M-060",
+      "task": "同步双方改动",
+      "depth": "D2",
+      "evidence_ids": "E-QUA-01",
+      "known_branches": "双方改同PDF时设备版保留原名、电脑版另名；一边删另一边改则保留修改版。只同步目录下PDF和含PDF目录；解除同步不删文件。特定PC/同步删除绕过回收站；同步中不能用笔。",
+      "gaps": "冲突命名细节/回执/重复重试未知；电脑同步目录改名或移动会解除绑定，重设前不能视作继续同步。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-060-quaderno.md",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "flow_id": "F-M060-08",
+      "product_id": "M-060",
+      "task": "同步双方改动",
+      "depth": "D2",
+      "evidence_ids": "E-QUA-01;E-QGNT-01",
+      "known_branches": "双方改同PDF时设备版保留原名、电脑版另名；一边删另一边改则保留修改版。只同步目录下PDF和含PDF目录；解除同步不删文件。特定PC/同步删除绕过回收站；同步中不能用笔。；Gen.2 p89–90/92核App连接启动自动同步、连接期间默认60分钟、空目录不传及删除/双改规则",
+      "gaps": "冲突命名细节/回执/重复重试未知；电脑同步目录改名或移动会解除绑定，重设前不能视作继续同步。；自动触发、最新同步时间和文件完整性不能互代；重绑首次合并未知",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-060-quaderno.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "owner": "docs/research/interaction-library/batches/hifi-extension-coverage.csv",
+    "before": {
+      "flow_id": "F-M065-06",
+      "product_id": "M-065",
+      "task": "安装受支持服务app",
+      "depth": "D2",
+      "evidence_ids": "E-AK-06;E-AK-07",
+      "known_branches": "安装包、app数据和服务账户为不同对象；部分服务另需订阅。",
+      "gaps": "共用FAQ示范SP1000M；SR35当前包架构、权限弹窗、安装失败、卸载/重装后下载。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-065-astell-kern.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M065-06",
+      "product_id": "M-065",
+      "task": "安装受支持服务app",
+      "depth": "D2",
+      "evidence_ids": "E-AK-06;E-AK-07;E-AKOP-01",
+      "known_branches": "安装包、app数据和服务账户为不同对象；部分服务另需订阅。；旧SP1000M图补Service列表中的包/版本、CANCEL/INSTALL确认及应用登录页；包存在、安装和服务授权分开",
+      "gaps": "共用FAQ示范SP1000M；SR35当前包架构、权限弹窗、安装失败、卸载/重装后下载。；仅静态旧机照片，取消结果与当前SR35安装/登录仍未知",
+      "visual_status": "static_reference_only",
+      "hands_on": "false",
+      "case_path": "cases/M-065-astell-kern.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "owner": "docs/research/interaction-library/batches/hifi-extension-coverage.csv",
+    "before": {
+      "flow_id": "F-M065-07",
+      "product_id": "M-065",
+      "task": "应用兼容性条件（D1）",
+      "depth": "D1",
+      "evidence_ids": "E-AK-07",
+      "known_branches": "表中曾测试不保证2026仍能登录；不要把同品牌所有app都写可用。",
+      "gaps": "错误码、可回退版本、旧离线文件是否仍授权；本轮未登录验证。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-065-astell-kern.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M065-07",
+      "product_id": "M-065",
+      "task": "应用兼容性条件（D1）",
+      "depth": "D1",
+      "evidence_ids": "E-AK-07",
+      "known_branches": "表中曾测试不保证2026仍能登录；不要把同品牌所有app都写可用。；2026-10-27复读表内日期仍为2025-05-01，未获得当前测试记录",
+      "gaps": "错误码、可回退版本、旧离线文件是否仍授权；本轮未登录验证。；维持D1，不因重新取得网页而提升兼容性结论",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-065-astell-kern.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "owner": "docs/research/interaction-library/batches/quaderno-controls-deepening-coverage.csv",
+    "before": {
+      "flow_id": "F-M060-11",
+      "product_id": "M-060",
+      "task": "按标记和颜色定位原文",
+      "depth": "D2",
+      "evidence_ids": "E-QUA-01;E-QCD-09;E-QGNT-01",
+      "known_branches": "文内正文/图形/颜色笔型搜索按页跳转，外点关闭；全库图形搜索按文档去重且排除回收站。已有PDF书签为目录、无书签隐藏；历史跳转不记普通划页。；Gen.2 p56另核手写/高亮列表分栏、点项跳页和外点关闭",
+      "gaps": "任意手写OCR不在本链；图形识别可失败，跨文档色搜索/新建书签未取得步骤；未测搜索速度。；Gen.2未继承Gen.3C全库颜色/图形检索结论",
+      "visual_status": "static_manual_pages_only",
+      "hands_on": "false",
+      "case_path": "cases/M-060-quaderno.md",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "flow_id": "F-M060-11",
+      "product_id": "M-060",
+      "task": "按标记和颜色定位原文",
+      "depth": "D2",
+      "evidence_ids": "E-QUA-01;E-QCD-09;E-QGNT-01",
+      "known_branches": "文内正文/图形/颜色笔型搜索按页跳转，外点关闭；全库图形搜索按文档去重且排除回收站。已有PDF书签为目录、无书签隐藏；历史跳转不记普通划页。；Gen.2 p56另核手写/高亮列表分栏、点项跳页和外点关闭；Gen.2 p91另核电脑搜索范围、结果按文档去重、双击在PC阅读器打开与关闭结果",
+      "gaps": "任意手写OCR不在本链；图形识别可失败，跨文档色搜索/新建书签未取得步骤；未测搜索速度。；Gen.2未继承Gen.3C全库颜色/图形检索结论；搜索结果打开不等于设备跳页或持久传出",
+      "visual_status": "static_manual_pages_only",
+      "hands_on": "false",
+      "case_path": "cases/M-060-quaderno.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "owner": "docs/research/interaction-library/batches/quaderno-controls-deepening-coverage.csv",
+    "before": {
+      "flow_id": "F-M060-12",
+      "product_id": "M-060",
+      "task": "移动笔迹并在当前页撤回",
+      "depth": "D2",
+      "evidence_ids": "E-QUA-01;E-QCD-09;E-QGNT-01",
+      "known_branches": "书写即保存；范围选择圈选复制/剪切，目标页粘贴调位确认；选择/粘贴模式不能翻页。一次粘贴后入口隐藏，重启/再复制清空旧剪贴；换页清空撤销/重做。；Gen.2 p27/52–57独立确认即时保存、单次剪贴、翻页清撤销；灰度显示仍有颜色数据，默认限制编辑其他设备笔迹",
+      "gaps": "切取后崩溃、剪贴跨页期间撤销关系未测；文本高亮不适用于图片/手写；受保护或空间不足可能只读。；两代分列；未核Gen.2往返传输、外部笔迹实际兼容或崩溃恢复",
+      "visual_status": "static_manual_pages_only",
+      "hands_on": "false",
+      "case_path": "cases/M-060-quaderno.md",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "flow_id": "F-M060-12",
+      "product_id": "M-060",
+      "task": "移动笔迹并在当前页撤回",
+      "depth": "D2",
+      "evidence_ids": "E-QUA-01;E-QCD-09;E-QGNT-01",
+      "known_branches": "书写即保存；范围选择圈选复制/剪切，目标页粘贴调位确认；选择/粘贴模式不能翻页。一次粘贴后入口隐藏，重启/再复制清空旧剪贴；换页清空撤销/重做。；Gen.2 p27/52–57独立确认即时保存、单次剪贴、翻页清撤销；灰度显示仍有颜色数据，默认限制编辑其他设备笔迹；Gen.2 p110核休眠页面、保护/空间不足只读、PC操作占用及外部笔迹限制开关",
+      "gaps": "切取后崩溃、剪贴跨页期间撤销关系未测；文本高亮不适用于图片/手写；受保护或空间不足可能只读。；两代分列；未核Gen.2往返传输、外部笔迹实际兼容或崩溃恢复；等待、解锁、释放空间、编辑权限是不同故障路径，未测实际恢复",
+      "visual_status": "static_manual_pages_only",
+      "hands_on": "false",
+      "case_path": "cases/M-060-quaderno.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "owner": "docs/research/interaction-library/batches/quaderno-controls-deepening-coverage.csv",
+    "before": {
+      "flow_id": "F-M060-16",
+      "product_id": "M-060",
+      "task": "特定旧固件文档问题生成修复副本",
+      "depth": "D2",
+      "evidence_ids": "E-QUA-01",
+      "known_branches": "仅曾升2.1.00.26250FP且出现恢复入口的文档；文件夹菜单恢复→检测确认OK→报告文件名。可产一/两份recovery副本，原件保留；同名或空间不足会失败。",
+      "gaps": "不是通用修复；未实测内容完整度或两副本哪份正确；进行中不得休眠/关机，异常中断行为未知。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-060-quaderno.md",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "flow_id": "F-M060-16",
+      "product_id": "M-060",
+      "task": "特定旧固件文档问题生成修复副本",
+      "depth": "D2",
+      "evidence_ids": "E-QUA-01;E-QGNT-01",
+      "known_branches": "仅曾升2.1.00.26250FP且出现恢复入口的文档；文件夹菜单恢复→检测确认OK→报告文件名。可产一/两份recovery副本，原件保留；同名或空间不足会失败。；Gen.2 p111也独立核同一特定旧固件、一或两份修复副本及同名/空间失败",
+      "gaps": "不是通用修复；未实测内容完整度或两副本哪份正确；进行中不得休眠/关机，异常中断行为未知。；仍不泛化到全部损坏或其他固件",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-060-quaderno.md",
+      "checked_on": "2026-10-27"
+    }
+  }
+]

@@ -1,0 +1,89 @@
+{
+  "ok": true,
+  "counts": {
+    "source_images": 26,
+    "source_headings": 41,
+    "downloaded_images": 24,
+    "audit_observations": 24,
+    "archived_images": 21,
+    "inventory_rows": 41,
+    "evidence_rows": 1
+  },
+  "source": {
+    "html_fetch_match": true,
+    "extracted_text_match": true,
+    "audit_http_match": true,
+    "html_heading_missing": [],
+    "text_heading_missing": [],
+    "html_image_src_missing": [],
+    "text_heading_match": "41/41 after whitespace normalization; Q20 HTML/elements has two spaces after colon, extracted text has one"
+  },
+  "images": {
+    "download_metadata_or_hash_mismatches": [],
+    "audit_vs_download_mismatches": [],
+    "archived_indexes": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      9,
+      10,
+      11,
+      12,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25
+    ],
+    "audit_archived_indexes": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      9,
+      10,
+      11,
+      12,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25
+    ],
+    "archived_hash_mismatches": [],
+    "evidence_image_keyset_match": true
+  },
+  "evidence": {
+    "path_hash_checks": {
+      "archived_artifact": true,
+      "raw_work_path": true,
+      "visual_audit_path": true
+    }
+  },
+  "inventory": {
+    "exact_order_title_anchor_match": true,
+    "mismatches": []
+  },
+  "unknowns": [
+    "未核验网络端当前内容",
+    "未评估或验证实机效果"
+  ],
+  "state_change": "仅创建或覆盖 work/research/batch48-integration/helper-source-check.json"
+}

@@ -1,0 +1,221 @@
+[
+  {
+    "class": "page-header-inner-logo-link",
+    "href": "/en",
+    "title": "",
+    "url": "https://help.ground.news/en"
+  },
+  {
+    "class": "page-header-inner-title",
+    "href": "/en",
+    "title": "Ground News Help Center",
+    "url": "https://help.ground.news/en"
+  },
+  {
+    "type": "button",
+    "class": "kb-button primary",
+    "href": "/en/contact-us",
+    "title": "Contact Us",
+    "url": "https://help.ground.news/en/contact-us"
+  },
+  {
+    "id": "moreResultsLink",
+    "type": "button",
+    "class": "kb-button secondary",
+    "href": "/en/search",
+    "title": "More results",
+    "url": "https://help.ground.news/en/search"
+  },
+  {
+    "href": "https://ground.news/privacy-policy",
+    "title": "Privacy Policy",
+    "url": "https://ground.news/privacy-policy"
+  },
+  {
+    "href": "#can_i_access_a_full_list_of_sources",
+    "class": "navigation-item indent-2",
+    "title": "Can I Access a Full List of Sources?",
+    "url": "https://help.ground.news/en/articles/6049601#can_i_access_a_full_list_of_sources"
+  },
+  {
+    "href": "#how_to_search_and_follow_news_sources",
+    "class": "navigation-item indent-2",
+    "title": "How to Search and Follow News Sources",
+    "url": "https://help.ground.news/en/articles/6049601#how_to_search_and_follow_news_sources"
+  },
+  {
+    "href": "#want_to_suggest_a_news_source",
+    "class": "navigation-item indent-2",
+    "title": "Want to Suggest a News Source?",
+    "url": "https://help.ground.news/en/articles/6049601#want_to_suggest_a_news_source"
+  },
+  {
+    "href": "#need_additional_support",
+    "class": "navigation-item indent-2",
+    "title": "Need Additional Support?",
+    "url": "https://help.ground.news/en/articles/6049601#need_additional_support"
+  },
+  {
+    "href": "#related_articles",
+    "class": "navigation-item indent-2",
+    "title": "Related Articles",
+    "url": "https://help.ground.news/en/articles/6049601#related_articles"
+  },
+  {
+    "href": "/en",
+    "title": "Home",
+    "url": "https://help.ground.news/en"
+  },
+  {
+    "href": "/en/categories/2272705-understanding-ground-news",
+    "title": "Understanding Ground News",
+    "url": "https://help.ground.news/en/categories/2272705-understanding-ground-news"
+  },
+  {
+    "href": "/en/categories/2272705-understanding-sources-coverage",
+    "title": "Understanding Sources & Coverage",
+    "url": "https://help.ground.news/en/categories/2272705-understanding-sources-coverage"
+  },
+  {
+    "target": "_self",
+    "rel": "noopener noreferrer nofollow",
+    "class": "kb-link kb-link",
+    "href": "/en/articles/5609857",
+    "title": "how to search for news sources or coverage that matter most to you here.",
+    "url": "https://help.ground.news/en/articles/5609857"
+  },
+  {
+    "target": "_self",
+    "rel": "noopener noreferrer nofollow",
+    "class": "kb-link kb-link",
+    "href": "/en/articles/950017",
+    "title": "Learn more about following your favorite topics and interests here",
+    "url": "https://help.ground.news/en/articles/950017"
+  },
+  {
+    "target": "_self",
+    "rel": "noopener noreferrer nofollow",
+    "class": "kb-link kb-link",
+    "href": "/en/articles/1750529",
+    "title": "Our Browser Extension is available on Chrome, Firefox, Edge, Brave, and Opera, and you can learn more about this works here.",
+    "url": "https://help.ground.news/en/articles/1750529"
+  },
+  {
+    "target": "_self",
+    "rel": "noopener noreferrer nofollow",
+    "class": "kb-link kb-link",
+    "href": "/en/articles/1750273",
+    "title": "learn more about suggesting a news source to our team here",
+    "url": "https://help.ground.news/en/articles/1750273"
+  },
+  {
+    "target": "_self",
+    "rel": "noopener noreferrer nofollow",
+    "class": "kb-link kb-link",
+    "href": "mailto:feedback@ground.news",
+    "title": "feedback@ground.news",
+    "url": "mailto:feedback@ground.news"
+  },
+  {
+    "target": "_self",
+    "rel": "noopener noreferrer nofollow",
+    "class": "kb-link kb-link",
+    "href": "/en/articles/9683777",
+    "title": "learn more about reporting an issue here",
+    "url": "https://help.ground.news/en/articles/9683777"
+  },
+  {
+    "target": "_self",
+    "rel": "noopener noreferrer nofollow",
+    "class": "kb-link kb-link",
+    "href": "/en/articles/6049857",
+    "title": "Sort and Filter News Sources",
+    "url": "https://help.ground.news/en/articles/6049857"
+  },
+  {
+    "target": "_self",
+    "rel": "noopener noreferrer nofollow",
+    "class": "kb-link kb-link",
+    "href": "/en/articles/5224577",
+    "title": "Filtering For High-Factuality News Sources",
+    "url": "https://help.ground.news/en/articles/5224577"
+  },
+  {
+    "target": "_self",
+    "rel": "noopener noreferrer nofollow",
+    "class": "kb-link kb-link",
+    "href": "/en/articles/9683777",
+    "title": "Report an Issue",
+    "url": "https://help.ground.news/en/articles/9683777"
+  },
+  {
+    "target": "_self",
+    "rel": "noopener noreferrer nofollow",
+    "class": "kb-link kb-link",
+    "href": "/en/articles/9683777",
+    "title": "Learn more about reporting an issue here",
+    "url": "https://help.ground.news/en/articles/9683777"
+  },
+  {
+    "target": "_self",
+    "rel": "noopener noreferrer nofollow",
+    "class": "kb-link kb-link",
+    "href": "mailto:feedback@ground.news",
+    "title": "feedback@ground.news",
+    "url": "mailto:feedback@ground.news"
+  },
+  {
+    "target": "_self",
+    "rel": "noopener noreferrer nofollow",
+    "class": "kb-link kb-link",
+    "href": "https://ground.news/account/account-information",
+    "title": "visit your Account page here",
+    "url": "https://ground.news/account/account-information"
+  },
+  {
+    "target": "_self",
+    "rel": "noopener noreferrer nofollow",
+    "class": "kb-link kb-link",
+    "href": "mailto:subscriptions@ground.news",
+    "title": "subscriptions@ground.news",
+    "url": "mailto:subscriptions@ground.news"
+  },
+  {
+    "target": "_self",
+    "rel": "noopener noreferrer nofollow",
+    "class": "kb-link kb-link",
+    "href": "mailto:feedback@ground.news",
+    "title": "feedback@ground.news",
+    "url": "mailto:feedback@ground.news"
+  },
+  {
+    "href": "https://twitter.com/Ground_app",
+    "title": "",
+    "url": "https://twitter.com/Ground_app"
+  },
+  {
+    "href": "https://ca.linkedin.com/company/groundnews",
+    "title": "",
+    "url": "https://ca.linkedin.com/company/groundnews"
+  },
+  {
+    "href": "https://www.instagram.com/groundnews/",
+    "title": "",
+    "url": "https://www.instagram.com/groundnews/"
+  },
+  {
+    "href": "https://ground.news/refund-policy",
+    "title": "Refund and Cancellation Policy",
+    "url": "https://ground.news/refund-policy"
+  },
+  {
+    "href": "https://ground.news/terms-and-conditions",
+    "title": "Terms and Conditions",
+    "url": "https://ground.news/terms-and-conditions"
+  },
+  {
+    "href": "https://about.ground.news/privacy-policy",
+    "title": "Privacy Policy",
+    "url": "https://about.ground.news/privacy-policy"
+  }
+]

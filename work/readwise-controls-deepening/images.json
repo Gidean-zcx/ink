@@ -1,0 +1,62 @@
+[
+  {
+    "source_name": "eink",
+    "index": 0,
+    "url": "https://docs.readwise.io/images/eink-mode_boox_annotated.png",
+    "path": "work/readwise-controls-deepening/raw/eink-mode_boox_annotated.png",
+    "sha256": "c044997a4fcc1cce24bd1ee9d6a1c4af3e88d1bf60ba3caccaf140f5cb41a1fa",
+    "status": 200,
+    "alt": "E-ink Mode settings on BOOX device.",
+    "visual_observed": true,
+    "observed_on": "2026-10-27",
+    "observation_kind": "official_static_screenshot"
+  },
+  {
+    "source_name": "appearance",
+    "index": 16,
+    "url": "https://docs.readwise.io/images/reader-toolbar-layout_settings.png",
+    "path": "work/readwise-controls-deepening/raw/reader-toolbar-layout_settings.png",
+    "sha256": "277ccba27528b682bbd9a5647b3666a51c89f213ccc7af2c5d993cb9689e045b",
+    "status": 200,
+    "alt": "Toolbar layout settings page in the Reader mobile app.",
+    "visual_observed": true,
+    "observed_on": "2026-10-27",
+    "observation_kind": "official_static_screenshot"
+  },
+  {
+    "source_name": "global",
+    "index": 8,
+    "url": "https://docs.readwise.io/images/global-ghostreader_add-skill-form.png",
+    "path": "work/readwise-controls-deepening/raw/global-ghostreader_add-skill-form.png",
+    "sha256": "9b409a262dd6a1b8359951af1b1c3e8b7b33ee7c7514a739c3bd8bd35b9f38e8",
+    "status": 200,
+    "alt": "The skill editor with fields for name, description, and instructions, plus Scope and Model dropdowns.",
+    "visual_observed": true,
+    "observed_on": "2026-10-27",
+    "observation_kind": "official_static_screenshot"
+  },
+  {
+    "source_name": "global",
+    "index": 10,
+    "url": "https://docs.readwise.io/images/global-ghostreader_tool-approval-card.png",
+    "path": "work/readwise-controls-deepening/raw/global-ghostreader_tool-approval-card.png",
+    "sha256": "17609ed3cde2561e0c88be544378ac926d2daf5ff27b94f3e8b7e53a63b83640",
+    "status": 200,
+    "alt": "The inline confirmation card in chat with Remember, Deny, and Approve options.",
+    "visual_observed": true,
+    "observed_on": "2026-10-27",
+    "observation_kind": "official_static_screenshot"
+  },
+  {
+    "source_name": "saving",
+    "index": 9,
+    "url": "https://docs.readwise.io/images/annotated-share-sheet_mobile.jpeg",
+    "path": "work/readwise-controls-deepening/raw/annotated-share-sheet_mobile.jpeg",
+    "sha256": "cc227ab1d986d24307882d2b0f8d5d339a41e736c0e15a8856abe472d3d8179a",
+    "status": 200,
+    "alt": "Annotated screenshot of Reader's mobile share menu.",
+    "visual_observed": true,
+    "observed_on": "2026-10-27",
+    "observation_kind": "official_static_screenshot"
+  }
+]

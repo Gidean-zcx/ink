@@ -1,0 +1,46 @@
+Understanding Our Bias Comparison Summary Feature
+Ground News Help Center
+Contact Us
+How can we help you?
+Results
+No results found
+More results
+We use cookies to analyze website traffic and help improve our visitor experience. Privacy Policy
+Reject
+Accept
+In this articleHow Does the Bias Comparison Work?Where to Find the Bias Comparison Summary on our Mobile AppWhere to Find the Bias Comparison Summary on our WebsiteAI Summaries and Accuracy"I Don't See the Bias Comparison Summary"
+Home
+Understanding Ground News
+How Ground News Works
+Understanding Our Bias Comparison Summary Feature
+Edited Saturday, August 29 2026
+How Does the Bias Comparison Work?
+The Bias Comparison summary feature helps readers quickly see how news outlets across the political spectrum (Left, Center, and Right) are covering the same story. Once you’ve clicked into a story, select the Bias Comparison tab just below the headline to view a summary of how each side is reporting on it.
+Where to Find the Bias Comparison Summary on our Mobile App
+Once you've clicked into a story on our mobile app, the Bias Comparison Summary tab is located just below the story headline, as highlighted in the screenshot below.
+Where to Find the Bias Comparison Summary on our Website
+Once you've clicked into a story on our website, the Bias Comparison Summary tab is located just below the story headline, as highlighted in the screenshot below.
+AI Summaries and Accuracy
+We use AI to help us analyze content at the speed and volume that our readers expect.  There are tens of thousands of news stories published each day, and it would not be possible for our team to manually review and summarize each one. Our mission at Ground News is to show readers every angle of every story, and we are creating more features to make that possible.
+We understand hesitations around AI, and as with any technology, we believe what matters most is the care and accountability with which it is used. At Ground, we’ve spent years developing and implementing guardrails, including human-in-the-loop oversight, to ensure we are using AI as thoughtfully and responsibly as possible.
+Rest assured that our team is always here to personally answer any questions you may have and investigate any issue you may encounter on Ground News. In the meantime, we'll continue working to improve the technology and provide our readers with the best product possible.
+If you notice an issue with a summary, you can report it directly to our support team. Our team is available 7 days a week to address and investigate any reported issues. Learn more about reporting an issue on Ground News here.
+"I Don't See the Bias Comparison Summary"
+The Bias Comparison summary is available for stories that have enough distinct coverage across the political spectrum. If a story lacks enough unique articles from the Left, Center, or Right, the bias comparison feature may not be available.
+For smaller stories with fewer sources, Ground News may only provide a general summary rather than a full bias comparison. As the story gains more media coverage, the Bias Comparison can become available.
+Your feedback matters, and we want to hear from you. Our team is available 7 days a week to answer your questions and investigate any reported issues. Learn more about reporting an issue on Ground News here.
+If you have any concerns about this article and would like to leave a comment, we welcome your feedback – but please keep in mind that feedback directly submitted on a Help Center article will not be responded to by our team.
+bias comparison
+feature
+summary
+Was this article helpful?
+Yes
+No
+Sorry about that! Care to tell us more?
+What was unhelpful?
+Submit
+Thanks for the feedback!
+There was an issue submitting your feedback
+Please check your connection and try again.
+Cookie preferences
+Refund and Cancellation PolicyTerms and ConditionsPrivacy Policy

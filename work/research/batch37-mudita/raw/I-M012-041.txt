@@ -1,0 +1,21 @@
+How to Create a vCard (VCF File) Using iCloud?
+Modified on: Sat, 3 Oct, 2026 at 8:38 AM
+You can export your contacts from iCloud as a vCard (VCF file), which can then be imported to your Kompakt device using Mudita Center
+Exporting Contacts from iCloud
+On your computer, sign in to your iCloud account using your Apple ID.
+Click Contacts.
+Select the contacts you want to export using:
+Ctrl + click (Windows) or Command + click (macOS) to select individual contacts.
+Shift + click to select a range of contacts.
+Click the Export icon.
+Click Export vCard.
+The vCard (VCF file) will appear in your Downloads folder.
+To quickly select all contacts:
+Click the three dots in a circle icon.
+Click Select All.
+You can then export all contacts into a single VCF file
+Was this article helpful?
+No
+Yes
+That’s Great!
+Thank you for your feedback

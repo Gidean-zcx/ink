@@ -1,0 +1,28 @@
+HELP CENTER
+USING DUOLINGO
+What is a streak?
+Your streak (flame icon) represents the number of days in a row you’ve completed a lesson on Duolingo.
+Language learning is about building goals over time, and the streak is a proven way to motivate you to keep learning and practicing every day.
+Tip: Practice reminders can be a great help for remembering to do your lessons. In your notification settings you can turn on practice reminders and set the time that will work best for you.
+What is a streak freeze?
+Sometimes you need a break! A streak freeze lets you maintain your streak when you forget to practice for a day.
+A streak freeze must be purchased in advance of the day of a missed lesson to protect the streak.
+But if you forget to purchase a streak freeze and you lose your streak, no worries! You can also purchase a streak repair with gems (available in the Shop). Head over to the Shop tab to purchase your streak freeze.
+On the Duolingo app (iOS or Android):
+Open the Duolingo app
+Sign in to your Duolingo account
+Tap the gem icon at the top of the screen to go to the Shop
+Tap “Streak Freeze” and confirm
+On your web browser (desktop):
+Sign in to your Duolingo account via web browser
+Click “Shop” in the side navigation
+Tap “Streak Freeze” and confirm
+How do I get gems in Duolingo?
+Gems are Duolingo’s virtual in-app currency. (In the web version, they’re called lingots.)
+You’ll earn gems as you complete lessons and quests. If you don’t have enough gems to purchase an item in the Shop, you can purchase packs of gems in the Shop.
+Relevant Articles
+Why did my course change?
+What are leaderboards and leagues?
+Does Duolingo use any open source libraries?
+How does matchmaking work in Duolingo Chess?
+I want to submit a bug report

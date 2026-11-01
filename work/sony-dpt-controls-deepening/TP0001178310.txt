@@ -1,0 +1,19 @@
+Using the Digital Paper App, you can create new folders on the Digital Paper, as well as rename, move, copy, and delete the existing folders/documents.
+Connect the computer to the Digital Paper.
+Launch the Digital Paper App on the computer.
+Click [Folders] or [All documents] to display the folder/document you want to edit.
+To move/copy/create a new folder, click [Folders] to display the folders.
+To create a folder
+Click  (New folder) at the level where you want to make a new folder. Then input the name of the folder and click [OK].
+To change the folder name/file name
+Right-click to select a folder/document, and then click [Rename]. Proceed to enter the folder name/file name, and then click [OK].
+To move/copy
+Right-click to select a folder/document, and then click [Cut (within Digital Paper)]/[Copy (within Digital Paper)]. Next, display the folder that you want to move/copy to and right-click, then click [Paste (within Digital Paper)].
+To delete
+Select a folder/document, and then click  (Delete).
+Note
+Folder names and file names that contain certain special characters may not be displayed properly.
+Folders and documents cut or copied with the Digital Paper App cannot be pasted anywhere other than in the Digital Paper App.
+If copying a folder or document to your computer, copy using the [Transfer documents to computer] function.
+Files and folders cut or copied on your computer cannot be pasted in the Digital Paper App. If copying to the Digital Paper App, copy using the [Transfer documents to Digital Paper] function.
+When renaming or moving the synced folder, the sync settings are deleted. If you want to sync continuously, set  [Set sync folder] again.

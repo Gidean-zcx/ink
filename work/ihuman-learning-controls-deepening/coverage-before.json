@@ -1,0 +1,82 @@
+[
+  {
+    "source_batch": "docs/research/interaction-library/batches/children-coverage.csv",
+    "record": {
+      "flow_id": "F-M029-01",
+      "product_id": "M-029",
+      "task": "单字到子集故事内容循环",
+      "depth": "D1",
+      "evidence_ids": "E-IHUM-01;E-IHUM-02;E-IHD-02;E-IHCD-01;E-IHCD-03",
+      "known_branches": "当前五步声明；2018版练界面仅静态选项/导航；作者示范建议不当实现",
+      "gaps": "现行选课、错答提示/重试、奖励/复习结算、故事解锁及退出恢复",
+      "visual_status": "static_reference_only",
+      "hands_on": "false",
+      "case_path": "cases/M-029-ihuman.md",
+      "checked_on": "2026-10-26"
+    }
+  },
+  {
+    "source_batch": "docs/research/interaction-library/batches/children-coverage.csv",
+    "record": {
+      "flow_id": "F-M029-02",
+      "product_id": "M-029",
+      "task": "调节游戏和跳过",
+      "depth": "D2",
+      "evidence_ids": "E-IHUM-02;E-IHCD-01;E-IHCD-02",
+      "known_branches": "2020官方回复关闭游戏与禁止跳过；3.0.1静态设置容器；重置进度回复仅表示考虑",
+      "gaps": "现行入口/验证失败、教学开关保存与课内生效、按孩子分别配置",
+      "visual_status": "static_official_images_only",
+      "hands_on": "false",
+      "case_path": "cases/M-029-ihuman.md",
+      "checked_on": "2026-10-26"
+    }
+  },
+  {
+    "source_batch": "docs/research/interaction-library/batches/children-coverage.csv",
+    "record": {
+      "flow_id": "F-M029-03",
+      "product_id": "M-029",
+      "task": "获取档案成长报告副本",
+      "depth": "D2",
+      "evidence_ids": "E-IHUM-03;E-IHUM-04;E-IHCD-02",
+      "known_branches": "登录与相册权限；官方设置图显示3.0.1及隐私中心进入按钮",
+      "gaps": "平台与图日期、拒绝权限、图片导出失败及结构化进度恢复",
+      "visual_status": "static_official_images_only",
+      "hands_on": "false",
+      "case_path": "cases/M-029-ihuman.md",
+      "checked_on": "2026-10-26"
+    }
+  },
+  {
+    "source_batch": "docs/research/interaction-library/batches/ihuman-controls-deepening-coverage.csv",
+    "record": {
+      "flow_id": "F-M029-05",
+      "product_id": "M-029",
+      "task": "历史3.7.2家长验证与退出登录入口",
+      "depth": "D1",
+      "evidence_ids": "E-IHCD-04",
+      "known_branches": "正文描述设置→数字验证→账户中心→退出登录；iPhone12/iOS15.6/3.7.2",
+      "gaps": "截图403；确认/取消与退出后状态；当前构建、草稿/进度保留和重登录恢复",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-029-ihuman.md",
+      "checked_on": "2026-10-26"
+    }
+  },
+  {
+    "source_batch": "docs/research/interaction-library/batches/children-loop-deepening-coverage.csv",
+    "record": {
+      "flow_id": "F-M029-04",
+      "product_id": "M-029",
+      "task": "按教材核查整课汉字",
+      "depth": "D1",
+      "evidence_ids": "E-IHD-01;E-IHCD-01",
+      "known_branches": "年级/书册/课文范围；iOS4.4.0/2026-02-05宣布部编版地图；先单字后整课测验",
+      "gaps": "当前4.5.2具体入口、错答/提示/补练、结算、退出恢复",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-029-ihuman.md",
+      "checked_on": "2026-10-26"
+    }
+  }
+]

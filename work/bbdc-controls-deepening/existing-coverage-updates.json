@@ -1,0 +1,106 @@
+[
+  {
+    "flow_id": "F-M018-01",
+    "source_batch": "docs/research/interaction-library/batches/vocab-coverage.csv",
+    "field": "known_branches",
+    "before": "中国区iOS拼写设置日志；Android例句显示修复",
+    "after": "分别配置学后/复习后拼写；5.9.8复习100词/组不是每日计划；Android例句显示修复仍限旧记录",
+    "reason": "原任务边界及取得方式补证；编号/深度不变，仅建议root合并"
+  },
+  {
+    "flow_id": "F-M018-01",
+    "source_batch": "docs/research/interaction-library/batches/vocab-coverage.csv",
+    "field": "gaps",
+    "before": "逐题回忆/揭示/评价/反馈链、原声音频与中断恢复未知",
+    "after": "逐题回忆/揭示/评价/反馈、听写与听词区分、原声音频、分组中断和跨日队列未知",
+    "reason": "原任务边界及取得方式补证；编号/深度不变，仅建议root合并"
+  },
+  {
+    "flow_id": "F-M018-01",
+    "source_batch": "docs/research/interaction-library/batches/vocab-coverage.csv",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27",
+    "reason": "原任务边界及取得方式补证；编号/深度不变，仅建议root合并"
+  },
+  {
+    "flow_id": "F-M018-02",
+    "source_batch": "docs/research/interaction-library/batches/vocab-coverage.csv",
+    "field": "known_branches",
+    "before": "回上一词/只拼错词/提示页与记错了修复日志",
+    "after": "回上一词/只拼错词/提示页声明；5.11.6仅记尝试修复纠错按钮，不证修复成功",
+    "reason": "原任务边界及取得方式补证；编号/深度不变，仅建议root合并"
+  },
+  {
+    "flow_id": "F-M018-02",
+    "source_batch": "docs/research/interaction-library/batches/vocab-coverage.csv",
+    "field": "gaps",
+    "before": "是否撤销、空错词集合、提示阶梯、重试和队列更新未知",
+    "after": "返回是否撤销、空错词集合、提示阶梯、重试、按钮恢复和队列更新未知",
+    "reason": "原任务边界及取得方式补证；编号/深度不变，仅建议root合并"
+  },
+  {
+    "flow_id": "F-M018-02",
+    "source_batch": "docs/research/interaction-library/batches/vocab-coverage.csv",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27",
+    "reason": "原任务边界及取得方式补证；编号/深度不变，仅建议root合并"
+  },
+  {
+    "flow_id": "F-M018-04",
+    "source_batch": "docs/research/interaction-library/batches/vocab-coverage.csv",
+    "field": "known_branches",
+    "before": "部分共享数据范围",
+    "after": "部分共享数据范围；政策索引列特定老账号密码条件和两种账户入口名称；04:00限日数据边界",
+    "reason": "原任务边界及取得方式补证；编号/深度不变，仅建议root合并"
+  },
+  {
+    "flow_id": "F-M018-04",
+    "source_batch": "docs/research/interaction-library/batches/vocab-coverage.csv",
+    "field": "gaps",
+    "before": "冲突、离线、重装",
+    "after": "账号入口版本关系、身份合并、同步冲突、离线、重装和用户可执行备份/回滚未知",
+    "reason": "原任务边界及取得方式补证；编号/深度不变，仅建议root合并"
+  },
+  {
+    "flow_id": "F-M018-04",
+    "source_batch": "docs/research/interaction-library/batches/vocab-coverage.csv",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27",
+    "reason": "原任务边界及取得方式补证；编号/深度不变，仅建议root合并"
+  },
+  {
+    "flow_id": "F-M018-05",
+    "source_batch": "docs/research/interaction-library/batches/vocab-coverage.csv",
+    "field": "known_branches",
+    "before": "iOS帮助路径；Android描述路径差异",
+    "after": "iOS帮助路径；Android描述路径差异；2026-10-27政策直接请求仅壳、搜索索引仍有说明",
+    "reason": "原任务边界及取得方式补证；编号/深度不变，仅建议root合并"
+  },
+  {
+    "flow_id": "F-M018-05",
+    "source_batch": "docs/research/interaction-library/batches/vocab-coverage.csv",
+    "field": "gaps",
+    "before": "具体FAQ正文、反馈受理状态、离线保存与工单恢复未知",
+    "after": "应用内帮助目录与具体FAQ正文、反馈受理状态、离线保存和工单恢复未知",
+    "reason": "原任务边界及取得方式补证；编号/深度不变，仅建议root合并"
+  },
+  {
+    "flow_id": "F-M018-05",
+    "source_batch": "docs/research/interaction-library/batches/vocab-coverage.csv",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27",
+    "reason": "原任务边界及取得方式补证；编号/深度不变，仅建议root合并"
+  },
+  {
+    "flow_id": "F-M018-04",
+    "source_batch": "docs/research/interaction-library/batches/vocab-coverage.csv",
+    "field": "evidence_ids",
+    "before": "E-BBDC-03",
+    "after": "E-BBDC-03;E-BBD-01",
+    "reason": "04:00日数据边界由商店5.9.17日志支持；账户入口由政策支持，不混来源"
+  }
+]

@@ -1,0 +1,7 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M012-11,M-012,创建及删除联系人（机内/Center）,D2,E-MACD-10;E-MACD-11;E-MACD-18,机内Add contact/Create；Pencil/Bin/Delete contact；Center勾选或全选并两次Delete；阻止另见F01。,编辑保存、数据存储位置、误删回收/恢复、删除与历史消息关联未知。,not_observed,false,cases/M-012-mudita.md,2026-10-27
+F-M012-12,M-012,选择联系人来源并导入Kompakt,D2,E-MACD-18,Center Contacts/Import contacts；CSV或vCard文件、Google、Outlook三路；选择部分/全部后Import selected contacts；过程勿断线。,不等于持续同步；授权细目、重复/字段映射、失败重试、完成反馈与远端删除传播未知。,not_observed,false,cases/M-012-mudita.md,2026-10-27
+F-M012-13,M-012,创建便笺并批量删除,D2,E-MACD-06;E-MDCD-04,Apps/Notes；首条Create new note或Plus；54字符标题、Enter、正文、Done；Edit勾选后两次Delete。,退出草稿、自动保存/编辑、超长标题反馈、回收/恢复未知；Task list仅K1.6版本声明。,not_observed,false,cases/M-012-mudita.md,2026-10-27
+F-M012-14,M-012,录音保存、回听及删除,D2,E-MACD-07;E-MACD-08;E-MACD-09;E-MDCD-04,录制Pause与Done停止分开；命名后Done保存。Menu选录音回放；Done仅说明关画面。单个Bin/Delete，批量Edit选择并二次Delete。,暂停续录、保存前离开、关闭画面是否停播、来电/锁屏、导出格式、误删恢复与备份范围未知。,not_observed,false,cases/M-012-mudita.md,2026-10-27
+F-M012-15,M-012,选择全局或逐App定位共享范围,D2,E-MACD-15,Control Center/Settings/Location Sharing；总开关或选择App再选共享等级。,具体等级名、总开关优先级、保存/退出、后台或精确定位、其他权限均未说明。,not_observed,false,cases/M-012-mudita.md,2026-10-27
+F-M012-16,M-012,添加和删除解锁指纹,D2,E-MACD-14,Settings/Security/Manage Fingerprints先输passcode；Plus后按提示录入，震动后换部位；Bin/Delete移除所选指纹。,最终录入完成确认、重复/失败次数、上限、末枚删除及失去口令时指纹作用未知。,not_observed,false,cases/M-012-mudita.md,2026-10-27

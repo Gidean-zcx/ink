@@ -1,0 +1,9 @@
+{
+  "path": "docs/research/interaction-library/cases/M-052-toutiao.md",
+  "backup": "work/espresso-controls-deepening/toutiao-case-before-merge-status.md",
+  "before_sha256": "b7161998ed8ccb9fb770f8b9b06f9799b8d81b1a06d22ce287267d726a580b60",
+  "after_sha256": "74212e205c64c1bf124db8f388c2b9c891a00c8db14cf24dc8bbba96ef50b182",
+  "before_text": "旧E追加采集与旧F字段建议交root合并，旧批和主索引未修改。",
+  "after_text": "旧E追加采集和旧F修订已合并，沿用原编号。",
+  "reason": "replace handoff-only status after root merged reviewed updates; no research claims changed"
+}

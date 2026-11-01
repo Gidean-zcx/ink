@@ -1,0 +1,1 @@
+Yes. Changes sync once your device reconnects to the internet.

@@ -1,0 +1,20 @@
+Launch a shortcut from another app on iPhone or iPad
+You can run a shortcut from another app to process content without leaving that app. You do this by making the shortcut accessible from other apps via the Share button .
+For example, by tapping the Share button in another app, you can activate a shortcut to grab all the images from a page in Safari, convert a text file you’re viewing, or edit images in your Photos library.
+Enable a shortcut to run in other apps on iPhone or iPad
+To allow a shortcut to run from within other apps, you must enable it to appear in the share sheet—the window that appears when you tap the Share button in another app.
+In the Shortcuts app on your iPhone or iPad, tap on a shortcut.
+The shortcut opens in the shortcut editor.
+Tap to open Details, then turn on Show in Share Sheet.
+Tap Done.
+A new action appears at the beginning of your workflow defining inputs the shortcut will accept.
+The shortcut will now be available in other apps. To limit which apps your shortcut appears in, see Limit the input for a shortcut on iPhone or iPad.
+Run a shortcut in another app
+After you’ve turned on Show in Share Sheet for a shortcut, you can run the shortcut from any app that has a Share button .
+Select content in an app on your iPhone or iPad.
+For example, depending on the shortcut you plan to run, you might select a block of text or an image.
+Tap .
+Scroll down to show available shortcuts.
+Tap a shortcut button.
+A shortcut notification appears, showing the progress of each action in the shortcut as it runs.
+Note: If your shortcut isn’t available from the share sheet, the app may not have appropriate content to pass to the input of your shortcut. See Limit the input for a shortcut on iPhone or iPad.

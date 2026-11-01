@@ -1,0 +1,45 @@
+[
+  {
+    "name": "translate-support",
+    "url": "https://web.shanbay.com/bay-translate/support",
+    "http_status": 200,
+    "final_url": "https://web.shanbay.com/bay-translate/support",
+    "content_type": "text/html; charset=utf-8",
+    "raw_work_path": "work/shanbay-controls-deepening-2/translate-support.html",
+    "raw_sha256": "1373f8578330528174bffa5f98790c7f40a600089a81fa5d93879721f4a0bc4c",
+    "result": "public_body",
+    "text_length": 1662
+  },
+  {
+    "name": "translate-home",
+    "url": "https://web.shanbay.com/bay-translate/",
+    "http_status": 404,
+    "final_url": "https://web.shanbay.com/bay-translate",
+    "content_type": null,
+    "raw_work_path": "work/shanbay-controls-deepening-2/translate-home.html",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "result": "non200 no retry"
+  },
+  {
+    "name": "translate-privacy",
+    "url": "https://web.shanbay.com/bay-translate/privacy",
+    "http_status": 200,
+    "final_url": "https://web.shanbay.com/bay-translate/privacy",
+    "content_type": "text/html; charset=utf-8",
+    "raw_work_path": "work/shanbay-controls-deepening-2/translate-privacy.html",
+    "raw_sha256": "22264a5da1439c6a10fc80bae1acba454fd9e5bce4b4aa1017279e27d0ff84c5",
+    "result": "public_body",
+    "text_length": 11472
+  },
+  {
+    "name": "company",
+    "url": "https://web.shanbay.com/company/jieshao",
+    "http_status": 200,
+    "final_url": "https://web.shanbay.com/company/jieshao",
+    "content_type": "text/html; charset=utf-8",
+    "raw_work_path": "work/shanbay-controls-deepening-2/company.html",
+    "raw_sha256": "8748b51e5df1b1d6549497be2f12d8df33e08074854e5108d846f432f655194c",
+    "result": "public_body",
+    "text_length": 3482
+  }
+]

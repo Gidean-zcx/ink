@@ -1,0 +1,57 @@
+How do I delete an app and re-download? – Khan Academy (https://khankids.zendesk.com/hc/en-us/articles/360006761532-How-do-I-delete-an-app-and-re-download)
+citeturn961view2 [wordlim: 200] Crawled: last week; Content type: text/html; Source: click({"ref_id":"turn959view0","id":2}); Total lines: 55
+L0: 【0†Skip to main content】
+L1: 
+L2: 【1†Submit a request】
+L3: 
+L4: [Input][Input] [Input: Search]
+L5: 
+L6: Articles in this section
+L7:   * 【2†Our Accessibility Statement】
+L8:   * 【3†Get in touch!】
+L9:   * 【4†Welcome to Khan Academy Kids】
+L10:   * 【5†Parent and Home Account Users: Getting Started and creating an account with Khan Academy Kids】
+L11:   * 【6†How do I set up an account?】
+L12:   * 【7†How do I verify my email?】
+L13:   * 【8†List of resources for parents】
+L14:   * 【9†Printable activities for parents and teachers】
+L15:   * 【10†Weekly Planners for Ages 2-8】
+L16:   * 【11†How does the learning level adjust and how do I view my child's progress?】
+L17: 【12†See more】
+L18: # How do I delete an app and re-download?
+L19: 
+L20:   * February 27, 2026 00:11
+L21:   * Updated
+L22: ## Apple iOS devices
+L23:   * To delete the application from your device, press down on the app icon you want to delete until all of the icons start shaking
+L24:   * An X should appear on the top corner of the icons
+L25:   * Press the X of the app icon you want to delete
+L26:   * Open the App Store, search for the app, then re-download the application with the same iTunes login
+L27:   * If you are re-downloading Khan Academy Kids, no payment is necessary since Khan Academy Kids is completely free to download
+L28:   * Please restart your device after re-downloading (see "【13†How to I restart my device】")
+L29: ## Android devices
+L30: 
+L31:   * Open Settings on your device
+L32:   * Tap on Apps or Application manager
+L33:   * Tap on the app you want to remove (you may need to scroll to find the right one)
+L34:   * Tap Uninstall
+L35: 
+L36: Was this article helpful?
+L37: 
+L38: [Button: Yes] [Button: No]
+L39: 
+L40: 9 out of 10 found this helpful
+L41: 
+L42: Have more questions? 【1†Submit a request】
+L43: 
+L44: 【14†Return to top】
+L45: 
+L46: ## Comments
+L47: 
+L48: 0 comments
+L49: 
+L50: Article is closed for comments.
+L51: 
+L52: 【15†Khan Academy】
+L53: 
+L54: 【16†Powered by Zendesk†www.zendesk.com】

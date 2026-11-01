@@ -1,0 +1,196 @@
+Rules - automate your RSS feeds | Inoreader
+inoreader-logo
+Start 15-Day Trial
+Home
+Features
+Enterprise
+Pricing
+Blog
+Contact
+RSS tools
+Free tools
+Feed validatorValidate a feed for errors
+Podcast validatorGet a podcast listed everywhere
+Feed analyticsSee how a feed performs
+Feed finderFind the feeds of any website
+OPML checkerCheck and repair an OPML export
+All RSS tools
+Feed validator
+Inoreader fetches the feed the way a reader does, reports what is wrong and tells you exactly what to change.
+Open the validator
+Podcast validator
+Inoreader fetches a podcast feed, its newest episode files and the artwork, and checks everything Apple Podcasts, Spotify and the apps require.
+Open the podcast validator
+Feed analytics
+See how many Inoreader readers follow a feed, how it ranks in its topic and how reliably it delivers new posts.
+Open feed analytics
+Feed finder
+Paste a website's address and Inoreader lists the feeds it publishes, for you to copy or follow in one click.
+Open the finder
+OPML checker
+Upload an OPML export and see which of its feeds still work, which fail, which moved and which are listed twice.
+Open the checker
+All RSS tools →
+Sign in
+Create account
+Features
+/
+Rules
+Automate what happens to every new article
+Rules sort, forward and act on articles for you. Set the trigger, the conditions and the actions once, and Inoreader applies them to every new article, around the clock.
+See pricing
+ProPro includes 30 rules, and more are available as an add-on.
+TeamEvery Team and Team Intelligence plan includes rules, pooled across the team.
+Automate what happens to new articles
+Most RSS readers show you everything and leave the sorting to you. With rules, every new article is checked against your conditions, and the actions you chose happen at once, whether you are reading or not.
+Triggers
+Choose which articles are checked: everything you follow, a folder, a feed, a monitoring feed, or the articles you tag, star or save.
+Conditions
+Look for keywords in the title or the body, an author, a URL, a language, an attachment or the feed's own categories, combined with "all" or "any".
+Actions
+Tag, star, save or mark the article as read, notify you or email it. Forward it to Slack, a Team channel, a webhook or an integration, translate it, summarize it or add a note.
+Chains of rules
+A rule can trigger on the result of another rule, so one rule narrows a busy feed and the next decides where the remaining articles go.
+Create a rule
+Open Automate, then Rules, and create a new rule.
+Choose the trigger. It can be all articles, a folder, a feed, a monitoring feed, or something you do, such as tagging or starring an article.
+Add conditions. "Title contains" and "Content contains" cover most cases, and you can add author, URL, language or attachment conditions when you need them. Then choose whether all of the conditions or any of them must match.
+Add as many actions as you need. Tag and save actions keep your own reading organized. Email, push and desktop alerts tell you when something matches. Team channel, Slack, webhook, Zapier and n8n actions move the article elsewhere.
+Click Run rule to see what the rule would do with the articles already in your account, then save it. From then on, the rule runs on every new article.
+Use cases
+Alerts without a separate tool
+Set up a rule on a monitoring feed for your brand or your competitors that sends you a push notification or an email the minute a matching article appears. You no longer have to wait for a daily alert digest.
+Research that files itself
+Save every article that mentions your project to Evernote, OneNote or Raindrop.io as it arrives, so your notes stay up to date without copying links by hand.
+Sending articles to your team's tools
+Forward the articles that match a client, a market or a product to a Slack channel, a Microsoft Teams channel, a Team channel in Inoreader, or a webhook that posts into your own system. When the source is in another language, a rule can also translate the articles as they arrive.
+Frequently asked questions
+What is a rule in an RSS reader?
+A rule is an automation that runs on every new article. When an article matches the conditions you set, such as a keyword, an author, a feed or a language, the rule performs actions on it. It can tag the article, save it, or send it to your email or to another app. You set up a rule once, and it runs for as long as you keep it.
+What can trigger a rule?
+A rule can start from a new article in all your feeds, in one folder, in one feed or in a monitoring feed. It can also start when you tag, star or broadcast an article, save a web page or upload a file, or when there is a new Intelligence report. A rule can even start from another rule, so you can chain rules together.
+Which conditions can a rule check?
+A rule can check keywords in the title or the content, the author, the article URL, the language, attachments such as images or audio, and the feed's own categories. You can combine these conditions and choose whether "all" or "any" of them must match.
+What actions can a rule perform?
+A rule can tag or star an article, mark it as read or save it to Read later. It can send you a push notification, a desktop alert or an email, or forward the article to a Team channel, Slack, Microsoft Teams, a webhook, IFTTT, Zapier or n8n. It can also save the article to Evernote, OneNote, Google Drive, Dropbox, Readwise or Raindrop.io, translate it, create a summary or add a note. One rule can perform several actions at once. A rule can also be triggered by another rule, and when a rule is triggered by a rule that translates, it waits until the translation is finished, so its email, push notification, summary or webhook carries the translated article.
+Can I test a rule before it runs?
+Yes. Click Run rule to preview what the rule would do with the articles already in your account, so you can adjust the conditions before you save it.
+How many rules do I get?
+The Pro plan includes 30 rules, and more are available as an add-on. Team and Team Intelligence plans include rules too, pooled across the whole team. You can see your usage under Preferences > Billing and usage.
+Related features
+Filters
+Read only the articles you want
+Monitoring feeds
+Watch any keyword, brand or topic across the web
+Email digests
+Send the articles that matter to anyone by email
+Help center
+What are rules?
+What can trigger a rule?
+What conditions can rules use?
+What actions can rules perform?
+Can I test a rule before saving it?
+Blog
+Introducing new rule triggers and actions: Translations, summaries, and more
+Streamline content discovery with filters and rules
+Build your own newsfeed
+Ready to give it a go?
+Start a 14-day trial, no credit card required.
+Create account
+With Inoreader, content comes to you the minute it's available.
+Follow websites, social media feeds, podcasts, blogs, and newsletters. Enjoy what's important to you, all in one place.
+With Inoreader, content comes to you the minute it's available.
+Follow websites, social media feeds, podcasts, blogs, and newsletters. Enjoy what's important to you, all in one place.
+Create account
+Product
+Features
+Pricing
+Enterprise
+Mobile apps
+Browser extension
+Inoreader alternatives
+RSS tools
+All tools
+Feed finder
+Feed analytics
+Top RSS feeds
+Feed validator
+Podcast validator
+Feed viewer
+OPML checker
+Company
+About us
+Blog
+Help center
+Developer portal
+Contact us
+Brand portal
+Service status
+Legal
+Terms of Service
+Privacy Policy
+Security commitment
+© 2026 Innologica Ltd
+We use cookies to enhance your Inoreader experience. By using our website, you agree to our use of cookies.
+Access cookie settings
+OK, I agree
+×
+Sign in
+Use a different account
+Sign in with a passkey
+Other sign-in methods
+Change user
+Passkey sign-in was canceled or couldn't be completed.
+Don't have a passkey yet? Sign in with your password first, then add one in your account settings.
+Sign in
+Email address:
+Please enter Email
+Password
+Please enter password
+Remember me
+Forgot password?
+Sign in
+Sign in with a passkey
+Passkey sign-in was canceled or couldn't be completed
+Don't have a passkey yet? Sign in with your password first, then add one in your account settings.
+Or simply sign in with:
+New to Inoreader? Create an account
+Create account
+With Inoreader, content comes to you.
+Sign up to browse more than 5 000 000 sources and build the ultimate newsfeed!
+Create account
+Don't have an account?
+Create one now
+×
+Create account
+Email address
+Please enter email
+Password
+Please enter password
+Create account
+Or simply sign in with:
+Already have an account? Sign in.
+Sign in
+Already have an account?
+Enter your profile and access your feeds now.
+Sign in
+Already have an account?
+Sign in
+×
+Request Quote
+Name
+Please enter name
+Email
+Please provide valid email
+Company                    Optional
+Industry                    Optional
+Select from listMedia and PublishingPharmaceuticalsCybersecurityTelecommunicationsIT and SoftwareFinance and BankingTransport and LogisticsMarketing and PRPublic AuthoritiesInternational OrganizationsResearchEducation ServicesOther
+Position                    Optional
+Message
+Please enter message
+I understand and accept the Inoreader Privacy
+Policy
+You must accept the privacy policy
+Send message
+Thank you for your query. Our team will review the details and get back to you shortly.
+Go to homepage

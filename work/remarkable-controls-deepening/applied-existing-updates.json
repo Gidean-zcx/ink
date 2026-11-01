@@ -1,0 +1,212 @@
+[
+  {
+    "file": "docs/research/interaction-library/batches/eink-systems-coverage.csv",
+    "flow_id": "F-M005-01",
+    "field": "evidence_ids",
+    "before": "E-RMK-01;E-RMK-03",
+    "after": "E-RMK-01;E-RMK-03;E-RMCD-01"
+  },
+  {
+    "file": "docs/research/interaction-library/batches/eink-systems-coverage.csv",
+    "flow_id": "F-M005-01",
+    "field": "known_branches",
+    "before": "本机可离线存文档；配对是启用云服务的另一步，不等于已付费订阅。",
+    "after": "本机可离线；原手册p20可跳过配对；云配对一次性码；支付/Activate Connect为另一阶段；旧指南五分钟时效未实测"
+  },
+  {
+    "file": "docs/research/interaction-library/batches/eink-systems-coverage.csv",
+    "flow_id": "F-M005-01",
+    "field": "gaps",
+    "before": "当前3.29全部向导、离线跳过路径、验证码过期、初次同步中断。",
+    "after": "3.29全部首次逐屏、验证码过期实际反馈、初次同步中断；旧单设备账户限制未采"
+  },
+  {
+    "file": "docs/research/interaction-library/batches/eink-systems-coverage.csv",
+    "flow_id": "F-M005-01",
+    "field": "visual_status",
+    "before": "not_observed",
+    "after": "static_manual_pages_only"
+  },
+  {
+    "file": "docs/research/interaction-library/batches/eink-systems-coverage.csv",
+    "flow_id": "F-M005-01",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27"
+  },
+  {
+    "file": "docs/research/interaction-library/batches/eink-systems-coverage.csv",
+    "flow_id": "F-M005-04",
+    "field": "evidence_ids",
+    "before": "E-RMK-08;E-RMK-09",
+    "after": "E-RMK-08;E-RMK-09;E-RMCD-09"
+  },
+  {
+    "file": "docs/research/interaction-library/batches/eink-systems-coverage.csv",
+    "flow_id": "F-M005-04",
+    "field": "known_branches",
+    "before": "笔画编辑不等于删页；工具栏可移动，部分工具随位置移进Document settings。",
+    "after": "圈选后移动/缩放/旋转；复制或剪切后可跨页重复粘贴，Clear clipboard清空；翻转可拖角越过对边；Undo/Redo与删页分开"
+  },
+  {
+    "file": "docs/research/interaction-library/batches/eink-systems-coverage.csv",
+    "flow_id": "F-M005-04",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27"
+  },
+  {
+    "file": "docs/research/interaction-library/batches/eink-systems-coverage.csv",
+    "flow_id": "F-M005-07",
+    "field": "evidence_ids",
+    "before": "E-RMK-11",
+    "after": "E-RMK-11;E-RMCD-09;E-RMCD-10"
+  },
+  {
+    "file": "docs/research/interaction-library/batches/eink-systems-coverage.csv",
+    "flow_id": "F-M005-07",
+    "field": "known_branches",
+    "before": "前者保留手写原页，后者移除被选墨迹；不是两种相同的转换入口。桌面/手机编辑需Connect。",
+    "after": "整页/多页转换新增文字页保留原稿；选区转换专页称自动替换，Selection页称光标后粘贴并可跨文档，冲突未实测消解"
+  },
+  {
+    "file": "docs/research/interaction-library/batches/eink-systems-coverage.csv",
+    "flow_id": "F-M005-07",
+    "field": "gaps",
+    "before": "识别差错批量修正、取消/超时、选区转换撤销；PDF/EPUB适用性见下方冲突。",
+    "after": "选区自动/手动粘贴冲突、替换撤销、取消/超时与批量纠错；PDF原页/附加笔记页适用性仍冲突"
+  },
+  {
+    "file": "docs/research/interaction-library/batches/eink-systems-coverage.csv",
+    "flow_id": "F-M005-07",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27"
+  },
+  {
+    "file": "docs/research/interaction-library/batches/eink-systems-coverage.csv",
+    "flow_id": "F-M005-08",
+    "field": "known_branches",
+    "before": "页标签与文件标签是两层对象；去标签不删内容。",
+    "after": "页与文件/文件夹标签分开；白黑状态、移除关联；Tags总览长按Rename保存；Delete→Yes delete tag移除所有文件/页关联"
+  },
+  {
+    "file": "docs/research/interaction-library/batches/eink-systems-coverage.csv",
+    "flow_id": "F-M005-08",
+    "field": "gaps",
+    "before": "多标签组合检索、标签改名传播、误删标签恢复、同名大小写。",
+    "after": "多标签组合、改名跨端传播、删除标签恢复、同名大小写未核"
+  },
+  {
+    "file": "docs/research/interaction-library/batches/eink-systems-coverage.csv",
+    "flow_id": "F-M005-08",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27"
+  },
+  {
+    "file": "docs/research/interaction-library/batches/eink-systems-coverage.csv",
+    "flow_id": "F-M005-10",
+    "field": "evidence_ids",
+    "before": "E-RMK-14",
+    "after": "E-RMK-14;E-RMCD-05;E-RMCD-06"
+  },
+  {
+    "file": "docs/research/interaction-library/batches/eink-systems-coverage.csv",
+    "flow_id": "F-M005-10",
+    "field": "known_branches",
+    "before": "USB支持PDF/EPUB/rmdoc；USB/web上限100MB，更大走app。普通输出格式不可自动等同原生可编辑笔记备份。",
+    "after": "USB/app/web格式与大小条件；网页上传PDF/EPUB/JPG/PNG上限100MB，Connect另可PDF/DOCX转Notebook；桌面PDF/PNG/SVG导出不等于原生备份"
+  },
+  {
+    "file": "docs/research/interaction-library/batches/eink-systems-coverage.csv",
+    "flow_id": "F-M005-10",
+    "field": "gaps",
+    "before": "rmdoc往返保真、取消/断线、同名重复、PDF超大文件错误。",
+    "after": "rmdoc往返保真、网页PDF转换版式/图层、取消断线、同名重复与超大文件错误"
+  },
+  {
+    "file": "docs/research/interaction-library/batches/eink-systems-coverage.csv",
+    "flow_id": "F-M005-10",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27"
+  },
+  {
+    "file": "docs/research/interaction-library/batches/eink-systems-coverage.csv",
+    "flow_id": "F-M005-11",
+    "field": "evidence_ids",
+    "before": "E-RMK-10;E-RMK-16",
+    "after": "E-RMK-10;E-RMK-16;E-RMCD-03"
+  },
+  {
+    "file": "docs/research/interaction-library/batches/eink-systems-coverage.csv",
+    "flow_id": "F-M005-11",
+    "field": "known_branches",
+    "before": "文件被导入本机；“云盘集成”不等同原位置自动双向编辑。转换成Notebook改变后续编辑能力。",
+    "after": "云盘导入时选择PDF/Notebook及位置；3.25+Connect文档转换支持DOCX/GoogleDocs/TXT，但去表格/分栏/边距；新版网页PDF转换另列"
+  },
+  {
+    "file": "docs/research/interaction-library/batches/eink-systems-coverage.csv",
+    "flow_id": "F-M005-11",
+    "field": "gaps",
+    "before": "绑定/授权失效、下载离线、改后上传重名策略、原始.docx格式保真。",
+    "after": "绑定授权过期、离线下载、改后上传重名、表格内容可读性和原文件回溯"
+  },
+  {
+    "file": "docs/research/interaction-library/batches/eink-systems-coverage.csv",
+    "flow_id": "F-M005-11",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27"
+  },
+  {
+    "file": "docs/research/interaction-library/batches/eink-systems-coverage.csv",
+    "flow_id": "F-M005-13",
+    "field": "evidence_ids",
+    "before": "E-RMK-04;E-RMK-02",
+    "after": "E-RMK-04;E-RMK-02;E-RMCD-02"
+  },
+  {
+    "file": "docs/research/interaction-library/batches/eink-systems-coverage.csv",
+    "flow_id": "F-M005-13",
+    "field": "known_branches",
+    "before": "单独删页跳过Trash、不能靠文件恢复入口撤销；恢复时限随版本变化。",
+    "after": "文件Trash恢复/永久删除，3.29加30天自动删；单页删除不进Trash；周期会议本在Trash可点相关日历事件恢复并打开"
+  },
+  {
+    "file": "docs/research/interaction-library/batches/eink-systems-coverage.csv",
+    "flow_id": "F-M005-13",
+    "field": "gaps",
+    "before": "删除确认、30天起算/离线计时、已有Trash迁移、云端清理传播、页删除即时Undo。",
+    "after": "30天起算/离线计时、云传播、单页Undo、会议事件恢复是否回原文件夹未核"
+  },
+  {
+    "file": "docs/research/interaction-library/batches/eink-systems-coverage.csv",
+    "flow_id": "F-M005-13",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27"
+  },
+  {
+    "file": "docs/research/interaction-library/batches/eink-systems-coverage.csv",
+    "flow_id": "F-M005-15",
+    "field": "known_branches",
+    "before": "官方说明AI汇总和下一步；访问者可不注册查看，编辑需登录。原稿、识别文字与AI总结应区分。",
+    "after": "Share→Convert and share→二维码/自己邮箱；任何持链接者可看/下载，只有所有者登录可编辑；可下载DOCX；链接默认6月到期，所有者菜单可改到期；本机后续修改不更新网页"
+  },
+  {
+    "file": "docs/research/interaction-library/batches/eink-systems-coverage.csv",
+    "flow_id": "F-M005-15",
+    "field": "gaps",
+    "before": "内容选择范围、删除/撤销链接、访问控制、AI错误回溯、地区/语言。",
+    "after": "范围选择、即时撤销/删除链接、AI错误回溯与语言/地区、多个链接与网页编辑回流未知"
+  },
+  {
+    "file": "docs/research/interaction-library/batches/eink-systems-coverage.csv",
+    "flow_id": "F-M005-15",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27"
+  }
+]

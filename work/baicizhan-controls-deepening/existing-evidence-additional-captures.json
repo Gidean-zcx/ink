@@ -1,0 +1,146 @@
+[
+  {
+    "evidence_id": "E-BCZ-01",
+    "source_batch": "docs/research/interaction-library/batches/vocab-evidence.jsonl",
+    "field": "additional_captures",
+    "before": [],
+    "after": [
+      {
+        "capture_url": "https://passport.baicizhan.com/privacy/introductions.html",
+        "checked_on": "2026-10-27",
+        "access_mode": "ordinary_anonymous_GET",
+        "raw_work_path": "work/baicizhan-controls-deepening/introductions.html",
+        "raw_sha256": "beb1c5ff200a793c9f54e186862e108580a7b6dc1f766117307986873d974725",
+        "locator": "功能介绍4标题；能力声明无操作",
+        "archived_artifact": "artifacts/baicizhan-controls-deepening/source-notes.md",
+        "sha256": "a8e593cc3fe506258a61b75de641fcaf7911262ce05759497af43624db551e16",
+        "hands_on": false,
+        "visual_observed": false,
+        "http_status": 200,
+        "final_url": "https://passport.baicizhan.com/privacy/introductions.html",
+        "limitation": "公开HTML正文；未安装、未使用图片/评论补操作"
+      }
+    ],
+    "reason": "同URL新采集或旧原件复读，复用E"
+  },
+  {
+    "evidence_id": "E-BCZ-02",
+    "source_batch": "docs/research/interaction-library/batches/vocab-evidence.jsonl",
+    "field": "additional_captures",
+    "before": [],
+    "after": [
+      {
+        "capture_url": "https://www.baicizhan.com/",
+        "checked_on": "2026-10-27",
+        "access_mode": "local_reread_of_existing_public_artifact",
+        "raw_work_path": "work/chinese-vocab-deepening/bcz.html",
+        "raw_sha256": "3a2120cedc7054c3f4def68403d8d7d85fab3d386e216a202a6e32229f9a579c",
+        "locator": "官网模式声明；本轮bcz-reused.txt",
+        "archived_artifact": "artifacts/baicizhan-controls-deepening/source-notes.md",
+        "sha256": "a8e593cc3fe506258a61b75de641fcaf7911262ce05759497af43624db551e16",
+        "hands_on": false,
+        "visual_observed": false,
+        "original_capture_on": "2026-10-26",
+        "limitation": "复读已存原件，未再次GET；不能以本轮查阅日冒充页面修订日"
+      }
+    ],
+    "reason": "同URL新采集或旧原件复读，复用E"
+  },
+  {
+    "evidence_id": "E-BCZ-03",
+    "source_batch": "docs/research/interaction-library/batches/vocab-evidence.jsonl",
+    "field": "additional_captures",
+    "before": [],
+    "after": [
+      {
+        "capture_url": "https://apps.apple.com/cn/app/百词斩-背单词-学英语日语韩语法语/id557545298?platform=watch",
+        "checked_on": "2026-10-27",
+        "access_mode": "ordinary_anonymous_GET",
+        "raw_work_path": "work/baicizhan-controls-deepening/app-store.html",
+        "raw_sha256": "14bd9de382df152a78914bcb6a1e223537ebe8f0b671fb940015e2a15f9330c2",
+        "locator": "TitledParagraph版本7.10.25/2026-10-19；兼容性；本轮version-index.json",
+        "archived_artifact": "artifacts/baicizhan-controls-deepening/source-notes.md",
+        "sha256": "a8e593cc3fe506258a61b75de641fcaf7911262ce05759497af43624db551e16",
+        "hands_on": false,
+        "visual_observed": false,
+        "http_status": 200,
+        "final_url": "https://apps.apple.com/cn/app/%E7%99%BE%E8%AF%8D%E6%96%A9-%E8%83%8C%E5%8D%95%E8%AF%8D-%E5%AD%A6%E8%8B%B1%E8%AF%AD%E6%97%A5%E8%AF%AD%E9%9F%A9%E8%AF%AD%E6%B3%95%E8%AF%AD/id557545298?platform=watch",
+        "limitation": "公开HTML正文；未安装、未使用图片/评论补操作",
+        "app_build": "7.10.25（商店正文，未安装）",
+        "source_updated_on": "2026-10-19"
+      }
+    ],
+    "reason": "同URL新采集或旧原件复读，复用E"
+  },
+  {
+    "evidence_id": "E-BCZ-04",
+    "source_batch": "docs/research/interaction-library/batches/vocab-evidence.jsonl",
+    "field": "additional_captures",
+    "before": [],
+    "after": [
+      {
+        "capture_url": "https://www.baicizhan.com/information",
+        "checked_on": "2026-10-27",
+        "access_mode": "local_reread_of_existing_public_artifact",
+        "raw_work_path": "work/chinese-vocab-deepening/bcz-info.html",
+        "raw_sha256": "1f27ecfa5fc16d67c5f543197f82eae9e5ddf94a37434dd2cfcb4c1df2eda4f3",
+        "locator": "3.8.3实时同步、边走边听与离线两项；本轮bcz-info-reused.txt",
+        "archived_artifact": "artifacts/baicizhan-controls-deepening/source-notes.md",
+        "sha256": "a8e593cc3fe506258a61b75de641fcaf7911262ce05759497af43624db551e16",
+        "hands_on": false,
+        "visual_observed": false,
+        "original_capture_on": "2026-10-26",
+        "limitation": "复读已存原件，未再次GET；不能以本轮查阅日冒充页面修订日"
+      }
+    ],
+    "reason": "同URL新采集或旧原件复读，复用E"
+  },
+  {
+    "evidence_id": "E-BCZ-06",
+    "source_batch": "docs/research/interaction-library/batches/vocab-evidence.jsonl",
+    "field": "additional_captures",
+    "before": [],
+    "after": [
+      {
+        "capture_url": "https://passport.baicizhan.com/privacy/privacy.html",
+        "checked_on": "2026-10-27",
+        "access_mode": "ordinary_anonymous_GET",
+        "raw_work_path": "work/baicizhan-controls-deepening/privacy.html",
+        "raw_sha256": "826be3ac31442ba974f792ddc5c61c28b43790c1935eb2dae5ce49e7a9f7fcad",
+        "locator": "更新/生效2026-09-04；查阅复制/删除；privacy.txt322—354行",
+        "archived_artifact": "artifacts/baicizhan-controls-deepening/source-notes.md",
+        "sha256": "a8e593cc3fe506258a61b75de641fcaf7911262ce05759497af43624db551e16",
+        "hands_on": false,
+        "visual_observed": false,
+        "http_status": 200,
+        "final_url": "https://passport.baicizhan.com/privacy/privacy.html",
+        "limitation": "公开HTML正文；未安装、未使用图片/评论补操作",
+        "source_updated_on": "2026-09-04"
+      }
+    ],
+    "reason": "同URL新采集或旧原件复读，复用E"
+  },
+  {
+    "evidence_id": "E-BCD-07",
+    "source_batch": "docs/research/interaction-library/batches/chinese-vocab-deepening-evidence.jsonl",
+    "field": "additional_captures",
+    "before": [],
+    "after": [
+      {
+        "capture_url": "https://www.baicizhan.com/little_class/article/925/share_view",
+        "checked_on": "2026-10-27",
+        "access_mode": "local_reread_of_existing_public_artifact",
+        "raw_work_path": "work/chinese-vocab-deepening/bcz-925.html",
+        "raw_sha256": "58b6f4eec1ad799729ca89a11e7537c6fc66ae9e6c6b9b1530d9bb92a036e8c6",
+        "locator": "2023-03-23拼写错误词再出现声明；本轮bcz-925-reused.txt",
+        "archived_artifact": "artifacts/baicizhan-controls-deepening/source-notes.md",
+        "sha256": "a8e593cc3fe506258a61b75de641fcaf7911262ce05759497af43624db551e16",
+        "hands_on": false,
+        "visual_observed": false,
+        "original_capture_on": "2026-10-26",
+        "limitation": "复读已存原件，未再次GET；不能以本轮查阅日冒充页面修订日"
+      }
+    ],
+    "reason": "同URL新采集或旧原件复读，复用E"
+  }
+]

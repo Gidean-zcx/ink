@@ -1,0 +1,9 @@
+Intro to editing shortcuts on iPhone or iPad
+As you build your shortcut collection, there are a number of ways you can organize and edit shortcuts. You can:
+Reorder shortcuts so that the ones you use most appear first in the Shortcuts app, in the Shortcuts widget on iOS and iPadOS, and on Apple Watch
+Edit a shortcut by describing a change in plain language
+Quickly duplicate a shortcut for use as the starting point of a new shortcut
+Delete a shortcut you no longer need
+Share shortcuts, and customize a shared shortcut’s information so that no personal data is shared
+Sync shortcuts between devices
+Create folders to organize shortcuts into custom categories

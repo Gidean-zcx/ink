@@ -1,0 +1,500 @@
+{
+  "images": [
+    {
+      "class": "b-cornerLogo__pic",
+      "alt": "Helpix. Мобильные телефоны",
+      "src": "/pic/logo.png",
+      "width": "90",
+      "height": "60"
+    },
+    {
+      "class": "b-mobhead__logoPic",
+      "alt": "Helpix. Мобильные телефоны",
+      "src": "/pic/logo.png",
+      "width": "45",
+      "height": "30",
+      "border": "0"
+    },
+    {
+      "src": "//top-fwz1.mail.ru/counter?id=512417;js=na",
+      "style": "border:0;",
+      "height": "1",
+      "width": "1",
+      "alt": "Рейтинг@Mail.ru"
+    },
+    {
+      "class": "b-cornerSocial__icon",
+      "src": "/pic/favicon/telegram.png"
+    },
+    {
+      "class": "b-cornerSocial__icon",
+      "src": "/pic/favicon/max.png"
+    },
+    {
+      "class": "b-cornerSocial__icon",
+      "src": "/pic/favicon/twitter.png"
+    },
+    {
+      "class": "b-cornerSocial__icon",
+      "src": "/pic/favicon/vkontakte.png"
+    },
+    {
+      "class": "b-cornerSocial__icon",
+      "src": "/pic/favicon/youtube.png"
+    },
+    {
+      "src": "https://i.ibb.co/jJJqHmy/IMG-20240809-150552.jpg",
+      "alt": "IMG-20240809-150552",
+      "border": "0"
+    },
+    {
+      "src": "https://i.ibb.co/gt192LS/IMG-20240809-150458.jpg",
+      "alt": "IMG-20240809-150458",
+      "border": "0"
+    },
+    {
+      "src": "https://i.ibb.co/3fH0sw8/photorealism-high-detail-evil-toad-rhinella-marina-750381175.jpg",
+      "alt": "photorealism-high-detail-evil-toad-rhinella-marina-750381175",
+      "border": "0"
+    },
+    {
+      "src": "https://i.ibb.co/hykm3tD/image.jpg",
+      "alt": "image",
+      "border": "0"
+    },
+    {
+      "src": "https://cdn1.picturebb.com/1/2024/08/29/shfjg.md.jpg",
+      "alt": "shfjg.jpg",
+      "border": "0"
+    },
+    {
+      "src": "https://cdn1.picturebb.com/1/2024/08/29/sh8ah.md.jpg",
+      "alt": "sh8ah.jpg",
+      "border": "0"
+    },
+    {
+      "src": "https://cdn1.picturebb.com/1/2024/08/29/shind.md.jpg",
+      "alt": "shind.jpg",
+      "border": "0"
+    },
+    {
+      "src": "https://cdn1.picturebb.com/1/2024/08/29/shGD1.md.jpg",
+      "alt": "shGD1.jpg",
+      "border": "0"
+    },
+    {
+      "src": "https://cdn1.picturebb.com/1/2024/08/29/sht0f.md.jpg",
+      "alt": "sht0f.jpg",
+      "border": "0"
+    },
+    {
+      "src": "https://cdn1.picturebb.com/1/2024/08/29/svrRX.md.jpg",
+      "alt": "svrRX.jpg",
+      "border": "0"
+    },
+    {
+      "src": "https://cdn1.picturebb.com/1/2024/08/29/svBgF.md.jpg",
+      "alt": "svBgF.jpg",
+      "border": "0"
+    },
+    {
+      "src": "https://cdn1.picturebb.com/1/2024/08/30/sK1BA.md.jpg",
+      "alt": "sK1BA.jpg",
+      "border": "0"
+    },
+    {
+      "src": "https://cdn1.picturebb.com/1/2024/08/31/stNmn.md.jpg",
+      "alt": "stNmn.jpg",
+      "border": "0"
+    },
+    {
+      "src": "https://cdn1.picturebb.com/1/2024/08/30/sWCEy.md.jpg",
+      "alt": "sWCEy.md.jpg",
+      "border": "0"
+    },
+    {
+      "src": "https://cdn1.picturebb.com/1/2024/08/30/sWTsg.md.jpg",
+      "alt": "sWTsg.md.jpg",
+      "border": "0"
+    },
+    {
+      "src": "https://cdn1.picturebb.com/1/2024/08/30/scoEE.md.jpg",
+      "alt": "scoEE.jpg",
+      "border": "0"
+    },
+    {
+      "src": "https://i.ibb.co/Sxg3zbD/t5-1.jpg",
+      "alt": "t5-1",
+      "border": "0"
+    },
+    {
+      "src": "https://i.ibb.co/cr0G8L7/t5-2.jpg",
+      "alt": "t5-2",
+      "border": "0"
+    },
+    {
+      "src": "https://i.ibb.co/31ZPQQF/t5-3.jpg",
+      "alt": "t5-3",
+      "border": "0"
+    },
+    {
+      "src": "https://i.ibb.co/dGkmf09/t5-4.jpg",
+      "alt": "t5-4",
+      "border": "0"
+    },
+    {
+      "src": "https://i.ibb.co/cyS55kV/t5-5.jpg",
+      "alt": "t5-5",
+      "border": "0"
+    },
+    {
+      "src": "https://cdn1.picturebb.com/1/2024/08/31/stkiW.md.jpg",
+      "alt": "stkiW.jpg",
+      "border": "0"
+    },
+    {
+      "src": "https://cdn1.picturebb.com/1/2024/08/30/scm0D.md.jpg",
+      "alt": "scm0D.jpg",
+      "border": "0"
+    },
+    {
+      "src": "https://cdn1.picturebb.com/1/2024/08/30/scX3I.md.jpg",
+      "alt": "scX3I.md.jpg",
+      "border": "0"
+    },
+    {
+      "src": "https://cdn1.picturebb.com/1/2024/08/30/sc9Rw.md.jpg",
+      "alt": "sc9Rw.md.jpg",
+      "border": "0"
+    },
+    {
+      "src": "https://cdn1.picturebb.com/1/2024/08/31/stEn7.md.jpg",
+      "alt": "stEn7.jpg",
+      "border": "0"
+    },
+    {
+      "src": "https://cdn1.picturebb.com/1/2024/08/30/suUvY.md.jpg",
+      "alt": "suUvY.jpg",
+      "border": "0"
+    },
+    {
+      "src": "https://cdn1.picturebb.com/1/2024/08/30/sehon.md.jpg",
+      "alt": "sehon.jpg",
+      "border": "0"
+    },
+    {
+      "src": "https://cdn1.picturebb.com/1/2024/08/30/sedDf.md.jpg",
+      "alt": "sedDf.jpg",
+      "border": "0"
+    },
+    {
+      "src": "https://cdn1.picturebb.com/1/2024/08/30/seswE.md.jpg",
+      "alt": "seswE.jpg",
+      "border": "0"
+    },
+    {
+      "src": "https://cdn1.picturebb.com/1/2024/08/30/swzV1.md.jpg",
+      "alt": "swzV1.md.jpg",
+      "border": "0"
+    },
+    {
+      "src": "https://cdn1.picturebb.com/1/2024/08/30/swBhQ.md.jpg",
+      "alt": "swBhQ.md.jpg",
+      "border": "0"
+    },
+    {
+      "src": "https://cdn1.picturebb.com/1/2024/08/30/swklf.md.jpg",
+      "alt": "swklf.jpg",
+      "border": "0"
+    },
+    {
+      "src": "https://cdn1.picturebb.com/1/2024/08/30/sw4rV.md.jpg",
+      "alt": "sw4rV.md.jpg",
+      "border": "0"
+    },
+    {
+      "src": "https://cdn1.picturebb.com/1/2024/08/30/swGch.md.jpg",
+      "alt": "swGch.md.jpg",
+      "border": "0"
+    },
+    {
+      "src": "https://cdn1.picturebb.com/1/2024/08/30/swTGT.md.jpg",
+      "alt": "swTGT.md.jpg",
+      "border": "0"
+    },
+    {
+      "src": "https://cdn1.picturebb.com/1/2024/08/30/swnlD.md.jpg",
+      "alt": "swnlD.md.jpg",
+      "border": "0"
+    },
+    {
+      "src": "https://cdn1.picturebb.com/1/2024/08/30/sGTT1.md.jpg",
+      "alt": "sGTT1.jpg",
+      "border": "0"
+    },
+    {
+      "src": "https://cdn1.picturebb.com/1/2024/08/30/sGtK0.md.jpg",
+      "alt": "sGtK0.jpg",
+      "border": "0"
+    },
+    {
+      "src": "https://cdn1.picturebb.com/1/2024/08/29/s0rnf.md.jpg",
+      "alt": "s0rnf.jpg",
+      "border": "0"
+    },
+    {
+      "src": "https://cdn1.picturebb.com/1/2024/08/29/sXHd1.md.jpg",
+      "alt": "sXHd1.jpg",
+      "border": "0"
+    },
+    {
+      "src": "https://cdn1.picturebb.com/1/2024/08/30/sC3gF.md.jpg",
+      "alt": "sC3gF.jpg",
+      "border": "0"
+    },
+    {
+      "src": "https://cdn1.picturebb.com/1/2024/08/30/sTIzW.md.jpg",
+      "alt": "sTIzW.jpg",
+      "border": "0"
+    },
+    {
+      "src": "https://cdn1.picturebb.com/1/2024/08/30/sTP71.md.jpg",
+      "alt": "sTP71.jpg",
+      "border": "0"
+    },
+    {
+      "src": "https://cdn1.picturebb.com/1/2024/08/30/sTce0.md.jpg",
+      "alt": "sTce0.jpg",
+      "border": "0"
+    },
+    {
+      "src": "https://i.ibb.co/rF0ZTF9/image.jpg",
+      "alt": "image",
+      "border": "0"
+    },
+    {
+      "src": "https://cdn1.picturebb.com/1/2024/08/30/snRWV.md.png",
+      "alt": "snRWV.png",
+      "border": "0"
+    },
+    {
+      "src": "https://counter.yadro.ru/logo?38.6",
+      "border": "0",
+      "title": "LiveInternet",
+      "width": "31",
+      "height": "31"
+    },
+    {
+      "src": "//counter.rambler.ru/top100.cnt?pid=444755",
+      "alt": "Топ-100"
+    },
+    {
+      "src": "//top-fwz1.mail.ru/counter?id=512417;t=281;l=1",
+      "style": "border:0;",
+      "height": "31",
+      "width": "38",
+      "alt": "Рейтинг@Mail.ru"
+    },
+    {
+      "src": "https://mc.yandex.ru/watch/39482990",
+      "style": "position:absolute; left:-9999px;",
+      "alt": ""
+    }
+  ],
+  "links": [
+    "/",
+    "/",
+    "/cgi/sendopinion/",
+    "/currency/",
+    "/devtyp/phone_gsm/",
+    "/devtyp/phone_gsm/",
+    "/devtyp/pad/",
+    "/devtyp/pad/",
+    "/devtyp/ebook/",
+    "/devtyp/ebook/",
+    "/rest/",
+    "/appinion/",
+    "/chipset/",
+    "/isensor/",
+    "/news/",
+    "/reviews/helpix.html",
+    "https://telegram.me/helpix",
+    "https://max.ru/join/QfHGXSpskxwj38ZNHVd78XZ1MR9Xuaror5ayR9MlJ7U",
+    "https://twitter.com/helpix_ru",
+    "https://vk.com/helpix_ru",
+    "https://www.youtube.com/user/HelpixVideo?sub_confirmation=1",
+    "/cgi/sendopinion/",
+    "/currency/",
+    "/devtyp/phone_gsm/",
+    "/samsung/",
+    "/xiaomi/",
+    "/huawei/",
+    "/honor/",
+    "/apple/",
+    "/nokia/",
+    "/alcatel/",
+    "/asus/",
+    "/bq/",
+    "/blackview/",
+    "/doogee/",
+    "/google/",
+    "/htc/",
+    "/infinix/",
+    "/itel/",
+    "/meizu/",
+    "/motorola/",
+    "/oneplus/",
+    "/oppo/",
+    "/oukitel/",
+    "/realme/",
+    "/sony/",
+    "/tecno/",
+    "/ulefone/",
+    "/vivo/",
+    "/zte/",
+    "/devtyp/phone_gsm/",
+    "/devtyp/phone_gsm/",
+    "/devtyp/pad/",
+    "/apple/pad/",
+    "/huawei/pad/",
+    "/samsung/pad/",
+    "/devtyp/pad/",
+    "/devtyp/pad/",
+    "/devtyp/ebook/",
+    "/amazon/ebook/",
+    "/onyx/ebook/",
+    "/pocketbook/ebook/",
+    "/devtyp/ebook/",
+    "/devtyp/ebook/",
+    "/rest/",
+    "/appinion/",
+    "/chipset/",
+    "/isensor/",
+    "/news/",
+    "/news/indexpromo.html",
+    "/reviews/helpix.html",
+    "/search/",
+    "/list/",
+    "/a/",
+    "/horo/",
+    "/feedback/",
+    "/meebook/m7/",
+    "/onyx/boox_edison/",
+    "/gmini/magicbook_a62lhd/",
+    "https://ibb.co/jJJqHmy",
+    "https://ibb.co/gt192LS",
+    "/onyx/boox_edison/",
+    "/onyx/boox_edison/",
+    "/onyx/boox_edison/",
+    "/onyx/boox_galileo/",
+    "/amazon/kindle_oasis/",
+    "/amazon/kindle_voyage/",
+    "/amazon/kindle_paperwhite_2021/",
+    "https://ibb.co/3fH0sw8",
+    "/ectaco/jetbook_mini/",
+    "/meebook/m7/",
+    "/meebook/m7/",
+    "/meebook/m7/",
+    "/meebook/m7/",
+    "/meebook/m7/",
+    "/meebook/m7/",
+    "/meebook/m7/",
+    "/meebook/m7/",
+    "https://ibb.co/hykm3tD",
+    "https://shopozz.ru/",
+    "https://picturebb.com/image/shfjg",
+    "https://picturebb.com/image/sh8ah",
+    "https://picturebb.com/image/shind",
+    "https://picturebb.com/image/shGD1",
+    "/meebook/m7/",
+    "https://picturebb.com/image/sht0f",
+    "/onyx/boox_galileo/",
+    "/amazon/kindle_oasis/",
+    "/meebook/m7/",
+    "https://picturebb.com/image/svrRX",
+    "/meebook/m7/",
+    "/amazon/kindle_voyage/",
+    "/meebook/m7/",
+    "/amazon/kindle_oasis/",
+    "/meebook/m7/",
+    "https://picturebb.com/image/svBgF",
+    "/amazon/kindle_voyage/",
+    "/onyx/boox_monte_cristo/",
+    "/onyx/boox_edison/",
+    "/meebook/m7/",
+    "https://habr.com/ru/articles/404213/",
+    "https://picturebb.com/image/sK1BA",
+    "https://picturebb.com/image/stNmn",
+    "/meebook/m7/",
+    "/meebook/m7/",
+    "/gmini/magicbook_a62lhd/",
+    "/meebook/m7/",
+    "/lenovo/tab_3_8/",
+    "https://picturebb.com/image/sWCEy",
+    "https://picturebb.com/image/sWTsg",
+    "https://picturebb.com/image/scoEE",
+    "https://ibb.co/Sxg3zbD",
+    "https://ibb.co/cr0G8L7",
+    "https://ibb.co/31ZPQQF",
+    "https://ibb.co/dGkmf09",
+    "https://ibb.co/cyS55kV",
+    "/meebook/m7/",
+    "/meebook/m7/",
+    "https://picturebb.com/image/stkiW",
+    "/meebook/m7/",
+    "https://picturebb.com/image/scm0D",
+    "https://picturebb.com/image/scX3I",
+    "https://picturebb.com/image/sc9Rw",
+    "https://picturebb.com/image/stEn7",
+    "/meebook/m7/",
+    "https://picturebb.com/image/suUvY",
+    "/meebook/m7/",
+    "/meebook/m7/",
+    "https://picturebb.com/image/sehon",
+    "/meebook/m7/",
+    "https://picturebb.com/image/sedDf",
+    "https://picturebb.com/image/seswE",
+    "https://picturebb.com/image/swzV1",
+    "https://picturebb.com/image/swBhQ",
+    "https://picturebb.com/image/swklf",
+    "https://4pda.to/forum/index.php?showuser=1099134",
+    "/meebook/m7/",
+    "/meebook/m7/",
+    "/meebook/m7/",
+    "/meebook/m7/",
+    "/meebook/m7/",
+    "/meebook/m7/",
+    "https://picturebb.com/image/sw4rV",
+    "https://picturebb.com/image/swGch",
+    "https://picturebb.com/image/swTGT",
+    "https://picturebb.com/image/swnlD",
+    "/onyx/boox_livingstone/",
+    "https://picturebb.com/image/sGTT1",
+    "https://picturebb.com/image/sGtK0",
+    "/meebook/m7/",
+    "/meebook/m7/",
+    "https://picturebb.com/image/s0rnf",
+    "/meebook/m7/",
+    "https://picturebb.com/image/sXHd1",
+    "/meebook/m7/",
+    "/meebook/m7/",
+    "/meebook/m7/",
+    "https://picturebb.com/image/sC3gF",
+    "/meebook/m7/",
+    "/meebook/m7/",
+    "https://picturebb.com/image/sTIzW",
+    "/meebook/m7/",
+    "/meebook/m7/",
+    "/onyx/boox_livingstone/",
+    "https://picturebb.com/image/sTP71",
+    "https://picturebb.com/image/sTce0",
+    "/meebook/m7/",
+    "/meebook/m7/",
+    "https://ibb.co/rF0ZTF9",
+    "/meebook/m7/",
+    "https://picturebb.com/image/snRWV",
+    "/go2admin.cgi?get=https://helpix.ru/opinion/202409/60517-meebook_m7.html",
+    "http://www.liveinternet.ru/click",
+    "https://top.mail.ru/jump?from=512417"
+  ]
+}

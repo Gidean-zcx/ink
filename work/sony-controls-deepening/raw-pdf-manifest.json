@@ -1,0 +1,27 @@
+{
+  "url": "https://helpguide.sony.net/dmp/1301/v1/en/print.pdf",
+  "raw_work_path": "work/sony-controls-deepening/raw/guide-existing.pdf",
+  "raw_sha256": "90b7cb2c48cf9e28b2dfb9fcde541a5e9e450b4ea6c63413fb9af2497181dced",
+  "copied_from": "work/audio-research/sony.pdf",
+  "copy_checked_on": "2026-10-27",
+  "downloaded_on": "not_recovered_this_batch",
+  "pages": 143,
+  "manual_number": "5-042-672-11(5)",
+  "new_network_download": false,
+  "visual_derivatives": [
+    {
+      "path": "artifacts/sony-controls-deepening/manual-p022.png",
+      "printed_page": 22,
+      "pdf_zero_based_page": 21,
+      "sha256": "c5e69e27606b09d955ac97b50a13bcd93e23a06e3a086c4ae7ecd0721a0a40fa",
+      "viewed": true
+    },
+    {
+      "path": "artifacts/sony-controls-deepening/manual-p111.png",
+      "printed_page": 111,
+      "pdf_zero_based_page": 110,
+      "sha256": "a3534275f819b11c6eb56ca59b65bff3e38ea9aebb37f802c0d2c66d59efa96c",
+      "viewed": true
+    }
+  ]
+}

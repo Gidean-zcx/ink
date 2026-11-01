@@ -1,0 +1,147 @@
+[
+  {
+    "file": "docs/research/interaction-library/batches/dictionary-coverage.csv",
+    "before": {
+      "flow_id": "F-M021-01",
+      "product_id": "M-021",
+      "task": "AI资料生成与预览校订",
+      "depth": "D2",
+      "evidence_ids": "E-QZLT-01",
+      "known_branches": "手动/AI切换",
+      "gaps": "生成失败及来源校验",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-021-quizlet.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M021-01",
+      "product_id": "M-021",
+      "task": "AI资料生成与预览校订",
+      "depth": "D2",
+      "evidence_ids": "E-QZLT-01;E-QZMW-01;E-QZMW-05",
+      "known_branches": "Smart Assist手动/AI切换；外部Claude/ChatGPT连接后对话生成翻卡，打开Quizlet进一步编辑学习",
+      "gaps": "生成失败、来源校验；外部AI账户归属、可见性、保存回执、重复请求与断开连接后果未知",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-021-quizlet.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "file": "docs/research/interaction-library/batches/dictionary-coverage.csv",
+    "before": {
+      "flow_id": "F-M021-03",
+      "product_id": "M-021",
+      "task": "结构化文本导入",
+      "depth": "D2",
+      "evidence_ids": "E-QZLT-03",
+      "known_branches": "分隔符/语言",
+      "gaps": "空行、重复和失败",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-021-quizlet.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M021-03",
+      "product_id": "M-021",
+      "task": "学习资料输入与结构化导入",
+      "depth": "D2",
+      "evidence_ids": "E-QZLT-03;E-QZMW-02;E-QZMW-07",
+      "known_branches": "文本分隔符/语言；手动两列/插卡；移动扫描框词后人工配对、键盘校订、至少两卡，预览删除后确认",
+      "gaps": "空行、重复及失败；相机拒绝、无字/错行、取消重扫、扫描草稿与最终提交时点未知",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-021-quizlet.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "file": "docs/research/interaction-library/batches/dictionary-coverage.csv",
+    "before": {
+      "flow_id": "F-M021-04",
+      "product_id": "M-021",
+      "task": "学习集编辑复制导出",
+      "depth": "D2",
+      "evidence_ids": "E-QZLT-04;E-QZLT-11;E-QZLT-12;E-QZCD-05;E-QZCD-06;E-QZCD-07;E-QZCD-08",
+      "known_branches": "自有/复制/导出限制；网站行垃圾桶与手机左滑删卡；整集只能删自建且不可恢复；动态隐藏仅网站；可见性有年龄例外",
+      "gaps": "单卡误删/版本撤销、并发编辑、高级内容权限、隐藏找回、整集删除确认与指南级联未知",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-021-quizlet.md",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "flow_id": "F-M021-04",
+      "product_id": "M-021",
+      "task": "学习集编辑复制导出",
+      "depth": "D2",
+      "evidence_ids": "E-QZLT-04;E-QZLT-11;E-QZLT-12;E-QZCD-05;E-QZCD-06;E-QZCD-07;E-QZCD-08;E-QZMW-03;E-QZMW-04",
+      "known_branches": "已有编辑/删除/可见性分支；高级内容复制受限；网站合并可临时学习或保存新集，原集保留，保存后手机可学习编辑",
+      "gaps": "误删撤销/并发编辑/隐藏找回/删除确认；合并去重、进度星标映射、源更新、重试与撤销未知",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-021-quizlet.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "file": "docs/research/interaction-library/batches/dictionary-coverage.csv",
+    "before": {
+      "flow_id": "F-M021-05",
+      "product_id": "M-021",
+      "task": "草稿中断恢复",
+      "depth": "D2",
+      "evidence_ids": "E-QZLT-05",
+      "known_branches": "断网警告、退出账号丢弃",
+      "gaps": "进程终止保存",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-021-quizlet.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M021-05",
+      "product_id": "M-021",
+      "task": "草稿中断恢复",
+      "depth": "D2",
+      "evidence_ids": "E-QZLT-05;E-QZMW-07",
+      "known_branches": "创建页自动草稿与显式发布分开；既有断网警告/退出账号丢弃规则；不将普通草稿规则套外部AI或扫描",
+      "gaps": "进程终止、系统重启及编辑冲突的保存边界未知",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-021-quizlet.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "file": "docs/research/interaction-library/batches/dictionary-coverage.csv",
+    "before": {
+      "flow_id": "F-M021-08",
+      "product_id": "M-021",
+      "task": "评分选项与连胜误判",
+      "depth": "D2",
+      "evidence_ids": "E-QZLT-07;E-QZLT-08;E-QZCD-09;E-QZCD-17",
+      "known_branches": "语言/三卡条件、I was correct、切题型重置连胜；网站Test单答案要求按分隔符识别，偏好影响该集其他活动且可取消",
+      "gaps": "长期记忆状态修正、Test提交后误判修正、改变评分对已提交成绩的影响未知；不将Learn/Write按钮套到Test",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-021-quizlet.md",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "flow_id": "F-M021-08",
+      "product_id": "M-021",
+      "task": "评分选项与连胜误判",
+      "depth": "D2",
+      "evidence_ids": "E-QZLT-07;E-QZLT-08;E-QZCD-09;E-QZCD-17;E-QZMW-06",
+      "known_branches": "原US/连胜误判分支保留；UK文档列Learn三级默认语言条件、网站保存/手机完成；Test单答案设置仅网站，作用于同集其他活动",
+      "gaps": "地区/构建实际边界、中文数学等例外、历史成绩回算和调度影响未知；不将Learn/Write误判按钮套到Test",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-021-quizlet.md",
+      "checked_on": "2026-10-27"
+    }
+  }
+]

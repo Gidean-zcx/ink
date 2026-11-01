@@ -1,0 +1,206 @@
+[
+  {
+    "flow_id": "F-M058-01",
+    "field": "known_branches",
+    "before": "睡眠回原处；完整关机回首页",
+    "after": "睡眠回原屏幕/页面，完整关机再开回首页；睡眠会关闭WiFi并可能中断同步。"
+  },
+  {
+    "flow_id": "F-M058-01",
+    "field": "gaps",
+    "before": "未保存编辑、后台同步中断后的回补",
+    "after": "未保存编辑、睡眠中断后重试与书签同步结果未核"
+  },
+  {
+    "flow_id": "F-M058-01",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27"
+  },
+  {
+    "flow_id": "F-M058-02",
+    "field": "known_branches",
+    "before": "USB Books目录或云上传后同步/下载",
+    "after": "USB支持PDF/EPUB/TXT/MOBI/CBZ/CBR复制至Books并安全弹出；云上传EPUB/PDF，同步后点封面下载再离线读；封面可见不等于本机有文件。"
+  },
+  {
+    "flow_id": "F-M058-02",
+    "field": "gaps",
+    "before": "重名、未完整文件、云与本机删除冲突",
+    "after": "重名、半文件、云配额/冲突及自传书的跨端进度未核"
+  },
+  {
+    "flow_id": "F-M058-02",
+    "field": "evidence_ids",
+    "before": "E-TOL-02;E-TOL-06",
+    "after": "E-TOL-01;E-TOL-02;E-TOL-06"
+  },
+  {
+    "flow_id": "F-M058-02",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27"
+  },
+  {
+    "flow_id": "F-M058-03",
+    "field": "known_branches",
+    "before": "长按词；初次需下载词典",
+    "after": "正文长按词查词/翻译；More Settings Language & Dictionaries→Installed Edit；加号增词典、取消勾选删后Save。"
+  },
+  {
+    "flow_id": "F-M058-03",
+    "field": "gaps",
+    "before": "无命中、选错、返回定位、原句生词和练习",
+    "after": "无命中提示、取消与回原句、词典包离线和生词练习未核"
+  },
+  {
+    "flow_id": "F-M058-03",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27"
+  },
+  {
+    "flow_id": "F-M058-04",
+    "field": "known_branches",
+    "before": "Connected反馈；30秒跳转；配对失败重试",
+    "after": "蓝牙Connected后My Books打开有声书；播放/停、前后30秒、时间条、章节、1x速度、音量及章/全书剩余时长；章节需下载；播放三点有Details/Dictionary；配对失败两端关开蓝牙重试。"
+  },
+  {
+    "flow_id": "F-M058-04",
+    "field": "gaps",
+    "before": "重启/断联续播、缓存丢失、时间和书页映射",
+    "after": "断连/重启续播、收听进度同步、与正文锚点对齐及实际声输出未核"
+  },
+  {
+    "flow_id": "F-M058-04",
+    "field": "evidence_ids",
+    "before": "E-TOL-01",
+    "after": "E-TOL-01;E-TOL-02;E-TLCD-02"
+  },
+  {
+    "flow_id": "F-M058-04",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27"
+  },
+  {
+    "flow_id": "F-M058-05",
+    "field": "known_branches",
+    "before": "阅读菜单三点开始/停止",
+    "after": "页中→三点Read Aloud，原菜单Stop；德文8.2限定Kobo EPUB/EPUB。"
+  },
+  {
+    "flow_id": "F-M058-05",
+    "field": "gaps",
+    "before": "最低固件、语言、离线音色、外设与后台限制",
+    "after": "语言/音色、离线包、最低构建、PDF支持和读听定位未核；不得把Screen Reader条件套此入口"
+  },
+  {
+    "flow_id": "F-M058-05",
+    "field": "evidence_ids",
+    "before": "E-TOL-02",
+    "after": "E-TOL-02;E-TLCD-02"
+  },
+  {
+    "flow_id": "F-M058-05",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27"
+  },
+  {
+    "flow_id": "F-M058-06",
+    "field": "known_branches",
+    "before": "本机保留云封面；云删除影响所有端",
+    "after": "长按封面Remove选择本地或cloud；本地默认只去下载且封面保留，云删除影响多端；Manage books可多选/全选；误删云书需联系书店。"
+  },
+  {
+    "flow_id": "F-M058-06",
+    "field": "gaps",
+    "before": "撤销窗口、客服恢复成功条件",
+    "after": "客服恢复不保证；自传书删除回收、断网传播、撤销及注释连带变化未核"
+  },
+  {
+    "flow_id": "F-M058-06",
+    "field": "evidence_ids",
+    "before": "E-TOL-02",
+    "after": "E-TOL-01;E-TOL-02"
+  },
+  {
+    "flow_id": "F-M058-06",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27"
+  },
+  {
+    "flow_id": "F-M058-07",
+    "field": "known_branches",
+    "before": "先同步；强制关机与出厂重置不同",
+    "after": "手动Sync now或关闭电子书自动同步，后者需两端在线；最多五设备是账户限制。普通强制关机不等于重置。退出账户需先同步未保存书签/笔记；重置清本机书/侧载文件/未同步注释及设置。手动恢复需接电、按至关机再长按至LED快闪结束，出现Restore后重设联网。"
+  },
+  {
+    "flow_id": "F-M058-07",
+    "field": "gaps",
+    "before": "断电写入、侧载文件备份、冲突处理",
+    "after": "同步冲突、未联网登录、恢复完整性、刷机回退和侧载原件备份未核"
+  },
+  {
+    "flow_id": "F-M058-07",
+    "field": "evidence_ids",
+    "before": "E-TOL-01",
+    "after": "E-TOL-01;E-TOL-02"
+  },
+  {
+    "flow_id": "F-M058-07",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27"
+  },
+  {
+    "flow_id": "F-M058-08",
+    "field": "known_branches",
+    "before": "新ByteBooks ID；旧授权例外；到期/账号不一致",
+    "after": "OverDrive按原服务ByteBooks迁移；Onleihe当前T302从5.15.253009 More→Onleihe→选城市/馆→登录→搜书Borrow/OK→打开；LCP首次四位reader code。三点或长按封面Return；只直接借电子书。帮助称清Web-Browser-Daten可清最近馆，但范围不止选馆未证明。"
+  },
+  {
+    "flow_id": "F-M058-08",
+    "field": "gaps",
+    "before": "T302所需最低固件、不同图书馆具体菜单",
+    "after": "两服务授权不可混用；Onleihe直接登录在桌面选馆器本次未实现，见F-M058-19；实际T302借书/到期/断网仍未核"
+  },
+  {
+    "flow_id": "F-M058-08",
+    "field": "evidence_ids",
+    "before": "E-TOL-04;E-TOL-05",
+    "after": "E-TOL-04;E-TOL-05;E-TLCD-04;E-TLCD-05"
+  },
+  {
+    "flow_id": "F-M058-08",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27"
+  },
+  {
+    "flow_id": "F-M058-09",
+    "field": "known_branches",
+    "before": "专页KoboRoot.tgz/update.tar；FAQ写update.zip",
+    "after": "优先联网同步检查更新；USB依型号/当前版本选文件、电量>20%、连接确认、KoboRoot.tgz/update.tar放.kobo安全弹出后自动重启。英站仍5.12.232736，德文T302表列5.18.264769；FAQ的update.zip与专页不一，德文表亦有版本拼写/非递进目标疑点。"
+  },
+  {
+    "flow_id": "F-M058-09",
+    "field": "gaps",
+    "before": "两官方页差异、失败回滚、断电恢复",
+    "after": "未下载固件；不把网站current当装机版本；升级链冲突、失败回退和数据完整性需官方/实机核实"
+  },
+  {
+    "flow_id": "F-M058-09",
+    "field": "evidence_ids",
+    "before": "E-TOL-02;E-TOL-03",
+    "after": "E-TOL-02;E-TOL-03;E-TLCD-06"
+  },
+  {
+    "flow_id": "F-M058-09",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27"
+  }
+]

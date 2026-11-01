@@ -1,0 +1,21 @@
+The handwritten notes have a tag system to better manage them. In this article, you will learn more about the tag system and how to search and manage the tags.
+ 
+ [image:1] 
+ 
+Add Tags to Your Content
+To add a tag to your handwritten notes, do the following:
+In the Notes app, use the Lasso tool and select your handwritten notes.
+Tap the Tag icon on the Top Toolbar.
+The system will automatically perform handwriting recognition to the selected area as the default name of the tag. You can also type in a customized tag name, or select a recent tag from below.
+Tap OK to apply the tag to your content.
+ 
+Search for Tagged Content
+To search for your tagged content and quickly locate it, do the following:
+In the Notes app, tap the Search tool on your Sidebar, and it will display all tags in this notepad.
+Tap one of the tags to quickly locate it in the notepad.
+ 
+Tag Management
+To manage all your tags in this device, do the following:
+In Home Screen, go to Notes.
+Tap the hamburger icon on the upper right corner and choose Options > Tag Management.
+Here you can add a new tag or delete an existing tag.

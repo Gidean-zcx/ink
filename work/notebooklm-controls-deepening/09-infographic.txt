@@ -1,0 +1,48 @@
+Generate an Infographic in Gemini Notebook
+Important: At this time, this feature is also only available to over 18 users. Infographics are available in the mobile app but may have differences. Learn more about the supported features in Gemini Notebook mobile app.
+Infographics turn complex information from your sources into a single, engaging visual summary. They are designed to help you quickly understand the main points, visualize data, or picture relationships between different concepts in a fun and engaging way!
+Open an existing notebook or create a new one and upload sources.
+To generate or delete an Infographic, you need edit access to a notebook.
+In the "Studio" panel, select "Infographic" to start, or use the pencil icon to customize before generating. The visual will be generated in the background, so you can continue working in your notebook.
+(Optional) Within the customization panel, you can also express preferences for your Infographic:
+Select an output language.
+Choose level of detail, from Concise, Standard, or Detailed (beta).
+Select an orientation, such as Square , Portrait, or Landscape.
+Choose a visual style (only for 18+ users), such as Sketch Note, Kawaii, Professional, etc. Or, let Gemini Notebook auto-select for you!
+Input a prompt to describe the Infographic you want to create. You can guide the style, color, or focus, such as "Use a blue color theme and highlight the 3 key stats."
+Important:
+Infographics are AI-generated and may contain visual or factual inaccuracies.
+Gemini Notebook may take a couple of minutes to generate the Infographic.
+Manage your Infographic
+Use the three dots menu next to your generated Infographic to rename, download as a PNG file, share, or delete.
+To view the prompt used to generate your Infographic, select “View custom prompt” within the three dots menu next to the title in the studio panel.
+Load a previous Infographic
+Important: This is only applicable to notebooks that have previously generated Infographics.
+Open an existing notebook.
+In the "Studio" panel, navigate to the "Infographic" section.
+Select the title of the Infographic you wish to load.
+When exploring your Infographic in the expanded viewer, you can zoom in and zoom out, share, and download. To go back to your Notebook, you can minimize the Infographic or exit the viewer.
+Share feedback on your Infographic by selecting "Good content" or "Bad content."
+Share an Infographic
+Option 1: Share a link
+Generate an Infographic.
+In the Infographic viewer, select Share.
+Confirm that the notebook is shared with the recipient or is made public (open to “Anyone with a link”) and viewers have access to the “full notebook.”
+Copy link to Infographic and share link with recipient.
+Save to apply changes.
+Important:
+Public notebook sharing is only enabled for consumer accounts. It's currently disabled for Workspace Enterprise or Education accounts.
+Only notebook owners and editors can make a generated Infographic publicly available and manage its access. As an owner or editor, you can turn off public access by selecting a different Notebook access level in the sharing panel.
+Once an Infographic is deleted, any previously generated share link will no longer work.
+Option 2: Share the entire notebook
+Generate an Infographic.
+Share the notebook.
+Other users can access the Infographic in the "Studio" panel.
+Option 3: Download & share the Infographic
+To download the Infographic, select Download.
+Share the downloaded image file.
+Tip: Depending on the publisher's content restrictions, you may not be able to download artifacts generated using a notebook that has a Play Books ebook as a source.
+Related resources
+Create a notebook in Gemini Notebook
+Add or discover new sources for your Notebook
+Use chat in Gemini Notebook

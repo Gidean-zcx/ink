@@ -1,0 +1,10 @@
+Why has a feed stopped updating?
+Check whether the publisher has added new items to the feed itself, as new content on the website may not be included in the feed. Open the feed’s Properties page to check its current status and any reported errors. Make sure you’re viewing the correct feed and that filters aren’t removing new articles.
+Related questions
+What is a feed?
+What types of sources can I follow?
+How do I add a feed?
+Can I import feeds from another RSS reader?
+Can I discover new sources in Inoreader?
+Where can I see all articles from my feeds together?
+Why can’t Inoreader find a feed for a website?

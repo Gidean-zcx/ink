@@ -1,0 +1,16 @@
+{
+  "status": "PASS",
+  "products": 65,
+  "flows": 857,
+  "new_flows": 11,
+  "new_evidence": 20,
+  "old_flows": 4,
+  "old_evidence_captures": 4,
+  "formal_files": 65,
+  "iflytek_frames": 35,
+  "ihuman_frames": 2,
+  "boox_images": 4,
+  "directory_images": 1,
+  "requirements_unchanged": true,
+  "new_product_operations": 0
+}

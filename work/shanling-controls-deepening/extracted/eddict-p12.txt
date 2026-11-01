@@ -1,0 +1,58 @@
+                    E d d i c t P l a y e r
+
+
+  Wi-Fi Transfer
+
+Allowing for file transfer between smartphone, portable players
+and computers.
+
+
+Transfer from computer:
+
+1. Make sure your smartphone and computer are connected to
+  the same network.
+
+2. Open internet browser on your computer and go to the
+  viewed address to access the memory of your device for file
+   transfer.
+
+Transfer between apps:
+
+1. Make sure both devices are connected to the same network.
+ On receiving device, please open this page of the app.
+
+2. Select files in library and transfer them to the receiving device
+  by clicking on the Wi-Fi transfer icon. (Function available in
+  the three dot field)
+
+
+
+
+
+                                  Synclink Remote control
+
+                                    Allowing for a simple playback control of local files through
+                                   Bluetooth or Wi-Fi connection to your device. Compatible with
+                             MTouch Players, Android Players and Streamers.
+
+                                   Connecting:
+
+                                            1. Locate SyncLink switch on your device and turn it on. Make
+                                      sure Bluetooth and Wi-Fi is turned on on both devices.
+
+                                             2. Open SyncLink menu in Eddict Player app on your smartphone
+                                and switch on the "SyncLink Controller".
+
+                                            3. App will search for compatible devices and show them in the
+                                                           list. Click on your device in the list to establish connection.
+
+                                            4. After connecting, you can control the local file playback from
+                                      the home screen of the Eddict Player app. It might be needed
+                                        to perform Music Scan to view files correctly in the Local
+                                    Music library.
+
+
+
+
+
+                                        12

@@ -1,0 +1,95 @@
+[
+  {
+    "evidence_id": "E-HSD-05",
+    "expected_url": "https://www.ithome.com/0/611/514.htm",
+    "before_additional_captures": [],
+    "append_additional_captures": [
+      {
+        "url": "https://www.ithome.com/0/611/514.htm",
+        "checked_on": "2026-10-27",
+        "access_mode": "anonymous_urllib_GET",
+        "status": 200,
+        "final_url": "https://www.ithome.com/0/611/514.htm",
+        "content_type": "text/html; charset=utf-8",
+        "raw_work_path": "work/hisense-controls-deepening/raw/hireader-ithome.html",
+        "raw_sha256": "d03b139d5167157a61cba1153d93c17f40a175f2f0807854cf8ba70a91ec5ede",
+        "extracted_work_path": "work/hisense-controls-deepening/raw/hireader-ithome.txt",
+        "extracted_sha256": "ea9b966ab105a4ca2e3598eeed990b69b4ea0b374c35e5191198bc80d63c6826",
+        "hands_on": false,
+        "visual_observed": false,
+        "archived_artifact": "artifacts/hisense-controls-deepening/source-notes.md",
+        "sha256": "b7775a8330b022ad88e1e720f904054c02fcf0f082430e849c6d856ff0792eaf",
+        "note": "同文章复读；选定照片另以衍生E记录，不重复整篇来源。"
+      }
+    ]
+  },
+  {
+    "evidence_id": "E-HSD-08",
+    "expected_url": "https://mobile.yesky.com/283/725998783.shtml",
+    "before_additional_captures": [],
+    "append_additional_captures": [
+      {
+        "url": "https://mobile.yesky.com/283/725998783.shtml",
+        "checked_on": "2026-10-27",
+        "access_mode": "anonymous_urllib_GET",
+        "status": 200,
+        "final_url": "https://mobile.yesky.com/283/725998783.shtml",
+        "content_type": "text/html; charset=gb2312",
+        "raw_work_path": "work/hisense-controls-deepening/raw/a9-yesky.html",
+        "raw_sha256": "6aebcdd35bbf6ea17fbe9aa2ada580ed6a3e58afa17c8f94a9ab9c04ec84a400",
+        "extracted_work_path": "work/hisense-controls-deepening/raw/a9-yesky.gb18030.txt",
+        "extracted_sha256": "061a6f89d6d97bbdebe11d000fd8e17afe12d91ecd9f7f91ade9672b7afc962c",
+        "extraction_note": "Header gb2312 decoded with gb18030; initial UTF-8 extraction retained as failed garbled intermediate.",
+        "hands_on": false,
+        "visual_observed": false,
+        "archived_artifact": "artifacts/hisense-controls-deepening/source-notes.md",
+        "sha256": "b7775a8330b022ad88e1e720f904054c02fcf0f082430e849c6d856ff0792eaf",
+        "note": "同文章复读；选定照片另以衍生E记录，不重复整篇来源。"
+      }
+    ]
+  },
+  {
+    "evidence_id": "E-HSD-09",
+    "expected_url": "https://sblt.deali.cn/blog/eink-hisense-hi-reader",
+    "before_additional_captures": [],
+    "append_additional_captures": [
+      {
+        "url": "https://sblt.deali.cn/blog/eink-hisense-hi-reader",
+        "checked_on": "2026-10-27",
+        "access_mode": "anonymous_urllib_GET",
+        "status": 200,
+        "final_url": "https://sblt.deali.cn/blog/eink-hisense-hi-reader",
+        "content_type": "text/html; charset=utf-8",
+        "raw_work_path": "work/hisense-controls-deepening/raw/hireader-deali.html",
+        "raw_sha256": "19198e3328ab67026e1829b2ca37e0e4366ef31e8dcef09434cf88ad5ab343cb",
+        "extracted_work_path": "work/hisense-controls-deepening/raw/hireader-deali.txt",
+        "extracted_sha256": "9a34cf57f13d277952f16c35bfb445b1fda11a07b5a8f8e8f14feb929a7afdfd",
+        "hands_on": false,
+        "visual_observed": false,
+        "archived_artifact": "artifacts/hisense-controls-deepening/source-notes.md",
+        "sha256": "b7775a8330b022ad88e1e720f904054c02fcf0f082430e849c6d856ff0792eaf",
+        "note": "同文章复读；选定照片另以衍生E记录，不重复整篇来源。"
+      }
+    ]
+  },
+  {
+    "evidence_id": "E-HSD-03",
+    "expected_url": "https://mobile.hisense.com/yidongziliao/",
+    "before_additional_captures": [],
+    "append_additional_captures": [
+      {
+        "checked_on": "2026-10-27",
+        "url": "https://mobile.hisense.com/yidongziliao/",
+        "access_mode": "public_web_tool_text_read_then_separate_urllib_timeout",
+        "locator": "资料下载标题下至页脚；web返回正文未列旧三款下载",
+        "hands_on": false,
+        "visual_observed": false,
+        "raw_work_path": null,
+        "raw_sha256": null,
+        "archived_artifact": "artifacts/hisense-controls-deepening/source-notes.md",
+        "sha256": "b7775a8330b022ad88e1e720f904054c02fcf0f082430e849c6d856ff0792eaf",
+        "note": "未保存完整web原文；独立GET超时，不冒充HTML原件。旧型号手册仍未取得；未重试。"
+      }
+    ]
+  }
+]

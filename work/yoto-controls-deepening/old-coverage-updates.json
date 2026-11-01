@@ -1,0 +1,280 @@
+[
+  {
+    "flow_id": "F-M037-01",
+    "before": {
+      "flow_id": "F-M037-01",
+      "product_id": "M-037",
+      "task": "准备离线故事",
+      "depth": "D2",
+      "evidence_ids": "E-YOT-01",
+      "known_branches": "下载状态、缓存淘汰、网络条件",
+      "gaps": "正文归档、型号、完成/失败状态",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-037-yoto.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M037-01",
+      "product_id": "M-037",
+      "task": "准备离线故事",
+      "depth": "D2",
+      "evidence_ids": "E-YOT-01;E-YTCD-12",
+      "known_branches": "逐机在Settings→设备→Audio Download Status核下载；空闲接电联网准备只是建议，不保证隔夜完成。Player3为32GB；Mini2024与2021–23被当前容量页合列16/32GB并附序列规则，不能据此确认2024存在两种装配；缓存移除不删App库，联网播放可触发重下。",
+      "gaps": "没有实机完成/失败反馈；离线页least-played与容量页longest time未播放的淘汰算法冲突；手机离线缓存、授权复查及两机断点未核。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-037-yoto.md",
+      "checked_on": "2026-10-27"
+    },
+    "changed_fields": {
+      "evidence_ids": {
+        "before": "E-YOT-01",
+        "after": "E-YOT-01;E-YTCD-12"
+      },
+      "known_branches": {
+        "before": "下载状态、缓存淘汰、网络条件",
+        "after": "逐机在Settings→设备→Audio Download Status核下载；空闲接电联网准备只是建议，不保证隔夜完成。Player3为32GB；Mini2024与2021–23被当前容量页合列16/32GB并附序列规则，不能据此确认2024存在两种装配；缓存移除不删App库，联网播放可触发重下。"
+      },
+      "gaps": {
+        "before": "正文归档、型号、完成/失败状态",
+        "after": "没有实机完成/失败反馈；离线页least-played与容量页longest time未播放的淘汰算法冲突；手机离线缓存、授权复查及两机断点未核。"
+      },
+      "checked_on": {
+        "before": "2026-10-26",
+        "after": "2026-10-27"
+      }
+    }
+  },
+  {
+    "flow_id": "F-M037-02",
+    "before": {
+      "flow_id": "F-M037-02",
+      "product_id": "M-037",
+      "task": "睡眠计时",
+      "depth": "D2",
+      "evidence_ids": "E-YOT-02",
+      "known_branches": "换内容不重置",
+      "gaps": "重启/跨设备/后台状态",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-037-yoto.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M037-02",
+      "product_id": "M-037",
+      "task": "睡眠计时",
+      "depth": "D2",
+      "evidence_ids": "E-YOT-02",
+      "known_branches": "换卡或换内容不重置；月亮星星入口再选off可提前取消；到时停播而非已证明关机。",
+      "gaps": "重启/断电/跨设备、手机后台、闹钟与睡眠计时重叠状态未说明。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-037-yoto.md",
+      "checked_on": "2026-10-27"
+    },
+    "changed_fields": {
+      "known_branches": {
+        "before": "换内容不重置",
+        "after": "换卡或换内容不重置；月亮星星入口再选off可提前取消；到时停播而非已证明关机。"
+      },
+      "gaps": {
+        "before": "重启/跨设备/后台状态",
+        "after": "重启/断电/跨设备、手机后台、闹钟与睡眠计时重叠状态未说明。"
+      },
+      "checked_on": {
+        "before": "2026-10-26",
+        "after": "2026-10-27"
+      }
+    }
+  },
+  {
+    "flow_id": "F-M037-03",
+    "before": {
+      "flow_id": "F-M037-03",
+      "product_id": "M-037",
+      "task": "播放卡顿排查",
+      "depth": "D2",
+      "evidence_ids": "E-YOT-01;E-YOT-03",
+      "known_branches": "网络、队列、下载时机冲突",
+      "gaps": "冲突原因、实际错误提示与恢复",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-037-yoto.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M037-03",
+      "product_id": "M-037",
+      "task": "播放卡顿排查",
+      "depth": "D2",
+      "evidence_ids": "E-YOT-01;E-YOT-03;E-YTCD-14",
+      "known_branches": "网络/下载分流：正文红时钟在线、白时钟离线、绿脸为连WiFi但无互联网。离线帮助称首播边流边下，故障帮助仍称无卡空闲才下，未据新正文消除冲突。",
+      "gaps": "冲突所涉型号/版本未知；状态图标未实际查看；重试与等待不保证恢复，首播或隔夜不等于已下载完成。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-037-yoto.md",
+      "checked_on": "2026-10-27"
+    },
+    "changed_fields": {
+      "evidence_ids": {
+        "before": "E-YOT-01;E-YOT-03",
+        "after": "E-YOT-01;E-YOT-03;E-YTCD-14"
+      },
+      "known_branches": {
+        "before": "网络、队列、下载时机冲突",
+        "after": "网络/下载分流：正文红时钟在线、白时钟离线、绿脸为连WiFi但无互联网。离线帮助称首播边流边下，故障帮助仍称无卡空闲才下，未据新正文消除冲突。"
+      },
+      "gaps": {
+        "before": "冲突原因、实际错误提示与恢复",
+        "after": "冲突所涉型号/版本未知；状态图标未实际查看；重试与等待不保证恢复，首播或隔夜不等于已下载完成。"
+      },
+      "checked_on": {
+        "before": "2026-10-26",
+        "after": "2026-10-27"
+      }
+    }
+  },
+  {
+    "flow_id": "F-M037-05",
+    "before": {
+      "flow_id": "F-M037-05",
+      "product_id": "M-037",
+      "task": "儿童选章、暂停、停止 D2",
+      "depth": "D2",
+      "evidence_ids": "E-YOD-01",
+      "known_branches": "当前播放/章节改变；约 3 秒电源开关、10 秒硬重启，后者保留 Wi-Fi/音频。Player 伏面可调夜灯，Mini 不套用。",
+      "gaps": "普通“长按停止”与“约 3 秒关机”分界未定义；取卡保存时机、选章起点、误触复原未知。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-037-yoto.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M037-05",
+      "product_id": "M-037",
+      "task": "儿童选章、暂停、停止 D2",
+      "depth": "D2",
+      "evidence_ids": "E-YOD-01;E-YOD-20",
+      "known_branches": "旧代旋钮长按超过1秒快进/退，文档随持续按压加速；短按电源可暂停App发起的音频。10秒硬重启文档称保留WiFi和音频，区别出厂重置；不采第四代绿键/电源语义。",
+      "gaps": "长按停止与约3秒关机分界仍不明；取卡/换卡/重启与跨机秒点保存均未闭合；公布加速比未实测，不等于精确寻位。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-037-yoto.md",
+      "checked_on": "2026-10-27"
+    },
+    "changed_fields": {
+      "evidence_ids": {
+        "before": "E-YOD-01",
+        "after": "E-YOD-01;E-YOD-20"
+      },
+      "known_branches": {
+        "before": "当前播放/章节改变；约 3 秒电源开关、10 秒硬重启，后者保留 Wi-Fi/音频。Player 伏面可调夜灯，Mini 不套用。",
+        "after": "旧代旋钮长按超过1秒快进/退，文档随持续按压加速；短按电源可暂停App发起的音频。10秒硬重启文档称保留WiFi和音频，区别出厂重置；不采第四代绿键/电源语义。"
+      },
+      "gaps": {
+        "before": "普通“长按停止”与“约 3 秒关机”分界未定义；取卡保存时机、选章起点、误触复原未知。",
+        "after": "长按停止与约3秒关机分界仍不明；取卡/换卡/重启与跨机秒点保存均未闭合；公布加速比未实测，不等于精确寻位。"
+      },
+      "checked_on": {
+        "before": "2026-10-26",
+        "after": "2026-10-27"
+      }
+    }
+  },
+  {
+    "flow_id": "F-M037-07",
+    "before": {
+      "flow_id": "F-M037-07",
+      "product_id": "M-037",
+      "task": "MP3→MYO 列表→写卡 D2",
+      "depth": "D2",
+      "evidence_ids": "E-YOD-06",
+      "known_branches": "卡关联云端列表；本机音频下载是另一状态，离线仍查 F-M037-01。",
+      "gaps": "上传取消/断网、重复命名、卡旧关联保留时点、误覆写撤销未知。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-037-yoto.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M037-07",
+      "product_id": "M-037",
+      "task": "MP3→MYO 列表→写卡 D2",
+      "depth": "D2",
+      "evidence_ids": "E-YOD-06;E-YTCD-13",
+      "known_branches": "卡关联云端列表与本机下载分开；自建MYO最多100轨，单轨100MB/60分钟、整卡500MB/5小时。该限制不套直接关联已购Yoto卡。",
+      "gaps": "字节/时长超限反馈、上传取消/断网、重复命名、卡旧关联保留时点、误覆写撤销未知。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-037-yoto.md",
+      "checked_on": "2026-10-27"
+    },
+    "changed_fields": {
+      "evidence_ids": {
+        "before": "E-YOD-06",
+        "after": "E-YOD-06;E-YTCD-13"
+      },
+      "known_branches": {
+        "before": "卡关联云端列表；本机音频下载是另一状态，离线仍查 F-M037-01。",
+        "after": "卡关联云端列表与本机下载分开；自建MYO最多100轨，单轨100MB/60分钟、整卡500MB/5小时。该限制不套直接关联已购Yoto卡。"
+      },
+      "gaps": {
+        "before": "上传取消/断网、重复命名、卡旧关联保留时点、误覆写撤销未知。",
+        "after": "字节/时长超限反馈、上传取消/断网、重复命名、卡旧关联保留时点、误覆写撤销未知。"
+      },
+      "checked_on": {
+        "before": "2026-10-26",
+        "after": "2026-10-27"
+      }
+    }
+  },
+  {
+    "flow_id": "F-M037-11",
+    "before": {
+      "flow_id": "F-M037-11",
+      "product_id": "M-037",
+      "task": "加家庭成员及第二台 D2",
+      "depth": "D2",
+      "evidence_ids": "E-YOD-11;E-YOD-12;E-YOD-13;E-YOD-19",
+      "known_branches": "可访问家庭书库、管理设备；一个用户加入新家庭会离开原家庭。",
+      "gaps": "3.22 另引入邀请码；旧帮助仍称 Menu/Players，路径采用较新 Settings 帮助，不合并两种代码机制。未证明播放秒点共享。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-037-yoto.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M037-11",
+      "product_id": "M-037",
+      "task": "加家庭成员及第二台 D2",
+      "depth": "D2",
+      "evidence_ids": "E-YOD-11;E-YOD-12;E-YOD-13;E-YOD-19;E-YTCD-08;E-YTCD-09",
+      "known_branches": "家庭成员可控全部登记设备和设置；每个成员可在Settings→用户三点移除他人或离开家庭，不能推定仅管理员可执行。一个用户加入新家庭会离开旧家庭。",
+      "gaps": "邀请码与设备现场六码保留不同路径；未证实儿童/只读亲属分权、移除后的缓存/购买/录音归属或撤权延迟，也未证实跨机秒点。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-037-yoto.md",
+      "checked_on": "2026-10-27"
+    },
+    "changed_fields": {
+      "evidence_ids": {
+        "before": "E-YOD-11;E-YOD-12;E-YOD-13;E-YOD-19",
+        "after": "E-YOD-11;E-YOD-12;E-YOD-13;E-YOD-19;E-YTCD-08;E-YTCD-09"
+      },
+      "known_branches": {
+        "before": "可访问家庭书库、管理设备；一个用户加入新家庭会离开原家庭。",
+        "after": "家庭成员可控全部登记设备和设置；每个成员可在Settings→用户三点移除他人或离开家庭，不能推定仅管理员可执行。一个用户加入新家庭会离开旧家庭。"
+      },
+      "gaps": {
+        "before": "3.22 另引入邀请码；旧帮助仍称 Menu/Players，路径采用较新 Settings 帮助，不合并两种代码机制。未证明播放秒点共享。",
+        "after": "邀请码与设备现场六码保留不同路径；未证实儿童/只读亲属分权、移除后的缓存/购买/录音归属或撤权延迟，也未证实跨机秒点。"
+      },
+      "checked_on": {
+        "before": "2026-10-26",
+        "after": "2026-10-27"
+      }
+    }
+  }
+]

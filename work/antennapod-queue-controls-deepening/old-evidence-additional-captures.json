@@ -1,0 +1,23 @@
+[
+  {
+    "evidence_id": "E-APCD-13",
+    "expected_url": "https://github.com/AntennaPod/AntennaPod/blob/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/app/src/main/java/de/danoeh/antennapod/ui/screen/feed/RemoveFeedDialog.java",
+    "before_additional_captures": [],
+    "append_additional_captures": [
+      {
+        "checked_on": "2026-10-27",
+        "access_mode": "existing_related_source_local_reread",
+        "related_source_url": "https://github.com/AntennaPod/AntennaPod/blob/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/app/src/main/java/de/danoeh/antennapod/ui/screen/subscriptions/SubscriptionFragment.java",
+        "raw_work_path": "work/antennapod-controls-deepening/src/app/src/main/java/de/danoeh/antennapod/ui/screen/subscriptions/SubscriptionFragment.java",
+        "raw_sha256": "0d35a96da963bd24f39653fe879527290c302e5cc05638145407a2cc7cac643f",
+        "verified_git_blob": "4c991062ec13512875c52f23223699f152181d07",
+        "locator": "SubscriptionFragment 128–230;246–300;335–510",
+        "note": "原E已将SubscriptionFragment列为关联源码；本轮只复读标签/列表分支，未重新GET。",
+        "hands_on": false,
+        "visual_observed": false,
+        "archived_artifact": "artifacts/antennapod-queue-controls-deepening/source-notes.md",
+        "sha256": "76023a8b5ac6214a62711bd203fd82e176fd5e2bf5a477488dd63445de13cd11"
+      }
+    ]
+  }
+]

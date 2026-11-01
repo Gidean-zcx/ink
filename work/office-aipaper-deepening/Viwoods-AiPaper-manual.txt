@@ -1,0 +1,1319 @@
+
+=== FILE PAGE 1 ===
+User Manual
+ZZZYLZRRGVFRP
+
+
+=== FILE PAGE 2 ===
+Contents
+ϭ
+4XLFN6WDUW
+)HDWXUH2YHUYLHZ
+3DSHU
+,QSXW0HWKRG
+/HDUQLQJ
+0HHWLQJ
+'DLO\
+3LFNLQJ
+$,
+0DLOER[
+9L7UDQVIHU
+6KDUH
+0HPR
+)LOH(QFU\SWLRQ
+$SSV
+9LZRRGV)LOHV$3.
+7KLUG3DUW\&ORXG,QWHUJUDWLRQ
+
+
+=== FILE PAGE 3 ===
+Quick Start  - Home Screen
+6HDUFK
++RPH6FUHHQ
+3DSHU
+'DLO\
+0HHWLQJ
+3LFNLQJ
+0DLOER[
+$33
+6HWWLQJV
+4XLFN&UHDWH
+8SORDG
+%DFN
+%XWWRQ
+6KRUW3UHVV5HWXUQWR+RPH6FUHHQ
+/RQJ3UHVV7DVN0DQDJHU
+6KRUW3UHVV$,$FWLYDWLRQ
+/RQJ3UHVV9RLFH$,
+3RZHU%XWWRQ
+)LQJHUSULQW6HQVRU
+&KDUJLQJ3RUW
++HDGSKRQH-DFN
+5HFHQW$FWLYLW\
+Ϯ
+/HDUQLQJ
+9LZRRGV)RUXP
+9LZRRGV)LOHV$3.
+7KLUG3DUW\&ORXG
+6\QF(QWU\
+
+
+=== FILE PAGE 4 ===
+6ZLSHGRZQIURPWKHXSSHUULJKWFRUQHURIWKHVFUHHQWRDFFHVVWKH&RQWURO&HQWUHZKLFK
+LQFOXGHVTXLFNDFFHVVWRFRPPRQIHDWXUHV:L)L%OXHWRRWK5HIUHVK:/$1&DVW0RUH
+DQGWKUHHUHIUHVKPRGHV
+Quick Start  - Control Centre
+6KRUW3UHVV%OXHWRRWK
+2Q2II
+
+/RQJ3UHVV$FFHVV
+%OXHWRRWK6HWWLQJV
+6KRUW3UHVV
+:L)L2Q2II
+
+/RQJ3UHVV
+$FFHVV:L)L
+6HWWLQJV
+7LPH
+$FFHVV
+6HWWLQJV
+&RPPRQ)HDWXUHV
+5HIUHVK0RGHV
+ϯ
+
+
+=== FILE PAGE 5 ===
+Quick Start  - Control Centre
+1. Refresh 
+:KHQLPDJHUHWHQWLRQDSSHDUVRQWKHGLVSOD\PDQXDOUHIUHVKFDQEHXVHGWRFOHDULWRUXVHD
+VKRUWFXWJHVWXUHE\VZLSLQJGRZQIURPWKHWRSRIWKHOHIWVLGHRIWKHVFUHHQIRUTXLFNFOHDULQJ
+ϰ
+
+
+=== FILE PAGE 6 ===
+Quick Start  - Control Center
+2. WLAN Cast 
+(QDEOHWKLVIHDWXUHLQWKH>&RQWURO&HQWHU@E\SXOOLQJGRZQIURPWKHV\VWHPEDU
+7RFDVWWKHVFUHHQZLWKLQWKHVDPHORFDOQHWZRUNHLWKHULQSXWWKHVSHFLILHG85/LQWRWKHEURZVHURIWKH
+WDUJHWGHYLFHRUVFDQWKH45FRGHIRUVFUHHQVKDULQJ
+KWWS˖
+ϱ
+
+
+=== FILE PAGE 7 ===
+Quick Start  - Control Centre
+3. Contrast 
+7KHGLVSOD\HIIHFWRIWKHFXUUHQWDSSOLFDWLRQFDQEHFXVWRPL]HG
+ϲ
+
+
+=== FILE PAGE 8 ===
+ϳ
+Quick Start  - Control Centre
+4.WLAN Transfer Shortcut Entry
+(QDEOHWKLVRSWLRQYLDWKHGURSGRZQ&RQWURO&HQWUHLQWKHV\VWHPEDU
+:LWKLQWKHVDPHORFDODUHDQHWZRUNHQWHUWKHGHVLJQDWHG85/LQWKHEURZVHURIWKHWDUJHWGHYLFHWR
+WUDQVIHUILOHVVZLIWO\EHWZHHQGHYLFHV
+KWWS˖
+
+
+=== FILE PAGE 9 ===
+ϴ
+Quick Start  - Control Centre
+5.Disable Bottom Buttons
+6.Memo Shortcut
+(QDEOHWRGHDFWLYDWHWKHERWWRPIXQFWLRQEXWWRQVWRSUHYHQWDFFLGHQWDOWRXFKHV
+$VKRUWFXWWRWKH0HPRIHDWXUHDOORZLQJXVHUVWRTXLFNO\MRWGRZQQRWHVZLWKRXWLQWHUUXSWLQJWKH
+FXUUHQWZRUNIORZ
+
+
+=== FILE PAGE 10 ===
+Quick Start  - Control Centre
+7. Refresh Mode 
+Best Display (Default)  
+High-quality refresh mode with 
+superior image quality but slower 
+refresh speed. Suitable for 
+displaying complex images or 
+reading text. 
+Fast Mode  
+Fast refresh mode with lower 
+quality but quicker refresh speed. 
+Ideal for browsing web pages or 
+fast scrolling. 
+Ultra-fast Mode  
+Offers even faster refresh speed, 
+suitable for simple interface 
+changes. 
+ϵ
+
+
+=== FILE PAGE 11 ===
+Quick Start  - Settings 
+1.Viwoods Account 
+
+(DFKGHYLFHFDQEHERXQGWRDVLQJOH9LZRRGV
+DFFRXQW
+
+(PDLODQGSKRQHQXPEHUELQGLQJDUHVXSSRUWHG
+$FFRXQWGHUHJLVWUDWLRQLVDYDLODEOH3DVVZRUGV
+PXVWEHDWOHDVWFKDUDFWHUVORQJDQGPD\
+LQFOXGHQXPEHUVOHWWHUVDQGFRPPRQV\PEROV
+
+0XOWLGHYLFHPDQDJHPHQW8SRQORJJLQJLQXVHUV
+FDQYLHZDOOGHYLFHVOLQNHGWRWKHLUDFFRXQWDQG
+SHUIRUPUHPRWHXQELQGLQJ
+ϭϬ
+
+
+=== FILE PAGE 12 ===
+ϭϭ
+2.Wi-Fi
+
+:L)LFDQEHHQDEOHGWRDXWRPDWLFDOO\VHDUFKIRUDYDLODEOH:L)LKRWVSRWV6HOHFWWKH
+GHVLUHG:L)LQHWZRUNDQGHQWHUWKHSDVVZRUGWRFRQQHFW$IWHUDVXFFHVVIXOFRQQHFWLRQ
+:L)LZLOODXWRPDWLFDOO\UHFRQQHFWZKHQHQDEOHGDJDLQ
+
+:L)LFDQDOVREHWRJJOHGLQWKH&RQWURO&HQWUHXVLQJWKH:L)LEXWWRQńVKRUWSUHVVWR
+WXUQ:L)LRQRIIORQJSUHVVWRHQWHUWKH:L)LVHWWLQJVOLVW
+
+6XSSRUWVHQWHUSULVH:L)LFRQQHFWLRQ
+3. Bluetooth 
+
+(QDEOH%OXHWRRWKWRVHDUFKIRUQHDUE\DYDLODEOH%OXHWRRWKGHYLFHVDQGVHQGFRQQHFWLRQ
+UHTXHVWV%RWKGHYLFHVPXVWEHSDLUHGIRU%OXHWRRWKWRIXQFWLRQ
+
+%OXHWRRWKFDQDOVREHWRJJOHGLQWKH&RQWURO&HQWHUXVLQJWKH%OXHWRRWKEXWWRQńVKRUW
+SUHVVWRWXUQ%OXHWRRWKRQRIIORQJSUHVVWRHQWHUWKH%OXHWRRWKVHWWLQJVOLVW
+
+6XSSRUWVILOHWUDQVIHUYLD%OXHWRRWK7UDQVIHUUHGILOHVFDQEHDFFHVVHGXQGHU5HFHLYHG
+)LOHV
+4. Language 
+
+6XSSRUWVODQJXDJHVHOHFWLRQLQFOXGLQJ(QJOLVK*HUPDQ6SDQLVK)UHQFK,WDOLDQ'XWFK
+3RUWXJXHVH5XVVLDQ6LPSOLILHG&KLQHVH7UDGLWLRQDO&KLQHVH.RUHDQDQG-DSDQHVH
+
+$XWRPDWLFDOO\DGDSWVGDWHIRUPDWVDFFRUGLQJWRWKHVHOHFWHGODQJXDJH
+Quick Start  - Settings 
+
+
+=== FILE PAGE 13 ===
+Quick Start  - Settings
+5. Display Settings
+
+6XSSRUWVIRQWVL]HDGMXVWPHQW
+
+6XSSRUWVPDQXDOFRQILJXUDWLRQRIVOHHSWLPH
+ϭϮ
+6.Pen Function Settings
+$OORZVDGMXVWPHQWRIVW\OXVVHQVLWLYLW\DQGSUHVVXUHDQGHQDEOHVGLVDEOHV
+WKHDQWLDOLDVLQJIXQFWLRQ
+$QWL$OLDVLQJ7RJJOH
+3HQ6WURNH3UHYLHZ:LQGRZ
+3HQ6HQVLWLYLW\$GMXVWPHQW
+3HQ3UHVVXUH6HQVLWLYLW\
+$GMXVWPHQW
+$QWL$OLDVLQJ)XQFWLRQ'HVFULSWLRQ
+Ŏ$UHWKHZULWWHQVWURNHVMDJJHG"7XUQRQDQWLDOLDVLQJWRLQVWDQWO\VPRRWKWKHPRXW
+6HQVLWLYLW\$GMXVWPHQW,QVWUXFWLRQV
+Ŏ+LJKHUVHQVLWLYLW\DOORZVZULWLQJZLWKDOLJKWWRXFKńLGHDOIRUWKRVHZKRSUHIHUDGHOLFDWHZULWLQJIHHO
+Ŏ/RZHUVHQVLWLYLW\UHTXLUHVPRUHSUHVVXUHIRULQNńKHOSVSUHYHQWSDOPLQWHUIHUHQFHDQGLPSURYHVLQN
+RXWSXWFRQVLVWHQF\
+3UHVVXUH$GMXVWPHQW,QVWUXFWLRQV
+Ŏ+LJKSUHVVXUHVHQVLWLYLW\OLJKWVWURNHVSURGXFHILQHOLQHVKHDY\SUHVVXUHUHVXOWVLQEROGOLQHV
+Ŏ/RZSUHVVXUHVHQVLWLYLW\QRWLFHDEOHIRUFHLVQHHGHGWRVHHOLQHZLGWKYDULDWLRQ
+
+
+=== FILE PAGE 14 ===
+ϭϯ
+7. General
+
+7LPHIRUPDWFDQEHVHWWRHLWKHUKRXURU
+KRXUPRGHEDVHGRQXVHUSUHIHUHQFHV
+DQGWKHGDWHGLVSOD\IRUPDWFDQEHDGMXVWHG
+
+:DOOSDSHUVDQGVLJQDWXUHVFDQEH
+FXVWRPL]HG7UDQVSDUHQWZDOOSDSHUVDUH
+VXSSRUWHG
+
+5HVWRUHIDFWRU\VHWWLQJV
+8. Security
+
+/RFN6FUHHQ3DVVZRUG6HWDQXPHULF
+SDVVZRUGZLWKRUGLJLWV0RGLILFDWLRQ
+DQGUHVHWRSWLRQVDUHDYDLODEOH
+Quick Start  - Settings
+
+
+=== FILE PAGE 15 ===
+ϭϰ
+Quick Start  - Settings
+9. About
+'LVSOD\VEDVLFGHYLFHLQIRUPDWLRQDQGPHPRU\VWDWXV
+11. Updates
+6\VWHPFKHFNIRUXSGDWHVDQGXSJUDGHVLVVXSSRUWHGLQFOXGLQJWKHDELOLW\WRYLHZKLVWRULFDO
+YHUVLRQXSGDWHORJV
+
+)LQJHUSULQW)LQJHUSULQWXQORFNLV
+VXSSRUWHGRQFHDORFNVFUHHQ
+SDVVZRUGLVVHW8SWRILQJHUSULQWV
+FDQEHVWRUHGDQGUHQDPHG)LQJHUSULQW
+DFFHVVLVDYDLODEOHIRUHQFU\SWHGILOHV
+10. Play Store
+
+(QDEOH$FWLYDWHVWKH*RRJOH6HUYLFHV)UDPHZRUN*RRJOHDXWKRUL]DWLRQLVUHTXLUHG
+WRSURSHUO\DFFHVVWKH*RRJOH3OD\6WRUHDQGDVVRFLDWHGFHUWLILHGDSSOLFDWLRQV
+
+'LVDEOH'HDFWLYDWHV*RRJOHVHUYLFHVDQGDXWRPDWLFDOO\FOHDUVFDFKHGGDWD
+
+
+=== FILE PAGE 16 ===
+3K\VLFDOHUDVHU(UDVHUVL]HDGMXVWV
+DFFRUGLQJWRWKHSUHVVXUHDSSOLHG
+:KHQWKHEXWWRQLVSUHVVHGWKH
+HUDVHULVDFWLYDWHGDQGWKHHUDVLQJ
+DUHDDGMXVWVEDVHGRQWKHSUHVVXUH
+DSSOLHG
+Feature Overview
+7KHSUHVVXUHVHQVLWLYHHUDVHU
+DGMXVWVLWVVL]HEDVHGRQWKH
+DSSOLHGSUHVVXUH/LJKWHU
+SUHVVXUHUHVXOWVLQDVPDOOHU
+HUDVHUDUHDZKLOHLQFUHDVHG
+SUHVVXUHHQODUJHVWKHHUDVLQJ
+DUHD
+Eraser
+ϭϱ
+
+
+=== FILE PAGE 17 ===
+Input Method
+ƌŝŶŐƵƉƚŚĞŚĂŶĚǁƌŝƚŝŶŐŬĞǇďŽĂƌĚ
+<ĞǇďŽĂƌĚ>ĂŶŐƵĂŐĞ^ǁŝƚĐŚ
+<ĞǇďŽĂƌĚ/ŶƉƵƚ
+hŶĚŽ
+ĂĐŬ
+DŽǀĞ>ĞĨƚ DŽǀĞZŝŐŚƚ ^ƉĂĐĞ
+ĞůĞƚĞ
+ŶƚĞƌ
+>ĂŶŐƵĂŐĞ^ǁŝƚĐŚ
+ϭϲ
+
+
+=== FILE PAGE 18 ===
+Paper
+4XLFN1RWH
+&UHDWLRQ
+1RWHVFDQEHFUHDWHG
+DIWHUQDPLQJDQG
+VHOHFWLQJDWHPSODWH
+3'))LOHV
+1RWHV
+)DYRULWHG&RQWHQW
+(QFU\SWHG&RQWHQW
+7DJJHG&RQWHQW
+5HF\FOH%LQ
+6XSSRUWVILOH
+QDPHDQGWDJ
+NH\ZRUGVHDUFK
+0HQX
+Paper Home Screen
+6RUWLQJ
+0HWKRGV
+ϭϳ
+
+
+=== FILE PAGE 19 ===
+Paper
+3')WHPSODWHVRU
+GRFXPHQWVFDQEH
+LPSRUWHGDQG
+FRPELQHGZLWK
+KDQGZULWWHQQRWHV
+7RVHOHFWFRQWHQWIRU
+HGLWLQJSUHVVDQG
+KROG7DSWRDGGRU
+UHPRYHVKDUHG
+FRQWHQWIRUHGLWLQJ
+0XOWLSOHGRFXPHQWV
+FDQEHVHOHFWHGIRU
+HQFU\SWLRQWDJJLQJ
+DQGVKDULQJ
+(GLWLQJ%DU
+0RYHWR
+)ROGHU
+$GG7DJ
+'HOHWHGFRQWHQW
+ZLOOEHPRYHGWR
+WKH5HF\FOH%LQ
+6KDUH
+5HQDPH
+)DYRULWH
+ϭϴ
+/RFN
+
+
+=== FILE PAGE 20 ===
+Paper
+7DSWRFUHDWHWDJV
+7DJVFDQEHHGLWHG
+E\ORQJSUHVVLQJ
+7DSRQFUHDW]HG
+WDJVWRDGGWKHP
+$GGHG7DJV
+ϭϵ
+7KHVLGHEDUWDJ
+SDQHOGLVSOD\VDOO
+WDJVZKHUHXVHUV
+PD\SHUIRUPWDJ
+VHDUFKHV/RQJ
+SUHVVLQJDWDJ
+HQDEOHVHGLWLQJ
+IXQFWLRQVVXFKDV
+GHOHWHRUUHQDPH
+
+
+=== FILE PAGE 21 ===
+)ROGHUVVXSSRUWWKHFUHDWLRQDQGHGLWLQJRIVXEIROGHUV
+Paper
+7KHWHPSODWHVDERYHDUHOLQNHGWRVSHFLILFIROGHUVDQG
+QRWHVFUHDWHGXVLQJWKHVDPHWHPSODWHZLOOEHDXWRPDWLFDOO\
+FDWHJRUL]HGDQGVDYHGWRWKHUHVSHFWLYHIROGHU
+([DPSOH1HZO\FUHDWHG
+TXLFNQRWHVZLOOEH
+DXWRPDWLFDOO\VDYHGWRWKH
+FRUUHVSRQGLQJIROGHU
+ϮϬ
+
+
+=== FILE PAGE 22 ===
+Paper
+5HSUHVHQWVDIROGHUZLWKQRDVVRFLDWHG
+TXLFNQRWHSURSHUWLHVUHIHUUHGWRDVD
+ŉ*HQHUDOIROGHU
+5HSUHVHQWVDIROGHUDVVRFLDWHGZLWK
+TXLFNQRWHSURSHUWLHVUHIHUUHGWRDV
+Dŉ/LQNHGIROGHU
+Introduction to Linked Folders:
+1. When a quick note shortcut is deleted, the linked folder will convert to a general folder.  
+2. Deleting the linked folder directly will also remove the associated quick note shortcut.  
+3. When a quick note shortcut is created, a linked folder with the same name will be generated.  
+4. To turn a general folder into a linked folder, create a quick note with the same name as the 
+folder to establish the association.
+&OLFNWRGLUHFWO\FUHDWHD
+QRWHWKDWPDWFKHVWKH
+IROGHU
+VSURSHUWLHVDQGWKH
+QRWHZLOOEHVDYHGZLWKLQ
+WKHIROGHU
+/RQJSUHVVWR
+HGLWWKHIROGHU
+Ϯϭ
+
+
+=== FILE PAGE 23 ===
+$GGRUUHPRYHTXLFNQRWH
+WHPSODWHVKRUWFXWV
+&OLFNWRGHOHWHWKHTXLFN
+QRWHWHPSODWHVKRUWFXW
+&OLFNWRDGGDQHZ
+TXLFNQRWHWHPSODWH
+$OLQNHGIROGHUZLWKWKHVDPHQDPHZLOOEH
+JHQHUDWHGDIWHUDGGLQJ
+ϮϮ
+Paper
+
+
+=== FILE PAGE 24 ===
+Paper
+Paper Handwriting Page Functions
+5HWXUQWRWKH3DSHU
++RPH6FUHHQ
+3HQW\SHWKLFNQHVV
+DQGJUD\VFDOHOHYHOV
+VHOHFWLRQ
+(UDVHUZLWKGLIIHUHQW
+HUDVLQJRSWLRQV
+7H[WHGLWLQJ
+$,&RPPDQGV
+8QGR
+5HGR
+0XOWLSDJH
+0DQDJHPHQW
+/D\HUV
+&KDQJH7HPSODWH
+(QFU\SWLRQ
+0HQX
+([SDQG&ROODSVH
+^ǁŝƉĞůĞĨƚŽƌƌŝŐŚƚƚŽƚƵƌŶƉĂŐĞƐ͘ ƚ
+ƚŚĞůĂƐƚƉĂŐĞ͕ ĐůŝĐŬƚŽĂĚĚĂŶĞǁƉĂŐĞ͘
+6ZLSHOHIWRUULJKWWRWXUQ
+SDJHVDQGYLHZFRQWHQW
+/DVVR7RRO
+0RUH)HDWXUHV
+$GG7DJ
+6ZLSHOHIWDWWKHODVWSDJHWR
+UHYHDOWKH$GG3DJHLFRQ
+&OLFNWRDGGDQHZSDJH
+Ϯϯ
+
+
+=== FILE PAGE 25 ===
+Paper
+Lasso Tool Feature Overview
+6HOHFWWKHFRUUHVSRQGLQJ
+ODQJXDJHIRUFRQYHUVLRQ
+&RQYHUW
+WR7H[W
+1RWH7RHQVXUHDFFXUDWH
+KDQGZULWLQJWRWH[WFRQYHUVLRQ
+FKRRVHWKHDSSURSULDWH
+ODQJXDJHEHIRUHFOLFNLQJWKH
+FRQYHUVLRQLFRQIRUUHFRJQLWLRQ
+'HOHWH
+&XW
+$,&RPPDQGV
+Editing Box Usage Guide:
+6HOHFWWKHODVVRWRRODQGXVHWKHSHQWRFLUFOHWKHGHVLUHGDUHD
+'UDJWKHFRUQHUFRQWUROVWRVFDOHSURSRUWLRQDOO\
+'UDJWKHVLGHFRQWUROVOHIWULJKWERWWRPWRDGMXVWWKHVHOHFWLRQLQRQHGLUHFWLRQ
++ROGWKHFLUFXODUFRQWUROWRURWDWHWKHVHOHFWHGFRQWHQW
+&OLFNWKLVFRQWUROWR
+URWDWHWKHVHOHFWLRQ
+Ϯϰ
+&RS\LQJLVVXSSRUWHG
+FRQWHQWFDQEHVHOHFWHG
+ZLWKLQWKLVDSSOLFDWLRQDQG
+SDVWHGDFURVVQRWHV
+Interactive Gestures are Supported for Undo and Redo Actions
+7ZRILQJHUWDSSHUIRUPVWKH
+ŉEDFNŊIXQFWLRQ
+7KUHHILQJHUWDSSHUIRUPV
+WKHŉUHGRŊIXQFWLRQ
+8QGRDQGUHGRVKRUWFXWJHVWXUHVDUHDYDLODEOHZLWKLQWKH3DSHU'DLO\0HHWLQJDQG3LFNLQJPRGXOHV
+
+
+=== FILE PAGE 26 ===
+Paper
+(GLWWH[W
+(GLWDOOWH[WFRQWHQW
+(GLWWKHVHOHFWHGWH[W
+$JUD\HGRXWLFRQLQGLFDWHVQRFRQWHQW
+LVDYDLODEOHIRUSDVWLQJ
+$IWHUFRS\LQJSUHVVDQGKROGWRGLVSOD\WKHSDVWHLFRQWKHQWDSWRSDVWH
+&URVVPRGXOHFRS\DQGSDVWHIXQFWLRQDOLW\LVVXSSRUWHG
+Ϯϱ
+
+
+=== FILE PAGE 27 ===
+Paper
+Geometric Shape Recognition Overview
+Shape Recognition Process
+Special Arrow Recognition Process
+'UDZDVKDSHZLWKDKRRNLQRQHVWURNH
+3DXVHIRUVHFRQGDWWKHHQGSRLQWWR
+UHFRJQL]HWKHVKDSH
+:KLOHKROGLQJWKHSHQDWWKHHQGSRLQWSUHVV
+DQGKROGZLWKWKHRWKHUKDQGWRWUDQVIRUPLW
+LQWRDOLQHZLWKDQDUURZ
+Ϯϲ
++DQGGUDZQ6KDSHV
+'UDZWKHGHVLUHGEDVLF
+VKDSHLQRQHVWURNH
+3DXVHIRUVHFRQGDWWKH
+HQGSRLQWWRUHFRJQL]HLWDVD
+JHRPHWULFVKDSH
+:KLOHSDXVLQJSUHVVDQGKROG
+ZLWKWKHRWKHUKDQGWRFRQYHUWLW
+LQWRDVWDQGDUGVKDSH
+Supported Standard Shapes for Recognition
++DQGGUDZQ6KDSHV
+5HFRJQL]HG6KDSHV
+6WUDLJKW/LQH
+$UURZ/LQH
+,VRVFHOHV
+7ULDQJOH
+3DUDOOHORJUDP
+5HFRJQL]HG6KDSHV
+&LUFOH
+7UDSH]RLG
+5KRPEXV
+4XDGULODWHUDO
+
+
+=== FILE PAGE 28 ===
+Learning
+Importing Files
+&OLFN,PSRUW)LOHVDQGXVH\RXUPRELOHGHYLFHRUWDEOHWWRVFDQWKH45FRGHLQWKHSRSXSRUHQWHUWKH
+DGGUHVV>KWWSVP\YLZRRGVFRP@KWWSVP\YLZRRGVFRPRQDFRPSXWHU7UDQVIHU3')̵
+(38%̵
+02%,̵
+$=:ILOHVIURP\RXUZHERUPRELOHGHYLFHWRWKLVGHYLFHDQGDFFHVVWKHPLQ/LEUDU\)RUGHWDLOHGLPSRUW
+LQVWUXFWLRQVUHIHUWR)LOH7UDQVIHUń,PSRUW
+7KH/HDUQLQJPRGXOHFXUUHQWO\VXSSRUWVUHDGLQJDQGDQQRWDWLQJILOHVLQ3')(38%02%,$=:DQG
+$=:IRUPDWV)LOHVPD\EHWUDQVIHUUHGWRWKLVGHYLFHYLD9LZRRGV7UDQVIHUDQGDFFHVVHGWKURXJKŉ0\
+/LEUDU\Ŋ
+:KLOHEURZVLQJILOHVXVHDKLJKOLJKWHUWRDQQRWDWHPDUNNH\SRLQWVFKDOOHQJHVDQGDUHDVRIFRQIXVLRQ
+DQGPDNHQRWHV$,VXSSRUWHQKDQFHVOHDUQLQJDQGZRUNSURFHVVHV$QQRWDWHGSDJHVFDQEHXVHGWR
+FUHDWHQHZUHDGLQJQRWHVIDFLOLWDWLQJIRFXVHGUHYLHZDQGIXUWKHUGHYHORSPHQW
+Ϯϳ
+Folder
+)ROGHUDQGVXEIROGHUPDQDJHPHQWLVVXSSRUWHG8VHUVPD\RUJDQL]HUHDGLQJPDWHULDOVLQWRIROGHUVIRU
+HDVLHUFDWHJRUL]DWLRQDQGPDQDJHPHQW
+
+
+=== FILE PAGE 29 ===
+Learning
+6ZLSHIURPULJKWWROHIWWRJRWR
+WKHQH[WSDJH
+6ZLSHIURPOHIWWRULJKWWRJR
+WRWKHSUHYLRXVSDJH
+Single-finger Swipe
+Single-finger Tap
+7DSWKHOHIWVLGHWRJRWR
+WKHSUHYLRXVSDJH
+7DSWKHULJKWVLGHWRJRWR
+WKHQH[WSDJH
+7DSWKHWRSILIWKRIWKHVFUHHQWR
+H[SDQGWKHPHQX
+Page Turn Gestures
+Long Press
+In "My Library," a single-finger long press on a book 
+allows renaming or deletion of the book.
+Ϯϴ
+
+
+=== FILE PAGE 30 ===
+Learning
+On the reading interface, long press with one finger or use the selection tool to highlight text in PDF 
+or EPUB files. Selected text can be used with AI Assistant, Translation, Dictionary, Copy, Share, and 
+Highlight features.
+
+AI Assistant: Automatically pastes the selected text into the AI Assistant for answering queries.
+
+Translation: Translates selected characters, words, sentences, or paragraphs into the chosen target 
+language.
+
+Dictionary: Provides definitions for individual characters.
+
+Copy: Copy selected valuable text to paste into notes, meeting records, or any other required area.
+
+Share: Export selected text as a TXT file and share it to desired terminals via QR code, email, file 
+transfer, or Bluetooth.
+
+Highlight: Highlights selected content, which is automatically saved in the Highlight section of 
+Reading Notes for consolidated viewing and management. Highlights can also be exported in PDF 
+format, with the exported text available for copying and editing.
+Ϯϵ
+$,$VVLVWDQW
+'LFWLRQDU\
+7UDQVODWLRQ
+&RS\ 6KDUH
++LJKOLJKW
+6HOHFWWKHGHVLUHG
+WUDQVODWLRQODQJXDJH
+6HOHFWWKHFXUUHQW
+ODQJXDJH
+
+
+=== FILE PAGE 31 ===
+ϯϬ
+$QQRWDWLRQV
+3HQ
+(UDVHU
+8QGR
+5HGR
+&RQWHQWV
+5HDGLQJ
+1RWHV
+'LVSOD\
+%RRNPDUNV $,
+$VVLVWDQW
+Learning
+%DFN
+6HOHFWLRQ
+7RRO
+&ROODSVH
+0RUH
+Annotations
+)UHHO\ZULWHRUKLJKOLJKWLPSRUWDQWGRXEWIXORUFKDOOHQJLQJSRLQWVRQRSHQHGERRNGRFXPHQWV
+9DULRXVSHQVFDQEHVHOHFWHGGXULQJDQQRWDWLRQLQFOXGLQJIRXQWDLQSHQVDUWSHQVWHFKQLFDOSHQVDQG
+KLJKOLJKWHUVIRUULFKHUFRQWHQW3')ILOHVVXSSRUWIXOOGRFXPHQWVKDULQJZLWKDQQRWDWLRQVLQFOXGHG
+Annotation Stroke Undo
+8QGRE\VWURNHGXULQJDQQRWDWLRQ
+Eraser
+,QFOXGHVSL[HOHUDVHUODVVRHUDVHUDQGHUDVHDOORSWLRQV/DVVRHUDVHULVWKHGHIDXOW
+
+
+=== FILE PAGE 32 ===
+Learning
+Reading Notes
+$OODQQRWDWHGSDJHVZLWKLQDERRNFDQEHFROOHFWLYHO\YLHZHG8VHUVPD\VHOHFWRQHPXOWLSOHRUDOOSDJHV
+WRFRPSLOHLQWRDVLQJOH3')ILOHDQGVKDUHWKHLUUHDGLQJQRWHVYLDHPDLO45FRGH9LZRRGV7UDQVIHURU
+%OXHWRRWK
+Contents
+'LVSOD\VWKHFKDSWHUVDQGSDJHQXPEHUVRIWKHERRNDOORZLQJTXLFNEURZVLQJRIWKHERRN
+VVWUXFWXUH
+DQGORFDWLQJVSHFLILFFKDSWHUV3')ILOHVZLWKRXWDWDEOHRIFRQWHQWVFDQDXWRPDWLFDOO\JHQHUDWHDQG
+GLVSOD\SDJHQXPEHUV
+Display (PDF)
+HD Display
+Displays without any 
+additional effects.
+Enhances the image quality for a 
+more refined display.
+Strengthens HD display for 
+clearer image quality.
+ϯϭ
+Denoise
+Original Image
+
+
+=== FILE PAGE 33 ===
+Learning
+Font Settings (Epub)
+Set Font Size
+Use the font size adjustment buttons to set the font size according to reading preferences.
+Set Font Style
+Select from various font styles based on preference. Available fonts include EB Garamond、Source 
+Sans 、OpenDyslexic、Noto Serif、Noto Sans、Source Han Serif.
+Two-Finger Gestures
+3LQFKLQZDUGWR
+UHGXFHWKHSDJHVL]H
+3LQFKRXWZDUGWRHQODUJH
+WKHSDJH
+$IWHUHQODUJLQJWKHSDJHVZLSH
+ZLWKWZRILQJHUVWRPRYHWKHSDJH
+Zoom
+Tap the zoom buttons to enlarge the PDF file proportionally by 1.1X, 1.2X, 1.3X, 1.4X, 1.5X, 1.6X, 1.7X, 
+1.8X, 1.9X, and 2.0X. After zooming, use a two-finger swipe to view details outside the visible area. 
+When writing on a zoomed PDF document, the stroke size adjusts proportionally and remains in the 
+same position.
+Click to Zoom
+ϯϮ
+
+
+=== FILE PAGE 34 ===
+Learning
+Bookmarks
+AI
+Share
+Progress Bar
+3UHYLRXV
+&KDSWHU
+1H[W
+&KDSWHU
+&XUUHQW3DJH
+7RWDO3DJHV
+&XUUHQW&KDSWHU7LWOH
+While browsing, tapping the bottom fifth of the screen reveals a progress bar. You may slide the 
+bar for quick navigation, or tap the arrow to jump directly to specific chapters.
+Share the current page being read.
+Use AI assistance to resolve questions, find information, or expand thinking during reading.
+When reading a lengthy book, use bookmarks to quickly revisit related 
+pages. Bookmarks help locate associated pages efficiently.
+Bold Font
+Page Settings
+ϯϯ
+The default font style
+The bold font style appears thicker
+$OLJQPHQW2SWLRQV
+3DJH0DUJLQV
+/LQH6SDFLQJ
+
+
+=== FILE PAGE 35 ===
+Meeting
+$OO0HHWLQJ5HFRUGV
+)DYRULWHG
+(QFU\SWHG
+7DJJHG
+6HOHFWDWHPSODWH
+EHIRUHFUHDWLRQ
+6HDUFK
+'HIDXOW7HPSODWH
+4XLFN&UHDWLRQ
+5HF\FOH%LQ
+ϯϰ
+
+
+=== FILE PAGE 36 ===
+Meeting - New Template Meeting
+hƐĞƌƐĐĂŶƐĞůĞĐƚĂŵĞĞƚŝŶŐƚĞŵƉůĂƚĞĂĐĐŽƌĚŝŶŐƚŽƚŚĞŝƌŶĞĞĚƐ
+ϯϱ
+
+
+=== FILE PAGE 37 ===
+Meeting - AI
+&XVWRP$,FRPPDQGVDQGPXOWLSDJHLQWHJUDWLRQ
+VXSSRUWOLQNLQJZLWKPHHWLQJUHFRUGVLQWKH'DLO\PRGXOH
+$GG&XVWRP
+&RPPDQGV
+'HIDXOW
+&RPPDQGV
+&OLFNWRFRPSOHWHWKH
+SURFHVVDQGOLQNWR'DLO\
+&OLFNWRVHOHFWDQG
+QDYLJDWHWRWKH
+FRUUHVSRQGLQJ
+PHHWLQJUHFRUG
+ϯϲ
+0HUJLQJPXOWLSOH
+SDJHVDQGDSSO\LQJ
+$,FRPPDQGV
+
+
+=== FILE PAGE 38 ===
+Daily
+3DJHQXPEHULVVDPHDV3DSHU
+)HHGEDFN
+LQGLFDWRUVIRU
+QRWHVFRQWHQW
+&OLFNWKHDUURZWR
+VZLWFKPRQWKV
+0DUN
+UHPLQGHUV
+7DVNVDQG
+QRWHVFDQEH
+LQWHUFKDQJHG
+:HHNO\
+YLHZ
+ϯϳ
+$,
+FRPPDQGV
+5HWXUQWR
+WRGD\
+&DOHQGDU
+HYHQW
+GLVSOD\
+&UHDWHHYHQW
+(YHQWVZLWKFRQWHQW
+SURYLGHYLVXDO
+IHHGEDFNLQGLFDWRUV
+0RQWKO\
+YLHZ
+'DLO\
+YLHZ
+1RWHVSDJH
+RYHUYLHZ
+
+
+=== FILE PAGE 39 ===
+Daily
+ϯϴ
+'DLO\RYHUYLHZZLWKUHDOWLPHWLPHOLQHGLVSOD\VWLPHUDQJHVRIVFKHGXOHG
+HYHQWV(YHQWVFDQEHFUHDWHGHGLWHGDQGGHOHWHG
+7LPHOLQH
+5HDOWLPHWLPHIHHGEDFNLVVXSSRUWHG
+Display, Create, and Edit Events
+7DSRQDQ\GLVSOD\HGHYHQWWR
+HGLWRUGHOHWHLW
+&UHDWH(YHQW
+
+
+=== FILE PAGE 40 ===
+ϯϵ
+Daily
+6HOHFWWKHFDOHQGDUWRELQG
+&OLFNWRH[HFXWHV\QFKURQL]DWLRQ
+ZLWKFDOHQGDUHYHQWV
+&RQILJXUHWKHVWDUWLQJGD\
+RIWKHZHHNń0RQGD\
+6DWXUGD\RU6XQGD\DUH
+VXSSRUWHG
+Calendar Binding and Synchronization
+6XSSRUWVLQWHJUDWLRQZLWK2XWORRNDQG*RRJOH&DOHQGDUV2QFHOLQNHGHYHQWVDGGHGGHOHWHGRU
+PRGLILHGZLOODXWRPDWLFDOO\V\QFKURQL]H$IWHUXQELQGLQJRQO\ORFDOO\FUHDWHGHYHQWVUHPDLQRQWKHGHYLFH
+1RWH
+2XWORRNHQWHUSULVHDFFRXQWVUHTXLUHPDQXDODGPLQLVWUDWRUDXWKRUL]DWLRQWRV\QFKURQL]HZLWKWKHGHYLFH
+FDOHQGDU
+7RHQVXUHXVHUSULYDF\FDOHQGDUELQGLQJDQGV\QFKURQL]DWLRQDUHFRQGXFWHGHQWLUHO\WKURXJKWKLUG
+SDUW\SURWRFROVZLWKRXWSDVVLQJWKURXJKRXUVHUYHUV%LQGLQJPD\RFFDVLRQDOO\IDLOSOHDVHUHWU\LIVR
+
+
+=== FILE PAGE 41 ===
+ϰϬ
+Daily
+ŉ2WKHUVŊ7DE$GDLO\VXPPDU\ZLQGRZDFURVV
+DOODSSOLFDWLRQV+HUH\RXFDQYLHZGRFXPHQWV
+FUHDWHGLQWKH3DSHU0HHWLQJ3LFNLQJDQG
+/HDUQLQJPRGXOHVE\GDWH
+Paper and Meeting Integration
+1RWHVIURPWKH3DSHUDQG0HHWLQJPRGXOHV
+FDQEHOLQNHGWRVSHFLILFGDWHVLQWKH'DLO\
+PRGXOH&OLFNLQJWKHQRWHQDPHUHRSHQVLWDW
+WKHSDJHZKHUHWKHOLQNZDVFUHDWHG
+
+
+=== FILE PAGE 42 ===
+Picking
+Access the Notes home page from the APK
+$OOQRWH
+GRFXPHQWV
+$OOVFUHHQVKRWV
+DQGDQQRWDWHG
+SDJHV
+&UHDWHDQHZ
+QRWHGRFXPHQW
+ϰϭ
+%DWFKVHOHFWVFUHHQVKRWVWR
+FRPSLOHLQWRD3LFNLQJGRFXPHQW
+
+
+=== FILE PAGE 43 ===
+Picking
+6ZLSHIURPWKHXSSHUULJKWFRUQHUWRWKHORZHU
+OHIWHGJHRUWKURXJKWKHEODFNDUHD7KLVWRROLV
+JOREDODQGFDQEHLQYRNHGLQDQ\RWKHU$3.
+Picking Invocation Method
+ϰϮ
+
+
+=== FILE PAGE 44 ===
+Picking
+,QVHUWWKH
+FDSWXUHGLPDJH
+LQWRWKHQRWH
+6DYHWRQRWH
+VFUHHQVKRWV
+)RQW
+UHFRJQLWLRQ
+6HOHFWWKH
+ODQJXDJHIRU
+UHFRJQLWLRQ
+6HOHFW&URSWKHQ
+XVHWKHSHQWR
+FLUFOHWKHFRQWHQW
+WREHFDSWXUHG
+$IWHUVHOHFWLRQ
+FRQYHUWWRFURS
+DQGDFWLYDWHWKH
+HGLWLQJIXQFWLRQ
+&OLFNWKLVLFRQWR
+H[SDQGWKHVFUHHQVKRW
+DUHDWRIXOOVFUHHQ
+7KHHGLWLQJER[
+FDQEHGUDJJHG
+ϰϯ
+Crop
+
+
+=== FILE PAGE 45 ===
+Picking
+Annotate 
+7KLVEXWWRQDFWLYDWHVRU
+GHDFWLYDWHVWKHDQQRWDWLRQPRGH
+:KHQDFWLYDWHGWKHSDJHLV
+ORFNHGDQGDQQRWDWLRQVFDQEH
+IUHHO\PDGH
+6DYH
+DQQRWDWHG
+SDJH
+&OLFNWRPRGLI\
+WKHQDPHRI
+WKHDQQRWDWLRQ
+7RFDQFHODQQRWDWLRQPRGH
+FOLFNWKHGHDFWLYDWLRQ
+EXWWRQ7KHDQQRWDWLRQ
+IHDWXUHZLOOEHIUR]HQDQG
+FDQEHUHDFWLYDWHGDV
+QHHGHG
+ϰϰ
+
+
+=== FILE PAGE 46 ===
+)UHHO\VHOHFW
+H[LVWLQJ0HPR
+GRFXPHQWV
+6XSSRUWVPXOWLSDJH
+YLHZLQJDQGHGLWLQJ
+Picking
+Insert Note
+6ZLWFKWRVHPL
+WUDQVSDUHQWPRGH
+5HQDPH
+,QVHUWLPDJHV
+IURPVFUHHQVKRWV
+ϰϱ
+
+
+=== FILE PAGE 47 ===
+ϰϲ
+File Encryption
+Select Files to Encrypt or Decrypt
+File encryption is available in both the Paper and Meeting modules. Long press a file to enter edit mode 
+and apply encryption to one or multiple files. You may also click the encryption icon within the file 
+toolbar to secure the current file. To remove encryption, click the icon again and enter the password. For 
+user privacy, encryption is not linked to any account.
+Set Encryption Password
+When using the document encryption feature for the 
+first time, you must set an encryption password. 
+Passwords for Paper and Meeting are managed 
+independently, although identical passwords may be set. 
+Passwords must be 4–12 characters in length. 
+Fingerprint access for encrypted files is also supported 
+and can be enabled manually under [Settings] – 
+[Security] – [Fingerprint].
+Change Encryption 
+Password
+To change the encryption password, 
+tap the encrypted file and select 
+the password change option on the 
+input screen.
+Note: Passwords are stored locally 
+on the device. Please remember 
+your password, as files cannot be 
+unlocked if it is forgotten.
+
+
+=== FILE PAGE 48 ===
+ϰϳ
+Apps
+Within the Apps module, you may freely download and install third-party applications. 
+Long pressing an app icon allows you to clear its cache, uninstall the app, or add it to the 
+home screen.
+
+
+=== FILE PAGE 49 ===
+AI
+This is an intelligent sheet of paper. It allows interaction with AI and provides context-
+specific AI assistance in various modules. AI functions are available even when not logged 
+in. Supported models include GPT-4o, GPT-4o-mini, Deepseek-R1, and Deepseek-V1.
+Voice AI, Text Entry via Electronic Keyboard
+Long press the AI button on the bottom right corner of the e-ink tablet to record a voice message 
+up to 15 seconds. Release to automatically send it to AI, which will transcribe the voice message 
+into text. The AI has strong reasoning abilities to address everyday issues encountered in life and 
+learning. AI endows our future paper with limitless intelligence.
+Short press the AI button on the bottom right corner of the e-ink tablet to enter text for AI 
+dialogue via the electronic keyboard.
+Content from AI interactions can be copied or shared based on its value.
+6KRUWSUHVVWRXVH$,
+/RQJSUHVVWRLQSXWYRLFHWR$,
+ϰϴ
+
+
+=== FILE PAGE 50 ===
+AI 
+AI for Picking
+For captured images and text, AI can assist with content recognition, analysis, and 
+summary extraction. 
+AI can convert full-page content into text or answer queries.
+AI for Daily
+AI for learning
+In journal notes, AI can create stories, use AI 
+assistants, organize and classify tasks, and 
+generate schedule reports.
+AI features within the reading interface 
+support translation, dictionary, AI 
+assistant, and customization for 
+selected text. Full-page AI supports 
+only the AI assistant and customization.
+AI for Paper
+AI for Meeting
+In Paper, AI can analyze handwritten content, 
+generate articles, and convert text. Custom 
+AI commands can be set to consult the AI 
+assistant for queries.
+AI generates meeting minutes from 
+recorded meeting content.
+ϰϵ
+AI Commands 
+
+
+=== FILE PAGE 51 ===
+AI
+Custom AI commands
+Set up AI commands according to needs. For example, if translating written text into French, name the 
+command "Eng-Fra" and instruct the AI to "Translate the written English into French."
+Up to five AI commands can be set. Long press to delete.
+AI Assistant
+Use the AI Assistant to automatically paste 
+selected text, circled images, or the current 
+page into the AI dialogue box for discussion.
+History
+All AI dialogue records are automatically saved 
+locally and available for continuous conversation 
+within 24 hours. Currently, AI commands are not 
+automatically saved.
+ϱϬ
+Export
+AI-generated content can be exported in TXT or HTML formats. Exporting as HTML preserves 
+display integrity and sharing quality of AI-generated results.
+
+
+=== FILE PAGE 52 ===
+ϱϭ
+Viwoods Files APK
+Tap the Viwoods Files APK shortcut from the main sidebar.
+Access My Files, Cloud Drive, and Local files.
+
+My Files: Includes handwritten documents from the Paper, Daily, Meeting, Learning, Picking, and 
+Memo modules.
+
+Cloud Drive: Files from third-party cloud storage.
+
+Local: Files stored locally on the device (currently in development).
+
+
+=== FILE PAGE 53 ===
+ϱϮ
+Viwoods Files APK
+Log in to Third-Party Cloud Storage
+
+Click the Viwoods Files APK shortcut entry in the homepage sidebar to access the cloud storage 
+section. It supports logging into third-party cloud storage accounts, allowing simultaneous login to 
+Google Drive, OneDrive, and Dropbox accounts.௙
+
+By default, the first account logged in is set as the synchronization account. You can modify the 
+synchronization account in the sync settings.
+Supports browsing third-party cloud storage directories, importing files to the device, deleting files, 
+and creating folders (folder creation is available only when importing files to cloud storage).
+Import Cloud Files to Device௙
+Long-press 
+to select௙
+௙Import files to device
+Sync Settings
+Log in to Cloud Storage
+
+
+=== FILE PAGE 54 ===
+ϱϯ
+Viwoods Files APK
+Device Files and Cloud Export
+Full access to all device files is available, with 
+support for export to third-party cloud storage.
+Long press to select
+Export files to 
+cloud storage
+
+
+=== FILE PAGE 55 ===
+ϱϰ
+Third-Party Cloud Integration
+Third-Party Cloud Sync Shortcut
+From the homepage, tap the third-party cloud sync button to instantly synchronize device files to 
+Google Drive, OneDrive, or Dropbox.
+Long press the third-party cloud sync button to enter the cloud storage interface. Tap “Settings” to 
+select the sync account, target folder, and file format for synchronization.
+Cloud Sync 
+Button
+
+
+=== FILE PAGE 56 ===
+ - Login
+7DSWKHPDLOER[VKRUWFXW
+(QWHU\RXU*RRJOHDFFRXQW
+(QWHUSDVVZRUGDQGORJLQ
+/RJLQVXFFHVVIXO
+6XSSRUWV*RRJOHDQG2XWORRNDFFRXQWORJLQV
+Mailbox
+Google Account (Supports login with Google Workspace accounts)
+ϱϱ
+
+
+=== FILE PAGE 57 ===
+ - Login
+7DSWKHPDLOER[VKRUWFXW
+(QWHU2XWORRNDFFRXQW
+(QWHUSDVVZRUGDQGORJLQ
+/RJLQVXFFHVVIXO
+Mailbox
+Outlook Account (Supports login with Microsoft 365 accounts)
+ϱϲ
+2XWORRNDFFRXQWVZLWK#OLYHFRPDQG#PVQFRPGRPDLQVDUHVXSSRUWHG
+
+
+=== FILE PAGE 58 ===
+ϱϳ
+——登录
+Mailbox
+Manual Configuration of Email Via IMAP and POP3 Protocols
+7DSWKH0DQXDO6HWXSHQWU\
+6HOHFW,0$3RU323SURWRFRO
+(QWHU6073FRQILJXUDWLRQGHWDLOV
+(QWHUWKHDFFRXQWLQIRUPDWLRQ
+DQG,0$3323VHWWLQJV
+/RJLQVXFFHVVIXO
+,0$3DQG323LQIRUPDWLRQ
+FDQEHREWDLQHGIURP\RXUHPDLO
+SURYLGHU
+VZHELQWHUIDFH
+
+
+=== FILE PAGE 59 ===
+Mailbox - Homepage
+
+$FFRXQW
+6ZLWFK$GG
+&RPSRVH
+(PDLO
+6HDUFK
+Email Settings
+6XSSRUWVXVHUDFFRXQWVZLWFKLQJDQG
+DGGLQJZLWKDPD[LPXPRIDFFRXQWV
+6HOHFWDEOHHPDLOYLVLELOLW\UDQJHLV
+VXSSRUWHG
+/RFDOGDWDFDQEHFOHDUHG
+ϱϴ
+3DJLQDWHG
+(PDLO'LVSOD\
+
+
+=== FILE PAGE 60 ===
+Mailbox - Compose Email
+
+&RPSRVH(PDLO
++DQGZULWLQJ
+WRROV
+7H[W
+HPDLO
+8QGR
+%DFN
+3HQ
+W\SH
+(UDVHU
+%DFNJURXQG
+SDWWHUQ
+'HOHWHSDJH
+$,
+$WWDFK
+ILOHV
+1. Handwriting Toolbar
+2. Text Email Toolbar
+8VHUVFDQFKRRVHWRVHQGDQHPDLOHLWKHULQKDQGZULWWHQIRUPRUWH[WIRUPDW
+6ZLSHOHIWWRDGGSDJH
+ϱϵ
+
+
+=== FILE PAGE 61 ===
+/ĂƵƚŽŵĂƚŝĐĂůůǇĨŝůůƐƐƵďũĞĐƚĂŶĚŶĂŵĞ
+$,FDQDXWRPDWLFDOO\JHQHUDWHDQHPDLOIURP
+KDQGZULWWHQFRQWHQWRUFRQYHUWKDQGZULWWHQ
+WH[WLQWRW\SHGWH[WIRUWKHHPDLO
+Mailbox - AI
+ϲϬ
+
+
+=== FILE PAGE 62 ===
+Mailbox - Signature Editing
+8VHUVFDQFXVWRPL]HDQGHGLWVLJQDWXUHVHLWKHU
+ZKLOHFRPSRVLQJDQHPDLORULQWKHHPDLO
+VHWWLQJV
+ϭ͘ ĚŝƚƐŝŐŶĂƚƵƌĞŝŶƚŚĞĞŵĂŝůĐŽŵƉŽƐĞƐĞĐƚŝŽŶ͘
+Ϯ͘ ĚŝƚƐŝŐŶĂƚƵƌĞŝŶĞŵĂŝůƐĞƚƚŝŶŐƐ͘
+ϲϭ
+
+
+=== FILE PAGE 63 ===
+,PSRUWILOHV
+6HQGILOHV
+2QJRLQJWUDQVIHUVVHDUFKXVHUJXLGH
+5HFHLYHGDQG
+VHQWILOHUHFRUGV
+ViTransfer supports both import and export.
+/RJLQWR>9L7UDQVIHU@RQDFRPSXWHURUPRELOHGHYLFHWRLPSRUWILOHV
+WRWKHGHYLFHRUVDYHILOHVIURPWKHGHYLFHWRWKHFRPSXWHUPRELOH
+GHYLFHHQDEOLQJWZRZD\ILOHWUDQVIHU
+ViTransfer - Homepage
+ŵǇ͘ ǀŝǁŽŽĚƐ͘ ĐŽŵ
+ϲϮ
+
+
+=== FILE PAGE 64 ===
+ViTransfer
+1.Import
+,PSRUWILOHVIURPFRPSXWHURUSKRQHWR
+$L3DSHU
+/RJin RQFRPSXWHURUSKRQH
+6FDQWKH45FRGHZLWK\RXUSKRQHRUHQWHUP\
+YLZRRGVFRPRQFRPSXWHUWRORJLQWR\RXU
+9LZRRGVDFFRXQW
+3. Import file
+Click Import on computer or tap + on 
+your phone to select files to import.
+4. Receive
+(QWHU9L7UDQVIHUWDS5HFHLYHWRLPSRUW
+1.Log in to AiPaper 
+/RJLQWR9LZRRGVDFFRXQWWRXVH9L7UDQVIHU
+ϲϯ
+
+
+=== FILE PAGE 65 ===
+2.Export
+([SRUWQRWHVRUIROGHUVIURP$L3DSHUWR
+FRPSXWHURUSKRQH
+2. Export
+Enter ViTransfer - Tap Export - Select 
+files - Tap Export
+3. Log in on computer or phone(Not logged in)
+6FDQWKH45FRGHZLWK\RXUSKRQHRUHQWHU
+P\YLZRRGVFRPRQFRPSXWHUDQGORJLQWR\RXU
+9LZRRGVDFFRXQW
+4. Send
+'RZQORDGVKDUHRUV\QFILOHVIURP
+P\YLZRRGVFRP
+1.Log in to AiPaper 
+/RJLQWR9LZRRGVDFFRXQWWRXVH9L7UDQVIHU
+ViTransfer
+ϲϰ
+
+
+=== FILE PAGE 66 ===
+3.Sync
+6\QFDFURVVPXOWLSOH$L3DSHUVIRUWKHVDPH
+XVHU
+([SRUW
+(QWHU9L7UDQVIHURQ$L3DSHU$6HOHFWILOHV
+7DS([SRUW
+2. Sync
+6FDQWKH45FRGHZLWK\RXUSKRQHRUHQWHU
+P\YLZRRGVFRPRQFRPSXWHUDQGORJLQWR
+\RXU9LZRRGVDFFRXQW
+6HOHFWILOHV6HOHFWWKHGHYLFHWR
+V\QF$L3DSHU%6\QF
+3. Receive
+(QWHU9L7UDQVIHURQ$L3DSHU%5HFHLYH6\QF
+VXFFHVVIXOO\
+ViTransfer
+ϲϱ
+
+
+=== FILE PAGE 67 ===
+Share
+1.QR code
+8VHUVFDQVFDQWKH45FRGHZLWKD
+PRELOHGHYLFHRURWKHUGHYLFHVWR
+REWDLQWKHILOH
+2.Email
+6HQGDWWDFKPHQWVYLD0DLOER[WR
+UHFHLYHILOHV6XSSRUWV*RRJOHDQG
+2XWORRNDFFRXQWV
+3.ViTransfer
+6HQGILOHVWRWKH9L7UDQVIHUVWDWLRQ
+P\YLZRRGVFRP)LOHVFDQEH
+GRZQORDGHGIURPWKHWUDQVIHUVWDWLRQ
+4.Bluetooth
+6HQGILOHVYLD%OXHWRRWK
+&XUUHQWO\VXSSRUWVVKDULQJILOHVYLD45FRGH(PDLO9L7UDQVIHUDQG%OXHWRRWK
+)LOHIRUPDWDQGSDJHVHOHFWLRQFDQEHVSHFLILHGILOHUHQDPLQJEHIRUHVHQGLQJLVVXSSRUWHG
+ϲϲ
+
+
+=== FILE PAGE 68 ===
+Memo - To-Do Notes
+dŽͲĚŽŶŽƚĞƐƐƵƉƉŽƌƚƐĞƚƚŝŶŐƌĞŵŝŶĚĞƌƚŝŵĞƐ͘
+ϲϳ
+
+
+=== FILE PAGE 69 ===
+Memo
+/RQJSUHVVWRHGLWZLWKRSWLRQVWRSLQVHWFDQFHOUHPLQGHUWLPHVUHQDPHIDYRULWHVKDUHRUGHOHWH
+5HFHQWO\GHOHWHGQRWHVDUHVWRUHGIRUXSWR
+GD\VDQGFDQEHUHVWRUHGRUSHUPDQHQWO\
+GHOHWHG
+ϲϴ
+
+
+=== FILE PAGE 70 ===
+)RUDQ\LVVXHVGXULQJXVHSOHDVHFRQWDFWservice@viwoods.com
+ŽŶƚĂĐƚhƐ

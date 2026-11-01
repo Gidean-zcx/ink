@@ -1,0 +1,6 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M016-01,M-016,日常学词与复习,D1,E-BCZ-01;E-BCZ-02;E-BCZ-03;E-BCD-02;E-BCD-03;E-BCD-04;E-BCD-06;E-BCD-07;E-BCD-08;E-BCD-09,历史选书/斩词/单词本计划片段；题型与静态题面,现版完整作答链、误判撤销、离线；历史片段构建与执行结果未知,static_reference_only,false,cases/M-016-baicizhan.md,2026-10-26
+F-M018-01,M-018,语境学词后拼写,D1,E-BBDC-01;E-BBDC-02;E-BBD-01;E-BBD-02,中国区iOS拼写设置日志；Android例句显示修复,逐题回忆/揭示/评价/反馈链、原声音频与中断恢复未知,not_observed,false,cases/M-018-bbdc.md,2026-10-26
+F-M018-02,M-018,返回与错词拼写,D1,E-BBDC-02;E-BBD-01,回上一词/只拼错词/提示页与记错了修复日志,是否撤销、空错词集合、提示阶梯、重试和队列更新未知,not_observed,false,cases/M-018-bbdc.md,2026-10-26
+F-M018-03,M-018,词书与学习范围,D1,E-BBDC-02;E-BBDC-03;E-BBDC-04;E-BBD-01;E-BBD-03,单元范围、已有本学习与PDF日志；公开自制入口重定向,登录后导入/校订/去重；范围实际状态；删除与进度恢复未知,not_observed,false,cases/M-018-bbdc.md,2026-10-26
+F-M018-05,M-018,寻求帮助,D2,E-BBDC-03;E-BBD-01;E-BBD-02,iOS帮助路径；Android描述路径差异,具体FAQ正文、反馈受理状态、离线保存与工单恢复未知,not_observed,false,cases/M-018-bbdc.md,2026-10-26

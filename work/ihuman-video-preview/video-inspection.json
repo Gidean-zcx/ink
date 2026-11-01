@@ -1,0 +1,291 @@
+{
+  "url": "https://h5static1.ihumand.com/website/pc/cn/shizi/assets/media/cn_video.198bceb2.mp4",
+  "source_page": "https://www.ihuman.com/shizi/",
+  "checked_on": "2026-10-27",
+  "audio_observed": false,
+  "device_hands_on": false,
+  "method": "normal_browser_public_video_paused_samples_no_mp4_saved",
+  "metadata": {
+    "duration": 86.122667,
+    "width": 1920,
+    "height": 1080,
+    "error": null
+  },
+  "browser": "156.0.8078.4",
+  "samples": [
+    {
+      "seconds": 10,
+      "path": "work/ihuman-video-preview/video/010.00.png",
+      "sha256": "db58a75a7409be68f18aa2f3a9c7c6f039f5340054430d5b35c1a11affec3c38"
+    },
+    {
+      "seconds": 30,
+      "path": "work/ihuman-video-preview/video/030.00.png",
+      "sha256": "9b03deafd2046085275644f1db3de3839f98b50ce38b36bf67948afc10c0c6e9"
+    },
+    {
+      "seconds": 50,
+      "path": "work/ihuman-video-preview/video/050.00.png",
+      "sha256": "940495e6a9c3a267a7c17f1edd6f3700ac7c69660255ebd9051b9f2e87fa331a"
+    },
+    {
+      "seconds": 70,
+      "path": "work/ihuman-video-preview/video/070.00.png",
+      "sha256": "9a2f1051f067e11ea1e17ebdb0787c34337d1838e1c0c9e6803c6c60e871876c"
+    }
+  ],
+  "network": [
+    {
+      "url": "https://h5static1.ihumand.com/website/pc/cn/shizi/assets/media/cn_video.198bceb2.mp4",
+      "status": 206,
+      "content_type": "video/mp4",
+      "content_length": "14230136",
+      "content_range": "bytes 0-14230135/14230136"
+    },
+    {
+      "url": "https://h5static1.ihumand.com/website/pc/cn/shizi/assets/media/cn_video.198bceb2.mp4",
+      "status": 206,
+      "content_type": "video/mp4",
+      "content_length": "8824",
+      "content_range": "bytes 14221312-14230135/14230136"
+    },
+    {
+      "url": "https://h5static1.ihumand.com/website/pc/cn/shizi/assets/media/cn_video.198bceb2.mp4",
+      "status": 206,
+      "content_type": "video/mp4",
+      "content_length": "14164600",
+      "content_range": "bytes 65536-14230135/14230136"
+    },
+    {
+      "url": "https://h5static1.ihumand.com/website/pc/cn/shizi/assets/media/cn_video.198bceb2.mp4",
+      "status": 206,
+      "content_type": "video/mp4",
+      "content_length": "12493432",
+      "content_range": "bytes 1736704-14230135/14230136"
+    },
+    {
+      "url": "https://h5static1.ihumand.com/website/pc/cn/shizi/assets/media/cn_video.198bceb2.mp4",
+      "status": 206,
+      "content_type": "video/mp4",
+      "content_length": "11936376",
+      "content_range": "bytes 2293760-14230135/14230136"
+    },
+    {
+      "url": "https://h5static1.ihumand.com/website/pc/cn/shizi/assets/media/cn_video.198bceb2.mp4",
+      "status": 206,
+      "content_type": "video/mp4",
+      "content_length": "9314936",
+      "content_range": "bytes 4915200-14230135/14230136"
+    },
+    {
+      "url": "https://h5static1.ihumand.com/website/pc/cn/shizi/assets/media/cn_video.198bceb2.mp4",
+      "status": 206,
+      "content_type": "video/mp4",
+      "content_length": "9151096",
+      "content_range": "bytes 5079040-14230135/14230136"
+    },
+    {
+      "url": "https://h5static1.ihumand.com/website/pc/cn/shizi/assets/media/cn_video.198bceb2.mp4",
+      "status": 206,
+      "content_type": "video/mp4",
+      "content_length": "9118328",
+      "content_range": "bytes 5111808-14230135/14230136"
+    },
+    {
+      "url": "https://h5static1.ihumand.com/website/pc/cn/shizi/assets/media/cn_video.198bceb2.mp4",
+      "status": 206,
+      "content_type": "video/mp4",
+      "content_length": "8987256",
+      "content_range": "bytes 5242880-14230135/14230136"
+    },
+    {
+      "url": "https://h5static1.ihumand.com/website/pc/cn/shizi/assets/media/cn_video.198bceb2.mp4",
+      "status": 206,
+      "content_type": "video/mp4",
+      "content_length": "8921720",
+      "content_range": "bytes 5308416-14230135/14230136"
+    },
+    {
+      "url": "https://h5static1.ihumand.com/website/pc/cn/shizi/assets/media/cn_video.198bceb2.mp4",
+      "status": 206,
+      "content_type": "video/mp4",
+      "content_length": "7217784",
+      "content_range": "bytes 7012352-14230135/14230136"
+    },
+    {
+      "url": "https://h5static1.ihumand.com/website/pc/cn/shizi/assets/media/cn_video.198bceb2.mp4",
+      "status": 206,
+      "content_type": "video/mp4",
+      "content_length": "7021176",
+      "content_range": "bytes 7208960-14230135/14230136"
+    },
+    {
+      "url": "https://h5static1.ihumand.com/website/pc/cn/shizi/assets/media/cn_video.198bceb2.mp4",
+      "status": 206,
+      "content_type": "video/mp4",
+      "content_length": "6922872",
+      "content_range": "bytes 7307264-14230135/14230136"
+    },
+    {
+      "url": "https://h5static1.ihumand.com/website/pc/cn/shizi/assets/media/cn_video.198bceb2.mp4",
+      "status": 206,
+      "content_type": "video/mp4",
+      "content_length": "6726264",
+      "content_range": "bytes 7503872-14230135/14230136"
+    },
+    {
+      "url": "https://h5static1.ihumand.com/website/pc/cn/shizi/assets/media/cn_video.198bceb2.mp4",
+      "status": 206,
+      "content_type": "video/mp4",
+      "content_length": "6627960",
+      "content_range": "bytes 7602176-14230135/14230136"
+    },
+    {
+      "url": "https://h5static1.ihumand.com/website/pc/cn/shizi/assets/media/cn_video.198bceb2.mp4",
+      "status": 206,
+      "content_type": "video/mp4",
+      "content_length": "6496888",
+      "content_range": "bytes 7733248-14230135/14230136"
+    },
+    {
+      "url": "https://h5static1.ihumand.com/website/pc/cn/shizi/assets/media/cn_video.198bceb2.mp4",
+      "status": 206,
+      "content_type": "video/mp4",
+      "content_length": "6398584",
+      "content_range": "bytes 7831552-14230135/14230136"
+    },
+    {
+      "url": "https://h5static1.ihumand.com/website/pc/cn/shizi/assets/media/cn_video.198bceb2.mp4",
+      "status": 206,
+      "content_type": "video/mp4",
+      "content_length": "6300280",
+      "content_range": "bytes 7929856-14230135/14230136"
+    },
+    {
+      "url": "https://h5static1.ihumand.com/website/pc/cn/shizi/assets/media/cn_video.198bceb2.mp4",
+      "status": 206,
+      "content_type": "video/mp4",
+      "content_length": "6201976",
+      "content_range": "bytes 8028160-14230135/14230136"
+    },
+    {
+      "url": "https://h5static1.ihumand.com/website/pc/cn/shizi/assets/media/cn_video.198bceb2.mp4",
+      "status": 206,
+      "content_type": "video/mp4",
+      "content_length": "6070904",
+      "content_range": "bytes 8159232-14230135/14230136"
+    },
+    {
+      "url": "https://h5static1.ihumand.com/website/pc/cn/shizi/assets/media/cn_video.198bceb2.mp4",
+      "status": 206,
+      "content_type": "video/mp4",
+      "content_length": "5939832",
+      "content_range": "bytes 8290304-14230135/14230136"
+    },
+    {
+      "url": "https://h5static1.ihumand.com/website/pc/cn/shizi/assets/media/cn_video.198bceb2.mp4",
+      "status": 206,
+      "content_type": "video/mp4",
+      "content_length": "5841528",
+      "content_range": "bytes 8388608-14230135/14230136"
+    },
+    {
+      "url": "https://h5static1.ihumand.com/website/pc/cn/shizi/assets/media/cn_video.198bceb2.mp4",
+      "status": 206,
+      "content_type": "video/mp4",
+      "content_length": "5808760",
+      "content_range": "bytes 8421376-14230135/14230136"
+    },
+    {
+      "url": "https://h5static1.ihumand.com/website/pc/cn/shizi/assets/media/cn_video.198bceb2.mp4",
+      "status": 206,
+      "content_type": "video/mp4",
+      "content_length": "5546616",
+      "content_range": "bytes 8683520-14230135/14230136"
+    },
+    {
+      "url": "https://h5static1.ihumand.com/website/pc/cn/shizi/assets/media/cn_video.198bceb2.mp4",
+      "status": 206,
+      "content_type": "video/mp4",
+      "content_length": "4104824",
+      "content_range": "bytes 10125312-14230135/14230136"
+    },
+    {
+      "url": "https://h5static1.ihumand.com/website/pc/cn/shizi/assets/media/cn_video.198bceb2.mp4",
+      "status": 206,
+      "content_type": "video/mp4",
+      "content_length": "4006520",
+      "content_range": "bytes 10223616-14230135/14230136"
+    },
+    {
+      "url": "https://h5static1.ihumand.com/website/pc/cn/shizi/assets/media/cn_video.198bceb2.mp4",
+      "status": 206,
+      "content_type": "video/mp4",
+      "content_length": "3875448",
+      "content_range": "bytes 10354688-14230135/14230136"
+    },
+    {
+      "url": "https://h5static1.ihumand.com/website/pc/cn/shizi/assets/media/cn_video.198bceb2.mp4",
+      "status": 206,
+      "content_type": "video/mp4",
+      "content_length": "3613304",
+      "content_range": "bytes 10616832-14230135/14230136"
+    },
+    {
+      "url": "https://h5static1.ihumand.com/website/pc/cn/shizi/assets/media/cn_video.198bceb2.mp4",
+      "status": 206,
+      "content_type": "video/mp4",
+      "content_length": "3515000",
+      "content_range": "bytes 10715136-14230135/14230136"
+    },
+    {
+      "url": "https://h5static1.ihumand.com/website/pc/cn/shizi/assets/media/cn_video.198bceb2.mp4",
+      "status": 206,
+      "content_type": "video/mp4",
+      "content_length": "3449464",
+      "content_range": "bytes 10780672-14230135/14230136"
+    },
+    {
+      "url": "https://h5static1.ihumand.com/website/pc/cn/shizi/assets/media/cn_video.198bceb2.mp4",
+      "status": 206,
+      "content_type": "video/mp4",
+      "content_length": "3383928",
+      "content_range": "bytes 10846208-14230135/14230136"
+    },
+    {
+      "url": "https://h5static1.ihumand.com/website/pc/cn/shizi/assets/media/cn_video.198bceb2.mp4",
+      "status": 206,
+      "content_type": "video/mp4",
+      "content_length": "3351160",
+      "content_range": "bytes 10878976-14230135/14230136"
+    },
+    {
+      "url": "https://h5static1.ihumand.com/website/pc/cn/shizi/assets/media/cn_video.198bceb2.mp4",
+      "status": 206,
+      "content_type": "video/mp4",
+      "content_length": "3220088",
+      "content_range": "bytes 11010048-14230135/14230136"
+    },
+    {
+      "url": "https://h5static1.ihumand.com/website/pc/cn/shizi/assets/media/cn_video.198bceb2.mp4",
+      "status": 206,
+      "content_type": "video/mp4",
+      "content_length": "3056248",
+      "content_range": "bytes 11173888-14230135/14230136"
+    },
+    {
+      "url": "https://h5static1.ihumand.com/website/pc/cn/shizi/assets/media/cn_video.198bceb2.mp4",
+      "status": 206,
+      "content_type": "video/mp4",
+      "content_length": "2957944",
+      "content_range": "bytes 11272192-14230135/14230136"
+    },
+    {
+      "url": "https://h5static1.ihumand.com/website/pc/cn/shizi/assets/media/cn_video.198bceb2.mp4",
+      "status": 206,
+      "content_type": "video/mp4",
+      "content_length": "2826872",
+      "content_range": "bytes 11403264-14230135/14230136"
+    }
+  ]
+}

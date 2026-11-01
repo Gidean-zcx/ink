@@ -1,0 +1,529 @@
+{
+  "flow_changes": [
+    {
+      "id": "F-M045-01",
+      "field": "task",
+      "before": "一日简报读完",
+      "after": "一日简报读完（历史链与现版分开）"
+    },
+    {
+      "id": "F-M045-01",
+      "field": "depth",
+      "before": "D1",
+      "after": "D2"
+    },
+    {
+      "id": "F-M045-01",
+      "field": "evidence_ids",
+      "before": "E-ESPR-01;E-ESPR-02",
+      "after": "E-ESPR-01;E-ESPR-02;E-ESD-01;E-ESCD-01;E-ESCD-02"
+    },
+    {
+      "id": "F-M045-01",
+      "field": "known_branches",
+      "before": "内容或权限可用性未实测",
+      "after": "2017作者点文/滑动/勾选至结束页；2025机构图仅支持Today栏目和勾的外观，当前主链仍未核"
+    },
+    {
+      "id": "F-M045-01",
+      "field": "gaps",
+      "before": "精确入口与已读结算返回",
+      "after": "历史已读触发与跳读、当前末篇结束、日期更新/离线及跨端恢复"
+    },
+    {
+      "id": "F-M045-01",
+      "field": "visual_status",
+      "before": "not_observed",
+      "after": "historical_and_institutional_static_images_only"
+    },
+    {
+      "id": "F-M045-01",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M045-02",
+      "field": "evidence_ids",
+      "before": "E-ESPR-01;E-ESPR-02;E-ESD-02",
+      "after": "E-ESPR-01;E-ESPR-02;E-ESD-02;E-ESCD-01"
+    },
+    {
+      "id": "F-M045-02",
+      "field": "known_branches",
+      "before": "机构指南 Settings 到 For you；不证明改每日短报",
+      "after": "机构指南Settings改主题；HKU图For you周长文卡/时间/四个位置点；不证明改每日短报"
+    },
+    {
+      "id": "F-M045-02",
+      "field": "gaps",
+      "before": "选项、确认、生效与当前平台构建",
+      "after": "主题完整选项、确认、更新生效与当前构建；卡片手势和跨端同步"
+    },
+    {
+      "id": "F-M045-02",
+      "field": "visual_status",
+      "before": "not_observed",
+      "after": "institutional_static_images_only"
+    },
+    {
+      "id": "F-M045-02",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M045-03",
+      "field": "evidence_ids",
+      "before": "E-ESPR-02;E-ESD-01",
+      "after": "E-ESPR-02;E-ESD-01;E-ESCD-01"
+    },
+    {
+      "id": "F-M045-03",
+      "field": "known_branches",
+      "before": "静态图可见阅读时间与音频入口、时长；翻译为能力声明",
+      "after": "文章/周长文静态音频入口；本地商店历史3.31四语言实验、3.32译文显示修订；不证明中文音频"
+    },
+    {
+      "id": "F-M045-03",
+      "field": "gaps",
+      "before": "播放结果、暂停结束、精确返回恢复与语言入口",
+      "after": "播放/暂停/结束、精确返回与断点；译文入口、范围、回原文位置和当前实验状态"
+    },
+    {
+      "id": "F-M045-03",
+      "field": "visual_status",
+      "before": "static_official_images_only",
+      "after": "official_and_institutional_static_images_only"
+    },
+    {
+      "id": "F-M045-03",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M045-04",
+      "field": "evidence_ids",
+      "before": "E-ESPR-04;E-ESPR-03",
+      "after": "E-ESPR-04;E-ESPR-03;E-ESCD-01"
+    },
+    {
+      "id": "F-M045-04",
+      "field": "known_branches",
+      "before": "机构特定账号和16岁以上资格",
+      "after": "ACG机构账号路径与HKU学生自建账号分开；HKU指引该路径不选SSO；16+资格仍依原优惠条款"
+    },
+    {
+      "id": "F-M045-04",
+      "field": "gaps",
+      "before": "通用新用户错误恢复及当前界面",
+      "after": "机构/学生权益冲突、登录失败/恢复、服务到期与当前通用流程"
+    },
+    {
+      "id": "F-M045-04",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M045-07",
+      "field": "evidence_ids",
+      "before": "E-ESD-02",
+      "after": "E-ESD-02;E-ESD-01;E-ESCD-01"
+    },
+    {
+      "id": "F-M045-07",
+      "field": "known_branches",
+      "before": "机构指南 Settings 选项",
+      "after": "机构指南Settings列显示/通知选项；HKU只见Settings底栏；历史通知/无障碍改进声明不证明菜单结果"
+    },
+    {
+      "id": "F-M045-07",
+      "field": "gaps",
+      "before": "保存、通知系统权限、跨重启状态",
+      "after": "字号档位、主题默认/跟随系统、通知权限与保存/跨重启状态"
+    },
+    {
+      "id": "F-M045-07",
+      "field": "visual_status",
+      "before": "not_observed",
+      "after": "settings_entry_static_only"
+    },
+    {
+      "id": "F-M045-07",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M008-01",
+      "field": "evidence_ids",
+      "before": "E-HANV-03",
+      "after": "E-HANV-03;E-HND-01"
+    },
+    {
+      "id": "F-M008-01",
+      "field": "known_branches",
+      "before": "能力终点明确，原稿与输出副本关系未知。",
+      "after": "官方列PDF/图片输出；旧评测正文另列复制、笔记、划线、查找、百科/AI及全局批注保存声明，未给选中/调用步骤。"
+    },
+    {
+      "id": "F-M008-01",
+      "field": "gaps",
+      "before": "选页/批量、导出路径、隐藏层、撤销、覆盖/取消。",
+      "after": "原稿/输出副本/全局批注关系，选页/批量、导出位置、格式层与再编辑、撤销、覆盖/取消。"
+    },
+    {
+      "id": "F-M008-01",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M008-03",
+      "field": "evidence_ids",
+      "before": "E-HANV-03",
+      "after": "E-HANV-03;E-HVCD-01;E-HVCD-02"
+    },
+    {
+      "id": "F-M008-03",
+      "field": "known_branches",
+      "before": "不能推定转写、纪要、原声总是一起保存或一起删除。",
+      "after": "作者列灵动条语音转写入口及离线转写模式；只有入口/能力描述，未证明离线生成纪要或音频、转写、摘要共同保存。"
+    },
+    {
+      "id": "F-M008-03",
+      "field": "gaps",
+      "before": "说话人修正、暂停/锁屏、断网后AI、原音回听、改指令、导出格式。",
+      "after": "开启离线模式的菜单、录音停/继续、锁屏后台、说话人改名、原音回听、AI联网失败、原稿追溯及导出。"
+    },
+    {
+      "id": "F-M008-03",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M008-04",
+      "field": "evidence_ids",
+      "before": "E-HANV-03",
+      "after": "E-HANV-03;E-HND-01;E-HVCD-01"
+    },
+    {
+      "id": "F-M008-04",
+      "field": "known_branches",
+      "before": "“传输”“多端同步”不能自动解释为冲突合并。",
+      "after": "作者称微信需先绑定、聚合网盘绑定后传输；没有授权页、方向或落点。“传输/同步”不能推定自动合并或备份。"
+    },
+    {
+      "id": "F-M008-04",
+      "field": "gaps",
+      "before": "云离线、重名、版本、删除、取消和回滚；是否需要付费。",
+      "after": "微信/网盘账号权限、接收目录、导入进度、重名/中断、云离线、删除传播、取消/回滚与付费条件。"
+    },
+    {
+      "id": "F-M008-04",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M008-06",
+      "field": "evidence_ids",
+      "before": "E-HND-01;E-HND-03",
+      "after": "E-HND-01;E-HND-03;E-HVCD-01"
+    },
+    {
+      "id": "F-M008-06",
+      "field": "known_branches",
+      "before": "类型、位置、方向；取消/确定按钮",
+      "after": "旧静态有类型/位置/方向及取消/确定；评测正文另提分屏笔记用途，没有提供进入动作或执行后状态。"
+    },
+    {
+      "id": "F-M008-06",
+      "field": "gaps",
+      "before": "进入、选择内容、实际布局和退出后状态未知",
+      "after": "入口、第二内容选择、实际布局、取消是否丢更改、退出保存/回原页与笔记独立导出未知。"
+    },
+    {
+      "id": "F-M008-06",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M052-01",
+      "field": "known_branches",
+      "before": "无连续观察",
+      "after": "商店18.8.0仍仅一般功能/修复声明；官网普通GET为身份初始化壳，未取得阅读主链"
+    },
+    {
+      "id": "F-M052-01",
+      "field": "gaps",
+      "before": "阅读器状态及出处返回续读",
+      "after": "文章来源跳转、阅读器结束/回卡位置、收藏回访和重启续读仍未知"
+    },
+    {
+      "id": "F-M052-01",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M052-02",
+      "field": "evidence_ids",
+      "before": "E-TT-01",
+      "after": "E-TT-01;E-TTCD-02"
+    },
+    {
+      "id": "F-M052-02",
+      "field": "known_branches",
+      "before": "X理由与增删屏蔽",
+      "after": "政策仅信息栏X→相关理由；内容屏蔽标签可增删，效果措辞为不再或减少；未证长按"
+    },
+    {
+      "id": "F-M052-02",
+      "field": "gaps",
+      "before": "提交撤销及弱网",
+      "after": "理由枚举、作者/关键词/单篇对象范围、提交/撤销/弱网与即时移卡未知"
+    },
+    {
+      "id": "F-M052-02",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M052-03",
+      "field": "evidence_ids",
+      "before": "E-TT-01",
+      "after": "E-TT-01;E-TTCD-02"
+    },
+    {
+      "id": "F-M052-03",
+      "field": "known_branches",
+      "before": "隐藏推荐保留其他频道",
+      "after": "关闭推荐隐藏推荐频道；可分别关闭基于位置/搜索/关注的特征；丰富度为尝试多样化，广告开关另列"
+    },
+    {
+      "id": "F-M052-03",
+      "field": "gaps",
+      "before": "重启同步及恢复内容",
+      "after": "关注内容是否按时间排序、频道编辑按钮、重启/跨端/恢复内容；2024省略设置层不可套现版"
+    },
+    {
+      "id": "F-M052-03",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M052-04",
+      "field": "evidence_ids",
+      "before": "E-TT-01",
+      "after": "E-TT-01;E-TTCD-01;E-TTCD-02"
+    },
+    {
+      "id": "F-M052-04",
+      "field": "known_branches",
+      "before": "清除后重新积累",
+      "after": "2026政策清兴趣/偏好后重新积累；我的内容查删浏览/收藏等记录；旧指引删除行为措辞和2024永久字样单独保留"
+    },
+    {
+      "id": "F-M052-04",
+      "field": "gaps",
+      "before": "确认撤销及列表内容续读",
+      "after": "删除确认/撤销/同步、收藏精确续读、旧文行为删除范围与现版关系未知"
+    },
+    {
+      "id": "F-M052-04",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M052-05",
+      "field": "known_branches",
+      "before": "搜索阅读两个无痕入口",
+      "after": "搜索框删本地历史；无痕搜索不本地记录展示/用于推荐，仍作搜索与安全基本服务；无痕阅读另限点击浏览"
+    },
+    {
+      "id": "F-M052-05",
+      "field": "gaps",
+      "before": "实际检索主链及错误恢复",
+      "after": "无痕切换回执、既有记录是否追溯清理、跨端、实际检索错误与返回恢复未知"
+    },
+    {
+      "id": "F-M052-05",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    }
+  ],
+  "evidence_changes": [
+    {
+      "id": "E-TT-01",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "capture_url": "https://lf26-cdn-tos.draftstatic.com/obj/ies-hotsoon-draft/toutiaoGIP/5fb89857-7777-40b8-8105-989b87cdfb8f.html",
+          "checked_on": "2026-10-27",
+          "access_mode": "local_reread_of_existing_public_artifact",
+          "raw_work_path": "work/feed-interactions/tt-privacy.html",
+          "raw_sha256": "ce2f1862aa74849719fc85e27dae2176dac020fabf8bc93ded0f3f35529fae20",
+          "original_capture_on": "2026-10-26",
+          "locator": "范围声明；6.1.2/6.2.2/7.2.1/7.2.2；设置指引可能调整",
+          "limitation": "未重新GET；政策适用多系列，本文仍聚焦主App且不为每一路径指定OS/build",
+          "archived_artifact": "artifacts/toutiao-controls-deepening/source-notes.md",
+          "sha256": "65ed9f19d0d7a6c834810aaa1ad06065e7ff924c6616a2a74d1094c712fa7218",
+          "hands_on": false,
+          "visual_observed": false
+        }
+      ]
+    },
+    {
+      "id": "E-TT-04",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "capture_url": "https://apps.apple.com/cn/app/%E4%BB%8A%E6%97%A5%E5%A4%B4%E6%9D%A1/id529092160",
+          "checked_on": "2026-10-27",
+          "access_mode": "public_app_store_html_read",
+          "raw_work_path": "work/toutiao-controls-deepening/appstore.html",
+          "raw_sha256": "93ee7266605d55a66adbaaba0f09f66ee7eafb63c746eea330ed4da99228c67b",
+          "app_build": "18.8.0",
+          "source_updated_on": "2026-10-22",
+          "locator": "版本历史首项HTML datetime及开发者描述",
+          "limitation": "中国区iPhone/iPad条目，未安装；无具体长按/恢复变更说明；排除用户好评",
+          "archived_artifact": "artifacts/toutiao-controls-deepening/source-notes.md",
+          "sha256": "65ed9f19d0d7a6c834810aaa1ad06065e7ff924c6616a2a74d1094c712fa7218",
+          "hands_on": false,
+          "visual_observed": false
+        }
+      ]
+    },
+    {
+      "id": "E-HANV-03",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "local_saved_source_reread_no_network",
+          "locator": "N10 Pro二代能力段，止于Clear6 Turbo标题",
+          "raw_work_path": "work/ai-notebooks-research/hanv399.html",
+          "raw_sha256": "328baec8de537c41ed0a9828c9f959cd84330a66bf68aef889ee5da264b40ebb",
+          "extracted_work_path": "work/ai-notebooks-research/hanv399.txt",
+          "extracted_sha256": "e3cd0dadebb8cc5ac612738ab64c631861d64a9a1aa30446b44c24e67324168b",
+          "hands_on": false,
+          "visual_observed": false,
+          "archived_artifact": "artifacts/hanvon-controls-deepening/source-notes.md",
+          "sha256": "4ec7c13d411bc28e15da4ab4cfbb2e5a21e89b5eed5f3a70c651c0ecdef05660",
+          "note": "复读旧原件，不新增URL证据；本次未重新查看配图。"
+        }
+      ]
+    },
+    {
+      "id": "E-HND-01",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "local_saved_source_reread_no_network",
+          "locator": "已存HTML本地提取，阅读/全局批注/分屏/网盘段",
+          "raw_work_path": "work/child-information-deepening/hanvon-review.html",
+          "raw_sha256": "bb960e513f3b9db260253c950015fd42d107fa8dda3945f238180789b4fbe1a0",
+          "extracted_work_path": "work/hanvon-controls-deepening/raw/old-review.txt",
+          "extracted_sha256": "baa4503fef9809d7fbff00ca766f9d3e13bf4363af198732c457f08d5c3aaee5",
+          "hands_on": false,
+          "visual_observed": false,
+          "archived_artifact": "artifacts/hanvon-controls-deepening/source-notes.md",
+          "sha256": "4ec7c13d411bc28e15da4ab4cfbb2e5a21e89b5eed5f3a70c651c0ecdef05660",
+          "note": "复读旧原件，不新增URL证据；本次未重新查看配图。"
+        }
+      ]
+    },
+    {
+      "id": "E-ESD-01",
+      "field": "additional_captures",
+      "before": null,
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "capture_method": "local_raw_html_reread_and_embedded_version_extraction",
+          "capture_url": "https://apps.apple.com/us/app/espresso-world-news-in-a-shot/id896628003",
+          "raw_work_path": "work/news-app-deepening/espresso-appstore.html",
+          "raw_sha256": "711b2d0e38368fb71bf7471d06c13fc2f9ce39833ca256c24625819ec75bab3e",
+          "extracted_work_path": "work/espresso-controls-deepening/store-versions.json",
+          "extracted_sha256": "d37594d061c272df4826839b93642607fcad4dbf07f26c791c9b21feb5438925",
+          "note": "Original captured2026-10-26; 25 version entries re-read, not full history or new app operation",
+          "archived_artifact": "artifacts/espresso-controls-deepening/source-notes.md",
+          "sha256": "a29fc4674505f78d117f93e6095fc67dd9a7ccb28f758759709c1781c83dd64e"
+        }
+      ]
+    }
+  ],
+  "files": [
+    {
+      "path": "docs/research/interaction-library/batches/feed-coverage.csv",
+      "backup": "work/espresso-controls-deepening/reviewed-before/feed-coverage.csv",
+      "before_sha256": "3853d461800f446875621a1c3dec93a1285569c4f982fb63c3c1f76e834287cf",
+      "after_sha256": "0030eacf49a5ca5ca049d7095995b6e1e7cffceaf2c271d6030e203444cee1c2"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/news-coverage.csv",
+      "backup": "work/espresso-controls-deepening/reviewed-before/news-coverage.csv",
+      "before_sha256": "49ac719fe5bce1077a7517aad499220baf15d055eb551d3299a0782b3ea79bd3",
+      "after_sha256": "8fb00beaf6120f497f7f3830e74e5d545c344d076ee195a57351aedf804de5c6"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/news-app-deepening-evidence.jsonl",
+      "backup": "work/espresso-controls-deepening/reviewed-before/news-app-deepening-evidence.jsonl",
+      "before_sha256": "2d8c70aaf0708b01b326f5affa28fa5a8f57a88dc26de5a91b3bd2d09afcf207",
+      "after_sha256": "85895c5c7f7342ec9946e89f04af7167a950a48e98c40cb006677f45d74dd13b"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/feed-evidence.jsonl",
+      "backup": "work/espresso-controls-deepening/reviewed-before/feed-evidence.jsonl",
+      "before_sha256": "73c03e304b495d00b9b386ca2942a5602b7c19c6697db0aa75f3daa81072814b",
+      "after_sha256": "864336c57c35d13beee3a98fb70a19b5586baba6de82839a0afbcd128edcb63f"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/ai-notebooks-coverage.csv",
+      "backup": "work/espresso-controls-deepening/reviewed-before/ai-notebooks-coverage.csv",
+      "before_sha256": "cb089006f4c029f5b96c21c1e81b76de7470fed8e04979e9ea99b380457f4197",
+      "after_sha256": "79e67699e786d06630f19cd2bdbebe36a9cff9de164a7ce4effc2ddfff24285e"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/ai-notebooks-evidence.jsonl",
+      "backup": "work/espresso-controls-deepening/reviewed-before/ai-notebooks-evidence.jsonl",
+      "before_sha256": "87150ee86029c067f3e1270087c5059c7d275d81ed16cf46d5d877687e295118",
+      "after_sha256": "e75ee4c1ee0ef563bf4510d24224395fc6c21a2fc73083f880420ee381774e23"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/child-information-deepening-evidence.jsonl",
+      "backup": "work/espresso-controls-deepening/reviewed-before/child-information-deepening-evidence.jsonl",
+      "before_sha256": "4a19da2250c5fb5998384ab8f450fa8a4ef28f12070124e21e928a16049687a2",
+      "after_sha256": "ba3d1e74feaac22630c7e081f137a27b01213e43a220b67b17db4a4a0e86a943"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/child-information-deepening-coverage.csv",
+      "backup": "work/espresso-controls-deepening/reviewed-before/child-information-deepening-coverage.csv",
+      "before_sha256": "51d11355ae118b609c5b64503afec1185576952f20941ed6f64cc547b0bbb567",
+      "after_sha256": "835799a3a13ecab08e33ab23658ac927ea4f50e24850a5bd12a74a395074ace9"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/news-app-deepening-coverage.csv",
+      "backup": "work/espresso-controls-deepening/reviewed-before/news-app-deepening-coverage.csv",
+      "before_sha256": "a7885d5a440e3c6aee140e86b297f45533ba8966f35e2084dae4bbbfb989dc13",
+      "after_sha256": "cbed93a20094d17a25cf0ae5329184bb4aa741748b3ba0b13167286ee7c6df8b"
+    }
+  ],
+  "old_tasks": 14,
+  "old_task_fields": 60,
+  "old_evidence_captures": 5
+}

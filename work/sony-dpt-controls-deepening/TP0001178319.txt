@@ -1,0 +1,10 @@
+Use the Digital Paper App to transfer documents.
+Connect the computer to the Digital Paper.
+Launch the Digital Paper App on the computer.
+Select a file/folder on the Digital Paper via the Digital Paper App.
+Multiple files/folders can be selected and transferred together.
+Click
+(Transfer documents to computer), and select a folder on your computer (transfer destination).
+Note
+If the Wi-Fi function or Bluetooth function is turned off or the USB cable is removed during the transfer, the data may be corrupted.
+The maximum file size for transfers is 1 GB per file.

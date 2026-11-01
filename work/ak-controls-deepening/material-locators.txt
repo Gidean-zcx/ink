@@ -1,0 +1,751 @@
+PRINTED PAGE 24 / PDF FILE 25
+User Guide
+
+Notifi-         1  2  3  4  5  6  7  8  9  10 11 12 13
+cation
+Bar
+
+
+
+
+
+                 14
+
+
+                 15
+
+
+
+
+
+                                                         Using the Device 24
+
+PRINTED PAGE 25 / PDF FILE 26
+User Guide
+
+
+                  1       Wi-Fi          Press [      ] to turn Wi-Fi on/off.
+
+                  2       Bluetooth      Press [   ] to turn Bluetooth on/
+                                                             off.
+
+                  3      DAC          Change the DAC operating mode.
+
+                  4      EQ            Press [      ] to turn the EQ on/
+                                                             off. The most recent EQ settings
+                                            are applied by default.
+
+                  5     AMP          Change to the desired AMP mode.
+
+                  6       Car Mode      Press [          ] to turn Car Mode
+                                                    on/off.
+
+                  7       Gapless        Press [        ] to turn Gapless
+                           Playback       Playback on/off.
+
+                  8      Wheel Lock    Press [      ] to turn Wheel lock
+                                                    on/off. When turned on, the
+                                       volume wheel will be disabled
+                                   when the screen is locked.
+
+                  9       ReplayGain     Press [      ] to turn ReplayGain
+                                                    on/off. When enabled, a uniform
+                                       volume level will be applied.
+
+                  10      Line-out       Press [       ] to turn line-out on
+                                                             /off.
+
+                  11     AK CONNECT   Press [      ] to turn AK Connect
+                                                    on/off.
+
+
+
+
+
+                                                         Using the Device 25
+
+PRINTED PAGE 26 / PDF FILE 27
+User Guide
+
+
+                  12     AK File Drop    Wirelessly upload or download
+                                                        files to and from devices on
+                                            the same network (PC, tablet,
+                                         smartphone, etc.) using the
+                                     SR35 via an FTP program.
+
+                  13       Settings       Press [      ] to display the
+                                                         full settings menu.
+
+                  14      Brightness     Use the adjustment bar to
+                                                  control the display brightness.
+
+                  15       Notifications    Device notifications are
+                            Display         displayed in this area.
+
+
+
+
+
+                              Long-press an icon [     /     /     /     /     /       /     /     /
+                                          /    ] to navigate to the corresponding full settings menu screen.
+
+
+
+
+
+                                                         Using the Device 26
+
+PRINTED PAGE 28 / PDF FILE 29
+User Guide
+
+AK              Access and play back music files stored on a computer, NAS
+CONNECT   drivesoundorthroughAK Devicecompatibleon the samespeakersnetwork,with asAKwellConnect.as output
+               AK Connect is available on your AK device and also available
+                  as an app for your smartphone or tablet via Apple’s App store
+                    or Google Play Store.
+
+
+                  Using AK Connect to Link Music Libraries/Speakers
+
+                       1. Turn on the music library device
+                     and/or speaker and AK player.
+                       2. Connect all devices to the same
+                      Wi-Fi network.
+                       3. Turn on the AK CONNECT feature
+                     by pressing and holding [      ] in the
+                         Notification Bar or selecting [Menu-
+                      Settings-AK CONNECT].
+                       4. Select the library or speaker to use.
+
+
+
+                       5. A list of libraries / speakers that
+                      are on the same network with the
+                 AK player will be displayed.
+                       6. Select a library / speaker to
+                      connect.
+
+
+
+
+
+                                                         Using the Device 28
+
+PRINTED PAGE 29 / PDF FILE 30
+User Guide
+
+
+                       7. After selecting a library / speaker,
+                       select a category from the menu
+                        to display the corresponding music
+                                list.
+
+
+
+
+
+                              For Wi-Fi connections, see Page 58.
+                             Tap the [      ] button at the top left of the screen while connecting
+                                   to the speaker to cancel the connection.
+
+
+
+
+
+                                                         Using the Device 29
+
+PRINTED PAGE 30 / PDF FILE 31
+User Guide
+
+
+                  Streaming Music from Your Library
+
+                       1. Select a category from the library
+                menu to see your list of music.
+                       2. Select a song to begin streaming.
+
+
+
+
+
+                 Downloading Music from Your Library
+
+                       1. Select a category from the library
+                menu to see your list of music.
+                       2. Press [      ] button at the upper
+                         right corner of the music list.
+                       3. Select the desired music and
+                     press [      ] to initiate the
+                     download.
+                    The song will be saved in the
+                           location set in Settings > Download.
+                  A message on the Notification
+                     Bar will indicate when the
+                     download is complete.
+
+
+
+                             Tap [   ] to the right of the playlist to select the position in the queue
+                                   for the selected song or download the song directly.
+                             Depending on network conditions, song loading may be slow and
+                              streaming may stutter.
+                              Using a library for other processes can slow down the response
+                              time of the library.
+                                                 If you stream and download at the same time, it may slow the device’s
+                               response time depending on the speed of the Wi-Fi network or server.
+                              To stop a download in progress, tap the notification in the Notification
+                               Bar to go to the download screen. Then, select the items to pause or delete.
+
+
+                                                         Using the Device 30
+
+PRINTED PAGE 34 / PDF FILE 35
+User Guide
+
+
+                  Using AK File Drop
+
+                       1. Connect the SR35 and the desired
+                       device to the same network, and
+                     enable the AK File Drop feature on
+                      the SR35.
+
+
+
+
+
+                       2. Enter the address, ID, and password
+                       displayed on the SR35 into the
+                  FTP program of the device to be
+                      connected.
+                       3. Use the connected device to
+                    download or upload the desired
+                              file(s).
+
+
+
+
+
+                            You can connect without logging in via anonymous FTP, but only
+                            downloads will be enabled.
+                        AK File Drop can be added to the notification panel.
+
+
+
+
+
+                                                         Using the Device 34
+
+PRINTED PAGE 37 / PDF FILE 38
+User Guide
+
+
+                                    If you tap [     ] in the [Songs/Albums/Artists/MQS] category
+                   and enter keywords in the input window, a list of items
+                      with the search terms in their names will be displayed.
+                           In the search results screen, tap [     ] in the upper right
+                       corner to play a song or add it to the playlist.
+                       Select the [Folder] category to check the internal / external
+                 memory capacity and number of files / folders.
+                      Tap [   ] in the folder list to play/add to the bookmarks/
+                      copy/move/remove the selected folder.
+                      Tap [   ] in the file list to play/copy/move/edit tags for/
+                     remove the selected file.
+                      You can also move/copy/remove files or folders by
+                        tapping [      ] at the top of the Folder category.
+                         In the [MQS] category, the MQS tab shows MQA files and
+               PCM files of 24 bits or more, and the DSD tab shows DSD
+                             files.
+                   MQS: MQA [44.1-768kHz(24bit)]
+                   MQS: PCM [8~384kHz(24/32bit)]
+                    DSD: DSD [2.8/5.6/11.2MHz]
+                    Tap [     ] in the [Artist] category to sort the list of artists/
+                   album artists.
+                        After selecting [ALBUM] or [CD LIBRARY] category, press
+                                 [     /     /     ] at the top to sort by different viewing options.
+                        Click [     ] to the right of the category to display the
+                     playback settings.
+
+
+
+
+
+                                                         Using the Device 37
+
+PRINTED PAGE 42 / PDF FILE 43
+User Guide
+
+USB DAC    The USB DAC function allows the device to be recognized
+Installation asplayeda soundthroughcardtheon device’sa computer.headphoneMusic fromport thefor computeran enhancedis
+                      listening experience.
+
+
+               USB DAC Specifications
+
+                    Supported OS
+                    Windows 10/11 (32/64bit)
+                MAC OS 10.7(Lion) or later
+                USB DAC Support Specifications
+                      Supported Formats: PCM [8~384kHz(8/16/24/32bit)]
+                                DSD [2.8MHz/5.6MHz/11.2MHz]
+                      Control the volume with the AK device’s volume wheel.
+
+
+                               Playback is unavailable when settings exceed the supported formats.
+                            The Previous, Play, and Next buttons are unavailable when connected
+                              as a USB DAC.
+                              Playback may stutter when computer performance is slow or the
+                        USB connection is experiencing heavy usage.
+                             There may be issues with audio-to-video synchronization during
+                                   video playback depending on the sound quality and operating environment.
+                           Volume cannot be adjusted via the Windows volume control. The
+                            volume wheel on the device or volume control on the appropriate
+                           program must be used to adjust the volume.
+                                     Install a dedicated driver to use the AK device as a USB DAC.
+                           The driver file is located in SR35\Internal_Storage\SR35_Contents
+                                   \Driver.
+
+
+
+
+
+                                                         Using the Device 42
+
+PRINTED PAGE 43 / PDF FILE 44
+User Guide
+
+How to        Connect the device to a portable amp or DAC using USB Audio Out.
+Use USB              How to Connect a Portable USB DAC
+Audio
+                       1. Connect the portable USB DAC to the AK device’s USB
+                    Type-C port with a dedicated cable.
+                       2. Check the connected messages in the Notifications Display.
+                       3. After connection, the function is automatically enabled, allowing you
+                            to listen to music through the portable USB DAC’s audio output jack.
+
+                           The USB Type-C cable that comes packaged with the device is only
+                                   to be used for computer data transfer or to charge the device.
+                           The type of dedicated cable needed to connect to the portable DAC
+                                   varies; please refer to USB DAC manufacturer instructions for
+                                 correct cable type.
+                        A USB DAC cable is not included with the device and must be
+                             purchased separately.
+                             Depending on the OTG cable used, the connection may be unstable.
+                        When a USB connection is established while playing a DSD or DXD
+                                               file, a mode selection pop-up box will appear with the following options:
+                                 External device connection: Connect the player to the computer to
+                                   transfer files, USB DAC for audio playback or CD Ripper connection.
+                              Charge device: Charge the device.
+
+
+
+              How to Change USB Audio DSD Output Type
+
+                  You can change the type of DSD data that is outputted through
+                    the USB audio out.
+                       1. Select a DSD output type in [Menu - Settings - USB Audio].
+                PCM : DSD audio is converted into PCM before being
+                              outputted through the USB audio out.
+                  DoP : DSD audio is converted into DoP before being
+                              outputted through the USB audio out.
+                MQA : Optional activation of S/W MQA decoding.
+                                 Options may differ depending on the connected external
+                                    device. Please refer to the specifications of each device.
+
+                                                         Using the Device 43
+
+PRINTED PAGE 48 / PDF FILE 49
+User Guide
+
+Bookmark   Allows user to select up to five folders for display on the top
+Function      of the screen.
+
+                    Setting a bookmark
+
+                       1. Tap [   ] to the right of the
+                      desired folder in the playlist
+                        to add a bookmark.
+
+
+
+
+
+                   Deleting Bookmarks
+
+                       1. Pressing [      ] on the left of the bookmarked folder will
+                   remove it from the bookmark.
+
+
+                         Up to 5 bookmarks can be set.
+
+
+                                                         Using the Device 48
+
+PRINTED PAGE 50 / PDF FILE 51
+User Guide
+
+Settings     The settings menu allows users to customize the device.
+                 The settings menu may vary depending on the firmware
+                     version.
+
+
+                  Setup
+
+                       1. Select [Main Menu - Settings] or select [      ] from the
+                         Notification Bar menu.
+                       2. Select the feature to view setting options.
+
+
+                   Wi-Fi
+
+                   Change wireless network settings and turn Wi-Fi on/off.
+
+
+                           See page 58 for more information on connecting to Wi-Fi.
+
+
+
+                   Bluetooth
+
+                      Configures two-way Bluetooth (RX/TX) to listen to music
+                        wirelessly using a device that supports Bluetooth.
+
+
+                           See page 59 for more information on using Bluetooth.
+
+
+
+                   Bluetooth Codec
+
+                 When Bluetooth is activated, the applicable codec can be
+                          set.
+
+
+                             Reconnect the Bluetooth device to apply the changed settings. If a
+                              codec is not supported by the connected device, the player will
+                                automatically select another supported codec.
+
+
+                                                         Using the Device 50
+
+PRINTED PAGE 53 / PDF FILE 54
+User Guide
+
+
+               LR Balance
+
+                      Adjust the left-right balance for earphones/headphones.
+
+
+                  Playback Settings
+
+                      Set how to add a song to Now Playing when a song is
+                      selected from a music list.
+
+
+                  ReplayGain
+
+                      Set a consistent volume playback level between tracks.
+
+
+                     Notification Panel
+
+                     Add, delete, or reorganize Quick Settings buttons on the
+                         notification bar. Drag and drop icons to add quick settings
+                      buttons or change the preferred order.
+
+
+               CD Ripper
+
+                      Set the automatic CD ripping function as well as the file
+                     format and ripping speed.
+
+
+               USB Mode
+
+                    Media Device (USB Drive): When connected to a computer,
+                       device appears as a removable drive.
+                  DAC Input: Output sound from a connected computer to the device.
+
+
+
+
+
+                                                         Using the Device 53
+
+PRINTED PAGE 54 / PDF FILE 55
+User Guide
+
+
+               USB Audio
+
+                       Select the type of DSD sound being outputted through
+                USB Audio Out to a connected portable DAC.
+                      Enable/Disable MQA decoding software.
+
+                               Bluetooth functionality cannot be used while USB audio is being
+                               used.
+
+
+
+                 Car Mode
+
+                    Turn car mode on/off.
+                      Set the default screen mode to landscape or portrait.
+
+
+                Volume Limit
+
+                      Displays a warning when the volume reaches a certain
+                         level and sets related options.
+
+
+                  Screen Brightness
+
+                      Adjust screen brightness settings.
+
+
+                  Date & Time
+
+                      Set the current date and time.
+
+
+                   Device Name
+
+                      Set the name of the device.
+                    The maximum name length is 50 characters.
+
+
+
+                                                         Using the Device 54
+
+PRINTED PAGE 55 / PDF FILE 56
+User Guide
+
+
+                 Language
+
+                       Select the display language.
+                      Supported languages are English, Korean, Japanese,
+                       French, Russian, German, and Spanish.
+
+
+                    Input Method
+
+                     Keyboard: Select a language for the keyboard.
+                      Supported languages are English, Korean, Japanese,
+                      Chinese (Simplified/Traditional), French, Russian,
+                     German, and Spanish.
+
+
+                             Supported languages may vary depending on your location.
+
+
+
+                 Timer Settings
+
+                     Auto Power Off: The device will automatically power off after
+                      the selected amount of time of no user and device activity.
+                    Screen Timeout: The screen will turn off after the selected
+                  amount of time of no user activity.
+                     Sleep Timer: After a set amount of time, playback will stop,
+                   and the device will turn off according to the time set in
+                      [Auto Power Off].
+
+
+
+
+
+                                                         Using the Device 55
+
+PRINTED PAGE 56 / PDF FILE 57
+User Guide
+
+
+                 Downloads
+
+                       Select a folder for downloaded files to be saved by default.
+
+
+                        When using AK Connect to download music, if the [Default folder] is
+                                selected in Settings, downloading will automatically begin to the
+                                pre-set Downloads folder.
+                        When [Select Folder] is selected, the user is prompted to choose a
+                            download folder each time a file is downloaded.
+
+
+
+                 Update
+
+                   System Update: Update the device when a new firmware
+                       version is available.
+                       Application Update: Update the default applications when
+                 new versions are available.
+                     Automatic updates for Open APP applications are not
+                        available through the Settings Menu of the device.
+
+
+                 System Information
+
+                    System Information: View model number, firmware version,
+               MAC address and memory usage information. The microSD
+                      card can be mounted/dismounted and data can be deleted.
+                       Legal information: Check open source licenses and regulations.
+
+
+                              Formatting the microSD card will delete all data on the memory
+                                  card. Be sure to backup any important files before formatting.
+                        When formatting the microSD card on a computer, use of the FAT32
+                             system is recommended.
+
+
+
+
+
+                                                         Using the Device 56
+
+PRINTED PAGE 57 / PDF FILE 58
+User Guide
+
+
+                 System Reset
+
+                               Initialize Media Scan: Resets and rescans the internal database.
+                    Database initialization time may vary depending on the
+                  number of files stored on the device.
+                           Settings Reset: Resets all user settings back to the default settings.
+                       Factory Data Reset: Deletes all user data and resets all
+                     user settings back to the default setting.
+
+
+
+
+
+                                                         Using the Device 57
+
+PRINTED PAGE 59 / PDF FILE 60
+User Guide
+
+Using          Configures two-way Bluetooth (RX/TX) to listen to music
+Bluetooth    wirelessly using a device that supports Bluetooth.
+
+                  Turning Bluetooth On/Off
+
+               A Bluetooth device must be paired
+                    with the device prior to use.
+                   Refer to the Bluetooth device's
+                     instruction manual for details.
+                       1. Select [     ] from the Notification
+                   Bar menu or select [On/Off] from
+                   [Menu - Settings - Bluetooth].
+
+
+
+
+
+                   Bluetooth Pairing
+
+                       1. In the Settings Menu, select the appropriate Bluetooth
+                       device from the list of available devices.
+
+
+                   Disconnect a Bluetooth Device
+
+                       1. Press the connected Bluetooth
+                       device and confirm the message
+                   prompt to disconnect the device.
+
+
+
+
+
+                                                         Using the Device 59
+
+PRINTED PAGE 60 / PDF FILE 61
+User Guide
+
+
+                 Removing a Bluetooth Pairing
+
+                       1. Press [      ] to the right of the
+                      paired device to go to settings.
+                       2. Select [Remove] to complete
+                      the process.
+
+
+
+
+
+                  Using Bluetooth Sink Mode
+
+                    Similar to connecting to a Bluetooth speaker from a
+                  smartphone, music being played on an external device can
+                 be played on the SR35 by connecting to the SR35 from
+                    the external device.
+
+                                                       OR
+
+
+
+
+
+                      SOURCE DEVICE               SR35
+                             DEVICE                  BLUETOOTH SPEAKER
+
+
+                       1. Enable Bluetooth Sink Mode.
+                       2. Search for and connect to the
+                  SR35 from the Bluetooth
+                menu of the external device.
+
+
+
+                                                         Using the Device 60
+
+PRINTED PAGE 61 / PDF FILE 62
+User Guide
+
+
+                       3. Music will be outputted through
+                      the SR35 when played on the
+                     connected device.
+
+
+
+
+
+                         When Bluetooth Sink Mode is enabled, any device currently connected
+                                      will be disconnected.
+                            The Bluetooth codec can be set on the source device playing music.
+                                Bluetooth Support Specifications
+                                         Profile: A2DP, AVRCP
+                                Supported Codecs: Qualcomm® aptX™ HD, LDAC, AAC, SBC
+                                  Device performance may be affected during Hi-Res playback.
+                          Do not turn off the device while connected to Bluetooth.
+                              Turn the Bluetooth device off then on in case of issue.
+                                  Pairing methods may differ for each individual Bluetooth device.
+                              Always refer to the respective instruction manual for details.
+                         When connecting the product to a Bluetooth device, the distance
+                             between the two must be within 20 cm.
+                               Audio quality will degrade with longer distances and the pairing may
+                                 disconnect at a distance of 2 m (6.5 ft.) or more. (Distances may vary
+                              depending on device and environment.)
+                                 Crosstalk may be heard while using Bluetooth.
+                                For multipoint devices, make the necessary connections prior to use.
+                                  Malfunction, noise, and other undesirable effects may occur due to the
+                                   device's battery level and the environment.
+                                                     If signal interference affects data transmission. (e.g., holding
+                                   the device while wearing a Bluetooth device, holding the device
+                                   while holding another electronic device, etc.)
+                                                     If the device or Bluetooth headset's radio transmitters are
+                                   touching parts of the body.
+                                                     If the transmission strength is affected by walls, corners,
+                                         partitions, etc.
+                                                     If devices using the same frequencies cause interference. (e.g.,
+                                 medical devices, microwave ovens, Wi-Fi, etc.)
+                                 Areas with an excessive amount of interference or weak signals.
+                                             (e.g., elevators, underground, etc.)
+
+
+                                                         Using the Device 61

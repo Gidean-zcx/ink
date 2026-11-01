@@ -1,0 +1,58 @@
+[
+  {
+    "evidence_id": "E-KHK-01",
+    "source_batch": "docs/research/interaction-library/batches/initial-evidence.jsonl",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27",
+    "reason": "实际查看一张官方书页，新增审计独立于可变案例；仍非实操"
+  },
+  {
+    "evidence_id": "E-KHK-01",
+    "source_batch": "docs/research/interaction-library/batches/initial-evidence.jsonl",
+    "field": "source_updated_on",
+    "before": null,
+    "after": "2026-02-26",
+    "reason": "实际查看一张官方书页，新增审计独立于可变案例；仍非实操"
+  },
+  {
+    "evidence_id": "E-KHK-01",
+    "source_batch": "docs/research/interaction-library/batches/initial-evidence.jsonl",
+    "field": "visual_observed",
+    "before": false,
+    "after": true,
+    "reason": "实际查看一张官方书页，新增审计独立于可变案例；仍非实操"
+  },
+  {
+    "evidence_id": "E-KHK-01",
+    "source_batch": "docs/research/interaction-library/batches/initial-evidence.jsonl",
+    "field": "visual_kind",
+    "before": null,
+    "after": "static_official_help_image",
+    "reason": "实际查看一张官方书页，新增审计独立于可变案例；仍非实操"
+  },
+  {
+    "evidence_id": "E-KHK-01",
+    "source_batch": "docs/research/interaction-library/batches/initial-evidence.jsonl",
+    "field": "visual_audit_path",
+    "before": null,
+    "after": "artifacts/khan-library-controls-deepening/source-notes.md",
+    "reason": "实际查看一张官方书页，新增审计独立于可变案例；仍非实操"
+  },
+  {
+    "evidence_id": "E-KHK-01",
+    "source_batch": "docs/research/interaction-library/batches/initial-evidence.jsonl",
+    "field": "visual_audit_sha256",
+    "before": null,
+    "after": "dc0bf2de45ba29857a4c303a9fc1d65fdaba624a6a68bb57efa9e799e700d1a6",
+    "reason": "实际查看一张官方书页，新增审计独立于可变案例；仍非实操"
+  },
+  {
+    "evidence_id": "E-KHK-01",
+    "source_batch": "docs/research/interaction-library/batches/initial-evidence.jsonl",
+    "field": "observed_on",
+    "before": null,
+    "after": "2026-10-27",
+    "reason": "实际查看一张官方书页，新增审计独立于可变案例；仍非实操"
+  }
+]

@@ -1,0 +1,592 @@
+[
+  {
+    "index": 0,
+    "label": "initial",
+    "screenshot": "00-initial.png",
+    "sha256": "ad804fea50f92d6b79f4f23641f4b05e3a92441a5f5fbc99f08aea3c7b6d6301",
+    "viewport": {
+      "width": 1200,
+      "height": 820
+    },
+    "panelOpen": false,
+    "panelText": "",
+    "panelSource": "",
+    "note": "",
+    "stats": "5 HIGHLIGHTS\n2 SOURCES\n1 CONNECTIONS",
+    "legend": [
+      {
+        "text": "Synthetic Learning Notes\n2",
+        "active": false
+      },
+      {
+        "text": "Synthetic News Notes\n2",
+        "active": false
+      }
+    ],
+    "selected": null,
+    "filter": null,
+    "hover": null,
+    "graph": {
+      "nodes": [
+        {
+          "id": "h_101",
+          "bookId": 1,
+          "text": "Synthetic highlight A: a learner explains an idea before receiving feedback."
+        },
+        {
+          "id": "h_102",
+          "bookId": 1,
+          "text": "Synthetic highlight B: a later attempt can distinguish recognition from recall."
+        },
+        {
+          "id": "h_201",
+          "bookId": 2,
+          "text": "Synthetic highlight C: compare evidence from independent news sources."
+        },
+        {
+          "id": "h_202",
+          "bookId": 2,
+          "text": "Synthetic highlight D: record a correction separately from the original report."
+        },
+        {
+          "id": "h_301",
+          "bookId": 3,
+          "text": "Synthetic singleton highlight E: one book has only one retained highlight."
+        }
+      ],
+      "links": 3,
+      "zoom": 2.3392141905702926
+    }
+  },
+  {
+    "index": 1,
+    "label": "filter-learning",
+    "screenshot": "01-filter-learning.png",
+    "sha256": "a70d06801f50bf2f52b6ce6387f66efebd95119facc81349dead3f3e83e21c04",
+    "viewport": {
+      "width": 1200,
+      "height": 820
+    },
+    "panelOpen": false,
+    "panelText": "",
+    "panelSource": "",
+    "note": "",
+    "stats": "5 HIGHLIGHTS\n2 SOURCES\n1 CONNECTIONS",
+    "legend": [
+      {
+        "text": "Synthetic Learning Notes\n2",
+        "active": true
+      },
+      {
+        "text": "Synthetic News Notes\n2",
+        "active": false
+      }
+    ],
+    "selected": null,
+    "filter": 1,
+    "hover": null,
+    "graph": {
+      "nodes": [
+        {
+          "id": "h_101",
+          "bookId": 1,
+          "text": "Synthetic highlight A: a learner explains an idea before receiving feedback."
+        },
+        {
+          "id": "h_102",
+          "bookId": 1,
+          "text": "Synthetic highlight B: a later attempt can distinguish recognition from recall."
+        },
+        {
+          "id": "h_201",
+          "bookId": 2,
+          "text": "Synthetic highlight C: compare evidence from independent news sources."
+        },
+        {
+          "id": "h_202",
+          "bookId": 2,
+          "text": "Synthetic highlight D: record a correction separately from the original report."
+        },
+        {
+          "id": "h_301",
+          "bookId": 3,
+          "text": "Synthetic singleton highlight E: one book has only one retained highlight."
+        }
+      ],
+      "links": 3,
+      "zoom": 2.3392141905702926
+    }
+  },
+  {
+    "index": 2,
+    "label": "selected-with-filter",
+    "screenshot": "02-selected-with-filter.png",
+    "sha256": "1ada35d350fa24a303668db55456436d6003f5822e404b26ccb39a5f3d82a5c7",
+    "viewport": {
+      "width": 1200,
+      "height": 820
+    },
+    "panelOpen": true,
+    "panelText": "Synthetic highlight A: a learner explains an idea before receiving feedback.",
+    "panelSource": "Synthetic Learning Notes — Research fixture",
+    "note": "Synthetic note: ask for an example.",
+    "stats": "5 HIGHLIGHTS\n2 SOURCES\n1 CONNECTIONS",
+    "legend": [
+      {
+        "text": "Synthetic Learning Notes\n2",
+        "active": true
+      },
+      {
+        "text": "Synthetic News Notes\n2",
+        "active": false
+      }
+    ],
+    "selected": "h_101",
+    "filter": 1,
+    "hover": null,
+    "graph": {
+      "nodes": [
+        {
+          "id": "h_101",
+          "bookId": 1,
+          "text": "Synthetic highlight A: a learner explains an idea before receiving feedback."
+        },
+        {
+          "id": "h_102",
+          "bookId": 1,
+          "text": "Synthetic highlight B: a later attempt can distinguish recognition from recall."
+        },
+        {
+          "id": "h_201",
+          "bookId": 2,
+          "text": "Synthetic highlight C: compare evidence from independent news sources."
+        },
+        {
+          "id": "h_202",
+          "bookId": 2,
+          "text": "Synthetic highlight D: record a correction separately from the original report."
+        },
+        {
+          "id": "h_301",
+          "bookId": 3,
+          "text": "Synthetic singleton highlight E: one book has only one retained highlight."
+        }
+      ],
+      "links": 3,
+      "zoom": 4
+    }
+  },
+  {
+    "index": 3,
+    "label": "cross-source-from-panel",
+    "screenshot": "03-cross-source-from-panel.png",
+    "sha256": "5a538ce8cd2e287f4e94e8276322d4b2f2c2048dfa67a488bfcf578487d903f8",
+    "viewport": {
+      "width": 1200,
+      "height": 820
+    },
+    "panelOpen": true,
+    "panelText": "Synthetic highlight C: compare evidence from independent news sources.",
+    "panelSource": "Synthetic News Notes — Research fixture",
+    "note": "Synthetic note: a related idea, not a proven conclusion.",
+    "stats": "5 HIGHLIGHTS\n2 SOURCES\n1 CONNECTIONS",
+    "legend": [
+      {
+        "text": "Synthetic Learning Notes\n2",
+        "active": true
+      },
+      {
+        "text": "Synthetic News Notes\n2",
+        "active": false
+      }
+    ],
+    "selected": "h_201",
+    "filter": 1,
+    "hover": null,
+    "graph": {
+      "nodes": [
+        {
+          "id": "h_101",
+          "bookId": 1,
+          "text": "Synthetic highlight A: a learner explains an idea before receiving feedback."
+        },
+        {
+          "id": "h_102",
+          "bookId": 1,
+          "text": "Synthetic highlight B: a later attempt can distinguish recognition from recall."
+        },
+        {
+          "id": "h_201",
+          "bookId": 2,
+          "text": "Synthetic highlight C: compare evidence from independent news sources."
+        },
+        {
+          "id": "h_202",
+          "bookId": 2,
+          "text": "Synthetic highlight D: record a correction separately from the original report."
+        },
+        {
+          "id": "h_301",
+          "bookId": 3,
+          "text": "Synthetic singleton highlight E: one book has only one retained highlight."
+        }
+      ],
+      "links": 3,
+      "zoom": 4
+    }
+  },
+  {
+    "index": 4,
+    "label": "same-source-from-panel",
+    "screenshot": "04-same-source-from-panel.png",
+    "sha256": "f0c33962304ba2ae76047962bfd688003dc04e87fdfbc348ab0dcfb9c870e5eb",
+    "viewport": {
+      "width": 1200,
+      "height": 820
+    },
+    "panelOpen": true,
+    "panelText": "Synthetic highlight D: record a correction separately from the original report.",
+    "panelSource": "Synthetic News Notes — Research fixture",
+    "note": "Synthetic note: a related idea, not a proven conclusion.",
+    "stats": "5 HIGHLIGHTS\n2 SOURCES\n1 CONNECTIONS",
+    "legend": [
+      {
+        "text": "Synthetic Learning Notes\n2",
+        "active": true
+      },
+      {
+        "text": "Synthetic News Notes\n2",
+        "active": false
+      }
+    ],
+    "selected": "h_202",
+    "filter": 1,
+    "hover": null,
+    "graph": {
+      "nodes": [
+        {
+          "id": "h_101",
+          "bookId": 1,
+          "text": "Synthetic highlight A: a learner explains an idea before receiving feedback."
+        },
+        {
+          "id": "h_102",
+          "bookId": 1,
+          "text": "Synthetic highlight B: a later attempt can distinguish recognition from recall."
+        },
+        {
+          "id": "h_201",
+          "bookId": 2,
+          "text": "Synthetic highlight C: compare evidence from independent news sources."
+        },
+        {
+          "id": "h_202",
+          "bookId": 2,
+          "text": "Synthetic highlight D: record a correction separately from the original report."
+        },
+        {
+          "id": "h_301",
+          "bookId": 3,
+          "text": "Synthetic singleton highlight E: one book has only one retained highlight."
+        }
+      ],
+      "links": 3,
+      "zoom": 4
+    }
+  },
+  {
+    "index": 5,
+    "label": "onscreen-esc",
+    "screenshot": "05-onscreen-esc.png",
+    "sha256": "6ba0e20878c8c0b7b0e5f8668a140f7702cb349ad83bd1a7d6f6b9ce667d9ad4",
+    "viewport": {
+      "width": 1200,
+      "height": 820
+    },
+    "panelOpen": false,
+    "panelText": "Synthetic highlight D: record a correction separately from the original report.",
+    "panelSource": "Synthetic News Notes — Research fixture",
+    "note": "Synthetic note: a related idea, not a proven conclusion.",
+    "stats": "5 HIGHLIGHTS\n2 SOURCES\n1 CONNECTIONS",
+    "legend": [
+      {
+        "text": "Synthetic Learning Notes\n2",
+        "active": true
+      },
+      {
+        "text": "Synthetic News Notes\n2",
+        "active": false
+      }
+    ],
+    "selected": null,
+    "filter": 1,
+    "hover": null,
+    "graph": {
+      "nodes": [
+        {
+          "id": "h_101",
+          "bookId": 1,
+          "text": "Synthetic highlight A: a learner explains an idea before receiving feedback."
+        },
+        {
+          "id": "h_102",
+          "bookId": 1,
+          "text": "Synthetic highlight B: a later attempt can distinguish recognition from recall."
+        },
+        {
+          "id": "h_201",
+          "bookId": 2,
+          "text": "Synthetic highlight C: compare evidence from independent news sources."
+        },
+        {
+          "id": "h_202",
+          "bookId": 2,
+          "text": "Synthetic highlight D: record a correction separately from the original report."
+        },
+        {
+          "id": "h_301",
+          "bookId": 3,
+          "text": "Synthetic singleton highlight E: one book has only one retained highlight."
+        }
+      ],
+      "links": 3,
+      "zoom": 4
+    }
+  },
+  {
+    "index": 6,
+    "label": "keyboard-escape",
+    "screenshot": "06-keyboard-escape.png",
+    "sha256": "185878816e90c9f2d204deffd208fc3a8515969f34a5cbefc083589a281821b4",
+    "viewport": {
+      "width": 1200,
+      "height": 820
+    },
+    "panelOpen": false,
+    "panelText": "Synthetic highlight D: record a correction separately from the original report.",
+    "panelSource": "Synthetic News Notes — Research fixture",
+    "note": "Synthetic note: a related idea, not a proven conclusion.",
+    "stats": "5 HIGHLIGHTS\n2 SOURCES\n1 CONNECTIONS",
+    "legend": [
+      {
+        "text": "Synthetic Learning Notes\n2",
+        "active": false
+      },
+      {
+        "text": "Synthetic News Notes\n2",
+        "active": false
+      }
+    ],
+    "selected": null,
+    "filter": null,
+    "hover": null,
+    "graph": {
+      "nodes": [
+        {
+          "id": "h_101",
+          "bookId": 1,
+          "text": "Synthetic highlight A: a learner explains an idea before receiving feedback."
+        },
+        {
+          "id": "h_102",
+          "bookId": 1,
+          "text": "Synthetic highlight B: a later attempt can distinguish recognition from recall."
+        },
+        {
+          "id": "h_201",
+          "bookId": 2,
+          "text": "Synthetic highlight C: compare evidence from independent news sources."
+        },
+        {
+          "id": "h_202",
+          "bookId": 2,
+          "text": "Synthetic highlight D: record a correction separately from the original report."
+        },
+        {
+          "id": "h_301",
+          "bookId": 3,
+          "text": "Synthetic singleton highlight E: one book has only one retained highlight."
+        }
+      ],
+      "links": 3,
+      "zoom": 4
+    }
+  },
+  {
+    "index": 7,
+    "label": "singleton-source",
+    "screenshot": "07-singleton-source.png",
+    "sha256": "ef0e88983295fbdc8ab80069dc8476dd48eab5455ed9729fffc517b1dfa8bd1f",
+    "viewport": {
+      "width": 1200,
+      "height": 820
+    },
+    "panelOpen": true,
+    "panelText": "Synthetic singleton highlight E: one book has only one retained highlight.",
+    "panelSource": "Synthetic Single Source — Research fixture",
+    "note": "Synthetic note: a related idea, not a proven conclusion.",
+    "stats": "5 HIGHLIGHTS\n2 SOURCES\n1 CONNECTIONS",
+    "legend": [
+      {
+        "text": "Synthetic Learning Notes\n2",
+        "active": false
+      },
+      {
+        "text": "Synthetic News Notes\n2",
+        "active": false
+      }
+    ],
+    "selected": "h_301",
+    "filter": null,
+    "hover": null,
+    "graph": {
+      "nodes": [
+        {
+          "id": "h_101",
+          "bookId": 1,
+          "text": "Synthetic highlight A: a learner explains an idea before receiving feedback."
+        },
+        {
+          "id": "h_102",
+          "bookId": 1,
+          "text": "Synthetic highlight B: a later attempt can distinguish recognition from recall."
+        },
+        {
+          "id": "h_201",
+          "bookId": 2,
+          "text": "Synthetic highlight C: compare evidence from independent news sources."
+        },
+        {
+          "id": "h_202",
+          "bookId": 2,
+          "text": "Synthetic highlight D: record a correction separately from the original report."
+        },
+        {
+          "id": "h_301",
+          "bookId": 3,
+          "text": "Synthetic singleton highlight E: one book has only one retained highlight."
+        }
+      ],
+      "links": 3,
+      "zoom": 4
+    }
+  },
+  {
+    "index": 8,
+    "label": "reloaded",
+    "screenshot": "08-reloaded.png",
+    "sha256": "adac9b65debc9a751f84ba51ec32efd067039b16cd8248b81b8539cf16acfde4",
+    "viewport": {
+      "width": 1200,
+      "height": 820
+    },
+    "panelOpen": false,
+    "panelText": "",
+    "panelSource": "",
+    "note": "",
+    "stats": "5 HIGHLIGHTS\n2 SOURCES\n1 CONNECTIONS",
+    "legend": [
+      {
+        "text": "Synthetic Learning Notes\n2",
+        "active": false
+      },
+      {
+        "text": "Synthetic News Notes\n2",
+        "active": false
+      }
+    ],
+    "selected": null,
+    "filter": null,
+    "hover": null,
+    "graph": {
+      "nodes": [
+        {
+          "id": "h_101",
+          "bookId": 1,
+          "text": "Synthetic highlight A: a learner explains an idea before receiving feedback."
+        },
+        {
+          "id": "h_102",
+          "bookId": 1,
+          "text": "Synthetic highlight B: a later attempt can distinguish recognition from recall."
+        },
+        {
+          "id": "h_201",
+          "bookId": 2,
+          "text": "Synthetic highlight C: compare evidence from independent news sources."
+        },
+        {
+          "id": "h_202",
+          "bookId": 2,
+          "text": "Synthetic highlight D: record a correction separately from the original report."
+        },
+        {
+          "id": "h_301",
+          "bookId": 3,
+          "text": "Synthetic singleton highlight E: one book has only one retained highlight."
+        }
+      ],
+      "links": 3,
+      "zoom": 2.3392141905702926
+    }
+  },
+  {
+    "index": 9,
+    "label": "narrow-panel",
+    "screenshot": "09-narrow-panel.png",
+    "sha256": "ad3ea1bf17805d07283cc78a84318a26eb4940974f2a832772c9bef8a3a545cd",
+    "viewport": {
+      "width": 320,
+      "height": 640
+    },
+    "panelOpen": false,
+    "panelText": "",
+    "panelSource": "",
+    "note": "",
+    "stats": "5 HIGHLIGHTS\n2 SOURCES\n1 CONNECTIONS",
+    "legend": [
+      {
+        "text": "Synthetic Learning Notes\n2",
+        "active": false
+      },
+      {
+        "text": "Synthetic News Notes\n2",
+        "active": false
+      }
+    ],
+    "selected": null,
+    "filter": null,
+    "hover": null,
+    "graph": {
+      "nodes": [
+        {
+          "id": "h_101",
+          "bookId": 1,
+          "text": "Synthetic highlight A: a learner explains an idea before receiving feedback."
+        },
+        {
+          "id": "h_102",
+          "bookId": 1,
+          "text": "Synthetic highlight B: a later attempt can distinguish recognition from recall."
+        },
+        {
+          "id": "h_201",
+          "bookId": 2,
+          "text": "Synthetic highlight C: compare evidence from independent news sources."
+        },
+        {
+          "id": "h_202",
+          "bookId": 2,
+          "text": "Synthetic highlight D: record a correction separately from the original report."
+        },
+        {
+          "id": "h_301",
+          "bookId": 3,
+          "text": "Synthetic singleton highlight E: one book has only one retained highlight."
+        }
+      ],
+      "links": 3,
+      "zoom": 2.3392141905702926
+    }
+  }
+]

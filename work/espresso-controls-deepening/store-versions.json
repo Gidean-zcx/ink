@@ -1,0 +1,127 @@
+[
+  {
+    "version": "3.42.0",
+    "date": "Thu Apr 16 2026 08:00:06 GMT+0000 (Coordinated Universal Time)",
+    "text": "- General improvements\n\nThank you for reading Espresso. We're constantly working to improve your experience."
+  },
+  {
+    "version": "3.40.0",
+    "date": "Wed Jul 23 2025 18:40:21 GMT+0000 (Coordinated Universal Time)",
+    "text": "- Enhanced accessibility features for better navigation and screen reader support\n- Fixed article sharing issues\n- Improved video playback reliability\n- Various performance improvements\n\nThank you for reading Espresso. We're constantly working to improve your experience."
+  },
+  {
+    "version": "3.39.0",
+    "date": "Tue Jun 03 2025 09:31:55 GMT+0000 (Coordinated Universal Time)",
+    "text": "- We've made various under-the-hood improvements for a smoother reading experience"
+  },
+  {
+    "version": "3.38.0",
+    "date": "Tue May 06 2025 08:52:29 GMT+0000 (Coordinated Universal Time)",
+    "text": "- Improved video playback for a smoother viewing experience\n- Enhanced notification capabilities to keep you informed about important updates\n- Better personalisation to deliver content that matters to you\n- Fixed several issues that were affecting app performance\n- General stability improvements and bug fixes\n\nThank you for reading Espresso. We're constantly working to improve your experience."
+  },
+  {
+    "version": "3.37.0",
+    "date": "Wed Mar 05 2025 06:49:58 GMT+0000 (Coordinated Universal Time)",
+    "text": "- We've refreshed the Today tab to ensure you always see the most up-to-date content\n- Improved the display of dates in The World in Brief section, making it easier to see when content was last updated\n- Fixed an issue with image cropping to enhance your reading experience\n- Various behind-the-scenes improvements to make the app more reliable"
+  },
+  {
+    "version": "3.36.0",
+    "date": "Wed Feb 19 2025 09:14:43 GMT+0000 (Coordinated Universal Time)",
+    "text": "This release includes general improvements and bug fixes."
+  },
+  {
+    "version": "3.35.0",
+    "date": "Wed Feb 05 2025 08:29:39 GMT+0000 (Coordinated Universal Time)",
+    "text": "This release includes general improvements and bug fixes."
+  },
+  {
+    "version": "3.34.0",
+    "date": "Thu Jan 09 2025 10:19:11 GMT+0000 (Coordinated Universal Time)",
+    "text": "This release includes general improvements and bug fixes."
+  },
+  {
+    "version": "3.33.1",
+    "date": "Mon Oct 21 2024 06:52:01 GMT+0000 (Coordinated Universal Time)",
+    "text": "This release includes general improvements and bug fixes."
+  },
+  {
+    "version": "3.33.0",
+    "date": "Thu Oct 03 2024 11:47:33 GMT+0000 (Coordinated Universal Time)",
+    "text": "This release includes general improvements and bug fixes."
+  },
+  {
+    "version": "3.32.0",
+    "date": "Wed Aug 28 2024 06:42:44 GMT+0000 (Coordinated Universal Time)",
+    "text": "We've addressed an issue that caused delays in ‘The World in Brief’ updates. Additionally, we've made visual improvements to our translated article experiment."
+  },
+  {
+    "version": "3.31.0",
+    "date": "Thu Aug 15 2024 21:32:12 GMT+0000 (Coordinated Universal Time)",
+    "text": "We're thrilled to introduce a new way to experience your daily news fix. Savour Espresso with our AI powered experimental feature, offered to you in French, German, Spanish and Mandarin.\n\nNote that this is an experimental feature. We welcome your feedback as we continue to refine and improve the experience."
+  },
+  {
+    "version": "3.30.0",
+    "date": "Thu Aug 08 2024 08:08:45 GMT+0000 (Coordinated Universal Time)",
+    "text": "Update your app for performance improvements and bug fixes while we finish brewing a special new blend."
+  },
+  {
+    "version": "3.29.0",
+    "date": "Mon Jul 22 2024 15:41:27 GMT+0000 (Coordinated Universal Time)",
+    "text": "Something's percolating in our development lab, but we can’t spill the beans just yet. Update your app for performance improvements and bug fixes while we perfect our special blend."
+  },
+  {
+    "version": "3.28.0",
+    "date": "Fri Jul 12 2024 19:59:25 GMT+0000 (Coordinated Universal Time)",
+    "text": "Update your app for performance improvements and bug fixes while we experiment with a new blend."
+  },
+  {
+    "version": "3.27.0",
+    "date": "Wed Jul 03 2024 06:53:56 GMT+0000 (Coordinated Universal Time)",
+    "text": "You can now watch short-form videos directly from the Today tab for insightful analysis and concise explanations from our expert journalists."
+  },
+  {
+    "version": "3.26.0",
+    "date": "Wed Jun 05 2024 06:09:39 GMT+0000 (Coordinated Universal Time)",
+    "text": "You’ve asked for more content in Espresso and we've listened. This update includes some behind the scenes changes as we finalise work to allow you to enjoy our best shortform video content in Espresso, which launches very soon."
+  },
+  {
+    "version": "3.25.0",
+    "date": "Mon May 20 2024 08:35:06 GMT+0000 (Coordinated Universal Time)",
+    "text": "Energise your world\nThis update includes some fixes to improve app stability and performance\nShare your feedback with the team by emailing espresso-app@economist.com\n\nBest wishes,\nThe Espresso team"
+  },
+  {
+    "version": "3.24.0",
+    "date": "Fri Apr 26 2024 07:16:16 GMT+0000 (Coordinated Universal Time)",
+    "text": "This update includes support for seamless navigation directly to Podcasts and Daily Quiz sections when arriving at the App from external sources. We’ve also fixed a few minor bugs.\nShare your feedback with the team by emailing espresso-app@economist.com\n\nBest wishes,\nThe Espresso team"
+  },
+  {
+    "version": "3.23.0",
+    "date": "Mon Apr 15 2024 08:24:44 GMT+0000 (Coordinated Universal Time)",
+    "text": "Energise your world\n\nThis release contains updates to comply with regional consent laws in the US as well as minor bug fixes and improvements.\nShare your feedback with the team by emailing espresso-app@economist.com\n\nBest wishes,\nThe Espresso team"
+  },
+  {
+    "version": "3.22.0",
+    "date": "Thu Mar 28 2024 10:30:57 GMT+0000 (Coordinated Universal Time)",
+    "text": "Energise your world\nThis update includes further design tweaks in support of our new font, and fixed an over-caffeinated copy/paste issue that appeared for some users in the last version.\n\nShare your feedback with the team by emailing espresso-app@economist.com\n\nBest wishes,\nThe Espresso team"
+  },
+  {
+    "version": "3.21.0",
+    "date": "Fri Mar 08 2024 09:18:41 GMT+0000 (Coordinated Universal Time)",
+    "text": "Energise your world\n\nThis update includes an update to our typeface, making for a more enjoyable reading experience. \n\nShare your feedback with the team by emailing espresso-app@economist.com\n\nBest wishes,\nThe Espresso team"
+  },
+  {
+    "version": "3.20.0",
+    "date": "Thu Nov 30 2023 08:03:30 GMT+0000 (Coordinated Universal Time)",
+    "text": "Energise your world\nThis update includes a fix for reading The World in Brief on older devices and an update to contact information for support at The Economist\n\nShare your feedback with the team by emailing espresso-app@economist.com\n\nBest wishes,\nThe Espresso team"
+  },
+  {
+    "version": "3.19.1",
+    "date": "Tue Oct 31 2023 20:28:44 GMT+0000 (Coordinated Universal Time)",
+    "text": "Energise your world\nThis update includes a fix for saving preferences in the new Data Privacy Manager; the new privacy manager provides greater transparency for our Advertising partners. The update also includes some enhancements to app performance and stability\n\nShare your feedback with the team by emailing espresso-app@economist.com\n\nBest wishes,\nThe Espresso team"
+  },
+  {
+    "version": "3.19.0",
+    "date": "Thu Oct 26 2023 08:43:02 GMT+0000 (Coordinated Universal Time)",
+    "text": "Energise your world\nThis update includes migrating to a new version of our Data Privacy Manager which provides greater transparency on our Advertising partners, as well as some enhancements to app performance and stability\n\nShare your feedback with the team by emailing espresso-app@economist.com\n\nBest wishes,\nThe Espresso team"
+  }
+]

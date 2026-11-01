@@ -1,0 +1,80 @@
+[
+  {
+    "flow_id": "F-M051-01",
+    "product_id": "M-051",
+    "task": "进入观看至退出回访",
+    "depth": "D1",
+    "evidence_ids": "E-DOUY-01;E-DOUY-04",
+    "known_branches": "无连续观察",
+    "gaps": "播放状态与主入口及结束恢复",
+    "visual_status": "not_observed",
+    "hands_on": "false",
+    "case_path": "cases/M-051-douyin.md",
+    "checked_on": "2026-10-26"
+  },
+  {
+    "flow_id": "F-M051-02",
+    "product_id": "M-051",
+    "task": "不感兴趣与减少同类",
+    "depth": "D2",
+    "evidence_ids": "E-DOUY-03",
+    "known_branches": "长按或分享入口",
+    "gaps": "撤销及提交反馈",
+    "visual_status": "not_observed",
+    "hands_on": "false",
+    "case_path": "cases/M-051-douyin.md",
+    "checked_on": "2026-10-26"
+  },
+  {
+    "flow_id": "F-M051-03",
+    "product_id": "M-051",
+    "task": "助手调节类别与探索",
+    "depth": "D2",
+    "evidence_ids": "E-DOUY-03",
+    "known_branches": "探索风格和三级强度及屏蔽",
+    "gaps": "统计周期及同步恢复",
+    "visual_status": "not_observed",
+    "hands_on": "false",
+    "case_path": "cases/M-051-douyin.md",
+    "checked_on": "2026-10-26"
+  },
+  {
+    "flow_id": "F-M051-04",
+    "product_id": "M-051",
+    "task": "关闭推荐或主动搜索",
+    "depth": "D2",
+    "evidence_ids": "E-DOUY-02",
+    "known_branches": "推荐频道隐藏;其他频道保留",
+    "gaps": "搜索结果返回与实际界面",
+    "visual_status": "not_observed",
+    "hands_on": "false",
+    "case_path": "cases/M-051-douyin.md",
+    "checked_on": "2026-10-26"
+  },
+  {
+    "flow_id": "F-M051-05",
+    "product_id": "M-051",
+    "task": "亲子绑定与时长管理",
+    "depth": "D2",
+    "evidence_ids": "E-DOUY-05;E-DOUY-06",
+    "known_branches": "双端接受与超时密码夜间限制",
+    "gaps": "拒绝误绑解绑忘记密码",
+    "visual_status": "not_observed",
+    "hands_on": "false",
+    "case_path": "cases/M-051-douyin.md",
+    "checked_on": "2026-10-26"
+  },
+  {
+    "flow_id": "F-M051-06",
+    "product_id": "M-051",
+    "task": "AI笔记跳回片段",
+    "depth": "D2",
+    "evidence_ids": "E-DOUY-06",
+    "known_branches": "仅部分知识视频",
+    "gaps": "摘要失败纠错导出与掌握判定",
+    "visual_status": "not_observed",
+    "hands_on": "false",
+    "case_path": "cases/M-051-douyin.md",
+    "checked_on": "2026-10-26"
+  }
+]

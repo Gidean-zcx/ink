@@ -1,0 +1,46 @@
+[
+  {
+    "name": "15-ios-log",
+    "url": "https://eudic.yuque.com/org-wiki-eudic-fxu2ea/mfxd3t/tr7b5gleigu37ido?singleDoc",
+    "method": "requests GET timeout=(5,18), one attempt",
+    "status": 200,
+    "final_url": "https://eudic.yuque.com/org-wiki-eudic-fxu2ea/mfxd3t/tr7b5gleigu37ido?singleDoc",
+    "content_type": "text/html; charset=utf-8",
+    "raw_work_path": "work/eudic-controls-deepening/15-ios-log.html",
+    "raw_sha256": "7b7e716522af6c780190459ff592cbd5f90d661fdb3020b4dee7a84f016c7dd3",
+    "bytes": 55231
+  },
+  {
+    "name": "16-android-log",
+    "url": "https://eudic.yuque.com/org-wiki-eudic-fxu2ea/mfxd3t/xgrx389eyl0nk4re?singleDoc",
+    "method": "requests GET timeout=(5,18), one attempt",
+    "status": 200,
+    "final_url": "https://eudic.yuque.com/org-wiki-eudic-fxu2ea/mfxd3t/xgrx389eyl0nk4re?singleDoc",
+    "content_type": "text/html; charset=utf-8",
+    "raw_work_path": "work/eudic-controls-deepening/16-android-log.html",
+    "raw_sha256": "f41779b7d1fd7937f1782c5e2d55cbaf3da0b164a96b7a49030766db2d97dda5",
+    "bytes": 55121
+  },
+  {
+    "name": "17-desktop-log",
+    "url": "https://eudic.yuque.com/org-wiki-eudic-fxu2ea/mfxd3t/tqq00bp7a8p2y1gu?singleDoc",
+    "method": "requests GET timeout=(5,18), one attempt",
+    "status": 200,
+    "final_url": "https://eudic.yuque.com/org-wiki-eudic-fxu2ea/mfxd3t/tqq00bp7a8p2y1gu?singleDoc",
+    "content_type": "text/html; charset=utf-8",
+    "raw_work_path": "work/eudic-controls-deepening/17-desktop-log.html",
+    "raw_sha256": "f0b187594ca95beaa840e567f24d5a4f8e0f2e71f235662ef0d2ece45a7fb264",
+    "bytes": 55153
+  },
+  {
+    "name": "18-privacy",
+    "url": "https://www.eudic.net/v4/home/privacy",
+    "method": "requests GET timeout=(5,18), one attempt",
+    "status": 200,
+    "final_url": "https://www.eudic.net/v4/home/privacy",
+    "content_type": "text/html; charset=utf-8",
+    "raw_work_path": "work/eudic-controls-deepening/18-privacy.html",
+    "raw_sha256": "3c5479db3846b3d53dded78af9cda8d2f959e4de9f9a4ed0dd1e8e0a685cfb8d",
+    "bytes": 181239
+  }
+]

@@ -1,0 +1,13 @@
+{
+  "url": "https://www.duolingo.com/help",
+  "status": 200,
+  "browser": "156.0.8078.4",
+  "product_operated": false,
+  "body_preview": "HELP CENTER\nHOME\nFrequently Asked Questions\nUsing Duolingo\nWhy did my course change?\nWhat is a streak?\nWhat are leaderboards and leagues?\nDoes Duolingo use any open source libraries?\nHow does matchmaking work in Duolingo Chess?\nAccount Management\nHow do I change my username or email address?\nHow do I find, follow, and block users on Duolingo?\nHow do I remove or reset a course?\nI’m having trouble accessing my account.\nHow do I delete my account and access my data?\nWhat to do if your data was compromised\nSubscription & Payments\nWhat is Super Duolingo and how do I subscribe?\nFamily Plan\nHow do I cancel my Super Duolingo subscription?\nHow do I request a refund?\nHow do I use a promo code?\nWhat is Duolingo Max?\nStill unsure about something?\nSEND FEEDBACK",
+  "links": 4,
+  "files": {
+    "work/duolingo-controls-deepening/help-rendered.txt": "4575f141890d445e61b570b81b2eca78bdd180ec8916f350e15042f81616876b",
+    "work/duolingo-controls-deepening/help-rendered-links.json": "526e4bfb7639bf00f6071366fdb07f1fa6df3bc7338b037ff825926878547e20",
+    "work/duolingo-controls-deepening/help-rendered.html": "8d7af80ec32b81852090057b25d26dca0a0baca2d1667ebf2e96c1d83209ddfa"
+  }
+}

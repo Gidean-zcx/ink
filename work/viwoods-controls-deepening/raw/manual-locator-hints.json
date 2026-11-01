@@ -1,0 +1,422 @@
+[
+  {
+    "file_page": 1,
+    "printed_page": null,
+    "locator_hint_only": "font-specific +29 transform; verify visually before factual use",
+    "text": "User Manual\nwww.viwoods.com"
+  },
+  {
+    "file_page": 2,
+    "printed_page": 1,
+    "locator_hint_only": "font-specific +29 transform; verify visually before factual use",
+    "text": "Contents\nϭ\n\u0014\u0011\u00034XLFN\u00036WDUW\u0003\u0003\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0003\u0015\n\u0015\u0011\u0003)HDWXUH\u00032YHUYLHZ\u0003\u0003\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0003\u0014\u0018\n\u0017\u0011\u00033DSHU\u0003\u0003\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0003\u0014\u001a\u0003\n\u0016\u0011\u0003,QSXW\u00030HWKRG\u0003\u0003\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0003\u0014\u0019\n\u0018\u0011\u0003/HDUQLQJ\u0003\u0003\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0003\u0015\u001a\n\u0019\u0011\u00030HHWLQJ\u0003\u0003\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0003\u0016\u0017\n\u001a\u0011\u0003'DLO\\\u0003\u0003\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0003\u0016\u001a\n\u001b\u0011\u00033LFNLQJ\u0003\u0003\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0003\u0017\u0014\n\u0014\u0014\u0011\u0003$,\u0003\u0003\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0003\u0017\u001b\n\u0014\u0017\u0011\u00030DLOER[\u0003\u0003\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0003\u0018\u0018\n\u0014\u0018\u0011\u00039L7UDQVIHU\u0003\u0003\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0003\u0019\u0015\n\u0014\u0019\u0011\u00036KDUH\u0003\u0003\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0003\u0019\u0019\n\u0014\u001a\u0011\u00030HPR\u0003\u0003\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0003\u0019\u001a\n\u001c\u0011\u0003)LOH\u0003(QFU\\SWLRQ\u0003\u0003\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0003\u0017\u0019\n\u0014\u0013\u0011\u0003$SSV\u0003\u0003\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0003\u0017\u001a\n\u0014\u0015\u0011\u00039LZRRGV\u0003)LOHV\u0003$3.\u0003\u0003\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0003\u0018\u0014\n\u0014\u0016\u0011\u00037KLUG\u00103DUW\\\u0003&ORXG\u0003,QWHUJUDWLRQ\u0003\u0003\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0003\u0018\u0017"
+  },
+  {
+    "file_page": 3,
+    "printed_page": 2,
+    "locator_hint_only": "font-specific +29 transform; verify visually before factual use",
+    "text": "Quick Start  \n- Home Screen\nSearch\nHome Screen\nPaper\nDaily\nMeeting\nPicking\nMailbox\nAPP\nSettings\nQuick Create\nUpload\nBack \nButton\nShort Press: Return to Home Screen  \nLong Press: Task Manager\nShort Press: AI Activation  \nLong Press: Voice AI\nPower Button/\nFingerprint Sensor\nCharging Port/\nHeadphone Jack\nRecent Activity\nϮ\nLearning\nViwoods Forum\nViwoods Files APK\nThird-Party Cloud \nSync Entry"
+  },
+  {
+    "file_page": 4,
+    "printed_page": 3,
+    "locator_hint_only": "font-specific +29 transform; verify visually before factual use",
+    "text": "Swipe down from the upper-right corner of the screen to access the Control Centre, which \nincludes quick access to common features (Wi-Fi, Bluetooth, Refresh, WLAN Cast,More  \nand three refresh modes).\nQuick Start  \n- Control Centre\nShort Press: Bluetooth \nOn/Off\n  \nLong Press: Access \nBluetooth Settings\nShort Press: \nWi-Fi On/Off \n \nLong Press: \nAccess Wi-Fi \nSettings\nTime\nAccess \nSettings\nCommon Features\nRefresh Modes\nϯ"
+  },
+  {
+    "file_page": 5,
+    "printed_page": 4,
+    "locator_hint_only": "font-specific +29 transform; verify visually before factual use",
+    "text": "Quick Start  \n- Control Centre\n1. Refresh \nWhen image retention appears on the display, manual refresh can be used to clear it, or use a \nshortcut gesture by swiping down from the top of the left side of the screen for quick clearing. \nϰ"
+  },
+  {
+    "file_page": 6,
+    "printed_page": 5,
+    "locator_hint_only": "font-specific +29 transform; verify visually before factual use",
+    "text": "Quick Start  \n- Control Center\n2. WLAN Cast \nEnable this feature in the [Control Center] by pulling down from the system bar.  \nTo cast the screen within the same local network, either input the specified URL into the browser of the \ntarget device or scan the QR code for screen sharing. \nKWWS˖\u0012\u0012\u0014\u001c\u0015\u0011\u0014\u0019\u001b\u0011\u0014\u0011\u0014\u0015\u0016\u001d\u001b\u0013\u001b\u001b\nϱ"
+  },
+  {
+    "file_page": 7,
+    "printed_page": 6,
+    "locator_hint_only": "font-specific +29 transform; verify visually before factual use",
+    "text": "Quick Start  \n- Control Centre\n3. Contrast \nThe display effect of the current application can be customized. \nϲ"
+  },
+  {
+    "file_page": 8,
+    "printed_page": 7,
+    "locator_hint_only": "font-specific +29 transform; verify visually before factual use",
+    "text": "ϳ\nQuick Start  \n- Control Centre\n4.WLAN Transfer Shortcut Entry\nEnable this option via the dropdown Control Centre in the system bar.\nWithin the same local area network, enter the designated URL in the browser of the target device to \ntransfer files swiftly between devices.\nKWWS˖\u0012\u0012\u0014\u001c\u0015\u0011\u0014\u0019\u001b\u0011\u0018\u0013\u0011\u0016\u0016\u001d\u001b\u0013\u001c\u0013"
+  },
+  {
+    "file_page": 9,
+    "printed_page": 8,
+    "locator_hint_only": "font-specific +29 transform; verify visually before factual use",
+    "text": "ϴ\nQuick Start  \n- Control Centre\n5.Disable Bottom Buttons\n6.Memo Shortcut\nEnable to deactivate the bottom function buttons to prevent accidental touches.\nA shortcut to the Memo feature, allowing users to quickly jot down notes without interrupting the \ncurrent workflow."
+  },
+  {
+    "file_page": 10,
+    "printed_page": 9,
+    "locator_hint_only": "font-specific +29 transform; verify visually before factual use",
+    "text": "Quick Start  \n- Control Centre\n7. Refresh Mode \nBest Display (Default)  \nHigh-quality refresh mode with \nsuperior image quality but slower \nrefresh speed. Suitable for \ndisplaying complex images or \nreading text. \nFast Mode  \nFast refresh mode with lower \nquality but quicker refresh speed. \nIdeal for browsing web pages or \nfast scrolling. \nUltra-fast Mode  \nOffers even faster refresh speed, \nsuitable for simple interface \nchanges. \nϵ"
+  },
+  {
+    "file_page": 11,
+    "printed_page": 10,
+    "locator_hint_only": "font-specific +29 transform; verify visually before factual use",
+    "text": "Quick Start  \n- Settings \n1.Viwoods Account \n\nEach device can be bound to a single Viwoods \naccount.\n\nEmail and phone number binding are supported. \nAccount deregistration is available. Passwords \nmust be at least 8 characters long and may \ninclude numbers, letters, and common symbols.\n\nMulti-device management: Upon logging in, users \ncan view all devices linked to their account and \nperform remote unbinding.\nϭϬ"
+  },
+  {
+    "file_page": 12,
+    "printed_page": 11,
+    "locator_hint_only": "font-specific +29 transform; verify visually before factual use",
+    "text": "ϭϭ\n2.Wi-Fi\n\nWi-Fi can be enabled to automatically search for available Wi-Fi hotspots. Select the \ndesired Wi-Fi network and enter the password to connect. After a successful connection, \nWi-Fi will automatically reconnect when enabled again.  \n\nWi-Fi can also be toggled in the Control Centre using the Wi-Fi buttonńshort press to \nturn Wi-Fi on/off, long press to enter the Wi-Fi settings list. \n\nSupports enterprise Wi-Fi connection.\n3. Bluetooth \n\nEnable Bluetooth to search for nearby available Bluetooth devices and send connection \nrequests. Both devices must be paired for Bluetooth to function.  \n\nBluetooth can also be toggled in the Control Center using the Bluetooth buttonńshort \npress to turn Bluetooth on/off, long press to enter the Bluetooth settings list. \n\nSupports file transfer via Bluetooth. Transferred files can be accessed under \"Received \nFiles.\"\n4. Language \n\nSupports language selection, including English, German, Spanish, French, Italian, Dutch, \nPortuguese, Russian, Simplified Chinese, Traditional Chinese, Korean, and Japanese.\n\nAutomatically adapts date formats according to the selected language.\nQuick Start  \n- Settings "
+  },
+  {
+    "file_page": 13,
+    "printed_page": 12,
+    "locator_hint_only": "font-specific +29 transform; verify visually before factual use",
+    "text": "Quick Start  \n- Settings\n5. Display Settings\n\nSupports font size adjustment.\n\nSupports manual configuration of sleep time.\nϭϮ\n6.Pen Function Settings\nAllows adjustment of stylus sensitivity and pressure, and enables/disables \nthe anti-aliasing function.\nAnti-Aliasing Toggle\nPen Stroke Preview Window\nPen Sensitivity Adjustment\nPen Pressure Sensitivity \nAdjustment\nAnti-Aliasing Function Description:\nŎ Are the written strokes jagged? Turn on anti-aliasing to instantly smooth them out!\nSensitivity Adjustment Instructions:\nŎ Higher sensitivity allows writing with a light touchńideal for those who prefer a delicate writing feel.\nŎ Lower sensitivity requires more pressure for inkńhelps prevent palm interference and improves ink \noutput consistency.\nPressure Adjustment Instructions:\nŎ High pressure sensitivity: light strokes produce fine lines; heavy pressure results in bold lines.\nŎ Low pressure sensitivity: noticeable force is needed to see line width variation."
+  },
+  {
+    "file_page": 14,
+    "printed_page": 13,
+    "locator_hint_only": "font-specific +29 transform; verify visually before factual use",
+    "text": "ϭϯ\n7. General\n\nTime format can be set to either 12-hour or \n24-hour mode based on user preferences, \nand the date display format can be adjusted.\n\nWallpapers and signatures can be \ncustomized. Transparent wallpapers are \nsupported.\n\nRestore factory settings.\n8. Security\n\nLock Screen Password: Set a numeric \npassword with 4 or 6 digits. Modification \nand reset options are available.\nQuick Start  \n- Settings"
+  },
+  {
+    "file_page": 15,
+    "printed_page": 14,
+    "locator_hint_only": "font-specific +29 transform; verify visually before factual use",
+    "text": "ϭϰ\nQuick Start  \n- Settings\n9. About\nDisplays basic device information and memory status.\n11. Updates\nSystem check for updates and upgrades is supported, including the ability to view historical \nversion update logs.\n\nFingerprint: Fingerprint unlock is \nsupported once a lock screen \npassword is set. Up to 5 fingerprints \ncan be stored and renamed. Fingerprint \naccess is available for encrypted files.\n10. Play Store\n\nEnable: Activates the Google Services Framework (Google authorization is required \nto properly access the Google Play Store and associated certified applications).\n\nDisable: Deactivates Google services and automatically clears cached data."
+  },
+  {
+    "file_page": 16,
+    "printed_page": 15,
+    "locator_hint_only": "font-specific +29 transform; verify visually before factual use",
+    "text": "Physical eraser: Eraser size adjusts \naccording to the pressure applied. \nWhen the button is pressed, the \neraser is activated, and the erasing \narea adjusts based on the pressure \napplied. \nFeature Overview\nThe pressure-sensitive eraser \nadjusts its size based on the \napplied pressure. Lighter \npressure results in a smaller \neraser area, while increased \npressure enlarges the erasing \narea. \nEraser\nϭϱ"
+  },
+  {
+    "file_page": 17,
+    "printed_page": 16,
+    "locator_hint_only": "font-specific +29 transform; verify visually before factual use",
+    "text": "Input Method\n\u0011ƌŝŶŐ\u0003ƵƉ\u0003ƚŚĞ\u0003ŚĂŶĚǁƌŝƚŝŶŐ\u0003ŬĞǇďŽĂƌĚ\n<ĞǇďŽĂƌĚ\u0003>ĂŶŐƵĂŐĞ\u0003^ǁŝƚĐŚ\u0003\n<ĞǇďŽĂƌĚ\u0003/ŶƉƵƚ\u0003\nhŶĚŽ\u0003\n\u0011ĂĐŬ\u0003\nDŽǀĞ\u0003>ĞĨƚ\n \nDŽǀĞ\u0003ZŝŐŚƚ ^ƉĂĐĞ\u0003\n\u0018ĞůĞƚĞ\u0003\n\u001cŶƚĞƌ\u0003\n>ĂŶŐƵĂŐĞ\u0003^ǁŝƚĐŚ\u0003\nϭϲ"
+  },
+  {
+    "file_page": 18,
+    "printed_page": 17,
+    "locator_hint_only": "font-specific +29 transform; verify visually before factual use",
+    "text": "Paper\nQuick Note \nCreation \nNotes can be created \nafter naming and \nselecting a template. \nPDF Files \nNotes \nFavorited Content \nEncrypted Content \nTagged Content \nRecycle Bin \nSupports file \nname and tag \nkeyword search. \nMenu \nPaper Home Screen\nSorting \nMethods\nϭϳ"
+  },
+  {
+    "file_page": 19,
+    "printed_page": 18,
+    "locator_hint_only": "font-specific +29 transform; verify visually before factual use",
+    "text": "Paper\nPDF templates or \ndocuments can be \nimported and \ncombined with \nhandwritten notes. \nTo select content for \nediting, press and \nhold. Tap to add or \nremove shared \ncontent for editing. \nMultiple documents \ncan be selected for \nencryption, tagging, \nand sharing.\nEditing Bar\nMove to \nFolder \nAdd Tag \nDeleted content \nwill be moved to \nthe Recycle Bin. \nShare \nRename \nFavorite \nϭϴ\nLock"
+  },
+  {
+    "file_page": 20,
+    "printed_page": 19,
+    "locator_hint_only": "font-specific +29 transform; verify visually before factual use",
+    "text": "Paper\nTap to create tags\nTags can be edited \nby long-pressing\nTap on creatzed \ntags to add them\nAdded Tags\nϭϵ\nThe sidebar tag \npanel displays all \ntags, where users \nmay perform tag \nsearches. Long \npressing a tag \nenables editing \nfunctions such as \ndelete or rename."
+  },
+  {
+    "file_page": 21,
+    "printed_page": 20,
+    "locator_hint_only": "font-specific +29 transform; verify visually before factual use",
+    "text": "Folders support the creation and editing of subfolders.\nPaper\nThe templates above are linked to specific folders, and \nnotes created using the same template will be automatically \ncategorized and saved to the respective folder.\nExample: Newly created \nquick notes will be \nautomatically saved to the \ncorresponding folder.\nϮϬ"
+  },
+  {
+    "file_page": 22,
+    "printed_page": 21,
+    "locator_hint_only": "font-specific +29 transform; verify visually before factual use",
+    "text": "Paper\nRepresents a folder with no associated \nquick note properties, referred to as a \nŉGeneral folder.\"\nRepresents a folder associated with \nquick note properties, referred to as \na ŉLinked folder.\"\nIntroduction to Linked Folders:\n1. When a quick note shortcut is deleted, the linked folder will convert to a general folder.  \n2. Deleting the linked folder directly will also remove the associated quick note shortcut.  \n3. When a quick note shortcut is created, a linked folder with the same name will be generated.  \n4. To turn a general folder into a linked folder, create a quick note with the same name as the \nfolder to establish the association.\nClick to directly create a \nnote that matches the \nfolder's properties, and the \nnote will be saved within \nthe folder.\nLong press to \nedit the folder\nϮϭ"
+  },
+  {
+    "file_page": 23,
+    "printed_page": 22,
+    "locator_hint_only": "font-specific +29 transform; verify visually before factual use",
+    "text": "Add or remove quick note \ntemplate shortcuts.\nClick to delete the quick \nnote template shortcut.\nClick to add a new \nquick note template.\nA linked folder with the same name will be \ngenerated after adding.\nϮϮ\nPaper"
+  },
+  {
+    "file_page": 24,
+    "printed_page": 23,
+    "locator_hint_only": "font-specific +29 transform; verify visually before factual use",
+    "text": "Paper\nPaper Handwriting Page Functions\nReturn to the Paper \nHome Screen\nPen type, thickness  \nand grayscale levels \nselection \nEraser (with different \nerasing options) \nText editing \nAI Commands\nUndo \nRedo \nMulti-page \nManagement \nLayers \nChange Template \nEncryption \nMenu \nExpand/Collapse \n^ǁŝƉĞ\u0003ůĞĨƚ\u0003Žƌ\u0003ƌŝŐŚƚ\u0003ƚŽ\u0003ƚƵƌŶ\u0003ƉĂŐĞƐ͘ \u0003\u0004ƚ\u0003\nƚŚĞ\u0003ůĂƐƚ\u0003ƉĂŐĞ͕ \u0003ĐůŝĐŬ\u0003ƚŽ\u0003ĂĚĚ\u0003Ă\u0003ŶĞǁ\u0003ƉĂŐĞ͘\nSwipe left or right to turn \npages and view content.\nLasso Tool \nMore Features \nAdd Tag \nSwipe left at the last page to \nreveal the \"Add Page\" icon. \nClick to add a new page.\nϮϯ"
+  },
+  {
+    "file_page": 25,
+    "printed_page": 24,
+    "locator_hint_only": "font-specific +29 transform; verify visually before factual use",
+    "text": "Paper\nLasso Tool Feature Overview\nSelect the corresponding \nlanguage for conversion \nConvert \nto Text \nNote: To ensure accurate \nhandwriting-to-text conversion, \nchoose the appropriate \nlanguage before clicking the \nconversion icon for recognition\nDelete\nCut \nAI Commands\nEditing Box Usage Guide:\n1. Select the lasso tool and use the pen to circle the desired area.  \n2. Drag the corner controls to scale proportionally.  \n3. Drag the side controls (left, right, bottom) to adjust the selection in one direction.  \n4. Hold the circular control to rotate the selected content.\nClick this control to \nrotate the selection\nϮϰ\nCopying is supported; \ncontent can be selected \nwithin this application and \npasted across notes\nInteractive Gestures are Supported for Undo and Redo Actions\nTwo-finger tap performs the \nŉbackŊ function\nThree-finger tap performs \nthe ŉredoŊ function\nUndo and redo shortcut gestures are available within the Paper, Daily, Meeting, and Picking modules."
+  },
+  {
+    "file_page": 26,
+    "printed_page": 25,
+    "locator_hint_only": "font-specific +29 transform; verify visually before factual use",
+    "text": "Paper\nEdit text\nEdit all text content.\nEdit the selected text\nA grayed-out icon indicates no content \nis available for pasting.\nAfter copying, press and hold to display the paste icon, then tap to paste.\nCross-module copy and paste functionality is supported.\nϮϱ"
+  },
+  {
+    "file_page": 27,
+    "printed_page": 26,
+    "locator_hint_only": "font-specific +29 transform; verify visually before factual use",
+    "text": "Paper\nGeometric Shape Recognition Overview\nShape Recognition Process\nSpecial Arrow Recognition Process\n1. Draw a shape with a hook in one stroke. \n2. Pause for 1 second at the endpoint to \nrecognize the shape. \n3. While holding the pen at the endpoint, press \nand hold with the other hand to transform it \ninto a line with an arrow.\nϮϲ\nHand-drawn Shapes\n1. Draw the desired basic \nshape in one stroke. \n2. Pause for 1 second at the \nendpoint to recognize it as a \ngeometric shape. \n3. While pausing, press and hold \nwith the other hand to convert it \ninto a standard shape.\nSupported Standard Shapes for Recognition\nHand-drawn Shapes\nRecognized Shapes\nStraight Line \nArrow Line \nIsosceles \nTriangle \nParallelogram \nRecognized Shapes\nCircle \nTrapezoid \nRhombus \nQuadrilateral"
+  },
+  {
+    "file_page": 28,
+    "printed_page": 27,
+    "locator_hint_only": "font-specific +29 transform; verify visually before factual use",
+    "text": "Learning\nImporting Files\nClick \"Import Files\" and use your mobile device or tablet to scan the QR code in the pop-up, or enter the \naddress [https://my.viwoods.com](https://my.viwoods.com) on a computer. Transfer PDF̵\nEPUB̵\nMOBI̵\nAZW files from your web or mobile device to this device and access them in \"Library.\" For detailed import \ninstructions, refer to \"File TransferńImport.\"\nThe Learning module currently supports reading and annotating files in PDF, EPUB, MOBI, AZW, and \nAZW3 formats. Files may be transferred to this device via Viwoods Transfer and accessed through ŉMy \nLibrary.Ŋ\nWhile browsing files, use a highlighter to annotate, mark key points, challenges, and areas of confusion, \nand make notes. AI support enhances learning and work processes. Annotated pages can be used to \ncreate new reading notes, facilitating focused review and further development.\nϮϳ\nFolder\nFolder and subfolder management is supported. Users may organize reading materials into folders for \neasier categorization and management."
+  },
+  {
+    "file_page": 29,
+    "printed_page": 28,
+    "locator_hint_only": "font-specific +29 transform; verify visually before factual use",
+    "text": "Learning\nSwipe from right to left to go to \nthe next page\nSwipe from left to right to go \nto the previous page\nSingle-finger Swipe\nSingle-finger Tap\nTap the left side to go to \nthe previous page\nTap the right side to go to \nthe next page\nTap the top fifth of the screen to \nexpand the menu\nPage Turn Gestures\nLong Press\nIn \"My Library,\" a single-finger long press on a book \nallows renaming or deletion of the book.\nϮϴ"
+  },
+  {
+    "file_page": 30,
+    "printed_page": 29,
+    "locator_hint_only": "font-specific +29 transform; verify visually before factual use",
+    "text": "Learning\nOn the reading interface, long press with one finger or use the selection tool to highlight text in PDF \nor EPUB files. Selected text can be used with AI Assistant, Translation, Dictionary, Copy, Share, and \nHighlight features.\n\nAI Assistant: \nAutomatically pastes the selected text into the AI Assistant for answering queries.\n\nTranslation: \nTranslates selected characters, words, sentences, or paragraphs into the chosen target \nlanguage.\n\nDictionary: \nProvides definitions for individual characters.\n\nCopy: \nCopy selected valuable text to paste into notes, meeting records, or any other required area.\n\nShare:\n Export selected text as a TXT file and share it to desired terminals via QR code, email, file \ntransfer, or Bluetooth.\n\nHighlight: \nHighlights selected content, which is automatically saved in the Highlight section of \nReading Notes for consolidated viewing and management. Highlights can also be exported in PDF \nformat, with the exported text available for copying and editing.\nϮϵ\nAI Assistant\nDictionary\nTranslation\nCopy\n=\nShare\nHighlight\nSelect the desired \ntranslation language\nSelect the current \nlanguage"
+  },
+  {
+    "file_page": 31,
+    "printed_page": 30,
+    "locator_hint_only": "font-specific +29 transform; verify visually before factual use",
+    "text": "ϯϬ\nAnnotations  \n(Pen) \nEraser\nUndo\nRedo \nContents \nReading \nNotes \nDisplay \nBookmarks \n=\nAI \nAssistant \nLearning\nBack\nSelection \nTool\nCollapse\nMore\nAnnotations\nFreely write or highlight important, doubtful, or challenging points on opened book documents. \nVarious pens can be selected during annotation, including fountain pens, art pens, technical pens, and \nhighlighters for richer content. PDF files support full-document sharing with annotations included.\nAnnotation Stroke Undo\nUndo by stroke during annotation.\nEraser\nIncludes pixel eraser, lasso eraser, and erase all options. Lasso eraser is the default."
+  },
+  {
+    "file_page": 32,
+    "printed_page": 31,
+    "locator_hint_only": "font-specific +29 transform; verify visually before factual use",
+    "text": "Learning\nReading Notes\nAll annotated pages within a book can be collectively viewed. Users may select one, multiple, or all pages \nto compile into a single PDF file, and share their reading notes via email, QR code, Viwoods Transfer, or \nBluetooth.\nContents\nDisplays the chapters and page numbers of the book, allowing quick browsing of the book's structure \nand locating specific chapters. PDF files without a table of contents can automatically generate and \ndisplay page numbers.\nDisplay (PDF)\nHD Display\nDisplays without any \nadditional effects.\nEnhances the image quality for a \nmore refined display.\nStrengthens HD display for \nclearer image quality.\nϯϭ\nDenoise\nOriginal Image"
+  },
+  {
+    "file_page": 33,
+    "printed_page": 32,
+    "locator_hint_only": "font-specific +29 transform; verify visually before factual use",
+    "text": "Learning\nFont Settings (Epub)\nSet Font Size\nUse the font size adjustment buttons to set the font size according to reading preferences.\nSet Font Style\nSelect from various font styles based on preference. Available fonts include EB Garamond、Source \nSans 、OpenDyslexic、Noto Serif、Noto Sans、Source Han Serif.\nTwo-Finger Gestures\nPinch inward to \nreduce the page size\nPinch outward to enlarge \nthe page\nAfter enlarging the page, swipe \nwith two fingers to move the page\nZoom\nTap the zoom buttons to enlarge the PDF file proportionally by 1.1X, 1.2X, 1.3X, 1.4X, 1.5X, 1.6X, 1.7X, \n1.8X, 1.9X, and 2.0X. After zooming, use a two-finger swipe to view details outside the visible area. \nWhen writing on a zoomed PDF document, the stroke size adjusts proportionally and remains in the \nsame position.\nClick to Zoom\nϯϮ"
+  },
+  {
+    "file_page": 34,
+    "printed_page": 33,
+    "locator_hint_only": "font-specific +29 transform; verify visually before factual use",
+    "text": "Learning\nBookmarks\nAI\nShare\nProgress Bar\nPrevious \nChapter \nNext \nChapter \nCurrent Page \nTotal Pages\nCurrent Chapter Title \nWhile browsing, tapping the bottom fifth of the screen reveals a progress bar. You may slide the \nbar for quick navigation, or tap the arrow to jump directly to specific chapters.\nShare the current page being read.\nUse AI assistance to resolve questions, find information, or expand thinking during reading.\nWhen reading a lengthy book, use bookmarks to quickly revisit related \npages. Bookmarks help locate associated pages efficiently.\nBold Font\nPage Settings\nϯϯ\nThe default font style\nThe bold font style appears thicker\nAlignment Options\nPage Margins\nLine Spacing"
+  },
+  {
+    "file_page": 35,
+    "printed_page": 34,
+    "locator_hint_only": "font-specific +29 transform; verify visually before factual use",
+    "text": "Meeting\nAll Meeting Records\nFavorited \nEncrypted \nTagged\nSelect a template \nbefore creation\nSearch\nDefault Template \nQuick Creation\nRecycle Bin\nϯϰ"
+  },
+  {
+    "file_page": 36,
+    "printed_page": 35,
+    "locator_hint_only": "font-specific +29 transform; verify visually before factual use",
+    "text": "Meeting \n- New Template Meeting\nhƐĞƌƐ\u0003ĐĂŶ\u0003ƐĞůĞĐƚ\u0003Ă\u0003ŵĞĞƚŝŶŐ\u0003ƚĞŵƉůĂƚĞ\u0003ĂĐĐŽƌĚŝŶŐ\u0003ƚŽ\u0003ƚŚĞŝƌ\u0003ŶĞĞĚƐ\nϯϱ"
+  },
+  {
+    "file_page": 37,
+    "printed_page": 36,
+    "locator_hint_only": "font-specific +29 transform; verify visually before factual use",
+    "text": "Meeting \n- \nAI\n&XVWRP\u0003$,\u0003FRPPDQGV\u0003DQG\u0003PXOWL\u0010SDJH\u0003LQWHJUDWLRQ\nVXSSRUW\u0003OLQNLQJ\u0003ZLWK\u0003PHHWLQJ\u0003UHFRUGV\u0003LQ\u0003WKH\u0003'DLO\\\u0003PRGXOH\u0011\nAdd Custom \nCommands\nDefault \nCommands\nClick to complete the \nprocess and link to Daily\nClick to select and \nnavigate to the \ncorresponding \nmeeting record\nϯϲ\nMerging multiple \npages and applying \nAI commands"
+  },
+  {
+    "file_page": 38,
+    "printed_page": 37,
+    "locator_hint_only": "font-specific +29 transform; verify visually before factual use",
+    "text": "Daily\nPage number is same as Paper\nFeedback \nindicators for \nnotes content\nClick the arrow to \nswitch months\nMark \nreminders\nTasks and \nnotes can be \ninterchanged\nWeekly \nview\nϯϳ\nAI \ncommands\nReturn to \ntoday\nCalendar \nevent \ndisplay\nCreate event\nEvents with content \nprovide visual \nfeedback indicators\nMonthly \nview\nDaily \nview\nNotes page \noverview"
+  },
+  {
+    "file_page": 39,
+    "printed_page": 38,
+    "locator_hint_only": "font-specific +29 transform; verify visually before factual use",
+    "text": "Daily\nϯϴ\nDaily overview with real-time timeline displays time ranges of scheduled \nevents. Events can be created, edited, and deleted\nTimeline\nReal-time time feedback is supported\nDisplay, Create, and Edit Events\nTap on any displayed event to \nedit or delete it\nCreate Event"
+  },
+  {
+    "file_page": 40,
+    "printed_page": 39,
+    "locator_hint_only": "font-specific +29 transform; verify visually before factual use",
+    "text": "ϯϵ\nDaily\nSelect the calendar to bind\nClick to execute synchronization \nwith calendar events\nConfigure the starting day \nof the weekńMonday, \nSaturday, or Sunday are \nsupported\nCalendar Binding and Synchronization\nSupports integration with Outlook and Google Calendars. Once linked, events added, deleted, or \nmodified will automatically synchronize. After unbinding, only locally created events remain on the device.\nNote:\n1. Outlook enterprise accounts require manual administrator authorization to synchronize with the device \ncalendar.\n2. To ensure user privacy, calendar binding and synchronization are conducted entirely through third-\nparty protocols, without passing through our servers. Binding may occasionally fail; please retry if so."
+  },
+  {
+    "file_page": 41,
+    "printed_page": 40,
+    "locator_hint_only": "font-specific +29 transform; verify visually before factual use",
+    "text": "ϰϬ\nDaily\nŉOthersŊ Tab: A daily summary window across \nall applications. Here you can view documents \ncreated in the Paper, Meeting, Picking, and \nLearning modules by date.\nPaper and Meeting Integration\nNotes from the Paper and Meeting modules \ncan be linked to specific dates in the Daily \nmodule. Clicking the note name reopens it at \nthe page where the link was created."
+  },
+  {
+    "file_page": 42,
+    "printed_page": 41,
+    "locator_hint_only": "font-specific +29 transform; verify visually before factual use",
+    "text": "Picking\nAccess the Notes home page from the APK\nAll note \ndocuments\nAll screenshots \nand annotated \npages\nCreate a new \nnote document\nϰϭ\nBatch select screenshots to \ncompile into a Picking document"
+  },
+  {
+    "file_page": 43,
+    "printed_page": 42,
+    "locator_hint_only": "font-specific +29 transform; verify visually before factual use",
+    "text": "Picking\nSwipe from the upper right corner to the lower \nleft edge or through the black area. This tool is \nglobal and can be invoked in any other APK.\nPicking Invocation Method\nϰϮ"
+  },
+  {
+    "file_page": 44,
+    "printed_page": 43,
+    "locator_hint_only": "font-specific +29 transform; verify visually before factual use",
+    "text": "Picking\nInsert the \ncaptured image \ninto the note\nSave to note \nscreenshots\nFont \nrecognition\nSelect the \nlanguage for \nrecognition\nSelect Crop, then \nuse the pen to \ncircle the content \nto be captured.\nAfter selection, \nconvert to crop \nand activate the \nediting function.\nClick this icon to \nexpand the screenshot \narea to full screen.\nThe editing box \ncan be dragged.\nϰϯ\nCrop"
+  },
+  {
+    "file_page": 45,
+    "printed_page": 44,
+    "locator_hint_only": "font-specific +29 transform; verify visually before factual use",
+    "text": "Picking\nAnnotate \nThis button activates or \ndeactivates the annotation mode. \nWhen activated, the page is \nlocked and annotations can be \nfreely made.\nSave \nannotated \npage\nClick to modify \nthe name of \nthe annotation\nTo cancel annotation mode, \nclick the deactivation \nbutton. The annotation \nfeature will be frozen and \ncan be reactivated as \nneeded.\nϰϰ"
+  },
+  {
+    "file_page": 46,
+    "printed_page": 45,
+    "locator_hint_only": "font-specific +29 transform; verify visually before factual use",
+    "text": "Freely select \nexisting Memo \ndocuments\nSupports multi-page \nviewing and editing\nPicking\nInsert Note\nSwitch to semi-\ntransparent mode\nRename\nInsert images \nfrom screenshots\nϰϱ"
+  },
+  {
+    "file_page": 47,
+    "printed_page": 46,
+    "locator_hint_only": "font-specific +29 transform; verify visually before factual use",
+    "text": "ϰϲ\nFile Encryption\nSelect Files to Encrypt or Decrypt\nFile encryption is available in both the Paper and Meeting modules. Long press a file to enter edit mode \nand apply encryption to one or multiple files. You may also click the encryption icon within the file \ntoolbar to secure the current file. To remove encryption, click the icon again and enter the password. For \nuser privacy, encryption is not linked to any account.\nSet Encryption Password\nWhen using the document encryption feature for the \nfirst time, you must set an encryption password. \nPasswords for Paper and Meeting are managed \nindependently, although identical passwords may be set. \nPasswords must be 4–12 characters in length. \nFingerprint access for encrypted files is also supported \nand can be enabled manually under [Settings] – \n[Security] – [Fingerprint].\nChange Encryption \nPassword\nTo change the encryption password, \ntap the encrypted file and select \nthe password change option on the \ninput screen.\nNote: Passwords are stored locally \non the device. Please remember \nyour password, as files cannot be \nunlocked if it is forgotten."
+  },
+  {
+    "file_page": 48,
+    "printed_page": 47,
+    "locator_hint_only": "font-specific +29 transform; verify visually before factual use",
+    "text": "ϰϳ\nApps\nWithin the Apps module, you may freely download and install third-party applications. \nLong pressing an app icon allows you to clear its cache, uninstall the app, or add it to the \nhome screen."
+  },
+  {
+    "file_page": 49,
+    "printed_page": 48,
+    "locator_hint_only": "font-specific +29 transform; verify visually before factual use",
+    "text": "AI\nThis is an intelligent sheet of paper. It allows interaction with AI and provides context-\nspecific AI assistance in various modules. AI functions are available even when not logged \nin. Supported models include GPT-4o, GPT-4o-mini, Deepseek-R1, and Deepseek-V1.\nVoice AI, Text Entry via Electronic Keyboard\nLong press the AI button on the bottom right corner of the e-ink tablet to record a voice message \nup to 15 seconds. Release to automatically send it to AI, which will transcribe the voice message \ninto text. The AI has strong reasoning abilities to address everyday issues encountered in life and \nlearning. AI endows our future paper with limitless intelligence.\nShort press the AI button on the bottom right corner of the e-ink tablet to enter text for AI \ndialogue via the electronic keyboard.\nContent from AI interactions can be copied or shared based on its value.\nShort press to use AI\nLong press to input voice to AI\nϰϴ"
+  },
+  {
+    "file_page": 50,
+    "printed_page": 49,
+    "locator_hint_only": "font-specific +29 transform; verify visually before factual use",
+    "text": "AI \nAI for Picking\nFor captured images and text, AI can assist with content recognition, analysis, and \nsummary extraction. \nAI can convert full-page content into text or answer queries.\nAI for Daily\nAI for learning\nIn journal notes, AI can create stories, use AI \nassistants, organize and classify tasks, and \ngenerate schedule reports.\nAI features within the reading interface \nsupport translation, dictionary, AI \nassistant, and customization for \nselected text. Full-page AI supports \nonly the AI assistant and customization.\nAI for Paper\nAI for Meeting\nIn Paper, AI can analyze handwritten content, \ngenerate articles, and convert text. Custom \nAI commands can be set to consult the AI \nassistant for queries.\nAI generates meeting minutes from \nrecorded meeting content.\nϰϵ\nAI Commands "
+  },
+  {
+    "file_page": 51,
+    "printed_page": 50,
+    "locator_hint_only": "font-specific +29 transform; verify visually before factual use",
+    "text": "AI\nCustom AI commands\nSet up AI commands according to needs. For example, if translating written text into French, name the \ncommand \"Eng-Fra\" and instruct the AI to \"Translate the written English into French.\"\nUp to five AI commands can be set. Long press to delete.\nAI Assistant\nUse the AI Assistant to automatically paste \nselected text, circled images, or the current \npage into the AI dialogue box for discussion.\nHistory\nAll AI dialogue records are automatically saved \nlocally and available for continuous conversation \nwithin 24 hours. Currently, AI commands are not \nautomatically saved.\nϱϬ\nExport\nAI-generated content can be exported in TXT or HTML formats. Exporting as HTML preserves \ndisplay integrity and sharing quality of AI-generated results."
+  },
+  {
+    "file_page": 52,
+    "printed_page": 51,
+    "locator_hint_only": "font-specific +29 transform; verify visually before factual use",
+    "text": "ϱϭ\nViwoods Files APK\nTap the Viwoods Files APK shortcut from the main sidebar.\nAccess My Files, Cloud Drive, and Local files.\n\nMy Files: Includes handwritten documents from the Paper, Daily, Meeting, Learning, Picking, and \nMemo modules.\n\nCloud Drive: Files from third-party cloud storage.\n\nLocal: Files stored locally on the device (currently in development)."
+  },
+  {
+    "file_page": 53,
+    "printed_page": 52,
+    "locator_hint_only": "font-specific +29 transform; verify visually before factual use",
+    "text": "ϱϮ\nViwoods Files APK\nLog in to Third-Party Cloud Storage\n\nClick the Viwoods Files APK shortcut entry in the homepage sidebar to access the cloud storage \nsection. It supports logging into third-party cloud storage accounts, allowing simultaneous login to \nGoogle Drive, OneDrive, and Dropbox accounts.\n\nBy default, the first account logged in is set as the synchronization account. You can modify the \nsynchronization account in the sync settings.\nSupports browsing third-party cloud storage directories, importing files to the device, deleting files, \nand creating folders (folder creation is available only when importing files to cloud storage).\nImport Cloud Files to Device\nLong-press \nto select\n௙\nImport files to device\nSync Settings\nLog in to Cloud Storage"
+  },
+  {
+    "file_page": 54,
+    "printed_page": 53,
+    "locator_hint_only": "font-specific +29 transform; verify visually before factual use",
+    "text": "ϱϯ\nViwoods Files APK\nDevice Files and Cloud Export\nFull access to all device files is available, with \nsupport for export to third-party cloud storage.\nLong press to select\nExport files to \ncloud storage"
+  },
+  {
+    "file_page": 55,
+    "printed_page": 54,
+    "locator_hint_only": "font-specific +29 transform; verify visually before factual use",
+    "text": "ϱϰ\nThird-Party Cloud Integration\nThird-Party Cloud Sync Shortcut\nFrom the homepage, tap the third-party cloud sync button to instantly synchronize device files to \nGoogle Drive, OneDrive, or Dropbox.\nLong press the third-party cloud sync button to enter the cloud storage interface. Tap “Settings” to \nselect the sync account, target folder, and file format for synchronization.\nCloud Sync \nButton"
+  },
+  {
+    "file_page": 56,
+    "printed_page": 55,
+    "locator_hint_only": "font-specific +29 transform; verify visually before factual use",
+    "text": " - Login\n1. Tap the mailbox shortcut.\n2. Enter your Google account.\n3. Enter password and log in.\n4. Login successful.\nSupports Google and Outlook account logins.\nMailbox\nGoogle Account (Supports login with Google Workspace accounts)\nϱϱ"
+  },
+  {
+    "file_page": 57,
+    "printed_page": 56,
+    "locator_hint_only": "font-specific +29 transform; verify visually before factual use",
+    "text": " - Login\n1. Tap the mailbox shortcut.\n2. Enter Outlook account.\n3. Enter password and log in.\n4. Login successful.\nMailbox\nOutlook Account (Supports login with Microsoft 365 accounts)\nϱϲ\nOutlook accounts with @live.com and @msn.com domains are supported"
+  },
+  {
+    "file_page": 58,
+    "printed_page": 57,
+    "locator_hint_only": "font-specific +29 transform; verify visually before factual use",
+    "text": "ϱϳ\n——登录\nMailbox\nManual Configuration of Email Via IMAP and POP3 Protocols\n1. Tap the Manual Setup entry\n2. Select IMAP or POP3 protocol\n4. Enter SMTP configuration details\n3. Enter the account information \nand IMAP/POP3 settings\n5. Login successful\n* IMAP and POP3 information \ncan be obtained from your email \nprovider's web interface"
+  },
+  {
+    "file_page": 59,
+    "printed_page": 58,
+    "locator_hint_only": "font-specific +29 transform; verify visually before factual use",
+    "text": "Mailbox \n- Homepage\n\u0003\nAccount \nSwitch/Add\nCompose \nEmail\nSearch\nEmail Settings\nSupports user account switching and \nadding, with a maximum of 5 accounts.\nSelectable email visibility range is \nsupported.\nLocal data can be cleared.\nϱϴ\nPaginated \nEmail Display"
+  },
+  {
+    "file_page": 60,
+    "printed_page": 59,
+    "locator_hint_only": "font-specific +29 transform; verify visually before factual use",
+    "text": "Mailbox\n - \nCompose Email\n\u0003\nCompose Email\nHandwriting \ntools\nText \nemail\nUndo\nBack\nPen \ntype\nEraser\nBackground \npattern\nDelete page\nAI\nAttach \nfiles\n1. Handwriting Toolbar\n2. Text Email Toolbar\nUsers can choose to send an email either in handwritten form or text format.\nSwipe left to add page\nϱϵ"
+  },
+  {
+    "file_page": 61,
+    "printed_page": 60,
+    "locator_hint_only": "font-specific +29 transform; verify visually before factual use",
+    "text": "\u0004/\u0003ĂƵƚŽŵĂƚŝĐĂůůǇ\u0003ĨŝůůƐ\u0003ƐƵďũĞĐƚ\u0003ĂŶĚ\u0003ŶĂŵĞ\nAI can automatically generate an email from \nhandwritten content or convert handwritten \ntext into typed text for the email.\nMailbox\n - \nAI\nϲϬ"
+  },
+  {
+    "file_page": 62,
+    "printed_page": 61,
+    "locator_hint_only": "font-specific +29 transform; verify visually before factual use",
+    "text": "Mailbox\n - \nSignature Editing\nUsers can customize and edit signatures either \nwhile composing an email or in the email \nsettings.\nϭ͘ \u0003\u001cĚŝƚ\u0003ƐŝŐŶĂƚƵƌĞ\u0003ŝŶ\u0003ƚŚĞ\u0003ĞŵĂŝů\u0003ĐŽŵƉŽƐĞ\u0003ƐĞĐƚŝŽŶ͘\nϮ͘ \u0003\u001cĚŝƚ\u0003ƐŝŐŶĂƚƵƌĞ\u0003ŝŶ\u0003ĞŵĂŝů\u0003ƐĞƚƚŝŶŐƐ͘\nϲϭ"
+  },
+  {
+    "file_page": 63,
+    "printed_page": 62,
+    "locator_hint_only": "font-specific +29 transform; verify visually before factual use",
+    "text": "Import files\nSend files\nOngoing transfers, search, user guide\nReceived and \nsent file records\nViTransfer supports both import and export.\nLog in to [ViTransfer] on a computer or mobile device to import files \nto the device or save files from the device to the computer/mobile \ndevice, enabling two-way file transfer.\nViTransfer\n - \nHomepage\nŵǇ͘ ǀŝǁŽŽĚƐ͘ ĐŽŵ\nϲϮ"
+  },
+  {
+    "file_page": 64,
+    "printed_page": 63,
+    "locator_hint_only": "font-specific +29 transform; verify visually before factual use",
+    "text": "ViTransfer\n1.Import\nImport files from computer or phone to \nAiPaper.\n2. Log \nin \non computer or phone\nScan the QR code with your phone or enter my. \nviwoods.com on computer to log in to your \nViwoods account.\n3. Import file\nClick Import on computer or tap + on \nyour phone to select files to import.\n4. Receive\nEnter ViTransfer, tap Receive to import.\n1.Log in to AiPaper \nLog in to Viwoods account to use ViTransfer.\nϲϯ"
+  },
+  {
+    "file_page": 65,
+    "printed_page": 64,
+    "locator_hint_only": "font-specific +29 transform; verify visually before factual use",
+    "text": "2.Export\nExport notes or folders from AiPaper to \ncomputer or phone.\n2. Export\nEnter ViTransfer - Tap Export - Select \nfiles - Tap Export\n3. Log in on computer or phone(Not logged in)\nScan the QR code with your phone or enter \nmy.viwoods.com on computer and log in to your \nViwoods account.\n4. Send\nDownload, share, or sync files from \nmy.viwoods.com.\n1.Log in to AiPaper \nLog in to Viwoods account to use ViTransfer.\nViTransfer\nϲϰ"
+  },
+  {
+    "file_page": 66,
+    "printed_page": 65,
+    "locator_hint_only": "font-specific +29 transform; verify visually before factual use",
+    "text": "3.Sync\nSync across multiple AiPapers for the same \nuser.\n1. Export\nEnter ViTransfer on AiPaper A - Select files - \nTap Export\n2. Sync\nScan the QR code with your phone or enter \nmy.viwoods.com on computer and log in to \nyour Viwoods account.\nSelect files - Select the device to \nsync(AiPaper B) - Sync\n3. Receive\nEnter ViTransfer on AiPaper B - Receive - Sync \nsuccessfully\nViTransfer\nϲϱ"
+  },
+  {
+    "file_page": 67,
+    "printed_page": 66,
+    "locator_hint_only": "font-specific +29 transform; verify visually before factual use",
+    "text": "Share\n1.QR code\nUsers can scan the QR code with a \nmobile device or other devices to \nobtain the file.\n2.Email\nSend attachments via Mailbox to \nreceive files. Supports Google and \nOutlook accounts.\n3.ViTransfer\nSend files to the ViTransfer station \n(my.viwoods.com). Files can be \ndownloaded from the transfer station.\n4.Bluetooth\nSend files via Bluetooth.\nCurrently supports sharing files via QR code, Email, ViTransfer, and Bluetooth. \nFile format and page selection can be specified; file renaming before sending is supported.\nϲϲ"
+  },
+  {
+    "file_page": 68,
+    "printed_page": 67,
+    "locator_hint_only": "font-specific +29 transform; verify visually before factual use",
+    "text": "Memo\n - \nTo-Do Notes\ndŽͲĚŽ\u0003ŶŽƚĞƐ\u0003ƐƵƉƉŽƌƚ\u0003ƐĞƚƚŝŶŐ\u0003ƌĞŵŝŶĚĞƌ\u0003ƚŝŵĞƐ͘\nϲϳ"
+  },
+  {
+    "file_page": 69,
+    "printed_page": 68,
+    "locator_hint_only": "font-specific +29 transform; verify visually before factual use",
+    "text": "Memo\nLong press to edit, with options to pin, set/cancel reminder times, rename, favorite, share, or delete.\nRecently deleted notes are stored for up to 30 \ndays and can be restored or permanently \ndeleted.\nϲϴ"
+  },
+  {
+    "file_page": 70,
+    "printed_page": 69,
+    "locator_hint_only": "font-specific +29 transform; verify visually before factual use",
+    "text": ")RU\u0003DQ\\\u0003LVVXHV\u0003GXULQJ\u0003XVH\u000f\u0003SOHDVH\u0003FRQWDFW\u0003\nservice@viwoods.com\n\u0011\n\u0012ŽŶƚĂĐƚ\u0003hƐ"
+  }
+]

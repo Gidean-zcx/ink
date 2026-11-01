@@ -1,0 +1,36 @@
+{
+  "audit_path": "docs/research/interaction-library/artifacts/britannica-controls-deepening/browser-operation-audit.md",
+  "audit_backup": "work/britannica-controls-deepening/audit-before-explicit-ids.md",
+  "old_audit_sha256": "960c7f3b3d6417bad92a6f87d3b9651f0c4a8a58c48e5f8dbb7ad146cf221c1c",
+  "new_audit_sha256": "2041103b8877c2cf1922493e552edc3181f4d08f59e3b8c1611676332c8886c2",
+  "batch_path": "docs/research/interaction-library/batches/britannica-controls-deepening-evidence.jsonl",
+  "batch_backup": "work/britannica-controls-deepening/new-evidence-before-audit-fix.jsonl",
+  "before_sha256": "3f3b029d05058855a532605efdfef79db132515a3fbd06d5b6f17999093914f1",
+  "after_sha256": "80f698f9706334ff59cb0a02e5d9467a65bffe351b74979e91b1cf99b57787ea",
+  "changes": [
+    {
+      "evidence_id": "E-BRCD-06",
+      "field": "sha256",
+      "before": "960c7f3b3d6417bad92a6f87d3b9651f0c4a8a58c48e5f8dbb7ad146cf221c1c",
+      "after": "2041103b8877c2cf1922493e552edc3181f4d08f59e3b8c1611676332c8886c2"
+    },
+    {
+      "evidence_id": "E-BRCD-06",
+      "field": "operation_audit_sha256",
+      "before": "960c7f3b3d6417bad92a6f87d3b9651f0c4a8a58c48e5f8dbb7ad146cf221c1c",
+      "after": "2041103b8877c2cf1922493e552edc3181f4d08f59e3b8c1611676332c8886c2"
+    },
+    {
+      "evidence_id": "E-BRCD-07",
+      "field": "sha256",
+      "before": "960c7f3b3d6417bad92a6f87d3b9651f0c4a8a58c48e5f8dbb7ad146cf221c1c",
+      "after": "2041103b8877c2cf1922493e552edc3181f4d08f59e3b8c1611676332c8886c2"
+    },
+    {
+      "evidence_id": "E-BRCD-07",
+      "field": "operation_audit_sha256",
+      "before": "960c7f3b3d6417bad92a6f87d3b9651f0c4a8a58c48e5f8dbb7ad146cf221c1c",
+      "after": "2041103b8877c2cf1922493e552edc3181f4d08f59e3b8c1611676332c8886c2"
+    }
+  ]
+}

@@ -1,0 +1,337 @@
+# Anki Docs
+
+## Manual
+
+### Desktop Manual
+
+- [Introduction](https://docs.ankiweb.net/manual/intro.md)
+- [Getting Started](https://docs.ankiweb.net/manual/getting-started.md)
+- [Background](https://docs.ankiweb.net/manual/background.md)
+- [Getting help](https://docs.ankiweb.net/manual/getting-help.md)
+- [Studying](https://docs.ankiweb.net/manual/studying.md)
+- [Adding/Editing](https://docs.ankiweb.net/manual/editing.md)
+- [Preferences](https://docs.ankiweb.net/manual/preferences.md)
+- [Deck Options](https://docs.ankiweb.net/manual/deck-options.md)
+- [Syncing with AnkiWeb](https://docs.ankiweb.net/manual/syncing.md)
+- [Profiles](https://docs.ankiweb.net/manual/profiles.md)
+- [Browsing](https://docs.ankiweb.net/manual/browsing.md)
+- [Filtered Decks & Cramming](https://docs.ankiweb.net/manual/filtered-decks.md): Filtered Decks
+- [Searching](https://docs.ankiweb.net/manual/searching.md)
+- [Exporting](https://docs.ankiweb.net/manual/exporting.md)
+- [Backups](https://docs.ankiweb.net/manual/backups.md)
+- [Managing Files and Your Collection](https://docs.ankiweb.net/manual/files.md): Managing Files
+- [Card Info, Graphs and Statistics](https://docs.ankiweb.net/manual/stats.md): Statistics
+- [Media](https://docs.ankiweb.net/manual/media.md)
+- [Math and Symbols](https://docs.ankiweb.net/manual/math.md): Math & Symbols
+- [Leeches](https://docs.ankiweb.net/manual/leeches.md)
+- [Add-ons](https://docs.ankiweb.net/manual/addons.md)
+- [Troubleshooting](https://docs.ankiweb.net/manual/troubleshooting.md)
+- [Self-Hosted Sync Server](https://docs.ankiweb.net/manual/sync-server.md): Sync Server
+- [Miscellanea](https://docs.ankiweb.net/manual/misc.md): Miscellaneous
+- [Contributing](https://docs.ankiweb.net/manual/contrib.md)
+- [Resources](https://docs.ankiweb.net/manual/resources.md)
+
+#### Platform Notes
+
+- [Platform Notes](https://docs.ankiweb.net/manual/platform/intro.md)
+
+##### Windows
+
+- [Windows](https://docs.ankiweb.net/manual/platform/windows/intro.md)
+- [Installing & Upgrading Anki on Windows](https://docs.ankiweb.net/manual/platform/windows/installing.md): Install & Upgrade
+- [Windows installation issues](https://docs.ankiweb.net/manual/platform/windows/installation-issues.md): Installation Issues
+- [Windows startup issues](https://docs.ankiweb.net/manual/platform/windows/startup-issues.md): Startup Issues
+- [Windows Display Issues](https://docs.ankiweb.net/manual/platform/windows/display-issues.md): Display Issues
+- [Copy and paste issues](https://docs.ankiweb.net/manual/platform/windows/copy-and-paste.md)
+- [Text Size](https://docs.ankiweb.net/manual/platform/windows/text-size.md)
+- [Windows permission problems](https://docs.ankiweb.net/manual/platform/windows/permission-problems.md): Permission Problems
+
+##### MacOS
+
+- [macOS](https://docs.ankiweb.net/manual/platform/mac/intro.md)
+- [Installing & Upgrading Anki on macOS](https://docs.ankiweb.net/manual/platform/mac/installing.md): Install & Upgrade
+- [Display Issues on macOS](https://docs.ankiweb.net/manual/platform/mac/display-issues.md): Display Issues
+
+##### Linux
+
+- [Linux](https://docs.ankiweb.net/manual/platform/linux/intro.md)
+- [Installing & Upgrading Anki on Linux](https://docs.ankiweb.net/manual/platform/linux/installing.md): Install & Upgrade
+- [Missing Libraries](https://docs.ankiweb.net/manual/platform/linux/missing-libraries.md)
+- [Display Issues on Linux](https://docs.ankiweb.net/manual/platform/linux/display-issues.md): Display Issues
+- [Blank Main Window](https://docs.ankiweb.net/manual/platform/linux/blank-window.md)
+- [Packages Distributed by Linux Distributions](https://docs.ankiweb.net/manual/platform/linux/distro-packages.md): Linux Distro Packages
+- [Anki not picking up GTK theme on Gnome/Linux](https://docs.ankiweb.net/manual/platform/linux/gtk-theme.md): Incorrect GTK Theme
+- [Wayland](https://docs.ankiweb.net/manual/platform/linux/wayland.md)
+- [Input Methods on Linux](https://docs.ankiweb.net/manual/platform/linux/input-methods.md): Input Methods
+
+#### Card Templates
+
+- [Card Templates](https://docs.ankiweb.net/manual/templates/intro.md)
+- [Field Replacements](https://docs.ankiweb.net/manual/templates/fields.md)
+- [Card Generation](https://docs.ankiweb.net/manual/templates/generation.md)
+- [Styling & HTML](https://docs.ankiweb.net/manual/templates/styling.md)
+- [Checks and Errors](https://docs.ankiweb.net/manual/templates/errors.md)
+
+#### Importing
+
+- [Importing](https://docs.ankiweb.net/manual/importing/intro.md)
+- [Text Files](https://docs.ankiweb.net/manual/importing/text-files.md)
+- [Packaged Decks](https://docs.ankiweb.net/manual/importing/packaged-decks.md)
+
+## AnkiMobile
+
+### AnkiMobile Manual
+
+- [Introduction](https://docs.ankiweb.net/ankimobile/intro.md)
+- [Support](https://docs.ankiweb.net/ankimobile/support.md)
+- [User Interface Language](https://docs.ankiweb.net/ankimobile/interface-language.md)
+- [Cloud Sync](https://docs.ankiweb.net/ankimobile/syncing.md)
+- [Shared Decks](https://docs.ankiweb.net/ankimobile/shared-decks.md)
+- [The Deck List](https://docs.ankiweb.net/ankimobile/deck-list.md)
+- [The Study Screen](https://docs.ankiweb.net/ankimobile/study-screen.md)
+- [Study Tools](https://docs.ankiweb.net/ankimobile/study-tools.md)
+- [Adding & Editing](https://docs.ankiweb.net/ankimobile/editing.md)
+- [Preferences](https://docs.ankiweb.net/ankimobile/preferences.md)
+- [Collection Transfer](https://docs.ankiweb.net/ankimobile/collection-transfer.md)
+- [Text to Speech](https://docs.ankiweb.net/ankimobile/tts.md)
+- [MathJax](https://docs.ankiweb.net/ankimobile/mathjax.md)
+- [Custom Fonts](https://docs.ankiweb.net/ankimobile/custom-fonts.md)
+- [Night Mode Styling](https://docs.ankiweb.net/ankimobile/night-mode.md)
+- [URL Schemes](https://docs.ankiweb.net/ankimobile/url-schemes.md)
+- [Installing AnkiMobile on multiple devices](https://docs.ankiweb.net/ankimobile/reinstalling.md)
+- [AnkiMobile beta testing](https://docs.ankiweb.net/ankimobile/beta-testing.md)
+- [More Features](https://docs.ankiweb.net/ankimobile/more.md)
+
+## FAQs
+
+### Support FAQs
+
+- [Introduction](https://docs.ankiweb.net/faqs/intro.md)
+- [Restoring an Automatic Backup (Recovering from Data Loss)](https://docs.ankiweb.net/faqs/restoring-an-automatic-backup-recovering-from-data-loss.md)
+
+#### Cards and Notes
+
+- [Can I link cards together?](https://docs.ankiweb.net/faqs/linking-cards-together.md)
+- [Can I reveal parts of a card one at a time?](https://docs.ankiweb.net/faqs/can-i-reveal-parts-of-a-card-one-at-a-time.md)
+- [Card template has a problem](https://docs.ankiweb.net/faqs/card-template-has-a-problem.md)
+- [Cards are reversed / appearing twice](https://docs.ankiweb.net/faqs/cards-are-reversed-appearing-twice.md)
+- [Characters are cut off](https://docs.ankiweb.net/faqs/characters-are-cut-off.md)
+- [Customizing MathJax](https://docs.ankiweb.net/faqs/customizing-mathjax.md)
+- [Errors when recording](https://docs.ankiweb.net/faqs/errors-when-recording.md)
+- [Extra characters appearing on cards](https://docs.ankiweb.net/faqs/extra-characters-appearing-on-cards.md)
+- [Multiple choice questions](https://docs.ankiweb.net/faqs/multiple-choice-questions.md)
+- [No cloze found on card](https://docs.ankiweb.net/faqs/no-cloze-found-on-card.md)
+- [Printing cards in your collection](https://docs.ankiweb.net/faqs/printing-cards-in-your-collection.md)
+- [Removing duplicate note types](https://docs.ankiweb.net/faqs/removing-duplicate-note-types.md)
+- ["Some updates were ignored because note type has changed"](https://docs.ankiweb.net/faqs/some-updates-were-ignored-because-the-note-type-has-changed.md)
+- [Sound/image media files have gone missing!](https://docs.ankiweb.net/faqs/sounds-or-images-have-gone-missing.md)
+- [Splitting a field into multiple fields](https://docs.ankiweb.net/faqs/splitting-a-field-into-multiple-fields.md)
+- [Text to speech support](https://docs.ankiweb.net/faqs/text-to-speech-support.md)
+- [When adding a new card, some fields do not reset!](https://docs.ankiweb.net/faqs/sticky-fields.md)
+
+#### Decks
+
+- [A deck I want has disappeared from AnkiWeb](https://docs.ankiweb.net/faqs/a-deck-i-want-has-disappeared-from-ankiweb.md)
+- [A shared deck is not showing images/playing audio](https://docs.ankiweb.net/faqs/a-shared-deck-is-not-showing-images-or-playing-audio.md)
+- [Cards are being placed in the "Default" deck](https://docs.ankiweb.net/faqs/cards-are-being-placed-in-the-default-deck.md)
+- [Hiding Decks](https://docs.ankiweb.net/faqs/hiding-decks.md)
+- [How can I work with someone else to create a deck?](https://docs.ankiweb.net/faqs/how-can-i-work-with-someone-else-to-create-a-deck.md)
+- [How do I move cards between decks?](https://docs.ankiweb.net/faqs/how-do-i-move-cards-between-decks.md)
+- [Merging/combining two decks](https://docs.ankiweb.net/faqs/merging-or-combining-two-decks.md)
+- [Shared decks with broken Javascript](https://docs.ankiweb.net/faqs/shared-decks-with-broken-javascript.md)
+- [Importing/exporting fails due to timestamps in the future](https://docs.ankiweb.net/faqs/timestamps-in-the-future.md)
+
+#### Scheduling
+
+- [Anki's not showing me all my cards!](https://docs.ankiweb.net/faqs/anki-is-not-showing-me-all-my-cards.md)
+- [Can I study my cards in a particular order?](https://docs.ankiweb.net/faqs/study-in-a-particular-order.md)
+- [Due times after a break](https://docs.ankiweb.net/faqs/due-times-after-a-break.md)
+- [Extra copies of a card are coming up](https://docs.ankiweb.net/faqs/extra-copies-of-a-card-are-coming-up.md)
+- [Hard/good interval is longer than good/easy](https://docs.ankiweb.net/faqs/hard-good-interval-longer-than-good-easy.md)
+- [I'm going on vacation. Can I pause the scheduler?](https://docs.ankiweb.net/faqs/i-am-going-on-vacation-can-i-pause-the-scheduler.md)
+- [Learning steps are skipped or repeated](https://docs.ankiweb.net/faqs/learning-steps-skipped-or-repeated.md)
+- [Resetting progress in a deck](https://docs.ankiweb.net/faqs/resetting-progress-in-a-deck.md)
+- [Settings for using Anki to prepare for a large exam](https://docs.ankiweb.net/faqs/settings-for-using-anki-to-prepare-for-a-large-exam.md)
+- [Old scheduler versions](https://docs.ankiweb.net/faqs/the-anki-2.1-scheduler.md): The Anki 2.1 scheduler
+- [The Anki v3 Scheduler](https://docs.ankiweb.net/faqs/the-2021-scheduler.md)
+- [Timezone handling changes](https://docs.ankiweb.net/faqs/timezone-handling-changes.md)
+- [What spaced repetition algorithm does Anki use?](https://docs.ankiweb.net/faqs/what-spaced-repetition-algorithm.md)
+- [Frequently asked questions about FSRS](https://docs.ankiweb.net/faqs/frequently-asked-questions-about-fsrs.md)
+
+#### Synchronising and Ankiweb
+
+- [AnkiWeb account removal](https://docs.ankiweb.net/faqs/ankiweb-account-removal.md)
+- [Are there limits on file sizes on AnkiWeb?](https://docs.ankiweb.net/faqs/are-there-limits-on-file-sizes-on-ankiweb.md)
+- [Can I sync only some of my decks?](https://docs.ankiweb.net/faqs/can-i-sync-only-some-of-my-decks.md)
+- [Email verification](https://docs.ankiweb.net/faqs/email-verification.md)
+- [Emails not being received due to "spam"](https://docs.ankiweb.net/faqs/emails-not-being-received.md): Emails not being received
+- ["Error establishing a secure connection." when syncing](https://docs.ankiweb.net/faqs/error-establishing-a-secure-connection-when-syncing.md)
+- [Media files may take time to sync](https://docs.ankiweb.net/faqs/media-files-may-take-time-to-sync.md)
+- [Outlook.com silently discards email](https://docs.ankiweb.net/faqs/outlook-silently-discards-email.md)
+- [Synchronizing multiple profiles](https://docs.ankiweb.net/faqs/synchronizing-multiple-profiles.md)
+- ['Syncing failed: Connection timed out' errors when syncing](https://docs.ankiweb.net/faqs/syncing-failed-connection-timed-out-errors-when-syncing.md)
+- [Sounds/images are not appearing on AnkiWeb or the mobile clients](https://docs.ankiweb.net/faqs/sounds-or-images-are-not-appearing-on-ankiweb-or-the-mobile-clients.md)
+
+#### Anki Desktop
+
+- [A shortcut key is not working](https://docs.ankiweb.net/faqs/shortcut-not-working.md)
+- [Anki must be able to connect to a local port](https://docs.ankiweb.net/faqs/anki-must-be-able-to-connect-to-a-local-port.md)
+- [Anki says my clock is wrong](https://docs.ankiweb.net/faqs/anki-says-my-clock-is-wrong.md)
+- [Changing the font](https://docs.ankiweb.net/faqs/changing-the-font.md)
+- [Changing the interface language](https://docs.ankiweb.net/faqs/changing-the-interface-language.md)
+- [My antivirus program says Anki is infected!](https://docs.ankiweb.net/faqs/my-antivirus-program-says-anki-is-infected.md)
+- [Running from Python](https://docs.ankiweb.net/faqs/running-from-python.md)
+- [Screenshots large and blurry on retina displays](https://docs.ankiweb.net/faqs/screenshots-large-and-blurry-on-retina-displays.md)
+
+#### Anki Mobile
+
+- [Requesting a refund for AnkiMobile](https://docs.ankiweb.net/faqs/requesting-a-refund-for-ankimobile.md)
+- [Retrieving AnkiMobile crash logs](https://docs.ankiweb.net/faqs/retrieving-ankimobile-crash-logs.md)
+- [Why does AnkiMobile cost more than a typical mobile app?](https://docs.ankiweb.net/faqs/why-does-ankimobile-cost-more-than-a-typical-mobile-app.md)
+
+#### Other Apps
+
+- [AnkiDroid has a separate support site](https://docs.ankiweb.net/faqs/ankidroid-has-a-separate-support-site.md)
+- [Anki knockoffs](https://docs.ankiweb.net/faqs/anki-knockoffs.md)
+- [AnkiUniversal is not supported here](https://docs.ankiweb.net/faqs/ankiuniversal-is-not-supported-here.md)
+- [We do not make robots](https://docs.ankiweb.net/faqs/we-do-not-make-robots.md)
+
+#### Misc
+
+- [Anki 2.0 support has ended](https://docs.ankiweb.net/faqs/anki-2.0-support-has-ended.md)
+- [Anki 2.0 add-ons](https://docs.ankiweb.net/faqs/anki-2.0-add-ons.md)
+- [Can I use Anki in a company or school?](https://docs.ankiweb.net/faqs/can-i-use-anki-in-a-company-or-school.md)
+- [How can I donate / contribute?](https://docs.ankiweb.net/faqs/how-can-i-donate.md): How can I donate?
+
+## Add-ons
+
+### Add-on Development
+
+- [Introduction](https://docs.ankiweb.net/addons/intro.md)
+- [Support](https://docs.ankiweb.net/addons/support.md)
+- [Editor Setup](https://docs.ankiweb.net/addons/editor-setup.md)
+- [MyPy](https://docs.ankiweb.net/addons/mypy.md)
+- [Add-on Folders](https://docs.ankiweb.net/addons/addon-folders.md)
+- [A Basic Add-on](https://docs.ankiweb.net/addons/a-basic-addon.md)
+- [The 'anki' Module](https://docs.ankiweb.net/addons/the-anki-module.md)
+- [Command-Line Use](https://docs.ankiweb.net/addons/command-line-use.md)
+- [Hooks & Filters](https://docs.ankiweb.net/addons/hooks-and-filters.md): Hooks and Filters
+- [Console Output](https://docs.ankiweb.net/addons/console-output.md)
+- [Background Operations](https://docs.ankiweb.net/addons/background-ops.md)
+- [Qt and PyQt](https://docs.ankiweb.net/addons/qt.md)
+- [Python Modules](https://docs.ankiweb.net/addons/python-modules.md)
+- [Add-on Config](https://docs.ankiweb.net/addons/addon-config.md)
+- [Reviewer Javascript](https://docs.ankiweb.net/addons/reviewer-javascript.md)
+- [Debugging](https://docs.ankiweb.net/addons/debugging.md)
+- [Monkey Patching and Method Wrapping](https://docs.ankiweb.net/addons/monkey-patching.md): Monkey Patching
+- [Sharing Add-ons](https://docs.ankiweb.net/addons/sharing.md)
+- [Hooks Reference](https://docs.ankiweb.net/addons/hooks-reference.md): A generated reference of all hooks and filters available in Anki for add-on development.
+- [Porting 2.1.x Add-ons](https://docs.ankiweb.net/addons/porting2.1.x.md)
+- [Porting Anki 2.0 add-ons](https://docs.ankiweb.net/addons/porting2.0.md)
+
+## Developers
+
+### Core Development
+
+- [Anki development](https://docs.ankiweb.net/developers/development.md)
+- [Python API](https://docs.ankiweb.net/developers/api-python.md)
+- [Rust API](https://docs.ankiweb.net/developers/api-rust.md)
+- [Anki Architecture](https://docs.ankiweb.net/developers/architecture.md)
+- [The build system](https://docs.ankiweb.net/developers/build.md)
+- [Contributing Code](https://docs.ankiweb.net/developers/contributing.md)
+- [Dependabot updates](https://docs.ankiweb.net/developers/dependabot.md)
+- [Building and running Anki in Docker](https://docs.ankiweb.net/developers/docker.md)
+- [Editing/IDEs](https://docs.ankiweb.net/developers/editing.md)
+- [Language Bridge](https://docs.ankiweb.net/developers/language_bridge.md)
+- [Linux-specific notes](https://docs.ankiweb.net/developers/linux.md)
+- [Mac-specific notes](https://docs.ankiweb.net/developers/mac.md)
+- [Windows](https://docs.ankiweb.net/developers/windows.md)
+- [Ninja](https://docs.ankiweb.net/developers/ninja.md)
+- [Protocol Buffers](https://docs.ankiweb.net/developers/protobuf.md)
+- [Releasing](https://docs.ankiweb.net/developers/releasing.md)
+- [Building and running Anki sync server in Docker](https://docs.ankiweb.net/developers/syncserver.md)
+- [Writing Unit Tests for Anki](https://docs.ankiweb.net/developers/unit-testing.md)
+- [Testing and Coverage](https://docs.ankiweb.net/developers/testing-coverage.md)
+- [End-to-End Testing with Playwright](https://docs.ankiweb.net/developers/e2e-testing.md)
+- [SonarCloud analysis](https://docs.ankiweb.net/developers/sonarcloud.md)
+
+## Translators
+
+### Translation Guide
+
+- [Getting Started](https://docs.ankiweb.net/translators/intro.md)
+- [AnkiMobile](https://docs.ankiweb.net/translators/ankimobile.md)
+- [Translating AnkiDroid](https://docs.ankiweb.net/translators/ankidroid.md)
+
+#### Translating Anki
+
+- [Translating Anki's User Interface](https://docs.ankiweb.net/translators/anki/intro.md)
+- [Core Interface](https://docs.ankiweb.net/translators/anki/core.md)
+- [Desktop Interface](https://docs.ankiweb.net/translators/anki/desktop.md)
+- [The Manual](https://docs.ankiweb.net/translators/anki/manual.md)
+- [For Developers](https://docs.ankiweb.net/translators/anki/developers.md)
+
+## Releases
+
+### Release Notes
+
+- [Intro & Downloads](https://docs.ankiweb.net/releases/betas/intro.md)
+- [Known Issues](https://docs.ankiweb.net/releases/changes/known-issues.md)
+- [Changes](https://docs.ankiweb.net/releases/changes/changes/intro.md)
+- [Changes in 23.12+](https://docs.ankiweb.net/releases/changes/changes/github.md)
+- [Changes in 23.10](https://docs.ankiweb.net/releases/changes/changes/23.10.md)
+- [Changes in 2.1.60 to 69](https://docs.ankiweb.net/releases/changes/changes/2.1.60-66.md)
+- [Changes in 2.1.50 to 59](https://docs.ankiweb.net/releases/changes/changes/2.1.50-59.md)
+- [Changes in 2.1.40 to 49](https://docs.ankiweb.net/releases/changes/changes/2.1.40-49.md)
+- [Changes in 2.1.30 to 39](https://docs.ankiweb.net/releases/changes/changes/2.1.30-39.md)
+- [Changes in 2.1.20 to 29](https://docs.ankiweb.net/releases/changes/changes/2.1.20-29.md)
+- [Changes in 2.1.10 to 19](https://docs.ankiweb.net/releases/changes/changes/2.1.10-19.md)
+- [Changes in 2.1.0 to 2.1.9](https://docs.ankiweb.net/releases/changes/changes/2.1.0-9.md)
+- [Changes in Anki 2.1](https://docs.ankiweb.net/releases/changes/changes/2.1.md)
+- [2021 Scheduler](https://docs.ankiweb.net/releases/betas/2021-scheduler.md)
+- [Changes in 23.12+](https://docs.ankiweb.net/releases/betas/github.md)
+- [Changes in 2.1.66](https://docs.ankiweb.net/releases/betas/anki23.10.md)
+- [Changes in 2.1.66](https://docs.ankiweb.net/releases/betas/anki2.1.66.md)
+- [Changes in 2.1.62](https://docs.ankiweb.net/releases/betas/anki2.1.62.md)
+- [Changes in 2.1.61](https://docs.ankiweb.net/releases/betas/anki2.1.61.md)
+- [Changes in 2.1.57](https://docs.ankiweb.net/releases/betas/anki2.1.57.md)
+- [Changes in 2.1.56](https://docs.ankiweb.net/releases/betas/anki2.1.56.md)
+- [Changes in 2.1.55](https://docs.ankiweb.net/releases/betas/anki2.1.55.md)
+- [Changes in 2.1.54](https://docs.ankiweb.net/releases/betas/anki2.1.54.md)
+- [Changes in 2.1.53](https://docs.ankiweb.net/releases/betas/anki2.1.53.md)
+- [Changes in 2.1.52](https://docs.ankiweb.net/releases/betas/anki2.1.52.md)
+- [Changes in 2.1.51](https://docs.ankiweb.net/releases/betas/anki2.1.51.md)
+- [Changes in 2.1.50](https://docs.ankiweb.net/releases/betas/anki2.1.50.md)
+- [Changes in 2.1.48](https://docs.ankiweb.net/releases/betas/anki2.1.48.md)
+- [Changes in 2.1.47](https://docs.ankiweb.net/releases/betas/anki2.1.47.md)
+- [Changes in 2.1.45](https://docs.ankiweb.net/releases/betas/anki2.1.45.md)
+- [Changes in 2.1.44](https://docs.ankiweb.net/releases/betas/anki2.1.44.md)
+- [Changes in 2.1.43](https://docs.ankiweb.net/releases/betas/anki2.1.43.md)
+- [Changes in 2.1.41](https://docs.ankiweb.net/releases/betas/anki2.1.41.md)
+- [Older](https://docs.ankiweb.net/releases/betas/older.md)
+
+## Optional
+
+- [Anki](https://apps.ankiweb.net)
+- [GitHub](https://github.com/ankitects/anki)
+
+> The links below point to documentation indexes. Follow each `/_llms/` index recursively until you reach documentation pages.
+
+## Indexes
+
+- [German (1 page)](https://docs.ankiweb.net/_llms/de.txt): Documentation for German.
+- [Spanish (1 page)](https://docs.ankiweb.net/_llms/es.txt): Documentation for Spanish.
+- [French (1 page)](https://docs.ankiweb.net/_llms/fr.txt): Documentation for French.
+- [Italian (1 page)](https://docs.ankiweb.net/_llms/it.txt): Documentation for Italian.
+- [Indonesian (1 page)](https://docs.ankiweb.net/_llms/id.txt): Documentation for Indonesian.
+- [Uzbek (1 page)](https://docs.ankiweb.net/_llms/uz.txt): Documentation for Uzbek.
+- [Polish (1 page)](https://docs.ankiweb.net/_llms/pl.txt): Documentation for Polish.
+- [Portuguese (1 page)](https://docs.ankiweb.net/_llms/pt.txt): Documentation for Portuguese.
+- [Russian (1 page)](https://docs.ankiweb.net/_llms/ru.txt): Documentation for Russian.
+- [Ukrainian (1 page)](https://docs.ankiweb.net/_llms/uk.txt): Documentation for Ukrainian.
+- [Arabic (112 pages)](https://docs.ankiweb.net/_llms/ar.txt): Documentation for Arabic.
+- [Japanese (1 page)](https://docs.ankiweb.net/_llms/ja.txt): Documentation for Japanese.
+- [Simplified Chinese (1 page)](https://docs.ankiweb.net/_llms/zh-hans.txt): Documentation for Simplified Chinese.
+
+
+This documentation is built and hosted on [Mintlify](https://mintlify.com), a developer documentation platform.

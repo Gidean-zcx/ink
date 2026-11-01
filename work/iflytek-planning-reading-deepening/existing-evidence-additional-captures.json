@@ -1,0 +1,58 @@
+[
+  {
+    "evidence_id": "E-ILD-17",
+    "before": [
+      {
+        "checked_on": "2026-10-27",
+        "access_mode": "anonymous_public_browser_help_model_selection",
+        "raw_work_path": "work/iflytek-video-controls-deepening/browser/04-t30pro-directory.json",
+        "raw_sha256": "0c97b1732308b7d30f6d9d016da33d58d666c83c3c26b00ef6c646f082dc04cb",
+        "archived_artifact": "artifacts/iflytek-video-controls-deepening/source-notes.md",
+        "sha256": "779fb67bc48194cf3ec6b38d09bd1a54eec7c5a9a9cc6cd46dc54c1b7aebc40e",
+        "note": "实际选择T30Pro，34功能标题；四条所选教程另立视频URL证据；不计产品实操",
+        "hands_on": false,
+        "artifact_hashes": {
+          "artifacts/iflytek-video-controls-deepening/04-t30pro-directory.json": "0c97b1732308b7d30f6d9d016da33d58d666c83c3c26b00ef6c646f082dc04cb",
+          "artifacts/iflytek-video-controls-deepening/04-t30pro-directory.png": "9c2656d1ff8f66556cab5146d2f3873375c817327629711cb8e7e395adfdb2c8",
+          "artifacts/iflytek-video-controls-deepening/video-samples.json": "ac833622b81ee6cddbfb82b7ff08e3eeba05563be0de2d29519afac83fdf2c97",
+          "artifacts/iflytek-video-controls-deepening/network-events.json": "f678e1ef6c8533b6dd70e6671676f8a75120a0d21c13c64762221de1bfa30973"
+        }
+      }
+    ],
+    "after": [
+      {
+        "checked_on": "2026-10-27",
+        "access_mode": "anonymous_public_browser_help_model_selection",
+        "raw_work_path": "work/iflytek-video-controls-deepening/browser/04-t30pro-directory.json",
+        "raw_sha256": "0c97b1732308b7d30f6d9d016da33d58d666c83c3c26b00ef6c646f082dc04cb",
+        "archived_artifact": "artifacts/iflytek-video-controls-deepening/source-notes.md",
+        "sha256": "779fb67bc48194cf3ec6b38d09bd1a54eec7c5a9a9cc6cd46dc54c1b7aebc40e",
+        "note": "实际选择T30Pro，34功能标题；四条所选教程另立视频URL证据；不计产品实操",
+        "hands_on": false,
+        "artifact_hashes": {
+          "artifacts/iflytek-video-controls-deepening/04-t30pro-directory.json": "0c97b1732308b7d30f6d9d016da33d58d666c83c3c26b00ef6c646f082dc04cb",
+          "artifacts/iflytek-video-controls-deepening/04-t30pro-directory.png": "9c2656d1ff8f66556cab5146d2f3873375c817327629711cb8e7e395adfdb2c8",
+          "artifacts/iflytek-video-controls-deepening/video-samples.json": "ac833622b81ee6cddbfb82b7ff08e3eeba05563be0de2d29519afac83fdf2c97",
+          "artifacts/iflytek-video-controls-deepening/network-events.json": "f678e1ef6c8533b6dd70e6671676f8a75120a0d21c13c64762221de1bfa30973"
+        }
+      },
+      {
+        "checked_on": "2026-10-27",
+        "access_mode": "anonymous_public_browser_help_model_selection",
+        "raw_work_path": "work/iflytek-planning-reading-deepening/browser/02-t30pro-directory.json",
+        "raw_sha256": "4cab13424e2f281e1afba19e757a40635f559b0bb472c98288237e4fcd05df8a",
+        "archived_artifact": "artifacts/iflytek-planning-reading-deepening/source-notes.md",
+        "sha256": "5cebc6b696f39b969b919d8d36dc637022cfd6195e64e238754ebd49f7fbb650",
+        "note": "再选T30Pro并打开四条新的教程；样本视频另E-IFPR-01至04，不计产品操作",
+        "hands_on": false,
+        "artifact_hashes": {
+          "artifacts/iflytek-planning-reading-deepening/02-t30pro-directory.json": "4cab13424e2f281e1afba19e757a40635f559b0bb472c98288237e4fcd05df8a",
+          "artifacts/iflytek-planning-reading-deepening/02-t30pro-directory.png": "d370ec872f4012f2870650c3570335f5c63611c284ca91190d3cc71d0376e8ec",
+          "artifacts/iflytek-planning-reading-deepening/video-samples.json": "147a0af2e098c02dd25a22f8f0054663484527259fa63cd2c36a926ade818bcc",
+          "artifacts/iflytek-planning-reading-deepening/network-events.json": "cc8a62b2e8af0275f753a764f5f1b222b27b9daa158eb104fe761fda4a15f907",
+          "artifacts/iflytek-planning-reading-deepening/commands.json": "b0ec66bf1d0aaae42e3e13f016d6f012608f704d408fffd4acfbaebcc0fdc7c1"
+        }
+      }
+    ]
+  }
+]

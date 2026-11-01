@@ -1,0 +1,51 @@
+Frequently asked questions
+Available features for the Gemini Notebook mobile app
+The early version of the app includes many core features of Gemini Notebook and is designed to help you understand anything, anywhere. Learn more about the Gemini Notebook mobile app.
+I can't access Gemini Notebook
+Before you access Gemini Notebook, make sure you verify your age in your Google Account. Learn how to access age-restricted content and features.
+Check if your country is supported in the 180+ regions where Gemini app is available.
+If you use a work or school email address and can't access the app, learn how to turn additional Google services on or off. To turn on the Gemini Notebook app, work with your workspace admin.
+I can't access Gemini Notebook with my work or school email
+Businesses, schools and universities, organizations, and enterprise users can access higher limits and expanded features with enterprise-grade data protection through:
+Google Workspace
+Google Workspace for Education
+Google Cloud
+If you use a work or school email address and can't access the app, learn how to turn additional Google services on or off. To turn on the Gemini Notebook app, work with your workspace admin.
+Learn more about using Gemini Notebook with a work or school Google account.
+My question wasn't answered
+Sometimes Gemini Notebook can’t answer your question because of:
+Safety flags: The content of your source contains language that triggers a safety flag. This occurs with sensitive topics like violence, sexuality, or obscenity, even in historical contexts.
+Unclear phrases: When your notebook contains many sources, Gemini Notebook retrieves the most relevant information based on your question, then builds a response from it. A specific question helps Gemini Notebook locate the most relevant pieces of information.
+Tip: Make your question more precise and understandable.
+Information not in sources: Gemini Notebook answers questions based on the information provided in your uploaded sources. If the answer isn't in the source material, it won't provide a response.
+How to report offensive responses generated in Gemini Notebook
+If you think a response generated in Gemini Notebook is offensive or unsafe, let us know.
+To report a response, select thumbs down   Offensive/unsafe  Submit.
+We’ll review the report and take appropriate actions to improve the safety of our model.
+Why does the share menu show a lock icon?
+While a notebook isn't shared with anyone the lock icon will appear indicating the notebook is private. It changes to the shared icon when the notebook is shared individually with users, and a globe icon when the notebook is publicly shared.
+How to report a privately shared Notebook for my infringed rights
+If you find content in a privately shared notebook that violates the law, let us know by either opening the settings menu in your notebook and selecting Report Notebook or by visiting this direct link.
+We’ll review the material and consider if we’ll block, limit, or remove access to it.
+Tip: You can also report through report content on Google.
+My data's privacy in Gemini Notebook
+Your data will never be shared by Gemini Notebook. Learn how Gemini Notebook protects your data.
+File size limit for sources in Gemini Notebook
+The current limit is 500,000 words per source or up to 200MB for local uploads. There’s no page limit.
+My source import failed
+Sources can’t be imported into Gemini Notebook if:
+It exceeds the allowed 500,000 word limit per source.
+The file size exceeds the allowed 200MB limit.
+Your original PDF file is copy-protected.
+How sources, chat context, and notes are used in prompts
+Notes: Only when you specifically select it.
+Sources: Always used in either the entire set or the subset you select.
+Conversation history: Used to generate responses.
+I don't always get citations
+If your source content is too short, Gemini Notebook references the entire document without a cited individual text from your source.
+Recover deleted notes in Gemini Notebook
+Unfortunately, there's currently no way to recover deleted notes.
+Duplicate a notebook
+This feature isn’t supported yet.
+Still have questions
+Send your questions and support request to notebooklm-user-support@google.com. If you’re a workspace user, contact Google Workspace support.

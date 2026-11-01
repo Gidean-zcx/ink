@@ -1,0 +1,8 @@
+Can I customize how summaries work?
+Yes. Configure prompts, personas, languages, and button behavior in Preferences > Intelligence.
+Related questions
+What are article summaries?
+How do I generate a summary?
+Can I use custom prompts with summaries?
+Where are summaries stored?
+Are article summaries available in all plans?

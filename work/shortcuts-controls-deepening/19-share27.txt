@@ -1,0 +1,31 @@
+Share shortcuts on iPhone or iPad
+You can share your shortcuts with friends through iCloud or as a file. You can add import questions to your shortcut before sharing to personalize the shortcut on your friend’s device.
+Share a shortcut through iCloud
+In the Shortcuts app  on your iPhone or iPad, tap  on a shortcut.
+In the shortcut editor, tap , then do one of the following:
+Share a shortcut through an app: Tap an app (such as Messages or Mail) in the row of share options, then use the app to send the link.
+When the recipient taps the link, a description of the shortcut is displayed. When the recipient taps Get Shortcut, the shortcut is added to their shortcuts collection.
+Share a shortcut as a copied link: Tap Copy iCloud Link, tap Copy Link, then paste the link into a sharing app (such as Messages or an email app).
+When the recipient taps the link, a description of the shortcut is displayed. When the recipient taps Get Shortcut, the shortcut is added to their shortcuts collection.
+Tip: You can also share a shortcut by tapping the down arrow next to the shortcut name in the shortcut editor, then choosing Export File.
+Share a shortcut as a file
+In the Shortcuts app  on your iPhone or iPad, tap  on a shortcut to open it in the shortcut editor, then tap .
+Tap Options, tap File, then choose one of the following:
+Anyone: Anyone can run your shortcut. Apple will receive a copy of your shortcut for validation (to prevent unauthorized tampering when you share it).
+People Who Know Me: Only people who have you in their contacts will be able to run your shortcut. Your contact info will be included in the shortcut file.
+Tap Done.
+Do one of the following:
+Send the shortcut as an attached file in a sharing app: Tap an app (such as Messages or Mail) in the row of share options, then use the app to send the attached file.
+When the recipient taps the link, a description of the shortcut is displayed. When the recipient taps Add Shortcut, the shortcut is added to their shortcuts collection.
+Save the shortcut to the Files app: Tap Save to Files, then choose a location on your device or in iCloud Drive.
+Tip: You can also share a shortcut by tapping the down arrow next to the shortcut name in the shortcut editor, then choosing Export File.
+Stop sharing a shortcut
+When you share a shortcut, the shortcut’s link is available in iCloud (at https://www.icloud.com/shortcuts/shortcut ID). To stop sharing a shortcut, you must first open the shortcut link in the Shortcuts app, then open the shortcut in the  app to access the Stop Sharing button.
+In the Shortcuts app  on your iPhone or iPad, tap  on the shared shortcut, then tap .
+Tap Copy iCloud Link, then tap Copy Link in the dialog that appears.
+On your device, open Safari, paste the link in the search field, then tap Go.
+The shortcut appears on the webpage.
+Swipe down from the center of the screen to display the Shortcuts Open button, then tap Open.
+The shortcut opens in the Shortcuts app.
+In the upper-right corner, tap , then tap Stop Sharing.
+Tap Stop Sharing in the dialog that appears.

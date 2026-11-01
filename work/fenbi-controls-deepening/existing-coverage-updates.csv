@@ -1,0 +1,7 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M032-01,M-032,行测模考报名与岗位锁定,D2,E-FENB-03;E-FBCD-03;E-FBCD-07,FAQ通用卷、岗位导入与锁定；2019图有职位编辑/报名结果；无法入场或答题仅引导客服,现行构建入口、报名失败、答题与交卷恢复；FAQ内容时间非版本,static_reference_only,false,cases/M-032-fenbi.md,2026-10-26
+F-M032-02,M-032,错过行测模考后补练及看报告,D2,E-FENB-03;E-FBCD-03;E-FBCD-09,补练有分无职位排名；2020托管帮助：年份/国省考季→折线场次→查看报告,具体托管租户官方反链；当前入口、空报告/失败、考中恢复与补交,not_observed,false,cases/M-032-fenbi.md,2026-10-26
+F-M032-04,M-032,错题重做与人工移出,D1,E-FENB-05;E-FENB-06;E-FBCD-04;E-FBCD-05;E-FBCD-08,备考文章声明自动汇集、筛选/重做/归因/移除；2020四方块目录与2026我的入口并列,控件与执行结果未核；清理确认/误删恢复/统计重算、首次与历次答案口径、同步,not_observed,false,cases/M-032-fenbi.md,2026-10-26
+F-M032-05,M-032,收藏疑难题并回看,D1,E-FENB-06;E-FBCD-05;E-FBCD-08,文章声明练习页或我的收藏；2020托管目录按考试类别列我的收藏,收藏保存反馈、取消与撤销、重复与同步；当前构建与具体租户官方反链,not_observed,false,cases/M-032-fenbi.md,2026-10-26
+F-M032-06,M-032,套卷计时与提交后耗时,D1,E-FENB-08;E-FBCD-06,计时模式/模块耗时是备考文章声明；不可暂停未证为技术规则,现行套卷答题卡、改选/跳题、确认/漏题/超时、后台/断网与重复提交,not_observed,false,cases/M-032-fenbi.md,2026-10-26
+F-M032-08,M-032,课程离线与PC机考范围,D1,E-FENB-01;E-FENB-02;E-FBCD-01;E-FBCD-02,课程离线；商店iOS6.19.9与下载页6.19.7并存；PC版本独立,题库/草稿离线、缓存清理及端间进度同步,not_observed,false,cases/M-032-fenbi.md,2026-10-26

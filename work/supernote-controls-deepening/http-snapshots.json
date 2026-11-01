@@ -1,0 +1,83 @@
+[
+  {
+    "name": "03-todo",
+    "url": "https://support.supernote.com/the-to-do-app",
+    "final_url": "https://support.supernote.com/the-to-do-app",
+    "status": 200,
+    "bytes": 76875,
+    "sha256": "f28ccf5d4a31a82a0e849422d7f9de1430e02d5625f61374de1d713edb709ab7",
+    "path": "work/supernote-controls-deepening/03-todo.html"
+  },
+  {
+    "name": "04-search",
+    "url": "https://support.supernote.com/en_US/organizing/global-search-using-categorization",
+    "final_url": "https://support.supernote.com/en_US/organizing/global-search-using-categorization",
+    "status": 200,
+    "bytes": 69069,
+    "sha256": "94e6b5c5b8b2c43a0d583c54fa2d8deca2c36e5c9bddf96710e9ceb967e901cd",
+    "path": "work/supernote-controls-deepening/04-search.html"
+  },
+  {
+    "name": "05-recognition",
+    "url": "https://support.supernote.com/en_US/Tools-Features/handwriting-recognition",
+    "final_url": "https://support.supernote.com/en_US/Tools-Features/handwriting-recognition",
+    "status": 200,
+    "bytes": 77275,
+    "sha256": "cf81dd665d4d32ebe4a367d6a9c00d0727a096b694af9b5db86a401269c7a55c",
+    "path": "work/supernote-controls-deepening/05-recognition.html"
+  },
+  {
+    "name": "06-edit",
+    "url": "https://support.supernote.com/en_US/organizing/2126285-untitled-article",
+    "final_url": "https://support.supernote.com/en_US/organizing/2126285-untitled-article",
+    "status": 200,
+    "bytes": 63028,
+    "sha256": "f81f3b6da809cf05d0495d4e59f71193fd4a7a9efa12fe7fdb778c908cd9eb8a",
+    "path": "work/supernote-controls-deepening/06-edit.html"
+  },
+  {
+    "name": "07-toolbar",
+    "url": "https://support.supernote.com/en_US/introduction-to-the-toolbar",
+    "final_url": "https://support.supernote.com/en_US/introduction-to-the-toolbar",
+    "status": 200,
+    "bytes": 74604,
+    "sha256": "4702d5725726aa8fe506c45b0f23518359ac0fc8b48d73eff16a73500c5398cf",
+    "path": "work/supernote-controls-deepening/07-toolbar.html"
+  },
+  {
+    "name": "08-auto-sync",
+    "url": "https://support.supernote.com/supernote-cloud-auto-sync?kb_language=en_US",
+    "final_url": "https://support.supernote.com/supernote-cloud-auto-sync?kb_language=en_US",
+    "status": 200,
+    "bytes": 58651,
+    "sha256": "849c9b60911ecc07a459e4770becf3717e239e89f3d493ac776a4d6edde8042e",
+    "path": "work/supernote-controls-deepening/08-auto-sync.html"
+  },
+  {
+    "name": "09-sync-trigger",
+    "url": "https://support.supernote.com/en_US/faq/when-do-my-notes-get-automatically-synced-to-supernote-cloud-",
+    "final_url": "https://support.supernote.com/en_US/faq/when-do-my-notes-get-automatically-synced-to-supernote-cloud-",
+    "status": 200,
+    "bytes": 59281,
+    "sha256": "e68d007d66b3c273c628fc740a0ec12ae0513ab60d6089a4a710da7fad9eb5d1",
+    "path": "work/supernote-controls-deepening/09-sync-trigger.html"
+  },
+  {
+    "name": "10-changelog",
+    "url": "https://support.supernote.com/changelog-for-manta-and-nomad",
+    "final_url": "https://support.supernote.com/changelog-for-manta-and-nomad",
+    "status": 200,
+    "bytes": 130039,
+    "sha256": "28ce34428094d1f9778d5071ccb79a4bfdc7ea946170099001cc9e61823b1030",
+    "path": "work/supernote-controls-deepening/10-changelog.html"
+  },
+  {
+    "name": "11-transfer",
+    "url": "https://support.supernote.com/en_US/organizing/transfer-files",
+    "final_url": "https://support.supernote.com/en_US/organizing/transfer-files",
+    "status": 200,
+    "bytes": 69508,
+    "sha256": "0067e8b8dee8fa2ba031271ed4fd8ea5668c473163cf8a6138f568a30e3ec54d",
+    "path": "work/supernote-controls-deepening/11-transfer.html"
+  }
+]

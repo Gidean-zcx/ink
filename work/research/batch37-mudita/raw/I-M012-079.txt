@@ -1,0 +1,12 @@
+Can the Mudita Kompakt be Rooted?
+Modified on: Sat, 3 Oct, 2026 at 8:37 AM
+The Mudita Kompakt's system (MuditaOS K) is based on AOSP. It is technically possible for advanced users to access the phone's bootloader and flash a different OS. However, we advise against doing so and will not provide any official support for such attempts.
+Risks of Rooting the Mudita Kompakt
+Installing a different OS on the Kompakt will void the phone's warranty.
+We won't be providing the ROM for MuditaOS K.
+Rooting can lead to unpredictable results and negatively impact the phone’s performance and usability. MuditaOS K was developed specifically for the Kompakt and its E-ink display. Software not optimized for this device might not perform as intended and can be inconvenient to use.
+Was this article helpful?
+No
+Yes
+That’s Great!
+Thank you for your feedback

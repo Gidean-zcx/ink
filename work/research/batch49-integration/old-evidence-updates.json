@@ -1,0 +1,527 @@
+[
+  {
+    "owner": "docs/research/interaction-library/batches/antennapod-controls-deepening-evidence.jsonl",
+    "before": {
+      "evidence_id": "E-APCD-03",
+      "product_id": "M-040",
+      "title": "3.12.3 global settings declaration inventory",
+      "url": "https://github.com/AntennaPod/AntennaPod/blob/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/ui/preferences/src/main/res/xml",
+      "checked_on": "2026-10-27",
+      "source_type": "official_source_code",
+      "access_mode": "official_http_text_and_targeted_static_source_read",
+      "version_scope": "AntennaPod Android 3.12.3; commit 175e5ef8fe3e125a5014d70ef0c57cf85661c71b; static source only",
+      "app_build": "3.12.3 (versionCode 3120395)",
+      "firmware_version": null,
+      "source_updated_on": null,
+      "locator": "11 preferences XML; 84 keyed nodes; referenced strings and visibility flags",
+      "note": "详见归档记录对应E行；相关原件清单在work/antennapod-controls-deepening/source-manifest.json。目录声明不等于流程完成。",
+      "hands_on": false,
+      "visual_observed": false,
+      "archived_artifact": "artifacts/antennapod-controls-deepening/functional-inventory.csv",
+      "sha256": "35c442ea779bc39c25e66dc576f953790fafc61951d38e1a1b26871dc63e96d2",
+      "capture_state": "source_text_and_derived_notes_archived_no_product_visual",
+      "supersedes": null,
+      "raw_work_path": "work/antennapod-controls-deepening/settings-manifest.json",
+      "raw_sha256": "d533e0efa450351df9d8c848986efbe7d5843476cfd6dfd96a988d843aa7fca1"
+    },
+    "after": {
+      "evidence_id": "E-APCD-03",
+      "product_id": "M-040",
+      "title": "3.12.3 global settings declaration inventory",
+      "url": "https://github.com/AntennaPod/AntennaPod/blob/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/ui/preferences/src/main/res/xml",
+      "checked_on": "2026-10-27",
+      "source_type": "official_source_code",
+      "access_mode": "official_http_text_and_targeted_static_source_read",
+      "version_scope": "AntennaPod Android 3.12.3; commit 175e5ef8fe3e125a5014d70ef0c57cf85661c71b; static source only",
+      "app_build": "3.12.3 (versionCode 3120395)",
+      "firmware_version": null,
+      "source_updated_on": null,
+      "locator": "11 preferences XML; 84 keyed nodes; referenced strings and visibility flags",
+      "note": "详见归档记录对应E行；相关原件清单在work/antennapod-controls-deepening/source-manifest.json。目录声明不等于流程完成。",
+      "hands_on": false,
+      "visual_observed": false,
+      "archived_artifact": "artifacts/antennapod-controls-deepening/functional-inventory.csv",
+      "sha256": "35c442ea779bc39c25e66dc576f953790fafc61951d38e1a1b26871dc63e96d2",
+      "capture_state": "source_text_and_derived_notes_archived_no_product_visual",
+      "supersedes": null,
+      "raw_work_path": "work/antennapod-controls-deepening/settings-manifest.json",
+      "raw_sha256": "d533e0efa450351df9d8c848986efbe7d5843476cfd6dfd96a988d843aa7fca1",
+      "additional_captures": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "local_pinned_source_reread_no_refetch",
+          "source_files": [
+            {
+              "raw_work_path": "work/antennapod-controls-deepening/src/storage/preferences/src/main/java/de/danoeh/antennapod/storage/preferences/UserPreferences.java",
+              "raw_sha256": "2ad61f7569ae27f403f1c31ffcbda7752ba440a778e351a3c28b71c27e546430",
+              "locator": "885–892：全局过滤SharedPreferences读取/写入"
+            },
+            {
+              "raw_work_path": "work/antennapod-controls-deepening/src/ui/i18n/src/main/res/values/strings.xml",
+              "raw_sha256": "fbe52dcd492a8d059b039c0a7ac02baba79b2d4017b1cc9b1335270de5484fdc",
+              "locator": "314/417/440/826：本地删除、清队列、空筛选、共同标签文案"
+            }
+          ],
+          "locator": "第49批：连接确认/取消与保存范围，见逐文件locator",
+          "archived_artifact": "artifacts/antennapod-state-controls/source-notes.md",
+          "sha256": "2e300fd43ead0820440c1f657d4169230799dae79245f660c751ed4cd177258e",
+          "hands_on": false,
+          "visual_observed": false
+        }
+      ]
+    }
+  },
+  {
+    "owner": "docs/research/interaction-library/batches/antennapod-controls-deepening-evidence.jsonl",
+    "before": {
+      "evidence_id": "E-APCD-13",
+      "product_id": "M-040",
+      "title": "3.12.3 unsubscribe, archive and restore dialog",
+      "url": "https://github.com/AntennaPod/AntennaPod/blob/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/app/src/main/java/de/danoeh/antennapod/ui/screen/feed/RemoveFeedDialog.java",
+      "checked_on": "2026-10-27",
+      "source_type": "official_source_code",
+      "access_mode": "official_http_text_and_targeted_static_source_read",
+      "version_scope": "AntennaPod Android 3.12.3; commit 175e5ef8fe3e125a5014d70ef0c57cf85661c71b; static source only",
+      "app_build": "3.12.3 (versionCode 3120395)",
+      "firmware_version": null,
+      "source_updated_on": null,
+      "locator": "59–84;119–178;193–206; FeedMenuHandler and SubscriptionFragment archive entry",
+      "note": "详见归档记录对应E行；相关原件清单在work/antennapod-controls-deepening/source-manifest.json。目录声明不等于流程完成。",
+      "hands_on": false,
+      "visual_observed": false,
+      "archived_artifact": "artifacts/antennapod-controls-deepening/source-notes.md",
+      "sha256": "2c8d9bfd2d45c4c705a5c09f25c22be85add3975a86f5fc23ea1daf0ed9b176c",
+      "capture_state": "source_text_and_derived_notes_archived_no_product_visual",
+      "supersedes": null,
+      "raw_work_path": "work/antennapod-controls-deepening/src/app/src/main/java/de/danoeh/antennapod/ui/screen/feed/RemoveFeedDialog.java",
+      "raw_sha256": "1278c978a5be72eda92f129957d8e58db0a7ddb06e22fd27924d505705dc3a0a",
+      "additional_captures": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "existing_related_source_local_reread",
+          "related_source_url": "https://github.com/AntennaPod/AntennaPod/blob/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/app/src/main/java/de/danoeh/antennapod/ui/screen/subscriptions/SubscriptionFragment.java",
+          "raw_work_path": "work/antennapod-controls-deepening/src/app/src/main/java/de/danoeh/antennapod/ui/screen/subscriptions/SubscriptionFragment.java",
+          "raw_sha256": "0d35a96da963bd24f39653fe879527290c302e5cc05638145407a2cc7cac643f",
+          "verified_git_blob": "4c991062ec13512875c52f23223699f152181d07",
+          "locator": "SubscriptionFragment 128–230;246–300;335–510",
+          "note": "原E已将SubscriptionFragment列为关联源码；本轮只复读标签/列表分支，未重新GET。",
+          "hands_on": false,
+          "visual_observed": false,
+          "archived_artifact": "artifacts/antennapod-queue-controls-deepening/source-notes.md",
+          "sha256": "76023a8b5ac6214a62711bd203fd82e176fd5e2bf5a477488dd63445de13cd11"
+        }
+      ]
+    },
+    "after": {
+      "evidence_id": "E-APCD-13",
+      "product_id": "M-040",
+      "title": "3.12.3 unsubscribe, archive and restore dialog",
+      "url": "https://github.com/AntennaPod/AntennaPod/blob/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/app/src/main/java/de/danoeh/antennapod/ui/screen/feed/RemoveFeedDialog.java",
+      "checked_on": "2026-10-27",
+      "source_type": "official_source_code",
+      "access_mode": "official_http_text_and_targeted_static_source_read",
+      "version_scope": "AntennaPod Android 3.12.3; commit 175e5ef8fe3e125a5014d70ef0c57cf85661c71b; static source only",
+      "app_build": "3.12.3 (versionCode 3120395)",
+      "firmware_version": null,
+      "source_updated_on": null,
+      "locator": "59–84;119–178;193–206; FeedMenuHandler and SubscriptionFragment archive entry",
+      "note": "详见归档记录对应E行；相关原件清单在work/antennapod-controls-deepening/source-manifest.json。目录声明不等于流程完成。",
+      "hands_on": false,
+      "visual_observed": false,
+      "archived_artifact": "artifacts/antennapod-controls-deepening/source-notes.md",
+      "sha256": "2c8d9bfd2d45c4c705a5c09f25c22be85add3975a86f5fc23ea1daf0ed9b176c",
+      "capture_state": "source_text_and_derived_notes_archived_no_product_visual",
+      "supersedes": null,
+      "raw_work_path": "work/antennapod-controls-deepening/src/app/src/main/java/de/danoeh/antennapod/ui/screen/feed/RemoveFeedDialog.java",
+      "raw_sha256": "1278c978a5be72eda92f129957d8e58db0a7ddb06e22fd27924d505705dc3a0a",
+      "additional_captures": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "existing_related_source_local_reread",
+          "related_source_url": "https://github.com/AntennaPod/AntennaPod/blob/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/app/src/main/java/de/danoeh/antennapod/ui/screen/subscriptions/SubscriptionFragment.java",
+          "raw_work_path": "work/antennapod-controls-deepening/src/app/src/main/java/de/danoeh/antennapod/ui/screen/subscriptions/SubscriptionFragment.java",
+          "raw_sha256": "0d35a96da963bd24f39653fe879527290c302e5cc05638145407a2cc7cac643f",
+          "verified_git_blob": "4c991062ec13512875c52f23223699f152181d07",
+          "locator": "SubscriptionFragment 128–230;246–300;335–510",
+          "note": "原E已将SubscriptionFragment列为关联源码；本轮只复读标签/列表分支，未重新GET。",
+          "hands_on": false,
+          "visual_observed": false,
+          "archived_artifact": "artifacts/antennapod-queue-controls-deepening/source-notes.md",
+          "sha256": "76023a8b5ac6214a62711bd203fd82e176fd5e2bf5a477488dd63445de13cd11"
+        },
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "local_pinned_source_reread_no_refetch",
+          "source_files": [
+            {
+              "raw_work_path": "work/antennapod-controls-deepening/src/app/src/main/java/de/danoeh/antennapod/ui/screen/subscriptions/FeedMenuHandler.java",
+              "raw_sha256": "835f7ee2df02b36e017301325d5754eb271f30204f613c1b814607a3e2665443",
+              "locator": "59–61：单订阅标签入口"
+            },
+            {
+              "raw_work_path": "work/antennapod-controls-deepening/src/app/src/main/java/de/danoeh/antennapod/ui/screen/subscriptions/SubscriptionFragment.java",
+              "raw_sha256": "0d35a96da963bd24f39653fe879527290c302e5cc05638145407a2cc7cac643f",
+              "locator": "192–229：批量标签入口及已有标签浏览"
+            }
+          ],
+          "locator": "第49批：连接确认/取消与保存范围，见逐文件locator",
+          "archived_artifact": "artifacts/antennapod-state-controls/source-notes.md",
+          "sha256": "2e300fd43ead0820440c1f657d4169230799dae79245f660c751ed4cd177258e",
+          "hands_on": false,
+          "visual_observed": false
+        }
+      ]
+    }
+  },
+  {
+    "owner": "docs/research/interaction-library/batches/antennapod-controls-deepening-evidence.jsonl",
+    "before": {
+      "evidence_id": "E-APCD-14",
+      "product_id": "M-040",
+      "title": "3.12.3 media/feed deletion and archive persistence",
+      "url": "https://github.com/AntennaPod/AntennaPod/blob/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/storage/database/src/main/java/de/danoeh/antennapod/storage/database/DBWriter.java",
+      "checked_on": "2026-10-27",
+      "source_type": "official_source_code",
+      "access_mode": "official_http_text_and_targeted_static_source_read",
+      "version_scope": "AntennaPod Android 3.12.3; commit 175e5ef8fe3e125a5014d70ef0c57cf85661c71b; static source only",
+      "app_build": "3.12.3 (versionCode 3120395)",
+      "firmware_version": null,
+      "source_updated_on": null,
+      "locator": "118–167;177–195;212–249;862–884",
+      "note": "详见归档记录对应E行；相关原件清单在work/antennapod-controls-deepening/source-manifest.json。目录声明不等于流程完成。",
+      "hands_on": false,
+      "visual_observed": false,
+      "archived_artifact": "artifacts/antennapod-controls-deepening/source-notes.md",
+      "sha256": "2c8d9bfd2d45c4c705a5c09f25c22be85add3975a86f5fc23ea1daf0ed9b176c",
+      "capture_state": "source_text_and_derived_notes_archived_no_product_visual",
+      "supersedes": null,
+      "raw_work_path": "work/antennapod-controls-deepening/src/storage/database/src/main/java/de/danoeh/antennapod/storage/database/DBWriter.java",
+      "raw_sha256": "f51bd0cb6b14d4242776d157d224aa11f48d689c7553e50a80edd0d3c1e55523"
+    },
+    "after": {
+      "evidence_id": "E-APCD-14",
+      "product_id": "M-040",
+      "title": "3.12.3 media/feed deletion and archive persistence",
+      "url": "https://github.com/AntennaPod/AntennaPod/blob/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/storage/database/src/main/java/de/danoeh/antennapod/storage/database/DBWriter.java",
+      "checked_on": "2026-10-27",
+      "source_type": "official_source_code",
+      "access_mode": "official_http_text_and_targeted_static_source_read",
+      "version_scope": "AntennaPod Android 3.12.3; commit 175e5ef8fe3e125a5014d70ef0c57cf85661c71b; static source only",
+      "app_build": "3.12.3 (versionCode 3120395)",
+      "firmware_version": null,
+      "source_updated_on": null,
+      "locator": "118–167;177–195;212–249;862–884",
+      "note": "详见归档记录对应E行；相关原件清单在work/antennapod-controls-deepening/source-manifest.json。目录声明不等于流程完成。",
+      "hands_on": false,
+      "visual_observed": false,
+      "archived_artifact": "artifacts/antennapod-controls-deepening/source-notes.md",
+      "sha256": "2c8d9bfd2d45c4c705a5c09f25c22be85add3975a86f5fc23ea1daf0ed9b176c",
+      "capture_state": "source_text_and_derived_notes_archived_no_product_visual",
+      "supersedes": null,
+      "raw_work_path": "work/antennapod-controls-deepening/src/storage/database/src/main/java/de/danoeh/antennapod/storage/database/DBWriter.java",
+      "raw_sha256": "f51bd0cb6b14d4242776d157d224aa11f48d689c7553e50a80edd0d3c1e55523",
+      "additional_captures": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "local_pinned_source_reread_no_refetch",
+          "source_files": [
+            {
+              "raw_work_path": "work/antennapod-controls-deepening/src/storage/database/src/main/java/de/danoeh/antennapod/storage/database/DBWriter.java",
+              "raw_sha256": "f51bd0cb6b14d4242776d157d224aa11f48d689c7553e50a80edd0d3c1e55523",
+              "locator": "55–167;455–522;569–631;812–821;920–930：异步请求、媒体删除、队列、偏好与过滤写入"
+            }
+          ],
+          "locator": "第49批：连接确认/取消与保存范围，见逐文件locator",
+          "archived_artifact": "artifacts/antennapod-state-controls/source-notes.md",
+          "sha256": "2e300fd43ead0820440c1f657d4169230799dae79245f660c751ed4cd177258e",
+          "hands_on": false,
+          "visual_observed": false
+        }
+      ]
+    }
+  },
+  {
+    "owner": "docs/research/interaction-library/batches/antennapod-queue-controls-deepening-evidence.jsonl",
+    "before": {
+      "product_id": "M-040",
+      "checked_on": "2026-10-27",
+      "firmware_version": null,
+      "hands_on": false,
+      "visual_observed": false,
+      "supersedes": null,
+      "archived_artifact": "artifacts/antennapod-queue-controls-deepening/source-notes.md",
+      "sha256": "76023a8b5ac6214a62711bd203fd82e176fd5e2bf5a477488dd63445de13cd11",
+      "capture_state": "text_and_static_code_notes_archived_no_product_visual",
+      "evidence_id": "E-APQD-04",
+      "title": "3.12.3 QueueFragment.java",
+      "url": "https://github.com/AntennaPod/AntennaPod/blob/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/app/src/main/java/de/danoeh/antennapod/ui/screen/queue/QueueFragment.java",
+      "source_type": "official_source_code",
+      "access_mode": "ordinary_HTTP_fixed_commit_then_targeted_static_read",
+      "source_updated_on": null,
+      "app_build": "3.12.3 (versionCode 3120395); source only",
+      "version_scope": "Android 3.12.3 source at 175e5ef8fe3e125a5014d70ef0c57cf85661c71b; not installed APK",
+      "locator": "88–137;230–365;419–490;527–728: queue menus, multi-select, ordering, drag write request",
+      "raw_work_path": "work/antennapod-queue-controls-deepening/raw/QueueFragment.java",
+      "raw_sha256": "fee6c7b93713ea45c5f679407cc15efaa1dd7346147806e987ebe3c04399f87f",
+      "note": "源码回调/文档描述，不是执行结果；下游未读处见独立摘记。",
+      "commit": "175e5ef8fe3e125a5014d70ef0c57cf85661c71b",
+      "verified_git_blob": "94d3251d3588b05cc8a68e8fc648325dff1a9e36"
+    },
+    "after": {
+      "product_id": "M-040",
+      "checked_on": "2026-10-27",
+      "firmware_version": null,
+      "hands_on": false,
+      "visual_observed": false,
+      "supersedes": null,
+      "archived_artifact": "artifacts/antennapod-queue-controls-deepening/source-notes.md",
+      "sha256": "76023a8b5ac6214a62711bd203fd82e176fd5e2bf5a477488dd63445de13cd11",
+      "capture_state": "text_and_static_code_notes_archived_no_product_visual",
+      "evidence_id": "E-APQD-04",
+      "title": "3.12.3 QueueFragment.java",
+      "url": "https://github.com/AntennaPod/AntennaPod/blob/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/app/src/main/java/de/danoeh/antennapod/ui/screen/queue/QueueFragment.java",
+      "source_type": "official_source_code",
+      "access_mode": "ordinary_HTTP_fixed_commit_then_targeted_static_read",
+      "source_updated_on": null,
+      "app_build": "3.12.3 (versionCode 3120395); source only",
+      "version_scope": "Android 3.12.3 source at 175e5ef8fe3e125a5014d70ef0c57cf85661c71b; not installed APK",
+      "locator": "88–137;230–365;419–490;527–728: queue menus, multi-select, ordering, drag write request",
+      "raw_work_path": "work/antennapod-queue-controls-deepening/raw/QueueFragment.java",
+      "raw_sha256": "fee6c7b93713ea45c5f679407cc15efaa1dd7346147806e987ebe3c04399f87f",
+      "note": "源码回调/文档描述，不是执行结果；下游未读处见独立摘记。",
+      "commit": "175e5ef8fe3e125a5014d70ef0c57cf85661c71b",
+      "verified_git_blob": "94d3251d3588b05cc8a68e8fc648325dff1a9e36",
+      "additional_captures": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "local_pinned_source_reread_no_refetch",
+          "source_files": [
+            {
+              "raw_work_path": "work/antennapod-queue-controls-deepening/raw/QueueFragment.java",
+              "raw_sha256": "fee6c7b93713ea45c5f679407cc15efaa1dd7346147806e987ebe3c04399f87f",
+              "locator": "137–172;299–312;438–487：队列事件、清空确认、多选结束"
+            }
+          ],
+          "locator": "第49批：连接确认/取消与保存范围，见逐文件locator",
+          "archived_artifact": "artifacts/antennapod-state-controls/source-notes.md",
+          "sha256": "2e300fd43ead0820440c1f657d4169230799dae79245f660c751ed4cd177258e",
+          "hands_on": false,
+          "visual_observed": false
+        }
+      ]
+    }
+  },
+  {
+    "owner": "docs/research/interaction-library/batches/antennapod-queue-controls-deepening-evidence.jsonl",
+    "before": {
+      "product_id": "M-040",
+      "checked_on": "2026-10-27",
+      "firmware_version": null,
+      "hands_on": false,
+      "visual_observed": false,
+      "supersedes": null,
+      "archived_artifact": "artifacts/antennapod-queue-controls-deepening/source-notes.md",
+      "sha256": "76023a8b5ac6214a62711bd203fd82e176fd5e2bf5a477488dd63445de13cd11",
+      "capture_state": "text_and_static_code_notes_archived_no_product_visual",
+      "evidence_id": "E-APQD-05",
+      "title": "3.12.3 EpisodeMultiSelectActionHandler.java",
+      "url": "https://github.com/AntennaPod/AntennaPod/blob/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/app/src/main/java/de/danoeh/antennapod/ui/episodeslist/EpisodeMultiSelectActionHandler.java",
+      "source_type": "official_source_code",
+      "access_mode": "ordinary_HTTP_fixed_commit_then_targeted_static_read",
+      "source_updated_on": null,
+      "app_build": "3.12.3 (versionCode 3120395); source only",
+      "version_scope": "Android 3.12.3 source at 175e5ef8fe3e125a5014d70ef0c57cf85661c71b; not installed APK",
+      "locator": "24–251: selected-item action dispatch and count feedback",
+      "raw_work_path": "work/antennapod-queue-controls-deepening/raw/EpisodeMultiSelectActionHandler.java",
+      "raw_sha256": "5191c537e483a5bbfbc5925d8c5bd1bf6fec11a6b4e79bb8bcc1c6f2b2b48996",
+      "note": "源码回调/文档描述，不是执行结果；下游未读处见独立摘记。",
+      "commit": "175e5ef8fe3e125a5014d70ef0c57cf85661c71b",
+      "verified_git_blob": "ac757d11e9a5d2e2ff1da509e6c4a2c01a1df33e"
+    },
+    "after": {
+      "product_id": "M-040",
+      "checked_on": "2026-10-27",
+      "firmware_version": null,
+      "hands_on": false,
+      "visual_observed": false,
+      "supersedes": null,
+      "archived_artifact": "artifacts/antennapod-queue-controls-deepening/source-notes.md",
+      "sha256": "76023a8b5ac6214a62711bd203fd82e176fd5e2bf5a477488dd63445de13cd11",
+      "capture_state": "text_and_static_code_notes_archived_no_product_visual",
+      "evidence_id": "E-APQD-05",
+      "title": "3.12.3 EpisodeMultiSelectActionHandler.java",
+      "url": "https://github.com/AntennaPod/AntennaPod/blob/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/app/src/main/java/de/danoeh/antennapod/ui/episodeslist/EpisodeMultiSelectActionHandler.java",
+      "source_type": "official_source_code",
+      "access_mode": "ordinary_HTTP_fixed_commit_then_targeted_static_read",
+      "source_updated_on": null,
+      "app_build": "3.12.3 (versionCode 3120395); source only",
+      "version_scope": "Android 3.12.3 source at 175e5ef8fe3e125a5014d70ef0c57cf85661c71b; not installed APK",
+      "locator": "24–251: selected-item action dispatch and count feedback",
+      "raw_work_path": "work/antennapod-queue-controls-deepening/raw/EpisodeMultiSelectActionHandler.java",
+      "raw_sha256": "5191c537e483a5bbfbc5925d8c5bd1bf6fec11a6b4e79bb8bcc1c6f2b2b48996",
+      "note": "源码回调/文档描述，不是执行结果；下游未读处见独立摘记。",
+      "commit": "175e5ef8fe3e125a5014d70ef0c57cf85661c71b",
+      "verified_git_blob": "ac757d11e9a5d2e2ff1da509e6c4a2c01a1df33e",
+      "additional_captures": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "local_pinned_source_reread_no_refetch",
+          "source_files": [
+            {
+              "raw_work_path": "work/antennapod-queue-controls-deepening/raw/EpisodeMultiSelectActionHandler.java",
+              "raw_sha256": "5191c537e483a5bbfbc5925d8c5bd1bf6fec11a6b4e79bb8bcc1c6f2b2b48996",
+              "locator": "39–56;152–169;212–231：本地删除警告分派、数量及移动"
+            }
+          ],
+          "locator": "第49批：连接确认/取消与保存范围，见逐文件locator",
+          "archived_artifact": "artifacts/antennapod-state-controls/source-notes.md",
+          "sha256": "2e300fd43ead0820440c1f657d4169230799dae79245f660c751ed4cd177258e",
+          "hands_on": false,
+          "visual_observed": false
+        }
+      ]
+    }
+  },
+  {
+    "owner": "docs/research/interaction-library/batches/antennapod-queue-controls-deepening-evidence.jsonl",
+    "before": {
+      "product_id": "M-040",
+      "checked_on": "2026-10-27",
+      "firmware_version": null,
+      "hands_on": false,
+      "visual_observed": false,
+      "supersedes": null,
+      "archived_artifact": "artifacts/antennapod-queue-controls-deepening/source-notes.md",
+      "sha256": "76023a8b5ac6214a62711bd203fd82e176fd5e2bf5a477488dd63445de13cd11",
+      "capture_state": "text_and_static_code_notes_archived_no_product_visual",
+      "evidence_id": "E-APQD-06",
+      "title": "3.12.3 ItemFilterDialog.java",
+      "url": "https://github.com/AntennaPod/AntennaPod/blob/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/app/src/main/java/de/danoeh/antennapod/ui/screen/feed/ItemFilterDialog.java",
+      "source_type": "official_source_code",
+      "access_mode": "ordinary_HTTP_fixed_commit_then_targeted_static_read",
+      "source_updated_on": null,
+      "app_build": "3.12.3 (versionCode 3120395); source only",
+      "version_scope": "Android 3.12.3 source at 175e5ef8fe3e125a5014d70ef0c57cf85661c71b; not installed APK",
+      "locator": "1–122: option callbacks, reset and dismiss",
+      "raw_work_path": "work/antennapod-queue-controls-deepening/raw/ItemFilterDialog.java",
+      "raw_sha256": "0f5304d91f1e71640bd4a3a4f8ecc2eaa9cd8e6fc30eeceff1001f5e78b03d05",
+      "note": "源码回调/文档描述，不是执行结果；下游未读处见独立摘记。",
+      "commit": "175e5ef8fe3e125a5014d70ef0c57cf85661c71b",
+      "verified_git_blob": "8dbcce69929b588f941353fc9f7ffeb621321926"
+    },
+    "after": {
+      "product_id": "M-040",
+      "checked_on": "2026-10-27",
+      "firmware_version": null,
+      "hands_on": false,
+      "visual_observed": false,
+      "supersedes": null,
+      "archived_artifact": "artifacts/antennapod-queue-controls-deepening/source-notes.md",
+      "sha256": "76023a8b5ac6214a62711bd203fd82e176fd5e2bf5a477488dd63445de13cd11",
+      "capture_state": "text_and_static_code_notes_archived_no_product_visual",
+      "evidence_id": "E-APQD-06",
+      "title": "3.12.3 ItemFilterDialog.java",
+      "url": "https://github.com/AntennaPod/AntennaPod/blob/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/app/src/main/java/de/danoeh/antennapod/ui/screen/feed/ItemFilterDialog.java",
+      "source_type": "official_source_code",
+      "access_mode": "ordinary_HTTP_fixed_commit_then_targeted_static_read",
+      "source_updated_on": null,
+      "app_build": "3.12.3 (versionCode 3120395); source only",
+      "version_scope": "Android 3.12.3 source at 175e5ef8fe3e125a5014d70ef0c57cf85661c71b; not installed APK",
+      "locator": "1–122: option callbacks, reset and dismiss",
+      "raw_work_path": "work/antennapod-queue-controls-deepening/raw/ItemFilterDialog.java",
+      "raw_sha256": "0f5304d91f1e71640bd4a3a4f8ecc2eaa9cd8e6fc30eeceff1001f5e78b03d05",
+      "note": "源码回调/文档描述，不是执行结果；下游未读处见独立摘记。",
+      "commit": "175e5ef8fe3e125a5014d70ef0c57cf85661c71b",
+      "verified_git_blob": "8dbcce69929b588f941353fc9f7ffeb621321926",
+      "additional_captures": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "local_pinned_source_reread_no_refetch",
+          "source_files": [
+            {
+              "raw_work_path": "work/antennapod-queue-controls-deepening/raw/ItemFilterDialog.java",
+              "raw_sha256": "0f5304d91f1e71640bd4a3a4f8ecc2eaa9cd8e6fc30eeceff1001f5e78b03d05",
+              "locator": "36–77;101–122：变化、确认、Reset；与新调用方连接"
+            }
+          ],
+          "locator": "第49批：连接确认/取消与保存范围，见逐文件locator",
+          "archived_artifact": "artifacts/antennapod-state-controls/source-notes.md",
+          "sha256": "2e300fd43ead0820440c1f657d4169230799dae79245f660c751ed4cd177258e",
+          "hands_on": false,
+          "visual_observed": false
+        }
+      ]
+    }
+  },
+  {
+    "owner": "docs/research/interaction-library/batches/antennapod-queue-controls-deepening-evidence.jsonl",
+    "before": {
+      "product_id": "M-040",
+      "checked_on": "2026-10-27",
+      "firmware_version": null,
+      "hands_on": false,
+      "visual_observed": false,
+      "supersedes": null,
+      "archived_artifact": "artifacts/antennapod-queue-controls-deepening/source-notes.md",
+      "sha256": "76023a8b5ac6214a62711bd203fd82e176fd5e2bf5a477488dd63445de13cd11",
+      "capture_state": "text_and_static_code_notes_archived_no_product_visual",
+      "evidence_id": "E-APQD-07",
+      "title": "3.12.3 FeedItemFilterQuery.java",
+      "url": "https://github.com/AntennaPod/AntennaPod/blob/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/storage/database/src/main/java/de/danoeh/antennapod/storage/database/mapper/FeedItemFilterQuery.java",
+      "source_type": "official_source_code",
+      "access_mode": "ordinary_HTTP_fixed_commit_then_targeted_static_read",
+      "source_updated_on": null,
+      "app_build": "3.12.3 (versionCode 3120395); source only",
+      "version_scope": "Android 3.12.3 source at 175e5ef8fe3e125a5014d70ef0c57cf85661c71b; not installed APK",
+      "locator": "1–103: SQL filter predicate generation",
+      "raw_work_path": "work/antennapod-queue-controls-deepening/raw/FeedItemFilterQuery.java",
+      "raw_sha256": "02f43983c4adde37fbc7b9b8d7896f8ccae59d73c935714bd4d8fbd2fe7b7e65",
+      "note": "源码回调/文档描述，不是执行结果；下游未读处见独立摘记。",
+      "commit": "175e5ef8fe3e125a5014d70ef0c57cf85661c71b",
+      "verified_git_blob": "0f70c5cc3dad7da5423d7f3e097f33d54b33fc57"
+    },
+    "after": {
+      "product_id": "M-040",
+      "checked_on": "2026-10-27",
+      "firmware_version": null,
+      "hands_on": false,
+      "visual_observed": false,
+      "supersedes": null,
+      "archived_artifact": "artifacts/antennapod-queue-controls-deepening/source-notes.md",
+      "sha256": "76023a8b5ac6214a62711bd203fd82e176fd5e2bf5a477488dd63445de13cd11",
+      "capture_state": "text_and_static_code_notes_archived_no_product_visual",
+      "evidence_id": "E-APQD-07",
+      "title": "3.12.3 FeedItemFilterQuery.java",
+      "url": "https://github.com/AntennaPod/AntennaPod/blob/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/storage/database/src/main/java/de/danoeh/antennapod/storage/database/mapper/FeedItemFilterQuery.java",
+      "source_type": "official_source_code",
+      "access_mode": "ordinary_HTTP_fixed_commit_then_targeted_static_read",
+      "source_updated_on": null,
+      "app_build": "3.12.3 (versionCode 3120395); source only",
+      "version_scope": "Android 3.12.3 source at 175e5ef8fe3e125a5014d70ef0c57cf85661c71b; not installed APK",
+      "locator": "1–103: SQL filter predicate generation",
+      "raw_work_path": "work/antennapod-queue-controls-deepening/raw/FeedItemFilterQuery.java",
+      "raw_sha256": "02f43983c4adde37fbc7b9b8d7896f8ccae59d73c935714bd4d8fbd2fe7b7e65",
+      "note": "源码回调/文档描述，不是执行结果；下游未读处见独立摘记。",
+      "commit": "175e5ef8fe3e125a5014d70ef0c57cf85661c71b",
+      "verified_git_blob": "0f70c5cc3dad7da5423d7f3e097f33d54b33fc57",
+      "additional_captures": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "local_pinned_source_reread_no_refetch",
+          "source_files": [
+            {
+              "raw_work_path": "work/antennapod-queue-controls-deepening/raw/FeedItemFilterQuery.java",
+              "raw_sha256": "02f43983c4adde37fbc7b9b8d7896f8ccae59d73c935714bd4d8fbd2fe7b7e65",
+              "locator": "23–103：AND条件、状态回退及字段含义"
+            }
+          ],
+          "locator": "第49批：连接确认/取消与保存范围，见逐文件locator",
+          "archived_artifact": "artifacts/antennapod-state-controls/source-notes.md",
+          "sha256": "2e300fd43ead0820440c1f657d4169230799dae79245f660c751ed4cd177258e",
+          "hands_on": false,
+          "visual_observed": false
+        }
+      ]
+    }
+  }
+]

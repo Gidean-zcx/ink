@@ -1,0 +1,44 @@
+[
+  {
+    "title": "Products",
+    "tag": "h2"
+  },
+  {
+    "title": "Advantages",
+    "tag": "h2"
+  },
+  {
+    "title": "Service",
+    "tag": "h2"
+  },
+  {
+    "title": "Current Category: Manuals | eReader I tab",
+    "tag": "h3"
+  },
+  {
+    "title": "FAQ",
+    "tag": "h3"
+  },
+  {
+    "title": "Current Category: FAQ | eReader & accessories",
+    "tag": "h4"
+  },
+  {
+    "title": "tolino shine 5 Gen.",
+    "tag": "h1",
+    "class": "faq-title"
+  },
+  {
+    "title": "Downloads",
+    "tag": "h2",
+    "class": "entry-title"
+  },
+  {
+    "title": "Download tolino app from the App Store:",
+    "tag": "h3"
+  },
+  {
+    "title": "Keep in touch with tolino:",
+    "tag": "h3"
+  }
+]

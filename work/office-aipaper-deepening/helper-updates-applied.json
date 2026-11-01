@@ -1,0 +1,66 @@
+[
+  {
+    "flow_id": "F-M065-01",
+    "path": "docs/research/interaction-library/batches/hifi-extension-coverage.csv"
+  },
+  {
+    "flow_id": "F-M065-02",
+    "path": "docs/research/interaction-library/batches/hifi-extension-coverage.csv"
+  },
+  {
+    "flow_id": "F-M065-03",
+    "path": "docs/research/interaction-library/batches/hifi-extension-coverage.csv"
+  },
+  {
+    "flow_id": "F-M065-04",
+    "path": "docs/research/interaction-library/batches/hifi-extension-coverage.csv"
+  },
+  {
+    "flow_id": "F-M065-05",
+    "path": "docs/research/interaction-library/batches/hifi-extension-coverage.csv"
+  },
+  {
+    "flow_id": "F-M065-08",
+    "path": "docs/research/interaction-library/batches/hifi-extension-coverage.csv"
+  },
+  {
+    "flow_id": "F-M065-10",
+    "path": "docs/research/interaction-library/batches/hifi-extension-coverage.csv"
+  },
+  {
+    "flow_id": "F-M065-12",
+    "path": "docs/research/interaction-library/batches/hifi-extension-coverage.csv"
+  },
+  {
+    "flow_id": "F-M019-01",
+    "path": "docs/research/interaction-library/batches/vocab-coverage.csv"
+  },
+  {
+    "flow_id": "F-M019-03",
+    "path": "docs/research/interaction-library/batches/vocab-coverage.csv"
+  },
+  {
+    "flow_id": "F-M019-04",
+    "path": "docs/research/interaction-library/batches/vocab-coverage.csv"
+  },
+  {
+    "flow_id": "F-M019-05",
+    "path": "docs/research/interaction-library/batches/vocab-coverage.csv"
+  },
+  {
+    "flow_id": "F-M019-06",
+    "path": "docs/research/interaction-library/batches/vocab-coverage.csv"
+  },
+  {
+    "flow_id": "F-M019-07",
+    "path": "docs/research/interaction-library/batches/vocab-coverage.csv"
+  },
+  {
+    "flow_id": "F-M019-08",
+    "path": "docs/research/interaction-library/batches/vocab-coverage.csv"
+  },
+  {
+    "flow_id": "F-M019-09",
+    "path": "docs/research/interaction-library/batches/vocab-coverage.csv"
+  }
+]

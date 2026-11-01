@@ -1,0 +1,68 @@
+[
+  {
+    "printed_page": 17,
+    "pdf_page": 18,
+    "raw_work_path": "work/ibasso-controls-deepening/dx180-printed-17.png",
+    "raw_sha256": "fed85b1906b98ea9f8733418389fdd4b9d07af4f8125391a998b23a4e541dcb5",
+    "observed": true,
+    "observed_on": "2026-10-27",
+    "observation_method": "view_image",
+    "archived_artifact": "artifacts/ibasso-controls-deepening/dx180-printed-17.png",
+    "sha256": "fed85b1906b98ea9f8733418389fdd4b9d07af4f8125391a998b23a4e541dcb5"
+  },
+  {
+    "printed_page": 18,
+    "pdf_page": 19,
+    "raw_work_path": "work/ibasso-controls-deepening/dx180-printed-18.png",
+    "raw_sha256": "ad93d376108ba361829a2e29ac84c5fe42363e04465d0ef05723fba8bc3dd90c",
+    "observed": true,
+    "observed_on": "2026-10-27",
+    "observation_method": "view_image",
+    "archived_artifact": "artifacts/ibasso-controls-deepening/dx180-printed-18.png",
+    "sha256": "ad93d376108ba361829a2e29ac84c5fe42363e04465d0ef05723fba8bc3dd90c"
+  },
+  {
+    "printed_page": 20,
+    "pdf_page": 21,
+    "raw_work_path": "work/ibasso-controls-deepening/dx180-printed-20.png",
+    "raw_sha256": "46a820d1d77834365f4f674c8611666da96906adbe8911fbd56b14f28f6a17fd",
+    "observed": true,
+    "observed_on": "2026-10-27",
+    "observation_method": "view_image",
+    "archived_artifact": "artifacts/ibasso-controls-deepening/dx180-printed-20.png",
+    "sha256": "46a820d1d77834365f4f674c8611666da96906adbe8911fbd56b14f28f6a17fd"
+  },
+  {
+    "printed_page": 21,
+    "pdf_page": 22,
+    "raw_work_path": "work/ibasso-controls-deepening/dx180-printed-21.png",
+    "raw_sha256": "796d568c697d900fc4d5548632cb1868ca2e67945329f170a148b61eb72fcb4b",
+    "observed": true,
+    "observed_on": "2026-10-27",
+    "observation_method": "view_image",
+    "archived_artifact": "artifacts/ibasso-controls-deepening/dx180-printed-21.png",
+    "sha256": "796d568c697d900fc4d5548632cb1868ca2e67945329f170a148b61eb72fcb4b"
+  },
+  {
+    "printed_page": 34,
+    "pdf_page": 35,
+    "raw_work_path": "work/ibasso-controls-deepening/dx180-printed-34.png",
+    "raw_sha256": "5cba3a64c8bd7decf1f5d19f5cc1d75991af847935b0091784493b307a2f01cb",
+    "observed": true,
+    "observed_on": "2026-10-27",
+    "observation_method": "view_image",
+    "archived_artifact": "artifacts/ibasso-controls-deepening/dx180-printed-34.png",
+    "sha256": "5cba3a64c8bd7decf1f5d19f5cc1d75991af847935b0091784493b307a2f01cb"
+  },
+  {
+    "printed_page": 42,
+    "pdf_page": 43,
+    "raw_work_path": "work/ibasso-controls-deepening/dx180-printed-42.png",
+    "raw_sha256": "194a9c1d366e4c8590ba21708ba548ec8df12a5871b554cb8afe3f99a13653da",
+    "observed": true,
+    "observed_on": "2026-10-27",
+    "observation_method": "view_image",
+    "archived_artifact": "artifacts/ibasso-controls-deepening/dx180-printed-42.png",
+    "sha256": "194a9c1d366e4c8590ba21708ba548ec8df12a5871b554cb8afe3f99a13653da"
+  }
+]

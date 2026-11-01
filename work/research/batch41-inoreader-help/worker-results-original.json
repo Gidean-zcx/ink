@@ -1,0 +1,352 @@
+[
+  {
+    "order": 1,
+    "entry_id": "INO-basic--article-view--what-layout-options-are-available",
+    "parent_id": "INO-basic--article-view",
+    "title": "What layout options are available?",
+    "url": "https://www.inoreader.com/help/basic/article-view/what-layout-options-are-available",
+    "duplicate_evidence_id": null,
+    "status": "blocked_domain_stop",
+    "http_status": 200,
+    "body_status": "unknown",
+    "h1": null,
+    "bytes": 142164,
+    "sha256": "ca7d1011945dbb3ccdb5bdd93f75c086cef0df21ee542c903f27e07f4ccd84fb",
+    "raw_html": "work/research/batch41-inoreader-help/01-INO-basic--article-view--what-layout-options-are-available.html",
+    "body_text": "work/research/batch41-inoreader-help/01-INO-basic--article-view--what-layout-options-are-available.txt",
+    "meta_path": "work/research/batch41-inoreader-help/01-INO-basic--article-view--what-layout-options-are-available.meta.json",
+    "link_count": 0,
+    "image_url_count": 0,
+    "verification_page": true
+  },
+  {
+    "order": 2,
+    "entry_id": "INO-basic--article-view--can-i-group-articles-visually",
+    "parent_id": "INO-basic--article-view",
+    "title": "Can I group articles visually?",
+    "url": "https://www.inoreader.com/help/basic/article-view/can-i-group-articles-visually",
+    "duplicate_evidence_id": null,
+    "status": "blocked_domain_stop",
+    "http_status": 200,
+    "body_status": "unknown",
+    "h1": null,
+    "bytes": 141834,
+    "sha256": "3082fa3329adc92a62a50095ae191596f68eb28c13bfa0d42933534e8425f8fb",
+    "raw_html": "work/research/batch41-inoreader-help/02-INO-basic--article-view--can-i-group-articles-visually.html",
+    "body_text": "work/research/batch41-inoreader-help/02-INO-basic--article-view--can-i-group-articles-visually.txt",
+    "meta_path": "work/research/batch41-inoreader-help/02-INO-basic--article-view--can-i-group-articles-visually.meta.json",
+    "link_count": 0,
+    "image_url_count": 0,
+    "verification_page": true
+  },
+  {
+    "order": 3,
+    "entry_id": "INO-basic--article-view--can-different-feeds-use-different-layouts",
+    "parent_id": "INO-basic--article-view",
+    "title": "Can different feeds use different layouts?",
+    "url": "https://www.inoreader.com/help/basic/article-view/can-different-feeds-use-different-layouts",
+    "duplicate_evidence_id": null,
+    "status": "skipped_domain_stopped",
+    "body_status": "not_fetched"
+  },
+  {
+    "order": 4,
+    "entry_id": "INO-basic--article-view--why-do-i-see-only-part-of-an-article",
+    "parent_id": "INO-basic--article-view",
+    "title": "Why do I see only part of an article?",
+    "url": "https://www.inoreader.com/help/basic/article-view/why-do-i-see-only-part-of-an-article",
+    "duplicate_evidence_id": null,
+    "status": "skipped_domain_stopped",
+    "body_status": "not_fetched"
+  },
+  {
+    "order": 5,
+    "entry_id": "INO-basic--saved-read-later--what-is-the-saved-section",
+    "parent_id": "INO-basic--saved-read-later",
+    "title": "What is the Saved section?",
+    "url": "https://www.inoreader.com/help/basic/saved-read-later/what-is-the-saved-section",
+    "duplicate_evidence_id": null,
+    "status": "skipped_domain_stopped",
+    "body_status": "not_fetched"
+  },
+  {
+    "order": 6,
+    "entry_id": "INO-basic--saved-read-later--how-do-i-save-an-article-for-later",
+    "parent_id": "INO-basic--saved-read-later",
+    "title": "How do I save an article for later?",
+    "url": "https://www.inoreader.com/help/basic/saved-read-later/how-do-i-save-an-article-for-later",
+    "duplicate_evidence_id": null,
+    "status": "skipped_domain_stopped",
+    "body_status": "not_fetched"
+  },
+  {
+    "order": 7,
+    "entry_id": "INO-basic--saved-read-later--what-is-read-later",
+    "parent_id": "INO-basic--saved-read-later",
+    "title": "What is Read later?",
+    "url": "https://www.inoreader.com/help/basic/saved-read-later/what-is-read-later",
+    "duplicate_evidence_id": null,
+    "status": "skipped_domain_stopped",
+    "body_status": "not_fetched"
+  },
+  {
+    "order": 8,
+    "entry_id": "INO-basic--saved-read-later--can-i-continue-reading-where-i-left-off",
+    "parent_id": "INO-basic--saved-read-later",
+    "title": "Can I continue reading where I left off?",
+    "url": "https://www.inoreader.com/help/basic/saved-read-later/can-i-continue-reading-where-i-left-off",
+    "duplicate_evidence_id": null,
+    "status": "skipped_domain_stopped",
+    "body_status": "not_fetched"
+  },
+  {
+    "order": 9,
+    "entry_id": "INO-basic--saved-read-later--can-i-receive-reminders-about-saved-articles",
+    "parent_id": "INO-basic--saved-read-later",
+    "title": "Can I receive reminders about saved articles?",
+    "url": "https://www.inoreader.com/help/basic/saved-read-later/can-i-receive-reminders-about-saved-articles",
+    "duplicate_evidence_id": null,
+    "status": "skipped_domain_stopped",
+    "body_status": "not_fetched"
+  },
+  {
+    "order": 10,
+    "entry_id": "INO-basic--archive--what-is-the-archive",
+    "parent_id": "INO-basic--archive",
+    "title": "What is the Archive?",
+    "url": "https://www.inoreader.com/help/basic/archive/what-is-the-archive",
+    "duplicate_evidence_id": null,
+    "status": "skipped_domain_stopped",
+    "body_status": "not_fetched"
+  },
+  {
+    "order": 11,
+    "entry_id": "INO-basic--archive--can-i-restore-archived-articles",
+    "parent_id": "INO-basic--archive",
+    "title": "Can I restore archived articles?",
+    "url": "https://www.inoreader.com/help/basic/archive/can-i-restore-archived-articles",
+    "duplicate_evidence_id": null,
+    "status": "skipped_domain_stopped",
+    "body_status": "not_fetched"
+  },
+  {
+    "order": 12,
+    "entry_id": "INO-basic--web-pages--can-i-save-web-pages-outside-my-feeds",
+    "parent_id": "INO-basic--web-pages",
+    "title": "Can I save web pages outside my feeds?",
+    "url": "https://www.inoreader.com/help/basic/web-pages/can-i-save-web-pages-outside-my-feeds",
+    "duplicate_evidence_id": null,
+    "status": "skipped_domain_stopped",
+    "body_status": "not_fetched"
+  },
+  {
+    "order": 13,
+    "entry_id": "INO-basic--web-pages--is-the-browser-extension-available-on-mobile",
+    "parent_id": "INO-basic--web-pages",
+    "title": "How can I save web pages on mobile?",
+    "url": "https://www.inoreader.com/help/basic/web-pages/is-the-browser-extension-available-on-mobile",
+    "duplicate_evidence_id": null,
+    "status": "skipped_domain_stopped",
+    "body_status": "not_fetched"
+  },
+  {
+    "order": 14,
+    "entry_id": "INO-basic--preferences-customization--can-i-customize-the-appearance-of-inoreader",
+    "parent_id": "INO-basic--preferences-customization",
+    "title": "Can I customize the appearance of Inoreader?",
+    "url": "https://www.inoreader.com/help/basic/preferences-customization/can-i-customize-the-appearance-of-inoreader",
+    "duplicate_evidence_id": null,
+    "status": "skipped_domain_stopped",
+    "body_status": "not_fetched"
+  },
+  {
+    "order": 15,
+    "entry_id": "INO-basic--preferences-customization--where-can-i-manage-my-account-settings",
+    "parent_id": "INO-basic--preferences-customization",
+    "title": "Where can I manage my account settings?",
+    "url": "https://www.inoreader.com/help/basic/preferences-customization/where-can-i-manage-my-account-settings",
+    "duplicate_evidence_id": null,
+    "status": "skipped_domain_stopped",
+    "body_status": "not_fetched"
+  },
+  {
+    "order": 16,
+    "entry_id": "INO-basic--preferences-customization--can-i-export-my-subscriptions-and-content",
+    "parent_id": "INO-basic--preferences-customization",
+    "title": "Can I export my subscriptions and content?",
+    "url": "https://www.inoreader.com/help/basic/preferences-customization/can-i-export-my-subscriptions-and-content",
+    "duplicate_evidence_id": null,
+    "status": "skipped_domain_stopped",
+    "body_status": "not_fetched"
+  },
+  {
+    "order": 17,
+    "entry_id": "INO-basic--syncing-mobile-apps--does-inoreader-sync-across-devices",
+    "parent_id": "INO-basic--syncing-mobile-apps",
+    "title": "Does Inoreader sync across devices?",
+    "url": "https://www.inoreader.com/help/basic/syncing-mobile-apps/does-inoreader-sync-across-devices",
+    "duplicate_evidence_id": null,
+    "status": "skipped_domain_stopped",
+    "body_status": "not_fetched"
+  },
+  {
+    "order": 18,
+    "entry_id": "INO-basic--syncing-mobile-apps--where-can-i-use-inoreader",
+    "parent_id": "INO-basic--syncing-mobile-apps",
+    "title": "Where can I use Inoreader?",
+    "url": "https://www.inoreader.com/help/basic/syncing-mobile-apps/where-can-i-use-inoreader",
+    "duplicate_evidence_id": null,
+    "status": "skipped_domain_stopped",
+    "body_status": "not_fetched"
+  },
+  {
+    "order": 19,
+    "entry_id": "INO-pro--text-to-speech--what-is-text-to-speech",
+    "parent_id": "INO-pro--text-to-speech",
+    "title": "What is text-to-speech?",
+    "url": "https://www.inoreader.com/help/pro/text-to-speech/what-is-text-to-speech",
+    "duplicate_evidence_id": null,
+    "status": "skipped_domain_stopped",
+    "body_status": "not_fetched"
+  },
+  {
+    "order": 20,
+    "entry_id": "INO-pro--text-to-speech--how-do-i-listen-to-an-article-with-text-to-speech",
+    "parent_id": "INO-pro--text-to-speech",
+    "title": "How do I listen to an article with text-to-speech?",
+    "url": "https://www.inoreader.com/help/pro/text-to-speech/how-do-i-listen-to-an-article-with-text-to-speech",
+    "duplicate_evidence_id": null,
+    "status": "skipped_domain_stopped",
+    "body_status": "not_fetched"
+  },
+  {
+    "order": 21,
+    "entry_id": "INO-pro--text-to-speech--can-i-listen-to-articles-and-podcasts-together",
+    "parent_id": "INO-pro--text-to-speech",
+    "title": "Can I listen to articles and podcasts together?",
+    "url": "https://www.inoreader.com/help/pro/text-to-speech/can-i-listen-to-articles-and-podcasts-together",
+    "duplicate_evidence_id": null,
+    "status": "skipped_domain_stopped",
+    "body_status": "not_fetched"
+  },
+  {
+    "order": 22,
+    "entry_id": "INO-pro--text-to-speech--can-i-listen-in-the-background",
+    "parent_id": "INO-pro--text-to-speech",
+    "title": "Can I listen in the background?",
+    "url": "https://www.inoreader.com/help/pro/text-to-speech/can-i-listen-in-the-background",
+    "duplicate_evidence_id": null,
+    "status": "skipped_domain_stopped",
+    "body_status": "not_fetched"
+  },
+  {
+    "order": 23,
+    "entry_id": "INO-pro--annotations--what-are-annotations",
+    "parent_id": "INO-pro--annotations",
+    "title": "What are annotations?",
+    "url": "https://www.inoreader.com/help/pro/annotations/what-are-annotations",
+    "duplicate_evidence_id": null,
+    "status": "skipped_domain_stopped",
+    "body_status": "not_fetched"
+  },
+  {
+    "order": 24,
+    "entry_id": "INO-pro--annotations--how-do-i-create-a-highlight",
+    "parent_id": "INO-pro--annotations",
+    "title": "How do I create a highlight?",
+    "url": "https://www.inoreader.com/help/pro/annotations/how-do-i-create-a-highlight",
+    "duplicate_evidence_id": null,
+    "status": "skipped_domain_stopped",
+    "body_status": "not_fetched"
+  },
+  {
+    "order": 25,
+    "entry_id": "INO-pro--annotations--how-do-i-add-a-note-to-a-highlight",
+    "parent_id": "INO-pro--annotations",
+    "title": "How do I add a note to a highlight?",
+    "url": "https://www.inoreader.com/help/pro/annotations/how-do-i-add-a-note-to-a-highlight",
+    "duplicate_evidence_id": null,
+    "status": "skipped_domain_stopped",
+    "body_status": "not_fetched"
+  },
+  {
+    "order": 26,
+    "entry_id": "INO-pro--annotations--how-do-i-add-a-note-to-an-article",
+    "parent_id": "INO-pro--annotations",
+    "title": "How do I add a note to an article?",
+    "url": "https://www.inoreader.com/help/pro/annotations/how-do-i-add-a-note-to-an-article",
+    "duplicate_evidence_id": null,
+    "status": "skipped_domain_stopped",
+    "body_status": "not_fetched"
+  },
+  {
+    "order": 27,
+    "entry_id": "INO-pro--annotations--where-can-i-find-my-annotations",
+    "parent_id": "INO-pro--annotations",
+    "title": "Where can I find my annotations?",
+    "url": "https://www.inoreader.com/help/pro/annotations/where-can-i-find-my-annotations",
+    "duplicate_evidence_id": null,
+    "status": "skipped_domain_stopped",
+    "body_status": "not_fetched"
+  },
+  {
+    "order": 28,
+    "entry_id": "INO-pro--annotations--are-annotations-available-on-all-plans",
+    "parent_id": "INO-pro--annotations",
+    "title": "Are annotations available on all plans?",
+    "url": "https://www.inoreader.com/help/pro/annotations/are-annotations-available-on-all-plans",
+    "duplicate_evidence_id": null,
+    "status": "skipped_domain_stopped",
+    "body_status": "not_fetched"
+  },
+  {
+    "order": 29,
+    "entry_id": "INO-pro--offline-mode--what-is-offline-mode",
+    "parent_id": "INO-pro--offline-mode",
+    "title": "What is offline mode?",
+    "url": "https://www.inoreader.com/help/pro/offline-mode/what-is-offline-mode",
+    "duplicate_evidence_id": null,
+    "status": "skipped_domain_stopped",
+    "body_status": "not_fetched"
+  },
+  {
+    "order": 30,
+    "entry_id": "INO-pro--offline-mode--what-can-i-make-available-offline",
+    "parent_id": "INO-pro--offline-mode",
+    "title": "What can I make available offline?",
+    "url": "https://www.inoreader.com/help/pro/offline-mode/what-can-i-make-available-offline",
+    "duplicate_evidence_id": null,
+    "status": "skipped_domain_stopped",
+    "body_status": "not_fetched"
+  },
+  {
+    "order": 31,
+    "entry_id": "INO-pro--offline-mode--how-do-i-make-content-available-offline",
+    "parent_id": "INO-pro--offline-mode",
+    "title": "How do I make content available offline?",
+    "url": "https://www.inoreader.com/help/pro/offline-mode/how-do-i-make-content-available-offline",
+    "duplicate_evidence_id": null,
+    "status": "skipped_domain_stopped",
+    "body_status": "not_fetched"
+  },
+  {
+    "order": 32,
+    "entry_id": "INO-pro--offline-mode--do-offline-changes-sync-automatically-later",
+    "parent_id": "INO-pro--offline-mode",
+    "title": "Do offline changes sync automatically later?",
+    "url": "https://www.inoreader.com/help/pro/offline-mode/do-offline-changes-sync-automatically-later",
+    "duplicate_evidence_id": null,
+    "status": "skipped_domain_stopped",
+    "body_status": "not_fetched"
+  },
+  {
+    "order": 33,
+    "entry_id": "INO-pro--offline-mode--why-cant-i-read-an-article-offline",
+    "parent_id": "INO-pro--offline-mode",
+    "title": "Why can’t I read an article offline?",
+    "url": "https://www.inoreader.com/help/pro/offline-mode/why-cant-i-read-an-article-offline",
+    "duplicate_evidence_id": null,
+    "status": "skipped_domain_stopped",
+    "body_status": "not_fetched"
+  }
+]

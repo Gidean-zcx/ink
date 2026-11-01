@@ -1,0 +1,12 @@
+{
+  "status": "PASS",
+  "new_E": 27,
+  "new_F": 9,
+  "old_tasks": 22,
+  "old_task_fields": 89,
+  "old_evidence_captures": 16,
+  "old_evidence_metadata_fields": 3,
+  "linked_inventories": 63,
+  "inventory_rows": 6286,
+  "requirements_unchanged": true
+}

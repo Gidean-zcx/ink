@@ -1,0 +1,43 @@
+[
+  {
+    "kind": "pageerror",
+    "error": "Load error!"
+  },
+  {
+    "kind": "requestfailed",
+    "url": "https://audio.emagazines.com/readalong_382803_71df8ff0-49b0-4af2-a6b9-fc55978e1354.mp3",
+    "failure": "net::ERR_ABORTED"
+  },
+  {
+    "kind": "pageerror",
+    "error": "Load error!"
+  },
+  {
+    "kind": "pageerror",
+    "error": "Load error!"
+  },
+  {
+    "kind": "pageerror",
+    "error": "Load error!"
+  },
+  {
+    "kind": "pageerror",
+    "error": "Load error!"
+  },
+  {
+    "kind": "pageerror",
+    "error": "Load error!"
+  },
+  {
+    "kind": "pageerror",
+    "error": "Load error!"
+  },
+  {
+    "kind": "pageerror",
+    "error": "Load error!"
+  },
+  {
+    "kind": "pageerror",
+    "error": "Load error!"
+  }
+]

@@ -1,0 +1,118 @@
+[
+  {
+    "owner": "docs/research/interaction-library/batches/audio-coverage.csv",
+    "before": {
+      "flow_id": "F-M040-02",
+      "product_id": "M-040",
+      "task": "把想听内容放进队列",
+      "depth": "D2",
+      "evidence_ids": "E-ANTP-02;E-ANTP-06;E-APCD-03;E-APQD-04;E-APQD-05",
+      "known_branches": "排队/下载/已播分开；下载入队可配置。3.12.3批量入队过滤无媒体和已标队列项；Queue多选无项提示，发动作后结束选择；数量提示不是DB成功回执。",
+      "gaps": "多选启动手势、并发重复入队、DB写入失败/回滚、实际安装默认未核；空队列导向Inbox只是有New记录时的界面分支。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-040-antennapod.md",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "flow_id": "F-M040-02",
+      "product_id": "M-040",
+      "task": "把想听内容放进队列",
+      "depth": "D2",
+      "evidence_ids": "E-ANTP-02;E-ANTP-06;E-APCD-03;E-APQD-04;E-APQD-05;E-APST-01;E-APCD-14",
+      "known_branches": "长按上下文菜单后选Multi-select；选择模式点击切换，选中按列表顺序取出；原入队资格仍保留",
+      "gaps": "多选旋转/数据更新后恢复、并发重复入队、DB错误与实际反馈未测",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-040-antennapod.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "owner": "docs/research/interaction-library/batches/audio-coverage.csv",
+    "before": {
+      "flow_id": "F-M040-03",
+      "product_id": "M-040",
+      "task": "混排多个节目并保留先后关系",
+      "depth": "D2",
+      "evidence_ids": "E-ANTP-03;E-ANTP-04;E-APQD-01;E-APQD-04;E-APQD-05",
+      "known_branches": "旧帮助Smart shuffle为尽量分散；3.12.3 Keep Sorted隐藏锁菜单，Random关闭Keep Sorted；选排序即存偏好并请求重排。锁定/Keep Sorted/全选等禁移动；拖动结束才请求写库；清队列先确认。",
+      "gaps": "当前播放项固定、排序/清空撤回、拖动取消和DB失败回滚未知；未把锁队列当防删除。当前帮助明确多队列不支持，不按标签造队列。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-040-antennapod.md",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "flow_id": "F-M040-03",
+      "product_id": "M-040",
+      "task": "混排多个节目并保留先后关系",
+      "depth": "D2",
+      "evidence_ids": "E-ANTP-03;E-ANTP-04;E-APQD-01;E-APQD-04;E-APQD-05;E-APST-07;E-APST-08;E-APCD-14",
+      "known_branches": "确认清空只删队列表，事件清UI；移顶先逆序插入保持传入顺序；setQueue事务捕获SQL异常仅日志，事件非落盘凭据",
+      "gaps": "当前播放服务对清队列事件的全部反应、撤回、故障注入/回读、并发顺序与实机拖动未测",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-040-antennapod.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "owner": "docs/research/interaction-library/batches/audio-coverage.csv",
+    "before": {
+      "flow_id": "F-M040-05",
+      "product_id": "M-040",
+      "task": "清下载并区分退订与本地原文件删除",
+      "depth": "D2",
+      "evidence_ids": "E-ANTP-06;E-ANTP-07;E-APCD-14;E-APQD-05",
+      "known_branches": "保留既有文件失败仍可能清状态边界。批量删除对已下载/本地媒体调用删除，下载中未完成项调用取消；仅见本地文件警告helper入口。统计数在请求时累加，不能当实际删净。",
+      "gaps": "警告文案/确认/取消、单项撤销、存储失败可见提示、批量中途回滚仍缺；本地原文件无重下载保证，取消下载后残留处理未读。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-040-antennapod.md",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "flow_id": "F-M040-05",
+      "product_id": "M-040",
+      "task": "清下载并区分退订与本地原文件删除",
+      "depth": "D2",
+      "evidence_ids": "E-ANTP-06;E-ANTP-07;E-APCD-14;E-APQD-05;E-APST-05;E-APST-07",
+      "known_branches": "任一所选本地源触发警告，取消不调用整组删除；无本地源直接执行；数量是异步请求计数，物理失败与状态改变分开",
+      "gaps": "实际取消/删除失败反馈、媒体残留、取消下载半文件、本地文件恢复及批量回滚未测",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-040-antennapod.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "owner": "docs/research/interaction-library/batches/antennapod-queue-controls-deepening-coverage.csv",
+    "before": {
+      "flow_id": "F-M040-13",
+      "product_id": "M-040",
+      "task": "按已有标签浏览订阅并恢复选择",
+      "depth": "D2",
+      "evidence_ids": "E-APQD-01;E-APQD-02;E-APCD-13",
+      "known_branches": "订阅页点标签重载；普通订阅onPause保存last_tag，归档从root开始。标签不在过滤结果则退root；结果数量下降结束多选；标签不能生成独立队列。",
+      "gaps": "赋标签的命名/确认、长按管理、标签同步/删除恢复和异常终止保存未核；root仍受现有过滤限制，未实操。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-040-antennapod.md",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "flow_id": "F-M040-13",
+      "product_id": "M-040",
+      "task": "整理订阅标签、按标签浏览并恢复选择",
+      "depth": "D2",
+      "evidence_ids": "E-APQD-01;E-APQD-02;E-APCD-13;E-APST-04;E-APST-06;E-APST-07;E-APST-14;E-APCD-14",
+      "known_branches": "单/多订阅标签临时编辑，OK逐节目写入；批量仅改共同标签，保留独有标签；空/重复名不新增但不阻止OK提交；保留原last_tag浏览恢复条件",
+      "gaps": "长按标签全局管理、并行写入/部分失败、跨端同步、删除恢复及异常终止保存未测",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-040-antennapod.md",
+      "checked_on": "2026-10-27"
+    }
+  }
+]

@@ -1,0 +1,38 @@
+
+
+USB
+MassStorage User ManualOn this page
+MassStorage User Manual
+The MassStorage protocol definition does not involve file systems, because when using it, it is necessary to ensure that the computer host or mobile phone can support the involved file systems. Currently, the list of file systems supported by HiBy Player is as follows: FAT\exFat\NTFS.
+
+MacOS​
+
+MacOS supports FAT and exFAT, but does not support NTFS. Therefore, if you are using a NTFS file system, you need to install a third-party driver to use it. The following two methods are available:
+
+app
+
+
+Paragon：https://www.paragon-software.com/home/ntfs-mac//
+
+Western Data:https://support-eu.wd.com/app/answers/detailweb/a_id/34871/~/external-drive%3A-paragon-ntfs-driver-for-mac
+
+MacOS
+If you are a MacOS user, it is recommended that you back up your disk files and format the disk to exFAT for use, which can provide a better file compatibility experience.
+
+Windows ​
+
+FAT\exFat\NTFS are all file systems supported by Windows systems, so devices involving MassStorage can be plugged in and used.
+
+FAQs on MassStorage Usage​
+
+You can try it as follows:
+
+
+Make sure the USB cable connection is normal
+
+After confirming that the USB cable is connected, make sure that USB is currently using the USB storage protocol;
+
+Restart the computer and try again
+
+Restart the player and try again
+

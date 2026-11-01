@@ -1,0 +1,334 @@
+[
+  {
+    "title": "Products",
+    "tag": "h2"
+  },
+  {
+    "title": "Advantages",
+    "tag": "h2"
+  },
+  {
+    "title": "Service",
+    "tag": "h2"
+  },
+  {
+    "title": "Manuals | eReader I tab",
+    "tag": "h3"
+  },
+  {
+    "title": "FAQ",
+    "tag": "h3"
+  },
+  {
+    "title": "FAQ | eReader & accessories",
+    "tag": "h4"
+  },
+  {
+    "title": "tolino shine (5. generation)",
+    "tag": "h1",
+    "class": "faq-title"
+  },
+  {
+    "title": "Downloads",
+    "tag": "h2",
+    "class": "entry-title"
+  },
+  {
+    "title": "Weitere Downloads",
+    "tag": "h2",
+    "class": "entry-title"
+  },
+  {
+    "title": "1. Audiobooks (tolino shine 5. generation)",
+    "tag": "h3",
+    "class": "entry-title"
+  },
+  {
+    "title": "1.1. How can I connect my Bluetooth speaker and my headphones to my tolino eReader?",
+    "tag": "h4",
+    "class": "entry-title"
+  },
+  {
+    "title": "1.2. How can I manage my Bluetooth devices?",
+    "tag": "h4",
+    "class": "entry-title"
+  },
+  {
+    "title": "1.3. How do I listen to an audiobook on my tolino eReader?",
+    "tag": "h4",
+    "class": "entry-title"
+  },
+  {
+    "title": "1.4. How do I use the audiobook player on my tolino eReader?",
+    "tag": "h4",
+    "class": "entry-title"
+  },
+  {
+    "title": "2. ebooks (tolino shine 5. generation)",
+    "tag": "h3",
+    "class": "entry-title"
+  },
+  {
+    "title": "2.1. Can I look up or translate words from an eBook?",
+    "tag": "h4",
+    "class": "entry-title"
+  },
+  {
+    "title": "2.2. Can I read eBooks from public libraries on my tolino eReader?",
+    "tag": "h4",
+    "class": "entry-title"
+  },
+  {
+    "title": "2.3. Can I read eBooks I have purchased without an internet connection?",
+    "tag": "h4",
+    "class": "entry-title"
+  },
+  {
+    "title": "2.4. How can I delete an eBook from my library?",
+    "tag": "h4",
+    "class": "entry-title"
+  },
+  {
+    "title": "2.5. How can I download eBooks I have purchased to my tolino?",
+    "tag": "h4",
+    "class": "entry-title"
+  },
+  {
+    "title": "2.6. How can I import books I've already purchased or upload my own content onto the tolino eReader? (Side loading)",
+    "tag": "h4",
+    "class": "entry-title"
+  },
+  {
+    "title": "2.7. How can I navigate while reading my eBook and how do I adjust my reading settings?",
+    "tag": "h4",
+    "class": "entry-title"
+  },
+  {
+    "title": "2.8. How can I read DRM-protected (Digital Rights Management) eBooks on a tolino eReader?",
+    "tag": "h4",
+    "class": "entry-title"
+  },
+  {
+    "title": "2.9. How can I read eBooks and texts on other devices (synchronization)?",
+    "tag": "h4",
+    "class": "entry-title"
+  },
+  {
+    "title": "2.10. How do I organize my eBooks into collections?",
+    "tag": "h4",
+    "class": "entry-title"
+  },
+  {
+    "title": "2.11. Which eBook formats can I read on my tolino eReader?",
+    "tag": "h4",
+    "class": "entry-title"
+  },
+  {
+    "title": "3. FAQ Screenreader",
+    "tag": "h3",
+    "class": "entry-title"
+  },
+  {
+    "title": "3.1. 1. What is required to use the Screen Reader function?",
+    "tag": "h4",
+    "class": "entry-title"
+  },
+  {
+    "title": "3.2. How do I activate the Screenreader?",
+    "tag": "h4",
+    "class": "entry-title"
+  },
+  {
+    "title": "3.3. How do I navigate the reading experience with the Screen Reader?",
+    "tag": "h4",
+    "class": "entry-title"
+  },
+  {
+    "title": "3.4. How do I navigate through my books with the Screen Reader?",
+    "tag": "h4",
+    "class": "entry-title"
+  },
+  {
+    "title": "3.5. How do I set up Bluetooth devices (audio device and keyboard) with my eReader?",
+    "tag": "h4",
+    "class": "entry-title"
+  },
+  {
+    "title": "4. General (tolino shine 5. generation)",
+    "tag": "h3",
+    "class": "entry-title"
+  },
+  {
+    "title": "4.1. Activating Large Print Mode on Your tolino eReader",
+    "tag": "h4",
+    "class": "entry-title"
+  },
+  {
+    "title": "4.2. Activating Large Print Mode on Your tolino eReader",
+    "tag": "h4",
+    "class": "entry-title"
+  },
+  {
+    "title": "4.3. Adjusting Screen Brightness",
+    "tag": "h4",
+    "class": "entry-title"
+  },
+  {
+    "title": "4.4. How can I customize the tolino background that appears when my screen is in sleep mode?",
+    "tag": "h4",
+    "class": "entry-title"
+  },
+  {
+    "title": "4.5. How can I perform a software update on my tolino eReader?",
+    "tag": "h4",
+    "class": "entry-title"
+  },
+  {
+    "title": "4.6. How do I reset my tolino eReader to factory settings?",
+    "tag": "h4",
+    "class": "entry-title"
+  },
+  {
+    "title": "4.7. How many eBooks can I store on my eReader?",
+    "tag": "h4",
+    "class": "entry-title"
+  },
+  {
+    "title": "4.8. Is my tolino eReader waterproof?",
+    "tag": "h4",
+    "class": "entry-title"
+  },
+  {
+    "title": "4.9. What are my warranty entitlements for my tolino eReader?",
+    "tag": "h4",
+    "class": "entry-title"
+  },
+  {
+    "title": "4.10. What can I do if my eReader has been lost or stolen?",
+    "tag": "h4",
+    "class": "entry-title"
+  },
+  {
+    "title": "4.11. Where do I go to install a dictionary on my tolino eReader?",
+    "tag": "h4",
+    "class": "entry-title"
+  },
+  {
+    "title": "4.12. Where do I go to set up my PIN code?",
+    "tag": "h4",
+    "class": "entry-title"
+  },
+  {
+    "title": "5. Getting started (tolino shine 5. generation)",
+    "tag": "h3",
+    "class": "entry-title"
+  },
+  {
+    "title": "5.1. How do I connect my tolino eReader to the web?",
+    "tag": "h4",
+    "class": "entry-title"
+  },
+  {
+    "title": "5.2. How do I log in to my book store from my tolino eReader?",
+    "tag": "h4",
+    "class": "entry-title"
+  },
+  {
+    "title": "5.3. Your homescreen at a glance",
+    "tag": "h4",
+    "class": "entry-title"
+  },
+  {
+    "title": "6. Read Aloud Function (Text-to-Speech)",
+    "tag": "h3",
+    "class": "entry-title"
+  },
+  {
+    "title": "6.1. How do I stop the Read Aloud function?",
+    "tag": "h4",
+    "class": "entry-title"
+  },
+  {
+    "title": "6.2. How do I use the Read Aloud function for eBooks",
+    "tag": "h4",
+    "class": "entry-title"
+  },
+  {
+    "title": "7. tolino cloud (tolino shine 5. generation)",
+    "tag": "h3",
+    "class": "entry-title"
+  },
+  {
+    "title": "7.1. How can I link the eBooks I have from other book stores to my tolino library (library linking)?",
+    "tag": "h4",
+    "class": "entry-title"
+  },
+  {
+    "title": "7.2. How do I set up Family Sharing on my tolino eReader?",
+    "tag": "h4",
+    "class": "entry-title"
+  },
+  {
+    "title": "7.3. Where can I find more information about “Family Sharing”?",
+    "tag": "h4",
+    "class": "entry-title"
+  },
+  {
+    "title": "7.4. Where can I find the books and audio books that a family member has shared with me?",
+    "tag": "h4",
+    "class": "entry-title"
+  },
+  {
+    "title": "9. Troubleshooting (tolino shine 5. Generation)",
+    "tag": "h3",
+    "class": "entry-title"
+  },
+  {
+    "title": "9.1.  I can't open my ebook, what should I do?",
+    "tag": "h4",
+    "class": "entry-title"
+  },
+  {
+    "title": "9.2. I'm having problems connecting my tolino eReader to the computer. What can I do?",
+    "tag": "h4",
+    "class": "entry-title"
+  },
+  {
+    "title": "9.3. I'm having problems logging in, what should I do?",
+    "tag": "h4",
+    "class": "entry-title"
+  },
+  {
+    "title": "9.4. I'm having problems with my WiFi connection, what can I do?",
+    "tag": "h4",
+    "class": "entry-title"
+  },
+  {
+    "title": "9.5. My book store is not available, what should I do?",
+    "tag": "h4",
+    "class": "entry-title"
+  },
+  {
+    "title": "9.6. My tolino eReader isn't responding. How do I carry out a reset?",
+    "tag": "h4",
+    "class": "entry-title"
+  },
+  {
+    "title": "9.7. What should I do if a software update doesn’t work?",
+    "tag": "h4",
+    "class": "entry-title"
+  },
+  {
+    "title": "9.8. When I open my eBook, I get the error message \"This eBook is DRM protected...\" What should I do?",
+    "tag": "h4",
+    "class": "entry-title"
+  },
+  {
+    "title": "Download tolino app from the App Store:",
+    "tag": "h3"
+  },
+  {
+    "title": "Keep in touch with tolino:",
+    "tag": "h3"
+  }
+]

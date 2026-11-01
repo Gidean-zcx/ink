@@ -1,0 +1,117 @@
+> For the complete documentation index, see [llms.txt](https://docs.eudic.net/1/llms.txt). Markdown versions of documentation pages are available by appending `.md` to page URLs; this page is available as [Markdown](https://docs.eudic.net/1/shi-yong-zhi-yin/dan-ci-cha-xun/kua-ruan-jian-qu-ci.md).
+
+# 跨软件取词
+
+借助欧路词典强大的跨软件取词功能，您可以方便地在使用其他软件时轻松获取单词释义。
+
+因系统限制，iOS 和 Android 设备的跨软件取词方式有所不同，请根据您的设备按需查看。
+
+{% tabs %}
+{% tab title="iOS 设备" %}
+
+## **1. 跨软件翻译窗口**
+
+（1）打开词典App账号页面 - 跨软件取词 - 开启“启用跨软件翻译窗口”，然后将词典App置于后台。
+
+{% hint style="info" %}
+自选设置：可以在当前页面设置是否开启“通知栏显示”、跨软件翻译窗口的大小、默认的翻译引擎。
+{% endhint %}
+
+（2）在任意程序（比如 Safari 浏览器）中，长按选中需要翻译的单词或句子，点击菜单中&#x7684;**【复制】**。
+
+使用指引动画：
+
+<figure><img src="https://3412199665-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2F-Mgyh1kdOQ5JH6pNTt27%2Fuploads%2FdG7ruaYrnjM4ZmHcVB6E%2FScreenRecording_06-19-2025%2014-16-47_1.GIF?alt=media&amp;token=b11182d1-3c4f-4745-9894-7e0315280a14" alt=""><figcaption></figcaption></figure>
+
+## **2. 设置为系统默认翻译App**
+
+{% hint style="warning" %}
+设置为系统默认翻译App，需要iOS/iPadOS 18.4及以上的系统。
+{% endhint %}
+
+（1）打开欧路词典App账号页面 - 跨软件取词 - 点击设置为系统翻译App - 默认翻译App - 欧路词典。
+
+（2）在系统支持的场景中（长按选中文本后出现系统分享菜单），点击菜单中&#x7684;**【翻译】**。
+
+（3）可以在翻译弹窗中，点击分析，查看单词/句子的解析。
+
+使用指引动画：
+
+<figure><img src="https://3412199665-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2F-Mgyh1kdOQ5JH6pNTt27%2Fuploads%2FzJRYUnyPyVemu4mpwkbA%2FScreenRecording_06-19-2025%2014-28-34_1.GIF?alt=media&amp;token=8e8cbfad-f689-4dda-a45c-23a461d1db17" alt=""><figcaption></figcaption></figure>
+
+## **3. 共享取词**
+
+（1）在任意程序（比如 Safari 浏览器）中，长按选择需要翻译的单词。
+
+（2）在弹出的菜单中点&#x51FB;**【共享】**。
+
+<figure><img src="https://3412199665-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2F-Mgyh1kdOQ5JH6pNTt27%2Fuploads%2Ffm4qspUn0zHDjrdxDhBX%2Fqa_share.png?alt=media&amp;token=8b7107cb-726e-42c1-a509-27e974f8762f" alt=""><figcaption></figcaption></figure>
+
+（3）在弹窗底部点&#x51FB;**【编辑操作】**，即可将词典加&#x5165;**【个人收藏】**。
+
+<figure><img src="https://3412199665-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2F-Mgyh1kdOQ5JH6pNTt27%2Fuploads%2FticEm5K2Y8R7j9ogRMne%2Fqa_save.png?alt=media&amp;token=861e6066-13b6-460c-8daa-57fdaf68622b" alt=""><figcaption></figcaption></figure>
+
+（4）设置完成后，以后就可以随时点&#x51FB;**【共享】**&#x8FDB;行翻译了。
+
+<figure><img src="https://3412199665-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2F-Mgyh1kdOQ5JH6pNTt27%2Fuploads%2F5MoRRCxDkg8wPeCKzJZL%2Fqa_send.png?alt=media&amp;token=cec9e7b7-3ec2-46f3-b471-dcf66699fa02" alt=""><figcaption></figcaption></figure>
+
+使用指引动画：
+
+<figure><img src="https://3412199665-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2F-Mgyh1kdOQ5JH6pNTt27%2Fuploads%2Fg5xVcAMbnMO0g5auLNjv%2Fintroduction.gif?alt=media&amp;token=c6492106-116c-4472-b949-37283f4e5f6d" alt=""><figcaption></figcaption></figure>
+
+## 4. iPad 分屏取词
+
+（1）使用其他 App 时，从屏幕底部边缘向上轻扫并停顿一下，以显示程序坞。
+
+<figure><img src="https://3412199665-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2F-Mgyh1kdOQ5JH6pNTt27%2Fuploads%2FAzqAxVfV5R50cdXCr2TS%2Fipad_01.png?alt=media&amp;token=0fdd9040-3766-4bca-bf9f-0ec4c9f4367b" alt=""><figcaption></figcaption></figure>
+
+（2）在程序坞中按住词典软件，将其拖到屏幕的右边缘或左边缘，然后松开手指。
+
+<figure><img src="https://3412199665-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2F-Mgyh1kdOQ5JH6pNTt27%2Fuploads%2FwNPdDvwgchhrUy0Vjqvs%2Fipad_02.png?alt=media&amp;token=c9a69935-f721-433d-8b69-2d38b67790fb" alt=""><figcaption></figcaption></figure>
+
+（3）长按选中您需要翻译的内容，点&#x51FB;**【拷贝】**&#x6309;钮。
+
+<figure><img src="https://3412199665-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2F-Mgyh1kdOQ5JH6pNTt27%2Fuploads%2FFiGIHexclweoTn6RGCXc%2Fipad_03.png?alt=media&amp;token=34e6704e-a107-4e3a-878a-a542e45da66f" alt=""><figcaption></figcaption></figure>
+
+（4）词典中会自动显示该单词的解释供您查看。
+
+<figure><img src="https://3412199665-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2F-Mgyh1kdOQ5JH6pNTt27%2Fuploads%2FaSyqBRlLJf5duf9zpoNK%2Fipad_04.png?alt=media&amp;token=36231ce4-c731-4abe-99da-654869bec985" alt=""><figcaption></figcaption></figure>
+{% endtab %}
+
+{% tab title="Android 设备" %}
+
+## 1. 浮动图标取词
+
+（1）&#x5728;**【帐号】**-【**跨软件取词】**&#x4E2D;打开【**显示浮动取词图标】**&#x5F00;关，并给予欧路词典**显示悬浮窗**以及**截取屏幕内容**的权限。设置完成后，即可在各类软件中方便快捷地查词翻译。
+
+![](https://3412199665-files.gitbook.io/~/files/v0/b/gitbook-legacy-files/o/assets%2F-Mgyh1kdOQ5JH6pNTt27%2F-MhmVCFEj7nwsEpf4H9_%2F-MhmVaUMPevvugQEXWV1%2Fimage.png?alt=media\&token=7bb2ad0a-dc86-4438-933a-c3738713d20e)
+
+![](https://3412199665-files.gitbook.io/~/files/v0/b/gitbook-legacy-files/o/assets%2F-Mgyh1kdOQ5JH6pNTt27%2F-MhmVCFEj7nwsEpf4H9_%2F-MhmVja8MI2WLMMhjDXz%2Fimage.png?alt=media\&token=888592d8-0e13-488f-9423-07984616a3eb)
+
+![](https://3412199665-files.gitbook.io/~/files/v0/b/gitbook-legacy-files/o/assets%2F-Mgyh1kdOQ5JH6pNTt27%2F-MhmVCFEj7nwsEpf4H9_%2F-MhmVqDdt8IKPM8p_Cj6%2Fimage.png?alt=media\&token=8b9230c8-a9d5-471e-a16a-96b1b86246f0)
+
+（2）使用其他软件并遇到生词时，只需**拖动浮动图标**，把**取词框**对准对应单词，就会出&#x73B0;**【查词弹窗】**&#x5E76;显示单词释义。如果觉得弹窗太小，看着不方便，上下拖动弹窗底部即可自由调节大小。
+
+![](https://3412199665-files.gitbook.io/~/files/v0/b/gitbook-legacy-files/o/assets%2F-Mgyh1kdOQ5JH6pNTt27%2F-MhrrQeTtqay09d0qxZR%2F-Mhrsjv3g8fS8MvfamCL%2Fimage.png?alt=media\&token=571af8fc-0d39-43aa-8da4-e89a6bbf4a15)
+
+（3）浮动图标取词支持**自定义弹窗内容。**&#x60A8;可以在【**帐号】**-【**词典库管理】**&#x4E2D;添加你需要的词库，它就会在浮动图标取词时显示出来，同时也支持对词典的自定义排序。
+
+（4）**点击浮动图标**即可**快速查词**。如果您希望在其他软件中搜索查词，只需**点击浮动小图标**，在搜索栏中输入要查询的内容，就会出现对应的释义或者单词，以及联想词列表。
+
+如果需要查看更多解释，点击列表中的任意一行，即可查看详细释义。
+
+![](https://3412199665-files.gitbook.io/~/files/v0/b/gitbook-legacy-files/o/assets%2F-Mgyh1kdOQ5JH6pNTt27%2F-MhrrQeTtqay09d0qxZR%2F-Mhrto_6TYc3w3eVnhju%2Fimage.png?alt=media\&token=f667f2bf-c131-466a-a08f-7431328097bc)
+
+## 2. LightPeek 复制查词
+
+{% hint style="info" %}
+从 Android 10 开始，系统限制了第三方软件访问剪贴板的权限，因此在Android 10及以上的系统上，复制查词功能无法使用，推荐您使用**浮动图标取词**功能。
+{% endhint %}
+
+（1）&#x5728;**【帐号】**-**【跨软件取词】**&#x4E2D;打&#x5F00;**【开启 LightPeek 跨软件取词】**&#x5F00;关
+
+（2）使用其他软件并遇到生词时，只需选中生词，在菜单中点&#x51FB;**【复制】**&#x6309;钮，即可自动弹出单词释义。
+
+（3）您可以在【**帐号】**-【**词典库管理】**&#x4E2D;添加你需要的词库，它会取词时显示出来，同时也支持对词典的自定义排序。
+{% endtab %}
+{% endtabs %}

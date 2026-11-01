@@ -1,0 +1,17 @@
+{
+  "name": "76-streak-goal-selected",
+  "at": "2026-10-27T02:15:36.462961+00:00",
+  "url": "https://www.duolingo.com/lesson",
+  "title": "Duolingo - The world’s most popular way to learn",
+  "text": "You’ll be 2x more likely to complete the course!\nYou’ll be 2x more likely to complete the course!\n7\n7 day streak\nGood\n14 day streak\nGreat\n30 day streak\nIncredible\n50 day streak\nUnstoppable\nI CAN DO IT!",
+  "controls": [
+    {
+      "tag": "BUTTON",
+      "text": "I CAN DO IT!",
+      "aria": null,
+      "test": "player-next",
+      "type": "submit",
+      "disabled": false
+    }
+  ]
+}

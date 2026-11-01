@@ -1,0 +1,42 @@
+[
+  {
+    "name": "onleihe-new",
+    "url": "https://mytolino.de/onleihe-neu/",
+    "final_url": "https://mytolino.de/onleihe-neu/",
+    "status": 200,
+    "raw_work_path": "work/tolino-controls-deepening/onleihe-new.html",
+    "raw_sha256": "4b03fdbced96b15028f54f61a2ce33316ac4a0efa11e87f9944bf62f33540fbf",
+    "bytes": 72481,
+    "parsed_text_path": "work/tolino-controls-deepening/onleihe-new.txt"
+  },
+  {
+    "name": "onleihe-help",
+    "url": "https://mytolino.de/anleitung-onleihe/",
+    "final_url": "https://mytolino.de/anleitung-onleihe/",
+    "status": 200,
+    "raw_work_path": "work/tolino-controls-deepening/onleihe-help.html",
+    "raw_sha256": "1e981c579ac9510e8a110569271917a5b1197350633068b4b12dd0bb4ab80ec6",
+    "bytes": 84946,
+    "parsed_text_path": "work/tolino-controls-deepening/onleihe-help.txt"
+  },
+  {
+    "name": "updates-de",
+    "url": "https://mytolino.de/software-updates-tolino-ereader/",
+    "final_url": "https://mytolino.de/software-updates-tolino-ereader/",
+    "status": 200,
+    "raw_work_path": "work/tolino-controls-deepening/updates-de.html",
+    "raw_sha256": "820f71a43f08932af28a0fa7995b01359358c4001f9dce4c4db0624613864623",
+    "bytes": 108517,
+    "parsed_text_path": "work/tolino-controls-deepening/updates-de.txt"
+  },
+  {
+    "name": "finder",
+    "url": "https://mytolino.de/onleihe/",
+    "final_url": "https://mytolino.de/onleihe/",
+    "status": 200,
+    "raw_work_path": "work/tolino-controls-deepening/finder.html",
+    "raw_sha256": "d76152f89e2929f8a5930f641c7c6f8b4186e3a3f618246e38298472a5263072",
+    "bytes": 449309,
+    "parsed_text_path": "work/tolino-controls-deepening/finder.txt"
+  }
+]

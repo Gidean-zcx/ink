@@ -1,0 +1,1192 @@
+=== PDF / printed 28 ===
+28
+eraser only applies to real-time recognition notes.)
+Region eraser
+Allows you to erase the lines or strokes within a specific area
+you have circled. (You can also slide the pen tip over the lines
+or strokes to quickly erase them.)
+Erase all
+Allows you to erase all the handwriting on the current layer.
+White
+Light grey
+Dark grey
+Black
+Grayscale colors
+Lasso
+After selecting handwritten content, you can resize, rotate,
+move, copy (including across pages), cut, or delete it. It can
+also be set as a heading, keyword, event, task, link, or sticker,
+and recognized as text or Digest.
+Layer
+You can create up to 3 layers on top of the main layer.
+Available only in Standard Notes.
+Undo
+Undo up to the last 20 actions on the current page (excluding
+adding/deleting layers and template changes).
+Redo
+Restore previously undone actions on the current page.
+Export & Share
+You can share notes via QR code, or export them as PNG / PDF
+/ TXT / DOCX, or share NOTE files to InkHub.
+Add
+to
+Quick
+Access
+Add current page or current note/document to Quick Access
+list in the sidebar menu
+One-finger
+swipe Allow one-finger gesture to slide and turn pages
+
+=== PDF / printed 58 ===
+58
+Chapter 4
+Handwriting and Drawing
+4.1 Create a new notebook
+1、
+Tap "
+New Note" in the
+sidebar menu
+2、
+Or tap "Files" in the sidebar
+menu to access the "Files"
+page, then tap "
+New
+Note" in any file.
+
+=== PDF / printed 59 ===
+59
+3、
+Enter a new name for the
+note or use the default
+name , Select a note type
+and tap “Create”.
+4.2 Real-time recognition notebooks
+This type of note is marked with “
+”in “Files”and supports searching for recognized
+handwritten text, but doesn’t support layers.
+1、
+Create
+a
+real-time
+recognition note
+
+When
+creating
+a
+new
+note, select the note type
+as
+“Real-Time
+Recognition”
+
+Select
+a
+handwriting
+recognition language for
+the note (which cannot be
+changed once the note is
+
+=== PDF / printed 64 ===
+64
+4.5 Change templates
+Tap “
+Templates”
+Or select one or more
+pages
+on
+the
+“Pages”
+screen
+and
+tap
+“
+Templates”.
+Built-in templates
+Tap on the template to
+apply it
+Image
+Tap
+"Customization"
+or
+select from MyStyle folder
+Tap an image to apply it
+directly as a template.
+
+=== PDF / printed 65 ===
+65
+PDF
+Tap
+“Customization”
+to
+select
+directly,
+choose
+from the MyStyle folder,
+or download from InkHub.
+Tap a PDF template to
+select one or more pages
+on the “Pages” screen
+Tap
+“
+Apply
+as
+Template ”(Note:Supports
+navigating between pages
+via the links embedded in
+the original PDF)
+Note: Support importing custom image and PDF templates, please refer to How to make
+a custom note template using images?
+4.6 Using layers
+Layer function is usually applicable for drawing. Apart from the Background layer and the
+
+=== PDF / printed 66 ===
+66
+main layer, another three layers can be added.
+Tap “
+Layers”
+The “Main Layer” is The
+“Main Layer” is mainly
+used
+for
+handwriting
+words. It’s the only layer
+where
+you
+can
+set
+headings
+and
+keywords
+for notes, create links and
+calendar events. (Please
+refer to “Using headings”,
+“Using Keywords”, “Using
+links” and “ Recognize
+titles for event ”).
+1、
+Add, delete, show/hide
+To add, delete, show/hide layers
+Tap “
+” to add a layer
+Tap “
+” to delete the
+selected layer
+Tap “
+” to hide a layer
+Tap “
+”to display a
+layer
+
+=== PDF / printed 67 ===
+67
+2、
+Adjust the layer sequence
+Tap “
+” or “
+” to
+adjust
+the
+order
+of
+selected layer
+3、
+Rename layer
+Tap "
+"
+Enter a new name in the
+popup window and tap
+“OK”
+to
+rename
+the
+selected layer
+4.7 Using headings
+1、
+Create headings
+Tap “
+Lasso”, select
+handwriting
+content
+by
+drawing a circle around it
+with stylus.
+
+=== PDF / printed 68 ===
+68
+Tap “
+”to select a
+heading pattern
+*Note:
+Handwriting
+in
+the
+lassoed heading area cannot be
+performed.
+2、
+Check headings
+Tap
+“
+Navigation
+Window”
+Select “
+Headings”
+
+=== PDF / printed 69 ===
+69
+3、
+Delete headings
+Circle a heading with the
+lasso tool or press and
+hold it with the pen, tap
+“
+”.
+You can also tap “
+” on
+the Titles page in the
+navigation Window.
+* Note: The heading function is only available on main layer.
+4.8 Using keywords
+The content written on the note or document page can be identified by circled keywords, so
+as to quickly search for the file pages related to the keywords. Take below "notes" as an
+example:
+1、
+Add keywords
+Lasso
+the
+handwritten
+text you want to create a
+keyword from and tap
+“
+”.
+Or tap “
+More”and
+“
+Add Keyword”.
+
+=== PDF / printed 70 ===
+70
+Enter a keyword using the
+keyboard and tap“Add”;
+or
+select
+one
+from
+recently used.
+2、
+Check keywords
+Tap
+“
+Navigation
+Window”
+Select “
+Keywords”
+3、
+Delete keywords
+On the “Keywords” page,
+tap “
+”.
+*Note：Keywords only can be recognized in the main layer.
+
+=== PDF / printed 71 ===
+71
+4.9 Using links
+1、
+Insert links
+Lasso
+the
+handwriting
+you need to create a link
+for or tap “
+More”,
+then tap “
+Insert
+Link”
+Select a link style and
+target
+type
+(When
+creating a link from the
+More
+menu,
+you
+can
+choose how the link title
+to be displayed)
+Select a link target
+
+=== PDF / printed 72 ===
+72
+2、
+Edit links
+Circle a link with the
+lasso tool or press and
+hold it with the pen,tap
+“
+”.
+3、
+Delete links
+Circle a link with the
+lasso tool or press and
+hold it with the pen,tap
+“
+”.
+
+=== PDF / printed 73 ===
+73
+4、
+Navigate using links
+Tap the link to jump to
+the target location
+Tap “
+”or swipe up
+with one finger in the top
+half of the
+screen to
+return
+to
+the
+page(s)
+before jumping step by
+step; tap “
+” to
+return
+to
+the
+original
+page before jumping at
+once
+*Note: Links can only be created and tapped on the visible main layer. （You can only
+create links in notes for now.）
+
+=== PDF / printed 74 ===
+74
+4.10 Using text boxes
+1、
+Create text boxes
+
+Tap the “
+Text” tool
+to insert digests, paste
+text, or create a new text
+box.
+
+You can also use the
+“
+Lasso” tool to circle
+handwriting and select
+“
+Recognize as Text”
+to create a text box.
+
+=== PDF / printed 75 ===
+75
+2、
+Edit text boxes
+
+Double-tap the text box
+with a finger or long
+press it with the pen to
+enter editing mode.
+
+Alternatively, select the
+text box with the "Lasso
+"
+tool
+and
+tap
+"
+Edit Text" to enter
+editing mode.
+
+While in editing mode,
+you can modify the font
+and size, or apply bold,
+italic, or delete the text.
+3、
+Adjust text boxes
+
+In editing mode, you can
+use the pen to move the
+text box or resize it.
+
+You can also use the
+“
+Lasso”
+tool
+to
+adjust its position or size.
+
+=== PDF / printed 76 ===
+76
+4、
+Delete text boxes
+
+After
+selecting
+a
+text
+box, tap“
+Delete”.
+
+You can also delete it
+with the “
+Lasso” tool
+or Eraser tool.
+4.11 Using stickers
+5、
+Create stickers
+Tap "
+Lasso" and
+select
+handwritten
+content by drawing
+a
+circle
+around
+it
+with
+stylus.
+
+Tap "
+New Sticker",
+enter a name, and select
+a collection.
+
+Tap "Create"
+6、
+Organize stickers
+
+Stickers
+can
+be
+categorized
+and
+managed by collections.
+
+Long press a sticker to
+
+=== PDF / printed 77 ===
+77
+rename, move, bring to
+front, or delete it.
+7、
+Insert stickers
+
+Tap a sticker to insert it.
+*Note: Currently, only collections exported from this feature can be imported.
+4.12 Organize handwriting
+4.12.1 Copy/cut/paste handwriting
+1、
+Tap "
+Lasso"
+Select
+handwriting
+content
+by
+drawing
+a
+circle
+around
+it
+with
+stylus.
+Tap
+“
+Copy”,
+or
+“
+Cut”
+After that, the lasso icon
+will
+be
+switched
+to
+“
+Paste”
+
+=== PDF / printed 78 ===
+78
+2、
+Paste
+copied
+or
+cut
+handwriting to the current
+note
+After
+tapping
+the
+“
+Copy”or “
+Cut”
+icon, stay on the current
+page or jump to another
+page
+from
+the“Pages”screen.
+Or tap “
+Copy to” to
+jump
+to
+the
+“Pages”screen and select
+a target page.
+Tap the screen with stylus
+nib to paste the note
+3、
+Paste
+copied
+or
+cut
+handwriting to a different
+note
+
+Open a different note
+Tap “
+Paste”(skip this
+step if the paste icon is
+already selected)
+Tap the screen with stylus
+
+=== PDF / printed 79 ===
+79
+to paste
+*Note: Tap “
+”to clear
+clipboard and the paste icon
+will also switch back to the
+lasso icon.
+4.12.2 Move handwriting
+Tap “
+Lasso”, select
+handwriting content by
+drawing a circle around it
+with stylus.
+Drag
+in
+lasso
+selected
+square region with pen
+nib
+4.12.3 Zoom in/zoom out handwriting
+Tap “
+Lasso”, select
+handwriting content by
+drawing a circle around it
+with stylus.
+In the region selected by
+lasso with pen tip, select
+
+=== PDF / printed 80 ===
+80
+the four corners of the
+lasso
+square,
+drag
+it
+outward/inward to zoom
+in and zoom out.
+4.12.4 Rotate handwriting
+Tap “
+Lasso”, select
+handwriting content by
+drawing a circle around it
+with stylus.
+Use pen tip on "
+"
+icon
+of
+lasso
+selected
+region
+to
+rotate
+the
+square angle.
+
+=== PDF / printed 81 ===
+81
+4.13 Organize pages
+4.13.1 Delete/insert note pages
+1、
+Delete a note page
+Tap “
+More” on the
+toolbar
+and
+tap
+“
+Delete
+Current
+Page”
+Or tap “
+pages”and
+long press a note page
+until
+the
+function
+bar
+appears. Select the note
+page(s)
+you
+want
+to
+delete
+and
+tap
+“
+Delete”
+2、
+Insert a note page
+Tap “
+More”on the
+toolbar or navigate from
+the top function bar on
+the “Pages” screen.
+Tap “
+Insert Page
+Before” to insert a note
+page before the current
+
+=== PDF / printed 82 ===
+82
+page
+Tap “
+Insert Page
+After” to insert a note
+page after the current
+page
+4.13.2 Copy/move note pages
+1、
+Tap “
+Pages”
+Long press a note page
+until
+the
+function
+bar
+appears at the top of the
+screen
+2、
+Select
+note
+page(s)
+to
+copy or move
+Tap
+“
+Copy”
+or
+“
+Move”
+
+=== PDF / printed 83 ===
+83
+2、
+“Copy
+to”
+/
+“Move
+to”page
+Stay in the current note
+or select another note
+Tap to select a page to be
+moved or copied
+Select the "Before page"
+or "After page" of the
+target page
+
+Tap“ OK”
+4.13.3 Cut/copy current note page
+Tap “
+More” on the
+toolbar
+Tap
+“
+Cut
+Current
+Page”or “
+Copy Current
+Page”
+Select where to paste the
+cut or copied page in the
+current
+note
+or
+other
+notes
+
+Tap “
+Paste Page” to
+
+=== PDF / printed 84 ===
+84
+paste the cut or copied
+page
+4.14. Export & share
+Tap
+“
+Export
+&
+Share”
+and
+select
+the
+pages you want to export
+or share.
+Export as PNG, PDF, TXT,
+or Word.
+You can also share PNG
+or PDF via QR code.
+Or directly share NOTE
+files to InkHub.
+Chapter 5
+Read
+5.1 Import documents
+You can use USB 、Supernote Partner App or Cloud to import PDF and EPUB files to your
+Supernote device.
+Method 1: USB
+1、
+Connect Supernote device to PC with a USB cable
+
+=== PDF / printed 130 ===
+130
+10、Delete a straight line
+
+Select the straight line
+using the lasso tool and
+tap “
+Delete”; or use
+the eraser tool to erase
+it.
+*Note：You can turn on/off “Smart Straight Line”feature in “ Pen Preferences.”
+14.4 Star tag
+1、
+Draw "
+" in one stroke
+on a note/document page
+to create a star, which
+allows you to search for
+the specific page quickly.
+2、
+View pages with the "
+"
+tag
+
+Tap
+“
+Navigation
+Window”
+
+Tap "
+Stars" to view
+pages with this tag
+
+=== PDF / printed 131 ===
+131
+3、
+Erase
+pages
+with
+the
+"
+" tag
+
+Select and long press a
+page
+
+Select the pages with the
+"
+" tag you want to
+erase
+
+Tap "
+Erase Star"
+*Note:
+Stars
+within
+headings won’t erased
+*Note：Stars can only be used on the main layer. You can turn on/off star recognition in
+“ Pen Preferences”.
+14.5 Clipboard
+The clipboard function is applicable in Notes, Documents, Settings, File Manager, Digests,
+Mail, Calendar, To-Do, and some third-party apps (text content only).Supports cutting,
+copying and pasting text between Supernote and the desktop Supernote Partner app. (To
+do this, please enable Keyboard Sharing in the desktop Supernote Partner app.)
+Select text
+
+=== PDF / printed 132 ===
+132
+Double-tap
+a
+word to
+enter
+text
+selection
+mode.
+Adjust the start and end
+points
+to
+select
+the
+desired text.
+Copy or cut text
+After the action menu
+pops up, tap “Copy” to
+save
+the
+text
+to
+the
+clipboard.
+Tap “Cut” to move the
+text to the clipboard and
+delete it from the original
+location.
+Paste text
+In the target input field
+or
+any
+text-supported
+app,
+Double-tap,
+then
+tap
+“Paste”
+from
+the
+menu.
+The copied or cut text
+will be inserted at the
+
+=== PDF / printed 133 ===
+133
+cursor position from the
+clipboard.
+14.6 Browse & Access
+
+Swipe down from the
+top of the screen to
+open the top menu bar
+and tap “
+Browse &
+Access”
+
+Enter the corresponding
+URL
+on
+the
+receiving
+device
+
+On the receiving device,
+click “
+” to upload
+files,
+single-click
+a
+filename
+to
+download
+the
+corresponding
+file
+and click “
+” to
+refresh the webpage.
+
+=== PDF / printed 135 ===
+135
+14.8 Search
+Open the top menu bar, tap
+“
+Search”
+Search for files
+Tap a file format and tap
+“
+”.
+Or enter the file name
+and tap “
+”.
+Search for keywords
+
+=== PDF / printed 136 ===
+136
+Switch the search target
+to Keyword.
+Tap “
+” directly to
+see the search results
+that
+contain
+all
+the
+keywords
+you
+have
+added.
+Or enter a keyword, and
+tap “
+”.
+Search results for related
+files or pages per input
+keyword
+Search for stars
+Switch the search target
+to Star.
+Tap “
+”directly to see
+the search results that
+contain all the stars you
+have created.
+Or enter a file name, and
+tap “
+”to search for
+
+=== PDF / printed 137 ===
+137
+specific files that contain
+stars.
+Search for handwritten text
+Switch the search target
+to Handwriting.
+Enter
+recognized
+handwritten
+text
+from
+real-time
+recognition
+notes.
+Tap “
+”
+14.9 Quick access
+You can add 8 specified pages, notes/documents, or folders that need to be opened
+quickly to the quick access list in the sidebar menu
+1、
+Add items to Quick Access
+Specified
+pages
+and
+notes/documents
+Open a note/document
+page
+Tap “
+”and choose to
+add the current page or
+note/document
+by
+
+=== PDF / printed 148 ===
+148
+15.5 Delete Local emails
+Long press to select the
+mail to be deleted
+Tap "
+"
+15.6 Read and Unread
+Long
+press
+to
+select
+email(s)
+Tap
+“
+Mark
+as
+Unread” or “
+Mark as
+Read”.
+Chapter 16 Calendar
+In the sidebar menu, tap “Calendar”.
+If it is the first time opening the Calendar, the default
+view
+will be the “Monthly View”.
+16.1 Manage account
+Tap "
+"
+Tap"
+"to
+enter
+authorization page
+
+=== PDF / printed 149 ===
+149
+Use QR code scan or
+input website link
+Input Random code
+Get
+and
+input
+Authorization code
+Tap "Authorize "
+
+=== PDF / printed 150 ===
+150
+After
+authorization
+is
+completed
+successfully,
+you
+can
+choose
+to
+enable
+Auto-sync
+or
+tap“
+”to manually
+sync your calendar.
+* Note: If Auto-sync is enabled, the calendar will be synced automatically every time a
+calendar event is created, revised or deleted.
+16.2 Settings
+Tap "
+"
+Tap the date square or
+"
+"
+Select the start day of
+the week
+Close
+side
+column
+by
+tapping
+screen
+once
+after
+completion
+of
+settings
+*Note：Please delete ALL handwritings before set up the date.
+
+=== PDF / printed 151 ===
+151
+16.3 Switch view
+Tap
+"
+", "
+",
+and
+"
+"to switch
+different calendar views
+Handwritings
+can
+be
+added into monthly and
+weekly calendar views
+16.4 Select the date
+Tap Year/Month on top
+of display
+Select
+"Year"and
+"Month"
+Tap "
+" or slide
+the calendar to switch
+different month
+Tap " Today "to return
+
+=== PDF / printed 152 ===
+152
+16.5 Using events
+1、
+Create
+In
+monthly
+or
+weekly
+view
+Tap "
+"
+Input title and details
+Set up the time
+Tap "OK"
+In daily calendar view
+Tap the time slot to input
+Create
+event
+corresponding the time
+slot
+Tap "OK"
+
+=== PDF / printed 153 ===
+153
+In the Note app
+tap “
+Lasso”
+Draw a circle to selected
+handwriting
+and
+tap
+“
+New Event”
+Input details and set the
+time
+Tap "OK"
+2、
+Check
+In
+monthly
+or
+weekly
+view
+Select date
+Tap
+date
+square
+or
+bottom-right
+corner
+to
+check all events of the
+day
+
+=== PDF / printed 154 ===
+154
+Click
+single
+event
+to
+check details
+In Daily calendar view
+Tap the date to check all
+events of the day
+3、
+Edit, Delete
+Edit
+Tap "
+"
+Open the event page ，
+Re-edit
+
+=== PDF / printed 155 ===
+155
+Tap "OK"
+Delete
+
+Tap“
+” in event list
+box or Event details
+Tap
+“Delete”
+in
+event
+edit page
+16.6 Today’s Notes
+In the bottom-left corner
+of
+the
+monthly
+and
+weekly views, you can
+view
+or
+open
+today’s
+notes.
+Tap “
+New Note” to
+create notes for today.

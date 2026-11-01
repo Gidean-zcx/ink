@@ -1,0 +1,108 @@
+Manage your Lists (https://help.audible.com/s/article/manage-collections?language=en_US)
+citeturn766search3 [wordlim: 200] Crawled: 2 days ago; ## Manage your Lists ... Give your list a name and description. ... Browse to find and select a public collection that interest you.
+
+## Manage your Lists
+
+You'll find two types of lists in the Audible experience — personal ones you can create in your own Library and public ones curated by your favorite authors, narrators, and Audible editors. You can save these public lists to your Library from both the desktop website and app to make them easier to access and enjoy.
+
+If you're looking for more information about your Library, please visit Manage your Library.
+
+Note: The mobile website doesn't currently support creating personal lists.
+
+## How do I create a personal list?
+
+In the app
+
+  1. Open the Audible app.
+  2. Go to your Library.
+  3. Select Lists.
+  4. Select New Lists.
+  5. Give your list a name and description.
+  6. Select Create.
+
+You can start adding titles from your Library right away.
+
+On the Audible website
+
+  1. Go to the Audible site and sign in.
+  2. Select Library in the site's navigation.
+  3. Select Collections.
+  4. Select New Collection.
+  5. Give your collection a name and description.
+  6. Select Create.
+
+You can start adding titles from your Library right away.
+
+## How do I add titles to a list?
+
+In the app
+
+  1. Open the Audible app.
+  2. Select Library.
+  3. Find the title you want to add.
+  4. Select the 3-dot More menu.
+  5. Select Add to list.
+  6. Choose the list to which you want to add the title.
+
+On the Audible website
+
+  1. Go to the Audible site and sign in.
+  2. Select Library.
+  3. Find the title you want to add.
+  4. Select + Add to… under the title.
+  5. Choose the collection you want to add the title to.
+
+
+## How do I remove a title from a list?
+
+In the app
+
+  1. Open the Audible app.
+  2. Go to your Library.
+  3. Select Lists.
+  4. Find the list that has the title.
+  5. Find the title on the list.
+  6. Select the 3-dot More menu.
+  7. Select Remove from List.
+
+On desktop
+
+  1. Go to the Audible site and sign in.
+  2. Go to your Library.
+  3. Select Collections.
+  4. Find the list that has the title.
+  5. Find the title on the list.
+  6. Select Remove from collection.
+
+## How do I remove a list?
+
+In the app
+
+  1. Open the Audible app.
+  2. Go to your Library.
+  3. Select Lists.
+  4. Find the list you want to remove.
+  5. Select the 3-dot More menu.
+  6. Select Remove from Lists.
+
+On the Audible website
+
+  1. Go to the Audible site and sign in.
+  2. Select Library.
+  3. Select Collections.
+  4. Find the list you want to remove.
+  5. Select Delete collection.
+  6. Confirm deletion.
+
+Note: Once deleted, lists cannot be restored, and the list will need to be created again and the titles added manually.
+
+## How do I follow public Collections?
+
+You can listen to curated content by authors, narrators, podcast hosts and Audible editors by following these steps.
+
+  1. Go to the Audible site and sign in.
+  2. Browse to find and select a public collection that interest you.
+  3. Select Save to Collections.
+  4. The collection will appear in your Library under Lists.
+
+Note: You can unfollow a public collection at any time by selecting your Library, Lists, then select Delete collection.

@@ -1,0 +1,21 @@
+{
+  "order": 12,
+  "entry_id": "INO-basic--web-pages--can-i-save-web-pages-outside-my-feeds",
+  "title": "Can I save web pages outside my feeds?",
+  "url": "https://www.inoreader.com/help/basic/web-pages/can-i-save-web-pages-outside-my-feeds",
+  "checked_on": "2026-10-27",
+  "http_status": 200,
+  "final_url": "https://www.inoreader.com/help/basic/web-pages/can-i-save-web-pages-outside-my-feeds",
+  "acquisition": "one_anonymous_normal_GET",
+  "raw_path": "work/research/batch41-inoreader-help/12-INO-basic--web-pages--can-i-save-web-pages-outside-my-feeds.html",
+  "headers_path": "work/research/batch41-inoreader-help/12-INO-basic--web-pages--can-i-save-web-pages-outside-my-feeds.headers.json",
+  "raw_sha256": "ebe0d23b0060c21d0a95f384640591fc8502561d7e0085baaed849f938da010e",
+  "bytes": 140887,
+  "status": "body_obtained",
+  "body_status": "extracted_not_yet_root_read",
+  "body_path": "work/research/batch41-inoreader-help/12-INO-basic--web-pages--can-i-save-web-pages-outside-my-feeds.body.txt",
+  "body_sha256": "05380742aede0b73ce78e8c702c28b50d297321291f2a7da31703a97b015e88d",
+  "body_chars": 89,
+  "links": [],
+  "images": []
+}

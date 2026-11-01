@@ -1,0 +1,10 @@
+Control the flow of actions in Shortcuts on iPhone or iPad
+When you start working with more complex shortcuts, you’ll encounter actions that express logic and change the flow of the shortcut (such as skipping or separating groups of actions). Here are a few examples of these special types of actions:
+Variables
+Variables temporarily save some content for use later in a shortcut. Often, actions that contain variables don’t connect directly to the next action in the shortcut. Instead, they pass their output (including the variable) to another action later in the shortcut. See Use variables in Shortcuts on iPhone or iPad.
+If actions
+The If action checks for specific conditions in a shortcut and outputs varying results depending on which condition is met. Therefore, actions can take different paths depending on conditions that are determined when the shortcut runs. See Use If actions in Shortcuts on iPhone or iPad.
+Repeat actions
+Repeat actions are used to perform the same actions multiple times, creating loops. Actions inside a repeat loop run from top to bottom in the loop, and then jump back to the top, repeating the actions as many times as necessary. See Use Repeat actions in Shortcuts on iPhone or iPad.
+Choose from actions
+Choose from actions pause the shortcut and present a menu of options to the user. Based on the option chosen, different actions populate the rest of the shortcut, leading to different outcomes. See Use the Choose from Menu action in Shortcuts on iPhone or iPad.

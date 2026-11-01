@@ -1,0 +1,42 @@
+{
+  "id": "6a5e0aeff7351ed8c8cb8c93",
+  "articleId": "6a4e08dbd72beb3969ce1178",
+  "title": "How to factory reset your Yoto Player or Mini",
+  "body": "<h4><span style=\"color: rgb(248, 94, 65);\">A factory reset will delete all downloaded content and restore your Yoto Player or Yoto Mini to factory conditions.</span></h4><p><br></p><p><strong>To factory reset a Yoto Player:</strong></p><ol><li>Press and hold all three buttons on the Yoto Player until the nightlight pulses red.</li><li>Within three seconds of this red pulse, release all three buttons and press the orange button on the right-hand side once.</li><li>The nightlight will briefly flash orange and then shut down once reset is complete.</li></ol><p><br></p><p><strong>To factory reset a Yoto Mini:</strong></p><ol><li>Press and hold all three buttons on the Yoto Mini until a red dot appears on the screen.</li><li>Within three seconds of this red button, release all three buttons and press the orange button on the right-hand side once.</li><li>An orange dot should appear and then shut down once reset is complete.</li></ol><p><br></p><p>After a factory reset, your Yoto Player or Mini will need to go through its setup process again <a href=\"https://support.yotoplay.com/en-US/setting-up-your-yoto-player--mini-3098\">(click here to open the setup article)</a>. If you require any further support, feel free to message us.</p><p><br></p><p><strong>Remove the device from the previous account:</strong></p><p id=\"isPasted\">A factory reset will not remove the device from your family account. If you are giving it to someone else, make sure to also delete its name and remove it from your family account, through the Yoto App.</p><p dir=\"ltr\">To remove it from the family account:&nbsp;</p><ul><li>Go to the Settings tab in the Yoto App</li><li>Tap on the device to open the settings page</li><li>At the top of the page, delete the Player Name</li><li>Scroll to the bottom of the settings page</li><li>Select &ldquo;Remove from family account&rdquo;.</li></ul><p><br></p><p dir=\"ltr\"><strong>Leave the old family account</strong></p><p dir=\"ltr\">If you received a Yoto player from someone else, but they have forgotten to first remove it from their account, you can leave their family account by:</p><ul id=\"isPasted\"><li dir=\"ltr\">Go to the Settings tab in the Yoto App</li><li dir=\"ltr\">Tap on the three dots next to your user</li><li dir=\"ltr\">Select &ldquo;Leave this family account&rdquo;.</li></ul>",
+  "categories": [
+    {
+      "id": "6a19a5be6e96d255daa8983f",
+      "knowledgeBase": "69d522fcb7baaa50525b3529"
+    }
+  ],
+  "primaryCategory": "6a19a5be6e96d255daa8983f",
+  "metaDescription": "A factory reset will delete all downloaded content and restore your Yoto Player or Yoto Mini to factory conditions      To factory reset a Yoto Player    Pres",
+  "metaKeywords": [
+    "Yoto",
+    "reset",
+    "three",
+    "account",
+    "family",
+    "factory",
+    "Player",
+    "will",
+    "Mini",
+    "buttons",
+    "red",
+    "orange",
+    "remove",
+    "delete"
+  ],
+  "metaTitle": "",
+  "lang": "en_gb",
+  "slug": "how-to-factory-reset-your-yoto-player-or-mini",
+  "draftSlug": null,
+  "hash": "ByE1FKsXzl",
+  "publishedAt": "2026-07-20T11:48:03.359Z",
+  "updatedAt": "2026-07-20T11:48:03.462Z",
+  "createdAt": "2026-07-20T11:47:59.565Z",
+  "href": "/en_gb/how-to-factory-reset-your-yoto-player-or-mini-ByE1FKsXzl",
+  "tags": [],
+  "knowledgeBases": [],
+  "scope": "public"
+}

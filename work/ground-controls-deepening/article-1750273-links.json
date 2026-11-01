@@ -1,0 +1,137 @@
+[
+  {
+    "class": "page-header-inner-logo-link",
+    "href": "/en",
+    "title": "",
+    "url": "https://help.ground.news/en"
+  },
+  {
+    "class": "page-header-inner-title",
+    "href": "/en",
+    "title": "Ground News Help Center",
+    "url": "https://help.ground.news/en"
+  },
+  {
+    "type": "button",
+    "class": "kb-button primary",
+    "href": "/en/contact-us",
+    "title": "Contact Us",
+    "url": "https://help.ground.news/en/contact-us"
+  },
+  {
+    "id": "moreResultsLink",
+    "type": "button",
+    "class": "kb-button secondary",
+    "href": "/en/search",
+    "title": "More results",
+    "url": "https://help.ground.news/en/search"
+  },
+  {
+    "href": "https://ground.news/privacy-policy",
+    "title": "Privacy Policy",
+    "url": "https://ground.news/privacy-policy"
+  },
+  {
+    "href": "#for_news_organizations_submit_your_news_source",
+    "class": "navigation-item indent-2",
+    "title": "For News Organizations: Submit Your News Source",
+    "url": "https://help.ground.news/en/articles/1750273#for_news_organizations_submit_your_news_source"
+  },
+  {
+    "href": "#for_readers_recommend_a_news_source",
+    "class": "navigation-item indent-2",
+    "title": "For Readers: Recommend a News Source",
+    "url": "https://help.ground.news/en/articles/1750273#for_readers_recommend_a_news_source"
+  },
+  {
+    "href": "#looking_for_additional_support_let_our_team_help_you",
+    "class": "navigation-item indent-2",
+    "title": "Looking for additional support? Let our team help you.",
+    "url": "https://help.ground.news/en/articles/1750273#looking_for_additional_support_let_our_team_help_you"
+  },
+  {
+    "href": "/en",
+    "title": "Home",
+    "url": "https://help.ground.news/en"
+  },
+  {
+    "href": "/en/categories/2273025-share-your-feedback",
+    "title": "Share Your Feedback",
+    "url": "https://help.ground.news/en/categories/2273025-share-your-feedback"
+  },
+  {
+    "href": "/en/categories/2275393-share-your-feedback-reference-articles",
+    "title": "Share Your Feedback Reference Articles",
+    "url": "https://help.ground.news/en/categories/2275393-share-your-feedback-reference-articles"
+  },
+  {
+    "target": "_self",
+    "rel": "noopener noreferrer nofollow",
+    "class": "kb-link kb-link",
+    "href": "https://ground.news/contact-us?form=source",
+    "title": "News Source Submission Form",
+    "url": "https://ground.news/contact-us?form=source"
+  },
+  {
+    "target": "_self",
+    "rel": "noopener noreferrer nofollow",
+    "class": "kb-link kb-link",
+    "href": "https://ground.news/contact-us?form=source",
+    "title": "News Source Submission Form",
+    "url": "https://ground.news/contact-us?form=source"
+  },
+  {
+    "target": "_self",
+    "rel": "noopener noreferrer nofollow",
+    "class": "kb-link kb-link",
+    "href": "mailto:feedback@ground.news",
+    "title": "feedback@ground.news",
+    "url": "mailto:feedback@ground.news"
+  },
+  {
+    "target": "_self",
+    "rel": "noopener noreferrer nofollow",
+    "class": "kb-link kb-link",
+    "href": "mailto:subscriptions@ground.news",
+    "title": "feedback@ground.news",
+    "url": "mailto:subscriptions@ground.news"
+  },
+  {
+    "target": "_self",
+    "rel": "noopener noreferrer nofollow",
+    "class": "kb-link kb-link",
+    "href": "mailto:feedback@ground.news",
+    "title": "feedback@ground.news",
+    "url": "mailto:feedback@ground.news"
+  },
+  {
+    "href": "https://twitter.com/Ground_app",
+    "title": "",
+    "url": "https://twitter.com/Ground_app"
+  },
+  {
+    "href": "https://ca.linkedin.com/company/groundnews",
+    "title": "",
+    "url": "https://ca.linkedin.com/company/groundnews"
+  },
+  {
+    "href": "https://www.instagram.com/groundnews/",
+    "title": "",
+    "url": "https://www.instagram.com/groundnews/"
+  },
+  {
+    "href": "https://ground.news/refund-policy",
+    "title": "Refund and Cancellation Policy",
+    "url": "https://ground.news/refund-policy"
+  },
+  {
+    "href": "https://ground.news/terms-and-conditions",
+    "title": "Terms and Conditions",
+    "url": "https://ground.news/terms-and-conditions"
+  },
+  {
+    "href": "https://about.ground.news/privacy-policy",
+    "title": "Privacy Policy",
+    "url": "https://about.ground.news/privacy-policy"
+  }
+]

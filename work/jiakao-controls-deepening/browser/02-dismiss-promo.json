@@ -1,0 +1,562 @@
+{
+  "name": "02-dismiss-promo",
+  "url": "https://www.jiakaobaodian.com/mnks/exercise/0-car-kemu1.html?id=800500",
+  "title": "小车科目一模拟考试顺序练习【驾考宝典】",
+  "text": "全国  [切换]\n题库：小车\n驾校入驻驾校后台登录\n首页\n模拟考试\n找驾校\n驾考圈\n交通标志\n软件下载\n驾考宝典企业版\n智慧驾校\n买新车\n二手车\n当前位置：首页>模拟考试>小车科目一>顺序练习\n\n1/100、对未取得驾驶证驾驶机动车的，追究其法律责任。\n\n收藏\n\nA、正确\n\nB、错误\n\n判断题，请判断对错\n上一题\n下一题\n显示答题卡\n显示详解\n 答对自动下一题\n答对：0 题\n答错：0 题\n正确率：0%\n云同步做题进度\n还没报驾校？看看大家报的驾校\n•\nC1/C2\n面议\n汽车销量排行\n更多>\n热门驾校\n长城驾校德安驾校庆安驾校聚元驾校易通驾校影山天麒驾校安行驾校征途驾校骥千里驾校快通驾校民佳驾校柏睿驾校交安驾校驾趣驾校园林驾校呈兴摩托车驾校安胜驾校天城驾校正益驾校润明驾校\n关于我们\n核心产品\n提交漏洞\n隐私政策\n服务条款\n用户协议\n投诉监管\n\n地址：武汉市东湖高新区关山大道332号保利国际31层  \n\n电话：400-056-1377（教练热线）；400-056-1600（驾校热线）\n\n鄂公网安备 42018502004455号  鄂ICP备20007713号-3\n\nCopyright © 2026 武汉木仓科技股份有限公司版权所有\n\n违法和不良信息及算法推荐相关举报入口\n\n举报电话：18120408600，举报邮箱：ipr@mucang.cn",
+  "buttons": [
+    {
+      "text": "短信验证码",
+      "aria": null,
+      "title": "",
+      "id": "",
+      "visible": false
+    },
+    {
+      "text": "开始计算",
+      "aria": null,
+      "title": "",
+      "id": "",
+      "visible": false
+    },
+    {
+      "text": "短信验证码",
+      "aria": null,
+      "title": "",
+      "id": "",
+      "visible": false
+    },
+    {
+      "text": "开始计算",
+      "aria": null,
+      "title": "",
+      "id": "",
+      "visible": false
+    },
+    {
+      "text": "收藏",
+      "aria": null,
+      "title": "",
+      "id": "",
+      "visible": true
+    },
+    {
+      "text": "上一题",
+      "aria": null,
+      "title": "",
+      "id": "",
+      "visible": true
+    },
+    {
+      "text": "下一题",
+      "aria": null,
+      "title": "",
+      "id": "",
+      "visible": true
+    },
+    {
+      "text": "显示答题卡",
+      "aria": null,
+      "title": "",
+      "id": "",
+      "visible": true
+    },
+    {
+      "text": "显示详解",
+      "aria": null,
+      "title": "",
+      "id": "",
+      "visible": true
+    },
+    {
+      "text": "同步",
+      "aria": null,
+      "title": "",
+      "id": "yundata-tongbu",
+      "visible": false
+    },
+    {
+      "text": "返回查看",
+      "aria": null,
+      "title": "",
+      "id": "",
+      "visible": false
+    },
+    {
+      "text": "短信验证码",
+      "aria": null,
+      "title": "",
+      "id": "",
+      "visible": false
+    },
+    {
+      "text": "提交",
+      "aria": null,
+      "title": "",
+      "id": "",
+      "visible": false
+    },
+    {
+      "text": "短信验证码",
+      "aria": null,
+      "title": "",
+      "id": "",
+      "visible": false
+    },
+    {
+      "text": "提交",
+      "aria": null,
+      "title": "",
+      "id": "",
+      "visible": false
+    },
+    {
+      "text": "短信验证码",
+      "aria": null,
+      "title": "",
+      "id": "",
+      "visible": false
+    },
+    {
+      "text": "登录",
+      "aria": null,
+      "title": "",
+      "id": "",
+      "visible": false
+    },
+    {
+      "text": "×",
+      "aria": null,
+      "title": "",
+      "id": "",
+      "visible": false
+    },
+    {
+      "text": "确定",
+      "aria": null,
+      "title": "",
+      "id": "",
+      "visible": false
+    },
+    {
+      "text": "取消",
+      "aria": null,
+      "title": "",
+      "id": "",
+      "visible": false
+    },
+    {
+      "text": "提交",
+      "aria": null,
+      "title": "",
+      "id": "",
+      "visible": false
+    },
+    {
+      "text": "确定",
+      "aria": null,
+      "title": "",
+      "id": "",
+      "visible": false
+    },
+    {
+      "text": "确定",
+      "aria": null,
+      "title": "",
+      "id": "",
+      "visible": false
+    },
+    {
+      "text": "取消",
+      "aria": null,
+      "title": "",
+      "id": "",
+      "visible": false
+    }
+  ],
+  "inputs": [
+    {
+      "type": "text",
+      "placeholder": "请填写您的姓名",
+      "aria": null,
+      "value": "",
+      "id": "",
+      "visible": false
+    },
+    {
+      "type": "text",
+      "placeholder": "请填写您的手机号",
+      "aria": null,
+      "value": "",
+      "id": "",
+      "visible": false
+    },
+    {
+      "type": "text",
+      "placeholder": "请填写短信验证码",
+      "aria": null,
+      "value": "",
+      "id": "",
+      "visible": false
+    },
+    {
+      "type": "hidden",
+      "placeholder": "",
+      "aria": null,
+      "value": "",
+      "id": "",
+      "visible": false
+    },
+    {
+      "type": "text",
+      "placeholder": "所在区域",
+      "aria": null,
+      "value": "",
+      "id": "",
+      "visible": false
+    },
+    {
+      "type": "hidden",
+      "placeholder": "",
+      "aria": null,
+      "value": "",
+      "id": "",
+      "visible": false
+    },
+    {
+      "type": "hidden",
+      "placeholder": "",
+      "aria": null,
+      "value": "",
+      "id": "",
+      "visible": false
+    },
+    {
+      "type": "hidden",
+      "placeholder": "",
+      "aria": null,
+      "value": "",
+      "id": "",
+      "visible": false
+    },
+    {
+      "type": "checkbox",
+      "placeholder": "",
+      "aria": null,
+      "value": "on",
+      "id": "checkbox",
+      "visible": false
+    },
+    {
+      "type": "text",
+      "placeholder": "请填写您的姓名",
+      "aria": null,
+      "value": "某某",
+      "id": "",
+      "visible": false
+    },
+    {
+      "type": "text",
+      "placeholder": "请填写您的手机号",
+      "aria": null,
+      "value": "",
+      "id": "",
+      "visible": false
+    },
+    {
+      "type": "text",
+      "placeholder": "请填写短信验证码",
+      "aria": null,
+      "value": "",
+      "id": "",
+      "visible": false
+    },
+    {
+      "type": "hidden",
+      "placeholder": "",
+      "aria": null,
+      "value": "",
+      "id": "",
+      "visible": false
+    },
+    {
+      "type": "text",
+      "placeholder": "所在区域",
+      "aria": null,
+      "value": "",
+      "id": "",
+      "visible": false
+    },
+    {
+      "type": "hidden",
+      "placeholder": "",
+      "aria": null,
+      "value": "",
+      "id": "",
+      "visible": false
+    },
+    {
+      "type": "hidden",
+      "placeholder": "",
+      "aria": null,
+      "value": "",
+      "id": "",
+      "visible": false
+    },
+    {
+      "type": "hidden",
+      "placeholder": "",
+      "aria": null,
+      "value": "",
+      "id": "",
+      "visible": false
+    },
+    {
+      "type": "checkbox",
+      "placeholder": "",
+      "aria": null,
+      "value": "on",
+      "id": "checkbox",
+      "visible": false
+    },
+    {
+      "type": "text",
+      "placeholder": "请输入关键字",
+      "aria": null,
+      "value": "",
+      "id": "so360_keyword",
+      "visible": true
+    },
+    {
+      "type": "submit",
+      "placeholder": "",
+      "aria": null,
+      "value": "搜 索",
+      "id": "so360_submit",
+      "visible": true
+    },
+    {
+      "type": "hidden",
+      "placeholder": "",
+      "aria": null,
+      "value": "utf8",
+      "id": "",
+      "visible": false
+    },
+    {
+      "type": "hidden",
+      "placeholder": "",
+      "aria": null,
+      "value": "zz_jiakaobaodian.com",
+      "id": "",
+      "visible": false
+    },
+    {
+      "type": "hidden",
+      "placeholder": "",
+      "aria": null,
+      "value": "jiakaobaodian.com",
+      "id": "",
+      "visible": false
+    },
+    {
+      "type": "hidden",
+      "placeholder": "",
+      "aria": null,
+      "value": "1",
+      "id": "",
+      "visible": false
+    },
+    {
+      "type": "checkbox",
+      "placeholder": "",
+      "aria": null,
+      "value": "on",
+      "id": "",
+      "visible": true
+    },
+    {
+      "type": "text",
+      "placeholder": "请填写您的姓名",
+      "aria": null,
+      "value": "",
+      "id": "",
+      "visible": false
+    },
+    {
+      "type": "text",
+      "placeholder": "请填写您的手机号",
+      "aria": null,
+      "value": "",
+      "id": "",
+      "visible": false
+    },
+    {
+      "type": "text",
+      "placeholder": "请填写短信验证码",
+      "aria": null,
+      "value": "",
+      "id": "",
+      "visible": false
+    },
+    {
+      "type": "hidden",
+      "placeholder": "",
+      "aria": null,
+      "value": "",
+      "id": "",
+      "visible": false
+    },
+    {
+      "type": "text",
+      "placeholder": "所在区域",
+      "aria": null,
+      "value": "",
+      "id": "",
+      "visible": false
+    },
+    {
+      "type": "hidden",
+      "placeholder": "",
+      "aria": null,
+      "value": "",
+      "id": "",
+      "visible": false
+    },
+    {
+      "type": "hidden",
+      "placeholder": "",
+      "aria": null,
+      "value": "",
+      "id": "",
+      "visible": false
+    },
+    {
+      "type": "hidden",
+      "placeholder": "",
+      "aria": null,
+      "value": "",
+      "id": "",
+      "visible": false
+    },
+    {
+      "type": "checkbox",
+      "placeholder": "",
+      "aria": null,
+      "value": "on",
+      "id": "checkbox",
+      "visible": false
+    },
+    {
+      "type": "text",
+      "placeholder": "请填写您的姓名",
+      "aria": null,
+      "value": "",
+      "id": "",
+      "visible": false
+    },
+    {
+      "type": "text",
+      "placeholder": "请填写您的手机号",
+      "aria": null,
+      "value": "",
+      "id": "",
+      "visible": false
+    },
+    {
+      "type": "text",
+      "placeholder": "请填写短信验证码",
+      "aria": null,
+      "value": "",
+      "id": "",
+      "visible": false
+    },
+    {
+      "type": "hidden",
+      "placeholder": "",
+      "aria": null,
+      "value": "",
+      "id": "",
+      "visible": false
+    },
+    {
+      "type": "text",
+      "placeholder": "所在区域",
+      "aria": null,
+      "value": "",
+      "id": "",
+      "visible": false
+    },
+    {
+      "type": "hidden",
+      "placeholder": "",
+      "aria": null,
+      "value": "",
+      "id": "",
+      "visible": false
+    },
+    {
+      "type": "hidden",
+      "placeholder": "",
+      "aria": null,
+      "value": "",
+      "id": "",
+      "visible": false
+    },
+    {
+      "type": "hidden",
+      "placeholder": "",
+      "aria": null,
+      "value": "",
+      "id": "",
+      "visible": false
+    },
+    {
+      "type": "checkbox",
+      "placeholder": "",
+      "aria": null,
+      "value": "on",
+      "id": "checkbox",
+      "visible": false
+    },
+    {
+      "type": "text",
+      "placeholder": "手机号码",
+      "aria": null,
+      "value": "",
+      "id": "",
+      "visible": false
+    },
+    {
+      "type": "text",
+      "placeholder": "短信验证码",
+      "aria": null,
+      "value": "",
+      "id": "",
+      "visible": false
+    },
+    {
+      "type": "hidden",
+      "placeholder": "",
+      "aria": null,
+      "value": "",
+      "id": "",
+      "visible": false
+    },
+    {
+      "type": "text",
+      "placeholder": "输入地址查找...",
+      "aria": null,
+      "value": "",
+      "id": "suggestId",
+      "visible": false
+    },
+    {
+      "type": "text",
+      "placeholder": "联系方式(QQ/手机/Email)",
+      "aria": null,
+      "value": "",
+      "id": "",
+      "visible": false
+    }
+  ]
+}

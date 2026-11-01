@@ -1,0 +1,122 @@
+[
+  {
+    "flow_id": "F-M061-01",
+    "source_batch": "docs/research/interaction-library/batches/extension-manuals-coverage.csv",
+    "field": "evidence_ids",
+    "before": "E-HWP-01",
+    "after": "E-HWP-01;E-HWCD-08",
+    "reason": "同任务补机制/条件，编号和D2不变；由root合并"
+  },
+  {
+    "flow_id": "F-M061-01",
+    "source_batch": "docs/research/interaction-library/batches/extension-manuals-coverage.csv",
+    "field": "known_branches",
+    "before": "普通模式优先画质，官方说明某些 app 可能卡顿/闪屏；一键刷新处理当前残影。未给出 60fps 结论。",
+    "after": "智能/普通刷新与一键刷新分开；灯光一键熄灯/白天/夜间/自定义；区域4+64悬浮球可双击刷新",
+    "reason": "同任务补机制/条件，编号和D2不变；由root合并"
+  },
+  {
+    "flow_id": "F-M061-01",
+    "source_batch": "docs/research/interaction-library/batches/extension-manuals-coverage.csv",
+    "field": "gaps",
+    "before": "逐app持久性和实际刷新",
+    "after": "逐app持久性、灰度/实际速度功耗；区域悬浮球当前大陆构建未知",
+    "reason": "同任务补机制/条件，编号和D2不变；由root合并"
+  },
+  {
+    "flow_id": "F-M061-01",
+    "source_batch": "docs/research/interaction-library/batches/extension-manuals-coverage.csv",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27",
+    "reason": "同任务补机制/条件，编号和D2不变；由root合并"
+  },
+  {
+    "flow_id": "F-M061-02",
+    "source_batch": "docs/research/interaction-library/batches/extension-manuals-coverage.csv",
+    "field": "known_branches",
+    "before": "对端限所列 HarmonyOS 2/3 支持机型；看不到书时官方建议重开两端 Wi-Fi/蓝牙。只是导入，不足以证明全量进度同步。",
+    "after": "华为阅读导入同账号对端本地书；对端限HarmonyOS2/3所支持机型；建议5GHz Wi-Fi，2.4GHz可能不稳；看不到书时重开两端Wi-Fi/蓝牙",
+    "reason": "同任务补机制/条件，编号和D2不变；由root合并"
+  },
+  {
+    "flow_id": "F-M061-02",
+    "source_batch": "docs/research/interaction-library/batches/extension-manuals-coverage.csv",
+    "field": "gaps",
+    "before": "重连失败、重复导入和进度",
+    "after": "重连失败、重复/DRM导入、文件完成回执和进度/笔迹同步；Huawei Share文件接收另见F14",
+    "reason": "同任务补机制/条件，编号和D2不变；由root合并"
+  },
+  {
+    "flow_id": "F-M061-02",
+    "source_batch": "docs/research/interaction-library/batches/extension-manuals-coverage.csv",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27",
+    "reason": "同任务补机制/条件，编号和D2不变；由root合并"
+  },
+  {
+    "flow_id": "F-M061-06",
+    "source_batch": "docs/research/interaction-library/batches/extension-manuals-coverage.csv",
+    "field": "evidence_ids",
+    "before": "E-HWP-07",
+    "after": "E-HWP-07;E-HWCD-02",
+    "reason": "同任务补机制/条件，编号和D2不变；由root合并"
+  },
+  {
+    "flow_id": "F-M061-06",
+    "source_batch": "docs/research/interaction-library/batches/extension-manuals-coverage.csv",
+    "field": "known_branches",
+    "before": "HarmonyOS 2.1 说明笔记 app 不支持原录音导出；不能把“可导出笔记”理解成录音也在内。",
+    "after": "HarmonyOS2.1笔记App不支持原录音导出；转写文字可随图/PDF分享，原音频另用录音机；笔记单篇/多篇分享不证明包含原音频",
+    "reason": "同任务补机制/条件，编号和D2不变；由root合并"
+  },
+  {
+    "flow_id": "F-M061-06",
+    "source_batch": "docs/research/interaction-library/batches/extension-manuals-coverage.csv",
+    "field": "gaps",
+    "before": "录音对象备份恢复",
+    "after": "录音机实际导出步骤、笔记录音备份/恢复及后续版本变化；CN/CA笔记整理差异",
+    "reason": "同任务补机制/条件，编号和D2不变；由root合并"
+  },
+  {
+    "flow_id": "F-M061-06",
+    "source_batch": "docs/research/interaction-library/batches/extension-manuals-coverage.csv",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27",
+    "reason": "同任务补机制/条件，编号和D2不变；由root合并"
+  },
+  {
+    "flow_id": "F-M061-08",
+    "source_batch": "docs/research/interaction-library/batches/extension-manuals-coverage.csv",
+    "field": "evidence_ids",
+    "before": "E-HWP-08",
+    "after": "E-HWP-08;E-HWCD-10",
+    "reason": "同任务补机制/条件，编号和D2不变；由root合并"
+  },
+  {
+    "flow_id": "F-M061-08",
+    "source_batch": "docs/research/interaction-library/batches/extension-manuals-coverage.csv",
+    "field": "known_branches",
+    "before": "禁止手写时笔被当作手指，同一手势会截屏。阅读菜单自己的返回入口又不同。",
+    "after": "正常笔右上内划选分屏；中文2.1横屏可手指左右边缘退出或笔菜单退出；掌阅禁止手写会转截图，退出需先聚焦笔记",
+    "reason": "同任务补机制/条件，编号和D2不变；由root合并"
+  },
+  {
+    "flow_id": "F-M061-08",
+    "source_batch": "docs/research/interaction-library/batches/extension-manuals-coverage.csv",
+    "field": "gaps",
+    "before": "焦点/禁止手写模式实测",
+    "after": "竖屏手指退出、当前构建焦点/误触、分屏笔记保存与异常恢复；不能据区域简写取消中文横屏条件",
+    "reason": "同任务补机制/条件，编号和D2不变；由root合并"
+  },
+  {
+    "flow_id": "F-M061-08",
+    "source_batch": "docs/research/interaction-library/batches/extension-manuals-coverage.csv",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27",
+    "reason": "同任务补机制/条件，编号和D2不变；由root合并"
+  }
+]

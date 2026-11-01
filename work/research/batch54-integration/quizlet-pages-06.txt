@@ -1,0 +1,378 @@
+Embedding sets – Quizlet Help Center (https://help.quizlet.com/hc/en-us/articles/360032935851-Embedding-sets)
+citeturn1095view0 [wordlim: 200] Crawled: today; Content type: text/html; Source: click({"ref_id":"turn1089view1","id":16}); Total lines: 78
+L0: 【0†iframe†www.googletagmanager.com】
+L1: 
+L2: 【1†Help center†quizlet.zendesk.com】
+L3: 
+L4: Topics
+L5: 
+L6: Popular Articles
+L7: 
+L8: 【2†Resending a confirmation message】 【3†Changing your username】 【4†Changing your password】 【5†Finding flashcard sets】 【6†Finding your teacher's class】 【7†Browser and device compatibility】
+L9: 
+L10: [Input][Input: Search]
+L11: 
+L12: 【8†Image】   【8†Username】
+L13: # Embedding sets
+L14: 
+L15: 【8†IOS】 【8†Web】 【8†Android】
+L16: 
+L17: Embedding sets into a website students or other learners already visit regularly is a great way to share study content. You can embed public sets in Match, Learn, Test, Flashcards, and Spell mode.
+L18: 
+L19: To embed a set
+L20:   1. 【9†Log in†quizlet.com】 to your account.
+L21:   2. Select Your library.
+L22:   3. Select Flashcard sets.
+L23:   4. Open the set you want to embed.
+L24:   5. Select【10†Image: More_menu_-_iOS_-_Resized.png】 (more menu).
+L25:   6. Select Embed.
+L26:   7. Select the activity you want to embed.
+L27:   8. Select Copy HTML.
+L28:   9. Add the copied HTML to your class website or LMS page.
+L29: Once you've embedded the set, others can study it in the activity you selected, or they can study the set with any other activity by clicking Choose a Study Mode. They can also select View this flashcard set to see and study the set on Quizlet.
+L30: 
+L31: Embedded sets include the Quizlet logo, and that cannot be removed.
+L32: You can currently only get the embed code for a set on the website. Log in to your account from your mobile browser and then click the Web icon above and follow the instructions for embedding a set.
+L33: 
+L34: You can currently only get the embed code for a set on the website. Log in to your account from your mobile browser and then click the Web icon above and follow the instructions for embedding a set.
+L35: ### Related Articles
+L36: 
+L37:   * 【5†Finding flashcard sets】
+L38:   * 【6†Finding your teacher's class】
+L39:   * 【11†Navigating your home feed on mobile devices】
+L40:   * 【12†Trouble accessing a set】
+L41:   * 【13†Sharing sets and folders】
+L42:   * 【14†Changing a set's editing permissions】
+L43:   * 【15†Changing a set's visibility】
+L44:   * 【16†Protecting a set with a password】
+L45:   * 【17†Exporting your sets】
+L46:   * 【18†Embedding sets】
+L47:   * 【19†See more】
+L48: ### Can't find what you're looking for?
+L49: 
+L50: 【20†Ask a question】
+L51: 
+L52: Was this article helpful?
+L53: 
+L54: [Button: Yes] [Button: No]
+L55: 
+L56: ##### About us
+L57: 
+L58: 【21†About Quizlet†quizlet.com】 【22†How Quizlet works†quizlet.com】 【23†Careers†quizlet.com】 【24†Advertise with us†quizlet.com】 【25†Get the app†quizlet.com】
+L59: ##### For students
+L60: 
+L61: 【26†Flashcards†quizlet.com】 【27†Test†quizlet.com】 【28†Learn†quizlet.com】 【29†Solutions†quizlet.com】 【30†Modern Learning Lab†quizlet.com】 【31†Quizlet Plus†quizlet.com】 【32†Study Guides†quizlet.com】 【33†Pomodoro timer†quizlet.com】
+L62: 
+L63: ##### For Teachers
+L64: 
+L65: 【34†Live†quizlet.com】 【35†Blog†quizlet.com】 【36†Be the Change†quizlet.com】 【37†Quizlet Plus for teachers†quizlet.com】
+L66: ##### Resources
+L67: 
+L68: 【38†Help center†quizlet.com】 【39†Sign up†quizlet.com】 【40†Honor code†quizlet.com】 【41†Community guidelines†quizlet.com】 【42†Accessibility statement†quizlet.com】 【43†Privacy†quizlet.com】 【44†Your Privacy/Cookies Choices†quizlet.com】 【45†Terms†quizlet.com】 【46†Ad and Cookie Policy†quizlet.com】 【47†Interest-Based Advertising†quizlet.com】 【48†Quizlet for Schools†quizlet.com】 【49†Parents†quizlet.com】
+L69: 
+L70: ##### Language
+L71: 
+L72: English (United States)
+L73: 
+L74: 【50†Image】 【51†Get the app†get.quizlet.com】
+L75: ##### Get the app
+L76: 
+L77: © Quizlet Inc.
+--------------------------------------------------------------------------------
+Dropping a class – Quizlet Help Center (https://help.quizlet.com/hc/en-us/articles/360031518251-Dropping-a-class)
+citeturn1095view1 [wordlim: 200] Crawled: today; Content type: text/html; Source: click({"ref_id":"turn1089view1","id":18}); Total lines: 87
+L0: 【0†iframe†www.googletagmanager.com】
+L1: 
+L2: 【1†Help center†quizlet.zendesk.com】
+L3: 
+L4: Topics
+L5: 
+L6: Popular Articles
+L7: 
+L8: 【2†Resending a confirmation message】 【3†Changing your username】 【4†Changing your password】 【5†Finding flashcard sets】 【6†Finding your teacher's class】 【7†Browser and device compatibility】
+L9: 
+L10: [Input][Input: Search]
+L11: 
+L12: 【8†Image】   【8†Username】
+L13: # Dropping a class
+L14: 
+L15: 【8†IOS】 【8†Web】 【8†Android】
+L16: 
+L17: If you're no longer part of a class, you can easily drop it.
+L18: 
+L19: To drop a class
+L20:   1. 【9†Log in†quizlet.com】 to your account.
+L21:   2. Select Your library on the left panel.
+L22:   3. Select Classes.
+L23:   4. Select View all classes.
+L24:   5. Select the class you'd like to drop.
+L25:   6. Select 【10†Image: More_menu_-_iOS_-_Resized.png】 (More menu).
+L26:   7. Select Drop class.
+L27: If you don't see the option to drop the class, you are the class owner. You can 【11†delete a class】 you own, but you cannot drop it.
+L28: 
+L29: If you drop a class by mistake, your teacher or class administrator can 【12†add you back】.
+L30:   1. Select View all under Classes.
+L31:   2. Select the class.
+L32:   3. Select Members.
+L33:   4. Select – by your name.
+L34:   5. Select Yes.
+L35: 
+L36: If you drop a class by mistake, your teacher or class administrator can 【12†add you back】.
+L37: 
+L38:   1. Select View all under Classes.
+L39:   2. Select the class.
+L40:   3. Select 【13†Image: More_menu_-_Android_-_Resized.png】(More menu).
+L41:   4. Select Drop class.
+L42: 
+L43: If you drop a class by mistake, your teacher or class administrator can 【12†add you back】.
+L44: ### Related Articles
+L45: 
+L46:   * 【5†Finding flashcard sets】
+L47:   * 【6†Finding your teacher's class】
+L48:   * 【14†Navigating your home feed on mobile devices】
+L49:   * 【15†Trouble accessing a set】
+L50:   * 【16†Sharing sets and folders】
+L51:   * 【17†Changing a set's editing permissions】
+L52:   * 【18†Changing a set's visibility】
+L53:   * 【19†Protecting a set with a password】
+L54:   * 【20†Exporting your sets】
+L55:   * 【21†Embedding sets】
+L56:   * 【22†See more】
+L57: ### Can't find what you're looking for?
+L58: 
+L59: 【23†Ask a question】
+L60: 
+L61: Was this article helpful?
+L62: 
+L63: [Button: Yes] [Button: No]
+L64: 
+L65: ##### About us
+L66: 
+L67: 【24†About Quizlet†quizlet.com】 【25†How Quizlet works†quizlet.com】 【26†Careers†quizlet.com】 【27†Advertise with us†quizlet.com】 【28†Get the app†quizlet.com】
+L68: ##### For students
+L69: 
+L70: 【29†Flashcards†quizlet.com】 【30†Test†quizlet.com】 【31†Learn†quizlet.com】 【32†Solutions†quizlet.com】 【33†Modern Learning Lab†quizlet.com】 【34†Quizlet Plus†quizlet.com】 【35†Study Guides†quizlet.com】 【36†Pomodoro timer†quizlet.com】
+L71: 
+L72: ##### For Teachers
+L73: 
+L74: 【37†Live†quizlet.com】 【38†Blog†quizlet.com】 【39†Be the Change†quizlet.com】 【40†Quizlet Plus for teachers†quizlet.com】
+L75: ##### Resources
+L76: 
+L77: 【41†Help center†quizlet.com】 【42†Sign up†quizlet.com】 【43†Honor code†quizlet.com】 【44†Community guidelines†quizlet.com】 【45†Accessibility statement†quizlet.com】 【46†Privacy†quizlet.com】 【47†Your Privacy/Cookies Choices†quizlet.com】 【48†Terms†quizlet.com】 【49†Ad and Cookie Policy†quizlet.com】 【50†Interest-Based Advertising†quizlet.com】 【51†Quizlet for Schools†quizlet.com】 【52†Parents†quizlet.com】
+L78: 
+L79: ##### Language
+L80: 
+L81: English (United States)
+L82: 
+L83: 【53†Image】 【54†Get the app†get.quizlet.com】
+L84: ##### Get the app
+L85: 
+L86: © Quizlet Inc.
+--------------------------------------------------------------------------------
+Troubleshooting custom audio recording – Quizlet Help Center (https://help.quizlet.com/hc/en-us/articles/360030842071)
+citeturn1095view2 [wordlim: 200] Crawled: last week; Content type: text/html; Source: click({"ref_id":"turn1090view2","id":16}); Redirected to URL: https://help.quizlet.com/hc/en-us/articles/360030842071-Troubleshooting-custom-audio-recording; Total lines: 90
+L0: 【0†iframe†www.googletagmanager.com】
+L1: 
+L2: 【1†Help center†quizlet.zendesk.com】
+L3: 
+L4: Topics
+L5: 
+L6: Popular Articles
+L7: 
+L8: 【2†Resending a confirmation message】 【3†Changing your username】 【4†Changing your password】 【5†Finding flashcard sets】 【6†Finding your teacher's class】 【7†Browser and device compatibility】
+L9: 
+L10: [Input][Input: Search]
+L11: 
+L12: 【8†Image】   【8†Username】
+L13: # Troubleshooting custom audio recording
+L14: 
+L15: 【8†IOS】 【8†Web】 【8†Android】
+L16: 
+L17: If your microphone isn't working, please check your computer's microphone settings to make sure it's set to pick up your voice. You'll also want to make sure you're on Google Chrome to use Voice Recording.
+L18: 
+L19: If the microphone icon doesn't respond when you speak
+L20: 
+L21: Mac
+L22:   1. Go to System preferences.
+L23:   2. Select Sound.
+L24:   3. Select Input.
+L25:   4. Select the microphone you want to use.
+L26:   5. Test your microphone.
+L27: Make sure that Use ambient noise reduction is turned on.
+L28: 
+L29: Windows
+L30:   1. Open your sound settings and choose the microphone you want to use.
+L31: In Windows 7, select the Speaker at the bottom of the screen, and select Recording devices.
+L32: In Windows 8, select the Control Panel and then select More settings.
+L33:   2. Select Properties.
+L34:   3. Select Levels to check and adjust the input volume.
+L35: 
+L36: If you accidentally denied access to the microphone
+L37: 
+L38: Chrome
+L39: 
+L40:   1. Click the Camera in the URL bar.
+L41:   2. Reload the page.
+L42:   3. Select【9†Image: Microphone_-_Resized.png】 (microphone).
+L43: If you can't hear the audio playback
+L44: 
+L45: If you can't hear the audio and your speakers aren't muted, you may need to update your web browser or switch to a different one. Quizlet works best in Chrome, and doesn't work in Opera or Internet Explorer.
+L46: 
+L47: Recording custom audio is currently only available on the website. Once you record your audio there, you can listen to it and study with it on your mobile device.
+L48: Recording custom audio is currently only available on the website. Once you record your audio there, you can listen to it and study with it on your mobile device.
+L49: ### Related Articles
+L50: 
+L51:   * 【7†Browser and device compatibility】
+L52:   * 【10†Troubleshooting Quizlet】
+L53:   * 【11†Administrators: Google Workspace for Education and Quizlet】
+L54:   * 【12†Someone signed up with my email address】
+L55:   * 【13†Typos or incorrect information】
+L56:   * 【14†Why was our class deleted?】
+L57:   * 【15†Troubleshooting audio playback】
+L58:   * 【16†Troubleshooting custom audio recording】
+L59:   * 【17†Quizlet is blocked or not loading】
+L60: ### Can't find what you're looking for?
+L61: 
+L62: 【18†Ask a question】
+L63: 
+L64: Was this article helpful?
+L65: 
+L66: [Button: Yes] [Button: No]
+L67: 
+L68: ##### About us
+L69: 
+L70: 【19†About Quizlet†quizlet.com】 【20†How Quizlet works†quizlet.com】 【21†Careers†quizlet.com】 【22†Advertise with us†quizlet.com】 【23†Get the app†quizlet.com】
+L71: ##### For students
+L72: 
+L73: 【24†Flashcards†quizlet.com】 【25†Test†quizlet.com】 【26†Learn†quizlet.com】 【27†Solutions†quizlet.com】 【28†Modern Learning Lab†quizlet.com】 【29†Quizlet Plus†quizlet.com】 【30†Study Guides†quizlet.com】 【31†Pomodoro timer†quizlet.com】
+L74: 
+L75: ##### For Teachers
+L76: 
+L77: 【32†Live†quizlet.com】 【33†Blog†quizlet.com】 【34†Be the Change†quizlet.com】 【35†Quizlet Plus for teachers†quizlet.com】
+L78: ##### Resources
+L79: 
+L80: 【36†Help center†quizlet.com】 【37†Sign up†quizlet.com】 【38†Honor code†quizlet.com】 【39†Community guidelines†quizlet.com】 【40†Accessibility statement†quizlet.com】 【41†Privacy†quizlet.com】 【42†Your Privacy/Cookies Choices†quizlet.com】 【43†Terms†quizlet.com】 【44†Ad and Cookie Policy†quizlet.com】 【45†Interest-Based Advertising†quizlet.com】 【46†Quizlet for Schools†quizlet.com】 【47†Parents†quizlet.com】
+L81: 
+L82: ##### Language
+L83: 
+L84: English (United States)
+L85: 
+L86: 【48†Image】 【49†Get the app†get.quizlet.com】
+L87: ##### Get the app
+L88: 
+L89: © Quizlet Inc.
+--------------------------------------------------------------------------------
+Updating your school information – Quizlet Help Center (https://help.quizlet.com/hc/en-us/articles/360032561391)
+citeturn1095view3 [wordlim: 200] Crawled: 4 days ago; Content type: text/html; Source: click({"ref_id":"turn1094view2","id":11}); Redirected to URL: https://help.quizlet.com/hc/en-us/articles/360032561391-Updating-your-school-information; Total lines: 111
+L0: 【0†iframe†www.googletagmanager.com】
+L1: 
+L2: 【1†Help center†quizlet.zendesk.com】
+L3: 
+L4: Topics
+L5: 
+L6: Popular Articles
+L7: 
+L8: 【2†Resending a confirmation message】 【3†Changing your username】 【4†Changing your password】 【5†Finding flashcard sets】 【6†Finding your teacher's class】 【7†Browser and device compatibility】
+L9: 
+L10: [Input][Input: Search]
+L11: 
+L12: 【8†Image】   【8†Username】
+L13: # Updating your school information
+L14: 
+L15: 【8†IOS】 【8†Web】 【8†Android】
+L16: 
+L17: You can choose to let us know what school you attend and what courses you're taking to help us find the best study material for you and your classmates. You can update your school and course information any time.
+L18: 
+L19: * * *
+L20: 
+L21: Looking to change your class's school information? You can 【9†edit your class and school information】 any time.
+L22: 
+L23: * * *
+L24: These settings are currently only available for students attending schools within Australia, Austria, Belgium, Canada, France, Germany, Ireland, Japan, the Netherlands, Poland, South Korea, the United Kingdom, and the United States.
+L25: 
+L26: To update or remove your school information
+L27:   1. 【10†Log in†quizlet.com】 to your account.
+L28:   2. Select your profile picture.
+L29:   3. Select 【11†Settings†quizlet.com】.
+L30:   4. In Personal information, select Edit for your school information.
+L31:   5. Enter your current school's name, or select X to remove it.
+L32:   6. Select Save.
+L33: 
+L34: You can choose to let us know what school you attend and what courses you're taking to help us find the best study material for you and your classmates. You can update your school and course information any time.
+L35: 
+L36: * * *
+L37: Looking to change your class's school information? You can 【9†edit your class and school information】 any time.
+L38: 
+L39: * * *
+L40: 
+L41: These settings are currently only available for students attending schools within Australia, Austria, Belgium, Canada, France, Germany, Ireland, Japan, the Netherlands, Poland, South Korea, the United Kingdom, and the United States.
+L42: 
+L43: To update or remove your school information
+L44:   1. Select your profile picture.
+L45:   2. Select Settings.
+L46:   3. Under Manage subscription, select your subscription.
+L47:   4. Under Personal info, select your school information.
+L48:   5. Enter your current school's name, or select X to remove it.
+L49:   6. Select X by any courses you want to remove.
+L50:   7. Enter your new course names.
+L51:   8. Select Save.
+L52: You can choose to let us know what school you attend and what courses you're taking to help us find the best study material for you and your classmates. You can update your school and course information any time.
+L53: 
+L54: * * *
+L55: 
+L56: Looking to change your class's school information? You can 【9†edit your class and school information】 any time.
+L57: 
+L58: * * *
+L59: These settings are currently only available for students attending schools within Australia, Austria, Belgium, Canada, France, Germany, Ireland, Japan, the Netherlands, Poland, South Korea, the United Kingdom, and the United States.
+L60: 
+L61: To update or remove your school information
+L62:   1. Select your profile picture.
+L63:   2. Select Settings.
+L64:   3. Under Manage subscription, select your subscription.
+L65:   4. Under Personal info, select your school information.
+L66:   5. Enter your current school's name, or select X to remove it.
+L67:   6. Select X by any courses you want to remove.
+L68:   7. Enter your new course names.
+L69:   8. Select Save
+L70: ### Related Articles
+L71: 
+L72:   * 【3†Changing your username】
+L73:   * 【4†Changing your password】
+L74:   * 【12†Changing your email address】
+L75:   * 【13†Changing your notification preferences】
+L76:   * 【14†Changing your profile picture】
+L77:   * 【15†Using Dark mode】
+L78:   * 【16†Unlinking your Facebook or Google account】
+L79:   * 【17†Updating your school information】
+L80:   * 【18†Deleting your account】
+L81: 
+L82: ### Can't find what you're looking for?
+L83: 
+L84: 【19†Ask a question】
+L85: 
+L86: Was this article helpful?
+L87: 
+L88: [Button: Yes] [Button: No]
+L89: ##### About us
+L90: 
+L91: 【20†About Quizlet†quizlet.com】 【21†How Quizlet works†quizlet.com】 【22†Careers†quizlet.com】 【23†Advertise with us†quizlet.com】 【24†Get the app†quizlet.com】
+L92: 
+L93: ##### For students
+L94: 
+L95: 【25†Flashcards†quizlet.com】 【26†Test†quizlet.com】 【27†Learn†quizlet.com】 【28†Solutions†quizlet.com】 【29†Modern Learning Lab†quizlet.com】 【30†Quizlet Plus†quizlet.com】 【31†Study Guides†quizlet.com】 【32†Pomodoro timer†quizlet.com】
+L96: ##### For Teachers
+L97: 
+L98: 【33†Live†quizlet.com】 【34†Blog†quizlet.com】 【35†Be the Change†quizlet.com】 【36†Quizlet Plus for teachers†quizlet.com】
+L99: ##### Resources
+L100: 
+L101: 【37†Help center†quizlet.com】 【38†Sign up†quizlet.com】 【39†Honor code†quizlet.com】 【40†Community guidelines†quizlet.com】 【41†Accessibility statement†quizlet.com】 【42†Privacy†quizlet.com】 【43†Your Privacy/Cookies Choices†quizlet.com】 【44†Terms†quizlet.com】 【45†Ad and Cookie Policy†quizlet.com】 【46†Interest-Based Advertising†quizlet.com】 【47†Quizlet for Schools†quizlet.com】 【48†Parents†quizlet.com】
+L102: 
+L103: ##### Language
+L104: 
+L105: English (United States)
+L106: 
+L107: 【49†Image】 【50†Get the app†get.quizlet.com】
+L108: ##### Get the app
+L109: 
+L110: © Quizlet Inc.
+

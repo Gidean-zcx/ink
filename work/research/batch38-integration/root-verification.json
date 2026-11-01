@@ -1,0 +1,17 @@
+{
+  "state_count": 37,
+  "unique_screenshots": 29,
+  "action_count": 35,
+  "actual_ui_scope": "root viewed meaningful frames; same-hash duplicates reuse screenshots; no audible listening",
+  "verified": [
+    "saved page14 restored across two browser restarts using same profile",
+    "paused2:52 speed1.5; same-page reopen Pause button and2:57 DOM, screenshot2:56",
+    "second restart missing audio entry and two timeout actions, no claimed audio resume",
+    "fresh mobile context from1 to14, emulation only",
+    "all37 screenshot hashes match29 archived images",
+    "requirements unchanged"
+  ],
+  "source_attempt": "root read raw403 response and challenge header; parser exit1 separately recorded; no further fetch",
+  "formal_files_changed_or_added": 55,
+  "deleted": []
+}

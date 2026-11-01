@@ -1,0 +1,12 @@
+To check your Reading Statistics in NeoReader, do the following:
+In Home Screen, go to Library.
+Tap the Reading Statistics button in the upper right corner.
+ 
+ [image:1] 
+ 
+Here you can find some useful statistics on your reading time based on each week, the amount of books read, etc. The Reading Statistics are available only on this device itself and cannot be synced to other devices.
+ 
+To enable / disable Reading Statistics, do the following:
+In Home Screen, go to Library.
+Tap the hamburger menu in the top right corner and choose Settings > Library settings.
+Toggle on/off Enable reading statistics.

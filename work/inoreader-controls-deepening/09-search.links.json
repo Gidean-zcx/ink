@@ -1,0 +1,390 @@
+[
+  {
+    "href": "/",
+    "text": "inoreader-logo"
+  },
+  {
+    "href": "/signup",
+    "text": "Start 15-Day Trial"
+  },
+  {
+    "href": "/",
+    "text": "Home"
+  },
+  {
+    "href": "/features/",
+    "text": "Features"
+  },
+  {
+    "href": "/enterprise",
+    "text": "Enterprise"
+  },
+  {
+    "href": "/pricing",
+    "text": "Pricing"
+  },
+  {
+    "href": "/blog/",
+    "text": "Blog"
+  },
+  {
+    "href": "/contact",
+    "text": "Contact"
+  },
+  {
+    "href": "/rss-tools",
+    "text": "RSS tools"
+  },
+  {
+    "href": "/rss-feed-validator",
+    "text": "Feed validatorValidate a feed for errors"
+  },
+  {
+    "href": "/podcast-feed-validator",
+    "text": "Podcast validatorGet a podcast listed everywhere"
+  },
+  {
+    "href": "/feed-analytics",
+    "text": "Feed analyticsSee how a feed performs"
+  },
+  {
+    "href": "/rss-feed-finder",
+    "text": "Feed finderFind the feeds of any website"
+  },
+  {
+    "href": "/opml-checker",
+    "text": "OPML checkerCheck and repair an OPML export"
+  },
+  {
+    "href": "/rss-tools",
+    "text": "All RSS tools"
+  },
+  {
+    "href": "/rss-feed-validator",
+    "text": "Open the validator"
+  },
+  {
+    "href": "/podcast-feed-validator",
+    "text": "Open the podcast validator"
+  },
+  {
+    "href": "/feed-analytics",
+    "text": "Open feed analytics"
+  },
+  {
+    "href": "/rss-feed-finder",
+    "text": "Open the finder"
+  },
+  {
+    "href": "/opml-checker",
+    "text": "Open the checker"
+  },
+  {
+    "href": "/rss-tools",
+    "text": "All RSS tools →"
+  },
+  {
+    "href": "https://apps.apple.com/app/apple-store/id892355414?pt=32204000&ct=inoreader_internal&mt=8",
+    "text": ""
+  },
+  {
+    "href": "https://play.google.com/store/apps/details?id=com.innologica.inoreader",
+    "text": ""
+  },
+  {
+    "href": "/login",
+    "text": "Sign in"
+  },
+  {
+    "href": "/signup",
+    "text": "Create account"
+  },
+  {
+    "href": "/features/",
+    "text": "Features"
+  },
+  {
+    "href": "/pricing",
+    "text": "See pricing"
+  },
+  {
+    "href": "/features/annotations",
+    "text": "notes and highlights"
+  },
+  {
+    "href": "/features/intelligence",
+    "text": "Intelligence reports"
+  },
+  {
+    "href": "/pricing",
+    "text": "Pro"
+  },
+  {
+    "href": "/features/mentions",
+    "text": "mentions"
+  },
+  {
+    "href": "/features/monitoring-feeds",
+    "text": "monitoring feed"
+  },
+  {
+    "href": "/features/monitoring-feeds",
+    "text": "Monitoring feeds"
+  },
+  {
+    "href": "/features/intelligence",
+    "text": "Inoreader Intelligence"
+  },
+  {
+    "href": "/features/rules",
+    "text": "Rules"
+  },
+  {
+    "href": "/help/basic/search/how-do-i-search-for-articles-in-inoreader",
+    "text": "How do I search for articles in Inoreader?"
+  },
+  {
+    "href": "/help/basic/search/can-i-search-within-a-specific-feed-or-folder",
+    "text": "Can I search within a specific feed or folder?"
+  },
+  {
+    "href": "/help/pro/global-search/what-is-global-search",
+    "text": "What is Global search?"
+  },
+  {
+    "href": "/help/pro/global-search/can-i-filter-global-search-results",
+    "text": "Can I filter Global search results?"
+  },
+  {
+    "href": "/help/basic/tags/can-i-combine-tags-when-searching",
+    "text": "Can I combine tags when searching?"
+  },
+  {
+    "href": "/blog/2026/09/introducing-mentions-redesigned-search-and-smarter-monitoring-feeds.html",
+    "text": "Introducing mentions, redesigned search and smarter monitoring feeds"
+  },
+  {
+    "href": "/blog/2025/03/discover-quality-content-with-our-new-global-search-update.html",
+    "text": "Discover quality content with our new Global search update"
+  },
+  {
+    "href": "/blog/2023/04/making-complex-searches-easy-with-our-new-query-builder.html",
+    "text": "Making complex searches easy with our new query builder"
+  },
+  {
+    "href": "/signup",
+    "text": "Create account"
+  },
+  {
+    "href": "/signup",
+    "text": "Create account"
+  },
+  {
+    "href": "/features",
+    "text": "Features"
+  },
+  {
+    "href": "/pricing",
+    "text": "Pricing"
+  },
+  {
+    "href": "/enterprise",
+    "text": "Enterprise"
+  },
+  {
+    "href": "/apps",
+    "text": "Mobile apps"
+  },
+  {
+    "href": "/rss-reader-extension",
+    "text": "Browser extension"
+  },
+  {
+    "href": "/alternatives",
+    "text": "Inoreader alternatives"
+  },
+  {
+    "href": "/rss-tools",
+    "text": "All tools"
+  },
+  {
+    "href": "/rss-feed-finder",
+    "text": "Feed finder"
+  },
+  {
+    "href": "/feed-analytics",
+    "text": "Feed analytics"
+  },
+  {
+    "href": "/rss-feeds",
+    "text": "Top RSS feeds"
+  },
+  {
+    "href": "/rss-feed-validator",
+    "text": "Feed validator"
+  },
+  {
+    "href": "/podcast-feed-validator",
+    "text": "Podcast validator"
+  },
+  {
+    "href": "/rss-feed-viewer",
+    "text": "Feed viewer"
+  },
+  {
+    "href": "/opml-checker",
+    "text": "OPML checker"
+  },
+  {
+    "href": "/about-us",
+    "text": "About us"
+  },
+  {
+    "href": "/blog/",
+    "text": "Blog"
+  },
+  {
+    "href": "/help",
+    "text": "Help center"
+  },
+  {
+    "href": "/developers",
+    "text": "Developer portal"
+  },
+  {
+    "href": "/contact",
+    "text": "Contact us"
+  },
+  {
+    "href": "/brand-portal",
+    "text": "Brand portal"
+  },
+  {
+    "href": "https://status.inoreader.com",
+    "text": "Service status"
+  },
+  {
+    "href": "/tos",
+    "text": "Terms of Service"
+  },
+  {
+    "href": "/privacy_policy",
+    "text": "Privacy Policy"
+  },
+  {
+    "href": "/security_commitment",
+    "text": "Security commitment"
+  },
+  {
+    "href": "https://apps.apple.com/app/apple-store/id892355414?pt=32204000&ct=inoreader_internal&mt=8",
+    "text": ""
+  },
+  {
+    "href": "https://play.google.com/store/apps/details?id=com.innologica.inoreader",
+    "text": ""
+  },
+  {
+    "href": "https://innologica.com/",
+    "text": "© 2026 Innologica Ltd"
+  },
+  {
+    "href": "https://www.inoreader.com/blog/feed",
+    "text": ""
+  },
+  {
+    "href": "https://www.youtube.com/@Inoreader",
+    "text": ""
+  },
+  {
+    "href": "https://www.facebook.com/Inoreader/",
+    "text": ""
+  },
+  {
+    "href": "https://www.linkedin.com/company/inoreader",
+    "text": ""
+  },
+  {
+    "href": "https://x.com/Inoreader",
+    "text": ""
+  },
+  {
+    "href": "https://mastodon.social/@Inoreader",
+    "text": ""
+  },
+  {
+    "href": "https://bsky.app/profile/inoreader.com",
+    "text": ""
+  },
+  {
+    "href": "/cookie_use",
+    "text": "Access cookie settings"
+  },
+  {
+    "href": "javascript:void(0);",
+    "text": "OK, I agree"
+  },
+  {
+    "href": "javascript:void(0)",
+    "text": "Use a different account"
+  },
+  {
+    "href": "/forgot-password",
+    "text": "Forgot password?"
+  },
+  {
+    "href": "javascript:void(0)",
+    "text": ""
+  },
+  {
+    "href": "javascript:void(0)",
+    "text": ""
+  },
+  {
+    "href": "/sso",
+    "text": ""
+  },
+  {
+    "href": "/signup?sendback=",
+    "text": "Create an account"
+  },
+  {
+    "href": "/signup",
+    "text": "Create account"
+  },
+  {
+    "href": "/signup",
+    "text": "Create one now"
+  },
+  {
+    "href": "javascript:void(0)",
+    "text": ""
+  },
+  {
+    "href": "javascript:void(0)",
+    "text": ""
+  },
+  {
+    "href": "/sso",
+    "text": ""
+  },
+  {
+    "href": "/login?sendback=",
+    "text": "Sign in."
+  },
+  {
+    "href": "/login",
+    "text": "Sign in"
+  },
+  {
+    "href": "/login",
+    "text": "Sign in"
+  },
+  {
+    "href": "/tos",
+    "text": "Inoreader Privacy\n                                Policy"
+  },
+  {
+    "href": "/",
+    "text": "Go to homepage"
+  }
+]

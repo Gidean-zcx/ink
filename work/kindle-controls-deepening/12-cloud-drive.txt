@@ -1,0 +1,125 @@
+Cloud Drive FAQs
+en_US
+Cloud Drive FAQs
+Get more information about cloud drive connections on Kindle Scribe
+For the most recent version of these FAQs visit: Kindle Connections(https://www.amazon.com/kindle/connections).
+Table of Contents
+About Cloud Drive Connections
+Getting Started
+Importing Files
+Sending Files Back to Cloud Drives
+Managing Your Account
+About Cloud Drive Connections
+1. What can I do with cloud drive connections on my Kindle Scribe?
+You can:
+Browse and import your Google Drive or Microsoft OneDrive files directly on your Kindle Scribe.
+Read and write on files imported to your Kindle Scribe Library (see FAQ 2 for a list of compatible files).
+Send compatible files from your Kindle Scribe to your cloud drive as PDFs.
+Note: Files don’t automatically sync between your Kindle Scribe and cloud drives. You’ll need to import or export files manually.
+2. What types of files can I import?
+You can import:
+Documents: PDF, DOC, DOCX, TXT, RTF
+Presentations: PPT, Google Slides (Google Drive only)
+Images: PNG, GIF, JPG, JPEG, BMP
+Web files: HTM, HTML
+Books: EPUB
+Google Docs (Google Drive only)
+Note: Files must be under 200 MB. Files above this limit or not in one of the supported file formats will be greyed out and marked “Not compatible.”
+3. Can I see what a file looks like before importing?
+Yes, you can tap on a compatible file to see a read-only preview of its first page. Preview is not supported for EPUB files or password-protected files.
+Back to top
+Getting Started
+4. How do I connect to my cloud storage account?
+On your Kindle Scribe, find the connections icon  next to the search bar on Home, Library, or Workspace tabs (Alternatively: Go to Settings > Connections).
+From the drop-down menu, tap "Add connections."
+Select the cloud drive service you want to connect and tap “Connect.”
+Your Kindle Scribe will present a QR code.
+Use your phone to scan the QR code (Alternatively: Type the web address on any separate device).
+Sign in with your Amazon account (must match the account on your Kindle Scribe).
+Enter the 6-digit code if asked.
+Follow the steps on your phone or separate device to finish connecting.
+5. How do I solve an “account mismatch” error?
+Make sure you're using the same Amazon account that's registered to your Kindle Scribe. If you are not using the same Amazon account, you will need to sign out of the account on your phone or desktop browser and restart the connection.
+To check your Kindle Scribe account:
+On the Kindle Scribe, go to Settings > Your Account to view the registered user.
+Check the Connections popup for the registered email or phone number (above the QR code).
+Visit Manage Your Content and Devices to check which devices are registered to your account.
+6. I'm having trouble with two-factor authentication during Google or Microsoft to sign in. What should I do?
+For support with Google or Microsoft two-factor authentication, visit their help pages below:
+Google accounts: Google Account Security Help
+Microsoft accounts: Microsoft Account Security Help
+If you are still having issues, contact Google or Microsoft support directly for authentication help.
+7. Can I connect to my workplace cloud drive account?
+Access to your workplace cloud drive depends on your company's security settings. Check with your IT team to see if you can connect to your company account.
+Back to top
+Importing Files
+8. How do I import files?
+You have two options:
+Tap the “Import” button next to the file to use the default import settings.
+Press and hold the “Import” button for more options.
+9. How long does importing take?
+Import times depend on your file size, format, and internet connection. Most imports complete in under a minute, but larger files may take longer. You can check the status of your imports by tapping the import history icon in the cloud drive file browser.
+10. Where do imported files go?
+By default, imported files are:
+Converted to Kindle format.
+Saved to your Kindle Cloud Library.
+Added to your Kindle Scribe's Library tab.
+Available on your other Kindle devices and apps.
+11. Can I save files directly to the Workspace tab?
+Yes, you have 2 options:
+Change your default import settings in Settings > Connections.
+Do a custom import for each file (long-press on the file's import button).
+12. Why do files still show "Import" after I've already imported it?
+Each time you open the cloud drive file browser, the "Import" option reappears so you can download more copies if needed. Your previous and in-progress imports aren't affected and will be shown in your Kindle Scribe Library. To check the status of your recent imports, tap the import history icon  in the top-right corner of the cloud drive file browser.
+13. What if I import the same file again?
+We'll create an additional copy of it on your Kindle Scribe. Your existing file and any notes you've made stay as they are.
+14. Can I import password-protected files?
+Yes, but they'll be read-only PDFs. You won't be able to write on them.
+Back to top
+Sending Files Back to Cloud Drives
+15. Can I send my files back to my cloud drives?
+Yes, you can send a copy of your Kindle Scribe documents with annotations and notebooks as PDF files to your cloud drive. They'll appear in a new "Kindle Scribe" folder:
+Google Drive: My Drive > Kindle Scribe
+Microsoft OneDrive: My Files > Kindle Scribe
+To send files:
+From inside a document or notebook: Tap the share icon  (top right) and choose your cloud drive.
+From Library or Workspace: Tap the 3-dot menu on a downloaded file or notebook and select "Share."
+Note: Files transferred to Kindle Scribe via USB cable cannot be exported back to cloud drives.
+16. How long does it take to send files?
+It may take a few minutes depending on the file size and your internet connection. Look for your file in the "Kindle Scribe" folder of your cloud storage.
+17. Where are my sent files?
+Your files are saved to a "Kindle Scribe" folder in Google Drive and Microsoft OneDrive. Note: new files may not appear directly on your mobile or desktop app’s home tab.
+To find your files, navigate to the following folder paths:
+Google Drive: My Drive > Kindle Scribe
+Microsoft OneDrive: My Files > Kindle Scribe
+If you are still unable to find the files, try the search function in your cloud drive to find the file name or the “Kindle Scribe” folder. Also, check the email linked to your Amazon account for any error messages.
+Back to top
+Managing Your Account
+18. Can I connect multiple Kindle Scribe devices to the same Google Drive or Microsoft OneDrive account?
+Yes. When you send files from your devices, each Kindle Scribe automatically creates its own folder in your cloud drive (for example, "Kindle Scribe" or "Kindle Scribe 1") to store your documents. You can rename these folders, and your documents will continue to be delivered to this location.
+19. How much file storage do I have available?
+To check your Kindle device storage, go to Settings > Device options > Storage management. To check your Google Drive or Microsoft OneDrive storage space, visit their web portal or mobile app.
+20. How do I disconnect my cloud storage account?
+You have several options:
+On your Scribe: Go to Settings > Connections.
+On the web: Visit Kindle Connections(https://www.amazon.com/kindle/connections)
+Through your cloud storage provider's account settings.
+21. What happens to my cloud account information when I disconnect?
+We only keep your information while the connection is active. When you disconnect, we delete all account information from the third-party cloud storage service.
+For files imported to your Kindle Scribe, you can remove them directly on your device or at Manage Your Content and Devices.
+22. What happens if I reset or deregister my device?
+Your cloud storage connection is removed.
+Access to your cloud drive from your Kindle Scribe is removed.
+Your cloud account information is deleted from our systems.
+Any imported files remain backed up in your Kindle cloud library until you delete them.
+Note: The Kindle Connections website may not show the updated status right away, but your access is completely removed.
+23. How do we protect your information?
+Your security and privacy are important to us.
+We encrypt your information while it’s stored on your device, on the cloud, and during file transfers.
+We never share your cloud storage data with third parties.
+For more details, see the Kindle Store Terms of Use and Amazon's Privacy Notice.
+Back to top
+en_US
+US
+Cpiu6TFOuXpU4ymOzD
+TIh9JOMGAKr7bY4zqu

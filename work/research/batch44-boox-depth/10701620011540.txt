@@ -1,0 +1,10 @@
+Note: The camera is only available on Tab Ultra, Tab Ultra C, and Tab Ultra C Pro.
+Tab Ultra, Tab Ultra C, and Tab Ultra C Pro are equipped with an exclusive 16MP rear camera as the Smart Scanner for document scanning, OCR, and other amazing functions. In this article, you will learn more about how to use the built-in Scan Documents app.
+Step 1: Create a new scan
+To create a new scan file, tap the New Scan area, type in the file name and tap OK. You can also manage your existing scans here such as moving, renaming and deleting scan files, and creating a folder.
+Step 2: Take shots of your documents
+Here you can take one or multiple shots of each page of your document, or import images from the storage. Each shot will be stored as one page in the scan file. Tap Next Step to proceed.
+Step 3: Manage your shots
+Here you can manage your shots or imported images such as editing, replacing and deleting the shots. Tap Next Step to generate the scan file.
+Step 4: Further operations
+After the scan file is generated, you can add another shot, perform an OCR to particular pages, or export it to the Notes app or as a PDF.

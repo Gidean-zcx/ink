@@ -1,0 +1,562 @@
+[
+  {
+    "url": "https://api.xunfeixxj.com/assistant/guide/getGuideList",
+    "status": 200,
+    "content_type": "application/json;charset=UTF-8",
+    "content_length": null,
+    "content_range": null
+  },
+  {
+    "url": "https://api.xunfeixxj.com/assistant/problem/getVideoProblemList",
+    "status": 200,
+    "content_type": "application/json;charset=UTF-8",
+    "content_length": null,
+    "content_range": null
+  },
+  {
+    "url": "https://api.xunfeixxj.com/assistant/video/getHelpVideoList",
+    "status": 200,
+    "content_type": "application/json;charset=UTF-8",
+    "content_length": null,
+    "content_range": null
+  },
+  {
+    "url": "https://api.xunfeixxj.com/assistant/device/getProductList",
+    "status": 200,
+    "content_type": "application/json;charset=UTF-8",
+    "content_length": null,
+    "content_range": null
+  },
+  {
+    "url": "https://api.xunfeixxj.com/assistant/video/getHelpVideoList",
+    "status": 200,
+    "content_type": "application/json;charset=UTF-8",
+    "content_length": null,
+    "content_range": null
+  },
+  {
+    "url": "https://api.xunfeixxj.com/assistant/video/getHelpVideoList",
+    "status": 200,
+    "content_type": "application/json;charset=UTF-8",
+    "content_length": null,
+    "content_range": null
+  },
+  {
+    "url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E8%AF%AD%E6%96%87%E8%AE%AF%E9%A3%9E%E4%B9%A6%E5%9F%8E.mp4",
+    "status": 206,
+    "content_type": "video/mp4",
+    "content_length": "56055361",
+    "content_range": "bytes 0-56055360/56055361"
+  },
+  {
+    "url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E8%AF%AD%E6%96%87%E8%AE%AF%E9%A3%9E%E4%B9%A6%E5%9F%8E.mp4",
+    "status": 206,
+    "content_type": "video/mp4",
+    "content_length": "54253121",
+    "content_range": "bytes 1802240-56055360/56055361"
+  },
+  {
+    "url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E8%AF%AD%E6%96%87%E8%AE%AF%E9%A3%9E%E4%B9%A6%E5%9F%8E.mp4",
+    "status": 206,
+    "content_type": "video/mp4",
+    "content_length": "49600065",
+    "content_range": "bytes 6455296-56055360/56055361"
+  },
+  {
+    "url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E8%AF%AD%E6%96%87%E8%AE%AF%E9%A3%9E%E4%B9%A6%E5%9F%8E.mp4",
+    "status": 206,
+    "content_type": "video/mp4",
+    "content_length": "45798977",
+    "content_range": "bytes 10256384-56055360/56055361"
+  },
+  {
+    "url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E8%AF%AD%E6%96%87%E8%AE%AF%E9%A3%9E%E4%B9%A6%E5%9F%8E.mp4",
+    "status": 206,
+    "content_type": "video/mp4",
+    "content_length": "43112001",
+    "content_range": "bytes 12943360-56055360/56055361"
+  },
+  {
+    "url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E8%AF%AD%E6%96%87%E8%AE%AF%E9%A3%9E%E4%B9%A6%E5%9F%8E.mp4",
+    "status": 206,
+    "content_type": "video/mp4",
+    "content_length": "39474753",
+    "content_range": "bytes 16580608-56055360/56055361"
+  },
+  {
+    "url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E8%AF%AD%E6%96%87%E8%AE%AF%E9%A3%9E%E4%B9%A6%E5%9F%8E.mp4",
+    "status": 206,
+    "content_type": "video/mp4",
+    "content_length": "36820545",
+    "content_range": "bytes 19234816-56055360/56055361"
+  },
+  {
+    "url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E8%AF%AD%E6%96%87%E8%AE%AF%E9%A3%9E%E4%B9%A6%E5%9F%8E.mp4",
+    "status": 206,
+    "content_type": "video/mp4",
+    "content_length": "30922305",
+    "content_range": "bytes 25133056-56055360/56055361"
+  },
+  {
+    "url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E8%AF%AD%E6%96%87%E8%AE%AF%E9%A3%9E%E4%B9%A6%E5%9F%8E.mp4",
+    "status": 206,
+    "content_type": "video/mp4",
+    "content_length": "26629697",
+    "content_range": "bytes 29425664-56055360/56055361"
+  },
+  {
+    "url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E8%AF%AD%E6%96%87%E8%AE%AF%E9%A3%9E%E4%B9%A6%E5%9F%8E.mp4",
+    "status": 206,
+    "content_type": "video/mp4",
+    "content_length": "21386817",
+    "content_range": "bytes 34668544-56055360/56055361"
+  },
+  {
+    "url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E8%AF%AD%E6%96%87%E8%AE%AF%E9%A3%9E%E4%B9%A6%E5%9F%8E.mp4",
+    "status": 206,
+    "content_type": "video/mp4",
+    "content_length": "18077249",
+    "content_range": "bytes 37978112-56055360/56055361"
+  },
+  {
+    "url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E8%AF%AD%E6%96%87%E8%AE%AF%E9%A3%9E%E4%B9%A6%E5%9F%8E.mp4",
+    "status": 206,
+    "content_type": "video/mp4",
+    "content_length": "14046785",
+    "content_range": "bytes 42008576-56055360/56055361"
+  },
+  {
+    "url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E8%AF%AD%E6%96%87%E8%AE%AF%E9%A3%9E%E4%B9%A6%E5%9F%8E.mp4",
+    "status": 206,
+    "content_type": "video/mp4",
+    "content_length": "10376769",
+    "content_range": "bytes 45678592-56055360/56055361"
+  },
+  {
+    "url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E8%AF%AD%E6%96%87%E8%AE%AF%E9%A3%9E%E4%B9%A6%E5%9F%8E.mp4",
+    "status": 206,
+    "content_type": "video/mp4",
+    "content_length": "5822017",
+    "content_range": "bytes 50233344-56055360/56055361"
+  },
+  {
+    "url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E8%AF%AD%E6%96%87%E8%AE%AF%E9%A3%9E%E4%B9%A6%E5%9F%8E.mp4",
+    "status": 206,
+    "content_type": "video/mp4",
+    "content_length": "1660481",
+    "content_range": "bytes 54394880-56055360/56055361"
+  },
+  {
+    "url": "https://api.xunfeixxj.com/assistant/device/getProductList",
+    "status": 200,
+    "content_type": "application/json;charset=UTF-8",
+    "content_length": null,
+    "content_range": null
+  },
+  {
+    "url": "https://api.xunfeixxj.com/assistant/video/getHelpVideoList",
+    "status": 200,
+    "content_type": "application/json;charset=UTF-8",
+    "content_length": null,
+    "content_range": null
+  },
+  {
+    "url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E8%AF%AD%E6%96%87%E5%90%8C%E6%AD%A5%E5%AD%A6%E4%B9%A0.mp4",
+    "status": 206,
+    "content_type": "video/mp4",
+    "content_length": "43561332",
+    "content_range": "bytes 0-43561331/43561332"
+  },
+  {
+    "url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E8%AF%AD%E6%96%87%E5%90%8C%E6%AD%A5%E5%AD%A6%E4%B9%A0.mp4",
+    "status": 206,
+    "content_type": "video/mp4",
+    "content_length": "41759092",
+    "content_range": "bytes 1802240-43561331/43561332"
+  },
+  {
+    "url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E8%AF%AD%E6%96%87%E5%90%8C%E6%AD%A5%E5%AD%A6%E4%B9%A0.mp4",
+    "status": 206,
+    "content_type": "video/mp4",
+    "content_length": "37335412",
+    "content_range": "bytes 6225920-43561331/43561332"
+  },
+  {
+    "url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E8%AF%AD%E6%96%87%E5%90%8C%E6%AD%A5%E5%AD%A6%E4%B9%A0.mp4",
+    "status": 206,
+    "content_type": "video/mp4",
+    "content_length": "33206644",
+    "content_range": "bytes 10354688-43561331/43561332"
+  },
+  {
+    "url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E8%AF%AD%E6%96%87%E5%90%8C%E6%AD%A5%E5%AD%A6%E4%B9%A0.mp4",
+    "status": 206,
+    "content_type": "video/mp4",
+    "content_length": "30585204",
+    "content_range": "bytes 12976128-43561331/43561332"
+  },
+  {
+    "url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E8%AF%AD%E6%96%87%E5%90%8C%E6%AD%A5%E5%AD%A6%E4%B9%A0.mp4",
+    "status": 206,
+    "content_type": "video/mp4",
+    "content_length": "23310708",
+    "content_range": "bytes 20250624-43561331/43561332"
+  },
+  {
+    "url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E8%AF%AD%E6%96%87%E5%90%8C%E6%AD%A5%E5%AD%A6%E4%B9%A0.mp4",
+    "status": 206,
+    "content_type": "video/mp4",
+    "content_length": "18624884",
+    "content_range": "bytes 24936448-43561331/43561332"
+  },
+  {
+    "url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E8%AF%AD%E6%96%87%E5%90%8C%E6%AD%A5%E5%AD%A6%E4%B9%A0.mp4",
+    "status": 206,
+    "content_type": "video/mp4",
+    "content_length": "15937908",
+    "content_range": "bytes 27623424-43561331/43561332"
+  },
+  {
+    "url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E8%AF%AD%E6%96%87%E5%90%8C%E6%AD%A5%E5%AD%A6%E4%B9%A0.mp4",
+    "status": 206,
+    "content_type": "video/mp4",
+    "content_length": "12333428",
+    "content_range": "bytes 31227904-43561331/43561332"
+  },
+  {
+    "url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E8%AF%AD%E6%96%87%E5%90%8C%E6%AD%A5%E5%AD%A6%E4%B9%A0.mp4",
+    "status": 206,
+    "content_type": "video/mp4",
+    "content_length": "7844212",
+    "content_range": "bytes 35717120-43561331/43561332"
+  },
+  {
+    "url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E8%AF%AD%E6%96%87%E5%90%8C%E6%AD%A5%E5%AD%A6%E4%B9%A0.mp4",
+    "status": 206,
+    "content_type": "video/mp4",
+    "content_length": "2503028",
+    "content_range": "bytes 41058304-43561331/43561332"
+  },
+  {
+    "url": "https://api.xunfeixxj.com/assistant/device/getProductList",
+    "status": 200,
+    "content_type": "application/json;charset=UTF-8",
+    "content_length": null,
+    "content_range": null
+  },
+  {
+    "url": "https://api.xunfeixxj.com/assistant/video/getHelpVideoList",
+    "status": 200,
+    "content_type": "application/json;charset=UTF-8",
+    "content_length": null,
+    "content_range": null
+  },
+  {
+    "url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E8%87%AA%E5%AE%9A%E4%B9%89%E5%AD%A6%E4%B9%A0%E8%AE%A1%E5%88%92.mp4",
+    "status": 206,
+    "content_type": "video/mp4",
+    "content_length": "34127672",
+    "content_range": "bytes 0-34127671/34127672"
+  },
+  {
+    "url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E8%87%AA%E5%AE%9A%E4%B9%89%E5%AD%A6%E4%B9%A0%E8%AE%A1%E5%88%92.mp4",
+    "status": 206,
+    "content_type": "video/mp4",
+    "content_length": "31964984",
+    "content_range": "bytes 2162688-34127671/34127672"
+  },
+  {
+    "url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E8%87%AA%E5%AE%9A%E4%B9%89%E5%AD%A6%E4%B9%A0%E8%AE%A1%E5%88%92.mp4",
+    "status": 206,
+    "content_type": "video/mp4",
+    "content_length": "28393272",
+    "content_range": "bytes 5734400-34127671/34127672"
+  },
+  {
+    "url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E8%87%AA%E5%AE%9A%E4%B9%89%E5%AD%A6%E4%B9%A0%E8%AE%A1%E5%88%92.mp4",
+    "status": 206,
+    "content_type": "video/mp4",
+    "content_length": "25149240",
+    "content_range": "bytes 8978432-34127671/34127672"
+  },
+  {
+    "url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E8%87%AA%E5%AE%9A%E4%B9%89%E5%AD%A6%E4%B9%A0%E8%AE%A1%E5%88%92.mp4",
+    "status": 206,
+    "content_type": "video/mp4",
+    "content_length": "21249848",
+    "content_range": "bytes 12877824-34127671/34127672"
+  },
+  {
+    "url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E8%87%AA%E5%AE%9A%E4%B9%89%E5%AD%A6%E4%B9%A0%E8%AE%A1%E5%88%92.mp4",
+    "status": 206,
+    "content_type": "video/mp4",
+    "content_length": "17415992",
+    "content_range": "bytes 16711680-34127671/34127672"
+  },
+  {
+    "url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E8%87%AA%E5%AE%9A%E4%B9%89%E5%AD%A6%E4%B9%A0%E8%AE%A1%E5%88%92.mp4",
+    "status": 206,
+    "content_type": "video/mp4",
+    "content_length": "13057848",
+    "content_range": "bytes 21069824-34127671/34127672"
+  },
+  {
+    "url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E8%87%AA%E5%AE%9A%E4%B9%89%E5%AD%A6%E4%B9%A0%E8%AE%A1%E5%88%92.mp4",
+    "status": 206,
+    "content_type": "video/mp4",
+    "content_length": "10174264",
+    "content_range": "bytes 23953408-34127671/34127672"
+  },
+  {
+    "url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E8%87%AA%E5%AE%9A%E4%B9%89%E5%AD%A6%E4%B9%A0%E8%AE%A1%E5%88%92.mp4",
+    "status": 206,
+    "content_type": "video/mp4",
+    "content_length": "5390136",
+    "content_range": "bytes 28737536-34127671/34127672"
+  },
+  {
+    "url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E8%87%AA%E5%AE%9A%E4%B9%89%E5%AD%A6%E4%B9%A0%E8%AE%A1%E5%88%92.mp4",
+    "status": 206,
+    "content_type": "video/mp4",
+    "content_length": "900920",
+    "content_range": "bytes 33226752-34127671/34127672"
+  },
+  {
+    "url": "https://api.xunfeixxj.com/assistant/device/getProductList",
+    "status": 200,
+    "content_type": "application/json;charset=UTF-8",
+    "content_length": null,
+    "content_range": null
+  },
+  {
+    "url": "https://api.xunfeixxj.com/assistant/video/getHelpVideoList",
+    "status": 200,
+    "content_type": "application/json;charset=UTF-8",
+    "content_length": null,
+    "content_range": null
+  },
+  {
+    "url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E8%AF%AD%E6%96%87%E7%9C%8B%E5%9B%BE%E8%83%8C%E8%AF%97.mp4",
+    "status": 206,
+    "content_type": "video/mp4",
+    "content_length": "26627247",
+    "content_range": "bytes 0-26627246/26627247"
+  },
+  {
+    "url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E8%AF%AD%E6%96%87%E7%9C%8B%E5%9B%BE%E8%83%8C%E8%AF%97.mp4",
+    "status": 206,
+    "content_type": "video/mp4",
+    "content_length": "24890543",
+    "content_range": "bytes 1736704-26627246/26627247"
+  },
+  {
+    "url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E8%AF%AD%E6%96%87%E7%9C%8B%E5%9B%BE%E8%83%8C%E8%AF%97.mp4",
+    "status": 206,
+    "content_type": "video/mp4",
+    "content_length": "20827311",
+    "content_range": "bytes 5799936-26627246/26627247"
+  },
+  {
+    "url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E8%AF%AD%E6%96%87%E7%9C%8B%E5%9B%BE%E8%83%8C%E8%AF%97.mp4",
+    "status": 206,
+    "content_type": "video/mp4",
+    "content_length": "16796847",
+    "content_range": "bytes 9830400-26627246/26627247"
+  },
+  {
+    "url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E8%AF%AD%E6%96%87%E7%9C%8B%E5%9B%BE%E8%83%8C%E8%AF%97.mp4",
+    "status": 206,
+    "content_type": "video/mp4",
+    "content_length": "13782191",
+    "content_range": "bytes 12845056-26627246/26627247"
+  },
+  {
+    "url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E8%AF%AD%E6%96%87%E7%9C%8B%E5%9B%BE%E8%83%8C%E8%AF%97.mp4",
+    "status": 206,
+    "content_type": "video/mp4",
+    "content_length": "13716655",
+    "content_range": "bytes 12910592-26627246/26627247"
+  },
+  {
+    "url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E8%AF%AD%E6%96%87%E7%9C%8B%E5%9B%BE%E8%83%8C%E8%AF%97.mp4",
+    "status": 206,
+    "content_type": "video/mp4",
+    "content_length": "11193519",
+    "content_range": "bytes 15433728-26627246/26627247"
+  },
+  {
+    "url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E8%AF%AD%E6%96%87%E7%9C%8B%E5%9B%BE%E8%83%8C%E8%AF%97.mp4",
+    "status": 206,
+    "content_type": "video/mp4",
+    "content_length": "6737071",
+    "content_range": "bytes 19890176-26627246/26627247"
+  },
+  {
+    "url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E8%AF%AD%E6%96%87%E7%9C%8B%E5%9B%BE%E8%83%8C%E8%AF%97.mp4",
+    "status": 206,
+    "content_type": "video/mp4",
+    "content_length": "2084015",
+    "content_range": "bytes 24543232-26627246/26627247"
+  },
+  {
+    "url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E8%AF%AD%E6%96%87%E7%9C%8B%E5%9B%BE%E8%83%8C%E8%AF%97.mp4",
+    "status": 206,
+    "content_type": "video/mp4",
+    "content_length": "18992303",
+    "content_range": "bytes 7634944-26627246/26627247"
+  },
+  {
+    "url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E8%AF%AD%E6%96%87%E7%9C%8B%E5%9B%BE%E8%83%8C%E8%AF%97.mp4",
+    "status": 206,
+    "content_type": "video/mp4",
+    "content_length": "11193519",
+    "content_range": "bytes 15433728-26627246/26627247"
+  },
+  {
+    "url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E8%AF%AD%E6%96%87%E7%9C%8B%E5%9B%BE%E8%83%8C%E8%AF%97.mp4",
+    "status": 206,
+    "content_type": "video/mp4",
+    "content_length": "8866991",
+    "content_range": "bytes 17760256-26627246/26627247"
+  },
+  {
+    "url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E8%AF%AD%E6%96%87%E7%9C%8B%E5%9B%BE%E8%83%8C%E8%AF%97.mp4",
+    "status": 206,
+    "content_type": "video/mp4",
+    "content_length": "8015023",
+    "content_range": "bytes 18612224-26627246/26627247"
+  },
+  {
+    "url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E8%AF%AD%E6%96%87%E7%9C%8B%E5%9B%BE%E8%83%8C%E8%AF%97.mp4",
+    "status": 206,
+    "content_type": "video/mp4",
+    "content_length": "3886255",
+    "content_range": "bytes 22740992-26627246/26627247"
+  },
+  {
+    "url": "https://api.xunfeixxj.com/assistant/device/getProductList",
+    "status": 200,
+    "content_type": "application/json;charset=UTF-8",
+    "content_length": null,
+    "content_range": null
+  },
+  {
+    "url": "https://api.xunfeixxj.com/assistant/video/getHelpVideoList",
+    "status": 200,
+    "content_type": "application/json;charset=UTF-8",
+    "content_length": null,
+    "content_range": null
+  },
+  {
+    "url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E8%87%AA%E5%AE%9A%E4%B9%89%E5%AD%A6%E4%B9%A0%E8%AE%A1%E5%88%92.mp4",
+    "status": 206,
+    "content_type": "video/mp4",
+    "content_length": "34127672",
+    "content_range": "bytes 0-34127671/34127672"
+  },
+  {
+    "url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E8%87%AA%E5%AE%9A%E4%B9%89%E5%AD%A6%E4%B9%A0%E8%AE%A1%E5%88%92.mp4",
+    "status": 206,
+    "content_type": "video/mp4",
+    "content_length": "17415992",
+    "content_range": "bytes 16711680-34127671/34127672"
+  },
+  {
+    "url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E8%87%AA%E5%AE%9A%E4%B9%89%E5%AD%A6%E4%B9%A0%E8%AE%A1%E5%88%92.mp4",
+    "status": 206,
+    "content_type": "video/mp4",
+    "content_length": "3391288",
+    "content_range": "bytes 30736384-34127671/34127672"
+  },
+  {
+    "url": "https://api.xunfeixxj.com/assistant/device/getProductList",
+    "status": 200,
+    "content_type": "application/json;charset=UTF-8",
+    "content_length": null,
+    "content_range": null
+  },
+  {
+    "url": "https://api.xunfeixxj.com/assistant/video/getHelpVideoList",
+    "status": 200,
+    "content_type": "application/json;charset=UTF-8",
+    "content_length": null,
+    "content_range": null
+  },
+  {
+    "url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E8%AF%AD%E6%96%87%E5%90%8C%E6%AD%A5%E5%AD%A6%E4%B9%A0.mp4",
+    "status": 206,
+    "content_type": "video/mp4",
+    "content_length": "43561332",
+    "content_range": "bytes 0-43561331/43561332"
+  },
+  {
+    "url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E8%AF%AD%E6%96%87%E5%90%8C%E6%AD%A5%E5%AD%A6%E4%B9%A0.mp4",
+    "status": 206,
+    "content_type": "video/mp4",
+    "content_length": "25538932",
+    "content_range": "bytes 18022400-43561331/43561332"
+  },
+  {
+    "url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E8%AF%AD%E6%96%87%E5%90%8C%E6%AD%A5%E5%AD%A6%E4%B9%A0.mp4",
+    "status": 206,
+    "content_type": "video/mp4",
+    "content_length": "13382004",
+    "content_range": "bytes 30179328-43561331/43561332"
+  },
+  {
+    "url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E8%AF%AD%E6%96%87%E5%90%8C%E6%AD%A5%E5%AD%A6%E4%B9%A0.mp4",
+    "status": 206,
+    "content_type": "video/mp4",
+    "content_length": "9941364",
+    "content_range": "bytes 33619968-43561331/43561332"
+  },
+  {
+    "url": "https://api.xunfeixxj.com/assistant/device/getProductList",
+    "status": 200,
+    "content_type": "application/json;charset=UTF-8",
+    "content_length": null,
+    "content_range": null
+  },
+  {
+    "url": "https://api.xunfeixxj.com/assistant/video/getHelpVideoList",
+    "status": 200,
+    "content_type": "application/json;charset=UTF-8",
+    "content_length": null,
+    "content_range": null
+  },
+  {
+    "url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E8%AF%AD%E6%96%87%E8%AE%AF%E9%A3%9E%E4%B9%A6%E5%9F%8E.mp4",
+    "status": 206,
+    "content_type": "video/mp4",
+    "content_length": "56055361",
+    "content_range": "bytes 0-56055360/56055361"
+  },
+  {
+    "url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E8%AF%AD%E6%96%87%E8%AE%AF%E9%A3%9E%E4%B9%A6%E5%9F%8E.mp4",
+    "status": 206,
+    "content_type": "video/mp4",
+    "content_length": "43112001",
+    "content_range": "bytes 12943360-56055360/56055361"
+  },
+  {
+    "url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E8%AF%AD%E6%96%87%E8%AE%AF%E9%A3%9E%E4%B9%A6%E5%9F%8E.mp4",
+    "status": 206,
+    "content_type": "video/mp4",
+    "content_length": "38229569",
+    "content_range": "bytes 17825792-56055360/56055361"
+  },
+  {
+    "url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E8%AF%AD%E6%96%87%E8%AE%AF%E9%A3%9E%E4%B9%A6%E5%9F%8E.mp4",
+    "status": 206,
+    "content_type": "video/mp4",
+    "content_length": "33248833",
+    "content_range": "bytes 22806528-56055360/56055361"
+  },
+  {
+    "url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E5%AD%A6%E8%AF%AD%E6%96%87%E8%AE%AF%E9%A3%9E%E4%B9%A6%E5%9F%8E.mp4",
+    "status": 206,
+    "content_type": "video/mp4",
+    "content_length": "3462721",
+    "content_range": "bytes 52592640-56055360/56055361"
+  }
+]

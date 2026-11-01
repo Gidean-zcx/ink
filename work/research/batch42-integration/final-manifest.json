@@ -1,0 +1,343 @@
+{
+  "batch": 42,
+  "requirements_unchanged": true,
+  "changed_file_count": 56,
+  "changes": [
+    {
+      "path": "README.md",
+      "status": "modified",
+      "before": "ce0c4216b537039f048cc0060eba130c681dd87268fb59e11fba886ed04a4d41",
+      "after": "c53799585bf71a83230be0309922f1a445719c59ec062762ccedcbbed608d656"
+    },
+    {
+      "path": "docs/briefs/042-math-feedback-and-research-depth.md",
+      "status": "new",
+      "before": null,
+      "after": "40cf2997246d1c2bd70f289a20a07d92cfe002880ce2bf5ba7382e0c80e0e0b3"
+    },
+    {
+      "path": "docs/ideas.md",
+      "status": "modified",
+      "before": "9c5a95046868c25051d739968893f0cf3f209218f14f5bd7fc3271bae5d76593",
+      "after": "5cdde49ea60004decd0f076aee1759cba7574e31f4c2b1ab2a7066019c2342a4"
+    },
+    {
+      "path": "docs/research/interaction-library/README.md",
+      "status": "modified",
+      "before": "92c32627f4ea638e3c2763f8de5702418d62a3cbf245584a9953cacfd8d544e6",
+      "after": "f31a539ad9637d33ea414740dfeb31f908941870e3966a723555667015f8ddf9"
+    },
+    {
+      "path": "docs/research/interaction-library/analysis-status.md",
+      "status": "modified",
+      "before": "381b6d7da782ebc2de9d8ff3fc7d7e3738789ccb7cdd11d529c29ccf20cf91ff",
+      "after": "8eb29ebecee614159279e0ba23725922d8887a2699ca64a4d91c2b9881968bbd"
+    },
+    {
+      "path": "docs/research/interaction-library/artifacts/child-core-evidence-audit/media-locations.json",
+      "status": "new",
+      "before": null,
+      "after": "414a809a86eafe172753a8a268f671c16d9c315784df6b3438619aca392c20dd"
+    },
+    {
+      "path": "docs/research/interaction-library/artifacts/child-core-evidence-audit/source-notes.md",
+      "status": "new",
+      "before": null,
+      "after": "b7415db08f45371a86e5521ce0dbac8f0fcec298d9165040aaaafd3a3152ea99"
+    },
+    {
+      "path": "docs/research/interaction-library/artifacts/duolingo-math-interactions/browser-operation-audit.md",
+      "status": "new",
+      "before": null,
+      "after": "aae66140ffd7b7e41709a35c30cf9d22dc22a3cbbe9c2dd00d33800a3fb16b9d"
+    },
+    {
+      "path": "docs/research/interaction-library/artifacts/duolingo-math-interactions/browser/13-after-daily-goal.png",
+      "status": "new",
+      "before": null,
+      "after": "e6a756d9c0618ff624a7a953db6136ef7f81994432d93652c214d34bbb8673bb"
+    },
+    {
+      "path": "docs/research/interaction-library/artifacts/duolingo-math-interactions/browser/20-calculator-closed.png",
+      "status": "new",
+      "before": null,
+      "after": "e610218f6902d45e07a96981afd8b83b9e85068a7f9dc4cbd77c181b5736cf55"
+    },
+    {
+      "path": "docs/research/interaction-library/artifacts/duolingo-math-interactions/browser/23-wrong-answer-feedback.png",
+      "status": "new",
+      "before": null,
+      "after": "8b2b9c2a83f7ca0348d3933d7186dd2318c63395eb5214f453f4c7d78fb15d83"
+    },
+    {
+      "path": "docs/research/interaction-library/artifacts/duolingo-math-interactions/browser/24-after-first-error.png",
+      "status": "new",
+      "before": null,
+      "after": "d80e1184f5931b5f326984bceba341dbf014dd6143f12bf8862b79195c07e063"
+    },
+    {
+      "path": "docs/research/interaction-library/artifacts/duolingo-math-interactions/browser/25-correct-choice-pending.png",
+      "status": "new",
+      "before": null,
+      "after": "23a775b4ab15ec296462cfaae5ec34580e31d2464db8f74e412d9b8ca7d2ad1a"
+    },
+    {
+      "path": "docs/research/interaction-library/artifacts/duolingo-math-interactions/browser/27-after-quit-ready.png",
+      "status": "new",
+      "before": null,
+      "after": "2341229bf1beeb42e477f41e945d06d173eec4723ae3f129bf479c1b8ab3caf6"
+    },
+    {
+      "path": "docs/research/interaction-library/artifacts/duolingo-math-interactions/browser/29-reentered-math.png",
+      "status": "new",
+      "before": null,
+      "after": "5c42b85e194bbc5b0909ec3d901f612039e7bd1c96ea4ea1a8d5427220278ec3"
+    },
+    {
+      "path": "docs/research/interaction-library/artifacts/duolingo-math-interactions/browser/30-second-session-error-feedback.png",
+      "status": "new",
+      "before": null,
+      "after": "a0f9f7814d80f21909659a2c010fa6a35530c6c94c6d5fa306dc8e55c7d5acb8"
+    },
+    {
+      "path": "docs/research/interaction-library/artifacts/duolingo-math-interactions/browser/36-equation-feedback.png",
+      "status": "new",
+      "before": null,
+      "after": "6cf9f8984e5d21a91e43a6c7247c8c1cb6cf955b3889142715d45e1eaf4a534f"
+    },
+    {
+      "path": "docs/research/interaction-library/artifacts/duolingo-math-interactions/browser/38-first-tile-settled.png",
+      "status": "new",
+      "before": null,
+      "after": "45a2487d33eb2b808a8d142f10beec90d00d05dcb376295e5fd2499c8ba730c6"
+    },
+    {
+      "path": "docs/research/interaction-library/artifacts/duolingo-math-interactions/browser/39-selected-tile-removed.png",
+      "status": "new",
+      "before": null,
+      "after": "6aff6ce082cb0275c7ab3e134d16f158eda2b7a213a8dbee0a1fbd6f519f8386"
+    },
+    {
+      "path": "docs/research/interaction-library/artifacts/duolingo-math-interactions/browser/40-expression-two-plus-three.png",
+      "status": "new",
+      "before": null,
+      "after": "776b59f52a80f98d5457731f9812365c8726b3b694e82a11d03a78fdc85aee4f"
+    },
+    {
+      "path": "docs/research/interaction-library/artifacts/duolingo-math-interactions/browser/41-composed-answer-feedback.png",
+      "status": "new",
+      "before": null,
+      "after": "23a5f4b358d8967afa762ecd77e39a2e9f19367ba2da2f6eb89895bafeb7be13"
+    },
+    {
+      "path": "docs/research/interaction-library/artifacts/duolingo-math-interactions/browser/43-number-line-selected.png",
+      "status": "new",
+      "before": null,
+      "after": "a47959028f5da1ace71eb3b45df9221f33e1d76fbdf841937ec1cafbb6b9c051"
+    },
+    {
+      "path": "docs/research/interaction-library/artifacts/duolingo-math-interactions/browser/44-number-line-feedback.png",
+      "status": "new",
+      "before": null,
+      "after": "11a4c4d7d6856d92cc5fd7bd943e8775437dbdff22cb9a269b2cb6e92a297eba"
+    },
+    {
+      "path": "docs/research/interaction-library/artifacts/duolingo-math-interactions/browser/46-typed-eight.png",
+      "status": "new",
+      "before": null,
+      "after": "3962dac3ccbdbd96a9c7c25adc2226e7a7b7c3c673f6073302727f33e940fcca"
+    },
+    {
+      "path": "docs/research/interaction-library/artifacts/duolingo-math-interactions/browser/47-typed-feedback.png",
+      "status": "new",
+      "before": null,
+      "after": "14c5ebbe4203754e5d3ef82eaa8b743fd95560101fd6c2bae9b1b3e0140ab221"
+    },
+    {
+      "path": "docs/research/interaction-library/artifacts/duolingo-math-interactions/browser/57-next-task.png",
+      "status": "new",
+      "before": null,
+      "after": "f187af672fb4f6c069f981737de167d9398d937d012e12bdd44afaca178b7e58"
+    },
+    {
+      "path": "docs/research/interaction-library/artifacts/duolingo-math-interactions/browser/59-ticked-line-feedback.png",
+      "status": "new",
+      "before": null,
+      "after": "405c31b12e0c9d15961ceac37cf42af552d83196f34f4a3a7c86cc93273b7633"
+    },
+    {
+      "path": "docs/research/interaction-library/artifacts/duolingo-math-interactions/browser/64-next-task.png",
+      "status": "new",
+      "before": null,
+      "after": "223cc4005ef38077dc3347ec2b893a4446c22c77b41ee388fd7419b279bcaac5"
+    },
+    {
+      "path": "docs/research/interaction-library/artifacts/duolingo-math-interactions/browser/65-first-error-review-feedback.png",
+      "status": "new",
+      "before": null,
+      "after": "4c02409d7d185bdbc4e9a201362c2efa200f9181772280654048dbc38fbb0aef"
+    },
+    {
+      "path": "docs/research/interaction-library/artifacts/duolingo-math-interactions/browser/65-first-error-review-next.png",
+      "status": "new",
+      "before": null,
+      "after": "0ea541214c4d62905ab96275c414a67ea0844e15943e73f54f303e1ac5a9d933"
+    },
+    {
+      "path": "docs/research/interaction-library/artifacts/duolingo-math-interactions/browser/66-review-expression-composed.png",
+      "status": "new",
+      "before": null,
+      "after": "f75ad97c83f37cdd957a6a36c3fe508da7eb735085f5cc2e673a46a9e169fb79"
+    },
+    {
+      "path": "docs/research/interaction-library/artifacts/duolingo-math-interactions/browser/67-review-expression-feedback.png",
+      "status": "new",
+      "before": null,
+      "after": "0ea7e90e2742adb2738dc8bd02a561cd167cd08607b8b4de86102764bc21a0d6"
+    },
+    {
+      "path": "docs/research/interaction-library/artifacts/duolingo-math-interactions/browser/69-result-settled.png",
+      "status": "new",
+      "before": null,
+      "after": "4834874edf46f350790a945e1c16d8aa301bb9ed3fda1dd7e9fb6631d01cf215"
+    },
+    {
+      "path": "docs/research/interaction-library/artifacts/duolingo-math-interactions/browser/74-after-refresh-task.png",
+      "status": "new",
+      "before": null,
+      "after": "fd60f4189b00636d734564060bd2378af7ab0ceee9fb519e7c319c704796c08f"
+    },
+    {
+      "path": "docs/research/interaction-library/artifacts/duolingo-math-interactions/browser/77-learning-page-ready.png",
+      "status": "new",
+      "before": null,
+      "after": "74def79384a3a944060262ec1c129fe477b7b921be3c8d299c867bf37955ca3b"
+    },
+    {
+      "path": "docs/research/interaction-library/artifacts/duolingo-math-interactions/browser/browser-errors.json",
+      "status": "new",
+      "before": null,
+      "after": "0a5b2ea006fe0eb54f094fb6fa9c402d414c046419423f0aa88d3efd4c07323c"
+    },
+    {
+      "path": "docs/research/interaction-library/artifacts/duolingo-math-interactions/browser/network-statuses.json",
+      "status": "new",
+      "before": null,
+      "after": "d73aa63de61d4ae58b366809f70059f51c1adde5095f3ab04aab9030cdb132e9"
+    },
+    {
+      "path": "docs/research/interaction-library/artifacts/duolingo-math-interactions/browser/observed-states.json",
+      "status": "new",
+      "before": null,
+      "after": "4fd2eaf3cd3258684696c155d66102287c92f90e934d197d17548db5ecdfb6c5"
+    },
+    {
+      "path": "docs/research/interaction-library/artifacts/duolingo-math-interactions/browser/raw-capture-manifest.json",
+      "status": "new",
+      "before": null,
+      "after": "ec00efcc16c8e74b4e21a9bf156df25a95ad2ff7364341917ebd20d1bdf17afb"
+    },
+    {
+      "path": "docs/research/interaction-library/artifacts/duolingo-math-interactions/browser/session.json",
+      "status": "new",
+      "before": null,
+      "after": "06f1762e0317c0d73f3d515f2d6a7e811e1ed39efc5e72a85f445ae8559d0f9c"
+    },
+    {
+      "path": "docs/research/interaction-library/artifacts/duolingo-math-interactions/browser/trace-actions.json",
+      "status": "new",
+      "before": null,
+      "after": "18d05822cb8eb7771c1e433aef5f62e942c78ccc287c1ddb41cd5fa32d3d8adf"
+    },
+    {
+      "path": "docs/research/interaction-library/artifacts/duolingo-math-interactions/source-captures.json",
+      "status": "new",
+      "before": null,
+      "after": "55349232e9779bfcb060cb5de276c3d244e498afb97ea52bfdbbcb3dead79d9d"
+    },
+    {
+      "path": "docs/research/interaction-library/artifacts/duolingo-math-interactions/source-notes.md",
+      "status": "new",
+      "before": null,
+      "after": "c64d67055eecef8383c0cf9320005405da3873d8ff2bb4f6faddd640cabcf054"
+    },
+    {
+      "path": "docs/research/interaction-library/backlog.md",
+      "status": "modified",
+      "before": "0350dafbb3eca7dca7f6a1c621e5e36926364d1dc115d8045ab2d9d63664515d",
+      "after": "bf960c6c62f27488caa2ad37c363aaff1d18c5d19253986e0b8669d8ee456d5e"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/README.md",
+      "status": "modified",
+      "before": "b82e2d1a1b2ee6898526be47de8adeb370db6ba946ffb5d57b114fb0eeee5a39",
+      "after": "ac55e19eab437eca8ccb61063410e503ee3f3bbe03554ce249c38ea2ca67ad4c"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/duolingo-controls-deepening-coverage.csv",
+      "status": "modified",
+      "before": "4fc5c52bf1a248bf25d4c2663a4af60e42f85636380428fb2600bb774150283d",
+      "after": "ee07333016746de9e7e9ee3404d498a501cdc5ed27e37dfed173ae542be3e6af"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/duolingo-math-interactions-coverage.csv",
+      "status": "new",
+      "before": null,
+      "after": "d41117ac697c44088d37dbe3dc5e2e253a06e57917def1f2da654a75f29eb692"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/duolingo-math-interactions-evidence.jsonl",
+      "status": "new",
+      "before": null,
+      "after": "90f7435f235eda622b7fd2e8734cdce879b00d766372df47fee92dae2e5ddbf3"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/duolingo-math-interactions-inventory.csv",
+      "status": "new",
+      "before": null,
+      "after": "310caad728cf051d3a804edd6f0e5c8984d515e6c98afb1180c3793dee528ab8"
+    },
+    {
+      "path": "docs/research/interaction-library/case-index.md",
+      "status": "modified",
+      "before": "b10879c7428e05b9ea8391b810e1b3bec139ea0d45cf192ad2e533843e5c227e",
+      "after": "bd56ed22d639c48bd8f00693f73da55df6b0c03e81887fb60487bf9e7da34335"
+    },
+    {
+      "path": "docs/research/interaction-library/cases/M-031-duolingo-adventures.md",
+      "status": "modified",
+      "before": "5f7afa39afc8c0c8ee8224151cbd058bcea343cf4984fb655b6959a5797d9427",
+      "after": "7b5090a009627fccbd04fd105b0447c31014744f9ec6a06461c92d23bd5fb7f2"
+    },
+    {
+      "path": "docs/research/interaction-library/coverage.csv",
+      "status": "modified",
+      "before": "9d9dda7acedb9c83c383c3a35400a60926cd370979cf5f74dcaa4b8ac7424ce4",
+      "after": "498b44ee2789d5b621b4b147d6ad4f7f8e57492df91a0a796c6413e5acd12ff3"
+    },
+    {
+      "path": "docs/research/interaction-library/data-dictionary.md",
+      "status": "modified",
+      "before": "28172f9e7f707ce183ebea999578605d389b953b7c1d9b61e66c6a6fce0e2a6c",
+      "after": "a047c7131a7ccb9e13334cc3194a63ba5d901cc41ec013b345de5cedd5c8ed45"
+    },
+    {
+      "path": "docs/research/interaction-library/design-reference-guide.md",
+      "status": "modified",
+      "before": "e9cd644e198a00c6ac0f9a93b7ba4264373adb6a81c6ceba83c9e7680bce637e",
+      "after": "4ef59443aac8ac0c952e8359ba45b07ddb98a875c5cf06d1936fbda6f5d81151"
+    },
+    {
+      "path": "docs/research/interaction-library/evidence.jsonl",
+      "status": "modified",
+      "before": "021caff55edf676a1dcb2df1e271717e9b406f4d79da7bd5bf9984b642b316fa",
+      "after": "0a9d34ae77f5b908bc84bfff35b731305b1dcce5f00c16aad85723cedd8ca1b5"
+    },
+    {
+      "path": "docs/research/interaction-library/reference-points.csv",
+      "status": "modified",
+      "before": "dc555f626dd090a2d7d5ca6665429e7af53b1a68040c2214fabd91d0f34fffd7",
+      "after": "3b9e90d995a2438d328d583548874a93cb073364e1a0900f38b177853ea312e1"
+    }
+  ]
+}

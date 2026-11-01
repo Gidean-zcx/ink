@@ -1,0 +1,223 @@
+Manage clips & notes (https://help.audible.com/s/article/manage-clips-bookmarks)
+citeturn761view1 [wordlim: 200] Crawled: today; Content type: text/html; Source: open({"ref_id":"https://help.audible.com/s/article/manage-clips-bookmarks","lineno":null}); Total lines: 260
+L0: Loading
+L1: 
+L2: Sorry to interrupt
+L3: 
+L4: Uncaught TypeError: Cannot read properties of null (reading 'style')
+L5: 
+L6: 【0†Refresh】
+L7: 
+L8: Skip to Main Content
+L9: 
+L10: Related topics
+L11: 
+L12: Android Ask A Question Clips & bookmarks Cloud Player+4
+L13: ## Manage clips & notes
+L14: 
+L15:   * Sep 9, 2026
+L16:   * Knowledge
+L17: 
+L18: Title
+L19: 
+L20: Manage clips & notes
+L21: 
+L22: URL Name
+L23: 
+L24: manage-clips-bookmarks
+L25: 
+L26: Answer
+L27: 
+L28: You can save, edit, delete, and play specific clips of an audiobook right from the player in your app. Creating clips makes it easy to replay your favorite sections, quotes, or bits of dialogue. They can be as long as 44 seconds and as short as 5 seconds. You can also bookmark certain places you'd like to return to later, from both the app or Cloud Player.
+L29: If you're looking for more information about Cloud Player, including how to use it and common troubleshooting techniques, please refer to 【1†Listen on a browser.】
+L30: 
+L31: Notes:
+L32: 
+L33:   * Any clip you save in the app will also add a bookmark.
+L34:   * Select Go to Bookmark from the app or 【1†Cloud Player】 will resume playback from that exact position.
+L35:   * You aren't able to add or manage clips from the website—only the app.
+L36: 
+L37: In this article:
+L38:   * 【2†Save an audio clip】
+L39:   * 【3†Edit an audio clip】
+L40:   * 【4†Add a note to your clip】
+L41:   * 【5†Delete an audio clip】
+L42:   * 【6†Play a saved audio clip】
+L43:   * 【7†Add a bookmark】
+L44:   * 【8†Add a note to a bookmark】
+L45:   * 【9†Access a saved bookmark】
+L46:   * 【10†Delete a saved bookmark】
+L47: ## Save an audio clip
+L48: 
+L49: The Audio Clips feature is exclusively accessible through the Audible app on Android and iOS devices.
+L50: 
+L51: In the app
+L52: 
+L53:   1. Open the title's player screen.
+L54:   2. Select the +Clip icon to automatically save 30 seconds.
+L55: ## Edit an audio clip
+L56: 
+L57: You can edit and access the Audio Clip features through the Audible app.
+L58: 
+L59: In the app
+L60: 
+L61: From the confirmation banner
+L62: 
+L63:   1. Open the title's player screen.
+L64:   2. Select the +Clip icon to automatically save 30 seconds.
+L65:   3. Select Edit on the confirmation banner “Clip Saved.”
+L66:   4. Drag the audio clip handles to set your desired beginning and end point.
+L67: 
+L68: From Clips & Notes
+L69:   1. Open the title's player screen.
+L70:   2. Select the Clips & Notes button.
+L71:   3. Find the clip you'd like to edit and select the 3-dot menu.
+L72:   4. Select Edit Clip.
+L73:   5. Drag the audio clip handles to set your desired beginning and end point.
+L74: ## Add a note to your clip
+L75: 
+L76: You can add notes to your Audio Clips through the Audible app.
+L77: 
+L78: In the app
+L79: 
+L80: From the confirmation banner
+L81: 
+L82:   1. Open the title's player screen.
+L83:   2. Select the +Clip icon to automatically save 30 seconds.
+L84:   3. Select Edit on the confirmation banner “Clip Saved.”
+L85:   4. Enter your note.
+L86:   5. Select Save.
+L87: 
+L88: From Clips & Notes
+L89:   1. Open the title's player screen.
+L90:   2. Select the Clips & Notes button.
+L91:   3. Find the clip you'd like to edit and select the 3-dot menu.
+L92:   4. Select Edit Clip.
+L93:   5. Enter your note.
+L94:   6. Select Save.
+L95: ## Delete an audio clip
+L96: 
+L97: You can delete an audio clip through the Audio Clips feature through the Audible app.
+L98: 
+L99: In the app
+L100: 
+L101:   1. Open the title's player screen.
+L102:   2. Select the Clips & Notes button.
+L103:   3. Find the clip you'd like to delete and select the 3-dot menu.
+L104:   4. Select Delete.
+L105:   5. Confirm by selecting Delete.
+L106: ## Play a saved audio clip
+L107: 
+L108: You can play and save audio clips through the Audio Clips feature through the Audible app.
+L109: 
+L110: In the app
+L111: 
+L112:   1. Open the title's player screen.
+L113:   2. Select the Clips & Notes button.
+L114:   3. Find the clip you'd like to play.
+L115:   4. Select Clip to play only a clip or select Start in Player to start listening again from the clip.
+L116: ## Add a bookmark
+L117: 
+L118: You can add and access podcast bookmarks in the Audible app or Cloud Player.
+L119: 
+L120: In the app
+L121: 
+L122:   1. Open the podcast episode.
+L123:   2. Select +Bookmark.
+L124: 
+L125: On Cloud Player
+L126: 
+L127:   1. Open a title's player screen.
+L128:   2. Select Add a bookmark.
+L129: ## Add a note to a bookmark
+L130: 
+L131: You can add notes to your bookmarks through the Cloud Player and the Audible app.
+L132: 
+L133: In the app
+L134: 
+L135: From the confirmation banner
+L136: 
+L137:   1. Open the podcast episode.
+L138:   2. Select +Bookmark.
+L139:   3. Select Add note on the confirmation banner “Bookmark has been saved.”
+L140:   4. Enter your note.
+L141:   5. Select Save.
+L142: 
+L143: From Clips & Notes
+L144:   1. Open the podcast episode.
+L145:   2. Select the Bookmarks & Notes button.
+L146:   3. Select the 3-dots More menu.
+L147:   4. Select Add note.
+L148:   5. Enter your note.
+L149:   6. Select Save.
+L150: 
+L151: On Cloud Player
+L152: 
+L153: From the confirmation pop-up
+L154: 
+L155:   1. Open a title's player screen.
+L156:   2. Select Add a bookmark.
+L157:   3. Select Add note on the pop-up screen.
+L158:   4. Select Save.
+L159: 
+L160: From the Bookmarks menu
+L161:   1. Open a title's player screen.
+L162:   2. Select the main menu at the top.
+L163:   3. Select Bookmarks.
+L164:   4. Find the bookmark you want to edit.
+L165:   5. Select the 3-dot More menu.
+L166:   6. Select Add note.
+L167:   7. Select Save.
+L168: ## Access a saved bookmark
+L169: 
+L170: Bookmarks can be accessed in Cloud Player and the Audible app for podcasts on both iOS and Android devices.
+L171: 
+L172: In the app
+L173: 
+L174:   1. Open the podcast episode.
+L175:   2. Select the Bookmarks & Notes button.
+L176:   3. Select your bookmark.
+L177: 
+L178: On Cloud Player
+L179: 
+L180:   1. Open a title's player screen.
+L181:   2. Select the main menu at the top.
+L182:   3. Select Bookmarks.
+L183:   4. Find the bookmark you want.
+L184:   5. Select Start in Player.
+L185: ## Delete a saved bookmark
+L186: 
+L187: Bookmarks can be accessed and deleted in Cloud Player and the Audible app for podcasts on both iOS and Android devices.
+L188: 
+L189: In the app
+L190: 
+L191:   1. Open the podcast episode.
+L192:   2. Select the Bookmarks & Notes button.
+L193:   3. Select the 3-dot menu on your saved bookmark.
+L194:   4. Select Delete.
+L195:   5. Confirm by selecting Delete.
+L196: 
+L197: On Cloud Player
+L198:   1. Open a title's player screen.
+L199:   2. Select the main menu at the top.
+L200:   3. Select Bookmarks.
+L201:   4. Find the bookmark you want to delete.
+L202:   5. Select the 3-dots More menu.
+L203:   6. Select Delete.
+L204:   7. Confirm by selecting Delete.
+L205: 
+L206: Did this answer your question?
+L207: 
+L208: 【11†Image: Thumbs Up】Like
+L209: 
+L210: 
+L211: 
+L212: 【12†Image: Thumbs Down】Dislike
+L213: 
+L214:  Back to top
+L215: 
+L216: 【13†Image: Share link】 Share link
+L217: 
+L218: 【14†Image: Download PDF】 Download PDF
+L219: ## Need more assistance?
+L220:

@@ -1,0 +1,62 @@
+[
+  {
+    "name": "01-start",
+    "url": "https://memodocs.maimemo.com/docs/memo-get-started/",
+    "method": "requests GET timeout=(5,18), one attempt",
+    "status": 200,
+    "final_url": "https://memodocs.maimemo.com/docs/memo-get-started/",
+    "raw_work_path": "work/maimemo-controls-deepening/01-start.html",
+    "raw_sha256": "c7f8f15d2f6aaa9e008618c951df710ae61c0089e65466382f67cc1ccf179e6b",
+    "bytes": 56571
+  },
+  {
+    "name": "02-basics",
+    "url": "https://memodocs.maimemo.com/docs/GKfswhD6Ei4TdMk0naQcfMBtnJg",
+    "method": "requests GET timeout=(5,18), one attempt",
+    "status": 200,
+    "final_url": "https://memodocs.maimemo.com/docs/GKfswhD6Ei4TdMk0naQcfMBtnJg",
+    "raw_work_path": "work/maimemo-controls-deepening/02-basics.html",
+    "raw_sha256": "d98fb4cdb3ad397ce3ee59957235b6ede4c35d07ca9056b2f992746e51f4f428",
+    "bytes": 56728
+  },
+  {
+    "name": "03-daily",
+    "url": "https://memodocs.maimemo.com/docs/PulqwOB1xi5jV0kb8Y1cPE7ZnKc/",
+    "method": "requests GET timeout=(5,18), one attempt",
+    "status": 200,
+    "final_url": "https://memodocs.maimemo.com/docs/PulqwOB1xi5jV0kb8Y1cPE7ZnKc/",
+    "raw_work_path": "work/maimemo-controls-deepening/03-daily.html",
+    "raw_sha256": "5324d945bb304f2090379b6e8696ef4598f055a4e6ba3b400b27041fb4edc3a8",
+    "bytes": 58368
+  },
+  {
+    "name": "04-pie",
+    "url": "https://memodocs.maimemo.com/docs/IAdywC1b0if5N4knUqocOxphnwr",
+    "method": "requests GET timeout=(5,18), one attempt",
+    "status": 200,
+    "final_url": "https://memodocs.maimemo.com/docs/IAdywC1b0if5N4knUqocOxphnwr",
+    "raw_work_path": "work/maimemo-controls-deepening/04-pie.html",
+    "raw_sha256": "d67510c2833474a5b9a68d2fac32fc37668dd3aa360ffbd2816c8ad23f327153",
+    "bytes": 56443
+  },
+  {
+    "name": "05-makeup",
+    "url": "https://memodocs.maimemo.com/docs/WVyFwrbiXiexP7k6N7gcYY0Vnzh",
+    "method": "requests GET timeout=(5,18), one attempt",
+    "status": 200,
+    "final_url": "https://memodocs.maimemo.com/docs/WVyFwrbiXiexP7k6N7gcYY0Vnzh",
+    "raw_work_path": "work/maimemo-controls-deepening/05-makeup.html",
+    "raw_sha256": "f26ea45dc498a004c0bb3e6e13d73147643babb4433df7c654fbb7fa6909a6a6",
+    "bytes": 57176
+  },
+  {
+    "name": "06-checkin-error",
+    "url": "https://memodocs.maimemo.com/docs/Ai7rwDzjpi9RelkODxmcGcPnncA",
+    "method": "requests GET timeout=(5,18), one attempt",
+    "status": 200,
+    "final_url": "https://memodocs.maimemo.com/docs/Ai7rwDzjpi9RelkODxmcGcPnncA",
+    "raw_work_path": "work/maimemo-controls-deepening/06-checkin-error.html",
+    "raw_sha256": "881fbb376092fc2c019188a212ef8e913108efe937c0c38f0a49c47844d31024",
+    "bytes": 56046
+  }
+]

@@ -1,0 +1,67 @@
+[
+  {
+    "name": "learning-index",
+    "url": "https://support.kahoot.com/hc/en-us/sections/4468203653523-Learning-apps",
+    "final_url": "https://support.kahoot.com/hc/en-us/sections/4468203653523-Learning-apps",
+    "status": 403,
+    "checked_on": "2026-10-27",
+    "checked_utc": "2026-10-26T19:14:15.026015+00:00",
+    "raw_work_path": "work/dragonbox-controls-deepening/learning-index.html",
+    "raw_sha256": "35114361ecfdb40ea5147aa7c6bfa6415aa9f1dc22a6320655ec5339b5168f64",
+    "bytes": 5640,
+    "parsed_text_path": "work/dragonbox-controls-deepening/learning-index.txt"
+  },
+  {
+    "name": "profiles",
+    "url": "https://support.kahoot.com/hc/en-us/articles/4815253732371-How-to-manage-profiles-in-learning-apps",
+    "final_url": "https://support.kahoot.com/hc/en-us/articles/4815253732371-How-to-manage-profiles-in-learning-apps",
+    "status": 403,
+    "checked_on": "2026-10-27",
+    "checked_utc": "2026-10-26T19:14:14.961501+00:00",
+    "raw_work_path": "work/dragonbox-controls-deepening/profiles.html",
+    "raw_sha256": "0679d860f257ac97cfca7e83ecdc4b7f4096270f83e855c1766bd71828134147",
+    "bytes": 5760,
+    "parsed_text_path": "work/dragonbox-controls-deepening/profiles.txt"
+  },
+  {
+    "name": "dashboard",
+    "url": "https://support.kahoot.com/hc/en-us/articles/39935017652125-Child-Activity-Dashboard-your-parent-dashboard-for-Kahoot-Kids",
+    "final_url": "https://support.kahoot.com/hc/en-us/articles/39935017652125-Child-Activity-Dashboard-your-parent-dashboard-for-Kahoot-Kids",
+    "status": 403,
+    "checked_on": "2026-10-27",
+    "checked_utc": "2026-10-26T19:14:14.996383+00:00",
+    "raw_work_path": "work/dragonbox-controls-deepening/dashboard.html",
+    "raw_sha256": "a20d586fb3e9a56ce3f28034adb8fe0e7d9ff181dfbb4d3a444198abaecfe16f",
+    "bytes": 5854,
+    "parsed_text_path": "work/dragonbox-controls-deepening/dashboard.txt"
+  },
+  {
+    "name": "subscriptions",
+    "url": "https://support.kahoot.com/hc/en-us/articles/4815480526227-How-to-manage-DragonBox-and-Poio-subscriptions",
+    "final_url": "https://support.kahoot.com/hc/en-us/articles/4815480526227-How-to-manage-DragonBox-and-Poio-subscriptions",
+    "status": 403,
+    "checked_on": "2026-10-27",
+    "checked_utc": "2026-10-26T19:14:15.032343+00:00",
+    "raw_work_path": "work/dragonbox-controls-deepening/subscriptions.html",
+    "raw_sha256": "9a52f8e960a7a04e9aa39043bf2a77884018270cc5c1b850a36aa5c9e48905e4",
+    "bytes": 5781,
+    "parsed_text_path": "work/dragonbox-controls-deepening/subscriptions.txt"
+  },
+  {
+    "name": "googleplay",
+    "url": "https://play.google.com/store/apps/details?hl=en_US&id=com.kahoot.numbers",
+    "final_url": "https://play.google.com/store/apps/details?hl=en_US&id=com.kahoot.numbers",
+    "status": 200,
+    "checked_on": "2026-10-27",
+    "checked_utc": "2026-10-26T19:14:15.215698+00:00",
+    "raw_work_path": "work/dragonbox-controls-deepening/googleplay.html",
+    "raw_sha256": "4bcbda766ccc51ec5eba8f0aba2b54acd56fcedbf0b296464d134c482c059956",
+    "bytes": 1344059,
+    "parsed_text_path": "work/dragonbox-controls-deepening/googleplay.txt"
+  },
+  {
+    "name": "privacy",
+    "url": "https://dragonbox.com/privacy-policy",
+    "error": "TypeError: dict() got multiple values for keyword argument 'title'"
+  }
+]

@@ -1,0 +1,20 @@
+[
+  {
+    "url": "https://www.timeforkids.com/educators",
+    "status": 200,
+    "final_url": "https://www.timeforkids.com/educators",
+    "raw_work_path": "work/time-vocabulary-deepening/educators.html",
+    "raw_sha256": "68cc02dfa8d9f0fbf8c6be7c3d3beeff29be892ce0d691b4bdfd36fb096ed4c6",
+    "bytes": 49204,
+    "text_work_path": "work/time-vocabulary-deepening/educators.txt",
+    "text_sha256": "e8a3fec65110d2b650e5712efe241434f89e9648d39ed21a7e2a8065a8930a0a"
+  },
+  {
+    "url": "https://www.timeforkids.com/wp-content/uploads/2018/02/edition-3-4-cover-quiz-022318.pdf",
+    "status": 200,
+    "final_url": "https://www.timeforkids.com/wp-content/uploads/2018/02/edition-3-4-cover-quiz-022318.pdf",
+    "raw_work_path": "work/time-vocabulary-deepening/quiz.pdf",
+    "raw_sha256": "799aa73f06cbedf348eb0b3b1b1e6dce7f05d78e2854f6363334aad19e46cd55",
+    "bytes": 1667476
+  }
+]

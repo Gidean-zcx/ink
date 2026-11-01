@@ -1,0 +1,15 @@
+{
+  "new_e": 14,
+  "new_f": 3,
+  "inventory_rows": 578,
+  "levels": {
+    "1": 20,
+    "2": 108,
+    "3": 450
+  },
+  "old_f": 10,
+  "old_f_fields": 51,
+  "old_e_additional_captures": 4,
+  "observed_pages": 68,
+  "new_archived_pages": 13
+}

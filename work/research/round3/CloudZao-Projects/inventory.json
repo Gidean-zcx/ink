@@ -1,0 +1,11 @@
+{
+  "repo": "Changkai9888/CloudZao-Projects",
+  "sha": "c4c9d7a1ec9b3e15620a3a67ecf34449f3735b14",
+  "branch": "main",
+  "truncated": false,
+  "files": [
+    "protocols/Skill_Firmware_Integration_Compatibility_v0.2.txt",
+    "protocols/Skill生成固件的最小集成兼容协议_v0.3.txt",
+    "protocols/固件口袋接入规范与开发指南.md"
+  ]
+}

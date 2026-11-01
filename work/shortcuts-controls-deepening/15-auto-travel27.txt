@@ -1,0 +1,18 @@
+Travel triggers in Shortcuts on iPhone or iPad
+Use a travel trigger to run an automation based on your location.
+The Arrive trigger has the following options:
+Location: Tap Choose, then select a location from the list, or use the search field to find a location to trigger your automation.
+Tip: Drag the blue circle on the map to adjust the boundary of the location.
+Time: Further hone your trigger by adding a time option:
+Any: Triggers your automation any time you arrive at the specified location.
+Time Range: Triggers your automation if you arrive at the specified location during a specific time period, which you set by choosing a start and end time.
+The Leave trigger has the following options:
+Location: Tap Choose, then select a location from the list, or use the search field to find a location. Leaving this location triggers your automation.
+Tip: Drag the blue circle on the map to adjust the boundary of the location.
+Time: Further hone your trigger by adding a time option:
+Any: Triggers your automation any time you leave the specified location.
+Time Range: Triggers your automation if you leave the specified location during a specific time period, which you set by choosing a start and end time.
+Note: To use Before I Leave triggers, you may need to set your contact card in your device Settings. For more information, see Add your contact info.
+The CarPlay trigger has the following options:
+Connects: Triggers your automation when your device connects to CarPlay.
+Disconnects: Triggers your automation when your device disconnects from CarPlay.See alsoUse variables in Shortcuts on iPhone or iPad

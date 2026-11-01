@@ -1,0 +1,286 @@
+[
+  {
+    "path": "work/viwoods-controls-deepening/raw/faq.html",
+    "sha256": "e08a7dec39db5a86bd03b2cf82cfbcda2f86d3c4658dc89ee3656661f6407dd0"
+  },
+  {
+    "path": "work/viwoods-controls-deepening/raw/faq.txt",
+    "sha256": "1698b3327910dd24293a8939895da8772a458dbef6dc9ea3ac60a3b941c671a7"
+  },
+  {
+    "path": "work/viwoods-controls-deepening/raw/manual-current-capture.pdf",
+    "sha256": "90bd3c06b4bb4425ad62aef69dd2b553ab622ead68b01a668cea4ab3b5786676"
+  },
+  {
+    "path": "work/viwoods-controls-deepening/raw/manual-file-03.png",
+    "sha256": "c3b4eadb814762208f9360617e5429dfeedcb8bae491e2e5dba9f0327a414c07"
+  },
+  {
+    "path": "work/viwoods-controls-deepening/raw/manual-file-04.png",
+    "sha256": "2fa2d8fcad795091ee3abd0d51f32482741f5f22c33951f1029082ca7a3b7739"
+  },
+  {
+    "path": "work/viwoods-controls-deepening/raw/manual-file-05.png",
+    "sha256": "9d0407a1d40646576d1c72b80bd8402dd9decd2a25deab7643fbf1b5118c0ac6"
+  },
+  {
+    "path": "work/viwoods-controls-deepening/raw/manual-file-06.png",
+    "sha256": "8386f050d22183fce2c009c02a668ee43ef9e6f5919dc0100255980726bc3d18"
+  },
+  {
+    "path": "work/viwoods-controls-deepening/raw/manual-file-07.png",
+    "sha256": "00d61b44ff525e29efa4c296573a386f3c0eabe017b4abb17139a4601a719f37"
+  },
+  {
+    "path": "work/viwoods-controls-deepening/raw/manual-file-08.png",
+    "sha256": "e1644542cb4d5183458fe8c2dabdd9b79b6a002ea8a147490ee99c6ca05f87bb"
+  },
+  {
+    "path": "work/viwoods-controls-deepening/raw/manual-file-09.png",
+    "sha256": "66eab9022ff8d410826bde2cf28103ca4aadbb5cae1647bb03af18663cd4c208"
+  },
+  {
+    "path": "work/viwoods-controls-deepening/raw/manual-file-10.png",
+    "sha256": "5125c9e793763d4656eecde46d0bb2d0c7dc544aaaf0538a0f0c3434da1aba50"
+  },
+  {
+    "path": "work/viwoods-controls-deepening/raw/manual-file-11.png",
+    "sha256": "665ad4039ee760da349226a2026d13525e968a60fcb671cf9fd413d9cd7629b3"
+  },
+  {
+    "path": "work/viwoods-controls-deepening/raw/manual-file-12.png",
+    "sha256": "db768e565869abda4bba4e11a567b12d77edc9bfb9e1b91d049e762dd6d79235"
+  },
+  {
+    "path": "work/viwoods-controls-deepening/raw/manual-file-13.png",
+    "sha256": "c4d91afce2b753735cae2852f576cf9da831acb72e64bfeb43c797ad82a065c8"
+  },
+  {
+    "path": "work/viwoods-controls-deepening/raw/manual-file-14.png",
+    "sha256": "c3e9158755a9b1d408f8bdf2fc12be7ba23150ff8765f1e2ac0b52369b116e9e"
+  },
+  {
+    "path": "work/viwoods-controls-deepening/raw/manual-file-15.png",
+    "sha256": "d7536e9cba42e5b2b857e30957a14d80c7ac924363fb77aae0ff5df51f522cf9"
+  },
+  {
+    "path": "work/viwoods-controls-deepening/raw/manual-file-16.png",
+    "sha256": "6889535dd6cfb5f1787fc3c56de7574181e16a2a5ca189265268363f8ac92184"
+  },
+  {
+    "path": "work/viwoods-controls-deepening/raw/manual-file-17.png",
+    "sha256": "0fb90cb58b29247d01af327705fc9492ef6122f8759123cb98e3b0eda281536b"
+  },
+  {
+    "path": "work/viwoods-controls-deepening/raw/manual-file-18.png",
+    "sha256": "80ab01b67e86e4b63051ba3351058c9c989f8f2ed36291b657998d4be23249bd"
+  },
+  {
+    "path": "work/viwoods-controls-deepening/raw/manual-file-19.png",
+    "sha256": "3ccd312a75511da799c73b9a862f0d14104b01ad8e708c2bcf8058d54ec8bd96"
+  },
+  {
+    "path": "work/viwoods-controls-deepening/raw/manual-file-20.png",
+    "sha256": "64b7a563c1397c1d9ac94b476d35a03a83db4e8a8b4fc678b701eb1c7db63a24"
+  },
+  {
+    "path": "work/viwoods-controls-deepening/raw/manual-file-21.png",
+    "sha256": "21c52854bcbf87051390bf228b43364f08ca66f9990e439ee1977e5f4fecaaad"
+  },
+  {
+    "path": "work/viwoods-controls-deepening/raw/manual-file-22.png",
+    "sha256": "2b9b5d44dd715befb451b19ee6e713a0a00349661202522d748ddd1d5232953f"
+  },
+  {
+    "path": "work/viwoods-controls-deepening/raw/manual-file-23.png",
+    "sha256": "88f190707a964801e78b9d8c440da1330437387c0f03555ce3de4b6d9996aeec"
+  },
+  {
+    "path": "work/viwoods-controls-deepening/raw/manual-file-24.png",
+    "sha256": "cc540ff7de29f5cde231f49623cc8408ed15f278c63e9e4b0e24165afb093272"
+  },
+  {
+    "path": "work/viwoods-controls-deepening/raw/manual-file-25.png",
+    "sha256": "bda40f88a15167e122586f7791e15791b342e658b771ec7f8928cf911f844362"
+  },
+  {
+    "path": "work/viwoods-controls-deepening/raw/manual-file-26.png",
+    "sha256": "dd60d833f773c629284de4f3d4b1f55133c9d467e129e088c8aae20968e32d41"
+  },
+  {
+    "path": "work/viwoods-controls-deepening/raw/manual-file-27.png",
+    "sha256": "b7fd60d9b7c338a7423dc5824c66d40eb1066541887174ceb88a1fb48113ba4c"
+  },
+  {
+    "path": "work/viwoods-controls-deepening/raw/manual-file-28.png",
+    "sha256": "3551a247175decb12b1397eff3d5c3955c26729e7f94be390d216b9a1120b1aa"
+  },
+  {
+    "path": "work/viwoods-controls-deepening/raw/manual-file-29.png",
+    "sha256": "7693d29094109c6ddd2322907b17495c6f2a30f703d96154170c46dac514799f"
+  },
+  {
+    "path": "work/viwoods-controls-deepening/raw/manual-file-30.png",
+    "sha256": "a3c5c0d16ea579f83c05c1a237bcd40febe02e6e22fcd1f4d8a4d85a1885c8c4"
+  },
+  {
+    "path": "work/viwoods-controls-deepening/raw/manual-file-31.png",
+    "sha256": "072843ee1d4a4b49217827834b69bf781f60e375d9adcc6cc3ec9d2697c4837e"
+  },
+  {
+    "path": "work/viwoods-controls-deepening/raw/manual-file-32.png",
+    "sha256": "3f99ceab287a8d435eda7b823e66ba69ef223e208ef36e55888fde52519020ba"
+  },
+  {
+    "path": "work/viwoods-controls-deepening/raw/manual-file-33.png",
+    "sha256": "5482c2b958f76cb68a4bdd0bb6debed454cfa831fa73691a7b02458ac795fdd3"
+  },
+  {
+    "path": "work/viwoods-controls-deepening/raw/manual-file-34.png",
+    "sha256": "950b47833bfd65264f093b40ccf48ffae6988e17d7ec739ae83a00aa89b6f4ec"
+  },
+  {
+    "path": "work/viwoods-controls-deepening/raw/manual-file-35.png",
+    "sha256": "fe3655d0af84381952a4270a46ea868f32e9a82b39c96f605778a67ae6c2276a"
+  },
+  {
+    "path": "work/viwoods-controls-deepening/raw/manual-file-36.png",
+    "sha256": "033ba40707ac302c2448cb3d55f76dc917be741d7c77608d1cc493048279448f"
+  },
+  {
+    "path": "work/viwoods-controls-deepening/raw/manual-file-37.png",
+    "sha256": "ee2c310f05e43d153d17f28e1f326b235a260977c6514eca8c036c7dcb80e633"
+  },
+  {
+    "path": "work/viwoods-controls-deepening/raw/manual-file-41.png",
+    "sha256": "0d414faf472d47a11d19920b08919fe02378e8ec44f0e21de9afe906b327716b"
+  },
+  {
+    "path": "work/viwoods-controls-deepening/raw/manual-file-42.png",
+    "sha256": "33e0c7e9b9606d0c08ac8bc2099ffb5a9b9655ecf1e7782b2e4442d0b4031c34"
+  },
+  {
+    "path": "work/viwoods-controls-deepening/raw/manual-file-43.png",
+    "sha256": "4284306492be271b451168f6cbe7b822e86449694a43bae7c5592874af6321b0"
+  },
+  {
+    "path": "work/viwoods-controls-deepening/raw/manual-file-44.png",
+    "sha256": "b0ec298f5dabca4036504d1b7a543373eb0a47f66c76cd2695d9a534fe32ee0c"
+  },
+  {
+    "path": "work/viwoods-controls-deepening/raw/manual-file-45.png",
+    "sha256": "98c9b71fcda4fa395383b1526e6c3f6a8d6aae2db88787ee854cd54e77ef9e73"
+  },
+  {
+    "path": "work/viwoods-controls-deepening/raw/manual-file-46.png",
+    "sha256": "20c049260bbf017976f5a0f1e1335896a7e4f6f03453c7faf4cf6170244eebd8"
+  },
+  {
+    "path": "work/viwoods-controls-deepening/raw/manual-file-47.png",
+    "sha256": "b468382de39d03b42984bbe3b16a9eabb72b1945d9db41572b61f02328d330d6"
+  },
+  {
+    "path": "work/viwoods-controls-deepening/raw/manual-file-48.png",
+    "sha256": "3658908242c22f3f68de0b2e0dc9a5f950f6cd3aa1470444f59f44a0b3c1953f"
+  },
+  {
+    "path": "work/viwoods-controls-deepening/raw/manual-file-49.png",
+    "sha256": "ca259a6bd4228d236d3f54c08ee60f4ef1548501626bf3a37b7ab840cabf798c"
+  },
+  {
+    "path": "work/viwoods-controls-deepening/raw/manual-file-50.png",
+    "sha256": "6705700cb3625e6380bc4d60108b881a78bf4ec388f6b3f225d75b73d69a70c3"
+  },
+  {
+    "path": "work/viwoods-controls-deepening/raw/manual-file-51.png",
+    "sha256": "2c507cd3d54d29be61a94adf3a23e2a11d48069fee708c9ed1e542c9694c087b"
+  },
+  {
+    "path": "work/viwoods-controls-deepening/raw/manual-file-52.png",
+    "sha256": "d7fa64aa68011b6b5d015fdd331810dc13ff52101518259ebda99f28b2b44cdc"
+  },
+  {
+    "path": "work/viwoods-controls-deepening/raw/manual-file-56.png",
+    "sha256": "a66b07fae776c1d52d97a2f35465acebedc9f120c506d226c126c8048cac5050"
+  },
+  {
+    "path": "work/viwoods-controls-deepening/raw/manual-file-57.png",
+    "sha256": "db53d0f15b39afbda1286ce23507ccf27c45bb9b9cbe448d632a39a8ceea6101"
+  },
+  {
+    "path": "work/viwoods-controls-deepening/raw/manual-file-58.png",
+    "sha256": "5623adade7946cef75da0a847d6036fd0b2fb8133116e515dd8adbb77e280fec"
+  },
+  {
+    "path": "work/viwoods-controls-deepening/raw/manual-file-59.png",
+    "sha256": "047834d7bd923e562dc36f57292cdafa570b19aaf0a1df96e079d09712e7f748"
+  },
+  {
+    "path": "work/viwoods-controls-deepening/raw/manual-file-60.png",
+    "sha256": "00d34ae7f173eee3447543790694c643bbbbfec048b92d7c554121e008cb4073"
+  },
+  {
+    "path": "work/viwoods-controls-deepening/raw/manual-file-61.png",
+    "sha256": "998f4020c2861454df9ef96c0e70bb2d725de217c65ef3dcad682fbc1e69f40b"
+  },
+  {
+    "path": "work/viwoods-controls-deepening/raw/manual-file-62.png",
+    "sha256": "7316cc4e101ac895da7921798fd1e0d08074738227a603f94d5fc368e4977594"
+  },
+  {
+    "path": "work/viwoods-controls-deepening/raw/manual-file-63.png",
+    "sha256": "7e3a544198a1d0bcc3f9b93fb9e7684a45555c375538301ba1b2964b4083d72e"
+  },
+  {
+    "path": "work/viwoods-controls-deepening/raw/manual-file-64.png",
+    "sha256": "e0af0e39ef561c72f50b86d2c5ce3e6fba01f8462e9a0141f240d186b10c9978"
+  },
+  {
+    "path": "work/viwoods-controls-deepening/raw/manual-file-65.png",
+    "sha256": "1bf31110cd352e797bf218f6a90303d247e083cb625578ab382383d45c8442ee"
+  },
+  {
+    "path": "work/viwoods-controls-deepening/raw/manual-file-66.png",
+    "sha256": "a51a30420e996d8ed231edc3f23f4aa5e164c3fe659c154b6157ff4e38acdcb5"
+  },
+  {
+    "path": "work/viwoods-controls-deepening/raw/manual-file-67.png",
+    "sha256": "3abba299e24e9272f3f1433875a233abf466f0549d919273ac3891704a89633c"
+  },
+  {
+    "path": "work/viwoods-controls-deepening/raw/manual-file-68.png",
+    "sha256": "faf357952bbbc9eb4db10449def14e734fc487c63611c76a2cf6257689c10837"
+  },
+  {
+    "path": "work/viwoods-controls-deepening/raw/manual-file-69.png",
+    "sha256": "420c68dda54ef241d9057eeefa0718ff38bfc8e4a116eefba747c52b58effa6d"
+  },
+  {
+    "path": "work/viwoods-controls-deepening/raw/manual-index.html",
+    "sha256": "c1cc5a0b660d53185214ea2ca28469571fcc5cd2d5d3ecf790065ba4ff746e55"
+  },
+  {
+    "path": "work/viwoods-controls-deepening/raw/manual-index.txt",
+    "sha256": "21f824496960b6f81db3ca1cfaf3b8769cd8b5eeac3616f8953685853298c8a6"
+  },
+  {
+    "path": "work/viwoods-controls-deepening/raw/manual-locator-hints.json",
+    "sha256": "662921a9c507820be1cbd9861f2348750d5995ddbb06bd47879f1311ec58c563"
+  },
+  {
+    "path": "work/viwoods-controls-deepening/raw/update312.html",
+    "sha256": "9ae8464cc53bfa86aced8e6182db2bde66136f1317bc40d8e5630b67236e9258"
+  },
+  {
+    "path": "work/viwoods-controls-deepening/raw/update312.txt",
+    "sha256": "0f3c0a0e65f192eef788f80faae2dc302d10c8d563cd064987acbbc37af913df"
+  },
+  {
+    "path": "work/viwoods-controls-deepening/raw/update315.html",
+    "sha256": "d4c419a1c4425fcc0e654e9ff6eb81a3e970322ff7c6f82ea637bf26bd9ee59d"
+  },
+  {
+    "path": "work/viwoods-controls-deepening/raw/update315.txt",
+    "sha256": "b533a8b80d3a318debf59db29b10083d823affa01ba36d8c61fea0275cd29fec"
+  }
+]

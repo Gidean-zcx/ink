@@ -1,0 +1,22 @@
+HELP CENTER
+SUBSCRIPTION & PAYMENTS
+How do I request a refund?
+Generally, all charges for in-app purchases are nonrefundable, and there are no refunds or credits for partially used periods.
+If you subscribed to Super Duolingo on an iOS (Apple) phone/device:
+Refunds are handled by Apple, not Duolingo. Follow these instructions from Apple.
+If you subscribed to Super Duolingo on a web browser (desktop):
+Sign in to your “Duolingo account” via web browser
+Click the Super icon at the top of the home screen
+Scroll toward the bottom of the page and select the option to contact Duolingo support
+You will have the option to send an email to Duolingo support. Please detail in the email that you need a refund for your web subscription. A member of our support team will review your request.
+If you subscribed to Super Duolingo on Android:
+You will have the option to contact Duolingo support via this link and select the option “Purchase Issue” from the drop-down. Please also detail in the email that you need a refund for your subscription. A member of our support team will review your request.
+How do I request a gem refund?
+If you need a refund of gems (Duolingo’s in-app currency), please submit a bug report and select “Purchase issue” as the type of issue.
+Relevant Articles
+What is Super Duolingo and how do I subscribe?
+Family Plan
+How do I cancel my Super Duolingo subscription?
+How do I use a promo code?
+What is Duolingo Max?
+I want to submit a bug report

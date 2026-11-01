@@ -1,0 +1,610 @@
+[
+  {
+    "href": "/",
+    "text": "inoreader-logo"
+  },
+  {
+    "href": "/signup",
+    "text": "Start 15-Day Trial"
+  },
+  {
+    "href": "/",
+    "text": "Home"
+  },
+  {
+    "href": "/features/",
+    "text": "Features"
+  },
+  {
+    "href": "/enterprise",
+    "text": "Enterprise"
+  },
+  {
+    "href": "/pricing",
+    "text": "Pricing"
+  },
+  {
+    "href": "/blog/",
+    "text": "Blog"
+  },
+  {
+    "href": "/contact",
+    "text": "Contact"
+  },
+  {
+    "href": "/rss-tools",
+    "text": "RSS tools"
+  },
+  {
+    "href": "/rss-feed-validator",
+    "text": "Feed validatorValidate a feed for errors"
+  },
+  {
+    "href": "/podcast-feed-validator",
+    "text": "Podcast validatorGet a podcast listed everywhere"
+  },
+  {
+    "href": "/feed-analytics",
+    "text": "Feed analyticsSee how a feed performs"
+  },
+  {
+    "href": "/rss-feed-finder",
+    "text": "Feed finderFind the feeds of any website"
+  },
+  {
+    "href": "/opml-checker",
+    "text": "OPML checkerCheck and repair an OPML export"
+  },
+  {
+    "href": "/rss-tools",
+    "text": "All RSS tools"
+  },
+  {
+    "href": "/rss-feed-validator",
+    "text": "Open the validator"
+  },
+  {
+    "href": "/podcast-feed-validator",
+    "text": "Open the podcast validator"
+  },
+  {
+    "href": "/feed-analytics",
+    "text": "Open feed analytics"
+  },
+  {
+    "href": "/rss-feed-finder",
+    "text": "Open the finder"
+  },
+  {
+    "href": "/opml-checker",
+    "text": "Open the checker"
+  },
+  {
+    "href": "/rss-tools",
+    "text": "All RSS tools →"
+  },
+  {
+    "href": "https://apps.apple.com/app/apple-store/id892355414?pt=32204000&ct=inoreader_internal&mt=8",
+    "text": ""
+  },
+  {
+    "href": "https://play.google.com/store/apps/details?id=com.innologica.inoreader",
+    "text": ""
+  },
+  {
+    "href": "/cs/help/basic/syncing-mobile-apps",
+    "text": "Čeština"
+  },
+  {
+    "href": "/help/basic/syncing-mobile-apps",
+    "text": "English"
+  },
+  {
+    "href": "/es/help/basic/syncing-mobile-apps",
+    "text": "Español"
+  },
+  {
+    "href": "/fr/help/basic/syncing-mobile-apps",
+    "text": "Français"
+  },
+  {
+    "href": "/it/help/basic/syncing-mobile-apps",
+    "text": "Italiano"
+  },
+  {
+    "href": "/hu/help/basic/syncing-mobile-apps",
+    "text": "Magyar"
+  },
+  {
+    "href": "/nl/help/basic/syncing-mobile-apps",
+    "text": "Nederlands"
+  },
+  {
+    "href": "/pl/help/basic/syncing-mobile-apps",
+    "text": "Polski"
+  },
+  {
+    "href": "/sk/help/basic/syncing-mobile-apps",
+    "text": "Slovenčina"
+  },
+  {
+    "href": "/bg/help/basic/syncing-mobile-apps",
+    "text": "Български"
+  },
+  {
+    "href": "/uk/help/basic/syncing-mobile-apps",
+    "text": "Українська"
+  },
+  {
+    "href": "/fa/help/basic/syncing-mobile-apps",
+    "text": "پارسی"
+  },
+  {
+    "href": "/zh-hans/help/basic/syncing-mobile-apps",
+    "text": "中文(简体)"
+  },
+  {
+    "href": "/ja/help/basic/syncing-mobile-apps",
+    "text": "日本語"
+  },
+  {
+    "href": "/login",
+    "text": "Sign in"
+  },
+  {
+    "href": "/signup",
+    "text": "Create account"
+  },
+  {
+    "href": "/cs/help/basic/syncing-mobile-apps",
+    "text": "Čeština"
+  },
+  {
+    "href": "/help/basic/syncing-mobile-apps",
+    "text": "English"
+  },
+  {
+    "href": "/es/help/basic/syncing-mobile-apps",
+    "text": "Español"
+  },
+  {
+    "href": "/fr/help/basic/syncing-mobile-apps",
+    "text": "Français"
+  },
+  {
+    "href": "/it/help/basic/syncing-mobile-apps",
+    "text": "Italiano"
+  },
+  {
+    "href": "/hu/help/basic/syncing-mobile-apps",
+    "text": "Magyar"
+  },
+  {
+    "href": "/nl/help/basic/syncing-mobile-apps",
+    "text": "Nederlands"
+  },
+  {
+    "href": "/pl/help/basic/syncing-mobile-apps",
+    "text": "Polski"
+  },
+  {
+    "href": "/sk/help/basic/syncing-mobile-apps",
+    "text": "Slovenčina"
+  },
+  {
+    "href": "/bg/help/basic/syncing-mobile-apps",
+    "text": "Български"
+  },
+  {
+    "href": "/uk/help/basic/syncing-mobile-apps",
+    "text": "Українська"
+  },
+  {
+    "href": "/fa/help/basic/syncing-mobile-apps",
+    "text": "پارسی"
+  },
+  {
+    "href": "/zh-hans/help/basic/syncing-mobile-apps",
+    "text": "中文(简体)"
+  },
+  {
+    "href": "/ja/help/basic/syncing-mobile-apps",
+    "text": "日本語"
+  },
+  {
+    "href": "/help",
+    "text": "Help center"
+  },
+  {
+    "href": "/help/basic/getting-started",
+    "text": "Getting started"
+  },
+  {
+    "href": "/help/basic/account-and-login",
+    "text": "Account & login"
+  },
+  {
+    "href": "/help/basic/feeds-sources",
+    "text": "Feeds & sources"
+  },
+  {
+    "href": "/help/basic/search",
+    "text": "Search"
+  },
+  {
+    "href": "/help/basic/folders",
+    "text": "Folders"
+  },
+  {
+    "href": "/help/basic/tags",
+    "text": "Tags"
+  },
+  {
+    "href": "/help/basic/dashboards",
+    "text": "Dashboards"
+  },
+  {
+    "href": "/help/basic/article-view",
+    "text": "Article view"
+  },
+  {
+    "href": "/help/basic/saved-read-later",
+    "text": "Saved & Read later"
+  },
+  {
+    "href": "/help/basic/archive",
+    "text": "Archive"
+  },
+  {
+    "href": "/help/basic/web-pages",
+    "text": "Web pages"
+  },
+  {
+    "href": "/help/basic/spotlights",
+    "text": "Spotlights"
+  },
+  {
+    "href": "/help/basic/preferences-customization",
+    "text": "Preferences & customization"
+  },
+  {
+    "href": "/help/basic/syncing-mobile-apps",
+    "text": "Syncing & mobile apps"
+  },
+  {
+    "href": "/help",
+    "text": "Back"
+  },
+  {
+    "href": "/help/basic/syncing-mobile-apps/does-inoreader-sync-across-devices",
+    "text": "Does Inoreader sync across devices?"
+  },
+  {
+    "href": "/help/basic/syncing-mobile-apps/where-can-i-use-inoreader",
+    "text": "Where can I use Inoreader?"
+  },
+  {
+    "href": "/signup",
+    "text": "Create account"
+  },
+  {
+    "href": "/features",
+    "text": "Features"
+  },
+  {
+    "href": "/pricing",
+    "text": "Pricing"
+  },
+  {
+    "href": "/enterprise",
+    "text": "Enterprise"
+  },
+  {
+    "href": "/apps",
+    "text": "Mobile apps"
+  },
+  {
+    "href": "/rss-reader-extension",
+    "text": "Browser extension"
+  },
+  {
+    "href": "/alternatives",
+    "text": "Inoreader alternatives"
+  },
+  {
+    "href": "/rss-tools",
+    "text": "All tools"
+  },
+  {
+    "href": "/rss-feed-finder",
+    "text": "Feed finder"
+  },
+  {
+    "href": "/feed-analytics",
+    "text": "Feed analytics"
+  },
+  {
+    "href": "/rss-feeds",
+    "text": "Top RSS feeds"
+  },
+  {
+    "href": "/rss-feed-validator",
+    "text": "Feed validator"
+  },
+  {
+    "href": "/podcast-feed-validator",
+    "text": "Podcast validator"
+  },
+  {
+    "href": "/rss-feed-viewer",
+    "text": "Feed viewer"
+  },
+  {
+    "href": "/opml-checker",
+    "text": "OPML checker"
+  },
+  {
+    "href": "/about-us",
+    "text": "About us"
+  },
+  {
+    "href": "/blog/",
+    "text": "Blog"
+  },
+  {
+    "href": "/help",
+    "text": "Help center"
+  },
+  {
+    "href": "/developers",
+    "text": "Developer portal"
+  },
+  {
+    "href": "/contact",
+    "text": "Contact us"
+  },
+  {
+    "href": "/brand-portal",
+    "text": "Brand portal"
+  },
+  {
+    "href": "https://status.inoreader.com",
+    "text": "Service status"
+  },
+  {
+    "href": "/tos",
+    "text": "Terms of Service"
+  },
+  {
+    "href": "/privacy_policy",
+    "text": "Privacy Policy"
+  },
+  {
+    "href": "/security_commitment",
+    "text": "Security commitment"
+  },
+  {
+    "href": "https://apps.apple.com/app/apple-store/id892355414?pt=32204000&ct=inoreader_internal&mt=8",
+    "text": ""
+  },
+  {
+    "href": "https://play.google.com/store/apps/details?id=com.innologica.inoreader",
+    "text": ""
+  },
+  {
+    "href": "/cs/help/basic/syncing-mobile-apps",
+    "text": "Čeština"
+  },
+  {
+    "href": "/help/basic/syncing-mobile-apps",
+    "text": "English"
+  },
+  {
+    "href": "/es/help/basic/syncing-mobile-apps",
+    "text": "Español"
+  },
+  {
+    "href": "/fr/help/basic/syncing-mobile-apps",
+    "text": "Français"
+  },
+  {
+    "href": "/it/help/basic/syncing-mobile-apps",
+    "text": "Italiano"
+  },
+  {
+    "href": "/hu/help/basic/syncing-mobile-apps",
+    "text": "Magyar"
+  },
+  {
+    "href": "/nl/help/basic/syncing-mobile-apps",
+    "text": "Nederlands"
+  },
+  {
+    "href": "/pl/help/basic/syncing-mobile-apps",
+    "text": "Polski"
+  },
+  {
+    "href": "/sk/help/basic/syncing-mobile-apps",
+    "text": "Slovenčina"
+  },
+  {
+    "href": "/bg/help/basic/syncing-mobile-apps",
+    "text": "Български"
+  },
+  {
+    "href": "/uk/help/basic/syncing-mobile-apps",
+    "text": "Українська"
+  },
+  {
+    "href": "/fa/help/basic/syncing-mobile-apps",
+    "text": "پارسی"
+  },
+  {
+    "href": "/zh-hans/help/basic/syncing-mobile-apps",
+    "text": "中文(简体)"
+  },
+  {
+    "href": "/ja/help/basic/syncing-mobile-apps",
+    "text": "日本語"
+  },
+  {
+    "href": "https://innologica.com/",
+    "text": "© 2026 Innologica Ltd"
+  },
+  {
+    "href": "/cs/help/basic/syncing-mobile-apps",
+    "text": "Čeština"
+  },
+  {
+    "href": "/help/basic/syncing-mobile-apps",
+    "text": "English"
+  },
+  {
+    "href": "/es/help/basic/syncing-mobile-apps",
+    "text": "Español"
+  },
+  {
+    "href": "/fr/help/basic/syncing-mobile-apps",
+    "text": "Français"
+  },
+  {
+    "href": "/it/help/basic/syncing-mobile-apps",
+    "text": "Italiano"
+  },
+  {
+    "href": "/hu/help/basic/syncing-mobile-apps",
+    "text": "Magyar"
+  },
+  {
+    "href": "/nl/help/basic/syncing-mobile-apps",
+    "text": "Nederlands"
+  },
+  {
+    "href": "/pl/help/basic/syncing-mobile-apps",
+    "text": "Polski"
+  },
+  {
+    "href": "/sk/help/basic/syncing-mobile-apps",
+    "text": "Slovenčina"
+  },
+  {
+    "href": "/bg/help/basic/syncing-mobile-apps",
+    "text": "Български"
+  },
+  {
+    "href": "/uk/help/basic/syncing-mobile-apps",
+    "text": "Українська"
+  },
+  {
+    "href": "/fa/help/basic/syncing-mobile-apps",
+    "text": "پارسی"
+  },
+  {
+    "href": "/zh-hans/help/basic/syncing-mobile-apps",
+    "text": "中文(简体)"
+  },
+  {
+    "href": "/ja/help/basic/syncing-mobile-apps",
+    "text": "日本語"
+  },
+  {
+    "href": "https://www.inoreader.com/blog/feed",
+    "text": ""
+  },
+  {
+    "href": "https://www.youtube.com/@Inoreader",
+    "text": ""
+  },
+  {
+    "href": "https://www.facebook.com/Inoreader/",
+    "text": ""
+  },
+  {
+    "href": "https://www.linkedin.com/company/inoreader",
+    "text": ""
+  },
+  {
+    "href": "https://x.com/Inoreader",
+    "text": ""
+  },
+  {
+    "href": "https://mastodon.social/@Inoreader",
+    "text": ""
+  },
+  {
+    "href": "https://bsky.app/profile/inoreader.com",
+    "text": ""
+  },
+  {
+    "href": "/cookie_use",
+    "text": "Access cookie settings"
+  },
+  {
+    "href": "javascript:void(0);",
+    "text": "OK, I agree"
+  },
+  {
+    "href": "javascript:void(0)",
+    "text": "Use a different account"
+  },
+  {
+    "href": "/forgot-password",
+    "text": "Forgot password?"
+  },
+  {
+    "href": "javascript:void(0)",
+    "text": ""
+  },
+  {
+    "href": "javascript:void(0)",
+    "text": ""
+  },
+  {
+    "href": "/sso",
+    "text": ""
+  },
+  {
+    "href": "/signup?sendback=",
+    "text": "Create an account"
+  },
+  {
+    "href": "/signup",
+    "text": "Create account"
+  },
+  {
+    "href": "/signup",
+    "text": "Create one now"
+  },
+  {
+    "href": "javascript:void(0)",
+    "text": ""
+  },
+  {
+    "href": "javascript:void(0)",
+    "text": ""
+  },
+  {
+    "href": "/sso",
+    "text": ""
+  },
+  {
+    "href": "/login?sendback=",
+    "text": "Sign in."
+  },
+  {
+    "href": "/login",
+    "text": "Sign in"
+  },
+  {
+    "href": "/login",
+    "text": "Sign in"
+  },
+  {
+    "href": "/tos",
+    "text": "Inoreader Privacy\n                                Policy"
+  },
+  {
+    "href": "/",
+    "text": "Go to homepage"
+  }
+]

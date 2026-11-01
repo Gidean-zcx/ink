@@ -1,0 +1,177 @@
+[
+  {
+    "name": "app-overview",
+    "url": "https://support.yotoplay.com/en_gb/using-the-yoto-app-on-ios-and-android-ryJtFi7Me",
+    "final_url": "https://support.yotoplay.com/en_gb/using-the-yoto-app-on-ios-and-android-ryJtFi7Me",
+    "http_status": 200,
+    "access_mode": "reuse_this_batch_capture",
+    "raw_work_path": "work/yoto-controls-deepening/raw/app-overview.html",
+    "raw_sha256": "f2d2a15aa4390f1a468f8974bed083f73f5702552a7460306a20e4979ab5658d",
+    "extracted_work_path": "work/yoto-controls-deepening/extracted/app-overview.json",
+    "extracted_sha256": "7182be4b6643a9682622dc6985cc65e1785bf3a6fe7af730792d33620250daaf",
+    "checked_on": "2026-10-27",
+    "title": "Using the Yoto App on iOS and Android",
+    "article_meta": {
+      "id": "6a5a40fd48c292722a786b98",
+      "articleId": "6a4e08f6c5d2cba690d538c9",
+      "title": "Using the Yoto App on iOS and Android",
+      "categories": [
+        {
+          "id": "6a19a5a89f2ebfcad8e9da8f",
+          "knowledgeBase": "69d522fcb7baaa50525b3529"
+        }
+      ],
+      "primaryCategory": "6a19a5a89f2ebfcad8e9da8f",
+      "metaDescription": "Getting started with the Yoto app    If you are a brandnew user choose  Set up your player  from either the landing screen or the Settings section    As a se",
+      "metaKeywords": [
+        "player",
+        "Yoto",
+        "can",
+        "content",
+        "play",
+        "Set",
+        "See",
+        "will",
+        "app",
+        "tab",
+        "cards",
+        "Player",
+        "mode",
+        "Bluetooth"
+      ],
+      "metaTitle": "",
+      "lang": "en_gb",
+      "slug": "using-the-yoto-app-on-ios-and-android",
+      "draftSlug": null,
+      "hash": "ryJtFi7Me",
+      "publishedAt": "2026-07-17T14:50:47.904Z",
+      "updatedAt": "2026-07-17T14:50:48.027Z",
+      "createdAt": "2026-07-17T14:49:33.309Z",
+      "href": "/en_gb/using-the-yoto-app-on-ios-and-android-ryJtFi7Me",
+      "tags": [],
+      "knowledgeBases": [],
+      "scope": "public"
+    },
+    "links": [
+      "https://yoto.space"
+    ],
+    "images": [
+      {
+        "src": "https://attachments.gorgias.help/Aa90l7EQnv7JWorj/hc/9JWjXVxGb7DvMqmO/2024082710-63c04f22-2b0c-4853-a336-914139f2a788-setup.png",
+        "style": "width: 500px;",
+        "class": "fr-fic fr-dib",
+        "alt": "Yoto App - Set up a player"
+      },
+      {
+        "src": "https://attachments.gorgias.help/Aa90l7EQnv7JWorj/hc/9JWjXVxGb7DvMqmO/2024082708-6bd1b95e-6c59-4157-a57f-d7273b6ad8a3-01%20news@2x.png",
+        "style": "width: 500px;",
+        "class": "fr-fic fr-dib",
+        "alt": "Yoto App - News tab"
+      },
+      {
+        "src": "https://attachments.gorgias.help/Aa90l7EQnv7JWorj/hc/9JWjXVxGb7DvMqmO/2024082708-aa1b4636-4812-48a2-87a3-e977406e2006-02%20create@2x.png",
+        "style": "width: 500px;",
+        "class": "fr-fic fr-dib",
+        "alt": ""
+      },
+      {
+        "src": "https://attachments.gorgias.help/Aa90l7EQnv7JWorj/hc/9JWjXVxGb7DvMqmO/2024082708-7ed62744-e46c-4908-97d2-58ccf0bfeeaa-03%20library@2x.png",
+        "style": "width: 500px;",
+        "class": "fr-fic fr-dib",
+        "alt": ""
+      },
+      {
+        "src": "https://attachments.gorgias.help/Aa90l7EQnv7JWorj/hc/9JWjXVxGb7DvMqmO/2024082708-5f4151de-7708-41d6-8be0-c10145de81e0-04%20discover@2x.png",
+        "style": "width: 500px;",
+        "class": "fr-fic fr-dib",
+        "alt": "Yoto App - Discover tab"
+      },
+      {
+        "src": "https://attachments.gorgias.help/Aa90l7EQnv7JWorj/hc/9JWjXVxGb7DvMqmO/2024082708-350ce785-c91c-48c6-951f-482803a8fdde-05%20settings@2x.png",
+        "style": "width: 500px;",
+        "class": "fr-fic fr-dib",
+        "alt": "Yoto App - Settings tab"
+      }
+    ]
+  },
+  {
+    "name": "category-cards-content-make-your-own",
+    "url": "https://support.yotoplay.com/en_gb/categories/cards-content-make-your-own-r1CcBmvlMx",
+    "final_url": "https://support.yotoplay.com/en_gb/categories/cards-content-make-your-own-r1CcBmvlMx",
+    "http_status": 200,
+    "access_mode": "anonymous_public_html_GET",
+    "raw_work_path": "work/yoto-controls-deepening/raw/category-cards-content-make-your-own.html",
+    "raw_sha256": "c5f2e000ac1aa6df5b1afb3867ffdd7c6e74e22d8d749af0d0b065c21ddd3dfc",
+    "extracted_work_path": "work/yoto-controls-deepening/extracted/category-cards-content-make-your-own.json",
+    "extracted_sha256": "38430c6686974a86dc6f984441bdc1d3dd954309a23fb028d53e8b6540c258e5",
+    "checked_on": "2026-10-27",
+    "title": "Cards, Content & Make Your Own",
+    "article_meta": {},
+    "links": [],
+    "images": []
+  },
+  {
+    "name": "category-using-your-yoto",
+    "url": "https://support.yotoplay.com/en_gb/categories/using-your-yoto-rkx2SXPlGl",
+    "final_url": "https://support.yotoplay.com/en_gb/categories/using-your-yoto-rkx2SXPlGl",
+    "http_status": 200,
+    "access_mode": "anonymous_public_html_GET",
+    "raw_work_path": "work/yoto-controls-deepening/raw/category-using-your-yoto.html",
+    "raw_sha256": "52cc235dd8f8d5a769d11e164c730ea93958d8fa7a3aed7f70a433e33d330727",
+    "extracted_work_path": "work/yoto-controls-deepening/extracted/category-using-your-yoto.json",
+    "extracted_sha256": "af436c9d1d03bcea7961e9e481e109f15345ac11f8933844a77fcc024481cb87",
+    "checked_on": "2026-10-27",
+    "title": "Using Your Yoto",
+    "article_meta": {},
+    "links": [],
+    "images": []
+  },
+  {
+    "name": "category-yoto-club",
+    "url": "https://support.yotoplay.com/en_gb/categories/yoto-club-Bym2rmvlGx",
+    "final_url": "https://support.yotoplay.com/en_gb/categories/yoto-club-Bym2rmvlGx",
+    "http_status": 200,
+    "access_mode": "anonymous_public_html_GET",
+    "raw_work_path": "work/yoto-controls-deepening/raw/category-yoto-club.html",
+    "raw_sha256": "7f2b4a41fd811f55e546b7771f39372f4125534d4ca886b77d0eead9a9ac1257",
+    "extracted_work_path": "work/yoto-controls-deepening/extracted/category-yoto-club.json",
+    "extracted_sha256": "70ac861f5d22e818744ee84d46cabd4af1bf0faf09ffcc83c20a14e14ae79c84",
+    "checked_on": "2026-10-27",
+    "title": "Yoto Club",
+    "article_meta": {},
+    "links": [],
+    "images": []
+  },
+  {
+    "name": "category-new-to-yoto",
+    "url": "https://support.yotoplay.com/en_gb/categories/new-to-yoto-Bk23H7vefl",
+    "final_url": "https://support.yotoplay.com/en_gb/categories/new-to-yoto-Bk23H7vefl",
+    "http_status": 200,
+    "access_mode": "anonymous_public_html_GET",
+    "raw_work_path": "work/yoto-controls-deepening/raw/category-new-to-yoto.html",
+    "raw_sha256": "6189ec32a48622bf0acdf2f6d6c9aa9e490d8d9cf88d58dddd57343a2722cb2b",
+    "extracted_work_path": "work/yoto-controls-deepening/extracted/category-new-to-yoto.json",
+    "extracted_sha256": "0581421c4d8a77bd283f95d73ed37f20d01b589fab8495c63203280276afd1a3",
+    "checked_on": "2026-10-27",
+    "title": "New to Yoto",
+    "article_meta": {},
+    "links": [],
+    "images": []
+  },
+  {
+    "name": "category-fixing-a-problem-safety",
+    "url": "https://support.yotoplay.com/en_gb/categories/fixing-a-problem-safety-HyL6rmvgGg",
+    "final_url": "https://support.yotoplay.com/en_gb/categories/fixing-a-problem-safety-HyL6rmvgGg",
+    "http_status": 200,
+    "access_mode": "anonymous_public_html_GET",
+    "raw_work_path": "work/yoto-controls-deepening/raw/category-fixing-a-problem-safety.html",
+    "raw_sha256": "1bd9833e216068f5fa09cc4a1e9a8b63dd6dc29a21fd9d95d0882ceddd82c3b9",
+    "extracted_work_path": "work/yoto-controls-deepening/extracted/category-fixing-a-problem-safety.json",
+    "extracted_sha256": "0c3db3eb0bbf39fce968886bec1bb8e6e3c42cce1b57762021b0be09744e5344",
+    "checked_on": "2026-10-27",
+    "title": "Fixing a Problem & Safety",
+    "article_meta": {},
+    "links": [],
+    "images": []
+  }
+]

@@ -1,0 +1,39 @@
+{
+  "status": "pass",
+  "new_evidence": 22,
+  "new_flows": 3,
+  "old_updates": 7,
+  "inventory_rows": 111,
+  "inventory_reading_status": {
+    "text_read": 30,
+    "body_read": 16,
+    "index_only": 64,
+    "prior_body_read": 1
+  },
+  "raw_files_hashed": 39,
+  "official_frames_observed": 2,
+  "hands_on": false,
+  "old_rows_state": {
+    "F-M012-01": "after_already_applied",
+    "F-M012-02": "after_already_applied",
+    "F-M012-03": "after_already_applied",
+    "F-M012-04": "after_already_applied",
+    "F-M012-05": "after_already_applied",
+    "F-M012-06": "after_already_applied",
+    "F-M012-07": "after_already_applied"
+  },
+  "csv_newlines": [
+    {
+      "file": "batches/mudita-controls-deepening-coverage.csv",
+      "physical_LF": 4,
+      "physical_CRLF": 0,
+      "literal_backslash_r_backslash_n": 0
+    },
+    {
+      "file": "artifacts/mudita-controls-deepening/function-inventory.csv",
+      "physical_LF": 112,
+      "physical_CRLF": 0,
+      "literal_backslash_r_backslash_n": 0
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M022-03,M-022,离线与再联网,D1,E-BCZH-01;E-BCDVC-01;E-BCDVC-02,现Mini/Max离线及多端宣传D1；2022型号未知的计划下发/同步确认/切书局部D2,历史型号适用性、首次绑定、缓存、取消/断网、同步对象/冲突与恢复未知,not_observed,false,cases/M-022-baicizhan-device.md,2026-10-26
+F-M023-01,M-023,绑定与换书,D2,E-MMOH-01;E-MMDVC-01,单书离线准备；自动同步与资源更新路径；云词本版本条件,完成提示、配网/绑定失败、主动更新时序、iOS版本号歧义与空词本,not_observed,false,cases/M-023-maimemo-device.md,2026-10-26
+F-M023-02,M-023,自评与负荷,D2,E-MMOH-01;E-MMDVC-01,短按自评；模式及合并/分开日量方向键；返回/退出,回退是否撤销、逐题提示/错答反馈、空任务、跨日及调整生效时间,not_observed,false,cases/M-023-maimemo-device.md,2026-10-26
+F-M023-03,M-023,标记与恢复,D2,E-MMOH-01;E-MMDVC-01,熟知/收藏/不想背及取消；跨书状态保留,暂停及状态优先级、误长按后的排期、反馈撤销与删除不能混同,not_observed,false,cases/M-023-maimemo-device.md,2026-10-26
+F-M023-04,M-023,回顾与随身听,D2,E-MMOH-01;E-MMDVC-01,回顾不改调度；播放/暂停/重播/音量；有线耳机与未来蓝牙分开,中断断点、循环/终点、空队列和媒体缺失,not_observed,false,cases/M-023-maimemo-device.md,2026-10-26
+F-M023-05,M-023,同步与解绑,D2,E-MMOH-01;E-MMDVC-01;E-MMO-07,学习数据同步与资源更新区分；App删除后合并再同步；解绑丢未同步记录,两端冲突、上限边界、幂等重试、换机/解绑撤回和云端恢复未知,not_observed,false,cases/M-023-maimemo-device.md,2026-10-26

@@ -1,0 +1,21 @@
+{
+  "order": 10,
+  "entry_id": "INO-basic--archive--what-is-the-archive",
+  "title": "What is the Archive?",
+  "url": "https://www.inoreader.com/help/basic/archive/what-is-the-archive",
+  "checked_on": "2026-10-27",
+  "http_status": 200,
+  "final_url": "https://www.inoreader.com/help/basic/archive/what-is-the-archive",
+  "acquisition": "one_anonymous_normal_GET",
+  "raw_path": "work/research/batch41-inoreader-help/10-INO-basic--archive--what-is-the-archive.html",
+  "headers_path": "work/research/batch41-inoreader-help/10-INO-basic--archive--what-is-the-archive.headers.json",
+  "raw_sha256": "6ce1096ee26cde46aabe9a8b7746cf8611d4a5c476dcbd297dd7fbd078a456d4",
+  "bytes": 140033,
+  "status": "body_obtained",
+  "body_status": "extracted_not_yet_root_read",
+  "body_path": "work/research/batch41-inoreader-help/10-INO-basic--archive--what-is-the-archive.body.txt",
+  "body_sha256": "9ce36a1003e5ee849b0ec069e6579def800f829967c6d18043f9d0b8dcf6ff7c",
+  "body_chars": 286,
+  "links": [],
+  "images": []
+}

@@ -1,0 +1,42 @@
+Use Your Pen to Handwrite on Books and Personal Documents
+en_US
+Use Your Pen to Handwrite on Books and Personal Documents
+Add an active canvas or a sticky note and write using the writing toolbar. Use writing tools such as Pen, Highlighter, Eraser, and Undo/Redo. Double tap on Pen, Highlighter, or Eraser to access custom options for those tools.
+The toolbar options also allow you to place the toolbar on the left or right side of the screen.
+Supported devices:
+Kindle Scribe. Use the included Kindle Scribe pen.
+Kindle app for Android. Use a stylus the device recognizes as a pen (such as Samsung S Pen).
+To hide the writing toolbar across all books and documents:
+To display the top navigation bar, tap on the top of the screen.
+Tap on the 3-dot icon, and select Hide Writing Toolbar.
+To show the toolbar again, go to the same 3-dot menu and select
+Show Writing Toolbar.
+In books and compatible Personal Documents, you’re able to create active canvases or sticky notes:
+To insert an active canvas:
+Select the Active Canvas tool  in the writing toolbar.
+Press and hold between book lines to insert the active canvas.
+The active canvas inserted between lines is as wide as the text column.
+You can also create a custom-size canvas simply by creating a stroke on the page. A translucent box shows with confirm or cancel buttons for insertion. The canvas keeps expanding as you keep writing before you confirm insertion.
+To change a canvas size, touch the canvas frame with the pointer tool and pull the sides in or out.
+To delete a canvas, touch the canvas frame with the pointer and select the trash icon on the bottom-right corner. Confirm the deletion on the dialogue that opens next.
+Note: Active canvas is available on Kindle Scribe, and stylus-supported Android and iOS devices. Active canvas only supports left-to-right horizontal languages. Right-to-left horizontal languages, such as Arabic, or vertical languages like Japanese, aren't supported at this time.
+To insert a sticky note:
+Select the Note option in the annotation menu that appears when you tap on a highlight or underlined text, or
+Select the sticky note tool in the writing toolbar, and then touch the page to place your note where you want it. A note icon shows marking where you saved your sticky note. Tap on the icon to reopen the note and make any edits.
+If you create notes in the expandable margin, they also appear in sticky notes when the margin is closed.
+Your sticky notes appear in the expandable margin when the margin is open.
+Tip: To view or hide the action menu after highlighting or underlining text, activate or deactivate the
+Annotation Menu. Select the
+Aa menu in the top navigation bar, and then the
+More tab.
+Notes get autosaved after you finish writing on your sticky note canvas and tap on the X to close it.
+In certain books or PDFs that you import onto your device using the Send to Kindle(https://www.amazon.com/sendtokindle) service, you’re able to write notes directly on the page.
+Note: The use of third-party covers may interfere with some of the screen writing areas.
+For more help, go to:
+Kindle Personal Document File Types That Support Notes
+View Your Notes Added to Books and Personal Documents
+Write in the Expandable Margin of eBooks on Kindle Scribe
+en_US
+US
+Cpiu6TFOuXpU4ymOzD
+T0MT2p2D8t046zUxih

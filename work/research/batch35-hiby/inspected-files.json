@@ -1,0 +1,67 @@
+[
+  {
+    "path": "docs/research/interaction-library/cases/M-035-hiby.md",
+    "sha256": "65514e618c2944b513e8f48eba3bfc791ddd553042bf2700cab674ec4877fda8",
+    "bytes": 18670
+  },
+  {
+    "path": "docs/research/interaction-library/batches/hiby-controls-deepening-inventory.csv",
+    "sha256": "af75f8bfde0151791c5a6def1a949ec1407f974c4663aac977115be2243ab7c3",
+    "bytes": 37292
+  },
+  {
+    "path": "docs/research/interaction-library/batches/hiby-library-controls-deepening-inventory.csv",
+    "sha256": "5fb9d740c1046c5b854fc642ea84f1e3ae65afb2f5611dd60407f42687c938d5",
+    "bytes": 47065
+  },
+  {
+    "path": "work/hiby-controls-deepening/raw/manual-en.html",
+    "sha256": "d631a86d1cf1cd41e685034d1c6808efbdea05effc147aaf77452b2d4be27ede",
+    "bytes": 104713
+  },
+  {
+    "path": "work/hiby-controls-deepening/extracted/manual-en.txt",
+    "sha256": "eb5c95421824b5c847e823cbf08d71a42fdf2a5c4be3cd4a629b3c8422c6be36",
+    "bytes": 33026
+  },
+  {
+    "path": "work/hiby-controls-deepening/raw/manual-zh.html",
+    "sha256": "38b541d793b2e7b343591d47ada81e5599c6a43a17e46a0131bd6fa4b654c84c",
+    "bytes": 101773
+  },
+  {
+    "path": "work/hiby-controls-deepening/extracted/manual-zh.txt",
+    "sha256": "a21719acb29ab48ca34cc9f21b6471c5e709472796159ed274858eaafd4bdff6",
+    "bytes": 27588
+  },
+  {
+    "path": "work/hiby-controls-deepening/raw/faq-en.html",
+    "sha256": "10cc0e02d3059703e4189b2d9c7e7e4428e350a40358525685ff1b9c5be1555d",
+    "bytes": 54646
+  },
+  {
+    "path": "work/hiby-controls-deepening/extracted/faq-en.txt",
+    "sha256": "6a4582cfd2d65e3517a815698ca91a22658ed7617a46eead933b220e026452de",
+    "bytes": 13571
+  },
+  {
+    "path": "work/hiby-controls-deepening/raw/faq-zh.html",
+    "sha256": "d132f48295345e8d33eb3a51f2c0cada130e5a2fd7ffc1b8c56f8318dbb96031",
+    "bytes": 51353
+  },
+  {
+    "path": "work/hiby-controls-deepening/extracted/faq-zh.txt",
+    "sha256": "c9869c6af22938401728c93503507dfff7c921451c3802294feb260c924f38d5",
+    "bytes": 11562
+  },
+  {
+    "path": "work/hiby-controls-deepening/raw/firmware-en.html",
+    "sha256": "324635ed3c27a01f6ffc0353c860813c65c960be79d34fc456f1109b49e28dc4",
+    "bytes": 34834
+  },
+  {
+    "path": "work/hiby-controls-deepening/extracted/firmware-en.txt",
+    "sha256": "db9295d1a41dbbc880eb261e8118d793bf915d7e4d0908e3c24856ff25fdd607",
+    "bytes": 628
+  }
+]

@@ -1,0 +1,68 @@
+
+Pop a card into the slot on top of your player, and it plays - that’s the magic. The first time each card plays, your Yoto needs Wi-Fi to fetch the audio; after that, the card plays anywhere, no internet needed.
+
+
+
+
+
+Give every card a head start (10 minutes now, zero interruptions later)
+Want the first experience to be seamless? After setup, do this once:
+
+Pop each of your cards into the player, one by one. A few seconds each is fine.
+
+Take the last card out, and leave the player switched on, charging and online overnight.
+
+That’s it - your player quietly downloads everything while it rests. By morning, every card plays instantly, with or without Wi-Fi.
+
+
+How Yoto Cards actually work
+Each card holds a little chip (NFC - the same tech as contactless payment) that acts like a key. Insert the card, and your player unlocks that audio in one of two ways:
+
+Already downloaded? It plays straight from the player - no internet needed. This is how cards your child has played before will work.
+
+First play, or not finished downloading? The audio streams over Wi-Fi while the player downloads it in the background - so you’ll need to be online, with a decent connection. (Some cards, like radio stations, always stream.)
+Curious which is happening? Your player’s display tells you - See: What the icons on your Yoto’s display mean.
+
+
+If the audio stutters or breaks up
+Almost always one of two things, and both pass:
+
+Busy Wi-Fi or a weak signal - move the player closer to the router. 
+
+Lots of downloads at once - typical on day one when every card is new. Give it time (or run the overnight routine above).
+
+
+If a card won’t play at all 
+
+Take it out, and try again.
+
+Try another Yoto Card. If other cards play normally, test the affected card using a phone with NFC:
+
+Make sure NFC is switched on, if your phone has this setting.
+
+Hold the card against your phone’s NFC reader-usually near the top or on the back-for a few seconds.
+
+If nothing happens, remove your phone case and try moving the card slowly across the back of your phone.
+
+If possible, scan a Yoto Card that works normally for comparison.
+
+
+
+
+Check the display. A red stop sign means the card wasn’t recognised.
+
+
+
+
+
+
+Still stuck? Contact our Customer Happiness team and tell us:
+
+The name of the card
+
+What you see on the display
+
+Whether other cards play normally
+
+Whether your phone detected the affected card
+Wondering about compatibility? See Interactive Yoto Cards and 4th Generation Players - What You Need to Know

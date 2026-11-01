@@ -1,0 +1,25 @@
+[
+  {
+    "evidence_id": "E-KDCD-02",
+    "before": [],
+    "after": [
+      {
+        "name": "guide.html",
+        "url": "https://d1ergij2b6wmg5.cloudfront.net/kug/kindle_scribe_2024/v1/en-US/html/kug.html",
+        "checked_on": "2026-10-27",
+        "access_mode": "public_GET",
+        "hands_on": false,
+        "visual_observed": false,
+        "status": 200,
+        "content_type": "text/html",
+        "last_modified": "Mon, 05 Oct 2026 07:48:33 GMT",
+        "raw_work_path": "work/kindle-audio-family-deepening/raw/guide.html",
+        "raw_sha256": "6122a2ee70cb5748992d93a301a72fc2c76608e3bf2c99dabd732a99595f8815",
+        "bytes": 152359,
+        "archived_artifact": "artifacts/kindle-audio-family-deepening/source-notes.md",
+        "sha256": "90b7a8fea030817a03f73d452cfbdabcbb1138c1d363bea58bab3e478397915b",
+        "note": "同SHA指南复读扩展；11图另立派生E，不把GET当看图"
+      }
+    ]
+  }
+]

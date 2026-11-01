@@ -1,0 +1,127 @@
+[
+  {
+    "version": "8.6.2",
+    "date_raw": "Thu Oct 22 2026 15:47:09 GMT+0000 (Coordinated Universal Time)",
+    "note": "1、修复已知问题，优化听书体验；"
+  },
+  {
+    "version": "8.6.1",
+    "date_raw": "Fri Sep 04 2026 02:22:47 GMT+0000 (Coordinated Universal Time)",
+    "note": "1、已知问题修复；"
+  },
+  {
+    "version": "8.6.0",
+    "date_raw": "Wed Sep 02 2026 12:01:14 GMT+0000 (Coordinated Universal Time)",
+    "note": "1、已知问题优化"
+  },
+  {
+    "version": "8.5.9",
+    "date_raw": "Mon Aug 24 2026 02:03:17 GMT+0000 (Coordinated Universal Time)",
+    "note": "1、本次更新对听书功能的部分音色进行了音质升级，优化了使用体验。"
+  },
+  {
+    "version": "8.5.8",
+    "date_raw": "Mon Aug 10 2026 02:45:02 GMT+0000 (Coordinated Universal Time)",
+    "note": "1、已知问题优化。"
+  },
+  {
+    "version": "8.5.7",
+    "date_raw": "Thu Jun 04 2026 16:23:04 GMT+0000 (Coordinated Universal Time)",
+    "note": "1、已知问题优化"
+  },
+  {
+    "version": "8.5.6",
+    "date_raw": "Wed Jun 03 2026 08:19:14 GMT+0000 (Coordinated Universal Time)",
+    "note": "1、修复已知问题\n2、优化使用体验"
+  },
+  {
+    "version": "8.5.5",
+    "date_raw": "Mon Mar 09 2026 02:42:37 GMT+0000 (Coordinated Universal Time)",
+    "note": "1、已知问题修复"
+  },
+  {
+    "version": "8.5.4",
+    "date_raw": "Mon Feb 02 2026 02:36:01 GMT+0000 (Coordinated Universal Time)",
+    "note": "1.优化搜索结果页\n2.修复已知问题"
+  },
+  {
+    "version": "8.5.3",
+    "date_raw": "Sun Jan 04 2026 05:35:13 GMT+0000 (Coordinated Universal Time)",
+    "note": "1. 修复书架模块的一个崩溃问题"
+  },
+  {
+    "version": "8.5.2",
+    "date_raw": "Tue Dec 23 2025 08:10:01 GMT+0000 (Coordinated Universal Time)",
+    "note": "1. 升级VIP模块视觉效果\n2. 修复冷启动打断外部音乐播放的问题"
+  },
+  {
+    "version": "8.5.1",
+    "date_raw": "Thu Oct 30 2025 08:38:20 GMT+0000 (Coordinated Universal Time)",
+    "note": "修复TTS阅读在碰到标点符号不正确停顿的问题"
+  },
+  {
+    "version": "8.5.0",
+    "date_raw": "Wed Oct 22 2025 14:02:25 GMT+0000 (Coordinated Universal Time)",
+    "note": "1. 修复线上问题.\n2. 优化使用体验."
+  },
+  {
+    "version": "8.4.9",
+    "date_raw": "Sat Oct 11 2025 02:49:20 GMT+0000 (Coordinated Universal Time)",
+    "note": "修复冷启动中的一些问题."
+  },
+  {
+    "version": "8.4.8",
+    "date_raw": "Thu Oct 09 2025 09:24:12 GMT+0000 (Coordinated Universal Time)",
+    "note": "修复已知问题, 优化使用体验"
+  },
+  {
+    "version": "8.4.7",
+    "date_raw": "Wed Aug 27 2025 07:38:14 GMT+0000 (Coordinated Universal Time)",
+    "note": "1.修复了一些体验问题"
+  },
+  {
+    "version": "8.4.6",
+    "date_raw": "Tue Jul 15 2025 07:18:20 GMT+0000 (Coordinated Universal Time)",
+    "note": "1.修复了一些体验问题"
+  },
+  {
+    "version": "8.4.5",
+    "date_raw": "Fri Jul 11 2025 03:41:11 GMT+0000 (Coordinated Universal Time)",
+    "note": "1.修复了一些体验问题"
+  },
+  {
+    "version": "8.4.4",
+    "date_raw": "Wed Jul 02 2025 05:50:24 GMT+0000 (Coordinated Universal Time)",
+    "note": "1.修复了一些体验问题"
+  },
+  {
+    "version": "8.4.3",
+    "date_raw": "Fri Jun 27 2025 09:29:34 GMT+0000 (Coordinated Universal Time)",
+    "note": "1.修复了一些体验问题"
+  },
+  {
+    "version": "8.4.2",
+    "date_raw": "Wed Jun 18 2025 07:30:05 GMT+0000 (Coordinated Universal Time)",
+    "note": "1.修复了一些体验问题"
+  },
+  {
+    "version": "8.4.1",
+    "date_raw": "Wed Jun 11 2025 08:44:26 GMT+0000 (Coordinated Universal Time)",
+    "note": "1.修复了一些体验问题"
+  },
+  {
+    "version": "8.4.0",
+    "date_raw": "Wed Apr 23 2025 06:52:48 GMT+0000 (Coordinated Universal Time)",
+    "note": "1.修复了一些体验问题"
+  },
+  {
+    "version": "8.3.9",
+    "date_raw": "Tue Mar 11 2025 12:24:03 GMT+0000 (Coordinated Universal Time)",
+    "note": "1.修复了一些体验问题"
+  },
+  {
+    "version": "8.3.8",
+    "date_raw": "Wed Feb 19 2025 10:59:04 GMT+0000 (Coordinated Universal Time)",
+    "note": "1.修复了一些体验问题"
+  }
+]

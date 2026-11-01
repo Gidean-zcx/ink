@@ -1,0 +1,42 @@
+{
+  "name": "04-title",
+  "at": "2026-10-26T20:51:50.360220+00:00",
+  "url": "https://cdn.britannica.com/11/288011-184-BF60C826/default.html?autoplay=1",
+  "text": "slide: Title\nStart",
+  "controls": [
+    {
+      "tag": "BUTTON",
+      "text": "Start",
+      "aria": "Start",
+      "title": "",
+      "id": "acc-6BVadlf0Qdy",
+      "visible": true
+    },
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": null,
+      "title": "",
+      "id": "",
+      "visible": false
+    }
+  ],
+  "media": [
+    {
+      "tag": "VIDEO",
+      "paused": true,
+      "time": 0,
+      "duration": 0.04644,
+      "ended": false,
+      "error": null
+    },
+    {
+      "tag": "VIDEO",
+      "paused": true,
+      "time": 0,
+      "duration": 0.04644,
+      "ended": false,
+      "error": null
+    }
+  ]
+}

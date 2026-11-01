@@ -1,0 +1,15 @@
+Run app shortcuts on iPhone or iPad
+Many Apple and third-party apps include built-in shortcuts that automate app features. If an app on your iPhone or iPad has available shortcuts, they’re shown in the Shortcuts screen (iOS) or Shortcuts sidebar (iPadOS), in the App Shortcuts category. You can run these shortcuts from the Shortcuts app, and you can also include these app shortcuts as an action in your own custom shortcuts.
+Run an App shortcut from the Shortcuts app
+In the Shortcuts app  on your iPhone or iPad, do one of the following:
+iPhone:  Tap  in the upper-left corner of the screen.
+iPad:  Swipe from the left edge of the screen.
+In the App Shortcuts area, tap the name of an app, then tap a shortcut.
+Add an app shortcut to a custom shortcut
+Adding an app shortcut to your own custom shortcut lets you hand off part of a task to another app. For example, you could add the Play Last Voice Memo app shortcut to a custom shortcut that creates a new note with the current date.
+In the Shortcuts app  on your iPhone or iPad, do one of the following:
+iPhone:  Tap  in the upper-left corner of the screen.
+iPad:  Swipe from the left edge of the screen.
+In the App Shortcuts area, tap the name of an app.
+Tap  on the App Shortcut you want to include in your shortcut, then tap Use in New Shortcut.
+Continue creating your custom shortcut.

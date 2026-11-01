@@ -1,0 +1,84 @@
+[
+  {
+    "flow_id": "F-M032-04",
+    "source_batch": "docs/research/interaction-library/batches/chinese-apps-coverage.csv",
+    "changes": {
+      "task": {
+        "before": "错题重做与人工移出",
+        "after": "错题重做与移出（规则分来源）"
+      },
+      "evidence_ids": {
+        "before": "E-FENB-05;E-FENB-06;E-FBCD-04;E-FBCD-05;E-FBCD-08",
+        "after": "E-FENB-05;E-FENB-06;E-FBCD-04;E-FBCD-05;E-FBCD-08;E-FBPC-01;E-FBPC-03"
+      },
+      "known_branches": {
+        "before": "备考文章声明自动汇集、筛选/重做/归因/移除；2020四方块目录与2026我的入口并列",
+        "after": "官方备考文章仅功能声明；2020目录四方块与2026“我的”入口并列；2019作者称重答正确移出/错误看解析，科目构建未明；2022行测作者描述做题时间/题型选择"
+      },
+      "gaps": {
+        "before": "控件与执行结果未核；清理确认/误删恢复/统计重算、首次与历次答案口径、同步",
+        "after": "现行控件/执行结果仍未核；历史文字不证当前自动移出，未见回执/撤销/空列表/历史答案口径；2022自报8.0.1未官方核定；清理与同步未知"
+      },
+      "visual_status": {
+        "before": "not_observed",
+        "after": "static_reference_only"
+      },
+      "checked_on": {
+        "before": "2026-10-26",
+        "after": "2026-10-27"
+      }
+    },
+    "replacement_row": {
+      "flow_id": "F-M032-04",
+      "product_id": "M-032",
+      "task": "错题重做与移出（规则分来源）",
+      "depth": "D1",
+      "evidence_ids": "E-FENB-05;E-FENB-06;E-FBCD-04;E-FBCD-05;E-FBCD-08;E-FBPC-01;E-FBPC-03",
+      "known_branches": "官方备考文章仅功能声明；2020目录四方块与2026“我的”入口并列；2019作者称重答正确移出/错误看解析，科目构建未明；2022行测作者描述做题时间/题型选择",
+      "gaps": "现行控件/执行结果仍未核；历史文字不证当前自动移出，未见回执/撤销/空列表/历史答案口径；2022自报8.0.1未官方核定；清理与同步未知",
+      "visual_status": "static_reference_only",
+      "hands_on": "false",
+      "case_path": "cases/M-032-fenbi.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "flow_id": "F-M032-09",
+    "source_batch": "docs/research/interaction-library/batches/fenbi-controls-deepening-coverage.csv",
+    "changes": {
+      "task": {
+        "before": "历史iOS6.8.8国考快速练习到报告解析",
+        "after": "历史快速练习：2019国考结果解析与2022漏答确认（分材料）"
+      },
+      "evidence_ids": {
+        "before": "E-FBCD-07",
+        "after": "E-FBCD-07;E-FBPC-02"
+      },
+      "known_branches": {
+        "before": "静态拼图：答题卡交卷入口、报告及全部/错题解析",
+        "after": "2019国考iOS6.8.8静态图：答题卡交卷入口、报告及全部/错题解析；2022作者自报6.16.25文字：快速练习未全部答完交卷有确认，科目/地区未知，未看图"
+      },
+      "gaps": {
+        "before": "当前版适用；改选/跳题/确认/漏题/超时/恢复；返回目标",
+        "after": "两材料不得拼成同一会话或套当前App；2022无弹窗原文/取消结果/交卷后状态；2019未见改选跳题确认，返回目标未知；超时后台断网恢复均未知"
+      },
+      "checked_on": {
+        "before": "2026-10-26",
+        "after": "2026-10-27"
+      }
+    },
+    "replacement_row": {
+      "flow_id": "F-M032-09",
+      "product_id": "M-032",
+      "task": "历史快速练习：2019国考结果解析与2022漏答确认（分材料）",
+      "depth": "D2",
+      "evidence_ids": "E-FBCD-07;E-FBPC-02",
+      "known_branches": "2019国考iOS6.8.8静态图：答题卡交卷入口、报告及全部/错题解析；2022作者自报6.16.25文字：快速练习未全部答完交卷有确认，科目/地区未知，未看图",
+      "gaps": "两材料不得拼成同一会话或套当前App；2022无弹窗原文/取消结果/交卷后状态；2019未见改选跳题确认，返回目标未知；超时后台断网恢复均未知",
+      "visual_status": "static_reference_only",
+      "hands_on": "false",
+      "case_path": "cases/M-032-fenbi.md",
+      "checked_on": "2026-10-27"
+    }
+  }
+]

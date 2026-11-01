@@ -1,0 +1,127 @@
+[
+  {
+    "path": "work/boox-controls-deepening/epaper-pc-articles.json",
+    "sha256": "02e30182beee444963ce691bbec9523380dcf91000c32685e27bea33f08a2cd8",
+    "bytes": 407832
+  },
+  {
+    "path": "work/boox-reading-controls-deepening/raw/10701454503572.json",
+    "sha256": "beedd170f98de16f7dd802844f6542b7750ecc2f3622cdc0996d0818b44030e0",
+    "bytes": 2440
+  },
+  {
+    "path": "work/boox-reading-controls-deepening/raw/10701454503572.txt",
+    "sha256": "e9f9707b531f45315ea4f7a8f97dfa8b1d11771a815935c8cf3080bb5b6cfc89",
+    "bytes": 611
+  },
+  {
+    "path": "work/boox-reading-controls-deepening/raw/10701486858388.json",
+    "sha256": "8165adacfd6c2279adcfcc2f973b9c9c9d333a079943cafdaa82d8b1d859adb0",
+    "bytes": 6221
+  },
+  {
+    "path": "work/boox-reading-controls-deepening/raw/10701486858388.txt",
+    "sha256": "5093ffc4c968fdb033fed6b37572aa90d80ee786dd3bc614fd08ff4716143e17",
+    "bytes": 3267
+  },
+  {
+    "path": "work/boox-reading-controls-deepening/raw/10701488996500.json",
+    "sha256": "58066dd9ec5dfc7f984ce8823b386ef6f66b7d71b5789142e19aacd733e696f0",
+    "bytes": 1942
+  },
+  {
+    "path": "work/boox-reading-controls-deepening/raw/10701488996500.txt",
+    "sha256": "b382cd373cfecde03c95746cc542bc06f6b062bb78bd2daf06f864e6bf182604",
+    "bytes": 405
+  },
+  {
+    "path": "work/boox-reading-controls-deepening/raw/10701489683092.json",
+    "sha256": "22bd8d103a9e4870bbde6d7204ccff5fc4e135ed1a4b79a0c43dcc0b7c8a3b3f",
+    "bytes": 2705
+  },
+  {
+    "path": "work/boox-reading-controls-deepening/raw/10701489683092.txt",
+    "sha256": "732b079fb486532dfb649158d363318c231e8b27e018a083add9d94980ba6d6c",
+    "bytes": 595
+  },
+  {
+    "path": "work/boox-reading-controls-deepening/raw/10701491126548.json",
+    "sha256": "678ed0eee99c9a8ad3c0110bfe4d342919c4e2d229e6f33d0bb41221b8e2a38d",
+    "bytes": 6692
+  },
+  {
+    "path": "work/boox-reading-controls-deepening/raw/10701491126548.txt",
+    "sha256": "698162cab21e582a315be98f50d2842e09c8143b709a3fa8ec95ac4de1890bce",
+    "bytes": 1142
+  },
+  {
+    "path": "work/boox-reading-controls-deepening/raw/10701497927316.json",
+    "sha256": "24385ad84089f95eb99d94b89c1bc8db950bcbe3d9b2c1556c12a463798f6313",
+    "bytes": 2920
+  },
+  {
+    "path": "work/boox-reading-controls-deepening/raw/10701497927316.txt",
+    "sha256": "133bb5f5d3abf110c7087026bcd634f2d3be82b8898a6e7f3eb0428320177d14",
+    "bytes": 1125
+  },
+  {
+    "path": "work/boox-reading-controls-deepening/raw/10701570125588.json",
+    "sha256": "28a8f0dc4d6311ea60838b9bfc0a9c7bf58ec6703f128224fe1e8718e01e006d",
+    "bytes": 4027
+  },
+  {
+    "path": "work/boox-reading-controls-deepening/raw/10701570125588.txt",
+    "sha256": "6f8e28bdb74ac0b58e405503347308de46cf45829d32c836ca69e26ec75cc928",
+    "bytes": 1112
+  },
+  {
+    "path": "work/boox-reading-controls-deepening/raw/10701578837268.json",
+    "sha256": "a20007acbd6c6a574e851d39054d7ada2376b6448bf7eb0f0ad56d3988921f8b",
+    "bytes": 80061
+  },
+  {
+    "path": "work/boox-reading-controls-deepening/raw/10701578837268.txt",
+    "sha256": "1c1be3ae99c2b7af7ee12258fa96694bb13447e572478e5cd78fefcbd1c8263b",
+    "bytes": 11420
+  },
+  {
+    "path": "work/boox-reading-controls-deepening/raw/15196391289108.json",
+    "sha256": "b7f9f2fdd91597b9673b98f2864b464219b3b5b09c2b2ace8df7d61d6880612e",
+    "bytes": 12130
+  },
+  {
+    "path": "work/boox-reading-controls-deepening/raw/15196391289108.txt",
+    "sha256": "5c42cb1f39b35abbe2eb05b9ca51548099ade6cfc98105041806b6bbae40cce3",
+    "bytes": 1817
+  },
+  {
+    "path": "work/boox-reading-controls-deepening/raw/25400769451540.json",
+    "sha256": "f0912a84b20cd5ad1d2f1ddf6695a29f23782497099eed57b2c9962942ed7f46",
+    "bytes": 3680
+  },
+  {
+    "path": "work/boox-reading-controls-deepening/raw/25400769451540.txt",
+    "sha256": "131f6fde10de147820dc6fb900c8e45949b476a5b7b82f1a0c40196435e06242",
+    "bytes": 1412
+  },
+  {
+    "path": "work/boox-reading-controls-deepening/raw/epub-more-settings.png",
+    "sha256": "bd070475b2dce000ea5c15535470b922513698b50afbed7391132098444a919c",
+    "bytes": 1144355
+  },
+  {
+    "path": "work/boox-reading-controls-deepening/raw/library-scan.jpg",
+    "sha256": "ca5a1051603cde55ef83b70150598f8a55e0240f3853142df6674a562c329ae3",
+    "bytes": 363781
+  },
+  {
+    "path": "work/boox-reading-controls-deepening/raw/notes-layers.png",
+    "sha256": "964f0841729cd1dd9de8c729de6c981b795ff42a9ee3dec92ef8aacdc8c84e9a",
+    "bytes": 494599
+  },
+  {
+    "path": "work/boox-reading-controls-deepening/raw/notes-page-manager.png",
+    "sha256": "089285229033c6d565e943bd546493cc136fe02ee23b471e93d5c23c26114d09",
+    "bytes": 1199680
+  }
+]

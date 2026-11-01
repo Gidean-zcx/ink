@@ -1,0 +1,16 @@
+Can I Access the Mudita Kompakt If I Forgot My PIN or Screen Pattern?
+Modified on: Sat, 3 Oct, 2026 at 8:38 AM
+If you forget your PIN or screen pattern for the Mudita Kompakt, you will need to perform a factory reset to regain access.
+This process will erase all data on the phone, so please be aware that any information not backed up will be lost.
+Factory reset procedure:
+Power off the phone
+Hold Power and + Volume Up buttons together until you see the "Select Boot Mode" screen
+Use the Volume Up button to scroll to "Recovery Mode", then click the Volume Down button to press "OK"
+Once the screen shows a broken robot icon, press and hold the Power button, then click the Volume Up button once to open the Recovery menu
+Use the Volume Up/Down buttons to scroll to "Wipe data/factory reset" and click the Power button to confirm
+Wait for the factory reset to complete
+Was this article helpful?
+ No
+ Yes
+That’s Great!
+Thank you for your feedback

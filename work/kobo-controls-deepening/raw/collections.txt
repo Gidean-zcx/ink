@@ -1,0 +1,40 @@
+You can organize your books into a list called a ‘collection’ on your eReader.
+For example, you can create a collection with books from your favourite author, genre, or other topics. These collections let you find eBooks you’ve grouped together in one place. You can see collections that you’ve created on both your eReader and Kobo Books app.
+Create a new collection
+Go to your Home screen.
+Tap the My Books icon at the bottom of the screen.
+Tap Collections near the top of the screen.
+Tap the Menu icon near the top-right of the screen.
+Tap New collection .
+Enter the name of your collection into the text box and tap Next.
+Tap the + icon beside the eBooks you want to add to this collection.
+After you’ve chosen the books you want to add, tap Create in the bottom right corner.
+Add or remove books from your collection
+Go to your Home screen.
+Tap the My Books icon at the bottom of the screen.
+Tap Collections near the top of the screen.
+On the ' Collections' page, tap and hold the collection name you want to make changes to until you see a menu appear.
+Tap Manage.
+To remove a book from your collection, select the C heckmark beside the name of the book you want to remove.
+To add a book to your collection, select the Plus icon beside the name of the book you want to add.
+Once you’ve made all of your changes, tap Save in the bottom right corner.
+Rename your collection
+Go to your Home screen.
+Tap the My Books icon at the bottom of the screen.
+Tap Collections near the top of the screen.
+On the 'Collections' page, tap and hold the collection name you want to make changes to until you see a menu appear.
+Tap Rename.
+Type the new name of the collection in the text box.
+Tap Save.
+Delete a collection
+Go to your Home screen.
+Tap the My Books icon at the bottom of the screen.
+Tap Collections near the top of the screen.
+On the ' Collections' page, tap and hold the collection name you want to make changes to until you see a menu appear.
+Tap Delete.
+If you’re sure you want to delete the collection, tap Delete.
+If you want to find the books that you’ve grouped together, your collections will be saved in the ‘My Collections’ page.
+When you create a collection on your Kobo Books app or eReader there may be a delay when you try to view the new collection on the other device.
+Learn more
+Organize your eBooks and audiobooks on your Kobo Books app for iOS
+Organize your eBooks and audiobooks on your Kobo Books app for Android

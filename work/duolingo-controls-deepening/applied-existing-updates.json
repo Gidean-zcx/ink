@@ -1,0 +1,223 @@
+{
+  "updates": [
+    {
+      "flow_id": "F-M017-01",
+      "field": "evidence_ids",
+      "before": "E-MMO-01;E-MMO-02;E-MMO-03",
+      "after": "E-MMO-01;E-MMO-02;E-MMO-03;E-MMCD-01;E-MMCD-02;E-MMCD-12",
+      "reason": "2026-10-27 官方软件帮助及公开契约补证；仅文档，保持稳定 F"
+    },
+    {
+      "flow_id": "F-M017-01",
+      "field": "known_branches",
+      "before": "认识/模糊/忘记、跨书共享",
+      "after": "选词批选/章节/熟知度排序；英中与中英模式入口；当天首次自评和跨书共享；HarmonyOS 控制仅日志发现",
+      "reason": "2026-10-27 官方软件帮助及公开契约补证；仅文档，保持稳定 F"
+    },
+    {
+      "flow_id": "F-M017-01",
+      "field": "gaps",
+      "before": "释义显隐、误评撤销、完成页",
+      "after": "显示答案与拼写判分重试、误评回滚、结束页操作、后台/跨日恢复未知；返回上词不等于撤销",
+      "reason": "2026-10-27 官方软件帮助及公开契约补证；仅文档，保持稳定 F"
+    },
+    {
+      "flow_id": "F-M017-01",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27",
+      "reason": "2026-10-27 官方软件帮助及公开契约补证；仅文档，保持稳定 F"
+    },
+    {
+      "flow_id": "F-M017-02",
+      "field": "evidence_ids",
+      "before": "E-MMO-02;E-MMO-03",
+      "after": "E-MMO-02;E-MMO-03;E-MMO-11;E-MMCD-13;E-MMCD-12",
+      "reason": "2026-10-27 官方软件帮助及公开契约补证；仅文档，保持稳定 F"
+    },
+    {
+      "flow_id": "F-M017-02",
+      "field": "known_branches",
+      "before": "追加新词即时学",
+      "after": "追加新词即时学；固定新学量是官方不建议而非能力禁止；跨平台版本有别",
+      "reason": "2026-10-27 官方软件帮助及公开契约补证；仅文档，保持稳定 F"
+    },
+    {
+      "flow_id": "F-M017-02",
+      "field": "gaps",
+      "before": "当前小组如何重算",
+      "after": "当前小组如何重算、固定值/最大值设置细节、积压跨日重排与分散压力确认步骤未知",
+      "reason": "2026-10-27 官方软件帮助及公开契约补证；仅文档，保持稳定 F"
+    },
+    {
+      "flow_id": "F-M017-02",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27",
+      "reason": "2026-10-27 官方软件帮助及公开契约补证；仅文档，保持稳定 F"
+    },
+    {
+      "flow_id": "F-M017-07",
+      "field": "depth",
+      "before": "D1",
+      "after": "D2",
+      "reason": "2026-10-27 官方软件帮助及公开契约补证；仅文档，保持稳定 F"
+    },
+    {
+      "flow_id": "F-M017-07",
+      "field": "evidence_ids",
+      "before": "E-MMO-09",
+      "after": "E-MMO-09;E-MMCD-09;E-MMCD-10",
+      "reason": "2026-10-27 官方软件帮助及公开契约补证；仅文档，保持稳定 F"
+    },
+    {
+      "flow_id": "F-M017-07",
+      "field": "known_branches",
+      "before": "个人凭据/第三方授权",
+      "after": "凭据/第三方授权分开；词 ID、词本和加入计划分开；规范返回成功数；公测/同步/当日初始化/频控限制",
+      "reason": "2026-10-27 官方软件帮助及公开契约补证；仅文档，保持稳定 F"
+    },
+    {
+      "flow_id": "F-M017-07",
+      "field": "gaps",
+      "before": "接口实测、失败、限流、幂等",
+      "after": "未调用接口；精确权限清单、错误响应/重试等待、幂等、撤销、删除恢复及硬件下发未知",
+      "reason": "2026-10-27 官方软件帮助及公开契约补证；仅文档，保持稳定 F"
+    },
+    {
+      "flow_id": "F-M017-07",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27",
+      "reason": "2026-10-27 官方软件帮助及公开契约补证；仅文档，保持稳定 F"
+    },
+    {
+      "flow_id": "F-M038-05",
+      "field": "evidence_ids",
+      "before": "E-TONI-15;E-TONI-05;E-TONI-10",
+      "after": "E-TONI-15;E-TONI-05;E-TONI-10;E-TNCD-14;E-TNCD-16"
+    },
+    {
+      "flow_id": "F-M038-05",
+      "field": "known_branches",
+      "before": "云端内容清单与盒子本地内容版本分离；上传不等于盒子已能离线播。",
+      "after": "云内容清单、账号授权、盒子缓存分开；上传不等于盒子离线可播，拿到实体公仔也不等于拥有编辑权。"
+    },
+    {
+      "flow_id": "F-M038-05",
+      "field": "gaps",
+      "before": "录音权限、取消上传、格式失败、容量超限实际提示、不同家庭权限。",
+      "after": "录音权限、取消上传、格式失败和容量超限提示；授权撤销后旧离线缓存是否仍播放未知。"
+    },
+    {
+      "flow_id": "F-M038-05",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "flow_id": "F-M038-06",
+      "field": "evidence_ids",
+      "before": "E-TONI-16;E-TONI-17;E-TONI-18",
+      "after": "E-TONI-16;E-TONI-17;E-TONI-18;E-TNCD-17;E-TNCD-18"
+    },
+    {
+      "flow_id": "F-M038-06",
+      "field": "known_branches",
+      "before": "改云端章节顺序/成员，盒子同步后才体现。官方不提供把上传内容重新下载备份的入口，应另保留原文件。",
+      "after": "手动顺序与自动新内容置顶是两种规则；UK页给出Live前置条件，US页未同样明确。1代按专页同步，2代仍按自动同步专页；原文件应另留。"
+    },
+    {
+      "flow_id": "F-M038-06",
+      "field": "gaps",
+      "before": "删除确认/撤销、录音导出、旧缓存清理时机、正播放章节被删除后的进度映射。",
+      "after": "Live关闭的确认/旧顺序恢复、两地区帮助对应构建、删除撤销、旧缓存清理及正播章节进度映射未知；Live不是直播。"
+    },
+    {
+      "flow_id": "F-M038-06",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "flow_id": "F-M038-08",
+      "field": "evidence_ids",
+      "before": "E-TONI-09",
+      "after": "E-TONI-09;E-TNCD-05;E-TNCD-07"
+    },
+    {
+      "flow_id": "F-M038-08",
+      "field": "known_branches",
+      "before": "仅可用完整已缓存 Tonie/Tonieplay；不能激活新内容，App 配置不同步，文档列日出闹钟等 app 功能停用。状态需手动解除。",
+      "after": "完整已缓存Tonie/Tonieplay可用；新内容不能激活，App不同步，日出闹钟等App功能被列为停用；需手动恢复在线。"
+    },
+    {
+      "flow_id": "F-M038-08",
+      "field": "gaps",
+      "before": "离线时实体睡眠键可用范围，不能由“app 功能停用”泛推所有本地计时。",
+      "after": "实体睡眠键离线范围、游戏断电/重置后缓存与进度持久性；不能把后续离线游戏推广为首次无网可玩。"
+    },
+    {
+      "flow_id": "F-M038-08",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "flow_id": "F-M038-10",
+      "field": "evidence_ids",
+      "before": "E-TONI-11;E-TONI-07",
+      "after": "E-TONI-11;E-TONI-07;E-TNCD-13"
+    },
+    {
+      "flow_id": "F-M038-10",
+      "field": "known_branches",
+      "before": "计时终止播放/关盒，睡眠灯与播放状态相关；不把这个功能赋给 1 代。",
+      "after": "计时到期关盒；Settings→Bedtime & Sleep Light→Preferences调音量/亮度，计时或闹钟启用时生效。闹钟另见F14。"
+    },
+    {
+      "flow_id": "F-M038-10",
+      "field": "gaps",
+      "before": "计时期间换公仔、重启、离线转换、下一晚记忆范围。",
+      "after": "换公仔、重启、离线转换及下一晚记忆的具体范围未测；灯持续整夜/到计时结束的条件与关盒后灯状态未说明清楚。"
+    },
+    {
+      "flow_id": "F-M038-10",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "flow_id": "F-M038-11",
+      "field": "evidence_ids",
+      "before": "E-TONI-12;E-TONI-13",
+      "after": "E-TONI-12;E-TONI-13;E-TNCD-08;E-TNCD-21;E-TNCD-24"
+    },
+    {
+      "flow_id": "F-M038-11",
+      "field": "known_branches",
+      "before": "一个外观并不唯一映射一个状态；年龄模式影响可用动作。",
+      "after": "年龄模式、灯光、网络和固件分别解释。重启不等于恢复出厂；App中的Factory reset instructions是操作指南入口，不证明远程执行。"
+    },
+    {
+      "flow_id": "F-M038-11",
+      "field": "gaps",
+      "before": "年龄模式切换入口与确认、实体取放/续播的 2 代精确保存规则。",
+      "after": "年龄切换确认、普通Tonie的2代持久续播、每个错误词及重置对云数据/游戏存档的具体范围仍未知；未执行重启/重置。"
+    },
+    {
+      "flow_id": "F-M038-11",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    }
+  ],
+  "before_hashes": {
+    "docs/research/interaction-library/batches/audio-coverage.csv": "0efede8a6a657d35f956884195b297559ac5f8e549f790706d1bef222c37b435",
+    "docs/research/interaction-library/batches/vocab-coverage.csv": "b228df80c8490e6ad5e71464a6928a28b53a07e95f2b4f941963c3d3bd95c299"
+  },
+  "after_hashes": {
+    "docs/research/interaction-library/batches/audio-coverage.csv": "137b1e0b8147b118bc8434c643d93ea863f51129fc09bab1d03d445d0901eba0",
+    "docs/research/interaction-library/batches/vocab-coverage.csv": "014fc22234c9962a6aebc7c9cde89c6072c2d81068c0f3257a334461e861d3f4"
+  }
+}

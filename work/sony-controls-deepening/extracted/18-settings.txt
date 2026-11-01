@@ -1,0 +1,37 @@
+Settings menu in “Music player”
+You can adjust the following settings from the Settings menu in “Music player”.
+To open the Settings menu, tap the menu items in the following order.
+(Options) － [Settings].
+Playback
+Shuffle
+Repeat
+Repeat off
+Repeat all
+Repeat 1 song
+Playback range
+All range
+Selected range
+Play on cassette tape screen
+Artist list display
+Album artist
+Artist
+DSD
+USB output for DSD
+Auto
+DoP
+Filtering during DSD playback
+Slow roll-off
+Sharp roll-off
+Gain during DSD playback
+0 dB
+-3 dB
+Database
+Rebuild database
+Update database
+Folders to be imported
+Other
+Reset settings
+Reset Sound adjustment settings
+About Music player
+The contents of the Help Guide may be subject to change without notice due to updates to the product's specifications.
+Go to Page Top

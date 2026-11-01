@@ -1,0 +1,23 @@
+[
+  {
+    "name": "opinion",
+    "url": "https://cdn.mos.cms.futurecdn.net/7gbZM5XuwhYMFApAij22L9/339-LHP.pdf",
+    "status": 200,
+    "bytes": 104650,
+    "sha256": "13eddb2a4871848542c4fb8991222d2606bbfee321e91a4f81a6f6af2b812b88"
+  },
+  {
+    "name": "trivia",
+    "url": "https://cdn.mos.cms.futurecdn.net/92ViDAmU8DEpxiK4n3nv37/WJS320.24_25_how_to_24.pdf",
+    "status": 200,
+    "bytes": 145274,
+    "sha256": "b6916a4b0baeb2ab9173b91a72fdd169a4006a7b08f3fc7cb983c9a8166ec7b1"
+  },
+  {
+    "name": "scavenger",
+    "url": "https://cdn.mos.cms.futurecdn.net/BApd4mobfZY83iRc4LqmCn/328howto_24.pdf",
+    "status": 200,
+    "bytes": 172327,
+    "sha256": "edb41b1d3cd32f85cb4f04264051403cb95a7250f540ea8e5e9446f2d84de979"
+  }
+]

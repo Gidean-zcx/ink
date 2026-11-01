@@ -1,0 +1,439 @@
+
+
+Player
+HiBy X1600 R PlayerOn this page
+HiBy X1600 R Player
+Description​
+
+The following applies to the HiBy R Series X1600E chip platform player, including but not limited to the following models:
+R Series:
+HiBy R3PROII
+
+HiBy R3II(2025)
+
+HiBy R1
+
+System​
+
+
+How to upgrade the player?​
+
+
+Network upgrade: System settings -》 System upgrade -》 Network upgrade
+
+TF/MicroSD card upgrade (can be turned on): Copy the downloaded upt file to the root directory of the TF/MicroSD card (player connected to the computer), on the player: System Settings -》 System Upgrade -》 TF/MicroSD card upgrade
+
+TF/MicroSD card upgrade (cannot boot): Copy the downloaded upt file to the root directory of the TF/MicroSD card (using a card reader), insert the TF/MicroSD card into the player, press and hold the upgrade key to turn on the computer (the specific models are different), and the machine enters the upgrade interface to upgrade
+
+
+
+What file formats are supported for TF/MicroSD cards?​
+
+
+FAT32 、 Exfat 、 NTFS ；
+
+
+
+What capacity is the maximum supported TF/MicroSD card?​
+
+
+TF cards that support up to 2T;
+
+
+Power Supply​
+
+
+Sleep shutdown definition​
+
+
+The sleep shutdown timing point is calculated from when the sleep shutdown is turned on;
+
+After the sleep shutdown is turned on, if the setting value is 10 minutes, the formatting and updating the media library are operated within these 10 minutes. The shutdown time will be calculated again and will automatically shut down after 10 minutes.
+
+Restart after sleep shutdown, and save the original set value during sleep time; the sleep switch state is off;
+
+After turning on sleep, restart after manually shutting down the computer, and save the original set value of the sleep time; the sleep switch state is off;
+
+Regardless of whether the charger is plugged in or not, the time will not be recalculated under any conditions after turning on the sleep shutdown time (including the operation of squeezing or adding or decreasing volume, plugging and unplugging the TF card, plugging and unplugging the charger, etc.), and will automatically shut down after the setting value;
+
+When plugging in the charger, set to shut down after sleep (1. When the battery is not full, directly enter the charging interface after shutting down. 2. When the battery is full, turn off the black screen directly);
+
+The computer connects USB and sets to shut down after sleep after shutting down the computer without responding to sleep;
+
+
+
+Power saving shutdown definition​
+
+
+Restart after power saving and power saving shutdown time and power saving switch save the original set value;
+
+The power-saving shutdown timing point is calculated from when the machine stops any operation (any operations include: playing music, adding or decreasing volume, key operation, playing music, etc.);
+
+When plugging in the charger, set the power saving and shutdown (1. When the battery is not full, directly enter the charging interface after shutting down. 2. When the battery is full, the screen will be turned off directly;
+
+The computer connects USB and sets power saving and shutdown after setting power saving and shutdown without responding to power saving;
+
+
+Audio​
+
+
+Album cover supports specifications?​
+
+
+bmp 2048*2048
+
+jpg Unlimited
+
+png 1024*1024
+
+
+
+External cover specification priority?​
+
+
+Built-in cover;
+
+Pictures with the same name as the song in the folder of the song will be displayed in the order of priority in the format;
+
+In the folder of the song, the picture with the prefix of the picture with the "front" prefix in front of the picture is displayed in the order of format;
+
+In the folder of the song, the picture with the prefix of the picture with the prefix of "cover" is displayed in the order of formatting;
+
+In the folder of the song, the picture with the prefix of the picture with the prefix of "folder" is displayed in the order of format;
+
+Supported formats are ("bmp", "jpg", "png")
+
+
+
+Is there a limit on the number of files?​
+
+
+The maximum limit for files without CUE is 5800, and when there is CUE, the maximum limit is 6200;
+
+8000 heads are still relatively easy to cause insufficient memory, so the scope is further narrowed;
+
+
+
+Song Meta Information Priority​
+
+
+ID3V2 > APEV2 > ALL；
+
+Windows can use mp3tag to edit meta information;
+
+
+
+Limit the number of recent playlist files saved​
+
+
+Only 50 recent songs are saved under the recent playlist;
+
+
+
+Description of the limit number of internal playlists​
+
+
+There is no limit on the number of songs under the new playlist and the list (unlimited)
+
+Unlimited number of my favorites
+
+
+
+What music formats does the X1600 platform support?​
+
+
+mp3\wav\flac\ape\wma\ogg\m4a\aac\mp2\aif\aiff
+
+dsf\dff\iso(normal, non-dst)
+
+
+
+Which music formats does the X1600 platform CUE support?​
+
+
+ape\flac\wav\m4a\mp3
+
+
+
+Does the X1600 platform support DST music files?​
+
+
+The X1600 platform does not support ISO (DST) and DST music files
+
+
+
+What are the track order definitions under each list of the X1600 platform?​
+
+
+
+
+All list (including folder track list)/artist/style:
+
+
+First, sort the numbers in order
+
+Then the first letter (capital in front) A/B...
+
+Pinyin first letter
+
+CUE audio track (Special characters are inserted into the list in the character order of the ascii code table)
+
+
+
+
+
+Folder list (folder name) sort:
+
+
+Number size order
+
+Letters (capital in front)
+
+Pinyin first letter (special characters are inserted into the list in the character order of the ascii code table)
+
+
+
+
+
+Album title sort:
+
+
+Sort by album ID first
+
+If there is no album ID, sort it in order of numerical size
+
+The first letter (capital in front) A/B...
+
+Pinyin first letter
+
+
+
+
+
+Artist name and style name sort:
+
+
+First, sort the numbers in order
+
+Then the first letter (capital in front) A/B...
+
+Pinyin first letter
+
+
+
+
+
+What should I do if there are garbled words in songs and lyrics? Solution and reasons?​
+
+
+The inconsistency between the song information encoding and the selected language leads to errors in string parsing;
+
+The solution is that the user re-edits the song information or lyrics information with mp3tag and uses local encoding to save the song information;
+
+
+
+What do the error prompts -5, -9, -11, -12, -13 mean?​
+
+
+SAE_USED -5, there is an exception in the code part. You can contact the developer (ringsd@hiby.com)
+
+SAE_FORMAT -9, file format error
+
+SAE_RANGE -11, file sampling rate exceeds the support range
+
+SAE_NOTSUPPORT-12, file not supported
+
+SAE_IO -13, possible reasons: the file format does not support (maybe some features), the file is corrupted, the file is encrypted, the output device does not support (USB DAC or BT playback), network exceptions (communication exceptions with the server side, such as: FM, TIDAL, Qobuz), etc., or other types of problems can be fed back to customer service.
+
+
+
+Under what circumstances will seamless play take effect?​
+
+
+Seamless playback is mainly used to solve the problem that the original single-track file is cut into multiple split files, resulting in song pauses or gaps in the middle;
+
+PCM type music supports seamlessness, but the same samples must be switched to achieve seamless effects;
+
+The seamless play option is invalid for DSD format;
+
+
+
+Does Bluetooth car support song information?​
+
+
+As the transmitting end, the X1600 platform player will send song title, artist, album, style, duration, current playback progress and other information. If the receiving end processes the data on the transmitting end, it can be displayed normally. If there is no processing, then it will not be displayed;
+
+Lyric display is not supported;
+
+
+
+Does EQ (equalizer) support range for sampling rate?​
+
+
+PCM supports up to 48kHz;
+
+DSD/MQA songs are not supported;
+
+Both digital output and analog output are effective;
+
+
+
+MSEB supports range for sampling rate?​
+
+
+PCM supports up to 384kHz;
+
+DSD/MQA songs are not supported;
+
+Both digital output and analog output are effective;
+
+
+
+DSD output mode (PCM\DoP\Native) function definition​
+
+
+When the audio output is balanced (BAL)\single-ended (PO)\LineOut(LO), the DSD output mode selection cannot be performed. This function is invalid and output according to the actual situation;
+
+When the audio output is Bluetooth, DSD output mode cannot be selected. This function is invalid and is converted to PCM output;
+
+When the audio output is SPDIF, DSD output mode selection can be performed
+Select PCM and output according to the sampling rate 88.2kHz
+Select DoP or Native. When playing DSD64, it will be output in DoP mode, and the output sampling rate is 2.8 MHz;
+Select DoP or Native. When playing DSD128 and DSD256, they are converted to PCM output, with an output sampling rate of 88.2 kHz.
+
+When the audio output is USB Audio Out, DSD output mode selection can be performed
+Select PCM, press PCM to output, the maximum support sampling rate is 384kHz
+Select DoP, press DoP to output, and support DSD256 (11.2MHz) at most (condition: The decoding device that needs to be accessed supports DSD decoding. If the device does not support it, the playback fails)
+Select Native, press Native to output, and support DSD256 (11.2MHz) at most (condition: The decoding and decoding device that needs to be accessed supports DSD decoding. If the device does not support it, the playback fails)
+
+
+
+Qobuz reported 400 error?​
+
+
+Time Setting Set the correct date and 24 hours time system
+
+
+
+USB DAC input Bluetooth output, matter description:​
+
+
+The sampling rate support is limited by Bluetooth output coding: Bluetooth SBC coding (44.1/48) LDAC coding (44.1/48/88.2/96). (If it exceeds it, there will be no output)
+
+
+Other​
+
+
+How to set up and add dynamic covers?​
+
+
+Settings portal: System Settings -》 Screensaver Settings -》 Dynamic Cover
+
+Create a new screensavers folder in the MicroSD(TF) directory (casing is required for directory) and place the picture in this directory:
+
+
+Support jpg and png formats
+
+The resolution is recommended not to exceed 1024*1024
+
+The number of pictures should not exceed 16
+
+
+
+
+
+How to add a custom network station?​
+Method 1
+
+Create new text with UTF8 encoding in the root directory of MicroSD(TF) cardradio.txt
+
+Open text Fill in the station name and URL, name and URL in English characters,Split, one radio station per line, for example:
+中国之声, http://ngcdn001.cnr.cn/live/zgzs/index.m3u8
+音乐之声, http://ngcdn003.cnr.cn/live/yyzs/index.m3u8
+
+
+
+Method 2
+Thanks to the reddit userdough10, original connection referenceRefer
+
+Select the desired radio station on (https://customradio.dough10.me)
+
+Click Download, and the browser will download a radio.txt file
+
+Copy radio.txt to the MicroSD(TF) card root directory. If there are already some radio stations, you can append the downloaded radio.txt content to the original radio.txt)
+
+
+
+Import and export playlist​
+
+The player takes a b c as the root directory of the disk, for example:
+
+
+a:\\Indicates the root directory of the first MicroSD card (TF card);
+
+b:\\Indicates the root directory of the second MicroSD card (TF card);
+
+c:\\Represents the root directory of the OTG;
+
+
+The imported and exported m3u files are stored on MicroSD card (TF card)playlist_dataUnder the folder.
+
+
+m3u parsing processing logic​
+
+The player takes a b c as the root directory of the disk, for example:
+
+
+a:\\Indicates the root directory of the first MicroSD card (TF card);
+
+b:\\Indicates the root directory of the second MicroSD card (TF card);
+
+c:\\Represents the root directory of the OTG;
+
+
+m3u file rules
+
+
+File format supports m3u and m3u8
+
+File encoding supports ASCII, Unicode16 large and small end, UTF-8 With BOM, UTF-8 Without BOM, and UTF-8 With BOM is recommended.
+
+CUE and ISO tracking is not supported, singles are supported
+
+Support relative paths and absolute paths, and relative paths are recommended.
+
+absolute path
+Since the player uses a b c as the root directory of the disk, when using an absolute path, it must bea:、b:、c:Such a prefix
+
+For example, an existing m3u file王心凌-爱你.m3u, the song is placed ina:\m3u\hiby\music\, then this m3u file is placed in any position and will be searched during playbacka:\m3u\hiby\music\*The corresponding tracks under this path.
+
+王心凌-爱你.m3uas follows:
+a:\m3u\hiby\music\王心凌 - 心心相印.flac
+a:\m3u\hiby\music\王心凌 - 恋爱节奏.flac
+a:\m3u\hiby\music\王心凌 - 抱着你哭.flac
+a:\m3u\hiby\music\王心凌 - 明天见.flac
+a:\m3u\hiby\music\王心凌 - 月光.flac
+a:\m3u\hiby\music\王心凌 - 爱你.flac
+a:\m3u\hiby\music\王心凌 - 爱的套餐.flac
+a:\m3u\hiby\music\王心凌 - 第一次爱的人.flac
+a:\m3u\hiby\music\王心凌 - 糖罐子.flac
+a:\m3u\hiby\music\王心凌 - 羽毛.flac
+
+relative path
+When using the relative path, use the folder where the current m3u file is located as the starting point to find the corresponding songs in the m3u file.
+
+For example, an existing m3u file王心凌-爱你.m3u, the song is placed ina:\m3u\hiby\music\爱你, then only this m3u file is placed ina:\m3u\hiby\music\爱你It can only be found during playbacka:\m3u\hiby\music\爱你The corresponding tracks under this path. Placed in any other location cannot be found correctly.
+
+王心凌-爱你.m3uas follows:
+王心凌 - 心心相印.flac
+王心凌 - 恋爱节奏.flac
+王心凌 - 抱着你哭.flac
+王心凌 - 明天见.flac
+王心凌 - 月光.flac
+王心凌 - 爱你.flac
+王心凌 - 爱的套餐.flac
+王心凌 - 第一次爱的人.flac
+王心凌 - 糖罐子.flac
+王心凌 - 羽毛.flac
+
+

@@ -1,0 +1,15 @@
+22. How to use the FiiO Cast function in JM21?
+You could refer to the video instruction for M33 for help:
+How to use the FiiO Cast function in JM21?
+1.Download and install the FiiO Control app from the app store in the mobile phone.
+2.Ensure your phone and JM21 are connected to the same local network.
+3.On the JM21 device, open the 'FiiO Cast' App and tap Start. (To view the IP address or QR code, tap "Click for more ways to connect".
+4. Open the installed FiiO Control app on your phone.Tap Add New Device, then select Player. Search for the JM21's IP address and tap to connect. Alternatively, scan the QR code displayed in Step 3 to establish the connection.
+JM21 remote connection failures solution:
+If you experience connection issues after previously successful remote control usage, please follow these steps:
+1.Verify whether the network connection between your phone and JM21 has changed.
+2.Confirm that the remote control background service hasn't been cleared.
+3.Check if the IP address in FiiO Cast has changed.
+4.If the background service is running normally and the IP address remains unchanged but reconnection still fails:Delete the previously added device from your phone;Completely close and restart the FiiO Cast on JM21; Re-add the device through FiiO Control app on your phone.
+5.If all above steps fail to resolve the issue, please contact our customer support.
+ꄘ

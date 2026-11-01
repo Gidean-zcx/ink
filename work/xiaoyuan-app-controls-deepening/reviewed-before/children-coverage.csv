@@ -1,0 +1,18 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M027-01,M-027,薄弱点诊学练路线,D1,E-IFLYL-01;E-IFLYL-02,学段科目限制,一道题的入口提示重试结算与恢复,not_observed,false,cases/M-027-iflytek-learning.md,2026-10-26
+F-M027-02,M-027,错题文件打印,D2,E-IFLYL-04,自动发现或手动IP添加,型号范围与打印失败取消重复任务,not_observed,false,cases/M-027-iflytek-learning.md,2026-10-26
+F-M027-03,M-027,旧型号家庭孩子角色,D2,E-IFLYL-05;E-ILD-08,旧四型号管理员与普通成员；相同桌面可有不同应用许可；退出家庭与删除孩子不同,T30规则未知；迁移删除说明冲突；离线生效与权限冲突未查,not_observed,false,cases/M-027-iflytek-learning.md,2026-10-26
+F-M028-01,M-028,检查后解释与错题整理,D2,E-XYAI-02;E-XYAI-03,解析会员边界,拍照识别纠错提示和再练全链,not_observed,false,cases/M-028-xiaoyuan-ai.md,2026-10-26
+F-M028-02,M-028,指定知识点手写练习,D2,E-XYAI-03;E-XYCD-01;E-XYCD-02,历史口算局部补证；其他题型不套用,当前构建、识别误判修订、保存粒度,static_reference_only,false,cases/M-028-xiaoyuan-ai.md,2026-10-26
+F-M028-03,M-028,AI追问与单条反馈,D2,E-XYAI-04,文本语音图像权限与历史,生成失败重试删除和恢复,not_observed,false,cases/M-028-xiaoyuan-ai.md,2026-10-26
+F-M028-04,M-028,PK赛季任务与装扮,D1,E-XYAI-05,同年级知识点与赛季活动,结算奖励数值退出与掉线,not_observed,false,cases/M-028-xiaoyuan-ai.md,2026-10-26
+F-M029-01,M-029,单字到子集故事内容循环,D1,E-IHUM-01;E-IHUM-02;E-IHD-02;E-IHCD-01;E-IHCD-03,当前五步声明；2018版练界面仅静态选项/导航；作者示范建议不当实现,现行选课、错答提示/重试、奖励/复习结算、故事解锁及退出恢复,static_reference_only,false,cases/M-029-ihuman.md,2026-10-26
+F-M029-02,M-029,调节游戏和跳过,D2,E-IHUM-02;E-IHCD-01;E-IHCD-02,2020官方回复关闭游戏与禁止跳过；3.0.1静态设置容器；重置进度回复仅表示考虑,现行入口/验证失败、教学开关保存与课内生效、按孩子分别配置,static_official_images_only,false,cases/M-029-ihuman.md,2026-10-26
+F-M029-03,M-029,获取档案成长报告副本,D2,E-IHUM-03;E-IHUM-04;E-IHCD-02,登录与相册权限；官方设置图显示3.0.1及隐私中心进入按钮,平台与图日期、拒绝权限、图片导出失败及结构化进度恢复,static_official_images_only,false,cases/M-029-ihuman.md,2026-10-26
+F-M031-01,M-031,点击式场景任务,D1,E-DUOA-01;E-DAD-02,环境和角色交互,完整一集目标达成退出恢复,static_official_images_only,false,cases/M-031-duolingo-adventures.md,2026-10-26
+F-M031-02,M-031,情境澄清反馈,D2,E-DUOA-01,角色对错误澄清,提示层数扣分重试与最终失败,not_observed,false,cases/M-031-duolingo-adventures.md,2026-10-26
+F-M031-03,M-031,Speaking Adventures口语场景,D1,E-DUOA-02;E-DAD-03,免费付费用户与课程场景,构建课程儿童范围及识别判定,static_official_images_only,false,cases/M-031-duolingo-adventures.md,2026-10-26
+F-M050-01,M-050,拼图构数与金币解锁,D2,E-DRGN-02;E-DRGN-03;E-DBCD-01,旧p5可见数字6空槽、构件及未完成图；四表示与金币用途沿旧指南。教材Quiz气泡不当内置出题或判分。,错放/提示/撤销、最后落位到结算、金币数值/重玩收益与恢复仍未核；静态白线不当动作轨迹。,static_reference_only,false,cases/M-050-dragonbox.md,2026-10-27
+F-M050-02,M-050,梯子目标数量与障碍,D2,E-DRGN-02;E-DBCD-01,旧p8以数轴、70+10+角色和高度说明数量关系；1–100为指南教学范围，非当前App硬上限。,碰撞、生命、重试、成功结算及是否保留奖励；四教学目标不当四关或学习成效。,static_reference_only,false,cases/M-050-dragonbox.md,2026-10-27
+F-M050-03,M-050,家庭档案创建与管理,D2,E-DRGN-04;E-DBCD-03,Numbers外部管理分两App：Kids的Parents→成人年龄→Profiles→头像/铅笔；Kahoot先激活成人，长按孩子头像→Edit profile→Save或底部Delete Profile。,最终删除确认/保留期/撤销、Numbers存档同步和数据删除范围；Kids免费一档案与旧学习App六档案按计划/入口分开。,not_observed,false,cases/M-050-dragonbox.md,2026-10-27
+F-M050-04,M-050,跨应用家长活动报告,D2,E-DRGN-05,Profile→Child Activity Dashboard→选孩子；本周/上周、累计主题进度、推荐；学习时间按日更新，免费总时长与套餐详情分开。,Numbers具体准确率/每步事件字段、实时性与精确续关；未看Completed Activities配图，FAQ Settings与步骤Profile层级不同。,not_observed,false,cases/M-050-dragonbox.md,2026-10-27

@@ -1,0 +1,587 @@
+[
+  {
+    "manual_item": "Safety Precautions",
+    "printed_page": "5",
+    "pdf_page": "5",
+    "checked_scope": "目录定位；正文未作任务分析",
+    "flow_ids": "",
+    "evidence_ids": "E-PBCD-01",
+    "gap": "完整操作、确认/取消、错误、数据保留与恢复未逐项闭环。"
+  },
+  {
+    "manual_item": "Appearance",
+    "printed_page": "9",
+    "pdf_page": "9",
+    "checked_scope": "目录定位；正文未作任务分析",
+    "flow_ids": "",
+    "evidence_ids": "E-PBCD-01",
+    "gap": "完整操作、确认/取消、错误、数据保留与恢复未逐项闭环。"
+  },
+  {
+    "manual_item": "Technical Specifications",
+    "printed_page": "10",
+    "pdf_page": "10",
+    "checked_scope": "目录定位；正文未作任务分析",
+    "flow_ids": "",
+    "evidence_ids": "E-PBCD-01",
+    "gap": "完整操作、确认/取消、错误、数据保留与恢复未逐项闭环。"
+  },
+  {
+    "manual_item": "Getting Started",
+    "printed_page": "11",
+    "pdf_page": "11",
+    "checked_scope": "已读章节/功能目录；未单列完整任务",
+    "flow_ids": "",
+    "evidence_ids": "E-PBCD-01",
+    "gap": "完整操作、确认/取消、错误、数据保留与恢复未逐项闭环。"
+  },
+  {
+    "manual_item": "Charging Battery",
+    "printed_page": "11",
+    "pdf_page": "11",
+    "checked_scope": "目录定位；正文未作任务分析",
+    "flow_ids": "",
+    "evidence_ids": "E-PBCD-01",
+    "gap": "完整操作、确认/取消、错误、数据保留与恢复未逐项闭环。"
+  },
+  {
+    "manual_item": "Device management",
+    "printed_page": "12",
+    "pdf_page": "12",
+    "checked_scope": "D2对应任务/仍有缺口",
+    "flow_ids": "F-M003-01",
+    "evidence_ids": "E-PBCD-01",
+    "gap": "完整操作、确认/取消、错误、数据保留与恢复未逐项闭环。"
+  },
+  {
+    "manual_item": "Main menu overview",
+    "printed_page": "13",
+    "pdf_page": "13",
+    "checked_scope": "D2对应任务/仍有缺口",
+    "flow_ids": "F-M003-01",
+    "evidence_ids": "E-PBCD-01",
+    "gap": "13图含Settings，21默认文字含Notes；不自行统一。"
+  },
+  {
+    "manual_item": "Gestures",
+    "printed_page": "15",
+    "pdf_page": "15",
+    "checked_scope": "已读章节/功能目录；未单列完整任务",
+    "flow_ids": "",
+    "evidence_ids": "E-PBCD-01",
+    "gap": "完整操作、确认/取消、错误、数据保留与恢复未逐项闭环。"
+  },
+  {
+    "manual_item": "Working with On-Screen Keyboard",
+    "printed_page": "16",
+    "pdf_page": "16",
+    "checked_scope": "已读章节/功能目录；未单列完整任务",
+    "flow_ids": "",
+    "evidence_ids": "E-PBCD-01",
+    "gap": "完整操作、确认/取消、错误、数据保留与恢复未逐项闭环。"
+  },
+  {
+    "manual_item": "Brightness",
+    "printed_page": "17",
+    "pdf_page": "17",
+    "checked_scope": "已读章节/功能目录；未单列完整任务",
+    "flow_ids": "",
+    "evidence_ids": "E-PBCD-01",
+    "gap": "完整操作、确认/取消、错误、数据保留与恢复未逐项闭环。"
+  },
+  {
+    "manual_item": "Connecting to the Internet",
+    "printed_page": "18",
+    "pdf_page": "18",
+    "checked_scope": "已读章节/功能目录；未单列完整任务",
+    "flow_ids": "",
+    "evidence_ids": "E-PBCD-01",
+    "gap": "完整操作、确认/取消、错误、数据保留与恢复未逐项闭环。"
+  },
+  {
+    "manual_item": "Configuring Bluetooth pairing",
+    "printed_page": "19",
+    "pdf_page": "19",
+    "checked_scope": "D2对应任务/仍有缺口",
+    "flow_ids": "F-M003-09",
+    "evidence_ids": "E-PBCD-01",
+    "gap": "完整操作、确认/取消、错误、数据保留与恢复未逐项闭环。"
+  },
+  {
+    "manual_item": "Applications",
+    "printed_page": "21",
+    "pdf_page": "21",
+    "checked_scope": "D2对应任务/仍有缺口",
+    "flow_ids": "F-M003-01",
+    "evidence_ids": "E-PBCD-01",
+    "gap": "完整操作、确认/取消、错误、数据保留与恢复未逐项闭环。"
+  },
+  {
+    "manual_item": "Library [Applications]",
+    "printed_page": "22",
+    "pdf_page": "22",
+    "checked_scope": "已读章节/功能目录；未单列完整任务",
+    "flow_ids": "",
+    "evidence_ids": "E-PBCD-01",
+    "gap": "完整操作、确认/取消、错误、数据保留与恢复未逐项闭环。"
+  },
+  {
+    "manual_item": "Store",
+    "printed_page": "22",
+    "pdf_page": "22",
+    "checked_scope": "已读章节/功能目录；未单列完整任务",
+    "flow_ids": "",
+    "evidence_ids": "E-PBCD-01",
+    "gap": "22–23已读账户/下载目录；未购买或登录。"
+  },
+  {
+    "manual_item": "Browser",
+    "printed_page": "24",
+    "pdf_page": "24",
+    "checked_scope": "已读章节/功能目录；未单列完整任务",
+    "flow_ids": "",
+    "evidence_ids": "E-PBCD-01",
+    "gap": "24–25菜单/退出已读；RSS复用浏览器，未访问真实订阅。"
+  },
+  {
+    "manual_item": "Notes",
+    "printed_page": "25",
+    "pdf_page": "25",
+    "checked_scope": "D2对应任务/仍有缺口",
+    "flow_ids": "F-M003-03",
+    "evidence_ids": "E-PBCD-01",
+    "gap": "扩展名、import入口和回导可编辑性未给出；本地评论编辑与导出分开。"
+  },
+  {
+    "manual_item": "General",
+    "printed_page": "28",
+    "pdf_page": "28",
+    "checked_scope": "已读章节/功能目录；未单列完整任务",
+    "flow_ids": "",
+    "evidence_ids": "E-PBCD-01",
+    "gap": "完整操作、确认/取消、错误、数据保留与恢复未逐项闭环。"
+  },
+  {
+    "manual_item": "Calendar & Clock",
+    "printed_page": "28",
+    "pdf_page": "28",
+    "checked_scope": "已读章节/功能目录；未单列完整任务",
+    "flow_ids": "",
+    "evidence_ids": "E-PBCD-01",
+    "gap": "完整操作、确认/取消、错误、数据保留与恢复未逐项闭环。"
+  },
+  {
+    "manual_item": "Calculator",
+    "printed_page": "28",
+    "pdf_page": "28",
+    "checked_scope": "已读章节/功能目录；未单列完整任务",
+    "flow_ids": "",
+    "evidence_ids": "E-PBCD-01",
+    "gap": "完整操作、确认/取消、错误、数据保留与恢复未逐项闭环。"
+  },
+  {
+    "manual_item": "Gallery",
+    "printed_page": "28",
+    "pdf_page": "28",
+    "checked_scope": "已读章节/功能目录；未单列完整任务",
+    "flow_ids": "",
+    "evidence_ids": "E-PBCD-01",
+    "gap": "完整操作、确认/取消、错误、数据保留与恢复未逐项闭环。"
+  },
+  {
+    "manual_item": "Photo Frame",
+    "printed_page": "28",
+    "pdf_page": "28",
+    "checked_scope": "已读章节/功能目录；未单列完整任务",
+    "flow_ids": "",
+    "evidence_ids": "E-PBCD-01",
+    "gap": "完整操作、确认/取消、错误、数据保留与恢复未逐项闭环。"
+  },
+  {
+    "manual_item": "RSS News",
+    "printed_page": "30",
+    "pdf_page": "30",
+    "checked_scope": "D2对应任务/仍有缺口",
+    "flow_ids": "F-M003-08",
+    "evidence_ids": "E-PBCD-01",
+    "gap": "失败URL、认证、取消/断网、重复更新、删源与档案范围未知。"
+  },
+  {
+    "manual_item": "Music Player",
+    "printed_page": "30",
+    "pdf_page": "30",
+    "checked_scope": "已读章节/功能目录；未单列完整任务",
+    "flow_ids": "",
+    "evidence_ids": "E-PBCD-01",
+    "gap": "31控制页已读；32移出列表与Remove from the device图文冲突。"
+  },
+  {
+    "manual_item": "Audiobooks",
+    "printed_page": "32",
+    "pdf_page": "32",
+    "checked_scope": "D2对应任务/仍有缺口",
+    "flow_ids": "F-M003-07",
+    "evidence_ids": "E-PBCD-01",
+    "gap": "Contents/Bookmarks只有部分入口；时间书签全链、章节和恢复未知。"
+  },
+  {
+    "manual_item": "PocketBook x Libby",
+    "printed_page": "34",
+    "pdf_page": "34",
+    "checked_scope": "已读章节/功能目录；未单列完整任务",
+    "flow_ids": "",
+    "evidence_ids": "E-PBCD-01",
+    "gap": "34–39已读；卡登录/借阅/到期条件，仅目录与规则，不新增流程。"
+  },
+  {
+    "manual_item": "Games",
+    "printed_page": "40",
+    "pdf_page": "40",
+    "checked_scope": "已读章节/功能目录；未单列完整任务",
+    "flow_ids": "",
+    "evidence_ids": "E-PBCD-01",
+    "gap": "完整操作、确认/取消、错误、数据保留与恢复未逐项闭环。"
+  },
+  {
+    "manual_item": "Klondike",
+    "printed_page": "40",
+    "pdf_page": "40",
+    "checked_scope": "已读章节/功能目录；未单列完整任务",
+    "flow_ids": "",
+    "evidence_ids": "E-PBCD-01",
+    "gap": "完整操作、确认/取消、错误、数据保留与恢复未逐项闭环。"
+  },
+  {
+    "manual_item": "Sudoku",
+    "printed_page": "40",
+    "pdf_page": "40",
+    "checked_scope": "已读章节/功能目录；未单列完整任务",
+    "flow_ids": "",
+    "evidence_ids": "E-PBCD-01",
+    "gap": "完整操作、确认/取消、错误、数据保留与恢复未逐项闭环。"
+  },
+  {
+    "manual_item": "Chess",
+    "printed_page": "40",
+    "pdf_page": "40",
+    "checked_scope": "已读章节/功能目录；未单列完整任务",
+    "flow_ids": "",
+    "evidence_ids": "E-PBCD-01",
+    "gap": "完整操作、确认/取消、错误、数据保留与恢复未逐项闭环。"
+  },
+  {
+    "manual_item": "Scribble",
+    "printed_page": "40",
+    "pdf_page": "40",
+    "checked_scope": "已读章节/功能目录；未单列完整任务",
+    "flow_ids": "",
+    "evidence_ids": "E-PBCD-01",
+    "gap": "40–41保存My Pictures/可编辑图形笔记；不能外推导出回导。"
+  },
+  {
+    "manual_item": "Coloring",
+    "printed_page": "41",
+    "pdf_page": "41",
+    "checked_scope": "已读章节/功能目录；未单列完整任务",
+    "flow_ids": "",
+    "evidence_ids": "E-PBCD-01",
+    "gap": "完整操作、确认/取消、错误、数据保留与恢复未逐项闭环。"
+  },
+  {
+    "manual_item": "Services",
+    "printed_page": "41",
+    "pdf_page": "41",
+    "checked_scope": "已读章节/功能目录；未单列完整任务",
+    "flow_ids": "",
+    "evidence_ids": "E-PBCD-01",
+    "gap": "完整操作、确认/取消、错误、数据保留与恢复未逐项闭环。"
+  },
+  {
+    "manual_item": "Dropbox PocketBook",
+    "printed_page": "41",
+    "pdf_page": "41",
+    "checked_scope": "已读章节/功能目录；未单列完整任务",
+    "flow_ids": "",
+    "evidence_ids": "E-PBCD-01",
+    "gap": "41–42、71：目录范围与自动/手动同步已读；权限和删除冲突未验证。"
+  },
+  {
+    "manual_item": "Send-to-PocketBook",
+    "printed_page": "43",
+    "pdf_page": "43",
+    "checked_scope": "D2对应任务/仍有缺口",
+    "flow_ids": "F-M003-06",
+    "evidence_ids": "E-PBCD-01",
+    "gap": "43/44默认目录名不一致，实际Download folder待核；未发送。"
+  },
+  {
+    "manual_item": "Reading Books",
+    "printed_page": "46",
+    "pdf_page": "46",
+    "checked_scope": "已读章节/功能目录；未单列完整任务",
+    "flow_ids": "",
+    "evidence_ids": "E-PBCD-01",
+    "gap": "完整操作、确认/取消、错误、数据保留与恢复未逐项闭环。"
+  },
+  {
+    "manual_item": "Gestures in Reading Mode",
+    "printed_page": "47",
+    "pdf_page": "47",
+    "checked_scope": "已读章节/功能目录；未单列完整任务",
+    "flow_ids": "",
+    "evidence_ids": "E-PBCD-01",
+    "gap": "完整操作、确认/取消、错误、数据保留与恢复未逐项闭环。"
+  },
+  {
+    "manual_item": "Reading Menu",
+    "printed_page": "48",
+    "pdf_page": "48",
+    "checked_scope": "已读章节/功能目录；未单列完整任务",
+    "flow_ids": "",
+    "evidence_ids": "E-PBCD-01",
+    "gap": "完整操作、确认/取消、错误、数据保留与恢复未逐项闭环。"
+  },
+  {
+    "manual_item": "Adjust SMARTlight and frontlight Brightness in reading mode",
+    "printed_page": "49",
+    "pdf_page": "49",
+    "checked_scope": "已读章节/功能目录；未单列完整任务",
+    "flow_ids": "",
+    "evidence_ids": "E-PBCD-01",
+    "gap": "完整操作、确认/取消、错误、数据保留与恢复未逐项闭环。"
+  },
+  {
+    "manual_item": "Contents",
+    "printed_page": "49",
+    "pdf_page": "49",
+    "checked_scope": "已读章节/功能目录；未单列完整任务",
+    "flow_ids": "",
+    "evidence_ids": "E-PBCD-01",
+    "gap": "完整操作、确认/取消、错误、数据保留与恢复未逐项闭环。"
+  },
+  {
+    "manual_item": "Bookmarks",
+    "printed_page": "50",
+    "pdf_page": "50",
+    "checked_scope": "已读章节/功能目录；未单列完整任务",
+    "flow_ids": "",
+    "evidence_ids": "E-PBCD-01",
+    "gap": "完整操作、确认/取消、错误、数据保留与恢复未逐项闭环。"
+  },
+  {
+    "manual_item": "Dictionary",
+    "printed_page": "50",
+    "pdf_page": "50",
+    "checked_scope": "D2对应任务/仍有缺口",
+    "flow_ids": "F-M003-02",
+    "evidence_ids": "E-PBCD-01",
+    "gap": "完整操作、确认/取消、错误、数据保留与恢复未逐项闭环。"
+  },
+  {
+    "manual_item": "Note",
+    "printed_page": "53",
+    "pdf_page": "53",
+    "checked_scope": "D2对应任务/仍有缺口",
+    "flow_ids": "F-M003-03",
+    "evidence_ids": "E-PBCD-01",
+    "gap": "完整操作、确认/取消、错误、数据保留与恢复未逐项闭环。"
+  },
+  {
+    "manual_item": "Voice",
+    "printed_page": "55",
+    "pdf_page": "55",
+    "checked_scope": "D2对应任务/仍有缺口",
+    "flow_ids": "F-M003-05",
+    "evidence_ids": "E-PBCD-01",
+    "gap": "55控制与自动翻页明确；后台/退出恢复、格式顺序未知。"
+  },
+  {
+    "manual_item": "Settings [Reading Books]",
+    "printed_page": "56",
+    "pdf_page": "56",
+    "checked_scope": "已读章节/功能目录；未单列完整任务",
+    "flow_ids": "",
+    "evidence_ids": "E-PBCD-01",
+    "gap": "完整操作、确认/取消、错误、数据保留与恢复未逐项闭环。"
+  },
+  {
+    "manual_item": "Following Links",
+    "printed_page": "59",
+    "pdf_page": "59",
+    "checked_scope": "已读章节/功能目录；未单列完整任务",
+    "flow_ids": "",
+    "evidence_ids": "E-PBCD-01",
+    "gap": "完整操作、确认/取消、错误、数据保留与恢复未逐项闭环。"
+  },
+  {
+    "manual_item": "Loading Files",
+    "printed_page": "59",
+    "pdf_page": "59",
+    "checked_scope": "D2对应任务/仍有缺口",
+    "flow_ids": "F-M003-04;F-M003-06",
+    "evidence_ids": "E-PBCD-01",
+    "gap": "完整操作、确认/取消、错误、数据保留与恢复未逐项闭环。"
+  },
+  {
+    "manual_item": "Library [Reading Books]",
+    "printed_page": "63",
+    "pdf_page": "63",
+    "checked_scope": "已读章节/功能目录；未单列完整任务",
+    "flow_ids": "",
+    "evidence_ids": "E-PBCD-01",
+    "gap": "完整操作、确认/取消、错误、数据保留与恢复未逐项闭环。"
+  },
+  {
+    "manual_item": "PocketBook Cloud",
+    "printed_page": "65",
+    "pdf_page": "65",
+    "checked_scope": "D2对应任务/仍有缺口",
+    "flow_ids": "F-M003-04",
+    "evidence_ids": "E-PBCD-01",
+    "gap": "同步进度仅PDF/EPUB/FB2；删除条目再现不推定自动重下载；他端/冲突未知。"
+  },
+  {
+    "manual_item": "Settings [system]",
+    "printed_page": "69",
+    "pdf_page": "69",
+    "checked_scope": "已读章节/功能目录；未单列完整任务",
+    "flow_ids": "",
+    "evidence_ids": "E-PBCD-01",
+    "gap": "完整操作、确认/取消、错误、数据保留与恢复未逐项闭环。"
+  },
+  {
+    "manual_item": "Wi-Fi",
+    "printed_page": "69",
+    "pdf_page": "69",
+    "checked_scope": "已读章节/功能目录；未单列完整任务",
+    "flow_ids": "",
+    "evidence_ids": "E-PBCD-01",
+    "gap": "完整操作、确认/取消、错误、数据保留与恢复未逐项闭环。"
+  },
+  {
+    "manual_item": "Bluetooth",
+    "printed_page": "69",
+    "pdf_page": "69",
+    "checked_scope": "D2对应任务/仍有缺口",
+    "flow_ids": "F-M003-09",
+    "evidence_ids": "E-PBCD-01",
+    "gap": "完整操作、确认/取消、错误、数据保留与恢复未逐项闭环。"
+  },
+  {
+    "manual_item": "Accounts and Synchronization",
+    "printed_page": "70",
+    "pdf_page": "70",
+    "checked_scope": "D2对应任务/仍有缺口",
+    "flow_ids": "F-M003-04;F-M003-06",
+    "evidence_ids": "E-PBCD-01",
+    "gap": "完整操作、确认/取消、错误、数据保留与恢复未逐项闭环。"
+  },
+  {
+    "manual_item": "PIN code",
+    "printed_page": "72",
+    "pdf_page": "72",
+    "checked_scope": "已读章节/功能目录；未单列完整任务",
+    "flow_ids": "",
+    "evidence_ids": "E-PBCD-01",
+    "gap": "72–74已读；恢复依邮件，未设置/验证，不借此推定离线恢复。"
+  },
+  {
+    "manual_item": "Accessibility",
+    "printed_page": "74",
+    "pdf_page": "74",
+    "checked_scope": "已读章节/功能目录；未单列完整任务",
+    "flow_ids": "",
+    "evidence_ids": "E-PBCD-01",
+    "gap": "74–78已读；Screen Reader改变触摸语义；Menu三击入口和Power三击快捷项对象分开，未操作。"
+  },
+  {
+    "manual_item": "Personalize",
+    "printed_page": "78",
+    "pdf_page": "78",
+    "checked_scope": "已读章节/功能目录；未单列完整任务",
+    "flow_ids": "",
+    "evidence_ids": "E-PBCD-01",
+    "gap": "78–84已读；前光/Logos/LED/触摸滑动拖动/全刷/User Profiles；配置隔离范围未实测。"
+  },
+  {
+    "manual_item": "Languages",
+    "printed_page": "84",
+    "pdf_page": "84",
+    "checked_scope": "已读章节/功能目录；未单列完整任务",
+    "flow_ids": "",
+    "evidence_ids": "E-PBCD-01",
+    "gap": "完整操作、确认/取消、错误、数据保留与恢复未逐项闭环。"
+  },
+  {
+    "manual_item": "Date/Time",
+    "printed_page": "84",
+    "pdf_page": "84",
+    "checked_scope": "已读章节/功能目录；未单列完整任务",
+    "flow_ids": "",
+    "evidence_ids": "E-PBCD-01",
+    "gap": "完整操作、确认/取消、错误、数据保留与恢复未逐项闭环。"
+  },
+  {
+    "manual_item": "Saving Power",
+    "printed_page": "84",
+    "pdf_page": "84",
+    "checked_scope": "已读章节/功能目录；未单列完整任务",
+    "flow_ids": "",
+    "evidence_ids": "E-PBCD-01",
+    "gap": "完整操作、确认/取消、错误、数据保留与恢复未逐项闭环。"
+  },
+  {
+    "manual_item": "Maintenance",
+    "printed_page": "85",
+    "pdf_page": "85",
+    "checked_scope": "已读章节/功能目录；未单列完整任务",
+    "flow_ids": "",
+    "evidence_ids": "E-PBCD-01",
+    "gap": "85：Factory Reset保留书/图与内部格式化不同；均未执行。"
+  },
+  {
+    "manual_item": "About Device",
+    "printed_page": "85",
+    "pdf_page": "85",
+    "checked_scope": "已读章节/功能目录；未单列完整任务",
+    "flow_ids": "",
+    "evidence_ids": "E-PBCD-01",
+    "gap": "85–86：Memory格式化删除非系统数据；软件状态/更新；未操作。"
+  },
+  {
+    "manual_item": "Firmware Update",
+    "printed_page": "87",
+    "pdf_page": "87",
+    "checked_scope": "已读章节/功能目录；未单列完整任务",
+    "flow_ids": "",
+    "evidence_ids": "E-PBCD-01",
+    "gap": "87–88已读；文件缺失/损坏/版本错误只是文档，未下载或刷机。"
+  },
+  {
+    "manual_item": "Troubleshooting",
+    "printed_page": "89",
+    "pdf_page": "89",
+    "checked_scope": "已读章节/功能目录；未单列完整任务",
+    "flow_ids": "",
+    "evidence_ids": "E-PBCD-01",
+    "gap": "89–90已读；损坏/编码/满存储影响保存等；未磁盘检查/转换/删除。"
+  },
+  {
+    "manual_item": "Customer Support",
+    "printed_page": "91",
+    "pdf_page": "91",
+    "checked_scope": "目录定位；正文未作任务分析",
+    "flow_ids": "",
+    "evidence_ids": "E-PBCD-01",
+    "gap": "完整操作、确认/取消、错误、数据保留与恢复未逐项闭环。"
+  },
+  {
+    "manual_item": "Compliance with International Standards",
+    "printed_page": "92",
+    "pdf_page": "92",
+    "checked_scope": "目录定位；正文未作任务分析",
+    "flow_ids": "",
+    "evidence_ids": "E-PBCD-01",
+    "gap": "完整操作、确认/取消、错误、数据保留与恢复未逐项闭环。"
+  }
+]

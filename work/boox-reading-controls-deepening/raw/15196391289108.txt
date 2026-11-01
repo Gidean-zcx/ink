@@ -1,0 +1,49 @@
+Since Firmware V3.3.2, we have introduced the brand-new word processor, Text Notes. In this article, you will learn more about the interface and tools of the Text Notes.
+ 
+ [image:1] 
+ 
+Undo & Redo
+Here you can tap the Undo button to move one step back, or tap the Redo button to move one step forward.
+ 
+Style
+ [image:2] 
+Here you can adjust the font, font size, or color of the text, or set the text to bold, italic, or underlined.
+ 
+Format
+ [image:3] 
+Here you can apply the format of Body or Headings of different levels to the text.
+ 
+Spacing
+ [image:4] 
+Here you can adjust the line spacing, word spacing, or margins of the page.
+ 
+Align
+ [image:5] 
+Here you can set the paragraph to left-aligned, centered, right-aligned, and increase or reduce the indentation.
+ 
+List
+ [image:6] 
+Here you can create a checklist, bulleted, or numbered list with different styles.
+ 
+Insert
+ [image:7] 
+Here you can insert links to websites, images or attachments.
+ 
+Record
+Here you can create an audio recording with the microphone. Then the recording will be pinned on your canvas. After the recording is finished, you can play back, delete, export, or share the recording.
+ 
+Export
+Here you can export the file to TXT/.note format and share the note with others.
+ 
+Search
+Here you can search or replace your text for a specific keyword.
+ 
+Sync
+Here you can sync your note to the cloud after logging in to your ONYX account.
+ 
+More
+ [image:8] 
+Save: Saves the note manually.
+Control: Here you can enable / disable various touch settings including the System Bar, Bottom Gestures, and Side Gestures to avoid accidental touches by the palm.
+Clear Format: Completely clears the format of the text.
+Customize Toolbar: Here you can add or remove tools in the sidebar, or enable / disable text display below each icon.

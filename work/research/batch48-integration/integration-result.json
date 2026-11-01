@@ -1,0 +1,12 @@
+{
+  "new_flows": 1,
+  "new_depth": "D1",
+  "updated_flows": 5,
+  "new_evidence": 1,
+  "existing_evidence_capture": 1,
+  "new_reference_points": 8,
+  "source_heading_rows": 41,
+  "images_viewed": 24,
+  "images_archived": 21,
+  "requirements_sha256": "e141320e2714df805c009fe64dd92d17decd6429d5728f8ce42d6d868b775087"
+}

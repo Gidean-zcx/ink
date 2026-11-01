@@ -1,0 +1,54 @@
+[
+  {
+    "method": "visible_locator_click",
+    "selector": "#legend .it:first-child"
+  },
+  {
+    "method": "mouse_click_canvas_node",
+    "target": "h_101",
+    "coordinates": {
+      "x": 792.5375244521196,
+      "y": 443.9785639374553
+    }
+  },
+  {
+    "method": "visible_locator_click",
+    "selector": "#cl .cc:first-child"
+  },
+  {
+    "method": "visible_locator_click",
+    "selector": "#sl .sb-item:first-child"
+  },
+  {
+    "method": "visible_locator_click",
+    "selector": "#panel .close"
+  },
+  {
+    "method": "keyboard_press",
+    "key": "Escape"
+  },
+  {
+    "method": "mouse_click_canvas_node",
+    "target": "h_301",
+    "coordinates": {
+      "x": 23.66597368548952,
+      "y": 265.34682797901746
+    }
+  },
+  {
+    "method": "page_reload"
+  },
+  {
+    "method": "viewport_resize",
+    "width": 320,
+    "height": 640
+  },
+  {
+    "method": "mouse_click_canvas_node",
+    "target": "h_101",
+    "coordinates": {
+      "x": 792.2562190678071,
+      "y": 443.7764708221134
+    }
+  }
+]

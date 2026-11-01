@@ -1,0 +1,202 @@
+[
+  {
+    "$kind": "TitledParagraph",
+    "text": "1. 修复学习范围默认显示全选的问题\n2. 尝试修复「记错了」按钮消失的问题",
+    "style": "detail",
+    "wantsCollapsedNewlines": true,
+    "primarySubtitle": "5.11.6",
+    "secondarySubtitle": "Fri Sep 18 2026 02:28:19 GMT+0000 (Coordinated Universal Time)"
+  },
+  {
+    "$kind": "TitledParagraph",
+    "text": "修复一些已知问题 & 一些小优化",
+    "style": "detail",
+    "wantsCollapsedNewlines": true,
+    "primarySubtitle": "5.11.5",
+    "secondarySubtitle": "Fri Sep 11 2026 01:48:25 GMT+0000 (Coordinated Universal Time)"
+  },
+  {
+    "$kind": "TitledParagraph",
+    "text": "1. 单词机支持添加自制词书、筛选学习范围\n2. 修复一些已知问题 & 一些小优化",
+    "style": "detail",
+    "wantsCollapsedNewlines": true,
+    "primarySubtitle": "5.11.4",
+    "secondarySubtitle": "Sat Sep 05 2026 16:14:34 GMT+0000 (Coordinated Universal Time)"
+  },
+  {
+    "$kind": "TitledParagraph",
+    "text": "1. 优化拼写提示页，操作更顺手\n2. 升级成就页，学习成果更有仪式感\n3. 修复一些已知问题 & 一些小优化",
+    "style": "detail",
+    "wantsCollapsedNewlines": true,
+    "primarySubtitle": "5.11.3",
+    "secondarySubtitle": "Wed Sep 02 2026 04:44:01 GMT+0000 (Coordinated Universal Time)"
+  },
+  {
+    "$kind": "TitledParagraph",
+    "text": "修复一些已知问题 & 一些小优化",
+    "style": "detail",
+    "wantsCollapsedNewlines": true,
+    "primarySubtitle": "5.11.2",
+    "secondarySubtitle": "Mon Aug 10 2026 01:50:20 GMT+0000 (Coordinated Universal Time)"
+  },
+  {
+    "$kind": "TitledParagraph",
+    "text": "1. 优化了数据展示\n2. 修复了一些bug",
+    "style": "detail",
+    "wantsCollapsedNewlines": true,
+    "primarySubtitle": "5.11.1",
+    "secondarySubtitle": "Mon Aug 03 2026 13:35:25 GMT+0000 (Coordinated Universal Time)"
+  },
+  {
+    "$kind": "TitledParagraph",
+    "text": "1. 「学习计划」上线啦！\n根据计划完成每日学习，稳稳推进备考进度。\n\n2. 「只拼错词」上线啦！\n完成学习后，可着重拼写错过的词，将有限时间花在刀刃上。\n\n3. 还有其他小优化 & 修复了一些已知问题",
+    "style": "detail",
+    "wantsCollapsedNewlines": true,
+    "primarySubtitle": "5.11",
+    "secondarySubtitle": "Tue Jul 28 2026 06:17:31 GMT+0000 (Coordinated Universal Time)"
+  },
+  {
+    "$kind": "TitledParagraph",
+    "text": "修复一些已知问题 & 一些小优化",
+    "style": "detail",
+    "wantsCollapsedNewlines": true,
+    "primarySubtitle": "5.9.25",
+    "secondarySubtitle": "Tue Jun 23 2026 01:53:41 GMT+0000 (Coordinated Universal Time)"
+  },
+  {
+    "$kind": "TitledParagraph",
+    "text": "修复一些已知问题 & 一些小优化",
+    "style": "detail",
+    "wantsCollapsedNewlines": true,
+    "primarySubtitle": "5.9.24",
+    "secondarySubtitle": "Thu Apr 30 2026 06:18:48 GMT+0000 (Coordinated Universal Time)"
+  },
+  {
+    "$kind": "TitledParagraph",
+    "text": "修复一些已知问题 & 一些小优化",
+    "style": "detail",
+    "wantsCollapsedNewlines": true,
+    "primarySubtitle": "5.9.21",
+    "secondarySubtitle": "Mon Jan 19 2026 01:49:34 GMT+0000 (Coordinated Universal Time)"
+  },
+  {
+    "$kind": "TitledParagraph",
+    "text": "修复一些已知问题 & 一些小优化",
+    "style": "detail",
+    "wantsCollapsedNewlines": true,
+    "primarySubtitle": "5.9.20",
+    "secondarySubtitle": "Sun Jan 04 2026 02:23:33 GMT+0000 (Coordinated Universal Time)"
+  },
+  {
+    "$kind": "TitledParagraph",
+    "text": "1.「关联笔记」上线啦！如果 A 词的笔记有提及 B 词（例如在易混词、近义词辨析中），那么现在学 B 词时也能看到 A 词的笔记啦～不用单独再记一遍！\n2. 修复一些已知问题 & 一些小优化",
+    "style": "detail",
+    "wantsCollapsedNewlines": true,
+    "primarySubtitle": "5.9.19",
+    "secondarySubtitle": "Mon Dec 08 2025 01:44:13 GMT+0000 (Coordinated Universal Time)"
+  },
+  {
+    "$kind": "TitledParagraph",
+    "text": "1. 每日数据更新时间延后至凌晨 4 点啦\n2. 修复一些已知问题 & 一些小优化",
+    "style": "detail",
+    "wantsCollapsedNewlines": true,
+    "primarySubtitle": "5.9.17",
+    "secondarySubtitle": "Thu Nov 20 2025 02:19:39 GMT+0000 (Coordinated Universal Time)"
+  },
+  {
+    "$kind": "TitledParagraph",
+    "text": "修复一些已知问题 & 一些小优化",
+    "style": "detail",
+    "wantsCollapsedNewlines": true,
+    "primarySubtitle": "5.9.16",
+    "secondarySubtitle": "Fri Oct 24 2025 01:49:36 GMT+0000 (Coordinated Universal Time)"
+  },
+  {
+    "$kind": "TitledParagraph",
+    "text": "按单元筛选学习范围，上线啦！\n高频词、基础词... 想学哪些单元，就学哪些单元～",
+    "style": "detail",
+    "wantsCollapsedNewlines": true,
+    "primarySubtitle": "5.9.15",
+    "secondarySubtitle": "Tue Oct 14 2025 01:39:01 GMT+0000 (Coordinated Universal Time)"
+  },
+  {
+    "$kind": "TitledParagraph",
+    "text": "1.「拆分助记」上线啦，单词拆成块儿，更好记～\n2.「班级打卡」常驻啦，在不背学堂可随时加入班级一起学～",
+    "style": "detail",
+    "wantsCollapsedNewlines": true,
+    "primarySubtitle": "5.9.13",
+    "secondarySubtitle": "Wed Sep 17 2025 02:03:14 GMT+0000 (Coordinated Universal Time)"
+  },
+  {
+    "$kind": "TitledParagraph",
+    "text": "修复一些已知问题 & 一些小优化\n\n——————\n最新版本已支持 「导出 PDF」，线下也能随时学习～",
+    "style": "detail",
+    "wantsCollapsedNewlines": true,
+    "primarySubtitle": "5.9.12",
+    "secondarySubtitle": "Mon Aug 11 2025 01:39:43 GMT+0000 (Coordinated Universal Time)"
+  },
+  {
+    "$kind": "TitledParagraph",
+    "text": "已支持 「导出 PDF」，线下也能随时学习～\n\n还有更多小优化等你发现",
+    "style": "detail",
+    "wantsCollapsedNewlines": true,
+    "primarySubtitle": "5.9.11",
+    "secondarySubtitle": "Mon Jul 28 2025 01:35:45 GMT+0000 (Coordinated Universal Time)"
+  },
+  {
+    "$kind": "TitledParagraph",
+    "text": "修复一些已知问题 & 一些小优化",
+    "style": "detail",
+    "wantsCollapsedNewlines": true,
+    "primarySubtitle": "5.9.9",
+    "secondarySubtitle": "Sun Apr 27 2025 06:05:52 GMT+0000 (Coordinated Universal Time)"
+  },
+  {
+    "$kind": "TitledParagraph",
+    "text": "1. 复习新增 100词/组 选项，可以更沉浸复习啦\n2. 学习/复习后是否拼写，可以分别设定了\n3. 还有更多小优化等你发现",
+    "style": "detail",
+    "wantsCollapsedNewlines": true,
+    "primarySubtitle": "5.9.8",
+    "secondarySubtitle": "Mon Apr 14 2025 01:40:24 GMT+0000 (Coordinated Universal Time)"
+  },
+  {
+    "$kind": "TitledParagraph",
+    "text": "修复一些已知问题 & 一些小优化",
+    "style": "detail",
+    "wantsCollapsedNewlines": true,
+    "primarySubtitle": "5.9.7",
+    "secondarySubtitle": "Wed Mar 12 2025 09:54:22 GMT+0000 (Coordinated Universal Time)"
+  },
+  {
+    "$kind": "TitledParagraph",
+    "text": "修复一些已知问题 & 一些小优化",
+    "style": "detail",
+    "wantsCollapsedNewlines": true,
+    "primarySubtitle": "5.9.6",
+    "secondarySubtitle": "Tue Feb 25 2025 02:17:40 GMT+0000 (Coordinated Universal Time)"
+  },
+  {
+    "$kind": "TitledParagraph",
+    "text": "1. 改进了复习算法\n2. 更新了若干笔记功能\n3. 支持了单词本单词批量转移/复制\n4. 修复一些已知问题 & 一些小优化",
+    "style": "detail",
+    "wantsCollapsedNewlines": true,
+    "primarySubtitle": "5.9.5",
+    "secondarySubtitle": "Thu Jan 16 2025 01:55:52 GMT+0000 (Coordinated Universal Time)"
+  },
+  {
+    "$kind": "TitledParagraph",
+    "text": "1. 学习复习：支持返回上一词\n2. 单词本：支持在 Learn / Review / 备考速刷里学习\n3. 修复一些已知问题 & 一些小优化",
+    "style": "detail",
+    "wantsCollapsedNewlines": true,
+    "primarySubtitle": "5.9.4",
+    "secondarySubtitle": "Wed Nov 27 2024 03:40:35 GMT+0000 (Coordinated Universal Time)"
+  },
+  {
+    "$kind": "TitledParagraph",
+    "text": "修复一些已知问题 & 一些小优化",
+    "style": "detail",
+    "wantsCollapsedNewlines": true,
+    "primarySubtitle": "5.9.3",
+    "secondarySubtitle": "Wed Oct 23 2024 01:40:06 GMT+0000 (Coordinated Universal Time)"
+  }
+]

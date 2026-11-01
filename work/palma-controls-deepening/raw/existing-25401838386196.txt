@@ -1,0 +1,74 @@
+You can sync your reading data, including reading progress, bookmarks, highlights, underlines, annotations, handwritten notes, and reading themes across all your BOOX devices. The annotated contents can be viewed and shared on our send2boox websites and BOOX Assistant app. In this article, you will learn more about reading data syncing to the cloud and between devices.
+Account, Server, and Directory
+1. You can only sync reading data to the cloud after
+logging into
+your ONYX account.
+2. Choose the
+same account and server
+to avoid incomplete syncing or mess.
+3. Put the same files in the
+same directory
+for your devices.
+4. Please refer to the
+ONYX Account and Server
+and
+Language and Input
+pages for more info.
+Note
+:
+1. The data on each server is independently stored.
+2. If multiple accounts are logged on one device, each user will only see the notes synced to their own accounts.
+Auto Syncing
+1. To auto-sync
+all your reading data
+, do the following:
+Home Screen＞Library＞More icon on the upper right corner＞Library Settings＞Turn on Sync Switch
+2. To auto-sync
+one particular document
+, do the following:
+Home Screen＞Library＞Long-press one document＞Sync tab＞Turn on Sync Switch
+Note
+: This setting is not available when the main sync setting is turned off.
+Manual Syncing
+1. Sync the Reading Data
+To manually sync your reading data, do the following:
+1. Open the document in NeoReader.
+2. Tap the center area to display the main menu.
+3. Tap the Sync button in the upper area.
+Note
+: This setting is not available when the main sync setting or the sync setting for this document is turned off.
+2. Sync the Source File
+Since Firmware V4.1, you can now upload a document’s source file and its reading data to the cloud when switching between different BOOX devices.
+1. In the Library, long-press a book, and enter the Sync tab.
+2. Select the ONYX account you want to sync with, and turn on the Cloud Sync option.
+3. Tap "Upload source file" to complete the process.
+Note
+: Make sure each document is 200MB or smaller.
+Local Library Backup
+Enter Library > Tap Library Settings > Backup and Restore > Tap Local Backup and Restore
+Since Firmware V4.1, you can now back up local book files along with their associated data—including notes, annotations, and reading themes, etc.
+After the backup operation, a compressed file with the extension .booxc will be generated. You can
+transfer this file
+to another BOOX device and restore it there.
+Note
+: Both devices must be running Firmware V4.1 or later to support this feature.
+【backup】
+【restore】
+Sync with Third-party Cloud
+To sync reading data for files in the
+integrated third-party cloud storage
+, do the following:
+1. Log in to the same account and choose the same server for your BOOX devices.
+2. Open the same files in the integrated third-party cloud storage, and they will be automatically recognized in the same directory on both devices.
+Check Reading Data on the Website
+You can enter one of our send2boox websites on a browser to view your annotated content. Please remember to log in and select the same server your device uses.
+US/VN Server:
+https://push.boox.com/
+EUR Server:
+https://eur.boox.com/
+Check Reading Data on BOOX Assistant App
+You can also download the BOOX Assistant App on your Android/iOS devices to check data.
+Android: Please click
+here
+to download the app.
+iOS: Please search for "BOOX Assistant" in the App Store to download the app.

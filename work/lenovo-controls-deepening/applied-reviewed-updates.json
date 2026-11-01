@@ -1,0 +1,490 @@
+{
+  "flow_changes": [
+    {
+      "id": "F-M062-01",
+      "field": "known_branches",
+      "before": "阅读区横向划动用于翻页；图示明确区分起点，没有给出触发阈值。",
+      "after": "Wi-Fi/蓝牙短按开关、长按分别进入网络/配对；音量必须先接蓝牙音频。系统边缘导航与内部翻页分开；刷新模式有入口但无波形或刷新率参数。"
+    },
+    {
+      "id": "F-M062-01",
+      "field": "gaps",
+      "before": "实际手势阈值与误触",
+      "after": "触发阈值/误触、刷新质量、快捷控制持久化和实际音频重连未知。"
+    },
+    {
+      "id": "F-M062-01",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M062-03",
+      "field": "known_branches",
+      "before": "回放可显示对应手写内容，播放需蓝牙音频；删除某段后关系如何变化未知。",
+      "after": "可加速回放；录音列表长按改名/删除；Note replay显示对应手写内容。播放需蓝牙音频；图标表不是连续回放观察。"
+    },
+    {
+      "id": "F-M062-03",
+      "field": "gaps",
+      "before": "删除录音后关系和精确定位",
+      "after": "离开笔记/断电保存、删除音频后的笔迹关系、转写、精确位置和跨端同步未知。"
+    },
+    {
+      "id": "F-M062-03",
+      "field": "evidence_ids",
+      "before": "E-LNP-01",
+      "after": "E-LNP-01;E-LNCD-01"
+    },
+    {
+      "id": "F-M062-03",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M062-03",
+      "field": "visual_status",
+      "before": "not_observed",
+      "after": "static_manual_pages_only"
+    },
+    {
+      "id": "F-M062-04",
+      "field": "known_branches",
+      "before": "搜索、翻译和朗读需网络；未证明整本听书或读听断点同步。",
+      "after": "选词还可高亮、复制或Wiki搜索；搜索/翻译/朗读需网络。词级窗口不等于整本听书或持久续播。"
+    },
+    {
+      "id": "F-M062-04",
+      "field": "gaps",
+      "before": "整本听书/跨端断点",
+      "after": "词典是否全离线、资格/付费、选词失败与读听断点未知。"
+    },
+    {
+      "id": "F-M062-04",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M062-07",
+      "field": "known_branches",
+      "before": "云空间有期限/购买条件；不是整个设备镜像。同步冲突、账号退出与恢复覆盖未知。",
+      "after": "限定Notebook及Library/指定格式文件；有效云空间、联网，锁屏自动或文件页手动同步。配套App导入与设备同步是不同入口。"
+    },
+    {
+      "id": "F-M062-07",
+      "field": "gaps",
+      "before": "过期/满空间/冲突和恢复",
+      "after": "过期/满空间/冲突/刷机恢复、录音与进度覆盖未核；Q32账号隐藏另见F-M062-19，不当通用恢复。"
+    },
+    {
+      "id": "F-M062-07",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M062-08",
+      "field": "known_branches",
+      "before": "指南说明清除内部数据；开了云同步不等于最近编辑已上传，完成后如何恢复仍需独立验证。",
+      "after": "2023指南路径含General且清内部数据后自动重启；FAQ简写Settings > Factory Reset，不能据简写判定界面已改版。启用同步不证明最后编辑已上传。"
+    },
+    {
+      "id": "F-M062-08",
+      "field": "gaps",
+      "before": "重置后实际恢复范围",
+      "after": "完整恢复、上传完成回执与失败/断电回滚未知；无重置实测。"
+    },
+    {
+      "id": "F-M062-08",
+      "field": "evidence_ids",
+      "before": "E-LNP-01",
+      "after": "E-LNP-01;E-LNP-02"
+    },
+    {
+      "id": "F-M062-08",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M063-01",
+      "field": "evidence_ids",
+      "before": "E-SHAN-01;E-SHCD-01",
+      "after": "E-SHAN-01;E-SHCD-01;E-SHCD-03"
+    },
+    {
+      "id": "F-M063-01",
+      "field": "known_branches",
+      "before": "文件传入后仍需扫描；补证修正指南页码。",
+      "after": "文件传入后仍需扫描；HiFi Oasis作者自报V2.1并描述可选指定文件夹扫描，这是评测补证，非官方过滤规则。"
+    },
+    {
+      "id": "F-M063-01",
+      "field": "gaps",
+      "before": "自动扫描、空卡、重名、路径移动、取消/完成提示。",
+      "after": "自动扫描、空卡、重名、路径移动、取消/完成提示及扫描过滤/上限缺当前官方步骤。"
+    },
+    {
+      "id": "F-M063-01",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M063-08",
+      "field": "evidence_ids",
+      "before": "E-SHAN-02;E-SHAN-04;E-SHCD-04",
+      "after": "E-SHAN-02;E-SHAN-04;E-SHCD-04;E-SLCD-01;E-SLCD-02;E-SLCD-03"
+    },
+    {
+      "id": "F-M063-08",
+      "field": "known_branches",
+      "before": "D2仅作者蓝牙SyncLink分支；AirPlay入口/DLNA/Tidal其余D1，Wi-Fi失败非普遍结论。",
+      "after": "M1蓝牙D2仍基于作者链；共用Eddict手册补手机控制端搜索/连接成功反馈、iOS仅控制端。p15明确App播放设置不影响连接设备，不能用手机定时/记忆替代M1设置；SyncLink与DLNA/投屏分开。"
+    },
+    {
+      "id": "F-M063-08",
+      "field": "gaps",
+      "before": "固件/Eddict构建、权限、退出/中断、云服务账户与离线；遥控非传文件。",
+      "after": "Eddict文档V1.2不等于Android2.3.7；名单漏M1不等于不支持。英文BT/Wi-Fi同时开与评测互斥未解；M1权限、失败、退出/中断、服务账户/离线仍缺。两静态页为其他机型示例。"
+    },
+    {
+      "id": "F-M063-08",
+      "field": "visual_status",
+      "before": "not_observed",
+      "after": "static_reference_only"
+    },
+    {
+      "id": "F-M063-08",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M063-10",
+      "field": "known_branches",
+      "before": "音频先在卡、A:\\引用、_explaylist_data及Playlist/Import playlist；作者观察。",
+      "after": "作者自报V2.1：A:\\音频引用、_explaylist_data及Import playlist；另描述可导出，歌单按创建次序、后添在末尾。此为评测版本口径，非当前固件排序保证。"
+    },
+    {
+      "id": "F-M063-10",
+      "field": "gaps",
+      "before": "相对路径/M3U8、重复导入、失效项和换卡；非当前固件实测。",
+      "after": "导出入口/文件名/重导冲突、相对路径/M3U8、失效项和换卡未核；无删除对象确认或撤销，不能用Eddict手机队列能力补成M1队列。"
+    },
+    {
+      "id": "F-M063-10",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M064-01",
+      "field": "evidence_ids",
+      "before": "E-IBA-01;E-IBA-02;E-IBCD-04",
+      "after": "E-IBA-01;E-IBA-02;E-IBCD-04;E-IBCD-01"
+    },
+    {
+      "id": "F-M064-01",
+      "field": "known_branches",
+      "before": "扫描静态图补位置/Start/过滤/M3U；Position定位文件非时间点。",
+      "after": "补USB复制/历史Mac MTP条件；Music左向右开分类/文件/底部搜索；All Music按Title/Album/Artist/Time/Folder排序；Position定位当前文件，目录Return逐级返回；关键词范围为曲目/专辑/艺人"
+    },
+    {
+      "id": "F-M064-01",
+      "field": "gaps",
+      "before": "扫描标签冲突保留；授权、完成/取消、重复与路径修复。",
+      "after": "Time排序语义、ID3编辑/标签冲突、空结果/搜索历史清除；授权、完成/取消、重复和路径修复；不由当前50曲清单推断时间断点"
+    },
+    {
+      "id": "F-M064-01",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M064-06",
+      "field": "evidence_ids",
+      "before": "E-IBA-02;E-IBCD-08",
+      "after": "E-IBA-02;E-IBCD-08;E-IBDC-01"
+    },
+    {
+      "id": "F-M064-06",
+      "field": "known_branches",
+      "before": "历史手册D2为操作重计/到时关机；1.04.237分列系统定时关机和Mango变化，原文暂时播放疑误；1.05.273新增始终有效。",
+      "after": "历史手册操作重计/到时关机；CN1.04.237系统定时与Mango变化分列且暂时播放疑误保留；JP MUSIN v1.04明确Mango计时停止播放；CN1.05.273新增始终有效仅声明"
+    },
+    {
+      "id": "F-M064-06",
+      "field": "gaps",
+      "before": "当前Mango结束动作、两计时关系、始终有效含义/完整交互未知；不得概括现版操作重计。",
+      "after": "JP区域解释不自动统一CN；当前Mango结束动作/反馈、两计时关系、始终有效和操作重计规则仍缺完整链"
+    },
+    {
+      "id": "F-M064-06",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M064-09",
+      "field": "known_branches",
+      "before": "封面手势切曲；Music/Settings入口；缩略图返回、Info展开/收回。",
+      "after": "封面切曲、Music/Settings入口；Music子页缩略图回播放、Return逐页返回；Info点上半部收回；Recent Play限最近50曲，ID3年份仅显示"
+    },
+    {
+      "id": "F-M064-09",
+      "field": "gaps",
+      "before": "Info Delete对象、原筛选/滚动位置、当前构建差异。",
+      "after": "Info与曲库Delete对象；原筛选/滚动位置、历史清除、跨会话时间点；只读标签不等于编辑ID3"
+    },
+    {
+      "id": "F-M064-09",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M064-10",
+      "field": "known_branches",
+      "before": "GEQ/PEQ从响应曲线进入；PEQ逐滤波器编辑及On/Off。",
+      "after": "GEQ5预设+自定义/10段；PEQ每设置最多6滤波器、8类型；Fc33–16000Hz/Gain−20–20dB/Q0.3–20；低通/高通/全通/Band/Notch的Gain不生效；逐项On/Off"
+    },
+    {
+      "id": "F-M064-10",
+      "field": "gaps",
+      "before": "保存/重置、模式间持久化、跨app范围及音质未验证。",
+      "after": "越界输入/校验反馈、保存/重置、模式间持久化、跨app范围及音质未验证"
+    },
+    {
+      "id": "F-M064-10",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    }
+  ],
+  "evidence_changes": [
+    {
+      "id": "E-SHCD-01",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "existing_pdf_reread_PyMuPDF",
+          "hands_on": false,
+          "visual_observed": false,
+          "archived_artifact": "artifacts/shanling-controls-deepening/source-notes.md",
+          "sha256": "5d794e2c78b2f52c0d1fc727be6921d60b32ee02942cd3324fbc1d189b4476e2",
+          "raw_work_path": "work/hifi-controls-deepening/M1_Plus-V1.0.pdf",
+          "raw_sha256": "9e6810edca745df4ea7e0b0dc825ddc7d796a45006f62552f9250b65b3bec9f6",
+          "locator": "24页完整文本复读；本批不重复旧5/6页观察；目录台账按实际章节，不按PDF页N书签充数"
+        }
+      ]
+    },
+    {
+      "id": "E-SHCD-02",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "anonymous_public_html_GET",
+          "hands_on": false,
+          "visual_observed": false,
+          "archived_artifact": "artifacts/shanling-controls-deepening/source-notes.md",
+          "sha256": "5d794e2c78b2f52c0d1fc727be6921d60b32ee02942cd3324fbc1d189b4476e2",
+          "url": "https://shanling.com/download/134",
+          "status": 200,
+          "raw_work_path": "work/shanling-controls-deepening/raw/m1plus-v18.html",
+          "raw_sha256": "6d99348cf6bc5172d0492a12df57bdf7ab2e61df12c07d49b5d10a5dd1ec82ba",
+          "extracted_work_path": "work/shanling-controls-deepening/extracted/m1plus-v18.txt",
+          "extracted_sha256": "48d7b91b78af63776f4da456c4e7aeb8363bd2f30598fc46b29f92abe8891455"
+        }
+      ]
+    },
+    {
+      "id": "E-SHCD-03",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "anonymous_public_html_GET",
+          "hands_on": false,
+          "visual_observed": false,
+          "archived_artifact": "artifacts/shanling-controls-deepening/source-notes.md",
+          "sha256": "5d794e2c78b2f52c0d1fc727be6921d60b32ee02942cd3324fbc1d189b4476e2",
+          "url": "https://www.hifioasis.com/reviews/shanling-m1-plus-review/",
+          "status": 200,
+          "raw_work_path": "work/shanling-controls-deepening/raw/review.html",
+          "raw_sha256": "5beab437782037f23bbca2989120f741c27494f866d31469793bc53a150a6f19",
+          "extracted_work_path": "work/shanling-controls-deepening/extracted/review.txt",
+          "extracted_sha256": "19c72b2efc858b91d9190eba659111cef71f76c57c27fcaaa16a9270c3535149"
+        }
+      ]
+    },
+    {
+      "id": "E-IBCD-01",
+      "field": "additional_captures",
+      "before": null,
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "archived_artifact": "artifacts/ibasso-controls-deepening/source-notes.md",
+          "sha256": "a0507e276298095f753efba1df7d078a987d2f2a9a15a476f10bab1a928bbf8f",
+          "hands_on": false,
+          "capture_kind": "local_reread_and_static_page_observation",
+          "network_refetched": false,
+          "raw_work_path": "work/hifi-extension-research/DX180userguide.pdf",
+          "raw_sha256": "bbbb517f695f36baa62d77585f38bbd6b9407576e96c4e756d965c96103f1da8",
+          "original_acquisition_date": "2026-10-26",
+          "locator": "印刷1目录；17–21应用/USB/设置；30–42导航搜索；45–54参数；全文页映射",
+          "visual_observed": true,
+          "visual_kind": "official_manual_static_pages_only",
+          "visual_audit_path": "artifacts/ibasso-controls-deepening/source-notes.md",
+          "rendered_artifacts": [
+            "artifacts/ibasso-controls-deepening/dx180-printed-17.png",
+            "artifacts/ibasso-controls-deepening/dx180-printed-18.png",
+            "artifacts/ibasso-controls-deepening/dx180-printed-20.png",
+            "artifacts/ibasso-controls-deepening/dx180-printed-21.png",
+            "artifacts/ibasso-controls-deepening/dx180-printed-34.png",
+            "artifacts/ibasso-controls-deepening/dx180-printed-42.png"
+          ],
+          "artifact_hashes": {
+            "artifacts/ibasso-controls-deepening/dx180-printed-17.png": "fed85b1906b98ea9f8733418389fdd4b9d07af4f8125391a998b23a4e541dcb5",
+            "artifacts/ibasso-controls-deepening/dx180-printed-18.png": "ad93d376108ba361829a2e29ac84c5fe42363e04465d0ef05723fba8bc3dd90c",
+            "artifacts/ibasso-controls-deepening/dx180-printed-20.png": "46a820d1d77834365f4f674c8611666da96906adbe8911fbd56b14f28f6a17fd",
+            "artifacts/ibasso-controls-deepening/dx180-printed-21.png": "796d568c697d900fc4d5548632cb1868ca2e67945329f170a148b61eb72fcb4b",
+            "artifacts/ibasso-controls-deepening/dx180-printed-34.png": "5cba3a64c8bd7decf1f5d19f5cc1d75991af847935b0091784493b307a2f01cb",
+            "artifacts/ibasso-controls-deepening/dx180-printed-42.png": "194a9c1d366e4c8590ba21708ba548ec8df12a5871b554cb8afe3f99a13653da"
+          },
+          "limitation": "6图同一旧PDF；20是纯文字页，无连续流程"
+        }
+      ]
+    },
+    {
+      "id": "E-IBCD-08",
+      "field": "additional_captures",
+      "before": null,
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "archived_artifact": "artifacts/ibasso-controls-deepening/source-notes.md",
+          "sha256": "a0507e276298095f753efba1df7d078a987d2f2a9a15a476f10bab1a928bbf8f",
+          "hands_on": false,
+          "capture_kind": "public_http_refetch_same_body_hash",
+          "network_refetched": true,
+          "raw_work_path": "work/ibasso-controls-deepening/firmware-cn.html",
+          "raw_sha256": "c9a111a08010b38a11934502d5d061bacd104d5ae65aa861b1e339fc7434d615",
+          "capture_url": "https://ibasso.cn/support/dx180firmware",
+          "locator": "5版本37项声明及更新提示",
+          "visual_observed": false
+        }
+      ]
+    },
+    {
+      "id": "E-IBA-03",
+      "field": "additional_captures",
+      "before": null,
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "archived_artifact": "artifacts/ibasso-controls-deepening/source-notes.md",
+          "sha256": "a0507e276298095f753efba1df7d078a987d2f2a9a15a476f10bab1a928bbf8f",
+          "hands_on": false,
+          "capture_kind": "public_http_canonical_url_read",
+          "network_refetched": true,
+          "raw_work_path": "work/ibasso-controls-deepening/firmware-en.html",
+          "raw_sha256": "ae03d36392cce123b57e19d74bdecadad6aff7657f37c1b97288db1e5959030a",
+          "capture_url": "https://ibasso.com/dx180-firmware/",
+          "locator": "V1.01–V1.05/驱动目录；旧URL?p=3371",
+          "visual_observed": false
+        }
+      ]
+    },
+    {
+      "id": "E-LNP-01",
+      "field": "additional_captures",
+      "before": null,
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "existing_pdf_reread",
+          "capture_url": "https://download.lenovo.com/consumer/mobiles_pub/lenovo_smart_paper_ug_en_2023.pdf",
+          "raw_work_path": "work/research/extension-manuals/lenovo-smart-paper.pdf",
+          "raw_sha256": "b30235ca552e3e7b4f6f038203e2e2b0c3e0842ee06079438606e2d8405e5ef4",
+          "text_work_path": "work/lenovo-controls-deepening/guide-pages.json",
+          "text_sha256": "ab191162aa9a3f76935bdcdd87682fa9dd4b7d45b95801dd431d814f0e4b8e4c",
+          "note": "核p2目录及p3–17功能正文；附录不作已读功能链",
+          "note_artifact": "artifacts/lenovo-controls-deepening/source-notes.md",
+          "note_sha256": "bdd04700ed45d0f3b8b7918cfd658cf904921745c6f2001414cd60b7821faee1"
+        }
+      ]
+    },
+    {
+      "id": "E-LNP-02",
+      "field": "additional_captures",
+      "before": null,
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "official_search_index_only",
+          "capture_url": "https://support.lenovo.com/ca/en/solutions/ht514875-lenovo-smart-paper-lenovo-sp101fu-frequently-asked-questions-faqs",
+          "raw_work_path": "work/lenovo-controls-deepening/search-index-b.txt",
+          "raw_sha256": "8e26a5724e6f58a01a78a4911c6c9398232a3a96bf4dd4a7ddc2dbca692cec50",
+          "note": "普通公开搜索索引；本轮使用LB/IN区域Q11/19/29/32/46，CA更新日期仅属CA；未重试403或访问其他区域原站。",
+          "note_artifact": "artifacts/lenovo-controls-deepening/source-notes.md",
+          "note_sha256": "bdd04700ed45d0f3b8b7918cfd658cf904921745c6f2001414cd60b7821faee1",
+          "indexed_source_urls": [
+            "https://support.lenovo.com/lb/en/solutions/ht514875-lenovo-smart-paper-lenovo-sp101fu-frequently-asked-questions-faqs",
+            "https://support.lenovo.com/in/en/solutions/ht514875-lenovo-smart-paper-lenovo-sp101fu-frequently-asked-questions-faqs"
+          ]
+        }
+      ]
+    }
+  ],
+  "files": [
+    {
+      "path": "docs/research/interaction-library/batches/hifi-controls-deepening-evidence.jsonl",
+      "backup": "work/lenovo-controls-deepening/reviewed-before/hifi-controls-deepening-evidence.jsonl",
+      "before_sha256": "23399dcafb399d092bc0ccca74e4811f0ac0d36bb9912f5c2acb5559e0bf1960",
+      "after_sha256": "a31d2f5c533f55d656274bdd1e0879b4731e417468a2925294c16f472a5aff58"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/hifi-controls-deepening-coverage.csv",
+      "backup": "work/lenovo-controls-deepening/reviewed-before/hifi-controls-deepening-coverage.csv",
+      "before_sha256": "0906d3ea8ade2bc05f9dd8942044061cb717c887b6942dd82505027bc1f2b794",
+      "after_sha256": "08436b48db4d8a001e08ac68201bd1f23e59be16fec7eb99005e943112130c00"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/hifi-extension-coverage.csv",
+      "backup": "work/lenovo-controls-deepening/reviewed-before/hifi-extension-coverage.csv",
+      "before_sha256": "bc06c11d64b4479ca2c0a0957dfc33c4b05339c0b5039ef4d6a63f16eb35bb23",
+      "after_sha256": "54992a14abb5c4db4cebd6f034985cd48b98d79e5cd15bfebf8b5219b148d09e"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/hifi-extension-evidence.jsonl",
+      "backup": "work/lenovo-controls-deepening/reviewed-before/hifi-extension-evidence.jsonl",
+      "before_sha256": "ada44f148ca323a344543b5c0f0c4b8718862de42e788045f7c458e648442ed5",
+      "after_sha256": "ebde5aee5a5c1ece416b2e99aee4fc4528e3c23694ce1ee0173eb7c11f070735"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/extension-manuals-evidence.jsonl",
+      "backup": "work/lenovo-controls-deepening/reviewed-before/extension-manuals-evidence.jsonl",
+      "before_sha256": "8d5d957f60bfaa064d5f68f815e588584ada5d9feb9f724ae0b07a0f277d7df5",
+      "after_sha256": "6e9d29a61bbc217c1a7764d693f3b96db658a64426a56d69f15c30f186a2d2b0"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/extension-manuals-coverage.csv",
+      "backup": "work/lenovo-controls-deepening/reviewed-before/extension-manuals-coverage.csv",
+      "before_sha256": "ebeed582a400437460ac1c0ac01a749198d6e6c7fa4e388ac1a669181d03c7df",
+      "after_sha256": "0dec729e2cd78dfd45af3c25afce7646c3358e5e04a6000ca362a68615f736a4"
+    }
+  ],
+  "old_tasks": 12,
+  "old_task_fields": 44,
+  "old_evidence_captures": 8
+}

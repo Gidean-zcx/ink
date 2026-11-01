@@ -1,0 +1,108 @@
+Generate Slide Decks in Gemini Notebook
+Important: At this time, this feature is only available to over 18 users. Slide Decks are available in the mobile app but may have differences. Learn more about the supported features in Gemini Notebook mobile app.
+Transform your sources into a polished presentation by generating a Slide Deck, perfect for sharing or reviewing key concepts. Present your deck instantly in Gemini Notebook or share it as a PDF.
+Generate slide decks
+Important: Slide decks are AI-generated and may contain visual or factual inaccuracies.
+On your device, open Gemini Notebook.
+Open an existing notebook or create a new one with sources.
+To generate or delete a slide deck, you need edit access to the notebook it’s in.
+Learn how to add or discover new sources for your notebook.
+In the "Studio" panel, select Slide Deck.
+Customize your slide deck.
+Select a format, output language, length, and sources.
+Describe the slide deck you want to create.
+For example: Create a deck for beginners using a bold and playful style with a focus on step-by-step instructions.
+Select Generate now or Generate later.
+Gemini Notebook may take multiple minutes to generate a slide deck. You can continue working in your notebook in the meantime.
+Co-create slide decks with Gemini Notebook
+Important:
+This feature is only available for Google AI Ultra subscribers.
+Slide decks are AI-generated and may contain visual or factual inaccuracies.
+Step 1: Open a notebook you have edit access to
+On your device, open Gemini Notebook.
+Open an existing notebook or create a new one with sources.
+Learn how to add or discover new sources for your notebook.
+Step 2: Create your slide deck outline
+From the “Studio” panel
+In the "Studio" panel, select Slide Deck.
+Customize your slide deck.
+Select a format, output language, length, and sources.
+Describe the slide deck you want to create.
+For example: Create a deck for beginners using a bold and playful style with a focus on step-by-step instructions.
+Turn on Review outline notes.
+Select Generate now.
+Tip: If you select Generate later, you’ll schedule a generation of the slide deck without an outline.
+From Gemini Notebook chat
+In the chat box, enter a prompt about creating a slide deck.
+For example: Make me a slide deck about [topic]
+Customize your slide deck through the responsive cards that Gemini Notebook returns to you in chat.
+Turn on Review outline before final rendering.
+Select Generate.
+Gemini Notebook may take multiple minutes to generate an outline. You can continue working in your notebook in the meantime.
+Step 3: Generate your slide deck
+In the “Studio” panel, next to an outline that is ready, select Review.
+To refine your outline, add all of your feedback at once.
+Select Proceed.
+Important: Once you select Proceed, Gemini Notebook will generate your slide deck. You will not be able to further refine your outline.
+Gemini Notebook may take multiple minutes to generate a slide deck. You can continue working in your notebook in the meantime.
+Manage your Slide Deck
+Use the three dots menu next to your generated Slide Deck to rename, download as a PDF file, share, or delete.
+To view the prompt used to generate your Slide Deck, select “View custom prompt” within the three dots menu next to the title in the studio panel.
+To present your Slide Deck in full screen slideshow mode, select "Start slideshow."
+Edit your Slide Deck
+Go to Gemini Notebook.
+Under “Studio,” select your Slide Deck.
+At the top, select Revise .
+On each slide, enter your instructions for revisions.
+You can change more than one slide, and your instructions will be grouped under “Pending Changes.”
+You can try editing text, changing layouts, or updating visuals.
+At this time, sources are not taken into account during revisions.
+When you are ready to regenerate your deck with revised slides, select Generate revised deck.
+Editing existing slides is faster than generating a new deck from scratch.
+Tip: Batch your slide revisions. Every time you generate a revision, Gemini Notebook creates an entirely new slide deck. While there is no limit to the number of individual slides you can revise within a slide deck, there are quota limits to the total number of slide decks you can revise.
+Delete slides
+Go to Gemini Notebook.
+Under “Studio,” select your Slide Deck.
+At the top, select Revise .
+Hover over any existing slide in the deck.
+Select More   Delete slide.
+Slides that are pending deletion are grayed out with a trash icon.
+Tip: To restore a deleted slide, select More   Restore slide.
+When you’re ready to apply your pending edits, select Generate revised deck.
+Reorder your slides
+Go to Gemini Notebook.
+Under “Studio,” select your Slide Deck.
+At the top, select Revise .
+In the deck preview, drag a slide thumbnail to a new position.
+Load a previous Slide Deck
+Important: This is only applicable to notebooks that have previously generated Slide Decks.
+Open an existing notebook.
+In the "Studio" panel, navigate to the "Slide Deck" section.
+Select the title of the Slide Deck you wish to load.
+When exploring your Slide Deck, you can expand or collapse the viewer or hit play to start slideshow. You can also share or download as a PDF file.
+The expanded viewer allows you to scroll to navigate between pages and zoom in or zoom out.
+The full-screen slideshow mode is great for presenting. You can click or use the arrow keys to navigate. To exit, use the "esc" key.
+Share feedback on your Slide Deck by selecting "Good content" or "Bad content."
+Share a Slide Deck
+Option 1: Share a link
+Generate a Slide Deck.
+In the Slide Deck viewer, select Share.
+Confirm that the notebook is shared with the recipient or is made public (open to “Anyone with a link”) and viewers have access to the “full notebook.”
+Copy link to Slide Deck and share link with recipient.
+Save to apply changes.
+Important:
+Public notebook sharing is only enabled for consumer accounts. It's currently disabled for Workspace Enterprise or Education accounts.
+Only notebook owners and editors can make a generated Slide Deck publicly available and manage its access. As an owner or editor, you can turn off public access by selecting a different Notebook access level in the sharing panel.
+Once a Slide Deck is deleted, any previously generated share link will no longer work.
+Option 2: Share the entire notebook
+Generate a Slide Deck.
+Share the notebook.
+Other users can access the Slide Deck in the "Studio" panel.
+Option 3: Download & share the Slide Deck
+To download the Slide Deck, select the three dots menu and “Download PDF Document (.pdf)” or “Download PowerPoint (.pptx)”.
+Share the downloaded file.
+Tip: Depending on the publisher's content restrictions, you may not be able to download artifacts generated using a notebook that has a Play Books ebook as a source.
+Related resources
+Create a notebook in Gemini Notebook
+Add or discover new sources for your Notebook
+Use chat in Gemini Notebook

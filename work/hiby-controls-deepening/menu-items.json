@@ -1,0 +1,499 @@
+[
+  {
+    "anchor": "quick-operation",
+    "position": 1,
+    "title": "Bluetooth Click the Bluetooth icon and switch Bluetooth. Press and hold the Bluetooth icon to enter the Bluetooth settings interface.",
+    "direct_text": "Bluetooth Click the Bluetooth icon and switch Bluetooth. Press and hold the Bluetooth icon to enter the Bluetooth settings interface.",
+    "body": "Bluetooth Click the Bluetooth icon and switch Bluetooth. Press and hold the Bluetooth icon to enter the Bluetooth settings interface."
+  },
+  {
+    "anchor": "quick-operation",
+    "position": 2,
+    "title": "WiFi Click the WiFi icon toggle on and on. Press and hold the WiFi icon to enter the WiFi settings interface.",
+    "direct_text": "WiFi Click the WiFi icon toggle on and on. Press and hold the WiFi icon to enter the WiFi settings interface.",
+    "body": "WiFi Click the WiFi icon toggle on and on. Press and hold the WiFi icon to enter the WiFi settings interface."
+  },
+  {
+    "anchor": "quick-operation",
+    "position": 3,
+    "title": "DLNA Click the DLNA icon to switch DLNA.",
+    "direct_text": "DLNA Click the DLNA icon to switch DLNA.",
+    "body": "DLNA Click the DLNA icon to switch DLNA."
+  },
+  {
+    "anchor": "quick-operation",
+    "position": 4,
+    "title": "AirPlay Click the AirPlay icon toggle on and on AirPlay.",
+    "direct_text": "AirPlay Click the AirPlay icon toggle on and on AirPlay.",
+    "body": "AirPlay Click the AirPlay icon toggle on and on AirPlay."
+  },
+  {
+    "anchor": "quick-operation",
+    "position": 5,
+    "title": "HiByLink Click the HiByLink icon to switch HiByLink.",
+    "direct_text": "HiByLink Click the HiByLink icon to switch HiByLink.",
+    "body": "HiByLink Click the HiByLink icon to switch HiByLink."
+  },
+  {
+    "anchor": "quick-operation",
+    "position": 6,
+    "title": "MSEB Click the MSEB icon, switch MSEB Press and hold the MSEB icon to enter the MSEB settings interface.",
+    "direct_text": "MSEB Click the MSEB icon, switch MSEB Press and hold the MSEB icon to enter the MSEB settings interface.",
+    "body": "MSEB Click the MSEB icon, switch MSEB Press and hold the MSEB icon to enter the MSEB settings interface."
+  },
+  {
+    "anchor": "quick-operation",
+    "position": 7,
+    "title": "Output selection Click the [Output Selection] icon to switch PO/LO",
+    "direct_text": "Output selection Click the [Output Selection] icon to switch PO/LO",
+    "body": "Output selection Click the [Output Selection] icon to switch PO/LO"
+  },
+  {
+    "anchor": "quick-operation",
+    "position": 8,
+    "title": "Gain settings Click the gain icon to adjust the gain.",
+    "direct_text": "Gain settings Click the gain icon to adjust the gain.",
+    "body": "Gain settings Click the gain icon to adjust the gain."
+  },
+  {
+    "anchor": "quick-operation",
+    "position": 9,
+    "title": "Fade in and out Click the fade icon to fade in and fade in and out",
+    "direct_text": "Fade in and out Click the fade icon to fade in and fade in and out",
+    "body": "Fade in and out Click the fade icon to fade in and fade in and out"
+  },
+  {
+    "anchor": "quick-operation",
+    "position": 10,
+    "title": "Gapless playback Click the seamless play icon, switch play seamlessly",
+    "direct_text": "Gapless playback Click the seamless play icon, switch play seamlessly",
+    "body": "Gapless playback Click the seamless play icon, switch play seamlessly"
+  },
+  {
+    "anchor": "quick-operation",
+    "position": 11,
+    "title": "Sleep shutdown Click the Sleep Shutdown icon toggle on and off, and start countdown synchronously. If you need to set different times of sleep shutdown, you need to enter the System -> Sleep shutdown adjustment.",
+    "direct_text": "Sleep shutdown Click the Sleep Shutdown icon toggle on and off, and start countdown synchronously. If you need to set different times of sleep shutdown, you need to enter the System -> Sleep shutdown adjustment.",
+    "body": "Sleep shutdown Click the Sleep Shutdown icon toggle on and off, and start countdown synchronously. If you need to set different times of sleep shutdown, you need to enter the System -> Sleep shutdown adjustment."
+  },
+  {
+    "anchor": "playback-settings",
+    "position": 1,
+    "title": "MSEB The top areas are reset MSEB, MSEB setting entry, and MSEB switch respectively",
+    "direct_text": "MSEB The top areas are reset MSEB, MSEB setting entry, and MSEB switch respectively",
+    "body": "MSEB The top areas are reset MSEB, MSEB setting entry, and MSEB switch respectively Swipe up and down to show more adjustments Slide left and right to adjust the settings of corresponding items MSEB is only valid for songs not higher than 96kHz Invalid for DSD and MQA songs"
+  },
+  {
+    "anchor": "playback-settings",
+    "position": 2,
+    "title": "Equalizer The top areas are reset equalizers, select the preset equalizer menu entry, and equalizer switch",
+    "direct_text": "Equalizer The top areas are reset equalizers, select the preset equalizer menu entry, and equalizer switch",
+    "body": "Equalizer The top areas are reset equalizers, select the preset equalizer menu entry, and equalizer switch By sliding left and right, different equalizer bands are displayed Slide up and down the slider of different frequency bands to adjust the gain/attenuation dB value of the corresponding frequency bands Draw the corresponding curve according to the position adjusted by different frequency bands Equalizer is only valid for songs not higher than 48kHz Invalid for DSD and MQA songs"
+  },
+  {
+    "anchor": "playback-settings",
+    "position": 3,
+    "title": "Update database Start scanning songs manually",
+    "direct_text": "Update database Start scanning songs manually",
+    "body": "Update database Start scanning songs manually"
+  },
+  {
+    "anchor": "playback-settings",
+    "position": 4,
+    "title": "Music update mode",
+    "direct_text": "Music update mode",
+    "body": "Music update mode Manually, the user needs to manually update the song library Automatically, if the MicroSD(TF) card is detected or the USB is plugged in, the system will automatically rescan the song library."
+  },
+  {
+    "anchor": "playback-settings",
+    "position": 5,
+    "title": "Playback mode",
+    "direct_text": "Playback mode",
+    "body": "Playback mode List playback: Starts from the selected track until the current list playback is completed and plays stop. Single loop: The same song is repeated until it is manually cut or shut down and the playback stops. Shuffle: Randomly select the next song in the current list to start playing until it stops manually or shuts down, and stops playback. List loop: Starting from the selected track, continuously looping the songs in the current list until they are manually stopped or shut down, and the playback is stopped."
+  },
+  {
+    "anchor": "playback-settings",
+    "position": 6,
+    "title": "Output selection",
+    "direct_text": "Output selection",
+    "body": "Output selection Since PO/LO multiplexes the same output port, this option is used to switch PO/LO outputs"
+  },
+  {
+    "anchor": "playback-settings",
+    "position": 7,
+    "title": "DSD output mode",
+    "direct_text": "DSD output mode",
+    "body": "DSD output mode When the audio output is balanced (BAL)\\single-ended (PO)\\LineOut(LO), the DSD output mode selection cannot be performed. This function is invalid and output according to the actual situation; When the audio output is Bluetooth, DSD output mode cannot be selected. This function is invalid and is converted to PCM output; When the audio output is SPDIF, DSD output mode selection can be performed Select PCM and output according to the sampling rate 88.2kHz Select DoP or Native. When playing DSD64, it will be output in DoP mode, and the output sampling rate is 2.8 MHz; Select DoP or Native. When playing DSD128 and DSD256, they are converted to PCM output, with an output sampling rate of 88.2 kHz. When the audio output is USB Audio Out, DSD output mode selection can be performed Select PCM, press PCM to output, the maximum support sampling rate is 384kHz Select DoP, press DoP to output, and support DSD256 (11.2MHz) at most (condition: The decoding device that needs to be accessed supports DSD decoding. If the device does not support it, the playback fails) Select Native, press Native to output, and support DSD256 (11.2MHz) at most (condition: The decoding and decoding device that needs to be accessed supports DSD decoding. If the device does not support it, the playback fails)"
+  },
+  {
+    "anchor": "playback-settings",
+    "position": 8,
+    "title": "DSD Gain Compensation Since DSD audio is lower than PCM, you can adjust certain compensations yourself as needed to keep DSD and PCM at the same output level.",
+    "direct_text": "DSD Gain Compensation Since DSD audio is lower than PCM, you can adjust certain compensations yourself as needed to keep DSD and PCM at the same output level.",
+    "body": "DSD Gain Compensation Since DSD audio is lower than PCM, you can adjust certain compensations yourself as needed to keep DSD and PCM at the same output level."
+  },
+  {
+    "anchor": "playback-settings",
+    "position": 9,
+    "title": "Power-off memory playback After turning on, shut down the power while playing. After the next time the next time the song played will be automatically recorded and the automatic playback will continue.",
+    "direct_text": "Power-off memory playback After turning on, shut down the power while playing. After the next time the next time the song played will be automatically recorded and the automatic playback will continue.",
+    "body": "Power-off memory playback After turning on, shut down the power while playing. After the next time the next time the song played will be automatically recorded and the automatic playback will continue."
+  },
+  {
+    "anchor": "playback-settings",
+    "position": 10,
+    "title": "Gapless playback The two songs are seamlessly connected.",
+    "direct_text": "Gapless playback The two songs are seamlessly connected.",
+    "body": "Gapless playback The two songs are seamlessly connected."
+  },
+  {
+    "anchor": "playback-settings",
+    "position": 11,
+    "title": "Sound field Sound field plug-in",
+    "direct_text": "Sound field Sound field plug-in",
+    "body": "Sound field Sound field plug-in"
+  },
+  {
+    "anchor": "playback-settings",
+    "position": 12,
+    "title": "Maximum digital volume output When setting digital output (S/PDIF\\USB Audio Out\\Bluetooth Audio Output), limit the maximum value of digital volume.",
+    "direct_text": "Maximum digital volume output When setting digital output (S/PDIF\\USB Audio Out\\Bluetooth Audio Output), limit the maximum value of digital volume.",
+    "body": "Maximum digital volume output When setting digital output (S/PDIF\\USB Audio Out\\Bluetooth Audio Output), limit the maximum value of digital volume."
+  },
+  {
+    "anchor": "playback-settings",
+    "position": 13,
+    "title": "Maximum volume limit When setting the local output port output (single-ended and balanced output), limit the maximum output volume.",
+    "direct_text": "Maximum volume limit When setting the local output port output (single-ended and balanced output), limit the maximum output volume.",
+    "body": "Maximum volume limit When setting the local output port output (single-ended and balanced output), limit the maximum output volume."
+  },
+  {
+    "anchor": "playback-settings",
+    "position": 14,
+    "title": "Default volume on power Sets the volume of the local output (single-ended and balanced output) outputs each time it is powered on.",
+    "direct_text": "Default volume on power Sets the volume of the local output (single-ended and balanced output) outputs each time it is powered on.",
+    "body": "Default volume on power Sets the volume of the local output (single-ended and balanced output) outputs each time it is powered on."
+  },
+  {
+    "anchor": "playback-settings",
+    "position": 15,
+    "title": "Fade in and out When the song starts and stops playing, the sound goes from small to normal, or from normal to none.",
+    "direct_text": "Fade in and out When the song starts and stops playing, the sound goes from small to normal, or from normal to none.",
+    "body": "Fade in and out When the song starts and stops playing, the sound goes from small to normal, or from normal to none."
+  },
+  {
+    "anchor": "playback-settings",
+    "position": 16,
+    "title": "Gain settings Sets the player's high and low gain.",
+    "direct_text": "Gain settings Sets the player's high and low gain.",
+    "body": "Gain settings Sets the player's high and low gain."
+  },
+  {
+    "anchor": "playback-settings",
+    "position": 17,
+    "title": "ReplayGain This option is valid if the song's information contains ReplayGain information. If you select the audio track or album ReplayGain, each song or album will be adjusted according to the ReplayGain parameters of the song, so that the actual volume of different songs is maintained at the same level without changing the system volume.",
+    "direct_text": "ReplayGain This option is valid if the song's information contains ReplayGain information. If you select the audio track or album ReplayGain, each song or album will be adjusted according to the ReplayGain parameters of the song, so that the actual volume of different songs is maintained at the same level without changing the system volume.",
+    "body": "ReplayGain This option is valid if the song's information contains ReplayGain information. If you select the audio track or album ReplayGain, each song or album will be adjusted according to the ReplayGain parameters of the song, so that the actual volume of different songs is maintained at the same level without changing the system volume. Close: Ignore ReplayGain information in the song Audio track: Make gain adjustments according to the ReplayGain information of the audio track in the song Album: Make gain adjustments according to the ReplayGain information of the album in the song"
+  },
+  {
+    "anchor": "playback-settings",
+    "position": 18,
+    "title": "Balance Set the volume of left and right channels.",
+    "direct_text": "Balance Set the volume of left and right channels.",
+    "body": "Balance Set the volume of left and right channels."
+  },
+  {
+    "anchor": "playback-settings",
+    "position": 19,
+    "title": "Digital filter Used to select different digital filters to provide different listening experiences.",
+    "direct_text": "Digital filter Used to select different digital filters to provide different listening experiences.",
+    "body": "Digital filter Used to select different digital filters to provide different listening experiences."
+  },
+  {
+    "anchor": "playback-settings",
+    "position": 20,
+    "title": "Play through folders",
+    "direct_text": "Play through folders",
+    "body": "Play through folders Play through folderss can prevent users from listening to repeated catalog songs all the time; The song playback ends. If the song is the last song in the current directory list, the previous directory will be returned to the previous level directory when cutting the song. If the parent directory has another directory, it will enter the next directory of the current directory and play it according to the list. Otherwise, continue to look for the next directory in the parent directory; How to find other directories or songs, continue to return to the previous directory and repeat the process until the last song in the root directory is found; The folder jump function can be performed by list playback, random playback, and sequential playback. When the folder jumps, the playback mode logic is invalid; When the playback mode is a single loop and automatically cuts the song, the function is invalid;"
+  },
+  {
+    "anchor": "playback-settings",
+    "position": 21,
+    "title": "Play through albums",
+    "direct_text": "Play through albums",
+    "body": "Play through albums When the album list is played, after one album is played, it will jump to another album to play; When the playback mode is a single loop and the song is automatically cut, the function is invalid;"
+  },
+  {
+    "anchor": "playback-settings",
+    "position": 22,
+    "title": "Repeat function",
+    "direct_text": "Repeat function",
+    "body": "Repeat function After turning on the switch, the A-B icon will be displayed on the playback interface. After setting point A B, the player will repeatedly play music or other language materials between A-B."
+  },
+  {
+    "anchor": "playback-settings",
+    "position": 23,
+    "title": "Speed play",
+    "direct_text": "Speed play",
+    "body": "Speed play After turning on the switch, the speed icon will be displayed on the playback interface. After setting the speed of the time, music or other language materials will be played"
+  },
+  {
+    "anchor": "playback-settings",
+    "position": 24,
+    "title": "Automatically slide to playlist",
+    "direct_text": "Automatically slide to playlist",
+    "body": "Automatically slide to playlist After turning on the switch, click on the song in the list and you will directly enter the playlist interface."
+  },
+  {
+    "anchor": "bluetooth",
+    "position": 1,
+    "title": "Bluetooth switch Click the Bluetooth switch to perform Bluetooth switch operation",
+    "direct_text": "Bluetooth switch Click the Bluetooth switch to perform Bluetooth switch operation",
+    "body": "Bluetooth switch Click the Bluetooth switch to perform Bluetooth switch operation"
+  },
+  {
+    "anchor": "bluetooth",
+    "position": 2,
+    "title": "Sound quality (Bluetooth encoding) LDAC 、 、 APTX 、 AAC 、 SBC。 Among them, UAT is the HiBy Bluetooth encoding protocol and is only valid for HiBy audio devices. The default connection order UAT > LDAC > aptX > AAC > SBC will be selected step by step based on the highest supported format of the connected device. For more information about Bluetooth encoding, please refer toHere。",
+    "direct_text": "Sound quality (Bluetooth encoding) LDAC 、 、 APTX 、 AAC 、 SBC。 Among them, UAT is the HiBy Bluetooth encoding protocol and is only valid for HiBy audio devices. The default connection order UAT > LDAC > aptX > AAC > SBC will be selected step by step based on the highest supported format of the connected device. For more information about Bluetooth encoding, please refer toHere。",
+    "body": "Sound quality (Bluetooth encoding) LDAC 、 、 APTX 、 AAC 、 SBC。 Among them, UAT is the HiBy Bluetooth encoding protocol and is only valid for HiBy audio devices. The default connection order UAT > LDAC > aptX > AAC > SBC will be selected step by step based on the highest supported format of the connected device. For more information about Bluetooth encoding, please refer toHere。"
+  },
+  {
+    "anchor": "bluetooth",
+    "position": 3,
+    "title": "Bluetooth volume adjustment The adjusted volume of Bluetooth devices is mainly used to solve the problem that some Bluetooth headsets or Bluetooth speakers do not take effect by adjusting the volume through the player buttons.",
+    "direct_text": "Bluetooth volume adjustment The adjusted volume of Bluetooth devices is mainly used to solve the problem that some Bluetooth headsets or Bluetooth speakers do not take effect by adjusting the volume through the player buttons.",
+    "body": "Bluetooth volume adjustment The adjusted volume of Bluetooth devices is mainly used to solve the problem that some Bluetooth headsets or Bluetooth speakers do not take effect by adjusting the volume through the player buttons."
+  },
+  {
+    "anchor": "bluetooth",
+    "position": 4,
+    "title": "Bluetooth search Click Bluetooth Search to search for Bluetooth devices.",
+    "direct_text": "Bluetooth search Click Bluetooth Search to search for Bluetooth devices.",
+    "body": "Bluetooth search Click Bluetooth Search to search for Bluetooth devices."
+  },
+  {
+    "anchor": "bluetooth",
+    "position": 5,
+    "title": "Matched devices Display the paired device: Click the device name to reconnect the device; press the device name to delete the device.",
+    "direct_text": "Matched devices Display the paired device: Click the device name to reconnect the device; press the device name to delete the device.",
+    "body": "Matched devices Display the paired device: Click the device name to reconnect the device; press the device name to delete the device."
+  },
+  {
+    "anchor": "bluetooth",
+    "position": 6,
+    "title": "Available equipment Shows all searched devices.",
+    "direct_text": "Available equipment Shows all searched devices.",
+    "body": "Available equipment Shows all searched devices."
+  },
+  {
+    "anchor": "wi-fi",
+    "position": 1,
+    "title": "Wi-Fi switch Click the Wi-Fi switch to perform Wi-Fi switching operation",
+    "direct_text": "Wi-Fi switch Click the Wi-Fi switch to perform Wi-Fi switching operation",
+    "body": "Wi-Fi switch Click the Wi-Fi switch to perform Wi-Fi switching operation"
+  },
+  {
+    "anchor": "wi-fi",
+    "position": 2,
+    "title": "Wi-Fi information After clicking, you can see the displayed host name, Wi-Fi physical address, and IP address.",
+    "direct_text": "Wi-Fi information After clicking, you can see the displayed host name, Wi-Fi physical address, and IP address.",
+    "body": "Wi-Fi information After clicking, you can see the displayed host name, Wi-Fi physical address, and IP address."
+  },
+  {
+    "anchor": "wi-fi",
+    "position": 3,
+    "title": "Add a network Adding a network is mainly used to add hidden SSID to users. The user manually enters the Wi-Fi name and password to connect.",
+    "direct_text": "Add a network Adding a network is mainly used to add hidden SSID to users. The user manually enters the Wi-Fi name and password to connect.",
+    "body": "Add a network Adding a network is mainly used to add hidden SSID to users. The user manually enters the Wi-Fi name and password to connect."
+  },
+  {
+    "anchor": "wi-fi",
+    "position": 4,
+    "title": "Wi-Fi Scan Click Bluetooth Search to search for Bluetooth devices.",
+    "direct_text": "Wi-Fi Scan Click Bluetooth Search to search for Bluetooth devices.",
+    "body": "Wi-Fi Scan Click Bluetooth Search to search for Bluetooth devices."
+  },
+  {
+    "anchor": "wi-fi",
+    "position": 5,
+    "title": "DNS settings When modifying the DNS of the current network, sometimes you can't access the Internet. You can try to modify this part of the content. Here are some commonly used DNS:",
+    "direct_text": "DNS settings When modifying the DNS of the current network, sometimes you can't access the Internet. You can try to modify this part of the content. Here are some commonly used DNS: China：114.114.114.114 or 114.114.115.115 Google: 8.8.8.8 or 8.8.4.4Microsoft：4.2.2.1 or 4.2.2.2",
+    "body": "DNS settings When modifying the DNS of the current network, sometimes you can't access the Internet. You can try to modify this part of the content. Here are some commonly used DNS: China：114.114.114.114 or 114.114.115.115 Google: 8.8.8.8 or 8.8.4.4Microsoft：4.2.2.1 or 4.2.2.2"
+  },
+  {
+    "anchor": "wi-fi",
+    "position": 6,
+    "title": "Matched devices Shows the connected network Click the network name to reconnect to the network; press the network name to delete the network.",
+    "direct_text": "Matched devices Shows the connected network Click the network name to reconnect to the network; press the network name to delete the network.",
+    "body": "Matched devices Shows the connected network Click the network name to reconnect to the network; press the network name to delete the network."
+  },
+  {
+    "anchor": "wi-fi",
+    "position": 7,
+    "title": "Available networks Shows all searched networks. :::",
+    "direct_text": "Available networks Shows all searched networks. :::",
+    "body": "Available networks Shows all searched networks. :::"
+  },
+  {
+    "anchor": "10-system",
+    "position": 1,
+    "title": "Language Select the current system language as needed.",
+    "direct_text": "Language Select the current system language as needed.",
+    "body": "Language Select the current system language as needed."
+  },
+  {
+    "anchor": "10-system",
+    "position": 2,
+    "title": "Backlight settings Set different backlight brightness and the time to automatically turn off the backlight.",
+    "direct_text": "Backlight settings Set different backlight brightness and the time to automatically turn off the backlight.",
+    "body": "Backlight settings Set different backlight brightness and the time to automatically turn off the backlight."
+  },
+  {
+    "anchor": "10-system",
+    "position": 3,
+    "title": "Theme color After opening, you can select a different color to serve as the main color of the device.",
+    "direct_text": "Theme color After opening, you can select a different color to serve as the main color of the device.",
+    "body": "Theme color After opening, you can select a different color to serve as the main color of the device."
+  },
+  {
+    "anchor": "10-system",
+    "position": 4,
+    "title": "UI themes The overall UI style setting and Theme color will only modify the color and may make some adjustments to the icons.",
+    "direct_text": "UI themes The overall UI style setting and Theme color will only modify the color and may make some adjustments to the icons.",
+    "body": "UI themes The overall UI style setting and Theme color will only modify the color and may make some adjustments to the icons."
+  },
+  {
+    "anchor": "10-system",
+    "position": 5,
+    "title": "Font size Set the font size. If you feel that the current font is not suitable, you can select different font size options to adapt to your needs.",
+    "direct_text": "Font size Set the font size. If you feel that the current font is not suitable, you can select different font size options to adapt to your needs.",
+    "body": "Font size Set the font size. If you feel that the current font is not suitable, you can select different font size options to adapt to your needs."
+  },
+  {
+    "anchor": "10-system",
+    "position": 6,
+    "title": "USB working mode Since the USB interface uses TypeC interface, some devices are not implemented in standard protocols, which leads to compatibility issues, so this option is specially added.",
+    "direct_text": "USB working mode Since the USB interface uses TypeC interface, some devices are not implemented in standard protocols, which leads to compatibility issues, so this option is specially added.",
+    "body": "USB working mode Since the USB interface uses TypeC interface, some devices are not implemented in standard protocols, which leads to compatibility issues, so this option is specially added. Automatic: The system will automatically identify whether it is a peripheral or a host based on the inserted device, and then operate in the corresponding mode. Device: The player will act as a device that can be connected to a computer or a mobile phone. Use scenario: Use the player as a USB drive and a USB decoder. OTG: The player will act as a host and can be connected to an external device. Use scenario: Connect a USB drive and connect a USB decoder."
+  },
+  {
+    "anchor": "10-system",
+    "position": 7,
+    "title": "USB DAC feedback If the connected device is unavailable, you can try to modify this option.",
+    "direct_text": "USB DAC feedback If the connected device is unavailable, you can try to modify this option.",
+    "body": "USB DAC feedback If the connected device is unavailable, you can try to modify this option."
+  },
+  {
+    "anchor": "10-system",
+    "position": 8,
+    "title": "Time settings Modify the current player time.",
+    "direct_text": "Time settings Modify the current player time.",
+    "body": "Time settings Modify the current player time."
+  },
+  {
+    "anchor": "10-system",
+    "position": 9,
+    "title": "Power saving shutdown After turning on the switch, the player is in an unplayed state, there is no audio data transmission on HiByLink, Bluetooth and Wi-Fi, and the USB is not connected, saving power-saving shutdown time to save power.",
+    "direct_text": "Power saving shutdown After turning on the switch, the player is in an unplayed state, there is no audio data transmission on HiByLink, Bluetooth and Wi-Fi, and the USB is not connected, saving power-saving shutdown time to save power.",
+    "body": "Power saving shutdown After turning on the switch, the player is in an unplayed state, there is no audio data transmission on HiByLink, Bluetooth and Wi-Fi, and the USB is not connected, saving power-saving shutdown time to save power."
+  },
+  {
+    "anchor": "10-system",
+    "position": 10,
+    "title": "Sleep shutdown",
+    "direct_text": "Sleep shutdown",
+    "body": "Sleep shutdown After turning on the switch, after the sleep time has come, if the USB is not inserted, the power will be shut down unconditionally. If the USB is inserted, the charging interface will be entered. This function is effective at one time. After the next time you turn on the computer, the sleep shutdown function will fail and you need to turn on the switch again."
+  },
+  {
+    "anchor": "10-system",
+    "position": 11,
+    "title": "Power percentage display After setting, the battery percentage will be displayed next to the battery icon.",
+    "direct_text": "Power percentage display After setting, the battery percentage will be displayed next to the battery icon.",
+    "body": "Power percentage display After setting, the battery percentage will be displayed next to the battery icon."
+  },
+  {
+    "anchor": "10-system",
+    "position": 12,
+    "title": "Wire control Whether to support the wire-control function, due to the differences in the headphone interface, add the wire-control switch to avoid some headphones causing the wire-control function to be incorrect during use.",
+    "direct_text": "Wire control Whether to support the wire-control function, due to the differences in the headphone interface, add the wire-control switch to avoid some headphones causing the wire-control function to be incorrect during use.",
+    "body": "Wire control Whether to support the wire-control function, due to the differences in the headphone interface, add the wire-control switch to avoid some headphones causing the wire-control function to be incorrect during use."
+  },
+  {
+    "anchor": "10-system",
+    "position": 13,
+    "title": "LED indicators",
+    "direct_text": "LED indicators",
+    "body": "LED indicators The LED indicators switch can be turned off at night to avoid light pollution. When charging, breathe on the red light. When not charging, the blue light indicates work."
+  },
+  {
+    "anchor": "10-system",
+    "position": 14,
+    "title": "Button operation when screen off Whether it supports operation when closing the screen, avoid misoperation caused by placing it in your pocket or other places.",
+    "direct_text": "Button operation when screen off Whether it supports operation when closing the screen, avoid misoperation caused by placing it in your pocket or other places.",
+    "body": "Button operation when screen off Whether it supports operation when closing the screen, avoid misoperation caused by placing it in your pocket or other places."
+  },
+  {
+    "anchor": "10-system",
+    "position": 15,
+    "title": "Volume knob operation when the screen is turned off Whether it supports operation when closing the screen, avoid misoperation caused by placing it in your pocket or other places.",
+    "direct_text": "Volume knob operation when the screen is turned off Whether it supports operation when closing the screen, avoid misoperation caused by placing it in your pocket or other places.",
+    "body": "Volume knob operation when the screen is turned off Whether it supports operation when closing the screen, avoid misoperation caused by placing it in your pocket or other places."
+  },
+  {
+    "anchor": "10-system",
+    "position": 16,
+    "title": "Shortcut menu Set the shortcut menu function.",
+    "direct_text": "Shortcut menu Set the shortcut menu function.",
+    "body": "Shortcut menu Set the shortcut menu function."
+  },
+  {
+    "anchor": "10-system",
+    "position": 17,
+    "title": "Screensaver settings",
+    "direct_text": "Screensaver settings",
+    "body": "Screensaver settings Set the display mode of the screensaver, you can choose to close, album cover, and dynamic cover. Album cover: Shows the currently playing song cover. Dynamic Cover: Create a new one under the root directory of Micro SD(TF)screensaversFolder and place the pictures in this directory. Support jpg, png and other formats Recommended resolution not exceeding 1024*1024 It is recommended that the number of pictures should not exceed 16"
+  },
+  {
+    "anchor": "10-system",
+    "position": 18,
+    "title": "Screen rotation Can support 180 rotating the screen to display.",
+    "direct_text": "Screen rotation Can support 180 rotating the screen to display.",
+    "body": "Screen rotation Can support 180 rotating the screen to display."
+  },
+  {
+    "anchor": "10-system",
+    "position": 19,
+    "title": "Restore factory settings",
+    "direct_text": "Restore factory settings",
+    "body": "Restore factory settings"
+  },
+  {
+    "anchor": "10-system",
+    "position": 20,
+    "title": "Firmware update",
+    "direct_text": "Firmware update",
+    "body": "Firmware update TF card upgrade Will download*.uptCopy the upgrade package to the Micro SD (TF) card root directory and select TF card upgrade. Network upgrade After clicking, the system will automatically detect whether the server has the latest firmware, and then follow the prompts to operate. How to upgrade the player if it cannot be turned on? Through a card reader or other device that can read the card, the download will be*.uptCopy the upgrade package to the Micro SD (TF) card root directory. When the power is turned off, press the play pause key and the power start button at the same time. When the system is powered on, it will automatically enter the upgrade mode."
+  },
+  {
+    "anchor": "10-system",
+    "position": 21,
+    "title": "Certification information Display information related to equipment certification.",
+    "direct_text": "Certification information Display information related to equipment certification.",
+    "body": "Certification information Display information related to equipment certification."
+  },
+  {
+    "anchor": "10-system",
+    "position": 22,
+    "title": "About",
+    "direct_text": "About",
+    "body": "About Brand Showcase the HiBy brand logo. Model, firmware version Displays player version information. Click the version number multiple times to open the System - Developer Options switch, which contains some hidden or debugging functions, and ordinary users do not need to pay attention to this part. Storage capacity Displays current storage capacity information, including used capacity and total capacity. Additional Information The product supports contact information, official website, serial number and other platform contact information. Click to pop up the QR code and you can scan the code directly. Firmware compilation time Displays the compile time of the current firmware."
+  },
+  {
+    "anchor": "10-system",
+    "position": 23,
+    "title": "Developer Options The default hidden option is required in [About]-》【Model, Firmware Version】-》【Click multiple version number】",
+    "direct_text": "Developer Options The default hidden option is required in [About]-》【Model, Firmware Version】-》【Click multiple version number】",
+    "body": "Developer Options The default hidden option is required in [About]-》【Model, Firmware Version】-》【Click multiple version number】 Volume lock screenshot"
+  }
+]

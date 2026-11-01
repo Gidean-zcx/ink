@@ -1,0 +1,22 @@
+{
+  "name": "06-onboarding-question",
+  "url": "https://www.duolingo.com/welcome",
+  "title": "Duolingo - Learn French with lessons that work",
+  "utc": "2026-10-26T17:39:16.856106+00:00",
+  "text": "CONTINUE",
+  "buttons": [
+    {
+      "text": "",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "CONTINUE",
+      "aria": null,
+      "test": "funboarding-continue-button",
+      "visible": true
+    }
+  ],
+  "inputs": []
+}

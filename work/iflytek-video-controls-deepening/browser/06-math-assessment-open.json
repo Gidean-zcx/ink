@@ -1,0 +1,18 @@
+{
+  "name": "06-math-assessment-open",
+  "url": "https://xxj.xunfei.cn/h5-help/#/play?bgc=https%3A%2F%2Fk12-swift.xunfeixxj.com%2Fxxjserver%2Fwx%2Fh5%2Fhelp%2Fvideo%2F%E5%B0%8F%E6%95%B0AI%E7%BB%84%E5%8D%B7%E9%98%B6%E6%AE%B5%E6%B5%8B.jpg&video=https%3A%2F%2Fk12-swift.xunfeixxj.com%2Fxxjserver%2Fwx%2Fh5%2Fhelp%2Fvideo%2F%E5%B0%8F%E6%95%B0AI%E7%BB%84%E5%8D%B7%E9%98%B6%E6%AE%B5%E6%B5%8B.mp4&videoName=%E5%B0%8F%E6%95%B0AI%E7%BB%84%E5%8D%B7%E9%98%B6%E6%AE%B5%E6%B5%8B&productName=%E5%AD%A6%E4%B9%A0%E6%9C%BAT30Pro&moduleType=introduce&productId=2e5298d3%2FAISTUDY_SU30_T30PRO",
+  "text": "",
+  "videos": [
+    {
+      "src": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%B0%8F%E6%95%B0AI%E7%BB%84%E5%8D%B7%E9%98%B6%E6%AE%B5%E6%B5%8B.mp4",
+      "duration": 123.28,
+      "time": 0.023597,
+      "paused": true,
+      "readyState": 4,
+      "error": null,
+      "width": 1920,
+      "height": 1080
+    }
+  ],
+  "sha256": "1d723de72c5145d8efb6fadcb2fcdfe0fc5c08a80985c00a149df8dac9a04bde"
+}

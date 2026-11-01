@@ -1,0 +1,282 @@
+[
+  {
+    "evidence_id": "E-PALMA-01",
+    "url": "https://shop.boox.com/products/palma2",
+    "before_additional_captures": [],
+    "append_additional_captures": [
+      {
+        "checked_on": "2026-10-27",
+        "access_mode": "ordinary_anonymous_GET",
+        "http_status": 200,
+        "raw_work_path": "work/palma-controls-deepening/raw/palma-product.html",
+        "raw_sha256": "2f6e635b90945a3693592401e791661795eddbc121306153fa7012626b8cdea8",
+        "extracted_work_path": "work/palma-controls-deepening/raw/palma-product.txt",
+        "extracted_sha256": "ca39983df21e02b02ec9d4dfc7bd7030cf50758340a06d3830b3fb5cc140ceab",
+        "hands_on": false,
+        "visual_observed": false,
+        "archived_artifact": "artifacts/palma-controls-deepening/source-notes.md",
+        "sha256": "ae9ac4b859da5350e40a490fab0122bab465a14962ea9c8da1c0ee644f6d17ef"
+      }
+    ]
+  },
+  {
+    "evidence_id": "E-PALMA-02",
+    "url": "https://shop.boox.com/blogs/news/palma2-mindful-living",
+    "before_additional_captures": [],
+    "append_additional_captures": [
+      {
+        "checked_on": "2026-10-27",
+        "access_mode": "ordinary_anonymous_GET",
+        "http_status": 200,
+        "raw_work_path": "work/palma-controls-deepening/raw/palma-launch.html",
+        "raw_sha256": "dce3f4b0c6a5a16df2d114a3d684dbb7c4afec4126022e45ecdc30f91f0b938c",
+        "extracted_work_path": "work/palma-controls-deepening/raw/palma-launch.txt",
+        "extracted_sha256": "73941722232bc28805e2cd04c226f98edec9d21462fbbe6014e72cdc2284cf28",
+        "hands_on": false,
+        "visual_observed": false,
+        "archived_artifact": "artifacts/palma-controls-deepening/source-notes.md",
+        "sha256": "ae9ac4b859da5350e40a490fab0122bab465a14962ea9c8da1c0ee644f6d17ef"
+      }
+    ]
+  },
+  {
+    "evidence_id": "E-PALMA-15",
+    "url": "https://ebookreader.dk/images/upload/Onyx%20BOOX%20Palma%202%20Pro%20User%20Manual.pdf",
+    "before_additional_captures": [],
+    "append_additional_captures": [
+      {
+        "checked_on": "2026-10-27",
+        "access_mode": "ordinary_anonymous_GET",
+        "http_status": 200,
+        "raw_work_path": "work/palma-controls-deepening/raw/mobile-v4-existing.pdf",
+        "raw_sha256": "66a194e882c852677433b96a8d5ac128adf9f9cfb652f73da6738d7f6f937808",
+        "pdf_pages": 103,
+        "pdf_metadata_creation_date": "2024-12-10",
+        "metadata_date_is_not_publication_date": true,
+        "locator": "PDF physical pages; outline73; selected body read; observations separately E-PLCD-04",
+        "hands_on": false,
+        "visual_observed": false,
+        "archived_artifact": "artifacts/palma-controls-deepening/source-notes.md",
+        "sha256": "ae9ac4b859da5350e40a490fab0122bab465a14962ea9c8da1c0ee644f6d17ef"
+      }
+    ]
+  },
+  {
+    "evidence_id": "E-PALMA-04",
+    "url": "https://booxsupport.zendesk.com/hc/en-us/articles/25213043150996-Navigate-Your-Device",
+    "before_additional_captures": [],
+    "append_additional_captures": [
+      {
+        "checked_on": "2026-10-27",
+        "access_mode": "local_saved_public_help_body_reread_no_network",
+        "raw_work_path": "work/eink-systems-research/boox-articles.json",
+        "raw_sha256": "a6bbfd6cb4e8ff122152ccac6f0b504608734649ef826877f8024613de275390",
+        "extracted_work_path": "work/palma-controls-deepening/raw/existing-25213043150996.txt",
+        "extracted_sha256": "708d8f29628e628c957dfd37d2b7769f5082add202d6245e41d57a97fbfcd6ad",
+        "locator": "article id25213043150996; conditional context for M-010 Palma 2",
+        "hands_on": false,
+        "visual_observed": false,
+        "archived_artifact": "artifacts/palma-controls-deepening/source-notes.md",
+        "sha256": "ae9ac4b859da5350e40a490fab0122bab465a14962ea9c8da1c0ee644f6d17ef"
+      }
+    ]
+  },
+  {
+    "evidence_id": "E-PALMA-09",
+    "url": "https://booxsupport.zendesk.com/hc/en-us/articles/8569296110100-Take-Notes-on-Books",
+    "before_additional_captures": [],
+    "append_additional_captures": [
+      {
+        "checked_on": "2026-10-27",
+        "access_mode": "local_saved_public_help_body_reread_no_network",
+        "raw_work_path": "work/eink-systems-research/boox-articles.json",
+        "raw_sha256": "a6bbfd6cb4e8ff122152ccac6f0b504608734649ef826877f8024613de275390",
+        "extracted_work_path": "work/palma-controls-deepening/raw/existing-8569296110100.txt",
+        "extracted_sha256": "41521d4d1f9402f775df838bccb8b7c900ad662cf11afda12b77de1042977aff",
+        "locator": "article id8569296110100; conditional context for M-010 Palma 2",
+        "hands_on": false,
+        "visual_observed": false,
+        "archived_artifact": "artifacts/palma-controls-deepening/source-notes.md",
+        "sha256": "ae9ac4b859da5350e40a490fab0122bab465a14962ea9c8da1c0ee644f6d17ef"
+      }
+    ]
+  },
+  {
+    "evidence_id": "E-PALMA-10",
+    "url": "https://booxsupport.zendesk.com/hc/en-us/articles/10701496119060-TOC-Bookmarks",
+    "before_additional_captures": [],
+    "append_additional_captures": [
+      {
+        "checked_on": "2026-10-27",
+        "access_mode": "local_saved_public_help_body_reread_no_network",
+        "raw_work_path": "work/eink-systems-research/boox-articles.json",
+        "raw_sha256": "a6bbfd6cb4e8ff122152ccac6f0b504608734649ef826877f8024613de275390",
+        "extracted_work_path": "work/palma-controls-deepening/raw/existing-10701496119060.txt",
+        "extracted_sha256": "29c23b1d269d28da9cedfbc6f9c46d8da999daed38933a59e1f7515ff78e4cc8",
+        "locator": "article id10701496119060; conditional context for M-010 Palma 2",
+        "hands_on": false,
+        "visual_observed": false,
+        "archived_artifact": "artifacts/palma-controls-deepening/source-notes.md",
+        "sha256": "ae9ac4b859da5350e40a490fab0122bab465a14962ea9c8da1c0ee644f6d17ef"
+      }
+    ]
+  },
+  {
+    "evidence_id": "E-PALMA-11",
+    "url": "https://booxsupport.zendesk.com/hc/en-us/articles/10701495414804-Book-Progress",
+    "before_additional_captures": [],
+    "append_additional_captures": [
+      {
+        "checked_on": "2026-10-27",
+        "access_mode": "local_saved_public_help_body_reread_no_network",
+        "raw_work_path": "work/eink-systems-research/boox-articles.json",
+        "raw_sha256": "a6bbfd6cb4e8ff122152ccac6f0b504608734649ef826877f8024613de275390",
+        "extracted_work_path": "work/palma-controls-deepening/raw/existing-10701495414804.txt",
+        "extracted_sha256": "002755b8200b3601c921aa9948ae149388ceac7aec7cb3a6291b1297eb278309",
+        "locator": "article id10701495414804; conditional context for M-010 Palma 2",
+        "hands_on": false,
+        "visual_observed": false,
+        "archived_artifact": "artifacts/palma-controls-deepening/source-notes.md",
+        "sha256": "ae9ac4b859da5350e40a490fab0122bab465a14962ea9c8da1c0ee644f6d17ef"
+      }
+    ]
+  },
+  {
+    "evidence_id": "E-PALMA-12",
+    "url": "https://booxsupport.zendesk.com/hc/en-us/articles/360031058312-How-could-I-download-new-TTS-engine-on-BOOX-device-and-use-it-as-the-default-TTS-on-our-device",
+    "before_additional_captures": [],
+    "append_additional_captures": [
+      {
+        "checked_on": "2026-10-27",
+        "access_mode": "local_saved_public_help_body_reread_no_network",
+        "raw_work_path": "work/eink-systems-research/boox-articles.json",
+        "raw_sha256": "a6bbfd6cb4e8ff122152ccac6f0b504608734649ef826877f8024613de275390",
+        "extracted_work_path": "work/palma-controls-deepening/raw/existing-360031058312.txt",
+        "extracted_sha256": "8c4e9f701cec7e003f295e187927f15cf9eb719dcff3ac3b6e83c8422d0afccc",
+        "locator": "article id360031058312; conditional context for M-010 Palma 2",
+        "hands_on": false,
+        "visual_observed": false,
+        "archived_artifact": "artifacts/palma-controls-deepening/source-notes.md",
+        "sha256": "ae9ac4b859da5350e40a490fab0122bab465a14962ea9c8da1c0ee644f6d17ef"
+      }
+    ]
+  },
+  {
+    "evidence_id": "E-PALMA-13",
+    "url": "https://booxsupport.zendesk.com/hc/en-us/articles/10701262170644-App-Management-Settings",
+    "before_additional_captures": [],
+    "append_additional_captures": [
+      {
+        "checked_on": "2026-10-27",
+        "access_mode": "local_saved_public_help_body_reread_no_network",
+        "raw_work_path": "work/eink-systems-research/boox-articles.json",
+        "raw_sha256": "a6bbfd6cb4e8ff122152ccac6f0b504608734649ef826877f8024613de275390",
+        "extracted_work_path": "work/palma-controls-deepening/raw/existing-10701262170644.txt",
+        "extracted_sha256": "47278481dc63eee87ff1752e9841be59480d5fa627cc015eff8b41d911e5d321",
+        "locator": "article id10701262170644; conditional context for M-010 Palma 2",
+        "hands_on": false,
+        "visual_observed": false,
+        "archived_artifact": "artifacts/palma-controls-deepening/source-notes.md",
+        "sha256": "ae9ac4b859da5350e40a490fab0122bab465a14962ea9c8da1c0ee644f6d17ef"
+      }
+    ]
+  },
+  {
+    "evidence_id": "E-PALMA-14",
+    "url": "https://booxsupport.zendesk.com/hc/en-us/articles/10701399613076-Transfer-with-Your-Computer",
+    "before_additional_captures": [],
+    "append_additional_captures": [
+      {
+        "checked_on": "2026-10-27",
+        "access_mode": "local_saved_public_help_body_reread_no_network",
+        "raw_work_path": "work/eink-systems-research/boox-articles.json",
+        "raw_sha256": "a6bbfd6cb4e8ff122152ccac6f0b504608734649ef826877f8024613de275390",
+        "extracted_work_path": "work/palma-controls-deepening/raw/existing-10701399613076.txt",
+        "extracted_sha256": "b763c232b3204ad1e43cd4aa366331ef4acfd45d62b3c97ee24dd263afc6cb75",
+        "locator": "article id10701399613076; conditional context for M-010 Palma 2",
+        "hands_on": false,
+        "visual_observed": false,
+        "archived_artifact": "artifacts/palma-controls-deepening/source-notes.md",
+        "sha256": "ae9ac4b859da5350e40a490fab0122bab465a14962ea9c8da1c0ee644f6d17ef"
+      }
+    ]
+  },
+  {
+    "evidence_id": "E-PALMA-16",
+    "url": "https://booxsupport.zendesk.com/hc/en-us/articles/25401838386196-Reading-Data-Syncing-and-Backup",
+    "before_additional_captures": [],
+    "append_additional_captures": [
+      {
+        "checked_on": "2026-10-27",
+        "access_mode": "local_saved_public_help_body_reread_no_network",
+        "raw_work_path": "work/eink-systems-research/boox-articles.json",
+        "raw_sha256": "a6bbfd6cb4e8ff122152ccac6f0b504608734649ef826877f8024613de275390",
+        "extracted_work_path": "work/palma-controls-deepening/raw/existing-25401838386196.txt",
+        "extracted_sha256": "c14abcdc6b38b3ff7d6cdf2a7ba8ad74dbf6caa0bff27541212397e19528747c",
+        "locator": "article id25401838386196; conditional context for M-010 Palma 2",
+        "hands_on": false,
+        "visual_observed": false,
+        "archived_artifact": "artifacts/palma-controls-deepening/source-notes.md",
+        "sha256": "ae9ac4b859da5350e40a490fab0122bab465a14962ea9c8da1c0ee644f6d17ef"
+      }
+    ]
+  },
+  {
+    "evidence_id": "E-BXCD-06",
+    "url": "https://booxsupport.zendesk.com/hc/en-us/articles/10701299044372-App-Optimization",
+    "before_additional_captures": [],
+    "append_additional_captures": [
+      {
+        "checked_on": "2026-10-27",
+        "access_mode": "local_saved_public_help_body_reread_no_network",
+        "raw_work_path": "work/eink-systems-research/boox-articles.json",
+        "raw_sha256": "a6bbfd6cb4e8ff122152ccac6f0b504608734649ef826877f8024613de275390",
+        "extracted_work_path": "work/palma-controls-deepening/raw/existing-10701299044372.txt",
+        "extracted_sha256": "cfa7571014ef29b21ce808c0b041938f47f712506397bf63532b8a48a145117e",
+        "locator": "article id10701299044372; conditional context for M-010 Palma 2",
+        "hands_on": false,
+        "visual_observed": false,
+        "archived_artifact": "artifacts/palma-controls-deepening/source-notes.md",
+        "sha256": "ae9ac4b859da5350e40a490fab0122bab465a14962ea9c8da1c0ee644f6d17ef"
+      }
+    ]
+  },
+  {
+    "evidence_id": "E-BXCD-14",
+    "url": "https://booxsupport.zendesk.com/hc/en-us/articles/10701171762452-Sleep-and-Battery",
+    "before_additional_captures": [],
+    "append_additional_captures": [
+      {
+        "checked_on": "2026-10-27",
+        "access_mode": "local_saved_public_help_body_reread_no_network",
+        "raw_work_path": "work/eink-systems-research/boox-articles.json",
+        "raw_sha256": "a6bbfd6cb4e8ff122152ccac6f0b504608734649ef826877f8024613de275390",
+        "extracted_work_path": "work/palma-controls-deepening/raw/existing-10701171762452.txt",
+        "extracted_sha256": "388dde0bbcf2673e6f265b6c22b89b5de72cd8d6fe5dffe00cc96eb84793cf69",
+        "locator": "article id10701171762452; conditional context for M-010 Palma 2",
+        "hands_on": false,
+        "visual_observed": false,
+        "archived_artifact": "artifacts/palma-controls-deepening/source-notes.md",
+        "sha256": "ae9ac4b859da5350e40a490fab0122bab465a14962ea9c8da1c0ee644f6d17ef"
+      }
+    ]
+  },
+  {
+    "evidence_id": "E-BXCD-01",
+    "url": "https://booxsupport.zendesk.com/hc/en-us/categories/38115205868180-User-Guide-ePaper-Tablet-PCs",
+    "before_additional_captures": [],
+    "append_additional_captures": [
+      {
+        "checked_on": "2026-10-27",
+        "access_mode": "local_saved_category_index_reread_no_network",
+        "raw_work_path": "work/boox-controls-deepening/epaper-pc-articles.json",
+        "raw_sha256": "02e30182beee444963ce691bbec9523380dcf91000c32685e27bea33f08a2cd8",
+        "locator": "59 articles/14 sections, next_page=null; not Palma 2 model inventory",
+        "hands_on": false,
+        "visual_observed": false,
+        "archived_artifact": "artifacts/palma-controls-deepening/source-notes.md",
+        "sha256": "ae9ac4b859da5350e40a490fab0122bab465a14962ea9c8da1c0ee644f6d17ef"
+      }
+    ]
+  }
+]

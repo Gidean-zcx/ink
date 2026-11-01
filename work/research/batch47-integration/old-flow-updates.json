@@ -1,0 +1,176 @@
+[
+  {
+    "owner": "docs/research/interaction-library/batches/ai-coverage.csv",
+    "before": {
+      "flow_id": "F-M043-01",
+      "product_id": "M-043",
+      "task": "组装并测试任务",
+      "depth": "D2",
+      "evidence_ids": "E-SCT-01;E-SCT-02;E-SCCD-02;E-SCCD-03;E-SCCD-23",
+      "known_branches": "27可自然语言生成后修改/运行；动作Info可看输入输出，App Shortcuts可嵌入；编辑撤销不代表执行副作用回滚。",
+      "gaps": "生成错误、缺动作、额度耗尽、运行副作用与撤回",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-043-shortcuts.md",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "flow_id": "F-M043-01",
+      "product_id": "M-043",
+      "task": "组装并测试任务",
+      "depth": "D2",
+      "evidence_ids": "E-SCT-01;E-SCT-02;E-SCCD-02;E-SCCD-03;E-SCCD-23;E-SCDF-06;E-SCDF-07",
+      "known_branches": "另补27动作连接线与Show Info；无连接可能不取输入而非错误；Quick Look为链中运行预览，不是无副作用试跑。",
+      "gaps": "生成错误、缺动作、额度耗尽、运行副作用与撤回",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-043-shortcuts.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "owner": "docs/research/interaction-library/batches/ai-coverage.csv",
+    "before": {
+      "flow_id": "F-M043-03",
+      "product_id": "M-043",
+      "task": "遇到不适合或缺失的输入",
+      "depth": "D2",
+      "evidence_ids": "E-SCT-04",
+      "known_branches": "可停止并回复、另询输入、取剪贴板或继续；继续时变量可为空。必须区分“不显示入口”与“运行后没输入”。",
+      "gaps": "缺输入实际反馈",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-043-shortcuts.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M043-03",
+      "product_id": "M-043",
+      "task": "遇到不适合或缺失的输入",
+      "depth": "D2",
+      "evidence_ids": "E-SCT-04;E-SCDF-01",
+      "known_branches": "27正文核对：输入动作限制类型；缺输入停止回复/询问/剪贴板/继续；Continue保留空输入变量。",
+      "gaps": "各入口空输入实际反馈、权限与取消传播",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-043-shortcuts.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "owner": "docs/research/interaction-library/batches/ai-coverage.csv",
+    "before": {
+      "flow_id": "F-M043-04",
+      "product_id": "M-043",
+      "task": "运行时补齐信息",
+      "depth": "D2",
+      "evidence_ids": "E-SCT-05",
+      "known_branches": "输入传下一动作或保留为变量；可有默认值、按类型选择键盘。取消的后续状态尚未核实。",
+      "gaps": "取消输入后的链状态",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-043-shortcuts.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M043-04",
+      "product_id": "M-043",
+      "task": "运行时补齐信息",
+      "depth": "D2",
+      "evidence_ids": "E-SCT-05;E-SCDF-02;E-SCDF-15",
+      "known_branches": "27 Ask for Input输入Done传值；Ask Each Time到该参数步骤才暂停，Done继续；默认值可改。",
+      "gaps": "输入或参数提问取消、等待/锁屏、已执行步骤与恢复",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-043-shortcuts.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "owner": "docs/research/interaction-library/batches/ai-coverage.csv",
+    "before": {
+      "flow_id": "F-M043-05",
+      "product_id": "M-043",
+      "task": "授权后再次运行",
+      "depth": "D2",
+      "evidence_ids": "E-SCT-06",
+      "known_branches": "总是允许后不再每次弹出；授权范围按指令记录。文档未证明拒绝后一律回滚之前动作。",
+      "gaps": "拒绝后的部分结果",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-043-shortcuts.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M043-05",
+      "product_id": "M-043",
+      "task": "授权后再次运行",
+      "depth": "D2",
+      "evidence_ids": "E-SCT-06;E-SCDF-03;E-SCDF-16",
+      "known_branches": "27单次/总是/拒绝及Privacy撤销；脚本总开关与指令-网页许可分别记录；拒绝不证明此前动作回滚。",
+      "gaps": "网页匹配范围、拒绝/撤销后的部分结果、脚本检查与权限缓存",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-043-shortcuts.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "owner": "docs/research/interaction-library/batches/ai-coverage.csv",
+    "before": {
+      "flow_id": "F-M043-06",
+      "product_id": "M-043",
+      "task": "结束、提前停止并返回",
+      "depth": "D2",
+      "evidence_ids": "E-SCT-07;E-SCCD-20;E-SCCD-21",
+      "known_branches": "原输出/返回语义保留；Show Alert的Done继续、Cancel可停止；Show Notification发出即继续，不能当已确认。",
+      "gaps": "进程终止、停止后的对象去留、事务回滚、恢复入口",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-043-shortcuts.md",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "flow_id": "F-M043-06",
+      "product_id": "M-043",
+      "task": "结束、提前停止并返回",
+      "depth": "D2",
+      "evidence_ids": "E-SCT-07;E-SCCD-20;E-SCCD-21;E-SCDF-04",
+      "known_branches": "27编辑器显示末尾输出；外部运行结束无预览并返回；Stop and Output交回结果，接收上下文决定去向。Alert确认/取消与Notification继续仍分开。",
+      "gaps": "进程终止、停止后对象去留、事务回滚、输出接收及恢复入口",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-043-shortcuts.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "owner": "docs/research/interaction-library/batches/shortcuts-controls-deepening-coverage.csv",
+    "before": {
+      "flow_id": "F-M043-08",
+      "product_id": "M-043",
+      "task": "查看转换对象并回溯来源",
+      "depth": "D2",
+      "evidence_ids": "E-SCCD-05;E-SCCD-06",
+      "known_branches": "变量Type和属性改变传递对象；Reveal Action高亮来源，Go Back返回；URL转Article可能获取外部内容。",
+      "gaps": "转换失败、字段缺失、来源被删与更新",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-043-shortcuts.md",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "flow_id": "F-M043-08",
+      "product_id": "M-043",
+      "task": "查看转换对象并回溯来源",
+      "depth": "D2",
+      "evidence_ids": "E-SCCD-05;E-SCCD-06;E-SCDF-05;E-SCDF-08;E-SCDF-09;E-SCDF-10",
+      "known_branches": "另补Magic变量来源选择、特殊参数及Set覆盖/Add追加；Clear移除引用不证明删原对象。普通链完成复位，跨运行存储是另一能力。",
+      "gaps": "转换/缺字段、来源被删、参数引用更新、跨运行存储的键/覆盖/删除/恢复",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-043-shortcuts.md",
+      "checked_on": "2026-10-27"
+    }
+  }
+]

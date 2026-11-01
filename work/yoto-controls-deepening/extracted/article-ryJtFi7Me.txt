@@ -1,0 +1,92 @@
+
+Getting started with the Yoto app
+If you are a brand-new user, choose Set up your player from either the landing screen or the Settings section.
+As a second parent or family member with a player that has already been set up, choose Join a Family Account (from either the landing screen or the Settings section of the app).
+ 
+
+
+
+
+News tab
+This is where you can see up-to-date news from Yoto, tips on how to use your player and articles on things we find interesting, and hopefully you may too.
+
+
+Create tab
+
+
+This is the hub of Create in the app. Here you'll be able to:
+Record yourself narrating a story
+Access your previous recordings
+Make a playlist with your recordings or from mp3s
+Discover content from other creators on our community site: https://yoto.space
+Access how to Make Your Own guides to help you to create your own content
+
+
+Library tab
+The library is the heart of the app. 
+
+From here, you can:
+See (and play) all the cards you own
+See (and play) all Make Your Own playlists that you have created or that have been shared with you
+See (and play) all free cards (radio, podcasts, sleep etc.) you've added to your library
+See (and play) all Club Collection cards you've added to your library
+See and remotely control what's playing on a player
+
+To play any of the content in the app, click the play icon, located on the image of that audio, and it will automatically play on the player or phone selected.
+The Device Picker (above the main tab navigation and now playing info) allows you to select which device you are controlling, and playing audio on. 
+The Now Playing area shows you which piece of content you are playing on your phone, and allows you to pause or resume playing. Tapping on the Now Playing area opens up the Maxi Player. From here you can skip chapters or tracks and adjust the volume. 
+From the Maxi Player, you can also: 
+Set a sleep timer by tapping on the moon and stars icon in the right-hand corner.
+Choose the playback speed, rewind/ forward within the chapter by 15 seconds or by using the slider at the top.
+See the chapters of a card by pressing on the burger menu..
+
+ 
+Discover tab
+
+This is where you'll find and discover all of our free content covering radio, podcasts, sleep and stories. You can play all content from here and if you like it, you can add it to your own library for fast access. Just tap on the content to see the content details and tap 'Add to library'.
+
+
+Settings tab
+
+This is where you can see details of who is in your Family Account and all of your players. 
+Your registered details are at the top of the screen (this is the email address you used to sign in to the app). You will also be able to see details of all users (including you) in your Family Account who are paired with your players.
+Under the list of users, you will also see all the players linked to your Family Account. 
+Each listed player has a chevron icon. Tap this icon to manage settings for that player. 
+
+
+STATUS
+Player name - Personalize your player by giving it a name
+Battery level - view battery level of your player
+Manage Wi-Fi - disconnect your player from the Wi-Fi or add a new network
+Audio Download Status - This shows you if all your cards have been downloaded to your player, or if some content still needs to download. If content is not downloaded fully, it will need to stream, which may cause playback issues if you have poor Wi-Fi in the location of your player
+
+
+ALARMS
+Set-up up to 10 alarms. 
+
+
+DAY AND NIGHT MODE
+Morning - Set a start time for day mode (the clock will change from moon to sun)
+Bedtime - Set a start time for night mode (your clock will change from sun to moon)
+Morning Light / Nightlight Color (V2/V3 only) - Choose the color of the light on the rear of the Player. You can set different colors for night and day, so your child knows when it’s time to get up, even if the player is on its front. Only for Yoto Player: the Yoto Mini does not have a night light.
+Auto Display Brightness (V3 only) - Enable the Display Brightness to be auto-adjusted based on ambient light.
+Display Brightness - Set the default screen brightness during day/night modes when Auto Display Brightness is disabled/unavailable.
+Volume Limit - Set a limit for how loud your player will go for the day/night modes.
+Note: this volume limit applies to the Speaker and Wired Headphone outputs. The Yoto Wireless Headphones feature their own kid-safe volume limiting.
+Right Button Shortcuts - By default, your player will play Yoto Daily and Yoto Radio on first and second press during the day; and Yoto Sleep Radio on first press during the night. These can be edited to include French Language items and Timers. 
+
+
+ADVANCED
+Battery saver - Set how quickly the player display dims when no buttons or cards are touched, and when not on the dock. 
+Auto Power-Off - Set how quickly the player switched off when no buttons or cards are touched while off charge. 
+Bluetooth pairing - Toggle this on to allow your player to enter Bluetooth mode, so you can play audio through your player just like any other Bluetooth speaker.
+Be aware, toggling this one does not turn on Bluetooth mode, it unlocks the feature, so you can subsequently enter Bluetooth mode by pressing the left-hand orange button for 3 seconds. 
+Headphone volume limit - set up a volume limit when audio is played with headphone.
+24-hour clock - Choose between a 12 and 24-hour clock for the front display of your player.
+Automatic time zone - Ensure the time zone for your clock is set correctly (includes updates for daylight saving).
+Yoto OS version - See which software version your player is on.
+Yoto App version - See which software version your app is on.
+Registration code - The six-letter code you used to set up your player. It is used to troubleshoot issues, if you have them.
+Player MAC Address 
+Yoto Beta labs - to join our beta user.
+Unpair this player from Family Account - to unpair a player from your account. 

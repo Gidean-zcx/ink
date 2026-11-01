@@ -1,0 +1,39 @@
+{
+  "reason": "Old visual audit hashed the full mutable case. Preserve the unchanged 2026-10-26 audit section in a stable separate artifact; no new observation or evidence-depth change.",
+  "before_case_sha256": "83d855a2ff24dcb903a8b7fd996ca391ec10373c54bcf77a586128dcd0ba6f42",
+  "section_unchanged": true,
+  "changes": [
+    {
+      "id": "E-YDCD-03",
+      "field": "visual_audit_path",
+      "before": "cases/M-025-youdao-pen.md",
+      "after": "artifacts/youdao-controls-deepening/prior-visual-audit.md"
+    },
+    {
+      "id": "E-YDCD-03",
+      "field": "visual_audit_sha256",
+      "before": "83d855a2ff24dcb903a8b7fd996ca391ec10373c54bcf77a586128dcd0ba6f42",
+      "after": "ac0f96f2b724d5753e90163bb05c291d774962407cbed7d1b7ddb596fbd92a64"
+    },
+    {
+      "id": "E-YDCD-04",
+      "field": "visual_audit_path",
+      "before": "cases/M-025-youdao-pen.md",
+      "after": "artifacts/youdao-controls-deepening/prior-visual-audit.md"
+    },
+    {
+      "id": "E-YDCD-04",
+      "field": "visual_audit_sha256",
+      "before": "83d855a2ff24dcb903a8b7fd996ca391ec10373c54bcf77a586128dcd0ba6f42",
+      "after": "ac0f96f2b724d5753e90163bb05c291d774962407cbed7d1b7ddb596fbd92a64"
+    }
+  ],
+  "files": [
+    {
+      "path": "docs/research/interaction-library/batches/youdao-device-deepening-evidence.jsonl",
+      "backup": "work/time-vocabulary-deepening/audit-migration-before-youdao-device-deepening-evidence.jsonl",
+      "before_sha256": "a799fa1efac8cd921aaa76e352c041792252d63146773dcdc62259cddb78b78f",
+      "after_sha256": "8c06fe766990bb07fbf61a3e59d215e6dd5eec7bab24c0a82d054b8ea22b4dd6"
+    }
+  ]
+}

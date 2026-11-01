@@ -1,0 +1,52 @@
+[
+  {
+    "path": "docs/research/interaction-library/cases/M-010-palma.md",
+    "sha256": "0dc3f286f4fc529f2c32f419d00799ab644fd14a50556dae9bd7abcbd07ff362",
+    "bytes": 15377
+  },
+  {
+    "path": "docs/research/interaction-library/batches/palma-controls-deepening-evidence.jsonl",
+    "sha256": "28379b4b8a8f0ca2c5d8d68b24f6f3ff06677f99f9e3bd2d6429c3cc8a003450",
+    "bytes": 5984
+  },
+  {
+    "path": "docs/research/interaction-library/batches/palma-controls-deepening-coverage.csv",
+    "sha256": "aa0cf671b21fa0390e9b0cfb58c6cecf3a0d7df66eaad894707f17ea224f6025",
+    "bytes": 107
+  },
+  {
+    "path": "docs/research/interaction-library/batches/palma-controls-deepening-inventory.csv",
+    "sha256": "5214225a24d2137d25dfe7fbe6cc53ca872c1e9908aed1368381dce59dca4765",
+    "bytes": 50166
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/palma-controls-deepening/source-notes.md",
+    "sha256": "ae9ac4b859da5350e40a490fab0122bab465a14962ea9c8da1c0ee644f6d17ef",
+    "bytes": 4047
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/palma-controls-deepening/mobile-v4-p001.png",
+    "sha256": "ade9afa1624d2c790a7162613814ec70c2f688277b1cd886bff144433add90b8",
+    "bytes": 23981
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/palma-controls-deepening/mobile-v4-p086.png",
+    "sha256": "c02f6894c4c51444cf44bc3e083166a85aac30c2e5647fd7dc8c6ea81b41de5f",
+    "bytes": 28419
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/palma-controls-deepening/mobile-v4-p095.png",
+    "sha256": "95eec91988821cdd2073106bf838aa89a4aff5256f80a6ef02f7216acf76e414",
+    "bytes": 13247
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/palma-controls-deepening/mobile-v4-p097.png",
+    "sha256": "5df48b76d8e3cafa15f48e16cbdc2ca40af6f294b54360bdc886be5b879f9663",
+    "bytes": 22601
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/palma-controls-deepening/palma2-smart-button.jpg",
+    "sha256": "0031c40c6ecde6ec2a85dd3dfb29fcd97be59a11cba2085d00dee6bae270d4d8",
+    "bytes": 63053
+  }
+]

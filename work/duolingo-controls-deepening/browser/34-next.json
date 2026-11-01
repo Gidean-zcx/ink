@@ -1,0 +1,52 @@
+{
+  "name": "34-next",
+  "url": "https://www.duolingo.com/lesson",
+  "title": "Duolingo - Learn French with lessons that work",
+  "utc": "2026-10-26T17:51:57.658946+00:00",
+  "text": "4\nWrite this in English\nun café\ncoffee\na\nand\nSKIP\nCHECK",
+  "buttons": [
+    {
+      "text": "",
+      "aria": null,
+      "test": "quit-button",
+      "visible": true
+    },
+    {
+      "text": "",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "coffee",
+      "aria": null,
+      "test": "coffee-challenge-tap-token",
+      "visible": true
+    },
+    {
+      "text": "a",
+      "aria": null,
+      "test": "a-challenge-tap-token",
+      "visible": true
+    },
+    {
+      "text": "and",
+      "aria": null,
+      "test": "and-challenge-tap-token",
+      "visible": true
+    },
+    {
+      "text": "SKIP",
+      "aria": null,
+      "test": "player-skip",
+      "visible": true
+    },
+    {
+      "text": "CHECK",
+      "aria": null,
+      "test": "player-next",
+      "visible": true
+    }
+  ],
+  "inputs": []
+}

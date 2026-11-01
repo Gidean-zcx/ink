@@ -1,0 +1,23 @@
+{
+  "status": "PASS",
+  "new_E": 3,
+  "new_F": 0,
+  "total_case_F": 10,
+  "old_F_rows": 3,
+  "old_F_fields": 12,
+  "csv_checks": [
+    {
+      "kind": "coverage",
+      "rows": 0,
+      "physical_LF": 1,
+      "literal_backslash_rn": 0
+    },
+    {
+      "kind": "inventory",
+      "rows": 114,
+      "physical_LF": 115,
+      "literal_backslash_rn": 0
+    }
+  ],
+  "errors": []
+}

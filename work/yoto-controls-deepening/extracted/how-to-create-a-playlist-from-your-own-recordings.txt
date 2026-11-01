@@ -1,0 +1,61 @@
+
+Use the recording feature in the Yoto app to record stories, songs, jokes - whatever you feel like - and then create a playlist to link to a Make Your Own card.
+
+
+Record your own audio
+You can make simple recordings within the Yoto App.
+1) Go to the Create tab and select the 'My recordings' button at the bottom of the page.
+
+2) Press the large red record button at the bottom of your screen. This will start a 3 second count down and then your recording will begin.
+
+4) You can pause the recording at any time by pressing the pause button.
+
+5) To end and save your recording, press to the right of the record button.
+
+This will take you back to your My Recordings screen, where you will be able to listen back to your recording.
+
+You also have the option to rename your recording, and to add it to a Make Your Own playlist from here.
+
+
+Create a playlist
+Now you have something recorded, the next step is to upload your recordings from your phone to a playlist.
+You can do this from the My Recordings screen by pressing Add to a playlist for your chosen recording.
+
+You can also do this from either the panel on the Create tab, or via the Playlists section of your Library by pressing the blue Make Playlist button.  Follow the instructions to give your playlist a title, and then select your recording from the following options menu when prompted.
+
+
+
+When you start to make a playlist, you will be able to give your playlist a title, description, and choose a random cover picture.
+
+When your recording has uploaded, you can press Create Playlist, and this will create your playlist.
+
+When you go back to the Playlists area in your Library, you will see your newly created playlist.
+
+
+
+Link your playlist to a card
+To link your playlist to a card, you will need to open the playlist details view. You can open your playlist by pressing on the card you want to view.  You are now ready to link your recordings to a blank Make Your Own card.
+
+1) Press Link to a MYO Card
+
+2) You will then have the option to link a card using your phone or a player.
+
+
+
+Link with your phone
+Press use your phone, and follow the instructions on your phone.
+
+
+You will then need to place your MYO card near the NFC scanner at the top of your phone.
+Wait for the phone to confirm that the audio link is complete.
+
+
+Link with your player
+Press use your phone, and follow the instructions on your phone.
+Press Use a Yoto player.  Your player will need to be switched on and connected to Wi-Fi to link to a card.
+
+Insert your card into your chosen player and select it to begin the card linking.
+
+You should see a red 'record' icon on the player display, followed by a green tick to indicate a successful link.
+Take your card out of the player and reinsert it to play your new playlist!
+

@@ -1,0 +1,62 @@
+■警告表示について
+
+このマニュアルでは、いろいろな絵表示を使っています。これは本製品を安全に正しくお使いいただき、あなたや
+他の人々に加えられるおそれのある危害や損害を、未然に防止するための目印となるものです。その表示と意味は
+次のようになっています。内容をよくご理解のうえ、お読みください。
+
+
+       この表示を無視して、誤った取り扱いをすると、人が死亡する可能性または重傷を負うことがあ
+   危険
+       り、その切迫の度合いが高いことを示しています。
+
+       この表示を無視して、誤った取り扱いをすると、人が死亡する可能性または重傷を負う可能性が
+   警告
+       あることを示しています。
+
+       この表示を無視して、誤った取り扱いをすると、人が傷害を負う可能性があること、物的損害が
+   注意       発生する可能性があることを示しています。
+
+また、危害や損害の内容がどのようなものかを示すために、上記の絵表示と同時に次の記号を使っています。
+
+
+
+    △で示した記号は、警告・注意をうながす内容であることを告げるものです。記号の中やその脇には、
+    具体的な警告内容が示されています。
+
+      で示した記号は、してはいけない行為（禁止行為）であることを告げるものです。記号の中やその
+
+    脇には、具体的な禁止内容が示されています。
+
+    ●で示した記号は、必ず従っていただく内容であることを告げるものです。記号の中やその脇には、具
+    体的な指示内容が示されています。
+
+商標および著作権
+
+クアデルノの日本語変換は、オムロンソフトウェア（株）のiWnn を使用しています。
+iWnn© OMRON SOFTWARE Co., Ltd. 2008-2025 All Rights Reserved.
+Google、Google ロゴ、Google Play、Google Play ロゴ、Android は、Google LLC. の商標または登録商標です。
+macOSは、米国および他の国々で登録されたApple Inc.の商標です。App Storeは、Apple Inc.のサービスマークです。
+This product includes software developed by the OpenSSL Project for use in the OpenSSL Toolkit.
+OpenSSL License について詳しくは、本製品に収録されている「使用許諾契約書」をご覧ください。
+Wi-Fi, the Wi-Fi CERTIFIED logo, WPA and WPA2 are trademarks or registered trademarks of Wi-Fi Alliance.
+Foxit PDF SDK Copyright© 2025,Foxit Corporation www.foxitsoftware.com, All rights reserved.
+This software based in part of the work of the FreeType Team. (www.freetype.org)
+This software is based in part on the work of the Independent JPEG Group.
+N-Mark は米国およびその他の国におけるNFC Forum, Inc. の商標または登録商標です。
+FeliCa はソニー株式会社の商標または登録商標です。
+ScanSnap は、株式会社PFU の日本における登録商標または商標です。
+Bluetooth® のワードマークおよびロゴは、Bluetooth SIG, Inc. が所有する登録商標であり、富士通クライアントコ
+ンピューティング株式会社はこれらのマークをライセンスに基づいて使用しています。
+QUADERNO は富士通クライアントコンピューティング株式会社の登録商標です。
+
+その他の各製品名は、各社の商標、または登録商標です。
+その他の各製品は、各社の著作物です。
+その他のすべての商標は、それぞれの所有者に帰属します。
+
+Copyright Fujitsu Client Computing Limited 2024-2025
+
+
+
+
+
+                          11

@@ -1,0 +1,40 @@
+[
+  {
+    "flow_id": "F-M047-01",
+    "before": {
+      "evidence_ids": "E-TFK-02;E-TFK-03;E-TKCD-02;E-TKCD-03",
+      "known_branches": "同篇西语/英文切换；Search展开输入层后进入K–1结果；无意义查询仍见普通文章；清空并从标题返回正文。",
+      "gaps": "仅桌面匿名该篇；打印、所有年级/主题/分页、已读/精准续读、检索失败原因及课堂分配未知。",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "evidence_ids": "E-TFK-02;E-TFK-03;E-TKCD-02;E-TKCD-03;E-TKVD-02",
+      "known_branches": "同篇西语/英文切换；Search展开输入层后进入K–1结果；无意义查询仍见普通文章；清空并从标题返回正文。 本轮另实际展开年级→K–1→Science→Next→浏览器返回；成人区出生年月表单未提交，X退出后可再开资源菜单。",
+      "gaps": "仍未核所有年级/主题、阅读级别、打印/课堂分配/账号与精准续读；Science分页不能证明所有检索正确。",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "flow_id": "F-M047-03",
+    "before": {
+      "task": "分级辅助与分配",
+      "depth": "D1",
+      "evidence_ids": "E-TFK-01;E-TFK-03;E-TKD-02",
+      "known_branches": "只有特定文章有辅助工具；2018年3–4年级文章含静态词汇释义/音频/关闭节点，不套K–1",
+      "gaps": "实际选级、词汇弹窗交互、课堂分配及结果未知",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "task": "使用词汇辅助并核对分级与分配范围",
+      "depth": "D4",
+      "evidence_ids": "E-TFK-01;E-TFK-03;E-TKD-02;E-TKD-02;E-TKVD-01",
+      "known_branches": "D4仅2018 G3–4公开词汇卡：预标词点击/Enter开卡，X关卡；词音关闭后仍推进，重开继续，暂停保持；刷新后回0。年级目录不等于阅读级别。",
+      "gaps": "未实际听音；词卡不是任意选词词典或生词本，收藏/测验关联未知；本篇未见级别选择器，课堂分配仍仅声明；不泛化K–1或账号。",
+      "visual_status": "observed_browser_sequence",
+      "hands_on": "true",
+      "checked_on": "2026-10-27"
+    }
+  }
+]

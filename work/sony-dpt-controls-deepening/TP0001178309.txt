@@ -1,0 +1,11 @@
+Select handwriting or highlights by passing over them with the pen while holding down the eraser button (a), and then lift the pen from the screen.
+The handwriting or highlights that were passed over will be erased.
+The eraser for the Digital Paper can erase the entirety of a line by selecting only a portion of it. It is not necessary to select the complete area that you want to erase, as you would when erasing pencil marks from normal paper. By selecting multiple lines, you can erase them all at once.
+When erasing on paper
+When erasing on Digital Paper
+To change the size of the eraser
+Tap anywhere on the screen of a document to display the tool bar. Then, tap  (pen settings) in the top right corner of the document screen and select an item for [Eraser Size].
+To undo/redo the erase of handwriting or highlighting
+Tap anywhere on the screen of a document to display the tool bar. Then, tap  (Undo/Redo) in the top right corner of the document screen and select [ Undo] or [ Redo].
+Note
+The [Undo]/[Redo] function will be reset when you go to a different page.

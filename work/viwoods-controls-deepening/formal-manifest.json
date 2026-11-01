@@ -1,0 +1,78 @@
+[
+  {
+    "path": "docs/research/interaction-library/cases/M-007-viwoods.md",
+    "sha256": "34d716ee72e2308a4fbc17ba8a36b562f232f670119ef433d6fa54187d0037fe"
+  },
+  {
+    "path": "docs/research/interaction-library/batches/viwoods-controls-deepening-evidence.jsonl",
+    "sha256": "e8a42436f84b619f06fa1f1fbe6d440637fb9710017a9db713bb32e30c4116b8"
+  },
+  {
+    "path": "docs/research/interaction-library/batches/viwoods-controls-deepening-coverage.csv",
+    "sha256": "3872af418c8e902627e4e2358f89b4216c773aa5268fe0eb33ccbcb76b128ab5"
+  },
+  {
+    "path": "docs/research/interaction-library/batches/viwoods-controls-deepening-inventory.csv",
+    "sha256": "8c50508cd2859863b02594239ae6da25decd49f5ad1e7fa476fd800b175ea09a"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/viwoods-controls-deepening/manual-file-08.png",
+    "sha256": "e1644542cb4d5183458fe8c2dabdd9b79b6a002ea8a147490ee99c6ca05f87bb"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/viwoods-controls-deepening/manual-file-19.png",
+    "sha256": "3ccd312a75511da799c73b9a862f0d14104b01ad8e708c2bcf8058d54ec8bd96"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/viwoods-controls-deepening/manual-file-22.png",
+    "sha256": "2b9b5d44dd715befb451b19ee6e713a0a00349661202522d748ddd1d5232953f"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/viwoods-controls-deepening/manual-file-23.png",
+    "sha256": "88f190707a964801e78b9d8c440da1330437387c0f03555ce3de4b6d9996aeec"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/viwoods-controls-deepening/manual-file-24.png",
+    "sha256": "cc540ff7de29f5cde231f49623cc8408ed15f278c63e9e4b0e24165afb093272"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/viwoods-controls-deepening/manual-file-25.png",
+    "sha256": "bda40f88a15167e122586f7791e15791b342e658b771ec7f8928cf911f844362"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/viwoods-controls-deepening/manual-file-30.png",
+    "sha256": "a3c5c0d16ea579f83c05c1a237bcd40febe02e6e22fcd1f4d8a4d85a1885c8c4"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/viwoods-controls-deepening/manual-file-31.png",
+    "sha256": "072843ee1d4a4b49217827834b69bf781f60e375d9adcc6cc3ec9d2697c4837e"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/viwoods-controls-deepening/manual-file-32.png",
+    "sha256": "3f99ceab287a8d435eda7b823e66ba69ef223e208ef36e55888fde52519020ba"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/viwoods-controls-deepening/manual-file-47.png",
+    "sha256": "b468382de39d03b42984bbe3b16a9eabb72b1945d9db41572b61f02328d330d6"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/viwoods-controls-deepening/manual-file-48.png",
+    "sha256": "3658908242c22f3f68de0b2e0dc9a5f950f6cd3aa1470444f59f44a0b3c1953f"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/viwoods-controls-deepening/manual-file-51.png",
+    "sha256": "2c507cd3d54d29be61a94adf3a23e2a11d48069fee708c9ed1e542c9694c087b"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/viwoods-controls-deepening/manual-file-69.png",
+    "sha256": "420c68dda54ef241d9057eeefa0718ff38bfc8e4a116eefba747c52b58effa6d"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/viwoods-controls-deepening/observed-pages.json",
+    "sha256": "c74515ff3ea37395892f8d167f47474902d9dec3d8e203d98eb3d7e14e064746"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/viwoods-controls-deepening/source-notes.md",
+    "sha256": "34b46514beec33e50cc881176a9f4ba9941931ca524d37a6267c6fa0526df467"
+  }
+]

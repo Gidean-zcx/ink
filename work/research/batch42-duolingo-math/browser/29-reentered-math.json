@@ -1,0 +1,33 @@
+{
+  "name": "29-reentered-math",
+  "at": "2026-10-27T06:31:35.854593+00:00",
+  "url": "https://www.duolingo.com/lesson/unit/1/level/1",
+  "title": "Duolingo - The world’s most popular way to learn",
+  "text": "Follow\nthe\npattern\nFollow the pattern\n6\n+\n0\n6+0\n6\n6\n6\n+\n1\n6+1\n7\n7\n6\n+\n2\n6+2\n?\n?\n8\n8\n9\n9\nTOOLKIT\nCHECK",
+  "controls": [
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": null,
+      "test": "quit-button",
+      "type": "submit",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "TOOLKIT",
+      "aria": null,
+      "test": null,
+      "type": "submit",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "CHECK",
+      "aria": null,
+      "test": "player-next",
+      "type": "submit",
+      "disabled": false
+    }
+  ]
+}

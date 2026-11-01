@@ -1,0 +1,101 @@
+[
+  {
+    "clip": 1,
+    "requested_time": 0,
+    "actual_time": 0,
+    "image": "clip-1-0.00s.png",
+    "sha256": "7d65373e8f96915bb0ac6241b9eb954c2da1f540c1fe39368aa921e73dc1e09e",
+    "duration": 8.76,
+    "width": 960,
+    "height": 720,
+    "media_url_without_query": "https://sqcwsp-vod.smzdm.com/4395211bvodtranscq1500013160/ec9a24221397757885604583788/v.f100030.mp4"
+  },
+  {
+    "clip": 1,
+    "requested_time": 4,
+    "actual_time": 4,
+    "image": "clip-1-4.00s.png",
+    "sha256": "aa2f03c19a61fc600d8c81e2d324b91070e36e36d43d3c7f109317a992d97d56",
+    "duration": 8.76,
+    "width": 960,
+    "height": 720,
+    "media_url_without_query": "https://sqcwsp-vod.smzdm.com/4395211bvodtranscq1500013160/ec9a24221397757885604583788/v.f100030.mp4"
+  },
+  {
+    "clip": 1,
+    "requested_time": 8.61,
+    "actual_time": 8.61,
+    "image": "clip-1-8.61s.png",
+    "sha256": "cdec5460d0d06b5288baecd7c5070fb5c2650712825cfa484d7b2cdada222a6f",
+    "duration": 8.76,
+    "width": 960,
+    "height": 720,
+    "media_url_without_query": "https://sqcwsp-vod.smzdm.com/4395211bvodtranscq1500013160/ec9a24221397757885604583788/v.f100030.mp4"
+  },
+  {
+    "clip": 2,
+    "requested_time": 0,
+    "actual_time": 0,
+    "image": "clip-2-0.00s.png",
+    "sha256": "37e343376543258c6c6a20d67573d644cfed2cb48664d31cc61a2a9f58dd06ad",
+    "duration": 10.96,
+    "width": 1280,
+    "height": 720,
+    "media_url_without_query": "https://sqcwsp-vod.smzdm.com/4395211bvodtranscq1500013160/b207322a1397757885597783675/v.f100030.mp4"
+  },
+  {
+    "clip": 2,
+    "requested_time": 4,
+    "actual_time": 4,
+    "image": "clip-2-4.00s.png",
+    "sha256": "a905ef17afdb6ecf1e46e1e679a9d5f5c84e542660cd6043348658c3576e0527",
+    "duration": 10.96,
+    "width": 1280,
+    "height": 720,
+    "media_url_without_query": "https://sqcwsp-vod.smzdm.com/4395211bvodtranscq1500013160/b207322a1397757885597783675/v.f100030.mp4"
+  },
+  {
+    "clip": 2,
+    "requested_time": 10.81,
+    "actual_time": 10.81,
+    "image": "clip-2-10.81s.png",
+    "sha256": "a046e0fb4135e2c63cba46b7dffba12096cf1cfb6d524b69620661185032552c",
+    "duration": 10.96,
+    "width": 1280,
+    "height": 720,
+    "media_url_without_query": "https://sqcwsp-vod.smzdm.com/4395211bvodtranscq1500013160/b207322a1397757885597783675/v.f100030.mp4"
+  },
+  {
+    "clip": 3,
+    "requested_time": 0,
+    "actual_time": 0,
+    "image": "clip-3-0.00s.png",
+    "sha256": "6a12d3a1c26d5bc208c22ee36affc4d769c561d45b7b49e42449fa99247cc461",
+    "duration": 12.818005,
+    "width": 720,
+    "height": 960,
+    "media_url_without_query": "https://sqcwsp-vod.smzdm.com/4395211bvodtranscq1500013160/fac3bd141397757885611914544/v.f100030.mp4"
+  },
+  {
+    "clip": 3,
+    "requested_time": 4,
+    "actual_time": 4,
+    "image": "clip-3-4.00s.png",
+    "sha256": "e110e09d23ea57a307bf1927676051d9706dadcac620455fecb2cbb256197a44",
+    "duration": 12.818005,
+    "width": 720,
+    "height": 960,
+    "media_url_without_query": "https://sqcwsp-vod.smzdm.com/4395211bvodtranscq1500013160/fac3bd141397757885611914544/v.f100030.mp4"
+  },
+  {
+    "clip": 3,
+    "requested_time": 12.668004999999999,
+    "actual_time": 12.668005,
+    "image": "clip-3-12.67s.png",
+    "sha256": "b98adb865af0cb579728d0e031ef887eeb566ad982dba9ee3d1a187b562403cc",
+    "duration": 12.818005,
+    "width": 720,
+    "height": 960,
+    "media_url_without_query": "https://sqcwsp-vod.smzdm.com/4395211bvodtranscq1500013160/fac3bd141397757885611914544/v.f100030.mp4"
+  }
+]

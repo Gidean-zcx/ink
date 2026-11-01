@@ -1,0 +1,514 @@
+{
+  "started_at": "2026-10-27T11:55:18+0800",
+  "candidate_file": "work/research/batch36-moaan/media-candidates.json",
+  "candidate_sha256": "b6ea1d4ce7444843af2d42047ac303b204536b380457c9a2cc650b283b6210d7",
+  "browser": "156.0.8078.4",
+  "skipped_first_unknown_request": {
+    "source_file": "moaan-transfer-2020.html",
+    "evidence_id": "E-MOD-03",
+    "tag": "img",
+    "url": "http://www.moaansmart.com/data/upload/9/e7/9e7d7f996484795dfddfceb11a74881c.gif",
+    "alt": "方法一.gif"
+  },
+  "records": [
+    {
+      "source_file": "moaan-transfer-2020.html",
+      "evidence_id": "E-MOD-03",
+      "tag": "img",
+      "url": "http://www.moaansmart.com/data/upload/2/d7/2d76c77d76a44b151ae239734d394686.jpg",
+      "alt": "方法二.jpg",
+      "index": 2,
+      "responses": [
+        {
+          "url": "http://www.moaansmart.com/data/upload/2/d7/2d76c77d76a44b151ae239734d394686.jpg",
+          "status": 200,
+          "content_type": "image/jpeg"
+        }
+      ],
+      "request_failures": [],
+      "page_errors": [],
+      "console_errors": [],
+      "screenshots": [
+        {
+          "timepoint": "0s",
+          "path": "work/research/batch36-moaan/root-samples/02-E-MOD-03-.jpg-0s.png",
+          "sha256": "f43857d08ba7a2c372e189f4e3358a9de584e875d5ec31657152cca4b0da07c6",
+          "bytes": 224717,
+          "png_pixels": [
+            1080,
+            1088
+          ]
+        },
+        {
+          "timepoint": "2s",
+          "path": "work/research/batch36-moaan/root-samples/02-E-MOD-03-.jpg-2s.png",
+          "sha256": "f43857d08ba7a2c372e189f4e3358a9de584e875d5ec31657152cca4b0da07c6",
+          "bytes": 224717,
+          "png_pixels": [
+            1080,
+            1088
+          ]
+        },
+        {
+          "timepoint": "5s",
+          "path": "work/research/batch36-moaan/root-samples/02-E-MOD-03-.jpg-5s.png",
+          "sha256": "f43857d08ba7a2c372e189f4e3358a9de584e875d5ec31657152cca4b0da07c6",
+          "bytes": 224717,
+          "png_pixels": [
+            1080,
+            1088
+          ]
+        }
+      ],
+      "http_status": 200,
+      "natural_size": [
+        1080,
+        1088
+      ],
+      "complete": true,
+      "error": null,
+      "rendered_size": [
+        1080,
+        1088
+      ],
+      "current_src": "http://www.moaansmart.com/data/upload/2/d7/2d76c77d76a44b151ae239734d394686.jpg"
+    },
+    {
+      "source_file": "moaan-transfer-2020.html",
+      "evidence_id": "E-MOD-03",
+      "tag": "img",
+      "url": "http://www.moaansmart.com/data/upload/1/69/16919ce1783fc6aaecad4bd37b845695.gif",
+      "alt": "方法三.gif",
+      "index": 3,
+      "responses": [
+        {
+          "url": "http://www.moaansmart.com/data/upload/1/69/16919ce1783fc6aaecad4bd37b845695.gif",
+          "status": 200,
+          "content_type": "image/gif"
+        }
+      ],
+      "request_failures": [],
+      "page_errors": [],
+      "console_errors": [],
+      "screenshots": [
+        {
+          "timepoint": "0s",
+          "path": "work/research/batch36-moaan/root-samples/03-E-MOD-03-.gif-0s.png",
+          "sha256": "90030754fe98ad6ca265d45ab1feb4a7644420971ac532a1ebfa9d7c62fc8141",
+          "bytes": 57903,
+          "png_pixels": [
+            639,
+            920
+          ]
+        },
+        {
+          "timepoint": "2s",
+          "path": "work/research/batch36-moaan/root-samples/03-E-MOD-03-.gif-2s.png",
+          "sha256": "5e7755ee2b72664ba106e84b7a8149a8fb69aa4893f451e1fb18046c0cc1250a",
+          "bytes": 61776,
+          "png_pixels": [
+            639,
+            920
+          ]
+        },
+        {
+          "timepoint": "5s",
+          "path": "work/research/batch36-moaan/root-samples/03-E-MOD-03-.gif-5s.png",
+          "sha256": "90030754fe98ad6ca265d45ab1feb4a7644420971ac532a1ebfa9d7c62fc8141",
+          "bytes": 57903,
+          "png_pixels": [
+            639,
+            920
+          ]
+        }
+      ],
+      "http_status": 200,
+      "natural_size": [
+        639,
+        920
+      ],
+      "complete": true,
+      "error": null,
+      "rendered_size": [
+        639,
+        920
+      ],
+      "current_src": "http://www.moaansmart.com/data/upload/1/69/16919ce1783fc6aaecad4bd37b845695.gif"
+    },
+    {
+      "source_file": "root-moaan-87.html",
+      "evidence_id": "E-MOD-04",
+      "tag": "img",
+      "url": "http://www.moaansmart.com/data/upload/a/b9/ab9f1c1ce4b1b5581f1c820d64399ca2.gif",
+      "alt": "蓝牙传输.gif",
+      "index": 4,
+      "responses": [
+        {
+          "url": "http://www.moaansmart.com/data/upload/a/b9/ab9f1c1ce4b1b5581f1c820d64399ca2.gif",
+          "status": 200,
+          "content_type": "image/gif"
+        }
+      ],
+      "request_failures": [],
+      "page_errors": [],
+      "console_errors": [],
+      "screenshots": [
+        {
+          "timepoint": "0s",
+          "path": "work/research/batch36-moaan/root-samples/04-E-MOD-04-.gif-0s.png",
+          "sha256": "bd668b4a2cdc790b30ebe252ddfc1bea435e675939d46bd169f3805d689fbd22",
+          "bytes": 38144,
+          "png_pixels": [
+            639,
+            920
+          ]
+        },
+        {
+          "timepoint": "2s",
+          "path": "work/research/batch36-moaan/root-samples/04-E-MOD-04-.gif-2s.png",
+          "sha256": "b49e510aef175b73d95a45930e584e6bafb037fa6c1b755018419f39d32d0c83",
+          "bytes": 44679,
+          "png_pixels": [
+            639,
+            920
+          ]
+        },
+        {
+          "timepoint": "5s",
+          "path": "work/research/batch36-moaan/root-samples/04-E-MOD-04-.gif-5s.png",
+          "sha256": "bd668b4a2cdc790b30ebe252ddfc1bea435e675939d46bd169f3805d689fbd22",
+          "bytes": 38144,
+          "png_pixels": [
+            639,
+            920
+          ]
+        }
+      ],
+      "http_status": 200,
+      "natural_size": [
+        639,
+        920
+      ],
+      "complete": true,
+      "error": null,
+      "rendered_size": [
+        639,
+        920
+      ],
+      "current_src": "http://www.moaansmart.com/data/upload/a/b9/ab9f1c1ce4b1b5581f1c820d64399ca2.gif"
+    },
+    {
+      "source_file": "moaan-85.html",
+      "evidence_id": "E-MOD-07",
+      "tag": "img",
+      "url": "http://www.moaansmart.com/data/upload/c/b1/cb17f9824ebabe6c21373a56098b532e.gif",
+      "alt": "重排.gif",
+      "index": 5,
+      "responses": [
+        {
+          "url": "http://www.moaansmart.com/data/upload/c/b1/cb17f9824ebabe6c21373a56098b532e.gif",
+          "status": 200,
+          "content_type": "image/gif"
+        }
+      ],
+      "request_failures": [],
+      "page_errors": [],
+      "console_errors": [],
+      "screenshots": [
+        {
+          "timepoint": "0s",
+          "path": "work/research/batch36-moaan/root-samples/05-E-MOD-07-.gif-0s.png",
+          "sha256": "9e2b66476d8258a115adbc0ebaa7dbdfdd1c5dc4809aa2df0f9f1a7000dc3772",
+          "bytes": 200586,
+          "png_pixels": [
+            639,
+            920
+          ]
+        },
+        {
+          "timepoint": "2s",
+          "path": "work/research/batch36-moaan/root-samples/05-E-MOD-07-.gif-2s.png",
+          "sha256": "b6157c20c05258d35ae84586df822dc66f61cf8ae103b7d5934c384316f699a3",
+          "bytes": 200722,
+          "png_pixels": [
+            639,
+            920
+          ]
+        },
+        {
+          "timepoint": "5s",
+          "path": "work/research/batch36-moaan/root-samples/05-E-MOD-07-.gif-5s.png",
+          "sha256": "9e2b66476d8258a115adbc0ebaa7dbdfdd1c5dc4809aa2df0f9f1a7000dc3772",
+          "bytes": 200586,
+          "png_pixels": [
+            639,
+            920
+          ]
+        }
+      ],
+      "http_status": 200,
+      "natural_size": [
+        639,
+        920
+      ],
+      "complete": true,
+      "error": null,
+      "rendered_size": [
+        639,
+        920
+      ],
+      "current_src": "http://www.moaansmart.com/data/upload/c/b1/cb17f9824ebabe6c21373a56098b532e.gif"
+    },
+    {
+      "source_file": "moaan-88.html",
+      "evidence_id": "E-MOD-05",
+      "tag": "img",
+      "url": "http://www.moaansmart.com/data/upload/3/47/34709625632dbffa78310c90defbed6e.gif",
+      "alt": "移动.gif",
+      "index": 6,
+      "responses": [
+        {
+          "url": "http://www.moaansmart.com/data/upload/3/47/34709625632dbffa78310c90defbed6e.gif",
+          "status": 200,
+          "content_type": "image/gif"
+        }
+      ],
+      "request_failures": [],
+      "page_errors": [],
+      "console_errors": [],
+      "screenshots": [
+        {
+          "timepoint": "0s",
+          "path": "work/research/batch36-moaan/root-samples/06-E-MOD-05-.gif-0s.png",
+          "sha256": "746a2ff565ca70b53d0b5079dd1fe28ca216adf2c52ddc366290e760115119b8",
+          "bytes": 54102,
+          "png_pixels": [
+            639,
+            920
+          ]
+        },
+        {
+          "timepoint": "2s",
+          "path": "work/research/batch36-moaan/root-samples/06-E-MOD-05-.gif-2s.png",
+          "sha256": "808d1936317ad4173e453d186fec74fb5dd3713b56b0d4dbdf5f21af8e21f138",
+          "bytes": 44526,
+          "png_pixels": [
+            639,
+            920
+          ]
+        },
+        {
+          "timepoint": "5s",
+          "path": "work/research/batch36-moaan/root-samples/06-E-MOD-05-.gif-5s.png",
+          "sha256": "808d1936317ad4173e453d186fec74fb5dd3713b56b0d4dbdf5f21af8e21f138",
+          "bytes": 44526,
+          "png_pixels": [
+            639,
+            920
+          ]
+        }
+      ],
+      "http_status": 200,
+      "natural_size": [
+        639,
+        920
+      ],
+      "complete": true,
+      "error": null,
+      "rendered_size": [
+        639,
+        920
+      ],
+      "current_src": "http://www.moaansmart.com/data/upload/3/47/34709625632dbffa78310c90defbed6e.gif"
+    },
+    {
+      "source_file": "moaan-83.html",
+      "evidence_id": "E-MOD-09",
+      "tag": "img",
+      "url": "http://www.moaansmart.com/data/upload/6/31/631cd63a7acaef2b366d929c3e2371be.gif",
+      "alt": "多笔记.gif",
+      "index": 7,
+      "responses": [
+        {
+          "url": "http://www.moaansmart.com/data/upload/6/31/631cd63a7acaef2b366d929c3e2371be.gif",
+          "status": 200,
+          "content_type": "image/gif"
+        }
+      ],
+      "request_failures": [],
+      "page_errors": [],
+      "console_errors": [],
+      "screenshots": [
+        {
+          "timepoint": "0s",
+          "path": "work/research/batch36-moaan/root-samples/07-E-MOD-09-.gif-0s.png",
+          "sha256": "4e8654434ef778c19358977e24c3a12f8b080c2df89c1f2aa0cce37d7d3ca0ac",
+          "bytes": 30604,
+          "png_pixels": [
+            639,
+            920
+          ]
+        },
+        {
+          "timepoint": "2s",
+          "path": "work/research/batch36-moaan/root-samples/07-E-MOD-09-.gif-2s.png",
+          "sha256": "f44a07b9d3a695da5a674e3ff934fc74f30a093f3e2aa5646ae3da8db190d833",
+          "bytes": 41898,
+          "png_pixels": [
+            639,
+            920
+          ]
+        },
+        {
+          "timepoint": "5s",
+          "path": "work/research/batch36-moaan/root-samples/07-E-MOD-09-.gif-5s.png",
+          "sha256": "f44a07b9d3a695da5a674e3ff934fc74f30a093f3e2aa5646ae3da8db190d833",
+          "bytes": 41898,
+          "png_pixels": [
+            639,
+            920
+          ]
+        }
+      ],
+      "http_status": 200,
+      "natural_size": [
+        639,
+        920
+      ],
+      "complete": true,
+      "error": null,
+      "rendered_size": [
+        639,
+        920
+      ],
+      "current_src": "http://www.moaansmart.com/data/upload/6/31/631cd63a7acaef2b366d929c3e2371be.gif"
+    },
+    {
+      "source_file": "moaan-84.html",
+      "evidence_id": "E-MOD-08",
+      "tag": "img",
+      "url": "http://www.moaansmart.com/data/upload/d/00/d00e0b6a403cc94c2e7ceaacd27250d2.gif",
+      "alt": "笔记名称.gif",
+      "index": 8,
+      "responses": [
+        {
+          "url": "http://www.moaansmart.com/data/upload/d/00/d00e0b6a403cc94c2e7ceaacd27250d2.gif",
+          "status": 200,
+          "content_type": "image/gif"
+        }
+      ],
+      "request_failures": [],
+      "page_errors": [],
+      "console_errors": [],
+      "screenshots": [
+        {
+          "timepoint": "0s",
+          "path": "work/research/batch36-moaan/root-samples/08-E-MOD-08-.gif-0s.png",
+          "sha256": "a5f2c6bf81f3c164eba6e2b31e15c9c97a5e4d1e13e80f073422391eed3c6d73",
+          "bytes": 48511,
+          "png_pixels": [
+            639,
+            920
+          ]
+        },
+        {
+          "timepoint": "2s",
+          "path": "work/research/batch36-moaan/root-samples/08-E-MOD-08-.gif-2s.png",
+          "sha256": "b465a545533130fc710f0a0cd2fc6235f167c7a77175e41045142abb51fb53f9",
+          "bytes": 74277,
+          "png_pixels": [
+            639,
+            920
+          ]
+        },
+        {
+          "timepoint": "5s",
+          "path": "work/research/batch36-moaan/root-samples/08-E-MOD-08-.gif-5s.png",
+          "sha256": "b465a545533130fc710f0a0cd2fc6235f167c7a77175e41045142abb51fb53f9",
+          "bytes": 74277,
+          "png_pixels": [
+            639,
+            920
+          ]
+        }
+      ],
+      "http_status": 200,
+      "natural_size": [
+        639,
+        920
+      ],
+      "complete": true,
+      "error": null,
+      "rendered_size": [
+        639,
+        920
+      ],
+      "current_src": "http://www.moaansmart.com/data/upload/d/00/d00e0b6a403cc94c2e7ceaacd27250d2.gif"
+    },
+    {
+      "source_file": "root-moaan-82.html",
+      "evidence_id": "E-MOD-10",
+      "tag": "img",
+      "url": "http://www.moaansmart.com/data/upload/6/b4/6b466d05b9ec0c8f82db3887c075e35f.gif",
+      "alt": "导出pdf.gif",
+      "index": 9,
+      "responses": [
+        {
+          "url": "http://www.moaansmart.com/data/upload/6/b4/6b466d05b9ec0c8f82db3887c075e35f.gif",
+          "status": 200,
+          "content_type": "image/gif"
+        }
+      ],
+      "request_failures": [],
+      "page_errors": [],
+      "console_errors": [],
+      "screenshots": [
+        {
+          "timepoint": "0s",
+          "path": "work/research/batch36-moaan/root-samples/09-E-MOD-10-pdf.gif-0s.png",
+          "sha256": "bcc6d7fb6f11ad487157fb81733ee8185d9451a18a7e07c9ebb2dd6e728602cb",
+          "bytes": 53453,
+          "png_pixels": [
+            639,
+            920
+          ]
+        },
+        {
+          "timepoint": "2s",
+          "path": "work/research/batch36-moaan/root-samples/09-E-MOD-10-pdf.gif-2s.png",
+          "sha256": "265293861889e375449d4b42f260aad42916d78217df642a53cf9105988642fb",
+          "bytes": 56684,
+          "png_pixels": [
+            639,
+            920
+          ]
+        },
+        {
+          "timepoint": "5s",
+          "path": "work/research/batch36-moaan/root-samples/09-E-MOD-10-pdf.gif-5s.png",
+          "sha256": "bcc6d7fb6f11ad487157fb81733ee8185d9451a18a7e07c9ebb2dd6e728602cb",
+          "bytes": 53453,
+          "png_pixels": [
+            639,
+            920
+          ]
+        }
+      ],
+      "http_status": 200,
+      "natural_size": [
+        639,
+        920
+      ],
+      "complete": true,
+      "error": null,
+      "rendered_size": [
+        639,
+        920
+      ],
+      "current_src": "http://www.moaansmart.com/data/upload/6/b4/6b466d05b9ec0c8f82db3887c075e35f.gif"
+    }
+  ],
+  "stopped": false,
+  "stop_reason": null,
+  "finished_at": "2026-10-27T11:56:08+0800"
+}

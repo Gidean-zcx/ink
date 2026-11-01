@@ -1,0 +1,138 @@
+try{ NetworkTracking.init('/_ui/networks/tracking/NetworkTrackingServlet', 'network', 'null'); }catch(x){}try{ NetworkTracking.logPageView();}catch(x){}(function(UITheme) {
+UITheme.getUITheme = function() {
+return UserContext.uiTheme;
+};
+}(window.UITheme = window.UITheme || {}));
+Login | Forgot Your Password?
+if(!window.sfdcPage) { window.sfdcPage = new ApexDetailPage(); }UserContext.initialize({"ampm":["AM","PM"],"isAccessibleMode":false,"salesforceURL":"https://support.remarkable.com?refURL=http%3A%2F%2Fsupport.remarkable.com%2Farticles%2FKnowledge%2FRead-on-reMarkable-Google-Chrome-Extension","dateFormat":"dd.MM.yyyy","dayPeriods":[],"language":"en_US","locale":"no_NO","enableLoggingInAuraAlohaFrameNavigator":true,"dateTimeFormat":"dd.MM.yyyy, HH:mm","labelLastModified":"1789190098000","today":"26.10.2026, 18:11","userPreferences":[{"index":112,"name":"HideInlineEditSplash","value":false},{"index":114,"name":"OverrideTaskSendNotification","value":false},{"index":115,"name":"DefaultTaskSendNotification","value":false},{"index":119,"name":"HideUserLayoutStdFieldInfo","value":false},{"index":116,"name":"HideRPPWarning","value":false},{"index":87,"name":"HideInlineSchedulingSplash","value":false},{"index":88,"name":"HideCRUCNotification","value":false},{"index":89,"name":"HideNewPLESplash","value":false},{"index":90,"name":"HideNewPLEWarnIE6","value":false},{"index":122,"name":"HideOverrideSharingMessage","value":false},{"index":91,"name":"HideProfileILEWarn","value":false},{"index":93,"name":"HideProfileElvVideo","value":false},{"index":97,"name":"ShowPicklistEditSplash","value":false},{"index":92,"name":"HideDataCategorySplash","value":false},{"index":128,"name":"ShowDealView","value":false},{"index":129,"name":"HideDealViewGuidedTour","value":false},{"index":132,"name":"HideKnowledgeFirstTimeSetupMsg","value":false},{"index":104,"name":"DefaultOffEntityPermsMsg","value":false},{"index":135,"name":"HideNewCsnSplash","value":false},{"index":101,"name":"HideBrowserWarning","value":false},{"index":139,"name":"HideDashboardBuilderGuidedTour","value":false},{"index":140,"name":"HideSchedulingGuidedTour","value":false},{"index":180,"name":"HideReportBuilderGuidedTour","value":false},{"index":183,"name":"HideAssociationQueueCallout","value":false},{"index":194,"name":"HideQTEBanner","value":false},{"index":270,"name":"HideIDEGuidedTour","value":false},{"index":282,"name":"HideQueryToolGuidedTour","value":false},{"index":196,"name":"HideCSIGuidedTour","value":false},{"index":271,"name":"HideFewmetGuidedTour","value":false},{"index":272,"name":"HideEditorGuidedTour","value":false},{"index":205,"name":"HideApexTestGuidedTour","value":false},{"index":206,"name":"HideSetupProfileHeaderTour","value":false},{"index":207,"name":"HideSetupProfileObjectsAndTabsTour","value":false},{"index":213,"name":"DefaultOffArticleTypeEntityPermMsg","value":false},{"index":214,"name":"HideSelfInfluenceGetStarted","value":false},{"index":215,"name":"HideOtherInfluenceGetStarted","value":false},{"index":216,"name":"HideFeedToggleGuidedTour","value":false},{"index":268,"name":"ShowChatterTab178GuidedTour","value":false},{"index":275,"name":"HidePeopleTabDeprecationMsg","value":false},{"index":276,"name":"HideGroupTabDeprecationMsg","value":false},{"index":224,"name":"HideUnifiedSearchGuidedTour","value":false},{"index":226,"name":"ShowDevContextMenu","value":false},{"index":227,"name":"HideWhatRecommenderForActivityQueues","value":false},{"index":228,"name":"HideLiveAgentFirstTimeSetupMsg","value":false},{"index":232,"name":"HideGroupAllowsGuestsMsgOnMemberWidget","value":false},{"index":233,"name":"HideGroupAllowsGuestsMsg","value":false},{"index":234,"name":"HideWhatAreGuestsMsg","value":false},{"index":235,"name":"HideNowAllowGuestsMsg","value":false},{"index":236,"name":"HideSocialAccountsAndContactsGuidedTour","value":false},{"index":237,"name":"HideAnalyticsHomeGuidedTour","value":false},{"index":238,"name":"ShowQuickCreateGuidedTour","value":false},{"index":245,"name":"HideFilePageGuidedTour","value":false},{"index":250,"name":"HideForecastingGuidedTour","value":false},{"index":251,"name":"HideBucketFieldGuide","value":false},{"index":263,"name":"HideSmartSearchCallOut","value":false},{"index":273,"name":"ShowForecastingQuotaAttainment","value":false},{"index":280,"name":"HideForecastingQuotaColumn","value":false},{"index":301,"name":"HideManyWhoGuidedTour","value":false},{"index":298,"name":"HideFileSyncBannerMsg","value":false},{"index":299,"name":"HideTestConsoleGuidedTour","value":false},{"index":302,"name":"HideManyWhoInlineEditTip","value":false},{"index":303,"name":"HideSetupV2WelcomeMessage","value":false},{"index":312,"name":"ForecastingShowQuantity","value":false},{"index":313,"name":"HideDataImporterIntroMsg","value":false},{"index":314,"name":"HideEnvironmentHubLightbox","value":false},{"index":316,"name":"HideSetupV2GuidedTour","value":false},{"index":317,"name":"HideFileSyncMobileDownloadDialog","value":false},{"index":322,"name":"HideEnhancedProfileHelpBubble","value":false},{"index":328,"name":"ForecastingHideZeroRows","value":false},{"index":330,"name":"HideEmbeddedComponentsFeatureCallout","value":false},{"index":341,"name":"HideDedupeMatchResultCallout","value":false},{"index":340,"name":"HideS1BrowserUI","value":true},{"index":346,"name":"HideS1Banner","value":false},{"index":358,"name":"HideEmailVerificationAlert","value":false},{"index":354,"name":"HideLearningPathModal","value":false},{"index":359,"name":"HideAtMentionsHelpBubble","value":false},{"index":368,"name":"LightningExperiencePreferred","value":true},{"index":373,"name":"PreviewLightning","value":false},{"index":281,"name":"HideMSPPopup","value":false}],"networkId":"0DB7Q000000bqvW","uiTheme":"Theme3","uiSkin":"Theme3","userName":"support_web@00d7q000002qcc5uam.org.force.com","userId":"0057Q000006iZrQ","isCurrentlySysAdminSU":false,"renderMode":"RETRO","startOfWeek":"2","vfDomainPattern":"getremarkable--(?:[^.]+).vf.force.com","auraDomain":"getremarkable.lightning.force.com","useNativeAlertConfirmPrompt":false,"orgPreferences":[{"index":257,"name":"TabOrganizer","value":true},{"index":113,"name":"GroupTasks","value":true}],"isDefaultNetwork":false,"timeFormat":"HH:mm"});
+Read on reMarkable - Google Chrome ExtensionPrintable View
+« Go Back
+Information
+Properties
+Information
+Title
+Read on reMarkable - Google Chrome Extension
+URL Name
+Read-on-reMarkable-Google-Chrome-Extension
+Summary
+**Summary**: The article explains how to use the Read on reMarkable Chrome extension to send web content to your reMarkable tablet in simplified text or PDF format. It also covers how to send Word and PowerPoint files using the Microsoft Office add-in. Installation steps, different reading options, and troubleshooting tips are provided.
+**Keywords**: Read on reMarkable, Chrome extension, web content, simplified text, PDF, Microsoft Office add-in, Word, PowerPoint, installation, troubleshooting.
+**Generalized Terms**:
+- reMarkable paper tablet -> tablet, pad
+- Read on reMarkable -> Chrome extension
+- Read on reMarkable as PDF -> PDF format
+- Marker -> pen, stylus
+- Marker tips -> nibs, pen nibs
+Description
+Read this article to learn how to send web articles to your reMarkable paper tablet with our Read on reMarkable extension for Google Chrome.
+You can choose whether you want to send documents as reMarkable notebooks or as EPUB files.
+j_id0__SiteTemplate__j_id17__j_id18__j_id25__j_id26__j_id387__0__j_id390__3__j_id398 = window.onload; window.onload=function() { if (j_id0__SiteTemplate__j_id17__j_id18__j_id25__j_id26__j_id387__0__j_id390__3__j_id398!= null) j_id0__SiteTemplate__j_id17__j_id18__j_id25__j_id26__j_id387__0__j_id390__3__j_id398();};
+Time Estimate
+Article Body
+Download Read on reMarkable Chrome extension.
+You can also send Word and PowerPoint files to your reMarkable using our Read on reMarkable add-in for Microsoft Office. Once the documents have been sent to your paper tablet, you can read, review, and annotate without any distractions.
+Learn how to install our add-in for Microsoft Office.Read this article to learn how to send web articles to your reMarkable paper tablet with our Read on reMarkable extension for Google Chrome.
+You can choose whether you want to send documents as reMarkable notebooks or as EPUB files.
+Download Read on reMarkable Chrome extension.
+You can also send Word and PowerPoint files to your reMarkable using our Read on reMarkable add-in for Microsoft Office. Once the documents have been sent to your paper tablet, you can read, review, and annotate without any distractions.
+Learn how to install our add-in for Microsoft Office.
+Before you start
+Currently, Read on reMarkable only works with the Google Chrome web browser.
+Make sure you have a reMarkable account set up.
+Note that importing articles as editable reMarkable notebooks requires a Connect subscription. You don't need a subscription to use the EPUB option.
+Once installed, you’ll find the Read on reMarkable icon at the top-right of your Chrome browser window (next to the address bar).
+Each website has its own way of displaying content, which may change the formatting of the page when it appears on your paper tablet.
+How to install Read on reMarkable
+Open Chrome.
+Go to the Chrome Web Store.
+Click Add to Chrome in the top-right corner.
+Click Add extension.
+A new tab will open, giving you the option to connect Read on reMarkable to your account.
+Click Get one-time code. A new tab will open and take you to my.remarkable.com.
+Log in at my.remarkable.com.
+Copy the one-time code, then go back to the reMarkable page in the Chrome Web Store, and paste the code.
+Click Connect and wait a few seconds. Click Done.
+The Read on reMarkable extension is now installed and will appear in the top-right corner of your browser.
+Different reading options
+reMarkable notebook
+Click the reMarkable icon and the content on the page you're viewing will be sent to your paper tablet as a notebook within a few seconds. Images in the article will also be included (requires software version 3.27).
+These notebooks are fully editable.
+EPUB
+Here are two ways to send an article to your paper tablet as an EPUB:
+Right-click on the reMarkable icon, then click Read on reMarkable as EPUB.
+Click the three dots next to the Chrome extension icon, click Options, then EPUB.
+Note: EPUB files are read-only, so you won't be able to adjust the underlying text. However, you can still annotate on top of the file.
+Sending articles as PDFs
+To add a PDF to your paper tablet, use the print function in your web browser to save the page, then import the file using the reMarkable web app or desktop app.
+Here’s how:
+Find the article you want to read, then open the print menu in your web browser (Ctrl+P or Command+P).
+Save the file to your computer.
+Open the reMarkable desktop or web app.
+Import the saved PDF into the app to send it to your paper tablet.
+Read more about importing files.
+EPUB settings
+Click Read on reMarkable as EPUB. A print dialogue box will open.
+Change the destination to Read on reMarkable as EPUB.
+Select the pages you want to send, and adjust the layout if you want to make changes.
+Click Save.
+How to create more space for note-taking
+Right-click the rM icon and select Read on reMarkable as EPUB.
+Click More settings.
+Click Margins, and choose Custom.
+Move the margins to make extra space for notes.
+Click Save to finish.
+How to set your default file type
+You can choose your default file type (reMarkable notebook or EPUB) for one-click transfer:
+Click the three dots next to the reMarkable icon.
+Click Options.
+Select your preferred default option.
+Click Done.
+How to remove the Read on reMarkable extension
+Click the three dots next to the reMarkable icon.
+Select Remove from Chrome.
+Click Remove.
+j_id0__SiteTemplate__j_id17__j_id18__j_id25__j_id26__j_id387__0__j_id390__5__j_id398 = window.onload; window.onload=function() { if (j_id0__SiteTemplate__j_id17__j_id18__j_id25__j_id26__j_id387__0__j_id390__5__j_id398!= null) j_id0__SiteTemplate__j_id17__j_id18__j_id25__j_id26__j_id387__0__j_id390__5__j_id398();};
+Properties
+Article Created Date
+04.07.2022, 13:01
+Last Published Date
+01.09.2026, 13:34
+Override Page Navigation
+Override Page Navigation API Name
+Tile Image URL
+Validation Status
+Not Validated
+Publication Status
+Published
+DesktopContext.pageTitle = "Knowledge: Read on reMarkable - Google Chrome Extension";
+document.title = "Knowledge: Read on reMarkable - Google Chrome Extension";
+var isModal = false;
+Ext.onReady(function() {
+if (!isModal){
+var propertiesPanel = Ext.query('*[id=j_id0:SiteTemplate:j_id17:j_id18:j_id25:j_id26:articleRendererToolbar] *[id $= :extPanel]')[0];
+if (true) {
+var renderer = new TOCDetailRenderer({elemId:"knowledgeTOCRenderer", height:-110, contentId:'knowledgeTOCRendererContent'});
+if (propertiesPanel) {
+Ext.ComponentMgr.get(propertiesPanel.id).addListener('beforeExpand', function() {
+renderer.height = -190;
+renderer.resize();
+});
+Ext.ComponentMgr.get(propertiesPanel.id).addListener('collapse', function() {
+renderer.height = -110;
+renderer.resize();
+});
+}
+new TOCSectionSelector({menuId:'menu', contentId:'knowledgeTOCRendererContent'});
+}
+ArticleRenderer.registerArticleLinksForConsole();
+}
+else{
+Sfdc.onReady(function(){window.addEventListener("beforeunload", function(){
+if(window.parent.Sfdc.get('ChatterDeflectionModal')){
+Sfdc.Dom.hideByVisibility(window.parent.Sfdc.get('ChatterDeflectionModal'));
+}
+});
+});
+}
+});
+Powered by

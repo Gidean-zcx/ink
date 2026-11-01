@@ -1,0 +1,142 @@
+[
+  {
+    "before": {
+      "flow_id": "F-M023-01",
+      "product_id": "M-023",
+      "task": "绑定与换书",
+      "depth": "D2",
+      "evidence_ids": "E-MMOH-01;E-MMDVC-01",
+      "known_branches": "单书离线准备；自动同步与资源更新路径；云词本版本条件",
+      "gaps": "完成提示、配网/绑定失败、主动更新时序、iOS版本号歧义与空词本",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-023-maimemo-device.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M023-01",
+      "product_id": "M-023",
+      "task": "绑定与换书",
+      "depth": "D2",
+      "evidence_ids": "E-MMOH-01;E-MMDVC-01;E-MMDS-01",
+      "known_branches": "补手机云词本选择→已选→确认换书静态步骤；尚未证明资源到设备可读。",
+      "gaps": "配网/二维码失败；同名/空云词本；确认后下载/首题；iOS版本疑点",
+      "visual_status": "static_reference_only",
+      "hands_on": "false",
+      "case_path": "cases/M-023-maimemo-device.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "before": {
+      "flow_id": "F-M023-02",
+      "product_id": "M-023",
+      "task": "自评与负荷",
+      "depth": "D2",
+      "evidence_ids": "E-MMOH-01;E-MMDVC-01",
+      "known_branches": "短按自评；模式及合并/分开日量方向键；返回/退出",
+      "gaps": "回退是否撤销、逐题提示/错答反馈、空任务、跨日及调整生效时间",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-023-maimemo-device.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M023-02",
+      "product_id": "M-023",
+      "task": "自评与负荷",
+      "depth": "D2",
+      "evidence_ids": "E-MMOH-01;E-MMDVC-01;E-MMDS-01",
+      "known_branches": "答案揭示前四键可显示答案，揭示后才三类自评；学习提示设置和日量确认补静态图，方向箭头与正文映射不一致。",
+      "gaps": "同构建真实按键映射；误评撤销/重排；空任务；结算；提示设置保存",
+      "visual_status": "static_reference_only",
+      "hands_on": "false",
+      "case_path": "cases/M-023-maimemo-device.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "before": {
+      "flow_id": "F-M023-03",
+      "product_id": "M-023",
+      "task": "标记与恢复",
+      "depth": "D2",
+      "evidence_ids": "E-MMOH-01;E-MMDVC-01",
+      "known_branches": "熟知/收藏/不想背及取消；跨书状态保留",
+      "gaps": "暂停及状态优先级、误长按后的排期、反馈撤销与删除不能混同",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-023-maimemo-device.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M023-03",
+      "product_id": "M-023",
+      "task": "标记与恢复",
+      "depth": "D2",
+      "evidence_ids": "E-MMOH-01;E-MMDVC-01;E-MMDS-01",
+      "known_branches": "长按说明配套熟知/不想背/收藏确认弹窗；详情圆/叉切词，不作自评；状态可并列示意。",
+      "gaps": "确认/取消后状态；取消标记排期；组合优先级；同步和恢复",
+      "visual_status": "static_reference_only",
+      "hands_on": "false",
+      "case_path": "cases/M-023-maimemo-device.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "before": {
+      "flow_id": "F-M023-04",
+      "product_id": "M-023",
+      "task": "回顾与随身听",
+      "depth": "D2",
+      "evidence_ids": "E-MMOH-01;E-MMDVC-01",
+      "known_branches": "回顾不改调度；播放/暂停/重播/音量；有线耳机与未来蓝牙分开",
+      "gaps": "中断断点、循环/终点、空队列和媒体缺失",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-023-maimemo-device.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M023-04",
+      "product_id": "M-023",
+      "task": "回顾与随身听",
+      "depth": "D2",
+      "evidence_ids": "E-MMOH-01;E-MMDVC-01;E-MMDS-01",
+      "known_branches": "回顾列表→确认进入，回顾不记反馈；听词页确认键暂停、圆键设置，另有顺序/重复/定时静态选项。",
+      "gaps": "列表全部项目；空队列；定时单位/到期动作；倍速入口；缺媒体；后台/重启断点",
+      "visual_status": "static_reference_only",
+      "hands_on": "false",
+      "case_path": "cases/M-023-maimemo-device.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "before": {
+      "flow_id": "F-M023-05",
+      "product_id": "M-023",
+      "task": "同步与解绑",
+      "depth": "D2",
+      "evidence_ids": "E-MMOH-01;E-MMDVC-01;E-MMO-07",
+      "known_branches": "学习数据同步与资源更新区分；App删除后合并再同步；解绑丢未同步记录",
+      "gaps": "两端冲突、上限边界、幂等重试、换机/解绑撤回和云端恢复未知",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-023-maimemo-device.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M023-05",
+      "product_id": "M-023",
+      "task": "同步与解绑",
+      "depth": "D2",
+      "evidence_ids": "E-MMOH-01;E-MMDVC-01;E-MMO-07;E-MMDS-01",
+      "known_branches": "手机合并数据与设备同步仍分步；管理页4天前是静态样例，不能当本次同步成功。",
+      "gaps": "冲突/失败和重试；未同步解绑；已清除记忆重传；换机恢复",
+      "visual_status": "static_reference_only",
+      "hands_on": "false",
+      "case_path": "cases/M-023-maimemo-device.md",
+      "checked_on": "2026-10-27"
+    }
+  }
+]

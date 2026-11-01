@@ -1,0 +1,10 @@
+HELP CENTER
+USING DUOLINGO
+Why did my course change?
+Duolingo continuously updates courses to make them better and more effective. As we make improvements, you might notice adjustments to existing content or the introduction of brand new material. When this happens, we may also reposition you within your learning path to better align with the fresh content and structure. Rest assured, this helps ensure that you receive the most up-to-date and impactful learning experience possible!
+Relevant Articles
+What is a streak?
+What are leaderboards and leagues?
+Does Duolingo use any open source libraries?
+How does matchmaking work in Duolingo Chess?
+I want to submit a bug report

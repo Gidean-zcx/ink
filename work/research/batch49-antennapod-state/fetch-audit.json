@@ -1,0 +1,156 @@
+[
+  {
+    "path": "work/research/batch49-antennapod-state/EpisodeItemListAdapter.java",
+    "repo_path": "app/src/main/java/de/danoeh/antennapod/ui/episodeslist/EpisodeItemListAdapter.java",
+    "url": "https://raw.githubusercontent.com/AntennaPod/AntennaPod/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/app/src/main/java/de/danoeh/antennapod/ui/episodeslist/EpisodeItemListAdapter.java",
+    "source_url": "https://github.com/AntennaPod/AntennaPod/blob/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/app/src/main/java/de/danoeh/antennapod/ui/episodeslist/EpisodeItemListAdapter.java",
+    "final_url": "https://raw.githubusercontent.com/AntennaPod/AntennaPod/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/app/src/main/java/de/danoeh/antennapod/ui/episodeslist/EpisodeItemListAdapter.java",
+    "status": 200,
+    "bytes": 8051,
+    "sha256": "46f8b51cf3f7eb5e84d79335cd0c686f4920928183b72578629cb916a64e59a7",
+    "git_blob_sha": "7ebd031db38088261b3f7d3e20efc0513eccb638"
+  },
+  {
+    "path": "work/research/batch49-antennapod-state/AllEpisodesFragment.java",
+    "repo_path": "app/src/main/java/de/danoeh/antennapod/ui/screen/AllEpisodesFragment.java",
+    "url": "https://raw.githubusercontent.com/AntennaPod/AntennaPod/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/app/src/main/java/de/danoeh/antennapod/ui/screen/AllEpisodesFragment.java",
+    "source_url": "https://github.com/AntennaPod/AntennaPod/blob/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/app/src/main/java/de/danoeh/antennapod/ui/screen/AllEpisodesFragment.java",
+    "final_url": "https://raw.githubusercontent.com/AntennaPod/AntennaPod/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/app/src/main/java/de/danoeh/antennapod/ui/screen/AllEpisodesFragment.java",
+    "status": 200,
+    "bytes": 5993,
+    "sha256": "d0a3239620428b7cc134f2536321446790d28d30d9c3335ea0cdb081f7acf795",
+    "git_blob_sha": "4450c5117025e964b7e8f815061a311870a06b5f"
+  },
+  {
+    "path": "work/research/batch49-antennapod-state/FeedItemlistFragment.java",
+    "repo_path": "app/src/main/java/de/danoeh/antennapod/ui/screen/feed/FeedItemlistFragment.java",
+    "url": "https://raw.githubusercontent.com/AntennaPod/AntennaPod/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/app/src/main/java/de/danoeh/antennapod/ui/screen/feed/FeedItemlistFragment.java",
+    "source_url": "https://github.com/AntennaPod/AntennaPod/blob/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/app/src/main/java/de/danoeh/antennapod/ui/screen/feed/FeedItemlistFragment.java",
+    "final_url": "https://raw.githubusercontent.com/AntennaPod/AntennaPod/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/app/src/main/java/de/danoeh/antennapod/ui/screen/feed/FeedItemlistFragment.java",
+    "status": 200,
+    "bytes": 34613,
+    "sha256": "2acdc7de4b69c2833e5030db95853b86ca944f38c4e9cabc1681cd77f99c8429",
+    "git_blob_sha": "cba25f59ab42a4419ac6b53589a233a6c9bd2cc8"
+  },
+  {
+    "path": "work/research/batch49-antennapod-state/TagSettingsDialog.java",
+    "repo_path": "app/src/main/java/de/danoeh/antennapod/ui/screen/feed/preferences/TagSettingsDialog.java",
+    "url": "https://raw.githubusercontent.com/AntennaPod/AntennaPod/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/app/src/main/java/de/danoeh/antennapod/ui/screen/feed/preferences/TagSettingsDialog.java",
+    "source_url": "https://github.com/AntennaPod/AntennaPod/blob/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/app/src/main/java/de/danoeh/antennapod/ui/screen/feed/preferences/TagSettingsDialog.java",
+    "final_url": "https://raw.githubusercontent.com/AntennaPod/AntennaPod/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/app/src/main/java/de/danoeh/antennapod/ui/screen/feed/preferences/TagSettingsDialog.java",
+    "status": 200,
+    "bytes": 7049,
+    "sha256": "5aacfb3062a690ce38d397008b834553b3ff6641de03765d6c7bf104801d55ce",
+    "git_blob_sha": "74e53d2afc390d25a4cb69726473957acc3b0cbe"
+  },
+  {
+    "path": "work/research/batch49-antennapod-state/LocalDeleteModal.java",
+    "repo_path": "app/src/main/java/de/danoeh/antennapod/ui/view/LocalDeleteModal.java",
+    "url": "https://raw.githubusercontent.com/AntennaPod/AntennaPod/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/app/src/main/java/de/danoeh/antennapod/ui/view/LocalDeleteModal.java",
+    "source_url": "https://github.com/AntennaPod/AntennaPod/blob/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/app/src/main/java/de/danoeh/antennapod/ui/view/LocalDeleteModal.java",
+    "final_url": "https://raw.githubusercontent.com/AntennaPod/AntennaPod/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/app/src/main/java/de/danoeh/antennapod/ui/view/LocalDeleteModal.java",
+    "status": 200,
+    "bytes": 1233,
+    "sha256": "ffda513d66739bcafb6828b9486cbf266429d3c9ff86563f03ef6529f6fd4d3c",
+    "git_blob_sha": "b4eab4e3cb3965a6d80e19bd15ede5f0c0769a13"
+  },
+  {
+    "path": "work/research/batch49-antennapod-state/FeedPreferences.java",
+    "repo_path": "model/src/main/java/de/danoeh/antennapod/model/feed/FeedPreferences.java",
+    "url": "https://raw.githubusercontent.com/AntennaPod/AntennaPod/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/model/src/main/java/de/danoeh/antennapod/model/feed/FeedPreferences.java",
+    "source_url": "https://github.com/AntennaPod/AntennaPod/blob/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/model/src/main/java/de/danoeh/antennapod/model/feed/FeedPreferences.java",
+    "final_url": "https://raw.githubusercontent.com/AntennaPod/AntennaPod/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/model/src/main/java/de/danoeh/antennapod/model/feed/FeedPreferences.java",
+    "status": 200,
+    "bytes": 9461,
+    "sha256": "27c108d851908f4cf501e439175453ab4108d82087b6203c8c21606b3b7ad2a1",
+    "git_blob_sha": "2d649e5059faf639d76c7b59e8ac36a65d8ef168"
+  },
+  {
+    "path": "work/research/batch49-antennapod-state/PodDBAdapter.java",
+    "repo_path": "storage/database/src/main/java/de/danoeh/antennapod/storage/database/PodDBAdapter.java",
+    "url": "https://raw.githubusercontent.com/AntennaPod/AntennaPod/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/storage/database/src/main/java/de/danoeh/antennapod/storage/database/PodDBAdapter.java",
+    "source_url": "https://github.com/AntennaPod/AntennaPod/blob/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/storage/database/src/main/java/de/danoeh/antennapod/storage/database/PodDBAdapter.java",
+    "final_url": "https://raw.githubusercontent.com/AntennaPod/AntennaPod/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/storage/database/src/main/java/de/danoeh/antennapod/storage/database/PodDBAdapter.java",
+    "status": 200,
+    "bytes": 72890,
+    "sha256": "74e39999e4857b9a445a7bf01bc0580e6846ead85c9cf48eef84f001df5dbd36",
+    "git_blob_sha": "22a5eb9e9bc7bcd8623b12180361b5a7d0a36854"
+  },
+  {
+    "path": "work/research/batch49-antennapod-state/ConfirmationDialog.java",
+    "repo_path": "ui/common/src/main/java/de/danoeh/antennapod/ui/common/ConfirmationDialog.java",
+    "url": "https://raw.githubusercontent.com/AntennaPod/AntennaPod/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/ui/common/src/main/java/de/danoeh/antennapod/ui/common/ConfirmationDialog.java",
+    "source_url": "https://github.com/AntennaPod/AntennaPod/blob/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/ui/common/src/main/java/de/danoeh/antennapod/ui/common/ConfirmationDialog.java",
+    "final_url": "https://raw.githubusercontent.com/AntennaPod/AntennaPod/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/ui/common/src/main/java/de/danoeh/antennapod/ui/common/ConfirmationDialog.java",
+    "status": 200,
+    "bytes": 1881,
+    "sha256": "cfed0dba646d279fe95529bccf4970d421d8894558321deeae3d0e80051a7062",
+    "git_blob_sha": "8acedc7d34ac35e3e5c84d338b20eac8c41200eb"
+  },
+  {
+    "path": "work/research/batch49-antennapod-state/AllEpisodesFilterDialog.java",
+    "repo_path": "app/src/main/java/de/danoeh/antennapod/ui/AllEpisodesFilterDialog.java",
+    "url": "https://raw.githubusercontent.com/AntennaPod/AntennaPod/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/app/src/main/java/de/danoeh/antennapod/ui/AllEpisodesFilterDialog.java",
+    "source_url": "https://github.com/AntennaPod/AntennaPod/blob/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/app/src/main/java/de/danoeh/antennapod/ui/AllEpisodesFilterDialog.java",
+    "final_url": "https://raw.githubusercontent.com/AntennaPod/AntennaPod/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/app/src/main/java/de/danoeh/antennapod/ui/AllEpisodesFilterDialog.java",
+    "status": 200,
+    "bytes": 1041,
+    "sha256": "0d261c77bc19adc3ee26c7087d5ba28b0674c8e53f0dc4cd3104b7532e523325",
+    "git_blob_sha": "d3464cd542024572853aa53770323a98df042abc"
+  },
+  {
+    "path": "work/research/batch49-antennapod-state/FeedItemFilterDialog.java",
+    "repo_path": "app/src/main/java/de/danoeh/antennapod/ui/FeedItemFilterDialog.java",
+    "url": "https://raw.githubusercontent.com/AntennaPod/AntennaPod/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/app/src/main/java/de/danoeh/antennapod/ui/FeedItemFilterDialog.java",
+    "source_url": "https://github.com/AntennaPod/AntennaPod/blob/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/app/src/main/java/de/danoeh/antennapod/ui/FeedItemFilterDialog.java",
+    "final_url": "https://raw.githubusercontent.com/AntennaPod/AntennaPod/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/app/src/main/java/de/danoeh/antennapod/ui/FeedItemFilterDialog.java",
+    "status": 200,
+    "bytes": 953,
+    "sha256": "fa4ad1d0a3510159d798cb6746ecdde1fe2774a8daf70afbb425e80137b10644",
+    "git_blob_sha": "cce78013a85c3b70c449fb0855a842b448801dff"
+  },
+  {
+    "path": "work/research/batch49-antennapod-state/EpisodesListFragment.java",
+    "repo_path": "app/src/main/java/de/danoeh/antennapod/ui/episodeslist/EpisodesListFragment.java",
+    "url": "https://raw.githubusercontent.com/AntennaPod/AntennaPod/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/app/src/main/java/de/danoeh/antennapod/ui/episodeslist/EpisodesListFragment.java",
+    "source_url": "https://github.com/AntennaPod/AntennaPod/blob/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/app/src/main/java/de/danoeh/antennapod/ui/episodeslist/EpisodesListFragment.java",
+    "final_url": "https://raw.githubusercontent.com/AntennaPod/AntennaPod/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/app/src/main/java/de/danoeh/antennapod/ui/episodeslist/EpisodesListFragment.java",
+    "status": 200,
+    "bytes": 18770,
+    "sha256": "da5bebb036e79af824bd0ec19dd566b7e025e8892a8dcea565932d8db8fd634a",
+    "git_blob_sha": "6bd71bb188b9afa6bfc9cc98fb53490e3c45c118"
+  },
+  {
+    "path": "work/research/batch49-antennapod-state/FeedItemFilter.java",
+    "repo_path": "model/src/main/java/de/danoeh/antennapod/model/feed/FeedItemFilter.java",
+    "url": "https://raw.githubusercontent.com/AntennaPod/AntennaPod/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/model/src/main/java/de/danoeh/antennapod/model/feed/FeedItemFilter.java",
+    "source_url": "https://github.com/AntennaPod/AntennaPod/blob/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/model/src/main/java/de/danoeh/antennapod/model/feed/FeedItemFilter.java",
+    "final_url": "https://raw.githubusercontent.com/AntennaPod/AntennaPod/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/model/src/main/java/de/danoeh/antennapod/model/feed/FeedItemFilter.java",
+    "status": 200,
+    "bytes": 6203,
+    "sha256": "201d762a425d8f0d6e55db3d9d228713474a0efe0e391e6ee469a25993d6d0ba",
+    "git_blob_sha": "70f4f08ba61c4d113cd719d8a09a732c7b36f884"
+  },
+  {
+    "path": "work/research/batch49-antennapod-state/DBReader.java",
+    "repo_path": "storage/database/src/main/java/de/danoeh/antennapod/storage/database/DBReader.java",
+    "url": "https://raw.githubusercontent.com/AntennaPod/AntennaPod/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/storage/database/src/main/java/de/danoeh/antennapod/storage/database/DBReader.java",
+    "source_url": "https://github.com/AntennaPod/AntennaPod/blob/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/storage/database/src/main/java/de/danoeh/antennapod/storage/database/DBReader.java",
+    "final_url": "https://raw.githubusercontent.com/AntennaPod/AntennaPod/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/storage/database/src/main/java/de/danoeh/antennapod/storage/database/DBReader.java",
+    "status": 200,
+    "bytes": 33216,
+    "sha256": "240c26934c7adee8c664b3f875134f6f290dc4bc4ba8e1189748b9972182e697",
+    "git_blob_sha": "b6b09a6acb82b12c8a146c6173967d322ed01941"
+  },
+  {
+    "path": "work/research/batch49-antennapod-state/FeedMultiSelectActionHandler.java",
+    "repo_path": "app/src/main/java/de/danoeh/antennapod/ui/screen/subscriptions/FeedMultiSelectActionHandler.java",
+    "url": "https://raw.githubusercontent.com/AntennaPod/AntennaPod/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/app/src/main/java/de/danoeh/antennapod/ui/screen/subscriptions/FeedMultiSelectActionHandler.java",
+    "source_url": "https://github.com/AntennaPod/AntennaPod/blob/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/app/src/main/java/de/danoeh/antennapod/ui/screen/subscriptions/FeedMultiSelectActionHandler.java",
+    "final_url": "https://raw.githubusercontent.com/AntennaPod/AntennaPod/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/app/src/main/java/de/danoeh/antennapod/ui/screen/subscriptions/FeedMultiSelectActionHandler.java",
+    "status": 200,
+    "bytes": 8523,
+    "sha256": "81f3664dc1e67fe00a561066f1e677c033ab6136a5957c2f56a53258c2389766",
+    "git_blob_sha": "fe07f3307a837fdf01104b591c361e432aac0cdc"
+  }
+]

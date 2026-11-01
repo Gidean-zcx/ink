@@ -1,0 +1,42 @@
+{
+  "checked_on": "2026-10-27",
+  "queries": [
+    "site.ireader.com 掌阅 手机 帮助 笔记 导入 听书",
+    "site:ireader.com 掌阅 书童 点击 使用",
+    "site:consumer.huawei.com 掌阅 墨水屏 导入 图书笔记",
+    "site:ireader.com \"帮助\" \"笔记\"",
+    "site:zhangyue.com \"帮助\" \"导入\"",
+    "site:ireader.com \"书童\" \"点击\"",
+    "掌阅 帮助中心 官方 \"导入\"",
+    "\"掌阅\" \"书童\" \"长按\"",
+    "\"掌阅\" \"帮助与反馈\" \"笔记\"",
+    "site:ah2.ireader.com 帮助",
+    "\"掌阅\" \"笔记\" \"导出\" \"官方\" \"手机\"",
+    "\"掌阅书童\" \"点击\" \"掌阅科技\"",
+    "\"掌阅\" \"常见问题\" \"听书\"",
+    "site:mp.weixin.qq.com \"掌阅\" \"本机导入\""
+  ],
+  "query_record_type": "manual_log_of_tool_queries_and_outcomes_not_response_archive",
+  "results": "官网域名检索主要返回书城/图书正文；移动端帮助未取得。AppStore与Huawei为旧URL；其他为非官方教程、硬件/精选等不同对象或新闻，不补手机流程。",
+  "stopped": [
+    {
+      "route": "www.ireader.com/ previously challenged homepage",
+      "action": "旧本地原件复读，本轮未重试"
+    },
+    {
+      "route": "zhangyue.com web search",
+      "result": "Blocked by robots.txt; non-retryable",
+      "action": "停止该路径，未改用HTTP绕过"
+    }
+  ],
+  "excluded_examples": [
+    "https://www.itmop.com/article/52485.html",
+    "https://jingyan.baidu.com/article/d45ad148840ba328552b80c3.html",
+    "https://apps.apple.com/cn/app/id1447341012",
+    "https://www.bilibili.com/video/BV1xt4y1K78M/"
+  ],
+  "network_gets": 1,
+  "new_evidence": 0,
+  "new_flows": 0,
+  "images_viewed": 0
+}

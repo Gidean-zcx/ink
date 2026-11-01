@@ -1,0 +1,73 @@
+{
+  "name": "10-grade-choice",
+  "at": "2026-10-27T06:25:51.131883+00:00",
+  "url": "https://www.duolingo.com/welcome?welcomeStep=learningReason",
+  "title": "Duolingo - The world’s most popular way to learn",
+  "text": "How can Duolingo Math help?\nHow can Duolingo Math help?\nPractice math skills\nHelp with homework\nStudy for a test\nSpend time productively\nHave fun learning\nOther\nCONTINUE",
+  "controls": [
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": null,
+      "test": null,
+      "type": "submit",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": null,
+      "test": null,
+      "type": "button",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": null,
+      "test": null,
+      "type": "button",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": null,
+      "test": null,
+      "type": "button",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": null,
+      "test": null,
+      "type": "button",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": null,
+      "test": null,
+      "type": "button",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": null,
+      "test": null,
+      "type": "button",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "CONTINUE",
+      "aria": null,
+      "test": "funboarding-continue-button",
+      "type": "submit",
+      "disabled": true
+    }
+  ]
+}

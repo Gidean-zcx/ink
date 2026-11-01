@@ -1,0 +1,147 @@
+[
+  {
+    "flow_id": "F-M011-01",
+    "before": {
+      "flow_id": "F-M011-01",
+      "product_id": "M-011",
+      "task": "返回、切后台和改按键",
+      "depth": "D2",
+      "evidence_ids": "E-BIGME-02;E-BGD-02",
+      "known_branches": "导航/显示动作，不等于关闭app或清其数据。",
+      "gaps": "PDF p3–7；默认设置是否随固件改变、长按/锁屏响应、误触撤回。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-011-bigme.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M011-01",
+      "product_id": "M-011",
+      "task": "返回、切后台和改按键",
+      "depth": "D2",
+      "evidence_ids": "E-BIGME-02;E-BGD-02",
+      "known_branches": "单击/长按各10项映射；底部左/中/右手势各10项；导航、清缓存和全刷语义分开",
+      "gaps": "PDF p3–7；保存/还原、锁屏响应、映射冲突；不从其他固件补双击",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-011-bigme.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "flow_id": "F-M011-02",
+    "before": {
+      "flow_id": "F-M011-02",
+      "product_id": "M-011",
+      "task": "针对当前内容选显示方式",
+      "depth": "D2",
+      "evidence_ids": "E-BIGME-02",
+      "known_branches": "预设为 Default、Magazine、Comic、Video；保存范围未交代。",
+      "gaps": "PDF p9–12；切app是否继承、恢复默认、刷新延迟、残影；不从模式名推断实测速度。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-011-bigme.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M011-02",
+      "product_id": "M-011",
+      "task": "针对当前内容选显示方式",
+      "depth": "D2",
+      "evidence_ids": "E-BIGME-02",
+      "known_branches": "系统右上控制中心→E Ink Center的4预设/Custom与阅读页Refresh Settings分列；App optimization改字号/文本增强/图标及背景",
+      "gaps": "PDF p11–12/19；系统与书内设置是否同步、逐App保存、恢复默认、光学残影/延迟；21F/S宣传及其他型号80FPS均非实测",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-011-bigme.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "flow_id": "F-M011-03",
+    "before": {
+      "flow_id": "F-M011-03",
+      "product_id": "M-011",
+      "task": "导入并找到一本书",
+      "depth": "D2",
+      "evidence_ids": "E-BIGME-02",
+      "known_branches": "文件进入书库后仍需阅读器解析；手册提导出/删除标记。",
+      "gaps": "PDF p18–19；WiFi传输地址/配网、空库、重复/坏文件、删除是否确认、标记回收。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-011-bigme.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M011-03",
+      "product_id": "M-011",
+      "task": "导入并找到一本书",
+      "depth": "D2",
+      "evidence_ids": "E-BIGME-02",
+      "known_branches": "Books自动扫描；Import→Local从Books/Download或WiFi导入；阅读Settings显示批注/书签导出路径，Contents浏览/导出/删除",
+      "gaps": "PDF p18–19；传输完成与解析成功分开；重复/坏文件、导出命名与覆盖、删除确认/回收及位置恢复未知",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-011-bigme.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "flow_id": "F-M011-06",
+    "before": {
+      "flow_id": "F-M011-06",
+      "product_id": "M-011",
+      "task": "阅读切听（D1）",
+      "depth": "D1",
+      "evidence_ids": "E-BIGME-01;E-BIGME-02",
+      "known_branches": "只能确认入口与在线服务性质，尚无“暂停→恢复句子”完整流程。",
+      "gaps": "PDF p20–21；下载/缓存、语言、计时器、关屏、来电、短信提示、蓝牙断开后是否外放。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-011-bigme.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M011-06",
+      "product_id": "M-011",
+      "task": "阅读切听（D1）",
+      "depth": "D1",
+      "evidence_ids": "E-BIGME-01;E-BIGME-02",
+      "known_branches": "文本和PDF的Progress都列听书；产品页在线TTS声明；文件名TTS的宣传GIF实际为音乐/词典/字体，不补朗读链",
+      "gaps": "PDF p20–21；读听启动、暂停/续句、下载/计时/语音、锁屏/来电/蓝牙断开；无TTS控件实观",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-011-bigme.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "flow_id": "F-M011-07",
+    "before": {
+      "flow_id": "F-M011-07",
+      "product_id": "M-011",
+      "task": "选词/段落批注（D1）",
+      "depth": "D1",
+      "evidence_ids": "E-BIGME-01;E-BIGME-02",
+      "known_branches": "功能已发现，选区→保存→再次定位的连贯行为尚未证实。",
+      "gaps": "PDF p19；词典来源/离线、标记颜色与文字定位、取消选择、导出格式。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-011-bigme.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M011-07",
+      "product_id": "M-011",
+      "task": "选词/段落批注（D1）",
+      "depth": "D1",
+      "evidence_ids": "E-BIGME-01;E-BIGME-02;E-BGCD-02",
+      "known_branches": "阅读Settings列长按菜单/词典；宣传静态帧可见词典及图标，但选区→保存→再定位链未证实",
+      "gaps": "PDF p19与宣传帧2；应用/构建、图标执行语义、词典离线、批注定位/取消/导出仍缺",
+      "visual_status": "static_reference_only",
+      "hands_on": "false",
+      "case_path": "cases/M-011-bigme.md",
+      "checked_on": "2026-10-27"
+    }
+  }
+]

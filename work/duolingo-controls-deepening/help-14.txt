@@ -1,0 +1,37 @@
+HELP CENTER
+SUBSCRIPTION & PAYMENTS
+How do I cancel my Super Duolingo subscription?
+You can cancel your Super Duolingo subscription at any time.
+You will need to cancel your subscription based on how you originally started the subscription.
+Deleting the app and/or your account does not cancel your subscription.
+If you subscribed to Super Duolingo on the Duolingo app (iOS or Android):
+Open the Duolingo app
+Tap the Super icon at the top of the home screen
+Tap Settings (gear icon)
+Tap “Manage subscription”
+Select “Cancel subscription” and proceed to cancel
+Confirm cancellation through Google Play Store or App Store or Alipay
+If you subscribed to Super Duolingo on your phone/device settings:
+For Android phones/devices: Submit a “support request”
+For iOS phones/devices: Follow “these instructions” from Apple
+If you subscribed to Super Duolingo on a web browser (desktop):
+Sign in to your “Duolingo account” via web browser
+Click your profile picture at the top of the home screen, and choose “Settings”
+Select “Super Duolingo”
+Select “Cancel subscription” and confirm
+What can I expect after canceling?
+Your streak and learning progress will not be affected.
+You will be able to use Super Duolingo features for the remainder of the subscription period.
+You will no longer be billed automatically once you cancel your subscription.
+You can reactivate your subscription anytime.
+Canceling your subscription will not retroactively refund subscription payments.
+Previously charged subscription fees cannot be prorated based on cancellation date.
+If I have problems with my Super subscription, what can I do?
+If you have any issues with your subscription, please “submit a bug report” and select the option "Purchase Issue" from the drop-down. Please note that we cannot access the iOS App Store, nor resolve issues you are experiencing with this service.
+Relevant Articles
+What is Super Duolingo and how do I subscribe?
+Family Plan
+How do I request a refund?
+How do I use a promo code?
+What is Duolingo Max?
+I want to submit a bug report

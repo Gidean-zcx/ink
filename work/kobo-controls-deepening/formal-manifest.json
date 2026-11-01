@@ -1,0 +1,30 @@
+[
+  {
+    "path": "docs/research/interaction-library/cases/M-002-kobo.md",
+    "sha256": "435678f0f4457fe436b709bbf62268823fe98b07a5ab734f69f0d041980a1ffe"
+  },
+  {
+    "path": "docs/research/interaction-library/batches/kobo-controls-deepening-evidence.jsonl",
+    "sha256": "152b5425e55d83a62cd995d9091aa1e3d586934c515202b5f2c37160e832a606"
+  },
+  {
+    "path": "docs/research/interaction-library/batches/kobo-controls-deepening-coverage.csv",
+    "sha256": "b6ae1be3a19b0e7a06d68176a9c6c2319377c32f4142063e571fbd7d24c46a04"
+  },
+  {
+    "path": "docs/research/interaction-library/batches/kobo-controls-deepening-inventory.csv",
+    "sha256": "5739bb8f510e23d8bd60f883a1684226e607e7ef42835cfdc894d5bcff5c22f9"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/kobo-controls-deepening/source-notes.md",
+    "sha256": "a08fb3c02953833150d278aecb7547b6e3e79a4f5f3f223515eceabdf309c21a"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/kobo-controls-deepening/reading-settings-page2.png",
+    "sha256": "b7f82c303538773ab14149c87a1fbda2b5ae6471865ae5bc3b800f182e59bdac"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/kobo-controls-deepening/audiobook-stats.png",
+    "sha256": "6bdcc67b4f3eb60d2a5b5a34b0800cd983d11516753d4d4f253fe03e28d488dc"
+  }
+]

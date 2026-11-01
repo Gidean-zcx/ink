@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../../../favicon.ico">
+
+    <title>haoqingtech</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="editor.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="narrow-jumbotron.css" rel="stylesheet">
+
+    <!-- Animate on scroll library -->
+    <script src="aos.js"></script>
+    <link href="aos.css" rel="stylesheet">
+	<noscript>
+        <style type="text/css">
+            [data-aos] {
+                opacity: 1 !important;
+                transform: translate(0) scale(1) !important;
+            }
+        </style>
+    </noscript>    
+<style id="vvvebjs-styles">#language-btn {margin-top: 10px;}</style></head>
+	
+  <body data-aos-easing="ease" data-aos-duration="400" data-aos-delay="0">
+
+   <header class="header clearfix container" id="top-header" data-aos="zoom-in" data-aos-delay="100">
+	<div class="container">
+         <nav>
+          <ul class="nav nav-pills float-end">
+            <li class="nav-item">
+              <a class="nav-link active" href="#" id="language-btn" onclick="myFunction()"> EN </a>
+            </li>
+          </ul>
+        </nav>
+         <h3 class="text-muted"><img src="logo.png" class="mw-100" width="200" height="55"><br></h3>
+        </div>
+	<ul class="nav navbar-nav float-end">
+	 <a class="text-decoration-underline" id="privacy-text" href="http://www.haoqingtech.com/privacy.html"  >隐藏政策</a>
+	</ul>
+      </header>
+
+      <section class="jumbotron container bg-light p-4" id="jumbotron"><img src="zh.png" class="mw-100"id="content-img">
+	
+      </section>
+
+      
+
+	<script>
+    var languageIndex = 0;
+    function myFunction()
+    {
+      btn=document.getElementById("language-btn");  // 找到元素
+      img=document.getElementById("content-img");
+      if(languageIndex == 0){
+        btn.innerHTML=" CN ";
+        img.src="en1.png"
+        languageIndex = 1;
+      }else {
+        btn.innerHTML=" EN ";
+        img.src="zh.png"
+        languageIndex = 0;
+      }
+    }
+		AOS.init();
+	</script>
+
+
+</body>
+</html>

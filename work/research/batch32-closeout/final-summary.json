@@ -1,0 +1,52 @@
+{
+  "markdown_files": 217,
+  "local_links_checked": 1594,
+  "products": 65,
+  "partial_cases": 65,
+  "flows": 865,
+  "depths": {
+    "D2": 771,
+    "D1": 78,
+    "D4": 16
+  },
+  "evidence_records": 1443,
+  "distinct_source_urls": 1275,
+  "static_visual_evidence": 201,
+  "operated_browser_evidence": 19,
+  "errors": [],
+  "batch": 32,
+  "checked_on": "2026-10-27",
+  "status": "batch_complete_goal_active",
+  "new_evidence": 6,
+  "new_flows": 5,
+  "new_D2": 4,
+  "new_D4": 1,
+  "old_flows": 5,
+  "old_fields": 14,
+  "old_evidence_captures": 3,
+  "formal_images": 24,
+  "requirements_sha256": "e141320e2714df805c009fe64dd92d17decd6429d5728f8ce42d6d868b775087",
+  "checks": [
+    {
+      "command": "python3 work/research/interaction-depth/check_docs.py",
+      "exit_code": 0
+    },
+    {
+      "command": "root inline Python post-merge verification",
+      "exit_code": 0
+    },
+    {
+      "command": "git diff --check",
+      "exit_code": 0
+    }
+  ],
+  "brief": "docs/briefs/032-learning-games-and-completion.md",
+  "guide": "docs/research/interaction-library/design-reference-guide.md",
+  "depth_audit": "docs/research/interaction-library/analysis-status.md",
+  "new_actual_operation": "anonymous Duolingo Chess webpage only",
+  "native_app_or_device_operation": false,
+  "continuous_recording": false,
+  "once_only_mutations_complete": true,
+  "inventory_csvs_linked": 77,
+  "inventory_rows": 7324
+}

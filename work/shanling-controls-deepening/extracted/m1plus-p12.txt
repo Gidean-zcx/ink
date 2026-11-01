@@ -1,0 +1,31 @@
+Operation Instructions
+
+Power ON / OFF / Screen Locking
+
+1. Power on: Press and hold the wheel for 2 seconds. Screen will wake
+  up and the Indicator Light will light up. (You can change the color of
+   light at "System Setting - Display - Atmosphere Lamp Settings")
+
+2. Power off: Press and hold power button for 2 seconds, until device
+  displays power off confirmation windows. Click on "Enter" to power
+   off the device.
+
+3. Screen lock: while the device is powered on, short press power button
+   to lock screen and turn off display. Press power button again to
+  unlock device.
+
+Previous / Next / Play & Pause
+
+1. Previous      : Short press to jump to previous song or to beginning of
+  current song. Long press for fast rewind in currently playing song.
+
+2. Next     : Short press to jump to next song. Long press to fast forward in
+   currently playing song.
+
+3. Play & pause buttons     : short press to play or pause playback.
+
+
+Volume Control
+
+Turn the wheel clockwise to increase the volume, turn the wheel
+counterclockwise to decrease the volume.

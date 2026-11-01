@@ -1,0 +1,21 @@
+{
+  "order": 20,
+  "entry_id": "INO-pro--newsletter-feeds--how-do-i-subscribe-to-a-newsletter-with-inoreader",
+  "title": "How do I subscribe to a newsletter with Inoreader?",
+  "url": "https://www.inoreader.com/help/pro/newsletter-feeds/how-do-i-subscribe-to-a-newsletter-with-inoreader",
+  "checked_on": "2026-10-27",
+  "http_status": 200,
+  "final_url": "https://www.inoreader.com/help/pro/newsletter-feeds/how-do-i-subscribe-to-a-newsletter-with-inoreader",
+  "acquisition": "one_anonymous_normal_GET",
+  "raw_path": "work/research/batch41-inoreader-help/20-INO-pro--newsletter-feeds--how-do-i-subscribe-to-a-newsletter-with-inoreader.html",
+  "headers_path": "work/research/batch41-inoreader-help/20-INO-pro--newsletter-feeds--how-do-i-subscribe-to-a-newsletter-with-inoreader.headers.json",
+  "raw_sha256": "3fadbdd4c181080baef21cf6211466056191b5bb0e69fb17c02a2c2cded76372",
+  "bytes": 149234,
+  "status": "body_obtained",
+  "body_status": "extracted_not_yet_root_read",
+  "body_path": "work/research/batch41-inoreader-help/20-INO-pro--newsletter-feeds--how-do-i-subscribe-to-a-newsletter-with-inoreader.body.txt",
+  "body_sha256": "3c7b01375822be437bbf8b7fcea3e45410d1472346f7a689badd6cf73de8b485",
+  "body_chars": 261,
+  "links": [],
+  "images": []
+}

@@ -1,0 +1,188 @@
+Listen in the app (https://help.audible.com/s/article/listen-in-the-app)
+citeturn757view2 [wordlim: 200] Crawled: today; Content type: text/html; Source: open({"ref_id":"https://help.audible.com/s/article/listen-in-the-app","lineno":null}); Total lines: 186
+L0: Loading
+L1: 
+L2: Sorry to interrupt
+L3: 
+L4: Uncaught TypeError: Cannot read properties of null (reading 'style')
+L5: 
+L6: 【0†Refresh】
+L7: 
+L8: Skip to Main Content
+L9: 
+L10: Related topics
+L11: 
+L12: Android Ask A Question iOS Listening Ways to listen
+L13: ## Listen in the app
+L14: 
+L15:   * Oct 13, 2026
+L16:   * Knowledge
+L17: 
+L18: Title
+L19: 
+L20: Listen in the app
+L21: 
+L22: URL Name
+L23: 
+L24: listen-in-the-app
+L25: 
+L26: Answer
+L27: 
+L28: You can listen to free or purchased titles on the Audible app anytime — no membership required. All you need is an Amazon account to get started. The Audible app gives you full control over your listening experience with customizable player settings, narration speed, timers, and more.
+L29: Note: The Audible app is available for iOS and Android devices. For a full list of supported devices, visit 【1†Devices compatible with Audible】.
+L30: 
+L31: In this article:
+L32: 
+L33:   * 【2†How do I install the app?】
+L34:   * 【3†How do I listen to titles in the app?】
+L35:   * 【4†How do I resume playback in the Audible app?】
+L36:   * 【5†How do I sync my listening across devices?】
+L37:   * 【6†Where do I find my player settings?】
+L38:   * 【7†What features can I use in the player?】
+L39:   * 【8†Can't listen or having playback issues?】
+L40: ## How do I install the app?
+L41: 
+L42: You can download the Audible app on your iOS mobile devices—including Apple Watch, Android device, Galaxy device, and Fire TV.
+L43: 
+L44: On my iOS Device
+L45: 
+L46:   1. Open the App Store on your Apple device.
+L47:   2. Search for “Audible.”
+L48:   3. Select Get next to the Audible app.
+L49:   4. Select Install.
+L50: 
+L51: On my Apple Watch
+L52: 
+L53: Before you begin, you’ll need to make sure your Apple Watch is paired with your iPhone.
+L54:   1. Open the Apple Watch app on your iPhone.
+L55:   2. Select the My Watch tab.
+L56:   3. Scroll down to Available Apps.
+L57:   4. Select the Install button next to the Audible app.
+L58: 
+L59: On my Android Device
+L60: 
+L61:   1. Open the Google Play store on your device and search for "Audible."
+L62:   2. Select Audible: Audio Entertainment.
+L63:   3. Select Install.
+L64: 
+L65: On my Fire TV
+L66: 
+L67: You can enjoy Audible on your Fire TV or Fire TV Stick FOS7/FOS8 via the Audible app for Fire TV.
+L68:   1. Search for Audible to bring up the app. You can also use the Voice Control button on your remote and search by saying "Audible."
+L69:   2. Navigate to Apps.
+L70:   3. Find the Audible app.
+L71:   4. Select Get.
+L72: ## How do I listen to titles in the app?
+L73: 
+L74:   1. Open the Audible app and sign in with your Amazon account.
+L75:   2. Go to your Library.
+L76:   3. Select a title to play.
+L77: 
+L78: Note: If your Library appears empty or you can't find a title, visit 【9†Missing title issues】 for troubleshooting steps.
+L79: ## How do I resume playback in the Audible app?
+L80: 
+L81: If you've already started a title, you can select Play to resume listening on the Audible mini player. You can also resume listening from your lock screen controls without opening the app.
+L82: ## How do I sync my listening across devices?
+L83: 
+L84: The Audible app will automatically sync your listening position across devices. To manage this setting:
+L85: 
+L86:   1. Go to your Profile.
+L87:   2. Select the Settings gear icon.
+L88:   3. Select Player.
+L89:   4. Toggle the Sync listening position slider on or off.
+L90: 
+L91: Troubleshooting sync issues: If your listening position is not syncing correctly, toggle the Sync listening position slider off, then on again to reset the connection.
+L92: ## Where do I find my player settings?
+L93: 
+L94: Note: Player settings are available only in the Audible app for iOS and Android.
+L95: 
+L96: From the player
+L97: 
+L98:   1. Open the player.
+L99:   2. Select the 3-dot More menu at the top of the screen.
+L100:   3. Select Player settings.
+L101: 
+L102: From your Profile
+L103: 
+L104:   1. Go to your Profile.
+L105:   2. Select the Settings gear icon.
+L106:   3. Select Player.
+L107: 
+L108: You can adjust or turn on or off the following settings:
+L109:   * Player customization.
+L110:   * Progress bar per chapter or for the whole title.
+L111:   * How many seconds you skip forward or back.
+L112:   * How you want to see time displayed in the mini player while listening.
+L113:   * Shake to extend for your timer.
+L114:   * Auto-lock for your screen.
+L115:   * Automatic Car Mode.
+L116:   * Sync listening position.
+L117:   * Continuous listening (affects automatic listening samples, podcast episodes, and the play queue).
+L118: ## What features can I use in the player?
+L119: 
+L120: The Audible player gives you access to several features while listening like:
+L121: 
+L122:   1. 【10†Browse chapters or podcast episodes】.
+L123:   2. 【11†View your listening log】
+L124:   3. 【12†Change the narration speed】
+L125:   4. 【13†Use timer】.
+L126:   5. 【14†Manage your auto-play settings】.
+L127:   6. 【15†Create a listening reminder】
+L128: ## Can't listen or having playback issues?
+L129: 
+L130: If you're having trouble playing a title in the app, visit 【16†Audio quality issues】 for detailed troubleshooting steps by device type, including how to update the app, re-download titles, change download quality, and more.
+L131: 
+L132: Did this answer your question?
+L133: 
+L134: 【17†Image: Thumbs Up】Like
+L135: 
+L136: 
+L137: 
+L138: 【18†Image: Thumbs Down】Dislike
+L139: 
+L140:  Back to top
+L141: 
+L142: 【19†Image: Share link】 Share link
+L143: 
+L144: 【20†Image: Download PDF】 Download PDF
+L145: ## Need more assistance?
+L146: 
+L147: 【21†Contact us†www.audible.com】
+L148: 
+L149: 
+L150: 
+L151: How satisfied were you with our Help Center today?
+L152: 
+L153: 
+L154: 
+L155: Worst
+L156: 
+L157: 1
+L158: 
+L159: 2
+L160: 
+L161: 3
+L162: 
+L163: 4
+L164: 
+L165: 5
+L166: 
+L167: 6
+L168: 
+L169: 7
+L170: 
+L171: Best
+L172: 
+L173: 
+L174: 
+L175: Region
+L176: 
+L177: United States
+L178: 
+L179: Language
+L180: 
+L181: English
+L182: 
+L183: Loading
+L184: 
+L185: Listen in the app 【22†Adobe ID Syncing iFrame†audible.demdex.net】

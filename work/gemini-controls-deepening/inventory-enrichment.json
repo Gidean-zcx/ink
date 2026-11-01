@@ -1,0 +1,9 @@
+{
+  "path": "docs/research/interaction-library/batches/gemini-controls-deepening-inventory.csv",
+  "backup": "work/gemini-controls-deepening/inventory-before-enrichment.csv",
+  "before_sha256": "f74ef3950fbcd7478ffbfb9a972efb36ad14db511cb413bba2058cb98fdd7b28",
+  "after_sha256": "8c99233e7d90b66d8ab8c4e8f1364a6f7424a6990615be71e7db08c7a27aa4ff",
+  "rows": 129,
+  "directory_entries": 85,
+  "note": "Retain factual account/age/location/language/platform criteria and help targets; no marketing description copied; extraction is not child-help analysis"
+}

@@ -1,0 +1,1 @@
+Go to Add feed > Newsletter feed, name your feed, and choose its dedicated email address. Use that address when subscribing to a newsletter so incoming messages appear in Inoreader. You can also forward newsletters from your existing email inbox to the address.

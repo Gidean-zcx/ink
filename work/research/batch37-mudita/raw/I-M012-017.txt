@@ -1,0 +1,30 @@
+Mudita Kompakt Initial Setup
+Modified on: Sat, 3 Oct, 2026 at 8:42 AM
+How to setup Kompakt for the first time:
+Press the Power Button
+Tap Language setup
+Select the Language you want
+Select the Wi-Fi network you want to join
+Enter the Wi-Fi password
+Tap Next
+Read the End User Licence Agreement > Tap Accept
+Enter a new 6 digit passcode
+Tap Confirm passcode
+Enter the 6 digit passcode again
+Tap Set passcode
+Tap Next
+Rest your finger on the fingerprint scanner
+On the vibration, Lift your finger
+Continue to Rest and lift finger, slightly changing it’s position on the power button each time
+Tap Done
+Both the code and fingerprint can be changed later on
+Tap Quick Tutorial* > Tap Next to view each page
+Tap Next
+If an update is available, tap Update
+Tap Restart phone
+*Skipping the tutorial will not impact the setup in any way
+Was this article helpful?
+No
+Yes
+That’s Great!
+Thank you for your feedback

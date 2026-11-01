@@ -1,0 +1,58 @@
+# M-021 Quizlet：资料生成、校订、作答与复习
+
+查阅 2026-10-26；范围为官方英文帮助覆盖的 Web、iOS、Android。未安装、登录或生成学习集，未连续观察界面；操作链为 D2 文档重建。构建与帮助发布日期多数未知；文中明确网站专属与移动端差异。免费、Plus/Unlimited、教师账户资格随功能区分；评分选项采用美国帮助的适用范围，不推广为所有地区均可用。不采用旧宣传页的固定模式总数。
+
+## 功能目录与范围
+
+| 功能族 | 已核范围 | 未完成部分 |
+| --- | --- | --- |
+| 内容建立 | Smart Assist 草稿；Study Guides；结构化文本导入；编辑/复制/导出 | AI来源引用、幻觉校验、支持文件上限、扫描失败 |
+| 学习与测试 | Flashcards、Learn、书写重答、评分宽松度、Answer Streaks、网站间隔复习 | Test完整会话、Practice Tests、Match/Blocks、Live/小组未逐项观察 |
+| 内容与进度管理 | 草稿、发布、可见性、手机离线下载和同步限制 | 双端并发编辑、共享集变更对进度影响、误删恢复 |
+
+## 操作流程
+
+| F 编号 | 入口 / 前置 | 操作与反馈 | 状态 / 结束 | 缺口及证据 |
+| --- | --- | --- | --- | --- |
+| F-M021-01 AI生成并校订 | 登录→Create→Create a new flashcard set | 输入/粘贴资料、上传文件或给主题；Smart Assist产出预览草稿，可编辑、删卡、添卡；同一集可切手动创建 | 校订后发布成为学习集；生成预览与发布分开 | 生成失败、重生成覆盖、自动事实核查未证实。E-QZLT-01 |
+| F-M021-02 Study Guide | 网站帮助路径 Generate→Study guide→上传/粘贴→Start transforming | 生成大纲、卡组等；More可改题名、可见性、查看原上传或删除 | Your library→Study guides 找回；生成卡组另设其可见性 | 免费次数有限；限定英/法/德及官方所列地区年龄，最低门槛14岁；中国大陆未在所列地区，实际资格未验证。E-QZLT-02 |
+| F-M021-03 结构化导入 | 网站 Create→Flashcard set→Import | 粘贴术语/释义，按分隔符解析；Import后选两侧语言→Create | 文本成为卡对；语言选择影响后续语音/评分 | 词义可用逗号、Tab或横线分隔，行可分号或换行；异常行与重复合并未知。E-QZLT-03 |
+| F-M021-04 校订、复制与导出 | 自有集 More→Edit；他人集 More→Make a copy | 编辑文字/语言、拖动顺序、交换两列；复制编辑后Create。自建集 More→Export→选排列→Copy text | 网站保存Done；导出是复制文本；他人集复制品有导出限制 | 高级内容复制可能需套餐；图片不导出；删除行恢复未知。E-QZLT-04、11、12 |
+| F-M021-05 草稿中断与恢复 | 创建/编辑时自动保存；Library→Flashcard sets→In Progress | 重开草稿继续、Create发布或丢弃；未保存词旁有警告，断网时保留网页等待重连 | 草稿仅自己可见，不在网站与App间同步；移动端发布前退出账号会丢弃草稿 | 丢弃不可恢复；自动保存计数可见，重启进程后的边界未知。E-QZLT-05 |
+| F-M021-06 翻卡自查 | 集→Flashcards | 点击翻面，网站箭头/键盘前后；手机滑动；Options可排序至Still learning/Know、设卡面及播放 | 看完全部卡完成一轮；手机X退出保存本设备会话位置 | 文档明确该进度不跨设备；语音缺失可能是语言不支持。E-QZLT-13 |
+| F-M021-07 Learn与错题重答 | 登录→集→Learn→选学习目标 | Options选择题型、作答方向、星标词、声音；网站Write/Spell可进入书写，错误书面答案可设置重输正确答案 | 学习中产生回答记录；退出与跨日重排细节未知 | 免费仅有限学习轮次；不把会员资格混为永久免费。E-QZLT-06 |
+| F-M021-08 评分与误判纠正 | Learn→Options→Grading options | 选择Relaxed/Moderate/Strict并保存；宽松允许语义改写，严格要求精确文本（大小写/标点例外） | 连对机制只计首答，五题起连胜；误判时I was correct可保持连胜，切题型重置连胜 | 评分选项受语言及至少3卡条件限制；修正是否重写长期调度未知。E-QZLT-07、08 |
+| F-M021-09 间隔复习 | 网站集→Flashcards→Spaced repetition | 翻面后选Repeat/Hard/Okay/Easy，安排不同再现时间；直至没有到期卡 | Options可切学习方法、日新增量；再次打开保留所选方法 | 评级例示间隔不是效果保证；移动端该方法未支持于所查帮助，误评撤销未知。E-QZLT-09 |
+| F-M021-10 离线准备与恢复 | iOS Profile→Your settings；Android Account→离线保存 | 自动缓存最近8集，也可单集下载；勾选表示保存。Library的Downloaded/Downloads进入；勾选→移除下载 | 离线Flashcards/Match及创建可用；重连刷新同步离线记录，编辑内容自动发布 | 灰标题未离线可用；下载可能需数分钟。会话位置同步参见F-06，不能据总页承诺全状态恢复。E-QZLT-10、13 |
+
+完整主链以自有资料为例：F-01生成草稿→F-04人工核对词义/语言→发布→F-07作答→F-08处理评分/误判→F-09到期复习。各阶段是不同对象/模式；没有证据表明 AI 生成后无需校订，也未证实 Learn 错题自动无缝迁移到新的 Spaced Repetition 调度。
+
+## 分支与限制
+
+- “草稿自动保存”“发布集跨设备”“离线学习同步”“Flashcards会话位置”四种状态不可合并。离线帮助概述同步全部离线进度，Flashcards专页仍写手机会话进度不跨端；具体同步字段尚需实测。
+- 发布集可见性与Study Guide可见性分别管理；不能根据指南私有推断其生成卡组也私有。共享内容编辑授权及公开默认值应按实际创建页复核。
+- 未覆盖：空资料、上传超限、生成超时、题目无正确项、取消订阅后缓存、撤销回答后的历史审计、同步冲突、账户切换后的下载清理。未知不等于没有功能。
+
+## 数据、激励与本项目关系
+
+事实可区分原始上传、生成指南、卡组、卡对、草稿/发布状态、共享权限、星标、自评/答案、连胜和下载状态。连胜强调首次正确，允许“我答对了”修正评分；它不是知识掌握的独立测量。生成能力的年龄/地区条件也使其不能直接作为本项目5–6岁儿童自主账户路径。
+
+关联 G-001/G-002、R-016/019/021、H-004/005：本项目可借鉴“资料→可审阅草稿→发布学习包”，把来源定位、校订理由和版本归属于每张卡；AI应分清修正题目、纠正评分、修改复习计划。个人新闻转学习素材可沿该链，但公开分享须有独立状态。以上均是推断，未选定Quizlet接口或算法。
+
+最小后续观察：固定一个网站和一个手机构建，用三张自建卡分别验证断网草稿、误判更正、会话退出、离线同步、跨设备与间隔复习之间的数据边界；本轮未执行。
+
+## 证据
+
+- E-QZLT-01：[Creating study sets with Smart Assist](https://help.quizlet.com/hc/en-us/articles/39606772122509-Creating-study-sets-with-Smart-Assist)；To use; Tips。正文；预览草稿可编辑/删/增，未验证生成结果。
+- E-QZLT-02：[Studying with Study Guides](https://help.quizlet.com/hc/en-us/articles/18312306436365-Studying-with-Study-Guides)；Eligibility; platform creation; visibility。正文；地区年龄及语言限制，原始上传与生成卡组分开。
+- E-QZLT-03：[Creating sets by importing content](https://help.quizlet.com/hc/en-au/articles/360029977151-Creating-sets-by-importing-content)；Import steps; delimiter rules。官方检索正文；网站文本导入流程。
+- E-QZLT-04：[Editing sets](https://help.quizlet.com/hc/en-au/articles/360030212131-Editing-sets)；Web/mobile edit; delete; settings。官方检索正文；校订词义、语言及顺序。
+- E-QZLT-05：[Editing draft sets](https://help.quizlet.com/hc/en-us/articles/360029768912-Editing-draft-sets)；Drafts; offline warnings; logout。正文；草稿不跨网站/App同步，丢弃不可恢复。
+- E-QZLT-06：[Studying with Learn](https://help.quizlet.com/hc/en-us/articles/360030986971-Studying-with-Learn)；Start Learn; Options; Write/Spell。正文；目标、题型及重输错题。
+- E-QZLT-07：[Using grading options (US)](https://help.quizlet.com/hc/en-us/articles/360048313652-Using-grading-options-US)；Relaxed/Moderate/Strict; Learn/Test settings。正文；美国帮助范围，评分宽松程度及语言条件。
+- E-QZLT-08：[Studying with Answer Streaks](https://help.quizlet.com/hc/en-us/articles/40011154960653-Studying-with-Answer-Streaks)；How streaks work; I was correct。正文；首答连对及误判修正。
+- E-QZLT-09：[Studying with Spaced Repetition](https://help.quizlet.com/hc/en-us/articles/48324742264077-Studying-with-Spaced-Repetition)；Web start; four ratings; options。正文；当前仅网站，四档自评与日新增量。
+- E-QZLT-10：[Studying offline with Quizlet mobile apps](https://help.quizlet.com/hc/en-ca/articles/360030565412-Studying-offline-with-Quizlet-mobile-apps)；iOS/Android download; sync; grey titles。正文；最近八组自动缓存及恢复联网刷新。
+- E-QZLT-11：[Exporting your sets](https://help.quizlet.com/hc/en-us/articles/360034345672-Exporting-your-sets)；Export procedure; ownership restrictions。官方检索正文；仅网站导出自建集，不导出图片。
+- E-QZLT-12：[Copying and editing a set](https://help.quizlet.com/hc/en-us/articles/360029781232-Copying-and-editing-a-set)；Make a copy; premium restriction。官方检索正文；复制后成为另一个学习集。
+- E-QZLT-13：[Studying with Flashcards](https://help.quizlet.com/hc/en-ca/articles/360030988091-Studying-with-Flashcards)；Flip; sorting; mobile X and progress。正文；手机会话进度不跨设备，与离线总页口径需区分。

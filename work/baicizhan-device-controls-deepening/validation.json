@@ -1,0 +1,37 @@
+{
+  "status": "PASS",
+  "new_evidence_count": 1,
+  "new_flow_count": 0,
+  "case_flows": [
+    "F-M022-01",
+    "F-M022-02",
+    "F-M022-03"
+  ],
+  "case_depth": "three existing flows remain D1",
+  "old_field_proposal_count": 4,
+  "images_observed": 0,
+  "image_http_statuses": [
+    403,
+    403,
+    403
+  ],
+  "old_batches_unchanged": {
+    "docs/research/interaction-library/batches/vocab-evidence.jsonl": true,
+    "docs/research/interaction-library/batches/vocab-coverage.csv": true,
+    "docs/research/interaction-library/batches/vocab-device-deepening-evidence.jsonl": true,
+    "docs/research/interaction-library/batches/vocab-device-deepening-coverage.csv": true
+  },
+  "raw_hashes": {
+    "work/baicizhan-device-controls-deepening/01-official-home.html": "47e7718d62b9b0e94707740198d4335181cfc730842a884da62d26845e41e828",
+    "work/baicizhan-device-controls-deepening/02-52audio-ace-max.html": "12fd996dcc2af3cdf35f8eaf894a74163db488d1e14f6580a03c0d29b55519fb"
+  },
+  "output_hashes": {
+    "docs/research/interaction-library/cases/M-022-baicizhan-device.md": "62c74d6a962ce3a46e78a98e40ce8f2da319b7f1292c2b62a367a3158c22af91",
+    "docs/research/interaction-library/batches/baicizhan-device-controls-deepening-evidence.jsonl": "55d7ecffce073c7c203540bfbdf68d2e7a8bbd22399347c3295916c156868057",
+    "docs/research/interaction-library/batches/baicizhan-device-controls-deepening-coverage.csv": "aa0cf671b21fa0390e9b0cfb58c6cecf3a0d7df66eaad894707f17ea224f6025",
+    "work/baicizhan-device-controls-deepening/existing-coverage-updates.csv": "f9484331b7c7ae1fb6cd952f8f16078d29da9cc8f3cf2f08526b14851270013b",
+    "work/baicizhan-device-controls-deepening/research-log.md": "4ab8038e21b3cd9254ffaf6a8049deeba1c2cb8187634656c0bb1494ca4e347d"
+  },
+  "master_modified_by_this_batch": false,
+  "checks": "UTF-8; LF; duplicate E; F identifiers; before values; local Markdown links; raw SHA; four old batch SHA; no image artifact or depth upgrade"
+}

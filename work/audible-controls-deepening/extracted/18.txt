@@ -1,0 +1,141 @@
+App keeps crashing (https://help.audible.com/s/article/app-keeps-crashing?language=en_US)
+citeturn766view1 [wordlim: 200] Crawled: today; Content type: text/html; Source: open({"ref_id":"https://help.audible.com/s/article/app-keeps-crashing?language=en_US","lineno":null}); Total lines: 144
+L0: Loading
+L1: 
+L2: Sorry to interrupt
+L3: 
+L4: Uncaught TypeError: Cannot read properties of null (reading 'style')
+L5: 
+L6: 【0†Refresh】
+L7: 
+L8: Skip to Main Content
+L9: 
+L10: Related topics
+L11: 
+L12: Android App issues Ask A Question iOS Troubleshooting
+L13: ## App keeps crashing
+L14: 
+L15:   * Aug 27, 2026
+L16:   * Knowledge
+L17: 
+L18: Title
+L19: 
+L20: App keeps crashing
+L21: 
+L22: URL Name
+L23: 
+L24: app-keeps-crashing
+L25: 
+L26: Answer
+L27: 
+L28: There are a few troubleshooting methods to try if the Audible app is consistently crashing (closing immediately after opening) or is slowly loading information.
+L29: 
+L30: In this article:
+L31: 
+L32:   * 【1†Force quit the app】
+L33:   * 【2†Update the app】
+L34:   * 【3†Clear app data and cache on Android】
+L35:   * 【4†Re-install the app】
+L36:   * 【5†Temporary fixes】
+L37: ## Force quit the app
+L38: 
+L39:   1. Press the home button twice or swipe up from the bottom of your screen.
+L40:   2. Close the Audible app.
+L41:   3. Reopen the Audible app.
+L42: 
+L43: If the issue continues, you may need to update or reinstall your Audible app.
+L44: ## Update the app
+L45: 
+L46: Occasionally, app features and functions may stop working because the app hasn't been updated to the latest version.
+L47: 
+L48: Note: An update will only display if there's an update available to download. If you're using an older device that doesn't support the latest version of the app, you can continue to listen to all of your audiobooks on another compatible device or in the Audible Cloud Player.
+L49: ### Update the iOS app
+L50: 
+L51:   1. Open the App Store.
+L52:   2. Select your profile icon.
+L53:   3. Find and select the Audible app.
+L54:   4. Select Update.
+L55:   5. Select Open to view the latest version of the Audible app.
+L56: 
+L57: Note: If you don't see the Audible app, you may need to swipe down to refresh your list of available updates.
+L58: 
+L59: ### Update the Android app
+L60: 
+L61:   1. Open the Google Play Store.
+L62:   2. Select your profile icon.
+L63:   3. Select My apps & games.
+L64:   4. Find the Audible app in the Updates pending list.
+L65:   5. Select Update.
+L66: ## Clear app data and cache on Android
+L67: 
+L68:   1. Go to the settings on your Android device.
+L69:   2. Select Apps.
+L70:   3. Find Audible in the list of all apps.
+L71:   4. Select Storage or Storage & cache.
+L72:   5. Select Clear Cache.
+L73:   6. Select Clear Storage and confirm.
+L74: ## Re-install the app
+L75: 
+L76:   1. Delete the app from your device.
+L77:   2. Open your app store.
+L78:   3. Find the Audible app.
+L79:   4. Download the app.
+L80: 
+L81: Note: Uninstalling the app will remove any downloaded titles and those marked as "Finished." You may re-download these titles at any time and remark as "Finished."
+L82: ## Temporary fixes
+L83: 
+L84: If none of the above solves the crashing problem, you can try the following to minimize disruptions:
+L85: 
+L86:   * Keeping the Audible app in the foreground when listening.
+L87:   * Not switching between apps frequently.
+L88:   * Closing all other apps when using Audible.
+L89: 
+L90: Did this answer your question?
+L91: 
+L92: 【6†Image: Thumbs Up】Like
+L93: 
+L94: 
+L95: 
+L96: 【7†Image: Thumbs Down】Dislike
+L97: 
+L98:  Back to top
+L99: 
+L100: 【8†Image: Share link】 Share link
+L101: 
+L102: 【9†Image: Download PDF】 Download PDF
+L103: ## Need more assistance?
+L104: 
+L105: 【10†Contact us†www.audible.com】
+L106: 
+L107: 
+L108: 
+L109: How satisfied were you with our Help Center today?
+L110: 
+L111: 
+L112: 
+L113: Worst
+L114: 
+L115: 1
+L116: 
+L117: 2
+L118: 
+L119: 3
+L120: 
+L121: 4
+L122: 
+L123: 5
+L124: 
+L125: 6
+L126: 
+L127: 7
+L128: 
+L129: Best
+L130: 
+L131: 
+L132: 
+L133: Region
+L134: 
+L135: United States
+L136: 
+L137: Language
+L138:

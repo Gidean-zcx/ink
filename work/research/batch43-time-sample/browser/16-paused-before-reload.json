@@ -1,0 +1,145 @@
+{
+  "name": "16-paused-before-reload",
+  "at": "2026-10-27T07:10:27.011611+00:00",
+  "url": "https://reader.emagazines.com/issue/time-for-kids-k-1/may-8-2026/saving-sea-turtles?viewMobile=true&ipt=c8869aa3-8f3d-4699-b112-1d4a6270a953#p3",
+  "title": "Saving Sea Turtles",
+  "text": "0:53\n/\n2:02\n.75x\n1x\n1.25x\n1.5x\n1.75x\n2x\nMeet Sea Turtles\nThere are seven species of sea turtles. Each species has a shell for protection. Each species has strong flippers for swimming. Learn more about sea turtles.\nTurtle Diet\nThis sea turtle is chasing a jellyfish. Some sea turtles also eat plants. They eat seaweed and algae.\nA Long Journey\nSea turtles live in the water. But they lay eggs on land. Baby turtles hurry to the ocean when they hatch.\nSharp Eyes\nSea turtles have good eyesight. They can see in dark water. And they can see colors. Their eyesight helps them hunt.\nTurtles in Trouble\nThere is trash in the ocean. That is a problem for turtles. See this bag? A turtle might think it is food.\nAI ANGEL GENTEL—GETTY IMAGES; KJORGEN—GETTY IMAGES; M.M. SWEET—GETTY IMAGES;\nANTONIO BUSIELLO—GETTY IMAGES. BACKGROUND: ABSTRACT AERIAL ART/GETTY IMAGES\nSaving Sea Turtles\nGrace Buschiazzo is a marine biologist. She works at the South Carolina Aquarium. She is part of its Sea Turtle Care Center.\nTurtle Rescue\nSea turtles can get sick. They can get hurt. The team at the care center treats them.\nA Trip to the Doctor\nThis turtle is getting scanned. It has to be strong and healthy. Then it can go back to the sea.\nGood as New\nAnother turtle swallowed fishing line. Doctors did surgery. They removed it. The turtle was saved.\nSOUTH CAROLINA AQUARIUM UNDER SCDNR MTP 2024-0004 (3); BACKGROUND: ABSTRACT AERIAL ART/GETTY IMAGES COVER: ABSTRACT AERIAL ART/GETTY IMAGES Please recycle this magazine.\nTIME for Kids Edition K–1 (ISSN 2156-5023) is published and mailed in seven bundles of four issues each from September through May by Time USA, LLC. Volume #16, Issue #28. Principal Office: 3 Bryant Park, New York, NY 10036. Periodical postage paid at New York, NY, and at additional mailing offices. © 2026 Time USA, LLC. All rights reserved. Reproduction whole or in part without written permission is prohibited. Subscribers: If the postal authorities alert us that your magazine is undeliverable, we have no obligation unless we receive a corrected address within two years. POSTMASTER: Send address changes to TIME for Kids, P.O. Box 37508 Boone, IA 50037-0508. Subscription queries: 877-604-8017. TIME for Kids is a registered trademark at Time USA, LLC. For international licensing and syndication requests, please email syndication@time.com.\n  Library\nSearch Table of Contents\nCover\nGo to page 1: Cover\nMeet Sea Turtles\nGo to page 2: <span style=\"font-weight: bold;\">Meet Sea Turtles</span>\nThere are seven species of sea turtles. Each species has a shell for protection. Each species has strong flippers for swimming. Learn more about sea turtles.\nSubtitle: There are seven species of sea turtles. Each species has a shell for protection. Each species has strong flippers for swimming. Learn more about sea turtles.\nSaving Sea Turtles\nGo to page 3: <span style=\"font-weight: bold;\">Saving Sea Turtles</span>\nGrace Buschiazzo is a marine biologist. She works at the South Carolina Aquarium. She is part of its Sea Turtle Care Center.\nSubtitle: Grace Buschiazzo is a marine biologist. She works at the South Carolina Aquarium. She is part of its Sea Turtle Care Center.\nDownload Issue\nView Desktop Version",
+  "controls": [
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": "Play",
+      "test": null,
+      "type": "button",
+      "disabled": false
+    },
+    {
+      "tag": "SELECT",
+      "text": ".75x\n1x\n1.25x\n1.5x\n1.75x\n2x",
+      "aria": "Playback speed",
+      "test": null,
+      "type": "select-one",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": "Adjust volume",
+      "test": null,
+      "type": "button",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": "Close audio player",
+      "test": null,
+      "type": "button",
+      "disabled": false
+    },
+    {
+      "tag": "A",
+      "text": "877-604-8017",
+      "aria": null,
+      "test": null,
+      "type": "",
+      "disabled": null
+    },
+    {
+      "tag": "A",
+      "text": "syndication@time.com",
+      "aria": null,
+      "test": null,
+      "type": "",
+      "disabled": null
+    },
+    {
+      "tag": "A",
+      "text": "  Library",
+      "aria": "Return to library",
+      "test": null,
+      "type": "",
+      "disabled": null
+    },
+    {
+      "tag": "INPUT",
+      "text": "",
+      "aria": "Search Table of Contents",
+      "test": null,
+      "type": "text",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": "Submit search",
+      "test": null,
+      "type": "button",
+      "disabled": false
+    },
+    {
+      "tag": "A",
+      "text": "Cover",
+      "aria": null,
+      "test": null,
+      "type": "",
+      "disabled": null
+    },
+    {
+      "tag": "A",
+      "text": "Meet Sea Turtles",
+      "aria": null,
+      "test": null,
+      "type": "",
+      "disabled": null
+    },
+    {
+      "tag": "A",
+      "text": "There are seven species of sea turtles. Each species has a shell for protection. Each species has strong flippers for swimming. Learn more about sea turtles.",
+      "aria": null,
+      "test": null,
+      "type": "",
+      "disabled": null
+    },
+    {
+      "tag": "A",
+      "text": "Saving Sea Turtles",
+      "aria": null,
+      "test": null,
+      "type": "",
+      "disabled": null
+    },
+    {
+      "tag": "A",
+      "text": "Grace Buschiazzo is a marine biologist. She works at the South Carolina Aquarium. She is part of its Sea Turtle Care Center.",
+      "aria": null,
+      "test": null,
+      "type": "",
+      "disabled": null
+    },
+    {
+      "tag": "A",
+      "text": "Download Issue",
+      "aria": "Download PDF issue",
+      "test": null,
+      "type": "",
+      "disabled": null
+    },
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": "Previous page",
+      "test": null,
+      "type": "button",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": "Next page",
+      "test": null,
+      "type": "button",
+      "disabled": false
+    }
+  ]
+}

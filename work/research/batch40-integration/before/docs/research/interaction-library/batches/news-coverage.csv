@@ -1,0 +1,20 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M045-01,M-045,一日简报读完（历史链与现版分开）,D2,E-ESPR-01;E-ESPR-02;E-ESD-01;E-ESCD-01;E-ESCD-02,2017作者点文/滑动/勾选至结束页；2025机构图仅支持Today栏目和勾的外观，当前主链仍未核,历史已读触发与跳读、当前末篇结束、日期更新/离线及跨端恢复,static_reference_only,false,cases/M-045-espresso.md,2026-10-27
+F-M045-02,M-045,主题偏好与每周深读,D2,E-ESPR-01;E-ESPR-02;E-ESD-02;E-ESCD-01,机构指南Settings改主题；HKU图For you周长文卡/时间/四个位置点；不证明改每日短报,主题完整选项、确认、更新生效与当前构建；卡片手势和跨端同步,static_reference_only,false,cases/M-045-espresso.md,2026-10-27
+F-M045-03,M-045,文章听读与翻译,D1,E-ESPR-02;E-ESD-01;E-ESCD-01,文章/周长文静态音频入口；本地商店历史3.31四语言实验、3.32译文显示修订；不证明中文音频,播放/暂停/结束、精确返回与断点；译文入口、范围、回原文位置和当前实验状态,static_reference_only,false,cases/M-045-espresso.md,2026-10-27
+F-M045-04,M-045,机构登录及学生资格,D2,E-ESPR-04;E-ESPR-03;E-ESCD-01,ACG机构账号路径与HKU学生自建账号分开；HKU指引该路径不选SSO；16+资格仍依原优惠条款,机构/学生权益冲突、登录失败/恢复、服务到期与当前通用流程,not_observed,false,cases/M-045-espresso.md,2026-10-27
+F-M046-01,M-046,同一事件比较并筛选来源,D2,E-GRND-01;E-GRND-03;E-GRND-04;E-GRND-07;E-GRCD-02,Full Coverage→Sort & Filter；排序Bias/Factuality/Latest/Alphabetical，偏向/事实性/所有权/Locality/Paywall组合；Show Results应用，Clear或换事件复位。移动静态图含Unknown，比较摘要覆盖不足时只给普通摘要。,零结果、取消回滚、外链返回位置/付费墙与全局默认优先级未实测；教程三机构与方法论两机构口径不一,static_official_images_only,false,cases/M-046-ground-news.md,2026-10-27
+F-M046-02,M-046,收藏与回访,D2,E-GRND-02;E-GND-14,Saved Stories 回访；Web/App 均不支持离线浏览,取消收藏、同步冲突、断网恢复、原文删除与滚动位置,not_observed,false,cases/M-046-ground-news.md,2026-10-26
+F-M046-03,M-046,关注与隐藏已读,D2,E-GRND-05;E-GRND-06;E-GRCD-07,Discover关注后进入个性化流；For You帮助明确使用地点、关注主题/来源和App使用模式，不是只按显式订阅。移动Premium+可Profile Settings打开Hide Read Stories。,已读阈值、撤销、隐式行为权重与关闭个性化入口未核；观看/打开不等于理解,not_observed,false,cases/M-046-ground-news.md,2026-10-27
+F-M046-04,M-046,报告错误,D2,E-GRND-08;E-GRCD-11,Web旗帜、Android事件三点、iOS邮件入口报告问题；建议缺失来源时读者邮件提供名称/URL，机构另走表单且不保证收录或时限。,未提交；成功反馈、修复时延、聚合错配处理及新增来源审核结果未知,not_observed,false,cases/M-046-ground-news.md,2026-10-27
+F-M047-01,M-047,K1公开植物文章阅读,D4,E-TFK-02;E-TFK-03;E-TKCD-02;E-TKCD-03;E-TKVD-02,同篇西语/英文切换；Search展开输入层后进入K–1结果；无意义查询仍见普通文章；清空并从标题返回正文。 本轮另实际展开年级→K–1→Science→Next→浏览器返回；成人区出生年月表单未提交，X退出后可再开资源菜单。,仍未核所有年级/主题、阅读级别、打印/课堂分配/账号与精准续读；Science分页不能证明所有检索正确。,observed_browser_sequence,true,cases/M-047-time-for-kids.md,2026-10-27
+F-M047-02,M-047,教师组织海洋单元任务,D2,E-TFK-04,读前提问阅读应用与讨论,非应用自动评分;未观察课堂,static_reference_only,false,cases/M-047-time-for-kids.md,2026-10-26
+F-M047-03,M-047,使用词汇辅助并核对分级与分配范围,D4,E-TFK-01;E-TFK-03;E-TKD-02;E-TKD-02;E-TKVD-01,D4仅2018 G3–4公开词汇卡：预标词点击/Enter开卡，X关卡；词音关闭后仍推进，重开继续，暂停保持；刷新后回0。年级目录不等于阅读级别。,未实际听音；词卡不是任意选词词典或生词本，收藏/测验关联未知；本篇未见级别选择器，课堂分配仍仅声明；不泛化K–1或账号。,observed_browser_sequence,true,cases/M-047-time-for-kids.md,2026-10-27
+F-M048-01,M-048,一期内容阅读路线,D2,E-WJ-02;E-WJ-03,历史公开样张只有封面及2至29页,缺30至32页及完整一期结束,static_reference_only,false,cases/M-048-week-junior.md,2026-10-26
+F-M048-02,M-048,辩论阅读与跨周反馈,D2,E-WJ-03;E-WJ-04,背景双方论据及下周结果,未投票;提交与改票未知,static_reference_only,false,cases/M-048-week-junior.md,2026-10-26
+F-M048-03,M-048,纸面谜题提示与核对,D2,E-WJ-03,第26页题与提示及29页答案,没有数字判错/奖励证据,static_reference_only,false,cases/M-048-week-junior.md,2026-10-26
+F-M048-04,M-048,US数字当期与往期,D1,E-WJ-05;E-WJ-06;E-WJ-07,数字访问随权益期限,阅读器朗读离线恢复和购买恢复,not_observed,false,cases/M-048-week-junior.md,2026-10-26
+F-M049-01,M-049,Elementary文章研究,D2,E-BRIT-01;E-BRIT-02;E-BRIT-04;E-BRCD-04;E-BRCD-02,学段导航器分别配置；章节/媒体/相关内容、字号与引用；个人级别选择不改变其他用户。主指南p8–9的Library措辞不套School,真实搜索返回、选级后原段锚点、精确播放恢复；新闻频率冲突未解,static_reference_only,false,cases/M-049-britannica.md,2026-10-27
+F-M049-02,M-049,Early百科读听,D2,E-BRIT-03;E-BRCD-01;E-BRCD-04,六类/关键词、分节与画廊；原生英西语及逐词朗读。Early导航图与Elementary级别工具分开,自动续节、换语言位置、退出和离线恢复；未验证触屏词典或中文原生内容,static_reference_only,false,cases/M-049-britannica.md,2026-10-27
+F-M049-03,M-049,保存引用与翻译限制,D2,E-BRIT-02;E-BRIT-04;E-BRCD-04,保存需个人账号；教师课程需教师身份，课堂分享取决机构权限；打印工具带引用；机器翻译工具限制仍在,保存成功/重名/删除/冲突和跨端未知；原生西语不等于Google翻译副本,static_reference_only,false,cases/M-049-britannica.md,2026-10-27
+F-M049-04,M-049,Fundamentals活动,D1,E-BRIT-03;E-BRED-01,Read/Explore/Play/Create需订阅启用；绘画有擦除/重置/打印声明，打印不证明云存储或可再编辑,Fundamentals错答/提示/重试/结算及退出保存仍未知；本轮Community Helpers实际预览不是该四模式,static_manual_pages_only,false,cases/M-049-britannica.md,2026-10-27

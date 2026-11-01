@@ -1,0 +1,122 @@
+Return a title (https://help.audible.com/s/article/return-a-title)
+citeturn762view0 [wordlim: 200] Crawled: today; Content type: text/html; Source: open({"ref_id":"https://help.audible.com/s/article/return-a-title","lineno":null}); Total lines: 120
+L0: Loading
+L1: 
+L2: Sorry to interrupt
+L3: 
+L4: Uncaught TypeError: Cannot read properties of null (reading 'style')
+L5: 
+L6: 【0†Refresh】
+L7: 
+L8: Skip to Main Content
+L9: 
+L10: Related topics
+L11: 
+L12: Account Ask A Question Membership Plans & benefits+2
+L13: ## Return a title
+L14: 
+L15:   * Sep 3, 2026
+L16:   * Knowledge
+L17: 
+L18: Title
+L19: 
+L20: Return a title
+L21: 
+L22: URL Name
+L23: 
+L24: return-a-title
+L25: 
+L26: Answer
+L27: 
+L28: 
+L29: 
+L30: Remember, you cannot return titles directly from the Audible app. You must use the website to initiate the return process.
+L31: As long as they meet the eligibility requirements, 【1†Audible Premium】 members have the option to return audiobooks and get their credit back. This option lets you return titles purchased in error or explore different narrators and stories risk-free. You can return an audiobook through the Audible website.
+L32: 
+L33: In this article:
+L34:   * 【2†Eligibility requirements】
+L35:   * 【3†How do I return an audiobook on mobile?】
+L36:   * 【4†How do I return an audiobook on desktop?】
+L37:   * 【5†What happens to your Audible title when you return its companion Kindle eBook?】
+L38: ## Eligibility requirements
+L39: 
+L40:   * You must be an active 【1†Audible Premium】 member in good standing.
+L41:   * You're making the return within 365 days of its purchase date.
+L42:   * You purchased the title with an Audible credit.
+L43: Note: We reserve the right to limit the number of returns or revoke return privileges at our discretion. Based on your return history, the self-service refund option may not be available. Audible may cancel or modify the terms of our returns option with respect to any or all participants at any time. Customers who cancel or fail to maintain their membership in good standing are not eligible to make returns. This return option doesn't affect any rights you have under consumer law.
+L44: Returns may only be made through the same method in which you purchased the title. For example, if you purchased a title through the Google Play Store or App Store, you can only return that title through the Google Play Store or App Store customer service.
+L45: ## How do I return an audiobook on mobile?
+L46: 
+L47: Return Audible titles from your iOS device or Android device by following these steps:
+L48: 
+L49:   1. Go to 【6†www.audible.com†www.audible.com】 and sign in to your account.
+L50:   2. Select the main menu.
+L51:   3. Select your name.
+L52:   4. Select 【7†Purchase history†www.audible.com】.
+L53:   5. Find the title you want to return and select it.
+L54:   6. Select Return this title and confirm.
+L55: Note: Refunded 【8†credits】 will expire 12 months after being issued, regardless of the original credit type. After confirming your return, 1 credit will be added back to your account.
+L56: ## How do I return an audiobook on desktop?
+L57: 
+L58:   1. Select your username from the site's top navigation or select 【9†Membership Details†www.audible.com】.
+L59:   2. Select 【7†Purchase history†www.audible.com】.
+L60:   3. Next to the title you want to return, select Return this title.
+L61:   4. Confirm the return.
+L62: 
+L63: Note: Refunded 【8†credits】 will expire 12 months after being issued, regardless of the original credit type. After confirming your return, 1 credit will be added back to your account.
+L64: ## What happens to your Audible title when you return its companion Kindle eBook?
+L65: When you purchase an Audible title at a discounted price through the "Add Narration" offer (which offers savings when you purchase an audiobook alongside its Kindle eBook), the two titles are linked. If you later make an eligible return of that Kindle eBook, Audible will automatically process a refund for the Audible title and remove it from your Library. This refund will be issued to your original payment method, and you will receive a notification when this action occurs.
+L66: 
+L67: Did this answer your question?
+L68: 【10†Image: Thumbs Up】Like
+L69: 
+L70: 
+L71: 
+L72: 【11†Image: Thumbs Down】Dislike
+L73: 
+L74:  Back to top
+L75: 
+L76: 【12†Image: Share link】 Share link
+L77: 
+L78: 【13†Image: Download PDF】 Download PDF
+L79: ## Need more assistance?
+L80: 
+L81: Chat now【14†Contact us†www.audible.com】
+L82: 
+L83: 
+L84: 
+L85: How satisfied were you with our Help Center today?
+L86: 
+L87: 
+L88: 
+L89: Worst
+L90: 
+L91: 1
+L92: 
+L93: 2
+L94: 
+L95: 3
+L96: 
+L97: 4
+L98: 
+L99: 5
+L100: 
+L101: 6
+L102: 
+L103: 7
+L104: 
+L105: Best
+L106: 
+L107: 
+L108: 
+L109: Region
+L110: 
+L111: United States
+L112: 
+L113: Language
+L114: 
+L115: English
+L116: 
+L117: Loading
+L118: 
+L119: Return a title 【15†Adobe ID Syncing iFrame†audible.demdex.net】

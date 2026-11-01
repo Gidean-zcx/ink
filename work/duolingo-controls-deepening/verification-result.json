@@ -1,0 +1,18 @@
+{
+  "new_evidence": 64,
+  "new_tasks": 23,
+  "old_tasks_amended": 8,
+  "old_fields_amended": 33,
+  "distinct_raw_source_files": 45,
+  "tonie_extracted_texts": 24,
+  "maimemo_work_manifest_files": 20,
+  "duolingo_help_articles": 17,
+  "browser_states": 57,
+  "browser_screenshots": 14,
+  "browser_commands": 44,
+  "browser_locator_errors": 4,
+  "inventories": 20,
+  "inventory_rows": 1554,
+  "new_inventory_rows": 237,
+  "errors": []
+}

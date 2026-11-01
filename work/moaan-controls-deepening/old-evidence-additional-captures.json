@@ -1,0 +1,291 @@
+[
+  {
+    "evidence_id": "E-MOD-01",
+    "expected_url": "http://www.moaansmart.com/?list=15",
+    "before_additional_captures": [],
+    "append_additional_captures": [
+      {
+        "checked_on": "2026-10-27",
+        "access_mode": "existing_local_official_HTTP_capture_reread",
+        "raw_work_path": "work/moaan-controls-deepening/raw/moaan-guide-index.html",
+        "raw_sha256": "e55d75de41e8328c7b2c0d6aaf36c5969e046f2448c6eda919a9dc0ea284a2b8",
+        "original_work_path": "work/chinese-reader-deepening/moaan-guide-index.html",
+        "source_captured_on": "2026-10-26",
+        "locator": "产品导航、用户指南、公司页脚",
+        "hands_on": false,
+        "visual_observed": false,
+        "note": "本地复读，未重新联网；不更新原采集日期。",
+        "archived_artifact": "artifacts/moaan-controls-deepening/source-notes.md",
+        "sha256": "1e87162de8a6f2fbb64044e1c2547d97401e1fa5b8de2ce206043eed9d66b56b",
+        "audit_artifact": "artifacts/moaan-controls-deepening/source-notes.md",
+        "audit_sha256": "1e87162de8a6f2fbb64044e1c2547d97401e1fa5b8de2ce206043eed9d66b56b"
+      }
+    ]
+  },
+  {
+    "evidence_id": "E-MOD-03",
+    "expected_url": "http://www.moaansmart.com/?show=86",
+    "before_additional_captures": [],
+    "append_additional_captures": [
+      {
+        "checked_on": "2026-10-27",
+        "access_mode": "existing_local_official_HTTP_capture_reread",
+        "raw_work_path": "work/moaan-controls-deepening/raw/moaan-transfer-2020.html",
+        "raw_sha256": "acf75b537ce92a2165fe2c07d9358be02809678e8fa43cbd45426e48b4f0435d",
+        "original_work_path": "work/chinese-reader-deepening/moaan-transfer-2020.html",
+        "source_captured_on": "2026-10-26",
+        "locator": "USB、FTP、多看WLAN",
+        "hands_on": false,
+        "visual_observed": false,
+        "note": "本地复读，未重新联网；不更新原采集日期。",
+        "archived_artifact": "artifacts/moaan-controls-deepening/source-notes.md",
+        "sha256": "1e87162de8a6f2fbb64044e1c2547d97401e1fa5b8de2ce206043eed9d66b56b",
+        "audit_artifact": "artifacts/moaan-controls-deepening/source-notes.md",
+        "audit_sha256": "1e87162de8a6f2fbb64044e1c2547d97401e1fa5b8de2ce206043eed9d66b56b"
+      }
+    ]
+  },
+  {
+    "evidence_id": "E-MOD-04",
+    "expected_url": "http://www.moaansmart.com/?show=87",
+    "before_additional_captures": [],
+    "append_additional_captures": [
+      {
+        "checked_on": "2026-10-27",
+        "access_mode": "existing_local_official_HTTP_capture_reread",
+        "raw_work_path": "work/moaan-controls-deepening/raw/root-moaan-87.html",
+        "raw_sha256": "6e5fa6a9d46f8f59ccecc66072053ec18c84552b3e52c65325b235d7a96d543f",
+        "original_work_path": "work/chinese-reader-deepening/root-moaan-87.html",
+        "source_captured_on": "2026-10-26",
+        "locator": "内部存储books、通知栏打开及加入书架",
+        "hands_on": false,
+        "visual_observed": false,
+        "note": "本地复读，未重新联网；不更新原采集日期。",
+        "archived_artifact": "artifacts/moaan-controls-deepening/source-notes.md",
+        "sha256": "1e87162de8a6f2fbb64044e1c2547d97401e1fa5b8de2ce206043eed9d66b56b",
+        "audit_artifact": "artifacts/moaan-controls-deepening/source-notes.md",
+        "audit_sha256": "1e87162de8a6f2fbb64044e1c2547d97401e1fa5b8de2ce206043eed9d66b56b"
+      }
+    ]
+  },
+  {
+    "evidence_id": "E-MOD-10",
+    "expected_url": "http://www.moaansmart.com/?show=82",
+    "before_additional_captures": [],
+    "append_additional_captures": [
+      {
+        "checked_on": "2026-10-27",
+        "access_mode": "existing_local_official_HTTP_capture_reread",
+        "raw_work_path": "work/moaan-controls-deepening/raw/root-moaan-82.html",
+        "raw_sha256": "7894f00e6cbbbd9a43f7b856c18951cd43f4dc42eeb2396bbcfc3135b5b518f8",
+        "original_work_path": "work/chinese-reader-deepening/root-moaan-82.html",
+        "source_captured_on": "2026-10-26",
+        "locator": "保存笔记缩略图省略号、导出、Note目录",
+        "hands_on": false,
+        "visual_observed": false,
+        "note": "本地复读，未重新联网；不更新原采集日期。",
+        "archived_artifact": "artifacts/moaan-controls-deepening/source-notes.md",
+        "sha256": "1e87162de8a6f2fbb64044e1c2547d97401e1fa5b8de2ce206043eed9d66b56b",
+        "audit_artifact": "artifacts/moaan-controls-deepening/source-notes.md",
+        "audit_sha256": "1e87162de8a6f2fbb64044e1c2547d97401e1fa5b8de2ce206043eed9d66b56b"
+      }
+    ]
+  },
+  {
+    "evidence_id": "E-MOD-11",
+    "expected_url": "https://raw.githubusercontent.com/panicopticon/MoaanInkPalmPlusRoot/ca9246421618d51dd1fe9ab9883e7c564a3dd471/manual/cn/b_cn.png",
+    "before_additional_captures": [],
+    "append_additional_captures": [
+      {
+        "checked_on": "2026-10-27",
+        "access_mode": "existing_local_static_image_reobserved",
+        "raw_work_path": "work/moaan-controls-deepening/raw/inkpalm-plus-b.png",
+        "raw_sha256": "091a998e689dda0622ea93c3fcf31abf8812baae4ae0ee062c97144ae3005064",
+        "original_work_path": "work/chinese-reader-deepening/inkpalm-plus-b.png",
+        "source_captured_on": "2026-10-26",
+        "locator": "01产品介绍、02参数及10生产者",
+        "hands_on": false,
+        "visual_observed": true,
+        "note": "本地复读，未重新联网；不更新原采集日期。",
+        "archived_artifact": "artifacts/chinese-reader-deepening/inkpalm-plus-b.png",
+        "sha256": "091a998e689dda0622ea93c3fcf31abf8812baae4ae0ee062c97144ae3005064",
+        "audit_artifact": "artifacts/moaan-controls-deepening/source-notes.md",
+        "audit_sha256": "1e87162de8a6f2fbb64044e1c2547d97401e1fa5b8de2ce206043eed9d66b56b",
+        "observed_on": "2026-10-27"
+      }
+    ]
+  },
+  {
+    "evidence_id": "E-MOD-12",
+    "expected_url": "https://raw.githubusercontent.com/panicopticon/MoaanInkPalmPlusRoot/ca9246421618d51dd1fe9ab9883e7c564a3dd471/manual/cn/c_cn.png",
+    "before_additional_captures": [],
+    "append_additional_captures": [
+      {
+        "checked_on": "2026-10-27",
+        "access_mode": "existing_local_static_image_reobserved",
+        "raw_work_path": "work/moaan-controls-deepening/raw/inkpalm-plus-c.png",
+        "raw_sha256": "d5fd8a0f63d847d345abac9e0995a83218cb9247759923134499f1ef4a5dd852",
+        "original_work_path": "work/chinese-reader-deepening/inkpalm-plus-c.png",
+        "source_captured_on": "2026-10-26",
+        "locator": "04功能、05异常处理",
+        "hands_on": false,
+        "visual_observed": true,
+        "note": "本地复读，未重新联网；不更新原采集日期。",
+        "archived_artifact": "artifacts/chinese-reader-deepening/inkpalm-plus-c.png",
+        "sha256": "d5fd8a0f63d847d345abac9e0995a83218cb9247759923134499f1ef4a5dd852",
+        "audit_artifact": "artifacts/moaan-controls-deepening/source-notes.md",
+        "audit_sha256": "1e87162de8a6f2fbb64044e1c2547d97401e1fa5b8de2ce206043eed9d66b56b",
+        "observed_on": "2026-10-27"
+      }
+    ]
+  },
+  {
+    "evidence_id": "E-MOD-13",
+    "expected_url": "https://raw.githubusercontent.com/panicopticon/MoaanInkPalmPlusRoot/ca9246421618d51dd1fe9ab9883e7c564a3dd471/manual/cn/a_cn.png",
+    "before_additional_captures": [],
+    "append_additional_captures": [
+      {
+        "checked_on": "2026-10-27",
+        "access_mode": "existing_local_static_image_reobserved",
+        "raw_work_path": "work/moaan-controls-deepening/raw/inkpalm-plus-a.png",
+        "raw_sha256": "00ae755dbad032a799e3821872e9e8d7827a6109f378c33ed34c0a1aba1a674e",
+        "original_work_path": "work/chinese-reader-deepening/inkpalm-plus-a.png",
+        "source_captured_on": "2026-10-26",
+        "locator": "封面型号；07有害物质章节",
+        "hands_on": false,
+        "visual_observed": true,
+        "note": "本地复读，未重新联网；不更新原采集日期。",
+        "archived_artifact": "artifacts/chinese-reader-deepening/inkpalm-plus-a.png",
+        "sha256": "00ae755dbad032a799e3821872e9e8d7827a6109f378c33ed34c0a1aba1a674e",
+        "audit_artifact": "artifacts/moaan-controls-deepening/source-notes.md",
+        "audit_sha256": "1e87162de8a6f2fbb64044e1c2547d97401e1fa5b8de2ce206043eed9d66b56b",
+        "observed_on": "2026-10-27"
+      }
+    ]
+  },
+  {
+    "evidence_id": "E-MOD-05",
+    "expected_url": "http://www.moaansmart.com/?show=88",
+    "before_additional_captures": [],
+    "append_additional_captures": [
+      {
+        "url": "http://www.moaansmart.com/?show=88",
+        "checked_on": "2026-10-27",
+        "access_mode": "anonymous_urllib_GET",
+        "status": 200,
+        "final_url": "http://www.moaansmart.com/?show=88",
+        "content_type": "text/html; charset=UTF-8",
+        "raw_work_path": "work/moaan-controls-deepening/raw/moaan-88.html",
+        "raw_sha256": "6fd73bf9358aa1bb614cb86b39a80af6eac5755b361725cc722532ccd881857f",
+        "extracted_work_path": "work/moaan-controls-deepening/raw/moaan-88.txt",
+        "extracted_sha256": "56bd18c4dde1b606bc69fdefde3f33e9129c709481eba624e4f2d275fd7bac18",
+        "locator": "文件管理长按、复制/剪切、目标目录粘贴",
+        "hands_on": false,
+        "visual_observed": false,
+        "archived_artifact": "artifacts/moaan-controls-deepening/source-notes.md",
+        "sha256": "1e87162de8a6f2fbb64044e1c2547d97401e1fa5b8de2ce206043eed9d66b56b",
+        "note": "同URL补原件与散列；2020历史指南型号未知，GIF未看。"
+      }
+    ]
+  },
+  {
+    "evidence_id": "E-MOD-06",
+    "expected_url": "http://www.moaansmart.com/?show=89",
+    "before_additional_captures": [],
+    "append_additional_captures": [
+      {
+        "url": "http://www.moaansmart.com/?show=89",
+        "checked_on": "2026-10-27",
+        "access_mode": "anonymous_urllib_GET",
+        "status": 200,
+        "final_url": "http://www.moaansmart.com/?show=89",
+        "content_type": "text/html; charset=UTF-8",
+        "raw_work_path": "work/moaan-controls-deepening/raw/moaan-89.html",
+        "raw_sha256": "9f125b905bd01f39b35657a4b5e43d322e76afddecf789627fcb56ac9751c36c",
+        "extracted_work_path": "work/moaan-controls-deepening/raw/moaan-89.txt",
+        "extracted_sha256": "939dab8143336b1fabd07476bbfe71c767d45680beb2207634aedd103ae1c4b5",
+        "locator": "USB至Apps分类；浏览器至download",
+        "hands_on": false,
+        "visual_observed": false,
+        "archived_artifact": "artifacts/moaan-controls-deepening/source-notes.md",
+        "sha256": "1e87162de8a6f2fbb64044e1c2547d97401e1fa5b8de2ce206043eed9d66b56b",
+        "note": "同URL补原件与散列；2020历史指南型号未知，GIF未看。"
+      }
+    ]
+  },
+  {
+    "evidence_id": "E-MOD-07",
+    "expected_url": "http://www.moaansmart.com/?show=85",
+    "before_additional_captures": [],
+    "append_additional_captures": [
+      {
+        "url": "http://www.moaansmart.com/?show=85",
+        "checked_on": "2026-10-27",
+        "access_mode": "anonymous_urllib_GET",
+        "status": 200,
+        "final_url": "http://www.moaansmart.com/?show=85",
+        "content_type": "text/html; charset=UTF-8",
+        "raw_work_path": "work/moaan-controls-deepening/raw/moaan-85.html",
+        "raw_sha256": "7ceef44e1650ee7c0777cae1bd8e892a3e43c4979d225838b7293365c2fcc94f",
+        "extracted_work_path": "work/moaan-controls-deepening/raw/moaan-85.txt",
+        "extracted_sha256": "048d4154927efd03420607b59feb4feec9c046e537c8db10bf01435d07b382b5",
+        "locator": "阅读中点击空白区后的底栏",
+        "hands_on": false,
+        "visual_observed": false,
+        "archived_artifact": "artifacts/moaan-controls-deepening/source-notes.md",
+        "sha256": "1e87162de8a6f2fbb64044e1c2547d97401e1fa5b8de2ce206043eed9d66b56b",
+        "note": "同URL补原件与散列；2020历史指南型号未知，GIF未看。"
+      }
+    ]
+  },
+  {
+    "evidence_id": "E-MOD-08",
+    "expected_url": "http://www.moaansmart.com/?show=84",
+    "before_additional_captures": [],
+    "append_additional_captures": [
+      {
+        "url": "http://www.moaansmart.com/?show=84",
+        "checked_on": "2026-10-27",
+        "access_mode": "anonymous_urllib_GET",
+        "status": 200,
+        "final_url": "http://www.moaansmart.com/?show=84",
+        "content_type": "text/html; charset=UTF-8",
+        "raw_work_path": "work/moaan-controls-deepening/raw/moaan-84.html",
+        "raw_sha256": "5fb65d77487ba5a672566f28ebfe7f0027f88cbedd225836a811b1bf665a8a44",
+        "extracted_work_path": "work/moaan-controls-deepening/raw/moaan-84.txt",
+        "extracted_sha256": "b1ba06e8c7b7a88467e86b31aee6bba70264e4d1ca6b99f9f673f3b0f20158ea",
+        "locator": "新建保存命名、左上菜单改名",
+        "hands_on": false,
+        "visual_observed": false,
+        "archived_artifact": "artifacts/moaan-controls-deepening/source-notes.md",
+        "sha256": "1e87162de8a6f2fbb64044e1c2547d97401e1fa5b8de2ce206043eed9d66b56b",
+        "note": "同URL补原件与散列；2020历史指南型号未知，GIF未看。"
+      }
+    ]
+  },
+  {
+    "evidence_id": "E-MOD-09",
+    "expected_url": "http://www.moaansmart.com/?show=83",
+    "before_additional_captures": [],
+    "append_additional_captures": [
+      {
+        "url": "http://www.moaansmart.com/?show=83",
+        "checked_on": "2026-10-27",
+        "access_mode": "anonymous_urllib_GET",
+        "status": 200,
+        "final_url": "http://www.moaansmart.com/?show=83",
+        "content_type": "text/html; charset=UTF-8",
+        "raw_work_path": "work/moaan-controls-deepening/raw/moaan-83.html",
+        "raw_sha256": "462130a954b81d38d776a78276ed05c523f638f005cb77f660c81fe1f64532b9",
+        "extracted_work_path": "work/moaan-controls-deepening/raw/moaan-83.txt",
+        "extracted_sha256": "658412f8c7d9f694a5ee873d06e953b29f97297d4bd70a9af62f6a0e1596c650",
+        "locator": "多页笔记的页码与4/9格",
+        "hands_on": false,
+        "visual_observed": false,
+        "archived_artifact": "artifacts/moaan-controls-deepening/source-notes.md",
+        "sha256": "1e87162de8a6f2fbb64044e1c2547d97401e1fa5b8de2ce206043eed9d66b56b",
+        "note": "同URL补原件与散列；2020历史指南型号未知，GIF未看。"
+      }
+    ]
+  }
+]

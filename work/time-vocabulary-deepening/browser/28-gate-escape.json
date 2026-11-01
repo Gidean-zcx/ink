@@ -1,0 +1,509 @@
+{
+  "name": "28-gate-escape",
+  "at": "2026-10-26T20:13:42.953863+00:00",
+  "url": "https://www.timeforkids.com/k1/topics/science/",
+  "title": "TIME for Kids | Science | Topic | K-1",
+  "text": "Skip to main content\nSearch\n\nThe page you are about to enter is for grown-ups.\nEnter your birth date to continue.\n\nMONTH (MM)\n01\n02\n03\n04\n05\n06\n07\n08\n09\n10\n11\n12\n \nYEAR (YYYY)\n1926\n1927\n1928\n1929\n1930\n1931\n1932\n1933\n1934\n1935\n1936\n1937\n1938\n1939\n1940\n1941\n1942\n1943\n1944\n1945\n1946\n1947\n1948\n1949\n1950\n1951\n1952\n1953\n1954\n1955\n1956\n1957\n1958\n1959\n1960\n1961\n1962\n1963\n1964\n1965\n1966\n1967\n1968\n1969\n1970\n1971\n1972\n1973\n1974\n1975\n1976\n1977\n1978\n1979\n1980\n1981\n1982\n1983\n1984\n1985\n1986\n1987\n1988\n1989\n1990\n1991\n1992\n1993\n1994\n1995\n1996\n1997\n1998\n1999\n2000\n2001\n2002\n2003\n2004\n2005\n2006\n2007\n2008\n2009\n2010\n2011\n2012\n2013\n2014\n2015\n2016\n2017\n2018\n2019\n2020\n2021\n2022\n2023\n2024\n2025\n2026\nSubmit\nScience\nEnvironment\nWe Need Trees\nMarch 14, 2025\n\nTake a look outside. Do you see any trees? They are an important natural resource. Trees help the environment. They give us clean air to breathe. Read about other ways that trees benefit people and the planet. Trees shelter animals.…\n\nAudio\nSpanish\nEnvironment\nCelebrate Arbor Day\nMarch 14, 2025\n\nArbor Day is a day to plant trees. The holiday was started by a man named Julius Sterling Morton. He knew that trees are important. He wanted people to plant them for the future. The first Arbor Day was on…\n\nAudio\nAnimals\nCave Living\nFebruary 5, 2025\n\nCaves are full of interesting animals. These animals fly, swim, and slither. Here are four cave creatures. Learn how they have adapted to their dark habitat. Bats Bats make a high-pitched sound. It bounces off cave walls. Bats use…\n\nAudio\nSpanish\nAnimals\nNatural Partners\nFebruary 5, 2025\n\nSome animals adapt to work together. This is called mutualism. They help each other survive. Read about two examples. Clown Fish and Sea Anemones Sea anemones (above) have tentacles. They sting. But clown fish are not harmed. The fish bring…\n\nAudio\nAnimals\nGrow, Frog, Grow!\nJanuary 31, 2025\n\nA frog goes through four stages of life. These stages are its life cycle. It looks different at each stage. This change is called metamorphosis. Here is how a frog grows. Egg Female frogs lay hundreds of eggs. The…\n\nAudio\nSpanish\nAnimals\nComplete Changes\nJanuary 31, 2025\n\nSome insects go through complete metamorphosis. They change form. Here are three examples. Bees Many bees make cocoons (above). Young bees are called larvas. They are wormlike. They spin a cocoon, like in the photo above. They spend a week…\n\nAudio\nAnimals\nYoung Animals\nJanuary 24, 2025\n\nBaby animals look similar to their parents. But they are smaller. And they have different names. Do you know any of these names? Here are some examples. A baby rabbit is called a kit or kitten. A mother rabbit can…\n\nAudio\nSpanish\nAnimals\nNatural Partners\nDecember 15, 2023\n\nAnimals benefit from working together. Plants and animals help one another too. This is called mutualism. Each species provides a service. Each helps the other survive. Read about some helpful relationships. Impalas and Oxpeckers Impalas are bitten by bugs. But…\n\nAudio\nSpanish\nAnimals\nAnimal Friends\nDecember 15, 2023\n\nScientists say friendships help us stay healthy. That’s true for animals too. Unusual Pair (above) Animals can have friends from other species. Dogs and cats are very different but can get along. Cleaning Up These chimpanzees know how to…\n\nAudio\nEnvironment\nExplore a Coral Reef\nApril 20, 2023\n\nMany underwater plants and animals live in a coral reef. They depend on the reef for food and protection. People benefit from the reefs, too. Dive in to learn more about coral reefs. Curious Creatures Corals are animals. They…\n\nAudio\nSpanish\n1 2 Next\nCONTACT US\nPRIVACY POLICY\nTERMS OF SERVICE\nSUBSCRIBE\nCLASSROOM INTERNATIONAL\n© 2026 TIME USA, LLC. All Rights Reserved.\nPowered by WordPress.com VIP",
+  "controls": [
+    {
+      "tag": "A",
+      "text": "Skip to main content",
+      "aria": null,
+      "title": "",
+      "href": "https://www.timeforkids.com/k1/topics/science/#main-content",
+      "id": "",
+      "type": ""
+    },
+    {
+      "tag": "A",
+      "text": "Search",
+      "aria": null,
+      "title": "",
+      "href": "https://www.timeforkids.com/k1/",
+      "id": "",
+      "type": ""
+    },
+    {
+      "tag": "A",
+      "text": "",
+      "aria": null,
+      "title": "",
+      "href": "https://www.timeforkids.com/?u=",
+      "id": "",
+      "type": ""
+    },
+    {
+      "tag": "SELECT",
+      "text": "01\n02\n03\n04\n05\n06\n07\n08\n09\n10\n11\n12",
+      "aria": null,
+      "title": "",
+      "href": null,
+      "id": "",
+      "type": "select-one"
+    },
+    {
+      "tag": "SELECT",
+      "text": "1926\n1927\n1928\n1929\n1930\n1931\n1932\n1933\n1934\n1935\n1936\n1937\n1938\n1939\n1940\n1941\n1942\n1943\n1944\n1945\n1946\n1947\n1948\n1949\n1950\n1951\n1952\n1953\n1954\n1955\n1956\n1957\n1958\n1959\n1960\n1961\n1962\n1963\n1964\n1965\n1966\n1967\n1968\n1969\n1970\n1971\n1972\n1973\n1974\n1975\n1976\n1977\n1978\n1979\n1980\n1981\n1982\n1983\n1984\n1985\n1986\n1987\n1988\n1989\n1990\n1991\n1992\n1993\n1994\n1995\n1996\n1997\n1998\n1999\n2000\n2001\n2002\n2003\n2004\n2005\n2006\n2007\n2008\n2009\n2010\n2011\n2012\n2013\n2014\n2015\n2016\n2017\n2018\n2019\n2020\n2021\n2022\n2023\n2024\n2025\n2026",
+      "aria": null,
+      "title": "",
+      "href": null,
+      "id": "",
+      "type": "select-one"
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Submit",
+      "aria": null,
+      "title": "",
+      "href": null,
+      "id": "",
+      "type": "submit"
+    },
+    {
+      "tag": "A",
+      "text": "",
+      "aria": null,
+      "title": "",
+      "href": "",
+      "id": "main-content",
+      "type": ""
+    },
+    {
+      "tag": "A",
+      "text": "",
+      "aria": null,
+      "title": "",
+      "href": "",
+      "id": "",
+      "type": ""
+    },
+    {
+      "tag": "A",
+      "text": "",
+      "aria": null,
+      "title": "",
+      "href": "https://www.timeforkids.com/k1/we-need-trees-k1/",
+      "id": "",
+      "type": ""
+    },
+    {
+      "tag": "A",
+      "text": "Environment",
+      "aria": null,
+      "title": "",
+      "href": "https://www.timeforkids.com/k1/sections/environment/",
+      "id": "",
+      "type": ""
+    },
+    {
+      "tag": "A",
+      "text": "We Need Trees",
+      "aria": null,
+      "title": "",
+      "href": "https://www.timeforkids.com/k1/we-need-trees-k1/",
+      "id": "",
+      "type": ""
+    },
+    {
+      "tag": "A",
+      "text": "Take a look outside. Do you see any trees? They are an important natural resource. Trees help the environment. They give us clean air to breathe. Read about other ways that trees benefit people and the planet. Trees shelter animals.…",
+      "aria": null,
+      "title": "",
+      "href": "https://www.timeforkids.com/k1/we-need-trees-k1/",
+      "id": "",
+      "type": ""
+    },
+    {
+      "tag": "A",
+      "text": "",
+      "aria": null,
+      "title": "",
+      "href": "https://www.timeforkids.com/k1/celebrate-arbor-day-k1/",
+      "id": "",
+      "type": ""
+    },
+    {
+      "tag": "A",
+      "text": "Environment",
+      "aria": null,
+      "title": "",
+      "href": "https://www.timeforkids.com/k1/sections/environment/",
+      "id": "",
+      "type": ""
+    },
+    {
+      "tag": "A",
+      "text": "Celebrate Arbor Day",
+      "aria": null,
+      "title": "",
+      "href": "https://www.timeforkids.com/k1/celebrate-arbor-day-k1/",
+      "id": "",
+      "type": ""
+    },
+    {
+      "tag": "A",
+      "text": "Arbor Day is a day to plant trees. The holiday was started by a man named Julius Sterling Morton. He knew that trees are important. He wanted people to plant them for the future. The first Arbor Day was on…",
+      "aria": null,
+      "title": "",
+      "href": "https://www.timeforkids.com/k1/celebrate-arbor-day-k1/",
+      "id": "",
+      "type": ""
+    },
+    {
+      "tag": "A",
+      "text": "",
+      "aria": null,
+      "title": "",
+      "href": "https://www.timeforkids.com/k1/cave-living-k1/",
+      "id": "",
+      "type": ""
+    },
+    {
+      "tag": "A",
+      "text": "Animals",
+      "aria": null,
+      "title": "",
+      "href": "https://www.timeforkids.com/k1/sections/animals/",
+      "id": "",
+      "type": ""
+    },
+    {
+      "tag": "A",
+      "text": "Cave Living",
+      "aria": null,
+      "title": "",
+      "href": "https://www.timeforkids.com/k1/cave-living-k1/",
+      "id": "",
+      "type": ""
+    },
+    {
+      "tag": "A",
+      "text": "Caves are full of interesting animals. These animals fly, swim, and slither. Here are four cave creatures. Learn how they have adapted to their dark habitat. Bats Bats make a high-pitched sound. It bounces off cave walls. Bats use…",
+      "aria": null,
+      "title": "",
+      "href": "https://www.timeforkids.com/k1/cave-living-k1/",
+      "id": "",
+      "type": ""
+    },
+    {
+      "tag": "A",
+      "text": "",
+      "aria": null,
+      "title": "",
+      "href": "https://www.timeforkids.com/k1/natural-partners-k1/",
+      "id": "",
+      "type": ""
+    },
+    {
+      "tag": "A",
+      "text": "Animals",
+      "aria": null,
+      "title": "",
+      "href": "https://www.timeforkids.com/k1/sections/animals/",
+      "id": "",
+      "type": ""
+    },
+    {
+      "tag": "A",
+      "text": "Natural Partners",
+      "aria": null,
+      "title": "",
+      "href": "https://www.timeforkids.com/k1/natural-partners-k1/",
+      "id": "",
+      "type": ""
+    },
+    {
+      "tag": "A",
+      "text": "Some animals adapt to work together. This is called mutualism. They help each other survive. Read about two examples. Clown Fish and Sea Anemones Sea anemones (above) have tentacles. They sting. But clown fish are not harmed. The fish bring…",
+      "aria": null,
+      "title": "",
+      "href": "https://www.timeforkids.com/k1/natural-partners-k1/",
+      "id": "",
+      "type": ""
+    },
+    {
+      "tag": "A",
+      "text": "",
+      "aria": null,
+      "title": "",
+      "href": "https://www.timeforkids.com/k1/grow-frog-grow-k1/",
+      "id": "",
+      "type": ""
+    },
+    {
+      "tag": "A",
+      "text": "Animals",
+      "aria": null,
+      "title": "",
+      "href": "https://www.timeforkids.com/k1/sections/animals/",
+      "id": "",
+      "type": ""
+    },
+    {
+      "tag": "A",
+      "text": "Grow, Frog, Grow!",
+      "aria": null,
+      "title": "",
+      "href": "https://www.timeforkids.com/k1/grow-frog-grow-k1/",
+      "id": "",
+      "type": ""
+    },
+    {
+      "tag": "A",
+      "text": "A frog goes through four stages of life. These stages are its life cycle. It looks different at each stage. This change is called metamorphosis. Here is how a frog grows. Egg Female frogs lay hundreds of eggs. The…",
+      "aria": null,
+      "title": "",
+      "href": "https://www.timeforkids.com/k1/grow-frog-grow-k1/",
+      "id": "",
+      "type": ""
+    },
+    {
+      "tag": "A",
+      "text": "",
+      "aria": null,
+      "title": "",
+      "href": "https://www.timeforkids.com/k1/complete-changes-k1/",
+      "id": "",
+      "type": ""
+    },
+    {
+      "tag": "A",
+      "text": "Animals",
+      "aria": null,
+      "title": "",
+      "href": "https://www.timeforkids.com/k1/sections/animals/",
+      "id": "",
+      "type": ""
+    },
+    {
+      "tag": "A",
+      "text": "Complete Changes",
+      "aria": null,
+      "title": "",
+      "href": "https://www.timeforkids.com/k1/complete-changes-k1/",
+      "id": "",
+      "type": ""
+    },
+    {
+      "tag": "A",
+      "text": "Some insects go through complete metamorphosis. They change form. Here are three examples. Bees Many bees make cocoons (above). Young bees are called larvas. They are wormlike. They spin a cocoon, like in the photo above. They spend a week…",
+      "aria": null,
+      "title": "",
+      "href": "https://www.timeforkids.com/k1/complete-changes-k1/",
+      "id": "",
+      "type": ""
+    },
+    {
+      "tag": "A",
+      "text": "",
+      "aria": null,
+      "title": "",
+      "href": "https://www.timeforkids.com/k1/young-animals-k1/",
+      "id": "",
+      "type": ""
+    },
+    {
+      "tag": "A",
+      "text": "Animals",
+      "aria": null,
+      "title": "",
+      "href": "https://www.timeforkids.com/k1/sections/animals/",
+      "id": "",
+      "type": ""
+    },
+    {
+      "tag": "A",
+      "text": "Young Animals",
+      "aria": null,
+      "title": "",
+      "href": "https://www.timeforkids.com/k1/young-animals-k1/",
+      "id": "",
+      "type": ""
+    },
+    {
+      "tag": "A",
+      "text": "Baby animals look similar to their parents. But they are smaller. And they have different names. Do you know any of these names? Here are some examples. A baby rabbit is called a kit or kitten. A mother rabbit can…",
+      "aria": null,
+      "title": "",
+      "href": "https://www.timeforkids.com/k1/young-animals-k1/",
+      "id": "",
+      "type": ""
+    },
+    {
+      "tag": "A",
+      "text": "",
+      "aria": null,
+      "title": "",
+      "href": "https://www.timeforkids.com/k1/natural-partners-k1-2/",
+      "id": "",
+      "type": ""
+    },
+    {
+      "tag": "A",
+      "text": "Animals",
+      "aria": null,
+      "title": "",
+      "href": "https://www.timeforkids.com/k1/sections/animals/",
+      "id": "",
+      "type": ""
+    },
+    {
+      "tag": "A",
+      "text": "Natural Partners",
+      "aria": null,
+      "title": "",
+      "href": "https://www.timeforkids.com/k1/natural-partners-k1-2/",
+      "id": "",
+      "type": ""
+    },
+    {
+      "tag": "A",
+      "text": "Animals benefit from working together. Plants and animals help one another too. This is called mutualism. Each species provides a service. Each helps the other survive. Read about some helpful relationships. Impalas and Oxpeckers Impalas are bitten by bugs. But…",
+      "aria": null,
+      "title": "",
+      "href": "https://www.timeforkids.com/k1/natural-partners-k1-2/",
+      "id": "",
+      "type": ""
+    },
+    {
+      "tag": "A",
+      "text": "",
+      "aria": null,
+      "title": "",
+      "href": "https://www.timeforkids.com/k1/animal-friends-k1/",
+      "id": "",
+      "type": ""
+    },
+    {
+      "tag": "A",
+      "text": "Animals",
+      "aria": null,
+      "title": "",
+      "href": "https://www.timeforkids.com/k1/sections/animals/",
+      "id": "",
+      "type": ""
+    },
+    {
+      "tag": "A",
+      "text": "Animal Friends",
+      "aria": null,
+      "title": "",
+      "href": "https://www.timeforkids.com/k1/animal-friends-k1/",
+      "id": "",
+      "type": ""
+    },
+    {
+      "tag": "A",
+      "text": "Scientists say friendships help us stay healthy. That’s true for animals too. Unusual Pair (above) Animals can have friends from other species. Dogs and cats are very different but can get along. Cleaning Up These chimpanzees know how to…",
+      "aria": null,
+      "title": "",
+      "href": "https://www.timeforkids.com/k1/animal-friends-k1/",
+      "id": "",
+      "type": ""
+    },
+    {
+      "tag": "A",
+      "text": "",
+      "aria": null,
+      "title": "",
+      "href": "https://www.timeforkids.com/k1/explore-a-coral-reef/",
+      "id": "",
+      "type": ""
+    },
+    {
+      "tag": "A",
+      "text": "Environment",
+      "aria": null,
+      "title": "",
+      "href": "https://www.timeforkids.com/k1/sections/environment/",
+      "id": "",
+      "type": ""
+    },
+    {
+      "tag": "A",
+      "text": "Explore a Coral Reef",
+      "aria": null,
+      "title": "",
+      "href": "https://www.timeforkids.com/k1/explore-a-coral-reef/",
+      "id": "",
+      "type": ""
+    },
+    {
+      "tag": "A",
+      "text": "Many underwater plants and animals live in a coral reef. They depend on the reef for food and protection. People benefit from the reefs, too. Dive in to learn more about coral reefs. Curious Creatures Corals are animals. They…",
+      "aria": null,
+      "title": "",
+      "href": "https://www.timeforkids.com/k1/explore-a-coral-reef/",
+      "id": "",
+      "type": ""
+    },
+    {
+      "tag": "A",
+      "text": "2",
+      "aria": null,
+      "title": "",
+      "href": "https://www.timeforkids.com/k1/topics/science/page/2/",
+      "id": "",
+      "type": ""
+    },
+    {
+      "tag": "A",
+      "text": "Next",
+      "aria": null,
+      "title": "",
+      "href": "https://www.timeforkids.com/k1/topics/science/page/2/",
+      "id": "",
+      "type": ""
+    },
+    {
+      "tag": "A",
+      "text": "CONTACT US",
+      "aria": null,
+      "title": "",
+      "href": "https://www.timeforkids.com/contact-us/",
+      "id": "",
+      "type": ""
+    },
+    {
+      "tag": "A",
+      "text": "PRIVACY POLICY",
+      "aria": null,
+      "title": "",
+      "href": "https://www.timeforkids.com/privacy-policy/",
+      "id": "",
+      "type": ""
+    },
+    {
+      "tag": "A",
+      "text": "TERMS OF SERVICE",
+      "aria": null,
+      "title": "",
+      "href": "https://www.timeforkids.com/terms-of-service/",
+      "id": "",
+      "type": ""
+    },
+    {
+      "tag": "A",
+      "text": "SUBSCRIBE",
+      "aria": null,
+      "title": "",
+      "href": "https://get.timeforkids.com/servlet/OrdersGateway?cds_mag_code=TFK&cds_page_id=282171&cds_response_key=CI1GPKFC1",
+      "id": "",
+      "type": ""
+    },
+    {
+      "tag": "A",
+      "text": "CLASSROOM INTERNATIONAL",
+      "aria": null,
+      "title": "",
+      "href": "https://get.timeforkids.com/servlet/OrdersGateway?cds_mag_code=TFK&cds_page_id=282171&cds_response_key=II1GPKFC1",
+      "id": "",
+      "type": ""
+    }
+  ],
+  "scroll": {
+    "x": 0,
+    "y": 0
+  },
+  "media": []
+}

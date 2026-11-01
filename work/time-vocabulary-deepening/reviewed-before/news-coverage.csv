@@ -1,0 +1,20 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M045-01,M-045,一日简报读完,D1,E-ESPR-01;E-ESPR-02,内容或权限可用性未实测,精确入口与已读结算返回,not_observed,false,cases/M-045-espresso.md,2026-10-26
+F-M045-02,M-045,主题偏好与每周深读,D2,E-ESPR-01;E-ESPR-02;E-ESD-02,机构指南 Settings 到 For you；不证明改每日短报,选项、确认、生效与当前平台构建,not_observed,false,cases/M-045-espresso.md,2026-10-26
+F-M045-03,M-045,文章听读与翻译,D1,E-ESPR-02;E-ESD-01,静态图可见阅读时间与音频入口、时长；翻译为能力声明,播放结果、暂停结束、精确返回恢复与语言入口,static_official_images_only,false,cases/M-045-espresso.md,2026-10-26
+F-M045-04,M-045,机构登录及学生资格,D2,E-ESPR-04;E-ESPR-03,机构特定账号和16岁以上资格,通用新用户错误恢复及当前界面,not_observed,false,cases/M-045-espresso.md,2026-10-26
+F-M046-01,M-046,同一事件比较并筛选来源,D2,E-GRND-01;E-GRND-03;E-GRND-04;E-GRND-07;E-GRCD-02,Full Coverage→Sort & Filter；排序Bias/Factuality/Latest/Alphabetical，偏向/事实性/所有权/Locality/Paywall组合；Show Results应用，Clear或换事件复位。移动静态图含Unknown，比较摘要覆盖不足时只给普通摘要。,零结果、取消回滚、外链返回位置/付费墙与全局默认优先级未实测；教程三机构与方法论两机构口径不一,static_official_images_only,false,cases/M-046-ground-news.md,2026-10-27
+F-M046-02,M-046,收藏与回访,D2,E-GRND-02;E-GND-14,Saved Stories 回访；Web/App 均不支持离线浏览,取消收藏、同步冲突、断网恢复、原文删除与滚动位置,not_observed,false,cases/M-046-ground-news.md,2026-10-26
+F-M046-03,M-046,关注与隐藏已读,D2,E-GRND-05;E-GRND-06;E-GRCD-07,Discover关注后进入个性化流；For You帮助明确使用地点、关注主题/来源和App使用模式，不是只按显式订阅。移动Premium+可Profile Settings打开Hide Read Stories。,已读阈值、撤销、隐式行为权重与关闭个性化入口未核；观看/打开不等于理解,not_observed,false,cases/M-046-ground-news.md,2026-10-27
+F-M046-04,M-046,报告错误,D2,E-GRND-08;E-GRCD-11,Web旗帜、Android事件三点、iOS邮件入口报告问题；建议缺失来源时读者邮件提供名称/URL，机构另走表单且不保证收录或时限。,未提交；成功反馈、修复时延、聚合错配处理及新增来源审核结果未知,not_observed,false,cases/M-046-ground-news.md,2026-10-27
+F-M047-01,M-047,K1公开植物文章阅读,D4,E-TFK-02;E-TFK-03;E-TKCD-02;E-TKCD-03,同篇西语/英文切换；Search展开输入层后进入K–1结果；无意义查询仍见普通文章；清空并从标题返回正文。,仅桌面匿名该篇；打印、所有年级/主题/分页、已读/精准续读、检索失败原因及课堂分配未知。,observed_browser_sequence,true,cases/M-047-time-for-kids.md,2026-10-26
+F-M047-02,M-047,教师组织海洋单元任务,D2,E-TFK-04,读前提问阅读应用与讨论,非应用自动评分;未观察课堂,static_reference_only,false,cases/M-047-time-for-kids.md,2026-10-26
+F-M047-03,M-047,分级辅助与分配,D1,E-TFK-01;E-TFK-03;E-TKD-02,只有特定文章有辅助工具；2018年3–4年级文章含静态词汇释义/音频/关闭节点，不套K–1,实际选级、词汇弹窗交互、课堂分配及结果未知,not_observed,false,cases/M-047-time-for-kids.md,2026-10-26
+F-M048-01,M-048,一期内容阅读路线,D2,E-WJ-02;E-WJ-03,历史公开样张只有封面及2至29页,缺30至32页及完整一期结束,static_reference_only,false,cases/M-048-week-junior.md,2026-10-26
+F-M048-02,M-048,辩论阅读与跨周反馈,D2,E-WJ-03;E-WJ-04,背景双方论据及下周结果,未投票;提交与改票未知,static_reference_only,false,cases/M-048-week-junior.md,2026-10-26
+F-M048-03,M-048,纸面谜题提示与核对,D2,E-WJ-03,第26页题与提示及29页答案,没有数字判错/奖励证据,static_reference_only,false,cases/M-048-week-junior.md,2026-10-26
+F-M048-04,M-048,US数字当期与往期,D1,E-WJ-05;E-WJ-06;E-WJ-07,数字访问随权益期限,阅读器朗读离线恢复和购买恢复,not_observed,false,cases/M-048-week-junior.md,2026-10-26
+F-M049-01,M-049,Elementary文章研究,D2,E-BRIT-01;E-BRIT-02;E-BRIT-04,章节词典和可用阅读级别,精确搜索返回与播放恢复,static_reference_only,false,cases/M-049-britannica.md,2026-10-26
+F-M049-02,M-049,Early百科读听,D2,E-BRIT-03,原生英西语与逐词朗读,自动续节和退出恢复,static_reference_only,false,cases/M-049-britannica.md,2026-10-26
+F-M049-03,M-049,保存引用与翻译限制,D2,E-BRIT-02;E-BRIT-04,个人账号及翻译禁用工具,成功提示删除重名跨设备,static_reference_only,false,cases/M-049-britannica.md,2026-10-26
+F-M049-04,M-049,Fundamentals活动,D1,E-BRIT-03;E-BRED-01,订阅必须启用,题面与画板静态图已看；错答、提示、重试、结算及退出保存未知,static_manual_pages_only,false,cases/M-049-britannica.md,2026-10-26

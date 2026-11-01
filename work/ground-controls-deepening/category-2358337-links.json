@@ -1,0 +1,113 @@
+[
+  {
+    "class": "page-header-inner-logo-link",
+    "href": "/en",
+    "title": "",
+    "url": "https://help.ground.news/en"
+  },
+  {
+    "class": "page-header-inner-title",
+    "href": "/en",
+    "title": "Ground News Help Center",
+    "url": "https://help.ground.news/en"
+  },
+  {
+    "type": "button",
+    "class": "kb-button primary",
+    "href": "/en/contact-us",
+    "title": "Contact Us",
+    "url": "https://help.ground.news/en/contact-us"
+  },
+  {
+    "id": "moreResultsLink",
+    "type": "button",
+    "class": "kb-button secondary",
+    "href": "/en/search",
+    "title": "More results",
+    "url": "https://help.ground.news/en/search"
+  },
+  {
+    "href": "https://ground.news/privacy-policy",
+    "title": "Privacy Policy",
+    "url": "https://ground.news/privacy-policy"
+  },
+  {
+    "href": "/en",
+    "title": "Home",
+    "url": "https://help.ground.news/en"
+  },
+  {
+    "class": "article-card",
+    "href": "/en/articles/11672961",
+    "data-edited": "1791227337545",
+    "title": "Apply as an Independent CreatorEdited Monday, October 5 2026You can fill out our  Partnership Application Form  right away, or read further for a step-by-step guide on the application process. At Ground News, w...",
+    "url": "https://help.ground.news/en/articles/11672961"
+  },
+  {
+    "class": "article-card",
+    "href": "/en/articles/11672513",
+    "data-edited": "1778275687375",
+    "title": "Why work with Ground News?\nEdited Friday, May 8 2026As you think about how sponsorship fits into your content, it is important that any partnership aligns with your voice and is valuable to your audienc...",
+    "url": "https://help.ground.news/en/articles/11672513"
+  },
+  {
+    "class": "article-card",
+    "href": "/en/articles/11672641",
+    "data-edited": "1778275648464",
+    "title": "Partnership EligibilityEdited Friday, May 8 2026If what you’ve seen so far feels like a good fit, we’d love to work with you! You can fill out our  Partnership Application Form for Independent Creat...",
+    "url": "https://help.ground.news/en/articles/11672641"
+  },
+  {
+    "class": "article-card",
+    "href": "/en/articles/11593153",
+    "data-edited": "1778275716920",
+    "title": "Who is Ground News?Edited Friday, May 8 2026Ground News is an independent, non-partisan news comparison platform. We compile news from over 50,000 global sources, coming from all sides of the po...",
+    "url": "https://help.ground.news/en/articles/11593153"
+  },
+  {
+    "class": "kb-category-card",
+    "href": "https://help.ground.news/en/categories/2273089-getting-started",
+    "target": "_blank",
+    "rel": "noreferrer",
+    "title": "Getting StartedTips and tricks to get you off the ground in no time!",
+    "url": "https://help.ground.news/en/categories/2273089-getting-started"
+  },
+  {
+    "class": "kb-category-card",
+    "href": "https://help.ground.news/en/articles/485057",
+    "target": "_blank",
+    "rel": "noreferrer",
+    "title": "How Does Ground News Help Readers See News Differently?",
+    "url": "https://help.ground.news/en/articles/485057"
+  },
+  {
+    "href": "https://twitter.com/Ground_app",
+    "title": "",
+    "url": "https://twitter.com/Ground_app"
+  },
+  {
+    "href": "https://ca.linkedin.com/company/groundnews",
+    "title": "",
+    "url": "https://ca.linkedin.com/company/groundnews"
+  },
+  {
+    "href": "https://www.instagram.com/groundnews/",
+    "title": "",
+    "url": "https://www.instagram.com/groundnews/"
+  },
+  {
+    "href": "https://ground.news/refund-policy",
+    "title": "Refund and Cancellation Policy",
+    "url": "https://ground.news/refund-policy"
+  },
+  {
+    "href": "https://ground.news/terms-and-conditions",
+    "title": "Terms and Conditions",
+    "url": "https://ground.news/terms-and-conditions"
+  },
+  {
+    "href": "https://about.ground.news/privacy-policy",
+    "title": "Privacy Policy",
+    "url": "https://about.ground.news/privacy-policy"
+  }
+]

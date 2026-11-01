@@ -1,0 +1,11 @@
+{
+  "url": "https://raw.githubusercontent.com/readwiseio/readwise-skills/2d1ce9627c611d24f510dfc2e05a123fa509d2f6/skills/highlight-graph/build_graph.py",
+  "status": 200,
+  "path": "work/research/batch36-readwise/build_graph.py",
+  "bytes": 22049,
+  "sha256": "cd8130937fd1cdaf43cf9be3d690ac7b91484c183e20e54d416ac83321ff8881",
+  "git_blob": "263ac15b38e5f809fa7e5a5e4321a9913d28af09",
+  "expected_git_blob": "263ac15b38e5f809fa7e5a5e4321a9913d28af09",
+  "commit": "2d1ce9627c611d24f510dfc2e05a123fa509d2f6",
+  "checked_on": "2026-10-27"
+}

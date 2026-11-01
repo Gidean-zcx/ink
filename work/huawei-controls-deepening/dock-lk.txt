@@ -1,0 +1,16 @@
+A Navigation Dock for All Your Needs
+With the navigation dock, all of your most frequently-used shortcuts are just a touch away! Get exactly where left off in a favorite book or article, without having to flip through different settings screens, to read and browse with newfound ease!
+Try it out
+Swipe down from the top right edge of the screen to display
+Control Panel
+, and enable
+Navigation Dock
+in the shortcut switch panel. From there, feel free to:
+Expand the navigation dock:
+Tap on the navigation dock to expand it, and perform the following: switch between screen refresh modes, return to home screen, return to the previous screen, and more.
+Refresh the current screen:
+Double-tap on the navigation dock to immediately refresh the current screen and remove any residual images.
+Move the navigation dock:
+Touch and hold down on the navigation dock and drag it to your desired location.
+Note
+The navigation dock will be hidden along the edge of the screen when this feature is idle for more than five seconds. Just tap on the dock when you want to use it again.

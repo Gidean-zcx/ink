@@ -1,0 +1,25 @@
+How To Manage Mobile Data and Roaming on Mudita Kompakt
+Modified on: Sat, 3 Oct, 2026 at 8:41 AM
+How To Allow or Stop Downloads Using Data
+If you stop Kompakt from using mobile data, downloads will need a Wi-Fi connection.
+This is useful if you have a limited data allowance or high cost for data.
+Press the Control Center button
+Tap Settings icon
+Tap Network and Internet
+Tap Mobile Network
+Tap the Mobile data Toggle switch to stop or allow Kompakt using mobile data
+How to allow or stop roaming
+Roaming is when you use your device outside of your home country.
+Your network provider can charge you extra for this feature.
+Always check with your network provider before allowing roaming!
+To allow roaming:
+Press the Control Center button
+Tap Settings icon
+Tap Network and Internet
+Tap Mobile Network
+Tap the Roaming Toggle switch to stop or allow roaming
+Was this article helpful?
+No
+Yes
+That’s Great!
+Thank you for your feedback

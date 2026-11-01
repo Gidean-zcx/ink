@@ -1,0 +1,7 @@
+import pathlib,json,subprocess,sys
+base=pathlib.Path(__file__).parent
+paths=['app/build.gradle','playback/service/src/main/AndroidManifest.xml','playback/service/src/main/java/de/danoeh/antennapod/playback/service/PlaybackServiceInterface.java','playback/service/src/main/java/de/danoeh/antennapod/playback/service/PlaybackServiceStarter.java','playback/service/src/main/java/de/danoeh/antennapod/playback/service/Media3PlaybackService.java','playback/service/build.gradle','app/src/main/java/de/danoeh/antennapod/ui/screen/playback/audio/AudioPlayerFragment.java','app/src/main/java/de/danoeh/antennapod/ui/screen/chapter/ChaptersFragment.java','app/src/main/java/de/danoeh/antennapod/ui/screen/playback/SleepTimerDialog.java','app/src/main/java/de/danoeh/antennapod/ui/screen/feed/RemoveFeedDialog.java','app/src/main/java/de/danoeh/antennapod/ui/screen/preferences/ImportExportPreferencesFragment.java','storage/preferences/src/main/java/de/danoeh/antennapod/storage/preferences/UserPreferences.java','storage/preferences/src/main/java/de/danoeh/antennapod/storage/preferences/SleepTimerPreferences.java','ui/i18n/src/main/res/values/strings.xml']
+paths += [r['path'] for r in json.load(open(base/'tree.json'))['tree'] if r['path'].startswith('ui/preferences/src/main/res/xml/preferences')]
+(base/'selected-paths.json').write_text(json.dumps(paths,indent=2))
+url='https://raw.githubusercontent.com/AntennaPod/AntennaPod/175e5ef8fe3e125a5014d70ef0c57cf85661c71b/'
+subprocess.run([sys.executable,str(base/'fetch.py')]+['src/'+p+'='+url+p for p in paths],check=True)

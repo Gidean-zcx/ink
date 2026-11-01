@@ -1,0 +1,686 @@
+[
+  {
+    "kind": "topic",
+    "title": "Welcome",
+    "url": "https://support.apple.com/guide/shortcuts/welcome/ios",
+    "topic_id": "APDA2B83D0E0"
+  },
+  {
+    "kind": "group",
+    "title": "Shortcuts basics",
+    "url": null,
+    "topic_id": null
+  },
+  {
+    "kind": "topic",
+    "title": "Intro to Shortcuts",
+    "url": "https://support.apple.com/guide/shortcuts/intro-to-shortcuts-apdf22b0444c/ios",
+    "topic_id": "APDF22B0444C"
+  },
+  {
+    "kind": "topic",
+    "title": "Discover shortcuts in the Gallery",
+    "url": "https://support.apple.com/guide/shortcuts/discover-shortcuts-in-the-gallery-apdd018638ca/ios",
+    "topic_id": "APDD018638CA"
+  },
+  {
+    "kind": "group",
+    "title": "Run shortcuts",
+    "url": null,
+    "topic_id": null
+  },
+  {
+    "kind": "topic",
+    "title": "Run a shortcut from the app",
+    "url": "https://support.apple.com/guide/shortcuts/run-a-shortcut-from-the-app-apd5ba077760/ios",
+    "topic_id": "APD5BA077760"
+  },
+  {
+    "kind": "topic",
+    "title": "Run shortcuts with Siri",
+    "url": "https://support.apple.com/guide/shortcuts/run-shortcuts-with-siri-apd07c25bb38/ios",
+    "topic_id": "APD07C25BB38"
+  },
+  {
+    "kind": "topic",
+    "title": "Run shortcuts from Control Center",
+    "url": "https://support.apple.com/guide/shortcuts/run-shortcuts-from-control-center-apd06a9201d4/ios",
+    "topic_id": "APD06A9201D4"
+  },
+  {
+    "kind": "topic",
+    "title": "Run shortcuts with the Action button",
+    "url": "https://support.apple.com/guide/shortcuts/run-shortcuts-with-the-action-button-apdfea15680b/ios",
+    "topic_id": "APDFEA15680B"
+  },
+  {
+    "kind": "topic",
+    "title": "Run shortcuts with Apple Pencil Pro",
+    "url": "https://support.apple.com/guide/shortcuts/run-shortcuts-with-apple-pencil-pro-apdbe445a3a2/ios",
+    "topic_id": "APDBE445A3A2"
+  },
+  {
+    "kind": "topic",
+    "title": "Run app shortcuts",
+    "url": "https://support.apple.com/guide/shortcuts/run-app-shortcuts-apd43295406d/ios",
+    "topic_id": "APD43295406D"
+  },
+  {
+    "kind": "topic",
+    "title": "Run shortcuts from the Home Screen widget",
+    "url": "https://support.apple.com/guide/shortcuts/run-shortcuts-from-the-home-screen-widget-apd029b36d05/ios",
+    "topic_id": "APD029B36D05"
+  },
+  {
+    "kind": "topic",
+    "title": "Run shortcuts from the Search screen",
+    "url": "https://support.apple.com/guide/shortcuts/run-shortcuts-from-the-search-screen-apd8a8ffb4ac/ios",
+    "topic_id": "APD8A8FFB4AC"
+  },
+  {
+    "kind": "topic",
+    "title": "Add a shortcut to the Home Screen",
+    "url": "https://support.apple.com/guide/shortcuts/add-a-shortcut-to-the-home-screen-apd735880972/ios",
+    "topic_id": "APD735880972"
+  },
+  {
+    "kind": "topic",
+    "title": "Run a shortcut from another app",
+    "url": "https://support.apple.com/guide/shortcuts/run-a-shortcut-from-another-app-apd163eb9f95/ios",
+    "topic_id": "APD163EB9F95"
+  },
+  {
+    "kind": "topic",
+    "title": "Run shortcuts from Apple Watch",
+    "url": "https://support.apple.com/guide/shortcuts/run-shortcuts-from-apple-watch-apd5888b0858/ios",
+    "topic_id": "APD5888B0858"
+  },
+  {
+    "kind": "topic",
+    "title": "Run shortcuts by tapping the back of your iPhone",
+    "url": "https://support.apple.com/guide/shortcuts/run-shortcuts-tapping-iphone-apd897693606/ios",
+    "topic_id": "APD897693606"
+  },
+  {
+    "kind": "topic",
+    "title": "Adjust privacy settings",
+    "url": "https://support.apple.com/guide/shortcuts/adjust-privacy-settings-apd961a4fc65/ios",
+    "topic_id": "APD961A4FC65"
+  },
+  {
+    "kind": "group",
+    "title": "How shortcuts work",
+    "url": null,
+    "topic_id": null
+  },
+  {
+    "kind": "topic",
+    "title": "Intro to how shortcuts work",
+    "url": "https://support.apple.com/guide/shortcuts/intro-to-how-shortcuts-work-apdad3cbabfc/ios",
+    "topic_id": "APDAD3CBABFC"
+  },
+  {
+    "kind": "topic",
+    "title": "The flow of content",
+    "url": "https://support.apple.com/guide/shortcuts/the-flow-of-content-apd33c8d5c6d/ios",
+    "topic_id": "APD33C8D5C6D"
+  },
+  {
+    "kind": "topic",
+    "title": "Action connections",
+    "url": "https://support.apple.com/guide/shortcuts/action-connections-apda850ab0e1/ios",
+    "topic_id": "APDA850AB0E1"
+  },
+  {
+    "kind": "topic",
+    "title": "Control the flow of actions",
+    "url": "https://support.apple.com/guide/shortcuts/control-the-flow-of-actions-apd25a01237e/ios",
+    "topic_id": "APD25A01237E"
+  },
+  {
+    "kind": "topic",
+    "title": "Shortcut completion",
+    "url": "https://support.apple.com/guide/shortcuts/shortcut-completion-apda9578f70f/ios",
+    "topic_id": "APDA9578F70F"
+  },
+  {
+    "kind": "topic",
+    "title": "The Content Graph engine",
+    "url": "https://support.apple.com/guide/shortcuts/the-content-graph-engine-apd4618db957/ios",
+    "topic_id": "APD4618DB957"
+  },
+  {
+    "kind": "topic",
+    "title": "Use Apple Intelligence in Shortcuts",
+    "url": "https://support.apple.com/guide/shortcuts/use-apple-intelligence-in-shortcuts-tpg3vrvwmclv/ios",
+    "topic_id": "TPG3VRVWMCLV"
+  },
+  {
+    "kind": "group",
+    "title": "Create custom shortcuts",
+    "url": null,
+    "topic_id": null
+  },
+  {
+    "kind": "topic",
+    "title": "Create a custom shortcut",
+    "url": "https://support.apple.com/guide/shortcuts/create-a-custom-shortcut-apd84c576f8c/ios",
+    "topic_id": "APD84C576F8C"
+  },
+  {
+    "kind": "topic",
+    "title": "Ideas for custom shortcuts",
+    "url": "https://support.apple.com/guide/shortcuts/ideas-for-custom-shortcuts-apdb272b27ec/ios",
+    "topic_id": "APDB272B27EC"
+  },
+  {
+    "kind": "group",
+    "title": "Work with actions in Shortcuts",
+    "url": null,
+    "topic_id": null
+  },
+  {
+    "kind": "topic",
+    "title": "Navigate the action list",
+    "url": "https://support.apple.com/guide/shortcuts/navigate-the-action-list-apdc33e4f4da/ios",
+    "topic_id": "APDC33E4F4DA"
+  },
+  {
+    "kind": "topic",
+    "title": "Order of actions",
+    "url": "https://support.apple.com/guide/shortcuts/order-of-actions-apde53ab0903/ios",
+    "topic_id": "APDE53AB0903"
+  },
+  {
+    "kind": "topic",
+    "title": "Get actions",
+    "url": "https://support.apple.com/guide/shortcuts/get-actions-apd5c2bd430f/ios",
+    "topic_id": "APD5C2BD430F"
+  },
+  {
+    "kind": "topic",
+    "title": "Transform actions",
+    "url": "https://support.apple.com/guide/shortcuts/transform-actions-apd1d9413cfb/ios",
+    "topic_id": "APD1D9413CFB"
+  },
+  {
+    "kind": "topic",
+    "title": "Share actions",
+    "url": "https://support.apple.com/guide/shortcuts/share-actions-apdaf74d75a5/ios",
+    "topic_id": "APDAF74D75A5"
+  },
+  {
+    "kind": "topic",
+    "title": "Test your actions",
+    "url": "https://support.apple.com/guide/shortcuts/test-your-actions-apda75604f37/ios",
+    "topic_id": "APDA75604F37"
+  },
+  {
+    "kind": "topic",
+    "title": "About actions in complicated shortcuts",
+    "url": "https://support.apple.com/guide/shortcuts/about-actions-in-complicated-shortcuts-apd081d9d61f/ios",
+    "topic_id": "APD081D9D61F"
+  },
+  {
+    "kind": "group",
+    "title": "Edit shortcuts",
+    "url": null,
+    "topic_id": null
+  },
+  {
+    "kind": "topic",
+    "title": "Intro to editing shortcuts",
+    "url": "https://support.apple.com/guide/shortcuts/intro-to-editing-shortcuts-apd5b1537ca0/ios",
+    "topic_id": "APD5B1537CA0"
+  },
+  {
+    "kind": "topic",
+    "title": "Organize shortcuts in folders",
+    "url": "https://support.apple.com/guide/shortcuts/organize-shortcuts-in-folders-apd113493874/ios",
+    "topic_id": "APD113493874"
+  },
+  {
+    "kind": "topic",
+    "title": "Change the layout",
+    "url": "https://support.apple.com/guide/shortcuts/change-the-layout-apd873475724/ios",
+    "topic_id": "APD873475724"
+  },
+  {
+    "kind": "topic",
+    "title": "Reorder shortcuts",
+    "url": "https://support.apple.com/guide/shortcuts/reorder-shortcuts-apd052072d68/ios",
+    "topic_id": "APD052072D68"
+  },
+  {
+    "kind": "topic",
+    "title": "Rename shortcuts",
+    "url": "https://support.apple.com/guide/shortcuts/rename-shortcuts-apdd57094696/ios",
+    "topic_id": "APDD57094696"
+  },
+  {
+    "kind": "topic",
+    "title": "Modify shortcut icons",
+    "url": "https://support.apple.com/guide/shortcuts/modify-shortcut-icons-apd5ad5a2128/ios",
+    "topic_id": "APD5AD5A2128"
+  },
+  {
+    "kind": "topic",
+    "title": "Duplicate shortcuts",
+    "url": "https://support.apple.com/guide/shortcuts/duplicate-shortcuts-apd6b467942c/ios",
+    "topic_id": "APD6B467942C"
+  },
+  {
+    "kind": "topic",
+    "title": "Delete shortcuts",
+    "url": "https://support.apple.com/guide/shortcuts/delete-shortcuts-apd096cd65c6/ios",
+    "topic_id": "APD096CD65C6"
+  },
+  {
+    "kind": "topic",
+    "title": "Sync shortcuts",
+    "url": "https://support.apple.com/guide/shortcuts/sync-shortcuts-apdb3a4240b0/ios",
+    "topic_id": "APDB3A4240B0"
+  },
+  {
+    "kind": "topic",
+    "title": "Share shortcuts",
+    "url": "https://support.apple.com/guide/shortcuts/share-shortcuts-apdf01f8c054/ios",
+    "topic_id": "APDF01F8C054"
+  },
+  {
+    "kind": "topic",
+    "title": "Add import questions to shared shortcuts",
+    "url": "https://support.apple.com/guide/shortcuts/add-import-questions-to-shared-shortcuts-apdf330fd3a0/ios",
+    "topic_id": "APDF330FD3A0"
+  },
+  {
+    "kind": "topic",
+    "title": "Add a shortcut to Reminders using Siri",
+    "url": "https://support.apple.com/guide/shortcuts/add-a-shortcut-to-reminders-using-siri-apdacfdf1802/ios",
+    "topic_id": "APDACFDF1802"
+  },
+  {
+    "kind": "group",
+    "title": "Automations",
+    "url": null,
+    "topic_id": null
+  },
+  {
+    "kind": "topic",
+    "title": "Intro to automation shortcuts",
+    "url": "https://support.apple.com/guide/shortcuts/intro-to-automation-shortcuts-apd690170742/ios",
+    "topic_id": "APD690170742"
+  },
+  {
+    "kind": "topic",
+    "title": "Add automations",
+    "url": "https://support.apple.com/guide/shortcuts/add-automations-apdfbdbd7123/ios",
+    "topic_id": "APDFBDBD7123"
+  },
+  {
+    "kind": "group",
+    "title": "Automation triggers",
+    "url": null,
+    "topic_id": null
+  },
+  {
+    "kind": "topic",
+    "title": "Event triggers",
+    "url": "https://support.apple.com/guide/shortcuts/event-triggers-apd932ff833f/ios",
+    "topic_id": "APD932FF833F"
+  },
+  {
+    "kind": "topic",
+    "title": "Travel triggers",
+    "url": "https://support.apple.com/guide/shortcuts/travel-triggers-apd8ebfc4e8e/ios",
+    "topic_id": "APD8EBFC4E8E"
+  },
+  {
+    "kind": "topic",
+    "title": "Communication triggers",
+    "url": "https://support.apple.com/guide/shortcuts/communication-triggers-apdd711f9dff/ios",
+    "topic_id": "APDD711F9DFF"
+  },
+  {
+    "kind": "topic",
+    "title": "Transaction trigger",
+    "url": "https://support.apple.com/guide/shortcuts/transaction-trigger-apd65c67538a/ios",
+    "topic_id": "APD65C67538A"
+  },
+  {
+    "kind": "topic",
+    "title": "Setting triggers",
+    "url": "https://support.apple.com/guide/shortcuts/setting-triggers-apde31e9638b/ios",
+    "topic_id": "APDE31E9638B"
+  },
+  {
+    "kind": "group",
+    "title": "Advanced shortcuts",
+    "url": null,
+    "topic_id": null
+  },
+  {
+    "kind": "group",
+    "title": "Use variables",
+    "url": null,
+    "topic_id": null
+  },
+  {
+    "kind": "topic",
+    "title": "Intro to variables",
+    "url": "https://support.apple.com/guide/shortcuts/intro-to-variables-apdb5506f698/ios",
+    "topic_id": "APDB5506F698"
+  },
+  {
+    "kind": "topic",
+    "title": "Variable types",
+    "url": "https://support.apple.com/guide/shortcuts/variable-types-apdd2b316022/ios",
+    "topic_id": "APDD2B316022"
+  },
+  {
+    "kind": "topic",
+    "title": "Use variables",
+    "url": "https://support.apple.com/guide/shortcuts/use-variables-apdd02c2780c/ios",
+    "topic_id": "APDD02C2780C"
+  },
+  {
+    "kind": "topic",
+    "title": "Adjust variables",
+    "url": "https://support.apple.com/guide/shortcuts/adjust-variables-apda36b9018b/ios",
+    "topic_id": "APDA36B9018B"
+  },
+  {
+    "kind": "topic",
+    "title": "Use list actions",
+    "url": "https://support.apple.com/guide/shortcuts/use-list-actions-apd4dcacc115/ios",
+    "topic_id": "APD4DCACC115"
+  },
+  {
+    "kind": "topic",
+    "title": "Use the Choose from Menu action",
+    "url": "https://support.apple.com/guide/shortcuts/use-the-choose-from-menu-action-apdd7bf369da/ios",
+    "topic_id": "APDD7BF369DA"
+  },
+  {
+    "kind": "topic",
+    "title": "Use If actions",
+    "url": "https://support.apple.com/guide/shortcuts/use-if-actions-apd83dcd1b51/ios",
+    "topic_id": "APD83DCD1B51"
+  },
+  {
+    "kind": "topic",
+    "title": "Use Repeat actions",
+    "url": "https://support.apple.com/guide/shortcuts/use-repeat-actions-apdc11deb2c1/ios",
+    "topic_id": "APDC11DEB2C1"
+  },
+  {
+    "kind": "group",
+    "title": "Use Find and Filter actions",
+    "url": null,
+    "topic_id": null
+  },
+  {
+    "kind": "topic",
+    "title": "Intro to Find and Filter actions",
+    "url": "https://support.apple.com/guide/shortcuts/intro-to-find-and-filter-actions-apd3c845e881/ios",
+    "topic_id": "APD3C845E881"
+  },
+  {
+    "kind": "topic",
+    "title": "Add filter parameters",
+    "url": "https://support.apple.com/guide/shortcuts/add-filter-parameters-apdbdab3433f/ios",
+    "topic_id": "APDBDAB3433F"
+  },
+  {
+    "kind": "group",
+    "title": "Show prompts in a shortcut",
+    "url": null,
+    "topic_id": null
+  },
+  {
+    "kind": "topic",
+    "title": "Intro to using prompts",
+    "url": "https://support.apple.com/guide/shortcuts/intro-to-using-prompts-apd8efa49a70/ios",
+    "topic_id": "APD8EFA49A70"
+  },
+  {
+    "kind": "topic",
+    "title": "Use the Ask for Input action",
+    "url": "https://support.apple.com/guide/shortcuts/use-the-ask-for-input-action-apd68b5c9161/ios",
+    "topic_id": "APD68B5C9161"
+  },
+  {
+    "kind": "topic",
+    "title": "Use the Ask Each Time variable",
+    "url": "https://support.apple.com/guide/shortcuts/use-the-ask-each-time-variable-apd8b28e2166/ios",
+    "topic_id": "APD8B28E2166"
+  },
+  {
+    "kind": "topic",
+    "title": "Use the Show Alert action",
+    "url": "https://support.apple.com/guide/shortcuts/use-the-show-alert-action-apdb9661c761/ios",
+    "topic_id": "APDB9661C761"
+  },
+  {
+    "kind": "topic",
+    "title": "Use the Show Notification action",
+    "url": "https://support.apple.com/guide/shortcuts/use-the-show-notification-action-apd2175adcab/ios",
+    "topic_id": "APD2175ADCAB"
+  },
+  {
+    "kind": "topic",
+    "title": "Input types",
+    "url": "https://support.apple.com/guide/shortcuts/input-types-apd7644168e1/ios",
+    "topic_id": "APD7644168E1"
+  },
+  {
+    "kind": "topic",
+    "title": "Limit the input for a shortcut",
+    "url": "https://support.apple.com/guide/shortcuts/limit-the-input-for-a-shortcut-apd8195f96d6/ios",
+    "topic_id": "APD8195F96D6"
+  },
+  {
+    "kind": "topic",
+    "title": "Receive onscreen items",
+    "url": "https://support.apple.com/guide/shortcuts/receive-onscreen-items-apd350ce757a/ios",
+    "topic_id": "APD350CE757A"
+  },
+  {
+    "kind": "topic",
+    "title": "Advanced Shortcuts settings",
+    "url": "https://support.apple.com/guide/shortcuts/advanced-shortcuts-settings-apdfeb05586f/ios",
+    "topic_id": "APDFEB05586F"
+  },
+  {
+    "kind": "group",
+    "title": "Run JavaScript on a webpage",
+    "url": null,
+    "topic_id": null
+  },
+  {
+    "kind": "topic",
+    "title": "Intro to the Run JavaScript on Webpage action",
+    "url": "https://support.apple.com/guide/shortcuts/intro-to-the-run-javascript-on-webpage-action-apd218e2187d/ios",
+    "topic_id": "APD218E2187D"
+  },
+  {
+    "kind": "topic",
+    "title": "Use the Run JavaScript on Webpage action",
+    "url": "https://support.apple.com/guide/shortcuts/use-the-run-javascript-on-webpage-action-apdb71a01d93/ios",
+    "topic_id": "APDB71A01D93"
+  },
+  {
+    "kind": "group",
+    "title": "Use URL schemes",
+    "url": null,
+    "topic_id": null
+  },
+  {
+    "kind": "topic",
+    "title": "Intro to URL schemes",
+    "url": "https://support.apple.com/guide/shortcuts/intro-to-url-schemes-apd621a1ad7a/ios",
+    "topic_id": "APD621A1AD7A"
+  },
+  {
+    "kind": "topic",
+    "title": "Open, create, and run a shortcut",
+    "url": "https://support.apple.com/guide/shortcuts/open-create-and-run-a-shortcut-apda283236d7/ios",
+    "topic_id": "APDA283236D7"
+  },
+  {
+    "kind": "topic",
+    "title": "Run a shortcut from a URL",
+    "url": "https://support.apple.com/guide/shortcuts/run-a-shortcut-from-a-url-apd624386f42/ios",
+    "topic_id": "APD624386F42"
+  },
+  {
+    "kind": "topic",
+    "title": "Open or search the Gallery from a URL",
+    "url": "https://support.apple.com/guide/shortcuts/open-or-search-the-gallery-from-a-url-apd9c112ca23/ios",
+    "topic_id": "APD9C112CA23"
+  },
+  {
+    "kind": "topic",
+    "title": "Use x-callback-url",
+    "url": "https://support.apple.com/guide/shortcuts/use-x-callback-url-apdcd7f20a6f/ios",
+    "topic_id": "APDCD7F20A6F"
+  },
+  {
+    "kind": "topic",
+    "title": "Use another app’s URL scheme",
+    "url": "https://support.apple.com/guide/shortcuts/use-another-apps-url-scheme-apd68802640c/ios",
+    "topic_id": "APD68802640C"
+  },
+  {
+    "kind": "group",
+    "title": "Use Web APIs in Shortcuts",
+    "url": null,
+    "topic_id": null
+  },
+  {
+    "kind": "topic",
+    "title": "Intro to web APIs",
+    "url": "https://support.apple.com/guide/shortcuts/intro-to-web-apis-apd2d448b2de/ios",
+    "topic_id": "APD2D448B2DE"
+  },
+  {
+    "kind": "group",
+    "title": "Get started with web APIs",
+    "url": null,
+    "topic_id": null
+  },
+  {
+    "kind": "topic",
+    "title": "What’s an API?",
+    "url": "https://support.apple.com/guide/shortcuts/whats-an-api-apd2e30c9d45/ios",
+    "topic_id": "APD2E30C9D45"
+  },
+  {
+    "kind": "topic",
+    "title": "Request your first API",
+    "url": "https://support.apple.com/guide/shortcuts/request-your-first-api-apd58d46713f/ios",
+    "topic_id": "APD58D46713F"
+  },
+  {
+    "kind": "group",
+    "title": "Work with JSON",
+    "url": null,
+    "topic_id": null
+  },
+  {
+    "kind": "topic",
+    "title": "Intro to using JSON",
+    "url": "https://support.apple.com/guide/shortcuts/intro-to-using-json-apd0f2e057df/ios",
+    "topic_id": "APD0F2E057DF"
+  },
+  {
+    "kind": "topic",
+    "title": "Parsing JSON",
+    "url": "https://support.apple.com/guide/shortcuts/parsing-json-apdde2dfe749/ios",
+    "topic_id": "APDDE2DFE749"
+  },
+  {
+    "kind": "topic",
+    "title": "Handling lists",
+    "url": "https://support.apple.com/guide/shortcuts/handling-lists-apd9ba41d21b/ios",
+    "topic_id": "APD9BA41D21B"
+  },
+  {
+    "kind": "topic",
+    "title": "Get Dictionary Value action",
+    "url": "https://support.apple.com/guide/shortcuts/get-dictionary-value-action-apdf01294032/ios",
+    "topic_id": "APDF01294032"
+  },
+  {
+    "kind": "topic",
+    "title": "Create contacts",
+    "url": "https://support.apple.com/guide/shortcuts/create-contacts-apd9cf19a736/ios",
+    "topic_id": "APD9CF19A736"
+  },
+  {
+    "kind": "group",
+    "title": "Further exploration with APIs",
+    "url": null,
+    "topic_id": null
+  },
+  {
+    "kind": "topic",
+    "title": "API limitations",
+    "url": "https://support.apple.com/guide/shortcuts/api-limitations-apd891a6c84e/ios",
+    "topic_id": "APD891A6C84E"
+  },
+  {
+    "kind": "topic",
+    "title": "Format Date timestamps",
+    "url": "https://support.apple.com/guide/shortcuts/format-date-timestamps-apdfb33b0e17/ios",
+    "topic_id": "APDFB33B0E17"
+  },
+  {
+    "kind": "topic",
+    "title": "Dictionaries",
+    "url": "https://support.apple.com/guide/shortcuts/dictionaries-apd43b69f337/ios",
+    "topic_id": "APD43B69F337"
+  },
+  {
+    "kind": "group",
+    "title": "Date and time formatting",
+    "url": null,
+    "topic_id": null
+  },
+  {
+    "kind": "topic",
+    "title": "About date and time formatting",
+    "url": "https://support.apple.com/guide/shortcuts/about-date-and-time-formatting-apd71b0ac246/ios",
+    "topic_id": "APD71B0AC246"
+  },
+  {
+    "kind": "topic",
+    "title": "Date and time formats",
+    "url": "https://support.apple.com/guide/shortcuts/date-and-time-formats-apdfbad418ca/ios",
+    "topic_id": "APDFBAD418CA"
+  },
+  {
+    "kind": "topic",
+    "title": "Dates as written language",
+    "url": "https://support.apple.com/guide/shortcuts/dates-as-written-language-apdc6348bca9/ios",
+    "topic_id": "APDC6348BCA9"
+  },
+  {
+    "kind": "topic",
+    "title": "Technical standards",
+    "url": "https://support.apple.com/guide/shortcuts/technical-standards-apdfd459e13d/ios",
+    "topic_id": "APDFD459E13D"
+  },
+  {
+    "kind": "topic",
+    "title": "Custom date formats",
+    "url": "https://support.apple.com/guide/shortcuts/custom-date-formats-apd8d9b19184/ios",
+    "topic_id": "APD8D9B19184"
+  },
+  {
+    "kind": "topic",
+    "title": "Copyright and trademarks",
+    "url": "https://support.apple.com/guide/shortcuts/copyright-and-trademarks-apd19e3e6994/ios",
+    "topic_id": "APD19E3E6994"
+  }
+]

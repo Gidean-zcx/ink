@@ -1,0 +1,64 @@
+Read only the articles you want
+In a busy feed, only a few articles are the ones you actually want. Set up a filter once to pick them out, and every device you read on shows the same result.
+See pricing
+ProPro includes 50 filters, and more are available as an add-on.
+TeamTeam and Team Intelligence plans include filters, pooled across the team.
+Decide once what reaches you
+A filter makes a lasting decision about a feed, a folder or your whole newsfeed. Every new article is checked as it arrives, and only the ones that pass reach your reading list.
+Keep or remove
+A filter either keeps only the articles that match, or removes the ones that do.
+Search conditions
+Use the conditions you search by: a word or phrase in the title or the content, an author or the article URL. You can combine several.
+Duplicate filters
+When several outlets carry the same story, a duplicate filter keeps the first copy and hides the others, matched by URL, identical title or nearly identical title.
+Filter once for every device
+A filtered article never shows up on the web, in the apps or through the API, so every device shows the same list.
+Set up a filter
+Open Automate, then Filters, and create a new filter. You can also right-click a feed or folder and choose to filter it.
+Choose the scope, which can be one feed, a folder or everything you follow.
+Choose "keep articles that match" or "remove articles that match", then add the conditions, such as title or content contains, author is, or URL contains. You can combine several conditions.
+To handle duplicates, create a duplicate filter instead and choose how strict the match should be: the same URL, the same title or nearly the same title.
+Save the filter. It applies to every new article from then on and syncs to every device.
+Use cases
+Narrowing a broad feed to one topic
+Filter a national newspaper's feed down to the articles that mention your industry, your city or your company. A day of 200 articles becomes five.
+Showing each wire story once
+Add a duplicate filter to your news folder, and the same wire story from six outlets shows up only once.
+Cutting what you never read
+Use a title word or an author condition to remove sponsored posts, live blogs, podcast episodes or a columnist you always skip. Your unread count then means something again.
+Filters and rules together
+Rules act on articles, while filters decide which articles are worth acting on, or reading, in the first place. Together they make up Inoreader's automation.
+Frequently asked questions
+How do I filter an RSS feed by keyword?
+Create a content filter on the feed or folder and choose whether to keep or remove the articles that match. Then add the condition, which can be a word or phrase in the title or the content, an author or a URL. From then on, every new article that matches is kept and the rest are hidden, or the other way round.
+What is the difference between a filter and a rule?
+A filter decides what you see, because it keeps or removes articles. A rule acts on articles. It can tag, save, forward or translate them, or notify you about them. In short, filters shape the feed and rules do things with it. Many people use both, with a filter to cut the noise and a rule on what is left.
+What is a duplicate filter?
+A duplicate filter hides articles you have already seen in another feed. Inoreader detects duplicates by URL, by identical titles or by nearly identical titles, so it also catches the same wire story published by several outlets.
+Do filters work in the mobile apps?
+Yes. Filters run on the server, so you see the same filtered feed on the web, in the iOS and Android apps and through the API.
+Can I filter a whole folder?
+Yes. A filter can apply to one feed, to a folder or to everything you follow. A filter on a folder also applies to every feed you add to that folder later.
+How many filters do I get?
+The Pro plan includes 50 filters and 10 duplicate filters, and more are available as an add-on. Team and Team Intelligence plans include filters too, pooled across the whole team. You can see your usage under Preferences > Billing and usage.
+Related features
+Rules
+Automate what happens to every new article
+Monitoring feeds
+Watch any keyword, brand or topic across the web
+Newsletters
+Read your newsletters in Inoreader
+Help center
+What are filters?
+What are content filters?
+What are duplicate filters?
+How are duplicate articles detected?
+How many filters are included in Pro plans?
+Blog
+New combined filter quotas
+Streamline content discovery with filters and rules
+Win The Clone Wars With Duplicate Filters
+Build your own newsfeed
+Ready to give it a go?
+Start a 14-day trial, no credit card required.
+Create account

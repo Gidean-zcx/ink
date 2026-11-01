@@ -1,0 +1,1055 @@
+{
+  "flow_changes": [
+    {
+      "id": "F-M028-01",
+      "field": "known_branches",
+      "before": "解析会员边界",
+      "after": "FAQ解析/VIP与错题关系；检查历史保留，非同题连续链"
+    },
+    {
+      "id": "F-M028-01",
+      "field": "gaps",
+      "before": "拍照识别纠错提示和再练全链",
+      "after": "拍照识别纠错、提示、再练及错题状态全链；未借历史练习补纸面检查"
+    },
+    {
+      "id": "F-M028-01",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M028-02",
+      "field": "evidence_ids",
+      "before": "E-XYAI-03;E-XYCD-01;E-XYCD-02",
+      "after": "E-XYAI-03;E-XYCD-01;E-XYCD-02;E-XYAC-01;E-XYAC-02;E-XYAC-03;E-XYAC-04"
+    },
+    {
+      "id": "F-M028-02",
+      "field": "known_branches",
+      "before": "历史口算局部补证；其他题型不套用",
+      "after": "口算重写/跳过、独立草稿撤销/重做、退出确认；竖式显式完成；同步练下一题；结果完成可仅部分答对"
+    },
+    {
+      "id": "F-M028-02",
+      "field": "gaps",
+      "before": "当前构建、识别误判修订、保存粒度",
+      "after": "各题型规则不可互换；识别误判修订、保存/强退恢复未知；题量200只正文非可见菜单"
+    },
+    {
+      "id": "F-M028-02",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M028-03",
+      "field": "known_branches",
+      "before": "文本语音图像权限与历史",
+      "after": "文本/语音/图像、历史与单条反馈；撤回OS权限不同于删除既有记录"
+    },
+    {
+      "id": "F-M028-03",
+      "field": "gaps",
+      "before": "生成失败重试删除和恢复",
+      "after": "生成失败重试、单轮删除/恢复、反馈撤销；不证明系统级AI读取所有App"
+    },
+    {
+      "id": "F-M028-03",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M028-04",
+      "field": "known_branches",
+      "before": "同年级知识点与赛季活动",
+      "after": "旧商店活动与同年级知识点；独练周联赛/金币图不当PK规则"
+    },
+    {
+      "id": "F-M028-04",
+      "field": "gaps",
+      "before": "结算奖励数值退出与掉线",
+      "after": "PK结算奖励、退出掉线及赛季常设性未知；当前3.145.0日志无具体补证"
+    },
+    {
+      "id": "F-M028-04",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M028-05",
+      "field": "task",
+      "before": "在线字词听写：历史任务局部",
+      "after": "字词听写：在线、纸笔、自由输入及结果"
+    },
+    {
+      "id": "F-M028-05",
+      "field": "evidence_ids",
+      "before": "E-XYCD-01;E-XYCD-03",
+      "after": "E-XYCD-01;E-XYCD-03;E-XYAC-06;E-XYAC-12"
+    },
+    {
+      "id": "F-M028-05",
+      "field": "known_branches",
+      "before": "提交与后续操作边界",
+      "after": "中文提交前清写、提交后正确写法/下一项；课文/范围与声音/间隔/次数/顺序；纸笔和自由输入；英文只横屏输入局部"
+    },
+    {
+      "id": "F-M028-05",
+      "field": "gaps",
+      "before": "当前版本、撤回、强退恢复和识别误判修订",
+      "after": "撤回、误判修订、强退恢复未知；中文错误规则不套英文；完成数非答对数"
+    },
+    {
+      "id": "F-M028-05",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M028-06",
+      "field": "evidence_ids",
+      "before": "E-XYCD-01;E-XYCD-04",
+      "after": "E-XYCD-01;E-XYCD-04;E-XYAC-13"
+    },
+    {
+      "id": "F-M028-06",
+      "field": "known_branches",
+      "before": "失败次数对应不同路径",
+      "after": "示范/录音与单词星级结果；作者述首次失败重试再次前进；句子/情景仅入口"
+    },
+    {
+      "id": "F-M028-06",
+      "field": "gaps",
+      "before": "评分门槛、漏录和中断保存；拼图非连续",
+      "after": "评分阈值、噪声漏录、录音回放内容/保存与中断未知；拼图题号不连续"
+    },
+    {
+      "id": "F-M028-06",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M007-01",
+      "field": "evidence_ids",
+      "before": "E-VIW-08;E-VIW-09",
+      "after": "E-VIW-08;E-VIW-09;E-VICD-01;E-VWCD-01"
+    },
+    {
+      "id": "F-M007-01",
+      "field": "known_branches",
+      "before": "刷新策略与关闭进程是两个动作。",
+      "after": "历史手册区分右上下拉控制中心与左上下拉全刷；V3.12 App Display新增独立刷新开关，可用本App设置或跟随系统。不是性能实测。"
+    },
+    {
+      "id": "F-M007-01",
+      "field": "gaps",
+      "before": "模式是否逐app保存；关闭前自动保存、听读中断和耗时。",
+      "after": "V3.15具体开关页、保存/重启保持、关闭进程前自动保存和音频恢复未核；不能继续将“是否有逐App选择”全列未知。"
+    },
+    {
+      "id": "F-M007-01",
+      "field": "visual_status",
+      "before": "not_observed",
+      "after": "static_manual_pages_only"
+    },
+    {
+      "id": "F-M007-01",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M007-02",
+      "field": "evidence_ids",
+      "before": "E-VIW-06;E-VIW-12",
+      "after": "E-VIW-06;E-VIW-12;E-VWCD-08;E-VWCD-09"
+    },
+    {
+      "id": "F-M007-02",
+      "field": "known_branches",
+      "before": "选中文本是上下文，不证明AI自动取得整本书。",
+      "after": "历史PDF/EPUB长按或Selection后，AI带入选区；同栏有翻译、词典、复制、TXT分享、高亮归入Reading Notes。Back入口独立存在，未证AI关闭后的返回锚点。"
+    },
+    {
+      "id": "F-M007-02",
+      "field": "gaps",
+      "before": "关闭对话后原选区/页锚；扫描PDF；长文本截断。",
+      "after": "扫描件OCR、长选区截断、对话关闭后选区/页/滚动保持仍未知；不能据Back图标认定一键返回原选区。"
+    },
+    {
+      "id": "F-M007-02",
+      "field": "visual_status",
+      "before": "not_observed",
+      "after": "static_manual_pages_only"
+    },
+    {
+      "id": "F-M007-02",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M007-03",
+      "field": "evidence_ids",
+      "before": "E-VIW-06",
+      "after": "E-VIW-06;E-VWCD-13"
+    },
+    {
+      "id": "F-M007-03",
+      "field": "known_branches",
+      "before": "保存提示词与保存生成结果不同。",
+      "after": "历史配置窗有命令名称/指令与Confirm；正文最多5条而同页截图写4条，二者冲突；长按删除为文字规则。"
+    },
+    {
+      "id": "F-M007-03",
+      "field": "gaps",
+      "before": "V3.15数量上限、直接编辑入口、已有结果是否受改指令影响。",
+      "after": "V3.15数量与编辑/删除确认、改指令后旧结果关系未知；不能把历史5条上限写成统一事实。"
+    },
+    {
+      "id": "F-M007-03",
+      "field": "visual_status",
+      "before": "not_observed",
+      "after": "static_manual_pages_only"
+    },
+    {
+      "id": "F-M007-03",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M007-04",
+      "field": "evidence_ids",
+      "before": "E-VIW-06",
+      "after": "E-VIW-06;E-VICD-01;E-VWCD-13"
+    },
+    {
+      "id": "F-M007-04",
+      "field": "known_branches",
+      "before": "短语音问题与Meeting长录音分属不同任务。",
+      "after": "历史手册长按AI录入最多15秒、松开自动提交；文本输入为短按。TXT/HTML导出；历史说明24小时内可续聊，不能推出之后自动删除。"
+    },
+    {
+      "id": "F-M007-04",
+      "field": "gaps",
+      "before": "误触提交/取消、失败重试；历史会话保留期与最新云端关系。",
+      "after": "误松提交、取消/失败/重试、当代会话保留期未知；“AI commands不自动保存”的具体对象未解释，不能与自定义命令保存混同。"
+    },
+    {
+      "id": "F-M007-04",
+      "field": "visual_status",
+      "before": "not_observed",
+      "after": "static_manual_pages_only"
+    },
+    {
+      "id": "F-M007-04",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M007-07",
+      "field": "evidence_ids",
+      "before": "E-VIW-03;E-VIW-04",
+      "after": "E-VIW-03;E-VIW-04;E-VICD-01;E-VIW-02"
+    },
+    {
+      "id": "F-M007-07",
+      "field": "known_branches",
+      "before": "标记与大纲是导航对象；删除入口不等于删原文。",
+      "after": "标记/大纲沿用V3.14；旧Paper标签可长按改名/删除并从侧栏筛选；Daily关联明确按笔记名打开关联建立时的页。V3.15新增大纲子层、整本复制与跨笔记移页只是功能增量。"
+    },
+    {
+      "id": "F-M007-07",
+      "field": "gaps",
+      "before": "重排/移页后的锚点、同名条目、撤销和恢复。",
+      "after": "移页后标记/大纲/日历锚点、同名条目、撤销/恢复未核；没有把Picking移页按钮当作Paper移页流程。"
+    },
+    {
+      "id": "F-M007-07",
+      "field": "visual_status",
+      "before": "not_observed",
+      "after": "static_manual_pages_only"
+    },
+    {
+      "id": "F-M007-07",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M007-08",
+      "field": "evidence_ids",
+      "before": "E-VIW-07;E-VIW-04;E-VIW-05",
+      "after": "E-VIW-07;E-VIW-04;E-VIW-05;E-VICD-01;E-VWCD-01"
+    },
+    {
+      "id": "F-M007-08",
+      "field": "known_branches",
+      "before": "老Picking与新Knowledge Base名称需辨明；当前剪辑按来源app递增命名。",
+      "after": "保留Picking→Knowledge Base版本区分；旧Picking标注开关启用时锁当前页，停用后标注冻结可再启，Save为另一入口。V3.12重组PickNotes/VisualNotes并改为先注释再裁剪保存。"
+    },
+    {
+      "id": "F-M007-08",
+      "field": "gaps",
+      "before": "是否保存URL/书页、来源修改、AI使用的是图像还是OCR文本、重复裁剪去重。",
+      "after": "URL/书页来源、取消/关闭后持久化及OCR错误、去重未知；不同版本不能拼同一连续流程。"
+    },
+    {
+      "id": "F-M007-08",
+      "field": "visual_status",
+      "before": "not_observed",
+      "after": "static_manual_pages_only"
+    },
+    {
+      "id": "F-M007-08",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M007-09",
+      "field": "evidence_ids",
+      "before": "E-VIW-12;E-VIW-05",
+      "after": "E-VIW-12;E-VIW-05;E-VICD-01;E-VWCD-09;E-VWCD-10"
+    },
+    {
+      "id": "F-M007-09",
+      "field": "known_branches",
+      "before": "书签/标注与临时跳页不同。",
+      "after": "历史页/章导航之外，Reading Notes可选一/多/全部批注页汇为PDF；Learning书库长按可改名/删书。当前书/全部书显示范围有选择入口，图中选中值不当默认。"
+    },
+    {
+      "id": "F-M007-09",
+      "field": "gaps",
+      "before": "跳转后的一键返回历史、其他语言离线词库、删书后标注保留。",
+      "after": "跳转返回历史、AI返回、删书后标记/回收期限、导出后原生可编辑性仍未知；Memo30天不得套书库。"
+    },
+    {
+      "id": "F-M007-09",
+      "field": "visual_status",
+      "before": "not_observed",
+      "after": "static_manual_pages_only"
+    },
+    {
+      "id": "F-M007-09",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M007-10",
+      "field": "task",
+      "before": "通过ViTransfer传入资料",
+      "after": "传入资料：账号收件与局域网入口"
+    },
+    {
+      "id": "F-M007-10",
+      "field": "evidence_ids",
+      "before": "E-VIW-12",
+      "after": "E-VIW-12;E-VICD-01;E-VWCD-02"
+    },
+    {
+      "id": "F-M007-10",
+      "field": "known_branches",
+      "before": "是显式收件；不是自动双向云同步。",
+      "after": "ViTransfer是登录账号后显式Import/Receive；独立WLAN Transfer为同局域网URL，并提示传输期间不要锁屏或关闭此功能。历史手册导入正文my.viwoods.com与图中mytest域名不一致，未访问测试域名。"
+    },
+    {
+      "id": "F-M007-10",
+      "field": "gaps",
+      "before": "账户切换、重复名、断线/取消/满盘；旧手册路径当前适配。",
+      "after": "重名/断线/取消/满盘、锁屏失败后的续传、当前构建适配未知；不把局域网传输与账号云同步混成一项自动机制。"
+    },
+    {
+      "id": "F-M007-10",
+      "field": "visual_status",
+      "before": "not_observed",
+      "after": "static_manual_pages_only"
+    },
+    {
+      "id": "F-M007-10",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M007-11",
+      "field": "evidence_ids",
+      "before": "E-VIW-02",
+      "after": "E-VIW-02;E-VIW-10;E-VWCD-11"
+    },
+    {
+      "id": "F-M007-11",
+      "field": "known_branches",
+      "before": "原生云、第三方云和ViTransfer要分开；账号内容独立。",
+      "after": "V3.15原生云与第三方云/ViTransfer分开；账号内容独立。V3.15称Paper/Meeting共用笔记密码，旧手册分别管理。Advanced Settings多用户权限仅功能声明。"
+    },
+    {
+      "id": "F-M007-11",
+      "field": "gaps",
+      "before": "开关完整菜单、合并规则、离线删除、云满、退出账号本地可见性。",
+      "after": "完整同步/权限菜单、密码迁移/找回、离线删除、云满、账号切换后本地可见性与授权范围仍未知。"
+    },
+    {
+      "id": "F-M007-11",
+      "field": "visual_status",
+      "before": "not_observed",
+      "after": "static_manual_pages_only"
+    },
+    {
+      "id": "F-M007-11",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M007-13",
+      "field": "evidence_ids",
+      "before": "E-VIW-09",
+      "after": "E-VIW-09;E-VICD-01;E-VWCD-12"
+    },
+    {
+      "id": "F-M007-13",
+      "field": "known_branches",
+      "before": "网络恢复不证明未完成AI请求会自动续跑。",
+      "after": "保留WLAN/Google故障恢复路径；历史Play Store禁用说明清缓存，Apps页正文clear cache但图为Clear Data，不同入口不能等同；未执行清理/卸载。"
+    },
+    {
+      "id": "F-M007-13",
+      "field": "gaps",
+      "before": "AI请求队列/收费重试、离线识别语言包、缓存/数据清理影响。",
+      "after": "清理具体数据、登录态和笔记保留、卸载/重装恢复、AI请求续跑/收费重试仍未知；不能保证清理无损。"
+    },
+    {
+      "id": "F-M007-13",
+      "field": "visual_status",
+      "before": "not_observed",
+      "after": "static_manual_pages_only"
+    },
+    {
+      "id": "F-M007-13",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M056-01",
+      "field": "known_branches",
+      "before": "官方能力模块目录",
+      "after": "已取得官网前端S6六模块目录；页面代际与固件未核定"
+    },
+    {
+      "id": "F-M056-01",
+      "field": "gaps",
+      "before": "题目实际入口提示重试与恢复",
+      "after": "年级/教材影响资源；题目实际入口、手写识别纠正、提示重试、完成及暂退恢复未知；不能套后续同名S6或旧S2"
+    },
+    {
+      "id": "F-M056-01",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M056-02",
+      "field": "gaps",
+      "before": "选级提示纠错重试结束恢复",
+      "after": "选级提示纠错重试结束恢复未知；课程S1/S2/S3不是硬件代际；本轮无新增静态图观察"
+    },
+    {
+      "id": "F-M056-02",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M056-03",
+      "field": "known_branches",
+      "before": "静态管控选项及开关示例",
+      "after": "前轮静态管控选项及示例；家长iPhone商店1.25.1日期2026-09-25"
+    },
+    {
+      "id": "F-M056-03",
+      "field": "gaps",
+      "before": "完整入口保存生效超时解锁离线",
+      "after": "完整入口保存生效超时解锁离线未知；25条泛化版本记录未补具体硬件行为"
+    },
+    {
+      "id": "F-M056-03",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M056-04",
+      "field": "known_branches",
+      "before": "示例时间线及家长列表",
+      "after": "前轮示例时间线及家长列表；政策列我的到家庭模块更正信息入口"
+    },
+    {
+      "id": "F-M056-04",
+      "field": "gaps",
+      "before": "数据口径角色权限邀请恢复",
+      "after": "数据口径角色权限邀请恢复未知；共享登录不证明学习状态迁移"
+    },
+    {
+      "id": "F-M056-04",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M056-05",
+      "field": "gaps",
+      "before": "E1适用性文件限制同步打开打印恢复",
+      "after": "E1适用性文件限制同步打开打印恢复未知；S6小程序上传与家长App政策发送不能拼成已验证全链"
+    },
+    {
+      "id": "F-M056-05",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M056-06",
+      "field": "known_branches",
+      "before": "确认家庭解绑条件与短信验证码",
+      "after": "注销确认家庭解绑条件与短信验证码；关联产品须分别注销/要求删除；后台备份可延迟到更新时删除"
+    },
+    {
+      "id": "F-M056-06",
+      "field": "gaps",
+      "before": "错误验证码及重新绑定儿童进度",
+      "after": "验证码失败、重新绑定儿童进度未知；客服副本请求未给格式/回灌；后台备份不是用户找回承诺"
+    },
+    {
+      "id": "F-M056-06",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    }
+  ],
+  "evidence_changes": [
+    {
+      "id": "E-XYAI-01",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "name": "home",
+          "url": "https://leo.fbcontent.cn/",
+          "checked_on": "2026-10-27",
+          "access_mode": "anonymous_public_GET_no_login",
+          "status": 200,
+          "final_url": "https://leo.fbcontent.cn/",
+          "content_type": "text/html; charset=utf-8",
+          "raw_work_path": "work/xiaoyuan-app-controls-deepening/raw/home.html",
+          "raw_sha256": "a825be84f376f41adb73a8021e8e8488428e9a990545c010b50fc806f0dda913",
+          "bytes": 15418,
+          "text_work_path": "work/xiaoyuan-app-controls-deepening/raw/home.txt",
+          "text_sha256": "1f0353e4afe24280e4507d61a6cd38ae619b75261033895aa0a1b614d9555711",
+          "archived_artifact": "artifacts/xiaoyuan-app-controls-deepening/source-notes.md",
+          "sha256": "306eeaa31d2b56d9912e4bda80c409c39dad23f98c054edd620f9ec4870a825c",
+          "visual_observed": false,
+          "hands_on": false
+        }
+      ]
+    },
+    {
+      "id": "E-XYAI-02",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "name": "faq",
+          "url": "https://xykspt.yuanfudao.com/faq",
+          "checked_on": "2026-10-27",
+          "access_mode": "anonymous_public_GET_no_login",
+          "status": 200,
+          "final_url": "https://xykspt.yuanfudao.com/faq",
+          "content_type": "text/html; charset=utf-8",
+          "raw_work_path": "work/xiaoyuan-app-controls-deepening/raw/faq.html",
+          "raw_sha256": "ef461ab11668d43877a337fdc71d0542192739114a160bcaa7b06a5a1cf2a3d9",
+          "bytes": 12768,
+          "text_work_path": "work/xiaoyuan-app-controls-deepening/raw/faq.txt",
+          "text_sha256": "db73b42ed1b021ad1b7740d5ca6bd3ddd13207ee836c6f7c5451a48ac3d2b303",
+          "archived_artifact": "artifacts/xiaoyuan-app-controls-deepening/source-notes.md",
+          "sha256": "306eeaa31d2b56d9912e4bda80c409c39dad23f98c054edd620f9ec4870a825c",
+          "visual_observed": false,
+          "hands_on": false
+        }
+      ]
+    },
+    {
+      "id": "E-XYAI-03",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "name": "child-policy",
+          "url": "https://solar-online.oss-cn-beijing.aliyuncs.com/solar-user-profile/user-privacy-policy/leo-child-privacy-xyks.html",
+          "checked_on": "2026-10-27",
+          "access_mode": "anonymous_public_GET_no_login",
+          "status": 200,
+          "final_url": "https://solar-online.oss-cn-beijing.aliyuncs.com/solar-user-profile/user-privacy-policy/leo-child-privacy-xyks.html",
+          "content_type": "text/html",
+          "raw_work_path": "work/xiaoyuan-app-controls-deepening/raw/child-policy.html",
+          "raw_sha256": "9e64120f998e60a18653b3334eaac684d5d044bcd116b3e1af4c6af4f705adae",
+          "bytes": 167394,
+          "text_work_path": "work/xiaoyuan-app-controls-deepening/raw/child-policy.txt",
+          "text_sha256": "d39fd92ebcf7ddbea90643d404bbc7c9209b8a2f16c39aaf2d81f3ad321b3bf1",
+          "archived_artifact": "artifacts/xiaoyuan-app-controls-deepening/source-notes.md",
+          "sha256": "306eeaa31d2b56d9912e4bda80c409c39dad23f98c054edd620f9ec4870a825c",
+          "visual_observed": false,
+          "hands_on": false
+        }
+      ]
+    },
+    {
+      "id": "E-XYAI-04",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "name": "privacy",
+          "url": "https://xyks.yuanfudao.com/common/mobile-privacy-policy",
+          "checked_on": "2026-10-27",
+          "access_mode": "anonymous_public_GET_no_login",
+          "status": 200,
+          "final_url": "https://xyks.yuanfudao.com/common/mobile-privacy-policy",
+          "content_type": "text/html; charset=utf-8",
+          "raw_work_path": "work/xiaoyuan-app-controls-deepening/raw/privacy.html",
+          "raw_sha256": "fbd99b065d8a865af18347c339e37009d68f6db65c513c76ff989e16985cbff4",
+          "bytes": 56241,
+          "text_work_path": "work/xiaoyuan-app-controls-deepening/raw/privacy.txt",
+          "text_sha256": "ecee590e0347cdec26c63814197fe6de8ed1e09566ef3f19f8f0ef436bf32407",
+          "archived_artifact": "artifacts/xiaoyuan-app-controls-deepening/source-notes.md",
+          "sha256": "306eeaa31d2b56d9912e4bda80c409c39dad23f98c054edd620f9ec4870a825c",
+          "visual_observed": false,
+          "hands_on": false
+        }
+      ]
+    },
+    {
+      "id": "E-XYAI-05",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "name": "store",
+          "url": "https://apps.apple.com/cn/app/id1325419855",
+          "checked_on": "2026-10-27",
+          "access_mode": "anonymous_public_GET_no_login",
+          "status": 200,
+          "final_url": "https://apps.apple.com/cn/app/%E5%B0%8F%E7%8C%BFai-%E5%8E%9F-%E5%B0%8F%E7%8C%BF%E5%8F%A3%E7%AE%97-%E6%A3%80%E6%9F%A5%E4%BD%9C%E4%B8%9A%E7%A5%9E%E5%99%A8/id1325419855",
+          "content_type": "text/html",
+          "raw_work_path": "work/xiaoyuan-app-controls-deepening/raw/store.html",
+          "raw_sha256": "85e9f6fbaee2d3f6da23d0931913a11ecfcd89cc8bccff01f475f7c1655c2ae5",
+          "bytes": 847052,
+          "text_work_path": "work/xiaoyuan-app-controls-deepening/raw/store.txt",
+          "text_sha256": "b7974e65681734c25099e0ee2e75b264206ace41eec1878678dce800c4129e64",
+          "archived_artifact": "artifacts/xiaoyuan-app-controls-deepening/source-notes.md",
+          "sha256": "306eeaa31d2b56d9912e4bda80c409c39dad23f98c054edd620f9ec4870a825c",
+          "visual_observed": false,
+          "hands_on": false,
+          "app_build": "3.145.0",
+          "source_updated_on": "2026-10-26",
+          "note": "最新版本datetime；不改旧快照构建，不采用户评论，不当具体功能验证"
+        }
+      ]
+    },
+    {
+      "id": "E-XYCD-01",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "evidence_id": "E-XYCD-01",
+          "checked_on": "2026-10-27",
+          "access_mode": "prior_local_HTML_reread",
+          "raw_work_path": "work/chinese-app-depth/xiaoyuan-firsthand.html",
+          "raw_sha256": "05ddc2c133e1d3eaebd4b5d021d864555a8160230e7a7d925e74613970edad82",
+          "text_work_path": "work/xiaoyuan-app-controls-deepening/raw/historical-author.txt",
+          "text_sha256": "d5c9855d70cd04e5b80ec8fc411620bfab0502f63fc13847810c1064083a4b67",
+          "archived_artifact": "artifacts/xiaoyuan-app-controls-deepening/source-notes.md",
+          "sha256": "306eeaa31d2b56d9912e4bda80c409c39dad23f98c054edd620f9ec4870a825c",
+          "note": "原HTML本地复读；13小节正文和选图审查，图片另登记派生证据"
+        }
+      ]
+    },
+    {
+      "id": "E-XYCD-02",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "existing_static_image_local_review",
+          "observed_artifact": "artifacts/xiaoyuan-app-controls-deepening/xy-math-error.png",
+          "observed_sha256": "2be47889b74d6efa2b331464bf831ea970cbc17225eccfc1a6143bdfbe5cdff9",
+          "archived_artifact": "artifacts/xiaoyuan-app-controls-deepening/source-notes.md",
+          "sha256": "306eeaa31d2b56d9912e4bda80c409c39dad23f98c054edd620f9ec4870a825c",
+          "raw_work_path": "work/chinese-app-depth/xy-math-error.png",
+          "raw_sha256": "2be47889b74d6efa2b331464bf831ea970cbc17225eccfc1a6143bdfbe5cdff9",
+          "visual_observed": true,
+          "hands_on": false,
+          "note": "旧图重看及正式归档，沿用E，不新增URL/独立来源"
+        }
+      ]
+    },
+    {
+      "id": "E-XYCD-03",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "existing_static_image_local_review",
+          "observed_artifact": "artifacts/xiaoyuan-app-controls-deepening/xy-dictation.png",
+          "observed_sha256": "8c9485a207dce3340613d6948537960d2cba37aad8ce4466551c48fc6327acbd",
+          "archived_artifact": "artifacts/xiaoyuan-app-controls-deepening/source-notes.md",
+          "sha256": "306eeaa31d2b56d9912e4bda80c409c39dad23f98c054edd620f9ec4870a825c",
+          "raw_work_path": "work/chinese-app-depth/xy-dictation.png",
+          "raw_sha256": "8c9485a207dce3340613d6948537960d2cba37aad8ce4466551c48fc6327acbd",
+          "visual_observed": true,
+          "hands_on": false,
+          "note": "旧图重看及正式归档，沿用E，不新增URL/独立来源"
+        }
+      ]
+    },
+    {
+      "id": "E-XYCD-04",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "existing_static_image_local_review",
+          "observed_artifact": "artifacts/xiaoyuan-app-controls-deepening/xy-speaking.png",
+          "observed_sha256": "263c336eb5a03a418dada21a1d28ef3a807117d4c251348a1822639f70666136",
+          "archived_artifact": "artifacts/xiaoyuan-app-controls-deepening/source-notes.md",
+          "sha256": "306eeaa31d2b56d9912e4bda80c409c39dad23f98c054edd620f9ec4870a825c",
+          "raw_work_path": "work/chinese-app-depth/xy-speaking.png",
+          "raw_sha256": "263c336eb5a03a418dada21a1d28ef3a807117d4c251348a1822639f70666136",
+          "visual_observed": true,
+          "hands_on": false,
+          "note": "旧图重看及正式归档，沿用E，不新增URL/独立来源"
+        }
+      ]
+    },
+    {
+      "id": "E-XYHW-01",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "capture_url": "https://www.xiaoyuanyingjian.com/",
+          "checked_on": "2026-10-27",
+          "original_capture_on": "2026-10-26",
+          "access_mode": "local_reread_of_existing_public_artifact",
+          "raw_work_path": "work/learning-hardware/official-main.js",
+          "raw_sha256": "f3e9acdba2af4c5de5cd342a81d0300d57c5748d868c75338b98d1f112d092ec",
+          "locator": "Te/rn/Rn/S2-S6路由；解码字符偏移详独立摘记",
+          "archived_artifact": "artifacts/xiaoyuan-hardware-controls-deepening/source-notes.md",
+          "sha256": "b23dd9adc9131e36885fe67b7d61f85dbfdffad09b471c5e5fac119cc032c14c",
+          "hands_on": false,
+          "visual_observed": false,
+          "limitation": "本轮只读文字；旧静态观察不扩展。硬件固件/代际与完整主链未核定。",
+          "retrieval_request": "GET https://www.xiaoyuanyingjian.com/static/js/main.12d356ac.chunk.js"
+        }
+      ]
+    },
+    {
+      "id": "E-XYHW-02",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "capture_url": "https://apps.apple.com/cn/app/%E5%B0%8F%E7%8C%BF%E6%99%BA%E8%83%BD%E8%AE%BE%E5%A4%87/id6738277050",
+          "checked_on": "2026-10-27",
+          "original_capture_on": "2026-10-27",
+          "access_mode": "ordinary_anonymous_GET",
+          "raw_work_path": "work/xiaoyuan-hardware-controls-deepening/parent-store.html",
+          "raw_sha256": "eb9a6caaa2efc25caaf05036db03983050e21eef75fcd9e42ec2e5c23921de2d",
+          "locator": "time datetime=2026-09-25；1.25.1；25条版本日志；iOS13.5",
+          "archived_artifact": "artifacts/xiaoyuan-hardware-controls-deepening/source-notes.md",
+          "sha256": "b23dd9adc9131e36885fe67b7d61f85dbfdffad09b471c5e5fac119cc032c14c",
+          "hands_on": false,
+          "visual_observed": false,
+          "limitation": "本轮只读文字；旧静态观察不扩展。硬件固件/代际与完整主链未核定。",
+          "http_status": 200,
+          "source_updated_on": "2026-09-25",
+          "version_scope": "China iPhone App Store 1.25.1; iOS13.5+; paired hardware unknown"
+        }
+      ]
+    },
+    {
+      "id": "E-XYHW-05",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "capture_url": "https://megrez.yuanfudao.com/megrez-parent-web/privacys/privacy",
+          "checked_on": "2026-10-27",
+          "original_capture_on": "2026-10-26",
+          "access_mode": "local_reread_of_existing_public_artifact",
+          "raw_work_path": "work/learning-hardware/parent-privacy-body.html",
+          "raw_sha256": "cda62866625f96c6bffbfb25a7c095dbf788e5c1621f47cd118ddc1a161a3b01",
+          "locator": "2025-08-15政策§二/§四(一)4/§六.2、3、5、6、7",
+          "archived_artifact": "artifacts/xiaoyuan-hardware-controls-deepening/source-notes.md",
+          "sha256": "b23dd9adc9131e36885fe67b7d61f85dbfdffad09b471c5e5fac119cc032c14c",
+          "hands_on": false,
+          "visual_observed": false,
+          "limitation": "本轮只读文字；旧静态观察不扩展。硬件固件/代际与完整主链未核定。",
+          "resolved_source_url": "https://solar-online.fbcontent.cn/megrez-online/megrez-gallery/megrez-resource/1a017eac33f2fb4.html"
+        }
+      ]
+    },
+    {
+      "id": "E-VIW-11",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "url": "https://viwoods.com/pages/user-manuals",
+          "checked_on": "2026-10-27",
+          "status": 200,
+          "final_url": "https://viwoods.com/pages/user-manuals",
+          "raw_work_path": "work/viwoods-controls-deepening/raw/manual-index.html",
+          "raw_sha256": "c1cc5a0b660d53185214ea2ca28469571fcc5cd2d5d3ecf790065ba4ff746e55",
+          "extracted_work_path": "work/viwoods-controls-deepening/raw/manual-index.txt",
+          "extracted_sha256": "21f824496960b6f81db3ca1cfaf3b8769cd8b5eeac3616f8953685853298c8a6",
+          "access_mode": "anonymous_public_HTML_GET_text_read",
+          "hands_on": false,
+          "visual_observed": false,
+          "archived_artifact": "artifacts/viwoods-controls-deepening/source-notes.md",
+          "sha256": "34b46514beec33e50cc881176a9f4ba9941931ca524d37a6267c6fa0526df467"
+        }
+      ]
+    },
+    {
+      "id": "E-VIW-02",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "url": "https://viwoods.com/pages/system-update-3-15",
+          "checked_on": "2026-10-27",
+          "status": 200,
+          "final_url": "https://viwoods.com/pages/system-update-3-15",
+          "raw_work_path": "work/viwoods-controls-deepening/raw/update315.html",
+          "raw_sha256": "d4c419a1c4425fcc0e654e9ff6eb81a3e970322ff7c6f82ea637bf26bd9ee59d",
+          "extracted_work_path": "work/viwoods-controls-deepening/raw/update315.txt",
+          "extracted_sha256": "b533a8b80d3a318debf59db29b10083d823affa01ba36d8c61fea0275cd29fec",
+          "access_mode": "anonymous_public_HTML_GET_text_read",
+          "hands_on": false,
+          "visual_observed": false,
+          "archived_artifact": "artifacts/viwoods-controls-deepening/source-notes.md",
+          "sha256": "34b46514beec33e50cc881176a9f4ba9941931ca524d37a6267c6fa0526df467"
+        }
+      ]
+    },
+    {
+      "id": "E-VIW-10",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "url": "https://viwoods.com/pages/frequently-asked-questions-about-viwoods",
+          "checked_on": "2026-10-27",
+          "status": 200,
+          "final_url": "https://viwoods.com/pages/frequently-asked-questions-about-viwoods",
+          "raw_work_path": "work/viwoods-controls-deepening/raw/faq.html",
+          "raw_sha256": "e08a7dec39db5a86bd03b2cf82cfbcda2f86d3c4658dc89ee3656661f6407dd0",
+          "extracted_work_path": "work/viwoods-controls-deepening/raw/faq.txt",
+          "extracted_sha256": "1698b3327910dd24293a8939895da8772a458dbef6dc9ea3ac60a3b941c671a7",
+          "access_mode": "anonymous_public_HTML_GET_text_read",
+          "hands_on": false,
+          "visual_observed": false,
+          "archived_artifact": "artifacts/viwoods-controls-deepening/source-notes.md",
+          "sha256": "34b46514beec33e50cc881176a9f4ba9941931ca524d37a6267c6fa0526df467"
+        }
+      ]
+    },
+    {
+      "id": "E-VICD-01",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0729/7368/0674/files/viwoods-AiPaper-User-Manual.pdf?v=1787939059",
+          "checked_on": "2026-10-27",
+          "status": 200,
+          "final_url": "https://cdn.shopify.com/s/files/1/0729/7368/0674/files/viwoods-AiPaper-User-Manual.pdf?v=1787939059",
+          "raw_work_path": "work/viwoods-controls-deepening/raw/manual-current-capture.pdf",
+          "raw_sha256": "90bd3c06b4bb4425ad62aef69dd2b553ab622ead68b01a668cea4ab3b5786676",
+          "bytes": 17098207,
+          "same_as_local_old": true,
+          "access_mode": "anonymous_public_PDF_GET_same_bytes_then_local_static_page_review",
+          "hands_on": false,
+          "visual_observed": true,
+          "observed_file_pages": [
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            63,
+            64,
+            65,
+            66,
+            67,
+            68,
+            69
+          ],
+          "observed_printed_pages": "1–68",
+          "visual_audit_path": "artifacts/viwoods-controls-deepening/observed-pages.json",
+          "visual_audit_sha256": "c74515ff3ea37395892f8d167f47474902d9dec3d8e203d98eb3d7e14e064746",
+          "archived_artifact": "artifacts/viwoods-controls-deepening/source-notes.md",
+          "sha256": "34b46514beec33e50cc881176a9f4ba9941931ca524d37a6267c6fa0526df467",
+          "note": "同一旧原件复取，目录/功能页逐页观察；不是现行V3.15手册。"
+        }
+      ]
+    },
+    {
+      "id": "E-XYHW-01",
+      "field": "version_scope",
+      "before": "China mainland S6/E1; current website, firmware unknown",
+      "after": "China mainland S6/E1 as represented in captured main.12d356ac.chunk.js; page release/generation and firmware unknown"
+    },
+    {
+      "id": "E-XYHW-02",
+      "field": "source_updated_on",
+      "before": null,
+      "after": "2026-09-25"
+    },
+    {
+      "id": "E-XYHW-02",
+      "field": "note",
+      "before": "Four static developer compositions viewed; only one retained formally. Sample values are not defaults. Store 1.25.1 date displayed Sep 25 without year on row; no user reviews used.",
+      "after": "Four static developer compositions viewed in prior capture; only one retained formally. Sample values are not defaults. Original date row showed Sep 25 without year; fresh 2026-10-27 HTML time datetime confirms 2026-09-25 for 1.25.1. Twenty-five version notes are generic; no specific hardware repair inferred. No new images or user reviews used."
+    }
+  ],
+  "files": [
+    {
+      "path": "docs/research/interaction-library/batches/ai-notebooks-coverage.csv",
+      "backup": "work/xiaoyuan-app-controls-deepening/reviewed-before/ai-notebooks-coverage.csv",
+      "before_sha256": "79e67699e786d06630f19cd2bdbebe36a9cff9de164a7ce4effc2ddfff24285e",
+      "after_sha256": "06cbc55c570fcd8003495db1f146d462d22d950739bdb2917b6c99cbdd61c5c3"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/chinese-app-controls-deepening-evidence.jsonl",
+      "backup": "work/xiaoyuan-app-controls-deepening/reviewed-before/chinese-app-controls-deepening-evidence.jsonl",
+      "before_sha256": "f777c8a8dd2ad5acf768b9a3c7d7d076aa45b8d8b90098f717466d49b4136b23",
+      "after_sha256": "dd44f0d5252d19bc267c26e43b499b9ee24a8bd15844c79ecbc17f789e89e299"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/children-evidence.jsonl",
+      "backup": "work/xiaoyuan-app-controls-deepening/reviewed-before/children-evidence.jsonl",
+      "before_sha256": "33da08fbe25bf3b9f8091849d913d41f10132970be73a469a8eca6aabf64e6a2",
+      "after_sha256": "26ad3cca14311d33a49322cf3e2a6f734d4c80ff3fd0eb14936b943d4144fe0d"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/office-aipaper-deepening-evidence.jsonl",
+      "backup": "work/xiaoyuan-app-controls-deepening/reviewed-before/office-aipaper-deepening-evidence.jsonl",
+      "before_sha256": "76c8ab1b8d8e76562563db6e7029b2fa84666e431cb95e76d6eee27db338e29e",
+      "after_sha256": "308fc73f9c36c03ac939ad011abb608c0ec9603cb9f47dc8906724bab2a4a234"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/learning-hardware-evidence.jsonl",
+      "backup": "work/xiaoyuan-app-controls-deepening/reviewed-before/learning-hardware-evidence.jsonl",
+      "before_sha256": "d3224c4f952da5cd37055646482c817fa59fa4da7378d8446f7f5e3ad073f8a5",
+      "after_sha256": "5ba8693a4e186f6f4f5ffbef321dec8f09396325a3c3720e230788a63235735e"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/children-coverage.csv",
+      "backup": "work/xiaoyuan-app-controls-deepening/reviewed-before/children-coverage.csv",
+      "before_sha256": "40659828882461e3dc696d8f7be29a183affe092c7197fd7fac0b2f5f563b811",
+      "after_sha256": "02db29374bccf1df8e969878842d49db60544b8e6654bc5ad4797bcc539beb0f"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/learning-hardware-coverage.csv",
+      "backup": "work/xiaoyuan-app-controls-deepening/reviewed-before/learning-hardware-coverage.csv",
+      "before_sha256": "ffd8fa35d34b707d8c33cd5cf8136901243737314fbcaee44879b26d62352e80",
+      "after_sha256": "9271d292f7e7f9eee009ddd568a950b7c4b57f28dd1d8ace151e8de109d279a9"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/chinese-app-controls-deepening-coverage.csv",
+      "backup": "work/xiaoyuan-app-controls-deepening/reviewed-before/chinese-app-controls-deepening-coverage.csv",
+      "before_sha256": "1a56d2c0074d6f4bb460f40824fa2677eaba1c66716ec04d9afa4d6229f62a37",
+      "after_sha256": "0b1e7259f6cecfa9262d8561b10767d449fcc06bdae5c3162c165c49329d55ce"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/ai-notebooks-evidence.jsonl",
+      "backup": "work/xiaoyuan-app-controls-deepening/reviewed-before/ai-notebooks-evidence.jsonl",
+      "before_sha256": "e75ee4c1ee0ef563bf4510d24224395fc6c21a2fc73083f880420ee381774e23",
+      "after_sha256": "159d38c0ffa6b7b0cff7b6e0993c3c478b3e3fe6b453a4ba799dec43588f526d"
+    }
+  ],
+  "old_tasks": 22,
+  "old_task_fields": 89,
+  "old_evidence_captures": 16,
+  "old_evidence_metadata_fields": 3
+}

@@ -1,0 +1,352 @@
+Guangzhou Feiao Electronic Technology Co., Ltd.-JM21
+计时中
+English
+简体中文
+Check Authenticity
+ꄙ
+About FIIO
+Aliexpress
+Agents
+Forum
+Support
+DAC Driver
+All products
+Portable Devices
+Desktop Devices
+Headphones
+Speakers
+Retro Products
+Keyboard
+Cables
+Accessories
+M27
+M25/M25 R2R
+M33 R2R
+DT11
+M21
+JM21
+DISC
+ECHO
+ECHO MINI
+Q15
+Q7
+Q3-MQA
+Q11
+RETRO NANO
+BTR17
+BTR11
+BTR13
+BTR15
+BTR7
+BTR5 2021
+BTR3K
+UTWS5
+UTWS3
+UTWS5 2025
+UTWS17
+TINY
+QX11
+QX13
+MELODY
+KA17
+KA15
+KA13
+KA11
+JA11
+BT11
+AIR LINK
+ANYWHERE
+DAP
+DAC/AMP
+Bluetooth DAC/AMP
+Bluetooth ear hooks
+USB dongles
+Bluetooth TX/RX
+Portable Speaker
+GIGAS 1
+CLASS A
+K17 R2R
+K15
+K17
+K13
+K13 R2R
+K11R2R
+R7
+R9
+S15
+BR15 R2R
+BTA30 Pro
+BR13
+D03K
+SR11
+WARMER R2R
+DARKSIDE PRO
+PL50
+EA13
+LEVEL_1
+AIR AMP
+DAC/AMP
+Digital Streaming Player
+Bluetooth TX/RX
+DAC
+Streaming Music Receiver
+R2R DAC + tube buffer
+linear power supply
+Power Amplifier
+OAK NANO
+FD15
+FD7
+FD3/FD3 Pro
+JD7
+FD1
+JD1
+FD11
+JD10
+FA7S
+FA19
+FX15
+FX17
+FX25
+FH19
+FH11
+LUMI
+FH3
+FH9
+FH7S
+FH5s/FH5s Pro
+JH3
+JH5
+JF11
+FF5
+FF3
+FF1
+FF3S
+JT9
+JT7
+FT13
+FT15
+FT7
+FT5
+FT1
+FT1 PRO
+JT1
+FG3
+FW3
+FW5
+JW1
+FP3
+Dynamic Driver IEMs
+Balanced Armature IEMs
+Tribrid Driver IEMs
+Hybrid IEMs
+Earbuds
+Over-Ear Headphones
+Gaming headset
+TWS Earphones
+Planar IEMs
+SP5
+SA1
+SP3/SP3 BT
+RETRO BOX
+Active speakers
+CP13
+TT13
+TT11
+RR13
+RR11
+DM13
+DM15 R2R
+KB3
+HiFi Keyboard
+New octa-core 6nm Snapdragon 680 | Fully balanced audio design | 13mm ultra-thin body
+Dual CS43198+dual op-amps | Dual custom femtosecond crystal oscillators | Android13 700mW+700mW output power | 4.7-inch HD display | 16h ultra-long battery life Proprietary DAPS system without global SRC | 4.4mm+3.5mm outputs
+SPDIF/USB/LO audio outputs
+Parameters
+Gallery
+Reviews
+FAQ
+Buy Now
+JM21
+M23
+M11 PLUS
+*Picture are for reference only.The actual product mayvary.
+Portable High-Res Lossless Music Player
+넳
+넲
+Learn more
+JM21 parameters
+Entry-level price
+Flagship chips
+Fabrication process
+6nm
+2.4GHz
+An all-new processor beyond the average – inside the JM21 is the Qualcomm Snapdragon 680, featuring 8-cores based on the Kryo™ 265 architecture, clock frequencies up to 2.4GHz, and made on the 6nm fabrication process. Experience a significant performance leap with noticeably reduced power consumption for a silky-smooth experience.
+Clock frequencies up to
+Note: Due to the larger memory usage of Android 13, and the JM21 being limited to 3GB of RAM due to cost constraints, it is recommended to only install streaming music apps for optimal user experience. Other apps are not recommended for installation. Additionally, to ensure sound quality and performance, please avoid running multiple apps simultaneously.
+넳
+넲
+3 gain levels
+3 volume curves
+The JM21 has 3 levels of low, medium and high gains, each gain level having its own volume curve. This allows the JM21 to give you a better listening experience with various types of headphones, whether you are using earphones or over-ear headphones.
+넳
+넲
+two DAC chips ES9068AS handle the left and right channels respectively, and the fine "core" polishes the quality and sound quality. Listen to your favorite song list and revel in the beautiful song in an instant.
+high-performance dual-core, sound into your heart
+Two Cirrus Logic flagship CS43198 DACs are paired with two high-performance SGM8262 op-amps in a fully balanced audio design. Thanks to our learnings from the development of numerous previous products, we have further optimized the segmented power supply as well as the front and rear stage gain stages for wider dynamic range and enriched musicality.
+Dual flagship CS43198 DAC Fully balanced design
+넳
+넲
+Segmented power supply
+Shielded partitions
+Segmented power supply
+There are independent power supplies for digital and analog sections. The DAC, voltage, and current amplification stages each are handled by a dedicated stage in the three-stage segmented power supply. Each of the op-amps in the four- channel amplification stage is equipped with four independent LDO precision regulators.
+Shielded partitions
+The main control, DAC, and headphone amplifier sections are separated into their own zones, each with its own shielding and isolation. This further reduces signal crosstalk and resists external signal interference, resulting in purer sound quality.
+넳
+넲
+The deeply customized Android 13 operating system is both intuitive and smooth. It also allows you to install major streaming music apps or any other kinds of apps.
+Simply smooth
+Custom Android 13 OS
+넳
+넲
+Proprietary DAPS
+(Digital Audio Purification System)
+FIIO collaborated closely with its suppliers to specifically select for the JM21 10ppm low-temperature drift crystal oscillators with ceramic gold-plated bases and ultra-low phase noise. These custom crystal oscillators are screened at the femtosecond level to ensure consistent and stable output. The high-precision, low-jitter unified clock source ensures that digital audio signals are precisely handled as they go through the audio circuit.
+5th-gen FPGA + dual custom
+femtosecond crystal oscillators
+Whether you are using FiiO Music, Apple Music, or other third- party apps to play local music, or even connecting to an external DAC through USB, the audio’s original sampling rate is untouched to ensure lossless sound quality.
+SRC audio degradation
+Neatly solved
+넳
+넲
+The JM21 features brand-new sky blue contrasting color design in a lightweight design that can be comfortably held with just one hand. Your fingers will simply glide over the 4.7-inch HD screen, allowing the JM21 to produce music that flows through your fingertips.
+Ultra-thin body
+Music flowing through your fingertips
+As thin as13mm As light as156g
+넳
+넲
+Say Bye to battery anxiety!
+12.5 hours ultra-long battery life
+The ultra-long battery life, enough for continuous listening for an entire day, ensures you can listen pleasantly without anxiety of running out of power.
+*JM21 (3G+32G) single-ended battery life is about 12.5h, and balanced about 9.5h; JM21 (4G+64G) single-ended battery life is about 16h, and balanced about 12.5h.
+*16 hours of ultra-long battery life means the single-ended output of JM21 (4G+64G). Figure based on testing from FIIO Labs. Actual battery life may vary due to differing usage conditions.
+넳
+넲
+Bluetooth can be HiFi
+Two-way LDAC connection
+The JM21 supports two-way Bluetooth 5.0, being able to transmit and receive Bluetooth signals. This ensures stable yet high-quality Bluetooth audio.
+Bluetooth transmission: SBC/AAC/aptX/aptX HD/LHDC/LDAC
+Bluetooth reception: SBC/AAC/LDAC
+넳
+넲
+When connected to a MacOS or Windows computer, the JM21 can greatly improve your audio experience there with sampling rate support up to 384kHz/32bit.
+*USB DAC functionality is designed for audio development purpose with slightly higher latency. It is not recommended to watch videos using this mode.
+Asynchronous USB DAC
+Supports 384kHz/32bit
+넳
+넲
+Various outputs
+Quite versatile
+Analog outputs
+3.5mm, 4.4mm outputs: Connect to headphones
+LO mode can be switched in the system settings when connecting to active speakers or power amplifiers.
+USB Audio: Turn it into a streaming media turntable in seconds
+Analog Output
+3.5mm, 4.4mm headphone output interface: connect headphones
+Digital outputs
+SPDIF: Connect to external DACs
+넳
+넲
+Body and Interface
+넳
+넲
+①---------------------------JM21*1
+②---------------------------PET film screen protector (pre-applied)*1
+③---------------------------Transparent case*1
+④---------------------------USB cable*1
+⑤---------------------------Quick start guide*1
+⑥---------------------------Warranty card*1
+Packing list
+넳
+넲
+Color: Sky blue, Black
+Material: Aluminum alloy + Plastic
+Dimensions: About 120.7x68x13mm
+Weight: About 156g (excluding transparent case)
+SoC: Qualcomm Snapdragon 680
+RAM and Storage: 3G RAM+32G ROM (about 22G ROM usable); 4G RAM+64G ROM (about 52G ROM usable)
+Storage expansion: Standard microSD card slot, up to 2TB
+Android: Android 13
+Working mode: Android mode/Pure music mode/USB DAC
+mode/Bluetooth receiving mode
+WiFi: 2.4GHz/5GHz; supports DLNA, AirPlay, WiFi music transfer, etc.
+DAC: CS43198*2
+Battery capacity:3G RAM+32G ROM: 2400mAh; 4G RAM+64G ROM: 3100mAh
+Battery life: 3G RAM+32G ROM: Single-ended 12.5h, balanced 9.5h; 4G RAM+64G ROM: Single-ended16h, balanced 12.5h
+Charging time: (3G+32G) about 2h (5V 2A power supply); (4G+64G) about 2.5h (5V 2A power supply)
+Op-amp: SGM8262*2
+Display: 4.7-inch HD (750*1334)
+Outputs: 3.5mm headphone out/line out/coaxial out+ 4.4mm balanced headphone out/line out
+USB connector: Type-C USB2.0 data/charging/USB Audio
+Bluetooth version: 5.0
+Bluetooth transmission: SBC/AAC/aptX/aptX HD/LHDC/LDAC
+Bluetooth reception: SBC/AAC/LDAC
+Local decoding: 384kHz/32bit; DSD256 (Native)
+USB DAC: 384kHz/32bit; DSD256 (Native)
+USB Audio: 768kHz/32bit; DSD512 (supports DoP/D2P/Native)
+Coaxial output: 384kHz/24bit; DSD128 (supports DoP/D2P)
+Output power 1: L+R≥245mW+245mW (32Ω/THD+N＜1%/single-ended)
+Output power 2: L+R≥700mW+700mW (32Ω/THD+N＜1%/balanced)
+Signal-to-noise ratio: ≥130dB
+Noise floor: ＜1.5μV
+Output impedance: ＜1Ω
+THD+N: ＜0.0006%
+Basic specifications
+넳
+넲
+A specially-designed and tuned audio circuit allows the JM21 to achieve a balanced power output of up to 700mW+700mW within an ultra-thin body of only 13mm thickness. This ensures that it drives all kinds of headphones with ease.
+Powerful penetrating sound
+700mW power output
+700mW 700mW
+32Ω/THD+N＜1%/balanced
+넳
+넲
+R9
+M23
+K17
+S15
+Products
+About FIIO
+Contact Us
+News & Events
+Company Development
+Company
+Product Help
+Warranty Terms
+Download Center
+Check Authenticity
+Support
+FIIO Aliexpress Store
+FIIO Forum
+FIIO Music App
+Sales Agents
+Others
+Copyright © Guangzhou FiiO Electronics Technology Co., Ltd. 粤ICP备07072214号
+Aliexpress
+Privacy policy
+Open Source Licenses
+끠
+Search
+Follow Us
+本网站由阿里云提供云计算及安全服务
+本网站支持
+IPv6
+本网站由阿里云提供云计算及安全服务
+本网站支持
+IPv6
+本网站由阿里云提供云计算及安全服务
+本网站支持
+IPv6
+本网站由阿里云提供云计算及安全服务
+本网站支持
+IPv6

@@ -1,0 +1,127 @@
+{
+  "product_id": "M-006",
+  "frozen_on": "2026-10-27",
+  "before_merge_only": true,
+  "files": [
+    {
+      "path": "docs/research/interaction-library/artifacts/supernote-notes-controls-deepening/source-notes.md",
+      "bytes": 4088,
+      "sha256": "57e07f1645ab884ed6d99267d8349c1c2f52c464aa94f4a91b29fa8d28051180"
+    },
+    {
+      "path": "docs/research/interaction-library/artifacts/supernote-notes-controls-deepening/x2-v3.28.42-p153.png",
+      "bytes": 81612,
+      "sha256": "737eacaf66291150af2ccbad4f874cccc81fc18261bd50b35754a967b8a6bced"
+    },
+    {
+      "path": "docs/research/interaction-library/artifacts/supernote-notes-controls-deepening/x2-v3.28.42-p65.png",
+      "bytes": 82318,
+      "sha256": "70fcaa4ce2a9c54b3520c66e1f89580cd9da4a72b3ffc37a3e0dc688dd1cfb41"
+    },
+    {
+      "path": "docs/research/interaction-library/artifacts/supernote-notes-controls-deepening/x2-v3.28.42-p66.png",
+      "bytes": 86864,
+      "sha256": "cfda3129505aa12cf542d3e8060710d7de66c51465e90b6144ec035b02aa9e1b"
+    },
+    {
+      "path": "docs/research/interaction-library/artifacts/supernote-notes-controls-deepening/x2-v3.28.42-p75.png",
+      "bytes": 115689,
+      "sha256": "1aa140420e5e4730a83852df627cbad9624d945daad63c87f9c7d84fb3cedbe6"
+    },
+    {
+      "path": "docs/research/interaction-library/artifacts/supernote-notes-controls-deepening/x2-v3.28.42-p83.png",
+      "bytes": 77555,
+      "sha256": "d08dfa8255c35c3f527ae0dba5b7af0eee1affcf4f40a5b4171cca263e773baf"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/supernote-notes-controls-deepening-coverage.csv",
+      "bytes": 2042,
+      "sha256": "8f003576ee307ccdc334458b4b4ca6e4e04a3aaf21b06934e78187b54867b2d3"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/supernote-notes-controls-deepening-evidence.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/supernote-notes-controls-deepening-inventory.csv",
+      "bytes": 47024,
+      "sha256": "d53ffbb6d355301c58adddbf96934b150d0561e6e04ad34866dd705b4bbaf47e"
+    },
+    {
+      "path": "docs/research/interaction-library/cases/M-006-supernote.md",
+      "bytes": 23394,
+      "sha256": "d05a5a390e45bdcc0d791763d182f19482fa359796d82049688881d44246464e"
+    },
+    {
+      "path": "work/supernote-notes-controls-deepening/HANDOFF.md",
+      "bytes": 8483,
+      "sha256": "d91fc683573e1ddd04c5f67117cb988e6fec833b52b99716ed8a2ba42ef38842"
+    },
+    {
+      "path": "work/supernote-notes-controls-deepening/baseline-paths.json",
+      "bytes": 1086,
+      "sha256": "8ad390f3ec2807033badb85666b123c5a2037c63afc920ce8c3e89bf506f7560"
+    },
+    {
+      "path": "work/supernote-notes-controls-deepening/build-results.json",
+      "bytes": 282,
+      "sha256": "f46e2b621fcb815e3993bd450ef538e145c53f6faca0e5742199e8598b354d66"
+    },
+    {
+      "path": "work/supernote-notes-controls-deepening/build.py",
+      "bytes": 23971,
+      "sha256": "8b3e16b0f9fb91d46571df520111fa44141624b342fbbed3425c9f47b5e20833"
+    },
+    {
+      "path": "work/supernote-notes-controls-deepening/case-before.md",
+      "bytes": 16791,
+      "sha256": "59b21b5e45e2361c10cf5d81a0f3ebeac4f8208f7dde6ddc04d92cf35280ad92"
+    },
+    {
+      "path": "work/supernote-notes-controls-deepening/check.py",
+      "bytes": 4859,
+      "sha256": "4da15469efb771e06261e151fbf6fe06075412d01f036890ce58d772b7050881"
+    },
+    {
+      "path": "work/supernote-notes-controls-deepening/coverage-before.json",
+      "bytes": 7165,
+      "sha256": "8c6a23a5f06048592e1b4bc0440224a2fd3a072961865c508f0407e6af88e3ab"
+    },
+    {
+      "path": "work/supernote-notes-controls-deepening/evidence-before.json",
+      "bytes": 21575,
+      "sha256": "6f336ee97d0e3323911b0d79c493794e9714e0deffb90cb81269378539b447fd"
+    },
+    {
+      "path": "work/supernote-notes-controls-deepening/existing-coverage-updates.json",
+      "bytes": 4987,
+      "sha256": "b5816fa4959a992317517df7ad0a93800d00399a9c7166d2111992bde8b21ba3"
+    },
+    {
+      "path": "work/supernote-notes-controls-deepening/existing-evidence-additional-captures.json",
+      "bytes": 6215,
+      "sha256": "71a44feba14b6dc86f7dbc2e47ca84c389e6c8f66a5218266aef3f985585ae3e"
+    },
+    {
+      "path": "work/supernote-notes-controls-deepening/raw/10-changelog.html",
+      "bytes": 130039,
+      "sha256": "28ce34428094d1f9778d5071ccb79a4bfdc7ea946170099001cc9e61823b1030"
+    },
+    {
+      "path": "work/supernote-notes-controls-deepening/raw/10-changelog.txt",
+      "bytes": 49518,
+      "sha256": "ffd1869e05661d5e4ed94c6e94f926871e05fec1f71cb68c5347e1f1283e3df4"
+    },
+    {
+      "path": "work/supernote-notes-controls-deepening/raw/X2_V3.28.42_EN.pdf",
+      "bytes": 19158941,
+      "sha256": "9c7b24be22b8f06727381564412f192273e50e2157a2aa5b4350d12b6c3037d2"
+    },
+    {
+      "path": "work/supernote-notes-controls-deepening/raw/selected-pages.txt",
+      "bytes": 16767,
+      "sha256": "ff89dfe3dd8fd1abdc023ef99d977caa9ffd96b935273cd9153e951039be8e66"
+    }
+  ]
+}

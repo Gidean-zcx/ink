@@ -1,0 +1,23 @@
+Adjust basic privacy settings in Shortcuts on iPhone and iPad
+To protect your data and privacy, the Shortcuts app has default security settings that you can adjust.
+Give a shortcut access to required data
+When you run a shortcut, the Shortcuts app requests access to necessary data.
+In the Shortcuts app on your iPhone or iPad, run a shortcut.
+If a Privacy dialog appears requesting access to data, choose Allow Once, Always Allow, or Don’t Allow.
+If you choose Always Allow, the Shortcuts app won’t ask you for access the next time you run the shortcut.
+Remove a shortcut’s access to data
+If you previously chose Always Allow when a shortcut requested access to necessary data, you can override that decision.
+In the Shortcuts app on your iPhone or iPad, tap on a shortcut, then tap to open Details.
+Tap Privacy.
+Note: If you don’t see the Privacy tab, the shortcut does not have access to your data.
+Turn off an option—for example, Location or Safari.
+To remove access to all data for this shortcut, tap Reset Privacy.
+Allow sharing large amounts of data
+Some shortcuts require access to large amounts of data. To enable these shortcuts, you must turn on a special setting.
+On your iPhone or iPad, go to Settings > Shortcuts > Advanced.
+Turn on Allow Sharing Large Amounts of Data.
+Allow private sharing of shortcuts on iPhone or iPad
+You can receive shortcuts directly from people in your contacts through AirDrop, Messages, and more. However, because these third-party shortcuts are considered “untrusted,” you must first enable shared shortcuts in settings.
+WARNING: Apple cannot verify the authenticity or behavior of shortcuts shared privately. Always verify shortcuts you receive from contacts.
+On your iPhone or iPad, go to Settings > Shortcuts.
+Turn on Private Sharing.See alsoAdvanced Privacy and security settings in Shortcuts on iPhone or iPad

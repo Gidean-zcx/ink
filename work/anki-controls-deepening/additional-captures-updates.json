@@ -1,0 +1,140 @@
+[
+  {
+    "evidence_id": "E-AND-01",
+    "field": "additional_captures",
+    "before": null,
+    "after": [
+      {
+        "capture_kind": "public_http_markdown_body_read",
+        "checked_on": "2026-10-27",
+        "network_refetched": true,
+        "source_url": "https://docs.ankiweb.net/llms.txt",
+        "capture_url": "https://docs.ankiweb.net/llms.txt",
+        "http_status": 200,
+        "locator": "Manual完整页面目录，含平台父子项",
+        "raw_work_path": "work/anki-controls-deepening/llms.txt",
+        "raw_sha256": "37277f3b5505aa8ab28719e28b3ac2bb9217288d8648beb974a93568ba2edbdc",
+        "archived_artifact": "artifacts/anki-controls-deepening/source-notes.md",
+        "sha256": "01498c2eac1b71bf6f2dca8b322ec08f0598b61c0c36e1b012c64cc85860222d",
+        "hands_on": false,
+        "visual_observed": false
+      }
+    ],
+    "reason": "同页HTML/Markdown沿用旧E；补本轮正文采集和哈希，不重复计来源"
+  },
+  {
+    "evidence_id": "E-ANK-02",
+    "field": "additional_captures",
+    "before": null,
+    "after": [
+      {
+        "capture_kind": "public_http_markdown_body_read",
+        "checked_on": "2026-10-27",
+        "network_refetched": true,
+        "source_url": "https://docs.ankiweb.net/manual/syncing",
+        "capture_url": "https://docs.ankiweb.net/manual/syncing.md",
+        "http_status": 200,
+        "locator": "Conflicts；Merging Conflicts；Media",
+        "raw_work_path": "work/anki-controls-deepening/syncing.md",
+        "raw_sha256": "b9f2d7069200c44b339400f839efaeb16a23bd5a97b338020986d1e4ca985c9c",
+        "archived_artifact": "artifacts/anki-controls-deepening/source-notes.md",
+        "sha256": "01498c2eac1b71bf6f2dca8b322ec08f0598b61c0c36e1b012c64cc85860222d",
+        "hands_on": false,
+        "visual_observed": false
+      }
+    ],
+    "reason": "同页HTML/Markdown沿用旧E；补本轮正文采集和哈希，不重复计来源"
+  },
+  {
+    "evidence_id": "E-ANK-03",
+    "field": "additional_captures",
+    "before": null,
+    "after": [
+      {
+        "capture_kind": "public_http_markdown_body_read",
+        "checked_on": "2026-10-27",
+        "network_refetched": true,
+        "source_url": "https://docs.ankiweb.net/manual/backups",
+        "capture_url": "https://docs.ankiweb.net/manual/backups.md",
+        "http_status": 200,
+        "locator": "Creating；Restoring；Deletion log",
+        "raw_work_path": "work/anki-controls-deepening/backups.md",
+        "raw_sha256": "1f398b3b52d6c53a4e9e8e2ff16134e07c7374f7b8073f9d5fec143f44da3cfb",
+        "archived_artifact": "artifacts/anki-controls-deepening/source-notes.md",
+        "sha256": "01498c2eac1b71bf6f2dca8b322ec08f0598b61c0c36e1b012c64cc85860222d",
+        "hands_on": false,
+        "visual_observed": false
+      }
+    ],
+    "reason": "同页HTML/Markdown沿用旧E；补本轮正文采集和哈希，不重复计来源"
+  },
+  {
+    "evidence_id": "E-AND-12",
+    "field": "additional_captures",
+    "before": null,
+    "after": [
+      {
+        "capture_kind": "public_http_markdown_body_read",
+        "checked_on": "2026-10-27",
+        "network_refetched": true,
+        "source_url": "https://docs.ankiweb.net/manual/deck-options.md",
+        "capture_url": "https://docs.ankiweb.net/manual/deck-options.md",
+        "http_status": 200,
+        "locator": "Auto Advance；Timers",
+        "raw_work_path": "work/anki-controls-deepening/deck-options.md",
+        "raw_sha256": "2bb7c9f536b4b33a754fa363d75f7625b4001eda260aec92b3f5fe8975a8c2ae",
+        "archived_artifact": "artifacts/anki-controls-deepening/source-notes.md",
+        "sha256": "01498c2eac1b71bf6f2dca8b322ec08f0598b61c0c36e1b012c64cc85860222d",
+        "hands_on": false,
+        "visual_observed": false
+      }
+    ],
+    "reason": "同页HTML/Markdown沿用旧E；补本轮正文采集和哈希，不重复计来源"
+  },
+  {
+    "evidence_id": "E-AND-15",
+    "field": "additional_captures",
+    "before": null,
+    "after": [
+      {
+        "capture_kind": "public_http_markdown_body_read",
+        "checked_on": "2026-10-27",
+        "network_refetched": true,
+        "source_url": "https://docs.ankiweb.net/manual/media.md",
+        "capture_url": "https://docs.ankiweb.net/manual/media.md",
+        "http_status": 200,
+        "locator": "Checking Media；Manually Adding Media",
+        "raw_work_path": "work/anki-controls-deepening/media.md",
+        "raw_sha256": "4151e6313563d44de616562e1d7509a766e788fab606179ef3c381d44332ce5b",
+        "archived_artifact": "artifacts/anki-controls-deepening/source-notes.md",
+        "sha256": "01498c2eac1b71bf6f2dca8b322ec08f0598b61c0c36e1b012c64cc85860222d",
+        "hands_on": false,
+        "visual_observed": false
+      }
+    ],
+    "reason": "同页HTML/Markdown沿用旧E；补本轮正文采集和哈希，不重复计来源"
+  },
+  {
+    "evidence_id": "E-AND-17",
+    "field": "additional_captures",
+    "before": null,
+    "after": [
+      {
+        "capture_kind": "public_http_markdown_body_read",
+        "checked_on": "2026-10-27",
+        "network_refetched": true,
+        "source_url": "https://docs.ankiweb.net/manual/profiles.md",
+        "capture_url": "https://docs.ankiweb.net/manual/profiles.md",
+        "http_status": 200,
+        "locator": "Profiles；Profiles window",
+        "raw_work_path": "work/anki-controls-deepening/profiles.md",
+        "raw_sha256": "23d6c6434bfde60295c8b874bcb63f007ec61b7be0212df4b4dd5fc964ff1c2f",
+        "archived_artifact": "artifacts/anki-controls-deepening/source-notes.md",
+        "sha256": "01498c2eac1b71bf6f2dca8b322ec08f0598b61c0c36e1b012c64cc85860222d",
+        "hands_on": false,
+        "visual_observed": false
+      }
+    ],
+    "reason": "同页HTML/Markdown沿用旧E；补本轮正文采集和哈希，不重复计来源"
+  }
+]

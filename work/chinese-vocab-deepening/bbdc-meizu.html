@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html>
+<meta name="description" content="魅族Flyme应用商店是魅族官方应用市场，提供海量最新最潮的魅族手机应用、游戏和主题下载,按主题分类,下载排行推荐；登陆Flyme账户可直接下载应用至手机,更方便,更快捷."/>
+<meta name="keywords" content="魅族Flyme应用中心,魅族手机应用中心,魅族应用市场,魅族应用商店"/>
+<link href="https://i3.mzres.com/resources/portal/common/css/common.css?v=20210910" rel="stylesheet" type="text/css">
+<title>魅族应用商店_魅族手机应用下载官方商店</title>
+<div id="head_wrapper">
+<div class="menu_head">
+    <div class="menu">
+        <div class="left" style="width: 450px;">
+            <a href="http://www.flyme.cn" target="_blank">Flyme官网</a><div class="split"></div>
+            <a href="https://cloud.flyme.cn" target="_blank">云服务</a><div class="split"></div>
+            <a href="http://www.meizu.com" target="_blank">魅族官网</a><div class="split"></div>
+            <a href="http://open.flyme.cn" target="_blank">开放平台</a><div  class="split game" style="display: none;"></div>
+            <a class="game" href="https://game.flyme.cn" target="_blank" style="display: none;">游戏中心</a>
+        </div>
+        <!-- <div class="right" style="width: 550px;text-align: right;">
+            <input type="hidden" name="mz_flyme" id="mz_flyme" value=""/>
+            <input type="hidden" name="mz_developer" id="mz_developer" value=""/>
+            <input type="hidden" id="_assertion_nickname" value=""/>
+            <span id="loginWrap" class="none">
+                <a target="_blank" href="https://member.meizu.com/uc/webjsp/member/detail" id="w_notify" title= "" class="ellipsis"><i class="i_tooltips radius2" id="tooltips"></i></a>
+                <div class="split"></div>
+            <a id="head-logout" href="javascript:logout()" hidefocus="" title="退出">退出</a>
+            </span>
+            <span id="unloginWrap">
+                <a href="javascript:login()" title="登录">登录</a>
+                <div class="split"></div>
+                <a href="javascript:register()" title="注册">注册</a>
+            </span>
+        </div> -->
+    </div>
+</div>
+<div class="head">
+    <div class="iconfont logo">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 439.49 157.99"><defs><style>.cls-1{fill:#0095ff;}</style></defs><g id="图层_2" data-name="图层 2"><g id="图层_1-2" data-name="图层 1"><polygon class="cls-1" points="132.4 157.99 151.61 157.99 202.14 35.99 182.93 35.99 159.1 95.06 135.28 35.99 116.06 35.99 149.77 117.36 132.4 157.99"/><path class="cls-1" d="M415.69,95.69a27,27,0,0,1-47.36-10H439a45.06,45.06,0,1,0-2.72,10ZM394.49,52a27,27,0,0,1,24.95,16.69h-49.9A27,27,0,0,1,394.49,52Z"/><path class="cls-1" d="M0,27v95H18V72H68V54H18V27a9,9,0,0,1,9-9H74V0H27A27,27,0,0,0,0,27Z"/><rect class="cls-1" x="88" width="18" height="122"/><path class="cls-1" d="M302.49,34.08a35.9,35.9,0,0,0-27,12.24,30.7,30.7,0,0,0-45-4.43V36h-18v86.08h18v-52a18,18,0,1,1,36,0v52h18v-52a18,18,0,1,1,36,0v52h18v-52A36,36,0,0,0,302.49,34.08Z"/></g></g></svg>
+    </div>
+    <a data-href="/apps/public/index" style="width: 143px" data="app">应用</a>
+    <a data-href="/games/public/index" style="width: 143px" data="game">游戏</a>
+    <a data-href="http://theme.flyme.cn/themes/public/index" style="width: 143px" data="theme">主题</a>
+    <!-- <a data-href="/apps/console/personal" data="owner">我的</a> -->
+    <div class="search_bg">
+        <input type="text" id="flymeSearch" class="search" maxlength="100" value="">
+        <span class="default_val none">请输入应用/游戏的名称</span>
+    </div>
+    <div class="search_btn" id="flymeSearchBtn"></div>
+</div>
+<div class="content">
+    <div class="content_nav">
+    </div>
+</div>
+</div>
+<script language="javascript">
+    function login() {
+	    if (window.location.href.indexOf("app.flyme.cn")>=0) {
+            window.location.href = 'https://member.meizu.com/login.jsp?service=app&sid=unionlogin&appuri=http://app.flyme.cn/login&useruri='+ encodeURIComponent(window.location.href.replace(/keyword=.*/, 'keyword='));
+        } else {
+        	window.location.href = 'https://member.meizu.com/login.jsp?service=app&sid=unionlogin&appuri=http://app.meizu.com/login&useruri='+ encodeURIComponent(window.location.href.replace(/keyword=.*/, 'keyword='));
+        }
+    }
+
+    function logout() {
+	    /* if (window.location.href.indexOf("app.flyme.cn")>=0) {
+	    	window.location.href = 'http://app.flyme.cn/logout?useruri='+encodeURIComponent(window.location.href);
+
+        } else {
+	    	window.location.href = 'http://app.meizu.com/logout?useruri='+encodeURIComponent(window.location.href);
+        } */
+	    var _value='https://member.meizu.com/logout.jsp?useruri=' + encodeURIComponent(window.location.href);
+	    window.location.href = _value;
+    }
+
+    function register() {
+	    if (window.location.href.indexOf("app.flyme.cn")>=0) {
+	    	window.location.href = 'https://member.meizu.com/register?service=app&appuri=http://app.flyme.cn/login&useruri='+encodeURIComponent(window.location.href);
+	    } else {
+	    	window.location.href = 'https://member.meizu.com/register?service=app&appuri=http://app.meizu.com/login&useruri='+encodeURIComponent(window.location.href);
+	    }
+    }
+</script>
+<div class="tip_msg none"></div>
+<script src="https://i3.mzres.com/resources/portal/common/js/common.js"></script>
+<script src="https://i3.mzres.com/resources/portal/common/js/jquery.jsonSuggestFlyme.js"></script>
+<script src="https://i3.mzres.com/resources/portal/common/js/public.js?v=20220913"></script>
+<head>
+    <title>Flyme 软件商店-&#x4e0d;&#x80cc;&#x5355;&#x8bcd;-&#x9ad8;&#x6548;&#x5907;&#x8003;</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link href="https://i3.mzres.com/resources/portal/app/css/app.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<div id="wrapper">
+<input type="hidden" id="count" data-cname="学习教育" data-cid="338" data-name="&#x4e0d;&#x80cc;&#x5355;&#x8bcd;-&#x9ad8;&#x6548;&#x5907;&#x8003;" data-appId="0"/>
+<div class="content_main">
+    <div id="theme_content" class="clearfix color_line1">
+        <div class="left inside_left">
+            <div class="app_download download_container">
+                <img class="app_img" src="http://i5.res.meizu.com/fileserver/app_icon/595/e741d9c05287474395d22c9a34faee29.png" />
+                <ul>
+                    <li>
+                        <span class="app_title">魅友评分：</span>
+                        <div class="app_content"><div class="star_bg" data-num="49"></div></div>
+                    </li>
+                    <li>
+                        <span class="app_title">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;别：</span>
+                        <div class="app_content"><a href="/apps/public/category/338/all/feed/index/0/18" class="current" title="学习教育">学习教育</a></div>
+                    </li>
+                    <li>
+                        <span class="app_title">开&nbsp;发&nbsp;者&nbsp;：</span>
+                        <div class="app_content ellipsis">
+                        	<a href="/apps/public/developers/1222070/apps?publisher_name=&#x5317;&#x4eac;&#x827e;&#x65af;&#x9177;&#x79d1;&#x6280;&#x6709;&#x9650;&#x516c;&#x53f8;&cate_type=app" class="current" title="&#x5317;&#x4eac;&#x827e;&#x65af;&#x9177;&#x79d1;&#x6280;&#x6709;&#x9650;&#x516c;&#x53f8;">&#x5317;&#x4eac;&#x827e;&#x65af;&#x9177;&#x79d1;&#x6280;&#x6709;&#x9650;&#x516c;&#x53f8;</a>
+                        </div>
+
+                    </li>
+                    <li>
+                        <span class="app_title">版&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;本：</span>
+                        <div class="app_content ellipsis noPointer">5.11.7</div>
+                    </li>
+                    <li>
+                        <span class="app_title">下&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;载：</span>
+                        <div class="app_content"><span>4787235</span></div>
+                    </li>
+                    <li>
+                        <span class="app_title">大&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;小：</span>
+                        <div class="app_content">
+                            110.86MB
+                        </div>
+                    </li>
+                    <li>
+                        <span class="app_title">更新时间：</span>
+                        <div class="app_content">2026-10-15</div>
+                    </li>
+                    <!--<li>
+                        <span class="app_title">系统版本：</span>
+                        <div class="app_content">
+                        </div>
+                    </li>-->
+                    <!-- <li>
+                        <div class="price_bg downloading" data-appId="3210D1AE0E0AAEE48ACABFD6E5A4F2D5" data-catId="1" data-detail="1">
+                            <a href="#" class="price apk_download">下载</a>
+                        </div>
+                    </li> -->
+                </ul>
+            </div>
+            
+            
+        </div>
+        <div class="right inside_right">
+            <div class="app_detail">
+                <div class="detail_top">
+                    <h3>&#x4e0d;&#x80cc;&#x5355;&#x8bcd;-&#x9ad8;&#x6548;&#x5907;&#x8003;</h3>
+                    <div class="share_right">
+                        <span class="shareWord">分享至</span>
+                        <a rel="nofollow" href="#" onclick="util.sendToSiNa();"><span class="sina"></span></a>
+                        <a href="#" onclick="util.sendToTenCent();" ><span class="tencent"></span></a>
+                </div>
+                <div class="detail_content">
+                
+                    <span class="detail_title_style clearfix">应用简介：</span>
+                    <div class="description_detail">
+                        &#x4e0d;&#x80cc;&#x5355;&#x8bcd;&#x662f;&#x4e00;&#x6b3e;&#x771f;&#x5b9e;&#x8bed;&#x5883;&#x5b66;&#x5355;&#x8bcd;&#x795e;&#x5668;&#x3002;<br/><br/>&#x8fd9;&#x91cc;&#x6709;&#x4e13;&#x4e3a;&#x82f1;&#x8bed;&#x8003;&#x8bd5;&#x5b9a;&#x5236;&#x7684;&#x4e00;&#x7ad9;&#x5f0f;&#x89e3;&#x51b3;&#x65b9;&#x6848;&#x3002;&#x5728;&#x6d77;&#x91cf;&#x6709;&#x58f0;&#x4f8b;&#x53e5;&#x521b;&#x9020;&#x7684;&#x771f;&#x5b9e;&#x8bed;&#x5883;&#x4e2d;&#xff0c;&#x8bcd;&#x4e49;&#x548c;&#x7528;&#x6cd5;&#x88ab;&#x7cbe;&#x51c6;&#x5448;&#x73b0;&#xff0c;&#x667a;&#x80fd;&#x8bb0;&#x5fc6;&#x7b97;&#x6cd5;&#xff0c;&#x8ba9;&#x4f60;&#x771f;&#x6b63;&#x79d1;&#x5b66;&#x9ad8;&#x6548;&#x5730;&#x638c;&#x63e1;&#x5355;&#x8bcd;&#x3002;<br/><br/>&#x300c; &#x9ad8;&#x6548;&#x5237;&#x8bcd;&#x5907;&#x8003;&#xff0c;&#x6211;&#x6709; 4 &#x5927;&#x6cd5;&#x5b9d; &#x300d;<br/>- &#x8003;&#x4e49;&#xff1a;&#x771f;&#x9898;&#x8003;&#x4e49;&#x52a0;&#x7c97;&#x6807;&#x6ce8;&#xff0c;&#x8bb0;&#x5fc6;&#x6709;&#x91cd;&#x70b9;<br/>- &#x8003;&#x70b9;&#xff1a;&#x5355;&#x8bcd; &amp; &#x771f;&#x9898;&#x8bcd;&#x7ec4;&#x914d;&#x5957;&#x5b66;&#xff0c;&#x4e00;&#x6b21;&#x5b66;&#x4e60;&#xff0c;&#x53cc;&#x91cd;&#x56de;&#x62a5;<br/>- &#x8003;&#x9891;&#xff1a;&#x5355;&#x8bcd;&#x8003;&#x9891;&#x4e00;&#x770b;&#x4fbf;&#x77e5;&#xff0c;&#x5408;&#x7406;&#x5206;&#x914d;&#x5b66;&#x4e60;&#x65f6;&#x95f4;<br/>- &#x8003;&#x9898;&#xff1a;&#x968f;&#x65f6;&#x67e5;&#x770b;&#x771f;&#x9898;&#x4f8b;&#x53e5;&#xff0c;&#x5b9e;&#x6218;&#x6f14;&#x7ec3;&#x8003;&#x8bd5;&#x4e0d;&#x614c;<br/><br/>&#x300c; &#x771f;&#x5b9e;&#x8bed;&#x5883;&#x8bb0;&#x5355;&#x8bcd; &#x300d;<br/>- 150&#x4e07;&#x2b; &#x6761;&#x539f;&#x58f0;&#x4f8b;&#x53e5;&#xff0c;&#x51fa;&#x81ea;&#x4f60;&#x559c;&#x6b22;&#x7684;&#x5267;&#x96c6;&#x3001;&#x7535;&#x5f71;&#x7b49;&#x771f;&#x5b9e;&#x8bed;&#x5883;<br/>- &#x5730;&#x9053;&#x8bcd;&#x7ec4;&#x642d;&#x914d;&#xff0c;&#x89e3;&#x8bfb;&#x8bcd;&#x4e49;&#x3001;&#x4f53;&#x73b0;&#x7528;&#x6cd5;&#xff0c;&#x6253;&#x9020;&ldquo;&#x6700;&#x5c0f;&#x8bed;&#x5883;&rdquo;<br/><br/>&#x300c; &#x4e30;&#x5bcc;&#x7684;&#x5b66;&#x4e60;&#x5185;&#x5bb9; &#x300d;<br/>- 2000&#x2b;&#x8bcd;&#x6839;&#x8bcd;&#x7f00;&#xff0c;&#x8986;&#x76d6;&#x8fd1; 2 &#x4e07;&#x8bcd;&#x6761;&#xff0c;&#x8ffd;&#x6839;&#x6eaf;&#x6e90;&#x6df1;&#x5165;&#x89e3;&#x6790;<br/>- 5500&#x2b;&#x6d3e;&#x751f;&#x8bcd;&#x6c47;&#x6811;&#xff0c;&#x4ee5;&#x719f;&#x8bcd;&#x8bb0;&#x751f;&#x8bcd;&#xff0c;&#x52a0;&#x6df1;&#x7406;&#x89e3;&#x9ad8;&#x6548;&#x8bb0;&#x5fc6;<br/>- &#x67ef;&#x6797;&#x65af;&#x53cc;&#x89e3;&#x8bcd;&#x5178;&#xff0c;&#x8c46;&#x74e3;&#x8bc4;&#x5206; 9.7 &#x7684;&#x5b66;&#x4e60;&#x578b;&#x8bcd;&#x5178;<br/><br/>&#x300c; &#x5168;&#x9762;&#x7684;&#x5355;&#x8bcd;&#x8bcd;&#x4e66;&#x5e93; &#x300d;<br/>- &#x5c0f;&#x5b66;&#x2f;&#x521d;&#x4e2d;&#x2f;&#x9ad8;&#x4e2d;&#x2f;&#x56db;&#x7ea7;&#x2f;&#x516d;&#x7ea7;&#x2f;&#x8003;&#x7814;&#x2f;&#x6258;&#x798f;&#x2f;&#x96c5;&#x601d;&#x2f;&#x4e13;&#x56db;&#x2f;&#x4e13;&#x516b;&#x2f;&#x4e13;&#x5347;&#x672c;&#x2f;&#x65e5;&#x5e38;&#x751f;&#x6d3b;&#x2f;&#x5546;&#x4e1a;&#x6cd5;&#x5f8b;&#x2f;&#x4eba;&#x6587;&#x793e;&#x79d1;&#x2f;&#x6717;&#x6587;&#x2f;COCA&#x2f;BEC&#x2f;GRE&#x2f;SAT&#x2f;GMAT&#x2f;MBA&#x2f;&#x6258;&#x4e1a;&#x7b49;&#x6743;&#x5a01;&#x8bcd;&#x4e66;&#x4efb;&#x4f60;&#x6311;&#x9009;<br/><br/>&#x300c; &#x5de9;&#x56fa;&#x8bb0;&#x5fc6;&#x6709;&#x7edd;&#x62db; &#x300d;<br/>- &#x72ec;&#x7279;&#x62fc;&#x5199;&#x6d4b;&#x8bd5;&#xff0c;&#x5b66;&#x5b8c;&#x4e00;&#x7ec4;&#x52a8;&#x624b;&#x62fc;&#x5199;&#x5f3a;&#x5316;&#x8bb0;&#x5fc6;<br/>- &#x8bb0;&#x5fc6;&#x7b97;&#x6cd5;&#x667a;&#x80fd;&#x5b89;&#x6392;&#x5b66;&#x4e60;&#xff0c;&#x5728;&#x9057;&#x5fd8;&#x4e34;&#x754c;&#x70b9;&#x63d0;&#x9192;&#x590d;&#x4e60;<br/>- &#x5355;&#x8bcd;&#x968f;&#x8eab;&#x542c;&#x8bb0;&#xff0c;&#x9ad8;&#x6548;&#x5229;&#x7528;&#x788e;&#x7247;&#x65f6;&#x95f4;<br/><br/>&#x300c; &#x62ef;&#x6551;&#x5b66;&#x4e60;&#x62d6;&#x5ef6;&#x75c7; &#x300d;<br/>- &#x7b7e;&#x5230;&#x5b66;&#x4e60;&#x9001;&#x5927;&#x628a;&#x9177;&#x5e01;&#xff0c;&#x80cc;&#x5355;&#x8bcd;&#x4e0d;&#x72af;&#x62d6;&#x5ef6;&#x75c7;<br/>- &#x4e0d;&#x5b9a;&#x671f;&#x7ec4;&#x961f;&#x6253;&#x5361;&#x6d3b;&#x52a8;&#xff0c;&#x5145;&#x5206;&#x8c03;&#x52a8;&#x5b66;&#x4e60;&#x79ef;&#x6781;&#x6027;<br/><br/>&#x300c; &#x6211;&#x4eec;&#x8fd8;&#x6709;&#x4ec0;&#x4e48;&#xff1f; &#x300d;<br/>- UI &#x7b80;&#x6d01; &#xff0c;&#x64cd;&#x4f5c;&#x7b80;&#x6613;&#xff0c;&#x4e13;&#x6ce8;&#x5b66;&#x4e60;&#xff0c;&#x4e0d;&#x53d7;&#x6253;&#x6270;<br/>- &#x5ba2;&#x4e32;&#x58c1;&#x7eb8;App&#xff0c;&#x6bcf;&#x6b21;&#x5b66;&#x4e60;&#x90fd;&#x6709;&#x60ca;&#x559c;<br/>- &#x4e3b;&#x9898;&#x660e;&#x4eae;&#x2f;&#x6df1;&#x9083;&#x2f;&#x6781;&#x591c;&#x4e09;&#x79cd;&#x53ef;&#x9009;&#xff0c;&#x652f;&#x6301;&#x8ddf;&#x968f;&#x65e5;&#x51fa;&#x65e5;&#x843d;&#x5207;&#x6362;<br/><br/>&#x300c; &#x4e0d;&#x80cc;&#x6210;&#x7ee9;&#x5355; &#x300d;<br/>- 50000&#x2b;&#x4e94;&#x661f;&#x597d;&#x8bc4;<br/>- App Store &#x9996;&#x9875;&#x901a;&#x680f;&#x63a8;&#x8350;<br/>- &#x91d1;&#x7c73;&#x5956;<br/>- &#x81f3;&#x7f8e;&#x5956;<br/>- &#x5c0f;&#x7ea2;&#x82b1;&#x5956;<br/>- &#x8bbe;&#x8ba1;&#x5956;<br/><br/>&#x300c; &#x4e0d;&#x80cc;&#x6210;&#x957f;&#x5173;&#x7231;&#x70ed;&#x7ebf; &#x300d;<br/>- &#x5fae;&#x4fe1;&#x516c;&#x4f17;&#x53f7;&#xff1a;&#x641c;&#x7d22;&#x300c;&#x4e0d;&#x80cc;&#x5355;&#x8bcd;App&#x300d;<br/>- &#x5b98;&#x65b9; QQ &#x4ea4;&#x6d41;&#x7fa4;&#xff1a;758465732<br/>- &#x65b0;&#x6d6a;&#x5fae;&#x535a;&#xff1a;&#x40;&#x4e0d;&#x80cc;&#x5355;&#x8bcd;App<br/>- &#x4e0d;&#x80cc;&#x5355;&#x8bcd;&#x5e94;&#x7528;&#x5185;&#xff1a;&#x8bbe;&#x7f6e;-&#x5e2e;&#x52a9;&#x4e2d;&#x5fc3;
+                    </div>
+                </div>
+                <div class="detail_content clearfix">
+                    <span class="detail_title_style">版本描述：</span>
+                    <div class="description_detail">
+                        &#x4fee;&#x590d;&#x6c89;&#x6d78;&#x5237;&#x8bcd;&#x90e8;&#x5206;&#x4f8b;&#x53e5;&#x663e;&#x793a;&#x4e0d;&#x5168;&#x7684;&#x95ee;&#x9898;
+                    </div>
+                </div>
+            </div>
+            <div class="screenShots clearfix">
+                <span class="detail_title_style">应用截图：</span>
+                <div id="scrollImage" class="scrollImage">
+                    <div id="left_button" class="left_button">
+                        <a href="javascript:void(0);"><img class="app_img" src="https://i3.mzres.com/resources/portal/app/images/left_button.gif" /></a>
+                    </div>
+                    <div class="center-img">
+                    	<ul class="piclist mainlist" id="imagesList">
+                            <li><a href="http://i5.res.meizu.com/fileserver/app_ad_snap/690/4af991f325fe4946a3dad04e9b3b7479.jpg" class="detail_img"><img class="screenImg1" src="http://i5.res.meizu.com/fileserver/app_ad_snap/690/4af991f325fe4946a3dad04e9b3b7479.jpg" /></a></li>
+                            <li><a href="http://i5.res.meizu.com/fileserver/app_ad_snap/690/54c54728f80b449e88c6673ee1c07f80.jpg" class="detail_img"><img class="screenImg1" src="http://i5.res.meizu.com/fileserver/app_ad_snap/690/54c54728f80b449e88c6673ee1c07f80.jpg" /></a></li>
+                            <li><a href="http://i5.res.meizu.com/fileserver/app_ad_snap/690/aea963574b934758a519947f55376921.jpg" class="detail_img"><img class="screenImg1" src="http://i5.res.meizu.com/fileserver/app_ad_snap/690/aea963574b934758a519947f55376921.jpg" /></a></li>
+                            <li><a href="http://i5.res.meizu.com/fileserver/app_ad_snap/690/ed095d97b0134115931dbd19ae854c9b.jpg" class="detail_img"><img class="screenImg1" src="http://i5.res.meizu.com/fileserver/app_ad_snap/690/ed095d97b0134115931dbd19ae854c9b.jpg" /></a></li>
+                            <li><a href="http://i5.res.meizu.com/fileserver/app_ad_snap/690/0d38f0394d1243c9a6b8966dc4abec18.jpg" class="detail_img"><img class="screenImg1" src="http://i5.res.meizu.com/fileserver/app_ad_snap/690/0d38f0394d1243c9a6b8966dc4abec18.jpg" /></a></li>
+                        </ul>
+                        <ul class="piclist swaplist"></ul>
+                    </div>
+                    <div id="right_button" class="right-button">
+                        <a href="javascript:void(0);"><img class="app_img" src="https://i3.mzres.com/resources/portal/app/images/right_button.gif" /></a>
+                    </div>
+                </div>
+            </div>
+            <div class="comments clearfix">
+            	<span class="detail_title_style"></span>
+                <div id="eva">
+                </div>
+            </div>
+            <div class="bottom_page clearfix view_page">
+                <div>
+                <div id="pager" class="pager">
+                </div></div>
+            </div>
+        </div>
+    </div>
+</div>
+    </div>
+<div class="alert_bg none"></div>
+<div class="alert_box none" id="alert_box">
+    <a class="alert_close" id="closeDownloadBtn"></a>
+    <div class="alert_content" id="alert_content">
+    </div>
+    
+    <div style="text-align:center;color:red;height: 20px;margin-bottom: 5px;">
+        <span id="returnMessage">&nbsp;</span>  
+    </div>
+    <div class="liveBtn" id="alertBtn">
+        <input type="hidden" id="downloadUrl" value=""/>
+        <span id="downloadButton">下载</span>
+    </div>
+</div>
+<script id="infoDialog" type="text/x-jquery-tmpl" 12>
+    <div class="alert_content">
+        <div class="left">
+            <img src="{{= icon}}"/>
+            <div class="star_bg" id="starNum" data-num="{{= star}}"></div>
+        </div>
+        <div class="app_info app">
+            <span class="ellipsis title" title="{{= appName}}">{{= appName}}</span>
+            <ul>
+                <li>开发者：<span class="ellipsis" title="{{= publisher}}">{{= publisher}}</span></li>
+                <li><span>免费下载</span></li>
+                <li>系统版本：<span class="ellipsis" title="{{= mzos}}">{{= mzos}}</span></li>
+            </ul>
+        </div>
+        <div class="line_1"></div>
+
+        <div class="option_cont">昵称：<span>{{= nickName}}</span>
+            <ul>
+                <li class="checked" downloadTarget="device">安装至手机
+                    <select id="deviceSelector" style="width: 180px;height: 24px;margin-left: 15px;">
+
+                    </select>
+                </li>
+
+                <span>手机需要连接网络，并且与网页端登录相同的Flyme账号</span>
+                <li downloadTarget="host">下载至电脑
+
+                </li>
+            </ul>
+        </div>
+    </div>
+</script>
+<script id="infoDialogTheme" type="text/x-jquery-tmpl">
+    <div class="alert_content">
+        <div class="left">
+            <img src="{{= icon}}"/>
+            <div class="star_bg" id="starNum" data-num="{{= star}}"></div>
+        </div>
+        <div class="app_info">
+            <span class="ellipsis title" title="{{= appName}}">{{= appName}}</span>
+            <ul>
+                <li>开发者：<span class="ellipsis" title="{{= publisher}}">{{= publisher}}</span></li>
+                <li><span>免费下载</span></li>
+                <li>系统版本：<span class="ellipsis" title="{{= mzos}}">{{= mzos}}</span></li>
+            </ul>
+        </div>
+        <div class="line_1"></div>
+
+        <div class="option_cont">昵称：<span>{{= nickName}}</span>
+            <ul>
+                <li class="checked" downloadTarget="device">安装至手机
+                    <select id="deviceSelector" style="width: 180px;height: 24px;margin-left: 15px;">
+                    </select>
+                </li>
+
+                <span>手机需要连接网络，并且与网页端登录相同的Flyme账号</span>
+                <li downloadTarget="host">下载至电脑
+                    <select id="flymeSelector" style="width: 100px;height: 24px;margin-left: 15px;">
+                    </select>
+                    <select id="screeSizeSelector" style="width: 100px;height: 24px;margin-left: 15px;">
+                    </select>
+                </li>
+            </ul>
+        </div>
+    </div>
+</script>
+<script id="infoDialogThemeNoLogin" type="text/x-jquery-tmpl">
+    <div class="alert_content">
+        <div class="left">
+            <img src="{{= icon}}"/>
+            <div class="star_bg" id="starNum" data-num="{{= star}}"></div>
+        </div>
+        <div class="app_info">
+            <span class="ellipsis title" title="{{= appName}}">{{= appName}}</span>
+            <ul>
+                <li>开发者：<span class="ellipsis" title="{{= publisher}}">{{= publisher}}</span></li>
+                <li><span>免费下载</span></li>
+                <li>系统版本：<span class="ellipsis" title="{{= mzos}}">{{= mzos}}</span></li>
+            </ul>
+        </div>
+        <div class="line_1"></div>
+        <div class="option_cont">
+            <ul>
+                <li downloadTarget="host" class="checked">下载至电脑
+                    <select id="flymeSelector" style="width: 100px;height: 24px;margin-left: 15px;">
+                    </select>
+                    <select id="screeSizeSelector" style="width: 100px;height: 24px;margin-left: 15px;">
+                    </select>
+                </li>
+            </ul>
+        </div>
+    </div>
+</script>
+<div id='flymeFooter' class='footerWrap'>
+    <div class='footerInner'>
+        <div class='footer-layer1'>
+            <!-- <div class='footer-innerLink'> -->
+            <!--<a href="http://www.meizu.com/about.html" target="_blank" title="售后服务政策">售后服务政策</a>
+                <img class="foot-line" src="https://https-res.meizu.com/resources/common/images/default/space.gif">-->
+            <a href="http://www.meizu.com/about.html" target="_blank" title="关于魅族">关于魅族</a>
+            <img class="foot-line" src="https://https-res.meizu.com/resources/common/images/default/space.gif">
+            <a href="http://hr.meizu.com" target="_blank" title="工作机会">工作机会</a>
+            <img class="foot-line" src="https://https-res.meizu.com/resources/common/images/default/space.gif">
+            <a href="http://www.meizu.com/contact.html" target="_blank" title="联系我们">联系我们</a>
+            <img class="foot-line" src="https://https-res.meizu.com/resources/common/images/default/space.gif">
+            <!-- <img class="foot-line" src="https://https-res.meizu.com/resources/common/images/default/space.gif"> -->
+            <!-- <a href="http://www.12377.cn" target="_blank" title="中国互联网举报中心">中国互联网举报中心</a> -->
+            <!--<img class="foot-line" src="https://https-res.meizu.com/resources/common/images/default/space.gif">
+                <a href="#" id="globalName" class="footer-language" title="简体中文">简体中文&nbsp;&nbsp;&nbsp;</a>-->
+            <!-- </div> -->
+            <!-- <div class='footer-service'> -->
+            <!-- <span class='service-label'>违法和不良信息举报电话</span>
+                <span class='service-num'>400-788-3333</span> -->
+            <a id='service-online' class='service-online' title="在线客服">在线客服</a>
+            <!-- </div> -->
+            <div class='footer-outerLink'>
+                <a class='footer-sinaMblog' href="http://weibo.com/meizuflyme" target="_blank"><i
+                        class='i_icon'></i></a>
+                <!-- a class='footer-tencentMblog' href="http://t.qq.com/mx_flyme" target="_blank"><i class='i_icon'></i></a>  -->
+                <a id='footer-weChat' class='footer-weChat' target="_blank"><i class='i_icon'></i></a>
+                <!--<a class='footer-qzone' href="http://user.qzone.qq.com/2762957059" target="_blank"><i class='i_icon'></i></a>-->
+            </div>
+            <div id="globalContainer" class="footer-language_menu">
+                <a href="http://www.meizu.cn" title="简体中文" class="checked">简体中文</a>
+                <a href="http://www.meizu.com.hk" title="繁體中文" class="ClobalItem">繁體中文</a>
+                <a href="http://en.meizu.com" title="English" class="ClobalItem">English</a>
+                <a href="http://ru.meizu.com" title="Русский" class="ClobalItem">Русский</a>
+                <a href="http://il.meizu.com" title="עברית" class="ClobalItem" style="border-width:0px;">עברית</a>
+            </div>
+        </div>
+        <div class='clear'></div>
+        <div id='flymeCopyright' class="copyrightWrap"></div>
+        <div id="flymeReport" class="reportWrap">
+            <a href="https://white.anva.org.cn/" target="_blank" class="anva-icon"></a>
+            <div class="jubao">
+                <a href="http://www.12377.cn" target="_blank" class="link1">
+                    <img width="40" height="40" src="https://i3.mzres.com/resources/portal/common/images/home_b_1.gif"
+                        alt="不良信息举报中心">
+                </a>
+                <a href="http://www.12377.cn" target="_blank" class="link2">
+                    不良信息<br>举报中心
+                </a>
+            </div>
+            <span class='service-label'>互联网违法和不良信息举报电话</span>
+            <span class='service-num'>400-788-3333</span>
+            <span>（含互联网算法推荐举报）</span>
+        </div>
+    </div>
+</div>
+<div id="wechatPic"></div>
+
+<script src="https://r2.mzres.com/business/oms/site-footer.js" data-container=".copyrightWrap"></script></div>
+</body>
+<script src="https://i3.mzres.com/resources/portal/common/js/developer.js"></script>
+<script src="https://i3.mzres.com/resources/portal/app/js/app-view.js"></script>
+<script src="https://i3.mzres.com/resources/portal/common/js/jquery.imgbox.pack.js"></script>

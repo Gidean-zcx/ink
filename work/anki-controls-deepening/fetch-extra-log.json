@@ -1,0 +1,35 @@
+[
+  {
+    "name": "release-23.12.html",
+    "url": "https://github.com/ankitects/anki/releases/tag/23.12",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "final_url": "https://github.com/ankitects/anki/releases/tag/23.12",
+    "content_type": "text/html; charset=utf-8",
+    "raw_work_path": "work/anki-controls-deepening/release-23.12.html",
+    "raw_sha256": "87a9ddeebaa886ffb3625971bfa6a89118ff47251b9bf33406e27a558f39465e",
+    "bytes": 246783
+  },
+  {
+    "name": "scheduler-2021.md",
+    "url": "https://docs.ankiweb.net/faqs/the-2021-scheduler.md",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "final_url": "https://docs.ankiweb.net/faqs/the-2021-scheduler.md",
+    "content_type": "text/markdown; charset=utf-8",
+    "raw_work_path": "work/anki-controls-deepening/scheduler-2021.md",
+    "raw_sha256": "58ed5992ed17d189c1ab01e4161bb7d6304be9c3650d9002a122dd4aaa9f0abb",
+    "bytes": 7459
+  },
+  {
+    "name": "issue-4228.html",
+    "url": "https://github.com/ankitects/anki/issues/4228",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "final_url": "https://github.com/ankitects/anki/issues/4228",
+    "content_type": "text/html; charset=utf-8",
+    "raw_work_path": "work/anki-controls-deepening/issue-4228.html",
+    "raw_sha256": "98cc4997904c84fe11c66b53d80cd7471dcbe7eb5b6051a198598b40bf629470",
+    "bytes": 281231
+  }
+]

@@ -1,0 +1,22 @@
+{
+  "Connection": "keep-alive",
+  "Content-Length": "30868",
+  "via": "1.1 varnish, 1.1 varnish, 1.1 varnish",
+  "content-type": "text/html; charset=utf-8",
+  "server": "openresty",
+  "status": "200 OK",
+  "content-encoding": "gzip",
+  "etag": "W/\"1ca22-yoHKNyc/hk7HWObwK8gYmSH5p4c\"",
+  "cache-control": "public, max-age=0",
+  "Accept-Ranges": "bytes",
+  "Age": "37838",
+  "Date": "Tue, 27 Oct 2026 06:20:28 GMT",
+  "X-Served-By": "cache-ams-eham8680048-AMS, cache-ams-eham8680048-AMS, cache-ams-eham8680034-AMS, cache-nrt-rjtt7900074-NRT",
+  "X-Cache": "MISS, HIT, MISS",
+  "X-Cache-Hits": "0, 21, 0",
+  "X-Timer": "S1793082028.123973,VS0,VE232",
+  "Vary": "Cookie, Accept-Encoding",
+  "x-request-id": "375a3a4f-6cb8-4696-a429-b59e22338bb3",
+  "Ghost-Fastly": "true;production",
+  "Alt-Svc": "clear"
+}

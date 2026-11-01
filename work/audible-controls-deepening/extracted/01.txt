@@ -1,0 +1,228 @@
+Listening | Audible Help (https://help.audible.com/s/listening?language=en_US)
+citeturn757view0 [wordlim: 200] Crawled: today; Content type: text/html; Source: open({"ref_id":"https://help.audible.com/s/listening?language=en_US","lineno":null}); Total lines: 226
+L0: Loading
+L1: 
+L2: Sorry to interrupt
+L3: 
+L4: This page has an error. You might just need to refresh it. [Cannot read properties of undefined (reading 'bind')]
+L5: 
+L6: 【0†Refresh】
+L7: 
+L8: Skip to Main Content
+L9: 
+L10: # Listening
+L11: 
+L12: Explore essential tips for listening across all devices, making the most out of your personal Library, using the player, and making your opinion about specific titles known.
+L13: ## Ways to listen
+L14: 
+L15:   * 【1†Listen in the app】
+L16: 
+L17: 173060 Views•Oct 13, 2026•Knowledge
+L18: 
+L19:   * 【2†Learn about immersion reading】
+L20: 
+L21: 5168 Views•Oct 12, 2026•Knowledge
+L22: 
+L23:   * 【3†Listen on Amazon Alexa Tablets】
+L24: 
+L25: 670 Views•Oct 8, 2026•Knowledge
+L26: 
+L27:   * 【4†Listen with AudibleSync】
+L28: 
+L29: 497957 Views•Oct 1, 2026•Knowledge
+L30: 
+L31:   * 【5†Learn about Read & Listen】
+L32: 
+L33: 638369 Views•Oct 1, 2026•Knowledge
+L34: 
+L35:   * 【6†Listen on your macOS device】
+L36: 
+L37: 161899 Views•Oct 1, 2026•Knowledge
+L38: 
+L39:   * 【7†Listen with Sonos】
+L40: 
+L41: 21672 Views•Sep 30, 2026•Knowledge
+L42:   * 【8†Listen with Alexa】
+L43: 
+L44: 333692 Views•Sep 14, 2026•Knowledge
+L45: 
+L46:   * 【9†Audible App Download Discontinued on Windows 11】
+L47: 
+L48: 127001 Views•Sep 3, 2026•Knowledge
+L49: 
+L50:   * 【10†Listen with Apple Watch】
+L51: 
+L52: 130323 Views•Sep 3, 2026•Knowledge
+L53: 
+L54: No articles found
+L55: 
+L56: Loading
+L57: 
+L58: Load more
+L59: ## Library
+L60: 
+L61:   * 【11†Manage your Library】
+L62: 
+L63: 659573 Views•Sep 9, 2026•Knowledge
+L64: 
+L65:   * 【12†Manage your Lists】
+L66: 
+L67: 66837 Views•Sep 9, 2026•Knowledge
+L68: 
+L69:   * 【13†Manage your Wish List】
+L70: 
+L71: 39626 Views•Sep 9, 2026•Knowledge
+L72: 
+L73:   * 【14†View accompanying PDF】
+L74: 
+L75: 353576 Views•Sep 3, 2026•Knowledge
+L76: 
+L77:   * 【15†Use Page Sync】
+L78: 
+L79: 8263 Views•Sep 3, 2026•Knowledge
+L80: 
+L81:   * 【16†View your Goodreads Want to Read shelf in the Audible app】
+L82: 
+L83: 13220 Views•Sep 3, 2026•Knowledge
+L84: 
+L85:   * 【17†Manage Family Library Sharing】
+L86: 1081443 Views•Sep 3, 2026•Knowledge
+L87: 
+L88:   * 【18†Download titles】
+L89: 
+L90: 443150 Views•Sep 3, 2026•Knowledge
+L91: 
+L92:   * 【19†Discover new audiobooks with Maven】
+L93: 
+L94: 5478 Views•Sep 3, 2026•Knowledge
+L95: 
+L96: No articles found
+L97: 
+L98: Loading
+L99: ## Player
+L100: 
+L101:   * 【20†Manage clips & notes】
+L102: 
+L103: 76434 Views•Sep 9, 2026•Knowledge
+L104: 
+L105:   * 【21†View listening log】
+L106: 
+L107: 146257 Views•Sep 3, 2026•Knowledge
+L108: 
+L109:   * 【14†View accompanying PDF】
+L110: 
+L111: 353576 Views•Sep 3, 2026•Knowledge
+L112: 
+L113:   * 【22†Use timer】
+L114: 
+L115: 69500 Views•Sep 3, 2026•Knowledge
+L116: 
+L117:   * 【23†Share a title】
+L118: 
+L119: 271259 Views•Sep 3, 2026•Knowledge
+L120: 
+L121:   * 【24†Set narration speed】
+L122: 
+L123: 54832 Views•Sep 3, 2026•Knowledge
+L124: 
+L125:   * 【25†Manage your auto-play settings】
+L126: 
+L127: 33909 Views•Sep 3, 2026•Knowledge
+L128: 
+L129:   * 【26†Manage Listening reminders】
+L130: 12544 Views•Sep 3, 2026•Knowledge
+L131: 
+L132:   * 【27†Learn about Audible listening challenges】
+L133: 
+L134: 5333 Views•Sep 3, 2026•Knowledge
+L135: 
+L136:   * 【28†Browse chapters and episodes】
+L137: 
+L138: 57776 Views•Sep 3, 2026•Knowledge
+L139: 
+L140: No articles found
+L141: 
+L142: Loading
+L143: ## Reviews & social sharing
+L144: 
+L145:   * 【23†Share a title】
+L146: 
+L147: 271259 Views•Sep 3, 2026•Knowledge
+L148: 
+L149:   * 【29†Manage your reviews】
+L150: 
+L151: 47217 Views•Sep 3, 2026•Knowledge
+L152: 
+L153: No articles found
+L154: 
+L155: Loading
+L156: ## Profiles
+L157: 
+L158:   * 【30†Create a Kids Profile】
+L159: 
+L160: 190476 Views•Sep 9, 2026•Knowledge
+L161: 
+L162:   * 【31†Delete a Kids Profile】
+L163: 
+L164: 10935 Views•Sep 9, 2026•Knowledge
+L165: 
+L166:   * 【32†Listen with a Kids Profile】
+L167: 
+L168: 86743 Views•Sep 9, 2026•Knowledge
+L169: 
+L170:   * 【33†Share with a Kids Profile】
+L171: 
+L172: 103834 Views•Sep 9, 2026•Knowledge
+L173: 
+L174:   * 【34†View Your Listening Stats】
+L175: 
+L176: 9754 Views•May 13, 2026•Knowledge
+L177: 
+L178:   * 【35†List is only partly shared】
+L179: 
+L180: 11630 Views•Jun 18, 2025•Knowledge
+L181: 
+L182: No articles found
+L183: 
+L184: Loading
+L185: ## Need more help?
+L186: 
+L187: 【36†Contact us†www.audible.com】
+L188: 
+L189: 
+L190: 
+L191: How satisfied were you with our Help Center today?
+L192: 
+L193: 
+L194: 
+L195: Worst
+L196: 
+L197: 1
+L198: 
+L199: 2
+L200: 
+L201: 3
+L202: 
+L203: 4
+L204: 
+L205: 5
+L206: 
+L207: 6
+L208: 
+L209: 7
+L210: 
+L211: Best
+L212: 
+L213: 
+L214: 
+L215: Region
+L216: 
+L217: United States
+L218: 
+L219: Language
+L220: 
+L221: English
+L222: 
+L223: Loading
+L224: 
+L225: Listening | Audible Help 【37†Adobe ID Syncing iFrame†audible.demdex.net】

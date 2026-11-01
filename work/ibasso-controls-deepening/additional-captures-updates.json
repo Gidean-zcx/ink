@@ -1,0 +1,84 @@
+[
+  {
+    "evidence_id": "E-IBCD-01",
+    "field": "additional_captures",
+    "before": null,
+    "after": [
+      {
+        "checked_on": "2026-10-27",
+        "archived_artifact": "artifacts/ibasso-controls-deepening/source-notes.md",
+        "sha256": "a0507e276298095f753efba1df7d078a987d2f2a9a15a476f10bab1a928bbf8f",
+        "hands_on": false,
+        "capture_kind": "local_reread_and_static_page_observation",
+        "network_refetched": false,
+        "raw_work_path": "work/hifi-extension-research/DX180userguide.pdf",
+        "raw_sha256": "bbbb517f695f36baa62d77585f38bbd6b9407576e96c4e756d965c96103f1da8",
+        "original_acquisition_date": "2026-10-26",
+        "locator": "印刷1目录；17–21应用/USB/设置；30–42导航搜索；45–54参数；全文页映射",
+        "visual_observed": true,
+        "visual_kind": "official_manual_static_pages_only",
+        "visual_audit_path": "artifacts/ibasso-controls-deepening/source-notes.md",
+        "rendered_artifacts": [
+          "artifacts/ibasso-controls-deepening/dx180-printed-17.png",
+          "artifacts/ibasso-controls-deepening/dx180-printed-18.png",
+          "artifacts/ibasso-controls-deepening/dx180-printed-20.png",
+          "artifacts/ibasso-controls-deepening/dx180-printed-21.png",
+          "artifacts/ibasso-controls-deepening/dx180-printed-34.png",
+          "artifacts/ibasso-controls-deepening/dx180-printed-42.png"
+        ],
+        "artifact_hashes": {
+          "artifacts/ibasso-controls-deepening/dx180-printed-17.png": "fed85b1906b98ea9f8733418389fdd4b9d07af4f8125391a998b23a4e541dcb5",
+          "artifacts/ibasso-controls-deepening/dx180-printed-18.png": "ad93d376108ba361829a2e29ac84c5fe42363e04465d0ef05723fba8bc3dd90c",
+          "artifacts/ibasso-controls-deepening/dx180-printed-20.png": "46a820d1d77834365f4f674c8611666da96906adbe8911fbd56b14f28f6a17fd",
+          "artifacts/ibasso-controls-deepening/dx180-printed-21.png": "796d568c697d900fc4d5548632cb1868ca2e67945329f170a148b61eb72fcb4b",
+          "artifacts/ibasso-controls-deepening/dx180-printed-34.png": "5cba3a64c8bd7decf1f5d19f5cc1d75991af847935b0091784493b307a2f01cb",
+          "artifacts/ibasso-controls-deepening/dx180-printed-42.png": "194a9c1d366e4c8590ba21708ba548ec8df12a5871b554cb8afe3f99a13653da"
+        },
+        "limitation": "6图同一旧PDF；20是纯文字页，无连续流程"
+      }
+    ],
+    "reason": "沿用旧E，不新编号同PDF/同发布页面"
+  },
+  {
+    "evidence_id": "E-IBCD-08",
+    "field": "additional_captures",
+    "before": null,
+    "after": [
+      {
+        "checked_on": "2026-10-27",
+        "archived_artifact": "artifacts/ibasso-controls-deepening/source-notes.md",
+        "sha256": "a0507e276298095f753efba1df7d078a987d2f2a9a15a476f10bab1a928bbf8f",
+        "hands_on": false,
+        "capture_kind": "public_http_refetch_same_body_hash",
+        "network_refetched": true,
+        "raw_work_path": "work/ibasso-controls-deepening/firmware-cn.html",
+        "raw_sha256": "c9a111a08010b38a11934502d5d061bacd104d5ae65aa861b1e339fc7434d615",
+        "capture_url": "https://ibasso.cn/support/dx180firmware",
+        "locator": "5版本37项声明及更新提示",
+        "visual_observed": false
+      }
+    ],
+    "reason": "沿用旧E，不新编号同PDF/同发布页面"
+  },
+  {
+    "evidence_id": "E-IBA-03",
+    "field": "additional_captures",
+    "before": null,
+    "after": [
+      {
+        "checked_on": "2026-10-27",
+        "archived_artifact": "artifacts/ibasso-controls-deepening/source-notes.md",
+        "sha256": "a0507e276298095f753efba1df7d078a987d2f2a9a15a476f10bab1a928bbf8f",
+        "hands_on": false,
+        "capture_kind": "public_http_canonical_url_read",
+        "network_refetched": true,
+        "raw_work_path": "work/ibasso-controls-deepening/firmware-en.html",
+        "raw_sha256": "ae03d36392cce123b57e19d74bdecadad6aff7657f37c1b97288db1e5959030a",
+        "capture_url": "https://ibasso.com/dx180-firmware/",
+        "locator": "V1.01–V1.05/驱动目录；旧URL?p=3371",
+        "visual_observed": false
+      }
+    ],
+    "reason": "沿用旧E，不新编号同PDF/同发布页面"
+  }
+]

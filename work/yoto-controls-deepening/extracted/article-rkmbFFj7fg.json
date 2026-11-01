@@ -1,0 +1,42 @@
+{
+  "id": "6aa2b83933112fabacb6584c",
+  "articleId": "6a4e08faa629f31c9ed1a537",
+  "title": "Does my Yoto need to be online to play content?",
+  "body": "<h3><br></h3><h3 id=\"isPasted\"><strong><span style=\"color: rgb(226, 80, 65);\">Only twice: when you first set it up, and the first time you play each card. Once a card has downloaded, it plays anywhere - car, campsite, Grandma&rsquo;s - no internet needed.</span></strong></h3><h4><table style=\"margin-right: calc(12%); width: 88%;\"><tbody><tr><td><em><strong>The exception&nbsp;</strong></em><span style=\" text-align: left;\" id=\"isPasted\"><strong>-&nbsp;</strong></span>audio that needs to be streamed over Wi-Fi by nature, like radio stations and podcasts, always needs your player to be online.</td></tr></tbody></table></h4><h4><br></h4><h2><strong>When your player needs to be online</strong></h2><p><br></p><ul><li><strong>Setting up</strong>: &nbsp;your player connects to Wi-Fi as part of setup.&nbsp;</li><li><strong>The first play of any card:</strong> the audio streams from our servers while your player downloads it in the background, so you&rsquo;ll need a solid connection.</li><li><strong>Radio stations and podcasts</strong>: cards linked to these stream continuously, so they won&rsquo;t play offline.</li><li><strong>Playing to your player from the app</strong>: both your phone and your player need to be online.</li></ul><p><br></p><h2><strong>When your player does not need to be online</strong></h2><p><br></p><ul><li><strong>Any card that&rsquo;s finished downloading</strong> plays straight from your player&rsquo;s built-in storage - completely offline.</li></ul><p>On your phone, it&rsquo;s simpler still: if your phone has internet (Wi-Fi or mobile data), the app can play anything in your library, including radio, podcasts and cards that haven&rsquo;t downloaded to the player yet.</p><p><br></p><h2><strong>How do I download audio before a trip?</strong></h2><p><br></p><p>First, connect your player to Wi-Fi and plug it in to charge. You can check its connection in the Yoto App.</p><p>To start downloading audio:</p><ul><li><p><strong>On&nbsp;</strong><u><strong>any</strong></u><strong>&nbsp;Yoto Player or Yoto Mini:</strong> Insert each Yoto Card and let it play for a few seconds.</p></li><li><p><strong>On a Yoto Player 4th Gen or Yoto Mini 4th Gen:</strong> You can also download titles that are already in your Yoto Library by adding them to a Green Button playlist. Some titles purchased as physical cards will only appear in your Library after you&rsquo;ve inserted the card once. [Learn how to use the Green Button.]</p></li></ul><p>Once you&rsquo;ve added your Green Button titles or played each card for a few seconds, remove any card and leave the player switched on, plugged in and idle while the downloads complete. Leaving it overnight before a trip works a treat.</p><p>To check your downloads, open the Yoto App, go to <strong>Settings</strong>, select your player and tap <strong>Audio Download Status</strong>. You&rsquo;ll see which titles have downloaded and which are still waiting.</p><h4><br></h4><h2><strong>Got more than one Yoto player?</strong></h2><p><br></p><p>All the cards in your library download to each of your players:</p><ul><li><p>If your library fits within a player&rsquo;s storage, <strong>everything</strong> downloads.</p></li><li><p>If your library is bigger than a player&rsquo;s storage, the least-played cards make room for the most popular ones, worked out per player. Nothing leaves your app library, and any card re-downloads when you play it online.&nbsp;</p></li></ul><p><br></p><p><strong>Related help:</strong> <a href=\"https://support.yotoplay.com/en_gb/how-much-audio-can-my-yoto-player-store-SJNFKiQGe\" target=\"_blank\" rel=\"noopener noreferrer\">How much audio can my Yoto player store?</a>; <a href=\"https://support.yotoplay.com/en_gb/playing-your-first-yoto-card-HygA_FiXze\" target=\"_blank\" rel=\"noopener noreferrer\">Playing your first Yoto Card.</a></p>",
+  "categories": [
+    {
+      "id": "6a19a5a89f2ebfcad8e9da8f",
+      "knowledgeBase": "69d522fcb7baaa50525b3529"
+    }
+  ],
+  "primaryCategory": "6a19a5a89f2ebfcad8e9da8f",
+  "metaDescription": "The answer is both yes and no    To play streamed content like radio and podcasts you will need your Yoto player to be online  And the first time you play ",
+  "metaKeywords": [
+    "will",
+    "player",
+    "Yoto",
+    "play",
+    "content",
+    "need",
+    "cards",
+    "online",
+    "card",
+    "downloaded",
+    "download",
+    "radio",
+    "podcasts",
+    "first"
+  ],
+  "metaTitle": "",
+  "lang": "en_gb",
+  "slug": "does-my-yoto-need-to-be-online-to-play-content",
+  "draftSlug": null,
+  "hash": "rkmbFFj7fg",
+  "publishedAt": "2026-09-10T14:02:23.019Z",
+  "updatedAt": "2026-09-10T14:02:23.215Z",
+  "createdAt": "2026-09-10T14:01:29.598Z",
+  "href": "/en_gb/does-my-yoto-need-to-be-online-to-play-content-rkmbFFj7fg",
+  "tags": [],
+  "knowledgeBases": [],
+  "scope": "public"
+}

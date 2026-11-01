@@ -1,0 +1,22 @@
+{
+  "name": "14-motivation",
+  "url": "https://www.duolingo.com/welcome?welcomeStep=choosePath",
+  "title": "Duolingo - Learn French with lessons that work",
+  "utc": "2026-10-26T17:43:00.570599+00:00",
+  "text": "…so Duolingo is designed to be fun like a game!\n…so Duolingo is designed to be fun like a game!\nCONTINUE",
+  "buttons": [
+    {
+      "text": "",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "CONTINUE",
+      "aria": null,
+      "test": "funboarding-continue-button",
+      "visible": true
+    }
+  ],
+  "inputs": []
+}

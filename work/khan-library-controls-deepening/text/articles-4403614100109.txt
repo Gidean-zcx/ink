@@ -1,0 +1,95 @@
+Progress reports in the Khan Academy Kids app – Khan Academy (https://khankids.zendesk.com/hc/en-us/articles/4403614100109-Progress-reports-in-the-Khan-Academy-Kids-app)
+citeturn961view3 [wordlim: 200] Crawled: today; Content type: text/html; Source: click({"ref_id":"turn959view1","id":2}); Total lines: 93
+L0: 【0†Skip to main content】
+L1: 
+L2: 【1†Submit a request】
+L3: 
+L4: [Input][Input] [Input: Search]
+L5: 
+L6: Articles in this section
+L7:   * 【2†Our Accessibility Statement】
+L8:   * 【3†Five ways to use Khan Kids for back to school success】
+L9:   * 【4†Quick start guide for preschool through 2nd grade teachers】
+L10:   * 【5†✨ NEW: Teacher Dashboard on the web】
+L11:   * 【6†✨ NEW: Manage student access to areas of the app】
+L12:   * 【7†Module 1: Setting up a Class Account】
+L13:   * 【8†Learning Topics: Using Khan Academy Kids in Educational Settings】
+L14:   * 【9†Module 2: Using Class Codes】
+L15:   * 【10†Daily Schedules for Ages 2-8】
+L16:   * 【11†Module 3: Assigning lessons】
+L17: 【12†See more】
+L18: # Progress reports in the Khan Academy Kids app
+L19: 
+L20:   * February 23, 2026 23:05
+L21:   * Updated
+L22: 
+L23: 【13†Image: Reports_Banner.png】
+L24: The Khan Academy Kids app has progress reports that allow teachers to identify student needs at a glance. Use the Assignments Report to see which students have completed their assignments, or use the All Progress Report to see cumulative student progress in each subject area. The best part? You can respond to student data in real time by assigning lessons directly from the reports. Read below to learn more!
+L25: ## What can you do with the progress reports in Khan Academy Kids?
+L26: 
+L27:   * Assign, edit, and preview lessons directly from the report
+L28:   * See students’ score history on each lesson
+L29:   * Quickly see how far students have progressed to each domain
+L30:   * Identify students who have not completed assignments
+L31:   * Email reports to your desktop computer for easy viewing
+L32:   * Email individual student reports to parents
+L33: 
+L34: Here’s what the progress reports look like! Need a close up? Look 【14†here】.
+L35: 【15†Image: ClassReport_AllProgress__1_.png】  | 【16†Image: ClassReport_Assignments.png】
+L36: 
+L37: Access these reports from your teacher view in the Khan Academy Kids app. Make sure you are on the Students tab, and then select Class Reports.
+L38: 
+L39: 【17†Image: StudentsTab_ClassReports.png】
+L40: 
+L41: There are two different reports. You can switch between the two by tapping Assignments or All Progress at the top of the screen.
+L42: 
+L43: Use the Assignments report if...  | Use the All Progress report if...
+L44:   * You’d like to see which students have assignments that haven’t been completed yet.
+L45:   * You’d like to check to see if students attempted an assignment multiple times.
+L46:   * You’d like to edit an existing assignment, either by changing the date students receive it, or changing which students receive it.
+L47:   * Learn more about the Assignments report 【14†here】.
+L48:  |
+L49:   * You’d like to see students’ overall progress in a given subject area (like ELA), or in a given domain (like Counting & Cardinality).
+L50:   * You’d like to make instructional decisions based on student scores. If you see that a student received a low score on a Main assignment, you can assign the Basic lesson to provide them with additional scaffolding. Tap Basic directly on this screen to assign.
+L51:   * Learn more about the All Progress report 【18†here】.
+L52: ### The Assignments report
+L53: 
+L54:   * The Assignments report shows all of the lessons you’ve assigned and all student scores.
+L55:   * It’s easy to see which students have completed assignments.
+L56:   * If students have made multiple attempts on a lesson, you can see their score history. Tap on one of the checkmarks to view all attempts.
+L57:   * Tap the lesson thumbnails on the left to edit the assignment or to view the lesson.
+L58: 
+L59: 【19†Image: 5-25-21_Report_Dialog_Assignments_iPad.png】
+L60: ### The All Progress report
+L61:   * The All Progress report shows every lesson that students have completed, whether it was sent to them as an assignment, an activity they chose from the Library, or lessons from their Learning Path.
+L62:   * It’s easy to see overall progress in a subject area. The fractions show how many skills have been mastered.
+L63:   * If students have made multiple attempts on a lesson, you can see their score history. Tap on one of the percentages to view all attempts.
+L64:   * Tap the lesson titles on the left to edit the assignment or to view the lesson.
+L65:   * Respond to student scores immediately. If you see that a student received a low score on a Main assignment, then assign the Basic lesson to provide them with additional scaffolding. Tap Basic directly on this screen to assign.
+L66: 【20†Image: Progress_article.png】
+L67: #### Email reports
+L68: 
+L69: You can email these reports to yourself so you can view them on a computer. Or, you can use filters to select an individual student and send their report to their parent or guardian. Tap the Email button in the top right corner. Enter an email address in the "To" field to send.
+L70: 
+L71: 【21†Image: ClassReport_Arrow_Email.png】  | 【22†Image: EmailDialogue.png】
+L72: When you or a student's family member receives the email, there will be an attachment in the form of a ZIP file. Unzip the file to see an HTML file that will open up inside of a web browser.
+L73: 
+L74: Please note that your mobile device must be connected to an email address in the device's Settings in order for this to work. That way the app has a "From" address to reference when it sends the email.
+L75: 
+L76: Was this article helpful?
+L77: 
+L78: [Button: Yes] [Button: No]
+L79: 
+L80: 1 out of 1 found this helpful
+L81: Have more questions? 【1†Submit a request】
+L82: 
+L83: 【23†Return to top】
+L84: ## Comments
+L85: 
+L86: 0 comments
+L87: 
+L88: Article is closed for comments.
+L89: 
+L90: 【24†Khan Academy】
+L91: 
+L92: 【25†Powered by Zendesk†www.zendesk.com】

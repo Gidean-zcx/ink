@@ -1,0 +1,33 @@
+{
+  "name": "34-nearest-star",
+  "at": "2026-10-27T02:09:15.515397+00:00",
+  "url": "https://www.duolingo.com/lesson",
+  "title": "Duolingo - The world’s most popular way to learn",
+  "text": "5\nSolve the puzzle\nIf the path is clear, a rook can move any number of squares.\nHINT",
+  "controls": [
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": null,
+      "test": "quit-button",
+      "type": "submit",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": "Previous move",
+      "test": null,
+      "type": "button",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": "Next move",
+      "test": null,
+      "type": "button",
+      "disabled": true
+    }
+  ]
+}

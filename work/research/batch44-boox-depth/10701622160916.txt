@@ -1,0 +1,38 @@
+In this article, you will learn how to share the screen of your BOOX device via the built-in Screen Cast tool or a third-party screen mirroring app.
+Built-in Screen Cast
+The built-in Screen Cast tool is currently compatible with Windows 10 / 11 only.
+Before using the Screen Cast tool, you need to check if your PC supports Miracast and do some basic setup by doing the following:
+Select Start > Settings > System > Projecting to this PC.
+Unless it shows "This device doesn't support receiving Miracast, so you can't project to it wirelessly" on the top, you are able to use this method for screen mirroring.
+Under Add the "Wireless Display" optional feature to project to this PC, select Optional features.
+Select Add a feature.
+Select the check box next to Wireless Display from the list of results, then select Install.
+After "Wireless Display" is installed, manage your projecting preferences on the Projecting to this PC page in Settings.
+Select Launch the Connect app to project to this PC and wait for your BOOX device to connect.
+To use the Screen Cast tool on your BOOX device, do the following:
+Make sure your BOOX device and your PC are connected to the same network.
+Swipe down from the top right corner to open the Control Center.
+Find and tap the Screencast button in the Shortcut Switches.
+Wait for your BOOX device to search for your PC, or tap SETTINGS to select your PC manually.
+You will then be able to view and control your BOOX device on your PC.
+Note: If you cannot find the Screen Cast button on the Control Center, you may do the following:
+Swipe down from the top right corner to open the Control Center.
+Tap the Edit icon.
+Drag and drop the Screencast button to the enabled Shortcut Switches.
+BOOXDrop Screen Mirroring
+BOOXDrop Screen Mirroring is a convenient way to share the screen of your BOOX device with a PC, TV, and smartphone.
+1. Connect your BOOX device and another device with the same LAN (local area network).
+2. Swipe down from the top right corner to open the Control Center. Tap the BOOXDrop Screen Mirroring button.
+3. Tap "Start Now"
+4. Enter the URL into the browser of the device you want to project.
+5. On the right, you can choose full-screen view and rotate the screen.
+Third-Party Screen Mirroring App
+Thanks to the open Android OS, you can freely use third-party screen mirroring apps as you like. Here we will recommend one of the most popular third-party screen mirroring apps, AnyDesk.
+AnyDesk provides screen share and remote control solutions for almost all platforms including Windows, macOS, Android, iOS, Linux and more.
+To use AnyDesk for screen mirroring to other devices, do the following:
+Download and open AnyDesk on your BOOX device and the other device.
+For the first time, connect your devices to the same network, and your BOOX device will be shown on the Discovered menu of the other device.
+On the other device, click the kebab button on the bottom right corner and choose Connect.
+On your BOOX device, choose a Permission Profile and tap ACCEPT. Then tap Start now.
+You can then view the screen of your BOOX device. After the first time, you can reconnect and use screen mirroring either with or without connecting them to the same network.
+You can visit the AnyDesk website to discover more of its features.

@@ -1,0 +1,98 @@
+[
+  {
+    "evidence_id": "E-SNCD-02",
+    "source_batch": "docs/research/interaction-library/batches/supernote-controls-deepening-evidence.jsonl",
+    "field": "additional_captures",
+    "before_exists": false,
+    "before": [],
+    "after": [
+      {
+        "checked_on": "2026-10-27",
+        "capture_method": "local_reread_of_existing_public_snapshot_no_network",
+        "original_capture_on": "2026-10-26",
+        "url": "https://ib.supernote.com/x2/X2_V3.28.42_EN.pdf",
+        "raw_work_path": "work/supernote-notes-controls-deepening/raw/X2_V3.28.42_EN.pdf",
+        "raw_sha256": "9c7b24be22b8f06727381564412f192273e50e2157a2aa5b4350d12b6c3037d2",
+        "source_updated_on": null,
+        "locator": "p28,58–59,64–84,130–133,135–137,148–155; actual static pages65/66/75/83/153",
+        "archived_artifact": "artifacts/supernote-notes-controls-deepening/source-notes.md",
+        "sha256": "57e07f1645ab884ed6d99267d8349c1c2f52c464aa94f4a91b29fa8d28051180",
+        "hands_on": false,
+        "visual_observed": true,
+        "note": "复读既有原件，不是新HTTP抓取或独立来源；版本不自动延伸为当前实机状态",
+        "artifact_hashes": {
+          "artifacts/supernote-notes-controls-deepening/x2-v3.28.42-p153.png": "737eacaf66291150af2ccbad4f874cccc81fc18261bd50b35754a967b8a6bced",
+          "artifacts/supernote-notes-controls-deepening/x2-v3.28.42-p65.png": "70fcaa4ce2a9c54b3520c66e1f89580cd9da4a72b3ffc37a3e0dc688dd1cfb41",
+          "artifacts/supernote-notes-controls-deepening/x2-v3.28.42-p66.png": "cfda3129505aa12cf542d3e8060710d7de66c51465e90b6144ec035b02aa9e1b",
+          "artifacts/supernote-notes-controls-deepening/x2-v3.28.42-p75.png": "1aa140420e5e4730a83852df627cbad9624d945daad63c87f9c7d84fb3cedbe6",
+          "artifacts/supernote-notes-controls-deepening/x2-v3.28.42-p83.png": "d08dfa8255c35c3f527ae0dba5b7af0eee1affcf4f40a5b4171cca263e773baf"
+        },
+        "visual_audit_path": "artifacts/supernote-notes-controls-deepening/source-notes.md",
+        "visual_audit_sha256": "57e07f1645ab884ed6d99267d8349c1c2f52c464aa94f4a91b29fa8d28051180"
+      }
+    ],
+    "append": {
+      "checked_on": "2026-10-27",
+      "capture_method": "local_reread_of_existing_public_snapshot_no_network",
+      "original_capture_on": "2026-10-26",
+      "url": "https://ib.supernote.com/x2/X2_V3.28.42_EN.pdf",
+      "raw_work_path": "work/supernote-notes-controls-deepening/raw/X2_V3.28.42_EN.pdf",
+      "raw_sha256": "9c7b24be22b8f06727381564412f192273e50e2157a2aa5b4350d12b6c3037d2",
+      "source_updated_on": null,
+      "locator": "p28,58–59,64–84,130–133,135–137,148–155; actual static pages65/66/75/83/153",
+      "archived_artifact": "artifacts/supernote-notes-controls-deepening/source-notes.md",
+      "sha256": "57e07f1645ab884ed6d99267d8349c1c2f52c464aa94f4a91b29fa8d28051180",
+      "hands_on": false,
+      "visual_observed": true,
+      "note": "复读既有原件，不是新HTTP抓取或独立来源；版本不自动延伸为当前实机状态",
+      "artifact_hashes": {
+        "artifacts/supernote-notes-controls-deepening/x2-v3.28.42-p153.png": "737eacaf66291150af2ccbad4f874cccc81fc18261bd50b35754a967b8a6bced",
+        "artifacts/supernote-notes-controls-deepening/x2-v3.28.42-p65.png": "70fcaa4ce2a9c54b3520c66e1f89580cd9da4a72b3ffc37a3e0dc688dd1cfb41",
+        "artifacts/supernote-notes-controls-deepening/x2-v3.28.42-p66.png": "cfda3129505aa12cf542d3e8060710d7de66c51465e90b6144ec035b02aa9e1b",
+        "artifacts/supernote-notes-controls-deepening/x2-v3.28.42-p75.png": "1aa140420e5e4730a83852df627cbad9624d945daad63c87f9c7d84fb3cedbe6",
+        "artifacts/supernote-notes-controls-deepening/x2-v3.28.42-p83.png": "d08dfa8255c35c3f527ae0dba5b7af0eee1affcf4f40a5b4171cca263e773baf"
+      },
+      "visual_audit_path": "artifacts/supernote-notes-controls-deepening/source-notes.md",
+      "visual_audit_sha256": "57e07f1645ab884ed6d99267d8349c1c2f52c464aa94f4a91b29fa8d28051180"
+    }
+  },
+  {
+    "evidence_id": "E-SNCD-10",
+    "source_batch": "docs/research/interaction-library/batches/supernote-controls-deepening-evidence.jsonl",
+    "field": "additional_captures",
+    "before_exists": false,
+    "before": [],
+    "after": [
+      {
+        "checked_on": "2026-10-27",
+        "capture_method": "local_reread_of_existing_public_snapshot_no_network",
+        "original_capture_on": "2026-10-26",
+        "url": "https://support.supernote.com/changelog-for-manta-and-nomad",
+        "raw_work_path": "work/supernote-notes-controls-deepening/raw/10-changelog.html",
+        "raw_sha256": "28ce34428094d1f9778d5071ccb79a4bfdc7ea946170099001cc9e61823b1030",
+        "source_updated_on": "2026-10-23",
+        "locator": "Chauvet3.24.38 Added Text Box/search; 3.25.39 Optimized Text Box exit; 3.28.42 Fixed hidden-layer export/template shutdown/link issue",
+        "archived_artifact": "artifacts/supernote-notes-controls-deepening/source-notes.md",
+        "sha256": "57e07f1645ab884ed6d99267d8349c1c2f52c464aa94f4a91b29fa8d28051180",
+        "hands_on": false,
+        "visual_observed": false,
+        "note": "复读既有原件，不是新HTTP抓取或独立来源；版本不自动延伸为当前实机状态"
+      }
+    ],
+    "append": {
+      "checked_on": "2026-10-27",
+      "capture_method": "local_reread_of_existing_public_snapshot_no_network",
+      "original_capture_on": "2026-10-26",
+      "url": "https://support.supernote.com/changelog-for-manta-and-nomad",
+      "raw_work_path": "work/supernote-notes-controls-deepening/raw/10-changelog.html",
+      "raw_sha256": "28ce34428094d1f9778d5071ccb79a4bfdc7ea946170099001cc9e61823b1030",
+      "source_updated_on": "2026-10-23",
+      "locator": "Chauvet3.24.38 Added Text Box/search; 3.25.39 Optimized Text Box exit; 3.28.42 Fixed hidden-layer export/template shutdown/link issue",
+      "archived_artifact": "artifacts/supernote-notes-controls-deepening/source-notes.md",
+      "sha256": "57e07f1645ab884ed6d99267d8349c1c2f52c464aa94f4a91b29fa8d28051180",
+      "hands_on": false,
+      "visual_observed": false,
+      "note": "复读既有原件，不是新HTTP抓取或独立来源；版本不自动延伸为当前实机状态"
+    }
+  }
+]

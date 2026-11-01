@@ -1,0 +1,7 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M056-01,M-056,S6 一题选题手写纠错再练结束,D1,E-XYHW-01,官方能力模块目录,题目实际入口提示重试与恢复,not_observed,false,cases/M-056-xiaoyuan-hardware.md,2026-10-26
+F-M056-02,M-056,E1 识字与分级阅读,D1,E-XYHW-01;E-XYHW-03;E-XYHW-04,课程分龄S3为5至6岁,选级提示纠错重试结束恢复,static_official_images_only,false,cases/M-056-xiaoyuan-hardware.md,2026-10-26
+F-M056-03,M-056,家长时间及答案限制,D1,E-XYHW-02;E-XYHW-05,静态管控选项及开关示例,完整入口保存生效超时解锁离线,static_official_images_only,false,cases/M-056-xiaoyuan-hardware.md,2026-10-26
+F-M056-04,M-056,轨迹查看与家庭协作,D1,E-XYHW-02;E-XYHW-05,示例时间线及家长列表,数据口径角色权限邀请恢复,static_official_images_only,false,cases/M-056-xiaoyuan-hardware.md,2026-10-26
+F-M056-05,M-056,导入文档及发送打印,D1,E-XYHW-01;E-XYHW-05,小程序输入及Word图片PDF,E1适用性文件限制同步打开打印恢复,not_observed,false,cases/M-056-xiaoyuan-hardware.md,2026-10-26
+F-M056-06,M-056,家长账号注销,D2,E-XYHW-05,确认家庭解绑条件与短信验证码,错误验证码及重新绑定儿童进度,not_observed,false,cases/M-056-xiaoyuan-hardware.md,2026-10-26

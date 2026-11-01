@@ -1,0 +1,31 @@
+[
+  {
+    "evidence_id": "E-PBK-01",
+    "expected_url": "https://support.pocketbook-int.com/fw/743K3/u/6.10.2854/manual/User_Manual_InkPad_Color_3_EN.pdf",
+    "before_additional_captures": [],
+    "append_additional_captures": [
+      {
+        "checked_on": "2026-10-27",
+        "access_mode": "existing_local_pdf_text_and_selected_static_pages_no_network",
+        "raw_work_path": "work/research/interaction-depth/pocketbook-6.10.2854.pdf",
+        "raw_sha256": "87bf56b461cd298b7c53421c5b21f72f1498e4c060d4eea89844545667030101",
+        "locator": "Printed/PDF pp28–30,34–41,69–90 text; actual static views pp29,37,41,76,77 only",
+        "text_pages_count": 33,
+        "visual_observed": true,
+        "visual_pages": [
+          29,
+          37,
+          41,
+          76,
+          77
+        ],
+        "hands_on": false,
+        "continuous_sequence": false,
+        "archived_artifact": "artifacts/pocketbook-app-controls-deepening/source-notes.md",
+        "sha256": "f773ab64456a13a2a23ad3a8fa2d77d8cf0610879c8a63394685378355936a40",
+        "visual_audit_path": "artifacts/pocketbook-app-controls-deepening/observed-pages.json",
+        "note": "旧同一原件本地复读；非新修订或独立来源，未重新下载；同URL旧E-PBCD-01保持历史记录。"
+      }
+    ]
+  }
+]

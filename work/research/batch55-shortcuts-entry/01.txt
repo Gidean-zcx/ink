@@ -1,0 +1,17 @@
+What’s a shortcut?
+A
+shortcut
+is a quick way to get one or more tasks done with your apps. The Shortcuts app lets you create your own shortcuts with multiple steps. For example, build a “Surf Time” shortcut that grabs the surf report, gives an ETA to the beach, and launches your surf music playlist.
+Learn how shortcuts work
+What’s an action?
+An
+action
+—the building block of a shortcut—is a single step in a task. Mix and match actions to create shortcuts that interact with the apps and content on your Apple devices, as well as with content and services on the Internet. Each shortcut is made up of one or more actions.
+Learn about actions
+Where do I find shortcuts?
+The
+Gallery
+features a curated collection of creative and useful shortcuts. Explore the Gallery to check out shortcut possibilities and to see how they’re built. When you find a Gallery shortcut you like, add it to your shortcuts collection with a simple tap and customize it to suit your needs.
+Explore the Gallery
+To browse the Shortcuts User Guide, click Table of Contents at the top of the page.
+Not all apps, services, and content shown in the user guide are available in all countries or regions.

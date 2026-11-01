@@ -1,0 +1,15 @@
+Run shortcuts from Apple Watch
+You can run a shortcut from the Shortcuts app on Apple Watch. Alternatively, you can use the Siri watch face to run relevant shortcuts, or you can add a shortcut complication to any watch face that supports complications. For more information about complications, see the Apple Watch User Guide.
+Show a shortcut on Apple Watch
+The Shortcuts app on Apple Watch shows only shortcuts that you enable on your iPhone or iPad.
+In the Shortcuts app on your iPhone or iPad, tap on a shortcut, then tap to open Details.
+Turn on Show on Apple Watch.
+Tap Done.
+The shortcut appears in the Shortcuts app on your Apple Watch.
+To see all the shortcuts enabled on your Apple Watch, tap Shortcuts in the upper-left corner of the Shortcuts app on your iPhone or iPad, then tap Apple Watch.
+Run a shortcut on Apple Watch
+You can run a shortcut in the Shortcuts app on your Apple Watch or from a complication.
+On Apple Watch, do one of the following:
+From the Shortcuts app, tap a shortcut.
+To run a shortcut as a complication, tap the complication on your watch face.
+For more information on which shortcuts work well on your watch, see About actions in complicated shortcuts.

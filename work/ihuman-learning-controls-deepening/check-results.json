@@ -1,0 +1,19 @@
+{
+  "command": "python3 work/ihuman-learning-controls-deepening/precheck.py --manifest",
+  "exit_code": 0,
+  "result": {
+    "status": "PASS",
+    "checks": 198,
+    "new_E": 2,
+    "new_F": 0,
+    "old_F_rows": 2,
+    "old_F_fields": 8,
+    "old_E_capture_rows": 1,
+    "inventory_rows": 36,
+    "new_visual_observations": 0,
+    "before_merge_only": true,
+    "external_state_changed": false
+  },
+  "scoped_git_diff_check_exit_code": 0,
+  "sha_and_scoped_status_exit_code": 0
+}

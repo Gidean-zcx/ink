@@ -1,0 +1,9 @@
+Use Siri to run shortcuts with your voice
+You can ask Siri to run any shortcut in your collection. Siri can launch shortcuts from most of your devices, including HomePod and Apple Watch.
+Run a shortcut with Siri
+Activate Siri on your iPhone or iPad, HomePod, Apple Watch, or Mac, then say the name of a shortcut, such as “Text Last Image.”
+After running the shortcut, Siri tells you the result.
+When your device is locked and you run a shortcut that opens an app, Siri asks to unlock your device before continuing.
+To verify that you can use “Hey Siri” on your device, see the Apple Support article Use Siri on all your Apple devices.
+Note: If the shortcut’s name is the same as a standard Siri command (“What time is it?” for example), Siri runs the shortcut instead of the standard command.
+For more information about talking to Siri, see Turn on and activate Siri in the iPhone User Guide. If you need to pass items on your device’s screen to your shortcut, see Receive onscreen items from other apps.See alsoIntro to variables in Shortcuts on iPhone or iPad

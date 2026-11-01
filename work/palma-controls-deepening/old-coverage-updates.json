@@ -1,0 +1,374 @@
+[
+  {
+    "flow_id": "F-M010-01",
+    "before": {
+      "flow_id": "F-M010-01",
+      "product_id": "M-010",
+      "task": "单手翻页与快捷动作（D1）",
+      "depth": "D1",
+      "evidence_ids": "E-PALMA-01;E-PALMA-02",
+      "known_branches": "物理事件可映射不同任务；功能存在有据，但设置页面序列未取到。",
+      "gaps": "精确入口、默认映射、音量/翻页互斥、锁屏/休眠生效；不补成已观察操作。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-010-palma.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M010-01",
+      "product_id": "M-010",
+      "task": "单手翻页与快捷动作（D1）",
+      "depth": "D1",
+      "evidence_ids": "E-PALMA-01;E-PALMA-02;E-PLCD-01;E-PLCD-03;E-PLCD-04",
+      "known_branches": "Palma 2宣传图有短按/双击/长按三项且例值均None；通用V4.0例值不同，均不能证明出厂默认。通用FAQ要求部分App另开音量翻页。",
+      "gaps": "本机设置入口、动作列表、按App事件映射、默认值、锁屏/休眠触发及指纹失败；静态图不闭合执行链。",
+      "visual_status": "static_reference_only",
+      "hands_on": "false",
+      "case_path": "cases/M-010-palma.md",
+      "checked_on": "2026-10-27"
+    },
+    "changed_fields": {
+      "evidence_ids": {
+        "before": "E-PALMA-01;E-PALMA-02",
+        "after": "E-PALMA-01;E-PALMA-02;E-PLCD-01;E-PLCD-03;E-PLCD-04"
+      },
+      "known_branches": {
+        "before": "物理事件可映射不同任务；功能存在有据，但设置页面序列未取到。",
+        "after": "Palma 2宣传图有短按/双击/长按三项且例值均None；通用V4.0例值不同，均不能证明出厂默认。通用FAQ要求部分App另开音量翻页。"
+      },
+      "gaps": {
+        "before": "精确入口、默认映射、音量/翻页互斥、锁屏/休眠生效；不补成已观察操作。",
+        "after": "本机设置入口、动作列表、按App事件映射、默认值、锁屏/休眠触发及指纹失败；静态图不闭合执行链。"
+      },
+      "visual_status": {
+        "before": "not_observed",
+        "after": "static_reference_only"
+      },
+      "checked_on": {
+        "before": "2026-10-26",
+        "after": "2026-10-27"
+      }
+    }
+  },
+  {
+    "flow_id": "F-M010-02",
+    "before": {
+      "flow_id": "F-M010-02",
+      "product_id": "M-010",
+      "task": "进入控制、处理通知后回阅读",
+      "depth": "D2",
+      "evidence_ids": "E-PALMA-04",
+      "known_branches": "清通知不同于终止播放/下载；从系统控制回 app 不保证保留页面内部选区。",
+      "gaps": "通用帮助在 Palma 2 的菜单位置、媒体通知实际按钮、返回精确位置。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-010-palma.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M010-02",
+      "product_id": "M-010",
+      "task": "进入控制、处理通知后回阅读",
+      "depth": "D2",
+      "evidence_ids": "E-PALMA-04;E-PALMA-15;E-PLCD-04",
+      "known_branches": "通用帮助给双下拉/导航球/导航路径，V4.0图可见手势或导航栏与侧手势入口；回桌面、返回阅读与结束媒体不是同一动作。",
+      "gaps": "Palma 2已装版本的入口、默认手势、通知媒体键、退出选区和返回位置；通用图未操作。",
+      "visual_status": "static_reference_only",
+      "hands_on": "false",
+      "case_path": "cases/M-010-palma.md",
+      "checked_on": "2026-10-27"
+    },
+    "changed_fields": {
+      "evidence_ids": {
+        "before": "E-PALMA-04",
+        "after": "E-PALMA-04;E-PALMA-15;E-PLCD-04"
+      },
+      "known_branches": {
+        "before": "清通知不同于终止播放/下载；从系统控制回 app 不保证保留页面内部选区。",
+        "after": "通用帮助给双下拉/导航球/导航路径，V4.0图可见手势或导航栏与侧手势入口；回桌面、返回阅读与结束媒体不是同一动作。"
+      },
+      "gaps": {
+        "before": "通用帮助在 Palma 2 的菜单位置、媒体通知实际按钮、返回精确位置。",
+        "after": "Palma 2已装版本的入口、默认手势、通知媒体键、退出选区和返回位置；通用图未操作。"
+      },
+      "visual_status": {
+        "before": "not_observed",
+        "after": "static_reference_only"
+      },
+      "checked_on": {
+        "before": "2026-10-26",
+        "after": "2026-10-27"
+      }
+    }
+  },
+  {
+    "flow_id": "F-M010-05",
+    "before": {
+      "flow_id": "F-M010-05",
+      "product_id": "M-010",
+      "task": "看书时查词、标注并回原文",
+      "depth": "D2",
+      "evidence_ids": "E-PALMA-08;E-PALMA-09",
+      "known_branches": "选词、段落标注与整书进度分别保存；第三方弹出词典需其自身支持。",
+      "gaps": "关闭浮层/返回后选区位置、词库离线内容、重复词合并。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-010-palma.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M010-05",
+      "product_id": "M-010",
+      "task": "看书时查词、标注并回原文",
+      "depth": "D2",
+      "evidence_ids": "E-PALMA-08;E-PALMA-09",
+      "known_branches": "通用帮助：Contents→Annotations管理/导出到本地、邮件或其他账户；中央菜单→More→Settings→Annotation Export Settings。不采用该页另列的手写出口。",
+      "gaps": "Palma 2实际导出格式/路径、覆盖及取消、原书与副本关系、重装恢复；关闭浮层后选区、离线词库及重复词合并。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-010-palma.md",
+      "checked_on": "2026-10-27"
+    },
+    "changed_fields": {
+      "known_branches": {
+        "before": "选词、段落标注与整书进度分别保存；第三方弹出词典需其自身支持。",
+        "after": "通用帮助：Contents→Annotations管理/导出到本地、邮件或其他账户；中央菜单→More→Settings→Annotation Export Settings。不采用该页另列的手写出口。"
+      },
+      "gaps": {
+        "before": "关闭浮层/返回后选区位置、词库离线内容、重复词合并。",
+        "after": "Palma 2实际导出格式/路径、覆盖及取消、原书与副本关系、重装恢复；关闭浮层后选区、离线词库及重复词合并。"
+      },
+      "checked_on": {
+        "before": "2026-10-26",
+        "after": "2026-10-27"
+      }
+    }
+  },
+  {
+    "flow_id": "F-M010-06",
+    "before": {
+      "flow_id": "F-M010-06",
+      "product_id": "M-010",
+      "task": "查章/跳页后恢复阅读位置",
+      "depth": "D2",
+      "evidence_ids": "E-PALMA-10;E-PALMA-11",
+      "known_branches": "临时历史视图与持久书签不同；不能等同跨 app 或重启恢复。",
+      "gaps": "EPUB 字号变更后的锚点、书关掉后的历史长度。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-010-palma.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M010-06",
+      "product_id": "M-010",
+      "task": "查章/跳页后恢复阅读位置",
+      "depth": "D2",
+      "evidence_ids": "E-PALMA-10;E-PALMA-11",
+      "known_branches": "通用帮助用页角书签图标空心变实心表示添加，Contents定位；Prev/Next View为文内视图历史，不是跨App/重启恢复。",
+      "gaps": "本机当前构建、字号变化后的锚点、关闭书后的历史长度、书签删除与同步冲突。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-010-palma.md",
+      "checked_on": "2026-10-27"
+    },
+    "changed_fields": {
+      "known_branches": {
+        "before": "临时历史视图与持久书签不同；不能等同跨 app 或重启恢复。",
+        "after": "通用帮助用页角书签图标空心变实心表示添加，Contents定位；Prev/Next View为文内视图历史，不是跨App/重启恢复。"
+      },
+      "gaps": {
+        "before": "EPUB 字号变更后的锚点、书关掉后的历史长度。",
+        "after": "本机当前构建、字号变化后的锚点、关闭书后的历史长度、书签删除与同步冲突。"
+      },
+      "checked_on": {
+        "before": "2026-10-26",
+        "after": "2026-10-27"
+      }
+    }
+  },
+  {
+    "flow_id": "F-M010-07",
+    "before": {
+      "flow_id": "F-M010-07",
+      "product_id": "M-010",
+      "task": "从读切听并排查后台停止",
+      "depth": "D2",
+      "evidence_ids": "E-PALMA-11;E-PALMA-12;E-PALMA-13",
+      "known_branches": "有朗读入口、有引擎配置；“暂停后继续哪一句”仍不是官方已证实的状态协议。",
+      "gaps": "锁屏、闹钟、第三方语音来电、蓝牙断连、睡眠定时、离线语音包实际结果。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-010-palma.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M010-07",
+      "product_id": "M-010",
+      "task": "从读切听并排查后台停止",
+      "depth": "D2",
+      "evidence_ids": "E-PALMA-11;E-PALMA-12;E-PALMA-13;E-PALMA-15;E-BXCD-06;E-BXCD-14;E-PLCD-02;E-PLCD-04",
+      "known_branches": "TTS入口/引擎配置与第三方App保活、冻结分开；V4.0通用手册另要求休眠后蓝牙在线播放时保留Wi-Fi/蓝牙/音频，图中音频Pause仅示例。同名帮助Power/Display入口不同。",
+      "gaps": "本机固件/入口及开关选项、保活/冻结/自启动/休眠优先级；锁屏与返回后的TTS句子、来电/闹钟/蓝牙恢复、离线包和计时结果。",
+      "visual_status": "static_reference_only",
+      "hands_on": "false",
+      "case_path": "cases/M-010-palma.md",
+      "checked_on": "2026-10-27"
+    },
+    "changed_fields": {
+      "evidence_ids": {
+        "before": "E-PALMA-11;E-PALMA-12;E-PALMA-13",
+        "after": "E-PALMA-11;E-PALMA-12;E-PALMA-13;E-PALMA-15;E-BXCD-06;E-BXCD-14;E-PLCD-02;E-PLCD-04"
+      },
+      "known_branches": {
+        "before": "有朗读入口、有引擎配置；“暂停后继续哪一句”仍不是官方已证实的状态协议。",
+        "after": "TTS入口/引擎配置与第三方App保活、冻结分开；V4.0通用手册另要求休眠后蓝牙在线播放时保留Wi-Fi/蓝牙/音频，图中音频Pause仅示例。同名帮助Power/Display入口不同。"
+      },
+      "gaps": {
+        "before": "锁屏、闹钟、第三方语音来电、蓝牙断连、睡眠定时、离线语音包实际结果。",
+        "after": "本机固件/入口及开关选项、保活/冻结/自启动/休眠优先级；锁屏与返回后的TTS句子、来电/闹钟/蓝牙恢复、离线包和计时结果。"
+      },
+      "visual_status": {
+        "before": "not_observed",
+        "after": "static_reference_only"
+      },
+      "checked_on": {
+        "before": "2026-10-26",
+        "after": "2026-10-27"
+      }
+    }
+  },
+  {
+    "flow_id": "F-M010-08",
+    "before": {
+      "flow_id": "F-M010-08",
+      "product_id": "M-010",
+      "task": "电脑/手机送书后找到内容",
+      "depth": "D2",
+      "evidence_ids": "E-PALMA-14",
+      "known_branches": "本地接收和远程推送分开；传输完成后才进入阅读任务。",
+      "gaps": "文件重名、错误类型、移 microSD、取消/断点下载与空间不足。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-010-palma.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M010-08",
+      "product_id": "M-010",
+      "task": "电脑/手机送书后找到内容",
+      "depth": "D2",
+      "evidence_ids": "E-PALMA-14;E-PLCD-01",
+      "known_branches": "LAN Receive与远程Push不同；通用USB排错先检查线/电脑，并在Charging this device via USB中选择File Transfer；未证明传输后自动入库。",
+      "gaps": "Palma 2当前USB界面、书架扫描/打开、重名/中断/取消、卡移除及空间不足后的残留。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-010-palma.md",
+      "checked_on": "2026-10-27"
+    },
+    "changed_fields": {
+      "evidence_ids": {
+        "before": "E-PALMA-14",
+        "after": "E-PALMA-14;E-PLCD-01"
+      },
+      "known_branches": {
+        "before": "本地接收和远程推送分开；传输完成后才进入阅读任务。",
+        "after": "LAN Receive与远程Push不同；通用USB排错先检查线/电脑，并在Charging this device via USB中选择File Transfer；未证明传输后自动入库。"
+      },
+      "gaps": {
+        "before": "文件重名、错误类型、移 microSD、取消/断点下载与空间不足。",
+        "after": "Palma 2当前USB界面、书架扫描/打开、重名/中断/取消、卡移除及空间不足后的残留。"
+      },
+      "checked_on": {
+        "before": "2026-10-26",
+        "after": "2026-10-27"
+      }
+    }
+  },
+  {
+    "flow_id": "F-M010-09",
+    "before": {
+      "flow_id": "F-M010-09",
+      "product_id": "M-010",
+      "task": "保留原书并迁移读书状态",
+      "depth": "D2",
+      "evidence_ids": "E-PALMA-16;E-PALMA-03;E-PALMA-15",
+      "known_branches": "源书、批注/进度、本地备份分开；通用 V4.0 手册“只同步阅读数据”是历史行为，不能覆盖4.1增量。",
+      "gaps": "冲突合并、同名重复、两端不同固件；不包括第三方 app 数据。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-010-palma.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M010-09",
+      "product_id": "M-010",
+      "task": "保留原书并迁移读书状态",
+      "depth": "D2",
+      "evidence_ids": "E-PALMA-16;E-PALMA-03;E-PALMA-15",
+      "known_branches": "通用V4.1+：源文件每份≤200MB；总同步关闭时单书及手动同步不可用；同账号/服务器/目录。booxc含本地书与关联数据，两端均需V4.1+。",
+      "gaps": "Palma 2是否已装适用版本、恢复过程/失败、覆盖与重复名、跨版冲突、删除传播；第三方App数据不在该书库备份承诺内。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-010-palma.md",
+      "checked_on": "2026-10-27"
+    },
+    "changed_fields": {
+      "known_branches": {
+        "before": "源书、批注/进度、本地备份分开；通用 V4.0 手册“只同步阅读数据”是历史行为，不能覆盖4.1增量。",
+        "after": "通用V4.1+：源文件每份≤200MB；总同步关闭时单书及手动同步不可用；同账号/服务器/目录。booxc含本地书与关联数据，两端均需V4.1+。"
+      },
+      "gaps": {
+        "before": "冲突合并、同名重复、两端不同固件；不包括第三方 app 数据。",
+        "after": "Palma 2是否已装适用版本、恢复过程/失败、覆盖与重复名、跨版冲突、删除传播；第三方App数据不在该书库备份承诺内。"
+      },
+      "checked_on": {
+        "before": "2026-10-26",
+        "after": "2026-10-27"
+      }
+    }
+  },
+  {
+    "flow_id": "F-M010-10",
+    "before": {
+      "flow_id": "F-M010-10",
+      "product_id": "M-010",
+      "task": "区分清数据与删缓存（D1）",
+      "depth": "D1",
+      "evidence_ids": "E-PALMA-15",
+      "known_branches": "说明操作语义与导出边界；未将菜单名承诺为 Palma 2 当前可照做路径。",
+      "gaps": "Palma 2实机确认、完整删除文件/回收站路径、确认对话框、账号切换与撤销。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-010-palma.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M010-10",
+      "product_id": "M-010",
+      "task": "区分清数据与删缓存（D1）",
+      "depth": "D1",
+      "evidence_ids": "E-PALMA-15",
+      "known_branches": "通用V4.0区分清密码默认设置、书阅读数据、缓存/封面与整机重置；清阅读数据不可恢复，重置清用户数据。阅读锁仅NeoReader有效；Android11锁屏密码说明不套Palma 2。",
+      "gaps": "Palma 2现固件菜单/确认、完整删除/回收站、账号切换、备份是否完整和恢复成功；尚无可操作本机恢复指南。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-010-palma.md",
+      "checked_on": "2026-10-27"
+    },
+    "changed_fields": {
+      "known_branches": {
+        "before": "说明操作语义与导出边界；未将菜单名承诺为 Palma 2 当前可照做路径。",
+        "after": "通用V4.0区分清密码默认设置、书阅读数据、缓存/封面与整机重置；清阅读数据不可恢复，重置清用户数据。阅读锁仅NeoReader有效；Android11锁屏密码说明不套Palma 2。"
+      },
+      "gaps": {
+        "before": "Palma 2实机确认、完整删除文件/回收站路径、确认对话框、账号切换与撤销。",
+        "after": "Palma 2现固件菜单/确认、完整删除/回收站、账号切换、备份是否完整和恢复成功；尚无可操作本机恢复指南。"
+      },
+      "checked_on": {
+        "before": "2026-10-26",
+        "after": "2026-10-27"
+      }
+    }
+  }
+]

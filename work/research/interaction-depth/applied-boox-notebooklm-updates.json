@@ -1,0 +1,379 @@
+[
+  {
+    "batch": "eink-systems-coverage.csv",
+    "before": {
+      "flow_id": "F-M004-02",
+      "product_id": "M-004",
+      "task": "从阅读进入全局控制再返回",
+      "depth": "D2",
+      "evidence_ids": "E-BOOX-05",
+      "known_branches": "系统面板与应用页面是不同上下文；隐藏导航栏时先底部上滑调出。",
+      "gaps": "当前本机固件是否同路径；返回 app 后页码、选区及滚动位置是否保留。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-004-boox-neoreader.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M004-02",
+      "product_id": "M-004",
+      "task": "从阅读进入全局控制再返回",
+      "depth": "D2",
+      "evidence_ids": "E-BOOX-05;E-BXCD-03",
+      "known_branches": "控制/通知中心分侧；快捷项可Edit补入；侧边内滑需启用；导航栏隐藏先上滑调出；双击导航球回桌面不等于保存或终止进程",
+      "gaps": "未取得V4.1.2机型手册；面板关闭动作及选区/阅读页保留、手势与app冲突未观察",
+      "visual_status": "static_reference_only",
+      "hands_on": "false",
+      "case_path": "cases/M-004-boox-neoreader.md",
+      "checked_on": "2026-10-26"
+    }
+  },
+  {
+    "batch": "eink-systems-coverage.csv",
+    "before": {
+      "flow_id": "F-M004-03",
+      "product_id": "M-004",
+      "task": "按任务调整显示",
+      "depth": "D2",
+      "evidence_ids": "E-BOOX-06;E-BOOX-07;E-BOOX-08",
+      "known_branches": "app 配置、当前文档配置、全局范围分别处理；一次全刷不等于改变后续策略。",
+      "gaps": "当前帮助模式已变；本机 V4.1.2 模式实值、主题覆盖关系、耗电/残影未测。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-004-boox-neoreader.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M004-03",
+      "product_id": "M-004",
+      "task": "按任务调整显示",
+      "depth": "D2",
+      "evidence_ids": "E-BOOX-06;E-BOOX-07;E-BOOX-08;E-BXCD-04;E-BXCD-05;E-BXCD-06;E-BXCD-07;E-BXCD-12",
+      "known_branches": "单次全刷/App显示配置/当前文档/全部文档不同；原DPI、关闭Master Switch、单App Reset All及全App重置不同；NeoReader文档帮助Regal/Speed不与通用HD/Speed/Smooth混表",
+      "gaps": "本机4.1.2完整模式/默认参数/生效及退出反馈，重置关联、卸载后优化数据保留、真实残影/耗电未知",
+      "visual_status": "static_reference_only",
+      "hands_on": "false",
+      "case_path": "cases/M-004-boox-neoreader.md",
+      "checked_on": "2026-10-26"
+    }
+  },
+  {
+    "batch": "eink-systems-coverage.csv",
+    "before": {
+      "flow_id": "F-M004-06",
+      "product_id": "M-004",
+      "task": "标记并找回文档证据",
+      "depth": "D2",
+      "evidence_ids": "E-BOOX-12",
+      "known_branches": "文本批注与手写墨迹分开管理；文档级导出设置在 Settings → Annotation Export Settings。",
+      "gaps": "外部 PDF 软件如何识别注释、擦除/撤销、导出是否保留可编辑对象。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-004-boox-neoreader.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M004-06",
+      "product_id": "M-004",
+      "task": "标记并找回文档证据",
+      "depth": "D2",
+      "evidence_ids": "E-BOOX-12;E-BXCD-11",
+      "known_branches": "文本批注与手写分开管理；Progress的Blank Page会嵌入PDF，可在Preview或书签旁入口删除新增页",
+      "gaps": "PDF新增页删除确认/撤销/锚点变化、跨软件对象可编辑性、导出失败和存储不足未观察",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-004-boox-neoreader.md",
+      "checked_on": "2026-10-26"
+    }
+  },
+  {
+    "batch": "eink-systems-coverage.csv",
+    "before": {
+      "flow_id": "F-M004-07",
+      "product_id": "M-004",
+      "task": "查阅旁页后回到原处",
+      "depth": "D2",
+      "evidence_ids": "E-BOOX-13;E-BOOX-14",
+      "known_branches": "书签是持久标记；视图历史是暂时导航，不必靠记页码返回。",
+      "gaps": "重排 EPUB 后锚点、关书后历史、重复添加书签。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-004-boox-neoreader.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M004-07",
+      "product_id": "M-004",
+      "task": "查阅旁页后回到原处",
+      "depth": "D2",
+      "evidence_ids": "E-BOOX-13;E-BOOX-14;E-BXCD-11",
+      "known_branches": "Progress内Prev View/Next View逐次往返；书签是独立持久标记，不承诺视图历史跨关书或重启",
+      "gaps": "关书/系统回收后历史、EPUB重排定位与重复书签未知",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-004-boox-neoreader.md",
+      "checked_on": "2026-10-26"
+    }
+  },
+  {
+    "batch": "eink-systems-coverage.csv",
+    "before": {
+      "flow_id": "F-M004-08",
+      "product_id": "M-004",
+      "task": "阅读时创建关联笔记",
+      "depth": "D2",
+      "evidence_ids": "E-BOOX-15",
+      "known_branches": "一文档只有一个关联笔记，改笔记名不解除关联；也能在 Notes 编辑。",
+      "gaps": "移动/复制/删除源文件后关联；两窗口手写同步的实际时刻。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-004-boox-neoreader.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M004-08",
+      "product_id": "M-004",
+      "task": "阅读时创建关联笔记",
+      "depth": "D2",
+      "evidence_ids": "E-BOOX-15;E-BXCD-09;E-BXCD-10",
+      "known_branches": "Current Doc两窗标记在刷新后同步；关联笔记与系统独立Notes不同；控制中心换边/退出，系统分屏也可回Home退出；Flexible帮助型号名单未列本机",
+      "gaps": "关联Notes的写入时刻不能由Current Doc推断；源文件移动/删除、退出后页锚、Flexible本机适用未知",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-004-boox-neoreader.md",
+      "checked_on": "2026-10-26"
+    }
+  },
+  {
+    "batch": "eink-systems-coverage.csv",
+    "before": {
+      "flow_id": "F-M004-09",
+      "product_id": "M-004",
+      "task": "写笔记、改笔画、保留输出",
+      "depth": "D2",
+      "evidence_ids": "E-BOOX-16",
+      "known_branches": "普通导出与原笔记对象不同；More → Page- 删除当前页，帮助明确不可撤销。",
+      "gaps": ".note 再导入保真、删除整本恢复、退出前断电、不同擦除模式的实际反馈。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-004-boox-neoreader.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M004-09",
+      "product_id": "M-004",
+      "task": "写笔记、改笔画、保留输出",
+      "depth": "D2",
+      "evidence_ids": "E-BOOX-16;E-BXCD-13",
+      "known_branches": "Exit保存并返回Notepad View；More内Save手动保存，两入口不合并；Page-帮助称不能撤销",
+      "gaps": "Home/切App/系统回收是否持久保存、断电写入、.note往返、删整本恢复未知",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-004-boox-neoreader.md",
+      "checked_on": "2026-10-26"
+    }
+  },
+  {
+    "batch": "eink-systems-coverage.csv",
+    "before": {
+      "flow_id": "F-M004-14",
+      "product_id": "M-004",
+      "task": "从 TTS/后台问题排查到安全更新",
+      "depth": "D2",
+      "evidence_ids": "E-BOOX-14;E-BOOX-21;E-BOOX-22;E-BOOX-23",
+      "known_branches": "“支持 TTS”不能证明锁屏续播；恢复出厂设置默认清除存储，更新和恢复不是同一动作。",
+      "gaps": "焦点抢占、蓝牙断开、语音通话、自动恢复句子、首次引擎下载失败。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-004-boox-neoreader.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M004-14",
+      "product_id": "M-004",
+      "task": "从 TTS/后台问题排查到安全更新",
+      "depth": "D2",
+      "evidence_ids": "E-BOOX-14;E-BOOX-21;E-BOOX-22;E-BOOX-23;E-BXCD-06;E-BXCD-07;E-BXCD-08;E-BXCD-14",
+      "known_branches": "TTS引擎、通知权限、App Startup、Stay active和Freeze是不同控制；冻结阻后台/通知；睡眠连接设置另列；安装/卸载只取得入口D1",
+      "gaps": "各后台开关优先级、TTS锁屏/蓝牙/焦点中断续播、安装失败/卸载后文件账户和偏好保留/恢复未知",
+      "visual_status": "static_reference_only",
+      "hands_on": "false",
+      "case_path": "cases/M-004-boox-neoreader.md",
+      "checked_on": "2026-10-26"
+    }
+  },
+  {
+    "batch": "ai-coverage.csv",
+    "before": {
+      "flow_id": "F-M041-01",
+      "product_id": "M-041",
+      "task": "找到并选入学习资料",
+      "depth": "D2",
+      "evidence_ids": "E-NBL-01",
+      "known_branches": "Deep Research 可后台执行后选入报告/来源；取消会丢弃未导入结果，超限可能只导入部分。该深研入口另有 18+ 条件。",
+      "gaps": "重复/超限实际反馈、资料准确性",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-041-notebooklm.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M041-01",
+      "product_id": "M-041",
+      "task": "找到并选入学习资料",
+      "depth": "D2",
+      "evidence_ids": "E-NBL-01;E-NBCD-02;E-NBCD-03",
+      "known_branches": "保留Fast/Deep Research任务；本地资料Add sources导入。超过500000词、上传200MB或PDF复制保护可失败；YouTube取字幕、音频取转写；重复去重未说明。",
+      "gaps": "重复导入识别、错误页与保留部分数据、全格式保真未知",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-041-notebooklm.md",
+      "checked_on": "2026-10-26"
+    }
+  },
+  {
+    "batch": "ai-coverage.csv",
+    "before": {
+      "flow_id": "F-M041-02",
+      "product_id": "M-041",
+      "task": "更新来源并识别失效",
+      "depth": "D2",
+      "evidence_ids": "E-NBL-01",
+      "known_branches": "失去 Drive 查看权限时来源不可用且仍占额度；网页导入不包含嵌入媒体。不能将全部来源理解为永久本地副本。",
+      "gaps": "原文变更后旧产物是否更新",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-041-notebooklm.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M041-02",
+      "product_id": "M-041",
+      "task": "更新来源并识别失效",
+      "depth": "D2",
+      "evidence_ids": "E-NBL-01;E-NBCD-02;E-NBCD-04",
+      "known_branches": "Drive打开来源可手动sync，帮助亦述自动更新；失权/被删来源仍占额度但不参与新问答/产物，可请求访问或移除。取消勾选只确证范围选择，不等同删除；原Drive文件不受编辑/删除。",
+      "gaps": "手动删除入口/确认/恢复、重复合并、旧产物是否随来源更新未知；创建帮助关于unselect/remove措辞需实核",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-041-notebooklm.md",
+      "checked_on": "2026-10-26"
+    }
+  },
+  {
+    "batch": "ai-coverage.csv",
+    "before": {
+      "flow_id": "F-M041-04",
+      "product_id": "M-041",
+      "task": "生成并完成一次卡片/测验",
+      "depth": "D2",
+      "evidence_ids": "E-NBL-02",
+      "known_branches": "结束看结果并重练；卡片可只练错项、打乱、删卡或下载 CSV，部分书源限制下载。题目生成和掌握评价是两种数据。",
+      "gaps": "逐题编辑、评分撤销、自动复习规则",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-041-notebooklm.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M041-04",
+      "product_id": "M-041",
+      "task": "生成并完成一次卡片/测验",
+      "depth": "D2",
+      "evidence_ids": "E-NBL-02;E-NBCD-05",
+      "known_branches": "前后箭头导航、Hint/Explain、自评和结果重练；卡片可重启、打乱、删卡和CSV下载。自评记录不证明掌握；未见题干/答案文本编辑或评分撤销步骤。",
+      "gaps": "逐题文本校订、评分撤销、删卡确认/恢复、自动间隔复习规则未知",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-041-notebooklm.md",
+      "checked_on": "2026-10-26"
+    }
+  },
+  {
+    "batch": "ai-coverage.csv",
+    "before": {
+      "flow_id": "F-M041-05",
+      "product_id": "M-041",
+      "task": "中断后继续学习",
+      "depth": "D2",
+      "evidence_ids": "E-NBL-04;E-NBL-07",
+      "known_branches": "2026-03-20 发布说明明确跨会话保存进度、结果页重练及删除单卡/单题；并非本项目测试。不能套用到早期上线时的行为。",
+      "gaps": "多端冲突、删题恢复、精确断点",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-041-notebooklm.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M041-05",
+      "product_id": "M-041",
+      "task": "中断后继续学习",
+      "depth": "D2",
+      "evidence_ids": "E-NBL-04;E-NBL-07;E-NBCD-05;E-NBCD-12",
+      "known_branches": "当前帮助也述离开后继续进度；2026-03-20旧证据保留单卡/单题删除与重练历史范围，本轮该发布页HTTP429未复取。Android同步延迟建议退出重开，不保证冲突合并。",
+      "gaps": "多端冲突优先级、删题恢复、精确断点及重练是否重置历史成绩未知",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-041-notebooklm.md",
+      "checked_on": "2026-10-26"
+    }
+  },
+  {
+    "batch": "ai-coverage.csv",
+    "before": {
+      "flow_id": "F-M041-06",
+      "product_id": "M-041",
+      "task": "听摘要并插入问题",
+      "depth": "D2",
+      "evidence_ids": "E-NBL-05",
+      "known_branches": "回答后继续原音频。互动目前文档限英语；生成音频不是原书逐字朗读，分享链接也不让别人直接加入互动。",
+      "gaps": "中文互动、断网、真实恢复位置",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-041-notebooklm.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M041-06",
+      "product_id": "M-041",
+      "task": "听摘要并插入问题",
+      "depth": "D2",
+      "evidence_ids": "E-NBL-05;E-NBCD-12",
+      "known_branches": "原英语互动流程保留；Android可后台听，Studio音频Download或左滑下载后在首页Downloaded找回离线音频；离线缓存不能当作设备文件导出。",
+      "gaps": "中文互动、精确续播位置、缓存清理后的恢复及离线互动未知",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-041-notebooklm.md",
+      "checked_on": "2026-10-26"
+    }
+  },
+  {
+    "batch": "ai-coverage.csv",
+    "before": {
+      "flow_id": "F-M041-07",
+      "product_id": "M-041",
+      "task": "保存自己的知识笔记",
+      "depth": "D2",
+      "evidence_ids": "E-NBL-06",
+      "known_branches": "选中笔记会参与后续问答/生成；回答笔记移除引用后可编辑。导出 Docs 是新副本，不回同步，分享权限不继承；移动端目前不支持笔记编辑。",
+      "gaps": "移除引用后可追溯性、删除恢复",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-041-notebooklm.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M041-07",
+      "product_id": "M-041",
+      "task": "保存自己的知识笔记",
+      "depth": "D2",
+      "evidence_ids": "E-NBL-06;E-NBCD-06;E-NBCD-03",
+      "known_branches": "新笔记属于Sources，勾选后参加问答/生成；旧Studio笔记Convert或批量Convert；笔记More导出新Docs，修改不回同步且权限不继承。FAQ明确已删除笔记不能恢复；移动端只读/选取/问答。",
+      "gaps": "移除引用后可追溯性、删除确认、笔记变更是否更新旧产物未知",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-041-notebooklm.md",
+      "checked_on": "2026-10-26"
+    }
+  }
+]

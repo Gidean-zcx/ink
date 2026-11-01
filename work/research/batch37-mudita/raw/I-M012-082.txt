@@ -1,0 +1,29 @@
+What Are the SAR Values for Mudita Kompakt?
+Modified on: Sat, 3 Oct, 2026 at 8:44 AM
+Unlike the Mudita Pure, the Mudita Kompakt doesn't focus on achieving the lowest possible SAR rating. However, it still has relatively low SAR values compared to many other phones on the market.
+Mudita Kompakt SAR (Global)
+Measured with EU method:
+Head (10g @5mm): 0.490 W/kg
+Body (10g @5mm): 1.310 W/kg
+Measured with US method:
+Head (1g @10mm): 0.97 W/kg
+Body (1g @10mm): 0.78 W/kg
+Mudita Kompakt SAR (North American)
+Measured with EU method:
+Head (10g @5mm): 0.457 W/kg
+Body (10g @5mm): 1.279 W/kg
+Measured with US method:
+Head (1g @10mm): 1.06 W/kg
+Body (1g @10mm): 1.17 W/kg
+Why No Ultralow-SAR Antenna?
+Many among our community remember the first mobile phone we ever created, the Mudita Pure. We designed the Pure from the ground up as a minimalist phone offering the lowest possible EMF emissions. For this purpose, we engineered a custom antenna that allowed the Pure to achieve what was likely the lowest SAR rating of any other phone on the market.
+However, the Pure with its ultralow-SAR antenna also required much better signal quality than most other phones. It could struggle to maintain a stable connection in areas without very good coverage, which limited the phone's network performance in remote regions.
+The Pure's specification also limited users in the US to just the T-Mobile network due to certification issues with other major American carriers.
+In comparison to the Pure, the Mudita Kompakt offers far superior connectivity. It's also fully certified in all countries where we are shipping it to and won't be limited to any specific carriers.
+While the Kompakt has higher SAR ratings than the Pure, it also offers more reliable network performance for everyday use.
+EMF-sensitive Kompakt users can reduce their radiation exposure with Offline+ mode while not needing to use the phone. Easily activated with a physical switch on the side of the device, Offline+ cuts off power to the GSM module and disables all microphones at the hardware level. It also disables the camera, Wi-Fi, and Bluetooth at the software level. This solution makes the phone fully offline, enabling maximum security and zero EMF emissions.
+Was this article helpful?
+No
+Yes
+That’s Great!
+Thank you for your feedback

@@ -1,0 +1,25 @@
+{
+  "status": "PASS",
+  "new_evidence": 14,
+  "new_flows": 1,
+  "case_flows": 9,
+  "case_evidence": 23,
+  "inventory": {
+    "parent_groups": 9,
+    "child_topics": 47,
+    "body_subtopics": 2
+  },
+  "old_flow_changes": 8,
+  "old_field_changes": 34,
+  "old_batches_unchanged": true,
+  "http_200": 14,
+  "hands_on": false,
+  "visual_observed": false,
+  "files": {
+    "docs/research/interaction-library/cases/M-001-kindle.md": "5fe7897fc9b318701a040897bfc80aa8c68337bce2c7c6f094dc81366fc2e184",
+    "docs/research/interaction-library/batches/kindle-controls-deepening-evidence.jsonl": "9ed818c0ce4ad6fcd022c150c9ee234cbad9cfe62e50cef94198c443cb53d3fb",
+    "docs/research/interaction-library/batches/kindle-controls-deepening-coverage.csv": "774bf05a14d76603d5508e5c31215bfd08784c7768982aa174ecb2f7035440d4",
+    "docs/research/interaction-library/batches/kindle-controls-deepening-inventory.csv": "b421d96863733f927e2ba716e581c717b908af319bd693144cf45fedfe399e1e",
+    "work/kindle-controls-deepening/existing-coverage-updates.csv": "ca630501b718fcc2da7ed7e96192c7d08e3b496fd529d2c23b1c05ce4f7409e1"
+  }
+}

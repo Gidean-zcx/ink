@@ -1,0 +1,21 @@
+Formatting a microSD card
+You can format a microSD card on the player.
+Formatting the microSD card will delete all data stored on the card. Save a backup copy in advance. Be careful not to delete important data.
+Swipe the [WALKMAN Home] screen upwards.
+Tap the menu items in the following order.
+[Settings] － [Storage].
+Tap the drop-down list, and then tap the name of the microSD card.
+Tap (options) in the top right of the screen.
+Tap [Format].
+Confirm the message carefully. Follow the onscreen instructions.
+Hint
+When you back up a music file from “Music player”, you can check the location of the file. Confirm [File location] under [Detailed song information].
+To display the information, tap the menu items in the following order.
+From the playback screen in “Music player”:
+(Options) － [Detailed song information].
+From the library screen, play queue screen, or favorites screen in “Music player”:
+(Context menu) － [Detailed song information].
+Note
+When you use a microSD card on the player for the first time, format the microSD card with the player. Otherwise, some functions of the player may be limited.
+The contents of the Help Guide may be subject to change without notice due to updates to the product's specifications.
+Go to Page Top

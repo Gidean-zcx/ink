@@ -1,0 +1,33 @@
+{
+  "name": "31-correct-pattern-next",
+  "at": "2026-10-27T06:32:20.924048+00:00",
+  "url": "https://www.duolingo.com/lesson/unit/1/level/1",
+  "title": "Duolingo - The world’s most popular way to learn",
+  "text": "Select\nthe\nanswer\nSelect the answer\n1\n+\n4\n=\n9\n+4=9\n13\n13\n9\n9\n5\n5\nTOOLKIT\nCHECK",
+  "controls": [
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": null,
+      "test": "quit-button",
+      "type": "submit",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "TOOLKIT",
+      "aria": null,
+      "test": null,
+      "type": "submit",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "CHECK",
+      "aria": null,
+      "test": "player-next",
+      "type": "submit",
+      "disabled": false
+    }
+  ]
+}

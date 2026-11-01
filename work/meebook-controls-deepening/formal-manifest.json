@@ -1,0 +1,27 @@
+[
+  {
+    "path": "docs/research/interaction-library/cases/M-057-meebook.md",
+    "sha256": "61b1abf5f9658df97000b63fa1b1add3101a8f430669fbde33cdbc66f1084d58",
+    "bytes": 6458
+  },
+  {
+    "path": "docs/research/interaction-library/batches/meebook-controls-deepening-evidence.jsonl",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "path": "docs/research/interaction-library/batches/meebook-controls-deepening-coverage.csv",
+    "sha256": "aa0cf671b21fa0390e9b0cfb58c6cecf3a0d7df66eaad894707f17ea224f6025",
+    "bytes": 107
+  },
+  {
+    "path": "docs/research/interaction-library/batches/meebook-controls-deepening-inventory.csv",
+    "sha256": "96341f4bbb665bdfc820710488ea61403a46a5acbc39085246e572f1467580c5",
+    "bytes": 11603
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/meebook-controls-deepening/source-notes.md",
+    "sha256": "e096a28910f56b3e5fbbfc8339a089e799fc9b6738f72b060d45c81e304da545",
+    "bytes": 2878
+  }
+]

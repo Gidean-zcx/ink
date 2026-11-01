@@ -1,0 +1,343 @@
+[
+  {
+    "kind": "new_body",
+    "before": {
+      "order": "39",
+      "entry_kind": "child_topic",
+      "parent_order": "38",
+      "functional_domain": "Studying with Podcasts",
+      "source_url": "https://help.quizlet.com/hc/en-us/sections/360005938691-Studying",
+      "source_section": "Studying / Studying with Podcasts",
+      "article_url": "",
+      "evidence_ids": "E-QZCD-03",
+      "flow_ids": "",
+      "coverage": "仅目录；正文未在本例展开",
+      "missing_controls_or_branches": "可从官方目录继续；入口/动作/反馈/结束/异常恢复均未逐项核定",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "order": "39",
+      "entry_kind": "child_topic",
+      "parent_order": "38",
+      "functional_domain": "Studying with Podcasts",
+      "source_url": "https://help.quizlet.com/hc/en-us/sections/360005938691-Studying",
+      "source_section": "Studying / Studying with Podcasts",
+      "article_url": "https://help.quizlet.com/hc/en-us/articles/49085623511565-Studying-with-Podcasts",
+      "evidence_ids": "E-QZCD-03;E-QZAS-01",
+      "flow_ids": "F-M021-18",
+      "coverage": "D2部分；已读正文，未操作",
+      "missing_controls_or_branches": "生成到Library的文档链；不纠正源材料错误，播放/恢复未知",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "kind": "new_body",
+    "before": {
+      "order": "41",
+      "entry_kind": "child_topic",
+      "parent_order": "38",
+      "functional_domain": "Using Study with friends",
+      "source_url": "https://help.quizlet.com/hc/en-us/sections/360005938691-Studying",
+      "source_section": "Studying / Using Study with friends",
+      "article_url": "",
+      "evidence_ids": "E-QZCD-03",
+      "flow_ids": "",
+      "coverage": "仅目录；正文未在本例展开",
+      "missing_controls_or_branches": "可从官方目录继续；入口/动作/反馈/结束/异常恢复均未逐项核定",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "order": "41",
+      "entry_kind": "child_topic",
+      "parent_order": "38",
+      "functional_domain": "Using Study with friends",
+      "source_url": "https://help.quizlet.com/hc/en-us/sections/360005938691-Studying",
+      "source_section": "Studying / Using Study with friends",
+      "article_url": "https://help.quizlet.com/hc/en-us/articles/48158602540685-Using-Study-with-friends",
+      "evidence_ids": "E-QZCD-03;E-QZAS-04",
+      "flow_ids": "F-M021-21",
+      "coverage": "D2部分；已读正文，未操作",
+      "missing_controls_or_branches": "公开集会话、匿名一次、模式不同结果；会话成员可见最新成绩/对错词",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "kind": "new_body",
+    "before": {
+      "order": "42",
+      "entry_kind": "child_topic",
+      "parent_order": "38",
+      "functional_domain": "Playing Charms",
+      "source_url": "https://help.quizlet.com/hc/en-us/sections/360005938691-Studying",
+      "source_section": "Studying / Playing Charms",
+      "article_url": "",
+      "evidence_ids": "E-QZCD-03",
+      "flow_ids": "",
+      "coverage": "仅目录；正文未在本例展开",
+      "missing_controls_or_branches": "可从官方目录继续；入口/动作/反馈/结束/异常恢复均未逐项核定",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "order": "42",
+      "entry_kind": "child_topic",
+      "parent_order": "38",
+      "functional_domain": "Playing Charms",
+      "source_url": "https://help.quizlet.com/hc/en-us/sections/360005938691-Studying",
+      "source_section": "Studying / Playing Charms",
+      "article_url": "https://help.quizlet.com/hc/en-us/articles/47712424067341-Playing-Charms",
+      "evidence_ids": "E-QZCD-03;E-QZAS-05",
+      "flow_ids": "F-M021-20",
+      "coverage": "D2部分；已读正文，未操作",
+      "missing_controls_or_branches": "匹配得分、答对加步、错答不加步、步耗尽结束；实际反馈/保存未知",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "kind": "new_body",
+    "before": {
+      "order": "43",
+      "entry_kind": "child_topic",
+      "parent_order": "38",
+      "functional_domain": "Studying with Audio Notes",
+      "source_url": "https://help.quizlet.com/hc/en-us/sections/360005938691-Studying",
+      "source_section": "Studying / Studying with Audio Notes",
+      "article_url": "",
+      "evidence_ids": "E-QZCD-03",
+      "flow_ids": "",
+      "coverage": "仅目录；正文未在本例展开",
+      "missing_controls_or_branches": "可从官方目录继续；入口/动作/反馈/结束/异常恢复均未逐项核定",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "order": "43",
+      "entry_kind": "child_topic",
+      "parent_order": "38",
+      "functional_domain": "Studying with Audio Notes",
+      "source_url": "https://help.quizlet.com/hc/en-us/sections/360005938691-Studying",
+      "source_section": "Studying / Studying with Audio Notes",
+      "article_url": "https://help.quizlet.com/hc/en-us/articles/47540466130829-Studying-with-Audio-Notes",
+      "evidence_ids": "E-QZCD-03;E-QZAS-02",
+      "flow_ids": "F-M021-02;F-M021-12",
+      "coverage": "D2部分；已读正文，未操作",
+      "missing_controls_or_branches": "音频录制/上传、继续本机草稿、错语言新建指南；不能由音频直接生成Practice Tests",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "kind": "new_body",
+    "before": {
+      "order": "45",
+      "entry_kind": "child_topic",
+      "parent_order": "38",
+      "functional_domain": "Studying with Ask Quizlet",
+      "source_url": "https://help.quizlet.com/hc/en-us/sections/360005938691-Studying",
+      "source_section": "Studying / Studying with Ask Quizlet",
+      "article_url": "",
+      "evidence_ids": "E-QZCD-03",
+      "flow_ids": "",
+      "coverage": "仅目录；正文未在本例展开",
+      "missing_controls_or_branches": "可从官方目录继续；入口/动作/反馈/结束/异常恢复均未逐项核定",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "order": "45",
+      "entry_kind": "child_topic",
+      "parent_order": "38",
+      "functional_domain": "Studying with Ask Quizlet",
+      "source_url": "https://help.quizlet.com/hc/en-us/sections/360005938691-Studying",
+      "source_section": "Studying / Studying with Ask Quizlet",
+      "article_url": "https://help.quizlet.com/hc/en-us/articles/42790350723725-Studying-with-Ask-Quizlet",
+      "evidence_ids": "E-QZCD-03;E-QZAS-03",
+      "flow_ids": "F-M021-19",
+      "coverage": "D2部分；已读正文，未操作",
+      "missing_controls_or_branches": "解释到建议动作；最小化保留，离开重置；US14岁及以上，生成卡组可编辑",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "kind": "new_body",
+    "before": {
+      "order": "46",
+      "entry_kind": "child_topic",
+      "parent_order": "38",
+      "functional_domain": "Using Quizlet with Superhuman",
+      "source_url": "https://help.quizlet.com/hc/en-us/sections/360005938691-Studying",
+      "source_section": "Studying / Using Quizlet with Superhuman",
+      "article_url": "",
+      "evidence_ids": "E-QZCD-03",
+      "flow_ids": "",
+      "coverage": "仅目录；正文未在本例展开",
+      "missing_controls_or_branches": "可从官方目录继续；入口/动作/反馈/结束/异常恢复均未逐项核定",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "order": "46",
+      "entry_kind": "child_topic",
+      "parent_order": "38",
+      "functional_domain": "Using Quizlet with Superhuman",
+      "source_url": "https://help.quizlet.com/hc/en-us/sections/360005938691-Studying",
+      "source_section": "Studying / Using Quizlet with Superhuman",
+      "article_url": "https://help.quizlet.com/hc/en-us/articles/41655677850509-Using-Quizlet-with-Superhuman",
+      "evidence_ids": "E-QZCD-03;E-QZAS-06",
+      "flow_ids": "F-M021-01",
+      "coverage": "D2部分；已读正文，未操作",
+      "missing_controls_or_branches": "首次账号授权、选文字/文档/符合条件标签页、进入Quizlet；不证明全页面访问",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "kind": "stale_status_correction",
+    "before": {
+      "order": "48",
+      "entry_kind": "child_topic",
+      "parent_order": "38",
+      "functional_domain": "Playing a game of Blocks",
+      "source_url": "https://help.quizlet.com/hc/en-us/sections/360005938691-Studying",
+      "source_section": "Studying / Playing a game of Blocks",
+      "article_url": "",
+      "evidence_ids": "E-QZCD-03",
+      "flow_ids": "",
+      "coverage": "仅目录；正文未在本例展开",
+      "missing_controls_or_branches": "可从官方目录继续；入口/动作/反馈/结束/异常恢复均未逐项核定",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "order": "48",
+      "entry_kind": "child_topic",
+      "parent_order": "38",
+      "functional_domain": "Playing a game of Blocks",
+      "source_url": "https://help.quizlet.com/hc/en-us/sections/360005938691-Studying",
+      "source_section": "Studying / Playing a game of Blocks",
+      "article_url": "https://help.quizlet.com/hc/en-us/articles/37203179032717-Playing-a-game-of-Blocks",
+      "evidence_ids": "E-QZCD-03;E-QZGM-02",
+      "flow_ids": "F-M021-15",
+      "coverage": "D2部分；回填既有第32批正文，非本批新取证",
+      "missing_controls_or_branches": "原游戏案例已读；取消/恢复仍缺，Live仅加入流程",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "kind": "new_body",
+    "before": {
+      "order": "51",
+      "entry_kind": "child_topic",
+      "parent_order": "38",
+      "functional_domain": "Studying with Quizlet Expert Solutions",
+      "source_url": "https://help.quizlet.com/hc/en-us/sections/360005938691-Studying",
+      "source_section": "Studying / Studying with Quizlet Expert Solutions",
+      "article_url": "",
+      "evidence_ids": "E-QZCD-03",
+      "flow_ids": "",
+      "coverage": "仅目录；正文未在本例展开",
+      "missing_controls_or_branches": "可从官方目录继续；入口/动作/反馈/结束/异常恢复均未逐项核定",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "order": "51",
+      "entry_kind": "child_topic",
+      "parent_order": "38",
+      "functional_domain": "Studying with Quizlet Expert Solutions",
+      "source_url": "https://help.quizlet.com/hc/en-us/sections/360005938691-Studying",
+      "source_section": "Studying / Studying with Quizlet Expert Solutions",
+      "article_url": "https://help.quizlet.com/hc/en-us/articles/5649137275789-Studying-with-Quizlet-Expert-Solutions",
+      "evidence_ids": "E-QZCD-03;E-QZAS-07",
+      "flow_ids": "F-M021-22",
+      "coverage": "D2部分；已读正文，未操作",
+      "missing_controls_or_branches": "教材章页题定位、App扫描与近期解答；专家答案和AI追加解释分开",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "kind": "new_body",
+    "before": {
+      "order": "58",
+      "entry_kind": "child_topic",
+      "parent_order": "38",
+      "functional_domain": "Searching your flashcard sets by keyword",
+      "source_url": "https://help.quizlet.com/hc/en-us/sections/360005938691-Studying",
+      "source_section": "Studying / Searching your flashcard sets by keyword",
+      "article_url": "",
+      "evidence_ids": "E-QZCD-03",
+      "flow_ids": "",
+      "coverage": "仅目录；正文未在本例展开",
+      "missing_controls_or_branches": "可从官方目录继续；入口/动作/反馈/结束/异常恢复均未逐项核定",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "order": "58",
+      "entry_kind": "child_topic",
+      "parent_order": "38",
+      "functional_domain": "Searching your flashcard sets by keyword",
+      "source_url": "https://help.quizlet.com/hc/en-us/sections/360005938691-Studying",
+      "source_section": "Studying / Searching your flashcard sets by keyword",
+      "article_url": "https://help.quizlet.com/hc/en-us/articles/360058606332-Searching-your-flashcard-sets-by-keyword",
+      "evidence_ids": "E-QZCD-03;E-QZAS-08",
+      "flow_ids": "F-M021-23",
+      "coverage": "D2部分；已读正文，未操作",
+      "missing_controls_or_branches": "网站按Recent/Created范围查词返回包含内容的卡组；手机需浏览器",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "kind": "stale_status_correction",
+    "before": {
+      "order": "59",
+      "entry_kind": "child_topic",
+      "parent_order": "38",
+      "functional_domain": "Joining a game of Classic Quizlet Live",
+      "source_url": "https://help.quizlet.com/hc/en-us/sections/360005938691-Studying",
+      "source_section": "Studying / Joining a game of Classic Quizlet Live",
+      "article_url": "",
+      "evidence_ids": "E-QZCD-03",
+      "flow_ids": "",
+      "coverage": "仅目录；正文未在本例展开",
+      "missing_controls_or_branches": "可从官方目录继续；入口/动作/反馈/结束/异常恢复均未逐项核定",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "order": "59",
+      "entry_kind": "child_topic",
+      "parent_order": "38",
+      "functional_domain": "Joining a game of Classic Quizlet Live",
+      "source_url": "https://help.quizlet.com/hc/en-us/sections/360005938691-Studying",
+      "source_section": "Studying / Joining a game of Classic Quizlet Live",
+      "article_url": "https://help.quizlet.com/hc/en-au/articles/360031249731-Helping-players-join-a-game-of-Classic-Quizlet-Live",
+      "evidence_ids": "E-QZCD-03;E-QZGM-04",
+      "flow_ids": "F-M021-17",
+      "coverage": "D2部分；回填既有第32批正文，非本批新取证",
+      "missing_controls_or_branches": "原游戏案例已读；取消/恢复仍缺，Live仅加入流程",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "kind": "stale_status_correction",
+    "before": {
+      "order": "60",
+      "entry_kind": "child_topic",
+      "parent_order": "38",
+      "functional_domain": "Playing Match",
+      "source_url": "https://help.quizlet.com/hc/en-us/sections/360005938691-Studying",
+      "source_section": "Studying / Playing Match",
+      "article_url": "",
+      "evidence_ids": "E-QZCD-03",
+      "flow_ids": "",
+      "coverage": "仅目录；正文未在本例展开",
+      "missing_controls_or_branches": "可从官方目录继续；入口/动作/反馈/结束/异常恢复均未逐项核定",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "order": "60",
+      "entry_kind": "child_topic",
+      "parent_order": "38",
+      "functional_domain": "Playing Match",
+      "source_url": "https://help.quizlet.com/hc/en-us/sections/360005938691-Studying",
+      "source_section": "Studying / Playing Match",
+      "article_url": "https://help.quizlet.com/hc/en-us/articles/360031183611-Playing-Match",
+      "evidence_ids": "E-QZCD-03;E-QZGM-01",
+      "flow_ids": "F-M021-14",
+      "coverage": "D2部分；回填既有第32批正文，非本批新取证",
+      "missing_controls_or_branches": "原游戏案例已读；取消/恢复仍缺，Live仅加入流程",
+      "checked_on": "2026-10-27"
+    }
+  }
+]

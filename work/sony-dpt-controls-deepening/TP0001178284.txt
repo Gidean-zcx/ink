@@ -1,0 +1,22 @@
+There are two types of notes: “standalone notes” and “side-notes on documents.” This section explains how to create a side-note on a document. For how to create a standalone note, see the links in “Related Topics.”
+Hint
+When a one-to-one relationship is made between a side-note and a document, simply select  (option) — [Open Side-Note] on the screen of the document to display the side-note alongside the document. This is convenient for displaying a note without have to find it in a list.
+Tap anywhere on the screen of a document to display the tool bar.
+Tap  (option) in the upper right of the document screen — [Create a New Side-Note for This Document].
+Select a template, and tap [OK].
+The document and side-note are displayed side-by-side.
+The side-note is given the same file name as the document with “_Note” attached to the end, and it is located in the same folder as the document.
+To change the side that the document and the side-note are displayed on
+Tap
+(option) — [Swap Screens].
+To display only one document
+Tap  (option) on either the left or right, and then tap [Display This Document Only].
+Note
+When the document and side-note are displayed side-by-side, the document cannot be rotated.
+The document and side-note cannot be displayed top and bottom.
+When you press the
+(home) button and tap [Create&#010;New Note], a standalone note is created, not a side-note.
+A side-note cannot be created in a note.
+Hint
+Only one side-note can be created per document. When you want to create a side-note to replace the existing side-note, after displaying the existing side-note in side-by-side format with the document, tap  (option) — [Create a New Side-Note for This Document]. The old side-note will become a standalone note.
+Side-notes are created as PDF files and can be handled the same way as documents. After creation, the relationship between the document and the side-note will be retained, even if the Digital Paper App is used to move the document or the side-note to another folder or to change the file name of the side-note.

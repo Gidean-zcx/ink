@@ -1,0 +1,156 @@
+[
+  {
+    "url": "https://docs.ankiweb.net/llms.txt",
+    "status": 200,
+    "type": "text/plain; charset=utf-8",
+    "path": "work/anki-deepening/llms.txt",
+    "sha256": "37277f3b5505aa8ab28719e28b3ac2bb9217288d8648beb974a93568ba2edbdc",
+    "bytes": 22058
+  },
+  {
+    "url": "https://docs.ankiweb.net/manual/adding-editing.md",
+    "error": "HTTP Error 404: Not Found"
+  },
+  {
+    "url": "https://docs.ankiweb.net/manual/browsing.md",
+    "status": 200,
+    "type": "text/markdown; charset=utf-8",
+    "path": "work/anki-deepening/browsing.md",
+    "sha256": "26f82d80fdfd689bfa5c6392302e3dc6ba6907d1c2f9a3ba170729e64384fded",
+    "bytes": 19809
+  },
+  {
+    "url": "https://docs.ankiweb.net/manual/deck-options.md",
+    "status": 200,
+    "type": "text/markdown; charset=utf-8",
+    "path": "work/anki-deepening/deck-options.md",
+    "sha256": "2bb7c9f536b4b33a754fa363d75f7625b4001eda260aec92b3f5fe8975a8c2ae",
+    "bytes": 39923
+  },
+  {
+    "url": "https://docs.ankiweb.net/manual/editing.md",
+    "status": 200,
+    "path": "work/anki-deepening/editing.md",
+    "sha256": "26e96c191439a915c2a6cf78828e139704b10a979b67b0a5fadd0deb5ce263fb",
+    "bytes": 30285
+  },
+  {
+    "url": "https://docs.ankiweb.net/manual/importing/text-files.md",
+    "status": 200,
+    "path": "work/anki-deepening/importing-text-files.md",
+    "sha256": "bb27ae5f28bc9aca8dde9f1f1caa884000ad9fb10c193bba7f2f3e08b2024095",
+    "bytes": 11298
+  },
+  {
+    "url": "https://docs.ankiweb.net/manual/importing/packaged-decks.md",
+    "status": 200,
+    "path": "work/anki-deepening/importing-packaged-decks.md",
+    "sha256": "7a2cffe127b882f82e39b2b1c74cb91ed5efc34ede3fb17e30413aa2bb5b6dff",
+    "bytes": 2778
+  },
+  {
+    "url": "https://docs.ankiweb.net/manual/templates/intro.md",
+    "status": 200,
+    "path": "work/anki-deepening/templates-intro.md",
+    "sha256": "172af3621cf9d04e9309efda037c910897b5c971f63fc589c25dca41f4054a1a",
+    "bytes": 2847
+  },
+  {
+    "url": "https://docs.ankiweb.net/manual/templates/generation.md",
+    "status": 200,
+    "path": "work/anki-deepening/templates-generation.md",
+    "sha256": "04f572f96600e15b1113778dd9077bcc32fe93f11985c0fbc07b7671af703842",
+    "bytes": 7733
+  },
+  {
+    "url": "https://docs.ankiweb.net/manual/filtered-decks.md",
+    "status": 200,
+    "path": "work/anki-deepening/filtered-decks.md",
+    "sha256": "b41452aaafe8712ef8073c17a194b1a5525a3bb94706e382116cb53ad5caf695",
+    "bytes": 11354
+  },
+  {
+    "url": "https://docs.ankiweb.net/manual/searching.md",
+    "status": 200,
+    "path": "work/anki-deepening/searching.md",
+    "sha256": "d58f94e862eccc61b04c575474ed8400e73299e6b765a5d560b1857750481939",
+    "bytes": 15885
+  },
+  {
+    "url": "https://docs.ankiweb.net/manual/stats.md",
+    "status": 200,
+    "path": "work/anki-deepening/stats.md",
+    "sha256": "4de7bc0416b51d83f3c67694ae5165bcefe6462f223a60c28e76e9aeffffe918",
+    "bytes": 13184
+  },
+  {
+    "url": "https://docs.ankiweb.net/manual/media.md",
+    "status": 200,
+    "path": "work/anki-deepening/media.md",
+    "sha256": "4151e6313563d44de616562e1d7509a766e788fab606179ef3c381d44332ce5b",
+    "bytes": 3661
+  },
+  {
+    "url": "https://docs.ankiweb.net/manual/leeches.md",
+    "status": 200,
+    "path": "work/anki-deepening/leeches.md",
+    "sha256": "bc53f86af91f5ddd201529efc86549a6e539205309c3750b6f598799a6234145",
+    "bytes": 2919
+  },
+  {
+    "url": "https://docs.ankiweb.net/manual/preferences.md",
+    "status": 200,
+    "path": "work/anki-deepening/preferences.md",
+    "sha256": "0b26360d503400d3ba0be4979d81ff62bf34fd8d77ce73d933a530592e003728",
+    "bytes": 7261
+  },
+  {
+    "url": "https://docs.ankiweb.net/manual/addons.md",
+    "status": 200,
+    "path": "work/anki-deepening/addons.md",
+    "sha256": "d4d7f5211793d92537f1542261d951432d2aba3527d8e6eac7ab49e5f64c139f",
+    "bytes": 1573
+  },
+  {
+    "url": "https://docs.ankiweb.net/manual/profiles.md",
+    "status": 200,
+    "path": "work/anki-deepening/profiles.md",
+    "sha256": "23d6c6434bfde60295c8b874bcb63f007ec61b7be0212df4b4dd5fc964ff1c2f",
+    "bytes": 1939
+  },
+  {
+    "url": "https://docs.ankiweb.net/manual/studying.md",
+    "status": 200,
+    "path": "work/anki-deepening/studying.md",
+    "sha256": "f33f06d6f944063c7a5bf9843bd4b3942ce5c465a694675bd35c5abe23cfcc46",
+    "bytes": 14055
+  },
+  {
+    "url": "https://docs.ankiweb.net/manual/exporting.md",
+    "status": 200,
+    "path": "work/anki-deepening/exporting.md",
+    "sha256": "b6b0082bf604050104b4bfb2a6918d54f271c5ff2d8b886dd00ad82864a5ca44",
+    "bytes": 4722
+  },
+  {
+    "url": "https://docs.ankiweb.net/manual/troubleshooting.md",
+    "status": 200,
+    "path": "work/anki-deepening/troubleshooting.md",
+    "sha256": "04da4520c8b0406f5ab220a4ba5fc72e8d6b3bc27e84cd3fec8e55da28b9ab7d",
+    "bytes": 3512
+  },
+  {
+    "url": "https://docs.ankiweb.net/manual/templates/fields.md",
+    "status": 200,
+    "path": "work/anki-deepening/templates-fields.md",
+    "sha256": "50c3975e6867af42712deed10f1a408d3456dcf27065d93a15c7e3a224773ba4",
+    "bytes": 17089
+  },
+  {
+    "url": "https://docs.ankiweb.net/manual/importing/intro.md",
+    "status": 200,
+    "path": "work/anki-deepening/importing-intro.md",
+    "sha256": "5fde3a69ada5a2181fd82c29f2318c04457ac3e69da1ef4d62050d997ac3c3e6",
+    "bytes": 469
+  }
+]

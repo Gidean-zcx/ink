@@ -1,0 +1,50 @@
+[
+  {
+    "name": "help-index",
+    "url": "https://help.ground.news/",
+    "final_url": "https://help.ground.news/",
+    "status": 200,
+    "checked_on": "2026-10-27",
+    "checked_utc": "2026-10-26T18:52:26.970384+00:00",
+    "raw_work_path": "work/ground-controls-deepening/help-index.html",
+    "raw_sha256": "01bb41cd646815bc197c6ad319922af92af7afff0157869ace788520a4fc7ac3",
+    "bytes": 108225,
+    "parsed_text_path": "work/ground-controls-deepening/help-index.txt"
+  },
+  {
+    "name": "factuality",
+    "url": "https://help.ground.news/en/articles/5224577",
+    "final_url": "https://help.ground.news/en/articles/5224577",
+    "status": 200,
+    "checked_on": "2026-10-27",
+    "checked_utc": "2026-10-26T18:52:27.398067+00:00",
+    "raw_work_path": "work/ground-controls-deepening/factuality.html",
+    "raw_sha256": "57549c4b3f7d2eb9cb3b0e5c19c705648d1e04d7254358939aa5650123545df5",
+    "bytes": 105759,
+    "parsed_text_path": "work/ground-controls-deepening/factuality.txt"
+  },
+  {
+    "name": "methodology",
+    "url": "https://ground.news/rating-system",
+    "final_url": "https://ground.news/rating-system",
+    "status": 200,
+    "checked_on": "2026-10-27",
+    "checked_utc": "2026-10-26T18:52:28.139588+00:00",
+    "raw_work_path": "work/ground-controls-deepening/methodology.html",
+    "raw_sha256": "fa373fede97845f65f405d38cd667996c3990ae4e73fe7eef57fc8306f2686b8",
+    "bytes": 237749,
+    "parsed_text_path": "work/ground-controls-deepening/methodology.txt"
+  },
+  {
+    "name": "home",
+    "url": "https://ground.news/",
+    "final_url": "https://ground.news/",
+    "status": 200,
+    "checked_on": "2026-10-27",
+    "checked_utc": "2026-10-26T18:52:29.274280+00:00",
+    "raw_work_path": "work/ground-controls-deepening/home.html",
+    "raw_sha256": "090fac2e5dc6c80daf9b7ed7092263af9633cfc1a699abec3fa133f5447d5950",
+    "bytes": 4353991,
+    "parsed_text_path": "work/ground-controls-deepening/home.txt"
+  }
+]

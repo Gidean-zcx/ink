@@ -1,0 +1,12 @@
+{
+  "Connection": "keep-alive",
+  "Content-Length": "103957",
+  "age": "88304",
+  "cache-control": "no-cache, must-revalidate",
+  "date": "Mon, 26 Oct 2026 05:26:44 GMT",
+  "last-modified": "Tue, 13 Oct 2026 16:28:55 GMT",
+  "etag": "\"64d74637c57a75114a10d133a46234c2\"",
+  "content-type": "text/html",
+  "accept-ranges": "bytes",
+  "x-served-by": "cache-nrt-rjtt7900042-NRT"
+}

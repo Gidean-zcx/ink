@@ -1,0 +1,219 @@
+[
+  {
+    "file": "docs/research/interaction-library/batches/news-coverage.csv",
+    "flow_id": "F-M046-01",
+    "field": "known_branches",
+    "before": "缺比较摘要及清除筛选与外部付费墙",
+    "after": "Full Coverage→Sort & Filter；排序Bias/Factuality/Latest/Alphabetical，偏向/事实性/所有权/Locality/Paywall组合；Show Results应用，Clear或换事件复位。移动静态图含Unknown，比较摘要覆盖不足时只给普通摘要。"
+  },
+  {
+    "file": "docs/research/interaction-library/batches/news-coverage.csv",
+    "flow_id": "F-M046-01",
+    "field": "gaps",
+    "before": "原文跳转返回和零结果实际状态",
+    "after": "零结果、取消回滚、外链返回位置/付费墙与全局默认优先级未实测；教程三机构与方法论两机构口径不一"
+  },
+  {
+    "file": "docs/research/interaction-library/batches/news-coverage.csv",
+    "flow_id": "F-M046-01",
+    "field": "evidence_ids",
+    "before": "E-GRND-01;E-GRND-03;E-GRND-04;E-GRND-07",
+    "after": "E-GRND-01;E-GRND-03;E-GRND-04;E-GRND-07;E-GRCD-02"
+  },
+  {
+    "file": "docs/research/interaction-library/batches/news-coverage.csv",
+    "flow_id": "F-M046-01",
+    "field": "visual_status",
+    "before": "not_observed",
+    "after": "static_official_images_only"
+  },
+  {
+    "file": "docs/research/interaction-library/batches/news-coverage.csv",
+    "flow_id": "F-M046-01",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27"
+  },
+  {
+    "file": "docs/research/interaction-library/batches/news-coverage.csv",
+    "flow_id": "F-M046-03",
+    "field": "known_branches",
+    "before": "移动端Premium+门槛",
+    "after": "Discover关注后进入个性化流；For You帮助明确使用地点、关注主题/来源和App使用模式，不是只按显式订阅。移动Premium+可Profile Settings打开Hide Read Stories。"
+  },
+  {
+    "file": "docs/research/interaction-library/batches/news-coverage.csv",
+    "flow_id": "F-M046-03",
+    "field": "gaps",
+    "before": "已读阈值撤销及账号切换",
+    "after": "已读阈值、撤销、隐式行为权重与关闭个性化入口未核；观看/打开不等于理解"
+  },
+  {
+    "file": "docs/research/interaction-library/batches/news-coverage.csv",
+    "flow_id": "F-M046-03",
+    "field": "evidence_ids",
+    "before": "E-GRND-05;E-GRND-06",
+    "after": "E-GRND-05;E-GRND-06;E-GRCD-07"
+  },
+  {
+    "file": "docs/research/interaction-library/batches/news-coverage.csv",
+    "flow_id": "F-M046-03",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27"
+  },
+  {
+    "file": "docs/research/interaction-library/batches/news-coverage.csv",
+    "flow_id": "F-M046-04",
+    "field": "known_branches",
+    "before": "Web Android iOS不同路径",
+    "after": "Web旗帜、Android事件三点、iOS邮件入口报告问题；建议缺失来源时读者邮件提供名称/URL，机构另走表单且不保证收录或时限。"
+  },
+  {
+    "file": "docs/research/interaction-library/batches/news-coverage.csv",
+    "flow_id": "F-M046-04",
+    "field": "gaps",
+    "before": "提交成功及修复时延未实测",
+    "after": "未提交；成功反馈、修复时延、聚合错配处理及新增来源审核结果未知"
+  },
+  {
+    "file": "docs/research/interaction-library/batches/news-coverage.csv",
+    "flow_id": "F-M046-04",
+    "field": "evidence_ids",
+    "before": "E-GRND-08",
+    "after": "E-GRND-08;E-GRCD-11"
+  },
+  {
+    "file": "docs/research/interaction-library/batches/news-coverage.csv",
+    "flow_id": "F-M046-04",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27"
+  },
+  {
+    "file": "docs/research/interaction-library/batches/news-app-deepening-coverage.csv",
+    "flow_id": "F-M046-05",
+    "field": "known_branches",
+    "before": "地区主题按钮；本地手动搜索；覆盖不足补充",
+    "after": "地区主题按钮；本地手动搜索；覆盖不足补更大地区。地区可能同时改变偏向条配色，但可独立设颜色，不能混为内容过滤。"
+  },
+  {
+    "file": "docs/research/interaction-library/batches/news-app-deepening-coverage.csv",
+    "flow_id": "F-M046-05",
+    "field": "evidence_ids",
+    "before": "E-GND-02;E-GND-03",
+    "after": "E-GND-02;E-GND-03;E-GRCD-09"
+  },
+  {
+    "file": "docs/research/interaction-library/batches/news-app-deepening-coverage.csv",
+    "flow_id": "F-M046-05",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27"
+  },
+  {
+    "file": "docs/research/interaction-library/batches/news-app-deepening-coverage.csv",
+    "flow_id": "F-M046-06",
+    "field": "known_branches",
+    "before": "标题关键词 URL；覆盖与来源入口",
+    "after": "标题/关键词/URL找覆盖，来源名找媒体页；In Focus持续更新事件。官方无静态可下载全来源清单，搜索未命中不代表来源永不支持。"
+  },
+  {
+    "file": "docs/research/interaction-library/batches/news-app-deepening-coverage.csv",
+    "flow_id": "F-M046-06",
+    "field": "gaps",
+    "before": "搜索穷尽程度；外链返回位置",
+    "after": "检索穷尽/匹配失败提示、事件更新版本/终点、外链返回位置未核"
+  },
+  {
+    "file": "docs/research/interaction-library/batches/news-app-deepening-coverage.csv",
+    "flow_id": "F-M046-06",
+    "field": "evidence_ids",
+    "before": "E-GND-01;E-GRND-02",
+    "after": "E-GND-01;E-GRCD-05;E-GRCD-06"
+  },
+  {
+    "file": "docs/research/interaction-library/batches/news-app-deepening-coverage.csv",
+    "flow_id": "F-M046-06",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27"
+  },
+  {
+    "file": "docs/research/interaction-library/batches/news-app-deepening-coverage.csv",
+    "flow_id": "F-M046-08",
+    "field": "known_branches",
+    "before": "取消不保存；管理回改；屏蔽跨 Web",
+    "after": "取消不保存，Manage Sources & Topics回改，App屏蔽反映到Web；Positive帮助把Show Me Less写作减少而非完全禁止，实际算法效果未测。"
+  },
+  {
+    "file": "docs/research/interaction-library/batches/news-app-deepening-coverage.csv",
+    "flow_id": "F-M046-08",
+    "field": "evidence_ids",
+    "before": "E-GND-04;E-GND-06",
+    "after": "E-GND-04;E-GND-06;E-GRCD-07"
+  },
+  {
+    "file": "docs/research/interaction-library/batches/news-app-deepening-coverage.csv",
+    "flow_id": "F-M046-08",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27"
+  },
+  {
+    "file": "docs/research/interaction-library/batches/news-app-deepening-coverage.csv",
+    "flow_id": "F-M046-09",
+    "field": "known_branches",
+    "before": "Web Premium/Vantage；条件 Confirm 刷新",
+    "after": "Web For You Custom Feeds→命名→任一包含/全部包含/任一排除→Confirm刷新。专页称Premium/Vantage，Positive页称Pro+，不统一套餐含义。"
+  },
+  {
+    "file": "docs/research/interaction-library/batches/news-app-deepening-coverage.csv",
+    "flow_id": "F-M046-09",
+    "field": "gaps",
+    "before": "编辑删除、空结果和移动当前版本",
+    "after": "编辑/删除、空结果、当前移动是否上线及套餐措辞冲突未核"
+  },
+  {
+    "file": "docs/research/interaction-library/batches/news-app-deepening-coverage.csv",
+    "flow_id": "F-M046-09",
+    "field": "evidence_ids",
+    "before": "E-GND-07",
+    "after": "E-GND-07;E-GRCD-07"
+  },
+  {
+    "file": "docs/research/interaction-library/batches/news-app-deepening-coverage.csv",
+    "flow_id": "F-M046-09",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27"
+  },
+  {
+    "file": "docs/research/interaction-library/batches/news-app-deepening-coverage.csv",
+    "flow_id": "F-M046-16",
+    "field": "known_branches",
+    "before": "登录方式；商店恢复副作用；错误渠道加载",
+    "after": "网站购买须回正确账户/原登录方法；绑定其他登录方式后仍属原账户，不是转移订阅。商店Restore In-App Purchase帮助警告会重启已取消订阅；网站购买用此入口可能持续加载。"
+  },
+  {
+    "file": "docs/research/interaction-library/batches/news-app-deepening-coverage.csv",
+    "flow_id": "F-M046-16",
+    "field": "gaps",
+    "before": "实际恢复结果和状态反馈",
+    "after": "恢复是否成功/完整保留未知；不能由邮箱域名推注册方式，不能把Restore当无副作用刷新"
+  },
+  {
+    "file": "docs/research/interaction-library/batches/news-app-deepening-coverage.csv",
+    "flow_id": "F-M046-16",
+    "field": "evidence_ids",
+    "before": "E-GND-17",
+    "after": "E-GND-17;E-GRCD-13;E-GRCD-15;E-GRCD-16"
+  },
+  {
+    "file": "docs/research/interaction-library/batches/news-app-deepening-coverage.csv",
+    "flow_id": "F-M046-16",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27"
+  }
+]

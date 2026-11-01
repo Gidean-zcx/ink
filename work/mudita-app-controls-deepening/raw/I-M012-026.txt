@@ -1,0 +1,15 @@
+How to Send SMS Messages to a New Number?
+Modified on: Sat, 3 Oct, 2026 at 8:36 AM
+Sending an SMS to a new number on your Kompakt is simple and only takes a few steps. You can start a conversation even if the number is not saved in your contacts
+Open the SMS app.
+Tap the Plus icon to start a new message.
+Enter the phone number manually.
+Tap Send to: [phone number] to confirm the recipient.
+Type your message in the text field.
+Tap the Send icon to send your SMS.
+If the keyboard does not appear, tap the blinking cursor to activate it.
+Was this article helpful?
+ No
+ Yes
+That’s Great!
+Thank you for your feedback

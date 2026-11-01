@@ -1,0 +1,198 @@
+【0†iframe†www.googletagmanager.com】
+
+【1†Help center†quizlet.zendesk.com】
+
+Topics
+
+Popular Articles
+
+【2†Resending a confirmation message】 【3†Changing your username】 【4†Changing your password】 【5†Finding flashcard sets】 【6†Finding your teacher's class】 【7†Browser and device compatibility】
+
+[Input][Input: Search]
+
+【8†Image】   【8†Username】
+# Using grading options (US)
+
+【8†IOS】 【8†Web】 【8†Android】
+
+Grading options let you choose how strictly Quizlet checks your answers so you can focus on understanding concepts at the level that works best for you.
+
+* * *
+
+Sections in this article include:
+
+  * 【9†Grading options in Learn】
+  * 【10†Grading options in Test】
+
+* * *
+## Grading options in Learn
+
+When you’re studying on the website, grading options are available in sets that have three or more cards and with terms and definitions in English, French, German, or Spanish in Learn.
+
+Relaxed
+
+  * The general meaning of your answer is accepted as correct. Synonyms, rephrasing, and typos are also accepted.
+  * This level is selected by default if the set meets the grading options requirements and both sides are in your default language.
+
+Moderate
+  * An exact match is required, but minor misspellings such as accent mark errors or missing letters are accepted.
+  * Available when both sides of the set are in the same language and the language is not one that is graded strictly (Chinese, Japanese, math, chemistry, Akkadian, or photo-only sets).
+  * This level is selected by default if Relaxed isn’t available and the set doesn’t default to Strict.
+
+Strict
+  * An exact match is required. Only small stylistic mistakes like case or punctuation differences are accepted.
+  * Always available.
+  * This level is selected by default if the set has different languages on each side (for example, language learning sets).
+
+To choose a Grading option in Learn
+
+  1. 【11†Log in†quizlet.com】 to your account.
+  2. Open a set.
+  3. Select Learn.
+  4. Select Options.
+  5. Select Grading options.
+  6. Choose a grading option.
+  7. Select Save.
+## Grading options in Test
+
+If a set includes terms that have multiple definitions or answers, you can change your grading settings to require one or all answers in Test.
+
+To choose a Grading option in Test
+
+  1. 【11†Log in†quizlet.com】 to your account.
+  2. Open a set.
+  3. Select Test.
+  4. Select Options.
+  5. Select Grading options.
+  6. Check Require 1 answer only.
+This will mark answers correct if they contain at least one of the correct options included in a definition.
+Multiple correct answers in a definition must be separated by a comma, slash, or semicolon for single-answer grading to work.
+## Settings and options
+
+  * Single-answer grading is available for Test.
+  * Once you turn on single-answer grading for a set, that preference is also set for all other activities. To disable it, click Options and then uncheck Require 1 answer only.
+
+Grading options let you choose how strictly Quizlet checks your answers so you can focus on understanding concepts at the level that works best for you.
+
+* * *
+
+Sections in this article include:
+  * 【12†Grading options in Learn】
+  * 【13†Grading options in Test】
+
+* * *
+## Grading options in Learn
+
+When you’re studying on the iOS app, grading options are available in sets that have three or more cards and with terms and definitions in English, French, German, or Spanish in Learn.
+
+Relaxed
+
+  * The general meaning of your answer is accepted as correct. Synonyms, rephrasing, and typos are also accepted.
+  * This level is selected by default if the set meets the grading options requirements and both sides are in your default language.
+
+Moderate
+  * An exact match is required, but minor misspellings such as accent mark errors or missing letters are accepted.
+  * Available when both sides of the set are in the same language and the language is not one that is graded strictly (Chinese, Japanese, math, chemistry, Akkadian, or photo-only sets).
+  * This level is selected by default if Relaxed isn’t available and the set doesn’t default to Strict.
+
+Strict
+  * An exact match is required. Only small stylistic mistakes like case or punctuation differences are accepted.
+  * Always available.
+  * This level is selected by default if the set has different languages on each side (for example, language learning sets).
+
+To choose a Grading option in Learn
+
+  1. Open a set.
+  2. Select Learn.
+  3. Select Options.
+  4. Select Grading options.
+  5. Choose a grading option.
+  6. Select Done.
+## Grading options in Test
+
+Currently, you can only change your grading options on the website.
+
+Grading options let you choose how strictly Quizlet checks your answers so you can focus on understanding concepts at the level that works best for you.
+
+* * *
+
+Sections in this article include:
+
+  * 【14†Grading options in Learn】
+  * 【15†Grading options in Test】
+
+* * *
+## Grading options in Learn
+
+When you’re studying on the Android app, grading options are available in sets that have three or more cards and with terms and definitions in English, French, German, or Spanish in Learn.
+
+Relaxed
+
+  * The general meaning of your answer is accepted as correct. Synonyms, rephrasing, and typos are also accepted.
+  * This level is selected by default if the set meets the grading options requirements and both sides are in your default language.
+
+Moderate
+  * An exact match is required, but minor misspellings such as accent mark errors or missing letters are accepted.
+  * Available when both sides of the set are in the same language and the language is not one that is graded strictly (Chinese, Japanese, math, chemistry, Akkadian, or photo-only sets).
+  * This level is selected by default if Relaxed isn’t available and the set doesn’t default to Strict.
+
+Strict
+  * An exact match is required. Only small stylistic mistakes like case or punctuation differences are accepted.
+  * Always available.
+  * This level is selected by default if the set has different languages on each side (for example, language learning sets).
+
+To choose a Grading option in Learn
+
+  1. Open a set.
+  2. Select Learn.
+  3. Select Options.
+  4. Select Grading options.
+  5. Choose a grading option.
+  6. Select Done.
+## Grading options in Test
+
+Currently, you can only change your grading options on the website.
+
+### Related Articles
+
+  * 【16†Studying with Podcasts】
+  * 【17†Studying with Spaced Repetition】
+  * 【18†Using Study with friends】
+  * 【19†Playing Charms】
+  * 【20†Studying with Audio Notes】
+  * 【21†Create flashcard sets directly in ChatGPT】
+  * 【22†Studying with Ask Quizlet】
+  * 【23†Using Quizlet with Superhuman】
+  * 【24†Studying with Answer Streaks】
+  * 【25†Playing a game of Blocks】
+  * 【26†See more】
+### Can't find what you're looking for?
+
+【27†Ask a question】
+
+Was this article helpful?
+
+[Button: Yes] [Button: No]
+
+##### About us
+
+【28†About Quizlet†quizlet.com】 【29†How Quizlet works†quizlet.com】 【30†Careers†quizlet.com】 【31†Advertise with us†quizlet.com】 【32†Get the app†quizlet.com】
+##### For students
+
+【33†Flashcards†quizlet.com】 【34†Test†quizlet.com】 【35†Learn†quizlet.com】 【36†Solutions†quizlet.com】 【37†Modern Learning Lab†quizlet.com】 【38†Quizlet Plus†quizlet.com】 【39†Study Guides†quizlet.com】 【40†Pomodoro timer†quizlet.com】
+
+##### For Teachers
+
+【41†Live†quizlet.com】 【42†Blog†quizlet.com】 【43†Be the Change†quizlet.com】 【44†Quizlet Plus for teachers†quizlet.com】
+##### Resources
+
+【45†Help center†quizlet.com】 【46†Sign up†quizlet.com】 【47†Honor code†quizlet.com】 【48†Community guidelines†quizlet.com】 【49†Accessibility statement†quizlet.com】 【50†Privacy†quizlet.com】 【51†Your Privacy/Cookies Choices†quizlet.com】 【52†Terms†quizlet.com】 【53†Ad and Cookie Policy†quizlet.com】 【54†Interest-Based Advertising†quizlet.com】 【55†Quizlet for Schools†quizlet.com】 【56†Parents†quizlet.com】
+
+##### Language
+
+English (United States)
+
+【57†Image】 【58†Get the app†get.quizlet.com】
+##### Get the app
+
+© Quizlet Inc.

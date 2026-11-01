@@ -1,0 +1,188 @@
+
+ How To Create and Restore Mudita Kompakt Data Backups With Mudita Center 
+Skip to content
+ Store
+ Special Deals
+ Phones
+ Alarm Clocks
+ Watches & Straps
+ Accessories
+ Lifestyle
+ Outlet
+ Spare Parts
+ Products
+ Phones
+ Mudita Kompakt
+ Mudita Pure
+ Watches
+ Mudita Moment Automatic
+ Mudita Element Automatic
+ Mudita Radiant Automatic
+ Alarm Clocks
+ Mudita Bell 2
+ Mudita Harmony 2
+Meditation
+ Mudita Oasis
+Desktop App
+ Mudita Center
+ Community
+ Blog
+ Forum
+ Resources
+ Support
+English
+English
+Polish
+ All
+ Articles
+Recent Searches
+ Clear all
+No recent searches
+ Popular Articles
+Articles
+ View all
+Topics
+ View all
+Tickets
+ View all
+Sorry! nothing found for 
+ Store
+Special Deals
+Phones
+Alarm Clocks
+Watches & Straps
+Accessories
+Lifestyle
+Outlet
+Spare Parts
+ Products
+ Phones
+Mudita Kompakt
+Mudita Pure
+ Watches
+Mudita Moment Automatic
+Mudita Element Automatic
+Mudita Radiant Automatic
+ Alarm Clocks
+Mudita Bell 2
+Mudita Harmony 2
+ Meditation
+Mudita Oasis
+ Desktop App
+Mudita Center
+ Community
+Blog
+Forum
+Resources
+ Support
+ Solution home
+ Knowledge Base
+ Mudita Kompakt and Mudita Center
+ How To Create and Restore Mudita Kompakt Data Backups With Mudita Center
+ Modified on: Sat, 3 Oct, 2026 at 8:45 AM
+How to create a backup for Kompakt
+Open Mudita Center and connect your device 
+Look under Your Kompakt > Click Overview
+Click Create backup
+Click Create backup to confirm
+Create a password to protect your backup data* 
+Click Confirm passcode
+Enter your passcode to create the backup
+*Warning! You can not change the password after you confirm it.                    
+ If you don’t want a password, click Skip password to create the backup 
+How to restore Kompakt from a backup
+Open Mudita Center and connect your device 
+Look under Your Kompakt > Click Overview
+Click Restore from backup
+Select the Backup you want to restore from the list
+Click Restore from backup
+Enter the password protecting the backup* 
+Click Confirm 
+*Warning! There is no way to recover or change the password for backups.             
+ If no password was created, you will skip this step and start the restore process
+How to find the backup file to restore Kompakt
+Open Mudita Center and connect your device 
+Look under Mudita Center > Click Settings*
+You will see the file path (Example: C:/User/Documents/Mudita/Kompakt/backup)
+Follow the file path using your computer’s browser
+*The backup tab opens by default, if it does not, click Backup at the top of the screen
+Was this article helpful?
+ No
+ Yes
+That’s Great!
+Thank you for your feedback
+Sorry! We couldn't be helpful
+Thank you for your feedback
+ Your e-mail address
+ *
+Let us know how can we improve this article! *
+ Need more information
+ Difficult to understand
+ Inaccurate/irrelevant content
+ Missing/broken link
+ Select at least one of the reasons
+ Please give your comments
+ CAPTCHA verification is required.
+ Cancel
+ Send
+Feedback sent
+We appreciate your effort and will try to fix the article
+Articles in this folder 
+ How To Manage Mudita Kompakt Contacts With Mudita Center
+ How To Create and Restore Mudita Kompakt Data Backups With Mudita Center
+You may like to read 
+ Can I Transfer Files Between Mudita Kompakt and My Computer?
+ Managing Mudita Pure Data Backups in Mudita Center
+ Mudita Center 3.0.0
+ Updating MuditaOS K on Kompakt
+ What Is the Desktop App Mudita Center For?
+ How to import contacts from CSV file or vCard?
+ How To Do System Updates on Mudita Kompakt
+ How To Manage Mudita Kompakt Contacts With Mudita Center
+ Does Mudita Kompakt Support Third-Party Apps?
+ Mudita Center 1.0.0 & Mudita Center 1.1.0
+ X
+ 0 of 0
+ Store
+Phones
+Alarm Clocks
+Watches & Straps
+Accessories
+Spare Parts
+Lifestyle
+Outlet
+Special Deals
+ Products
+Mudita Kompakt
+Mudita Pure
+Mudita Bell
+Mudita Bell 2
+Mudita Harmony
+Mudita Harmony 2
+Mudita Element Automatic
+Mudita Radiant Automatic
+Mudita Moment Automatic
+Mudita Oasis
+Mudita Center
+ Support
+Knowledge Base
+User Guides & Warranties
+Orders & Shipping
+Software Release Notes
+Returns
+ Legal
+POIG
+Privacy Policy
+Privacy Policy Cookies
+Terms & Conditions
+Terms of Sale
+Compliance & Certifications
+ About Us
+Manifesto
+Team
+Career
+Contact
+Media
+MMD
+For Retailers
+ 2026 © Mudita All images and content may not be used without permission. Mudita® are registered trademarks of Mudita Sp. z o. o., registered in the EU.

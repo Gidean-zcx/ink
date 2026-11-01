@@ -1,0 +1,54 @@
+# M-001 Kindle／Scribe：阅读导航、词汇积累与笔记生命周期
+
+查阅：2026-10-26。对象分为 Kindle 阅读系统、Scribe 手写功能、2025 年及以后 Scribe 的专属入口。v1 路径用户指南为在线现行内容，不代表固定固件 v1；所引用现行帮助未逐项标注最低固件。地区、书籍权限及格式限制分别记录。文档级分析，无设备操作或连续界面观察。
+
+## 功能目录与覆盖
+
+| 功能域 | 已建立的细节 | 边界/缺口 |
+| --- | --- | --- |
+| 书库与内容 | 本地/云端、收藏集合、下载、Send to Kindle、云盘进出 | 购买、借阅与家庭分发完整过程待补 |
+| 阅读导航 | 翻页、Page Flip、目录、书签、字号/布局 | 横竖屏触区与所有格式的表现未观察 |
+| 理解与学词 | 词典、生词本、Word Wise、X-Ray | Recaps/Story So Far 是另有地区和内容条件的功能；未完整拆解 |
+| 手写批注 | Sticky note、Active Canvas、PDF 页内笔迹 | 普通 Kindle 无笔不能借用 Scribe 的能力 |
+| 笔记管理 | 多页选择、移动、删除、分享、转换 | 2025 型号的复制/模板等新项需逐型号核查 |
+| 数据流转 | 同步、邮件导出、云盘手动进出 | 无实测冲突/断电/误删恢复；云盘连接不等于双向同步 |
+| 音频与系统 | 指南有 Audible、蓝牙、快速操作、家长控制、无障碍等章节 | 此处只索引，不把未拆音频/家庭/全部设置视为已完成 |
+
+## 任务流程
+
+| F 编号 | 前置、动作与反馈 | 状态与分支 | 证据 |
+| --- | --- | --- | --- |
+| F-M001-01 查词再复习 | 正文长按词看释义；进入 Vocabulary Builder，按词/书查看，再进入卡片，用原句尝试回忆并查看释义。 | 有学习中/已掌握统计，具体标记动作仍待核对；自动收词可配置。Word Wise 的密度可调且受内容/语言支持限制。 | E-KDL-01 |
+| F-M001-02 临时翻找再回原处 | 阅读中打开 Page Flip，浏览缩略页或拖进度，选中页可跳转。 | 预览保留原位置；需区分“预览位置”和真正阅读进度。 | E-KDL-01 |
+| F-M001-03 在书中写批注 | 用 Active Canvas 在行间长按插入；直接落笔可出现可确认/取消的画布。Sticky note 写完关闭后保存。 | PDF 经 Send to Kindle 与 USB 传入有不同手写支持；兼容表是按入口和内容类型区分，不只按扩展名。 | E-KDL-02、03 |
+| F-M001-04 整理多页笔记 | 笔记概览 → Select 或长按页面 → 看到勾选 → 添加、删除、移动或分享；移动时选择页间位置。 | 多选后 Add 在各选中页后添加，不只是最后追加一页；2025 及以后机型另有操作，不套旧机。 | E-KDL-04 |
+| F-M001-05 导出与转换 | 打开笔记/文档 → Share → 注册邮箱快发或指定邮箱；可选择手写转文字。 | 下载链接 7 天有效；文字转换预览修改与可搜索手写 PDF 是不同产物。Family 共享不自动覆盖这些个人笔记。 | E-KDL-05 |
+| F-M001-06 同步并排查缺失 | 联网 → 下拉 Quick Actions → Sync；笔记未更新时重新打开/刷新视图，核对另一台同账号设备的删除。 | 关闭同步会限制云端笔记下载、备份与永久删除。手写跨端支持在不同帮助页中有范围差异，不能统一泛化。 | E-KDL-06、07 |
+| F-M001-07 从云盘导入再带回 | 连接云盘后浏览文件 → 兼容文件可预览/导入 → 在 Scribe 修改 → 分享回云盘。 | 手动导入/导出；不兼容或超限文件灰显。USB 导入内容不能直接按该路径导回；授权断开、重复导出及替换规则待逐项核查。 | E-KDL-08 |
+| F-M001-08 首页随手记 | 2025 及以后 Scribe 的 Quick Notes 固定在首页，显示上次所用页面，可展开进入。 | 文档要求注册和联网；不能据此断言每次离线都无法编辑，也不能套所有 Scribe。 | E-KDL-09 |
+
+## 交互细节的意义与未解问题
+
+- 首要差异是内容入口与数据产物：同一个 PDF 经不同渠道进入，手写能力可能不同；“成功导入”不能单独证明后续可编辑。用户的 R-017 自动找书应检查后续任务条件。
+- 预览、当前位置、最远读到的位置和生词掌握记录是不同对象。AI 若把它们压成一个进度值，会使“看看后面再回来”变成推进进度。此项为本项目推断。
+- 系统同步、云盘导出、邮件分享分别有账户与作用范围。邮件链接过期不是笔记被删；导出副本也不是持续同步。
+- E-KDL-03 的兼容表允许部分手机端手写，而 E-KDL-06 泛称手写批注只在 Scribe 间可访问；需要按内容类型、客户端与文档更新解决，暂不合并为统一结论。
+- 阅读器体系的家长控制与本家庭 5–6 岁读听需求相关，但账户切换、家长退出及离线权限仍缺完整流程。
+
+## 后续可复现观察
+
+准备同一段自有文本及两份相同 PDF，分别 USB/Send to Kindle 导入；记录工具可见性与失败说明。再做 Page Flip 返回、查词入本、错误标记掌握、笔记多选移动、断网后编辑再同步。使用隔离测试资料，不在真实资料上验证删除。需固定机型、系统、语言/地区和书籍版本；当前未执行。
+
+## 来源
+
+- E-KDL-01：[Kindle Scribe 用户指南](https://d1ergij2b6wmg5.cloudfront.net/kug/kindle_scribe/v1/en-US/html/kug.html)，Navigation、Dictionary、Word Wise、Vocabulary Builder 及目录。
+- E-KDL-02：[手写、画布与便签](https://digprjsurvey.amazon.com/csad/help/node/T0MT2p2D8t046zUxih)。
+- E-KDL-03：[个人文档笔记兼容表](https://digprjsurvey.amazon.com/csad/help/node/TNtSm13k3txFI4EvDV)。
+- E-KDL-04：[笔记多页操作](https://digprjsurvey.amazon.com/csad/help/node/Tq6OTco5USdWqZ91ZH)。
+- E-KDL-05：[分享笔记及转换](https://digprjsurvey.amazon.com/csad/help/node/TJE2UYmdw0ppUuR3Rs)。
+- E-KDL-06：[同步](https://digprjsurvey.amazon.com/csad/help/node/GDCAMDFMC2LZP6BR)。
+- E-KDL-07：[笔记问题排查](https://digprjsurvey.amazon.com/csad/help/node/TyNFaxgPlqhHz1d4B4?theme=light)。
+- E-KDL-08：[云盘连接 FAQ](https://digprjsurvey.amazon.com/csad/help/node/TIh9JOMGAKr7bY4zqu)。
+- E-KDL-09：[Quick Notes 条件与入口](https://digprjsurvey.amazon.com/csad/help/node/T54Isf2DDrox4TckQR)，本轮官方索引正文。
+
+Amazon 帮助子域属于官方来源；部分页面无明确更新/最低固件，不能以查阅日伪装版本。没有把普通 Kindle、历代 Scribe 与手机 app 合成同一机型。

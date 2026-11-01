@@ -1,0 +1,10 @@
+{
+  "new_evidence": 4,
+  "new_flows": 2,
+  "inventory_rows": 32,
+  "old_flow_count": 6,
+  "old_flow_field_changes": 23,
+  "old_evidence_additional_captures": 7,
+  "static_images": 3,
+  "case_audit_reverse_dependencies": 0
+}

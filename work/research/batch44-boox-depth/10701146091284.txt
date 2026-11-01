@@ -1,0 +1,13 @@
+In this article, you will learn how to set the screensaver and shutdown image for your BOOX Tab Series device.
+Screensaver
+In Home Screen, go to Settings > Desktop & Screensaver > Screensaver. Here you can set different kinds of screensavers when the device is in sleep mode.
+Image Screensaver: Here you can select one or multiple images as the screensaver. When multiple images are selected, the screensaver will be shown in carousel format. You can tap Select Images to choose the images from Local, System, Cloud, and Push.
+Memo Screensaver: It will show the memo of today in the Calendar Memo app as the screensaver.
+Clock Screensaver: It will show the time and date as the screensaver.
+Transparent Screensaver: It will keep the current screen as the screensaver, especially useful when you need to keep the current screen for a prolonged period. But please beware of protecting your personal information when using this function.
+Monthly Calendar Screensaver: It will show the time, battery status, date, and monthly calendar as the screensaver. You can switch between the light theme and the dark theme.
+Note:
+The auto shutdown function will not be activated if your screensaver contains the clock.
+Monthly Calendar Screensaver is only available in some models.
+Shutdown Image
+In Home Screen, go to Settings > Desktop & Screensaver > Power off. Here you can customize your shutdown image when the device is powered off.

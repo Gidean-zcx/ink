@@ -1,0 +1,92 @@
+[
+  {
+    "flow_id": "F-M033-01",
+    "before": {
+      "flow_id": "F-M033-01",
+      "product_id": "M-033",
+      "task": "小车科一练习与错误反馈",
+      "depth": "D1",
+      "evidence_ids": "E-JKB-02;E-JKB-03",
+      "known_branches": "多练习入口；自动下一题开关文字",
+      "gaps": "选择错误后的反馈时机、改答和跳过",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-033-jiakaobaodian.md",
+      "checked_on": "2026-10-26"
+    },
+    "updates": {
+      "depth": "D4",
+      "evidence_ids": "E-JKB-02;E-JKB-03;E-JKCD-01",
+      "known_branches": "网页错答停留、解析手动展开；改点正确不改首次记录；正确自动前进可取消；返回保留当次选答。",
+      "gaps": "只核匿名顺序网页三题；App题型、声音、错题集合再练、离线及更多分支未知。",
+      "visual_status": "observed_browser_sequence",
+      "hands_on": "true"
+    }
+  },
+  {
+    "flow_id": "F-M033-02",
+    "before": {
+      "flow_id": "F-M033-02",
+      "product_id": "M-033",
+      "task": "错题与收藏再练",
+      "depth": "D1",
+      "evidence_ids": "E-JKB-02;E-JKB-03;E-JKB-04",
+      "known_branches": "云端错题/收藏/未做分开",
+      "gaps": "加入/移出条件、撤销和题目更新",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-033-jiakaobaodian.md",
+      "checked_on": "2026-10-26"
+    },
+    "updates": {
+      "evidence_ids": "E-JKB-02;E-JKB-03;E-JKB-04;E-JKCD-02",
+      "known_branches": "错题/收藏入口；匿名网页点收藏出现登录框，未完成收藏。",
+      "gaps": "登录后加入/移出、错题再练、撤销与题目更新未知；入口前置观察不等于收藏链完成。"
+    }
+  },
+  {
+    "flow_id": "F-M033-03",
+    "before": {
+      "flow_id": "F-M033-03",
+      "product_id": "M-033",
+      "task": "Web计时模拟与交卷",
+      "depth": "D1",
+      "evidence_ids": "E-JKB-05",
+      "known_branches": "静态剩余时间、答题卡、再做一套",
+      "gaps": "确认弹框、超时自动交卷、中断恢复",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-033-jiakaobaodian.md",
+      "checked_on": "2026-10-26"
+    },
+    "updates": {
+      "depth": "D4",
+      "evidence_ids": "E-JKB-05;E-JKCD-04",
+      "known_branches": "北京匿名模拟页倒计时运行；错/对均前进；交卷通用确认可取消；返回已答题显示结果；确认后结果中心空白。",
+      "gaps": "未见成绩/复盘/再做一套；完整100题、到零、中断恢复、记录保存与App未知。",
+      "visual_status": "observed_browser_sequence",
+      "hands_on": "true"
+    }
+  },
+  {
+    "flow_id": "F-M033-04",
+    "before": {
+      "flow_id": "F-M033-04",
+      "product_id": "M-033",
+      "task": "App上传并在Web看云端记录",
+      "depth": "D2",
+      "evidence_ids": "E-JKB-04",
+      "known_branches": "登录→同步数据→立即同步→返回查看",
+      "gaps": "成功提示、冲突、重装后恢复",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-033-jiakaobaodian.md",
+      "checked_on": "2026-10-26"
+    },
+    "updates": {
+      "evidence_ids": "E-JKB-04;E-JKCD-02",
+      "known_branches": "原文档App同步→立即同步→Web返回查看；匿名网页点云同步实际先要求登录。",
+      "gaps": "未登录或同步；成功提示、冲突、重装后恢复仍未知。"
+    }
+  }
+]

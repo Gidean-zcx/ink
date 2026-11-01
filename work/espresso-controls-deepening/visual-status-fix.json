@@ -1,0 +1,43 @@
+{
+  "reason": "use existing static_reference_only enum; evidence scope remains in tasks and audits",
+  "changes": [
+    {
+      "flow_id": "F-M045-01",
+      "field": "visual_status",
+      "before": "historical_and_institutional_static_images_only",
+      "after": "static_reference_only"
+    },
+    {
+      "flow_id": "F-M045-02",
+      "field": "visual_status",
+      "before": "institutional_static_images_only",
+      "after": "static_reference_only"
+    },
+    {
+      "flow_id": "F-M045-03",
+      "field": "visual_status",
+      "before": "official_and_institutional_static_images_only",
+      "after": "static_reference_only"
+    },
+    {
+      "flow_id": "F-M045-07",
+      "field": "visual_status",
+      "before": "settings_entry_static_only",
+      "after": "static_reference_only"
+    }
+  ],
+  "files": [
+    {
+      "path": "docs/research/interaction-library/batches/news-coverage.csv",
+      "backup": "work/espresso-controls-deepening/before-visual-status-fix/news-coverage.csv",
+      "before_sha256": "8fb00beaf6120f497f7f3830e74e5d545c344d076ee195a57351aedf804de5c6",
+      "after_sha256": "2e60f6de82e5e84c628ecd6173a5bcbe85c836f2393baf14adf068be2da4b093"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/news-app-deepening-coverage.csv",
+      "backup": "work/espresso-controls-deepening/before-visual-status-fix/news-app-deepening-coverage.csv",
+      "before_sha256": "cbed93a20094d17a25cf0ae5329184bb4aa741748b3ba0b13167286ee7c6df8b",
+      "after_sha256": "3786db451b27078e4bdbe335d123a957b0334fdc4e63ceb913c496f25d1356b9"
+    }
+  ]
+}

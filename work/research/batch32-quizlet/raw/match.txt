@@ -1,0 +1,16 @@
+Source: https://help.quizlet.com/hc/en-us/articles/360031183611-Playing-Match
+Retrieved: 2026-10-27
+Access: official Help text returned by public search extraction; not source HTML; HTTP status unavailable
+Title: Playing Match
+Platforms shown: iOS, Web, Android
+
+Rule and flow extracted:
+- Race against the clock by matching terms and definitions.
+- Open a set -> Match -> Start game -> select a term/definition -> select its match.
+- Matching every pair ends the game and shows the score.
+- Six pairs appear in each game; larger sets require several games to review all material.
+- Each incorrect match adds one second.
+- Mobile Options offers Restart Match.
+- For diagram sets, mobile Options can enable/disable term-definition and location-term pair types.
+
+Not stated in the extracted official text: how an in-progress game behaves on X/back/app background; whether a restart asks for confirmation; whether scores/history persist or sync; subscription boundary.

@@ -1,0 +1,58 @@
+{
+  "name": "45-next",
+  "url": "https://www.duolingo.com/lesson",
+  "title": "Duolingo - Learn French with lessons that work",
+  "utc": "2026-10-26T17:55:22.527791+00:00",
+  "text": "4\nTap what you hear\nthé\nBonjour\nCAN'T LISTEN NOW\nUSE KEYBOARD\nCHECK",
+  "buttons": [
+    {
+      "text": "",
+      "aria": null,
+      "test": "quit-button",
+      "visible": true
+    },
+    {
+      "text": "",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "thé",
+      "aria": null,
+      "test": "thé-challenge-tap-token",
+      "visible": true
+    },
+    {
+      "text": "Bonjour",
+      "aria": null,
+      "test": "Bonjour-challenge-tap-token",
+      "visible": true
+    },
+    {
+      "text": "CAN'T LISTEN NOW",
+      "aria": null,
+      "test": "player-skip",
+      "visible": true
+    },
+    {
+      "text": "USE KEYBOARD",
+      "aria": null,
+      "test": "player-toggle-keyboard",
+      "visible": true
+    },
+    {
+      "text": "CHECK",
+      "aria": null,
+      "test": "player-next",
+      "visible": true
+    }
+  ],
+  "inputs": []
+}

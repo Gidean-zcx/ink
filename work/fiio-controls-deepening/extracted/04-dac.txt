@@ -1,0 +1,10 @@
+7. How to enable the USB DAC function?
+For Mac computers, it is driver-free.
+For Windows computers, please make the settings as the followed steps.
+1.Install the FiiO DAC driver in the computer first.
+2.Switch the working mode of the JM21 to USB DAC mode on the drop-down menu or go to Settings->Mode choose menu to enter the USB DAC mode.
+3. Connect the JM21 to the computer by the USB port. Select the JM21 as the audio input both in the computer and the music app, so it can work.
+For detailed USB DAC instructions, please refer to: https://forum.fiio.com/note/showNoteContent.do?id=202105191527366657910&tid=17
+Notes:
+When in the USB DAC mode, the JM21 does not support Bluetooth transmitting.
+ꄘ

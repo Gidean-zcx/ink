@@ -1,0 +1,23 @@
+How To Create and Delete Notes on Mudita Kompakt
+Modified on: Sat, 3 Oct, 2026 at 8:40 AM
+How to create notes
+Tap Apps
+Tap Notes
+Tap the Plus icon*
+Write a title for your note (max. 54 characters)
+Tap Enter on the keyboard
+Write more detail for your note
+Tap Done
+*If it is your first note, tap Create new note
+How to delete notes
+Tap Apps
+Tap Notes
+Tap the Edit icon
+Tap the Check box to select the note(s) you want to delete
+Tap Delete
+Tap Delete
+Was this article helpful?
+ No
+ Yes
+That’s Great!
+Thank you for your feedback

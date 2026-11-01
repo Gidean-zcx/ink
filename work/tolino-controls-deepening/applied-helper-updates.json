@@ -1,0 +1,366 @@
+[
+  {
+    "flow_id": "F-M024-02",
+    "field": "evidence_ids",
+    "before": "E-CASIO-01;E-CASIO-02;E-CASIO-04",
+    "after": "E-CASIO-01;E-CASIO-02;E-CASIO-04;E-CACD-07",
+    "reason": "2026-10-27复核同一MA2307-A正文；补旧任务分支，不增加重复F或升深度",
+    "file": "docs/research/interaction-library/batches/dictionary-coverage.csv"
+  },
+  {
+    "flow_id": "F-M024-02",
+    "field": "known_branches",
+    "before": "模糊、通配符、SHIFT",
+    "after": "模糊/通配符及SHIFT；无命中检查连字符/空格与&；问号星号不能混用，HOME多词典部分不可用",
+    "reason": "2026-10-27复核同一MA2307-A正文；补旧任务分支，不增加重复F或升深度",
+    "file": "docs/research/interaction-library/batches/dictionary-coverage.csv"
+  },
+  {
+    "flow_id": "F-M024-02",
+    "field": "gaps",
+    "before": "无命中和跳查栈",
+    "after": "完整无命中界面和跳查返回栈未观察；归一化规则依查询类型",
+    "reason": "2026-10-27复核同一MA2307-A正文；补旧任务分支，不增加重复F或升深度",
+    "file": "docs/research/interaction-library/batches/dictionary-coverage.csv"
+  },
+  {
+    "flow_id": "F-M024-02",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27",
+    "reason": "2026-10-27复核同一MA2307-A正文；补旧任务分支，不增加重复F或升深度",
+    "file": "docs/research/interaction-library/batches/dictionary-coverage.csv"
+  },
+  {
+    "flow_id": "F-M024-04",
+    "field": "known_branches",
+    "before": "色标/CHECK、容量",
+    "after": "色标/CHECK可切换；12本各300条、每词10处；单条直删与批量确认；便笺可同词组合",
+    "reason": "2026-10-27复核同一MA2307-A正文；补旧任务分支，不增加重复F或升深度",
+    "file": "docs/research/interaction-library/batches/dictionary-coverage.csv"
+  },
+  {
+    "flow_id": "F-M024-04",
+    "field": "gaps",
+    "before": "任意外部原句",
+    "after": "任意外部原句、满额提示、误删撤销和组合删除联动未知",
+    "reason": "2026-10-27复核同一MA2307-A正文；补旧任务分支，不增加重复F或升深度",
+    "file": "docs/research/interaction-library/batches/dictionary-coverage.csv"
+  },
+  {
+    "flow_id": "F-M024-04",
+    "field": "evidence_ids",
+    "before": "E-CASIO-05;E-CASIO-09",
+    "after": "E-CASIO-05;E-CASIO-09;E-CACD-03",
+    "reason": "2026-10-27复核同一MA2307-A正文；补旧任务分支，不增加重复F或升深度",
+    "file": "docs/research/interaction-library/batches/dictionary-coverage.csv"
+  },
+  {
+    "flow_id": "F-M024-04",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27",
+    "reason": "2026-10-27复核同一MA2307-A正文；补旧任务分支，不增加重复F或升深度",
+    "file": "docs/research/interaction-library/batches/dictionary-coverage.csv"
+  },
+  {
+    "flow_id": "F-M024-05",
+    "field": "evidence_ids",
+    "before": "E-CASIO-06;E-CASIO-09",
+    "after": "E-CASIO-06;E-CASIO-09;E-CACD-02",
+    "reason": "2026-10-27复核同一MA2307-A正文；补旧任务分支，不增加重复F或升深度",
+    "file": "docs/research/interaction-library/batches/dictionary-coverage.csv"
+  },
+  {
+    "flow_id": "F-M024-05",
+    "field": "visual_status",
+    "before": "not_observed",
+    "after": "static_manual_pages_only",
+    "reason": "2026-10-27复核同一MA2307-A正文；补旧任务分支，不增加重复F或升深度",
+    "file": "docs/research/interaction-library/batches/dictionary-coverage.csv"
+  },
+  {
+    "flow_id": "F-M024-05",
+    "field": "known_branches",
+    "before": "看/听、返回原文",
+    "after": "看/听与返回原文；本机6本各100卡；语音单独保存后仍须保存整卡；编辑保存及单卡/批量删除",
+    "reason": "2026-10-27复核同一MA2307-A正文；补旧任务分支，不增加重复F或升深度",
+    "file": "docs/research/interaction-library/batches/dictionary-coverage.csv"
+  },
+  {
+    "flow_id": "F-M024-05",
+    "field": "gaps",
+    "before": "导出/调度",
+    "after": "满额/撤销/导出/调度未知；手册171页最后删除选项标签与说明范围冲突，未选定其实际行为",
+    "reason": "2026-10-27复核同一MA2307-A正文；补旧任务分支，不增加重复F或升深度",
+    "file": "docs/research/interaction-library/batches/dictionary-coverage.csv"
+  },
+  {
+    "flow_id": "F-M024-05",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27",
+    "reason": "2026-10-27复核同一MA2307-A正文；补旧任务分支，不增加重复F或升深度",
+    "file": "docs/research/interaction-library/batches/dictionary-coverage.csv"
+  },
+  {
+    "flow_id": "F-M024-08",
+    "field": "evidence_ids",
+    "before": "E-CASIO-01;E-CASIO-10;E-CASIO-11",
+    "after": "E-CASIO-01;E-CASIO-10;E-CASIO-11;E-CACD-07",
+    "reason": "2026-10-27复核同一MA2307-A正文；补旧任务分支，不增加重复F或升深度",
+    "file": "docs/research/interaction-library/batches/dictionary-coverage.csv"
+  },
+  {
+    "flow_id": "F-M024-08",
+    "field": "known_branches",
+    "before": "网络重搜、2026停服",
+    "after": "网络重搜及2026-12-31 17:00停下载；卡读失败先回书库关机、拔卡等约10秒重插；2至3次仍失败换卡",
+    "reason": "2026-10-27复核同一MA2307-A正文；补旧任务分支，不增加重复F或升深度",
+    "file": "docs/research/interaction-library/batches/dictionary-coverage.csv"
+  },
+  {
+    "flow_id": "F-M024-08",
+    "field": "gaps",
+    "before": "下载失败、导入",
+    "after": "下载失败/导入仍未知；他机认证卡不等于可迁移备份；没有把换卡当数据恢复",
+    "reason": "2026-10-27复核同一MA2307-A正文；补旧任务分支，不增加重复F或升深度",
+    "file": "docs/research/interaction-library/batches/dictionary-coverage.csv"
+  },
+  {
+    "flow_id": "F-M024-08",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27",
+    "reason": "2026-10-27复核同一MA2307-A正文；补旧任务分支，不增加重复F或升深度",
+    "file": "docs/research/interaction-library/batches/dictionary-coverage.csv"
+  },
+  {
+    "flow_id": "F-M024-09",
+    "field": "evidence_ids",
+    "before": "E-CASIO-01;E-CASIO-09",
+    "after": "E-CASIO-01;E-CASIO-09;E-CACD-07",
+    "reason": "2026-10-27复核同一MA2307-A正文；补旧任务分支，不增加重复F或升深度",
+    "file": "docs/research/interaction-library/batches/dictionary-coverage.csv"
+  },
+  {
+    "flow_id": "F-M024-09",
+    "field": "known_branches",
+    "before": "音频合盖继续",
+    "after": "语音播放器合盖续播且播放时不自动关机；无线连接时自动关机为6分钟；低电量可退到语言设置",
+    "reason": "2026-10-27复核同一MA2307-A正文；补旧任务分支，不增加重复F或升深度",
+    "file": "docs/research/interaction-library/batches/dictionary-coverage.csv"
+  },
+  {
+    "flow_id": "F-M024-09",
+    "field": "gaps",
+    "before": "未保存内容",
+    "after": "未保存内容与异常掉电恢复未知；合盖续用不等于复位或备份恢复",
+    "reason": "2026-10-27复核同一MA2307-A正文；补旧任务分支，不增加重复F或升深度",
+    "file": "docs/research/interaction-library/batches/dictionary-coverage.csv"
+  },
+  {
+    "flow_id": "F-M024-09",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27",
+    "reason": "2026-10-27复核同一MA2307-A正文；补旧任务分支，不增加重复F或升深度",
+    "file": "docs/research/interaction-library/batches/dictionary-coverage.csv"
+  },
+  {
+    "flow_id": "F-M034-01",
+    "field": "evidence_ids",
+    "before": "E-FIIO-02",
+    "after": "E-FIIO-02;E-FICD-08;E-FICD-15",
+    "file": "docs/research/interaction-library/batches/audio-coverage.csv"
+  },
+  {
+    "flow_id": "F-M034-01",
+    "field": "known_branches",
+    "before": "文件到设备不等于已进入 app 曲库；扫描的当前完整步骤尚未找到。",
+    "after": "文件传入不等于索引完成。卡插入方向按JM21 FAQ为触点向下、推入锁定，再推弹出；不能套用Sony方向。手册空库图出现Scan for music入口，但本轮没有扫描完成流程。",
+    "file": "docs/research/interaction-library/batches/audio-coverage.csv"
+  },
+  {
+    "flow_id": "F-M034-01",
+    "field": "gaps",
+    "before": "新增/移动/重复文件的扫描策略；当前 macOS 兼容性；传输取消与索引失败。",
+    "after": "扫描过滤/增量/移动或重复文件策略、弹卡后的队列及歌单状态、当前macOS兼容性、传输取消与索引失败。",
+    "file": "docs/research/interaction-library/batches/audio-coverage.csv"
+  },
+  {
+    "flow_id": "F-M034-01",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27",
+    "file": "docs/research/interaction-library/batches/audio-coverage.csv"
+  },
+  {
+    "flow_id": "F-M034-02",
+    "field": "evidence_ids",
+    "before": "E-FIIO-01;E-FIIO-11",
+    "after": "E-FIIO-01;E-FIIO-11;E-FICD-15",
+    "file": "docs/research/interaction-library/batches/audio-coverage.csv"
+  },
+  {
+    "flow_id": "F-M034-02",
+    "field": "known_branches",
+    "before": "收藏、歌单成员和音频文件是不同对象；批量删除是否删文件及确认界面待核。",
+    "after": "手册给出添加时间/文件名/首字母/年份排序；行菜单图可见Play next（当前曲后播放）与Cancel，批量图可见Select all和Cancel。静态入口不证明取消回滚、重排、持久化或删除对象范围。",
+    "file": "docs/research/interaction-library/batches/audio-coverage.csv"
+  },
+  {
+    "flow_id": "F-M034-02",
+    "field": "gaps",
+    "before": "空库首次引导、扫描过滤、队列插入/替换、去重和撤销。",
+    "after": "扫描过滤、完整队列插入/替换/重排/去重、删除确认/是否删文件、撤销；旧手册界面不当作3.3.4已验证界面。",
+    "file": "docs/research/interaction-library/batches/audio-coverage.csv"
+  },
+  {
+    "flow_id": "F-M034-02",
+    "field": "visual_status",
+    "before": "not_observed",
+    "after": "static_manual_pages_only",
+    "file": "docs/research/interaction-library/batches/audio-coverage.csv"
+  },
+  {
+    "flow_id": "F-M034-02",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27",
+    "file": "docs/research/interaction-library/batches/audio-coverage.csv"
+  },
+  {
+    "flow_id": "F-M034-04",
+    "field": "evidence_ids",
+    "before": "E-FIIO-03",
+    "after": "E-FIIO-03",
+    "file": "docs/research/interaction-library/batches/audio-coverage.csv"
+  },
+  {
+    "flow_id": "F-M034-04",
+    "field": "known_branches",
+    "before": "改变整机工作角色；不能把“蓝牙接收”理解为给蓝牙耳机发声。",
+    "after": "五种工作角色总入口；非Android模式的屏上选择或Settings→Exit返回Android。USB-DAC、AirPlay和蓝牙接收的具体音频目标分别见F11/F12/F15，未作为此处重复任务。",
+    "file": "docs/research/interaction-library/batches/audio-coverage.csv"
+  },
+  {
+    "flow_id": "F-M034-04",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27",
+    "file": "docs/research/interaction-library/batches/audio-coverage.csv"
+  },
+  {
+    "flow_id": "F-M034-06",
+    "field": "evidence_ids",
+    "before": "E-FIIO-05;E-FIIO-10",
+    "after": "E-FIIO-05;E-FIIO-10;E-FICD-15",
+    "file": "docs/research/interaction-library/batches/audio-coverage.csv"
+  },
+  {
+    "flow_id": "F-M034-06",
+    "field": "known_branches",
+    "before": "app 输出选项与系统端口角色共同影响发声；SPDIF 接收端不认 DoP 时 FAQ 建议 D2P。",
+    "after": "USB输出开关与端口角色影响发声；手册描述蓝牙发射与模拟/同轴间遵循后接入优先。两个模拟口仅写按插入顺序优先，未擅自补先/后规则。LO音量可调开关关闭时为最大固定音量。",
+    "file": "docs/research/interaction-library/batches/audio-coverage.csv"
+  },
+  {
+    "flow_id": "F-M034-06",
+    "field": "gaps",
+    "before": "切出口音量继承、热插拔瞬间声音、失败后的 UI 提示和自动回退。",
+    "after": "切出口音量继承、两个模拟口的明确优先顺序、热插拔瞬间声音、失败UI提示和自动回退；未实测手册优先级。",
+    "file": "docs/research/interaction-library/batches/audio-coverage.csv"
+  },
+  {
+    "flow_id": "F-M034-06",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27",
+    "file": "docs/research/interaction-library/batches/audio-coverage.csv"
+  },
+  {
+    "flow_id": "F-M034-07",
+    "field": "evidence_ids",
+    "before": "E-FIIO-08;E-FIIO-09",
+    "after": "E-FIIO-08;E-FIIO-09;E-FICD-07;E-FICD-13",
+    "file": "docs/research/interaction-library/batches/audio-coverage.csv"
+  },
+  {
+    "flow_id": "F-M034-07",
+    "field": "known_branches",
+    "before": "Link 是控制连接；DLNA 是读取远端媒体。该 JM21 FAQ 只声明 DLNA 接收，不等于离线下载或云同步。",
+    "after": "Link是Music遥控，DLNA是远端媒体；另有JM21 FiiO Cast与手机FiiO Control连接路径，失联排查网络/后台服务/IP后可删除旧设备、重启Cast、重加。型号旧FAQ仅接收的DLNA表述与通用App实验发射日志并存，不能断言当前JM21不支持发射。",
+    "file": "docs/research/interaction-library/batches/audio-coverage.csv"
+  },
+  {
+    "flow_id": "F-M034-07",
+    "field": "gaps",
+    "before": "手机断连是否继续、队列冲突、DLNA 缓存与恢复、Wi-Fi 传歌失败处理。",
+    "after": "当前JM21构建DLNA发射入口和支持范围、Cast退出/授权/多客户端/断点、Wi-Fi传歌目标目录与失败处理、远端缓存与队列冲突。",
+    "file": "docs/research/interaction-library/batches/audio-coverage.csv"
+  },
+  {
+    "flow_id": "F-M034-07",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27",
+    "file": "docs/research/interaction-library/batches/audio-coverage.csv"
+  },
+  {
+    "flow_id": "F-M034-08",
+    "field": "evidence_ids",
+    "before": "E-FIIO-06;E-FIIO-11",
+    "after": "E-FIIO-06;E-FIIO-11;E-FICD-15",
+    "file": "docs/research/interaction-library/batches/audio-coverage.csv"
+  },
+  {
+    "flow_id": "F-M034-08",
+    "field": "known_branches",
+    "before": "系统计时与 app 停止不是同一层；通用产品页只足以证明记曲目，不证明 JM21 当前构建精确逐书断点。",
+    "after": "系统关机与App停止/记曲目不同；手册Audio的Auto pause without headphones仅列Android/Pure Music模式无耳机2分钟后暂停，不能推成立即拔耳机暂停或蓝牙断连规则。",
+    "file": "docs/research/interaction-library/batches/audio-coverage.csv"
+  },
+  {
+    "flow_id": "F-M034-08",
+    "field": "gaps",
+    "before": "app timer 的当前入口、换曲是否延时、重启后计时、逐曲时间点与意外断电保存。",
+    "after": "App timer当前入口、换曲是否延时、计时重启保留、逐曲时间点与断电保存；无耳机暂停的计时起点/多出口判定未核。",
+    "file": "docs/research/interaction-library/batches/audio-coverage.csv"
+  },
+  {
+    "flow_id": "F-M034-08",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27",
+    "file": "docs/research/interaction-library/batches/audio-coverage.csv"
+  },
+  {
+    "flow_id": "F-M034-09",
+    "field": "evidence_ids",
+    "before": "E-FIIO-07",
+    "after": "E-FIIO-07;E-FICD-15",
+    "file": "docs/research/interaction-library/batches/audio-coverage.csv"
+  },
+  {
+    "flow_id": "F-M034-09",
+    "field": "known_branches",
+    "before": "强制重启、清 app 数据、整机清除是不同级别；不能把后两者当作“刷新曲库”。",
+    "after": "重启、清App数据、出厂清除分层。手册System→Reset options另列网络重置、App偏好重置、清全部内存数据；不能以清数据替代扫描。",
+    "file": "docs/research/interaction-library/batches/audio-coverage.csv"
+  },
+  {
+    "flow_id": "F-M034-09",
+    "field": "gaps",
+    "before": "日志是否含敏感数据、清除后歌单/进度恢复、断电后损坏索引的处理。",
+    "after": "日志敏感信息、偏好重置完整影响、歌单/进度备份恢复、断电后索引损坏与清除失败未核。",
+    "file": "docs/research/interaction-library/batches/audio-coverage.csv"
+  },
+  {
+    "flow_id": "F-M034-09",
+    "field": "checked_on",
+    "before": "2026-10-26",
+    "after": "2026-10-27",
+    "file": "docs/research/interaction-library/batches/audio-coverage.csv"
+  }
+]

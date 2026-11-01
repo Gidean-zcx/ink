@@ -1,0 +1,109 @@
+In this article, you will find some FAQs regarding the BOOX devices.
+Software
+Q: How can I turn pages on third-party apps by using the built-in page-turn buttons or the buttons on the magnetic case?
+A: The built-in page-turn buttons or the buttons on the magnetic case simulate the volume buttons in the Android OS. As a result, you need to enable Turn Pages with Volume Controls in some apps to use them to turn pages.
+Q: What can I do if my device is locked?
+A: This issue is caused due to the server update on our end. If you find your device is suddenly locked, please connect the device to the Internet. After that, your device will be unlocked automatically.
+If you are still unable to unlock the device, please submit a request here. In your request, please let us know:
+Your order number or a screenshot for proof of purchase
+A picture of the device (includes MAC number)
+The serial number of the device (located at the back of the device)
+Once receiving your info, we will contact our tech team to unlock the device for you.
+Q: How can I restore my notes deleted by mistake?
+A: The Restore function has been added since Firmware V3.2.2. You can do the following to restore your notes:
+In Home Screen, go to
+Notes
+.
+Tap the hamburger menu in the top right corner and choose
+Recycle Bin
+.
+Choose your notes and tap the Restore button to restore them.
+Note:
+Notes deleted before Firmware V3.2.2 cannot be restored.
+Q: How can I keep my notes after logging out?
+A: You can do the following to keep your notes after logging out:
+During the login status, go to
+Notes
+in Home Screen.
+Tap the hamburger menu in the top right corner and choose
+Option Settings
+>
+Backup and Restore
+.
+Tap the
+Backup
+button in the top right corner, type in a filename and choose
+OK
+. Then wait for the backup process.
+Log out of your account and go back to the
+Backup and Restore
+settings.
+Choose your backup data, tap the
+Restore
+button and choose
+OK
+. Then wait for the restoring process.
+Now you can check and edit your notes without logging in.
+Q: How can I change the layout of my external keyboard?
+A: You can do the following to change the layout of your external keyboard if you find it inconsistent with your typing preference:
+After connecting your keyboard to the BOOX device, swipe down from the top left corner to open the
+Notification Center
+.
+Find and tap
+Configure physical keyboard
+.
+Choose your physical keyboard.
+Tap
+SET UP KEYBOARD LAYOUTS
+.
+Choose and enable your preferred keyboard layout.
+Hardware
+Q: Can I apply a screen protector on the BOOX device?
+A: Yes, but we do not include screen protectors in our package or sell them separately, and we do not recommend applying them. Any damage to the screen during applying a screen protector will nullify the warranty.
+Q: Unable to turn on the device?
+A: Please charge the device for an hour. After that, please long press the power button for about 10 seconds without removing the power source and see if you are able to turn on the device. If you are still unable to turn on the device, please contact us through customer service.
+Q: Unable to connect to the computer via USB?
+A: You can do the following respectively for troubleshooting:
+Try another USB cable to check if the original cable is damaged.
+Try another computer to check if the original computer lacks the latest driver or system.
+Swipe down from the top left corner to open the
+Notification Center
+and check if it shows
+Charging this device via USB
+. If so, tap it and then switch to
+File Transfer
+under
+USE USB FOR
+.
+Q: My stylus starts to leak and write without touching the screen?
+A: Please replace the tip and see if this continues. If so, please contact us through customer service.
+Q: My device consumes power very quickly?
+A: Please do the following to check whether the battery is abnormal.
+Go to
+Settings
+>
+Feedback
+> Hamburger menu in the upper right corner >
+Settings
+> Enable
+Save logs to local storage
+before Reboot
+device
+> return to the previous page and tap the
++
+button to submit the first feedback.
+After submitting the first feedback, please fully charge the device and use it as normal until the power reaches about 30%. Then go to
+Settings
+>
+Feedback
+> tap the
++
+button > tick
+Send Log
+and send the second feedback.
+After receiving your feedback, our tech team will check if the battery has worked properly.
+If you have more questions, please visit our
+Help Center
+or refer to the
+Customer Service
+page to contact us.

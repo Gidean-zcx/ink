@@ -1,0 +1,27 @@
+HELP CENTER
+USING DUOLINGO
+What are leaderboards and leagues?
+What are leaderboards?
+Leaderboards are a fun way to compete with other Duolingo learners in a weekly contest. As you earn more XP (experience points) with each lesson, you’ll rise in the ranks of your leaderboard. You’ll face a new group of competitors each week. Check out the Leaderboards tab in the app to get the competition started!
+What are leagues?
+The top XP earners in your leaderboard will be promoted to a higher league for the following week. The lower XP earners will be demoted to the previous league.
+Leagues, from lowest to highest: Bronze, Silver, Gold, Sapphire, Ruby, Emerald, Amethyst, Pearl, Obsidian, and Diamond.
+When do leaderboards end and restart?
+Leaderboards end and restart Sunday afternoon or evening, based on your device’s timezone. The leaderboard tab includes a countdown showing when it will end.
+If I don’t see leaderboards, what can I do?
+You can check whether your profile is private. If you would like to have access to leaderboards:
+Go to your privacy settings here: https://www.duolingo.com/settings/privacy
+Check “Make my profile public”
+If you are under 13 years old you won’t have access to social features including leaderboards. If you are in a classroom, be sure to check your classroom settings.
+How do I disable leaderboard-related notifications?
+In your “notification settings” you can turn on or off notifications about your leaderboard standings.
+How do I disable leagues/leaderboards?
+If you make your profile private, it will disable leaderboards and friends. To make your profile private:
+Go to your privacy settings here: https://www.duolingo.com/settings/privacy
+Uncheck “Make my profile public”
+Relevant Articles
+Why did my course change?
+What is a streak?
+Does Duolingo use any open source libraries?
+How does matchmaking work in Duolingo Chess?
+I want to submit a bug report

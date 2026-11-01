@@ -1,0 +1,12 @@
+A factory reset deletes all files and settings on your reMarkable, restoring it to its original state. If your files are synced to the cloud, they’ll return once you re-pair your device after the reset.
+Before you begin
+Make sure you’ve synced your notes and documents to the reMarkable cloud (Menu > Settings > Cloud > Check sync, on the device).
+A factory reset cannot be undone, and unsynced content will be permanently lost.
+After the reset, your reMarkable will go through the standard setup and onboarding process.
+How to perform a factory reset
+On your reMarkable, tap Menu in the upper-left corner.
+Tap Settings.
+Under General, tap Account.
+Tap Reset.
+Tap Factory reset to confirm.
+If you’re re-pairing a device that was previously connected to the cloud, we recommend performing a factory reset first to avoid file sync issues.

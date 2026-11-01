@@ -1,0 +1,15 @@
+Limit the input for a shortcut on iPhone or iPad
+When you first enable a shortcut to run from another app, the shortcut will accept any content as an input. Limiting the type of content that a shortcut will accept streamlines sharing options in an app, by hiding shortcuts that aren’t relevant to the app. For example, a shortcut that accepts only contacts won’t appear as a sharing extension in the Maps app. See the full list of input types and their definitions in Understanding input types in Shortcuts on iPhone or iPad. You can allow your shortcut to react dynamically if no input was received.
+Note: Some shortcuts receive no initial input (for example, shortcuts that you run from a widget).
+In the Shortcuts app on your iPhone or iPad, tap on a shortcut.
+The shortcut opens in the shortcut editor.
+Tap Any (or the current input) in the input action.
+If you don’t see an input action, see Launch a shortcut from another app on iPhone or iPad or Receive onscreen items from other apps.
+Turn off any content type you don’t want as input for your shortcut.
+Tap Clear to turn off all content types.
+Tap Done.
+Optional: To choose how the shortcut responds if there is no input, tap Continue in the input action and choose one of the following:
+Stop and Respond: The shortcut stops and (optionally) displays a message. To display a message when the shortcut runs and there is no input, tap Response and type a message.
+Ask For: The shortcut asks for input. Select the content type to pass through to the shortcut.
+Get Clipboard: The shortcut uses the contents of the Clipboard as input.
+Continue: The shortcut runs without interruption. If an action uses the input as a Magic Variable, the variable will be empty.

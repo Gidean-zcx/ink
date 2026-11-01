@@ -1,0 +1,3 @@
+Intro to URL schemes in Shortcuts on iPhone or iPad
+You can use URL schemes in Shortcuts. A URL scheme is the part of a link that specifies the type of application your device uses to open a URL. Many apps support URL schemes: FaceTime uses URL schemes to place calls when a URL starting with facetime:// is opened, just like Safari handles URLs starting with http://.
+You can also open URLs using schemes inside of your shortcuts provided by other apps. To do so, use the Open URL or Open X-Callback URL action.See alsoIntro to variables in Shortcuts on iPhone or iPad

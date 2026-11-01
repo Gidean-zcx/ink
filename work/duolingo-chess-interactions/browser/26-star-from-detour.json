@@ -1,0 +1,33 @@
+{
+  "name": "26-star-from-detour",
+  "at": "2026-10-27T02:07:57.351781+00:00",
+  "url": "https://www.duolingo.com/lesson",
+  "title": "Duolingo - The world’s most popular way to learn",
+  "text": "5\nSolve the puzzle\nThe rook moves in straight lines. Capture the stars.\nHINT",
+  "controls": [
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": null,
+      "test": "quit-button",
+      "type": "submit",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": "Previous move",
+      "test": null,
+      "type": "button",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": "Next move",
+      "test": null,
+      "type": "button",
+      "disabled": true
+    }
+  ]
+}

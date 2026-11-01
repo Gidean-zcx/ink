@@ -1,0 +1,11 @@
+{
+  "rows": 111,
+  "states": {
+    "text_read": 30,
+    "body_read": 34,
+    "index_only": 46,
+    "prior_body_read": 1
+  },
+  "newly_read_article_rows": 18,
+  "new_controls_are_not_new_flows": true
+}

@@ -1,0 +1,21 @@
+New combined filter quotas
+Apr 7, 2026
+|
+News
+Filters are one of Inoreader’s most powerful tools for reducing noise. They automatically hide irrelevant content the moment it arrives, so you can focus only on what matters without manually skimming through every article.
+We’ve updated how filter quotas work. Instead of having separate limits for content (30) and duplicate filters (10), Pro users now get 50 filters total per account.
+This means:
+More filters overall
+No fixed limits per filter type
+Greater flexibility in how you organize and clean your feeds
+For example, you can now use more keyword-based content filters, more duplicate filters, or any mix that fits your workflow.
+When to use which?
+Content filters help you control what appears in your feeds based on specific criteria, such as keywords, phrases, authors, or other article properties.
+Duplicate filters automatically detect and remove repeated content. They’re especially useful when following multiple sources that publish the same or very similar articles.
+Usage & availability
+Filters are a Pro feature. With this update, Pro users can use up to 50 filters in total, allocated however they prefer.
+Existing filters remain unchanged and count toward your new total quota.
+You can track your usage anytime in Preferences > Billing and usage, and if needed, add more filters as a custom add-on.
+Haven’t tried filters yet?
+Start using filters to clean up your feeds automatically and stay focused on what matters most. With more flexibility and higher limits, you have even greater control over what reaches your reading list.
+Start a free Pro trial

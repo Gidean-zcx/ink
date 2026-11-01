@@ -1,0 +1,198 @@
+[
+  {
+    "flow_id": "F-M002-02",
+    "before": {
+      "flow_id": "F-M002-02",
+      "product_id": "M-002",
+      "task": "选区、高亮与笔记",
+      "depth": "D2",
+      "evidence_ids": "E-KOB-02;E-KOB-03",
+      "known_branches": "自动高亮、撤销、第三方书删除",
+      "gaps": "取消/撤销全流程、离线、冲突",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-002-kobo.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M002-02",
+      "product_id": "M-002",
+      "task": "选区、高亮与笔记",
+      "depth": "D2",
+      "evidence_ids": "E-KOB-02;E-KOB-03;E-KBCD-07",
+      "known_branches": "自动高亮/撤销及第三方书删除；通用手势页明确PDF和漫画不能按此长按方式选文本。",
+      "gaps": "格式例外不等于不支持手写；取消/撤销全链、离线、冲突及当前N428构建未测。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-002-kobo.md",
+      "checked_on": "2026-10-27"
+    },
+    "changed_fields": {
+      "evidence_ids": {
+        "before": "E-KOB-02;E-KOB-03",
+        "after": "E-KOB-02;E-KOB-03;E-KBCD-07"
+      },
+      "known_branches": {
+        "before": "自动高亮、撤销、第三方书删除",
+        "after": "自动高亮/撤销及第三方书删除；通用手势页明确PDF和漫画不能按此长按方式选文本。"
+      },
+      "gaps": {
+        "before": "取消/撤销全流程、离线、冲突",
+        "after": "格式例外不等于不支持手写；取消/撤销全链、离线、冲突及当前N428构建未测。"
+      },
+      "checked_on": {
+        "before": "2026-10-26",
+        "after": "2026-10-27"
+      }
+    }
+  },
+  {
+    "flow_id": "F-M002-10",
+    "before": {
+      "flow_id": "F-M002-10",
+      "product_id": "M-002",
+      "task": "翻页、预览跳转与返回",
+      "depth": "D2",
+      "evidence_ids": "E-KBD-01;E-KBD-12;E-KBD-13;E-KBD-29",
+      "known_branches": "退出预览和回原页、软件分支",
+      "gaps": "N428键反转与快翻具体动作",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-002-kobo.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M002-10",
+      "product_id": "M-002",
+      "task": "翻页、预览跳转与返回",
+      "depth": "D2",
+      "evidence_ids": "E-KBD-01;E-KBD-12;E-KBD-13;E-KBD-29;E-KBCD-02;E-KBCD-04",
+      "known_branches": "预览外退出/回原页保持旧链；中央Reading Menu→目录→点章，目录超过一页可左右划页。菜单另区分章节前后、书内搜索与Notes。",
+      "gaps": "N428按键反转/长按快翻仍未闭合；目录跳转后的原页返回是否与预览相同、空目录/搜索及无障碍分支差异未核。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-002-kobo.md",
+      "checked_on": "2026-10-27"
+    },
+    "changed_fields": {
+      "evidence_ids": {
+        "before": "E-KBD-01;E-KBD-12;E-KBD-13;E-KBD-29",
+        "after": "E-KBD-01;E-KBD-12;E-KBD-13;E-KBD-29;E-KBCD-02;E-KBCD-04"
+      },
+      "known_branches": {
+        "before": "退出预览和回原页、软件分支",
+        "after": "预览外退出/回原页保持旧链；中央Reading Menu→目录→点章，目录超过一页可左右划页。菜单另区分章节前后、书内搜索与Notes。"
+      },
+      "gaps": {
+        "before": "N428键反转与快翻具体动作",
+        "after": "N428按键反转/长按快翻仍未闭合；目录跳转后的原页返回是否与预览相同、空目录/搜索及无障碍分支差异未核。"
+      },
+      "checked_on": {
+        "before": "2026-10-26",
+        "after": "2026-10-27"
+      }
+    }
+  },
+  {
+    "flow_id": "F-M002-13",
+    "before": {
+      "flow_id": "F-M002-13",
+      "product_id": "M-002",
+      "task": "亮度与彩色处理",
+      "depth": "D2",
+      "evidence_ids": "E-KBD-18;E-KBD-19",
+      "known_branches": "彩虹纹处理的显示取舍",
+      "gaps": "全刷频率入口、刷新实际表现",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-002-kobo.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M002-13",
+      "product_id": "M-002",
+      "task": "亮度与彩色处理",
+      "depth": "D2",
+      "evidence_ids": "E-KBD-18;E-KBD-19;E-KBCD-05;E-KBCD-06;E-KBCD-11",
+      "known_branches": "原彩虹纹取舍保留；深色由Reading Settings/Page appearance勾选后X保存，图像不反相。暖光Auto与手动分开，可设Bedtime。官方共用Page2静态图可见Refresh the screen every: Chapter。",
+      "gaps": "仅刷新入口/示例值，非默认或完整档位；未测刷新/残影性能。Bedtime不等于音频计时；当前固件菜单、模式持久化/相互作用未核。",
+      "visual_status": "static_reference_only",
+      "hands_on": "false",
+      "case_path": "cases/M-002-kobo.md",
+      "checked_on": "2026-10-27"
+    },
+    "changed_fields": {
+      "evidence_ids": {
+        "before": "E-KBD-18;E-KBD-19",
+        "after": "E-KBD-18;E-KBD-19;E-KBCD-05;E-KBCD-06;E-KBCD-11"
+      },
+      "known_branches": {
+        "before": "彩虹纹处理的显示取舍",
+        "after": "原彩虹纹取舍保留；深色由Reading Settings/Page appearance勾选后X保存，图像不反相。暖光Auto与手动分开，可设Bedtime。官方共用Page2静态图可见Refresh the screen every: Chapter。"
+      },
+      "gaps": {
+        "before": "全刷频率入口、刷新实际表现",
+        "after": "仅刷新入口/示例值，非默认或完整档位；未测刷新/残影性能。Bedtime不等于音频计时；当前固件菜单、模式持久化/相互作用未核。"
+      },
+      "visual_status": {
+        "before": "not_observed",
+        "after": "static_reference_only"
+      },
+      "checked_on": {
+        "before": "2026-10-26",
+        "after": "2026-10-27"
+      }
+    }
+  },
+  {
+    "flow_id": "F-M002-18",
+    "before": {
+      "flow_id": "F-M002-18",
+      "product_id": "M-002",
+      "task": "下载并用蓝牙听书",
+      "depth": "D2",
+      "evidence_ids": "E-KBD-23",
+      "known_branches": "下载状态、配对失败、未缓存章节",
+      "gaps": "断网换章、断连与重启续播",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-002-kobo.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M002-18",
+      "product_id": "M-002",
+      "task": "下载并用蓝牙听书",
+      "depth": "D2",
+      "evidence_ids": "E-KBD-23;E-KBCD-08;E-KBCD-10;E-KBCD-12",
+      "known_branches": "原下载/配对/跳章；统计按钮看章/全书剩余和下一章时长，菜单可详情/词典。排错给Rescan及Settings/Bluetooth connection设备菜单Forget后重配；启用蓝牙自动开Wi-Fi只指开关，不证明需互联网。",
+      "gaps": "静态Back to My Books未触发，不推定退出续播；整本离线/断连/重启进度仍未知。设计概述计时范围未给N428音频入口/对象，不能套手机App睡眠计时。",
+      "visual_status": "static_reference_only",
+      "hands_on": "false",
+      "case_path": "cases/M-002-kobo.md",
+      "checked_on": "2026-10-27"
+    },
+    "changed_fields": {
+      "evidence_ids": {
+        "before": "E-KBD-23",
+        "after": "E-KBD-23;E-KBCD-08;E-KBCD-10;E-KBCD-12"
+      },
+      "known_branches": {
+        "before": "下载状态、配对失败、未缓存章节",
+        "after": "原下载/配对/跳章；统计按钮看章/全书剩余和下一章时长，菜单可详情/词典。排错给Rescan及Settings/Bluetooth connection设备菜单Forget后重配；启用蓝牙自动开Wi-Fi只指开关，不证明需互联网。"
+      },
+      "gaps": {
+        "before": "断网换章、断连与重启续播",
+        "after": "静态Back to My Books未触发，不推定退出续播；整本离线/断连/重启进度仍未知。设计概述计时范围未给N428音频入口/对象，不能套手机App睡眠计时。"
+      },
+      "visual_status": {
+        "before": "not_observed",
+        "after": "static_reference_only"
+      },
+      "checked_on": {
+        "before": "2026-10-26",
+        "after": "2026-10-27"
+      }
+    }
+  }
+]

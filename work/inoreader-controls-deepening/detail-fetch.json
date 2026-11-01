@@ -1,0 +1,194 @@
+[
+  {
+    "key": "09-search",
+    "url": "https://www.inoreader.com/features/search",
+    "final_url": "https://www.inoreader.com/features/search",
+    "status": 200,
+    "raw_work_path": "work/inoreader-controls-deepening/09-search.html",
+    "raw_sha256": "44e96a045b0adf06da27cec594dea3a76d52b2e870652bdbbfd3f15629f9de56"
+  },
+  {
+    "key": "10-monitoring",
+    "url": "https://www.inoreader.com/features/monitoring-feeds",
+    "final_url": "https://www.inoreader.com/features/monitoring-feeds",
+    "status": 200,
+    "raw_work_path": "work/inoreader-controls-deepening/10-monitoring.html",
+    "raw_sha256": "344ad7c85a44556697f504ada3d35c82d3b2d252a1d3ecdd083c3d2331f6c451"
+  },
+  {
+    "key": "11-organize",
+    "url": "https://www.inoreader.com/features/folders-and-tags",
+    "final_url": "https://www.inoreader.com/features/folders-and-tags",
+    "status": 200,
+    "raw_work_path": "work/inoreader-controls-deepening/11-organize.html",
+    "raw_sha256": "925cea1168801e4c63d489fe1ee0ff7956254663b37e5d2a2746398ca3640d83"
+  },
+  {
+    "key": "12-annotations",
+    "url": "https://www.inoreader.com/features/annotations",
+    "final_url": "https://www.inoreader.com/features/annotations",
+    "status": 200,
+    "raw_work_path": "work/inoreader-controls-deepening/12-annotations.html",
+    "raw_sha256": "c3b8f50518aca423d920190452ef580f5541b75b5cb8f493580ab36f7d58aade"
+  },
+  {
+    "key": "13-archive",
+    "url": "https://www.inoreader.com/features/archive",
+    "final_url": "https://www.inoreader.com/features/archive",
+    "status": 200,
+    "raw_work_path": "work/inoreader-controls-deepening/13-archive.html",
+    "raw_sha256": "39b4cb9cb207650df2eaa3d9cd7154df0dfce83d58066d58425475e85b07aada"
+  },
+  {
+    "key": "14-spotlights",
+    "url": "https://www.inoreader.com/features/spotlights",
+    "final_url": "https://www.inoreader.com/features/spotlights",
+    "status": 200,
+    "raw_work_path": "work/inoreader-controls-deepening/14-spotlights.html",
+    "raw_sha256": "832273f9c5cfdb2256550ed5301c0fa200d8a72ba6b1f3753ef107d9f54b68c0"
+  },
+  {
+    "key": "15-dashboards",
+    "url": "https://www.inoreader.com/features/dashboards",
+    "final_url": "https://www.inoreader.com/features/dashboards",
+    "status": 200,
+    "raw_work_path": "work/inoreader-controls-deepening/15-dashboards.html",
+    "raw_sha256": "3f26a0391f00b761a160b5f7f7b6d6c190f671e9afcda41948b0af705e5d0549"
+  },
+  {
+    "key": "16-intelligence",
+    "url": "https://www.inoreader.com/features/intelligence",
+    "final_url": "https://www.inoreader.com/features/intelligence",
+    "status": 200,
+    "raw_work_path": "work/inoreader-controls-deepening/16-intelligence.html",
+    "raw_sha256": "ed1b84c3988d55b349aaf971438409705e0de7f9b3e5f0c60ec9640048e23d0e"
+  },
+  {
+    "key": "17-api",
+    "url": "https://www.inoreader.com/features/api",
+    "final_url": "https://www.inoreader.com/features/api",
+    "status": 200,
+    "raw_work_path": "work/inoreader-controls-deepening/17-api.html",
+    "raw_sha256": "a96edebc3072ffc311eb309b3b19a688f8dd8d5dafac470171d88729ee82434d"
+  },
+  {
+    "key": "18-unread-restore",
+    "url": "https://www.inoreader.com/help/basic/article-view/how-can-i-restore-articles-accidentally-marked-as-read",
+    "final_url": "https://www.inoreader.com/help/basic/article-view/how-can-i-restore-articles-accidentally-marked-as-read",
+    "status": 200,
+    "raw_work_path": "work/inoreader-controls-deepening/18-unread-restore.html",
+    "raw_sha256": "8bff9fe3a2da8fca043b31eab187ea203dc35db4a07ae9fc13e48e41d858955f"
+  },
+  {
+    "key": "19-import",
+    "url": "https://www.inoreader.com/help/basic/feeds-sources/can-i-import-feeds-from-another-rss-reader",
+    "final_url": "https://www.inoreader.com/help/basic/feeds-sources/can-i-import-feeds-from-another-rss-reader",
+    "status": 200,
+    "raw_work_path": "work/inoreader-controls-deepening/19-import.html",
+    "raw_sha256": "798e48a5cdcf7f0bdaa7a07ca2789dd39b0af2d72b2bf837fcd29835a8774e14"
+  },
+  {
+    "key": "20-feed-failure",
+    "url": "https://www.inoreader.com/help/basic/feeds-sources/why-has-a-feed-stopped-updating",
+    "final_url": "https://www.inoreader.com/help/basic/feeds-sources/why-has-a-feed-stopped-updating",
+    "status": 200,
+    "raw_work_path": "work/inoreader-controls-deepening/20-feed-failure.html",
+    "raw_sha256": "fdf47fce83c9253adfb3ba2a6ed01b2c5598f55e7d17a730f3f397eae9a9d953"
+  },
+  {
+    "key": "21-add-feed",
+    "url": "https://www.inoreader.com/help/basic/feeds-sources/how-do-i-add-a-feed",
+    "final_url": "https://www.inoreader.com/help/basic/feeds-sources/how-do-i-add-a-feed",
+    "status": 200,
+    "raw_work_path": "work/inoreader-controls-deepening/21-add-feed.html",
+    "raw_sha256": "459d3ad86747d5ca916c1fca11d19345fd9077890c87896e54d1b7d5075802df"
+  },
+  {
+    "key": "22-layout",
+    "url": "https://www.inoreader.com/help/basic/article-view/can-i-customize-how-articles-are-displayed",
+    "final_url": "https://www.inoreader.com/help/basic/article-view/can-i-customize-how-articles-are-displayed",
+    "status": 200,
+    "raw_work_path": "work/inoreader-controls-deepening/22-layout.html",
+    "raw_sha256": "5f1c3a75a055bca015b1a4913c5d16ebf46ba87ac36bc6073c3c8b4843367efe"
+  },
+  {
+    "key": "23-sorting",
+    "url": "https://www.inoreader.com/help/basic/article-view/what-sorting-options-are-available",
+    "final_url": "https://www.inoreader.com/help/basic/article-view/what-sorting-options-are-available",
+    "status": 200,
+    "raw_work_path": "work/inoreader-controls-deepening/23-sorting.html",
+    "raw_sha256": "5ffe20db14006385aace9ec7cf2c368ce7c3ef7af27fc14236c0534d21d8b18d"
+  },
+  {
+    "key": "24-magic",
+    "url": "https://www.inoreader.com/help/pro/magic-sorting/what-is-magic-sorting",
+    "final_url": "https://www.inoreader.com/help/pro/magic-sorting/what-is-magic-sorting",
+    "status": 200,
+    "raw_work_path": "work/inoreader-controls-deepening/24-magic.html",
+    "raw_sha256": "e39578ce8d9fc19dbf3dcfa3e23cd46f47d576a2851d63edd07a46e6819ed86d"
+  },
+  {
+    "key": "25-summary-generate",
+    "url": "https://www.inoreader.com/help/intelligence/article-summaries/how-do-i-generate-a-summary",
+    "final_url": "https://www.inoreader.com/help/intelligence/article-summaries/how-do-i-generate-a-summary",
+    "status": 200,
+    "raw_work_path": "work/inoreader-controls-deepening/25-summary-generate.html",
+    "raw_sha256": "f7ba60e87b0bbc7a7fb0ac5ced5effa2e10720d3a73a64fd2026a99dbc9b8aad"
+  },
+  {
+    "key": "26-summary-config",
+    "url": "https://www.inoreader.com/help/intelligence/article-summaries/can-i-customize-how-summaries-work",
+    "final_url": "https://www.inoreader.com/help/intelligence/article-summaries/can-i-customize-how-summaries-work",
+    "status": 200,
+    "raw_work_path": "work/inoreader-controls-deepening/26-summary-config.html",
+    "raw_sha256": "76d86b072e75e6fa18ce476ed8179dbf4d1f5e976db1bf66933a32f8a56b6df9"
+  },
+  {
+    "key": "27-summary-store",
+    "url": "https://www.inoreader.com/help/intelligence/article-summaries/where-are-summaries-stored",
+    "final_url": "https://www.inoreader.com/help/intelligence/article-summaries/where-are-summaries-stored",
+    "status": 200,
+    "raw_work_path": "work/inoreader-controls-deepening/27-summary-store.html",
+    "raw_sha256": "338a8f99fcd59217bb26251002bac2dd773b96650abb58b125acd2c6f793585c"
+  },
+  {
+    "key": "28-report-create",
+    "url": "https://www.inoreader.com/help/intelligence/intelligence-reports/how-do-i-create-an-intelligence-report",
+    "final_url": "https://www.inoreader.com/help/intelligence/intelligence-reports/how-do-i-create-an-intelligence-report",
+    "status": 200,
+    "raw_work_path": "work/inoreader-controls-deepening/28-report-create.html",
+    "raw_sha256": "fca97195ec2e34854d4f164892dfc7514cc7bd63f07027874c0eb7178fb2325c"
+  },
+  {
+    "key": "29-report-auto",
+    "url": "https://www.inoreader.com/help/intelligence/intelligence-reports/how-do-i-create-an-automated-report",
+    "final_url": "https://www.inoreader.com/help/intelligence/intelligence-reports/how-do-i-create-an-automated-report",
+    "status": 200,
+    "raw_work_path": "work/inoreader-controls-deepening/29-report-auto.html",
+    "raw_sha256": "83ac319508caa50594df47d38edbae75304540fb0e66936f8eab8b2e3899c88c"
+  },
+  {
+    "key": "30-report-vs-digest",
+    "url": "https://www.inoreader.com/help/intelligence/intelligence-reports/should-i-use-an-intelligence-report-or-an-email-digest",
+    "final_url": "https://www.inoreader.com/help/intelligence/intelligence-reports/should-i-use-an-intelligence-report-or-an-email-digest",
+    "status": 200,
+    "raw_work_path": "work/inoreader-controls-deepening/30-report-vs-digest.html",
+    "raw_sha256": "4429fb5e94882f4f61ca967889288428c0e4dad22628a0e5acb46363a0d569a5"
+  },
+  {
+    "key": "31-monitor-empty",
+    "url": "https://www.inoreader.com/help/pro/monitoring-feeds/why-is-my-monitoring-feed-not-finding-the-articles-i-expect",
+    "final_url": "https://www.inoreader.com/help/pro/monitoring-feeds/why-is-my-monitoring-feed-not-finding-the-articles-i-expect",
+    "status": 200,
+    "raw_work_path": "work/inoreader-controls-deepening/31-monitor-empty.html",
+    "raw_sha256": "85bdf1a7dcae060676a5854a9ea66183b0d498c7b605403a2fe0aea8ecbf8c82"
+  },
+  {
+    "key": "32-search-empty",
+    "url": "https://www.inoreader.com/help/basic/search/why-does-my-search-return-no-results",
+    "final_url": "https://www.inoreader.com/help/basic/search/why-does-my-search-return-no-results",
+    "status": 200,
+    "raw_work_path": "work/inoreader-controls-deepening/32-search-empty.html",
+    "raw_sha256": "e6b1521b61c076540898c1ee1f40f898251bd3aa9c859308fbe02bf795c298c8"
+  }
+]

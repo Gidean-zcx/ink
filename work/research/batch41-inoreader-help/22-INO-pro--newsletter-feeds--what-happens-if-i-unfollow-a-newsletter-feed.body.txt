@@ -1,0 +1,1 @@
+Unfollowing a newsletter feed deletes its email address and all collected emails. You'll stop receiving messages sent to that address and lose access to previously received emails.

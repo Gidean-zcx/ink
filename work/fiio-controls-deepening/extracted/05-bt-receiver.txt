@@ -1,0 +1,5 @@
+8. How to use the JM21 as a Bluetooth receiver?
+1. Go to the drop-down or Settings menu of the JM21, and choose the working mode as Bluetooth receiving mode.
+2. Go to the Bluetooth transmitting list of the mobile phone, and tap the JM21 to complete the connection.
+If the connection fails, it is recommended to turn off the Bluetooth of mobile phone and JM21, then turn on the Bluetooth function again for pairing and connection.
+ꄘ

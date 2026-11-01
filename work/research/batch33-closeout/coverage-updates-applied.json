@@ -1,0 +1,150 @@
+[
+  {
+    "flow_id": "F-M038-09",
+    "before": {
+      "flow_id": "F-M038-09",
+      "product_id": "M-038",
+      "task": "2 代更新配置/内容并纠正“还播旧的”",
+      "depth": "D2",
+      "evidence_ids": "E-TONI-10;E-TONI-14",
+      "known_branches": "配置已保存、盒子在线、同步完成、媒体已缓存是不同状态；故事优先可使更新延后。",
+      "gaps": "30 秒是官方提示而非本项目测速；网络差时完成确认、同步中断后版本原子性。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-038-tonie.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M038-09",
+      "product_id": "M-038",
+      "task": "2 代更新配置/内容并纠正“还播旧的”",
+      "depth": "D2",
+      "evidence_ids": "E-TONI-10;E-TONI-14",
+      "known_branches": "配置已保存、盒子在线、同步完成、媒体已缓存是不同状态；故事优先可使更新延后。 US同ID帮助另给未接电时双耳持续60秒到关机再接电的重启，或等自动关机再开；联网开机后至少等30秒再放公仔。",
+      "gaps": "60秒/30秒是官方操作提示非实测；普通故事的关机持久断点、网络差时同步完成确认和版本原子性未核。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-038-tonie.md",
+      "checked_on": "2026-10-27"
+    },
+    "fields_changed": [
+      "known_branches",
+      "gaps",
+      "checked_on"
+    ],
+    "owning_files": [
+      "docs/research/interaction-library/batches/audio-coverage.csv"
+    ]
+  },
+  {
+    "flow_id": "F-M038-11",
+    "before": {
+      "flow_id": "F-M038-11",
+      "product_id": "M-038",
+      "task": "2 代判断“不能播/没灯”",
+      "depth": "D2",
+      "evidence_ids": "E-TONI-12;E-TONI-13;E-TNCD-08;E-TNCD-21;E-TNCD-24",
+      "known_branches": "年龄模式、灯光、网络和固件分别解释。重启不等于恢复出厂；App中的Factory reset instructions是操作指南入口，不证明远程执行。",
+      "gaps": "年龄切换确认、普通Tonie的2代持久续播、每个错误词及重置对云数据/游戏存档的具体范围仍未知；未执行重启/重置。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-038-tonie.md",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "flow_id": "F-M038-11",
+      "product_id": "M-038",
+      "task": "2 代判断“不能播/没灯”",
+      "depth": "D2",
+      "evidence_ids": "E-TONI-12;E-TONI-13;E-TNCD-08;E-TNCD-21;E-TNCD-24;E-TNPR-01;E-TNPR-02;E-TNPR-03",
+      "known_branches": "年龄模式、灯光、网络和固件分别解释。重启不等于恢复出厂；App中的Factory reset instructions是操作指南入口，不证明远程执行。 快换公仔播错对象可移下等几秒再放；敲击失效可等无活动自动关机再唤醒。特定下载故障页要求开机/自动关机/再开联网后在App核v1.6或更高。",
+      "gaps": "文档排错不是保证恢复；普通故事位置、全部错误词、重置对云/游戏存档范围未核。v1.6是该故障门槛，不表示最新版本。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-038-tonie.md",
+      "checked_on": "2026-10-27"
+    },
+    "fields_changed": [
+      "evidence_ids",
+      "known_branches",
+      "gaps"
+    ],
+    "owning_files": [
+      "docs/research/interaction-library/batches/audio-coverage.csv"
+    ]
+  },
+  {
+    "flow_id": "F-M038-12",
+    "before": {
+      "flow_id": "F-M038-12",
+      "product_id": "M-038",
+      "task": "2代准备并开始一款Tonieplay游戏",
+      "depth": "D2",
+      "evidence_ids": "E-TNCD-05;E-TNCD-06;E-TNCD-07;E-TNCD-23;E-TNCD-24",
+      "known_branches": "完整缓存后可离线再玩；普通Tonie首章可先播的规则不能套给游戏。",
+      "gaps": "两页“开始”对应阶段未核；控制器旋转选择/按压确认的逐步反馈、每款游戏规则/判分/退出、下载取消与续传未知；官网30分钟至1小时以上仅估计，不是本项目测速。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-038-tonie.md",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "flow_id": "F-M038-12",
+      "product_id": "M-038",
+      "task": "2代准备并开始一款Tonieplay游戏",
+      "depth": "D2",
+      "evidence_ids": "E-TNCD-05;E-TNCD-06;E-TNCD-07;E-TNCD-23;E-TNCD-24;E-TNPR-04",
+      "known_branches": "完整缓存后可离线再玩；普通Tonie首章可先播的规则不能套给游戏。 US正文明确取走Tonieplay盘后下载仍在后台继续；取盘不等于取消。普通Tonie卡住可移下等待再放，持续失败再重启。",
+      "gaps": "两页开始阶段、逐步输入反馈及游戏判分仍缺；真正取消入口、断网/断电续传、完整缓存回执及存档恢复未知。官方等待时长不作实测。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-038-tonie.md",
+      "checked_on": "2026-10-27"
+    },
+    "fields_changed": [
+      "evidence_ids",
+      "known_branches",
+      "gaps"
+    ],
+    "owning_files": [
+      "docs/research/interaction-library/batches/tonie-controls-deepening-coverage.csv"
+    ]
+  },
+  {
+    "flow_id": "F-M039-09",
+    "before": {
+      "flow_id": "F-M039-09",
+      "product_id": "M-039",
+      "task": "换设备续听与纠正同步",
+      "depth": "D2",
+      "evidence_ids": "E-AUD-01;E-AUCD-07",
+      "known_branches": "普通进度同步与Read & Listen双格式配对分开；手动重新同步需联网；两文档分别称Sync listening position/Sync device position。",
+      "gaps": "离线并发进度冲突、标记/笔记合并、回退确认与全设置同步未知。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-039-audible.md",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "flow_id": "F-M039-09",
+      "product_id": "M-039",
+      "task": "换设备续听与纠正同步",
+      "depth": "D2",
+      "evidence_ids": "E-AUD-01;E-AUCD-07;E-AUFC-02",
+      "known_branches": "普通进度同步与Read & Listen双格式配对分开；手动重新同步需联网；两文档分别称Sync listening position/Sync device position。 Kids Profile是例外：帮助要求换设备时重新定位，多机同时听不等于位置跟随个人。",
+      "gaps": "离线并发进度冲突、标记/笔记合并、回退确认与全设置同步未知。 儿童同机共享的个人进度隔离未证。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-039-audible.md",
+      "checked_on": "2026-10-27"
+    },
+    "fields_changed": [
+      "evidence_ids",
+      "known_branches",
+      "gaps"
+    ],
+    "owning_files": [
+      "docs/research/interaction-library/batches/audio-coverage.csv"
+    ]
+  }
+]

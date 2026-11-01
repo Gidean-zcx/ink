@@ -1,0 +1,7 @@
+{
+  "path": "docs/research/interaction-library/batches/readwise-controls-deepening-evidence.jsonl",
+  "backup": "work/readwise-controls-deepening/new-evidence-before-schema-fix.jsonl",
+  "before_sha256": "15ee67bf677c8a056a61fdaa2a609719b35bd4aea89d3f9cfa419237f7813d17",
+  "after_sha256": "3e36a7e862790898cdcecd2f306108a210640783a70fceb6414670fc320ae9c2",
+  "change": "Add explicit null supersedes to 17 new evidence records; no factual or depth change"
+}

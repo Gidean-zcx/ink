@@ -1,0 +1,88 @@
+{
+  "name": "39-answer-nine",
+  "url": "https://www.duolingo.com/lesson",
+  "title": "Duolingo - Learn French with lessons that work",
+  "utc": "2026-10-26T17:54:01.615773+00:00",
+  "text": "8 IN A ROW\n4\nNEW WORD\nWrite this in English\nMadame, un thé ?\nMa'am\nsome\ntea\ntea\nsir\nMa'am\nsome\nNice job!\nTOO EASY\nTOO DIFFICULT\nREPORT\nCONTINUE",
+  "buttons": [
+    {
+      "text": "",
+      "aria": null,
+      "test": "quit-button",
+      "visible": true
+    },
+    {
+      "text": "",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "Ma'am",
+      "aria": null,
+      "test": "Ma'am-challenge-tap-token",
+      "visible": true
+    },
+    {
+      "text": "some",
+      "aria": null,
+      "test": "some-challenge-tap-token",
+      "visible": true
+    },
+    {
+      "text": "tea",
+      "aria": null,
+      "test": "tea-challenge-tap-token",
+      "visible": true
+    },
+    {
+      "text": "tea",
+      "aria": null,
+      "test": "tea-challenge-tap-token",
+      "visible": true
+    },
+    {
+      "text": "sir",
+      "aria": null,
+      "test": "sir-challenge-tap-token",
+      "visible": true
+    },
+    {
+      "text": "Ma'am",
+      "aria": null,
+      "test": "Ma'am-challenge-tap-token",
+      "visible": true
+    },
+    {
+      "text": "some",
+      "aria": null,
+      "test": "some-challenge-tap-token",
+      "visible": true
+    },
+    {
+      "text": "TOO EASY",
+      "aria": "Too easy",
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "TOO DIFFICULT",
+      "aria": "Too difficult",
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "REPORT",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "CONTINUE",
+      "aria": null,
+      "test": "player-next",
+      "visible": true
+    }
+  ],
+  "inputs": []
+}

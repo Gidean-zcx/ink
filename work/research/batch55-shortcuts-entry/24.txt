@@ -1,0 +1,54 @@
+Organize shortcuts in folders on iPhone or iPad
+You can organize your shortcuts into custom categories by creating folders of related shortcuts. These folders are shown in the Folders area of the Shortcuts screen (iOS) or sidebar (iPadOS). Additionally, when you select All Shortcuts, your custom folders are shown as sections as you scroll.
+See your shortcuts organized by category
+In the Shortcuts app on your iPhone or iPad, do one of the following:
+iPhone: Tap in the upper-left corner of the screen.
+iPad: Swipe from the left edge of the screen.
+A list of categorical folders appears, including All Shortcuts, My Shortcuts, Share Sheet, Apple Watch, and any custom folders you’ve created.
+Create a custom folder to organize your shortcuts
+In the Shortcuts app on your iPhone or iPad, tap in the upper-left corner of the screen.
+Tap .
+Enter a name for the folder.
+In the row of icons, choose a glyph (icon) to represent the folder in the list.
+Tip: To see all available glyphs, tap Done in the keyboard.
+Tap Add.
+A custom folder with the name and glyph you chose appears under the four default categories in the list.
+Edit a custom folder’s name and appearance
+In the Shortcuts app on your iPhone or iPad, tap in the upper-left corner of the screen.
+Touch and hold a folder in the Folders area.
+Tap Edit Name and Icon.
+Enter a new name and choose a new icon.
+Tap Save.
+Create a shortcut in a custom folder
+In the Shortcuts app on your iPhone or iPad, tap in the upper-left corner of the screen.
+Tap a folder in the Folders area, then Tap in the upper-right corner.
+An empty, untitled shortcut appears in the shortcut editor.
+For more information about creating shortcuts, see Create a custom shortcut.
+Move or remove a shortcut
+You can move shortcuts from folders you create or from automatic collections to a custom folder.
+In the Shortcuts app on your iPhone or iPad, tap Edit.
+Do one of the following:
+Tap one or more shortcuts (a checkmark appears in the upper-right corner to indicate selection), then tap Move.
+Touch and hold a shortcut, then tap Move.
+CAUTION: If you tap Delete, any selected shortcuts will be removed.
+Do one of the following:
+Move the selected shortcuts to another folder: Choose a folder from the list.
+Move the selected shortcuts to a newly created folder: Tap , enter a folder name, then tap Add. For more information, see Organize shortcuts in folders.
+When you select shortcuts in an automatic collection, like Apple Watch, the Remove option appears (instead of the Move option). Tapping Remove eliminates the shortcut from the automatic collection, but keeps the shortcut in the All Shortcuts collection.
+Delete a custom folder
+You can delete a custom folder and optionally delete all the shortcuts inside the deleted folder.
+In the Shortcuts app on your iPhone or iPad, tap in the upper-left corner of the screen.
+Tap Edit.
+Note: If you have no custom folders, the Edit button does not appear.
+Tap next to the folder you want to delete, then tap Delete.
+If the folder contains shortcuts, choose an option:
+Delete Shortcuts: Deletes the shortcuts in the folder.
+Keep Shortcuts: Moves the shortcuts to the All Shortcuts folder.
+Tap Done.
+Reorder custom folders
+You can reorder your custom folders.
+In the Shortcuts app on your iPhone or iPad, tap in the upper-left corner of the screen.
+Tap Edit.
+Note: If you have no custom folders, the Edit button does not appear.
+Drag next to the folder you want to move.
+Tap Done.

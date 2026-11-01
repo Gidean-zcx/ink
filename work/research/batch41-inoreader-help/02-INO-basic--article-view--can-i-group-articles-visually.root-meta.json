@@ -1,0 +1,20 @@
+{
+  "order": 2,
+  "entry_id": "INO-basic--article-view--can-i-group-articles-visually",
+  "title": "Can I group articles visually?",
+  "url": "https://www.inoreader.com/help/basic/article-view/can-i-group-articles-visually",
+  "checked_on": "2026-10-27",
+  "http_status": 200,
+  "acquisition": "existing_worker_raw_no_new_GET",
+  "raw_path": "work/research/batch41-inoreader-help/02-INO-basic--article-view--can-i-group-articles-visually.html",
+  "prior_classification": "worker false-positive challenge: global reCAPTCHA script; root confirmed actual article body",
+  "raw_sha256": "3082fa3329adc92a62a50095ae191596f68eb28c13bfa0d42933534e8425f8fb",
+  "bytes": 141834,
+  "status": "body_obtained",
+  "body_status": "extracted_not_yet_root_read",
+  "body_path": "work/research/batch41-inoreader-help/02-INO-basic--article-view--can-i-group-articles-visually.body.txt",
+  "body_sha256": "1602d490d69dee5c04931f693020e52bcceed5cb912f0f535c950039616f8c66",
+  "body_chars": 45,
+  "links": [],
+  "images": []
+}

@@ -1,0 +1,19 @@
+How To Use the Weather App on Mudita Kompakt
+Modified on: Sat, 3 Oct, 2026 at 8:40 AM
+How to open the weather app
+Press the Control Center button
+Tap Weather widget*
+*You can also unhide the app icon to enable access by tapping Apps > Weather
+How to change the weather default location
+Open the Weather app
+Tap the Menu icon
+Tap the Pencil icon
+Select the current default location
+Either search for the location you want or tap Use your current location*
+Tap Done
+* You may need to manage location sharing in settings
+Was this article helpful?
+No
+Yes
+That’s Great!
+Thank you for your feedback

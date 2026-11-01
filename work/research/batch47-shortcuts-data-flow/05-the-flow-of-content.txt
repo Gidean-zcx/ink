@@ -1,0 +1,4 @@
+The flow of content in Shortcuts on iPhone and iPad
+When you run a shortcut, information is passed from action to action and transformed along the way. This information, or content, can be any type of data—text, photos, videos, URLs, Calendar events, songs, contacts, Health data, Maps locations, and much more.
+Any number of items can be passed from one action to the next. Content is mostly invisible in the shortcut as it’s handed from action to action. And when a shortcut finishes, the content is discarded and the shortcut reset for the next time you run it.
+For example, the Get Latest Photos action retrieves and outputs the images most recently saved to the Photos app. In the following shortcut, multiple items are passed between actions: the Get Latest Photos action passes three images, sorted in order from most recent to oldest, to the Send Message action.See alsoIntro to how shortcuts work on iPhone and iPad

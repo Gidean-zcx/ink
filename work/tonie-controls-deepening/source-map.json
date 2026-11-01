@@ -1,0 +1,170 @@
+[
+  {
+    "id": 1,
+    "ref": "turn785search5",
+    "snapshot": "work/tonie-controls-deepening/tn-pages6.json",
+    "extracted": "work/tonie-controls-deepening/extracted/01.txt",
+    "header": "Toniebox 1 – tonies® Support (https://support.tonies.com/hc/en-us/sections/29036371188498-Toniebox-1)"
+  },
+  {
+    "id": 2,
+    "ref": "turn781search4",
+    "snapshot": "work/tonie-controls-deepening/tn-pages4.json",
+    "extracted": "work/tonie-controls-deepening/extracted/02.txt",
+    "header": "Toniebox 2 – tonies® Support (https://support.tonies.com/hc/en-us/sections/29036371272594-Toniebox-2)"
+  },
+  {
+    "id": 3,
+    "ref": "turn778view0",
+    "snapshot": "work/tonie-controls-deepening/tn-pages2.json",
+    "extracted": "work/tonie-controls-deepening/extracted/03.txt",
+    "header": "Tonieplay – tonies® Support (https://support.tonies.com/hc/en-gb/sections/29036400009490-Tonieplay)"
+  },
+  {
+    "id": 4,
+    "ref": "turn783search4",
+    "snapshot": "work/tonie-controls-deepening/tn-pages5.json",
+    "extracted": "work/tonie-controls-deepening/extracted/04.txt",
+    "header": "Managing Your Household – tonies® Support (https://support.tonies.com/hc/en-us/sections/29036388191506-Managing-Your-Household)"
+  },
+  {
+    "id": 5,
+    "ref": "turn786view5",
+    "snapshot": "work/tonie-controls-deepening/tn-pages7.json",
+    "extracted": "work/tonie-controls-deepening/extracted/05.txt",
+    "header": "What do I need in order to play a Tonieplay game? – tonies® Support (https://support.tonies.com/hc/en-gb/articles/29036518566802-What-do-I-need-in-order-to-play-a-Tonieplay-game)"
+  },
+  {
+    "id": 6,
+    "ref": "turn780search2",
+    "snapshot": "work/tonie-controls-deepening/tn-pages3.json",
+    "extracted": "work/tonie-controls-deepening/extracted/06.txt",
+    "header": "Meet the Toniebox 2: Features FAQ – tonies® Support (https://support.tonies.com/hc/en-ca/articles/29036389310738-Meet-the-Toniebox-2-Features-FAQ)"
+  },
+  {
+    "id": 7,
+    "ref": "turn778search2",
+    "snapshot": "work/tonie-controls-deepening/tn-pages2.json",
+    "extracted": "work/tonie-controls-deepening/extracted/07.txt",
+    "header": "Tonieplay - Troubleshooting Tips – tonies® Support (https://support.tonies.com/hc/en-gb/articles/29255022702354-Tonieplay-Troubleshooting-Tips)"
+  },
+  {
+    "id": 8,
+    "ref": "turn778search0",
+    "snapshot": "work/tonie-controls-deepening/tn-pages2.json",
+    "extracted": "work/tonie-controls-deepening/extracted/08.txt",
+    "header": "Tonieplay game card not recognised – tonies® Support (https://support.tonies.com/hc/en-gb/articles/29537628346770-Tonieplay-game-card-not-recognised)"
+  },
+  {
+    "id": 9,
+    "ref": "turn786view3",
+    "snapshot": "work/tonie-controls-deepening/tn-pages7.json",
+    "extracted": "work/tonie-controls-deepening/extracted/09.txt",
+    "header": "How long does the Toniebox 2 remember your auto-saved status when you remove the disc, take a break or play something else? – tonies® Support (https://support.tonies.com/hc/en-us/articles/29036389045778-How-long-does-the-Toniebox-2-remember-your-auto-saved-status-when-you-remove-the-disc-take-a-break-or-play-something-else)"
+  },
+  {
+    "id": 10,
+    "ref": "turn786view4",
+    "snapshot": "work/tonie-controls-deepening/tn-pages7.json",
+    "extracted": "work/tonie-controls-deepening/extracted/10.txt",
+    "header": "Can I restart a Tonieplay game? – tonies® Support (https://support.tonies.com/hc/en-150/articles/29036401221522-Can-I-restart-a-Tonieplay-game)"
+  },
+  {
+    "id": 11,
+    "ref": "turn781view0",
+    "snapshot": "work/tonie-controls-deepening/tn-pages4.json",
+    "extracted": "work/tonie-controls-deepening/extracted/11.txt",
+    "header": "Can I skip past the intro to the Tonieplay game? – tonies® Support (https://support.tonies.com/hc/en-gb/articles/29036617886482-Can-I-skip-past-the-intro-to-the-Tonieplay-game)"
+  },
+  {
+    "id": 12,
+    "ref": "turn781view1",
+    "snapshot": "work/tonie-controls-deepening/tn-pages4.json",
+    "extracted": "work/tonie-controls-deepening/extracted/12.txt",
+    "header": "Can you ever choose the chapter? – tonies® Support (https://support.tonies.com/hc/en-gb/articles/29036401264530-Can-you-ever-choose-the-chapter)"
+  },
+  {
+    "id": 13,
+    "ref": "turn775search5",
+    "snapshot": "work/tonie-controls-deepening/tn-pages1.json",
+    "extracted": "work/tonie-controls-deepening/extracted/13.txt",
+    "header": "Sleep Light with Timer & Sunrise Alarm guide – tonies® Support (https://support.tonies.com/hc/en-gb/articles/29255589102866-Sleep-Light-with-Timer-Sunrise-Alarm-guide)"
+  },
+  {
+    "id": 14,
+    "ref": "turn771search0",
+    "snapshot": "work/tonie-controls-deepening/web-discovery.json",
+    "extracted": "work/tonie-controls-deepening/extracted/14.txt",
+    "header": "How do I manage Household members permissions? – tonies® Support (https://support.tonies.com/hc/en-us/articles/29036509409170-How-do-I-manage-Household-members-permissions)"
+  },
+  {
+    "id": 15,
+    "ref": "turn786view1",
+    "snapshot": "work/tonie-controls-deepening/tn-pages7.json",
+    "extracted": "work/tonie-controls-deepening/extracted/15.txt",
+    "header": "How do I invite other members into my Household? – tonies® Support (https://support.tonies.com/hc/en-us/articles/29036487201170-How-do-I-invite-other-members-into-my-Household)"
+  },
+  {
+    "id": 16,
+    "ref": "turn780search6",
+    "snapshot": "work/tonie-controls-deepening/tn-pages3.json",
+    "extracted": "work/tonie-controls-deepening/extracted/16.txt",
+    "header": "A Creative Tonie does not appear in the Toniecloud account – tonies® Support (https://support.tonies.com/hc/en-us/articles/29036607088914-A-Creative-Tonie-does-not-appear-in-the-Toniecloud-account)"
+  },
+  {
+    "id": 17,
+    "ref": "turn781search1",
+    "snapshot": "work/tonie-controls-deepening/tn-pages4.json",
+    "extracted": "work/tonie-controls-deepening/extracted/17.txt",
+    "header": "How do I activate Live function on my Creative Tonie? – tonies® Support (https://support.tonies.com/hc/en-us/articles/29036519484562-How-do-I-activate-Live-function-on-my-Creative-Tonie)"
+  },
+  {
+    "id": 18,
+    "ref": "turn781search5",
+    "snapshot": "work/tonie-controls-deepening/tn-pages4.json",
+    "extracted": "work/tonie-controls-deepening/extracted/18.txt",
+    "header": "How do I change the order of the content on my Creative Tonie? – tonies® Support (https://support.tonies.com/hc/en-gb/articles/29036510512658-How-do-I-change-the-order-of-the-content-on-my-Creative-Tonie)"
+  },
+  {
+    "id": 19,
+    "ref": "turn786view2",
+    "snapshot": "work/tonie-controls-deepening/tn-pages7.json",
+    "extracted": "work/tonie-controls-deepening/extracted/19.txt",
+    "header": "How do I transfer ownership of my Household? – tonies® Support (https://support.tonies.com/hc/en-150/articles/29206380198162-How-do-I-transfer-ownership-of-my-Household)"
+  },
+  {
+    "id": 20,
+    "ref": "turn786view0",
+    "snapshot": "work/tonie-controls-deepening/tn-pages7.json",
+    "extracted": "work/tonie-controls-deepening/extracted/20.txt",
+    "header": "How do I delete my Household? – tonies® Support (https://support.tonies.com/hc/en-us/articles/29036630818578-How-do-I-delete-my-Household)"
+  },
+  {
+    "id": 21,
+    "ref": "turn781search0",
+    "snapshot": "work/tonie-controls-deepening/tn-pages4.json",
+    "extracted": "work/tonie-controls-deepening/extracted/21.txt",
+    "header": "How to reset your Toniebox 2 to factory settings – tonies® Support (https://support.tonies.com/hc/en-us/articles/29251407505682-How-to-reset-your-Toniebox-2-to-factory-settings)"
+  },
+  {
+    "id": 22,
+    "ref": "turn786view6",
+    "snapshot": "work/tonie-controls-deepening/tn-pages7.json",
+    "extracted": "work/tonie-controls-deepening/extracted/22.txt",
+    "header": "What new Tonieplay specific data will we capture? – tonies® Support (https://support.tonies.com/hc/en-gb/articles/29264253409682-What-new-Tonieplay-specific-data-will-we-capture)"
+  },
+  {
+    "id": 23,
+    "ref": "turn783search5",
+    "snapshot": "work/tonie-controls-deepening/tn-pages5.json",
+    "extracted": "work/tonie-controls-deepening/extracted/23.txt",
+    "header": "Tonieplay and How It Works | tonies® (https://us.tonies.com/pages/tonieplay)"
+  },
+  {
+    "id": 24,
+    "ref": "turn778search5",
+    "snapshot": "work/tonie-controls-deepening/tn-pages2.json",
+    "extracted": "work/tonie-controls-deepening/extracted/24.txt",
+    "header": "Troubleshooting – tonies® Support (https://support.tonies.com/hc/en-us/sections/29258108517522-Troubleshooting)"
+  }
+]

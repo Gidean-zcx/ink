@@ -1,0 +1,10 @@
+Can I import feeds from another RSS reader?
+Yes. Use the Import feeds option in the sidebar while in Add feed to transfer subscriptions from another service.
+Related questions
+What is a feed?
+What types of sources can I follow?
+How do I add a feed?
+Can I discover new sources in Inoreader?
+Where can I see all articles from my feeds together?
+Why can’t Inoreader find a feed for a website?
+Why has a feed stopped updating?

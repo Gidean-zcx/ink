@@ -1,0 +1,72 @@
+[
+  {
+    "flow_id": "F-M018-01",
+    "source_batch": "docs/research/interaction-library/batches/vocab-coverage.csv",
+    "changes": {
+      "evidence_ids": {
+        "before": "E-BBDC-01;E-BBDC-02;E-BBD-01;E-BBD-02",
+        "after": "E-BBDC-01;E-BBDC-02;E-BBD-01;E-BBD-02;E-BBLC-01;E-BBLC-02;E-BBLC-03"
+      },
+      "known_branches": {
+        "before": "分别配置学后/复习后拼写；5.9.8复习100词/组不是每日计划；Android例句显示修复仍限旧记录",
+        "after": "官方学后/复习后拼写配置与100词/组边界沿用；2017历史图补不认识揭示/例句入口、辨识完成后放弃或开始拼写；2021V4.3作者流程与2022经历文字分开"
+      },
+      "gaps": {
+        "before": "逐题回忆/揭示/评价/反馈、听写与听词区分、原声音频、分组中断和跨日队列未知",
+        "after": "现行逐题回忆/揭示/评价到拼写结算仍未知；听写/听词与原声音频未核；分组中断和跨日队列未知；不同词拼图不证明同词提示前后；四次/五次口径及历史构建不统一；完成不等于掌握"
+      },
+      "visual_status": {
+        "before": "not_observed",
+        "after": "static_reference_only"
+      }
+    },
+    "replacement_row": {
+      "flow_id": "F-M018-01",
+      "product_id": "M-018",
+      "task": "语境学词后拼写",
+      "depth": "D1",
+      "evidence_ids": "E-BBDC-01;E-BBDC-02;E-BBD-01;E-BBD-02;E-BBLC-01;E-BBLC-02;E-BBLC-03",
+      "known_branches": "官方学后/复习后拼写配置与100词/组边界沿用；2017历史图补不认识揭示/例句入口、辨识完成后放弃或开始拼写；2021V4.3作者流程与2022经历文字分开",
+      "gaps": "现行逐题回忆/揭示/评价到拼写结算仍未知；听写/听词与原声音频未核；分组中断和跨日队列未知；不同词拼图不证明同词提示前后；四次/五次口径及历史构建不统一；完成不等于掌握",
+      "visual_status": "static_reference_only",
+      "hands_on": "false",
+      "case_path": "cases/M-018-bbdc.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "flow_id": "F-M018-02",
+    "source_batch": "docs/research/interaction-library/batches/vocab-coverage.csv",
+    "changes": {
+      "evidence_ids": {
+        "before": "E-BBDC-02;E-BBD-01",
+        "after": "E-BBDC-02;E-BBD-01;E-BBLC-01;E-BBLC-02;E-BBLC-03"
+      },
+      "known_branches": {
+        "before": "回上一词/只拼错词/提示页声明；5.11.6仅记尝试修复纠错按钮，不证修复成功",
+        "after": "原回上一词/只拼错词/提示页声明沿用；5.11.6仅记修复尝试；2021作者图描述选错→答案→继续，2017图定位拼写灯泡，正文称发音提示；历史作者四次/五次说法分开"
+      },
+      "gaps": {
+        "before": "返回是否撤销、空错词集合、提示阶梯、重试、按钮恢复和队列更新未知",
+        "after": "现行误判撤销/错词专项仍未核；未见同词拼错→提示→重试→通过；灯泡是否揭词/扣分、返回作用、空集合、队列和退出恢复未知"
+      },
+      "visual_status": {
+        "before": "not_observed",
+        "after": "static_reference_only"
+      }
+    },
+    "replacement_row": {
+      "flow_id": "F-M018-02",
+      "product_id": "M-018",
+      "task": "返回与错词拼写",
+      "depth": "D1",
+      "evidence_ids": "E-BBDC-02;E-BBD-01;E-BBLC-01;E-BBLC-02;E-BBLC-03",
+      "known_branches": "原回上一词/只拼错词/提示页声明沿用；5.11.6仅记修复尝试；2021作者图描述选错→答案→继续，2017图定位拼写灯泡，正文称发音提示；历史作者四次/五次说法分开",
+      "gaps": "现行误判撤销/错词专项仍未核；未见同词拼错→提示→重试→通过；灯泡是否揭词/扣分、返回作用、空集合、队列和退出恢复未知",
+      "visual_status": "static_reference_only",
+      "hands_on": "false",
+      "case_path": "cases/M-018-bbdc.md",
+      "checked_on": "2026-10-27"
+    }
+  }
+]

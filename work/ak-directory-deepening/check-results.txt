@@ -1,0 +1,3 @@
+ak-directory-deepening-coverage.csv actual_LF= 3 literal_backslash_rn= 0 DictReader_rows= 2
+ak-directory-deepening-inventory.csv actual_LF= 203 literal_backslash_rn= 0 DictReader_rows= 202
+PASS: 3 E / 2 F / 202 inventory; 4 old F / 15 fields; 5 old E captures; 5 viewed static pages; hashes/links/schema/scope and pre-merge before assertions

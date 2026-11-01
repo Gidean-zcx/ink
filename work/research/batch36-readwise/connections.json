@@ -1,0 +1,20 @@
+[
+  {
+    "a_id": "101",
+    "b_id": "201",
+    "label": "Synthetic relation",
+    "why": "Synthetic connection supplied by the researcher; no AI judgment."
+  },
+  {
+    "a_id": "201",
+    "b_id": "101",
+    "label": "Duplicate reversed pair",
+    "why": "Must deduplicate by unordered IDs."
+  },
+  {
+    "a_id": "101",
+    "b_id": "401",
+    "label": "Filtered endpoint",
+    "why": "Short text endpoint is filtered out."
+  }
+]

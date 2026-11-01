@@ -1,0 +1,60 @@
+[
+  {
+    "flow_id": "F-M027-01",
+    "before": {
+      "flow_id": "F-M027-01",
+      "product_id": "M-027",
+      "task": "薄弱点诊学练路线",
+      "depth": "D1",
+      "evidence_ids": "E-IFLYL-01;E-IFLYL-02",
+      "known_branches": "学段科目限制",
+      "gaps": "一道题的入口提示重试结算与恢复",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-027-iflytek-learning.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M027-01",
+      "product_id": "M-027",
+      "task": "薄弱点诊学练路线",
+      "depth": "D2",
+      "evidence_ids": "E-IFLYL-01;E-IFLYL-02;E-IFVC-01",
+      "known_branches": "局部教程重建：选知识点/方案→讲解/典例/练习；手写、思路点拨入口、批改正确反馈/解析/下一题；全绿完成与下一节",
+      "gaps": "视频剪辑换题，无同题错答→提示→重试链；首次诊断、误识别校订、阈值、完成持久化/离线/重启恢复未知",
+      "visual_status": "static_reference_only",
+      "hands_on": "false",
+      "case_path": "cases/M-027-iflytek-learning.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "flow_id": "F-M027-14",
+    "before": {
+      "flow_id": "F-M027-14",
+      "product_id": "M-027",
+      "task": "为纸面练习配置内容",
+      "depth": "D2",
+      "evidence_ids": "E-ILD-12;E-ILD-16",
+      "known_branches": "家庭打印助手配套手册，完整兼容机型未标明：按科目/教材或错题选择内容→打印预览→设答案位置、作答空间等→提交。",
+      "gaps": "学习素材变为练习单是准备任务，不代表作答或计分。部分阶段测提交后不再显示打印入口，题目来源也影响是否有解析。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-027-iflytek-learning.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M027-14",
+      "product_id": "M-027",
+      "task": "为纸面练习配置内容",
+      "depth": "D2",
+      "evidence_ids": "E-ILD-12;E-ILD-16;E-IFVC-02",
+      "known_branches": "家庭打印助手配套手册，完整兼容机型未标明：按科目/教材或错题选择内容→打印预览→设答案位置、作答空间等→提交。；T30目录教程90s可见加载中的打印配置，目标/纸张/浓度/份数/字号",
+      "gaps": "学习素材变为练习单是准备任务，不代表作答或计分。部分阶段测提交后不再显示打印入口，题目来源也影响是否有解析。；视频仅配置及加载，未证明打印完成或与旧型号帮助完全一致",
+      "visual_status": "static_reference_only",
+      "hands_on": "false",
+      "case_path": "cases/M-027-iflytek-learning.md",
+      "checked_on": "2026-10-27"
+    }
+  }
+]

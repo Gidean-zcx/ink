@@ -1,0 +1,129 @@
+Use timer (https://help.audible.com/s/article/use-timer)
+citeturn764view0 [wordlim: 200] Crawled: today; Content type: text/html; Source: open({"ref_id":"https://help.audible.com/s/article/use-timer","lineno":null}); Total lines: 127
+L0: Loading
+L1: 
+L2: Sorry to interrupt
+L3: 
+L4: Uncaught TypeError: Cannot read properties of null (reading 'style')
+L5: 
+L6: 【0†Refresh】
+L7: 
+L8: Skip to Main Content
+L9: 
+L10: Related topics
+L11: 
+L12: Android App settings Ask A Question iOS Listening+2
+L13: ## Use timer
+L14: 
+L15:   * Sep 3, 2026
+L16:   * Knowledge
+L17: 
+L18: Title
+L19: 
+L20: Use timer
+L21: 
+L22: URL Name
+L23: 
+L24: use-timer
+L25: 
+L26: Answer
+L27: 
+L28: The Audible timer allows you to control when your audiobook will stop playing so you never lose your place again.
+L29: 
+L30: Note: The timer feature is available only in the Audible app.
+L31: 
+L32: In this article:
+L33:   * 【1†How to set the timer?】
+L34:   * 【2†How to extend your timer while it's running?】
+L35:   * 【3†How to extend your timer when it ends?】
+L36:   * 【4†How to turn on or off your shake-to-extend setting?】
+L37:   * 【5†How to use the timer with iOS Live Activity?】
+L38: ## How to set the timer?
+L39: 
+L40:   1. Open your player while a title is playing.
+L41:   2. Select the Timer icon.
+L42:   3. Choose a preset time or create and save a custom length.
+L43:   4. Once time is up, your audiobook will stop playing.
+L44: ## How to extend your timer while it's running?
+L45: 
+L46: If you'd like to change the timer while it's still counting down, you can overwrite it with a new time.
+L47: 
+L48:   1. Open your player while a title is playing.
+L49:   2. Select the Timer icon at the bottom of the player or the “countdown banner” on top of the cover of the book
+L50:   3. Select a new time from the menu to overwrite the current timer.
+L51: ## How to extend your timer when it ends?
+L52: 
+L53: When the timer ends, you'll get an alert. You can choose to extend the timer for the same amount of time or reset it with a new time.
+L54: 
+L55: To extend your timer for the same amount of time, you can shake your phone within 30 seconds of the audio starting to fade.
+L56: ## How to turn on or off your shake-to-extend setting?
+L57: 
+L58: You can change your timer settings anytime in the app.
+L59: 
+L60:   1. Go to your Profile.
+L61:   2. Select the Settings gear icon.
+L62:   3. Select Player.
+L63:   4. Swipe to Timer.
+L64:   5. Toggle Shake to extend on or off.
+L65: ## How to use the timer with iOS Live Activity?
+L66: 
+L67: iOS Live Activity is automatically turned on for all iPhones with iOS 17.0 or later. Whenever you set your timer, the Timer Live Activity will be visible from your phone's lock screen or dynamic island so you can see the time remaining without opening your iOS device.
+L68:   * For all iOS devices, you can shake your phone to extend the timer.
+L69:   * For all iOS devices with iOS 17.0 or later, you can select Live Activity from the lock screen to access your timer.
+L70:   * On all iPhone 14 Pros, you can select Live Activity on Apple's Dynamic Island to access your timer.
+L71: 
+L72: Note: You can allow Audible Live Activities for Audible in your device settings. You can also accept or reject Live Activities from the Audible app when you see the Timer Live Activity for the first time.
+L73: Did this answer your question?
+L74: 
+L75: 【6†Image: Thumbs Up】Like
+L76: 
+L77: 
+L78: 
+L79: 【7†Image: Thumbs Down】Dislike
+L80: 
+L81:  Back to top
+L82: 
+L83: 【8†Image: Share link】 Share link
+L84: 
+L85: 【9†Image: Download PDF】 Download PDF
+L86: ## Need more assistance?
+L87: 
+L88: 【10†Contact us†www.audible.com】
+L89: 
+L90: 
+L91: 
+L92: How satisfied were you with our Help Center today?
+L93: 
+L94: 
+L95: 
+L96: Worst
+L97: 
+L98: 1
+L99: 
+L100: 2
+L101: 
+L102: 3
+L103: 
+L104: 4
+L105: 
+L106: 5
+L107: 
+L108: 6
+L109: 
+L110: 7
+L111: 
+L112: Best
+L113: 
+L114: 
+L115: 
+L116: Region
+L117: 
+L118: United States
+L119: 
+L120: Language
+L121: 
+L122: English
+L123: 
+L124: Loading
+L125: 
+L126: Use timer 【11†Adobe ID Syncing iFrame†audible.demdex.net】

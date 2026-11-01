@@ -1,0 +1,25 @@
+{
+  "name": "28-reentry-selection",
+  "at": "2026-10-27T06:31:27.227896+00:00",
+  "url": "https://www.duolingo.com/onboarding/add-course?welcomeStep=mathSelection",
+  "title": "Duolingo - The world’s most popular way to learn",
+  "text": "Let's pick a starting point!\nLet's pick a starting point!\n2\nGrade 2\n3\nGrade 3\n4\nGrade 4\n5\nGrade 5\n6\nGrade 6\n7\nGrade 7\n8\nGrade 8\n9\nGrade 9\n10\nGrade 10\n11\nGrade 11\n12\nGrade 12\nCONTINUE",
+  "controls": [
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": null,
+      "test": null,
+      "type": "submit",
+      "disabled": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "CONTINUE",
+      "aria": null,
+      "test": "funboarding-continue-button",
+      "type": "submit",
+      "disabled": true
+    }
+  ]
+}

@@ -1,0 +1,308 @@
+{
+  "headings": [
+    {
+      "level": "h1",
+      "id": "",
+      "title": "How to choose a Library configuration"
+    },
+    {
+      "level": "h2",
+      "id": "change-your-library-configuration",
+      "title": "Change your Library configuration"
+    },
+    {
+      "level": "h3",
+      "id": "on-web-or-in-the-desktop-app",
+      "title": "On web or in the desktop app"
+    },
+    {
+      "level": "h3",
+      "id": "in-the-mobile-app",
+      "title": "In the mobile app"
+    },
+    {
+      "level": "h2",
+      "id": "how-each-configuration-works",
+      "title": "How each configuration works"
+    },
+    {
+      "level": "h3",
+      "id": "triage",
+      "title": "Triage"
+    },
+    {
+      "level": "h3",
+      "id": "shortlist",
+      "title": "Shortlist"
+    },
+    {
+      "level": "h3",
+      "id": "classic",
+      "title": "Classic"
+    },
+    {
+      "level": "h2",
+      "id": "why-your-configuration-matters",
+      "title": "Why your configuration matters"
+    }
+  ],
+  "links": [
+    {
+      "href": "/",
+      "text": "",
+      "in_article": false
+    },
+    {
+      "href": "/",
+      "text": "",
+      "in_article": false
+    },
+    {
+      "href": "/",
+      "text": "",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs",
+      "text": "Documentation",
+      "in_article": false
+    },
+    {
+      "href": "/reader/guides",
+      "text": "Guides",
+      "in_article": false
+    },
+    {
+      "href": "/reader/guides/filtering/syntax-guide",
+      "text": "Syntax Guide",
+      "in_article": false
+    },
+    {
+      "href": "/reader/guides/filtering/query-examples",
+      "text": "Filter Library",
+      "in_article": false
+    },
+    {
+      "href": "/reader/guides/filtering/default-views",
+      "text": "Default Views",
+      "in_article": false
+    },
+    {
+      "href": "/reader/guides/ghostreader/overview",
+      "text": "Overview",
+      "in_article": false
+    },
+    {
+      "href": "/reader/guides/ghostreader/global",
+      "text": "Global Ghostreader",
+      "in_article": false
+    },
+    {
+      "href": "/reader/guides/ghostreader/chat",
+      "text": "Chat",
+      "in_article": false
+    },
+    {
+      "href": "/reader/guides/ghostreader/quick-lookup",
+      "text": "Quick Lookup",
+      "in_article": false
+    },
+    {
+      "href": "/reader/guides/ghostreader/default-prompts",
+      "text": "Default Prompts",
+      "in_article": false
+    },
+    {
+      "href": "/reader/guides/ghostreader/custom-prompts",
+      "text": "Custom Prompts",
+      "in_article": false
+    },
+    {
+      "href": "/reader/guides/ghostreader/prompt-library",
+      "text": "Prompt Library",
+      "in_article": false
+    },
+    {
+      "href": "/reader/guides/ghostreader/reference",
+      "text": "Reference",
+      "in_article": false
+    },
+    {
+      "href": "/reader/guides/ghostreader/tips-tricks",
+      "text": "Tips & Tricks",
+      "in_article": false
+    },
+    {
+      "href": "/",
+      "text": "Home",
+      "in_article": false
+    },
+    {
+      "href": "/reader",
+      "text": "Reader",
+      "in_article": false
+    },
+    {
+      "href": "/reader/guides",
+      "text": "Guides",
+      "in_article": false
+    },
+    {
+      "href": "/reader/guides/workflows",
+      "text": "Workflows",
+      "in_article": false
+    },
+    {
+      "href": "/reader/guides/workflows/library-configuration",
+      "text": "Library Configuration",
+      "in_article": false
+    },
+    {
+      "href": "https://read.readwise.io/preferences",
+      "text": "preferences page",
+      "in_article": true
+    },
+    {
+      "href": "/reader/guides/filtering/default-views#default-filtered-views",
+      "text": "default view",
+      "in_article": true
+    },
+    {
+      "href": "/reader/docs/organizing-content#tags",
+      "text": "use a tag",
+      "in_article": true
+    },
+    {
+      "href": "/reader/guides/workflows/favorites",
+      "text": "Favorites",
+      "in_article": false
+    },
+    {
+      "href": "/reader/guides/workflows/longform-reading",
+      "text": "Long-form Reading",
+      "in_article": false
+    },
+    {
+      "href": "mailto:hello@readwise.io",
+      "text": "Email Ushello@readwise.io",
+      "in_article": false
+    },
+    {
+      "href": "https://x.com/readwise",
+      "text": "Follow Us@readwise",
+      "in_article": false
+    },
+    {
+      "href": "https://www.reddit.com/r/readwise/",
+      "text": "Ask the CommunityJoin us on Reddit",
+      "in_article": false
+    },
+    {
+      "href": "https://en.wikipedia.org/wiki/Curse_of_knowledge",
+      "text": "Curse of Knowledge",
+      "in_article": false
+    },
+    {
+      "href": "mailto:hello@readwise.io?Subject=Documentation Feedback",
+      "text": "Send Feedback",
+      "in_article": false
+    },
+    {
+      "href": "#change-your-library-configuration",
+      "text": "Change your Library configuration",
+      "in_article": false
+    },
+    {
+      "href": "#on-web-or-in-the-desktop-app",
+      "text": "On web or in the desktop app",
+      "in_article": false
+    },
+    {
+      "href": "#in-the-mobile-app",
+      "text": "In the mobile app",
+      "in_article": false
+    },
+    {
+      "href": "#how-each-configuration-works",
+      "text": "How each configuration works",
+      "in_article": false
+    },
+    {
+      "href": "#triage",
+      "text": "Triage",
+      "in_article": false
+    },
+    {
+      "href": "#shortlist",
+      "text": "Shortlist",
+      "in_article": false
+    },
+    {
+      "href": "#classic",
+      "text": "Classic",
+      "in_article": false
+    },
+    {
+      "href": "#why-your-configuration-matters",
+      "text": "Why your configuration matters",
+      "in_article": false
+    }
+  ],
+  "images": [
+    {
+      "src": "/images/library-config_dropdown_web.png",
+      "alt": "Library dropdown menu in Reader.",
+      "class": "rounded-lg max-h-[200px] w-auto ml-0 -mt-4"
+    },
+    {
+      "src": "/images/library-config_edit-location_web.png",
+      "alt": "Edit Library locations in Reader.",
+      "class": "rounded-lg max-h-[200px] w-auto ml-0 -mt-4"
+    },
+    {
+      "src": "/images/library-config_options_web.png",
+      "alt": "Library location options in Reader.",
+      "class": "rounded-lg max-h-[400px] w-auto ml-0 -mt-4"
+    },
+    {
+      "src": "/images/library-config_preferences_web.png",
+      "alt": "Library configuration options on preferences page.",
+      "class": "rounded-lg max-h-[400px] w-auto ml-0 -mt-4"
+    },
+    {
+      "src": "/images/library-config_options_web.png",
+      "alt": "Library location options in Reader.",
+      "class": "rounded-lg max-h-[400px] w-auto ml-0 -mt-4"
+    },
+    {
+      "src": "/images/account-tab_mobile.png",
+      "alt": "Account tab in the Reader mobile app.",
+      "class": "rounded-lg max-w-[500px] h-auto ml-0 -mt-4"
+    },
+    {
+      "src": "/images/library-config_settings_mobile.png",
+      "alt": "Library configuration option in Reader mobile app settings.",
+      "class": "rounded-lg max-w-[500px] h-auto ml-0 -mt-4"
+    },
+    {
+      "src": "/images/library-config_options_mobile.png",
+      "alt": "Library configuration options in the Reader mobile app.",
+      "class": "rounded-lg max-w-[500px] h-auto ml-0 -mt-4"
+    },
+    {
+      "src": "/images/library-config_triage.png",
+      "alt": "Library tab bar while in Triage configuration.",
+      "class": "rounded-lg w-full h-auto mx-auto"
+    },
+    {
+      "src": "/images/library-config_shortlist.png",
+      "alt": "Library tab bar while in Shortlist configuration.",
+      "class": "rounded-lg w-full h-auto mx-auto"
+    },
+    {
+      "src": "/images/library-config_classic.png",
+      "alt": "Library tab bar while in Classic configuration.",
+      "class": "rounded-lg w-full h-auto mx-auto"
+    }
+  ]
+}

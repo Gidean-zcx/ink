@@ -1,0 +1,43 @@
+                    E d d i c t P l a y e r
+
+
+ Introduction
+
+This manual covers UI and functions of the Eddict Player application. Guiding users how to use the app
+to get the full potential of the products that work in cooperation with the app.
+
+
+
+ Application Overview
+
+Eddict player is a professional Hi-Fi lossless music player suitable for enthusiasts. It supports
+range of audio formats, song classification management, sorting and playback of internal and
+external storage of the device. Eddict player can be used as a wireless controller and companion
+application for range of devices from Shanling, YBA and ONIX .
+
+Features:
+
+1. Support for wide range of formats and Hi-Res audio: APE, DSD (DSF, DFF, DST), ISO, WAV, FLAC, AiFF,
+  M4A, AAC, WMA, MP3, OGG.
+
+2. Library browsing based on Album, Artist, Genre & Hi-Res.
+
+3. Folder based browsing.
+
+4. Support of Playlists, including import and export of user created playlists.
+
+5. Lyrics support.
+
+6. Wi-Fi File transfer, SyncLink, Wireless Projection.
+
+7. DLNA、AirPlay、NAS、WebDav support.
+
+8. View, control and play songs in mobile phone or device by UPnP.
+
+9. CD Ripping with matching Shanling CR60 hardware.
+
+
+
+
+
+                                        10

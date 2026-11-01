@@ -1,0 +1,17 @@
+Delete a Folder or Notebook on Kindle Scribe
+en_US
+Delete a Folder or Notebook on Kindle Scribe
+Remove download or permanently delete options are available depending on whether your Kindle Scribe is connected to the internet or not.
+Kindle Scribe doesn't support multi-selecting several notebooks for deletion.
+To delete a notebook or folder, select the three-dot menu.
+A checkmark on the notebook cover shows that the notebook is downloaded on your device.
+Permanently delete removes the notebook from all Kindle devices and apps. You can't recover notebooks after permanently deleting it. The option isn’t available for notebooks or folders created while Sync is off.
+Remove download removes the notebook from the device and frees up space, but keeps the notebook accessible and shows a default cover of the notebook to easily download again.
+Any notebooks or documents you share as attachments with Alexa using Send to Alexa will remain on Alexa and can be reviewed, downloaded, or deleted using Review Attachments at: Alexa Privacy.
+For more help, go to:
+Move a Notebook on Kindle Scribe
+Fix Issues with Notebooks on Kindle Scribe
+en_US
+US
+Cpiu6TFOuXpU4ymOzD
+TyR30Qzqu0hGzFbFVx

@@ -1,0 +1,539 @@
+{
+  "name": "01-home",
+  "url": "https://mytolino.de/onleihe/",
+  "title": "tolino - Onleihe",
+  "utc": "2026-10-26T18:32:31.426361+00:00",
+  "text": "Herzlich Willkommen\nbei der Onleihe\n\nBibliothek auswählen\n\nThis button closes the dialog. Its functionality is identical to the Nur essentielle Cookies akzeptieren button.\nDatenschutzeinstellung\n\nWir benötigen Ihre Zustimmung, bevor Sie unsere Website weiter nutzen können\n\nWenn Sie unter 16 Jahre alt sind und der optionalen Dienste zustimmen möchten, müssen Sie Ihre gesetzlichen Vertreter um Erlaubnis bitten.\n\nWir verwenden Cookies und andere Technologien auf unserer Website. Einige davon sind essenziell, während andere uns helfen, diese Website und Ihre Erfahrung zu verbessern.\n\n \n\nPersonenbezogene Daten können verarbeitet werden (z. B. IP-Adressen), zum Beispiel für personalisierte Werbung und Inhalte oder zur Messung von Werbung und Inhalten.\n\n \n\nWeitere Informationen zur Nutzung Ihrer Daten finden Sie in unserer Datenschutzerklärung.\n\n \n\nEs besteht keine Verpflichtung, der Verarbeitung Ihrer Daten zuzustimmen, um dieses Angebot nutzen zu können.\n\n \n\nSie können Ihre Auswahl jederzeit unter Einstellungen widerrufen oder anpassen.\n\n \n\nBitte beachten Sie, dass aufgrund individueller Einstellungen nicht alle Funktionen der Website verfügbar sein können.“\n\nEinige Dienste verarbeiten personenbezogene Daten in den USA. Mit Ihrer Zustimmung zur Nutzung dieser Dienste stimmen Sie auch der Verarbeitung Ihrer Daten in den USA gemäß Art. 49 Abs. 1 lit. a DSGVO zu. Der EuGH stuft die USA als ein Land mit unzureichendem Datenschutzniveau gemäß EU-Standards ein. Beispielsweise besteht das Risiko, dass US-Behörden personenbezogene Daten in Überwachungsprogrammen verarbeiten, ohne dass Europäern eine rechtliche Handhabe besteht.\n\nThe following is a list of service groups for which consent can be given. The first service group is essential and cannot be unchecked.\nEssenziell\n\nEssenzielle Services ermöglichen grundlegende Funktionen und sind für das ordnungsgemäße Funktionieren der Website erforderlich.\n\nStatistik\n\nStatistik-Cookies sammeln Nutzungsdaten, die uns Aufschluss darüber geben, wie unsere Besucher mit unserer Website umgehen.\n\nWeitere\n\nWeitere, für den Betrieb der Website optionale Services.\n\nZustimmung speichern\nIch akzeptiere alle\nNur essentielle Cookies akzeptieren\nIndividuelle Datenschutzeinstellungen\nEinstellungen\nBorlabs Cookie",
+  "buttons": [
+    {
+      "text": "\n\n  \n          .da-icon-filler {        fill: #ffffff;      }\n  \n  \n  \n  \n   \n      \n      \n    \n\n",
+      "aria": "Barrierefreiheit-Einstellungen öffnen",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "\n                    \n                        \n                        \n                    \n                ",
+      "aria": "Schließt das Tool",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "Zurücksetzen",
+      "aria": "Alle Einstellungen zurücksetzen",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "-",
+      "aria": "Schriftgröße verringern",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "+",
+      "aria": "Schriftgröße erhöhen",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "Zurücksetzen",
+      "aria": "Schriftgröße zurücksetzen",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "-",
+      "aria": "Zeilenabstand verringern",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "+",
+      "aria": "Zeilenabstand erhöhen",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "Zurücksetzen",
+      "aria": "Zeilenabstände zurücksetzen",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "-",
+      "aria": null,
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "+",
+      "aria": null,
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "Zurücksetzen",
+      "aria": "Inhaltsgröße zurücksetzen",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "-",
+      "aria": "Wortabstand verringern",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "+",
+      "aria": "Wortabstand erhöhen",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "Zurücksetzen",
+      "aria": "Wortabstand zurücksetzen",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "\n                        \n                            \n                            \n                        \n                        Schwarz / weiß\n                    ",
+      "aria": "Schwarz weiß Modus",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "\n                        \n                            \n                            \n                        \n                        Bilder ausblenden\n                    ",
+      "aria": null,
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "\n                        \n                            \n                            \n                        \n                        Maus Hervorhebung\n                    ",
+      "aria": "den Inhalt unter der Maus hervorheben",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "\n                        \n                            \n                            \n                        \n                        Einfache Schrift\n                    ",
+      "aria": "Ändern der Schriftart in eine einfache Schriftart",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "\n                        \n                            \n                            \n                        \n                        Animationen stoppen\n                    ",
+      "aria": "Deaktiviert Animationen",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "\n                        \n                            \n                            \n                        \n                        Ton stummschalten\n                    ",
+      "aria": null,
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "\n                        \n                            \n                        \n                        Lichtbalken\n                    ",
+      "aria": "Schwarze Balken hinzufügen, um nur den Inhalt unter der Maus zu fokussieren",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "\n                        \n                            \n                            \n                        \n                        Lupe\n                    ",
+      "aria": "Vergrößerung des Inhalts unter der Maus",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "-",
+      "aria": "Zeichenabstand verringern",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "+",
+      "aria": "Zeichenabstand erhöhen",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "Zurücksetzen",
+      "aria": "Zeichenabstände zurücksetzen",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "\n                        \n                            \n                            \n                        \n                        Link Hervorhebung\n                    ",
+      "aria": null,
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "\n                        \n                            \n                            \n                        Großer Zeiger\n                    ",
+      "aria": null,
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "\n                    \n                        \n                        \n                    \n\n                        Virtuelle Tastatur\n                        ",
+      "aria": "Aktiviert eine virtuele Tastatur als Eingabehilfe",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "\n                        \n                            \n                            \n                        \n                        Sättigung\n                    ",
+      "aria": "Sättigung erhöhen",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "\n                        \n                            \n                            \n                        \n                        Kontrast\n                    ",
+      "aria": "Kontrast erhöhen",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "\n                        \n                            \n                            \n                        Video\n                    ",
+      "aria": "Videos pausieren",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "",
+      "aria": "Hintergrundfarbe in schwarz ändern",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "",
+      "aria": "Hintergrundfarbe in weiß ändern",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "",
+      "aria": "Hintergrundfarbe in orange ändern",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "",
+      "aria": "Hintergrundfarbe in grün ändern",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "",
+      "aria": "Hintergrundfarbe in rot ändern",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "",
+      "aria": "Hintergrundfarbe in blau ändern",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "",
+      "aria": "Hintergrundfarbe in lila ändern",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "",
+      "aria": "Hintergrundfarbe in gelb ändern",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "Zurücksetzen",
+      "aria": "Hintergrundfarbe zurücksetzen",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "",
+      "aria": "Textfarbe in schwarz ändern",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "",
+      "aria": "Textfarbe in weiß ändern",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "",
+      "aria": "Textfarbe in orange ändern",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "",
+      "aria": "Textfarbe in grün ändern",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "",
+      "aria": "Textfarbe in rot ändern",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "",
+      "aria": "Textfarbe in blau ändern",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "",
+      "aria": "Textfarbe in lila ändern",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "",
+      "aria": "Textfarbe in gelb ändern",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "Zurücksetzen",
+      "aria": "Textfarbe zurücksetzen",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "",
+      "aria": "Linkfarbe in schwarz ändern",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "",
+      "aria": "Linkfarbe in weiß ändern",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "",
+      "aria": "Linkfarbe in orange ändern",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "",
+      "aria": "Linkfarbe in grün ändern",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "",
+      "aria": "Linkfarbe in rot ändern",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "",
+      "aria": "Linkfarbe in blau ändern",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "",
+      "aria": "Linkfarbe in lila ändern",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "",
+      "aria": "Linkfarbe in gelb ändern",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "Zurücksetzen",
+      "aria": "Link-Farbe zurücksetzen",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "",
+      "aria": "Titelfarbe in schwarz ändern",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "",
+      "aria": "Titelfarbe in weiß ändern",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "",
+      "aria": "Titelfarbe in orange ändern",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "",
+      "aria": "Titelfarbe in grün ändern",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "",
+      "aria": "Titelfarbe in rot ändern",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "",
+      "aria": "Titelfarbe in blau ändern",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "",
+      "aria": "Titelfarbe in lila ändern",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "",
+      "aria": "Titelfarbe in gelb ändern",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "Zurücksetzen",
+      "aria": "Titelfarbe zurücksetzen",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "Schließen",
+      "aria": "Schließt das Tool",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "Zurücksetzen",
+      "aria": "Alle Einstellungen zurücksetzen",
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "Widget ausblenden",
+      "aria": null,
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "\n                        Abbrechen\n                    ",
+      "aria": null,
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "\n                        Bestätigen\n                    ",
+      "aria": null,
+      "test": null,
+      "visible": false
+    },
+    {
+      "text": "This button closes the dialog. Its functionality is identical to the Nur essentielle Cookies akzeptieren button.",
+      "aria": "Close dialog",
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "Zustimmung speichern",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "Ich akzeptiere alle",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "Nur essentielle Cookies akzeptieren",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "Individuelle Datenschutzeinstellungen",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "Einstellungen",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "x",
+      "aria": "Schließen",
+      "test": null,
+      "visible": false
+    }
+  ],
+  "inputs": [
+    {
+      "type": "range",
+      "placeholder": "",
+      "value": "0",
+      "visible": false
+    },
+    {
+      "type": "range",
+      "placeholder": "",
+      "value": "0",
+      "visible": false
+    },
+    {
+      "type": "range",
+      "placeholder": "",
+      "value": "0",
+      "visible": false
+    },
+    {
+      "type": "range",
+      "placeholder": "",
+      "value": "0",
+      "visible": false
+    },
+    {
+      "type": "range",
+      "placeholder": "",
+      "value": "0",
+      "visible": false
+    },
+    {
+      "type": "checkbox",
+      "placeholder": "",
+      "value": "on",
+      "visible": true
+    },
+    {
+      "type": "checkbox",
+      "placeholder": "",
+      "value": "on",
+      "visible": true
+    },
+    {
+      "type": "checkbox",
+      "placeholder": "",
+      "value": "on",
+      "visible": true
+    }
+  ]
+}

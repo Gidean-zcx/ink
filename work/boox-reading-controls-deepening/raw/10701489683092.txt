@@ -1,0 +1,10 @@
+The Status Bar is a useful tool at the bottom of NeoReader to display information, including time, battery value, remaining reading time, reading progress, and chapter name during reading.
+ [image:1] 
+ 
+ 
+To enable/disable or customize the Status Bar, do the following:
+Tap any book file in the Library to open NeoReader.
+Tap the center area to display the main menu.
+Tap the More icon in the top right corner and choose Settings > Global Settings.
+Toggle "Enable Reading Status Bar" and the settings below.
+Drag to adjust the section order or tap to select which section is shown on the bar.

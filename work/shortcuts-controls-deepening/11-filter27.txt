@@ -1,0 +1,20 @@
+Add filter parameters to Find and Filter actions in Shortcuts on iPhone or iPad
+After you add a Find or Filter action to your shortcut, you activate filter parameters in the action to narrow down the data set gathered by the action.
+For example, in the Find Photos action, you can add filter parameters such as “Album is Portrait,” which retrieves only photos in an album named “Portrait.” You can add more filter parameters to further refine the search criteria—for example, to exclude the “Selfies” album, by changing the filter option from “Album [is]” to “Album [is not],” and then choosing “Selfies” from the list of search criteria.
+Add filter parameters to a Find or Filter action
+In the Shortcuts app  on your iPhone or iPad, tap  on the shortcut you want to modify.
+In the shortcut editor, tap , enter “Find” or “Filter” in the search field, touch and hold the action in the list, then drag it to the position you want.
+In the Find or Filter action you added, tap Add Filter.
+A default filtering string appears—for example, “Album is All Photos.”
+Tap any of the terms, then tap an option from the list to customize the filtering string.
+For example, you could tap Album and choose Width, tap “is” and choose “is not,” then tap the last parameter and enter a number in the keypad that appears.
+To add more filter parameters, repeat steps 2–3.
+Note: When you add multiple filter parameters, the All or Any options become available.
+Sort and limit filter parameter results
+The Find and Filter actions also include parameters to order your results and limit the number of results collected in the filtering operation.
+In the Shortcuts app  on your iPhone or iPad, do either or both of the following:
+Order the filter results: Tap “Sort by,” choose an option from the list that appears, then tap the Order parameter that appears, tap an option (Smallest First, for example).
+Limit the filter results: Turn on Limit, then in the Get [x Items] row that appears, tap the plus (+) or minus (–) button to select a maximum number of results.
+Additionally, you can tap Limit or Get [x] items to set these parameters using an Ask Each Time variable or a Magic Variable (depending on actions in the shortcut), allowing you to alter the limit while the shortcut is running.
+Tip: To use two Find actions in a row—without causing the second action to filter the output of the first—place a Nothing action in between the two Find actions. That way, “nothing” is passed as input to the second Find action, signaling it to retrieve its own content.
+When working with a large amount of content or broad queries in the Find and Filter actions, a shortcut’s performance may be impacted when run from the Shortcuts widget or Apple Watch. In such cases, place a Continue Shortcut in App action to switch to the Shortcuts app, or experiment with more specific filters that limit the number of possible results.

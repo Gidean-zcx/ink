@@ -1,0 +1,29 @@
+Setting triggers in Shortcuts on iPhone or iPad
+Use a setting trigger to run an automation when you change a setting on your device.
+The Wi-Fi trigger has one option:
+Network: Tap Choose, then select one or more Wi-Fi networks. When you connect to a selected network, your automation triggers. You can also choose Any Network to launch your automation whenever you connect to any Wi-Fi network.
+The Bluetooth trigger has one option:
+Device: Tap Choose, then select one or more Bluetooth devices. When you connect to a selected device, your automation triggers. You can also choose Any Device to launch your automation whenever you connect to any Bluetooth device.
+The Focus triggers activate a personal automation when you turn on or turn off the Focus feature in iOS and iPadOS. (For more information, see Set up a Focus in the iPhone User Guide.) In Shortcuts, these triggers have the following options:
+When Turning On: Triggers your automation when you turn on Focus.
+When Turning Off: Triggers your automation when you turn off Focus.
+The Low Power Mode trigger has the following options:
+Is Turned On: Triggers your automation when you turn on Lower Power Mode.
+Is Turned Off: Triggers your automation when you turn off Lower Power Mode.
+The Battery Level trigger has the following options:
+Equals: Triggers your automation when the battery percentage equals the value set in the percentage slider.
+Rises Above: Triggers your automation when the battery percentage rises above the value set in the percentage slider.
+Falls Below: Triggers your automation when the battery percentage falls below the value set in the percentage slider.
+The Charger trigger is activated when you start or stop charging—whether with a cable, wirelessly, or with a charging case. The Charger trigger has the following options:
+Is Connected: Triggers your automation when you connect a charger.
+Is Disconnected: Triggers your automation when you disconnect from a charger.
+The NFC trigger has one option:
+NFC Tag: Triggers your automation when you scan a near-field communication tag. After you initially scan the NFC tag, you can name it for future reference. Other than the unique identifier, the contents of the NFC tag are ignored.
+Note: Not all devices support NFC.
+The App trigger has the following options:
+App: Tap Choose, then select an app from the list.
+Is Opened: Triggers your automation when you open or switch to the selected app.
+Is Closed: Triggers your automation when you close or switch from the selected app.
+The Airplane Mode trigger has the following options:
+Is Turned On: Triggers your automation when you turn on Airplane Mode.
+Is Turned Off: Triggers your automation when you turn off Airplane Mode.See alsoUse variables in Shortcuts on iPhone or iPad

@@ -1,0 +1,28 @@
+Micro SD Card Update
+
+1. Please download the firmware update from the Shanling official
+   website-. Copy the latest firmware file to the card, it must be placed
+   into the root directory of the card.
+
+2. In the "System Setting", select "System Update" - "TF card update".
+  Update selection box will appear, press "Enter", latest firmware will be
+  update automatically.
+
+
+Common Problems
+
+1. It is recommended to use DC5V 2A adapter. Using the adapter with
+  higher voltage may damage M1 Plus.
+
+2. Unable to start M1 Plus , it may be caused by low power or exhausted
+   battery, please recharge and then start up again.
+
+3. If the device is not responsive, press down the power button for 10
+  seconds. This should force the device to shut down. Then power it on
+  again.
+
+4. If there is noise from headphones, headphone's output interface may
+  not be connected correctly, please try to insert it again.
+
+5. When there is no sound, try to use different pair of headphones or
+   different cable and make sure the system volume is set correctly.

@@ -1,0 +1,12 @@
+How can I restore articles accidentally marked as read?
+If you accidentally used Mark all as read, you can restore the affected articles’ unread status.
+On the web:Click the drop-down arrow next toMark all as readand choose a period, such asOlder than one day.
+On mobile:Long-press the tick icon and choose the corresponding option.
+This only works for articles marked as read using Mark all as read within the past two weeks. It does not apply to articles marked as read individually. Otherwise, the previous unread status cannot be restored.
+Related questions
+Can I customize how articles are displayed?
+What layout options are available?
+What sorting options are available?
+Can I group articles visually?
+Can different feeds use different layouts?
+Why do I see only part of an article?

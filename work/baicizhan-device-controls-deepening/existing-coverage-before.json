@@ -1,0 +1,41 @@
+[
+  {
+    "flow_id": "F-M022-01",
+    "product_id": "M-022",
+    "task": "Mini锁定入口",
+    "depth": "D1",
+    "evidence_ids": "E-BCZH-02",
+    "known_branches": "长按提示",
+    "gaps": "型号映射、解锁后状态",
+    "visual_status": "static_official_images_only",
+    "hands_on": "false",
+    "case_path": "cases/M-022-baicizhan-device.md",
+    "checked_on": "2026-10-26"
+  },
+  {
+    "flow_id": "F-M022-02",
+    "product_id": "M-022",
+    "task": "Max选择学习任务",
+    "depth": "D1",
+    "evidence_ids": "E-BCZH-03",
+    "known_branches": "六入口、分页",
+    "gaps": "按键映射、完整任务与第二页",
+    "visual_status": "static_official_images_only",
+    "hands_on": "false",
+    "case_path": "cases/M-022-baicizhan-device.md",
+    "checked_on": "2026-10-26"
+  },
+  {
+    "flow_id": "F-M022-03",
+    "product_id": "M-022",
+    "task": "离线与再联网",
+    "depth": "D1",
+    "evidence_ids": "E-BCZH-01;E-BCDVC-01;E-BCDVC-02",
+    "known_branches": "现Mini/Max离线及多端宣传D1；2022型号未知的计划下发/同步确认/切书局部D2",
+    "gaps": "历史型号适用性、首次绑定、缓存、取消/断网、同步对象/冲突与恢复未知",
+    "visual_status": "not_observed",
+    "hands_on": "false",
+    "case_path": "cases/M-022-baicizhan-device.md",
+    "checked_on": "2026-10-26"
+  }
+]

@@ -1,0 +1,92 @@
+try{ NetworkTracking.init('/_ui/networks/tracking/NetworkTrackingServlet', 'network', 'null'); }catch(x){}try{ NetworkTracking.logPageView();}catch(x){}(function(UITheme) {
+UITheme.getUITheme = function() {
+return UserContext.uiTheme;
+};
+}(window.UITheme = window.UITheme || {}));
+Login | Forgot Your Password?
+if(!window.sfdcPage) { window.sfdcPage = new ApexDetailPage(); }UserContext.initialize({"ampm":["AM","PM"],"isAccessibleMode":false,"salesforceURL":"https://support.remarkable.com?refURL=http%3A%2F%2Fsupport.remarkable.com%2Farticles%2FKnowledge%2FScreen-Share","dateFormat":"dd.MM.yyyy","dayPeriods":[],"language":"en_US","locale":"no_NO","enableLoggingInAuraAlohaFrameNavigator":true,"dateTimeFormat":"dd.MM.yyyy, HH:mm","labelLastModified":"1789190098000","today":"26.10.2026, 18:13","userPreferences":[{"index":112,"name":"HideInlineEditSplash","value":false},{"index":114,"name":"OverrideTaskSendNotification","value":false},{"index":115,"name":"DefaultTaskSendNotification","value":false},{"index":119,"name":"HideUserLayoutStdFieldInfo","value":false},{"index":116,"name":"HideRPPWarning","value":false},{"index":87,"name":"HideInlineSchedulingSplash","value":false},{"index":88,"name":"HideCRUCNotification","value":false},{"index":89,"name":"HideNewPLESplash","value":false},{"index":90,"name":"HideNewPLEWarnIE6","value":false},{"index":122,"name":"HideOverrideSharingMessage","value":false},{"index":91,"name":"HideProfileILEWarn","value":false},{"index":93,"name":"HideProfileElvVideo","value":false},{"index":97,"name":"ShowPicklistEditSplash","value":false},{"index":92,"name":"HideDataCategorySplash","value":false},{"index":128,"name":"ShowDealView","value":false},{"index":129,"name":"HideDealViewGuidedTour","value":false},{"index":132,"name":"HideKnowledgeFirstTimeSetupMsg","value":false},{"index":104,"name":"DefaultOffEntityPermsMsg","value":false},{"index":135,"name":"HideNewCsnSplash","value":false},{"index":101,"name":"HideBrowserWarning","value":false},{"index":139,"name":"HideDashboardBuilderGuidedTour","value":false},{"index":140,"name":"HideSchedulingGuidedTour","value":false},{"index":180,"name":"HideReportBuilderGuidedTour","value":false},{"index":183,"name":"HideAssociationQueueCallout","value":false},{"index":194,"name":"HideQTEBanner","value":false},{"index":270,"name":"HideIDEGuidedTour","value":false},{"index":282,"name":"HideQueryToolGuidedTour","value":false},{"index":196,"name":"HideCSIGuidedTour","value":false},{"index":271,"name":"HideFewmetGuidedTour","value":false},{"index":272,"name":"HideEditorGuidedTour","value":false},{"index":205,"name":"HideApexTestGuidedTour","value":false},{"index":206,"name":"HideSetupProfileHeaderTour","value":false},{"index":207,"name":"HideSetupProfileObjectsAndTabsTour","value":false},{"index":213,"name":"DefaultOffArticleTypeEntityPermMsg","value":false},{"index":214,"name":"HideSelfInfluenceGetStarted","value":false},{"index":215,"name":"HideOtherInfluenceGetStarted","value":false},{"index":216,"name":"HideFeedToggleGuidedTour","value":false},{"index":268,"name":"ShowChatterTab178GuidedTour","value":false},{"index":275,"name":"HidePeopleTabDeprecationMsg","value":false},{"index":276,"name":"HideGroupTabDeprecationMsg","value":false},{"index":224,"name":"HideUnifiedSearchGuidedTour","value":false},{"index":226,"name":"ShowDevContextMenu","value":false},{"index":227,"name":"HideWhatRecommenderForActivityQueues","value":false},{"index":228,"name":"HideLiveAgentFirstTimeSetupMsg","value":false},{"index":232,"name":"HideGroupAllowsGuestsMsgOnMemberWidget","value":false},{"index":233,"name":"HideGroupAllowsGuestsMsg","value":false},{"index":234,"name":"HideWhatAreGuestsMsg","value":false},{"index":235,"name":"HideNowAllowGuestsMsg","value":false},{"index":236,"name":"HideSocialAccountsAndContactsGuidedTour","value":false},{"index":237,"name":"HideAnalyticsHomeGuidedTour","value":false},{"index":238,"name":"ShowQuickCreateGuidedTour","value":false},{"index":245,"name":"HideFilePageGuidedTour","value":false},{"index":250,"name":"HideForecastingGuidedTour","value":false},{"index":251,"name":"HideBucketFieldGuide","value":false},{"index":263,"name":"HideSmartSearchCallOut","value":false},{"index":273,"name":"ShowForecastingQuotaAttainment","value":false},{"index":280,"name":"HideForecastingQuotaColumn","value":false},{"index":301,"name":"HideManyWhoGuidedTour","value":false},{"index":298,"name":"HideFileSyncBannerMsg","value":false},{"index":299,"name":"HideTestConsoleGuidedTour","value":false},{"index":302,"name":"HideManyWhoInlineEditTip","value":false},{"index":303,"name":"HideSetupV2WelcomeMessage","value":false},{"index":312,"name":"ForecastingShowQuantity","value":false},{"index":313,"name":"HideDataImporterIntroMsg","value":false},{"index":314,"name":"HideEnvironmentHubLightbox","value":false},{"index":316,"name":"HideSetupV2GuidedTour","value":false},{"index":317,"name":"HideFileSyncMobileDownloadDialog","value":false},{"index":322,"name":"HideEnhancedProfileHelpBubble","value":false},{"index":328,"name":"ForecastingHideZeroRows","value":false},{"index":330,"name":"HideEmbeddedComponentsFeatureCallout","value":false},{"index":341,"name":"HideDedupeMatchResultCallout","value":false},{"index":340,"name":"HideS1BrowserUI","value":true},{"index":346,"name":"HideS1Banner","value":false},{"index":358,"name":"HideEmailVerificationAlert","value":false},{"index":354,"name":"HideLearningPathModal","value":false},{"index":359,"name":"HideAtMentionsHelpBubble","value":false},{"index":368,"name":"LightningExperiencePreferred","value":true},{"index":373,"name":"PreviewLightning","value":false},{"index":281,"name":"HideMSPPopup","value":false}],"networkId":"0DB7Q000000bqvW","uiTheme":"Theme3","uiSkin":"Theme3","userName":"support_web@00d7q000002qcc5uam.org.force.com","userId":"0057Q000006iZrQ","isCurrentlySysAdminSU":false,"renderMode":"RETRO","startOfWeek":"2","vfDomainPattern":"getremarkable--(?:[^.]+).vf.force.com","auraDomain":"getremarkable.lightning.force.com","useNativeAlertConfirmPrompt":false,"orgPreferences":[{"index":257,"name":"TabOrganizer","value":true},{"index":113,"name":"GroupTasks","value":true}],"isDefaultNetwork":false,"timeFormat":"HH:mm"});
+Screen SharePrintable View
+« Go Back
+Information
+Properties
+Information
+Title
+Screen Share
+URL Name
+Screen-Share
+Summary
+Description
+Use Screen Share to instantly present what you're writing or sketching on your computer.
+j_id0__SiteTemplate__j_id17__j_id18__j_id25__j_id26__j_id387__0__j_id390__3__j_id398 = window.onload; window.onload=function() { if (j_id0__SiteTemplate__j_id17__j_id18__j_id25__j_id26__j_id387__0__j_id390__3__j_id398!= null) j_id0__SiteTemplate__j_id17__j_id18__j_id25__j_id26__j_id387__0__j_id390__3__j_id398();};
+Time Estimate
+Article Body
+Before you start using Screen Share:
+Your paper tablet needs to be paired with the cloud.
+Make sure you have the reMarkable desktop app installed or use the web app by logging in at app.remarkable.com.
+To use Screen Share with the web app, your paper tablet needs to be running software version 3.27 or newer.
+Your paper tablet and desktop can be connected to separate Wi-Fi networks.
+Note: guest networks or Wi-Fi networks using a secure gateway can interfere with Screen Share. Firewall settings on your computer can also prevent Screen Share from working correctly.
+How to present with Screen Share using the web app
+1. Go to app.remarkable.com and log in.
+2. Click Screen Share in the side menu.
+3. On your paper tablet, open the file you want to present.
+4. Tap the three-dot menu on your paper tablet, then tap Share.
+5. Tap Present with Screen Share. Content from your paper tablet is now displayed on your computer or phone.
+How to present with Screen Share via the desktop app
+1. On your paper tablet, open the file you want to present. (Screen Share works in notebooks, PDFs, and ebooks).
+2. Tap the three-dot menu on your paper tablet, then tap Share.
+3. Select Present with Screen Share to get started.
+4. A window will appear in your desktop app asking you to accept the Screen Share invite. Tap Accept to start presenting. You can now share this window in digital meetings or on an external monitor.
+5. To stop Screen Share, tap Stop sharing your screen.
+A guide to the features in Screen Share
+You have a pointer functionality in Screen Share for drawing attention to different parts of the page. When using the web app, click the pencil icon in the upper-left corner to use this feature.
+If you're using the desktop app, hold your Marker tip just above the display and a red dot will appear in your desktop app window.
+Screen Share will not show the My files home screen on your device, only one document at a time. This means that you can switch between documents while sharing your screen without showing your audience any of your private files or notebooks.
+You can switch from portrait to landscape view from your device while Screen Share is active.
+When you're presenting with Screen Share, you can use the highlighter tool to highlight text in yellow, green, or pink. The highlighter will show as different shades of gray on your paper tablet, but appears in color on exported documents and in Screen Share.
+Choose between red and blue when you're using the fineliner, marker or ballpoint pen while presenting with Screen Share.
+j_id0__SiteTemplate__j_id17__j_id18__j_id25__j_id26__j_id387__0__j_id390__5__j_id398 = window.onload; window.onload=function() { if (j_id0__SiteTemplate__j_id17__j_id18__j_id25__j_id26__j_id387__0__j_id390__5__j_id398!= null) j_id0__SiteTemplate__j_id17__j_id18__j_id25__j_id26__j_id387__0__j_id390__5__j_id398();};
+Properties
+Article Created Date
+04.07.2022, 12:58
+Last Published Date
+06.05.2026, 17:46
+Override Page Navigation
+Override Page Navigation API Name
+Tile Image URL
+Validation Status
+Not Validated
+Publication Status
+Published
+DesktopContext.pageTitle = "Knowledge: Screen Share";
+document.title = "Knowledge: Screen Share";
+var isModal = false;
+Ext.onReady(function() {
+if (!isModal){
+var propertiesPanel = Ext.query('*[id=j_id0:SiteTemplate:j_id17:j_id18:j_id25:j_id26:articleRendererToolbar] *[id $= :extPanel]')[0];
+if (true) {
+var renderer = new TOCDetailRenderer({elemId:"knowledgeTOCRenderer", height:-110, contentId:'knowledgeTOCRendererContent'});
+if (propertiesPanel) {
+Ext.ComponentMgr.get(propertiesPanel.id).addListener('beforeExpand', function() {
+renderer.height = -190;
+renderer.resize();
+});
+Ext.ComponentMgr.get(propertiesPanel.id).addListener('collapse', function() {
+renderer.height = -110;
+renderer.resize();
+});
+}
+new TOCSectionSelector({menuId:'menu', contentId:'knowledgeTOCRendererContent'});
+}
+ArticleRenderer.registerArticleLinksForConsole();
+}
+else{
+Sfdc.onReady(function(){window.addEventListener("beforeunload", function(){
+if(window.parent.Sfdc.get('ChatterDeflectionModal')){
+Sfdc.Dom.hideByVisibility(window.parent.Sfdc.get('ChatterDeflectionModal'));
+}
+});
+});
+}
+});
+Powered by

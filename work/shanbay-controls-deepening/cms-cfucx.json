@@ -1,0 +1,24 @@
+{
+  "id": "cfucx",
+  "type": "FORBIDDEN_COMMENT",
+  "title": "新词量和已掌握单词量",
+  "description": "新词量和已掌握单词量",
+  "content_html": "<div class=\"kraft-content\" style=\"width:100%;padding:16px;color:#333;font-size:16px;line-height:1.75;letter-spacing:1px;word-spacing:0;word-break:break-word;background-color:#fff;overflow:hidden\"><h4 style=\"margin:0;padding:7px 0;font-weight:bold;font-size:16px\"><span>新词量和已掌握单词量</span></h4><p style=\"margin:0;padding:0;line-height:1.75;text-align:start;letter-spacing:normal;word-spacing:0px\"><strong><span>Q：为什么我的已掌握单词数为0？怎样才算掌握一个单词？</span></strong></p><p style=\"margin:0;padding:0;line-height:1.75;text-align:start;letter-spacing:normal;word-spacing:0px\"><strong><span>A：</span></strong><span>系统会对你有效学习5次及以上、测试均通过的单词标记已掌握。你再多学一段时间，就不会是零了。</span></p></div>",
+  "content_json": "[{\"type\":\"h4\",\"children\":[{\"text\":\"新词量和已掌握单词量\"}]},{\"type\":\"p\",\"textAlign\":\"start\",\"letterSpacing\":\"normal\",\"wordSpacing\":\"0px\",\"children\":[{\"text\":\"Q：为什么我的已掌握单词数为0？怎样才算掌握一个单词？\",\"bold\":true}]},{\"type\":\"p\",\"textAlign\":\"start\",\"letterSpacing\":\"normal\",\"wordSpacing\":\"0px\",\"children\":[{\"text\":\"A：\",\"bold\":true},{\"text\":\"系统会对你有效学习5次及以上、测试均通过的单词标记已掌握。你再多学一段时间，就不会是零了。\"}]}]",
+  "like_num": 0,
+  "comment_num": 0,
+  "assign_date": "2021-06-28T16:00:00+00:00",
+  "order_type": "COMMEND",
+  "reply_push_url": "",
+  "weight": 1000,
+  "allow_comment": false,
+  "is_send": false,
+  "cover_url": "",
+  "column_id": "bcrmcn",
+  "is_like": false,
+  "column": {
+    "name": "官网帮助-背单词"
+  },
+  "tags": [],
+  "redirect_url": "https://web.shanbay.com/op/articles/cfucx?shanbay_immersive_mode=true"
+}

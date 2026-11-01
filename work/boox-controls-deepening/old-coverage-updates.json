@@ -1,0 +1,224 @@
+[
+  {
+    "flow_id": "F-M004-02",
+    "changes": {
+      "evidence_ids": {
+        "before": "E-BOOX-05",
+        "after": "E-BOOX-05;E-BXCD-03"
+      },
+      "known_branches": {
+        "before": "系统面板与应用页面是不同上下文；隐藏导航栏时先底部上滑调出。",
+        "after": "控制/通知中心分侧；快捷项可Edit补入；侧边内滑需启用；导航栏隐藏先上滑调出；双击导航球回桌面不等于保存或终止进程"
+      },
+      "gaps": {
+        "before": "当前本机固件是否同路径；返回 app 后页码、选区及滚动位置是否保留。",
+        "after": "未取得V4.1.2机型手册；面板关闭动作及选区/阅读页保留、手势与app冲突未观察"
+      },
+      "visual_status": {
+        "before": "not_observed",
+        "after": "static_reference_only"
+      }
+    },
+    "replacement_row": {
+      "flow_id": "F-M004-02",
+      "product_id": "M-004",
+      "task": "从阅读进入全局控制再返回",
+      "depth": "D2",
+      "evidence_ids": "E-BOOX-05;E-BXCD-03",
+      "known_branches": "控制/通知中心分侧；快捷项可Edit补入；侧边内滑需启用；导航栏隐藏先上滑调出；双击导航球回桌面不等于保存或终止进程",
+      "gaps": "未取得V4.1.2机型手册；面板关闭动作及选区/阅读页保留、手势与app冲突未观察",
+      "visual_status": "static_reference_only",
+      "hands_on": "false",
+      "case_path": "cases/M-004-boox-neoreader.md",
+      "checked_on": "2026-10-26"
+    }
+  },
+  {
+    "flow_id": "F-M004-03",
+    "changes": {
+      "evidence_ids": {
+        "before": "E-BOOX-06;E-BOOX-07;E-BOOX-08",
+        "after": "E-BOOX-06;E-BOOX-07;E-BOOX-08;E-BXCD-04;E-BXCD-05;E-BXCD-06;E-BXCD-07;E-BXCD-12"
+      },
+      "known_branches": {
+        "before": "app 配置、当前文档配置、全局范围分别处理；一次全刷不等于改变后续策略。",
+        "after": "单次全刷/App显示配置/当前文档/全部文档不同；原DPI、关闭Master Switch、单App Reset All及全App重置不同；NeoReader文档帮助Regal/Speed不与通用HD/Speed/Smooth混表"
+      },
+      "gaps": {
+        "before": "当前帮助模式已变；本机 V4.1.2 模式实值、主题覆盖关系、耗电/残影未测。",
+        "after": "本机4.1.2完整模式/默认参数/生效及退出反馈，重置关联、卸载后优化数据保留、真实残影/耗电未知"
+      },
+      "visual_status": {
+        "before": "not_observed",
+        "after": "static_reference_only"
+      }
+    },
+    "replacement_row": {
+      "flow_id": "F-M004-03",
+      "product_id": "M-004",
+      "task": "按任务调整显示",
+      "depth": "D2",
+      "evidence_ids": "E-BOOX-06;E-BOOX-07;E-BOOX-08;E-BXCD-04;E-BXCD-05;E-BXCD-06;E-BXCD-07;E-BXCD-12",
+      "known_branches": "单次全刷/App显示配置/当前文档/全部文档不同；原DPI、关闭Master Switch、单App Reset All及全App重置不同；NeoReader文档帮助Regal/Speed不与通用HD/Speed/Smooth混表",
+      "gaps": "本机4.1.2完整模式/默认参数/生效及退出反馈，重置关联、卸载后优化数据保留、真实残影/耗电未知",
+      "visual_status": "static_reference_only",
+      "hands_on": "false",
+      "case_path": "cases/M-004-boox-neoreader.md",
+      "checked_on": "2026-10-26"
+    }
+  },
+  {
+    "flow_id": "F-M004-06",
+    "changes": {
+      "evidence_ids": {
+        "before": "E-BOOX-12",
+        "after": "E-BOOX-12;E-BXCD-11"
+      },
+      "known_branches": {
+        "before": "文本批注与手写墨迹分开管理；文档级导出设置在 Settings → Annotation Export Settings。",
+        "after": "文本批注与手写分开管理；Progress的Blank Page会嵌入PDF，可在Preview或书签旁入口删除新增页"
+      },
+      "gaps": {
+        "before": "外部 PDF 软件如何识别注释、擦除/撤销、导出是否保留可编辑对象。",
+        "after": "PDF新增页删除确认/撤销/锚点变化、跨软件对象可编辑性、导出失败和存储不足未观察"
+      }
+    },
+    "replacement_row": {
+      "flow_id": "F-M004-06",
+      "product_id": "M-004",
+      "task": "标记并找回文档证据",
+      "depth": "D2",
+      "evidence_ids": "E-BOOX-12;E-BXCD-11",
+      "known_branches": "文本批注与手写分开管理；Progress的Blank Page会嵌入PDF，可在Preview或书签旁入口删除新增页",
+      "gaps": "PDF新增页删除确认/撤销/锚点变化、跨软件对象可编辑性、导出失败和存储不足未观察",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-004-boox-neoreader.md",
+      "checked_on": "2026-10-26"
+    }
+  },
+  {
+    "flow_id": "F-M004-07",
+    "changes": {
+      "evidence_ids": {
+        "before": "E-BOOX-13;E-BOOX-14",
+        "after": "E-BOOX-13;E-BOOX-14;E-BXCD-11"
+      },
+      "known_branches": {
+        "before": "书签是持久标记；视图历史是暂时导航，不必靠记页码返回。",
+        "after": "Progress内Prev View/Next View逐次往返；书签是独立持久标记，不承诺视图历史跨关书或重启"
+      },
+      "gaps": {
+        "before": "重排 EPUB 后锚点、关书后历史、重复添加书签。",
+        "after": "关书/系统回收后历史、EPUB重排定位与重复书签未知"
+      }
+    },
+    "replacement_row": {
+      "flow_id": "F-M004-07",
+      "product_id": "M-004",
+      "task": "查阅旁页后回到原处",
+      "depth": "D2",
+      "evidence_ids": "E-BOOX-13;E-BOOX-14;E-BXCD-11",
+      "known_branches": "Progress内Prev View/Next View逐次往返；书签是独立持久标记，不承诺视图历史跨关书或重启",
+      "gaps": "关书/系统回收后历史、EPUB重排定位与重复书签未知",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-004-boox-neoreader.md",
+      "checked_on": "2026-10-26"
+    }
+  },
+  {
+    "flow_id": "F-M004-08",
+    "changes": {
+      "evidence_ids": {
+        "before": "E-BOOX-15",
+        "after": "E-BOOX-15;E-BXCD-09;E-BXCD-10"
+      },
+      "known_branches": {
+        "before": "一文档只有一个关联笔记，改笔记名不解除关联；也能在 Notes 编辑。",
+        "after": "Current Doc两窗标记在刷新后同步；关联笔记与系统独立Notes不同；控制中心换边/退出，系统分屏也可回Home退出；Flexible帮助型号名单未列本机"
+      },
+      "gaps": {
+        "before": "移动/复制/删除源文件后关联；两窗口手写同步的实际时刻。",
+        "after": "关联Notes的写入时刻不能由Current Doc推断；源文件移动/删除、退出后页锚、Flexible本机适用未知"
+      }
+    },
+    "replacement_row": {
+      "flow_id": "F-M004-08",
+      "product_id": "M-004",
+      "task": "阅读时创建关联笔记",
+      "depth": "D2",
+      "evidence_ids": "E-BOOX-15;E-BXCD-09;E-BXCD-10",
+      "known_branches": "Current Doc两窗标记在刷新后同步；关联笔记与系统独立Notes不同；控制中心换边/退出，系统分屏也可回Home退出；Flexible帮助型号名单未列本机",
+      "gaps": "关联Notes的写入时刻不能由Current Doc推断；源文件移动/删除、退出后页锚、Flexible本机适用未知",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-004-boox-neoreader.md",
+      "checked_on": "2026-10-26"
+    }
+  },
+  {
+    "flow_id": "F-M004-09",
+    "changes": {
+      "evidence_ids": {
+        "before": "E-BOOX-16",
+        "after": "E-BOOX-16;E-BXCD-13"
+      },
+      "known_branches": {
+        "before": "普通导出与原笔记对象不同；More → Page- 删除当前页，帮助明确不可撤销。",
+        "after": "Exit保存并返回Notepad View；More内Save手动保存，两入口不合并；Page-帮助称不能撤销"
+      },
+      "gaps": {
+        "before": ".note 再导入保真、删除整本恢复、退出前断电、不同擦除模式的实际反馈。",
+        "after": "Home/切App/系统回收是否持久保存、断电写入、.note往返、删整本恢复未知"
+      }
+    },
+    "replacement_row": {
+      "flow_id": "F-M004-09",
+      "product_id": "M-004",
+      "task": "写笔记、改笔画、保留输出",
+      "depth": "D2",
+      "evidence_ids": "E-BOOX-16;E-BXCD-13",
+      "known_branches": "Exit保存并返回Notepad View；More内Save手动保存，两入口不合并；Page-帮助称不能撤销",
+      "gaps": "Home/切App/系统回收是否持久保存、断电写入、.note往返、删整本恢复未知",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-004-boox-neoreader.md",
+      "checked_on": "2026-10-26"
+    }
+  },
+  {
+    "flow_id": "F-M004-14",
+    "changes": {
+      "evidence_ids": {
+        "before": "E-BOOX-14;E-BOOX-21;E-BOOX-22;E-BOOX-23",
+        "after": "E-BOOX-14;E-BOOX-21;E-BOOX-22;E-BOOX-23;E-BXCD-06;E-BXCD-07;E-BXCD-08;E-BXCD-14"
+      },
+      "known_branches": {
+        "before": "“支持 TTS”不能证明锁屏续播；恢复出厂设置默认清除存储，更新和恢复不是同一动作。",
+        "after": "TTS引擎、通知权限、App Startup、Stay active和Freeze是不同控制；冻结阻后台/通知；睡眠连接设置另列；安装/卸载只取得入口D1"
+      },
+      "gaps": {
+        "before": "焦点抢占、蓝牙断开、语音通话、自动恢复句子、首次引擎下载失败。",
+        "after": "各后台开关优先级、TTS锁屏/蓝牙/焦点中断续播、安装失败/卸载后文件账户和偏好保留/恢复未知"
+      },
+      "visual_status": {
+        "before": "not_observed",
+        "after": "static_reference_only"
+      }
+    },
+    "replacement_row": {
+      "flow_id": "F-M004-14",
+      "product_id": "M-004",
+      "task": "从 TTS/后台问题排查到安全更新",
+      "depth": "D2",
+      "evidence_ids": "E-BOOX-14;E-BOOX-21;E-BOOX-22;E-BOOX-23;E-BXCD-06;E-BXCD-07;E-BXCD-08;E-BXCD-14",
+      "known_branches": "TTS引擎、通知权限、App Startup、Stay active和Freeze是不同控制；冻结阻后台/通知；睡眠连接设置另列；安装/卸载只取得入口D1",
+      "gaps": "各后台开关优先级、TTS锁屏/蓝牙/焦点中断续播、安装失败/卸载后文件账户和偏好保留/恢复未知",
+      "visual_status": "static_reference_only",
+      "hands_on": "false",
+      "case_path": "cases/M-004-boox-neoreader.md",
+      "checked_on": "2026-10-26"
+    }
+  }
+]

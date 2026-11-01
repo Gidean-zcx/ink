@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta content="always" name="referrer">
+  <meta name="renderer" content="webkit">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+  <meta name="format-detection" content="telephone=no"/>
+  <title>单词机单词本使用教程</title>
+  <style>
+  body, html {
+    font-family: PingFangSC-Regular, 'Lantinghei SC', 'Open Sans', Arial, 'Hiragino Sans GB', 'Microsoft YaHei', '微软雅黑', STHeiti, 'WenQuanYi Micro Hei', SimSun, sans-serif;
+    color: #666;
+    -webkit-font-smoothing: antialiased;
+    font-size: 14px;
+    width: 100%;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  body, h2, h3, h4, h5, h6, html, ol, small, ul {
+    margin: 0;
+    padding: 0;
+  }
+
+
+  .content {
+    width: 100%;
+    height: auto;
+    padding-bottom: 20px
+  }
+
+  .content > .article > p {
+    /*padding: 0 15px;*/
+    padding: 0 0;
+    margin: 0
+  }
+
+  .content > .article > p:first-of-type {
+    margin-top: 0;
+    padding-top: 0;
+    padding-left: 0;
+    padding-right: 0
+  }
+
+  .content > .article > p:first-of-type > span {
+    padding: 0 15px
+  }
+
+  .content > .article > p:first-of-type > span > img {
+    width: 100%;
+    margin-left: -15px
+  }
+
+  .content > .article img:not([class^="audio-"]) {
+    max-width: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    vertical-align: middle
+  }
+
+  .content > .article > img {
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  body .content article img, #article_head {
+    -webkit-user-select: none;
+    user-select: none;
+    pointer-events: none;
+  }
+
+  body .content article video + img, body .content p > a > img {
+      pointer-events: all;
+  }
+
+
+  *, :after, :before {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+    outline: 0;
+    -webkit-text-size-adjust: none;
+  }
+
+  .content > .footer {
+    text-align: center;
+    color: #d6d1c7;
+    font-size: 12px
+  }
+
+  .article-info {
+    margin: 30px 20px 0 20px;
+    text-align: left;
+  }
+  .article-info .item {
+    display: inline-block;
+    vertical-align: middle;
+  }
+  .article-info .item img, .article-info .item div {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    vertical-align: middle;
+  }
+  .article-info .item span {
+    color: #9CA6B8;
+    min-width: 10px;
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  .article-info .item .like {
+    background-size: 100%;
+    background-image: url(https://7n.bczcdn.com/little_class/upvote.svg);
+  }
+  .article-info .item .liked {
+    background-image: url(https://7n.bczcdn.com/little_class/upvote_pressed.svg);
+    background-size: 100%;
+  }
+
+
+  /* 新版文本文章样式 */
+  .clear {
+    clear: both;
+  }
+
+  img.paved {
+    width: 100%;
+    display: block;
+  }
+  img.center {
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+  }
+
+  .article_tag {
+    float: left;
+    color: #96999c;
+    font-size: 14px;
+    margin-right: 12px;
+  }
+
+  h1 {
+    color: #202224;
+    font-size: 24px;
+    margin-bottom: 16px;
+    margin-top: 0;
+  }
+
+  #article_body {
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 16px;
+  }
+
+  #article_publish_info {
+    height: 24px;
+  }
+  #article_publish_info > img:nth-child(1) {
+    width: 24px;
+    height: 24px;
+    float: left;
+    margin-right: 8px;
+    border-radius: 12px;
+  }
+  #article_publish_info > div:nth-child(2) {
+    height: 24px;
+    line-height: 24px;
+    color: #202224;
+    font-size: 14px;
+    float: left;
+  }
+  #article_publish_time {
+    height: 24px;
+    line-height: 24px;
+    color: #96999c;
+    float: right;
+    font-size: 14px;
+    display: none;
+  }
+
+  #article_content {
+    color: #595959;
+    font-size: 16px;
+    padding: 0;
+    margin: 0;
+    line-height: 1.7em;
+    letter-spacing: 1px;
+  }
+  p {
+    color: #595959;
+    font-size: 16px;
+    padding: 0;
+    margin: 0;
+    line-height: 1.7em;
+    letter-spacing: 1px;
+  }
+  .article_bold {
+    color: #202224;
+    font-weight: bold;
+  }
+
+
+</style>
+  <style>
+  .container {
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+  }
+
+  .bcz-comments {
+    /*padding-bottom: 100px;*/
+    z-index: 100;
+    max-width: 900px;
+    margin: 0 auto;
+    position: relative;
+    width: 100%;
+    font-size: 10px;
+    font-family: PingFangSC-Regular,'Lantinghei SC', 'Open Sans', Arial, 'Hiragino Sans GB', 'Microsoft YaHei', '微软雅黑', STHeiti, 'WenQuanYi Micro Hei', SimSun, sans-serif;
+    color: #333;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .bcz-comment-dialog, .bcz-comments {
+    width: 100%;
+    font-size: 10px;
+    font-family: PingFangSC-Regular,'Lantinghei SC', 'Open Sans', Arial, 'Hiragino Sans GB', 'Microsoft YaHei', '微软雅黑', STHeiti, 'WenQuanYi Micro Hei', SimSun, sans-serif;
+    color: #333;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .bcz-comment-dialog p, .bcz-comments p {
+    margin: 0;
+    padding: 0;
+    font-size: 1.3rem;
+    color: #7A7A7A;
+    line-height: 1.6154
+  }
+
+  .bcz-comments .comments-list.hot, .bcz-comments .comments-list.recently {
+    margin: 0;
+    padding: 30px 0 0;
+    position: relative;
+  }
+
+  .bcz-comment-dialog *, .bcz-comment-dialog ::after, .bcz-comment-dialog ::before, .bcz-comments *, .bcz-comments ::after, .bcz-comments ::before {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    outline: 0;
+    border: none;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-text-size-adjust: none;
+  }
+
+  .comments-list.hot:before,.comments-list.recently:before {
+    content: " ";
+    display: inline-block;
+    width: 100%;
+    border-top: 1px solid #eee;
+    position: absolute;
+    top: 12px;
+    left: 0;
+  }
+
+  .comments-list.hot:after,.comments-list.recently:after {
+    display: inline-block;
+    padding: 0 15px;
+    line-height: 24px;
+    font-size: 14px;
+    background-color: #7da9d7;
+    color: #fff;
+    position: absolute;
+    left: 0;
+    top: 0;
+    -webkit-border-radius: 0 12px 12px 0;
+    -moz-border-radius: 0 12px 12px 0;
+    border-radius: 0 12px 12px 0;
+  }
+
+  .comments-list.recently:after {
+    content: "最新评论";
+  }
+
+  .comments-list.hot:after {
+    content: "最热评论";
+  }
+
+  .comments-list>.item {
+    font-size: 0;
+    min-height: 50px;
+    width: 100%;
+    color: #aaa;
+    border-bottom: 1px solid #E1E3E6;
+  }
+  .comments-list.hot>.item:last-of-type {
+    border: none;
+  }
+
+  .comments-list>.item>.left {
+    width: 80px;
+  }
+
+  .comments-list>.item>.right {
+    width: 100%;
+    margin-top: -60px;
+    padding: 10px 10px 15px 80px;
+  }
+
+  .comments-list>.item>.left,.comments-list>.item>.right {
+    display: inline-block;
+    font-size: 14px;
+    vertical-align: top;
+  }
+
+  .comments-list>.item>.left>.user-img {
+    width: 45px;
+    display: block;
+    margin: 15px auto 0;
+    border-radius: 50%;
+  }
+
+  .comments-list>.item>.right p,.comments-list>.item>.right>.title {
+    margin: 8px 0 0;
+    padding: 0;
+    line-height: 1;
+    color: #7A7A7A;
+  }
+  .comments-list>.item>.right>.title {
+    font-size: 14px;
+    position: relative;
+  }
+
+  .comments-list>.item>.right>.title>.user-form {
+    color: #7da9d7;
+    display: inline-block;
+    vertical-align: middle;
+    max-width: 100px;
+    overflow: hidden;
+    white-space: nowrap;
+    -o-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+  }
+
+  .comments-list>.item>.right>.title>.vote-like,.comments-list>.item>.right>.title>.vote-liked {
+    position: absolute;
+    right: 0;
+    top: -10px;
+    padding-right: 10px;
+    height: 40px;
+    display: inline-block;
+    vertical-align: middle;
+    overflow: hidden;
+  }
+
+  .comments-list>.item>.right>.title>.vote-like:before,.comments-list>.item>.right>.title>.vote-liked:before {
+    content: '';
+    display: inline-block;
+    vertical-align: top;
+    height: 40px;
+    width: 24px;
+    margin: 4px 4px 0 0;
+    -webkit-background-size: 100% 100%;
+    -moz-background-size: 100%;
+    -o-background-size: 100%;
+    background-size: 100%;
+    background-position: center center;
+    background-repeat: no-repeat;
+  }
+
+  .comments-list>.item>.right>.title>.vote-like:before {
+    background-image: url(https://7n.bczcdn.com/little_class/article_like.png)
+  }
+
+  .comments-list>.item>.right>.title>.vote-liked:before {
+    background-image: url(https://7n.bczcdn.com/little_class/article_liked.png)
+  }
+
+  .comments-list>.item>.right>.title>.vote-like:after,.comments-list>.item>.right>.title>.vote-liked:after {
+    content: attr(data-count);
+    color: #A0A0A0;
+    font-size: 12px;
+    vertical-align: top;
+    display: inline-block;
+    margin-right: 5px;
+    padding-top: 17px;
+  }
+
+  .comments-list>.item>.right .created-date {
+    font-size: 12px;
+  }
+
+
+  /* test start */
+  .comments-list>.item>.right>.bottom {
+    font-size: 14px;
+    position: relative;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+
+  .comments-list>.item>.right>.bottom>.vote-delike {
+    position: absolute;
+    right: 70px;
+    top: 0;
+    display: inline-block;
+    vertical-align: middle;
+    overflow: hidden;
+    background: #7da9d7;
+    border-radius: 4px;
+    height: 30px;
+    line-height: 30px;
+    color: #fff;
+    margin-top: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .comments-list>.item>.right>.bottom>.vote-like,.comments-list>.item>.right>.bottom>.vote-liked {
+    position: absolute;
+    right: 0;
+    top: -10px;
+    padding-right: 10px;
+    margin-top: 7px;
+    height: 30px;
+    display: inline-block;
+    vertical-align: middle;
+    overflow: hidden;
+    margin-top: 15px;
+  }
+
+  .comments-list>.item>.right>.bottom>.vote-like:before,.comments-list>.item>.right>.bottom>.vote-liked:before {
+    content: '';
+    display: inline-block;
+    vertical-align: top;
+    height: 30px;
+    width: 24px;
+    margin: 4px 4px 0 0;
+    -webkit-background-size: 100% 100%;
+    -moz-background-size: 100%;
+    -o-background-size: 100%;
+    background-size: 100%;
+    background-position: center center;
+    background-repeat: no-repeat;
+  }
+
+  .comments-list>.item>.right>.bottom>.vote-like:before {
+    background-image: url(https://7n.bczcdn.com/little_class/upvote.png)
+  }
+
+  .comments-list>.item>.right>.bottom>.vote-liked:before {
+    background-image: url(https://7n.bczcdn.com/little_class/upvoted.png)
+  }
+
+  .comments-list>.item>.right>.bottom>.vote-like:after,.comments-list>.item>.right>.bottom>.vote-liked:after {
+    content: attr(data-count);
+    color: #A0A0A0;
+    font-size: 12px;
+    vertical-align: top;
+    display: inline-block;
+    margin-right: 5px;
+    padding-top: 12px;
+  }
+
+  .comments-list>.item>.right>.bottom> .created-date {
+    font-size: 12px;
+    padding-top: 10px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+  }
+  /* test end */
+
+
+  .comments-list>.item>.right .reply,.comments-list>.item>.right p {
+    margin: 8px 0 0;
+    padding: 0;
+    line-height: 1;
+  }
+
+  .comments-list>.item>.right>.reply {
+    margin-top: 10px;
+    padding: 10px 10px 25px;
+    background-color: rgba(0,0,0,0.06);
+    position: relative;
+    -webkit-transition: all .5s ease-in-out;
+    -moz-transition: all .5s ease-in-out;
+    -o-transition: all .5s ease-in-out;
+    transition: all .5s ease-in-out;
+  }
+
+  .comments-list>.item>.right>.reply>.user-to {
+    color: #7da9d7;
+    display: inline-block;
+    vertical-align: top;
+    line-height: 18px;
+    max-width: 100px;
+    overflow: hidden;
+    white-space: nowrap;
+    -o-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+  }
+
+  .comments-list>.item>.right>.reply>.to-comment {
+    word-break: break-all;
+    font-size: 14px;
+    line-height: 1.4;
+    overflow: hidden;
+    color: #666;
+  }
+
+  .comments-list>.item>.right .comment-content {
+    font-size: 16px;
+    line-height: 1.428;
+    margin-top: 10px;
+    color: #4a4a4a;
+    word-wrap: break-word;
+  }
+
+
+  .bcz-comments .loading-more {
+    position: absolute;
+    bottom: 50px;
+    width: 100%;
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+    z-index: 10;
+    -webkit-transform: translate(-50%,0);
+    -moz-transform: translate(-50%,0);
+    -ms-transform: translate(-50%,0);
+    -o-transform: translate(-50%,0);
+    transform: translate(-50%,0);
+    overflow: hidden;
+    -webkit-transform: translate3d(0,0,0);
+    -moz-transform: translate3d(0,0,0);
+    transform: translate3d(0,0,0);
+  }
+
+
+  .bcz-comment-alertpop {
+    position: fixed;
+    bottom: 40%;
+    left: 20%;
+    width: 60%;
+    margin: 0;
+    display: block;
+    background-color: rgba(0,0,0,.8);
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    color: #fff;
+    font-size: 14px;
+    padding: 10px;
+    text-align: center;
+    z-index: 999;
+    -webkit-box-shadow: 0 10px 20px rgba(0,0,0,.2);
+    -moz-box-shadow: 0 10px 20px rgba(0,0,0,.2);
+    box-shadow: 0 10px 20px rgba(0,0,0,.2);
+  }
+
+
+  .add-comment {
+    background: #fcfcfc;
+    /*padding-top: 9px;*/
+    /*padding-bottom: 9px;*/
+    text-align: left;
+    position: fixed;
+    width: 100%;
+    max-width: 600px;
+    bottom: 0;
+    left: 0;
+    z-index: 999;
+    display: block;
+    height: 50px;
+    border-top: 1px solid rgba(225, 227, 229, 0.5);
+  }
+
+  .add-comment .input-btn {
+    z-index: 2;
+    display: inline-block;
+    margin-left: 15px;
+    height: 30px;
+    line-height: 40px;
+    padding-left: 15px;
+    font-size: 14px;
+    color: #96999c;
+    background-color: #fff;
+    -webkit-border-radius: 40px;
+    -moz-border-radius: 40px;
+    border-radius: 40px;
+    border: 1px solid rgba(225, 227, 229, 0.5);
+    outline: 0;
+    overflow: hidden;
+  }
+
+
+
+/*  .add-comment .input-btn:before {
+    content: '';
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    !*vertical-align: middle;*!
+    margin-right: 10px;
+    -webkit-background-size: 100% 100%;
+    -moz-background-size: 100%;
+    -o-background-size: 100%;
+    background-size: 100%;
+  }*/
+
+  /*.add-comment .input-btn:after {*/
+    /*content: '';*/
+    /*display: block;*/
+    /*position: absolute;*/
+    /*top: 0;*/
+    /*right: 0;*/
+    /*bottom: 0;*/
+    /*left: 0;*/
+    /*border: 1px solid #d6d1c7;*/
+    /*-webkit-border-radius: 40px;*/
+    /*-moz-border-radius: 40px;*/
+    /*border-radius: 40px;*/
+    /*z-index: 1;*/
+  /*}*/
+
+
+
+  .bcz-comment-dialog {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 998;
+    text-align: center;
+    -webkit-perspective: 400px;
+    -moz-perspective: 400px;
+    perspective: 400px;
+    -webkit-perspective-origin: 50% 50%;
+    -moz-perspective-origin: 50% 50%;
+    perspective-origin: 50% 50%;
+  }
+
+  .bcz-comment-dialog .dialog-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 999;
+    text-align: center;
+    background-color: rgba(0,0,0,.4);
+  }
+
+  .bcz-comment-dialog>.dialog-body {
+    position: absolute;
+    top: 15%;
+    left: 10%;
+    z-index: 9999;
+    width: 80%;
+    padding: 0 0 13px;
+    background-color: #f4f2ed;
+    border-color: #f9f9f9;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    border-radius: 6px;
+    -webkit-box-shadow: 0 15px 30px rgba(0,0,0,.1);
+    -moz-box-shadow: 0 15px 30px rgba(0,0,0,.1);
+    box-shadow: 0 15px 30px rgba(0,0,0,.1);
+    font-size: 12px;
+    color: #b4ab94;
+    text-align: center;
+  }
+
+  .bcz-comment-dialog>.dialog-body>.head {
+    width: 100%;
+    height: 50px;
+    position: relative;
+  }
+
+  .bcz-comment-dialog>.dialog-body>.head>.close-btn {
+    position: absolute;
+    left: 0;
+    color: #7da9d7;
+  }
+
+  .bcz-comment-dialog>.dialog-body>.head>.close-btn, .bcz-comment-dialog>.dialog-body>.head>.loading-send, .bcz-comment-dialog>.dialog-body>.head>.send-btn {
+    width: 60px;
+    background-color: transparent;
+    cursor: pointer;
+  }
+
+  .bcz-comment-dialog>.dialog-body>.head>.close-btn, .bcz-comment-dialog>.dialog-body>.head>.loading-send, .bcz-comment-dialog>.dialog-body>.head>.send-btn, .bcz-comment-dialog>.dialog-body>.head>.title {
+    display: inline-block;
+    vertical-align: middle;
+    margin: 0;
+    padding: 0;
+    font-weight: 300;
+    height: 100%;
+    line-height: 50px;
+    font-size: 13px;
+  }
+
+  .bcz-comment-dialog>.dialog-body>.head>.loading-send, .bcz-comment-dialog>.dialog-body>.head>.send-btn {
+    position: absolute;
+    right: 0;
+  }
+
+  .bcz-comment-dialog .form-control:focus, .bcz-comments .form-control:focus {
+    background-color: #fff;
+  }
+  .bcz-comment-dialog .form-control, .bcz-comments .form-control {
+    display: inline-block;
+    vertical-align: middle;
+    width: 90%;
+    height: 90px;
+    max-width: 90%;
+    background: #fff;
+    font-size: 14px;
+    line-height: 1.428;
+    border: 1px solid #d6d1c7;
+    outline: 0;
+    padding: 5px;
+    color: #555;
+    resize: none;
+  }
+
+  .loading:before, .bcz-comments .loading:before {
+    content: '';
+    display: inline-block;
+    height: 15px;
+    width: 15px;
+    margin: 0 8px;
+    -webkit-border-radius: 100%;
+    -moz-border-radius: 100%;
+    border-radius: 100%;
+    border: 2px solid #666;
+    border-bottom-color: transparent;
+    vertical-align: middle;
+    -webkit-animation: rotate .75s linear infinite;
+    -moz-animation: rotate .75s linear infinite;
+    -o-animation: rotate .75s linear infinite;
+    animation: rotate .75s linear infinite
+  }
+
+
+
+  @-webkit-keyframes rotate {
+    0% {
+      -webkit-transform: rotate(0);
+      transform: rotate(0)
+    }
+    50% {
+      -webkit-transform: rotate(180deg);
+      transform: rotate(180deg)
+    }
+    100% {
+      -webkit-transform: rotate(360deg);
+      transform: rotate(360deg)
+    }
+  }
+
+  @-moz-keyframes rotate {
+    0% {
+      -moz-transform: rotate(0);
+      transform: rotate(0)
+    }
+    50% {
+      -moz-transform: rotate(180deg);
+      transform: rotate(180deg)
+    }
+    100% {
+      -moz-transform: rotate(360deg);
+      transform: rotate(360deg)
+    }
+  }
+
+  @-o-keyframes rotate {
+    0% {
+      -o-transform: rotate(0);
+      transform: rotate(0)
+    }
+    50% {
+      -o-transform: rotate(180deg);
+      transform: rotate(180deg)
+    }
+    100% {
+      -o-transform: rotate(360deg);
+      transform: rotate(360deg)
+    }
+  }
+
+  @keyframes rotate {
+    0% {
+      -webkit-transform: rotate(0);
+      -moz-transform: rotate(0);
+      -o-transform: rotate(0);
+      transform: rotate(0)
+    }
+    50% {
+      -webkit-transform: rotate(180deg);
+      -moz-transform: rotate(180deg);
+      -o-transform: rotate(180deg);
+      transform: rotate(180deg)
+    }
+    100% {
+      -webkit-transform: rotate(360deg);
+      -moz-transform: rotate(360deg);
+      -o-transform: rotate(360deg);
+      transform: rotate(360deg)
+    }
+  }
+
+
+</style>
+  <!-- 自定义音频播放器 css -->
+<style>
+  div.audio-wrapper {
+    background-color: transparent;
+  }
+
+  div.audio-control {
+    height: 45px;
+    background-color: #fcfcfc;
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+    margin-top: 32px;
+    margin-bottom: 40px;
+  }
+  div.audio-vertical-margin {
+    width: 100%;
+    height: 10px;
+  }
+
+  img.audio-img {
+    position: relative;
+    width: 25px;
+    height: 25px;
+    top: 50%;
+    transform: translate(0%, -50%);
+    -webkit-transform: translate(0%, -50%);
+    margin-left: 10px;
+    float: left;
+  }
+
+  img.audio-play {
+    position: relative;
+    width: 25px;
+    height: 25px;
+    top: 50%;
+    transform: translate(0%, -50%);
+    -webkit-transform: translate(0%, -50%);
+    margin-right: 10px;
+    float: right;
+  }
+
+  div.audio-content {
+    position: relative;
+    margin-left: 45px;
+    margin-right: 45px;
+    margin-top: 13px;
+  }
+
+  div.audio-track-area {
+    position: relative;
+    margin-left: 45px;
+    margin-right: 45px;
+    height: 100%;
+    margin-top: -15px;
+  }
+
+  div.audio-progress {
+    width: 100%;
+    height: 2px;
+    background-color: #ebebeb;
+  }
+
+  .audio-progress-track {
+    width: 12px;
+    height: 12px;
+    top: -5px;
+    position: absolute;
+  }
+
+  p.audio-time-total {
+    float: right;
+    font-size: 10px;
+    color: #999999;
+    margin-top: 5px;
+  }
+  p.audio-time-current {
+    float: left;
+    font-size: 10px;
+    color: #999999;
+    margin-top: 5px;
+  }
+</style>
+
+  <!-- 自定义音频播放器 js -->
+<script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", function(event) {
+        var cdn = 'https://7n.bczcdn.com'
+        var audioWrapper = document.getElementsByClassName('audio-wrapper');
+        var index;
+        for (index = 0; index < audioWrapper.length; index++) {
+            addAudioEventOf(index, length);
+        }
+
+        function addAudioEventOf(index, length) {
+            var audio = document.getElementById('audio-' + (index + 1));
+            var curTime = document.getElementById('audio-time-current-' + (index + 1));
+            var totalTime = document.getElementById('audio-time-total-' + (index + 1));
+            var playBtn = document.getElementById('audio-play-' + (index + 1));
+            var duration;
+            var trackArea = document.getElementById('audio-track-area-' + (index + 1));
+            var progressTrack = document.getElementById('audio-progress-track-' + (index + 1));
+            var progress = document.getElementById('audio-progress-' + (index + 1));
+            var progressWidth = progress.offsetWidth - progressTrack.offsetWidth;
+            var onProgressTrack = false;
+
+            trackArea.addEventListener('touchstart', touchStart, false);
+            window.addEventListener('touchend', touchEnd, false);
+            audio.addEventListener('canplaythrough', function() {
+                duration = audio.duration;
+                curTime.textContent = getMMSS(0);
+                totalTime.textContent = getMMSS(duration);
+            }, false);
+            audio.addEventListener('timeupdate', timeUpdate, false);
+            audio.addEventListener('pause', onPause, false);
+            audio.addEventListener('ended', onComplete, false);
+            playBtn.addEventListener('click', toggle);
+
+            function touchStart(event) {
+                event.preventDefault();
+                onProgressTrack = true;
+                window.addEventListener('touchmove', moveProgressTrack, true);
+            }
+
+            function touchEnd(event) {
+                if (onProgressTrack == true) {
+                    moveProgressTrack(event);
+                    window.removeEventListener('touchmove', moveProgressTrack, true);
+
+                    audio.currentTime = duration * clickPercent(event);
+                    audio.addEventListener('timeupdate', timeUpdate, false);
+                }
+                onProgressTrack = false;
+            }
+
+            function moveProgressTrack(event) {
+                event.preventDefault();
+                var touch = event.changedTouches[0];
+                var newMargLeft = touch.clientX - getPosition(progress);
+                var virtualCurtime = duration * newMargLeft / progressWidth;
+
+                if (newMargLeft >= 0 && newMargLeft <= progressWidth) {
+                    progressTrack.style.marginLeft = newMargLeft + "px";
+                }
+
+                if (newMargLeft < 0) {
+                    progressTrack.style.marginLeft = "0px";
+                    virtualCurtime = 0;
+                }
+
+                if (newMargLeft > progressWidth) {
+                    progressTrack.style.marginLeft = progressWidth + "px";
+                    virtualCurtime = duration;
+                }
+
+                curTime.textContent = getMMSS(virtualCurtime);
+                audio.removeEventListener('timeupdate', timeUpdate, false);
+            }
+
+            function toggle() {
+                if (audio.paused) {
+                    audio.play();
+                    playBtn.src = cdn + "/little_class/icon/pause.png";
+                } else {
+                    audio.pause();
+                    playBtn.src = cdn + "/little_class/icon/play.png";
+                }
+            }
+
+            function onPause() {
+                playBtn.src = cdn + "/little_class/icon/play.png";
+            }
+
+            function onComplete() {
+                playBtn.src = cdn + "/little_class/icon/play.png";
+                progressTrack.style.marginLeft = "0px";
+                curTime.textContent = getMMSS(0);
+            }
+
+            function timeUpdate() {
+                if (duration <= 0) {
+                    duration = audio.duration;
+                    curTime.textContent = getMMSS(0);
+                    totalTime.textContent = getMMSS(duration);
+                }
+
+                var playPercent = progressWidth * (audio.currentTime / duration);
+                progressTrack.style.marginLeft = playPercent + "px";
+                if (audio.currentTime == duration && !audio.loop) {
+                    playBtn.src = cdn + "/little_class/icon/play.png";
+                }
+
+                curTime.textContent = getMMSS(audio.currentTime);
+            }
+
+            function clickPercent(event) {
+                var touch = event.changedTouches[0];
+                return (touch.clientX - getPosition(progress)) / progressWidth;
+            }
+        }
+
+        function getPosition(el) {
+            return el.getBoundingClientRect().left;
+        }
+
+        function getMMSS(time) {
+            var minutes = parseInt(time / 60, 10);
+            var seconds = parseInt(time % 60);
+            return (minutes < 10 ? ("0" + minutes) : minutes) + ":" +
+                (seconds < 10 ? ("0" + seconds) : seconds);
+        }
+
+        var autoPlayed = false;
+        document.addEventListener('play', function(e) {
+            var audios = document.getElementsByTagName('audio');
+            var playbutton;
+            for (var i = 0, len = audios.length; i < len; i++) {
+                playbutton = document.getElementById('audio-play-' + (i + 1));
+                if (audios[i].autoplay && !autoPlayed){
+                    autoPlayed = true;
+                    playbutton.src = cdn + "/little_class/icon/pause.png";
+                } else if (audios[i] != e.target) {
+                    audios[i].pause();
+                    audios[i].currentTime = 0;
+                    playbutton.src = cdn + "/little_class/icon/play.png";
+                }
+            }
+        }, true);
+    });
+</script>
+
+  <style>
+    #download_icon{
+      position: fixed;
+      width: 100%;
+      bottom: 0;
+      z-index: 999;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+<!--微信二次分享缩略图-->
+<div id='wx_logo' style='margin:0 auto;display:none;'>
+  <img src='https://7n.bczcdn.com/vocabtest/vocabtest-wx-share-logo.png' />
+</div>
+<main class="content" id="contentArticle">
+      <div>
+        <img class="paved" id="article_head" src="https://7n.bczcdn.com/editer_uploads/image/202211/342297948885.png" />
+        <div id="article_body">
+          <div>
+          </div>
+          <br clear="clear" />
+          <h1>单词机单词本使用教程</h1>
+          <div id="article_publish_info">
+                <img src="https://7n.bczcdn.com/little_class/author/zhan.png">
+                <div>斩护卫</div>
+            <div id="article_publish_time">2022年11月8日</div>
+            <br clear="clear" />
+          </div>
+
+          <article id="article_content">
+            <p>
+	&nbsp;<video width='100%' webkit-playsinline preload style='display:none;' id='video_0'><source src='https://7n.bczcdn.com/editer_uploads/media/202211/75f293134700.mp4' type='video/mp4'/>Your browser does not support HTML5 video. </video><img src='https://7n.bczcdn.com/bcztv/bcztv_20160801_ada.png' style='width:100%;cursor:pointer;' id='playvideo_0'/>
+</p>
+<h4>
+	&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<b>点击查看教程 👆🏻</b> 
+</h4>
+<p>
+	<br />
+</p>
+<p>
+	&nbsp; &nbsp;「单词本」是一个支持自定义的单词列表，不管是你长期积累的收藏单词，还是老师布置的背单词作业，都可以通过录入单词本，并在单词机上完成学习，那么如何开始学习呢？
+</p>
+<p>
+	<br />
+</p>
+<p>
+	&nbsp; &nbsp; &nbsp;首先，在百词斩APP进行配置，点击【单词本】-【设置计划】，进入单词本列表，在这里可以选择已有的单词本【设置计划】，并点击【开始该学习计划】
+</p>
+<p>
+	<br />
+</p>
+<p>
+	&nbsp; &nbsp; &nbsp; 然后，打开单词机进行配置，将单词机置于首页几秒，就会出现同步确认弹窗啦。记得一定要选择【确认】呀！同步结束后，请大侠返回单词机首页，进入【我的词书】，将当前在学更换至【单词本】，成功后就可以在【单词新学】中快乐学习啦~
+</p><script type='text/javascript' src='https://7n.bczcdn.com/pack/assets/jquery-1.8.2.min.js'></script><script type='text/javascript'> $('[id^=playvideo_]').on('click',function(e){$(this).hide();var vid=$(this).attr('id').split('_')[1];$('#video_'+vid).show();document.getElementById('video_'+vid).play(); });</script>
+          </article>
+        </div>
+      </div>
+
+  <footer class="footer">
+    <section class="article-info">
+      <div class="item">
+        <span style="font-size: 14px;color:#a0a0a0 ">阅读数 24</span>
+      </div>
+    </section>
+  </footer>
+</main>
+<!--下载图标-->
+<img src="https://7n.bczcdn.com/little_class/AppDownload_2.png" id="download_icon" onclick="window.location.href = 'http://a.app.qq.com/o/simple.jsp?pkgname=com.jiongji.andriod.card'"/>
+<!--评论-->
+<div class="container bcz-comments" id="bczComments" style="margin-top: 40px; margin-bottom: 60px;">
+
+</div>
+<script type="text/javascript">
+    function getMagicAppOS() {
+        return  navigator.userAgent.search(/bcz_ma/) >= 0;
+    }
+    var isMaigc = getMagicAppOS();
+    if (!isMaigc) {
+        # document.querySelector("#download_icon").style.display = "block";
+    }
+</script>
+</body>
+</html>

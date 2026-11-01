@@ -1,0 +1,92 @@
+How do I invite other members into my Household? – tonies® Support (https://support.tonies.com/hc/en-us/articles/29036487201170-How-do-I-invite-other-members-into-my-Household)
+citeturn786view1 [wordlim: 200] Crawled: today; Content type: text/html; Source: open({"ref_id":"turn778view3","lineno":50}); Total lines: 90
+L0: 【0†Skip to main content】
+L1: 
+L2: 【1†Contact us】
+L3: 
+L4: [Input] English (United States)
+L5: 
+L6: Articles in this section
+L7: 
+L8:   * 【2†How do I transfer ownership of my Household?】
+L9:   * 【3†How to create a my.tonies account】
+L10:   * 【4†How do I invite other members into my Household?】
+L11:   * 【5†How do I manage Household members permissions?】
+L12:   * 【6†How do I change the name of my Household?】
+L13:   * 【7†How do I remove a Toniebox 1 from my Household?】
+L14:   * 【8†I'm having trouble logging in to my account】
+L15:   * 【9†How do I delete my Household?】
+L16: # How do I invite other members into my Household?
+L17: 
+L18: Want to allow others into your Household to record messages onto your Creative Tonies? This is one of the best features about Creative Tonies! All that is required for the other members to have is a free 【10†my.tonies.com†my.tonies.com】 account. Follow these steps and you will be good to go in no time!
+L19: 
+L20: How to invite other members into your Household:
+L21: 
+L22: Using the tonies app
+L23: 
+L24: 【11†iframe†www.youtube-nocookie.com】
+L25:   1. Open the tonies app and tap your profile picture in the top-right side of the screen.
+L26: 【12†Image: Profile.jpg】
+L27: 
+L28:   2. Tap 'Household'.
+L29: 【13†Image: Permissions_Step_2.jpg】
+L30: 
+L31:   3. Tap the red '+' plus sign on the top-right hand side of the screen.
+L32: 【14†Image: Invite_Step_2.jpg】
+L33:   4. Here you can select the permission level you want the new member to have. You can make them either a Full member (allowed to manage Tonieboxes, Creative Tonies and other members) or only a Creative Tonie member (may only edit Creative Tonies that you choose). Tap on the type of member you would like to choose.
+L34: 【15†Image: Invite_Step_3.jpg】
+L35: 
+L36:   5. A prompt will appear to enter the individual's email address. Type in the email address and then tap 'Next'.
+L37: 【16†Image: Invite_Step_4.jpg】
+L38:   6. Tap 'Confirm'.
+L39: 【17†Image: Invite_Step_5.jpg】
+L40: 
+L41:   7. Success! The member will now receive an email to accept the invitation.
+L42: 【18†Image: Invite_Step_6.jpg】
+L43: 
+L44:   8. Below is an example of the email invitation the invited member will receive. All they need to do is click 'Accept Invitation' and they will be prompted to login to their account and confirm that they want to join your Household.
+L45: 【19†Image: HouseholdInvite2.jpg】
+L46:   9. Note that if you have chosen to make the member a Creative Tonie member, you will just need to follow through an additional process once the member accepts the invitation to select which specific Creative Tonies you would like them to have access to. For a full walkthrough of this process, check out our other support article here: 【5†How do I manage Household members permissions?】
+L47:   10. Once the member is officially added to your Household, they will either see all of your Tonies or only the Creative Tonies you have given them access to in their tonies app or in their my.tonies.com account. They are then all set to record/upload content to a Creative Tonie the same way you currently do. Just in case, for steps walking through that process, take a look at our other support article here: 【20†How do I add content onto my Creative Tonie?】
+L48: Using my.tonies.com
+L49: 
+L50: 【21†iframe†www.youtube-nocookie.com】
+L51:   1. Login to my.tonies.com and click the 'Members' heading.
+L52: 【22†Image: householdFAQ1.jpg】
+L53: 
+L54:   2. Under your Household settings, click the button that says 'Add member.'
+L55: 【23†Image: householdFAQ2.jpg】
+L56:   3. A prompt will appear to enter the email of the individual you want to add and then select the permission level you want them to have. You can make them either a full member (allowed to manage Tonieboxes, Creative Tonies and members) or only a Creative Tonie member (may only edit Creative Tonies). Click to send the invite and they will receive an email to accept the invitation.
+L57: 【24†Image: householdFAQ3.jpg】
+L58:   4. Below is an example of the email invitation the invited member will receive. All they need to do is click 'Accept Invitation' and they will be prompted to login to their account and confirm they want to join your Household.
+L59: 【25†Image: householdFAQ4.jpg】
+L60:   5. Once the member is added to your Household, they will either see all of your Tonies or only the Creative Tonies you have given them access to in their tonies app or in their my.tonies.com account. They are then all set to record/upload content to a Creative Tonie the same way you currently do. Just in case, for steps walking through that process, take a look at our other support article here: 【20†How do I add content onto my Creative Tonie?】
+L61: 
+L62: 
+L63: If you run into any problems inviting others into your Household, 【1†send us a message】 with your Toniebox 1 ID and Tonies account email and help will be on the way!
+L64: 
+L65: 【26†Return to top】
+L66: 
+L67: Return to top
+L68: ## Was this article helpful?
+L69: 
+L70: [Button: Yes] [Button: No]
+L71: 
+L72: 30 out of 70 found this helpful
+L73: 
+L74: Have more questions? 【1†Submit a request】
+L75: 
+L76: ### In this article
+L77: 
+L78: Contents Articles
+L79: 
+L80: ### Title
+L81: 
+L82: [Button: ×]
+L83: 
+L84: 【27†tonies® Support】
+L85: 
+L86:   * 【28†Imprint†login.tonies.com】
+L87:   * 【29†Privacy policy†login.tonies.com】
+L88:   * 【30†Cookie Settings】
+L89:   * © tonies GmbH

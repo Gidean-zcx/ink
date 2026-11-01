@@ -1,0 +1,2 @@
+原JS字符偏移 226396
+sT=()=>wS("deviceVersion")==="2.0"?"dcj2":qn?"sxj":"bczApp",ES={fetchQAList(){const e={platform:sT(),...lT.parse(location.search.slice(1))};return t=>{Y1({domain:"assistant.baicizhan.com",path:"/feedback_api/get_qa_info",query:e,headers:{"Content-Type":"text/plain; charset=utf-8"}}).then(r=>t(qh.setQAInfo(r)))

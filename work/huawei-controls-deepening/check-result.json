@@ -1,0 +1,17 @@
+{
+  "status": "PASS",
+  "checks": 1477,
+  "new_evidence": 13,
+  "new_flows": 7,
+  "inventory_rows": 25,
+  "old_flow_ids": [
+    "F-M061-01",
+    "F-M061-02",
+    "F-M061-06",
+    "F-M061-08"
+  ],
+  "old_field_changes": 15,
+  "old_evidence_captures": 7,
+  "actually_viewed_images": 5,
+  "old_batches_unchanged": true
+}

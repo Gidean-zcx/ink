@@ -1,0 +1,21 @@
+{
+  "coverage_rows": 6,
+  "coverage_physical_lf": 7,
+  "inventory_rows": 97,
+  "inventory_physical_lf": 98,
+  "status": "PASS",
+  "evidence": 15,
+  "new_F": 6,
+  "case_F": 15,
+  "old_proposals": 7,
+  "sha": "all_match",
+  "before": "all_7_match",
+  "static_source_count": 1,
+  "static_pages": [
+    29,
+    30,
+    31,
+    33
+  ],
+  "hands_on": false
+}

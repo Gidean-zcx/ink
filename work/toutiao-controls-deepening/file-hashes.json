@@ -1,0 +1,157 @@
+[
+  {
+    "path": "docs/research/interaction-library/cases/M-052-toutiao.md",
+    "bytes": 12204,
+    "sha256": "b7161998ed8ccb9fb770f8b9b06f9799b8d81b1a06d22ce287267d726a580b60"
+  },
+  {
+    "path": "docs/research/interaction-library/batches/toutiao-controls-deepening-coverage.csv",
+    "bytes": 499,
+    "sha256": "ca6d8aa40027b4be29d4010727579b0a7f3a49555bf5e02fe040b0549cdccea3"
+  },
+  {
+    "path": "docs/research/interaction-library/batches/toutiao-controls-deepening-evidence.jsonl",
+    "bytes": 3305,
+    "sha256": "c1b69112594339fd0af878f43734ab286e166d421a406384c0ebc8519b1268eb"
+  },
+  {
+    "path": "docs/research/interaction-library/batches/toutiao-controls-deepening-inventory.csv",
+    "bytes": 5709,
+    "sha256": "227d0c2597afb34659461c23051fca32f8d7d05fb2edbab1cb2641ec6fde3a22"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/toutiao-controls-deepening/creator-help-index.csv",
+    "bytes": 8340,
+    "sha256": "807f00c48d713a2438e25551ade04cd0eaffa4e4df3aa4a90f40c9df2bc779f1"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/toutiao-controls-deepening/source-notes.md",
+    "bytes": 3344,
+    "sha256": "65ed9f19d0d7a6c834810aaa1ad06065e7ff924c6616a2a74d1094c712fa7218"
+  },
+  {
+    "path": "work/feed-interactions/tt-privacy.html",
+    "bytes": 80362,
+    "sha256": "ce2f1862aa74849719fc85e27dae2176dac020fabf8bc93ded0f3f35529fae20"
+  },
+  {
+    "path": "work/feed-interactions/tt-privacy.txt",
+    "bytes": 62614,
+    "sha256": "6f5b598af94c03b41b3f47676b2867f6a3e66a4f3dc1c6d5c5e065f5021fa7e0"
+  },
+  {
+    "path": "work/toutiao-controls-deepening/appstore.html",
+    "bytes": 734911,
+    "sha256": "93ee7266605d55a66adbaaba0f09f66ee7eafb63c746eea330ed4da99228c67b"
+  },
+  {
+    "path": "work/toutiao-controls-deepening/appstore.txt",
+    "bytes": 22604,
+    "sha256": "b9a6a1da4e4515b71febc2c2251cefc61663b8d56501c38173fd32400b55c0a0"
+  },
+  {
+    "path": "work/toutiao-controls-deepening/baseline.json",
+    "bytes": 7808,
+    "sha256": "6b9582801733f5e2b09c981e318708529eaa3bab85db15e9cf8c2ebb8e13008b"
+  },
+  {
+    "path": "work/toutiao-controls-deepening/basic-service.html",
+    "bytes": 22688,
+    "sha256": "419b026d853da91663a8967e4c8d6286a4e778b0b3541ad29057dc56be01724c"
+  },
+  {
+    "path": "work/toutiao-controls-deepening/basic-service.txt",
+    "bytes": 16415,
+    "sha256": "4fe3849b299ec739d4c99e647623299d8cb45eaf1dbc0cafff0ed49ca53b63a1"
+  },
+  {
+    "path": "work/toutiao-controls-deepening/build-result.json",
+    "bytes": 214,
+    "sha256": "32d3db9ac7ab7770b2027aaeaab754f7aa9d72b91463fceca4f9c9f3e7095d07"
+  },
+  {
+    "path": "work/toutiao-controls-deepening/build.py",
+    "bytes": 21962,
+    "sha256": "d64bd532fb5c2faeda2cae42bf2279c2a2f9758b727e09d0317cbed273e96b20"
+  },
+  {
+    "path": "work/toutiao-controls-deepening/capture.py",
+    "bytes": 1412,
+    "sha256": "0696831dc82045cca2eb56b0e0f7637080834de87381976cd796cc4965d47cba"
+  },
+  {
+    "path": "work/toutiao-controls-deepening/captures.json",
+    "bytes": 2263,
+    "sha256": "40eabfb3d048bf9e304ddc1d34e8cd9a6f248043464487ea5397e076f08b8971"
+  },
+  {
+    "path": "work/toutiao-controls-deepening/case-before.md",
+    "bytes": 8389,
+    "sha256": "4a5d07b68aff6c1299e66d3767e02d5aba1f7cbe2f74dcc09baaf0908f91a40f"
+  },
+  {
+    "path": "work/toutiao-controls-deepening/check-result.txt",
+    "bytes": 238,
+    "sha256": "3167550f0feba81ff8fe28d29bd306b6cc5f324e1a56fdb7dbb1ed2555648190"
+  },
+  {
+    "path": "work/toutiao-controls-deepening/check.py",
+    "bytes": 5320,
+    "sha256": "ecb8287fb116d9f2048c79ea1f2d71944cc96e7294cd618b9035576d12464755"
+  },
+  {
+    "path": "work/toutiao-controls-deepening/creator-help.html",
+    "bytes": 168524,
+    "sha256": "159961445c2b9451da2beb3a73fff1848947abe557b03d5e0ef7bcf213cb8b93"
+  },
+  {
+    "path": "work/toutiao-controls-deepening/creator-help.txt",
+    "bytes": 4627,
+    "sha256": "36defd1975db4ea6c877ff09bf32310565017c35afd34f4449eac8c8e63015be"
+  },
+  {
+    "path": "work/toutiao-controls-deepening/creator-render-data.json",
+    "bytes": 90149,
+    "sha256": "a5e9eb422ae00c1a752a89503a1fda44daafdee8c3347c5877e880f11f2149ad"
+  },
+  {
+    "path": "work/toutiao-controls-deepening/existing-coverage-updates.json",
+    "bytes": 6519,
+    "sha256": "0215f826090a6931ab694301d109b5892c991c74a81d9112c11ead39f935856d"
+  },
+  {
+    "path": "work/toutiao-controls-deepening/existing-evidence-additional-captures.json",
+    "bytes": 2339,
+    "sha256": "e7160fe7dff9d6afa58a745b6cb48318f68f23a788239af3949ad9bdf3d9bd4c"
+  },
+  {
+    "path": "work/toutiao-controls-deepening/exploration-log.json",
+    "bytes": 1889,
+    "sha256": "9e17bc7185d4e13a97b3a57cbdc9a232bf14f6041469a3b8ebf40d1a900613a7"
+  },
+  {
+    "path": "work/toutiao-controls-deepening/homepage.html",
+    "bytes": 4911,
+    "sha256": "d2a3d5b1ce4dfff150c262d2e04c369fa105eff5a0400cd1a13717f44be1e82f"
+  },
+  {
+    "path": "work/toutiao-controls-deepening/homepage.txt",
+    "bytes": 55,
+    "sha256": "e41001d8aba7039d58de931ab7801073c13d8cd8e618eecd74eee3cdf70c06f5"
+  },
+  {
+    "path": "work/toutiao-controls-deepening/make-handoff.py",
+    "bytes": 9094,
+    "sha256": "93a8f1a440de4639ab8d06e88fdcab7f76cdaa134dcc17192e47adeb1adda6cf"
+  },
+  {
+    "path": "work/toutiao-controls-deepening/personal-management.html",
+    "bytes": 4530,
+    "sha256": "3a68f5f50cb76a134ada867942921ec6d51acbacb78a061b68724089e12834eb"
+  },
+  {
+    "path": "work/toutiao-controls-deepening/personal-management.txt",
+    "bytes": 2084,
+    "sha256": "a299f3bac65505ccd8208c8f9533878ff8baf26d04e3ca9e72ab07ae45919a01"
+  }
+]

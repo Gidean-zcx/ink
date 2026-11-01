@@ -1,0 +1,17 @@
+{
+  "url": "https://k12-swift.xunfeixxj.com/xxjserver/wx/h5/help/video/%E5%90%AC%E4%B8%80%E5%90%AC.mp4",
+  "duration": 89.233333,
+  "position": 88,
+  "width": 1920,
+  "height": 1080,
+  "paused": true,
+  "muted": true,
+  "readyState": 4,
+  "requested": 88,
+  "path": "work/iflytek-video-controls-deepening/frames/listening-end/088.00.png",
+  "sha256": "029df310bd32dcf2a22f6b322c5bc2144b3c058e4264029c5bc4eb6d9ec98e42",
+  "method": "official_help_video_browser_seek_and_element_screenshot",
+  "device_scale_factor": 3,
+  "audio_observed": false,
+  "product_hands_on": false
+}

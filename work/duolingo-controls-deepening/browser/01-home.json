@@ -1,0 +1,28 @@
+{
+  "name": "01-home",
+  "url": "https://www.duolingo.com/",
+  "title": "Duolingo - The world’s most popular way to learn",
+  "utc": "2026-10-26T17:34:43.282106+00:00",
+  "text": "SITE LANGUAGE: ENGLISH\nThe most fun way to learn languages, chess, and more!\nGET STARTED\nI ALREADY HAVE AN ACCOUNT\nENGLISH\nCHESS\nMATH\nSPANISH\nFRENCH\nGERMAN\nITALIAN\nPORTUGUESE\nDUTCH\nJAPANESE\nARABIC\nCZECH\nWELSH\nDANISH\nGREEK\nESPERANTO\nFINNISH\nIRISH\nSCOTTISH GAELIC\nHEBREW\nHINDI\nHAITIAN CREOLE\nHUNGARIAN\nHIGH VALYRIAN\nHAWAIIAN\nINDONESIAN\nKOREAN\nLATIN\nNORWEGIAN (BOKMÅL)\nNAVAJO\nPOLISH\nROMANIAN\nRUSSIAN\nSWEDISH\nSWAHILI\nKLINGON\nTURKISH\nUKRAINIAN\nVIETNAMESE\nYIDDISH\nCHINESE (SIMPLIFIED)\nZULU\nfree. fun. effective.\n\nLearning with Duolingo is fun, and research shows that it works! With quick, bite-sized lessons, you’ll earn points and unlock new levels while gaining real-world communication skills.\n\nbacked by science\n\nWe use a combination of research-backed teaching methods and delightful content to create courses that effectively teach reading, writing, listening, and speaking skills!\n\nstay motivated\n\nWe make it easy to form a habit of language learning with game-like features, fun challenges, and reminders from our friendly mascot, Duo the owl.\n\npersonalized learning\n\nCombining the best of AI and language science, lessons are tailored to help you learn at just the right level and pace.\n\nlearn anytime, anywhere\nDownload on the\nApp Store\n下载请前往\n360 手机助手\nTRY 1 WEEK FREE\nduolingo english test\n\nOur convenient, fast, and affordable English test integrates the latest assessment science and AI — empowering anyone to accurately test their English where and when they’re at their best.\n\nCERTIFY YOUR ENGLISH\nlearn a language with duolingo\nGET STARTED\nAbout us\nCourses\nMission\nApproach\nEfficacy\nDuolingo Handbook\nResearch\nCareers\nStore\nPress\nInvestors\nContact us\nProducts\nDuolingo\nDuolingo for Schools\nDuolingo English Test\nPodcast\nDuolingo for Business\nSuper Duolingo\nGift Super Duolingo\nDuolingo Max\nApps\nDuolingo for Android\nDuolingo for iOS\nHelp and support\nDuolingo FAQs\nSchools FAQs\nDuolingo English Test FAQs\nStatus\nPrivacy and terms\nCommunity guidelines\nTerms\nPrivacy\nDo Not Sell or Share My Personal Information\nSocial\nBlog\nInstagram\nTikTok\nTwitter\nYouTube\nLinkedIn\nSite language:\nالعربيةবাংলাČeštinaDeutschΕλληνικάEnglishEspañolFrançaisहिंदीMagyarBahasa IndonesiaItaliano日本語ಕನ್ನಡ한국어मराठीNederlandsਪੰਜਾਬੀPolskiPortuguêsRomânăРусскийsvenskaதமிழ்తెలుగుภาษาไทยTagalogTürkçeУкраїнськоюاُردُوTiếng Việt中文",
+  "buttons": [
+    {
+      "text": "SITE LANGUAGE: ENGLISH",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "I ALREADY HAVE AN ACCOUNT",
+      "aria": null,
+      "test": "have-account",
+      "visible": true
+    },
+    {
+      "text": "TRY 1 WEEK FREE",
+      "aria": null,
+      "test": null,
+      "visible": true
+    }
+  ],
+  "inputs": []
+}

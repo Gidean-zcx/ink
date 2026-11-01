@@ -1,0 +1,103 @@
+If you’re having issues pairing your Bluetooth headphones, speaker to your eReader or Kobo Remote follow the steps below.
+Note: Only these Kobo eReaders have Bluetooth
+compatibility:
+Kobo Clara 2E
+Kobo Sage
+Kobo Libra 2
+Kobo Elipsa
+Kobo Elipsa 2E
+Kobo Clara BW
+Kobo Clara Colour
+Kobo Libra Colour
+If you’re not sure which eReader you have, follow the steps here.
+Before you start:
+Note: Third-party Bluetooth page turners are not officially supported on Kobo eReaders. Some devices may work, but compatibility and functionality can vary and cannot be guaranteed. Verify that your headphones or speaker has built-in Bluetooth.
+On most Bluetooth-enabled products, you’ll see the logo or Bluetooth icon on the device or box it came in.
+Place your Bluetooth headphones or speaker close to your
+eReader.
+Make sure your Bluetooth headphones or speaker is fully charged.
+Ensure that you don't have other devices paired to your Bluetooth
+speaker or headphone.
+Step 1: Set your Bluetooth headphones or speaker to pairing mode
+Ensure your Bluetooth headphones or speaker is in pairing mode. When
+your headphones or speaker is in pairing mode, it will let your eReader
+connect to it.
+For example, before you can connect your Airpods to your Kobo Sage, you’ll
+need to set your Airpods to pairing mode.
+For support on how to set your headphones or speaker to pairing
+mode, follow the instructions that came with your device.
+In some cases, you may have to unpair your Bluetooth headphones
+or speaker before you can pair it with your eReader.
+If your Bluetooth headphones or speaker was previously connected
+to another device (for example, your laptop), you’ll have
+to first unpair your headphones from your device. After your
+headphones are unpaired, you can then set it to pairing mode
+so that it can connect to your eReader.
+Pairing tips
+Ensure that your Bluetooth headphones or speaker are: Nearby your eReader.
+In pairing mode.
+Fully charged.
+Away from other WiFi devices such as your cellphone
+or tablet.
+Step 2: Scan for Bluetooth devices on your eReader
+On your Kobo eReader, Bluetooth requires Wi-Fi to be on. When you enable
+Bluetooth, Wi-Fi will automatically turn on.
+Follow the steps in this article to pair and troubleshoot Bluetooth devices
+on your eReader:
+Connect your Bluetooth headphones or speaker to your Kobo eReader
+If you're still unable to see your Bluetooth device on your eReader:
+Turn your eReader's Bluetooth off and then back on.
+Turn your Bluetooth headphones or speaker off and then back
+on. Next, set it to pairing mode so that it’s discoverable
+by your Kobo eReader.
+Rescan for available Bluetooth devices on your eReader
+You can rescan for your Bluetooth devices within the audiobook player
+or using the Settings menu.
+Rescan within the audiobook player menu
+With your audiobook player open:
+Tap No Bluetooth Connected near the
+bottom of the screen.
+Tap Rescan .
+Tap on the name of your Bluetooth headphones or speaker to
+connect to it.
+Rescan within the Settings menu
+Go to your Home screen .
+Tap More at the bottom of the screen.
+Tap Settings .
+Tap Bluetooth Connection .
+Beside ‘Bluetooth’, tap the circle icon to turn Bluetooth on. After Bluetooth is enabled on your eReader, set your Bluetooth
+headphones or speaker to pairing mode.
+Tap Rescan at the bottom of the screen. Your
+Bluetooth headphones or device should appear in the list.
+Tap on the name of your Bluetooth headphones or speaker to
+connect to it.
+Step 3: Remove your Bluetooth device from the connection list
+If the steps above didn't work, try removing the Bluetooth headphones
+or speakers from your Bluetooth connection list, and then pair your Bluetooth
+headphones or speakers to your eReader.
+Before you start:
+To reduce signal interference, keep your phone and other
+WiFi devices away from your eReader and Bluetooth headphones
+or speakers.
+Go to your Home screen.
+Tap More at the bottom of the screen.
+Tap Settings .
+Tap Bluetooth connection .
+Beside your Bluetooth device, tap the menu icon.
+Tap Forget .
+Turn off your eReader and Bluetooth headphones or speaker. Kobo Sage, Kobo Libra 2, Kobo Monza: Kobo Elipsa: Note: To turn off your eReader,
+press and hold the power button until you see
+the 'Powered off' message on the screen.
+Turn on your eReader and Bluetooth headphones or speaker.
+Set your headphones or speakers to Bluetooth pairing mode.
+Open the Bluetooth connection menu on your eReader: From your Home screen ,
+tap More > Settings > Bluetooth connection .
+Tap Rescan at the bottom of the screen. Your Bluetooth headphones or speakers should appear in the
+list.
+Tap on the name of your Bluetooth headphone or speakers to
+connect to it.
+Learn more
+Connect your Bluetooth speaker or headphones to your Kobo eReader
+Listen to audiobooks on your Kobo eReader
+Buy audiobooks on your Kobo eReader
+Find audiobooks on your Kobo eReader

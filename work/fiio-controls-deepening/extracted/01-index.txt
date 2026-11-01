@@ -1,0 +1,23 @@
+1.User manual, download link of JM21 /newsinfo/984177.html
+2. What should I do if the JM21 crashes or freezes? Forget Password? /newsinfo/984178.html
+3.How to access the storage/SD card after connecting the JM21 to a computer? /newsinfo/984179.html
+4.How to upgrade the JM21? /newsinfo/984180.html
+5.How to install third-party applications? /newsinfo/984181.html
+6.How to switch the working mode of the JM21? /newsinfo/984182.html
+7. How to enable the USB DAC function? /newsinfo/984183.html
+8. How to use the JM21 as a Bluetooth receiver? /newsinfo/984184.html
+9.How to use the JM21 as a Bluetooth transmitter? /newsinfo/984185.html
+10. How to connect the JM21 to an external decoder? Does it support USB audio digital output? /newsinfo/984187.html
+11. How to output coaxial digital signal from JM21? /newsinfo/984188.html
+12.What power supply adapter is suggested to charge the JM21? /newsinfo/984189.html
+13.How to use the FiiO Link function? /newsinfo/984190.html
+14.How to use the AirPlay function? /newsinfo/984191.html
+15.How to use the DLNA function? /newsinfo/984192.html
+16.Instructions for Settings->Audio menu /newsinfo/984193.html
+17.The indication of sampling rates /newsinfo/984194.html
+18.Instructions for Settings->Global menu /newsinfo/984195.html
+19.How to change the language on the JM21? Lyrics display, screenshot of the JM21 /newsinfo/984196.html
+20.JM21 indicator light description /newsinfo/984197.html
+21.Does DK1Pro support JM21? /newsinfo/984198.html
+22. How to use the FiiO Cast function in JM21? /newsinfo/1063630.html
+23. How to insert/eject the SD card to JM21? /newsinfo/1070933.html

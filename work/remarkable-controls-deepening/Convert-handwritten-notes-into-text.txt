@@ -1,0 +1,49 @@
+Handwriting conversion allows you to turn your handwritten notes into editable, typed text on your reMarkable.
+With a Connect subscription, you can also convert notes using the desktop app.
+Before you get started:
+Make sure your device is connected to Wi-Fi
+Make sure you are logged in with your reMarkable account
+How to convert handwritten notes into text
+Open your notebook, ebook, or PDF to the handwritten page.
+Tap the Document settings icon from the toolbar
+Tap Convert to text from the menu that appears
+→ A new page will be created with typed text.
+Converting to text using the selection tool
+Yes, here’s how:
+Open your document
+Tap the Selection Tool and select your handwritten text
+Tap the Handwriting conversion icon (lowercase letter A)
+Your converted text will be pasted onto the page automatically
+Note: This conversion method does not preserve handwriting, it swaps it for text (cut-paste) on the same page instead. For non-destructive conversion, using Convert to text under the Document settings menu is recommended.
+What happens after I convert my notes?
+A new page with your converted, typed notes will be created.
+If you are converting using the document settings, your original handwritten notes remain unchanged in your notebook. However, if you convert using the selection tool, your handwriting will be removed in the process.
+You can edit the typed version using:
+The on-screen keyboard
+Type Folio
+The reMarkable mobile and desktop apps (with Connect)
+What types of content can be converted?
+You can convert:
+Handwritten notes in notebooks
+Symbols, such as mathematical notations and diagrams are not converted
+However:
+Bullet points and some smiley faces are supported
+Block letters and cursive handwriting are recognized
+Handwriting conversion languages
+reMarkable supports many languages for handwriting conversion. To get the best results:
+Tap Menu → Settings
+Under Personal, tap Language and keyboard
+Tap Handwriting conversion, then select your preferred language
+Supported languages include:
+Basque, Bulgarian, Catalan, Croatian, Czech, Danish, Dutch (Belgium), Dutch (The Netherlands), English (Canada), English (United Kingdom), English (United States), Estonian, Finnish, French (Canada), French (France), Galician, German (Austria), German (Germany), Greek, Hungarian, Icelandic, Irish, Italian, Latvian, Lithuanian, Norwegian, Polish, Portuguese, Romanian, Slovak, Slovenian, Spanish, and Swedish.
+How do I export converted notes?
+You can:
+Move converted notes into other notebooks
+Send by email as a PDF, PNG, or inline text
+Upload to cloud services like Google Drive or Dropbox
+How do I convert multiple pages at once?
+Tap Page Overview in the toolbar
+Long-press the first page → Tap to select additional pages
+Tap Convert in the action bar
+Tap the new text page to open and edit
+You can then use Type Folio, the mobile/desktop apps, or the on-screen keyboard to edit your converted text.

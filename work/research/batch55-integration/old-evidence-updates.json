@@ -1,0 +1,83 @@
+[
+  {
+    "file": "docs/research/interaction-library/batches/shortcuts-controls-deepening-evidence.jsonl",
+    "before": {
+      "evidence_id": "E-SCCD-01",
+      "product_id": "M-043",
+      "title": "27指南目录",
+      "url": "https://support.apple.com/guide/shortcuts/welcome/10.0/ios/27",
+      "checked_on": "2026-10-27",
+      "source_type": "official_help",
+      "access_mode": "public_http_html_text",
+      "version_scope": "Shortcuts 10.0 / iOS 27 guide/release documentation; installed device build untested",
+      "app_build": null,
+      "firmware_version": null,
+      "source_updated_on": null,
+      "locator": "Table of Contents",
+      "note": "19分组与95主题；有父子和非功能条目，不能当独立功能数量。",
+      "hands_on": false,
+      "visual_observed": false,
+      "archived_artifact": null,
+      "sha256": null,
+      "capture_state": "durable_notes_temporary_source_html",
+      "source_notes_path": "artifacts/shortcuts-controls-deepening/source-notes.md",
+      "raw_work_path": "work/shortcuts-controls-deepening/06-guide27.html",
+      "raw_sha256": "33eabd6b6901533839d3ad53b490c39383901ac4acc6011d9c634ecfa5307b73",
+      "supersedes": null
+    },
+    "after": {
+      "evidence_id": "E-SCCD-01",
+      "product_id": "M-043",
+      "title": "27指南目录",
+      "url": "https://support.apple.com/guide/shortcuts/welcome/10.0/ios/27",
+      "checked_on": "2026-10-27",
+      "source_type": "official_help",
+      "access_mode": "public_http_html_text",
+      "version_scope": "Shortcuts 10.0 / iOS 27 guide/release documentation; installed device build untested",
+      "app_build": null,
+      "firmware_version": null,
+      "source_updated_on": null,
+      "locator": "Table of Contents",
+      "note": "19分组与95主题；有父子和非功能条目，不能当独立功能数量。",
+      "hands_on": false,
+      "visual_observed": false,
+      "archived_artifact": null,
+      "sha256": null,
+      "capture_state": "durable_notes_temporary_source_html",
+      "source_notes_path": "artifacts/shortcuts-controls-deepening/source-notes.md",
+      "raw_work_path": "work/shortcuts-controls-deepening/06-guide27.html",
+      "raw_sha256": "33eabd6b6901533839d3ad53b490c39383901ac4acc6011d9c634ecfa5307b73",
+      "supersedes": null,
+      "additional_captures": [
+        {
+          "checked_on": "2026-10-27",
+          "source_url": "https://support.apple.com/guide/shortcuts/welcome/ios",
+          "role": "welcome_or_copyright_reference_only",
+          "raw_work_path": "work/research/batch55-shortcuts-entry/01.html.gz",
+          "raw_sha256": "d929d97895d8bbcaed25ca144cbfb2b60b5e6149cea912e75f25dbb1351aaebc",
+          "raw_encoding": "gzip",
+          "decompressed_sha256": "36442c6c833bccaeb5ce3fa64e09d37acfb4822fa55c5a7531b42a1c0599e20d",
+          "extracted_work_path": "work/research/batch55-shortcuts-entry/01.txt",
+          "extracted_sha256": "306982a47b1def25c5380854f55c70d32e136c100180d8ff818886b06585dcfc",
+          "hands_on": false,
+          "visual_observed": false,
+          "note": "只核原目录非操作条目正文；不新增功能或独立操作证据"
+        },
+        {
+          "checked_on": "2026-10-27",
+          "source_url": "https://support.apple.com/guide/shortcuts/copyright-and-trademarks-apd19e3e6994/10.0/ios/27",
+          "role": "welcome_or_copyright_reference_only",
+          "raw_work_path": "work/research/batch55-shortcuts-entry/46.html.gz",
+          "raw_sha256": "db2692761ee5bf9af5a659a970d8f63855d7ed2f4d93138e9ae93e7ac2fbdbed",
+          "raw_encoding": "gzip",
+          "decompressed_sha256": "8ad175ec4ee3f53e917893a5a27e7fdb07d8a8a530782fea94d45315e937cdf9",
+          "extracted_work_path": "work/research/batch55-shortcuts-entry/46.txt",
+          "extracted_sha256": "7d5d50ff44fd4e92484abd20830d66a0713a56ba460ec645ff9ecfb3f5abc865",
+          "hands_on": false,
+          "visual_observed": false,
+          "note": "只核原目录非操作条目正文；不新增功能或独立操作证据"
+        }
+      ]
+    }
+  }
+]

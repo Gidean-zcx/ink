@@ -1,0 +1,51 @@
+HELP CENTER
+ACCOUNT MANAGEMENT
+How do I find, follow, and block users on Duolingo?
+You can connect with other learners on Duolingo!
+When you follow someone, they’ll show up on your friends list and you can encourage each other to stick with your language goals!
+Where do I view my friends on Duolingo?
+On the Duolingo app:
+Go to your Profile
+Tap “Following” to view your friends list
+On the web version:
+Go to your Profile
+Scroll down to view your friends list
+Your Friends list is ordered by their all-time XP. If you want to compare stats, you can tap or click on their name to compare weekly XP and view their streak and league stats and achievements.
+How do I follow someone on Duolingo?
+When you land on their profile page, click the “Follow” button.
+They will be notified that they have a new follower. They can also follow you back. If they block you, you can no longer follow them. The maximum number of followers is currently 1,000.
+How do I unfollow someone on Duolingo?
+Tap on the “Following” button and that will unfollow the user.
+How do I block or report someone on Duolingo?
+Blocking someone means they won’t be able to follow you on Duolingo.
+To block a user on the Duolingo app:
+Go to your Profile
+Tap “Following” to view your friends list
+Tap on the user’s name
+Scroll down and tap “Block user” then confirm
+To block a user on the web version:
+Go to your Profile
+Click on the user’s name via your friends list
+Hover over the three dots menu and tap “Block”
+If you change your mind later, you can unblock a user by tapping “Unblock user.”
+How do I report a user?
+Reporting someone means you’re alerting Duolingo that the user may have violated community guidelines, which could mean their account will be removed.
+To report a user, go to their profile and then tap or click “Report.” Or, you can “submit a bug report” and select “Report abuse” as the type of issue. If possible please include a screenshot and the usernames of those involved so that we can investigate.
+If I can’t follow others, what can I do?
+Check that your email is verified
+If your account is inactive, complete a lesson then try again
+If you set your profile to private or are under 13 years of age, you cannot follow others or be followed
+How can I congratulate my friends?
+Once you follow a friend on Duolingo, you can encourage and motivate each other as you reach key learning milestones. The app will notify you when your friend has a milestone to celebrate, and when your friend next opens Duolingo they’ll see your congratulatory message!
+You can also share your personal milestones by tapping the “Share” button and selecting a social platform.
+How do I make my profile private?
+Go to your privacy settings here: https://www.duolingo.com/settings/privacy
+Uncheck “Make my profile public”
+Note: If you make your profile private, it will disable leaderboards and friends.
+Relevant Articles
+How do I change my username or email address?
+How do I remove or reset a course?
+I’m having trouble accessing my account.
+How do I delete my account and access my data?
+What to do if your data was compromised
+I want to submit a bug report

@@ -1,0 +1,56 @@
+Make the names you care about stand out
+When you scan hundreds of headlines a day, the ones that matter should jump out. Pick the terms you watch, give each group a color, and Inoreader marks them everywhere you read.
+Create a free account
+FreeSpotlights are free on every plan.
+TeamTeam plans add Team spotlights that admins share with every member.
+Color the words you care about
+A spotlight colors the words you care about wherever they appear, so the articles that matter catch your eye as you scroll past hundreds of others.
+A color for each group
+Create one spotlight for your company and its products, another for your competitors and a third for the people you follow, each with its own color.
+Feeds, folders and articles
+The terms are colored in your feeds, folders, saved articles and tags, and inside the article when you open it.
+Highlighting without filtering
+Spotlights change how fast you read, not what you read. Nothing is reordered, and you can switch a spotlight off when a project ends.
+Team spotlights
+On Team plans, admins share spotlights with every member, so the whole team sees the same terms in the same colors.
+Create a spotlight
+Open Automate, then Spotlights, and click Create spotlight.
+Name the spotlight, add a description if you like, and pick a color.
+List the words and phrases to mark, and set a term to match case when capitalization matters.
+Save it, and the terms are colored in your article lists and inside articles straight away.
+Use cases
+Following a market at a glance
+Give your company, your competitors and your customers a color each, and see who is in the news as you scroll through a busy industry folder.
+Reading for a project
+Collect the names, products and technical terms of a project in one spotlight, so the relevant passages stand out in long articles.
+A shared vocabulary for a team
+On a Team plan, an admin creates spotlights for the clients and topics the team covers, and every member sees them marked the same way.
+Frequently asked questions
+What is a spotlight?
+A spotlight is a named group of words or phrases with a color of its own. Wherever one of those terms appears in Inoreader, in a list of articles or inside an article, it is shown in that color.
+How do I create one?
+Open Automate, then Spotlights, and click Create spotlight. Give it a name and, if you like, a description, pick one of ten colors and list the terms you want marked.
+Does a spotlight hide or remove articles?
+No. A spotlight only colors the terms it contains and changes nothing about which articles you see. To keep or remove articles by keyword, use a filter.
+Can a term match only with the exact capitalization?
+Yes. Each term can be set to match case, which helps with short names and acronyms that are also ordinary words.
+How do Team spotlights work?
+Team admins can make a spotlight visible to all Team members. Each member decides whether to show Team spotlights, and when a term is in both a personal and a Team spotlight, the Team spotlight's color is used.
+Is there a limit?
+No. Spotlights are free on every plan, and you can create as many as you need and turn each one on or off at any time.
+Related features
+Filters
+Read only the articles you want
+Monitoring feeds
+Watch any keyword, brand or topic across the web
+Annotations
+Highlight and annotate what you read
+Help center
+What are spotlights?
+How do I create a spotlight?
+What are spotlights useful for?
+What are Team spotlights?
+Build your own newsfeed
+Ready to give it a go?
+Start a 14-day trial, no credit card required.
+Create account

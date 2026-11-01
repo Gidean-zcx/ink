@@ -1,0 +1,14 @@
+Advanced Privacy and security settings in Shortcuts on iPhone or iPad
+Due to the inherent risk of running automation on your device, the Shortcuts app has settings to protect you from malicious actors and scripts. Before you add or run shortcuts from outside the Gallery or shortcuts containing JavaScript, you must enable several settings.
+Privacy and Security on a Webpage
+When you allow a shortcut to run JavaScript on a webpage, that shortcut can access all of the information on that webpage—including potentially sensitive data. The Shortcuts app takes a few measures to make sure you run your JavaScript shortcuts securely and privately.
+When you run a shortcut that contains the Run JavaScript on Webpage action, a prompt is displayed informing you that the shortcut is about to interact with the webpage. This means that the shortcut can access potentially sensitive data from the webpage, such as passwords, phone numbers, or credit card information.
+When you tap Allow, the shortcut runs on the specified webpage. If you run the same shortcut on the same webpage again, Shortcuts does not show the prompt again. This permission persists on a per-shortcut, per-webpage basis.
+After you’ve allowed a shortcut access to a webpage, Shortcuts takes an extra step to further protect you from potentially malicious scripts by periodically downloading updated malware definitions. Before interacting with a webpage, Shortcuts analyzes the JavaScript, then consults the malware definitions. Based on this evaluation, Shortcuts is instructed to allow the script, to deny the script, or to display an additional prompt before allowing the shortcut to run.
+This evaluation is performed on your device—the contents of your JavaScript (in the text field of the Run JavaScript on Webpage action) are not sent to an external server for analysis.
+If the shortcut is prevented from running, an explanatory error message is displayed.
+Important: You should never run a shortcut that contains JavaScript you don’t trust.
+Allow scripts to run from a shortcut
+On your iPhone or iPad, go to Settings > Shortcuts > Advanced.
+Turn on Allow Running Scripts.
+WARNING: Running shortcuts with scripts could cause data loss.See alsoRun a shortcut using a URL scheme on iPhone or iPad

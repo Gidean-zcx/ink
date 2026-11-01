@@ -1,0 +1,1 @@
+{"status": "PASS", "checks": 257, "new_E": 4, "new_F": 2, "inventory": 32, "old_F_fields": 23, "additional_captures": 7, "static_images": 3, "old_batch_unchanged": true, "hands_on": false}

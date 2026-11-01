@@ -1,0 +1,36 @@
+Learn about Audible Plus (https://help.audible.com/s/article/learn-about-audible-plus?language=en_US)
+citeturn767view2 [wordlim: 200] Crawled: today; Content type: text/html; Source: open({"ref_id":"https://help.audible.com/s/article/learn-about-audible-plus?language=en_US","lineno":null}); Total lines: 142
+L0: Loading
+L1: 
+L2: Sorry to interrupt
+L3: 
+L4: Uncaught TypeError: Cannot read properties of null (reading 'style')
+L5: 
+L6: 【0†Refresh】
+L7: 
+L8: Skip to Main Content
+L9: 
+L10: Related topics
+L11: 
+L12: Audible Plus Membership Plans Plans & benefits
+L13: ## Learn about Audible Plus
+L14: 
+L15:   * Sep 3, 2026
+L16:   * Knowledge
+L17: 
+L18: Title
+L19: 
+L20: Learn about Audible Plus
+L21: 
+L22: URL Name
+L23: 
+L24: learn-about-audible-plus
+L25: 
+L26: Answer
+L27: 
+L28: Our Audible Plus membership lets you stream or download thousands of titles from the included catalog. It includes access to podcasts, audiobooks, and Audible Originals. If you enjoy podcasts and short-form content, you might enjoy this plan.
+L29: 
+L30: With an Audible Plus monthly membership, you will have access to:
+L31:   * Finding and playing titles: It's easy to browse through audiobooks, podcasts, and Originals in the Audible library. You can stream all you want from the included catalog. Want to buy individual titles? You can do that too, whether you're a member or not.
+L32:   * Ways to listen: You can enjoy Audible content through the mobile app or online player. On the app, you can download your favorite titles to listen offline.
+L33:   * Cancellation and pausing: You can cancel your plan anytime. Remember that if you cancel, you'll lose access to the included catalog and any unused credits.

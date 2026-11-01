@@ -1,0 +1,118 @@
+[
+  {
+    "owner": "docs/research/interaction-library/batches/ai-coverage.csv",
+    "before": {
+      "flow_id": "F-M042-02",
+      "product_id": "M-042",
+      "task": "发现并调用应用动作",
+      "depth": "D2",
+      "evidence_ids": "E-GEM-02;E-GECD-01;E-GECD-02",
+      "known_branches": "按账号/平台过滤目录；详情支持/不支持动作；85目录项仅发现；普通连接器Add/Disconnect与自定义应用生命周期分开",
+      "gaps": "各连接器完整动作、部分失败、返回真实结果；跨App依赖及重试",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-042-gemini.md",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "flow_id": "F-M042-02",
+      "product_id": "M-042",
+      "task": "发现并调用应用动作",
+      "depth": "D2",
+      "evidence_ids": "E-GEM-02;E-GECD-01;E-GECD-02;E-GENR-01;E-GENR-02",
+      "known_branches": "按账号/平台过滤目录；详情支持/不支持动作；85目录项仅发现；普通连接器Add/Disconnect与自定义应用生命周期分开；笔记/待办须活动开启，多个同类连接默认最近访问者，@指定；Workspace只补两类子帮助",
+      "gaps": "各连接器完整动作、部分失败、返回真实结果；跨App依赖及重试；其完整帮助/日历本次未取得，不能外推全部Workspace能力",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-042-gemini.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "owner": "docs/research/interaction-library/batches/gemini-controls-deepening-coverage.csv",
+    "before": {
+      "flow_id": "F-M042-10",
+      "product_id": "M-042",
+      "task": "Live中执行并撤销应用动作",
+      "depth": "D2",
+      "evidence_ids": "E-GECD-05;E-GEM-02",
+      "known_branches": "未连接先到设置连接，再回Live重复请求；前台可Undo，后台与三星应用例外需目标App编辑",
+      "gaps": "撤销时限、复合任务部分成功、重复请求幂等与目标对象回执",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-042-gemini.md",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "flow_id": "F-M042-10",
+      "product_id": "M-042",
+      "task": "Live中执行并撤销应用动作",
+      "depth": "D2",
+      "evidence_ids": "E-GECD-05;E-GEM-02;E-GENR-01;E-GENR-02",
+      "known_branches": "未连接先到设置连接，再回Live重复请求；前台可Undo，后台与三星应用例外需目标App编辑；专门帮助也明确Live后台所建笔记/动作不能由Gemini Undo，可经回复链接回目标对象编辑",
+      "gaps": "撤销时限、复合任务部分成功、重复请求幂等与目标对象回执；专门帮助没有证明写前确认，撤销通知与写前批准分开",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-042-gemini.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "owner": "docs/research/interaction-library/batches/quaderno-controls-deepening-coverage.csv",
+    "before": {
+      "flow_id": "F-M060-11",
+      "product_id": "M-060",
+      "task": "按标记和颜色定位原文",
+      "depth": "D2",
+      "evidence_ids": "E-QUA-01;E-QCD-09",
+      "known_branches": "文内正文/图形/颜色笔型搜索按页跳转，外点关闭；全库图形搜索按文档去重且排除回收站。已有PDF书签为目录、无书签隐藏；历史跳转不记普通划页。",
+      "gaps": "任意手写OCR不在本链；图形识别可失败，跨文档色搜索/新建书签未取得步骤；未测搜索速度。",
+      "visual_status": "static_manual_pages_only",
+      "hands_on": "false",
+      "case_path": "cases/M-060-quaderno.md",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "flow_id": "F-M060-11",
+      "product_id": "M-060",
+      "task": "按标记和颜色定位原文",
+      "depth": "D2",
+      "evidence_ids": "E-QUA-01;E-QCD-09;E-QGNT-01",
+      "known_branches": "文内正文/图形/颜色笔型搜索按页跳转，外点关闭；全库图形搜索按文档去重且排除回收站。已有PDF书签为目录、无书签隐藏；历史跳转不记普通划页。；Gen.2 p56另核手写/高亮列表分栏、点项跳页和外点关闭",
+      "gaps": "任意手写OCR不在本链；图形识别可失败，跨文档色搜索/新建书签未取得步骤；未测搜索速度。；Gen.2未继承Gen.3C全库颜色/图形检索结论",
+      "visual_status": "static_manual_pages_only",
+      "hands_on": "false",
+      "case_path": "cases/M-060-quaderno.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "owner": "docs/research/interaction-library/batches/quaderno-controls-deepening-coverage.csv",
+    "before": {
+      "flow_id": "F-M060-12",
+      "product_id": "M-060",
+      "task": "移动笔迹并在当前页撤回",
+      "depth": "D2",
+      "evidence_ids": "E-QUA-01;E-QCD-09",
+      "known_branches": "书写即保存；范围选择圈选复制/剪切，目标页粘贴调位确认；选择/粘贴模式不能翻页。一次粘贴后入口隐藏，重启/再复制清空旧剪贴；换页清空撤销/重做。",
+      "gaps": "切取后崩溃、剪贴跨页期间撤销关系未测；文本高亮不适用于图片/手写；受保护或空间不足可能只读。",
+      "visual_status": "static_manual_pages_only",
+      "hands_on": "false",
+      "case_path": "cases/M-060-quaderno.md",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "flow_id": "F-M060-12",
+      "product_id": "M-060",
+      "task": "移动笔迹并在当前页撤回",
+      "depth": "D2",
+      "evidence_ids": "E-QUA-01;E-QCD-09;E-QGNT-01",
+      "known_branches": "书写即保存；范围选择圈选复制/剪切，目标页粘贴调位确认；选择/粘贴模式不能翻页。一次粘贴后入口隐藏，重启/再复制清空旧剪贴；换页清空撤销/重做。；Gen.2 p27/52–57独立确认即时保存、单次剪贴、翻页清撤销；灰度显示仍有颜色数据，默认限制编辑其他设备笔迹",
+      "gaps": "切取后崩溃、剪贴跨页期间撤销关系未测；文本高亮不适用于图片/手写；受保护或空间不足可能只读。；两代分列；未核Gen.2往返传输、外部笔迹实际兼容或崩溃恢复",
+      "visual_status": "static_manual_pages_only",
+      "hands_on": "false",
+      "case_path": "cases/M-060-quaderno.md",
+      "checked_on": "2026-10-27"
+    }
+  }
+]

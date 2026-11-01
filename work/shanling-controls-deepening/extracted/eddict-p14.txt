@@ -1,0 +1,55 @@
+                    E d d i c t P l a y e r
+
+
+NAS
+
+Function allowing app to access audio files stored on local NAS
+servers.
+
+1. Go to " Cloud Music" > "NAS".
+
+2. App will search for available local servers, click on the server
+  to be accessed. If your server is password protected, you will
+  be asked to input your password at this step.
+
+
+
+                                 Bluetooth Headphone AMP Control
+
+                                     Various devices can be added to the app to access their settings,
+                                   usable mainly with Bluetooth Amplifier devices.
+
+                                            1. Go to " Device control" and choose " Bluetooth headphone
+                           amp control".
+
+                                            2. Pick corresponding category of device and click on it, it will
+                                      search for all compatible devices. Click on the device to
+                                      access it.
+
+
+
+
+
+DLNA
+
+Eddict Player app can act as a DMC for DLNA compatible devices.
+App finds content on digital media servers (DMS) and instruct
+digital media renderers (DMR) to play the content. Allowing app
+to control playback and volume.
+
+Connecting:
+
+1. Make sure your streamer is connected to Wi-Fi.
+
+2. Please make sure your device supports DLNA and that it's
+  enabled.
+
+3. In Eddict Player, click on the   DLNA icon in Playback interface.
+
+4. Select your Streamer to act as a DMR to play the file.
+
+
+
+
+
+                                        14

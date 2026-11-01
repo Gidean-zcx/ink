@@ -1,0 +1,27 @@
+
+Help with common audio playback issues.
+
+
+There are two main causes for audio stuttering:
+
+
+Connectivity
+If your player is too far away from the Wi-Fi router or internet bandwidth is limited, you may experience audio stuttering while streaming audio. 
+This would mostly affect radio playback, or when you play cards for the very first time (before the content has downloaded to the player).
+Solution: Try moving your player closer to your Wi-Fi router 
+
+
+The player is busy/overloaded
+Your player may be trying to complete too many tasks at once, which may cause audio to start buffering or to start cutting out. 
+This can happen in a more obvious way when you first set up your player and try to play several cards in a short period of time.
+Solution: if this continues to happen after playing a new card for the first time, you may need to wait for the content to download fully. Depending on your network speed and the number of cards needing to download, this could take a couple of hours. 
+Note: new content will only download when the player is not being used, and has no cards inserted.
+You can check if your player has any remaining content to download by tapping the cog icon next to your player in the Settings tab of the app. If your player still has content to download, it will be listed in the Status section.
+ 
+If you've just unboxed your player and are having playback issues
+This may be because the player has a long queue of audio files that it needs to download before it can smoothly play them from local memory.
+For the best results, take all of your cards and pop them into player one by one. Then remove your final card and leave the player switched on, idle, on charge and online, overnight. 
+This will give your player ample time to download all the content, and when you come back to it, the cards should play seamlessly.
+
+
+If you're still experiencing problems, get in touch! Please send us a video of the issue and the registration code of your Yoto player, which is found in the Settings tab.

@@ -1,0 +1,17 @@
+{
+  "new_evidence": 12,
+  "new_flows": 2,
+  "old_flows": 4,
+  "old_fields": 18,
+  "old_captures": 4,
+  "inventory": 141,
+  "domains": {
+    "在线指南链接": 74,
+    "Reading栏目链接": 28,
+    "阅读菜单控件": 14,
+    "静态设置项": 5,
+    "暖光设置项": 4,
+    "音频文档章节": 11,
+    "补充正文": 5
+  }
+}

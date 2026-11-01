@@ -1,0 +1,34 @@
+
+A factory reset will delete all downloaded content and restore your Yoto Player or Yoto Mini to factory conditions.
+
+
+To factory reset a Yoto Player:
+Press and hold all three buttons on the Yoto Player until the nightlight pulses red.
+Within three seconds of this red pulse, release all three buttons and press the orange button on the right-hand side once.
+The nightlight will briefly flash orange and then shut down once reset is complete.
+
+
+To factory reset a Yoto Mini:
+Press and hold all three buttons on the Yoto Mini until a red dot appears on the screen.
+Within three seconds of this red button, release all three buttons and press the orange button on the right-hand side once.
+An orange dot should appear and then shut down once reset is complete.
+
+
+After a factory reset, your Yoto Player or Mini will need to go through its setup process again (click here to open the setup article). If you require any further support, feel free to message us.
+
+
+Remove the device from the previous account:
+A factory reset will not remove the device from your family account. If you are giving it to someone else, make sure to also delete its name and remove it from your family account, through the Yoto App.
+To remove it from the family account: 
+Go to the Settings tab in the Yoto App
+Tap on the device to open the settings page
+At the top of the page, delete the Player Name
+Scroll to the bottom of the settings page
+Select “Remove from family account”.
+
+
+Leave the old family account
+If you received a Yoto player from someone else, but they have forgotten to first remove it from their account, you can leave their family account by:
+Go to the Settings tab in the Yoto App
+Tap on the three dots next to your user
+Select “Leave this family account”.

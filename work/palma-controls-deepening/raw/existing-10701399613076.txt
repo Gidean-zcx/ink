@@ -1,0 +1,63 @@
+In this article, you will learn how to use different tools like BOOXDrop and the send2boox website to transfer files and webpages.
+Transfer Files
+Transfer Files with BOOXDrop (Recommended)
+1. Connect your BOOX device and your computer with the same LAN (local area network).
+2. Open the BOOXDrop app on your device and enter the URL in your computer browser.
+3. Here you can send files to your BOOX device or download files to your computer.
+4. You can check the file in
+the Receive tab
+in the BOOXDrop app on your device.
+Transfer Files with send2boox Website
+1. Enter the send2boox websites the same as that on your BOOXDrop App into your computer browser. (If you want to change the server, click
+here
+.)
+US/VN Server:
+https://push.boox.com/
+EUR Server:
+https://eur.boox.com/
+2. Log into your account.
+3. Click the
+BOOXDrop
+tab, where you can send files and
+screensaver
+to your device in the
+Online transfer
+, and you can check the file in the
+Push tab
+in the BOOXDrop app on your device.
+4. You can also do a two-way transfer by clicking the device in the
+Local transfer
+. Ensure that your computer and your BOOX device connect to
+the same LAN
+and choose
+the same
+server
+.
+Transfer Webpages
+Transfer Webpages with send2boox Website
+1. Enter the send2boox websites the same as that on your BOOXDrop App in your computer browser. (If you want to change the server, click
+here
+.)
+US/VN Server:
+https://push.boox.com/
+EUR Server:
+https://eur.boox.com/
+2. Log into your account.
+3. Click the
+PushRead
+tab and then choose
+Webpage
+.
+4. Enter the
+URL
+of the webpage and click
+Add
+.
+5. Check the webpage on the
+All tab
+or
+ONXY Push
+tab on the
+PushRead
+app
+of your BOOX device.

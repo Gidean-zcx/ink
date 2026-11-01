@@ -1,0 +1,91 @@
+{
+  "checked_on": "2026-10-26",
+  "articles": 59,
+  "sections": 14,
+  "new_evidence": 14,
+  "new_flows": 0,
+  "old_flow_updates": 7,
+  "hands_on": false,
+  "raw_files": [
+    {
+      "path": "work/boox-controls-deepening/epaper-pc-articles.json",
+      "sha256": "02e30182beee444963ce691bbec9523380dcf91000c32685e27bea33f08a2cd8"
+    },
+    {
+      "path": "work/boox-controls-deepening/categories.json",
+      "sha256": "5e2942088f48fbfc42c5cd23983dbefb2f431ef5fa1e3ea5f6c1e883ce65164f"
+    },
+    {
+      "path": "work/boox-controls-deepening/sections.json",
+      "sha256": "26779a7df53408c21d0f35405ffb238519598505f1d0b46b9920bc05c01d2bf6"
+    },
+    {
+      "path": "work/boox-controls-deepening/manual-access.json",
+      "sha256": "35140033fe52f764de3da172d42a8c877c74fcf28b3811cb7b9749dc28c9beae"
+    },
+    {
+      "path": "work/eink-systems-research/boox-articles.json",
+      "sha256": "a6bbfd6cb4e8ff122152ccac6f0b504608734649ef826877f8024613de275390"
+    }
+  ],
+  "formal_files": [
+    {
+      "path": "artifacts/boox-controls-deepening/functional-inventory.csv",
+      "sha256": "4dc0ae66854d030dce8111696a0b2b053f65c56f03241857375610802e10abd3"
+    },
+    {
+      "path": "artifacts/boox-controls-deepening/source-notes.md",
+      "sha256": "7cdc8e4f7180c1a208f0a67c2d34189155a5bda5fc8c1e892f55a6d9bdac859a"
+    },
+    {
+      "path": "artifacts/boox-controls-deepening/control-center.jpg",
+      "sha256": "50969ec86d83d87f5fd89be82916db8473da854299b409e388e00017496b92ef"
+    },
+    {
+      "path": "artifacts/boox-controls-deepening/app-optimization-display.jpg",
+      "sha256": "ff752655aea70b9731ac7cd074471a24d6963227a9917cf8b0fdf95a2c44a583"
+    },
+    {
+      "path": "artifacts/boox-controls-deepening/app-management.jpg",
+      "sha256": "adcd455798a6df952fddbe1e7d7b6bb2c80e80c17152d5e1982b4052608ffebe"
+    },
+    {
+      "path": "artifacts/boox-controls-deepening/neoreader-refresh.png",
+      "sha256": "4805c1bcfe1b3736117c916fa15c53952f169b0285832aebdd71e1d7bb419e96"
+    }
+  ],
+  "static_images": [
+    {
+      "name": "control-center",
+      "url": "https://booxsupport.zendesk.com/hc/article_attachments/25213026596884",
+      "status": 200,
+      "content_type": "image/jpeg",
+      "path": "work/boox-controls-deepening/control-center.jpg",
+      "sha256": "50969ec86d83d87f5fd89be82916db8473da854299b409e388e00017496b92ef"
+    },
+    {
+      "name": "app-optimization-display",
+      "url": "https://booxsupport.zendesk.com/hc/article_attachments/15194659695252",
+      "status": 200,
+      "content_type": "image/jpeg",
+      "path": "work/boox-controls-deepening/app-optimization-display.jpg",
+      "sha256": "ff752655aea70b9731ac7cd074471a24d6963227a9917cf8b0fdf95a2c44a583"
+    },
+    {
+      "name": "app-management",
+      "url": "https://booxsupport.zendesk.com/hc/article_attachments/15194698123924",
+      "status": 200,
+      "content_type": "image/jpeg",
+      "path": "work/boox-controls-deepening/app-management.jpg",
+      "sha256": "adcd455798a6df952fddbe1e7d7b6bb2c80e80c17152d5e1982b4052608ffebe"
+    },
+    {
+      "name": "neoreader-refresh",
+      "url": "https://booxsupport.zendesk.com/hc/article_attachments/48680074878356",
+      "status": 200,
+      "content_type": "image/png",
+      "path": "work/boox-controls-deepening/neoreader-refresh.png",
+      "sha256": "4805c1bcfe1b3736117c916fa15c53952f169b0285832aebdd71e1d7bb419e96"
+    }
+  ]
+}

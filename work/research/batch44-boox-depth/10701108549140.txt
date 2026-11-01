@@ -1,0 +1,49 @@
+The BOOX Tab Series devices have a redesigned interface for you to enjoy a unique user experience like on a conventional tablet. The Home Screen is an area to display all your apps and widgets on the device, while the Dock can store your frequently used apps. In this article, you will learn how to organize your Home Screen to fit the way you work.
+Rearrange App Icons
+To move an app icon, do the following:
+Tap and hold the app icon you would like to move, and then it will show the context menu.
+Drag and drop it to a different location of the Home Screen, or to the Dock as one of your frequently used apps.
+If you drag it to the left/right border of the screen, it will turn to the previous/next page.
+Add/Remove an App to a Group
+To add an app to a group, do the following:
+1. Long press the icon.
+2. Drag and drop it into an existing group or create a new group.
+You can also long press the icon to bring up the context menu and tap "Add to a group". Or tap an existing group and tap the "Add" icon.
+To remove apps from a group, do the following:
+1. Tap an existing group.
+2. Long press the app you would like to remove from this group.
+3. Tap Remove from group in the context menu.
+Tidy Up App Icons
+To auto arrange (tidy up) icons, do the following:
+Long press a blank area of the Home Screen to enter Edit Mode.
+Tap Tidy Up, and it will automatically arrange the icons on all pages.
+Rearrange Widgets
+To add a widget, do the following:
+Long press a blank area of the Home Screen to enter Edit Mode.
+Tap Desktop Widgets.
+Choose a widget you would like to add.
+Tap a blank area to exit Edit Mode.
+To remove a widget, do the following:
+Long press the widget you would like to remove.
+Tap Remove.
+or
+Long press a blank area of the Home Screen to enter Edit Mode.
+Tap the – icon on the upper right corner of the widget you would like to remove.
+Tap a blank area to exit Edit Mode.
+To move a widget, do the following:
+Tap and hold the widget you would like to move, and then it will show the context menu.
+Drag and drop it to a different location of the Home Screen.
+If you drag it to the left/right border of the screen, it will turn to the previous/next page.
+To resize a widget, do the following:
+Long press the widget you would like to resize.
+Tap Resize a widget.
+Adjust the borders of the widget, and then tap a blank area to exit.
+Note: The resizing function is not applicable to all widgets.
+Advanced Settings
+For more advanced settings, do the following:
+Long press a blank area of the Home Screen to enter Edit Mode.
+Tap Desktop Settings.
+or
+Go to the Settings page.
+Choose Desktop & Screensaver.
+Here you can customize the settings including changing the screensaver or shutdown image, setting a home screen, locking the desktop layout, or turning on/off Smart Assistant.

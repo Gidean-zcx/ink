@@ -1,0 +1,25 @@
+Saving Content to Reader
+Your Reader library is only as good as the content it holds, so how can you make sure it's full of things you want to read? By saving cool things as soon as you find them!
+Save from the web with the browser extension
+Save articles to Reader with the browser extension.
+The Reader browser extension performs two functions: first, saving articles to Reader and second (optionally), highlighting the open web. To save a document to Reader, tap the icon in the browser bar or use the keyboard shortcut alt + R. (You can change the keyboard binding in the extension's options.) This will save a clean, readable version of the document to your Reader inbox.
+The browser extension is the most robust way to save documents to Reader because the extension gets the underlying content rendered in your browser as opposed to just a URL.
+Browser extension features
+Open in Reader: Go to the current article in your Reader Library.
+Number of highlights: Displays the number of highlights you've taken on the current document.
+Toggle auto-highlighting: By default, this option is on and selected text on the page will automatically become a highlight in Reader. If turned off, selections will need to be manually converted to highlights via the annotation menu bar.
+Add tags: Open the tagging menu to categorize the document.
+Add a document note: Open the document note field. Good for adding context about why you're saving a document, or who recommended it.
+Move the document: By default, the extension saves documents to the first section of your Library (either Inbox or Later, depending on your configuration). Use this dropdown menu to move the document to another section. For example, you can move it straight to the archive if you read it on-site.
+Hide the extension bar: Click the upward arrow to hide the extension's options.
+Save on mobile with your device's share menu
+You can save documents to Reader using your mobile device's share sheet.
+If you don't see Reader among the apps you can share to, try restarting your device. Sometimes mobile devices have a bug where new apps don't immediately appear in the share menu, but a restart should clear that up.
+On mobile, Reader can only get the full content of a paywalled article if it's saved using the iOS Safari browser while logged into the site. When importing from other sources (e.g. the native WSJ or NYT apps) or from any Android browsers, Reader only receives the naked URL, and this results in partial parsing because the full content is blocked.
+Mobile share menu features
+Read Now: Open the shared article in the Reader app.
+Delete: Remove the shared article from your Reader Library.
+Add tags: Open the tagging menu to categorize the document.
+Add a document note: Open the document note field. Good for adding context about why you're saving a document, or who recommended it.
+Move to Later: Move the shared article to the Later section of your Library. Note: If your Library is using the "Shortlist" configuration, this will be a star icon that will move the document to your Shortlist.
+Move to Archive: Move the shared article to the Archive section of your Library. This is useful for articles you've read in your browser and simply want to save for posterity.

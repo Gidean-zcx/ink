@@ -1,0 +1,42 @@
+[
+  {
+    "path": "docs/research/interaction-library/cases/M-065-astell-kern.md",
+    "sha256": "9b469f925bdd2c7b31ab2ce599db6e5c1256977a8ede16aff219af41227959a0"
+  },
+  {
+    "path": "docs/research/interaction-library/batches/ak-directory-deepening-evidence.jsonl",
+    "sha256": "b1e75cf35e98f2fb85e7c435c4d0d64f87c43503309788256b1e465dd96e950b"
+  },
+  {
+    "path": "docs/research/interaction-library/batches/ak-directory-deepening-coverage.csv",
+    "sha256": "d72638e3e3cee825d7a6e7e2affeedd050bb76f4d7e0c22db96b146a2bbe47f5"
+  },
+  {
+    "path": "docs/research/interaction-library/batches/ak-directory-deepening-inventory.csv",
+    "sha256": "32a97997a6a40350e3dcf14ab5c5e75fe34a863f0373a82d64363e34ecf4c87a"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/ak-directory-deepening/source-notes.md",
+    "sha256": "208461d068269f64ab8668855e1fb1c2103a552b7d7f3bd48330aca1dc6ee99c"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/ak-directory-deepening/sr35-printed-1.png",
+    "sha256": "c2f40511e8a87d7f94515fdef5b72417f0fc89f8d005bc4c9ddb2396ddb4a9ec"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/ak-directory-deepening/sr35-printed-40.png",
+    "sha256": "f2d2cf71ea72a61fdca427255740c8882c82f4608dbdf43e21af00f47caed8c1"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/ak-directory-deepening/sr35-printed-41.png",
+    "sha256": "1780dfad8317273d43b76103c6c51c660e352230761d8112708b83571ebb4e13"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/ak-directory-deepening/sr35-printed-62.png",
+    "sha256": "eb34b2b5715c557702c8f02fea5ca3e8d438fb950c7cab8fab1f73c88fb37ddd"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/ak-directory-deepening/sr35-printed-63.png",
+    "sha256": "7606a026d3979915bf669bca2d2e6dacadde65d2fea19ce853a73a2f4c48713b"
+  }
+]

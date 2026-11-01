@@ -1,0 +1,548 @@
+{
+  "headings": [
+    {
+      "level": "h1",
+      "id": "",
+      "title": "Basics"
+    },
+    {
+      "level": "h2",
+      "id": "how-do-i-get-started-with-reader",
+      "title": "How do I get started with Reader?"
+    },
+    {
+      "level": "h2",
+      "id": "how-do-i-find-the-reader-web-app-in-my-browser",
+      "title": "How do I find the Reader web app in my browser?"
+    },
+    {
+      "level": "h2",
+      "id": "how-do-i-log-into-reader",
+      "title": "How do I log into Reader?"
+    },
+    {
+      "level": "h2",
+      "id": "whats-the-relationship-between-reader-and-readwise-are-they-automatically-connected",
+      "title": "What's the relationship between Reader and Readwise? Are they automatically connected?"
+    },
+    {
+      "level": "h2",
+      "id": "what-is-the-business-model-of-readwise-if-i-start-using-reader-how-do-i-know-you-wont-disappear-on-me",
+      "title": "What is the business model of Readwise? If I start using Reader, how do I know you won't disappear on me?"
+    },
+    {
+      "level": "h2",
+      "id": "what-is-the-pricing-of-reader",
+      "title": "What is the pricing of Reader?"
+    },
+    {
+      "level": "h2",
+      "id": "can-i-use-reader-offline",
+      "title": "Can I use Reader offline?"
+    },
+    {
+      "level": "h2",
+      "id": "can-i-select-which-documents-are-cached-for-offline-reading",
+      "title": "Can I select which documents are cached for offline reading?"
+    },
+    {
+      "level": "h2",
+      "id": "does-reader-have-a-command-palette",
+      "title": "Does Reader have a Command Palette?"
+    },
+    {
+      "level": "h2",
+      "id": "does-reader-use-keyboard-shortcuts-or-hotkeys",
+      "title": "Does Reader use keyboard shortcuts or hotkeys?"
+    },
+    {
+      "level": "h2",
+      "id": "what-do-the-colored-dots-on-documents-mean",
+      "title": "What do the colored dots on documents mean?"
+    },
+    {
+      "level": "h2",
+      "id": "what-do-the-colors-on-the-progress-bar-mean",
+      "title": "What do the colors on the progress bar mean?"
+    },
+    {
+      "level": "h2",
+      "id": "how-do-i-return-to-my-previous-location-after-skimming-ahead-or-backward",
+      "title": "How do I return to my previous location after skimming ahead or backward?"
+    },
+    {
+      "level": "h2",
+      "id": "can-i-undo-an-accidental-action",
+      "title": "Can I undo an accidental action?"
+    },
+    {
+      "level": "h2",
+      "id": "how-can-i-delete-unwanted-documents",
+      "title": "How can I delete unwanted documents?"
+    },
+    {
+      "level": "h2",
+      "id": "can-i-restore-documents-that-i-ve-previously-deleted",
+      "title": "Can I restore documents that I've previously deleted?"
+    },
+    {
+      "level": "h2",
+      "id": "i-bulk-deleted-a-bunch-of-documents-and-now-i-want-them-back-can-i-restore-all-of-my-deleted-items",
+      "title": "I bulk deleted a bunch of documents and now I want them back. Can I restore all of my deleted items?"
+    }
+  ],
+  "links": [
+    {
+      "href": "/",
+      "text": "",
+      "in_article": false
+    },
+    {
+      "href": "/",
+      "text": "",
+      "in_article": false
+    },
+    {
+      "href": "/",
+      "text": "",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs",
+      "text": "Documentation",
+      "in_article": false
+    },
+    {
+      "href": "/reader/guides",
+      "text": "Guides",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs",
+      "text": "What is Reader?",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/migrating-content",
+      "text": "Migrating from Other Apps",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/saving-content",
+      "text": "Saving Content",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/organizing-content",
+      "text": "Organizing Content",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs",
+      "text": "Basics",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/importing-content",
+      "text": "Importing Content",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/adding-new-content",
+      "text": "Adding New Content",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/highlights-tags-notes",
+      "text": "Highlights, Tags, and Notes",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/appearance",
+      "text": "Appearance",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/feed",
+      "text": "Feed",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/email-newsletters",
+      "text": "Email Newsletters",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/navigation",
+      "text": "Navigation",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/searching",
+      "text": "Searching",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/parsing",
+      "text": "Parsing",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/filtered-views",
+      "text": "Filtered Views",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/action-tags",
+      "text": "Action Tags",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/pdfs",
+      "text": "PDFs",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/videos",
+      "text": "Videos",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/text-to-speech",
+      "text": "Text-to-Speech (TTS)",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/exporting",
+      "text": "Exporting",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/sharing",
+      "text": "Sharing",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/daily-digest",
+      "text": "Daily Digest",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/ghostreader",
+      "text": "Ghostreader",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/eink",
+      "text": "E-ink Devices",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/miscellaneous",
+      "text": "Miscellaneous",
+      "in_article": false
+    },
+    {
+      "href": "/",
+      "text": "Home",
+      "in_article": false
+    },
+    {
+      "href": "/reader",
+      "text": "Reader",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs",
+      "text": "Docs",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs",
+      "text": "Faqs",
+      "in_article": false
+    },
+    {
+      "href": "https://read.readwise.io/",
+      "text": "read.readwise.io",
+      "in_article": true
+    },
+    {
+      "href": "https://readwise.io/read/download/",
+      "text": "desktop apps",
+      "in_article": true
+    },
+    {
+      "href": "https://read.readwise.io/",
+      "text": "read.readwise.io",
+      "in_article": true
+    },
+    {
+      "href": "https://readwise.io/reader101",
+      "text": "short walkthrough video",
+      "in_article": true
+    },
+    {
+      "href": "https://read.readwise.io/",
+      "text": "read.readwise.io",
+      "in_article": true
+    },
+    {
+      "href": "https://readwise.io/dashboard",
+      "text": "Readwise",
+      "in_article": true
+    },
+    {
+      "href": "https://blog.readwise.io/why-were-bootstrapping-readwise/",
+      "text": "Why We're Bootstrapping Readwise",
+      "in_article": true
+    },
+    {
+      "href": "https://readwise.io/pricing",
+      "text": "pricing page",
+      "in_article": true
+    },
+    {
+      "href": "https://read.readwise.io/",
+      "text": "read.readwise.io",
+      "in_article": true
+    },
+    {
+      "href": "https://readwise.io/read/download/",
+      "text": "desktop app",
+      "in_article": true
+    },
+    {
+      "href": "/reader/docs/faqs/highlights-tags-notes#how-do-i-select-multiple-items-to-perform-actions-in-bulk",
+      "text": "bulk action",
+      "in_article": true
+    },
+    {
+      "href": "/reader/docs/organizing-content",
+      "text": "Organizing Content",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/importing-content",
+      "text": "Importing Content",
+      "in_article": false
+    },
+    {
+      "href": "mailto:hello@readwise.io",
+      "text": "Email Ushello@readwise.io",
+      "in_article": false
+    },
+    {
+      "href": "https://x.com/readwise",
+      "text": "Follow Us@readwise",
+      "in_article": false
+    },
+    {
+      "href": "https://www.reddit.com/r/readwise/",
+      "text": "Ask the CommunityJoin us on Reddit",
+      "in_article": false
+    },
+    {
+      "href": "https://en.wikipedia.org/wiki/Curse_of_knowledge",
+      "text": "Curse of Knowledge",
+      "in_article": false
+    },
+    {
+      "href": "mailto:hello@readwise.io?Subject=Documentation Feedback",
+      "text": "Send Feedback",
+      "in_article": false
+    },
+    {
+      "href": "#how-do-i-get-started-with-reader",
+      "text": "How do I get started with Reader?",
+      "in_article": false
+    },
+    {
+      "href": "#how-do-i-find-the-reader-web-app-in-my-browser",
+      "text": "How do I find the Reader web app in my browser?",
+      "in_article": false
+    },
+    {
+      "href": "#how-do-i-log-into-reader",
+      "text": "How do I log into Reader?",
+      "in_article": false
+    },
+    {
+      "href": "#whats-the-relationship-between-reader-and-readwise-are-they-automatically-connected",
+      "text": "What's the relationship between Reader and Readwise? Are they automatically connected?",
+      "in_article": false
+    },
+    {
+      "href": "#what-is-the-business-model-of-readwise-if-i-start-using-reader-how-do-i-know-you-wont-disappear-on-me",
+      "text": "What is the business model of Readwise? If I start using Reader, how do I know you won't disappear on me?",
+      "in_article": false
+    },
+    {
+      "href": "#what-is-the-pricing-of-reader",
+      "text": "What is the pricing of Reader?",
+      "in_article": false
+    },
+    {
+      "href": "#can-i-use-reader-offline",
+      "text": "Can I use Reader offline?",
+      "in_article": false
+    },
+    {
+      "href": "#can-i-select-which-documents-are-cached-for-offline-reading",
+      "text": "Can I select which documents are cached for offline reading?",
+      "in_article": false
+    },
+    {
+      "href": "#does-reader-have-a-command-palette",
+      "text": "Does Reader have a Command Palette?",
+      "in_article": false
+    },
+    {
+      "href": "#does-reader-use-keyboard-shortcuts-or-hotkeys",
+      "text": "Does Reader use keyboard shortcuts or hotkeys?",
+      "in_article": false
+    },
+    {
+      "href": "#what-do-the-colored-dots-on-documents-mean",
+      "text": "What do the colored dots on documents mean?",
+      "in_article": false
+    },
+    {
+      "href": "#what-do-the-colors-on-the-progress-bar-mean",
+      "text": "What do the colors on the progress bar mean?",
+      "in_article": false
+    },
+    {
+      "href": "#how-do-i-return-to-my-previous-location-after-skimming-ahead-or-backward",
+      "text": "How do I return to my previous location after skimming ahead or backward?",
+      "in_article": false
+    },
+    {
+      "href": "#can-i-undo-an-accidental-action",
+      "text": "Can I undo an accidental action?",
+      "in_article": false
+    },
+    {
+      "href": "#how-can-i-delete-unwanted-documents",
+      "text": "How can I delete unwanted documents?",
+      "in_article": false
+    },
+    {
+      "href": "#can-i-restore-documents-that-i-ve-previously-deleted",
+      "text": "Can I restore documents that I've previously deleted?",
+      "in_article": false
+    },
+    {
+      "href": "#i-bulk-deleted-a-bunch-of-documents-and-now-i-want-them-back-can-i-restore-all-of-my-deleted-items",
+      "text": "I bulk deleted a bunch of documents and now I want them back. Can I restore all of my deleted items?",
+      "in_article": false
+    }
+  ],
+  "images": [
+    {
+      "src": "/images/settings_offline-documents.png",
+      "alt": "Open the Offline Documents menu in the Reader settings.",
+      "class": "rounded-lg max-h-[400px] w-auto mx-auto"
+    },
+    {
+      "src": "/images/offline-documents_toggle-off.gif",
+      "alt": "Cache files are removed when the toggle is turned off.",
+      "class": "rounded-lg max-w-[350px] h-auto mx-auto"
+    },
+    {
+      "src": "/images/offline-documents_toggle-on.gif",
+      "alt": "Cache files download once the toggle is turned on.",
+      "class": "rounded-lg max-w-[350px] h-auto mx-auto"
+    },
+    {
+      "src": "/images/doc-status-indicators_web.png",
+      "alt": "Status dot color indicators on documents in the Reader list view.",
+      "class": "rounded-lg shadow-xl mx-auto"
+    },
+    {
+      "src": "/images/reader-progress-bar_web-skimming-ahead.png",
+      "alt": "A progress bar with a darker grey segment from skimming ahead of the reading position.",
+      "class": "rounded-lg max-h-[600px] w-auto mx-auto -mt-4"
+    },
+    {
+      "src": "/images/reader-progress-bar_web-list-partially-read.png",
+      "alt": "Progress bars of three partially read documents in the Reader document list.",
+      "class": "rounded-lg max-h-[600px] w-auto mx-auto -mt-4"
+    },
+    {
+      "src": "/images/reader-progress-bar_mobile.png",
+      "alt": "The reading progress line above the bottom toolbar in the Reader mobile app.",
+      "class": "rounded-lg max-w-[350px] h-auto mx-auto"
+    },
+    {
+      "src": "/images/reader-return-to-position_web.png",
+      "alt": "The return arrow button in the bottom right corner of the Reader web app reading view.",
+      "class": "rounded-lg max-h-[500px] w-auto mx-auto"
+    },
+    {
+      "src": "/images/reader-return-to-position_mobile.png",
+      "alt": "The Return to 31% button in the Reader mobile app reading view.",
+      "class": "rounded-lg max-w-[350px] h-auto mx-auto"
+    },
+    {
+      "src": "/images/reader-return-to-position_mobile-setting.png",
+      "alt": "The Return indicator toggle in the Reading View section of the Reader mobile app settings.",
+      "class": "rounded-lg max-w-[350px] h-auto mx-auto"
+    },
+    {
+      "src": "/images/undo-z_web.gif",
+      "alt": "Undo actions in Reader on web.",
+      "class": "rounded-lg max-h-[400px] w-auto mx-auto"
+    },
+    {
+      "src": "/images/shake-to-undo_iphone.png",
+      "alt": "Toggle shake-to-undo in iOS settings.",
+      "class": "rounded-lg max-w-[250px] h-auto mx-auto"
+    },
+    {
+      "src": "/images/undo-toast_mobile.gif",
+      "alt": "Tap the undo toast button on mobile.",
+      "class": "rounded-lg max-w-[350px] h-auto mx-auto"
+    },
+    {
+      "src": "/images/trash_delete-doc_web.gif",
+      "alt": "Delete a document on web.",
+      "class": "rounded-lg max-h-[400px] w-auto mx-auto"
+    },
+    {
+      "src": "/images/trash_delete-doc_mobile.gif",
+      "alt": "Delete a document on mobile.",
+      "class": "rounded-lg max-w-[250px] h-auto mx-auto"
+    },
+    {
+      "src": "/images/trash_sidebar_web.png",
+      "alt": "Trash section of Reader on web.",
+      "class": "rounded-lg max-h-[400px] w-auto ml-0 -mt-4"
+    },
+    {
+      "src": "/images/trash_restore-document_web.png",
+      "alt": "Restore a deleted document from Reader's Trash on web.",
+      "class": "rounded-lg max-w-[500px] h-auto ml-0 -mt-4"
+    },
+    {
+      "src": "/images/trash_mobile.png",
+      "alt": "Deleted documents on mobile.",
+      "class": "rounded-lg max-w-[250px] h-auto mx-auto -mt-4"
+    },
+    {
+      "src": "/images/restore-deleted-doc_mobile.gif",
+      "alt": "Restore a deleted document from Reader's Trash on mobile.",
+      "class": "rounded-lg max-w-[250px] h-auto ml-0 -mt-4"
+    },
+    {
+      "src": "/images/trash_restore-all_web.gif",
+      "alt": "Restore all documents from trash on web.",
+      "class": "rounded-lg max-h-[500px] w-auto mx-auto"
+    },
+    {
+      "src": "/images/trash_restore-all_mobile.gif",
+      "alt": "Restore all documents from trash on mobile.",
+      "class": "rounded-lg max-w-[350px] h-auto mx-auto"
+    }
+  ]
+}

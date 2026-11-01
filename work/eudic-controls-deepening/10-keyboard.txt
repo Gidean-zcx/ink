@@ -1,0 +1,43 @@
+> For the complete documentation index, see [llms.txt](https://docs.eudic.net/1/llms.txt). Markdown versions of documentation pages are available by appending `.md` to page URLs; this page is available as [Markdown](https://docs.eudic.net/1/jin-jie-gong-neng/wai-jie-jian-pan-kuai-jie-jian.md).
+
+# 外接键盘快捷键
+
+如果您是苹果用户且您的系统在 iOS 9 以上，长按 Command 键，即可查看当前页面可用的外接键盘快捷键。以下是快捷键的详细说明：
+
+**词典首页可用：**&#x20;
+
+Command + 向上箭头 上个单词&#x20;
+
+Command + 向下箭头 下个单词
+
+**解释界面内可用的：**&#x20;
+
+Command + A 加入生词本&#x20;
+
+Command + N 新建编辑笔记&#x20;
+
+Command + \[ 上一本词典&#x20;
+
+Command + ] 下一本词典&#x20;
+
+Command + R 发音（解释界面）&#x20;
+
+Command + W 返回继续查词&#x20;
+
+Command + 向上箭头 向上翻页&#x20;
+
+Command + 向下箭头 向下翻页
+
+**翻译界面可用的（仅 iPhone）：**&#x20;
+
+Command + 回车 开始翻译&#x20;
+
+Command + C 复制翻译结果
+
+**笔记界面内可用的：**
+
+Command + S 退出并保存笔记&#x20;
+
+Command + W 退出但不保存笔记&#x20;
+
+Command + 1 2 3 等，可切换Tab

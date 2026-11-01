@@ -1,0 +1,14 @@
+Run a shortcut from the Shortcuts app on iPhone or iPad
+When you open Shortcuts, your shortcuts collection appears, listing all the shortcuts you’ve created or added from the Gallery. You can run any of these shortcuts.
+Run a shortcut from the Shortcuts app
+In the Shortcuts app on your iPhone or iPad, do one of the following:
+Tap a shortcut (the colored rectangle).
+Tap on the shortcut you want to run, then at the bottom of shortcut editor that appears (showing all the actions in the shortcut), tap .
+Shortcuts performs each action sequentially (from top to bottom as listed in the shortcut editor).
+If an action requires additional data, a dialog appears and asks for input. If an action requires private data from your device, a dialog asks for permission to use your data.
+If the last action in the sequence results in a rich preview (such as an image or map location), a small preview window appears below the shortcut. Tap to view content in full screen, or tap to send it elsewhere.
+Cancel a shortcut
+You can stop a shortcut while it’s running.
+In the Shortcuts app on your iPhone or iPad, do one of the following:
+Cancel a shortcut from its colored rectangle: Tap .
+Cancel a shortcut from the shortcut editor: Tap .See alsoShare shortcuts on iPhone or iPadRun a shortcut with SiriRun shortcuts from a widgetRun a shortcut from another appRun shortcuts from the Search screenRun a shortcut from the Home Screen

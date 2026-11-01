@@ -1,0 +1,21 @@
+{
+  "order": 28,
+  "entry_id": "INO-pro--annotations--what-are-annotations",
+  "title": "What are annotations?",
+  "url": "https://www.inoreader.com/help/pro/annotations/what-are-annotations",
+  "checked_on": "2026-10-27",
+  "http_status": 200,
+  "final_url": "https://www.inoreader.com/help/pro/annotations/what-are-annotations",
+  "acquisition": "one_anonymous_normal_GET",
+  "raw_path": "work/research/batch41-inoreader-help/28-INO-pro--annotations--what-are-annotations.html",
+  "headers_path": "work/research/batch41-inoreader-help/28-INO-pro--annotations--what-are-annotations.headers.json",
+  "raw_sha256": "7a9c1f672bfe525c279676940ee05e2aa9f500f8649742f7a984236ba72058c0",
+  "bytes": 145970,
+  "status": "body_obtained",
+  "body_status": "extracted_not_yet_root_read",
+  "body_path": "work/research/batch41-inoreader-help/28-INO-pro--annotations--what-are-annotations.body.txt",
+  "body_sha256": "f3b04a4356635f280a06683843bb43c192f9d7ab93df04b7838f1252661395e7",
+  "body_chars": 66,
+  "links": [],
+  "images": []
+}

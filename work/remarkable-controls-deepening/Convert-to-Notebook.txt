@@ -1,0 +1,22 @@
+Here's how to use this feature:
+Import via my.remarkable.com
+Go to my.remarkable.com and log in.
+Click My Files in the menu in the upper-left corner.
+Drag a file into the list or click Import and select it.
+You’ll see a new notebook in your library. Open the file to read or edit it on your paper tablet.
+Import from storage integrations on your paper tablet
+You can also import files directly on your paper tablet using storage integrations (such as Google Drive, Dropbox, or OneDrive).
+On your paper tablet, tap the menu in the upper-left corner, then Import files.
+Select your storage integration and browse to the file you want to import.
+Long-press the file to download and import it as an editable notebook.
+Once your file is on your device, you can add space, annotate, and edit text. Great for reviewing reports, plans, or proposals on your paper tablet.
+FAQs
+Which file types are supported?
+You can convert Word documents (.docx), Google Docs, and .txt files to notebooks using this feature.
+Can I add Google Docs?
+Yes, you can import files directly on your paper tablet using integrated cloud storage. Simply tap the menu in the upper-left corner, select Import files, and browse to find the file. Tap it to download and import it as an editable notebook.
+Alternatively, you can open the document on your computer, save it as a .docx file, and import it via my.remarkable.com.
+Will the new notebook keep the formatting of the imported file?
+No, you'll only see formatting that's supported in notebooks. This means that tables, columns, and margins are removed, but all text is kept.
+How can I access this feature?
+You'll need a Connect subscription and software version 3.25 or newer to use Convert to Notebook. Read how to update your paper tablet.

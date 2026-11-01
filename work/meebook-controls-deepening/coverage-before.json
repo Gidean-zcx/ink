@@ -1,0 +1,80 @@
+[
+  {
+    "flow_id": "F-M057-01",
+    "product_id": "M-057",
+    "task": "USB载入本地书籍",
+    "depth": "D2",
+    "evidence_ids": "E-MEE-03",
+    "known_branches": "Books根目录；文件管理中找回",
+    "gaps": "支持格式/同名处理/中断/书架索引",
+    "visual_status": "not_observed",
+    "hands_on": "false",
+    "case_path": "cases/M-057-meebook.md",
+    "checked_on": "2026-10-26"
+  },
+  {
+    "flow_id": "F-M057-02",
+    "product_id": "M-057",
+    "task": "局域网传书",
+    "depth": "D2",
+    "evidence_ids": "E-MEE-03",
+    "known_branches": "应用页WiFi传书；同路由器",
+    "gaps": "身份验证、成功反馈、重试去重与取消",
+    "visual_status": "not_observed",
+    "hands_on": "false",
+    "case_path": "cases/M-057-meebook.md",
+    "checked_on": "2026-10-26"
+  },
+  {
+    "flow_id": "F-M057-03",
+    "product_id": "M-057",
+    "task": "字典与字体导入后使用",
+    "depth": "D2",
+    "evidence_ids": "E-MEE-03",
+    "known_branches": "Dict和fonts为独立目录；本地书Aa选择字体",
+    "gaps": "字典格式/查词上下文/生词复习；字体失败回退",
+    "visual_status": "not_observed",
+    "hands_on": "false",
+    "case_path": "cases/M-057-meebook.md",
+    "checked_on": "2026-10-26"
+  },
+  {
+    "flow_id": "F-M057-04",
+    "product_id": "M-057",
+    "task": "翻页键长按和第三方应用适配",
+    "depth": "D2",
+    "evidence_ids": "E-MEE-04",
+    "known_branches": "V1.5.2改长按；应用图标长按优化滚动",
+    "gaps": "不同App实际可用性、默认键值、冲突恢复",
+    "visual_status": "not_observed",
+    "hands_on": "false",
+    "case_path": "cases/M-057-meebook.md",
+    "checked_on": "2026-10-26"
+  },
+  {
+    "flow_id": "F-M057-05",
+    "product_id": "M-057",
+    "task": "读书与同步/导出",
+    "depth": "D1",
+    "evidence_ids": "E-MEE-03;E-MEE-04",
+    "known_branches": "日志仅称JD Bookstore阅读记录同步",
+    "gaps": "原生读书进度、笔记导出、全部App统一同步",
+    "visual_status": "not_observed",
+    "hands_on": "false",
+    "case_path": "cases/M-057-meebook.md",
+    "checked_on": "2026-10-26"
+  },
+  {
+    "flow_id": "F-M057-06",
+    "product_id": "M-057",
+    "task": "后台管理与恢复",
+    "depth": "D1",
+    "evidence_ids": "E-MEE-03;E-MEE-04",
+    "known_branches": "任务管理/后台管理；历史多项修复声明",
+    "gaps": "清理任务后状态、刷机/重置恢复、修复复现",
+    "visual_status": "not_observed",
+    "hands_on": "false",
+    "case_path": "cases/M-057-meebook.md",
+    "checked_on": "2026-10-26"
+  }
+]

@@ -1,0 +1,167 @@
+[
+  {
+    "evidence_id": "E-TOL-01",
+    "before": {
+      "evidence_id": "E-TOL-01",
+      "product_id": "M-058",
+      "title": "tolino shine T302 英文用户手册",
+      "url": "https://mytolino.de/wp-content/uploads/2024/12/DEC24_including-EU-Common-Charger-Directive_tolino-shine-T302-User-Guide-EN.pdf",
+      "checked_on": "2026-10-26",
+      "source_type": "official_manual",
+      "access_mode": "downloaded_pdf_text",
+      "version_scope": "tolino shine 5th generation T302; English manual Dec2024 plus current help snapshot; not shine color or older models",
+      "app_build": null,
+      "firmware_version": null,
+      "source_updated_on": "2024-12",
+      "locator": "PDF页5—6、18、23、25—29、37—39、44—47",
+      "note": "官方PDF下载后用现有PyMuPDF核读；正文流程，不是设备操作或视觉观察。",
+      "hands_on": false,
+      "visual_observed": false,
+      "archived_artifact": null,
+      "sha256": null,
+      "capture_state": "bibliography_and_short_note_only",
+      "supersedes": null
+    },
+    "after": {
+      "evidence_id": "E-TOL-01",
+      "product_id": "M-058",
+      "title": "tolino shine T302 英文用户手册",
+      "url": "https://mytolino.de/wp-content/uploads/2024/12/DEC24_including-EU-Common-Charger-Directive_tolino-shine-T302-User-Guide-EN.pdf",
+      "checked_on": "2026-10-26",
+      "source_type": "official_manual",
+      "access_mode": "downloaded_pdf_text",
+      "version_scope": "tolino shine 5th generation T302; English manual Dec2024 plus current help snapshot; not shine color or older models",
+      "app_build": null,
+      "firmware_version": null,
+      "source_updated_on": "2024-12",
+      "locator": "PDF页5—6、18、23、25—29、37—39、44—47",
+      "note": "官方PDF下载后用现有PyMuPDF核读；正文流程，不是设备操作或视觉观察。",
+      "hands_on": false,
+      "visual_observed": false,
+      "archived_artifact": null,
+      "sha256": null,
+      "capture_state": "bibliography_and_short_note_only",
+      "supersedes": null,
+      "additional_captures": [
+        {
+          "checked_on": "2026-10-27",
+          "archived_artifact": "artifacts/tolino-controls-deepening/source-notes.md",
+          "sha256": "3e92008eaeeb0abc4ba459dc6a05455d9dbdf8a90ef6eaa528def98515b9717c",
+          "access_mode": "existing_PDF_reinspection",
+          "raw_work_path": "work/extended-readers/tolino-shine5.pdf",
+          "raw_sha256": "ad2e15c5581d57f7a007772fa000467f3d67ac86d54de9d884f7773279ef3f78"
+        }
+      ]
+    }
+  },
+  {
+    "evidence_id": "E-TOL-02",
+    "before": {
+      "evidence_id": "E-TOL-02",
+      "product_id": "M-058",
+      "title": "shine 第五代FAQ",
+      "url": "https://mytolino.com/faq-group/tolino-shine-5-generation-en/page/2/",
+      "checked_on": "2026-10-26",
+      "source_type": "official_help",
+      "access_mode": "opened_text",
+      "version_scope": "tolino shine 5th generation T302; English manual Dec2024 plus current help snapshot; not shine color or older models",
+      "app_build": null,
+      "firmware_version": null,
+      "source_updated_on": null,
+      "locator": "2.1/2.3/2.4/2.6；6.1—6.2；9.7；3作目录边界",
+      "note": "官方正文；未注明构建。FAQ更新文件名与软件更新专页不一致；不以FAQ推定旧固件都有TTS。",
+      "hands_on": false,
+      "visual_observed": false,
+      "archived_artifact": null,
+      "sha256": null,
+      "capture_state": "bibliography_and_short_note_only",
+      "supersedes": null
+    },
+    "after": {
+      "evidence_id": "E-TOL-02",
+      "product_id": "M-058",
+      "title": "shine 第五代FAQ",
+      "url": "https://mytolino.com/faq-group/tolino-shine-5-generation-en/page/2/",
+      "checked_on": "2026-10-26",
+      "source_type": "official_help",
+      "access_mode": "opened_text",
+      "version_scope": "tolino shine 5th generation T302; English manual Dec2024 plus current help snapshot; not shine color or older models",
+      "app_build": null,
+      "firmware_version": null,
+      "source_updated_on": null,
+      "locator": "2.1/2.3/2.4/2.6；6.1—6.2；9.7；3作目录边界",
+      "note": "官方正文；未注明构建。FAQ更新文件名与软件更新专页不一致；不以FAQ推定旧固件都有TTS。",
+      "hands_on": false,
+      "visual_observed": false,
+      "archived_artifact": null,
+      "sha256": null,
+      "capture_state": "bibliography_and_short_note_only",
+      "supersedes": null,
+      "additional_captures": [
+        {
+          "checked_on": "2026-10-27",
+          "archived_artifact": "artifacts/tolino-controls-deepening/source-notes.md",
+          "sha256": "3e92008eaeeb0abc4ba459dc6a05455d9dbdf8a90ef6eaa528def98515b9717c",
+          "access_mode": "public_HTTP200_recheck",
+          "raw_work_path": "work/tolino-controls-deepening/faq.html",
+          "raw_sha256": "0609e0aa9964f39343e60fe9628aeca11b961ceffa6a93e9eed33a2862cee638"
+        }
+      ]
+    }
+  },
+  {
+    "evidence_id": "E-TOL-03",
+    "before": {
+      "evidence_id": "E-TOL-03",
+      "product_id": "M-058",
+      "title": "Tolino 软件更新专页",
+      "url": "https://mytolino.com/software-updates-for-tolino-ereaders/",
+      "checked_on": "2026-10-26",
+      "source_type": "official_update_help",
+      "access_mode": "opened_text",
+      "version_scope": "shine 5 current update catalog on 2026-10-26; firmware not tested",
+      "app_build": null,
+      "firmware_version": "5.12.232736 (listed current; not tested)",
+      "source_updated_on": null,
+      "locator": "shine color/shine5分组；手动更新该两型号例外段",
+      "note": "官方正文；列表当前5.12.232736，下载选择还依已有版本。未下载/安装固件。",
+      "hands_on": false,
+      "visual_observed": false,
+      "archived_artifact": null,
+      "sha256": null,
+      "capture_state": "bibliography_and_short_note_only",
+      "supersedes": null
+    },
+    "after": {
+      "evidence_id": "E-TOL-03",
+      "product_id": "M-058",
+      "title": "Tolino 软件更新专页",
+      "url": "https://mytolino.com/software-updates-for-tolino-ereaders/",
+      "checked_on": "2026-10-26",
+      "source_type": "official_update_help",
+      "access_mode": "opened_text",
+      "version_scope": "shine 5 current update catalog on 2026-10-26; firmware not tested",
+      "app_build": null,
+      "firmware_version": "5.12.232736 (listed current; not tested)",
+      "source_updated_on": null,
+      "locator": "shine color/shine5分组；手动更新该两型号例外段",
+      "note": "官方正文；列表当前5.12.232736，下载选择还依已有版本。未下载/安装固件。",
+      "hands_on": false,
+      "visual_observed": false,
+      "archived_artifact": null,
+      "sha256": null,
+      "capture_state": "bibliography_and_short_note_only",
+      "supersedes": null,
+      "additional_captures": [
+        {
+          "checked_on": "2026-10-27",
+          "archived_artifact": "artifacts/tolino-controls-deepening/source-notes.md",
+          "sha256": "3e92008eaeeb0abc4ba459dc6a05455d9dbdf8a90ef6eaa528def98515b9717c",
+          "access_mode": "public_HTTP200_recheck",
+          "raw_work_path": "work/tolino-controls-deepening/updates.html",
+          "raw_sha256": "9875445c4715f2b75086c1d74efd6282bad4c08474c1a0d5bb61a35719418b74"
+        }
+      ]
+    }
+  }
+]

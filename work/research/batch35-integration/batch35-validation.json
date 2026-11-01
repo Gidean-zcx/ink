@@ -1,0 +1,437 @@
+{
+  "flow_added_exact": true,
+  "evidence_added_exact": true,
+  "old_flows_changed": [
+    "F-M015-26"
+  ],
+  "old_evidence_changed": [
+    "E-RWCD-17"
+  ],
+  "expected_old_changes": true,
+  "new_flows_D2_false": {
+    "F-M015-27": [
+      "D2",
+      "false"
+    ],
+    "F-M015-28": [
+      "D2",
+      "false"
+    ],
+    "F-M015-29": [
+      "D2",
+      "false"
+    ],
+    "F-M015-30": [
+      "D2",
+      "false"
+    ],
+    "F-M015-31": [
+      "D2",
+      "false"
+    ],
+    "F-M015-32": [
+      "D2",
+      "false"
+    ],
+    "F-M015-33": [
+      "D2",
+      "false"
+    ],
+    "F-M015-34": [
+      "D2",
+      "false"
+    ],
+    "F-M015-35": [
+      "D2",
+      "false"
+    ],
+    "F-M056-07": [
+      "D2",
+      "false"
+    ],
+    "F-M056-08": [
+      "D2",
+      "false"
+    ]
+  },
+  "new_flows_D2_false_ok": true,
+  "new_evidence_locators": {
+    "E-RWSK-01": "Available Skills / Usage",
+    "E-RWSK-02": "Setup; Reader Tools; Readwise Tools",
+    "E-RWSK-03": "Discovering Commands; Reader Commands; Readwise Commands",
+    "E-RWSK-04": "Setup; Process; Handling Responses",
+    "E-RWSK-05": "Fetch Unseen Feed Items; Present; Handle Responses",
+    "E-RWSK-06": "Pick a Document; Prepare; Quiz; Wrap Up",
+    "E-RWSK-07": "Quick Pass; Write Persona; Deep Pass",
+    "E-RWSK-08": "Fetch Recent Documents; Get Highlights; Classify; Write",
+    "E-RWSK-09": "Phases 1–7; Error Handling",
+    "E-RWSK-10": "Fetch; Prepare; Render; Connections; Iterate",
+    "E-RWSK-11": "Fetch; Paginate; Categorize; Generate; Return",
+    "E-RWSK-12": "Gather; Analyze; Deliver; Go Deeper",
+    "E-RWSK-13": "Configuration / Readonly mode; Authentication",
+    "E-XYHL-01": "核心功能：教材同步/错题本/云文件；不足",
+    "E-XYHL-02": "24.08.31更新：教材习题/听书模式/多孩切换"
+  },
+  "new_evidence_locators_ok": true,
+  "requirements_sha": "e141320e2714df805c009fe64dd92d17decd6429d5728f8ce42d6d868b775087",
+  "requirements_ok": true,
+  "file_hash_checks": [
+    [
+      "E-RWSK-01",
+      "archived_artifact",
+      "docs/research/interaction-library/artifacts/readwise-ai-workflows/source-notes.md",
+      true,
+      "151f5c756ce365487065045a89ee8949fab179285bc34c154cfe6788cb11ca9b",
+      "151f5c756ce365487065045a89ee8949fab179285bc34c154cfe6788cb11ca9b",
+      true
+    ],
+    [
+      "E-RWSK-01",
+      "raw_work_path",
+      "work/research/batch35-readwise/raw/README.md",
+      true,
+      "4f4e715c65aa4c68044e588b983ff57ae02b3db2502d2bb8a87bf0d05bc82dd0",
+      "4f4e715c65aa4c68044e588b983ff57ae02b3db2502d2bb8a87bf0d05bc82dd0",
+      true
+    ],
+    [
+      "E-RWSK-02",
+      "archived_artifact",
+      "docs/research/interaction-library/artifacts/readwise-ai-workflows/source-notes.md",
+      true,
+      "151f5c756ce365487065045a89ee8949fab179285bc34c154cfe6788cb11ca9b",
+      "151f5c756ce365487065045a89ee8949fab179285bc34c154cfe6788cb11ca9b",
+      true
+    ],
+    [
+      "E-RWSK-02",
+      "raw_work_path",
+      "work/research/batch35-readwise/raw/skills/readwise-mcp/SKILL.md",
+      true,
+      "a72340a2f73f9e10b81551b485be88de4322c22a92b105bf8878e94f63213994",
+      "a72340a2f73f9e10b81551b485be88de4322c22a92b105bf8878e94f63213994",
+      true
+    ],
+    [
+      "E-RWSK-03",
+      "archived_artifact",
+      "docs/research/interaction-library/artifacts/readwise-ai-workflows/source-notes.md",
+      true,
+      "151f5c756ce365487065045a89ee8949fab179285bc34c154cfe6788cb11ca9b",
+      "151f5c756ce365487065045a89ee8949fab179285bc34c154cfe6788cb11ca9b",
+      true
+    ],
+    [
+      "E-RWSK-03",
+      "raw_work_path",
+      "work/research/batch35-readwise/raw/skills/readwise-cli/SKILL.md",
+      true,
+      "629f39edbf8e4d342df867f9ad5cafd7e701fc6cfcd888e0085b574e1ff32a4e",
+      "629f39edbf8e4d342df867f9ad5cafd7e701fc6cfcd888e0085b574e1ff32a4e",
+      true
+    ],
+    [
+      "E-RWSK-04",
+      "archived_artifact",
+      "docs/research/interaction-library/artifacts/readwise-ai-workflows/source-notes.md",
+      true,
+      "151f5c756ce365487065045a89ee8949fab179285bc34c154cfe6788cb11ca9b",
+      "151f5c756ce365487065045a89ee8949fab179285bc34c154cfe6788cb11ca9b",
+      true
+    ],
+    [
+      "E-RWSK-04",
+      "raw_work_path",
+      "work/research/batch35-readwise/raw/skills/triage/SKILL.md",
+      true,
+      "24c0f39736de206369693be156318e16b02e5ea32bc656becff5f2fb82110c76",
+      "24c0f39736de206369693be156318e16b02e5ea32bc656becff5f2fb82110c76",
+      true
+    ],
+    [
+      "E-RWSK-05",
+      "archived_artifact",
+      "docs/research/interaction-library/artifacts/readwise-ai-workflows/source-notes.md",
+      true,
+      "151f5c756ce365487065045a89ee8949fab179285bc34c154cfe6788cb11ca9b",
+      "151f5c756ce365487065045a89ee8949fab179285bc34c154cfe6788cb11ca9b",
+      true
+    ],
+    [
+      "E-RWSK-05",
+      "raw_work_path",
+      "work/research/batch35-readwise/raw/skills/feed-catchup/SKILL.md",
+      true,
+      "eb1dff932e2f6a01f100163f6b3e57f5b2a04733e849eb3d42625e9e855ba9ad",
+      "eb1dff932e2f6a01f100163f6b3e57f5b2a04733e849eb3d42625e9e855ba9ad",
+      true
+    ],
+    [
+      "E-RWSK-06",
+      "archived_artifact",
+      "docs/research/interaction-library/artifacts/readwise-ai-workflows/source-notes.md",
+      true,
+      "151f5c756ce365487065045a89ee8949fab179285bc34c154cfe6788cb11ca9b",
+      "151f5c756ce365487065045a89ee8949fab179285bc34c154cfe6788cb11ca9b",
+      true
+    ],
+    [
+      "E-RWSK-06",
+      "raw_work_path",
+      "work/research/batch35-readwise/raw/skills/quiz/SKILL.md",
+      true,
+      "2a7e1214cd591c40484e7a0e749df48fbfbcc6754cbadc8d5dbeae1660e184bd",
+      "2a7e1214cd591c40484e7a0e749df48fbfbcc6754cbadc8d5dbeae1660e184bd",
+      true
+    ],
+    [
+      "E-RWSK-07",
+      "archived_artifact",
+      "docs/research/interaction-library/artifacts/readwise-ai-workflows/source-notes.md",
+      true,
+      "151f5c756ce365487065045a89ee8949fab179285bc34c154cfe6788cb11ca9b",
+      "151f5c756ce365487065045a89ee8949fab179285bc34c154cfe6788cb11ca9b",
+      true
+    ],
+    [
+      "E-RWSK-07",
+      "raw_work_path",
+      "work/research/batch35-readwise/raw/skills/build-persona/SKILL.md",
+      true,
+      "18fdd45d7c34919a5f8ae44ce55e5fdeb7bf08bae789ae7ef4138f1943aea0a1",
+      "18fdd45d7c34919a5f8ae44ce55e5fdeb7bf08bae789ae7ef4138f1943aea0a1",
+      true
+    ],
+    [
+      "E-RWSK-08",
+      "archived_artifact",
+      "docs/research/interaction-library/artifacts/readwise-ai-workflows/source-notes.md",
+      true,
+      "151f5c756ce365487065045a89ee8949fab179285bc34c154cfe6788cb11ca9b",
+      "151f5c756ce365487065045a89ee8949fab179285bc34c154cfe6788cb11ca9b",
+      true
+    ],
+    [
+      "E-RWSK-08",
+      "raw_work_path",
+      "work/research/batch35-readwise/raw/skills/reader-recap/SKILL.md",
+      true,
+      "1034232404d6ba9754dca6d4c745271421539054a199df0d0574a6c1f738b7ef",
+      "1034232404d6ba9754dca6d4c745271421539054a199df0d0574a6c1f738b7ef",
+      true
+    ],
+    [
+      "E-RWSK-09",
+      "archived_artifact",
+      "docs/research/interaction-library/artifacts/readwise-ai-workflows/source-notes.md",
+      true,
+      "151f5c756ce365487065045a89ee8949fab179285bc34c154cfe6788cb11ca9b",
+      "151f5c756ce365487065045a89ee8949fab179285bc34c154cfe6788cb11ca9b",
+      true
+    ],
+    [
+      "E-RWSK-09",
+      "raw_work_path",
+      "work/research/batch35-readwise/raw/skills/book-review/SKILL.md",
+      true,
+      "0d9375569eb113b6782c7c314420e9b7b5670d245fdf2a3cf984265f4b28a392",
+      "0d9375569eb113b6782c7c314420e9b7b5670d245fdf2a3cf984265f4b28a392",
+      true
+    ],
+    [
+      "E-RWSK-10",
+      "archived_artifact",
+      "docs/research/interaction-library/artifacts/readwise-ai-workflows/source-notes.md",
+      true,
+      "151f5c756ce365487065045a89ee8949fab179285bc34c154cfe6788cb11ca9b",
+      "151f5c756ce365487065045a89ee8949fab179285bc34c154cfe6788cb11ca9b",
+      true
+    ],
+    [
+      "E-RWSK-10",
+      "raw_work_path",
+      "work/research/batch35-readwise/raw/skills/highlight-graph/SKILL.md",
+      true,
+      "084c3861014f24374d51a0c04cce7f725e5e27d007d35d2944b7681829b0be52",
+      "084c3861014f24374d51a0c04cce7f725e5e27d007d35d2944b7681829b0be52",
+      true
+    ],
+    [
+      "E-RWSK-11",
+      "archived_artifact",
+      "docs/research/interaction-library/artifacts/readwise-ai-workflows/source-notes.md",
+      true,
+      "151f5c756ce365487065045a89ee8949fab179285bc34c154cfe6788cb11ca9b",
+      "151f5c756ce365487065045a89ee8949fab179285bc34c154cfe6788cb11ca9b",
+      true
+    ],
+    [
+      "E-RWSK-11",
+      "raw_work_path",
+      "work/research/batch35-readwise/raw/skills/now-reading-page/SKILL.md",
+      true,
+      "c92f7e1662c6ab7e5af2cf5c4474fc5b3171a2dc7d8ccfc97b5f1a8cfd4a374b",
+      "c92f7e1662c6ab7e5af2cf5c4474fc5b3171a2dc7d8ccfc97b5f1a8cfd4a374b",
+      true
+    ],
+    [
+      "E-RWSK-12",
+      "archived_artifact",
+      "docs/research/interaction-library/artifacts/readwise-ai-workflows/source-notes.md",
+      true,
+      "151f5c756ce365487065045a89ee8949fab179285bc34c154cfe6788cb11ca9b",
+      "151f5c756ce365487065045a89ee8949fab179285bc34c154cfe6788cb11ca9b",
+      true
+    ],
+    [
+      "E-RWSK-12",
+      "raw_work_path",
+      "work/research/batch35-readwise/raw/skills/surprise-me/SKILL.md",
+      true,
+      "6d99a54d0da2f7dce18b249c34b9ee0e5e5382462f52be1f1a3db39bfbc71ac3",
+      "6d99a54d0da2f7dce18b249c34b9ee0e5e5382462f52be1f1a3db39bfbc71ac3",
+      true
+    ],
+    [
+      "E-RWSK-13",
+      "archived_artifact",
+      "docs/research/interaction-library/artifacts/readwise-ai-workflows/source-notes.md",
+      true,
+      "151f5c756ce365487065045a89ee8949fab179285bc34c154cfe6788cb11ca9b",
+      "151f5c756ce365487065045a89ee8949fab179285bc34c154cfe6788cb11ca9b",
+      true
+    ],
+    [
+      "E-RWSK-13",
+      "raw_work_path",
+      "work/research/batch35-readwise/web-tool-docs.json",
+      true,
+      "e0385b7c9ce895e2809cc18a817b391323e39c73085595cc5de189e1f65ea293",
+      "e0385b7c9ce895e2809cc18a817b391323e39c73085595cc5de189e1f65ea293",
+      true
+    ],
+    [
+      "E-XYHL-01",
+      "archived_artifact",
+      "docs/research/interaction-library/artifacts/xiaoyuan-historical-learning/source-notes.md",
+      true,
+      "4a1d64ffbde54b15edc987a40f4290e235f4d85d4e74a37382f660ac29e935c0",
+      "4a1d64ffbde54b15edc987a40f4290e235f4d85d4e74a37382f660ac29e935c0",
+      true
+    ],
+    [
+      "E-XYHL-01",
+      "raw_work_path",
+      "work/research/batch35-xiaoyuan/original-review.html",
+      true,
+      "3ed3699d72176ef717120a3e1db509a0df1d0155022a10a424923f697b2f1ffc",
+      "3ed3699d72176ef717120a3e1db509a0df1d0155022a10a424923f697b2f1ffc",
+      true
+    ],
+    [
+      "E-XYHL-01",
+      "text_work_path",
+      "work/research/batch35-xiaoyuan/original-review.txt",
+      true,
+      "b9d4ac1a02e527c1fd16836a4d8098b7b7cbc81bb06a0d1208db6771b0af2c53",
+      "b9d4ac1a02e527c1fd16836a4d8098b7b7cbc81bb06a0d1208db6771b0af2c53",
+      true
+    ],
+    [
+      "E-XYHL-01",
+      "artifact_hashes",
+      "docs/research/interaction-library/artifacts/xiaoyuan-historical-learning/clip-1-4.00s.png",
+      true,
+      "aa2f03c19a61fc600d8c81e2d324b91070e36e36d43d3c7f109317a992d97d56",
+      "aa2f03c19a61fc600d8c81e2d324b91070e36e36d43d3c7f109317a992d97d56",
+      true
+    ],
+    [
+      "E-XYHL-01",
+      "artifact_hashes",
+      "docs/research/interaction-library/artifacts/xiaoyuan-historical-learning/clip-2-4.00s.png",
+      true,
+      "a905ef17afdb6ecf1e46e1e679a9d5f5c84e542660cd6043348658c3576e0527",
+      "a905ef17afdb6ecf1e46e1e679a9d5f5c84e542660cd6043348658c3576e0527",
+      true
+    ],
+    [
+      "E-XYHL-01",
+      "artifact_hashes",
+      "docs/research/interaction-library/artifacts/xiaoyuan-historical-learning/clip-3-4.00s.png",
+      true,
+      "e110e09d23ea57a307bf1927676051d9706dadcac620455fecb2cbb256197a44",
+      "e110e09d23ea57a307bf1927676051d9706dadcac620455fecb2cbb256197a44",
+      true
+    ],
+    [
+      "E-XYHL-02",
+      "archived_artifact",
+      "docs/research/interaction-library/artifacts/xiaoyuan-historical-learning/source-notes.md",
+      true,
+      "4a1d64ffbde54b15edc987a40f4290e235f4d85d4e74a37382f660ac29e935c0",
+      "4a1d64ffbde54b15edc987a40f4290e235f4d85d4e74a37382f660ac29e935c0",
+      true
+    ],
+    [
+      "E-XYHL-02",
+      "raw_work_path",
+      "work/research/batch35-xiaoyuan/followup-review.html",
+      true,
+      "6e7a258dd475f7996bec1f3efa681992dc126ae64c816c436e76a79df513d8f6",
+      "6e7a258dd475f7996bec1f3efa681992dc126ae64c816c436e76a79df513d8f6",
+      true
+    ],
+    [
+      "E-XYHL-02",
+      "text_work_path",
+      "work/research/batch35-xiaoyuan/followup-review.txt",
+      true,
+      "a7f593de8c5d6ddb486167f1e830db9382506c768ab6d68121db88f419e96242",
+      "a7f593de8c5d6ddb486167f1e830db9382506c768ab6d68121db88f419e96242",
+      true
+    ]
+  ],
+  "file_hash_checks_ok": true,
+  "inventories": {
+    "new_readwise_14": {
+      "path": "docs/research/interaction-library/batches/readwise-ai-workflows-inventory.csv",
+      "rows": 14,
+      "unique_ids": true,
+      "sha256": "95c474a571734b2091aa5d45db0a21026ea18d291b6fcfb02b6dc3986326c212"
+    },
+    "new_xiaoyuan_12": {
+      "path": "docs/research/interaction-library/batches/xiaoyuan-historical-learning-inventory.csv",
+      "rows": 12,
+      "unique_ids": true,
+      "sha256": "f100f5df2a88349b38b0c491ca351a3c429ac8a174e878b7275472bdc373ecae"
+    },
+    "old_readwise_281": {
+      "path": "docs/research/interaction-library/batches/readwise-controls-deepening-inventory.csv",
+      "rows": 281,
+      "unique_ids": true,
+      "sha256": "f690b2375d7484f30b137c9386c3e1fa2a3ff583572a98ee291c0d775d1ed7a1"
+    },
+    "old_xiaoyuan_33": {
+      "path": "docs/research/interaction-library/batches/xiaoyuan-hardware-controls-deepening-inventory.csv",
+      "rows": 33,
+      "unique_ids": true,
+      "sha256": "882c7bd92b1d561448575d84d2d01b2e97cc8a5de54eab0964f18650f7d717a1"
+    }
+  },
+  "new_inventory_refs": [
+    [
+      "Readwise 14项",
+      "../batches/readwise-ai-workflows-inventory.csv",
+      true,
+      "docs/research/interaction-library/batches/readwise-ai-workflows-inventory.csv"
+    ],
+    [
+      "小猿历史12域",
+      "../batches/xiaoyuan-historical-learning-inventory.csv",
+      true,
+      "docs/research/interaction-library/batches/xiaoyuan-historical-learning-inventory.csv"
+    ]
+  ],
+  "new_inventory_refs_ok": true
+}

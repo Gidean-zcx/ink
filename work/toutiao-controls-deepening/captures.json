@@ -1,0 +1,52 @@
+[
+  {
+    "name": "homepage.html",
+    "url": "https://www.toutiao.com/",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "final_url": "https://www.toutiao.com/",
+    "bytes": 4911,
+    "raw_work_path": "work/toutiao-controls-deepening/homepage.html",
+    "raw_sha256": "d2a3d5b1ce4dfff150c262d2e04c369fa105eff5a0400cd1a13717f44be1e82f"
+  },
+  {
+    "name": "appstore.html",
+    "url": "https://apps.apple.com/cn/app/%E4%BB%8A%E6%97%A5%E5%A4%B4%E6%9D%A1/id529092160",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "final_url": "https://apps.apple.com/cn/app/%E4%BB%8A%E6%97%A5%E5%A4%B4%E6%9D%A1/id529092160",
+    "bytes": 734911,
+    "raw_work_path": "work/toutiao-controls-deepening/appstore.html",
+    "raw_sha256": "93ee7266605d55a66adbaaba0f09f66ee7eafb63c746eea330ed4da99228c67b"
+  },
+  {
+    "name": "personal-management.html",
+    "url": "https://sf3-cdn-tos.douyinstatic.com/obj/ies-hotsoon-draft/toutiaoGIP/Personal_information_management.html",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "final_url": "https://sf3-cdn-tos.douyinstatic.com/obj/ies-hotsoon-draft/toutiaoGIP/Personal_information_management.html",
+    "bytes": 4530,
+    "raw_work_path": "work/toutiao-controls-deepening/personal-management.html",
+    "raw_sha256": "3a68f5f50cb76a134ada867942921ec6d51acbacb78a061b68724089e12834eb"
+  },
+  {
+    "name": "creator-help.html",
+    "url": "https://baike.toutiao.com/detail/195/282/0",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "final_url": "https://baike.toutiao.com/detail/195/282/0",
+    "bytes": 168524,
+    "raw_work_path": "work/toutiao-controls-deepening/creator-help.html",
+    "raw_sha256": "159961445c2b9451da2beb3a73fff1848947abe557b03d5e0ef7bcf213cb8b93"
+  },
+  {
+    "name": "basic-service.html",
+    "url": "https://lf9-cdn-tos.draftstatic.com/obj/ies-hotsoon-draft/toutiaoGIP/e327f6fd-d5b9-4090-b44e-d65dc891020a.html",
+    "checked_on": "2026-10-27",
+    "status": 200,
+    "final_url": "https://lf9-cdn-tos.draftstatic.com/obj/ies-hotsoon-draft/toutiaoGIP/e327f6fd-d5b9-4090-b44e-d65dc891020a.html",
+    "bytes": 22688,
+    "raw_work_path": "work/toutiao-controls-deepening/basic-service.html",
+    "raw_sha256": "419b026d853da91663a8967e4c8d6286a4e778b0b3541ad29057dc56be01724c"
+  }
+]

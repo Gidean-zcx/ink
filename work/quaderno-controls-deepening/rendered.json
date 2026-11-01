@@ -1,0 +1,20 @@
+[
+  {
+    "pdf_page": 57,
+    "printed_page": 57,
+    "path": "docs/research/interaction-library/artifacts/quaderno-controls-deepening/gen3c-p57.png",
+    "sha256": "f485d64855a748cac6b5bcad5569a5c6ed34a640c81af6047a09c2def310977d"
+  },
+  {
+    "pdf_page": 66,
+    "printed_page": 66,
+    "path": "docs/research/interaction-library/artifacts/quaderno-controls-deepening/gen3c-p66.png",
+    "sha256": "ea7b8904b1cc03e6572fbbca51de6aa44ce407afe6c9700c497d50d1c3c31125"
+  },
+  {
+    "pdf_page": 86,
+    "printed_page": 86,
+    "path": "docs/research/interaction-library/artifacts/quaderno-controls-deepening/gen3c-p86.png",
+    "sha256": "5a32b3086339cdaaf805069cff2a71a4d196bbacb27a30a707a27117966729ed"
+  }
+]

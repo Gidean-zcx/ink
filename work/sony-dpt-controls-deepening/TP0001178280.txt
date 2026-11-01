@@ -1,0 +1,12 @@
+To transfer documents to the Digital Paper, it is necessary to install the dedicated app, “Digital Paper App,” onto your computer and to set up a connection (perform pairing) between the Digital Paper and the Digital Paper App on the computer.
+By installing the Digital Paper App onto multiple computers in your home or office, you can pair multiple computers with a single Digital Paper device. If one computer is set up with multiple user accounts, each user account must be paired separately.
+The Digital Paper App for a single user account can be paired with multiple Digital Paper devices. For information on how to pair with the Digital Paper App, see the links in “Related Topic.”
+When multiple user accounts are set to a computer, make sure to set “Connecting a second and subsequent Digital Paper” for each user account.
+If you skipped pairing during the initial setup or if you want to install the Digital Paper App onto a different computer, follow the steps below.
+Turn on the computer and connect it to the Internet.
+If the Digital Paper App has already been installed on the computer, steps 1 and 2 are not necessary. Please proceed to step 3.
+Download the Digital Paper App from the customer support website, and install it onto the computer.
+Launch the Digital Paper App, and use the supplied USB cable to connect the computer to the Digital Paper.
+The [Connect to Digital Paper] screen is displayed.
+Follow the screen of the Digital Paper App, and pair the Digital Paper device with the Digital Paper App.
+If a software update is available for the Digital Paper, perform the update.

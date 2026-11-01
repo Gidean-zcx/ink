@@ -1,0 +1,2298 @@
+[
+  {
+    "at": "2026-10-27T02:00:44.946505+00:00",
+    "url": "https://www.duolingo.com/chess",
+    "status": 200,
+    "resource_type": "document",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:00:45.149638+00:00",
+    "url": "https://cdn.cookielaw.org/consent/55a7f100-001e-4085-87ec-1a6d522f7d67/55a7f100-001e-4085-87ec-1a6d522f7d67.json",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:00:45.269523+00:00",
+    "url": "https://geolocation.onetrust.com/cookieconsentpub/v1/geo/location",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:00:46.205561+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:00:46.282538+00:00",
+    "url": "https://zombie.duolingo.com/0/web.json",
+    "status": 404,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:00:46.290491+00:00",
+    "url": "https://cdn.cookielaw.org/consent/55a7f100-001e-4085-87ec-1a6d522f7d67/018f30d2-10c8-771e-8439-98a6c95838b2/en.json",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:00:46.298416+00:00",
+    "url": "https://www.duolingo.com/2023-05-23/config",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:00:46.303776+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:00:46.350583+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:00:46.471443+00:00",
+    "url": "https://www.duolingo.com/users/undefined/streak-goal-next-options",
+    "status": 404,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:00:46.476735+00:00",
+    "url": "https://www.duolingo.com/users/undefined/streak-goal-current",
+    "status": 404,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:00:46.478101+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:00:46.524951+00:00",
+    "url": "https://www.recaptcha.net/recaptcha/enterprise/anchor",
+    "status": 200,
+    "resource_type": "document",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:00:46.617034+00:00",
+    "url": "https://cdn.cookielaw.org/scripttemplates/202404.1.0/assets/otCommonStyles.css",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:00:47.089707+00:00",
+    "url": "https://www.google-analytics.com/j/collect",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:00:47.198600+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:00:47.200295+00:00",
+    "url": "https://analytics.google.com/g/collect",
+    "status": 204,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:00:47.202840+00:00",
+    "url": "https://www.google.com/rmkt/collect/728842606/",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:00:47.205128+00:00",
+    "url": "https://www.google.com/ccm/collect",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:00:47.206669+00:00",
+    "url": "https://ad.doubleclick.net/ccm/s/collect",
+    "status": 204,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:00:47.537947+00:00",
+    "url": "https://www.googleadservices.com/pagead/conversion/397119219/",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:00:47.893322+00:00",
+    "url": "https://googleads.g.doubleclick.net/pagead/viewthroughconversion/397119219/",
+    "status": 302,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:00:47.903066+00:00",
+    "url": "https://www.google.com/pagead/1p-conversion/397119219/",
+    "status": 302,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:00:47.909141+00:00",
+    "url": "https://www.google.co.jp/pagead/1p-conversion/397119219/",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:01:13.249235+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:01:19.139267+00:00",
+    "url": "https://analytics.google.com/g/collect",
+    "status": 204,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:01:41.872336+00:00",
+    "url": "https://zombie.duolingo.com/0/web.json",
+    "status": 404,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:01:42.091932+00:00",
+    "url": "https://www.googleadservices.com/pagead/conversion/728842606/",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:01:42.120985+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:01:42.147278+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:01:42.148957+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:01:42.301518+00:00",
+    "url": "https://www.recaptcha.net/recaptcha/enterprise/reload",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:01:42.319454+00:00",
+    "url": "https://googleads.g.doubleclick.net/pagead/viewthroughconversion/728842606/",
+    "status": 302,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:01:42.324679+00:00",
+    "url": "https://www.google.com/pagead/1p-conversion/728842606/",
+    "status": 302,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:01:42.328532+00:00",
+    "url": "https://www.google.co.jp/pagead/1p-conversion/728842606/",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:01:42.387982+00:00",
+    "url": "https://www.recaptcha.net/recaptcha/enterprise/clr",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:01:42.490514+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:01:43.391789+00:00",
+    "url": "https://www.duolingo.com/2023-05-23/users",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:01:43.581202+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:01:43.802525+00:00",
+    "url": "https://www.duolingo.com/2023-05-23/users/645359785987789",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:01:44.189986+00:00",
+    "url": "https://d3kwyfyztuo0xs.cloudfront.net/config/latest/0.9.6",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:01:44.191675+00:00",
+    "url": "https://www.duolingo.com/rocks/1/containers/learning_app_ui_preferences/users/645359785987789",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:01:44.366438+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:01:44.370155+00:00",
+    "url": "https://www.duolingo.com/2023-05-23/users/645359785987789",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:01:44.376449+00:00",
+    "url": "https://www.duolingo.com/users/645359785987789/avatar-builder-config",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:01:44.381924+00:00",
+    "url": "https://www.duolingo.com/users/645359785987789/streak-goal-next-options",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:01:44.387669+00:00",
+    "url": "https://www.duolingo.com/users/645359785987789/streak-goal-next-options",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:01:44.393231+00:00",
+    "url": "https://www.duolingo.com/2023-05-23/users/645359785987789/subscription-catalog",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:01:44.396605+00:00",
+    "url": "https://www.duolingo.com/users/645359785987789/streak-goal-current",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:01:44.399103+00:00",
+    "url": "https://www.duolingo.com/users/645359785987789/streak-goal-current",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:01:44.404424+00:00",
+    "url": "https://www.duolingo.com/2017-06-30/friends/users/645359785987789/profile",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:01:44.407078+00:00",
+    "url": "https://d35aaqx5ub95lt.cloudfront.net/sounds/0a27c1ee63dd220647e8410a0029aed2.mp3",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:01:44.413010+00:00",
+    "url": "https://www.duolingo.com/2023-05-23/shop-items",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:01:44.595554+00:00",
+    "url": "https://www.duolingo.com/2023-05-23/users/645359785987789",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:01:44.873805+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:01:44.882034+00:00",
+    "url": "https://www.duolingo.com/2023-05-23/config",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:01:44.889137+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:01:44.893991+00:00",
+    "url": "https://www.duolingo.com/users/645359785987789/streak-goal-current",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:01:44.899102+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:01:44.903100+00:00",
+    "url": "https://www.duolingo.com/users/645359785987789/streak-goal-next-options",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:01:44.906201+00:00",
+    "url": "https://www.duolingo.com/2023-05-23/users/645359785987789/xp_summaries",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:01:44.908595+00:00",
+    "url": "https://www.duolingo.com/users/645359785987789/built-avatar-states",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:01:44.922396+00:00",
+    "url": "https://www.duolingo.com/2017-06-30/words-list/supported-courses",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:01:44.934516+00:00",
+    "url": "https://www.duolingo.com/2023-05-23/attribution/survey/custom",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:01:45.023619+00:00",
+    "url": "https://www.duolingo.com/2017-06-30/friends/users/645359785987789/recommendations",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:01:45.048549+00:00",
+    "url": "https://d35aaqx5ub95lt.cloudfront.net/lottie/funboarding/4e5c13bf6b0be65006ae027f066362fc.json",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:01:45.061502+00:00",
+    "url": "https://d35aaqx5ub95lt.cloudfront.net/lottie/funboarding/a3c85b28676df146ce9d53540978f3e5.json",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:01:45.069494+00:00",
+    "url": "https://d35aaqx5ub95lt.cloudfront.net/lottie/funboarding/679e4fbde0d7bb55821bcfc215744dbb.json",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:01:45.077404+00:00",
+    "url": "https://d35aaqx5ub95lt.cloudfront.net/lottie/funboarding/ed177eb496e0280c95367b83efb512d2.json",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:01:45.087419+00:00",
+    "url": "https://d35aaqx5ub95lt.cloudfront.net/vendor/fa3d16bb6533dc46e7703fe9dfe74d97.json",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:01:45.096122+00:00",
+    "url": "https://d35aaqx5ub95lt.cloudfront.net/vendor/fa3d16bb6533dc46e7703fe9dfe74d97.json",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:01:45.360157+00:00",
+    "url": "https://www.duolingo.com/2017-06-30/users/645359785987789/family-plan/invites",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:01:45.370631+00:00",
+    "url": "https://www.duolingo.com/v2/mistakes/users/645359785987789/courses/CHESS_CH/count",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:01:45.888281+00:00",
+    "url": "https://www.duolingo.com/api/1/courses/list",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:01:45.956524+00:00",
+    "url": "https://goals-api.duolingo.com/schema",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:01:45.975397+00:00",
+    "url": "https://duolingo-leaderboards-prod.duolingo.com/leaderboards/4b668ba6-288d-4b78-81a3-7b213175ae2c/users/645359785987789",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:01:45.979546+00:00",
+    "url": "https://analytics.google.com/g/collect",
+    "status": 204,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:01:45.983653+00:00",
+    "url": "https://duolingo-leaderboards-prod.duolingo.com/leaderboards/7d9f5dd1-8423-491a-91f2-2532052038ce/users/645359785987789",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:01:45.995503+00:00",
+    "url": "https://analytics.google.com/g/collect",
+    "status": 204,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:01:46.006495+00:00",
+    "url": "https://analytics.google.com/g/collect",
+    "status": 204,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:01:46.011428+00:00",
+    "url": "https://goals-api.duolingo.com/users/645359785987789/quests",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:01:46.019078+00:00",
+    "url": "https://goals-api.duolingo.com/users/645359785987789/progress",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:01:46.022080+00:00",
+    "url": "https://analytics.google.com/g/collect",
+    "status": 204,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:01:46.027093+00:00",
+    "url": "https://www.google.com/measurement/conversion",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:01:46.031638+00:00",
+    "url": "https://www.google.com/measurement/conversion",
+    "status": 302,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:01:46.036820+00:00",
+    "url": "https://www.duolingo.com/2017-06-30/messaging/get-messages/",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:01:46.086254+00:00",
+    "url": "https://www.google.com/measurement/1p-conversion/",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:02:01.429655+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:02:01.431292+00:00",
+    "url": "https://duolingo-leaderboards-prod.duolingo.com/reactions/uncohorted/7d9f5dd1-8423-491a-91f2-2532052038ce/users/645359785987789",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:02:01.432651+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:02:01.434547+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:02:01.436413+00:00",
+    "url": "https://www.duolingo.com/2023-05-23/attribution/users/645359785987789/devices",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:02:01.438778+00:00",
+    "url": "https://app.adjust.com/session",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:02:01.440171+00:00",
+    "url": "https://app.adjust.com/attribution",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:02:33.773398+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:02:34.082026+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:02:34.534087+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:03:12.921476+00:00",
+    "url": "https://zombie.duolingo.com/89/web.json",
+    "status": 404,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:03:13.273848+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:03:13.672007+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:03:38.410330+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:03:38.430539+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:03:38.435416+00:00",
+    "url": "https://analytics.google.com/g/collect",
+    "status": 204,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:03:38.440614+00:00",
+    "url": "https://analytics.google.com/g/collect",
+    "status": 204,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:03:38.450795+00:00",
+    "url": "https://www.google.com/measurement/conversion",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:03:38.452992+00:00",
+    "url": "https://zombie.duolingo.com/89/web.json",
+    "status": 404,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:03:44.194512+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:03:44.506569+00:00",
+    "url": "https://www.duolingo.com/2023-05-23/users/645359785987789",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "PATCH"
+  },
+  {
+    "at": "2026-10-27T02:03:44.711648+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:03:45.238632+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:03:46.027057+00:00",
+    "url": "https://analytics.google.com/g/collect",
+    "status": 204,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:03:46.029549+00:00",
+    "url": "https://analytics.google.com/g/collect",
+    "status": 204,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:03:46.036133+00:00",
+    "url": "https://www.google.com/measurement/conversion",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:04:10.272244+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:04:10.419252+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:04:11.187185+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:04:11.711270+00:00",
+    "url": "https://analytics.google.com/g/collect",
+    "status": 204,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:04:11.714896+00:00",
+    "url": "https://analytics.google.com/g/collect",
+    "status": 204,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:04:11.719742+00:00",
+    "url": "https://www.google.com/measurement/conversion",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:04:18.038252+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:04:18.506370+00:00",
+    "url": "https://zombie.duolingo.com/89/web.json",
+    "status": 404,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:04:18.707551+00:00",
+    "url": "https://www.duolingo.com/2023-05-23/users/645359785987789",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "PATCH"
+  },
+  {
+    "at": "2026-10-27T02:04:19.012483+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:04:19.374159+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:04:19.554173+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:04:20.209675+00:00",
+    "url": "https://analytics.google.com/g/collect",
+    "status": 204,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:04:20.222950+00:00",
+    "url": "https://analytics.google.com/g/collect",
+    "status": 204,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:04:20.230285+00:00",
+    "url": "https://www.google.com/measurement/conversion",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:04:26.803126+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:04:47.620609+00:00",
+    "url": "https://d35aaqx5ub95lt.cloudfront.net/lottie/681e3b6084394d09df2af15f9d12d51c.json",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:04:47.627912+00:00",
+    "url": "https://d35aaqx5ub95lt.cloudfront.net/lottie/7f1370b3f1d802951f0cab013ecb05c2.json",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:04:47.635590+00:00",
+    "url": "https://d35aaqx5ub95lt.cloudfront.net/lottie/6f4525b361ab4ef04c92af8f42cdcec6.json",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:04:48.140734+00:00",
+    "url": "https://www.duolingo.com/2023-05-23/sessions",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:04:48.176427+00:00",
+    "url": "https://d35aaqx5ub95lt.cloudfront.net/vendor/9932ca2b9e20838274b4171351147e7c.wasm",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:04:55.448543+00:00",
+    "url": "https://d35aaqx5ub95lt.cloudfront.net/lottie/2a62162ea93d55dee67189cc47bd98ab.json",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:04:55.451075+00:00",
+    "url": "https://d35aaqx5ub95lt.cloudfront.net/vendor/107ae4ad85c899d3c55a037fa3c9be83.svg",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:04:55.455046+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:04:55.457629+00:00",
+    "url": "https://d35aaqx5ub95lt.cloudfront.net/vendor/9932ca2b9e20838274b4171351147e7c.wasm",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:04:55.460521+00:00",
+    "url": "https://d35aaqx5ub95lt.cloudfront.net/rive/d943498900d7b9774c2a48129d487f83.riv",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:04:55.462704+00:00",
+    "url": "https://d35aaqx5ub95lt.cloudfront.net/rive/0f2c4531614dd017fcec882bb6caa4f3.riv",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:04:55.465010+00:00",
+    "url": "https://d35aaqx5ub95lt.cloudfront.net/fonts/a9a093c88a0bae992c95d1dc3b6730a1.otf",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:04:55.467189+00:00",
+    "url": "https://analytics.google.com/g/collect",
+    "status": 204,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:05:17.805440+00:00",
+    "url": "https://zombie.duolingo.com/89/web.json",
+    "status": 404,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:05:17.813162+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:05:56.468298+00:00",
+    "url": "https://d35aaqx5ub95lt.cloudfront.net/lottie/funboarding/679e4fbde0d7bb55821bcfc215744dbb.json",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:05:56.857882+00:00",
+    "url": "https://www.duolingo.com/v2/mistakes/users/645359785987789/courses/CHESS_CH",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:05:56.864439+00:00",
+    "url": "https://www.duolingo.com/v2/mistakes/users/645359785987789/courses/CHESS_CH",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:05:56.869524+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:05:56.900620+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:05:56.910471+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:05:56.946659+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:05:56.960550+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:05:56.986990+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:06:21.188916+00:00",
+    "url": "https://analytics.google.com/g/collect",
+    "status": 204,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:06:21.191233+00:00",
+    "url": "https://zombie.duolingo.com/89/web.json",
+    "status": 404,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:06:21.193015+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:06:21.701563+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:06:34.244788+00:00",
+    "url": "https://d35aaqx5ub95lt.cloudfront.net/lottie/681e3b6084394d09df2af15f9d12d51c.json",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:06:34.251509+00:00",
+    "url": "https://d35aaqx5ub95lt.cloudfront.net/lottie/7f1370b3f1d802951f0cab013ecb05c2.json",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:06:34.255878+00:00",
+    "url": "https://d35aaqx5ub95lt.cloudfront.net/lottie/6f4525b361ab4ef04c92af8f42cdcec6.json",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:06:34.448540+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:06:34.457983+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:06:34.466361+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:06:34.489601+00:00",
+    "url": "https://www.duolingo.com/2023-05-23/sessions",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:06:34.638034+00:00",
+    "url": "https://d35aaqx5ub95lt.cloudfront.net/vendor/9932ca2b9e20838274b4171351147e7c.wasm",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:06:34.645687+00:00",
+    "url": "https://d35aaqx5ub95lt.cloudfront.net/lottie/2a62162ea93d55dee67189cc47bd98ab.json",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:06:34.654136+00:00",
+    "url": "https://d35aaqx5ub95lt.cloudfront.net/rive/d943498900d7b9774c2a48129d487f83.riv",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:06:34.658186+00:00",
+    "url": "https://d35aaqx5ub95lt.cloudfront.net/rive/0f2c4531614dd017fcec882bb6caa4f3.riv",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:06:34.802259+00:00",
+    "url": "https://d35aaqx5ub95lt.cloudfront.net/fonts/a9a093c88a0bae992c95d1dc3b6730a1.otf",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:06:35.109512+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:06:35.145418+00:00",
+    "url": "https://zombie.duolingo.com/89/web.json",
+    "status": 404,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:06:45.647373+00:00",
+    "url": "https://analytics.google.com/g/collect",
+    "status": 204,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:06:47.862702+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:07:19.270772+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:07:47.157039+00:00",
+    "url": "https://zombie.duolingo.com/89/web.json",
+    "status": 404,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:08:11.250261+00:00",
+    "url": "https://zombie.duolingo.com/89/web.json",
+    "status": 404,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:08:13.286529+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:08:14.711977+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:08:15.113196+00:00",
+    "url": "https://d35aaqx5ub95lt.cloudfront.net/lottie/2a62162ea93d55dee67189cc47bd98ab.json",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:08:15.230170+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:08:55.201171+00:00",
+    "url": "https://zombie.duolingo.com/89/web.json",
+    "status": 404,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:09:14.058516+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:09:16.517993+00:00",
+    "url": "https://d35aaqx5ub95lt.cloudfront.net/lottie/2a62162ea93d55dee67189cc47bd98ab.json",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:09:16.704646+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:09:53.380492+00:00",
+    "url": "https://zombie.duolingo.com/89/web.json",
+    "status": 404,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:09:54.550249+00:00",
+    "url": "https://www.duolingo.com/2023-05-23/users/645359785987789/remove-heart",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "PUT"
+  },
+  {
+    "at": "2026-10-27T02:09:54.620527+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:09:54.645957+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:10:16.349687+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:10:34.399258+00:00",
+    "url": "https://zombie.duolingo.com/89/web.json",
+    "status": 404,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:10:38.473664+00:00",
+    "url": "https://d35aaqx5ub95lt.cloudfront.net/lottie/2a62162ea93d55dee67189cc47bd98ab.json",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:10:38.571785+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:11:10.855653+00:00",
+    "url": "https://d35aaqx5ub95lt.cloudfront.net/lottie/2a62162ea93d55dee67189cc47bd98ab.json",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:11:10.983180+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:11:17.336690+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:11:34.586635+00:00",
+    "url": "https://zombie.duolingo.com/89/web.json",
+    "status": 404,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:11:36.981143+00:00",
+    "url": "https://d35aaqx5ub95lt.cloudfront.net/lottie/2a62162ea93d55dee67189cc47bd98ab.json",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:11:37.130626+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:12:13.432674+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:12:13.570015+00:00",
+    "url": "https://d35aaqx5ub95lt.cloudfront.net/lottie/2a62162ea93d55dee67189cc47bd98ab.json",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:12:13.682628+00:00",
+    "url": "https://zombie.duolingo.com/89/web.json",
+    "status": 404,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:12:13.758679+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:12:32.219691+00:00",
+    "url": "https://d35aaqx5ub95lt.cloudfront.net/lottie/2a62162ea93d55dee67189cc47bd98ab.json",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:12:32.373587+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:13:00.095864+00:00",
+    "url": "https://d35aaqx5ub95lt.cloudfront.net/lottie/2a62162ea93d55dee67189cc47bd98ab.json",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:13:00.232499+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:13:02.741880+00:00",
+    "url": "https://zombie.duolingo.com/89/web.json",
+    "status": 404,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:13:20.620895+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:13:21.384531+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:13:23.972453+00:00",
+    "url": "https://d35aaqx5ub95lt.cloudfront.net/lottie/2a62162ea93d55dee67189cc47bd98ab.json",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:13:24.046181+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:13:49.440326+00:00",
+    "url": "https://d35aaqx5ub95lt.cloudfront.net/lottie/2a62162ea93d55dee67189cc47bd98ab.json",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:13:49.617442+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:13:49.923503+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:13:49.943239+00:00",
+    "url": "https://www.duolingo.com/2023-05-23/sessions/45378909-3d62-4157-a58d-2c6bf611619d",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "PUT"
+  },
+  {
+    "at": "2026-10-27T02:13:50.184378+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:13:50.202258+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:13:50.565291+00:00",
+    "url": "https://www.duolingo.com/2023-05-23/users/645359785987789",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:13:51.246498+00:00",
+    "url": "https://www.duolingo.com/v2/mistakes/users/645359785987789/courses/CHESS_CH/count",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:13:51.257463+00:00",
+    "url": "https://www.duolingo.com/2023-05-23/users/645359785987789/xp_summaries",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:13:51.267357+00:00",
+    "url": "https://www.duolingo.com/2023-05-23/score-info/scores/sync",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:13:51.297951+00:00",
+    "url": "https://www.duolingo.com/2023-05-23/users/645359785987789/subscription-catalog",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:13:51.403523+00:00",
+    "url": "https://www.duolingo.com/2023-05-23/shop-items",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:13:52.036407+00:00",
+    "url": "https://www.duolingo.com/2023-05-23/users/645359785987789/shop-items",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:13:52.152512+00:00",
+    "url": "https://goals-api.duolingo.com/users/645359785987789/progress/batch",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:13:52.198874+00:00",
+    "url": "https://www.duolingo.com/2023-05-23/users/645359785987789/shop-items",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:13:52.475316+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:13:52.588327+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:13:52.610289+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:13:52.618723+00:00",
+    "url": "https://www.duolingo.com/2017-06-30/messaging/get-messages/",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:13:52.715387+00:00",
+    "url": "https://www.duolingo.com/rewards/users/645359785987789/consume/DAILY_QUEST_FIRST-2207b509_a6ac_333e_85e1_9e197881d348-BASE_CHEST-GEMS",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "PUT"
+  },
+  {
+    "at": "2026-10-27T02:13:52.813991+00:00",
+    "url": "https://d35aaqx5ub95lt.cloudfront.net/lottie/sessionEnd/68a30cf365cfc1525ebfa9cd6104fba9.json",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:13:53.049889+00:00",
+    "url": "https://goals-api.duolingo.com/users/645359785987789/progress/batch",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:14:19.823530+00:00",
+    "url": "https://duolingo-leaderboards-prod.duolingo.com/leaderboards/4b668ba6-288d-4b78-81a3-7b213175ae2c/users/645359785987789",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:14:19.827595+00:00",
+    "url": "https://duolingo-leaderboards-prod.duolingo.com/leaderboards/7d9f5dd1-8423-491a-91f2-2532052038ce/users/645359785987789",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:14:19.832438+00:00",
+    "url": "https://duolingo-leaderboards-prod.duolingo.com/reactions/uncohorted/7d9f5dd1-8423-491a-91f2-2532052038ce/users/645359785987789",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:14:19.837921+00:00",
+    "url": "https://zombie.duolingo.com/89/web.json",
+    "status": 404,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:14:19.840517+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:14:20.338609+00:00",
+    "url": "https://d35aaqx5ub95lt.cloudfront.net/lottie/a2bf5e70eb58fda52068ab397569a0e7.json",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:14:20.360490+00:00",
+    "url": "https://d35aaqx5ub95lt.cloudfront.net/rive/c75092d1cdbfc99faa361d669ad5ba11.riv",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:14:20.365867+00:00",
+    "url": "https://d35aaqx5ub95lt.cloudfront.net/rive/b96b15c836fdb2c61eb77d5f15308f1d.riv",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:14:20.492138+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:14:20.523774+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:14:20.531689+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:14:30.357319+00:00",
+    "url": "https://d35aaqx5ub95lt.cloudfront.net/lottie/ac2431a0ca595dc031085a1ddfe86817.json",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:14:30.539697+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:14:30.677526+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:14:45.775947+00:00",
+    "url": "https://zombie.duolingo.com/89/web.json",
+    "status": 404,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:15:36.231762+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:15:36.234800+00:00",
+    "url": "https://zombie.duolingo.com/89/web.json",
+    "status": 404,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:15:36.649054+00:00",
+    "url": "https://d35aaqx5ub95lt.cloudfront.net/lottie/2a62162ea93d55dee67189cc47bd98ab.json",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:15:36.842796+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:15:36.880176+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:15:37.031552+00:00",
+    "url": "https://www.duolingo.com/users/645359785987789/streak-goal-current",
+    "status": 403,
+    "resource_type": "fetch",
+    "method": "PUT"
+  },
+  {
+    "at": "2026-10-27T02:15:37.289629+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:15:49.109108+00:00",
+    "url": "https://d35aaqx5ub95lt.cloudfront.net/lottie/de3e9a8a9576d9bb68cb519a438ed03f.json",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:15:49.267224+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:15:49.294059+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:15:49.299178+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:16:04.363837+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:16:04.380966+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:16:04.552628+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:16:12.901355+00:00",
+    "url": "https://zombie.duolingo.com/89/web.json",
+    "status": 404,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:16:13.445722+00:00",
+    "url": "https://www.duolingo.com/v2/mistakes/users/645359785987789/courses/CHESS_CH",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:16:13.453243+00:00",
+    "url": "https://www.duolingo.com/2017-06-30/messaging/ack-messages/",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:16:13.512306+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:16:13.519356+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:16:13.528054+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:16:13.531464+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:16:13.534484+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:16:13.537586+00:00",
+    "url": "https://www.duolingo.com/v2/mistakes/users/645359785987789/courses/CHESS_CH",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:16:13.644024+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:16:13.660799+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:16:13.681700+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:16:13.882177+00:00",
+    "url": "https://d35aaqx5ub95lt.cloudfront.net/images/path/4950512fbafc582eeebe5d171c08285b.svg",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:16:14.025808+00:00",
+    "url": "https://analytics.google.com/g/collect",
+    "status": 204,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:16:23.968099+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:16:23.988388+00:00",
+    "url": "https://www.duolingo.com/learn",
+    "status": 200,
+    "resource_type": "document",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:16:24.215753+00:00",
+    "url": "https://cdn.cookielaw.org/consent/55a7f100-001e-4085-87ec-1a6d522f7d67/55a7f100-001e-4085-87ec-1a6d522f7d67.json",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:16:24.540337+00:00",
+    "url": "https://geolocation.onetrust.com/cookieconsentpub/v1/geo/location",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:16:24.555580+00:00",
+    "url": "https://o4506106988134400.ingest.sentry.io/api/4506139970502656/envelope/",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:16:24.963068+00:00",
+    "url": "https://cdn.cookielaw.org/consent/55a7f100-001e-4085-87ec-1a6d522f7d67/018f30d2-10c8-771e-8439-98a6c95838b2/en.json",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:16:25.079778+00:00",
+    "url": "https://zombie.duolingo.com/89/web.json",
+    "status": 404,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:16:25.131606+00:00",
+    "url": "https://www.recaptcha.net/recaptcha/enterprise/anchor",
+    "status": 200,
+    "resource_type": "document",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:16:25.301660+00:00",
+    "url": "https://www.duolingo.com/2023-05-23/config",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:16:25.307837+00:00",
+    "url": "https://www.duolingo.com/users/645359785987789/streak-goal-current",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:16:25.330305+00:00",
+    "url": "https://d35aaqx5ub95lt.cloudfront.net/sounds/0a27c1ee63dd220647e8410a0029aed2.mp3",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:16:25.389903+00:00",
+    "url": "https://www.duolingo.com/rocks/1/containers/learning_app_ui_preferences/users/645359785987789",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:16:25.402898+00:00",
+    "url": "https://www.duolingo.com/users/645359785987789/streak-goal-next-options",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:16:25.458474+00:00",
+    "url": "https://cdn.cookielaw.org/scripttemplates/202404.1.0/assets/otCommonStyles.css",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:16:26.014161+00:00",
+    "url": "https://d35aaqx5ub95lt.cloudfront.net/images/path/4950512fbafc582eeebe5d171c08285b.svg",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:16:26.197752+00:00",
+    "url": "https://www.duolingo.com/2017-06-30/users/645359785987789/family-plan/invites",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:16:26.218435+00:00",
+    "url": "https://www.duolingo.com/v2/mistakes/users/645359785987789/courses/CHESS_CH",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:16:26.232960+00:00",
+    "url": "https://www.duolingo.com/v2/mistakes/users/645359785987789/courses/CHESS_CH",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:16:26.249643+00:00",
+    "url": "https://www.duolingo.com/2017-06-30/words-list/supported-courses",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:16:26.264687+00:00",
+    "url": "https://duolingo-leaderboards-prod.duolingo.com/reactions/uncohorted/7d9f5dd1-8423-491a-91f2-2532052038ce/users/645359785987789",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:16:26.372344+00:00",
+    "url": "https://www.duolingo.com/2023-05-23/users/645359785987789",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:16:27.187224+00:00",
+    "url": "https://www.duolingo.com/2017-06-30/messaging/get-messages/",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:16:27.203925+00:00",
+    "url": "https://www.duolingo.com/2023-05-23/config",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:16:27.216957+00:00",
+    "url": "https://www.duolingo.com/users/645359785987789/avatar-builder-config",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:16:27.229571+00:00",
+    "url": "https://www.duolingo.com/2023-05-23/users/645359785987789/subscription-catalog",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:16:27.243807+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:16:27.253772+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:16:27.273525+00:00",
+    "url": "https://www.duolingo.com/2023-05-23/shop-items",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:16:27.771681+00:00",
+    "url": "https://www.duolingo.com/2023-05-23/users/645359785987789/xp_summaries",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:16:27.790201+00:00",
+    "url": "https://www.duolingo.com/users/645359785987789/built-avatar-states",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:16:27.805861+00:00",
+    "url": "https://www.duolingo.com/users/645359785987789/streak-goal-current",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:16:27.813171+00:00",
+    "url": "https://www.duolingo.com/users/645359785987789/streak-goal-next-options",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:16:27.820220+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:16:27.827078+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:16:27.831678+00:00",
+    "url": "https://www.duolingo.com/2023-05-23/users/645359785987789",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:16:27.844358+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:16:27.851289+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:16:27.859617+00:00",
+    "url": "https://duolingo-leaderboards-prod.duolingo.com/leaderboards/7d9f5dd1-8423-491a-91f2-2532052038ce/users/645359785987789",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:16:27.886772+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:16:27.903192+00:00",
+    "url": "https://www.duolingo.com/2017-06-30/friends/users/645359785987789/recommendations",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:16:27.920061+00:00",
+    "url": "https://duolingo-leaderboards-prod.duolingo.com/leaderboards/4b668ba6-288d-4b78-81a3-7b213175ae2c/users/645359785987789",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:16:27.958735+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:16:27.981145+00:00",
+    "url": "https://www.duolingo.com/2017-06-30/friends/users/645359785987789/profile",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:16:28.412486+00:00",
+    "url": "https://goals-api.duolingo.com/users/645359785987789/quests",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:16:28.426410+00:00",
+    "url": "https://goals-api.duolingo.com/users/645359785987789/progress",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:16:28.434498+00:00",
+    "url": "https://goals-api.duolingo.com/schema",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:16:29.103540+00:00",
+    "url": "https://duolingo-leaderboards-prod.duolingo.com/reactions/uncohorted/7d9f5dd1-8423-491a-91f2-2532052038ce/users/645359785987789",
+    "status": 200,
+    "resource_type": "fetch",
+    "method": "GET"
+  },
+  {
+    "at": "2026-10-27T02:16:29.631079+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:17:08.430186+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:17:08.433324+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:17:08.435904+00:00",
+    "url": "https://www.duolingo.com/api/1/sync/batch",
+    "status": 200,
+    "resource_type": "xhr",
+    "method": "POST"
+  },
+  {
+    "at": "2026-10-27T02:17:08.438042+00:00",
+    "url": "https://zombie.duolingo.com/89/web.json",
+    "status": 404,
+    "resource_type": "fetch",
+    "method": "GET"
+  }
+]

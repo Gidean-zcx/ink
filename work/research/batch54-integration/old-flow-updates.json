@@ -1,0 +1,60 @@
+[
+  {
+    "file": "docs/research/interaction-library/batches/dictionary-coverage.csv",
+    "before": {
+      "flow_id": "F-M021-04",
+      "product_id": "M-021",
+      "task": "学习集编辑复制导出",
+      "depth": "D2",
+      "evidence_ids": "E-QZLT-04;E-QZLT-11;E-QZLT-12;E-QZCD-05;E-QZCD-06;E-QZCD-07;E-QZCD-08;E-QZMW-03;E-QZMW-04",
+      "known_branches": "已有编辑/删除/可见性分支；高级内容复制受限；网站合并可临时学习或保存新集，原集保留，保存后手机可学习编辑",
+      "gaps": "误删撤销/并发编辑/隐藏找回/删除确认；合并去重、进度星标映射、源更新、重试与撤销未知",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-021-quizlet.md",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "flow_id": "F-M021-04",
+      "product_id": "M-021",
+      "task": "学习集编辑复制导出",
+      "depth": "D2",
+      "evidence_ids": "E-QZLT-04;E-QZLT-11;E-QZLT-12;E-QZCD-05;E-QZCD-06;E-QZCD-07;E-QZCD-08;E-QZMW-03;E-QZMW-04;E-QZMS-05;E-QZMS-07;E-QZMS-08",
+      "known_branches": "已有编辑/删除/可见性分支；高级内容复制受限；网站合并可临时学习或保存新集，原集保留，保存后手机可学习编辑；Editable by与Visible to入口分开；密码可改、移动确认；访问失败分登录/密码/私有/未发布",
+      "gaps": "误删撤销/并发编辑/隐藏找回/删除确认；合并去重、进度星标映射、源更新、重试与撤销未知；编辑与查看权限联动、撤权/旧密码生效及旧副本影响未知",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-021-quizlet.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "file": "docs/research/interaction-library/batches/dictionary-coverage.csv",
+    "before": {
+      "flow_id": "F-M021-05",
+      "product_id": "M-021",
+      "task": "草稿中断恢复",
+      "depth": "D2",
+      "evidence_ids": "E-QZLT-05;E-QZMW-07",
+      "known_branches": "创建页自动草稿与显式发布分开；既有断网警告/退出账号丢弃规则；不将普通草稿规则套外部AI或扫描",
+      "gaps": "进程终止、系统重启及编辑冲突的保存边界未知",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-021-quizlet.md",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "flow_id": "F-M021-05",
+      "product_id": "M-021",
+      "task": "草稿中断恢复",
+      "depth": "D2",
+      "evidence_ids": "E-QZLT-05;E-QZMW-07;E-QZMS-05",
+      "known_branches": "创建页自动草稿与显式发布分开；既有断网警告/退出账号丢弃规则；不将普通草稿规则套外部AI或扫描；跨端找不到先核是否发布，不能把未发布草稿当已同步",
+      "gaps": "进程终止、系统重启及编辑冲突的保存边界未知；发布后可见时点与同步失败界面未知",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-021-quizlet.md",
+      "checked_on": "2026-10-27"
+    }
+  }
+]

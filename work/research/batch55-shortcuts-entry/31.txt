@@ -1,0 +1,5 @@
+Intro to Find and Filter actions in Shortcuts on iPhone and iPad
+Find actions locate and sort existing content on a device. Filter actions sort content gathered by a previous action in your shortcut.
+Find actions include Find Photos, Find Reminders, Find Calendar Events, Find Music, Find Health Samples, and Find Contacts. These actions filter photos, reminders, events, and other content passed as input. If no input is passed into Find actions, however, they retrieve content on their own from their respective apps (similar to Get actions).
+Filter actions include Filter Event Attendees, Filter Files, Filter Locations, Filter Articles, and Filter Images. These actions take content as input, narrow the content using filters that you specify, and then pass the matched results as output.
+For information about how to add filtering parameters to sort data in these actions, see Add filter parameters to Find and Filter actions in Shortcuts on iPhone or iPad.

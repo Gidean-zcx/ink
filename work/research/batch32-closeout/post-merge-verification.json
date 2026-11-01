@@ -1,0 +1,16 @@
+{
+  "status": "PASS",
+  "new_records_match": true,
+  "old_flows": 5,
+  "old_evidence": 3,
+  "chess_hashes": 31,
+  "inventory_scope": "distinct CSV links in inventories/README.md; first logical row excluded as header",
+  "inventory_csvs": 77,
+  "inventory_rows": 7324,
+  "distinct_inventory_e": 994,
+  "distinct_inventory_f": 760,
+  "network_rows": 328,
+  "goal_put_403": 1,
+  "same_put_retry": false,
+  "requirements_sha256": "e141320e2714df805c009fe64dd92d17decd6429d5728f8ce42d6d868b775087"
+}

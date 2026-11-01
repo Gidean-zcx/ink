@@ -1,0 +1,25 @@
+> For the complete documentation index, see [llms.txt](https://docs.eudic.net/1/llms.txt). Markdown versions of documentation pages are available by appending `.md` to page URLs; this page is available as [Markdown](https://docs.eudic.net/1/shi-yong-zhi-yin/tian-jia-kuo-chong-ci-ku.md).
+
+# 添加扩充词库
+
+![](https://3412199665-files.gitbook.io/~/files/v0/b/gitbook-legacy-files/o/assets%2F-Mgyh1kdOQ5JH6pNTt27%2F-Mi5qU5ds9iXuu6L2ig5%2F-Mi5ql7R_edKcBBGIsdJ%2F4.png?alt=media\&token=c756c54a-49fb-437c-9303-9fbdf6bd3e8c)
+
+到相关网址下载您需要的词库文件，目前欧路支持Mdict(mdx, mdd)，灵格斯(l2d)，Babylon(bgl)。
+
+可以通过【帐号】-【WiFi文件共享】功能，将词库文件传输到词典中； 也可以利用电脑 iTunes 软件来导入。
+
+复制完成后，打开【帐号】-【词典库管理】中即可看到添加的词库。 注意：对于mdx格式的词典，请确保mdd、css、js等资源文件名称和词库文件名称相同，或者按作者要求命名。 提示：可以百度搜索“掌上百科” 下载第三方提供的Mdx词库。
+
+## “WiFi文件传输”如何使用？
+
+&#x20;点&#x51FB;**【帐号】**-**【WiFi文件传输】**，软件会自动检测识别WiFi地址，将此网址输入电脑浏览器的地址栏，传输您需要的文件，进&#x5165;**【词库管理】**&#x6216;**【文件阅读】**&#x4E2D;查看即可。
+
+## 如何下载官方扩充词库？&#x20;
+
+点&#x51FB;**【帐号】**-**【词库管理】**-**【下载扩充词库】**&#x5373;可。
+
+![](https://3412199665-files.gitbook.io/~/files/v0/b/gitbook-legacy-files/o/assets%2F-Mgyh1kdOQ5JH6pNTt27%2F-MhS_j-rBnT3RmM8fmFj%2F-MhSeEPYbTkfN155Hza4%2F1.png?alt=media\&token=47cf6cad-3a13-4c16-a9d6-4ed98b564753)
+
+## 如何下载离线语音库？&#x20;
+
+点&#x51FB;**【帐号】**-**【发音库管理】**-**【下载离线发音库】**。

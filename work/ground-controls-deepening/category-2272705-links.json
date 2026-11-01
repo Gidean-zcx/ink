@@ -1,0 +1,148 @@
+[
+  {
+    "class": "page-header-inner-logo-link",
+    "href": "/en",
+    "title": "",
+    "url": "https://help.ground.news/en"
+  },
+  {
+    "class": "page-header-inner-title",
+    "href": "/en",
+    "title": "Ground News Help Center",
+    "url": "https://help.ground.news/en"
+  },
+  {
+    "type": "button",
+    "class": "kb-button primary",
+    "href": "/en/contact-us",
+    "title": "Contact Us",
+    "url": "https://help.ground.news/en/contact-us"
+  },
+  {
+    "id": "moreResultsLink",
+    "type": "button",
+    "class": "kb-button secondary",
+    "href": "/en/search",
+    "title": "More results",
+    "url": "https://help.ground.news/en/search"
+  },
+  {
+    "href": "https://ground.news/privacy-policy",
+    "title": "Privacy Policy",
+    "url": "https://ground.news/privacy-policy"
+  },
+  {
+    "href": "/en",
+    "title": "Home",
+    "url": "https://help.ground.news/en"
+  },
+  {
+    "class": "kb-category-card",
+    "href": "https://ground.news/rating-system",
+    "target": "_blank",
+    "rel": "noreferrer",
+    "title": "About Our RatingsRead more on our Bias Rating explainer page.",
+    "url": "https://ground.news/rating-system"
+  },
+  {
+    "class": "kb-category-card",
+    "href": "https://ground.news/blindspot/about",
+    "target": "_blank",
+    "rel": "noreferrer",
+    "title": "What Is A News Blindspot?Learn how Ground News reveals what's being reported across the political spectrum.",
+    "url": "https://ground.news/blindspot/about"
+  },
+  {
+    "class": "article-card",
+    "href": "/en/articles/485057",
+    "data-edited": "1773619101869",
+    "title": "How Does Ground News Help Readers See News Differently?Edited Monday, March 16 2026Ground News helps readers compare how different news outlets report on the same story. By organizing coverage from across the political spectrum, we m...",
+    "url": "https://help.ground.news/en/articles/485057"
+  },
+  {
+    "class": "article-card",
+    "href": "/en/articles/245249",
+    "data-edited": "1773276968183",
+    "title": "How Do I Read the Ground News Bias Bar?Edited Thursday, March 12 2026The bias bar demonstrates the bias distribution of reporting on a given story. For example, if 15 sources are reporting on a story, and only 10% of co...",
+    "url": "https://help.ground.news/en/articles/245249"
+  },
+  {
+    "class": "article-card",
+    "href": "/en/articles/238465",
+    "data-edited": "1773032149569",
+    "title": "What Do the \"L\", \"C\", \"R\" Stand For?Edited Monday, March 9 2026The letters stand for \"Left\" \"Right\" and \"Center\", with reference to the political spectrum. Left leaning sources tend to support issues that are impo...",
+    "url": "https://help.ground.news/en/articles/238465"
+  },
+  {
+    "class": "article-card",
+    "href": "/en/articles/3189505",
+    "data-edited": "1788033199151",
+    "title": "Understanding Our Bias Comparison Summary FeatureEdited Saturday, August 29 2026The Bias Comparison summary feature helps readers quickly see how news outlets across the political spectrum (Left, Center, and Right) are covering th...",
+    "url": "https://help.ground.news/en/articles/3189505"
+  },
+  {
+    "class": "article-card",
+    "href": "/en/articles/722625",
+    "data-edited": "1773031979676",
+    "title": "What Is the Ground News \"In Focus\" Feed?Edited Monday, March 9 2026The Ground News \"In Focus\" feed provides a dedicated feed to view today's major news events.  The feed is regularly updated with new world events to c...",
+    "url": "https://help.ground.news/en/articles/722625"
+  },
+  {
+    "class": "article-card",
+    "href": "/en/articles/6049601",
+    "data-edited": "1773859389447",
+    "title": "Does Ground News Have A Comprehensive List of Featured Sources?Edited Wednesday, March 18 2026Ground News gathers news from over 60,000+ sources globally, offering a wide range of perspectives across regions, political leanings, and media types...",
+    "url": "https://help.ground.news/en/articles/6049601"
+  },
+  {
+    "class": "article-card",
+    "href": "/en/articles/245313",
+    "data-edited": "1773032018408",
+    "title": "What If I Disagree With A Bias Rating?Edited Monday, March 9 2026Bias ratings are not static and can change over time. If you disagree with a rating in the meantime, you can edit the rating on your account. On the m...",
+    "url": "https://help.ground.news/en/articles/245313"
+  },
+  {
+    "class": "article-card",
+    "href": "/en/articles/593857",
+    "data-edited": "1773032367007",
+    "title": "Does Ground News Have Non-English Articles?Edited Monday, March 9 2026Yes, Ground News shows stories in their original language. If you are looking for a specific news source from a non-English speaking country, you can ...",
+    "url": "https://help.ground.news/en/articles/593857"
+  },
+  {
+    "class": "article-card",
+    "href": "/en/articles/4663041",
+    "data-edited": "1773029803301",
+    "title": "Exploring Podcasts and OpinionsEdited Monday, March 9 2026Ground News is rolling out a brand new feature   that offers alternative media formats directly on story pages. This feature offers additional perspec...",
+    "url": "https://help.ground.news/en/articles/4663041"
+  },
+  {
+    "href": "https://twitter.com/Ground_app",
+    "title": "",
+    "url": "https://twitter.com/Ground_app"
+  },
+  {
+    "href": "https://ca.linkedin.com/company/groundnews",
+    "title": "",
+    "url": "https://ca.linkedin.com/company/groundnews"
+  },
+  {
+    "href": "https://www.instagram.com/groundnews/",
+    "title": "",
+    "url": "https://www.instagram.com/groundnews/"
+  },
+  {
+    "href": "https://ground.news/refund-policy",
+    "title": "Refund and Cancellation Policy",
+    "url": "https://ground.news/refund-policy"
+  },
+  {
+    "href": "https://ground.news/terms-and-conditions",
+    "title": "Terms and Conditions",
+    "url": "https://ground.news/terms-and-conditions"
+  },
+  {
+    "href": "https://about.ground.news/privacy-policy",
+    "title": "Privacy Policy",
+    "url": "https://about.ground.news/privacy-policy"
+  }
+]

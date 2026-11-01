@@ -1,0 +1,16 @@
+Can I Transfer Files Between Mudita Kompakt and My Computer?
+Modified on: Sat, 3 Oct, 2026 at 8:39 AM
+You can easily connect and transfer files (like music, pictures, ebooks and more) between your Kompakt and computer thanks to the built-in USB MTP protocol. Simply plug in your Mudita Kompakt and you can manage your files directly by dragging and dropping or copying and pasting them between folders.
+You can also use our desktop app Mudita Center, available for Windows, macOS, and Linux.
+USB MTP Protocol
+Please note that file transfer must be enabled in the phone's settings for the USB MTP protocol to work.
+How To Enable and Disable USB File Transfer
+Also, MacOS computers may require additional tools to enable file transfer, such as MacDroid, OpenMTP, or others. This is because of Apple's limited integration with Android-based devices.
+Mudita Center File Management
+Mudita Center will allow you to create data backups and manage your files and contacts.
+The file management capabilities are currently still quite limited, but they will be expanded in upcoming updates.
+Was this article helpful?
+No
+Yes
+That’s Great!
+Thank you for your feedback

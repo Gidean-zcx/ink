@@ -1,0 +1,80 @@
+[
+  {
+    "flow_id": "F-M016-01",
+    "product_id": "M-016",
+    "task": "日常学词与复习",
+    "depth": "D1",
+    "evidence_ids": "E-BCZ-01;E-BCZ-02;E-BCZ-03;E-BCD-02;E-BCD-03;E-BCD-04;E-BCD-06;E-BCD-07;E-BCD-08;E-BCD-09",
+    "known_branches": "历史选书/斩词/单词本计划片段；题型与静态题面",
+    "gaps": "现版完整作答链、误判撤销、离线；历史片段构建与执行结果未知",
+    "visual_status": "static_reference_only",
+    "hands_on": "false",
+    "case_path": "cases/M-016-baicizhan.md",
+    "checked_on": "2026-10-26"
+  },
+  {
+    "flow_id": "F-M016-02",
+    "product_id": "M-016",
+    "task": "翻转听词（3.8.3历史）",
+    "depth": "D2",
+    "evidence_ids": "E-BCZ-04",
+    "known_branches": "翻转记不熟后继续",
+    "gaps": "现版存在性、误触、断点",
+    "visual_status": "not_observed",
+    "hands_on": "false",
+    "case_path": "cases/M-016-baicizhan.md",
+    "checked_on": "2026-10-26"
+  },
+  {
+    "flow_id": "F-M016-03",
+    "product_id": "M-016",
+    "task": "2026单词大赛",
+    "depth": "D2",
+    "evidence_ids": "E-BCZ-05",
+    "known_branches": "审核复审、晚入场",
+    "gaps": "断线、题型、重试、分数公式",
+    "visual_status": "not_observed",
+    "hands_on": "false",
+    "case_path": "cases/M-016-baicizhan.md",
+    "checked_on": "2026-10-26"
+  },
+  {
+    "flow_id": "F-M016-04",
+    "product_id": "M-016",
+    "task": "查询学习相关数据",
+    "depth": "D2",
+    "evidence_ids": "E-BCZ-06",
+    "known_branches": "页面未显示可申请",
+    "gaps": "导出格式、恢复、API",
+    "visual_status": "not_observed",
+    "hands_on": "false",
+    "case_path": "cases/M-016-baicizhan.md",
+    "checked_on": "2026-10-26"
+  },
+  {
+    "flow_id": "F-M016-05",
+    "product_id": "M-016",
+    "task": "开启额外拼写题型（2023历史局部）",
+    "depth": "D2",
+    "evidence_ids": "E-BCD-01",
+    "known_branches": "深度模式历史迁移；轻快用户不受影响",
+    "gaps": "构建未知；开关保存/即时生效/现版入口未核实",
+    "visual_status": "not_observed",
+    "hands_on": "false",
+    "case_path": "cases/M-016-baicizhan.md",
+    "checked_on": "2026-10-26"
+  },
+  {
+    "flow_id": "F-M016-06",
+    "product_id": "M-016",
+    "task": "真题查词后收藏（2022历史局部）",
+    "depth": "D2",
+    "evidence_ids": "E-BCD-02;E-BCD-05",
+    "known_branches": "文中义与本文标记词表；批量收藏",
+    "gaps": "App总入口、空表/重复收藏、原句保留、成功反馈与复习启动未知",
+    "visual_status": "static_reference_only",
+    "hands_on": "false",
+    "case_path": "cases/M-016-baicizhan.md",
+    "checked_on": "2026-10-26"
+  }
+]

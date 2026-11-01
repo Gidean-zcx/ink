@@ -1,0 +1,72 @@
+[
+  {
+    "path": "work/bbdc-learning-controls-deepening/raw/c01-review2020.html",
+    "url": "https://www.woshipm.com/evaluating/3548342.html",
+    "final_url": "https://www.woshipm.com/evaluating/3548342.html",
+    "status": 200,
+    "bytes": 101977,
+    "sha256": "58824b00d62dbe1a7b27669dddc39f111b43b056a69f824eda5d4974f4075784",
+    "candidate_id": "C01",
+    "disposition": "exclude",
+    "note": "历史正文对结算分享存在同页质疑；未固定构建，不确认该规则",
+    "checked_on": "2026-10-27"
+  },
+  {
+    "url": "https://www.sohu.com/a/579227156_819205",
+    "access": "web.open",
+    "error": "(400) Timeout fetching",
+    "raw_work_path": null,
+    "candidate_id": "C02",
+    "disposition": "exclude",
+    "note": "web.open内部400 Timeout fetching；未取得正文，不换路抓取",
+    "checked_on": "2026-10-27"
+  },
+  {
+    "path": "work/bbdc-learning-controls-deepening/raw/c03-paper2022.pdf",
+    "url": "https://pdf.hanspub.org/ae20220700000_69509379.pdf",
+    "final_url": "https://pdf.hanspub.org/ae20220700000_69509379.pdf",
+    "status": 200,
+    "bytes": 586106,
+    "sha256": "de8f31eac97e927fa4b5a8943d85609757fe0456b41e33617d48f2d503519d0a",
+    "candidate_id": "C03",
+    "disposition": "exclude",
+    "note": "论文作者算法图非界面；系统/构建和实验序列未注，不证实实现/学习成效",
+    "checked_on": "2026-10-27"
+  },
+  {
+    "path": "work/bbdc-learning-controls-deepening/raw/c04-review2021.html",
+    "url": "https://www.woshipm.com/evaluating/4425622.html",
+    "final_url": "https://www.woshipm.com/evaluating/4425622.html",
+    "status": 200,
+    "bytes": 139706,
+    "sha256": "f421f35afd9d1c6aa0be73be8840341a587d15737e0b8c4cb42bdbb6c444d1d2",
+    "candidate_id": "C04",
+    "disposition": "E-BBLC-01",
+    "note": "作者V4.3/iOS13.6.1；3张图实看但流程图和UI分开",
+    "checked_on": "2026-10-27"
+  },
+  {
+    "path": "work/bbdc-learning-controls-deepening/raw/c05-agirls2017.html",
+    "url": "https://agirls.aotter.net/post/51654",
+    "final_url": "https://agirls.aotter.net/post/51654",
+    "status": 200,
+    "bytes": 51055,
+    "sha256": "17771d6a7abc1df1c28265859affa7edcd8ad31e767bd958c1eede37123e6444",
+    "candidate_id": "C05",
+    "disposition": "E-BBLC-02",
+    "note": "2张图实看；辨识完成/拼写选择明确，错拼重试结束未知",
+    "checked_on": "2026-10-27"
+  },
+  {
+    "path": "work/bbdc-learning-controls-deepening/raw/c06-sspai2023.html",
+    "url": "https://sspai.com/post/76700",
+    "final_url": "https://sspai.com/post/76700",
+    "status": 200,
+    "bytes": 113763,
+    "sha256": "d34cd3191ef0e96f5e54cf79381d8a256e92ee7b32b10bd8dc78a8be74136f1f",
+    "candidate_id": "C06",
+    "disposition": "E-BBLC-03",
+    "note": "仅正文；日期/经历不同，第一图403停止，全部配图未看",
+    "checked_on": "2026-10-27"
+  }
+]

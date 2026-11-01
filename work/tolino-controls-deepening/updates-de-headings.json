@@ -1,0 +1,94 @@
+[
+  {
+    "title": "Produkte",
+    "tag": "h2"
+  },
+  {
+    "title": "Vorteile",
+    "tag": "h2"
+  },
+  {
+    "title": "News I Events",
+    "tag": "h2"
+  },
+  {
+    "title": "tolino Sleepscreens",
+    "tag": "h3"
+  },
+  {
+    "title": "tolino Lesetipps",
+    "tag": "h3"
+  },
+  {
+    "title": "tolino eBook-Bestseller",
+    "tag": "h3"
+  },
+  {
+    "title": "tolino EN eBook-Bestseller",
+    "tag": "h3"
+  },
+  {
+    "title": "Presse",
+    "tag": "h2"
+  },
+  {
+    "title": "Current Category: Service",
+    "tag": "h2"
+  },
+  {
+    "title": "Anleitungen | eReader",
+    "tag": "h3"
+  },
+  {
+    "title": "Anleitungen | tolino tab",
+    "tag": "h3"
+  },
+  {
+    "title": "FAQ",
+    "tag": "h3"
+  },
+  {
+    "title": "FAQ | eReader & Zubehör",
+    "tag": "h4"
+  },
+  {
+    "title": "FAQ | Onleihe",
+    "tag": "h4"
+  },
+  {
+    "title": "Software-Updates für Ihren tolino eReader",
+    "tag": "h1",
+    "class": "entry-title"
+  },
+  {
+    "title": "Die Tabelle unten zeigt Ihnen, welches Software-Update für Ihr eReader-Modell das zur Zeit gültige ist. Bitte überprüfen Sie vor dem Download anhand Ihrer Modellbezeichnung, über welchen Downloadlink Sie das für Ihr Modell passende Software-Update runterladen können. Bitte beachten Sie: andere eReader-Modelle würden durch die Verwendung einer falschen Software-Version beschädigt werden!",
+    "tag": "h4",
+    "id": "die-tabelle-unten-zeigt-ihnen-welches-software-update-fur-ihr-ereader-modell-das-zur-zeit-gultige-ist-bitte-uberprufen-sie-vor-dem-download-anhand-ihrer-modellbezeichnung-uber-welchen-downloadlink-sie-das-fur-ihr-modell-passende-software-update-runterladen-konnen-bitte-beachten-sie-andere-ereader-modelle-wurden-durch-die-verwendung-einer-falschen-software-version-beschadigt-werden",
+    "class": "wp-block-heading"
+  },
+  {
+    "title": "Manuelle Installation von Software-Updates",
+    "tag": "h2",
+    "class": "wp-block-heading has-text-align-center",
+    "id": "manuelle-installation-von-software-updates"
+  },
+  {
+    "title": "Probleme mit dem Software-Update?",
+    "tag": "h2",
+    "id": "probleme-mit-dem-software-update",
+    "class": "wp-block-heading"
+  },
+  {
+    "title": "Bitte wählen Sie Ihren tolino Händler.",
+    "tag": "h2",
+    "class": "shop-logo-box-title"
+  },
+  {
+    "title": "Holen Sie sich die App:",
+    "tag": "h3"
+  },
+  {
+    "title": "Bleiben Sie in Kontakt mit uns:",
+    "tag": "h3"
+  }
+]

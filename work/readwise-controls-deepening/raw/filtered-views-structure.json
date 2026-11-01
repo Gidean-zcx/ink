@@ -1,0 +1,438 @@
+{
+  "headings": [
+    {
+      "level": "h1",
+      "id": "",
+      "title": "Filtered Views"
+    },
+    {
+      "level": "h2",
+      "id": "what-are-filtered-views",
+      "title": "What are Filtered Views?"
+    },
+    {
+      "level": "h2",
+      "id": "how-do-i-create-groups-of-documents",
+      "title": "How do I create groups of documents?"
+    },
+    {
+      "level": "h2",
+      "id": "how-do-i-create-a-custom-filtered-view",
+      "title": "How do I create a custom filtered view?"
+    },
+    {
+      "level": "h3",
+      "id": "filter-by-tag-or-feed-source",
+      "title": "Filter by tag or feed source"
+    },
+    {
+      "level": "h3",
+      "id": "filter-by-author",
+      "title": "Filter by author"
+    },
+    {
+      "level": "h3",
+      "id": "filter-by-query",
+      "title": "Filter by query"
+    },
+    {
+      "level": "h2",
+      "id": "how-do-i-create-a-query-based-filtered-view-on-mobile",
+      "title": "How do I create a query-based filtered view on mobile?"
+    },
+    {
+      "level": "h2",
+      "id": "how-do-i-put-an-icon-in-front-of-a-filtered-view",
+      "title": "How do I put an icon in front of a filtered view?"
+    },
+    {
+      "level": "h2",
+      "id": "can-i-see-how-many-items-are-in-a-filtered-view",
+      "title": "Can I see how many items are in a filtered view?"
+    },
+    {
+      "level": "h2",
+      "id": "how-do-i-use-filtered-views",
+      "title": "How do I use filtered views?"
+    },
+    {
+      "level": "h2",
+      "id": "how-can-i-see-all-my-tags",
+      "title": "How can I see all my tags?"
+    },
+    {
+      "level": "h2",
+      "id": "what-does-it-mean-to-split-a-view",
+      "title": "What does it mean to \"split\" a view?"
+    },
+    {
+      "level": "h2",
+      "id": "how-do-i-add-a-filtered-view-to-my-home-page",
+      "title": "How do I add a filtered view to my Home page?"
+    }
+  ],
+  "links": [
+    {
+      "href": "/",
+      "text": "",
+      "in_article": false
+    },
+    {
+      "href": "/",
+      "text": "",
+      "in_article": false
+    },
+    {
+      "href": "/",
+      "text": "",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs",
+      "text": "Documentation",
+      "in_article": false
+    },
+    {
+      "href": "/reader/guides",
+      "text": "Guides",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs",
+      "text": "What is Reader?",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/migrating-content",
+      "text": "Migrating from Other Apps",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/saving-content",
+      "text": "Saving Content",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/organizing-content",
+      "text": "Organizing Content",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs",
+      "text": "Basics",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/importing-content",
+      "text": "Importing Content",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/adding-new-content",
+      "text": "Adding New Content",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/highlights-tags-notes",
+      "text": "Highlights, Tags, and Notes",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/appearance",
+      "text": "Appearance",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/feed",
+      "text": "Feed",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/email-newsletters",
+      "text": "Email Newsletters",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/navigation",
+      "text": "Navigation",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/searching",
+      "text": "Searching",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/parsing",
+      "text": "Parsing",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/filtered-views",
+      "text": "Filtered Views",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/action-tags",
+      "text": "Action Tags",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/pdfs",
+      "text": "PDFs",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/videos",
+      "text": "Videos",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/text-to-speech",
+      "text": "Text-to-Speech (TTS)",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/exporting",
+      "text": "Exporting",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/sharing",
+      "text": "Sharing",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/daily-digest",
+      "text": "Daily Digest",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/ghostreader",
+      "text": "Ghostreader",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/eink",
+      "text": "E-ink Devices",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/miscellaneous",
+      "text": "Miscellaneous",
+      "in_article": false
+    },
+    {
+      "href": "/",
+      "text": "Home",
+      "in_article": false
+    },
+    {
+      "href": "/reader",
+      "text": "Reader",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs",
+      "text": "Docs",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs",
+      "text": "Faqs",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/filtered-views",
+      "text": "Filtered Views",
+      "in_article": false
+    },
+    {
+      "href": "https://readwise.io/reader202",
+      "text": "Reader 202 walkthrough video on Filtered Views",
+      "in_article": true
+    },
+    {
+      "href": "/reader/guides/filtering/syntax-guide",
+      "text": "Filtered View guide",
+      "in_article": true
+    },
+    {
+      "href": "https://read.readwise.io/feed/sources",
+      "text": "Manage feeds",
+      "in_article": true
+    },
+    {
+      "href": "https://read.readwise.io/tags",
+      "text": "Manage tags",
+      "in_article": true
+    },
+    {
+      "href": "/reader/guides/filtering/syntax-guide",
+      "text": "Reader Filtering Guide",
+      "in_article": true
+    },
+    {
+      "href": "https://readwise.io/reader202",
+      "text": "Reader 202 walkthrough video on Filtered Views",
+      "in_article": true
+    },
+    {
+      "href": "/reader/guides/filtering/syntax-guide",
+      "text": "Filtered View guide",
+      "in_article": true
+    },
+    {
+      "href": "https://read.readwise.io/tags",
+      "text": "Manage tags section",
+      "in_article": true
+    },
+    {
+      "href": "/reader/docs/faqs/parsing",
+      "text": "Parsing",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/action-tags",
+      "text": "Action Tags",
+      "in_article": false
+    },
+    {
+      "href": "mailto:hello@readwise.io",
+      "text": "Email Ushello@readwise.io",
+      "in_article": false
+    },
+    {
+      "href": "https://x.com/readwise",
+      "text": "Follow Us@readwise",
+      "in_article": false
+    },
+    {
+      "href": "https://www.reddit.com/r/readwise/",
+      "text": "Ask the CommunityJoin us on Reddit",
+      "in_article": false
+    },
+    {
+      "href": "https://en.wikipedia.org/wiki/Curse_of_knowledge",
+      "text": "Curse of Knowledge",
+      "in_article": false
+    },
+    {
+      "href": "mailto:hello@readwise.io?Subject=Documentation Feedback",
+      "text": "Send Feedback",
+      "in_article": false
+    },
+    {
+      "href": "#what-are-filtered-views",
+      "text": "What are Filtered Views?",
+      "in_article": false
+    },
+    {
+      "href": "#how-do-i-create-groups-of-documents",
+      "text": "How do I create groups of documents?",
+      "in_article": false
+    },
+    {
+      "href": "#how-do-i-create-a-custom-filtered-view",
+      "text": "How do I create a custom filtered view?",
+      "in_article": false
+    },
+    {
+      "href": "#filter-by-tag-or-feed-source",
+      "text": "Filter by tag or feed source",
+      "in_article": false
+    },
+    {
+      "href": "#filter-by-author",
+      "text": "Filter by author",
+      "in_article": false
+    },
+    {
+      "href": "#filter-by-query",
+      "text": "Filter by query",
+      "in_article": false
+    },
+    {
+      "href": "#how-do-i-create-a-query-based-filtered-view-on-mobile",
+      "text": "How do I create a query-based filtered view on mobile?",
+      "in_article": false
+    },
+    {
+      "href": "#how-do-i-put-an-icon-in-front-of-a-filtered-view",
+      "text": "How do I put an icon in front of a filtered view?",
+      "in_article": false
+    },
+    {
+      "href": "#can-i-see-how-many-items-are-in-a-filtered-view",
+      "text": "Can I see how many items are in a filtered view?",
+      "in_article": false
+    },
+    {
+      "href": "#how-do-i-use-filtered-views",
+      "text": "How do I use filtered views?",
+      "in_article": false
+    },
+    {
+      "href": "#how-can-i-see-all-my-tags",
+      "text": "How can I see all my tags?",
+      "in_article": false
+    },
+    {
+      "href": "#what-does-it-mean-to-split-a-view",
+      "text": "What does it mean to \"split\" a view?",
+      "in_article": false
+    },
+    {
+      "href": "#how-do-i-add-a-filtered-view-to-my-home-page",
+      "text": "How do I add a filtered view to my Home page?",
+      "in_article": false
+    }
+  ],
+  "images": [
+    {
+      "src": "https://s3.amazonaws.com/readwiseio/2023/12/add-tags-to-view_web.gif",
+      "alt": "Add tags to view.",
+      "class": "rounded-lg max-h-[600px] w-auto mx-auto"
+    },
+    {
+      "src": "/images/view-from-tag_mobile.gif",
+      "alt": "Create a view from a tag in Reader on mobile.",
+      "class": "rounded-lg max-w-[350px] h-auto mx-auto"
+    },
+    {
+      "src": "https://s3.amazonaws.com/readwiseio/2023/12/save-author-view_web.gif",
+      "alt": "Save author as view.",
+      "class": "rounded-lg max-h-[600px] w-auto mx-auto"
+    },
+    {
+      "src": "/images/new-view_mobile.gif",
+      "alt": "Create a new filtered view on mobile.",
+      "class": "rounded-lg max-h-[600px] w-auto mx-auto"
+    },
+    {
+      "src": "https://s3.amazonaws.com/readwiseio/2024/01/show-count-badge_web.png",
+      "alt": "Show view count badge.",
+      "class": "rounded-lg max-h-[400px] w-auto mx-auto"
+    },
+    {
+      "src": "/images/split-view_web.png",
+      "alt": "Split a filtered view on web.",
+      "class": "rounded-lg max-h-[400px] w-auto mx-auto"
+    },
+    {
+      "src": "/images/split-view_mobile.png",
+      "alt": "Split a filtered view on mobile.",
+      "class": "rounded-lg max-w-[350px] h-auto mx-auto"
+    },
+    {
+      "src": "/images/configure-home_web.gif",
+      "alt": "Add and reorganize views on the Home page on web.",
+      "class": "rounded-lg max-h-[500px] w-auto mx-auto"
+    },
+    {
+      "src": "/images/pin-books-to-home_mobile.gif",
+      "alt": "Pin a new view to Home page on mobile.",
+      "class": "rounded-lg max-w-[350px] h-auto mx-auto"
+    }
+  ]
+}

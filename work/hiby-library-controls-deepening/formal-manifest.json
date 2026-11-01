@@ -1,0 +1,27 @@
+[
+  {
+    "path": "docs/research/interaction-library/cases/M-035-hiby.md",
+    "sha256": "65514e618c2944b513e8f48eba3bfc791ddd553042bf2700cab674ec4877fda8",
+    "bytes": 18670
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/hiby-library-controls-deepening/source-notes.md",
+    "sha256": "1c626780fcb24bbfe3392b03b2a3fce77b168844fbd8ed947fdc6757790dc671",
+    "bytes": 2588
+  },
+  {
+    "path": "docs/research/interaction-library/batches/hiby-library-controls-deepening-coverage.csv",
+    "sha256": "d5bb45a5483a3c646ad9b9c38fb956c91cf6d169ab6b65e7d8043f0face17a7f",
+    "bytes": 571
+  },
+  {
+    "path": "docs/research/interaction-library/batches/hiby-library-controls-deepening-evidence.jsonl",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "path": "docs/research/interaction-library/batches/hiby-library-controls-deepening-inventory.csv",
+    "sha256": "5fb9d740c1046c5b854fc642ea84f1e3ae65afb2f5611dd60407f42687c938d5",
+    "bytes": 47065
+  }
+]

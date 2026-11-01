@@ -1,0 +1,19 @@
+Using the Digital Paper App, you can sync PDF files within in a specific folder on your computer (a) with those within a specific folder on the Digital Paper (b). Content that is added, changed, or deleted is done so on your computer and the Digital Paper.
+Connect the computer and the Digital Paper.
+Launch the Digital Paper App on the computer.
+On the Digital Paper App, select the folder you want to sync and click  (Set sync folder).
+On the folder selection screen, select the folders of the computer.
+When the sync settings are successful, the corresponding folder/document/note icon changes.
+Click  (Sync).
+The specified folder is synced with the Digital Paper.
+To update the contents of the synced folder
+Click  (Sync).
+To delete the sync settings
+On the Digital Paper App, right-click the folder configured with the sync settings and click [Delete sync setting].
+Hint
+If separately editing the same PDF file on your computer and the Digital Paper, the PDF file on the Digital Paper is synced on the computer and the PDF file on the computer is saved with a different name.
+Even if you delete the sync settings, the folders and files saved on the Digital Paper and computer are not deleted.
+Note
+Only the designated folders — and only the PDF files in those folders — are synced.  Folders with no PDF files are not synced.
+Up to 20 folders can be synced.
+You cannot configure or delete the sync settings while syncing.

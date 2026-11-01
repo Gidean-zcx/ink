@@ -1,0 +1,212 @@
+[
+  {
+    "path": "docs/research/interaction-library/cases/M-013-weread.md",
+    "bytes": 10778,
+    "sha256": "37c28efc49e7d13d56677fd9a96b690548edfbd417687282868e222112997942"
+  },
+  {
+    "path": "docs/research/interaction-library/batches/weread-controls-deepening-coverage.csv",
+    "bytes": 694,
+    "sha256": "10d8dff7307657cc866b29006217b98760827cce874b72804459a6df4c631806"
+  },
+  {
+    "path": "docs/research/interaction-library/batches/weread-controls-deepening-evidence.jsonl",
+    "bytes": 7672,
+    "sha256": "fce51175b8a0c642ea3c8324d0c87de66d04a8e19771c2ca9a3ac50632a121c3"
+  },
+  {
+    "path": "docs/research/interaction-library/batches/weread-controls-deepening-inventory.csv",
+    "bytes": 7275,
+    "sha256": "84ec9ec17968b708ce0c1dbaa33e0760c1bfdbe5bc020a6bc3cd5e1746c71187"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/weread-controls-deepening/ai-citations.jpg",
+    "bytes": 182791,
+    "sha256": "719779a935fb8db2f8026dc0b9ad25e8ae1f691411f7ae99ec1fc47f6b717889"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/weread-controls-deepening/ai-entry.jpg",
+    "bytes": 252519,
+    "sha256": "73c62fe09714d808f1039fb7607d108eec87c1f3e92f7c3e5488e726d9e1d779"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/weread-controls-deepening/ai-selection.png",
+    "bytes": 215408,
+    "sha256": "b54658ec4346689bb94dc6cd0aa48ca9e06db1bf3d6686fdbe7542e63f06c8ca"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/weread-controls-deepening/source-notes.md",
+    "bytes": 3735,
+    "sha256": "7de92903a20630c9c303c128fb53fb9643a68dc6d8f943ee795754750d1af9de"
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/weread-controls-deepening/visual-audit.md",
+    "bytes": 1070,
+    "sha256": "df779bddfeecc47283dc2577b62a3d1e6c8654c6cd783bd4564f7c56e18e1b9d"
+  },
+  {
+    "path": "work/chinese-apps/wrd-README.md",
+    "bytes": 1804,
+    "sha256": "4865ea7d3b4b73128455b809c9e617f86d3d331efeef041d64e7218b51a8b2d7"
+  },
+  {
+    "path": "work/chinese-apps/wrd-SKILL.md",
+    "bytes": 6237,
+    "sha256": "c78981c72ff5940343d641d04912932d7f983b264ed69a799b33c8508c2eccc9"
+  },
+  {
+    "path": "work/chinese-apps/wrd-shelf.md",
+    "bytes": 8179,
+    "sha256": "5d5658396dae1d36cec8f2509a82582978e9ecfe9cfe87d8d02ebf3a013ec514"
+  },
+  {
+    "path": "work/chinese-apps/wrd-search.md",
+    "bytes": 7068,
+    "sha256": "019337ec094bc39a2b12db0cd732eb33a49ace2c42fe6525d8f0a3318b2414d9"
+  },
+  {
+    "path": "work/chinese-apps/wrd-book.md",
+    "bytes": 3748,
+    "sha256": "5578ef66944f71e654934f534c388f70ac55d0f2b429dd32c1f8415121e12fe6"
+  },
+  {
+    "path": "work/chinese-apps/wrd-notes.md",
+    "bytes": 13323,
+    "sha256": "b333ce09a32815b23a9dd0dcaeb406039b3d3b531674b331c07f19a283c32b16"
+  },
+  {
+    "path": "work/chinese-apps/wrd-readdata.md",
+    "bytes": 12251,
+    "sha256": "35534d41984199b315f565a0c468346b1115ebfb5a5b09d89685aec9c820434c"
+  },
+  {
+    "path": "work/weread-controls-deepening/ai-citations.jpg",
+    "bytes": 182791,
+    "sha256": "719779a935fb8db2f8026dc0b9ad25e8ae1f691411f7ae99ec1fc47f6b717889"
+  },
+  {
+    "path": "work/weread-controls-deepening/ai-entry.jpg",
+    "bytes": 252519,
+    "sha256": "73c62fe09714d808f1039fb7607d108eec87c1f3e92f7c3e5488e726d9e1d779"
+  },
+  {
+    "path": "work/weread-controls-deepening/ai-rag.html",
+    "bytes": 128811,
+    "sha256": "465d18a923998c8f637beb6714d21b166ed249581804395748e6a0bb3d0f64dd"
+  },
+  {
+    "path": "work/weread-controls-deepening/ai-rag.txt",
+    "bytes": 16673,
+    "sha256": "11aad191bc4c96ea9fe097f349cf698fe7a34821aea93d350b59d7c9df743f10"
+  },
+  {
+    "path": "work/weread-controls-deepening/ai-selection.png",
+    "bytes": 215408,
+    "sha256": "b54658ec4346689bb94dc6cd0aa48ca9e06db1bf3d6686fdbe7542e63f06c8ca"
+  },
+  {
+    "path": "work/weread-controls-deepening/appstore.html",
+    "bytes": 1091419,
+    "sha256": "a6121bbc1bf47883dd30e3d8be7cf54d3d7493c8f392f85cff41e68f4e4bc0d0"
+  },
+  {
+    "path": "work/weread-controls-deepening/appstore.txt",
+    "bytes": 18535,
+    "sha256": "a9e56121ed33114a6c4a1af6b288985a37a76192e3c8b96f0154d675fa935131"
+  },
+  {
+    "path": "work/weread-controls-deepening/author.html",
+    "bytes": 144035,
+    "sha256": "7ffc2af8d67475be10c5b4adf6f5d2477b2aeaba4f5e7f4ae1ba433c0832f4ee"
+  },
+  {
+    "path": "work/weread-controls-deepening/author.txt",
+    "bytes": 10307,
+    "sha256": "b2118d0c314e3deec1390b916213013a3cf3ffd36687803b021244b8fa0b3f72"
+  },
+  {
+    "path": "work/weread-controls-deepening/baseline.json",
+    "bytes": 12869,
+    "sha256": "d2a51e5b443737f63bc87da16511e9172dd522270e3ab73e769bd70f2af84ebd"
+  },
+  {
+    "path": "work/weread-controls-deepening/build-result.json",
+    "bytes": 224,
+    "sha256": "05384441a87f45ce16cac14b01942dc154b74ba79f74a366c199b325320c7f18"
+  },
+  {
+    "path": "work/weread-controls-deepening/build.py",
+    "bytes": 28968,
+    "sha256": "d75c0716ef91dcf429faaff74bb6dd1c87adb8b636caaea9b47e925ba557b212"
+  },
+  {
+    "path": "work/weread-controls-deepening/capture.py",
+    "bytes": 1411,
+    "sha256": "9c75458b7863fa69146045159bbcf820e458ea0e5bae855797d5395bca6f6e98"
+  },
+  {
+    "path": "work/weread-controls-deepening/captures.json",
+    "bytes": 4467,
+    "sha256": "3d394f305fa621154af4791433d9572ef8f31dc78f6f9d7478a86e5eece551aa"
+  },
+  {
+    "path": "work/weread-controls-deepening/case-before.md",
+    "bytes": 7171,
+    "sha256": "4bb8471afaecb422a8b4cc4cf24bb6f3b0e0664cfb393352a6d1cb9921869896"
+  },
+  {
+    "path": "work/weread-controls-deepening/check-result.txt",
+    "bytes": 189,
+    "sha256": "7e0dfb99a95554f8b64eb8e06649fae4b9aa218fb30512615ba90bd8afd1957b"
+  },
+  {
+    "path": "work/weread-controls-deepening/check.py",
+    "bytes": 6292,
+    "sha256": "f5e86c4c929756ffd58701d998cf0abb31b1a5f07c71b22aeebc56e83475de5a"
+  },
+  {
+    "path": "work/weread-controls-deepening/discover.md",
+    "bytes": 3684,
+    "sha256": "81817b64669596dee8c168cce2d5dd0c8ccc13524ca6d5dec3224acca674b7a3"
+  },
+  {
+    "path": "work/weread-controls-deepening/existing-coverage-updates.json",
+    "bytes": 8755,
+    "sha256": "91363907676740e509ac883eb08546c712cd1450665016a9d4f7acbe8d165d88"
+  },
+  {
+    "path": "work/weread-controls-deepening/existing-evidence-additional-captures.json",
+    "bytes": 8205,
+    "sha256": "bc896bb6dca51c6a6383e1471429097145c19267177b928e77a126aeef3c9a5b"
+  },
+  {
+    "path": "work/weread-controls-deepening/homepage.html",
+    "bytes": 807649,
+    "sha256": "64dd03ca8670ac06e79dfad921f438d50b4e07473b03972677618bbbab2ef1dc"
+  },
+  {
+    "path": "work/weread-controls-deepening/homepage.txt",
+    "bytes": 2896,
+    "sha256": "3c2c59b7a1eb1b08f2aa85516b09fd58a1baefe5b1cf7d491f20d54d64557903"
+  },
+  {
+    "path": "work/weread-controls-deepening/make-handoff.py",
+    "bytes": 8331,
+    "sha256": "4bcc6395bb733024b4c0960a88475abc87c703b24323cea2dc253f8951c7aab0"
+  },
+  {
+    "path": "work/weread-controls-deepening/review.md",
+    "bytes": 4164,
+    "sha256": "8a86c3a70b05900b408ebec554de0e4177e9f0c8105f8d7e33ada693fd13a31f"
+  },
+  {
+    "path": "work/weread-controls-deepening/web-entry.js",
+    "bytes": 664821,
+    "sha256": "5026291bf1a7cd968ce07ec4b5d42f94ffc49ff7b85d5065f41b65c7b19e3ad7"
+  },
+  {
+    "path": "work/weread-controls-deepening/web-help-literals.json",
+    "bytes": 2010,
+    "sha256": "ca032fa1680d8fcfa3c8463b092a08e72f518aa4880a37a6131f5fcbd47cefec"
+  }
+]

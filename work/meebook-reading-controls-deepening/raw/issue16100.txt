@@ -1,0 +1,272 @@
+Physical page-turn buttons do not work on Meebook M7 (KEYCODE_PAGE_UP/DOWN 92/93) · Issue #16100 · koreader/koreader · GitHub
+Skip to content
+Navigation Menu
+Sign in
+Appearance settings
+Platform
+AI CODE CREATION
+GitHub Copilot
+Write better code with AI
+GitHub Copilot app
+Direct agents from issue to merge
+MCP Registry
+Integrate external tools
+DEVELOPER WORKFLOWS
+Actions
+Automate any workflow
+Codespaces
+Instant dev environments
+Issues
+Plan and track work
+Code Review
+Manage code changes
+Code Quality
+Enforce quality at merge
+APPLICATION SECURITY
+GitHub Advanced Security
+Find and fix vulnerabilities
+Code security
+Secure your code as you build
+Secret protection
+Stop leaks before they start
+EXPLORE
+Why GitHub
+Documentation
+Blog
+Changelog
+Marketplace
+View all features
+Solutions
+BY COMPANY SIZE
+Enterprises
+Small and medium teams
+Startups
+Nonprofits
+BY USE CASE
+App Modernization
+DevSecOps
+DevOps
+CI/CD
+View all use cases
+BY INDUSTRY
+Healthcare
+Financial services
+Manufacturing
+Government
+See all industries
+View all solutions
+Resources
+EXPLORE BY TOPIC
+AI
+Software Development
+DevOps
+Security
+View all topics
+EXPLORE BY TYPE
+Customer stories
+Events & webinars
+Ebooks & reports
+Business insights
+GitHub Skills
+SUPPORT & SERVICES
+Documentation
+Customer support
+Community forum
+Trust center
+Partners
+View all resources
+Open Source
+COMMUNITY
+GitHub Sponsors
+Fund open source developers
+PROGRAMS
+Security Lab
+Maintainer Community
+GitHub Stars
+Archive Program
+REPOSITORIES
+Topics
+Trending
+Collections
+Enterprise
+ENTERPRISE SOLUTIONS
+Enterprise platform
+AI-powered developer platform
+AVAILABLE ADD-ONS
+GitHub Advanced Security
+Enterprise-grade security features
+Copilot for Business
+Enterprise-grade AI features
+Premium Support
+Enterprise-grade 24/7 support
+Pricing
+Search
+/
+Sign in
+Sign up
+Appearance settings
+You signed in with another tab or window.
+Reload
+to refresh your session.
+You signed out in another tab or window.
+Reload
+to refresh your session.
+You switched accounts on another tab or window.
+Reload
+to refresh your session.
+Dismiss alert
+{{ message }}
+koreader
+koreader
+Repository navigation
+Code
+Issues
+1.3k
+(
+1.3k
+)
+Pull requests
+82
+(
+82
+)
+Discussions
+Actions
+Projects
+Wiki
+Security and quality
+Insights
+More
+items
+Physical page-turn buttons do not work on Meebook M7 (KEYCODE_PAGE_UP/DOWN 92/93)
+#16100
+New issue
+Copy link
+New issue
+Copy link
+Closed
+Closed
+Physical page-turn buttons do not work on Meebook M7 (KEYCODE_PAGE_UP/DOWN 92/93)
+#16100
+Copy link
+Description
+drosan-dev
+opened
+on Sep 22, 2026
+Issue body actions
+Before submitting
+Reproduced the issue with external plugins and user-patches disabled.
+Searched existing issues for similar reports.
+Tested on the latest nightly build (
+more information
+).
+Device
+Android
+KOReader version
+2026.07.1
+Model and firmware version
+Meebook M7 android 11
+Issue description
+Meebook M7 is a 6.8-inch Android-based E-Ink reader with two physical page-turn buttons on the side of the device. The buttons are intended for navigating between pages while reading.
+On my device, Android detects these buttons as:
+Upper button: KEYCODE_PAGE_UP (92)
+Lower button: KEYCODE_PAGE_DOWN (93)
+The buttons work in other applications and are correctly detected by Android key event testing apps, but they do not trigger page turns in KOReader.
+Regression
+No
+Last working version
+No response
+Steps to reproduce
+Open any book (EPUB, for example).
+Press either of the physical page-turn buttons on the side of the device.
+Observe that nothing happens and the page does not turn.
+Log
+Additional information
+No response
+Reactions are currently unavailable
+Activity
+hius07
+commented
+on
+Sep 22, 2026
+hius07
+on Sep 22, 2026
+Member
+More actions
+https://github.com/koreader/koreader/wiki/Keymapping
+https://github.com/koreader/koreader/wiki/Android-tips-and-tricks#customize-keys
+[
+291
+]
+=
+"
+RPgBack
+"
+,
+[
+292
+]
+=
+"
+RPgFwd
+"
+,
+hius07
+commented
+on
+Sep 22, 2026
+hius07
+on Sep 22, 2026
+Member
+More actions
+That's from a M7 owner (I got no device).
+drosan-dev
+commented
+on
+Sep 22, 2026
+drosan-dev
+on Sep 22, 2026
+Author
+More actions
+It helps! Thanks!
+drosan-dev
+closed this
+as
+completed
+on Sep 22, 2026
+Sign up for free
+to join this conversation on GitHub.
+Already have an account?
+Sign in to comment
+Metadata
+Metadata
+Assignees
+No one assigned
+Labels
+No labels
+No labels
+Type
+No type
+Projects
+No projects
+Milestone
+No milestone
+Relationships
+None yet
+Development
+No branches or pull requests
+Issue actions
+Open in GitHub Copilot app
+Footer
+© 2026 GitHub, Inc.
+Footer navigation
+Terms
+Privacy
+Security
+Status
+Community
+Docs
+Contact
+Manage cookies
+Do not share my personal information
+You can’t perform that action at this time.

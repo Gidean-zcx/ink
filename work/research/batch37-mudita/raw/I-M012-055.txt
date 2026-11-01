@@ -1,0 +1,22 @@
+How To Use the Camera and Gallery on Mudita Kompakt
+Modified on: Sat, 3 Oct, 2026 at 8:41 AM
+How to take a photo
+Tap Apps
+Tap Camera
+Aim the camera at the object
+Tap the photo button* 
+*As Kompakt has an e-ink display, you may need to hold the phone still for a little longer than a typical smart phone
+How to view photos
+You can only view photos on Kompakt in greyscale but when you transfer your photos to a computer you can view them in full color.
+Tap Apps
+Tap Camera
+Tap the Image icon
+Tap the photo you want to view
+How to take a screenshot
+Press Power button and Volume down buttons at the same time*
+*Currently there is no feedback that the screenshot was taken, but it will be there when you view your photos
+Was this article helpful?
+No
+Yes
+That’s Great!
+Thank you for your feedback

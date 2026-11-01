@@ -1,0 +1,146 @@
+[
+  {
+    "flow_id": "F-M030-01",
+    "source_batch": "docs/research/interaction-library/batches/initial-coverage.csv",
+    "field": "evidence_ids",
+    "before": "E-KHK-01;E-KHCD-03",
+    "after": "E-KHK-01;E-KHCD-03;E-KLCD-11",
+    "reason": "新正文补原任务分支，保持D2；家长/教师/语言/构建范围分开"
+  },
+  {
+    "flow_id": "F-M030-01",
+    "source_batch": "docs/research/interaction-library/batches/initial-coverage.csv",
+    "field": "known_branches",
+    "before": "Books/Reading、朗读/自主读",
+    "after": "Books两种读法；Reading含提问/点图及高年级选择题；Early Readers先听后读是成人练习建议",
+    "reason": "新正文补原任务分支，保持D2；家长/教师/语言/构建范围分开"
+  },
+  {
+    "flow_id": "F-M030-01",
+    "source_batch": "docs/research/interaction-library/batches/initial-coverage.csv",
+    "field": "gaps",
+    "before": "中途切换、具体题型与提示",
+    "after": "中途切换、逐字点读、答案判定与提示、退出续接未知；静态三角按钮作用未核",
+    "reason": "新正文补原任务分支，保持D2；家长/教师/语言/构建范围分开"
+  },
+  {
+    "flow_id": "F-M030-01",
+    "source_batch": "docs/research/interaction-library/batches/initial-coverage.csv",
+    "field": "visual_status",
+    "before": "not_observed",
+    "after": "static_reference_only",
+    "reason": "新正文补原任务分支，保持D2；家长/教师/语言/构建范围分开"
+  },
+  {
+    "flow_id": "F-M030-02",
+    "source_batch": "docs/research/interaction-library/batches/initial-coverage.csv",
+    "field": "task",
+    "before": "路线、进度与中断",
+    "after": "路线级别与家长进度",
+    "reason": "新正文补原任务分支，保持D2；家长/教师/语言/构建范围分开"
+  },
+  {
+    "flow_id": "F-M030-02",
+    "source_batch": "docs/research/interaction-library/batches/initial-coverage.csv",
+    "field": "evidence_ids",
+    "before": "E-KHK-02;E-KHK-03;E-KHCD-03",
+    "after": "E-KHK-02;E-KHK-03;E-KHCD-03;E-KLCD-02;E-KLCD-07",
+    "reason": "新正文补原任务分支，保持D2；家长/教师/语言/构建范围分开"
+  },
+  {
+    "flow_id": "F-M030-02",
+    "source_batch": "docs/research/interaction-library/batches/initial-coverage.csv",
+    "field": "known_branches",
+    "before": "级别/档案、奖励、下一课",
+    "after": "年级决定起点；表现影响主题推进及基础支持；Library勾号按档案/级别查看",
+    "reason": "新正文补原任务分支，保持D2；家长/教师/语言/构建范围分开"
+  },
+  {
+    "flow_id": "F-M030-02",
+    "source_batch": "docs/research/interaction-library/batches/initial-coverage.csv",
+    "field": "gaps",
+    "before": "奖励数值、失败重试、课内保存",
+    "after": "调级阈值、提示计分、失败重试与课内保存未知；中断另见F06；教师报告另见F13",
+    "reason": "新正文补原任务分支，保持D2；家长/教师/语言/构建范围分开"
+  },
+  {
+    "flow_id": "F-M030-04",
+    "source_batch": "docs/research/interaction-library/batches/children-deepening-coverage.csv",
+    "field": "evidence_ids",
+    "before": "E-KHD-01;E-KHD-03;E-KHCD-10",
+    "after": "E-KHD-01;E-KHD-03;E-KHCD-10;E-KLCD-07",
+    "reason": "新正文补原任务分支，保持D2；家长/教师/语言/构建范围分开"
+  },
+  {
+    "flow_id": "F-M030-04",
+    "source_batch": "docs/research/interaction-library/batches/children-deepening-coverage.csv",
+    "field": "known_branches",
+    "before": "Kodi 提示；错误反馈；分步示范",
+    "after": "Kodi求助与分步示范；中文指南称重复活动说明，旧英文称下一句",
+    "reason": "新正文补原任务分支，保持D2；家长/教师/语言/构建范围分开"
+  },
+  {
+    "flow_id": "F-M030-04",
+    "source_batch": "docs/research/interaction-library/batches/children-deepening-coverage.csv",
+    "field": "gaps",
+    "before": "触发顺序/次数；示范后操作；结束页",
+    "after": "两种帮助措辞未解；上一句回放、触发次数、示范后操作及结束页未知",
+    "reason": "新正文补原任务分支，保持D2；家长/教师/语言/构建范围分开"
+  },
+  {
+    "flow_id": "F-M030-09",
+    "source_batch": "docs/research/interaction-library/batches/khan-controls-deepening-coverage.csv",
+    "field": "task",
+    "before": "同一家长账户增加儿童档案",
+    "after": "家长账户下新增、编辑及删除儿童档案",
+    "reason": "新正文补原任务分支，保持D2；家长/教师/语言/构建范围分开"
+  },
+  {
+    "flow_id": "F-M030-09",
+    "source_batch": "docs/research/interaction-library/batches/khan-controls-deepening-coverage.csv",
+    "field": "evidence_ids",
+    "before": "E-KHCD-07",
+    "after": "E-KHCD-07;E-KLCD-04;E-KLCD-05;E-KLCD-06",
+    "reason": "新正文补原任务分支，保持D2；家长/教师/语言/构建范围分开"
+  },
+  {
+    "flow_id": "F-M030-09",
+    "source_batch": "docs/research/interaction-library/batches/khan-controls-deepening-coverage.csv",
+    "field": "known_branches",
+    "before": "New或头像入口、成人区、名字年龄头像、Next",
+    "after": "新增同旧；成人区My Account编辑名字/头像；Enable Delete后头像X删除，清进度及路线历史",
+    "reason": "新正文补原任务分支，保持D2；家长/教师/语言/构建范围分开"
+  },
+  {
+    "flow_id": "F-M030-09",
+    "source_batch": "docs/research/interaction-library/batches/khan-controls-deepening-coverage.csv",
+    "field": "gaps",
+    "before": "已有成员切换/删除/合并、作品与进度隔离及跨端冲突未知",
+    "after": "编辑保存回执、误删撤销、作品去留、账号整体删除及跨端冲突未知",
+    "reason": "新正文补原任务分支，保持D2；家长/教师/语言/构建范围分开"
+  },
+  {
+    "flow_id": "F-M030-10",
+    "source_batch": "docs/research/interaction-library/batches/khan-controls-deepening-coverage.csv",
+    "field": "evidence_ids",
+    "before": "E-KHCD-08;E-KHCD-09",
+    "after": "E-KHCD-08;E-KHCD-09;E-KLCD-07;E-KLCD-09",
+    "reason": "新正文补原任务分支，保持D2；家长/教师/语言/构建范围分开"
+  },
+  {
+    "flow_id": "F-M030-10",
+    "source_batch": "docs/research/interaction-library/batches/khan-controls-deepening-coverage.csv",
+    "field": "known_branches",
+    "before": "家庭/课堂/Clever退出不同；单设备重置后逐台登录",
+    "after": "家庭/课堂/Clever退出不同；单设备重置后逐台登录；邮件账号保留进度是官方说明非恢复实测",
+    "reason": "新正文补原任务分支，保持D2；家长/教师/语言/构建范围分开"
+  },
+  {
+    "flow_id": "F-M030-10",
+    "source_batch": "docs/research/interaction-library/batches/khan-controls-deepening-coverage.csv",
+    "field": "gaps",
+    "before": "未同步数据、过期链接、其他登录方式及实测恢复未知",
+    "after": "未同步数据、过期链接和作品恢复未知；重装页iOS旧菜单/Android仅卸载，不证明完整恢复",
+    "reason": "新正文补原任务分支，保持D2；家长/教师/语言/构建范围分开"
+  }
+]

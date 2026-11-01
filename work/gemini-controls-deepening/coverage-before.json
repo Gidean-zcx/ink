@@ -1,0 +1,80 @@
+[
+  {
+    "flow_id": "F-M042-01",
+    "product_id": "M-042",
+    "task": "就眼前内容问 AI",
+    "depth": "D2",
+    "evidence_ids": "E-GEM-01",
+    "known_branches": "内容可含截图、文件或 URL。长按建议可改自动提交；自动推断何时读取屏幕的功能另限英语，文本与截图开关分别设置。",
+    "gaps": "屏幕外/历史数据覆盖",
+    "visual_status": "not_observed",
+    "hands_on": "false",
+    "case_path": "cases/M-042-gemini.md",
+    "checked_on": "2026-10-26"
+  },
+  {
+    "flow_id": "F-M042-02",
+    "product_id": "M-042",
+    "task": "发现并调用应用动作",
+    "depth": "D2",
+    "evidence_ids": "E-GEM-02",
+    "known_branches": "可见目录随账户/平台而变；关闭 Keep Activity 后 Android 仍保留部分设备/通信连接器，不能照搬到 iOS/web。",
+    "gaps": "每个连接器全动作及部分失败",
+    "visual_status": "not_observed",
+    "hands_on": "false",
+    "case_path": "cases/M-042-gemini.md",
+    "checked_on": "2026-10-26"
+  },
+  {
+    "flow_id": "F-M042-03",
+    "product_id": "M-042",
+    "task": "修改闹钟和计时状态",
+    "depth": "D2",
+    "evidence_ids": "E-GEM-03",
+    "known_branches": "时钟实现按厂家/Google/第三方不同；停响、停用、删除不是同一动作。具体失败反馈与确认卡尚未观察。",
+    "gaps": "重复对象、确认与错误回执",
+    "visual_status": "not_observed",
+    "hands_on": "false",
+    "case_path": "cases/M-042-gemini.md",
+    "checked_on": "2026-10-26"
+  },
+  {
+    "flow_id": "F-M042-04",
+    "product_id": "M-042",
+    "task": "取得并撤销设备权限",
+    "depth": "D2",
+    "evidence_ids": "E-GEM-03",
+    "known_branches": "缺这些授权时仍可做其他支持动作，不能理解为全有或全无。已保存密码、重置设备等不在该文档支持范围。",
+    "gaps": "拒绝权限后已执行动作",
+    "visual_status": "not_observed",
+    "hands_on": "false",
+    "case_path": "cases/M-042-gemini.md",
+    "checked_on": "2026-10-26"
+  },
+  {
+    "flow_id": "F-M042-05",
+    "product_id": "M-042",
+    "task": "让 AI 代做一项 app 任务",
+    "depth": "D2",
+    "evidence_ids": "E-GEM-04",
+    "known_branches": "可在后台推进；若有 Connected App 会优先使用。尚未完成的订单可能已经留下购物车内容，停止不等于撤销全部修改。",
+    "gaps": "实际支持名单、部分修改与重试",
+    "visual_status": "not_observed",
+    "hands_on": "false",
+    "case_path": "cases/M-042-gemini.md",
+    "checked_on": "2026-10-26"
+  },
+  {
+    "flow_id": "F-M042-06",
+    "product_id": "M-042",
+    "task": "查看、停止与接管",
+    "depth": "D2",
+    "evidence_ids": "E-GEM-04;E-GEM-05",
+    "known_branches": "Pixel 10、Galaxy S26 在所查说明中只能停止，不能照搬新设备的接管行为。两份官方索引的支持设备/地区列表不同，不能拼成通用承诺。",
+    "gaps": "不同设备接管、取消后的持久状态",
+    "visual_status": "not_observed",
+    "hands_on": "false",
+    "case_path": "cases/M-042-gemini.md",
+    "checked_on": "2026-10-26"
+  }
+]

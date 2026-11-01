@@ -1,0 +1,179 @@
+[
+  {
+    "action": "go('https://britannicaeducation.com/resources/britannica-school-early-elementary-content-catalog/');page.get_by_role('button',name='Launch Community Helpers Interactive').scroll_into_view_if_needed();snap('01-preview');print(page.locator('main').inner_text()[-2400:] if page.locator('main').count() else page.locator('body').inner_text()[-2400:]);print(statuses)",
+    "started": "2026-10-26T20:50:18.222638+00:00",
+    "result": "ok",
+    "ended": "2026-10-26T20:50:24.139341+00:00"
+  },
+  {
+    "action": "page.get_by_role('button',name='Launch Community Helpers Interactive').click();page.wait_for_timeout(1800);snap('02-interactive-launched');print([(f.name,f.url) for f in page.frames]);print(statuses[-5:]);print(errs[-4:])",
+    "started": "2026-10-26T20:50:50.196606+00:00",
+    "result": "ok",
+    "ended": "2026-10-26T20:50:52.667853+00:00"
+  },
+  {
+    "action": "f=next(f for f in page.frames if f.url.startswith('https://cdn.britannica.com/11/288011'));print(f.locator('body').inner_text()[:5000]);print(f.locator('button,a,input,[role=button],canvas').evaluate_all('(es)=>es.map(e=>({tag:e.tagName,text:e.innerText,aria:e.getAttribute(\"aria-label\"),title:e.title,id:e.id,cls:e.className,visible:!!e.getClientRects().length}))'));page.locator('iframe[title=\"Community Helpers Interactive\"]').scroll_into_view_if_needed();snap('03-interactive-ready')",
+    "started": "2026-10-26T20:51:20.041520+00:00",
+    "result": "ok",
+    "ended": "2026-10-26T20:51:20.538208+00:00"
+  },
+  {
+    "action": "base_snap=snap;exec('def snap(name):\\n base_snap(name)\\n data=dict(name=name,at=now(),url=f.url,text=f.locator(\"body\").inner_text(),controls=f.locator(\"button,a,input,select,[role=button]\").evaluate_all(\"(es)=>es.map(e=>({tag:e.tagName,text:e.innerText,aria:e.getAttribute(\\\"aria-label\\\"),title:e.title,id:e.id,visible:!!e.getClientRects().length}))\"),media=f.locator(\"audio,video\").evaluate_all(\"(es)=>es.map(e=>({tag:e.tagName,paused:e.paused,time:e.currentTime,duration:Number.isFinite(e.duration)?e.duration:null,ended:e.ended,error:e.error?.message}))\"))\\n (out/(name+\"-frame.json\")).write_text(json.dumps(data,ensure_ascii=False,indent=2))\\n (out/(name+\"-frame.html\")).write_text(f.content())\\n print(data[\"text\"][:1800],flush=True)');snap('04-title');f.get_by_role('button',name='Start',exact=True).click();page.wait_for_timeout(1000);snap('05-started')",
+    "started": "2026-10-26T20:51:32.554169+00:00",
+    "result": "error",
+    "error": "SyntaxError('invalid syntax. Perhaps you forgot a comma?', ('<string>', 3, 148, ' data=dict(name=name,at=now(),url=f.url,text=f.locator(\"body\").inner_text(),controls=f.locator(\"button,a,input,select,[role=button]\").evaluate_all(\"(es)=>es.map(e=>({tag:e.tagName,text:e.innerText,aria:e.getAttribute(\"aria-label\"),title:e.title,id:e.id,visible:!!e.getClientRects().length}))\"),media=f.locator(\"audio,video\").evaluate_all(\"(es)=>es.map(e=>({tag:e.tagName,paused:e.paused,time:e.currentTime,duration:Number.isFinite(e.duration)?e.duration:null,ended:e.ended,error:e.error?.message}))\"))\\n', 3, 229))",
+    "ended": "2026-10-26T20:51:32.556718+00:00"
+  },
+  {
+    "action": "exec(Path('/home/workspace/reader/work/britannica-controls-deepening/frame_capture.py').read_text());snap('04-title');f.get_by_role('button',name='Start',exact=True).click();page.wait_for_timeout(1000);snap('05-started')",
+    "started": "2026-10-26T20:51:49.967328+00:00",
+    "result": "error",
+    "error": "TimeoutError('Locator.click: Timeout 5000ms exceeded.\\nCall log:\\n  - waiting for get_by_role(\"button\", name=\"Start\", exact=True)\\n    - locator resolved to <button tabindex=\"0\" type=\"button\" data-dv_comp=\"40\" aria-label=\"Start\" data-has-capture=\"\" id=\"acc-6BVadlf0Qdy\" data-display-name=\"AccButton\" class=\"acc-shadow-el acc-button\" data-represents=\"_player.6Jjr9ORoK9m.5aZ6j2Z3FWL.6BVadlf0Qdy\">…</button>\\n  - attempting click action\\n    2 × waiting for element to be visible, enabled and stable\\n      - element is visible, enabled and stable\\n      - scrolling into view if needed\\n      - done scrolling\\n      - <image x=\"0\" y=\"0\" opacity=\"1\" width=\"434\" height=\"141\" id=\"uniqueDomId-17\" data-accepts=\"events\" data-original-image=\"01\" preserveAspectRatio=\"none\" transform=\"scale(0.5, 0.4964539110660553)\" xlink:href=\"/11/288011-184-BF60C826/mobile/5ilqUxVYWFj.png\"></image> from <div data-dv_comp=\"35\" data-dv_ref=\"contentArea\" data-display-name=\"SlideLayer\" class=\"slide-layer base-layer shown\">…</div> subtree intercepts pointer events\\n    - retrying click action\\n    - waiting 20ms\\n    - waiting for element to be visible, enabled and stable\\n    - element is visible, enabled and stable\\n    - scrolling into view if needed\\n    - done scrolling\\n    - <image x=\"0\" y=\"0\" opacity=\"1\" width=\"434\" height=\"141\" id=\"uniqueDomId-17\" data-accepts=\"events\" data-original-image=\"01\" preserveAspectRatio=\"none\" transform=\"scale(0.5, 0.4964539110660553)\" xlink:href=\"/11/288011-184-BF60C826/mobile/5ilqUxVYWFj.png\"></image> from <div data-dv_comp=\"35\" data-dv_ref=\"contentArea\" data-display-name=\"SlideLayer\" class=\"slide-layer base-layer shown\">…</div> subtree intercepts pointer events\\n  2 × retrying click action\\n      - waiting 100ms\\n      - waiting for element to be visible, enabled and stable\\n      - element is visible, enabled and stable\\n      - scrolling into view if needed\\n      - done scrolling\\n      - <nav class=\"container flex items-center justify-between w-full gap-1 mx-auto xl:gap-5 2xl:gap-6\">…</nav> from <div class=\"wp-site-blocks\">…</div> subtree intercepts pointer events\\n  2 × retrying click action\\n      - waiting 500ms\\n      - waiting for element to be visible, enabled and stable\\n      - element is visible, enabled and stable\\n      - scrolling into view if needed\\n      - done scrolling\\n      - <image x=\"0\" y=\"0\" opacity=\"1\" width=\"434\" height=\"141\" id=\"uniqueDomId-17\" data-accepts=\"events\" data-original-image=\"01\" preserveAspectRatio=\"none\" transform=\"scale(0.5, 0.4964539110660553)\" xlink:href=\"/11/288011-184-BF60C826/mobile/5ilqUxVYWFj.png\"></image> from <div data-dv_comp=\"35\" data-dv_ref=\"contentArea\" data-display-name=\"SlideLayer\" class=\"slide-layer base-layer shown\">…</div> subtree intercepts pointer events\\n    - retrying click action\\n      - waiting 500ms\\n      - waiting for element to be visible, enabled and stable\\n      - element is visible, enabled and stable\\n      - scrolling into view if needed\\n      - done scrolling\\n      - <image x=\"0\" y=\"0\" opacity=\"1\" width=\"434\" height=\"141\" id=\"uniqueDomId-17\" data-accepts=\"events\" data-original-image=\"01\" preserveAspectRatio=\"none\" transform=\"scale(0.5, 0.4964539110660553)\" xlink:href=\"/11/288011-184-BF60C826/mobile/5ilqUxVYWFj.png\"></image> from <div data-dv_comp=\"35\" data-dv_ref=\"contentArea\" data-display-name=\"SlideLayer\" class=\"slide-layer base-layer shown\">…</div> subtree intercepts pointer events\\n    - retrying click action\\n      - waiting 500ms\\n      - waiting for element to be visible, enabled and stable\\n      - element is visible, enabled and stable\\n      - scrolling into view if needed\\n      - done scrolling\\n      - <nav class=\"container flex items-center justify-between w-full gap-1 mx-auto xl:gap-5 2xl:gap-6\">…</nav> from <div class=\"wp-site-blocks\">…</div> subtree intercepts pointer events\\n    - retrying click action\\n      - waiting 500ms\\n      - waiting for element to be visible, enabled and stable\\n      - element is visible, enabled and stable\\n      - scrolling into view if needed\\n      - done scrolling\\n      - <nav class=\"container flex items-center justify-between w-full gap-1 mx-auto xl:gap-5 2xl:gap-6\">…</nav> from <div class=\"wp-site-blocks\">…</div> subtree intercepts pointer events\\n  - retrying click action\\n    - waiting 500ms\\n')",
+    "ended": "2026-10-26T20:51:55.578935+00:00"
+  },
+  {
+    "action": "page.mouse.wheel(0,450);page.wait_for_timeout(400);print(page.locator('iframe[title=\"Community Helpers Interactive\"]').bounding_box());snap('06-start-before-coordinate')",
+    "started": "2026-10-26T20:52:16.088605+00:00",
+    "result": "ok",
+    "ended": "2026-10-26T20:52:16.843235+00:00"
+  },
+  {
+    "action": "page.mouse.move(500,500);page.mouse.wheel(-2000,-600);page.wait_for_timeout(400);snap('07-reposition');print(page.locator('iframe[title=\"Community Helpers Interactive\"]').bounding_box())",
+    "started": "2026-10-26T20:52:35.067764+00:00",
+    "result": "ok",
+    "ended": "2026-10-26T20:52:35.975761+00:00"
+  },
+  {
+    "action": "box=page.locator('iframe[title=\"Community Helpers Interactive\"]').bounding_box();page.mouse.click(box['x']+box['width']*0.84,box['y']+box['height']*0.88);page.wait_for_timeout(1200);snap('08-start-coordinate')",
+    "started": "2026-10-26T20:52:43.102986+00:00",
+    "result": "ok",
+    "ended": "2026-10-26T20:52:45.050868+00:00"
+  },
+  {
+    "action": "snap('09-introduction-later');print(f.locator('button').evaluate_all('(es)=>es.map(e=>({aria:e.getAttribute(\"aria-label\"),text:e.innerText,box:{x:e.getBoundingClientRect().x,y:e.getBoundingClientRect().y,w:e.getBoundingClientRect().width,h:e.getBoundingClientRect().height}}))'))",
+    "started": "2026-10-26T20:53:08.986937+00:00",
+    "result": "ok",
+    "ended": "2026-10-26T20:53:09.563619+00:00"
+  },
+  {
+    "action": "b=f.get_by_role('button',name='Let’s go!',exact=True).bounding_box();page.mouse.click(b['x']+b['width']/2,b['y']+b['height']/2);page.wait_for_timeout(500);snap('10-selection')",
+    "started": "2026-10-26T20:53:23.504350+00:00",
+    "result": "ok",
+    "ended": "2026-10-26T20:53:26.513002+00:00"
+  },
+  {
+    "action": "page.wait_for_timeout(1200);snap('11-clue-one');print(f.locator('button').evaluate_all('(es)=>es.map(e=>({aria:e.getAttribute(\"aria-label\"),text:e.innerText,visible:!!e.getClientRects().length}))'))",
+    "started": "2026-10-26T20:53:47.959232+00:00",
+    "result": "ok",
+    "ended": "2026-10-26T20:53:50.068532+00:00"
+  },
+  {
+    "action": "exec('def ck(name,idx=0):\\n b=f.get_by_role(\"button\",name=name,exact=True).nth(idx).bounding_box()\\n assert b and b[\"width\"]>0 and b[\"height\"]>0\\n page.mouse.click(b[\"x\"]+b[\"width\"]/2,b[\"y\"]+b[\"height\"]/2)');ck('Magnifying glass');page.wait_for_timeout(400);snap('12-city-choices')",
+    "started": "2026-10-26T20:54:41.070788+00:00",
+    "result": "ok",
+    "ended": "2026-10-26T20:54:42.191133+00:00"
+  },
+  {
+    "action": "ck('Doctor');page.wait_for_timeout(800);snap('13-wrong-doctor')",
+    "started": "2026-10-26T20:54:49.197963+00:00",
+    "result": "ok",
+    "ended": "2026-10-26T20:54:51.808011+00:00"
+  },
+  {
+    "action": "ck('Try again');page.wait_for_timeout(300);snap('14-retry');print(f.locator('body').inner_text()[:500])",
+    "started": "2026-10-26T20:55:12.569177+00:00",
+    "result": "ok",
+    "ended": "2026-10-26T20:55:13.508751+00:00"
+  },
+  {
+    "action": "ck('See clue');page.wait_for_timeout(400);snap('15-reopen-clue');ck('Magnifying glass');page.wait_for_timeout(300);ck('Librarian');page.wait_for_timeout(800);snap('16-correct-librarian')",
+    "started": "2026-10-26T20:55:20.731440+00:00",
+    "result": "ok",
+    "ended": "2026-10-26T20:55:25.679907+00:00"
+  },
+  {
+    "action": "snap('17-correct-after-feedback')",
+    "started": "2026-10-26T20:55:47.395940+00:00",
+    "result": "ok",
+    "ended": "2026-10-26T20:55:48.074949+00:00"
+  },
+  {
+    "action": "ck('Next');page.wait_for_timeout(1000);snap('18-clue-two')",
+    "started": "2026-10-26T20:55:57.494649+00:00",
+    "result": "ok",
+    "ended": "2026-10-26T20:56:00.174315+00:00"
+  },
+  {
+    "action": "snap('19-clue-two-ready')",
+    "started": "2026-10-26T20:56:59.890200+00:00",
+    "result": "ok",
+    "ended": "2026-10-26T20:57:00.455897+00:00"
+  },
+  {
+    "action": "ck('Back',0);page.wait_for_timeout(300);snap('20-back-from-clue-two')",
+    "started": "2026-10-26T20:57:16.817054+00:00",
+    "result": "ok",
+    "ended": "2026-10-26T20:57:19.546212+00:00"
+  },
+  {
+    "action": "ck('Librarian');f.get_by_role('button',name='Next',exact=True).wait_for(state='visible',timeout=30000);snap('21-librarian-after-return');ck('Next');page.wait_for_timeout(2000);ck('Magnifying glass');ck('Construction worker');f.get_by_role('button',name='Next',exact=True).wait_for(state='visible',timeout=30000);snap('22-construction-correct');ck('Next');page.wait_for_timeout(2500);snap('23-clue-three')",
+    "started": "2026-10-26T20:57:55.270444+00:00",
+    "result": "error",
+    "error": "TimeoutError('Locator.bounding_box: Timeout 5000ms exceeded.\\nCall log:\\n  - waiting for get_by_role(\"button\", name=\"Librarian\", exact=True).first\\n')",
+    "ended": "2026-10-26T20:58:00.319611+00:00"
+  },
+  {
+    "action": "snap('21-back-settled');print(f.locator('body').inner_text()[:1800])",
+    "started": "2026-10-26T20:58:44.339554+00:00",
+    "result": "ok",
+    "ended": "2026-10-26T20:58:45.047604+00:00"
+  },
+  {
+    "action": "ck('Next');page.wait_for_timeout(2500);snap('22-clue-two-restored');ck('Magnifying glass');page.wait_for_timeout(500);ck('Construction worker');f.get_by_role('button',name='Next',exact=True).wait_for(state='visible',timeout=30000);snap('23-construction-correct');ck('Next');page.wait_for_timeout(2500);snap('24-clue-three')",
+    "started": "2026-10-26T20:58:55.683658+00:00",
+    "result": "ok",
+    "ended": "2026-10-26T20:59:15.001221+00:00"
+  },
+  {
+    "action": "f.get_by_role('button',name='Magnifying glass',exact=True).wait_for(state='visible',timeout=10000);ck('Magnifying glass');page.wait_for_timeout(500);ck('Doctor');f.get_by_role('button',name='Next',exact=True).wait_for(state='visible',timeout=30000);snap('25-doctor-correct');ck('Next');page.wait_for_timeout(3000);snap('26-clue-four')",
+    "started": "2026-10-26T20:59:36.211233+00:00",
+    "result": "ok",
+    "ended": "2026-10-26T20:59:53.763777+00:00"
+  },
+  {
+    "action": "f.get_by_role('button',name='Magnifying glass',exact=True).wait_for(state='visible',timeout=10000);ck('Magnifying glass');page.wait_for_timeout(500);ck('Police officer');f.get_by_role('button',name='Next',exact=True).wait_for(state='visible',timeout=30000);snap('27-police-correct');ck('Next');page.wait_for_timeout(3000);snap('28-clue-five')",
+    "started": "2026-10-26T21:00:30.652610+00:00",
+    "result": "ok",
+    "ended": "2026-10-26T21:00:45.762427+00:00"
+  },
+  {
+    "action": "page.wait_for_timeout(1500);snap('29-completion');print(f.locator('button').evaluate_all('(es)=>es.map(e=>({aria:e.getAttribute(\"aria-label\"),text:e.innerText,visible:!!e.getClientRects().length}))'))",
+    "started": "2026-10-26T21:01:02.087218+00:00",
+    "result": "ok",
+    "ended": "2026-10-26T21:01:04.652879+00:00"
+  },
+  {
+    "action": "ck('Next');page.wait_for_timeout(3000);snap('30-after-completion-next')",
+    "started": "2026-10-26T21:01:47.861944+00:00",
+    "result": "ok",
+    "ended": "2026-10-26T21:01:51.738715+00:00"
+  },
+  {
+    "action": "snap('31-final-settled');ck('Start activity again');page.wait_for_timeout(1200);snap('32-start-again')",
+    "started": "2026-10-26T21:02:41.539356+00:00",
+    "result": "ok",
+    "ended": "2026-10-26T21:02:44.392203+00:00"
+  },
+  {
+    "action": "ck('Start');f.get_by_role('button',name='Let’s go!',exact=True).wait_for(state='visible',timeout=30000);ck('Let’s go!');f.get_by_role('button',name='Magnifying glass',exact=True).wait_for(state='visible',timeout=15000);ck('Magnifying glass');page.wait_for_timeout(500);ck('Doctor');page.wait_for_timeout(1000);snap('33-wrong-before-frame-reload');r=f.goto(f.url,wait_until='domcontentloaded');print('FRAME_RELOAD_HTTP',r.status if r else None);page.wait_for_timeout(2000);snap('34-frame-reloaded')",
+    "started": "2026-10-26T21:03:18.930211+00:00",
+    "result": "ok",
+    "ended": "2026-10-26T21:03:52.906711+00:00"
+  },
+  {
+    "action": "page.wait_for_timeout(1000);snap('35-reload-settled');page.locator('#ee-catalog-status').scroll_into_view_if_needed();base_snap('36-catalog-error');print(page.locator('#ee-catalog-status').inner_text());print('OPS',len(ops),'STATES',len(states),'ERRORS',len(errs),'DOCS',statuses)",
+    "started": "2026-10-26T21:04:43.167638+00:00",
+    "result": "ok",
+    "ended": "2026-10-26T21:04:45.547785+00:00"
+  }
+]

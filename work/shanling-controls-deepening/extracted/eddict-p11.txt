@@ -1,0 +1,55 @@
+                    E d d i c t P l a y e r
+
+
+ Instruction
+
+  Installation
+
+Eddict Player app is available for Android and iOS. Please open the official app store on your device,
+search for "Eddict Player" and proceed with installation.
+
+
+
+  Local Files Playback
+
+1. Supported formats: APE、DSD (DSF、DFF、DST) ISO、WAV、FLAC、AiFF、M4A、AAC、WMA、
+  MP3、OGG.
+
+2. For iOS system, please copy files into the correct location using iTunes or Wi-FI file transfer. For
+   Android, app will load up any files stored on your device.
+
+Adding Files to library
+
+1. Go to " Playback Settings" > " Music Scan" , let the app load all the files.
+
+2. Alternatively please use Folder based browsing, which do not require music scan.
+
+
+
+  Local Music & Playback Interface
+
+Local Music
+
+Display files stored on the unit, with tag based or file based browsing. You can add tracks to que or view
+their info.
+
+Playback Interface
+
+Control playback, view album art, file info. Tap the " …" for further functionality. Lyrics from .lrf files are
+supported.
+
+
+
+
+  Cloud music
+
+Application allows user to login into their Spotify account and
+use the embedded Spotify app. Please make sure you have
+established Spotify account before attempting to login through
+Eddict Player app.
+
+
+
+
+
+                                        11

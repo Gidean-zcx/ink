@@ -1,0 +1,8 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M038-12,M-038,2代准备并开始一款Tonieplay游戏,D2,E-TNCD-05;E-TNCD-06;E-TNCD-07;E-TNCD-23;E-TNCD-24,完整缓存后可离线再玩；普通Tonie首章可先播的规则不能套给游戏。,两页“开始”对应阶段未核；控制器旋转选择/按压确认的逐步反馈、每款游戏规则/判分/退出、下载取消与续传未知；官网30分钟至1小时以上仅估计，不是本项目测速。,not_observed,false,cases/M-038-tonie.md,2026-10-27
+F-M038-13,M-038,2代Tonieplay中断、回检查点与重开,D2,E-TNCD-09;E-TNCD-10;E-TNCD-11;E-TNCD-12,这里的恢复不是统一秒点暂停；5题只是quiz轮次举例。多数开场可跳，但答题/选择不能立即重播；章节页当时仅点名Winnie The Pooh可选故事。,两页“pause/从头/last position/checkpoint”如何对应具体游戏未知；跳过具体按键、通关全重置入口、断电/跨盒持久性、错误答案和奖励均未核。,not_observed,false,cases/M-038-tonie.md,2026-10-27
+F-M038-14,M-038,2代设置日出闹钟并识别不响条件,D2,E-TNCD-13;E-TONI-09,若顶部Tonie仍在播放，闹钟不响；页面另提醒电量耗尽不启动。首次设定与次日实际响铃未观察。,仅有设置路径：停止响铃/贪睡/重复日程、时区、断网/断电恢复未知；“需充电器”与“电量足够”并列，不能推出拔线可用。,not_observed,false,cases/M-038-tonie.md,2026-10-27
+F-M038-15,M-038,邀请家庭成员并限制可编辑的Creative Tonie,D2,E-TNCD-14;E-TNCD-15,受限成员只见/编辑获授权Creative对象；Full可编辑全部Creative，权限页设备管理措辞只明确1代。官网Members→成员→选公仔→Save Changes。,邀请过期、撤回/移除成员、并发修改、降权对盒子离线缓存的影响；2代设备细粒度管理权未逐项说明。,not_observed,false,cases/M-038-tonie.md,2026-10-27
+F-M038-16,M-038,收到外家庭Creative Tonie后取得编辑权限,D2,E-TNCD-16;E-TNCD-14,拿到实体公仔不等于获得云端编辑权；带内容公仔不能携内容转入另一云账户。二手公仔需原持有人释放，支持方说明不会替用户移除内容。,原持有人失联、释放后旧盒离线缓存、解绑撤销、内容导出与自动备份未核；不能把公仔移交等同全家数据迁移。,not_observed,false,cases/M-038-tonie.md,2026-10-27
+F-M038-17,M-038,把家庭所有权移交给已邀请成员,D2,E-TNCD-19,完成后新成员成为Owner，旧Owner自动退出；旧Owner要回家庭须由新Owner重新邀请。,未操作确认/失败/撤销；接收者原家庭有数据时的合并方案未说明，不把“删除自己的家庭”当无损步骤。,not_observed,false,cases/M-038-tonie.md,2026-10-27
+F-M038-18,M-038,删除整个家庭并确认数据损失范围,D2,E-TNCD-20;E-TONI-18,官方明确永久删除家庭全部数据，包括Creative Tonie录音；不等同删除某段音频、释放公仔、退出家庭或重置盒子。,未执行；回收站/撤销/客服恢复未说明，盒子离线旧缓存清除时机未知。,not_observed,false,cases/M-038-tonie.md,2026-10-27

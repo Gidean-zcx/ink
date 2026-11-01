@@ -1,0 +1,51 @@
+[
+  {
+    "batch": "news-coverage.csv",
+    "before": {
+      "flow_id": "F-M047-01",
+      "product_id": "M-047",
+      "task": "K1公开植物文章阅读",
+      "depth": "D2",
+      "evidence_ids": "E-TFK-02;E-TFK-03",
+      "known_branches": "正文西语打印及同主题回访",
+      "gaps": "动态朗读控件与续读状态",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-047-time-for-kids.md",
+      "checked_on": "2026-10-26"
+    },
+    "updates": {
+      "depth": "D4",
+      "evidence_ids": "E-TFK-02;E-TFK-03;E-TKCD-02;E-TKCD-03",
+      "known_branches": "同篇西语/英文切换；Search展开输入层后进入K–1结果；无意义查询仍见普通文章；清空并从标题返回正文。",
+      "gaps": "仅桌面匿名该篇；打印、所有年级/主题/分页、已读/精准续读、检索失败原因及课堂分配未知。",
+      "visual_status": "observed_browser_sequence",
+      "hands_on": "true"
+    }
+  },
+  {
+    "batch": "child-information-deepening-coverage.csv",
+    "before": {
+      "flow_id": "F-M047-04",
+      "product_id": "M-047",
+      "task": "公开播放器的条件式启动、暂停及错误分支",
+      "depth": "D2",
+      "evidence_ids": "E-TFK-03;E-TKD-01",
+      "known_branches": "服务配置有效才初始化；结束、关闭和错误重试分开",
+      "gaps": "未运行；具体控件启用、跨页位置、离线、重试上限未知",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-047-time-for-kids.md",
+      "checked_on": "2026-10-26"
+    },
+    "updates": {
+      "task": "公开文章朗读控制、关闭与刷新恢复",
+      "depth": "D4",
+      "evidence_ids": "E-TFK-03;E-TKD-01;E-TKCD-01;E-TKCD-02",
+      "known_branches": "运行/暂停、高亮与自动滚动；5档语速菜单，实际选1.25x；Enter改进度；暂停位置保持，关闭重开与非零刷新对照均回起始/.9x。",
+      "gaps": "未实际听音；声音语种/质量/同步精度、离线/失败重试/音量/跨设备未知；仅单篇匿名网页，日志错误未定位。",
+      "visual_status": "observed_browser_sequence",
+      "hands_on": "true"
+    }
+  }
+]

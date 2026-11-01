@@ -1,0 +1,27 @@
+[
+  {
+    "path": "docs/research/interaction-library/artifacts/mudita-app-controls-deepening/source-notes.md",
+    "bytes": 3183,
+    "sha256": "50b3015be7094b8d6931c95d659e8e90a7a1092257f8e09c786753bbce301727"
+  },
+  {
+    "path": "docs/research/interaction-library/batches/mudita-app-controls-deepening-coverage.csv",
+    "bytes": 2281,
+    "sha256": "d10593b44ab5be206920c77a87e256de59ef93eeccba32c25e6bb4fd925d8a07"
+  },
+  {
+    "path": "docs/research/interaction-library/batches/mudita-app-controls-deepening-evidence.jsonl",
+    "bytes": 23694,
+    "sha256": "41a61a84578d90bba3ad962eb2bb39948f83e213c545822a86fd13eb18a35e87"
+  },
+  {
+    "path": "docs/research/interaction-library/batches/mudita-app-controls-deepening-inventory.csv",
+    "bytes": 39448,
+    "sha256": "ef083c1f89209295f05a3efa15f9b583e5bdd5ee839622b6a613a440bd56eb77"
+  },
+  {
+    "path": "docs/research/interaction-library/cases/M-012-mudita.md",
+    "bytes": 30332,
+    "sha256": "98bebb84e9573421200e9eae0b4120c4705a25994f30d21b1e20309a2b8e4218"
+  }
+]

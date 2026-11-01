@@ -1,0 +1,149 @@
+[
+  {
+    "evidence_id": "E-HWP-01",
+    "field": "additional_captures",
+    "before": null,
+    "after": [
+      {
+        "capture_kind": "local_reread_of_prior_official_html",
+        "original_acquisition_date": "2026-10-26",
+        "checked_on": "2026-10-27",
+        "network_refetched": false,
+        "source_url": "https://consumer.huawei.com/cn/support/content/zh-cn15879064/",
+        "raw_work_path": "work/research/extension-manuals/huawei-15879064.html",
+        "raw_sha256": "b29d7cb385135aea149af99d631986928a5818dcc77ff7f0bf19387aafcd7f6a",
+        "archived_artifact": "artifacts/huawei-controls-deepening/source-notes.md",
+        "sha256": "4096ccd665bfeb2774f447f96b210f2bfd493280b84cbaa62d27a3b400adfbe0",
+        "hands_on": false,
+        "visual_observed": false
+      }
+    ],
+    "reason": "复读旧HTML，不重复新建E；原始取得日期仍2026-10-26"
+  },
+  {
+    "evidence_id": "E-HWP-02",
+    "field": "additional_captures",
+    "before": null,
+    "after": [
+      {
+        "capture_kind": "local_reread_of_prior_official_html",
+        "original_acquisition_date": "2026-10-26",
+        "checked_on": "2026-10-27",
+        "network_refetched": false,
+        "source_url": "https://consumer.huawei.com/cn/support/content/zh-cn15881450/",
+        "raw_work_path": "work/research/extension-manuals/huawei-15881450.html",
+        "raw_sha256": "a294ab313716089f53e17702a7565d4821f9b33fa2888f7b8ea67a85d8813600",
+        "archived_artifact": "artifacts/huawei-controls-deepening/source-notes.md",
+        "sha256": "4096ccd665bfeb2774f447f96b210f2bfd493280b84cbaa62d27a3b400adfbe0",
+        "hands_on": false,
+        "visual_observed": false
+      }
+    ],
+    "reason": "复读旧HTML，不重复新建E；原始取得日期仍2026-10-26"
+  },
+  {
+    "evidence_id": "E-HWP-03",
+    "field": "additional_captures",
+    "before": null,
+    "after": [
+      {
+        "capture_kind": "local_reread_of_prior_official_html",
+        "original_acquisition_date": "2026-10-26",
+        "checked_on": "2026-10-27",
+        "network_refetched": false,
+        "source_url": "https://consumer.huawei.com/cn/support/content/zh-cn15881453/",
+        "raw_work_path": "work/research/extension-manuals/huawei-15881453.html",
+        "raw_sha256": "e608ca4cc9d36d0325e8d1576669691a6ad63fb13abdd83acaea3a242799b954",
+        "archived_artifact": "artifacts/huawei-controls-deepening/source-notes.md",
+        "sha256": "4096ccd665bfeb2774f447f96b210f2bfd493280b84cbaa62d27a3b400adfbe0",
+        "hands_on": false,
+        "visual_observed": false
+      }
+    ],
+    "reason": "复读旧HTML，不重复新建E；原始取得日期仍2026-10-26"
+  },
+  {
+    "evidence_id": "E-HWP-04",
+    "field": "additional_captures",
+    "before": null,
+    "after": [
+      {
+        "capture_kind": "local_reread_of_prior_official_html",
+        "original_acquisition_date": "2026-10-26",
+        "checked_on": "2026-10-27",
+        "network_refetched": false,
+        "source_url": "https://consumer.huawei.com/cn/support/content/zh-cn15881454/",
+        "raw_work_path": "work/research/extension-manuals/huawei-15881454.html",
+        "raw_sha256": "804ffa2ed9395ab2f9dd3eca8abfbd1b5c06f50a38a98da2d0403f2bb2d35b1d",
+        "archived_artifact": "artifacts/huawei-controls-deepening/source-notes.md",
+        "sha256": "4096ccd665bfeb2774f447f96b210f2bfd493280b84cbaa62d27a3b400adfbe0",
+        "hands_on": false,
+        "visual_observed": false
+      }
+    ],
+    "reason": "复读旧HTML，不重复新建E；原始取得日期仍2026-10-26"
+  },
+  {
+    "evidence_id": "E-HWP-05",
+    "field": "additional_captures",
+    "before": null,
+    "after": [
+      {
+        "capture_kind": "local_reread_of_prior_official_html",
+        "original_acquisition_date": "2026-10-26",
+        "checked_on": "2026-10-27",
+        "network_refetched": false,
+        "source_url": "https://consumer.huawei.com/cn/support/content/zh-cn15898323/",
+        "raw_work_path": "work/research/extension-manuals/huawei-15898323.html",
+        "raw_sha256": "06382a780fb8ed1bb454fe005f823586b250e3350edbc29597250f658b70af10",
+        "archived_artifact": "artifacts/huawei-controls-deepening/source-notes.md",
+        "sha256": "4096ccd665bfeb2774f447f96b210f2bfd493280b84cbaa62d27a3b400adfbe0",
+        "hands_on": false,
+        "visual_observed": false
+      }
+    ],
+    "reason": "复读旧HTML，不重复新建E；原始取得日期仍2026-10-26"
+  },
+  {
+    "evidence_id": "E-HWP-06",
+    "field": "additional_captures",
+    "before": null,
+    "after": [
+      {
+        "capture_kind": "local_reread_of_prior_official_html",
+        "original_acquisition_date": "2026-10-26",
+        "checked_on": "2026-10-27",
+        "network_refetched": false,
+        "source_url": "https://consumer.huawei.com/cn/support/content/zh-cn15960354/",
+        "raw_work_path": "work/research/extension-manuals/huawei-15960354.html",
+        "raw_sha256": "dc93e05606d5967b1999b52f3a9f731542e483e4c194e88a6fe7d5ff72d03771",
+        "archived_artifact": "artifacts/huawei-controls-deepening/source-notes.md",
+        "sha256": "4096ccd665bfeb2774f447f96b210f2bfd493280b84cbaa62d27a3b400adfbe0",
+        "hands_on": false,
+        "visual_observed": false
+      }
+    ],
+    "reason": "复读旧HTML，不重复新建E；原始取得日期仍2026-10-26"
+  },
+  {
+    "evidence_id": "E-HWP-08",
+    "field": "additional_captures",
+    "before": null,
+    "after": [
+      {
+        "capture_kind": "local_reread_of_prior_official_html",
+        "original_acquisition_date": "2026-10-26",
+        "checked_on": "2026-10-27",
+        "network_refetched": false,
+        "source_url": "https://consumer.huawei.com/cn/support/content/zh-cn15939571/",
+        "raw_work_path": "work/research/extension-manuals/huawei-15939571.html",
+        "raw_sha256": "39e7af2a2b8d1c0593ca18b682cdab7d701c99516afeaa5fd10a14caa540068a",
+        "archived_artifact": "artifacts/huawei-controls-deepening/source-notes.md",
+        "sha256": "4096ccd665bfeb2774f447f96b210f2bfd493280b84cbaa62d27a3b400adfbe0",
+        "hands_on": false,
+        "visual_observed": false
+      }
+    ],
+    "reason": "复读旧HTML，不重复新建E；原始取得日期仍2026-10-26"
+  }
+]

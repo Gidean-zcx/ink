@@ -1,0 +1,52 @@
+[
+  {
+    "path": "docs/research/interaction-library/cases/M-004-boox-neoreader.md",
+    "sha256": "11a8421b29f2e4a9b33a28ab8ec04f441661ab563ea1ef86f15f00fb644ef22d",
+    "bytes": 36290
+  },
+  {
+    "path": "docs/research/interaction-library/batches/boox-reading-controls-deepening-coverage.csv",
+    "sha256": "d64a7764032408e4bcabcde8f16c08ec29041c2bc19dda539b0e931ac5befb57",
+    "bytes": 2403
+  },
+  {
+    "path": "docs/research/interaction-library/batches/boox-reading-controls-deepening-evidence.jsonl",
+    "sha256": "bb01b786ca893d63712863469de421a768625a736cfb838c799cac09fa020061",
+    "bytes": 18182
+  },
+  {
+    "path": "docs/research/interaction-library/batches/boox-reading-controls-deepening-inventory.csv",
+    "sha256": "fc1dbb1b312758f2555bcbc411a99d40320143490ebcc92f40410aa4171b9625",
+    "bytes": 62771
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/boox-reading-controls-deepening/epub-more-settings.png",
+    "sha256": "bd070475b2dce000ea5c15535470b922513698b50afbed7391132098444a919c",
+    "bytes": 1144355
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/boox-reading-controls-deepening/library-scan.jpg",
+    "sha256": "ca5a1051603cde55ef83b70150598f8a55e0240f3853142df6674a562c329ae3",
+    "bytes": 363781
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/boox-reading-controls-deepening/notes-layers.png",
+    "sha256": "964f0841729cd1dd9de8c729de6c981b795ff42a9ee3dec92ef8aacdc8c84e9a",
+    "bytes": 494599
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/boox-reading-controls-deepening/notes-page-manager.png",
+    "sha256": "089285229033c6d565e943bd546493cc136fe02ee23b471e93d5c23c26114d09",
+    "bytes": 1199680
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/boox-reading-controls-deepening/observed-images.json",
+    "sha256": "7556c73adfab72070820f947a87b9dd09ce7ef7743505ac230fbe3fad15ad8c1",
+    "bytes": 2836
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/boox-reading-controls-deepening/source-notes.md",
+    "sha256": "49d6ffbbb7edc9937b3d66b5941d2a95eb47fb72d514071fe3ded09a13bf2dbe",
+    "bytes": 4927
+  }
+]

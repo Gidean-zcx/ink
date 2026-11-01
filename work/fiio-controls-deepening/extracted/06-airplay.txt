@@ -1,0 +1,6 @@
+14.How to use the AirPlay function?
+The AirPlay function will only be available when connecting the JM21 to iOS devices but not Android devices. There are mainly 3 steps.
+1. Make sure the JM21 and your iOS devices are connected to the same WiFi network.
+2.Switch the JM21 to the AirPlay mode.
+3.On the drop-down menu of the iOS device, choose the JM21 as the playing device. So the JM21 can receive audio signals from the iOS device.
+ꄘ

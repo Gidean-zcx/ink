@@ -1,0 +1,16 @@
+To waken the Digital Paper from sleep mode, instead of entering a lock password, a FeliCa card, FeliCa-compatible mobile phone, smartphone, or similar item can be held against the Digital Paper to disable the screen lock. After setting a lock password, follow the steps below to register a FeliCa card/FeliCa-compatible device to the Digital Paper.
+Press the
+(home) button, and tap [Settings].
+Tap [System Settings] — [Screen Lock] — [NFC Card Lock Release Settings].
+Enter a lock password, and tap [OK].
+Tap [Register NFC Card], and if a message asking whether you want to turn on NFC appears, tap [Yes].
+Align the center of the FeliCa card or  (FeliCa mark) on the FeliCa-compatible device with  (N mark) on the Digital Paper for about two seconds.
+To disable the screen lock
+When the entry screen for the lock password is displayed, align the center of the FeliCa card or  (FeliCa mark) on the FeliCa-compatible device with  (N mark) on the Digital Paper for about two seconds.
+To delete the registered information for a FeliCa card/FeliCa-compatible device
+Press the
+(home) button, and tap [Settings] — [System Settings] — [Screen Lock] — [NFC Card Lock Release Settings]. Enter the lock password, and tap [OK] then [Deregister NFC Card].
+To register a different FeliCa card/FeliCa-compatible device
+Only one FeliCa card/FeliCa-compatible device can be registered at a time. Delete the information for the FeliCa card/FeliCa-compatible device that is currently registered before registering a different FeliCa card/FeliCa-compatible device.
+Note
+If the device is placed on a metal desk, it may not function properly, such as failing to communicate with the FeliCa card or devices that support FeliCa. In this case, keep a few centimeters between the device and the metal desk.

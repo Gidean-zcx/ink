@@ -1,0 +1,10 @@
+Trace the text while pressing the highlight button (a) on the pen.
+To undo/redo highlighting
+Tap anywhere on the screen of a document to display the tool bar. Then, tap  (Undo/Redo) in the top right corner of the document screen and select [ Undo] or [ Redo].
+Note
+Highlights cannot be added to the following.
+A document that was scanned (page contains only image data)
+Text that is embedded in an image
+An area that was handwritten on the Digital Paper
+A note that does not contain text
+The [Undo]/[Redo] function will be reset when you go to a different  page.

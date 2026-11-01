@@ -1,0 +1,41 @@
+6.スマートフォン連携
+
+
+
+ スマートフォンとクアデルノでドキュメントの転送をするには、スマートフォンに「QUADERNO Mobile App」を
+インストールします。
+
+「QUADERNO Mobile App」は、AndroidTM版はGoogle PlayTMで、iOS版はApp Store®で無料でダウンロードできます。
+
+ QUADERNO Mobile App のインストール方法
+
+
+■製品情報サイトから
+ 製品情報サイトの「ダウンロード」をスマートフォンでご覧になり、Google PlayTM またはApp Store® へのリンク
+をタップしてください。
+
+
+    製品情報サイト　ダウンロード　
+
+               https://www.fmworld.net/digital-paper/support/download/
+
+
+■スマートフォンで検索
+ スマートフォンでGoogle PlayTM またはApp Store® を開き、アプリ名称や「クアデルノ」で検索し、検索結果から
+「QUADERNO Mobile App」を選択してインストールしてください。
+
+ QUADERNO Mobile App のヘルプガイド
+
+「QUADERNO Mobile App」の右上の  （メニュー）をタップし、表示されたメニューから「ヘルプガイド」を選
+択すると表示されます。
+
+    POINTPOINTPOINT
+
+    「QUADERNO Mobile App」を初めて起動するときに使用許諾が表示されます。よく読んで「同意」をタップしてくださ
+   い。
+
+
+
+
+
+                           25

@@ -1,0 +1,39 @@
+2.パソコンにQUADERNO PC App をインストールする
+
+
+
+ご購入時の初期設定で「QUADERNO PC App」をセットアップしないで終了した場合、「QUADERNO PC App」をダ
+ウンロードしてセットアップしてください。
+
+
+   POINTPOINTPOINT
+  お使いの機種によって使用するアプリが異なります。QUADERNO （Gen.3C）の専用アプリ「QUADERNO PC App」をイ
+   ンストールしてください。
+
+  重要重要重要
+
+   Windows 11をお使いの場合は、オプション機能「WMIC」を有効にする必要があります。詳しくは、FMVサポートページ
+   のQ&Aナンバー「7111-3846」をご覧ください。
+     https://www.fmworld.net/cs/azbyclub/qanavi/jsp/qacontents.jsp?PID=7111-3846
+
+  パソコンでダウンロードサイトにアクセスし、「QUADERNO PC App」をダウンロードします。1
+
+    製品情報サイト　ダウンロード　
+
+              https://www.fmworld.net/digital-paper/support/download/
+
+
+  ダウンロードした「QUADERNO PC App」をインストールします。2
+
+             PC App」を起動します。3「QUADERNO
+
+  クアデルノのUSB2.0 Type-C コネクタとパソコンのUSB コネクタに、添付のUSB ケーブルを接続しま4
+  す。
+
+  これ以降は、画面のメッセージに従って接続設定（ペアリング）を行ってください。
+
+
+
+
+
+                          91

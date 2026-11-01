@@ -1,0 +1,13 @@
+{
+  "docs/research/interaction-library/cases/M-037-yoto.md": "fd1c9e9dc29ef4135987df82c1a446310d5e539c467dd8086cd3350a4e79cff1",
+  "docs/research/interaction-library/cases/M-038-tonie.md": "5a9ce4f4e121495fa8e3918d0e7398b05297273952eaf3a5c5f19d25e56e518b",
+  "docs/research/interaction-library/cases/M-039-audible.md": "22f3c396cf8493caeb2711b1eec94666aacfffaf4d0a2eedba767d4762cc4fb2",
+  "docs/research/interaction-library/batches/audio-coverage.csv": "4f4b7ce16ddb23e2ae7bfa8bb362a1310fad3befab6e02450b7576da3b36ef7a",
+  "docs/research/interaction-library/batches/tonie-controls-deepening-coverage.csv": "1a6b8906aa58f2046581627ddc80db59f65929dbe09066fce5a5b2d102faf721",
+  "docs/research/interaction-library/batches/audible-controls-deepening-evidence.jsonl": "6ddadb505571aabc831938ff277a1c1a1b3d682ec071a6e6f17362b5137b04c9",
+  "docs/research/interaction-library/batches/audio-evidence.jsonl": "75aa8f110a1e906cb3c7a4ea52ce312d987dc91fa44313cecfeb2363c7145baa",
+  "docs/research/interaction-library/batches/tonie-controls-deepening-evidence.jsonl": "6f9b5bcb7d3cae70d4fad2c31b11c66ec3a551491e3f800a6ddc0d30051f70f0",
+  "docs/research/interaction-library/batches/audible-controls-deepening-inventory.csv": "0e893b5c4db2bf34bc4438aea7cae5f7529a89e4ffbbeda740e3b303a8904385",
+  "docs/research/interaction-library/batches/yoto-controls-deepening-inventory.csv": "8c5287cbd0f4a3096e08b04b9631a9bb6bece15123484904f33005a35336845e",
+  "docs/research/interaction-library/batches/tonie-controls-deepening-inventory.csv": "01826bea4bea85cddf643e4e1621b1b113dfe91222e30ec9fe324af05c6fd760"
+}

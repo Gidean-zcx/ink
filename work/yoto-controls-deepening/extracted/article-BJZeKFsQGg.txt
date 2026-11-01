@@ -1,0 +1,492 @@
+
+See the features for the latest update we have made to the Yoto app, as well as all the previous updates.
+
+
+Tip: you can check which version of the Yoto app you have by going to the Menu tab (in the app) where it is listed at  the bottom of the screen. 
+
+
+Yoto app updates
+We release updates for the app regularly, bringing in new features, optimising performance and squishing bugs that come along from time to time. It's probably a good idea to switch on auto updates for the app, if you don't have this already.
+
+
+Yoto app reviews
+We really appreciate your app reviews and feedback. If you love our updates, please do leave a review in the app stores.
+iPhone: https://apps.apple.com/app/yoto-music-stories-learning/id1412039719
+Android: https://play.google.com/store/apps/details?id=com.yotoplay.yoto
+
+
+Yoto app (Beta)
+We make an app beta available for external testing before we promote the new release to the app stores. Whilst we test extensively and endeavour to ensure the app operates in beta without issues, there are times when glitches may arise. Participating in the app beta gives you access to new features ahead of time but with the caveat that there may be glitches that we haven't spotted. If you let us know at hello@yotoplay.com we can quickly put it right. To participate in the Yoto app beta, you can sign up via one of these links:
+iPhone: https://testflight.apple.com/join/di4bwD5z
+Android: https://play.google.com/apps/testing/com.yotoplay.yoto
+
+
+Latest beta version
+Yoto App v3.35 (22 Apr 2026)
+We've been busy behind the scenes – tidying, tweaking and giving the app a proper spruce-up. Tidier and easier to get around. Same Yoto magic, just with a little extra shine!
+
+
+Latest app version
+Yoto App v3.34 (14 Apr 2026)
+We've squashed some bugs and improved performance for a better app experience
+
+
+Previous app versions
+Yoto App v3.33 (1 Apr 2026)
+We've squashed some bugs and improved performance for a better app experience
+Minimum supported OS is now iOS 17 and Android 10
+Yoto App v3.32.1 (12 Mar 2026)
+We've squashed some bugs and improved performance for a better app experience
+Yoto App v3.32 (11 Mar 2026)
+We've squashed some bugs and improved performance for a better app experience
+Yoto App v3.31 (2 Mar 2026)
+We've squashed some bugs and improved performance for a better app experience
+Yoto App v3.30 (9 Feb 2026)
+We've squashed some bugs and improved performance for a better app experience
+Yoto App v3.29 (19 Jan 2026)
+We've squashed some bugs and improved performance for a better app experience
+Yoto App v3.28.1 (5 Jan 2026)
+We've squashed some bugs and improved performance for a better app experience
+Yoto App v3.28 (5 Dec 2025)
+We've squashed some bugs and improved performance for a better app experience
+Yoto App v3.27 (14 Nov 2025)
+We've squashed some bugs and improved performance for a better app experience
+Yoto App v3.26 (29 Oct 2025)
+We've squashed some bugs and improved performance for a better app experience
+Yoto App v3.25 (7 Oct 2025)
+We've squashed some bugs and improved performance for a better app experience
+Yoto App v3.24 (4 Sep 2025)
+We've squashed some bugs and improved performance for a better app experience
+Yoto App v3.23 (20 Aug 2025)
+We've squashed some bugs and improved performance for a better app experience
+Yoto App v3.22 (5 Aug 2025)
+You can now add new members to your family from your app. Generate an invite code and send it to a parent or grandparent to your Yoto family.
+We've squashed some bugs and improved performance for a better app experience
+Yoto App v3.21 (23 July 2025)
+    •    We've squashed some bugs and improved performance for a better app experience
+Yoto App v3.20 (10 July 2025)
+    •    We've squashed some bugs and improved performance for a better app experience
+Yoto App v3.19 (12 Jun 2025)
+We've squashed some bugs and improved performance for a better app experience
+Yoto App v3.18 (2 Jun 2025)
+We've squashed some bugs and improved performance for a better app experience
+Yoto App v3.17 (13 Mar 2025)
+We've squashed some bugs and improved performance for a better app experience
+Yoto App v3.16 (7 Apr 2025)
+Improvements to new minimised player and making it available on more screens
+Yoto Daily in the app from midnight of the daily episode
+We've squashed some bugs and improved performance for a better app experience
+Yoto App v3.15 (18 Mar 2025)
+We've squashed some bugs and improved performance for a better app experience
+Yoto App v3.14 (13 Dec 2024)
+CarPlay interface updates
+We've squashed some bugs and improved performance for a better app experience
+Yoto App v3.13 (13 Dec 2024)
+We've squashed some bugs and improved performance for a better app experience
+Yoto App v3.12 (2 Dec 2024)
+We've squashed some bugs and improved performance for a better app experience
+Yoto App v3.11 (25 Nov 2024)
+We've squashed some bugs and improved performance for a better app experience
+Yoto App v3.10 (19 Nov 2024)
+We've squashed some bugs and improved performance for a better app experience
+Yoto App v3.9
+Add images to your groups, making it easier to personalise and organise your Yoto app the way you like
+We've squashed some bugs and improved performance for a better app experience
+Yoto App v3.8
+We've squashed some bugs and improved performance for a better app experience
+Yoto App v3.7
+We've squashed some bugs and improved performance for a better app experience
+Yoto App v3.6
+Updated navigation:
+The Menu & Player tabs have been merged into one new tab Settings
+To make it easier to create your own content we've moved My recordings, Make a playlist and Yoto Creators to a new tab, Create
+We've squashed some bugs and improved performance for a better app experience
+Yoto App v3.5
+We've squashed some bugs and improved performance for a better app experience
+Yoto App v3.4
+Helping to discover Club Collection content for you & your family!
+Club Collection:
+Filtering to the Club Collection for easier content discovery
+We've squashed some bugs and improved performance for a better app experience.
+Yoto App v3.3
+We're excited to bring you the first additional update to Groups!
+Groups:
+Remove cards from a Group to keep everything up-to-date.
+Fix typos or change the name of your Group.
+Rotate the Group's randomised image to one of your choice.
+We've squashed some bugs and improved performance for a better app experience.
+Yoto App v3.1/3.2
+Introducing Groups: You can now create Groups within your Family Library!
+Add any cards from your Family Library to a Group. Combine podcasts, radio streams, MYOs, free, and purchased cards into a Group. Add one card to multiple Groups. Create up to 20 Groups. Filter and search your card list to find cards to add to your Groups. Watch out for more updates to follow!
+We've squashed some bugs and made performance improvements for a better app experience.
+Yoto App v3.0
+Discover has a new home:
+Explore a world of free audio including free Podcasts, Sleep Sounds and Radio to add to your family library.
+You can now manage your library by adding cards from Discover and removing any old cards you no longer need.
+Yoto Club subscribers can browse their digital Club Collection to add Premium cards to their library.
+Yoto App v2.73 (2nd Apr 2024)
+We've squashed some bugs and made performance improvements for a better app experience
+Yoto App v2.72 (13th Mar 2024)
+My Library: Dive into a world of stories with our new navigation system, designed to help you uncover more from the content in your library
+My Library: We've made it easier to see how your library is currently being sorted.
+Store: We've updated the links from the store to help you find more of what we can offer you from our community and main website
+We've squashed some bugs and made performance improvements for a better app experience
+Yoto App v2.71 (19th Feb 2024)
+We've squashed some bugs and made performance improvements for a better app experience
+Yoto App v2.70 (12th Feb 2024)
+Yoto is now compatible with CarPlay / Android Auto! Access your favourite cards directly from your car's dashboard
+We've squashed some bugs and made performance improvements for a better app experience
+Yoto App v2.69 (6th Feb 2024)
+We've squashed some bugs and made performance improvements for a better app experience
+Yoto App v2.68 (28th Nov 2023)
+Referrals: Do you know a family who will love Yoto as much as yours? You can now find and share your referral code from the app to share with friends and earn points for yourself.
+Player Settings: If we notice an issue with your player, we will highlight this in your player settings. We will help you contact our Customer Happiness team to resolve any issues as quickly as possible.
+Player Setup: We’ve made the steps for setting up Wi-Fi and family account setup clearer.
+Update on iOS Compatibility: To enhance your experience, we’re now focusing on newer versions and will no longer support iOS 14.
+We've squashed some bugs and made performance improvements for a better app experience.
+Yoto App v2.67 (8th Nov 2023)
+Player setup: We've updated the player setup to provide you with essential information on safe usage
+Player setup: Our app now checks you are connected to the player before sending wifi credentials (iOS only)
+We've squashed some bugs and made performance improvements for a better app experience
+Yoto App v2.66 (30th Oct 2023)
+Player Settings : Improved the player downloads screen for a clearer view of downloaded content and download tips
+Player Setup : Now, when pairing with an already paired player, the email address is partially hidden for your privacy
+We've made more space in the bottom navigation for an easier and smoother navigation experience (iOS only)
+MYO : You can now upload an MP3 from another app using your sharing screen (Android only)
+Fix for Android 14 issue where audio stops playing in the background
+We've squashed some bugs and made performance improvements for a better app experience
+Yoto App v2.65 (10th Oct 2023)
+Club in the app: for UK, US & CA club subscribers, there's a new section with additional free content
+Bug fixes and performance improvements
+Yoto App v2.64 (4th Oct 2023)
+Player setup: We’ve made improvements to the player setup flow.
+Player Settings: We’ve refreshed the look and feel of the night mode section of player settings.
+Bug fixes and performance improvements.
+Yoto App v2.63 (14th Sept 2023)
+MYO: Upload and edit custom icons for your MYO tracks.
+Player Settings: We’ve refreshed the look of your player setting including dark mode support.
+Bug fixes and performance improvements.
+Android only
+Fixed crash affecting large file uploads.
+Yoto App v2.62 (4th Sept 2023)
+MYO: Take a photo or upload an image to personalize your MYO playlists
+Alarms: Enable and disable individual alarms with the flick of a switch
+Coming soon in a future release: Upload your own custom pixel artwork to tracks MYO track
+Bug fixes and performance improvements
+(Android: Fixed an issue that caused users to be logged out of the app when installing the app)
+(Android: Fixed an issue caused the screen to lock on some devices)
+Yoto App v2.61 (14th Aug 2023)
+MYO: You can now upload any MP3s from your phone to a MYO playlist from within the app.
+
+Coming soon in a future release: Upload any artwork to your MYO playlist without going to the MYO webpage.
+
+Bug fixes and performance improvements.
+Yoto App v2.60 (7th Aug 2023)
+MYO: Edit your MYO playlists in the app. Edit your playlist name and description. Rename, reorder and change the icons of your tracks.
+Coming soon in a future release: Upload any audio and artwork to your MYO playlist without going to the MYO webpage.
+Bug fixes and performance improvements.
+Yoto App v2.59 (27th June 2023)
+MYO: upload your voice recordings directly from the app! Coming soon in another future release: in-app editing of your MYO playlists and uploading any audio from the app without going to the MYO webpage.
+Bug fixes and performance improvements.
+Yoto App v2.57/2.58 (5th June 2023)
+Store tab: a Yoto Space banner to help you navigate to Yoto Space more easily
+Card details: added a more prominent 'Link to a MYO card' button under the card details track list
+Removed iOS 13 support
+Bug fixes and performance improvements
+Yoto App v2.56 (30th May 2023)
+Yoto creator: our AI story generator to generate your own personalised stories and record in a voice of your choice (iOS beta only)
+Card linking: updated flow for linking your cards with a better view of your available players
+Card linking: use your phone to link a card by simply tapping the card to the phone when in linking mode
+News: news feed now supports dark mode
+Card details: updated screen in preparation for editing playlists in the app
+Setup: new setup images to better guide how to generate a setup code
+Numerous bug fixes and performance improvements
+Yoto App v2.55 (12th May 2023)
+My recordings: an updated voice recordings screen in preparation for in-app upload to a playlist. Also now available in dark mode
+My recordings list: a refreshed list of recordings and removed friction with an optional file renaming
+My recordings voice recorder: a chime button to play a sound to help you to separate chapters
+Numerous bug fixes and performance improvements
+Yoto App v2.54 (21st Apr 2023)
+Bug fixes and performance improvements
+Yoto App v2.53 (11th Apr 2023)
+Login: new in-app login and signup screens
+Maxi player: Apple AirPlay so that you can stream to other devices around your home (iOS only)
+Setup: improvements to the setup screens and a prominent MAC address to help you to connect to other networks
+Numerous bug fixes and performance improvements
+Yoto App v2.52 (2nd Mar 2023)
+Maxi player: card looping when playing on a player
+Maxi player: displaying the track icon of the currently playing track
+Minimised player: displaying the track icon of the currently playing track
+News & Players: a light restyle
+Numerous bug fixes and performance improvements
+Android 13 lock screen widget fix
+Yoto App v2.51 (13th Feb 2023)
+
+Player downloads: a new section to display the current card queued for download
+
+Numerous bug fixes and performance improvements
+Yoto App v2.50 (2nd Feb 2023)
+
+Maxi player: card looping when playing on the phone. Player looping is coming soon!
+
+Maxi player: for streaming content a new animation indicates something is playing when the seek bar can't be displayed
+
+Pairing: a warning and confirmation when leaving an existing family to join another
+
+Numerous bug fixes and performance improvements
+Yoto App v2.49 (18th Jan 2023)
+
+Bug fixes and performance improvements
+Yoto App v2.48 (16th Jan 2023)
+
+Bug fixes and performance improvements
+Yoto App v2.47 (12th Dec 2022)
+
+Menu: a troubleshooting test to ensure your network can get through to the Yoto cloud
+
+Store tab: added a club link to take you to the club page on the website
+
+Numerous bug fixes and performance improvements
+Yoto App v2.46 (1st Dec 2022)
+ALARMS!! from player settings set up to 10 alarms to sound on your player (turn off the alarm by pressing any button on the player)
+Menu tab:switch between modes from the app menu
+Numerous bug fixes and performance improvements
+Yoto App v2.45 (22nd Nov 2022)
+ALARMS!! from player settings set up to 10 alarms to sound on your player (your player must be on beta).
+Player settings: player downloads view improvements
+Maxi player: time remaining added to the track position scrubber
+Maxi player: 'Scan a card' moved into the three dots menu
+Menu tab: light restyle
+Store tab: dark mode
+Voice recording permissions fix for Android 13
+Fix for missing right hand button section for Android 6 and 7
+Numerous bug fixes and performance improvements
+Yoto App v2.44 (14th Oct 2022)
+Maxi Player: pause & resume controls so you can pause a card for a moment without then having to find it in the library again
+Maxi Player: added more support for dark mode in the app
+Card details: volume control and a player picker
+Library: new empty state designs
+Players: new logged out and empty state designs
+Numerous bug fixes and performance improvements
+Yoto App v2.43 (16th Sept 2022)
+Bug fixes and performance improvements
+Yoto App v2.42 (5th Sept 2022)
+Player downloads: search and sort the player downloads view to help you find the download status of a card more quickly
+Store: a new store tab to help you get to the areas of the website you want more quickly
+Landing screen: a refreshed landing screen to help new users understand what the Yoto app can do
+Library Radio tab:a small restyle of the radio images
+Dark mode: added more support for dark mode in the app
+Numerous bug fixes and performance improvements
+Yoto App v2.41 (18th Aug 2022)
+Player settings: see which of your library and MYO cards are downloaded on your player
+Player settings: new buttons for finer adjustment of the brightness of the player display
+Library: an additional sorting option 'Last added' to sort cards by the time they were added to the Library
+Library: 'Add a playlist' library button to match the My Cards experience
+Updates to improve playing cards in the background or over bluetooth
+Numerous bug fixes and performance improvements
+Yoto App v2.40 (24th June 2022)
+Library: an additional sorting option 'Last played' to sort cards by their last played time
+Library: 'Add a podcast' library button to match the My Cards experience
+Library: search your podcasts
+Maxi player: sleep timer when playing on the phone
+Maxi Player: choose a playback speed for when listening on your phone
+Maxi player: removed text 'Chapters' and 'Scan' to make room for future audio features coming soon
+Numerous bug fixes and performance improvements
+Yoto App v2.39 (27th May 2022)
+Card details: Track icons on the card details screen to match the Player display
+Library: Preparation work to support an accurate last played view in a future release
+Library: Image loading performance (iOS)
+Library: Navigation to the correct tab from a shared link (podcast or MYO)
+Library: Other shared card improvements
+Accessibility: Updated Voice Over support for better accessibility for the sight impaired
+Maxi player: A player seek bar visibility fix when playing Yoto Daily / Mini Journal from a right hand button press
+Locales: Android fix for people with right to left locales
+Login: The pairing flow and 'Create an account' button now direct to the Sign Up tab on the login screen
+Numerous bug fixes and performance improvements
+Yoto App v2.38 (27th Apr 2022)
+Dropped support for iOS 12
+Maxi player: see the current position of the track playing and scrub forwards and backwards using the seekbar. In addition bump forwards/backwards buttons 15 seconds on the currently playing track
+Maxi player: set a custom sleep timer
+Library: search by author as well as title when viewing your cards
+Player settings Yoto Beta Labs: you can join the player beta from the app and if you're participating in it you can try out some of our experimental settings we're trialling with the players
+Shared cards: improvements for consuming shared cards
+Numerous bug fixes and performance improvements
+Yoto App v2.37 (4th Apr 2022)
+Library: we’ve added a ‘Scan a card’ button to make it more obvious you can scan a card to add it to your library
+Library: we've updated the Menu style to bring it up to date with the recent My Library design updates
+MYO: this now has a gallery view, like ‘My Cards’. In addition, you can now create custom artwork, reorder tracks and rename tracks. 
+Numerous bug fixes and performance improvements
+Yoto App v2.36 (2 Mar 2022)
+Library: We’ve refreshed the library header, card play buttons and podcasts as we constantly look to keep the app fresh, adding visual improvements and updated features
+Library: My Cards and MYO sorting title alphabetically and MYO by last updated. There’s more to come here in future releases, with more sort options and library views to help you to find the cards you’re looking for
+Library: My Cards and MYO search by title
+Maxi player: you can now fast forward (and back) 15 seconds in a track when the phone is selected. We will be bringing the same support to the Player soon
+Setup/pairing: a light refresh of the setup and pairing screens to match the new library header
+Player settings: a new battery saver icon
+MYO sharing: shared card improvements
+Numerous other bug fixes and performance improvements
+Yoto App v2.35 (4th Feb 2022)
+Log out: an always available log out button on the Players tab
+V1 Players: an always available stop button for the original V1 kickstarter players
+Volume bar: moved up to prevent unintentional app switching (iOS)
+Performance: library performance improvements
+Player settings: fix for day/night mode time bug on iOS 12/13/14
+Subscribe: fix for the subscriptions screen after log in (Android)
+Numerous bug fixes and performance improvements
+Yoto App v2.34 (12th Dec 2021)
+Sleep timer: set a timer to stop your Player or Mini playing after a set period of minutes
+Remove a Library card: hide purchases from the app and then add them back in by playing them again
+Player MAC address: find your Player MAC address in Player settings
+Numerous bug fixes and performance improvements
+Yoto App v2.33 (24th Nov 2021)
+Player and app: visibility of what your Player or Mini is doing, its current and maximum volume, and what is playing on it
+App expanded player screen: a refreshed design with space for some upcoming features
+Track listings screen: a refreshed design and the ability to start individual tracks playing on your Player or Mini from the app
+Yoto Mini: setup screens for our new portable player
+Lots of bug fixes and performance improvements behind the scenes
+Yoto App v2.32 (5th Oct 2021)
+Numerous bug fixes and performance improvements
+Yoto App v2.31 (2nd Sept 2021)
+Player Settings: we have refreshed the Advanced section to follow the updates to the Day and Night mode sections in the last release
+Podcasts: Yoto Daily and the French Yoto Journal are now ordered first so that they are easier to find
+Setup: improvements to the overall flow when connecting to the Yoto_xxx hotspot fails (Android only)
+Numerous bug fixes and performance improvements
+Yoto App v2.30 (28th July 2021)
+MYO Sharing: small updates to the sharing text
+Player Settings: we have updated the Day Mode and Night Mode sections here, so setting a bedtime and choosing the nightlight and morning light colours is much clearer
+Discover: the selection of free cards in the app is now sorted into sections to help with finding new cards to explore
+Players: you can now pull down to refresh the screen
+Setup: we have added a Connect button to the setup flow just in case the keyboard has been dismissed
+Numerous bug fixes and performance improvements
+Yoto App v2.29 (26th July 2021)
+Player Settings: we have updated the Day Mode and Night Mode sections here, so setting a bedtime and choosing the nightlight and morning light colours is much clearer
+Discover: the selection of free cards in the app is now sorted into sections to help with finding new cards to explore
+Players: you can now pull down to refresh the screen
+Setup: we have added a Connect button to the setup flow just in case the keyboard has been dismissed
+Numerous bug fixes and performance improvements
+Yoto App v2.28 (30th June 2021)
+Splash: we’ve given the splash screen a makeover
+Discover: the Featured Audio tab has become Discover
+Navigation: we’ve made navigation of the library more intuitive and clearer you can swipe between content screens
+New users: we’ve given the app a refresh for new users to better explain what you can do in the app
+Setup: you can now connect the Player to your phone’s hotspot using one phone, not two!
+iPad: we’ve made the iPad screens full screen for a better tablet experience
+Yoto App v2.27 (18th May 2021)
+Simplified join family/claim player pairing flow and screens
+Fixed voice recording for Android 11 users
+Fixed My Library blank screen bug affecting some iPhone users
+Yoto App v2.26 (6th May 2021)
+Setup Improvements: including adding more specific details to our troubleshooting screens to make them more likely to solve real world setup issues. These updates are based on ongoing research and development we do in order to continually improve the setup process for Yoto Player.
+Sharing Playlists for MYO: we have expanded the beta trial of the new sharing feature so that more people can try this out and let us know how it’s working for them. Simply tap the three dot menu within any Make Your Own playlist and see the option to ‘Share with Friends & Family’.
+Disconnect Wi-Fi: we have reinstated the option to disconnect Yoto Player from your Wi-Fi network (in the Manage Wi-Fi section), which we had inadvertently removed at the same time as adding the option to add a new Wi-Fi network in the last app release.
+Leave a Family Account: we have added the option to leave a Family Account from within the Players tab. Previously, to ‘leave’ an account, you had to be ‘removed’ by another User in the same Family Account, which seemed odd to us when we thought about it.
+Yoto App v2.25 (3rd May 2021)
+Setup Improvements: including adding more specific details to our troubleshooting screens to make them more likely to solve real world setup issues. These updates are based on ongoing research and development we do in order to continually improve the setup process for Yoto Player.
+Sharing Playlists for MYO: we have expanded the beta trial of the new sharing feature so that more people can try this out and let us know how it’s working for them. Simply tap the three dot menu within any Make Your Own playlist and see the option to ‘Share with Friends & Family’.
+Disconnect Wi-Fi: we have reinstated the option to disconnect Yoto Player from your Wi-Fi network (in the Manage Wi-Fi section), which we had inadvertently removed at the same time as adding the option to add a new Wi-Fi network in the last app release.
+Leave a Family Account: we have added the option to leave a Family Account from within the Players tab. Previously, to ‘leave’ an account, you had to be ‘removed’ by another User in the same Family Account, which seemed odd to us when we thought about it.
+Yoto App v2.24 (7th April 2021)
+Adding new Wi-Fi network details is now clearer to do, as it happens in the Manage Wi-Fi section of Player Settings. Previously you had to ‘Set up a Yoto Player’ when you wanted to get your Player online at a new location, or if you changed your Wi-Fi password or provider, which was confusing.
+Card running times are now shown on the card detail screen (to add to the track/chapter lengths that were added in the previous release).
+Haptic feedback (nice little vibrations that help indicate buttons have been pushed) has been added to the main play/stop buttons
+We have added a direct link to the Make Your Own section of the app from the landing screen, for people using the app for the first time who may only be interested in creating their own content to share with family (grandparents, aunts, uncles for example)
+Yoto App v2.23 (6th March 2021)
+Track Lengths: we have added track lengths on the card detail screen, so you can… see how long the tracks are! And we’ll be making further improvements to this area in future releases, too.
+‘Players’ tab: we have changed the name of the old ‘Account’ tab to ‘Players’ as you told us that the old name was somewhat confusing. We think this is a better way to describe this, as the main reason for using this screen is to manage your Yoto Player settings.
+Yoto App v2.22 (4th March 2021)
+Track Lengths: we have added track lengths on the card detail screen, so you can… see how long the tracks are! And we’ll be making further improvements to this area in future releases, too.
+‘Players’ tab: we have changed the name of the old ‘Account’ tab to ‘Players’ as you told us that the old name was somewhat confusing. We think this is a better way to describe this, as the main reason for using this screen is to manage your Yoto Player settings.
+Yoto App v2.21 (14th February 2021)
+We’ve made setup easier since you can now join the Yoto hotspot without leaving the Yoto app (previously you had to exit the app and go to and from your phone Wi-Fi settings)
+Also, at the end of setup you will now go straight to My Library so you can start to enjoy your audio straight away
+We have also made a few small bug fixes and improvements
+Yoto App v2.20 (31st January 2021)
+We’ve added track numbers in the app to match those shown on the Player
+You can now delete playlists in the Make Your Own part of your library, so that you can keep things tidy and get rid of unwanted test playlists and out of date content
+We have also made various other bug fixes and tweaks
+Yoto App v2.19 (16th December 2020)
+Delete recordings: you can now delete audio recordings you make in the Yoto app. Simply swipe left on a recording and confirm by tapping the delete icon. Keeping things nice and tidy!
+New layout for Make Your Own library: we’ve updated the design of the MYO section so you can see clearly those playlists you have made (which you can then edit) and those made by other members of your family account (which you are not able to edit).
+Various bug fixes and improvements.
+Yoto App v2.18 (18th November 2020)
+Record Audio: some additional improvements to this new feature in the app.
+Better Free Content Access: we have opened up the app so you can more easily enjoy our selection of Podcasts, Radio and Sleep Sounds without having to log in to the app.
+Plus: a bug fix for playing audio through other Bluetooth speakers (iPhone only), as well as some other general improvements to make things run smoothly.
+Yoto App v2.17 (11th November 2020)
+Audio Record: Now you can record your own audio directly in the app, to make playlists you can link to cards to play on Yoto Player! No need to mess around with a 3rd party voice memo app, it all now happens in the Yoto app.
+
+Grandparents can make recordings which you can link to cards remotely for the kids. They just need to download the app, follow the “Set up a Yoto Player” steps (getting you to press the buttons and tell them the code over the phone if they can’t be there in person), and join your Family Account.
+
+All playlists they make will now be visible in your app.
+Yoto App v2.16 (23rd October 2020)
+Sleep Sounds: an exciting new feature coming to Yoto, Sleep Sounds is an addition to the My Library section of the app, and contains a selection of sounds to help sooth the restless when it’s time for bed. From White Noise, to Thundery Rain, to the gentle sound of a Devon Hedgerow. You can play these tracks from the app directly on your phone, or remotely through Yoto Player, or you can link them to a Make Your Own card in the normal way.
+Yoto Sleep Radio: within the Sleep Sounds area of the app, we have introduced a new radio station playing a selection of tracks for a calm and soothing bedtime. You can play this station from the app directly on your phone, or remotely through Yoto Player, or you can link it to a Make Your Own card in the normal way.
+Other fixes and improvements: layout tweaks for phones of different sizes, and more guidance on setting up Yoto Player to your Wi-Fi network when you have a network name (SSID) longer than 31 characters.
+Yoto App v2.15 (13th October 2020)
+Setup: for Wi-Fi setup, we have added the ability to manually input your chosen network name, instead of just choosing from a list. Also for Wi-Fi setup, we have added a warning for when your network name is longer than 31 characters, which is unsupported by the Yoto Player at this time
+
+
+Yoto App v2.14 (1st October 2020)
+Newsfeed: news notification icon added to show when a new article has been added to the newsfeed, so you don’t have to navigate there for no reason.
+Yoto App v2.13 (24th September 2020)
+General: various improvements and bug fixes.
+Yoto App v2.12 (26th August 2020)
+Language Support: support for a French language version of the app.
+General: various improvements and bug fixes.
+Yoto App v2.11 (20th August 2020)
+Improved My Library: without repeated refreshing of screen, and with a better view of your cards and other audio.
+Improved Card Linking: this process now happens within the app, not on a web page, so should be a much smoother and enjoyable experience.
+Improved Player Setup options: you can now start this process from the device picker if you have not yet set up a Yoto Player. We made this change to give better options for people new to the app to do the thing they are likely to need to do first.
+ Yoto App v2.10 (6th July 2020)
+Track/Chapter Listings: see tracks and play from a specific track when your phone is selected as the play-on device (when Yoto Player is selected you can see tracks and play the content from the beginning). Navigate to tracks/chapters by tapping a card image or title in My Library or tapping the “Chapters” link on the maxi player.
+New side bar navigation: on My Library for navigating between your library of content. This improves the navigation and paves the way for some exciting updates we have planned for the coming weeks.
+How To Guides: available from updated Menu screen
+Security update: see unverified members of your family account
+Family Account organisation improved: Remove a family member from the family account (only when you are verified). Helpful if things got mixed up during setup.
+
+
+Yoto App v2.9 (10th June 2020)
+Updated tab bar navigation including News Feed section
+Updated device picker with position change for UX improvement
+Updated Yoto player
+
+
+Yoto App v2.8 (20th May 2020)
+In-app messaging
+UX improvements and bug fixes
+ Yoto App v2.7 (30th April 2020)
+UX improvements and bug fixes
+Refresh button on the setup select wifi screen
+ Yoto App v2.6 (11th April 2020)
+Play your Yoto card audio directly from your phone.
+Play audio, including a selection of free content, directly from the app without needing to own a Yoto Player.
+For iPhones 7 and above, tap a card on your phone to play it. Again, no Yoto Player needed to enjoy.
+Lockscreen audio widget
+ Yoto App v2.5 (9th April 2020)
+Play your Yoto card audio directly from your phone.
+Play audio, including a selection of free content, directly from the app without needing to own a Yoto Player.
+For iPhones 7 and above, tap a card on your phone to play it. Again, no Yoto Player needed to enjoy.
+ Yoto App v2.4 (30th March 2020)
+Play cards from your library directly on your phone
+For iPhones 7 and above, scan a card to listen to it
+ Yoto App v2.3 (21th February 2020)
+New visualisations of connected devices and users in the pairing flow
+New visualisations of connected devices and users on the account screen
+ Yoto App v2.2 (5th February 2020)
+We've refreshed our app with our new branding, an improved user experience and support for the new Yoto Player
+ Yoto App v2.1 (31st January 2020)
+We've refreshed our app with our new branding, an improved user experience and support for the new Yoto Player
+ Yoto App v2.0 (31st January 2020)
+We've refreshed our app with our new branding, an improved user experience and support for the new Yoto Player
+ Yoto App v1.3 (19th September 2019)
+We have improved navigation in the app, with everything now easily accessible in a single menu on the right hand side. You can now also control your Yoto Player remotely, i.e. you don't need your mobile phone connected to the same Wi-Fi network as the Player to access it in the app.
+ Yoto App v1.2 (17th September 2019)
+Bug fixes
+Version number added to the drawer menu footer
+Token refresh when expired
+Remove back button from webview
+Changed support email address
+ Yoto App v1.1 (20th December 2018)
+Interface tweaks and small fixes.
+ Yoto App v1.0 (17th October 2018)
+A new app to support the setup process for Yoto Player

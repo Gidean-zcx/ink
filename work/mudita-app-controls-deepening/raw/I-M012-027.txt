@@ -1,0 +1,14 @@
+How to Send an MMS Message to a Contact?
+Modified on: Sat, 3 Oct, 2026 at 8:37 AM
+Sending an MMS message on your Kompakt lets you quickly share photos with your contacts. Simply select a recipient, attach an image, and send your message
+Open the SMS app.
+Tap the Plus icon to create a new message.
+Select the contact you want to message.
+Tap the Image icon to attach a photo.
+Select the image you want to send.
+Tap Send to send your MMS message.
+Was this article helpful?
+ No
+ Yes
+That’s Great!
+Thank you for your feedback

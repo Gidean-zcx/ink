@@ -1,0 +1,22 @@
+{
+  "name": "12-goal-confirmed",
+  "url": "https://www.duolingo.com/welcome?welcomeStep=choosePath",
+  "title": "Duolingo - Learn French with lessons that work",
+  "utc": "2026-10-26T17:42:29.170676+00:00",
+  "text": "Now let’s find the best place to start!\nNow let’s find the best place to start!\nStart from scratch\nTake the easiest lesson of the French course\nFind my level\nLet Duo recommend where you should start learning\nCONTINUE",
+  "buttons": [
+    {
+      "text": "",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "CONTINUE",
+      "aria": null,
+      "test": "funboarding-continue-button",
+      "visible": true
+    }
+  ],
+  "inputs": []
+}

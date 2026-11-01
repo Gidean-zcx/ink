@@ -1,0 +1,16 @@
+{
+  "name": "03-french",
+  "url": "https://www.duolingo.com/register",
+  "title": "Learning Goal - Duolingo",
+  "utc": "2026-10-26T17:37:03.299349+00:00",
+  "text": "SITE LANGUAGE: ENGLISH\nI want to learn...",
+  "buttons": [
+    {
+      "text": "SITE LANGUAGE: ENGLISH",
+      "aria": null,
+      "test": null,
+      "visible": true
+    }
+  ],
+  "inputs": []
+}

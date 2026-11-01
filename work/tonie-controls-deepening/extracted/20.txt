@@ -1,0 +1,84 @@
+How do I delete my Household? – tonies® Support (https://support.tonies.com/hc/en-us/articles/29036630818578-How-do-I-delete-my-Household)
+citeturn786view0 [wordlim: 200] Crawled: today; Content type: text/html; Source: open({"ref_id":"turn781view3","lineno":35}); Total lines: 82
+L0: 【0†Skip to main content】
+L1: 
+L2: 【1†Contact us】
+L3: 
+L4: [Input] English (United States)
+L5: 
+L6: Articles in this section
+L7: 
+L8:   * 【2†How do I transfer ownership of my Household?】
+L9:   * 【3†How to create a my.tonies account】
+L10:   * 【4†How do I invite other members into my Household?】
+L11:   * 【5†How do I manage Household members permissions?】
+L12:   * 【6†How do I change the name of my Household?】
+L13:   * 【7†How do I remove a Toniebox 1 from my Household?】
+L14:   * 【8†I'm having trouble logging in to my account】
+L15:   * 【9†How do I delete my Household?】
+L16: # How do I delete my Household?
+L17: 
+L18: If you need to delete your Household for any reason, it's important to know that this process will also permanently delete all data, including any recordings that are on Creative Tonies in your Household. If you would like to proceed with deleting your Household, follow the steps below.
+L19: 
+L20: How to delete your Household:
+L21: 
+L22: Using the tonies app
+L23: 
+L24: 【10†iframe†www.youtube-nocookie.com】
+L25:   1. Open the tonies app and tap your profile picture in the top-right side of the screen.
+L26: 【11†Image: Profile__1_.jpg】
+L27: 
+L28:   2. Tap 'Household'.
+L29: 【12†Image: Permissions_Step_2.jpg】
+L30: 
+L31:   3. Tap the settings icon in the upper-right hand side of the screen.
+L32: 【13†Image: Delete_HH_Step_3.jpg】
+L33: 
+L34:   4. Tap 'Dissolve Household'.
+L35: 【14†Image: Delete_HH_Step_4.jpg】
+L36: 
+L37:   5. Tap the red 'Delete' button to confirm that you wish to permanently delete the Household.
+L38: 【15†Image: DeleteHH__2_.jpg】
+L39:   6. You have now successfully deleted your Household and all data will also be permanently deleted.
+L40: Using my.tonies.com
+L41: 
+L42: 【16†iframe†www.youtube-nocookie.com】
+L43:   1. Login to your account at 【17†my.tonies.com†my.tonies.com】 and click the 'Members' tab.
+L44: 【18†Image: TransferStep1.jpg】
+L45: 
+L46:   2. Click the 'Household preferences' dropdown.
+L47: 【19†Image: Step2Delete.jpg】
+L48: 
+L49:   3. Click on 'Delete this household'.
+L50: 【20†Image: Step3Delete.jpg】
+L51: 
+L52:   4. Click on 'Delete Household' in the window that appears to confirm that you wish to permanently delete the Household.
+L53: 【21†Image: Step4Delete.jpg】
+L54:   5. You have now successfully deleted your Household and all data will also be permanently deleted.
+L55: If you are having any trouble deleting your Household, 【1†send us a message】 and we will help guide you through the process!
+L56: 
+L57: 【22†Return to top】
+L58: 
+L59: Return to top
+L60: ## Was this article helpful?
+L61: 
+L62: [Button: Yes] [Button: No]
+L63: 
+L64: 26 out of 51 found this helpful
+L65: 
+L66: Have more questions? 【1†Submit a request】
+L67: 
+L68: ### In this article
+L69: 
+L70: Contents Articles
+L71: 
+L72: ### Title
+L73: 
+L74: [Button: ×]
+L75: 
+L76: 【23†tonies® Support】
+L77: 
+L78:   * 【24†Imprint†login.tonies.com】
+L79:   * 【25†Privacy policy†login.tonies.com】
+L80:   * 【26†Cookie Settings】
+L81:   * © tonies GmbH

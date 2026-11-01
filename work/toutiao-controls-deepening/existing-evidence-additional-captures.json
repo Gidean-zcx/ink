@@ -1,0 +1,49 @@
+[
+  {
+    "evidence_id": "E-TT-01",
+    "source_batch": "docs/research/interaction-library/batches/feed-evidence.jsonl",
+    "field": "additional_captures",
+    "before": [],
+    "after": [
+      {
+        "capture_url": "https://lf26-cdn-tos.draftstatic.com/obj/ies-hotsoon-draft/toutiaoGIP/5fb89857-7777-40b8-8105-989b87cdfb8f.html",
+        "checked_on": "2026-10-27",
+        "access_mode": "local_reread_of_existing_public_artifact",
+        "raw_work_path": "work/feed-interactions/tt-privacy.html",
+        "raw_sha256": "ce2f1862aa74849719fc85e27dae2176dac020fabf8bc93ded0f3f35529fae20",
+        "original_capture_on": "2026-10-26",
+        "locator": "范围声明；6.1.2/6.2.2/7.2.1/7.2.2；设置指引可能调整",
+        "limitation": "未重新GET；政策适用多系列，本文仍聚焦主App且不为每一路径指定OS/build",
+        "archived_artifact": "artifacts/toutiao-controls-deepening/source-notes.md",
+        "sha256": "65ed9f19d0d7a6c834810aaa1ad06065e7ff924c6616a2a74d1094c712fa7218",
+        "hands_on": false,
+        "visual_observed": false
+      }
+    ],
+    "reason": "旧E同源补取得方式/日期与正文定位，不重新编号"
+  },
+  {
+    "evidence_id": "E-TT-04",
+    "source_batch": "docs/research/interaction-library/batches/feed-evidence.jsonl",
+    "field": "additional_captures",
+    "before": [],
+    "after": [
+      {
+        "capture_url": "https://apps.apple.com/cn/app/%E4%BB%8A%E6%97%A5%E5%A4%B4%E6%9D%A1/id529092160",
+        "checked_on": "2026-10-27",
+        "access_mode": "public_app_store_html_read",
+        "raw_work_path": "work/toutiao-controls-deepening/appstore.html",
+        "raw_sha256": "93ee7266605d55a66adbaaba0f09f66ee7eafb63c746eea330ed4da99228c67b",
+        "app_build": "18.8.0",
+        "source_updated_on": "2026-10-22",
+        "locator": "版本历史首项HTML datetime及开发者描述",
+        "limitation": "中国区iPhone/iPad条目，未安装；无具体长按/恢复变更说明；排除用户好评",
+        "archived_artifact": "artifacts/toutiao-controls-deepening/source-notes.md",
+        "sha256": "65ed9f19d0d7a6c834810aaa1ad06065e7ff924c6616a2a74d1094c712fa7218",
+        "hands_on": false,
+        "visual_observed": false
+      }
+    ],
+    "reason": "旧E同源补取得方式/日期与正文定位，不重新编号"
+  }
+]

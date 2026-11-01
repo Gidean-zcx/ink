@@ -1,0 +1,18 @@
+{
+  "status": "passed",
+  "readwise_source_git_blob": "263ac15b38e5f809fa7e5a5e4321a9913d28af09",
+  "source_sha256": "cd8130937fd1cdaf43cf9be3d690ac7b91484c183e20e54d416ac83321ff8881",
+  "x2_original_sha256": "79402307df3f46d112e2c505b73761b8d481ca24b4a47d473c624b396a921ff4",
+  "requirements_sha256": "e141320e2714df805c009fe64dd92d17decd6429d5728f8ce42d6d868b775087",
+  "new_flows": 7,
+  "new_evidence": 1,
+  "changed_old_flows": 9,
+  "changed_old_evidence": 9,
+  "moaan_samples": 24,
+  "moaan_unique_frames": 15,
+  "prior_notes_unchanged": {
+    "/home/workspace/reader/docs/research/interaction-library/artifacts/readwise-ai-workflows/source-notes.md": "151f5c756ce365487065045a89ee8949fab179285bc34c154cfe6788cb11ca9b",
+    "/home/workspace/reader/docs/research/interaction-library/artifacts/moaan-controls-deepening/source-notes.md": "1e87162de8a6f2fbb64044e1c2547d97401e1fa5b8de2ce206043eed9d66b56b"
+  },
+  "limits": "Root checked scoped source statements, code/data state and visual samples; no real product end-to-end test or all-feature completion"
+}

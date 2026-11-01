@@ -1,0 +1,20 @@
+{
+  "status": "PASS",
+  "mode": "pre_merge_read_only",
+  "new_e": 18,
+  "new_f": 6,
+  "old_f": 6,
+  "old_f_fields": 18,
+  "old_e_local_rereads": 2,
+  "inventory_rows": 111,
+  "new_body_read_rows": 18,
+  "remaining_index_only": 46,
+  "new_static_observations": 0,
+  "formal_files": 5,
+  "raw_files": 58,
+  "case_sha256": "98bebb84e9573421200e9eae0b4120c4705a25994f30d21b1e20309a2b8e4218",
+  "formal_manifest_sha256": "303caa8812ef68f262355c161a33dfc837214aac3b137d81cfb2c5a2b6965ac8",
+  "state_changed_by_check": false,
+  "command": "python3 work/mudita-app-controls-deepening/check.py",
+  "exit_code": 0
+}

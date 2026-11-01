@@ -1,0 +1,1 @@
+{"status": "PASS", "checks": 146, "new_E": 3, "new_F": 1, "reader_inventory": 22, "creator_index": 73, "creator_body_read": 1, "old_F_fields": 18, "old_E_captures": 2, "images_observed": 0, "old_batch_unchanged": true, "hands_on": false}

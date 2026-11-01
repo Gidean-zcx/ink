@@ -1,0 +1,14 @@
+{
+  "new_evidence": 73,
+  "distinct_raw_files_checked": 103,
+  "derived_extracts_hashed": 23,
+  "audible_manifest_files": 35,
+  "static_images": 2,
+  "inventories": 17,
+  "inventory_rows": 1317,
+  "new_directory_rows": 437,
+  "new_tasks": 16,
+  "existing_tasks_updated": 18,
+  "existing_fields_updated": 73,
+  "errors": []
+}

@@ -1,0 +1,330 @@
+[
+  {
+    "evidence_id": "E-HBD-01",
+    "before": {
+      "evidence_id": "E-HBD-01",
+      "product_id": "M-035",
+      "title": "R3II 2025 完整目录与指南",
+      "url": "https://guide.hiby.com/en/docs/products/audio_player/hiby_r3ii_2025/guide/",
+      "checked_on": "2026-10-26",
+      "source_type": "official_manual",
+      "access_mode": "opened_text",
+      "version_scope": "HiBy R3II (2025); dynamic model manual, firmware reference 1.1_202501061153; actual firmware unknown",
+      "app_build": null,
+      "firmware_version": null,
+      "source_updated_on": null,
+      "locator": "§1–11；重点 §2、§5、§9、§10；直接 HTML 正文，手册版本/更新日未标明。",
+      "note": "与 E-HBY-01 同一本手册；扩展目录/章节，非独立交叉验证。",
+      "hands_on": false,
+      "visual_observed": false,
+      "archived_artifact": null,
+      "sha256": null,
+      "capture_state": "bibliography_and_short_note_only",
+      "supersedes": null
+    },
+    "after": {
+      "evidence_id": "E-HBD-01",
+      "product_id": "M-035",
+      "title": "R3II 2025 完整目录与指南",
+      "url": "https://guide.hiby.com/en/docs/products/audio_player/hiby_r3ii_2025/guide/",
+      "checked_on": "2026-10-26",
+      "source_type": "official_manual",
+      "access_mode": "opened_text",
+      "version_scope": "HiBy R3II (2025); dynamic model manual, firmware reference 1.1_202501061153; actual firmware unknown",
+      "app_build": null,
+      "firmware_version": null,
+      "source_updated_on": null,
+      "locator": "§1–11；重点 §2、§5、§9、§10；直接 HTML 正文，手册版本/更新日未标明。",
+      "note": "与 E-HBY-01 同一本手册；扩展目录/章节，非独立交叉验证。",
+      "hands_on": false,
+      "visual_observed": false,
+      "archived_artifact": null,
+      "sha256": null,
+      "capture_state": "bibliography_and_short_note_only",
+      "supersedes": null,
+      "additional_captures": [
+        {
+          "url": "https://guide.hiby.com/en/docs/products/audio_player/hiby_r3ii_2025/guide/",
+          "checked_on": "2026-10-27",
+          "raw_work_path": "work/hiby-controls-deepening/raw/manual-en.html",
+          "raw_sha256": "d631a86d1cf1cd41e685034d1c6808efbdea05effc147aaf77452b2d4be27ede",
+          "extracted_work_path": "work/hiby-controls-deepening/extracted/manual-en.txt",
+          "extracted_sha256": "eb5c95421824b5c847e823cbf08d71a42fdf2a5c4be3cd4a629b3c8422c6be36",
+          "access_mode": "anonymous_public_html_GET",
+          "locator": "article正文；章节/设置定位见本批inventory",
+          "archived_artifact": "artifacts/hiby-controls-deepening/source-notes.md",
+          "sha256": "cf50722812021de3a024d49e7fa78a611f4b457fea05b03132ba48738230f946",
+          "hands_on": false,
+          "visual_observed": false
+        }
+      ]
+    },
+    "changed_fields": {
+      "additional_captures": {
+        "before": null,
+        "after": [
+          {
+            "url": "https://guide.hiby.com/en/docs/products/audio_player/hiby_r3ii_2025/guide/",
+            "checked_on": "2026-10-27",
+            "raw_work_path": "work/hiby-controls-deepening/raw/manual-en.html",
+            "raw_sha256": "d631a86d1cf1cd41e685034d1c6808efbdea05effc147aaf77452b2d4be27ede",
+            "extracted_work_path": "work/hiby-controls-deepening/extracted/manual-en.txt",
+            "extracted_sha256": "eb5c95421824b5c847e823cbf08d71a42fdf2a5c4be3cd4a629b3c8422c6be36",
+            "access_mode": "anonymous_public_html_GET",
+            "locator": "article正文；章节/设置定位见本批inventory",
+            "archived_artifact": "artifacts/hiby-controls-deepening/source-notes.md",
+            "sha256": "cf50722812021de3a024d49e7fa78a611f4b457fea05b03132ba48738230f946",
+            "hands_on": false,
+            "visual_observed": false
+          }
+        ]
+      }
+    }
+  },
+  {
+    "evidence_id": "E-HBD-02",
+    "before": {
+      "evidence_id": "E-HBD-02",
+      "product_id": "M-035",
+      "title": "R3II 2025 固件记录",
+      "url": "https://guide.hiby.com/en/docs/products/audio_player/hiby_r3ii_2025/firmware/",
+      "checked_on": "2026-10-26",
+      "source_type": "official_release_notes",
+      "access_mode": "opened_text",
+      "version_scope": "HiBy R3II (2025); dynamic model manual, firmware reference 1.1_202501061153; actual firmware unknown",
+      "app_build": null,
+      "firmware_version": "1.1_202501061153 (listed release; not measured on device)",
+      "source_updated_on": null,
+      "locator": "1.1_202501061153 / 1.0_202411191142；直接正文，未下载固件。",
+      "note": "仅阅读版本记录；未取得用户升级包，Burn firmware 与 .upt 不作等同。",
+      "hands_on": false,
+      "visual_observed": false,
+      "archived_artifact": null,
+      "sha256": null,
+      "capture_state": "bibliography_and_short_note_only",
+      "supersedes": null
+    },
+    "after": {
+      "evidence_id": "E-HBD-02",
+      "product_id": "M-035",
+      "title": "R3II 2025 固件记录",
+      "url": "https://guide.hiby.com/en/docs/products/audio_player/hiby_r3ii_2025/firmware/",
+      "checked_on": "2026-10-26",
+      "source_type": "official_release_notes",
+      "access_mode": "opened_text",
+      "version_scope": "HiBy R3II (2025); dynamic model manual, firmware reference 1.1_202501061153; actual firmware unknown",
+      "app_build": null,
+      "firmware_version": "1.1_202501061153 (listed release; not measured on device)",
+      "source_updated_on": null,
+      "locator": "1.1_202501061153 / 1.0_202411191142；直接正文，未下载固件。",
+      "note": "仅阅读版本记录；未取得用户升级包，Burn firmware 与 .upt 不作等同。",
+      "hands_on": false,
+      "visual_observed": false,
+      "archived_artifact": null,
+      "sha256": null,
+      "capture_state": "bibliography_and_short_note_only",
+      "supersedes": null,
+      "additional_captures": [
+        {
+          "url": "https://guide.hiby.com/en/docs/products/audio_player/hiby_r3ii_2025/firmware/",
+          "checked_on": "2026-10-27",
+          "raw_work_path": "work/hiby-controls-deepening/raw/firmware-en.html",
+          "raw_sha256": "324635ed3c27a01f6ffc0353c860813c65c960be79d34fc456f1109b49e28dc4",
+          "extracted_work_path": "work/hiby-controls-deepening/extracted/firmware-en.txt",
+          "extracted_sha256": "db9295d1a41dbbc880eb261e8118d793bf915d7e4d0908e3c24856ff25fdd607",
+          "access_mode": "anonymous_public_html_GET",
+          "locator": "article正文；章节/设置定位见本批inventory",
+          "archived_artifact": "artifacts/hiby-controls-deepening/source-notes.md",
+          "sha256": "cf50722812021de3a024d49e7fa78a611f4b457fea05b03132ba48738230f946",
+          "hands_on": false,
+          "visual_observed": false
+        }
+      ]
+    },
+    "changed_fields": {
+      "additional_captures": {
+        "before": null,
+        "after": [
+          {
+            "url": "https://guide.hiby.com/en/docs/products/audio_player/hiby_r3ii_2025/firmware/",
+            "checked_on": "2026-10-27",
+            "raw_work_path": "work/hiby-controls-deepening/raw/firmware-en.html",
+            "raw_sha256": "324635ed3c27a01f6ffc0353c860813c65c960be79d34fc456f1109b49e28dc4",
+            "extracted_work_path": "work/hiby-controls-deepening/extracted/firmware-en.txt",
+            "extracted_sha256": "db9295d1a41dbbc880eb261e8118d793bf915d7e4d0908e3c24856ff25fdd607",
+            "access_mode": "anonymous_public_html_GET",
+            "locator": "article正文；章节/设置定位见本批inventory",
+            "archived_artifact": "artifacts/hiby-controls-deepening/source-notes.md",
+            "sha256": "cf50722812021de3a024d49e7fa78a611f4b457fea05b03132ba48738230f946",
+            "hands_on": false,
+            "visual_observed": false
+          }
+        ]
+      }
+    }
+  },
+  {
+    "evidence_id": "E-HBD-03",
+    "before": {
+      "evidence_id": "E-HBD-03",
+      "product_id": "M-035",
+      "title": "X1600 R Player FAQ",
+      "url": "https://guide.hiby.com/en/docs/question/audio_player/x1600_r/",
+      "checked_on": "2026-10-26",
+      "source_type": "official_help",
+      "access_mode": "opened_text",
+      "version_scope": "HiBy R3II (2025); dynamic model manual, firmware reference 1.1_202501061153; actual firmware unknown",
+      "app_build": null,
+      "firmware_version": null,
+      "source_updated_on": null,
+      "locator": "Description 明列本型号；System、Power Supply、Audio、Other；直接正文，跨机型内容限界。",
+      "note": "明确包含本型号的跨机型 FAQ；第二卡槽示例、定时及音效冲突保留。",
+      "hands_on": false,
+      "visual_observed": false,
+      "archived_artifact": null,
+      "sha256": null,
+      "capture_state": "bibliography_and_short_note_only",
+      "supersedes": null
+    },
+    "after": {
+      "evidence_id": "E-HBD-03",
+      "product_id": "M-035",
+      "title": "X1600 R Player FAQ",
+      "url": "https://guide.hiby.com/en/docs/question/audio_player/x1600_r/",
+      "checked_on": "2026-10-26",
+      "source_type": "official_help",
+      "access_mode": "opened_text",
+      "version_scope": "HiBy R3II (2025); dynamic model manual, firmware reference 1.1_202501061153; actual firmware unknown",
+      "app_build": null,
+      "firmware_version": null,
+      "source_updated_on": null,
+      "locator": "Description 明列本型号；System、Power Supply、Audio、Other；直接正文，跨机型内容限界。",
+      "note": "明确包含本型号的跨机型 FAQ；第二卡槽示例、定时及音效冲突保留。",
+      "hands_on": false,
+      "visual_observed": false,
+      "archived_artifact": null,
+      "sha256": null,
+      "capture_state": "bibliography_and_short_note_only",
+      "supersedes": null,
+      "additional_captures": [
+        {
+          "url": "https://guide.hiby.com/en/docs/question/audio_player/x1600_r/",
+          "checked_on": "2026-10-27",
+          "raw_work_path": "work/hiby-controls-deepening/raw/faq-en.html",
+          "raw_sha256": "10cc0e02d3059703e4189b2d9c7e7e4428e350a40358525685ff1b9c5be1555d",
+          "extracted_work_path": "work/hiby-controls-deepening/extracted/faq-en.txt",
+          "extracted_sha256": "6a4582cfd2d65e3517a815698ca91a22658ed7617a46eead933b220e026452de",
+          "access_mode": "anonymous_public_html_GET",
+          "locator": "article正文；章节/设置定位见本批inventory",
+          "archived_artifact": "artifacts/hiby-controls-deepening/source-notes.md",
+          "sha256": "cf50722812021de3a024d49e7fa78a611f4b457fea05b03132ba48738230f946",
+          "hands_on": false,
+          "visual_observed": false
+        }
+      ]
+    },
+    "changed_fields": {
+      "additional_captures": {
+        "before": null,
+        "after": [
+          {
+            "url": "https://guide.hiby.com/en/docs/question/audio_player/x1600_r/",
+            "checked_on": "2026-10-27",
+            "raw_work_path": "work/hiby-controls-deepening/raw/faq-en.html",
+            "raw_sha256": "10cc0e02d3059703e4189b2d9c7e7e4428e350a40358525685ff1b9c5be1555d",
+            "extracted_work_path": "work/hiby-controls-deepening/extracted/faq-en.txt",
+            "extracted_sha256": "6a4582cfd2d65e3517a815698ca91a22658ed7617a46eead933b220e026452de",
+            "access_mode": "anonymous_public_html_GET",
+            "locator": "article正文；章节/设置定位见本批inventory",
+            "archived_artifact": "artifacts/hiby-controls-deepening/source-notes.md",
+            "sha256": "cf50722812021de3a024d49e7fa78a611f4b457fea05b03132ba48738230f946",
+            "hands_on": false,
+            "visual_observed": false
+          }
+        ]
+      }
+    }
+  },
+  {
+    "evidence_id": "E-HBD-04",
+    "before": {
+      "evidence_id": "E-HBD-04",
+      "product_id": "M-035",
+      "title": "USB MassStorage 帮助",
+      "url": "https://guide.hiby.com/en/docs/guides/usb/massstorage/",
+      "checked_on": "2026-10-26",
+      "source_type": "official_help",
+      "access_mode": "opened_text",
+      "version_scope": "HiBy R3II (2025); dynamic model manual, firmware reference 1.1_202501061153; actual firmware unknown",
+      "app_build": null,
+      "firmware_version": null,
+      "source_updated_on": null,
+      "locator": "MacOS、Windows、FAQs；直接正文，型号手册链接的通用资料。",
+      "note": "本轮新增定位；具体已查/未知见 M-035-hiby.md。",
+      "hands_on": false,
+      "visual_observed": false,
+      "archived_artifact": null,
+      "sha256": null,
+      "capture_state": "bibliography_and_short_note_only",
+      "supersedes": null
+    },
+    "after": {
+      "evidence_id": "E-HBD-04",
+      "product_id": "M-035",
+      "title": "USB MassStorage 帮助",
+      "url": "https://guide.hiby.com/en/docs/guides/usb/massstorage/",
+      "checked_on": "2026-10-26",
+      "source_type": "official_help",
+      "access_mode": "opened_text",
+      "version_scope": "HiBy R3II (2025); dynamic model manual, firmware reference 1.1_202501061153; actual firmware unknown",
+      "app_build": null,
+      "firmware_version": null,
+      "source_updated_on": null,
+      "locator": "MacOS、Windows、FAQs；直接正文，型号手册链接的通用资料。",
+      "note": "本轮新增定位；具体已查/未知见 M-035-hiby.md。",
+      "hands_on": false,
+      "visual_observed": false,
+      "archived_artifact": null,
+      "sha256": null,
+      "capture_state": "bibliography_and_short_note_only",
+      "supersedes": null,
+      "additional_captures": [
+        {
+          "url": "https://guide.hiby.com/en/docs/guides/usb/massstorage/",
+          "checked_on": "2026-10-27",
+          "raw_work_path": "work/hiby-controls-deepening/raw/usb-en.html",
+          "raw_sha256": "5d13b45e18c4abfbfb996ee245650668de889020bf2ecec65a6b80327d7d52cb",
+          "extracted_work_path": "work/hiby-controls-deepening/extracted/usb-en.txt",
+          "extracted_sha256": "73e9b32656d66b0feab90397c43445a46474b274590d1af63d3ae4924026c2c7",
+          "access_mode": "anonymous_public_html_GET",
+          "locator": "article正文；章节/设置定位见本批inventory",
+          "archived_artifact": "artifacts/hiby-controls-deepening/source-notes.md",
+          "sha256": "cf50722812021de3a024d49e7fa78a611f4b457fea05b03132ba48738230f946",
+          "hands_on": false,
+          "visual_observed": false
+        }
+      ]
+    },
+    "changed_fields": {
+      "additional_captures": {
+        "before": null,
+        "after": [
+          {
+            "url": "https://guide.hiby.com/en/docs/guides/usb/massstorage/",
+            "checked_on": "2026-10-27",
+            "raw_work_path": "work/hiby-controls-deepening/raw/usb-en.html",
+            "raw_sha256": "5d13b45e18c4abfbfb996ee245650668de889020bf2ecec65a6b80327d7d52cb",
+            "extracted_work_path": "work/hiby-controls-deepening/extracted/usb-en.txt",
+            "extracted_sha256": "73e9b32656d66b0feab90397c43445a46474b274590d1af63d3ae4924026c2c7",
+            "access_mode": "anonymous_public_html_GET",
+            "locator": "article正文；章节/设置定位见本批inventory",
+            "archived_artifact": "artifacts/hiby-controls-deepening/source-notes.md",
+            "sha256": "cf50722812021de3a024d49e7fa78a611f4b457fea05b03132ba48738230f946",
+            "hands_on": false,
+            "visual_observed": false
+          }
+        ]
+      }
+    }
+  }
+]

@@ -1,0 +1,1 @@
+Check that offline access is enabled for the relevant section and that the article is marked as available offline. If it isn’t, reconnect to the internet and let the download finish before trying to read it offline again.

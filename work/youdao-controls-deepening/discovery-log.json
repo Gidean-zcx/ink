@@ -1,0 +1,66 @@
+[
+  {
+    "discovery_id": "D01",
+    "url": "https://www.youdao.com/",
+    "access_status": "web_open_body",
+    "result": "首页可读含AI硬件链接；未取得普通2.0帮助目录",
+    "disposition": "只目录探索，不分配E",
+    "checked_on": "2026-10-27"
+  },
+  {
+    "discovery_id": "D02",
+    "url": "https://hardware.youdao.com/",
+    "access_status": "web_open_redirect",
+    "result": "跳至www.youdao.com首页；不是型号化支持正文",
+    "disposition": "不视为停服证明",
+    "checked_on": "2026-10-27"
+  },
+  {
+    "discovery_id": "D03",
+    "url": "https://c.youdao.com/",
+    "access_status": "web_open_403_stop",
+    "result": "根路径403；停止，不重取历史产品路径",
+    "disposition": "未作绕过或重试",
+    "checked_on": "2026-10-27"
+  },
+  {
+    "discovery_id": "D04",
+    "url": "https://smart.youdao.com/",
+    "access_status": "web_click_nonretryable_redirect",
+    "result": "工具500并报告转向smartyoudao.com/collections/youdao-products不可访问",
+    "disposition": "未访问目的地，不迁入当前/海外能力",
+    "checked_on": "2026-10-27"
+  },
+  {
+    "discovery_id": "D05",
+    "url": "https://post.smzdm.com/p/a5klmn0l/",
+    "access_status": "web_open_size_limit",
+    "result": "工具报正文超过1048577字节；没有可用正文/新图片观察",
+    "disposition": "不据搜索片段建E/F",
+    "checked_on": "2026-10-27"
+  },
+  {
+    "discovery_id": "D06",
+    "url": "https://cidian.youdao.com/5.0/help/deskdict5beta/features/03.html",
+    "access_status": "search_result_excluded",
+    "result": "桌面词典5.0单词本帮助，不是普通2.0笔",
+    "disposition": "不迁入复习/同步流程",
+    "checked_on": "2026-10-27"
+  },
+  {
+    "discovery_id": "D07",
+    "url": "https://www.sohu.com/a/409798850_120135347",
+    "access_status": "search_result_excluded",
+    "result": "专业版体验，不是普通2.0固定范围",
+    "disposition": "不迁入菜单/收藏/听力",
+    "checked_on": "2026-10-27"
+  },
+  {
+    "discovery_id": "D08",
+    "url": "",
+    "access_status": "bounded_official_search_no_stronger_source",
+    "result": "售后服务/原厂使用视频及dictPen2.0 help检索回旧材料或跨代、无关条目",
+    "disposition": "非穷尽不存在证明；无额外重复检索",
+    "checked_on": "2026-10-27"
+  }
+]

@@ -1,0 +1,122 @@
+[
+  {
+    "term": "智能出题",
+    "offset": 65011,
+    "context": "ildren:[Object(A.jsx)(\"h2\",{children:\"教材同步练，贯通校内外\"}),Object(A.jsx)(\"h3\",{style:{marginBottom:0},children:\"结合猿辅导教学模型和AI技术智能出题，全学科覆盖\"}),Object(A.jsxs)(\"div\",{className:\"sync-wrap\",children:[Object(A.jsxs)(bt.a,{target:Object(A.jsx)(\"img\",{className:\"sync-middle\",src:hc.a,alt:\"小猿学练机\"}),totalProgress:e,paused:!0,children:[Object(A.jsx)(bt.b,{from:{scale:1,xPercent:-50,yPercent:-50}"
+  },
+  {
+    "term": "智能出题",
+    "offset": 68545,
+    "context": "lassName:\"sync-main\",children:[Object(A.jsx)(\"h2\",{children:\"教材同步练，贯通校内外\"}),Object(A.jsx)(\"h3\",{children:\"结合猿辅导教学模型和AI技术智能出题，全学科覆盖\"}),Object(A.jsxs)(mc.a,{centeredSlides:!0,slidesPerView:\"auto\",onSlideChange:()=>console.log(\"slide change\"),initialSlide:4,children:[Object(A.jsx)(pc.a,{children:Object(A.jsx)(\"img\",{className:\"sync-pic\",src:Xc.a,alt:\"地理教材同步练习\"})}),Object(A.jsx)(pc"
+  },
+  {
+    "term": "智能批改",
+    "offset": 182354,
+    "context": "\"p\",{children:[Object(A.jsx)(\"strong\",{children:\"作为行业首批应用大模型的教育硬件，\"}),\"小猿学练机依托自研的小猿AI大模型，结合DeepSeek，已经实现了“互动阅读“、“答疑辅导”、“智能批改”、“学情分析”等学习全场景大模型的深度应用，其\",Object(A.jsx)(\"strong\",{children:\"模型能力获得行业最高级别认证\"}),\"。\"]}),Object(A.jsx)(\"p\",{children:\"除了以技术驱动产品创新外，小猿学练机在教育资源及专业性上，也是行业之最。目前覆盖305个教材版本，是行业覆盖教材版本最多、区域化程度最深的学习平板。同时拥有20万题库，数百万套试卷及超过1万本精品图书资源。\"}),Object(A.jsxs)(\"p\",{children:[Objec"
+  },
+  {
+    "term": "错题",
+    "offset": 90887,
+    "context": "cursor:\"pointer\"},children:r})]}),id:2,content:\"一键AI自动批改，秒判错对，省时省力。\",pic:Ga.a,icon:\"correct\",isHover:n[1]},{id:3,title:\"错题归纳\",content:\"错题自动收录整理，定期回顾，告别手动抄写粘贴的低效模式。\",pic:Ha.a,icon:\"induction\",isHover:n[2]},{id:4,title:\"错题讲解\",content:\"错题分步骤引导解析，真人老师视频手把手启发解题，讲题过程还能倍数加速。\",pic:Ma.a,icon:\"explain\",isHover:n[3]},{id:5,title:\"薄弱点专练\",content:\"精准定位薄弱点，自动生成个性化薄弱点专练，定期回顾攻克薄弱项。\",pic:Wa.a,i"
+  },
+  {
+    "term": "错题",
+    "offset": 90902,
+    "context": "\"},children:r})]}),id:2,content:\"一键AI自动批改，秒判错对，省时省力。\",pic:Ga.a,icon:\"correct\",isHover:n[1]},{id:3,title:\"错题归纳\",content:\"错题自动收录整理，定期回顾，告别手动抄写粘贴的低效模式。\",pic:Ha.a,icon:\"induction\",isHover:n[2]},{id:4,title:\"错题讲解\",content:\"错题分步骤引导解析，真人老师视频手把手启发解题，讲题过程还能倍数加速。\",pic:Ma.a,icon:\"explain\",isHover:n[3]},{id:5,title:\"薄弱点专练\",content:\"精准定位薄弱点，自动生成个性化薄弱点专练，定期回顾攻克薄弱项。\",pic:Wa.a,icon:\"practice\","
+  },
+  {
+    "term": "分步",
+    "offset": 91002,
+    "context": "tle:\"错题归纳\",content:\"错题自动收录整理，定期回顾，告别手动抄写粘贴的低效模式。\",pic:Ha.a,icon:\"induction\",isHover:n[2]},{id:4,title:\"错题讲解\",content:\"错题分步骤引导解析，真人老师视频手把手启发解题，讲题过程还能倍数加速。\",pic:Ma.a,icon:\"explain\",isHover:n[3]},{id:5,title:\"薄弱点专练\",content:\"精准定位薄弱点，自动生成个性化薄弱点专练，定期回顾攻克薄弱项。\",pic:Wa.a,icon:\"practice\",isHover:n[4]},{id:6,title:\"举一反三\",content:\"AI自动举一反三，一个知识点吃透练透。\",pic:Ja.a,icon:\"analogy\",isHover:n[5]}"
+  },
+  {
+    "term": "分步",
+    "offset": 98265,
+    "context": "lor:\"inherit\"},children:\"错题讲解\"})]}),Object(A.jsx)(\"div\",{className:\"system-content\",style:{color:\"inherit\"},children:\"错题分步骤引导解析，真人老师视频手把手启发解题，讲题过程还能倍数加速。\"})]}),totalProgress:e,children:[Object(A.jsx)(bt.b,{from:tn.normal,to:tn.highlight,delay:an(3),duration:0}),Object(A.jsx)(bt.b,{to:tn.normal,delay:1200,duration:0}),Object(A.jsx)(bt.b,{to:tn.normal,duration:nn(3)})]}),Object(A"
+  },
+  {
+    "term": "薄弱",
+    "offset": 91088,
+    "context": "2]},{id:4,title:\"错题讲解\",content:\"错题分步骤引导解析，真人老师视频手把手启发解题，讲题过程还能倍数加速。\",pic:Ma.a,icon:\"explain\",isHover:n[3]},{id:5,title:\"薄弱点专练\",content:\"精准定位薄弱点，自动生成个性化薄弱点专练，定期回顾攻克薄弱项。\",pic:Wa.a,icon:\"practice\",isHover:n[4]},{id:6,title:\"举一反三\",content:\"AI自动举一反三，一个知识点吃透练透。\",pic:Ja.a,icon:\"analogy\",isHover:n[5]}]),[n]);return Object(A.jsx)(A.Fragment,{children:t?Object(A.jsx)(\"section\",{className"
+  },
+  {
+    "term": "薄弱",
+    "offset": 91108,
+    "context": "解\",content:\"错题分步骤引导解析，真人老师视频手把手启发解题，讲题过程还能倍数加速。\",pic:Ma.a,icon:\"explain\",isHover:n[3]},{id:5,title:\"薄弱点专练\",content:\"精准定位薄弱点，自动生成个性化薄弱点专练，定期回顾攻克薄弱项。\",pic:Wa.a,icon:\"practice\",isHover:n[4]},{id:6,title:\"举一反三\",content:\"AI自动举一反三，一个知识点吃透练透。\",pic:Ja.a,icon:\"analogy\",isHover:n[5]}]),[n]);return Object(A.jsx)(A.Fragment,{children:t?Object(A.jsx)(\"section\",{className:\"animate system-con"
+  },
+  {
+    "term": "同步练",
+    "offset": 64931,
+    "context": ",duration:1700,pin:!0,children:e=>Object(A.jsxs)(\"div\",{className:\"sync-main\",children:[Object(A.jsx)(\"h2\",{children:\"教材同步练，贯通校内外\"}),Object(A.jsx)(\"h3\",{style:{marginBottom:0},children:\"结合猿辅导教学模型和AI技术智能出题，全学科覆盖\"}),Object(A.jsxs)(\"div\",{className:\"sync-wrap\",children:[Object(A.jsxs)(bt.a,{target:Object(A.jsx)(\"img\",{className:\"sync-middle\",src:hc.a,alt:\"小猿学练机\"}),totalProgress:e,"
+  },
+  {
+    "term": "同步练",
+    "offset": 65496,
+    "context": "rcent:-50},duration:800})]}),Object(A.jsxs)(bt.a,{target:Object(A.jsx)(\"img\",{className:\"sync-left-1\",src:gc.a,alt:\"语文教材同步练习\"}),totalProgress:e,paused:!0,children:[Object(A.jsx)(bt.b,{from:{opacity:0,translateY:\"-50%\",translateX:\"-50%\",scale:.9},to:{scale:.9,opacity:1,translateY:\"-50%\",translateX:\"-80%\"},delay:500,duration:500}),Object(A.jsx)(bt.b,{to:{scale:.9,opacity:1},durat"
+  },
+  {
+    "term": "专项",
+    "offset": 60645,
+    "context": "ject(A.jsxs)(\"div\",{className:\"bt-main\",children:[Object(A.jsxs)(\"h2\",{style:{zIndex:11,position:\"relative\"},children:[\"专项突破\",Object(A.jsx)(\"sup\",{onClick:c,style:{cursor:\"pointer\"},children:s}),\"，强化提升\"]}),Object(A.jsxs)(\"div\",{className:\"bt-wrap\",children:[Object(A.jsx)(bt.a,{totalProgress:e,paused:!0,children:Object(A.jsx)(bt.b,{from:{opacity:0},to:{opacity:1},delay:jc,durati"
+  },
+  {
+    "term": "专项",
+    "offset": 61237,
+    "context": "pacity:1},delay:jc,duration:dc,children:Object(A.jsx)(\"div\",{className:\"bg\",children:Object(A.jsx)(\"img\",{src:oc.a,alt:\"专项突破背景\"})})})}),Object(A.jsx)(bt.a,{totalProgress:e,paused:!0,children:Object(A.jsx)(bt.b,{from:{opacity:1},to:{opacity:0},delay:jc,duration:dc,children:Object(A.jsx)(\"img\",{className:\"bt-subject bt-subject-math\",src:Zt.a,alt:\"数学标签\"})})}),Object(A.jsx)(bt.a,{t"
+  },
+  {
+    "term": "智慧拍",
+    "offset": 25760,
+    "context": "{id:\"ai\",content:\"「以练促学」精准学系统是小猿学练机深度应用人工智能技术，通过硬件与软件的创新结合，在实现学习过程、学习内容、学习数据全面数字化的基础上，建立起的一整套全场景个性化学习系统。所有功能、内容、资源、手写支持、智慧拍等产品硬件及软件设计共同构成「以练促学」精准学系统。\"},{id:\"blue-ray\",content:\"数据来自猿力科技智能硬件实验室。蓝光测试机对纸张、墨水屏、通用手机屏幕三种屏幕介质进行测试，得到的蓝光数值分别为0、0、0.3。\"},{id:\"4096\",content:\"4096级压感需匹配特定应用实现，请以实际体验为准。本产品标配手写笔。\"},{id:\"861\",content:\"数据来源于猿力科技智能硬件实验室。屏占比计算方法为屏幕显示区域/整机正面投影面积，计算结果为86.1%。\"},{id:\""
+  },
+  {
+    "term": "智慧拍",
+    "offset": 74030,
+    "context": " ls(e){let{windowLg:t}=e;return Object(A.jsxs)(\"section\",{className:is.a.root,children:[Object(A.jsx)(\"h2\",{children:\"一键智慧拍，意想不到大妙用\"}),Object(A.jsx)(\"video\",{className:is.a.player,muted:!0,autoPlay:!0,loop:!0,playsInline:!0,src:t?\"https://solar-online.fbcontent.cn/megrez-online/megrez-alkaid/public/20240514/smart_camera_pc_1715653479252_8b72001-136b-1cc-bff8-c24c56f63bb.mp4\":\"h"
+  },
+  {
+    "term": "Te=",
+    "offset": 42700,
+    "context": "ick:j,children:\"规格参数\"})})]})})]})})}var He=c(224),qe=c.n(He),Me=c.p+\"static/media/s6-product.79ffb3a6.svg\";c(536);const Te={S6:[{title:\"产品图\",image:Me},{title:\"尺寸与重量\",content:[\"高度：226.06mm\",\"宽度：188mm\",\"厚度：6.9mm\",\"重量：445g\"]},{title:\"屏幕\",content:[\"尺寸：10.3英寸\",\"分辨率：1872X1404 226PPI\",\"类型：墨水屏\",\"屏占比：86.1%\"]},{title:\"摄像头\",content:[\"后置800W摄像头\"]},{title:\"处理器\",content:[\"高通八核芯片\"]},{title:\"内"
+  },
+  {
+    "term": "E1",
+    "offset": 25285,
+    "context": "b.cn/c.0vNXzz\";let I=function(e){return e.home=\"officialHomePage\",e.S6=\"megrezOfficialPage\",e.S2=\"megrezOfficialPage\",e.E1=\"colorMegrezPage\",e.study=\"aiMegrezDetailPage\",e}({});const C=[{id:\"certificate\",content:\"弗若斯特沙利文于2023年9月对小猿学练机「中国墨水屏学习平板领导者」的市场地位作出研究结果确认并颁发市场地位确认证书。\"},{id:\"eink\",content:\"小猿学练机采用E-ink电子墨水屏技术。电子墨水屏本身不发光，自然光线经过物理反射进入人眼。「护眼」指与纸质书籍几乎等同的用眼体验，用户使用产品时仍需采用正确的坐姿及保"
+  },
+  {
+    "term": "E1",
+    "offset": 28297,
+    "context": "0, 0, 0.8)\",trademarkColor:\"#FF5500\"},home:{color:\"#fff\",backgroundColor:\"rgba(0, 0, 0, 0.8)\",trademarkColor:\"#FF5500\"},E1:{color:\"#fff\",backgroundColor:\"#05040A\",trademarkColor:\"#FF5500\"}};function T(e){let{windowType:t,windowLg:c,type:n=\"home\",color:i=\"common\"}=e;const l=Object(g.f)(),r=e=>{const{url:t,frogName:c}=e;S(\"/click/\".concat(I[n],\"/firstNavigation/button\"),{keyValue"
+  },
+  {
+    "term": "/S6",
+    "offset": 34989,
+    "context": ".a.machineSplit,\" \").concat(Qe.a.reveal),\"aria-label\":\"学练机产品\",\"data-home-reveal\":!0,children:[Object(A.jsx)(\"a\",{href:\"#/S6\",children:Object(A.jsx)(\"span\",{style:{backgroundImage:\"url(\".concat(te.a,\")\")},children:Object(A.jsx)(\"img\",{src:te.a,alt:\"小猿学练机 S6\",loading:\"lazy\"})})}),Object(A.jsx)(\"a\",{href:\"#/E1\",children:Object(A.jsx)(\"span\",{style:{backgroundImage:\"url(\".concat(se"
+  },
+  {
+    "term": "/S6",
+    "offset": 177893,
+    "context": "375),Go=c.n(Lo);c(566);const Ko=[{id:\"S6\",image:Ro.a,name:\"小猿学练机 S6\",price:\"￥3899\",originalPrice:\"\\xa54299\",detailPath:\"/S6\",buyUrl:\"https://item.jd.com/100305180628.html\"},{id:\"E1\",image:Go.a,name:\"小猿学练机彩墨版\",price:\"￥4299\",detailPath:\"/E1\"}];var Ho=[...[...[{path:\"/\",name:\"Home\",exact:!0,component:function(){const{windowWidth:e,windowType:t}=Y();return Object(A.jsxs)(\"div\",{cla"
+  },
+  {
+    "term": "/S2",
+    "offset": 179695,
+    "context": ")})]})},nav:!1,meta:{title:\"小猿学练机\"}},{path:\"/S6\",name:\"S6\",exact:!0,component:ri,nav:!1,meta:{title:\"小猿学练机 S6\"}},{path:\"/S2\",name:\"S2\",exact:!0,component:ri,nav:!1,meta:{title:\"小猿学练机 S6\"}},{path:\"/E1\",name:\"E1\",exact:!0,component:function(){const{windowWidth:e,windowType:t}=Y();return Object(s.useEffect)((()=>{S(\"/event/megrezOfficialPage/display\",{keyValues:R({type:L()})}),S(\""
+  },
+  {
+    "term": "Word",
+    "offset": 110441,
+    "context": "icon-group\",children:[Object(A.jsxs)(\"div\",{className:\"icon-item\",children:[Object(A.jsx)(\"img\",{src:Pn.a,alt:\"word\"}),\"Word\"]}),Object(A.jsxs)(\"div\",{className:\"icon-item\",children:[Object(A.jsx)(\"img\",{src:Bn.a,alt:\"图片\"}),\"图片\"]}),Object(A.jsxs)(\"div\",{className:\"icon-item\",children:[Object(A.jsx)(\"img\",{src:In.a,alt:\"PDF\"}),\"PDF\"]})]})]})]}),Object(A.jsxs)(\"div\",{className:\"f"
+  },
+  {
+    "term": "云空间",
+    "offset": 42998,
+    "context": "\"]},{title:\"摄像头\",content:[\"后置800W摄像头\"]},{title:\"处理器\",content:[\"高通八核芯片\"]},{title:\"内存\",content:[\"机身内存：4GB RAM + 64G ROM\",\"云空间：5GB\",\"拓展存储：不支持\"]},{title:\"网络支持\",content:[\"支持802.11 a/b/g/n/ac+BT5.0(2.4G.5G双模）\"]},{title:\"系统\",content:[\"Android 11\"]},{title:\"电池\",content:[\"3.85V / 4000mAh\"]},{title:\"充电\",content:[\"支持 5V/3A 充电\"]},{title:\"麦克风\",content:[\"双MIC\"]},{title:\"扬声器\",content:[\"双扬声器\"]"
+  },
+  {
+    "term": "云空间",
+    "offset": 43635,
+    "context": "类型：墨水屏（E Ink Kaleido 3™）\",\"屏占比：75%\"]},{title:\"处理器\",content:[\"高通八核芯片\"]},{title:\"内存\",content:[\"机身内存：6GB RAM + 128GB ROM\",\"云空间：不支持\",\"拓展存储：不支持\"]},{title:\"电池\",content:[\"4.3V / 4000mAh\"]},{title:\"充电\",content:[\"支持5V/3A充电\"]},{title:\"麦克风\",content:[\"双MIC\"]},{title:\"扬声器\",content:[\"双扬声器\"]},{title:\"包装清单\",content:[\"学习平板 \\xd7 1\",\"电磁笔 \\xd7 1\",\"磁吸保护套 \\xd7 1\",\"笔尖套装 \\xd7 1\",\"充电线 \\xd7 1\"]}]};funct"
+  }
+]

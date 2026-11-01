@@ -1,0 +1,14 @@
+{
+  "new_evidence": 8,
+  "new_flows": 6,
+  "old_flows_updated": 3,
+  "old_captures": 2,
+  "new_body_inventory_rows": 8,
+  "stale_game_inventory_rows": 3,
+  "new_reference_points": 10,
+  "corrections": [
+    "Khan E-KHD-04 page body already read; only video unobserved",
+    "Quizlet old game rows updated from existing E-QZGM evidence; not new reading"
+  ],
+  "new_actual_operations": 0
+}

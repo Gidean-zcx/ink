@@ -1,0 +1,13 @@
+For security purposes, the Digital Paper can be protected by a screen lock. When the screen lock is set, a lock password must be entered after the Digital Paper is turned on or awaken from sleep mode.
+Press the
+(home) button, and tap [Settings].
+Tap [System Settings] — [Screen Lock] —  [Screen Lock] — [Enable] — [OK].
+Enter a lock password, and tap [OK].
+The lock password can be any combination of 4 to 20 alphanumeric characters and symbols.
+Disabling the screen lock function
+Press the
+(home) button, and tap [Settings] — [System Settings] — [Screen Lock] — [Screen Lock]. Enter the lock password, and tap [OK]. Then select [Disable] and tap [OK].
+Note
+Do not use a lock password that would be easy for third parties to guess. Also, change the lock password periodically.
+Make sure that you do not forget the lock password that you set. If you forget the lock password, contact the Sony professional products support center to remove the lock password (not for free). When the lock password is removed, all documents on the Digital Paper will be erased.
+The Tab key and Space key are inoperable when entering a lock password.

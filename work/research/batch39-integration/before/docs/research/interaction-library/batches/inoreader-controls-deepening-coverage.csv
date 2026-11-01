@@ -1,0 +1,11 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M044-07,M-044,搜索账号内资料并扩大来源,D2,E-INCD-09;E-INCD-32,源/文件夹、账号与公共索引范围不同；空结果撤限制并逐项重建。,实际分词、评分、隐藏来源及空结果反馈,not_observed,false,cases/M-044-inoreader.md,2026-10-27
+F-M044-08,M-044,将查询保存为持续监控,D2,E-INCD-10;E-INCD-31,改查询保留旧历史，仅新到条目按新条件；告警需另建Rule。,历史重筛、漏收、重复、停用删除和错误重试,not_observed,false,cases/M-044-inoreader.md,2026-10-27
+F-M044-09,M-044,组织来源文章并管理未读范围,D2,E-INCD-11;E-INCD-22;E-INCD-23;E-INCD-24,文件夹装源、标签装文章；合并/固定与未读时限分开；Magic有群体及习惯因素。,未读时限隐藏或改状态、合并撤回、排序权重和多端冲突,not_observed,false,cases/M-044-inoreader.md,2026-10-27
+F-M044-10,M-044,批注回访并保留原文关系,D2,E-INCD-12,整篇笔记与段落高亮不同；标注文本副本保留，更新另外提示。,批注修改删除、离线同步、外部副本及源版本关联,not_observed,false,cases/M-044-inoreader.md,2026-10-27
+F-M044-11,M-044,查看新闻修订与发布版本,D2,E-INCD-08,Edited列表、红绿差异、版本选择器和Published；web套餐条件，只有官方静态图。,未采集修订、移动端、更新频率、保留期和AI产物联动,static_reference_only,false,cases/M-044-inoreader.md,2026-10-27
+F-M044-12,M-044,组装个人新闻起始页,D2,E-INCD-15,widget数据源、位置、列数、多看板与启动页分别设置；默认含热门推荐。,移动布局、空栏目、限制和跨端冲突,not_observed,false,cases/M-044-inoreader.md,2026-10-27
+F-M044-13,M-044,突出关键词并保留原列表,D2,E-INCD-14,Spotlights仅着色，不过滤/改排序；大小写与Team颜色优先。,大量重叠词、无色显示、读听与停用恢复,not_observed,false,cases/M-044-inoreader.md,2026-10-27
+F-M044-14,M-044,生成单文摘要提问并设偏好,D2,E-INCD-16;E-INCD-25;E-INCD-26;E-INCD-27,预设/自写prompt、平台/语言/persona；摘要随文存储和搜索。,生成取消、重试覆盖、源更新、引用和额度失败,not_observed,false,cases/M-044-inoreader.md,2026-10-27
+F-M044-15,M-044,生成多篇报告及安排定时报告,D2,E-INCD-16;E-INCD-28;E-INCD-29;E-INCD-30,多篇/整源分析与定时分发目标不同；报告作为新文章到达。,空期、部分结果、引用、暂停删除、预览副作用及token不足,not_observed,false,cases/M-044-inoreader.md,2026-10-27
+F-M044-16,M-044,批量处理和误标已读恢复范围,D2,E-INCD-02;E-INCD-18,最多50项；近两周批量已读恢复文档有范围，所给时间菜单路径却未写明确撤销控件。,单项失败、撤销真实入口、超两周与单篇已读、外发撤回,not_observed,false,cases/M-044-inoreader.md,2026-10-27

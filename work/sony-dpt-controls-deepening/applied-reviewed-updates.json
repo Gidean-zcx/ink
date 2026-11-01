@@ -1,0 +1,736 @@
+{
+  "flow_changes": [
+    {
+      "id": "F-M059-02",
+      "field": "known_branches",
+      "before": "文件进入 Received；这不是设备直接解析原网页/Office。旧系统列表需单独复核。",
+      "after": "电脑转换为PDF→显示传输状态→完成后设备打开并进Received；单文件≤1GB，传输断连可能损坏。"
+    },
+    {
+      "id": "F-M059-02",
+      "field": "gaps",
+      "before": "新系统兼容性、失败恢复",
+      "after": "当前OS兼容、同名冲突和失败恢复未测；旧打印OS与App总体OS列表不同。"
+    },
+    {
+      "id": "F-M059-02",
+      "field": "evidence_ids",
+      "before": "E-DPT-02",
+      "after": "E-DPT-02;E-DPT-01"
+    },
+    {
+      "id": "F-M059-02",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M059-03",
+      "field": "known_branches",
+      "before": "另一文档须出现在最近/同目录列表；可恢复上次组合，或选择某一侧退回单文档。",
+      "after": "先显示同文档两份；另一侧快速列表可选最近/同目录资料，列表外不能直接并排。可恢复最近组合；不能上下排或旋转。"
+    },
+    {
+      "id": "F-M059-03",
+      "field": "gaps",
+      "before": "快速列表外文档与恢复",
+      "after": "相应资料不在列表时要先使其可访问；组合/页码跨重启保留未测。"
+    },
+    {
+      "id": "F-M059-03",
+      "field": "evidence_ids",
+      "before": "E-DPT-03",
+      "after": "E-DPT-03;E-DPT-01"
+    },
+    {
+      "id": "F-M059-03",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M059-04",
+      "field": "known_branches",
+      "before": "与两文档并排不同；双页下不能创建关联笔记，也不能跨两页画连续笔迹。",
+      "after": "有封面从第2页起，无封面从第1页；双页不可旋转、并排另一文档、建关联笔记、增删笔记页或跨两页连画。"
+    },
+    {
+      "id": "F-M059-04",
+      "field": "gaps",
+      "before": "不同PDF和返回位置",
+      "after": "PDF排版/退出页码和设置持久化未测。"
+    },
+    {
+      "id": "F-M059-04",
+      "field": "evidence_ids",
+      "before": "E-DPT-04",
+      "after": "E-DPT-04;E-DPT-01"
+    },
+    {
+      "id": "F-M059-04",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M059-05",
+      "field": "known_branches",
+      "before": "每文档一个关联笔记；新建替代时旧笔记转为独立笔记。官方 App 移动或改笔记名仍保留关系。",
+      "after": "每原文一份，原目录名加_Note；替换时旧笔记转独立。App移动原文或笔记、改笔记名保持关联；不能在笔记内再建side-note。"
+    },
+    {
+      "id": "F-M059-05",
+      "field": "gaps",
+      "before": "原文删除、重命名与跨软件关系",
+      "after": "原文改名/删除、外部软件修改、复制和恢复后的关联未知。"
+    },
+    {
+      "id": "F-M059-05",
+      "field": "evidence_ids",
+      "before": "E-DPT-05",
+      "after": "E-DPT-05;E-DPT-01"
+    },
+    {
+      "id": "F-M059-05",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M059-06",
+      "field": "known_branches",
+      "before": "选择及粘贴模式不能翻页；只可粘贴一次。重启丢失剪贴内容，翻到别页会重置撤销/重做。",
+      "after": "选区/粘贴模式不可翻页；Copy/Cut结束回文档后再选目标。只粘贴一次，新剪贴覆盖旧内容，重启丢失；换页清撤销。"
+    },
+    {
+      "id": "F-M059-06",
+      "field": "gaps",
+      "before": "剪贴取消与重启实测",
+      "after": "取消选区/剪切后未粘贴、跨文档及故障恢复未测。"
+    },
+    {
+      "id": "F-M059-06",
+      "field": "evidence_ids",
+      "before": "E-DPT-06",
+      "after": "E-DPT-06;E-DPT-01"
+    },
+    {
+      "id": "F-M059-06",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M059-07",
+      "field": "known_branches",
+      "before": "同页多个命中合并；电脑端同类搜索按文档合并，双击交给电脑 PDF 阅读器。识别成功率未测。",
+      "after": "设备书内标记按页合并；全库及PC按文档合并，PC可选择全库/文件夹范围。手写方式影响识别，不是通用手写全文检索。"
+    },
+    {
+      "id": "F-M059-07",
+      "field": "gaps",
+      "before": "漏检和实际定位",
+      "after": "漏检、匹配形状与命中定位未测；搜索结果退出不保证恢复所有滚动状态。"
+    },
+    {
+      "id": "F-M059-07",
+      "field": "evidence_ids",
+      "before": "E-DPT-07;E-DPT-08",
+      "after": "E-DPT-07;E-DPT-08;E-DPT-01"
+    },
+    {
+      "id": "F-M059-07",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M059-08",
+      "field": "known_branches",
+      "before": "双方同一 PDF 都修改时，设备版本保留原名、电脑版本另存；删除会传播。仅指定目录的 PDF。",
+      "after": "同PDF双改保留两份；只同步指定目录PDF，空PDF目录不参与，最多20目录。PC App可设自动同步间隔，作用于连接使用时。"
+    },
+    {
+      "id": "F-M059-08",
+      "field": "gaps",
+      "before": "多端并发/传输中断",
+      "after": "并发/中断、删除与另一边编辑同时发生的规则未知；不可借QUADERNO规则补全。"
+    },
+    {
+      "id": "F-M059-08",
+      "field": "evidence_ids",
+      "before": "E-DPT-09",
+      "after": "E-DPT-09;E-DPT-01;E-DPCD-28"
+    },
+    {
+      "id": "F-M059-08",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M059-09",
+      "field": "known_branches",
+      "before": "只解除关系，已有双方文件不删；同步正在进行时不能改该配置。",
+      "after": "Delete sync setting只去关系、不删两边文件；同步中不可配/删关系。同步目录改名或移动也会删除配置，继续使用须重设。"
+    },
+    {
+      "id": "F-M059-09",
+      "field": "gaps",
+      "before": "取消配置实际回执",
+      "after": "解除/移动后的回执、重新指定目录的冲突处置未测。"
+    },
+    {
+      "id": "F-M059-09",
+      "field": "evidence_ids",
+      "before": "E-DPT-09",
+      "after": "E-DPT-09;E-DPT-01;E-DPCD-11"
+    },
+    {
+      "id": "F-M059-09",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M059-10",
+      "field": "known_branches",
+      "before": "这是文件复制流程；不能据此承诺恢复账号、设置、临时剪贴或全部阅读历史。传输中断可能损坏文件。",
+      "after": "System storage全选传出是文件复制；每文件≤1GB且断连可能损坏。双击只读临时副本关闭App即删除，不能当完成备份。"
+    },
+    {
+      "id": "F-M059-10",
+      "field": "gaps",
+      "before": "设置/历史/账号恢复范围",
+      "after": "设置/历史/关联笔记属性的回导与恢复范围未核。"
+    },
+    {
+      "id": "F-M059-10",
+      "field": "evidence_ids",
+      "before": "E-DPT-01",
+      "after": "E-DPT-01;E-DPCD-09;E-DPCD-16"
+    },
+    {
+      "id": "F-M059-10",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M060-04",
+      "field": "known_branches",
+      "before": "恢复到原目录；目录已不存在会重建，同名冲突要求改名。站内容量超 1GB 时询问永久删除或取消；电脑 App 不能操作该回收站。",
+      "after": "设备删除后回收站还原；1GB以上阈值提供直接永久删除或取消。回收站内不能打开文件/查看子文件夹，需先还原；PC App删除及特定同步删除不入回收站。原目录重建/同名改名沿用。"
+    },
+    {
+      "id": "F-M060-04",
+      "field": "gaps",
+      "before": "回收站满与同名恢复实测",
+      "after": "未测阈值/同名恢复；永久删除、笔记删页和特定旧固件修复不受此链保证。"
+    },
+    {
+      "id": "F-M060-04",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M060-05",
+      "field": "known_branches",
+      "before": "导入完成后暂存区原条目消失；不要把这个变化当作资料丢失。macOS 用配套 App。",
+      "after": "Windows MTP的Import暂存由设备目标目录导入后消失；不得删除或重命名Import/Export/Template。macOS走PC App，不能移植MTP步骤；PC App再传回电脑的重名编号规则不套到本入口。"
+    },
+    {
+      "id": "F-M060-05",
+      "field": "gaps",
+      "before": "重复文件与中断",
+      "after": "本入口同名碰撞、复制未完就导入、拔线损坏及重试仍未说明；不借PC App规则填补。"
+    },
+    {
+      "id": "F-M060-05",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M060-06",
+      "field": "known_branches",
+      "before": "保存为带日期 ZIP，同日另编号；回收站不包含在内。备份目录不能同时设为同步目录。",
+      "after": "USB备份ZIP、同日编号、排除回收站；备份与同步目录分开。手册要求保存盘及App安装盘各有至少相当于数据总量的空间（目安）；中途拔线会失败。备份改名后不在列表显示（手册口径）。"
+    },
+    {
+      "id": "F-M060-06",
+      "field": "gaps",
+      "before": "备份失败及范围验证",
+      "after": "空间阈值/失败回执未实测；不保证失败残留ZIP可用。"
+    },
+    {
+      "id": "F-M060-06",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M060-07",
+      "field": "known_branches",
+      "before": "恢复会删除备份之后新增数据；创建/修改时间变为导入时间，浏览时间重置。先传出新资料是官方建议。",
+      "after": "导入备份覆盖备份后新增数据，创建/修改时间改为导入时间、浏览时间重置；Samples及其中内容不导入。确认后才执行；中途拔线会失败，官方建议先导出新增资料。"
+    },
+    {
+      "id": "F-M060-07",
+      "field": "gaps",
+      "before": "覆盖确认与中断恢复",
+      "after": "中断后的设备部分状态、自动回滚/续传、改名备份如何重新索引均未知。"
+    },
+    {
+      "id": "F-M060-07",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M060-08",
+      "field": "known_branches",
+      "before": "双方都编辑会留两份；单边删除通常传播，但另一边已有修改时保留修改版。不是所有冲突都由“删除优先”解决。",
+      "after": "双方改同PDF时设备版保留原名、电脑版另名；一边删另一边改则保留修改版。只同步目录下PDF和含PDF目录；解除同步不删文件。特定PC/同步删除绕过回收站；同步中不能用笔。"
+    },
+    {
+      "id": "F-M060-08",
+      "field": "gaps",
+      "before": "冲突回执和重复重试",
+      "after": "冲突命名细节/回执/重复重试未知；电脑同步目录改名或移动会解除绑定，重设前不能视作继续同步。"
+    },
+    {
+      "id": "F-M060-08",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M061-01",
+      "field": "evidence_ids",
+      "before": "E-HWP-01",
+      "after": "E-HWP-01;E-HWCD-08"
+    },
+    {
+      "id": "F-M061-01",
+      "field": "known_branches",
+      "before": "普通模式优先画质，官方说明某些 app 可能卡顿/闪屏；一键刷新处理当前残影。未给出 60fps 结论。",
+      "after": "智能/普通刷新与一键刷新分开；灯光一键熄灯/白天/夜间/自定义；区域4+64悬浮球可双击刷新"
+    },
+    {
+      "id": "F-M061-01",
+      "field": "gaps",
+      "before": "逐app持久性和实际刷新",
+      "after": "逐app持久性、灰度/实际速度功耗；区域悬浮球当前大陆构建未知"
+    },
+    {
+      "id": "F-M061-01",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M061-02",
+      "field": "known_branches",
+      "before": "对端限所列 HarmonyOS 2/3 支持机型；看不到书时官方建议重开两端 Wi-Fi/蓝牙。只是导入，不足以证明全量进度同步。",
+      "after": "华为阅读导入同账号对端本地书；对端限HarmonyOS2/3所支持机型；建议5GHz Wi-Fi，2.4GHz可能不稳；看不到书时重开两端Wi-Fi/蓝牙"
+    },
+    {
+      "id": "F-M061-02",
+      "field": "gaps",
+      "before": "重连失败、重复导入和进度",
+      "after": "重连失败、重复/DRM导入、文件完成回执和进度/笔迹同步；Huawei Share文件接收另见F14"
+    },
+    {
+      "id": "F-M061-02",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M061-06",
+      "field": "evidence_ids",
+      "before": "E-HWP-07",
+      "after": "E-HWP-07;E-HWCD-02"
+    },
+    {
+      "id": "F-M061-06",
+      "field": "known_branches",
+      "before": "HarmonyOS 2.1 说明笔记 app 不支持原录音导出；不能把“可导出笔记”理解成录音也在内。",
+      "after": "HarmonyOS2.1笔记App不支持原录音导出；转写文字可随图/PDF分享，原音频另用录音机；笔记单篇/多篇分享不证明包含原音频"
+    },
+    {
+      "id": "F-M061-06",
+      "field": "gaps",
+      "before": "录音对象备份恢复",
+      "after": "录音机实际导出步骤、笔记录音备份/恢复及后续版本变化；CN/CA笔记整理差异"
+    },
+    {
+      "id": "F-M061-06",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M061-08",
+      "field": "evidence_ids",
+      "before": "E-HWP-08",
+      "after": "E-HWP-08;E-HWCD-10"
+    },
+    {
+      "id": "F-M061-08",
+      "field": "known_branches",
+      "before": "禁止手写时笔被当作手指，同一手势会截屏。阅读菜单自己的返回入口又不同。",
+      "after": "正常笔右上内划选分屏；中文2.1横屏可手指左右边缘退出或笔菜单退出；掌阅禁止手写会转截图，退出需先聚焦笔记"
+    },
+    {
+      "id": "F-M061-08",
+      "field": "gaps",
+      "before": "焦点/禁止手写模式实测",
+      "after": "竖屏手指退出、当前构建焦点/误触、分屏笔记保存与异常恢复；不能据区域简写取消中文横屏条件"
+    },
+    {
+      "id": "F-M061-08",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    }
+  ],
+  "evidence_changes": [
+    {
+      "id": "E-QUA-01",
+      "field": "version_scope",
+      "before": "QUADERNO Gen.3C FMVDP43CA4/FMVDP53CA5; B5FL-2101-02 Z0 published 2026-04-01; firmware unknown",
+      "after": "QUADERNO Gen.3C FMVDP43CA4/FMVDP53CA5; B5FL-2101-02 Z0 cover, Z0-02 colophon issued 2025-04; support index public date 2026-04-01; installed firmware unknown"
+    },
+    {
+      "id": "E-QUA-01",
+      "field": "source_updated_on",
+      "before": "2026-04-01",
+      "after": null
+    },
+    {
+      "id": "E-QUA-02",
+      "field": "version_scope",
+      "before": "QUADERNO Gen.3C FMVDP43CA4/FMVDP53CA5; B5FL-2101-02 Z0 published 2026-04-01; firmware unknown",
+      "after": "QUADERNO Gen.3C FMVDP43CA4/FMVDP53CA5; B5FL-2101-02 Z0 cover, Z0-02 colophon issued 2025-04; support index public date 2026-04-01; installed firmware unknown"
+    },
+    {
+      "id": "E-QUA-03",
+      "field": "version_scope",
+      "before": "QUADERNO Gen.3C FMVDP43CA4/FMVDP53CA5; B5FL-2101-02 Z0 published 2026-04-01; firmware unknown",
+      "after": "QUADERNO Gen.3C FMVDP43CA4/FMVDP53CA5; B5FL-2101-02 Z0 cover, Z0-02 colophon issued 2025-04; support index public date 2026-04-01; installed firmware unknown"
+    },
+    {
+      "id": "E-QUA-04",
+      "field": "version_scope",
+      "before": "QUADERNO Gen.3C FMVDP43CA4/FMVDP53CA5; B5FL-2101-02 Z0 published 2026-04-01; firmware unknown",
+      "after": "QUADERNO Gen.3C FMVDP43CA4/FMVDP53CA5; B5FL-2101-02 Z0 cover, Z0-02 colophon issued 2025-04; support index public date 2026-04-01; installed firmware unknown"
+    },
+    {
+      "id": "E-QUA-04",
+      "field": "source_updated_on",
+      "before": "2026-04-01",
+      "after": null
+    },
+    {
+      "id": "E-QUA-05",
+      "field": "version_scope",
+      "before": "QUADERNO Gen.3C FMVDP43CA4/FMVDP53CA5; B5FL-2101-02 Z0 published 2026-04-01; firmware unknown",
+      "after": "QUADERNO Gen.3C FMVDP43CA4/FMVDP53CA5; B5FL-2101-02 Z0 cover, Z0-02 colophon issued 2025-04; support index public date 2026-04-01; installed firmware unknown"
+    },
+    {
+      "id": "E-QUA-01",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "existing_pdf_reread_PyMuPDF",
+          "hands_on": false,
+          "visual_observed": false,
+          "archived_artifact": "artifacts/quaderno-controls-deepening/source-notes.md",
+          "sha256": "4b696f7c102d7c345146f844eeb2b8625e57059b00f953307c41e6f728218753",
+          "raw_work_path": "work/research/extension-manuals/quaderno-gen3c.pdf",
+          "raw_sha256": "d7248dfc9cd602139f4a5dddf03c33809b02b00d9f13601cf73f17ad1b8ac5f4",
+          "locator": "全212项outline；正文页列表work/quaderno-controls-deepening/read-pages.json；p134发行2025-04与官网公开日不同"
+        }
+      ]
+    },
+    {
+      "id": "E-QUA-02",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "anonymous_public_html_GET",
+          "hands_on": false,
+          "visual_observed": false,
+          "archived_artifact": "artifacts/quaderno-controls-deepening/source-notes.md",
+          "sha256": "4b696f7c102d7c345146f844eeb2b8625e57059b00f953307c41e6f728218753",
+          "url": "https://www.fmworld.net/digital-paper/support/",
+          "status": 200,
+          "raw_work_path": "work/quaderno-controls-deepening/raw/support.html",
+          "raw_sha256": "df57540305ecf9c0e84eac54625bd9f4f3bdf0571381b3e79bf5c8c8c859e615",
+          "extracted_work_path": "work/quaderno-controls-deepening/extracted/support.txt",
+          "extracted_sha256": "fb01b7e02dced96da4290c60e51643cf89f7b3cab86712f2636a6724ce3538b2"
+        }
+      ]
+    },
+    {
+      "id": "E-QUA-03",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "anonymous_public_html_GET",
+          "hands_on": false,
+          "visual_observed": false,
+          "archived_artifact": "artifacts/quaderno-controls-deepening/source-notes.md",
+          "sha256": "4b696f7c102d7c345146f844eeb2b8625e57059b00f953307c41e6f728218753",
+          "url": "https://www.fmworld.net/digital-paper/support/download/",
+          "status": 200,
+          "raw_work_path": "work/quaderno-controls-deepening/raw/download.html",
+          "raw_sha256": "43e16fcf02616fba24b5dada5c873757b050e5690effa5c204ed252130266375",
+          "extracted_work_path": "work/quaderno-controls-deepening/extracted/download.txt",
+          "extracted_sha256": "a8bb0273381c2ea95507d623f822f12702efc7babd0a6b660419a8160a08991d"
+        }
+      ]
+    },
+    {
+      "id": "E-HWP-01",
+      "field": "additional_captures",
+      "before": null,
+      "after": [
+        {
+          "capture_kind": "local_reread_of_prior_official_html",
+          "original_acquisition_date": "2026-10-26",
+          "checked_on": "2026-10-27",
+          "network_refetched": false,
+          "source_url": "https://consumer.huawei.com/cn/support/content/zh-cn15879064/",
+          "raw_work_path": "work/research/extension-manuals/huawei-15879064.html",
+          "raw_sha256": "b29d7cb385135aea149af99d631986928a5818dcc77ff7f0bf19387aafcd7f6a",
+          "archived_artifact": "artifacts/huawei-controls-deepening/source-notes.md",
+          "sha256": "4096ccd665bfeb2774f447f96b210f2bfd493280b84cbaa62d27a3b400adfbe0",
+          "hands_on": false,
+          "visual_observed": false
+        }
+      ]
+    },
+    {
+      "id": "E-HWP-02",
+      "field": "additional_captures",
+      "before": null,
+      "after": [
+        {
+          "capture_kind": "local_reread_of_prior_official_html",
+          "original_acquisition_date": "2026-10-26",
+          "checked_on": "2026-10-27",
+          "network_refetched": false,
+          "source_url": "https://consumer.huawei.com/cn/support/content/zh-cn15881450/",
+          "raw_work_path": "work/research/extension-manuals/huawei-15881450.html",
+          "raw_sha256": "a294ab313716089f53e17702a7565d4821f9b33fa2888f7b8ea67a85d8813600",
+          "archived_artifact": "artifacts/huawei-controls-deepening/source-notes.md",
+          "sha256": "4096ccd665bfeb2774f447f96b210f2bfd493280b84cbaa62d27a3b400adfbe0",
+          "hands_on": false,
+          "visual_observed": false
+        }
+      ]
+    },
+    {
+      "id": "E-HWP-03",
+      "field": "additional_captures",
+      "before": null,
+      "after": [
+        {
+          "capture_kind": "local_reread_of_prior_official_html",
+          "original_acquisition_date": "2026-10-26",
+          "checked_on": "2026-10-27",
+          "network_refetched": false,
+          "source_url": "https://consumer.huawei.com/cn/support/content/zh-cn15881453/",
+          "raw_work_path": "work/research/extension-manuals/huawei-15881453.html",
+          "raw_sha256": "e608ca4cc9d36d0325e8d1576669691a6ad63fb13abdd83acaea3a242799b954",
+          "archived_artifact": "artifacts/huawei-controls-deepening/source-notes.md",
+          "sha256": "4096ccd665bfeb2774f447f96b210f2bfd493280b84cbaa62d27a3b400adfbe0",
+          "hands_on": false,
+          "visual_observed": false
+        }
+      ]
+    },
+    {
+      "id": "E-HWP-04",
+      "field": "additional_captures",
+      "before": null,
+      "after": [
+        {
+          "capture_kind": "local_reread_of_prior_official_html",
+          "original_acquisition_date": "2026-10-26",
+          "checked_on": "2026-10-27",
+          "network_refetched": false,
+          "source_url": "https://consumer.huawei.com/cn/support/content/zh-cn15881454/",
+          "raw_work_path": "work/research/extension-manuals/huawei-15881454.html",
+          "raw_sha256": "804ffa2ed9395ab2f9dd3eca8abfbd1b5c06f50a38a98da2d0403f2bb2d35b1d",
+          "archived_artifact": "artifacts/huawei-controls-deepening/source-notes.md",
+          "sha256": "4096ccd665bfeb2774f447f96b210f2bfd493280b84cbaa62d27a3b400adfbe0",
+          "hands_on": false,
+          "visual_observed": false
+        }
+      ]
+    },
+    {
+      "id": "E-HWP-05",
+      "field": "additional_captures",
+      "before": null,
+      "after": [
+        {
+          "capture_kind": "local_reread_of_prior_official_html",
+          "original_acquisition_date": "2026-10-26",
+          "checked_on": "2026-10-27",
+          "network_refetched": false,
+          "source_url": "https://consumer.huawei.com/cn/support/content/zh-cn15898323/",
+          "raw_work_path": "work/research/extension-manuals/huawei-15898323.html",
+          "raw_sha256": "06382a780fb8ed1bb454fe005f823586b250e3350edbc29597250f658b70af10",
+          "archived_artifact": "artifacts/huawei-controls-deepening/source-notes.md",
+          "sha256": "4096ccd665bfeb2774f447f96b210f2bfd493280b84cbaa62d27a3b400adfbe0",
+          "hands_on": false,
+          "visual_observed": false
+        }
+      ]
+    },
+    {
+      "id": "E-HWP-06",
+      "field": "additional_captures",
+      "before": null,
+      "after": [
+        {
+          "capture_kind": "local_reread_of_prior_official_html",
+          "original_acquisition_date": "2026-10-26",
+          "checked_on": "2026-10-27",
+          "network_refetched": false,
+          "source_url": "https://consumer.huawei.com/cn/support/content/zh-cn15960354/",
+          "raw_work_path": "work/research/extension-manuals/huawei-15960354.html",
+          "raw_sha256": "dc93e05606d5967b1999b52f3a9f731542e483e4c194e88a6fe7d5ff72d03771",
+          "archived_artifact": "artifacts/huawei-controls-deepening/source-notes.md",
+          "sha256": "4096ccd665bfeb2774f447f96b210f2bfd493280b84cbaa62d27a3b400adfbe0",
+          "hands_on": false,
+          "visual_observed": false
+        }
+      ]
+    },
+    {
+      "id": "E-HWP-08",
+      "field": "additional_captures",
+      "before": null,
+      "after": [
+        {
+          "capture_kind": "local_reread_of_prior_official_html",
+          "original_acquisition_date": "2026-10-26",
+          "checked_on": "2026-10-27",
+          "network_refetched": false,
+          "source_url": "https://consumer.huawei.com/cn/support/content/zh-cn15939571/",
+          "raw_work_path": "work/research/extension-manuals/huawei-15939571.html",
+          "raw_sha256": "39e7af2a2b8d1c0593ca18b682cdab7d701c99516afeaa5fd10a14caa540068a",
+          "archived_artifact": "artifacts/huawei-controls-deepening/source-notes.md",
+          "sha256": "4096ccd665bfeb2774f447f96b210f2bfd493280b84cbaa62d27a3b400adfbe0",
+          "hands_on": false,
+          "visual_observed": false
+        }
+      ]
+    },
+    {
+      "id": "E-DPT-09",
+      "field": "additional_captures",
+      "before": null,
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "ordinary_public_html_body",
+          "capture_url": "https://helpguide.sony.net/dpt/rp1/v1/en/contents/TP0001273119.html",
+          "raw_work_path": "work/sony-dpt-controls-deepening/TP0001273119.html",
+          "raw_sha256": "187256cd04f8229a274f08c695de9c4ae515cfbd8a28541c6b32c98a02e5172f",
+          "text_work_path": "work/sony-dpt-controls-deepening/TP0001273119.txt",
+          "text_sha256": "67fb208c5fbd2e3effbae3d7e2747c297cf8502d8de33ecc44676846e89c9a19",
+          "note": "普通GET200；首次article提取漏step-list，已离线按id_content修正；无产品操作。",
+          "note_artifact": "artifacts/sony-dpt-controls-deepening/source-notes.md",
+          "note_sha256": "0e07de84eb69df306728ffd47c75395a55ca1083b7d10bc8028ab6385b2f614f"
+        }
+      ]
+    },
+    {
+      "id": "E-DPT-06",
+      "field": "additional_captures",
+      "before": null,
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "ordinary_public_html_body",
+          "capture_url": "https://helpguide.sony.net/dpt/rp1/v1/en/contents/TP0001273124.html",
+          "raw_work_path": "work/sony-dpt-controls-deepening/TP0001273124.html",
+          "raw_sha256": "509c0b28c187544d0d74689e3e3d22d21020d532c6623998340d00256a5ed760",
+          "text_work_path": "work/sony-dpt-controls-deepening/TP0001273124.txt",
+          "text_sha256": "3c29d5d9dd23a5c6e8c64eecd2638dcd2055018172ed2e24a4f5219353c5705e",
+          "note": "普通GET200；首次article提取漏step-list，已离线按id_content修正；无产品操作。",
+          "note_artifact": "artifacts/sony-dpt-controls-deepening/source-notes.md",
+          "note_sha256": "0e07de84eb69df306728ffd47c75395a55ca1083b7d10bc8028ab6385b2f614f"
+        }
+      ]
+    },
+    {
+      "id": "E-DPT-05",
+      "field": "additional_captures",
+      "before": null,
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "ordinary_public_html_body",
+          "capture_url": "https://helpguide.sony.net/dpt/rp1/v1/en/contents/TP0001178284.html",
+          "raw_work_path": "work/sony-dpt-controls-deepening/TP0001178284.html",
+          "raw_sha256": "3747e98a9d009edd19643ee387d41dae0baa4a887e6b9901b61a4055e0981241",
+          "text_work_path": "work/sony-dpt-controls-deepening/TP0001178284.txt",
+          "text_sha256": "09d40f912f7fd2336b1958c133eaef413ae5734fdb11b21cf7ae1822a59bbfed",
+          "note": "普通GET200；首次article提取漏step-list，已离线按id_content修正；无产品操作。",
+          "note_artifact": "artifacts/sony-dpt-controls-deepening/source-notes.md",
+          "note_sha256": "0e07de84eb69df306728ffd47c75395a55ca1083b7d10bc8028ab6385b2f614f"
+        }
+      ]
+    },
+    {
+      "id": "E-DPT-01",
+      "field": "additional_captures",
+      "before": null,
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "existing_pdf_reread_and_catalog_reconstructed",
+          "capture_url": "https://helpguide.sony.net/dpt/rp1/v1/en/print.pdf",
+          "raw_work_path": "work/research/extension-manuals/sony-dpt.pdf",
+          "raw_sha256": "41a4a31fef1f37b6868f8d151d4df9a20449b303704008af8faaa046492fef65",
+          "note": "按目录核读正文6–95页；法律/规格仅背景。新增目录与任务不表示当前实机测试；p15/56另静态证据，p61仅work。",
+          "note_artifact": "artifacts/sony-dpt-controls-deepening/source-notes.md",
+          "note_sha256": "0e07de84eb69df306728ffd47c75395a55ca1083b7d10bc8028ab6385b2f614f"
+        }
+      ]
+    }
+  ],
+  "files": [
+    {
+      "path": "docs/research/interaction-library/batches/extension-manuals-evidence.jsonl",
+      "backup": "work/sony-dpt-controls-deepening/reviewed-before/extension-manuals-evidence.jsonl",
+      "before_sha256": "e31dff758c233d7a18434c666c08a71de53ecb05864d4739c6ca88c9c0bdc123",
+      "after_sha256": "8d5d957f60bfaa064d5f68f815e588584ada5d9feb9f724ae0b07a0f277d7df5"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/extension-manuals-coverage.csv",
+      "backup": "work/sony-dpt-controls-deepening/reviewed-before/extension-manuals-coverage.csv",
+      "before_sha256": "1dd64157cae7dadc5cf465f464d51811c4021ceac773056bc253ef9ccc9da234",
+      "after_sha256": "ebeed582a400437460ac1c0ac01a749198d6e6c7fa4e388ac1a669181d03c7df"
+    }
+  ],
+  "old_tasks": 18,
+  "old_task_fields": 66,
+  "old_evidence_captures": 14,
+  "old_evidence_metadata_fields": 7
+}

@@ -1,0 +1,202 @@
+[
+  {
+    "$kind": "TitledParagraph",
+    "text": "功能更新\n修复历史问题",
+    "style": "detail",
+    "wantsCollapsedNewlines": true,
+    "primarySubtitle": "1.25.1",
+    "secondarySubtitle": "Fri Sep 25 2026 23:41:32 GMT+0000 (Coordinated Universal Time)"
+  },
+  {
+    "$kind": "TitledParagraph",
+    "text": "功能体验优化",
+    "style": "detail",
+    "wantsCollapsedNewlines": true,
+    "primarySubtitle": "1.25.0",
+    "secondarySubtitle": "Wed Sep 23 2026 08:47:41 GMT+0000 (Coordinated Universal Time)"
+  },
+  {
+    "$kind": "TitledParagraph",
+    "text": "- 功能体验优化",
+    "style": "detail",
+    "wantsCollapsedNewlines": true,
+    "primarySubtitle": "1.24.0",
+    "secondarySubtitle": "Mon Sep 14 2026 03:11:58 GMT+0000 (Coordinated Universal Time)"
+  },
+  {
+    "$kind": "TitledParagraph",
+    "text": "功能体验优化",
+    "style": "detail",
+    "wantsCollapsedNewlines": true,
+    "primarySubtitle": "1.23.0",
+    "secondarySubtitle": "Sat Sep 05 2026 16:04:16 GMT+0000 (Coordinated Universal Time)"
+  },
+  {
+    "$kind": "TitledParagraph",
+    "text": "-优化了一些已知功能-",
+    "style": "detail",
+    "wantsCollapsedNewlines": true,
+    "primarySubtitle": "1.22.1",
+    "secondarySubtitle": "Tue Aug 18 2026 16:13:05 GMT+0000 (Coordinated Universal Time)"
+  },
+  {
+    "$kind": "TitledParagraph",
+    "text": "-优化了一些已知问题-",
+    "style": "detail",
+    "wantsCollapsedNewlines": true,
+    "primarySubtitle": "1.22.0",
+    "secondarySubtitle": "Wed Aug 12 2026 20:39:53 GMT+0000 (Coordinated Universal Time)"
+  },
+  {
+    "$kind": "TitledParagraph",
+    "text": "优化了一些已知问题",
+    "style": "detail",
+    "wantsCollapsedNewlines": true,
+    "primarySubtitle": "1.21.0",
+    "secondarySubtitle": "Sat Aug 01 2026 05:23:53 GMT+0000 (Coordinated Universal Time)"
+  },
+  {
+    "$kind": "TitledParagraph",
+    "text": "优化了一些已知问题",
+    "style": "detail",
+    "wantsCollapsedNewlines": true,
+    "primarySubtitle": "1.20.0",
+    "secondarySubtitle": "Mon Jul 13 2026 22:50:45 GMT+0000 (Coordinated Universal Time)"
+  },
+  {
+    "$kind": "TitledParagraph",
+    "text": "优化了一些已知问题",
+    "style": "detail",
+    "wantsCollapsedNewlines": true,
+    "primarySubtitle": "1.19.1",
+    "secondarySubtitle": "Thu Jun 25 2026 22:47:39 GMT+0000 (Coordinated Universal Time)"
+  },
+  {
+    "$kind": "TitledParagraph",
+    "text": "优化了一些已知问题",
+    "style": "detail",
+    "wantsCollapsedNewlines": true,
+    "primarySubtitle": "1.19.0",
+    "secondarySubtitle": "Mon Jun 22 2026 16:46:51 GMT+0000 (Coordinated Universal Time)"
+  },
+  {
+    "$kind": "TitledParagraph",
+    "text": "优化了一些已知问题",
+    "style": "detail",
+    "wantsCollapsedNewlines": true,
+    "primarySubtitle": "1.18.0",
+    "secondarySubtitle": "Thu May 28 2026 17:00:29 GMT+0000 (Coordinated Universal Time)"
+  },
+  {
+    "$kind": "TitledParagraph",
+    "text": "优化了一些已知问题",
+    "style": "detail",
+    "wantsCollapsedNewlines": true,
+    "primarySubtitle": "1.17.2",
+    "secondarySubtitle": "Tue May 19 2026 16:10:58 GMT+0000 (Coordinated Universal Time)"
+  },
+  {
+    "$kind": "TitledParagraph",
+    "text": "-用户体验优化",
+    "style": "detail",
+    "wantsCollapsedNewlines": true,
+    "primarySubtitle": "1.17.0",
+    "secondarySubtitle": "Fri Apr 17 2026 16:55:05 GMT+0000 (Coordinated Universal Time)"
+  },
+  {
+    "$kind": "TitledParagraph",
+    "text": "-用户体验优化",
+    "style": "detail",
+    "wantsCollapsedNewlines": true,
+    "primarySubtitle": "1.16.2",
+    "secondarySubtitle": "Fri Mar 13 2026 17:24:49 GMT+0000 (Coordinated Universal Time)"
+  },
+  {
+    "$kind": "TitledParagraph",
+    "text": "-用户体验优化",
+    "style": "detail",
+    "wantsCollapsedNewlines": true,
+    "primarySubtitle": "1.16.0",
+    "secondarySubtitle": "Sun Dec 14 2025 02:55:10 GMT+0000 (Coordinated Universal Time)"
+  },
+  {
+    "$kind": "TitledParagraph",
+    "text": "- 用户体验优化",
+    "style": "detail",
+    "wantsCollapsedNewlines": true,
+    "primarySubtitle": "1.15.0",
+    "secondarySubtitle": "Tue Nov 04 2025 08:57:37 GMT+0000 (Coordinated Universal Time)"
+  },
+  {
+    "$kind": "TitledParagraph",
+    "text": "- 用户体验优化",
+    "style": "detail",
+    "wantsCollapsedNewlines": true,
+    "primarySubtitle": "1.14.0",
+    "secondarySubtitle": "Tue Sep 23 2025 06:36:53 GMT+0000 (Coordinated Universal Time)"
+  },
+  {
+    "$kind": "TitledParagraph",
+    "text": "- 功能体验优化",
+    "style": "detail",
+    "wantsCollapsedNewlines": true,
+    "primarySubtitle": "1.13.0",
+    "secondarySubtitle": "Thu Aug 14 2025 16:13:37 GMT+0000 (Coordinated Universal Time)"
+  },
+  {
+    "$kind": "TitledParagraph",
+    "text": "- 功能体验优化",
+    "style": "detail",
+    "wantsCollapsedNewlines": true,
+    "primarySubtitle": "1.12.0",
+    "secondarySubtitle": "Fri Jul 25 2025 01:39:00 GMT+0000 (Coordinated Universal Time)"
+  },
+  {
+    "$kind": "TitledParagraph",
+    "text": "- 功能体验优化",
+    "style": "detail",
+    "wantsCollapsedNewlines": true,
+    "primarySubtitle": "1.11.0",
+    "secondarySubtitle": "Thu Jul 03 2025 09:41:06 GMT+0000 (Coordinated Universal Time)"
+  },
+  {
+    "$kind": "TitledParagraph",
+    "text": "- 功能体验优化",
+    "style": "detail",
+    "wantsCollapsedNewlines": true,
+    "primarySubtitle": "1.10.0",
+    "secondarySubtitle": "Thu Jun 19 2025 04:47:11 GMT+0000 (Coordinated Universal Time)"
+  },
+  {
+    "$kind": "TitledParagraph",
+    "text": "- 功能体验优化",
+    "style": "detail",
+    "wantsCollapsedNewlines": true,
+    "primarySubtitle": "1.9.1",
+    "secondarySubtitle": "Thu Jun 12 2025 02:40:16 GMT+0000 (Coordinated Universal Time)"
+  },
+  {
+    "$kind": "TitledParagraph",
+    "text": "- 功能体验优化",
+    "style": "detail",
+    "wantsCollapsedNewlines": true,
+    "primarySubtitle": "1.9.0",
+    "secondarySubtitle": "Thu Jun 05 2025 09:50:05 GMT+0000 (Coordinated Universal Time)"
+  },
+  {
+    "$kind": "TitledParagraph",
+    "text": "- 功能体验优化",
+    "style": "detail",
+    "wantsCollapsedNewlines": true,
+    "primarySubtitle": "1.8.0",
+    "secondarySubtitle": "Wed May 28 2025 06:00:23 GMT+0000 (Coordinated Universal Time)"
+  },
+  {
+    "$kind": "TitledParagraph",
+    "text": "- 已知问题体验优化",
+    "style": "detail",
+    "wantsCollapsedNewlines": true,
+    "primarySubtitle": "1.7.0",
+    "secondarySubtitle": "Sun Apr 27 2025 02:42:19 GMT+0000 (Coordinated Universal Time)"
+  }
+]

@@ -1,0 +1,21 @@
+> For the complete documentation index, see [llms.txt](https://docs.eudic.net/1/llms.txt). Markdown versions of documentation pages are available by appending `.md` to page URLs; this page is available as [Markdown](https://docs.eudic.net/1/shi-yong-zhi-yin/dan-ci-cha-xun/quan-wen-sou-suo-1.md).
+
+# 全文搜索
+
+全文搜索功能支持内置词库以及导入扩充词库。
+
+&#x5728;**【帐号】** -**【词典库管理】**&#x754C;面找到想要启用全文搜索功能的词库，点击词库进入词库详细信息界面，开&#x542F;**【全文搜索】**&#x9009;项：
+
+接下来等待一段时间（十几分钟到半个小时不等），等全文搜索选项后面提示“索引完成”或"已启用索引"时就说明词库已经准备好了。索引的过程可以在后台完成，过程中您可以先执行别的任务。
+
+![](https://3412199665-files.gitbook.io/~/files/v0/b/gitbook-legacy-files/o/assets%2F-Mgyh1kdOQ5JH6pNTt27%2F-MhSVaK_YUhT9xc9eP6h%2F-MhSYx6mvRWhAoAcCi-G%2F%E5%8D%95%E8%AF%8D%E6%9F%A5%E8%AF%A28.png?alt=media\&token=f2975052-e9c1-4ac5-9566-6cbaa5bff42e)
+
+最后，在首页搜索框中输入中文或词组，再&#x70B9;**【全文搜索】**，就可以看到全文搜索结果了。
+
+![](https://3412199665-files.gitbook.io/~/files/v0/b/gitbook-legacy-files/o/assets%2F-Mgyh1kdOQ5JH6pNTt27%2F-MhXAis8wFs9GRBRb2-d%2F-MhXDZ9mug1iC2btwkzG%2F%E5%8D%95%E8%AF%8D%E6%9F%A5%E8%AF%A29.png?alt=media\&token=070260e6-539f-4442-8993-5cb3e446d6fd)
+
+您也可以在解释页面看到内置词库的全文搜索结果，操作方法如下：&#x5728;**【帐号】**-**【词典库管理】**&#x754C;面中，&#x5C06;**【全文搜索】**&#x62D6;动&#x5230;**【显示的词库】**&#x4E00;栏中。
+
+![](https://3412199665-files.gitbook.io/~/files/v0/b/gitbook-legacy-files/o/assets%2F-Mgyh1kdOQ5JH6pNTt27%2F-MhSVaK_YUhT9xc9eP6h%2F-MhSZ1KVGByFwsk4L9AX%2F%E5%8D%95%E8%AF%8D%E6%9F%A5%E8%AF%A210.png?alt=media\&token=d904b69c-8af6-4519-9fda-f275a948143f)
+
+操作完成后，在首页搜索框中输入中文或词组，在解释页面中，就可以查阅对应内容全文搜索的结果了。

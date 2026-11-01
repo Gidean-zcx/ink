@@ -1,0 +1,74 @@
+[
+  {
+    "evidence_id": "E-IRD-01",
+    "source_batch": "docs/research/interaction-library/batches/chinese-apps-evidence.jsonl",
+    "field": "additional_captures",
+    "before": [],
+    "after": [
+      {
+        "capture_url": "https://apps.apple.com/cn/app/id463150061",
+        "checked_on": "2026-10-27",
+        "access_mode": "public_app_store_html_read",
+        "raw_work_path": "work/ireader-controls-deepening/app-store.html",
+        "raw_sha256": "c11853a5986a75b5e8fc2f2227f3f07931d67fda841d374a34e20eddb943abef",
+        "locator": "开发者描述；版本历史primarySubtitle/secondarySubtitle；兼容性",
+        "limitation": "新GET 200；版本8.6.2；用户评论/图片未作为操作依据",
+        "archived_artifact": "artifacts/ireader-controls-deepening/source-notes.md",
+        "sha256": "a39c61c2ea45ed2a9bad9052dd0d45b6a8173ac7c8f3cdaf45f9382779c2c6c2",
+        "hands_on": false,
+        "visual_observed": false,
+        "app_build": "8.6.2",
+        "source_updated_on": "2026-10-22",
+        "http_status": 200,
+        "final_url": "https://apps.apple.com/cn/app/%E6%8E%8C%E9%98%85-%E5%BC%95%E9%A2%86%E5%93%81%E8%B4%A8%E9%98%85%E8%AF%BB/id463150061"
+      }
+    ],
+    "reason": "同URL追加采集/原件复读，不重复编号"
+  },
+  {
+    "evidence_id": "E-IRD-03",
+    "source_batch": "docs/research/interaction-library/batches/chinese-apps-evidence.jsonl",
+    "field": "additional_captures",
+    "before": [],
+    "after": [
+      {
+        "capture_url": "https://consumer.huawei.com/cn/support/content/zh-cn15939571/",
+        "checked_on": "2026-10-27",
+        "access_mode": "local_reread_of_existing_public_artifact",
+        "raw_work_path": "work/research/extension-manuals/huawei-15939571.html",
+        "raw_sha256": "39e7af2a2b8d1c0593ca18b682cdab7d701c99516afeaa5fd10a14caa540068a",
+        "locator": "4类18问；笔迹不可见4子项；派生txt69—157行",
+        "limitation": "未重新GET；同URL既存原件；MatePad Paper适配版而非手机；App构建未知",
+        "archived_artifact": "artifacts/ireader-controls-deepening/source-notes.md",
+        "sha256": "a39c61c2ea45ed2a9bad9052dd0d45b6a8173ac7c8f3cdaf45f9382779c2c6c2",
+        "hands_on": false,
+        "visual_observed": false,
+        "original_capture_on": "2026-10-26"
+      }
+    ],
+    "reason": "同URL追加采集/原件复读，不重复编号"
+  },
+  {
+    "evidence_id": "E-IPAD-01",
+    "source_batch": "docs/research/interaction-library/batches/chinese-app-controls-deepening-evidence.jsonl",
+    "field": "additional_captures",
+    "before": [],
+    "after": [
+      {
+        "capture_url": "https://ah2.ireader.com/fe3/zybook/other/statement/privacyagreement_detail.html",
+        "checked_on": "2026-10-27",
+        "access_mode": "local_reread_of_existing_public_artifact",
+        "raw_work_path": "work/chinese-app-depth/ireader-privacy.html",
+        "raw_sha256": "93d47df113271ae28e807eb354f45b3fac14e09a38dd0e7b79156a46c6226d1b",
+        "locator": "第一节基本/扩展业务2/5/7/8；第五节删除/副本；派生txt28/39—94/169行",
+        "limitation": "未重新GET；2024-06-27政策不代表8.6.2操作；旧顶层第二节定位需修正",
+        "archived_artifact": "artifacts/ireader-controls-deepening/source-notes.md",
+        "sha256": "a39c61c2ea45ed2a9bad9052dd0d45b6a8173ac7c8f3cdaf45f9382779c2c6c2",
+        "hands_on": false,
+        "visual_observed": false,
+        "original_capture_on": "2026-10-26"
+      }
+    ],
+    "reason": "同URL追加采集/原件复读，不重复编号"
+  }
+]

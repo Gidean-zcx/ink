@@ -1,0 +1,12 @@
+HELP CENTER
+ACCOUNT MANAGEMENT
+How do I change my username or email address?
+If you want to edit your Duolingo username or email address, go to your settings and edit the username or email address. Your username appears on your weekly leaderboard. Remember to tap “Save changes” when you make any changes.
+If it is not changing, it means it is already taken by another Duolingo account. All usernames and email addresses are unique. Try changing the name again by adding unique letters or numbers to try to make it unique and save again. If the email address you are attempting to update to is already taken, you may have previously created another account with that email address.
+Relevant Articles
+How do I find, follow, and block users on Duolingo?
+How do I remove or reset a course?
+I’m having trouble accessing my account.
+How do I delete my account and access my data?
+What to do if your data was compromised
+I want to submit a bug report

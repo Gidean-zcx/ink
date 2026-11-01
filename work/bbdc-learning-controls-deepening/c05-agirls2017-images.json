@@ -1,0 +1,88 @@
+[
+  {
+    "src": "/static/images/logo_2026.png",
+    "width": "108",
+    "height": "32",
+    "alt": "電獺少女"
+  },
+  {
+    "src": "https://agirls.aottercdn.com/media/990a0cb1-1040-4420-9f89-fcf696749c7e.jpg",
+    "style": "height:707px; width:800px",
+    "loading": "lazy"
+  },
+  {
+    "src": "https://agirls.aottercdn.com/media/d7f5812e-b9b5-45e4-9c7c-7cadc68ee744.jpg",
+    "style": "height:472px; width:800px",
+    "loading": "lazy"
+  },
+  {
+    "src": "https://agirls.aottercdn.com/media/938c6c86-6d40-4535-889a-cdc60612335e.jpg",
+    "style": "height:472px; width:800px",
+    "loading": "lazy"
+  },
+  {
+    "src": "https://agirls.aottercdn.com/media/baa41d1e-b01c-4e59-9c7a-4da53ff2aac5.jpg",
+    "style": "height:472px; width:800px",
+    "loading": "lazy"
+  },
+  {
+    "src": "https://agirls.aottercdn.com/media/a032d9fa-bfb3-40cd-b864-7763227d85ad.jpg",
+    "style": "height:709px; width:800px",
+    "loading": "lazy"
+  },
+  {
+    "src": "https://agirls.aottercdn.com/media/567cd202-5292-4ef8-b3e3-7b91c2464eb6.jpg",
+    "style": "height:472px; width:800px",
+    "loading": "lazy"
+  },
+  {
+    "src": "https://agirls.aottercdn.com/media/c1f643cb-1db4-465d-b1e2-ed147fe94123.PNG",
+    "style": "height:700px; width:394px",
+    "loading": "lazy"
+  },
+  {
+    "src": "https://agirls.aottercdn.com/media/5eb78fdb-4cb8-46f3-9b48-288486625d4a.png",
+    "class": "ag-download__img",
+    "alt": "不背單詞"
+  },
+  {
+    "src": "https://agirls.aottercdn.com/media/84eebe57-5cd2-4b6e-a106-f6102e7c31c5.jpg",
+    "class": "ag-author__img",
+    "alt": "亭伊"
+  },
+  {
+    "src": "https://agirls.aottercdn.com/media/2925c99e-6d4a-4ad5-83b9-454d7a78af64.jpg",
+    "loading": "lazy",
+    "class": "ag-post-item__cover",
+    "width": "1200",
+    "height": "684"
+  },
+  {
+    "src": "https://agirls.aottercdn.com/media/fc53bc2f-9f6f-4262-b5c2-3edd061f1dbd.jpg",
+    "loading": "lazy",
+    "class": "ag-post-item__cover",
+    "width": "1200",
+    "height": "684"
+  },
+  {
+    "src": "https://agirls.aottercdn.com/media/2bff7bca-dc5e-4dd9-9e75-0dfc1cb6a864.jpg",
+    "loading": "lazy",
+    "class": "ag-post-item__cover",
+    "width": "1200",
+    "height": "684"
+  },
+  {
+    "src": "https://agirls.aottercdn.com/media/f20517c5-2d53-4034-9d41-d68588759220.jpg",
+    "loading": "lazy",
+    "class": "ag-post-item__cover",
+    "width": "1200",
+    "height": "684"
+  },
+  {
+    "src": "https://agirls.aottercdn.com/media/a7f1a62f-931b-44ba-b9df-639cf3868933.jpg",
+    "loading": "lazy",
+    "class": "ag-post-item__cover",
+    "width": "1200",
+    "height": "684"
+  }
+]

@@ -1,0 +1,21 @@
+Switching the home screen
+This player has two home screens.
+Android Home screen: Default Android Home screen
+[WALKMAN Home] screen: Home screen customized for music playback
+Set either of the two home screens as the main home screen. The main home screen appears when you tap the (home) button.
+The [WALKMAN Home] screen features the Music player widget so that you can control music playback without launching an app. We recommend setting the [WALKMAN Home] screen as the main home screen.
+You can also switch between the two home screens at any time.
+Set the main home screen
+On the home screen, hold down an empty space.
+Tap [Home settings] － [Select Home screen].
+Select the desired home screen, and then tap [OK].
+Hint
+If you select [Page 2 (WALKMAN® Home)] for [Select Home screen] during the initial setup, the [WALKMAN Home] screen will be set as the main home screen.
+Switch the home screen
+Swipe the home screen to the left or right.
+The contents of the Help Guide may be subject to change without notice due to updates to the product's specifications.
+Go to Page Top
+Related Topic
+Configuring the initial setup
+[WALKMAN Home] screen
+Android Home screen

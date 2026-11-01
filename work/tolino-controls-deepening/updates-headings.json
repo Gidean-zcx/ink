@@ -1,0 +1,49 @@
+[
+  {
+    "title": "Products",
+    "tag": "h2"
+  },
+  {
+    "title": "Advantages",
+    "tag": "h2"
+  },
+  {
+    "title": "Current Category: Service",
+    "tag": "h2"
+  },
+  {
+    "title": "Manuals | eReader I tab",
+    "tag": "h3"
+  },
+  {
+    "title": "FAQ",
+    "tag": "h3"
+  },
+  {
+    "title": "FAQ | eReader & accessories",
+    "tag": "h4"
+  },
+  {
+    "title": "Software updates for tolino eReaders",
+    "tag": "h1",
+    "class": "entry-title"
+  },
+  {
+    "title": "Update your tolino eReader manually",
+    "tag": "h2",
+    "class": "wp-block-heading has-text-align-center"
+  },
+  {
+    "title": "*Exception: manual software update for the tolino shine color and tolino shine (5th generation)",
+    "tag": "h4",
+    "class": "wp-block-heading has-text-align-center has-tolino-primary-color has-text-color has-link-color wp-elements-b6a53624740c09f261428d40acb2a8fb"
+  },
+  {
+    "title": "Download tolino app from the App Store:",
+    "tag": "h3"
+  },
+  {
+    "title": "Keep in touch with tolino:",
+    "tag": "h3"
+  }
+]

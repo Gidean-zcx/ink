@@ -1,0 +1,64 @@
+
+
+
+Plenty! Every Yoto player stores hundreds of hours of audio for offline listening, and when it’s full, your player quietly makes room by itself. Everything always stays safe in your Yoto App library. 
+
+
+How much audio can my Yoto player store for offline listening? 
+
+
+Storage capacity depends on the model you own. 
+Not sure where to look? See: Which Yoto do I have?
+
+Yoto model
+Built-in storage
+Estimated audio capacity* 
+
+Yoto Player and Yoto Mini (4th Generation)
+64 GB
+At least 1,000 hours
+
+Yoto Player (3rd Generation)
+32 GB
+Around 700 hours
+
+Yoto Mini (2024 Edition) and Yoto Mini (2021–2023 Edition)
+16 GB or 32 GB - one quick check below
+Around 250 or 700 hours
+
+Yoto Player (2nd Generation)
+16GB 
+Around 350 hours
+*Estimates based on spoken-word audio, like Roald Dahl or Julia Donaldson stories. Music may take up more space, so a music-heavy library may store fewer hours
+
+
+Check the storage on an earlier Yoto Mini 
+Turn it over and look at the serial number on the base:
+
+16 GB - the serial number starts with 5 or a lower number, and doesn't end in -H, -H7 or -U.
+
+32 GB - everything else (starts with 6 or higher, starts with letters, or ends in -H, -H7 or -U).
+
+
+When the storage is full
+Nothing you’ll notice - and don’t worry, it won’t be “lost” from your library: 
+
+Your player automatically removes the audio that hasn’t been played for the longest time, to make room for new downloads of more popular content. 
+
+Removed audio stays in your Yoto App library. To get it back on the player, just play it while your Yoto is online, it downloads again automatically.
+
+
+Check storage and downloads
+In the Yoto App, go to Settings, select your player and open Audio Download Status. If your model does not show a storage total, use the title list to check which audio is ready offline.
+
+
+
+
+
+*
+
+
+
+
+
+

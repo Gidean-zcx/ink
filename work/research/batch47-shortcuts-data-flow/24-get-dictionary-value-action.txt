@@ -1,0 +1,5 @@
+Handling dictionaries using the Get Dictionary Value action in Shortcuts on iPhone or iPad
+To get the value for a particular key in a dictionary, you can use the Get Dictionary Value action and specify the name of the key. To get an object’s phone value, add the Get Dictionary Value action and set it to phone.
+The latitude and longitude for each object is stored in address as a dictionary called geo. Using dot notation, you can access data nested multiple levels deep in a dictionary.
+For information on working with multiple items in a dictionary, see Handling lists in Shortcuts on iPhone or iPad.
+Not all apps, services, and content are available in all countries or regions.

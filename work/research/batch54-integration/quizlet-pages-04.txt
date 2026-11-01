@@ -1,0 +1,286 @@
+Rating a set – Quizlet Help Center (https://help.quizlet.com/hc/en-us/articles/360038516272-Rating-a-set)
+citeturn1093view0 [wordlim: 200] Crawled: 4 days ago; Content type: text/html; Source: click({"ref_id":"turn1089view0","id":28}); Total lines: 67
+L0: 【0†iframe†www.googletagmanager.com】
+L1: 
+L2: 【1†Help center†quizlet.zendesk.com】
+L3: 
+L4: Topics
+L5: 
+L6: Popular Articles
+L7: 
+L8: 【2†Resending a confirmation message】 【3†Changing your username】 【4†Changing your password】 【5†Finding flashcard sets】 【6†Finding your teacher's class】 【7†Browser and device compatibility】
+L9: 
+L10: [Input][Input: Search]
+L11: 
+L12: 【8†Image】   【8†Username】
+L13: # Rating a set
+L14: 
+L15: You can rate a set at any time. The set creator can see the overall ratings on a set by opening the set, and they are not notified when you leave a rating. Currently, ratings are available only on the website.
+L16: 
+L17:   1. 【9†Log in†quizlet.com】 to your account.
+L18:   2. Open the set.
+L19:   3. Select Leave a rating.
+L20:   4. Rate the set.
+L21:   5. Select Submit.
+L22: You can 【10†change the rating】 at any time.
+L23: Rating a set helps students and teachers more easily find high-quality study materials to help them achieve their learning goals.
+L24: ### Related Articles
+L25: 
+L26:   * 【11†Create flashcard sets directly in Claude】
+L27:   * 【12†Studying with Study Groups】
+L28:   * 【13†Creating study sets with Smart Assist】
+L29:   * 【14†Becoming a top creator on Quizlet】
+L30:   * 【15†Studying with Study Guides】
+L31:   * 【16†What are flashcard sets?】
+L32:   * 【17†Creating flashcard sets】
+L33:   * 【18†Adding images to sets from the free gallery】
+L34:   * 【19†Adding your own images to sets】
+L35:   * 【20†Recording custom audio】
+L36:   * 【21†See more】
+L37: ### Can't find what you're looking for?
+L38: 
+L39: 【22†Ask a question】
+L40: 
+L41: Was this article helpful?
+L42: 
+L43: [Button: Yes] [Button: No]
+L44: 
+L45: ##### About us
+L46: 
+L47: 【23†About Quizlet†quizlet.com】 【24†How Quizlet works†quizlet.com】 【25†Careers†quizlet.com】 【26†Advertise with us†quizlet.com】 【27†Get the app†quizlet.com】
+L48: ##### For students
+L49: 
+L50: 【28†Flashcards†quizlet.com】 【29†Test†quizlet.com】 【30†Learn†quizlet.com】 【31†Solutions†quizlet.com】 【32†Modern Learning Lab†quizlet.com】 【33†Quizlet Plus†quizlet.com】 【34†Study Guides†quizlet.com】 【35†Pomodoro timer†quizlet.com】
+L51: 
+L52: ##### For Teachers
+L53: 
+L54: 【36†Live†quizlet.com】 【37†Blog†quizlet.com】 【38†Be the Change†quizlet.com】 【39†Quizlet Plus for teachers†quizlet.com】
+L55: ##### Resources
+L56: 
+L57: 【40†Help center†quizlet.com】 【41†Sign up†quizlet.com】 【42†Honor code†quizlet.com】 【43†Community guidelines†quizlet.com】 【44†Accessibility statement†quizlet.com】 【45†Privacy†quizlet.com】 【46†Your Privacy/Cookies Choices†quizlet.com】 【47†Terms†quizlet.com】 【48†Ad and Cookie Policy†quizlet.com】 【49†Interest-Based Advertising†quizlet.com】 【50†Quizlet for Schools†quizlet.com】 【51†Parents†quizlet.com】
+L58: 
+L59: ##### Language
+L60: 
+L61: English (United States)
+L62: 
+L63: 【52†Image】 【53†Get the app†get.quizlet.com】
+L64: ##### Get the app
+L65: 
+L66: © Quizlet Inc.
+--------------------------------------------------------------------------------
+Changing a rating on a set – Quizlet Help Center (https://help.quizlet.com/hc/en-us/articles/360038900411-Changing-a-rating-on-a-set)
+citeturn1093view1 [wordlim: 200] Crawled: 3 weeks ago; Content type: text/html; Source: click({"ref_id":"turn1089view0","id":29}); Total lines: 66
+L0: 【0†iframe†www.googletagmanager.com】
+L1: 
+L2: 【1†Help center†quizlet.zendesk.com】
+L3: 
+L4: Topics
+L5: 
+L6: Popular Articles
+L7: 
+L8: 【2†Resending a confirmation message】 【3†Changing your username】 【4†Changing your password】 【5†Finding flashcard sets】 【6†Finding your teacher's class】 【7†Browser and device compatibility】
+L9: 
+L10: [Input][Input: Search]
+L11: 
+L12: 【8†Image】   【8†Username】
+L13: # Changing a rating on a set
+L14: 
+L15: Once you've left a rating on a set, you can't delete it, but you can edit the rating at any time. The set creator can see the overall ratings on a set by opening the set, and they are not notified when you leave a rating. Currently, ratings are available only on the website.
+L16: 
+L17:   1. 【9†Log in†quizlet.com】 to your account.
+L18:   2. Open the set.
+L19:   3. Select the rating.
+L20:   4. Edit your rating.
+L21:   5. Select Submit.
+L22: Rating a set helps students and teachers more easily find high-quality study materials to help them achieve their learning goals.
+L23: ### Related Articles
+L24: 
+L25:   * 【10†Create flashcard sets directly in Claude】
+L26:   * 【11†Studying with Study Groups】
+L27:   * 【12†Creating study sets with Smart Assist】
+L28:   * 【13†Becoming a top creator on Quizlet】
+L29:   * 【14†Studying with Study Guides】
+L30:   * 【15†What are flashcard sets?】
+L31:   * 【16†Creating flashcard sets】
+L32:   * 【17†Adding images to sets from the free gallery】
+L33:   * 【18†Adding your own images to sets】
+L34:   * 【19†Recording custom audio】
+L35:   * 【20†See more】
+L36: ### Can't find what you're looking for?
+L37: 
+L38: 【21†Ask a question】
+L39: 
+L40: Was this article helpful?
+L41: 
+L42: [Button: Yes] [Button: No]
+L43: 
+L44: ##### About us
+L45: 
+L46: 【22†About Quizlet†quizlet.com】 【23†How Quizlet works†quizlet.com】 【24†Careers†quizlet.com】 【25†Advertise with us†quizlet.com】 【26†Get the app†quizlet.com】
+L47: ##### For students
+L48: 
+L49: 【27†Flashcards†quizlet.com】 【28†Test†quizlet.com】 【29†Learn†quizlet.com】 【30†Solutions†quizlet.com】 【31†Modern Learning Lab†quizlet.com】 【32†Quizlet Plus†quizlet.com】 【33†Study Guides†quizlet.com】 【34†Pomodoro timer†quizlet.com】
+L50: 
+L51: ##### For Teachers
+L52: 
+L53: 【35†Live†quizlet.com】 【36†Blog†quizlet.com】 【37†Be the Change†quizlet.com】 【38†Quizlet Plus for teachers†quizlet.com】
+L54: ##### Resources
+L55: 
+L56: 【39†Help center†quizlet.com】 【40†Sign up†quizlet.com】 【41†Honor code†quizlet.com】 【42†Community guidelines†quizlet.com】 【43†Accessibility statement†quizlet.com】 【44†Privacy†quizlet.com】 【45†Your Privacy/Cookies Choices†quizlet.com】 【46†Terms†quizlet.com】 【47†Ad and Cookie Policy†quizlet.com】 【48†Interest-Based Advertising†quizlet.com】 【49†Quizlet for Schools†quizlet.com】 【50†Parents†quizlet.com】
+L57: 
+L58: ##### Language
+L59: 
+L60: English (United States)
+L61: 
+L62: 【51†Image】 【52†Get the app†get.quizlet.com】
+L63: ##### Get the app
+L64: 
+L65: © Quizlet Inc.
+--------------------------------------------------------------------------------
+Viewing your sets' ratings – Quizlet Help Center (https://help.quizlet.com/hc/en-us/articles/360038900751-Viewing-your-sets-ratings)
+citeturn1093view2 [wordlim: 200] Crawled: 3 weeks ago; Content type: text/html; Source: click({"ref_id":"turn1089view0","id":30}); Total lines: 64
+L0: 【0†iframe†www.googletagmanager.com】
+L1: 
+L2: 【1†Help center†quizlet.zendesk.com】
+L3: 
+L4: Topics
+L5: 
+L6: Popular Articles
+L7: 
+L8: 【2†Resending a confirmation message】 【3†Changing your username】 【4†Changing your password】 【5†Finding flashcard sets】 【6†Finding your teacher's class】 【7†Browser and device compatibility】
+L9: 
+L10: [Input][Input: Search]
+L11: 
+L12: 【8†Image】   【8†Username】
+L13: # Viewing your sets' ratings
+L14: 
+L15: If someone rates a set you've created, you can see its overall rating by opening the set. You won't get a notification if someone rates your set.
+L16: 
+L17:   1. 【9†Log in†quizlet.com】 to your account.
+L18:   2. Open the set.
+L19: 
+L20: Ratings are currently available only on the website, and it's not possible to turn ratings off at this time. Sets with ratings help students and teachers more easily find high-quality study materials to help them achieve their learning goals.
+L21: ### Related Articles
+L22: 
+L23:   * 【10†Create flashcard sets directly in Claude】
+L24:   * 【11†Studying with Study Groups】
+L25:   * 【12†Creating study sets with Smart Assist】
+L26:   * 【13†Becoming a top creator on Quizlet】
+L27:   * 【14†Studying with Study Guides】
+L28:   * 【15†What are flashcard sets?】
+L29:   * 【16†Creating flashcard sets】
+L30:   * 【17†Adding images to sets from the free gallery】
+L31:   * 【18†Adding your own images to sets】
+L32:   * 【19†Recording custom audio】
+L33:   * 【20†See more】
+L34: ### Can't find what you're looking for?
+L35: 
+L36: 【21†Ask a question】
+L37: 
+L38: Was this article helpful?
+L39: 
+L40: [Button: Yes] [Button: No]
+L41: 
+L42: ##### About us
+L43: 
+L44: 【22†About Quizlet†quizlet.com】 【23†How Quizlet works†quizlet.com】 【24†Careers†quizlet.com】 【25†Advertise with us†quizlet.com】 【26†Get the app†quizlet.com】
+L45: ##### For students
+L46: 
+L47: 【27†Flashcards†quizlet.com】 【28†Test†quizlet.com】 【29†Learn†quizlet.com】 【30†Solutions†quizlet.com】 【31†Modern Learning Lab†quizlet.com】 【32†Quizlet Plus†quizlet.com】 【33†Study Guides†quizlet.com】 【34†Pomodoro timer†quizlet.com】
+L48: 
+L49: ##### For Teachers
+L50: 
+L51: 【35†Live†quizlet.com】 【36†Blog†quizlet.com】 【37†Be the Change†quizlet.com】 【38†Quizlet Plus for teachers†quizlet.com】
+L52: ##### Resources
+L53: 
+L54: 【39†Help center†quizlet.com】 【40†Sign up†quizlet.com】 【41†Honor code†quizlet.com】 【42†Community guidelines†quizlet.com】 【43†Accessibility statement†quizlet.com】 【44†Privacy†quizlet.com】 【45†Your Privacy/Cookies Choices†quizlet.com】 【46†Terms†quizlet.com】 【47†Ad and Cookie Policy†quizlet.com】 【48†Interest-Based Advertising†quizlet.com】 【49†Quizlet for Schools†quizlet.com】 【50†Parents†quizlet.com】
+L55: 
+L56: ##### Language
+L57: 
+L58: English (United States)
+L59: 
+L60: 【51†Image】 【52†Get the app†get.quizlet.com】
+L61: ##### Get the app
+L62: 
+L63: © Quizlet Inc.
+--------------------------------------------------------------------------------
+What are flashcard sets? – Quizlet Help Center (https://help.quizlet.com/hc/en-us/articles/360032006352-What-are-flashcard-sets)
+citeturn1093view3 [wordlim: 200] Crawled: today; Content type: text/html; Source: click({"ref_id":"turn1089view0","id":14}); Total lines: 77
+L0: 【0†iframe†www.googletagmanager.com】
+L1: 
+L2: 【1†Help center†quizlet.zendesk.com】
+L3: 
+L4: Topics
+L5: 
+L6: Popular Articles
+L7: 
+L8: 【2†Resending a confirmation message】 【3†Changing your username】 【4†Changing your password】 【5†Finding flashcard sets】 【6†Finding your teacher's class】 【7†Browser and device compatibility】
+L9: 
+L10: [Input][Input: Search]
+L11: 
+L12: 【8†Image】   【8†Username】
+L13: # What are flashcard sets?
+L14: 
+L15: A flashcard set is a list of terms paired with their matching definitions or a set of questions with their matching answers. You can study this kind of content using Quizlet's activities.
+L16: 
+L17: Flashcard sets can include words, images, diagrams, and audio.
+L18: 
+L19: There are millions of flashcard sets you can search for and study with Quizlet. You can also 【9†create your own flashcard sets】 and 【10†share them with others】.
+L20: 
+L21: Diagram sets
+L22: Diagram sets include an image labeled with terms and optional definitions. These sets can help you study parts of an image, map, or diagram. See how you can 【11†create a diagram set】.
+L23: 
+L24: Diagram sets are available for 【12†Quizlet Plus†quizlet.com】 and 【13†Quizlet Plus for teachers†quizlet.com】 subscribers.
+L25: 
+L26: Studying on Quizlet
+L27: 
+L28: You can study many different ways with Quizlet! Activities make reviewing any subject engaging and effective. Here's a quick look at all the ways you can 【14†study with Quizlet】.
+L29: You can 【12†subscribe any time†quizlet.com】 to get more special features like Study Guides, Learn and Test, Expert Solutions, offline studying and scanning materials to create sets quickly.
+L30: 
+L31: You can study anywhere using the 【15†Quizlet website】, 【16†iOS app†quizlet.app.link】, or 【17†Android app†quizlet.app.link】.
+L32: 
+L33: Quizlet is also a 【13†great resource for teachers†quizlet.com】 looking for new ways to engage students and encourage them to study more often.
+L34: ### Related Articles
+L35: 
+L36:   * 【18†Create flashcard sets directly in Claude】
+L37:   * 【19†Studying with Study Groups】
+L38:   * 【20†Creating study sets with Smart Assist】
+L39:   * 【21†Becoming a top creator on Quizlet】
+L40:   * 【22†Studying with Study Guides】
+L41:   * 【23†What are flashcard sets?】
+L42:   * 【24†Creating flashcard sets】
+L43:   * 【25†Adding images to sets from the free gallery】
+L44:   * 【26†Adding your own images to sets】
+L45:   * 【27†Recording custom audio】
+L46:   * 【28†See more】
+L47: ### Can't find what you're looking for?
+L48: 
+L49: 【29†Ask a question】
+L50: 
+L51: Was this article helpful?
+L52: 
+L53: [Button: Yes] [Button: No]
+L54: 
+L55: ##### About us
+L56: 
+L57: 【30†About Quizlet†quizlet.com】 【31†How Quizlet works†quizlet.com】 【32†Careers†quizlet.com】 【33†Advertise with us†quizlet.com】 【34†Get the app†quizlet.com】
+L58: ##### For students
+L59: 
+L60: 【35†Flashcards†quizlet.com】 【36†Test†quizlet.com】 【37†Learn†quizlet.com】 【38†Solutions†quizlet.com】 【39†Modern Learning Lab†quizlet.com】 【40†Quizlet Plus†quizlet.com】 【41†Study Guides†quizlet.com】 【42†Pomodoro timer†quizlet.com】
+L61: 
+L62: ##### For Teachers
+L63: 
+L64: 【43†Live†quizlet.com】 【44†Blog†quizlet.com】 【45†Be the Change†quizlet.com】 【46†Quizlet Plus for teachers†quizlet.com】
+L65: ##### Resources
+L66: 
+L67: 【47†Help center†quizlet.com】 【48†Sign up†quizlet.com】 【49†Honor code†quizlet.com】 【50†Community guidelines†quizlet.com】 【51†Accessibility statement†quizlet.com】 【52†Privacy†quizlet.com】 【53†Your Privacy/Cookies Choices†quizlet.com】 【54†Terms†quizlet.com】 【55†Ad and Cookie Policy†quizlet.com】 【56†Interest-Based Advertising†quizlet.com】 【57†Quizlet for Schools†quizlet.com】 【58†Parents†quizlet.com】
+L68: 
+L69: ##### Language
+L70: 
+L71: English (United States)
+L72: 
+L73: 【59†Image】 【60†Get the app†get.quizlet.com】
+L74: ##### Get the app
+L75: 
+L76: © Quizlet Inc.
+

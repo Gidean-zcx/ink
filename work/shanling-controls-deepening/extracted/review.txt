@@ -1,0 +1,493 @@
+Shanling M1 Plus Review: A Proper Budget DAP - HiFi Oasis
+Skip to content
+Bridging the gap between audiophiles and casual listeners.
+Follow
+X (opens in a new tab)
+YouTube (opens in a new tab)
+Instagram (opens in a new tab)
+Reddit (opens in a new tab)
+Facebook (opens in a new tab)
+HiFi Oasis
+Reviews
+Wired Headphones
+Wireless Headphones
+IEMs (In Ear Monitors)
+True Wireless Earbuds
+DAPs (Digital Audio Players)
+DACs, Amps, Combos
+Portable DACs & Amps
+Accessories/Other Audio Gear
+Media Streamers
+CD Players
+App Reviews
+Speakers
+Comparisons
+Revisits
+Buying Advice
+Guides
+News
+Contact Us
+Search
+DAP Database
+DAPs
+HiFi-Dawson on YouTube
+Subscribe
+Dark mode
+Menu
+Search the site
+Search
+Close search
+HiFi Oasis
+Close menu
+Search the site
+Search
+DAP Database
+YouTube
+Reviews
+Wired Headphones
+Wireless Headphones
+IEMs (In Ear Monitors)
+True Wireless Earbuds
+DAPs (Digital Audio Players)
+DACs, Amps, Combos
+Portable DACs & Amps
+Accessories/Other Audio Gear
+Media Streamers
+CD Players
+App Reviews
+Speakers
+Comparisons
+Revisits
+Buying Advice
+Guides
+News
+Contact Us
+Social Links
+Twitter
+YouTube
+Instagram
+Reddit
+Facebook
+Categories
+Categories
+Select Category
+Advice  (31)
+Comparison  (4)
+Guide  (12)
+News  (52)
+Personal  (2)
+Reviews  (189)
+Accessory Reviews  (1)
+Amp Reviews  (1)
+App Reviews  (1)
+CD Player Reviews  (5)
+DAC Reviews  (2)
+DAC/Amp Reviews  (13)
+Digital Audio Player Reviews  (24)
+Headphone Reviews  (21)
+IEMs (In Ear Monitors)  (47)
+Media Streamer  (5)
+Portable DACs & Amps  (25)
+Round-Up  (2)
+Speakers  (7)
+Wireless Earbud Reviews  (22)
+Wireless Headphone Reviews  (24)
+Revisit  (1)
+Shows  (2)
+Uncategorized  (1)
+Search
+Search
+Recent Articles
+News
+Uncategorized
+Esprit Brings Its Generation 10 Cable Lineup to the U.S.
+October 21, 2026
+News
+Fosi Audio Launches DAP Neo, a Compact Digital Audio Player Starting at $79.99
+October 10, 2026
+News
+SteelSeries and KontrolFreek Unveil New Fortnite Gear Collection
+October 6, 2026
+X (opens in a new tab)
+YouTube (opens in a new tab)
+Instagram (opens in a new tab)
+Reddit (opens in a new tab)
+Facebook (opens in a new tab)
+Home
+-
+Shanling M1 Plus Review: A Proper Budget DAP
+Digital Audio Player Reviews
+Shanling M1 Plus Review: A Proper Budget DAP
+The Shanling M1 Plus is a portable yet powerful DAP that is packed with features, has excellent sound quality, and robust music playback capabilities, all for under $200.
+HiFi-Dawson
+September 11, 2025
+· Updated
+May 11, 2026
+·
+16 min read
+9/10
+Amazing
+review score
+Jump to verdict
+Total
+0
+Shares
+0
+0
+On this page
+Key Specifications
+1
+/13
+Key Specifications
+In the Box
+Design & Build Quality
+Leather Case
+MTouch OS and UI
+Bluetooth and Wi-Fi Performance
+Battery Life
+Syncing Music and Playlists
+Overall User Experience
+Output Power
+Sound Quality
+Final Thoughts
+Verdict
+Disclosure:
+The Shanling M1 Plus was purchased by me, thanks to readers like you supporting this site. HiFi Oasis only uses affiliate links to generate revenue, no ads or sponsored content.
+The Shanling M1 Plus is a portable, non-Android DAP (Digital Audio Player) that sells for $199 USD. It has an aluminum body, 3.5mm SE and 4.4mm balanced outputs with a good amount of output power, Bluetooth 5.2 with support for sending and receiving, and USB DAC functionality, just to name a few features.
+The M1 Plus is meant to allow you to focus solely on music playback, removing any complexity and distractions from DAPs that operate more like a smartphone. It uses Shanling’s own MTouch OS, so if you don’t find HiByOS devices appealing, this might be the right one for you.
+As usual in my DAP reviews, I’ll take you through everything from the overall design and build, software features and UI, Bluetooth and WiFi performance, battery life, sound quality, to how it performs in everyday use and situations. So let’s get into it.
+Key Specifications
+Product Page:
+https://en.shanling.com/product/456
+MSRP:
+$199 USD
+Core Processor
+: Ingenic X2000
+Internal Components
+:
+DAC
+: ESS ESS9069Q
+Amps
+: 2x SGM8262
+RAM
+: Unknown
+Storage
+: MicroSD card slot (supports up to 2TB)
+OS:
+MTouch OS
+Display
+: 3.2 inch, 320×480 touchscreen
+Connectivity
+:
+3.5mm SE (195mW @ 32 ohm)
+4.4mm Balanced (660mW @ 32 ohm)
+USB-C for charging and data transfer (USB 2.0), supports OTG
+Bluetooth 5.2 (SBC, AAC, aptX, aptX HD, LDAC)
+WiFi 4, 2.4GHz and 5GHz
+Battery
+:
+2100mAh (Up to 12.5 hours playback)
+Supported Sample Rates and Formats:
+Up to 32bit 768kHz PCM (USB DAC: 32-bit/384kHz, DSD 256)
+DSD512
+File type support: iso, dxd, ape, flac, wav, aiff, alf, dts,mp3, wma, aac, ogg, alac, mp2, m4a, ac3, m3u, m3u8, opus
+Notable Features
+:
+Two-way Bluetooth functionality
+Volume wheel with LED
+Combined 3.5mm Coaxial and SPDIF out
+USB DAC capability
+AirPlay (receive only), DLNA, SyncLink support
+Eddict Player Companion App
+Tidal streaming support
+Dimensions
+:
+86mm x 61mm x 17mm
+Weight: 116g
+In the Box
+Shanling M1 Plus
+Screen protector
+USB-A to USB-C cable
+Manual
+You don’t get anything extra or special included with the Shanling M1 Plus. Even the screen protector isn’t pre-applied. Brands like HiBy and FiiO will pre-apply the screen protector for you, as well as include a silicone case for some basic protection. This adds incredible value, so I have to say it’s a little disappointing that Shanling didn’t go that route.
+Design & Build Quality
+The Shanling M1 Plus has one of the more interesting designs in the DAP space. It features an angular shape that gives it a distinct look. If you look at it from the bottom, it’s almost as if it is slanting to the left due to where the edges are. This adds some ergonomics too, making it easy to hold (if you’re right-handed) as the buttons and volume wheel are all in places where your thumb and fingers naturally land.
+The M1 Plus is made out of aluminum, with on the front and back. It feels phenomenally premium and solid. No creaking sounds when using it, and no visual gaps in the construction of it. At this price, it’s one of the best-built and best-feeling DAPs I’ve ever used. The whole aesthetic is one of class and professionalism.
+On the right side is the volume wheel, which seems to be digital and not analog. It has distinct feedback with every turn, which is a really nice addition. It doubles as the power button as well, so it can be pressed in to either power on/off the device, or simply to lock/unlock the screen. It feels great to use, and there’s no looseness or play with the button either.  An indicator light, or “atmosphere lamp”, is located behind the wheel.
+On the very top are the 3.5mm SE and 4.4mm balanced outputs. The bottom features the microSD card slot and the USB-C connector. The left side is where the playback buttons are located. The top button is for the previous track, the middle button is Play/Pause, and the bottom button is for the next track. The middle button is slighter thicker than the other two to help give you tactile feedback as to which button you are pressing. Ultimately, they all feel the same to me, but three buttons are easy to memorize, so I have no issue discerning them when using them without looking. The buttons do not press in easily, which I appreciate as it prevents any accidental activations. They also have a nice, solid click to them.
+The front of the M1 Plus features a 3.2-inch LCD touch screen with a resolution of 320×480, covered by tempered glass. It takes up most of the front of the device, though the bezels are quite large. The touch screen is pretty responsive and even has a single-tap-to-wake feature that can be enabled.
+The back of the device is also tempered glass and has all of the branding on it, which I have to say is rather subtle and not in your face. It helps the M1 Plus maintain its professional look.
+Here are some comparisons with the HiBy R3Pro II, FiiO JM21, Apple iPod Classic 7
+th
+gen, and the Microsoft Zune, to give you an idea of the size and profile.
+Leather Case
+There is a leather case available for purchase, which does give you some excellent protection. I ordered the black one, and it looks and feels very nice. The cutouts for the connections are very accessible, and the material has enough texture to give you a soft yet stable grip on the device. Personally, I do think it’s worth the price, adding a premium element to an already premium feeling device.
+MTouch OS and UI
+The Shanling M1 Plus uses Shanling’s in-house developed OS. It’s a nice change from the many HiByOS devices that are out there, as well as offering an option for those not wanting to with a DAP running Android. This is powered by the Ingenic X2000 platform, which is optimized for power efficiency. It’s not a powerhouse, but it also doesn’t need to be, as this device is purpose-built for music playback.
+You cannot install any applications or plugins on the M1 Plus; you only have what is provided by Shanling. The interface itself is mostly touch-based. There are icons on the screen that can be customized in the sense that they can be removed from the screen and then re-added to change their order.  This is done by swiping all the way to the right until a menu appears, where you can simply select or deselect an item. Re-selecting an item will then change the order they are presented on the screen, with an option to reset the interface back to the default state located at the very bottom.
+I wish there were an easier way to change the icon order, as it can be cumbersome to get it the way you want it. Still, it is nice to be able to at least remove things you don’t want, which is not an option with HiByOS devices. I’ll leave some pictures of the interface, as well as a video of it in action, at the bottom of this section since I won’t be explicitly covering everything in the OS. This will already be extremely lengthy anyway, but I’ll try to cover the most important aspects.
+Swiping down from the top of the screen brings down a quick menu system that has all of the essential options, like WiFi and Bluetooth, Gain control, brightness control, and buttons for Playback Settings and System Settings.
+At the very bottom of the main screen is the Now Playing bar. Tapping it brings you to the Now Playing Screen, which shows the album art, song name, artist, track position, and scrubbing bar, time elapsed, and total time. You can also favorite the track, or press the three dots to get to options like AB repeat, playback speed, adding to a playlist, Downloading Cover and lyrics (when connected to WiFi). Swiping left on the album art will show you lyrics, if any, and swiping left again shows the file metadata properties.
+Looking at the Artist app, one thing I do appreciate is that you can sort by either Artist or Album Artist (see my
+HiBy R3Pro II for my rant about this
+). I always use the album artist tag for sorting my library, so this option is greatly appreciated. Pressing the icon that looks like a person at the top right of the screen will toggle between the options. The icon next to it is to mass select artists for adding to playlists, favorites, or deleting them entirely. The final icon on the right with vertical lines will take you to the Now Playing screen. It is present on essentially every screen in the OS, with the exception of the home screen, and I’ve come to really like this as it allows me to quickly jump to what is currently playing with just one tap. The only things missing here are the ability to scroll and select a letter to scroll directly to, as well as a search function.
+When you select an artist, all of their albums are displayed in alphabetical order, which in 2025 makes no sense to me, especially when you have metadata you can read from to sort it properly. This is a recurring issue even for some Android apps. At the very bottom of the listed albums is the ability to play all songs by the artist.
+Playlist stores all your playlists and allows you to create, import, and even export them to the microSD card. Playlists are sorted in the order that they are created, so if you are importing them from an M3U file, they will be imported alphabetically. Any new playlists imported or created after this will show up at the bottom, with no way to reorganize them (unless you export them, then re-import them). This will probably annoy those with lots of playlists or those with OCD. You also cannot search for a playlist, but you can search for a track, album, or artist within a playlist.
+Playback Setting is anything related to music playback, like Gain control, filter selection, and EQ. For filters, there is no NOS mode (non-oversampling), but here is the list of included filters:
+Minimum phase
+Linear phase fast roll-off apodizing
+Linear phase fast roll-off filter
+Linear phase fast roll-off ripple
+Linear phase slow roll-off filter
+Minimum phase fast roll-off filter
+Minimum phase slow roll-off filter
+Minimum phase slow roll-off low dispersion
+The EQ is a 10-band equalizer with fixed frequencies ranging from 32Hz to 16kHz. There are three custom slots and 8 built-in profiles. It also only applies to files with a sample rate below 48kHz.
+There are Various Play Modes (List Play, Repeat Track, Shuffle, Repeat All), and you can set the max and default volumes, as well as set the volume memory to use the last used volume. There are options to set the USB DAC to fixed or variable volume output, memory playback (Off, Track, and Position), Gapless playback support, ReplayGain (Off, Audio, Album), enabling the digital output function, Channel Balance, Folder Album Cover (on, off), and Folder Skip (on, off). There’s also an option to enable Enlarged Album Art after 10 seconds of playback.
+System Settings are pretty straightforward. Here you have things like the language selection, Wireless and Bluetooth options, SyncLink options, Network Services support (DLNA AirPlay, WiFi file transfer), and Display settings. From the Display Settings, you can modify the “Atmosphere Lamp”, which is located behind the volume wheel, to display a green or blue light, turn off when the screen is off, or simply disable it altogether.
+There are Idle settings such as the Sleep Timer, Auto-standby (after 5 minutes of idle, the device goes into a standby mode), and Auto-Shutdown. There is a vehicle mode that will enable/disable the USB port when it detects power (like when a vehicle starts then stops), a “Tap the Screen to Activate Screen” mode (one tap on the screen wakes it), and a Button lock to lock the buttons when the screen is off (Lock Volume Only, Lock Buttons Only, Lock Volume and Buttons).
+You also have a Screen Rotation option, Theme selection (Simplified color or Pop color, there’s not a huge difference, honestly), and options for performing System Updates (OTA or from microSD card), formatting the microSD card, and resetting the device entirely.
+The M1 Plus has Tidal support, which Shanling worked directly with Tidal to allow for this integration. It works well, mostly. Sometimes there are some network issues, but the majority of the time it was fine to use. It supports streaming only, no downloads, but does support the full range of quality modes available on Tidal. The one thing missing, whether it is a bug or by design, is that it doesn’t support gapless playback with Tidal.
+Folder view is pretty self-explanatory. The reason this exists is that some people organize their libraries by folders following their own logic/workflow. The real reason this might be necessary for some, though, is that the M1 Plus (well, all MTouch OS devices) only supports indexing of up to 20,000 tracks. If you have more than that, you need to use the Folder browser to see them. And it works fine, there’s even a search option in it.
+CD Ripper is interesting. It supports direct integration with Shanling’s CR60 desktop CD player for ripping CDs directly to the DAP, which is pretty cool.
+There are a few other “apps”, which you can see in the pictures and embedded video below. I feel Shanling includes enough options that should appeal to most music listeners, and in my opinion, they go above and beyond what companies like HiBy offer with their HiByOS.
+Bluetooth and Wi-Fi Performance
+Bluetooth performance is, in a word, excellent. The M1 Plus offers SBC (and SBC HQ?), AAC, aptX, aptX HD, and LDAC codecs. The LDAC codec is broken into three categories: LDAC Connection (auto), LDAC Standard (660kbps), and LDAC HQ (990kbps). The M1 Plus is one of the few devices that have no issues with the highest bitrate LDAC codec. I was able to use this setting with the GO pod Max, Sony WH-1000XM5, SoundPeats Air 5 Pro, and Roseselsa EarFree i5, all without issue. I even used my Qudelix 5K with it to verify the bitrate. It’s one of the few DAPs that I have never had any performance issues with Bluetooth, the other being the FiiO JM21 (though it took some time for FiiO to resolve some issues, now it’s perfect).
+The M1 Plus supports two-way Bluetooth, meaning not only can it connect to headphones, TWS earbuds, and Bluetooth speakers to output audio, it can also act as a portable Bluetooth DAC (not at the same time, obviously). Meaning, you can pair it with a laptop, smartphone, or another DAP via Bluetooth, and send audio to it so you can listen via wired IEMs or headphones. Very cool feature that works well. I tested this with my Samsung Galaxy Fold 7 via LDAC, and it performed perfectly. You can even control playback from the M1 Plus.
+The M1 Plus supports WiFi 4 with 2.4GHz and 5GHz bands (max connection speed of 150mbps). It’s mainly used for OTA firmware updates, Tidal streaming, AirPlay (casting audio from an Apple device), DLNA, and the WiFi File Transfer functionality. All of these features work fine in my testing, and the WiFi File transfer in particular is very handy since you don’t need to pull out your microSD card to add music. The WiFi connection is also used for downloading album art and artist info, if you choose to do so.
+One thing that should be noted is that Bluetooth and WiFi cannot be turned on at the same time. I’m sure this is due to interference issues, but it’s rather unfortunate that with similar DAPs in this price range, they do not have this issue.
+Shanling has their Eddict Player app (iOS and Android) that can connect to the M1 Plus via Bluetooth or WiFi, and acts as a remote control for controlling playback on the M1 Plus.
+Battery Life
+The Shanling M1 Plus has a 2100 mAh battery, which is rather average for a DAP this size. The claimed battery life for the M1 Plus is 12.5 hours with the 3.5mm SE connection, 10 hours with the 4.4mm balanced connection, about 8 hours with Tidal streaming, and about 24 hours when used with Bluetooth headphones and TWS earbuds. Standby time is 270 hours (roughly 11 days), and charging time is about an hour as it supports 15W fast charging.
+All of this matched my testing, and I was actually able to get just over 24 hours when using it purely as a Bluetooth transmitter to my Sonos Ace Bluetooth headphones (aptX HD codec). Overall, the battery life is just above average, with DAPs like the HiBy R3Pro II almost doubling the battery performance while having a similar physical size.
+The one annoying thing, though, is that there is no option to display the battery percentage. Shanling has said this is due to the way the device measures the battery level, and a percentage indicator would not be accurate. My suggestion to Shanling would be to invest in a better way to measure the battery level and allow us to see it as a percentage. I’m really not asking for much here, especially considering almost all devices these days can do this.
+Syncing Music and Playlists
+Syncing music is very easy. I put all of my music into a folder called “Music” on the microSD card, put the card into the M1 Plus, go to the Update Library “app” on the DAP, press “Scan music now”. You can also have it select a specific folder to scan, which is not something you see too often on non-Android DAPs.
+For playlists, the M1 Plus supports the M3U format. The easiest way I have found to import already created playlists is this. First, you will need to edit your playlist files so that they start with “A:\”. It will look something like this in the M3U file:
+A:\Music\Talk Talk\The Colour of Spring\03 - Life's What You Make It.flac
+Then, on the microSD card, create a folder called “_explaylist_data” and put your M3U files in it. Then put the card into the DAP, go to the Playlist “app” and select “Import playlist”. If you set everything correctly ,then the M3U files will be imported and you’re good to go. You can also use a program like MusicBee to automatically do this for you, which is what I do.
+Overall User Experience
+If you read my review of the HiBy R3Pro II, then you’ll know I had some drama around using it at first, at least until a firmware update resolved many underlying issues. Using the Shanling M1 Plus gave me an entirely opposite experience. After updating it to the latest firmware version, V2.1, when I received it, it ran absolutely perfectly for me. I did not have any drastic UI lag issues, random reboots, or error screens. I scanned my music library on my microSD card, started playing music, and it just worked without causing a fuss.
+I used a 512GB microSD card that has about 10,900 tracks. 95% of which are FLAC, with a few WAV and DSD, and about 5% MP3. The music scan took about 5 minutes. The M1 Plus had no issues handling this amount of files and file types.
+You will not get a smartphone-level of smoothness and fluidity with the interface, but honestly, I didn’t feel like I was being slowed down by the device at all. Browsing artists is quick and easy, as is selecting albums and songs to play. Album art does take a moment to load, but it’s nowhere near the level of jankiness that can occur on HiByOS DAPs.
+One thing that is missing, and this is also the case for HiByOS DAPs, is that there is no play queue or play next queue system. Again, here we are in 2025, missing basic music playback features that we had back in the 2000s.
+Pressing the volume wheel will turn the display on or off, and volume changes are very responsive with the volume wheel. Navigation overall is very easy, the touchscreen is responsive. Sometimes I did find myself accidentally selecting something else, such as when pressing the Back button, where I would end up selecting another artist instead, but these occurrences were fairly rare. The Shanling M1 Plus does a good job overall of giving you a singular music playback experience, and most importantly, I was never left feeling frustrated due to performance.
+When being used with Bluetooth headphones and TWs earbuds, the playback controls were very responsive, and I didn’t encounter any disconnect issues, even when the device was idle for a few minutes.
+Output Power
+The Shanling M1 Plus has a good amount of output power, especially compared to similar devices in this price range. It also scales down very well to low impedance IEMs. Using the 64 Audio Solo, ZiiGaat Crescent, and Simgot EA1000 Fermat IEMs, I detected no hiss or background noise. I never needed to use High gain, which would introduce some noise, but it’s not needed for IEMs.
+With headphones, it drove all the headphones in my collection perfectly. The HIFIMAN Sundara, Sennheiser HD 660S2, and Audeze LCD-2 all had no issues and had more than enough volume overhead. It’s safe to say the M1 Plus will drive the majority of headphones out there.
+Sound Quality
+Headphones and IEMs used for this review:
+HIFIMAN Sundara (4.4mm Balanced)
+Audeze LCD-2 (3.5mm SE)
+Sennheiser HD 620S (3.5mm SE)
+Sennheiser HD 660S2 (4.4mm Balanced)
+64 Audio Solo (3.5mm SE)
+Simgot EA1000 (3.5mm SE)
+Juzear x Z Reviews Defiant (3.5mm SE and 4.4mm Balanced)
+7Hz Timeless II (4.4mm Balanced)
+Bluetooth headphones and TWS earbuds used for this review:
+iFi GO pod Max (LDAC)
+Apple AirPods 4 ANC (AAC)
+Sonos Ace (aptX) HD
+Links to my music playlist used for the majority of testing:
+Spotify:
+https://open.spotify.com/playlist/6QSIhuCBDAUyoWGcyxPeN8?si=c0a4eb6bd3e3421e
+Apple Music:
+https://music.apple.com/ca/playlist/hifi-oasis-audio-testing/pl.u-lKWlcjy04xp
+Tidal:
+https://tidal.com/playlist/503485c7-7f3d-43f0-b904-4b9a89c33875
+The Shanling M1 Plus does not alter or color the sound in any way that I can hear. It uses the ESS ESS9069Q DAC, which is a well-known and reputable chip. I appreciate that the properties of each IEM and headphone I used were kept intact, meaning the sound output is transparent and clean, with no distortion that I could detect.
+I know some people will talk about how the soundstage might sound smaller or bigger, or the dynamics will sound more lively, or the treble will be less bright. Honestly, for me, I really do not hear too much of a difference in the $100-$500 range of DAPs, with most of the sound differences coming down to output power (louder can often be mistaken as sounding better).
+So, what I can say about the Shanling M1 Plus is that it sounds fantastic with all of my gear, and I never once had any feeling that dissuaded me from wanting to listen to it more.
+I had thought that the HiBy R3Pro II sounded great, with some kind of magical synergy going on with certain IEMs and headphones. I have the exact same feeling with the Shanling M1 Plus, though. So my conclusion can only be that if a company does a good job at implementing the DAC and amp chips in their device and tuning well, then it will sound good, which is very much the case here.
+Final Thoughts
+The $200 USD price segment for DAPs has some very decent competition. The Shanling M1 Plus differentiates itself mostly from having it’s own OS, instead of running Android or HiBy OS, and by really doing the one job it needs to do, which is playing music, and doing it very, very well.
+As I went through, there are many quirks associated with the device that may or may not be a deal breaker for you. Some may not appreciate the lack of PEQ, which is becoming more prevalent on devices. Others may appreciate the simplicity of the interface and overall responsiveness. I do feel that, overall, the M1 Plus is in a good place and plays music supremely well, without getting in your way. For $199 USD, I think it brings a lot fo value, and if you’re looking for a DAP in this price range, definitely add the Shanling M1 Plus to your list of DAPs to consider.
+Buy from Amazon:
+https://amzn.to/3K0lWuA
+Buy from Linsoul:
+https://www.linsoul.com/products/shanling-m1-plus?sca_ref=5236667.OhF52MYHpZ
+The above links may be affiliate links. All commission earned through them goes directly to maintaining this site and bringing you more audio reviews.
+I’m not always able to cover all the details of a product, both hardware and software, in our reviews. If you have any specific questions about this product, please feel free to leave a comment or
+contact me directly
+.
+Be sure to check out our excellent
+Buyer’s Guides
+, as well as our other
+R
+e
+views
+.
+dpearse
+HiFi Oasis Verdict
+HiFi Oasis Verdict
+9
+10
+0
+1
+Design & Build Quality
+9
+/
+10
+Amazing
+Sound
+9
+/
+10
+Amazing
+Features/Accessories
+8
+/
+10
+Very good
+Value
+9
+/
+10
+Amazing
+9
+/
+10
+Total Score
+Pros
+Superb build quality and overall easthetic
+Thoughtful design, buttons placed in comfortable positions
+Volume wheel feels great to use
+Sound quality is excellent, with no hiss or background noise
+More than enough output power for most IEMs and headphones
+Solid Bluetooth performance
+Tidal streaming support
+Lots of extra features (DLNA, Airplay, Shanling Eddict Player integration, album art and lyrics download)
+Cheaper than most Android DAPs
+Extremely easy to setup and use
+Cons
+Software is not very customizable
+Only Tidal is supported, and it has limitations like no gapless playback support
+Screen is lower resolution than competition
+Bare minimum accessories included
+20,000 track limitation for indexing
+Explore the reviewed players
+See complete specifications, source links, firmware information and comparisons in the HiFi Oasis DAP database.
+Shanling M1 Plus — specifications and database entry
+#DAP
+#Digital Audio Player
+#shanling
+Total
+0
+Shares
+Share
+0
+Tweet
+0
+Share
+0
+Share
+0
+Share
+0
+Share
+0
+Recent Reviews
+Surfans F20 Pro+ Review: The Upgrade the F20 Pro Needed
+October 21, 2026
+8/10
+Very good
+JUZEAR x KOTO Nebula Review
+October 15, 2026
+8/10
+Very good
+PSB iQ2 Review
+October 5, 2026
+8/10
+Very good
+Written by
+HiFi-Dawson
+All posts
+Website
+Previous
+Unveiling DUNU X KOTO ITO : A Unique Blend of Multi-Driver Hybrid IEM!!
+Next
+TempoTec Variations V1 Review
+View 2 comments
+2 comments
+P.
+says:
+January 5, 2026 at 4:06 am
+Hi,
+thanks for the great review.
+Compared, to the sony NW-A306, do you feel, the Shanling M1 plus would be an upgrade in sound quality?
+Thanks,
+Kind regards
+Reply
+HiFi-Dawson
+says:
+January 5, 2026 at 9:08 am
+Yes, I think it’s a noticeable upgrade in sound quality, especially if you are comparing it to the volume-capped A306 version. The higher output power of the M1 Plus gives you a lot of volume overhead, especially with headphones.
+Reply
+Leave a Reply
+Cancel reply
+Your email address will not be published.
+Required fields are marked
+*
+Comment
+*
+Name
+Email
+Website
+Save my name, email, and website in this browser for the next time I comment.
+Δ
+On this page
+Key Specifications
+In the Box
+Design & Build Quality
+Leather Case
+MTouch OS and UI
+Bluetooth and Wi-Fi Performance
+Battery Life
+Syncing Music and Playlists
+Overall User Experience
+Output Power
+Sound Quality
+Final Thoughts
+Verdict
+Back to top
+Related posts
+More Digital Audio Player Reviews
+8/10
+Very good
+review score
+Digital Audio Player Reviews
+Surfans F20 Pro+ Review: The Upgrade the F20 Pro Needed
+October 21, 2026
+7/10
+review score
+Digital Audio Player Reviews
+HIDIZS AP30 Music Boy Review: Great Hardware and Sound Quality Held back by Software
+July 22, 2026
+8/10
+Very good
+review score
+Digital Audio Player Reviews
+Shanling M0 Pura Review: A Small and Portable DAP Done Right!
+July 14, 2026
+Back to top
+Newsletter
+The HiFi Oasis Dispatch
+New reviews, buying advice and deals worth knowing about. No daily promotions. Unsubscribe at any time.
+Subscribe
+HiFi Oasis
+Bridging the gap between audiophiles and casual listeners.
+X
+(opens in a new tab)
+YouTube
+(opens in a new tab)
+Instagram
+(opens in a new tab)
+Reddit
+(opens in a new tab)
+Facebook
+(opens in a new tab)
+When you purchase products via the links on our website, we may receive an affiliate commission.
+© 2026 HiFi Oasis
+Back to top

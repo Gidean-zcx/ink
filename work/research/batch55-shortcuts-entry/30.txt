@@ -1,0 +1,8 @@
+Add a shortcut to Reminders using Siri on iPhone or iPad
+You can use Siri to add shortcuts to the Reminders app, specifying shortcuts to be shown at a particular time or location. For example, you can schedule a reminder to run the Log Weight shortcut each morning, or to display the Home ETA shortcut when you depart from work.
+Add a shortcut to Reminders using Siri
+In the Shortcuts app on your iPhone or iPad, tap on a shortcut, activate Siri, then say, “Remind me about this.”
+The shortcut is added to your default Reminders list. The name of the shortcut is the title of the reminder.
+Note: You can also use alternate Siri phrases, such as “Add this to my Work list” or “Remind me about this Saturday at 2 p.m.”
+For more information on talking to Siri, see Turn on and activate Siri in the iPhone User Guide.
+To run the shortcut from Reminders, tap the Shortcuts icon in the list.See alsoIdeas for custom shortcuts on iPhone or iPad

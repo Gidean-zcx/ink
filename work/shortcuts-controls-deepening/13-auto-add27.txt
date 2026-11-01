@@ -1,0 +1,44 @@
+Add automations to Shortcuts on iPhone or iPad
+You can add automations to shortcuts so they run automatically when a trigger, such a specific time of day or a notification is received.
+Add an automation trigger to a shortcut
+In the Shortcuts app  on your iPhone or iPad, do one the following:
+Tap an existing shortcut or create a new shortcut.
+Tap Edit, then Automation. Choose a trigger, such as Time of Day or Arrive.
+To allow a shortcut to run without user interaction, see Enable an automation to run without asking, below.
+Remove an automation trigger from a shortcut
+You can remove the automation trigger from your shortcut so it no longer runs automatically.
+In the Shortcuts app  on your iPhone or iPad, tap an existing shortcut.
+Choose your automation trigger, such as Time of Day or Arrive, and remove it.
+Filter shortcuts with automations
+You can view a list of your enabled and disabled shortcuts that include an automation.
+In the Shortcuts app  on your iPhone or iPad, tap Automation.
+Note: For iPhone, you may have to tap  [IMAGE: the Back button]  first.
+To filter by Turned On or Turned Off, Tap  [IMAGE: the Filter button] .
+Enable an automation to run without asking
+Some personal automations can run without asking you for confirmation when they’re triggered.
+In the Shortcuts app  on your iPhone or iPad, tap an existing shortcut.
+Tap Edit, then  [IMAGE: the Info button] .
+Tap Privacy then enable Allow Running When Locked.
+The automation will not notify you when it’s triggered.
+The following automations can be run automatically:
+Time of Day
+Alarm
+Sleep
+Arrive
+Leave
+CarPlay
+Email
+Message
+Transaction
+Wi-Fi
+Bluetooth
+Apple Watch Workout
+NFC
+App
+Airplane Mode
+Do Not Disturb
+Low Power Mode
+Battery Level
+Charger
+Sound Recognition
+Note: You also may need to set individual actions to run automatically.

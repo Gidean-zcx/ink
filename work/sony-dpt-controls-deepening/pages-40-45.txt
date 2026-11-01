@@ -1,0 +1,106 @@
+=== PDF PAGE 40 ===
+Help Guide
+Digital Paper System
+DPT-RP1/DPT-CP1
+Turning the page
+Swipe (move your finger) in the direction of the next page.
+When [Page Flow] is set to [Right to left], swipe right to left, and when [Page Flow] is set to [Left to right], swipe left to
+right.
+For a PDF file for which this setting was not designated on a computer, turn to the next page by swiping right to let by
+default.
+Related Topic
+Changing how to turn pages
+Displaying the page specifying the page number
+4-597-942-19(1)
+Copyright 2016 Sony Corporation
+40
+
+=== PDF PAGE 41 ===
+Help Guide
+Digital Paper System
+DPT-RP1/DPT-CP1
+Changing how to turn pages
+4-597-942-19(1)
+Copyright 2016 Sony Corporation
+Tap anywhere on the screen of a document to display the tool bar.
+1
+Tap 
+ (option) in the upper right of the document screen — [Page Flow].
+2
+To turn the page by swiping from right to left, tap [Right to left], and to turn by swiping from left to right, tap
+[Left to right].
+3
+41
+
+=== PDF PAGE 42 ===
+Help Guide
+Digital Paper System
+DPT-RP1/DPT-CP1
+Displaying the page specifying the page number
+4-597-942-19(1)
+Copyright 2016 Sony Corporation
+Tap 
+ (option) in the upper right of the document screen - [Page Jump].
+1
+Input the page number and tap [OK].
+The specified page is displayed.
+2
+42
+
+=== PDF PAGE 43 ===
+Help Guide
+Digital Paper System
+DPT-RP1/DPT-CP1
+Zooming in on a document
+Zoom in on part of a document. While zoomed in, you can write using the pen, delete items written with the pen, and
+highlight items.
+The following two ways are available to zoom in a document.
+1. Zooming in by pinch-out
+Pinch out on the desired area with two fingers. (Pinch-out)
+Pinching in the zoomed-in screen with two fingers zooms out the document. (Pinch-in)
+Note
+You cannot turn the page while zoomed in.
+2. Zooming in by tapping 
+Note
+You cannot turn the page while zoomed in.
+You cannot zoom again or change the zoom ratio. Cancel zooming and select the part which you want to zoom into again.
+To return to the original size
+Tap 
+[Exit] in the upper right of the document screen.
+Hint
+By dragging while zooming, you can move the displaying part.
+Tap anywhere on the screen of a document to display the toolbar.
+1
+Tap 
+ (zoom in) in the upper right of the document screen.
+2
+Tap the location you want to zoom into, or use your finger or the pen to encircle the area you want to zoom
+into.
+The document is zoomed in.
+3
+43
+
+=== PDF PAGE 44 ===
+4-597-942-19(1)
+Copyright 2016 Sony Corporation
+44
+
+=== PDF PAGE 45 ===
+Help Guide
+Digital Paper System
+DPT-RP1/DPT-CP1
+Display page thumbnails
+You can search for a page by displaying a list of 16 pages on a single screen.
+To return the display to normal size
+Tap any one of the pages.
+Hint
+When switching from documents that are being displayed side-by-side, nine pages are displayed in the list.
+When you pinch in on the screen while displaying a document, the page thumbnails can be displayed.
+4-597-942-19(1)
+Copyright 2016 Sony Corporation
+Tap anywhere on the screen of a document to display the tool bar.
+1
+Tap 
+ (option) in the upper right of the document screen — [Page Thumbnails].
+2
+45

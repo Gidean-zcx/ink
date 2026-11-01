@@ -1,0 +1,66 @@
+14.楽譜を見る
+
+
+
+Bluetooth フットペダルを使ってドキュメントのページをめくることができます。また、ドキュメントを「見開き
+表示」にしてページをめくる場合、ページ送りの順番を見開きの片側に次ページを先行して表示する「先読み」に
+変更できます。楽器演奏時に楽譜を表示するときに役立つ機能です。
+
+
+見開きの片側に次ページを先行して表示したい場合は「先読み」を選択してください。
+
+
+
+
+
+   POINTPOINTPOINT
+  本機能は、次のプロファイルに対応したBluetooth 機器のみ対応しています。
+
+     Bluetooth Classic：HID(Human Interface Device) プロファイル
+
+     Bluetooth Low Energy(BLE)：HOGP(Human Interface Device Over GATT Profile) プロファイル
+
+    Bluetooth Low Energy(BLE)を有効にすると、Bluetooth 接続でQUADERNO PC Appを使用できません。USB ケーブルまた
+   は、Wi-Fiで接続してください。
+
+    Bluetooth Low Energy(BLE)の設定を変更すると登録済みのBluetooth フットペダルのペアリング情報は削除されます。再
+   度、ペアリングしなおしてください。
+
+  ページめくり機能はキーボードのカーソルキー【↑】／【↓】に対応しています。Bluetooth 機器が対応していることを
+   ご確認ください。
+
+  次の機器で動作確認しています。
+   ・Donner PageTurner
+
+    ・IK MULTIMEDIA iRig BlueTurn
+
+Bluetooth フットペダルを接続する
+
+フットペダルをBluetooth で接続するには、はじめにBluetooth 機器のペアリング（機器登録）が必要です。一度
+ペアリングを行えば、次回からはクアデルノのBluetooth 機能をオンにして、フットペダルと接続できます。
+
+   （ホームボタン）を「カチッ」という感触があるまで押し、「設定」をタップします。1
+2「Bluetooth」をタップしてチェックを付けます。
+
+   Bluetooth Low Energy(BLE) を設定します。3
+  ■BLE 対応のBluetooth 機器を接続する場合
+    1.「Bluetooth 設定」→「Bluetooth Low Energy(BLE) 設定」の順にタップします。
+
+    2.「BLE 有効」をタップします。
+     3. 確認のメッセージが表示されたら「はい」をタップします。
+  ■BLE 非対応のBluetooth 機器を接続する場合
+    1.「Bluetooth 設定」→「Bluetooth Low Energy(BLE) 設定」の順にタップします。
+
+    2.「BLE 無効」をタップします。
+     3. 確認のメッセージが表示されたら「はい」をタップします。
+
+         設定」→「本機にBluetooth 機器を追加」の順にタップします。4「Bluetooth
+
+       機器一覧」からフットペダルを選択します。5「Bluetooth
+  接続したいフットペダルが表示されないときは、「Bluetooth 機器一覧を更新」をタップしてください。
+
+       ペアリングが完了しました。」と表示されたら、「OK」をタップします。6「Bluetooth
+
+
+
+                          76

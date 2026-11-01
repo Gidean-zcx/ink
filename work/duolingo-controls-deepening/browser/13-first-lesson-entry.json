@@ -1,0 +1,22 @@
+{
+  "name": "13-first-lesson-entry",
+  "url": "https://www.duolingo.com/welcome?welcomeStep=choosePath",
+  "title": "Duolingo - Learn French with lessons that work",
+  "utc": "2026-10-26T17:42:41.353156+00:00",
+  "text": "It can be hard to stay motivated…\nIt can be hard to stay motivated…\nCONTINUE",
+  "buttons": [
+    {
+      "text": "",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "CONTINUE",
+      "aria": null,
+      "test": "funboarding-continue-button",
+      "visible": true
+    }
+  ],
+  "inputs": []
+}

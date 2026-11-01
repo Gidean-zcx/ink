@@ -1,0 +1,60 @@
+[
+  {
+    "owner": "docs/research/interaction-library/batches/reader-coverage.csv",
+    "before": {
+      "flow_id": "F-M003-01",
+      "product_id": "M-003",
+      "task": "从主页进入系统控制",
+      "depth": "D2",
+      "evidence_ids": "E-PBK-01;E-PBK-04;E-PBCD-01",
+      "known_branches": "补Menu键通知栏、长按Home任务管理；13图底栏Settings与21默认文字Notes不一致。 Settings总则为退出节应用更改；阅读触摸/滑动/边缘拖动可配置；HID蓝牙按键映射有独立入口。",
+      "gaps": "当前默认布局/实际安装版、配置保存失败、HID适配、后台保留与关闭影响未知；读屏手势仅见F13。",
+      "visual_status": "static_reference_only",
+      "hands_on": "false",
+      "case_path": "cases/M-003-pocketbook.md",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "flow_id": "F-M003-01",
+      "product_id": "M-003",
+      "task": "从主页进入系统控制",
+      "depth": "D2",
+      "evidence_ids": "E-PBK-01;E-PBK-04;E-PBCD-01;E-PBRC-01",
+      "known_branches": "补Menu键通知栏、长按Home任务管理；13图底栏Settings与21默认文字Notes不一致。 Settings总则为退出节应用更改；阅读触摸/滑动/边缘拖动可配置；HID蓝牙按键映射有独立入口。 点按区选动作后勾号确认；边缘拖动可改光/色温/音量/字号。键盘长按特殊字符、globe切布局，最多配置3种；密码可切可见性。",
+      "gaps": "82页Cancel仅入口，未见撤销/保存结果；16页空格语言标签图文不同。当前映射、输入保留、后台保留/关闭影响、配置失败及HID适配未知；读屏手势独立。",
+      "visual_status": "static_manual_pages_only",
+      "hands_on": "false",
+      "case_path": "cases/M-003-pocketbook.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "owner": "docs/research/interaction-library/batches/reader-coverage.csv",
+    "before": {
+      "flow_id": "F-M003-04",
+      "product_id": "M-003",
+      "task": "Cloud同步、离线状态与删除",
+      "depth": "D2",
+      "evidence_ids": "E-PBK-01;E-PBCD-05;E-PBCD-06",
+      "known_branches": "虚线仅云端；登录/开关书/收藏合集及手动同步；本机Delete后条目再现、Remove from Cloud不可恢复；服务状态与网络重试。",
+      "gaps": "条目再现不保证自动重下载；位置仅PDF/EPUB/FB2；冲突/删除确认/他端副本/撤销未知。",
+      "visual_status": "static_reference_only",
+      "hands_on": "false",
+      "case_path": "cases/M-003-pocketbook.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M003-04",
+      "product_id": "M-003",
+      "task": "Cloud同步、离线状态与删除",
+      "depth": "D2",
+      "evidence_ids": "E-PBK-01;E-PBCD-05;E-PBCD-06",
+      "known_branches": "虚线仅云端；登录/开关书/收藏合集及手动同步；本机Delete后条目再现、Remove from Cloud不可恢复；服务状态与网络重试。",
+      "gaps": "条目再现不保证自动重下载；位置仅PDF/EPUB/FB2；冲突/删除确认/他端副本/撤销未知。 Dropbox的指定目录文件同步见F24，不能借其Autosync推定本Cloud的备份、删除或进度范围。",
+      "visual_status": "static_reference_only",
+      "hands_on": "false",
+      "case_path": "cases/M-003-pocketbook.md",
+      "checked_on": "2026-10-27"
+    }
+  }
+]

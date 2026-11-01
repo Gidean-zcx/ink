@@ -1,0 +1,15 @@
+{
+  "result": "PASS",
+  "checks": 290,
+  "errors": [],
+  "new_evidence": 7,
+  "new_flows": 0,
+  "old_flows_suggested": 9,
+  "old_fields_suggested": 36,
+  "manual_pages": 55,
+  "manual_body_read_partial": 25,
+  "manual_directory_only": 30,
+  "support_pages": 5,
+  "visual_observed": false,
+  "hands_on": false
+}

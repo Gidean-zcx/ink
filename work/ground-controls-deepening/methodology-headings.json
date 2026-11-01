@@ -1,0 +1,106 @@
+[
+  {
+    "tag": "h1",
+    "title": "Methodology"
+  },
+  {
+    "tag": "h2",
+    "title": "Bias Ratings"
+  },
+  {
+    "tag": "h3",
+    "title": "Rating Description"
+  },
+  {
+    "tag": "h4",
+    "title": "Far Left"
+  },
+  {
+    "tag": "h4",
+    "title": "Left"
+  },
+  {
+    "tag": "h4",
+    "title": "Lean Left"
+  },
+  {
+    "tag": "h4",
+    "title": "Center"
+  },
+  {
+    "tag": "h4",
+    "title": "Lean Right"
+  },
+  {
+    "tag": "h4",
+    "title": "Right"
+  },
+  {
+    "tag": "h4",
+    "title": "Far Right"
+  },
+  {
+    "tag": "h2",
+    "title": "Factuality Score"
+  },
+  {
+    "tag": "h4",
+    "title": "Very Low"
+  },
+  {
+    "tag": "h4",
+    "title": "Low"
+  },
+  {
+    "tag": "h4",
+    "title": "Mixed"
+  },
+  {
+    "tag": "h4",
+    "title": "High"
+  },
+  {
+    "tag": "h4",
+    "title": "Very High"
+  },
+  {
+    "tag": "h2",
+    "title": "Ownership Categories"
+  },
+  {
+    "tag": "h4",
+    "title": "Media Conglomerates"
+  },
+  {
+    "tag": "h4",
+    "title": "Private Equity"
+  },
+  {
+    "tag": "h4",
+    "title": "Individual"
+  },
+  {
+    "tag": "h4",
+    "title": "Government"
+  },
+  {
+    "tag": "h4",
+    "title": "Telecom"
+  },
+  {
+    "tag": "h4",
+    "title": "Corporation"
+  },
+  {
+    "tag": "h4",
+    "title": "Independent"
+  },
+  {
+    "tag": "h4",
+    "title": "Other"
+  },
+  {
+    "tag": "h2",
+    "title": "Formula"
+  }
+]

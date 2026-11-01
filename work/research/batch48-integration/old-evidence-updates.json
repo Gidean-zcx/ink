@@ -1,0 +1,63 @@
+[
+  {
+    "owner": "docs/research/interaction-library/batches/vocab-device-deepening-evidence.jsonl",
+    "before": {
+      "evidence_id": "E-MMDVC-01",
+      "product_id": "M-023",
+      "title": "MM-WM01帮助：资源、按键与恢复补核",
+      "url": "https://memodocs.maimemo.com/docs/support_wordmachine/",
+      "checked_on": "2026-10-26",
+      "source_type": "official_help",
+      "access_mode": "opened_text",
+      "version_scope": "MM-WM01; binding App5.5.96+; learning sync firmware1.0.36+; actual installed build unknown",
+      "app_build": null,
+      "firmware_version": null,
+      "source_updated_on": null,
+      "locator": "Q3/4/8/9/12/16/18/20；快速指南、按键介绍、帮助与反馈",
+      "note": "复查E-MMOH-01同一来源。Q12原文Android5.6.06+、iOS5.60.7+，后者不擅自改写。公测/未来功能与现行描述并存。后续定位一次超时未反复重试；第一张配图连接阻塞后终止，未查看图片。",
+      "hands_on": false,
+      "visual_observed": false,
+      "archived_artifact": null,
+      "sha256": null,
+      "capture_state": "bibliography_and_short_note_only",
+      "supersedes": null
+    },
+    "after": {
+      "evidence_id": "E-MMDVC-01",
+      "product_id": "M-023",
+      "title": "MM-WM01帮助：资源、按键与恢复补核",
+      "url": "https://memodocs.maimemo.com/docs/support_wordmachine/",
+      "checked_on": "2026-10-26",
+      "source_type": "official_help",
+      "access_mode": "opened_text",
+      "version_scope": "MM-WM01; binding App5.5.96+; learning sync firmware1.0.36+; actual installed build unknown",
+      "app_build": null,
+      "firmware_version": null,
+      "source_updated_on": null,
+      "locator": "Q3/4/8/9/12/16/18/20；快速指南、按键介绍、帮助与反馈",
+      "note": "复查E-MMOH-01同一来源。Q12原文Android5.6.06+、iOS5.60.7+，后者不擅自改写。公测/未来功能与现行描述并存。后续定位一次超时未反复重试；第一张配图连接阻塞后终止，未查看图片。",
+      "hands_on": false,
+      "visual_observed": false,
+      "archived_artifact": null,
+      "sha256": null,
+      "capture_state": "bibliography_and_short_note_only",
+      "supersedes": null,
+      "additional_captures": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "ordinary_public_http_200_body_read",
+          "raw_work_path": "work/research/batch48-maimemo-device/device.html",
+          "raw_sha256": "8efad5579fd525c6d65240800272dfd99ec96b7a1435b6a0ecd8b0c1710f9044",
+          "extracted_work_path": "work/research/batch48-maimemo-device/device.txt",
+          "extracted_sha256": "7118852ad9fc688e2cfa606d1d0e4b8dd7868ec04400533ace8310f4d3bf84a7",
+          "locator": "41正文标题对应全文；图片另见派生E-MMDS-01",
+          "hands_on": false,
+          "visual_observed": false,
+          "archived_artifact": "artifacts/maimemo-device-controls/source-notes.md",
+          "sha256": "469a3f79219eb18b74b3a516b98581f622dbf62f61bb8a724f5cdcc96dff3df9",
+          "note": "保留公测/未来能力、iOS版本格式与文图按键方向差异。"
+        }
+      ]
+    }
+  }
+]

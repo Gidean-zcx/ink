@@ -1,0 +1,162 @@
+[
+  {
+    "source_batch": "docs/research/interaction-library/batches/reader-coverage.csv",
+    "record": {
+      "flow_id": "F-M006-01",
+      "product_id": "M-006",
+      "task": "建立可回找的手写结构",
+      "depth": "D2",
+      "evidence_ids": "E-SUP-01;E-SNCD-02;E-SNCD-06",
+      "known_branches": "标题可再套索编辑；主图层限制；p131 Erase Star不擦标题内星标；历史帮助称标记删除不可撤销",
+      "gaps": "删除标记后的原笔迹、当前版本恢复/星标识别误触未知",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-006-supernote.md",
+      "checked_on": "2026-10-26"
+    }
+  },
+  {
+    "source_batch": "docs/research/interaction-library/batches/reader-coverage.csv",
+    "record": {
+      "flow_id": "F-M006-02",
+      "product_id": "M-006",
+      "task": "用链接连接笔记",
+      "depth": "D2",
+      "evidence_ids": "E-SUP-02;E-SNCD-02;E-SNCD-06;E-SNCD-10",
+      "known_branches": "p73逐步/一次返回与上半屏上滑；可见主图层；3.25.39移到microSD/OTG后链接保留规则",
+      "gaps": "目标删除/任意改名/云重建稳定性，跳转历史持久化未知",
+      "visual_status": "static_reference_only",
+      "hands_on": "false",
+      "case_path": "cases/M-006-supernote.md",
+      "checked_on": "2026-10-26"
+    }
+  },
+  {
+    "source_batch": "docs/research/interaction-library/batches/reader-coverage.csv",
+    "record": {
+      "flow_id": "F-M006-03",
+      "product_id": "M-006",
+      "task": "把内容收成摘录",
+      "depth": "D2",
+      "evidence_ids": "E-SUP-03;E-SNCD-02",
+      "known_branches": "帮助写Recognize as Text，指南p98写Recognize as Digest/Create且p112分列；删分类连删摘录；Digest TXT元数据恢复",
+      "gaps": "入口历史名称或文案错误未确定；导出评论/笔迹/回源关系完整往返未知",
+      "visual_status": "static_reference_only",
+      "hands_on": "false",
+      "case_path": "cases/M-006-supernote.md",
+      "checked_on": "2026-10-26"
+    }
+  },
+  {
+    "source_batch": "docs/research/interaction-library/batches/reader-coverage.csv",
+    "record": {
+      "flow_id": "F-M006-04",
+      "product_id": "M-006",
+      "task": "备份与恢复摘录",
+      "depth": "D2",
+      "evidence_ids": "E-SUP-04;E-SUP-05;E-SNCD-02",
+      "known_branches": "2024恢复清除后续数据与3.24.38不先清空的版本分支；p160 Digest本地备份与Digest/To-Do Data Sync分开",
+      "gaps": "To-Do同类本地恢复包不能由标题推断；重复恢复/合并去重/取消中断未知",
+      "visual_status": "static_reference_only",
+      "hands_on": "false",
+      "case_path": "cases/M-006-supernote.md",
+      "checked_on": "2026-10-26"
+    }
+  },
+  {
+    "source_batch": "docs/research/interaction-library/batches/reader-coverage.csv",
+    "record": {
+      "flow_id": "F-M006-05",
+      "product_id": "M-006",
+      "task": "两台设备接续",
+      "depth": "D2",
+      "evidence_ids": "E-SUP-06;E-SNCD-08;E-SNCD-09;E-SNCD-10;E-SNCD-11",
+      "known_branches": "先一端同步再另一端；Drive选目录Save/手动同步；Auto Sync/Back to Files历史触发；3.31.45冲突处理声明",
+      "gaps": "冲突选择及合并规则、最新完整触发条件、断网和两端删除竞态未知",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-006-supernote.md",
+      "checked_on": "2026-10-26"
+    }
+  },
+  {
+    "source_batch": "docs/research/interaction-library/batches/reader-coverage.csv",
+    "record": {
+      "flow_id": "F-M006-06",
+      "product_id": "M-006",
+      "task": "定制临时工具手势",
+      "depth": "D2",
+      "evidence_ids": "E-SUP-07;E-SNCD-02;E-SNCD-10",
+      "known_branches": "两指按住临时工具、松指回原工具；左右手为历史/V3.28.42，3.31.45改八种姿势",
+      "gaps": "新姿势有效区域、误触/手掌拒触/延迟未观察",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-006-supernote.md",
+      "checked_on": "2026-10-26"
+    }
+  },
+  {
+    "source_batch": "docs/research/interaction-library/batches/supernote-controls-deepening-coverage.csv",
+    "record": {
+      "flow_id": "F-M006-07",
+      "product_id": "M-006",
+      "task": "手写变待办并回来源笔记",
+      "depth": "D2",
+      "evidence_ids": "E-SNCD-02;E-SNCD-03;E-SNCD-10",
+      "known_branches": "套索New Task/Add；Note图标回笔记；无日期不列Planned；完成可撤销；Data Sync独立于文件同步；3.18.29历史离线丢任务修复",
+      "gaps": "原句/笔划定位、任务删除恢复、改任务是否影响原笔迹、最新断网序列未验证",
+      "visual_status": "static_reference_only",
+      "hands_on": "false",
+      "case_path": "cases/M-006-supernote.md",
+      "checked_on": "2026-10-26"
+    }
+  },
+  {
+    "source_batch": "docs/research/interaction-library/batches/supernote-controls-deepening-coverage.csv",
+    "record": {
+      "flow_id": "F-M006-08",
+      "product_id": "M-006",
+      "task": "按类别搜索并回到命中内容",
+      "depth": "D2",
+      "evidence_ids": "E-SNCD-02;E-SNCD-04;E-SNCD-05;E-SUP-05",
+      "known_branches": "Handwriting/Keyword回页，File回最后页；Star按File也不保证星标页；后台识别延后及触摸暂停为文档规则",
+      "gaps": "3.24.38后文本搜索完整界面、无结果/误识别修正、实际耗时及重启队列未知",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-006-supernote.md",
+      "checked_on": "2026-10-26"
+    }
+  },
+  {
+    "source_batch": "docs/research/interaction-library/batches/supernote-controls-deepening-coverage.csv",
+    "record": {
+      "flow_id": "F-M006-09",
+      "product_id": "M-006",
+      "task": "选择笔记页导出交换文件",
+      "depth": "D2",
+      "evidence_ids": "E-SNCD-02;E-SNCD-05;E-SNCD-07",
+      "known_branches": "PNG/PDF与识别TXT/DOCX；标准笔记导出时识别；实时识别语言创建后固定；QR/InkHub另列",
+      "gaps": "输出目录、重名/取消/存储不足、编辑后结构关系往返与原笔迹回写未知",
+      "visual_status": "static_reference_only",
+      "hands_on": "false",
+      "case_path": "cases/M-006-supernote.md",
+      "checked_on": "2026-10-26"
+    }
+  },
+  {
+    "source_batch": "docs/research/interaction-library/batches/supernote-controls-deepening-coverage.csv",
+    "record": {
+      "flow_id": "F-M006-10",
+      "product_id": "M-006",
+      "task": "删除文件前保留副本并区分云回收",
+      "depth": "D2",
+      "evidence_ids": "E-SNCD-02;E-SNCD-10;E-SNCD-11",
+      "known_branches": "Files多选Delete；USB/同WiFi传输和独立副本；3.31.45云同步删除进回收站；V3.28.42非整机备份",
+      "gaps": "本地确认/撤销；云恢复按钮/保留期/永久删除/再次同步；恢复外链和重名规则未知",
+      "visual_status": "static_reference_only",
+      "hands_on": "false",
+      "case_path": "cases/M-006-supernote.md",
+      "checked_on": "2026-10-26"
+    }
+  }
+]

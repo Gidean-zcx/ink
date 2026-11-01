@@ -1,0 +1,104 @@
+Library screen in “Music player”
+You can select tracks from the library screen. Tracks are classified into various categories (such as [All songs], [Album], [Artist], etc.).
+To display the library screen
+Swipe the playback screen in “Music player” downwards. Alternatively, tap (Library top) button in the top right of the screen.
+Search area
+Tap the area to display the keyboard and input text. Type keywords to search for items such as track titles.
+Music categories ([All songs], [Album], [Artist], etc.)
+Each track is classified into several categories. Select a track from the desired category.
+Tap [Hi-Res] to search tracks by the quality of sound with one of the following filters.
+[Hi-Res]
+[CD quality]
+[Compressed]
+Connect the player to a computer and tap [USB DAC] to enjoy the music stored on the computer with the same sound quality as the player.
+Page indicator
+The number of dots represents the number of available pages. Swipe the screen to the left or right to switch to a different page.
+Update database button
+Tap the button to update the database of “Music player”.
+Purchased content or transferred content may not appear in the library of “Music player”. In this case, perform one of the following methods and then update the database.
+Ensure the music files are in one of the following folders.
+The [Music] folder or the [Download] folder in the internal memory of the player
+The [Music] folder on the microSD card
+The folders registered to [Folders to be imported] in “Music player”
+Register the folder that contains the desired music files to [Folders to be imported] in “Music player”.
+Options button
+Subcategories or track list
+After you select a music category, select a subcategory until you find the desired track.
+You can check the codecs for tracks, such as FLAC. Codecs for High-Resolution Audio formats appear in color.
+Shuffle playback button
+Tap to start shuffle playback with the displayed track list as the playback range.
+Option menu
+Tap (Options) to display the option menu.
+Displayed items may differ depending on the screen or settings.
+Settings
+Select the item to display the Settings menu for “Music player”.
+Select items to display
+Select the item to set which categories to display or not to display.
+Reset display item settings
+Select the item to display the default categories.
+Operation guide
+Select the item to view the operating guide.
+Create new playlist
+Select the item to create a new playlist.
+Delete all playlists
+Select the item to delete all playlists.
+Rename playlist
+Select the item to change the name of the playlist.
+Edit song order
+Select the item to change the order of tracks in the playlist.
+Edit Favorites order
+Select the item to change the order of items in Favorites.
+Add to playlist
+Select the item to add all tracks in the selected item to a playlist.
+Play next
+Select the item to add all tracks in Favorites to the position after the current track in the play queue.
+Add to the end of Play queue
+Select the item to add all tracks in Favorites to the end of the play queue.
+Empty Play queue and add
+Select the item to clear the current play queue and newly add all tracks in Favorites to the play queue.
+Remove all
+Select the item to remove all tracks or all items from the playlist or Favorites.
+Context menu
+Tap (Context menu) to display the context menu. (Context menu) appears to the right side of each item in a subcategory list.
+Displayed items may differ depending on the screen or settings.
+Add to Favorites
+Select the item to add the selected track/album/playlist to Favorites.
+Add to playlist
+Select the item to add the selected track or all tracks in the selected item to a playlist.
+Add to another playlist
+Select the item to add all tracks in the selected playlist to another playlist.
+Play next
+Select the item to add the selected track or all tracks in the selected item to the position after the current track in the play queue.
+Add to the end of Play queue
+Select the item to add the selected track or all tracks in the selected item to the end of the play queue.
+Empty Play queue and add
+Select the item to clear the current play queue and newly add the selected track or all tracks in the selected item to the play queue.
+Remove from this list
+Select the item to remove the selected item from the playlist or Favorites.
+Rename playlist
+Select the item to change the name of the playlist.
+Detailed song information
+Select the item to display the details of the track.
+Delete
+Select the item to delete the selected track, playlist, or folder.
+Hint
+You can move the category icons. Hold down an icon, and drag-and-drop it to the preferred position.
+You can also display the context menu by holding down an item in the list.
+You can also update the database from the Settings menu for “Music player”.
+Tap the menu items in the following order.
+(Options) － [Settings] － [Update database].
+When [Add to playlist] or [Add to another playlist] is selected, a playlist transferred from a computer cannot be selected as the addition destination. In this case, create a new playlist with the same content as the playlist transferred from the computer in advance, and then select that playlist as the addition destination.
+On the library screen, tap (Context menu) to the right side of the playlist transferred from the computer.
+Tap the menu items in the following order.
+[Add to another playlist] － [Create new playlist].
+The contents of the Help Guide may be subject to change without notice due to updates to the product's specifications.
+Go to Page Top
+Related Topic
+How to use the various screens of “Music player”
+Playing music
+Play queue screen in “Music player”
+Registering or unregistering folders to be imported to “Music player”
+Managing playlists in “Music player”
+Importing playlists from a Windows computer, playing, or deleting playlists in “Music player”
+Managing Favorites in “Music player”
+USB-DAC screen in “Music player”

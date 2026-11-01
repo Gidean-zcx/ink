@@ -1,0 +1,111 @@
+Rating System | Ground News
+Skip to main content
+See who owns your news
+Get Started
+Browser Extension
+Monday, October 26, 2026Set Location
+International Edition
+Section Icon
+Section Icon
+News Logo
+News Logo
+Home
+For You
+Local
+Blindspot
+SubscribeLogin
+Search IconSearch
+Subscribe
+Login
+Methodology
+Diagrams have been used since ancient times as a way to represent complex information in a simple way. At Ground News we use diagrams to give readers a visual breakdown of the entire media landscape so they can quickly understand what's going on. We take a comprehensive, data-driven approach to news.
+IndexBias RatingsFactuality ScoreOwnership CategoriesBlindspot
+Bias Ratings
+The Ground News bias ratings assess the political bias of news publications. They are based on the average rating of three independent news monitoring organizations: AllSides, Ad Fontes Media, and Media Bias Fact Check. Each news monitoring organization has their own methodology - including editorial reviews, blind bias surveys, independent reviews, and third party research. The analysis is done in the context of the U.S. political system.
+We use a combination of these ratings to offer the most comprehensive analysis. The ratings take into consideration things like wording, story choices and political affiliation. This rating does not measure the bias of specific news articles. The analysis is done at the publication level.
+AllSides Technologies is a mission-driven company that provides balanced news, bias ratings and bias detection technology, and enterprise solutions to help organizations navigate the information ecosystem. AllSides’ media bias ratings reflect the average judgment of Americans across the political spectrum through a unique multi-methodology approach. Its experts are trained to see 16 types of bias AllSides has identified, including spin, slant, sensationalism, bias by omission, and analysis presented as fact. For detailed methodology information, visit AllSides’ rating methods page.
+You might come across a news publication that has not been rated by one or two of these organizations, in which case we take an average of the ratings available. Some news organizations don't have any ratings, and therefore aren't included in the Bias Bar. These ratings are updated on an ongoing basis.
+Rating Description
+Far Left
+These publications tend to reflect the policy positions of the most extreme left-leaning party members. They are strongly biased toward liberal causes through story selection and/or political affiliation. They use strong wording that attempts to influence an audience by appealing to emotion or stereotypes. They may use loaded words, publish misleading reports or leave out information that could damage liberal causes.
+Left
+These publications tend to reflect the current positions held by leaders of left-leaning parties. They are moderately biased toward liberal causes through story selection and/or political affiliation. They may use loaded words, publish misleading reports or leave out information that doesn’t support liberal causes.
+Lean Left
+These publications have a slight to moderate liberal bias. They often publish factual information, but still may use loaded words that favor liberal causes.
+Center
+These publications have no discernable political position. They use very few loaded words and the reporting is well sourced. On a given issue, they present a relatively complete survey of key competing positions. This rating does not necessarily represent “balance” or “neutrality.” A Center rating does not imply that the position is best or most valid.
+Lean Right
+These publications are slightly to moderately conservative in bias. They often publish factual information, but still may use loaded words that favor conservative causes.
+Right
+These publications tend to reflect the current positions held by leaders of right-leaning parties. They are moderately biased toward conservative causes through story selection and/or political affiliation. They may publish misleading reports or leave out information that doesn’t support conservative causes.
+Far Right
+These publications tend to reflect the policy positions of the most extreme right-leaning party members. They are strongly biased toward conservative causes through story selection and/or political affiliation. They use strong wording that attempts to influence an audience by appealing to emotion or stereotypes. They may use loaded words, publish misleading reports or leave out information that could damage conservative causes.
+Factuality Score
+The Ground News Factuality Score is an overall assessment of a news publication's reporting practices, helping readers understand how reliable a source is at a glance.
+This score reflects the average of two trusted rating systems: Ad Fontes Media andMedia Bias Fact Check.
+Outlets are evaluated based on their use of credible sources, timeliness of corrections, and whether their reporting adds layers of context. Scores apply to each publication as a whole, not to their individual articles.
+If only one organization has rated a news outlet, we'll use that single rating. Outlets without any ratings will not receive a score.
+However, ratings are refreshed regularly to reflect any changes.
+Very Low
+These are the least reliable sources and often use sensational language. Their content usually isn't objective and can frequently mislead readers and distort facts.
+Low
+These sources often have significant issues with accuracy. They tend to lack credible sources, leave out important details, and use sensational language, resulting in misleading information.
+Mixed
+These sources have a mix of objective and opinion-driven articles. Some information may be credible, but they also include less reliable content. These sources have failed multiple fact-checks and do not quickly correct errors in reporting.
+High
+These sources are mostly fact-based, relying on original reporting. Their overall content is balanced, clear, and objective. These sources rarely fail fact-checks and correct any errors quickly.
+Very High
+These news sources are very reliable and known for sticking to the facts. They consistently provide well-researched, accurate information with minimal bias or sensationalism.
+Ownership Categories
+The ownership categories for each news source were created by Ground News. We researched, analyzed and hand-coded ownership data for 2,276 news outlets and counting. Below are the general parameters for each category.
+Media Conglomerates
+A collection of radio, television, print and other news sources owned by the same entity, typically formed through a series of mergers and acquisitions. Our definition includes any entity that owns a large majority of news outlets. Although typically large and national, we have included smaller companies that own a significant number of outlets in a geographical area.
+Private Equity
+Media outlets that have been purchased by private equity funds, either through a leveraged buyout of the news property or the buyout of its owner. Private equity funds in the media space typically roll up several news properties in order to cut costs while increasing profit margins. They are often accused of pushing profits over news quality.
+Individual
+Individuals with a net worth in the tens of millions or greater who have a significant stake in a media outlet. Everyone in this category built their wealth outside of the media landscape and used it to buy news assets.
+Government
+Primarily government-funded news sources which may be independently managed or explicitly used for issuing government approved media.
+Telecom
+Primarily connectivity providers that own phone, TV, internet or wireless mobility. Companies in this category have started vertically integrating to buy or create their own media assets, therefore owning both the infrastructure and content that you consume.
+Corporation
+Media sources owned by corporations that aren't media conglomerates or private equity firms. While it can be assumed that the interests of the corporate owner influence coverage, the degree of influence varies per outlet. Example: The  South China Morning Post, which is owned by Alibaba
+Independent
+Media that is free of influence by government or corporate interests. These outlets are not owned by any of our other classifications. Given the complexity of corporate cross-holdings and shell companies, any ownership stake greater than the publicized 5% cut-off was considered as 'influence on the news source.
+Other
+Sources that we could not appropriately classify or that do not fall under one of the existing categories.
+Formula
+FormulaA Blindspot is a news story that has political undertones and is disproportionately covered by media sources on one side of the political spectrum.
+The bias breakdown of the story must adhere to a specific formula in order to show up in the Blindspot feed. For example, a Blindspot for the Left must meet the following conditions:
+Fewer than 10 Left-leaning sources reporting
+Right-leaning coverage is greater than or equal to 33%
+Left-leaning coverage is less than or equal to (R/L% - 33) x (30/37)
+Blindspots can not have more than 35% Low factuality coverage
+Download the
+Ground News App
+Trending TopicsLula Da SilvaHalloweenArtificial IntelligenceSenateUnited States
+News Logo
+CompanyAboutHistoryMissionBlogTestimonialsGroup SubscriptionsSubscribeGiftFree TrialCareersAffiliates
+HelpHelp CenterFAQContact UsMedia Bias RatingsOwnership and Factuality RatingsReferral CodeNews SourcesTopicsImpersonation Scams
+ToolsAppBrowser ExtensionDaily NewsletterBlindspot Report NewsletterBurst Your Bubble Newsletter
+Facebook IconTwitter IconInstagram IconLinkedIn IconReddit Icon
+GiftPrivacy PolicyManage CookiesPrivacy PreferencesTerms and Conditions
+© 2026 Snapwise Inc
+Trending Icon
+Lula Da SilvaPlus Icon
+HalloweenPlus Icon
+Artificial IntelligencePlus Icon
+SenatePlus Icon
+Wall StreetPlus Icon
+2026 Midterm ElectionsPlus Icon
+Republican PartyPlus Icon
+Stock MarketsPlus Icon
+US PoliticsPlus Icon
+European UnionPlus Icon
+Democratic PartyPlus Icon
+Election DayPlus Icon
+NewsHome PageLocal NewsBlindspot FeedInternational
+InternationalNorth AmericaSouth AmericaEuropeAsiaAustraliaAfrica
+Trending InternationallyLula Da SilvaHalloweenArtificial IntelligenceSenateWall Street
+Trending in U.S.2026 Midterm ElectionsRepublican PartyUS PoliticsDemocratic PartyHalloween
+Trending in U.K.Manchester UnitedBudgetPremier LeagueHalloweenAndy Burnham

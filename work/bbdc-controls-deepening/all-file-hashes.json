@@ -1,0 +1,114 @@
+{
+  "docs/research/interaction-library/cases/M-018-bbdc.md": {
+    "sha256": "5ff40f5ab1b1141b6ae561cfd9ee11d0a929da6ef02af5b40f1b30da777867c2",
+    "bytes": 14770
+  },
+  "docs/research/interaction-library/batches/bbdc-controls-deepening-coverage.csv": {
+    "sha256": "aa0cf671b21fa0390e9b0cfb58c6cecf3a0d7df66eaad894707f17ea224f6025",
+    "bytes": 107
+  },
+  "docs/research/interaction-library/batches/bbdc-controls-deepening-evidence.jsonl": {
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  "docs/research/interaction-library/batches/bbdc-controls-deepening-inventory.csv": {
+    "sha256": "3a089a877943fca9f20424520dc5f0b8421e76f4e78daa4cc52b065dd303afef",
+    "bytes": 10754
+  },
+  "docs/research/interaction-library/artifacts/bbdc-controls-deepening/source-notes.md": {
+    "sha256": "134db89f2ce646ffc806efa6caaaf139e959656c9def7afecba315cf0e1cc700",
+    "bytes": 2207
+  },
+  "work/bbdc-controls-deepening/additional-captures-updates.json": {
+    "sha256": "cb9c52adb124f7f6fbb0e66b00cafcec00b169ef3babd6ed5647e6ca11b412a2",
+    "bytes": 4579
+  },
+  "work/bbdc-controls-deepening/appstore-cn-embedded.json": {
+    "sha256": "22a284364c3e4a0b5e25676ba6b9a8751226bcdfa1b39bf4c74d627e9dd0aaeb",
+    "bytes": 407973
+  },
+  "work/bbdc-controls-deepening/appstore-cn.html": {
+    "sha256": "3f11560658cfcd9f94ca8e9359f193456b8f2b0ff2ca3ce28c7871b07429218b",
+    "bytes": 655769
+  },
+  "work/bbdc-controls-deepening/appstore-cn.txt": {
+    "sha256": "fcaf6970cf93c2c54f526350fe93c5b04a25df07da1cf58b22f8717c2d841a35",
+    "bytes": 14714
+  },
+  "work/bbdc-controls-deepening/appstore-version-records.json": {
+    "sha256": "e85370493b270d5bca6518410d4800d8298bddd8f13cbf87270be4d4495c24c1",
+    "bytes": 8382
+  },
+  "work/bbdc-controls-deepening/baseline.json": {
+    "sha256": "845e79b24bd046c2440c74239a65e85817a66262efd99fe5e955d14ea5bfc4ac",
+    "bytes": 12443
+  },
+  "work/bbdc-controls-deepening/build.py": {
+    "sha256": "0d7b271e5a034f579477e0384da5100d2427f41d63fb75c527485154ab0854e2",
+    "bytes": 17689
+  },
+  "work/bbdc-controls-deepening/captures.json": {
+    "sha256": "618188ceb056b279a3cbaec6b84acd3f4f514bd0dc9a27d2831e716b5d19518b",
+    "bytes": 2505
+  },
+  "work/bbdc-controls-deepening/case-before.md": {
+    "sha256": "713d153b9101b2dde6401a2bd11baff6097cdffcddf5bfca4a3c2c69ce734b64",
+    "bytes": 11695
+  },
+  "work/bbdc-controls-deepening/case.diff": {
+    "sha256": "2cb710c0d98aaed24ba6aaad36d3e751571b74bb5b7508e2c09c4eb0b7fd3abd",
+    "bytes": 13648
+  },
+  "work/bbdc-controls-deepening/check.py": {
+    "sha256": "a55897958f545b6dee355b984388413a87cc94f0ba4ed27f41a734102227be6e",
+    "bytes": 5085
+  },
+  "work/bbdc-controls-deepening/counts.json": {
+    "sha256": "6152ab608030bd61c02dae2657ca54a1d5c0db47f283509f8aa37baff33593a0",
+    "bytes": 200
+  },
+  "work/bbdc-controls-deepening/existing-coverage-updates.csv": {
+    "sha256": "feae4aa3ddd8201ee9dc0f900d0b43f12771ff16cac4ab3404a3501e46afb50b",
+    "bytes": 3590
+  },
+  "work/bbdc-controls-deepening/existing-coverage-updates.json": {
+    "sha256": "56d932f294d4f8b53e4ddd67b96b78f19d7ed7e5e57dc15d10afb70a4f71fea3",
+    "bytes": 5041
+  },
+  "work/bbdc-controls-deepening/final-diff-status.json": {
+    "sha256": "ad48156359aec9dcfb7f49bcd1f05fe2aa8c3bb5c65937c25c18411bb551cf53",
+    "bytes": 240
+  },
+  "work/bbdc-controls-deepening/index.html": {
+    "sha256": "4ee092ce7e67d895ecb56f3705f14d88e74d9e6a402d15721ca9823ff4443fa8",
+    "bytes": 35980
+  },
+  "work/bbdc-controls-deepening/index.txt": {
+    "sha256": "3c1891f2b6b96fd1d091ecdf2c9424097fc6b3f6e8b8d43ddfc2bcf10a336f5d",
+    "bytes": 5249
+  },
+  "work/bbdc-controls-deepening/privacy-web-search-response.json": {
+    "sha256": "0cfc9429187f424247194a556c1b53c2251ebde9ad4cb711a1102fe3d52c9b38",
+    "bytes": 34815
+  },
+  "work/bbdc-controls-deepening/privacy-web-search-response.txt": {
+    "sha256": "f549627fcda2a32804cd6a02f2b44f2106d4041ecc0fc665683a255a93eeeaa9",
+    "bytes": 34470
+  },
+  "work/bbdc-controls-deepening/privacy.html": {
+    "sha256": "6aa7a91f42f7ca1a7ba8b0563661a976d59008b2f704ec3d1434f1f8a0ef3ebe",
+    "bytes": 976
+  },
+  "work/bbdc-controls-deepening/privacy.txt": {
+    "sha256": "b6907cc81fbea32c4f8c4689367d48cd04e59d6f1547fb9a1c3ff9fa8b92c3ac",
+    "bytes": 108
+  },
+  "work/bbdc-controls-deepening/research-log.md": {
+    "sha256": "7002c06bb49db1095b6dba8f30f7bb8363e98bd27fd54c6220f935d6c32d127e",
+    "bytes": 6955
+  },
+  "work/bbdc-controls-deepening/validation.json": {
+    "sha256": "d351e1c0142afccc86a95d1fb1eb5ff9a2fc3e399d33a41d65b302e2ded10754",
+    "bytes": 304400
+  }
+}

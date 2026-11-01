@@ -1,0 +1,15 @@
+How to Create a CSV File Using Outlook?
+Modified on: Sat, 3 Oct, 2026 at 8:34 AM
+You can export your contacts from Outlook as a CSV file to use them later in Mudita Center
+Exporting Contacts from Outlook
+On your computer, sign in to your Outlook account using your Microsoft ID.
+Click the People icon.
+Click Manage contacts.
+Click Export.
+Click Export again to confirm.
+The CSV file will be saved in your Downloads folder.
+Was this article helpful?
+No
+Yes
+That’s Great!
+Thank you for your feedback

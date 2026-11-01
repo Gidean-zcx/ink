@@ -1,0 +1,8 @@
+{
+  "previous_turn": "progress",
+  "evidence": "batch54 final-manifest matches current formal files",
+  "goal_complete": false,
+  "blocked_streak": 0,
+  "batch_finished": true,
+  "root_verification": "passed"
+}

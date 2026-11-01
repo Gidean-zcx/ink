@@ -1,0 +1,177 @@
+The new Inoreader experience is here! 🎉 | Inoreader blog
+inoreader-logo
+Start 15-Day Trial
+Home
+Features
+Enterprise
+Pricing
+Blog
+Contact
+RSS tools
+Free tools
+Feed validatorValidate a feed for errors
+Podcast validatorGet a podcast listed everywhere
+Feed analyticsSee how a feed performs
+Feed finderFind the feeds of any website
+OPML checkerCheck and repair an OPML export
+All RSS tools
+Feed validator
+Inoreader fetches the feed the way a reader does, reports what is wrong and tells you exactly what to change.
+Open the validator
+Podcast validator
+Inoreader fetches a podcast feed, its newest episode files and the artwork, and checks everything Apple Podcasts, Spotify and the apps require.
+Open the podcast validator
+Feed analytics
+See how many Inoreader readers follow a feed, how it ranks in its topic and how reliably it delivers new posts.
+Open feed analytics
+Feed finder
+Paste a website's address and Inoreader lists the feeds it publishes, for you to copy or follow in one click.
+Open the finder
+OPML checker
+Upload an OPML export and see which of its feeds still work, which fail, which moved and which are listed twice.
+Open the checker
+All RSS tools →
+Sign in
+Create account
+Back to Blog
+The new Inoreader experience is here! 🎉
+Oct 15, 2024
+|
+News
+After months of hard work, testing, breaking, fixing, and rebuilding, the cat is finally out of the bag. The brand-new Inoreader is here, and we couldn’t be more excited to share it with you! Our latest major update marks a significant milestone for our team, and we’ve done our best to bring you a fresh and modern interface with new and updated features to enhance your experience.
+Why a redesign?
+It’s been a while since our last major update, and we recognize that during this time, both the digital landscape and our users’ needs have evolved. Over the past few years, we’ve rolled out many new features that we felt needed to be organized and integrated into a cohesive experience. As we’ve grown alongside our community, we’ve listened to your feedback and observed how you interact with our platform. Our goal has always been to make content discovery, consumption, and distribution seamless and enjoyable.
+With this redesign, we’ve reimagined Inoreader’s UI to provide intuitive and user-friendly solutions at every step. We’ve modernized our interface, making it sleeker and more visually appealing while ensuring it remains easy to navigate. We’ve put considerable effort into preserving the familiarity and usability of features from the previous design so you can feel right at home in this new environment. Whether you’re a long-time power user or new to Inoreader, we believe these changes will significantly improve your workflows and make managing your content a breeze. Read on to learn what’s in store with this major release!
+Modern and responsive interface
+The first thing you’ll probably notice is Inoreader’s sleek new look. All themes have been updated with refreshed brand colors, offering a more visually appealing and cohesive experience. Enhanced components, including dialogues, menus, and other elements, provide a more intuitive and user-friendly interface. We’ve also dedicated significant effort to developing a responsive mobile experience, allowing you to transition your entire workflow to your phone without sacrificing functionality.
+New tab bar and dynamic sidebar
+Navigating Inoreader has become easier than ever with the new tab bar and dynamic sidebar. These features provide quick and easy access to all key sections of your account, including dashboards, feeds, saved items, Team spaces, automations, and dedicated tabs for searching articles and adding feeds. The intuitive layout helps you find what you need at a glance, ensuring you can effortlessly switch between sections while saving valuable time and effort.
+Enhanced custom dashboards
+Our redesigned dashboards offer improved customization with various new and updated widgets. Choose a layout to showcase essential content at a glance, creating a personalized space that meets your preferences. Key updates include new onboarding widgets to assist users during account setup, content widgets to highlight the most relevant articles, and data widgets to track your reading habits and feed performance, enabling effective usage monitoring.
+A new hub for your saved items
+The new Saved section redefines how you organize your personal library in Inoreader. It’s the central hub for articles saved to read later, archived items, annotations, and tags – all in one place. Enjoy a new article view featuring estimated reading times, progress tracking, and editable metadata for easier content management. The Continue reading tab lets you pick up right where you left off. To keep your reading list clutter-free, move articles you’ve read but would like to keep to the new Archive. With the ability to cross-select tags, discovering relevant content is just a few clicks away. Additionally, saving articles and external pages from the web is extremely easy, either through the Add web page button inside Inoreader or via the browser extension, available for the web and all apps.
+More control with content filters
+The recent updates to content filters are designed to save you time and effort by enabling you to apply filters to entire folders. This enhancement simplifies content management while reducing filter limitations. Additionally, you can now view items removed by your filters through the new Filters dashboard in the Automate section. Simply click on the number displayed under Removed today to access a log of all removed articles, giving you greater visibility and control.
+Improved article search
+Finding the content you need is now more efficient with our enhanced search functionality. The new contextual search allows you to seamlessly search within feeds, folders, and other sections of your account. Additionally, the dedicated article-only search engine in the tab bar simplifies finding specific content, whether from publicly available sources or within your own account.
+Convenient audio player
+Our background audio player also has a sleek new design. You can now access it directly from your tab bar and enjoy listening to articles and podcasts while browsing or multitasking. Easily add items to your queue from any feed, folder, or article, and rearrange your playlist on the go for a seamless listening experience.
+YouTube feed updates
+We have made some significant improvements to how you interact with YouTube content on Inoreader. You can now filter out videos under 60 seconds, with Shorts easily identifiable by a distinct icon in your feeds. Additionally, you can view video durations and identify live videos, whether scheduled or ongoing, at a glance. These updates give you more control and a clearer overview of your YouTube content.
+Note: This article describes an earlier version of Inoreader’s YouTube functionality. For the latest improvements, including transcripts, topic extraction, and article summaries, please see our 2025 update.
+Refreshed Teams interface
+The Teams section of Inoreader has undergone a complete redesign, now featuring separate tabs for essential areas such as Activity, Members, Digests, Folders, Channels, Tags, Organization, and Billing. These updates are further enhanced by new features like shared annotations to facilitate collaboration and email digest logs for easy access to past issues with detailed metadata.
+Other improvements
+In addition to these major updates, we’ve made some smaller changes to enhance your overall experience:
+Preferences section: Now includes a convenient search bar, helping you quickly locate and customize settings to suit your reading habits.
+Mark as read and hide: This optional setting lets you mark articles as read and hide them with a single (X) button. To enable it, go to Preferences > Settings > Article listing and check the box next to Mark as read and hide.
+Show updated items only: A new button toggles between showing all or only unread sections in the sidebar, available separately for feeds and tags.
+Resizable sidebar: Adjust the width of your sidebar to fit your browsing preferences for a more comfortable experience.
+No more ads: The Free plan no longer contains ads, providing a cleaner view that allows you to focus on what matters most.
+We hope these updates ensure a smooth and personalized workflow for your needs.
+A big thank you! 💙
+To conclude this lengthy post on a warm note, we want to express our sincere gratitude to our users for your continued support, patience, and feedback throughout the redesign process. Your insights, ideas, and suggestions have played a crucial role in shaping the new Inoreader experience, and we truly hope you enjoy the enhancements we’ve made. As we move forward, we’ll be listening closely to your feedback and addressing any minor bugs that may arise in the coming weeks. If you have any thoughts or reports to share, please reach out through the feedback form in your Inoreader account. Thank you for being a part of our community!
+In case you missed it
+Introducing article edit history
+Oct 19, 2026
+A first look at Inoreader on iPhone Duo
+Oct 5, 2026
+Reddit is ending RSS support: What this means for Inoreader
+Oct 1, 2026
+With Inoreader, content comes to you the minute it's available.
+Follow websites, social media feeds, podcasts, blogs, and newsletters. Enjoy what's important to you, all in one place.
+With Inoreader, content comes to you the minute it's available.
+Follow websites, social media feeds, podcasts, blogs, and newsletters. Enjoy what's important to you, all in one place.
+Create account
+Product
+Features
+Pricing
+Enterprise
+Mobile apps
+Browser extension
+Inoreader alternatives
+RSS tools
+All tools
+Feed finder
+Feed analytics
+Top RSS feeds
+Feed validator
+Podcast validator
+Feed viewer
+OPML checker
+Company
+About us
+Blog
+Help center
+Developer portal
+Contact us
+Brand portal
+Service status
+Legal
+Terms of Service
+Privacy Policy
+Security commitment
+© 2026 Innologica Ltd
+We use cookies to enhance your Inoreader experience. By using our website, you agree to our use of cookies.
+Access cookie settings
+OK, I agree
+×
+Sign in
+Use a different account
+Sign in with a passkey
+Other sign-in methods
+Change user
+Passkey sign-in was canceled or couldn't be completed.
+Don't have a passkey yet? Sign in with your password first, then add one in your account settings.
+Sign in
+Email address:
+Please enter Email
+Password
+Please enter password
+Remember me
+Forgot password?
+Sign in
+Sign in with a passkey
+Passkey sign-in was canceled or couldn't be completed
+Don't have a passkey yet? Sign in with your password first, then add one in your account settings.
+Or simply sign in with:
+New to Inoreader? Create an account
+Create account
+With Inoreader, content comes to you.
+Sign up to browse more than 5 000 000 sources and build the ultimate newsfeed!
+Create account
+Don't have an account?
+Create one now
+×
+Create account
+Email address
+Please enter email
+Password
+Please enter password
+Create account
+Or simply sign in with:
+Already have an account? Sign in.
+Sign in
+Already have an account?
+Enter your profile and access your feeds now.
+Sign in
+Already have an account?
+Sign in
+×
+Request Quote
+Name
+Please enter name
+Email
+Please provide valid email
+Company                    Optional
+Industry                    Optional
+Select from listMedia and PublishingPharmaceuticalsCybersecurityTelecommunicationsIT and SoftwareFinance and BankingTransport and LogisticsMarketing and PRPublic AuthoritiesInternational OrganizationsResearchEducation ServicesOther
+Position                    Optional
+Message
+Please enter message
+I understand and accept the Inoreader Privacy
+Policy
+You must accept the privacy policy
+Send message
+Thank you for your query. Our team will review the details and get back to you shortly.
+Go to homepage

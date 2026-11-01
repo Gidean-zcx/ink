@@ -1,0 +1,4 @@
+Transaction triggers in Shortcuts on iPhone or iPad
+Use a transaction trigger to run an automation based on your wallet transactions.
+The Transaction trigger has the following option:
+When I tap: Select a card to trigger an automation whenever it’s tapped.See alsoUse variables in Shortcuts on iPhone or iPad

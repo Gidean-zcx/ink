@@ -1,0 +1,42 @@
+{
+  "id": "6a5dfaf8a3fa769cb4ecf1e7",
+  "articleId": "6a4e08d0cdeb84d826ae740b",
+  "title": "How to check if your Yoto player is online",
+  "body": "<h4><span style=\"color: rgb(248, 94, 65);\">There are several reasons why you may need to know if your player is currently online.</span></h4><p><strong><br></strong></p><p><strong>Downloading content to the player</strong></p><p><span style=\"color: rgb(0, 0, 0);\">The player needs to be online to download and store locally the audio content for each card. So to play a card for the first time, your player needs to be online.</span><br><span style=\"font-family: Inter;\"><br></span></p><p><strong>Streaming content</strong></p><p><span style=\"font-family: Inter; color: rgb(0, 0, 0);\">Some cards or content, like radio, always need a connection to play, so if your player is offline, this content won&#39;t work.</span></p><p><br></p><p><strong>Addi</strong><strong>ng new Wi-Fi details</strong></p><p><span style=\"font-family: Inter; color: rgb(0, 0, 0);\">If you want to add new Wi-Fi details to your player, so it can access another network, you can only do this if your player is offline.</span></p><p><span style=\"font-family: Inter;\"><br></span></p><p><strong>How to tell if your player is online</strong></p><p><span style=\"font-family: Inter;\">When your player is online, the sun or moon icon will be displayed (depending on whether your Yoto is currently in &#39;day&#39; mode or &#39;night&#39; mode), and the time will be displayed in red.&nbsp;</span></p><p><span style=\"font-family: Inter;\"><img src=\"https://attachments.gorgias.help/uploads.gorgias.io/Aa90l7EQnv7JWorj/Moon_clock-8e9e20f7-beb9-4db9-9acf-2bdcb48bfeab.png\" style=\"width: 500px;\" class=\"fr-fic fr-dib\" alt=\"Yoto players - online display\"></span></p><p><span style=\"font-family: Inter; color: rgb(0, 0, 0);\">If the time is displayed in white, this means Yoto Player is currently offline.</span></p><p><span style=\"font-family: Inter;\"><img src=\"https://attachments.gorgias.help/uploads.gorgias.io/Aa90l7EQnv7JWorj/Moon_clock-1-ac960d1b-5ff0-4626-ab80-c5d82316b65d.png\" style=\"width: 500px;\" class=\"fr-fic fr-dib\" alt=\"Yoto players - offline display\"></span></p><p><span style=\"font-family: Inter;\">&nbsp;</span></p><p><span style=\"color: rgb(0, 0, 0);\"><strong>Some other icons you may see, and what they mean</strong></span></p><p><span style=\"font-family: Inter; color: rgb(0, 0, 0);\">The green Yoto Face icon means that your player is connected to Wi-Fi but not connected to the internet - this can happen if your internet connection is down.</span></p><p><span style=\"font-family: Inter;\"><img src=\"https://attachments.gorgias.help/uploads.gorgias.io/Aa90l7EQnv7JWorj/Mini_green_face-6529c069-6852-49b6-bc28-f62a10fc68d0.png\" style=\"width: 500px;\" class=\"fr-fic fr-dib\" alt=\"Yoto mini - green Yoto face display\"></span></p><p><span style=\"font-family: Inter; color: rgb(0, 0, 0);\">When the white Yoto Face icon doesn&#39;t go away, it means that your player is offline, and it can&rsquo;t see what the time is &nbsp;- please follow the setup flow in the Yoto app to get your player online.</span></p><p><span style=\"font-family: Inter;\"><img src=\"https://attachments.gorgias.help/uploads.gorgias.io/Aa90l7EQnv7JWorj/Mini_white_face-c8a60ee4-0cec-4408-95c3-13ea9fd7d274.png\" style=\"width: 500px;\" class=\"fr-fic fr-dib\" alt=\"Yoto mini - white Yoto face display\"></span></p><p><br></p><p><span style=\"font-family: Inter;\"><a href=\"https://support.yotoplay.com/en-US/yoto-display-icons-11571\">Click here for more information on all the display icons and what they mean.</a></span></p><p><br></p>",
+  "categories": [
+    {
+      "id": "6a19a5be6e96d255daa8983f",
+      "knowledgeBase": "69d522fcb7baaa50525b3529"
+    }
+  ],
+  "primaryCategory": "6a19a5be6e96d255daa8983f",
+  "metaDescription": "There are several reasons why you may need to know if your player is currently online      Downloading content to the player  The player needs to be online to ",
+  "metaKeywords": [
+    "player",
+    "online",
+    "content",
+    "Yoto",
+    "time",
+    "offline",
+    "currently",
+    "WiFi",
+    "can",
+    "icon",
+    "displayed",
+    "means",
+    "may",
+    "need"
+  ],
+  "metaTitle": "",
+  "lang": "en_gb",
+  "slug": "how-to-check-if-your-yoto-player-is-online",
+  "draftSlug": null,
+  "hash": "rJ_A_Ki7Mx",
+  "publishedAt": "2026-07-20T10:40:25.993Z",
+  "updatedAt": "2026-07-20T10:40:26.089Z",
+  "createdAt": "2026-07-20T10:39:52.891Z",
+  "href": "/en_gb/how-to-check-if-your-yoto-player-is-online-rJ_A_Ki7Mx",
+  "tags": [],
+  "knowledgeBases": [],
+  "scope": "public"
+}

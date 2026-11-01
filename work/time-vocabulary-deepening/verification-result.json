@@ -1,0 +1,20 @@
+{
+  "new_evidence": 6,
+  "new_tasks": 3,
+  "new_D2": 3,
+  "old_task_D1_to_D4": 1,
+  "old_tasks_amended": 6,
+  "old_fields_amended": 27,
+  "old_evidence_additional_captures": 11,
+  "audit_metadata_fields_migrated": 4,
+  "inventories": 41,
+  "inventory_rows": 3877,
+  "new_inventory_rows": 305,
+  "new_archived_images": 17,
+  "raw_files_checked": 116,
+  "browser_captures": 31,
+  "reviewed_browser_images": 14,
+  "archived_browser_images": 12,
+  "recorded_browser_calls": 81,
+  "errors": []
+}

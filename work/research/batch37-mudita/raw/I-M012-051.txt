@@ -1,0 +1,14 @@
+How to Transfer Photos to Kompakt?
+Modified on: Sat, 3 Oct, 2026 at 8:37 AM
+You can easily transfer photos to your Kompakt using Mudita Center. Follow the steps below to upload your images 
+Open Mudita Center and connect your Kompakt to your computer.
+Under Your Kompakt, click Manage Files.
+Select the Photos tab.
+Click Add file.
+Browse your computer and select the image files you want to upload.
+Confirm the transfer to copy the selected photos to your Kompakt.
+Was this article helpful?
+No
+Yes
+That’s Great!
+Thank you for your feedback

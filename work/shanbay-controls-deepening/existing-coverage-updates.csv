@@ -1,0 +1,9 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M019-01,M-019,单词回忆与提示,D2,E-SBY-02;E-SBY-03;E-SBCD-11,认识/提示/不认识；有效学习与测试通过统计口径分开,历史帮助文案/掌握口径差异；现版误评撤销、简单词恢复和跳过,not_observed,false,cases/M-019-shanbay.md,2026-10-26
+F-M019-03,M-019,调整任务与继续,D2,E-SBY-05;E-SBCD-01;E-SBCD-03,即时或次日；再来一组；旧词优先/混合；切换与删除词书后果分开,词序保存与队列重算；删除确认及共享词状态；当前限额与追加上限,not_observed,false,cases/M-019-shanbay.md,2026-10-26
+F-M019-04,M-019,阅读遇词进入复习,D2,E-SBY-06;E-SBCD-08,旧查词/加入/手动完成分开；iOS4.47重读打卡及4.56.0自动打卡另标,新自动完成阈值及是否同一进度对象；重复入库；误点撤销；离线,not_observed,false,cases/M-019-shanbay.md,2026-10-26
+F-M019-05,M-019,阅读切换听书,D2,E-SBY-06;E-SBCD-08,旧点击句连续播放/付费译文；iOS4.56.0长按单句播放另标,新长按菜单关系；音频与对照范围；断点/中断/同步,not_observed,false,cases/M-019-shanbay.md,2026-10-26
+F-M019-06,M-019,听力文章练习,D2,E-SBY-08;E-SBY-09;E-SBY-10;E-SBY-11;E-SBCD-05,提示后积分/星级不同；历史5句计划打卡与未完文章继续安排,现版各模式判题；跳过与错误反馈；精确断点/未提交答案恢复,not_observed,false,cases/M-019-shanbay.md,2026-10-26
+F-M019-07,M-019,泛听与素材,D2,E-SBY-08;E-SBY-16;E-SBCD-06;E-SBCD-09,字幕/资源目录；雅思专区；5分钟泛听与5句计划分开；当前倍速/循环声明,当前打卡入口；搜索限制；循环设置及离线/后台中断,not_observed,false,cases/M-019-shanbay.md,2026-10-26
+F-M019-08,M-019,打卡遗漏与奖励核对,D2,E-SBY-12;E-SBY-13;E-SBCD-04;E-SBCD-05,补签/时光机；分享去重；历史阅读/听力计划中退失败且无完成奖励,退出确认与取消；失败计划恢复；现行门槛、额度与UI,not_observed,false,cases/M-019-shanbay.md,2026-10-26
+F-M019-09,M-019,跟读与复述,D1,E-SBY-01;E-SBY-16;E-SBCD-06;E-SBCD-10,独立口语与听力口语并存；雅思专区口语路径；跟读/复述声明,两个App各自录音/提交/重录控制；权限/上传失败；评分申诉和恢复,not_observed,false,cases/M-019-shanbay.md,2026-10-26

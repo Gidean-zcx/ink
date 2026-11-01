@@ -1,0 +1,9 @@
+There are two types of notes: “standalone notes” and “side-notes on documents.” This section explains how to create a standalone note. For how to create a side-note, see the links in “Related Topics.”
+Press the
+(home) button, and tap [Create&#010;New Note].
+Select a template, and tap [OK].
+A note is made in the Note folder under a file name that combines the name of the template with the date of creation.
+Hint
+Notes are created as PDF files and can be handled the same way as documents. After creation, the Digital Paper App can be used to move the note to a different folder or change the file name.
+Note
+Even when a document is open, performing the steps above will not create a side-note on the document.

@@ -1,0 +1,8 @@
+Where are summaries stored?
+Inside articles and in your searchable account sections.
+Related questions
+What are article summaries?
+How do I generate a summary?
+Can I use custom prompts with summaries?
+Can I customize how summaries work?
+Are article summaries available in all plans?

@@ -1,0 +1,34 @@
+[
+  {
+    "name": "dialog",
+    "url": "https://khankids.zendesk.com/hc/article_attachments/4403590761883",
+    "method": "ordinary_public_browser_static_image",
+    "checked_on": "2026-10-27",
+    "http_status": 200,
+    "final_url": "https://khankids.zendesk.com/hc/article_attachments/4403590761883",
+    "image_size": {
+      "width": 2048,
+      "height": 1536,
+      "complete": true
+    },
+    "path": "/home/workspace/reader/work/research/batch37-khan/assignment-images/dialog.png",
+    "sha256": "a1fdd20bebcb37cdcd5aca1ad7ed4bd541f06b4ecc4f93e193840c02737501f2",
+    "actual_product_operation": false
+  },
+  {
+    "name": "assignments",
+    "url": "https://khankids.zendesk.com/hc/article_attachments/4403593871515",
+    "method": "ordinary_public_browser_static_image",
+    "checked_on": "2026-10-27",
+    "http_status": 200,
+    "final_url": "https://khankids.zendesk.com/hc/article_attachments/4403593871515",
+    "image_size": {
+      "width": 2048,
+      "height": 1536,
+      "complete": true
+    },
+    "path": "/home/workspace/reader/work/research/batch37-khan/assignment-images/assignments.png",
+    "sha256": "4ec4cf6228676ae480c1216f9e901552a101a49c94c350635633ddddf82673b3",
+    "actual_product_operation": false
+  }
+]

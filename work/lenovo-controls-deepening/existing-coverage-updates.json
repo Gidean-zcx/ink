@@ -1,0 +1,79 @@
+[
+  {
+    "flow_id": "F-M062-01",
+    "before": {
+      "known_branches": "阅读区横向划动用于翻页；图示明确区分起点，没有给出触发阈值。",
+      "gaps": "实际手势阈值与误触",
+      "evidence_ids": "E-LNP-01;E-LNP-04",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "known_branches": "Wi-Fi/蓝牙短按开关、长按分别进入网络/配对；音量必须先接蓝牙音频。系统边缘导航与内部翻页分开；刷新模式有入口但无波形或刷新率参数。",
+      "gaps": "触发阈值/误触、刷新质量、快捷控制持久化和实际音频重连未知。",
+      "evidence_ids": "E-LNP-01;E-LNP-04",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "flow_id": "F-M062-03",
+    "before": {
+      "known_branches": "回放可显示对应手写内容，播放需蓝牙音频；删除某段后关系如何变化未知。",
+      "gaps": "删除录音后关系和精确定位",
+      "evidence_ids": "E-LNP-01",
+      "checked_on": "2026-10-26",
+      "visual_status": "not_observed"
+    },
+    "after": {
+      "known_branches": "可加速回放；录音列表长按改名/删除；Note replay显示对应手写内容。播放需蓝牙音频；图标表不是连续回放观察。",
+      "gaps": "离开笔记/断电保存、删除音频后的笔迹关系、转写、精确位置和跨端同步未知。",
+      "evidence_ids": "E-LNP-01;E-LNCD-01",
+      "checked_on": "2026-10-27",
+      "visual_status": "static_manual_pages_only"
+    }
+  },
+  {
+    "flow_id": "F-M062-04",
+    "before": {
+      "known_branches": "搜索、翻译和朗读需网络；未证明整本听书或读听断点同步。",
+      "gaps": "整本听书/跨端断点",
+      "evidence_ids": "E-LNP-01",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "known_branches": "选词还可高亮、复制或Wiki搜索；搜索/翻译/朗读需网络。词级窗口不等于整本听书或持久续播。",
+      "gaps": "词典是否全离线、资格/付费、选词失败与读听断点未知。",
+      "evidence_ids": "E-LNP-01",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "flow_id": "F-M062-07",
+    "before": {
+      "known_branches": "云空间有期限/购买条件；不是整个设备镜像。同步冲突、账号退出与恢复覆盖未知。",
+      "gaps": "过期/满空间/冲突和恢复",
+      "evidence_ids": "E-LNP-02",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "known_branches": "限定Notebook及Library/指定格式文件；有效云空间、联网，锁屏自动或文件页手动同步。配套App导入与设备同步是不同入口。",
+      "gaps": "过期/满空间/冲突/刷机恢复、录音与进度覆盖未核；Q32账号隐藏另见F-M062-19，不当通用恢复。",
+      "evidence_ids": "E-LNP-02",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "flow_id": "F-M062-08",
+    "before": {
+      "known_branches": "指南说明清除内部数据；开了云同步不等于最近编辑已上传，完成后如何恢复仍需独立验证。",
+      "gaps": "重置后实际恢复范围",
+      "evidence_ids": "E-LNP-01",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "known_branches": "2023指南路径含General且清内部数据后自动重启；FAQ简写Settings > Factory Reset，不能据简写判定界面已改版。启用同步不证明最后编辑已上传。",
+      "gaps": "完整恢复、上传完成回执与失败/断电回滚未知；无重置实测。",
+      "evidence_ids": "E-LNP-01;E-LNP-02",
+      "checked_on": "2026-10-27"
+    }
+  }
+]

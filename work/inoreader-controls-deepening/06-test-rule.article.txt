@@ -1,0 +1,11 @@
+Can I test a rule before saving it?
+Yes. Use Run rule to test your rule on existing articles before saving it. Start with a single feed so you can easily review the results. Check all configured actions before running the test, especially those that send emails or export articles, as these actions will be performed. Afterward, check which articles matched and whether the actions produced the expected results.
+Related questions
+What are rules?
+Where can I create and manage rules?
+What can trigger a rule?
+What conditions can rules use?
+What actions can rules perform?
+Can one rule perform multiple actions?
+Why is my rule not triggering?
+How many rules are included in Pro plans?

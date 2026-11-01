@@ -1,0 +1,26 @@
+Resources in Spanish and Other Languages – Khan Academy (https://khankids.zendesk.com/hc/en-us/sections/46978742033051-Resources-in-Spanish-and-Other-Languages)
+citeturn958view3 [wordlim: 200] Crawled: today; Content type: text/html; Source: open({"ref_id":"https://khankids.zendesk.com/hc/en-us/sections/46978742033051-Resources-in-Spanish-and-Other-Languages","lineno":null}); Total lines: 24
+L0: 【0†Skip to main content】
+L1: 
+L2: 【1†Submit a request】
+L3: 
+L4: [Input][Input: Search]
+L5: # Resources in Spanish and Other Languages
+L6:   * 【2†Ukrainian Parent Guide: Довідник для батьків: Початок роботи з Khan Academy Kids】
+L7:   * 【3†Spanish Parent Guide: Guía para Padres: Empezando con Khan Academy Kids】
+L8:   * 【4†Chinese Parent Guide: 家长指南: 开始使用可汗学院儿童版】
+L9:   * 【5†Polish Parent Guide: Poradnik dla Rodziców: Pierwsze Kroki z Khan Academy Kids】
+L10:   * 【6†Brazilian Portuguese Parent Guide: Guia para pais: primeiros passos no Khan Academy Kids】
+L11:   * 【7†Spanish books | Libros en español】
+L12:   * 【8†Korean Parent Guide: 학부모 가이드: Khan Academy Kids 시작하기】
+L13:   * 【9†French Parent Guide: Guide parent: Comment utiliser Khan Academy Kids】
+L14:   * 【10†Armenian Parent Guide: Ուղեցույց ծնողների համար: Սկսիր «Khan Academy Kids»-ի հետ】
+L15:   * 【11†Bulgarian Parent Guide: Ръководство за родители: Запознаване с Khan Academy Kids】
+L16:   * 【12†Turkish Parent Guide: Veli Rehberi: Khan Academy Kids’i Kullanmaya Nasıl Başlarım?】
+L17:   * 【13†Czech Parent Guide: Příručka pro rodiče: Začínáme s Khan Academy Kids】
+L18:   * 【14†Swedish Parent Guide: Föräldraguide: Kom igång med Khan Academy Kids】
+L19:   * 【15†Hungarian Parent Guide: Szülői útmutató: Első lépések a Khan Academy Kids használatához】
+L20:   * 【16†Azerbaijani Parent Guide: Valideyn Bələdçisi: Khan Academy Kids-dən istifadə etməyə necə başlamaq olar?】
+L21: 【17†Khan Academy】
+L22: 
+L23: 【18†Powered by Zendesk†www.zendesk.com】

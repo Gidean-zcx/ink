@@ -1,0 +1,34 @@
+[
+  {
+    "evidence_id": "E-LNP-01",
+    "capture": {
+      "checked_on": "2026-10-27",
+      "access_mode": "existing_pdf_reread",
+      "capture_url": "https://download.lenovo.com/consumer/mobiles_pub/lenovo_smart_paper_ug_en_2023.pdf",
+      "raw_work_path": "work/research/extension-manuals/lenovo-smart-paper.pdf",
+      "raw_sha256": "b30235ca552e3e7b4f6f038203e2e2b0c3e0842ee06079438606e2d8405e5ef4",
+      "text_work_path": "work/lenovo-controls-deepening/guide-pages.json",
+      "text_sha256": "ab191162aa9a3f76935bdcdd87682fa9dd4b7d45b95801dd431d814f0e4b8e4c",
+      "note": "核p2目录及p3–17功能正文；附录不作已读功能链",
+      "note_artifact": "artifacts/lenovo-controls-deepening/source-notes.md",
+      "note_sha256": "bdd04700ed45d0f3b8b7918cfd658cf904921745c6f2001414cd60b7821faee1"
+    }
+  },
+  {
+    "evidence_id": "E-LNP-02",
+    "capture": {
+      "checked_on": "2026-10-27",
+      "access_mode": "official_search_index_only",
+      "capture_url": "https://support.lenovo.com/ca/en/solutions/ht514875-lenovo-smart-paper-lenovo-sp101fu-frequently-asked-questions-faqs",
+      "raw_work_path": "work/lenovo-controls-deepening/search-index-b.txt",
+      "raw_sha256": "8e26a5724e6f58a01a78a4911c6c9398232a3a96bf4dd4a7ddc2dbca692cec50",
+      "note": "普通公开搜索索引；本轮使用LB/IN区域Q11/19/29/32/46，CA更新日期仅属CA；未重试403或访问其他区域原站。",
+      "note_artifact": "artifacts/lenovo-controls-deepening/source-notes.md",
+      "note_sha256": "bdd04700ed45d0f3b8b7918cfd658cf904921745c6f2001414cd60b7821faee1",
+      "indexed_source_urls": [
+        "https://support.lenovo.com/lb/en/solutions/ht514875-lenovo-smart-paper-lenovo-sp101fu-frequently-asked-questions-faqs",
+        "https://support.lenovo.com/in/en/solutions/ht514875-lenovo-smart-paper-lenovo-sp101fu-frequently-asked-questions-faqs"
+      ]
+    }
+  }
+]

@@ -1,0 +1,55 @@
+[
+  {
+    "evidence_id": "E-BOOX-16",
+    "expected_url": "https://booxsupport.zendesk.com/hc/en-us/articles/10701578837268-Handwritten-Notes",
+    "before_additional_captures": [],
+    "append_additional_captures": [
+      {
+        "checked_on": "2026-10-27",
+        "access_mode": "existing_local_public_help_capture_reread_no_body_network_request",
+        "raw_work_path": "work/boox-controls-deepening/epaper-pc-articles.json",
+        "raw_sha256": "02e30182beee444963ce691bbec9523380dcf91000c32685e27bea33f08a2cd8",
+        "locator": "Article 10701578837268 full body, especially Page Manager/Layers/Lasso/Insert/More; actual images 10 and 13 only",
+        "archived_artifact": "artifacts/boox-reading-controls-deepening/source-notes.md",
+        "sha256": "49d6ffbbb7edc9937b3d66b5941d2a95eb47fb72d514071fe3ded09a13bf2dbe",
+        "hands_on": false,
+        "visual_observed": true,
+        "continuous_sequence": false,
+        "note": "原件采集2026-10-26；本地复读不是新版本或独立互证，help元数据不是固件发行日期。",
+        "visual_audit_path": "artifacts/boox-reading-controls-deepening/observed-images.json"
+      }
+    ]
+  },
+  {
+    "evidence_id": "E-BXCD-01",
+    "expected_url": "https://booxsupport.zendesk.com/hc/en-us/categories/38115205868180-User-Guide-ePaper-Tablet-PCs",
+    "before_additional_captures": [
+      {
+        "checked_on": "2026-10-27",
+        "access_mode": "local_saved_category_index_reread_no_network",
+        "raw_work_path": "work/boox-controls-deepening/epaper-pc-articles.json",
+        "raw_sha256": "02e30182beee444963ce691bbec9523380dcf91000c32685e27bea33f08a2cd8",
+        "locator": "59 articles/14 sections, next_page=null; not Palma 2 model inventory",
+        "hands_on": false,
+        "visual_observed": false,
+        "archived_artifact": "artifacts/palma-controls-deepening/source-notes.md",
+        "sha256": "ae9ac4b859da5350e40a490fab0122bab465a14962ea9c8da1c0ee644f6d17ef"
+      }
+    ],
+    "append_additional_captures": [
+      {
+        "checked_on": "2026-10-27",
+        "access_mode": "existing_local_public_help_capture_reread_no_body_network_request",
+        "raw_work_path": "work/boox-controls-deepening/epaper-pc-articles.json",
+        "raw_sha256": "02e30182beee444963ce691bbec9523380dcf91000c32685e27bea33f08a2cd8",
+        "locator": "Existing 59-article inventory reused; selected ten article bodies read locally; not recaptured category",
+        "archived_artifact": "artifacts/boox-reading-controls-deepening/source-notes.md",
+        "sha256": "49d6ffbbb7edc9937b3d66b5941d2a95eb47fb72d514071fe3ded09a13bf2dbe",
+        "hands_on": false,
+        "visual_observed": false,
+        "continuous_sequence": false,
+        "note": "原件采集2026-10-26；本地复读不是新版本或独立互证，help元数据不是固件发行日期。"
+      }
+    ]
+  }
+]

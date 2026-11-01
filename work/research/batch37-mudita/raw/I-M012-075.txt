@@ -1,0 +1,8 @@
+Does Mudita Kompakt Support Video Recording and Playback?
+Modified on: Sat, 3 Oct, 2026 at 8:32 AM
+The Mudita Kompakt does not support video recording or playback. We might consider adding video support in the future, but for now, the Kompakt can only capture and display photos.
+Was this article helpful?
+No
+Yes
+That’s Great!
+Thank you for your feedback

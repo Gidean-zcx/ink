@@ -1,0 +1,60 @@
+[
+  {
+    "evidence_id": "E-QUA-01",
+    "changed_fields": {
+      "version_scope": {
+        "before": "QUADERNO Gen.3C FMVDP43CA4/FMVDP53CA5; B5FL-2101-02 Z0 published 2026-04-01; firmware unknown",
+        "after": "QUADERNO Gen.3C FMVDP43CA4/FMVDP53CA5; B5FL-2101-02 Z0 cover, Z0-02 colophon issued 2025-04; support index public date 2026-04-01; installed firmware unknown"
+      },
+      "source_updated_on": {
+        "before": "2026-04-01",
+        "after": null
+      }
+    },
+    "reason": "旧published 2026-04-01混淆官网公开日与PDF内发行月；精确日期分别保留capture定位，不猜PDF更新日。"
+  },
+  {
+    "evidence_id": "E-QUA-02",
+    "changed_fields": {
+      "version_scope": {
+        "before": "QUADERNO Gen.3C FMVDP43CA4/FMVDP53CA5; B5FL-2101-02 Z0 published 2026-04-01; firmware unknown",
+        "after": "QUADERNO Gen.3C FMVDP43CA4/FMVDP53CA5; B5FL-2101-02 Z0 cover, Z0-02 colophon issued 2025-04; support index public date 2026-04-01; installed firmware unknown"
+      }
+    },
+    "reason": "旧published 2026-04-01混淆官网公开日与PDF内发行月；精确日期分别保留capture定位，不猜PDF更新日。"
+  },
+  {
+    "evidence_id": "E-QUA-03",
+    "changed_fields": {
+      "version_scope": {
+        "before": "QUADERNO Gen.3C FMVDP43CA4/FMVDP53CA5; B5FL-2101-02 Z0 published 2026-04-01; firmware unknown",
+        "after": "QUADERNO Gen.3C FMVDP43CA4/FMVDP53CA5; B5FL-2101-02 Z0 cover, Z0-02 colophon issued 2025-04; support index public date 2026-04-01; installed firmware unknown"
+      }
+    },
+    "reason": "旧published 2026-04-01混淆官网公开日与PDF内发行月；精确日期分别保留capture定位，不猜PDF更新日。"
+  },
+  {
+    "evidence_id": "E-QUA-04",
+    "changed_fields": {
+      "version_scope": {
+        "before": "QUADERNO Gen.3C FMVDP43CA4/FMVDP53CA5; B5FL-2101-02 Z0 published 2026-04-01; firmware unknown",
+        "after": "QUADERNO Gen.3C FMVDP43CA4/FMVDP53CA5; B5FL-2101-02 Z0 cover, Z0-02 colophon issued 2025-04; support index public date 2026-04-01; installed firmware unknown"
+      },
+      "source_updated_on": {
+        "before": "2026-04-01",
+        "after": null
+      }
+    },
+    "reason": "旧published 2026-04-01混淆官网公开日与PDF内发行月；精确日期分别保留capture定位，不猜PDF更新日。"
+  },
+  {
+    "evidence_id": "E-QUA-05",
+    "changed_fields": {
+      "version_scope": {
+        "before": "QUADERNO Gen.3C FMVDP43CA4/FMVDP53CA5; B5FL-2101-02 Z0 published 2026-04-01; firmware unknown",
+        "after": "QUADERNO Gen.3C FMVDP43CA4/FMVDP53CA5; B5FL-2101-02 Z0 cover, Z0-02 colophon issued 2025-04; support index public date 2026-04-01; installed firmware unknown"
+      }
+    },
+    "reason": "旧published 2026-04-01混淆官网公开日与PDF内发行月；精确日期分别保留capture定位，不猜PDF更新日。"
+  }
+]

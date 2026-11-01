@@ -1,0 +1,58 @@
+[
+  {
+    "evidence_id": "E-BIGME-01",
+    "before": null,
+    "after": [
+      {
+        "checked_on": "2026-10-27",
+        "url": "https://store.bigme.vip/pages/hibreak-pro-landing-page",
+        "archived_artifact": "artifacts/bigme-controls-deepening/source-notes.md",
+        "sha256": "094ca7b500c7d7ce0481eb8649a0ceae425b7698c5cc3f20f0e2defe7c0f4093",
+        "hands_on": false,
+        "capture_method": "public_html_get_and_text_read",
+        "raw_work_path": "work/bigme-controls-deepening/raw/product.html",
+        "raw_sha256": "8dec25fddd952795ba34e9ed8f14bafd5558454b37570a1c1bd1bfec4bf20054",
+        "http_status": 200,
+        "note": "同页规格冲突保留；引用GIF另记E-BGCD-02，不将宣传图当流程"
+      }
+    ]
+  },
+  {
+    "evidence_id": "E-BIGME-02",
+    "before": null,
+    "after": [
+      {
+        "checked_on": "2026-10-27",
+        "url": "https://device.report/m/f9c833a5a200f1b7aad371249f065497aa4c9e0caf1023379311412b5579ff50.pdf",
+        "archived_artifact": "artifacts/bigme-controls-deepening/source-notes.md",
+        "sha256": "094ca7b500c7d7ce0481eb8649a0ceae425b7698c5cc3f20f0e2defe7c0f4093",
+        "hands_on": false,
+        "capture_method": "public_web_tool_pdf_text_read; direct_download_failed_403_stopped",
+        "http_download_status": 403,
+        "failed_body_work_path": "work/bigme-controls-deepening/raw/manual.pdf",
+        "failed_body_sha256": "885c20651c0793e4431dc2afacc822c4010a0b7b74b9bcd5dc053e42e2e209e3",
+        "pdf_original_archived": false,
+        "note": "同一本26页手册文字复读；13章目录登记、p19–21控件分层；无新PDF静态页或设备操作"
+      }
+    ]
+  },
+  {
+    "evidence_id": "E-BGD-01",
+    "before": null,
+    "after": [
+      {
+        "checked_on": "2026-10-27",
+        "url": "https://device.report/m/f9c833a5a200f1b7aad371249f065497aa4c9e0caf1023379311412b5579ff50.pdf",
+        "archived_artifact": "artifacts/bigme-controls-deepening/source-notes.md",
+        "sha256": "094ca7b500c7d7ce0481eb8649a0ceae425b7698c5cc3f20f0e2defe7c0f4093",
+        "hands_on": false,
+        "capture_method": "public_web_tool_pdf_text_read; direct_download_failed_403_stopped",
+        "http_download_status": 403,
+        "failed_body_work_path": "work/bigme-controls-deepening/raw/manual.pdf",
+        "failed_body_sha256": "885c20651c0793e4431dc2afacc822c4010a0b7b74b9bcd5dc053e42e2e209e3",
+        "pdf_original_archived": false,
+        "note": "同一本26页手册文字复读；13章目录登记、p19–21控件分层；无新PDF静态页或设备操作"
+      }
+    ]
+  }
+]

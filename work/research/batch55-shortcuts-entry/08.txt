@@ -1,0 +1,5 @@
+Run shortcuts on iPad with Apple Pencil Pro
+If you’re using an iPad with an Apple Pencil Pro, you can quickly squeeze Apple Pencil Pro to trigger a shortcut.
+Configure Apple Pencil Pro to run a shortcut
+On an iPad with an Apple Pencil Pro, go to Settings > Apple Pencil > Squeeze.
+Tap Shortcut, then select a shortcut.See alsoIntro to how shortcuts work on iPhone and iPad

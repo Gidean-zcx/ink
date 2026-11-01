@@ -1,0 +1,195 @@
+Dashboards - a start page built from your feeds | Inoreader
+inoreader-logo
+Start 15-Day Trial
+Home
+Features
+Enterprise
+Pricing
+Blog
+Contact
+RSS tools
+Free tools
+Feed validatorValidate a feed for errors
+Podcast validatorGet a podcast listed everywhere
+Feed analyticsSee how a feed performs
+Feed finderFind the feeds of any website
+OPML checkerCheck and repair an OPML export
+All RSS tools
+Feed validator
+Inoreader fetches the feed the way a reader does, reports what is wrong and tells you exactly what to change.
+Open the validator
+Podcast validator
+Inoreader fetches a podcast feed, its newest episode files and the artwork, and checks everything Apple Podcasts, Spotify and the apps require.
+Open the podcast validator
+Feed analytics
+See how many Inoreader readers follow a feed, how it ranks in its topic and how reliably it delivers new posts.
+Open feed analytics
+Feed finder
+Paste a website's address and Inoreader lists the feeds it publishes, for you to copy or follow in one click.
+Open the finder
+OPML checker
+Upload an OPML export and see which of its feeds still work, which fail, which moved and which are listed twice.
+Open the checker
+All RSS tools →
+Sign in
+Create account
+Features
+/
+Dashboards
+See what is new on a single screen
+Build a start page from widgets for the folders, feeds, tags and monitoring feeds you care about. Arrange them as you like, and make the dashboard the page Inoreader opens to.
+Create a free account
+FreeDashboards and their widgets are free.
+TeamTeam plans add shared Team dashboards for every member.
+Your start page
+A dashboard tells you what is new before you open a single feed. You build it from widgets and decide what each one shows.
+Feed and folder widgets
+Show the newest articles of a folder, a feed or all your feeds, or the latest matches of a monitoring feed. The same widget can appear several times for different folders.
+Activity widgets
+Other widgets show what is trending among Inoreader users, the articles you tagged, saved or read last, your reading statistics and a big unread counter.
+Several dashboards
+Keep as many dashboards as you need, each with its own widgets and a layout of one, two or three columns, and choose the one Inoreader opens to.
+Team dashboards
+On Team plans, admins build dashboards the whole team sees, with Team folders, channels, tags, Intelligence reports and digests.
+Build your dashboard
+Open Dashboards from the sidebar. The default dashboard shows your most read feeds, trending articles and recommended sources.
+Click the button at the top right to add a widget, then use its gear icon to choose what it shows, such as a folder, a feed, a tag or a monitoring feed.
+Drag the widgets into place and choose a layout. If one dashboard is not enough, add another with the plus in the tabs.
+Open the dashboard you use most, click the three-dot menu at the top right and choose Set as start page.
+Use cases
+A morning overview
+Put your work folders, your brand's monitoring feed and the trending list on one screen, and catch up in two minutes before the day starts.
+A topic wall
+Add one widget for each folder of a research subject, so you can see the newest article in each of them at once.
+A shared screen for the team
+Build a Team dashboard with the shared folders, the channel for flagged stories and the week's automated reports.
+Frequently asked questions
+What goes on a dashboard?
+Widgets. They can show the new articles from all your feeds, a folder or one feed, what is new in your most read feeds, trending articles and the latest results of a monitoring feed. Other widgets list the articles you recently tagged, saved or read, show your reading statistics and unread counts, recommend sources, list failing feeds or bring you the latest from the Inoreader team.
+Can I have more than one?
+Yes. You can make a dashboard for each way you use Inoreader, for example one for work and one for leisure, each with its own widgets and layout. You switch between them from the tabs at the top.
+Can I change the layout?
+Yes. Choose one, two or three columns, drag the widgets where you want them, and use the same widget several times for different folders.
+Can a dashboard be my start page?
+Yes. Any dashboard can be the page Inoreader opens to, both on the web and in the apps.
+Is there a dashboard for a team?
+Yes. On Team plans, admins build shared dashboards that every member sees, with widgets for Team folders, channels, tags, uploads, reports and digests.
+Is it free?
+Yes. Dashboards and their widgets are available on every plan. Team dashboards need a Team plan.
+Related features
+Folders and tags
+Organize your feeds and the articles you keep
+Monitoring feeds
+Watch any keyword, brand or topic across the web
+Teams
+Share one set of sources with your whole team
+Help center
+What are dashboards?
+Can I create multiple dashboards?
+Can I customize dashboard layouts and widgets?
+Can I set a dashboard as my start page?
+What is a Team dashboard?
+Blog
+Inoreader How-to: Customizing dashboards
+Introducing new collaboration features for Inoreader Teams
+Build your own newsfeed
+Ready to give it a go?
+Start a 14-day trial, no credit card required.
+Create account
+With Inoreader, content comes to you the minute it's available.
+Follow websites, social media feeds, podcasts, blogs, and newsletters. Enjoy what's important to you, all in one place.
+With Inoreader, content comes to you the minute it's available.
+Follow websites, social media feeds, podcasts, blogs, and newsletters. Enjoy what's important to you, all in one place.
+Create account
+Product
+Features
+Pricing
+Enterprise
+Mobile apps
+Browser extension
+Inoreader alternatives
+RSS tools
+All tools
+Feed finder
+Feed analytics
+Top RSS feeds
+Feed validator
+Podcast validator
+Feed viewer
+OPML checker
+Company
+About us
+Blog
+Help center
+Developer portal
+Contact us
+Brand portal
+Service status
+Legal
+Terms of Service
+Privacy Policy
+Security commitment
+© 2026 Innologica Ltd
+We use cookies to enhance your Inoreader experience. By using our website, you agree to our use of cookies.
+Access cookie settings
+OK, I agree
+×
+Sign in
+Use a different account
+Sign in with a passkey
+Other sign-in methods
+Change user
+Passkey sign-in was canceled or couldn't be completed.
+Don't have a passkey yet? Sign in with your password first, then add one in your account settings.
+Sign in
+Email address:
+Please enter Email
+Password
+Please enter password
+Remember me
+Forgot password?
+Sign in
+Sign in with a passkey
+Passkey sign-in was canceled or couldn't be completed
+Don't have a passkey yet? Sign in with your password first, then add one in your account settings.
+Or simply sign in with:
+New to Inoreader? Create an account
+Create account
+With Inoreader, content comes to you.
+Sign up to browse more than 5 000 000 sources and build the ultimate newsfeed!
+Create account
+Don't have an account?
+Create one now
+×
+Create account
+Email address
+Please enter email
+Password
+Please enter password
+Create account
+Or simply sign in with:
+Already have an account? Sign in.
+Sign in
+Already have an account?
+Enter your profile and access your feeds now.
+Sign in
+Already have an account?
+Sign in
+×
+Request Quote
+Name
+Please enter name
+Email
+Please provide valid email
+Company                    Optional
+Industry                    Optional
+Select from listMedia and PublishingPharmaceuticalsCybersecurityTelecommunicationsIT and SoftwareFinance and BankingTransport and LogisticsMarketing and PRPublic AuthoritiesInternational OrganizationsResearchEducation ServicesOther
+Position                    Optional
+Message
+Please enter message
+I understand and accept the Inoreader Privacy
+Policy
+You must accept the privacy policy
+Send message
+Thank you for your query. Our team will review the details and get back to you shortly.
+Go to homepage

@@ -1,0 +1,22 @@
+{
+  "name": "05-welcome-continue",
+  "url": "https://www.duolingo.com/welcome",
+  "title": "Duolingo - Learn French with lessons that work",
+  "utc": "2026-10-26T17:38:15.052894+00:00",
+  "text": "Let’s get this party started!\nLet’s get this party started!\nCONTINUE",
+  "buttons": [
+    {
+      "text": "",
+      "aria": null,
+      "test": null,
+      "visible": true
+    },
+    {
+      "text": "CONTINUE",
+      "aria": null,
+      "test": "funboarding-continue-button",
+      "visible": true
+    }
+  ],
+  "inputs": []
+}

@@ -1,0 +1,2 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M035-10,M-035,选择播放范围与跨目录/专辑连续播放,D2,E-HBD-01;E-HBCD-01,播放设置或播放页最左模式按钮选择列表/单曲循环/随机/列表循环；列表到尾停止，其余有循环规则。Play through folders/albums另控制到末曲后跨组；单曲循环自动切曲时跨组无效。,“顺序播放”与四模式术语未完全对齐；文件夹跳转时模式逻辑失效的实际顺序、手动下一曲例外、缺文件、随机恢复及与A-B/计时叠加未知。不是队列编辑/持久歌单任务。,not_observed,false,cases/M-035-hiby.md,2026-10-27

@@ -1,0 +1,154 @@
+[
+  {
+    "command": "go('https://www.timeforkids.com/g34/service-stars-packed-with-care-g3/?rl=en-650'); snap('00-g34-article')",
+    "started": "2026-10-27T07:02:37.448201+00:00",
+    "result": "ok",
+    "ended": "2026-10-27T07:02:40.412495+00:00"
+  },
+  {
+    "command": "import contextlib, io",
+    "started": "2026-10-27T07:03:13.980627+00:00",
+    "result": "ok",
+    "ended": "2026-10-27T07:03:13.998669+00:00"
+  },
+  {
+    "command": "_snap=snap",
+    "started": "2026-10-27T07:03:14.030873+00:00",
+    "result": "ok",
+    "ended": "2026-10-27T07:03:14.031038+00:00"
+  },
+  {
+    "command": "exec(\"def snap(name):\\n with contextlib.redirect_stdout(io.StringIO()): _snap(name)\\n print('CAPTURE', name, page.url, states[-1]['text'][:180], flush=True)\")",
+    "started": "2026-10-27T07:03:14.033756+00:00",
+    "result": "ok",
+    "ended": "2026-10-27T07:03:14.038448+00:00"
+  },
+  {
+    "command": "print('selects',page.locator('select').evaluate_all('(es)=>es.map(e=>({id:e.id,text:e.innerText,visible:!!e.getClientRects().length}))')); print('article-level-controls',page.locator('[class*=\"level\"]').evaluate_all('(es)=>es.map(e=>({tag:e.tagName,cls:e.className,text:e.innerText.slice(0,150),visible:!!e.getClientRects().length})).slice(0,12)'))",
+    "started": "2026-10-27T07:03:14.040188+00:00",
+    "result": "ok",
+    "ended": "2026-10-27T07:03:14.267951+00:00"
+  },
+  {
+    "command": "print('SESSION_ALIVE', page.url)",
+    "started": "2026-10-27T07:07:15.979652+00:00",
+    "result": "ok",
+    "ended": "2026-10-27T07:07:15.983351+00:00"
+  },
+  {
+    "command": "go('https://reader.emagazines.com/issue/time-for-kids-k-1/may-8-2026?ipt=c8869aa3-8f3d-4699-b112-1d4a6270a953'); snap('01-k1-sample-initial')",
+    "started": "2026-10-27T07:07:24.682731+00:00",
+    "result": "ok",
+    "ended": "2026-10-27T07:07:29.522839+00:00"
+  },
+  {
+    "command": "print(page.locator('button,a,input,[role=\"button\"]').evaluate_all('(es)=>es.filter(e=>e.getClientRects().length).map(e=>({tag:e.tagName,id:e.id,text:e.innerText,aria:e.getAttribute(\"aria-label\"),title:e.title,href:e.href,type:e.type}))'))",
+    "started": "2026-10-27T07:07:48.439251+00:00",
+    "result": "ok",
+    "ended": "2026-10-27T07:07:48.721058+00:00"
+  },
+  {
+    "command": "page.get_by_role('button',name='Next page',exact=True).click(); page.wait_for_timeout(800); snap('02-spread-pages2-3'); page.get_by_role('button',name='Next page',exact=True).click(); page.wait_for_timeout(800); snap('03-last-page4'); page.get_by_role('button',name='Toggle navigation').click(); snap('04-menu-at-last')",
+    "started": "2026-10-27T07:07:56.638097+00:00",
+    "result": "ok",
+    "ended": "2026-10-27T07:07:59.561936+00:00"
+  },
+  {
+    "command": "print(page.locator('body').inner_text()); print(page.locator('button,a,input').evaluate_all('(es)=>es.filter(e=>e.getClientRects().length).map(e=>({id:e.id,text:e.innerText,aria:e.getAttribute(\"aria-label\"),type:e.type,value:e.value,disabled:e.disabled}))'))",
+    "started": "2026-10-27T07:08:07.832280+00:00",
+    "result": "ok",
+    "ended": "2026-10-27T07:08:07.849676+00:00"
+  },
+  {
+    "command": "page.wait_for_timeout(2500); snap('05-menu-settled'); print('errors',errors[-12:]); print('status_limits',[n for n in network if n['status']>=400]); print('images',page.locator('img').evaluate_all('(es)=>es.map(e=>({src:e.currentSrc,complete:e.complete,w:e.naturalWidth}))'))",
+    "started": "2026-10-27T07:08:17.607029+00:00",
+    "result": "ok",
+    "ended": "2026-10-27T07:08:20.660966+00:00"
+  },
+  {
+    "command": "page.get_by_role('button',name='Go to last page',exact=True).click(); page.wait_for_timeout(2000); snap('06-last-page-command'); page.get_by_role('button',name='Save my place',exact=True).click(); page.wait_for_timeout(500); snap('07-save-place-dialog'); print(page.locator('body').inner_text()); print(page.locator('input,button').evaluate_all('(es)=>es.filter(e=>e.getClientRects().length).map(e=>({id:e.id,text:e.innerText,aria:e.getAttribute(\"aria-label\"),type:e.type,value:e.value}))'))",
+    "started": "2026-10-27T07:08:31.006207+00:00",
+    "result": "ok",
+    "ended": "2026-10-27T07:08:34.490732+00:00"
+  },
+  {
+    "command": "page.get_by_role('button',name='Next page',exact=True).click(); page.wait_for_timeout(1000); snap('08-last-next-boundary'); page.reload(wait_until='domcontentloaded'); page.wait_for_timeout(1800); snap('09-saved-reload')",
+    "started": "2026-10-27T07:08:42.493093+00:00",
+    "result": "ok",
+    "ended": "2026-10-27T07:08:47.748482+00:00"
+  },
+  {
+    "command": "page.get_by_role('button',name='Toggle navigation').click(); page.get_by_role('link',name='View mobile version',exact=True).click(); page.wait_for_timeout(2500); snap('10-mobile-view-entry'); print(page.locator('body').inner_text()[:6000]); print(page.locator('button,a').evaluate_all('(es)=>es.filter(e=>e.getClientRects().length).map(e=>({id:e.id,text:e.innerText,aria:e.getAttribute(\"aria-label\"),title:e.title,href:e.href}))'))",
+    "started": "2026-10-27T07:09:03.178103+00:00",
+    "result": "ok",
+    "ended": "2026-10-27T07:09:06.340462+00:00"
+  },
+  {
+    "command": "print('tabs',[(i,p.url) for i,p in enumerate(ctx.pages)]); print('limits',[n for n in network if n['status']>=400])",
+    "started": "2026-10-27T07:09:16.719737+00:00",
+    "result": "ok",
+    "ended": "2026-10-27T07:09:16.728451+00:00"
+  },
+  {
+    "command": "paper=page; page=ctx.pages[1]; page.on('response',response); page.on('requestfailed',lambda r: errors.append(dict(at=now(),kind='requestfailed',url=clean_url(r.url),failure=r.failure))); page.set_default_timeout(6000); snap('11-mobile-new-tab'); print(page.locator('body').inner_text()[:5000]); print(page.locator('button,a,input').evaluate_all('(es)=>es.filter(e=>e.getClientRects().length).map(e=>({id:e.id,text:e.innerText,aria:e.getAttribute(\"aria-label\"),title:e.title,type:e.type}))'))",
+    "started": "2026-10-27T07:09:28.094335+00:00",
+    "result": "ok",
+    "ended": "2026-10-27T07:09:29.088862+00:00"
+  },
+  {
+    "command": "page.get_by_role('button',name='Listen to audio',exact=True).click(); page.wait_for_timeout(1000); snap('12-mobile-listen'); print(page.locator('button,select,input').evaluate_all('(es)=>es.filter(e=>e.getClientRects().length).map(e=>({id:e.id,text:e.innerText,aria:e.getAttribute(\"aria-label\"),type:e.type,value:e.value}))'))",
+    "started": "2026-10-27T07:09:39.371116+00:00",
+    "result": "ok",
+    "ended": "2026-10-27T07:09:41.812779+00:00"
+  },
+  {
+    "command": "page.get_by_role('button',name='Pause',exact=True).click(); page.get_by_role('combobox',name='Playback speed').select_option('1.5'); snap('13-paused-speed'); print('media',page.locator('audio').evaluate_all('(es)=>es.map(e=>({currentTime:e.currentTime,duration:e.duration,paused:e.paused,rate:e.playbackRate,ended:e.ended}))')); page.get_by_role('button',name='Close audio player').click(); snap('14-audio-closed'); page.get_by_role('button',name='Listen to audio',exact=True).click(); page.wait_for_timeout(1000); snap('15-audio-reopened'); print('media',page.locator('audio').evaluate_all('(es)=>es.map(e=>({currentTime:e.currentTime,duration:e.duration,paused:e.paused,rate:e.playbackRate,ended:e.ended}))'))",
+    "started": "2026-10-27T07:10:07.851424+00:00",
+    "result": "ok",
+    "ended": "2026-10-27T07:10:09.876128+00:00"
+  },
+  {
+    "command": "page.get_by_role('button',name='Pause',exact=True).click(); snap('16-paused-before-reload'); page.reload(wait_until='domcontentloaded'); page.wait_for_timeout(1800); page.get_by_role('button',name='Listen to audio',exact=True).click(); page.wait_for_timeout(1000); snap('17-listen-after-reload'); page.get_by_role('button',name='Pause',exact=True).click(); print('speed_after_reload',page.locator('#speedSelect').input_value()); print('contents',page.get_by_text('CONTENTS',exact=True).count())",
+    "started": "2026-10-27T07:10:26.659082+00:00",
+    "result": "ok",
+    "ended": "2026-10-27T07:10:31.672851+00:00"
+  },
+  {
+    "command": "page.get_by_role('button',name='Close audio player').click(); page.get_by_text('CONTENTS',exact=True).click(); page.wait_for_timeout(500); snap('18-contents'); page.get_by_role('link',name='Meet Sea Turtles',exact=True).click(); page.wait_for_timeout(1200); snap('19-article-selected'); page.set_viewport_size({'width':390,'height':844}); page.wait_for_timeout(500); snap('20-narrow-reflow'); print('buttons',page.locator('button').evaluate_all('(es)=>es.filter(e=>e.getClientRects().length).map(e=>({text:e.innerText,aria:e.getAttribute(\"aria-label\")}))'))",
+    "started": "2026-10-27T07:10:44.216270+00:00",
+    "result": "error",
+    "error": "TimeoutError('Locator.click: Timeout 6000ms exceeded.\\nCall log:\\n  - waiting for get_by_role(\"link\", name=\"Meet Sea Turtles\", exact=True)\\n')",
+    "ended": "2026-10-27T07:10:51.001320+00:00"
+  },
+  {
+    "command": "print(page.locator('body').inner_text()[-2300:]); print(page.locator('a').evaluate_all('(es)=>es.filter(e=>e.getClientRects().length).map(e=>({text:e.innerText,aria:e.getAttribute(\"aria-label\"),href:e.href,role:e.getAttribute(\"role\")}))'))",
+    "started": "2026-10-27T07:10:59.290002+00:00",
+    "result": "ok",
+    "ended": "2026-10-27T07:10:59.300044+00:00"
+  },
+  {
+    "command": "page.locator('a[role=\"heading\"]').filter(has_text='Meet Sea Turtles').click(); page.wait_for_timeout(1600); snap('19-article-selected'); page.set_viewport_size({'width':390,'height':844}); page.wait_for_timeout(800); snap('20-narrow-reflow'); page=paper; page.bring_to_front(); page.get_by_role('button',name='Toggle navigation').click(); page.get_by_role('button',name='Go to first page').click(); page.wait_for_timeout(1800); snap('21-paper-cover-with-saved-page4')",
+    "started": "2026-10-27T07:11:12.565430+00:00",
+    "result": "ok",
+    "ended": "2026-10-27T07:11:19.773791+00:00"
+  },
+  {
+    "command": "print(page.url); print('menuvisible',page.locator('#pageNumberInput').is_visible()); page.get_by_role('button',name='Toggle navigation').click(); page.get_by_role('button',name='Go to first page').click(); page.wait_for_timeout(2000); snap('21-paper-cover-with-saved-page4')",
+    "started": "2026-10-27T07:11:39.913514+00:00",
+    "result": "error",
+    "error": "AssertionError('Duplicate capture name')",
+    "ended": "2026-10-27T07:11:42.037242+00:00"
+  },
+  {
+    "command": "ctx.close(); ctx=pw.chromium.launch_persistent_context(str(profile),headless=True,viewport={'width':1280,'height':950},locale='en-US'); page=ctx.pages[0]; page.set_default_timeout(6000); page.on('response',response); page.on('requestfailed',lambda r: errors.append(dict(at=now(),kind='requestfailed',url=clean_url(r.url),failure=r.failure))); go('https://reader.emagazines.com/issue/time-for-kids-k-1/may-8-2026?ipt=c8869aa3-8f3d-4699-b112-1d4a6270a953'); page.wait_for_timeout(1800); snap('22-browser-restart-base-entry')",
+    "started": "2026-10-27T07:12:03.973516+00:00",
+    "result": "ok",
+    "ended": "2026-10-27T07:12:10.616986+00:00"
+  },
+  {
+    "command": "print('restart_location',page.url); print('counts',len(states),len(ops)); print('limits',[n for n in network if n['status']>=400]); print('errors',errors); quitflag=False",
+    "started": "2026-10-27T07:12:25.032616+00:00",
+    "result": "ok",
+    "ended": "2026-10-27T07:12:25.036635+00:00"
+  }
+]

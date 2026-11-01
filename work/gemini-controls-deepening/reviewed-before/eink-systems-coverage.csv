@@ -1,0 +1,47 @@
+flow_id,product_id,task,depth,evidence_ids,known_branches,gaps,visual_status,hands_on,case_path,checked_on
+F-M004-01,M-004,建立云端身份,D2,E-BOOX-04;E-BOOX-18,登录同时可注册；跨设备必须保持账号与服务器一致。,首次向导可跳过哪些页、离线设置；不能把 Google 账户等同 ONYX。,not_observed,false,cases/M-004-boox-neoreader.md,2026-10-26
+F-M004-02,M-004,从阅读进入全局控制再返回,D2,E-BOOX-05;E-BXCD-03,控制/通知中心分侧；快捷项可Edit补入；侧边内滑需启用；导航栏隐藏先上滑调出；双击导航球回桌面不等于保存或终止进程,未取得V4.1.2机型手册；面板关闭动作及选区/阅读页保留、手势与app冲突未观察,static_reference_only,false,cases/M-004-boox-neoreader.md,2026-10-26
+F-M004-03,M-004,按任务调整显示,D2,E-BOOX-06;E-BOOX-07;E-BOOX-08;E-BXCD-04;E-BXCD-05;E-BXCD-06;E-BXCD-07;E-BXCD-12,单次全刷/App显示配置/当前文档/全部文档不同；原DPI、关闭Master Switch、单App Reset All及全App重置不同；NeoReader文档帮助Regal/Speed不与通用HD/Speed/Smooth混表,本机4.1.2完整模式/默认参数/生效及退出反馈，重置关联、卸载后优化数据保留、真实残影/耗电未知,static_reference_only,false,cases/M-004-boox-neoreader.md,2026-10-26
+F-M004-04,M-004,将电脑资料送入设备,D2,E-BOOX-09,LAN 双向传输与云推送是两条路径；收到文件还需选择 app 打开。,空间不足、取消、重复文件、局域网隔离与失败提示。,not_observed,false,cases/M-004-boox-neoreader.md,2026-10-26
+F-M004-05,M-004,查词、加生词与翻译选段,D2,E-BOOX-10;E-BOOX-11,生词归入词典 app；文字翻译与本地词典查询是不同服务。,弹窗关闭后选区、词典离线完整度、在线引擎配额；不推定所有第三方词典可弹出。,not_observed,false,cases/M-004-boox-neoreader.md,2026-10-26
+F-M004-06,M-004,标记并找回文档证据,D2,E-BOOX-12;E-BXCD-11,文本批注与手写分开管理；Progress的Blank Page会嵌入PDF，可在Preview或书签旁入口删除新增页,PDF新增页删除确认/撤销/锚点变化、跨软件对象可编辑性、导出失败和存储不足未观察,not_observed,false,cases/M-004-boox-neoreader.md,2026-10-26
+F-M004-07,M-004,查阅旁页后回到原处,D2,E-BOOX-13;E-BOOX-14;E-BXCD-11,Progress内Prev View/Next View逐次往返；书签是独立持久标记，不承诺视图历史跨关书或重启,关书/系统回收后历史、EPUB重排定位与重复书签未知,not_observed,false,cases/M-004-boox-neoreader.md,2026-10-26
+F-M004-08,M-004,阅读时创建关联笔记,D2,E-BOOX-15;E-BXCD-09;E-BXCD-10,Current Doc两窗标记在刷新后同步；关联笔记与系统独立Notes不同；控制中心换边/退出，系统分屏也可回Home退出；Flexible帮助型号名单未列本机,关联Notes的写入时刻不能由Current Doc推断；源文件移动/删除、退出后页锚、Flexible本机适用未知,not_observed,false,cases/M-004-boox-neoreader.md,2026-10-26
+F-M004-09,M-004,写笔记、改笔画、保留输出,D2,E-BOOX-16;E-BXCD-13,Exit保存并返回Notepad View；More内Save手动保存，两入口不合并；Page-帮助称不能撤销,Home/切App/系统回收是否持久保存、断电写入、.note往返、删整本恢复未知,not_observed,false,cases/M-004-boox-neoreader.md,2026-10-26
+F-M004-10,M-004,手写转文字并保留录音线索,D2,E-BOOX-16;E-BOOX-02,识别文本、墨迹与录音属于不同数据；V4.1 Infinite Notes 是另一种画布，可用 Pin 定位。,是否每次原位替换、录音与笔画逐时对齐、来电/锁屏中断、识别离线条件。,not_observed,false,cases/M-004-boox-neoreader.md,2026-10-26
+F-M004-11,M-004,跨设备同步阅读状态和原书,D2,E-BOOX-17;E-BOOX-02,阅读进度/批注与源书上传分开；单书上限帮助写 ≤200 MB，发布稿写 <200 MB，边界值待测。,两端同时编辑冲突、重命名、路径移动、原书与状态版本不一致。,not_observed,false,cases/M-004-boox-neoreader.md,2026-10-26
+F-M004-12,M-004,无云迁移书库及关联数据,D2,E-BOOX-17,备份包含本地书及阅读数据；不是整机 app/登录凭据备份。,增量/覆盖策略、恢复确认、加密、损坏包、存储不足。,not_observed,false,cases/M-004-boox-neoreader.md,2026-10-26
+F-M004-13,M-004,同步笔记或找回“登出后消失”的笔记,D2,E-BOOX-20,官方说明登录前笔记会纳入账号，登出后不可见不等于文件已删除；服务器数据独立。,账号删除后回收、未上传笔记去向、其他账号是否留本地副本。,not_observed,false,cases/M-004-boox-neoreader.md,2026-10-26
+F-M004-14,M-004,从 TTS/后台问题排查到安全更新,D2,E-BOOX-14;E-BOOX-21;E-BOOX-22;E-BOOX-23;E-BXCD-06;E-BXCD-07;E-BXCD-08;E-BXCD-14,TTS引擎、通知权限、App Startup、Stay active和Freeze是不同控制；冻结阻后台/通知；睡眠连接设置另列；安装/卸载只取得入口D1,各后台开关优先级、TTS锁屏/蓝牙/焦点中断续播、安装失败/卸载后文件账户和偏好保留/恢复未知,static_reference_only,false,cases/M-004-boox-neoreader.md,2026-10-26
+F-M010-01,M-010,单手翻页与快捷动作（D1）,D1,E-PALMA-01;E-PALMA-02,物理事件可映射不同任务；功能存在有据，但设置页面序列未取到。,精确入口、默认映射、音量/翻页互斥、锁屏/休眠生效；不补成已观察操作。,not_observed,false,cases/M-010-palma.md,2026-10-26
+F-M010-02,M-010,进入控制、处理通知后回阅读,D2,E-PALMA-04,清通知不同于终止播放/下载；从系统控制回 app 不保证保留页面内部选区。,通用帮助在 Palma 2 的菜单位置、媒体通知实际按钮、返回精确位置。,not_observed,false,cases/M-010-palma.md,2026-10-26
+F-M010-03,M-010,为阅读和滚动分别调显示,D2,E-PALMA-01;E-PALMA-05;E-PALMA-06,“本次刷新”“app 配置”“全局默认”不同；不是把更快模式设好便永久无残影。,当前本机实际模式及保存范围；延迟、灰阶与残影不作测量结论。,not_observed,false,cases/M-010-palma.md,2026-10-26
+F-M010-04,M-010,修正单手触摸翻页区,D2,E-PALMA-07,改的是 NeoReader 触控行为，不能据此推定第三方 app/实体键同步改变。,防误触、左右手切换、旋转后的映射；预设图未逐一观察。,not_observed,false,cases/M-010-palma.md,2026-10-26
+F-M010-05,M-010,看书时查词、标注并回原文,D2,E-PALMA-08;E-PALMA-09,选词、段落标注与整书进度分别保存；第三方弹出词典需其自身支持。,关闭浮层/返回后选区位置、词库离线内容、重复词合并。,not_observed,false,cases/M-010-palma.md,2026-10-26
+F-M010-06,M-010,查章/跳页后恢复阅读位置,D2,E-PALMA-10;E-PALMA-11,临时历史视图与持久书签不同；不能等同跨 app 或重启恢复。,EPUB 字号变更后的锚点、书关掉后的历史长度。,not_observed,false,cases/M-010-palma.md,2026-10-26
+F-M010-07,M-010,从读切听并排查后台停止,D2,E-PALMA-11;E-PALMA-12;E-PALMA-13,有朗读入口、有引擎配置；“暂停后继续哪一句”仍不是官方已证实的状态协议。,锁屏、闹钟、第三方语音来电、蓝牙断连、睡眠定时、离线语音包实际结果。,not_observed,false,cases/M-010-palma.md,2026-10-26
+F-M010-08,M-010,电脑/手机送书后找到内容,D2,E-PALMA-14,本地接收和远程推送分开；传输完成后才进入阅读任务。,文件重名、错误类型、移 microSD、取消/断点下载与空间不足。,not_observed,false,cases/M-010-palma.md,2026-10-26
+F-M010-09,M-010,保留原书并迁移读书状态,D2,E-PALMA-16;E-PALMA-03;E-PALMA-15,源书、批注/进度、本地备份分开；通用 V4.0 手册“只同步阅读数据”是历史行为，不能覆盖4.1增量。,冲突合并、同名重复、两端不同固件；不包括第三方 app 数据。,not_observed,false,cases/M-010-palma.md,2026-10-26
+F-M010-10,M-010,区分清数据与删缓存（D1）,D1,E-PALMA-15,说明操作语义与导出边界；未将菜单名承诺为 Palma 2 当前可照做路径。,Palma 2实机确认、完整删除文件/回收站路径、确认对话框、账号切换与撤销。,not_observed,false,cases/M-010-palma.md,2026-10-26
+F-M011-01,M-011,返回、切后台和改按键,D2,E-BIGME-02;E-BGD-02,导航/显示动作，不等于关闭app或清其数据。,PDF p3–7；默认设置是否随固件改变、长按/锁屏响应、误触撤回。,not_observed,false,cases/M-011-bigme.md,2026-10-26
+F-M011-02,M-011,针对当前内容选显示方式,D2,E-BIGME-02,预设为 Default、Magazine、Comic、Video；保存范围未交代。,PDF p9–12；切app是否继承、恢复默认、刷新延迟、残影；不从模式名推断实测速度。,not_observed,false,cases/M-011-bigme.md,2026-10-26
+F-M011-03,M-011,导入并找到一本书,D2,E-BIGME-02,文件进入书库后仍需阅读器解析；手册提导出/删除标记。,PDF p18–19；WiFi传输地址/配网、空库、重复/坏文件、删除是否确认、标记回收。,not_observed,false,cases/M-011-bigme.md,2026-10-26
+F-M011-04,M-011,录音/文件转成文字,D2,E-BIGME-02,导入限制≤1GB且≤5小时；输出/原音频关系未说明。,PDF p16；联网/账号条件、上传取消、说话人、时间戳、失败重试、收费或隐私边界。,not_observed,false,cases/M-011-bigme.md,2026-10-26
+F-M011-05,M-011,图片转成可复制文字,D2,E-BIGME-02,图片、识别文本和新PDF是不同产物。,PDF p17；识别纠错、重做覆盖、顺序/旋转、PDF是否可搜索、原图删除后的关联。,not_observed,false,cases/M-011-bigme.md,2026-10-26
+F-M011-06,M-011,阅读切听（D1）,D1,E-BIGME-01;E-BIGME-02,只能确认入口与在线服务性质，尚无“暂停→恢复句子”完整流程。,PDF p20–21；下载/缓存、语言、计时器、关屏、来电、短信提示、蓝牙断开后是否外放。,not_observed,false,cases/M-011-bigme.md,2026-10-26
+F-M011-07,M-011,选词/段落批注（D1）,D1,E-BIGME-01;E-BIGME-02,功能已发现，选区→保存→再次定位的连贯行为尚未证实。,PDF p19；词典来源/离线、标记颜色与文字定位、取消选择、导出格式。,not_observed,false,cases/M-011-bigme.md,2026-10-26
+F-M005-01,M-005,开始使用并配对云端,D2,E-RMK-01;E-RMK-03;E-RMCD-01,本机可离线；原手册p20可跳过配对；云配对一次性码；支付/Activate Connect为另一阶段；旧指南五分钟时效未实测,3.29全部首次逐屏、验证码过期实际反馈、初次同步中断；旧单设备账户限制未采,static_manual_pages_only,false,cases/M-005-remarkable.md,2026-10-27
+F-M005-02,M-005,切文件、快速设置及返回,D2,E-RMK-04;E-RMK-05,最近列表是导航入口；亮度设置不改文档内容。,手指命中/误触、打开另一文档后原页面恢复、睡眠与锁屏状态。,not_observed,false,cases/M-005-remarkable.md,2026-10-26
+F-M005-03,M-005,创建可持续编辑的笔记,D2,E-RMK-06;E-RMK-07,生成原生笔记对象；PDF版式模板是独立导入文档，不等于Notebook背景。,同名处理、模板更换范围、Quick sheet合并/迁移、离线Methods资源。,not_observed,false,cases/M-005-remarkable.md,2026-10-26
+F-M005-04,M-005,修改笔画并从误操作恢复,D2,E-RMK-08;E-RMK-09;E-RMCD-09,圈选后移动/缩放/旋转；复制或剪切后可跨页重复粘贴，Clear clipboard清空；翻转可拖角越过对边；Undo/Redo与删页分开,撤销历史跨度、关文档后是否保留、误手势、原稿与图层间作用范围。,not_observed,false,cases/M-005-remarkable.md,2026-10-27
+F-M005-05,M-005,标注PDF并暂时隐藏标记,D2,E-RMK-10,隐藏层不是删除；PDF原内容与叠加笔迹不同。,外部PDF软件的注释语义、隐藏层导出结果、扫描文本是否可选。,not_observed,false,cases/M-005-remarkable.md,2026-10-26
+F-M005-06,M-005,查旁页再回原位置,D2,E-RMK-04;E-RMK-06,预览/跳页保留返回点，不需重找页码。,关闭文档后起点保留、链接跳转历史、EPUB重排后返回锚点。,not_observed,false,cases/M-005-remarkable.md,2026-10-26
+F-M005-07,M-005,手写转文字并继续改,D2,E-RMK-11;E-RMCD-09;E-RMCD-10,整页/多页转换新增文字页保留原稿；选区转换专页称自动替换，Selection页称光标后粘贴并可跨文档，冲突未实测消解,选区自动/手动粘贴冲突、替换撤销、取消/超时与批量纠错；PDF原页/附加笔记页适用性仍冲突,not_observed,false,cases/M-005-remarkable.md,2026-10-27
+F-M005-08,M-005,给证据页做标签并找回,D2,E-RMK-12,页与文件/文件夹标签分开；白黑状态、移除关联；Tags总览长按Rename保存；Delete→Yes delete tag移除所有文件/页关联,多标签组合、改名跨端传播、删除标签恢复、同名大小写未核,not_observed,false,cases/M-005-remarkable.md,2026-10-27
+F-M005-09,M-005,用手写内容找页,D2,E-RMK-13,已同步索引内容可离线搜；新内容需Wi-Fi；该手写索引只覆盖笔记/笔记页，不覆盖PDF/EPUB正文。,中文检索/准确率、断网编辑多久入索引、结果失配恢复；文档所述等待非本轮计时。,not_observed,false,cases/M-005-remarkable.md,2026-10-26
+F-M005-10,M-005,导入、导出并保留可编辑原件,D2,E-RMK-14;E-RMCD-05;E-RMCD-06,USB/app/web格式与大小条件；网页上传PDF/EPUB/JPG/PNG上限100MB，Connect另可PDF/DOCX转Notebook；桌面PDF/PNG/SVG导出不等于原生备份,rmdoc往返保真、网页PDF转换版式/图层、取消断线、同名重复与超大文件错误,not_observed,false,cases/M-005-remarkable.md,2026-10-27
+F-M005-11,M-005,云盘资料导入为PDF或笔记,D2,E-RMK-10;E-RMK-16;E-RMCD-03,云盘导入时选择PDF/Notebook及位置；3.25+Connect文档转换支持DOCX/GoogleDocs/TXT，但去表格/分栏/边距；新版网页PDF转换另列,绑定授权过期、离线下载、改后上传重名、表格内容可读性和原文件回溯,not_observed,false,cases/M-005-remarkable.md,2026-10-27
+F-M005-12,M-005,判断云同步为何没完成,D2,E-RMK-17,连接检查通过不证明每个对象已合并；设备与app可能分别出故障。,并发写入冲突、离线删除传播、最终一致时间、同步进度的逐文件错误。,not_observed,false,cases/M-005-remarkable.md,2026-10-26
+F-M005-13,M-005,删除文件后恢复或永久清除,D2,E-RMK-04;E-RMK-02;E-RMCD-02,文件Trash恢复/永久删除，3.29加30天自动删；单页删除不进Trash；周期会议本在Trash可点相关日历事件恢复并打开,30天起算/离线计时、云传播、单页Undo、会议事件恢复是否回原文件夹未核,not_observed,false,cases/M-005-remarkable.md,2026-10-27
+F-M005-14,M-005,取消订阅后理解文件状态,D2,E-RMK-15;E-RMK-16,官方称云文件不因取消直接删除；50天未使用/同步的文件停止跨app更新，本机仍保留。,两页对50天条件用“未编辑”与“未打开并同步”措辞不同，实际重启同步条件待核。,not_observed,false,cases/M-005-remarkable.md,2026-10-26
+F-M005-15,M-005,从手写资料生成网页再校订,D2,E-RMK-18,Share→Convert and share→二维码/自己邮箱；任何持链接者可看/下载，只有所有者登录可编辑；可下载DOCX；链接默认6月到期，所有者菜单可改到期；本机后续修改不更新网页,范围选择、即时撤销/删除链接、AI错误回溯与语言/地区、多个链接与网页编辑回流未知,not_observed,false,cases/M-005-remarkable.md,2026-10-27

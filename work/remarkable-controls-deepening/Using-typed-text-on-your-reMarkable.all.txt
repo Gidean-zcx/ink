@@ -1,0 +1,134 @@
+try{ NetworkTracking.init('/_ui/networks/tracking/NetworkTrackingServlet', 'network', 'null'); }catch(x){}try{ NetworkTracking.logPageView();}catch(x){}(function(UITheme) {
+UITheme.getUITheme = function() {
+return UserContext.uiTheme;
+};
+}(window.UITheme = window.UITheme || {}));
+Login | Forgot Your Password?
+if(!window.sfdcPage) { window.sfdcPage = new ApexDetailPage(); }UserContext.initialize({"ampm":["AM","PM"],"isAccessibleMode":false,"salesforceURL":"https://support.remarkable.com?refURL=http%3A%2F%2Fsupport.remarkable.com%2Farticles%2FKnowledge%2FUsing-typed-text-on-your-reMarkable","dateFormat":"dd.MM.yyyy","dayPeriods":[],"language":"en_US","locale":"no_NO","enableLoggingInAuraAlohaFrameNavigator":true,"dateTimeFormat":"dd.MM.yyyy, HH:mm","labelLastModified":"1789190098000","today":"26.10.2026, 18:13","userPreferences":[{"index":112,"name":"HideInlineEditSplash","value":false},{"index":114,"name":"OverrideTaskSendNotification","value":false},{"index":115,"name":"DefaultTaskSendNotification","value":false},{"index":119,"name":"HideUserLayoutStdFieldInfo","value":false},{"index":116,"name":"HideRPPWarning","value":false},{"index":87,"name":"HideInlineSchedulingSplash","value":false},{"index":88,"name":"HideCRUCNotification","value":false},{"index":89,"name":"HideNewPLESplash","value":false},{"index":90,"name":"HideNewPLEWarnIE6","value":false},{"index":122,"name":"HideOverrideSharingMessage","value":false},{"index":91,"name":"HideProfileILEWarn","value":false},{"index":93,"name":"HideProfileElvVideo","value":false},{"index":97,"name":"ShowPicklistEditSplash","value":false},{"index":92,"name":"HideDataCategorySplash","value":false},{"index":128,"name":"ShowDealView","value":false},{"index":129,"name":"HideDealViewGuidedTour","value":false},{"index":132,"name":"HideKnowledgeFirstTimeSetupMsg","value":false},{"index":104,"name":"DefaultOffEntityPermsMsg","value":false},{"index":135,"name":"HideNewCsnSplash","value":false},{"index":101,"name":"HideBrowserWarning","value":false},{"index":139,"name":"HideDashboardBuilderGuidedTour","value":false},{"index":140,"name":"HideSchedulingGuidedTour","value":false},{"index":180,"name":"HideReportBuilderGuidedTour","value":false},{"index":183,"name":"HideAssociationQueueCallout","value":false},{"index":194,"name":"HideQTEBanner","value":false},{"index":270,"name":"HideIDEGuidedTour","value":false},{"index":282,"name":"HideQueryToolGuidedTour","value":false},{"index":196,"name":"HideCSIGuidedTour","value":false},{"index":271,"name":"HideFewmetGuidedTour","value":false},{"index":272,"name":"HideEditorGuidedTour","value":false},{"index":205,"name":"HideApexTestGuidedTour","value":false},{"index":206,"name":"HideSetupProfileHeaderTour","value":false},{"index":207,"name":"HideSetupProfileObjectsAndTabsTour","value":false},{"index":213,"name":"DefaultOffArticleTypeEntityPermMsg","value":false},{"index":214,"name":"HideSelfInfluenceGetStarted","value":false},{"index":215,"name":"HideOtherInfluenceGetStarted","value":false},{"index":216,"name":"HideFeedToggleGuidedTour","value":false},{"index":268,"name":"ShowChatterTab178GuidedTour","value":false},{"index":275,"name":"HidePeopleTabDeprecationMsg","value":false},{"index":276,"name":"HideGroupTabDeprecationMsg","value":false},{"index":224,"name":"HideUnifiedSearchGuidedTour","value":false},{"index":226,"name":"ShowDevContextMenu","value":false},{"index":227,"name":"HideWhatRecommenderForActivityQueues","value":false},{"index":228,"name":"HideLiveAgentFirstTimeSetupMsg","value":false},{"index":232,"name":"HideGroupAllowsGuestsMsgOnMemberWidget","value":false},{"index":233,"name":"HideGroupAllowsGuestsMsg","value":false},{"index":234,"name":"HideWhatAreGuestsMsg","value":false},{"index":235,"name":"HideNowAllowGuestsMsg","value":false},{"index":236,"name":"HideSocialAccountsAndContactsGuidedTour","value":false},{"index":237,"name":"HideAnalyticsHomeGuidedTour","value":false},{"index":238,"name":"ShowQuickCreateGuidedTour","value":false},{"index":245,"name":"HideFilePageGuidedTour","value":false},{"index":250,"name":"HideForecastingGuidedTour","value":false},{"index":251,"name":"HideBucketFieldGuide","value":false},{"index":263,"name":"HideSmartSearchCallOut","value":false},{"index":273,"name":"ShowForecastingQuotaAttainment","value":false},{"index":280,"name":"HideForecastingQuotaColumn","value":false},{"index":301,"name":"HideManyWhoGuidedTour","value":false},{"index":298,"name":"HideFileSyncBannerMsg","value":false},{"index":299,"name":"HideTestConsoleGuidedTour","value":false},{"index":302,"name":"HideManyWhoInlineEditTip","value":false},{"index":303,"name":"HideSetupV2WelcomeMessage","value":false},{"index":312,"name":"ForecastingShowQuantity","value":false},{"index":313,"name":"HideDataImporterIntroMsg","value":false},{"index":314,"name":"HideEnvironmentHubLightbox","value":false},{"index":316,"name":"HideSetupV2GuidedTour","value":false},{"index":317,"name":"HideFileSyncMobileDownloadDialog","value":false},{"index":322,"name":"HideEnhancedProfileHelpBubble","value":false},{"index":328,"name":"ForecastingHideZeroRows","value":false},{"index":330,"name":"HideEmbeddedComponentsFeatureCallout","value":false},{"index":341,"name":"HideDedupeMatchResultCallout","value":false},{"index":340,"name":"HideS1BrowserUI","value":true},{"index":346,"name":"HideS1Banner","value":false},{"index":358,"name":"HideEmailVerificationAlert","value":false},{"index":354,"name":"HideLearningPathModal","value":false},{"index":359,"name":"HideAtMentionsHelpBubble","value":false},{"index":368,"name":"LightningExperiencePreferred","value":true},{"index":373,"name":"PreviewLightning","value":false},{"index":281,"name":"HideMSPPopup","value":false}],"networkId":"0DB7Q000000bqvW","uiTheme":"Theme3","uiSkin":"Theme3","userName":"support_web@00d7q000002qcc5uam.org.force.com","userId":"0057Q000006iZrQ","isCurrentlySysAdminSU":false,"renderMode":"RETRO","startOfWeek":"2","vfDomainPattern":"getremarkable--(?:[^.]+).vf.force.com","auraDomain":"getremarkable.lightning.force.com","useNativeAlertConfirmPrompt":false,"orgPreferences":[{"index":257,"name":"TabOrganizer","value":true},{"index":113,"name":"GroupTasks","value":true}],"isDefaultNetwork":false,"timeFormat":"HH:mm"});
+Typed TextPrintable View
+« Go Back
+Information
+Properties
+Information
+Title
+Typed Text
+URL Name
+Using-typed-text-on-your-reMarkable
+Summary
+**Summary**: This article explains how to use typed text on the reMarkable tablet. It covers using the Type Folio or the on-screen keyboard to add typed text in notebooks, search and select typed text, and format it. The article also details how to type and edit notes in the mobile and desktop apps with a Connect subscription, and how to edit converted handwritten notes. Additional information includes changing text margins and using the selection tool for text formatting.
+**Keywords**: reMarkable, Type Folio, on-screen keyboard, typed text, notebooks, search text, select text, format text, mobile app, desktop app, Connect subscription, handwriting conversion.
+**Generalized Terms**:
+- reMarkable: tablet, pad, notepad
+- Type Folio: keyboard case
+- on-screen keyboard: digital keyboard
+- Marker: pen, stylus
+- notebook: document, file
+- display: screen
+Description
+j_id0__SiteTemplate__j_id17__j_id18__j_id25__j_id26__j_id387__0__j_id390__3__j_id398 = window.onload; window.onload=function() { if (j_id0__SiteTemplate__j_id17__j_id18__j_id25__j_id26__j_id387__0__j_id390__3__j_id398!= null) j_id0__SiteTemplate__j_id17__j_id18__j_id25__j_id26__j_id387__0__j_id390__3__j_id398();};
+Time Estimate
+Article Body
+In this article, you’ll learn how to use the on-screen keyboard or Type Folio to work with typed text on your reMarkable.
+Typing in notebooks
+Here’s how to use Type Folio to write in notebooks:
+Attach and unfold your Type Folio to your reMarkable.
+Open a notebook, or create a new one by tapping the plus icon on the My files page and then Notebook.
+Start typing on Type Folio.
+You can bring up the keyboard shortcuts menu by holding alt (Mac) or ctrl (PC) on your Type Folio for three seconds, depending on which style of key combinations you chose during setup.  Combine handwritten notes and typed text.
+Using typed text without Type Folio
+Here’s how to add typed text using the on-screen keyboard:
+In a notebook, tap the T icon in the toolbar.
+Tap Add text or Edit text
+Choose your preferred column width - narrow or wide.
+Use the on-screen keyboard to type.
+Searching typed text
+Search your typed text by tapping the Document settings button in the toolbar, then Search. On Type Folio, press ctrl + f or alt + f to search.
+You can search the typed text within a page or whole notebook.
+Selecting typed text
+You can select typed text using gestures, or Type Folio.
+Using gestures:
+double-tap to select a word,
+triple-tap to select a paragraph,
+and quadruple-tap to select all the text in a notebook.
+Once you’ve selected text, drag the handles to adjust the amount of text selected.
+Using your Marker, you can tap and hold where you’d like to start selecting text. Drag the Marker through typed text to select it. For text that spans multiple lines, tap, hold and drag a diagonal line with your Marker from the first to the last letter of the text you want to select.
+Using Type Folio, hold shift and use the arrow keys to select text.
+Copying, pasting, and moving text with the Type Folio
+Tap alt + C (Mac) or ctrl + C (Windows) to copy typed text in a notebook.
+Tap alt + V (Mac) or ctrl + V (Windows) to paste.
+When your Type Folio is attached to your reMarkable, you can bring up the shortcuts overview by holding alt (Mac) or ctrl (Windows) for 3 seconds.
+You can also copy and paste typed text using gestures (double-, triple-, quadruple-tap).
+Formatting typed text
+Tap the formatting menu to change the paragraph style. You can select between title, subheading, and body text, and add bullet points and checkboxes.
+Tap or tick a checkbox to mark it as done, and your reMarkable will automatically cross out the typed text next to it.
+Once you’ve selected typed text, tap the buttons in the selection menu to cut, copy, or apply bold or italic formatting. On Type Folio, press ctrl + b or alt + b for bold text, and ctrl + i or alt + i for italic text.
+Typing in the mobile and desktop apps
+If you subscribe to Connect, you can type and edit notes in the mobile and desktop apps. You can also view your notes, reorganize notebooks and folders, copy, export individual pages, delete, add new pages to notebooks, and create notebooks from the apps.
+Without a Connect subscription, you’ll have the option to view, organize, and export individual pages from notebooks and documents in the apps.
+Copy and paste text using the desktop app
+Here’s how to copy and paste text from a web page or document into a notebook:
+Copy (ctrl + C) the text you’d like to add to a notebook
+On your computer, enter the notebook in the desktop app.
+Paste the text (command + V on Mac or ctrl + V on Windows).
+Edit the text in the app or on your reMarkable.
+Editing converted notes
+When using the handwriting conversion feature, you can use your Type Folio or the on-screen keyboard to edit handwritten notes after converting them. Here’s how:
+Open a notebook.
+Tap Document settings in the toolbar.
+Tap Convert to text. The converted text will be added as a new page in your document (non-destructive, this preserves both your handwriting and the converted text).
+Edit with your Type Folio, or tap Text to use the on-screen keyboard.
+You can also convert handwritten notes to typed text with the selection tool (destructive), or by going to page overview and selecting the pages you want to convert (non-destructive).
+Converted notes can be moved into other documents. You can refine and upload them directly to your cloud storage services, and of course send by email.
+Frequently asked questions
+Can I change the width of the margins on the page?
+Yes, you can change the margins for typed text by opening the Typed Text (T) menu in the toolbar and switching between wide and narrow column.
+Can I edit typed text with the selection tool or eraser tool?
+You can use the selection tool to convert handwritten notes to typed text, and select, move, cut, copy, and apply bold or italic formatting to typed text. The eraser can’t be used with typed text.
+To learn more about typed text, visit our learning and inspiration hub, Using reMarkable.
+Can I type in a PDF document?
+You can type in a note page added to a PDF document (Document settings > Add note page) since continuing to add text on the PDF page is not currently available.
+j_id0__SiteTemplate__j_id17__j_id18__j_id25__j_id26__j_id387__0__j_id390__5__j_id398 = window.onload; window.onload=function() { if (j_id0__SiteTemplate__j_id17__j_id18__j_id25__j_id26__j_id387__0__j_id390__5__j_id398!= null) j_id0__SiteTemplate__j_id17__j_id18__j_id25__j_id26__j_id387__0__j_id390__5__j_id398();};
+Properties
+Article Created Date
+12.12.2022, 12:06
+Last Published Date
+04.09.2026, 09:18
+Override Page Navigation
+Override Page Navigation API Name
+Tile Image URL
+Validation Status
+Not Validated
+Publication Status
+Published
+DesktopContext.pageTitle = "Knowledge: Typed Text";
+document.title = "Knowledge: Typed Text";
+var isModal = false;
+Ext.onReady(function() {
+if (!isModal){
+var propertiesPanel = Ext.query('*[id=j_id0:SiteTemplate:j_id17:j_id18:j_id25:j_id26:articleRendererToolbar] *[id $= :extPanel]')[0];
+if (true) {
+var renderer = new TOCDetailRenderer({elemId:"knowledgeTOCRenderer", height:-110, contentId:'knowledgeTOCRendererContent'});
+if (propertiesPanel) {
+Ext.ComponentMgr.get(propertiesPanel.id).addListener('beforeExpand', function() {
+renderer.height = -190;
+renderer.resize();
+});
+Ext.ComponentMgr.get(propertiesPanel.id).addListener('collapse', function() {
+renderer.height = -110;
+renderer.resize();
+});
+}
+new TOCSectionSelector({menuId:'menu', contentId:'knowledgeTOCRendererContent'});
+}
+ArticleRenderer.registerArticleLinksForConsole();
+}
+else{
+Sfdc.onReady(function(){window.addEventListener("beforeunload", function(){
+if(window.parent.Sfdc.get('ChatterDeflectionModal')){
+Sfdc.Dom.hideByVisibility(window.parent.Sfdc.get('ChatterDeflectionModal'));
+}
+});
+});
+}
+});
+Powered by

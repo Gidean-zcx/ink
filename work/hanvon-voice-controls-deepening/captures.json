@@ -1,0 +1,24 @@
+[
+  {
+    "name": "sina-comparison",
+    "url": "https://zhongce.sina.com.cn/article/view/192508",
+    "status": 200,
+    "final_url": "https://zhongce.sina.com.cn/article/view/192508",
+    "content_type": "text/html; charset=UTF-8",
+    "path": "work/hanvon-voice-controls-deepening/raw/sina-comparison.html",
+    "sha256": "b7a1375a3fbfe320522688f804694c5d1d259efaa431536942ff2df98dba63c4",
+    "bytes": 47643,
+    "images": 41
+  },
+  {
+    "name": "pconline-voice",
+    "url": "https://best.pconline.com.cn/yuanchuang/31097518.html",
+    "status": 200,
+    "final_url": "https://best.pconline.com.cn/yuanchuang/31097518.html",
+    "content_type": "text/html; charset=UTF-8",
+    "path": "work/hanvon-voice-controls-deepening/raw/pconline-voice.html",
+    "sha256": "a3158341f649edb8f5e53daed5b5f9467ae50084ad8574dfff02ed47e1c8b443",
+    "bytes": 57660,
+    "images": 53
+  }
+]

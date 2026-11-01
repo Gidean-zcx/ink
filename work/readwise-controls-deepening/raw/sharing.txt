@@ -1,0 +1,37 @@
+Sharing
+How do I copy the URL of the document to my clipboard?
+You can copy the URL of the document to your clipboard a variety of different ways. On web, you can simply hit Shift + C to copy the URL of the current document or focused document to your clipboard. Alternatively, you can hit O to open the original document in a new tab or hover over the domain underneath the document title in the right sidebar to reveal a copy button. On mobile, you can enter the more menu (...) on any document and choose Share to copy the URL.
+How do I share an annotated article with a friend, colleague, or family member?
+You can share a clean, distraction-free version of any document you've highlighted and annotated in Reader. Reader creates a public link, and anyone with that link can view the document along with your highlights, notes, and tags. (Note that, for privacy reasons, this option isn't available on certain user-uploaded documents such as EPUBs and PDFs.)
+The steps for sharing these documents differs slightly between web and mobile.
+On web or in the desktop app
+Open the actions menu (...) in the top right.
+Select Enable public link, or press Option/Alt + S.
+Once the link is enabled, a blue link icon appears in the top bar. Click it and choose Copy link to grab the URL to share.
+In the mobile app
+Open the actions menu (...) and tap Share document.
+Select Share with annotations, then tap Share link to public version.
+To find all the documents you've shared a public link for, create a filtered view using the query shared:true.
+How do I turn off a public link?
+You can disable a public link at any time. Once you do, anyone who already has the link will no longer be able to open the shared version, so Reader will ask you to confirm before removing it.
+On web or in the desktop app
+When a document has a public link, a blue link icon appears in the top bar.
+Click the blue link icon.
+Click Disable public link, then confirm in the popup.
+In the mobile app
+Open the actions menu (...) and tap Share document.
+Tap Disable link to public version, then confirm in the popup.
+What is a bundle and how can I create my own to share with friends?
+Bundles are collections of documents with pretty landing pages that can easily be shared with others. (As an example, check out this bundle of every public beta update we've sent out for Reader.)
+To create your own bundle, first create a filtered view in the web app, then click the down chevron next to its name and select Enable public link. You can optionally add a cover image to spice up the public landing page.
+When a recipient hits the Open in Reader button on the bundle page, a filtered view will be created in their account and populated with the documents you curated.
+Will my shared bundles update automatically when I add new documents to the filtered view in my account?
+No. To prevent accidental spam into the accounts of people who have subscribed to your bundle, the public version of the view won't be updated with new additions automatically.
+However, you can update it manually by clicking the blue link icon that appears at the top of the view when you enable the public link, then clicking Refresh public link.
+This will add any new documents in your view to the public version of the bundle, and will also add those documents for anyone who has added your bundle to their own Reader account.
+How do I share highlights?
+You can share a beautified image of any highlight by clicking the ... icon while hovering over the highlight in the Notebook panel, then selecting Share highlight as image.
+On mobile, you can do this by tapping the i icon in the top right, tapping into the Notebook tab, tapping the ... beside a highlight, and selecting Share as image.
+How do I print an annotated copy of a document?
+You can print a clean copy of the document with all of your highlights by pressing Cmd/Ctrl + P or by opening the ... menu and selecting Print with annotations. You can then use your browser's print dialogue to select a printer, customize the print options, and print the document.
+If the document is a PDF, you can use Shift + D (or Download with annotations from the ... menu) to download a copy of the original file with your highlights overlaid onto it.

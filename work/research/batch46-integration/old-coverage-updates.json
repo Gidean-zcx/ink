@@ -1,0 +1,118 @@
+[
+  {
+    "owner": "docs/research/interaction-library/batches/audio-coverage.csv",
+    "before": {
+      "flow_id": "F-M036-01",
+      "product_id": "M-036",
+      "task": "USB 传入并发现本地音乐",
+      "depth": "D2",
+      "evidence_ids": "E-SONY-05",
+      "known_branches": "音频存到指定介质；传输完成不代表所有格式、标签都可识别。",
+      "gaps": "取消/断线后的半文件清理、重名覆盖、错误提示。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-036-sony.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M036-01",
+      "product_id": "M-036",
+      "task": "USB 传入并发现本地音乐",
+      "depth": "D2",
+      "evidence_ids": "E-SONY-05;E-SONY-15",
+      "known_branches": "音频存到指定介质；传输完成不代表所有格式、标签都可识别。 Music Center for PC 2.5+可在电脑选设备/卡和曲目后传输；ATRAC转AAC发生在电脑。CD导入有Import/Stop，Mac仅泛指适用传输软件。",
+      "gaps": "取消/断线后的半文件清理、重名覆盖、错误提示。 电脑导入停止后的半成品、转码/复制完成与设备索引结果未核。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-036-sony.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "owner": "docs/research/interaction-library/batches/audio-coverage.csv",
+    "before": {
+      "flow_id": "F-M036-02",
+      "product_id": "M-036",
+      "task": "添加非默认下载目录到曲库",
+      "depth": "D2",
+      "evidence_ids": "E-SONY-06",
+      "known_branches": "注册的是扫描范围，随后才将文件索引进曲库；注册中可取消。最多 10 个目录、识别至目录下第八层；不能注册根目录。",
+      "gaps": "更新中断、坏文件、移卡后空引用；取消注册不据文档推定为删文件。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-036-sony.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M036-02",
+      "product_id": "M-036",
+      "task": "添加非默认下载目录到曲库",
+      "depth": "D2",
+      "evidence_ids": "E-SONY-06;E-SONY-15;E-SYSA-04;E-SYSA-05",
+      "known_branches": "注册的是扫描范围，随后才将文件索引进曲库；注册中可取消。最多 10 个目录、识别至目录下第八层；不能注册根目录。 74/113–114页区分目录第8层音乐文件与该层文件夹：后者不识别；根下音乐不识别，默认Music/Download不可改名。",
+      "gaps": "更新中断、坏文件、移卡后空引用；取消注册不据文档推定为删文件。 图中内存根名sdcard不能当物理卡；深度边界/重扫失败待测。",
+      "visual_status": "static_manual_pages_only",
+      "hands_on": "false",
+      "case_path": "cases/M-036-sony.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "owner": "docs/research/interaction-library/batches/audio-coverage.csv",
+    "before": {
+      "flow_id": "F-M036-03",
+      "product_id": "M-036",
+      "task": "分类找曲与播放页导航",
+      "depth": "D2",
+      "evidence_ids": "E-SONY-01;E-SONY-02;E-SYCD-12;E-SYCD-17",
+      "known_branches": "曲库分类图标可长按拖动；Options可选显示项或重置默认分类。播放页标题/作者/专辑或Search related可回相关内容；返回滚动状态未知。",
+      "gaps": "返回时列表滚动位置、分类切换是否重建队列、空库引导。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-036-sony.md",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "flow_id": "F-M036-03",
+      "product_id": "M-036",
+      "task": "分类找曲与播放页导航",
+      "depth": "D2",
+      "evidence_ids": "E-SONY-01;E-SONY-02;E-SYCD-12;E-SYCD-17;E-SONY-15;E-SYSA-05",
+      "known_branches": "曲库分类图标可长按拖动；Options可选显示项或重置默认分类。播放页标题/作者/专辑或Search related可回相关内容；返回滚动状态未知。 WALKMAN小组件封面打开播放器，媒体按钮直接控制；mini player内容区左右划跳前/后曲，点内容回播放页。",
+      "gaps": "返回时列表滚动位置、分类切换是否重建队列、空库引导。 未测小组件与App页面同步、误划和返回原列表。",
+      "visual_status": "static_manual_pages_only",
+      "hands_on": "false",
+      "case_path": "cases/M-036-sony.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "owner": "docs/research/interaction-library/batches/audio-coverage.csv",
+    "before": {
+      "flow_id": "F-M036-09",
+      "product_id": "M-036",
+      "task": "蓝牙配对/回连、音质设置与出口相关音效",
+      "depth": "D2",
+      "evidence_ids": "E-SONY-11;E-SONY-12;E-SYCD-14;E-SYCD-15;E-SYCD-16;E-SYCD-05",
+      "known_branches": "首次Pair new device选设备/所需密钥；超时重试，恢复出厂后重配。Wireless playback quality下次连接才生效且受接收端影响。USB音频输出的音效限制不能套USB-DAC输入；后者应用本机音效。High-Res streaming在系统Sound中配置第三方App，兼容性非全覆盖。",
+      "gaps": "断连后是否暂停、接有线优先级、重新连是否自动出声；第三方App后台/音频焦点/离线授权未核。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-036-sony.md",
+      "checked_on": "2026-10-27"
+    },
+    "after": {
+      "flow_id": "F-M036-09",
+      "product_id": "M-036",
+      "task": "蓝牙配对/回连、音质设置与出口相关音效",
+      "depth": "D2",
+      "evidence_ids": "E-SONY-11;E-SONY-12;E-SYCD-14;E-SYCD-15;E-SYCD-16;E-SYCD-05;E-SONY-15;E-SYSA-01",
+      "known_branches": "首次Pair new device选设备/所需密钥；超时重试，恢复出厂后重配。Wireless playback quality下次连接才生效且受接收端影响。USB音频输出的音效限制不能套USB-DAC输入；后者应用本机音效。High-Res streaming在系统Sound中配置第三方App，兼容性非全覆盖。 音量与AVLS的蓝牙/USB例外另见F22。360个性化需带相机手机、兼容耳机和服务订阅，具体设置交外部App。",
+      "gaps": "断连后是否暂停、接有线优先级、重新连是否自动出声；第三方App后台/音频焦点/离线授权未核。 360手机采集/传回/保存及失败未知；旧App名称不当已核现行构建。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-036-sony.md",
+      "checked_on": "2026-10-27"
+    }
+  }
+]

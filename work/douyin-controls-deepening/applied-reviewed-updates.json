@@ -1,0 +1,586 @@
+{
+  "flow_changes": [
+    {
+      "id": "F-M051-01",
+      "field": "evidence_ids",
+      "before": "E-DOUY-01;E-DOUY-04",
+      "after": "E-DOUY-01;E-DOUY-04;E-DYCD-02;E-DYCD-04"
+    },
+    {
+      "id": "F-M051-01",
+      "field": "known_branches",
+      "before": "无连续观察",
+      "after": "侧栏历史/缓存/稍后再看及收藏夹示例仅入口；仍无连续观看至回访"
+    },
+    {
+      "id": "F-M051-01",
+      "field": "gaps",
+      "before": "播放状态与主入口及结束恢复",
+      "after": "启动、暂停、任务终点、收藏夹中间入口及重启准确恢复未知"
+    },
+    {
+      "id": "F-M051-01",
+      "field": "visual_status",
+      "before": "not_observed",
+      "after": "static_official_images_only"
+    },
+    {
+      "id": "F-M051-01",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M051-02",
+      "field": "evidence_ids",
+      "before": "E-DOUY-03",
+      "after": "E-DOUY-03;E-DYCD-04"
+    },
+    {
+      "id": "F-M051-02",
+      "field": "known_branches",
+      "before": "长按或分享入口",
+      "after": "长按/分享不感兴趣；图示长按菜单，滑走信号和举报分别记录"
+    },
+    {
+      "id": "F-M051-02",
+      "field": "gaps",
+      "before": "撤销及提交反馈",
+      "after": "当前卡片结果、撤回、弱网提交和后续推荐变化未测"
+    },
+    {
+      "id": "F-M051-02",
+      "field": "visual_status",
+      "before": "not_observed",
+      "after": "static_official_images_only"
+    },
+    {
+      "id": "F-M051-02",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M051-03",
+      "field": "evidence_ids",
+      "before": "E-DOUY-03",
+      "after": "E-DOUY-03;E-DYCD-01;E-DYCD-04"
+    },
+    {
+      "id": "F-M051-03",
+      "field": "known_branches",
+      "before": "探索风格和三级强度及屏蔽",
+      "after": "探索更多有取消/确认；三级内容偏好/恢复默认；关键词永久或短期屏蔽"
+    },
+    {
+      "id": "F-M051-03",
+      "field": "gaps",
+      "before": "统计周期及同步恢复",
+      "after": "确认后的回执、统计周期、短期时长、清除/撤销/跨端一致未知；已选12仅示例"
+    },
+    {
+      "id": "F-M051-03",
+      "field": "visual_status",
+      "before": "not_observed",
+      "after": "static_official_images_only"
+    },
+    {
+      "id": "F-M051-03",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M051-04",
+      "field": "evidence_ids",
+      "before": "E-DOUY-02",
+      "after": "E-DOUY-02;E-DYCD-04"
+    },
+    {
+      "id": "F-M051-04",
+      "field": "known_branches",
+      "before": "推荐频道隐藏;其他频道保留",
+      "after": "政策关闭推荐路径保留；搜索结果分类和用户关注静态示意"
+    },
+    {
+      "id": "F-M051-04",
+      "field": "gaps",
+      "before": "搜索结果返回与实际界面",
+      "after": "关闭推荐现版界面、搜索返回位置/零结果/筛选保存和取消关注未操作"
+    },
+    {
+      "id": "F-M051-04",
+      "field": "visual_status",
+      "before": "not_observed",
+      "after": "static_official_images_only"
+    },
+    {
+      "id": "F-M051-04",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M051-05",
+      "field": "evidence_ids",
+      "before": "E-DOUY-05;E-DOUY-06",
+      "after": "E-DOUY-05;E-DOUY-06;E-DYCD-02;E-DYCD-03"
+    },
+    {
+      "id": "F-M051-05",
+      "field": "known_branches",
+      "before": "双端接受与超时密码夜间限制",
+      "after": "孩子三页权限说明后协议/接受；家长近7日统计/时间锁/取消订阅/解除绑定按钮；示图上限3孩子"
+    },
+    {
+      "id": "F-M051-05",
+      "field": "gaps",
+      "before": "拒绝误绑解绑忘记密码",
+      "after": "扫码失败/拒绝/解绑确认和恢复未知；时间锁未开启示图与默认规则适用范围不同，夜间密码例外冲突保留"
+    },
+    {
+      "id": "F-M051-05",
+      "field": "visual_status",
+      "before": "not_observed",
+      "after": "static_official_images_only"
+    },
+    {
+      "id": "F-M051-05",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M051-06",
+      "field": "evidence_ids",
+      "before": "E-DOUY-06",
+      "after": "E-DOUY-06;E-DYCD-02;E-DYCD-03"
+    },
+    {
+      "id": "F-M051-06",
+      "field": "known_branches",
+      "before": "仅部分知识视频",
+      "after": "部分知识视频AI笔记摘要/蓝色章节时间码/X关闭；只静态图"
+    },
+    {
+      "id": "F-M051-06",
+      "field": "gaps",
+      "before": "摘要失败纠错导出与掌握判定",
+      "after": "生成失败/纠错、保存导出、实际章节跳转及返回进度未知；不是掌握判定"
+    },
+    {
+      "id": "F-M051-06",
+      "field": "visual_status",
+      "before": "not_observed",
+      "after": "static_official_images_only"
+    },
+    {
+      "id": "F-M051-06",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M055-01",
+      "field": "known_branches",
+      "before": "阅读手机型号与容量固定；官方页面现下架",
+      "after": "A9原版官方容量/阅读手机定位沿用旧采集；2022评测仅列四刷新模式、安装App与多种锁屏主题，未给主链操作。"
+    },
+    {
+      "id": "F-M055-01",
+      "field": "gaps",
+      "before": "导入开书、查词划线、音频、实体键、同步恢复",
+      "after": "导入开书、查词划线、音频/通话打断、锁屏恢复、后台与同步恢复仍缺固定构建证据；不借Hi Reader机内引导补A9。"
+    },
+    {
+      "id": "F-M055-01",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M055-05",
+      "field": "evidence_ids",
+      "before": "E-HSD-01;E-HSD-06",
+      "after": "E-HSD-01;E-HSD-06;E-HSCD-06"
+    },
+    {
+      "id": "F-M055-05",
+      "field": "known_branches",
+      "before": "前置：2021年原版TOUCH、具体固件未知；路径：体验文列阅读/音乐/应用/设置四入口；默认墨智键短按刷新、双击读书、长按速记；另报告拷贝本地音乐后可播放。；状态：只到入口与局部反馈，未取得传输模式、扫描、队列和退出完整链。官方USB DAC为功能声明。",
+      "after": "普通TOUCH与2021西安博物院联名款分开：新作者称删阅读标签，应用/设置标签保留，音乐标签进入播放器；三键导航在具体App内出现。只是入口与局部观察。"
+    },
+    {
+      "id": "F-M055-05",
+      "field": "gaps",
+      "before": "文件目录、播放顺序、断点、锁屏控制、外放/有线/蓝牙切换、DAC退出与音频中断未知。",
+      "after": "联名款与黛青SKU构建关系、编辑保存/重加标签、后台管理结果、USB入库/队列/断点、输出切换与DAC退出未知；删标签不证明卸载或数据删除。"
+    },
+    {
+      "id": "F-M055-05",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M055-06",
+      "field": "evidence_ids",
+      "before": "E-HSD-05",
+      "after": "E-HSD-05;E-HSCD-01;E-HSCD-04"
+    },
+    {
+      "id": "F-M055-06",
+      "field": "known_branches",
+      "before": "前置：原版、评测所述墨智键映射；路径：长按墨智键启动灵感速记→松开结束录音→短按收起并保存。；状态：文中称语音可转文字，终点是便签收起/保存；没有原音频去向说明。",
+      "after": "2022评测给长按录入、松开结束、短按收起保存；2023机内引导另说明按已配置按法启动后可新建/查看/删除。速记照片有录入状态和操作图标，未触发。"
+    },
+    {
+      "id": "F-M055-06",
+      "field": "gaps",
+      "before": "联网/账号/费用、转写失败、原音与文本关联、重开/修改/导出、误松手、后台打断未知。",
+      "after": "两年资料未标构建，不拼同一操作链；转写网络/账号/失败、原音与文字、查看/删除具体步骤及恢复、分享/软盘图标效果未核。"
+    },
+    {
+      "id": "F-M055-06",
+      "field": "visual_status",
+      "before": "not_observed",
+      "after": "static_reference_only"
+    },
+    {
+      "id": "F-M055-06",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M055-07",
+      "field": "evidence_ids",
+      "before": "E-HSD-05",
+      "after": "E-HSD-05;E-HSCD-02;E-HSCD-03"
+    },
+    {
+      "id": "F-M055-07",
+      "field": "known_branches",
+      "before": "前置：原版；来源为支持智慧识屏的app，文章以微信等为例；路径：双指长按文章→智慧识屏卡片→收藏。；状态：文中称页面存到本地、可离线阅读；未给重新打开的入口。",
+      "after": "2022评测为支持的App双指长按识屏后收藏、声称存本地；2023设置照片可见全局收藏管理，控制引导另列收藏文章。截图便笺是另一入口。"
+    },
+    {
+      "id": "F-M055-07",
+      "field": "gaps",
+      "before": "不是所有app保证；完整性、重复收藏、登录墙、图片、删除/恢复和跨设备同步未知。",
+      "after": "管理入口未点击，未观察收藏项重开/删除/恢复；App资格、离线首次抓取、图片完整性、重复及同步仍未知；两年资料构建未知，不拼同一操作链。"
+    },
+    {
+      "id": "F-M055-07",
+      "field": "visual_status",
+      "before": "not_observed",
+      "after": "static_reference_only"
+    },
+    {
+      "id": "F-M055-07",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M055-08",
+      "field": "evidence_ids",
+      "before": "E-HSD-05",
+      "after": "E-HSD-05;E-HSCD-05"
+    },
+    {
+      "id": "F-M055-08",
+      "field": "known_branches",
+      "before": "前置：原版评测中的阅读界面，阅读引擎未明确；路径：长按字句可调出划线、批注、复制、搜索/百科/词典菜单。；状态：仅确定菜单；选择→写注释→保存→再次定位→返回的链仍缺。",
+      "after": "2022作者长按文字调工具栏；照片可见选区、划线/批注/复制/搜索/词典/百科，所示词典结果注明汉语大词典。"
+    },
+    {
+      "id": "F-M055-08",
+      "field": "gaps",
+      "before": "词典来源/离线、选区移动、取消、书签关联、导出与删除标记未知。",
+      "after": "单帧不闭合选词→保存→重开；词典切换/离线、查询失败、标注取消/导出/删除及返回位置未知。"
+    },
+    {
+      "id": "F-M055-08",
+      "field": "visual_status",
+      "before": "not_observed",
+      "after": "static_reference_only"
+    },
+    {
+      "id": "F-M055-08",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M022-01",
+      "field": "evidence_ids",
+      "before": "E-BCZH-02",
+      "after": "E-BCZH-02;E-BDCQ-01"
+    },
+    {
+      "id": "F-M022-01",
+      "field": "gaps",
+      "before": "型号映射、解锁后状态",
+      "after": "型号映射、解锁后状态、长按冲突未知；dcj2的扫描笔圆键1秒不是Mini锁定操作证据"
+    },
+    {
+      "id": "F-M022-01",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    },
+    {
+      "id": "F-M022-02",
+      "field": "evidence_ids",
+      "before": "E-BCZH-03;E-BDCD-01",
+      "after": "E-BCZH-03;E-BDCD-01;E-BDCQ-01"
+    },
+    {
+      "id": "F-M022-02",
+      "field": "gaps",
+      "before": "官方按键规则、长短按及状态作用、进入/答错/误斩撤销/结束、第二页、复习与同步影响未知；固件和 App 构建未知",
+      "after": "官方按键规则、长短按及状态作用、进入/答错/误斩撤销/结束、第二页、复习与同步影响未知；固件和App构建未知；dcj2超级单词机帮助不能补Max流程"
+    },
+    {
+      "id": "F-M022-03",
+      "field": "evidence_ids",
+      "before": "E-BCZH-01;E-BCDVC-01;E-BCDVC-02",
+      "after": "E-BCZH-01;E-BCDVC-01;E-BCDVC-02;E-BDCQ-01"
+    },
+    {
+      "id": "F-M022-03",
+      "field": "gaps",
+      "before": "历史型号适用性、首次绑定、缓存、取消/断网、同步对象/冲突与恢复未知",
+      "after": "历史型号适用性、首次绑定、缓存、取消/断网、同步对象/冲突与恢复未知；dcj2离线打卡/收藏/解绑条款未证实适用Mini/Max"
+    },
+    {
+      "id": "F-M022-03",
+      "field": "checked_on",
+      "before": "2026-10-26",
+      "after": "2026-10-27"
+    }
+  ],
+  "evidence_changes": [
+    {
+      "id": "E-DOUY-03",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "prior_public_JSON_local_reread",
+          "raw_work_path": "work/feed-interactions/douyin-article-15710.json",
+          "raw_sha256": "4c46503ab0ca200e0c1b30580c3f5161e3411924ac58517c1eed9549014595a6",
+          "archived_artifact": "artifacts/douyin-controls-deepening/source-notes.md",
+          "sha256": "9ae3b6c895905f20e912ef4a7e43d06e3d329b3cfadca04f941f0c727cb1017d",
+          "note": "旧原件本地复读，文内静态图本轮查看另以E-DYCD-01/02登记；非新文章网络采集"
+        }
+      ]
+    },
+    {
+      "id": "E-DOUY-06",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "access_mode": "prior_public_JSON_local_reread",
+          "raw_work_path": "work/feed-interactions/douyin-article-3111768381106164.json",
+          "raw_sha256": "16706c48e6a9524aa1f00dc35763e1f805cc8fae2f41e8355c2b209b0d552b05",
+          "archived_artifact": "artifacts/douyin-controls-deepening/source-notes.md",
+          "sha256": "9ae3b6c895905f20e912ef4a7e43d06e3d329b3cfadca04f941f0c727cb1017d",
+          "note": "旧原件本地复读，文内静态图本轮查看另以E-DYCD-01/02登记；非新文章网络采集"
+        }
+      ]
+    },
+    {
+      "id": "E-BCZH-01",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "capture_url": "https://danciji.baicizhan.com/",
+          "checked_on": "2026-10-27",
+          "original_capture_on": "2026-10-27",
+          "access_mode": "local_reread_of_existing_public_artifact",
+          "raw_work_path": "work/baicizhan-device-controls-deepening/01-official-home.html",
+          "raw_sha256": "47e7718d62b9b0e94707740198d4335181cfc730842a884da62d26845e41e828",
+          "locator": "Mini/Max/系列功能正文；旧links.json的22个href；无新增界面观察",
+          "limitation": "未重新GET或看图；保持原型号、来源等级及失败路径边界",
+          "archived_artifact": "artifacts/baicizhan-device-controls-deepening-2/source-notes.md",
+          "sha256": "101dae305557f5f02ddcb23f17edf95d2d80cc3856c790f4600f1d5a9d49996a",
+          "hands_on": false,
+          "visual_observed": false
+        }
+      ]
+    },
+    {
+      "id": "E-BDCD-01",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "capture_url": "https://www.52audio.com/archives/239551.html",
+          "checked_on": "2026-10-27",
+          "original_capture_on": "2026-10-27",
+          "access_mode": "local_reread_of_existing_public_artifact",
+          "raw_work_path": "work/baicizhan-device-controls-deepening/02-52audio-ace-max.html",
+          "raw_sha256": "12fd996dcc2af3cdf35f8eaf894a74163db488d1e14f6580a03c0d29b55519fb",
+          "locator": "原件开箱正文，派生txt68—88行；按键/接口/复位孔描述，不推恢复功能",
+          "limitation": "未重新GET或看图；保持原型号、来源等级及失败路径边界",
+          "archived_artifact": "artifacts/baicizhan-device-controls-deepening-2/source-notes.md",
+          "sha256": "101dae305557f5f02ddcb23f17edf95d2d80cc3856c790f4600f1d5a9d49996a",
+          "hands_on": false,
+          "visual_observed": false
+        }
+      ]
+    },
+    {
+      "id": "E-HSD-05",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "url": "https://www.ithome.com/0/611/514.htm",
+          "checked_on": "2026-10-27",
+          "access_mode": "anonymous_urllib_GET",
+          "status": 200,
+          "final_url": "https://www.ithome.com/0/611/514.htm",
+          "content_type": "text/html; charset=utf-8",
+          "raw_work_path": "work/hisense-controls-deepening/raw/hireader-ithome.html",
+          "raw_sha256": "d03b139d5167157a61cba1153d93c17f40a175f2f0807854cf8ba70a91ec5ede",
+          "extracted_work_path": "work/hisense-controls-deepening/raw/hireader-ithome.txt",
+          "extracted_sha256": "ea9b966ab105a4ca2e3598eeed990b69b4ea0b374c35e5191198bc80d63c6826",
+          "hands_on": false,
+          "visual_observed": false,
+          "archived_artifact": "artifacts/hisense-controls-deepening/source-notes.md",
+          "sha256": "b7775a8330b022ad88e1e720f904054c02fcf0f082430e849c6d856ff0792eaf",
+          "note": "同文章复读；选定照片另以衍生E记录，不重复整篇来源。"
+        }
+      ]
+    },
+    {
+      "id": "E-HSD-08",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "url": "https://mobile.yesky.com/283/725998783.shtml",
+          "checked_on": "2026-10-27",
+          "access_mode": "anonymous_urllib_GET",
+          "status": 200,
+          "final_url": "https://mobile.yesky.com/283/725998783.shtml",
+          "content_type": "text/html; charset=gb2312",
+          "raw_work_path": "work/hisense-controls-deepening/raw/a9-yesky.html",
+          "raw_sha256": "6aebcdd35bbf6ea17fbe9aa2ada580ed6a3e58afa17c8f94a9ab9c04ec84a400",
+          "extracted_work_path": "work/hisense-controls-deepening/raw/a9-yesky.gb18030.txt",
+          "extracted_sha256": "061a6f89d6d97bbdebe11d000fd8e17afe12d91ecd9f7f91ade9672b7afc962c",
+          "extraction_note": "Header gb2312 decoded with gb18030; initial UTF-8 extraction retained as failed garbled intermediate.",
+          "hands_on": false,
+          "visual_observed": false,
+          "archived_artifact": "artifacts/hisense-controls-deepening/source-notes.md",
+          "sha256": "b7775a8330b022ad88e1e720f904054c02fcf0f082430e849c6d856ff0792eaf",
+          "note": "同文章复读；选定照片另以衍生E记录，不重复整篇来源。"
+        }
+      ]
+    },
+    {
+      "id": "E-HSD-09",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "url": "https://sblt.deali.cn/blog/eink-hisense-hi-reader",
+          "checked_on": "2026-10-27",
+          "access_mode": "anonymous_urllib_GET",
+          "status": 200,
+          "final_url": "https://sblt.deali.cn/blog/eink-hisense-hi-reader",
+          "content_type": "text/html; charset=utf-8",
+          "raw_work_path": "work/hisense-controls-deepening/raw/hireader-deali.html",
+          "raw_sha256": "19198e3328ab67026e1829b2ca37e0e4366ef31e8dcef09434cf88ad5ab343cb",
+          "extracted_work_path": "work/hisense-controls-deepening/raw/hireader-deali.txt",
+          "extracted_sha256": "9a34cf57f13d277952f16c35bfb445b1fda11a07b5a8f8e8f14feb929a7afdfd",
+          "hands_on": false,
+          "visual_observed": false,
+          "archived_artifact": "artifacts/hisense-controls-deepening/source-notes.md",
+          "sha256": "b7775a8330b022ad88e1e720f904054c02fcf0f082430e849c6d856ff0792eaf",
+          "note": "同文章复读；选定照片另以衍生E记录，不重复整篇来源。"
+        }
+      ]
+    },
+    {
+      "id": "E-HSD-03",
+      "field": "additional_captures",
+      "before": [],
+      "after": [
+        {
+          "checked_on": "2026-10-27",
+          "url": "https://mobile.hisense.com/yidongziliao/",
+          "access_mode": "public_web_tool_text_read_then_separate_urllib_timeout",
+          "locator": "资料下载标题下至页脚；web返回正文未列旧三款下载",
+          "hands_on": false,
+          "visual_observed": false,
+          "raw_work_path": null,
+          "raw_sha256": null,
+          "archived_artifact": "artifacts/hisense-controls-deepening/source-notes.md",
+          "sha256": "b7775a8330b022ad88e1e720f904054c02fcf0f082430e849c6d856ff0792eaf",
+          "note": "未保存完整web原文；独立GET超时，不冒充HTML原件。旧型号手册仍未取得；未重试。"
+        }
+      ]
+    }
+  ],
+  "files": [
+    {
+      "path": "docs/research/interaction-library/batches/vocab-evidence.jsonl",
+      "backup": "work/douyin-controls-deepening/reviewed-before/vocab-evidence.jsonl",
+      "before_sha256": "1260d0d4590447f128c19bf1ebc8497ea94d5552239b2ac024e086d4baf9765f",
+      "after_sha256": "89d6d22cbc112135a00b40133c51d239accb4c0ab72cf65481f9d8ffea65be38"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/feed-evidence.jsonl",
+      "backup": "work/douyin-controls-deepening/reviewed-before/feed-evidence.jsonl",
+      "before_sha256": "864336c57c35d13beee3a98fb70a19b5586baba6de82839a0afbcd128edcb63f",
+      "after_sha256": "e2b869c7903399770306ced3875af250deb5cb0a2d760972fb8fa3063b724ee7"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/extended-readers-coverage.csv",
+      "backup": "work/douyin-controls-deepening/reviewed-before/extended-readers-coverage.csv",
+      "before_sha256": "fd8445d65fa87f3c1674d7974e4b33fff122b79d8a50263d81e413fd2c0ac82d",
+      "after_sha256": "3fbf8116a4720ae06bcde3e2fedae47ffe43e7c4be816ef6fb67f2df74efd847"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/feed-coverage.csv",
+      "backup": "work/douyin-controls-deepening/reviewed-before/feed-coverage.csv",
+      "before_sha256": "0030eacf49a5ca5ca049d7095995b6e1e7cffceaf2c271d6030e203444cee1c2",
+      "after_sha256": "9453d2b697f9e8505efe24f8d7690a52a47c55583efb00a8ac671384b4f65b2c"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/eink-phone-deepening-coverage.csv",
+      "backup": "work/douyin-controls-deepening/reviewed-before/eink-phone-deepening-coverage.csv",
+      "before_sha256": "d925d07f3f43282c6493c130f265d61e2f0d2379f7f2fc9266b9ef79a41505f6",
+      "after_sha256": "bdb61e11d1fdec4c00643df3d5050e6e017b26d6f8d058a1f69ed71338a93d38"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/vocab-coverage.csv",
+      "backup": "work/douyin-controls-deepening/reviewed-before/vocab-coverage.csv",
+      "before_sha256": "d925a5c62c5cf69d5fdfcfd2d75a73d8668144dc505583f626efbe34f7977f4b",
+      "after_sha256": "aabf03599a49998effcf145e427b8e5e4d3345487f1d82d0f8dc7792577cfbaa"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/baicizhan-device-controls-deepening-evidence.jsonl",
+      "backup": "work/douyin-controls-deepening/reviewed-before/baicizhan-device-controls-deepening-evidence.jsonl",
+      "before_sha256": "55d7ecffce073c7c203540bfbdf68d2e7a8bbd22399347c3295916c156868057",
+      "after_sha256": "81abfc5299305439a6e49718d947f7342f63b9a62143f903976948e362ab1f6a"
+    },
+    {
+      "path": "docs/research/interaction-library/batches/eink-phone-deepening-evidence.jsonl",
+      "backup": "work/douyin-controls-deepening/reviewed-before/eink-phone-deepening-evidence.jsonl",
+      "before_sha256": "2cc2eafb650e9cf153b29398cdc9e705459793e83d62bb399b6e68fc1c3d6f14",
+      "after_sha256": "c404a60c297e61f20417e0a9513b7b32961c5081d5d922080b5ab969f7f1436c"
+    }
+  ],
+  "old_tasks": 14,
+  "old_task_fields": 60,
+  "old_evidence_captures": 8
+}

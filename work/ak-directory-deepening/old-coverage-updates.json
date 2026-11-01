@@ -1,0 +1,186 @@
+[
+  {
+    "flow_id": "F-M065-01",
+    "before": {
+      "flow_id": "F-M065-01",
+      "product_id": "M-065",
+      "task": "USB传入并安全结束",
+      "depth": "D2",
+      "evidence_ids": "E-AK-02;E-AKCD-01",
+      "known_branches": "Media Device复制后断线；型号手册补通知栏Safely Remove及System Information/Unmount。",
+      "gaps": "扫描触发、空库/坏文件、复制取消、同名覆盖、移动后歌单。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-065-astell-kern.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M065-01",
+      "product_id": "M-065",
+      "task": "USB传入并安全结束",
+      "depth": "D2",
+      "evidence_ids": "E-AK-02;E-AKCD-01;E-AKDD-01;E-AKDD-02",
+      "known_branches": "Media Device复制后断线；Safely Remove/Unmount。Folder右侧菜单有文件/目录复制、移动、移除，文件另有edit tags；仅入口明确。关联封面FAQ提嵌图或专辑目录图片后重启/重建，属通用旧文档。",
+      "gaps": "扫描触发、同名/中断、移动后歌单修复；设备端目标选择/确认/撤销、标签保存规则未给。旧封面FAQ的清空歌单复选框不认定SR35现版具备；数据库重扫不保证无损。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-065-astell-kern.md",
+      "checked_on": "2026-10-27"
+    },
+    "changed_fields": {
+      "evidence_ids": {
+        "before": "E-AK-02;E-AKCD-01",
+        "after": "E-AK-02;E-AKCD-01;E-AKDD-01;E-AKDD-02"
+      },
+      "known_branches": {
+        "before": "Media Device复制后断线；型号手册补通知栏Safely Remove及System Information/Unmount。",
+        "after": "Media Device复制后断线；Safely Remove/Unmount。Folder右侧菜单有文件/目录复制、移动、移除，文件另有edit tags；仅入口明确。关联封面FAQ提嵌图或专辑目录图片后重启/重建，属通用旧文档。"
+      },
+      "gaps": {
+        "before": "扫描触发、空库/坏文件、复制取消、同名覆盖、移动后歌单。",
+        "after": "扫描触发、同名/中断、移动后歌单修复；设备端目标选择/确认/撤销、标签保存规则未给。旧封面FAQ的清空歌单复选框不认定SR35现版具备；数据库重扫不保证无损。"
+      },
+      "checked_on": {
+        "before": "2026-10-26",
+        "after": "2026-10-27"
+      }
+    }
+  },
+  {
+    "flow_id": "F-M065-02",
+    "before": {
+      "flow_id": "F-M065-02",
+      "product_id": "M-065",
+      "task": "放入队列或歌单",
+      "depth": "D2",
+      "evidence_ids": "E-AK-02;E-AKCD-01",
+      "known_branches": "队列Next/Last；新建名称Add、加歌Complete；删除成员确认DELETE且不删存储音频。",
+      "gaps": "当前项移除后的播放、撤销、顺序持久化、整歌单删除后的恢复。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-065-astell-kern.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M065-02",
+      "product_id": "M-065",
+      "task": "放入队列或歌单",
+      "depth": "D2",
+      "evidence_ids": "E-AK-02;E-AKCD-01;E-AKDD-03",
+      "known_branches": "Next/Last与持久歌单分开；创建+命名/Add、加曲/Complete。可选部分曲加入Now Playing顶部/底部/当前后；成员DELETE明确不删存储音频。Playlists编辑选歌单→重命名图标→RENAME窗口→命名/RENAME；删除图标→DELETE确认整歌单。",
+      "gaps": "当前项移除后的播放、撤销、队列排序持久化、重名/空名、整歌单恢复与源文件移动后的引用未核；整表删除不可借成员移除说明推定所有数据后果。",
+      "visual_status": "static_reference_only",
+      "hands_on": "false",
+      "case_path": "cases/M-065-astell-kern.md",
+      "checked_on": "2026-10-27"
+    },
+    "changed_fields": {
+      "evidence_ids": {
+        "before": "E-AK-02;E-AKCD-01",
+        "after": "E-AK-02;E-AKCD-01;E-AKDD-03"
+      },
+      "known_branches": {
+        "before": "队列Next/Last；新建名称Add、加歌Complete；删除成员确认DELETE且不删存储音频。",
+        "after": "Next/Last与持久歌单分开；创建+命名/Add、加曲/Complete。可选部分曲加入Now Playing顶部/底部/当前后；成员DELETE明确不删存储音频。Playlists编辑选歌单→重命名图标→RENAME窗口→命名/RENAME；删除图标→DELETE确认整歌单。"
+      },
+      "gaps": {
+        "before": "当前项移除后的播放、撤销、顺序持久化、整歌单删除后的恢复。",
+        "after": "当前项移除后的播放、撤销、队列排序持久化、重名/空名、整歌单恢复与源文件移动后的引用未核；整表删除不可借成员移除说明推定所有数据后果。"
+      },
+      "visual_status": {
+        "before": "not_observed",
+        "after": "static_reference_only"
+      },
+      "checked_on": {
+        "before": "2026-10-26",
+        "after": "2026-10-27"
+      }
+    }
+  },
+  {
+    "flow_id": "F-M065-09",
+    "before": {
+      "flow_id": "F-M065-09",
+      "product_id": "M-065",
+      "task": "M3U路径兼容性（D1）",
+      "depth": "D1",
+      "evidence_ids": "E-AK-10",
+      "known_branches": "文件能复制不等于引用可解析；检查引用路径是本研究建议，非已验证恢复。",
+      "gaps": "SR35扫描入口、相对路径支持、编码、重复项、批量修复与重新导入反馈。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-065-astell-kern.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M065-09",
+      "product_id": "M-065",
+      "task": "M3U路径兼容性（D1）",
+      "depth": "D1",
+      "evidence_ids": "E-AK-10",
+      "known_branches": "共用FAQ声明M3U支持，同时指出Android路径不匹配可能无法识别；本轮复读未新增导入操作证据。",
+      "gaps": "SR35导入/扫描入口、编码、相对路径、重扫去重及批量修复未知；不将FAQ“无规范”措辞当标准事实，仍D1。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-065-astell-kern.md",
+      "checked_on": "2026-10-27"
+    },
+    "changed_fields": {
+      "known_branches": {
+        "before": "文件能复制不等于引用可解析；检查引用路径是本研究建议，非已验证恢复。",
+        "after": "共用FAQ声明M3U支持，同时指出Android路径不匹配可能无法识别；本轮复读未新增导入操作证据。"
+      },
+      "gaps": {
+        "before": "SR35扫描入口、相对路径支持、编码、重复项、批量修复与重新导入反馈。",
+        "after": "SR35导入/扫描入口、编码、相对路径、重扫去重及批量修复未知；不将FAQ“无规范”措辞当标准事实，仍D1。"
+      },
+      "checked_on": {
+        "before": "2026-10-26",
+        "after": "2026-10-27"
+      }
+    }
+  },
+  {
+    "flow_id": "F-M065-16",
+    "before": {
+      "flow_id": "F-M065-16",
+      "product_id": "M-065",
+      "task": "返回播放页、定位时间与歌词",
+      "depth": "D2",
+      "evidence_ids": "E-AKCD-01",
+      "known_branches": "Mini Player展开/收起；进度条拖动、封面歌词、剩余时间。",
+      "gaps": "无歌词反馈、定位精度、章节、跨书/重启进度、返回滚动位置；不当持久断点。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-065-astell-kern.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M065-16",
+      "product_id": "M-065",
+      "task": "返回播放页、定位时间与歌词",
+      "depth": "D2",
+      "evidence_ids": "E-AKCD-01",
+      "known_branches": "Mini Player上滑/点按展开，下滑/返回收起；拖进度、封面歌词、时长切换。More可回歌曲的Album/Artist/Folder或File Info；Songs/Albums/Artists/MQS分类支持名称关键词检索，结果编辑可播/加入歌单。",
+      "gaps": "无歌词/空搜索反馈、定位粒度、章节/持久时间书签、重启进度和返回滚动位置未核；分类排序/首页次序只有入口，不推定拖拽或持久化规则。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-065-astell-kern.md",
+      "checked_on": "2026-10-27"
+    },
+    "changed_fields": {
+      "known_branches": {
+        "before": "Mini Player展开/收起；进度条拖动、封面歌词、剩余时间。",
+        "after": "Mini Player上滑/点按展开，下滑/返回收起；拖进度、封面歌词、时长切换。More可回歌曲的Album/Artist/Folder或File Info；Songs/Albums/Artists/MQS分类支持名称关键词检索，结果编辑可播/加入歌单。"
+      },
+      "gaps": {
+        "before": "无歌词反馈、定位精度、章节、跨书/重启进度、返回滚动位置；不当持久断点。",
+        "after": "无歌词/空搜索反馈、定位粒度、章节/持久时间书签、重启进度和返回滚动位置未核；分类排序/首页次序只有入口，不推定拖拽或持久化规则。"
+      },
+      "checked_on": {
+        "before": "2026-10-26",
+        "after": "2026-10-27"
+      }
+    }
+  }
+]

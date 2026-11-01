@@ -1,0 +1,19 @@
+{
+  "total": 53,
+  "by_kind": {
+    "source_index": 5,
+    "source_heading": 15,
+    "reported_control": 3,
+    "reported_ui_group": 1,
+    "reported_ui_entry": 8,
+    "reported_feature": 4,
+    "capability": 5,
+    "prior_static_control": 2,
+    "reported_condition": 3,
+    "gap": 7
+  },
+  "new_flows": 0,
+  "new_evidence": 2,
+  "updated_old_flows": 4,
+  "updated_fields": 16
+}

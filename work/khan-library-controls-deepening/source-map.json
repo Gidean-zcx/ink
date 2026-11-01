@@ -1,0 +1,162 @@
+[
+  {
+    "title": "Home and Parent Resources – Khan Academy",
+    "url": "https://khankids.zendesk.com/hc/en-us/sections/360001481891-Home-and-Parent-Resources",
+    "source_response": "work/khan-library-controls-deepening/web-index-response.json",
+    "path": "work/khan-library-controls-deepening/text/sections-360001481891.txt",
+    "kind": "sections",
+    "id": "360001481891"
+  },
+  {
+    "title": "Class and Teacher Resources – Khan Academy",
+    "url": "https://khankids.zendesk.com/hc/en-us/sections/360008453772-Class-and-Teacher-Resources",
+    "source_response": "work/khan-library-controls-deepening/web-index-response.json",
+    "path": "work/khan-library-controls-deepening/text/sections-360008453772.txt",
+    "kind": "sections",
+    "id": "360008453772"
+  },
+  {
+    "title": "District and IT Administrator Resources – Khan Academy",
+    "url": "https://khankids.zendesk.com/hc/en-us/sections/39182012411547-District-and-IT-Administrator-Resources",
+    "source_response": "work/khan-library-controls-deepening/web-index-response.json",
+    "path": "work/khan-library-controls-deepening/text/sections-39182012411547.txt",
+    "kind": "sections",
+    "id": "39182012411547"
+  },
+  {
+    "title": "Resources in Spanish and Other Languages – Khan Academy",
+    "url": "https://khankids.zendesk.com/hc/en-us/sections/46978742033051-Resources-in-Spanish-and-Other-Languages",
+    "source_response": "work/khan-library-controls-deepening/web-index-response.json",
+    "path": "work/khan-library-controls-deepening/text/sections-46978742033051.txt",
+    "kind": "sections",
+    "id": "46978742033051"
+  },
+  {
+    "title": "News and Announcements – Khan Academy",
+    "url": "https://khankids.zendesk.com/hc/en-us/sections/46978591932315-News-and-Announcements",
+    "source_response": "work/khan-library-controls-deepening/web-index-response.json",
+    "path": "work/khan-library-controls-deepening/text/sections-46978591932315.txt",
+    "kind": "sections",
+    "id": "46978591932315"
+  },
+  {
+    "title": "Camp Khan Kids – Khan Academy",
+    "url": "https://khankids.zendesk.com/hc/en-us/sections/47204226038171-Camp-Khan-Kids",
+    "source_response": "work/khan-library-controls-deepening/web-index-response.json",
+    "path": "work/khan-library-controls-deepening/text/sections-47204226038171.txt",
+    "kind": "sections",
+    "id": "47204226038171"
+  },
+  {
+    "title": "Home and Parent Resources – Khan Academy",
+    "url": "https://khankids.zendesk.com/hc/en-us/sections/360001481891-Home-and-Parent-Resources?page=2",
+    "source_response": "work/khan-library-controls-deepening/web-response-1.json",
+    "path": "work/khan-library-controls-deepening/text/sections-360001481891-p2.txt",
+    "kind": "sections",
+    "id": "360001481891"
+  },
+  {
+    "title": "Class and Teacher Resources – Khan Academy",
+    "url": "https://khankids.zendesk.com/hc/en-us/sections/360008453772-Class-and-Teacher-Resources?page=2",
+    "source_response": "work/khan-library-controls-deepening/web-response-1.json",
+    "path": "work/khan-library-controls-deepening/text/sections-360008453772-p2.txt",
+    "kind": "sections",
+    "id": "360008453772"
+  },
+  {
+    "title": "Learn more about the Learning Path – Khan Academy",
+    "url": "https://khankids.zendesk.com/hc/en-us/articles/360048828572-Learn-more-about-the-Learning-Path",
+    "source_response": "work/khan-library-controls-deepening/web-response-1.json",
+    "path": "work/khan-library-controls-deepening/text/articles-360048828572.txt",
+    "kind": "articles",
+    "id": "360048828572"
+  },
+  {
+    "title": "How do I mute the background music? – Khan Academy",
+    "url": "https://khankids.zendesk.com/hc/en-us/articles/360006764152-How-do-I-mute-the-background-music",
+    "source_response": "work/khan-library-controls-deepening/web-response-1.json",
+    "path": "work/khan-library-controls-deepening/text/articles-360006764152.txt",
+    "kind": "articles",
+    "id": "360006764152"
+  },
+  {
+    "title": "How do I change the name of a user? – Khan Academy",
+    "url": "https://khankids.zendesk.com/hc/en-us/articles/360006761932-How-do-I-change-the-name-of-a-user",
+    "source_response": "work/khan-library-controls-deepening/web-response-1.json",
+    "path": "work/khan-library-controls-deepening/text/articles-360006761932.txt",
+    "kind": "articles",
+    "id": "360006761932"
+  },
+  {
+    "title": "How do I change the avatar for a user? – Khan Academy",
+    "url": "https://khankids.zendesk.com/hc/en-us/articles/360007053871-How-do-I-change-the-avatar-for-a-user",
+    "source_response": "work/khan-library-controls-deepening/web-response-1.json",
+    "path": "work/khan-library-controls-deepening/text/articles-360007053871.txt",
+    "kind": "articles",
+    "id": "360007053871"
+  },
+  {
+    "title": "How do I delete a user? – Khan Academy",
+    "url": "https://khankids.zendesk.com/hc/en-us/articles/360006763332-How-do-I-delete-a-user",
+    "source_response": "work/khan-library-controls-deepening/web-response-1.json",
+    "path": "work/khan-library-controls-deepening/text/articles-360006763332.txt",
+    "kind": "articles",
+    "id": "360006763332"
+  },
+  {
+    "title": "Chinese Parent Guide: 家长指南: 开始使用可汗学院儿童版 – Khan Academy",
+    "url": "https://khankids.zendesk.com/hc/en-us/articles/4457349308059-Chinese-Parent-Guide-%E5%AE%B6%E9%95%BF%E6%8C%87%E5%8D%97-%E5%BC%80%E5%A7%8B%E4%BD%BF%E7%94%A8%E5%8F%AF%E6%B1%97%E5%AD%A6%E9%99%A2%E5%84%BF%E7%AB%A5%E7%89%88",
+    "source_response": "work/khan-library-controls-deepening/web-response-1.json",
+    "path": "work/khan-library-controls-deepening/text/articles-4457349308059.txt",
+    "kind": "articles",
+    "id": "4457349308059"
+  },
+  {
+    "title": "Learn more about the books in the Khan Academy Kids app – Khan Academy",
+    "url": "https://khankids.zendesk.com/hc/en-us/articles/4409036780955-Learn-more-about-the-books-in-the-Khan-Academy-Kids-app",
+    "source_response": "work/khan-library-controls-deepening/web-response-2.json",
+    "path": "work/khan-library-controls-deepening/text/articles-4409036780955.txt",
+    "kind": "articles",
+    "id": "4409036780955"
+  },
+  {
+    "title": "Why can't I hear the sound? – Khan Academy",
+    "url": "https://khankids.zendesk.com/hc/en-us/articles/360007053151-Why-can-t-I-hear-the-sound",
+    "source_response": "work/khan-library-controls-deepening/web-response-2.json",
+    "path": "work/khan-library-controls-deepening/text/articles-360007053151.txt",
+    "kind": "articles",
+    "id": "360007053151"
+  },
+  {
+    "title": "How do I delete an app and re-download? – Khan Academy",
+    "url": "https://khankids.zendesk.com/hc/en-us/articles/360006761532-How-do-I-delete-an-app-and-re-download",
+    "source_response": "work/khan-library-controls-deepening/web-response-2.json",
+    "path": "work/khan-library-controls-deepening/text/articles-360006761532.txt",
+    "kind": "articles",
+    "id": "360006761532"
+  },
+  {
+    "title": "Progress reports in the Khan Academy Kids app – Khan Academy",
+    "url": "https://khankids.zendesk.com/hc/en-us/articles/4403614100109-Progress-reports-in-the-Khan-Academy-Kids-app",
+    "source_response": "work/khan-library-controls-deepening/web-response-2.json",
+    "path": "work/khan-library-controls-deepening/text/articles-4403614100109.txt",
+    "kind": "articles",
+    "id": "4403614100109"
+  },
+  {
+    "title": "Fluency: The key to independent reading – Khan Academy",
+    "url": "https://khankids.zendesk.com/hc/en-us/articles/4403706778637-Fluency-The-key-to-independent-reading",
+    "source_response": "work/khan-library-controls-deepening/web-response-2.json",
+    "path": "work/khan-library-controls-deepening/text/articles-4403706778637.txt",
+    "kind": "articles",
+    "id": "4403706778637"
+  },
+  {
+    "title": "Sandy's Instruments and Reya's Bugs – Khan Academy",
+    "url": "https://khankids.zendesk.com/hc/en-us/articles/360053927172-Sandy-s-Instruments-and-Reya-s-Bugs",
+    "source_response": "work/khan-library-controls-deepening/web-response-2.json",
+    "path": "work/khan-library-controls-deepening/text/articles-360053927172.txt",
+    "kind": "articles",
+    "id": "360053927172"
+  }
+]

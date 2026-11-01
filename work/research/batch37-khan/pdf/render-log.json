@@ -1,0 +1,44 @@
+[
+  {
+    "pdf": "goals",
+    "page": 1,
+    "image": "work/research/batch37-khan/pdf/goals-1.png",
+    "sha256": "a9f56bde8225243369225847f4f56583ba2f77ade6420b2eee7aa0884f345114"
+  },
+  {
+    "pdf": "goals",
+    "page": 2,
+    "image": "work/research/batch37-khan/pdf/goals-2.png",
+    "sha256": "975f48be2501426e76f8c5eeec880475b72c40c1b5feeb98ca0fd2b1dfea4af0"
+  },
+  {
+    "pdf": "goals",
+    "page": 3,
+    "image": "work/research/batch37-khan/pdf/goals-3.png",
+    "sha256": "69f65e3b1a58235a910942216cd5f55e6ab8a5fc9a9c245e6948f44b1f0213cc"
+  },
+  {
+    "pdf": "goals",
+    "page": 4,
+    "image": "work/research/batch37-khan/pdf/goals-4.png",
+    "sha256": "43f164a39d269eb6bbdb525c86a2212175ccc04d2af7b8319fc58cd81e5956e5"
+  },
+  {
+    "pdf": "goals",
+    "page": 5,
+    "image": "work/research/batch37-khan/pdf/goals-5.png",
+    "sha256": "e6fd5d902fa75ad58152085e5948c01f8d8c57c62c130d0c50cfac6e9a2b85d2"
+  },
+  {
+    "pdf": "tracker",
+    "page": 1,
+    "image": "work/research/batch37-khan/pdf/tracker-1.png",
+    "sha256": "4fbc9e313b477365191a6beca307211acb70b8862cbabcf69a3f35a703aee992"
+  },
+  {
+    "pdf": "certificate",
+    "page": 1,
+    "image": "work/research/batch37-khan/pdf/certificate-1.png",
+    "sha256": "8f2153f22ce05a40fb6f5a75616b35cc1ee2036861ec66b6fcfa2b59d332e471"
+  }
+]

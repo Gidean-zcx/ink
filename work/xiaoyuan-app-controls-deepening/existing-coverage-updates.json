@@ -1,0 +1,176 @@
+[
+  {
+    "flow_id": "F-M028-01",
+    "before": {
+      "flow_id": "F-M028-01",
+      "product_id": "M-028",
+      "task": "检查后解释与错题整理",
+      "depth": "D2",
+      "evidence_ids": "E-XYAI-02;E-XYAI-03",
+      "known_branches": "解析会员边界",
+      "gaps": "拍照识别纠错提示和再练全链",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-028-xiaoyuan-ai.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M028-01",
+      "product_id": "M-028",
+      "task": "检查后解释与错题整理",
+      "depth": "D2",
+      "evidence_ids": "E-XYAI-02;E-XYAI-03",
+      "known_branches": "FAQ解析/VIP与错题关系；检查历史保留，非同题连续链",
+      "gaps": "拍照识别纠错、提示、再练及错题状态全链；未借历史练习补纸面检查",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-028-xiaoyuan-ai.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "flow_id": "F-M028-02",
+    "before": {
+      "flow_id": "F-M028-02",
+      "product_id": "M-028",
+      "task": "指定知识点手写练习",
+      "depth": "D2",
+      "evidence_ids": "E-XYAI-03;E-XYCD-01;E-XYCD-02",
+      "known_branches": "历史口算局部补证；其他题型不套用",
+      "gaps": "当前构建、识别误判修订、保存粒度",
+      "visual_status": "static_reference_only",
+      "hands_on": "false",
+      "case_path": "cases/M-028-xiaoyuan-ai.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M028-02",
+      "product_id": "M-028",
+      "task": "指定知识点手写练习",
+      "depth": "D2",
+      "evidence_ids": "E-XYAI-03;E-XYCD-01;E-XYCD-02;E-XYAC-01;E-XYAC-02;E-XYAC-03;E-XYAC-04",
+      "known_branches": "口算重写/跳过、独立草稿撤销/重做、退出确认；竖式显式完成；同步练下一题；结果完成可仅部分答对",
+      "gaps": "各题型规则不可互换；识别误判修订、保存/强退恢复未知；题量200只正文非可见菜单",
+      "visual_status": "static_reference_only",
+      "hands_on": "false",
+      "case_path": "cases/M-028-xiaoyuan-ai.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "flow_id": "F-M028-03",
+    "before": {
+      "flow_id": "F-M028-03",
+      "product_id": "M-028",
+      "task": "AI追问与单条反馈",
+      "depth": "D2",
+      "evidence_ids": "E-XYAI-04",
+      "known_branches": "文本语音图像权限与历史",
+      "gaps": "生成失败重试删除和恢复",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-028-xiaoyuan-ai.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M028-03",
+      "product_id": "M-028",
+      "task": "AI追问与单条反馈",
+      "depth": "D2",
+      "evidence_ids": "E-XYAI-04",
+      "known_branches": "文本/语音/图像、历史与单条反馈；撤回OS权限不同于删除既有记录",
+      "gaps": "生成失败重试、单轮删除/恢复、反馈撤销；不证明系统级AI读取所有App",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-028-xiaoyuan-ai.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "flow_id": "F-M028-04",
+    "before": {
+      "flow_id": "F-M028-04",
+      "product_id": "M-028",
+      "task": "PK赛季任务与装扮",
+      "depth": "D1",
+      "evidence_ids": "E-XYAI-05",
+      "known_branches": "同年级知识点与赛季活动",
+      "gaps": "结算奖励数值退出与掉线",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-028-xiaoyuan-ai.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M028-04",
+      "product_id": "M-028",
+      "task": "PK赛季任务与装扮",
+      "depth": "D1",
+      "evidence_ids": "E-XYAI-05",
+      "known_branches": "旧商店活动与同年级知识点；独练周联赛/金币图不当PK规则",
+      "gaps": "PK结算奖励、退出掉线及赛季常设性未知；当前3.145.0日志无具体补证",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-028-xiaoyuan-ai.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "flow_id": "F-M028-05",
+    "before": {
+      "flow_id": "F-M028-05",
+      "product_id": "M-028",
+      "task": "在线字词听写：历史任务局部",
+      "depth": "D2",
+      "evidence_ids": "E-XYCD-01;E-XYCD-03",
+      "known_branches": "提交与后续操作边界",
+      "gaps": "当前版本、撤回、强退恢复和识别误判修订",
+      "visual_status": "static_reference_only",
+      "hands_on": "false",
+      "case_path": "cases/M-028-xiaoyuan-ai.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M028-05",
+      "product_id": "M-028",
+      "task": "字词听写：在线、纸笔、自由输入及结果",
+      "depth": "D2",
+      "evidence_ids": "E-XYCD-01;E-XYCD-03;E-XYAC-06;E-XYAC-12",
+      "known_branches": "中文提交前清写、提交后正确写法/下一项；课文/范围与声音/间隔/次数/顺序；纸笔和自由输入；英文只横屏输入局部",
+      "gaps": "撤回、误判修订、强退恢复未知；中文错误规则不套英文；完成数非答对数",
+      "visual_status": "static_reference_only",
+      "hands_on": "false",
+      "case_path": "cases/M-028-xiaoyuan-ai.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "flow_id": "F-M028-06",
+    "before": {
+      "flow_id": "F-M028-06",
+      "product_id": "M-028",
+      "task": "单词跟读：历史失败分支",
+      "depth": "D2",
+      "evidence_ids": "E-XYCD-01;E-XYCD-04",
+      "known_branches": "失败次数对应不同路径",
+      "gaps": "评分门槛、漏录和中断保存；拼图非连续",
+      "visual_status": "static_reference_only",
+      "hands_on": "false",
+      "case_path": "cases/M-028-xiaoyuan-ai.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M028-06",
+      "product_id": "M-028",
+      "task": "单词跟读：历史失败分支",
+      "depth": "D2",
+      "evidence_ids": "E-XYCD-01;E-XYCD-04;E-XYAC-13",
+      "known_branches": "示范/录音与单词星级结果；作者述首次失败重试再次前进；句子/情景仅入口",
+      "gaps": "评分阈值、噪声漏录、录音回放内容/保存与中断未知；拼图题号不连续",
+      "visual_status": "static_reference_only",
+      "hands_on": "false",
+      "case_path": "cases/M-028-xiaoyuan-ai.md",
+      "checked_on": "2026-10-27"
+    }
+  }
+]

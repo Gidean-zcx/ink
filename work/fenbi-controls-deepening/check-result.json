@@ -1,0 +1,51 @@
+{
+  "status": "PASS",
+  "new_evidence": 12,
+  "new_flows": 2,
+  "old_row_proposals": 6,
+  "static_images": 2,
+  "hands_on": false,
+  "old_batch_hashes": "unchanged",
+  "files": [
+    {
+      "path": "docs/research/interaction-library/cases/M-032-fenbi.md",
+      "sha256": "24f7cc25c6fa11cd46ab4bc4a25767645b3dee367330b924761e7610edea0faf",
+      "bytes": 16606
+    },
+    {
+      "path": "docs/research/interaction-library/batches/fenbi-controls-deepening-evidence.jsonl",
+      "sha256": "48eee5c370228bbc6c3e1c64dc84ce6ef1706f1325c7f4756eeb60e2620d735d",
+      "bytes": 10400
+    },
+    {
+      "path": "docs/research/interaction-library/batches/fenbi-controls-deepening-coverage.csv",
+      "sha256": "a2d25e1fc31602a5a3ec7e3bccd7ca1b63ea4938fa40d006e2412cd9f139594f",
+      "bytes": 711
+    },
+    {
+      "path": "docs/research/interaction-library/artifacts/fenbi-controls-deepening/historical-mock-screens.png",
+      "sha256": "9b46bddd00a5f07d4dca6a3ff32ccf9564157e04ed65e0b40b63b5bb888e9968",
+      "bytes": 414332
+    },
+    {
+      "path": "docs/research/interaction-library/artifacts/fenbi-controls-deepening/historical-practice-screens.jpg",
+      "sha256": "e8d95ceadb1eb50e4fabe6ebc3fcb81ae4f2d51ccff1ac3acd6689ce3676c033",
+      "bytes": 189930
+    },
+    {
+      "path": "docs/research/interaction-library/artifacts/fenbi-controls-deepening/static-observation-log.md",
+      "sha256": "dd487170dddf038570b0b33fb38720fb05a51f1710176d03ab1e74f653ded8e3",
+      "bytes": 1772
+    },
+    {
+      "path": "work/fenbi-controls-deepening/existing-coverage-updates.csv",
+      "sha256": "7182b12845185f0c7dbd4229fc72259513837dba6ee1dff459bd2316cedd503e",
+      "bytes": 2013
+    },
+    {
+      "path": "work/fenbi-controls-deepening/existing-coverage-field-changes.json",
+      "sha256": "1a28df772a6a20464baaf901c53f2099cfa09f3b0b7d097a5612380d73eac457",
+      "bytes": 4141
+    }
+  ]
+}

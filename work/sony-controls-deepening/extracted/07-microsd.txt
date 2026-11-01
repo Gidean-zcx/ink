@@ -1,0 +1,48 @@
+Using a microSD card
+This topic includes instructions for the following operations.
+Inserting a microSD card into the player.
+Formatting a microSD card on the player.
+To use a microSD card on the player, you first need to format the microSD card on the player.
+Removing a microSD card from the player.
+Insert a microSD card.
+Open the microSD card slot cover ( [1] ).
+Insert a microSD card ( [2] ) until it clicks into place.
+Make sure to insert the microSD card in the correct direction.
+The gold contact pins should face up.
+Close the cover ( [1] ).
+Format the microSD card.
+Swipe the [WALKMAN Home] screen upwards.
+Tap the menu items in the following order.
+[Settings] － [Storage].
+Tap the drop-down list, and then tap the name of the microSD card.
+Tap the menu items in the following order.
+(options) － [Format].
+Follow the onscreen instructions to complete formatting.
+To remove the microSD card
+Before you remove a microSD card from the player, first unmount the microSD card from the player.
+Swipe the [WALKMAN Home] screen upwards.
+Tap the menu items in the following order.
+[Settings] － [Storage].
+Tap the drop-down list, and then tap the name of the microSD card.
+Tap (options) button in the top right of the screen, and then tap [Eject].
+Open the microSD card slot cover.
+Push the microSD card into the microSD card slot.
+The microSD card will pop out.
+Remove the microSD card. Then, close the microSD card slot cover.
+Note
+If the player does not recognize the microSD card, remove and reinsert the microSD card into the player.
+Do not insert any object other than a microSD card into the microSD card slot.
+If the inserted microSD card contains a large amount of data, it may take about 10 minutes or longer for “Music player” to build the database.
+When you remove the microSD card, the following information will be deleted.
+The content that is currently being played.
+The playback position.
+Tracks and the playback order on the play queue screen.
+When you remove the microSD card, the following information will disappear.
+Favorite information for tracks/albums/playlists stored on the microSD card.
+Playlist registration information for tracks stored on the microSD card.
+Formatting a microSD card will delete all data stored on the microSD card. Save a backup of important data.
+The contents of the Help Guide may be subject to change without notice due to updates to the product's specifications.
+Go to Page Top
+Related Topic
+Notes on microSD cards
+Formatting a microSD card

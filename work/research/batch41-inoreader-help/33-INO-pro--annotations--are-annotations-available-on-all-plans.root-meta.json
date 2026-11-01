@@ -1,0 +1,21 @@
+{
+  "order": 33,
+  "entry_id": "INO-pro--annotations--are-annotations-available-on-all-plans",
+  "title": "Are annotations available on all plans?",
+  "url": "https://www.inoreader.com/help/pro/annotations/are-annotations-available-on-all-plans",
+  "checked_on": "2026-10-27",
+  "http_status": 200,
+  "final_url": "https://www.inoreader.com/help/pro/annotations/are-annotations-available-on-all-plans",
+  "acquisition": "one_anonymous_normal_GET",
+  "raw_path": "work/research/batch41-inoreader-help/33-INO-pro--annotations--are-annotations-available-on-all-plans.html",
+  "headers_path": "work/research/batch41-inoreader-help/33-INO-pro--annotations--are-annotations-available-on-all-plans.headers.json",
+  "raw_sha256": "0736f3e72fb73490a23561e543848357df2bb078d129c7b567ce0524b3e66e6d",
+  "bytes": 147392,
+  "status": "body_obtained",
+  "body_status": "extracted_not_yet_root_read",
+  "body_path": "work/research/batch41-inoreader-help/33-INO-pro--annotations--are-annotations-available-on-all-plans.body.txt",
+  "body_sha256": "27c14645c98a95e27bc0f8bacf636a921282d7f9a42aa0863028f79594c6ddf8",
+  "body_chars": 69,
+  "links": [],
+  "images": []
+}

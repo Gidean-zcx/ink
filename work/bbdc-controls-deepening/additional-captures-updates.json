@@ -1,0 +1,94 @@
+[
+  {
+    "evidence_id": "E-BBDC-01",
+    "source_batch": "docs/research/interaction-library/batches/vocab-evidence.jsonl",
+    "field": "additional_captures",
+    "before": null,
+    "after": [
+      {
+        "capture_kind": "public_html_get",
+        "checked_on": "2026-10-27",
+        "url": "https://www.bbdc.cn/index",
+        "final_url": "https://www.bbdc.cn/index",
+        "http_status": 200,
+        "raw_work_path": "work/bbdc-controls-deepening/index.html",
+        "raw_sha256": "4ee092ce7e67d895ecb56f3705f14d88e74d9e6a402d15721ca9823ff4443fa8",
+        "response_bytes": 35980,
+        "locator": "顶部/移动导航；表单节点非实际操作",
+        "archived_artifact": "artifacts/bbdc-controls-deepening/source-notes.md",
+        "sha256": "134db89f2ce646ffc806efa6caaaf139e959656c9def7afecba315cf0e1cc700",
+        "hands_on": false,
+        "visual_observed": false
+      }
+    ],
+    "reason": "同URL追加取得方式和原件散列，不重复编号；政策原件只壳而索引有正文"
+  },
+  {
+    "evidence_id": "E-BBD-01",
+    "source_batch": "docs/research/interaction-library/batches/chinese-vocab-deepening-evidence.jsonl",
+    "field": "additional_captures",
+    "before": null,
+    "after": [
+      {
+        "capture_kind": "public_html_get",
+        "checked_on": "2026-10-27",
+        "url": "https://apps.apple.com/cn/app/不背单词-四六级考研等英语单词学习/id698570469?platform=mac",
+        "final_url": "https://apps.apple.com/cn/app/%E4%B8%8D%E8%83%8C%E5%8D%95%E8%AF%8D-%E5%9B%9B%E5%85%AD%E7%BA%A7%E8%80%83%E7%A0%94%E7%AD%89%E8%8B%B1%E8%AF%AD%E5%8D%95%E8%AF%8D%E5%AD%A6%E4%B9%A0/id698570469?platform=mac",
+        "http_status": 200,
+        "raw_work_path": "work/bbdc-controls-deepening/appstore-cn.html",
+        "raw_sha256": "3f11560658cfcd9f94ca8e9359f193456b8f2b0ff2ca3ce28c7871b07429218b",
+        "response_bytes": 655769,
+        "locator": "serialized-server-data > data[0].data.shelfMapping.mostRecentVersion.seeAllAction.pageData.shelves[0].items；版本标签/完整日期",
+        "archived_artifact": "artifacts/bbdc-controls-deepening/source-notes.md",
+        "sha256": "134db89f2ce646ffc806efa6caaaf139e959656c9def7afecba315cf0e1cc700",
+        "hands_on": false,
+        "visual_observed": false,
+        "app_build": "5.11.6",
+        "source_updated_on": "2026-09-18",
+        "version_scope": "CN iPhone/iPad listing; date from HTML embedded version record, not installed build"
+      }
+    ],
+    "reason": "同URL追加取得方式和原件散列，不重复编号；政策原件只壳而索引有正文"
+  },
+  {
+    "evidence_id": "E-BBDC-03",
+    "source_batch": "docs/research/interaction-library/batches/vocab-evidence.jsonl",
+    "field": "additional_captures",
+    "before": null,
+    "after": [
+      {
+        "capture_kind": "http_shell_only",
+        "checked_on": "2026-10-27",
+        "url": "https://learnywhere.cn/lexis/privacy",
+        "final_url": "https://learnywhere.cn/lexis/privacy",
+        "http_status": 200,
+        "raw_work_path": "work/bbdc-controls-deepening/privacy.html",
+        "raw_sha256": "6aa7a91f42f7ca1a7ba8b0563661a976d59008b2f704ec3d1434f1f8a0ef3ebe",
+        "response_bytes": 976,
+        "locator": "976字节JavaScript壳；不含政策正文",
+        "archived_artifact": "artifacts/bbdc-controls-deepening/source-notes.md",
+        "sha256": "134db89f2ce646ffc806efa6caaaf139e959656c9def7afecba315cf0e1cc700",
+        "hands_on": false,
+        "visual_observed": false
+      },
+      {
+        "capture_kind": "official_search_index_text",
+        "checked_on": "2026-10-27",
+        "url": "https://learnywhere.cn/lexis/privacy",
+        "raw_work_path": "work/bbdc-controls-deepening/privacy-web-search-response.json",
+        "raw_sha256": "0cfc9429187f424247194a556c1b53c2251ebde9ad4cb711a1102fe3d52c9b38",
+        "upstream_http_body_verified": false,
+        "locator": "web.search响应；第二章（一）/（三）/（五）、第六章（一）/（二）；与直接GET脚本壳分开",
+        "archived_artifact": "artifacts/bbdc-controls-deepening/source-notes.md",
+        "sha256": "134db89f2ce646ffc806efa6caaaf139e959656c9def7afecba315cf0e1cc700",
+        "hands_on": false,
+        "visual_observed": false,
+        "app_build": null,
+        "source_updated_on": "2026-08-28",
+        "effective_on": "2026-09-04",
+        "version_scope": "policy index; client build unspecified"
+      }
+    ],
+    "reason": "同URL追加取得方式和原件散列，不重复编号；政策原件只壳而索引有正文"
+  }
+]

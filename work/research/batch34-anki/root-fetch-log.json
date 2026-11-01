@@ -1,0 +1,173 @@
+{
+  "reason": "Worker keyword heuristic matched access denied in permission-help prose. Root independently opened normal official HTML and verified actual troubleshooting article (web lines31-51); not an access challenge. Original false-positive log retained. Remaining normal public Markdown requests; no alternate credentials or access bypass.",
+  "records": [
+    {
+      "item_id": "M020-P35",
+      "request_url": "https://docs.ankiweb.net/manual/platform/windows/permission-problems.md",
+      "checked_at": "2026-10-27T03:07:13.662758+00:00",
+      "http_status": 200,
+      "final_url": "https://docs.ankiweb.net/manual/platform/windows/permission-problems.md",
+      "content_type": "text/markdown; charset=utf-8",
+      "bytes": 1906,
+      "sha256": "7ab5df6af682b510b0bf88884560c092bf791a2a3e5ce16a0210a47876c9fd9b",
+      "saved": true,
+      "path": "work/research/batch34-anki/raw/manual/platform/windows/permission-problems.md"
+    },
+    {
+      "item_id": "M020-P36",
+      "request_url": "https://docs.ankiweb.net/manual/platform/mac/intro.md",
+      "checked_at": "2026-10-27T03:07:14.119267+00:00",
+      "http_status": 200,
+      "final_url": "https://docs.ankiweb.net/manual/platform/mac/intro.md",
+      "content_type": "text/markdown; charset=utf-8",
+      "bytes": 620,
+      "sha256": "6963335febaef4feebc3d30f58ba06392688523955d02ac752e6b988f38f9436",
+      "saved": true,
+      "path": "work/research/batch34-anki/raw/manual/platform/mac/intro.md"
+    },
+    {
+      "item_id": "M020-P37",
+      "request_url": "https://docs.ankiweb.net/manual/platform/mac/installing.md",
+      "checked_at": "2026-10-27T03:07:14.544720+00:00",
+      "http_status": 200,
+      "final_url": "https://docs.ankiweb.net/manual/platform/mac/installing.md",
+      "content_type": "text/markdown; charset=utf-8",
+      "bytes": 1974,
+      "sha256": "7a10257f056e46664f78da3c1d111855d9f35bdee18679fe199a411c04ab5a27",
+      "saved": true,
+      "path": "work/research/batch34-anki/raw/manual/platform/mac/installing.md"
+    },
+    {
+      "item_id": "M020-P38",
+      "request_url": "https://docs.ankiweb.net/manual/platform/mac/display-issues.md",
+      "checked_at": "2026-10-27T03:07:15.019859+00:00",
+      "http_status": 200,
+      "final_url": "https://docs.ankiweb.net/manual/platform/mac/display-issues.md",
+      "content_type": "text/markdown; charset=utf-8",
+      "bytes": 1469,
+      "sha256": "f0b917be624ef0e92159ce8edc4ee83b173c74902eec5d356422acacd2c4b1fb",
+      "saved": true,
+      "path": "work/research/batch34-anki/raw/manual/platform/mac/display-issues.md"
+    },
+    {
+      "item_id": "M020-P39",
+      "request_url": "https://docs.ankiweb.net/manual/platform/linux/intro.md",
+      "checked_at": "2026-10-27T03:07:15.320683+00:00",
+      "http_status": 200,
+      "final_url": "https://docs.ankiweb.net/manual/platform/linux/intro.md",
+      "content_type": "text/markdown; charset=utf-8",
+      "bytes": 622,
+      "sha256": "fd152f646a06ec1972dea3980487d87a72617870c836a50faed754ffbb50d82d",
+      "saved": true,
+      "path": "work/research/batch34-anki/raw/manual/platform/linux/intro.md"
+    },
+    {
+      "item_id": "M020-P40",
+      "request_url": "https://docs.ankiweb.net/manual/platform/linux/installing.md",
+      "checked_at": "2026-10-27T03:07:15.769227+00:00",
+      "http_status": 200,
+      "final_url": "https://docs.ankiweb.net/manual/platform/linux/installing.md",
+      "content_type": "text/markdown; charset=utf-8",
+      "bytes": 4168,
+      "sha256": "bb6e4508f17003f61fd40c98cdefef2df4309214f22e3572717778b5c7ddd0ab",
+      "saved": true,
+      "path": "work/research/batch34-anki/raw/manual/platform/linux/installing.md"
+    },
+    {
+      "item_id": "M020-P41",
+      "request_url": "https://docs.ankiweb.net/manual/platform/linux/missing-libraries.md",
+      "checked_at": "2026-10-27T03:07:16.100367+00:00",
+      "http_status": 200,
+      "final_url": "https://docs.ankiweb.net/manual/platform/linux/missing-libraries.md",
+      "content_type": "text/markdown; charset=utf-8",
+      "bytes": 797,
+      "sha256": "a12203a57e7234cae80789fec315585bfe407ccc5e661845e355e752e8756180",
+      "saved": true,
+      "path": "work/research/batch34-anki/raw/manual/platform/linux/missing-libraries.md"
+    },
+    {
+      "item_id": "M020-P42",
+      "request_url": "https://docs.ankiweb.net/manual/platform/linux/display-issues.md",
+      "checked_at": "2026-10-27T03:07:16.517276+00:00",
+      "http_status": 200,
+      "final_url": "https://docs.ankiweb.net/manual/platform/linux/display-issues.md",
+      "content_type": "text/markdown; charset=utf-8",
+      "bytes": 886,
+      "sha256": "48755fcb916a12b759f43a10f0532a3b743ba8888708d7c79d5d49b4fee29bac",
+      "saved": true,
+      "path": "work/research/batch34-anki/raw/manual/platform/linux/display-issues.md"
+    },
+    {
+      "item_id": "M020-P43",
+      "request_url": "https://docs.ankiweb.net/manual/platform/linux/blank-window.md",
+      "checked_at": "2026-10-27T03:07:17.036143+00:00",
+      "http_status": 200,
+      "final_url": "https://docs.ankiweb.net/manual/platform/linux/blank-window.md",
+      "content_type": "text/markdown; charset=utf-8",
+      "bytes": 1409,
+      "sha256": "7529c8d377196a4ca57c46277e775a8d4dc84db42f4e4efec221aa352989d725",
+      "saved": true,
+      "path": "work/research/batch34-anki/raw/manual/platform/linux/blank-window.md"
+    },
+    {
+      "item_id": "M020-P44",
+      "request_url": "https://docs.ankiweb.net/manual/platform/linux/distro-packages.md",
+      "checked_at": "2026-10-27T03:07:17.450230+00:00",
+      "http_status": 200,
+      "final_url": "https://docs.ankiweb.net/manual/platform/linux/distro-packages.md",
+      "content_type": "text/markdown; charset=utf-8",
+      "bytes": 1435,
+      "sha256": "d58d3316fae670e586dcb0a348c249b8a0d4606592b12e479e17b2d0de3131bd",
+      "saved": true,
+      "path": "work/research/batch34-anki/raw/manual/platform/linux/distro-packages.md"
+    },
+    {
+      "item_id": "M020-P45",
+      "request_url": "https://docs.ankiweb.net/manual/platform/linux/gtk-theme.md",
+      "checked_at": "2026-10-27T03:07:17.903572+00:00",
+      "http_status": 200,
+      "final_url": "https://docs.ankiweb.net/manual/platform/linux/gtk-theme.md",
+      "content_type": "text/markdown; charset=utf-8",
+      "bytes": 764,
+      "sha256": "2e3cf72202f23bbc8cd479b5afdd3f1f57121d94daef6c602fd5d7af3c272e54",
+      "saved": true,
+      "path": "work/research/batch34-anki/raw/manual/platform/linux/gtk-theme.md"
+    },
+    {
+      "item_id": "M020-P46",
+      "request_url": "https://docs.ankiweb.net/manual/platform/linux/wayland.md",
+      "checked_at": "2026-10-27T03:07:18.372927+00:00",
+      "http_status": 200,
+      "final_url": "https://docs.ankiweb.net/manual/platform/linux/wayland.md",
+      "content_type": "text/markdown; charset=utf-8",
+      "bytes": 729,
+      "sha256": "68d6a8c1e8d0fe5965c10b74dd43306315fdf6a363a6735b1bb57e648a80ef0b",
+      "saved": true,
+      "path": "work/research/batch34-anki/raw/manual/platform/linux/wayland.md"
+    },
+    {
+      "item_id": "M020-P47",
+      "request_url": "https://docs.ankiweb.net/manual/platform/linux/input-methods.md",
+      "checked_at": "2026-10-27T03:07:18.837081+00:00",
+      "http_status": 200,
+      "final_url": "https://docs.ankiweb.net/manual/platform/linux/input-methods.md",
+      "content_type": "text/markdown; charset=utf-8",
+      "bytes": 562,
+      "sha256": "85e99e47fab5d8614b43685bbccbac3ce8d6d1104680b20cf87d141023cfd1b4",
+      "saved": true,
+      "path": "work/research/batch34-anki/raw/manual/platform/linux/input-methods.md"
+    },
+    {
+      "item_id": "M020-P51",
+      "request_url": "https://docs.ankiweb.net/manual/templates/styling.md",
+      "checked_at": "2026-10-27T03:07:19.364996+00:00",
+      "http_status": 200,
+      "final_url": "https://docs.ankiweb.net/manual/templates/styling.md",
+      "content_type": "text/markdown; charset=utf-8",
+      "bytes": 14465,
+      "sha256": "b635464f0186bfa21b39288c62a4e30007bb8962163424c81fe4b60395ece43b",
+      "saved": true,
+      "path": "work/research/batch34-anki/raw/manual/templates/styling.md"
+    }
+  ]
+}

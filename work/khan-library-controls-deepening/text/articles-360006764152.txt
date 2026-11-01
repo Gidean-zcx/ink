@@ -1,0 +1,47 @@
+How do I mute the background music? – Khan Academy (https://khankids.zendesk.com/hc/en-us/articles/360006764152-How-do-I-mute-the-background-music)
+citeturn959view3 [wordlim: 200] Crawled: today; Content type: text/html; Source: click({"ref_id":"turn958view0","id":31}); Total lines: 45
+L0: 【0†Skip to main content】
+L1: 
+L2: 【1†Submit a request】
+L3: 
+L4: [Input][Input] [Input: Search]
+L5: 
+L6: Articles in this section
+L7:   * 【2†Our Accessibility Statement】
+L8:   * 【3†Get in touch!】
+L9:   * 【4†Welcome to Khan Academy Kids】
+L10:   * 【5†Parent and Home Account Users: Getting Started and creating an account with Khan Academy Kids】
+L11:   * 【6†How do I set up an account?】
+L12:   * 【7†How do I verify my email?】
+L13:   * 【8†List of resources for parents】
+L14:   * 【9†Printable activities for parents and teachers】
+L15:   * 【10†Weekly Planners for Ages 2-8】
+L16:   * 【11†How does the learning level adjust and how do I view my child's progress?】
+L17: 【12†See more】
+L18: # How do I mute the background music?
+L19: 
+L20:   * February 26, 2026 23:52
+L21:   * Updated
+L22: 
+L23: Background music plays during the user experience in Khan Academy Kids. To mute the background music, tap the gray music note in the bottom right corner of the Home screen so that the icon is crossed out.
+L24: 
+L25: 【13†Image: Mute.png】
+L26: 
+L27: Was this article helpful?
+L28: 
+L29: [Button: Yes] [Button: No]
+L30: 
+L31: 8 out of 9 found this helpful
+L32: 
+L33: Have more questions? 【1†Submit a request】
+L34: 
+L35: 【14†Return to top】
+L36: ## Comments
+L37: 
+L38: 0 comments
+L39: 
+L40: Article is closed for comments.
+L41: 
+L42: 【15†Khan Academy】
+L43: 
+L44: 【16†Powered by Zendesk†www.zendesk.com】

@@ -1,0 +1,233 @@
+[
+  {
+    "flow_id": "F-M050-01",
+    "before": {
+      "flow_id": "F-M050-01",
+      "product_id": "M-050",
+      "task": "拼图构数与金币解锁",
+      "depth": "D2",
+      "evidence_ids": "E-DRGN-02;E-DRGN-03",
+      "known_branches": "不同数字表示与金币解锁",
+      "gaps": "错误放置提示结算奖励数值与恢复",
+      "visual_status": "static_reference_only",
+      "hands_on": "false",
+      "case_path": "cases/M-050-dragonbox.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M050-01",
+      "product_id": "M-050",
+      "task": "拼图构数与金币解锁",
+      "depth": "D2",
+      "evidence_ids": "E-DRGN-02;E-DRGN-03;E-DBCD-01",
+      "known_branches": "旧p5可见数字6空槽、构件及未完成图；四表示与金币用途沿旧指南。教材Quiz气泡不当内置出题或判分。",
+      "gaps": "错放/提示/撤销、最后落位到结算、金币数值/重玩收益与恢复仍未核；静态白线不当动作轨迹。",
+      "visual_status": "static_reference_only",
+      "hands_on": "false",
+      "case_path": "cases/M-050-dragonbox.md",
+      "checked_on": "2026-10-27"
+    },
+    "changed_fields": {
+      "evidence_ids": {
+        "before": "E-DRGN-02;E-DRGN-03",
+        "after": "E-DRGN-02;E-DRGN-03;E-DBCD-01"
+      },
+      "known_branches": {
+        "before": "不同数字表示与金币解锁",
+        "after": "旧p5可见数字6空槽、构件及未完成图；四表示与金币用途沿旧指南。教材Quiz气泡不当内置出题或判分。"
+      },
+      "gaps": {
+        "before": "错误放置提示结算奖励数值与恢复",
+        "after": "错放/提示/撤销、最后落位到结算、金币数值/重玩收益与恢复仍未核；静态白线不当动作轨迹。"
+      },
+      "checked_on": {
+        "before": "2026-10-26",
+        "after": "2026-10-27"
+      }
+    }
+  },
+  {
+    "flow_id": "F-M050-02",
+    "before": {
+      "flow_id": "F-M050-02",
+      "product_id": "M-050",
+      "task": "梯子目标数量与障碍",
+      "depth": "D2",
+      "evidence_ids": "E-DRGN-02",
+      "known_branches": "炸弹与奖励位置",
+      "gaps": "碰撞重试成功结算",
+      "visual_status": "static_reference_only",
+      "hands_on": "false",
+      "case_path": "cases/M-050-dragonbox.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M050-02",
+      "product_id": "M-050",
+      "task": "梯子目标数量与障碍",
+      "depth": "D2",
+      "evidence_ids": "E-DRGN-02;E-DBCD-01",
+      "known_branches": "旧p8以数轴、70+10+角色和高度说明数量关系；1–100为指南教学范围，非当前App硬上限。",
+      "gaps": "碰撞、生命、重试、成功结算及是否保留奖励；四教学目标不当四关或学习成效。",
+      "visual_status": "static_reference_only",
+      "hands_on": "false",
+      "case_path": "cases/M-050-dragonbox.md",
+      "checked_on": "2026-10-27"
+    },
+    "changed_fields": {
+      "evidence_ids": {
+        "before": "E-DRGN-02",
+        "after": "E-DRGN-02;E-DBCD-01"
+      },
+      "known_branches": {
+        "before": "炸弹与奖励位置",
+        "after": "旧p8以数轴、70+10+角色和高度说明数量关系；1–100为指南教学范围，非当前App硬上限。"
+      },
+      "gaps": {
+        "before": "碰撞重试成功结算",
+        "after": "碰撞、生命、重试、成功结算及是否保留奖励；四教学目标不当四关或学习成效。"
+      },
+      "checked_on": {
+        "before": "2026-10-26",
+        "after": "2026-10-27"
+      }
+    }
+  },
+  {
+    "flow_id": "F-M050-03",
+    "before": {
+      "flow_id": "F-M050-03",
+      "product_id": "M-050",
+      "task": "家庭档案创建与管理",
+      "depth": "D2",
+      "evidence_ids": "E-DRGN-04",
+      "known_branches": "订阅与单买差异成人入口",
+      "gaps": "存档同步冲突删除恢复",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-050-dragonbox.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M050-03",
+      "product_id": "M-050",
+      "task": "家庭档案创建与管理",
+      "depth": "D2",
+      "evidence_ids": "E-DRGN-04;E-DBCD-03",
+      "known_branches": "Numbers外部管理分两App：Kids的Parents→成人年龄→Profiles→头像/铅笔；Kahoot先激活成人，长按孩子头像→Edit profile→Save或底部Delete Profile。",
+      "gaps": "最终删除确认/保留期/撤销、Numbers存档同步和数据删除范围；Kids免费一档案与旧学习App六档案按计划/入口分开。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-050-dragonbox.md",
+      "checked_on": "2026-10-27"
+    },
+    "changed_fields": {
+      "evidence_ids": {
+        "before": "E-DRGN-04",
+        "after": "E-DRGN-04;E-DBCD-03"
+      },
+      "known_branches": {
+        "before": "订阅与单买差异成人入口",
+        "after": "Numbers外部管理分两App：Kids的Parents→成人年龄→Profiles→头像/铅笔；Kahoot先激活成人，长按孩子头像→Edit profile→Save或底部Delete Profile。"
+      },
+      "gaps": {
+        "before": "存档同步冲突删除恢复",
+        "after": "最终删除确认/保留期/撤销、Numbers存档同步和数据删除范围；Kids免费一档案与旧学习App六档案按计划/入口分开。"
+      },
+      "checked_on": {
+        "before": "2026-10-26",
+        "after": "2026-10-27"
+      }
+    }
+  },
+  {
+    "flow_id": "F-M050-04",
+    "before": {
+      "flow_id": "F-M050-04",
+      "product_id": "M-050",
+      "task": "跨应用家长活动报告",
+      "depth": "D2",
+      "evidence_ids": "E-DRGN-05",
+      "known_branches": "孩子周次套餐限制",
+      "gaps": "Numbers具体字段精确续接",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-050-dragonbox.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M050-04",
+      "product_id": "M-050",
+      "task": "跨应用家长活动报告",
+      "depth": "D2",
+      "evidence_ids": "E-DRGN-05",
+      "known_branches": "Profile→Child Activity Dashboard→选孩子；本周/上周、累计主题进度、推荐；学习时间按日更新，免费总时长与套餐详情分开。",
+      "gaps": "Numbers具体准确率/每步事件字段、实时性与精确续关；未看Completed Activities配图，FAQ Settings与步骤Profile层级不同。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-050-dragonbox.md",
+      "checked_on": "2026-10-27"
+    },
+    "changed_fields": {
+      "known_branches": {
+        "before": "孩子周次套餐限制",
+        "after": "Profile→Child Activity Dashboard→选孩子；本周/上周、累计主题进度、推荐；学习时间按日更新，免费总时长与套餐详情分开。"
+      },
+      "gaps": {
+        "before": "Numbers具体字段精确续接",
+        "after": "Numbers具体准确率/每步事件字段、实时性与精确续关；未看Completed Activities配图，FAQ Settings与步骤Profile层级不同。"
+      },
+      "checked_on": {
+        "before": "2026-10-26",
+        "after": "2026-10-27"
+      }
+    }
+  },
+  {
+    "flow_id": "F-M050-06",
+    "before": {
+      "flow_id": "F-M050-06",
+      "product_id": "M-050",
+      "task": "未完拼图退出与恢复",
+      "depth": "D1",
+      "evidence_ids": "E-DRGD-03;E-DRGN-04",
+      "known_branches": "家庭档案边界；局内状态待核",
+      "gaps": "退出/重开按钮；存档粒度；离线与跨端恢复",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-050-dragonbox.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M050-06",
+      "product_id": "M-050",
+      "task": "未完拼图退出与恢复",
+      "depth": "D1",
+      "evidence_ids": "E-DRGD-03;E-DRGN-04;E-DBCD-02",
+      "known_branches": "旧档案和更新记录仍不证明局内续接；Google Play含Offline标签，但没有Numbers专属离线授权/保存步骤。",
+      "gaps": "退出/重开按钮、未完槽位及金币提交时机、离线存档与跨端冲突；不套Kahoot主App离线机制。",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-050-dragonbox.md",
+      "checked_on": "2026-10-27"
+    },
+    "changed_fields": {
+      "evidence_ids": {
+        "before": "E-DRGD-03;E-DRGN-04",
+        "after": "E-DRGD-03;E-DRGN-04;E-DBCD-02"
+      },
+      "known_branches": {
+        "before": "家庭档案边界；局内状态待核",
+        "after": "旧档案和更新记录仍不证明局内续接；Google Play含Offline标签，但没有Numbers专属离线授权/保存步骤。"
+      },
+      "gaps": {
+        "before": "退出/重开按钮；存档粒度；离线与跨端恢复",
+        "after": "退出/重开按钮、未完槽位及金币提交时机、离线存档与跨端冲突；不套Kahoot主App离线机制。"
+      },
+      "checked_on": {
+        "before": "2026-10-26",
+        "after": "2026-10-27"
+      }
+    }
+  }
+]

@@ -1,0 +1,24 @@
+[
+  {
+    "evidence_id": "E-ILD-17",
+    "before": [],
+    "after": [
+      {
+        "checked_on": "2026-10-27",
+        "access_mode": "anonymous_public_browser_help_model_selection",
+        "raw_work_path": "work/iflytek-video-controls-deepening/browser/04-t30pro-directory.json",
+        "raw_sha256": "0c97b1732308b7d30f6d9d016da33d58d666c83c3c26b00ef6c646f082dc04cb",
+        "archived_artifact": "artifacts/iflytek-video-controls-deepening/source-notes.md",
+        "sha256": "779fb67bc48194cf3ec6b38d09bd1a54eec7c5a9a9cc6cd46dc54c1b7aebc40e",
+        "note": "实际选择T30Pro，34功能标题；四条所选教程另立视频URL证据；不计产品实操",
+        "hands_on": false,
+        "artifact_hashes": {
+          "artifacts/iflytek-video-controls-deepening/04-t30pro-directory.json": "0c97b1732308b7d30f6d9d016da33d58d666c83c3c26b00ef6c646f082dc04cb",
+          "artifacts/iflytek-video-controls-deepening/04-t30pro-directory.png": "9c2656d1ff8f66556cab5146d2f3873375c817327629711cb8e7e395adfdb2c8",
+          "artifacts/iflytek-video-controls-deepening/video-samples.json": "ac833622b81ee6cddbfb82b7ff08e3eeba05563be0de2d29519afac83fdf2c97",
+          "artifacts/iflytek-video-controls-deepening/network-events.json": "f678e1ef6c8533b6dd70e6671676f8a75120a0d21c13c64762221de1bfa30973"
+        }
+      }
+    ]
+  }
+]

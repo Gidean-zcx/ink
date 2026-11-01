@@ -1,0 +1,232 @@
+[
+  {
+    "path": "docs/research/interaction-library/cases/M-016-baicizhan.md",
+    "sha256": "4d910c9531045cd6fbade4924375c2a0fe46f97461e99b8f976878f9eb38c936",
+    "bytes": 13697
+  },
+  {
+    "path": "docs/research/interaction-library/batches/baicizhan-controls-deepening-coverage.csv",
+    "sha256": "f4880edfa9dc53e3e7a51fc020d4be0da7be77a87a5065c8ed365e6c82acb498",
+    "bytes": 836
+  },
+  {
+    "path": "docs/research/interaction-library/batches/baicizhan-controls-deepening-evidence.jsonl",
+    "sha256": "53e85e0b6609500b3a6d5b419fd3a13fd235a93e5fdf8e83be3812e2994a05de",
+    "bytes": 2877
+  },
+  {
+    "path": "docs/research/interaction-library/batches/baicizhan-controls-deepening-inventory.csv",
+    "sha256": "d2b8cabfeae47ee01580922d54c451f71872a512dbfa2d82efa48632f402ea05",
+    "bytes": 16004
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/baicizhan-controls-deepening/qa-rhyme-mode.jpg",
+    "sha256": "5791d1a6c0a0160d43dcd1a5826a28351356fa3c190cf18b5387287d62fc2fc2",
+    "bytes": 414324
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/baicizhan-controls-deepening/source-notes.md",
+    "sha256": "a8e593cc3fe506258a61b75de641fcaf7911262ce05759497af43624db551e16",
+    "bytes": 3165
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/baicizhan-controls-deepening/visual-audit.md",
+    "sha256": "de7fe0ee554ddc1ec14fbb55e4d548230334e1211a8587cae6f59b1d7e09983e",
+    "bytes": 1069
+  },
+  {
+    "path": "work/baicizhan-controls-deepening/app-store-version-index.json",
+    "sha256": "573a8467776b7bda5fb794aa116cdc88bf9da28fa4639fb7097484e20a80ad62",
+    "bytes": 7629
+  },
+  {
+    "path": "work/baicizhan-controls-deepening/app-store.html",
+    "sha256": "14bd9de382df152a78914bcb6a1e223537ebe8f0b671fb940015e2a15f9330c2",
+    "bytes": 901152
+  },
+  {
+    "path": "work/baicizhan-controls-deepening/app-store.html.capture.json",
+    "sha256": "51cc35d805054a3024b0590b54feeb1e3cda05196d83369ad9b14c5cbce489f3",
+    "bytes": 625
+  },
+  {
+    "path": "work/baicizhan-controls-deepening/app-store.txt",
+    "sha256": "2e89c4d46aa93d4845103e041650c97d80f377e0de1aa73f8c8ea73173169ba3",
+    "bytes": 26287
+  },
+  {
+    "path": "work/baicizhan-controls-deepening/baseline.json",
+    "sha256": "2e98dd6478456b893eed530cdceaebd346d5288645df2486fcab8776d8ae2b33",
+    "bytes": 34760
+  },
+  {
+    "path": "work/baicizhan-controls-deepening/bcz-925-reused.txt",
+    "sha256": "0ed3b3962a43ebb8abd3e4ba4471eb42e519deacd68da3bfc09fd70bc16197f4",
+    "bytes": 4688
+  },
+  {
+    "path": "work/baicizhan-controls-deepening/bcz-info-reused.txt",
+    "sha256": "54e6085757ef6dcd53b54496d4a4a7a3831bfadc735413edd7db1cc3d387604e",
+    "bytes": 770
+  },
+  {
+    "path": "work/baicizhan-controls-deepening/bcz-reused.txt",
+    "sha256": "95c4fb4284542f8d6b33d00c8196230dde183d9afee749d52c3477b23ed75bb6",
+    "bytes": 2450
+  },
+  {
+    "path": "work/baicizhan-controls-deepening/build-result.json",
+    "sha256": "cd4f816f2e2bee81e02ca5c4ef533535ba1b31302d96bcc625237f270c24a219",
+    "bytes": 566
+  },
+  {
+    "path": "work/baicizhan-controls-deepening/build.py",
+    "sha256": "fd77c087b5013b76e6f1bee5c9d7a647e1aebb63448320689bf7746b98808e2b",
+    "bytes": 19209
+  },
+  {
+    "path": "work/baicizhan-controls-deepening/capture.py",
+    "sha256": "e1fee304d8d2689f468491e30c0985d4c4650d2d18c7e4fbb91f4dd0d8a439c1",
+    "bytes": 1442
+  },
+  {
+    "path": "work/baicizhan-controls-deepening/case-after.md",
+    "sha256": "4d910c9531045cd6fbade4924375c2a0fe46f97461e99b8f976878f9eb38c936",
+    "bytes": 13697
+  },
+  {
+    "path": "work/baicizhan-controls-deepening/case-before.md",
+    "sha256": "f3fe27697c2ba73bf8edf151ddae6b9c3bc677aea0468521811d687cf6795495",
+    "bytes": 11934
+  },
+  {
+    "path": "work/baicizhan-controls-deepening/check.py",
+    "sha256": "c05d68784724ed820846e1aef1699dfd1cc9fc005d30f32ad7d232f310f50525",
+    "bytes": 5933
+  },
+  {
+    "path": "work/baicizhan-controls-deepening/coverage-before.json",
+    "sha256": "53b078ad2ec2abf35c11430e0ead4877cb5c04265088fb3dc9493155a3afd672",
+    "bytes": 2722
+  },
+  {
+    "path": "work/baicizhan-controls-deepening/evidence-before.json",
+    "sha256": "441596031d0559000b2483d6ec9efb486c83bdaf37ba3e9203f9e9cdd8312a8d",
+    "bytes": 14813
+  },
+  {
+    "path": "work/baicizhan-controls-deepening/existing-coverage-updates.json",
+    "sha256": "138f59780516cee554155c0df7362196b1b62e54d137c318e9d29891ac3dea81",
+    "bytes": 6642
+  },
+  {
+    "path": "work/baicizhan-controls-deepening/existing-evidence-additional-captures.json",
+    "sha256": "66bcb0941e7e9f2f71fd504c0162a4f8522f2b648bc9dbe5cbdb2647ca3ac9c1",
+    "bytes": 6971
+  },
+  {
+    "path": "work/baicizhan-controls-deepening/introductions.html",
+    "sha256": "beb1c5ff200a793c9f54e186862e108580a7b6dc1f766117307986873d974725",
+    "bytes": 1969
+  },
+  {
+    "path": "work/baicizhan-controls-deepening/introductions.html.capture.json",
+    "sha256": "55ad6cc26d147bf8440089db731b50d02f2138be0f29b26448e3f7539d06e2af",
+    "bytes": 447
+  },
+  {
+    "path": "work/baicizhan-controls-deepening/introductions.txt",
+    "sha256": "8817e91e473f0a1dca2c081284c360c0cad87c48e645331607813221cbbec7c9",
+    "bytes": 1253
+  },
+  {
+    "path": "work/baicizhan-controls-deepening/privacy.html",
+    "sha256": "826be3ac31442ba974f792ddc5c61c28b43790c1935eb2dae5ce49e7a9f7fcad",
+    "bytes": 86560
+  },
+  {
+    "path": "work/baicizhan-controls-deepening/privacy.html.capture.json",
+    "sha256": "06ac6f1bc2767a4424e5d861bbabe676bc512391f70c864a01ca97dadc320ccc",
+    "bytes": 424
+  },
+  {
+    "path": "work/baicizhan-controls-deepening/privacy.txt",
+    "sha256": "7dabbd3d14602f29891fc1ebd5979a703124fdf50a8a9937ab4c2ca1844cca5e",
+    "bytes": 78208
+  },
+  {
+    "path": "work/baicizhan-controls-deepening/qa-bczApp.json",
+    "sha256": "2fae2b92327222c9641122ae218671bb3fa5efb52c1f3646bad06f7cd2a3d7ab",
+    "bytes": 24768
+  },
+  {
+    "path": "work/baicizhan-controls-deepening/qa-bczApp.json.capture.json",
+    "sha256": "f0065c252b2d916b1620306413300ef9c610208fe3c9e84bdec6dfb7b59981e8",
+    "bytes": 470
+  },
+  {
+    "path": "work/baicizhan-controls-deepening/qa-index.js",
+    "sha256": "faa2b162d1675eb819006ec6c69ba4336ef82bed48a7c0fbcdb0cfe942ee31f0",
+    "bytes": 290213
+  },
+  {
+    "path": "work/baicizhan-controls-deepening/qa-index.js.capture.json",
+    "sha256": "e7b55e0013bf42a44f7269fece2df41bd8dd7fff7bad41391f4e1f3d2672927b",
+    "bytes": 451
+  },
+  {
+    "path": "work/baicizhan-controls-deepening/qa-pretty.json",
+    "sha256": "c7cd57a115a456ce7020ba9a2f301843417767c9bc205b4de7c0f8ddec4751f2",
+    "bytes": 43260
+  },
+  {
+    "path": "work/baicizhan-controls-deepening/qa-rhyme-mode.jpg",
+    "sha256": "5791d1a6c0a0160d43dcd1a5826a28351356fa3c190cf18b5387287d62fc2fc2",
+    "bytes": 414324
+  },
+  {
+    "path": "work/baicizhan-controls-deepening/qa-rhyme-mode.jpg.capture.json",
+    "sha256": "9398dcf9d43ecc0abdda4ca93742bf5b18074faec8b39b7cd4694817c1d6a99a",
+    "bytes": 459
+  },
+  {
+    "path": "work/baicizhan-controls-deepening/qa-text.txt",
+    "sha256": "d486f04089985a6f5e8d760c6d0e0675e825cb5fe166e1f72b92528235fdeec3",
+    "bytes": 19072
+  },
+  {
+    "path": "work/baicizhan-controls-deepening/qa.html",
+    "sha256": "4e8ef5c8b17ebba0dff64a26139639c3110ec35c9661572eebf17aa5d48ad803",
+    "bytes": 1833
+  },
+  {
+    "path": "work/baicizhan-controls-deepening/qa.html.capture.json",
+    "sha256": "fe73be221e61db00b00fcd119ca873b53495156dae2a809673ddb2200d9bbddc",
+    "bytes": 367
+  },
+  {
+    "path": "work/baicizhan-controls-deepening/qa.txt",
+    "sha256": "cb5a31cc3e021e0562a5104b91776aa10fc572417987eccc35f320c152c84ddf",
+    "bytes": 16
+  },
+  {
+    "path": "work/baicizhan-controls-deepening/research-log.md",
+    "sha256": "c89c6a342fa84230e2266429fec420bbca0d6a72faf8817018cda54640723cc0",
+    "bytes": 4135
+  },
+  {
+    "path": "work/chinese-vocab-deepening/bcz.html",
+    "sha256": "3a2120cedc7054c3f4def68403d8d7d85fab3d386e216a202a6e32229f9a579c",
+    "bytes": 20605
+  },
+  {
+    "path": "work/chinese-vocab-deepening/bcz-info.html",
+    "sha256": "1f27ecfa5fc16d67c5f543197f82eae9e5ddf94a37434dd2cfcb4c1df2eda4f3",
+    "bytes": 4087
+  },
+  {
+    "path": "work/chinese-vocab-deepening/bcz-925.html",
+    "sha256": "58b6f4eec1ad799729ca89a11e7537c6fc66ae9e6c6b9b1530d9bb92a036e8c6",
+    "bytes": 40644
+  }
+]

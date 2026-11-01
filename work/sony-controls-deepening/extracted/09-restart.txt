@@ -1,0 +1,11 @@
+Restarting the player
+Restart the player if operations become unstable.
+Restarting will not delete any data and pairing information.
+Hold down the (power) button ( [1] ) for 2 seconds while the screen is turned on.
+Tap [Restart].
+Hint
+If the player freezes, hold down the (power) button for 10 seconds to force the player to restart.
+The contents of the Help Guide may be subject to change without notice due to updates to the product's specifications.
+Go to Page Top
+Related Topic
+Formatting the player

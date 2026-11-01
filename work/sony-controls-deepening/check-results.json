@@ -1,0 +1,16 @@
+{
+  "status": "PASS",
+  "evidence": 18,
+  "new_flows": 6,
+  "existing_flow_proposals": 6,
+  "case_flows": 16,
+  "inventory": 82,
+  "visual_pages": [
+    22,
+    111
+  ],
+  "sha256_checks": "all_match",
+  "csv_physical_newlines": "coverage7/inventory83",
+  "master_before": "all_6_match",
+  "hands_on": false
+}

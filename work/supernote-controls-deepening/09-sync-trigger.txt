@@ -1,0 +1,59 @@
+When Do My Notes Get Automatically Synced to Supernote Cloud?  - Supernote
+English (US)
+Japanese
+English (US)
+繁體中文
+简体中文
+Support Home
+Contact Us
+English (US)
+Japanese
+English (US)
+繁體中文
+简体中文
+Home
+FAQ
+When Do My Notes Get Automatically Synced to Supernote Cloud?
+Written by
+James Huang
+Updated at January 23rd, 2024
+Contact Us
+If you still have questions or prefer to get help directly from an agent, please submit a request.
+We’ll get back to you as soon as possible.
+Please fill out the contact form below and we will reply as soon as possible.
+title="ReCAPTCHA"
+Getting Started
+Tools & Features
+Organizing & Managing
+Workflow Cases
+What's New
+FAQ
+My Order
+Hardware & Repair
+Changelog
++ More
+To automatically sync your notes to Supernote Cloud, please ensure that you are logged in to your Supernote account and have enabled
+Auto Sync
+in your settings. Additionally, make sure that you have chosen Supernote Cloud as the storage service to sync with.
+Once these prerequisites are met, your notes will be automatically synced to Supernote Cloud when you do tap the
+"Back to Files"
+button
+to return to the
+Files
+interface. This will trigger the automatic sync and ensure that your latest notes are uploaded to the cloud.
+The benefits of the Auto Sync feature are evident. It ensures that your notes are always up to date and synchronized in real-time. This means that even if you lose or change devices, you can easily recover and access your notes.
+The Auto Sync feature provides a convenient solution for note backup and synchronization. By meeting the specified prerequisites and performing the designated actions, you can ensure that your notes are always synced to Supernote Cloud for access and management anytime, anywhere. Whether you're a student, professional, or creative enthusiast, Supernote Cloud's Auto Sync feature brings added convenience and security to your work and creativity.
+supernote cloud
+sync notes
+Was this article helpful?
+Yes
+No
+Give feedback about this article
+Related Articles
+How to Create a Custom Note Template Using Images?
+What to Do If My Device Responds to Stylus Touch But Not Finger Touch?
+What Are the Differences between Pens?
+Copyright © 2026 Ratta Supernote
+Knowledge Base Software powered by Helpjuice
+Close
+Expand

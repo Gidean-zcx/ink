@@ -1,0 +1,134 @@
+[
+  {
+    "key": "05-the-flow-of-content",
+    "url": "https://support.apple.com/guide/shortcuts/the-flow-of-content-apd33c8d5c6d/10.0/ios/27",
+    "entry_id": "SCT-APD33C8D5C6D",
+    "title": "The flow of content"
+  },
+  {
+    "key": "06-action-connections",
+    "url": "https://support.apple.com/guide/shortcuts/action-connections-apda850ab0e1/10.0/ios/27",
+    "entry_id": "SCT-APDA850AB0E1",
+    "title": "Action connections"
+  },
+  {
+    "key": "07-test-your-actions",
+    "url": "https://support.apple.com/guide/shortcuts/test-your-actions-apda75604f37/10.0/ios/27",
+    "entry_id": "SCT-APDA75604F37",
+    "title": "Test your actions"
+  },
+  {
+    "key": "08-intro-to-variables",
+    "url": "https://support.apple.com/guide/shortcuts/intro-to-variables-apdb5506f698/10.0/ios/27",
+    "entry_id": "SCT-APDB5506F698",
+    "title": "Intro to variables"
+  },
+  {
+    "key": "09-variable-types",
+    "url": "https://support.apple.com/guide/shortcuts/variable-types-apdd2b316022/10.0/ios/27",
+    "entry_id": "SCT-APDD2B316022",
+    "title": "Variable types"
+  },
+  {
+    "key": "10-use-variables",
+    "url": "https://support.apple.com/guide/shortcuts/use-variables-apdd02c2780c/10.0/ios/27",
+    "entry_id": "SCT-APDD02C2780C",
+    "title": "Use variables"
+  },
+  {
+    "key": "11-use-list-actions",
+    "url": "https://support.apple.com/guide/shortcuts/use-list-actions-apd4dcacc115/10.0/ios/27",
+    "entry_id": "SCT-APD4DCACC115",
+    "title": "Use list actions"
+  },
+  {
+    "key": "12-use-the-choose-from-menu-action",
+    "url": "https://support.apple.com/guide/shortcuts/use-the-choose-from-menu-action-apdd7bf369da/10.0/ios/27",
+    "entry_id": "SCT-APDD7BF369DA",
+    "title": "Use the Choose from Menu action"
+  },
+  {
+    "key": "13-use-if-actions",
+    "url": "https://support.apple.com/guide/shortcuts/use-if-actions-apd83dcd1b51/10.0/ios/27",
+    "entry_id": "SCT-APD83DCD1B51",
+    "title": "Use If actions"
+  },
+  {
+    "key": "14-use-repeat-actions",
+    "url": "https://support.apple.com/guide/shortcuts/use-repeat-actions-apdc11deb2c1/10.0/ios/27",
+    "entry_id": "SCT-APDC11DEB2C1",
+    "title": "Use Repeat actions"
+  },
+  {
+    "key": "15-use-the-ask-each-time-variable",
+    "url": "https://support.apple.com/guide/shortcuts/use-the-ask-each-time-variable-apd8b28e2166/10.0/ios/27",
+    "entry_id": "SCT-APD8B28E2166",
+    "title": "Use the Ask Each Time variable"
+  },
+  {
+    "key": "16-advanced-shortcuts-settings",
+    "url": "https://support.apple.com/guide/shortcuts/advanced-shortcuts-settings-apdfeb05586f/10.0/ios/27",
+    "entry_id": "SCT-APDFEB05586F",
+    "title": "Advanced Shortcuts settings"
+  },
+  {
+    "key": "17-intro-to-the-run-javascript-on-webpage-action",
+    "url": "https://support.apple.com/guide/shortcuts/intro-to-the-run-javascript-on-webpage-action-apd218e2187d/10.0/ios/27",
+    "entry_id": "SCT-APD218E2187D",
+    "title": "Intro to the Run JavaScript on Webpage action"
+  },
+  {
+    "key": "18-use-the-run-javascript-on-webpage-action",
+    "url": "https://support.apple.com/guide/shortcuts/use-the-run-javascript-on-webpage-action-apdb71a01d93/10.0/ios/27",
+    "entry_id": "SCT-APDB71A01D93",
+    "title": "Use the Run JavaScript on Webpage action"
+  },
+  {
+    "key": "19-run-a-shortcut-from-a-url",
+    "url": "https://support.apple.com/guide/shortcuts/run-a-shortcut-from-a-url-apd624386f42/10.0/ios/27",
+    "entry_id": "SCT-APD624386F42",
+    "title": "Run a shortcut from a URL"
+  },
+  {
+    "key": "20-use-x-callback-url",
+    "url": "https://support.apple.com/guide/shortcuts/use-x-callback-url-apdcd7f20a6f/10.0/ios/27",
+    "entry_id": "SCT-APDCD7F20A6F",
+    "title": "Use x-callback-url"
+  },
+  {
+    "key": "21-use-another-apps-url-scheme",
+    "url": "https://support.apple.com/guide/shortcuts/use-another-apps-url-scheme-apd68802640c/10.0/ios/27",
+    "entry_id": "SCT-APD68802640C",
+    "title": "Use another app\u2019s URL scheme"
+  },
+  {
+    "key": "22-request-your-first-api",
+    "url": "https://support.apple.com/guide/shortcuts/request-your-first-api-apd58d46713f/10.0/ios/27",
+    "entry_id": "SCT-APD58D46713F",
+    "title": "Request your first API"
+  },
+  {
+    "key": "23-handling-lists",
+    "url": "https://support.apple.com/guide/shortcuts/handling-lists-apd9ba41d21b/10.0/ios/27",
+    "entry_id": "SCT-APD9BA41D21B",
+    "title": "Handling lists"
+  },
+  {
+    "key": "24-get-dictionary-value-action",
+    "url": "https://support.apple.com/guide/shortcuts/get-dictionary-value-action-apdf01294032/10.0/ios/27",
+    "entry_id": "SCT-APDF01294032",
+    "title": "Get Dictionary Value action"
+  },
+  {
+    "key": "25-api-limitations",
+    "url": "https://support.apple.com/guide/shortcuts/api-limitations-apd891a6c84e/10.0/ios/27",
+    "entry_id": "SCT-APD891A6C84E",
+    "title": "API limitations"
+  },
+  {
+    "key": "26-dictionaries",
+    "url": "https://support.apple.com/guide/shortcuts/dictionaries-apd43b69f337/10.0/ios/27",
+    "entry_id": "SCT-APD43B69F337",
+    "title": "Dictionaries"
+  }
+]

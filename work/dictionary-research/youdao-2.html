@@ -1,0 +1,60 @@
+  <!DOCTYPE html><html><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0"><title>网易有道词典笔 2.0</title><link rel=stylesheet href=https://shared.ydstatic.com/dict/market/dictPen2.0/v2.11/videojs/video-js.css><script>!function() {
+          function resize() {
+            var docEl = document.documentElement
+            var clientWidth = docEl.clientWidth || document.body.clientWidth || window.innerWidth
+            clientWidth  = clientWidth > 950 ? 475 : clientWidth
+            if (!clientWidth) return;
+            var fz = clientWidth / 950 * 100
+            docEl.style.fontSize = fz + 'px';
+            var realfz = ~~(+window.getComputedStyle(docEl).fontSize.replace('px', '') * 10000) / 10000
+            if (fz !== realfz) {
+              docEl.style.cssText = 'font-size: ' + fz * (fz / realfz) + "px";
+            }
+          }
+          window.addEventListener('resize', resize)
+          resize()
+        }()</script><link href=https://shared.ydstatic.com/dict/market/dictPen2.0/v2.11/css/app.2345c19e.css rel=preload as=style><link href=https://shared.ydstatic.com/dict/market/dictPen2.0/v2.11/css/chunk-vendors.1c425fdd.css rel=preload as=style><link href=https://shared.ydstatic.com/dict/market/dictPen2.0/v2.11/js/app.2389c148.js rel=preload as=script><link href=https://shared.ydstatic.com/dict/market/dictPen2.0/v2.11/js/chunk-vendors.76aa998e.js rel=preload as=script><link href=https://shared.ydstatic.com/dict/market/dictPen2.0/v2.11/css/chunk-vendors.1c425fdd.css rel=stylesheet><link href=https://shared.ydstatic.com/dict/market/dictPen2.0/v2.11/css/app.2345c19e.css rel=stylesheet></head><body><div id=app></div><script src=https://shared.ydstatic.com/js/ydk/ydk-1.5.0-min.js></script><script>ydk.config({
+        debug: false,
+        jsApiList: ['share','setMenus','onMenuClick']
+    });
+
+    window.ydk.extend({
+      setMenus: function (params) {
+        ydk._invoke('setMenus', params, params);
+      },
+      onMenuClick: function (params) {
+        ydk._on('onMenuClick', params, params);
+      },
+    })
+
+    ydk.share({
+        silence: true,
+        title  : "词典用户专享：网易有道词典笔2.0",
+        desc   : "中英生词 一扫而光",
+        imgUrl : "https://ydschool-video.nosdn.127.net/1576551324252share.jpg",
+        link   : window.location.href + '?t='+(+new Date())
+    });
+    if (window.ydk && window.ydk.setMenus) {
+      window.ydk.setMenus({
+    menus: [
+      {
+        title: '使用说明',
+        icon: 'https://shared.ydstatic.com/market/souti/dict_pen_sync/dict/1.4.1/dist/ic_nav_applet_more_info_light.png',
+        darkIcon: 'https://shared.ydstatic.com/market/souti/dict_pen_sync/dict/1.4.1/dist/ic_nav_applet_more_info_dark.png',
+      }
+    ]
+      })
+    }
+    if (window.ydk && window.ydk.onMenuClick) {
+      window.ydk.onMenuClick({
+        complete:function(data) {
+          console.log('onMenuClick data=', data);
+          if (data.index === 0) {
+            window.location.href = 'https://shared.ydstatic.com/market/souti/dict_pen_sync/dict/1.4.5/dist/index_dict.html#/function_explain'
+          }
+        },
+      });
+    }</script><script defer src=https://shared.ydstatic.com/js/rlog/v1.js></script><script>var _rlog = [];
+    _rlog.push(["_setAccount" , "dict-markets"]);
+    _rlog.push(["_addPost" , "activity" , "dictPenLanding"]);</script><script src=https://shared.ydstatic.com/dict/market/dictPen2.0/v2.11/videojs/video.min.js></script><script src=https://shared.ydstatic.com/dict/market/dictPen2.0/v2.11/videojs/zh-CN.js></script><script src=https://shared.ydstatic.com/dict/market/dictPen2.0/v2.11/js/chunk-vendors.76aa998e.js></script><script src=https://shared.ydstatic.com/dict/market/dictPen2.0/v2.11/js/app.2389c148.js></script></body></html>
+

@@ -1,0 +1,266 @@
+[
+  {
+    "title": "",
+    "href": "/"
+  },
+  {
+    "title": "製品サポート",
+    "href": "/support/"
+  },
+  {
+    "title": "お問い合わせ",
+    "href": "/contact/"
+  },
+  {
+    "title": "販売店",
+    "href": "/shop/"
+  },
+  {
+    "title": "オンラインショップ",
+    "href": "/#online_shop"
+  },
+  {
+    "title": "TOPICS",
+    "href": "/#topics"
+  },
+  {
+    "title": "NEWS",
+    "href": "/#news"
+  },
+  {
+    "title": "SPECIAL CONTENTS",
+    "href": "/#special_top"
+  },
+  {
+    "title": "ONLINE SHOP",
+    "href": "/#online_shop"
+  },
+  {
+    "title": "製品サポート",
+    "href": "/support/"
+  },
+  {
+    "title": "HOME",
+    "href": "/"
+  },
+  {
+    "title": "サポート",
+    "href": "/support/"
+  },
+  {
+    "title": "Open APP Serviceとは",
+    "href": "/support/faq_974.php"
+  },
+  {
+    "title": "Open APP Service　動作確認アプリバージョンリスト",
+    "href": "/support/faq_1014.php"
+  },
+  {
+    "title": "アルバムアートの表示方法",
+    "href": "/support/faq_965.php"
+  },
+  {
+    "title": "AK File Drop　- Windows PC編 -",
+    "href": "/support/faq_1012.php"
+  },
+  {
+    "title": "iriver及びAstell&Kern製品の 並行輸入品及びオークション購入品についてのご注意",
+    "href": "/support/faq_982.php"
+  },
+  {
+    "title": "BT SINKの方法",
+    "href": "/support/faq_1011.php"
+  },
+  {
+    "title": "AK File Drop　- File Zilla編 -",
+    "href": "/support/faq_1010.php"
+  },
+  {
+    "title": "ラインアウト（バランス）でオーディオデバイスと接続する方法",
+    "href": "/support/faq_1054.php"
+  },
+  {
+    "title": "V-Link（YouTube）の再生について",
+    "href": "/support/faq_1098.php"
+  },
+  {
+    "title": "充電についての注意",
+    "href": "/support/faq_1037.php"
+  },
+  {
+    "title": "フリーズした場合の対処方法 （強制リセット方法 ）",
+    "href": "/support/faq_1029.php"
+  },
+  {
+    "title": "Wi-Fi接続について",
+    "href": "/support/faq_1060.php"
+  },
+  {
+    "title": "m3u形式のプレイリストに対応していますか？",
+    "href": "/support/faq_1033.php"
+  },
+  {
+    "title": "Replay Gainについて",
+    "href": "/support/faq_1104.php"
+  },
+  {
+    "title": "4.4mmバランス端子のピンアサインについて",
+    "href": "/support/faq_1055.php"
+  },
+  {
+    "title": "aptX HD接続時の表示について",
+    "href": "/support/faq_1039.php"
+  },
+  {
+    "title": "アルバムアートの表示可能な最大サイズは？",
+    "href": "/support/faq_1035.php"
+  },
+  {
+    "title": "Google Gboardの対応はしていますか？",
+    "href": "/support/faq_1078.php"
+  },
+  {
+    "title": "「BT Sink」機能はSCMS-Tに対応していますか？",
+    "href": "/support/faq_1046.php"
+  },
+  {
+    "title": "修理料金の目安について",
+    "href": "/support/faq_1106.php"
+  },
+  {
+    "title": "本製品の電源がオンにならない",
+    "href": "/support/faq_1108.php"
+  },
+  {
+    "title": "通知バーへアイコンを追加、削除、再編成する",
+    "href": "/support/faq_1103.php"
+  },
+  {
+    "title": "Roon Readyについて",
+    "href": "/support/faq_1119.php"
+  },
+  {
+    "title": "※【注意】USB Type-Cイヤホン/ライン入力機能のないアンプの接続について",
+    "href": "/support/faq_1107.php"
+  },
+  {
+    "title": "SR35マニュアル",
+    "href": "file_1500.php"
+  },
+  {
+    "title": "SR35 FirmWare: V.1.22",
+    "href": "file_1596.php"
+  },
+  {
+    "title": "SR35 FirmWare: V.1.15",
+    "href": "file_1580.php"
+  },
+  {
+    "title": "SR35 FirmWare: V.1.14",
+    "href": "file_1564.php"
+  },
+  {
+    "title": "SR35 FirmWare: V.1.12",
+    "href": "file_1562.php"
+  },
+  {
+    "title": "SR35 FirmWare: V.1.11",
+    "href": "file_1541.php"
+  },
+  {
+    "title": "SR35 FirmWare: V1.04",
+    "href": "file_1517.php"
+  },
+  {
+    "title": "SR35 Windows用USB DACドライバ",
+    "href": "file_1504.php"
+  },
+  {
+    "title": "Mac-データ転送用ソフトウェア",
+    "href": "file_1372.php"
+  },
+  {
+    "title": "製品保証規定",
+    "href": "/support/rule.php"
+  },
+  {
+    "title": "故障かな?と思ったら",
+    "href": "/support/repair2.php"
+  },
+  {
+    "title": "修理サービスについて",
+    "href": "/support/repair.php"
+  },
+  {
+    "title": "サポート・お問い合わせフォーム",
+    "href": "/support/form.php"
+  },
+  {
+    "title": "",
+    "href": "#gWrapper"
+  },
+  {
+    "title": "",
+    "href": "https://x.com/AstellnKern_jp"
+  },
+  {
+    "title": "",
+    "href": "https://www.facebook.com/iriver.jp"
+  },
+  {
+    "title": "ポータブルプレーヤー",
+    "href": "/products/#b_1"
+  },
+  {
+    "title": "ヘッドホン＆イヤホン",
+    "href": "/products/#b_2"
+  },
+  {
+    "title": "ホームオーディオ",
+    "href": "/products/#b_3"
+  },
+  {
+    "title": "その他",
+    "href": "/products/#b_6"
+  },
+  {
+    "title": "製品サポート",
+    "href": "/support/"
+  },
+  {
+    "title": "お問い合わせ",
+    "href": "/contact/"
+  },
+  {
+    "title": "アキハバラe市場",
+    "href": "http://www.akiba-eshop.jp/"
+  },
+  {
+    "title": "アキハバラe市場 楽天市場支店",
+    "href": "http://www.rakuten.co.jp/akiba-eshop/"
+  },
+  {
+    "title": "アキハバラe市場",
+    "href": "http://www.akiba-eshop.jp/"
+  },
+  {
+    "title": "アキハバラe市場 楽天市場支店",
+    "href": "http://www.rakuten.co.jp/akiba-eshop/"
+  },
+  {
+    "title": "広報へのお問い合わせ",
+    "href": "/press/contact.php"
+  },
+  {
+    "title": "製品画像ダウンロード",
+    "href": "/press/dl.php"
+  },
+  {
+    "title": "ご利用案内",
+    "href": "/policy/"
+  },
+  {
+    "title": "会社情報",
+    "href": "/company/"
+  }
+]

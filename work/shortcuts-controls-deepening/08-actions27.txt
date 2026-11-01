@@ -1,0 +1,32 @@
+Navigate the action list in Shortcuts on iPhone or iPad
+Actions are the building blocks of a shortcut. As you add actions to your custom shortcut, you can view information about each action, sort the list of available actions by category or by search term, and create favorite actions for future use. Because many actions use other apps on your device, you can also view actions sorted according to the app they use.
+As you build a shortcut, the Shortcuts app predicts what actions you may want to use next. For example, if the last action is a Contacts action, the app suggests actions such as Call or FaceTime. In a shortcut that ends with a Get Current Song action, the list suggests actions such as Add to Playlist or Get Details of Music.
+Note: Actions that use another app on your device to accomplish a task may require you to grant permission by tapping Allow Access in the shortcut editor.
+View all actions in a specific category
+In the Shortcuts app  on your iPhone or iPad, tap  on a shortcut.
+In the shortcut editor, tap  [IMAGE: Search Actions]  Search Actions to display a list of action categories.
+Tap a category name (Media or Web, for example).
+All actions related to the category you chose appear in the list, organized by subcategory.
+View information about an action
+In the Shortcuts app  on your iPhone or iPad, tap  on a shortcut.
+In the shortcut editor, tap  [IMAGE: Search Actions]  Search Actions to display a list of action categories.
+Tap an action category in the list, then tap  for a specific action.
+A brief description of the action appears, including the type of content that can be used as input (if any) and the resulting output. To learn more about inputs and outputs, see Intro to how shortcuts work on iPhone and iPad.
+Tip: When an action is placed in a shortcut, you can tap the action’s icon, then tap Show Info to display the action’s description.
+Search the list of actions
+In the Shortcuts app  on your iPhone or iPad, tap  on a shortcut.
+In the shortcut editor, tap  [IMAGE: Search Actions]  Search Actions to display a list of action categories.
+Enter a term in the search field.
+The list is sorted to show actions containing that search term as well as the apps used by those actions. Try searching for get, find, or add to explore a variety of actions across multiple categories. You can also search for specific topics like music or events, or for apps and services you use.
+View all available actions for an app
+As you build a custom shortcut or modify and existing shortcut, you can easily sort the list of available actions by app name—for example, to see all of the actions that use the Safari app.
+In the Shortcuts app  on your iPhone or iPad, tap  on a shortcut.
+In the shortcut editor, tap  to display a list of action categories.
+Tap Apps.
+Tap an app name.
+All actions related to the app you chose appear in the list.
+Pin your favorite actions
+In the Shortcuts app on your iPhone or iPad, tap  on a shortcut.
+In the shortcut editor, tap  [IMAGE: Search Actions]  to display a list of action categories.
+Tap an action category, tap  next to the action you want to pin, then tap Pin.
+The action is pinned to the top of the actions list.

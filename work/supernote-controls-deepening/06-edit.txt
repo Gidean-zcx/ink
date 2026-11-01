@@ -1,0 +1,78 @@
+Edit Headings and Links - Supernote
+English (US)
+Japanese
+English (US)
+繁體中文
+简体中文
+Support Home
+Contact Us
+English (US)
+Japanese
+English (US)
+繁體中文
+简体中文
+Home
+Organizing & Managing
+Edit Headings and Links
+Written by
+James Huang
+Updated at October 9th, 2023
+Contact Us
+If you still have questions or prefer to get help directly from an agent, please submit a request.
+We’ll get back to you as soon as possible.
+Please fill out the contact form below and we will reply as soon as possible.
+title="ReCAPTCHA"
+Getting Started
+Tools & Features
+Organizing & Managing
+Workflow Cases
+What's New
+FAQ
+My Order
+Hardware & Repair
+Changelog
++ More
+Table of Contents
+Edit headings
+Edit links
+The ability to edit content is essential for effective note-taking, as it gives you control over how you organize and structure your notes. In this article, we will explain how to edit headings (originally named titles) and links.
+Edit headings
+Once a heading is created, you can re-lasso it to enter the edit mode and perform the following editing actions:
+Move the heading where you need it to be by dragging it with pen to the desired spot on the current page where it exists.
+Zoom in or out of the heading by dragging any of the four corners of the rectangle outward or inward.
+Copy the heading by tapping
+, and then paste it to anywhere on the current page where it exists by single-tapping the screen with pen.
+Copy the heading to another page of the same notebook by tapping
+, and then paste it by single-tapping the screen with pen.
+Change the heading style by tapping the Headings icon and selecting the heading style you want to use.
+Turn the heading into a keyword by tapping the keyword icon.
+Turn the heading into a calendar event title by tapping the calendar icon.
+Edit links
+Similarly, after you create a link, you can re-lasso it to perform the same editing actions:
+Move the link where you need it to be by dragging it with pen to the right spot on the current page where it exists.
+Zoom in or out of the link by dragging any of the four corners of the rectangle outward or inward.
+Copy the link by tapping
+, and then paste it to anywhere on the current page where it exists by single-tapping the screen with pen.
+Copy the link to another page of the same notebook by tapping
+, and then paste it by single-tapping the screen with pen.
+Turn the link into a keyword by tapping the keyword icon.
+Turn the link into a calendar event title by tapping the calendar icon.
+Tap the “Link” icon
+and then tap
+to change the link attributes, including the link style and target, or tap
+to cancel/delete the link.
+edit links
+edit headings
+Was this article helpful?
+Yes
+No
+Give feedback about this article
+Related Articles
+Keyboard
+Browse & Access
+Add Folders to Quick Access
+Use PDFs as Templates
+Copyright © 2026 Ratta Supernote
+Knowledge Base Software powered by Helpjuice
+Close
+Expand

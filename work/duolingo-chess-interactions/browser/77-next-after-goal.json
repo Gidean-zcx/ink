@@ -1,0 +1,17 @@
+{
+  "name": "77-next-after-goal",
+  "at": "2026-10-27T02:15:38.513973+00:00",
+  "url": "https://www.duolingo.com/lesson",
+  "title": "Duolingo - The world’s most popular way to learn",
+  "text": "All Daily Quests complete!\nEarn 10 XP\n10 / 10\n10 / 10\nCONTINUE",
+  "controls": [
+    {
+      "tag": "BUTTON",
+      "text": "CONTINUE",
+      "aria": null,
+      "test": "player-next",
+      "type": "submit",
+      "disabled": false
+    }
+  ]
+}

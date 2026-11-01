@@ -1,0 +1,49 @@
+Enjoying music content on a computer using the sound quality of the player (USB-DAC function)
+You can enjoy the music content on a computer with the same sound quality as the player by connecting the player to the computer via USB. Sound adjustments made on the player also apply to the output sound.
+The following applications are compatible with the USB-DAC function. They are recommended for use with the player.
+Windows: Music Center for PC
+Mac: Hi-Res Audio Player for Mac
+Note
+While the USB-DAC function is turned on, the player can only be used as a USB-DAC device. To use the player as a music player, turn off the USB-DAC function.
+Music content cannot be transferred while the USB-DAC function is turned on.
+Install the USB-DAC compatible application on a computer.
+Windows:
+Music Center for PC: To install the application, access the customer support website.
+(https://www.sony.net/smc4pc/)
+Sony Audio USB Driver (Windows): Access the customer support website to install Sony Audio USB Driver (Windows). Follow the onscreen instructions.
+Mac:
+​Hi-Res Audio Player for Mac: Access the customer support website to install the application. Follow the onscreen instructions.
+On the computer, configure the settings for USB-DAC if necessary.
+For details on the settings, refer to the following information.
+Windows: Online help information for Music Center for PC
+Mac: Online help information for Hi-Res Audio Player for Mac on the customer support website.
+Connect the player to the computer via USB.
+Confirm the [Use USB for] menu on the player. Select [USB DAC] and tap [OK].
+On the [WALKMAN Home] screen, tap [Music player].
+On the library screen in “Music player”, tap [USB DAC].
+When the start message is displayed, tap [YES].
+Play music on the computer.
+When the input signal is recognized, the lamp in the center of the screen lights up (green or blue) and information on the input signal is displayed.
+To adjust the sound
+Swipe the USB-DAC screen upwards.
+The sound adjustment screen will appear.
+Swipe the screen to the left or right to select a sound adjustment.
+Adjust the sound by following the onscreen instructions.
+Hint
+To turn off the USB-DAC function, tap the (back) button or tap (Library top) button. Confirm the end message and tap [YES].
+We recommend connecting the USB Type-C cable to a USB 3.0 port on your computer.
+If the USB-DAC screen goes to the background for reasons such as using another music playback app or video playback app on the player, sound may no longer be output from the headphones.
+In this case, you may be able to restore the audio output by returning to the [WALKMAN Home] screen and tapping [Music player] to display the USB-DAC screen again.
+Note
+You cannot listen to played-back sound wirelessly while the USB-DAC function is active.
+The USB-DAC function is designed exclusively for enjoying music. The player processes the audio signals prior to playback. As a result, the audio on the player becomes slightly delayed compared to the computer. This means that images and audio may not be synchronized when you use the USB-DAC function for the following purposes:
+Playing videos
+Playing games
+Use the USB-DAC function to enjoy music on its own.
+The contents of the Help Guide may be subject to change without notice due to updates to the product's specifications.
+Go to Page Top
+Related Topic
+Installing Music Center for PC (Windows)
+USB-DAC screen in “Music player”
+Adjusting the sound
+Customer support website

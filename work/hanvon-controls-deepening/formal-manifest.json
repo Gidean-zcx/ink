@@ -1,0 +1,27 @@
+[
+  {
+    "path": "docs/research/interaction-library/cases/M-008-hanvon.md",
+    "sha256": "a23ec63fdeae0eab91e38364ad6053209f4af27f5371c7d851e17f4a3e6d1972",
+    "bytes": 10969
+  },
+  {
+    "path": "docs/research/interaction-library/batches/hanvon-controls-deepening-evidence.jsonl",
+    "sha256": "754c86cc4ef841cae9e776b53d0706a98c35ddaba13ba8931dcd87428592a743",
+    "bytes": 2821
+  },
+  {
+    "path": "docs/research/interaction-library/batches/hanvon-controls-deepening-coverage.csv",
+    "sha256": "aa0cf671b21fa0390e9b0cfb58c6cecf3a0d7df66eaad894707f17ea224f6025",
+    "bytes": 107
+  },
+  {
+    "path": "docs/research/interaction-library/batches/hanvon-controls-deepening-inventory.csv",
+    "sha256": "670f4c2e813392c2b56424ce65a63e034c56e7e3f3f85e7a7f1d3d775991824c",
+    "bytes": 12080
+  },
+  {
+    "path": "docs/research/interaction-library/artifacts/hanvon-controls-deepening/source-notes.md",
+    "sha256": "4ec7c13d411bc28e15da4ab4cfbb2e5a21e89b5eed5f3a70c651c0ecdef05660",
+    "bytes": 2768
+  }
+]

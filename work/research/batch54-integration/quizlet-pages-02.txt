@@ -1,0 +1,402 @@
+Trouble accessing a set – Quizlet Help Center (https://help.quizlet.com/hc/en-us/articles/360029768352-Trouble-accessing-a-set)
+citeturn1091view0 [wordlim: 200] Crawled: today; Content type: text/html; Source: click({"ref_id":"turn1089view1","id":10}); Total lines: 65
+L0: 【0†iframe†www.googletagmanager.com】
+L1: 
+L2: 【1†Help center†quizlet.zendesk.com】
+L3: 
+L4: Topics
+L5: 
+L6: Popular Articles
+L7: 
+L8: 【2†Resending a confirmation message】 【3†Changing your username】 【4†Changing your password】 【5†Finding flashcard sets】 【6†Finding your teacher's class】 【7†Browser and device compatibility】
+L9: 
+L10: [Input][Input: Search]
+L11: 
+L12: 【8†Image】   【8†Username】
+L13: # Trouble accessing a set
+L14: 
+L15: All flashcard sets on Quizlet are created by individual students and teachers.
+L16: 
+L17: When you create a set, you can make it 【9†password-protected】 or 【10†visible only to certain people】. When you search for sets, you may see some that are only visible to select people.
+L18:   * If the set you're trying to access is part of a class you're in, you may need to 【11†log in†quizlet.com】 to your account to access it.
+L19:   * If the set is password protected, you can ask the creator for the password.
+L20:   * If a set is private and visible only to the creator, then it's unavailable to other Quizlet users. In this case, you may want to 【12†search for public sets】 on your topic of interest.
+L21:   * If you’re trying to access a set on your mobile device that you created on the website, or vice versa, it must be published to sync across devices. If you created a set but can’t see it, make sure it’s published before you try to study or edit it from a different device. Find out more about 【13†editing draft sets】.
+L22: ### Related Articles
+L23: 
+L24:   * 【5†Finding flashcard sets】
+L25:   * 【6†Finding your teacher's class】
+L26:   * 【14†Navigating your home feed on mobile devices】
+L27:   * 【15†Trouble accessing a set】
+L28:   * 【16†Sharing sets and folders】
+L29:   * 【17†Changing a set's editing permissions】
+L30:   * 【18†Changing a set's visibility】
+L31:   * 【19†Protecting a set with a password】
+L32:   * 【20†Exporting your sets】
+L33:   * 【21†Embedding sets】
+L34:   * 【22†See more】
+L35: ### Can't find what you're looking for?
+L36: 
+L37: 【23†Ask a question】
+L38: 
+L39: Was this article helpful?
+L40: 
+L41: [Button: Yes] [Button: No]
+L42: 
+L43: ##### About us
+L44: 
+L45: 【24†About Quizlet†quizlet.com】 【25†How Quizlet works†quizlet.com】 【26†Careers†quizlet.com】 【27†Advertise with us†quizlet.com】 【28†Get the app†quizlet.com】
+L46: ##### For students
+L47: 
+L48: 【29†Flashcards†quizlet.com】 【30†Test†quizlet.com】 【31†Learn†quizlet.com】 【32†Solutions†quizlet.com】 【33†Modern Learning Lab†quizlet.com】 【34†Quizlet Plus†quizlet.com】 【35†Study Guides†quizlet.com】 【36†Pomodoro timer†quizlet.com】
+L49: 
+L50: ##### For Teachers
+L51: 
+L52: 【37†Live†quizlet.com】 【38†Blog†quizlet.com】 【39†Be the Change†quizlet.com】 【40†Quizlet Plus for teachers†quizlet.com】
+L53: ##### Resources
+L54: 
+L55: 【41†Help center†quizlet.com】 【42†Sign up†quizlet.com】 【43†Honor code†quizlet.com】 【44†Community guidelines†quizlet.com】 【45†Accessibility statement†quizlet.com】 【46†Privacy†quizlet.com】 【47†Your Privacy/Cookies Choices†quizlet.com】 【48†Terms†quizlet.com】 【49†Ad and Cookie Policy†quizlet.com】 【50†Interest-Based Advertising†quizlet.com】 【51†Quizlet for Schools†quizlet.com】 【52†Parents†quizlet.com】
+L56: 
+L57: ##### Language
+L58: 
+L59: English (United States)
+L60: 
+L61: 【53†Image】 【54†Get the app†get.quizlet.com】
+L62: ##### Get the app
+L63: 
+L64: © Quizlet Inc.
+--------------------------------------------------------------------------------
+Sharing sets and folders – Quizlet Help Center (https://help.quizlet.com/hc/en-us/articles/360030254831-Sharing-sets-and-folders)
+citeturn1091view1 [wordlim: 200] Crawled: today; Content type: text/html; Source: click({"ref_id":"turn1089view1","id":11}); Total lines: 96
+L0: 【0†iframe†www.googletagmanager.com】
+L1: 
+L2: 【1†Help center†quizlet.zendesk.com】
+L3: 
+L4: Topics
+L5: 
+L6: Popular Articles
+L7: 
+L8: 【2†Resending a confirmation message】 【3†Changing your username】 【4†Changing your password】 【5†Finding flashcard sets】 【6†Finding your teacher's class】 【7†Browser and device compatibility】
+L9: 
+L10: [Input][Input: Search]
+L11: 
+L12: 【8†Image】   【8†Username】
+L13: # Sharing sets and folders
+L14: 
+L15: 【8†IOS】 【8†Web】 【8†Android】
+L16: 
+L17: Once you've created a flashcard set or folder, or if you've found helpful content someone else has made, you can share it with your friends, classmates, or students.*
+L18: 
+L19: To share a flashcard set or folder
+L20:   1. Open the set or folder.
+L21:   2. Select 【9†Image: Share_-_Resized.png】 (share).
+L22: If you're using a teacher-identified account, you can share through email, Google Classroom, Remind, or Microsoft Teams. You can also copy the link and send it directly.
+L23: If you're using a student-identified account, you can share through email, Facebook, or Twitter (X). You can also copy the link and send it directly.
+L24: 
+L25: Settings and options
+L26:   * Only public sets and folders can be shared. You can 【10†change a set's visibility】 to make it public.
+L27:   * You can share password-protected sets using the steps above and then sending the password separately.
+L28: 
+L29: Tips
+L30: 
+L31: If you're sharing with more than one person through email, separate their email addresses by commas.
+L32: 
+L33: *If you’re under the required age, you are unable to share sets until you reach your region’s age of consent. Find out more about 【11†younger users’ account limitations】.
+L34:   1. Open the set or folder.
+L35:   2. Select 【9†Image: Share_-_Resized.png】 (share).
+L36:   3. Select Message to text the link or Mail to email the link. You can also copy the link and send it directly.
+L37: 
+L38: Settings and options
+L39: 
+L40:   * Only public sets and folders can be shared. You can 【10†change a set's visibility】 to make it public.
+L41:   * You can share password-protected sets using the steps above and then sending the password separately.
+L42: *If you’re under the required age, you are unable to share sets until you reach your region’s age of consent. Find out more about 【11†younger users’ account limitations】.
+L43: 
+L44:   1. Open the set or folder.
+L45:   2. Select 【9†Image: Share_-_Resized.png】 (share).
+L46:   3. Select a sharing option to send the link.
+L47: 
+L48: Settings and options
+L49:   * Only public sets or folders can be shared. You can 【10†change a set's visibility】 to make it public.
+L50:   * You can share password-protected sets using the steps above and then sending the password separately.
+L51: 
+L52: *If you’re under the required age, you are unable to share sets until you reach your region’s age of consent. Find out more about 【11†younger users’ account limitations】.
+L53: ### Related Articles
+L54: 
+L55:   * 【5†Finding flashcard sets】
+L56:   * 【6†Finding your teacher's class】
+L57:   * 【12†Navigating your home feed on mobile devices】
+L58:   * 【13†Trouble accessing a set】
+L59:   * 【14†Sharing sets and folders】
+L60:   * 【15†Changing a set's editing permissions】
+L61:   * 【16†Changing a set's visibility】
+L62:   * 【17†Protecting a set with a password】
+L63:   * 【18†Exporting your sets】
+L64:   * 【19†Embedding sets】
+L65:   * 【20†See more】
+L66: ### Can't find what you're looking for?
+L67: 
+L68: 【21†Ask a question】
+L69: 
+L70: Was this article helpful?
+L71: 
+L72: [Button: Yes] [Button: No]
+L73: 
+L74: ##### About us
+L75: 
+L76: 【22†About Quizlet†quizlet.com】 【23†How Quizlet works†quizlet.com】 【24†Careers†quizlet.com】 【25†Advertise with us†quizlet.com】 【26†Get the app†quizlet.com】
+L77: ##### For students
+L78: 
+L79: 【27†Flashcards†quizlet.com】 【28†Test†quizlet.com】 【29†Learn†quizlet.com】 【30†Solutions†quizlet.com】 【31†Modern Learning Lab†quizlet.com】 【32†Quizlet Plus†quizlet.com】 【33†Study Guides†quizlet.com】 【34†Pomodoro timer†quizlet.com】
+L80: 
+L81: ##### For Teachers
+L82: 
+L83: 【35†Live†quizlet.com】 【36†Blog†quizlet.com】 【37†Be the Change†quizlet.com】 【38†Quizlet Plus for teachers†quizlet.com】
+L84: ##### Resources
+L85: 
+L86: 【39†Help center†quizlet.com】 【40†Sign up†quizlet.com】 【41†Honor code†quizlet.com】 【42†Community guidelines†quizlet.com】 【43†Accessibility statement†quizlet.com】 【44†Privacy†quizlet.com】 【45†Your Privacy/Cookies Choices†quizlet.com】 【46†Terms†quizlet.com】 【47†Ad and Cookie Policy†quizlet.com】 【48†Interest-Based Advertising†quizlet.com】 【49†Quizlet for Schools†quizlet.com】 【50†Parents†quizlet.com】
+L87: 
+L88: ##### Language
+L89: 
+L90: English (United States)
+L91: 
+L92: 【51†Image】 【52†Get the app†get.quizlet.com】
+L93: ##### Get the app
+L94: 
+L95: © Quizlet Inc.
+--------------------------------------------------------------------------------
+Changing a set's editing permissions – Quizlet Help Center (https://help.quizlet.com/hc/en-us/articles/360037864311-Changing-a-set-s-editing-permissions)
+citeturn1091view2 [wordlim: 200] Crawled: today; Content type: text/html; Source: click({"ref_id":"turn1089view1","id":12}); Total lines: 120
+L0: 【0†iframe†www.googletagmanager.com】
+L1: 
+L2: 【1†Help center†quizlet.zendesk.com】
+L3: 
+L4: Topics
+L5: 
+L6: Popular Articles
+L7: 
+L8: 【2†Resending a confirmation message】 【3†Changing your username】 【4†Changing your password】 【5†Finding flashcard sets】 【6†Finding your teacher's class】 【7†Browser and device compatibility】
+L9: 
+L10: [Input][Input: Search]
+L11: 
+L12: 【8†Image】   【8†Username】
+L13: # Changing a set's editing permissions
+L14: 
+L15: 【8†IOS】 【8†Web】 【8†Android】
+L16: 
+L17: Quizlet flashcard sets restrict editing to the creator by default*, and you can adjust your set's editing permissions at any time.
+L18: 
+L19: To change a set's editing permissions
+L20:   1. 【9†Log in†quizlet.com】 to your account.
+L21:   2. Select Your library.
+L22:   3. Select Flashcard sets.
+L23:   4. Select Created from the drop-down menu.
+L24:   5. Open the set you want to change.
+L25:   6. Select 【10†Image: More_menu_-_iOS_-_Resized.png】 (more menu).
+L26:   7. Select 【11†Image: Edit_-_Resized.png】 (edit).
+L27:   8. Select the Settings gear.
+L28:   9. Select Editable by.
+L29:   10. Choose who can edit your set.
+L30:   11. Select Save.
+L31:   12. Select Done.
+L32: 
+L33: Who can edit your sets
+L34:   * Certain classes
+L35: Your set can only be edited by people in classes it has been shared with.
+L36:   * People with a password
+L37: Your set can only be edited by people who have the password.
+L38:   * Just me
+L39: Your set is private and only you can edit it.
+L40: *If you're under the required age, you can only create private sets until you reach your region's age of consent. From then on, any new sets will be public by default. You can then update the editing permissions for any sets that were created before. Find out more about 【12†younger users' account limitations】.
+L41:   1. Select Your Library.
+L42:   2. Select Created from the drop-down menu.
+L43:   3. Open the set you want to change.
+L44:   4. Select 【13†Image: More_menu_-_iOS_-_Resized.png】 (more menu).
+L45:   5. Select 【14†Image: Edit_-_Resized.png】 Edit set.
+L46:   6. Select the Settings gear.
+L47:   7. Select Editable by.
+L48:   8. Choose who can edit your set.
+L49:   9. Select Done.
+L50: 
+L51: Who can edit your sets
+L52:   * Certain classes
+L53: Your set can only be edited by people in classes it has been shared with.
+L54:   * People with a password
+L55: Your set can only be edited by people who have the password.
+L56:   * Just me
+L57: Your set is private and only you can edit it.
+L58: *If you're under the required age, you can only create private sets until you reach your region's age of consent. From then on, any new sets will be public by default. You can then update the editing permissions for any sets that were created before. Find out more about 【12†younger users' account limitations】.
+L59:   1. Select Your Library.
+L60:   2. Select Created from the drop-down menu.
+L61:   3. Open the set you want to change.
+L62:   4. Select 【13†Image: More_menu_-_iOS_-_Resized.png】 (more menu).
+L63:   5. Select 【14†Image: Edit_-_Resized.png】 Edit set.
+L64:   6. Select the Settings gear.
+L65:   7. Select Editable by.
+L66:   8. Choose who can edit your set.
+L67:   9. Select Done.
+L68: 
+L69: Who can edit your sets
+L70:   * Certain classes
+L71: Your set can only be edited by people in classes it has been shared with.
+L72:   * People with a password
+L73: Your set can only be edited by people who have the password.
+L74:   * Just me
+L75: Your set is private and only you can edit it.
+L76: *If you're under the required age, you can only create private sets until you reach your region's age of consent. From then on, any new sets will be public by default. You can then update the editing permissions for any sets that were created before. Find out more about 【12†younger users' account limitations】.
+L77: ### Related Articles
+L78: 
+L79:   * 【5†Finding flashcard sets】
+L80:   * 【6†Finding your teacher's class】
+L81:   * 【15†Navigating your home feed on mobile devices】
+L82:   * 【16†Trouble accessing a set】
+L83:   * 【17†Sharing sets and folders】
+L84:   * 【18†Changing a set's editing permissions】
+L85:   * 【19†Changing a set's visibility】
+L86:   * 【20†Protecting a set with a password】
+L87:   * 【21†Exporting your sets】
+L88:   * 【22†Embedding sets】
+L89:   * 【23†See more】
+L90: ### Can't find what you're looking for?
+L91: 
+L92: 【24†Ask a question】
+L93: 
+L94: Was this article helpful?
+L95: 
+L96: [Button: Yes] [Button: No]
+L97: 
+L98: ##### About us
+L99: 
+L100: 【25†About Quizlet†quizlet.com】 【26†How Quizlet works†quizlet.com】 【27†Careers†quizlet.com】 【28†Advertise with us†quizlet.com】 【29†Get the app†quizlet.com】
+L101: ##### For students
+L102: 
+L103: 【30†Flashcards†quizlet.com】 【31†Test†quizlet.com】 【32†Learn†quizlet.com】 【33†Solutions†quizlet.com】 【34†Modern Learning Lab†quizlet.com】 【35†Quizlet Plus†quizlet.com】 【36†Study Guides†quizlet.com】 【37†Pomodoro timer†quizlet.com】
+L104: 
+L105: ##### For Teachers
+L106: 
+L107: 【38†Live†quizlet.com】 【39†Blog†quizlet.com】 【40†Be the Change†quizlet.com】 【41†Quizlet Plus for teachers†quizlet.com】
+L108: ##### Resources
+L109: 
+L110: 【42†Help center†quizlet.com】 【43†Sign up†quizlet.com】 【44†Honor code†quizlet.com】 【45†Community guidelines†quizlet.com】 【46†Accessibility statement†quizlet.com】 【47†Privacy†quizlet.com】 【48†Your Privacy/Cookies Choices†quizlet.com】 【49†Terms†quizlet.com】 【50†Ad and Cookie Policy†quizlet.com】 【51†Interest-Based Advertising†quizlet.com】 【52†Quizlet for Schools†quizlet.com】 【53†Parents†quizlet.com】
+L111: 
+L112: ##### Language
+L113: 
+L114: English (United States)
+L115: 
+L116: 【54†Image】 【55†Get the app†get.quizlet.com】
+L117: ##### Get the app
+L118: 
+L119: © Quizlet Inc.
+--------------------------------------------------------------------------------
+Protecting a set with a password – Quizlet Help Center (https://help.quizlet.com/hc/en-us/articles/360029771292-Protecting-a-set-with-a-password)
+citeturn1091view3 [wordlim: 200] Crawled: today; Content type: text/html; Source: click({"ref_id":"turn1089view1","id":14}); Total lines: 109
+L0: 【0†iframe†www.googletagmanager.com】
+L1: 
+L2: 【1†Help center†quizlet.zendesk.com】
+L3: 
+L4: Topics
+L5: 
+L6: Popular Articles
+L7: 
+L8: 【2†Resending a confirmation message】 【3†Changing your username】 【4†Changing your password】 【5†Finding flashcard sets】 【6†Finding your teacher's class】 【7†Browser and device compatibility】
+L9: 
+L10: [Input][Input: Search]
+L11: 
+L12: 【8†Image】   【8†Username】
+L13: # Protecting a set with a password
+L14: 
+L15: 【8†IOS】 【8†Web】 【8†Android】
+L16: 
+L17: If you'd like your set to be visible only to certain people, you can protect it with a password. When someone opens the set, they'll need a password to see it.
+L18: 
+L19: To protect a set with a password
+L20:   1. 【9†Log in†quizlet.com】 to your account.
+L21:   2. Select Your library.
+L22:   3. Select Flashcard sets.
+L23:   4. Select Created from the dropdown menu.
+L24:   5. Select the set you want to protect.
+L25:   6. Select 【10†Image: More_menu_-_iOS_-_Resized.png】 (more menu).
+L26:   7. Select 【11†Image: Edit_-_Resized.png】 (edit).
+L27:   8. Select the Settings gear.
+L28:   9. Open the Visible To menu.
+L29:   10. Select People with a password.
+L30:   11. Enter a password and select Save.
+L31:   12. Select Done.
+L32: 
+L33: Settings and options
+L34:   * You can share your password-protected set by sending the set link and password through email, text, or however you'd like to share.
+L35:   * You can change a set's password using the instructions above and entering a new password.
+L36:   1. Select Your library.
+L37:   2. Select Created from the drop-down menu.
+L38:   3. Open the set you want to protect.
+L39:   4. Select 【12†Image: More_menu_-_iOS_-_Resized.png】 (More menu).
+L40:   5. Select 【13†Image: Edit_-_Resized.png】 Edit set.
+L41:   6. Select the Settings gear.
+L42:   7. Select Visible to.
+L43:   8. Select People with a password.
+L44:   9. Enter a password and select Next.
+L45:   10. Enter the password again to confirm it.
+L46:   11. Select Done.
+L47: 
+L48: Settings and options
+L49:   * You can share the link to your password-protected set by selecting the share icon and copying the link. Send the set link and password through email, text, or however you'd like to share.
+L50:   * You can change a set's password using using the instructions above and entering a new password.
+L51:   1. Select Your library.
+L52:   2. Select Created from the drop-down menu.
+L53:   3. Open the set you want to protect.
+L54:   4. Select 【12†Image: More_menu_-_iOS_-_Resized.png】 (More menu).
+L55:   5. Select 【13†Image: Edit_-_Resized.png】 Edit set.
+L56:   6. Select the Settings gear.
+L57:   7. Select Visible to.
+L58:   8. Select People with a password.
+L59:   9. Enter a password and select Next.
+L60:   10. Enter the password again to confirm it.
+L61:   11. Select Done.
+L62: 
+L63: Settings and options
+L64:   * You can share the link to your password-protected set by selecting the share icon and copying the link. Send the set link and password through email, text, or however you'd like to share.
+L65:   * You can change a set's password using using the instructions above and entering a new password.
+L66: ### Related Articles
+L67: 
+L68:   * 【5†Finding flashcard sets】
+L69:   * 【6†Finding your teacher's class】
+L70:   * 【14†Navigating your home feed on mobile devices】
+L71:   * 【15†Trouble accessing a set】
+L72:   * 【16†Sharing sets and folders】
+L73:   * 【17†Changing a set's editing permissions】
+L74:   * 【18†Changing a set's visibility】
+L75:   * 【19†Protecting a set with a password】
+L76:   * 【20†Exporting your sets】
+L77:   * 【21†Embedding sets】
+L78:   * 【22†See more】
+L79: ### Can't find what you're looking for?
+L80: 
+L81: 【23†Ask a question】
+L82: 
+L83: Was this article helpful?
+L84: 
+L85: [Button: Yes] [Button: No]
+L86: 
+L87: ##### About us
+L88: 
+L89: 【24†About Quizlet†quizlet.com】 【25†How Quizlet works†quizlet.com】 【26†Careers†quizlet.com】 【27†Advertise with us†quizlet.com】 【28†Get the app†quizlet.com】
+L90: ##### For students
+L91: 
+L92: 【29†Flashcards†quizlet.com】 【30†Test†quizlet.com】 【31†Learn†quizlet.com】 【32†Solutions†quizlet.com】 【33†Modern Learning Lab†quizlet.com】 【34†Quizlet Plus†quizlet.com】 【35†Study Guides†quizlet.com】 【36†Pomodoro timer†quizlet.com】
+L93: 
+L94: ##### For Teachers
+L95: 
+L96: 【37†Live†quizlet.com】 【38†Blog†quizlet.com】 【39†Be the Change†quizlet.com】 【40†Quizlet Plus for teachers†quizlet.com】
+L97: ##### Resources
+L98: 
+L99: 【41†Help center†quizlet.com】 【42†Sign up†quizlet.com】 【43†Honor code†quizlet.com】 【44†Community guidelines†quizlet.com】 【45†Accessibility statement†quizlet.com】 【46†Privacy†quizlet.com】 【47†Your Privacy/Cookies Choices†quizlet.com】 【48†Terms†quizlet.com】 【49†Ad and Cookie Policy†quizlet.com】 【50†Interest-Based Advertising†quizlet.com】 【51†Quizlet for Schools†quizlet.com】 【52†Parents†quizlet.com】
+L100: 
+L101: ##### Language
+L102: 
+L103: English (United States)
+L104: 
+L105: 【53†Image】 【54†Get the app†get.quizlet.com】
+L106: ##### Get the app
+L107: 
+L108: © Quizlet Inc.
+

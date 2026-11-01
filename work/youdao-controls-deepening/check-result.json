@@ -1,0 +1,13 @@
+{
+  "status": "PASS",
+  "checks": 110,
+  "new_evidence": 0,
+  "new_flows": 0,
+  "old_flow_changes": 0,
+  "old_evidence_records": 4,
+  "additional_local_captures": 5,
+  "inventory_rows": 20,
+  "discovery_rows": 8,
+  "new_visual_observations": 0,
+  "old_batches_unchanged": true
+}

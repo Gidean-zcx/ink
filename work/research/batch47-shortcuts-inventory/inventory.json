@@ -1,0 +1,210 @@
+{
+  "inputs": [
+    "docs/research/interaction-library/batches/shortcuts-controls-deepening-inventory.csv",
+    "docs/research/interaction-library/coverage.csv",
+    "docs/research/interaction-library/evidence.jsonl"
+  ],
+  "counts": {
+    "inventory_rows": 114,
+    "entry_type": {
+      "topic": 95,
+      "group": 19
+    },
+    "review_status": {
+      "body_read_documented_not_operated": 21,
+      "directory_only": 93
+    },
+    "directory_only_by_type": {
+      "topic": 74,
+      "group": 19
+    },
+    "topics_with_url": 95,
+    "groups_with_url": 0,
+    "m043_flows": 12,
+    "m043_evidence": 32
+  },
+  "candidates": [
+    {
+      "entry_id": "SCT-APD33C8D5C6D",
+      "upstream_id": "APD33C8D5C6D",
+      "title": "The flow of content",
+      "url": "https://support.apple.com/guide/shortcuts/the-flow-of-content-apd33c8d5c6d/10.0/ios/27",
+      "reason": "输入经动作传递及多输出/空输出语义；现有 F 只覆盖局部对象转换。"
+    },
+    {
+      "entry_id": "SCT-APDA850AB0E1",
+      "upstream_id": "APDA850AB0E1",
+      "title": "Action connections",
+      "url": "https://support.apple.com/guide/shortcuts/action-connections-apda850ab0e1/10.0/ios/27",
+      "reason": "动作间连接、显式/隐式输入输出；现有 F 未单列断链与重连。"
+    },
+    {
+      "entry_id": "SCT-APD25A01237E",
+      "upstream_id": "APD25A01237E",
+      "title": "Control the flow of actions",
+      "url": "https://support.apple.com/guide/shortcuts/control-the-flow-of-actions-apd25a01237e/10.0/ios/27",
+      "reason": "控制流总体语义及提前结束；现有 F-06 仍缺失败后的对象去留与恢复入口。"
+    },
+    {
+      "entry_id": "SCT-APDA75604F37",
+      "upstream_id": "APDA75604F37",
+      "title": "Test your actions",
+      "url": "https://support.apple.com/guide/shortcuts/test-your-actions-apda75604f37/10.0/ios/27",
+      "reason": "逐步测试、失败定位和重跑边界；现有 F 未覆盖调试恢复流程。"
+    },
+    {
+      "entry_id": "SCT-APD081D9D61F",
+      "upstream_id": "APD081D9D61F",
+      "title": "About actions in complicated shortcuts",
+      "url": "https://support.apple.com/guide/shortcuts/about-actions-in-complicated-shortcuts-apd081d9d61f/10.0/ios/27",
+      "reason": "复杂链的可读性、依赖与故障定位；现有 F 多为单主题能力。"
+    },
+    {
+      "entry_id": "SCT-APDB5506F698",
+      "upstream_id": "APDB5506F698",
+      "title": "Intro to variables",
+      "url": "https://support.apple.com/guide/shortcuts/intro-to-variables-apdb5506f698/10.0/ios/27",
+      "reason": "变量基本来源与生命周期；现有 F-08 偏类型调整和来源回溯。"
+    },
+    {
+      "entry_id": "SCT-APDD2B316022",
+      "upstream_id": "APDD2B316022",
+      "title": "Variable types",
+      "url": "https://support.apple.com/guide/shortcuts/variable-types-apdd2b316022/10.0/ios/27",
+      "reason": "变量类型及输出兼容性；F-07/F-08 仍留输出类型、字段缺失。"
+    },
+    {
+      "entry_id": "SCT-APDD02C2780C",
+      "upstream_id": "APDD02C2780C",
+      "title": "Use variables",
+      "url": "https://support.apple.com/guide/shortcuts/use-variables-apdd02c2780c/10.0/ios/27",
+      "reason": "变量引用、设置与跨动作传递；现有 F 未充分覆盖覆盖/空值。"
+    },
+    {
+      "entry_id": "SCT-APD4DCACC115",
+      "upstream_id": "APD4DCACC115",
+      "title": "Use list actions",
+      "url": "https://support.apple.com/guide/shortcuts/use-list-actions-apd4dcacc115/10.0/ios/27",
+      "reason": "列表构造、追加/合并与输出；F-09 主要是筛选和限制。"
+    },
+    {
+      "entry_id": "SCT-APDD7BF369DA",
+      "upstream_id": "APDD7BF369DA",
+      "title": "Use the Choose from Menu action",
+      "url": "https://support.apple.com/guide/shortcuts/use-the-choose-from-menu-action-apdd7bf369da/10.0/ios/27",
+      "reason": "用户分支选择与取消路径；现有 F 未覆盖菜单取消后的链状态。"
+    },
+    {
+      "entry_id": "SCT-APD83DCD1B51",
+      "upstream_id": "APD83DCD1B51",
+      "title": "Use If actions",
+      "url": "https://support.apple.com/guide/shortcuts/use-if-actions-apd83dcd1b51/10.0/ios/27",
+      "reason": "条件分支、比较及无匹配路径；现有 F 未形成通用分支正文。"
+    },
+    {
+      "entry_id": "SCT-APDC11DEB2C1",
+      "upstream_id": "APDC11DEB2C1",
+      "title": "Use Repeat actions",
+      "url": "https://support.apple.com/guide/shortcuts/use-repeat-actions-apdc11deb2c1/10.0/ios/27",
+      "reason": "循环输入/输出、零次/中止/部分副作用；现有 F 未覆盖循环失败恢复。"
+    },
+    {
+      "entry_id": "SCT-APD8B28E2166",
+      "upstream_id": "APD8B28E2166",
+      "title": "Use the Ask Each Time variable",
+      "url": "https://support.apple.com/guide/shortcuts/use-the-ask-each-time-variable-apd8b28e2166/10.0/ios/27",
+      "reason": "运行时变量选择、取消与默认值；F-04 仅覆盖 Ask for Input。"
+    },
+    {
+      "entry_id": "SCT-APDF01294032",
+      "upstream_id": "APDF01294032",
+      "title": "Get Dictionary Value action",
+      "url": "https://support.apple.com/guide/shortcuts/get-dictionary-value-action-apdf01294032/10.0/ios/27",
+      "reason": "字典取值、缺键与类型不符；现有 F 无字典专门覆盖。"
+    },
+    {
+      "entry_id": "SCT-APD43B69F337",
+      "upstream_id": "APD43B69F337",
+      "title": "Dictionaries",
+      "url": "https://support.apple.com/guide/shortcuts/dictionaries-apd43b69f337/10.0/ios/27",
+      "reason": "字典构造、嵌套与序列化边界；现有 F 无字典专门覆盖。"
+    }
+  ],
+  "directory_rows_with_existing_evidence_and_flow": [
+    {
+      "entry_id": "SCT-APD5BA077760",
+      "upstream_id": "APD5BA077760",
+      "title": "Run a shortcut from the app",
+      "url": "https://support.apple.com/guide/shortcuts/run-a-shortcut-from-the-app-apd5ba077760/10.0/ios/27",
+      "current_status": "directory_only",
+      "evidence_ids": [
+        "E-SCT-02"
+      ],
+      "flow_ids": [
+        "F-M043-01"
+      ],
+      "basis": "same upstream guide ID; existing M-043 evidence and coverage reference"
+    },
+    {
+      "entry_id": "SCT-APD961A4FC65",
+      "upstream_id": "APD961A4FC65",
+      "title": "Adjust privacy settings",
+      "url": "https://support.apple.com/guide/shortcuts/adjust-privacy-settings-apd961a4fc65/10.0/ios/27",
+      "current_status": "directory_only",
+      "evidence_ids": [
+        "E-SCT-06"
+      ],
+      "flow_ids": [
+        "F-M043-05"
+      ],
+      "basis": "same upstream guide ID; existing M-043 evidence and coverage reference"
+    },
+    {
+      "entry_id": "SCT-APDA9578F70F",
+      "upstream_id": "APDA9578F70F",
+      "title": "Shortcut completion",
+      "url": "https://support.apple.com/guide/shortcuts/shortcut-completion-apda9578f70f/10.0/ios/27",
+      "current_status": "directory_only",
+      "evidence_ids": [
+        "E-SCT-07"
+      ],
+      "flow_ids": [
+        "F-M043-06"
+      ],
+      "basis": "same upstream guide ID; existing M-043 evidence and coverage reference"
+    },
+    {
+      "entry_id": "SCT-APD68B5C9161",
+      "upstream_id": "APD68B5C9161",
+      "title": "Use the Ask for Input action",
+      "url": "https://support.apple.com/guide/shortcuts/use-the-ask-for-input-action-apd68b5c9161/10.0/ios/27",
+      "current_status": "directory_only",
+      "evidence_ids": [
+        "E-SCT-05"
+      ],
+      "flow_ids": [
+        "F-M043-04"
+      ],
+      "basis": "same upstream guide ID; existing M-043 evidence and coverage reference"
+    },
+    {
+      "entry_id": "SCT-APD8195F96D6",
+      "upstream_id": "APD8195F96D6",
+      "title": "Limit the input for a shortcut",
+      "url": "https://support.apple.com/guide/shortcuts/limit-the-input-for-a-shortcut-apd8195f96d6/10.0/ios/27",
+      "current_status": "directory_only",
+      "evidence_ids": [
+        "E-SCT-04"
+      ],
+      "flow_ids": [
+        "F-M043-03"
+      ],
+      "basis": "same upstream guide ID; existing M-043 evidence and coverage reference"
+    }
+  ],
+  "uncertainties": [
+    "仅基于目录元数据、现有 E/F 摘要和上游 ID 对应；未读取候选正文、未联网、未实机验证。",
+    "“未充分覆盖”按 coverage 的 task/known_branches/gaps 判断，不等于正文核查后必然新增 F。",
+    "旧版 E-SCT 与 10.0/iOS 27 目录同上游 ID，但版本正文可能变化，修正状态时应保留版本范围。"
+  ]
+}

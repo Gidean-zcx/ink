@@ -1,0 +1,373 @@
+{
+  "headings": [
+    {
+      "level": "h1",
+      "id": "",
+      "title": "Navigation"
+    },
+    {
+      "level": "h2",
+      "id": "how-do-i-customize-the-sections-in-the-left-sidebar-of-the-web-app",
+      "title": "How do I customize the sections in the left sidebar of the web app?"
+    },
+    {
+      "level": "h2",
+      "id": "how-do-i-customize-the-swipe-actions-in-the-reader-mobile-app",
+      "title": "How do I customize the swipe actions in the Reader mobile app?"
+    },
+    {
+      "level": "h2",
+      "id": "can-i-auto-advance-to-the-next-document-when-i-perform-an-action-e-g-moving-the-current-document-to-the-archive",
+      "title": "Can I auto-advance to the next document when I perform an action (e.g. moving the current document to the Archive)?"
+    },
+    {
+      "level": "h2",
+      "id": "how-do-i-find-a-list-of-keyboard-shortcuts",
+      "title": "How do I find a list of keyboard shortcuts?"
+    },
+    {
+      "level": "h2",
+      "id": "how-can-i-customize-the-keyboard-shortcuts",
+      "title": "How can I customize the keyboard shortcuts?"
+    },
+    {
+      "level": "h2",
+      "id": "some-keyboard-shortcuts-are-not-working-on-my-keyboard-such-as-and-to-open-or-hide-the-side-panels-how-do-i-customize-my-keyboard-shortcuts",
+      "title": "Some keyboard shortcuts are not working on my keyboard such as [ and ] to open or hide the side panels. How do I customize my keyboard shortcuts?"
+    },
+    {
+      "level": "h2",
+      "id": "how-do-i-use-keyboard-shortcuts-in-the-i-pad-app",
+      "title": "How do I use keyboard shortcuts in the iPad app?"
+    },
+    {
+      "level": "h2",
+      "id": "how-do-i-dismiss-the-nudge-to-use-the-mobile-app-when-using-read-readwise-io-in-safari-on-i-pad",
+      "title": "How do I dismiss the nudge to use the mobile app when using read.readwise.io  in Safari on iPad?"
+    },
+    {
+      "level": "h2",
+      "id": "how-do-i-change-my-settings-to-keep-the-sidebars-hidden-at-all-times",
+      "title": "How do I change my settings to keep the sidebars hidden at all times?"
+    },
+    {
+      "level": "h2",
+      "id": "can-i-bump-an-old-document-back-to-the-top-of-my-document-list",
+      "title": "Can I bump an old document back to the top of my document list?"
+    }
+  ],
+  "links": [
+    {
+      "href": "/",
+      "text": "",
+      "in_article": false
+    },
+    {
+      "href": "/",
+      "text": "",
+      "in_article": false
+    },
+    {
+      "href": "/",
+      "text": "",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs",
+      "text": "Documentation",
+      "in_article": false
+    },
+    {
+      "href": "/reader/guides",
+      "text": "Guides",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs",
+      "text": "What is Reader?",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/migrating-content",
+      "text": "Migrating from Other Apps",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/saving-content",
+      "text": "Saving Content",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/organizing-content",
+      "text": "Organizing Content",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs",
+      "text": "Basics",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/importing-content",
+      "text": "Importing Content",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/adding-new-content",
+      "text": "Adding New Content",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/highlights-tags-notes",
+      "text": "Highlights, Tags, and Notes",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/appearance",
+      "text": "Appearance",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/feed",
+      "text": "Feed",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/email-newsletters",
+      "text": "Email Newsletters",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/navigation",
+      "text": "Navigation",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/searching",
+      "text": "Searching",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/parsing",
+      "text": "Parsing",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/filtered-views",
+      "text": "Filtered Views",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/action-tags",
+      "text": "Action Tags",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/pdfs",
+      "text": "PDFs",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/videos",
+      "text": "Videos",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/text-to-speech",
+      "text": "Text-to-Speech (TTS)",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/exporting",
+      "text": "Exporting",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/sharing",
+      "text": "Sharing",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/daily-digest",
+      "text": "Daily Digest",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/ghostreader",
+      "text": "Ghostreader",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/eink",
+      "text": "E-ink Devices",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/miscellaneous",
+      "text": "Miscellaneous",
+      "in_article": false
+    },
+    {
+      "href": "/",
+      "text": "Home",
+      "in_article": false
+    },
+    {
+      "href": "/reader",
+      "text": "Reader",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs",
+      "text": "Docs",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs",
+      "text": "Faqs",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/navigation",
+      "text": "Navigation",
+      "in_article": false
+    },
+    {
+      "href": "https://read.readwise.io/views",
+      "text": "Manage views",
+      "in_article": true
+    },
+    {
+      "href": "https://read.readwise.io/preferences/shortcuts",
+      "text": "Customize",
+      "in_article": true
+    },
+    {
+      "href": "https://read.readwise.io/preferences/shortcuts",
+      "text": "Customize",
+      "in_article": true
+    },
+    {
+      "href": "https://readwise.io",
+      "text": "read.readwise.io",
+      "in_article": true
+    },
+    {
+      "href": "https://read.readwise.io/preferences",
+      "text": "Preferences page",
+      "in_article": true
+    },
+    {
+      "href": "/reader/docs/faqs/email-newsletters",
+      "text": "Email Newsletters",
+      "in_article": false
+    },
+    {
+      "href": "/reader/docs/faqs/searching",
+      "text": "Searching",
+      "in_article": false
+    },
+    {
+      "href": "mailto:hello@readwise.io",
+      "text": "Email Ushello@readwise.io",
+      "in_article": false
+    },
+    {
+      "href": "https://x.com/readwise",
+      "text": "Follow Us@readwise",
+      "in_article": false
+    },
+    {
+      "href": "https://www.reddit.com/r/readwise/",
+      "text": "Ask the CommunityJoin us on Reddit",
+      "in_article": false
+    },
+    {
+      "href": "https://en.wikipedia.org/wiki/Curse_of_knowledge",
+      "text": "Curse of Knowledge",
+      "in_article": false
+    },
+    {
+      "href": "mailto:hello@readwise.io?Subject=Documentation Feedback",
+      "text": "Send Feedback",
+      "in_article": false
+    },
+    {
+      "href": "#how-do-i-customize-the-sections-in-the-left-sidebar-of-the-web-app",
+      "text": "How do I customize the sections in the left sidebar of the web app?",
+      "in_article": false
+    },
+    {
+      "href": "#how-do-i-customize-the-swipe-actions-in-the-reader-mobile-app",
+      "text": "How do I customize the swipe actions in the Reader mobile app?",
+      "in_article": false
+    },
+    {
+      "href": "#can-i-auto-advance-to-the-next-document-when-i-perform-an-action-e-g-moving-the-current-document-to-the-archive",
+      "text": "Can I auto-advance to the next document when I perform an action (e.g. moving the current document to the Archive)?",
+      "in_article": false
+    },
+    {
+      "href": "#how-do-i-find-a-list-of-keyboard-shortcuts",
+      "text": "How do I find a list of keyboard shortcuts?",
+      "in_article": false
+    },
+    {
+      "href": "#how-can-i-customize-the-keyboard-shortcuts",
+      "text": "How can I customize the keyboard shortcuts?",
+      "in_article": false
+    },
+    {
+      "href": "#some-keyboard-shortcuts-are-not-working-on-my-keyboard-such-as-and-to-open-or-hide-the-side-panels-how-do-i-customize-my-keyboard-shortcuts",
+      "text": "Some keyboard shortcuts are not working on my keyboard such as  and  to open or hide the side panels. How do I customize my keyboard shortcuts?",
+      "in_article": false
+    },
+    {
+      "href": "#how-do-i-use-keyboard-shortcuts-in-the-i-pad-app",
+      "text": "How do I use keyboard shortcuts in the iPad app?",
+      "in_article": false
+    },
+    {
+      "href": "#how-do-i-dismiss-the-nudge-to-use-the-mobile-app-when-using-read-readwise-io-in-safari-on-i-pad",
+      "text": "How do I dismiss the nudge to use the mobile app when using read.readwise.io  in Safari on iPad?",
+      "in_article": false
+    },
+    {
+      "href": "#how-do-i-change-my-settings-to-keep-the-sidebars-hidden-at-all-times",
+      "text": "How do I change my settings to keep the sidebars hidden at all times?",
+      "in_article": false
+    },
+    {
+      "href": "#can-i-bump-an-old-document-back-to-the-top-of-my-document-list",
+      "text": "Can I bump an old document back to the top of my document list?",
+      "in_article": false
+    }
+  ],
+  "images": [
+    {
+      "src": "/images/customize-swipes_mark-all-seen_mobile.gif",
+      "alt": "Customizing the swipe actions in the Reader mobile app.",
+      "class": "rounded-lg max-h-[600px] w-auto mx-auto"
+    },
+    {
+      "src": "/images/open-in-app-banner.png",
+      "alt": "Banner in Safari nudging to open the native Reader app.",
+      "class": "rounded-lg max-h-[400px] w-auto mx-auto"
+    },
+    {
+      "src": "/images/hide-reader-app_mobile.gif",
+      "alt": "Hide the Reader app from your iOS home page.",
+      "class": "rounded-lg max-w-[350px] h-auto mx-auto"
+    },
+    {
+      "src": "/images/side-panel-settings.png",
+      "alt": "Settings for side panel visibility.",
+      "class": "rounded-lg max-h-[600px] w-auto mx-auto"
+    },
+    {
+      "src": "/images/bump-to-top.png",
+      "alt": "Bump to top option in actions menu.",
+      "class": "rounded-lg max-h-[500px] w-auto mx-auto"
+    }
+  ]
+}

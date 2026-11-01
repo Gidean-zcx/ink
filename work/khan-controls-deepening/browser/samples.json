@@ -1,0 +1,97 @@
+{
+  "url": "https://blog.khanacademy.org/supporting-english-language-acquisition-with-khan-academy-kids/",
+  "status": 200,
+  "browser": "156.0.8078.4",
+  "observed_on": "2026-10-27",
+  "method": "public_design_blog_illustration_sampling_not_product_operation",
+  "samples": [
+    {
+      "file": "work/khan-controls-deepening/browser/ThisIsHow_LIGHT-1.png",
+      "sha256": "2ac68a049be901145fe879930c66ad0a8d23ec320a8798621ae81101736ac5c6",
+      "after_local_start_s": 0.382,
+      "media": {
+        "src": "https://blog.khanacademy.org/wp-content/uploads/2025/04/ThisIsHow_LIGHT.gif",
+        "width": 800,
+        "height": 534,
+        "alt": ""
+      }
+    },
+    {
+      "file": "work/khan-controls-deepening/browser/ThisIsHow_LIGHT-2.png",
+      "sha256": "821624b4ef25286b1f774134d144b72d753b8ed6d0f91de2e8fea75405df070d",
+      "after_local_start_s": 1.504,
+      "media": {
+        "src": "https://blog.khanacademy.org/wp-content/uploads/2025/04/ThisIsHow_LIGHT.gif",
+        "width": 800,
+        "height": 534,
+        "alt": ""
+      }
+    },
+    {
+      "file": "work/khan-controls-deepening/browser/ThisIsHow_LIGHT-3.png",
+      "sha256": "bb3a2d2a9c60fffa2bb472a69a646bd1964aa92fa5e7288db9237bdba139c880",
+      "after_local_start_s": 2.582,
+      "media": {
+        "src": "https://blog.khanacademy.org/wp-content/uploads/2025/04/ThisIsHow_LIGHT.gif",
+        "width": 800,
+        "height": 534,
+        "alt": ""
+      }
+    },
+    {
+      "file": "work/khan-controls-deepening/browser/ThisIsHow_LIGHT-4.png",
+      "sha256": "7e21a60357743c419bfd54155145d1d0e5925064f031509bf8b1ad7f818e3e13",
+      "after_local_start_s": 3.654,
+      "media": {
+        "src": "https://blog.khanacademy.org/wp-content/uploads/2025/04/ThisIsHow_LIGHT.gif",
+        "width": 800,
+        "height": 534,
+        "alt": ""
+      }
+    },
+    {
+      "file": "work/khan-controls-deepening/browser/Sparkles_FINAL-1.png",
+      "sha256": "258644b080ff80f516c1415fcef6c51da6508f0bb564f139b89bea0a4e6d7476",
+      "after_local_start_s": 0.273,
+      "media": {
+        "src": "https://blog.khanacademy.org/wp-content/uploads/2025/04/Sparkles_FINAL.gif",
+        "width": 850,
+        "height": 567,
+        "alt": ""
+      }
+    },
+    {
+      "file": "work/khan-controls-deepening/browser/Sparkles_FINAL-2.png",
+      "sha256": "359eb6ea64bae2e81c591c62112944ffec4371a62f3b13891f687b73feb28be6",
+      "after_local_start_s": 1.343,
+      "media": {
+        "src": "https://blog.khanacademy.org/wp-content/uploads/2025/04/Sparkles_FINAL.gif",
+        "width": 850,
+        "height": 567,
+        "alt": ""
+      }
+    },
+    {
+      "file": "work/khan-controls-deepening/browser/Sparkles_FINAL-3.png",
+      "sha256": "d335bfc28f7caf583c5588b65e77d75c8809e9453a190bf24ae0ed7c4318f575",
+      "after_local_start_s": 2.451,
+      "media": {
+        "src": "https://blog.khanacademy.org/wp-content/uploads/2025/04/Sparkles_FINAL.gif",
+        "width": 850,
+        "height": 567,
+        "alt": ""
+      }
+    },
+    {
+      "file": "work/khan-controls-deepening/browser/Sparkles_FINAL-4.png",
+      "sha256": "673d0e2832d8fa1021d5a168e36487144c6cecaad814bb7668efc0693fae0ead",
+      "after_local_start_s": 3.547,
+      "media": {
+        "src": "https://blog.khanacademy.org/wp-content/uploads/2025/04/Sparkles_FINAL.gif",
+        "width": 850,
+        "height": 567,
+        "alt": ""
+      }
+    }
+  ]
+}

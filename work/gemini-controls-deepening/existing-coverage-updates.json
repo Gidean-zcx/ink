@@ -1,0 +1,89 @@
+[
+  {
+    "flow_id": "F-M042-01",
+    "before": {
+      "flow_id": "F-M042-01",
+      "product_id": "M-042",
+      "task": "就眼前内容问 AI",
+      "depth": "D2",
+      "evidence_ids": "E-GEM-01",
+      "known_branches": "内容可含截图、文件或 URL。长按建议可改自动提交；自动推断何时读取屏幕的功能另限英语，文本与截图开关分别设置。",
+      "gaps": "屏幕外/历史数据覆盖",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-042-gemini.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M042-01",
+      "product_id": "M-042",
+      "task": "就眼前内容问 AI",
+      "depth": "D2",
+      "evidence_ids": "E-GEM-01",
+      "known_branches": "Ask about与其他建议的自动提交不同；当前屏幕/文件上传；文本、截图开关分开，智能屏幕推断限英语",
+      "gaps": "屏幕外/历史/完整库覆盖、上传取消及上下文更新；动态共享另见Live任务",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-042-gemini.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "flow_id": "F-M042-02",
+    "before": {
+      "flow_id": "F-M042-02",
+      "product_id": "M-042",
+      "task": "发现并调用应用动作",
+      "depth": "D2",
+      "evidence_ids": "E-GEM-02",
+      "known_branches": "可见目录随账户/平台而变；关闭 Keep Activity 后 Android 仍保留部分设备/通信连接器，不能照搬到 iOS/web。",
+      "gaps": "每个连接器全动作及部分失败",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-042-gemini.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M042-02",
+      "product_id": "M-042",
+      "task": "发现并调用应用动作",
+      "depth": "D2",
+      "evidence_ids": "E-GEM-02;E-GECD-01;E-GECD-02",
+      "known_branches": "按账号/平台过滤目录；详情支持/不支持动作；85目录项仅发现；普通连接器Add/Disconnect与自定义应用生命周期分开",
+      "gaps": "各连接器完整动作、部分失败、返回真实结果；跨App依赖及重试",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-042-gemini.md",
+      "checked_on": "2026-10-27"
+    }
+  },
+  {
+    "flow_id": "F-M042-04",
+    "before": {
+      "flow_id": "F-M042-04",
+      "product_id": "M-042",
+      "task": "取得并撤销设备权限",
+      "depth": "D2",
+      "evidence_ids": "E-GEM-03",
+      "known_branches": "缺这些授权时仍可做其他支持动作，不能理解为全有或全无。已保存密码、重置设备等不在该文档支持范围。",
+      "gaps": "拒绝权限后已执行动作",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-042-gemini.md",
+      "checked_on": "2026-10-26"
+    },
+    "after": {
+      "flow_id": "F-M042-04",
+      "product_id": "M-042",
+      "task": "取得并撤销设备权限",
+      "depth": "D2",
+      "evidence_ids": "E-GEM-03;E-GECD-03;E-GECD-04;E-GECD-06",
+      "known_branches": "Google电话/SMS/通讯录/通知权限、连接器开关、锁屏一般回答和免解锁通信分别控制；断开Messages不保证其他读取停止",
+      "gaps": "撤权对正在执行任务与既有数据的影响、确认回执；Allow/Make按钮文案版本差异",
+      "visual_status": "not_observed",
+      "hands_on": "false",
+      "case_path": "cases/M-042-gemini.md",
+      "checked_on": "2026-10-27"
+    }
+  }
+]
