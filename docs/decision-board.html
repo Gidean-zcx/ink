@@ -291,6 +291,13 @@ const DECISIONS = [
     opts:[
       {k:"keep", name:"暂不改写历史", desc:"日常用只克隆 main 分支即可；不影响其他分支。"},
       {k:"rewrite", name:"改写历史彻底移除", desc:"体积真正变小，但会改变所有提交编号、影响所有已有分支，不可逆。"}
+    ]},
+  { id:"D-19", title:"第二轮 · 实体按键怎么分工", kind:"tent", rec:"boot",
+    why:"Plus 没有专门的 AI 键：实体键是 BOOT（直连 GPIO）、电源、音量加减，盖板另有 3 个触摸虚拟键；上游用音量键翻页。",
+    opts:[
+      {k:"boot", name:"BOOT 键作 AI 键，音量键阅读时翻页", desc:"BOOT 直连 GPIO，响应最快；音量键在阅读/听书时翻页或跳段，长按调音量，其他页面调音量。"},
+      {k:"touch", name:"长按屏幕作 AI 键，音量键只调音量", desc:"不占实体键，但长按会和选字冲突，盲按不方便。"},
+      {k:"vol", name:"音量键长按作 AI 键", desc:"保留 BOOT 作他用，但音量键负担太多，孩子不易理解。"}
     ]}
 ];
 const ROAD = [
