@@ -25,7 +25,7 @@
 | AI 接入 | Apple App Intents（实体、确认、撤销、长任务）；Android AppFunctions；xiaozhi 设备侧 MCP | 上游 Plus 只开放 3 个工具，隐藏工具调用时不检查；Rabbit 硬编码 API key | 动作注册表 + 策略闸门在设备执行；密钥只在中枢 |
 | 协议 | xiaozhi：WSS + Opus 60 ms 帧 + `type:"mcp"` 信封，设备主动连出适合 4G | MCP 规范多次破坏性修订（2024-11-05 → 2026-07-28） | MCP 形状的私有协议，中枢翻译成标准 MCP |
 | 生成式界面 | Google A2UI：客户端组件目录 + 扁平组件表 + 数据绑定 | MCP Apps / Apps SDK 依赖 iframe HTML，设备无法渲染；LVGL 9.5 起运行时 XML 需付费许可 | A2UI v0.9 消息 + 自定义墨水屏组件目录 |
-| 语音 | xiaozhi 按键说话、abort 打断；分段时延数据（ASR 首词约 0.8 s、TTS 首音约 0.25–0.7 s） | xinnan 服务端按设备存记忆，声纹不用于授权 | 流式管线；按成员存记忆；按键说话 |
+| 语音 | xiaozhi 按键说话、abort 打断；分段时延数据（ASR 首词约 0.8–1.0 s、TTS 首音约 0.25–0.7 s） | xinnan 服务端按设备存记忆，声纹不用于授权 | 流式管线；按成员存记忆；按键说话 |
 | 开发方式 | KOReader `kodev run` SDL 模拟器；Mudita pytest 经 USB 驱动整机并导出 UI 树 | Mudita 模拟器“看不到 E-Ink 刷新” | 模拟器必须显示刷新类型、区域、闪烁与残影累计（见 R-034 模拟器任务） |
 
 ## 3. 我们明确不学的

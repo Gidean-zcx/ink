@@ -54,13 +54,13 @@
 - **刷新**：FAST/HALF/FULL 三级；默认每 15 页做一次 HALF（可选 1/5/10/30/从不）；睡眠画面用 FULL 或 HALF 清屏。
 - **CJK**：SD 卡上存按字号预光栅化的 `.cpfont`，每页只 prewarm 本页要用的字形（上限 512 个）。有 PSRAM 才允许直接加载 TTF。支持原生 ruby。
 - **Wi-Fi**：会话结束后"静默重启"（`ESP.restart()` 加 RTC 标志）来清除堆碎片，再回到原来的界面。
-- **范围**：SCOPE.md 拒绝交互应用、写作、RSS/浏览器类"主动联网"（理由是"后台 Wi-Fi 耗电"）和 PDF。服务集成放进 SD 卡插件（`device.json` 复用固件已有界面）。测试只有 71 组 host 端 gtest，没有设备模拟器。
+- **范围**：SCOPE.md 拒绝交互应用、写作、RSS/浏览器类"主动联网"（理由是"后台 Wi-Fi 耗电"）和 PDF。服务集成放进 SD 卡插件（`device.json` 复用固件已有界面）。测试是约 70 组 host 端 gtest，文档里没有提到设备模拟器。
 
 ### 1.3 其他 MCU 阅读器
 
 | 项目 | 文本 / CJK | 分页与缓存 | 刷新 / 睡眠 |
 |---|---|---|---|
-| Open Book / libros [O1–O3] | 纯文本。Babel：Unifont 全 BMP 字形放 flash，每个码点 O(1) 查表，带双向类和断行属性 | `.pag` 侧车存每页 (偏移, 长度)，分页一次后翻页 = seek+read。书库文件有备份和工作副本 | 早期 SAMD51 只有 192KB RAM |
+| Open Book / libros [O1–O3] | 纯文本。Babel：Unifont 全 BMP 字形放 flash，每个码点 O(1) 查表，带双向类和断行属性 | `.pag` 侧车存每页 (偏移, 长度)，分页一次后翻页 = seek+read。书库文件有备份和工作副本 | 早期 SAMD51 只有 192KB RAM；新版 libros 面向 ESP32-S3，babel.bin 单独烧在 flash 分区 |
 | EPDiy epub reader（LilyGo T5 4.7）[E1] | miniz + tinyxml2，无 CSS，仅拉丁字形，必须 PSRAM | — | 30s 后 deep sleep；**显示状态存 SD，唤醒后才能正确局刷** |
 | M5Paper EPUB reader [E2] | 增量解析 ZIP/XHTML | 有界页缓存 + 检查点重建；封面缩略图放 PSRAM LRU，并持久化到 SD | 前后页缓冲；脏区局刷；周期清残影；light sleep |
 | Inkplate [E3] | — | — | 默认每 10 次局刷自动全刷一次（建议 5–10） |
