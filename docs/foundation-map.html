@@ -1,0 +1,137 @@
+<title>ink 底座地图</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;900&family=Noto+Sans+SC:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a device "board" (layers stacked like a PCB stack-up) beside the hub column; a detail sheet under the map; scenario stepper lights up the blocks involved; plan timeline at the end. */
+:root {
+  --paper: #e8eae5; --sheet: #f4f5f1; --ink: #1b1d1a; --ink-2: #4a4f48; --rule: #c7cbc2;
+  --accent: #1f5a6b; --accent-soft: #d6e3e5; --hot: #8a3b12; --hot-soft: #f3dfd2;
+  --ok: #2f6b3a; --ok-soft: #dbe9dc; --warn: #8a5a12; --warn-soft: #f1e5cc;
+  --display: "Noto Serif SC", "Songti SC", "SimSun", serif;
+  --body: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --paper: #171916; --sheet: #20231f; --ink: #e6e8e2; --ink-2: #a9aea5; --rule: #3a3e37;
+  --accent: #7fb6c4; --accent-soft: #24393f; --hot: #f0a27a; --hot-soft: #3d281d;
+  --ok: #8cc496; --ok-soft: #22362a; --warn: #e0b46a; --warn-soft: #3b3020; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --paper: #171916; --sheet: #20231f; --ink: #e6e8e2; --ink-2: #a9aea5; --rule: #3a3e37;
+  --accent: #7fb6c4; --accent-soft: #24393f; --hot: #f0a27a; --hot-soft: #3d281d;
+  --ok: #8cc496; --ok-soft: #22362a; --warn: #e0b46a; --warn-soft: #3b3020; color-scheme: dark }
+body { background: var(--paper); color: var(--ink); font-family: var(--body); font-size: 15px; line-height: 1.65; }
+.wrap { max-width: 1080px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 28px 72px; display: grid; gap: 32px; }
+h1 { font-family: var(--display); font-weight: 900; font-size: clamp(30px, 6vw, 46px); line-height: 1.15; margin: 0; letter-spacing: .02em; text-wrap: balance; }
+h2 { font-family: var(--display); font-weight: 600; font-size: 21px; margin: 0; text-wrap: balance; }
+h3 { font-size: 16px; margin: 0; font-weight: 700; }
+p { margin: 0; }
+.mono { font-family: var(--mono); font-size: 12px; letter-spacing: .04em; }
+.lede { color: var(--ink-2); max-width: 66ch; }
+section { display: grid; gap: 14px; }
+header { display: grid; gap: 10px; }
+
+/* the map */
+.map { display: grid; grid-template-columns: minmax(0, 3fr) 56px minmax(0, 1.35fr); gap: 0; align-items: stretch; }
+.col { display: grid; gap: 8px; align-content: start; min-width: 0; }
+.col-title { font-family: var(--mono); font-size: 12px; color: var(--ink-2); letter-spacing: .08em; padding: 0 2px 4px; }
+.layer { border: 1px solid var(--rule); background: var(--sheet); padding: 8px; display: grid; gap: 6px; }
+.layer-name { font-size: 11px; color: var(--ink-2); font-family: var(--mono); letter-spacing: .06em; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { font: inherit; font-size: 13px; line-height: 1.35; text-align: left; color: var(--ink); background: var(--paper); border: 1.5px solid var(--rule); padding: 6px 9px; cursor: pointer; min-width: 0; }
+.chip:hover { border-color: var(--ink-2); }
+.chip:focus-visible, .scn button:focus-visible, .step:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.chip[aria-pressed="true"] { border-color: var(--ink); background: var(--ink); color: var(--paper); }
+.chip.lit { border-color: var(--hot); box-shadow: inset 0 -3px 0 var(--hot); }
+.chip.lit[aria-pressed="true"] { box-shadow: inset 0 -3px 0 var(--hot-soft); }
+.chip .tag { font-family: var(--mono); font-size: 10px; color: var(--accent); display: block; }
+.chip[aria-pressed="true"] .tag { color: var(--accent-soft); }
+.link { display: grid; place-items: center; position: relative; }
+.link::before { content: ""; position: absolute; top: 24px; bottom: 0; left: 50%; border-left: 2px dashed var(--accent); }
+.link button { position: relative; writing-mode: vertical-rl; font: inherit; font-size: 12px; letter-spacing: .2em; background: var(--accent-soft); color: var(--accent); border: 1.5px solid var(--accent); padding: 10px 4px; cursor: pointer; }
+.link button[aria-pressed="true"] { background: var(--accent); color: var(--paper); }
+.link button.lit { box-shadow: 0 0 0 3px var(--hot-soft); }
+@media (max-width: 760px) {
+  .map { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+  .link::before { display: none; }
+  .link button { writing-mode: horizontal-tb; letter-spacing: .05em; width: 100%; padding: 8px; }
+}
+
+/* detail */
+.detail { background: var(--sheet); border: 1px solid var(--rule); border-top: 4px solid var(--ink); padding: 18px; display: grid; gap: 14px; }
+.detail-head { display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: baseline; }
+.detail-head h3 { font-family: var(--display); font-size: 20px; font-weight: 600; }
+.facets { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px 22px; }
+.facet { display: grid; gap: 4px; min-width: 0; }
+.facet b { font-size: 12px; color: var(--ink-2); font-weight: 500; letter-spacing: .04em; }
+.facet p, .facet li { font-size: 14px; }
+.facet ul { margin: 0; padding-left: 18px; }
+.pill { display: inline-block; font-size: 11px; padding: 1px 8px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); margin: 0 4px 4px 0; font-family: var(--mono); }
+.status { font-size: 12px; padding: 2px 10px; border-radius: 999px; }
+.st-new { background: var(--accent-soft); color: var(--accent); }
+.st-port { background: var(--ok-soft); color: var(--ok); }
+.st-later { background: var(--warn-soft); color: var(--warn); }
+
+/* scenarios */
+.scn { display: flex; flex-wrap: wrap; gap: 6px; }
+.scn button { font: inherit; font-size: 13px; padding: 5px 12px; border-radius: 999px; border: 1px solid var(--rule); background: transparent; color: var(--ink); cursor: pointer; }
+.scn button[aria-pressed="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.steps { display: grid; gap: 6px; counter-reset: s; }
+.step { display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 10px; align-items: start; text-align: left; font: inherit; color: var(--ink); background: var(--sheet); border: 1px solid var(--rule); padding: 9px 12px; cursor: pointer; }
+.step::before { counter-increment: s; content: counter(s); font-family: var(--mono); font-size: 12px; color: var(--ink-2); border: 1px solid var(--rule); border-radius: 50%; width: 26px; height: 26px; display: grid; place-items: center; }
+.step[aria-current="true"] { border-color: var(--hot); background: var(--hot-soft); }
+.step[aria-current="true"]::before { border-color: var(--hot); color: var(--hot); }
+.step small { display: block; color: var(--ink-2); font-size: 12px; margin-top: 2px; }
+.scn-note { font-size: 13px; color: var(--ink-2); }
+
+/* timeline */
+.plan { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
+.wk { border-top: 4px solid var(--rule); padding: 10px 8px 6px; display: grid; gap: 6px; align-content: start; min-width: 0; }
+.wk.hw { border-color: var(--hot); }
+.wk b { font-size: 13px; }
+.wk .mono { color: var(--ink-2); }
+.wk ul { margin: 0; padding-left: 16px; font-size: 13px; color: var(--ink); }
+@media (max-width: 760px) { .plan { grid-template-columns: minmax(0, 1fr); } }
+.foot { font-size: 12px; color: var(--ink-2); }
+a { color: var(--accent); }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="mono" style="color:var(--accent)">INK · v0.1 底座 · 设计草案 2026-11-01</div>
+    <h1>ink 底座地图</h1>
+    <p class="lede" id="lede"></p>
+  </header>
+
+  <section aria-labelledby="map-h">
+    <h2 id="map-h">底座由哪些部分组成</h2>
+    <p class="lede">点任意一块，下方显示它负责什么、为什么需要、别人怎么做、首版做到哪一步。选一个场景，相关的块会被标出。</p>
+    <div class="map" id="map">
+      <div class="col" id="col-device"><div class="col-title">设备 · E-INK4 PLUS</div></div>
+      <div class="link"><button type="button" class="chip-proto" data-id="proto" aria-pressed="false">设备—中枢协议</button></div>
+      <div class="col" id="col-hub"><div class="col-title">家庭中枢 · VPS</div></div>
+    </div>
+    <article class="detail" id="detail" aria-live="polite"></article>
+  </section>
+
+  <section aria-labelledby="scn-h">
+    <h2 id="scn-h">五个场景走一遍</h2>
+    <div class="scn" role="group" aria-label="选择场景" id="scn"></div>
+    <p class="scn-note" id="scn-note"></p>
+    <div class="steps" id="steps"></div>
+  </section>
+
+  <section aria-labelledby="plan-h">
+    <h2 id="plan-h">硬件到货前的四周，与到货后第一周</h2>
+    <p class="lede">硬件约一个月后到。到货前在电脑模拟器和中枢上把系统跑通，到货后只需要把驱动接进同一套代码。</p>
+    <div class="plan" id="plan"></div>
+  </section>
+
+  <p class="foot">详细设计见仓库 docs/system/foundation.md；待你选择的事项在“ink 决策板”。</p>
+</div>
+
+<script>
+const DATA = window.FOUNDATION_DATA;
+</script>
