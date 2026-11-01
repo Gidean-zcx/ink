@@ -20,7 +20,7 @@
   - 【事实】`uart_eth_modem.*` 的文件头是 Apache-2.0，署名“Terrence”（[common/board/uart_eth_modem.h#L1-L2](https://github.com/CloudZao/Metalio-E-INK4-Plus/blob/690a023c66862af103a3187464373ee7c5efcd14/main/boards/common/board/uart_eth_modem.h#L1-L2)）。
   - 【事实】8 灰阶波形表是 Apache-2.0，来自 read-pico（[board/display/waveforms/LICENSE.gray8](https://github.com/CloudZao/Metalio-E-INK4-Plus/blob/690a023c66862af103a3187464373ee7c5efcd14/main/boards/metalio-e-ink4-plus/display/waveforms/LICENSE.gray8)）。
   - 【事实】esp-ml307 目录里放的是 Apache LICENSE，但它的 yml 写的是 MIT，两者矛盾。
-  - **【事实】EPDiy 上游是 LGPL-3.0-or-later，而仓库里内嵌改写的副本没有附任何 LGPL 声明。** 它对应上游 `403ba3b`（2026-04-16，版本标签 2.0.0）：epdiy.c 只差 4 行，`lcd_driver.c` 从 765 行扩到 1237 行，highlevel.c 和 render.c 改动很大。社区 fork 也把 epdiy 标为 LGPL。
+  - **【事实】EPDiy 上游是 LGPL-3.0-or-later，而仓库里内嵌改写的副本没有附任何 LGPL 声明。** 它对应上游 `403ba3b`（2026-04-16，该 commit 的 library.json 版本号为 2.0.0）：epdiy.c 只差 4 行，`lcd_driver.c` 从 765 行扩到 1237 行，highlevel.c 和 render.c 改动很大。社区 fork 也把 epdiy 标为 LGPL。
   - MiSans TTF 在仓库里没有附许可文件，未核实。
 
 ## 2. 设备与服务器协议
@@ -72,7 +72,7 @@
 | uart_eth_main / tx / init（仅 4G 模式） | 4 KB/10；3 KB/9；4 KB/4 | [common/board/uart_eth_modem.cc#L170-L185](https://github.com/CloudZao/Metalio-E-INK4-Plus/blob/690a023c66862af103a3187464373ee7c5efcd14/main/boards/common/board/uart_eth_modem.cc#L170-L185) |
 | ssl_receive / tcp_receive（每条连接一个） | 4 KB / 1 | [components/esp-ml307/src/esp/esp_ssl.cc#L70-L75](https://github.com/CloudZao/Metalio-E-INK4-Plus/blob/690a023c66862af103a3187464373ee7c5efcd14/components/esp-ml307/src/esp/esp_ssl.cc#L70-L75) |
 
-- 【事实】另外还有约 70 处按需创建的任务，例如 reader_page 24 KB 栈在 PSRAM，book_open 和 layout 16 KB 绑 core0；全仓库共约 132 处创建任务。Wi-Fi 任务绑在 core0（[sdkconfig#L2560](https://github.com/CloudZao/Metalio-E-INK4-Plus/blob/690a023c66862af103a3187464373ee7c5efcd14/sdkconfig#L2560)）。
+- 【事实】另外还有几十种按需创建的任务（UI、阅读、壁纸、网络、设置页测试等），例如 reader_page 24 KB 栈在 PSRAM，book_open 和 layout 16 KB 绑 core0；全仓库 grep 到约 130 行任务创建相关代码（含少量日志字符串）。Wi-Fi 任务绑在 core0（[sdkconfig#L2560](https://github.com/CloudZao/Metalio-E-INK4-Plus/blob/690a023c66862af103a3187464373ee7c5efcd14/sdkconfig#L2560)）。
 - **调度模型**
   - 【事实】`MainEventLoop` 只等 event group，把事件分发到 5 个任务域（[main/application.cc#L1839-L1851](https://github.com/CloudZao/Metalio-E-INK4-Plus/blob/690a023c66862af103a3187464373ee7c5efcd14/main/application.cc#L1839-L1851)）。
   - 【事实】UI 消息通过 `ScreenLvAsync` 进入两条静态队列（普通 80 条、紧急 16 条），在 Tick 里持 LVGL 锁处理，每轮最多 8 条或 5 ms（[main/display/screen/screen_common_nav.cc#L27-L35](https://github.com/CloudZao/Metalio-E-INK4-Plus/blob/690a023c66862af103a3187464373ee7c5efcd14/main/display/screen/screen_common_nav.cc#L27-L35) [main/display/screen/screen_common_nav.cc#L137-L184](https://github.com/CloudZao/Metalio-E-INK4-Plus/blob/690a023c66862af103a3187464373ee7c5efcd14/main/display/screen/screen_common_nav.cc#L137-L184)）。
