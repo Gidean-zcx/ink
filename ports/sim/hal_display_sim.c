@@ -66,6 +66,7 @@ static struct {
     bool playing;
     uint64_t play_start, play_frames, frame_ns;
     int frame_no;
+    uint64_t worst_stall_in_play; /* longest flash stall that overlapped the current waveform */
     /* stats */
     uint64_t busy_ns;
     unsigned wf_fallback_warned;
@@ -237,34 +238,29 @@ static void execute(req_t *r) {
         started = vtk_now();
         int phases = g_profile.wf[wf].phases;
         D.frame_ns = SIM_US(g_profile.frame_time_us);
-        uint64_t stall0 = vtk_stall_total_ns();
+        D.worst_stall_in_play = 0;
         sim_power_consumer("display.refresh", true, g_profile.ma_display_refresh);
-        if (g_profile.prep_cpu_duty > 0) {
-            vtk_lock();
-            D.play_start = started;
-            D.play_frames = (uint64_t)phases;
-            D.playing = true;
-            vtk_wake_all_locked(&D.feed_wq);
-            vtk_unlock();
-        }
+        vtk_lock();
+        D.play_start = started;
+        D.play_frames = (uint64_t)phases;
+        D.playing = true;
+        if (g_profile.prep_cpu_duty > 0) vtk_wake_all_locked(&D.feed_wq);
+        vtk_unlock();
         /* DMA-paced scan: hardware time runs from `started` even if the feeders preempt this task */
         uint64_t end = started + (uint64_t)phases * D.frame_ns;
         uint64_t now = vtk_now();
         if (now < end) vtk_sleep_ns(end - now);
-        if (g_profile.prep_cpu_duty > 0) {
-            vtk_lock();
-            D.playing = false;
-            vtk_wake_all_locked(&D.feed_wq);
-            vtk_unlock();
-        }
+        vtk_lock();
+        D.playing = false;
+        if (g_profile.prep_cpu_duty > 0) vtk_wake_all_locked(&D.feed_wq);
+        vtk_unlock();
         done = vtk_now();
         sim_power_consumer("display.refresh", false, g_profile.ma_display_refresh);
-        uint64_t stalled = vtk_stall_total_ns() - stall0;
-        if (stalled) {
+        if (D.worst_stall_in_play > SIM_US(g_profile.line_queue_us)) {
             sim_metric_add("display.underruns", 1);
-            sim_warn("display: internal-flash write froze the EPD feeders for %.1f ms during a %s waveform "
-                     "-> line-queue underrun (visible glitch on the device); defer flash writes while refreshing",
-                     stalled / 1e6, WFN[wf]);
+            sim_warn("display: a flash operation froze the EPD feeders for %.2f ms during a %s waveform (line queue "
+                     "covers %.2f ms) -> underrun, visible glitch on the device; keep flash writes out of refreshes",
+                     D.worst_stall_in_play / 1e6, WFN[wf], g_profile.line_queue_us / 1e3);
             res.ok = false;
         }
     }
@@ -346,6 +342,13 @@ uint32_t hal_display_update(const hal_rect_t *area, const uint8_t *gray8, int st
 }
 
 int hal_display_pending(void) { return D.pending; }
+
+void sim_display_flash_stall(uint64_t t0, uint64_t ns) {
+    if (!D.playing || D.info.tech != HAL_PANEL_EPD) return;
+    uint64_t end = D.play_start + D.play_frames * D.frame_ns;
+    if (t0 + ns <= D.play_start || t0 >= end) return;
+    if (ns > D.worst_stall_in_play) D.worst_stall_in_play = ns;
+}
 void hal_display_set_temperature(int celsius) { D.temperature = celsius; }
 void hal_display_hold_power(uint32_t ms) { D.hold_ms = D.info.tech == HAL_PANEL_EPD ? ms : 0; }
 

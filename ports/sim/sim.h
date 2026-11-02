@@ -31,6 +31,9 @@ typedef struct {
     const char *budget_path;  /* optional CI budgets */
     const char *flash_image;  /* persist /user flash across runs (power-cut tests) */
     const char *sd_dir;       /* host directory backing /content and /cache */
+    const char *asset_dirs[4]; /* read-only assets (fonts...), searched in order */
+    int nasset_dirs;
+    const char *seed_content;  /* host directory copied into /content at boot (books for scenarios) */
     bool trace;               /* write Chrome/Perfetto trace JSON */
     bool frames;              /* write a PNG after every completed display update */
     bool quiet;
@@ -92,6 +95,8 @@ void sim_display_report(void);
 void sim_display_snapshot(const char *name);
 /** Mean absolute residual ghosting over the panel (0..255), for budgets. */
 double sim_display_ghost_level(void);
+/** A cache-disabling flash operation froze PSRAM users for `ns` from `t0` (storage model -> display model). */
+void sim_display_flash_stall(uint64_t t0, uint64_t ns);
 
 void sim_input_init(void);            /* task context (boot) */
 /* Physical actions in logical (UI-orientation) coordinates; called from script events (ISR ctx). */

@@ -116,6 +116,7 @@ int profile_load(const char *path, sim_profile_t *p, char *err, size_t errlen) {
     p->keep_power_ms = (uint32_t)num(d, "keep_power_ms", 0);
     p->prep_cpu_duty = num(d, "prep_cpu_duty", 0.0);
     p->submit_copy_mbps = num(d, "submit_copy_mbps", 0.0);
+    p->line_queue_us = (uint32_t)num(d, "line_queue_us", 544);
     p->panel_buffers_external = (size_t)(num(d, "driver_external_kib", 0) * 1024);
     p->panel_buffers_internal = (size_t)(num(d, "driver_internal_kib", 0) * 1024);
     static const char *WF[HAL_WF_COUNT] = {"GC16", "GL16", "DU", "A2"};
@@ -161,6 +162,7 @@ int profile_load(const char *path, sim_profile_t *p, char *err, size_t errlen) {
     p->flash_pessimism = !strcmp(pess, "typ") ? 0 : !strcmp(pess, "max") ? 1 : 2;
     p->flash_stalls_cpu = flag(fl, "stalls_cpu", true);
     p->flash_write_chunk = (uint32_t)num(fl, "write_chunk_bytes", 8192);
+    p->assets_partition_bytes = (size_t)(num(fl, "assets_partition_kib", 0) * 1024);
     p->flash_read_mbps = num(fl, "read_mbps", 20);
     p->flash_op_overhead_us = (uint32_t)num(fl, "op_overhead_us", 30);
 

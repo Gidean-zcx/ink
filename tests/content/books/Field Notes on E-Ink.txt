@@ -1,0 +1,11 @@
+Field Notes on E-Ink
+
+An electrophoretic display does not glow. It is closer to paper than to a screen: millions of tiny capsules hold black and white particles, and a small electric field pulls one colour up and pushes the other down. Once the particles have moved, they stay where they are. The picture survives without power, which is why an e-reader can sit on a shelf for weeks and still show the page you left it on.
+
+The price of that stillness is speed. Moving particles through a fluid takes time, and the controller cannot simply set a pixel to grey. Instead it plays a waveform: a short sequence of voltage frames, chosen from a table according to the pixel's old value, its new value and the temperature. A clean sixteen-level update may need thirty or forty frames. At twelve to sixteen milliseconds per frame, that is half a second or more.
+
+Engineers have learned to live with this. Fast waveforms jump straight to black or white and are good enough for a pressed button or a moving cursor. Gentle waveforms change only the pixels that differ and avoid the familiar black flash, but they leave faint shadows of earlier images behind. Every few pages, a full flashing refresh wipes those ghosts away. Good e-ink software is mostly the art of choosing which of these to use, and when.
+
+Interaction has to be designed for the panel rather than against it. Pages beat scrolling; buttons beat sliders; a menu that appears all at once beats one that slides in. Feedback matters more than animation: when a finger touches the glass, something visible should change quickly, even if the full result arrives a moment later.
+
+There is a quiet benefit hidden in all of this. A device that cannot animate cannot easily distract. Without infinite feeds, autoplaying videos and pulsing notifications, what remains is the text, the picture and the reader's own attention. Some people buy e-ink for the battery life. Others stay for the calm.

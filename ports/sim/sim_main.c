@@ -36,7 +36,7 @@ static void usage(void) {
     fprintf(stderr,
             "usage: ink-sim --profile P.json [--script S] [--out DIR] [--budget B.json] [--trace] [--frames]\n"
             "               [--end 20s] [--cpu annotated|measured[:factor]] [--realtime[=speed]]\n"
-            "               [--flash-image F] [--sd-dir D] [--seed N] [--quiet]\n");
+            "               [--flash-image F] [--sd-dir D] [--assets DIR]... [--content DIR] [--seed N] [--quiet]\n");
 }
 
 static int parse_time(const char *s, uint64_t *ns) {
@@ -135,6 +135,10 @@ int main(int argc, char **argv) {
         else if (!strcmp(a, "--budget")) { NEEDV(); g_sim.budget_path = v; }
         else if (!strcmp(a, "--flash-image")) { NEEDV(); g_sim.flash_image = v; }
         else if (!strcmp(a, "--sd-dir")) { NEEDV(); g_sim.sd_dir = v; }
+        else if (!strcmp(a, "--assets")) {
+            NEEDV();
+            if (g_sim.nasset_dirs < 4) g_sim.asset_dirs[g_sim.nasset_dirs++] = v;
+        } else if (!strcmp(a, "--content")) { NEEDV(); g_sim.seed_content = v; }
         else if (!strcmp(a, "--seed")) { NEEDV(); g_sim.seed = (uint32_t)strtoul(v, NULL, 0); }
         else if (!strcmp(a, "--reset-reason")) { NEEDV(); g_sim.reset_reason = v; }
         else if (!strcmp(a, "--trace")) g_sim.trace = true;
@@ -158,6 +162,7 @@ int main(int argc, char **argv) {
         else { fprintf(stderr, "unknown option %s\n", a); usage(); return 3; }
     }
     if (!g_sim.profile_path) { usage(); return 3; }
+    if (!g_sim.nasset_dirs) g_sim.asset_dirs[g_sim.nasset_dirs++] = "assets";
     rng_state = g_sim.seed ? g_sim.seed * 2654435761u : 0x9e3779b9u;
 
     char err[300];

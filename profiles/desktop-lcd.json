@@ -41,7 +41,8 @@
     "driver_internal_kib": 0,
     "power_up_us": 0,
     "prep_cpu_duty": 0.0,
-    "keep_power_ms": 1000
+    "keep_power_ms": 1000,
+    "line_queue_us": 100000
   },
   "input": {
     "touch": true,

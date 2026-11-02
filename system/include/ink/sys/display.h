@@ -56,6 +56,11 @@ void ink_display_set_text_cleanup_every(int n);
 /** Number of committed-but-not-yet-stable regions (0 = screen settled). */
 int ink_display_busy(void);
 
+/** Flash guard (storage service): while held, no new refresh starts, so an
+ *  internal-flash write never freezes a playing waveform. Blocks until the
+ *  panel is idle when taking it. */
+void ink_display_flash_guard(bool hold);
+
 #ifdef __cplusplus
 }
 #endif

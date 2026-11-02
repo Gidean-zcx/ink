@@ -7,6 +7,7 @@
 #include "ink/osal.h"
 #include "ink/probe.h"
 #include "ink/sys/display.h"
+#include "ink/sys/storage.h"
 #include "ink/sys/ui.h"
 
 extern const ink_activity_t ink_app_home;
@@ -14,6 +15,7 @@ extern const ink_activity_t ink_app_home;
 void ink_main(void) {
     hal_log_write("ink: starting system services");
     if (ink_display_init() != 0) osal_panic("display service failed to start");
+    if (ink_storage_init() != 0) osal_panic("storage service failed to start");
     if (ink_ui_start(&ink_app_home) != 0) osal_panic("ui failed to start");
     ink_probe_mark("system-started");
 }

@@ -221,6 +221,7 @@ static void pointer_push(int x, int y, bool pressed) {
 /* -------------------------------------------------------------- hints */
 
 void ink_ui_hint_area(const lv_area_t *a, ink_refresh_t intent) {
+    if (UI.frame_intent >= INK_REFRESH_FLASH_UI) return; /* a screen transition is pending: one clean refresh */
     if (UI.nhints < MAX_HINTS) {
         UI.hints[UI.nhints].a = *a;
         UI.hints[UI.nhints].intent = intent;
@@ -309,8 +310,11 @@ static void show_top(void) {
     UI.screen = lv_obj_create(NULL);
     ink_ui_style_screen(UI.screen);
     UI.generation++;
-    /* a new screen replaces everything: flashing clean refresh */
-    ink_ui_hint_frame(INK_REFRESH_FLASH_UI);
+    /* a new screen replaces everything: one flashing clean refresh. Area hints from the old
+     * screen (e.g. FAST for the button that was tapped) must not split the frame: they would
+     * drive part of the NEW screen with a binary waveform first (seen in the simulator). */
+    UI.nhints = 0;
+    UI.frame_intent = INK_REFRESH_FLASH_UI;
     f->a->create(UI.screen, f->arg);
     lv_screen_load(UI.screen);
     if (old) lv_obj_delete(old);
@@ -331,6 +335,31 @@ void ink_ui_pop(void) {
     if (UI.stack[UI.depth - 1].a->destroy) UI.stack[UI.depth - 1].a->destroy();
     UI.depth--;
     show_top(); /* activities rebuild from their own state: only the top one holds a screen */
+}
+
+/* Open with feedback: the tapped control inverts immediately (one FAST refresh, first
+ * visible change ~160 ms) and the new activity is built only after that frame was
+ * committed — heavy work (loading a book) no longer delays the first visible change. */
+static struct {
+    const ink_activity_t *a;
+    void *arg;
+} pending_open;
+
+static void do_open(void *unused) {
+    (void)unused;
+    if (pending_open.a) ink_ui_push(pending_open.a, pending_open.arg);
+    pending_open.a = NULL;
+}
+
+void ink_ui_open(lv_obj_t *from, const ink_activity_t *a, void *arg) {
+    if (from) {
+        lv_obj_add_style(from, &UI.st_btn_pr, LV_STATE_USER_1);
+        lv_obj_add_state(from, LV_STATE_USER_1);
+        ink_ui_hint_obj(from, INK_REFRESH_FAST);
+    }
+    pending_open.a = a;
+    pending_open.arg = arg;
+    ink_ui_post(do_open, NULL);
 }
 
 void ink_ui_post(void (*fn)(void *), void *arg) {
@@ -366,6 +395,14 @@ static void handle_input(const umsg_t *m) {
         }
         if (e->phase == INK_PTR_PRESS) set_interactive(true);
         UI.cause_us = e->t_us;
+        if (e->phase == INK_PTR_RELEASE && (e->flags & INK_EVF_SWIPE)) {
+            /* a swipe is not a click: LVGL would send CLICKED on any release without scrolling
+             * (found in the simulator: a swipe turned the page twice, once per gesture path) */
+            lv_indev_reset(UI.indev, NULL);
+            UI.pn = 0;
+            UI.last_pressed = false;
+            break;
+        }
         pointer_push(e->x, e->y, e->phase != INK_PTR_RELEASE);
         break;
     case INK_EV_SWIPE:

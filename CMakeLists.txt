@@ -57,7 +57,8 @@ add_library(ink_port_sim STATIC
   ports/sim/hal_display_sim.c
   ports/sim/hal_input_sim.c
   ports/sim/hal_storage_sim.c
-  ports/sim/hal_power_sim.c)
+  ports/sim/hal_power_sim.c
+  ports/sim/hal_assets_sim.c)
 target_include_directories(ink_port_sim PUBLIC ports/sim platform/include)
 target_link_libraries(ink_port_sim PUBLIC ink_sim_core ink_littlefs ink_stb)
 target_compile_options(ink_port_sim PRIVATE ${INK_WARN})
@@ -90,11 +91,52 @@ add_library(ink_system STATIC
   system/display/display_service.c
   system/display/refresh_policy.c
   system/input/input_service.c
+  system/storage/storage_service.c
+  system/text/ink_font.c
+  system/text/linebreak.c
+  system/text/layout.c
   system/ui/ui_task.c
-  apps/home/home.c)
+  apps/home/home.c
+  apps/reader/reader.c)
 target_include_directories(ink_system PUBLIC system/include platform/include system/display)
 target_link_libraries(ink_system PUBLIC ink_lvgl)
 target_compile_options(ink_system PRIVATE ${INK_WARN})
+
+# ---------------------------------------------------------------- assets (generated)
+# CJK bitmap fonts rendered from Noto Sans CJK (SIL OFL 1.1) by tools/fontgen.
+set(INK_CJK_FONT "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc" CACHE FILEPATH "CJK font for the bitmap fonts")
+set(INK_CJK_FACE 2 CACHE STRING "Face index in the collection (Noto Sans CJK .ttc: 2 = Simplified Chinese)")
+set(INK_ASSETS_DIR ${CMAKE_BINARY_DIR}/assets)
+find_package(Python3 COMPONENTS Interpreter)
+set(INK_HAVE_FONTS OFF)
+if(EXISTS ${INK_CJK_FONT} AND Python3_FOUND)
+  set(INK_FONT_FILES)
+  foreach(px 24 32)
+    set(out ${INK_ASSETS_DIR}/fonts/sans-${px}.inkf)
+    add_custom_command(OUTPUT ${out}
+      COMMAND ${CMAKE_COMMAND} -E make_directory ${INK_ASSETS_DIR}/fonts
+      COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/fontgen/fontgen.py --font ${INK_CJK_FONT}
+              --face ${INK_CJK_FACE} --px ${px} --bpp 2 --charset ascii,punct,pinyin,gb2312 -o ${out}
+      DEPENDS ${CMAKE_SOURCE_DIR}/tools/fontgen/fontgen.py
+      COMMENT "fontgen: CJK bitmap font ${px}px")
+    list(APPEND INK_FONT_FILES ${out})
+  endforeach()
+  add_custom_target(ink_fonts ALL DEPENDS ${INK_FONT_FILES})
+  set(INK_HAVE_FONTS ON)
+else()
+  message(WARNING "No CJK font (${INK_CJK_FONT}) or Python 3: CJK fonts not generated, reader scenarios skipped. "
+                  "Debian/Ubuntu: apt install fonts-noto-cjk python3-pil")
+endif()
+
+# Scenario content: the committed sample books + a generated long book (pagination stress).
+set(INK_TEST_CONTENT ${CMAKE_BINARY_DIR}/test-content)
+add_custom_command(OUTPUT ${INK_TEST_CONTENT}/books/测试长书.txt
+  COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/tests/content ${INK_TEST_CONTENT}
+  COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/testdata/make_long_book.py
+          ${CMAKE_SOURCE_DIR}/tests/content/books/星星邮差.txt ${INK_TEST_CONTENT}/books/测试长书.txt 40
+  DEPENDS ${CMAKE_SOURCE_DIR}/tools/testdata/make_long_book.py ${CMAKE_SOURCE_DIR}/tests/content/books/星星邮差.txt
+  COMMENT "test content: long book")
+add_custom_target(ink_test_content ALL DEPENDS ${INK_TEST_CONTENT}/books/测试长书.txt)
 
 # The full system on the simulated device.
 add_executable(ink-sim ports/sim/sim_main.c)
@@ -124,15 +166,21 @@ function(ink_scenario name profile)
     COMMAND ink-sim --profile ${CMAKE_SOURCE_DIR}/profiles/${profile}.json
             --script ${CMAKE_SOURCE_DIR}/tests/scenarios/${name}.script
             --budget ${CMAKE_SOURCE_DIR}/tests/scenarios/${name}.budget.json
+            --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
             --out ${CMAKE_BINARY_DIR}/test-out/${name}-${profile} --quiet)
 endfunction()
 ink_scenario(home_basic metalio-plus)
 ink_scenario(home_basic metalio-plus-psram16)
+if(INK_HAVE_FONTS)
+  ink_scenario(reader_basic metalio-plus)
+  ink_scenario(reader_basic metalio-plus-psram16)
+endif()
 # Portability smoke runs: same system, other panels/classes (budget: no panic, input works)
 foreach(p pinenote-rk3566 desktop-lcd)
   add_test(NAME portability-home-${p}
     COMMAND ink-sim --profile ${CMAKE_SOURCE_DIR}/profiles/${p}.json
             --script ${CMAKE_SOURCE_DIR}/tests/scenarios/home_basic.script
             --budget ${CMAKE_SOURCE_DIR}/tests/scenarios/portability.budget.json
+            --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
             --out ${CMAKE_BINARY_DIR}/test-out/portability-${p} --quiet)
 endforeach()

@@ -1,0 +1,16 @@
+{
+  "_doc": "Reader on the pessimistic Plus profile (foundation §4.5/§4.7). Page-turn targets are design goals for this panel (GL16 37 phases x 16 ms = 592 ms of pure waveform).",
+  "panic.count": {"max": 0, "optional": true},
+  "reader.page_turns": {"min": 13, "why": "keys, swipes and tap zones must all turn pages"},
+  "reader.turns_prerendered": {"min": 9, "why": "most forward turns should hit the page rendered ahead of time"},
+  "ui.action_to_visible_ms.TEXT.p95": {"max": 1000, "why": "page turn fully visible within 1 s on this panel"},
+  "ui.action_to_first_change_ms.p95": {"max": 400},
+  "reader.page_render_ms.p95": {"max": 250, "why": "layout + glyph rendering of one page"},
+  "reader.open_ms.max": {"max": 1500, "why": "open a book (load + first page)"},
+  "display.underruns": {"max": 0, "optional": true, "why": "no flash write may overlap a waveform"},
+  "storage.write_ms.count": {"min": 1, "why": "the reading position must be saved"},
+  "storage.write_errors": {"max": 0, "optional": true},
+  "mem.internal.min_free_bytes": {"min": 4096, "why": "pessimistic profile: ~5 KiB headroom (see docs: DMA reserve and display driver budgets)"},
+  "mem.internal.failed_allocs": {"max": 0},
+  "mem.external.failed_allocs": {"max": 0}
+}

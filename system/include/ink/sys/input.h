@@ -27,7 +27,10 @@ typedef enum {
 typedef enum { INK_PTR_PRESS = 0, INK_PTR_MOVE, INK_PTR_RELEASE } ink_ptr_phase_t;
 typedef enum { INK_SWIPE_LEFT = 0, INK_SWIPE_RIGHT, INK_SWIPE_UP, INK_SWIPE_DOWN } ink_swipe_dir_t;
 
-enum { INK_EVF_AFTER_LONG = 1 }; /* release that follows a long press / long key press */
+enum {
+    INK_EVF_AFTER_LONG = 1, /* release that follows a long press / long key press */
+    INK_EVF_SWIPE = 2,      /* release that completes a swipe (an INK_EV_SWIPE follows): not a click */
+};
 
 typedef struct {
     uint8_t kind;   /* ink_input_kind_t */

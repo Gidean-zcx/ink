@@ -73,6 +73,7 @@ static void flash_busy(uint64_t ns, const char *what) {
         }
         if (ns > FL.max_stall_ns) FL.max_stall_ns = ns;
         sim_metric_sample("flash.stall_ms", ns / 1e6);
+        sim_display_flash_stall(t0, ns);
     } else {
         vtk_sleep_ns(ns); /* eMMC/SPI NAND with DMA: the caller just waits */
     }
@@ -558,6 +559,38 @@ static void mkdirs(const char *path) {
     mkdir(tmp, 0755);
 }
 
+static void copy_tree(const char *src, const char *dst) {
+    DIR *d = opendir(src);
+    if (!d) {
+        sim_warn("--content %s: not a directory", src);
+        return;
+    }
+    mkdirs(dst);
+    struct dirent *e;
+    while ((e = readdir(d))) {
+        if (e->d_name[0] == '.') continue;
+        char a[1024], b[1024];
+        snprintf(a, sizeof a, "%s/%s", src, e->d_name);
+        snprintf(b, sizeof b, "%s/%s", dst, e->d_name);
+        struct stat st;
+        if (stat(a, &st) < 0) continue;
+        if (S_ISDIR(st.st_mode)) {
+            copy_tree(a, b);
+            continue;
+        }
+        FILE *in = fopen(a, "rb"), *out = fopen(b, "wb");
+        char *buf = malloc(65536); /* host-side copy: keep it off the simulated task's stack */
+        if (in && out && buf) {
+            size_t n;
+            while ((n = fread(buf, 1, 65536, in)) > 0) fwrite(buf, 1, n, out);
+        }
+        free(buf);
+        if (in) fclose(in);
+        if (out) fclose(out);
+    }
+    closedir(d);
+}
+
 void sim_storage_init(void) {
     /* SD card */
     if (g_sim.sd_dir) snprintf(SD.root, sizeof SD.root, "%s", g_sim.sd_dir);
@@ -567,6 +600,10 @@ void sim_storage_init(void) {
     mkdirs(p);
     snprintf(p, sizeof p, "%s/cache", SD.root);
     mkdirs(p);
+    if (g_sim.seed_content) { /* files that are already on the card when the device boots */
+        snprintf(p, sizeof p, "%s/content", SD.root);
+        copy_tree(g_sim.seed_content, p);
+    }
 
     /* internal flash */
     FL.sector = g_profile.flash_sector ? g_profile.flash_sector : 4096;

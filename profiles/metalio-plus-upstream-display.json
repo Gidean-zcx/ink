@@ -65,7 +65,9 @@
     },
     "keep_power_ms": 0,
     "prep_cpu_duty": 0.7,
-    "submit_copy_mbps": 21
+    "submit_copy_mbps": 21,
+    "line_queue_us": 2159,
+    "_notes_line_queue": "line_queue_us: lines prepared ahead x 17 us/line. Design target 32 lines (foundation 3.2) = 544 us; upstream 127 lines = 2159 us. A flash stall longer than this during a waveform underruns."
   },
   "input": {
     "touch": true,
@@ -106,7 +108,9 @@
     "_notes": "GD25B128E-class datasheet values (exact part on the board unverified). ESP-IDF writes in 8 KB chunks; caches are disabled per chunk/erase: PSRAM and flash-resident code stall on both cores. Auto-suspend off upstream.",
     "write_chunk_bytes": 8192,
     "read_mbps": 20,
-    "op_overhead_us": 30
+    "op_overhead_us": 30,
+    "assets_partition_kib": 6144,
+    "_notes_assets": "assets partition (fonts, images) assumed 6 MiB of the 16 MiB flash next to 2 OTA app slots and /user; upstream fontpack alone is ~4.75 MiB"
   },
   "sd": {
     "read_mbps": 4,

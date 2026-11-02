@@ -17,7 +17,7 @@
 #define HOLD_INTERACTIVE_MS 2000
 #define HOLD_AFTER_FEEDBACK_MS 1500
 
-typedef enum { DM_REGION, DM_FRAME_END, DM_DONE, DM_INTERACTIVE, DM_CLEANUP_EVERY } dm_type_t;
+typedef enum { DM_REGION, DM_FRAME_END, DM_DONE, DM_INTERACTIVE, DM_CLEANUP_EVERY, DM_GUARD } dm_type_t;
 
 typedef struct {
     uint8_t type;
@@ -38,6 +38,8 @@ static struct {
     bool in_flight;
     rp_dispatch_t cur;
     bool interactive;
+    bool guard;
+    osal_sem_t *guard_ack;
     volatile int busy;
 } DS;
 
@@ -51,7 +53,7 @@ static void done_cb(void *ctx, const hal_display_result_t *r) {
 
 static void dispatch_next(void) {
     rp_dispatch_t d;
-    if (DS.in_flight || !rp_next(&DS.rp, &d)) return;
+    if (DS.in_flight || DS.guard || !rp_next(&DS.rp, &d)) return;
     /* power policy: keep rails up around touch feedback and interactive phases;
      * otherwise power off right after the update (reading = long idle gaps) */
     if (DS.interactive) hal_display_hold_power(HOLD_INTERACTIVE_MS);
@@ -99,7 +101,16 @@ static void service_task(void *arg) {
             if (!DS.interactive && !DS.in_flight) hal_display_hold_power(0);
             break;
         case DM_CLEANUP_EVERY: DS.rp.text_cleanup_every = (int)m.cause_us; break;
+        case DM_GUARD:
+            DS.guard = m.flag != 0;
+            if (DS.guard) {
+                /* acknowledge once the panel is idle (the done message re-enters here) */
+                if (!DS.in_flight) osal_sem_give(DS.guard_ack);
+                else DS.guard = true;
+            }
+            break;
         }
+        if (m.type == DM_DONE && DS.guard) osal_sem_give(DS.guard_ack);
         /* only dispatch on frame boundaries so a half-committed frame is never driven */
         if (m.type != DM_REGION) dispatch_next();
         DS.busy = DS.rp.npending + (DS.in_flight ? 1 : 0);
@@ -115,8 +126,9 @@ int ink_display_init(void) {
     DS.fb = osal_malloc((size_t)DS.stride * DS.h, OSAL_MEM_EXTERNAL);
     DS.lock = osal_mutex_create();
     DS.q = osal_queue_create(sizeof(dmsg_t), DS_QUEUE_LEN);
+    DS.guard_ack = osal_sem_create(0, 1);
     osal_mem_tag(prev);
-    if (!DS.fb || !DS.lock || !DS.q) return -1;
+    if (!DS.fb || !DS.lock || !DS.q || !DS.guard_ack) return -1;
     memset(DS.fb, 0xff, (size_t)DS.stride * DS.h);
     rp_init(&DS.rp, DS.w, DS.h, DS.info.waveforms, DS.info.tech == HAL_PANEL_LCD);
     osal_task_cfg_t cfg = {.name = "display", .fn = service_task, .stack_bytes = DS_STACK, .priority = DS_PRIO, .core = -1,
@@ -154,3 +166,9 @@ void ink_display_set_text_cleanup_every(int n) {
 }
 
 int ink_display_busy(void) { return DS.busy; }
+
+void ink_display_flash_guard(bool hold) {
+    dmsg_t m = {.type = DM_GUARD, .flag = hold};
+    osal_queue_send(DS.q, &m, OSAL_WAIT_FOREVER);
+    if (hold) osal_sem_take(DS.guard_ack, OSAL_WAIT_FOREVER);
+}

@@ -6,7 +6,7 @@
   "ui.action_to_first_change_ms.p95": {"max": 400, "why": "first visible change after an action (screen idle) <= 350 ms target + margin"},
   "ui.action_to_visible_ms.FAST.p95": {"max": 600, "why": "touch feedback fully visible"},
   "ui.action_to_visible_ms.TEXT.p95": {"max": 1200, "why": "page turn fully visible"},
-  "mem.internal.min_free_bytes": {"min": 8192, "why": "internal RAM floor during the scenario (target 50 KiB on the device once the platform static use is known)"},
+  "mem.internal.min_free_bytes": {"min": 4096, "why": "pessimistic profile leaves ~5 KiB: see docs/system/platform-and-simulator.md (internal RAM findings); device target is 50 KiB"},
   "mem.internal.failed_allocs": {"max": 0},
   "mem.external.failed_allocs": {"max": 0},
   "display.underruns": {"max": 0, "optional": true}

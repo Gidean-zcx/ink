@@ -80,14 +80,16 @@ static void on_touch(const hal_input_event_t *h) {
     case HAL_TOUCH_UP: {
         IS.down = false;
         if (IS.long_timer) osal_timer_stop(IS.long_timer);
+        int dx = IS.x - IS.x0, dy = IS.y - IS.y0;
+        uint64_t dt_ms = (h->t_us - IS.t0) / 1000;
+        bool swipe = !IS.long_fired && dt_ms <= SWIPE_MAX_MS && (abs(dx) >= mm(SWIPE_MIN_MM) || abs(dy) >= mm(SWIPE_MIN_MM));
         e.phase = INK_PTR_RELEASE;
         e.x = (int16_t)IS.x;
         e.y = (int16_t)IS.y;
         if (IS.long_fired) e.flags |= INK_EVF_AFTER_LONG;
+        if (swipe) e.flags |= INK_EVF_SWIPE; /* the UI must not turn this release into a click */
         emit(&e);
-        int dx = IS.x - IS.x0, dy = IS.y - IS.y0;
-        uint64_t dt_ms = (h->t_us - IS.t0) / 1000;
-        if (!IS.long_fired && dt_ms <= SWIPE_MAX_MS && (abs(dx) >= mm(SWIPE_MIN_MM) || abs(dy) >= mm(SWIPE_MIN_MM))) {
+        if (swipe) {
             ink_input_event_t s = {.kind = INK_EV_SWIPE, .x = (int16_t)IS.x0, .y = (int16_t)IS.y0, .dx = (int16_t)dx,
                                    .dy = (int16_t)dy, .t_us = h->t_us};
             if (abs(dx) >= abs(dy)) s.dir = dx < 0 ? INK_SWIPE_LEFT : INK_SWIPE_RIGHT;

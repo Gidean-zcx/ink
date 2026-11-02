@@ -36,6 +36,9 @@ typedef struct {
 int ink_ui_start(const ink_activity_t *home);
 /** Open an activity on top (UI task only). The new screen is drawn with a flashing refresh. */
 void ink_ui_push(const ink_activity_t *a, void *arg);
+/** Open an activity from a tapped control: the control inverts at once (fast feedback),
+ *  the activity is built afterwards (UI task only). */
+void ink_ui_open(lv_obj_t *from, const ink_activity_t *a, void *arg);
 /** Close the top activity (UI task only). */
 void ink_ui_pop(void);
 /** Run fn(arg) in the UI task (any task). */

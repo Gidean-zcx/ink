@@ -65,6 +65,7 @@ typedef struct {
     uint32_t keep_power_ms;     /* keep panel power on this long after an update (0 = off after each) */
     double prep_cpu_duty;       /* fraction of each core used by line feeders during waveform playback */
     double submit_copy_mbps;    /* framebuffer copy bandwidth for submitted areas */
+    uint32_t line_queue_us;     /* time the prepared-line queue bridges when the feeders freeze */
     profile_waveform_t wf[HAL_WF_COUNT];
     size_t panel_buffers_external; /* bytes the panel driver keeps in external RAM */
     size_t panel_buffers_internal; /* bytes the panel driver keeps in internal RAM (line queues, DMA) */
@@ -90,6 +91,7 @@ typedef struct {
     int flash_pessimism; /* 0 = typical, 1 = max, 2 = tail (mostly ~typ, 10% up to max) */
     bool flash_stalls_cpu; /* MCU: caches off while erasing/programming internal flash */
     uint32_t flash_write_chunk;
+    size_t assets_partition_bytes; /* memory-mapped read-only assets (fonts...) */
     double flash_read_mbps;
     uint32_t flash_op_overhead_us;
 
