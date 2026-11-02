@@ -73,6 +73,13 @@ static void scan_library(void) {
                 LIB.books[i] = LIB.books[j];
                 LIB.books[j] = t;
             }
+    /* warm the reading positions while the shelf is up: opening a book then needs no flash access
+     * (which would have to wait for the tap's refresh to finish) */
+    for (int i = 0; i < LIB.nbooks; i++) {
+        char pos[200];
+        snprintf(pos, sizeof pos, "/user/apps/reader-%s.pos", LIB.books[i].name);
+        ink_storage_prefetch(pos);
+    }
 }
 
 extern const ink_activity_t ink_app_book;

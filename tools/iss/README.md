@@ -63,3 +63,4 @@ iss_end2(glyphs, pixels);        /* 单位数 + 可选的第二单位数 */
 - miniz（Rich Geldreich 等，MIT）：运行时拉取 github.com/richgel999/miniz `77d0dce`（3.1.2），只编译 `miniz_tinfl.c`。
 - cJSON（MIT）与 TLSF（BSD）：用仓库内 `third_party/` 的副本。
 - `kernels/data/` 的文本与 JSON 由 `gen_data.py` 用固定种子生成（无版权内容）；zlib 流已提交，结果不依赖主机的 zlib 版本。
+- `kernels/k_feed.c`（墨水屏送行的单独测量，不在 `calibrate.sh` 里）含两段上游 MIT 代码（CloudZao/Metalio-E-INK4-Plus 的 `epdiy_riscv_ve_stub.c`），文件头注明版权与许可。

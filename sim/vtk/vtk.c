@@ -90,6 +90,8 @@ static struct {
     bool in_isr;
     uint64_t isr_now;
     uint64_t stall_from, stall_until, stall_total;
+    uint64_t stall_hist_a[16], stall_hist_b[16]; /* recent stall windows (work crossing one freezes inside it) */
+    int stall_hist_last;
     vtk_stall_hook_fn stall_hook;
     /* external injection (realtime) */
     pthread_mutex_t ext_m;
@@ -444,6 +446,28 @@ static void schedule_locked(vtk_task_t *self) {
 
 /* --------------------------------------------------- kernel call helpers */
 
+/* `cost` of CPU from s: work stops at the start of every stall window it runs into and resumes at
+ * its end (the window may have been registered by another core after this work began). */
+static uint64_t run_through_stalls_locked(uint64_t s, uint64_t cost, uint64_t *frozen) {
+    uint64_t t = s, left = cost;
+    *frozen = 0;
+    for (;;) {
+        int best = -1;
+        for (int i = 0; i < 16; i++) {
+            uint64_t a = K.stall_hist_a[i], b = K.stall_hist_b[i];
+            if (b > a && b > t && a < t + left && (best < 0 || a < K.stall_hist_a[best])) best = i;
+        }
+        if (best < 0) return t + left;
+        uint64_t a = K.stall_hist_a[best];
+        if (a > t) {
+            left -= a - t;
+            t = a;
+        }
+        *frozen += K.stall_hist_b[best] - t;
+        t = K.stall_hist_b[best];
+    }
+}
+
 static void charge_locked(vtk_task_t *t, uint64_t host_now, bool kernel_call) {
     uint64_t cost = t->pending_ns + (kernel_call ? K.cfg.sched_overhead_ns : 0);
     t->pending_ns = 0;
@@ -452,7 +476,12 @@ static void charge_locked(vtk_task_t *t, uint64_t host_now, bool kernel_call) {
         cost += (uint64_t)(d * K.cfg.host_to_target);
     }
     int c = t->core;
-    K.now[c] += cost;
+    uint64_t frozen = 0;
+    K.now[c] = run_through_stalls_locked(K.now[c], cost, &frozen);
+    if (frozen) {
+        t->stall_ns += frozen;
+        K.slice_start[c] += frozen; /* the frozen time is counted in stall_busy */
+    }
     t->cpu_ns += cost;
     if (cost > t->max_burst_ns) t->max_burst_ns = cost;
     if (K.cfg.long_burst_warn_ns && cost > K.cfg.long_burst_warn_ns && t->burst_warns < 5) {
@@ -605,6 +634,7 @@ uint64_t vtk_now(void) {
 }
 
 vtk_task_t *vtk_self(void) { return tls_self; }
+int vtk_current_core(void) { return tls_self && !K.in_isr ? tls_self->core : -1; }
 const char *vtk_task_name(const vtk_task_t *t) { return t ? t->name : "?"; }
 int vtk_task_count(void) { return K.ntasks; }
 
@@ -842,12 +872,16 @@ void vtk_stall_begin_locked(uint64_t until_ns) {
         K.stall_total += ext;
         stall_busy_add_locked(ext);
         K.stall_until = until_ns;
+        K.stall_hist_b[K.stall_hist_last] = until_ns;
     } else {
         shift_cores_ahead_locked(from, until_ns - from);
         K.stall_from = from;
         K.stall_until = until_ns;
         K.stall_total += until_ns - from;
         stall_busy_add_locked(until_ns - from);
+        K.stall_hist_last = (K.stall_hist_last + 1) % 16;
+        K.stall_hist_a[K.stall_hist_last] = from;
+        K.stall_hist_b[K.stall_hist_last] = until_ns;
     }
     if (K.stall_hook) K.stall_hook(added_from, until_ns);
 }

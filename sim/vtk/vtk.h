@@ -82,6 +82,7 @@ bool vtk_stopping(void);
 
 /* ---- time & self ---- */
 uint64_t vtk_now(void);          /* current virtual time in ns (of the calling task's core) */
+int vtk_current_core(void);      /* core of the calling task (-1 outside tasks) */
 vtk_task_t *vtk_self(void);
 const char *vtk_task_name(const vtk_task_t *t);
 int vtk_task_count(void);

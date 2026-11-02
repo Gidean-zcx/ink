@@ -33,7 +33,7 @@
     "dma_heap_kib": 64,
     "external_heap_kib": 7680,
     "always_internal_max_bytes": 16,
-    "_notes": "PESSIMISTIC DEFAULT. internal_heap_kib = internal RAM left for EVERYTHING allocated at run time (display driver buffers, task stacks, TLS, system) after static code/data, excluding the DMA reserve. dma_heap_kib = the upstream SPIRAM_MALLOC_RESERVE_INTERNAL pool: internal-only allocations may use it, default malloc may not; runtime DMA users (I2S, SDMMC, Wi-Fi) need it. Static use is unknown until `idf.py size` (foundation 3.2): replace these numbers then. PSRAM assumed 8 MB until 16 MB is confirmed.",
+    "_notes": "PESSIMISTIC DEFAULT. internal_heap_kib = internal RAM left for EVERYTHING allocated at run time (display driver buffers, task stacks, TLS, system) after static code/data, excluding the DMA reserve. dma_heap_kib = the upstream SPIRAM_MALLOC_RESERVE_INTERNAL pool: on the S31 (IDF 6.1) it is tried after regular internal RAM for DMA and internal requests and last for default ones; the dma_heap_kib >= 16 budget therefore measures what is left of the reserve, not a separate DMA pool. Static use is unknown until `idf.py size` (foundation 3.2): replace these numbers then. PSRAM assumed 8 MB until 16 MB is confirmed.",
     "internal_regions_kib": [
       112,
       58
@@ -50,7 +50,6 @@
     "gray_levels": 16,
     "rotation_deg": 90,
     "full_frame_scan": true,
-    "frame_time_us": 16000,
     "power_up_us": 140000,
     "power_down_us": 10000,
     "touch_pause_during_power_us": 140000,
@@ -77,15 +76,25 @@
     "line_count": 688,
     "line_time_us": 17,
     "line_queue_lines": 127,
-    "line_prep_us": 24,
+    "line_prep_us": 33.4,
     "phase_min_us": 12000,
     "gc16_full_phases": 48,
     "clear_frames": 69,
     "lcd_isr_duty": 0.1,
-    "_notes_pipeline": "Upstream pipeline (epd_hl_update_area): difference image over FULL-WIDTH rows of the area before the waveform, waveform over the whole panel, back-buffer copy of the dirty full-width rows after it; full-screen flashing GC16 uses the complete 48-phase table. Feeders (two, max priority, PSRAM stacks) spin until the last line of a phase is queued: duty = (line_count - line_queue_lines) x line_time / phase_min (derived). LCD bounce-buffer refill interrupt every 8 lines: lcd_isr_duty on core 0 (estimate 7-15%). Underrun recovery = epd_clear (69 frames) + complete GC16 (upstream epd_refresh.cc). line_queue_lines: 32 = design target (foundation 3.2), 127 = upstream. line_prep_us: estimate (C LUT path, no vector unit).",
-    "diff_pass": "full_width",
-    "driver_lut_kib": 64,
-    "color": false
+    "diff_pass": "full_screen",
+    "driver_lut_kib": 1,
+    "color": false,
+    "feeders": "cpu",
+    "line_skip_us": 0.5,
+    "feeder_claim": "interleave",
+    "feeder_columns": "full",
+    "feeder_wait": "spin",
+    "prefill_lines": 192,
+    "bounce_lines": 8,
+    "lcd_isr_iram_safe": false,
+    "frame_overhead_us": 150,
+    "gc16_full_clear_frames": 69,
+    "_notes_pipeline": "Upstream pipeline as shipped (render_lcd.c, epd_refresh.cc, metalio_epd.c): fixed odd/even line ownership, 192-line prefill, 127-slot queue per feeder, feeders spin (vTaskDelay(0)) on a full queue, LCD refill interrupt not IRAM-safe (CONFIG_LCD_RGB_ISR_IRAM_SAFE unset: masked during every flash operation), Draw() diffs the full screen, 'clean' = epd_clear_checked (69 frames) + 48-phase GC16, EPD_LUT_1K. line_prep_us 33.4 = upstream C (epdiy_riscv_ve_stub.c) on the ISS fitted model; consistent with upstream's note that a 64-line prefill underruns under concurrent audio."
   },
   "input": {
     "touch": true,
@@ -125,19 +134,23 @@
     "page_bytes": 256,
     "erase_sector_us": {
       "typ": 45000,
-      "max": 300000
+      "max": 400000
     },
     "program_page_us": {
-      "typ": 500,
-      "max": 2400
+      "typ": 700,
+      "max": 3000
     },
     "timing": "tail",
     "stalls_cpu": true,
-    "_notes": "GD25B128E-class datasheet values (exact part on the board unverified). ESP-IDF writes in 8 KB chunks; caches are disabled per chunk/erase: PSRAM and flash-resident code stall on both cores. Auto-suspend off upstream.",
+    "_notes": "The NOR part on the board is unverified: generic pessimistic values (program 0.7/3 ms per 256-byte page, 4 KiB erase 45/400 ms) instead of one vendor's datasheet. IDF 6.1: one cache-off window per esp_flash_write chunk (CONFIG_SPI_FLASH_WRITE_CHUNK_SIZE 8192 upstream; littlefs programs from its internal buffer = direct write), per erase and per read chunk; SPI1 moves <= 64 bytes per program/read command (spi_cmd_us each). A program command costs program_first_us + its share of the page time. Auto-suspend off upstream; erase yields only between the sectors of one multi-sector erase (littlefs erases one per call).",
     "read_mbps": 20,
     "op_overhead_us": 30,
     "assets_partition_kib": 6144,
-    "_notes_assets": "assets partition (fonts, images) assumed 6 MiB of the 16 MiB flash next to 2 OTA app slots and /user; upstream fontpack alone is ~4.75 MiB"
+    "_notes_assets": "assets partition (fonts, images) assumed 6 MiB of the 16 MiB flash next to 2 OTA app slots and /user; upstream fontpack alone is ~4.75 MiB",
+    "write_chunk_bytes": 8192,
+    "spi_cmd_bytes": 64,
+    "spi_cmd_us": 1.5,
+    "program_first_us": 30
   },
   "sd": {
     "read_mbps": 4,
@@ -162,9 +175,7 @@
     "epd.convert_px": 7.16,
     "glyph.blit": 13995,
     "text.layout_char": 1500,
-    "text.break_char": 400,
     "json.byte": 78.9,
-    "zlib.inflate_byte": 45.7,
     "crc32.byte": 17.5,
     "littlefs.op": 60000,
     "psram.copy_byte": 14.7,
@@ -183,10 +194,6 @@
     "audio.mix_sample": 6,
     "tone.sample": 20,
     "epd.diff_px": 14,
-    "glyph.px": 25.1,
-    "fill.px": 9.99,
-    "psram.set_byte": 8.87,
-    "sram.set_byte": 0.52,
     "flash.line_fill": 1150,
     "lvgl.obj_refr": 1500,
     "lvgl.obj_create": 20000

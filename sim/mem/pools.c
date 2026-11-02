@@ -227,23 +227,24 @@ static void *try_alloc(heap_pool_t *p, size_t size) {
 }
 
 void *pools_alloc(size_t size, uint32_t caps, const char *owner) {
-    heap_pool_t *order[3] = {0};
+    heap_pool_t *order[4] = {0};
     int n = 0;
-    if (caps & OSAL_MEM_DMA) {
-        /* all internal SRAM is DMA-capable; the reserve is used first */
-        order[n++] = &P[POOL_DMA];
-        order[n++] = &P[POOL_INTERNAL];
-    } else if (caps & OSAL_MEM_INTERNAL) {
+    /* ESP-IDF 6.1 on the S31: regular internal RAM carries DMA|INTERNAL|DEFAULT at priority 0; the
+     * PSRAM reserve (SPIRAM_MALLOC_RESERVE_INTERNAL) carries {0, DMA|INTERNAL, DEFAULT}: it is tried
+     * after regular RAM for DMA and internal requests, and last of all for default ones. */
+    if (caps & (OSAL_MEM_DMA | OSAL_MEM_INTERNAL)) {
         order[n++] = &P[POOL_INTERNAL];
         order[n++] = &P[POOL_DMA];
     } else if (caps & OSAL_MEM_EXTERNAL) {
         order[n++] = &P[POOL_EXTERNAL];
     } else if (size <= g_always_internal_max) {
         order[n++] = &P[POOL_INTERNAL];
+        order[n++] = &P[POOL_DMA];
         order[n++] = &P[POOL_EXTERNAL];
     } else {
         order[n++] = &P[POOL_EXTERNAL];
         order[n++] = &P[POOL_INTERNAL];
+        order[n++] = &P[POOL_DMA];
     }
     for (int i = 0; i < n; i++) {
         void *ptr = try_alloc(order[i], size);

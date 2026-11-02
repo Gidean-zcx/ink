@@ -73,22 +73,33 @@ typedef struct {
 
     /* display */
     hal_panel_info_t panel;
-    uint32_t frame_time_us;     /* one waveform phase = one full-panel scan */
+    uint32_t frame_time_us;     /* hardware EPD controller (feeders "none"): one phase */
     uint32_t power_up_us;
     uint32_t power_down_us;
     uint32_t touch_pause_us;
     uint32_t lcd_frame_us;      /* LCD: time until visible */
-    double prep_cpu_duty;       /* fraction of each core used by line feeders during waveform playback */
-    uint32_t line_queue_us;     /* time the prepared-line queue bridges when the feeders freeze (= lines x line time) */
-    int line_count;             /* lines scanned per phase */
+    /* EPDiy-style CPU feeders (feeders "cpu"): two max-priority tasks convert lines into per-feeder
+     * queues; the LCD bounce-buffer interrupt pulls them; the phase is planned line by line */
+    bool feeders_cpu;
+    bool feeder_dynamic;        /* next free feeder takes the next line (else fixed odd/even, upstream) */
+    bool feeder_area_columns;   /* convert only the area's columns (else full lines, upstream) */
+    bool feeder_block;          /* feeders block on a full queue (else spin, upstream) */
+    int line_count;             /* lines scanned per phase (panel lines + blanking) */
     uint32_t line_ns;           /* scan time of one line */
-    int line_queue_lines;       /* prepared-line queue depth (32 design target, 127 upstream) */
-    uint32_t line_prep_ns;      /* one feeder prepares one line in this long (2 feeders) */
-    uint32_t phase_min_us;      /* shortest phase the driver allows; feeders spin for most of it */
+    int line_queue_lines;       /* per feeder (upstream 127) */
+    int prefill_lines;          /* the scan starts once these many lines are ready (upstream 192) */
+    uint32_t line_prep_ns;      /* one feeder converts one full panel line (ISS-measured) */
+    uint32_t line_skip_ns;      /* one feeder queues an untouched (no-op) line */
+    uint32_t phase_min_us;      /* shortest phase the driver allows */
+    uint32_t frame_overhead_us; /* frame-done interrupt -> next phase start (update task, LUT, notify) */
+    int bounce_lines;           /* the LCD interrupt refills bounce buffers of this many lines (two buffers) */
+    bool lcd_isr_iram_safe;     /* the refill interrupt keeps running during flash operations */
     int gc16_full_phases;       /* complete GC16 table for full-screen flashing updates */
     int clear_frames;           /* epd_clear frames used to recover from an underrun */
-    double lcd_isr_duty;        /* LCD bounce-buffer refill interrupts on core 0 during playback */
-    int diff_pass;              /* CPU difference image + back-buffer copy: 0 none (EPD controller), 1 area, 2 full-width rows (upstream) */
+    int gc16_full_clear_frames; /* a full-screen flashing GC16 is preceded by these clear frames (upstream "clean": 69) */
+    double lcd_isr_duty;        /* LCD bounce-buffer refill interrupts on core 0 during the scan */
+    int diff_pass;              /* CPU difference image + back-buffer copy: 0 none (EPD controller), 1 area,
+                                 * 2 full-width rows of the area, 3 always the full screen (upstream Draw()) */
     profile_waveform_t wf[HAL_WF_COUNT];
     size_t panel_buffers_external; /* bytes the panel driver keeps in external RAM */
     size_t panel_buffers_internal; /* bytes the panel driver keeps in internal RAM (line queues, LUT, bounce, state) */
@@ -116,8 +127,12 @@ typedef struct {
     int flash_pessimism; /* 0 = typical, 1 = max, 2 = tail (mostly ~typ, 10% up to max) */
     bool flash_stalls_cpu; /* MCU: caches off while erasing/programming internal flash */
     size_t assets_partition_bytes; /* memory-mapped read-only assets (fonts...) */
-    double flash_read_mbps;
-    uint32_t flash_op_overhead_us;
+    double flash_read_mbps;       /* raw SPI1 data rate */
+    uint32_t flash_op_overhead_us; /* per cache-off window (IPC to the other core, cache off/on) */
+    uint32_t flash_write_chunk;    /* one esp_flash_write window covers this many bytes (CONFIG_SPI_FLASH_WRITE_CHUNK_SIZE) */
+    uint32_t flash_spi_cmd_bytes;  /* SPI1 moves at most this much per command (program and read) */
+    uint32_t flash_spi_cmd_ns;     /* per SPI1 command: opcode/address/dummy + driver setup */
+    uint32_t prog_first_us;        /* program command: fixed part (datasheet first-byte time) */
 
     /* sd card (content/cache volumes) */
     double sd_read_mbps, sd_write_mbps;
@@ -163,6 +178,7 @@ typedef struct {
 extern sim_profile_t g_profile;
 
 int profile_load(const char *path, sim_profile_t *out, char *err, size_t errlen);
-double profile_cost(const char *name); /* cycles per unit; 0 if unknown */
+double profile_cost(const char *name); /* cycles per unit; 0 (and one warning) if the profile lacks it */
+void profile_set_warn(void (*fn)(const char *msg));
 
 #endif

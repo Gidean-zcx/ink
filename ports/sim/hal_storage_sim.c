@@ -64,6 +64,17 @@ static uint64_t sample_us(uint32_t typ, uint32_t max) {
 /* The flash is busy for ns: caches off (MCU) -> stall window; the caller polls the status. */
 static void flash_busy(uint64_t ns, const char *what) {
     uint64_t t0 = vtk_now();
+    if (g_profile.flash_stalls_cpu && sim_display_playing()) {
+        /* the system rule is: no flash operation while the panel scans (storage service + flash guard) */
+        static int warned;
+        sim_metric_add("flash.ops_during_waveform", 1);
+        if (++warned <= 5) sim_warn("flash %s while the panel scans (freezes the feeders; IPC waits behind them)", what);
+        uint64_t w = sim_display_ipc_wait_ns(t0);
+        if (w) {
+            sim_metric_sample("flash.ipc_wait_ms", w / 1e6);
+            ns += w;
+        }
+    }
     if (g_profile.flash_stalls_cpu) {
         vtk_lock();
         vtk_stall_begin_locked(vtk_now() + ns);
@@ -77,24 +88,39 @@ static void flash_busy(uint64_t ns, const char *what) {
     sim_trace_span("flash", what, t0, t0 + ns, NULL);
 }
 
+/* SPI1 reads n bytes: one command per spi_cmd_bytes. */
+static uint64_t read_ns(size_t n) {
+    double mbps = g_profile.flash_read_mbps > 0 ? g_profile.flash_read_mbps : 20;
+    uint64_t cmds = (n + g_profile.flash_spi_cmd_bytes - 1) / g_profile.flash_spi_cmd_bytes;
+    return cmds * g_profile.flash_spi_cmd_ns + (uint64_t)((double)n * 1000.0 / mbps);
+}
+
 static int bd_read(const struct lfs_config *c, lfs_block_t block, lfs_off_t off, void *buffer, lfs_size_t size) {
     (void)c;
     size_t a = (size_t)block * FL.sector + off;
     if (a + size > FL.size) return LFS_ERR_IO;
-    uint64_t ns = SIM_US(g_profile.flash_op_overhead_us) +
-                  (uint64_t)((double)size * 1000.0 / (g_profile.flash_read_mbps > 0 ? g_profile.flash_read_mbps : 20));
+    size_t win = size; /* one cache-off window per read chunk */
     void *bounce = NULL;
     if (g_profile.flash_stalls_cpu && pools_is_external(buffer)) {
-        /* esp_flash_read into PSRAM: an internal bounce buffer (<= 16 KiB) per call, then a copy */
-        size_t bsz = size < 16384 ? size : 16384;
-        bounce = osal_malloc(bsz, OSAL_MEM_INTERNAL);
+        /* esp_flash_read into PSRAM: an internal temp buffer of min(size, 16 KiB, largest free internal
+         * block) (IDF get_buffer_malloc, 5 tries), the read in chunks of that size, then a copy */
+        osal_mem_stats_t ms;
+        osal_mem_stats(OSAL_MEM_INTERNAL, &ms);
+        size_t want = size < 16384 ? size : 16384;
+        if (want > ms.largest_free) want = ms.largest_free & ~(size_t)3;
+        bounce = want ? osal_malloc(want, OSAL_MEM_INTERNAL) : NULL;
         sim_metric_add("flash.reads_into_psram", 1);
-        if (!bounce) { /* fall back to 32-byte chunks, each with its own cache-off window */
-            for (lfs_size_t done = 0; done < size; done += 32) flash_busy(SIM_US(g_profile.flash_op_overhead_us) + 2000, "read32");
-            ns = 0;
+        if (!bounce) {
+            sim_metric_add("flash.read_no_mem", 1); /* ESP_ERR_NO_MEM: littlefs sees an I/O error */
+            sim_warn("flash read into PSRAM failed: no internal memory for the temp buffer");
+            return LFS_ERR_IO;
         }
+        win = want;
     }
-    if (ns) flash_busy(ns, "read");
+    for (size_t done = 0; done < size; done += win) {
+        size_t n = size - done < win ? size - done : win;
+        flash_busy(SIM_US(g_profile.flash_op_overhead_us) + read_ns(n), "read");
+    }
     if (bounce) {
         sim_charge_cycles((double)size * profile_cost("internal_to_psram.copy_byte"));
         osal_free(bounce);
@@ -110,21 +136,41 @@ static void nor_program(uint32_t a, const uint8_t *data, uint32_t len) {
     for (uint32_t i = 0; i < len; i++) FL.img[a + i] &= data[i]; /* NOR: 1 -> 0 only */
 }
 
+/* One program command of n bytes inside a page whose full program takes page_ns. */
+static uint64_t prog_cmd_ns(uint32_t n, uint32_t page, uint64_t page_ns) {
+    uint64_t first = SIM_US(g_profile.prog_first_us);
+    if (first > page_ns) first = page_ns;
+    return g_profile.flash_spi_cmd_ns + first + (page_ns - first) * n / page;
+}
+
+/* esp_flash_write from littlefs' internal program buffer (direct write): one cache-off window per
+ * write chunk (8 KiB upstream), inside it one SPI1 program command per <= 64 bytes within a page. */
 static int bd_prog(const struct lfs_config *c, lfs_block_t block, lfs_off_t off, const void *buffer, lfs_size_t size) {
     (void)c;
     uint32_t a = (uint32_t)(block * FL.sector + off);
     if (a + size > FL.size) return LFS_ERR_IO;
     const uint8_t *d = buffer;
-    uint32_t page = g_profile.flash_page ? g_profile.flash_page : 256;
+    uint32_t page = g_profile.flash_page ? g_profile.flash_page : 256, cmd = g_profile.flash_spi_cmd_bytes;
     uint32_t done = 0;
     while (done < size) {
-        uint32_t pa = a + done;
-        uint32_t n = page - (pa % page);
-        if (n > size - done) n = size - done;
-        uint64_t ns = SIM_US(g_profile.flash_op_overhead_us) + SIM_US(sample_us(g_profile.prog_us_typ, g_profile.prog_us_max));
+        uint32_t clen = size - done < g_profile.flash_write_chunk ? size - done : g_profile.flash_write_chunk;
+        uint64_t ns = SIM_US(g_profile.flash_op_overhead_us), page_ns = 0;
+        uint32_t cur = UINT32_MAX;
+        for (uint32_t o = 0; o < clen;) {
+            uint32_t pa = a + done + o;
+            if (pa / page != cur) {
+                cur = pa / page;
+                page_ns = SIM_US(sample_us(g_profile.prog_us_typ, g_profile.prog_us_max));
+            }
+            uint32_t n = page - pa % page;
+            if (n > cmd) n = cmd;
+            if (n > clen - o) n = clen - o;
+            ns += prog_cmd_ns(n, page, page_ns);
+            o += n;
+        }
         FL.op = OP_PROG;
-        FL.op_off = pa;
-        FL.op_len = n;
+        FL.op_off = a + done;
+        FL.op_len = clen;
         FL.op_data = d + done;
         FL.op_t0 = vtk_now();
         FL.op_t1 = FL.op_t0 + ns;
@@ -132,8 +178,8 @@ static int bd_prog(const struct lfs_config *c, lfs_block_t block, lfs_off_t off,
         flash_busy(ns, "program");
         if (FL.cut) return LFS_ERR_IO;
         FL.op = OP_NONE;
-        nor_program(pa, d + done, n);
-        done += n;
+        nor_program(a + done, d + done, clen);
+        done += clen;
     }
     sim_charge_cycles((double)size * profile_cost("crc32.byte")); /* commit CRCs */
     FL.progs++;
@@ -152,13 +198,8 @@ static int bd_erase(const struct lfs_config *c, lfs_block_t block) {
     FL.op_t0 = vtk_now();
     FL.op_t1 = FL.op_t0 + ns;
     maybe_cut_during_op();
-    flash_busy(ns, "erase");
+    flash_busy(ns, "erase"); /* one sector per call: IDF yields only before a later erase of a multi-sector call */
     if (FL.cut) return LFS_ERR_IO;
-    if (g_profile.flash_stalls_cpu && ns >= SIM_MS(20) && g_profile.tick_hz > 0) {
-        /* CONFIG_SPI_FLASH_YIELD_DURING_ERASE: after >= 20 ms of erasing the caller yields one tick */
-        uint64_t T = 1000000000ull / (uint64_t)g_profile.tick_hz, now = vtk_now();
-        vtk_sleep_ns((now / T + 1) * T - now);
-    }
     FL.op = OP_NONE;
     memset(FL.img + a, 0xff, FL.sector);
     FL.erase_count[block]++;

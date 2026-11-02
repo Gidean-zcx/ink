@@ -43,8 +43,8 @@
     "driver_external_kib": 0,
     "driver_internal_kib": 0,
     "power_up_us": 0,
-    "prep_cpu_duty": 0.0,
-    "line_queue_us": 100000
+    "line_queue_us": 100000,
+    "feeders": "none"
   },
   "input": {
     "touch": true,
@@ -100,9 +100,7 @@
     "epd.convert_px": 6,
     "glyph.blit": 9000,
     "text.layout_char": 1500,
-    "text.break_char": 400,
     "json.byte": 60,
-    "zlib.inflate_byte": 40,
     "crc32.byte": 8,
     "littlefs.op": 60000,
     "psram.copy_byte": 15.2,

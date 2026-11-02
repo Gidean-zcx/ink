@@ -69,11 +69,11 @@
         "ghost": 0.12
       }
     },
-    "prep_cpu_duty": 0.0,
     "gc16_full_phases": 40,
     "line_queue_lines": 4096,
     "lcd_isr_duty": 0.0,
-    "diff_pass": "none"
+    "diff_pass": "none",
+    "feeders": "none"
   },
   "input": {
     "touch": true,
@@ -126,9 +126,7 @@
     "epd.convert_px": 6,
     "glyph.blit": 9000,
     "text.layout_char": 1500,
-    "text.break_char": 400,
     "json.byte": 60,
-    "zlib.inflate_byte": 40,
     "crc32.byte": 8,
     "littlefs.op": 60000,
     "psram.copy_byte": 15.2,

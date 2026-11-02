@@ -9,12 +9,19 @@
  *            holds the shared I2C bus for part of it -> touch reads wait)
  *   diff     upstream epd_hl_update_area builds a difference image over the
  *            full-width rows of the area (PSRAM in, PSRAM out) — driver task
- *   play     phases x frame_time; EVERY update scans the whole panel
- *            (full_frame_scan). Two max-priority feeder tasks with PSRAM
- *            stacks keep the prepared-line queue topped up and spin until the
- *            last line of each phase is queued (derived duty); the LCD
- *            bounce-buffer interrupt adds load on core 0. A full-screen
- *            flashing GC16 uses the complete (48-phase) table.
+ *   play     every phase scans the whole panel (full_frame_scan). Two
+ *            max-priority feeder tasks (PSRAM stacks) convert the lines into
+ *            per-feeder queues — fixed odd/even ownership (upstream) or the
+ *            next free feeder — and the LCD bounce-buffer interrupt pulls them
+ *            (on core 0, which slows feeder 0). The scan starts once the
+ *            prefill lines are ready; each phase is planned line by line
+ *            (line cost: full line, untouched line, or only the area's
+ *            columns), so a feeder slower than the DMA, a too-small prefill
+ *            or a flash stall shows up as a late line. Feeders hold their
+ *            core until their last line is queued (spinning on a full queue,
+ *            as upstream) or only while computing ("block"). The next phase
+ *            starts after the frame-done overhead, padded to phase_min. A
+ *            full-screen flashing GC16 uses the complete (48-phase) table.
  *   copy     back-buffer update of the dirty full-width rows (PSRAM->PSRAM)
  *   done     pixels stable at the end of the waveform -> done callback (from
  *            the driver task, after the copy); rails off right away unless
@@ -23,11 +30,14 @@
  *            input service calls it on touch/key edges), so the ~140 ms
  *            overlaps rendering; unused wakes cost rail current only.
  *
- * Underruns: while a flash operation freezes the feeders the LCD DMA keeps
- * draining the line queue (one line per line time); between stalls the
- * feeders refill it at their net production rate. If it runs dry the panel
- * shows garbage: upstream then recovers with epd_clear + a complete GC16
- * (about 1.9 s), which is charged here too and counted in display.underruns.
+ * Underruns: a line not ready when the interrupt needs it means garbage on
+ * the panel: upstream aborts the waveform and recovers with epd_clear + a
+ * complete GC16 (about 1.9 s), charged here too and counted in
+ * display.underruns. A flash operation freezes both feeders; the refill
+ * interrupt keeps pulling lines only if it is IRAM-safe (port decision),
+ * otherwise it is masked and anything longer than one bounce buffer is
+ * garbage. Flash stalls are taken by virtual time, whenever they were
+ * reported.
  *
  * The panel state is modelled for screenshots: the physical image plus a
  * ghosting residual that grows with every non-flashing update and is cleared
@@ -81,14 +91,9 @@ static struct {
     /* feeders */
     vtk_waitq_t feed_wq;
     bool playing;
-    uint64_t play_start, play_frames, frame_ns;
-    int frame_no;
-    uint64_t worst_stall_in_play; /* longest flash stall that overlapped the current waveform */
-    double q_level;               /* prepared lines in the queue at q_t */
-    uint64_t q_t;
-    double q_min;                 /* lowest level during the current waveform */
-    double refill_per_ns;         /* net queue refill rate while the feeders run */
-    bool underrun;
+    uint32_t phase_seq;    /* bumped for every phase the feeders work on */
+    struct plan *plan;     /* the current phase (feeders read it) */
+    bool stall_dirty;      /* a flash stall was reported while playing: re-plan */
     uint64_t underrun_at;
     /* stats */
     uint64_t busy_ns;
@@ -172,61 +177,204 @@ double sim_display_ghost_level(void) {
 
 /* ------------------------------------------------------------------ feeders */
 
-static void feeder_task(void *arg) {
-    int core = (int)(intptr_t)arg;
-    for (;;) {
-        vtk_lock();
-        while (!D.playing) vtk_block_locked(&D.feed_wq, VTK_TIME_INF);
-        uint64_t start = D.play_start, frames = D.play_frames, frame = D.frame_ns;
-        vtk_unlock();
-        double duty = g_profile.prep_cpu_duty + (core == 0 ? g_profile.lcd_isr_duty : 0.0);
-        if (duty > 1.0) duty = 1.0;
-        for (uint64_t f = 0; f < frames; f++) {
-            uint64_t fs = start + f * frame, fe = fs + frame;
-            uint64_t now = vtk_now();
-            if (now >= fe) continue; /* frozen through this phase: the DMA scanned it without us */
-            if (now < fs) vtk_sleep_ns(fs - now);
-            /* prepare + push this phase's lines: busy (spinning on the line queue at max priority) */
-            now = vtk_now();
-            uint64_t busy = (uint64_t)(duty * (double)frame);
-            if (now + busy > fe) busy = fe > now ? fe - now : 0;
-            sim_charge_ns_always(busy);
-            vtk_sched_point();
-            now = vtk_now();
-            if (now < fe) vtk_sleep_ns(fe - now);
-        }
-        vtk_lock();
-        /* wait for the driver to clear `playing` (it does at the end of the waveform) */
-        while (D.playing && D.play_start == start) vtk_block_locked(&D.feed_wq, VTK_TIME_INF);
-        vtk_unlock();
-    }
+#define MAX_STALLS 32
+#define MAX_LINES 4096
+
+typedef struct {
+    uint64_t a, b;
+} span_t;
+
+static struct { /* recent flash stalls by virtual time (kernel lock) */
+    span_t s[MAX_STALLS];
+    int next;
+} ST_RING;
+
+typedef struct plan {
+    uint64_t start;       /* phase start (feeders notified) */
+    uint64_t scan_start;  /* the LCD DMA starts (prefill ready) */
+    uint64_t scan_end;
+    uint64_t next_start;  /* the next phase can start */
+    uint64_t busy_end[2]; /* feeder f holds its core until (spin) */
+    uint64_t cpu_ns[2];   /* feeder f computes this long */
+    bool late;            /* a line was not ready in time: garbage */
+    int late_line;
+    uint64_t late_at;
+    double min_slack_lines; /* (needed - ready) / line time, minimum over the phase */
+} plan_t;
+
+static plan_t PLAN; /* kernel lock */
+
+/* Flash stall hook (kernel lock held): remember it; a playing phase is re-planned. */
+static void display_stall_hook(uint64_t from, uint64_t until) {
+    if (D.info.tech != HAL_PANEL_EPD || !g_profile.feeders_cpu) return;
+    ST_RING.s[ST_RING.next] = (span_t){from, until};
+    ST_RING.next = (ST_RING.next + 1) % MAX_STALLS;
+    if (D.playing) D.stall_dirty = true;
 }
 
-/* Flash stall hook (kernel lock held): the feeders are frozen for [from, until) while the LCD DMA
- * keeps consuming prepared lines. */
-static void display_stall_hook(uint64_t from, uint64_t until) {
-    if (!D.playing || D.info.tech != HAL_PANEL_EPD) return;
-    uint64_t ps = D.play_start, pe = D.play_start + D.play_frames * D.frame_ns;
-    uint64_t a = from > ps ? from : ps, b = until < pe ? until : pe;
-    if (b <= a) return;
-    double Q = (double)g_profile.line_queue_lines;
-    double lvl = D.q_level;
-    if (a > D.q_t) lvl += (double)(a - D.q_t) * D.refill_per_ns;
-    if (lvl > Q) lvl = Q;
-    double drain = (double)(b - a) / (double)(g_profile.line_ns ? g_profile.line_ns : 17000);
-    if (drain >= lvl) {
-        if (!D.underrun) {
-            D.underrun = true;
-            D.underrun_at = a + (uint64_t)(lvl * (double)g_profile.line_ns);
+static int span_cmp(const void *x, const void *y) {
+    const span_t *a = x, *b = y;
+    return a->a < b->a ? -1 : a->a > b->a;
+}
+
+/* Stalls that end after t0, sorted and merged. */
+static int collect_stalls(uint64_t t0, span_t *out) {
+    int n = 0;
+    for (int i = 0; i < MAX_STALLS; i++)
+        if (ST_RING.s[i].b > t0 && ST_RING.s[i].b > ST_RING.s[i].a) out[n++] = ST_RING.s[i];
+    qsort(out, (size_t)n, sizeof *out, span_cmp);
+    int m = 0;
+    for (int i = 0; i < n; i++) {
+        if (m && out[i].a <= out[m - 1].b) {
+            if (out[i].b > out[m - 1].b) out[m - 1].b = out[i].b;
+        } else {
+            out[m++] = out[i];
         }
-        lvl = 0;
-    } else {
-        lvl -= drain;
     }
-    D.q_level = lvl;
-    D.q_t = b;
-    if (lvl < D.q_min) D.q_min = lvl;
-    if (b - a > D.worst_stall_in_play) D.worst_stall_in_play = b - a;
+    return m;
+}
+
+/* `work` ns of computing from t: frozen inside stalls. */
+static uint64_t run_through(uint64_t t, uint64_t work, const span_t *st, int n) {
+    for (int i = 0; i < n; i++) {
+        if (st[i].b <= t) continue;
+        if (st[i].a > t) {
+            if (work <= st[i].a - t) return t + work;
+            work -= st[i].a - t;
+        }
+        t = st[i].b;
+    }
+    return t + work;
+}
+
+/* Plan one phase of an update of native area `a` starting at t0 (kernel lock held). */
+static void plan_phase(const hal_rect_t *a, uint64_t t0, plan_t *p) {
+    static uint64_t ready[MAX_LINES];
+    static int lines_of[2][MAX_LINES];
+    const int L = g_profile.line_count < MAX_LINES ? g_profile.line_count : MAX_LINES;
+    const uint64_t ln = g_profile.line_ns;
+    const int Q = g_profile.line_queue_lines, F = g_profile.prefill_lines < L ? g_profile.prefill_lines : L;
+    const int B = g_profile.bounce_lines, lead = 2 * B; /* both bounce buffers are filled at the scan start */
+    const double isr = g_profile.lcd_isr_duty;
+    const uint64_t full = g_profile.line_prep_ns, skip = g_profile.line_skip_ns;
+    const uint64_t area_cost = g_profile.feeder_area_columns ? skip + (full - skip) * (uint64_t)a->w / (uint64_t)D.W : full;
+    span_t st[MAX_STALLS];
+    int ns = collect_stalls(t0, st);
+    uint64_t tf[2] = {t0, t0}, cpu[2] = {0, 0}, scan = UINT64_MAX;
+    int cnt[2] = {0, 0};
+    memset(p, 0, sizeof *p);
+    p->start = t0;
+    for (int l = 0; l < L; l++) {
+        uint64_t c = (l >= a->y && l < a->y + a->h && l < D.H) ? area_cost : skip;
+        uint64_t s[2];
+        for (int f = 0; f < 2; f++) {
+            s[f] = tf[f];
+            if (cnt[f] >= Q) { /* a queue slot frees when the interrupt pulls the feeder's (k-Q)-th line */
+                int old = lines_of[f][cnt[f] - Q];
+                if (scan == UINT64_MAX) s[f] = UINT64_MAX;
+                else {
+                    uint64_t pull = scan + (old > lead ? (uint64_t)(old - lead) * ln : 0);
+                    if (pull > s[f]) s[f] = pull;
+                }
+            }
+            if (l == F && scan != UINT64_MAX && s[f] < scan) s[f] = scan; /* the trigger line's owner starts the scan first */
+        }
+        int f = g_profile.feeder_dynamic ? (s[0] <= s[1] ? 0 : 1) : (l & 1);
+        if (s[f] == UINT64_MAX) {
+            osal_panic("display profile: the prefill (%d lines) does not fit the line queues (%d per feeder)", F, Q);
+        }
+        double speed = (f == 0 && scan != UINT64_MAX && s[f] >= scan) ? 1.0 - isr : 1.0;
+        uint64_t work = (uint64_t)((double)c / speed);
+        uint64_t e = run_through(s[f], work, st, ns);
+        ready[l] = e;
+        tf[f] = e;
+        cpu[f] += work;
+        lines_of[f][cnt[f]++] = l;
+        if (scan == UINT64_MAX && l == F - 1) { /* the whole prefix is ready: the scan starts (not inside a stall) */
+            uint64_t m = 0;
+            for (int i = 0; i < F; i++)
+                if (ready[i] > m) m = ready[i];
+            scan = run_through(m, 0, st, ns);
+        }
+    }
+    p->scan_start = scan;
+    p->scan_end = scan + (uint64_t)L * ln;
+    p->min_slack_lines = 1e9;
+    p->late_line = -1;
+    for (int l = 0; l < L; l++) {
+        uint64_t need = scan + (l > lead ? (uint64_t)(l - lead) * ln : 0);
+        double slack = ((double)need - (double)ready[l]) / (double)ln;
+        if (l >= F && slack < p->min_slack_lines) p->min_slack_lines = slack; /* the prefix is ready by construction */
+        if (ready[l] > need && !p->late) {
+            p->late = true;
+            p->late_line = l;
+            p->late_at = need;
+        }
+    }
+    if (!g_profile.lcd_isr_iram_safe) /* the refill interrupt is masked during flash operations */
+        for (int i = 0; i < ns; i++) {
+            uint64_t x = st[i].a > scan ? st[i].a : scan, y = st[i].b < p->scan_end ? st[i].b : p->scan_end;
+            if (y > x && y - x > (uint64_t)B * ln && (!p->late || x + (uint64_t)B * ln < p->late_at)) {
+                p->late = true;
+                p->late_line = (int)((x - scan) / ln);
+                p->late_at = x + (uint64_t)B * ln;
+                p->min_slack_lines = -1;
+            }
+        }
+    for (int f = 0; f < 2; f++) {
+        p->busy_end[f] = tf[f];
+        p->cpu_ns[f] = cpu[f];
+    }
+    uint64_t next = p->scan_end + SIM_US(g_profile.frame_overhead_us);
+    uint64_t pad = t0 + SIM_US(g_profile.phase_min_us);
+    p->next_start = next > pad ? next : pad;
+}
+
+static void feeder_task(void *arg) {
+    int f = (int)(intptr_t)arg;
+    uint32_t seen = 0;
+    for (;;) {
+        vtk_lock();
+        while (D.phase_seq == seen) vtk_block_locked(&D.feed_wq, VTK_TIME_INF);
+        seen = D.phase_seq;
+        plan_t p = PLAN;
+        vtk_unlock();
+        uint64_t now = vtk_now();
+        if (now >= p.scan_end) continue; /* frozen through this phase: the DMA scanned it without us */
+        if (now < p.start) vtk_sleep_ns(p.start - now);
+        if (!g_profile.feeder_block) {
+            /* convert, and spin on a full queue, until the last line is queued: the core is ours */
+            now = vtk_now();
+            if (p.busy_end[f] > now) sim_charge_ns_always(p.busy_end[f] - now);
+        } else {
+            /* compute in slices, blocked while the queue is full: others get the gaps */
+            uint64_t span = p.busy_end[f] > p.start ? p.busy_end[f] - p.start : 0, left = p.cpu_ns[f];
+            int slices = (int)(span / SIM_MS(1)) + 1;
+            for (int i = 0; i < slices && left; i++) {
+                uint64_t c = left / (uint64_t)(slices - i);
+                sim_charge_ns_always(c);
+                left -= c;
+                uint64_t until = p.start + span * (uint64_t)(i + 1) / (uint64_t)slices;
+                now = vtk_now();
+                if (until > now) vtk_sleep_ns(until - now);
+            }
+        }
+        if (f == 0 && g_profile.lcd_isr_duty > 0) {
+            /* the refill interrupt keeps taking its share of core 0 for the rest of the scan */
+            for (;;) {
+                now = vtk_now();
+                if (now < p.scan_start) vtk_sleep_ns(p.scan_start - now);
+                now = vtk_now();
+                if (now >= p.scan_end) break;
+                uint64_t slice = p.scan_end - now < SIM_MS(1) ? p.scan_end - now : SIM_MS(1);
+                sim_charge_ns_always((uint64_t)((double)slice * g_profile.lcd_isr_duty));
+                now = vtk_now();
+                uint64_t until = now + (uint64_t)((double)slice * (1.0 - g_profile.lcd_isr_duty));
+                if (until > p.scan_end) until = p.scan_end;
+                if (until > now) vtk_sleep_ns(until - now);
+            }
+        }
+    }
 }
 
 /* ------------------------------------------------------------------ driver */
@@ -274,39 +422,81 @@ static void apply_area(const req_t *r, hal_waveform_t wf) {
         }
 }
 
-/* Play `phases` frames, DMA-paced from now. Returns true if the line queue ran dry. */
-static bool play(int phases) {
-    uint64_t started = vtk_now();
-    D.frame_ns = SIM_US(g_profile.frame_time_us);
-    vtk_lock();
-    D.play_start = started;
-    D.play_frames = (uint64_t)phases;
-    D.worst_stall_in_play = 0;
-    D.q_level = (double)g_profile.line_queue_lines;
-    D.q_t = started;
-    D.q_min = D.q_level;
-    D.underrun = false;
+/* Play `phases` phases of an update of native area `a`. Returns false if a line was late (upstream
+ * aborts the waveform at that phase). */
+static bool play_cpu(int phases, const hal_rect_t *a) {
+    uint64_t t0 = vtk_now();
+    double worst = 1e9;
+    bool ok = true;
     D.playing = true;
-    if (g_profile.prep_cpu_duty > 0) vtk_wake_all_locked(&D.feed_wq);
-    vtk_unlock();
-    /* DMA-paced scan: hardware time runs from `started` even if the feeders preempt this task */
-    uint64_t end = started + (uint64_t)phases * D.frame_ns;
-    uint64_t now = vtk_now();
-    if (now < end) vtk_sleep_ns(end - now);
-    vtk_lock();
+    for (int k = 0; k < phases && ok; k++) {
+        sim_assets_cache_pollute(); /* the feeders stream PSRAM through the shared D-cache every phase */
+        plan_t p;
+        vtk_lock();
+        D.stall_dirty = false;
+        plan_phase(a, t0, &p);
+        PLAN = p;
+        D.phase_seq++;
+        vtk_wake_all_locked(&D.feed_wq);
+        vtk_unlock();
+        for (;;) { /* until the scan ends; a flash stall reported meanwhile re-plans the phase */
+            uint64_t now = vtk_now();
+            if (now < p.scan_end) vtk_sleep_ns(p.scan_end - now);
+            vtk_lock();
+            bool dirty = D.stall_dirty;
+            if (dirty) {
+                D.stall_dirty = false;
+                plan_phase(a, t0, &p);
+                PLAN = p;
+            }
+            vtk_unlock();
+            if (!dirty || vtk_now() >= p.scan_end) break;
+        }
+        if (p.min_slack_lines < worst) worst = p.min_slack_lines;
+        if (p.late) {
+            ok = false;
+            D.underrun_at = p.late_at;
+            sim_metric_add("display.late_lines_phases", 1);
+        }
+        sim_metric_sample("display.phase_ms", (p.next_start - t0) / 1e6);
+        sim_metric_sample("display.prefill_ms", (p.scan_start - t0) / 1e6);
+        t0 = p.next_start;
+        uint64_t now = vtk_now();
+        if (now < t0) vtk_sleep_ns(t0 - now);
+    }
     D.playing = false;
-    bool underrun = D.underrun;
-    if (g_profile.prep_cpu_duty > 0) vtk_wake_all_locked(&D.feed_wq);
-    vtk_unlock();
-    sim_metric_max("display.line_queue_min_lines_worst", (double)g_profile.line_queue_lines - D.q_min);
-    return underrun;
+    sim_metric_min("display.feeder_slack_lines_min", worst);
+    return ok;
+}
+
+/* Hardware EPD controller: fixed phase time, no CPU feeders. */
+static bool play_fixed(int phases) {
+    D.playing = true;
+    vtk_sleep_ns((uint64_t)phases * SIM_US(g_profile.frame_time_us));
+    D.playing = false;
+    return true;
+}
+
+static bool play(int phases, const hal_rect_t *a) { return g_profile.feeders_cpu ? play_cpu(phases, a) : play_fixed(phases); }
+
+/* Clear frames (epd_push_pixels_lcd): the interrupt copies one static line per line, no feeders, no
+ * prefill, no phase padding. */
+static void play_clear(int frames) {
+    if (!g_profile.feeders_cpu) {
+        (void)play_fixed(frames);
+        return;
+    }
+    D.playing = true;
+    uint64_t frame = (uint64_t)g_profile.line_count * g_profile.line_ns + SIM_US(g_profile.frame_overhead_us);
+    vtk_sleep_ns((uint64_t)frames * frame);
+    D.playing = false;
 }
 
 /* Upstream difference image (before) and back-buffer copy (after): full-width rows of the area. */
 static void diff_pass(const hal_rect_t *a) {
     sim_assets_cache_pollute(); /* the waveform streams PSRAM framebuffers through the shared D-cache */
     if (!g_profile.diff_pass) return;
-    double px = (double)a->h * (double)(g_profile.diff_pass == 2 ? D.W : a->w);
+    double px = g_profile.diff_pass == 3 ? (double)D.W * D.H : (double)a->h * (double)(g_profile.diff_pass == 2 ? D.W : a->w);
     uint64_t t0 = vtk_now();
     /* compute + PSRAM traffic: read front and back (4 bpp each), write the 1-byte-per-pixel difference */
     sim_charge_ns_always(sim_cycles_ns(px * (profile_cost("epd.diff_px") + profile_cost("psram_to_internal.copy_byte") +
@@ -317,7 +507,7 @@ static void diff_pass(const hal_rect_t *a) {
 
 static void back_copy(const hal_rect_t *a) {
     if (!g_profile.diff_pass) return;
-    double bytes = (double)a->h * (double)(g_profile.diff_pass == 2 ? D.W : a->w) / 2.0;
+    double bytes = (double)a->h * (double)(g_profile.diff_pass >= 2 ? D.W : a->w) / 2.0;
     uint64_t t0 = vtk_now();
     sim_charge_ns_always(sim_cycles_ns(bytes * profile_cost("psram.copy_byte")));
     vtk_sched_point();
@@ -345,18 +535,22 @@ static void execute(req_t *r) {
         sim_i2c_transfer("io-expander", 3); /* panel control lines on the TCA9555 at waveform start */
         diff_pass(&r->area);
         int phases = g_profile.wf[wf].phases;
-        if (wf == HAL_WF_GC16 && full_area && g_profile.gc16_full_phases > phases) phases = g_profile.gc16_full_phases;
+        bool full_gc16 = wf == HAL_WF_GC16 && full_area;
+        if (full_gc16 && g_profile.gc16_full_phases > phases) phases = g_profile.gc16_full_phases;
         started = vtk_now();
         sim_power_consumer("display.refresh", true, g_profile.ma_display_refresh);
-        bool underrun = play(phases);
+        if (full_gc16 && g_profile.gc16_full_clear_frames > 0) play_clear(g_profile.gc16_full_clear_frames);
+        bool underrun = !play(phases, &r->area);
         if (underrun) {
             sim_metric_add("display.underruns", 1);
-            sim_warn("display: the prepared-line queue ran dry at %.3f ms during a %s waveform (a flash operation froze the "
-                     "feeders; queue %d lines = %.2f ms) -> garbage on the panel; recovering with clear + full GC16",
-                     D.underrun_at / 1e6, WFN[wf], g_profile.line_queue_lines, g_profile.line_queue_us / 1e3);
+            sim_warn("display: a prepared line was not ready at %.3f ms during a %s waveform (feeders slower than the "
+                     "scan, too small a prefill, or a flash operation froze them) -> garbage on the panel; recovering "
+                     "with clear + full GC16",
+                     D.underrun_at / 1e6, WFN[wf]);
             uint64_t t_rec = vtk_now();
-            (void)play(g_profile.clear_frames);
-            (void)play(g_profile.gc16_full_phases);
+            hal_rect_t all = {0, 0, D.W, D.H};
+            play_clear(g_profile.clear_frames);
+            (void)play(g_profile.gc16_full_phases, &all);
             sim_trace_span("display", "underrun-recovery", t_rec, vtk_now(), NULL);
             sim_metric_sample("display.underrun_recovery_ms", (vtk_now() - t_rec) / 1e6);
             recovered = true;
@@ -502,9 +696,9 @@ void sim_display_init(void) {
     void *ext = g_profile.panel_buffers_external ? osal_malloc(g_profile.panel_buffers_external, OSAL_MEM_EXTERNAL) : (void *)1;
     if (!ext) osal_panic("display driver init failed: cannot reserve %zu KiB of external RAM", g_profile.panel_buffers_external / 1024);
     if (D.info.tech == HAL_PANEL_EPD && g_profile.panel_buffers_internal) {
-        size_t line_bytes = (size_t)D.W / 4; /* 2 bits per pixel on the panel bus */
-        size_t queue = (size_t)g_profile.line_queue_lines * line_bytes;
-        size_t bounce = 2 * 8 * line_bytes; /* refilled by the LCD interrupt every 8 lines */
+        size_t line_bytes = ((size_t)D.W / 4 + 15) / 16 * 16; /* 2 bits per pixel on the panel bus, 16-byte aligned */
+        size_t queue = (size_t)g_profile.line_queue_lines * line_bytes; /* per feeder */
+        size_t bounce = 2 * (size_t)g_profile.bounce_lines * line_bytes; /* refilled by the LCD interrupt */
         size_t lut = g_profile.driver_lut_bytes;
         size_t used = 2 * queue + lut + bounce;
         size_t state = g_profile.panel_buffers_internal > used ? g_profile.panel_buffers_internal - used : 0;
@@ -520,17 +714,12 @@ void sim_display_init(void) {
     } else if (g_profile.panel_buffers_internal && !osal_malloc(g_profile.panel_buffers_internal, OSAL_MEM_INTERNAL)) {
         osal_panic("display driver init failed: cannot reserve %zu KiB internal", g_profile.panel_buffers_internal / 1024);
     }
-    {
-        double prod = g_profile.line_prep_ns ? 2.0 / (double)g_profile.line_prep_ns : 0;
-        double cons = g_profile.line_ns ? 1.0 / (double)g_profile.line_ns : 0;
-        D.refill_per_ns = prod > cons ? prod - cons : cons * 0.01;
-        vtk_set_stall_hook(display_stall_hook);
-    }
+    vtk_set_stall_hook(display_stall_hook);
     D.q = osal_queue_create(sizeof(req_t), QUEUE_LEN);
     if (!D.q) osal_panic("display driver init failed: no memory for its request queue");
     osal_task_cfg_t cfg = {.name = "epd", .fn = driver_task, .stack_bytes = DRIVER_STACK, .priority = DRIVER_PRIO, .core = -1};
     if (osal_task_create(&cfg, &D.task) != OSAL_OK) osal_panic("display driver init failed: cannot create its task");
-    if (D.info.tech == HAL_PANEL_EPD && g_profile.prep_cpu_duty > 0) {
+    if (D.info.tech == HAL_PANEL_EPD && g_profile.feeders_cpu) {
         for (int c = 0; c < g_profile.cores && c < 2; c++) {
             char name[16];
             snprintf(name, sizeof name, "epd_prep%d", c);
@@ -545,6 +734,48 @@ void sim_display_init(void) {
         snprintf(dir, sizeof dir, "%s/frames", g_sim.out_dir);
         mkdir(dir, 0755);
     }
+}
+
+/* Timing of one phase of an update of `area` (self-test expectations; no stalls ahead). */
+void sim_display_plan_info(const hal_rect_t *area, uint64_t *phase_ns, uint64_t *busy0_ns, uint64_t *busy1_ns,
+                           double *slack_lines) {
+    if (!g_profile.feeders_cpu || D.info.tech != HAL_PANEL_EPD) {
+        *phase_ns = SIM_US(g_profile.frame_time_us);
+        *busy0_ns = *busy1_ns = 0;
+        *slack_lines = 1e9;
+        return;
+    }
+    plan_t p;
+    vtk_lock();
+    uint64_t t0 = vtk_now();
+    plan_phase(area, t0, &p);
+    vtk_unlock();
+    *phase_ns = p.next_start - t0;
+    *busy0_ns = p.busy_end[0] - t0;
+    *busy1_ns = p.busy_end[1] - t0;
+    *slack_lines = p.min_slack_lines;
+}
+
+bool sim_display_playing(void) { return D.playing; }
+
+/* A flash operation starting now (IDF 6.1 cache_utils.c): the caller suspends its own scheduler,
+ * posts a non-blocking IPC call to the other core and spins until the IPC task (priority
+ * configMAX_PRIORITIES - 1, esp_ipc.c) runs there. A feeder computing on that core has the same
+ * priority and is not preempted: the IPC task gets the core when the feeder is done with this
+ * phase's lines (or yields on a full queue) or at the next tick, whichever comes first. Modelled
+ * pessimistically: both cores count as frozen for the wait (in reality the other core's feeder
+ * keeps producing). Task context. */
+uint64_t sim_display_ipc_wait_ns(uint64_t now) {
+    if (!D.playing || !g_profile.feeders_cpu || g_profile.cores < 2) return 0;
+    int c = vtk_current_core();
+    int other = c == 0 ? 1 : 0;
+    vtk_lock();
+    plan_t p = PLAN;
+    vtk_unlock();
+    if (now < p.start || now >= p.busy_end[other]) return 0;
+    uint64_t T = g_profile.tick_hz > 0 ? 1000000000ull / (uint64_t)g_profile.tick_hz : SIM_MS(10);
+    uint64_t tick = (now / T + 1) * T, until = p.busy_end[other] < tick ? p.busy_end[other] : tick;
+    return until - now;
 }
 
 void sim_display_report(void) {

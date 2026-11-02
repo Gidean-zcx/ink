@@ -614,6 +614,7 @@ struct osal_timer {
     uint64_t period_ns, due;
     vtk_event_id_t ev;
     bool active, pending;
+    uint32_t backlog; /* firings not yet dispatched (esp_timer catches up on missed periods) */
     struct osal_timer *next_pending;
 };
 
@@ -627,8 +628,9 @@ static void timer_fire(void *arg) { /* ISR context */
     osal_timer_t *t = arg;
     t->ev = 0;
     if (!t->active) return;
+    t->backlog++;
     if (t->pending) {
-        sim_metric_add("timer.overruns", 1);
+        sim_metric_add("timer.late_periods", 1); /* still waiting for the timer task: runs back to back later */
     } else {
         t->pending = true;
         t->next_pending = NULL;
@@ -651,10 +653,14 @@ static void unlink_pending(osal_timer_t *t) {
         prev = *pp;
         pp = &(*pp)->next_pending;
     }
-    if (!*pp) return;
+    if (!*pp) {
+        t->backlog = 0;
+        return;
+    }
     *pp = t->next_pending;
     if (TS.tail == t) TS.tail = prev;
     t->pending = false;
+    t->backlog = 0;
 }
 
 static void timer_task(void *arg) {
@@ -666,6 +672,14 @@ static void timer_task(void *arg) {
         TS.head = t->next_pending;
         if (!TS.head) TS.tail = NULL;
         t->pending = false;
+        if (t->backlog) t->backlog--;
+        if (t->backlog) { /* more periods are due: queue it again (after the others) */
+            t->pending = true;
+            t->next_pending = NULL;
+            if (TS.tail) TS.tail->next_pending = t;
+            else TS.head = t;
+            TS.tail = t;
+        }
         vtk_unlock();
         sim_charge_ns_always(SIM_US(4)); /* esp_timer dispatch overhead */
         t->fn(t->arg);

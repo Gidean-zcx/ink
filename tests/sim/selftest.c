@@ -201,7 +201,10 @@ static void test_display(void) {
     if (pi.tech == HAL_PANEL_EPD) {
         int phases = g_profile.wf[HAL_WF_GC16].phases;
         if (g_profile.gc16_full_phases > phases) phases = g_profile.gc16_full_phases; /* full-screen GC16: complete table */
-        uint64_t play = (uint64_t)phases * g_profile.frame_time_us;
+        uint64_t ph_ns, b0, b1;
+        double slack;
+        sim_display_plan_info(&full, &ph_ns, &b0, &b1, &slack);
+        uint64_t play = (uint64_t)phases * ph_ns / 1000;
         uint64_t pu = g_profile.power_up_us;
         double diff_cycles_px = profile_cost("epd.diff_px") + profile_cost("psram_to_internal.copy_byte") +
                                 profile_cost("internal_to_psram.copy_byte");
@@ -210,13 +213,15 @@ static void test_display(void) {
               "GC16 starts after the PMIC power-up and the difference pass (%llu us, expected ~%llu)",
               (unsigned long long)(r.started_us - r.queued_us), (unsigned long long)(pu + diff_us));
         CHECK(r.done_us - r.started_us >= play - 100 && r.done_us - r.started_us <= play + 1000,
-              "GC16 plays phases x frame time (%llu us, expected %llu)", (unsigned long long)(r.done_us - r.started_us),
+              "GC16 plays phases x the planned phase (%llu us, expected %llu)", (unsigned long long)(r.done_us - r.started_us),
               (unsigned long long)play);
-        if (g_profile.prep_cpu_duty > 0) {
+        if (g_profile.feeders_cpu) {
+            CHECK(slack > 0, "a full-screen phase leaves the feeders ahead of the scan (slack %.1f lines)", slack);
             double total_ms = (double)(r.done_us - r.queued_us) / 1000.0;
             double share = (double)counter_ms / total_ms;
-            double expect = ((double)pu + (double)diff_us + (double)play * (1.0 - g_profile.prep_cpu_duty)) / 1000.0 / total_ms;
-            CHECK(share < expect + 0.08, "the EPD feeders leave only ~%.0f%% of a core during refresh (got %.0f%%)",
+            double free_us = (double)phases * (double)(ph_ns - (b1 < ph_ns ? b1 : ph_ns)) / 1000.0;
+            double expect = ((double)pu + (double)diff_us + free_us) / 1000.0 / total_ms;
+            CHECK(share < expect + 0.08, "the EPD feeders leave only ~%.0f%% of core 1 during refresh (got %.0f%%)",
                   expect * 100, share * 100);
         }
         /* partial DU with power held: no power-up on the second update, same full-frame scan time */
@@ -226,7 +231,9 @@ static void test_display(void) {
         osal_queue_recv(disp_q, &r, OSAL_WAIT_FOREVER);
         hal_display_update(&small, fb + 64, pi.width, HAL_WF_DU, 0, disp_done, NULL);
         osal_queue_recv(disp_q, &r, OSAL_WAIT_FOREVER);
-        uint64_t du = (uint64_t)g_profile.wf[r.waveform].phases * g_profile.frame_time_us;
+        uint64_t du_ph;
+        sim_display_plan_info(&small, &du_ph, &b0, &b1, &slack);
+        uint64_t du = (uint64_t)g_profile.wf[r.waveform].phases * du_ph / 1000;
         uint64_t small_diff_us = g_profile.diff_pass ? (uint64_t)(32.0 * (g_profile.diff_pass == 2 ? pi.width : 64) * diff_cycles_px / g_profile.mhz) : 0;
         CHECK(r.started_us - r.queued_us < 2000 + small_diff_us, "held rails: no power-up delay (%llu us)",
               (unsigned long long)(r.started_us - r.queued_us));
@@ -300,12 +307,49 @@ static void test_flash(void) {
           "volume info for /user");
 }
 
+/* ------------------------------------------ 7a. nothing runs in a stall */
+
+/* While a flash operation freezes the device, a task on the other core must not get work done,
+ * even when its CPU slice started before the stall was registered (review M-B). */
+static volatile bool leak_run;
+static volatile uint64_t leak_work_ns;
+
+static void leak_task(void *arg) {
+    (void)arg;
+    while (leak_run) {
+        sim_charge_ns_always(200000);
+        leak_work_ns += 200000;
+    }
+}
+
+static void test_stall_leak(void) {
+    if (!g_profile.flash_stalls_cpu || g_profile.cores < 2) return;
+    leak_run = true;
+    leak_work_ns = 0;
+    spawn("leak_busy", leak_task, NULL, 6, 1, 2048, 0);
+    osal_task_delay_us(5000);
+    uint64_t t0 = osal_now_us(), w0 = leak_work_ns, s0 = vtk_stall_total_ns();
+    for (int i = 0; i < 200; i++) {
+        vtk_consume_ns(150000); /* pending CPU of the caller, not yet charged */
+        vtk_lock();
+        vtk_stall_begin_locked(vtk_now() + 530000);
+        vtk_unlock();
+        vtk_sched_point();
+        osal_task_delay_us(1000);
+    }
+    uint64_t elapsed = (osal_now_us() - t0) * 1000, stalled = vtk_stall_total_ns() - s0, work = leak_work_ns - w0;
+    leak_run = false;
+    CHECK(work <= elapsed - stalled + 400000, "no work during stalls on the other core (%.1f ms done in %.1f ms awake)",
+          work / 1e6, (elapsed - stalled) / 1e6);
+}
+
 /* ------------------------------------- 7b. flash write during a waveform */
 
-/* A flash erase in the middle of a waveform must be caught as an underrun (the feeders freeze
- * while the LCD DMA drains the prepared-line queue) and cost the upstream recovery. */
+/* A flash stall longer than the line queues can bridge, in the middle of a waveform, must be caught
+ * as an underrun (the feeders freeze while the interrupt keeps pulling lines) and cost the upstream
+ * recovery. (Whether a short program stall is tolerated depends on the queue level at that moment.) */
 static void test_underrun(void) {
-    if (!g_profile.flash_stalls_cpu || g_profile.prep_cpu_duty <= 0) return;
+    if (!g_profile.flash_stalls_cpu || !g_profile.feeders_cpu) return;
     hal_panel_info_t pi;
     hal_display_get_info(&pi);
     static uint8_t px[64 * 32];
@@ -313,22 +357,26 @@ static void test_underrun(void) {
     hal_rect_t small = {200, 200, 64, 32};
     uint32_t id = hal_display_update(&small, px, 64, HAL_WF_DU, 0, disp_done, NULL);
     CHECK(id > 0, "queue a DU update for the underrun test");
-    osal_task_delay_us(g_profile.power_up_us + 150000); /* well inside the waveform */
-    static uint8_t data[6000];
-    memset(data, 0x5a, sizeof data);
-    hal_file_t *f = hal_fs_open("/user/underrun.bin", HAL_O_WRITE | HAL_O_CREATE | HAL_O_TRUNC);
-    if (f) {
-        hal_fs_write(f, data, sizeof data);
-        hal_fs_close(f);
-    }
+    for (int i = 0; i < 400 && !sim_display_playing(); i++) osal_task_delay_us(1000);
+    osal_task_delay_us(100000); /* well inside the waveform */
+    CHECK(sim_display_playing(), "the DU is still playing when the stall starts");
+    uint64_t bridge_ns = (uint64_t)(2 * g_profile.line_queue_lines + 2 * g_profile.bounce_lines) * g_profile.line_ns;
+    vtk_lock();
+    vtk_stall_begin_locked(vtk_now() + bridge_ns + 2000000); /* e.g. a sector erase */
+    vtk_unlock();
+    vtk_sched_point();
     hal_display_result_t r;
     osal_queue_recv(disp_q, &r, OSAL_WAIT_FOREVER);
-    uint64_t base = (uint64_t)g_profile.wf[r.waveform].phases * g_profile.frame_time_us;
-    uint64_t rec = (uint64_t)(g_profile.clear_frames + g_profile.gc16_full_phases) * g_profile.frame_time_us;
-    CHECK(r.done_us - r.started_us >= base + rec - 1000,
-          "a flash write inside a waveform underruns and pays the clear + full GC16 recovery (%llu us, expected >= %llu)",
-          (unsigned long long)(r.done_us - r.started_us), (unsigned long long)(base + rec));
-    hal_fs_remove("/user/underrun.bin");
+    hal_rect_t all = {0, 0, pi.width, pi.height};
+    uint64_t ph_ns, b0, b1;
+    double slack;
+    sim_display_plan_info(&all, &ph_ns, &b0, &b1, &slack);
+    uint64_t clear_ns = (uint64_t)g_profile.line_count * g_profile.line_ns + (uint64_t)g_profile.frame_overhead_us * 1000;
+    uint64_t rec = ((uint64_t)g_profile.clear_frames * clear_ns + (uint64_t)g_profile.gc16_full_phases * ph_ns) / 1000;
+    CHECK(r.done_us - r.started_us >= rec,
+          "a flash stall longer than the queues inside a waveform underruns and pays the clear + full GC16 recovery "
+          "(%llu us, expected >= %llu)",
+          (unsigned long long)(r.done_us - r.started_us), (unsigned long long)rec);
 }
 
 /* ----------------------------------------------------- 8. SD card */
@@ -443,6 +491,7 @@ static void selftest_task(void *arg) {
     test_memory();
     test_display();
     test_flash();
+    test_stall_leak();
     test_underrun();
     test_sd();
     test_speaker();

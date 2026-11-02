@@ -33,7 +33,7 @@
     "dma_heap_kib": 64,
     "external_heap_kib": 15872,
     "always_internal_max_bytes": 16,
-    "_notes": "PESSIMISTIC DEFAULT. internal_heap_kib = internal RAM left for EVERYTHING allocated at run time (display driver buffers, task stacks, TLS, system) after static code/data, excluding the DMA reserve. dma_heap_kib = the upstream SPIRAM_MALLOC_RESERVE_INTERNAL pool: internal-only allocations may use it, default malloc may not; runtime DMA users (I2S, SDMMC, Wi-Fi) need it. Static use is unknown until `idf.py size` (foundation 3.2): replace these numbers then. PSRAM assumed 8 MB until 16 MB is confirmed.",
+    "_notes": "PESSIMISTIC DEFAULT. internal_heap_kib = internal RAM left for EVERYTHING allocated at run time (display driver buffers, task stacks, TLS, system) after static code/data, excluding the DMA reserve. dma_heap_kib = the upstream SPIRAM_MALLOC_RESERVE_INTERNAL pool: on the S31 (IDF 6.1) it is tried after regular internal RAM for DMA and internal requests and last for default ones; the dma_heap_kib >= 16 budget therefore measures what is left of the reserve, not a separate DMA pool. Static use is unknown until `idf.py size` (foundation 3.2): replace these numbers then. PSRAM assumed 8 MB until 16 MB is confirmed.",
     "internal_regions_kib": [
       32,
       32,
@@ -50,7 +50,6 @@
     "gray_levels": 16,
     "rotation_deg": 90,
     "full_frame_scan": true,
-    "frame_time_us": 16000,
     "power_up_us": 140000,
     "power_down_us": 10000,
     "touch_pause_during_power_us": 10000,
@@ -76,16 +75,25 @@
     },
     "line_count": 688,
     "line_time_us": 17,
-    "line_queue_lines": 32,
-    "line_prep_us": 24,
+    "line_queue_lines": 48,
+    "line_prep_us": 31.8,
     "phase_min_us": 12000,
     "gc16_full_phases": 48,
     "clear_frames": 69,
     "lcd_isr_duty": 0.1,
-    "_notes_pipeline": "Upstream pipeline (epd_hl_update_area): difference image over FULL-WIDTH rows of the area before the waveform, waveform over the whole panel, back-buffer copy of the dirty full-width rows after it; full-screen flashing GC16 uses the complete 48-phase table. Feeders (two, max priority, PSRAM stacks) spin until the last line of a phase is queued: duty = (line_count - line_queue_lines) x line_time / phase_min (derived). LCD bounce-buffer refill interrupt every 8 lines: lcd_isr_duty on core 0 (estimate 7-15%). Underrun recovery = epd_clear (69 frames) + complete GC16 (upstream epd_refresh.cc). line_queue_lines: 32 = design target (foundation 3.2), 127 = upstream. line_prep_us: estimate (C LUT path, no vector unit).",
     "diff_pass": "full_width",
-    "driver_lut_kib": 16,
-    "color": false
+    "driver_lut_kib": 1,
+    "color": false,
+    "feeders": "cpu",
+    "line_skip_us": 0.5,
+    "feeder_claim": "dynamic",
+    "feeder_columns": "area",
+    "feeder_wait": "spin",
+    "prefill_lines": 64,
+    "bounce_lines": 8,
+    "lcd_isr_iram_safe": true,
+    "frame_overhead_us": 150,
+    "_notes_pipeline": "Phase = prefill + 688 lines x 17 us + frame-done overhead, padded to 12 ms (EPD_MIN_PHASE_US). Feeders (port design, provisional): two max-priority tasks, next free feeder takes the next line (dynamic), only the update area's columns are converted (the rest of a line is a no-op), 48-line queue per feeder, scan starts after 64 lines, LCD refill interrupt IRAM-safe (CONFIG_LCD_RGB_ISR_IRAM_SAFE + GDMA; callback and queues in internal RAM). line_prep_us 31.8 = optimized C (four pre-shifted 256-byte tables, mask folded in) 28.9 us/1216-px line on the ISS fitted model x1.1; upstream's C path measures 33.4 us there, and upstream's own notes (64-line prefill underruns under concurrent audio, 192 does not) bracket the real cost at ~32-34 us, so the ISS value is used with a small margin rather than the generic x1.3. LUT 1 KiB (1ppB, 4 x 256 B)."
   },
   "input": {
     "touch": true,
@@ -125,19 +133,23 @@
     "page_bytes": 256,
     "erase_sector_us": {
       "typ": 45000,
-      "max": 300000
+      "max": 400000
     },
     "program_page_us": {
-      "typ": 500,
-      "max": 2400
+      "typ": 700,
+      "max": 3000
     },
     "timing": "tail",
     "stalls_cpu": true,
-    "_notes": "GD25B128E-class datasheet values (exact part on the board unverified). ESP-IDF writes in 8 KB chunks; caches are disabled per chunk/erase: PSRAM and flash-resident code stall on both cores. Auto-suspend off upstream.",
+    "_notes": "The NOR part on the board is unverified: generic pessimistic values (program 0.7/3 ms per 256-byte page, 4 KiB erase 45/400 ms) instead of one vendor's datasheet. IDF 6.1: one cache-off window per esp_flash_write chunk (CONFIG_SPI_FLASH_WRITE_CHUNK_SIZE 8192 upstream; littlefs programs from its internal buffer = direct write), per erase and per read chunk; SPI1 moves <= 64 bytes per program/read command (spi_cmd_us each). A program command costs program_first_us + its share of the page time. Auto-suspend off upstream; erase yields only between the sectors of one multi-sector erase (littlefs erases one per call).",
     "read_mbps": 20,
     "op_overhead_us": 30,
     "assets_partition_kib": 6144,
-    "_notes_assets": "assets partition (fonts, images) assumed 6 MiB of the 16 MiB flash next to 2 OTA app slots and /user; upstream fontpack alone is ~4.75 MiB"
+    "_notes_assets": "assets partition (fonts, images) assumed 6 MiB of the 16 MiB flash next to 2 OTA app slots and /user; upstream fontpack alone is ~4.75 MiB",
+    "write_chunk_bytes": 8192,
+    "spi_cmd_bytes": 64,
+    "spi_cmd_us": 1.5,
+    "program_first_us": 30
   },
   "sd": {
     "read_mbps": 4,
@@ -162,9 +174,7 @@
     "epd.convert_px": 7.16,
     "glyph.blit": 10870,
     "text.layout_char": 1500,
-    "text.break_char": 400,
     "json.byte": 75.2,
-    "zlib.inflate_byte": 44.0,
     "crc32.byte": 17.3,
     "littlefs.op": 60000,
     "psram.copy_byte": 8.23,
@@ -183,10 +193,6 @@
     "audio.mix_sample": 6,
     "tone.sample": 20,
     "epd.diff_px": 14,
-    "glyph.px": 19.5,
-    "fill.px": 5.12,
-    "psram.set_byte": 4.59,
-    "sram.set_byte": 0.35,
     "flash.line_fill": 1150,
     "lvgl.obj_refr": 1500,
     "lvgl.obj_create": 20000

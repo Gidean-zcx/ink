@@ -157,24 +157,34 @@ int profile_load(const char *path, sim_profile_t *p, char *err, size_t errlen) {
     p->lcd_frame_us = p->panel.tech == HAL_PANEL_LCD ? (uint32_t)num(d, "lcd_frame_us", 16667) : 16667;
     p->line_count = (int)num(d, "line_count", 688);
     p->line_ns = (uint32_t)(num(d, "line_time_us", 17) * 1000);
-    p->line_queue_lines = (int)num(d, "line_queue_lines", 32);
-    p->line_prep_ns = (uint32_t)(num(d, "line_prep_us", 24) * 1000);
+    p->line_queue_lines = (int)num(d, "line_queue_lines", 127);
+    p->prefill_lines = (int)num(d, "prefill_lines", 192);
+    /* defaults: upstream S31 C feeder (epdiy_riscv_ve_stub.c) on the ISS fitted model, 1216 px */
+    p->line_prep_ns = (uint32_t)(num(d, "line_prep_us", 33.4) * 1000);
+    p->line_skip_ns = (uint32_t)(num(d, "line_skip_us", 0.5) * 1000);
     p->phase_min_us = (uint32_t)num(d, "phase_min_us", 12000);
+    p->frame_overhead_us = (uint32_t)num(d, "frame_overhead_us", 150);
+    p->bounce_lines = (int)num(d, "bounce_lines", 8);
+    p->lcd_isr_iram_safe = flag(d, "lcd_isr_iram_safe", false);
     p->gc16_full_phases = (int)num(d, "gc16_full_phases", 48);
     p->clear_frames = (int)num(d, "clear_frames", 69);
+    p->gc16_full_clear_frames = (int)num(d, "gc16_full_clear_frames", 0);
     p->lcd_isr_duty = num(d, "lcd_isr_duty", 0.10);
     {
         const char *dp = str(d, "diff_pass", "full_width");
-        p->diff_pass = !strcmp(dp, "none") ? 0 : !strcmp(dp, "area") ? 1 : 2;
+        p->diff_pass = !strcmp(dp, "none") ? 0 : !strcmp(dp, "area") ? 1 : !strcmp(dp, "full_screen") ? 3 : 2;
+        const char *fd = str(d, "feeders", NULL);
+        bool none = p->panel.tech == HAL_PANEL_LCD ||
+                    (cJSON_IsNumber(cJSON_GetObjectItemCaseSensitive(d, "prep_cpu_duty")) && num(d, "prep_cpu_duty", 0) <= 0);
+        p->feeders_cpu = fd ? !strcmp(fd, "cpu") : !none;
+        p->feeder_dynamic = !strcmp(str(d, "feeder_claim", "interleave"), "dynamic");
+        p->feeder_area_columns = !strcmp(str(d, "feeder_columns", "full"), "area");
+        p->feeder_block = !strcmp(str(d, "feeder_wait", "spin"), "block");
     }
-    p->line_queue_us = (uint32_t)((uint64_t)p->line_queue_lines * p->line_ns / 1000);
-    /* Feeders spin at top priority until the last line of a phase is queued:
-     * busy = (lines - queue depth) x line time, out of the shortest phase. An explicit value overrides. */
-    double busy_us = (double)(p->line_count - p->line_queue_lines) * p->line_ns / 1000.0;
-    double derived = p->phase_min_us ? busy_us / (double)p->phase_min_us : 0.7;
-    if (derived > 0.98) derived = 0.98;
-    if (derived < 0) derived = 0;
-    p->prep_cpu_duty = cJSON_IsNumber(cJSON_GetObjectItemCaseSensitive(d, "prep_cpu_duty")) ? num(d, "prep_cpu_duty", derived) : derived;
+    if (p->line_count < p->panel.height) p->line_count = p->panel.height;
+    if (p->bounce_lines < 1) p->bounce_lines = 1;
+    if (p->prefill_lines < 2 * p->bounce_lines) p->prefill_lines = 2 * p->bounce_lines; /* both bounce buffers */
+    if (p->line_queue_lines < 1) p->line_queue_lines = 1;
     p->panel_buffers_external = (size_t)(num(d, "driver_external_kib", 0) * 1024);
     p->panel_buffers_internal = (size_t)(num(d, "driver_internal_kib", 0) * 1024);
     p->driver_lut_bytes = (size_t)(num(d, "driver_lut_kib", 16) * 1024);
@@ -233,6 +243,12 @@ int profile_load(const char *path, sim_profile_t *p, char *err, size_t errlen) {
     p->assets_partition_bytes = (size_t)(num(fl, "assets_partition_kib", 0) * 1024);
     p->flash_read_mbps = num(fl, "read_mbps", 20);
     p->flash_op_overhead_us = (uint32_t)num(fl, "op_overhead_us", 30);
+    p->flash_write_chunk = (uint32_t)num(fl, "write_chunk_bytes", 8192);
+    p->flash_spi_cmd_bytes = (uint32_t)num(fl, "spi_cmd_bytes", 64);
+    p->flash_spi_cmd_ns = (uint32_t)(num(fl, "spi_cmd_us", 1.5) * 1000);
+    p->prog_first_us = (uint32_t)num(fl, "program_first_us", 30);
+    if (p->flash_write_chunk < 256) p->flash_write_chunk = 256;
+    if (p->flash_spi_cmd_bytes < 1) p->flash_spi_cmd_bytes = 64;
 
     const cJSON *sd = obj(root, "sd");
     p->sd_read_mbps = num(sd, "read_mbps", 8);
@@ -336,8 +352,22 @@ int profile_load(const char *path, sim_profile_t *p, char *err, size_t errlen) {
     return 0;
 }
 
+static void (*g_cost_warn)(const char *msg);
+void profile_set_warn(void (*fn)(const char *msg)) { g_cost_warn = fn; }
+
 double profile_cost(const char *name) {
     for (int i = 0; i < g_profile.ncosts; i++)
         if (!strcmp(g_profile.costs[i].name, name)) return g_profile.costs[i].cycles;
+    /* a missing class would silently make that work free: say so once per class */
+    static const char *warned[32];
+    static int nwarned;
+    for (int i = 0; i < nwarned; i++)
+        if (warned[i] == name || !strcmp(warned[i], name)) return 0;
+    if (nwarned < 32) warned[nwarned++] = name;
+    if (g_cost_warn) {
+        char msg[160];
+        snprintf(msg, sizeof msg, "profile has no cost class '%s': that work is charged 0 cycles", name);
+        g_cost_warn(msg);
+    }
     return 0;
 }

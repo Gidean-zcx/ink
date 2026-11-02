@@ -68,6 +68,7 @@ double sim_rand01(void);
 void sim_metric_sample(const char *name, double v); /* distribution */
 void sim_metric_add(const char *name, double v);    /* counter */
 void sim_metric_max(const char *name, double v);    /* max gauge */
+void sim_metric_min(const char *name, double v);    /* min gauge */
 void sim_metric_set(const char *name, double v);    /* gauge */
 /** Warning: printed, counted in "warnings.count", listed in the report. */
 void sim_warn(const char *fmt, ...) __attribute__((format(printf, 1, 2)));
@@ -130,6 +131,10 @@ void sim_i2c_transfer(const char *who, int bytes);       /* blocks for the bus +
 void sim_i2c_hold(const char *who, uint64_t ns);         /* occupy the bus (e.g. PMIC power-up sequence) */
 
 /* ---- audio (I2S rings) + stand-in codec ---- */
+void sim_display_plan_info(const hal_rect_t *area, uint64_t *phase_ns, uint64_t *busy0_ns, uint64_t *busy1_ns,
+                           double *slack_lines); /* task context */
+bool sim_display_playing(void);
+uint64_t sim_display_ipc_wait_ns(uint64_t now); /* task context */
 void sim_audio_init(void);            /* task context (boot) */
 void sim_audio_report(void);
 void sim_audio_mic_source(const char *name); /* ISR (script): "speech" | "silence" | "noise" */

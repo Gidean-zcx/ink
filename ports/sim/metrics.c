@@ -11,7 +11,7 @@
 #include "cJSON.h"
 #include "sim.h"
 
-typedef enum { M_COUNTER, M_GAUGE, M_MAX, M_DIST } mkind_t;
+typedef enum { M_COUNTER, M_GAUGE, M_MAX, M_DIST, M_MIN } mkind_t;
 
 typedef struct {
     char *name;
@@ -41,6 +41,7 @@ static metric_t *find(const char *name, mkind_t kind) {
     m->name = strdup(name);
     m->kind = kind;
     if (kind == M_MAX) m->value = -INFINITY;
+    if (kind == M_MIN) m->value = INFINITY;
     return m;
 }
 
@@ -59,6 +60,11 @@ void sim_metric_set(const char *name, double v) { find(name, M_GAUGE)->value = v
 void sim_metric_max(const char *name, double v) {
     metric_t *m = find(name, M_MAX);
     if (v > m->value) m->value = v;
+}
+
+void sim_metric_min(const char *name, double v) {
+    metric_t *m = find(name, M_MIN);
+    if (v < m->value) m->value = v;
 }
 
 static void stamp(char *buf, size_t n) {

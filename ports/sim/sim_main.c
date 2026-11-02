@@ -225,6 +225,7 @@ int main(int argc, char **argv) {
                g_profile.heap_region_overhead);
     pools_set_policy(g_profile.always_internal_max);
     pools_set_warn(pools_warn_sink);
+    profile_set_warn(pools_warn_sink);
     if (g_sim.trace) {
         char path[600];
         snprintf(path, sizeof path, "%s/trace.json", g_sim.out_dir);
