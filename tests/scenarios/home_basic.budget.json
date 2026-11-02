@@ -1,0 +1,13 @@
+{
+  "_doc": "Home demo on the pessimistic Plus profile. Numbers are design targets from foundation §4.5, not promises; tighten as the system improves.",
+  "panic.count": {"max": 0, "optional": true},
+  "home.taps": {"min": 2, "why": "taps on the counter button must reach LVGL"},
+  "home.page_turns": {"min": 7, "why": "keys and swipes must turn pages"},
+  "ui.action_to_first_change_ms.p95": {"max": 400, "why": "first visible change after an action (screen idle) <= 350 ms target + margin"},
+  "ui.action_to_visible_ms.FAST.p95": {"max": 600, "why": "touch feedback fully visible"},
+  "ui.action_to_visible_ms.TEXT.p95": {"max": 1200, "why": "page turn fully visible"},
+  "mem.internal.min_free_bytes": {"min": 8192, "why": "internal RAM floor during the scenario (target 50 KiB on the device once the platform static use is known)"},
+  "mem.internal.failed_allocs": {"max": 0},
+  "mem.external.failed_allocs": {"max": 0},
+  "display.underruns": {"max": 0, "optional": true}
+}

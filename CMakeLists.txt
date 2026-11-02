@@ -69,6 +69,38 @@ function(ink_sim_executable name)
   target_compile_options(${name} PRIVATE ${INK_WARN})
 endfunction()
 
+# ---------------------------------------------------------------- LVGL (pinned)
+# Local mirror: -DFETCHCONTENT_SOURCE_DIR_LVGL=/path/to/lvgl (no network needed)
+include(FetchContent)
+FetchContent_Declare(lvgl
+  GIT_REPOSITORY https://github.com/lvgl/lvgl.git
+  GIT_TAG v9.5.0
+  GIT_SHALLOW TRUE
+  SOURCE_SUBDIR do-not-add-subdirectory)
+FetchContent_MakeAvailable(lvgl)
+file(GLOB_RECURSE INK_LVGL_SOURCES CONFIGURE_DEPENDS ${lvgl_SOURCE_DIR}/src/*.c)
+add_library(ink_lvgl STATIC ${INK_LVGL_SOURCES} system/ui/lv_mem_osal.c)
+target_include_directories(ink_lvgl PUBLIC ${lvgl_SOURCE_DIR} system/ui platform/include)
+target_compile_definitions(ink_lvgl PUBLIC LV_CONF_INCLUDE_SIMPLE)
+target_compile_options(ink_lvgl PRIVATE -w)
+
+# ---------------------------------------------------------------- portable system + apps
+add_library(ink_system STATIC
+  system/main.c
+  system/display/display_service.c
+  system/display/refresh_policy.c
+  system/input/input_service.c
+  system/ui/ui_task.c
+  apps/home/home.c)
+target_include_directories(ink_system PUBLIC system/include platform/include system/display)
+target_link_libraries(ink_system PUBLIC ink_lvgl)
+target_compile_options(ink_system PRIVATE ${INK_WARN})
+
+# The full system on the simulated device.
+add_executable(ink-sim ports/sim/sim_main.c)
+target_link_libraries(ink-sim PRIVATE ink_system ink_lvgl ink_port_sim)
+target_compile_options(ink-sim PRIVATE ${INK_WARN})
+
 # ---------------------------------------------------------------- tests
 enable_testing()
 ink_sim_executable(sim-selftest tests/sim/selftest.c)
@@ -85,3 +117,22 @@ add_test(NAME determinism
           -DSCRIPT=${CMAKE_SOURCE_DIR}/tests/sim/selftest.script
           -DOUT=${CMAKE_BINARY_DIR}/test-out/determinism
           -P ${CMAKE_SOURCE_DIR}/tests/sim/determinism.cmake)
+
+# System scenarios: the real system on simulated devices, judged by budgets.
+function(ink_scenario name profile)
+  add_test(NAME scenario-${name}-${profile}
+    COMMAND ink-sim --profile ${CMAKE_SOURCE_DIR}/profiles/${profile}.json
+            --script ${CMAKE_SOURCE_DIR}/tests/scenarios/${name}.script
+            --budget ${CMAKE_SOURCE_DIR}/tests/scenarios/${name}.budget.json
+            --out ${CMAKE_BINARY_DIR}/test-out/${name}-${profile} --quiet)
+endfunction()
+ink_scenario(home_basic metalio-plus)
+ink_scenario(home_basic metalio-plus-psram16)
+# Portability smoke runs: same system, other panels/classes (budget: no panic, input works)
+foreach(p pinenote-rk3566 desktop-lcd)
+  add_test(NAME portability-home-${p}
+    COMMAND ink-sim --profile ${CMAKE_SOURCE_DIR}/profiles/${p}.json
+            --script ${CMAKE_SOURCE_DIR}/tests/scenarios/home_basic.script
+            --budget ${CMAKE_SOURCE_DIR}/tests/scenarios/portability.budget.json
+            --out ${CMAKE_BINARY_DIR}/test-out/portability-${p} --quiet)
+endforeach()

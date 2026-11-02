@@ -130,7 +130,9 @@
     "internal_to_psram.copy_byte": 10.0,
     "sram.copy_byte": 0.9,
     "icache.miss": 1150,
-    "heap.op": 1500
+    "heap.op": 1500,
+    "lvgl.refr": 150000,
+    "ui.rotate_px": 20
   },
   "power": {
     "_notes": "defaults from the simulator; not modelled for this class"

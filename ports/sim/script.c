@@ -14,12 +14,16 @@
  *
  * Times: "@t" absolute, "+t" relative to the previous line; units us/ms/s/m
  * (default ms). Other commands: press X Y / move X Y / release, longpress X Y.
+ * Coordinates: logical pixels ("340"), density-independent "116dp" (1/160 in),
+ * or a share of the logical screen "50%" — use dp/% so one script runs on
+ * panels of any size and density.
  */
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
+#include "ink/rotation.h"
 #include "sim.h"
 
 typedef enum { A_TOUCH, A_KEY, A_SNAP, A_MARK, A_NOTE, A_BATTERY, A_POWERCUT, A_END } akind_t;
@@ -61,6 +65,17 @@ static int parse_dur(const char *s, uint64_t *out) {
     else return -1;
     *out = (uint64_t)(v * mul);
     return 0;
+}
+
+/* coordinate with unit: px (default), dp, or % of the logical axis */
+static int coord(const char *s, bool is_x) {
+    char *end;
+    double v = strtod(s, &end);
+    int lw, lh;
+    ink_logical_size(g_profile.panel.width, g_profile.panel.height, g_profile.panel.rotation_deg, &lw, &lh);
+    if (!strcmp(end, "dp")) return (int)(v * g_profile.panel.dpi / 160.0 + 0.5);
+    if (!strcmp(end, "%")) return (int)(v / 100.0 * (is_x ? lw : lh) + 0.5);
+    return (int)v;
 }
 
 static hal_key_t key_named(const char *s) {
@@ -117,19 +132,19 @@ int sim_script_load(const char *path, char *err, size_t errlen) {
             uint64_t hold = !strcmp(cmd, "tap") ? SIM_MS(80) : SIM_MS(800);
             ok = n >= 4 && (n < 5 || !parse_dur(tok[4], &hold));
             if (ok) {
-                touch(t, 0, atoi(tok[2]), atoi(tok[3]));
-                touch(t + hold, 1, atoi(tok[2]), atoi(tok[3]));
+                touch(t, 0, coord(tok[2], true), coord(tok[3], false));
+                touch(t + hold, 1, coord(tok[2], true), coord(tok[3], false));
             }
         } else if (!strcmp(cmd, "press") || !strcmp(cmd, "move")) {
             ok = n >= 4;
-            if (ok) touch(t, 0, atoi(tok[2]), atoi(tok[3]));
+            if (ok) touch(t, 0, coord(tok[2], true), coord(tok[3], false));
         } else if (!strcmp(cmd, "release")) {
             touch(t, 1, -1, -1);
         } else if (!strcmp(cmd, "swipe")) {
             uint64_t dur = SIM_MS(300);
             ok = n >= 6 && (n < 7 || !parse_dur(tok[6], &dur));
             if (ok) {
-                int x1 = atoi(tok[2]), y1 = atoi(tok[3]), x2 = atoi(tok[4]), y2 = atoi(tok[5]);
+                int x1 = coord(tok[2], true), y1 = coord(tok[3], false), x2 = coord(tok[4], true), y2 = coord(tok[5], false);
                 int steps = (int)(dur / SIM_MS(8));
                 if (steps < 2) steps = 2;
                 for (int i = 0; i <= steps; i++) {
