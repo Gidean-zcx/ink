@@ -1,0 +1,54 @@
+{
+  "_doc": "Home demo on the pessimistic Plus profile. Numbers are design targets from foundation §4.5, not promises; tighten as the system improves.",
+  "panic.count": {
+    "max": 0,
+    "optional": true
+  },
+  "home.taps": {
+    "min": 2,
+    "why": "taps on the counter button must reach LVGL"
+  },
+  "home.page_turns": {
+    "min": 7,
+    "why": "keys and swipes must turn pages"
+  },
+  "ui.action_to_first_change_ms.p95": {
+    "max": 400,
+    "why": "first visible change after an action (screen idle) <= 350 ms target + margin"
+  },
+  "ui.action_to_visible_ms.FAST.p95": {
+    "max": 600,
+    "why": "touch feedback fully visible"
+  },
+  "ui.action_to_visible_ms.TEXT.p95": {
+    "max": 1200,
+    "why": "page turn fully visible"
+  },
+  "mem.internal.failed_allocs": {
+    "max": 0
+  },
+  "mem.external.failed_allocs": {
+    "max": 0
+  },
+  "display.underruns": {
+    "max": 0,
+    "optional": true
+  },
+  "mem.internal_total.min_free_bytes": {
+    "min": 32768,
+    "why": "SR-PL-04: at least 32 KiB of internal RAM (internal heap + DMA reserve, both usable by internal-only allocations) left at the worst moment"
+  },
+  "mem.dma.min_free_bytes": {
+    "min": 16384,
+    "why": "DMA reserve headroom for users not modelled yet (Wi-Fi RX bursts) after display bounce, 4G UART NIC and SD bounce buffers"
+  },
+  "mem.internal_total.largest_free_min_bytes": {
+    "min": 8192,
+    "why": "an internal-only allocation of 8 KiB (task stack, TLS record buffer) must still succeed at the worst moment"
+  },
+  "warnings.count": {
+    "max": 0,
+    "optional": true,
+    "why": "a simulator warning (stack, long burst, unknown cost class, underrun ...) means the run is not clean"
+  }
+}

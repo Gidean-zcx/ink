@@ -1,0 +1,169 @@
+{
+  "id": "desktop-lcd",
+  "name": "Desktop Linux, 1280x800 LCD (development / non-embedded target)",
+  "class": "desktop",
+  "cpu": {
+    "cores": 4,
+    "mhz": 3000,
+    "coremark_per_mhz_per_core": 6.0,
+    "host_to_target_default": 1.0,
+    "icache_penalty": 0.0,
+    "dcache_kib": 0
+  },
+  "kernel": {
+    "sched_overhead_ns": 300,
+    "ctx_switch_ns": 2000,
+    "queue_op_ns": 300,
+    "long_burst_warn_ms": 100,
+    "host_stack_ratio": 1.0,
+    "tcb_bytes": 0,
+    "sync_obj_bytes": 0,
+    "tick_hz": 1000,
+    "now_cost_ns": 50,
+    "main_stack_bytes": 8192,
+    "_notes_stack": "host_stack_ratio 1.0 = use host (x86-64) stack use as-is: pessimistic for RV32 (smaller frames, same arrays). Authoritative check: -fstack-usage on the target build."
+  },
+  "memory": {
+    "internal_heap_kib": 65536,
+    "dma_heap_kib": 16384,
+    "external_heap_kib": 524288,
+    "always_internal_max_bytes": 0,
+    "heap_region_overhead_bytes": 0
+  },
+  "display": {
+    "tech": "lcd",
+    "width": 1280,
+    "height": 800,
+    "dpi": 160,
+    "gray_levels": 256,
+    "color": true,
+    "rotation_deg": 0,
+    "full_frame_scan": false,
+    "lcd_frame_us": 16667,
+    "driver_external_kib": 0,
+    "driver_internal_kib": 0,
+    "power_up_us": 0,
+    "line_queue_us": 100000,
+    "feeders": "none"
+  },
+  "input": {
+    "touch": true,
+    "touch_points": 1,
+    "i2c_khz": 0,
+    "touch_read_bytes": 0,
+    "i2c_background_poll_ms": 0,
+    "i2c_background_bytes": 0,
+    "keys": [
+      "home",
+      "prev",
+      "next",
+      "back",
+      "ai"
+    ],
+    "touch_detect_us": 20000
+  },
+  "flash": {
+    "user_partition_kib": 65536,
+    "sector_bytes": 4096,
+    "page_bytes": 4096,
+    "erase_sector_us": {
+      "typ": 0,
+      "max": 0
+    },
+    "program_page_us": {
+      "typ": 50,
+      "max": 500
+    },
+    "timing": "typ",
+    "stalls_cpu": false,
+    "read_mbps": 20,
+    "op_overhead_us": 30
+  },
+  "sd": {
+    "read_mbps": 500,
+    "write_mbps": 300,
+    "op_latency_us": 100,
+    "spike_every_kib": 4096,
+    "capacity_gib": 8
+  },
+  "features": {
+    "modem": false,
+    "wifi": true,
+    "audio_out": true,
+    "audio_in": true,
+    "frontlight": false,
+    "haptics": false,
+    "rtc": true
+  },
+  "costs_cycles": {
+    "lvgl.px": 25,
+    "epd.convert_px": 6,
+    "glyph.blit": 9000,
+    "text.layout_char": 1500,
+    "json.byte": 60,
+    "crc32.byte": 8,
+    "littlefs.op": 60000,
+    "psram.copy_byte": 15.2,
+    "psram_to_internal.copy_byte": 5.8,
+    "internal_to_psram.copy_byte": 10.0,
+    "sram.copy_byte": 0.9,
+    "icache.miss": 1150,
+    "heap.op": 1500,
+    "lvgl.refr": 150000,
+    "ui.rotate_px": 20,
+    "tls.handshake": 96000000,
+    "net.byte": 40,
+    "opus.enc_frame": 2400000,
+    "opus.dec_frame": 450000,
+    "audio.convert_frame": 12,
+    "audio.mix_sample": 6,
+    "tone.sample": 20,
+    "epd.diff_px": 14,
+    "flash.line_fill": 0,
+    "lvgl.obj_refr": 1500,
+    "lvgl.obj_create": 20000
+  },
+  "power": {
+    "_notes": "defaults from the simulator; not modelled for this class"
+  },
+  "network": {
+    "wifi": {
+      "rtt_ms_p50": 8,
+      "rtt_ms_p99": 40,
+      "mbps": 20,
+      "wake_extra_ms": [
+        0,
+        50
+      ],
+      "tail_s": 0.2
+    },
+    "lte": {
+      "rtt_ms_p50": 60,
+      "rtt_ms_p99": 300,
+      "mbps": 10,
+      "idle_resume_after_s": 10,
+      "idle_resume_extra_ms": 200,
+      "loss": 0.005,
+      "tail_s": 10
+    },
+    "default_link": "wifi",
+    "tls_internal_kib": 0,
+    "tls_external_kib": 64,
+    "ws_task_stack": 8192,
+    "event_task_stack": 8192,
+    "ws_task_stack_external": false,
+    "uart_nic_task_stack_external": false
+  },
+  "audio": {
+    "dma_desc": 4,
+    "dma_frames": 320,
+    "slot_bytes": 4,
+    "start_ms": 50,
+    "stop_ms": 10,
+    "task_stack": 16384,
+    "task_prio": 8,
+    "opus_enc_kib": 30,
+    "opus_dec_kib": 27,
+    "_notes": "ALSA: 4 periods x 20 ms, 16-bit stereo; no flash stalls on this class of device. Estimates."
+  }
+}

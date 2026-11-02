@@ -1,0 +1,3 @@
+verify scroll_full, 60 phases: phases with any state/drive mismatch: 0; RV32 instructions 1000.7 M
+verify scroll_full, 60 phases: phases with any state/drive mismatch: 0; RV32 instructions 192.4 M
+verify scroll_full, 60 phases: phases with any state/drive mismatch: 0; RV32 instructions 150.1 M

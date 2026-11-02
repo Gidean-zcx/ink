@@ -1,0 +1,26 @@
+# Reader: open the library from home, open the Chinese book, read 14 pages
+# (keys, swipes, tap zones), idle long enough for the position to be saved,
+# go home. Coordinates in dp / % (portable).
+@3s      tap   116dp 160dp        # "阅读" on home (16..216 x 132..188 dp)
++2500ms  snap  library
++500ms   tap   50% 228dp          # third book (64 + 2*68 dp): 测试长书 (40 parts)
++3s      snap  page1
++1500ms  key   next
++1500ms  key   next
++1500ms  key   next
++1500ms  snap  page4
++500ms   key   next
++1500ms  key   next
++1500ms  swipe 85% 50% 15% 50% 250ms
++1500ms  swipe 85% 50% 15% 50% 250ms
++1500ms  tap   85% 50%            # right two thirds: next page
++1500ms  tap   85% 50%
++1500ms  tap   15% 50%            # left third: previous page
++1500ms  key   next
++1500ms  key   next
++1500ms  key   next
++1500ms  key   next
++1500ms  snap  page13
++12s     key   home               # position is saved during the idle gap
++3s      snap  home
++500ms   end

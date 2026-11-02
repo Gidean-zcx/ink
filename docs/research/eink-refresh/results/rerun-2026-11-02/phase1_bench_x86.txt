@@ -1,0 +1,11 @@
+ 432x160   PB driver 3.09 | integrator driver 1.84 | FS dither 7.15 | BN dither 1.04 | PQ (dither+drive) 30.62 (+pack 0.94)  ns/px
+           PB+FS total 10.24   PB+BN total 4.13   PQ total 31.56   -> PQ / (PB+FS) = 3.08x, PQ / (PB+BN) = 7.64x
+           PQ-fast (closed form) 18.61 ns/px (+pack 0.94) = 19.55 total -> 1.91x PB+FS, 4.73x PB+BN
+           PQ-branchless 18.34 ns/px (+pack 0.94) = 19.29 total -> 1.88x PB+FS, 4.67x PB+BN
+           PQ-wavefront 20.67 ns/px (+pack 0.94) = 21.62 total -> 2.11x PB+FS, 5.23x PB+BN
+1600x1200  PB driver 2.69 | integrator driver 1.56 | FS dither 6.46 | BN dither 0.94 | PQ (dither+drive) 25.76 (+pack 0.91)  ns/px
+           PB+FS total 9.16   PB+BN total 3.63   PQ total 26.67   -> PQ / (PB+FS) = 2.91x, PQ / (PB+BN) = 7.35x
+           PQ-fast (closed form) 17.19 ns/px (+pack 0.91) = 18.09 total -> 1.98x PB+FS, 4.98x PB+BN
+           PQ-branchless 16.61 ns/px (+pack 0.91) = 17.51 total -> 1.91x PB+FS, 4.83x PB+BN
+           PQ-wavefront 18.60 ns/px (+pack 0.91) = 19.51 total -> 2.13x PB+FS, 5.37x PB+BN
+exit 0

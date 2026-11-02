@@ -1,0 +1,17 @@
+fling scenarios (70 UI frames at ~28 fps, start 60-70 px/frame, decaying 7%/frame), 12 ms phases, one RV32IM core @320 MHz
+list scroll, half screen   PQ-BN   | while moving (183 phases): avg  31.38 ms  max 127.43 ms (excl. switch) | after stop: refine   51.4 ms of work, worst phase   14.0 ms, busy until +7 phases | mode switches   0.0 ms
+list scroll, half screen   hybrid  | while moving (183 phases): avg   6.85 ms  max  11.93 ms (excl. switch) | after stop: refine  285.5 ms of work, worst phase  145.0 ms, busy until +10 phases | mode switches 116.4 ms
+  (auto, budget 20000 px/phase: motion tiles present in 196 phases)
+list scroll, half screen   auto    | while moving (183 phases): avg   8.78 ms  max  17.55 ms (excl. switch) | after stop: refine  229.2 ms of work, worst phase   29.1 ms, busy until +30 phases | mode switches   0.0 ms
+full-screen scroll 28 fps  PQ-BN   | while moving (183 phases): avg  55.52 ms  max 234.91 ms (excl. switch) | after stop: refine   63.3 ms of work, worst phase   22.2 ms, busy until +7 phases | mode switches   0.0 ms
+full-screen scroll 28 fps  hybrid  | while moving (183 phases): avg  10.41 ms  max  20.11 ms (excl. switch) | after stop: refine  480.6 ms of work, worst phase  253.4 ms, busy until +10 phases | mode switches 219.5 ms
+  (auto, budget 20000 px/phase: motion tiles present in 208 phases)
+full-screen scroll 28 fps  auto    | while moving (183 phases): avg  13.64 ms  max  27.00 ms (excl. switch) | after stop: refine  363.5 ms of work, worst phase   28.9 ms, busy until +44 phases | mode switches   0.0 ms
+full-screen scroll 14 fps  PQ-BN   | while moving (186 phases): avg  33.05 ms  max 259.86 ms (excl. switch) | after stop: refine   63.4 ms of work, worst phase   22.3 ms, busy until +7 phases | mode switches   0.0 ms
+full-screen scroll 14 fps  hybrid  | while moving (186 phases): avg   8.89 ms  max  19.91 ms (excl. switch) | after stop: refine  478.7 ms of work, worst phase  251.3 ms, busy until +10 phases | mode switches 219.7 ms
+  (auto, budget 20000 px/phase: motion tiles present in 205 phases)
+full-screen scroll 14 fps  auto    | while moving (186 phases): avg  12.45 ms  max  29.40 ms (excl. switch) | after stop: refine  357.3 ms of work, worst phase   28.9 ms, busy until +44 phases | mode switches   0.0 ms
+cover grid scroll          PQ-BN   | while moving (177 phases): avg 105.47 ms  max 391.86 ms (excl. switch) | after stop: refine   68.1 ms of work, worst phase   28.6 ms, busy until +8 phases | mode switches   0.0 ms
+cover grid scroll          hybrid  | while moving (177 phases): avg  11.92 ms  max  22.09 ms (excl. switch) | after stop: refine  620.6 ms of work, worst phase  365.9 ms, busy until +10 phases | mode switches 225.4 ms
+  (auto, budget 20000 px/phase: motion tiles present in 209 phases)
+cover grid scroll          auto    | while moving (177 phases): avg  12.97 ms  max  25.41 ms (excl. switch) | after stop: refine  588.2 ms of work, worst phase   28.4 ms, busy until +52 phases | mode switches   0.0 ms

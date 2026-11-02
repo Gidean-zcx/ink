@@ -1,0 +1,178 @@
+{
+ "video|INT-BN  integrator + blue-noise binary": {
+  "name": "INT-BN  integrator + blue-noise binary",
+  "psnr": 22.517860412597656,
+  "psnr_final": 29.443164825439453,
+  "shimmer": 10.532285690307617,
+  "pulses": 6.805811631944452,
+  "dc_rms": 6.227358990776106,
+  "dc_max": 8,
+  "ghost_white": 1.1136853694915771,
+  "ghost_black": 1.1703951358795166
+ },
+ "video|INT-FS  integrator + FS binary": {
+  "name": "INT-FS  integrator + FS binary",
+  "psnr": 16.33761978149414,
+  "psnr_final": 31.9483585357666,
+  "shimmer": 14.34749984741211,
+  "pulses": 45.981870659722254,
+  "dc_rms": 6.2295665980869,
+  "dc_max": 8,
+  "ghost_white": 0.9092938899993896,
+  "ghost_black": 0.9878644943237305
+ },
+ "video|PQ-ED   serial ED over reachable states": {
+  "name": "PQ-ED   serial ED over reachable states",
+  "psnr": 26.251832962036133,
+  "psnr_final": 37.29288864135742,
+  "shimmer": 6.93048095703125,
+  "pulses": 10.066276041666663,
+  "dc_rms": 5.301923294899692,
+  "dc_max": 9,
+  "ghost_white": 0.7110322713851929,
+  "ghost_black": 1.3452260494232178
+ },
+ "video|PQ-BN   parallel, blue-noise over reachable": {
+  "name": "PQ-BN   parallel, blue-noise over reachable",
+  "psnr": 26.122953414916992,
+  "psnr_final": 35.48937225341797,
+  "shimmer": 7.81414270401001,
+  "pulses": 9.83587022569444,
+  "dc_rms": 5.31799838010819,
+  "dc_max": 10,
+  "ghost_white": 0.2561698853969574,
+  "ghost_black": 1.3219404220581055
+ },
+ "video|PQ-BN   integer (pqbn_fixed.c)": {
+  "name": "PQ-BN   integer (pqbn_fixed.c)",
+  "psnr": 26.06887435913086,
+  "psnr_final": 34.282833099365234,
+  "shimmer": 7.720638751983643,
+  "pulses": 9.642131076388882,
+  "dc_rms": 5.307438765544074,
+  "dc_max": 9,
+  "ghost_white": 0.26775750517845154,
+  "ghost_black": 1.468400001525879
+ },
+ "video|PQ-BN   64KB 2-bit LUT, 4bpp target": {
+  "name": "PQ-BN   64KB 2-bit LUT, 4bpp target",
+  "psnr": 25.520801544189453,
+  "psnr_final": 32.18289566040039,
+  "shimmer": 8.224543571472168,
+  "pulses": 10.224257812500001,
+  "dc_rms": 5.496786466503254,
+  "dc_max": 11,
+  "ghost_white": 0.27649015188217163,
+  "ghost_black": 1.31792151927948
+ },
+ "video|PQ-BN   event-driven (previous)": {
+  "name": "PQ-BN   event-driven (previous)",
+  "psnr": 25.53066062927246,
+  "psnr_final": 32.302425384521484,
+  "shimmer": 8.033417701721191,
+  "pulses": 9.921595052083337,
+  "dc_rms": 5.530772107415625,
+  "dc_max": 11,
+  "ghost_white": 0.2755145728588104,
+  "ghost_black": 1.3176183700561523
+ },
+ "video|PQ-BN v2 16-bit state, 32KB LUT, tiles": {
+  "name": "PQ-BN v2 16-bit state, 32KB LUT, tiles",
+  "psnr": 25.529396057128906,
+  "psnr_final": 32.72724914550781,
+  "shimmer": 8.167501449584961,
+  "pulses": 10.144058159722235,
+  "dc_rms": 5.528402044593597,
+  "dc_max": 11,
+  "ghost_white": 0.42623603343963623,
+  "ghost_black": 1.3144086599349976
+ },
+ "text|INT-BN  integrator + blue-noise binary": {
+  "name": "INT-BN  integrator + blue-noise binary",
+  "psnr": 19.48856544494629,
+  "psnr_final": 30.3317928314209,
+  "shimmer": 34.108673095703125,
+  "pulses": 13.65989149305557,
+  "dc_rms": 2.5565275929145246,
+  "dc_max": 8,
+  "ghost_white": 1.1416471004486084,
+  "ghost_black": 1.9180517196655273
+ },
+ "text|INT-FS  integrator + FS binary": {
+  "name": "INT-FS  integrator + FS binary",
+  "psnr": 19.434932708740234,
+  "psnr_final": 34.757408142089844,
+  "shimmer": 33.48340606689453,
+  "pulses": 13.717903645833335,
+  "dc_rms": 2.5522865565344866,
+  "dc_max": 8,
+  "ghost_white": 1.117548942565918,
+  "ghost_black": 1.8994605541229248
+ },
+ "text|PQ-ED   serial ED over reachable states": {
+  "name": "PQ-ED   serial ED over reachable states",
+  "psnr": 21.40589141845703,
+  "psnr_final": 37.68946838378906,
+  "shimmer": 31.18321990966797,
+  "pulses": 19.37358940972225,
+  "dc_rms": 2.868929279074919,
+  "dc_max": 5,
+  "ghost_white": 1.9032673835754395,
+  "ghost_black": 1.7350200414657593
+ },
+ "text|PQ-BN   parallel, blue-noise over reachable": {
+  "name": "PQ-BN   parallel, blue-noise over reachable",
+  "psnr": 21.34221076965332,
+  "psnr_final": 38.55377197265625,
+  "shimmer": 31.2633113861084,
+  "pulses": 19.416440972222226,
+  "dc_rms": 2.3578879143561227,
+  "dc_max": 7,
+  "ghost_white": 1.821528434753418,
+  "ghost_black": 1.7727670669555664
+ },
+ "text|PQ-BN   integer (pqbn_fixed.c)": {
+  "name": "PQ-BN   integer (pqbn_fixed.c)",
+  "psnr": 21.3282413482666,
+  "psnr_final": 38.44488525390625,
+  "shimmer": 31.20631217956543,
+  "pulses": 19.295010850694442,
+  "dc_rms": 2.3125309682611097,
+  "dc_max": 7,
+  "ghost_white": 1.9205771684646606,
+  "ghost_black": 1.8832530975341797
+ },
+ "text|PQ-BN   64KB 2-bit LUT, 4bpp target": {
+  "name": "PQ-BN   64KB 2-bit LUT, 4bpp target",
+  "psnr": 21.337722778320312,
+  "psnr_final": 39.16202926635742,
+  "shimmer": 31.169124603271484,
+  "pulses": 19.437641059027783,
+  "dc_rms": 2.364414457993071,
+  "dc_max": 7,
+  "ghost_white": 1.7658458948135376,
+  "ghost_black": 1.7871956825256348
+ },
+ "text|PQ-BN   event-driven (previous)": {
+  "name": "PQ-BN   event-driven (previous)",
+  "psnr": 21.336483001708984,
+  "psnr_final": 38.43904495239258,
+  "shimmer": 31.14346694946289,
+  "pulses": 19.400310329861114,
+  "dc_rms": 2.376526373547465,
+  "dc_max": 7,
+  "ghost_white": 1.7910698652267456,
+  "ghost_black": 1.7851272821426392
+ },
+ "text|PQ-BN v2 16-bit state, 32KB LUT, tiles": {
+  "name": "PQ-BN v2 16-bit state, 32KB LUT, tiles",
+  "psnr": 21.324993133544922,
+  "psnr_final": 38.00811767578125,
+  "shimmer": 31.16177749633789,
+  "pulses": 19.35137152777778,
+  "dc_rms": 2.2901453283580064,
+  "dc_max": 7,
+  "ghost_white": 1.920336127281189,
+  "ghost_black": 1.746706485748291
+ }
+}

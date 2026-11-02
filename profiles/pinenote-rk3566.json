@@ -1,0 +1,195 @@
+{
+  "id": "pinenote-rk3566",
+  "name": "RK3566 e-ink tablet class (PineNote-like, 10.3in 1872x1404, Linux)",
+  "class": "soc",
+  "_sources": "estimates for portability testing; RK3566 quad Cortex-A55 1.8 GHz, rockchip-ebc DRM e-ink controller; not calibrated",
+  "cpu": {
+    "cores": 4,
+    "mhz": 1800,
+    "coremark_per_mhz_per_core": 4.0,
+    "host_to_target_default": 4.0,
+    "icache_penalty": 0.0,
+    "dcache_kib": 0
+  },
+  "kernel": {
+    "sched_overhead_ns": 800,
+    "ctx_switch_ns": 4000,
+    "queue_op_ns": 800,
+    "long_burst_warn_ms": 50,
+    "host_stack_ratio": 1.0,
+    "tcb_bytes": 0,
+    "sync_obj_bytes": 0,
+    "tick_hz": 1000,
+    "now_cost_ns": 50,
+    "main_stack_bytes": 8192,
+    "_notes_stack": "host_stack_ratio 1.0 = use host (x86-64) stack use as-is: pessimistic for RV32 (smaller frames, same arrays). Authoritative check: -fstack-usage on the target build."
+  },
+  "memory": {
+    "internal_heap_kib": 65536,
+    "dma_heap_kib": 16384,
+    "external_heap_kib": 524288,
+    "always_internal_max_bytes": 0,
+    "_notes": "Linux: no internal/PSRAM split; budgets are what the ink system may use",
+    "heap_region_overhead_bytes": 0
+  },
+  "display": {
+    "tech": "epd",
+    "width": 1872,
+    "height": 1404,
+    "dpi": 227,
+    "gray_levels": 16,
+    "rotation_deg": 90,
+    "full_frame_scan": true,
+    "frame_time_us": 11800,
+    "power_up_us": 5000,
+    "power_down_us": 2000,
+    "touch_pause_during_power_us": 0,
+    "driver_external_kib": 0,
+    "driver_internal_kib": 0,
+    "_notes": "EBC ~85 Hz frame rate (estimate); waveform phase counts are estimates",
+    "waveforms": {
+      "GC16": {
+        "phases": 40,
+        "flashing": true,
+        "ghost": 0.0
+      },
+      "GL16": {
+        "phases": 40,
+        "flashing": false,
+        "ghost": 0.02
+      },
+      "DU": {
+        "phases": 22,
+        "flashing": false,
+        "ghost": 0.06
+      },
+      "A2": {
+        "phases": 10,
+        "flashing": false,
+        "ghost": 0.12
+      }
+    },
+    "gc16_full_phases": 40,
+    "line_queue_lines": 4096,
+    "lcd_isr_duty": 0.0,
+    "diff_pass": "none",
+    "feeders": "none"
+  },
+  "input": {
+    "touch": true,
+    "touch_points": 10,
+    "i2c_khz": 400,
+    "touch_read_bytes": 9,
+    "i2c_background_poll_ms": 0,
+    "i2c_background_bytes": 0,
+    "keys": [
+      "power"
+    ],
+    "touch_detect_us": 20000
+  },
+  "flash": {
+    "user_partition_kib": 65536,
+    "sector_bytes": 4096,
+    "page_bytes": 4096,
+    "erase_sector_us": {
+      "typ": 0,
+      "max": 0
+    },
+    "program_page_us": {
+      "typ": 150,
+      "max": 2000
+    },
+    "timing": "tail",
+    "stalls_cpu": false,
+    "_notes": "eMMC: no CPU stalls",
+    "read_mbps": 20,
+    "op_overhead_us": 30
+  },
+  "sd": {
+    "read_mbps": 150,
+    "write_mbps": 40,
+    "op_latency_us": 300,
+    "spike_every_kib": 4096,
+    "capacity_gib": 8
+  },
+  "features": {
+    "modem": false,
+    "wifi": true,
+    "audio_out": true,
+    "audio_in": true,
+    "frontlight": true,
+    "haptics": false,
+    "rtc": true
+  },
+  "costs_cycles": {
+    "lvgl.px": 25,
+    "epd.convert_px": 6,
+    "glyph.blit": 9000,
+    "text.layout_char": 1500,
+    "json.byte": 60,
+    "crc32.byte": 8,
+    "littlefs.op": 60000,
+    "psram.copy_byte": 15.2,
+    "psram_to_internal.copy_byte": 5.8,
+    "internal_to_psram.copy_byte": 10.0,
+    "sram.copy_byte": 0.9,
+    "icache.miss": 1150,
+    "heap.op": 1500,
+    "lvgl.refr": 150000,
+    "ui.rotate_px": 20,
+    "tls.handshake": 96000000,
+    "net.byte": 40,
+    "opus.enc_frame": 2400000,
+    "opus.dec_frame": 450000,
+    "audio.convert_frame": 12,
+    "audio.mix_sample": 6,
+    "tone.sample": 20,
+    "epd.diff_px": 14,
+    "flash.line_fill": 0,
+    "lvgl.obj_refr": 1500,
+    "lvgl.obj_create": 20000
+  },
+  "power": {
+    "_notes": "defaults from the simulator; not modelled for this class"
+  },
+  "network": {
+    "wifi": {
+      "rtt_ms_p50": 8,
+      "rtt_ms_p99": 40,
+      "mbps": 20,
+      "wake_extra_ms": [
+        0,
+        50
+      ],
+      "tail_s": 0.2
+    },
+    "lte": {
+      "rtt_ms_p50": 60,
+      "rtt_ms_p99": 300,
+      "mbps": 10,
+      "idle_resume_after_s": 10,
+      "idle_resume_extra_ms": 200,
+      "loss": 0.005,
+      "tail_s": 10
+    },
+    "default_link": "wifi",
+    "tls_internal_kib": 0,
+    "tls_external_kib": 64,
+    "ws_task_stack": 8192,
+    "event_task_stack": 8192,
+    "ws_task_stack_external": false,
+    "uart_nic_task_stack_external": false
+  },
+  "audio": {
+    "dma_desc": 4,
+    "dma_frames": 320,
+    "slot_bytes": 4,
+    "start_ms": 50,
+    "stop_ms": 10,
+    "task_stack": 16384,
+    "task_prio": 8,
+    "opus_enc_kib": 30,
+    "opus_dec_kib": 27,
+    "_notes": "ALSA: 4 periods x 20 ms, 16-bit stereo; no flash stalls on this class of device. Estimates."
+  }
+}

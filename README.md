@@ -4,21 +4,39 @@
 
 项目建立于 2026-10-26。云端仓库为 [Gidean-zcx/ink](https://github.com/Gidean-zcx/ink)，项目资料沿用 reader 名称。后续零散想法与需求从[云端协作入口](docs/project.md)持续接续。
 
-## 现在从这里开始（2026-11-01）
+## 现在从这里开始（2026-11-02）
 
-项目已从“收集想法与调研”（S0，已完成）进入**产品定义与系统需求**阶段。完整流程和当前位置见 [开发流程](docs/process.md)。
+**第一次接触本项目，或要做审计：先读 [项目全貌与背景](docs/background.md)。** 它集中交代了用户与目标、硬件、时间线、已定的决策、已实现的系统与模拟器、哪些只是估算、怎么构建测试，以及已知问题。
+
+项目已走完 S0 探索与调研。当前是 S1 产品定义（基本完成）、S2 系统需求与 S3 架构和技术验证（进行中），完整流程见 [开发流程](docs/process.md)。
+
+- **实物**：整机约 12 月初到货。到货前，系统在自建的两级模拟器上开发和验证：
+  - 第一级把系统编译成电脑程序，在按 E-Ink4 Plus 建模的虚拟设备上运行；
+  - 第二级是指令级模拟器，用来校准 CPU 成本。
+- **已有的系统纵切**：主页、书架与阅读器、语音 AI、动作与策略、电源与待机。全部在 CI 中按预算检查（26 项测试）。
+- **证据边界**：至今没有任何实机测量数据。
 
 | 想知道 | 看这里 |
 | --- | --- |
+| **项目全貌、证据边界、构建与测试** | [项目全貌与背景](docs/background.md) |
 | 整个流程怎么走、现在在哪一步 | [开发流程](docs/process.md) |
-| 产品给谁用、首版做什么（A/B/C 三个方案） | [产品定义 PRD](docs/product/prd.md) |
+| 产品给谁用、首版做什么 | [产品定义 PRD](docs/product/prd.md)、[需求深读](docs/product/needs-analysis.md) |
 | 每个功能做到什么程度算合格 | [系统需求 SRS](docs/system/srs.md) |
-| 用户到底要什么、底座必须承接什么 | [需求深读](docs/product/needs-analysis.md) |
-| **第一版底座怎么设计（当前核心文档）** | [底座设计](docs/system/foundation.md)；可点选的[底座地图](https://claude.ai/artifact/KvJAr2ZS9MZNvHu9RqcZRz)（源文件 [docs/foundation-map.html](docs/foundation-map.html)） |
-| 同类设备怎么建、我们借什么避什么 | [架构对标](docs/research/architecture-benchmarks.md)、[底座专题研究](docs/research/foundation/README.md) |
-| 系统怎么分层、设备与服务器怎么分工（第一轮方向） | [架构方案](docs/system/architecture.md) |
+| 第一版底座怎么设计 | [底座设计](docs/system/foundation.md)；可点选的[底座地图](https://claude.ai/artifact/KvJAr2ZS9MZNvHu9RqcZRz)（源文件 [docs/foundation-map.html](docs/foundation-map.html)） |
+| **模拟器与平台抽象：模型、参数、评审、现在的数字** | [平台与模拟器](docs/system/platform-and-simulator.md) |
+| 墨水屏刷新算法研究及其集成复核 | [刷新算法研究](docs/research/eink-refresh-algorithm.md)、[集成报告](docs/research/eink-refresh-integration.md) |
+| 系统怎么分层、设备与服务器怎么分工 | [架构方案](docs/system/architecture.md) |
 | 最大的技术风险和实机验证计划 | [风险与验证](docs/system/risks-and-spikes.md) |
 | 需要用户拍板的事项与推荐 | [决策记录](docs/decisions/README.md)；可点选的[交互式决策板](https://claude.ai/artifact/RWnCX8AyAbyqArc7D9Wsft)（源文件 [docs/decision-board.html](docs/decision-board.html)） |
+| 外部审计 | [审计记录与任务说明](docs/audits/README.md) |
+
+构建与测试：
+
+```bash
+cmake -S . -B build && cmake --build build -j && ctest --test-dir build --output-on-failure
+```
+
+需要能访问 GitHub（拉取 LVGL），以及 `fonts-noto-cjk`、`python3-pil`。详见 [项目全貌 §11](docs/background.md)。
 
 下方是 S0 阶段的原始说明与调研索引，作为参考库保留。
 
@@ -40,9 +58,11 @@
 
 - [云端协作入口](docs/project.md)：当前状态、资料位置，以及新想法和新需求的接续方式。
 - [有限算力下的调度与体验](docs/research/system-scheduling-and-experience.md)：2026-10-31 补充；联合考虑 CPU、内存、音频、刷新、IO 和多任务流程，保留源码证据与实机验证边界。
+- [墨水屏刷新算法研究](docs/research/eink-refresh-algorithm.md)：2026-11-02 归档，包括 PaperBoy 对照、Plus 波形审计与延迟仿真、PQ-BN v4 直驱算法（含自动快速运动渲染），以及[代码、结果与对比视频](docs/research/eink-refresh/README.md)；均为仿真与指令级估算，未实机验证。
 
 后续设计优先从[按问题查竞品依据](docs/research/interaction-library/design-reference-guide.md)进入，再查具体任务、证据与缺口；不必按时间顺序读完简报。
 
+- [第五十七期：墨水屏刷新算法与直驱方案](docs/briefs/057-eink-refresh-algorithm.md)：绕开全局锁逐相驱动；点按 50% 可见时间从 136 ms 降到 48 ms（仿真）；v4 单核可承担静止、出字、翻页，快速滚动自动切换渲染方式；待硬件标定。
 - [第五十六期：墨水屏怎样做到操作顺畅](docs/briefs/056-eink-ui-interaction.md)：官方文档与 Plus 固定源码交叉核查；区分输入、可见、可读和完成，比较手势、分页、AI 分段及儿童互动。
 - [第五十五期：全局入口与执行环境](docs/briefs/055-global-entry-and-execution-context.md)：快捷指令补语音/按键/组件、共享输入、提醒回访与配置组织；修正预览范围，新增14条设计参考。
 - [全部研究简报](docs/briefs/README.md)：历史发现与变更，按时间查阅。

@@ -1,0 +1,7 @@
+s0=0.00 phases 20000: pushes v3 475136 v4 475136, differing pixel-phases 0
+30000 phases: phases with hot-plane differences 0, drive-row differences 0 (drive bytes with pushes 6577963)
+motion test: 5801 phases, pushes 4141982, position mismatches 0, DC mismatches 0 of 3249 checked; exec_row mismatches 0 of 185600 rows
+page turn   : max motion tiles   0 (expect 0), max backlog 20 phases
+scroll      : max motion tiles 600 of 600, motion from phase 105 to 273 (scroll 102..219), max backlog 18
+cursor blink: max motion tiles   0 (expect 0), max backlog 0
+end         : motion tiles 0, pixels still planned 6308, DC mismatches 0 of 70492

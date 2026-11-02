@@ -1,0 +1,6 @@
+video  PQ-BN   event-driven (previous)              PSNR  25.53  final  32.30  shimmer   8.03  pulses  9.92%  DCrms    5.53 DCmax    11  ghostW  0.28 ghostB  1.32  (s)  (3s)
+video  PQ-BN v3 16-bit state, 32KB LUT              PSNR  25.53  final  32.72  shimmer   8.16  pulses 10.14%  DCrms    5.52 DCmax    11  ghostW  0.43 ghostB  1.31  (s)  (4s)
+video  PQ-BN v4 plan/execute, 2.5 B/px              PSNR  25.85  final  34.59  shimmer   8.08  pulses 10.00%  DCrms    5.46 DCmax    10  ghostW  0.38 ghostB  1.32  (s)   active words/phase 3214  tiles planned/phase 449.1 (4s)
+text   PQ-BN   event-driven (previous)              PSNR  21.34  final  38.44  shimmer  31.14  pulses 19.40%  DCrms    2.38 DCmax     7  ghostW  1.79 ghostB  1.79  (s)  (3s)
+text   PQ-BN v3 16-bit state, 32KB LUT              PSNR  21.32  final  38.00  shimmer  31.16  pulses 19.35%  DCrms    2.29 DCmax     7  ghostW  1.92 ghostB  1.75  (s)  (3s)
+text   PQ-BN v4 plan/execute, 2.5 B/px              PSNR  21.32  final  37.70  shimmer  31.14  pulses 19.36%  DCrms    2.34 DCmax     7  ghostW  1.93 ghostB  1.75  (s)   active words/phase 4111  tiles planned/phase 259.7 (4s)

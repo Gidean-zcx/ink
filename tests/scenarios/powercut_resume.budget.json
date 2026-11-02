@@ -1,0 +1,15 @@
+{
+  "_doc": "Run 2: after the torn save the filesystem mounts and the reader resumes at the old or the new position (SR-PL-08).",
+  "panic.count": {
+    "max": 0,
+    "optional": true
+  },
+  "reader.restored_page.max": {
+    "min": 3,
+    "why": "at least the first (complete) save survives: page 4 or later, never back to page 1"
+  },
+  "warnings.count": {
+    "max": 0,
+    "optional": true
+  }
+}

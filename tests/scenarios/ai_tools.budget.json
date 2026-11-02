@@ -1,0 +1,45 @@
+{
+  "_doc": "AI tool calls go through the action registry and its policy gate (foundation §6.1, §6.2, §6.4, §8).",
+  "panic.count": {
+    "max": 0,
+    "optional": true
+  },
+  "warnings.count": {
+    "max": 0,
+    "optional": true
+  },
+  "hub.tool_results.done": {
+    "min": 2,
+    "why": "page turn and member switch must be done by the device"
+  },
+  "hub.tool_results.stale": {
+    "min": 1,
+    "why": "a call prepared for an older page must not act on the new one"
+  },
+  "hub.tool_results.rejected": {
+    "min": 1,
+    "why": "a child cannot run a system action, whatever the model asks"
+  },
+  "action.ai.reader.next_page": {
+    "min": 2
+  },
+  "reader.page_turns": {
+    "min": 2,
+    "why": "the key turn and the AI turn both happened (stale one did not)"
+  },
+  "ai.answers": {
+    "min": 4
+  },
+  "ai.tool_to_visible_ms.p95": {
+    "max": 1500,
+    "srs": "SR-UX-03",
+    "why": "tool call received -> its effect stable (page turn ~0.85 s; member switch rebuilds the home screen with a full GC16 ~1.3 s)"
+  },
+  "audio.speaker.underruns": {
+    "max": 0,
+    "srs": "SR-PL-02"
+  },
+  "audio.mic.lost_ms": {
+    "max": 0
+  }
+}

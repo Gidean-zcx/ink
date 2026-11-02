@@ -1,0 +1,8 @@
+  (auto, budget 8000 px/phase: motion tiles present in 215 phases)
+list scroll, half screen   auto    | while moving (183 phases): avg   8.29 ms  max  14.42 ms (excl. switch) | after stop: refine  236.3 ms of work, worst phase   12.7 ms, busy until +52 phases | mode switches   0.0 ms
+  (auto, budget 8000 px/phase: motion tiles present in 248 phases)
+full-screen scroll 28 fps  auto    | while moving (183 phases): avg  11.94 ms  max  21.93 ms (excl. switch) | after stop: refine  379.1 ms of work, worst phase   12.4 ms, busy until +81 phases | mode switches   0.0 ms
+  (auto, budget 8000 px/phase: motion tiles present in 245 phases)
+full-screen scroll 14 fps  auto    | while moving (186 phases): avg  10.58 ms  max  22.13 ms (excl. switch) | after stop: refine  371.6 ms of work, worst phase   12.3 ms, busy until +81 phases | mode switches   0.0 ms
+  (auto, budget 8000 px/phase: motion tiles present in 259 phases)
+cover grid scroll          auto    | while moving (177 phases): avg  12.03 ms  max  22.88 ms (excl. switch) | after stop: refine  573.3 ms of work, worst phase   12.4 ms, busy until +93 phases | mode switches   0.0 ms

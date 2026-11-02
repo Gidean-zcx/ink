@@ -1,0 +1,25 @@
+/* Minimal startup for programs run on the iss simulator. */
+    .section .text.start, "ax"
+    .globl _start
+_start:
+    .option push
+    .option norelax
+    la      gp, __global_pointer$
+    .option pop
+    la      sp, __stack_top
+    /* zero .bss (the iss loader already does; kept for correctness) */
+    la      a0, __bss_start
+    la      a1, __bss_end
+1:  bgeu    a0, a1, 2f
+    sw      zero, 0(a0)
+    addi    a0, a0, 4
+    j       1b
+2:  li      t0, 0x2000          /* mstatus.FS = initial: FPU on */
+    csrs    mstatus, t0
+    csrwi   fcsr, 0
+    li      a0, 0
+    li      a1, 0
+    call    main
+    li      a7, 93              /* exit(a0) */
+    ecall
+3:  j       3b

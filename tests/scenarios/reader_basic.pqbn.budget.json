@@ -1,0 +1,76 @@
+{
+  "_doc": "Reader on the PQ-BN direct-drive profile (profiles/metalio-plus-pqbn.json, D-40): the same checks as reader_basic.budget.json except the page-turn gate. With the kernel as written the next phase is planned after each scan, so a full page takes ~1 s (p95 ~1.0 s vs 0.72 s with EPDiy); planning behind the scan (a port change, docs/research/eink-refresh-integration.md) brings it to ~0.71 s. The gate guards the model against regressions; target_max shows the gap to the EPDiy port.",
+  "panic.count": {
+    "max": 0,
+    "optional": true
+  },
+  "reader.page_turns": {
+    "min": 13,
+    "why": "keys, swipes and tap zones must all turn pages"
+  },
+  "reader.turns_prerendered": {
+    "min": 9,
+    "why": "most forward turns should hit the page rendered ahead of time"
+  },
+  "ui.action_to_visible_ms.TEXT.p95": {
+    "max": 1100,
+    "target_max": 722,
+    "srs": "D-40",
+    "why": "page turn stable on PQ-BN, kernel as written (planning after each scan); target = the EPDiy port's p95 on the same scenario; reaching it needs planning behind the scan (integration report section 4)"
+  },
+  "ui.action_to_first_change_ms.p95": {
+    "max": 400,
+    "target_max": 350,
+    "srs": "SR-UX-01b",
+    "why": "first visible feedback with the panel idle"
+  },
+  "reader.page_render_ms.p95": {
+    "max": 600,
+    "why": "wall time of rendering the next page ahead; it runs while a waveform plays and the two EPD feeders hold ~93% of both cores, so it must still finish well before the next turn (1.5 s in this script)"
+  },
+  "reader.open_ms.max": {
+    "max": 1500,
+    "why": "open a book (load + first page)"
+  },
+  "display.underruns": {
+    "max": 0,
+    "optional": true,
+    "why": "no flash write may overlap a waveform"
+  },
+  "storage.write_ms.count": {
+    "min": 1,
+    "why": "the reading position must be saved"
+  },
+  "storage.write_errors": {
+    "max": 0,
+    "optional": true
+  },
+  "mem.internal.failed_allocs": {
+    "max": 0
+  },
+  "mem.external.failed_allocs": {
+    "max": 0
+  },
+  "mem.internal_total.min_free_bytes": {
+    "min": 32768,
+    "why": "SR-PL-04: at least 32 KiB of internal RAM (internal heap + DMA reserve, both usable by internal-only allocations) left at the worst moment"
+  },
+  "mem.dma.min_free_bytes": {
+    "min": 16384,
+    "why": "DMA reserve headroom for users not modelled yet (Wi-Fi RX bursts) after display bounce, 4G UART NIC and SD bounce buffers"
+  },
+  "mem.internal_total.largest_free_min_bytes": {
+    "min": 8192,
+    "why": "an internal-only allocation of 8 KiB (task stack, TLS record buffer) must still succeed at the worst moment"
+  },
+  "warnings.count": {
+    "max": 0,
+    "optional": true,
+    "why": "a simulator warning (stack, long burst, unknown cost class, underrun ...) means the run is not clean"
+  },
+  "ui.open_to_stable_ms.max": {
+    "max": 1500,
+    "srs": "SR-UX-03",
+    "why": "tap on a book -> its first page stable (end to end, incl. loading and the full GC16)"
+  }
+}
