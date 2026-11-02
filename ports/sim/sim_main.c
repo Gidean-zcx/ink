@@ -75,6 +75,7 @@ static int finalize(const char *status) {
     sim_input_report();
     sim_storage_report();
     sim_net_report();
+    sim_audio_report();
     sim_assets_report();
     sim_power_report();
     sim_trace_close();
@@ -102,6 +103,7 @@ static void boot_task(void *arg) {
     sim_display_init();
     sim_input_init();
     sim_net_init();
+    sim_audio_init();
     osal_mem_tag(prev);
     sim_metric_sample("boot.platform_ready_ms", vtk_now() / 1e6);
     ink_main();

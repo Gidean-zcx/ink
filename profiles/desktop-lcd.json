@@ -152,7 +152,9 @@
     "tls_internal_kib": 0,
     "tls_external_kib": 64,
     "ws_task_stack": 8192,
-    "event_task_stack": 8192
+    "event_task_stack": 8192,
+    "ws_task_stack_external": false,
+    "uart_nic_task_stack_external": false
   },
   "audio": {
     "dma_desc": 4,

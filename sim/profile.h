@@ -134,6 +134,7 @@ typedef struct {
     uint32_t dead_detect_ms;       /* a dead connection is noticed after this (ping timeout) */
     size_t uart_nic_dma_bytes;     /* 4G UART-Ethernet DMA rings */
     uint32_t uart_nic_stack;
+    bool ws_stack_external, uart_nic_stack_external; /* port decisions: these tasks never touch flash */
 
     /* audio: I2S DMA rings (16 kHz), codec memory */
     int audio_dma_desc, audio_dma_frames; /* per direction: descriptors x frames each */

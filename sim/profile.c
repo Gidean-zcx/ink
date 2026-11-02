@@ -274,6 +274,8 @@ int profile_load(const char *path, sim_profile_t *p, char *err, size_t errlen) {
     p->dead_detect_ms = (uint32_t)num(net, "dead_detect_ms", 5000);
     p->uart_nic_dma_bytes = (size_t)(num(net, "uart_nic_dma_kib", 0) * 1024);
     p->uart_nic_stack = (uint32_t)num(net, "uart_nic_task_stack", 4096);
+    p->ws_stack_external = flag(net, "ws_task_stack_external", false);
+    p->uart_nic_stack_external = flag(net, "uart_nic_task_stack_external", false);
 
     const cJSON *au = obj(root, "audio");
     p->audio_dma_desc = (int)num(au, "dma_desc", 4);

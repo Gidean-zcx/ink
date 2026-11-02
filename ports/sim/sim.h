@@ -129,6 +129,13 @@ void sim_i2c_init(void);
 void sim_i2c_transfer(const char *who, int bytes);       /* blocks for the bus + transfer time */
 void sim_i2c_hold(const char *who, uint64_t ns);         /* occupy the bus (e.g. PMIC power-up sequence) */
 
+/* ---- audio (I2S rings) + stand-in codec ---- */
+void sim_audio_init(void);            /* task context (boot) */
+void sim_audio_report(void);
+void sim_audio_mic_source(const char *name); /* ISR (script): "speech" | "silence" | "noise" */
+/** Build a stand-in Opus packet (level, pitch) the simulated decoder turns into a tone. */
+int sim_opus_fake_packet(uint8_t *out, int cap, double freq, double level, int bytes, uint32_t seed);
+
 /* ---- network + scripted hub ---- */
 struct hal_ws;
 void sim_net_init(void);              /* task context (boot) */

@@ -43,6 +43,17 @@ int ink_hub_subscribe(const char *prefix, ink_hub_notify_fn fn, void *ctx);
 void ink_hub_demand(void);
 bool ink_hub_online(void);
 
+/**
+ * Fire-and-forget while online (returns INK_HUB_ERR_OFFLINE otherwise): a JSON-RPC notification,
+ * or one binary message. Binary messages carry media: [kind u8][stream u8][seq u16 LE] + payload,
+ * kind 1 = microphone Opus frame (device -> hub), 2 = TTS Opus frame (hub -> device).
+ */
+int ink_hub_notify(const char *method, const char *params_json);
+int ink_hub_send_binary(const void *data, size_t len);
+typedef void (*ink_hub_binary_fn)(void *ctx, const uint8_t *data, size_t len);
+/** The (single) receiver of binary messages from the hub; runs in the hub task. */
+void ink_hub_on_binary(ink_hub_binary_fn fn, void *ctx);
+
 #ifdef __cplusplus
 }
 #endif

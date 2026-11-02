@@ -9,7 +9,7 @@
   },
   "ai.answers": {
     "min": 2,
-    "why": "the two asks without an outage must complete"
+    "why": "the two asks without an outage must complete (text and speech)"
   },
   "ai.failures": {
     "min": 1,
@@ -61,5 +61,29 @@
     "max": 0,
     "optional": true,
     "why": "a simulator warning (stack, long burst, unknown cost class, underrun ...) means the run is not clean"
+  },
+  "ai.press_to_tone_heard_ms.p95": {
+    "max": 150,
+    "srs": "SR-UX-01a",
+    "why": "AI key -> listening tone heard: the perceivable acknowledgement (the panel needs ~0.5 s)"
+  },
+  "ai.release_to_first_audio_heard_ms.p95": {
+    "max": 4000,
+    "srs": "SR-UX-06b",
+    "why": "release -> first syllable of the spoken answer heard (scripted hub: stt 0.3 s + think 1.4 s + TTS 0.5 s)"
+  },
+  "audio.mic.lost_ms": {
+    "max": 0,
+    "why": "no microphone audio may be lost (flash writes are held off, the capture ring rides out refreshes)"
+  },
+  "audio.speaker.underruns": {
+    "max": 0,
+    "srs": "SR-PL-02",
+    "why": "no audible gap in the spoken answer, page turns and refreshes included"
+  },
+  "audio.jitter_overflow": {
+    "max": 0,
+    "optional": true,
+    "why": "the jitter buffer must hold what a faster-than-real-time TTS stream sends ahead"
   }
 }

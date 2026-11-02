@@ -432,7 +432,9 @@ hal_ws_t *hal_ws_open(const char *url, hal_ws_cb cb, void *ctx) {
         free(w);
         return NULL;
     }
-    osal_task_cfg_t cfg = {.name = "ws", .fn = ws_task, .arg = w, .stack_bytes = g_profile.ws_stack, .priority = 5, .core = -1};
+    /* esp_websocket_client: CONFIG_ESP_WS_CLIENT_TASK_STACK_IN_EXT_RAM puts the stack in PSRAM (TCB stays internal) */
+    osal_task_cfg_t cfg = {.name = "ws", .fn = ws_task, .arg = w, .stack_bytes = g_profile.ws_stack, .priority = 5, .core = -1,
+                           .flags = g_profile.ws_stack_external ? OSAL_TASK_STACK_EXTERNAL : 0u};
     if (osal_task_create(&cfg, &w->task) != OSAL_OK) {
         osal_free(w->tls_int);
         osal_free(w->tls_ext);
@@ -530,7 +532,8 @@ void sim_net_init(void) {
          * installed while the modem is powered (upstream: 4G mode chosen at boot) */
         osal_mem_tag("uart-nic");
         if (!osal_malloc(g_profile.uart_nic_dma_bytes, OSAL_MEM_DMA)) osal_panic("4G UART NIC: no DMA memory for its rings");
-        osal_task_cfg_t nic = {.name = "uart_nic", .fn = idle_forever, .stack_bytes = g_profile.uart_nic_stack, .priority = 18, .core = -1};
+        osal_task_cfg_t nic = {.name = "uart_nic", .fn = idle_forever, .stack_bytes = g_profile.uart_nic_stack, .priority = 18, .core = -1,
+                               .flags = g_profile.uart_nic_stack_external ? OSAL_TASK_STACK_EXTERNAL : 0u};
         if (osal_task_create(&nic, NULL) != OSAL_OK) osal_panic("4G UART NIC task failed");
     }
     osal_mem_tag(prev);

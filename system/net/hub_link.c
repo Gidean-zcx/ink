@@ -28,7 +28,17 @@
 #define HELLO_TIMEOUT_US (10ull * 1000000ull)
 
 typedef enum { HS_DISCONNECTED, HS_CONNECTING, HS_HELLO, HS_ONLINE, HS_BACKOFF } hub_state_t;
-typedef enum { HE_CALL = 1, HE_WS, HE_LINK, HE_DEMAND } hub_ev_t;
+typedef enum { HE_CALL = 1, HE_WS, HE_LINK, HE_DEMAND, HE_TX } hub_ev_t;
+
+/* Fire-and-forget messages (notifications, binary audio frames): a FIFO in PSRAM drained by the
+ * hub task while online, so callers never touch the WebSocket handle owned by the hub task. */
+typedef struct tx_item {
+    struct tx_item *next;
+    bool binary;
+    size_t len;
+    uint8_t data[];
+} tx_item_t;
+#define TX_MAX_BYTES (96 * 1024)
 
 typedef struct {
     uint32_t id;
@@ -75,6 +85,11 @@ static struct {
     } subs[MAX_SUBS];
     int nsubs;
     ink_json_t *json; /* parse buffer (PSRAM, ~2 KB): keeps the token array off the stack */
+    osal_mutex_t *tx_lock;
+    tx_item_t *tx_head, *tx_tail;
+    size_t tx_bytes;
+    ink_hub_binary_fn bin_fn;
+    void *bin_ctx;
 } H;
 
 static char *dup_mem(const void *p, size_t n) {
@@ -248,6 +263,26 @@ static void send_hello(void) {
     hello.params = NULL;
 }
 
+static void drain_tx(bool online) {
+    for (;;) {
+        osal_mutex_lock(H.tx_lock, OSAL_WAIT_FOREVER);
+        tx_item_t *it = H.tx_head;
+        if (it) {
+            H.tx_head = it->next;
+            if (!H.tx_head) H.tx_tail = NULL;
+            H.tx_bytes -= it->len;
+        }
+        osal_mutex_unlock(H.tx_lock);
+        if (!it) return;
+        if (!online || !H.ws || hal_ws_send(H.ws, it->binary, it->data, it->len, 2000000) != 0) {
+            ink_probe_count("hub.tx_dropped");
+        } else {
+            H.last_activity = osal_now_us();
+        }
+        osal_free(it);
+    }
+}
+
 /* ---------------------------------------------------------------- task */
 
 static uint64_t next_wakeup(uint64_t now) {
@@ -297,11 +332,15 @@ static void hub_task(void *arg) {
             }
             case HE_DEMAND: break;
             case HE_LINK: break;
+            case HE_TX: break; /* drained below */
             case HE_WS:
                 if (m.ws_event == HAL_WS_CONNECTED && H.state == HS_CONNECTING) {
                     send_hello();
                 } else if (m.ws_event == HAL_WS_TEXT && m.data) {
                     on_text(m.data, m.len);
+                } else if (m.ws_event == HAL_WS_BINARY && m.data) {
+                    H.last_activity = now;
+                    if (H.bin_fn) H.bin_fn(H.bin_ctx, (const uint8_t *)m.data, m.len);
                 } else if (m.ws_event == HAL_WS_CLOSED) {
                     fail_all(INK_HUB_ERR_LOST, true);
                     ink_probe_count("hub.disconnects");
@@ -315,6 +354,8 @@ static void hub_task(void *arg) {
             }
             osal_free(m.data);
         }
+        /* queued notifications and binary frames: sent while online, dropped otherwise */
+        drain_tx(H.state == HS_ONLINE);
         /* timeouts */
         for (int i = 0; i < MAX_PENDING; i++)
             if (H.pend[i].used && now >= H.pend[i].deadline)
@@ -353,8 +394,9 @@ int ink_hub_init(const char *url) {
     H.q = osal_queue_create(sizeof(hub_msg_t), HUB_QUEUE);
     H.id_lock = osal_mutex_create();
     H.json = osal_malloc(sizeof(ink_json_t), OSAL_MEM_EXTERNAL);
+    H.tx_lock = osal_mutex_create();
     osal_mem_tag(prev);
-    if (!H.q || !H.id_lock || !H.json) return -1;
+    if (!H.q || !H.id_lock || !H.json || !H.tx_lock) return -1;
     hal_net_set_link_callback(link_cb, NULL);
     osal_task_cfg_t cfg = {.name = "hub", .fn = hub_task, .stack_bytes = HUB_STACK, .priority = HUB_PRIO, .core = -1,
                            .flags = OSAL_TASK_STACK_EXTERNAL};
@@ -398,3 +440,55 @@ void ink_hub_demand(void) {
 }
 
 bool ink_hub_online(void) { return H.state == HS_ONLINE; }
+
+static int enqueue_tx(bool binary, const void *data, size_t len) {
+    if (H.state != HS_ONLINE) return -1;
+    osal_mutex_lock(H.tx_lock, OSAL_WAIT_FOREVER);
+    bool full = H.tx_bytes + len > TX_MAX_BYTES;
+    osal_mutex_unlock(H.tx_lock);
+    if (full) {
+        ink_probe_count("hub.tx_overflow");
+        return -1;
+    }
+    const char *prev = osal_mem_tag("hub");
+    tx_item_t *it = osal_malloc(sizeof *it + len, OSAL_MEM_EXTERNAL);
+    osal_mem_tag(prev);
+    if (!it) return -1;
+    it->next = NULL;
+    it->binary = binary;
+    it->len = len;
+    memcpy(it->data, data, len);
+    osal_mutex_lock(H.tx_lock, OSAL_WAIT_FOREVER);
+    if (H.tx_tail) H.tx_tail->next = it;
+    else H.tx_head = it;
+    H.tx_tail = it;
+    H.tx_bytes += len;
+    osal_mutex_unlock(H.tx_lock);
+    hub_msg_t m = {.type = HE_TX};
+    osal_queue_send(H.q, &m, 0); /* a full queue still wakes the task soon: it drains on every wake */
+    return 0;
+}
+
+int ink_hub_notify(const char *method, const char *params_json) {
+    char head[80];
+    const char *pj = params_json ? params_json : "{}";
+    snprintf(head, sizeof head, "{\"jsonrpc\":\"2.0\",\"method\":\"%s\",\"params\":", method);
+    size_t hl = strlen(head), pl = strlen(pj);
+    const char *prev = osal_mem_tag("hub");
+    char *buf = osal_malloc(hl + pl + 2, OSAL_MEM_EXTERNAL);
+    osal_mem_tag(prev);
+    if (!buf) return INK_HUB_ERR_NOMEM;
+    memcpy(buf, head, hl);
+    memcpy(buf + hl, pj, pl);
+    buf[hl + pl] = '}';
+    int r = enqueue_tx(false, buf, hl + pl + 1);
+    osal_free(buf);
+    return r == 0 ? 0 : INK_HUB_ERR_OFFLINE;
+}
+
+int ink_hub_send_binary(const void *data, size_t len) { return enqueue_tx(true, data, len) == 0 ? 0 : INK_HUB_ERR_OFFLINE; }
+
+void ink_hub_on_binary(ink_hub_binary_fn fn, void *ctx) {
+    H.bin_ctx = ctx;
+    H.bin_fn = fn;
+}

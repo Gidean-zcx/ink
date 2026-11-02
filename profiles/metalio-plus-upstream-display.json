@@ -229,7 +229,10 @@
     "event_task_stack": 2560,
     "dead_detect_ms": 5000,
     "uart_nic_dma_kib": 12,
-    "uart_nic_task_stack": 4096
+    "uart_nic_task_stack": 4096,
+    "ws_task_stack_external": false,
+    "uart_nic_task_stack_external": false,
+    "_notes_stacks": "Port decisions (internal RAM): the WebSocket client task (CONFIG_ESP_WS_CLIENT_TASK_STACK_IN_EXT_RAM, TCB stays internal) and the 4G UART-NIC task keep their stacks in PSRAM — neither calls the flash API. The upstream profile keeps them internal."
   },
   "audio": {
     "dma_desc": 4,

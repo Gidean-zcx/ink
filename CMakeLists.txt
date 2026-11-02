@@ -60,6 +60,8 @@ add_library(ink_port_sim STATIC
   ports/sim/hal_power_sim.c
   ports/sim/hal_assets_sim.c
   ports/sim/hal_net_sim.c
+  ports/sim/hal_audio_sim.c
+  ports/sim/hal_codec_sim.c
   ports/sim/sim_hub.c)
 target_include_directories(ink_port_sim PUBLIC ports/sim platform/include)
 target_link_libraries(ink_port_sim PUBLIC ink_sim_core ink_littlefs ink_stb)
@@ -97,6 +99,7 @@ add_library(ink_system STATIC
   system/core/ink_json.c
   system/net/hub_link.c
   system/ai/ai_service.c
+  system/audio/audio_service.c
   system/text/ink_font.c
   system/text/linebreak.c
   system/text/layout.c
