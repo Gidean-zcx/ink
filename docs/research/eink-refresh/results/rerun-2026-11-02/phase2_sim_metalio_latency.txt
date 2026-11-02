@@ -1,0 +1,8 @@
+GL-DU20 (default profile)   scroll/tap PSNR 15.33 dB | tap->50%: 48 216 228 228 48 48 ms (mean 136) | tap->90%: mean 172 ms | residual DC after returning to frame 0: max 0 rms 0.00 (0.0% px) | pushes/px/s 12.01
+GL-DU8  (fast profiles)     scroll/tap PSNR 17.00 dB | tap->50%: 48 72 132 84 48 48 ms (mean 72) | tap->90%: mean 108 ms | residual DC after returning to frame 0: max 22 rms 7.66 (86.4% px) | pushes/px/s 10.46
+ASYNC integrator N=8        scroll/tap PSNR 20.50 dB | tap->50%: 48 48 48 48 48 48 ms (mean 48) | tap->90%: mean 84 ms | residual DC after returning to frame 0: max 0 rms 0.00 (0.0% px) | pushes/px/s 12.01
+
+real	0m32.440s
+user	0m30.985s
+sys	0m1.160s
+exit 0

@@ -1,0 +1,17 @@
+per 12 ms phase, averaged over 60 phases; cycles = simple in-order estimate (instr + load-use + 2/taken branch + 2/jump + 3/mul)
+                           | old: Minstr  ms@320MHz  PSRAM MB | v3:  Minstr  ms@320MHz  PSRAM MB | v4:  Minstr  ms@320MHz  PSRAM MB | v4 worst phase ms
+  line mode: drive lines per phase avg 0.04 ms, worst phase 0.04 ms, worst line 0.1 us (line time ~16 us)
+static page                |    1.47      6.57      1.66   |    0.07      0.27      0.00   |    0.07      0.26      0.01   |    0.32
+  line mode: drive lines per phase avg 0.42 ms, worst phase 0.65 ms, worst line 3.1 us (line time ~16 us)
+AI text streaming          |    5.31     22.63      2.10   |    0.40      1.67      0.07   |    0.16      0.64      0.01   |    1.75
+  line mode: drive lines per phase avg 1.19 ms, worst phase 9.20 ms, worst line 16.2 us (line time ~16 us)
+page turn                  |    4.95     20.33      2.11   |    4.06     16.43      0.40   |    1.16      4.54      0.07   |  131.04
+  line mode: drive lines per phase avg 4.62 ms, worst phase 5.95 ms, worst line 11.6 us (line time ~16 us)
+list scroll, half screen   |   30.47    119.51      5.66   |   18.34     73.23      1.62   |    7.84     30.72      0.39   |  120.26
+  line mode: drive lines per phase avg 7.46 ms, worst phase 9.78 ms, worst line 19.6 us (line time ~16 us)
+full-screen scroll 28 fps  |   33.62    130.14      5.99   |   33.95    135.47      2.88   |   14.57     57.13      0.73   |  223.22
+  line mode: drive lines per phase avg 5.73 ms, worst phase 9.89 ms, worst line 19.6 us (line time ~16 us)
+full-screen scroll 14 fps  |   23.83     94.00      4.57   |   25.15    100.89      2.23   |    8.46     33.03      0.43   |  247.75
+  line mode: drive lines per phase avg 7.46 ms, worst phase 11.52 ms, worst line 19.6 us (line time ~16 us)
+cover grid scroll          |   35.15    133.51      6.27   |   45.68    178.24      3.63   |   26.56    104.79      1.21   |  377.39
+storage: old 6498 KB per-pixel arrays + 64 KB LUT; v3 1624 KB + 32 KB LUT + 31 KB tiles; v4 2030 KB (hot 406 + cold 1624) + 16+1.5 KB tables + 25 KB tiles; +4 KB thresholds each

@@ -1,0 +1,68 @@
+{
+ "video|PQ-BN   event-driven (previous)": {
+  "name": "PQ-BN   event-driven (previous)",
+  "psnr": 25.53066062927246,
+  "psnr_final": 32.302425384521484,
+  "shimmer": 8.033417701721191,
+  "pulses": 9.921595052083337,
+  "dc_rms": 5.530772107415625,
+  "dc_max": 11,
+  "ghost_white": 0.2755145728588104,
+  "ghost_black": 1.3176183700561523
+ },
+ "video|PQ-BN v3 16-bit state, 32KB LUT": {
+  "name": "PQ-BN v3 16-bit state, 32KB LUT",
+  "psnr": 25.529483795166016,
+  "psnr_final": 32.72160339355469,
+  "shimmer": 8.16085433959961,
+  "pulses": 10.138502604166668,
+  "dc_rms": 5.52272294706153,
+  "dc_max": 11,
+  "ghost_white": 0.4269828498363495,
+  "ghost_black": 1.3144694566726685
+ },
+ "video|PQ-BN v4 plan/execute, 2.5 B/px": {
+  "name": "PQ-BN v4 plan/execute, 2.5 B/px",
+  "psnr": 25.84943389892578,
+  "psnr_final": 34.58842849731445,
+  "shimmer": 8.079774856567383,
+  "pulses": 9.999027777777778,
+  "dc_rms": 5.458341284981485,
+  "dc_max": 10,
+  "ghost_white": 0.3795212507247925,
+  "ghost_black": 1.3160524368286133
+ },
+ "text|PQ-BN   event-driven (previous)": {
+  "name": "PQ-BN   event-driven (previous)",
+  "psnr": 21.336483001708984,
+  "psnr_final": 38.43904495239258,
+  "shimmer": 31.14346694946289,
+  "pulses": 19.400310329861114,
+  "dc_rms": 2.376526373547465,
+  "dc_max": 7,
+  "ghost_white": 1.7910698652267456,
+  "ghost_black": 1.7851272821426392
+ },
+ "text|PQ-BN v3 16-bit state, 32KB LUT": {
+  "name": "PQ-BN v3 16-bit state, 32KB LUT",
+  "psnr": 21.32439422607422,
+  "psnr_final": 38.00164031982422,
+  "shimmer": 31.159582138061523,
+  "pulses": 19.34772569444444,
+  "dc_rms": 2.288933976767351,
+  "dc_max": 7,
+  "ghost_white": 1.9222679138183594,
+  "ghost_black": 1.7465060949325562
+ },
+ "text|PQ-BN v4 plan/execute, 2.5 B/px": {
+  "name": "PQ-BN v4 plan/execute, 2.5 B/px",
+  "psnr": 21.32471466064453,
+  "psnr_final": 37.69844436645508,
+  "shimmer": 31.14495849609375,
+  "pulses": 19.355143229166682,
+  "dc_rms": 2.341079033622459,
+  "dc_max": 7,
+  "ghost_white": 1.9286524057388306,
+  "ghost_black": 1.7508631944656372
+ }
+}

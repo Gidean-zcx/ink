@@ -1,0 +1,16 @@
+# 复现时生成的文件不入库：编译产物、场景数组、RV32 场景、临时视频
+*.o
+*.so
+*.elf
+*.pyc
+__pycache__/
+*.npy
+*.pkl
+scen/
+pqbn_v4/tests/eq_v3_v4
+pqbn_v4/tests/eq_v4ab
+pqbn_v4/tests/motion_test
+pqbn_v4/tests/auto_test
+pqbn_v4/rv/rvbench4
+pqbn_v4/rv/rvhybrid
+pqbn_v4/rv/k4.bin

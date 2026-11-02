@@ -2,6 +2,7 @@
 
 简报按新到旧排列，记录各批发现及当时的证据边界。**后续设计优先使用[按设计问题查依据](../research/interaction-library/design-reference-guide.md)**；各产品与任务的当前覆盖以[案例索引](../research/interaction-library/case-index.md)为准。旧简报的数量是历史快照，不能累计当全功能完成率。
 
+- [第五十七期：墨水屏刷新算法与直驱方案](057-eink-refresh-algorithm.md)：归档 2026-10-28 的研究，包括 PaperBoy 对照、Plus 波形直流审计与延迟仿真、PQ-BN v4 直驱与自动快速运动渲染；均为仿真与指令级估算，未实机验证。
 - [第五十六期：墨水屏怎样做到操作顺畅](/home/workspace/reader/docs/briefs/056-eink-ui-interaction.md)：官方文档与 Plus 固定源码交叉核查；区分输入、可见、可读和完成，比较手势、分页、AI 分段及儿童互动。
 - [第五十五期：全局入口与执行环境](/home/workspace/reader/docs/briefs/055-global-entry-and-execution-context.md)：快捷指令补语音/按键/组件、共享输入、提醒回访与配置组织；修正预览范围，新增14条设计参考。
 - [第五十四期：媒体、权限与学习资料的交付](/home/workspace/reader/docs/briefs/054-media-permissions-and-study-content.md)：Quizlet补媒体、组织、权限、成员与评价；原64篇目录文章均有正文记录，首页推荐仍D1，新增13条设计参考。

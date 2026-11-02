@@ -1,0 +1,18 @@
+note: my_waveform_gc.h initializes 47/48 frames; rest zero-filled
+Base tables (as shipped in headers):
+DU20 source                phases=20  0->15 net +18  15->0 net -18  B/W round trip  +0  worst round trip +17  mean|round trip|  2.2  15->15 net +0  0->0 net +0
+GC16 source                phases=48  0->15 net +17  15->0 net -17  B/W round trip  +0  worst round trip  +2  mean|round trip|  1.8  15->15 net -1  0->0 net +1
+GL16 source                phases=48  0->15 net +18  15->0 net -18  B/W round trip  +0  worst round trip  +1  mean|round trip|  0.0  15->15 net +0  0->0 net +0
+gray8 GL                   phases=30  0->15 net +10  15->0 net -10  B/W round trip  +0  worst round trip  +0  mean|round trip|  0.0  15->15 net +0  0->0 net +0
+gray8 GC                   phases=30  0->15 net +10  15->0 net -10  B/W round trip  +0  worst round trip  +0  mean|round trip|  0.0  15->15 net +0  0->0 net +0
+
+Tables actually used at runtime (rebuilt from their builder code):
+DU20 (complete_du_build)   phases=20  0->15 net +18  15->0 net -18  B/W round trip  +0  worst round trip +27  mean|round trip| 10.2  15->15 net +0  0->0 net +0
+short DU8                  phases= 8  0->15 net  +8  15->0 net  -7  B/W round trip  +1  worst round trip +16  mean|round trip|  7.5  15->15 net +0  0->0 net +0
+GL16 + white tick          phases=48  0->15 net +18  15->0 net -18  B/W round trip  +0  worst round trip  +1  mean|round trip|  0.0  15->15 net +1  0->0 net +0
+fast GC (trim)             phases=36  0->15 net +17  15->0 net -12  B/W round trip  +5  worst round trip +12  mean|round trip|  5.7  15->15 net +6  0->0 net -1
+fast GL (trim+tick)        phases=37  0->15 net +18  15->0 net -13  B/W round trip  +5  worst round trip +10  mean|round trip|  4.2  15->15 net +1  0->0 net -2
+
+DU20 0->15 phases: 22222222222222222200  15->0: 11111111111111111100  (1=black,2=white)
+fast GC phase count: 36  fast GL: 37
+exit 0

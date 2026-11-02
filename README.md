@@ -22,9 +22,11 @@
 
 - [云端协作入口](docs/project.md)：当前状态、资料位置，以及新想法和新需求的接续方式。
 - [有限算力下的调度与体验](docs/research/system-scheduling-and-experience.md)：2026-10-31 补充；联合考虑 CPU、内存、音频、刷新、IO 和多任务流程，保留源码证据与实机验证边界。
+- [墨水屏刷新算法研究](docs/research/eink-refresh-algorithm.md)：2026-11-02 归档，包括 PaperBoy 对照、Plus 波形审计与延迟仿真、PQ-BN v4 直驱算法（含自动快速运动渲染），以及[代码、结果与对比视频](docs/research/eink-refresh/README.md)；均为仿真与指令级估算，未实机验证。
 
 后续设计优先从[按问题查竞品依据](docs/research/interaction-library/design-reference-guide.md)进入，再查具体任务、证据与缺口；不必按时间顺序读完简报。
 
+- [第五十七期：墨水屏刷新算法与直驱方案](docs/briefs/057-eink-refresh-algorithm.md)：绕开全局锁逐相驱动；点按 50% 可见时间从 136 ms 降到 48 ms（仿真）；v4 单核可承担静止、出字、翻页，快速滚动自动切换渲染方式；待硬件标定。
 - [第五十六期：墨水屏怎样做到操作顺畅](docs/briefs/056-eink-ui-interaction.md)：官方文档与 Plus 固定源码交叉核查；区分输入、可见、可读和完成，比较手势、分页、AI 分段及儿童互动。
 - [第五十五期：全局入口与执行环境](docs/briefs/055-global-entry-and-execution-context.md)：快捷指令补语音/按键/组件、共享输入、提醒回访与配置组织；修正预览范围，新增14条设计参考。
 - [全部研究简报](docs/briefs/README.md)：历史发现与变更，按时间查阅。
