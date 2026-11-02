@@ -437,7 +437,7 @@ static void age_task(void *arg) {
         hal_fs_volume_info("/user", &vi);
         if (vi.free_bytes < vi.total_bytes * 20 / 100) break;
         x = x * 1103515245u + 12345u;
-        size_t len = 200 + (x >> 8) % sizeof(buf);
+        size_t len = 200 + (x >> 8) % (sizeof(buf) - 200);
         for (size_t i = 0; i < len; i++) buf[i] = (uint8_t)(x >> (i % 24));
         snprintf(path, sizeof path, "/user/aged/f%03d.bin", n);
         if (n == 0) hal_fs_mkdir("/user/aged");
