@@ -1,0 +1,25 @@
+{
+  "_doc": "Two cover keys held at once (NEXT, then HOME 40 ms later). Before 2026-11-02 the simulator kept one cover key at a time and the input service cleared its long-press state on any release, so HOME was lost and the position was not saved.",
+  "action.user.reader.next_page": {
+    "min": 1,
+    "max": 1,
+    "why": "exactly the one NEXT press (a lost release must not turn into a long-press repeat)"
+  },
+  "input.key_delivery_ms.count": {
+    "min": 4,
+    "max": 4,
+    "why": "NEXT and HOME, press and release each"
+  },
+  "storage.write_ms.count": {
+    "min": 1,
+    "why": "HOME left the book: the reading position is saved"
+  },
+  "panic.count": {
+    "max": 0,
+    "optional": true
+  },
+  "warnings.count": {
+    "max": 0,
+    "optional": true
+  }
+}

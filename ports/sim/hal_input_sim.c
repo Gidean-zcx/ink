@@ -56,8 +56,9 @@ static struct {
     bool exp_irq, exp_confirm;
     struct { hal_key_t key; bool pressed; uint64_t t; } exp_pending[KEY_FIFO];
     int exp_n;
-    /* cover key on the touch controller (one at a time) */
-    struct { hal_key_t key; bool down, reported; uint64_t t_change; } vkey;
+    /* cover keys: touch points the controller reports outside the panel (upstream: Y ~ 1600), one
+     * per key, sharing the controller's touch points with the fingers */
+    struct { bool down, reported; uint64_t t_change; } vkey[HAL_KEY_COUNT];
     osal_task_t *task;
     /* stats */
     uint64_t touches;
@@ -217,14 +218,10 @@ void sim_input_key(hal_key_t key, bool pressed) {
         return;
     }
     if (g_profile.key_source[key] == 2 && g_profile.has_touch) { /* cover key: the touch controller sees a finger */
-        if (pressed) {
-            IN.vkey.key = key;
-            IN.vkey.down = true;
-            IN.vkey.t_change = vtk_isr_now();
-            vtk_event_after(SIM_US(g_profile.touch_detect_us) + monitor_delay_ns(), touch_irq_cb, NULL);
-        } else if (IN.vkey.key == key) {
-            IN.vkey.down = false;
-            IN.vkey.t_change = vtk_isr_now();
+        if (pressed != IN.vkey[key].down) {
+            IN.vkey[key].down = pressed;
+            IN.vkey[key].t_change = vtk_isr_now();
+            if (pressed) vtk_event_after(SIM_US(g_profile.touch_detect_us) + monitor_delay_ns(), touch_irq_cb, NULL);
         }
         return;
     }
@@ -241,11 +238,14 @@ static void deliver(const hal_input_event_t *e) {
     if (IN.sink) IN.sink(e, IN.ctx);
 }
 
-static bool any_reported_down(void) {
-    for (int i = 0; i < MAX_TOUCH; i++)
-        if (IN.reported[i].down) return true;
-    return IN.vkey.reported;
+static int points_reported(void) {
+    int n = 0;
+    for (int i = 0; i < MAX_TOUCH; i++) n += IN.reported[i].down;
+    for (int k = 0; k < HAL_KEY_COUNT; k++) n += IN.vkey[k].reported;
+    return n;
 }
+
+static bool any_reported_down(void) { return points_reported() > 0; }
 
 static void deliver_key(hal_key_t key, bool pressed, uint64_t t_ns) {
     hal_input_event_t e = {.type = HAL_IN_KEY, .t_us = t_ns / 1000};
@@ -258,17 +258,18 @@ static void deliver_key(hal_key_t key, bool pressed, uint64_t t_ns) {
 static void poll_touch_once(void) {
     sim_i2c_transfer("touch", g_profile.touch_read_bytes);
     uint64_t t_read = vtk_now();
-    if (IN.vkey.key != HAL_KEY_NONE) { /* cover key seen by the controller */
-        if (IN.vkey.down && !IN.vkey.reported) {
-            IN.vkey.reported = true;
-            deliver_key(IN.vkey.key, true, IN.vkey.t_change);
-        } else if (!IN.vkey.down && IN.vkey.reported) {
-            IN.vkey.reported = false;
-            hal_key_t k = IN.vkey.key;
-            IN.vkey.key = HAL_KEY_NONE;
-            deliver_key(k, false, IN.vkey.t_change);
+    /* cover keys, each its own point: releases first (they free points), then presses while the
+     * controller has points left (a press beyond that is reported once a point frees) */
+    for (int k = 0; k < HAL_KEY_COUNT; k++)
+        if (!IN.vkey[k].down && IN.vkey[k].reported) {
+            IN.vkey[k].reported = false;
+            deliver_key((hal_key_t)k, false, IN.vkey[k].t_change);
         }
-    }
+    for (int k = 0; k < HAL_KEY_COUNT; k++)
+        if (IN.vkey[k].down && !IN.vkey[k].reported && points_reported() < g_profile.touch_points) {
+            IN.vkey[k].reported = true;
+            deliver_key((hal_key_t)k, true, IN.vkey[k].t_change);
+        }
     for (int i = 0; i < MAX_TOUCH && i < g_profile.touch_points; i++) {
         phys_touch_t *p = &IN.phys[i];
         hal_input_event_t e = {.type = HAL_IN_TOUCH};

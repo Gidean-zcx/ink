@@ -77,7 +77,8 @@ typedef struct {
     size_t failed_allocs; /* allocations that failed */
 } osal_mem_stats_t;
 
-/** caps = exactly one of OSAL_MEM_INTERNAL / OSAL_MEM_EXTERNAL / OSAL_MEM_DMA. */
+/** caps = exactly one of OSAL_MEM_INTERNAL / OSAL_MEM_EXTERNAL / OSAL_MEM_DMA. INTERNAL and DMA
+ *  report every heap region that can serve such a request (as heap_caps_get_free_size()). */
 void osal_mem_stats(uint32_t caps, osal_mem_stats_t *out);
 
 /** Attribute subsequent allocations of the calling task to `tag` (e.g. "fonts",

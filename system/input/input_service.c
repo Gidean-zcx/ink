@@ -129,7 +129,7 @@ static void on_key(const hal_input_event_t *h) {
         IS.key_long_fired = false;
         IS.key_t0 = h->t_us;
         if (IS.key_timer) osal_timer_start(IS.key_timer, KEY_LONG_MS * 1000ull, 0);
-    } else {
+    } else if (h->key.key == IS.key_down) { /* releasing another key (overlapping presses) keeps this one */
         if (IS.key_timer) osal_timer_stop(IS.key_timer);
         IS.key_down = HAL_KEY_NONE;
         if (IS.key_long_fired) e.flags |= INK_EVF_AFTER_LONG;

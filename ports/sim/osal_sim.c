@@ -176,8 +176,22 @@ void osal_free(void *ptr) {
 }
 
 void osal_mem_stats(uint32_t caps, osal_mem_stats_t *out) {
-    pool_id_t id = (caps & OSAL_MEM_DMA) ? POOL_DMA : (caps & OSAL_MEM_EXTERNAL) ? POOL_EXTERNAL : POOL_INTERNAL;
-    pools_stats(id, out);
+    if (caps & OSAL_MEM_EXTERNAL) {
+        pools_stats(POOL_EXTERNAL, out);
+        return;
+    }
+    /* internal and DMA requests are served from regular internal RAM, then the reserve pool (both
+     * DMA|INTERNAL on the S31, pools_alloc), so their stats cover both, as heap_caps_get_*_size()
+     * does for MALLOC_CAP_INTERNAL / MALLOC_CAP_DMA */
+    osal_mem_stats_t r;
+    pools_stats(POOL_INTERNAL, out);
+    pools_stats(POOL_DMA, &r);
+    out->total += r.total;
+    out->free += r.free;
+    out->min_free = pools_internal_total_min_free();
+    if (r.largest_free > out->largest_free) out->largest_free = r.largest_free;
+    out->alloc_count += r.alloc_count;
+    out->failed_allocs += r.failed_allocs;
 }
 
 const char *osal_mem_tag(const char *tag) {
