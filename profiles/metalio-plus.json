@@ -74,8 +74,6 @@
         "ghost": 0.07
       }
     },
-    "keep_power_ms": 0,
-    "submit_copy_mbps": 21,
     "line_count": 688,
     "line_time_us": 17,
     "line_queue_lines": 32,
@@ -86,7 +84,8 @@
     "lcd_isr_duty": 0.1,
     "_notes_pipeline": "Upstream pipeline (epd_hl_update_area): difference image over FULL-WIDTH rows of the area before the waveform, waveform over the whole panel, back-buffer copy of the dirty full-width rows after it; full-screen flashing GC16 uses the complete 48-phase table. Feeders (two, max priority, PSRAM stacks) spin until the last line of a phase is queued: duty = (line_count - line_queue_lines) x line_time / phase_min (derived). LCD bounce-buffer refill interrupt every 8 lines: lcd_isr_duty on core 0 (estimate 7-15%). Underrun recovery = epd_clear (69 frames) + complete GC16 (upstream epd_refresh.cc). line_queue_lines: 32 = design target (foundation 3.2), 127 = upstream. line_prep_us: estimate (C LUT path, no vector unit).",
     "diff_pass": "full_width",
-    "driver_lut_kib": 16
+    "driver_lut_kib": 16,
+    "color": false
   },
   "input": {
     "touch": true,
@@ -105,7 +104,6 @@
       "next"
     ],
     "_notes": "FT6336U on the shared 100 kHz I2C1 bus with IO expander, fuel gauge, charger, RTC, accelerometer. AI = BOOT key (pending D-19); home/prev/next are cover touch keys.",
-    "touch_read_us": 1200,
     "touch_poll_ms": 10,
     "touch_detect_us": 20000,
     "_notes_detect": "touch_detect_us: finger contact -> INT, estimate (controller scan period in monitor mode)",
@@ -136,7 +134,6 @@
     "timing": "tail",
     "stalls_cpu": true,
     "_notes": "GD25B128E-class datasheet values (exact part on the board unverified). ESP-IDF writes in 8 KB chunks; caches are disabled per chunk/erase: PSRAM and flash-resident code stall on both cores. Auto-suspend off upstream.",
-    "write_chunk_bytes": 8192,
     "read_mbps": 20,
     "op_overhead_us": 30,
     "assets_partition_kib": 6144,
@@ -199,11 +196,12 @@
       "rtt_ms_p50": 8,
       "rtt_ms_p99": 60,
       "mbps": 5,
-      "wake_extra_ms": [
-        100,
-        300
-      ],
-      "tail_s": 1
+      "tail_s": 1,
+      "loss": 0.002,
+      "idle_resume_after_s": 1,
+      "idle_resume_extra_ms": 300,
+      "outages_per_hour": 0.2,
+      "uart_cap_mbps": 0
     },
     "lte": {
       "rtt_ms_p50": 80,

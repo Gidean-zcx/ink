@@ -49,6 +49,8 @@ static struct {
     bool cut;
 } FL;
 
+static void maybe_cut_during_op(void);
+
 static uint64_t sample_us(uint32_t typ, uint32_t max) {
     switch (g_profile.flash_pessimism) {
     case 0: return typ;
@@ -126,6 +128,7 @@ static int bd_prog(const struct lfs_config *c, lfs_block_t block, lfs_off_t off,
         FL.op_data = d + done;
         FL.op_t0 = vtk_now();
         FL.op_t1 = FL.op_t0 + ns;
+        maybe_cut_during_op();
         flash_busy(ns, "program");
         if (FL.cut) return LFS_ERR_IO;
         FL.op = OP_NONE;
@@ -148,6 +151,7 @@ static int bd_erase(const struct lfs_config *c, lfs_block_t block) {
     FL.op_len = FL.sector;
     FL.op_t0 = vtk_now();
     FL.op_t1 = FL.op_t0 + ns;
+    maybe_cut_during_op();
     flash_busy(ns, "erase");
     if (FL.cut) return LFS_ERR_IO;
     if (g_profile.flash_stalls_cpu && ns >= SIM_MS(20) && g_profile.tick_hz > 0) {
@@ -173,6 +177,22 @@ static void save_image(void) {
     if (!f || fwrite(FL.img, 1, FL.size, f) != FL.size) sim_warn("cannot save flash image %s", g_sim.flash_image);
     if (f) fclose(f);
 }
+
+static int g_cut_on_write; /* > 0: cut power during the n-th program/erase from now */
+
+static void armed_cut_cb(void *arg) {
+    (void)arg;
+    sim_storage_power_cut();
+}
+
+static void maybe_cut_during_op(void) { /* task context, right after FL.op_t0/op_t1 are set */
+    if (g_cut_on_write <= 0 || --g_cut_on_write > 0) return;
+    vtk_lock();
+    vtk_event_at(FL.op_t0 + (FL.op_t1 - FL.op_t0) * 2 / 5, armed_cut_cb, NULL);
+    vtk_unlock();
+}
+
+void sim_storage_arm_power_cut(int nth_write) { g_cut_on_write = nth_write > 0 ? nth_write : 1; }
 
 void sim_storage_power_cut(void) { /* ISR context */
     if (FL.cut) return;

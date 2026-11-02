@@ -8,20 +8,38 @@
 
 sim_profile_t g_profile;
 
+/* Every value the profile does not set falls back to a default; the defaults are recorded so the
+ * run lists them (a silent, optimistic default is how a model quietly drifts from the device). */
+static sim_profile_t *g_loading = &g_profile;
+
+static void note_default(const cJSON *o, const char *k) {
+    sim_profile_t *p = g_loading;
+    const char *sect = (o && o->string) ? o->string : "?";
+    size_t used = strlen(p->defaults_used);
+    if (used + strlen(sect) + strlen(k) + 3 < sizeof p->defaults_used)
+        snprintf(p->defaults_used + used, sizeof p->defaults_used - used, "%s%s.%s", used ? " " : "", sect, k);
+    p->ndefaults++;
+}
+
 static double num(const cJSON *o, const char *k, double def) {
     const cJSON *v = cJSON_GetObjectItemCaseSensitive(o, k);
-    return cJSON_IsNumber(v) ? v->valuedouble : def;
+    if (cJSON_IsNumber(v)) return v->valuedouble;
+    note_default(o, k);
+    return def;
 }
 
 static bool flag(const cJSON *o, const char *k, bool def) {
     const cJSON *v = cJSON_GetObjectItemCaseSensitive(o, k);
     if (cJSON_IsBool(v)) return cJSON_IsTrue(v);
+    note_default(o, k);
     return def;
 }
 
 static const char *str(const cJSON *o, const char *k, const char *def) {
     const cJSON *v = cJSON_GetObjectItemCaseSensitive(o, k);
-    return cJSON_IsString(v) ? v->valuestring : def;
+    if (cJSON_IsString(v)) return v->valuestring;
+    note_default(o, k);
+    return def;
 }
 
 static const cJSON *obj(const cJSON *o, const char *k) {
@@ -58,6 +76,7 @@ static char *slurp(const char *path) {
 
 int profile_load(const char *path, sim_profile_t *p, char *err, size_t errlen) {
     memset(p, 0, sizeof *p);
+    g_loading = p;
     char *text = slurp(path);
     if (!text) {
         snprintf(err, errlen, "cannot read %s", path);
@@ -78,7 +97,6 @@ int profile_load(const char *path, sim_profile_t *p, char *err, size_t errlen) {
     const cJSON *cpu = obj(root, "cpu");
     p->cores = (int)num(cpu, "cores", 2);
     p->mhz = (int)num(cpu, "mhz", 320);
-    p->coremark_per_mhz_core = num(cpu, "coremark_per_mhz_per_core", 3.43);
     p->host_to_target = num(cpu, "host_to_target_default", 40.0);
 
     const cJSON *kern = obj(root, "kernel");
@@ -136,9 +154,7 @@ int profile_load(const char *path, sim_profile_t *p, char *err, size_t errlen) {
     p->power_up_us = (uint32_t)num(d, "power_up_us", 140000);
     p->power_down_us = (uint32_t)num(d, "power_down_us", 2000);
     p->touch_pause_us = (uint32_t)num(d, "touch_pause_during_power_us", 0);
-    p->lcd_frame_us = (uint32_t)num(d, "lcd_frame_us", 16667);
-    p->keep_power_ms = (uint32_t)num(d, "keep_power_ms", 0);
-    p->submit_copy_mbps = num(d, "submit_copy_mbps", 0.0);
+    p->lcd_frame_us = p->panel.tech == HAL_PANEL_LCD ? (uint32_t)num(d, "lcd_frame_us", 16667) : 16667;
     p->line_count = (int)num(d, "line_count", 688);
     p->line_ns = (uint32_t)(num(d, "line_time_us", 17) * 1000);
     p->line_queue_lines = (int)num(d, "line_queue_lines", 32);
@@ -158,7 +174,7 @@ int profile_load(const char *path, sim_profile_t *p, char *err, size_t errlen) {
     double derived = p->phase_min_us ? busy_us / (double)p->phase_min_us : 0.7;
     if (derived > 0.98) derived = 0.98;
     if (derived < 0) derived = 0;
-    p->prep_cpu_duty = num(d, "prep_cpu_duty", derived);
+    p->prep_cpu_duty = cJSON_IsNumber(cJSON_GetObjectItemCaseSensitive(d, "prep_cpu_duty")) ? num(d, "prep_cpu_duty", derived) : derived;
     p->panel_buffers_external = (size_t)(num(d, "driver_external_kib", 0) * 1024);
     p->panel_buffers_internal = (size_t)(num(d, "driver_internal_kib", 0) * 1024);
     p->driver_lut_bytes = (size_t)(num(d, "driver_lut_kib", 16) * 1024);
@@ -182,7 +198,6 @@ int profile_load(const char *path, sim_profile_t *p, char *err, size_t errlen) {
     p->touch_read_bytes = (int)num(in, "touch_read_bytes", 9);
     p->i2c_background_poll_ms = (uint32_t)num(in, "i2c_background_poll_ms", 1000);
     p->i2c_background_bytes = (int)num(in, "i2c_background_bytes", 24);
-    p->touch_read_us = (uint32_t)num(in, "touch_read_us", 1200);
     p->touch_poll_ms = (uint32_t)num(in, "touch_poll_ms", 10);
     p->touch_detect_us = (uint32_t)num(in, "touch_detect_us", 20000);
     const cJSON *keys = cJSON_GetObjectItemCaseSensitive(in, "keys");
@@ -215,7 +230,6 @@ int profile_load(const char *path, sim_profile_t *p, char *err, size_t errlen) {
     const char *pess = str(fl, "timing", "tail");
     p->flash_pessimism = !strcmp(pess, "typ") ? 0 : !strcmp(pess, "max") ? 1 : 2;
     p->flash_stalls_cpu = flag(fl, "stalls_cpu", true);
-    p->flash_write_chunk = (uint32_t)num(fl, "write_chunk_bytes", 8192);
     p->assets_partition_bytes = (size_t)(num(fl, "assets_partition_kib", 0) * 1024);
     p->flash_read_mbps = num(fl, "read_mbps", 20);
     p->flash_op_overhead_us = (uint32_t)num(fl, "op_overhead_us", 30);

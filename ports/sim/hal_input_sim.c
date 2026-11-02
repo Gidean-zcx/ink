@@ -4,7 +4,7 @@
  *
  * Touch (FT6336U-class on a 100 kHz bus shared with the PMIC, fuel gauge and
  * RTC): the controller notices a finger after touch_detect_us and raises INT;
- * the driver task then reads it over I2C (touch_read_us, waits if the bus is
+ * the driver task then reads it over I2C (touch_read_bytes at i2c_khz, waits if the bus is
  * busy, e.g. during the e-ink PMIC power-up) and keeps polling every
  * touch_poll_ms (RTOS-tick quantized) until the finger lifts.
  * Keys, per the profile's key_sources:
@@ -155,7 +155,8 @@ static void expander_confirm_cb(void *arg) { /* ISR: debounce time over -> secon
 
 void sim_input_key(hal_key_t key, bool pressed) {
     if (!(g_profile.keys_mask & (1u << key))) {
-        sim_warn("script pressed a key this device does not have (%d)", (int)key);
+        /* a shared script on a device without this key: not a device problem */
+        sim_metric_add("input.absent_key_presses", 1);
         return;
     }
     sim_trace_instant("input", pressed ? "key-down" : "key-up", vtk_isr_now(), NULL);

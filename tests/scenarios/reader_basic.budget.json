@@ -14,10 +14,15 @@
   },
   "ui.action_to_visible_ms.TEXT.p95": {
     "max": 1000,
-    "why": "page turn fully visible within 1 s on this panel"
+    "target_max": 600,
+    "srs": "SR-UX-02",
+    "why": "page turn stable; CI gate 1 s on the pessimistic profile (GL16 37 phases x 16 ms alone is 592 ms), SRS target 600 ms needs SP-01 numbers / shorter waveforms"
   },
   "ui.action_to_first_change_ms.p95": {
-    "max": 400
+    "max": 400,
+    "target_max": 350,
+    "srs": "SR-UX-01b",
+    "why": "first visible feedback with the panel idle"
   },
   "reader.page_render_ms.p95": {
     "max": 600,
@@ -57,5 +62,15 @@
   "mem.internal_total.largest_free_min_bytes": {
     "min": 8192,
     "why": "an internal-only allocation of 8 KiB (task stack, TLS record buffer) must still succeed at the worst moment"
+  },
+  "warnings.count": {
+    "max": 0,
+    "optional": true,
+    "why": "a simulator warning (stack, long burst, unknown cost class, underrun ...) means the run is not clean"
+  },
+  "ui.open_to_stable_ms.max": {
+    "max": 1500,
+    "srs": "SR-UX-03",
+    "why": "tap on a book -> its first page stable (end to end, incl. loading and the full GC16)"
   }
 }

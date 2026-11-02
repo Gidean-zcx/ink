@@ -37,6 +37,18 @@ struct osal_task {
 };
 
 static osal_task_t *BY_VT[VTK_MAX_TASKS];
+/* Sanitizers add redzones to every stack frame: host stack estimates mean nothing then. */
+#if defined(__SANITIZE_ADDRESS__)
+#define INK_HOST_STACK_INFLATED 1
+#elif defined(__has_feature)
+#if __has_feature(address_sanitizer)
+#define INK_HOST_STACK_INFLATED 1
+#endif
+#endif
+#ifndef INK_HOST_STACK_INFLATED
+#define INK_HOST_STACK_INFLATED 0
+#endif
+
 static __thread osal_task_t *tls_task;
 static const char *g_boot_tag;
 static bool g_wall_set;
@@ -778,7 +790,7 @@ void sim_osal_report(void) {
         sim_metric_set(key, ti.stack_target_bytes);
         snprintf(key, sizeof key, "task.%s.stack_used_est_bytes", ti.name);
         sim_metric_set(key, ti.stack_used_est_bytes);
-        if (ti.stack_target_bytes && ti.stack_used_est_bytes > ti.stack_target_bytes)
+        if (ti.stack_target_bytes && ti.stack_used_est_bytes > ti.stack_target_bytes && !INK_HOST_STACK_INFLATED)
             sim_warn("task '%s' may overflow its %u-byte stack (pessimistic host-based estimate %u bytes; "
                      "verify with -fstack-usage on the RISC-V build)",
                      ti.name, ti.stack_target_bytes, ti.stack_used_est_bytes);

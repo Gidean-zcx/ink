@@ -177,6 +177,9 @@ int main(int argc, char **argv) {
         fprintf(stderr, "profile: %s\n", err);
         return 3;
     }
+    if (g_profile.ndefaults && !g_sim.quiet)
+        fprintf(stderr, "ink-sim: profile leaves %d values at simulator defaults: %s\n", g_profile.ndefaults,
+                g_profile.defaults_used);
     if (g_sim.flash_timing) {
         const char *ft = g_sim.flash_timing;
         if (!strcmp(ft, "typ")) g_profile.flash_pessimism = 0;

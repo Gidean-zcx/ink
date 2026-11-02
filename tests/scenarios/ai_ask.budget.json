@@ -17,11 +17,15 @@
   },
   "ai.press_to_listening_visible_ms.p95": {
     "max": 600,
-    "why": "the device must show it is listening within ~0.5 s"
+    "target_max": 300,
+    "srs": "SR-UX-05",
+    "why": "AI key -> listening prompt visible; SR-UX-05/01a will be met by the audio prompt (tone), the screen alone cannot do 300 ms"
   },
   "ai.release_to_first_text_visible_ms.p95": {
     "max": 3500,
-    "why": "first answer text on screen (includes ~1.4 s hub/model time)"
+    "target_max": 3000,
+    "srs": "SR-UX-06a",
+    "why": "release -> first answer text visible (scripted hub thinks 1.4 s)"
   },
   "ai.release_to_error_visible_ms.max": {
     "max": 9000,
@@ -52,5 +56,10 @@
   "mem.internal_total.largest_free_min_bytes": {
     "min": 8192,
     "why": "an internal-only allocation of 8 KiB (task stack, TLS record buffer) must still succeed at the worst moment"
+  },
+  "warnings.count": {
+    "max": 0,
+    "optional": true,
+    "why": "a simulator warning (stack, long burst, unknown cost class, underrun ...) means the run is not clean"
   }
 }

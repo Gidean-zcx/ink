@@ -10,6 +10,7 @@
  *   +0       mark  reading            # trace marker
  *   +0       battery 15 [charging]
  *   +3s      powercut                 # tear in-flight flash op, save image, stop
+ *   +3s      powercut write 2         # cut during the 2nd flash program/erase from now
  *   +0       net   wifi | lte | none   # switch the network link
  *   +0       outage 5s                 # link drops for a while (dead connection noticed later)
  *   +5s      end
@@ -192,7 +193,8 @@ int sim_script_load(const char *path, char *err, size_t errlen) {
             ok = n >= 3 && !parse_dur(tok[2], &dur);
             if (ok) push(t, A_OUTAGE)->c = (int)(dur / 1000000ull); /* ms */
         } else if (!strcmp(cmd, "powercut")) {
-            push(t, A_POWERCUT);
+            action_t *a = push(t, A_POWERCUT);
+            a->c = (n >= 3 && !strcmp(tok[2], "write")) ? (n >= 4 ? atoi(tok[3]) : 1) : 0;
         } else if (!strcmp(cmd, "end")) {
             push(t, A_END);
             has_end = true;
@@ -229,7 +231,10 @@ static void run_action(void *arg) { /* ISR context */
     case A_MARK: sim_trace_instant("marks", a->text, vtk_isr_now(), NULL); break;
     case A_NOTE: sim_note("script: %s", a->text); break;
     case A_BATTERY: sim_power_set_battery(a->a, a->b != 0); break;
-    case A_POWERCUT: sim_storage_power_cut(); break;
+    case A_POWERCUT:
+        if (a->c > 0) sim_storage_arm_power_cut(a->c);
+        else sim_storage_power_cut();
+        break;
     case A_END: vtk_stop(); break;
     case A_NET: sim_net_set_link(a->text); break;
     case A_OUTAGE: sim_net_outage(SIM_MS(a->c)); break;

@@ -187,6 +187,21 @@ if(INK_HAVE_FONTS)
   ink_scenario(reader_basic metalio-plus)
   ink_scenario(reader_basic metalio-plus-psram16)
   ink_scenario(ai_ask metalio-plus)
+  # Power cut in the middle of a position save, reboot from the torn flash image.
+  add_test(NAME scenario-powercut-during-save
+    COMMAND ${CMAKE_COMMAND} -DSIM=$<TARGET_FILE:ink-sim>
+            -DPROFILE=${CMAKE_SOURCE_DIR}/profiles/metalio-plus.json
+            -DOUT=${CMAKE_BINARY_DIR}/test-out/powercut -DSRC=${CMAKE_SOURCE_DIR}/tests/scenarios
+            -DASSETS=${INK_ASSETS_DIR} -DCONTENT=${INK_TEST_CONTENT}
+            -P ${CMAKE_SOURCE_DIR}/tests/scenarios/powercut.cmake)
+  # The real system must be bit-for-bit deterministic too (budgets compare single runs).
+  add_test(NAME determinism-reader
+    COMMAND ${CMAKE_COMMAND} -DSIM=$<TARGET_FILE:ink-sim>
+            -DPROFILE=${CMAKE_SOURCE_DIR}/profiles/metalio-plus.json
+            -DSCRIPT=${CMAKE_SOURCE_DIR}/tests/scenarios/reader_basic.script
+            -DOUT=${CMAKE_BINARY_DIR}/test-out/determinism-reader
+            "-DEXTRA=--assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT} --no-random-outages"
+            -P ${CMAKE_SOURCE_DIR}/tests/sim/determinism.cmake)
   # Same reader on the upstream display pipeline (timing comparison; lenient budget).
   add_test(NAME scenario-reader_basic-upstream-pipeline
     COMMAND ink-sim --profile ${CMAKE_SOURCE_DIR}/profiles/metalio-plus-upstream-display.json

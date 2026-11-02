@@ -161,6 +161,8 @@ static int cmp_name(const void *a, const void *b) {
     return strcmp(((const metric_t *)a)->name, ((const metric_t *)b)->name);
 }
 
+static int g_srs_gaps;
+
 static cJSON *eval_budgets(const char *budget_path, int *violations) {
     *violations = 0;
     cJSON *res = cJSON_CreateArray();
@@ -211,11 +213,29 @@ static cJSON *eval_budgets(const char *budget_path, int *violations) {
                 snprintf(reason, sizeof reason, "%.3f < min %.3f", v, mn->valuedouble);
             }
         }
+        /* SRS targets: reported (not a CI failure) so the gap between the pessimistic model and the
+         * requirement stays visible until hardware calibration decides */
+        cJSON *tmx = cJSON_GetObjectItemCaseSensitive(it, "target_max");
+        cJSON *tmn = cJSON_GetObjectItemCaseSensitive(it, "target_min");
+        const char *srs = cJSON_GetStringValue(cJSON_GetObjectItemCaseSensitive(it, "srs"));
+        bool target_met = true;
+        if (found && cJSON_IsNumber(tmx) && v > tmx->valuedouble) target_met = false;
+        if (found && cJSON_IsNumber(tmn) && v < tmn->valuedouble) target_met = false;
         cJSON *r = cJSON_CreateObject();
         cJSON_AddStringToObject(r, "metric", it->string);
         if (found) cJSON_AddNumberToObject(r, "value", v);
         if (cJSON_IsNumber(mx)) cJSON_AddNumberToObject(r, "max", mx->valuedouble);
         if (cJSON_IsNumber(mn)) cJSON_AddNumberToObject(r, "min", mn->valuedouble);
+        if (cJSON_IsNumber(tmx)) cJSON_AddNumberToObject(r, "target_max", tmx->valuedouble);
+        if (cJSON_IsNumber(tmn)) cJSON_AddNumberToObject(r, "target_min", tmn->valuedouble);
+        if (srs) cJSON_AddStringToObject(r, "srs", srs);
+        if (cJSON_IsNumber(tmx) || cJSON_IsNumber(tmn)) cJSON_AddBoolToObject(r, "target_met", target_met);
+        if (!target_met) {
+            g_srs_gaps++;
+            fprintf(stderr, "SRS GAP %s: %.1f vs target %s %.1f (%s, not a CI failure)\n", it->string, v,
+                        cJSON_IsNumber(tmx) ? "<=" : ">=", cJSON_IsNumber(tmx) ? tmx->valuedouble : tmn->valuedouble,
+                    srs ? srs : "SRS");
+        }
         cJSON_AddBoolToObject(r, "ok", ok);
         if (reason[0]) cJSON_AddStringToObject(r, "detail", reason);
         if (why) cJSON_AddStringToObject(r, "why", why);
@@ -262,6 +282,7 @@ int sim_metrics_write(const char *path, const char *budget_path, const char *sta
     cJSON *br = eval_budgets(budget_path, &violations);
     cJSON_AddItemToObject(root, "budgets", br);
     cJSON_AddNumberToObject(root, "budget_violations", violations);
+    cJSON_AddNumberToObject(root, "srs_gaps", g_srs_gaps);
     char *txt = cJSON_Print(root);
     if (path) {
         FILE *f = fopen(path, "wb");

@@ -47,7 +47,6 @@ typedef struct {
     /* cpu & kernel */
     int cores;
     int mhz;
-    double coremark_per_mhz_core;   /* reference performance per core */
     double host_to_target;          /* fallback when self-calibration is disabled */
     uint64_t sched_overhead_ns;
     uint64_t ctx_switch_ns;
@@ -79,9 +78,7 @@ typedef struct {
     uint32_t power_down_us;
     uint32_t touch_pause_us;
     uint32_t lcd_frame_us;      /* LCD: time until visible */
-    uint32_t keep_power_ms;     /* keep panel power on this long after an update (0 = off after each) */
     double prep_cpu_duty;       /* fraction of each core used by line feeders during waveform playback */
-    double submit_copy_mbps;    /* framebuffer copy bandwidth for submitted areas */
     uint32_t line_queue_us;     /* time the prepared-line queue bridges when the feeders freeze (= lines x line time) */
     int line_count;             /* lines scanned per phase */
     uint32_t line_ns;           /* scan time of one line */
@@ -107,7 +104,6 @@ typedef struct {
     uint32_t key_debounce_us;
     uint32_t i2c_background_poll_ms; /* other devices on the shared bus (fuel gauge, RTC ...) */
     int i2c_background_bytes;
-    uint32_t touch_read_us;
     uint32_t touch_poll_ms;
     uint32_t touch_detect_us;  /* finger down -> controller raises INT */
 
@@ -119,7 +115,6 @@ typedef struct {
     uint32_t prog_us_typ, prog_us_max;
     int flash_pessimism; /* 0 = typical, 1 = max, 2 = tail (mostly ~typ, 10% up to max) */
     bool flash_stalls_cpu; /* MCU: caches off while erasing/programming internal flash */
-    uint32_t flash_write_chunk;
     size_t assets_partition_bytes; /* memory-mapped read-only assets (fonts...) */
     double flash_read_mbps;
     uint32_t flash_op_overhead_us;
@@ -159,6 +154,9 @@ typedef struct {
 
     profile_cost_t costs[PROFILE_MAX_COSTS];
     int ncosts;
+    /* values the JSON did not set (defaults used), for the run log */
+    int ndefaults;
+    char defaults_used[2048];
 } sim_profile_t;
 
 extern sim_profile_t g_profile;

@@ -290,6 +290,7 @@ static void book_create(lv_obj_t *scr, void *arg) {
     unsigned saved = 0;
     if (ink_storage_read(path, data, sizeof data - 1) > 0) sscanf(data, "offset=%u", &saved);
     while (saved && find_page_start(RD.page + 1) >= 0 && RD.starts[RD.page + 1] <= saved) RD.page++;
+    ink_probe_value("reader.restored_page", (double)RD.page);
 
     RD.title = lv_label_create(scr);
     if (small) lv_obj_set_style_text_font(RD.title, ink_font_lvgl(small), 0);

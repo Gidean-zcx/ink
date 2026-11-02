@@ -45,5 +45,10 @@
   "mem.internal_total.largest_free_min_bytes": {
     "min": 8192,
     "why": "an internal-only allocation of 8 KiB (task stack, TLS record buffer) must still succeed at the worst moment"
+  },
+  "warnings.count": {
+    "max": 0,
+    "optional": true,
+    "why": "a simulator warning (stack, long burst, unknown cost class, underrun ...) means the run is not clean"
   }
 }

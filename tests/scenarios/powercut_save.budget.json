@@ -1,0 +1,7 @@
+{
+  "_doc": "Run 1: the armed power cut must hit a flash write of the position save.",
+  "flash.torn_ops": {
+    "min": 1,
+    "why": "the cut must land inside a program/erase"
+  }
+}

@@ -110,6 +110,8 @@ void sim_storage_init(void);          /* task context (boot): mounts /user, prep
 void sim_storage_report(void);
 /** Power cut now (ISR ctx): tear any in-flight flash operation and save the image. */
 void sim_storage_power_cut(void);
+/** Cut power in the middle of the n-th flash program/erase that starts from now (ISR ctx). */
+void sim_storage_arm_power_cut(int nth_write);
 void sim_storage_shutdown(void);      /* clean shutdown: save image */
 
 /* Mapped-asset D-cache model (hal_assets_sim.c) */

@@ -376,11 +376,15 @@ void ink_ui_pop(void) {
 static struct {
     const ink_activity_t *a;
     void *arg;
+    uint64_t cause_us; /* the tap that opened it: end-to-end "tap -> new screen stable" */
 } pending_open;
 
 static void do_open(void *unused) {
     (void)unused;
-    if (pending_open.a) ink_ui_push(pending_open.a, pending_open.arg);
+    if (pending_open.a) {
+        ink_ui_push(pending_open.a, pending_open.arg);
+        if (pending_open.cause_us) ink_ui_cause(pending_open.cause_us, "ui.open_to_stable_ms");
+    }
     pending_open.a = NULL;
 }
 
@@ -392,6 +396,7 @@ void ink_ui_open(lv_obj_t *from, const ink_activity_t *a, void *arg) {
     }
     pending_open.a = a;
     pending_open.arg = arg;
+    pending_open.cause_us = UI.cause_us;
     ink_ui_post(do_open, NULL);
 }
 
