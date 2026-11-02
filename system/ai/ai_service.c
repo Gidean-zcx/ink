@@ -24,6 +24,7 @@
 #include "ink/sys/ai.h"
 #include "ink/sys/audio.h"
 #include "ink/sys/font.h"
+#include "ink/sys/power.h"
 #include "ink/sys/hub.h"
 #include "ink/sys/json.h"
 #include "ink/sys/ui.h"
@@ -230,6 +231,7 @@ static void on_reply(void *ctx, int status, const ink_json_t *j, int result) { /
     (void)result;
     int id = (int)(intptr_t)ctx;
     post(id, status == INK_HUB_OK ? 1 : 2, status, NULL);
+    ink_power_release(INK_NEED_NET); /* the turn is over (answer, error or timeout) */
 }
 
 /* --------------------------------------------------------- voice uplink */
@@ -356,7 +358,9 @@ static int request(const char *method, bool voice) {
     AI.first_text_seen = false;
     AI.asking = true;
     AI.seq++;
+    ink_power_hold(INK_NEED_NET); /* no sleep while the answer is on its way */
     int id = ink_hub_call(method, w.overflow ? "{}" : params, ASK_TIMEOUT_US, on_reply, (void *)(intptr_t)AI.seq);
+    if (id < 0) ink_power_release(INK_NEED_NET);
     osal_free(snap);
     osal_free(params);
     return id;

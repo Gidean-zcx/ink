@@ -117,6 +117,9 @@ typedef struct {
     int i2c_background_bytes;
     uint32_t touch_poll_ms;
     uint32_t touch_detect_us;  /* finger down -> controller raises INT */
+    uint32_t touch_monitor_after_ms;  /* the controller drops to its slow monitor scan after this long untouched */
+    uint32_t touch_monitor_period_ms; /* monitor scan period: up to this much extra latency for the first touch */
+    uint32_t i2c_background_idle_poll_ms; /* background bus polling while the system is idle */
 
     /* internal flash (user-state partition) */
     size_t flash_user_bytes;
@@ -164,6 +167,13 @@ typedef struct {
     double ma_base_awake, ma_per_core_busy, ma_display_rails, ma_display_refresh;
     double ma_lte_idle, ma_lte_active, ma_wifi_idle, ma_wifi_active;
     double ma_audio_out, ma_audio_in, ma_light_full, ma_sleep;
+    int idle_mhz;               /* CPU clock floor when the system is not active and nothing boosts it */
+    double ma_base_awake_idle;  /* base current while awake at idle_mhz */
+    double ma_standby_modem;    /* modem registered + shared-rail parts while the chip sleeps ("可接听待机") */
+    uint32_t sleep_enter_us;    /* standby entry: panel PMIC to sleep (upstream 50 + 120 ms), SD park, rails */
+    uint32_t sleep_exit_us;     /* after the chip wakes: rails back, key baseline (upstream sequence) */
+    uint32_t sleep_wake_us;     /* chip light-sleep exit (clock/PLL restore) before any task runs */
+    uint32_t sd_remount_us;     /* SD card re-mount after a non-timer wake */
 
     /* features */
     hal_device_info_t info;

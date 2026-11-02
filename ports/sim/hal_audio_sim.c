@@ -407,6 +407,8 @@ void sim_audio_init(void) {
     osal_mem_tag(prev);
 }
 
+bool sim_audio_busy(void) { return A.cap_on || A.out_on; }
+
 void sim_audio_speaker_counters(uint64_t *underruns, double *underrun_ms, double *idle_ms) {
     vtk_lock();
     *underruns = A.underruns;

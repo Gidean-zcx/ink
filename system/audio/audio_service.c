@@ -28,9 +28,11 @@
 
 #include "ink/hal_audio.h"
 #include "ink/hal_codec.h"
+#include "ink/hal_power.h"
 #include "ink/osal.h"
 #include "ink/probe.h"
 #include "ink/sys/audio.h"
+#include "ink/sys/power.h"
 #include "ink/sys/storage.h"
 
 #define AU_STACK 26624 /* Opus encoder/decoder (upstream opus task: 26 KB, PSRAM) */
@@ -86,6 +88,8 @@ static struct {
     uint64_t stream_cause;
     uint64_t heard_cause;
     bool holding_writes;
+    bool boosting;
+    hal_cpu_boost_t *boost;
 } AU;
 
 static void lock(void) { osal_mutex_lock(AU.lock, OSAL_WAIT_FOREVER); }
@@ -318,13 +322,24 @@ static void service_playback(void) {
 
 /* ---------------------------------------------------------------- task */
 
+/* While playing or recording: flash writes wait (they would freeze the DMA refill), the chip stays
+ * awake (also when the device is locked: an audiobook keeps playing) and the codec runs at full clock. */
 static void update_write_hold(void) {
     lock();
     bool want = AU.cap_on || AU.stream || AU.out_open;
+    bool codec = AU.cap_on || AU.stream;
     unlock();
     if (want != AU.holding_writes) {
         AU.holding_writes = want;
         ink_storage_hold_writes(want);
+        if (want) ink_power_hold(INK_NEED_AUDIO);
+        else ink_power_release(INK_NEED_AUDIO);
+    }
+    if (codec != AU.boosting) {
+        AU.boosting = codec;
+        if (!AU.boost) AU.boost = hal_cpu_boost_create("audio");
+        if (codec) hal_cpu_boost_acquire(AU.boost);
+        else hal_cpu_boost_release(AU.boost);
     }
 }
 

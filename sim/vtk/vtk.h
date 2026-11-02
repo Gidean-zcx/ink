@@ -135,6 +135,9 @@ uint64_t vtk_stall_total_ns(void);
 /** Called (kernel lock held, ISR-like) with each newly stalled interval [from, until) (new window or extension). */
 typedef void (*vtk_stall_hook_fn)(uint64_t from_ns, uint64_t until_ns);
 void vtk_set_stall_hook(vtk_stall_hook_fn fn);
+/** Light sleep (kernel lock held): while set, only `t` may run; NULL ends it. Events keep firing
+ *  (their ISRs run), tasks they wake run after the sleep. */
+void vtk_set_sleeper_locked(vtk_task_t *t);
 
 /* ---- realtime/external input ---- */
 /** Thread-safe from ANY host thread (e.g. an SDL or network thread): run fn in event

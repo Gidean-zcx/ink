@@ -92,6 +92,7 @@ static struct {
     uint64_t stall_from, stall_until, stall_total;
     uint64_t stall_hist_a[16], stall_hist_b[16]; /* recent stall windows (work crossing one freezes inside it) */
     int stall_hist_last;
+    vtk_task_t *sleeper; /* light sleep: only this task may run (it called the sleep) */
     vtk_stall_hook_fn stall_hook;
     /* external injection (realtime) */
     pthread_mutex_t ext_m;
@@ -228,6 +229,7 @@ static bool eligible(const vtk_task_t *t, int c) {
     if (t->ready_at > K.now[c]) return false;
     if (t->core_aff >= 0 && t->core_aff != c) return false;
     if (stalled_at(K.now[c])) return false; /* scheduler suspended on all cores */
+    if (K.sleeper && t != K.sleeper) return false; /* the chip sleeps: everything else waits for the wake */
     return true;
 }
 
@@ -281,6 +283,11 @@ static void core_release_locked(int c) {
 static vtk_task_t *dispatch_on_core_locked(int c) {
     vtk_task_t *cur = K.cur[c];
     vtk_task_t *cand = best_ready_for_core(c);
+    if (cur && K.sleeper && cur != K.sleeper) { /* light sleep began: this task stops where it is */
+        make_ready_locked(cur, K.now[c]);
+        core_release_locked(c);
+        cur = NULL;
+    }
     if (cur) {
         if (stalled_at(K.now[c])) {
             uint64_t d = K.stall_until - K.now[c];
@@ -887,6 +894,8 @@ void vtk_stall_begin_locked(uint64_t until_ns) {
 }
 
 void vtk_set_stall_hook(vtk_stall_hook_fn fn) { K.stall_hook = fn; }
+
+void vtk_set_sleeper_locked(vtk_task_t *t) { K.sleeper = t; }
 
 uint64_t vtk_stall_total_ns(void) { return K.stall_total; }
 

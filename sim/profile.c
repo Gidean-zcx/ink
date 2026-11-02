@@ -210,6 +210,9 @@ int profile_load(const char *path, sim_profile_t *p, char *err, size_t errlen) {
     p->i2c_background_bytes = (int)num(in, "i2c_background_bytes", 24);
     p->touch_poll_ms = (uint32_t)num(in, "touch_poll_ms", 10);
     p->touch_detect_us = (uint32_t)num(in, "touch_detect_us", 20000);
+    p->touch_monitor_after_ms = (uint32_t)num(in, "touch_monitor_after_ms", 0); /* 0 = no monitor mode modelled */
+    p->touch_monitor_period_ms = (uint32_t)num(in, "touch_monitor_period_ms", 0);
+    p->i2c_background_idle_poll_ms = (uint32_t)num(in, "i2c_background_idle_poll_ms", p->i2c_background_poll_ms);
     const cJSON *keys = cJSON_GetObjectItemCaseSensitive(in, "keys");
     if (cJSON_IsArray(keys)) {
         const cJSON *k;
@@ -320,6 +323,14 @@ int profile_load(const char *path, sim_profile_t *p, char *err, size_t errlen) {
     p->ma_audio_in = num(pw, "audio_in_ma", 12);
     p->ma_light_full = num(pw, "frontlight_full_ma", 45);
     p->ma_sleep = num(pw, "sleep_ma", 1.5);
+    p->idle_mhz = (int)num(pw, "idle_mhz", p->mhz);
+    if (p->idle_mhz <= 0 || p->idle_mhz > p->mhz) p->idle_mhz = p->mhz;
+    p->ma_base_awake_idle = num(pw, "base_awake_idle_ma", p->ma_base_awake);
+    p->ma_standby_modem = num(pw, "standby_modem_ma", 2.5);
+    p->sleep_enter_us = (uint32_t)(num(pw, "sleep_enter_ms", 200) * 1000);
+    p->sleep_exit_us = (uint32_t)(num(pw, "sleep_exit_ms", 30) * 1000);
+    p->sleep_wake_us = (uint32_t)num(pw, "sleep_wake_us", 2000);
+    p->sd_remount_us = (uint32_t)(num(pw, "sd_remount_ms", 100) * 1000);
 
     const cJSON *f = obj(root, "features");
     p->info.profile_id = p->id;

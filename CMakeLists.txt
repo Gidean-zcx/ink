@@ -100,6 +100,8 @@ add_library(ink_system STATIC
   system/core/actions.c
   system/core/members.c
   system/core/system_actions.c
+  system/power/power_service.c
+  system/ui/lock_mark.c
   system/net/hub_link.c
   system/ai/ai_service.c
   system/audio/audio_service.c

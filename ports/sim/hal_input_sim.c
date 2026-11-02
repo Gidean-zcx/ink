@@ -17,6 +17,12 @@
  *
  * Events carry t_us = the physical time of the action (known exactly here),
  * so system-side latency probes measure true end-to-end latency.
+ *
+ * Power: after touch_monitor_after_ms untouched the controller scans in its
+ * slow monitor mode: the first touch (or cover key) waits up to one monitor
+ * period longer. While the chip sleeps, touches, cover keys and keys that
+ * are not armed wake sources are lost; an armed key wakes it and is read
+ * after the wake. Background bus polling slows down when the system is idle.
  */
 #include <stdio.h>
 #include <string.h>
@@ -55,7 +61,28 @@ static struct {
     osal_task_t *task;
     /* stats */
     uint64_t touches;
+    /* power */
+    uint64_t last_touch_activity;
+    hal_key_t dropped_key; /* press lost while asleep: drop its release too */
+    uint32_t bg_poll_ms;
 } IN;
+
+void sim_power_input_lost(void);
+
+/* Extra detection delay if the controller has dropped to its monitor scan. ISR context. */
+static uint64_t monitor_delay_ns(void) {
+    uint64_t now = vtk_isr_now(), extra = 0;
+    if (g_profile.touch_monitor_after_ms && g_profile.touch_monitor_period_ms &&
+        now - IN.last_touch_activity >= SIM_MS(g_profile.touch_monitor_after_ms))
+        extra = (uint64_t)(sim_rand01() * (double)SIM_MS(g_profile.touch_monitor_period_ms));
+    IN.last_touch_activity = now;
+    if (extra) sim_metric_sample("input.touch_monitor_extra_ms", extra / 1e6);
+    return extra;
+}
+
+void sim_input_set_power_state(hal_power_state_t s) {
+    IN.bg_poll_ms = s == HAL_PWR_STATE_ACTIVE ? g_profile.i2c_background_poll_ms : g_profile.i2c_background_idle_poll_ms;
+}
 
 static struct {
     osal_mutex_t *bus;
@@ -106,6 +133,10 @@ static void touch_irq_cb(void *arg) { /* ISR: controller raises INT */
 
 void sim_input_touch(int id, bool down, int lx, int ly) {
     if (id < 0 || id >= MAX_TOUCH || !g_profile.has_touch) return;
+    if (sim_power_sleeping()) { /* touch is not a wake source: the chip never sees it */
+        if (down) sim_power_input_lost();
+        return;
+    }
     phys_touch_t *p = &IN.phys[id];
     int nx, ny;
     ink_logical_to_native(g_profile.panel.width, g_profile.panel.height, g_profile.panel.rotation_deg, lx, ly, &nx, &ny);
@@ -116,7 +147,7 @@ void sim_input_touch(int id, bool down, int lx, int ly) {
     if (down != was) p->t_change = vtk_isr_now();
     if (down && !was) {
         IN.touches++;
-        vtk_event_after(SIM_US(g_profile.touch_detect_us), touch_irq_cb, NULL);
+        vtk_event_after(SIM_US(g_profile.touch_detect_us) + monitor_delay_ns(), touch_irq_cb, NULL);
         sim_trace_instant("input", "finger-down", vtk_isr_now(), NULL);
     } else if (!down && was) {
         sim_trace_instant("input", "finger-up", vtk_isr_now(), NULL);
@@ -160,6 +191,20 @@ void sim_input_key(hal_key_t key, bool pressed) {
         return;
     }
     sim_trace_instant("input", pressed ? "key-down" : "key-up", vtk_isr_now(), NULL);
+    if (sim_power_sleeping()) {
+        /* asleep: an armed wake key wakes the chip and is read afterwards; anything else is lost */
+        uint32_t src = key == HAL_KEY_POWER ? HAL_WAKE_POWER_KEY : key == HAL_KEY_AI ? HAL_WAKE_AI_KEY : 0;
+        bool keep = sim_power_waking() || (pressed && src && sim_power_wake(src));
+        if (!pressed && IN.dropped_key == key) keep = false;
+        if (!keep) {
+            if (pressed) {
+                IN.dropped_key = key;
+                sim_power_input_lost();
+            }
+            return;
+        }
+    }
+    if (pressed && IN.dropped_key == key) IN.dropped_key = HAL_KEY_NONE;
     if (g_profile.key_source[key] == 1) { /* IO expander: INT now, reads by the driver task */
         if (IN.exp_n < KEY_FIFO) {
             IN.exp_pending[IN.exp_n].key = key;
@@ -176,7 +221,7 @@ void sim_input_key(hal_key_t key, bool pressed) {
             IN.vkey.key = key;
             IN.vkey.down = true;
             IN.vkey.t_change = vtk_isr_now();
-            vtk_event_after(SIM_US(g_profile.touch_detect_us), touch_irq_cb, NULL);
+            vtk_event_after(SIM_US(g_profile.touch_detect_us) + monitor_delay_ns(), touch_irq_cb, NULL);
         } else if (IN.vkey.key == key) {
             IN.vkey.down = false;
             IN.vkey.t_change = vtk_isr_now();
@@ -297,7 +342,7 @@ static void input_task(void *arg) {
 static void i2c_background_task(void *arg) {
     (void)arg;
     for (;;) {
-        osal_task_delay_us((uint64_t)g_profile.i2c_background_poll_ms * 1000ull);
+        osal_task_delay_us((uint64_t)(IN.bg_poll_ms ? IN.bg_poll_ms : g_profile.i2c_background_poll_ms) * 1000ull);
         sim_i2c_transfer("fuel-gauge", g_profile.i2c_background_bytes);
     }
 }

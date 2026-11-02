@@ -10,6 +10,7 @@
 #include "ink/osal.h"
 #include "ink/rotation.h"
 #include "ink/sys/input.h"
+#include "ink/sys/power.h"
 
 #define SWIPE_MIN_MM 6
 #define SWIPE_MAX_MS 900
@@ -38,6 +39,7 @@ static struct {
     bool key_long_fired;
     uint64_t key_t0;
     osal_timer_t *key_timer;
+    hal_key_t swallow_release; /* the release of a key press the power policy consumed */
 } IS;
 
 static int mm(int v) { return v * IS.px_per_mm10 / 10; }
@@ -136,8 +138,33 @@ static void on_key(const hal_input_event_t *h) {
     emit(&e);
 }
 
+/* Power policy first: while locked only a wake key gets through (it unlocks); the power key locks on
+ * release (a long press is left for power-off later). Returns true if the event was consumed. */
+static bool power_filter(const hal_input_event_t *h) {
+    bool is_key = h->type == HAL_IN_KEY;
+    if (is_key && !h->key.pressed && IS.swallow_release == h->key.key) {
+        IS.swallow_release = HAL_KEY_NONE;
+        return true;
+    }
+    if (ink_power_state() == INK_PWR_LOCKED) {
+        if (is_key && h->key.pressed && (h->key.key == HAL_KEY_POWER || h->key.key == HAL_KEY_AI)) {
+            hal_display_wake(WAKE_HOLD_MS); /* the lock mark comes off right away */
+            IS.swallow_release = h->key.key;
+            ink_power_unlock(h->t_us);
+        }
+        return true;
+    }
+    if (is_key && h->key.key == HAL_KEY_POWER) {
+        if (!h->key.pressed) ink_power_lock();
+        return true;
+    }
+    ink_power_activity(h->t_us);
+    return false;
+}
+
 static void hal_sink(const hal_input_event_t *h, void *ctx) {
     (void)ctx;
+    if (power_filter(h)) return;
     if ((h->type == HAL_IN_TOUCH && h->touch.phase != HAL_TOUCH_MOVE) || h->type == HAL_IN_KEY)
         hal_display_wake(WAKE_HOLD_MS);
     if (h->type == HAL_IN_TOUCH) on_touch(h);

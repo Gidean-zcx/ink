@@ -250,7 +250,12 @@ static void storage_task(void *arg) {
     hal_fs_mkdir("/user/apps");
     ink_display_flash_guard(false);
     for (;;) {
-        osal_sem_take(ST.kick, IDLE_POLL_US * 4); /* prefetches wait for a quiet panel: look again now and then */
+        /* sleep until there is work; only waiting prefetches (they need a quiet panel) look again now and then */
+        osal_mutex_lock(ST.lock, OSAL_WAIT_FOREVER);
+        bool waiting = false;
+        for (int i = 0; i < PREFETCH_MAX && !waiting; i++) waiting = ST.prefetch[i] != NULL;
+        osal_mutex_unlock(ST.lock);
+        osal_sem_take(ST.kick, waiting ? IDLE_POLL_US * 4 : OSAL_WAIT_FOREVER);
         for (;;) {
             serve_read();
             prefetch_one();

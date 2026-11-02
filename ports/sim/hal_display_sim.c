@@ -514,8 +514,12 @@ static void back_copy(const hal_rect_t *a) {
     sim_trace_span("display", "backcopy", t0, vtk_now(), NULL);
 }
 
+static hal_cpu_boost_t *g_boost; /* the driver keeps the CPU at full speed while it refreshes */
+
 static void execute(req_t *r) {
     hal_display_result_t res = {.id = r->id, .ok = true, .queued_us = r->queued_ns / 1000};
+    if (!g_boost) g_boost = hal_cpu_boost_create("epd");
+    hal_cpu_boost_acquire(g_boost);
     hal_waveform_t wf = resolve_wf(r->wf);
     res.waveform = wf;
     uint64_t t_pick = vtk_now();
@@ -591,6 +595,7 @@ static void execute(req_t *r) {
         write_png(path);
     }
     D.pending--;
+    hal_cpu_boost_release(g_boost);
     if (r->done) r->done(r->ctx, &res);
 }
 

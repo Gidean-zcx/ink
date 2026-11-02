@@ -3,8 +3,21 @@
  * energy estimate per scenario. Currents are ESTIMATES from the profile until
  * bench measurements exist (SP-08) — use the result to compare designs, not
  * to promise battery life.
+ *
+ * CPU clock: full speed while the system is active or anything holds a CPU
+ * boost (esp_pm CPU_FREQ_MAX lock), otherwise the idle frequency; CPU work
+ * charged in cycles takes longer at the lower clock and the base current
+ * follows the clock. No automatic light sleep (upstream keeps it off on the
+ * S31: tickless idle disabled, light_sleep_enable false).
+ *
+ * Standby is an explicit light sleep (hal_power_sleep, upstream
+ * esp_light_sleep_start in 60 s slices): entry sequence (panel PMIC to sleep,
+ * SD park, rails), every other task suspended, only armed wake sources end
+ * it (after the chip's wake latency), then the restore sequence. Input from
+ * other sources is lost while asleep.
  */
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "ink/hal_device.h"
@@ -29,7 +42,18 @@ static struct {
     bool charging;
     int light_cold, light_warm;
     double cpu_mah;
+    /* clock and sleep */
+    hal_power_state_t state;
+    uint64_t state_since, state_ns[3];
+    int boosts;
+    bool sleeping;
+    uint32_t wake_mask, wake_cause;
+    vtk_waitq_t sleep_wq;
+    vtk_event_id_t slice_ev;
+    uint64_t sleep_ns, sleeps, wakes_by[8], lost_inputs;
 } PW;
+
+int g_sim_mhz;
 
 static consumer_t *find(const char *name) {
     for (int i = 0; i < PW.n; i++)
@@ -104,12 +128,138 @@ static double total_mah(void) {
         settle(&PW.c[i], t);
         sum += PW.c[i].mah;
     }
-    /* CPU: base while awake + per-core busy share (no light sleep modelled yet: pessimistic) */
-    double h = (double)t / 3.6e12;
+    /* CPU base current is the "cpu.base" consumer (follows the clock, off while asleep); here the
+     * per-core busy share on top (at full-clock current: pessimistic) */
     double busy_h = 0;
     for (int c = 0; c < g_profile.cores; c++) busy_h += (double)vtk_core_busy_ns(c) / 3.6e12;
-    PW.cpu_mah = g_profile.ma_base_awake * h + g_profile.ma_per_core_busy * busy_h;
+    PW.cpu_mah = g_profile.ma_per_core_busy * busy_h;
     return sum + PW.cpu_mah;
+}
+
+/* ------------------------------------------------------------ clock */
+
+static void apply_clock(void) { /* kernel lock not required: consumers settle with the current time */
+    bool full = PW.state == HAL_PWR_STATE_ACTIVE || PW.boosts > 0;
+    int mhz = full ? g_profile.mhz : g_profile.idle_mhz;
+    g_sim_mhz = mhz;
+    if (!PW.sleeping)
+        sim_power_consumer("cpu.base", true, mhz == g_profile.mhz ? g_profile.ma_base_awake : g_profile.ma_base_awake_idle);
+}
+
+static void account_state(uint64_t t) {
+    if (t > PW.state_since) PW.state_ns[PW.state] += t - PW.state_since;
+    PW.state_since = t;
+}
+
+void sim_input_set_power_state(hal_power_state_t s);
+
+void hal_power_set_state(hal_power_state_t s) {
+    if ((unsigned)s > HAL_PWR_STATE_LOCKED) return;
+    account_state(now_ns());
+    PW.state = s;
+    apply_clock();
+    sim_input_set_power_state(s);
+}
+
+hal_power_state_t sim_power_state(void) { return PW.state; }
+
+struct hal_cpu_boost {
+    char name[24];
+    bool held;
+};
+
+hal_cpu_boost_t *hal_cpu_boost_create(const char *name) {
+    hal_cpu_boost_t *b = calloc(1, sizeof *b);
+    if (!b) abort();
+    snprintf(b->name, sizeof b->name, "%s", name ? name : "boost");
+    return b;
+}
+
+void hal_cpu_boost_acquire(hal_cpu_boost_t *b) {
+    if (!b || b->held) return;
+    b->held = true;
+    PW.boosts++;
+    apply_clock();
+}
+
+void hal_cpu_boost_release(hal_cpu_boost_t *b) {
+    if (!b || !b->held) return;
+    b->held = false;
+    PW.boosts--;
+    apply_clock();
+}
+
+/* ------------------------------------------------------------ light sleep */
+
+bool sim_power_sleeping(void) { return PW.sleeping; }
+bool sim_power_waking(void) { return PW.sleeping && PW.wake_cause != 0; }
+
+static void wake_cb(void *arg) { /* ISR: the chip is awake: the sleeper continues */
+    (void)arg;
+    vtk_isr_wake_one(&PW.sleep_wq);
+}
+
+bool sim_power_wake(uint32_t cause) { /* ISR */
+    if (!PW.sleeping || !(PW.wake_mask & cause) || PW.wake_cause) return false;
+    PW.wake_cause = cause;
+    if (PW.slice_ev) vtk_event_cancel(PW.slice_ev);
+    PW.slice_ev = 0;
+    vtk_event_at(vtk_isr_now() + SIM_US(g_profile.sleep_wake_us), wake_cb, NULL);
+    return true;
+}
+
+void sim_power_input_lost(void) { PW.lost_inputs++; }
+
+static void slice_cb(void *arg) { /* ISR: the sleep timer expired */
+    (void)arg;
+    PW.slice_ev = 0;
+    sim_power_wake(HAL_WAKE_TIMER);
+}
+
+uint32_t hal_power_sleep(const hal_sleep_cfg_t *cfg) {
+    if (vtk_in_isr() || !vtk_self()) osal_panic("hal_power_sleep must be called from a task");
+    if (!cfg) return 0;
+    /* refuse while something is still busy (the system must quiesce first) */
+    if (hal_display_pending() > 0 || sim_display_playing() || sim_audio_busy()) {
+        sim_metric_add("power.sleep_refused", 1);
+        return 0;
+    }
+    uint64_t t_enter = vtk_now();
+    osal_task_delay_us(g_profile.sleep_enter_us); /* PMIC to sleep, SD parked, rails cut */
+    uint32_t wake_mask = cfg->wake_mask | (cfg->max_us ? HAL_WAKE_TIMER : 0);
+    if (!cfg->keep_modem) wake_mask &= ~(uint32_t)HAL_WAKE_MODEM;
+    vtk_lock();
+    uint64_t t0 = vtk_now();
+    PW.sleeping = true;
+    PW.wake_cause = 0;
+    PW.wake_mask = wake_mask;
+    vtk_set_sleeper_locked(vtk_self());
+    if (cfg->max_us) PW.slice_ev = vtk_event_at(t0 + cfg->max_us * 1000ull, slice_cb, NULL);
+    vtk_unlock();
+    sim_power_consumer("cpu.base", false, 0);
+    sim_power_consumer("cpu.sleep", true, g_profile.ma_sleep);
+    if (cfg->keep_modem && g_profile.info.has_modem) sim_power_consumer("modem.standby", true, g_profile.ma_standby_modem);
+    sim_trace_instant("power", "sleep", t0, NULL);
+    vtk_lock();
+    while (!PW.wake_cause) vtk_block_locked(&PW.sleep_wq, VTK_TIME_INF);
+    uint32_t cause = PW.wake_cause;
+    uint64_t t1 = vtk_now();
+    PW.sleeping = false;
+    PW.wake_mask = 0;
+    vtk_set_sleeper_locked(NULL);
+    vtk_unlock();
+    sim_power_consumer("cpu.sleep", false, 0);
+    sim_power_consumer("modem.standby", false, 0);
+    apply_clock();
+    PW.sleep_ns += t1 - t0;
+    PW.sleeps++;
+    for (int i = 0; i < 8; i++)
+        if (cause & (1u << i)) PW.wakes_by[i]++;
+    sim_trace_span("power", "light sleep", t0, t1, NULL);
+    osal_task_delay_us(g_profile.sleep_exit_us); /* rails back, key baseline */
+    if (cause != HAL_WAKE_TIMER) osal_task_delay_us(g_profile.sd_remount_us);
+    sim_trace_span("power", "standby enter+exit", t_enter, vtk_now(), NULL);
+    return cause;
 }
 
 void hal_power_battery(hal_battery_t *out) {
@@ -131,6 +281,8 @@ void sim_power_set_battery(int percent, bool charging) {
 void sim_power_init(void) {
     PW.soc = 0.8;
     find("display.rails");
+    PW.state = HAL_PWR_STATE_ACTIVE;
+    apply_clock();
 }
 
 void sim_power_report(void) {
@@ -141,9 +293,24 @@ void sim_power_report(void) {
         snprintf(key, sizeof key, "power.mah.%s", PW.c[i].name);
         sim_metric_set(key, PW.c[i].mah);
     }
-    sim_metric_set("power.mah.cpu", PW.cpu_mah);
+    sim_metric_set("power.mah.cpu_busy", PW.cpu_mah);
     sim_metric_set("power.mah_total", total);
     sim_metric_set("power.avg_ma_estimate", h > 0 ? total / h : 0);
+    account_state(now_ns());
+    static const char *SN[3] = {"active", "idle", "locked"};
+    for (int i = 0; i < 3; i++) {
+        snprintf(key, sizeof key, "power.state_ms.%s", SN[i]);
+        sim_metric_set(key, PW.state_ns[i] / 1e6);
+    }
+    sim_metric_set("power.sleep_ms", PW.sleep_ns / 1e6);
+    sim_metric_set("power.sleeps", (double)PW.sleeps);
+    static const char *WN[5] = {"timer", "power_key", "ai_key", "rtc", "modem"};
+    for (int i = 0; i < 5; i++)
+        if (PW.wakes_by[i]) {
+            snprintf(key, sizeof key, "power.wakes.%s", WN[i]);
+            sim_metric_set(key, (double)PW.wakes_by[i]);
+        }
+    if (PW.lost_inputs) sim_metric_set("power.inputs_lost_asleep", (double)PW.lost_inputs);
 }
 
 /* ------------------------------------------------------------ device */

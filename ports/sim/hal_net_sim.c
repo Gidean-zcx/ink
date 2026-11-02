@@ -22,6 +22,7 @@
 #include <string.h>
 
 #include "ink/hal_net.h"
+#include "ink/hal_power.h"
 #include "sim.h"
 
 typedef struct sim_msg {
@@ -331,7 +332,11 @@ static void ws_task(void *arg) {
         t += rtt_ns(); /* TCP */
         ok = wait_until(w, t);
         if (ok) {
+            static hal_cpu_boost_t *boost;
+            if (!boost) boost = hal_cpu_boost_create("tls");
+            hal_cpu_boost_acquire(boost); /* the TLS stack holds the CPU at full speed for the handshake */
             sim_charge_cycles(profile_cost("tls.handshake")); /* key exchange + certificate check */
+            hal_cpu_boost_release(boost);
             t = vtk_now() + rtt_ns() /* TLS 1.3 */ + rtt_ns() /* WebSocket upgrade */;
             ok = wait_until(w, t) && N.up && !w->dead;
         }

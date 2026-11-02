@@ -17,6 +17,7 @@
 #include "ink/osal.h"
 #include "ink/probe.h"
 #include "ink/sys/hub.h"
+#include "ink/sys/power.h"
 
 #define HUB_STACK 4096
 #define HUB_PRIO 6
@@ -78,6 +79,7 @@ static struct {
     uint32_t next_id;
     uint32_t hello_id;
     uint64_t last_activity, demand_until, backoff_until, backoff_us, connect_started;
+    volatile bool low_power; /* device locked: disconnect as soon as idle */
     struct {
         char prefix[16];
         ink_hub_notify_fn fn;
@@ -310,7 +312,7 @@ static uint64_t next_wakeup(uint64_t now) {
         if (H.pend[i].used && H.pend[i].deadline < t) t = H.pend[i].deadline;
     if (H.state == HS_BACKOFF && H.backoff_until < t) t = H.backoff_until;
     if (H.state == HS_ONLINE) {
-        uint64_t idle = H.last_activity + IDLE_DISCONNECT_US;
+        uint64_t idle = H.last_activity + (H.low_power ? 0 : IDLE_DISCONNECT_US);
         if (H.demand_until > idle) idle = H.demand_until;
         if (idle < t) t = idle;
     }
@@ -394,7 +396,7 @@ static void hub_task(void *arg) {
             if (now >= H.connect_started + HELLO_TIMEOUT_US) enter_backoff();
             break;
         case HS_ONLINE:
-            if (!has_demand(now) && now >= H.last_activity + IDLE_DISCONNECT_US) { /* D-24: quiet -> disconnect */
+            if (!has_demand(now) && now >= H.last_activity + (H.low_power ? 0 : IDLE_DISCONNECT_US)) { /* D-24 */
                 close_ws();
                 H.state = HS_DISCONNECTED;
                 ink_probe_count("hub.idle_disconnects");
@@ -407,6 +409,15 @@ static void hub_task(void *arg) {
 
 /* ----------------------------------------------------------------- API */
 
+static void on_power(void *ctx, ink_power_state_t from, ink_power_state_t to, uint64_t cause_us) { /* power task */
+    (void)ctx;
+    (void)from;
+    (void)cause_us;
+    H.low_power = to == INK_PWR_LOCKED; /* D-24: locked -> disconnect once quiet */
+    hub_msg_t m = {.type = HE_DEMAND};   /* wake the hub task to re-evaluate (sets no demand) */
+    osal_queue_send(H.q, &m, 0);
+}
+
 int ink_hub_init(const char *url) {
     snprintf(H.url, sizeof H.url, "%s", url);
     const char *prev = osal_mem_tag("hub");
@@ -416,6 +427,7 @@ int ink_hub_init(const char *url) {
     H.tx_lock = osal_mutex_create();
     osal_mem_tag(prev);
     if (!H.q || !H.id_lock || !H.json || !H.tx_lock) return -1;
+    ink_power_subscribe(on_power, NULL);
     hal_net_set_link_callback(link_cb, NULL);
     osal_task_cfg_t cfg = {.name = "hub", .fn = hub_task, .stack_bytes = HUB_STACK, .priority = HUB_PRIO, .core = -1,
                            .flags = OSAL_TASK_STACK_EXTERNAL};

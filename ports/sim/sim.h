@@ -16,6 +16,7 @@
 
 #include "ink/hal_display.h"
 #include "ink/hal_input.h"
+#include "ink/hal_power.h"
 #include "ink/osal.h"
 #include "pools.h"
 #include "profile.h"
@@ -53,8 +54,10 @@ typedef struct {
 extern sim_options_t g_sim;
 
 /* ---- time & cost ---- */
+extern int g_sim_mhz; /* current CPU clock (frequency scaling; 0 = the profile's maximum) */
 static inline uint64_t sim_cycles_ns(double cycles) {
-    return (uint64_t)(cycles * 1000.0 / (double)(g_profile.mhz > 0 ? g_profile.mhz : 1));
+    int mhz = g_sim_mhz > 0 ? g_sim_mhz : g_profile.mhz;
+    return (uint64_t)(cycles * 1000.0 / (double)(mhz > 0 ? mhz : 1));
 }
 /** Charge CPU work to the calling task (task context; ignored in MEASURED mode). */
 void sim_charge_cycles(double cycles);
@@ -135,6 +138,13 @@ void sim_display_plan_info(const hal_rect_t *area, uint64_t *phase_ns, uint64_t 
                            double *slack_lines); /* task context */
 bool sim_display_playing(void);
 uint64_t sim_display_ipc_wait_ns(uint64_t now); /* task context */
+bool sim_power_sleeping(void);
+bool sim_power_waking(void);  /* asleep, but a wake source already fired */
+void sim_power_input_lost(void);
+void sim_input_set_power_state(hal_power_state_t s);
+bool sim_power_wake(uint32_t cause); /* ISR: a wake source fired; true if it woke the chip */
+hal_power_state_t sim_power_state(void);
+bool sim_audio_busy(void);
 void sim_audio_init(void);            /* task context (boot) */
 void sim_audio_report(void);
 void sim_audio_mic_source(const char *name); /* ISR (script): "speech" | "silence" | "noise" */
