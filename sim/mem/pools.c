@@ -263,6 +263,7 @@ void pools_sample(void) {
 
 size_t pools_min_largest(pool_id_t id) { return P[id].min_largest; }
 bool pools_owns(const void *ptr) { return owner_of((void *)ptr) != NULL; }
+bool pools_is_external(const void *ptr) { return owner_of((void *)ptr) == &P[POOL_EXTERNAL]; }
 int pools_pool_of(const void *ptr) {
     heap_pool_t *p = owner_of((void *)ptr);
     return p ? (int)(p - P) : -1;

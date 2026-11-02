@@ -8,7 +8,11 @@
     "mhz": 320,
     "coremark_per_mhz_per_core": 3.083,
     "_coremark_source": "ESP32-S31 datasheet v0.5: CoreMark 2195.20 dual-core @320 MHz = 3.43/MHz per core, which needs CPI ~1.0 with GCC 15.2; the closest plausible single-issue model (ISS, tools/iss) gives 3.083 — used here",
-    "host_to_target_default": 40.0
+    "host_to_target_default": 40.0,
+    "icache_penalty": 0.15,
+    "dcache_kib": 64,
+    "cache_line_bytes": 64,
+    "_notes_cache": "I-cache 16 KiB per core, 2-way, 64 B lines; D-cache 64 KiB shared by both cores and by PSRAM and mapped flash (ESP-IDF soc.h / Kconfig.cache, see tools/iss/timing). icache_penalty: extra fraction on annotated system CPU for misses on flash-resident code (ISS: cold small kernels +30%, steady state lower; 0.15 pessimistic, 0.08 expected). flash.line_fill: one 64 B line over DIO 80 MHz flash (ISS flash.fill)."
   },
   "kernel": {
     "sched_overhead_ns": 2000,
@@ -166,7 +170,10 @@
     "glyph.px": 25.1,
     "fill.px": 9.99,
     "psram.set_byte": 8.87,
-    "sram.set_byte": 0.52
+    "sram.set_byte": 0.52,
+    "flash.line_fill": 1150,
+    "lvgl.obj_refr": 1500,
+    "lvgl.obj_create": 20000
   },
   "network": {
     "wifi": {

@@ -422,7 +422,54 @@ static void bad_psram_task(void *arg) {
     sim_warn("death test: a PSRAM-stack task read /user without crashing the device");
 }
 
+/* INK_SELFTEST_AGE=1 with --flash-image: leave /user 50-60 % full and fragmented (written to 80 %,
+ * every third file deleted, some rewritten), so scenarios run on an aged filesystem where writes
+ * trigger block reclaim and metadata compaction. */
+static void age_task(void *arg) {
+    (void)arg;
+    hal_fs_volume_info_t vi;
+    if (hal_fs_volume_info("/user", &vi) != 0) return;
+    static uint8_t buf[6000];
+    uint32_t x = 12345;
+    char path[64];
+    int n = 0;
+    for (; n < 400; n++) {
+        hal_fs_volume_info("/user", &vi);
+        if (vi.free_bytes < vi.total_bytes * 20 / 100) break;
+        x = x * 1103515245u + 12345u;
+        size_t len = 200 + (x >> 8) % sizeof(buf);
+        for (size_t i = 0; i < len; i++) buf[i] = (uint8_t)(x >> (i % 24));
+        snprintf(path, sizeof path, "/user/aged/f%03d.bin", n);
+        if (n == 0) hal_fs_mkdir("/user/aged");
+        hal_file_t *f = hal_fs_open(path, HAL_O_WRITE | HAL_O_CREATE | HAL_O_TRUNC);
+        if (!f) break;
+        hal_fs_write(f, buf, len);
+        hal_fs_close(f);
+    }
+    for (int i = 0; i < n; i += 3) { /* punch holes */
+        snprintf(path, sizeof path, "/user/aged/f%03d.bin", i);
+        hal_fs_remove(path);
+    }
+    for (int i = 1; i < n; i += 9) { /* rewrite some survivors */
+        snprintf(path, sizeof path, "/user/aged/f%03d.bin", i);
+        hal_file_t *f = hal_fs_open(path, HAL_O_WRITE | HAL_O_CREATE | HAL_O_TRUNC);
+        if (f) {
+            hal_fs_write(f, buf, 3000);
+            hal_fs_close(f);
+        }
+    }
+    hal_fs_volume_info("/user", &vi);
+    sim_note("aged /user: %d files written, a third removed; %llu of %llu KiB used", n,
+             (unsigned long long)((vi.total_bytes - vi.free_bytes) / 1024), (unsigned long long)(vi.total_bytes / 1024));
+    ink_probe_mark("aging-done");
+}
+
 void ink_main(void) {
+    if (getenv("INK_SELFTEST_AGE")) {
+        osal_task_cfg_t cfg = {.name = "age", .fn = age_task, .stack_bytes = 4096, .priority = OSAL_PRIO_NORMAL, .core = -1};
+        osal_task_create(&cfg, NULL);
+        return;
+    }
     const char *death = getenv("INK_SELFTEST_DEATH");
     if (death && !strcmp(death, "psram_flash")) {
         osal_task_cfg_t bad = {.name = "psram_reader", .fn = bad_psram_task, .stack_bytes = 3072,

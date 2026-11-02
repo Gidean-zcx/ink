@@ -6,7 +6,9 @@
     "cores": 4,
     "mhz": 3000,
     "coremark_per_mhz_per_core": 6.0,
-    "host_to_target_default": 1.0
+    "host_to_target_default": 1.0,
+    "icache_penalty": 0.0,
+    "dcache_kib": 0
   },
   "kernel": {
     "sched_overhead_ns": 300,
@@ -118,7 +120,10 @@
     "audio.convert_frame": 12,
     "audio.mix_sample": 6,
     "tone.sample": 20,
-    "epd.diff_px": 14
+    "epd.diff_px": 14,
+    "flash.line_fill": 0,
+    "lvgl.obj_refr": 1500,
+    "lvgl.obj_create": 20000
   },
   "power": {
     "_notes": "defaults from the simulator; not modelled for this class"

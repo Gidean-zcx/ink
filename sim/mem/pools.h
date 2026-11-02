@@ -31,6 +31,8 @@ size_t pools_min_largest(pool_id_t id);
 typedef void (*pools_warn_fn)(const char *msg);
 void pools_set_warn(pools_warn_fn fn);
 bool pools_owns(const void *p);
+/** True if p points into the external (PSRAM) pool. */
+bool pools_is_external(const void *p);
 /** Low-water of internal + DMA free bytes (what an internal-only allocation could still get). */
 size_t pools_internal_total_min_free(void);
 int pools_pool_of(const void *p); /* pool_id_t or -1 */

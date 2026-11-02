@@ -62,6 +62,71 @@ const void *hal_asset_map(const char *name, size_t *size) {
     return NULL;
 }
 
+/* ---- D-cache model for mapped flash: set-associative LRU over 64-byte lines ----
+ * Lines are identified by asset and offset (the partition is 64 KiB aligned on the device).
+ * sim_assets_cache_pollute() (called when a refresh streams the PSRAM framebuffers through
+ * the same cache) empties it. */
+#define DC_WAYS 2
+static struct {
+    uint64_t *tag; /* sets x ways, 0 = empty */
+    uint8_t *lru;  /* per set: index of the least recently used way */
+    uint32_t sets;
+    uint64_t hits, misses;
+} DC;
+
+static void dc_init(void) {
+    if (DC.tag || !g_profile.dcache_bytes) return;
+    DC.sets = g_profile.dcache_bytes / g_profile.dcache_line / DC_WAYS;
+    if (!DC.sets) return;
+    DC.tag = calloc((size_t)DC.sets * DC_WAYS, sizeof *DC.tag);
+    DC.lru = calloc(DC.sets, 1);
+    if (!DC.tag || !DC.lru) abort();
+}
+
+void sim_assets_cache_pollute(void) {
+    if (DC.tag) memset(DC.tag, 0, (size_t)DC.sets * DC_WAYS * sizeof *DC.tag);
+}
+
+void hal_asset_access(const void *p, size_t len) {
+    if (!len || !g_profile.dcache_bytes || vtk_in_isr() || !vtk_self()) return;
+    dc_init();
+    if (!DC.tag) return;
+    const uint8_t *b = p;
+    int ai = -1;
+    for (int i = 0; i < nAS; i++)
+        if (b >= (const uint8_t *)AS[i].data && b < (const uint8_t *)AS[i].data + AS[i].size) ai = i;
+    if (ai < 0) return;
+    uint64_t off = (uint64_t)(b - (const uint8_t *)AS[ai].data);
+    uint64_t first = off / g_profile.dcache_line, last = (off + len - 1) / g_profile.dcache_line;
+    unsigned misses = 0;
+    for (uint64_t l = first; l <= last; l++) {
+        uint64_t tag = ((uint64_t)(ai + 1) << 40) | (l + 1);
+        uint32_t set = (uint32_t)((l ^ ((uint64_t)ai * 2654435761u)) % DC.sets);
+        uint64_t *w = &DC.tag[(size_t)set * DC_WAYS];
+        if (w[0] == tag) {
+            DC.lru[set] = 1;
+            DC.hits++;
+        } else if (w[1] == tag) {
+            DC.lru[set] = 0;
+            DC.hits++;
+        } else {
+            int victim = DC.lru[set];
+            w[victim] = tag;
+            DC.lru[set] = (uint8_t)(victim ^ 1);
+            misses++;
+        }
+    }
+    if (misses) {
+        DC.misses += misses;
+        sim_charge_ns_always(sim_cycles_ns((double)misses * profile_cost("flash.line_fill")));
+    }
+}
+
+void sim_assets_report(void) {
+    sim_metric_set("assets.dcache_hits", (double)DC.hits);
+    sim_metric_set("assets.dcache_misses", (double)DC.misses);
+}
+
 void hal_asset_unmap(const void *data) {
     for (int i = 0; i < nAS; i++)
         if (AS[i].data == data && AS[i].maps > 0) AS[i].maps--;

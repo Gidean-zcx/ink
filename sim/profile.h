@@ -54,6 +54,9 @@ typedef struct {
     uint64_t queue_op_ns;
     uint64_t long_burst_warn_ns;
     double host_stack_ratio;
+    double icache_penalty;    /* extra fraction on annotated system CPU: code runs from flash through a 16 KiB I-cache */
+    uint32_t dcache_bytes;    /* shared D-cache in front of mapped flash (and PSRAM) */
+    uint32_t dcache_line;
     uint32_t tcb_bytes;
     uint32_t sync_obj_bytes;
     int tick_hz;              /* RTOS tick: delays/timeouts are quantized to it */

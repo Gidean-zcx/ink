@@ -174,10 +174,24 @@ static void flush_cb(lv_display_t *d, const lv_area_t *area, uint8_t *px) {
     lv_display_flush_ready(d);
 }
 
+static uint32_t count_objs(lv_obj_t *o) {
+    if (!o) return 0;
+    uint32_t n = 1, c = lv_obj_get_child_count(o);
+    for (uint32_t i = 0; i < c; i++) n += count_objs(lv_obj_get_child(o, (int32_t)i));
+    return n;
+}
+
 static void refr_event_cb(lv_event_t *e) {
     lv_event_code_t code = lv_event_get_code(e);
     if (code == LV_EVENT_REFR_START) {
+        /* fixed refresh overhead + per-object style/layout/draw-task work; objects created since
+         * the last refresh also pay their creation (allocations, style init, events) */
+        static uint32_t prev_objs;
+        uint32_t objs = count_objs(lv_screen_active()) + count_objs(lv_layer_top()) + count_objs(lv_layer_sys());
         osal_cost_units("lvgl.refr", 1);
+        osal_cost_units("lvgl.obj_refr", objs);
+        if (objs > prev_objs) osal_cost_units("lvgl.obj_create", objs - prev_objs);
+        prev_objs = objs;
     } else if (code == LV_EVENT_REFR_READY) {
         if (UI.ndirty) {
             ink_display_commit_tagged(UI.dirty, UI.ndirty, UI.cause_us, UI.cause_tag);

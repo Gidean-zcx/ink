@@ -301,11 +301,13 @@ static double cost_lookup(const char *cls) {
     return c;
 }
 
-void osal_cost_cycles(uint64_t cycles) { sim_charge_cycles((double)cycles); }
+/* System code runs from flash through the I-cache: annotated costs are warm-cache figures
+ * (ISS), so add the profile's miss penalty. */
+void osal_cost_cycles(uint64_t cycles) { sim_charge_cycles((double)cycles * (1.0 + g_profile.icache_penalty)); }
 
 void osal_cost_units(const char *cost_class, uint64_t units) {
     if (!units || vtk_in_isr() || !vtk_self() || g_sim.cpu_mode == VTK_CPU_MEASURED) return;
-    sim_charge_cycles(cost_lookup(cost_class) * (double)units);
+    sim_charge_cycles(cost_lookup(cost_class) * (double)units * (1.0 + g_profile.icache_penalty));
 }
 
 void osal_preempt_point(void) {

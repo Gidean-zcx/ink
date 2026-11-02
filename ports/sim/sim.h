@@ -36,6 +36,7 @@ typedef struct {
     const char *seed_content;  /* host directory copied into /content at boot (books for scenarios) */
     const char *hub_script;    /* scripted hub rules (JSON); built-in defaults if NULL */
     bool no_random_outages;    /* disable the profile's random link outages */
+    const char *flash_timing;  /* override the profile's flash timing: "typ" | "max" | "tail" */
     bool trace;               /* write Chrome/Perfetto trace JSON */
     bool frames;              /* write a PNG after every completed display update */
     bool quiet;
@@ -110,6 +111,10 @@ void sim_storage_report(void);
 /** Power cut now (ISR ctx): tear any in-flight flash operation and save the image. */
 void sim_storage_power_cut(void);
 void sim_storage_shutdown(void);      /* clean shutdown: save image */
+
+/* Mapped-asset D-cache model (hal_assets_sim.c) */
+void sim_assets_cache_pollute(void);  /* a refresh streamed PSRAM through the shared D-cache */
+void sim_assets_report(void);
 
 void sim_power_init(void);
 void sim_power_report(void);

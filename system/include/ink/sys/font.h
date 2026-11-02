@@ -28,6 +28,8 @@ typedef struct {
 ink_font_t *ink_font_open(const char *asset);
 /** Glyph for `cp`; falls back to a replacement glyph. Returns false only if even that is missing. */
 bool ink_font_glyph(const ink_font_t *f, uint32_t cp, ink_glyph_t *out);
+/** About to read the glyph's bitmap (lets simulators charge flash cache misses). */
+void ink_font_touch_bitmap(const ink_font_t *f, const ink_glyph_t *g);
 bool ink_font_has(const ink_font_t *f, uint32_t cp);
 int ink_font_px(const ink_font_t *f);
 int ink_font_bpp(const ink_font_t *f);

@@ -21,6 +21,15 @@ extern "C" {
 const void *hal_asset_map(const char *name, size_t *size);
 void hal_asset_unmap(const void *data);
 
+/**
+ * Hint: the caller is about to read [p, p+len) of a mapped asset. Nothing to
+ * do on real hardware (the cache does the work; ports may make it an empty
+ * inline); simulators charge cache misses on memory-mapped flash with it
+ * (Plus: one 64-byte line over DIO 80 MHz flash ~3.6 us, and refreshes
+ * stream ~1 MB of PSRAM through the same D-cache, so fonts start cold).
+ */
+void hal_asset_access(const void *p, size_t len);
+
 #ifdef __cplusplus
 }
 #endif

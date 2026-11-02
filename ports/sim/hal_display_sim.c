@@ -304,6 +304,7 @@ static bool play(int phases) {
 
 /* Upstream difference image (before) and back-buffer copy (after): full-width rows of the area. */
 static void diff_pass(const hal_rect_t *a) {
+    sim_assets_cache_pollute(); /* the waveform streams PSRAM framebuffers through the shared D-cache */
     if (!g_profile.diff_pass) return;
     double px = (double)a->h * (double)(g_profile.diff_pass == 2 ? D.W : a->w);
     uint64_t t0 = vtk_now();

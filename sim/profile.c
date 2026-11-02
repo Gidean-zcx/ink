@@ -93,6 +93,11 @@ int profile_load(const char *path, sim_profile_t *p, char *err, size_t errlen) {
     p->now_cost_ns = (uint64_t)num(kern, "now_cost_ns", 500);
     p->main_stack_bytes = (uint32_t)num(kern, "main_stack_bytes", 8192);
 
+    p->icache_penalty = num(cpu, "icache_penalty", 0.0);
+    p->dcache_bytes = (uint32_t)(num(cpu, "dcache_kib", 0) * 1024);
+    p->dcache_line = (uint32_t)num(cpu, "cache_line_bytes", 64);
+    if (p->dcache_line < 16) p->dcache_line = 16;
+
     const cJSON *mem = obj(root, "memory");
     p->internal_heap = (size_t)(num(mem, "internal_heap_kib", 80) * 1024);
     p->dma_heap = (size_t)(num(mem, "dma_heap_kib", 32) * 1024);

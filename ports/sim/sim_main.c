@@ -37,7 +37,7 @@ static void usage(void) {
             "usage: ink-sim --profile P.json [--script S] [--out DIR] [--budget B.json] [--trace] [--frames]\n"
             "               [--end 20s] [--cpu annotated|measured[:factor]] [--realtime[=speed]]\n"
             "               [--flash-image F] [--sd-dir D] [--assets DIR]... [--content DIR] [--hub F.json]\n"
-            "               [--no-random-outages] [--seed N] [--quiet]\n");
+            "               [--no-random-outages] [--seed N] [--flash-timing typ|max|tail] [--quiet]\n");
 }
 
 static int parse_time(const char *s, uint64_t *ns) {
@@ -75,6 +75,7 @@ static int finalize(const char *status) {
     sim_input_report();
     sim_storage_report();
     sim_net_report();
+    sim_assets_report();
     sim_power_report();
     sim_trace_close();
     char path[600];
@@ -145,6 +146,7 @@ int main(int argc, char **argv) {
         else if (!strcmp(a, "--hub")) { NEEDV(); g_sim.hub_script = v; }
         else if (!strcmp(a, "--no-random-outages")) g_sim.no_random_outages = true;
         else if (!strcmp(a, "--seed")) { NEEDV(); g_sim.seed = (uint32_t)strtoul(v, NULL, 0); }
+        else if (!strcmp(a, "--flash-timing")) { NEEDV(); g_sim.flash_timing = v; }
         else if (!strcmp(a, "--reset-reason")) { NEEDV(); g_sim.reset_reason = v; }
         else if (!strcmp(a, "--trace")) g_sim.trace = true;
         else if (!strcmp(a, "--frames")) g_sim.frames = true;
@@ -174,6 +176,13 @@ int main(int argc, char **argv) {
     if (profile_load(g_sim.profile_path, &g_profile, err, sizeof err)) {
         fprintf(stderr, "profile: %s\n", err);
         return 3;
+    }
+    if (g_sim.flash_timing) {
+        const char *ft = g_sim.flash_timing;
+        if (!strcmp(ft, "typ")) g_profile.flash_pessimism = 0;
+        else if (!strcmp(ft, "max")) g_profile.flash_pessimism = 1;
+        else if (!strcmp(ft, "tail")) g_profile.flash_pessimism = 2;
+        else { fprintf(stderr, "--flash-timing: typ, max or tail\n"); return 3; }
     }
     if (mkdir_p(g_sim.out_dir)) {
         fprintf(stderr, "cannot create %s\n", g_sim.out_dir);

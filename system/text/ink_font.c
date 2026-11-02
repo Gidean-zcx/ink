@@ -32,6 +32,7 @@ static const uint8_t *find(const ink_font_t *f, uint32_t cp) {
     while (lo < hi) {
         uint32_t mid = (lo + hi) / 2;
         const uint8_t *e = f->index + 16u * mid;
+        hal_asset_access(e, 16); /* binary search in memory-mapped flash */
         uint32_t c = rd32(e);
         if (c == cp) return e;
         if (c < cp) lo = mid + 1;
@@ -78,6 +79,9 @@ static void fill(const ink_font_t *f, const uint8_t *e, ink_glyph_t *out) {
     out->bits = f->bitmaps + rd32(e + 4);
 }
 
+/* Bitmap bytes of a glyph (2/4 bpp, rows padded to bytes). */
+static size_t bitmap_bytes(const ink_font_t *f, const ink_glyph_t *g) { return (size_t)g->h * (((size_t)g->w * f->bpp + 7) / 8); }
+
 bool ink_font_has(const ink_font_t *f, uint32_t cp) { return find(f, cp) != NULL; }
 
 bool ink_font_glyph(const ink_font_t *f, uint32_t cp, ink_glyph_t *out) {
@@ -86,6 +90,10 @@ bool ink_font_glyph(const ink_font_t *f, uint32_t cp, ink_glyph_t *out) {
     if (!e) return false;
     fill(f, e, out);
     return true;
+}
+
+void ink_font_touch_bitmap(const ink_font_t *f, const ink_glyph_t *g) {
+    if (g->w && g->h) hal_asset_access(g->bits, bitmap_bytes(f, g));
 }
 
 int ink_font_px(const ink_font_t *f) { return f->px; }
@@ -119,6 +127,7 @@ static const void *lv_get_bitmap(lv_font_glyph_dsc_t *dsc, lv_draw_buf_t *draw_b
     const ink_font_t *f = dsc->resolved_font->dsc;
     ink_glyph_t g;
     if (!ink_font_glyph(f, dsc->gid.index, &g) || !g.w || !g.h) return NULL;
+    hal_asset_access(g.bits, bitmap_bytes(f, &g));
     osal_cost_units("glyph.blit", 1);
     uint8_t *out = draw_buf->data;
     uint32_t stride_out = lv_draw_buf_width_to_stride(g.w, LV_COLOR_FORMAT_A8);

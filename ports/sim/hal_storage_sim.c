@@ -81,7 +81,23 @@ static int bd_read(const struct lfs_config *c, lfs_block_t block, lfs_off_t off,
     if (a + size > FL.size) return LFS_ERR_IO;
     uint64_t ns = SIM_US(g_profile.flash_op_overhead_us) +
                   (uint64_t)((double)size * 1000.0 / (g_profile.flash_read_mbps > 0 ? g_profile.flash_read_mbps : 20));
-    flash_busy(ns, "read");
+    void *bounce = NULL;
+    if (g_profile.flash_stalls_cpu && pools_is_external(buffer)) {
+        /* esp_flash_read into PSRAM: an internal bounce buffer (<= 16 KiB) per call, then a copy */
+        size_t bsz = size < 16384 ? size : 16384;
+        bounce = osal_malloc(bsz, OSAL_MEM_INTERNAL);
+        sim_metric_add("flash.reads_into_psram", 1);
+        if (!bounce) { /* fall back to 32-byte chunks, each with its own cache-off window */
+            for (lfs_size_t done = 0; done < size; done += 32) flash_busy(SIM_US(g_profile.flash_op_overhead_us) + 2000, "read32");
+            ns = 0;
+        }
+    }
+    if (ns) flash_busy(ns, "read");
+    if (bounce) {
+        sim_charge_cycles((double)size * profile_cost("internal_to_psram.copy_byte"));
+        osal_free(bounce);
+    }
+    sim_charge_cycles((double)size * profile_cost("crc32.byte")); /* littlefs checks CRCs on what it reads */
     memcpy(buffer, FL.img + a, size);
     FL.reads++;
     FL.read_bytes += size;
@@ -116,6 +132,7 @@ static int bd_prog(const struct lfs_config *c, lfs_block_t block, lfs_off_t off,
         nor_program(pa, d + done, n);
         done += n;
     }
+    sim_charge_cycles((double)size * profile_cost("crc32.byte")); /* commit CRCs */
     FL.progs++;
     FL.prog_bytes += size;
     return 0;
@@ -256,6 +273,7 @@ static void lock_user(void) {
                    "ESP-IDF asserts (stack unusable with cache disabled) -> device reset. Go through the storage service.",
                    osal_task_name(osal_task_self()));
     osal_mutex_lock(U.lock, OSAL_WAIT_FOREVER);
+    sim_charge_cycles(profile_cost("littlefs.op")); /* VFS + littlefs bookkeeping per call */
 }
 static void unlock_user(void) { osal_mutex_unlock(U.lock); }
 
@@ -271,7 +289,7 @@ hal_file_t *hal_fs_open(const char *path, int flags) {
             free(f);
             return NULL;
         }
-        f->cache = osal_malloc(LFS_CACHE, OSAL_MEM_DEFAULT);
+        f->cache = osal_malloc(LFS_CACHE, OSAL_MEM_INTERNAL); /* CONFIG_LITTLEFS_MALLOC_STRATEGY_INTERNAL */
         if (!f->cache) {
             free(f);
             return NULL;
@@ -645,9 +663,12 @@ void sim_storage_init(void) {
     U.cfg.block_cycles = 512;
     U.cfg.cache_size = LFS_CACHE;
     U.cfg.lookahead_size = LFS_LOOKAHEAD;
-    U.cfg.read_buffer = osal_malloc(LFS_CACHE, OSAL_MEM_DEFAULT);
-    U.cfg.prog_buffer = osal_malloc(LFS_CACHE, OSAL_MEM_DEFAULT);
-    U.cfg.lookahead_buffer = osal_malloc(LFS_LOOKAHEAD, OSAL_MEM_DEFAULT);
+    /* Port decision: CONFIG_LITTLEFS_MALLOC_STRATEGY_INTERNAL. With buffers in PSRAM, ESP-IDF
+     * programs flash 32 bytes at a time (one cache-off window each) and bounces reads through
+     * a temporary internal buffer of up to 16 KiB per call. */
+    U.cfg.read_buffer = osal_malloc(LFS_CACHE, OSAL_MEM_INTERNAL);
+    U.cfg.prog_buffer = osal_malloc(LFS_CACHE, OSAL_MEM_INTERNAL);
+    U.cfg.lookahead_buffer = osal_malloc(LFS_LOOKAHEAD, OSAL_MEM_INTERNAL);
     osal_mem_tag(prev);
     if (!U.lock || !U.cfg.read_buffer || !U.cfg.prog_buffer || !U.cfg.lookahead_buffer) osal_panic("littlefs: no memory");
 

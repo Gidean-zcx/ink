@@ -187,6 +187,24 @@ if(INK_HAVE_FONTS)
   ink_scenario(reader_basic metalio-plus)
   ink_scenario(reader_basic metalio-plus-psram16)
   ink_scenario(ai_ask metalio-plus)
+  # Aged /user (50-60 % full, fragmented) and worst-case flash timing: the reader must still
+  # meet its budgets while position saves hit a used filesystem.
+  add_test(NAME fixture-aged-user-image
+    COMMAND ${CMAKE_COMMAND} -DMODE=make -DSIM=$<TARGET_FILE:sim-selftest>
+            -DPROFILE=${CMAKE_SOURCE_DIR}/profiles/metalio-plus.json
+            -DIMAGE=${CMAKE_BINARY_DIR}/test-out/aged-user.img -DOUT=${CMAKE_BINARY_DIR}/test-out/aging
+            -P ${CMAKE_SOURCE_DIR}/tests/scenarios/aged_image.cmake)
+  set_tests_properties(fixture-aged-user-image PROPERTIES FIXTURES_SETUP aged_user)
+  add_test(NAME scenario-reader_basic-aged-flash-max
+    COMMAND ${CMAKE_COMMAND} -DMODE=run -DSIM=$<TARGET_FILE:ink-sim>
+            -DPROFILE=${CMAKE_SOURCE_DIR}/profiles/metalio-plus.json
+            -DIMAGE=${CMAKE_BINARY_DIR}/test-out/aged-user.img -DOUT=${CMAKE_BINARY_DIR}/test-out/reader_basic-aged
+            -DSCRIPT=${CMAKE_SOURCE_DIR}/tests/scenarios/reader_basic.script
+            -DBUDGET=${CMAKE_SOURCE_DIR}/tests/scenarios/reader_basic.budget.json
+            -DASSETS=${INK_ASSETS_DIR} -DCONTENT=${INK_TEST_CONTENT}
+            "-DEXTRA=--flash-timing max --no-random-outages --trace"
+            -P ${CMAKE_SOURCE_DIR}/tests/scenarios/aged_image.cmake)
+  set_tests_properties(scenario-reader_basic-aged-flash-max PROPERTIES FIXTURES_REQUIRED aged_user)
 endif()
 # Portability smoke runs: same system, other panels/classes (budget: no panic, input works)
 foreach(p pinenote-rk3566 desktop-lcd)

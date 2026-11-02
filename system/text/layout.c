@@ -142,6 +142,7 @@ void ink_render_page(const ink_layout_t *L, const char *text, const ink_page_t *
             if (cp == '\r' || cp == '\n') continue;
             ink_glyph_t g;
             if (cp != ' ' && cp != 0x3000 && ink_font_glyph(f, cp, &g)) {
+                ink_font_touch_bitmap(f, &g);
                 blit(f, &g, buf, stride, buf_w, buf_h, x + g.x_ofs, oy + ln->y + g.y_ofs);
                 glyphs++;
             }
