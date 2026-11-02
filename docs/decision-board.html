@@ -98,7 +98,7 @@ pre.mermaid { background: var(--sheet); border: 1px solid var(--rule); padding: 
     <div class="mono" style="color:var(--accent)">INK · 家庭 AI 墨水屏设备 · E-INK4 PLUS</div>
     <h1>ink 决策板</h1>
     <p class="lede">把项目从“零散想法和竞品调研”推进到可用产品时，需要你拍板的事情都在这里。每项都给了方案和推荐；你不选的可逆事项，我按推荐“暂定”继续推进。点选方案后会自动保存，下次对话我能读到。</p>
-    <div class="meta mono"><span>更新 2026-11-01 · 第一轮已全部选择；第二轮按独立评审修订，5 项需要你定</span><span>仓库 Gidean-zcx/ink · docs/decisions</span></div>
+    <div class="meta mono"><span>更新 2026-11-02 · 第一、二轮你已全部选择；第三轮（模拟器建成后的工程选择）按推荐暂定，随时可改</span><span>仓库 Gidean-zcx/ink · docs/decisions</span></div>
   </header>
 
   <section aria-labelledby="stage-h">
@@ -107,9 +107,9 @@ pre.mermaid { background: var(--sheet); border: 1px solid var(--rule); padding: 
       <div class="stage done" role="listitem"><b>S0 探索调研</b><span>已完成</span></div>
       <div class="stage done" role="listitem"><b>S1 产品定义</b><span>首版方案 A 已定</span></div>
       <div class="stage now" role="listitem"><b>S2 系统需求</b><span>草案 · 指标待校准</span></div>
-      <div class="stage now" role="listitem"><b>S3 架构验证</b><span>底座设计 v1 · 12 月初到货</span></div>
-      <div class="stage" role="listitem"><b>S4 详细设计</b><span>未开始</span></div>
-      <div class="stage" role="listitem"><b>S5 迭代开发</b><span>未开始</span></div>
+      <div class="stage now" role="listitem"><b>S3 架构验证</b><span>模拟器已建成 · 12 月初到货</span></div>
+      <div class="stage now" role="listitem"><b>S4 详细设计</b><span>平台抽象已定</span></div>
+      <div class="stage now" role="listitem"><b>S5 迭代开发</b><span>在模拟器上开发中</span></div>
       <div class="stage" role="listitem"><b>S6 自用测试</b><span>未开始</span></div>
       <div class="stage" role="listitem"><b>S7 发布运维</b><span>未开始</span></div>
     </div>
@@ -352,6 +352,51 @@ const DECISIONS = [
     opts:[
       {k:"buy", name:"买一块官方开发板", desc:"到货前就能在真芯片上标定性能；没有墨水屏与 4G。"},
       {k:"wait", name:"不买，等整机", desc:"约一个月后用整机标定；之前只靠参数化估算。"}
+    ]},
+  { id:"D-28", title:"第三轮 · 代码怎么组织", kind:"tent", rec:"mono",
+    why:"模拟器、设备固件、以后的 Linux 版要共用同一份系统代码；分仓库会让三边各改各的。",
+    opts:[
+      {k:"mono", name:"单仓库 + C11", desc:"本仓库按 platform / system / apps / ports / sim / tools 分层；系统只依赖 OSAL/HAL 接口和设备档案。"},
+      {k:"split", name:"设备与模拟器分仓库", desc:"各自独立发版，但接口变更要两边同步。"},
+      {k:"cpp", name:"改用 C++", desc:"写起来省事一些，但 ESP-IDF 与 LVGL 生态以 C 为主，二进制更大。"}
+    ]},
+  { id:"D-29", title:"第三轮 · 正文怎么排版", kind:"tent", rec:"own",
+    why:"LVGL 9.5 把每个汉字当成一个词，没有行首行尾禁则；阅读器的正文质量取决于排版引擎。",
+    opts:[
+      {k:"own", name:"自写中文排版引擎画进页面缓冲", desc:"已实现：禁则、英文单词不拆、标点悬挂、两端对齐、首行缩进、分页；界面其余部分仍用 LVGL。"},
+      {k:"lvgl", name:"全部用 LVGL 标签", desc:"省代码，但标点会落在行首，排版明显不如电子书。"}
+    ]},
+  { id:"D-30", title:"第三轮 · 任务栈放在哪里", kind:"tent", rec:"split",
+    why:"模拟显示：悲观估计下内部 RAM 只剩约 5 KiB，是第一约束；栈放 PSRAM 能省内部 RAM，但写 Flash 时会被冻结。",
+    opts:[
+      {k:"split", name:"按任务区分", desc:"默认内部 RAM；不写 Flash、本来就访问 PSRAM 的任务（界面、显示服务）栈放 PSRAM；LVGL 的分配全部放 PSRAM。"},
+      {k:"internal", name:"全部放内部 RAM", desc:"最简单，但内部 RAM 不够用。"}
+    ]},
+  { id:"D-31", title:"第三轮 · 按钮按下时要不要反色", kind:"tent", rec:"result",
+    why:"这块屏没有快速 A2 波形：按下反色、松开恢复要刷两次（各约 0.32 秒），真正的结果要晚一次刷新才出现。",
+    opts:[
+      {k:"result", name:"默认不反色，用结果当反馈", desc:"点一下只刷一次；打开书这类耗时操作先让被点的控件反色，再加载（首次可见变化约 0.16 秒）。"},
+      {k:"invert", name:"一律按下反色", desc:"更像手机，但每次点击多一次刷新，结果更慢出现。"}
+    ]},
+  { id:"D-32", title:"第三轮 · 屏幕高压电源怎么管", kind:"tent", rec:"scene",
+    why:"每次上电约 0.14 秒（上游代码）。保持上电能让连续操作更快，但待机耗电更高；具体电流要到货实测。",
+    opts:[
+      {k:"scene", name:"按场景", desc:"触摸后 2.5 秒内保持上电（菜单、连续点按更快）；阅读翻页后立即断电（翻页间隔长）。"},
+      {k:"always", name:"一直保持", desc:"每次操作都快约 0.14 秒，耗电最高。"},
+      {k:"never", name:"每次刷新后都断电", desc:"最省电，每次操作都多等约 0.14 秒。"}
+    ]},
+  { id:"D-33", title:"第三轮 · 密码/PIN 输入框要不要掩码", kind:"tent", rec:"mask",
+    why:"你在 D-23 选了所有页面对 AI 可见。页面照常可见的前提下，仍可以只把正在输入的密码字符替换成掩码，防止凭据本身离开设备。",
+    opts:[
+      {k:"mask", name:"只掩码凭据输入框", desc:"AI 能看到你在 PIN 页、输到第几位，看不到具体数字；页面其他内容照常可见。"},
+      {k:"none", name:"不掩码", desc:"完全按“全部可见”，PIN 数字也会进入快照。"}
+    ]},
+  { id:"D-34", title:"第三轮 · “更长”的数据保留期具体多长", kind:"tent", rec:"180",
+    why:"你在 D-26 选了比建议更长的保留期，没写具体天数。下面是可选的具体值，原始语音仍在转写后删除，快照仍不落盘。",
+    opts:[
+      {k:"180", name:"转写 180 天（儿童 90 天），运行记录 90 天", desc:"够回顾一个学期的学习与对话。"},
+      {k:"365", name:"转写 1 年（儿童 180 天），运行记录 180 天", desc:"便于长期回顾，隐私风险更高。"},
+      {k:"forever", name:"保留到手动删除", desc:"最方便回顾，需要定期清理。"}
     ]}
 ];
 const ROAD = [
