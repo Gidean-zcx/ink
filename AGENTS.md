@@ -20,6 +20,7 @@
 ## 跨会话接续
 
 - 新会话先查看仓库最新版本的 README.md、docs/project.md 和 docs/requirements.md，再按当前话题读取 docs/ideas.md 与对应调研；检查相关未结 Issue / PR，避免重复记录或覆盖其他会话的更新。
+- 想快速了解项目全貌（用户与目标、硬件、决策、已实现的系统与模拟器、证据边界、构建测试方法），先读 docs/background.md。外部审计的任务说明与记录在 docs/audits/。
 - docs/project.md 是持续协作入口。讨论完成后将有价值的原始想法、条件、结论与状态写入对应文件；只有远端写入成功并核对后，才报告“已保存”，并给出文件或提交链接。未来用户提供新想法时继续执行，不把持续协作理解为无人触发的定时研究。
 
 ## Codex and OpenCode hybrid routing
