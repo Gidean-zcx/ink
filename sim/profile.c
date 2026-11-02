@@ -100,6 +100,25 @@ int profile_load(const char *path, sim_profile_t *p, char *err, size_t errlen) {
 
     const cJSON *mem = obj(root, "memory");
     p->internal_heap = (size_t)(num(mem, "internal_heap_kib", 80) * 1024);
+    {
+        const cJSON *ir = mem ? cJSON_GetObjectItemCaseSensitive(mem, "internal_regions_kib") : NULL;
+        p->n_internal_regions = 0;
+        size_t sum = 0;
+        if (cJSON_IsArray(ir)) {
+            const cJSON *e;
+            cJSON_ArrayForEach(e, ir) {
+                if (!cJSON_IsNumber(e) || p->n_internal_regions >= 8) continue;
+                p->internal_regions[p->n_internal_regions++] = (size_t)(e->valuedouble * 1024);
+                sum += (size_t)(e->valuedouble * 1024);
+            }
+        }
+        if (!p->n_internal_regions) {
+            p->internal_regions[p->n_internal_regions++] = p->internal_heap;
+            sum = p->internal_heap;
+        }
+        p->internal_heap = sum;
+        p->heap_region_overhead = (size_t)num(mem, "heap_region_overhead_bytes", 1536);
+    }
     p->dma_heap = (size_t)(num(mem, "dma_heap_kib", 32) * 1024);
     p->external_heap = (size_t)(num(mem, "external_heap_kib", 7680) * 1024);
     p->always_internal_max = (size_t)num(mem, "always_internal_max_bytes", 16);
@@ -142,6 +161,7 @@ int profile_load(const char *path, sim_profile_t *p, char *err, size_t errlen) {
     p->prep_cpu_duty = num(d, "prep_cpu_duty", derived);
     p->panel_buffers_external = (size_t)(num(d, "driver_external_kib", 0) * 1024);
     p->panel_buffers_internal = (size_t)(num(d, "driver_internal_kib", 0) * 1024);
+    p->driver_lut_bytes = (size_t)(num(d, "driver_lut_kib", 16) * 1024);
     static const char *WF[HAL_WF_COUNT] = {"GC16", "GL16", "DU", "A2"};
     const cJSON *wfs = obj(d, "waveforms");
     for (int i = 0; i < HAL_WF_COUNT; i++) {
@@ -227,6 +247,8 @@ int profile_load(const char *path, sim_profile_t *p, char *err, size_t errlen) {
     p->ws_stack = (uint32_t)num(net, "ws_task_stack", 4096);
     p->sys_evt_stack = (uint32_t)num(net, "event_task_stack", 2560);
     p->dead_detect_ms = (uint32_t)num(net, "dead_detect_ms", 5000);
+    p->uart_nic_dma_bytes = (size_t)(num(net, "uart_nic_dma_kib", 0) * 1024);
+    p->uart_nic_stack = (uint32_t)num(net, "uart_nic_task_stack", 4096);
 
     const cJSON *au = obj(root, "audio");
     p->audio_dma_desc = (int)num(au, "dma_desc", 4);

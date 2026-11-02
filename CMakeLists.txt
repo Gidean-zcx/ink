@@ -187,6 +187,13 @@ if(INK_HAVE_FONTS)
   ink_scenario(reader_basic metalio-plus)
   ink_scenario(reader_basic metalio-plus-psram16)
   ink_scenario(ai_ask metalio-plus)
+  # Same reader on the upstream display pipeline (timing comparison; lenient budget).
+  add_test(NAME scenario-reader_basic-upstream-pipeline
+    COMMAND ink-sim --profile ${CMAKE_SOURCE_DIR}/profiles/metalio-plus-upstream-display.json
+            --script ${CMAKE_SOURCE_DIR}/tests/scenarios/reader_basic.script
+            --budget ${CMAKE_SOURCE_DIR}/tests/scenarios/upstream_pipeline.budget.json
+            --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
+            --out ${CMAKE_BINARY_DIR}/test-out/reader_basic-upstream-pipeline --quiet --trace --no-random-outages)
   # Aged /user (50-60 % full, fragmented) and worst-case flash timing: the reader must still
   # meet its budgets while position saves hit a used filesystem.
   add_test(NAME fixture-aged-user-image

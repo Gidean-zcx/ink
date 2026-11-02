@@ -227,10 +227,19 @@ static void sd_cost(size_t bytes, bool write) {
             SD.spikes++;
         }
     }
-    /* bounce buffer copies (internal SRAM <-> PSRAM) cost CPU; the transfer itself is DMA */
+    /* SDMMC DMA cannot reach PSRAM: the driver bounces through a DMA-capable internal buffer
+     * (held for the operation) and copies; the transfer itself is DMA */
+    void *bounce = NULL;
+    if (g_profile.flash_stalls_cpu) {
+        const char *prev = osal_mem_tag("sd-bounce");
+        bounce = osal_malloc(4096, OSAL_MEM_DMA);
+        osal_mem_tag(prev);
+        if (!bounce) sim_metric_add("sd.bounce_alloc_failures", 1); /* ESP_ERR_NO_MEM on the device */
+    }
     sim_charge_cycles((double)bytes * profile_cost("psram_to_internal.copy_byte") + 6000);
     uint64_t t0 = vtk_now();
     vtk_sleep_ns(ns);
+    if (bounce) osal_free(bounce);
     sim_trace_span("sd", write ? "write" : "read", t0, t0 + ns, NULL);
     SD.ops++;
     if (write) SD.bytes_written += bytes;

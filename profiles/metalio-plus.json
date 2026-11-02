@@ -33,7 +33,14 @@
     "dma_heap_kib": 64,
     "external_heap_kib": 7680,
     "always_internal_max_bytes": 16,
-    "_notes": "PESSIMISTIC DEFAULT. internal_heap_kib = internal RAM left for EVERYTHING allocated at run time (display driver buffers, task stacks, TLS, system) after static code/data, excluding the DMA reserve. dma_heap_kib = the upstream SPIRAM_MALLOC_RESERVE_INTERNAL pool: internal-only allocations may use it, default malloc may not; runtime DMA users (I2S, SDMMC, Wi-Fi) need it. Static use is unknown until `idf.py size` (foundation 3.2): replace these numbers then. PSRAM assumed 8 MB until 16 MB is confirmed."
+    "_notes": "PESSIMISTIC DEFAULT. internal_heap_kib = internal RAM left for EVERYTHING allocated at run time (display driver buffers, task stacks, TLS, system) after static code/data, excluding the DMA reserve. dma_heap_kib = the upstream SPIRAM_MALLOC_RESERVE_INTERNAL pool: internal-only allocations may use it, default malloc may not; runtime DMA users (I2S, SDMMC, Wi-Fi) need it. Static use is unknown until `idf.py size` (foundation 3.2): replace these numbers then. PSRAM assumed 8 MB until 16 MB is confirmed.",
+    "internal_regions_kib": [
+      32,
+      32,
+      32
+    ],
+    "_notes_regions": "The internal heap is several separate regions (memory map, static data, cache-reserved areas); profile guess: the largest block is <= 32 KiB until idf.py size / heap_caps_print_heap_info on the device says otherwise.",
+    "heap_region_overhead_bytes": 1536
   },
   "display": {
     "tech": "epd",
@@ -78,7 +85,8 @@
     "clear_frames": 69,
     "lcd_isr_duty": 0.1,
     "_notes_pipeline": "Upstream pipeline (epd_hl_update_area): difference image over FULL-WIDTH rows of the area before the waveform, waveform over the whole panel, back-buffer copy of the dirty full-width rows after it; full-screen flashing GC16 uses the complete 48-phase table. Feeders (two, max priority, PSRAM stacks) spin until the last line of a phase is queued: duty = (line_count - line_queue_lines) x line_time / phase_min (derived). LCD bounce-buffer refill interrupt every 8 lines: lcd_isr_duty on core 0 (estimate 7-15%). Underrun recovery = epd_clear (69 frames) + complete GC16 (upstream epd_refresh.cc). line_queue_lines: 32 = design target (foundation 3.2), 127 = upstream. line_prep_us: estimate (C LUT path, no vector unit).",
-    "diff_pass": "full_width"
+    "diff_pass": "full_width",
+    "driver_lut_kib": 16
   },
   "input": {
     "touch": true,
@@ -210,7 +218,9 @@
     "tls_external_kib": 40,
     "ws_task_stack": 4096,
     "event_task_stack": 2560,
-    "dead_detect_ms": 5000
+    "dead_detect_ms": 5000,
+    "uart_nic_dma_kib": 12,
+    "uart_nic_task_stack": 4096
   },
   "audio": {
     "dma_desc": 4,

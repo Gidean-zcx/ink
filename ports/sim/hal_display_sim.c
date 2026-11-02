@@ -495,12 +495,31 @@ void sim_display_init(void) {
     memset(D.screen, 255, n);
     D.temperature = 25;
 
-    /* the real driver's buffers (framebuffers, LUTs, line queues) come out of the device heaps */
+    /* The real driver's buffers come out of the device heaps, as separate blocks (a block can
+     * never exceed the largest internal heap region): per feeder a prepared-line queue, the
+     * waveform LUT, the LCD bounce buffers (DMA-capable) and the rest of its state. */
     const char *prev = osal_mem_tag("display-driver");
     void *ext = g_profile.panel_buffers_external ? osal_malloc(g_profile.panel_buffers_external, OSAL_MEM_EXTERNAL) : (void *)1;
-    void *in = g_profile.panel_buffers_internal ? osal_malloc(g_profile.panel_buffers_internal, OSAL_MEM_INTERNAL) : (void *)1;
-    if (!ext || !in) osal_panic("display driver init failed: cannot reserve its buffers (%zu KiB external, %zu KiB internal)",
-                                g_profile.panel_buffers_external / 1024, g_profile.panel_buffers_internal / 1024);
+    if (!ext) osal_panic("display driver init failed: cannot reserve %zu KiB of external RAM", g_profile.panel_buffers_external / 1024);
+    if (D.info.tech == HAL_PANEL_EPD && g_profile.panel_buffers_internal) {
+        size_t line_bytes = (size_t)D.W / 4; /* 2 bits per pixel on the panel bus */
+        size_t queue = (size_t)g_profile.line_queue_lines * line_bytes;
+        size_t bounce = 2 * 8 * line_bytes; /* refilled by the LCD interrupt every 8 lines */
+        size_t lut = g_profile.driver_lut_bytes;
+        size_t used = 2 * queue + lut + bounce;
+        size_t state = g_profile.panel_buffers_internal > used ? g_profile.panel_buffers_internal - used : 0;
+        struct { const char *what; size_t n; uint32_t caps; } parts[] = {
+            {"waveform LUT", lut, OSAL_MEM_INTERNAL},           {"line queue (feeder 0)", queue, OSAL_MEM_INTERNAL},
+            {"line queue (feeder 1)", queue, OSAL_MEM_INTERNAL}, {"LCD bounce buffers", bounce, OSAL_MEM_DMA},
+            {"driver state", state, OSAL_MEM_INTERNAL},
+        };
+        for (size_t i = 0; i < sizeof parts / sizeof parts[0]; i++)
+            if (parts[i].n && !osal_malloc(parts[i].n, parts[i].caps))
+                osal_panic("display driver init failed: no memory for its %s (%zu bytes; internal heap blocks are limited "
+                           "by the largest region)", parts[i].what, parts[i].n);
+    } else if (g_profile.panel_buffers_internal && !osal_malloc(g_profile.panel_buffers_internal, OSAL_MEM_INTERNAL)) {
+        osal_panic("display driver init failed: cannot reserve %zu KiB internal", g_profile.panel_buffers_internal / 1024);
+    }
     {
         double prod = g_profile.line_prep_ns ? 2.0 / (double)g_profile.line_prep_ns : 0;
         double cons = g_profile.line_ns ? 1.0 / (double)g_profile.line_ns : 0;

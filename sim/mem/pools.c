@@ -6,6 +6,8 @@
 
 #include "tlsf.h"
 
+#define MAX_REGIONS 8
+
 typedef struct {
     const char *name;
     uint8_t *base;
@@ -17,6 +19,8 @@ typedef struct {
     size_t min_largest;
     size_t alloc_count;
     size_t failed;
+    pool_t region[MAX_REGIONS];
+    int nregions;
 } heap_pool_t;
 
 static heap_pool_t P[POOL_COUNT];
@@ -125,30 +129,56 @@ static void walk_largest(void *ptr, size_t size, int used, void *user) {
 static size_t largest_free(heap_pool_t *p) {
     if (!p->tlsf) return 0;
     size_t max = 0;
-    tlsf_walk_pool(tlsf_get_pool(p->tlsf), walk_largest, &max);
+    for (int r = 0; r < p->nregions; r++) tlsf_walk_pool(p->region[r], walk_largest, &max);
     return max;
 }
 
-static void pool_init(heap_pool_t *p, const char *name, size_t bytes) {
-    memset(p, 0, sizeof *p);
-    p->name = name;
-    if (bytes < tlsf_size() + tlsf_pool_overhead() + 1024) bytes = tlsf_size() + tlsf_pool_overhead() + 1024;
-    p->size = bytes;
-    p->base = aligned_alloc(16, (bytes + 15) & ~(size_t)15);
-    if (!p->base) {
-        fprintf(stderr, "pools: cannot reserve %zu bytes for %s\n", bytes, name);
-        abort();
-    }
-    p->tlsf = tlsf_create_with_pool(p->base, bytes);
-    p->usable = largest_free(p);
-    p->min_free = p->usable;
-    p->min_largest = p->usable;
+static void walk_free(void *ptr, size_t size, int used, void *user) {
+    (void)ptr;
+    if (!used) *(size_t *)user += size;
 }
 
-void pools_init(size_t internal_bytes, size_t dma_bytes, size_t external_bytes) {
-    pool_init(&P[POOL_INTERNAL], NAMES[0], internal_bytes);
-    pool_init(&P[POOL_DMA], NAMES[1], dma_bytes);
-    pool_init(&P[POOL_EXTERNAL], NAMES[2], external_bytes);
+/* A pool may consist of several separate regions (the device's internal heap is split by the
+ * memory map and static data): a block never spans regions, so the largest possible allocation
+ * is bounded by the largest region. */
+static void pool_init(heap_pool_t *p, const char *name, const size_t *regions, int nregions, size_t overhead) {
+    memset(p, 0, sizeof *p);
+    p->name = name;
+    size_t ctl = tlsf_size(), total = ctl;
+    size_t rsz[MAX_REGIONS];
+    if (nregions < 1) nregions = 1;
+    if (nregions > MAX_REGIONS) nregions = MAX_REGIONS;
+    for (int r = 0; r < nregions; r++) {
+        size_t want = regions[r] > overhead ? regions[r] - overhead : 0; /* the device allocator's own control data */
+        rsz[r] = (want + tlsf_pool_overhead() + 15) & ~(size_t)15;
+        if (rsz[r] < 1024) rsz[r] = 1024;
+        total += rsz[r];
+    }
+    p->size = total;
+    p->base = aligned_alloc(16, (total + 15) & ~(size_t)15);
+    if (!p->base) {
+        fprintf(stderr, "pools: cannot reserve %zu bytes for %s\n", total, name);
+        abort();
+    }
+    p->tlsf = tlsf_create(p->base);
+    uint8_t *at = p->base + ((ctl + 15) & ~(size_t)15);
+    for (int r = 0; r < nregions; r++) {
+        p->region[r] = tlsf_add_pool(p->tlsf, at, rsz[r]);
+        at += rsz[r];
+    }
+    p->nregions = nregions;
+    size_t freeb = 0;
+    for (int r = 0; r < nregions; r++) tlsf_walk_pool(p->region[r], walk_free, &freeb);
+    p->usable = freeb;
+    p->min_free = p->usable;
+    p->min_largest = largest_free(p);
+}
+
+void pools_init(const size_t *internal_regions, int n_internal, size_t dma_bytes, size_t external_bytes,
+                size_t region_overhead) {
+    pool_init(&P[POOL_INTERNAL], NAMES[0], internal_regions, n_internal, region_overhead);
+    pool_init(&P[POOL_DMA], NAMES[1], &dma_bytes, 1, region_overhead);
+    pool_init(&P[POOL_EXTERNAL], NAMES[2], &external_bytes, 1, region_overhead);
 }
 
 void pools_set_policy(size_t always_internal_max) { g_always_internal_max = always_internal_max; }
@@ -171,12 +201,27 @@ static void track_after_change(heap_pool_t *p) {
 
 size_t pools_internal_total_min_free(void) { return g_internal_total_min == (size_t)-1 ? 0 : g_internal_total_min; }
 
+static size_t g_internal_largest_min = (size_t)-1; /* min over time of the largest block internal-only allocations can get */
+
+static void track_largest(heap_pool_t *p) {
+    if (p == &P[POOL_EXTERNAL]) return; /* MiBs: sampled periodically instead (walk cost) */
+    size_t l = largest_free(p);
+    if (l < p->min_largest) p->min_largest = l;
+    size_t li = p == &P[POOL_INTERNAL] ? l : largest_free(&P[POOL_INTERNAL]);
+    size_t ld = p == &P[POOL_DMA] ? l : largest_free(&P[POOL_DMA]);
+    size_t best = li > ld ? li : ld;
+    if (best < g_internal_largest_min) g_internal_largest_min = best;
+}
+
+size_t pools_internal_total_min_largest(void) { return g_internal_largest_min == (size_t)-1 ? 0 : g_internal_largest_min; }
+
 static void *try_alloc(heap_pool_t *p, size_t size) {
     void *ptr = tlsf_malloc(p->tlsf, size ? size : 1);
     if (ptr) {
         p->used += tlsf_block_size(ptr);
         p->alloc_count++;
         track_after_change(p);
+        track_largest(p);
     }
     return ptr;
 }
@@ -185,7 +230,9 @@ void *pools_alloc(size_t size, uint32_t caps, const char *owner) {
     heap_pool_t *order[3] = {0};
     int n = 0;
     if (caps & OSAL_MEM_DMA) {
+        /* all internal SRAM is DMA-capable; the reserve is used first */
         order[n++] = &P[POOL_DMA];
+        order[n++] = &P[POOL_INTERNAL];
     } else if (caps & OSAL_MEM_INTERNAL) {
         order[n++] = &P[POOL_INTERNAL];
         order[n++] = &P[POOL_DMA];

@@ -29,7 +29,8 @@
     "dma_heap_kib": 16384,
     "external_heap_kib": 524288,
     "always_internal_max_bytes": 0,
-    "_notes": "Linux: no internal/PSRAM split; budgets are what the ink system may use"
+    "_notes": "Linux: no internal/PSRAM split; budgets are what the ink system may use",
+    "heap_region_overhead_bytes": 0
   },
   "display": {
     "tech": "epd",

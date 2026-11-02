@@ -507,6 +507,13 @@ static void random_outage_cb(void *arg) { /* ISR */
     }
 }
 
+static void idle_forever(void *arg) {
+    (void)arg;
+    vtk_lock();
+    static vtk_waitq_t never;
+    for (;;) vtk_block_locked(&never, VTK_TIME_INF);
+}
+
 void sim_net_init(void) {
     hal_link_type_t t = !strcmp(g_profile.default_link, "wifi") ? HAL_LINK_WIFI
                         : !strcmp(g_profile.default_link, "lte") ? HAL_LINK_LTE : HAL_LINK_NONE;
@@ -518,6 +525,14 @@ void sim_net_init(void) {
     const char *prev = osal_mem_tag("net-driver");
     osal_task_cfg_t cfg = {.name = "sys_evt", .fn = sys_evt_task, .stack_bytes = g_profile.sys_evt_stack, .priority = 20, .core = -1};
     if (osal_task_create(&cfg, NULL) != OSAL_OK) osal_panic("network event task failed");
+    if (g_profile.lte.present && g_profile.uart_nic_dma_bytes) {
+        /* NT26 "UART Ethernet": UHCI DMA rings (DMA-capable internal RAM) and the framing task,
+         * installed while the modem is powered (upstream: 4G mode chosen at boot) */
+        osal_mem_tag("uart-nic");
+        if (!osal_malloc(g_profile.uart_nic_dma_bytes, OSAL_MEM_DMA)) osal_panic("4G UART NIC: no DMA memory for its rings");
+        osal_task_cfg_t nic = {.name = "uart_nic", .fn = idle_forever, .stack_bytes = g_profile.uart_nic_stack, .priority = 18, .core = -1};
+        if (osal_task_create(&nic, NULL) != OSAL_OK) osal_panic("4G UART NIC task failed");
+    }
     osal_mem_tag(prev);
     if (N.L && N.L->outages_per_hour > 0 && !g_sim.no_random_outages) {
         double mean_s = 3600.0 / N.L->outages_per_hour;

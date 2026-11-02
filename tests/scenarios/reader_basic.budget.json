@@ -48,10 +48,14 @@
   },
   "mem.internal_total.min_free_bytes": {
     "min": 32768,
-    "why": "SR-PL-04 floor: internal RAM (incl. the DMA reserve) an internal-only allocation can still get"
+    "why": "SR-PL-04: at least 32 KiB of internal RAM (internal heap + DMA reserve, both usable by internal-only allocations) left at the worst moment"
   },
   "mem.dma.min_free_bytes": {
-    "min": 32768,
-    "why": "keep at least half of the DMA reserve for runtime DMA users (I2S, SDMMC, Wi-Fi buffers)"
+    "min": 16384,
+    "why": "DMA reserve headroom for users not modelled yet (Wi-Fi RX bursts) after display bounce, 4G UART NIC and SD bounce buffers"
+  },
+  "mem.internal_total.largest_free_min_bytes": {
+    "min": 8192,
+    "why": "an internal-only allocation of 8 KiB (task stack, TLS record buffer) must still succeed at the worst moment"
   }
 }

@@ -216,7 +216,8 @@ int main(int argc, char **argv) {
     };
     vtk_init(&cfg);
     vtk_set_warn_sink(vtk_warn_sink);
-    pools_init(g_profile.internal_heap, g_profile.dma_heap, g_profile.external_heap);
+    pools_init(g_profile.internal_regions, g_profile.n_internal_regions, g_profile.dma_heap, g_profile.external_heap,
+               g_profile.heap_region_overhead);
     pools_set_policy(g_profile.always_internal_max);
     pools_set_warn(pools_warn_sink);
     if (g_sim.trace) {

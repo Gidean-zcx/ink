@@ -64,7 +64,10 @@ typedef struct {
     uint64_t now_cost_ns;     /* charged per osal_now_us() so busy-wait loops make progress */
 
     /* memory budgets available to the system */
-    size_t internal_heap;
+    size_t internal_heap;           /* sum of internal_regions */
+    size_t internal_regions[8];     /* separate internal heap regions (largest block <= largest region) */
+    size_t heap_region_overhead;    /* device allocator control data per region */
+    int n_internal_regions;
     size_t dma_heap;
     size_t external_heap;
     size_t always_internal_max;
@@ -91,7 +94,8 @@ typedef struct {
     int diff_pass;              /* CPU difference image + back-buffer copy: 0 none (EPD controller), 1 area, 2 full-width rows (upstream) */
     profile_waveform_t wf[HAL_WF_COUNT];
     size_t panel_buffers_external; /* bytes the panel driver keeps in external RAM */
-    size_t panel_buffers_internal; /* bytes the panel driver keeps in internal RAM (line queues, DMA) */
+    size_t panel_buffers_internal; /* bytes the panel driver keeps in internal RAM (line queues, LUT, bounce, state) */
+    size_t driver_lut_bytes;       /* waveform LUT (part of panel_buffers_internal) */
 
     /* input */
     bool has_touch;
@@ -131,6 +135,8 @@ typedef struct {
     size_t tls_internal_bytes, tls_external_bytes;
     uint32_t ws_stack, sys_evt_stack;
     uint32_t dead_detect_ms;       /* a dead connection is noticed after this (ping timeout) */
+    size_t uart_nic_dma_bytes;     /* 4G UART-Ethernet DMA rings */
+    uint32_t uart_nic_stack;
 
     /* audio: I2S DMA rings (16 kHz), codec memory */
     int audio_dma_desc, audio_dma_frames; /* per direction: descriptors x frames each */

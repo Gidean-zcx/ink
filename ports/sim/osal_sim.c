@@ -807,6 +807,7 @@ void sim_osal_report(void) {
         sim_metric_set(key, (double)st.failed_allocs);
     }
     sim_metric_set("mem.internal_total.min_free_bytes", (double)pools_internal_total_min_free());
+    sim_metric_set("mem.internal_total.largest_free_min_bytes", (double)pools_internal_total_min_largest());
     for (int i = 0; i < pools_tag_count(); i++) {
         const char *tag;
         size_t cur[POOL_COUNT], peak[POOL_COUNT], live;

@@ -14,7 +14,9 @@
 
 typedef enum { POOL_INTERNAL = 0, POOL_DMA = 1, POOL_EXTERNAL = 2, POOL_COUNT } pool_id_t;
 
-void pools_init(size_t internal_bytes, size_t dma_bytes, size_t external_bytes);
+/** internal heap = n_internal separate regions (a block never spans regions); DMA reserve and PSRAM are one region each. */
+void pools_init(const size_t *internal_regions, int n_internal, size_t dma_bytes, size_t external_bytes,
+                size_t region_overhead);
 /* `always_internal_max`: default-policy blocks up to this size go internal first (ESP-IDF SPIRAM_MALLOC_ALWAYSINTERNAL). */
 void pools_set_policy(size_t always_internal_max);
 void *pools_alloc(size_t size, uint32_t caps, const char *owner);
@@ -35,6 +37,8 @@ bool pools_owns(const void *p);
 bool pools_is_external(const void *p);
 /** Low-water of internal + DMA free bytes (what an internal-only allocation could still get). */
 size_t pools_internal_total_min_free(void);
+/** Low-water of the largest block an internal-only allocation can get (internal pool or DMA reserve). */
+size_t pools_internal_total_min_largest(void);
 int pools_pool_of(const void *p); /* pool_id_t or -1 */
 /* Attribution of live/peak bytes per owner tag (task name or osal_mem_tag()). */
 int pools_tag_count(void);

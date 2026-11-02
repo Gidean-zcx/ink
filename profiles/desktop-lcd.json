@@ -27,7 +27,8 @@
     "internal_heap_kib": 65536,
     "dma_heap_kib": 16384,
     "external_heap_kib": 524288,
-    "always_internal_max_bytes": 0
+    "always_internal_max_bytes": 0,
+    "heap_region_overhead_bytes": 0
   },
   "display": {
     "tech": "lcd",
