@@ -95,6 +95,8 @@ static struct {
     struct plan *plan;     /* the current phase (feeders read it) */
     bool stall_dirty;      /* a flash stall was reported while playing: re-plan */
     uint64_t underrun_at;
+    uint64_t wf_prep_ns;      /* the waveform being played: its own line cost (0 = display-wide) */
+    uint32_t wf_phase_min_us; /* ... and its own minimum phase time (0 = display-wide) */
     /* stats */
     uint64_t busy_ns;
     unsigned wf_fallback_warned;
@@ -256,7 +258,7 @@ static void plan_phase(const hal_rect_t *a, uint64_t t0, plan_t *p) {
     const int Q = g_profile.line_queue_lines, F = g_profile.prefill_lines < L ? g_profile.prefill_lines : L;
     const int B = g_profile.bounce_lines, lead = 2 * B; /* both bounce buffers are filled at the scan start */
     const double isr = g_profile.lcd_isr_duty;
-    const uint64_t full = g_profile.line_prep_ns, skip = g_profile.line_skip_ns;
+    const uint64_t full = D.wf_prep_ns ? D.wf_prep_ns : g_profile.line_prep_ns, skip = g_profile.line_skip_ns;
     const uint64_t area_cost = g_profile.feeder_area_columns ? skip + (full - skip) * (uint64_t)a->w / (uint64_t)D.W : full;
     span_t st[MAX_STALLS];
     int ns = collect_stalls(t0, st);
@@ -326,7 +328,7 @@ static void plan_phase(const hal_rect_t *a, uint64_t t0, plan_t *p) {
         p->cpu_ns[f] = cpu[f];
     }
     uint64_t next = p->scan_end + SIM_US(g_profile.frame_overhead_us);
-    uint64_t pad = t0 + SIM_US(g_profile.phase_min_us);
+    uint64_t pad = t0 + SIM_US(D.wf_phase_min_us ? D.wf_phase_min_us : g_profile.phase_min_us);
     p->next_start = next > pad ? next : pad;
 }
 
@@ -522,6 +524,8 @@ static void execute(req_t *r) {
     hal_cpu_boost_acquire(g_boost);
     hal_waveform_t wf = resolve_wf(r->wf);
     res.waveform = wf;
+    D.wf_prep_ns = g_profile.wf[wf].line_prep_ns; /* per-waveform scan cost / phase time, if the profile sets them */
+    D.wf_phase_min_us = g_profile.wf[wf].phase_min_us;
     uint64_t t_pick = vtk_now();
     /* EPDiy drives from the framebuffer as it is when the update starts */
     for (int y = 0; y < r->area.h; y++)

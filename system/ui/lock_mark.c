@@ -6,6 +6,8 @@
  * instead of a full standby picture keeps the unlock refresh small (upstream
  * paints a whole standby page and must repaint the page under it).
  */
+#include "ink/hal_display.h"
+#include "ink/sys/font.h"
 #include "ink/sys/power.h"
 #include "ink/sys/ui.h"
 
@@ -26,9 +28,12 @@ static void show(void *arg) { /* UI task */
     lv_obj_set_style_pad_hor(g_mark, ink_dp(10), 0);
     lv_obj_set_style_pad_ver(g_mark, ink_dp(4), 0);
     lv_obj_t *l = lv_label_create(g_mark);
-    lv_obj_set_style_text_font(l, ink_ui_font(0), 0);
+    hal_panel_info_t pi;
+    hal_display_get_info(&pi);
+    ink_font_t *cjk = ink_font_for_pt(8, pi.dpi); /* the UI fonts are Latin only */
+    lv_obj_set_style_text_font(l, cjk ? ink_font_lvgl(cjk) : ink_ui_font(2), 0);
     lv_obj_set_style_text_color(l, lv_color_black(), 0);
-    lv_label_set_text(l, "已锁定 · 按电源键唤醒");
+    lv_label_set_text(l, cjk ? "已锁定，按电源键唤醒" : "Locked - press power to wake");
     lv_obj_align(g_mark, LV_ALIGN_BOTTOM_MID, 0, -ink_dp(6));
     ink_ui_hint_obj(g_mark, INK_REFRESH_FAST); /* black on white: the fast binary waveform */
 }
@@ -52,4 +57,8 @@ static void on_power(void *ctx, ink_power_state_t from, ink_power_state_t to, ui
     }
 }
 
-int ink_ui_lock_mark_init(void) { return ink_power_subscribe(on_power, NULL); }
+int ink_ui_lock_mark_init(void) {
+    /* the chip must not sleep before the mark (or anything else the UI still draws) is on the panel */
+    if (ink_power_add_busy_check(ink_ui_busy) != 0) return -1;
+    return ink_power_subscribe(on_power, NULL);
+}

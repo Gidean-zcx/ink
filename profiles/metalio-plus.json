@@ -102,6 +102,7 @@
     "touch_read_bytes": 9,
     "i2c_background_poll_ms": 500,
     "i2c_background_bytes": 24,
+    "i2c_background_idle_poll_ms": 2000,
     "keys": [
       "ai",
       "power",
@@ -115,6 +116,9 @@
     "touch_poll_ms": 10,
     "touch_detect_us": 20000,
     "_notes_detect": "touch_detect_us: finger contact -> INT, estimate (controller scan period in monitor mode)",
+    "touch_monitor_after_ms": 10000,
+    "touch_monitor_period_ms": 60,
+    "_notes_monitor": "FT6336U monitor mode (estimate, defaults not verified against the datasheet): after ~10 s without a touch the controller scans slowly (G_CTRL / TIME_ENTER_MONITOR / PERIODMONITOR registers); the first touch or cover key then waits up to one monitor period (<= 60 ms assumed) longer. i2c_background_idle_poll_ms: fuel gauge / charger polling while the system is idle.",
     "key_sources": {
       "ai": "gpio",
       "power": "expander",
@@ -253,8 +257,10 @@
     "_notes": "BH1098G clocks I2S (ESP is slave): 16 kHz, stereo 32-bit slots, DMA 4 x 240 frames per direction = 60 ms runway (upstream bt_audio_codec.cc). Mic has 2 channels (mic + loopback reference). Output start = I2S enable + NS4150 enable via the TCA9555 over the shared I2C + settle: estimate 30 ms. Opus state from the esp_audio_codec table (48 kHz stereo: enc 29.4 KB, dec 26.6 KB; 16 kHz mono needs less, kept pessimistic). Upstream audio_input task: 4 KB stack in PSRAM, priority 8 (frozen, like every task, while the flash API runs). Opus CPU per 60 ms frame is an ESTIMATE (enc ~12% of one 320 MHz core at complexity 0, dec ~2%); calibrate on the ISS or hardware."
   },
   "power": {
-    "battery_mah": 1500,
+    "battery_mah": 1700,
     "base_awake_ma": 25,
+    "idle_mhz": 160,
+    "base_awake_idle_ma": 20,
     "per_core_busy_ma": 20,
     "display_rails_ma": 8,
     "display_refresh_ma": 40,
@@ -266,7 +272,14 @@
     "audio_in_ma": 12,
     "frontlight_full_ma": 45,
     "sleep_ma": 1.5,
-    "_notes": "ALL ESTIMATES (unmeasured): replace with bench measurements (SP-08). battery_mah is a placeholder; the real cell capacity is unverified."
+    "standby_modem_ma": 5.0,
+    "sleep_enter_ms": 200,
+    "sleep_exit_ms": 30,
+    "sleep_wake_us": 2000,
+    "sd_remount_ms": 100,
+    "_notes": "ALL ESTIMATES (unmeasured): replace with bench measurements (SP-08, SP-10). battery_mah 1700: upstream docs/battery-soc-and-charge.md (checked 2026-11-02) uses a 424860-2000 cell that delivered 1870.7 mAh at ~1 A to 3.3 V in their test; x0.9 for ageing and temperature (resources take lower bounds).",
+    "_notes_clock": "idle_mhz: port design (provisional): the CPU runs at 160 MHz while the system is idle or locked unless a CPU boost is held (display waveforms, audio codec, TLS handshake); upstream lets the user pick 160/240/320 MHz for AppIdle with 320 as default (power_policy.h). base_awake_idle_ma assumes ~20% less base current at half clock (ESP32-S3-class modem-sleep ratios); unmeasured on the S31.",
+    "_notes_standby": "Standby = explicit light sleep in slices (upstream: <= 60 s, esp_light_sleep_start). sleep_ma: whole board asleep with the shared P1.4 rail cut (chip + PSRAM retention + always-on parts: RTC, fuel gauge, IO expander, regulators). standby_modem_ma: extra while that rail stays up for answerable standby: the 4G module at short paging cycles 3.3-4.1 mA (vendor figure, foundation §7) plus the BH1098 on the same rail (unknown, ~1 mA assumed); SP-10 measures it. sleep_enter_ms 200 = upstream TPS65185 park (50 + 120 ms) + SD park + rails; sleep_exit_ms 30 = rails + key baseline; sd_remount_ms after a key wake only (upstream skips it on timer wakes); sleep_wake_us = chip wake-up (clock/PLL) before any task runs."
   },
   "_notes_costs": "costs_cycles: ISS Level-2 calibration (tools/iss, docs/research/simulator/iss-calibration.md, 2026-11-02): PESSIMISTIC values = max(raw x 1.3, slow corner) for copies, glyphs, conversion, JSON, inflate, CRC and the new glyph.px/fill.px/set_byte classes. Not measured on the ISS yet (kept as earlier guesses): lvgl.px, lvgl.refr, text.* (the ISS kernels are leaner than our text engine; measure system/text on the ISS next), heap.op (IDF heap wrapper not modelled), littlefs.op, tls.handshake, opus.*. CoreMark anchor 3.43/MHz needs CPI~1.0; fitted 3.083."
 }

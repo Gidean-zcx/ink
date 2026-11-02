@@ -2,7 +2,8 @@
  * Power service (foundation §7): one place decides when the device is
  * active, idle or locked, and when the chip may sleep.
  *
- *   ACTIVE  user input in the last few seconds: CPU at full speed.
+ *   ACTIVE  user input in the last few seconds, or a transfer the user waits for:
+ *           CPU at full speed.
  *   IDLE    the page just sits there (reading): CPU at its idle clock, the
  *           touch controller in monitor mode, background polling slowed.
  *   LOCKED  power key, or long without input: the screen keeps its image
@@ -31,7 +32,7 @@ typedef enum { INK_PWR_ACTIVE = 0, INK_PWR_IDLE, INK_PWR_LOCKED } ink_power_stat
 
 typedef enum {
     INK_NEED_AUDIO = 0, /* playing or recording: the chip stays awake (also while locked) */
-    INK_NEED_NET,       /* a transfer that must finish (AI turn, sync, download): no sleep until done */
+    INK_NEED_NET,       /* a transfer that must finish (AI turn, sync, download): active (full clock), no sleep until done */
     INK_NEED_NO_LOCK,   /* no automatic locking (USB disk, upgrade screen) */
     INK_NEED_COUNT
 } ink_power_need_t;
@@ -53,6 +54,11 @@ bool ink_power_unlock(uint64_t t_us);
 /** State changes, called in the power task after the change. Up to 8 listeners. */
 typedef void (*ink_power_fn)(void *ctx, ink_power_state_t from, ink_power_state_t to, uint64_t cause_us);
 int ink_power_subscribe(ink_power_fn fn, void *ctx);
+
+/** Work that must settle before the chip may sleep while locked, e.g. the UI drawing the lock
+ *  mark (asked from the power task: cheap, non-blocking). Up to 6. The panel (refreshes queued
+ *  or playing) and the flash (writes queued) are always checked. */
+int ink_power_add_busy_check(bool (*busy)(void));
 
 #ifdef __cplusplus
 }

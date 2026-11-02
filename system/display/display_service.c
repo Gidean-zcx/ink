@@ -41,15 +41,25 @@ static struct {
     bool interactive;
     bool guard;
     osal_sem_t *guard_ack;
-    volatile int busy;
+    int busy;  /* regions waiting in the policy + the update in flight (this task writes it) */
+    int inbox; /* messages sent and not yet fully handled (atomic) */
 } DS;
+
+/* Every message goes through here: the inbox count rises before the message is queued and
+ * falls only after the service task has handled it and updated busy, so ink_display_busy()
+ * never reads 0 while a message is between the queue and the policy (the power service sleeps
+ * the chip on that answer). */
+static void ds_send(const dmsg_t *m) {
+    __atomic_add_fetch(&DS.inbox, 1, __ATOMIC_SEQ_CST);
+    osal_queue_send(DS.q, m, OSAL_WAIT_FOREVER);
+}
 
 static const char *INTENT_NAME[INK_REFRESH_COUNT] = {"A2", "FAST", "UI", "TEXT", "FLASH_UI", "FULL"};
 
 static void done_cb(void *ctx, const hal_display_result_t *r) {
     (void)ctx;
     dmsg_t m = {.type = DM_DONE, .result = *r};
-    osal_queue_send(DS.q, &m, OSAL_WAIT_FOREVER);
+    ds_send(&m);
 }
 
 static void dispatch_next(void) {
@@ -135,7 +145,8 @@ static void service_task(void *arg) {
         if (m.type == DM_DONE && DS.guard) osal_sem_give(DS.guard_ack);
         /* only dispatch on frame boundaries so a half-committed frame is never driven */
         if (m.type != DM_REGION) dispatch_next();
-        DS.busy = DS.rp.npending + (DS.in_flight ? 1 : 0); /* written by this task only */
+        __atomic_store_n(&DS.busy, DS.rp.npending + (DS.in_flight ? 1 : 0), __ATOMIC_SEQ_CST);
+        __atomic_sub_fetch(&DS.inbox, 1, __ATOMIC_SEQ_CST); /* after busy: see ds_send */
     }
 }
 
@@ -175,28 +186,31 @@ void ink_display_commit_tagged(const ink_region_t *regions, int n, uint64_t caus
     for (int i = 0; i < n; i++) {
         dmsg_t m = {.type = DM_REGION, .intent = (uint8_t)regions[i].intent, .rect = regions[i].rect, .cause_us = cause_us,
                     .cause_tag = cause_tag};
-        osal_queue_send(DS.q, &m, OSAL_WAIT_FOREVER);
+        ds_send(&m);
     }
     dmsg_t end = {.type = DM_FRAME_END};
-    osal_queue_send(DS.q, &end, OSAL_WAIT_FOREVER);
+    ds_send(&end);
 }
 
 void ink_display_interactive(bool on) {
     dmsg_t m = {.type = DM_INTERACTIVE, .flag = on};
-    osal_queue_send(DS.q, &m, OSAL_WAIT_FOREVER);
+    ds_send(&m);
 }
 
 void ink_display_set_text_cleanup_every(int n) {
     dmsg_t m = {.type = DM_CLEANUP_EVERY, .cause_us = (uint64_t)n};
-    osal_queue_send(DS.q, &m, OSAL_WAIT_FOREVER);
+    ds_send(&m);
 }
 
-/* Queued messages + regions waiting in the policy + the update in flight. No read-modify-write
- * from other tasks (that raced with the service task and could leave the count stuck above 0). */
-int ink_display_busy(void) { return (int)osal_queue_count(DS.q) + DS.busy; }
+/* Messages not yet handled + regions waiting in the policy + the update in flight. Read the
+ * inbox first: the service task updates busy before it lowers the inbox. */
+int ink_display_busy(void) {
+    int inbox = __atomic_load_n(&DS.inbox, __ATOMIC_SEQ_CST);
+    return inbox + __atomic_load_n(&DS.busy, __ATOMIC_SEQ_CST);
+}
 
 void ink_display_flash_guard(bool hold) {
     dmsg_t m = {.type = DM_GUARD, .flag = hold};
-    osal_queue_send(DS.q, &m, OSAL_WAIT_FOREVER);
+    ds_send(&m);
     if (hold) osal_sem_take(DS.guard_ack, OSAL_WAIT_FOREVER);
 }

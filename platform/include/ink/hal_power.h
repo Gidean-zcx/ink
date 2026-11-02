@@ -64,6 +64,11 @@ typedef struct {
     uint64_t max_us;      /* slice length: wake by timer after this long (0 = no timer) */
     uint32_t wake_mask;   /* HAL_WAKE_* */
     bool keep_modem;      /* keep the 4G modem powered and registered ("可接听待机") */
+    /* Asked after the entry sequence, right before the chip sleeps (the real port: with the
+     * scheduler suspended, so it must not block): true cancels the sleep, e.g. a wake key was
+     * pressed and handled during the entry sequence. Optional. */
+    bool (*cancel)(void *ctx);
+    void *cancel_ctx;
 } hal_sleep_cfg_t;
 
 /**
@@ -73,7 +78,7 @@ typedef struct {
  * input from sources not in wake_mask is lost. The caller must have
  * quiesced the system (no refresh, flash write, audio or SD access in
  * progress). Returns the HAL_WAKE_* bit that woke it, or 0 if the sleep was
- * refused (something still busy).
+ * refused (something still busy) or cancelled.
  */
 uint32_t hal_power_sleep(const hal_sleep_cfg_t *cfg);
 

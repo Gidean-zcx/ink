@@ -47,6 +47,10 @@ void ink_ui_pop(void);
 void ink_ui_home(void);
 /** Run fn(arg) in the UI task (any task). */
 void ink_ui_post(void (*fn)(void *), void *arg);
+/** The UI has work that may still change the panel: posted calls or input not handled yet, or a
+ *  requested LVGL refresh not rendered yet (any task; the power service waits for false before
+ *  it sleeps the chip). A rendered frame is reported by ink_display_busy() instead. */
+bool ink_ui_busy(void);
 
 /** Refresh intent for an area that is about to change (UI task). Without a hint, changes use UI. */
 void ink_ui_hint_area(const lv_area_t *logical, ink_refresh_t intent);

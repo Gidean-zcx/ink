@@ -77,6 +77,10 @@ static struct {
     volatile uint32_t generation;
     bool interactive;
     uint64_t last_input_us;
+    /* busy signal for the power service (atomics): messages posted and not yet handled, and
+     * whether LVGL has a refresh requested that it has not rendered yet */
+    int posts;
+    bool render_pending;
     /* styles */
     lv_style_t st_screen, st_btn, st_btn_pr;
 } UI;
@@ -416,7 +420,20 @@ void ink_ui_open(lv_obj_t *from, const ink_activity_t *a, void *arg) {
 
 void ink_ui_post(void (*fn)(void *), void *arg) {
     umsg_t m = {.type = UM_CALL, .fn = fn, .arg = arg};
+    __atomic_add_fetch(&UI.posts, 1, __ATOMIC_SEQ_CST);
     osal_queue_send(UI.q, &m, OSAL_WAIT_FOREVER);
+}
+
+/* Read the post count first: the UI task stores render_pending before it lowers the count, and
+ * a rendered frame reaches the display service (ink_display_busy) before render_pending drops. */
+bool ink_ui_busy(void) {
+    if (__atomic_load_n(&UI.posts, __ATOMIC_SEQ_CST) > 0) return true;
+    return __atomic_load_n(&UI.render_pending, __ATOMIC_SEQ_CST);
+}
+
+static void note_render_pending(void) { /* UI task */
+    lv_timer_t *t = lv_display_get_refr_timer(UI.disp);
+    __atomic_store_n(&UI.render_pending, t && !lv_timer_get_paused(t), __ATOMIC_SEQ_CST);
 }
 
 /* ---------------------------------------------------------------- input */
@@ -426,7 +443,11 @@ static void input_handler(const ink_input_event_t *e, void *ctx) {
     umsg_t m = {.type = UM_INPUT, .generation = UI.generation, .ev = *e};
     /* moves may be dropped under load; presses, releases and keys never */
     bool droppable = e->kind == INK_EV_POINTER && e->phase == INK_PTR_MOVE;
-    if (osal_queue_send(UI.q, &m, droppable ? 0 : OSAL_WAIT_FOREVER) != OSAL_OK) ink_probe_count("ui.dropped_moves");
+    __atomic_add_fetch(&UI.posts, 1, __ATOMIC_SEQ_CST);
+    if (osal_queue_send(UI.q, &m, droppable ? 0 : OSAL_WAIT_FOREVER) != OSAL_OK) {
+        __atomic_sub_fetch(&UI.posts, 1, __ATOMIC_SEQ_CST);
+        ink_probe_count("ui.dropped_moves");
+    }
 }
 
 static void set_interactive(bool on) {
@@ -532,6 +553,7 @@ static void ui_task(void *arg) {
 
     for (;;) {
         uint32_t wait_ms = lv_timer_handler();
+        note_render_pending(); /* a frame just rendered is already queued at the display service */
         int64_t timeout = wait_ms == LV_NO_TIMER_READY ? OSAL_WAIT_FOREVER : (int64_t)wait_ms * 1000;
         if (UI.interactive) {
             int64_t left = (int64_t)(UI.last_input_us + INTERACTIVE_IDLE_MS * 1000ull) - (int64_t)osal_now_us();
@@ -545,6 +567,8 @@ static void ui_task(void *arg) {
         if (osal_queue_recv(UI.q, &m, timeout) != OSAL_OK) continue;
         if (m.type == UM_INPUT) handle_input(&m);
         else if (m.type == UM_CALL && m.fn) m.fn(m.arg);
+        note_render_pending(); /* before the count drops: see ink_ui_busy */
+        __atomic_sub_fetch(&UI.posts, 1, __ATOMIC_SEQ_CST);
     }
 }
 

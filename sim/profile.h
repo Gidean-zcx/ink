@@ -37,6 +37,10 @@ typedef struct {
     bool flashing;
     double ghost; /* ghosting gain per transition (heuristic, 0 = none) */
     bool supported;
+    /* optional per-waveform overrides (0 = the display-wide value): a refresh algorithm whose
+     * scan path costs more or less per line, or whose table uses a different phase time */
+    uint32_t line_prep_ns;
+    uint32_t phase_min_us;
 } profile_waveform_t;
 
 typedef struct {

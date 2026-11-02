@@ -1,0 +1,72 @@
+{
+  "_doc": "Standby on the pessimistic Plus profile (foundation §7, power service): idle clock, power-key lock, light sleep in 60 s slices, wake keys, auto lock. Currents are ESTIMATES (profile power section) until SP-08/SP-10: the current budgets are regression guards (a hold or a busy service that keeps the chip awake while locked fails them), not battery-life promises.",
+  "panic.count": {
+    "max": 0,
+    "optional": true
+  },
+  "warnings.count": {
+    "max": 0,
+    "optional": true,
+    "why": "a simulator warning means the run is not clean"
+  },
+  "mem.internal.failed_allocs": {
+    "max": 0
+  },
+  "mem.external.failed_allocs": {
+    "max": 0
+  },
+  "reader.page_turns": {
+    "min": 2,
+    "max": 2,
+    "why": "the two page turns while unlocked work; the touch and the cover key while locked and asleep must not reach the reader, not even after the wake"
+  },
+  "power.to_locked": {
+    "min": 3,
+    "why": "power key twice (the first lock is undone at once), and the automatic lock after 10 minutes without input"
+  },
+  "power.wakes.power_key": {
+    "min": 1
+  },
+  "power.wakes.ai_key": {
+    "min": 1,
+    "why": "the AI key is a wake source too (upstream arms only POWER)"
+  },
+  "power.wakes.timer": {
+    "min": 4,
+    "why": "light sleep in 60 s slices (upstream): about one timer wake per minute locked"
+  },
+  "power.inputs_lost_asleep": {
+    "min": 1,
+    "why": "touch and cover keys are not wake sources: the chip never sees them while it sleeps"
+  },
+  "power.locked_sleep_share": {
+    "min": 0.95,
+    "why": "asleep for at least 95% of the locked time (the rest: lock mark refresh, slice wake-ups, key wakes)"
+  },
+  "power.avg_ma.locked": {
+    "max": 8,
+    "why": "standby with the 4G rail kept up (answerable standby): sleep floor 1.5 mA + modem rail 5 mA + slices + lock mark, all estimates (SP-10); a chip kept awake while locked costs ~28 mA and fails this"
+  },
+  "power.lock_to_sleep_ms.max": {
+    "max": 2500,
+    "why": "lock -> lock mark on the panel -> chip asleep (the chip must not sleep before the mark is drawn)"
+  },
+  "power.unlock_to_visible_ms.max": {
+    "max": 1200,
+    "target_max": 800,
+    "why": "wake key (or a quick unlock during the sleep entry) -> lock mark off, the page fully back (TEXT waveform)"
+  },
+  "power.sleep_aborted": {
+    "max": 0,
+    "optional": true,
+    "why": "something started during the sleep entry sequence: the quiet check before it missed work"
+  },
+  "power.sleep_cancelled": {
+    "min": 1,
+    "why": "the quick unlock lands in the sleep entry sequence and must cancel the sleep (otherwise the unlock waits for the next 60 s slice and power.unlock_to_visible_ms fails); if model timings move, move the second key press so it still lands there"
+  },
+  "ui.action_to_visible_ms.TEXT.p95": {
+    "max": 1000,
+    "why": "page turns after a wake are as fast as before"
+  }
+}

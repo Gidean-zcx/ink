@@ -50,12 +50,22 @@ static struct {
         void *ctx;
     } subs[8];
     int nsubs;
+    bool (*checks[6])(void);
+    int nchecks;
 } PS;
 
 static const char *STATE_NAME[] = {"active", "idle", "locked"};
 
 static void lock(void) { osal_mutex_lock(PS.lock, OSAL_WAIT_FOREVER); }
 static void unlock(void) { osal_mutex_unlock(PS.lock); }
+
+/* PS.state changes under the lock; the sleep cancel check reads it without (atomic). */
+static void set_state(ink_power_state_t s) { __atomic_store_n(&PS.state, s, __ATOMIC_SEQ_CST); }
+
+static bool cancel_sleep(void *ctx) { /* called by the HAL right before the chip sleeps: no blocking */
+    (void)ctx;
+    return __atomic_load_n(&PS.state, __ATOMIC_SEQ_CST) != INK_PWR_LOCKED;
+}
 
 static hal_power_state_t hal_state(ink_power_state_t s) {
     return s == INK_PWR_ACTIVE ? HAL_PWR_STATE_ACTIVE : s == INK_PWR_IDLE ? HAL_PWR_STATE_IDLE : HAL_PWR_STATE_LOCKED;
@@ -70,6 +80,14 @@ static void notify(ink_power_state_t from, ink_power_state_t to, uint64_t cause)
     for (int i = 0; i < PS.nsubs; i++) PS.subs[i].fn(PS.subs[i].ctx, from, to, cause);
 }
 
+/* Nothing left that would change the panel or the flash while the chip sleeps. The UI check
+ * comes first: what it still has to draw reaches the display service before it reports idle. */
+static bool quiet(void) {
+    for (int i = 0; i < PS.nchecks; i++)
+        if (PS.checks[i]()) return false;
+    return ink_display_busy() == 0 && ink_storage_pending() == 0;
+}
+
 /* Sleep while locked, as long as nothing needs the chip. Returns when the state may have changed. */
 static void locked_step(void) {
     lock();
@@ -79,13 +97,15 @@ static void locked_step(void) {
         osal_sem_take(PS.kick, OSAL_WAIT_FOREVER);
         return;
     }
-    if (ink_display_busy() > 0 || ink_storage_pending() > 0) { /* the lock mark is still drawing, a write is queued */
+    if (!quiet()) { /* the lock mark is still being drawn, a write is queued ... */
+        ink_probe_count("power.sleep_deferred");
         osal_sem_take(PS.kick, QUIET_POLL_US);
         return;
     }
     hal_sleep_cfg_t cfg = {.max_us = SLICE_US,
                            .wake_mask = HAL_WAKE_POWER_KEY | HAL_WAKE_AI_KEY | HAL_WAKE_RTC | HAL_WAKE_MODEM,
-                           .keep_modem = PS.keep_modem};
+                           .keep_modem = PS.keep_modem,
+                           .cancel = cancel_sleep};
     lock();
     bool first = PS.locked_at != 0;
     uint64_t locked_at = PS.locked_at;
@@ -108,22 +128,26 @@ static void power_task(void *arg) {
         uint64_t now = osal_now_us();
         lock();
         ink_power_state_t s = PS.state;
+        /* a transfer the user waits for (an AI turn, a sync) keeps the device active: its
+         * answer is parsed and drawn at full clock, as upstream keeps AppIdle off while the
+         * device is not idle; audio does not (the codec holds its own CPU boost) */
+        bool user_idle = now - PS.last_activity >= IDLE_AFTER_US && PS.holds[INK_NEED_NET] == 0;
         if (PS.lock_req) {
             PS.lock_req = false;
             if (s != INK_PWR_LOCKED) s = INK_PWR_LOCKED;
-        } else if (s == INK_PWR_ACTIVE && now - PS.last_activity >= IDLE_AFTER_US) {
+        } else if (s == INK_PWR_ACTIVE && user_idle) {
             s = INK_PWR_IDLE;
-        } else if (s == INK_PWR_IDLE && now - PS.last_activity < IDLE_AFTER_US) {
+        } else if (s == INK_PWR_IDLE && !user_idle) {
             s = INK_PWR_ACTIVE;
         } else if (s == INK_PWR_IDLE && !PS.holds[INK_NEED_NO_LOCK] && now - PS.last_activity >= LOCK_AFTER_US) {
             s = INK_PWR_LOCKED;
         }
         if (s == INK_PWR_LOCKED && PS.state != INK_PWR_LOCKED) PS.locked_at = now;
-        PS.state = s;
+        set_state(s);
         ink_power_state_t from = PS.notified;
         uint64_t cause = PS.cause_us;
         PS.notified = s;
-        uint64_t deadline = s == INK_PWR_ACTIVE ? PS.last_activity + IDLE_AFTER_US
+        uint64_t deadline = s == INK_PWR_ACTIVE ? (PS.holds[INK_NEED_NET] ? 0 : PS.last_activity + IDLE_AFTER_US)
                             : s == INK_PWR_IDLE && !PS.holds[INK_NEED_NO_LOCK] ? PS.last_activity + LOCK_AFTER_US
                                                                                 : 0;
         unlock();
@@ -147,7 +171,8 @@ int ink_power_init(void) {
     hal_device_info_t di;
     hal_device_get_info(&di);
     PS.keep_modem = di.has_modem;
-    PS.state = PS.notified = INK_PWR_ACTIVE;
+    set_state(INK_PWR_ACTIVE);
+    PS.notified = INK_PWR_ACTIVE;
     PS.last_activity = osal_now_us();
     hal_power_set_state(HAL_PWR_STATE_ACTIVE);
     osal_task_cfg_t cfg = {.name = "power", .fn = power_task, .stack_bytes = PW_STACK, .priority = PW_PRIO, .core = -1};
@@ -165,7 +190,7 @@ void ink_power_activity(uint64_t t_us) {
     lock();
     if (t_us > PS.last_activity) PS.last_activity = t_us;
     bool wake = PS.state == INK_PWR_IDLE;
-    if (wake) PS.state = INK_PWR_ACTIVE;
+    if (wake) set_state(INK_PWR_ACTIVE);
     unlock();
     if (wake) {
         hal_power_set_state(HAL_PWR_STATE_ACTIVE); /* full clock before the UI reacts to this input */
@@ -200,7 +225,7 @@ bool ink_power_unlock(uint64_t t_us) {
     lock();
     bool was = PS.state == INK_PWR_LOCKED;
     if (was) {
-        PS.state = INK_PWR_ACTIVE;
+        set_state(INK_PWR_ACTIVE);
         PS.cause_us = t_us;
         if (t_us > PS.last_activity) PS.last_activity = t_us;
         PS.lock_req = false;
@@ -211,6 +236,12 @@ bool ink_power_unlock(uint64_t t_us) {
         osal_sem_give(PS.kick);
     }
     return was;
+}
+
+int ink_power_add_busy_check(bool (*busy)(void)) {
+    if (!busy || PS.nchecks >= 6) return -1;
+    PS.checks[PS.nchecks++] = busy; /* registered at start-up, before the device can lock */
+    return 0;
 }
 
 int ink_power_subscribe(ink_power_fn fn, void *ctx) {

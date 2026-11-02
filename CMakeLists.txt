@@ -195,6 +195,7 @@ if(INK_HAVE_FONTS)
   ink_scenario(reader_basic metalio-plus)
   ink_scenario(reader_basic metalio-plus-psram16)
   ink_scenario(ai_ask metalio-plus)
+  ink_scenario(standby metalio-plus)
   add_test(NAME scenario-ai_tools-metalio-plus
     COMMAND ink-sim --profile ${CMAKE_SOURCE_DIR}/profiles/metalio-plus.json
             --script ${CMAKE_SOURCE_DIR}/tests/scenarios/ai_tools.script

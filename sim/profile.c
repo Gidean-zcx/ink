@@ -28,6 +28,12 @@ static double num(const cJSON *o, const char *k, double def) {
     return def;
 }
 
+/* optional value: no "default used" note when absent */
+static double num_opt(const cJSON *o, const char *k, double def) {
+    const cJSON *v = cJSON_GetObjectItemCaseSensitive(o, k);
+    return cJSON_IsNumber(v) ? v->valuedouble : def;
+}
+
 static bool flag(const cJSON *o, const char *k, bool def) {
     const cJSON *v = cJSON_GetObjectItemCaseSensitive(o, k);
     if (cJSON_IsBool(v)) return cJSON_IsTrue(v);
@@ -197,6 +203,8 @@ int profile_load(const char *path, sim_profile_t *p, char *err, size_t errlen) {
         p->wf[i].phases = (int)num(w, "phases", 20);
         p->wf[i].flashing = flag(w, "flashing", false);
         p->wf[i].ghost = num(w, "ghost", 0);
+        p->wf[i].line_prep_ns = (uint32_t)(num_opt(w, "line_prep_us", 0) * 1000);
+        p->wf[i].phase_min_us = (uint32_t)num_opt(w, "phase_min_us", 0);
         p->panel.waveforms |= 1u << i;
     }
     if (p->panel.tech == HAL_PANEL_LCD) p->panel.waveforms = 0;
