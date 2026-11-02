@@ -17,7 +17,7 @@
 
 ## 功能目录与覆盖
 
-已逐项登记 [完整目录 CSV](/home/workspace/reader/docs/research/interaction-library/artifacts/supernote-controls-deepening/functional-inventory.csv)：140 个书签目录项，包括章、小节与非功能性前后页，**不是 140 项已分析任务**。记录 F/E 关联和未覆盖项。4.5 模板的 PDF 书签指向 p63，纸面目录和正文实际在 p64，保留差异。只对读过操作正文的重点小节标局部分析。全部目录依据 E-SNCD-02；[本轮目录状态](/home/workspace/reader/docs/research/interaction-library/batches/supernote-notes-controls-deepening-inventory.csv)保留这140项，并区分继承的目录状态、本轮已读正文、已关联任务和仍未展开的内容。下表为索引，不长篇重述整册手册。
+已逐项登记 [完整目录 CSV](../artifacts/supernote-controls-deepening/functional-inventory.csv)：140 个书签目录项，包括章、小节与非功能性前后页，**不是 140 项已分析任务**。记录 F/E 关联和未覆盖项。4.5 模板的 PDF 书签指向 p63，纸面目录和正文实际在 p64，保留差异。只对读过操作正文的重点小节标局部分析。全部目录依据 E-SNCD-02；[本轮目录状态](../batches/supernote-notes-controls-deepening-inventory.csv)保留这140项，并区分继承的目录状态、本轮已读正文、已关联任务和仍未展开的内容。下表为索引，不长篇重述整册手册。
 
 | 功能域 | 章节／页 | 已关联 F／补充 E | 缺口 |
 | --- | --- | --- | --- |
@@ -145,12 +145,12 @@ Pages长按页面进入选择工具栏，多选后 Copy/Move；留在当前笔�
 
 | 摘页 | 实际看见 | 不能推出 |
 | --- | --- | --- |
-| [p73](/home/workspace/reader/docs/research/interaction-library/artifacts/supernote-controls-deepening/x2-v3.28.42-p73.png) | 两种返回按钮、上半屏上滑说明 | 目标删除／历史持久性 |
-| [p84](/home/workspace/reader/docs/research/interaction-library/artifacts/supernote-controls-deepening/x2-v3.28.42-p84.png) | 导出／分享／Cancel 入口 | 实际文件、耗时、取消结果 |
-| [p112](/home/workspace/reader/docs/research/interaction-library/artifacts/supernote-controls-deepening/x2-v3.28.42-p112.png) | Recognize as Text／Digest／New Task 分开，Add／日期入口 | 成功后回落页面、双向改写笔迹 |
-| [p160](/home/workspace/reader/docs/research/interaction-library/artifacts/supernote-controls-deepening/x2-v3.28.42-p160.png) | 文件副本、Digest 备份、To-Do／Digest 同步分列 | 单包涵盖设置、任务删后可撤销 |
+| [p73](../artifacts/supernote-controls-deepening/x2-v3.28.42-p73.png) | 两种返回按钮、上半屏上滑说明 | 目标删除／历史持久性 |
+| [p84](../artifacts/supernote-controls-deepening/x2-v3.28.42-p84.png) | 导出／分享／Cancel 入口 | 实际文件、耗时、取消结果 |
+| [p112](../artifacts/supernote-controls-deepening/x2-v3.28.42-p112.png) | Recognize as Text／Digest／New Task 分开，Add／日期入口 | 成功后回落页面、双向改写笔迹 |
+| [p160](../artifacts/supernote-controls-deepening/x2-v3.28.42-p160.png) | 文件副本、Digest 备份、To-Do／Digest 同步分列 | 单包涵盖设置、任务删后可撤销 |
 
-本轮另查看 p65、66、75、83、153，逐图范围见[独立来源与视觉摘记](/home/workspace/reader/docs/research/interaction-library/artifacts/supernote-notes-controls-deepening/source-notes.md)。这些页分别支撑模板选择、图层面板、文本框编辑、整页目标位置、日历事件；没有连续操作或成功保存观察。
+本轮另查看 p65、66、75、83、153，逐图范围见[独立来源与视觉摘记](../artifacts/supernote-notes-controls-deepening/source-notes.md)。这些页分别支撑模板选择、图层面板、文本框编辑、整页目标位置、日历事件；没有连续操作或成功保存观察。
 
 下一最小观察：同一三页笔记建标记／链接／任务，分别改标题、删标记、移动来源文件，比较笔迹及回源定位；在 V3.31.45 记录工具栏与搜索分类。另用测试文件观察两机冲突和云回收恢复。OCR 修正是否回写笔迹、TXT／DOCX 再导入、重复恢复、任务删除、账户切换及重启中断未完成。
 

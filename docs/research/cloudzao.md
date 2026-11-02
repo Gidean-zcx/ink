@@ -4,7 +4,7 @@
 
 本页保留项目起点的文档初查和固定提交记录。**当前型号已限定 E-Ink4 Plus**，其他型号仅作历史比较；没有编译、刷机或实机测试。
 
-本轮修正：Plus 自己的板类直接接入 NT26，已有控制引脚、网络初始化和共享供电代码。此前因未追踪板类构造而只把 Claw4 作为通信重点，判断不充分。现按 Plus 继续研究短信和电话；完整模组型号、固件与音频接线仍需核对。最新证据见 [Plus 通信调研](/home/workspace/reader/docs/research/eink4-plus-cellular.md)。
+本轮修正：Plus 自己的板类直接接入 NT26，已有控制引脚、网络初始化和共享供电代码。此前因未追踪板类构造而只把 Claw4 作为通信重点，判断不充分。现按 Plus 继续研究短信和电话；完整模组型号、固件与音频接线仍需核对。最新证据见 [Plus 通信调研](eink4-plus-cellular.md)。
 
 初查范围：[CloudZao 的 GitHub 主页](https://github.com/CloudZao)及下列四个公开仓库的 README 和仓库页面。初查页面对应当时默认分支；随后补充的固定提交见下表。
 
@@ -63,7 +63,7 @@
 ### 通信：Plus 为目标，Claw4 仅作参考
 
 - **Plus 新增代码依据**：板类继承 DualNetworkBoard，配置 NT26 TX/RX=58/59、MRDY/SRDY=60/3，并有 P12/P14 共享复位/供电说明。蜂窝模式下创建 Nt26Board 并使用 UART 网卡与 AT 通道。[板类入口](https://github.com/CloudZao/Metalio-E-INK4-Plus/blob/ad8edf4150a688737c0d7c00cae4413079b262ef/main/boards/metalio-e-ink4-plus/metalio_e_ink4_plus_board.cc#L54)
-- **Plus 当前判断**：短信与通话有条件可开发。厂商子型号/底包支持、板上音频连接及 SIM 业务尚需对应；没有完整 app 不是硬件不可行的依据。[厂商与社区证据](/home/workspace/reader/docs/research/eink4-plus-cellular.md)
+- **Plus 当前判断**：短信与通话有条件可开发。厂商子型号/底包支持、板上音频连接及 SIM 业务尚需对应；没有完整 app 不是硬件不可行的依据。[厂商与社区证据](eink4-plus-cellular.md)
 
 以下三项为上一轮 Claw4 的参考证据，不能把该板的 SIM 与音频接线直接套给 Plus：
 
@@ -82,4 +82,4 @@
 
 ### 后续需要的最小证据
 
-先确认所选板卡实物版本、屏型号、可用内存、SDK/驱动对应版本，再提出有限验证。墨水屏验证参考 [高刷调研](/home/workspace/reader/docs/research/eink-high-refresh.md)；语音和 app 参考 [平台调研](/home/workspace/reader/docs/research/ai-native-platform.md)。本轮只整理材料，没有搭建完整固件工具链。
+先确认所选板卡实物版本、屏型号、可用内存、SDK/驱动对应版本，再提出有限验证。墨水屏验证参考 [高刷调研](eink-high-refresh.md)；语音和 app 参考 [平台调研](ai-native-platform.md)。本轮只整理材料，没有搭建完整固件工具链。

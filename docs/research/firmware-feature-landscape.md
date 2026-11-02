@@ -12,7 +12,7 @@
 
 本轮读取 [CloudZao Burner](https://burner.cloudzao.com/)公开目录返回的全部 **39 个条目**及各条目当前标记版本的说明：普通 E-Ink4 20 个、Plus 13 个、Claw4 4 个、其他硬件 2 个。条目数不等于独立项目数，也不等于成熟应用数；同名项目在不同硬件下可能功能不同。
 
-完整索引见 [39 项功能索引](/home/workspace/reader/docs/research/sources/2026-10-26-firmware-feature-index.json)。索引保留目录 ID、硬件、版本、作者发布状态和助手改写摘要；F001～F039 是本次快照编号。目录的 `latest` / `test` 是发布者标签，不是本项目测试结果。
+完整索引见 [39 项功能索引](sources/2026-10-26-firmware-feature-index.json)。索引保留目录 ID、硬件、版本、作者发布状态和助手改写摘要；F001～F039 是本次快照编号。目录的 `latest` / `test` 是发布者标签，不是本项目测试结果。
 
 证据分两层：**目录说明**来自发布者填写的简介/更新记录；**项目文档**来自对应公开仓库。下文明确标出二者。项目当前文档与目录里的固件二进制未建立构建对应关系，不能把新文档中的全部功能归到旧发布包上。本轮没有新增实现代码审计结论。
 
@@ -82,11 +82,11 @@ RickyOS 和 BoBoOS 等条目有名称或站点入口，但本轮未取得足够�
 
 | 编号 | 来源 | 本轮读取范围与证据层级 |
 | --- | --- | --- |
-| F001～F039 | [公开固件目录](https://burner.cloudzao.com/)及其公开只读目录响应；[本地索引](/home/workspace/reader/docs/research/sources/2026-10-26-firmware-feature-index.json) | 39 项简介、由 `latestVersionId` 指向的版本说明；索引摘要由助手改写，未下载固件二进制。具体版本见索引。 |
+| F001～F039 | [公开固件目录](https://burner.cloudzao.com/)及其公开只读目录响应；[本地索引](sources/2026-10-26-firmware-feature-index.json) | 39 项简介、由 `latestVersionId` 指向的版本说明；索引摘要由助手改写，未下载固件二进制。具体版本见索引。 |
 | S1 | [WhiteAI 中文说明](https://github.com/446599/Metalio-WhiteAI/blob/153d0967e97e1cf308403252cfc2839d6d65fb08/README_zh.md)、[系统 MCP 文档](https://github.com/446599/Metalio-WhiteAI/blob/153d0967e97e1cf308403252cfc2839d6d65fb08/docs/AI_SYSTEM_MCP.md) | 固定提交 `153d0967…` 的功能、状态与存储描述；不是代码验证或 Plus 运行结果。 |
 | S2 | [固件口袋接入规范](https://github.com/Changkai9888/CloudZao-Projects/blob/c4c9d7a1ec9b3e15620a3a67ecf34449f3735b14/protocols/%E5%9B%BA%E4%BB%B6%E5%8F%A3%E8%A2%8B%E6%8E%A5%E5%85%A5%E8%A7%84%E8%8C%83%E4%B8%8E%E5%BC%80%E5%8F%91%E6%8C%87%E5%8D%97.md) | 固定提交 `c4c9d7a1…`；重点读取版本/身份、保存、启动返回、公共配置与失败恢复部分。文档规范，未当作实现证明。 |
 | S3 | [CrossMux README](https://github.com/0x1abin/crossmux)、[SD 插件说明](https://github.com/0x1abin/crossmux/blob/main/docs/sd-plugins.md) | 当前公开功能与插件运行位置说明；没有移植或运行。 |
 | S4 | [dpReader README](https://github.com/dephia31/dpreader) | OPDS、KOReader Sync 与 Plus 发布关联；未测试同步兼容性。 |
 | S5 | [MoJi README](https://github.com/NinthCode/MoJi)、[架构说明](https://github.com/NinthCode/MoJi/blob/main/docs/ARCHITECTURE.md) | 应用镜像管理、安装验证与启动返回机制；未测试安装器。 |
 
-与既有研究的关系：[平台能力](/home/workspace/reader/docs/research/ai-native-platform.md)、[数据保护](/home/workspace/reader/docs/research/data-backup-sync.md)、[高刷边界](/home/workspace/reader/docs/research/eink-high-refresh.md)、[Plus 通信](/home/workspace/reader/docs/research/eink4-plus-cellular.md)、[硬件与源码](/home/workspace/reader/docs/research/cloudzao.md)。
+与既有研究的关系：[平台能力](ai-native-platform.md)、[数据保护](data-backup-sync.md)、[高刷边界](eink-high-refresh.md)、[Plus 通信](eink4-plus-cellular.md)、[硬件与源码](cloudzao.md)。

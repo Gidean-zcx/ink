@@ -32,7 +32,7 @@
 - **Eink4Boy（普通 E-Ink4）**：发布者描述黑白高速刷新、触摸操作、音频及存档，同时注明残影仍在调试、不支持 GBC 专用游戏。没有给出 60fps 实测条件；目录版本为 v0.1.0，简介自述版本为 0.3.18，两者不一致。本轮仅将其作为相同品牌硬件上的 GB 产品线索，没有下载或测量。
 - **retro-go-gba（Claw4）**：目录简介宣称 60fps，并标注 Claw4 / ESP32-P4。该板是 LCD 路线，这个数值不能作为 E-Ink4 Plus 墨水屏刷新能力的证据。
 
-见 [目录索引 F018、F027](/home/workspace/reader/docs/research/sources/2026-10-26-firmware-feature-index.json)及 [硬件比较](/home/workspace/reader/docs/research/cloudzao.md)。新线索不改变当前判断：保留 Plus 高刷目标，尚未证明全屏、固定灰阶和音频并发下能达到 60fps 无残影。
+见 [目录索引 F018、F027](sources/2026-10-26-firmware-feature-index.json)及 [硬件比较](cloudzao.md)。新线索不改变当前判断：保留 Plus 高刷目标，尚未证明全屏、固定灰阶和音频并发下能达到 60fps 无残影。
 
 ## “60fps”需要分别记录的量
 
@@ -52,7 +52,7 @@
 | E-Ink4 | SSD1677、800×480、SPI 10 MHz；驱动由控制器处理刷新并等待 BUSY。 | 不能直接套用原始行列驱动法；应单独研究控制器允许的更新与波形能力。当前配置下，全屏逐帧上传 60fps 已遇传输瓶颈。 |
 | E-Ink4 Plus | 上游 README 标注 ED047TC2、1216×684、EPDiy 并行驱动、TPS65185；有板级代码和波形文件。实际版本待对应。 | 原理上更贴近该高刷方法，现为唯一研究硬件；面板不同、主控为 S31，接口时序、内存、CPU 优化和波形均不能照搬。 |
 
-依据见 [固定提交及代码入口](/home/workspace/reader/docs/research/cloudzao.md)。Plus README 中现有“列表不滚动”是上游软件策略，不是本项目已经接受的需求，也不能单独当成物理极限。
+依据见 [固定提交及代码入口](cloudzao.md)。Plus README 中现有“列表不滚动”是上游软件策略，不是本项目已经接受的需求，也不能单独当成物理极限。
 
 本轮新增版本线索：kiikoread 的 [Plus 适配说明](https://github.com/wegooo-cell/Metalio-S31-kiikoread/blob/e942aeb1745241273d737c584c88a8068ef6e933/README.md)限定 V1.5、34Pin、E0470A14-AF；与 CloudZao README 的面板标记不同。暂不推断两者等价或认定其中一方写错，后续按实际 Plus 版本核对波形与引脚。这不改变以下分辨率估算的假设，但影响能否直接复用驱动。
 
@@ -101,4 +101,4 @@
 
 ## 2026-10-28：交互与实际刷新路径补充
 
-[墨水屏 UI 专题](/home/workspace/reader/docs/research/eink-ui-interaction.md)进一步核查同一 Plus 固定提交中的自定义完整/裁剪波形、独立刷新任务、滚动结束处理和区域差分。默认 EPDiy A2 波形限制不能套成 Plus 没有快刷；相位数不能称 FPS，框架提交也不能称光学显示完成。策略与交互建议、核查路径及待测项见专题；没有增加实机结果或改写 R-011。
+[墨水屏 UI 专题](eink-ui-interaction.md)进一步核查同一 Plus 固定提交中的自定义完整/裁剪波形、独立刷新任务、滚动结束处理和区域差分。默认 EPDiy A2 波形限制不能套成 Plus 没有快刷；相位数不能称 FPS，框架提交也不能称光学显示完成。策略与交互建议、核查路径及待测项见专题；没有增加实机结果或改写 R-011。

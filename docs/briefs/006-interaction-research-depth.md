@@ -6,7 +6,7 @@
 
 此前主要完成市场范围与功能发现，来源包括宣传、官方帮助、手册、更新说明和公开机制材料。**没有深入到每个产品的每个功能，更没有全部实际体验。** 用户指出“流于表面”成立；原有 43 组矩阵可用于找参考对象，还不足以支撑正式交互设计。
 
-本轮建立 [竞品交互资料库](/home/workspace/reader/docs/research/interaction-library/README.md)，把“有这个功能”继续拆为入口、步骤、反馈、状态/数据变化、错误与恢复、条件/版本、来源及未验证项。
+本轮建立 [竞品交互资料库](../research/interaction-library/README.md)，把“有这个功能”继续拆为入口、步骤、反馈、状态/数据变化、错误与恢复、条件/版本、来源及未验证项。
 
 ## 已落地的内容和实际深度
 
@@ -22,15 +22,15 @@
 
 ## 深入步骤后才显露的问题
 
-- **听书的“继续”需要具体定义。** Reader 将暂停、停止、浏览位置与播放位置区分处理；今后设计 AI 问答打断听书时，可以直接引用 [F-M015-02](/home/workspace/reader/docs/research/interaction-library/cases/M-015-readwise.md)，再检查重启和来电等尚无证据的分支。
-- **儿童看到同一本书，入口不同可能做不同任务。** Khan Kids 的自主读听与阅读课入口有差异；奖励阈值、错题提示和完整游戏循环仍未拆完，见 [F-M030-01/02](/home/workspace/reader/docs/research/interaction-library/cases/M-030-khan-kids.md)。这对 5–6 岁、能独立阅读且喜欢听书的使用者比“有绘本、有奖励”更有参考价值。
+- **听书的“继续”需要具体定义。** Reader 将暂停、停止、浏览位置与播放位置区分处理；今后设计 AI 问答打断听书时，可以直接引用 [F-M015-02](../research/interaction-library/cases/M-015-readwise.md)，再检查重启和来电等尚无证据的分支。
+- **儿童看到同一本书，入口不同可能做不同任务。** Khan Kids 的自主读听与阅读课入口有差异；奖励阈值、错题提示和完整游戏循环仍未拆完，见 [F-M030-01/02](../research/interaction-library/cases/M-030-khan-kids.md)。这对 5–6 岁、能独立阅读且喜欢听书的使用者比“有绘本、有奖励”更有参考价值。
 - **数据归属会改变产品体验。** Kobo 不同来源书籍的笔记/导出规则不同；Anki 同步与备份范围不同。相关案例已分别连到内容导入、AI 操作和恢复问题，不把“支持云同步”视为数据不会丢。
-- **新闻筛选会影响 AI 能看到什么。** Inoreader 的部分过滤会影响 API 可见性；本项目的全局 AI 目标需要研究原始信息、处理规则与展示结果的关系，见 [F-M044-01](/home/workspace/reader/docs/research/interaction-library/cases/M-044-inoreader.md)。
+- **新闻筛选会影响 AI 能看到什么。** Inoreader 的部分过滤会影响 API 可见性；本项目的全局 AI 目标需要研究原始信息、处理规则与展示结果的关系，见 [F-M044-01](../research/interaction-library/cases/M-044-inoreader.md)。
 
 Yoto 两篇官方材料对播放期间下载的说法存在差异，已并列登记，等待型号/固件或实际观察解释；没有挑选更符合期待的一条。
 
 ## 后续怎样反复使用
 
-从 [横向比较](/home/workspace/reader/docs/research/interaction-library/comparison.md)找到设计问题，进入具体 F 流程，再用 E 编号查 [来源记录](/home/workspace/reader/docs/research/interaction-library/evidence.jsonl)。设计时记录采用、改造或放弃的理由；来源更新后可以反查受影响的决定。
+从 [横向比较](../research/interaction-library/comparison.md)找到设计问题，进入具体 F 流程，再用 E 编号查 [来源记录](../research/interaction-library/evidence.jsonl)。设计时记录采用、改造或放弃的理由；来源更新后可以反查受影响的决定。
 
-接下来应按 [逐产品缺口](/home/workspace/reader/docs/research/interaction-library/backlog.md)继续扩大功能目录，并补连续界面观察、异常路径与必要实际操作。中文背词/识字、儿童游戏完整循环、成人连续学习、个人新闻以及电子纸系统交互仍有明显空白，不能因首批七个案例资料较容易取得就缩小总体研究范围。
+接下来应按 [逐产品缺口](../research/interaction-library/backlog.md)继续扩大功能目录，并补连续界面观察、异常路径与必要实际操作。中文背词/识字、儿童游戏完整循环、成人连续学习、个人新闻以及电子纸系统交互仍有明显空白，不能因首批七个案例资料较容易取得就缩小总体研究范围。

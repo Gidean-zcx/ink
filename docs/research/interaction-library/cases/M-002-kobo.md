@@ -51,9 +51,9 @@
 
 ## 2026-10-27逐项目录与读取层级
 
-[目录台账](/home/workspace/reader/docs/research/interaction-library/batches/kobo-controls-deepening-inventory.csv)共141条：在线指南74个功能/帮助链接（含重复深色入口和两项他机配件），Reading栏目28条、阅读菜单14控件、静态设置5项、暖光设置4项、音频小节11项及补充正文5项。不同层级有交叉，不是141项独立功能；在线指南另12个兼容型号链接不计功能。没有取得N428整册或全设置树。
+[目录台账](../batches/kobo-controls-deepening-inventory.csv)共141条：在线指南74个功能/帮助链接（含重复深色入口和两项他机配件），Reading栏目28条、阅读菜单14控件、静态设置5项、暖光设置4项、音频小节11项及补充正文5项。不同层级有交叉，不是141项独立功能；在线指南另12个兼容型号链接不计功能。没有取得N428整册或全设置树。
 
-每项区分本批正文、旧证据未复读、仅目录、他机配件及静态可见。当前固件仍未知；共用指南中的Sage/Elipsa保护壳、旧Stylus电池更换不能直接当N428/Stylus2流程。常规/欧盟无障碍分支保持原边界。正式短摘记见[本批来源说明](/home/workspace/reader/docs/research/interaction-library/artifacts/kobo-controls-deepening/source-notes.md)。
+每项区分本批正文、旧证据未复读、仅目录、他机配件及静态可见。当前固件仍未知；共用指南中的Sage/Elipsa保护壳、旧Stylus电池更换不能直接当N428/Stylus2流程。常规/欧盟无障碍分支保持原边界。正式短摘记见[本批来源说明](../artifacts/kobo-controls-deepening/source-notes.md)。
 
 ## 已有查词与文本批注流程
 
@@ -143,7 +143,7 @@
 - E-KOB-03：[添加笔记](https://help.kobo.com/hc/en-us/articles/360017639993-Add-notes-to-your-eBook)，保存及第三方书籍限制。
 - E-KOB-04：[批注导出](https://help.kobo.com/hc/en-us/articles/29991333812631-Export-annotations-from-your-books)，网页流程、格式、资格与保留期。
 
-新增 E-KBD 的完整 URL、章节、访问方式、版本与取得失败见 [Kobo 深化证据批次](/home/workspace/reader/docs/research/interaction-library/batches/kobo-deepening-evidence.jsonl)，F-M002-04～24 见 [新增覆盖表](/home/workspace/reader/docs/research/interaction-library/batches/kobo-deepening-coverage.csv)。均查阅于 2026-10-26，未归档图片；原批次及主索引不在本次改写范围。
+新增 E-KBD 的完整 URL、章节、访问方式、版本与取得失败见 [Kobo 深化证据批次](../batches/kobo-deepening-evidence.jsonl)，F-M002-04～24 见 [新增覆盖表](../batches/kobo-deepening-coverage.csv)。均查阅于 2026-10-26，未归档图片；原批次及主索引不在本次改写范围。
 
 主要正文入口：[N428 型号](https://help.kobo.com/hc/en-us/articles/17971574287895-Kobo-Libra-Colour)、[在线 User Guide](https://help.kobo.com/hc/en-us/articles/360019123773-Kobo-eReader-User-Guide)、[书内手写](https://help.kobo.com/hc/en-us/articles/1500001927562-Write-notes-in-your-book-with-Kobo-Stylus)、[笔记本](https://help.kobo.com/hc/en-us/articles/360062226733-Use-your-Kobo-eReader-as-a-notebook)、[N428 手动重置](https://help.kobo.com/hc/en-us/articles/18259230340887-Manual-reset-Kobo-Libra-Colour)、[无障碍分支](https://help.kobo.com/hc/en-us/articles/32246787707799-Kobo-eReader-Accessibility-Features-Support)。
 
@@ -151,7 +151,7 @@
 
 ## 本批新证据与反向依赖
 
-2026-10-27新证据见[本批JSONL](/home/workspace/reader/docs/research/interaction-library/batches/kobo-controls-deepening-evidence.jsonl)，新增F25/26见[覆盖表](/home/workspace/reader/docs/research/interaction-library/batches/kobo-controls-deepening-coverage.csv)。旧F02/10/13/18仅补分支，不重复计数。E-KBD-01/02/18/23复抓沿用旧E；历史正文保留取得方式，追加采集由根合并。
+2026-10-27新证据见[本批JSONL](../batches/kobo-controls-deepening-evidence.jsonl)，新增F25/26见[覆盖表](../batches/kobo-controls-deepening-coverage.csv)。旧F02/10/13/18仅补分支，不重复计数。E-KBD-01/02/18/23复抓沿用旧E；历史正文保留取得方式，追加采集由根合并。
 
 | 新E | 官方来源 | 已取得范围 |
 | --- | --- | --- |
@@ -165,7 +165,7 @@
 | E-KBCD-08 | [蓝牙排错与忘记配对](https://help.kobo.com/hc/en-us/articles/4406284800023-Troubleshoot-Bluetooth-pairing-on-your-Kobo-eReader) | 兼容列表含Libra Colour；Wi-Fi开关依赖；Rescan / Forget；未实操。 |
 | E-KBCD-09 | [官方Reading栏目逐项索引](https://help.kobo.com/hc/en-us/sections/360002688333-Reading) | 28条Articles；排除网站多语言通知链接；未实操。 |
 | E-KBCD-10 | [无障碍设计概述中的计时声明](https://help.kobo.com/hc/en-us/articles/32868920931991-Accessibility-Features-Design-Support) | 5–60分钟/关闭声明；未给音频计时入口或N428构建；未实操。 |
-| E-KBCD-11 | E-KBD-18派生[阅读设置图](/home/workspace/reader/docs/research/interaction-library/artifacts/kobo-controls-deepening/reading-settings-page2.png) | 实际看单帧；共用Colour帮助，未标固件/机型；Chapter仅示例。 |
-| E-KBCD-12 | E-KBD-23派生[音频统计入口图](/home/workspace/reader/docs/research/interaction-library/artifacts/kobo-controls-deepening/audiobook-stats.png) | 实际看单帧；可见返回入口，不能证明离开后的声音/位置。 |
+| E-KBCD-11 | E-KBD-18派生[阅读设置图](../artifacts/kobo-controls-deepening/reading-settings-page2.png) | 实际看单帧；共用Colour帮助，未标固件/机型；Chapter仅示例。 |
+| E-KBCD-12 | E-KBD-23派生[音频统计入口图](../artifacts/kobo-controls-deepening/audiobook-stats.png) | 实际看单帧；可见返回入口，不能证明离开后的声音/位置。 |
 
 修改前扫描全库JSONL/JSON中的本case路径及当前SHA，未发现旧E把此case当归档审计文件的反向依赖（当前M002旧E的archived_artifact/sha256均为空）。因此没有迁移旧E字段；交接保留扫描结果。未来审计应归档不可变摘记/原件，不以持续编辑的case承担证据哈希。

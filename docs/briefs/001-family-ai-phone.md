@@ -2,7 +2,7 @@
 
 日期：2026-10-26。阶段：想法整理、资料核查、产品原型与关键架构讨论。状态：供讨论；尚未形成用户认可的系统方案。
 
-后续更新：用户已限定 E-Ink4 Plus；其 NT26 板级代码已进一步确认，下文相应修正。数据备份、账户及社区通信线索见 [第二期简报](/home/workspace/reader/docs/briefs/002-plus-connectivity-and-data.md)。
+后续更新：用户已限定 E-Ink4 Plus；其 NT26 板级代码已进一步确认，下文相应修正。数据备份、账户及社区通信线索见 [第二期简报](002-plus-connectivity-and-data.md)。
 
 ## 简报一：产品方向成立，但要拆开几个承诺
 
@@ -18,7 +18,7 @@
 - 墨水屏 60fps、无残影是用户提出的目标，尚未通过验证。
 - 基本方向经用户认可后才进入全系统设计。
 
-完整清单见 [需求与边界](/home/workspace/reader/docs/requirements.md)。首版功能、Plus 具体版本、预算和续航仍未定；后续已补充儿童为 5–6 岁、可独立阅读、偏好听书，更新见 [第五期简报](/home/workspace/reader/docs/briefs/005-learning-news-ai-first.md)。
+完整清单见 [需求与边界](../requirements.md)。首版功能、Plus 具体版本、预算和续航仍未定；后续已补充儿童为 5–6 岁、可独立阅读、偏好听书，更新见 [第五期简报](005-learning-news-ai-first.md)。
 
 ## 简报二：硬件与高刷的三条重要发现
 
@@ -28,13 +28,13 @@
 
 ### 2. CloudZao 两款墨水屏不能按同一种屏来考虑
 
-E-Ink4 使用 SSD1677 SPI 路径，Plus 使用 EPDiy 并行路径。**后续用户已限定 Plus，普通 E-Ink4 仅作技术比较。** 代码确认显示链路存在；面板、主控与演示设备不同，不能原样移植。普通 E-Ink4 的 10 MHz SPI 配置甚至不足以每秒上传 60 次完整单色帧，这个估算不排除小区域更新。[硬件和固定代码依据](/home/workspace/reader/docs/research/cloudzao.md)、[估算及验证条件](/home/workspace/reader/docs/research/eink-high-refresh.md)
+E-Ink4 使用 SSD1677 SPI 路径，Plus 使用 EPDiy 并行路径。**后续用户已限定 Plus，普通 E-Ink4 仅作技术比较。** 代码确认显示链路存在；面板、主控与演示设备不同，不能原样移植。普通 E-Ink4 的 10 MHz SPI 配置甚至不足以每秒上传 60 次完整单色帧，这个估算不排除小区域更新。[硬件和固定代码依据](../research/cloudzao.md)、[估算及验证条件](../research/eink-high-refresh.md)
 
 ### 3. 通信判断修正：Plus 自己已有 NT26 接入路径
 
 第一轮读到 Claw4 的 4G 与拨号代码，未追踪 Plus 板类构造，因而将通信重点放在 Claw4。后续在同一个固定提交确认 Plus 直接传入 NT26 控制引脚，并管理其供电与网络初始化；原先“墨水屏与蜂窝暂未汇聚”的判断不充分。[Plus 代码](https://github.com/CloudZao/Metalio-E-INK4-Plus/blob/ad8edf4150a688737c0d7c00cae4413079b262ef/main/boards/metalio-e-ink4-plus/metalio_e_ink4_plus_board.cc#L54)
 
-当前按 Plus 研究短信和电话开发，继续确认具体模组功能、通话音频接线及待机接收。没有现成电话 app 不代表硬件不可行；已有网络驱动也不代表完整电话已验收。[详细修正和新发现](/home/workspace/reader/docs/research/eink4-plus-cellular.md)
+当前按 Plus 研究短信和电话开发，继续确认具体模组功能、通话音频接线及待机接收。没有现成电话 app 不代表硬件不可行；已有网络驱动也不代表完整电话已验收。[详细修正和新发现](../research/eink4-plus-cellular.md)
 
 ## 简报三：产品原型应围绕三个完整任务
 
@@ -88,11 +88,11 @@ flowchart LR
 | 怎样提高效率 | 设备负责稳定交互、媒体、进度与动作；较重的搜索/模型/转换按需要放远端 | 允许哪些外部服务；断网保留哪些功能。 |
 | 怎样可靠续播 | 以内容标识、版本、成员和真实位置保存进度 | 共用设备方式、TTS 与原音频的对应、异常断电恢复。 |
 
-这些方向有 [MCP 能力描述](https://modelcontextprotocol.io/specification/2025-11-25/server/tools)、[渐进披露](https://www.anthropic.com/research/code-execution-with-mcp)、[乐鑫加载器示例](https://github.com/espressif/esp-iot-solution/blob/master/examples/elf_loader/elf_embed_example/README.md)等参考，但不构成一套已验证的 MCU 操作系统。详细区分见 [平台调研](/home/workspace/reader/docs/research/ai-native-platform.md)。
+这些方向有 [MCP 能力描述](https://modelcontextprotocol.io/specification/2025-11-25/server/tools)、[渐进披露](https://www.anthropic.com/research/code-execution-with-mcp)、[乐鑫加载器示例](https://github.com/espressif/esp-iot-solution/blob/master/examples/elf_loader/elf_embed_example/README.md)等参考，但不构成一套已验证的 MCU 操作系统。详细区分见 [平台调研](../research/ai-native-platform.md)。
 
 ## 竞品给出的启发
 
-本轮按中文识字、儿童基础学习、语言情境、复习导入、考试练习、阅读 AI、儿童音频、墨水屏交互和手机形态九类整理了参考产品。[竞品对照与来源](/home/workspace/reader/docs/research/competitor-landscape.md)
+本轮按中文识字、儿童基础学习、语言情境、复习导入、考试练习、阅读 AI、儿童音频、墨水屏交互和手机形态九类整理了参考产品。[竞品对照与来源](../research/competitor-landscape.md)
 
 最值得讨论的三个推断是：
 

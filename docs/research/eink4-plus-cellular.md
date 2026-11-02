@@ -57,7 +57,7 @@
 | kiikoread · Metalio EINK 4 Plus | Plus V1.5、34Pin、S31；目录条目 rc100 | 侧重阅读、传书、前光、蓝牙翻页与 OTA，未从所读说明确认蜂窝电话。作者 [源码说明](https://github.com/wegooo-cell/Metalio-S31-kiikoread/blob/e942aeb1745241273d737c584c88a8068ef6e933/README.md)还限定 E0470A14-AF 面板，提醒不能仅按“Plus”名称统一驱动。 |
 | 固件口袋 | Plus / S31；发布者描述为集成多个适配固件 | 与动态功能组织相关的新线索，待另行研究。目录描述尚不足以证明无重启的 app 动态加载，未升级为选定方案。 |
 
-当次 Plus 分类返回 13 个条目；已检查其简介和版本说明，未发现可直接证明 Plus 完整短信/通话的声明。这是有限范围的搜索结果，不是“社区尚无人开发”的结论。目录原始字段的必要摘录与实际查询参数保存在 [来源记录](/home/workspace/reader/docs/research/sources/2026-10-26-cloudzao-firmware-catalog.json)，用于复核型号、版本及作者原话。
+当次 Plus 分类返回 13 个条目；已检查其简介和版本说明，未发现可直接证明 Plus 完整短信/通话的声明。这是有限范围的搜索结果，不是“社区尚无人开发”的结论。目录原始字段的必要摘录与实际查询参数保存在 [来源记录](sources/2026-10-26-cloudzao-firmware-catalog.json)，用于复核型号、版本及作者原话。
 
 其他已初查仓库包括 [mogo-e4p](https://github.com/chopper1026/mogo-e4p)与若干阅读固件；没有找到足以补上 Plus 通话音频证据的材料。无需为此扩大到替换主板或购买其他设备。
 

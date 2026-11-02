@@ -2,7 +2,7 @@
 
 查阅日期：2026-10-26。关联 G-001、G-002、R-005～R-009、R-012～R-021、H-004～H-006。硬件现已限定 E-Ink4 Plus。下文是关键架构研究与待讨论建议，不是正式系统设计、接口规范或技术栈定案。
 
-后续具体交互依据见 [按设计问题查竞品](/home/workspace/reader/docs/research/interaction-library/comparison.md)：从播放/浏览位置、隐藏入口、暂缓/删除、规则过滤等实际文档语义反推 AI 需要理解的数据与动作。该映射是本项目分析，不证明竞品已经开放相应 AI API，也未提前定义本系统接口。
+后续具体交互依据见 [按设计问题查竞品](interaction-library/comparison.md)：从播放/浏览位置、隐藏入口、暂缓/删除、规则过滤等实际文档语义反推 AI 需要理解的数据与动作。该映射是本项目分析，不证明竞品已经开放相应 AI API，也未提前定义本系统接口。
 
 2026-10-30 需求状态补充：账户、服务器备份与恢复已由 R-022、R-023 确认；高效底层系统优先，需匹配 Plus 实际资源（R-008），UI 交互匹配墨水屏特性（R-010）。以下具体机制仍为研究建议，本轮未新增技术核查或实机结果。
 
@@ -126,7 +126,7 @@
 - **CrossMux SD 插件**：JavaScript 在配套浏览器运行，设备显示声明式目录；依赖浏览器的后台任务不等于设备独立运行的 app。[插件说明](https://github.com/0x1abin/crossmux/blob/main/docs/sd-plugins.md)
 - **WhiteAI 的 AI 动作**：文档把笔记、提醒、录音等暴露为工具，并区分排队与完成、目录与正文；支持借鉴按需读数据和真实执行回执。工具分页仍不等于语义上按任务发现能力，具体协议继续未定。[MCP 文档](https://github.com/446599/Metalio-WhiteAI/blob/153d0967e97e1cf308403252cfc2839d6d65fb08/docs/AI_SYSTEM_MCP.md)
 
-以上为上游文档描述，没有本项目代码验证或 Plus 实测。AgentUI 的 `.eapp` 还只有 Claw4 目录中的安装说明，执行机制未明确。功能候选及证据范围见 [固件功能专题](/home/workspace/reader/docs/research/firmware-feature-landscape.md)。不能为便利复用而将 R-008 降格为每次切换整套固件。
+以上为上游文档描述，没有本项目代码验证或 Plus 实测。AgentUI 的 `.eapp` 还只有 Claw4 目录中的安装说明，执行机制未明确。功能候选及证据范围见 [固件功能专题](firmware-feature-landscape.md)。不能为便利复用而将 R-008 降格为每次切换整套固件。
 
 ## 语音链路与运行位置
 
@@ -138,7 +138,7 @@
 | 应用动作 | 本地 app/服务；必要时调用远端检索或转换 | 读写本地文件、设置提醒、控制播放等动作要能确认真实结果。 |
 | 语音输出 | 本地播放；TTS 可远端生成后流式/缓存播放 | 音频格式、首音延迟、缓存容量、费用和断网恢复待确定。 |
 
-乐鑫 [ESP-SR README](https://github.com/espressif/esp-sr/blob/master/README.md)与 [WakeNet 文档](https://docs.espressif.com/projects/esp-sr/en/latest/esp32s3/wake_word_engine/README.html)提供本地唤醒/音频前端依据。S31 的支持状态应以所用版本核对；CloudZao Plus 的现有依赖清单尚不能证明该功能已在此板开启，见 [代码抽查](/home/workspace/reader/docs/research/cloudzao.md)。
+乐鑫 [ESP-SR README](https://github.com/espressif/esp-sr/blob/master/README.md)与 [WakeNet 文档](https://docs.espressif.com/projects/esp-sr/en/latest/esp32s3/wake_word_engine/README.html)提供本地唤醒/音频前端依据。S31 的支持状态应以所用版本核对；CloudZao Plus 的现有依赖清单尚不能证明该功能已在此板开启，见 [代码抽查](cloudzao.md)。
 
 候选体验包括按住说话、唤醒词后对话、朗读中打断。必须区分麦克风正在采集、正在等待远端、正在播放三种状态。是否可全双工、远场唤醒，取决于回声消除和实际音频链路。来电、提醒、故事和 AI 回复需要统一音频优先级，不能各自抢占扬声器。
 
@@ -169,7 +169,7 @@
 
 建议以成员档案归属进度，在停止、切换及合理间隔持久化，并允许纠正“上次”指的是哪个内容。家庭共用设备时不能仅靠声音就假定说话人。存储、重启、异常断电及内容版本变化下的恢复方法留待后续设计。
 
-用户后续提出刷机、升级与卸载重装后的数据保护。建议将已保存故事、版本与断点一起纳入系统备份范围；聊天记忆、app 程序和用户数据分开管理。恢复 AI 任务状态时避免重新执行已经完成的外部动作。详见 [备份与账户讨论](/home/workspace/reader/docs/research/data-backup-sync.md)；账户与服务器备份的能力方向现已由 R-022、R-023 确认；上述数据组织及任务恢复机制仍属实现建议，具体方案待定。
+用户后续提出刷机、升级与卸载重装后的数据保护。建议将已保存故事、版本与断点一起纳入系统备份范围；聊天记忆、app 程序和用户数据分开管理。恢复 AI 任务状态时避免重新执行已经完成的外部动作。详见 [备份与账户讨论](data-backup-sync.md)；账户与服务器备份的能力方向现已由 R-022、R-023 确认；上述数据组织及任务恢复机制仍属实现建议，具体方案待定。
 
 ## 需要先验证的架构问题
 

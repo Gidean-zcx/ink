@@ -155,14 +155,14 @@ R-018需要分别验证文本TTS与真人有声书断点。对5–6岁自主听�
 | E-PBK-01 | [PB743K3 / 6.10.2854官方手册](https://support.pocketbook-int.com/fw/743K3/u/6.10.2854/manual/User_Manual_InkPad_Color_3_EN.pdf) | 原95页本地文件，哈希核对；无重新下载或执行固件。 |
 | E-PBK-02 | [官方设备FAQ](https://pocketbook.ch/en-ch/faq) | 前批重读Notes、TTS、Audiobooks、Cloud和邮件条目；通用跨型号，不证明导出格式。未访问视频。 |
 | E-PBK-03 | [型号规格与应用目录](https://pocketbook.ch/en-ch/catalog/color-e-readers/pocketbook-inkpad-color-3-ch) | 前批重读；不作流程或性能测量。 |
-| E-PBK-04 | 同册13页[旧静态图](/home/workspace/reader/docs/research/interaction-library/artifacts/M003-manual-p13.png) | 前批重看；保留与21页文字默认项差异。 |
-| E-PBK-05 | 同册32页[旧静态图](/home/workspace/reader/docs/research/interaction-library/artifacts/M003-manual-p32.png) | 前批重看；上部音乐删除图文冲突，下部有声书速度/音调。 |
+| E-PBK-04 | 同册13页[旧静态图](../artifacts/M003-manual-p13.png) | 前批重看；保留与21页文字默认项差异。 |
+| E-PBK-05 | 同册32页[旧静态图](../artifacts/M003-manual-p32.png) | 前批重看；上部音乐删除图文冲突，下部有声书速度/音调。 |
 | E-PBCD-01 | 同官方手册，目录2–4、操作11–90 | 既有PyMuPDF解析；逐项目录另存CSV；未把全部法律/合规内容宣称为已分析。 |
-| E-PBCD-02 | 同册27页[笔记摘页](/home/workspace/reader/docs/research/interaction-library/artifacts/pocketbook-controls-deepening/pb743k3-p27.png) | 实看静态菜单/说明；没有导出格式选择画面。 |
-| E-PBCD-03 | 同册33页[有声书摘页](/home/workspace/reader/docs/research/interaction-library/artifacts/pocketbook-controls-deepening/pb743k3-p33.png) | 实看Now Playing/Contents/Bookmarks及控制；图上时码不是观察时间戳。 |
-| E-PBCD-04 | 同册55页[TTS摘页](/home/workspace/reader/docs/research/interaction-library/artifacts/pocketbook-controls-deepening/pb743k3-p55.png) | 实看语音、速度、音量、最小化与Exit标签；未触发按钮。 |
-| E-PBCD-05 | 同册62页[同步状态摘页](/home/workspace/reader/docs/research/interaction-library/artifacts/pocketbook-controls-deepening/pb743k3-p62.png) | 实看图示及文字；其中服务示例为Dropbox。 |
-| E-PBCD-06 | 同册68页[Cloud状态摘页](/home/workspace/reader/docs/research/interaction-library/artifacts/pocketbook-controls-deepening/pb743k3-p68.png) | 实看三种存储状态；删除行为另依页内正文，不是实际删除观察。 |
+| E-PBCD-02 | 同册27页[笔记摘页](../artifacts/pocketbook-controls-deepening/pb743k3-p27.png) | 实看静态菜单/说明；没有导出格式选择画面。 |
+| E-PBCD-03 | 同册33页[有声书摘页](../artifacts/pocketbook-controls-deepening/pb743k3-p33.png) | 实看Now Playing/Contents/Bookmarks及控制；图上时码不是观察时间戳。 |
+| E-PBCD-04 | 同册55页[TTS摘页](../artifacts/pocketbook-controls-deepening/pb743k3-p55.png) | 实看语音、速度、音量、最小化与Exit标签；未触发按钮。 |
+| E-PBCD-05 | 同册62页[同步状态摘页](../artifacts/pocketbook-controls-deepening/pb743k3-p62.png) | 实看图示及文字；其中服务示例为Dropbox。 |
+| E-PBCD-06 | 同册68页[Cloud状态摘页](../artifacts/pocketbook-controls-deepening/pb743k3-p68.png) | 实看三种存储状态；删除行为另依页内正文，不是实际删除观察。 |
 | E-PBCD-07 | [同型号6.10.2854发布说明](https://support.pocketbook-int.com/fw/743K3/u/6.10.2854/rn/ww/RN_PB_InkPad_Color_3_EN.pdf)，2026-01-05 | 5文件页；封面版本日期；印刷3/文件4的蓝牙与高亮修复。web正文和HTTP200原件，未看作操作或性能验证。 |
 
 此前App与设置批次的静态观察（2026-10-27）：

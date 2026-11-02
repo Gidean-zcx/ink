@@ -32,7 +32,7 @@
 
 E-W220另列专业英语、留学英语等；全部名称见目录CSV，不把这些发现计作已完成流程。AI接口、账号云同步、任意外部电子书兼容仍未知。
 
-实体键在[手册42页静态图](/home/workspace/reader/docs/research/interaction-library/artifacts/dictionary/casio-ew-keyboard-p42.png)和[43页](/home/workspace/reader/docs/research/interaction-library/artifacts/dictionary/casio-ew-keyboard-p43.png)核对为：HOME、SHIFT、前一单词/后一单词（兼翻页）、音量±、发音、查询记录、退出、输入、方向、删除和字母键。**“输入”承担确认**；“退出”返回上一画面；屏右还有HOME/发音/退出/功能触屏快键。功能没有对应实体快键，播放时多数触屏快键无效但退出例外。E-CASIO-02、12、13。
+实体键在[手册42页静态图](../artifacts/dictionary/casio-ew-keyboard-p42.png)和[43页](../artifacts/dictionary/casio-ew-keyboard-p43.png)核对为：HOME、SHIFT、前一单词/后一单词（兼翻页）、音量±、发音、查询记录、退出、输入、方向、删除和字母键。**“输入”承担确认**；“退出”返回上一画面；屏右还有HOME/发音/退出/功能触屏快键。功能没有对应实体快键，播放时多数触屏快键无效但退出例外。E-CASIO-02、12、13。
 
 ## 结构化竞分（2026-10-28）
 

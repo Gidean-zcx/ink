@@ -19,7 +19,7 @@
 
 ## 功能目录与覆盖
 
-[逐条目录台账](/home/workspace/reader/docs/research/interaction-library/batches/quaderno-controls-deepening-inventory.csv)共275行：原PDF212个目录节点（含目录总项、章及父级）、设备设置44项、笔侧键/尾键选项9项、Mobile目录3类及7篇。父级与子项分别登记便于检索，**不是275个功能或已完成任务**。条目逐一记录页码、E/F和未闭合部分；本批没有把目录状态升级为D2。
+[逐条目录台账](../batches/quaderno-controls-deepening-inventory.csv)共275行：原PDF212个目录节点（含目录总项、章及父级）、设备设置44项、笔侧键/尾键选项9项、Mobile目录3类及7篇。父级与子项分别登记便于检索，**不是275个功能或已完成任务**。条目逐一记录页码、E/F和未闭合部分；本批没有把目录状态升级为D2。
 
 | 功能域 | 手册章节/页码 | 已关联 | 已查与缺口 |
 | --- | --- | --- | --- |
@@ -81,7 +81,7 @@ F09的“稍后批量传入”分支：分享给App后选择稍后传入，先�
 
 ## 静态观察与证据边界
 
-本批实际查看[第57页](/home/workspace/reader/docs/research/interaction-library/artifacts/quaderno-controls-deepening/gen3c-p57.png)、[第66页](/home/workspace/reader/docs/research/interaction-library/artifacts/quaderno-controls-deepening/gen3c-p66.png)、[第86页](/home/workspace/reader/docs/research/interaction-library/artifacts/quaderno-controls-deepening/gen3c-p86.png)，PDF页与印刷页一致。分别支持图形符号/搜索规则、单次剪贴规则、扫描完成出口与Received落点；它们是手册文字和示意框，不能证明实际命中、动作先后耗时或成功率。旧暗记p68–69观察保留E-QUA-04，本次未重看、不重复计数。[短摘记](/home/workspace/reader/docs/research/interaction-library/artifacts/quaderno-controls-deepening/source-notes.md)
+本批实际查看[第57页](../artifacts/quaderno-controls-deepening/gen3c-p57.png)、[第66页](../artifacts/quaderno-controls-deepening/gen3c-p66.png)、[第86页](../artifacts/quaderno-controls-deepening/gen3c-p86.png)，PDF页与印刷页一致。分别支持图形符号/搜索规则、单次剪贴规则、扫描完成出口与Received落点；它们是手册文字和示意框，不能证明实际命中、动作先后耗时或成功率。旧暗记p68–69观察保留E-QUA-04，本次未重看、不重复计数。[短摘记](../artifacts/quaderno-controls-deepening/source-notes.md)
 
 下载页本次复读：手机App仅日本区，Gen.3C要求1.0.6+；列Android14–16、iOS16/17/18/26，排除平板/iPad。PC App启动要联网，Windows ARM不支持，macOS不支持蓝牙。设备离线读PDF不证明全部管理流程离线可用。App构建、当前设备固件、网络恢复时间均未知。[E-QUA-03]
 

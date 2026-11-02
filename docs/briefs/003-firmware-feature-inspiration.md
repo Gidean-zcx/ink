@@ -4,7 +4,7 @@
 
 ## 这一轮的收获
 
-已盘点 [固件仓库](https://burner.cloudzao.com/)当前 **39 个条目，其中 13 个标注适配 Plus**。最有价值的参考包括多入口传书、语音记事、阅读进度、锁屏信息、快捷面板、录音和后台播放，以及应用安装与数据保存的约定。现有描述支持继续探索，但这些功能尚未在我们的 Plus 系统中验证。[分类调研与来源](/home/workspace/reader/docs/research/firmware-feature-landscape.md)
+已盘点 [固件仓库](https://burner.cloudzao.com/)当前 **39 个条目，其中 13 个标注适配 Plus**。最有价值的参考包括多入口传书、语音记事、阅读进度、锁屏信息、快捷面板、录音和后台播放，以及应用安装与数据保存的约定。现有描述支持继续探索，但这些功能尚未在我们的 Plus 系统中验证。[分类调研与来源](../research/firmware-feature-landscape.md)
 
 我建议先把它们组合成下面这些用户体验，再决定具体拆成多少 app：
 
@@ -17,15 +17,15 @@
 | 装卸 app 后东西还在 | 更新阅读 app 后，书和批注仍可用；重装练习 app 后，已有记录有恢复途径。 | 应用声明自己的重要数据，系统统一保存与恢复；不绑定到某个固件镜像。 |
 | 轻量工具与小游戏 | 五子棋、短时记忆游戏、词汇或数学闯关，随时退出、继续。 | 现有轻量游戏的输入和存档方式；是否有学习收益，需要看实际使用。 |
 
-以上是场景建议，不是对上游功能范围的转述；具体对应关系与条件见 [C-001～C-008 候选池](/home/workspace/reader/docs/research/firmware-feature-landscape.md)。
+以上是场景建议，不是对上游功能范围的转述；具体对应关系与条件见 [C-001～C-008 候选池](../research/firmware-feature-landscape.md)。
 
 ## 有三处值得特别分清
 
 **AI 操作已经有可参考的做法。** WhiteAI 文档描述让 AI 读写笔记、设提醒、控制录音和查询执行状态。最值得吸收的是“先保存原始表达，再按需处理”和“以真实结果为准”。它面向普通 E-Ink4，不能直接视为 Plus 已适配；工具列表分页也还不等于我们希望的按任务渐进披露。[WhiteAI 文档](https://github.com/446599/Metalio-WhiteAI/blob/153d0967e97e1cf308403252cfc2839d6d65fb08/docs/AI_SYSTEM_MCP.md)
 
-**安装方式不能只看名称。** 墨集管理和切换固件镜像；固件口袋规范不要求管理器后台常驻；CrossMux 的 JavaScript 插件运行在配套浏览器里。可吸收安装入口、数据保存、任务状态等做法，但我们的系统仍须满足全局 AI、跨 app 操作和持续音频/通信。应用运行时继续保持未定。[机制核查](/home/workspace/reader/docs/research/firmware-feature-landscape.md)
+**安装方式不能只看名称。** 墨集管理和切换固件镜像；固件口袋规范不要求管理器后台常驻；CrossMux 的 JavaScript 插件运行在配套浏览器里。可吸收安装入口、数据保存、任务状态等做法，但我们的系统仍须满足全局 AI、跨 app 操作和持续音频/通信。应用运行时继续保持未定。[机制核查](../research/firmware-feature-landscape.md)
 
-**模拟器线索增多，高刷结论仍需实测。** Eink4Boy 是普通 E-Ink4 的 GB 项目，简介仍写残影在调试；目录里的 60fps GBA 项目属于 Claw4。两者都没有证明 E-Ink4 Plus 已能达到 60fps 无残影。[显示研究](/home/workspace/reader/docs/research/eink-high-refresh.md)
+**模拟器线索增多，高刷结论仍需实测。** Eink4Boy 是普通 E-Ink4 的 GB 项目，简介仍写残影在调试；目录里的 60fps GBA 项目属于 Claw4。两者都没有证明 E-Ink4 Plus 已能达到 60fps 无残影。[显示研究](../research/eink-high-refresh.md)
 
 ## 对关键架构讨论的影响
 
@@ -38,4 +38,4 @@
 
 这些是需要共同解决的问题，尚未决定服务接口、存储方案或 app 技术栈。建议优先把“随口记”“内容导入”“从上次继续”做成可讨论的场景原型；音乐、天气、小游戏等保留为扩展候选。用户认可基本方向后，再进入全系统设计。
 
-资料：[详细分类与候选池](/home/workspace/reader/docs/research/firmware-feature-landscape.md)、[39 项索引](/home/workspace/reader/docs/research/sources/2026-10-26-firmware-feature-index.json)、[需求边界](/home/workspace/reader/docs/requirements.md)、[第二期通信与数据恢复](/home/workspace/reader/docs/briefs/002-plus-connectivity-and-data.md)。
+资料：[详细分类与候选池](../research/firmware-feature-landscape.md)、[39 项索引](../research/sources/2026-10-26-firmware-feature-index.json)、[需求边界](../requirements.md)、[第二期通信与数据恢复](002-plus-connectivity-and-data.md)。

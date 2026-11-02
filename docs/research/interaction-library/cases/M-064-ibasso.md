@@ -114,16 +114,16 @@ E 简写：IBA为旧证据，IBCD为本批。目录中未配 F 的项目保留�
 | E-IBA-02 | [厂家手册镜像](https://www.manualslib.com/manual/3477221/Ibasso-Audio-Dx180.html) | 同源手册，只用正文；印刷61为历史计时，非当前版本。 |
 | E-IBA-03 | [英文固件目录](https://ibasso.com/?p=3371) | V1.05，2026-08-27；与中文完整编号交叉定位。 |
 | E-IBCD-01 | [官方手册全文](https://www.ibasso.com/uploadfiles/download/DX180userguide.pdf) | 本地PDF提取；目录/页码核对，修订未知。 |
-| E-IBCD-02 | 同手册印刷25（文件26） | [About静态图](/home/workspace/reader/docs/research/interaction-library/artifacts/hifi-controls-deepening/dx180-printed-25.png)：历史Android13。 |
-| E-IBCD-03 | 同手册印刷28（文件29） | [播放页静态图](/home/workspace/reader/docs/research/interaction-library/artifacts/hifi-controls-deepening/dx180-printed-28.png)。 |
-| E-IBCD-04 | 同手册印刷57（文件58） | [扫描静态图](/home/workspace/reader/docs/research/interaction-library/artifacts/hifi-controls-deepening/dx180-printed-57.png)：示意状态非实际扫描。 |
-| E-IBCD-05 | 同手册印刷58（文件59） | [USB DAC静态图](/home/workspace/reader/docs/research/interaction-library/artifacts/hifi-controls-deepening/dx180-printed-58.png)：同页多截图非连续观察。 |
-| E-IBCD-06 | 同手册印刷22（文件23） | [Audio Settings静态图](/home/workspace/reader/docs/research/interaction-library/artifacts/hifi-controls-deepening/dx180-printed-22.png)。 |
-| E-IBCD-07 | 同手册印刷43（文件44） | [Mango Settings静态图](/home/workspace/reader/docs/research/interaction-library/artifacts/hifi-controls-deepening/dx180-printed-43.png)。 |
+| E-IBCD-02 | 同手册印刷25（文件26） | [About静态图](../artifacts/hifi-controls-deepening/dx180-printed-25.png)：历史Android13。 |
+| E-IBCD-03 | 同手册印刷28（文件29） | [播放页静态图](../artifacts/hifi-controls-deepening/dx180-printed-28.png)。 |
+| E-IBCD-04 | 同手册印刷57（文件58） | [扫描静态图](../artifacts/hifi-controls-deepening/dx180-printed-57.png)：示意状态非实际扫描。 |
+| E-IBCD-05 | 同手册印刷58（文件59） | [USB DAC静态图](../artifacts/hifi-controls-deepening/dx180-printed-58.png)：同页多截图非连续观察。 |
+| E-IBCD-06 | 同手册印刷22（文件23） | [Audio Settings静态图](../artifacts/hifi-controls-deepening/dx180-printed-22.png)。 |
+| E-IBCD-07 | 同手册印刷43（文件44） | [Mango Settings静态图](../artifacts/hifi-controls-deepening/dx180-printed-43.png)。 |
 | E-IBCD-08 | [中国官网DX180固件记录](https://ibasso.cn/support/dx180firmware) | 1.02.181、1.04.237、1.05.273及底部本地升级说明；网页正文，最高2026-08-27。官网身份由品牌页脚/支持导航核对。 |
-| E-IBCD-09 | 同手册印刷23（文件24） | [OTA静态图](/home/workspace/reader/docs/research/interaction-library/artifacts/hifi-controls-deepening/dx180-printed-23.png)：示范旧构建；文字Update Now与图INSTALL保留差异。 |
-| E-IBCD-10 | 同手册印刷49（文件50），配合45–54正文 | [PEQ参数摘页](/home/workspace/reader/docs/research/interaction-library/artifacts/hifi-controls-deepening/dx180-printed-49.png)：实际看的是说明页，不称已观察参数操作。 |
-| E-IBCD-11 | 同手册印刷60（文件61） | [Display静态图](/home/workspace/reader/docs/research/interaction-library/artifacts/hifi-controls-deepening/dx180-printed-60.png)。 |
+| E-IBCD-09 | 同手册印刷23（文件24） | [OTA静态图](../artifacts/hifi-controls-deepening/dx180-printed-23.png)：示范旧构建；文字Update Now与图INSTALL保留差异。 |
+| E-IBCD-10 | 同手册印刷49（文件50），配合45–54正文 | [PEQ参数摘页](../artifacts/hifi-controls-deepening/dx180-printed-49.png)：实际看的是说明页，不称已观察参数操作。 |
+| E-IBCD-11 | 同手册印刷60（文件61） | [Display静态图](../artifacts/hifi-controls-deepening/dx180-printed-60.png)。 |
 
 
 | 本轮新来源 | 定位与取得边界 |

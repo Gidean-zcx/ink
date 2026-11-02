@@ -2,7 +2,7 @@
 
 建立：2026-10-26。阶段：竞品研究。服务 G-001 信息/学习收益、G-002 全局 AI 能力；不构成本产品已认可的交互或系统设计。
 
-- [第五十五期：全局入口与执行环境](/home/workspace/reader/docs/briefs/055-global-entry-and-execution-context.md)：快捷指令补语音/按键/组件、共享输入、提醒回访与配置组织；修正预览范围，新增14条设计参考。
+- [第五十五期：全局入口与执行环境](../../briefs/055-global-entry-and-execution-context.md)：快捷指令补语音/按键/组件、共享输入、提醒回访与配置组织；修正预览范围，新增14条设计参考。
 - [全部研究简报](../../briefs/README.md)：按时间查发现与边界；后续设计优先用下方任务、证据及问题入口。
 
 ## 先说明当前研究做到了哪里
@@ -15,9 +15,9 @@
 
 当前没有手机/电子纸实机或已登录的原生App操作环境；文档、源码和静态图研究之外，已通过临时浏览器操作The Week Junior公开样刊、驾考宝典公开练习／模拟页、TIME for Kids单篇听读／搜索、Duolingo匿名法语课程、Tolino公开图书馆选择器及Britannica公开Community Helpers活动。环境、动作日志、截图及失败见[样刊审计](artifacts/week-junior-controls-deepening/browser-operation-audit.md)、[练习审计](artifacts/jiakao-controls-deepening/browser-operation-audit.md)、[听读审计](artifacts/time-controls-deepening/browser-operation-audit.md)、[课程审计](artifacts/duolingo-controls-deepening/browser-operation-audit.md)、[选馆审计](artifacts/tolino-controls-deepening/browser-operation-audit.md)及[儿童互动审计](artifacts/britannica-controls-deepening/browser-operation-audit.md)。数量统一见覆盖索引；D4包括尝试后未完成的分支，不是通过率。PDF解析库与研究浏览器均装在work/，没有创建产品工具链；这些网页结果不能证明触摸手感、时延、刷新残影或原生App行为。
 
-第33批见[第三十三期：家庭听书与语音控制](/home/workspace/reader/docs/briefs/033-family-audio-and-voice-controls.md)：Audible补儿童档案、语音、内容关联及不同播放端；Yoto补RSS/音频流绑定，Tonie补对象与后台下载。新增内容全是文档依据。上一批[学习游戏与完成结果](/home/workspace/reader/docs/briefs/032-learning-games-and-completion.md)保留[Duolingo Chess匿名课实际操作](artifacts/duolingo-chess-interactions/browser-operation-audit.md)，目标设置保存仍未证；全部案例仍部分覆盖。
+第33批见[第三十三期：家庭听书与语音控制](../../briefs/033-family-audio-and-voice-controls.md)：Audible补儿童档案、语音、内容关联及不同播放端；Yoto补RSS/音频流绑定，Tonie补对象与后台下载。新增内容全是文档依据。上一批[学习游戏与完成结果](../../briefs/032-learning-games-and-completion.md)保留[Duolingo Chess匿名课实际操作](artifacts/duolingo-chess-interactions/browser-operation-audit.md)，目标设置保存仍未证；全部案例仍部分覆盖。
 
-第34批[内容对象与学习材料](/home/workspace/reader/docs/briefs/034-content-objects-and-study-materials.md)补Anki原目录剩余30页，新增公式、分享和自托管同步任务，并深化批量修改范围。只有文档依据；55页正文读取完成不代表全部交互已验证。
+第34批[内容对象与学习材料](../../briefs/034-content-objects-and-study-materials.md)补Anki原目录剩余30页，新增公式、分享和自托管同步任务，并深化批量修改范围。只有文档依据；55页正文读取完成不代表全部交互已验证。
 
 ## 从哪里查
 
@@ -25,29 +25,29 @@
 | --- | --- |
 | [按设计问题查证据](design-reference-guide.md) | 读听、学习、新闻、AI动作、恢复与显示的使用入口；说明怎样引用F/E及判断证据是否足够。 |
 | [案例与覆盖索引](case-index.md) | 所有已入库案例、每组任务数与深度；保留尚无案例的对象。 |
-| [产品目录 catalog.csv](/home/workspace/reader/docs/research/interaction-library/catalog.csv) | 保留 M-001～M-043，给后续专题产品补编号；记录类别、旧资料、当前案例和下一项缺口。产品系列仍需按型号/平台/版本拆分。 |
-| [任务覆盖 coverage.csv](/home/workspace/reader/docs/research/interaction-library/coverage.csv) | 看具体任务哪些已有文档依据，哪些缺图像、实测或异常结果；不是全产品完成率。 |
+| [产品目录 catalog.csv](catalog.csv) | 保留 M-001～M-043，给后续专题产品补编号；记录类别、旧资料、当前案例和下一项缺口。产品系列仍需按型号/平台/版本拆分。 |
+| [任务覆盖 coverage.csv](coverage.csv) | 看具体任务哪些已有文档依据，哪些缺图像、实测或异常结果；不是全产品完成率。 |
 | [逐条功能与帮助目录](inventories/README.md) | 对能取得完整入口列表的资料逐项登记，分开“发现入口”与“研究了操作”；尚未取得的目录仍标未知。 |
-| [证据索引 evidence.jsonl](/home/workspace/reader/docs/research/interaction-library/evidence.jsonl) | 用稳定 E 编号查来源 URL、章节、查阅时间、平台/版本范围、获取方式与简短摘记。 |
-| [横向比较 comparison.md](/home/workspace/reader/docs/research/interaction-library/comparison.md) | 按学习、读听、新闻、AI执行、数据恢复、内容关联、系统交互七个问题域反查案例。 |
-| [待核查清单 backlog.md](/home/workspace/reader/docs/research/interaction-library/backlog.md) | 逐产品的后续范围、未解决冲突、实测脚本与材料缺口。 |
-| [记录模板 template.md](/home/workspace/reader/docs/research/interaction-library/template.md) | 后续新增产品、功能与实测时采用的统一字段。 |
+| [证据索引 evidence.jsonl](evidence.jsonl) | 用稳定 E 编号查来源 URL、章节、查阅时间、平台/版本范围、获取方式与简短摘记。 |
+| [横向比较 comparison.md](comparison.md) | 按学习、读听、新闻、AI执行、数据恢复、内容关联、系统交互七个问题域反查案例。 |
+| [待核查清单 backlog.md](backlog.md) | 逐产品的后续范围、未解决冲突、实测脚本与材料缺口。 |
+| [记录模板 template.md](template.md) | 后续新增产品、功能与实测时采用的统一字段。 |
 | [字段与读取约定](data-dictionary.md) | F/E、版本、路径、观察/操作字段及当前校验范围；说明自由描述字段和未自动检查的内容。 |
 | [批次与路径约定](batches/README.md) | 分批取证如何合并、图片如何长期保存，以及主索引的字段和路径含义。 |
 
 最初七个案例仍保留，新增案例从完整索引进入：
 
-- [M-002 Kobo Libra Colour：内容、阅读、手写、听书与恢复](/home/workspace/reader/docs/research/interaction-library/cases/M-002-kobo.md)
-- [M-015 Readwise Reader：订阅、读听与定位](/home/workspace/reader/docs/research/interaction-library/cases/M-015-readwise.md)
-- [M-020 Anki：资料制卡、学习调度与数据恢复](/home/workspace/reader/docs/research/interaction-library/cases/M-020-anki.md)
-- [M-030 Khan Kids：阅读入口、进阶与中断](/home/workspace/reader/docs/research/interaction-library/cases/M-030-khan-kids.md)
-- [M-035 HiBy：全局快捷操作与播放](/home/workspace/reader/docs/research/interaction-library/cases/M-035-hiby.md)
-- [M-037 Yoto：离线准备与睡眠计时](/home/workspace/reader/docs/research/interaction-library/cases/M-037-yoto.md)
-- [M-044 Inoreader：筛选、去重与规则](/home/workspace/reader/docs/research/interaction-library/cases/M-044-inoreader.md)
+- [M-002 Kobo Libra Colour：内容、阅读、手写、听书与恢复](cases/M-002-kobo.md)
+- [M-015 Readwise Reader：订阅、读听与定位](cases/M-015-readwise.md)
+- [M-020 Anki：资料制卡、学习调度与数据恢复](cases/M-020-anki.md)
+- [M-030 Khan Kids：阅读入口、进阶与中断](cases/M-030-khan-kids.md)
+- [M-035 HiBy：全局快捷操作与播放](cases/M-035-hiby.md)
+- [M-037 Yoto：离线准备与睡眠计时](cases/M-037-yoto.md)
+- [M-044 Inoreader：筛选、去重与规则](cases/M-044-inoreader.md)
 
-此前续补[reMarkable的日历/分享副本与恢复](cases/M-005-remarkable.md)、[欧路的取词/索引/解释页](cases/M-026-eudic.md)、[Sony的播放范围/介质/输出状态](cases/M-036-sony.md)，见[第十二期简报](/home/workspace/reader/docs/briefs/012-data-objects-and-state-boundaries.md)。三项均保留文档条件及实际操作缺口。
+此前续补[reMarkable的日历/分享副本与恢复](cases/M-005-remarkable.md)、[欧路的取词/索引/解释页](cases/M-026-eudic.md)、[Sony的播放范围/介质/输出状态](cases/M-036-sony.md)，见[第十二期简报](../../briefs/012-data-objects-and-state-boundaries.md)。三项均保留文档条件及实际操作缺口。
 
-此前续补[Duolingo主学习应用与实际网页任务](cases/M-031-duolingo-adventures.md)、[墨墨内容/API结果](cases/M-017-maimemo.md)、[Tonie游戏恢复和家庭权限](cases/M-038-tonie.md)，见[第十一期简报](/home/workspace/reader/docs/briefs/011-learning-actions-and-recovery.md)。
+此前续补[Duolingo主学习应用与实际网页任务](cases/M-031-duolingo-adventures.md)、[墨墨内容/API结果](cases/M-017-maimemo.md)、[Tonie游戏恢复和家庭权限](cases/M-038-tonie.md)，见[第十一期简报](../../briefs/011-learning-actions-and-recovery.md)。
 
 上一批新增[Inoreader的来源、新闻修订与规则试跑](cases/M-044-inoreader.md)、[Quizlet各模式的完成与恢复](cases/M-021-quizlet.md)、[Audible离线和读听条件](cases/M-039-audible.md)。同一任务补回原编号，帮助正文、官方单帧与实际操作分开；测试按钮、下载完成和同步声明不替代结果核查。
 

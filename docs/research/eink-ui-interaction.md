@@ -39,7 +39,7 @@
 - `display/waveforms/my_waveform.c`：有完整 DU/GC16/GL16、自定义快速裁剪、8 灰与短 DU 的定义及初始化。代码中的 8、20、30、48 等是波形相位数，不能换称每秒帧数；一个 `0–50` 温度区间的声明不证明整个温区质量合格。对默认 EPDiy A2 的限制不能推导出这个自定义分支完全不具备快刷。
 - `display/highlevel.c` 的 `epd_hl_update_area`：计算变化和行列掩码，再以全屏几何范围交给驱动，组合跳过未变化像素的标志。**界面脏矩形、传输范围、物理驱动像素不是同一个概念；把更新面积减半，不保证显示时间减半。**
 
-以上的 `display/` 短路径均位于 `main/boards/metalio-e-ink4-plus/`。面板版本差异仍见既有 [硬件研究](/home/workspace/reader/docs/research/cloudzao.md)；不将 README 的 ED047TC2 与社区 E0470A14-AF 未经核实视作同屏。
+以上的 `display/` 短路径均位于 `main/boards/metalio-e-ink4-plus/`。面板版本差异仍见既有 [硬件研究](cloudzao.md)；不将 README 的 ED047TC2 与社区 E0470A14-AF 未经核实视作同屏。
 
 ## 4. 怎样定义“感觉流畅”
 
@@ -122,4 +122,4 @@
 - UI-E08c：[Plus my_waveform.c](https://github.com/CloudZao/Metalio-E-INK4-Plus/blob/ad8edf4150a688737c0d7c00cae4413079b262ef/main/boards/metalio-e-ink4-plus/display/waveforms/my_waveform.c)，自定义波形及初始化。
 - UI-E08d：[Plus highlevel.c](https://github.com/CloudZao/Metalio-E-INK4-Plus/blob/ad8edf4150a688737c0d7c00cae4413079b262ef/main/boards/metalio-e-ink4-plus/display/highlevel.c#L205)，区域差分与驱动范围。
 
-既有资料：[高刷可行性](/home/workspace/reader/docs/research/eink-high-refresh.md)、[BOOX 交互案例](/home/workspace/reader/docs/research/interaction-library/cases/M-004-boox-neoreader.md)、[个人新闻](/home/workspace/reader/docs/research/personal-news.md)、[学习动力](/home/workspace/reader/docs/research/learning-engagement.md)。这次是跨场景专题综合，不增加“已完整分析产品”数量。
+既有资料：[高刷可行性](eink-high-refresh.md)、[BOOX 交互案例](interaction-library/cases/M-004-boox-neoreader.md)、[个人新闻](personal-news.md)、[学习动力](learning-engagement.md)。这次是跨场景专题综合，不增加“已完整分析产品”数量。

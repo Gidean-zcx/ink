@@ -4,7 +4,7 @@
 
 ## 范围
 
-中国大陆洪恩识字。旧商店索引列 iOS 4.5.0；本轮公开 HTTP 取得的中国 App Store 正文已列 **4.5.2 / 2026-10-23**（HTML `time datetime`），搜索索引仍可能显示 4.5.0，二者不混作同一快照（E-IHCD-01）。小米 Android 渠道原已核 4.5.2，更新时间 2026-10-23，包名 `com.hongen.app.word`，支持手机和平板（E-IHD-01）。两端均未安装，商店版本不等于官网示例图的构建。开发者定位 3–8 岁识字阅读；不包括独立的洪恩 AI 快读、洪恩双语绘本、洪恩故事等产品。账号与购买状态未知。D1 功能资料＋部分 D2 设置/信息导出文档；新增官方静态展示图观察，无亲自操作、连续录屏或学习效果测试。完整功能清单未核定；[公开材料目录](/home/workspace/reader/docs/research/interaction-library/batches/ihuman-learning-controls-deepening-inventory.csv)逐项区分36个已知功能域/历史条目与反馈缺口，不是当前App菜单全量。
+中国大陆洪恩识字。旧商店索引列 iOS 4.5.0；本轮公开 HTTP 取得的中国 App Store 正文已列 **4.5.2 / 2026-10-23**（HTML `time datetime`），搜索索引仍可能显示 4.5.0，二者不混作同一快照（E-IHCD-01）。小米 Android 渠道原已核 4.5.2，更新时间 2026-10-23，包名 `com.hongen.app.word`，支持手机和平板（E-IHD-01）。两端均未安装，商店版本不等于官网示例图的构建。开发者定位 3–8 岁识字阅读；不包括独立的洪恩 AI 快读、洪恩双语绘本、洪恩故事等产品。账号与购买状态未知。D1 功能资料＋部分 D2 设置/信息导出文档；新增官方静态展示图观察，无亲自操作、连续录屏或学习效果测试。完整功能清单未核定；[公开材料目录](../batches/ihuman-learning-controls-deepening-inventory.csv)逐项区分36个已知功能域/历史条目与反馈缺口，不是当前App菜单全量。
 
 ## 功能目录与版本区别
 
@@ -89,7 +89,7 @@ F-M029-01 沿用原号，仍为 D1。实际查看官网“原创子集绘本”�
 新增证据：
 
 - E-IHD-01：[小米商店开发者说明](https://app.mi.com/details?id=com.hongen.app.word)，详细信息／分阶与生活应用／新版特性，4.5.2、2026-10-23；正文和公开 HTML。网站“维护中”指下载服务，不能解释成 App 学习失败。
-- E-IHD-02：[官网图库](https://www.ihuman.com/shizi/)，`pic_1.0024c9b3.png` 绘本、`pic_6.1b1a85a1.png` 复习、`pic_4.1c12b5da.png` AI 合成展示；由公开 HTML/脚本定位并实际查看静态图。必要的[绘本示例](/home/workspace/reader/docs/research/interaction-library/artifacts/children-loop-deepening/ihuman-gallery-books.png)和[复习示意](/home/workspace/reader/docs/research/interaction-library/artifacts/children-loop-deepening/ihuman-gallery-review.png)已归档，AI 合成图仅临时查看。该记录限定 E-IHUM-01，不是新增独立来源。
+- E-IHD-02：[官网图库](https://www.ihuman.com/shizi/)，`pic_1.0024c9b3.png` 绘本、`pic_6.1b1a85a1.png` 复习、`pic_4.1c12b5da.png` AI 合成展示；由公开 HTML/脚本定位并实际查看静态图。必要的[绘本示例](../artifacts/children-loop-deepening/ihuman-gallery-books.png)和[复习示意](../artifacts/children-loop-deepening/ihuman-gallery-review.png)已归档，AI 合成图仅临时查看。该记录限定 E-IHUM-01，不是新增独立来源。
 - E-IHD-03：[官方反馈入口指引](https://www.ihuman.com/agreement/privacy/feedback.html)，洪恩识字条目；打开正文，日期与对应版本未知。
 
 
@@ -132,7 +132,7 @@ F01仍D1，F02沿用原历史D2；没有新增任务。两篇可读作者正文�
 - E-IHLC-01：懂课鸭、署名小张解课（2020-08-21）按“二”写玩、认、练、写；练习为按语音选石头，作者称三次正确后乌鸦喝到水。这个正常分支未给错选、重试或退出记录，不当所有字的阈值。
 - E-IHLC-02：晞爸买买买（2020-04-25）以“雨”述练习四选一，以及写页古字/问号辅助；每日五字与强制任务是作者采用的设置，非已核默认。没有据此补出设置生效、错答或恢复。
 
-[独立摘记](/home/workspace/reader/docs/research/interaction-library/artifacts/ihuman-learning-controls-deepening/source-notes.md)列作者、日期和正文定位。web工具返回可读正文，但本地普通GET分别为412和验证码壳；两路停止，未查看图片，也未保存完整原站正文。新目录只收有出处的功能，区分开发者声明、旧官方静态入口、历史操作文字；36行不表示36条已还原流程。
+[独立摘记](../artifacts/ihuman-learning-controls-deepening/source-notes.md)列作者、日期和正文定位。web工具返回可读正文，但本地普通GET分别为412和验证码壳；两路停止，未查看图片，也未保存完整原站正文。新目录只收有出处的功能，区分开发者声明、旧官方静态入口、历史操作文字；36行不表示36条已还原流程。
 
 另核一份学校教学PDF返回404、近期设置文章超时，均未采用。官网原已发现的介绍视频在浏览器启动阶段因可执行文件缺失失败，未发网络请求、未取截图/声音、未保存媒体；尚不能判它是完整教程还是宣传。旧403图片没有重试。
 

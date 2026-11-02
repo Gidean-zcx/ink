@@ -2,7 +2,7 @@
 
 资料查阅日期：2026-10-26；需求状态更新：2026-10-30。硬件限定 E-Ink4 Plus。关联 I-012、I-027、R-022、R-023。用户现已确认账户系统、服务器备份与恢复的能力方向；本文的存储协议、账户形式及实现方案仍是待讨论建议，本次未复验外部资料或实机能力。
 
-后续竞品依据：[Anki F-M020-03](/home/workspace/reader/docs/research/interaction-library/cases/M-020-anki.md)拆解同步方向、备份与媒体恢复，[Kobo F-M002-02/03](/home/workspace/reader/docs/research/interaction-library/cases/M-002-kobo.md)记录内容来源与笔记删除/导出的关系。它们供取舍参考；账户系统方向已由 R-022 确认，备份粒度与具体账户形式仍未定。
+后续竞品依据：[Anki F-M020-03](interaction-library/cases/M-020-anki.md)拆解同步方向、备份与媒体恢复，[Kobo F-M002-02/03](interaction-library/cases/M-002-kobo.md)记录内容来源与笔记删除/导出的关系。它们供取舍参考；账户系统方向已由 R-022 确认，备份粒度与具体账户形式仍未定。
 
 ## 用户表达与当前判断
 
@@ -63,7 +63,7 @@
 
 同日扩展功能调研后，固件口袋公开规范提供了一个可借鉴原则：应用声明必要业务数据并负责保存，管理层确认交接；恢复应用存档时不要把公共网络配置一起回滚。它说明的是应用切换期间的持久化约定，不是已经实现的服务器备份，也不保证 TF 损坏后的恢复。[接入规范](https://github.com/Changkai9888/CloudZao-Projects/blob/c4c9d7a1ec9b3e15620a3a67ecf34449f3735b14/protocols/%E5%9B%BA%E4%BB%B6%E5%8F%A3%E8%A2%8B%E6%8E%A5%E5%85%A5%E8%A7%84%E8%8C%83%E4%B8%8E%E5%BC%80%E5%8F%91%E6%8C%87%E5%8D%97.md)
 
-dpReader 文档的 KOReader Sync 用于阅读进度，OPDS 用于内容获取，两者都不能替代全套个人数据备份。此处继续支持“共享内容、个人进度、app 设置分别归属”的讨论，没有因此确定采用特定同步协议。[dpReader 说明](https://github.com/dephia31/dpreader)、[功能研究与范围](/home/workspace/reader/docs/research/firmware-feature-landscape.md)
+dpReader 文档的 KOReader Sync 用于阅读进度，OPDS 用于内容获取，两者都不能替代全套个人数据备份。此处继续支持“共享内容、个人进度、app 设置分别归属”的讨论，没有因此确定采用特定同步协议。[dpReader 说明](https://github.com/dephia31/dpreader)、[功能研究与范围](firmware-feature-landscape.md)
 
 ## 账户：能力方向已确认，注册与恢复形式待定
 

@@ -1,0 +1,24 @@
+name: ESP32-S31 static size
+
+# 只在手动触发时运行（仓库页面 Actions → ESP32-S31 static size → Run workflow），不随文档提交运行。
+on:
+  workflow_dispatch:
+
+jobs:
+  size:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build baselines and upstream for esp32s31
+        run: bash tools/s31-size/run.sh
+        env:
+          WORK: ${{ github.workspace }}/.s31-size
+      - name: Upload size reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: s31-size-reports
+          path: |
+            .s31-size/*.txt
+            .s31-size/*.log
