@@ -94,6 +94,7 @@ typedef struct {
     struct {
         int plan_budget;        /* pixels the planner may visit per phase */
         bool auto_motion;       /* tiles switch to the binary motion mode by themselves */
+        bool plan_during_scan;  /* the planner overlaps the scan (needs a port that plans behind the scan) */
         double full_swing;      /* pushes for a full black<->white swing (panel model and planner tables) */
         double stiction, stiction_tau; /* first-push loss after a rest: s0, time constant (phases) */
         double mobility_sd;     /* per-pixel spread of the push size (panel model only) */

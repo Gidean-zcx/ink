@@ -656,6 +656,7 @@ static struct {
     uint32_t *line_cost;      /* per line, ns */
     uint64_t phases, plan_late, cleans;
     uint64_t drive_ns;        /* time spent driving (phases) */
+    uint64_t idle_since;      /* end of the last drive (the phase clock is advanced across the rest) */
 } PQ;
 
 static bool pq_mode(void) { return g_profile.display_driver == 1 && D.info.tech == HAL_PANEL_EPD; }
@@ -845,15 +846,41 @@ static double pq_plan(uint32_t now) {
     const uint32_t planned = PQ.C.stat_planned - planned0;
     const int d = PQ.C.n_motion - motion0;
     sim_metric_max("display.pqbn.motion_tiles_max", PQ.C.n_motion);
+    sim_metric_add("display.pqbn.planned_px", planned);
     if (PQ.C.n_motion > motion0) {
         sim_metric_add("display.pqbn.motion_enter_tiles", PQ.C.n_motion - motion0);
         char a[64];
         snprintf(a, sizeof a, "{\"tiles\":%d,\"backlog\":%d}", PQ.C.n_motion - motion0, PQ.C.backlog);
         sim_trace_instant("display", "pqbn motion enter", vtk_now(), a);
     }
-    if (!planned && !dirty && !PQ.C.n_motion && !d) return g_profile.pqbn.plan_idle;
-    return g_profile.pqbn.plan_base + g_profile.pqbn.plan_px * planned + g_profile.pqbn.plan_motion_tile * mdirty +
-           g_profile.pqbn.plan_exit_tile * (d < 0 ? -d : 0);
+    double cyc = (!planned && !dirty && !PQ.C.n_motion && !d)
+                     ? g_profile.pqbn.plan_idle
+                     : g_profile.pqbn.plan_base + g_profile.pqbn.plan_px * planned + g_profile.pqbn.plan_motion_tile * mdirty +
+                           g_profile.pqbn.plan_exit_tile * (d < 0 ? -d : 0);
+    sim_metric_sample("display.pqbn.plan_ms", sim_cycles_ns(cyc) / 1e6);
+    return cyc;
+}
+
+/* The kernel counts rests in phases. Across a rest without drive phases the clock must still move
+ * (first-push stiction after a long rest); the jump is capped at 255 phases so the kernel's 10-bit
+ * settle timestamps (ages kept <= 256 + one 512-phase sweep) stay unambiguous, and the tile-age clamp
+ * the kernel runs on multiples of 4096 phases is applied if the jump skips one. */
+static void pq_advance_idle(void) {
+    uint64_t phase_ns = (uint64_t)g_profile.line_count * g_profile.line_ns + SIM_US(g_profile.frame_overhead_us);
+    if (phase_ns < SIM_US(g_profile.phase_min_us)) phase_ns = SIM_US(g_profile.phase_min_us);
+    uint64_t j = (vtk_now() - PQ.idle_since) / phase_ns;
+    if (j > 255) j = 255;
+    if (!j) return;
+    const uint32_t from = PQ.now, to = PQ.now + (uint32_t)j;
+    if ((from >> 12) != (to >> 12)) {
+        const uint32_t m = to & ~4095u;
+        const int nt = PQ.ntx * PQ.nty;
+        for (int i = 0; i < nt; i++)
+            if ((uint16_t)(m - PQ.C.tile_plan[i]) > 8192) PQ.C.tile_plan[i] = (uint16_t)(m - 8192);
+        for (int ty = 0; ty < PQ.nty; ty++)
+            if ((int16_t)(PQ.C.band[2 * ty] - (uint16_t)m) <= 0) PQ.C.band[2 * ty] = (uint16_t)m;
+    }
+    PQ.now = to;
 }
 
 /* feeder cost of every scan line for phase `now`; returns the rows with pushes, and the first one */
@@ -963,8 +990,7 @@ static void pq_after_phase(uint32_t now, uint64_t scan_end) {
         bool waiting = u->after_clean && PQ.clean_stage;
         if (!cleaning && !waiting && pq_area_still(u->tx0, u->ty0, u->tx1, u->ty1, now + 1)) {
             pq_finish(u, u->started_ns ? scan_end : vtk_now());
-            if (PQ.clean_stage && PQ.clean_idx > i) PQ.clean_idx--;
-            PQ.u[i] = PQ.u[--PQ.nu];
+            PQ.u[i] = PQ.u[--PQ.nu]; /* swap-remove: only the last entry moves (to i) */
             if (PQ.clean_stage && PQ.clean_idx == PQ.nu) PQ.clean_idx = i;
             continue;
         }
@@ -992,7 +1018,8 @@ static void pq_drive(void) {
     sim_i2c_transfer("io-expander", 3);
     sim_power_consumer("display.refresh", true, g_profile.ma_display_refresh);
     D.playing = true;
-    uint64_t t_start = vtk_now(), t0 = vtk_now();
+    if (!PQ.planned) pq_advance_idle();
+    uint64_t t_start = vtk_now(), t0 = vtk_now(), last_scan = 0;
     const hal_rect_t all = {0, 0, D.W, D.H};
     double worst = 1e9;
     bool plan_running = false;
@@ -1039,18 +1066,22 @@ static void pq_drive(void) {
         D.phase_seq++;
         vtk_wake_all_locked(&D.feed_wq);
         vtk_unlock();
+        if (last_scan) sim_metric_sample("display.pqbn.cycle_ms", (p.scan_start - last_scan) / 1e6);
+        last_scan = p.scan_start;
         pq_note_started(now, p.scan_start);
         pq_apply(now);
-        /* the planner prepares the next phase while this one scans */
         PQ.planned = false;
         plan_running = false;
-        if (pq_work_after(now)) {
+        /* plan_during_scan: the planner prepares the next phase while this one scans (the port must
+         * then plan only bands the scan has passed, or double-buffer the tile state: the kernel's
+         * re-plans rewrite tiles still pushing in this phase). Otherwise the next phase is planned after
+         * this scan (the kernel as written): its time adds to the phase cycle. */
+        if (g_profile.pqbn.plan_during_scan && pq_work_after(now)) {
             PQ.plan_cyc = pq_plan(now + 1);
             osal_sem_give(PQ.plan_go);
             plan_running = true;
             PQ.planned = true;
         }
-        sim_metric_sample("display.pqbn.plan_ms", sim_cycles_ns(PQ.plan_cyc) / 1e6);
         for (;;) { /* until the scan ends; a flash stall reported meanwhile re-plans it */
             uint64_t tn = vtk_now();
             if (tn < p.scan_end) vtk_sleep_ns(p.scan_end - tn);
@@ -1100,7 +1131,11 @@ static void pq_drive(void) {
             if (!PQ.nu) break;
         }
     }
+    vtk_lock();
     D.playing = false;
+    vtk_wake_all_locked(&PQ.pause_wq); /* a pause asked for during the last phase: the panel is still now */
+    vtk_unlock();
+    PQ.idle_since = vtk_now();
     sim_power_consumer("display.refresh", false, g_profile.ma_display_refresh);
     sim_i2c_transfer("io-expander", 3);
     sim_metric_min("display.feeder_slack_lines_min", worst);

@@ -198,7 +198,12 @@ if(INK_HAVE_FONTS)
   ink_scenario(ai_ask metalio-plus)
   ink_scenario(standby metalio-plus)
   # PQ-BN direct drive (research PR #7) on the same scenarios and budgets, plus its flash pause
-  ink_scenario(reader_basic metalio-plus-pqbn)
+  add_test(NAME scenario-reader_basic-metalio-plus-pqbn
+    COMMAND ink-sim --profile ${CMAKE_SOURCE_DIR}/profiles/metalio-plus-pqbn.json
+            --script ${CMAKE_SOURCE_DIR}/tests/scenarios/reader_basic.script
+            --budget ${CMAKE_SOURCE_DIR}/tests/scenarios/reader_basic.pqbn.budget.json
+            --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
+            --out ${CMAKE_BINARY_DIR}/test-out/reader_basic-metalio-plus-pqbn --quiet --trace --frames --no-random-outages)
   ink_scenario(ai_ask metalio-plus-pqbn)
   add_test(NAME scenario-pqbn_flash_pause-metalio-plus-pqbn
     COMMAND ink-sim --profile ${CMAKE_SOURCE_DIR}/profiles/metalio-plus-pqbn.json

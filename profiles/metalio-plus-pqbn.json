@@ -98,6 +98,7 @@
     "pqbn": {
       "plan_budget": 8000,
       "auto_motion": false,
+      "plan_during_scan": false,
       "full_swing_pushes": 7.6,
       "stiction": 0.3,
       "stiction_tau_phases": 120,
@@ -112,7 +113,7 @@
         "plan_exit_tile": 9305,
         "plan_idle": 118000
       },
-      "_notes": "Kernel and tables from the research (docs/research/eink-refresh-algorithm.md, PR #7): plan_budget 8000 px/phase, line mode. auto_motion OFF here (the research enables it): in this system's UI, feedback + new screen and consecutive frames hit the same tiles within 110 ms while the planner is behind, so page turns entered the binary motion mode (4923 tile entries in reader_basic) and finished later (p95 823 vs 714 ms); a page-based UI does not need it (motion only from explicit scroll hints if ever). Panel model = the research's assumptions (full swing 7.6 pushes at 12 ms phases, stiction s0 0.3 / tau 120 phases, mobility +-4%), NOT measured; the v4 table format cannot be built beyond ~13 pushes per full swing (15 fails). Costs: tools/iss/bench/run_pqbn.sh on the research's full-resolution scenarios, max(fitted x1.3, slow corner) (this profile's pessimistic convention); executor in IRAM, planner in flash, per-pixel state and the planner's tables in PSRAM. Two executor tasks (the feeder tasks, blocking on a full queue): one alone needs an 86-320-row prefill in page turns and scrolls on the ISS. Prefill 32 rows (18 leaves 2 rows of slack), 24-row queues."
+      "_notes": "Kernel and tables from the research (docs/research/eink-refresh-algorithm.md, PR #7): plan_budget 8000 px/phase, line mode. plan_during_scan OFF = the kernel as written: pqbn_v4_phase(N+1) rewrites tiles still pushing in phase N, so it may only run after the scan (its time adds to the phase cycle; page turns ~0.9-1.0 s). ON models a port that plans behind the scan (or double-buffers the tile state): ~0.65-0.71 s. auto_motion OFF (the research enables it): in this UI, tap feedback + new screen hit the same tiles within 110 ms while the planner is behind, so those tiles go through the binary motion mode; a page-based UI does not need it. Panel model = the research's assumptions (full swing 7.6 pushes at 12 ms phases, stiction s0 0.3 / tau 120 phases, mobility +-4%), NOT measured; the v4 table format builds up to ~14.5 pushes per full swing (15 fails, depends on s0). The phase clock advances across rests (capped at 255 phases for the 10-bit settle timestamps). Costs: tools/iss/bench/run_pqbn.sh on the research's full-resolution scenarios, max(fitted x1.3, slow corner); executor in IRAM, planner in flash, per-pixel state and the planner's tables in PSRAM (+0.4-1.9% planner time). Two executor tasks (the feeder tasks, blocking on a full queue): one alone needs an 86-320-row prefill in page turns and scrolls on the ISS. Prefill 32 rows (18 leaves 2 rows of slack), 24-row queues."
     }
   },
   "input": {

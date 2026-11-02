@@ -192,6 +192,7 @@ int profile_load(const char *path, sim_profile_t *p, char *err, size_t errlen) {
             const cJSON *q = obj(d, "pqbn");
             p->pqbn.plan_budget = (int)num(q, "plan_budget", 8000);
             p->pqbn.auto_motion = flag(q, "auto_motion", true);
+            p->pqbn.plan_during_scan = flag(q, "plan_during_scan", false);
             p->pqbn.full_swing = num(q, "full_swing_pushes", 7.6);
             p->pqbn.stiction = num(q, "stiction", 0.3);
             p->pqbn.stiction_tau = num(q, "stiction_tau_phases", 120);

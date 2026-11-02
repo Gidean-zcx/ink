@@ -44,12 +44,16 @@ int main(void) {
     uint8_t *fb4 = iss_psram_alloc(FB_BYTES, 64), *hot = iss_psram_alloc(FB_BYTES, 64);
     uint16_t *cold = iss_psram_alloc((size_t)PW * PH * 2, 64);
     uint8_t *drive = LINE ? NULL : iss_psram_alloc((size_t)PW * PH / 4, 64);
-#ifdef DEC_PSRAM /* option: the planner's 16 KiB decision table in PSRAM (saves internal RAM) */
+#ifdef DEC_PSRAM /* option: the planner's 16 KiB decision table in PSRAM (saves internal RAM; thresholds below too) */
     uint8_t *dec = iss_psram_alloc(16384, 64), *exk = iss_sram_alloc(1536, 64), *exk_m = iss_sram_alloc(1792, 64);
 #else
     uint8_t *dec = iss_sram_alloc(16384, 64), *exk = iss_sram_alloc(1536, 64), *exk_m = iss_sram_alloc(1792, 64);
 #endif
+#ifdef DEC_PSRAM /* the simulator's layout: the planner's tables (decision, thresholds) all in PSRAM */
+    uint8_t *tau = iss_psram_alloc(4096, 64), *tau_nib = iss_psram_alloc(2048, 64);
+#else
     uint8_t *tau = iss_sram_alloc(4096, 64), *tau_nib = iss_sram_alloc(2048, 64);
+#endif
     uint8_t *td = iss_sram_alloc(NT, 64), *tn = iss_sram_alloc(NT, 64), *map = iss_sram_alloc(NT, 64);
     uint16_t *tp = iss_sram_alloc(NT * 2, 64), *band = iss_sram_alloc(NTY * 4, 64);
     uint8_t *ra = iss_sram_alloc(PH, 64), *line = iss_sram_alloc(PW / 4, 64);
