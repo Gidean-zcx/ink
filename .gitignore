@@ -15,3 +15,6 @@
 
 # 本地代理工作区
 /.claude/
+
+# ISS 校准：拉取的第三方源码、交叉编译产物、中间 JSON（tools/iss/calibrate.sh 生成）
+/tools/iss/build/

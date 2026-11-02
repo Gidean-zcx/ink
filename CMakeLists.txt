@@ -197,3 +197,15 @@ foreach(p pinenote-rk3566 desktop-lcd)
             --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
             --out ${CMAKE_BINARY_DIR}/test-out/portability-${p} --quiet)
 endforeach()
+# ---------------------------------------------------------------- ISS (Level 2 calibration)
+# tools/iss: instruction-set simulator used by tools/iss/calibrate.sh to measure
+# cycles per unit for the cost classes. The self-test needs no cross compiler.
+set(ISS_SRC tools/iss/src/iss.c tools/iss/src/iss_cfg.c tools/iss/src/iss_elf.c)
+add_executable(iss ${ISS_SRC} tools/iss/src/main.c)
+add_executable(iss-selftest ${ISS_SRC} tools/iss/test/iss_selftest.c)
+foreach(t iss iss-selftest)
+  target_include_directories(${t} PRIVATE tools/iss/src)
+  target_compile_options(${t} PRIVATE ${INK_WARN} -frounding-math)
+  target_link_libraries(${t} PRIVATE m)
+endforeach()
+add_test(NAME iss-selftest COMMAND iss-selftest)

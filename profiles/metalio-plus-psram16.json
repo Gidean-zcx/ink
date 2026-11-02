@@ -1,13 +1,13 @@
 {
   "id": "metalio-e-ink4-plus-psram16",
-  "name": "CloudZao Metalio E-Ink4 Plus (ESP32-S31, 4.7in 1216x684 EPD) — expected 16 MB PSRAM",
+  "name": "CloudZao Metalio E-Ink4 Plus (ESP32-S31, 4.7in 1216x684 EPD) — 16 MB PSRAM, expected CPU costs",
   "class": "mcu",
   "_sources": "docs/research/foundation/platform-runtime.md, upstream-firmware.md, docs/research/simulator/performance-modeling.md. Principle until calibrated: time costs take upper bounds, resources take lower bounds.",
   "cpu": {
     "cores": 2,
     "mhz": 320,
-    "coremark_per_mhz_per_core": 3.43,
-    "_coremark_source": "ESP32-S31 datasheet v0.5: CoreMark 2195.20 dual-core @320 MHz",
+    "coremark_per_mhz_per_core": 3.083,
+    "_coremark_source": "ESP32-S31 datasheet v0.5: CoreMark 2195.20 dual-core @320 MHz = 3.43/MHz per core, which needs CPI ~1.0 with GCC 15.2; the closest plausible single-issue model (ISS, tools/iss) gives 3.083 — used here",
     "host_to_target_default": 40.0
   },
   "kernel": {
@@ -139,18 +139,18 @@
   },
   "costs_cycles": {
     "lvgl.px": 25,
-    "epd.convert_px": 6,
-    "glyph.blit": 9000,
+    "epd.convert_px": 7.16,
+    "glyph.blit": 10870,
     "text.layout_char": 1500,
     "text.break_char": 400,
-    "json.byte": 60,
-    "zlib.inflate_byte": 40,
-    "crc32.byte": 8,
+    "json.byte": 75.2,
+    "zlib.inflate_byte": 44.0,
+    "crc32.byte": 17.3,
     "littlefs.op": 60000,
-    "psram.copy_byte": 15.2,
-    "psram_to_internal.copy_byte": 5.8,
-    "internal_to_psram.copy_byte": 10.0,
-    "sram.copy_byte": 0.9,
+    "psram.copy_byte": 8.23,
+    "psram_to_internal.copy_byte": 3.78,
+    "internal_to_psram.copy_byte": 5.07,
+    "sram.copy_byte": 0.84,
     "icache.miss": 1150,
     "heap.op": 1500,
     "lvgl.refr": 150000,
@@ -162,7 +162,11 @@
     "audio.convert_frame": 12,
     "audio.mix_sample": 6,
     "tone.sample": 20,
-    "epd.diff_px": 14
+    "epd.diff_px": 14,
+    "glyph.px": 19.5,
+    "fill.px": 5.12,
+    "psram.set_byte": 4.59,
+    "sram.set_byte": 0.35
   },
   "network": {
     "wifi": {
@@ -228,5 +232,6 @@
     "frontlight_full_ma": 45,
     "sleep_ma": 1.5,
     "_notes": "ALL ESTIMATES (unmeasured): replace with bench measurements (SP-08). battery_mah is a placeholder; the real cell capacity is unverified."
-  }
+  },
+  "_notes_costs": "costs_cycles: ISS Level-2 calibration (tools/iss, docs/research/simulator/iss-calibration.md, 2026-11-02): EXPECTED values = raw x 1.3 for copies, glyphs, conversion, JSON, inflate, CRC and the new glyph.px/fill.px/set_byte classes. Not measured on the ISS yet (kept as earlier guesses): lvgl.px, lvgl.refr, text.* (the ISS kernels are leaner than our text engine; measure system/text on the ISS next), heap.op (IDF heap wrapper not modelled), littlefs.op, tls.handshake, opus.*. CoreMark anchor 3.43/MHz needs CPI~1.0; fitted 3.083."
 }
