@@ -1,4 +1,7 @@
-/* LVGL allocator glue: LVGL objects and buffers come from the device heaps. */
+/* LVGL allocator glue: LVGL objects and buffers come from the device heaps.
+ * Everything goes to PSRAM: with the default ESP-IDF policy (blocks <= 16 B
+ * internal) LVGL's many tiny allocations quietly ate internal RAM in the
+ * simulator (~3 KiB for two simple screens). */
 #include "ink/osal.h"
 #include "lvgl.h"
 
@@ -13,14 +16,14 @@ void lv_mem_remove_pool(lv_mem_pool_t pool) { (void)pool; }
 
 void *lv_malloc_core(size_t size) {
     const char *prev = osal_mem_tag("lvgl");
-    void *p = osal_malloc(size, OSAL_MEM_DEFAULT);
+    void *p = osal_malloc(size, OSAL_MEM_EXTERNAL);
     osal_mem_tag(prev);
     return p;
 }
 
 void *lv_realloc_core(void *p, size_t new_size) {
     const char *prev = osal_mem_tag("lvgl");
-    void *n = osal_realloc(p, new_size, OSAL_MEM_DEFAULT);
+    void *n = osal_realloc(p, new_size, OSAL_MEM_EXTERNAL);
     osal_mem_tag(prev);
     return n;
 }
