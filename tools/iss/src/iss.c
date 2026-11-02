@@ -666,6 +666,29 @@ static bool do_ecall(iss_t *m) {
         }
         return true;
     }
+    case ISS_SYS_INPUT: {
+        uint32_t done = 0;
+        if (m->input && fseek(m->input, (long)a1, SEEK_SET) == 0) {
+            uint8_t buf[4096];
+            while (done < a2) {
+                size_t want = a2 - done < sizeof buf ? a2 - done : sizeof buf;
+                size_t got = fread(buf, 1, want, m->input);
+                if (!got) break;
+                for (size_t i = 0; i < got; i++) {
+                    int reg;
+                    uint8_t *p = hostp(m, a0 + done + (uint32_t)i, 1, &reg);
+                    if (!p) {
+                        fail(m, "iss_input: bad destination 0x%08x", a0 + done + (uint32_t)i);
+                        return true;
+                    }
+                    *p = buf[i];
+                }
+                done += (uint32_t)got;
+            }
+        }
+        m->x[10] = done;
+        return true;
+    }
     default:
         fail(m, "unknown ecall %u (pc 0x%08x)", n, m->pc);
         return true;

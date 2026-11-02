@@ -50,6 +50,7 @@ target_include_directories(ink_stb PUBLIC third_party/stb)
 target_compile_options(ink_stb PRIVATE -w)
 
 add_library(ink_port_sim STATIC
+  drivers/epd/pqbn_v4.c
   ports/sim/osal_sim.c
   ports/sim/metrics.c
   ports/sim/trace.c
@@ -63,7 +64,7 @@ add_library(ink_port_sim STATIC
   ports/sim/hal_audio_sim.c
   ports/sim/hal_codec_sim.c
   ports/sim/sim_hub.c)
-target_include_directories(ink_port_sim PUBLIC ports/sim platform/include)
+target_include_directories(ink_port_sim PUBLIC ports/sim platform/include drivers/epd)
 target_link_libraries(ink_port_sim PUBLIC ink_sim_core ink_littlefs ink_stb)
 target_compile_options(ink_port_sim PRIVATE ${INK_WARN})
 
@@ -196,6 +197,15 @@ if(INK_HAVE_FONTS)
   ink_scenario(reader_basic metalio-plus-psram16)
   ink_scenario(ai_ask metalio-plus)
   ink_scenario(standby metalio-plus)
+  # PQ-BN direct drive (research PR #7) on the same scenarios and budgets, plus its flash pause
+  ink_scenario(reader_basic metalio-plus-pqbn)
+  ink_scenario(ai_ask metalio-plus-pqbn)
+  add_test(NAME scenario-pqbn_flash_pause-metalio-plus-pqbn
+    COMMAND ink-sim --profile ${CMAKE_SOURCE_DIR}/profiles/metalio-plus-pqbn.json
+            --script ${CMAKE_SOURCE_DIR}/tests/scenarios/pqbn_flash_pause.script
+            --budget ${CMAKE_SOURCE_DIR}/tests/scenarios/pqbn_flash_pause.budget.json
+            --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
+            --out ${CMAKE_BINARY_DIR}/test-out/pqbn_flash_pause --quiet --trace --no-random-outages)
   add_test(NAME scenario-ai_tools-metalio-plus
     COMMAND ink-sim --profile ${CMAKE_SOURCE_DIR}/profiles/metalio-plus.json
             --script ${CMAKE_SOURCE_DIR}/tests/scenarios/ai_tools.script
@@ -245,7 +255,7 @@ if(INK_HAVE_FONTS)
   set_tests_properties(scenario-reader_basic-aged-flash-max PROPERTIES FIXTURES_REQUIRED aged_user)
 endif()
 # Portability smoke runs: same system, other panels/classes (budget: no panic, input works)
-foreach(p pinenote-rk3566 desktop-lcd)
+foreach(p pinenote-rk3566 desktop-lcd metalio-plus-pqbn)
   add_test(NAME portability-home-${p}
     COMMAND ink-sim --profile ${CMAKE_SOURCE_DIR}/profiles/${p}.json
             --script ${CMAKE_SOURCE_DIR}/tests/scenarios/home_basic.script

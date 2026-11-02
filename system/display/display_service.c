@@ -36,8 +36,11 @@ static struct {
     int w, h, stride;
     hal_panel_info_t info;
     rp_state_t rp;
-    bool in_flight;
-    rp_dispatch_t cur;
+    int nflight; /* updates handed to the platform and not done (one at a time unless async) */
+    struct {
+        uint32_t id;
+        rp_dispatch_t d;
+    } flight[16];
     bool interactive;
     bool guard;
     osal_sem_t *guard_ack;
@@ -62,9 +65,17 @@ static void done_cb(void *ctx, const hal_display_result_t *r) {
     ds_send(&m);
 }
 
+static void dispatch_one(rp_dispatch_t d);
+
+/* EPDiy-class panels take one update at a time (global lock); a direct-drive panel (async) takes
+ * every committed region at once and converges them together */
 static void dispatch_next(void) {
     rp_dispatch_t d;
-    if (DS.in_flight || DS.guard || !rp_next(&DS.rp, &d)) return;
+    const int cap = DS.info.async_updates ? (int)(sizeof DS.flight / sizeof DS.flight[0]) : 1;
+    while (DS.nflight < cap && !DS.guard && rp_next(&DS.rp, &d)) dispatch_one(d);
+}
+
+static void dispatch_one(rp_dispatch_t d) {
     /* power policy: keep rails up around touch feedback and interactive phases;
      * otherwise power off right after the update (reading = long idle gaps) */
     if (DS.interactive) hal_display_hold_power(HOLD_INTERACTIVE_MS);
@@ -79,8 +90,9 @@ static void dispatch_next(void) {
         rp_done(&DS.rp, &d, false);
         return;
     }
-    DS.in_flight = true;
-    DS.cur = d;
+    DS.flight[DS.nflight].id = id;
+    DS.flight[DS.nflight].d = d;
+    DS.nflight++;
     char key[48];
     snprintf(key, sizeof key, "display.dispatch.%s%s", INTENT_NAME[d.intent], d.cleanup ? "+clean" : "");
     ink_probe_count(key);
@@ -102,19 +114,23 @@ static bool cause_seen(uint64_t cause, const char *tag) {
 }
 
 static void on_done(const hal_display_result_t *r) {
-    DS.in_flight = false;
-    rp_done(&DS.rp, &DS.cur, r->ok);
-    if (DS.cur.cause_us && !cause_seen(DS.cur.cause_us, DS.cur.cause_tag)) {
-        if (DS.cur.cause_tag) {
+    int k = 0;
+    while (k < DS.nflight && DS.flight[k].id != r->id) k++;
+    if (k == DS.nflight) return; /* not ours (cannot happen) */
+    rp_dispatch_t cur = DS.flight[k].d;
+    DS.flight[k] = DS.flight[--DS.nflight];
+    rp_done(&DS.rp, &cur, r->ok);
+    if (cur.cause_us && !cause_seen(cur.cause_us, cur.cause_tag)) {
+        if (cur.cause_tag) {
             /* a named cause (e.g. "AI answer visible after release") has its own metric and may
              * include network time, so it stays out of the generic input->screen latency */
-            ink_probe_value(DS.cur.cause_tag, (double)(r->done_us - DS.cur.cause_us) / 1000.0);
+            ink_probe_value(cur.cause_tag, (double)(r->done_us - cur.cause_us) / 1000.0);
         } else {
-            ink_probe_value("ui.action_to_first_change_ms", (double)(r->started_us - DS.cur.cause_us) / 1000.0);
-            ink_probe_value("ui.action_to_visible_ms", (double)(r->done_us - DS.cur.cause_us) / 1000.0);
+            ink_probe_value("ui.action_to_first_change_ms", (double)(r->started_us - cur.cause_us) / 1000.0);
+            ink_probe_value("ui.action_to_visible_ms", (double)(r->done_us - cur.cause_us) / 1000.0);
             char key[64];
-            snprintf(key, sizeof key, "ui.action_to_visible_ms.%s", INTENT_NAME[DS.cur.intent]);
-            ink_probe_value(key, (double)(r->done_us - DS.cur.cause_us) / 1000.0);
+            snprintf(key, sizeof key, "ui.action_to_visible_ms.%s", INTENT_NAME[cur.intent]);
+            ink_probe_value(key, (double)(r->done_us - cur.cause_us) / 1000.0);
         }
     }
 }
@@ -130,22 +146,20 @@ static void service_task(void *arg) {
         case DM_DONE: on_done(&m.result); break;
         case DM_INTERACTIVE:
             DS.interactive = m.flag != 0;
-            if (!DS.interactive && !DS.in_flight) hal_display_hold_power(0);
+            if (!DS.interactive && !DS.nflight) hal_display_hold_power(0);
             break;
         case DM_CLEANUP_EVERY: DS.rp.text_cleanup_every = (int)m.cause_us; break;
         case DM_GUARD:
             DS.guard = m.flag != 0;
-            if (DS.guard) {
-                /* acknowledge once the panel is idle (the done message re-enters here) */
-                if (!DS.in_flight) osal_sem_give(DS.guard_ack);
-                else DS.guard = true;
-            }
+            /* EPDiy-class: acknowledge once the update in flight is done (below); async panels are
+             * paused by the requester itself (ink_display_flash_guard) */
+            if (!DS.info.async_updates && DS.guard && !DS.nflight) osal_sem_give(DS.guard_ack);
             break;
         }
-        if (m.type == DM_DONE && DS.guard) osal_sem_give(DS.guard_ack);
+        if (m.type == DM_DONE && DS.guard && !DS.info.async_updates && !DS.nflight) osal_sem_give(DS.guard_ack);
         /* only dispatch on frame boundaries so a half-committed frame is never driven */
         if (m.type != DM_REGION) dispatch_next();
-        __atomic_store_n(&DS.busy, DS.rp.npending + (DS.in_flight ? 1 : 0), __ATOMIC_SEQ_CST);
+        __atomic_store_n(&DS.busy, DS.rp.npending + DS.nflight, __ATOMIC_SEQ_CST);
         __atomic_sub_fetch(&DS.inbox, 1, __ATOMIC_SEQ_CST); /* after busy: see ds_send */
     }
 }
@@ -164,6 +178,8 @@ int ink_display_init(void) {
     if (!DS.fb || !DS.lock || !DS.q || !DS.guard_ack) return -1;
     memset(DS.fb, 0xff, (size_t)DS.stride * DS.h);
     rp_init(&DS.rp, DS.w, DS.h, DS.info.waveforms, DS.info.tech == HAL_PANEL_LCD);
+    DS.rp.async = DS.info.async_updates;
+    if (DS.rp.async) DS.rp.text_cleanup_every = 0;
     osal_task_cfg_t cfg = {.name = "display", .fn = service_task, .stack_bytes = DS_STACK, .priority = DS_PRIO, .core = -1,
                            .flags = OSAL_TASK_STACK_EXTERNAL}; /* touches the PSRAM framebuffer anyway */
     return osal_task_create(&cfg, NULL) == OSAL_OK ? 0 : -1;
@@ -211,6 +227,19 @@ int ink_display_busy(void) {
 
 void ink_display_flash_guard(bool hold) {
     dmsg_t m = {.type = DM_GUARD, .flag = hold};
+    if (DS.info.async_updates) {
+        /* direct drive: the panel stops at the next phase boundary (pixels hold still) instead of
+         * waiting for every update to settle; paused here, in the requester's task, so the service
+         * keeps taking the driver's done messages meanwhile. New dispatches wait for the release. */
+        if (hold) {
+            ds_send(&m);
+            hal_display_pause(true);
+        } else {
+            hal_display_pause(false);
+            ds_send(&m);
+        }
+        return;
+    }
     ds_send(&m);
     if (hold) osal_sem_take(DS.guard_ack, OSAL_WAIT_FOREVER);
 }

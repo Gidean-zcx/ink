@@ -200,6 +200,7 @@ typedef struct iss {
     int exit_code;
     char error[256];
     FILE *console;
+    FILE *input;               /* -i file for ISS_SYS_INPUT (NULL = none) */
     /* optional profile: cycles per pc */
     bool profile;
     struct iss_prof *prof;
@@ -224,6 +225,8 @@ void iss_print_profile(iss_t *m, FILE *out, int top);
 #define ISS_SYS_BEGIN 0x100 /* a0 = const char *name */
 #define ISS_SYS_END 0x101   /* a0 = units, a1 = auxiliary units */
 #define ISS_SYS_CACHE 0x102 /* a0 = ISS_CACHE_* flags */
+#define ISS_SYS_INPUT 0x103 /* a0 = dst, a1 = file offset, a2 = length: copy from the -i file into memory;
+                               free and not through the caches (write back + invalidate the D-cache first) */
 #define ISS_CACHE_WB 1u        /* write back dirty D-cache lines */
 #define ISS_CACHE_INV_D 2u     /* invalidate D-cache */
 #define ISS_CACHE_INV_I 4u     /* invalidate I-cache, forget fetch line */

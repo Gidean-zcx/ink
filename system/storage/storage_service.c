@@ -23,6 +23,7 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "ink/hal_display.h"
 #include "ink/hal_storage.h"
 #include "ink/osal.h"
 #include "ink/probe.h"
@@ -34,6 +35,10 @@
 #define ST_PRIO 3
 #define IDLE_POLL_US 50000
 #define MAX_DEFER_US 30000000ull /* writes held off longer than this are forced (counted) */
+/* direct-drive panels (async) can pause between drive phases for a flash operation: a write waits
+ * this long for a quiet panel, then goes ahead and pauses the drive (a hiccup, no garbage) instead
+ * of waiting behind continuous updates (AI text streaming keeps such a panel busy) */
+#define ASYNC_PANEL_WAIT_US 500000
 #define CACHE_MAX 32
 #define CACHE_FILE_MAX 1024 /* larger files are not cached */
 #define PREFETCH_MAX 16
@@ -68,6 +73,7 @@ static struct {
     osal_sem_t *kick;        /* work for the storage task */
     osal_sem_t *read_done;
     osal_task_t *task;
+    bool panel_async;        /* the panel can pause between phases (hal_panel_info_t.async_updates) */
     job_t *jobs;             /* MAX_JOBS, external RAM */
     read_req_t *rreq;        /* pending read (under lock) */
     int pending;
@@ -269,6 +275,10 @@ static void storage_task(void *arg) {
                 serve_read();
                 bool held = writes_held();
                 if (!held && ink_display_busy() <= 0) break;
+                if (!held && ST.panel_async && osal_now_us() - t_wait >= ASYNC_PANEL_WAIT_US) {
+                    ink_probe_count("storage.writes_pausing_panel");
+                    break;
+                }
                 if (held && osal_now_us() - job.queued_us > MAX_DEFER_US) {
                     forced = true;
                     break;
@@ -289,6 +299,9 @@ static void storage_task(void *arg) {
 }
 
 int ink_storage_init(void) {
+    hal_panel_info_t pi;
+    hal_display_get_info(&pi);
+    ST.panel_async = pi.async_updates;
     const char *prev = osal_mem_tag("storage");
     ST.lock = osal_mutex_create();
     ST.read_lock = osal_mutex_create();

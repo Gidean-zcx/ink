@@ -88,6 +88,19 @@ typedef struct {
     bool feeder_dynamic;        /* next free feeder takes the next line (else fixed odd/even, upstream) */
     bool feeder_area_columns;   /* convert only the area's columns (else full lines, upstream) */
     bool feeder_block;          /* feeders block on a full queue (else spin, upstream) */
+    /* display driver: 0 = EPDiy-class waveform tables (global lock: one update at a time),
+     * 1 = PQ-BN direct drive (drivers/epd/pqbn_v4.c: per-pixel plans, updates overlap) */
+    int display_driver;
+    struct {
+        int plan_budget;        /* pixels the planner may visit per phase */
+        bool auto_motion;       /* tiles switch to the binary motion mode by themselves */
+        double full_swing;      /* pushes for a full black<->white swing (panel model and planner tables) */
+        double stiction, stiction_tau; /* first-push loss after a rest: s0, time constant (phases) */
+        double mobility_sd;     /* per-pixel spread of the push size (panel model only) */
+        /* CPU cycles (ISS, tools/iss/bench/run_pqbn.sh): scan rows and planner */
+        double row_idle, row_band, row_tile;
+        double plan_base, plan_px, plan_motion_tile, plan_exit_tile, plan_idle;
+    } pqbn;
     int line_count;             /* lines scanned per phase (panel lines + blanking) */
     uint32_t line_ns;           /* scan time of one line */
     int line_queue_lines;       /* per feeder (upstream 127) */

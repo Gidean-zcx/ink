@@ -1,0 +1,31 @@
+{
+  "_doc": "PQ-BN direct drive (profiles/metalio-plus-pqbn.json): a flash write requested while the panel converges pauses the drive at a phase boundary instead of waiting for every update to settle (D-36 still holds: no flash operation meets a scan).",
+  "panic.count": {
+    "max": 0,
+    "optional": true
+  },
+  "display.pqbn.pauses_while_driving": {
+    "min": 1,
+    "why": "the position save after leaving the book lands while the turn and the home screen are still being driven"
+  },
+  "flash.ops_during_waveform": {
+    "max": 0,
+    "optional": true,
+    "why": "the drive is paused (no scan) while the flash operation runs"
+  },
+  "display.underruns": {
+    "max": 0,
+    "optional": true
+  },
+  "storage.write_ms.count": {
+    "min": 1
+  },
+  "storage.wait_for_idle_ms.max": {
+    "max": 1000,
+    "why": "a write waits at most ~0.5 s for a quiet panel before it pauses the drive"
+  },
+  "warnings.count": {
+    "max": 0,
+    "optional": true
+  }
+}

@@ -10,6 +10,7 @@ static void usage(void) {
             "  -c FILE        timing config (key = value), may repeat\n"
             "  -s KEY=VALUE   override one timing parameter, may repeat\n"
             "  -o FILE        write the JSON report to FILE\n"
+            "  -i FILE        input file the program reads with iss_input() (untimed)\n"
             "  -n N           instruction limit (default 20000000000)\n"
             "  -p N           print the top-N functions by cycles to stderr\n"
             "  -q             discard the program's console output\n"
@@ -104,7 +105,7 @@ static void json_report(FILE *o, iss_t *m, const char *elf) {
 int main(int argc, char **argv) {
     iss_cfg_t cfg;
     iss_cfg_default(&cfg);
-    const char *out = NULL, *elf = NULL;
+    const char *out = NULL, *elf = NULL, *input = NULL;
     const char *sets[128];
     int nsets = 0, top = 0, quiet = 0, dump = 0;
     unsigned long long limit = 20000000000ull;
@@ -116,6 +117,8 @@ int main(int argc, char **argv) {
             if (nsets < 128) sets[nsets++] = argv[++i];
         } else if (!strcmp(a, "-o") && i + 1 < argc) {
             out = argv[++i];
+        } else if (!strcmp(a, "-i") && i + 1 < argc) {
+            input = argv[++i];
         } else if (!strcmp(a, "-n") && i + 1 < argc) {
             limit = strtoull(argv[++i], NULL, 0);
         } else if (!strcmp(a, "-p") && i + 1 < argc) {
@@ -150,6 +153,10 @@ int main(int argc, char **argv) {
     iss_t m;
     if (iss_init(&m, &cfg)) return 2;
     if (quiet) m.console = NULL;
+    if (input && !(m.input = fopen(input, "rb"))) {
+        fprintf(stderr, "iss: cannot read %s\n", input);
+        return 2;
+    }
     m.profile = top > 0;
     if (iss_load_elf(&m, elf)) return 2;
     int rc = iss_run(&m, limit);
@@ -168,6 +175,7 @@ int main(int argc, char **argv) {
     fprintf(stderr, "iss: exit %d, %llu instructions, %.0f cycles, CPI %.3f\n", rc,
             (unsigned long long)m.st.instret, cyc(m.st.cycles),
             m.st.instret ? cyc(m.st.cycles) / (double)m.st.instret : 0.0);
+    if (m.input) fclose(m.input);
     iss_free(&m);
     return rc < 0 ? 3 : rc;
 }

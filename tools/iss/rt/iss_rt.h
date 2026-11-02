@@ -29,11 +29,24 @@ static inline long iss_ecall2(long n, long arg0, long arg1) {
     return a0;
 }
 
+static inline long iss_ecall3(long n, long arg0, long arg1, long arg2) {
+    register long a0 __asm__("a0") = arg0;
+    register long a1 __asm__("a1") = arg1;
+    register long a2 __asm__("a2") = arg2;
+    register long a7 __asm__("a7") = n;
+    __asm__ volatile("ecall" : "+r"(a0) : "r"(a1), "r"(a2), "r"(a7) : "memory");
+    return a0;
+}
+
 static inline void iss_begin(const char *name) { iss_ecall(0x100, (long)name); }
 /* units = work done in the region; aux = optional second count (0 = none) */
 static inline void iss_end2(uint32_t units, uint32_t aux) { iss_ecall2(0x101, (long)units, (long)aux); }
 static inline void iss_end(uint32_t units) { iss_end2(units, 0); }
 static inline void iss_cache(unsigned flags) { iss_ecall(0x102, (long)flags); }
+
+/* Copy len bytes from offset off of the simulator's -i file to dst (free, untimed). Returns the
+ * bytes copied. It bypasses the caches: call iss_cache(ISS_CACHE_WB | ISS_CACHE_INV_D) first. */
+static inline long iss_input(void *dst, uint32_t off, uint32_t len) { return iss_ecall3(0x103, (long)dst, (long)off, (long)len); }
 
 /* Cold start: write back + invalidate both caches without charging time. */
 static inline void iss_cache_cold(void) { iss_cache(ISS_CACHE_WB | ISS_CACHE_INV_D | ISS_CACHE_INV_I); }

@@ -26,6 +26,7 @@ typedef struct {
     bool force_full_next; /* after a failed update or wake */
     uint32_t waveforms;   /* panel capabilities (hal_panel_info_t.waveforms) */
     bool lcd;
+    bool async;           /* per-pixel direct drive: no periodic flashing cleanups, screens change without a flash */
     int panel_w, panel_h;
 } rp_state_t;
 

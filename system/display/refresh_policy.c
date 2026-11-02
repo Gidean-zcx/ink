@@ -3,7 +3,8 @@
  *  1. intersecting requests merge into their bounding box; the stronger intent wins
  *  2. content is read from the framebuffer at dispatch time, so while the panel is
  *     busy only the newest frame of a region is ever shown (stale frames are skipped)
- *  3. every N text refreshes one is upgraded to a flashing clean (GC16)
+ *  3. every N text refreshes one is upgraded to a flashing clean (GC16); not on per-pixel
+ *     direct-drive panels (async), which converge every pixel and track its DC balance
  *  4. touch feedback (FAST/A2) is dispatched before everything else
  *  5. after a failed update the next one is a full clean
  * An EPDiy-class panel scans the whole frame for any update, so merging disjoint
@@ -91,6 +92,8 @@ void rp_add(rp_state_t *s, hal_rect_t r, ink_refresh_t intent, uint64_t cause_us
 
 hal_waveform_t rp_waveform_for(const rp_state_t *s, ink_refresh_t intent) {
     if (s->lcd) return HAL_WF_GC16;
+    if (s->async) /* the driver converges every pixel by itself; only FULL asks for a flashing clean */
+        return intent == INK_REFRESH_FULL ? HAL_WF_GC16 : intent <= INK_REFRESH_FAST ? HAL_WF_DU : HAL_WF_GL16;
     switch (intent) {
     case INK_REFRESH_A2: return (s->waveforms & (1u << HAL_WF_A2)) ? HAL_WF_A2 : HAL_WF_DU;
     case INK_REFRESH_FAST: return HAL_WF_DU;
@@ -134,13 +137,13 @@ bool rp_next(rp_state_t *s, rp_dispatch_t *out) {
         remove_at(s, i);
     }
     out->wf = rp_waveform_for(s, out->intent);
-    if (out->intent == INK_REFRESH_TEXT && !s->lcd) {
+    if (out->intent == INK_REFRESH_TEXT && !s->lcd && !s->async) {
         if (++s->text_since_clean >= s->text_cleanup_every && s->text_cleanup_every > 0) {
             out->wf = HAL_WF_GC16;
             out->cleanup = true;
         }
     }
-    if (out->intent >= INK_REFRESH_FLASH_UI) out->cleanup = true;
+    if (out->intent >= (s->async ? INK_REFRESH_FULL : INK_REFRESH_FLASH_UI)) out->cleanup = true;
     if (out->cleanup && (out->intent == INK_REFRESH_TEXT || out->intent == INK_REFRESH_FULL)) s->text_since_clean = 0;
     return true;
 }

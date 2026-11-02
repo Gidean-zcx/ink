@@ -43,6 +43,7 @@
  * ghosting residual that grows with every non-flashing update and is cleared
  * by flashing GC16 updates.
  */
+#include <math.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -51,6 +52,7 @@
 
 #include "ink/hal_display.h"
 #include "ink/rotation.h"
+#include "pqbn_v4.h"
 #include "sim.h"
 #include "stb_image_write.h"
 
@@ -97,6 +99,7 @@ static struct {
     uint64_t underrun_at;
     uint64_t wf_prep_ns;      /* the waveform being played: its own line cost (0 = display-wide) */
     uint32_t wf_phase_min_us; /* ... and its own minimum phase time (0 = display-wide) */
+    const uint32_t *line_cost; /* per-line feeder cost (ns) for the phase being planned (PQ-BN), else NULL */
     /* stats */
     uint64_t busy_ns;
     unsigned wf_fallback_warned;
@@ -267,7 +270,7 @@ static void plan_phase(const hal_rect_t *a, uint64_t t0, plan_t *p) {
     memset(p, 0, sizeof *p);
     p->start = t0;
     for (int l = 0; l < L; l++) {
-        uint64_t c = (l >= a->y && l < a->y + a->h && l < D.H) ? area_cost : skip;
+        uint64_t c = D.line_cost ? D.line_cost[l] : (l >= a->y && l < a->y + a->h && l < D.H) ? area_cost : skip;
         uint64_t s[2];
         for (int f = 0; f < 2; f++) {
             s[f] = tf[f];
@@ -603,8 +606,570 @@ static void execute(req_t *r) {
     if (r->done) r->done(r->ctx, &res);
 }
 
+/* ------------------------------------------------------------------ PQ-BN direct drive
+ *
+ * display.driver = "pqbn": the research's direct-drive kernel (drivers/epd/pqbn_v4.c) replaces the
+ * waveform tables. No global lock: an update converts its area into the kernel's 4 bpp target and
+ * marks the 32x4 tiles; the driver runs drive phases back to back while anything moves. Per phase:
+ *   - the scan: two executor tasks (the feeder tasks, blocking on a full queue) produce each drive
+ *     line with pqbn_v4_exec_row(); a row costs row_idle (its tile band has no running plan) or
+ *     row_band + row_tile x tiles still pushing (ISS fit, tools/iss/bench); the feeder planner above
+ *     decides whether every row is ready in time (else an underrun, as with EPDiy);
+ *   - the planner (its own task, just below the executors) computes the next phase's plans while
+ *     this phase scans; planner cycles = plan_base + plan_px x pixels visited + ... (ISS fit). If it
+ *     is not done when the scan ends, the next phase waits for it (counted: plan_late);
+ *   - the panel model applies the drive codes: each push moves the pixel by 1/full_swing of the
+ *     swing, less after a rest (stiction, the model the planner assumes), times a per-pixel mobility.
+ * An update is done when no tile of its area has a running, pending or capped plan (and none is in
+ * motion mode). HAL_WF_GC16 is a flashing clean: black, white, then the content.
+ * hal_display_pause() stops at the next phase boundary (flash operations run between phases). */
+
+#define PQ_MAX_UPD 64
+#define PQ_PLAN_STACK 3072
+
+typedef struct {
+    req_t r;
+    int tx0, ty0, tx1, ty1;   /* tiles covered, inclusive */
+    uint64_t started_ns;      /* first push in the area */
+    bool after_clean;         /* overlaps the area of a clean in progress: done only after it */
+} pq_upd_t;
+
+static struct {
+    pqbn_v4_ctx C;
+    int ntx, nty;
+    uint8_t *line;            /* host scratch: one drive line */
+    uint32_t now;             /* the kernel's phase clock */
+    bool planned;             /* kernel state holds the plan for phase now + 1 */
+    uint16_t *opt;            /* panel model: optical state, 8.8 fixed point (host only) */
+    uint32_t *last_push;      /* phase of the pixel's last push (host only) */
+    uint8_t *mob;             /* per-pixel push size, x/128 (host only) */
+    float st_tab[1024];       /* stiction factor by rest length (phases) */
+    pq_upd_t u[PQ_MAX_UPD];
+    int nu;
+    int clean_stage;          /* 0 none; 1 driving black, 2 white, 3 the content */
+    int clean_idx;            /* the GC16 update being cleaned */
+    hal_rect_t clean_area;
+    bool pause_req, paused;
+    vtk_waitq_t pause_wq;     /* hal_display_pause() waiters and the paused driver */
+    osal_sem_t *plan_go, *plan_done;
+    double plan_cyc;
+    uint32_t *line_cost;      /* per line, ns */
+    uint64_t phases, plan_late, cleans;
+    uint64_t drive_ns;        /* time spent driving (phases) */
+} PQ;
+
+static bool pq_mode(void) { return g_profile.display_driver == 1 && D.info.tech == HAL_PANEL_EPD; }
+
+static void pq_plan_task(void *arg) { /* the planner's CPU, concurrently with the scan */
+    (void)arg;
+    for (;;) {
+        osal_sem_take(PQ.plan_go, OSAL_WAIT_FOREVER);
+        sim_charge_ns_always(sim_cycles_ns(PQ.plan_cyc)); /* ISS cycles already include its cache misses */
+        osal_sem_give(PQ.plan_done);
+    }
+}
+
+static void pq_init(void) {
+    const int W = D.W, H = D.H;
+    if (W % PQBN_TPX || H % PQBN_TPY) osal_panic("pqbn: the panel (%dx%d) must be a multiple of the %dx%d tiles", W, H, PQBN_TPX, PQBN_TPY);
+    PQ.ntx = W / PQBN_TPX;
+    PQ.nty = H / PQBN_TPY;
+    const size_t nt = (size_t)PQ.ntx * PQ.nty, npx = (size_t)W * H;
+    /* device memory, from the simulated heaps: per-pixel state and the framebuffer in PSRAM; the
+     * planner's tables in PSRAM too (they stay in the D-cache: +1.5% planner time on the ISS); what
+     * the executor reads for every row (its tables, tile state) in internal RAM */
+    struct { void **p; size_t n; uint32_t caps; const char *what; } parts[] = {
+        {(void **)&PQ.C.fb4, npx / 2, OSAL_MEM_EXTERNAL, "4 bpp target"},
+        {(void **)&PQ.C.hot, npx / 2, OSAL_MEM_EXTERNAL, "plan nibbles"},
+        {(void **)&PQ.C.cold, npx * 2, OSAL_MEM_EXTERNAL, "pixel state"},
+        {(void **)&PQ.C.dec, 16384, OSAL_MEM_EXTERNAL, "decision table"},
+        {(void **)&PQ.C.tau, 4096, OSAL_MEM_EXTERNAL, "blue-noise thresholds"},
+        {(void **)&PQ.C.tau_nib, 2048, OSAL_MEM_EXTERNAL, "motion thresholds"},
+        {(void **)&PQ.C.exk, 6 * 256, OSAL_MEM_INTERNAL, "executor table"},
+        {(void **)&PQ.C.exk_m, 7 * 256, OSAL_MEM_INTERNAL, "motion executor table"},
+        {(void **)&PQ.C.tile_dirty, nt, OSAL_MEM_INTERNAL, "tile marks"},
+        {(void **)&PQ.C.tile_nmax, nt, OSAL_MEM_INTERNAL, "tile state"},
+        {(void **)&PQ.C.tile_plan, nt * 2, OSAL_MEM_INTERNAL, "tile plan phases"},
+        {(void **)&PQ.C.band, (size_t)PQ.nty * 4, OSAL_MEM_INTERNAL, "tile bands"},
+        {(void **)&PQ.C.row_active, (size_t)H, OSAL_MEM_INTERNAL, "row flags"},
+    };
+    for (size_t i = 0; i < sizeof parts / sizeof parts[0]; i++) {
+        *parts[i].p = osal_malloc(parts[i].n, parts[i].caps);
+        if (!*parts[i].p) osal_panic("pqbn init failed: no memory for its %s (%zu bytes)", parts[i].what, parts[i].n);
+        memset(*parts[i].p, 0, parts[i].n);
+    }
+    size_t line_bytes = ((size_t)W / 4 + 15) / 16 * 16;
+    size_t queue = (size_t)g_profile.line_queue_lines * line_bytes; /* per executor */
+    size_t bounce = 2 * (size_t)g_profile.bounce_lines * line_bytes;
+    if (!osal_malloc(queue, OSAL_MEM_INTERNAL) || !osal_malloc(queue, OSAL_MEM_INTERNAL))
+        osal_panic("pqbn init failed: no memory for the executors' line queues (2 x %zu bytes)", queue);
+    if (!osal_malloc(bounce, OSAL_MEM_DMA)) osal_panic("pqbn init failed: no memory for the LCD bounce buffers");
+    /* tables (build-time work, not charged) */
+    uint8_t *dec = (uint8_t *)PQ.C.dec, *exk = (uint8_t *)PQ.C.exk, *exk_m = (uint8_t *)PQ.C.exk_m;
+    uint8_t *tau = (uint8_t *)PQ.C.tau, *tau_nib = (uint8_t *)PQ.C.tau_nib;
+    if (pqbn_v4_build(dec, exk, PQ.C.step, (float)g_profile.pqbn.full_swing, (float)g_profile.pqbn.stiction,
+                      (float)g_profile.pqbn.stiction_tau))
+        osal_panic("pqbn: the decision table cannot be built for full_swing %.2f", g_profile.pqbn.full_swing);
+    for (int i = 0; i < 4096; i++) tau[i] = (uint8_t)((((i & 63) * 37) + ((i >> 6) * 101)) & 15); /* as the research's benches */
+    pqbn_v4_build_motion(exk_m, tau_nib, tau);
+    PQ.C.W = W;
+    PQ.C.H = H;
+    PQ.C.ntx = PQ.ntx;
+    PQ.C.nty = PQ.nty;
+    PQ.C.marg = 2;
+    PQ.C.plan_budget = g_profile.pqbn.plan_budget;
+    PQ.C.auto_motion = g_profile.pqbn.auto_motion;
+    PQ.C.line_mode = 1;
+    PQ.C.drive = NULL;
+    /* the panel starts white and settled */
+    memset((uint8_t *)PQ.C.fb4, 0xff, npx / 2);
+    pqbn_v4_init(&PQ.C, 0);
+    PQ.line = malloc(line_bytes);
+    PQ.opt = malloc(npx * sizeof *PQ.opt);
+    PQ.last_push = calloc(npx, sizeof *PQ.last_push);
+    PQ.mob = malloc(npx);
+    PQ.line_cost = malloc(sizeof *PQ.line_cost * (size_t)(g_profile.line_count > H ? g_profile.line_count : H));
+    if (!PQ.line || !PQ.opt || !PQ.last_push || !PQ.mob || !PQ.line_cost) abort();
+    for (size_t i = 0; i < npx; i++) {
+        PQ.opt[i] = 255 << 8;
+        uint32_t h = (uint32_t)i * 0x9E3779B1u;
+        h ^= h >> 15;
+        h *= 0x2C1B3C6Du;
+        h ^= h >> 12;
+        /* deterministic spread ~ N(1, sd): sum of two uniforms */
+        double u = ((h & 0xffff) + (h >> 16)) / 65536.0 - 1.0; /* -1..1, triangular */
+        double k = 1.0 + u * g_profile.pqbn.mobility_sd * 2.449;
+        PQ.mob[i] = (uint8_t)(k * 128.0 + 0.5);
+    }
+    const double s0 = g_profile.pqbn.stiction, tau_d = g_profile.pqbn.stiction_tau;
+    for (int d = 0; d < 1024; d++) PQ.st_tab[d] = d == 0 ? 1.0f : (float)(1.0 - s0 * (1.0 - exp(-(double)d / tau_d)));
+    PQ.plan_go = osal_sem_create(0, 1);
+    PQ.plan_done = osal_sem_create(0, 1);
+    if (!PQ.plan_go || !PQ.plan_done) osal_panic("pqbn init failed: no semaphores");
+    osal_task_cfg_t pc = {.name = "epd_plan", .fn = pq_plan_task, .stack_bytes = PQ_PLAN_STACK,
+                          .priority = OSAL_PRIO_MAX - 1, .core = -1};
+    if (osal_task_create(&pc, NULL) != OSAL_OK) osal_panic("pqbn init failed: cannot create the planner task");
+}
+
+static void pq_tiles_of(const hal_rect_t *a, int *tx0, int *ty0, int *tx1, int *ty1) {
+    *tx0 = a->x / PQBN_TPX;
+    *ty0 = a->y / PQBN_TPY;
+    *tx1 = (a->x + a->w - 1) / PQBN_TPX;
+    *ty1 = (a->y + a->h - 1) / PQBN_TPY;
+}
+
+static void pq_mark(const hal_rect_t *a) {
+    int tx0, ty0, tx1, ty1;
+    pq_tiles_of(a, &tx0, &ty0, &tx1, &ty1);
+    for (int ty = ty0; ty <= ty1; ty++)
+        for (int tx = tx0; tx <= tx1; tx++) PQ.C.tile_dirty[ty * PQ.ntx + tx] = 1;
+}
+
+static bool pq_in_clean(int x, int y) {
+    if (PQ.clean_stage != 1 && PQ.clean_stage != 2) return false;
+    const hal_rect_t *c = &PQ.clean_area;
+    return x >= c->x && x < c->x + c->w && y >= c->y && y < c->y + c->h;
+}
+
+/* set the kernel's target for area a: from the framebuffer (level < 0) or one level */
+static void pq_target(const hal_rect_t *a, int level, bool respect_clean) {
+    uint8_t *fb4 = (uint8_t *)PQ.C.fb4;
+    for (int y = a->y; y < a->y + a->h; y++)
+        for (int x = a->x; x < a->x + a->w; x++) {
+            if (respect_clean && pq_in_clean(x, y)) continue;
+            int t4 = level >= 0 ? level : (D.target[(size_t)y * D.W + x] * 15 + 127) / 255;
+            uint8_t *b = fb4 + (size_t)y * (D.W / 2) + x / 2;
+            *b = (x & 1) ? (uint8_t)((*b & 0x0f) | (t4 << 4)) : (uint8_t)((*b & 0xf0) | t4);
+        }
+    pq_mark(a);
+}
+
+static bool rect_overlap(const hal_rect_t *a, const hal_rect_t *b) {
+    return a->x < b->x + b->w && b->x < a->x + a->w && a->y < b->y + b->h && b->y < a->y + a->h;
+}
+
+static void pq_ingest(const req_t *r) {
+    if (PQ.nu == PQ_MAX_UPD) osal_panic("pqbn: more than %d updates in flight", PQ_MAX_UPD);
+    pq_upd_t *u = &PQ.u[PQ.nu++];
+    memset(u, 0, sizeof *u);
+    u->r = *r;
+    pq_tiles_of(&r->area, &u->tx0, &u->ty0, &u->tx1, &u->ty1);
+    if (r->wf == HAL_WF_GC16 && PQ.clean_stage == 0) { /* flashing clean: black first */
+        PQ.clean_stage = 1;
+        PQ.clean_idx = PQ.nu - 1;
+        PQ.clean_area = r->area;
+        PQ.cleans++;
+        pq_target(&r->area, 0, false);
+        return;
+    }
+    u->after_clean = PQ.clean_stage && rect_overlap(&r->area, &PQ.clean_area);
+    pq_target(&r->area, -1, true);
+}
+
+/* no further push in tile ti from phase `from` on */
+static bool pq_tile_still(int ti, uint32_t from) {
+    const int tn = PQ.C.tile_nmax[ti];
+    if (PQ.C.tile_dirty[ti] || (tn & (T_PEND | T_CAP | T_MOT))) return false;
+    return (int)(uint16_t)(from - PQ.C.tile_plan[ti]) >= (tn & T_NMAX);
+}
+
+static bool pq_area_still(int tx0, int ty0, int tx1, int ty1, uint32_t from) {
+    for (int ty = ty0; ty <= ty1; ty++)
+        for (int tx = tx0; tx <= tx1; tx++)
+            if (!pq_tile_still(ty * PQ.ntx + tx, from)) return false;
+    return true;
+}
+
+static bool pq_work_after(uint32_t now) { /* anything for phase now + 1 */
+    if (PQ.C.backlog || PQ.C.n_motion) return true;
+    const int nt = PQ.ntx * PQ.nty;
+    for (int i = 0; i < nt; i++)
+        if (PQ.C.tile_dirty[i] || (PQ.C.tile_nmax[i] & (T_PEND | T_CAP))) return true;
+    for (int ty = 0; ty < PQ.nty; ty++)
+        if ((int16_t)(PQ.C.band[2 * ty] - (uint16_t)(now + 1)) > 0) return true;
+    return false;
+}
+
+/* plan phase `now` (host) and return the planner's cycles on the device */
+static double pq_plan(uint32_t now) {
+    const int nt = PQ.ntx * PQ.nty;
+    int dirty = 0, mdirty = 0;
+    for (int i = 0; i < nt; i++)
+        if (PQ.C.tile_dirty[i]) {
+            dirty++;
+            mdirty += (PQ.C.tile_nmax[i] & T_MOT) != 0;
+        }
+    const int motion0 = PQ.C.n_motion;
+    const uint32_t planned0 = PQ.C.stat_planned;
+    pqbn_v4_phase(&PQ.C, now);
+    const uint32_t planned = PQ.C.stat_planned - planned0;
+    const int d = PQ.C.n_motion - motion0;
+    sim_metric_max("display.pqbn.motion_tiles_max", PQ.C.n_motion);
+    if (PQ.C.n_motion > motion0) {
+        sim_metric_add("display.pqbn.motion_enter_tiles", PQ.C.n_motion - motion0);
+        char a[64];
+        snprintf(a, sizeof a, "{\"tiles\":%d,\"backlog\":%d}", PQ.C.n_motion - motion0, PQ.C.backlog);
+        sim_trace_instant("display", "pqbn motion enter", vtk_now(), a);
+    }
+    if (!planned && !dirty && !PQ.C.n_motion && !d) return g_profile.pqbn.plan_idle;
+    return g_profile.pqbn.plan_base + g_profile.pqbn.plan_px * planned + g_profile.pqbn.plan_motion_tile * mdirty +
+           g_profile.pqbn.plan_exit_tile * (d < 0 ? -d : 0);
+}
+
+/* feeder cost of every scan line for phase `now`; returns the rows with pushes, and the first one */
+static int pq_row_costs(uint32_t now, int *first) {
+    int rows = 0;
+    *first = -1;
+    const double ns_per_cyc = 1000.0 / g_sim_mhz;
+    for (int ty = 0; ty < PQ.nty; ty++) {
+        int n = -1;
+        if ((int16_t)(PQ.C.band[2 * ty] - (uint16_t)now) > 0) {
+            n = 0;
+            for (int tx = 0; tx < PQ.ntx; tx++) {
+                const int ti = ty * PQ.ntx + tx;
+                n += (int)(uint16_t)(now - PQ.C.tile_plan[ti]) < (PQ.C.tile_nmax[ti] & T_NMAX);
+            }
+        }
+        const double cyc = n < 0 ? g_profile.pqbn.row_idle : g_profile.pqbn.row_band + g_profile.pqbn.row_tile * n;
+        for (int k = 0; k < PQBN_TPY; k++) PQ.line_cost[ty * PQBN_TPY + k] = (uint32_t)(cyc * ns_per_cyc);
+        if (n > 0) {
+            rows += PQBN_TPY;
+            if (*first < 0) *first = ty * PQBN_TPY;
+        }
+    }
+    for (int l = D.H; l < g_profile.line_count; l++) PQ.line_cost[l] = (uint32_t)(g_profile.pqbn.row_idle * ns_per_cyc);
+    return rows;
+}
+
+/* the panel model takes this phase's drive codes */
+static void pq_apply(uint32_t now) {
+    const double full = 255.0 * 256.0 / g_profile.pqbn.full_swing;
+    for (int y = 0; y < D.H; y++) {
+        if (!pqbn_v4_exec_row(&PQ.C, now, y, PQ.line)) continue;
+        for (int x = 0; x < D.W; x++) {
+            const int code = (PQ.line[x >> 2] >> (6 - 2 * (x & 3))) & 3;
+            if (!code) continue;
+            const size_t i = (size_t)y * D.W + x;
+            uint32_t rest = now - PQ.last_push[i] - 1;
+            if (PQ.last_push[i] == 0 && now > 1) rest = 1023;
+            const double step = full * PQ.st_tab[rest > 1023 ? 1023 : rest] * PQ.mob[i] / 128.0;
+            double v = PQ.opt[i] + (code == 2 ? step : -step);
+            if (v < 0) v = 0;
+            if (v > 65535) v = 65535;
+            PQ.opt[i] = (uint16_t)v;
+            PQ.last_push[i] = now;
+            D.screen[i] = (uint8_t)(PQ.opt[i] >> 8);
+        }
+    }
+}
+
+static void pq_finish(pq_upd_t *u, uint64_t done_ns) {
+    hal_display_result_t res = {.id = u->r.id, .ok = true, .waveform = u->r.wf, .queued_us = u->r.queued_ns / 1000};
+    res.started_us = (u->started_ns ? u->started_ns : done_ns) / 1000;
+    res.done_us = done_ns / 1000;
+    char key[80], args[160];
+    snprintf(key, sizeof key, "display.updates.%s", WFN[u->r.wf]);
+    sim_metric_add(key, 1);
+    snprintf(key, sizeof key, "display.update_ms.%s", WFN[u->r.wf]);
+    sim_metric_sample(key, (done_ns - u->r.queued_ns) / 1e6);
+    snprintf(args, sizeof args, "{\"id\":%u,\"x\":%d,\"y\":%d,\"w\":%d,\"h\":%d}", u->r.id, u->r.area.x, u->r.area.y,
+             u->r.area.w, u->r.area.h);
+    sim_trace_span("display", WFN[u->r.wf], u->started_ns ? u->started_ns : done_ns, done_ns, args);
+    if (g_sim.frames && g_sim.out_dir) {
+        char path[512];
+        snprintf(path, sizeof path, "%s/frames/%05u_%08.1fms_%s.png", g_sim.out_dir, u->r.id, done_ns / 1e6, WFN[u->r.wf]);
+        write_png(path);
+    }
+    D.pending--;
+    if (u->r.done) u->r.done(u->r.ctx, &res);
+}
+
+/* phase `now` is planned and about to scan (from scan_start): updates whose area pushes now start */
+static void pq_note_started(uint32_t now, uint64_t scan_start) {
+    for (int i = 0; i < PQ.nu; i++) {
+        pq_upd_t *u = &PQ.u[i];
+        if (u->started_ns) continue;
+        for (int ty = u->ty0; ty <= u->ty1 && !u->started_ns; ty++)
+            for (int tx = u->tx0; tx <= u->tx1; tx++) {
+                const int ti = ty * PQ.ntx + tx;
+                if ((int)(uint16_t)(now - PQ.C.tile_plan[ti]) < (PQ.C.tile_nmax[ti] & T_NMAX)) {
+                    u->started_ns = scan_start + (uint64_t)(ty * PQBN_TPY) * g_profile.line_ns;
+                    break;
+                }
+            }
+    }
+}
+
+/* after phase `now` (its scan ended at scan_end; the next phase may be planned): finished updates,
+ * clean stages */
+static void pq_after_phase(uint32_t now, uint64_t scan_end) {
+    if (PQ.clean_stage) { /* the clean advances once its area is still */
+        pq_upd_t *c = &PQ.u[PQ.clean_idx];
+        if (pq_area_still(c->tx0, c->ty0, c->tx1, c->ty1, now + 1)) {
+            if (PQ.clean_stage == 1) {
+                PQ.clean_stage = 2;
+                pq_target(&PQ.clean_area, 15, false);
+            } else if (PQ.clean_stage == 2) {
+                PQ.clean_stage = 3;
+                pq_target(&PQ.clean_area, -1, false); /* the newest content, other updates included */
+            } else {
+                PQ.clean_stage = 0;
+            }
+        }
+    }
+    for (int i = 0; i < PQ.nu;) {
+        pq_upd_t *u = &PQ.u[i];
+        bool cleaning = PQ.clean_stage && i == PQ.clean_idx;
+        bool waiting = u->after_clean && PQ.clean_stage;
+        if (!cleaning && !waiting && pq_area_still(u->tx0, u->ty0, u->tx1, u->ty1, now + 1)) {
+            pq_finish(u, u->started_ns ? scan_end : vtk_now());
+            if (PQ.clean_stage && PQ.clean_idx > i) PQ.clean_idx--;
+            PQ.u[i] = PQ.u[--PQ.nu];
+            if (PQ.clean_stage && PQ.clean_idx == PQ.nu) PQ.clean_idx = i;
+            continue;
+        }
+        i++;
+    }
+}
+
+static void pq_drain_requests(void) {
+    req_t r;
+    while (osal_queue_recv(D.q, &r, 0) == OSAL_OK) {
+        if (r.wake_ms) {
+            uint64_t until = r.queued_ns + (uint64_t)r.wake_ms * 1000000ull;
+            if (until > D.wake_until_ns) D.wake_until_ns = until;
+            continue;
+        }
+        pq_ingest(&r);
+    }
+}
+
+/* drive phases while anything moves */
+static void pq_drive(void) {
+    if (!g_boost) g_boost = hal_cpu_boost_create("epd");
+    hal_cpu_boost_acquire(g_boost);
+    power_up();
+    sim_i2c_transfer("io-expander", 3);
+    sim_power_consumer("display.refresh", true, g_profile.ma_display_refresh);
+    D.playing = true;
+    uint64_t t_start = vtk_now(), t0 = vtk_now();
+    const hal_rect_t all = {0, 0, D.W, D.H};
+    double worst = 1e9;
+    bool plan_running = false;
+    for (;;) {
+        pq_drain_requests();
+        if (PQ.pause_req) { /* a flash operation: hold still between phases */
+            if (plan_running) {
+                osal_sem_take(PQ.plan_done, OSAL_WAIT_FOREVER);
+                plan_running = false;
+            }
+            uint64_t tp = vtk_now();
+            vtk_lock();
+            PQ.paused = true;
+            D.playing = false; /* no scan: flash operations do not meet a waveform */
+            vtk_wake_all_locked(&PQ.pause_wq);
+            while (PQ.pause_req) vtk_block_locked(&PQ.pause_wq, VTK_TIME_INF);
+            PQ.paused = false;
+            D.playing = true;
+            vtk_unlock();
+            sim_metric_add("display.pqbn.pauses_while_driving", 1);
+            sim_metric_sample("display.pqbn.pause_ms", (vtk_now() - tp) / 1e6);
+            sim_trace_span("display", "pqbn paused (flash)", tp, vtk_now(), NULL);
+            t0 = vtk_now();
+            continue;
+        }
+        if (!PQ.planned) { /* first phase after a rest: plan before the scan (adds latency) */
+            PQ.plan_cyc = pq_plan(PQ.now + 1);
+            osal_sem_give(PQ.plan_go);
+            osal_sem_take(PQ.plan_done, OSAL_WAIT_FOREVER);
+            PQ.planned = true;
+            t0 = vtk_now();
+        }
+        const uint32_t now = ++PQ.now;
+        int first;
+        const int rows = pq_row_costs(now, &first);
+        sim_metric_sample("display.pqbn.rows_pushing", rows);
+        sim_assets_cache_pollute(); /* the executors stream the plan nibbles through the shared D-cache */
+        plan_t p;
+        vtk_lock();
+        D.line_cost = PQ.line_cost;
+        D.stall_dirty = false;
+        plan_phase(&all, t0, &p);
+        PLAN = p;
+        D.phase_seq++;
+        vtk_wake_all_locked(&D.feed_wq);
+        vtk_unlock();
+        pq_note_started(now, p.scan_start);
+        pq_apply(now);
+        /* the planner prepares the next phase while this one scans */
+        PQ.planned = false;
+        plan_running = false;
+        if (pq_work_after(now)) {
+            PQ.plan_cyc = pq_plan(now + 1);
+            osal_sem_give(PQ.plan_go);
+            plan_running = true;
+            PQ.planned = true;
+        }
+        sim_metric_sample("display.pqbn.plan_ms", sim_cycles_ns(PQ.plan_cyc) / 1e6);
+        for (;;) { /* until the scan ends; a flash stall reported meanwhile re-plans it */
+            uint64_t tn = vtk_now();
+            if (tn < p.scan_end) vtk_sleep_ns(p.scan_end - tn);
+            vtk_lock();
+            bool dirty = D.stall_dirty;
+            if (dirty) {
+                D.stall_dirty = false;
+                plan_phase(&all, t0, &p);
+                PLAN = p;
+            }
+            vtk_unlock();
+            if (!dirty || vtk_now() >= p.scan_end) break;
+        }
+        D.line_cost = NULL;
+        PQ.phases++;
+        if (p.min_slack_lines < worst) worst = p.min_slack_lines;
+        if (p.late) {
+            sim_metric_add("display.underruns", 1);
+            sim_metric_add("display.late_lines_phases", 1);
+            sim_warn("display: pqbn drive line %d was not ready at %.3f ms (executors slower than the scan, or a flash "
+                     "operation froze them) -> stray pushes; recovering with a full clean", p.late_line, p.late_at / 1e6);
+            if (PQ.clean_stage == 0) {
+                req_t rc = {.id = ++D.next_id, .area = all, .wf = HAL_WF_GC16, .queued_ns = vtk_now()};
+                D.pending++;
+                pq_ingest(&rc);
+            }
+        }
+        sim_metric_sample("display.phase_ms", (p.next_start - t0) / 1e6);
+        sim_metric_sample("display.prefill_ms", (p.scan_start - t0) / 1e6);
+        pq_after_phase(now, p.scan_end);
+        uint64_t tn = vtk_now();
+        if (tn < p.next_start) vtk_sleep_ns(p.next_start - tn);
+        if (plan_running) {
+            if (osal_sem_take(PQ.plan_done, 0) != OSAL_OK) { /* the next phase waits for its plan */
+                PQ.plan_late++;
+                uint64_t tw = vtk_now();
+                osal_sem_take(PQ.plan_done, OSAL_WAIT_FOREVER);
+                sim_metric_sample("display.pqbn.plan_wait_ms", (vtk_now() - tw) / 1e6);
+            }
+            plan_running = false;
+        }
+        t0 = vtk_now();
+        pq_drain_requests();
+        if (!PQ.planned && !pq_work_after(now)) {
+            /* nothing moves: anything still listed is finished (e.g. content that did not change) */
+            pq_after_phase(now, p.scan_end);
+            if (!PQ.nu) break;
+        }
+    }
+    D.playing = false;
+    sim_power_consumer("display.refresh", false, g_profile.ma_display_refresh);
+    sim_i2c_transfer("io-expander", 3);
+    sim_metric_min("display.feeder_slack_lines_min", worst);
+    PQ.drive_ns += vtk_now() - t_start;
+    D.busy_ns += vtk_now() - t_start;
+    sim_trace_span("display", "pqbn drive", t_start, vtk_now(), NULL);
+    hal_cpu_boost_release(g_boost);
+}
+
+static void pq_driver_loop(void) {
+    req_t r;
+    for (;;) {
+        osal_err_t e;
+        if (D.rails_on) {
+            uint64_t until = D.hold_ms ? D.last_done_ns + (uint64_t)D.hold_ms * 1000000ull : 0;
+            if (D.wake_until_ns > until) until = D.wake_until_ns;
+            uint64_t now = vtk_now();
+            if (until <= now) {
+                if (D.wake_until_ns && D.wake_until_ns <= now) sim_metric_add("display.wakes_unused", 1);
+                D.wake_until_ns = 0;
+                power_down();
+                continue;
+            }
+            e = osal_queue_recv(D.q, &r, (int64_t)((until - now + 999) / 1000));
+            if (e != OSAL_OK) continue;
+        } else {
+            e = osal_queue_recv(D.q, &r, OSAL_WAIT_FOREVER);
+            if (e != OSAL_OK) continue;
+        }
+        if (r.wake_ms) {
+            uint64_t until = r.queued_ns + (uint64_t)r.wake_ms * 1000000ull;
+            if (until > D.wake_until_ns) D.wake_until_ns = until;
+            if (!D.rails_on) {
+                sim_metric_add("display.wakes", 1);
+                power_up();
+            }
+            continue;
+        }
+        while (PQ.pause_req) { /* paused while idle: updates wait (no flash access needed for them) */
+            vtk_lock();
+            PQ.paused = true;
+            vtk_wake_all_locked(&PQ.pause_wq);
+            while (PQ.pause_req) vtk_block_locked(&PQ.pause_wq, VTK_TIME_INF);
+            PQ.paused = false;
+            vtk_unlock();
+        }
+        pq_ingest(&r);
+        pq_drive();
+        D.last_done_ns = vtk_now();
+        D.wake_until_ns = 0;
+    }
+}
+
+void hal_display_pause(bool pause) {
+    if (!pq_mode()) return;
+    if (vtk_in_isr() || !vtk_self()) osal_panic("hal_display_pause must be called from a task");
+    vtk_lock();
+    PQ.pause_req = pause;
+    if (!pause) {
+        vtk_wake_all_locked(&PQ.pause_wq);
+    } else {
+        while (D.playing && !PQ.paused) vtk_block_locked(&PQ.pause_wq, VTK_TIME_INF);
+    }
+    vtk_unlock();
+}
+
 static void driver_task(void *arg) {
     (void)arg;
+    if (pq_mode()) pq_driver_loop(); /* never returns */
     req_t r;
     for (;;) {
         osal_err_t e;
@@ -702,6 +1267,10 @@ void sim_display_init(void) {
      * never exceed the largest internal heap region): per feeder a prepared-line queue, the
      * waveform LUT, the LCD bounce buffers (DMA-capable) and the rest of its state. */
     const char *prev = osal_mem_tag("display-driver");
+    if (pq_mode()) { /* direct drive: its own buffers instead of EPDiy's */
+        pq_init();
+        goto tasks;
+    }
     void *ext = g_profile.panel_buffers_external ? osal_malloc(g_profile.panel_buffers_external, OSAL_MEM_EXTERNAL) : (void *)1;
     if (!ext) osal_panic("display driver init failed: cannot reserve %zu KiB of external RAM", g_profile.panel_buffers_external / 1024);
     if (D.info.tech == HAL_PANEL_EPD && g_profile.panel_buffers_internal) {
@@ -723,6 +1292,7 @@ void sim_display_init(void) {
     } else if (g_profile.panel_buffers_internal && !osal_malloc(g_profile.panel_buffers_internal, OSAL_MEM_INTERNAL)) {
         osal_panic("display driver init failed: cannot reserve %zu KiB internal", g_profile.panel_buffers_internal / 1024);
     }
+tasks:
     vtk_set_stall_hook(display_stall_hook);
     D.q = osal_queue_create(sizeof(req_t), QUEUE_LEN);
     if (!D.q) osal_panic("display driver init failed: no memory for its request queue");
@@ -789,6 +1359,22 @@ uint64_t sim_display_ipc_wait_ns(uint64_t now) {
 
 void sim_display_report(void) {
     sim_metric_set("display.busy_ms", D.busy_ns / 1e6);
+    if (pq_mode() && PQ.opt) {
+        sim_metric_set("display.pqbn.phases", (double)PQ.phases);
+        sim_metric_set("display.pqbn.plan_late_phases", (double)PQ.plan_late);
+        sim_metric_set("display.pqbn.cleans", (double)PQ.cleans);
+        sim_metric_set("display.pqbn.drive_ms", PQ.drive_ns / 1e6);
+        /* how close the panel model ended to the framebuffer (gray levels of 255) */
+        double sum = 0, mx = 0;
+        const size_t n = (size_t)D.W * D.H;
+        for (size_t i = 0; i < n; i++) {
+            double e = fabs((double)PQ.opt[i] / 256.0 - (double)D.target[i]);
+            sum += e;
+            if (e > mx) mx = e;
+        }
+        sim_metric_set("display.pqbn.final_error_mean", sum / (double)n);
+        sim_metric_set("display.pqbn.final_error_max", mx);
+    }
     sim_metric_set("display.ghost_level_final", sim_display_ghost_level());
     if (g_sim.out_dir && D.screen) {
         char path[512];

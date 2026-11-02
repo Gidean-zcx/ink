@@ -48,6 +48,11 @@ typedef struct {
     uint32_t waveforms;   /* bitmask of (1u << hal_waveform_t) */
     int rotation_deg;     /* mounting rotation of native panel vs. logical UI (0/90/180/270) */
     bool full_frame_scan; /* true if any partial update still scans the whole panel (EPDiy) */
+    /* Per-pixel direct drive (PQ-BN): an update joins the next drive phase even while others are
+     * still converging (no global lock); overlapping updates are fine; waveform hints are advice
+     * except HAL_WF_GC16, which still means a flashing clean of its area. Its done callback fires
+     * when the area has settled. */
+    bool async_updates;
 } hal_panel_info_t;
 
 /* Timing of one update, all on the osal_now_us() clock. */
@@ -101,6 +106,14 @@ void hal_display_hold_power(uint32_t ms);
  * No-op on LCD and when the rails are already up.
  */
 void hal_display_wake(uint32_t ms);
+
+/**
+ * Async panels: stop driving at the next phase boundary and keep the panel still (pixels hold
+ * their state) until called with false; returns once the panel is still. Lets flash operations,
+ * which freeze PSRAM access, run between drive phases instead of waiting for every update to
+ * settle. No-op on panels without async_updates.
+ */
+void hal_display_pause(bool pause);
 
 /** Ambient temperature hint in Celsius for waveform selection (INT32_MIN = unknown). */
 void hal_display_set_temperature(int celsius);
