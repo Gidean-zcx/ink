@@ -21,6 +21,12 @@ jobs:
         run: cmake --build build -j
       - name: Scenarios and budgets
         run: ctest --test-dir build --output-on-failure
+      - name: HTML reports (what the simulated panel showed, latencies, CPU, memory)
+        if: always()
+        run: |
+          for d in build/test-out/*/; do
+            [ -f "$d/metrics.json" ] && python3 tools/simreport/simreport.py "$d" --lang zh || true
+          done
       - name: Sanitizers (ASan + UBSan)
         run: |
           cmake -S . -B build-asan -DINK_SANITIZE=ON

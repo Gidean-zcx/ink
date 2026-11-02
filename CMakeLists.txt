@@ -167,7 +167,7 @@ function(ink_scenario name profile)
             --script ${CMAKE_SOURCE_DIR}/tests/scenarios/${name}.script
             --budget ${CMAKE_SOURCE_DIR}/tests/scenarios/${name}.budget.json
             --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
-            --out ${CMAKE_BINARY_DIR}/test-out/${name}-${profile} --quiet)
+            --out ${CMAKE_BINARY_DIR}/test-out/${name}-${profile} --quiet --trace --frames)
 endfunction()
 ink_scenario(home_basic metalio-plus)
 ink_scenario(home_basic metalio-plus-psram16)
