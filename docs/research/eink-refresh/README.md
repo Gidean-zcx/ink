@@ -19,6 +19,7 @@
 | [history/04-kernel-iterations/](history/04-kernel-iterations/) | 阶段 4 的中间版本：v4 草稿、v2/v3 的 x86 基准、早期 RV32 基准与比对程序、tile 统计，以及含事件驱动与 v2 行的画质结果 | 工作目录中的源码；v2/v3 内核本体在 `pqbn_v4/` 中 |
 | [results/rerun-2026-11-02/](results/rerun-2026-11-02/) | 2026-11-02 用归档代码重跑的阶段 1、2 输出 | 本次整理 |
 | [media/](media/) | 三段对比视频（压缩版）、静帧，以及归档版视频的生成脚本 | 本次整理 |
+| [integration/](integration/) | 2026-11-02 集成与复核的证据：本仓库 ISS 的复测汇总（`iss-summary.*`，由 `tools/iss/bench/run_pqbn.sh` 生成）、系统场景对比表、PQ-BN 翻页过程截图；分析见[集成报告](../eink-refresh-integration.md) | 集成复核 |
 
 各阶段目录中的 `README.md` 是当时随包交付的说明，保留原文。其中有一处已被更正：阶段 3 README 用“x86 × 10～14”折算 S31 耗时，阶段 4 的指令级估算证明它过于乐观，见报告。
 
