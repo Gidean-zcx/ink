@@ -98,7 +98,7 @@ pre.mermaid { background: var(--sheet); border: 1px solid var(--rule); padding: 
     <div class="mono" style="color:var(--accent)">INK · 家庭 AI 墨水屏设备 · E-INK4 PLUS</div>
     <h1>ink 决策板</h1>
     <p class="lede">把项目从“零散想法和竞品调研”推进到可用产品时，需要你拍板的事情都在这里。每项都给了方案和推荐；你不选的可逆事项，我按推荐“暂定”继续推进。点选方案后会自动保存，下次对话我能读到。</p>
-    <div class="meta mono"><span>更新 2026-11-02 · 第一、二轮你已全部选择；第三轮（模拟器建成后的工程选择）按推荐暂定，随时可改；第二次评审后新增 D-35、D-36；电源与待机新增 D-37～D-39</span><span>仓库 Gidean-zcx/ink · docs/decisions</span></div>
+    <div class="meta mono"><span>更新 2026-11-02 · 第一、二轮你已全部选择；第三轮（模拟器建成后的工程选择）按推荐暂定，随时可改；第二次评审后新增 D-35、D-36；电源与待机新增 D-37～D-39；刷新算法集成新增 D-40</span><span>仓库 Gidean-zcx/ink · docs/decisions</span></div>
   </header>
 
   <section aria-labelledby="stage-h">
@@ -431,6 +431,13 @@ const DECISIONS = [
     opts:[
       {k:"160", name:"降到 160 MHz", desc:"阅读时估计约 28 mA（不降约 33 mA），每小时省约 5 mAh；降频时外设时钟是否受影响要到货验证。"},
       {k:"320", name:"不降（上游默认）", desc:"最简单；阅读时多耗约 5 mA（估算）。"}
+    ]},
+  { id:"D-40", title:"第三轮 · 首版用哪种墨水屏驱动（刷新算法研究怎么落地）", kind:"tent", rec:"both",
+    why:"你另一个会话的刷新算法（PQ-BN 直驱）已接进模拟器，和现在的 EPDiy 方案跑了同样的场景。它的好处很确定：小范围更新快很多，也不用排队等上一段波形播完。翻页完成时间和画质，则取决于面板的真实响应，现在只有研究里的假设值。研究原样有两处要改：必须用两个扫描任务，自动运动模式要关掉（它会把翻页误判成滚动）。",
+    opts:[
+      {k:"epdiy", name:"只用 EPDiy 方案", desc:"最稳。PQ-BN 留作研究，不进首版。"},
+      {k:"pqbn", name:"首版直接用 PQ-BN", desc:"模拟中：唤醒后页面 0.71 → 0.28 秒出来，主页点按 0.60 → 0.23 秒完成，翻页与现方案相当。风险：如果面板要 12 推才完成满摆，翻页会更慢；要 15 推以上，现在的算法表就做不出来。"},
+      {k:"both", name:"两种都保留，先用 EPDiy，标定后切到 PQ-BN", desc:"系统已经能靠换一份设备配置切换，应用不用改。到货先测面板响应（SP-13），通过就把 PQ-BN 设为默认。"}
     ]}
 ];
 const ROAD = [

@@ -294,6 +294,24 @@ P4 手册给出 6.92/MHz（双核），上面的推理对 P4 应该同样成立�
 
 S31 的 XespV 向量扩展 ISS 不建模；若能用于查表，这一项还能大幅下降，需到货后核实。
 
+### 2.7 PQ-BN 直驱内核（2026-11-02，刷新算法研究集成）【仿】
+
+用 `tools/iss/bench/run_pqbn.sh` 在研究的 7 个全分辨率场景上跑 `drivers/epd/pqbn_v4.c`。帧由 ISS 新增的输入服务读入（`iss -i 文件`，目标端 `iss_input()`，不计时、不经缓存，读入前写回并作废 D-cache，略偏悲观）。
+
+布局：
+
+- 每像素状态和帧缓冲在 PSRAM；
+- 表与 tile 状态在内部 SRAM；
+- 执行器在 IRAM，规划器在 flash。
+
+结果：
+
+- 拟合模型为研究自带估算的 1.15～1.6 倍，慢角为 1.6～2.5 倍。
+- 最慢一行 23～26 µs（慢角 37～41 µs），超过 17 µs 的行时间。
+- 规划器的决策表放 PSRAM 只慢 1.5%。
+
+设备模拟器的成本模型由同一脚本拟合：逐行 R² 0.99，规划 R² 0.98。完整表格与分析见[集成报告](../eink-refresh-integration.md)。
+
 ## 3 建议写入 profile 的值（2026-11-02 已按本节写入，`text.*`/`heap.op` 除外）
 
 两组值都由 `calibrate.sh` 算出，在 `costs.json` 的 `proposed_costs_cycles`（预期）与 `proposed_costs_cycles_pessimistic`（悲观）里。

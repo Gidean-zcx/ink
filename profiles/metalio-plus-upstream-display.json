@@ -278,7 +278,7 @@
     "sleep_exit_ms": 30,
     "sleep_wake_us": 2000,
     "sd_remount_ms": 100,
-    "_notes": "ALL ESTIMATES (unmeasured): replace with bench measurements (SP-08, SP-10). battery_mah 1700: upstream docs/battery-soc-and-charge.md (checked 2026-11-02) uses a 424860-2000 cell that delivered 1870.7 mAh at ~1 A to 3.3 V in their test; x0.9 for ageing and temperature (resources take lower bounds).",
+    "_notes": "ALL ESTIMATES (unmeasured): replace with bench measurements (SP-14; standby SP-10). battery_mah 1700: upstream docs/battery-soc-and-charge.md (checked 2026-11-02) uses a 424860-2000 cell that delivered 1870.7 mAh at ~1 A to 3.3 V in their test; x0.9 for ageing and temperature (resources take lower bounds).",
     "_notes_clock": "idle_mhz 320: upstream default (AppIdle 160/240/320, default 320, power_policy.h), i.e. no idle down-clocking.",
     "_notes_standby": "Standby = explicit light sleep in slices (upstream: <= 60 s, esp_light_sleep_start). sleep_ma: whole board asleep with the shared P1.4 rail cut (chip + PSRAM retention + always-on parts: RTC, fuel gauge, IO expander, regulators). standby_modem_ma: extra while that rail stays up for answerable standby: the 4G module at short paging cycles 3.3-4.1 mA (vendor figure, foundation §7) plus the BH1098 on the same rail (unknown, ~1 mA assumed); SP-10 measures it. sleep_enter_ms 200 = upstream TPS65185 park (50 + 120 ms) + SD park + rails; sleep_exit_ms 30 = rails + key baseline; sd_remount_ms after a key wake only (upstream skips it on timer wakes); sleep_wake_us = chip wake-up (clock/PLL) before any task runs."
   },

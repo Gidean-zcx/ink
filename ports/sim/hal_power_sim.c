@@ -1,7 +1,7 @@
 /*
  * Power model: resource reference counts, front light, battery drain and an
  * energy estimate per scenario. Currents are ESTIMATES from the profile until
- * bench measurements exist (SP-08) — use the result to compare designs, not
+ * bench measurements exist (SP-14) — use the result to compare designs, not
  * to promise battery life.
  *
  * CPU clock: full speed while the system is active or anything holds a CPU

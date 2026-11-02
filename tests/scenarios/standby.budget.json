@@ -1,5 +1,5 @@
 {
-  "_doc": "Standby on the pessimistic Plus profile (foundation §7, power service): idle clock, power-key lock, light sleep in 60 s slices, wake keys, auto lock. Currents are ESTIMATES (profile power section) until SP-08/SP-10: the current budgets are regression guards (a hold or a busy service that keeps the chip awake while locked fails them), not battery-life promises.",
+  "_doc": "Standby on the pessimistic Plus profile (foundation §7, power service): idle clock, power-key lock, light sleep in 60 s slices, wake keys, auto lock. Currents are ESTIMATES (profile power section) until SP-14/SP-10: the current budgets are regression guards (a hold or a busy service that keeps the chip awake while locked fails them), not battery-life promises.",
   "panic.count": {
     "max": 0,
     "optional": true
