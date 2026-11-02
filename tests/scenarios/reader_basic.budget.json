@@ -20,8 +20,8 @@
     "max": 400
   },
   "reader.page_render_ms.p95": {
-    "max": 250,
-    "why": "layout + glyph rendering of one page"
+    "max": 600,
+    "why": "wall time of rendering the next page ahead; it runs while a waveform plays and the two EPD feeders hold ~93% of both cores, so it must still finish well before the next turn (1.5 s in this script)"
   },
   "reader.open_ms.max": {
     "max": 1500,

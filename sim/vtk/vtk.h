@@ -37,6 +37,7 @@ typedef struct {
     uint64_t long_burst_warn_ns;  /* warn when a task runs this long without a scheduling point */
     double host_stack_ratio;      /* host stack bytes per target stack byte (64-bit host vs RV32) */
     uint64_t end_time_ns;         /* stop at this virtual time (VTK_TIME_INF = never) */
+    uint64_t tick_ns;             /* RTOS tick: equal-priority ready tasks rotate at tick boundaries (0 = off) */
     bool realtime;                /* pace virtual time to wall clock (interactive) */
     double realtime_speed;        /* 1.0 = real time */
 } vtk_config_t;
@@ -51,8 +52,6 @@ typedef enum {
     VTK_ST_BLOCKED,
     VTK_ST_DONE,
 } vtk_state_t;
-
-enum { VTK_TASK_IRAM_SAFE = 1u << 0 };
 
 typedef struct {
     char name[32];
@@ -125,10 +124,16 @@ uint64_t vtk_isr_now(void);
 vtk_task_t *vtk_isr_wake_one(vtk_waitq_t *wq);
 
 /* ---- flash stall model ----
- * While internal flash is erased/programmed, CPU caches are off: every task
- * without VTK_TASK_IRAM_SAFE is frozen on all cores until the operation ends. */
+ * While internal flash is read/erased/programmed through the flash API, ESP-IDF
+ * disables the caches and suspends the scheduler on both cores: the caller
+ * spins in IRAM, the other core spins in an IPC task, and NO task runs until
+ * the operation ends (only IRAM-safe interrupts, i.e. events, keep running).
+ * Both cores count as busy for the duration. */
 void vtk_stall_begin_locked(uint64_t until_ns);
 uint64_t vtk_stall_total_ns(void);
+/** Called (kernel lock held, ISR-like) with each newly stalled interval [from, until) (new window or extension). */
+typedef void (*vtk_stall_hook_fn)(uint64_t from_ns, uint64_t until_ns);
+void vtk_set_stall_hook(vtk_stall_hook_fn fn);
 
 /* ---- realtime/external input ---- */
 /** Thread-safe from ANY host thread (e.g. an SDL or network thread): run fn in event

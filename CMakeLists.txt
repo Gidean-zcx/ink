@@ -158,6 +158,13 @@ foreach(p metalio-plus metalio-plus-psram16 pinenote-rk3566 desktop-lcd)
             --budget ${CMAKE_SOURCE_DIR}/tests/sim/selftest.budget.json
             --out ${CMAKE_BINARY_DIR}/test-out/selftest-${p} --quiet)
 endforeach()
+# Death test: a task with a PSRAM stack touching /user must crash the simulated device, as ESP-IDF does.
+add_test(NAME selftest-psram-stack-flash-access-crashes
+  COMMAND sim-selftest --profile ${CMAKE_SOURCE_DIR}/profiles/metalio-plus.json
+          --out ${CMAKE_BINARY_DIR}/test-out/selftest-death --quiet --end 2s)
+set_tests_properties(selftest-psram-stack-flash-access-crashes PROPERTIES
+  ENVIRONMENT "INK_SELFTEST_DEATH=psram_flash"
+  PASS_REGULAR_EXPRESSION "stack in PSRAM and accessed /user")
 add_test(NAME determinism
   COMMAND ${CMAKE_COMMAND} -DSIM=$<TARGET_FILE:sim-selftest>
           -DPROFILE=${CMAKE_SOURCE_DIR}/profiles/metalio-plus.json

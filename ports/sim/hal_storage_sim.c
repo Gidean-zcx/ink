@@ -65,15 +65,10 @@ static void flash_busy(uint64_t ns, const char *what) {
     if (g_profile.flash_stalls_cpu) {
         vtk_lock();
         vtk_stall_begin_locked(vtk_now() + ns);
-        vtk_unlock(); /* a non-IRAM-safe caller is frozen here until the window ends */
-        uint64_t now = vtk_now();
-        if (now < t0 + ns) { /* IRAM-safe caller: busy-waits on the status register */
-            sim_charge_ns_always(t0 + ns - now);
-            vtk_sched_point();
-        }
+        vtk_unlock(); /* every task, the caller included (it spins in IRAM), is frozen until the window ends */
+        vtk_sched_point();
         if (ns > FL.max_stall_ns) FL.max_stall_ns = ns;
         sim_metric_sample("flash.stall_ms", ns / 1e6);
-        sim_display_flash_stall(t0, ns);
     } else {
         vtk_sleep_ns(ns); /* eMMC/SPI NAND with DMA: the caller just waits */
     }
@@ -138,6 +133,11 @@ static int bd_erase(const struct lfs_config *c, lfs_block_t block) {
     FL.op_t1 = FL.op_t0 + ns;
     flash_busy(ns, "erase");
     if (FL.cut) return LFS_ERR_IO;
+    if (g_profile.flash_stalls_cpu && ns >= SIM_MS(20) && g_profile.tick_hz > 0) {
+        /* CONFIG_SPI_FLASH_YIELD_DURING_ERASE: after >= 20 ms of erasing the caller yields one tick */
+        uint64_t T = 1000000000ull / (uint64_t)g_profile.tick_hz, now = vtk_now();
+        vtk_sleep_ns((now / T + 1) * T - now);
+    }
     FL.op = OP_NONE;
     memset(FL.img + a, 0xff, FL.sector);
     FL.erase_count[block]++;
@@ -247,7 +247,16 @@ struct hal_file {
     int fd;
 };
 
-static void lock_user(void) { osal_mutex_lock(U.lock, OSAL_WAIT_FOREVER); }
+/* Every /user operation goes through here. On the MCU the flash API disables the cache; ESP-IDF
+ * asserts that the caller's stack stays reachable (spi_flash cache_utils), so a task with a PSRAM
+ * stack calling into /user crashes the device even for a read. */
+static void lock_user(void) {
+    if (g_profile.flash_stalls_cpu && sim_task_stack_external())
+        osal_panic("task '%s' has its stack in PSRAM and accessed /user: the flash driver disables the cache and "
+                   "ESP-IDF asserts (stack unusable with cache disabled) -> device reset. Go through the storage service.",
+                   osal_task_name(osal_task_self()));
+    osal_mutex_lock(U.lock, OSAL_WAIT_FOREVER);
+}
 static void unlock_user(void) { osal_mutex_unlock(U.lock); }
 
 hal_file_t *hal_fs_open(const char *path, int flags) {

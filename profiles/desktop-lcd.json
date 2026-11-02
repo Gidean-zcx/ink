@@ -112,7 +112,13 @@
     "lvgl.refr": 150000,
     "ui.rotate_px": 20,
     "tls.handshake": 96000000,
-    "net.byte": 40
+    "net.byte": 40,
+    "opus.enc_frame": 2400000,
+    "opus.dec_frame": 450000,
+    "audio.convert_frame": 12,
+    "audio.mix_sample": 6,
+    "tone.sample": 20,
+    "epd.diff_px": 14
   },
   "power": {
     "_notes": "defaults from the simulator; not modelled for this class"
@@ -142,5 +148,17 @@
     "tls_external_kib": 64,
     "ws_task_stack": 8192,
     "event_task_stack": 8192
+  },
+  "audio": {
+    "dma_desc": 4,
+    "dma_frames": 320,
+    "slot_bytes": 4,
+    "start_ms": 50,
+    "stop_ms": 10,
+    "task_stack": 16384,
+    "task_prio": 8,
+    "opus_enc_kib": 30,
+    "opus_dec_kib": 27,
+    "_notes": "ALSA: 4 periods x 20 ms, 16-bit stereo; no flash stalls on this class of device. Estimates."
   }
 }

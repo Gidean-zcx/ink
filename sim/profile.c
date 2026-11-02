@@ -96,7 +96,7 @@ int profile_load(const char *path, sim_profile_t *p, char *err, size_t errlen) {
     const cJSON *mem = obj(root, "memory");
     p->internal_heap = (size_t)(num(mem, "internal_heap_kib", 80) * 1024);
     p->dma_heap = (size_t)(num(mem, "dma_heap_kib", 32) * 1024);
-    p->external_heap = (size_t)(num(mem, "external_heap_kib", 15872) * 1024);
+    p->external_heap = (size_t)(num(mem, "external_heap_kib", 7680) * 1024);
     p->always_internal_max = (size_t)num(mem, "always_internal_max_bytes", 16);
 
     const cJSON *d = obj(root, "display");
@@ -109,14 +109,32 @@ int profile_load(const char *path, sim_profile_t *p, char *err, size_t errlen) {
     p->panel.rotation_deg = (int)num(d, "rotation_deg", 0);
     p->panel.full_frame_scan = flag(d, "full_frame_scan", true);
     p->frame_time_us = (uint32_t)num(d, "frame_time_us", 16000);
-    p->power_up_us = (uint32_t)num(d, "power_up_us", 10000);
+    p->power_up_us = (uint32_t)num(d, "power_up_us", 140000);
     p->power_down_us = (uint32_t)num(d, "power_down_us", 2000);
     p->touch_pause_us = (uint32_t)num(d, "touch_pause_during_power_us", 0);
     p->lcd_frame_us = (uint32_t)num(d, "lcd_frame_us", 16667);
     p->keep_power_ms = (uint32_t)num(d, "keep_power_ms", 0);
-    p->prep_cpu_duty = num(d, "prep_cpu_duty", 0.0);
     p->submit_copy_mbps = num(d, "submit_copy_mbps", 0.0);
-    p->line_queue_us = (uint32_t)num(d, "line_queue_us", 544);
+    p->line_count = (int)num(d, "line_count", 688);
+    p->line_ns = (uint32_t)(num(d, "line_time_us", 17) * 1000);
+    p->line_queue_lines = (int)num(d, "line_queue_lines", 32);
+    p->line_prep_ns = (uint32_t)(num(d, "line_prep_us", 24) * 1000);
+    p->phase_min_us = (uint32_t)num(d, "phase_min_us", 12000);
+    p->gc16_full_phases = (int)num(d, "gc16_full_phases", 48);
+    p->clear_frames = (int)num(d, "clear_frames", 69);
+    p->lcd_isr_duty = num(d, "lcd_isr_duty", 0.10);
+    {
+        const char *dp = str(d, "diff_pass", "full_width");
+        p->diff_pass = !strcmp(dp, "none") ? 0 : !strcmp(dp, "area") ? 1 : 2;
+    }
+    p->line_queue_us = (uint32_t)((uint64_t)p->line_queue_lines * p->line_ns / 1000);
+    /* Feeders spin at top priority until the last line of a phase is queued:
+     * busy = (lines - queue depth) x line time, out of the shortest phase. An explicit value overrides. */
+    double busy_us = (double)(p->line_count - p->line_queue_lines) * p->line_ns / 1000.0;
+    double derived = p->phase_min_us ? busy_us / (double)p->phase_min_us : 0.7;
+    if (derived > 0.98) derived = 0.98;
+    if (derived < 0) derived = 0;
+    p->prep_cpu_duty = num(d, "prep_cpu_duty", derived);
     p->panel_buffers_external = (size_t)(num(d, "driver_external_kib", 0) * 1024);
     p->panel_buffers_internal = (size_t)(num(d, "driver_internal_kib", 0) * 1024);
     static const char *WF[HAL_WF_COUNT] = {"GC16", "GL16", "DU", "A2"};
@@ -204,6 +222,19 @@ int profile_load(const char *path, sim_profile_t *p, char *err, size_t errlen) {
     p->ws_stack = (uint32_t)num(net, "ws_task_stack", 4096);
     p->sys_evt_stack = (uint32_t)num(net, "event_task_stack", 2560);
     p->dead_detect_ms = (uint32_t)num(net, "dead_detect_ms", 5000);
+
+    const cJSON *au = obj(root, "audio");
+    p->audio_dma_desc = (int)num(au, "dma_desc", 4);
+    p->audio_dma_frames = (int)num(au, "dma_frames", 240);
+    p->audio_slot_bytes = (int)num(au, "slot_bytes", 8);
+    p->audio_start_us = (uint32_t)(num(au, "start_ms", 30) * 1000);
+    p->audio_stop_us = (uint32_t)(num(au, "stop_ms", 5) * 1000);
+    p->audio_task_stack = (uint32_t)num(au, "task_stack", 4096);
+    p->audio_task_prio = (int)num(au, "task_prio", 8);
+    p->opus_enc_bytes = (size_t)(num(au, "opus_enc_kib", 30) * 1024);
+    p->opus_dec_bytes = (size_t)(num(au, "opus_dec_kib", 27) * 1024);
+    if (p->audio_dma_desc < 2) p->audio_dma_desc = 2;
+    if (p->audio_dma_frames < 16) p->audio_dma_frames = 16;
 
     const cJSON *pw = obj(root, "power");
     p->batt_mah = num(pw, "battery_mah", 1500);

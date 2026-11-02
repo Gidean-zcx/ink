@@ -198,18 +198,23 @@ static void test_display(void) {
     osal_queue_recv(disp_q, &r, OSAL_WAIT_FOREVER);
     counter_run = false;
     if (pi.tech == HAL_PANEL_EPD) {
-        uint64_t play = (uint64_t)g_profile.wf[HAL_WF_GC16].phases * g_profile.frame_time_us;
+        int phases = g_profile.wf[HAL_WF_GC16].phases;
+        if (g_profile.gc16_full_phases > phases) phases = g_profile.gc16_full_phases; /* full-screen GC16: complete table */
+        uint64_t play = (uint64_t)phases * g_profile.frame_time_us;
         uint64_t pu = g_profile.power_up_us;
-        CHECK(r.started_us - r.queued_us >= pu && r.started_us - r.queued_us <= pu + 20000,
-              "GC16 starts after the PMIC power-up (%llu us, expected ~%llu)",
-              (unsigned long long)(r.started_us - r.queued_us), (unsigned long long)pu);
+        double diff_cycles_px = profile_cost("epd.diff_px") + profile_cost("psram_to_internal.copy_byte") +
+                                profile_cost("internal_to_psram.copy_byte");
+        uint64_t diff_us = g_profile.diff_pass ? (uint64_t)((double)pi.width * pi.height * diff_cycles_px / g_profile.mhz) : 0;
+        CHECK(r.started_us - r.queued_us >= pu + diff_us * 9 / 10 && r.started_us - r.queued_us <= pu + diff_us + 20000,
+              "GC16 starts after the PMIC power-up and the difference pass (%llu us, expected ~%llu)",
+              (unsigned long long)(r.started_us - r.queued_us), (unsigned long long)(pu + diff_us));
         CHECK(r.done_us - r.started_us >= play - 100 && r.done_us - r.started_us <= play + 1000,
               "GC16 plays phases x frame time (%llu us, expected %llu)", (unsigned long long)(r.done_us - r.started_us),
               (unsigned long long)play);
         if (g_profile.prep_cpu_duty > 0) {
             double total_ms = (double)(r.done_us - r.queued_us) / 1000.0;
             double share = (double)counter_ms / total_ms;
-            double expect = ((double)pu + (double)play * (1.0 - g_profile.prep_cpu_duty)) / 1000.0 / total_ms;
+            double expect = ((double)pu + (double)diff_us + (double)play * (1.0 - g_profile.prep_cpu_duty)) / 1000.0 / total_ms;
             CHECK(share < expect + 0.08, "the EPD feeders leave only ~%.0f%% of a core during refresh (got %.0f%%)",
                   expect * 100, share * 100);
         }
@@ -221,7 +226,8 @@ static void test_display(void) {
         hal_display_update(&small, fb + 64, pi.width, HAL_WF_DU, 0, disp_done, NULL);
         osal_queue_recv(disp_q, &r, OSAL_WAIT_FOREVER);
         uint64_t du = (uint64_t)g_profile.wf[r.waveform].phases * g_profile.frame_time_us;
-        CHECK(r.started_us - r.queued_us < 2000, "held rails: no power-up delay (%llu us)",
+        uint64_t small_diff_us = g_profile.diff_pass ? (uint64_t)(32.0 * (g_profile.diff_pass == 2 ? pi.width : 64) * diff_cycles_px / g_profile.mhz) : 0;
+        CHECK(r.started_us - r.queued_us < 2000 + small_diff_us, "held rails: no power-up delay (%llu us)",
               (unsigned long long)(r.started_us - r.queued_us));
         CHECK(r.done_us - r.started_us >= du - 100, "a tiny partial update still scans the full panel (%llu us)",
               (unsigned long long)(r.done_us - r.started_us));
@@ -237,33 +243,28 @@ static void test_display(void) {
 /* --------------------------------------------------- 7. flash stalls */
 
 static volatile bool victim_run;
-static uint64_t victim_gap_max, iram_gap_max;
+static uint64_t victim_gap_max, worker_gap_max, victim_iters, worker_iters;
 
-static void victim_task(void *arg) { /* stack in PSRAM: freezes while flash is written */
+static void spin_task(void *arg) {
+    bool victim = arg != NULL;
     uint64_t last = osal_now_us();
     while (victim_run) {
         osal_cost_cycles(mhz() * 200);
         uint64_t now = osal_now_us();
-        if (now - last > victim_gap_max) victim_gap_max = now - last;
+        uint64_t *gap = victim ? &victim_gap_max : &worker_gap_max;
+        if (now - last > *gap) *gap = now - last;
         last = now;
-    }
-}
-
-static void iram_task(void *arg) { /* IRAM-safe: keeps running */
-    uint64_t last = osal_now_us();
-    while (victim_run) {
-        osal_cost_cycles(mhz() * 200);
-        uint64_t now = osal_now_us();
-        if (now - last > iram_gap_max) iram_gap_max = now - last;
-        last = now;
+        if (victim) victim_iters++;
+        else worker_iters++;
     }
 }
 
 static void test_flash(void) {
     victim_run = true;
     int other = g_profile.cores > 1 ? 1 : 0;
-    spawn("psram_victim", victim_task, NULL, 3, other, 2048, OSAL_TASK_STACK_EXTERNAL);
-    spawn("iram_worker", iram_task, NULL, 3, other, 2048, OSAL_TASK_IRAM_SAFE);
+    /* two equal-priority CPU hogs on the same core: one with a PSRAM stack, one with an internal stack */
+    spawn("psram_victim", spin_task, (void *)1, 3, other, 2048, OSAL_TASK_STACK_EXTERNAL);
+    spawn("internal_worker", spin_task, NULL, 3, other, 2048, 0);
     osal_task_delay_us(20000);
     static uint8_t data[8192];
     for (size_t i = 0; i < sizeof data; i++) data[i] = (uint8_t)(i * 31 + 7);
@@ -276,12 +277,16 @@ static void test_flash(void) {
     uint64_t dt = osal_now_us() - t0;
     victim_run = false;
     osal_task_delay_us(20000);
+    CHECK(victim_iters > 10 && worker_iters > 10,
+          "equal-priority tasks share a core by tick time slicing (%llu / %llu iterations)",
+          (unsigned long long)victim_iters, (unsigned long long)worker_iters);
     if (g_profile.flash_stalls_cpu) {
         CHECK(victim_gap_max >= g_profile.erase_us_typ * 9 / 10,
-              "a PSRAM task freezes for a whole sector erase (max gap %llu us, erase typ %u us)",
+              "a PSRAM-stack task freezes for a whole sector erase (max gap %llu us, erase typ %u us)",
               (unsigned long long)victim_gap_max, g_profile.erase_us_typ);
-        CHECK(iram_gap_max < 5000, "an IRAM-safe task keeps running during flash writes (max gap %llu us)",
-              (unsigned long long)iram_gap_max);
+        CHECK(worker_gap_max >= g_profile.erase_us_typ * 9 / 10,
+              "an internal-stack task freezes too: the scheduler is suspended on both cores (max gap %llu us)",
+              (unsigned long long)worker_gap_max);
     }
     ink_probe_value("selftest.user_write_8k_ms", dt / 1000.0);
     static uint8_t back[8192]; /* never put buffers this size on a task stack */
@@ -292,6 +297,37 @@ static void test_flash(void) {
     hal_fs_volume_info_t vi;
     CHECK(hal_fs_volume_info("/user", &vi) == 0 && vi.total_bytes > 0 && vi.free_bytes < vi.total_bytes,
           "volume info for /user");
+}
+
+/* ------------------------------------- 7b. flash write during a waveform */
+
+/* A flash erase in the middle of a waveform must be caught as an underrun (the feeders freeze
+ * while the LCD DMA drains the prepared-line queue) and cost the upstream recovery. */
+static void test_underrun(void) {
+    if (!g_profile.flash_stalls_cpu || g_profile.prep_cpu_duty <= 0) return;
+    hal_panel_info_t pi;
+    hal_display_get_info(&pi);
+    static uint8_t px[64 * 32];
+    memset(px, 0, sizeof px);
+    hal_rect_t small = {200, 200, 64, 32};
+    uint32_t id = hal_display_update(&small, px, 64, HAL_WF_DU, 0, disp_done, NULL);
+    CHECK(id > 0, "queue a DU update for the underrun test");
+    osal_task_delay_us(g_profile.power_up_us + 150000); /* well inside the waveform */
+    static uint8_t data[6000];
+    memset(data, 0x5a, sizeof data);
+    hal_file_t *f = hal_fs_open("/user/underrun.bin", HAL_O_WRITE | HAL_O_CREATE | HAL_O_TRUNC);
+    if (f) {
+        hal_fs_write(f, data, sizeof data);
+        hal_fs_close(f);
+    }
+    hal_display_result_t r;
+    osal_queue_recv(disp_q, &r, OSAL_WAIT_FOREVER);
+    uint64_t base = (uint64_t)g_profile.wf[r.waveform].phases * g_profile.frame_time_us;
+    uint64_t rec = (uint64_t)(g_profile.clear_frames + g_profile.gc16_full_phases) * g_profile.frame_time_us;
+    CHECK(r.done_us - r.started_us >= base + rec - 1000,
+          "a flash write inside a waveform underruns and pays the clear + full GC16 recovery (%llu us, expected >= %llu)",
+          (unsigned long long)(r.done_us - r.started_us), (unsigned long long)(base + rec));
+    hal_fs_remove("/user/underrun.bin");
 }
 
 /* ----------------------------------------------------- 8. SD card */
@@ -353,7 +389,8 @@ static void check_input(void) {
 
 /* ------------------------------------------------------------- main */
 
-void ink_main(void) {
+static void selftest_task(void *arg) {
+    (void)arg;
     hal_input_set_sink(sink, NULL);
     hal_device_info_t di;
     hal_device_get_info(&di);
@@ -365,10 +402,35 @@ void ink_main(void) {
     test_memory();
     test_display();
     test_flash();
+    test_underrun();
     test_sd();
     /* the script taps at 4.0 s and 4.5 s and presses NEXT at 5 s */
     uint64_t now = osal_now_us();
     if (now < 6500000) osal_task_delay_us(6500000 - now);
     check_input();
     ink_probe_mark("selftest-done");
+}
+
+static void bad_psram_task(void *arg) {
+    (void)arg;
+    char buf[16];
+    hal_file_t *f = hal_fs_open("/user/anything", HAL_O_READ); /* must not return on an MCU profile */
+    if (f) {
+        hal_fs_read(f, buf, sizeof buf);
+        hal_fs_close(f);
+    }
+    sim_warn("death test: a PSRAM-stack task read /user without crashing the device");
+}
+
+void ink_main(void) {
+    const char *death = getenv("INK_SELFTEST_DEATH");
+    if (death && !strcmp(death, "psram_flash")) {
+        osal_task_cfg_t bad = {.name = "psram_reader", .fn = bad_psram_task, .stack_bytes = 3072,
+                               .priority = OSAL_PRIO_NORMAL, .core = -1, .flags = OSAL_TASK_STACK_EXTERNAL};
+        osal_task_create(&bad, NULL);
+        return;
+    }
+    /* the checks need more stack than the product's main task gets; internal, because they write flash */
+    osal_task_cfg_t cfg = {.name = "selftest", .fn = selftest_task, .stack_bytes = 8192, .priority = OSAL_PRIO_NORMAL, .core = -1};
+    CHECK(osal_task_create(&cfg, NULL) == OSAL_OK, "create the self-test task");
 }

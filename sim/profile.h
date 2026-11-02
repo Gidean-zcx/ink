@@ -76,7 +76,16 @@ typedef struct {
     uint32_t keep_power_ms;     /* keep panel power on this long after an update (0 = off after each) */
     double prep_cpu_duty;       /* fraction of each core used by line feeders during waveform playback */
     double submit_copy_mbps;    /* framebuffer copy bandwidth for submitted areas */
-    uint32_t line_queue_us;     /* time the prepared-line queue bridges when the feeders freeze */
+    uint32_t line_queue_us;     /* time the prepared-line queue bridges when the feeders freeze (= lines x line time) */
+    int line_count;             /* lines scanned per phase */
+    uint32_t line_ns;           /* scan time of one line */
+    int line_queue_lines;       /* prepared-line queue depth (32 design target, 127 upstream) */
+    uint32_t line_prep_ns;      /* one feeder prepares one line in this long (2 feeders) */
+    uint32_t phase_min_us;      /* shortest phase the driver allows; feeders spin for most of it */
+    int gc16_full_phases;       /* complete GC16 table for full-screen flashing updates */
+    int clear_frames;           /* epd_clear frames used to recover from an underrun */
+    double lcd_isr_duty;        /* LCD bounce-buffer refill interrupts on core 0 during playback */
+    int diff_pass;              /* CPU difference image + back-buffer copy: 0 none (EPD controller), 1 area, 2 full-width rows (upstream) */
     profile_waveform_t wf[HAL_WF_COUNT];
     size_t panel_buffers_external; /* bytes the panel driver keeps in external RAM */
     size_t panel_buffers_internal; /* bytes the panel driver keeps in internal RAM (line queues, DMA) */
@@ -119,6 +128,14 @@ typedef struct {
     size_t tls_internal_bytes, tls_external_bytes;
     uint32_t ws_stack, sys_evt_stack;
     uint32_t dead_detect_ms;       /* a dead connection is noticed after this (ping timeout) */
+
+    /* audio: I2S DMA rings (16 kHz), codec memory */
+    int audio_dma_desc, audio_dma_frames; /* per direction: descriptors x frames each */
+    int audio_slot_bytes;                 /* bytes per I2S frame on the wire (stereo 32-bit slots = 8) */
+    uint32_t audio_start_us, audio_stop_us; /* output path up (I2S + amplifier settle) / down */
+    uint32_t audio_task_stack;
+    int audio_task_prio;
+    size_t opus_enc_bytes, opus_dec_bytes; /* codec state (external RAM) */
 
     /* power (estimates until measured) */
     double batt_mah;

@@ -9,8 +9,16 @@
  *   ports/posix     pthreads + monotonic clock     — Linux SoC (e.g. RK3566) / desktop
  *
  * Semantics follow FreeRTOS (fixed priorities, higher number = more urgent,
- * preemptive), because that is the most constrained target. Code that is
- * correct under these rules is correct on the richer platforms too.
+ * preemptive, equal priorities time-sliced at each tick; mutexes with
+ * priority inheritance but no hand-over), because that is the most
+ * constrained target. Code that is correct under these rules is correct on
+ * the richer platforms too.
+ *
+ * Delays and timeouts mean "at least N µs", ending on the first RTOS tick at
+ * or after now + N (tick = 10 ms on the Plus). The FreeRTOS port computes
+ * the target tick from the microsecond clock (target = ceil((now + N) / T),
+ * wait = target - xTaskGetTickCount()); a naive pdMS_TO_TICKS(N) could wake
+ * up to one tick early and is not allowed.
  */
 #ifndef INK_OSAL_H
 #define INK_OSAL_H
@@ -88,12 +96,12 @@ typedef void (*osal_task_fn)(void *arg);
 #define OSAL_PRIO_MAX 24
 
 enum {
-    /* Task never touches PSRAM or flash-resident code/data; may keep running
-     * while internal flash is erased/programmed (cache disabled). */
-    OSAL_TASK_IRAM_SAFE = 1u << 0,
     /* Put the stack in external RAM (PSRAM) to save internal RAM. Default is
-     * internal, as in ESP-IDF. Such a task freezes while internal flash is
-     * written and must never write flash itself. */
+     * internal, as in ESP-IDF. Such a task must never call the flash API at
+     * all — reading /user included: the flash driver disables the cache, the
+     * stack becomes unreachable and ESP-IDF asserts. Use the storage service.
+     * (No task of any kind runs while the flash API is busy: ESP-IDF
+     * suspends the scheduler on both cores; only IRAM-safe ISRs run.) */
     OSAL_TASK_STACK_EXTERNAL = 1u << 1,
 };
 

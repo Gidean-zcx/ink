@@ -89,6 +89,7 @@ void sim_trace_switch_hook(int core, const vtk_task_t *t, bool running, uint64_t
 void sim_osal_init(void);
 void sim_osal_report(void);           /* per-task stats into metrics */
 const char *sim_current_owner(void);  /* mem tag or task name, for attribution */
+bool sim_task_stack_external(void);   /* current task's stack is in PSRAM (task context) */
 
 /* ---- device models ---- */
 void sim_display_init(void);          /* task context (boot) */
@@ -97,8 +98,6 @@ void sim_display_report(void);
 void sim_display_snapshot(const char *name);
 /** Mean absolute residual ghosting over the panel (0..255), for budgets. */
 double sim_display_ghost_level(void);
-/** A cache-disabling flash operation froze PSRAM users for `ns` from `t0` (storage model -> display model). */
-void sim_display_flash_stall(uint64_t t0, uint64_t ns);
 
 void sim_input_init(void);            /* task context (boot) */
 /* Physical actions in logical (UI-orientation) coordinates; called from script events (ISR ctx). */

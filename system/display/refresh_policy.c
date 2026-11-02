@@ -103,6 +103,20 @@ hal_waveform_t rp_waveform_for(const rp_state_t *s, ink_refresh_t intent) {
 bool rp_next(rp_state_t *s, rp_dispatch_t *out) {
     if (!s->npending) return false;
     memset(out, 0, sizeof *out);
+    if (s->force_full_next) {
+        /* a full refresh covers every pending region: take them all (their causes too) */
+        s->force_full_next = false;
+        while (s->npending) {
+            fold_cause(&out->cause_us, &out->cause_tag, s->pending[0].cause_us, s->pending[0].cause_tag);
+            remove_at(s, 0);
+        }
+        out->intent = INK_REFRESH_FULL;
+        out->rect = (hal_rect_t){0, 0, s->panel_w, s->panel_h};
+        out->wf = rp_waveform_for(s, out->intent);
+        out->cleanup = true;
+        s->text_since_clean = 0;
+        return true;
+    }
     bool have_fast = false;
     for (int i = 0; i < s->npending; i++)
         if (s->pending[i].intent <= INK_REFRESH_FAST) have_fast = true;
@@ -118,11 +132,6 @@ bool rp_next(rp_state_t *s, rp_dispatch_t *out) {
         fold_cause(&out->cause_us, &out->cause_tag, p->cause_us, p->cause_tag);
         first = false;
         remove_at(s, i);
-    }
-    if (s->force_full_next) {
-        s->force_full_next = false;
-        out->intent = INK_REFRESH_FULL;
-        out->rect = (hal_rect_t){0, 0, s->panel_w, s->panel_h};
     }
     out->wf = rp_waveform_for(s, out->intent);
     if (out->intent == INK_REFRESH_TEXT && !s->lcd) {

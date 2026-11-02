@@ -90,6 +90,7 @@ static struct {
     bool in_isr;
     uint64_t isr_now;
     uint64_t stall_from, stall_until, stall_total;
+    vtk_stall_hook_fn stall_hook;
     /* external injection (realtime) */
     pthread_mutex_t ext_m;
     pthread_cond_t ext_cv;
@@ -99,6 +100,7 @@ static struct {
     vtk_switch_hook_fn hook;
     vtk_task_t *stack_probe;
     uint64_t busy[VTK_MAX_CORES];
+    uint64_t stall_busy[VTK_MAX_CORES]; /* cores spinning while the flash API runs */
     uint64_t slice_start[VTK_MAX_CORES];
 } K;
 
@@ -223,7 +225,7 @@ static bool eligible(const vtk_task_t *t, int c) {
     if (t->state != VTK_ST_READY) return false;
     if (t->ready_at > K.now[c]) return false;
     if (t->core_aff >= 0 && t->core_aff != c) return false;
-    if (!(t->flags & VTK_TASK_IRAM_SAFE) && stalled_at(K.now[c])) return false;
+    if (stalled_at(K.now[c])) return false; /* scheduler suspended on all cores */
     return true;
 }
 
@@ -278,15 +280,20 @@ static vtk_task_t *dispatch_on_core_locked(int c) {
     vtk_task_t *cur = K.cur[c];
     vtk_task_t *cand = best_ready_for_core(c);
     if (cur) {
-        if (!(cur->flags & VTK_TASK_IRAM_SAFE) && stalled_at(K.now[c])) {
+        if (stalled_at(K.now[c])) {
             uint64_t d = K.stall_until - K.now[c];
             cur->stall_ns += d;
             K.now[c] = K.stall_until;
-            K.slice_start[c] += d; /* frozen, not busy */
+            K.slice_start[c] += d; /* frozen; the core's spin time is counted in stall_busy */
             return NULL;
         }
-        /* Equal-priority tasks do not time-slice here (deterministic); they rotate at blocking/yield points. */
-        if (cand && cand->prio > cur->prio) {
+        bool rotate = false;
+        if (cand && cand->prio == cur->prio && K.cfg.tick_ns) {
+            /* FreeRTOS time slicing: at every tick an equal-priority ready task gets the core */
+            uint64_t tb = K.now[c] / K.cfg.tick_ns * K.cfg.tick_ns;
+            rotate = cur->run_since < tb;
+        }
+        if (cand && (cand->prio > cur->prio || rotate)) {
             make_ready_locked(cur, K.now[c]);
             core_release_locked(c);
             start_on_core_locked(cand, c);
@@ -317,7 +324,7 @@ static uint64_t next_interesting_time_locked(uint64_t t0) {
         vtk_task_t *t = K.tasks[i];
         if (t->state != VTK_ST_READY) continue;
         uint64_t when = t->ready_at > t0 ? t->ready_at : t0;
-        if (!(t->flags & VTK_TASK_IRAM_SAFE) && stalled_at(when)) when = K.stall_until;
+        if (stalled_at(when)) when = K.stall_until;
         if (when > t0 && when < t1) t1 = when;
         /* ready but pinned to a core that is ahead: that core's time is already counted above */
     }
@@ -493,7 +500,7 @@ void vtk_set_warn_sink(vtk_warn_fn fn) { K.warn = fn ? fn : default_warn; }
 void vtk_set_switch_hook(vtk_switch_hook_fn fn) { K.hook = fn; }
 uint64_t vtk_core_busy_ns(int core) {
     if (core < 0 || core >= K.cfg.ncores) return 0;
-    uint64_t b = K.busy[core];
+    uint64_t b = K.busy[core] + K.stall_busy[core];
     if (K.cur[core]) b += K.now[core] - K.slice_start[core];
     return b;
 }
@@ -812,30 +819,40 @@ static void shift_cores_ahead_locked(uint64_t from, uint64_t shift) {
     for (int c = 0; c < K.cfg.ncores; c++) {
         if (self && self->core == c && !K.in_isr) continue;
         vtk_task_t *t = K.cur[c];
-        if (!t || (t->flags & VTK_TASK_IRAM_SAFE) || K.now[c] <= from) continue;
+        if (!t || K.now[c] <= from) continue;
         K.now[c] += shift;
         K.slice_start[c] += shift;
         t->stall_ns += shift;
     }
 }
 
+static void stall_busy_add_locked(uint64_t d) {
+    for (int c = 0; c < K.cfg.ncores; c++) K.stall_busy[c] += d;
+}
+
 void vtk_stall_begin_locked(uint64_t until_ns) {
     uint64_t from = caller_time();
     if (until_ns <= from) return;
+    uint64_t added_from = from;
     if (from < K.stall_until && K.stall_until > K.stall_from) {
-        if (until_ns > K.stall_until) {
-            uint64_t ext = until_ns - K.stall_until;
-            shift_cores_ahead_locked(K.stall_until, ext);
-            K.stall_total += ext;
-            K.stall_until = until_ns;
-        }
+        if (until_ns <= K.stall_until) return;
+        uint64_t ext = until_ns - K.stall_until;
+        added_from = K.stall_until;
+        shift_cores_ahead_locked(K.stall_until, ext);
+        K.stall_total += ext;
+        stall_busy_add_locked(ext);
+        K.stall_until = until_ns;
     } else {
         shift_cores_ahead_locked(from, until_ns - from);
         K.stall_from = from;
         K.stall_until = until_ns;
         K.stall_total += until_ns - from;
+        stall_busy_add_locked(until_ns - from);
     }
+    if (K.stall_hook) K.stall_hook(added_from, until_ns);
 }
+
+void vtk_set_stall_hook(vtk_stall_hook_fn fn) { K.stall_hook = fn; }
 
 uint64_t vtk_stall_total_ns(void) { return K.stall_total; }
 

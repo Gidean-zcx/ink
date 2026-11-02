@@ -201,6 +201,7 @@ int main(int argc, char **argv) {
         .long_burst_warn_ns = g_profile.long_burst_warn_ns,
         .host_stack_ratio = g_profile.host_stack_ratio,
         .end_time_ns = g_sim.end_ns ? g_sim.end_ns : VTK_TIME_INF,
+        .tick_ns = g_profile.tick_hz > 0 ? 1000000000ull / (uint64_t)g_profile.tick_hz : 0,
         .realtime = g_sim.realtime,
         .realtime_speed = g_sim.realtime_speed,
     };

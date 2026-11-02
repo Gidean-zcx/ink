@@ -1,28 +1,39 @@
 /*
  * Display model: an EPDiy-style e-ink panel (or an LCD) with realistic timing,
- * CPU load and memory footprint.
+ * CPU load and memory footprint. Defaults follow the upstream Plus pipeline.
  *
  * E-ink update pipeline (all numbers from the device profile):
  *   submit   caller converts+copies the area into the driver framebuffer
  *            (CPU + PSRAM bandwidth charged to the caller), request queued
  *   power    if the HV rails are off: PMIC power-up (~140 ms on the Plus;
  *            holds the shared I2C bus for part of it -> touch reads wait)
+ *   diff     upstream epd_hl_update_area builds a difference image over the
+ *            full-width rows of the area (PSRAM in, PSRAM out) — driver task
  *   play     phases x frame_time; EVERY update scans the whole panel
- *            (full_frame_scan), so a 1-line change costs as much time as a
- *            full page. Two max-priority feeder tasks keep both cores busy
- *            (prep_cpu_duty) for the whole waveform.
- *   done     pixels stable -> done callback (from the driver task); rails
- *            off immediately unless hal_display_hold_power() asked otherwise.
+ *            (full_frame_scan). Two max-priority feeder tasks with PSRAM
+ *            stacks keep the prepared-line queue topped up and spin until the
+ *            last line of each phase is queued (derived duty); the LCD
+ *            bounce-buffer interrupt adds load on core 0. A full-screen
+ *            flashing GC16 uses the complete (48-phase) table.
+ *   copy     back-buffer update of the dirty full-width rows (PSRAM->PSRAM)
+ *   done     pixels stable at the end of the waveform -> done callback (from
+ *            the driver task, after the copy); rails off right away unless
+ *            hal_display_hold_power() / hal_display_wake() asked otherwise.
  *   wake     hal_display_wake() queues a power-up ahead of any update (the
  *            input service calls it on touch/key edges), so the ~140 ms
  *            overlaps rendering; unused wakes cost rail current only.
- * A flash erase/program during playback freezes the feeders (PSRAM stacks)
- * and is reported as a line-queue underrun (a visible glitch on the device).
+ *
+ * Underruns: while a flash operation freezes the feeders the LCD DMA keeps
+ * draining the line queue (one line per line time); between stalls the
+ * feeders refill it at their net production rate. If it runs dry the panel
+ * shows garbage: upstream then recovers with epd_clear + a complete GC16
+ * (about 1.9 s), which is charged here too and counted in display.underruns.
  *
  * The panel state is modelled for screenshots: the physical image plus a
  * ghosting residual that grows with every non-flashing update and is cleared
  * by flashing GC16 updates.
  */
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -73,6 +84,12 @@ static struct {
     uint64_t play_start, play_frames, frame_ns;
     int frame_no;
     uint64_t worst_stall_in_play; /* longest flash stall that overlapped the current waveform */
+    double q_level;               /* prepared lines in the queue at q_t */
+    uint64_t q_t;
+    double q_min;                 /* lowest level during the current waveform */
+    double refill_per_ns;         /* net queue refill rate while the feeders run */
+    bool underrun;
+    uint64_t underrun_at;
     /* stats */
     uint64_t busy_ns;
     unsigned wf_fallback_warned;
@@ -156,28 +173,60 @@ double sim_display_ghost_level(void) {
 /* ------------------------------------------------------------------ feeders */
 
 static void feeder_task(void *arg) {
-    (void)arg;
+    int core = (int)(intptr_t)arg;
     for (;;) {
         vtk_lock();
         while (!D.playing) vtk_block_locked(&D.feed_wq, VTK_TIME_INF);
         uint64_t start = D.play_start, frames = D.play_frames, frame = D.frame_ns;
         vtk_unlock();
-        double duty = g_profile.prep_cpu_duty;
+        double duty = g_profile.prep_cpu_duty + (core == 0 ? g_profile.lcd_isr_duty : 0.0);
+        if (duty > 1.0) duty = 1.0;
         for (uint64_t f = 0; f < frames; f++) {
-            uint64_t fs = start + f * frame;
+            uint64_t fs = start + f * frame, fe = fs + frame;
             uint64_t now = vtk_now();
+            if (now >= fe) continue; /* frozen through this phase: the DMA scanned it without us */
             if (now < fs) vtk_sleep_ns(fs - now);
-            /* prepare + push this frame's lines: busy (spinning on the line queue at max priority) */
-            sim_charge_ns_always((uint64_t)(duty * (double)frame));
+            /* prepare + push this phase's lines: busy (spinning on the line queue at max priority) */
+            now = vtk_now();
+            uint64_t busy = (uint64_t)(duty * (double)frame);
+            if (now + busy > fe) busy = fe > now ? fe - now : 0;
+            sim_charge_ns_always(busy);
             vtk_sched_point();
             now = vtk_now();
-            if (now < fs + frame) vtk_sleep_ns(fs + frame - now);
+            if (now < fe) vtk_sleep_ns(fe - now);
         }
         vtk_lock();
         /* wait for the driver to clear `playing` (it does at the end of the waveform) */
         while (D.playing && D.play_start == start) vtk_block_locked(&D.feed_wq, VTK_TIME_INF);
         vtk_unlock();
     }
+}
+
+/* Flash stall hook (kernel lock held): the feeders are frozen for [from, until) while the LCD DMA
+ * keeps consuming prepared lines. */
+static void display_stall_hook(uint64_t from, uint64_t until) {
+    if (!D.playing || D.info.tech != HAL_PANEL_EPD) return;
+    uint64_t ps = D.play_start, pe = D.play_start + D.play_frames * D.frame_ns;
+    uint64_t a = from > ps ? from : ps, b = until < pe ? until : pe;
+    if (b <= a) return;
+    double Q = (double)g_profile.line_queue_lines;
+    double lvl = D.q_level;
+    if (a > D.q_t) lvl += (double)(a - D.q_t) * D.refill_per_ns;
+    if (lvl > Q) lvl = Q;
+    double drain = (double)(b - a) / (double)(g_profile.line_ns ? g_profile.line_ns : 17000);
+    if (drain >= lvl) {
+        if (!D.underrun) {
+            D.underrun = true;
+            D.underrun_at = a + (uint64_t)(lvl * (double)g_profile.line_ns);
+        }
+        lvl = 0;
+    } else {
+        lvl -= drain;
+    }
+    D.q_level = lvl;
+    D.q_t = b;
+    if (lvl < D.q_min) D.q_min = lvl;
+    if (b - a > D.worst_stall_in_play) D.worst_stall_in_play = b - a;
 }
 
 /* ------------------------------------------------------------------ driver */
@@ -225,6 +274,55 @@ static void apply_area(const req_t *r, hal_waveform_t wf) {
         }
 }
 
+/* Play `phases` frames, DMA-paced from now. Returns true if the line queue ran dry. */
+static bool play(int phases) {
+    uint64_t started = vtk_now();
+    D.frame_ns = SIM_US(g_profile.frame_time_us);
+    vtk_lock();
+    D.play_start = started;
+    D.play_frames = (uint64_t)phases;
+    D.worst_stall_in_play = 0;
+    D.q_level = (double)g_profile.line_queue_lines;
+    D.q_t = started;
+    D.q_min = D.q_level;
+    D.underrun = false;
+    D.playing = true;
+    if (g_profile.prep_cpu_duty > 0) vtk_wake_all_locked(&D.feed_wq);
+    vtk_unlock();
+    /* DMA-paced scan: hardware time runs from `started` even if the feeders preempt this task */
+    uint64_t end = started + (uint64_t)phases * D.frame_ns;
+    uint64_t now = vtk_now();
+    if (now < end) vtk_sleep_ns(end - now);
+    vtk_lock();
+    D.playing = false;
+    bool underrun = D.underrun;
+    if (g_profile.prep_cpu_duty > 0) vtk_wake_all_locked(&D.feed_wq);
+    vtk_unlock();
+    sim_metric_max("display.line_queue_min_lines_worst", (double)g_profile.line_queue_lines - D.q_min);
+    return underrun;
+}
+
+/* Upstream difference image (before) and back-buffer copy (after): full-width rows of the area. */
+static void diff_pass(const hal_rect_t *a) {
+    if (!g_profile.diff_pass) return;
+    double px = (double)a->h * (double)(g_profile.diff_pass == 2 ? D.W : a->w);
+    uint64_t t0 = vtk_now();
+    /* compute + PSRAM traffic: read front and back (4 bpp each), write the 1-byte-per-pixel difference */
+    sim_charge_ns_always(sim_cycles_ns(px * (profile_cost("epd.diff_px") + profile_cost("psram_to_internal.copy_byte") +
+                                             profile_cost("internal_to_psram.copy_byte"))));
+    vtk_sched_point();
+    sim_trace_span("display", "diff", t0, vtk_now(), NULL);
+}
+
+static void back_copy(const hal_rect_t *a) {
+    if (!g_profile.diff_pass) return;
+    double bytes = (double)a->h * (double)(g_profile.diff_pass == 2 ? D.W : a->w) / 2.0;
+    uint64_t t0 = vtk_now();
+    sim_charge_ns_always(sim_cycles_ns(bytes * profile_cost("psram.copy_byte")));
+    vtk_sched_point();
+    sim_trace_span("display", "backcopy", t0, vtk_now(), NULL);
+}
+
 static void execute(req_t *r) {
     hal_display_result_t res = {.id = r->id, .ok = true, .queued_us = r->queued_ns / 1000};
     hal_waveform_t wf = resolve_wf(r->wf);
@@ -234,46 +332,51 @@ static void execute(req_t *r) {
     for (int y = 0; y < r->area.h; y++)
         memcpy(D.applying + (size_t)y * r->area.w, D.target + (size_t)(r->area.y + y) * D.W + r->area.x, (size_t)r->area.w);
 
+    bool full_area = r->area.x == 0 && r->area.y == 0 && r->area.w == D.W && r->area.h == D.H;
     uint64_t started, done;
+    bool recovered = false;
     if (D.info.tech == HAL_PANEL_LCD) {
         started = vtk_now();
         vtk_sleep_ns(SIM_US(g_profile.lcd_frame_us));
         done = vtk_now();
     } else {
         power_up();
-        started = vtk_now();
+        sim_i2c_transfer("io-expander", 3); /* panel control lines on the TCA9555 at waveform start */
+        diff_pass(&r->area);
         int phases = g_profile.wf[wf].phases;
-        D.frame_ns = SIM_US(g_profile.frame_time_us);
-        D.worst_stall_in_play = 0;
+        if (wf == HAL_WF_GC16 && full_area && g_profile.gc16_full_phases > phases) phases = g_profile.gc16_full_phases;
+        started = vtk_now();
         sim_power_consumer("display.refresh", true, g_profile.ma_display_refresh);
-        vtk_lock();
-        D.play_start = started;
-        D.play_frames = (uint64_t)phases;
-        D.playing = true;
-        if (g_profile.prep_cpu_duty > 0) vtk_wake_all_locked(&D.feed_wq);
-        vtk_unlock();
-        /* DMA-paced scan: hardware time runs from `started` even if the feeders preempt this task */
-        uint64_t end = started + (uint64_t)phases * D.frame_ns;
-        uint64_t now = vtk_now();
-        if (now < end) vtk_sleep_ns(end - now);
-        vtk_lock();
-        D.playing = false;
-        if (g_profile.prep_cpu_duty > 0) vtk_wake_all_locked(&D.feed_wq);
-        vtk_unlock();
+        bool underrun = play(phases);
+        if (underrun) {
+            sim_metric_add("display.underruns", 1);
+            sim_warn("display: the prepared-line queue ran dry at %.3f ms during a %s waveform (a flash operation froze the "
+                     "feeders; queue %d lines = %.2f ms) -> garbage on the panel; recovering with clear + full GC16",
+                     D.underrun_at / 1e6, WFN[wf], g_profile.line_queue_lines, g_profile.line_queue_us / 1e3);
+            uint64_t t_rec = vtk_now();
+            (void)play(g_profile.clear_frames);
+            (void)play(g_profile.gc16_full_phases);
+            sim_trace_span("display", "underrun-recovery", t_rec, vtk_now(), NULL);
+            sim_metric_sample("display.underrun_recovery_ms", (vtk_now() - t_rec) / 1e6);
+            recovered = true;
+        }
         done = vtk_now();
         sim_power_consumer("display.refresh", false, g_profile.ma_display_refresh);
-        if (D.worst_stall_in_play > SIM_US(g_profile.line_queue_us)) {
-            sim_metric_add("display.underruns", 1);
-            sim_warn("display: a flash operation froze the EPD feeders for %.2f ms during a %s waveform (line queue "
-                     "covers %.2f ms) -> underrun, visible glitch on the device; keep flash writes out of refreshes",
-                     D.worst_stall_in_play / 1e6, WFN[wf], g_profile.line_queue_us / 1e3);
-            res.ok = false;
-        }
+        back_copy(&r->area);
+        sim_i2c_transfer("io-expander", 3);
     }
-    apply_area(r, wf);
+    if (recovered) {
+        /* the whole panel now shows the framebuffer after a flashing GC16 */
+        memcpy(D.applying, D.target, (size_t)D.W * D.H);
+        req_t all = *r;
+        all.area = (hal_rect_t){0, 0, D.W, D.H};
+        apply_area(&all, HAL_WF_GC16);
+    } else {
+        apply_area(r, wf);
+    }
     res.started_us = started / 1000;
     res.done_us = done / 1000;
-    D.busy_ns += done - t_pick;
+    D.busy_ns += vtk_now() - t_pick;
 
     char key[80], args[200];
     snprintf(key, sizeof key, "display.updates.%s", WFN[wf]);
@@ -366,12 +469,6 @@ uint32_t hal_display_update(const hal_rect_t *area, const uint8_t *gray8, int st
 
 int hal_display_pending(void) { return D.pending; }
 
-void sim_display_flash_stall(uint64_t t0, uint64_t ns) {
-    if (!D.playing || D.info.tech != HAL_PANEL_EPD) return;
-    uint64_t end = D.play_start + D.play_frames * D.frame_ns;
-    if (t0 + ns <= D.play_start || t0 >= end) return;
-    if (ns > D.worst_stall_in_play) D.worst_stall_in_play = ns;
-}
 void hal_display_set_temperature(int celsius) { D.temperature = celsius; }
 void hal_display_hold_power(uint32_t ms) { D.hold_ms = D.info.tech == HAL_PANEL_EPD ? ms : 0; }
 
@@ -403,6 +500,12 @@ void sim_display_init(void) {
     void *in = g_profile.panel_buffers_internal ? osal_malloc(g_profile.panel_buffers_internal, OSAL_MEM_INTERNAL) : (void *)1;
     if (!ext || !in) osal_panic("display driver init failed: cannot reserve its buffers (%zu KiB external, %zu KiB internal)",
                                 g_profile.panel_buffers_external / 1024, g_profile.panel_buffers_internal / 1024);
+    {
+        double prod = g_profile.line_prep_ns ? 2.0 / (double)g_profile.line_prep_ns : 0;
+        double cons = g_profile.line_ns ? 1.0 / (double)g_profile.line_ns : 0;
+        D.refill_per_ns = prod > cons ? prod - cons : cons * 0.01;
+        vtk_set_stall_hook(display_stall_hook);
+    }
     D.q = osal_queue_create(sizeof(req_t), QUEUE_LEN);
     if (!D.q) osal_panic("display driver init failed: no memory for its request queue");
     osal_task_cfg_t cfg = {.name = "epd", .fn = driver_task, .stack_bytes = DRIVER_STACK, .priority = DRIVER_PRIO, .core = -1};
@@ -411,8 +514,8 @@ void sim_display_init(void) {
         for (int c = 0; c < g_profile.cores && c < 2; c++) {
             char name[16];
             snprintf(name, sizeof name, "epd_prep%d", c);
-            osal_task_cfg_t fc = {.name = name, .fn = feeder_task, .stack_bytes = FEEDER_STACK, .priority = OSAL_PRIO_MAX,
-                                  .core = c, .flags = OSAL_TASK_STACK_EXTERNAL};
+            osal_task_cfg_t fc = {.name = name, .fn = feeder_task, .arg = (void *)(intptr_t)c, .stack_bytes = FEEDER_STACK,
+                                  .priority = OSAL_PRIO_MAX, .core = c, .flags = OSAL_TASK_STACK_EXTERNAL};
             if (osal_task_create(&fc, NULL) != OSAL_OK) osal_panic("display driver init failed: cannot create %s", name);
         }
     }

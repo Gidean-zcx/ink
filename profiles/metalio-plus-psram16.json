@@ -64,10 +64,17 @@
       }
     },
     "keep_power_ms": 0,
-    "prep_cpu_duty": 0.7,
     "submit_copy_mbps": 21,
-    "line_queue_us": 544,
-    "_notes_line_queue": "line_queue_us: lines prepared ahead x 17 us/line. Design target 32 lines (foundation 3.2) = 544 us; upstream 127 lines = 2159 us. A flash stall longer than this during a waveform underruns."
+    "line_count": 688,
+    "line_time_us": 17,
+    "line_queue_lines": 32,
+    "line_prep_us": 24,
+    "phase_min_us": 12000,
+    "gc16_full_phases": 48,
+    "clear_frames": 69,
+    "lcd_isr_duty": 0.1,
+    "_notes_pipeline": "Upstream pipeline (epd_hl_update_area): difference image over FULL-WIDTH rows of the area before the waveform, waveform over the whole panel, back-buffer copy of the dirty full-width rows after it; full-screen flashing GC16 uses the complete 48-phase table. Feeders (two, max priority, PSRAM stacks) spin until the last line of a phase is queued: duty = (line_count - line_queue_lines) x line_time / phase_min (derived). LCD bounce-buffer refill interrupt every 8 lines: lcd_isr_duty on core 0 (estimate 7-15%). Underrun recovery = epd_clear (69 frames) + complete GC16 (upstream epd_refresh.cc). line_queue_lines: 32 = design target (foundation 3.2), 127 = upstream. line_prep_us: estimate (C LUT path, no vector unit).",
+    "diff_pass": "full_width"
   },
   "input": {
     "touch": true,
@@ -149,7 +156,13 @@
     "lvgl.refr": 150000,
     "ui.rotate_px": 20,
     "tls.handshake": 96000000,
-    "net.byte": 40
+    "net.byte": 40,
+    "opus.enc_frame": 2400000,
+    "opus.dec_frame": 450000,
+    "audio.convert_frame": 12,
+    "audio.mix_sample": 6,
+    "tone.sample": 20,
+    "epd.diff_px": 14
   },
   "network": {
     "wifi": {
@@ -187,6 +200,18 @@
     "ws_task_stack": 4096,
     "event_task_stack": 2560,
     "dead_detect_ms": 5000
+  },
+  "audio": {
+    "dma_desc": 4,
+    "dma_frames": 240,
+    "slot_bytes": 8,
+    "start_ms": 30,
+    "stop_ms": 5,
+    "task_stack": 4096,
+    "task_prio": 8,
+    "opus_enc_kib": 30,
+    "opus_dec_kib": 27,
+    "_notes": "BH1098G clocks I2S (ESP is slave): 16 kHz, stereo 32-bit slots, DMA 4 x 240 frames per direction = 60 ms runway (upstream bt_audio_codec.cc). Mic has 2 channels (mic + loopback reference). Output start = I2S enable + NS4150 enable via the TCA9555 over the shared I2C + settle: estimate 30 ms. Opus state from the esp_audio_codec table (48 kHz stereo: enc 29.4 KB, dec 26.6 KB; 16 kHz mono needs less, kept pessimistic). Upstream audio_input task: 4 KB stack in PSRAM, priority 8 (frozen, like every task, while the flash API runs). Opus CPU per 60 ms frame is an ESTIMATE (enc ~12% of one 320 MHz core at complexity 0, dec ~2%); calibrate on the ISS or hardware."
   },
   "power": {
     "battery_mah": 1500,

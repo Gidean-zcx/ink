@@ -221,10 +221,6 @@ osal_err_t osal_task_create(const osal_task_cfg_t *cfg, osal_task_t **out) {
         return OSAL_NO_MEM;
     }
     uint32_t vflags = 0;
-    if (cfg->flags & OSAL_TASK_IRAM_SAFE) {
-        if (ext) sim_warn("task '%s': IRAM_SAFE with an external stack is impossible; treated as not IRAM-safe", t->name);
-        else vflags |= VTK_TASK_IRAM_SAFE;
-    }
     vtk_task_t *vt = vtk_task_create(t->name, trampoline, t, prio, core, vflags, cfg->stack_bytes);
     if (!vt) {
         pools_free(t->stack_mem);
@@ -242,6 +238,7 @@ osal_err_t osal_task_create(const osal_task_cfg_t *cfg, osal_task_t **out) {
 }
 
 osal_task_t *osal_task_self(void) { return vtk_in_isr() ? NULL : tls_task; }
+bool sim_task_stack_external(void) { return !vtk_in_isr() && tls_task && (tls_task->flags & OSAL_TASK_STACK_EXTERNAL); }
 const char *osal_task_name(const osal_task_t *t) { return t ? t->name : "?"; }
 
 void osal_task_delay_us(uint64_t us) {
@@ -437,18 +434,6 @@ void osal_mutex_delete(osal_mutex_t *m) {
     free(m);
 }
 
-/* Effective priority = base raised to the highest waiter of any held mutex. */
-static void recompute_priority_locked(vtk_task_t *vt) {
-    osal_task_t *t = task_of(vt);
-    int p = vtk_base_priority(vt);
-    if (t)
-        for (int i = 0; i < t->nheld; i++) {
-            int w = vtk_waitq_max_priority(&t->held[i]->wq);
-            if (w > p) p = w;
-        }
-    vtk_set_priority(vt, p);
-}
-
 static void hold_add(vtk_task_t *vt, osal_mutex_t *m) {
     osal_task_t *t = task_of(vt);
     if (!t) return;
@@ -479,14 +464,23 @@ static void check_deadlock_locked(osal_mutex_t *m, vtk_task_t *self) {
     }
 }
 
+/* FreeRTOS xTaskPriorityInherit: raise the holder to the waiter's priority. Only the
+ * direct holder is raised (no chain through further mutexes). */
 static void inherit_locked(osal_mutex_t *m, int prio) {
     vtk_task_t *o = m->owner;
-    for (int depth = 0; o && depth < 16; depth++) {
-        if (vtk_priority(o) >= prio) break;
-        vtk_set_priority(o, prio);
-        osal_task_t *ot = task_of(o);
-        o = (ot && ot->waiting_on) ? ot->waiting_on->owner : NULL;
-    }
+    if (o && vtk_priority(o) < prio) vtk_set_priority(o, prio);
+}
+
+/* FreeRTOS vTaskPriorityDisinheritAfterTimeout: a waiter gave up. The holder drops to
+ * max(base, remaining waiters of this mutex) only if it holds no other mutex. */
+static void disinherit_after_timeout_locked(osal_mutex_t *m) {
+    vtk_task_t *o = m->owner;
+    osal_task_t *ot = task_of(o);
+    if (!o || !ot || ot->nheld != 1) return;
+    int p = vtk_base_priority(o);
+    int w = vtk_waitq_max_priority(&m->wq);
+    if (w > p) p = w;
+    if (p != vtk_priority(o)) vtk_set_priority(o, p);
 }
 
 osal_err_t osal_mutex_lock(osal_mutex_t *m, int64_t timeout_us) {
@@ -514,11 +508,8 @@ osal_err_t osal_mutex_lock(osal_mutex_t *m, int64_t timeout_us) {
         if (st) st->waiting_on = m;
         bool woke = vtk_block_locked(&m->wq, rem);
         if (st) st->waiting_on = NULL;
-        if (woke && m->owner == self) { /* ownership handed over by unlock */
-            vtk_unlock();
-            return OSAL_OK;
-        }
-        if (!woke && m->owner) recompute_priority_locked(m->owner); /* disinherit after timeout */
+        /* no hand-over: a woken waiter competes for the mutex again (FreeRTOS semantics) */
+        if (!woke && m->owner) disinherit_after_timeout_locked(m);
     }
 }
 
@@ -531,13 +522,12 @@ void osal_mutex_unlock(osal_mutex_t *m) {
         osal_panic("mutex unlocked by '%s' but owned by '%s'", vtk_task_name(self),
                    m->owner ? vtk_task_name(m->owner) : "nobody");
     hold_remove(self, m);
-    vtk_task_t *next = vtk_wake_one_locked(&m->wq);
-    m->owner = next;
-    if (next) {
-        hold_add(next, m);
-        recompute_priority_locked(next);
-    }
-    recompute_priority_locked(self);
+    m->owner = NULL;
+    /* xTaskPriorityDisinherit: an inherited priority is kept until the task holds no mutex */
+    osal_task_t *st = task_of(self);
+    if (st && st->nheld == 0 && vtk_priority(self) != vtk_base_priority(self))
+        vtk_set_priority(self, vtk_base_priority(self));
+    vtk_wake_one_locked(&m->wq);
     vtk_unlock();
 }
 
