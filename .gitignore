@@ -8,4 +8,7 @@
 !.env.example
 
 # 排除外部仓库副本
-ink/
+/ink/
+
+# 构建输出
+/build*/

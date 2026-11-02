@@ -1,0 +1,273 @@
+#include "pools.h"
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include "tlsf.h"
+
+typedef struct {
+    const char *name;
+    uint8_t *base;
+    size_t size;
+    tlsf_t tlsf;
+    size_t usable;    /* bytes available to allocations after TLSF control overhead */
+    size_t used;
+    size_t min_free;
+    size_t min_largest;
+    size_t alloc_count;
+    size_t failed;
+} heap_pool_t;
+
+static heap_pool_t P[POOL_COUNT];
+static size_t g_always_internal_max = 16;
+static pools_warn_fn g_warn;
+
+/* ---- host-side allocation map: attribution per owner tag (not stored in the pools) ---- */
+#define MAX_TAGS 128
+typedef struct {
+    const char *tag;
+    size_t cur[POOL_COUNT], peak[POOL_COUNT];
+    size_t live;
+} tag_stat_t;
+static tag_stat_t TAGS[MAX_TAGS];
+static int ntags;
+
+typedef struct {
+    uintptr_t key; /* 0 = empty, 1 = tombstone */
+    uint32_t size;
+    uint16_t tag;
+    uint8_t pool;
+} amap_ent_t;
+static amap_ent_t *AM;
+static size_t am_cap, am_used;
+
+static int tag_index(const char *tag) {
+    if (!tag) tag = "?";
+    for (int i = 0; i < ntags; i++)
+        if (TAGS[i].tag == tag || !strcmp(TAGS[i].tag, tag)) return i;
+    if (ntags >= MAX_TAGS) return MAX_TAGS - 1;
+    TAGS[ntags].tag = tag;
+    return ntags++;
+}
+
+static size_t am_hash(uintptr_t k) { return (size_t)((k >> 4) * 0x9E3779B97F4A7C15ull); }
+
+static void am_put(uintptr_t k, uint32_t size, int tag, int pool);
+static void am_grow(void) {
+    amap_ent_t *old = AM;
+    size_t oldcap = am_cap;
+    am_cap = am_cap ? am_cap * 2 : 4096;
+    AM = calloc(am_cap, sizeof *AM);
+    if (!AM) abort();
+    am_used = 0;
+    for (size_t i = 0; i < oldcap; i++)
+        if (old[i].key > 1) am_put(old[i].key, old[i].size, old[i].tag, old[i].pool);
+    free(old);
+}
+
+static void am_put(uintptr_t k, uint32_t size, int tag, int pool) {
+    if ((am_used + 1) * 2 > am_cap) am_grow();
+    size_t i = am_hash(k) & (am_cap - 1);
+    while (AM[i].key > 1) i = (i + 1) & (am_cap - 1);
+    AM[i].key = k;
+    AM[i].size = size;
+    AM[i].tag = (uint16_t)tag;
+    AM[i].pool = (uint8_t)pool;
+    am_used++;
+}
+
+static amap_ent_t *am_find(uintptr_t k) {
+    if (!am_cap) return NULL;
+    size_t i = am_hash(k) & (am_cap - 1);
+    while (AM[i].key) {
+        if (AM[i].key == k) return &AM[i];
+        i = (i + 1) & (am_cap - 1);
+    }
+    return NULL;
+}
+
+static void attribute(void *ptr, size_t block, int pool, const char *owner) {
+    int t = tag_index(owner);
+    TAGS[t].cur[pool] += block;
+    TAGS[t].live++;
+    if (TAGS[t].cur[pool] > TAGS[t].peak[pool]) TAGS[t].peak[pool] = TAGS[t].cur[pool];
+    am_put((uintptr_t)ptr, (uint32_t)block, t, pool);
+}
+
+static void unattribute(void *ptr) {
+    amap_ent_t *e = am_find((uintptr_t)ptr);
+    if (!e) return;
+    TAGS[e->tag].cur[e->pool] -= e->size;
+    TAGS[e->tag].live--;
+    e->key = 1; /* tombstone */
+}
+
+int pools_tag_count(void) { return ntags; }
+void pools_tag_info(int i, const char **tag, size_t cur[POOL_COUNT], size_t peak[POOL_COUNT], size_t *live) {
+    *tag = TAGS[i].tag;
+    for (int p = 0; p < POOL_COUNT; p++) {
+        cur[p] = TAGS[i].cur[p];
+        peak[p] = TAGS[i].peak[p];
+    }
+    *live = TAGS[i].live;
+}
+
+static const char *NAMES[POOL_COUNT] = {"internal", "dma", "external"};
+
+static void walk_largest(void *ptr, size_t size, int used, void *user) {
+    (void)ptr;
+    size_t *max = user;
+    if (!used && size > *max) *max = size;
+}
+
+static size_t largest_free(heap_pool_t *p) {
+    if (!p->tlsf) return 0;
+    size_t max = 0;
+    tlsf_walk_pool(tlsf_get_pool(p->tlsf), walk_largest, &max);
+    return max;
+}
+
+static void pool_init(heap_pool_t *p, const char *name, size_t bytes) {
+    memset(p, 0, sizeof *p);
+    p->name = name;
+    if (bytes < tlsf_size() + tlsf_pool_overhead() + 1024) bytes = tlsf_size() + tlsf_pool_overhead() + 1024;
+    p->size = bytes;
+    p->base = aligned_alloc(16, (bytes + 15) & ~(size_t)15);
+    if (!p->base) {
+        fprintf(stderr, "pools: cannot reserve %zu bytes for %s\n", bytes, name);
+        abort();
+    }
+    p->tlsf = tlsf_create_with_pool(p->base, bytes);
+    p->usable = largest_free(p);
+    p->min_free = p->usable;
+    p->min_largest = p->usable;
+}
+
+void pools_init(size_t internal_bytes, size_t dma_bytes, size_t external_bytes) {
+    pool_init(&P[POOL_INTERNAL], NAMES[0], internal_bytes);
+    pool_init(&P[POOL_DMA], NAMES[1], dma_bytes);
+    pool_init(&P[POOL_EXTERNAL], NAMES[2], external_bytes);
+}
+
+void pools_set_policy(size_t always_internal_max) { g_always_internal_max = always_internal_max; }
+void pools_set_warn(pools_warn_fn fn) { g_warn = fn; }
+const char *pools_name(pool_id_t id) { return NAMES[id]; }
+
+static heap_pool_t *owner_of(void *ptr) {
+    for (int i = 0; i < POOL_COUNT; i++)
+        if ((uint8_t *)ptr >= P[i].base && (uint8_t *)ptr < P[i].base + P[i].size) return &P[i];
+    return NULL;
+}
+
+static void track_after_change(heap_pool_t *p) {
+    size_t free_now = p->usable > p->used ? p->usable - p->used : 0;
+    if (free_now < p->min_free) p->min_free = free_now;
+}
+
+static void *try_alloc(heap_pool_t *p, size_t size) {
+    void *ptr = tlsf_malloc(p->tlsf, size ? size : 1);
+    if (ptr) {
+        p->used += tlsf_block_size(ptr);
+        p->alloc_count++;
+        track_after_change(p);
+    }
+    return ptr;
+}
+
+void *pools_alloc(size_t size, uint32_t caps, const char *owner) {
+    heap_pool_t *order[3] = {0};
+    int n = 0;
+    if (caps & OSAL_MEM_DMA) {
+        order[n++] = &P[POOL_DMA];
+    } else if (caps & OSAL_MEM_INTERNAL) {
+        order[n++] = &P[POOL_INTERNAL];
+        order[n++] = &P[POOL_DMA];
+    } else if (caps & OSAL_MEM_EXTERNAL) {
+        order[n++] = &P[POOL_EXTERNAL];
+    } else if (size <= g_always_internal_max) {
+        order[n++] = &P[POOL_INTERNAL];
+        order[n++] = &P[POOL_EXTERNAL];
+    } else {
+        order[n++] = &P[POOL_EXTERNAL];
+        order[n++] = &P[POOL_INTERNAL];
+    }
+    for (int i = 0; i < n; i++) {
+        void *ptr = try_alloc(order[i], size);
+        if (ptr) {
+            attribute(ptr, tlsf_block_size(ptr), (int)(order[i] - P), owner);
+            return ptr;
+        }
+    }
+    order[0]->failed++;
+    if (g_warn) {
+        char msg[200];
+        snprintf(msg, sizeof msg, "allocation of %zu bytes failed (caps=0x%x, owner=%s, %s free=%zu largest=%zu)",
+                 size, caps, owner ? owner : "?", order[0]->name,
+                 order[0]->usable > order[0]->used ? order[0]->usable - order[0]->used : 0, largest_free(order[0]));
+        g_warn(msg);
+    }
+    return NULL;
+}
+
+void pools_free(void *ptr) {
+    if (!ptr) return;
+    heap_pool_t *p = owner_of(ptr);
+    if (!p) {
+        fprintf(stderr, "pools: free of foreign pointer %p\n", ptr);
+        abort();
+    }
+    p->used -= tlsf_block_size(ptr);
+    p->alloc_count--;
+    unattribute(ptr);
+    tlsf_free(p->tlsf, ptr);
+}
+
+size_t pools_block_size(void *ptr) { return ptr ? tlsf_block_size(ptr) : 0; }
+
+void *pools_realloc(void *ptr, size_t size, uint32_t caps, const char *owner) {
+    if (!ptr) return pools_alloc(size, caps, owner);
+    if (size == 0) {
+        pools_free(ptr);
+        return NULL;
+    }
+    size_t old = tlsf_block_size(ptr);
+    if (old >= size) return ptr;
+    heap_pool_t *p = owner_of(ptr);
+    if (!p) {
+        fprintf(stderr, "pools: realloc of foreign pointer %p\n", ptr);
+        abort();
+    }
+    uint32_t want = caps;
+    if (!want) want = (p == &P[POOL_EXTERNAL]) ? OSAL_MEM_EXTERNAL : OSAL_MEM_INTERNAL;
+    void *n = pools_alloc(size, want, owner);
+    if (!n) return NULL;
+    memcpy(n, ptr, old);
+    pools_free(ptr);
+    return n;
+}
+
+void pools_sample(void) {
+    for (int i = 0; i < POOL_COUNT; i++) {
+        size_t l = largest_free(&P[i]);
+        if (l < P[i].min_largest) P[i].min_largest = l;
+        track_after_change(&P[i]);
+    }
+}
+
+size_t pools_min_largest(pool_id_t id) { return P[id].min_largest; }
+bool pools_owns(const void *ptr) { return owner_of((void *)ptr) != NULL; }
+int pools_pool_of(const void *ptr) {
+    heap_pool_t *p = owner_of((void *)ptr);
+    return p ? (int)(p - P) : -1;
+}
+
+void pools_stats(pool_id_t id, osal_mem_stats_t *out) {
+    heap_pool_t *p = &P[id];
+    out->total = p->usable;
+    out->free = p->usable > p->used ? p->usable - p->used : 0;
+    out->min_free = p->min_free;
+    out->largest_free = largest_free(p);
+    out->alloc_count = p->alloc_count;
+    out->failed_allocs = p->failed;
+}

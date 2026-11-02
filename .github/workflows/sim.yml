@@ -1,0 +1,33 @@
+name: sim
+
+# Builds the simulator and the portable system on Linux and runs every
+# scenario against its budgets. No hardware needed.
+on:
+  push:
+    branches: [main, "claude/**"]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build-test:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure (warnings are errors)
+        run: cmake -S . -B build -DINK_WERROR=ON
+      - name: Build
+        run: cmake --build build -j
+      - name: Scenarios and budgets
+        run: ctest --test-dir build --output-on-failure
+      - name: Sanitizers (ASan + UBSan)
+        run: |
+          cmake -S . -B build-asan -DINK_SANITIZE=ON
+          cmake --build build-asan -j
+          ctest --test-dir build-asan --output-on-failure
+      - name: Keep reports and screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sim-reports
+          path: build/test-out
+          retention-days: 14

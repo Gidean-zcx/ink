@@ -1,0 +1,6 @@
+# Scripted physical actions for the simulator self-test (logical coordinates).
+@4s     tap 200 300
+@4.5s   tap 400 900
+@5s     key next
+@6s     snap selftest
+@7s     end

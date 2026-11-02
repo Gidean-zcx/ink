@@ -1,0 +1,191 @@
+{
+  "id": "metalio-e-ink4-plus-psram16",
+  "name": "CloudZao Metalio E-Ink4 Plus (ESP32-S31, 4.7in 1216x684 EPD) — expected 16 MB PSRAM",
+  "class": "mcu",
+  "_sources": "docs/research/foundation/platform-runtime.md, upstream-firmware.md, docs/research/simulator/performance-modeling.md. Principle until calibrated: time costs take upper bounds, resources take lower bounds.",
+  "cpu": {
+    "cores": 2,
+    "mhz": 320,
+    "coremark_per_mhz_per_core": 3.43,
+    "_coremark_source": "ESP32-S31 datasheet v0.5: CoreMark 2195.20 dual-core @320 MHz",
+    "host_to_target_default": 40.0
+  },
+  "kernel": {
+    "sched_overhead_ns": 2000,
+    "ctx_switch_ns": 10000,
+    "queue_op_ns": 5000,
+    "long_burst_warn_ms": 20,
+    "host_stack_ratio": 1.0,
+    "tcb_bytes": 360,
+    "sync_obj_bytes": 96,
+    "_notes": "CONFIG_FREERTOS_HZ=100 upstream: delays/timeouts quantized to 10 ms. ctx switch 10 us / queue op 5 us are pessimistic estimates. FreeRTOS objects live in internal RAM (ESP-IDF).",
+    "tick_hz": 100,
+    "now_cost_ns": 500,
+    "main_stack_bytes": 8192,
+    "_notes_stack": "host_stack_ratio 1.0 = use host (x86-64) stack use as-is: pessimistic for RV32 (smaller frames, same arrays). Authoritative check: -fstack-usage on the target build."
+  },
+  "memory": {
+    "internal_heap_kib": 96,
+    "dma_heap_kib": 64,
+    "external_heap_kib": 15872,
+    "always_internal_max_bytes": 16,
+    "_notes": "expected case if the board carries ESP32-S31NRV16 (16 MB in-package PSRAM)"
+  },
+  "display": {
+    "tech": "epd",
+    "width": 1216,
+    "height": 684,
+    "dpi": 297,
+    "gray_levels": 16,
+    "rotation_deg": 90,
+    "full_frame_scan": true,
+    "frame_time_us": 16000,
+    "power_up_us": 140000,
+    "power_down_us": 10000,
+    "touch_pause_during_power_us": 10000,
+    "driver_external_kib": 1624,
+    "driver_internal_kib": 50,
+    "_notes": "phase >= 12 ms (EPD_MIN_PHASE_US), pessimistic 16 ms; line 17 us x 688 lines. Upstream 'balanced' default: GC16 36 / GL16 37 / DU 20 phases ('clear' = 48/48). TPS65185 power-up ~140 ms in upstream code (fixed 50+50 ms delays + PG polling), powered off after each refresh (keep_power false). During waveform playback two max-priority epd_prep feeder tasks occupy ~70% of each core. Driver internal 50 KiB is the design target (upstream ~120 KiB).",
+    "waveforms": {
+      "GC16": {
+        "phases": 36,
+        "flashing": true,
+        "ghost": 0.0
+      },
+      "GL16": {
+        "phases": 37,
+        "flashing": false,
+        "ghost": 0.025
+      },
+      "DU": {
+        "phases": 20,
+        "flashing": false,
+        "ghost": 0.07
+      }
+    },
+    "keep_power_ms": 0,
+    "prep_cpu_duty": 0.7,
+    "submit_copy_mbps": 21
+  },
+  "input": {
+    "touch": true,
+    "touch_points": 2,
+    "i2c_khz": 100,
+    "touch_read_bytes": 9,
+    "i2c_background_poll_ms": 500,
+    "i2c_background_bytes": 24,
+    "keys": [
+      "ai",
+      "power",
+      "vol_up",
+      "vol_down",
+      "home",
+      "prev",
+      "next"
+    ],
+    "_notes": "FT6336U on the shared 100 kHz I2C1 bus with IO expander, fuel gauge, charger, RTC, accelerometer. AI = BOOT key (pending D-19); home/prev/next are cover touch keys.",
+    "touch_read_us": 1200,
+    "touch_poll_ms": 10,
+    "touch_detect_us": 20000,
+    "_notes_detect": "touch_detect_us: finger contact -> INT, estimate (controller scan period in monitor mode)"
+  },
+  "flash": {
+    "user_partition_kib": 1408,
+    "sector_bytes": 4096,
+    "page_bytes": 256,
+    "erase_sector_us": {
+      "typ": 45000,
+      "max": 300000
+    },
+    "program_page_us": {
+      "typ": 500,
+      "max": 2400
+    },
+    "timing": "tail",
+    "stalls_cpu": true,
+    "_notes": "GD25B128E-class datasheet values (exact part on the board unverified). ESP-IDF writes in 8 KB chunks; caches are disabled per chunk/erase: PSRAM and flash-resident code stall on both cores. Auto-suspend off upstream.",
+    "write_chunk_bytes": 8192,
+    "read_mbps": 20,
+    "op_overhead_us": 30
+  },
+  "sd": {
+    "read_mbps": 4,
+    "write_mbps": 1,
+    "op_latency_us": 1500,
+    "write_busy_spike_ms": 250,
+    "_notes": "pessimistic: 4-bit 40 MHz theoretical 20 MB/s; S31 path uses a 4 KiB internal bounce buffer upstream",
+    "spike_every_kib": 4096,
+    "capacity_gib": 8
+  },
+  "features": {
+    "modem": true,
+    "wifi": true,
+    "audio_out": true,
+    "audio_in": true,
+    "frontlight": true,
+    "haptics": false,
+    "rtc": true
+  },
+  "costs_cycles": {
+    "lvgl.px": 25,
+    "epd.convert_px": 6,
+    "glyph.blit": 9000,
+    "text.layout_char": 1500,
+    "text.break_char": 400,
+    "json.byte": 60,
+    "zlib.inflate_byte": 40,
+    "crc32.byte": 8,
+    "littlefs.op": 60000,
+    "psram.copy_byte": 15.2,
+    "psram_to_internal.copy_byte": 5.8,
+    "internal_to_psram.copy_byte": 10.0,
+    "sram.copy_byte": 0.9,
+    "icache.miss": 1150,
+    "heap.op": 1500
+  },
+  "network": {
+    "wifi": {
+      "rtt_ms_p50": 8,
+      "rtt_ms_p99": 60,
+      "mbps": 5,
+      "wake_extra_ms": [
+        100,
+        300
+      ]
+    },
+    "lte": {
+      "rtt_ms_p50": 80,
+      "rtt_ms_p99": 400,
+      "mbps": 1.2,
+      "uart_cap_mbps": 1.6,
+      "idle_resume_after_s": 10,
+      "idle_resume_extra_ms": 300,
+      "loss": 0.01,
+      "outages_per_hour": [
+        1,
+        2
+      ],
+      "outage_s": [
+        2,
+        5
+      ]
+    },
+    "_notes": "estimates (unverified); LTE limited by the 2 Mbaud UART-Ethernet link"
+  },
+  "power": {
+    "battery_mah": 1500,
+    "base_awake_ma": 25,
+    "per_core_busy_ma": 20,
+    "display_rails_ma": 8,
+    "display_refresh_ma": 40,
+    "lte_idle_ma": 8,
+    "lte_active_ma": 180,
+    "wifi_idle_ma": 15,
+    "wifi_active_ma": 110,
+    "audio_out_ma": 35,
+    "audio_in_ma": 12,
+    "frontlight_full_ma": 45,
+    "sleep_ma": 1.5,
+    "_notes": "ALL ESTIMATES (unmeasured): replace with bench measurements (SP-08). battery_mah is a placeholder; the real cell capacity is unverified."
+  }
+}
