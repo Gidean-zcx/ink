@@ -36,7 +36,8 @@ static void usage(void) {
     fprintf(stderr,
             "usage: ink-sim --profile P.json [--script S] [--out DIR] [--budget B.json] [--trace] [--frames]\n"
             "               [--end 20s] [--cpu annotated|measured[:factor]] [--realtime[=speed]]\n"
-            "               [--flash-image F] [--sd-dir D] [--assets DIR]... [--content DIR] [--seed N] [--quiet]\n");
+            "               [--flash-image F] [--sd-dir D] [--assets DIR]... [--content DIR] [--hub F.json]\n"
+            "               [--no-random-outages] [--seed N] [--quiet]\n");
 }
 
 static int parse_time(const char *s, uint64_t *ns) {
@@ -73,6 +74,7 @@ static int finalize(const char *status) {
     sim_display_report();
     sim_input_report();
     sim_storage_report();
+    sim_net_report();
     sim_power_report();
     sim_trace_close();
     char path[600];
@@ -98,6 +100,7 @@ static void boot_task(void *arg) {
     sim_storage_init();
     sim_display_init();
     sim_input_init();
+    sim_net_init();
     osal_mem_tag(prev);
     sim_metric_sample("boot.platform_ready_ms", vtk_now() / 1e6);
     ink_main();
@@ -139,6 +142,8 @@ int main(int argc, char **argv) {
             NEEDV();
             if (g_sim.nasset_dirs < 4) g_sim.asset_dirs[g_sim.nasset_dirs++] = v;
         } else if (!strcmp(a, "--content")) { NEEDV(); g_sim.seed_content = v; }
+        else if (!strcmp(a, "--hub")) { NEEDV(); g_sim.hub_script = v; }
+        else if (!strcmp(a, "--no-random-outages")) g_sim.no_random_outages = true;
         else if (!strcmp(a, "--seed")) { NEEDV(); g_sim.seed = (uint32_t)strtoul(v, NULL, 0); }
         else if (!strcmp(a, "--reset-reason")) { NEEDV(); g_sim.reset_reason = v; }
         else if (!strcmp(a, "--trace")) g_sim.trace = true;
@@ -172,6 +177,10 @@ int main(int argc, char **argv) {
     }
     if (mkdir_p(g_sim.out_dir)) {
         fprintf(stderr, "cannot create %s\n", g_sim.out_dir);
+        return 3;
+    }
+    if (sim_hub_load(g_sim.hub_script, err, sizeof err)) {
+        fprintf(stderr, "hub: %s\n", err);
         return 3;
     }
     if (g_sim.script_path && sim_script_load(g_sim.script_path, err, sizeof err)) {

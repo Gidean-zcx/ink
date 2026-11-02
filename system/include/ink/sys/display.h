@@ -46,6 +46,8 @@ void ink_display_unlock(void);
 /** Hand over finished regions of one frame. `cause_us` = time of the user action that
  *  caused the change (osal_now_us clock), 0 if none; used for latency probes. */
 void ink_display_commit(const ink_region_t *regions, int n, uint64_t cause_us);
+/** Same, with a probe name: when the frame is physically visible, `cause_tag` records the latency. */
+void ink_display_commit_tagged(const ink_region_t *regions, int n, uint64_t cause_us, const char *cause_tag);
 
 /** Interactive phase (typing, menus): keep the panel powered between updates. */
 void ink_display_interactive(bool on);

@@ -25,6 +25,7 @@ typedef struct {
     uint8_t intent;
     hal_rect_t rect;
     uint64_t cause_us;
+    const char *cause_tag;
     hal_display_result_t result;
 } dmsg_t;
 
@@ -75,15 +76,36 @@ static void dispatch_next(void) {
     ink_probe_count(key);
 }
 
+/* A frame split into several dispatches carries the same cause: record each action once. */
+static bool cause_seen(uint64_t cause, const char *tag) {
+    static struct {
+        uint64_t cause;
+        const char *tag;
+    } seen[8];
+    static int next;
+    for (int i = 0; i < 8; i++)
+        if (seen[i].cause == cause && seen[i].tag == tag) return true;
+    seen[next].cause = cause;
+    seen[next].tag = tag;
+    next = (next + 1) % 8;
+    return false;
+}
+
 static void on_done(const hal_display_result_t *r) {
     DS.in_flight = false;
     rp_done(&DS.rp, &DS.cur, r->ok);
-    if (DS.cur.cause_us) {
-        ink_probe_value("ui.action_to_first_change_ms", (double)(r->started_us - DS.cur.cause_us) / 1000.0);
-        ink_probe_value("ui.action_to_visible_ms", (double)(r->done_us - DS.cur.cause_us) / 1000.0);
-        char key[64];
-        snprintf(key, sizeof key, "ui.action_to_visible_ms.%s", INTENT_NAME[DS.cur.intent]);
-        ink_probe_value(key, (double)(r->done_us - DS.cur.cause_us) / 1000.0);
+    if (DS.cur.cause_us && !cause_seen(DS.cur.cause_us, DS.cur.cause_tag)) {
+        if (DS.cur.cause_tag) {
+            /* a named cause (e.g. "AI answer visible after release") has its own metric and may
+             * include network time, so it stays out of the generic input->screen latency */
+            ink_probe_value(DS.cur.cause_tag, (double)(r->done_us - DS.cur.cause_us) / 1000.0);
+        } else {
+            ink_probe_value("ui.action_to_first_change_ms", (double)(r->started_us - DS.cur.cause_us) / 1000.0);
+            ink_probe_value("ui.action_to_visible_ms", (double)(r->done_us - DS.cur.cause_us) / 1000.0);
+            char key[64];
+            snprintf(key, sizeof key, "ui.action_to_visible_ms.%s", INTENT_NAME[DS.cur.intent]);
+            ink_probe_value(key, (double)(r->done_us - DS.cur.cause_us) / 1000.0);
+        }
     }
 }
 
@@ -93,7 +115,7 @@ static void service_task(void *arg) {
     for (;;) {
         osal_queue_recv(DS.q, &m, OSAL_WAIT_FOREVER);
         switch (m.type) {
-        case DM_REGION: rp_add(&DS.rp, m.rect, (ink_refresh_t)m.intent, m.cause_us); break;
+        case DM_REGION: rp_add(&DS.rp, m.rect, (ink_refresh_t)m.intent, m.cause_us, m.cause_tag); break;
         case DM_FRAME_END: break;
         case DM_DONE: on_done(&m.result); break;
         case DM_INTERACTIVE:
@@ -146,8 +168,13 @@ void ink_display_lock(void) { osal_mutex_lock(DS.lock, OSAL_WAIT_FOREVER); }
 void ink_display_unlock(void) { osal_mutex_unlock(DS.lock); }
 
 void ink_display_commit(const ink_region_t *regions, int n, uint64_t cause_us) {
+    ink_display_commit_tagged(regions, n, cause_us, NULL);
+}
+
+void ink_display_commit_tagged(const ink_region_t *regions, int n, uint64_t cause_us, const char *cause_tag) {
     for (int i = 0; i < n; i++) {
-        dmsg_t m = {.type = DM_REGION, .intent = (uint8_t)regions[i].intent, .rect = regions[i].rect, .cause_us = cause_us};
+        dmsg_t m = {.type = DM_REGION, .intent = (uint8_t)regions[i].intent, .rect = regions[i].rect, .cause_us = cause_us,
+                    .cause_tag = cause_tag};
         osal_queue_send(DS.q, &m, OSAL_WAIT_FOREVER);
     }
     dmsg_t end = {.type = DM_FRAME_END};

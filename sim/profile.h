@@ -17,6 +17,17 @@
 #define PROFILE_MAX_COSTS 96
 
 typedef struct {
+    bool present;
+    double rtt_p50_ms, rtt_p99_ms; /* round trip to the hub */
+    double mbps;                   /* usable throughput (LTE: min(radio, UART link)) */
+    double loss;                   /* message loss probability -> retransmission delay */
+    double resume_after_s;         /* radio drops to a low-power state after this much silence */
+    double resume_extra_ms;        /* ... and the next packet pays this (LTE RRC resume / Wi-Fi DTIM) */
+    double tail_s;                 /* radio stays in its high-power state this long after traffic */
+    double outages_per_hour, outage_min_s, outage_max_s;
+} profile_link_t;
+
+typedef struct {
     char name[40];
     double cycles; /* target CPU cycles per unit */
 } profile_cost_t;
@@ -101,6 +112,13 @@ typedef struct {
     uint32_t sd_write_busy_spike_ms;
     uint32_t sd_spike_every_kib;
     double sd_capacity_gib;
+
+    /* network */
+    profile_link_t wifi, lte;
+    char default_link[8];          /* "lte" | "wifi" | "none" */
+    size_t tls_internal_bytes, tls_external_bytes;
+    uint32_t ws_stack, sys_evt_stack;
+    uint32_t dead_detect_ms;       /* a dead connection is noticed after this (ping timeout) */
 
     /* power (estimates until measured) */
     double batt_mah;

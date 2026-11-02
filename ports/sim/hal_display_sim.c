@@ -13,6 +13,9 @@
  *            (prep_cpu_duty) for the whole waveform.
  *   done     pixels stable -> done callback (from the driver task); rails
  *            off immediately unless hal_display_hold_power() asked otherwise.
+ *   wake     hal_display_wake() queues a power-up ahead of any update (the
+ *            input service calls it on touch/key edges), so the ~140 ms
+ *            overlaps rendering; unused wakes cost rail current only.
  * A flash erase/program during playback freezes the feeders (PSRAM stacks)
  * and is reported as a line-queue underrun (a visible glitch on the device).
  *
@@ -43,6 +46,7 @@ typedef struct {
     hal_display_done_fn done;
     void *ctx;
     uint64_t queued_ns;
+    uint32_t wake_ms; /* != 0: not an update, power up and keep the rails for this long */
 } req_t;
 
 static const char *WFN[HAL_WF_COUNT] = {"GC16", "GL16", "DU", "A2"};
@@ -60,6 +64,8 @@ static struct {
     int pending;
     bool rails_on;
     uint32_t hold_ms;
+    uint64_t last_done_ns;  /* end of the last update (hold_ms counts from here) */
+    uint64_t wake_until_ns; /* rails requested up until (0 = no pending wake) */
     int temperature;
     /* feeders */
     vtk_waitq_t feed_wq;
@@ -295,19 +301,36 @@ static void driver_task(void *arg) {
     req_t r;
     for (;;) {
         osal_err_t e;
-        if (D.rails_on && D.hold_ms) {
-            /* keep the rails up for hold_ms waiting for the next update (exact: DMA/timer driven) */
-            e = osal_queue_recv(D.q, &r, (int64_t)D.hold_ms * 1000);
-            if (e != OSAL_OK) {
+        if (D.rails_on) {
+            /* rails stay up for hold_ms after the last update and until a pending wake expires
+             * (exact: DMA/timer driven), then go down */
+            uint64_t until = D.hold_ms ? D.last_done_ns + (uint64_t)D.hold_ms * 1000000ull : 0;
+            if (D.wake_until_ns > until) until = D.wake_until_ns;
+            uint64_t now = vtk_now();
+            if (until <= now) {
+                if (D.wake_until_ns && D.wake_until_ns <= now) sim_metric_add("display.wakes_unused", 1);
+                D.wake_until_ns = 0;
                 power_down();
                 continue;
             }
+            e = osal_queue_recv(D.q, &r, (int64_t)((until - now + 999) / 1000));
+            if (e != OSAL_OK) continue; /* deadline reached: re-evaluate */
         } else {
-            if (D.rails_on) power_down();
             e = osal_queue_recv(D.q, &r, OSAL_WAIT_FOREVER);
             if (e != OSAL_OK) continue;
         }
+        if (r.wake_ms) {
+            uint64_t until = r.queued_ns + (uint64_t)r.wake_ms * 1000000ull;
+            if (until > D.wake_until_ns) D.wake_until_ns = until;
+            if (!D.rails_on) {
+                sim_metric_add("display.wakes", 1);
+                power_up();
+            }
+            continue;
+        }
         execute(&r);
+        D.last_done_ns = vtk_now();
+        D.wake_until_ns = 0; /* the wake served its purpose; hold_ms decides from here */
     }
 }
 
@@ -351,6 +374,14 @@ void sim_display_flash_stall(uint64_t t0, uint64_t ns) {
 }
 void hal_display_set_temperature(int celsius) { D.temperature = celsius; }
 void hal_display_hold_power(uint32_t ms) { D.hold_ms = D.info.tech == HAL_PANEL_EPD ? ms : 0; }
+
+void hal_display_wake(uint32_t ms) {
+    if (D.info.tech != HAL_PANEL_EPD || !D.q || !ms) return;
+    if (vtk_in_isr() || !vtk_self()) osal_panic("hal_display_wake must be called from a task or timer callback");
+    req_t q = {.wake_ms = ms, .queued_ns = vtk_now()};
+    /* never blocks: with a full queue an update is already waiting and will power up anyway */
+    (void)osal_queue_send_front(D.q, &q, 0);
+}
 
 void sim_display_init(void) {
     D.info = g_profile.panel;

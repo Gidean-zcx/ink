@@ -92,6 +92,16 @@ int hal_display_pending(void);
  */
 void hal_display_hold_power(uint32_t ms);
 
+/**
+ * An update is probably coming (a finger went down, a key was pressed):
+ * start powering the panel now, so the power-up overlaps the UI's rendering
+ * instead of being added after it. Returns at once (the platform's display
+ * task does the PMIC work). The rails stay up until an update has run or
+ * `ms` passed without one; after that hold_power() applies as usual.
+ * No-op on LCD and when the rails are already up.
+ */
+void hal_display_wake(uint32_t ms);
+
 /** Ambient temperature hint in Celsius for waveform selection (INT32_MIN = unknown). */
 void hal_display_set_temperature(int celsius);
 

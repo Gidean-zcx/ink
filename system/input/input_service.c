@@ -15,6 +15,9 @@
 #define SLOP_MM 3
 #define LONGPRESS_MS 600
 #define KEY_LONG_MS 800
+/* Touch and key edges almost always lead to a refresh (feedback first), so
+ * start the panel power-up right away; the UI renders meanwhile. */
+#define WAKE_HOLD_MS 1000
 
 static struct {
     ink_input_handler_t handler;
@@ -118,6 +121,8 @@ static void on_key(const hal_input_event_t *h) {
 
 static void hal_sink(const hal_input_event_t *h, void *ctx) {
     (void)ctx;
+    if ((h->type == HAL_IN_TOUCH && h->touch.phase != HAL_TOUCH_MOVE) || h->type == HAL_IN_KEY)
+        hal_display_wake(WAKE_HOLD_MS);
     if (h->type == HAL_IN_TOUCH) on_touch(h);
     else if (h->type == HAL_IN_KEY) on_key(h);
 }

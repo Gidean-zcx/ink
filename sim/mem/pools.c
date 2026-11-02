@@ -21,6 +21,7 @@ typedef struct {
 
 static heap_pool_t P[POOL_COUNT];
 static size_t g_always_internal_max = 16;
+static size_t g_internal_total_min = (size_t)-1; /* internal + DMA pools: what MALLOC_CAP_INTERNAL can still get */
 static pools_warn_fn g_warn;
 
 /* ---- host-side allocation map: attribution per owner tag (not stored in the pools) ---- */
@@ -163,7 +164,12 @@ static heap_pool_t *owner_of(void *ptr) {
 static void track_after_change(heap_pool_t *p) {
     size_t free_now = p->usable > p->used ? p->usable - p->used : 0;
     if (free_now < p->min_free) p->min_free = free_now;
+    size_t fi = P[POOL_INTERNAL].usable > P[POOL_INTERNAL].used ? P[POOL_INTERNAL].usable - P[POOL_INTERNAL].used : 0;
+    size_t fd = P[POOL_DMA].usable > P[POOL_DMA].used ? P[POOL_DMA].usable - P[POOL_DMA].used : 0;
+    if (fi + fd < g_internal_total_min) g_internal_total_min = fi + fd;
 }
+
+size_t pools_internal_total_min_free(void) { return g_internal_total_min == (size_t)-1 ? 0 : g_internal_total_min; }
 
 static void *try_alloc(heap_pool_t *p, size_t size) {
     void *ptr = tlsf_malloc(p->tlsf, size ? size : 1);

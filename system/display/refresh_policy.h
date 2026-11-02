@@ -14,7 +14,8 @@
 typedef struct {
     hal_rect_t rect;
     ink_refresh_t intent;
-    uint64_t cause_us; /* earliest user action folded into this region (0 = none) */
+    uint64_t cause_us;     /* earliest user action folded into this region (0 = none) */
+    const char *cause_tag; /* probe name for that action's latency (static string) or NULL */
 } rp_region_t;
 
 typedef struct {
@@ -33,12 +34,13 @@ typedef struct {
     hal_waveform_t wf;
     ink_refresh_t intent;
     uint64_t cause_us;
+    const char *cause_tag;
     bool cleanup; /* this dispatch clears accumulated ghosting */
 } rp_dispatch_t;
 
 void rp_init(rp_state_t *s, int panel_w, int panel_h, uint32_t waveforms, bool lcd);
 /** Add a dirty region; merges with intersecting pending regions (higher intent wins). */
-void rp_add(rp_state_t *s, hal_rect_t r, ink_refresh_t intent, uint64_t cause_us);
+void rp_add(rp_state_t *s, hal_rect_t r, ink_refresh_t intent, uint64_t cause_us, const char *cause_tag);
 /** Pick the next update to drive (panel idle). Returns false if nothing pending. */
 bool rp_next(rp_state_t *s, rp_dispatch_t *out);
 /** Report the outcome of a dispatch (failures force a full clean next). */

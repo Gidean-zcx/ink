@@ -1,0 +1,49 @@
+/*
+ * Hub link service: the device's single connection to the family hub
+ * (D-04, D-12, D-24). JSON-RPC 2.0 messages with the hub's own envelope over
+ * a WebSocket; the connection is opened on demand and closed after a quiet
+ * period (active long connection, disconnect when idle).
+ *
+ * Callbacks run in the hub task: keep them short and post work elsewhere
+ * (e.g. ink_ui_post for the UI).
+ */
+#ifndef INK_SYS_HUB_H
+#define INK_SYS_HUB_H
+
+#include <stdbool.h>
+#include <stddef.h>
+#include <stdint.h>
+
+#include "ink/sys/json.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+enum {
+    INK_HUB_OK = 0,
+    INK_HUB_ERR_REMOTE = -1,  /* the hub answered with an error object */
+    INK_HUB_ERR_TIMEOUT = -2, /* no answer in time */
+    INK_HUB_ERR_OFFLINE = -3, /* no link / could not connect in time */
+    INK_HUB_ERR_LOST = -4,    /* connection lost after the request was sent */
+    INK_HUB_ERR_NOMEM = -5,
+};
+
+/* `msg` is the whole reply message (parsed), `result` the index of its result/error token. */
+typedef void (*ink_hub_reply_fn)(void *ctx, int status, const ink_json_t *msg, int result);
+/* A notification (e.g. "ai.delta"); `params` = index of its params token. */
+typedef void (*ink_hub_notify_fn)(void *ctx, const char *method, const ink_json_t *msg, int params);
+
+int ink_hub_init(const char *url);
+/** Asynchronous request. `params_json` = a JSON object text (copied). Returns the request id (> 0) or < 0. */
+int ink_hub_call(const char *method, const char *params_json, int64_t timeout_us, ink_hub_reply_fn cb, void *ctx);
+/** Receive notifications whose method starts with `prefix` (e.g. "ai."). Up to 8 subscribers. */
+int ink_hub_subscribe(const char *prefix, ink_hub_notify_fn fn, void *ctx);
+/** User activity: open the connection now if needed and keep it up for a while (pre-connect on key press). */
+void ink_hub_demand(void);
+bool ink_hub_online(void);
+
+#ifdef __cplusplus
+}
+#endif
+#endif

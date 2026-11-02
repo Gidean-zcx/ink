@@ -10,6 +10,8 @@
  *   +0       mark  reading            # trace marker
  *   +0       battery 15 [charging]
  *   +3s      powercut                 # tear in-flight flash op, save image, stop
+ *   +0       net   wifi | lte | none   # switch the network link
+ *   +0       outage 5s                 # link drops for a while (dead connection noticed later)
  *   +5s      end
  *
  * Times: "@t" absolute, "+t" relative to the previous line; units us/ms/s/m
@@ -26,7 +28,7 @@
 #include "ink/rotation.h"
 #include "sim.h"
 
-typedef enum { A_TOUCH, A_KEY, A_SNAP, A_MARK, A_NOTE, A_BATTERY, A_POWERCUT, A_END } akind_t;
+typedef enum { A_TOUCH, A_KEY, A_SNAP, A_MARK, A_NOTE, A_BATTERY, A_POWERCUT, A_END, A_NET, A_OUTAGE } akind_t;
 
 typedef struct {
     uint64_t t;
@@ -182,6 +184,13 @@ int sim_script_load(const char *path, char *err, size_t errlen) {
                 a->a = atoi(tok[2]);
                 a->b = n >= 4 && !strcmp(tok[3], "charging");
             }
+        } else if (!strcmp(cmd, "net")) {
+            ok = n >= 3 && (!strcmp(tok[2], "lte") || !strcmp(tok[2], "wifi") || !strcmp(tok[2], "none"));
+            if (ok) snprintf(push(t, A_NET)->text, 16, "%s", tok[2]);
+        } else if (!strcmp(cmd, "outage")) {
+            uint64_t dur;
+            ok = n >= 3 && !parse_dur(tok[2], &dur);
+            if (ok) push(t, A_OUTAGE)->c = (int)(dur / 1000000ull); /* ms */
         } else if (!strcmp(cmd, "powercut")) {
             push(t, A_POWERCUT);
         } else if (!strcmp(cmd, "end")) {
@@ -222,6 +231,8 @@ static void run_action(void *arg) { /* ISR context */
     case A_BATTERY: sim_power_set_battery(a->a, a->b != 0); break;
     case A_POWERCUT: sim_storage_power_cut(); break;
     case A_END: vtk_stop(); break;
+    case A_NET: sim_net_set_link(a->text); break;
+    case A_OUTAGE: sim_net_outage(SIM_MS(a->c)); break;
     }
 }
 

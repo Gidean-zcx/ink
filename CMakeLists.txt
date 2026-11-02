@@ -58,7 +58,9 @@ add_library(ink_port_sim STATIC
   ports/sim/hal_input_sim.c
   ports/sim/hal_storage_sim.c
   ports/sim/hal_power_sim.c
-  ports/sim/hal_assets_sim.c)
+  ports/sim/hal_assets_sim.c
+  ports/sim/hal_net_sim.c
+  ports/sim/sim_hub.c)
 target_include_directories(ink_port_sim PUBLIC ports/sim platform/include)
 target_link_libraries(ink_port_sim PUBLIC ink_sim_core ink_littlefs ink_stb)
 target_compile_options(ink_port_sim PRIVATE ${INK_WARN})
@@ -92,13 +94,16 @@ add_library(ink_system STATIC
   system/display/refresh_policy.c
   system/input/input_service.c
   system/storage/storage_service.c
+  system/core/ink_json.c
+  system/net/hub_link.c
+  system/ai/ai_service.c
   system/text/ink_font.c
   system/text/linebreak.c
   system/text/layout.c
   system/ui/ui_task.c
   apps/home/home.c
   apps/reader/reader.c)
-target_include_directories(ink_system PUBLIC system/include platform/include system/display)
+target_include_directories(ink_system PUBLIC system/include platform/include system/display third_party/jsmn)
 target_link_libraries(ink_system PUBLIC ink_lvgl)
 target_compile_options(ink_system PRIVATE ${INK_WARN})
 
@@ -167,13 +172,14 @@ function(ink_scenario name profile)
             --script ${CMAKE_SOURCE_DIR}/tests/scenarios/${name}.script
             --budget ${CMAKE_SOURCE_DIR}/tests/scenarios/${name}.budget.json
             --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
-            --out ${CMAKE_BINARY_DIR}/test-out/${name}-${profile} --quiet --trace --frames)
+            --out ${CMAKE_BINARY_DIR}/test-out/${name}-${profile} --quiet --trace --frames --no-random-outages)
 endfunction()
 ink_scenario(home_basic metalio-plus)
 ink_scenario(home_basic metalio-plus-psram16)
 if(INK_HAVE_FONTS)
   ink_scenario(reader_basic metalio-plus)
   ink_scenario(reader_basic metalio-plus-psram16)
+  ink_scenario(ai_ask metalio-plus)
 endif()
 # Portability smoke runs: same system, other panels/classes (budget: no panic, input works)
 foreach(p pinenote-rk3566 desktop-lcd)

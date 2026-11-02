@@ -21,7 +21,7 @@
     "_notes": "CONFIG_FREERTOS_HZ=100 upstream: delays/timeouts quantized to 10 ms. ctx switch 10 us / queue op 5 us are pessimistic estimates. FreeRTOS objects live in internal RAM (ESP-IDF).",
     "tick_hz": 100,
     "now_cost_ns": 500,
-    "main_stack_bytes": 8192,
+    "main_stack_bytes": 4096,
     "_notes_stack": "host_stack_ratio 1.0 = use host (x86-64) stack use as-is: pessimistic for RV32 (smaller frames, same arrays). Authoritative check: -fstack-usage on the target build."
   },
   "memory": {
@@ -29,7 +29,7 @@
     "dma_heap_kib": 64,
     "external_heap_kib": 7680,
     "always_internal_max_bytes": 16,
-    "_notes": "PESSIMISTIC DEFAULT: internal heap 96 KiB (largest block expected <=32 KiB), DMA reserve 64 KiB (upstream SPIRAM_MALLOC_RESERVE_INTERNAL), PSRAM assumed 8 MB until 16 MB is confirmed on the real board (esp_psram_get_size). See metalio-plus-psram16.json for the expected case."
+    "_notes": "PESSIMISTIC DEFAULT. internal_heap_kib = internal RAM left for EVERYTHING allocated at run time (display driver buffers, task stacks, TLS, system) after static code/data, excluding the DMA reserve. dma_heap_kib = the upstream SPIRAM_MALLOC_RESERVE_INTERNAL pool: internal-only allocations may use it, default malloc may not; runtime DMA users (I2S, SDMMC, Wi-Fi) need it. Static use is unknown until `idf.py size` (foundation 3.2): replace these numbers then. PSRAM assumed 8 MB until 16 MB is confirmed."
   },
   "display": {
     "tech": "epd",
@@ -147,7 +147,9 @@
     "icache.miss": 1150,
     "heap.op": 1500,
     "lvgl.refr": 150000,
-    "ui.rotate_px": 20
+    "ui.rotate_px": 20,
+    "tls.handshake": 96000000,
+    "net.byte": 40
   },
   "network": {
     "wifi": {
@@ -157,7 +159,8 @@
       "wake_extra_ms": [
         100,
         300
-      ]
+      ],
+      "tail_s": 1
     },
     "lte": {
       "rtt_ms_p50": 80,
@@ -174,9 +177,16 @@
       "outage_s": [
         2,
         5
-      ]
+      ],
+      "tail_s": 10
     },
-    "_notes": "estimates (unverified); LTE limited by the 2 Mbaud UART-Ethernet link"
+    "_notes": "estimates (unverified): LTE limited by the 2 Mbaud UART-Ethernet link; RRC idle after ~10 s, resume ~300 ms; TLS 1 session ~40 KiB PSRAM + ~6 KiB internal; esp_websocket_client task 4 KiB; event loop task 2.5 KiB",
+    "default_link": "lte",
+    "tls_internal_kib": 6,
+    "tls_external_kib": 40,
+    "ws_task_stack": 4096,
+    "event_task_stack": 2560,
+    "dead_detect_ms": 5000
   },
   "power": {
     "battery_mah": 1500,

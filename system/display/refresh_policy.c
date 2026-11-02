@@ -31,6 +31,14 @@ static uint64_t earliest(uint64_t a, uint64_t b) {
     return a < b ? a : b;
 }
 
+/* fold cause b into a (keeps the earliest action and its probe tag) */
+static void fold_cause(uint64_t *a, const char **atag, uint64_t b, const char *btag) {
+    uint64_t e = earliest(*a, b);
+    if (e && e == b && e != *a) *atag = btag;
+    else if (!*atag && e == b) *atag = btag;
+    *a = e;
+}
+
 static bool clip(const rp_state_t *s, hal_rect_t *r) {
     if (r->x < 0) { r->w += r->x; r->x = 0; }
     if (r->y < 0) { r->h += r->y; r->y = 0; }
@@ -52,10 +60,10 @@ static void remove_at(rp_state_t *s, int i) {
     s->pending[i] = s->pending[--s->npending];
 }
 
-void rp_add(rp_state_t *s, hal_rect_t r, ink_refresh_t intent, uint64_t cause_us) {
+void rp_add(rp_state_t *s, hal_rect_t r, ink_refresh_t intent, uint64_t cause_us, const char *cause_tag) {
     if (intent == INK_REFRESH_FULL) r = (hal_rect_t){0, 0, s->panel_w, s->panel_h};
     if (!clip(s, &r)) return;
-    rp_region_t n = {r, intent, cause_us};
+    rp_region_t n = {r, intent, cause_us, cause_us ? cause_tag : NULL};
     bool merged;
     do {
         merged = false;
@@ -64,7 +72,7 @@ void rp_add(rp_state_t *s, hal_rect_t r, ink_refresh_t intent, uint64_t cause_us
             if (!intersects(p->rect, n.rect)) continue;
             n.rect = bbox(p->rect, n.rect);
             if (p->intent > n.intent) n.intent = p->intent;
-            n.cause_us = earliest(n.cause_us, p->cause_us);
+            fold_cause(&n.cause_us, &n.cause_tag, p->cause_us, p->cause_tag);
             remove_at(s, i);
             merged = true;
             break;
@@ -74,7 +82,7 @@ void rp_add(rp_state_t *s, hal_rect_t r, ink_refresh_t intent, uint64_t cause_us
         for (int i = 0; i < s->npending; i++) {
             n.rect = bbox(n.rect, s->pending[i].rect);
             if (s->pending[i].intent > n.intent) n.intent = s->pending[i].intent;
-            n.cause_us = earliest(n.cause_us, s->pending[i].cause_us);
+            fold_cause(&n.cause_us, &n.cause_tag, s->pending[i].cause_us, s->pending[i].cause_tag);
         }
         s->npending = 0;
     }
@@ -107,7 +115,7 @@ bool rp_next(rp_state_t *s, rp_dispatch_t *out) {
         }
         out->rect = first ? p->rect : bbox(out->rect, p->rect);
         if (first || p->intent > out->intent) out->intent = p->intent;
-        out->cause_us = earliest(out->cause_us, p->cause_us);
+        fold_cause(&out->cause_us, &out->cause_tag, p->cause_us, p->cause_tag);
         first = false;
         remove_at(s, i);
     }

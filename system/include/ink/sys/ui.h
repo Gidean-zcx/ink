@@ -30,6 +30,8 @@ typedef struct {
     /* return true if handled */
     bool (*on_key)(hal_key_t key, bool long_press);
     bool (*on_swipe)(ink_swipe_dir_t dir);
+    /* page context for the AI (G-002): plain text of what is on screen; returns bytes written */
+    int (*snapshot)(char *buf, size_t cap);
 } ink_activity_t;
 
 /** Start the UI task with `home` as the root activity. */
@@ -49,6 +51,12 @@ void ink_ui_hint_area(const lv_area_t *logical, ink_refresh_t intent);
 void ink_ui_hint_obj(lv_obj_t *obj, ink_refresh_t intent);
 /** Intent for everything redrawn in the next frame that has no area hint. */
 void ink_ui_hint_frame(ink_refresh_t intent);
+
+/** Attribute the next frame to an earlier action: when it is visible, `tag` (static string)
+ *  records the latency from `t_us` (e.g. AI key release -> first answer text). */
+void ink_ui_cause(uint64_t t_us, const char *tag);
+/** Page context of the foreground activity (see ink_activity_t.snapshot). */
+int ink_ui_snapshot(char *buf, size_t cap, const char **activity_name);
 
 /** dp -> pixels for the current panel. */
 int ink_dp(int dp);

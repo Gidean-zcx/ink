@@ -1,0 +1,52 @@
+{
+  "_doc": "AI key -> answer on the pessimistic Plus profile over LTE, scripted hub with ~1.4 s time to first token. Targets are design goals (foundation 4.5, 6.4).",
+  "panic.count": {
+    "max": 0,
+    "optional": true
+  },
+  "ai.presses": {
+    "min": 3
+  },
+  "ai.answers": {
+    "min": 2,
+    "why": "the two asks without an outage must complete"
+  },
+  "ai.failures": {
+    "min": 1,
+    "why": "the ask during the outage must fail visibly, not hang"
+  },
+  "ai.press_to_listening_visible_ms.p95": {
+    "max": 600,
+    "why": "the device must show it is listening within ~0.5 s"
+  },
+  "ai.release_to_first_text_visible_ms.p95": {
+    "max": 3500,
+    "why": "first answer text on screen (includes ~1.4 s hub/model time)"
+  },
+  "ai.release_to_error_visible_ms.max": {
+    "max": 9000,
+    "why": "a lost answer must be reported within seconds (dead connection detection)"
+  },
+  "net.connect_ms.p95": {
+    "max": 2500,
+    "why": "TLS + WebSocket over LTE"
+  },
+  "display.underruns": {
+    "max": 0,
+    "optional": true
+  },
+  "mem.internal.failed_allocs": {
+    "max": 0
+  },
+  "mem.external.failed_allocs": {
+    "max": 0
+  },
+  "mem.internal_total.min_free_bytes": {
+    "min": 32768,
+    "why": "SR-PL-04 floor: internal RAM (incl. the DMA reserve) an internal-only allocation can still get"
+  },
+  "mem.dma.min_free_bytes": {
+    "min": 32768,
+    "why": "keep at least half of the DMA reserve for runtime DMA users (I2S, SDMMC, Wi-Fi buffers)"
+  }
+}

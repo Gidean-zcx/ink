@@ -174,6 +174,37 @@ int profile_load(const char *path, sim_profile_t *p, char *err, size_t errlen) {
     p->sd_spike_every_kib = (uint32_t)num(sd, "spike_every_kib", 4096);
     p->sd_capacity_gib = num(sd, "capacity_gib", 8);
 
+    const cJSON *net = obj(root, "network");
+    const char *links[2] = {"wifi", "lte"};
+    profile_link_t *dst[2] = {&p->wifi, &p->lte};
+    for (int i = 0; i < 2; i++) {
+        const cJSON *l = net ? obj(net, links[i]) : NULL;
+        profile_link_t *L = dst[i];
+        L->present = l != NULL;
+        L->rtt_p50_ms = num(l, "rtt_ms_p50", i ? 80 : 8);
+        L->rtt_p99_ms = num(l, "rtt_ms_p99", i ? 400 : 60);
+        L->mbps = num(l, "mbps", i ? 1.2 : 5);
+        double cap = num(l, "uart_cap_mbps", 0);
+        if (cap > 0 && cap < L->mbps) L->mbps = cap;
+        L->loss = num(l, "loss", i ? 0.01 : 0.002);
+        L->resume_after_s = num(l, "idle_resume_after_s", i ? 10 : 1);
+        L->resume_extra_ms = num(l, "idle_resume_extra_ms", i ? 300 : 300);
+        const cJSON *we = cJSON_GetObjectItemCaseSensitive(l, "wake_extra_ms");
+        if (cJSON_IsArray(we) && cJSON_GetArraySize(we) == 2) L->resume_extra_ms = cJSON_GetArrayItem(we, 1)->valuedouble;
+        L->tail_s = num(l, "tail_s", i ? 10 : 1);
+        const cJSON *oph = cJSON_GetObjectItemCaseSensitive(l, "outages_per_hour");
+        const cJSON *os = cJSON_GetObjectItemCaseSensitive(l, "outage_s");
+        L->outages_per_hour = cJSON_IsArray(oph) ? cJSON_GetArrayItem(oph, 1)->valuedouble : num(l, "outages_per_hour", 0);
+        L->outage_min_s = cJSON_IsArray(os) ? cJSON_GetArrayItem(os, 0)->valuedouble : 2;
+        L->outage_max_s = cJSON_IsArray(os) ? cJSON_GetArrayItem(os, 1)->valuedouble : 5;
+    }
+    snprintf(p->default_link, sizeof p->default_link, "%s", str(net, "default_link", "lte"));
+    p->tls_internal_bytes = (size_t)(num(net, "tls_internal_kib", 6) * 1024);
+    p->tls_external_bytes = (size_t)(num(net, "tls_external_kib", 40) * 1024);
+    p->ws_stack = (uint32_t)num(net, "ws_task_stack", 4096);
+    p->sys_evt_stack = (uint32_t)num(net, "event_task_stack", 2560);
+    p->dead_detect_ms = (uint32_t)num(net, "dead_detect_ms", 5000);
+
     const cJSON *pw = obj(root, "power");
     p->batt_mah = num(pw, "battery_mah", 1500);
     p->ma_base_awake = num(pw, "base_awake_ma", 25);

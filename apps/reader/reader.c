@@ -334,5 +334,22 @@ static void book_destroy(void) {
     memset(&RD, 0, sizeof RD);
 }
 
-const ink_activity_t ink_app_book = {
-    .name = "book", .create = book_create, .destroy = book_destroy, .on_key = book_key, .on_swipe = book_swipe};
+static int book_snapshot(char *buf, size_t cap) {
+    if (!RD.text || !cap) return 0;
+    size_t a = RD.starts[RD.page];
+    size_t b = RD.page + 1 < RD.nstarts ? RD.starts[RD.page + 1] : RD.len;
+    if (b > RD.len) b = RD.len;
+    size_t n = b > a ? b - a : 0;
+    if (n >= cap) n = cap - 1;
+    while (n && ((unsigned char)RD.text[a + n] & 0xC0) == 0x80) n--; /* do not cut a UTF-8 character */
+    memcpy(buf, RD.text + a, n);
+    buf[n] = 0;
+    return (int)n;
+}
+
+const ink_activity_t ink_app_book = {.name = "book",
+                                     .create = book_create,
+                                     .destroy = book_destroy,
+                                     .on_key = book_key,
+                                     .on_swipe = book_swipe,
+                                     .snapshot = book_snapshot};

@@ -34,6 +34,8 @@ typedef struct {
     const char *asset_dirs[4]; /* read-only assets (fonts...), searched in order */
     int nasset_dirs;
     const char *seed_content;  /* host directory copied into /content at boot (books for scenarios) */
+    const char *hub_script;    /* scripted hub rules (JSON); built-in defaults if NULL */
+    bool no_random_outages;    /* disable the profile's random link outages */
     bool trace;               /* write Chrome/Perfetto trace JSON */
     bool frames;              /* write a PNG after every completed display update */
     bool quiet;
@@ -120,6 +122,16 @@ void sim_power_consumer(const char *name, bool on, double ma);
 void sim_i2c_init(void);
 void sim_i2c_transfer(const char *who, int bytes);       /* blocks for the bus + transfer time */
 void sim_i2c_hold(const char *who, uint64_t ns);         /* occupy the bus (e.g. PMIC power-up sequence) */
+
+/* ---- network + scripted hub ---- */
+struct hal_ws;
+void sim_net_init(void);              /* task context (boot) */
+void sim_net_report(void);
+void sim_net_set_link(const char *name); /* ISR (script): "lte" | "wifi" | "none" */
+void sim_net_outage(uint64_t ns);        /* ISR (script) */
+void sim_net_hub_send(struct hal_ws *ws, uint64_t t_send, const void *data, size_t len, bool binary); /* ISR */
+int sim_hub_load(const char *path, char *err, size_t errlen);
+void sim_hub_receive(struct hal_ws *ws, uint64_t t, const uint8_t *data, size_t len, bool binary); /* ISR */
 
 /* ---- script ---- */
 int sim_script_load(const char *path, char *err, size_t errlen);

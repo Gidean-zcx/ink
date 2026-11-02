@@ -16,6 +16,7 @@
 #include "ink/osal.h"
 #include "ink/probe.h"
 #include "ink/rotation.h"
+#include "ink/sys/ai.h"
 #include "ink/sys/ui.h"
 
 #define UI_STACK 10240
@@ -68,6 +69,7 @@ static struct {
     int ndirty;
     bool fb_locked;
     uint64_t cause_us;
+    const char *cause_tag;
     /* activities */
     frame_t stack[MAX_ACTIVITIES];
     int depth;
@@ -178,9 +180,10 @@ static void refr_event_cb(lv_event_t *e) {
         osal_cost_units("lvgl.refr", 1);
     } else if (code == LV_EVENT_REFR_READY) {
         if (UI.ndirty) {
-            ink_display_commit(UI.dirty, UI.ndirty, UI.cause_us);
+            ink_display_commit_tagged(UI.dirty, UI.ndirty, UI.cause_us, UI.cause_tag);
             UI.ndirty = 0;
             UI.cause_us = 0;
+            UI.cause_tag = NULL;
         }
         UI.nhints = 0;
         UI.frame_intent = INK_REFRESH_UI;
@@ -233,8 +236,24 @@ void ink_ui_hint_area(const lv_area_t *a, ink_refresh_t intent) {
 
 void ink_ui_hint_obj(lv_obj_t *obj, ink_refresh_t intent) {
     lv_area_t a;
+    lv_obj_update_layout(obj); /* a just-created object has no coordinates until layout runs */
     lv_obj_get_coords(obj, &a);
     ink_ui_hint_area(&a, intent);
+}
+
+void ink_ui_cause(uint64_t t_us, const char *tag) {
+    UI.cause_us = t_us;
+    UI.cause_tag = tag;
+}
+
+int ink_ui_snapshot(char *buf, size_t cap, const char **activity_name) {
+    const ink_activity_t *top = UI.depth ? UI.stack[UI.depth - 1].a : NULL;
+    if (activity_name) *activity_name = top ? top->name : "";
+    if (!top || !top->snapshot || !cap) {
+        if (cap) buf[0] = 0;
+        return 0;
+    }
+    return top->snapshot(buf, cap);
 }
 
 void ink_ui_hint_frame(ink_refresh_t intent) {
@@ -395,6 +414,7 @@ static void handle_input(const umsg_t *m) {
         }
         if (e->phase == INK_PTR_PRESS) set_interactive(true);
         UI.cause_us = e->t_us;
+        UI.cause_tag = NULL;
         if (e->phase == INK_PTR_RELEASE && (e->flags & INK_EVF_SWIPE)) {
             /* a swipe is not a click: LVGL would send CLICKED on any release without scrolling
              * (found in the simulator: a swipe turned the page twice, once per gesture path) */
@@ -408,16 +428,23 @@ static void handle_input(const umsg_t *m) {
     case INK_EV_SWIPE:
         if (m->generation != UI.generation) return;
         UI.cause_us = e->t_us;
+        UI.cause_tag = NULL;
         if (top && top->on_swipe) top->on_swipe((ink_swipe_dir_t)e->dir);
         break;
     case INK_EV_KEY:
     case INK_EV_KEY_LONG: {
         bool lng = e->kind == INK_EV_KEY_LONG;
+        if (e->key == HAL_KEY_AI) { /* system-wide: push-to-talk, handled by the AI service */
+            if (e->kind == INK_EV_KEY) ink_ai_key(e->pressed, e->t_us);
+            return;
+        }
         if (e->kind == INK_EV_KEY && (!e->pressed || (e->flags & INK_EVF_AFTER_LONG))) {
             /* act on press; releases only matter to push-to-talk (handled by the AI service later) */
             if (!e->pressed) return;
         }
         UI.cause_us = e->t_us;
+        UI.cause_tag = NULL;
+        if ((e->key == HAL_KEY_BACK || e->key == HAL_KEY_HOME) && ink_ai_dismiss()) return;
         if (top && top->on_key && top->on_key((hal_key_t)e->key, lng)) return;
         if (e->key == HAL_KEY_BACK && !lng) ink_ui_pop();
         else if (e->key == HAL_KEY_HOME)
