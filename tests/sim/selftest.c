@@ -11,6 +11,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "ink/hal_audio.h"
 #include "ink/hal_device.h"
 #include "ink/hal_display.h"
 #include "ink/hal_input.h"
@@ -356,6 +357,46 @@ static void test_sd(void) {
     CHECK(found, "directory listing shows the SD file");
 }
 
+/* ----------------------------------------------------- 8b. speaker */
+
+/* The TX ring plays zeros when nobody refills it: an underrun only when that cuts into sound. */
+static void test_speaker(void) {
+    if (!g_profile.info.has_audio_out) return;
+    hal_audio_info_t ai;
+    hal_audio_get_info(&ai);
+    static int16_t pcm[480];
+    uint64_t u0, u1;
+    double gap0, gap1, idle0, idle1;
+    CHECK(hal_audio_play_start() == 0, "speaker output starts");
+    int64_t d = hal_audio_play_delay_us();
+    CHECK(d >= (int64_t)g_profile.audio_start_us - 1000 && d <= (int64_t)g_profile.audio_start_us,
+          "nothing plays before the amplifier settles (%lld us)", (long long)d);
+    for (int i = 0; i < 480; i++) pcm[i] = (i / 8) % 2 ? 6000 : -6000; /* 1 kHz square, no fade */
+    sim_audio_speaker_counters(&u0, &gap0, &idle0);
+    CHECK(hal_audio_play_write(pcm, 480, 0) == 480, "two descriptors written");
+    osal_task_delay_us((uint64_t)g_profile.audio_start_us + 120000);
+    sim_audio_speaker_counters(&u1, &gap1, &idle1);
+    CHECK(u1 == u0 + 1 && gap1 - gap0 >= 15.0, "running dry right after sound is one audible gap (%llu, %.0f ms)",
+          (unsigned long long)(u1 - u0), gap1 - gap0);
+    for (int i = 416; i < 480; i++) pcm[i] = 0; /* this time the sound ends in silence */
+    hal_audio_play_write(pcm, 480, 0);
+    osal_task_delay_us(120000);
+    uint64_t u2;
+    double gap2, idle2;
+    sim_audio_speaker_counters(&u2, &gap2, &idle2);
+    CHECK(u2 == u1 && idle2 - idle1 >= 15.0, "running dry after silence is idle, not an underrun (%llu, idle %.0f ms)",
+          (unsigned long long)(u2 - u1), idle2 - idle1);
+    for (int i = 0; i < 480; i++) pcm[i] = (i / 8) % 2 ? 6000 : -6000;
+    hal_audio_play_write(pcm, 480, 0);
+    hal_audio_play_stop(true); /* drain: plays out, no gap */
+    uint64_t u3;
+    double gap3, idle3;
+    sim_audio_speaker_counters(&u3, &gap3, &idle3);
+    CHECK(u3 == u2, "stopping with drain plays everything without a gap");
+    CHECK(ai.runway_ms == g_profile.audio_dma_desc * g_profile.audio_dma_frames * 1000 / HAL_AUDIO_RATE,
+          "runway = DMA ring (%d ms)", ai.runway_ms);
+}
+
 /* ----------------------------------------------------- 9. input */
 
 #define MAXEV 32
@@ -404,6 +445,7 @@ static void selftest_task(void *arg) {
     test_flash();
     test_underrun();
     test_sd();
+    test_speaker();
     /* the script taps at 4.0 s and 4.5 s and presses NEXT at 5 s */
     uint64_t now = osal_now_us();
     if (now < 6500000) osal_task_delay_us(6500000 - now);

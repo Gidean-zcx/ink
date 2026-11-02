@@ -97,6 +97,9 @@ add_library(ink_system STATIC
   system/input/input_service.c
   system/storage/storage_service.c
   system/core/ink_json.c
+  system/core/actions.c
+  system/core/members.c
+  system/core/system_actions.c
   system/net/hub_link.c
   system/ai/ai_service.c
   system/audio/audio_service.c
@@ -190,6 +193,13 @@ if(INK_HAVE_FONTS)
   ink_scenario(reader_basic metalio-plus)
   ink_scenario(reader_basic metalio-plus-psram16)
   ink_scenario(ai_ask metalio-plus)
+  add_test(NAME scenario-ai_tools-metalio-plus
+    COMMAND ink-sim --profile ${CMAKE_SOURCE_DIR}/profiles/metalio-plus.json
+            --script ${CMAKE_SOURCE_DIR}/tests/scenarios/ai_tools.script
+            --budget ${CMAKE_SOURCE_DIR}/tests/scenarios/ai_tools.budget.json
+            --hub ${CMAKE_SOURCE_DIR}/tests/scenarios/ai_tools.hub.json
+            --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
+            --out ${CMAKE_BINARY_DIR}/test-out/ai_tools-metalio-plus --quiet --trace --frames --no-random-outages)
   # Power cut in the middle of a position save, reboot from the torn flash image.
   add_test(NAME scenario-powercut-during-save
     COMMAND ${CMAKE_COMMAND} -DSIM=$<TARGET_FILE:ink-sim>

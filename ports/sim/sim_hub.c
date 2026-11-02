@@ -24,6 +24,12 @@
  *   {"method": "ai.listen", "listen": {"stt_ms": 300, "transcript": "...",
  *    "tts_first_ms": 500, "tts_chars_per_s": 4.5, "tts_speed": 2},
  *    "think_ms": 1400, "stream": {...}, "result": {...}}
+ * A voice rule may list "tools": [{"name": "reader.next_page", "arguments": {},
+ * "page_gen_offset": 0}] — after the transcript the hub calls them one by one
+ * ("tools/call", waiting for each receipt) and then answers with the last
+ * receipt's "say" (when "say_from_receipt": true) instead of the chunks.
+ * {"method": "ai.listen", "turns": [rule, rule, ...]}: the n-th request uses
+ * the n-th rule (the last one repeats).
  */
 #include <math.h>
 #include <stdio.h>
@@ -106,7 +112,13 @@ static struct {
     int frames;
     const cJSON *rule;
     bool used;
+    int page_gen;
+    int next_tool;      /* index of the next tool to call */
+    int64_t tool_rpc;   /* id of the tools/call in flight (0 = none) */
+    char say[256];      /* last receipt's "say" */
 } LS[MAX_LISTEN];
+
+static int64_t g_tool_rpc = 9000;
 
 static void notify(struct hal_ws *ws, uint64_t t, const char *method, cJSON *id, const char *text) {
     cJSON *n = cJSON_CreateObject();
@@ -131,16 +143,11 @@ static double num_or(const cJSON *o, const char *k, double def) {
     return cJSON_IsNumber(v) ? v->valuedouble : def;
 }
 
-/* The utterance is complete: transcript, answer text, TTS audio, end, result. */
-static void answer_listen(int i, uint64_t t) {
+/* Text chunks + TTS audio + end + result, starting at `at`. */
+static void finish_listen(int i, uint64_t at) {
     const cJSON *rule = LS[i].rule, *ls = cJSON_GetObjectItemCaseSensitive(rule, "listen");
     struct hal_ws *ws = LS[i].ws;
     cJSON *id = LS[i].id;
-    sim_metric_sample("hub.listen.frames", LS[i].frames);
-    uint64_t at = t + SIM_MS(num_or(ls, "stt_ms", 300));
-    const char *tr = cJSON_GetStringValue(cJSON_GetObjectItemCaseSensitive(ls, "transcript"));
-    notify(ws, at, "ai.stt", id, tr ? tr : "");
-    at += SIM_MS(num_or(rule, "think_ms", 1400));
     const cJSON *stream = cJSON_GetObjectItemCaseSensitive(rule, "stream");
     const cJSON *chunks = cJSON_GetObjectItemCaseSensitive(stream, "chunks"), *c;
     double iv = num_or(stream, "interval_ms", 400);
@@ -148,6 +155,12 @@ static void answer_listen(int i, uint64_t t) {
     uint64_t text_at = at, tts_at = at + SIM_MS(num_or(ls, "tts_first_ms", 500));
     double cps = num_or(ls, "tts_chars_per_s", 4.5), speed = num_or(ls, "tts_speed", 2);
     uint32_t seq = 0;
+    cJSON *say_chunks = NULL;
+    if (cJSON_IsTrue(cJSON_GetObjectItemCaseSensitive(rule, "say_from_receipt")) && LS[i].say[0]) {
+        say_chunks = cJSON_CreateArray();
+        cJSON_AddItemToArray(say_chunks, cJSON_CreateString(LS[i].say));
+        chunks = say_chunks;
+    }
     cJSON_ArrayForEach(c, chunks) {
         const char *txt = cJSON_GetStringValue(c) ? cJSON_GetStringValue(c) : "";
         notify(ws, text_at, nm ? nm : "ai.delta", id, txt);
@@ -167,8 +180,19 @@ static void answer_listen(int i, uint64_t t) {
             seq++;
         }
     }
+    cJSON_Delete(say_chunks);
     uint64_t end = text_at > tts_at ? text_at : tts_at;
-    notify(ws, tts_at, "ai.tts.end", id, NULL);
+    { /* names its turn: an end arriving after the user started a new question changes nothing there */
+        cJSON *n = cJSON_CreateObject();
+        cJSON_AddStringToObject(n, "jsonrpc", "2.0");
+        cJSON_AddStringToObject(n, "method", "ai.tts.end");
+        cJSON *params = cJSON_AddObjectToObject(n, "params");
+        cJSON_AddItemToObject(params, "id", cJSON_Duplicate(id, 1));
+        cJSON_AddNumberToObject(params, "stream", LS[i].stream);
+        cJSON_AddNumberToObject(params, "frames", seq);
+        send_json(ws, tts_at, n);
+        cJSON_Delete(n);
+    }
     cJSON *res = cJSON_CreateObject();
     cJSON_AddStringToObject(res, "jsonrpc", "2.0");
     cJSON_AddItemToObject(res, "id", cJSON_Duplicate(id, 1));
@@ -178,6 +202,61 @@ static void answer_listen(int i, uint64_t t) {
     cJSON_Delete(res);
     cJSON_Delete(LS[i].id);
     LS[i].used = false;
+}
+
+/* Call the next tool of the rule, or finish the turn. */
+static void next_tool_or_finish(int i, uint64_t at) {
+    const cJSON *tools = cJSON_GetObjectItemCaseSensitive(LS[i].rule, "tools");
+    const cJSON *tool = cJSON_IsArray(tools) ? cJSON_GetArrayItem(tools, LS[i].next_tool) : NULL;
+    if (!tool) {
+        finish_listen(i, at + SIM_MS(num_or(LS[i].rule, "think_ms", 1400)));
+        return;
+    }
+    LS[i].next_tool++;
+    cJSON *rq = cJSON_CreateObject();
+    cJSON_AddStringToObject(rq, "jsonrpc", "2.0");
+    LS[i].tool_rpc = ++g_tool_rpc;
+    cJSON_AddNumberToObject(rq, "id", (double)LS[i].tool_rpc);
+    cJSON_AddStringToObject(rq, "method", "tools/call");
+    cJSON *pr = cJSON_AddObjectToObject(rq, "params");
+    const char *name = cJSON_GetStringValue(cJSON_GetObjectItemCaseSensitive(tool, "name"));
+    cJSON_AddStringToObject(pr, "name", name ? name : "?");
+    const cJSON *args = cJSON_GetObjectItemCaseSensitive(tool, "arguments");
+    cJSON_AddItemToObject(pr, "arguments", args ? cJSON_Duplicate(args, 1) : cJSON_CreateObject());
+    cJSON_AddNumberToObject(pr, "page_gen", LS[i].page_gen + (int)num_or(tool, "page_gen_offset", 0));
+    send_json(LS[i].ws, at + SIM_MS(num_or(tool, "think_ms", 600)), rq);
+    cJSON_Delete(rq);
+}
+
+/* The utterance is complete: transcript, then tools (if any), then the answer. */
+static void answer_listen(int i, uint64_t t) {
+    const cJSON *rule = LS[i].rule, *ls = cJSON_GetObjectItemCaseSensitive(rule, "listen");
+    sim_metric_sample("hub.listen.frames", LS[i].frames);
+    uint64_t at = t + SIM_MS(num_or(ls, "stt_ms", 300));
+    const char *tr = cJSON_GetStringValue(cJSON_GetObjectItemCaseSensitive(ls, "transcript"));
+    notify(LS[i].ws, at, "ai.stt", LS[i].id, tr ? tr : "");
+    if (cJSON_GetObjectItemCaseSensitive(rule, "tools")) next_tool_or_finish(i, at);
+    else finish_listen(i, at + SIM_MS(num_or(rule, "think_ms", 1400)));
+}
+
+/* A response from the device to one of our tools/call requests. */
+static bool on_device_response(struct hal_ws *ws, uint64_t t, cJSON *msg) {
+    const cJSON *id = cJSON_GetObjectItemCaseSensitive(msg, "id");
+    if (!cJSON_IsNumber(id)) return false;
+    for (int i = 0; i < MAX_LISTEN; i++) {
+        if (!LS[i].used || LS[i].ws != ws || LS[i].tool_rpc != (int64_t)id->valuedouble) continue;
+        LS[i].tool_rpc = 0;
+        const cJSON *res = cJSON_GetObjectItemCaseSensitive(msg, "result");
+        const char *st = cJSON_GetStringValue(cJSON_GetObjectItemCaseSensitive(res, "status"));
+        const char *say = cJSON_GetStringValue(cJSON_GetObjectItemCaseSensitive(res, "say"));
+        char key[64];
+        snprintf(key, sizeof key, "hub.tool_results.%s", st ? st : "error");
+        sim_metric_add(key, 1);
+        snprintf(LS[i].say, sizeof LS[i].say, "%s", say ? say : "");
+        next_tool_or_finish(i, t);
+        return true;
+    }
+    return false;
 }
 
 void sim_hub_receive(struct hal_ws *ws, uint64_t t, const uint8_t *data, size_t len, bool binary) {
@@ -199,6 +278,11 @@ void sim_hub_receive(struct hal_ws *ws, uint64_t t, const uint8_t *data, size_t 
     }
     const char *method = cJSON_GetStringValue(cJSON_GetObjectItemCaseSensitive(req, "method"));
     cJSON *id = cJSON_GetObjectItemCaseSensitive(req, "id");
+    if (!method) { /* a response from the device (to a tools/call) */
+        if (!on_device_response(ws, t, req)) sim_metric_add("hub.unexpected_responses", 1);
+        cJSON_Delete(req);
+        return;
+    }
     char key[80];
     snprintf(key, sizeof key, "hub.requests.%s", method ? method : "?");
     sim_metric_add(key, 1);
@@ -216,12 +300,19 @@ void sim_hub_receive(struct hal_ws *ws, uint64_t t, const uint8_t *data, size_t 
         cJSON_Delete(req);
         return;
     }
+    const cJSON *turns = cJSON_GetObjectItemCaseSensitive(rule, "turns");
+    if (cJSON_IsArray(turns) && cJSON_GetArraySize(turns) > 0) { /* n-th request uses the n-th turn (last repeats) */
+        static int nth;
+        int k = nth < cJSON_GetArraySize(turns) ? nth : cJSON_GetArraySize(turns) - 1;
+        nth++;
+        rule = cJSON_GetArrayItem(turns, k);
+    }
     if (cJSON_GetObjectItemCaseSensitive(rule, "listen")) { /* voice turn: answer after ai.listen.end */
         const cJSON *pr = cJSON_GetObjectItemCaseSensitive(req, "params");
         for (int i = 0; i < MAX_LISTEN; i++)
             if (!LS[i].used) {
                 LS[i] = (typeof(LS[i])){.ws = ws, .id = cJSON_Duplicate(id, 1), .stream = (int)num_or(pr, "stream", 0),
-                                        .rule = rule, .used = true};
+                                        .rule = rule, .used = true, .page_gen = (int)num_or(pr, "page_gen", 0)};
                 break;
             }
         cJSON_Delete(req);

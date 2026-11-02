@@ -9,8 +9,18 @@
  * Timing: the speaker ring holds 60 ms, exactly one Opus frame, so decoded
  * audio waits in a staging buffer and is written as DMA descriptors free up;
  * the task wakes at least every tick (10 ms) while anything is active. During
- * an e-ink refresh the EPD feeders hold most of both cores: the capture ring
- * (2 s) and the jitter buffer absorb that.
+ * an e-ink refresh the EPD feeders hold most of both cores (~7 % left): the
+ * capture ring (2 s) and the jitter buffer absorb that, the speaker is
+ * refilled between encoded frames (one frame is ~9 ms of CPU, ~140 ms of wall
+ * time at that share), and every tone fits in the DMA ring, so it is written
+ * at once and no load can cut it.
+ *
+ * An open output with nothing to play is left alone: the DMA plays zeros by
+ * itself (the TX channel clears what it sent). While a stream waits for data
+ * the output stays open for a while, then closes.
+ *
+ * The staging buffer belongs to the service task; the API only changes the
+ * stream and the task drops staged audio of a stream that is gone.
  */
 #include <math.h>
 #include <stdio.h>
@@ -31,6 +41,7 @@
 #define JB_PREBUFFER 3                /* 180 ms before a stream starts playing */
 #define PLC_MAX 3                     /* conceal at most this many missing frames in a row */
 #define BITRATE 24000
+#define WAIT_HOLD_US 300000 /* a stream waiting for data keeps the output open this long, then it closes */
 #define FRAME HAL_OPUS_FRAME_SAMPLES
 
 typedef struct {
@@ -59,9 +70,12 @@ static struct {
     jb_frame_t *jb; /* JB_MAX, PSRAM */
     int jb_head, jb_count, plc_run;
     hal_opus_dec_t *dec;
-    int16_t *pcm; /* staging: one decoded frame or a tone (PSRAM) */
+    int dec_stream; /* the stream the decoder state belongs to */
+    int16_t *pcm; /* staging: one decoded frame or a tone (PSRAM); service task only */
     int pcm_off, pcm_len;
+    int staged_stream; /* stream the staged samples belong to (0 = a tone) */
     bool out_open;
+    uint64_t waiting_since; /* output open, the stream has nothing ready since (0 = not waiting) */
     /* tone request */
     bool tone_pending;
     ink_tone_t tone;
@@ -114,32 +128,31 @@ static void encode_and_deliver(const int16_t *frame) {
     if (n > 0 && AU.cap_fn) AU.cap_fn(AU.cap_ctx, pkt, (size_t)n, AU.cap_seq++);
 }
 
-static void service_capture(int16_t *scratch) {
-    for (;;) {
-        lock();
-        bool on = AU.cap_on, ending = AU.cap_ending, got = on && take_frame(scratch);
-        uint32_t left = AU.wr - AU.rd;
-        if (!got && on && ending) { /* flush the tail (padded) and signal the end */
-            for (int i = 0; i < FRAME; i++) scratch[i] = i < (int)left ? AU.ring[AU.rd++ % CAP_RING] : 0;
-        }
-        unlock();
-        if (got) {
-            encode_and_deliver(scratch);
-            continue;
-        }
-        if (on && ending) {
-            if (left) encode_and_deliver(scratch);
-            hal_audio_capture_stop();
-            if (AU.cap_fn) AU.cap_fn(AU.cap_ctx, NULL, 0, AU.cap_seq);
-            lock();
-            AU.cap_on = AU.cap_ending = false;
-            AU.cap_fn = NULL;
-            unlock();
-            hal_opus_enc_free(AU.enc);
-            AU.enc = NULL;
-        }
-        return;
+/* Encode one frame, or finish an ending capture. Returns true if there may be more to encode. */
+static bool capture_step(int16_t *scratch) {
+    lock();
+    bool on = AU.cap_on, ending = AU.cap_ending, got = on && take_frame(scratch);
+    uint32_t left = AU.wr - AU.rd;
+    if (!got && on && ending) { /* flush the tail (padded) and signal the end */
+        for (int i = 0; i < FRAME; i++) scratch[i] = i < (int)left ? AU.ring[AU.rd++ % CAP_RING] : 0;
     }
+    unlock();
+    if (got) {
+        encode_and_deliver(scratch);
+        return true;
+    }
+    if (on && ending) {
+        if (left) encode_and_deliver(scratch);
+        hal_audio_capture_stop();
+        if (AU.cap_fn) AU.cap_fn(AU.cap_ctx, NULL, 0, AU.cap_seq);
+        lock();
+        AU.cap_on = AU.cap_ending = false;
+        AU.cap_fn = NULL;
+        unlock();
+        hal_opus_enc_free(AU.enc);
+        AU.enc = NULL;
+    }
+    return false;
 }
 
 /* -------------------------------------------------------------- playback */
@@ -164,8 +177,11 @@ static void close_output(bool drain) {
 }
 
 static void make_tone(ink_tone_t t) {
-    static const struct { double f; int ms; } T[] = {{880, 110}, {660, 90}, {330, 220}};
-    int n = HAL_AUDIO_RATE * T[t].ms / 1000, fade = HAL_AUDIO_RATE * 8 / 1000;
+    /* placeholders until the sound design; each fits in the DMA ring (60 ms here), see the top */
+    static const struct { double f; int ms; } T[] = {{880, 60}, {660, 60}, {330, 60}};
+    int n = HAL_AUDIO_RATE * T[t].ms / 1000, fade = HAL_AUDIO_RATE * 6 / 1000;
+    int ring = AU.info.runway_ms > 0 ? HAL_AUDIO_RATE * AU.info.runway_ms / 1000 : n;
+    if (n > ring) n = ring;
     if (n > FRAME * 4) n = FRAME * 4;
     for (int i = 0; i < n; i++) {
         double env = i < fade ? (double)i / fade : i > n - fade ? (double)(n - i) / fade : 1.0;
@@ -174,6 +190,7 @@ static void make_tone(ink_tone_t t) {
     osal_cost_units("tone.sample", (uint64_t)n);
     AU.pcm_off = 0;
     AU.pcm_len = n;
+    AU.staged_stream = 0;
     apply_volume(AU.pcm, n);
 }
 
@@ -197,6 +214,7 @@ static bool stage_next(void) {
         return false;
     }
     AU.started = true;
+    int sid = AU.stream;
     jb_frame_t f = {0};
     bool have = AU.jb_count > 0;
     if (have) {
@@ -212,13 +230,21 @@ static bool stage_next(void) {
         ink_probe_count("audio.play_concealed_frames"); /* the network did not deliver in time */
     }
     unlock();
-    if (!AU.dec) AU.dec = hal_opus_dec_new();
+    if (AU.dec && AU.dec_stream != sid) { /* a new stream starts from a fresh decoder state */
+        hal_opus_dec_free(AU.dec);
+        AU.dec = NULL;
+    }
+    if (!AU.dec) {
+        AU.dec = hal_opus_dec_new();
+        AU.dec_stream = sid;
+    }
     int n = AU.dec ? hal_opus_decode(AU.dec, have ? f.data : NULL, have ? f.len : 0, AU.pcm) : -1;
     osal_free(f.data);
     if (n <= 0) return false;
     apply_volume(AU.pcm, n);
     AU.pcm_off = 0;
     AU.pcm_len = n;
+    AU.staged_stream = sid;
     lock();
     if (AU.stream_probe && have) { /* first real frame of the stream is about to go out */
         AU.heard_probe = AU.stream_probe;
@@ -236,6 +262,10 @@ static void service_playback(void) {
     const char *probe = AU.tone_probe;
     uint64_t cause = AU.tone_cause;
     AU.tone_pending = false;
+    if (AU.staged_stream && AU.staged_stream != AU.stream) { /* aborted or replaced: drop its staged audio */
+        AU.pcm_off = AU.pcm_len = 0;
+        AU.staged_stream = 0;
+    }
     unlock();
     if (tone && open_output()) {
         make_tone(which);
@@ -243,11 +273,12 @@ static void service_playback(void) {
         AU.heard_cause = cause;
     }
     for (;;) {
-        if (AU.pcm_off >= AU.pcm_len && !stage_next()) break;
+        if (AU.pcm_off >= AU.pcm_len && !stage_next()) break; /* nothing ready */
         if (!open_output()) {
             AU.pcm_off = AU.pcm_len = 0;
             break;
         }
+        AU.waiting_since = 0;
         if (AU.heard_probe) { /* first samples of a probed tone go out now: when will they be heard? */
             int64_t delay = hal_audio_play_delay_us();
             ink_probe_value(AU.heard_probe, (double)(osal_now_us() + (uint64_t)delay - AU.heard_cause) / 1000.0);
@@ -258,15 +289,28 @@ static void service_playback(void) {
         if (AU.pcm_off < AU.pcm_len) break; /* DMA ring full: come back next tick */
     }
     lock();
-    bool done_stream = AU.stream && AU.finishing && AU.jb_count == 0 && AU.pcm_off >= AU.pcm_len;
-    bool idle = !AU.stream && AU.pcm_off >= AU.pcm_len && !AU.tone_pending;
+    bool drained = AU.pcm_off >= AU.pcm_len;
+    bool done_stream = AU.stream && AU.finishing && AU.jb_count == 0 && drained;
+    bool idle = !AU.stream && drained && !AU.tone_pending;
     if (done_stream) {
         AU.stream = 0;
         AU.finishing = AU.started = false;
     }
+    bool no_stream = !AU.stream;
     unlock();
-    if (done_stream || (idle && AU.out_open)) close_output(true);
-    if (done_stream && AU.dec) {
+    if (done_stream || (idle && AU.out_open)) {
+        AU.waiting_since = 0;
+        close_output(true); /* play out what is queued */
+    } else if (AU.out_open && drained) {
+        /* the stream waits for data (prebuffering, a network gap): the DMA plays zeros by itself */
+        uint64_t now = osal_now_us();
+        if (!AU.waiting_since) AU.waiting_since = now;
+        else if (now - AU.waiting_since > WAIT_HOLD_US) {
+            AU.waiting_since = 0;
+            close_output(false); /* everything queued has long been played */
+        }
+    }
+    if (no_stream && AU.dec) { /* finished or aborted: give the decoder's memory back */
         hal_opus_dec_free(AU.dec);
         AU.dec = NULL;
     }
@@ -295,8 +339,10 @@ static void audio_task(void *arg) {
         bool active = AU.cap_on || AU.stream || AU.tone_pending || AU.out_open || AU.pcm_off < AU.pcm_len;
         unlock();
         osal_sem_take(AU.wake, active ? AU_TICK_US : OSAL_WAIT_FOREVER);
-        service_capture(scratch);
+        /* the speaker first and again after every encoded frame: the 60 ms DMA ring must not wait
+         * for the encoder to catch up on the capture ring */
         service_playback();
+        while (capture_step(scratch)) service_playback();
         update_write_hold();
     }
 }
@@ -372,7 +418,6 @@ int ink_audio_stream_open(ink_audio_prio_t prio, uint64_t cause_us, const char *
     AU.prio = prio;
     AU.finishing = AU.started = false;
     AU.plc_run = 0;
-    AU.pcm_off = AU.pcm_len = 0;
     AU.stream_probe = heard_probe;
     AU.stream_cause = cause_us;
     int id = AU.stream;
@@ -415,7 +460,6 @@ void ink_audio_stream_abort(int id) {
         free_jb();
         AU.stream = 0;
         AU.finishing = AU.started = false;
-        AU.pcm_off = AU.pcm_len = 0;
     }
     unlock();
     osal_sem_give(AU.wake);
@@ -426,7 +470,6 @@ void ink_audio_stop_all(void) {
     free_jb();
     AU.stream = 0;
     AU.finishing = AU.started = false;
-    AU.pcm_off = AU.pcm_len = 0;
     unlock();
     osal_sem_give(AU.wake);
 }

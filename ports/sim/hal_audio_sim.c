@@ -11,9 +11,14 @@
  *
  * Speaker: writers fill descriptors; once the output path is up (amplifier
  * enable over the shared I2C + settle) the DMA plays one descriptor per
- * period. If the next descriptor is not ready the DMA plays silence: an
- * underrun (an audible gap), counted. What the speaker played, gaps included,
- * goes to speaker.wav (16 kHz mono) on the run's timeline.
+ * period. A descriptor nobody refilled plays as zeros (the TX channel is
+ * configured to clear what it sent, as the ESP-IDF driver's auto_clear), so
+ * an open output with nothing to play costs no CPU and is silent. A dry
+ * descriptor is an underrun only when it cuts into sound (the samples played
+ * just before were not silent): the gap lasts until data comes again and is
+ * counted with its length; dry time after silence is only "idle". What the
+ * speaker played, gaps included, goes to speaker.wav (16 kHz mono) on the
+ * run's timeline.
  *
  * The DMA rings come out of DMA-capable internal RAM while a direction is
  * open (upstream tears the I2S channel down when the last user releases it).
@@ -60,7 +65,8 @@ static struct {
     vtk_event_id_t play_ev;
     vtk_waitq_t play_wq;
     void *tx_dma;
-    uint64_t underruns, underrun_samples, played_samples;
+    bool sounding, in_gap;      /* the last samples played were not silent; a gap that cut sound is going on */
+    uint64_t underruns, underrun_samples, idle_samples, played_samples;
     /* speaker.wav */
     FILE *wav;
     uint64_t wav_samples, wav_end_ns;
@@ -173,6 +179,29 @@ void sim_audio_mic_source(const char *name) { /* ISR (script) */
 
 static void play_tick(void *arg);
 
+#define AUDIBLE_LEVEL 64 /* |sample| above this (after volume) is sound */
+
+/* Sound in the last 2 ms of these samples? A gap after sound is audible, after silence it is not. */
+static bool tail_audible(const int16_t *s, int n) {
+    for (int i = n > 32 ? n - 32 : 0; i < n; i++)
+        if (s[i] > AUDIBLE_LEVEL || s[i] < -AUDIBLE_LEVEL) return true;
+    return false;
+}
+
+static void dry(uint64_t t, int samples, bool cut) { /* ISR: `samples` of zeros went out */
+    if (cut && !A.in_gap) {
+        A.in_gap = true;
+        A.underruns++;
+    }
+    if (A.in_gap) {
+        A.underrun_samples += (uint64_t)samples;
+        sim_trace_instant("audio", "speaker underrun", t, NULL);
+    } else {
+        A.idle_samples += (uint64_t)samples;
+    }
+    A.sounding = false;
+}
+
 static void maybe_start_dma_locked(uint64_t now) {
     if (A.dma_running || !A.out_on || A.play_ev) return;
     if (A.full == 0 && !(A.draining && A.partial > 0)) return;
@@ -193,27 +222,26 @@ static void play_tick(void *arg) { /* ISR: the DMA needs the next descriptor */
         A.tail = (A.tail + 1) % A.N;
         A.full--;
         A.played_samples += (uint64_t)A.chunk;
-    } else if (A.partial > 0) { /* a half-written descriptor: the rest plays as silence */
+        A.in_gap = false;
+        A.sounding = tail_audible(s, A.chunk);
+    } else if (A.partial > 0) { /* a half-written descriptor: the rest plays as zeros */
+        bool cut = !A.draining && tail_audible(s, A.partial);
         memset(s + A.partial, 0, (size_t)(A.chunk - A.partial) * 2);
         wav_put(s, A.chunk, t);
-        if (!A.draining) {
-            A.underruns++;
-            A.underrun_samples += (uint64_t)(A.chunk - A.partial);
-            sim_trace_instant("audio", "speaker underrun", t, NULL);
-        }
         A.played_samples += (uint64_t)A.partial;
+        A.in_gap = false;
+        if (A.draining) A.sounding = false;
+        else dry(t, A.chunk - A.partial, cut);
         A.partial = 0;
         A.tail = (A.tail + 1) % A.N;
     } else if (A.draining) { /* everything played */
         A.dma_running = false;
         vtk_wake_all_locked(&A.play_wq);
         return;
-    } else { /* nothing ready: the DMA sends zeros */
+    } else { /* nothing queued: the DMA sends zeros */
         static const int16_t zero[480];
         wav_put(zero, A.chunk <= 480 ? A.chunk : 480, t);
-        A.underruns++;
-        A.underrun_samples += (uint64_t)A.chunk;
-        sim_trace_instant("audio", "speaker underrun", t, NULL);
+        dry(t, A.chunk, A.sounding);
     }
     vtk_wake_all_locked(&A.play_wq);
     A.boundary_ns = t + A.period_ns;
@@ -294,6 +322,7 @@ int hal_audio_play_start(void) {
     A.draining = false;
     A.dma_running = false;
     A.tail = A.full = A.partial = 0;
+    A.sounding = A.in_gap = false;
     A.ready_ns = vtk_now() + SIM_US(g_profile.audio_start_us);
     vtk_unlock();
     return 0;
@@ -378,6 +407,14 @@ void sim_audio_init(void) {
     osal_mem_tag(prev);
 }
 
+void sim_audio_speaker_counters(uint64_t *underruns, double *underrun_ms, double *idle_ms) {
+    vtk_lock();
+    *underruns = A.underruns;
+    *underrun_ms = A.underrun_samples * 1000.0 / HAL_AUDIO_RATE;
+    *idle_ms = A.idle_samples * 1000.0 / HAL_AUDIO_RATE;
+    vtk_unlock();
+}
+
 void sim_audio_report(void) {
     sim_metric_set("audio.mic.captured_ms", A.cap_samples * 1000.0 / HAL_AUDIO_RATE);
     sim_metric_set("audio.mic.overruns", (double)A.cap_overruns);
@@ -385,6 +422,7 @@ void sim_audio_report(void) {
     sim_metric_set("audio.speaker.played_ms", A.played_samples * 1000.0 / HAL_AUDIO_RATE);
     sim_metric_set("audio.speaker.underruns", (double)A.underruns);
     sim_metric_set("audio.speaker.underrun_ms", A.underrun_samples * 1000.0 / HAL_AUDIO_RATE);
+    sim_metric_set("audio.speaker.idle_ms", A.idle_samples * 1000.0 / HAL_AUDIO_RATE);
     if (A.wav) {
         wav_header(A.wav, (uint32_t)A.wav_samples);
         fclose(A.wav);

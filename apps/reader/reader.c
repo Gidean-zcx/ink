@@ -14,6 +14,7 @@
 #include "ink/hal_storage.h"
 #include "ink/osal.h"
 #include "ink/probe.h"
+#include "ink/sys/actions.h"
 #include "ink/sys/font.h"
 #include "ink/sys/storage.h"
 #include "ink/sys/text.h"
@@ -114,6 +115,47 @@ static void library_create(lv_obj_t *scr, void *arg) {
 
 const ink_activity_t ink_app_reader = {.name = "reader", .create = library_create};
 
+static void act_list(const ink_json_t *a, int t, ink_receipt_t *rc) {
+    (void)a;
+    (void)t;
+    if (!LIB.nbooks) scan_library();
+    size_t n = (size_t)snprintf(rc->say, sizeof rc->say, "书架上有：");
+    for (int i = 0; i < LIB.nbooks && n < sizeof rc->say; i++)
+        n += (size_t)snprintf(rc->say + n, sizeof rc->say - n, "%s%s", i ? "、" : "", LIB.books[i].name);
+    snprintf(rc->object, sizeof rc->object, "shelf:books");
+}
+
+static void act_open(const ink_json_t *a, int t, ink_receipt_t *rc) {
+    char title[96];
+    if (!a || ink_json_str(a, ink_json_find(a, t, "title"), title, sizeof title) < 0) {
+        rc->status = INK_RC_INVALID;
+        snprintf(rc->detail, sizeof rc->detail, "title required");
+        return;
+    }
+    if (!LIB.nbooks) scan_library();
+    for (int i = 0; i < LIB.nbooks; i++)
+        if (strstr(LIB.books[i].name, title) || strstr(title, LIB.books[i].name)) {
+            ink_ui_push(&ink_app_book, (void *)(intptr_t)i);
+            snprintf(rc->object, sizeof rc->object, "book:%s", LIB.books[i].name);
+            snprintf(rc->say, sizeof rc->say, "打开《%s》", LIB.books[i].name);
+            return;
+        }
+    rc->status = INK_RC_FAILED;
+    snprintf(rc->detail, sizeof rc->detail, "no such book on the shelf");
+}
+
+static const ink_action_t SHELF_ACTIONS[] = {
+    {.id = "reader.list_books", .title = "书架上有哪些书", .effect = INK_FX_READ, .child_ok = true, .run = act_list},
+    {.id = "reader.open_book",
+     .title = "打开一本书",
+     .args = "{\"type\":\"object\",\"properties\":{\"title\":{\"type\":\"string\"}},\"required\":[\"title\"]}",
+     .effect = INK_FX_NAVIGATE,
+     .child_ok = true,
+     .run = act_open},
+};
+
+
+
 /* ---------------------------------------------------------------- book */
 
 /* starts[k] = byte offset of page k; a final entry == len marks the end of the book. */
@@ -183,13 +225,12 @@ static void save_cb(lv_timer_t *t) {
     if (ink_storage_write_atomic(path, data, (size_t)n) == 0) RD.dirty_pos = false;
 }
 
-static void turn(int delta) {
-    int target = RD.page + delta;
-    if (target < 0) return;
+static bool go_to(int target) {
+    if (target < 0) return false;
     int slot = RD.buf_page[0] == target ? 0 : RD.buf_page[1] == target ? 1 : -1;
     if (slot < 0) {
         slot = RD.buf_page[0] == RD.page ? 1 : 0; /* reuse the buffer not on screen */
-        if (!render_into(slot, target)) return;   /* end of book */
+        if (!render_into(slot, target)) return false; /* past the end of the book */
         ink_probe_count("reader.turns_rendered_on_demand");
     } else {
         ink_probe_count("reader.turns_prerendered");
@@ -200,19 +241,89 @@ static void turn(int delta) {
     ink_probe_count("reader.page_turns");
     arm_once(RD.ahead_timer);
     arm_once(RD.save_timer);
+    return true;
+}
+
+/* ---- actions: keys, swipes, taps and the AI all turn pages through these ---- */
+
+static void page_receipt(ink_receipt_t *rc) {
+    snprintf(rc->object, sizeof rc->object, "book:%s#page=%d", LIB.books[LIB.open].name, RD.page + 1);
+    rc->revision = (uint32_t)RD.page + 1;
+    snprintf(rc->say, sizeof rc->say, "现在是第 %d 页", RD.page + 1);
+}
+
+static void act_next(const ink_json_t *a, int t, ink_receipt_t *rc) {
+    (void)a;
+    (void)t;
+    if (!go_to(RD.page + 1)) {
+        rc->status = INK_RC_FAILED;
+        snprintf(rc->detail, sizeof rc->detail, "already on the last page");
+    }
+    page_receipt(rc);
+}
+
+static void act_prev(const ink_json_t *a, int t, ink_receipt_t *rc) {
+    (void)a;
+    (void)t;
+    if (!go_to(RD.page - 1)) {
+        rc->status = INK_RC_FAILED;
+        snprintf(rc->detail, sizeof rc->detail, "already on the first page");
+    }
+    page_receipt(rc);
+}
+
+static void act_goto(const ink_json_t *a, int t, ink_receipt_t *rc) {
+    int64_t page;
+    if (!a || !ink_json_int(a, ink_json_find(a, t, "page"), &page) || page < 1) {
+        rc->status = INK_RC_INVALID;
+        snprintf(rc->detail, sizeof rc->detail, "page must be >= 1");
+        return;
+    }
+    if (!go_to((int)page - 1)) {
+        rc->status = INK_RC_FAILED;
+        snprintf(rc->detail, sizeof rc->detail, "the book has fewer pages");
+    }
+    page_receipt(rc);
+}
+
+static int book_snapshot(char *buf, size_t cap);
+
+static void act_read(const ink_json_t *a, int t, ink_receipt_t *rc) {
+    (void)a;
+    (void)t;
+    page_receipt(rc);
+    book_snapshot(rc->say, sizeof rc->say); /* the start of the page; the full text is in the page snapshot */
+}
+
+static const ink_action_t BOOK_ACTIONS[] = {
+    {.id = "reader.next_page", .title = "下一页", .effect = INK_FX_NAVIGATE, .child_ok = true, .activity = "book", .run = act_next},
+    {.id = "reader.prev_page", .title = "上一页", .effect = INK_FX_NAVIGATE, .child_ok = true, .activity = "book", .run = act_prev},
+    {.id = "reader.goto_page",
+     .title = "跳到第几页",
+     .args = "{\"type\":\"object\",\"properties\":{\"page\":{\"type\":\"integer\",\"minimum\":1}},\"required\":[\"page\"]}",
+     .effect = INK_FX_NAVIGATE,
+     .child_ok = true,
+     .activity = "book",
+     .run = act_goto},
+    {.id = "reader.read_page", .title = "读出这一页", .effect = INK_FX_READ, .child_ok = true, .activity = "book", .run = act_read},
+};
+
+static void turn(int delta, ink_source_t src) {
+    ink_receipt_t rc;
+    ink_action_invoke(delta > 0 ? "reader.next_page" : "reader.prev_page", NULL, src, 0, &rc);
 }
 
 static bool book_key(hal_key_t key, bool long_press) {
     if (long_press) return false;
-    if (key == HAL_KEY_NEXT || key == HAL_KEY_VOL_DOWN) turn(+1);
-    else if (key == HAL_KEY_PREV || key == HAL_KEY_VOL_UP) turn(-1);
+    if (key == HAL_KEY_NEXT || key == HAL_KEY_VOL_DOWN) turn(+1, INK_SRC_KEY);
+    else if (key == HAL_KEY_PREV || key == HAL_KEY_VOL_UP) turn(-1, INK_SRC_KEY);
     else return false;
     return true;
 }
 
 static bool book_swipe(ink_swipe_dir_t dir) {
-    if (dir == INK_SWIPE_LEFT) turn(+1);
-    else if (dir == INK_SWIPE_RIGHT) turn(-1);
+    if (dir == INK_SWIPE_LEFT) turn(+1, INK_SRC_TOUCH);
+    else if (dir == INK_SWIPE_RIGHT) turn(-1, INK_SRC_TOUCH);
     else return false;
     return true;
 }
@@ -223,8 +334,8 @@ static void page_clicked(lv_event_t *e) {
     lv_area_t a;
     lv_obj_get_coords(lv_event_get_target_obj(e), &a);
     int w = lv_area_get_width(&a);
-    if (p.x - a.x1 < w / 3) turn(-1);
-    else turn(+1);
+    if (p.x - a.x1 < w / 3) turn(-1, INK_SRC_TOUCH);
+    else turn(+1, INK_SRC_TOUCH);
 }
 
 static bool load_text(const char *path) {
@@ -354,3 +465,8 @@ const ink_activity_t ink_app_book = {.name = "book",
                                      .on_key = book_key,
                                      .on_swipe = book_swipe,
                                      .snapshot = book_snapshot};
+
+int ink_reader_actions_init(void) {
+    int r = ink_actions_register(SHELF_ACTIONS, (int)(sizeof SHELF_ACTIONS / sizeof SHELF_ACTIONS[0]));
+    return r ? r : ink_actions_register(BOOK_ACTIONS, (int)(sizeof BOOK_ACTIONS / sizeof BOOK_ACTIONS[0]));
+}

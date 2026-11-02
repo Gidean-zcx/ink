@@ -45,6 +45,7 @@ struct hal_ws {
     vtk_waitq_t wq, txwq;
     bool close_req, dead, freed_by_user, task_done;
     uint64_t dead_since;
+    uint64_t down_last, up_last; /* latest arrival scheduled in each direction (TCP delivers in order) */
     osal_task_t *task;
     struct hal_ws *next;
 };
@@ -256,6 +257,9 @@ void sim_net_hub_send(struct hal_ws *w, uint64_t t_send, const void *data, size_
         arrive += SIM_MS(300) + rtt_ns(); /* TCP retransmission */
         sim_metric_add("net.retransmissions", 1);
     }
+    /* one TCP stream: nothing overtakes an earlier message (a retransmission holds back what follows) */
+    if (arrive < w->down_last) arrive = w->down_last;
+    w->down_last = arrive;
     sim_msg_t *m = malloc(sizeof *m + len + 1);
     if (!m) abort();
     m->binary = binary;
@@ -381,6 +385,8 @@ static void ws_task(void *arg) {
                 arrive += SIM_MS(300) + rtt_ns();
                 sim_metric_add("net.retransmissions", 1);
             }
+            if (arrive < w->up_last) arrive = w->up_last; /* in order, as above */
+            w->up_last = arrive;
             uplink_t *u = malloc(sizeof *u);
             if (!u) abort();
             u->ws = w;

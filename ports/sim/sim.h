@@ -133,6 +133,7 @@ void sim_i2c_hold(const char *who, uint64_t ns);         /* occupy the bus (e.g.
 void sim_audio_init(void);            /* task context (boot) */
 void sim_audio_report(void);
 void sim_audio_mic_source(const char *name); /* ISR (script): "speech" | "silence" | "noise" */
+void sim_audio_speaker_counters(uint64_t *underruns, double *underrun_ms, double *idle_ms); /* self-test */
 /** Build a stand-in Opus packet (level, pitch) the simulated decoder turns into a tone. */
 int sim_opus_fake_packet(uint8_t *out, int cap, double freq, double level, int bytes, uint32_t seed);
 

@@ -43,6 +43,8 @@ void ink_ui_push(const ink_activity_t *a, void *arg);
 void ink_ui_open(lv_obj_t *from, const ink_activity_t *a, void *arg);
 /** Close the top activity (UI task only). */
 void ink_ui_pop(void);
+/** Back to the root activity (one rebuild). */
+void ink_ui_home(void);
 /** Run fn(arg) in the UI task (any task). */
 void ink_ui_post(void (*fn)(void *), void *arg);
 
@@ -57,6 +59,8 @@ void ink_ui_hint_frame(ink_refresh_t intent);
 void ink_ui_cause(uint64_t t_us, const char *tag);
 /** Page context of the foreground activity (see ink_activity_t.snapshot). */
 int ink_ui_snapshot(char *buf, size_t cap, const char **activity_name);
+/** Name of the foreground activity ("" if none). */
+const char *ink_ui_top_name(void);
 
 /** dp -> pixels for the current panel. */
 int ink_dp(int dp);

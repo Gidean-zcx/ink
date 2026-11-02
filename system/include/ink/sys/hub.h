@@ -54,6 +54,16 @@ typedef void (*ink_hub_binary_fn)(void *ctx, const uint8_t *data, size_t len);
 /** The (single) receiver of binary messages from the hub; runs in the hub task. */
 void ink_hub_on_binary(ink_hub_binary_fn fn, void *ctx);
 
+/**
+ * Requests FROM the hub (integer ids), e.g. "tools/call" when the model uses a device action.
+ * The handler runs in the hub task and must answer exactly once (possibly later, from any task)
+ * with ink_hub_respond / ink_hub_respond_error.
+ */
+typedef void (*ink_hub_request_fn)(void *ctx, int64_t id, const char *method, const ink_json_t *msg, int params);
+int ink_hub_on_request(const char *prefix, ink_hub_request_fn fn, void *ctx);
+int ink_hub_respond(int64_t id, const char *result_json);
+int ink_hub_respond_error(int64_t id, int code, const char *message);
+
 #ifdef __cplusplus
 }
 #endif

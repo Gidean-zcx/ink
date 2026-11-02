@@ -260,6 +260,11 @@ void ink_ui_cause(uint64_t t_us, const char *tag) {
     UI.cause_tag = tag;
 }
 
+const char *ink_ui_top_name(void) {
+    const ink_activity_t *top = UI.depth ? UI.stack[UI.depth - 1].a : NULL;
+    return top && top->name ? top->name : "";
+}
+
 int ink_ui_snapshot(char *buf, size_t cap, const char **activity_name) {
     const ink_activity_t *top = UI.depth ? UI.stack[UI.depth - 1].a : NULL;
     if (activity_name) *activity_name = top ? top->name : "";
@@ -361,6 +366,15 @@ void ink_ui_push(const ink_activity_t *a, void *arg) {
     if (UI.depth && UI.stack[UI.depth - 1].a->destroy) UI.stack[UI.depth - 1].a->destroy();
     UI.stack[UI.depth++] = (frame_t){a, arg};
     show_top();
+}
+
+void ink_ui_home(void) {
+    if (UI.depth <= 1) return;
+    while (UI.depth > 1) {
+        if (UI.stack[UI.depth - 1].a->destroy) UI.stack[UI.depth - 1].a->destroy();
+        UI.depth--;
+    }
+    show_top(); /* one rebuild, not one per level */
 }
 
 void ink_ui_pop(void) {
@@ -467,7 +481,7 @@ static void handle_input(const umsg_t *m) {
         if (top && top->on_key && top->on_key((hal_key_t)e->key, lng)) return;
         if (e->key == HAL_KEY_BACK && !lng) ink_ui_pop();
         else if (e->key == HAL_KEY_HOME)
-            while (UI.depth > 1) ink_ui_pop();
+            ink_ui_home();
         break;
     }
     default: break;

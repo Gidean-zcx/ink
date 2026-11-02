@@ -1,0 +1,138 @@
+{
+  "rules": [
+    {
+      "method": "hello",
+      "think_ms": 40,
+      "result": {
+        "session": "sim",
+        "proto": 1
+      }
+    },
+    {
+      "method": "ai.listen",
+      "turns": [
+        {
+          "listen": {
+            "stt_ms": 300,
+            "transcript": "翻到下一页",
+            "tts_first_ms": 400,
+            "tts_chars_per_s": 4.5,
+            "tts_speed": 2
+          },
+          "think_ms": 900,
+          "stream": {
+            "notify": "ai.delta",
+            "interval_ms": 300,
+            "chunks": [
+              "好的。"
+            ]
+          },
+          "result": {
+            "done": true
+          },
+          "tools": [
+            {
+              "name": "reader.next_page",
+              "arguments": {},
+              "think_ms": 600
+            }
+          ],
+          "say_from_receipt": true
+        },
+        {
+          "listen": {
+            "stt_ms": 300,
+            "transcript": "再翻一页",
+            "tts_first_ms": 400,
+            "tts_chars_per_s": 4.5,
+            "tts_speed": 2
+          },
+          "think_ms": 900,
+          "stream": {
+            "notify": "ai.delta",
+            "interval_ms": 300,
+            "chunks": [
+              "页面刚才变了，请再说一次。"
+            ]
+          },
+          "result": {
+            "done": true
+          },
+          "tools": [
+            {
+              "name": "reader.next_page",
+              "arguments": {},
+              "page_gen_offset": -1,
+              "think_ms": 600
+            }
+          ]
+        },
+        {
+          "listen": {
+            "stt_ms": 300,
+            "transcript": "切换到孩子的空间",
+            "tts_first_ms": 400,
+            "tts_chars_per_s": 4.5,
+            "tts_speed": 2
+          },
+          "think_ms": 900,
+          "stream": {
+            "notify": "ai.delta",
+            "interval_ms": 300,
+            "chunks": [
+              "好的。"
+            ]
+          },
+          "result": {
+            "done": true
+          },
+          "tools": [
+            {
+              "name": "system.switch_member",
+              "arguments": {
+                "id": "kid"
+              },
+              "think_ms": 600
+            }
+          ],
+          "say_from_receipt": true
+        },
+        {
+          "listen": {
+            "stt_ms": 300,
+            "transcript": "恢复出厂设置",
+            "tts_first_ms": 400,
+            "tts_chars_per_s": 4.5,
+            "tts_speed": 2
+          },
+          "think_ms": 900,
+          "stream": {
+            "notify": "ai.delta",
+            "interval_ms": 300,
+            "chunks": [
+              "这个需要大人来操作。"
+            ]
+          },
+          "result": {
+            "done": true
+          },
+          "tools": [
+            {
+              "name": "system.factory_reset",
+              "arguments": {},
+              "think_ms": 600
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "method": "*",
+      "think_ms": 30,
+      "error": {
+        "code": -32601,
+        "message": "method not in hub script"
+      }
+    }
+  ]
+}

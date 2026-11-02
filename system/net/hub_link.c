@@ -90,6 +90,12 @@ static struct {
     size_t tx_bytes;
     ink_hub_binary_fn bin_fn;
     void *bin_ctx;
+    struct {
+        char prefix[16];
+        ink_hub_request_fn fn;
+        void *ctx;
+    } reqs[4];
+    int nreqs;
 } H;
 
 static char *dup_mem(const void *p, size_t n) {
@@ -208,6 +214,8 @@ static void start_connect(void) {
     if (!H.ws) enter_backoff();
 }
 
+int ink_hub_respond_error(int64_t id, int code, const char *message);
+
 static void on_text(const char *txt, size_t len) {
     ink_json_t *j = H.json;
     if (ink_json_parse(j, txt, len) != 0) {
@@ -244,6 +252,17 @@ static void on_text(const char *txt, size_t len) {
         char method[40];
         if (ink_json_str(j, m_t, method, sizeof method) < 0) return;
         int params = ink_json_find(j, 0, "params");
+        if (id_t >= 0) { /* a request from the hub (e.g. tools/call): exactly one handler answers */
+            int64_t rid;
+            if (!ink_json_int(j, id_t, &rid)) return;
+            for (int i = 0; i < H.nreqs; i++)
+                if (!strncmp(method, H.reqs[i].prefix, strlen(H.reqs[i].prefix))) {
+                    H.reqs[i].fn(H.reqs[i].ctx, rid, method, j, params);
+                    return;
+                }
+            ink_hub_respond_error(rid, -32601, "method not found on the device");
+            return;
+        }
         for (int i = 0; i < H.nsubs; i++)
             if (!strncmp(method, H.subs[i].prefix, strlen(H.subs[i].prefix))) H.subs[i].fn(H.subs[i].ctx, method, j, params);
     }
@@ -491,4 +510,41 @@ int ink_hub_send_binary(const void *data, size_t len) { return enqueue_tx(true, 
 void ink_hub_on_binary(ink_hub_binary_fn fn, void *ctx) {
     H.bin_ctx = ctx;
     H.bin_fn = fn;
+}
+
+int ink_hub_on_request(const char *prefix, ink_hub_request_fn fn, void *ctx) {
+    if (H.nreqs >= 4) return -1;
+    snprintf(H.reqs[H.nreqs].prefix, sizeof H.reqs[0].prefix, "%s", prefix);
+    H.reqs[H.nreqs].fn = fn;
+    H.reqs[H.nreqs].ctx = ctx;
+    H.nreqs++;
+    return 0;
+}
+
+int ink_hub_respond(int64_t id, const char *result_json) {
+    const char *r = result_json ? result_json : "{}";
+    size_t rl = strlen(r);
+    const char *prev = osal_mem_tag("hub");
+    char *buf = osal_malloc(rl + 64, OSAL_MEM_EXTERNAL);
+    osal_mem_tag(prev);
+    if (!buf) return INK_HUB_ERR_NOMEM;
+    int n = snprintf(buf, 64, "{\"jsonrpc\":\"2.0\",\"id\":%lld,\"result\":", (long long)id);
+    memcpy(buf + n, r, rl);
+    buf[n + rl] = '}';
+    int ok = enqueue_tx(false, buf, (size_t)n + rl + 1);
+    osal_free(buf);
+    return ok == 0 ? 0 : INK_HUB_ERR_OFFLINE;
+}
+
+int ink_hub_respond_error(int64_t id, int code, const char *message) {
+    char buf[256];
+    ink_jw_t w;
+    ink_jw_init(&w, buf, sizeof buf);
+    char head[80];
+    snprintf(head, sizeof head, "{\"jsonrpc\":\"2.0\",\"id\":%lld,\"error\":{\"code\":%d,\"message\":", (long long)id, code);
+    ink_jw_raw(&w, head);
+    ink_jw_str(&w, message ? message : "error");
+    ink_jw_raw(&w, "}}");
+    if (w.overflow) return INK_HUB_ERR_NOMEM;
+    return enqueue_tx(false, buf, w.len) == 0 ? 0 : INK_HUB_ERR_OFFLINE;
 }

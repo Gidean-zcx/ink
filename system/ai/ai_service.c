@@ -20,6 +20,7 @@
 #include "ink/hal_display.h"
 #include "ink/osal.h"
 #include "ink/probe.h"
+#include "ink/sys/actions.h"
 #include "ink/sys/ai.h"
 #include "ink/sys/audio.h"
 #include "ink/sys/font.h"
@@ -56,9 +57,10 @@ static struct {
     int buffered, frames_sent;
     bool end_pending;
     lv_timer_t *flush_timer;
-    /* voice downlink (hub task) */
-    int tts_stream;
-    uint8_t tts_for;
+    /* voice downlink (hub task; with `stream`, changed under `lock`) */
+    int tts_stream;   /* audio stream playing the current turn's speech (0 none) */
+    int tts_for;      /* turn the audio stream belongs to (-1 none) */
+    int tts_done_for; /* turn whose speech has ended (-1 none): frames after the end are dropped */
 } AI;
 
 typedef struct {
@@ -196,20 +198,31 @@ static void on_notify(void *ctx, const char *method, const ink_json_t *j, int pa
         if (ink_json_str(j, ink_json_find(j, params, "text"), text, sizeof text) < 0) return;
         post((int)id, method[3] == 'd' ? 0 : 3, 0, text);
     } else if (!strcmp(method, "ai.tts.end")) {
-        if (AI.tts_stream > 0) ink_audio_stream_finish(AI.tts_stream);
-        AI.tts_stream = 0;
+        int64_t st;
+        if (!ink_json_int(j, ink_json_find(j, params, "stream"), &st)) return;
+        osal_mutex_lock(AI.lock, OSAL_WAIT_FOREVER);
+        if (st == AI.stream) { /* the end of an older turn (the user already asked again) changes nothing */
+            if (AI.tts_stream > 0) ink_audio_stream_finish(AI.tts_stream);
+            AI.tts_stream = 0;
+            AI.tts_done_for = (int)st;
+        }
+        osal_mutex_unlock(AI.lock);
     }
 }
 
 static void on_binary(void *ctx, const uint8_t *d, size_t len) { /* hub task: TTS frames */
     (void)ctx;
     if (len < 5 || d[0] != 2) return;
-    if (d[1] != AI.stream) return; /* audio of an older turn */
-    if (AI.tts_stream <= 0 || AI.tts_for != d[1]) {
-        AI.tts_stream = ink_audio_stream_open(INK_AUDIO_PRIO_VOICE, AI.t_release, "ai.release_to_first_audio_heard_ms");
-        AI.tts_for = d[1];
+    /* under the lock, so a press (new turn) cannot slip between the check and opening a stream */
+    osal_mutex_lock(AI.lock, OSAL_WAIT_FOREVER);
+    if (d[1] == AI.stream && AI.tts_done_for != d[1]) { /* the current turn, its speech not ended yet */
+        if (AI.tts_stream <= 0 || AI.tts_for != d[1]) {
+            AI.tts_stream = ink_audio_stream_open(INK_AUDIO_PRIO_VOICE, AI.t_release, "ai.release_to_first_audio_heard_ms");
+            AI.tts_for = d[1];
+        }
+        if (AI.tts_stream > 0) ink_audio_stream_push(AI.tts_stream, d + 4, len - 4);
     }
-    if (AI.tts_stream > 0) ink_audio_stream_push(AI.tts_stream, d + 4, len - 4);
+    osal_mutex_unlock(AI.lock);
 }
 
 static void on_reply(void *ctx, int status, const ink_json_t *j, int result) { /* hub task */
@@ -272,11 +285,11 @@ static void on_frame(void *ctx, const uint8_t *data, size_t len, uint32_t seq) {
     f->next = NULL;
     f->len = len + 4;
     f->data[0] = 1;
-    f->data[1] = AI.stream;
     f->data[2] = (uint8_t)seq;
     f->data[3] = (uint8_t)(seq >> 8);
     memcpy(f->data + 4, data, len);
     osal_mutex_lock(AI.lock, OSAL_WAIT_FOREVER);
+    f->data[1] = AI.stream;
     if (AI.buffered >= MAX_BUFFERED_FRAMES) {
         osal_mutex_unlock(AI.lock);
         osal_free(f);
@@ -324,10 +337,19 @@ static int request(const char *method, bool voice) {
         ink_jw_raw(&w, "{\"question\":");
         ink_jw_str(&w, SIM_TRANSCRIPT);
     }
+    char gen[48];
+    snprintf(gen, sizeof gen, ",\"page_gen\":%u", (unsigned)ink_ui_generation());
+    ink_jw_raw(&w, gen);
     ink_jw_raw(&w, ",\"page\":{\"app\":");
     ink_jw_str(&w, app);
     ink_jw_raw(&w, ",\"text\":");
     ink_jw_strn(&w, snap, n > 0 ? (size_t)n : 0);
+    ink_jw_raw(&w, ",\"actions\":");
+    {
+        char ids[768];
+        int k = ink_actions_ids_json(ids, sizeof ids);
+        ink_jw_raw(&w, k > 0 ? ids : "[]");
+    }
     ink_jw_raw(&w, "}}");
     AI.answer_len = 0;
     AI.answer_text[0] = 0;
@@ -347,6 +369,12 @@ static bool voice_ok(void) { return ink_audio_has_mic(); }
 void ink_ai_key(bool pressed, uint64_t t_us) {
     if (pressed) {
         AI.t_press = t_us;
+        /* a new turn: frames and the speech end of the previous one no longer apply */
+        osal_mutex_lock(AI.lock, OSAL_WAIT_FOREVER);
+        AI.stream++;
+        AI.tts_stream = 0;
+        AI.tts_for = AI.tts_done_for = -1;
+        osal_mutex_unlock(AI.lock);
         ink_audio_stop_all(); /* talking over the previous answer interrupts it */
         ink_audio_tone(INK_TONE_LISTEN, t_us, "ai.press_to_tone_heard_ms");
         ink_hub_demand(); /* pre-connect while the user speaks */
@@ -354,22 +382,19 @@ void ink_ai_key(bool pressed, uint64_t t_us) {
             lv_label_set_text(AI.answer, "");
             lv_label_set_text(AI.question, "");
         }
-        bool was_open = AI.open;
         sheet_open();
         set_status("正在听…松开 AI 键结束");
-        /* first sight of the sheet: drive it with the fast binary waveform (it is black on white);
-         * later updates use GL16 and clean up the anti-aliased text */
-        if (!was_open) ink_ui_hint_obj(AI.sheet, INK_REFRESH_FAST);
+        /* the sheet appears or is cleared for a new question: drive it with the fast binary waveform
+         * (black on white); later updates use GL16 and clean up the anti-aliased text */
+        ink_ui_hint_obj(AI.sheet, INK_REFRESH_FAST);
         ink_ui_cause(t_us, "ai.press_to_listening_visible_ms");
         ink_probe_count("ai.presses");
         if (voice_ok()) {
             osal_mutex_lock(AI.lock, OSAL_WAIT_FOREVER);
             free_buffered();
-            AI.stream++;
             AI.frames_sent = 0;
             AI.end_pending = false;
             osal_mutex_unlock(AI.lock);
-            AI.tts_stream = 0;
             if (ink_audio_capture_begin(on_frame, NULL) == 0) {
                 AI.req_id = request("ai.listen", true);
                 if (!AI.flush_timer) AI.flush_timer = lv_timer_create(flush_timer_cb, 100, NULL);
@@ -381,7 +406,9 @@ void ink_ai_key(bool pressed, uint64_t t_us) {
         return;
     }
     if (!AI.open) return;
-    AI.t_release = t_us;
+    osal_mutex_lock(AI.lock, OSAL_WAIT_FOREVER);
+    AI.t_release = t_us; /* the hub task reads it for the first-audio probe */
+    osal_mutex_unlock(AI.lock);
     if (voice_ok() && AI.asking) {
         ink_audio_capture_end();
         lv_label_set_text(AI.question, "…");
@@ -404,6 +431,7 @@ int ink_ai_init(void) {
     osal_mem_tag(prev);
     if (!AI.answer_text || !AI.lock) return -1;
     AI.answer_text[0] = 0;
+    AI.tts_for = AI.tts_done_for = -1;
     ink_hub_on_binary(on_binary, NULL);
     return ink_hub_subscribe("ai.", on_notify, NULL);
 }
