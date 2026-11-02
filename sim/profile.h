@@ -103,6 +103,8 @@ typedef struct {
     int i2c_khz;
     int touch_read_bytes;
     uint32_t keys_mask;
+    uint8_t key_source[HAL_KEY_COUNT]; /* 0 GPIO (debounced), 1 IO expander (INT + I2C reads), 2 touch-controller cover key */
+    uint32_t key_debounce_us;
     uint32_t i2c_background_poll_ms; /* other devices on the shared bus (fuel gauge, RTC ...) */
     int i2c_background_bytes;
     uint32_t touch_read_us;

@@ -190,6 +190,17 @@ int profile_load(const char *path, sim_profile_t *p, char *err, size_t errlen) {
         const cJSON *k;
         cJSON_ArrayForEach(k, keys) if (cJSON_IsString(k)) p->keys_mask |= 1u << key_from(k->valuestring);
     }
+    p->key_debounce_us = (uint32_t)num(in, "key_debounce_us", 20000);
+    const cJSON *ks = cJSON_GetObjectItemCaseSensitive(in, "key_sources");
+    if (cJSON_IsObject(ks)) {
+        const cJSON *k;
+        cJSON_ArrayForEach(k, ks) {
+            if (!cJSON_IsString(k)) continue;
+            int key = key_from(k->string);
+            if (key <= 0 || key >= HAL_KEY_COUNT) continue;
+            p->key_source[key] = !strcmp(k->valuestring, "expander") ? 1 : !strcmp(k->valuestring, "touch") ? 2 : 0;
+        }
+    }
 
     const cJSON *fl = obj(root, "flash");
     p->flash_user_bytes = (size_t)(num(fl, "user_partition_kib", 1408) * 1024);

@@ -108,7 +108,18 @@
     "touch_read_us": 1200,
     "touch_poll_ms": 10,
     "touch_detect_us": 20000,
-    "_notes_detect": "touch_detect_us: finger contact -> INT, estimate (controller scan period in monitor mode)"
+    "_notes_detect": "touch_detect_us: finger contact -> INT, estimate (controller scan period in monitor mode)",
+    "key_sources": {
+      "ai": "gpio",
+      "power": "expander",
+      "vol_up": "expander",
+      "vol_down": "expander",
+      "home": "touch",
+      "prev": "touch",
+      "next": "touch"
+    },
+    "key_debounce_us": 20000,
+    "_notes_keys": "Key sources (upstream config.h): AI = BOOT key on GPIO61 (direct); POWER/VOL+/VOL- on the TCA9555 IO expander (INT on GPIO2 shared with the accelerometer, then I2C reads on the shared bus); HOME/PREV/NEXT are cover keys read by the touch controller (finger at Y~1600, outside the panel): touch INT after touch_detect_us, I2C read, polling until release, paused like touch while the PMIC powers up."
   },
   "flash": {
     "user_partition_kib": 1408,

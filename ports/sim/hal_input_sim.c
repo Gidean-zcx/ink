@@ -7,7 +7,13 @@
  * the driver task then reads it over I2C (touch_read_us, waits if the bus is
  * busy, e.g. during the e-ink PMIC power-up) and keeps polling every
  * touch_poll_ms (RTOS-tick quantized) until the finger lifts.
- * Keys: GPIO interrupt + debounce, delivered by the same driver task.
+ * Keys, per the profile's key_sources:
+ *   gpio      interrupt + debounce timer (AI key = BOOT on the Plus)
+ *   expander  IO expander INT, then I2C reads on the shared bus: one when the
+ *             INT fires, one after the debounce time (POWER, VOL+/-)
+ *   touch     cover keys read by the touch controller (HOME/PREV/NEXT): like a
+ *             finger — INT after touch_detect_us, I2C read, polling until
+ *             release — so they also wait while the PMIC holds the bus.
  *
  * Events carry t_us = the physical time of the action (known exactly here),
  * so system-side latency probes measure true end-to-end latency.
@@ -24,7 +30,6 @@
 #define INPUT_STACK 3072
 #define INPUT_PRIO 12
 #define BG_STACK 2048
-#define DEBOUNCE_NS SIM_MS(20)
 
 typedef struct {
     bool down;
@@ -41,6 +46,12 @@ static struct {
     struct { bool down; int nx, ny; } reported[MAX_TOUCH];
     hal_input_event_t keys[KEY_FIFO];
     int kh, kn;
+    /* IO expander keys: changes waiting for the driver's reads */
+    bool exp_irq, exp_confirm;
+    struct { hal_key_t key; bool pressed; uint64_t t; } exp_pending[KEY_FIFO];
+    int exp_n;
+    /* cover key on the touch controller (one at a time) */
+    struct { hal_key_t key; bool down, reported; uint64_t t_change; } vkey;
     osal_task_t *task;
     /* stats */
     uint64_t touches;
@@ -136,17 +147,46 @@ static void key_debounced_cb(void *arg) { /* ISR: debounce timer expired */
     }
 }
 
+static void expander_confirm_cb(void *arg) { /* ISR: debounce time over -> second read */
+    (void)arg;
+    IN.exp_confirm = true;
+    vtk_isr_wake_one(&IN.wq);
+}
+
 void sim_input_key(hal_key_t key, bool pressed) {
     if (!(g_profile.keys_mask & (1u << key))) {
         sim_warn("script pressed a key this device does not have (%d)", (int)key);
+        return;
+    }
+    sim_trace_instant("input", pressed ? "key-down" : "key-up", vtk_isr_now(), NULL);
+    if (g_profile.key_source[key] == 1) { /* IO expander: INT now, reads by the driver task */
+        if (IN.exp_n < KEY_FIFO) {
+            IN.exp_pending[IN.exp_n].key = key;
+            IN.exp_pending[IN.exp_n].pressed = pressed;
+            IN.exp_pending[IN.exp_n].t = vtk_isr_now();
+            IN.exp_n++;
+        }
+        IN.exp_irq = true;
+        vtk_isr_wake_one(&IN.wq);
+        return;
+    }
+    if (g_profile.key_source[key] == 2 && g_profile.has_touch) { /* cover key: the touch controller sees a finger */
+        if (pressed) {
+            IN.vkey.key = key;
+            IN.vkey.down = true;
+            IN.vkey.t_change = vtk_isr_now();
+            vtk_event_after(SIM_US(g_profile.touch_detect_us), touch_irq_cb, NULL);
+        } else if (IN.vkey.key == key) {
+            IN.vkey.down = false;
+            IN.vkey.t_change = vtk_isr_now();
+        }
         return;
     }
     key_ev_t *k = &KPEND[kpend_n++ % KEY_FIFO];
     k->key = key;
     k->pressed = pressed;
     k->t = vtk_isr_now();
-    vtk_event_after(DEBOUNCE_NS, key_debounced_cb, k);
-    sim_trace_instant("input", pressed ? "key-down" : "key-up", vtk_isr_now(), NULL);
+    vtk_event_after(SIM_US(g_profile.key_debounce_us), key_debounced_cb, k);
 }
 
 /* ---------------------------------------------------------------- driver */
@@ -158,12 +198,31 @@ static void deliver(const hal_input_event_t *e) {
 static bool any_reported_down(void) {
     for (int i = 0; i < MAX_TOUCH; i++)
         if (IN.reported[i].down) return true;
-    return false;
+    return IN.vkey.reported;
+}
+
+static void deliver_key(hal_key_t key, bool pressed, uint64_t t_ns) {
+    hal_input_event_t e = {.type = HAL_IN_KEY, .t_us = t_ns / 1000};
+    e.key.key = key;
+    e.key.pressed = pressed;
+    sim_metric_sample("input.key_delivery_ms", (vtk_now() - t_ns) / 1e6);
+    deliver(&e);
 }
 
 static void poll_touch_once(void) {
     sim_i2c_transfer("touch", g_profile.touch_read_bytes);
     uint64_t t_read = vtk_now();
+    if (IN.vkey.key != HAL_KEY_NONE) { /* cover key seen by the controller */
+        if (IN.vkey.down && !IN.vkey.reported) {
+            IN.vkey.reported = true;
+            deliver_key(IN.vkey.key, true, IN.vkey.t_change);
+        } else if (!IN.vkey.down && IN.vkey.reported) {
+            IN.vkey.reported = false;
+            hal_key_t k = IN.vkey.key;
+            IN.vkey.key = HAL_KEY_NONE;
+            deliver_key(k, false, IN.vkey.t_change);
+        }
+    }
     for (int i = 0; i < MAX_TOUCH && i < g_profile.touch_points; i++) {
         phys_touch_t *p = &IN.phys[i];
         hal_input_event_t e = {.type = HAL_IN_TOUCH};
@@ -194,10 +253,21 @@ static void input_task(void *arg) {
     (void)arg;
     for (;;) {
         vtk_lock();
-        while (!IN.irq && IN.kn == 0) vtk_block_locked(&IN.wq, VTK_TIME_INF);
-        bool irq = IN.irq;
-        IN.irq = false;
+        while (!IN.irq && IN.kn == 0 && !IN.exp_irq && !IN.exp_confirm) vtk_block_locked(&IN.wq, VTK_TIME_INF);
+        bool irq = IN.irq, exp_irq = IN.exp_irq, exp_confirm = IN.exp_confirm;
+        IN.irq = IN.exp_irq = IN.exp_confirm = false;
         vtk_unlock();
+        if (exp_irq) { /* read the expander's input ports (clears its INT), confirm after the debounce time */
+            sim_i2c_transfer("io-expander", 2);
+            vtk_lock();
+            vtk_event_after(SIM_US(g_profile.key_debounce_us), expander_confirm_cb, NULL);
+            vtk_unlock();
+        }
+        if (exp_confirm) {
+            sim_i2c_transfer("io-expander", 2);
+            for (int i = 0; i < IN.exp_n; i++) deliver_key(IN.exp_pending[i].key, IN.exp_pending[i].pressed, IN.exp_pending[i].t);
+            IN.exp_n = 0;
+        }
         while (IN.kn > 0) {
             hal_input_event_t e = IN.keys[IN.kh];
             IN.kh = (IN.kh + 1) % KEY_FIFO;

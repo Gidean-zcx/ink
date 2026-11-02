@@ -135,7 +135,7 @@ static void service_task(void *arg) {
         if (m.type == DM_DONE && DS.guard) osal_sem_give(DS.guard_ack);
         /* only dispatch on frame boundaries so a half-committed frame is never driven */
         if (m.type != DM_REGION) dispatch_next();
-        DS.busy = DS.rp.npending + (DS.in_flight ? 1 : 0);
+        DS.busy = DS.rp.npending + (DS.in_flight ? 1 : 0); /* written by this task only */
     }
 }
 
@@ -179,7 +179,6 @@ void ink_display_commit_tagged(const ink_region_t *regions, int n, uint64_t caus
     }
     dmsg_t end = {.type = DM_FRAME_END};
     osal_queue_send(DS.q, &end, OSAL_WAIT_FOREVER);
-    DS.busy += n;
 }
 
 void ink_display_interactive(bool on) {
@@ -192,7 +191,9 @@ void ink_display_set_text_cleanup_every(int n) {
     osal_queue_send(DS.q, &m, OSAL_WAIT_FOREVER);
 }
 
-int ink_display_busy(void) { return DS.busy; }
+/* Queued messages + regions waiting in the policy + the update in flight. No read-modify-write
+ * from other tasks (that raced with the service task and could leave the count stuck above 0). */
+int ink_display_busy(void) { return (int)osal_queue_count(DS.q) + DS.busy; }
 
 void ink_display_flash_guard(bool hold) {
     dmsg_t m = {.type = DM_GUARD, .flag = hold};
