@@ -1,0 +1,9 @@
+  PQ-BN integer (full frame)    :   7.05 ms  (8.47 ns/px) + pack 0.30 ns/px   ratio 9.33x
+  PQ-BN 64KB LUT (full frame)   :   6.52 ms  (7.84 ns/px)   ratio 8.34x
+per phase, full 1216x684 frame (x86):
+  EPDiy-style interlace+LUT+mask :   0.78 ms  (0.94 ns/px)
+  integrator, binary targets     :   1.71 ms  (2.06 ns/px)  ratio 2.19x
+  integrator, 9 gray levels      :   1.45 ms  (1.75 ns/px)  ratio 1.86x
+  integrator as 256-entry LUT    :   0.73 ms  (0.88 ns/px)  ratio 0.93x
+  (sink 1)
+exit 0

@@ -1,0 +1,50 @@
+[
+ {
+  "name": "PB     counter+3px binary pattern",
+  "psnr": 22.289323806762695,
+  "psnr_final": 29.053844451904297,
+  "shimmer": 23.071889877319336,
+  "pulses": 8.980533854166662,
+  "dc_rms": 46.690266540075925,
+  "dc_max": 204,
+  "ghost_white": 2.03908634185791,
+  "ghost_black": 16.051860809326172,
+  "sec": 4.7
+ },
+ {
+  "name": "INT-PB integrator+3px binary pattern",
+  "psnr": 22.3878116607666,
+  "psnr_final": 31.105852127075195,
+  "shimmer": 22.806499481201172,
+  "pulses": 6.4970992476851785,
+  "dc_rms": 2.156707882140947,
+  "dc_max": 4,
+  "ghost_white": 1.914509892463684,
+  "ghost_black": 2.6436562538146973,
+  "sec": 4.6
+ },
+ {
+  "name": "ML5    integrator+fixed 5-level pattern",
+  "psnr": 22.645761489868164,
+  "psnr_final": 26.78760528564453,
+  "shimmer": 14.910439491271973,
+  "pulses": 9.273466435185194,
+  "dc_rms": 1.8707474924627203,
+  "dc_max": 4,
+  "ghost_white": 1.9021164178848267,
+  "ghost_black": 2.421649217605591,
+  "sec": 4.4
+ },
+ {
+  "name": "PQ     physical quantizer (int16) mu=0.05",
+  "psnr": 23.600811004638672,
+  "psnr_final": 31.890270233154297,
+  "shimmer": 16.762157440185547,
+  "pulses": 11.639210792824088,
+  "dc_rms": 2.7758296119758903,
+  "dc_max": 8,
+  "ghost_white": 0.6421928405761719,
+  "ghost_black": 1.2334309816360474,
+  "sec": 4.8
+ }
+]
