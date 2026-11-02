@@ -98,7 +98,7 @@ pre.mermaid { background: var(--sheet); border: 1px solid var(--rule); padding: 
     <div class="mono" style="color:var(--accent)">INK · 家庭 AI 墨水屏设备 · E-INK4 PLUS</div>
     <h1>ink 决策板</h1>
     <p class="lede">把项目从“零散想法和竞品调研”推进到可用产品时，需要你拍板的事情都在这里。每项都给了方案和推荐；你不选的可逆事项，我按推荐“暂定”继续推进。点选方案后会自动保存，下次对话我能读到。</p>
-    <div class="meta mono"><span>更新 2026-11-02 · 第一、二轮你已全部选择；第三轮（模拟器建成后的工程选择）按推荐暂定，随时可改</span><span>仓库 Gidean-zcx/ink · docs/decisions</span></div>
+    <div class="meta mono"><span>更新 2026-11-02 · 第一、二轮你已全部选择；第三轮（模拟器建成后的工程选择）按推荐暂定，随时可改；第二次评审后新增 D-35、D-36</span><span>仓库 Gidean-zcx/ink · docs/decisions</span></div>
   </header>
 
   <section aria-labelledby="stage-h">
@@ -397,6 +397,20 @@ const DECISIONS = [
       {k:"180", name:"转写 180 天（儿童 90 天），运行记录 90 天", desc:"够回顾一个学期的学习与对话。"},
       {k:"365", name:"转写 1 年（儿童 180 天），运行记录 180 天", desc:"便于长期回顾，隐私风险更高。"},
       {k:"forever", name:"保留到手动删除", desc:"最方便回顾，需要定期清理。"}
+    ]},
+  { id:"D-35", title:"第三轮 · 墨水屏送行管线怎么做", kind:"tent", rec:"port",
+    why:"第二次独立评审 + 指令级实测：上游 S31 的送行 C 代码每行约 33 µs，两个送行任务合计刚好赶上扫描速度（17 µs 一行），差额只能靠扫描前预填的行补。上游用 192 行预填和约 77 KiB 内部 RAM 的行队列兜住，而内部 RAM 是这台机器最紧的资源。",
+    opts:[
+      {k:"upstream", name:"照搬上游", desc:"固定奇偶分行、整行转换、预填 192 行、两条 127 行队列（约 77 KiB 内部 RAM）。模拟：翻页 0.81 s、点书到首页 2.1 s；在指令级慢角每次刷新都花屏。"},
+      {k:"port", name:"本端口设计（行队列约 29 KiB）", desc:"谁空谁取、只转换区域内的列、优化查表（实测快 13%）、预填 64 行、两条 48 行队列、补缓冲中断 IRAM 安全。模拟：翻页 0.72 s、点书 1.2 s。每行成本超过约 34 µs 会花屏：到货先实测，超了就改预填 128（+10 KiB）或降像素时钟（翻页约 +0.08 s）。"},
+      {k:"safe", name:"端口结构 + 上游的大预填大队列", desc:"余量最大最稳；内部 RAM 多用约 48 KiB，留给其他功能的更少。"}
+    ]},
+  { id:"D-36", title:"第三轮 · 刷新期间能不能读写内部 Flash", kind:"tent", rec:"none",
+    why:"读写内部 Flash 会关缓存、冻结两个核上的任务；上游配置下补缓冲中断也被屏蔽，跨核调用还要排在送行任务后面。模拟中刷新时的一次读就会花屏，恢复要约 1.5 秒。",
+    opts:[
+      {k:"none", name:"刷新期间一律不读不写", desc:"读也等当前波形结束（已实现）；加了小文件读缓存和书架预取，点书读阅读位置不用等。所有场景里波形期间的 Flash 操作为 0。"},
+      {k:"writes", name:"只推迟写入（上游做法）", desc:"读照常进行；在上游配置下读也可能花屏。"},
+      {k:"short", name:"补缓冲中断改 IRAM 安全后允许短读", desc:"读不用等，但跨核等待和队列余量仍有风险，要实测。"}
     ]}
 ];
 const ROAD = [
