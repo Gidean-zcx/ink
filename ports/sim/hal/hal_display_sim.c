@@ -445,6 +445,26 @@ static void check_panel_power(void) {
     g_pmic_warned = true;
 }
 
+/* PWR_GOOD (P07) read low by whoever serves GPIO2 (the input task; the device port's GPIO2 handler
+ * the same): while the rails should be up, the supply went away. Counted, so a drive in progress
+ * notices at its next phase. D.rails_on is read without the lock: a stale read costs one check. */
+static unsigned g_supply_drops;
+
+void sim_display_supply_low(void) {
+    if (D.rails_on) __atomic_add_fetch(&g_supply_drops, 1, __ATOMIC_SEQ_CST);
+}
+
+static unsigned supply_drops(void) { return __atomic_load_n(&g_supply_drops, __ATOMIC_SEQ_CST); }
+
+/* The supply is trusted from our own power-up until something says otherwise: PWR_GOOD seen low
+ * since (g_drops0), or anyone changing the PMIC's pins since (the board driver keeps that record;
+ * even a blip that came back restarted the rails or VCOM). No bus traffic. */
+static unsigned g_drops0;
+
+static bool supply_suspect(void) {
+    return supply_drops() != g_drops0 || (g_profile.pmic_tps65185 && g_epd.ioexp && epd_power_pins_touched(&g_epd));
+}
+
 /* Rails up for a refresh. False when the board's sequence failed after its retries: the request
  * then fails (ok = false, the panel unchanged) and the system decides what to do (upstream
  * restarts the chip at this point; that policy belongs to the system, not the simulator). */
@@ -472,6 +492,7 @@ static bool power_up_locked(void) {
         if (now < t0 + total) vtk_sleep_ns(t0 + total - now);
     }
     D.rails_on = true;
+    g_drops0 = supply_drops(); /* watched from here (supply_suspect, power_kept) */
     sim_power_consumer("display.rails", true, 0);
     sim_trace_span("display", "power-up", t0, vtk_now(), NULL);
     sim_metric_add("display.power_ups", 1);
@@ -492,6 +513,10 @@ static void power_down_locked(void) {
 
 static bool power_up(void) {
     osal_mutex_lock(g_pwr_lock, OSAL_WAIT_FOREVER);
+    if (D.rails_on && supply_suspect()) { /* held up, but touched or seen dropping since: start again */
+        sim_metric_add("display.power_recycled", 1);
+        power_down_locked();
+    }
     bool ok = power_up_locked();
     osal_mutex_unlock(g_pwr_lock);
     return ok;
@@ -503,27 +528,17 @@ static void power_down(void) {
     osal_mutex_unlock(g_pwr_lock);
 }
 
-/* PWR_GOOD (P07) read low by whoever serves GPIO2 (the input task; the device port's GPIO2 handler
- * the same): while the rails should be up, the supply went away. Counted, so a drive in progress
- * notices at its next phase. D.rails_on is read without the lock: a stale read costs one check. */
-static unsigned g_supply_drops;
-
-void sim_display_supply_low(void) {
-    if (D.rails_on) __atomic_add_fetch(&g_supply_drops, 1, __ATOMIC_SEQ_CST);
-}
-
-static unsigned supply_drops(void) { return __atomic_load_n(&g_supply_drops, __ATOMIC_SEQ_CST); }
-
-/* After a waveform: did the panel keep its supply all the way? (The board driver reads PWR_GOOD and
- * the PMIC; the device port does the same.) If not, the rails are gone: the next update powers up
- * again. Display task. */
+/* After a waveform: did the panel keep its supply all the way? No drop seen and no pin touched since
+ * our power-up (supply_suspect), and the rails and VCOM good now (the board driver reads PWR_GOOD and
+ * the PMIC, retrying bus timeouts; the device port does the same). Once lost, even if it came back
+ * before this check, the update fails and the rails go down in order: the next update powers up from
+ * the start, and the system redraws what it needs. Display task. */
 static bool power_kept(void) {
     if (!g_profile.pmic_tps65185) return true;
     osal_mutex_lock(g_pwr_lock, OSAL_WAIT_FOREVER);
-    bool good = D.rails_on && epd_power_good(&g_epd);
+    bool good = D.rails_on && supply_drops() == g_drops0 && epd_power_kept(&g_epd);
     if (!good && D.rails_on) {
-        D.rails_on = false;
-        sim_power_consumer("display.rails", false, 0);
+        power_down_locked();
         sim_metric_add("display.power_lost_during_waveform", 1);
         sim_note("display: the panel supply went away during a waveform; the update fails, the image is not as asked");
     }
@@ -1078,8 +1093,12 @@ static int pq_row_costs(uint32_t now, int *first) {
 /* the panel model takes this phase's drive codes */
 static void pq_apply(uint32_t now) {
     const double full = 255.0 * 256.0 / g_profile.pqbn.full_swing;
+    /* the controller pushes whatever the supply does; the particles move only with rails and VCOM */
+    const bool powered = !g_profile.pmic_tps65185 || sim_tps65185_panel_ready();
+    if (!powered) sim_metric_add("display.unpowered_phases", 1);
     for (int y = 0; y < D.H; y++) {
         if (!pqbn_v4_exec_row(&PQ.C, now, y, PQ.line)) continue;
+        if (!powered) continue;
         for (int x = 0; x < D.W; x++) {
             const int code = (PQ.line[x >> 2] >> (6 - 2 * (x & 3))) & 3;
             if (!code) continue;
@@ -1095,7 +1114,7 @@ static void pq_apply(uint32_t now) {
             D.screen[i] = (uint8_t)(PQ.opt[i] >> 8);
         }
     }
-    D.version++;
+    if (powered) D.version++;
 }
 
 typedef struct {
@@ -1215,12 +1234,11 @@ static void pq_drive(void) {
     D.playing = true;
     if (!PQ.planned) pq_advance_idle();
     uint64_t t_start = vtk_now(), t0 = vtk_now(), last_scan = 0;
-    const unsigned drops0 = supply_drops();
     const hal_rect_t all = {0, 0, D.W, D.H};
     double worst = 1e9;
     bool plan_running = false;
     for (;;) {
-        if (supply_drops() != drops0) { /* PWR_GOOD fell: no further phase reaches the panel */
+        if (supply_suspect()) { /* PWR_GOOD fell or the PMIC's pins changed: no further phase is trusted */
             if (plan_running) osal_sem_take(PQ.plan_done, OSAL_WAIT_FOREVER);
             plan_running = false;
             PQ.planned = false;

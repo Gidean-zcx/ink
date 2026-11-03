@@ -655,8 +655,8 @@ static void restore_due_cb(void *arg) { /* ISR: time for another try */
     vtk_isr_wake_one(&IN.wq);
 }
 
-static void restore_retry_later(void) { /* backs off to one try a second */
-    uint64_t gap = SIM_MS(50) << (IN.restore_tries < 4 ? IN.restore_tries : 4);
+static void restore_retry_later(void) { /* 50 ms, doubling to one try a second */
+    uint64_t gap = SIM_MS(50) << (IN.restore_tries < 5 ? IN.restore_tries : 5);
     if (gap > SIM_MS(1000)) gap = SIM_MS(1000);
     vtk_lock();
     vtk_event_after(gap, restore_due_cb, NULL);
@@ -785,9 +785,11 @@ static void input_task(void *arg) {
             vtk_lock();
             exp_irq = IN.exp_irq;
             exp_confirm = IN.exp_confirm;
-            IN.exp_irq = IN.exp_confirm = false;
+            restore = IN.restore_due; /* a finger held down must not hold the expander's restore back */
+            IN.exp_irq = IN.exp_confirm = IN.restore_due = false;
             vtk_unlock();
-            if (exp_irq || exp_confirm) {
+            if (restore) restore_try();
+            if (exp_irq || exp_confirm || restore) {
                 service_expander(exp_irq, exp_confirm);
                 vtk_lock();
                 gpio2_recheck_locked();

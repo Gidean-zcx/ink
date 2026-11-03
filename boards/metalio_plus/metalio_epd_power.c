@@ -80,6 +80,9 @@ static epd_power_result_t power_on_once(epd_power_t *p) {
         osal_task_delay_us(TICK_US);
     }
     if (p->gate_output) p->gate_output(p->ctx, true);
+    io_lock(p);
+    p->ioexp->changed[0] &= (uint8_t)~PIN_MASK; /* from here a change of the pins is someone else's */
+    io_unlock(p);
     return EPD_POWER_OK;
 }
 
@@ -107,9 +110,22 @@ void epd_power_off(epd_power_t *p) {
 
 bool epd_power_good(epd_power_t *p) {
     uint8_t levels = 0, pg = 0;
-    if (read_port0(p, &levels) != HAL_I2C_OK || !(levels & EPD_PWR_GOOD)) return false;
-    return tps65185_read(p->pmic, TPS_REG_PG, &pg) == HAL_I2C_OK && (pg & TPS_PG_ALL_GOOD) == TPS_PG_ALL_GOOD;
+    hal_i2c_status_t s = HAL_I2C_ERR;
+    for (int i = 0; i < 3 && s != HAL_I2C_OK; i++) s = read_port0(p, &levels);
+    if (s != HAL_I2C_OK || !(levels & EPD_PWR_GOOD)) return false;
+    s = HAL_I2C_ERR;
+    for (int i = 0; i < 3 && s != HAL_I2C_OK; i++) s = tps65185_read(p->pmic, TPS_REG_PG, &pg);
+    return s == HAL_I2C_OK && (pg & TPS_PG_ALL_GOOD) == TPS_PG_ALL_GOOD;
 }
+
+bool epd_power_pins_touched(epd_power_t *p) {
+    io_lock(p);
+    bool touched = p->ioexp->changed[0] & PIN_MASK;
+    io_unlock(p);
+    return touched;
+}
+
+bool epd_power_kept(epd_power_t *p) { return !epd_power_pins_touched(p) && epd_power_good(p); }
 
 void epd_power_sleep(epd_power_t *p) {
     uint8_t out0 = shadow_port0(p);

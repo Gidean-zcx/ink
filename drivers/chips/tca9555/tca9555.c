@@ -30,11 +30,13 @@ hal_i2c_status_t tca9555_set(tca9555_t *t, int port, uint8_t mask, uint8_t value
         uint8_t reg = (uint8_t)(REG_OUTPUT0 + port), now;
         hal_i2c_status_t r = hal_i2c_write_read(t->dev, &reg, 1, &now, 1);
         if (r != HAL_I2C_OK) return r;
+        t->changed[port] |= (uint8_t)(t->out[port] ^ now);
         t->out[port] = now;
         t->stale[port] = false;
     }
     uint8_t want = (uint8_t)((t->out[port] & ~mask) | (value & mask));
     hal_i2c_status_t s = write_reg(t, (uint8_t)(REG_OUTPUT0 + port), want);
+    t->changed[port] |= (uint8_t)(t->out[port] ^ want); /* a failed write may have landed too */
     if (s == HAL_I2C_OK) t->out[port] = want;
     else t->stale[port] = true;
     return s;

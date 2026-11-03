@@ -68,11 +68,20 @@ void epd_power_off(epd_power_t *p);
 /** Before deep sleep: PMIC to SLEEP with the datasheet waits. */
 void epd_power_sleep(epd_power_t *p);
 
-/** Are the rails and VCOM still good? PWR_GOOD (P07) through the expander, then the PMIC's PG
- *  register; false if either says no or a read fails (a PMIC that lost WAKEUP does not answer).
- *  At the end of a waveform: false means the supply went away meanwhile and the panel did not get
- *  the whole waveform. */
+/** Are the rails and VCOM good now? PWR_GOOD (P07) through the expander, then the PMIC's PG
+ *  register; false if either says no or does not answer after three tries (a bus timeout is not a
+ *  supply loss; a PMIC that lost WAKEUP does not answer at all). */
 bool epd_power_good(epd_power_t *p);
+
+/** Has anyone changed the PMIC's pins (WAKEUP, PWRUP, VCOM_CTRL) since epd_power_on brought the
+ *  rails up? Even a blip that came back cut or restarted the rails or VCOM. No bus traffic. */
+bool epd_power_pins_touched(epd_power_t *p);
+
+/** At the end of a waveform: did the panel keep its supply all the way? The pins untouched since
+ *  epd_power_on and the rails and VCOM good now (epd_power_good). False: the panel did not get the
+ *  whole waveform. A drop of PWR_GOOD that came back without anyone touching the pins is only seen
+ *  by whoever serves the expander's INT meanwhile (the display port counts those). */
+bool epd_power_kept(epd_power_t *p);
 
 const char *epd_power_result_name(epd_power_result_t r);
 

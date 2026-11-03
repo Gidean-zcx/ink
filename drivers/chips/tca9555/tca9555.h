@@ -22,6 +22,9 @@ typedef struct {
     uint8_t out[2]; /* output levels the chip is known to drive */
     uint8_t dir[2]; /* configuration registers: 1 = input */
     bool stale[2]; /* a write failed: the output register is read back before the next change */
+    /* output bits a write changed (or may have: a failed write) since the owner of those pins last
+     * cleared them; tells a sequence whether anyone touched its pins meanwhile */
+    uint8_t changed[2];
 } tca9555_t;
 
 /** Write the output levels first, then the directions, so pins come up at the intended level. */

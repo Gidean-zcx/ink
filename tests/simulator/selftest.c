@@ -26,6 +26,7 @@
 #include "ink/probe.h"
 #include "ft6336u/ft6336u.h"
 #include "nt26/nt26.h"
+#include "tps65185/tps65185.h"
 #include "sim.h" /* the self-test may peek at the profile to compute expectations */
 
 #define CHECK(cond, ...)                                       \
@@ -757,6 +758,10 @@ static void vol_up(void *arg) { /* ISR */
     sim_input_key(HAL_KEY_VOL_UP, arg != NULL);
 }
 
+static void finger(void *arg) { /* ISR or locked */
+    sim_input_touch(0, arg != NULL, 300, 300);
+}
+
 
 static void sleep_checks(void) {
     hal_input_set_sink(board_sink, NULL);
@@ -843,6 +848,32 @@ static void sleep_checks(void) {
     osal_task_delay_us(500000);
     CHECK(g_vol_events == 2, "and the keys work again (%d VOL+ events)", g_vol_events);
 
+    /* the same with a finger on the screen from just after the wake (audit AUD4-002): the touch
+     * polling does not hold the restore back */
+    vtk_lock();
+    vtk_event_after(SIM_MS(400), power_press, (void *)1);
+    vtk_event_after(SIM_MS(401), expander_faults, (void *)1);
+    vtk_event_after(SIM_MS(450), power_press, NULL);
+    vtk_event_after(SIM_MS(470), finger, (void *)1);
+    vtk_event_after(SIM_MS(650), expander_faults, NULL);
+    vtk_unlock();
+    g_power_presses = g_power_releases = g_vol_events = 0;
+    cause = hal_power_sleep(&sc);
+    osal_task_delay_us(1500000);
+    CHECK(cause == HAL_WAKE_POWER_KEY && sim_tca_config(0) == 0xC0 && sim_tca_config(1) == 0xE3 && g_power_releases == 1,
+          "with a finger held on the screen the restore still gets through (cfg %02x %02x, %d releases)", sim_tca_config(0),
+          sim_tca_config(1), g_power_releases);
+    vtk_lock();
+    vtk_event_after(SIM_MS(10), vol_up, (void *)1);
+    vtk_event_after(SIM_MS(200), vol_up, NULL);
+    vtk_unlock();
+    osal_task_delay_us(500000);
+    CHECK(g_vol_events == 2, "and the keys work with the finger still down (%d VOL+ events)", g_vol_events);
+    vtk_lock();
+    finger(NULL);
+    vtk_unlock();
+    osal_task_delay_us(100000);
+
     /* recording started while the sleep entry is under way (audit AUD3-004): it waits for the sleep
      * to finish instead of losing P14 under it, sets the Bluetooth chip's mode again, and records */
     hal_sleep_cfg_t sc2 = {.max_us = 1000000, .wake_mask = HAL_WAKE_POWER_KEY}; /* P14 is cut */
@@ -854,6 +885,29 @@ static void sleep_checks(void) {
     CHECK(cause == HAL_WAKE_TIMER && g_cap_rc == 0 && sim_bt_audio_mode() == 1 && g_mic_samples > 0,
           "recording started during the sleep entry works after the wake (cause %u, rc %d, mode %d, %u samples)", (unsigned)cause,
           g_cap_rc, sim_bt_audio_mode(), g_mic_samples);
+    hal_audio_capture_stop();
+    osal_task_delay_us(4000000); /* the modem boots and registers again */
+
+    /* a wake whose supply restore has to wait for the expander's bus (P14 cut asleep; audit AUD4-003):
+     * until it gets through, recording refuses to start instead of starting without the Bluetooth
+     * chip's clock; afterwards it records */
+    vtk_lock();
+    vtk_event_after(SIM_MS(300), power_press, (void *)1);
+    vtk_event_after(SIM_MS(301), expander_faults, (void *)1);
+    vtk_event_after(SIM_MS(350), power_press, NULL);
+    vtk_event_after(SIM_MS(900), expander_faults, NULL);
+    vtk_unlock();
+    cause = hal_power_sleep(&sc2);
+    int rc_early = hal_audio_capture_start(board_mic, NULL);
+    if (rc_early == 0) hal_audio_capture_stop();
+    CHECK(cause == HAL_WAKE_POWER_KEY && rc_early == -1 && !sim_audio_busy(),
+          "right after a wake whose supply is not back yet, recording refuses to start (cause %u, rc %d)", (unsigned)cause, rc_early);
+    osal_task_delay_us(2000000);
+    g_mic_samples = 0;
+    int rc_late = hal_audio_capture_start(board_mic, NULL);
+    osal_task_delay_us(500000);
+    CHECK(rc_late == 0 && sim_board_shared_power() && sim_bt_audio_mode() == 1 && g_mic_samples > 0,
+          "once the restore gets through it records (rc %d, mode %d, %u samples)", rc_late, sim_bt_audio_mode(), g_mic_samples);
     hal_audio_capture_stop();
     osal_task_delay_us(4000000); /* the modem boots and registers again */
 
@@ -890,6 +944,23 @@ static void cut_panel_task(void *arg) {
     metalio_board_set(0, EPD_PWR_VCOM_CTRL | EPD_PWR_PWRUP | EPD_PWR_WAKEUP, 0); /* PMIC pins low mid-waveform */
 }
 
+/* a blip on the PMIC's pins that is back before the waveform ends (audit AUD4-001): PWRUP (the rails
+ * restart; VCOM enabled again by hand, as an outside writer could) or VCOM_CTRL alone (PWR_GOOD does
+ * not move) */
+static void blip_task(void *arg) {
+    const bool vcom_only = arg != NULL;
+    for (int i = 0; i < 2000 && !sim_display_playing(); i++) osal_task_delay_us(1000);
+    osal_task_delay_us(5000); /* a phase or so in */
+    metalio_board_set(0, vcom_only ? EPD_PWR_VCOM_CTRL : EPD_PWR_PWRUP, 0);
+    osal_task_delay_us(20000);
+    metalio_board_set(0, vcom_only ? EPD_PWR_VCOM_CTRL : EPD_PWR_PWRUP, vcom_only ? EPD_PWR_VCOM_CTRL : EPD_PWR_PWRUP);
+    if (!vcom_only) {
+        hal_i2c_dev_t *pmic = hal_i2c_device(0, TPS65185_ADDR, "pmic");
+        tps65185_write(pmic, TPS_REG_ENABLE, 0);
+        tps65185_write(pmic, TPS_REG_ENABLE, TPS_ENABLE_ALL_RAILS);
+    }
+}
+
 static bool update_and_wait(const uint8_t *px, const hal_rect_t *area) {
     g_upd_done = false;
     hal_display_update(area, px, area->w, HAL_WF_GL16, 0, upd_done, NULL);
@@ -911,6 +982,16 @@ static void display_cut_checks(void) {
     if (g_profile.display_driver != 1)
         CHECK(sim_display_version() == v0, "and the panel does not show it");
     CHECK(update_and_wait(px, &area) && g_upd_ok && sim_display_version() != v0, "the next update powers the panel up again and works");
+    for (int b = 0; b < 2; b++) {
+        memset(px, b ? 0x00 : 0xFF, sizeof px); /* new content: both pipelines drive their full phases */
+        osal_task_cfg_t cb = {.name = "panel_blip", .fn = blip_task, .arg = b ? (void *)1 : NULL, .stack_bytes = 2048,
+                              .priority = OSAL_PRIO_NORMAL + 2, .core = -1};
+        osal_task_create(&cb, NULL);
+        bool ok = update_and_wait(px, &area);
+        CHECK(ok && !g_upd_ok, "an update whose %s blips part way fails, although it is back before the end",
+              b ? "VCOM (VCOM_CTRL)" : "supply (PWRUP)");
+    }
+    CHECK(update_and_wait(px, &area) && g_upd_ok, "after a blip the next update powers up from the start and works");
 }
 
 static void board_task(void *arg) {
@@ -1028,18 +1109,24 @@ static void board_task(void *arg) {
     CHECK(nt26_registered(&reg) == NT26_OK && reg && lte_up(), "after P12 goes high the modem boots and registers");
     metalio_board_set(1, MB_P1_SHARED_PWR, 0);
     CHECK(hal_modem_at("AT", resp, sizeof resp, 500) == HAL_AT_TIMEOUT && !lte_up(), "P14 off powers the modem down");
-    /* the BH1098G clocks the I2S; without it (P14 off) the speaker queue does not move */
+    /* the BH1098G clocks the I2S: without it (P14 off) audio does not start, it would get no clock */
     static int16_t tone[4800];
-    CHECK(hal_audio_play_start() == 0, "speaker output starts without the Bluetooth chip's clock");
-    int took = hal_audio_play_write(tone, 4800, 300000);
-    CHECK(took < 4800, "no clock: the queue fills and the writer times out (%d of 4800 samples taken)", took);
-    hal_audio_play_stop(true); /* must not wait forever */
+    CHECK(hal_audio_play_start() == -1 && hal_audio_capture_start(board_mic, NULL) == -1 && !sim_audio_busy(),
+          "with the Bluetooth chip unpowered, speaker and microphone refuse to start");
     metalio_board_set(1, MB_P1_SHARED_PWR, MB_P1_SHARED_PWR);
     CHECK(sim_bt_audio_mode() == 0, "the P14 cycle also reset the Bluetooth audio chip (no mode)");
     osal_task_delay_us(4000000);
     CHECK(nt26_registered(&reg) == NT26_OK && reg, "P14 back on: the modem registers again");
     CHECK(hal_audio_play_start() == 0 && sim_bt_audio_mode() == 1, "the audio port sets conversation mode again after the power cycle");
-    hal_audio_play_stop(false);
+    /* the chip's clock going away under a running stream (the amplifier off first, as the wiring
+     * needs): the queue stops moving, the writer times out, the drain is bounded */
+    metalio_board_set(0, MB_P0_AMP, 0);
+    metalio_board_set(1, MB_P1_SHARED_PWR, 0);
+    int took = hal_audio_play_write(tone, 4800, 300000);
+    CHECK(took < 4800, "no clock: the queue fills and the writer times out (%d of 4800 samples taken)", took);
+    hal_audio_play_stop(true); /* must not wait forever */
+    metalio_board_set(1, MB_P1_SHARED_PWR, MB_P1_SHARED_PWR);
+    osal_task_delay_us(4000000); /* the modem registers again */
     display_cut_checks();
     sleep_checks();
     ink_probe_mark("board-shutdown");
@@ -1118,6 +1205,14 @@ static void expander_dead_task(void *arg) {
     vtk_unlock();
     osal_task_delay_us(800000);
     CHECK(metalio_board_ready() && g_dead_keys == 2, "once the bus answers the expander is set up and keys work (%d events)", g_dead_keys);
+    /* the Bluetooth audio chip, which the boot could not set up either (audit AUD4-004): the first
+     * recording sets its mode and gets samples */
+    g_mic_samples = 0;
+    int rc = hal_audio_capture_start(board_mic, NULL);
+    osal_task_delay_us(500000);
+    CHECK(rc == 0 && sim_bt_audio_mode() == 1 && g_mic_samples > 0, "and the first recording sets the Bluetooth chip up and records (rc %d, mode %d, %u samples)",
+          rc, sim_bt_audio_mode(), g_mic_samples);
+    hal_audio_capture_stop();
     ink_probe_mark("expander-dead-done");
 }
 
