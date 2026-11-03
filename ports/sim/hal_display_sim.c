@@ -871,6 +871,7 @@ static void pq_advance_idle(void) {
     uint64_t j = (vtk_now() - PQ.idle_since) / phase_ns;
     if (j > 255) j = 255;
     if (!j) return;
+    sim_metric_add("display.pqbn.idle_advance_phases", (double)j); /* budgets check the clock moves across rests */
     const uint32_t from = PQ.now, to = PQ.now + (uint32_t)j;
     if ((from >> 12) != (to >> 12)) {
         const uint32_t m = to & ~4095u;

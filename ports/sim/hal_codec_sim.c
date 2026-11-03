@@ -71,7 +71,9 @@ int hal_opus_encode(hal_opus_enc_t *e, const int16_t *pcm, uint8_t *out, int cap
     double rms = sqrt(sum / HAL_OPUS_FRAME_SAMPLES);
     double freq = crossings * (double)HAL_AUDIO_RATE / (2.0 * HAL_OPUS_FRAME_SAMPLES);
     int bytes = rms < 200 ? 8 : e->bitrate * 60 / 1000 / 8; /* DTX-like tiny packets for silence */
-    return sim_opus_fake_packet(out, cap, freq, rms, bytes, (uint32_t)sum);
+    /* via uint64_t: a double above UINT32_MAX does not convert to uint32_t (undefined; x86-64 keeps the
+     * low 32 bits, arm64 saturates), the sum of squares reaches ~1e12; the low 32 bits are the seed */
+    return sim_opus_fake_packet(out, cap, freq, rms, bytes, (uint32_t)(uint64_t)sum);
 }
 
 void hal_opus_enc_free(hal_opus_enc_t *e) {

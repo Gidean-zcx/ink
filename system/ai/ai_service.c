@@ -125,6 +125,12 @@ bool ink_ai_dismiss(void) {
     AI.sheet = NULL;
     AI.open = false;
     AI.asking = false;
+    /* closing ends this turn's speech too: frames still on their way are dropped (on_binary), not
+     * played after the sheet is gone */
+    osal_mutex_lock(AI.lock, OSAL_WAIT_FOREVER);
+    AI.tts_stream = 0;
+    AI.tts_done_for = AI.stream;
+    osal_mutex_unlock(AI.lock);
     ink_audio_stop_all();
     ink_ui_hint_frame(INK_REFRESH_FLASH_UI); /* the page underneath comes back cleanly */
     return true;

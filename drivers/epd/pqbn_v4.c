@@ -145,7 +145,7 @@ void pqbn_v4_build_motion(uint8_t *exk_m /*7*256*/, uint8_t *tau_nib /*2048*/, c
 
 static inline int sx5(int v) { return ((v & 31) ^ 16) - 16; }
 static inline int snapq(int v) { return v > 252 ? 255 : v < 3 ? 0 : v; }
-static inline int cls_of_rest(int r) { return r <= 0 ? 0 : r < 8 ? 1 : r < 64 ? 2 : 3; }
+static inline __attribute__((unused)) int cls_of_rest(int r) { return r <= 0 ? 0 : r < 8 ? 1 : r < 64 ? 2 : 3; } // kept from the research file; unused here (clang -Wunused-function)
 static const uint8_t lvl_tab[64] = {0, 1, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
                                      6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6};
 static inline int lvl_of_rest(int r) { return r >= 64 ? 7 : lvl_tab[r]; }      // r >= 0

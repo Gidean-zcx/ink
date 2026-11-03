@@ -72,5 +72,9 @@
     "max": 1500,
     "srs": "SR-UX-03",
     "why": "tap on a book -> its first page stable (end to end, incl. loading and the full GC16)"
+  },
+  "display.pqbn.idle_advance_phases": {
+    "min": 255,
+    "why": "the phase clock moves across rests (the 12 s pause before HOME alone is a full 255-phase step): stiction after a rest depends on it (audit AUD-012: switching it off passed every other budget)"
   }
 }

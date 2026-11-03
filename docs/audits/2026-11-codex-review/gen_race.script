@@ -1,0 +1,9 @@
+# AUD-007: the AI's "next page" tool call arrives after the user turned the page by hand
+@3s      tap   116dp 160dp        # 阅读
++2500ms  tap   50% 160dp          # 星星邮差
++3s      mic   speech
++0ms     key   ai 1200ms          # "翻到下一页" on page 1
++2200ms  key   home               # close the sheet
++500ms   key   next               # the user turns to page 2 by hand before the tool call arrives
++8s      snap  after
++1s      end

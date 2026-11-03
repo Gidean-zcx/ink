@@ -1,0 +1,28 @@
+{
+  "_doc": "Reading on without a pause (audit AUD-004): the idle save timer restarts on every turn, so the reader also saves when its unsaved position is 60 s old (SR-PL-08).",
+  "reader.page_turns": {
+    "min": 36,
+    "why": "every key turns a page"
+  },
+  "storage.write_ms.count": {
+    "min": 1,
+    "why": "SR-PL-08: while reading on, the position is saved at least every 60 s; the script ends before the idle save could run"
+  },
+  "storage.write_errors": {
+    "max": 0,
+    "optional": true
+  },
+  "display.underruns": {
+    "max": 0,
+    "optional": true,
+    "why": "the save waits for an idle panel between turns"
+  },
+  "panic.count": {
+    "max": 0,
+    "optional": true
+  },
+  "warnings.count": {
+    "max": 0,
+    "optional": true
+  }
+}
