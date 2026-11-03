@@ -2,7 +2,7 @@
   "id": "metalio-e-ink4-plus-pqbn",
   "name": "CloudZao Metalio E-Ink4 Plus — PQ-BN direct drive (ESP32-S31, 4.7in 1216x684 EPD)",
   "class": "mcu",
-  "_sources": "docs/research/foundation/platform-runtime.md, upstream-firmware.md, docs/research/simulator/performance-modeling.md. Principle until calibrated: time costs take upper bounds, resources take lower bounds.",
+  "_sources": "docs/research/foundation/platform-runtime.md, upstream-firmware.md, docs/research/simulator/performance-modeling.md. Principle until calibrated: time costs take upper bounds, resources take lower bounds. Device measurements: docs/hardware/2026-11-03-phase0.md (phase 0, 2026-11-03).",
   "cpu": {
     "cores": 2,
     "mhz": 320,
@@ -31,15 +31,14 @@
   "memory": {
     "internal_heap_kib": 96,
     "dma_heap_kib": 64,
-    "external_heap_kib": 7680,
+    "external_heap_kib": 15872,
     "always_internal_max_bytes": 16,
-    "_notes": "PESSIMISTIC DEFAULT. internal_heap_kib = internal RAM left for EVERYTHING allocated at run time (display driver buffers, task stacks, TLS, system) after static code/data, excluding the DMA reserve. dma_heap_kib = the upstream SPIRAM_MALLOC_RESERVE_INTERNAL pool: on the S31 (IDF 6.1) it is tried after regular internal RAM for DMA and internal requests and last for default ones; the dma_heap_kib >= 16 budget therefore measures what is left of the reserve, not a separate DMA pool. Static use is unknown until `idf.py size` (foundation 3.2): replace these numbers then. PSRAM assumed 8 MB until 16 MB is confirmed.",
+    "_notes": "PESSIMISTIC DEFAULT. internal_heap_kib = internal RAM left for EVERYTHING allocated at run time (display driver buffers, task stacks, TLS, system) after static code/data, excluding the DMA reserve. dma_heap_kib = the upstream SPIRAM_MALLOC_RESERVE_INTERNAL pool: on the S31 (IDF 6.1) it is tried after regular internal RAM for DMA and internal requests and last for default ones; the dma_heap_kib >= 16 budget therefore measures what is left of the reserve, not a separate DMA pool. Static use is unknown until `idf.py size` (foundation 3.2): replace these numbers then. PSRAM: 16 MB measured on the device (docs/hardware/2026-11-03-phase0.md). The factory firmware confirms the 64 KiB reserve (boot log); its own static use is 226.7 KiB, a reference only until idf.py size on our build.",
     "internal_regions_kib": [
-      32,
-      32,
-      32
+      80,
+      16
     ],
-    "_notes_regions": "The internal heap is several separate regions (memory map, static data, cache-reserved areas); profile guess: the largest block is <= 32 KiB until idf.py size / heap_caps_print_heap_info on the device says otherwise.",
+    "_notes_regions": "Measured layout (factory firmware heap_init, docs/hardware/2026-11-03-phase0.md): one large region plus a separate 16 KiB region at the top of SRAM (adjacent but its own heap, so no block spans both); IDF carves the 64 KiB reserve out of the large one. The total stays at the pessimistic 96 KiB until idf.py size on our own build; the factory firmware has 265 KiB in the large region after 226.7 KiB of static data, about 201 + 16 KiB once the reserve is taken.",
     "heap_region_overhead_bytes": 1536
   },
   "display": {
@@ -157,16 +156,16 @@
     "sector_bytes": 4096,
     "page_bytes": 256,
     "erase_sector_us": {
-      "typ": 45000,
-      "max": 400000
+      "typ": 50000,
+      "max": 240000
     },
     "program_page_us": {
-      "typ": 700,
-      "max": 3000
+      "typ": 500,
+      "max": 2400
     },
     "timing": "tail",
     "stalls_cpu": true,
-    "_notes": "The NOR part on the board is unverified: generic pessimistic values (program 0.7/3 ms per 256-byte page, 4 KiB erase 45/400 ms) instead of one vendor's datasheet. IDF 6.1: one cache-off window per esp_flash_write chunk (CONFIG_SPI_FLASH_WRITE_CHUNK_SIZE 8192 upstream; littlefs programs from its internal buffer = direct write), per erase and per read chunk; SPI1 moves <= 64 bytes per program/read command (spi_cmd_us each). A program command costs program_first_us + its share of the page time. Auto-suspend off upstream; erase yields only between the sectors of one multi-sector erase (littlefs erases one per call).",
+    "_notes": "Flash part measured: Puya PY25Q128HA (JEDEC 85 20 18, docs/hardware/2026-11-03-phase0.md); timing from its datasheet Ver0.3: program 0.5/2.4 ms per 256-byte page, 4 KiB erase 50/240 ms (typ/max). Other units may carry another part: check flash-id per device. IDF 6.1: one cache-off window per esp_flash_write chunk (CONFIG_SPI_FLASH_WRITE_CHUNK_SIZE 8192 upstream; littlefs programs from its internal buffer = direct write), per erase and per read chunk; SPI1 moves <= 64 bytes per program/read command (spi_cmd_us each). A program command costs program_first_us + its share of the page time. Auto-suspend off: the part supports suspend (75h/7Ah, latency <= 30 us) but IDF v6.1's generic chip driver enables it only for XMC and FM parts, not vendor 0x85 (code check); erase yields only between the sectors of one multi-sector erase (littlefs erases one per call).",
     "read_mbps": 20,
     "op_overhead_us": 30,
     "assets_partition_kib": 6144,

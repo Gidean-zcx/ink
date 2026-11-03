@@ -246,7 +246,7 @@ profiles/        设备档案：Plus 悲观档（CI 门槛）、Plus 16 MB、Plu
 | 点书到首页稳定 | 1.2 s | 同上 |
 | AI 键到听见提示音 / 看到“正在听” | 61 ms / 513 ms | `ai_ask` 场景 |
 | 松开 AI 键到第一段回答 p50 | 2.1 s | 同上 |
-| 内部 + DMA RAM 最低余量 | 53 KiB（阅读）/ 36 KiB（AI，预算 32 KiB） | 两个场景 |
+| 内部 + DMA RAM 最低余量 | 55 KiB（阅读）/ 38 KiB（AI，预算 32 KiB） | 两个场景；内部堆区段已按实测结构改写（[平台与模拟器 §5.7](system/platform-and-simulator.md)） |
 | 锁屏到入睡 / 唤醒到页面恢复 | 约 1.05 s / 约 0.65 s（最慢 0.71 s） | `standby` 场景 |
 | 可接听待机电流 | 约 6.6 mA（估算） | [平台与模拟器 §5.5](system/platform-and-simulator.md) |
 
@@ -300,7 +300,7 @@ python3 tools/simreport/simreport.py out/reader --lang zh    # HTML 报告：刷
 
 **内存余量**
 
-- AI 场景内部 RAM 最低余量 36 KiB（PQ-BN 档案 33.6 KiB），预算 32 KiB，偏紧。
+- AI 场景内部 RAM 最低余量 38 KiB（PQ-BN 档案 35 KiB），预算 32 KiB，偏紧。内部堆总量 96 KiB 仍是估计，要等本项目固件的 `idf.py size`。
 
 **估算项与未核实的硬件**
 

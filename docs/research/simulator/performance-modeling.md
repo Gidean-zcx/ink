@@ -126,13 +126,13 @@
 | psram.dma_contend | 有 DMA 时 CPU 访问 PSRAM 的带宽 −46% | 【测】S3：CPU 加一路 DMA 时，CPU 从 126 MB/s 降到 67 MB/s | LCD 扫描期间跑 memcpy |
 | sram.cpy | 350 MB/s；PIE 1.8 GB/s | 【测】S3 366 MB/s，PIE 1830 MB/s；P4 352 MiB/s | memcpy 矩阵 |
 | ram.int_app | 应用可用内部堆 96 KiB，其中最大块 ≤32 KiB；DMA 池最大块 ≤16 KiB | 【码】总量 512 KiB；EPDiy 固定占约 85 KiB；预留 64 KiB；上游告警线 50 KiB。具体数值为【估】 | `idf.py size`、启动日志、`heap_caps_get_info` |
-| ram.psram | 可用 8 MiB，确认是 16 MB 后再放开；显示常驻约 3.45 MB | 【官】有 16/32 MB 芯片和 8 MB 模组；显示常驻量来自 A 报告【码】【推】 | `esp_psram_get_size()` |
+| ram.psram | 可用 15.5 MiB：2026-11-03 实测为 16 MB，见[第 0 步](../../hardware/2026-11-03-phase0.md)；显示常驻约 3.45 MB | 【官】有 16/32 MB 芯片和 8 MB 模组；显示常驻量来自 A 报告【码】【推】 | `esp_psram_get_size()` |
 | flash.tPP | 每 256 B 页 2.4 ms（典型 0.5 ms） | 【官】GD25B128E；板上实际的 Flash 型号**未核实** | 写入计时 |
 | flash.tSE_4K | 300 ms（典型 45 ms） | 【官】GD25B128E；GD25LQ128E 典型 70 ms | 擦除计时 |
 | flash.tBE_64K | 1.6 s（典型 0.25 s） | 【官】GD25B128E | 擦除计时 |
 | flash.freeze_write | 每个写块冻结整机 77 ms（典型 16 ms） | 【官】`SPI_FLASH_WRITE_CHUNK_SIZE` 默认 8192，帮助文本说明分块是为了缩短关缓存的时间。冻结时间按 32 页 × tPP 推算【推】 | IRAM 定时器翻转 GPIO，同时 PSRAM 任务发心跳，测心跳间隙 |
 | flash.freeze_erase | 每条擦除命令冻结整段 tSE 或 tBE；单条命令超过 20 ms 时，结束后让出 1 tick（10 ms） | 【官】Kconfig 中 YIELD_DURING_ERASE 默认开、20 ms、1 tick；HZ=100【码】 | 同上 |
-| flash.suspend | 关（上游）。若打开：每次挂起约 40 µs，擦除总时长会被拉长 | 【码】`# CONFIG_SPI_FLASH_AUTO_SUSPEND is not set`。【官】IDF 文档称 tsus 典型约 40 µs；GD25B128E 数据手册 tSUS ≤20 µs | 打开后实测 |
+| flash.suspend | 关（上游）。若打开：每次挂起约 40 µs，擦除总时长会被拉长。板上 PY25Q128HA 支持挂起（≤ 30 µs），但 IDF v6.1 的通用驱动不对它开启，见[第 0 步](../../hardware/2026-11-03-phase0.md) | 【码】`# CONFIG_SPI_FLASH_AUTO_SUSPEND is not set`。【官】IDF 文档称 tsus 典型约 40 µs；GD25B128E 数据手册 tSUS ≤20 µs | 打开后实测 |
 | fs.littlefs_write | 20 ms/KB（含擦除和元数据提交） | 【测】IDF 示例输出：LittleFS 写入 0.066 MB/s，raw 写入 0.647 MB/s（未注明芯片）；esp_littlefs README 在 ESP32 上约 53～73 KB/s。【官】使用率 50% 时元数据更新平均为 2 倍开销，75% 时为 4 倍 | 跑 perf_benchmark |
 | epd.line | 17 µs | 【码】Plus 公式：(304+9+4+10−1)/20 MHz 取整后 +1。EPDiy 原公式为 16 µs | 启动日志中的 `line width` |
 | epd.lines | 688 | 【码】684 向上取整到 8 的倍数 | — |
