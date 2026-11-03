@@ -67,7 +67,7 @@ add_library(ink_drivers STATIC
   drivers/chips/nt26/nt26.c
   drivers/display/pqbn/pqbn_v4.c)
 target_include_directories(ink_drivers PUBLIC drivers/chips drivers/display/pqbn)
-target_link_libraries(ink_drivers PUBLIC ink_platform)
+target_link_libraries(ink_drivers PUBLIC ink_platform m) # m: the PQ-BN kernel's table build (expf, lrintf)
 target_compile_options(ink_drivers PRIVATE ${INK_WARN})
 
 # The Metalio E-Ink4 Plus: its wiring, the shared expander, panel power, touch coordinates.
