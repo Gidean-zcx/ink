@@ -92,8 +92,12 @@ static void outputs_changed(uint8_t rise0, uint8_t fall0, uint8_t rise1, uint8_t
             sim_warn("board: P14 cut while the amplifier is enabled (4G, Bluetooth audio and amplifier share it)");
         }
         sim_net_modem_power(false);
+        sim_bt_audio_power(false);
     }
-    if (rise1 & MB_P1_SHARED_PWR) sim_net_modem_power(true);
+    if (rise1 & MB_P1_SHARED_PWR) {
+        sim_net_modem_power(true);
+        sim_bt_audio_power(true);
+    }
     if (rise1 & MB_P1_PWR_PULSE) {
         uint64_t now = vtk_now(), gap = now - X.last_pulse;
         X.pulses = X.last_pulse && gap >= SIM_MS(MB_POWER_PULSE_MS) && gap <= SIM_MS(4 * MB_POWER_PULSE_MS) ? X.pulses + 1 : 1;
@@ -153,6 +157,7 @@ void sim_board_init(void) { /* task context (boot) */
     sim_power_chips_init();
     sim_sensors_init();
     sim_camera_init();
+    sim_bt_audio_init();
 }
 
 void sim_tca9555_init(void) {
@@ -162,6 +167,7 @@ void sim_tca9555_init(void) {
 
 void sim_tca9555_report(void) {
     sim_rtc_accel_report();
+    sim_bt_audio_report();
     sim_metric_set("board.motor_starts", X.motor_starts);
     sim_metric_set("board.shared_reset_warnings", X.shared_rst_warn);
     sim_metric_set("board.shared_power_warnings", X.shared_pwr_warn);

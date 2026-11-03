@@ -63,6 +63,8 @@ typedef struct {
     int64_t rtc_s;              /* UTC seconds the RTC shows */
     int accel_mg[3];            /* gravity the accelerometer reports */
     unsigned accel_motions;
+    int bt_mode;                /* BH1098G mode, 0 = not set */
+    bool bt_powered;
 } sim_gui_stats_t;
 
 /** Ask for a fresh sample and, if the panel image changed, a new frame. At most one request is

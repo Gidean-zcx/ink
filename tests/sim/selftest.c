@@ -18,6 +18,7 @@
 #include "ink/hal_input.h"
 #include "ink/hal_storage.h"
 #include "ink/osal.h"
+#include "bh1098g/bh1098g.h"
 #include "board/metalio_board.h"
 #include "ink/hal_net.h"
 #include "ink/hal_power.h"
@@ -631,6 +632,12 @@ static void board_task(void *arg) {
     metalio_board_set(0, MB_P0_CAM_SCR, MB_P0_CAM_SCR);
     if (pic) osal_free(pic);
 
+    /* Bluetooth audio chip (BH1098G on UART1): conversation mode set at boot, version answer */
+    hal_uart_t *bt = hal_uart_open(BH1098G_UART_PORT, BH1098G_BAUD);
+    char ver[16] = "";
+    CHECK(bt && sim_bt_audio_mode() == 1, "the Bluetooth audio chip is in conversation mode after boot (mode %d)", sim_bt_audio_mode());
+    CHECK(bt && bh1098g_version(bt, ver, sizeof ver) == 0 && !strcmp(ver, "V1.03"), "it answers its version (%s)", ver);
+
     char resp[64];
     bool reg = false;
     CHECK(nt26_registered(&reg) == NT26_OK && reg, "the modem is registered");
@@ -645,8 +652,10 @@ static void board_task(void *arg) {
     metalio_board_set(1, MB_P1_SHARED_PWR, 0);
     CHECK(hal_modem_at("AT", resp, sizeof resp, 500) == HAL_AT_TIMEOUT && !lte_up(), "P14 off powers the modem down");
     metalio_board_set(1, MB_P1_SHARED_PWR, MB_P1_SHARED_PWR);
+    CHECK(sim_bt_audio_mode() == 0, "the P14 cycle also reset the Bluetooth audio chip (no mode)");
     osal_task_delay_us(4000000);
     CHECK(nt26_registered(&reg) == NT26_OK && reg, "P14 back on: the modem registers again");
+    CHECK(bt && bh1098g_set_mode(bt, 1) == 0 && sim_bt_audio_mode() == 1, "conversation mode set again after the power cycle");
     ink_probe_mark("board-shutdown");
     hal_power_shutdown(); /* 15 pulses on P13: the run ends at the last one */
     CHECK(0, "hal_power_shutdown returned while the device should be off");

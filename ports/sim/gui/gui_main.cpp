@@ -761,6 +761,8 @@ void draw_panel(ImVec2 pos, ImVec2 size) {
             }
         }
         ImGui::TextDisabled("麦克风听到的声音（BH1098G 经 I2S，16 kHz）。");
+        static const char *modes[] = {"未设置", "模式 1：对话", "模式 2：发给蓝牙耳机", "模式 3：当蓝牙音箱"};
+        ImGui::TextDisabled("蓝牙音频芯片：%s%s", !g_st.bt_powered ? "没电（P14 关）" : modes[g_st.bt_mode & 3], "，串口 AT 设置");
     }
     if (ImGui::CollapsingHeader("摄像头 GC2145", ImGuiTreeNodeFlags_DefaultOpen)) {
         bool host = g_cam_host;

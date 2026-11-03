@@ -114,6 +114,8 @@ static void poll_on_host(void *arg) {
         st.rtc_s = sim_rtc_now_s();
         sim_accel_orientation(st.accel_mg);
         st.accel_motions = sim_accel_motions();
+        st.bt_mode = sim_bt_audio_mode();
+        st.bt_powered = sim_bt_audio_powered();
     }
 
     pthread_mutex_lock(&Gm);

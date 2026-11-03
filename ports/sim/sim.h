@@ -212,6 +212,12 @@ void sim_camera_set_source(sim_camera_source_fn fn, void *ctx); /* before sim_ma
 void sim_camera_init(void);               /* task context (boot) */
 bool sim_camera_last(uint8_t *buf, size_t cap, uint32_t *seq); /* the last picture taken, if newer than *seq */
 unsigned sim_camera_captures(void);
+/* BH1098G Bluetooth audio chip on UART1 (dev_bt_audio.c) */
+void sim_bt_audio_init(void);             /* task context (boot) */
+void sim_bt_audio_power(bool on);         /* board P14; any context */
+void sim_bt_audio_report(void);
+int sim_bt_audio_mode(void);              /* 0 = not set since power-up */
+bool sim_bt_audio_powered(void);
 void sim_gpio2_update(void);              /* GPIO2 = expander INT AND accelerometer INT1 (wired); any context */
 /* RTC + accelerometer models (dev_rtc_accel.c) and their HALs (hal_sensors_sim.c) */
 void sim_rtc_accel_init(void);

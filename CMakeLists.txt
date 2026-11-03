@@ -68,6 +68,7 @@ add_library(ink_port_sim STATIC
   drivers/pcf8563/pcf8563.c
   drivers/sc7a20h/sc7a20h.c
   drivers/gc2145/gc2145.c
+  drivers/bh1098g/bh1098g.c
   ports/sim/hal_i2c_sim.c
   ports/sim/dev_epd_power.c
   ports/sim/dev_tca9555.c
@@ -75,6 +76,7 @@ add_library(ink_port_sim STATIC
   ports/sim/dev_rtc_accel.c
   ports/sim/hal_sensors_sim.c
   ports/sim/dev_camera.c
+  ports/sim/dev_bt_audio.c
   ports/sim/osal_sim.c
   ports/sim/metrics.c
   ports/sim/trace.c
