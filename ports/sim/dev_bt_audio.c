@@ -4,7 +4,8 @@
  * commands, AT+GVER=1 answered with "AT+GVER=V1.03". Powered from P14 (shared with the modem and
  * the amplifier): deaf for 700 ms after power-up (upstream kBootSettleUs), and back to no mode after
  * a power cut, so whoever powers it up sets the mode again (upstream applies mode 1 at boot and
- * after P14 comes back). Bytes take 10 bit times at 115200 baud.
+ * after P14 comes back; here the audio port does, hal_audio_sim.c). Bytes take 10 bit times at
+ * 115200 baud.
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -107,23 +108,12 @@ int hal_uart_read_line(hal_uart_t *u, char *buf, size_t cap, uint32_t timeout_ms
     return (int)strlen(buf);
 }
 
-/* At boot, as upstream's MetalioAudio_Init: once the chip is up, conversation mode (mode 1). */
-static void bt_boot_task(void *arg) {
-    (void)arg;
-    uint64_t now = vtk_now();
-    if (B.ready_at > now) osal_task_delay_us((B.ready_at - now) / 1000);
-    hal_uart_t *u = hal_uart_open(BH1098G_UART_PORT, BH1098G_BAUD);
-    if (u && bh1098g_set_mode(u, 1)) sim_warn("board: BH1098G mode 1 not set");
-}
-
-void sim_bt_audio_init(void) { /* task context (boot); P14 is high from the board's power-on levels */
-    sim_bt_audio_power(true);
-    osal_task_cfg_t c = {.name = "bt_audio", .fn = bt_boot_task, .stack_bytes = 3072, .priority = 4, .core = -1,
-                         .flags = OSAL_TASK_STACK_EXTERNAL};
-    if (osal_task_create(&c, NULL) != OSAL_OK) sim_warn("board: cannot start the BH1098G setup");
-}
+/* P14 is high from the board's power-on levels; the audio port sets the mode (hal_audio_sim.c). */
+void sim_bt_audio_init(void) { sim_bt_audio_power(true); } /* task context (boot) */
 
 int sim_bt_audio_mode(void) { return B.mode; }
+/* the chip clocks the I2S (the ESP is the slave) once powered, booted and given a mode */
+bool sim_bt_audio_clock(void) { return B.powered && now_ns() >= B.ready_at && B.mode != 0; }
 bool sim_bt_audio_powered(void) { return B.powered; }
 
 void sim_bt_audio_report(void) {

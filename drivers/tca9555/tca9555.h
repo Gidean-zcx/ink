@@ -30,6 +30,9 @@ hal_i2c_status_t tca9555_init(tca9555_t *t, hal_i2c_dev_t *dev, const uint8_t ou
 /** Change the `mask` bits of port 0 or 1 to `value` and write that output register. */
 hal_i2c_status_t tca9555_set(tca9555_t *t, int port, uint8_t mask, uint8_t value);
 
+/** Set which pins of port 0 or 1 are inputs (1) or outputs (0). */
+hal_i2c_status_t tca9555_set_dir(tca9555_t *t, int port, uint8_t dir);
+
 /** Read the pin levels of port 0 or 1. */
 hal_i2c_status_t tca9555_read(tca9555_t *t, int port, uint8_t *levels);
 

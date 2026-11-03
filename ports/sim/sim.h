@@ -207,6 +207,9 @@ bool sim_board_motor_on(void);
 bool sim_board_amp_on(void);
 bool sim_board_shared_reset_held(void);   /* P12 low: touch controller and modem in reset */
 bool sim_board_cam_power(void);           /* P05: camera / screen power */
+bool sim_board_shared_power(void);        /* P14: 4G + Bluetooth audio + amplifier supply */
+uint8_t sim_tca_config(int port);         /* the expander's direction register (1 = input) */
+uint8_t sim_tca_levels(int port);         /* the levels on its pins */
 /* GC2145 camera (dev_camera.c). The window may give it pictures (RGB565, high byte first). */
 typedef bool (*sim_camera_source_fn)(uint8_t *rgb565be, int w, int h, void *ctx);
 void sim_camera_set_source(sim_camera_source_fn fn, void *ctx); /* before sim_main */
@@ -214,18 +217,23 @@ void sim_camera_init(void);               /* task context (boot) */
 void sim_camera_power_lost(void);         /* board: P05 or P12 fell */
 bool sim_camera_last(uint8_t *buf, size_t cap, uint32_t *seq); /* the last picture taken, if newer than *seq */
 unsigned sim_camera_captures(void);
+bool sim_camera_busy(void);               /* a capture is in progress */
 /* BH1098G Bluetooth audio chip on UART1 (dev_bt_audio.c) */
 void sim_bt_audio_init(void);             /* task context (boot) */
 void sim_bt_audio_power(bool on);         /* board P14; any context */
 void sim_bt_audio_report(void);
 int sim_bt_audio_mode(void);              /* 0 = not set since power-up */
+bool sim_bt_audio_clock(void);            /* it drives the I2S clocks (powered, booted, a mode set) */
 bool sim_bt_audio_powered(void);
 void sim_gpio2_update(void);              /* GPIO2 = expander INT AND accelerometer INT1 (wired); any context */
+bool sim_gpio2_low(void);
 /* RTC + accelerometer models (dev_rtc_accel.c) and their HALs (hal_sensors_sim.c) */
 void sim_rtc_accel_init(void);
 void sim_rtc_accel_report(void);
 void sim_sensors_init(void);              /* task context (boot) */
 void sim_sensors_service_gpio2(void);     /* task context: read the accelerometer's latch on GPIO2 */
+void sim_sensors_sleep(void);             /* light sleep: accelerometer quiet, INT1 released; task context */
+void sim_sensors_resume(void);            /* after the wake: set up again; task context */
 void sim_rtc_lose_time(void);             /* ISR (script) */
 int64_t sim_rtc_now_s(void);
 unsigned sim_rtc_alarms(void);
@@ -244,7 +252,12 @@ bool sim_power_sleeping(void);
 bool sim_power_waking(void);  /* asleep, but a wake source already fired */
 void sim_power_input_lost(void);
 void sim_input_set_power_state(hal_power_state_t s);
-bool sim_power_wake(uint32_t cause); /* ISR: a wake source fired; true if it woke the chip */
+bool sim_power_wake(uint32_t cause); /* a direct wake line fired (ISR or locked); true if it woke the chip */
+void sim_power_gpio2_low(void);      /* GPIO2 is low (ISR or locked): wakes the chip if the sleep armed it */
+/* the port's light-sleep sequence (hal_power_sleep) through the other HALs; task context */
+void sim_display_park(void);         /* rails down, TPS65185 to SLEEP */
+void sim_input_sleep_begin(void);    /* stop reading the expander's keys */
+void sim_input_sleep_end(hal_key_t woke_by, uint64_t t_wake_ns); /* key baseline; report the wake key */
 hal_power_state_t sim_power_state(void);
 bool sim_audio_busy(void);
 void sim_audio_init(void);            /* task context (boot) */

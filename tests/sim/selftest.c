@@ -638,6 +638,131 @@ static void cam_cut_task(void *arg) {
 /* INK_SELFTEST_BOARD=1: the Plus board's IO expander wiring (config.h @690a023) through our board
  * driver: the motor on P03, the shared touch + 4G reset on P12 and the shared supply on P14 acting
  * on the modem, then the official power-off pulse train on P13, which ends the run. */
+/* Light sleep on the board: what each part is in while the chip sleeps, read from an event (every task
+ * is suspended then); kept apart from the current figures, which are estimates. */
+static struct {
+    bool sampled;
+    uint8_t cfg0, cfg1, pmic_pins;
+    bool cam, p14, bt, modem, light;
+    unsigned accel_moves;
+} SLP;
+static int g_power_presses, g_power_releases;
+
+static void board_sink(const hal_input_event_t *e, void *ctx) {
+    (void)ctx;
+    if (e->type == HAL_IN_KEY && e->key.key == HAL_KEY_POWER) {
+        if (e->key.pressed) g_power_presses++;
+        else g_power_releases++;
+    }
+}
+
+static void sample_asleep(void *arg) { /* ISR */
+    (void)arg;
+    sim_power_gui_t g;
+    sim_power_gui_state(&g);
+    SLP.sampled = sim_power_sleeping();
+    SLP.cfg0 = sim_tca_config(0);
+    SLP.cfg1 = sim_tca_config(1);
+    SLP.pmic_pins = sim_tca_levels(0) & 0x07;
+    SLP.cam = sim_board_cam_power();
+    SLP.p14 = sim_board_shared_power();
+    SLP.bt = sim_bt_audio_powered();
+    SLP.modem = sim_net_modem_registered();
+    SLP.light = g.light_cold || g.light_warm;
+    unsigned before = sim_accel_motions();
+    sim_accel_shake(); /* the accelerometer is quiet: no movement detected, nothing on GPIO2 */
+    SLP.accel_moves = sim_accel_motions() - before;
+    sim_input_key(HAL_KEY_VOL_UP, true); /* not a wake input while asleep: lost */
+}
+
+static void vol_up_release(void *arg) { /* ISR */
+    (void)arg;
+    sim_input_key(HAL_KEY_VOL_UP, false);
+}
+
+static void power_press(void *arg) { /* ISR */
+    sim_input_key(HAL_KEY_POWER, arg != NULL);
+}
+
+static void sleep_checks(void) {
+    hal_input_set_sink(board_sink, NULL);
+    hal_sleep_cfg_t sc = {.max_us = 1000000, .wake_mask = HAL_WAKE_POWER_KEY | HAL_WAKE_RTC};
+    metalio_board_set(0, MB_P0_MOTOR, MB_P0_MOTOR);
+    CHECK(hal_power_sleep(&sc) == 0, "a sleep with the motor still on is refused");
+    metalio_board_set(0, MB_P0_MOTOR, 0);
+
+    /* without answerable standby: P14 goes, and the modem and the Bluetooth chip with it */
+    hal_light_set(400, 0);
+    vtk_lock();
+    vtk_event_after(SIM_MS(600), sample_asleep, NULL);
+    vtk_event_after(SIM_MS(700), vol_up_release, NULL);
+    vtk_unlock();
+    uint64_t t0 = osal_now_us();
+    uint32_t cause = hal_power_sleep(&sc);
+    CHECK(cause == HAL_WAKE_TIMER && osal_now_us() - t0 >= 1000000, "no armed input: the slice timer ends the sleep (cause %u)", (unsigned)cause);
+    CHECK(SLP.sampled && SLP.cfg0 == 0x00 && SLP.cfg1 == (MB_P1_POWER_KEY | MB_P1_RTC_INT),
+          "asleep the expander pins are outputs but the wake inputs P17 and P16 (cfg %02x %02x)", SLP.cfg0, SLP.cfg1);
+    CHECK(SLP.pmic_pins == 0 && !SLP.cam && !SLP.p14 && !SLP.bt && !SLP.modem,
+          "asleep the PMIC pins are low, P05 and P14 are off, the modem and the Bluetooth chip unpowered");
+    CHECK(!SLP.light && SLP.accel_moves == 0, "asleep the front light is off and the accelerometer detects nothing");
+    CHECK(sim_tca_config(0) == 0xC0 && sim_tca_config(1) == 0xE3 && sim_board_cam_power() && sim_board_shared_power(),
+          "after the wake the directions are as at boot and P05 and P14 are on again");
+    int ax = 0, ay = 0, az = 0;
+    CHECK(hal_accel_read(&ax, &ay, &az) && ay == 0 && ax == 1000, "the accelerometer is set up again (%d %d %d)", ax, ay, az);
+    CHECK(g_power_presses == 0, "the key pressed while asleep was not reported");
+    static int16_t tone[4800];
+    CHECK(hal_audio_play_start() == 0 && sim_bt_audio_mode() == 1, "before the next audio the port sets the Bluetooth chip's mode again");
+    CHECK(hal_audio_play_write(tone, 4800, 1000000) == 4800, "and the speaker queue moves");
+    hal_audio_play_stop(true);
+    osal_task_delay_us(4000000); /* the modem boots and registers again */
+
+    /* answerable standby: P14 stays; a POWER press wakes the chip through P17, INT and GPIO2 */
+    sc.keep_modem = true;
+    vtk_lock();
+    vtk_event_after(SIM_MS(400), power_press, (void *)1);
+    vtk_event_after(SIM_MS(450), power_press, NULL);
+    vtk_unlock();
+    g_power_presses = g_power_releases = 0;
+    t0 = osal_now_us();
+    cause = hal_power_sleep(&sc);
+    CHECK(cause == HAL_WAKE_POWER_KEY && osal_now_us() - t0 < 900000, "a short POWER press wakes the chip (cause %u)", (unsigned)cause);
+    osal_task_delay_us(100000);
+    CHECK(g_power_presses == 1 && g_power_releases == 1, "the wake key is reported once, pressed and released (%d %d)", g_power_presses, g_power_releases);
+    CHECK(sim_net_modem_registered(), "the modem stayed registered");
+
+    /* POWER held when the sleep starts: the armed input is already low, the chip wakes at once */
+    vtk_lock();
+    sim_input_key(HAL_KEY_POWER, true);
+    vtk_unlock();
+    osal_task_delay_us(100000);
+    g_power_presses = g_power_releases = 0;
+    t0 = osal_now_us();
+    cause = hal_power_sleep(&sc);
+    CHECK(cause == HAL_WAKE_POWER_KEY && osal_now_us() - t0 < 600000, "POWER held into the sleep wakes it at once (cause %u)", (unsigned)cause);
+    vtk_lock();
+    sim_input_key(HAL_KEY_POWER, false);
+    vtk_unlock();
+    osal_task_delay_us(100000);
+    CHECK(g_power_presses == 0 && g_power_releases == 1, "its press was reported before the sleep and not again, the release after (%d %d)",
+          g_power_presses, g_power_releases);
+
+    /* P16 held low by something else (the factory log reads it so on the board in hand): it cannot
+     * signal, so the sleep does not arm it and the timer ends the slice instead of an endless wake */
+    vtk_lock();
+    sim_tca_input(1, MB_P1_RTC_INT, 0);
+    vtk_event_after(SIM_MS(600), sample_asleep, NULL);
+    vtk_event_after(SIM_MS(700), vol_up_release, NULL);
+    vtk_unlock();
+    SLP.sampled = false;
+    cause = hal_power_sleep(&sc);
+    CHECK(cause == HAL_WAKE_TIMER && SLP.sampled && SLP.cfg1 == MB_P1_POWER_KEY,
+          "with P16 low the RTC is not armed and the slice timer ends the sleep (cause %u, cfg %02x)", (unsigned)cause, SLP.cfg1);
+    vtk_lock();
+    sim_tca_input(1, MB_P1_RTC_INT, MB_P1_RTC_INT);
+    vtk_unlock();
+    hal_input_set_sink(NULL, NULL);
+}
+
 static void board_task(void *arg) {
     (void)arg;
     CHECK(metalio_board_ready(), "the board's expander is set up at boot");
@@ -657,7 +782,7 @@ static void board_task(void *arg) {
     const int64_t t_set = 1798761598; /* 2026-12-31 23:59:58 UTC */
     CHECK(hal_rtc_set(t_set) && hal_rtc_get(&now_s) && now_s >= t_set && now_s <= t_set + 1, "the RTC takes a new time (%lld)", (long long)now_s);
     CHECK(hal_rtc_set_alarm(t_set + 2), "an alarm for the next minute is set");
-    hal_sleep_cfg_t sc = {.max_us = 10000000, .wake_mask = HAL_WAKE_RTC};
+    hal_sleep_cfg_t sc = {.max_us = 10000000, .wake_mask = HAL_WAKE_RTC, .keep_modem = true};
     uint32_t cause = hal_power_sleep(&sc);
     CHECK(cause == HAL_WAKE_RTC && sim_rtc_alarms() == 1, "the RTC alarm wakes the chip from light sleep (cause %u)", (unsigned)cause);
     CHECK(metalio_board_read(1, &p1) == HAL_I2C_OK && !(p1 & MB_P1_RTC_INT), "the alarm holds TCA9555 P16 low");
@@ -724,11 +849,19 @@ static void board_task(void *arg) {
     CHECK(nt26_registered(&reg) == NT26_OK && reg && lte_up(), "after P12 goes high the modem boots and registers");
     metalio_board_set(1, MB_P1_SHARED_PWR, 0);
     CHECK(hal_modem_at("AT", resp, sizeof resp, 500) == HAL_AT_TIMEOUT && !lte_up(), "P14 off powers the modem down");
+    /* the BH1098G clocks the I2S; without it (P14 off) the speaker queue does not move */
+    static int16_t tone[4800];
+    CHECK(hal_audio_play_start() == 0, "speaker output starts without the Bluetooth chip's clock");
+    int took = hal_audio_play_write(tone, 4800, 300000);
+    CHECK(took < 4800, "no clock: the queue fills and the writer times out (%d of 4800 samples taken)", took);
+    hal_audio_play_stop(true); /* must not wait forever */
     metalio_board_set(1, MB_P1_SHARED_PWR, MB_P1_SHARED_PWR);
     CHECK(sim_bt_audio_mode() == 0, "the P14 cycle also reset the Bluetooth audio chip (no mode)");
     osal_task_delay_us(4000000);
     CHECK(nt26_registered(&reg) == NT26_OK && reg, "P14 back on: the modem registers again");
-    CHECK(bt && bh1098g_set_mode(bt, 1) == 0 && sim_bt_audio_mode() == 1, "conversation mode set again after the power cycle");
+    CHECK(hal_audio_play_start() == 0 && sim_bt_audio_mode() == 1, "the audio port sets conversation mode again after the power cycle");
+    hal_audio_play_stop(false);
+    sleep_checks();
     ink_probe_mark("board-shutdown");
     hal_power_shutdown(); /* 15 pulses on P13: the run ends at the last one */
     CHECK(0, "hal_power_shutdown returned while the device should be off");
@@ -778,7 +911,7 @@ static void age_task(void *arg) {
 
 void ink_main(void) {
     if (getenv("INK_SELFTEST_BOARD")) {
-        osal_task_cfg_t cfg = {.name = "board", .fn = board_task, .stack_bytes = 4096, .priority = OSAL_PRIO_NORMAL, .core = -1};
+        osal_task_cfg_t cfg = {.name = "board", .fn = board_task, .stack_bytes = 6144, .priority = OSAL_PRIO_NORMAL, .core = -1};
         osal_task_create(&cfg, NULL);
         return;
     }

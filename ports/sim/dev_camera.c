@@ -119,7 +119,7 @@ bool hal_camera_info(hal_camera_info_t *out) {
     return true;
 }
 
-int hal_camera_capture(uint8_t *buf, size_t cap, uint32_t timeout_ms) {
+static int capture(uint8_t *buf, size_t cap, uint32_t timeout_ms) {
     uint64_t deadline = osal_now_us() + (uint64_t)timeout_ms * 1000u; /* covers the whole call */
     if (!g_cam || !buf || cap < GC2145_FRAME_BYTES || !pools_is_external(buf)) return -1; /* DMA writes PSRAM */
     uint16_t pid = 0;
@@ -144,6 +144,17 @@ int hal_camera_capture(uint8_t *buf, size_t cap, uint32_t timeout_ms) {
     sim_metric_add("camera.captures", 1);
     return GC2145_FRAME_BYTES;
 }
+
+static int g_capturing;
+
+int hal_camera_capture(uint8_t *buf, size_t cap, uint32_t timeout_ms) {
+    __atomic_add_fetch(&g_capturing, 1, __ATOMIC_SEQ_CST);
+    int r = capture(buf, cap, timeout_ms);
+    __atomic_sub_fetch(&g_capturing, 1, __ATOMIC_SEQ_CST);
+    return r;
+}
+
+bool sim_camera_busy(void) { return __atomic_load_n(&g_capturing, __ATOMIC_SEQ_CST) > 0; } /* the sleep must wait */
 
 void sim_camera_init(void) { /* task context (boot) */
     if (!sim_board_present()) return;

@@ -20,7 +20,6 @@
 
 #include "board/metalio_board.h"
 #include "ink/hal_i2c.h"
-#include "ink/hal_power.h"
 #include "pcf8563/pcf8563.h"
 #include "sc7a20h/sc7a20h.h"
 #include "sim.h"
@@ -68,8 +67,7 @@ static void alarm_cb(void *arg) { /* ISR: the alarm minute came */
     R.alarm_ev = 0;
     R.reg[0x01] |= 0x08; /* AF */
     R.alarms++;
-    rtc_int();
-    if (R.reg[0x01] & 0x02) sim_power_wake(HAL_WAKE_RTC);
+    rtc_int(); /* INT -> P16 -> the expander's INT -> GPIO2: a wake only if the sleep armed P16 */
 }
 
 static void schedule_alarm(void) { /* ISR or locked */

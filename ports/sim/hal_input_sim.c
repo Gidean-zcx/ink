@@ -20,9 +20,12 @@
  *
  * Power: after touch_monitor_after_ms untouched the controller scans in its
  * slow monitor mode: the first touch (or cover key) waits up to one monitor
- * period longer. While the chip sleeps, touches, cover keys and keys that
- * are not armed wake sources are lost; an armed key wakes it and is read
- * after the wake. Background bus polling slows down when the system is idle.
+ * period longer. While the chip sleeps, touches and cover keys are lost; on the
+ * Plus a key only changes its expander pin, and the chip wakes when that pin
+ * is an armed input (P17 POWER: the expander's INT pulls GPIO2 low); the key
+ * that woke it is reported after the wake, the rest is lost. Without the
+ * board model an armed key wakes the chip directly. Background bus polling
+ * slows down when the system is idle.
  */
 #include <stdio.h>
 #include <string.h>
@@ -71,6 +74,8 @@ static struct {
     uint64_t last_touch_activity;
     hal_key_t dropped_key; /* press lost while asleep: drop its release too */
     uint32_t bg_poll_ms;
+    osal_mutex_t *sample_lock; /* expander sampling vs the sleep sequence (upstream g_sample_mu) */
+    bool sampling_off;         /* the sleep sequence masked the expander: no key reads */
 } IN;
 
 void sim_power_input_lost(void);
@@ -143,10 +148,12 @@ void sim_i2c_hold(const char *who, uint64_t ns) { bus_run(who, ns); }
 /* GPIO2 = the expander's INT and the accelerometer's INT1, wired together (low = asserted). A
  * falling edge wakes the driver task, which services both. ISR or locked task context. */
 static bool g_gpio2_low;
+bool sim_gpio2_low(void) { return g_gpio2_low; }
 void sim_gpio2_update(void) {
     bool low = sim_tca_int_low() || sim_accel_int_low();
     bool fell = low && !g_gpio2_low;
     g_gpio2_low = low;
+    if (low) sim_power_gpio2_low(); /* EXT1 wakes on the level when armed */
     if (!fell) return;
     IN.gpio2_fell = vtk_in_isr() ? vtk_isr_now() : vtk_now();
     IN.exp_irq = true;
@@ -224,6 +231,15 @@ void sim_input_key(hal_key_t key, bool pressed) {
         return;
     }
     sim_trace_instant("input", pressed ? "key-down" : "key-up", vtk_isr_now(), NULL);
+    if (sim_power_sleeping() && g_profile.key_source[key] == 1 && sim_board_present()) {
+        /* asleep, the Plus: the key moves its pin; whether that wakes the chip is the expander's
+         * direction and the sleep's wake configuration (P17 armed -> INT -> GPIO2) */
+        uint8_t bit = key == HAL_KEY_POWER ? MB_P1_POWER_KEY : key == HAL_KEY_VOL_UP ? MB_P1_VOL_UP : MB_P1_VOL_DOWN;
+        bool woke = sim_power_waking();
+        sim_tca_input(1, bit, pressed ? 0 : bit);
+        if (pressed && !woke && !sim_power_waking()) sim_power_input_lost();
+        return;
+    }
     if (sim_power_sleeping()) {
         /* asleep: an armed wake key wakes the chip and is read afterwards; anything else is lost */
         uint32_t src = key == HAL_KEY_POWER ? HAL_WAKE_POWER_KEY : key == HAL_KEY_AI ? HAL_WAKE_AI_KEY : 0;
@@ -498,6 +514,7 @@ static void poll_touch_once(void) {
  * the panel PMIC's PWR_GOOD on P07 raises it with every power cycle), and the accelerometer's latch.
  * Key events come from the levels read, confirmed by a second read after the debounce time; a
  * failed read delivers nothing and is retried. Events carry the time of the edge. */
+
 static uint8_t g_keys_last = MB_P1_KEYS; /* debounced key levels (a bit high = released) */
 static uint8_t g_keys_first;             /* levels at the read that started a debounce */
 static bool g_keys_pending;
@@ -517,7 +534,69 @@ static void deliver_key_changes(uint8_t now) {
     g_keys_last = now;
 }
 
+static void service_expander_locked(bool edge, bool confirm);
+
 static void service_expander(bool edge, bool confirm) {
+    if (!IN.sample_lock) {
+        service_expander_locked(edge, confirm);
+        return;
+    }
+    osal_mutex_lock(IN.sample_lock, OSAL_WAIT_FOREVER);
+    if (!IN.sampling_off) service_expander_locked(edge, confirm);
+    osal_mutex_unlock(IN.sample_lock);
+}
+
+/* Light sleep (the port's sleep sequence, upstream MetalioKeys_MaskForSleep / ResumeAfterSleep):
+ * stop reading the keys before the expander is masked, so driving the key pins does not look like
+ * presses. After the wake: the key that woke the chip is reported pressed at t_wake_ns unless it
+ * already was, then whatever differs between what was reported and the levels now (a key released
+ * meanwhile, one held now). Presses and releases that came and went while asleep are lost. Task
+ * context. */
+void sim_input_sleep_begin(void) {
+    if (!IN.sample_lock) return;
+    osal_mutex_lock(IN.sample_lock, OSAL_WAIT_FOREVER);
+    IN.sampling_off = true;
+    osal_mutex_unlock(IN.sample_lock);
+}
+
+static void queue_key(hal_key_t key, bool pressed, uint64_t t_ns) { /* locked */
+    if (IN.kn >= KEY_FIFO) {
+        sim_metric_add("input.key_overflow", 1);
+        return;
+    }
+    hal_input_event_t *e = &IN.keys[(IN.kh + IN.kn++) % KEY_FIFO];
+    memset(e, 0, sizeof *e);
+    e->type = HAL_IN_KEY;
+    e->t_us = t_ns / 1000;
+    e->key.key = key;
+    e->key.pressed = pressed;
+}
+
+void sim_input_sleep_end(hal_key_t woke_by, uint64_t t_wake_ns) {
+    static const struct { uint8_t bit; hal_key_t key; } K[] = {
+        {MB_P1_POWER_KEY, HAL_KEY_POWER}, {MB_P1_VOL_UP, HAL_KEY_VOL_UP}, {MB_P1_VOL_DOWN, HAL_KEY_VOL_DOWN}};
+    if (!IN.sample_lock) return;
+    osal_mutex_lock(IN.sample_lock, OSAL_WAIT_FOREVER);
+    uint8_t p1 = 0;
+    bool ok = metalio_board_read(1, &p1) == HAL_I2C_OK;
+    vtk_lock();
+    IN.exp_irq = IN.exp_confirm = false; /* edges while masked or asleep: covered below */
+    if (woke_by == HAL_KEY_POWER && (g_keys_last & MB_P1_POWER_KEY)) {
+        queue_key(HAL_KEY_POWER, true, t_wake_ns);
+        g_keys_last &= (uint8_t)~MB_P1_POWER_KEY;
+    }
+    uint8_t now = ok ? (uint8_t)(p1 & MB_P1_KEYS) : g_keys_last; /* a failed read: the next INT tells */
+    for (unsigned i = 0; i < sizeof K / sizeof K[0]; i++)
+        if ((now ^ g_keys_last) & K[i].bit) queue_key(K[i].key, !(now & K[i].bit), vtk_now());
+    g_keys_last = now;
+    g_keys_pending = false;
+    IN.sampling_off = false;
+    vtk_wake_one_locked(&IN.wq);
+    vtk_unlock();
+    osal_mutex_unlock(IN.sample_lock);
+}
+
+static void service_expander_locked(bool edge, bool confirm) {
     uint8_t p0, p1;
     if (!metalio_board_ready()) { /* no register model: timing only */
         if (edge) {
@@ -635,6 +714,7 @@ void sim_input_init(void) {
             g_ft = NULL;
         }
     }
+    if (sim_board_present() && !(IN.sample_lock = osal_mutex_create())) osal_panic("input driver init failed: no memory");
     osal_task_cfg_t cfg = {.name = "input", .fn = input_task, .stack_bytes = INPUT_STACK, .priority = INPUT_PRIO, .core = -1};
     if (osal_task_create(&cfg, &IN.task) != OSAL_OK) osal_panic("input driver init failed");
     if (g_profile.i2c_background_poll_ms) {

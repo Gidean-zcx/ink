@@ -421,6 +421,9 @@ static void urc_push(const char *line) { /* ISR or locked */
     MS.urc_n++;
     if (vtk_in_isr()) vtk_isr_wake_one(&MS.urc_wq);
     else vtk_wake_one_locked(&MS.urc_wq);
+    /* the module signals data for the host on SRDY (GPIO3), a wake line when the sleep armed it
+     * (ASSUMPTION: the EC718PM raises SRDY for unsolicited lines; upstream does not arm it) */
+    sim_power_wake(HAL_WAKE_MODEM);
 }
 
 int hal_modem_urc(char *buf, size_t cap, uint32_t timeout_ms) {

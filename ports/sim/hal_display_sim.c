@@ -418,6 +418,7 @@ static void feeder_task(void *arg) {
  * power_up_us stands in for it. */
 static epd_power_t g_epd;
 static bool g_pmic_warned;
+static osal_mutex_t *g_pwr_lock; /* the display task and the sleep sequence both run the PMIC */
 
 static void gate_output(void *ctx, bool on) {
     (void)ctx;
@@ -447,7 +448,7 @@ static void check_panel_power(void) {
 /* Rails up for a refresh. False when the board's sequence failed after its retries: the request
  * then fails (ok = false, the panel unchanged) and the system decides what to do (upstream
  * restarts the chip at this point; that policy belongs to the system, not the simulator). */
-static bool power_up(void) {
+static bool power_up_locked(void) {
     if (D.rails_on) return true;
     uint64_t t0 = vtk_now();
     if (g_profile.pmic_tps65185) {
@@ -473,11 +474,11 @@ static bool power_up(void) {
     D.rails_on = true;
     sim_power_consumer("display.rails", true, 0);
     sim_trace_span("display", "power-up", t0, vtk_now(), NULL);
-    return true;
     sim_metric_add("display.power_ups", 1);
+    return true;
 }
 
-static void power_down(void) {
+static void power_down_locked(void) {
     if (!D.rails_on) return;
     uint64_t t0 = vtk_now();
     if (g_profile.pmic_tps65185)
@@ -487,6 +488,32 @@ static void power_down(void) {
     D.rails_on = false;
     sim_power_consumer("display.rails", false, 0);
     sim_trace_span("display", "power-down", t0, vtk_now(), NULL);
+}
+
+static bool power_up(void) {
+    osal_mutex_lock(g_pwr_lock, OSAL_WAIT_FOREVER);
+    bool ok = power_up_locked();
+    osal_mutex_unlock(g_pwr_lock);
+    return ok;
+}
+
+static void power_down(void) {
+    osal_mutex_lock(g_pwr_lock, OSAL_WAIT_FOREVER);
+    power_down_locked();
+    osal_mutex_unlock(g_pwr_lock);
+}
+
+/* Before light sleep (the port's sleep sequence; upstream tps_enter_sleep): rails down if a hold
+ * kept them up, then the PMIC to SLEEP with the datasheet's wait. Task context, nothing pending. */
+void sim_display_park(void) {
+    osal_mutex_lock(g_pwr_lock, OSAL_WAIT_FOREVER);
+    power_down_locked();
+    D.wake_until_ns = 0;
+    if (g_profile.pmic_tps65185) {
+        if (!g_epd.ioexp) board_init();
+        epd_power_sleep(&g_epd);
+    }
+    osal_mutex_unlock(g_pwr_lock);
 }
 
 static void apply_area(const req_t *r, hal_waveform_t wf) {
@@ -1454,7 +1481,8 @@ void sim_display_init(void) {
 tasks:
     vtk_set_stall_hook(display_stall_hook);
     D.q = osal_queue_create(sizeof(req_t), QUEUE_LEN);
-    if (!D.q) osal_panic("display driver init failed: no memory for its request queue");
+    g_pwr_lock = osal_mutex_create();
+    if (!D.q || !g_pwr_lock) osal_panic("display driver init failed: no memory for its request queue and lock");
     osal_task_cfg_t cfg = {.name = "epd", .fn = driver_task, .stack_bytes = DRIVER_STACK, .priority = DRIVER_PRIO, .core = -1};
     if (osal_task_create(&cfg, &D.task) != OSAL_OK) osal_panic("display driver init failed: cannot create its task");
     if (D.info.tech == HAL_PANEL_EPD && g_profile.feeders_cpu) {

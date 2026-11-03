@@ -47,6 +47,33 @@ void metalio_board_unlock(void);
 hal_i2c_status_t metalio_board_set(int port, uint8_t mask, uint8_t value);
 /** Input levels of a port (locked); reading port 1 releases the expander's INT. */
 hal_i2c_status_t metalio_board_read(int port, uint8_t *levels);
+/* Light sleep, in upstream's order (power_hw_light_sleep_once and the board functions it calls,
+ * @690a023): mask -> (GPIO2 idle high) -> arm_wake -> cut_rails -> sleep -> restore_keys -> (20 ms)
+ * -> restore_rails. */
+/** Safe output levels first (the PMIC pins, P06, P07, P13, P15 low; the keys P10, P11, P17 high, their
+ *  idle level; P16 high when it will be a wake input, else low; motor, amplifier, P05, P12 and P14 as
+ *  they are), then every pin an output, then both ports read, so nothing on the expander holds INT
+ *  (upstream ioexp_mask_for_sleep). Stop reading the keys before. */
+hal_i2c_status_t metalio_board_mask_for_sleep(bool rtc_wake);
+/** The wake inputs back as inputs, with INT idle: POWER P17 (upstream enable_power_wake_pin) and,
+ *  when asked, RTC INT P16 (upstream leaves it masked and wakes by timer only). An input that is
+ *  already active (a key held, an alarm pending) raises INT at once, so the sleep ends at once. */
+hal_i2c_status_t metalio_board_arm_wake(bool power_key, bool rtc);
+/** The shared rails off in the official order: P05 (camera/screen) first, then P14 (4G, Bluetooth
+ *  audio, amplifier) unless keep_shared_power. What hangs on them must be idle. */
+hal_i2c_status_t metalio_board_cut_rails(bool keep_shared_power);
+/** After the wake: directions as at boot, P13 low, both ports read (upstream ioexp_restore_keys);
+ *  the levels read come back in p0, p1 (may be NULL). Read the wake inputs before calling this. The
+ *  inputs settle for ~20 ms (upstream waits that long before taking the key baseline). */
+hal_i2c_status_t metalio_board_restore_keys(uint8_t *p0, uint8_t *p1);
+/** The shared rails back in the official order: P14, then P05 (upstream sleep_restore_rails). */
+hal_i2c_status_t metalio_board_restore_rails(void);
+/** The output latch of a port as last written (locked). */
+uint8_t metalio_board_output(int port);
+/** Changes each time P14 comes back on (any context): the modem, the Bluetooth audio chip and the
+ *  amplifier lost their state and boot again; metalio_board_shared_power_since_us says when. */
+unsigned metalio_board_shared_power_epoch(void);
+uint64_t metalio_board_shared_power_since_us(void);
 /** Turn the device off: MB_POWER_PULSES pulses on P13, as upstream after a 3 s POWER press. Does not
  *  return on the device once the power chip reacts. */
 void metalio_power_off(void);

@@ -193,8 +193,8 @@ typedef struct {
     int idle_mhz;               /* CPU clock floor when the system is not active and nothing boosts it */
     double ma_base_awake_idle;  /* base current while awake at idle_mhz */
     double ma_standby_modem;    /* modem registered + shared-rail parts while the chip sleeps ("可接听待机") */
-    uint32_t sleep_enter_us;    /* standby entry: panel PMIC to sleep (upstream 50 + 120 ms), SD park, rails */
-    uint32_t sleep_exit_us;     /* after the chip wakes: rails back, key baseline (upstream sequence) */
+    uint32_t sleep_enter_us;    /* standby entry, the part not modelled (with the board: SD park, display bus hold) */
+    uint32_t sleep_exit_us;     /* after the wake, the part not modelled (with the board: display bus restore) */
     uint32_t sleep_wake_us;     /* chip light-sleep exit (clock/PLL restore) before any task runs */
     uint32_t sd_remount_us;     /* SD card re-mount after a non-timer wake */
 

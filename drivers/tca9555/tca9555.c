@@ -40,6 +40,12 @@ hal_i2c_status_t tca9555_set(tca9555_t *t, int port, uint8_t mask, uint8_t value
     return s;
 }
 
+hal_i2c_status_t tca9555_set_dir(tca9555_t *t, int port, uint8_t dir) {
+    hal_i2c_status_t s = write_reg(t, (uint8_t)(REG_CONFIG0 + port), dir);
+    if (s == HAL_I2C_OK) t->dir[port] = dir;
+    return s;
+}
+
 hal_i2c_status_t tca9555_read(tca9555_t *t, int port, uint8_t *levels) {
     uint8_t reg = (uint8_t)(REG_INPUT0 + port);
     return hal_i2c_write_read(t->dev, &reg, 1, levels, 1);

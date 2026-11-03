@@ -28,6 +28,18 @@ void sim_sensors_service_gpio2(void) { /* task context: GPIO2 fell */
     if (g_accel && sim_accel_int_low() && sc7a20h_motion(g_accel, &moved) == HAL_I2C_OK && moved) g_motions++;
 }
 
+/* Light sleep (the port's sleep sequence, upstream MetalioAccel_ReleaseIntLine): interrupts off and the
+ * latch read, so INT1 cannot hold GPIO2 low; set up again after the wake. Task context. */
+void sim_sensors_sleep(void) {
+    bool moved = false;
+    if (g_accel && (sc7a20h_sleep(g_accel) != HAL_I2C_OK || sc7a20h_motion(g_accel, &moved) != HAL_I2C_OK))
+        sim_metric_add("accel.sleep_errors", 1);
+}
+
+void sim_sensors_resume(void) {
+    if (g_accel && sc7a20h_init(g_accel) != HAL_I2C_OK) sim_metric_add("accel.resume_errors", 1);
+}
+
 bool hal_rtc_get(int64_t *unix_s) {
     bool valid = false;
     return g_rtc && pcf8563_get(g_rtc, unix_s, &valid) == HAL_I2C_OK && valid;

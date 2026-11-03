@@ -295,7 +295,7 @@ set_tests_properties(selftest-sim-slots PROPERTIES ENVIRONMENT "INK_SELFTEST_CEL
 add_test(NAME selftest-board-wiring
   COMMAND sim-selftest --profile ${CMAKE_SOURCE_DIR}/profiles/metalio-plus.json
           --budget ${CMAKE_SOURCE_DIR}/tests/sim/board.budget.json
-          --out ${CMAKE_BINARY_DIR}/test-out/selftest-board --quiet --end 30s --no-random-outages)
+          --out ${CMAKE_BINARY_DIR}/test-out/selftest-board --quiet --end 40s --no-random-outages)
 set_tests_properties(selftest-board-wiring PROPERTIES ENVIRONMENT "INK_SELFTEST_BOARD=1")
 add_test(NAME determinism
   COMMAND ${CMAKE_COMMAND} -DSIM=$<TARGET_FILE:sim-selftest>

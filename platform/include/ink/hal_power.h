@@ -54,10 +54,12 @@ void hal_cpu_boost_release(hal_cpu_boost_t *b);
 /* Wake sources while the chip sleeps. */
 enum {
     HAL_WAKE_TIMER = 1u << 0,
-    HAL_WAKE_POWER_KEY = 1u << 1, /* Plus: TCA9555 P17 -> shared INT -> EXT1 */
+    HAL_WAKE_POWER_KEY = 1u << 1, /* Plus: TCA9555 P17 -> shared INT -> GPIO2 (EXT1) */
     HAL_WAKE_AI_KEY = 1u << 2,    /* Plus: BOOT (GPIO61); upstream does not arm it */
-    HAL_WAKE_RTC = 1u << 3,       /* RTC alarm (reminders) */
-    HAL_WAKE_MODEM = 1u << 4,     /* SMS / call / data from the 4G modem (needs its rail kept up) */
+    HAL_WAKE_RTC = 1u << 3,       /* RTC alarm (reminders); Plus: PCF8563 INT -> P16 -> GPIO2; upstream
+                                     leaves P16 masked */
+    HAL_WAKE_MODEM = 1u << 4,     /* SMS / call / data from the 4G modem (needs its rail kept up); Plus:
+                                     its SRDY line (GPIO3), ASSUMPTION until checked on the module */
 };
 
 typedef struct {
@@ -73,12 +75,17 @@ typedef struct {
 
 /**
  * Light sleep (task context): parks the panel PMIC, the SD card and the bus,
- * cuts the rails that may be cut, sleeps until a wake source or the timer,
- * then restores the hardware. All other tasks are suspended meanwhile and
- * input from sources not in wake_mask is lost. The caller must have
- * quiesced the system (no refresh, flash write, audio or SD access in
- * progress). Returns the HAL_WAKE_* bit that woke it, or 0 if the sleep was
- * refused (something still busy) or cancelled.
+ * quiets the sensors, cuts the rails that may be cut (Plus: P05, and P14
+ * unless keep_modem), sleeps until a wake source or the timer, then restores
+ * the hardware. All other tasks are suspended meanwhile and input from
+ * sources not in wake_mask is lost; the key that woke the chip is reported
+ * by hal_input after the wake (pressed, and released if it already is). The
+ * caller must have quiesced the system: no refresh, flash write, audio,
+ * camera capture or haptic pulse in progress, the amplifier off; otherwise
+ * the sleep is refused. The front light is off afterwards (set it again).
+ * What lost its supply boots again (the modem; the Bluetooth audio chip is
+ * set up again before the next audio). Returns the HAL_WAKE_* bits that woke
+ * it, or 0 if the sleep was refused (something still busy) or cancelled.
  */
 uint32_t hal_power_sleep(const hal_sleep_cfg_t *cfg);
 

@@ -35,8 +35,10 @@ static struct {
     unsigned pulses;     /* P13 rising edges with power-off spacing */
     uint64_t last_pulse;
     unsigned motor_starts, shared_rst_warn, shared_pwr_warn;
-} X = {.out = {0xFF, 0xFF}, .cfg = {0xFF, 0xFF}, .ext = {0x00, 0xB7}, .seen1 = 0xB7}; /* P1 idle levels from
-                                                                                    the factory boot log */
+} X = {.out = {0xFF, 0xFF}, .cfg = {0xFF, 0xFF}, .ext = {0x00, 0xF7}, .seen1 = 0xF7}; /* P1 idle levels: the
+    factory boot log reads 0xB7, with P16 low at every boot while the PCF8563 reports no interrupt enabled
+    or pending (CTRL2 0x00 or 0x40); the V1.4 wiring in config.h (the RTC's INT on P16, idle high) does
+    not explain that (an older board revision? open). Here P16 follows the RTC's INT, as config.h says. */
 
 static uint8_t levels(int port) {
     uint8_t ext = X.ext[port];
@@ -57,6 +59,9 @@ bool sim_board_motor_on(void) { return X.motor; }
 bool sim_board_amp_on(void) { return X.amp; }
 bool sim_board_shared_reset_held(void) { return !(levels(1) & MB_P1_SHARED_RST); }
 bool sim_board_cam_power(void) { return levels(0) & MB_P0_CAM_SCR; }
+bool sim_board_shared_power(void) { return levels(1) & MB_P1_SHARED_PWR; }
+uint8_t sim_tca_config(int port) { return X.cfg[port & 1]; }
+uint8_t sim_tca_levels(int port) { return levels(port & 1); }
 
 void sim_tca_reeval(void) { update_int(); } /* ISR or locked: an input changed on its own (P07) */
 

@@ -44,12 +44,15 @@ void hal_audio_get_info(hal_audio_info_t *out);
 typedef void (*hal_audio_capture_cb)(void *ctx, const int16_t *mic, const int16_t *ref, int samples, int lost,
                                      uint64_t t_us);
 
-/** Start the microphone. Returns 0, or -1 (no microphone / already capturing / out of memory). */
+/** Start the microphone (task context). Returns 0, or -1 (no microphone / already capturing / out of
+ *  memory). The first start after the audio chip lost its supply waits for it to come up (Plus: the
+ *  BH1098G, up to ~1.5 s). */
 int hal_audio_capture_start(hal_audio_capture_cb cb, void *ctx);
 /** Stop the microphone; no callbacks after this returns. */
 void hal_audio_capture_stop(void);
 
-/** Power up the output path (amplifier, I2S). Returns 0 or -1. */
+/** Power up the output path (amplifier, I2S; task context). Returns 0 or -1. May wait for the audio
+ *  chip as hal_audio_capture_start does. */
 int hal_audio_play_start(void);
 /**
  * Queue samples for the speaker. Blocks while the DMA ring is full, up to

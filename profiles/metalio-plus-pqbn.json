@@ -299,13 +299,13 @@
     "frontlight_full_ma": 45,
     "sleep_ma": 1.5,
     "standby_modem_ma": 5.0,
-    "sleep_enter_ms": 200,
-    "sleep_exit_ms": 30,
+    "sleep_enter_ms": 30,
+    "sleep_exit_ms": 10,
     "sleep_wake_us": 2000,
     "sd_remount_ms": 100,
     "_notes": "ALL ESTIMATES (unmeasured): replace with bench measurements (SP-14; standby SP-10). battery_mah 1700: upstream docs/battery-soc-and-charge.md (checked 2026-11-02) uses a 424860-2000 cell that delivered 1870.7 mAh at ~1 A to 3.3 V in their test; x0.9 for ageing and temperature (resources take lower bounds).",
     "_notes_clock": "idle_mhz: port design (provisional): the CPU runs at 160 MHz while the system is idle or locked unless a CPU boost is held (display waveforms, audio codec, TLS handshake); upstream lets the user pick 160/240/320 MHz for AppIdle with 320 as default (power_policy.h). base_awake_idle_ma assumes ~20% less base current at half clock (ESP32-S3-class modem-sleep ratios); unmeasured on the S31.",
-    "_notes_standby": "Standby = explicit light sleep in slices (upstream: <= 60 s, esp_light_sleep_start). sleep_ma: whole board asleep with the shared P1.4 rail cut (chip + PSRAM retention + always-on parts: RTC, fuel gauge, IO expander, regulators). standby_modem_ma: extra while that rail stays up for answerable standby: the 4G module at short paging cycles 3.3-4.1 mA (vendor figure, foundation §7) plus the BH1098 on the same rail (unknown, ~1 mA assumed); SP-10 measures it. sleep_enter_ms 200 = upstream TPS65185 park (50 + 120 ms) + SD park + rails; sleep_exit_ms 30 = rails + key baseline; sd_remount_ms after a key wake only (upstream skips it on timer wakes); sleep_wake_us = chip wake-up (clock/PLL) before any task runs."
+    "_notes_standby": "Standby = explicit light sleep in slices (upstream: <= 60 s, esp_light_sleep_start). sleep_ma: whole board asleep with the shared P1.4 rail cut (chip + PSRAM retention + always-on parts: RTC, fuel gauge, IO expander, regulators). standby_modem_ma: extra while that rail stays up for answerable standby: the 4G module at short paging cycles 3.3-4.1 mA (vendor figure, foundation §7) plus the BH1098 on the same rail (unknown, ~1 mA assumed); SP-10 measures it. sleep_enter_ms 30 (est.) = the part of the entry the drivers do not model, SD park and display bus hold (the TPS65185 park, 50 + 120 ms, the expander masking and the rails are the drivers' own); sleep_exit_ms 10 (est.) = display bus restore (keys with their 20 ms settle, rails and the accelerometer are modelled); sd_remount_ms after a key wake only (upstream skips it on timer wakes); sleep_wake_us = chip wake-up (clock/PLL) before any task runs."
   },
   "_notes_costs": "costs_cycles: ISS Level-2 calibration (tools/iss, docs/research/simulator/iss-calibration.md, 2026-11-02): PESSIMISTIC values = max(raw x 1.3, slow corner) for copies, glyphs, conversion, JSON, inflate, CRC and the new glyph.px/fill.px/set_byte classes. Not measured on the ISS yet (kept as earlier guesses): lvgl.px, lvgl.refr, text.* (the ISS kernels are leaner than our text engine; measure system/text on the ISS next), heap.op (IDF heap wrapper not modelled), littlefs.op, tls.handshake, opus.*. CoreMark anchor 3.43/MHz needs CPI~1.0; fitted 3.083."
 }

@@ -11,10 +11,19 @@
  * S31: tickless idle disabled, light_sleep_enable false).
  *
  * Standby is an explicit light sleep (hal_power_sleep, upstream
- * esp_light_sleep_start in 60 s slices): entry sequence (panel PMIC to sleep,
- * SD park, rails), every other task suspended, only armed wake sources end
- * it (after the chip's wake latency), then the restore sequence. Input from
- * other sources is lost while asleep.
+ * esp_light_sleep_start in 60 s slices). On the Plus the entry and exit run
+ * through our drivers in upstream's order (power_hw_light_sleep_once
+ * @690a023), so the chip models see every step: panel PMIC to SLEEP, the
+ * accelerometer quiet, key reads stopped and the expander masked, GPIO2 idle,
+ * the wake inputs armed (P17; P16 when the RTC may wake), the front light off,
+ * P05 and P14 cut (P14 kept for answerable standby); then every other task
+ * is suspended and only an armed line ends it (after the chip's wake latency):
+ * the timer, GPIO2, the AI key, the modem's SRDY. After it: what woke it is read
+ * from the expander, the keys come back (settle, baseline, the wake key
+ * reported), P14 then P05, the accelerometer set up again. Peripherals still
+ * busy (display, audio, camera, motor, amplifier) refuse the sleep. While
+ * asleep each consumer draws what its hardware state says. Without the board
+ * model a fixed entry and exit time stand in for all of it.
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -56,7 +65,7 @@ static struct {
     uint32_t wake_mask, wake_cause;
     vtk_waitq_t sleep_wq;
     vtk_event_id_t slice_ev;
-    uint64_t sleep_t0, sleep_ns, sleeps, wakes_by[8], lost_inputs;
+    uint64_t sleep_t0, sleep_ns, sleeps, wakes_by[8], lost_inputs, wakes_unexplained, wake_t;
 } PW;
 
 int g_sim_mhz;
@@ -268,7 +277,12 @@ void hal_cpu_boost_release(hal_cpu_boost_t *b) {
     apply_clock();
 }
 
-/* ------------------------------------------------------------ light sleep */
+/* ------------------------------------------------------------ light sleep
+ * The chip's wake logic (upstream: EXT1 ANY_LOW on GPIO2, the timer): what the sleep armed and what
+ * fired. Direct lines are the timer, the AI key (GPIO61) and the modem (SRDY, GPIO3); on the Plus the
+ * POWER key and the RTC both come through GPIO2 (the expander's INT), so which one it was is read from
+ * the expander after the wake. Without the board model POWER is a direct line too. */
+#define WAKE_GPIO2 (1u << 16) /* GPIO2 low: classified after the wake */
 
 bool sim_power_sleeping(void) { return PW.sleeping; }
 bool sim_power_waking(void) { return PW.sleeping && PW.wake_cause != 0; }
@@ -278,69 +292,175 @@ static void wake_cb(void *arg) { /* ISR: the chip is awake: the sleeper continue
     vtk_isr_wake_one(&PW.sleep_wq);
 }
 
-bool sim_power_wake(uint32_t cause) { /* ISR */
-    if (!PW.sleeping || !(PW.wake_mask & cause) || PW.wake_cause) return false;
-    PW.wake_cause = cause;
+static bool start_wake(uint32_t line) { /* ISR or locked */
+    if (!PW.sleeping || !(PW.wake_mask & line) || PW.wake_cause) return false;
+    PW.wake_cause = line;
+    PW.wake_t = now_ns();
     if (PW.slice_ev) vtk_event_cancel(PW.slice_ev);
     PW.slice_ev = 0;
-    vtk_event_at(vtk_isr_now() + SIM_US(g_profile.sleep_wake_us), wake_cb, NULL);
+    vtk_event_at(PW.wake_t + SIM_US(g_profile.sleep_wake_us), wake_cb, NULL);
     return true;
 }
+
+bool sim_power_wake(uint32_t cause) { return start_wake(cause); } /* a direct wake line; ISR or locked */
+void sim_power_gpio2_low(void) { start_wake(WAKE_GPIO2); }       /* EXT1 sees GPIO2 low; ISR or locked */
 
 void sim_power_input_lost(void) { PW.lost_inputs++; }
 
 static void slice_cb(void *arg) { /* ISR: the sleep timer expired */
     (void)arg;
     PW.slice_ev = 0;
-    sim_power_wake(HAL_WAKE_TIMER);
+    start_wake(HAL_WAKE_TIMER);
+}
+
+/* Peripherals that must be idle before the rails go (upstream: no active capture, shared-power
+ * operation or display work); the system quiesces them, the HAL refuses otherwise. */
+static const char *busy_reason(void) {
+    if (hal_display_pending() > 0 || sim_display_playing()) return "display";
+    if (sim_audio_busy()) return "audio";
+    if (sim_camera_busy()) return "camera";
+    if (metalio_board_ready()) {
+        uint8_t p0 = metalio_board_output(0);
+        if (p0 & MB_P0_MOTOR) return "motor";
+        if (p0 & MB_P0_AMP) return "amplifier";
+    }
+    return NULL;
+}
+
+static void refused(const char *metric, const char *why) {
+    char key[64];
+    sim_metric_add(metric, 1);
+    snprintf(key, sizeof key, "%s.%s", metric, why);
+    sim_metric_add(key, 1);
+}
+
+/* The Plus, the board part of the entry in upstream's order (power_hw_light_sleep_once @690a023),
+ * through our drivers: the models see every step. *applied tells the exit what to undo. */
+enum { APPLIED_KEYS = 1, APPLIED_RAILS = 2 };
+
+static const char *board_enter(const hal_sleep_cfg_t *cfg, bool power_key, bool rtc, int *applied) {
+    sim_display_park();                           /* TPS65185 to SLEEP (upstream tps_enter_sleep) */
+    osal_task_delay_us(g_profile.sleep_enter_us); /* SD park and the display bus held low: not modelled */
+    sim_sensors_sleep();                          /* the accelerometer lets go of GPIO2 */
+    sim_input_sleep_begin();                      /* no key reads from here: the pins are driven next */
+    *applied |= APPLIED_KEYS;
+    if (metalio_board_mask_for_sleep(rtc) != HAL_I2C_OK) return "expander";
+    for (int i = 0; sim_gpio2_low(); i++) { /* upstream WaitIntLineHigh: 30 x 20 ms */
+        if (i == 30) return "gpio2_low";
+        osal_task_delay_us(20000);
+    }
+    if (metalio_board_arm_wake(power_key, rtc) != HAL_I2C_OK) return "expander";
+    hal_light_set(0, 0); /* upstream ForceAllLow before the rails go; it stays off after the wake */
+    *applied |= APPLIED_RAILS;
+    if (metalio_board_cut_rails(cfg->keep_modem) != HAL_I2C_OK) return "expander";
+    return NULL;
+}
+
+/* After the wake or an aborted entry, upstream's order: keys (inputs back, settle, baseline), rails
+ * P14 then P05, then the rest. woke_by: the key reported as the cause (HAL_KEY_NONE: none). */
+static void board_exit(int applied, hal_key_t woke_by) {
+    if (applied & APPLIED_KEYS) {
+        if (metalio_board_restore_keys(NULL, NULL) != HAL_I2C_OK) sim_metric_add("power.sleep_restore_errors", 1);
+        osal_task_delay_us(20000); /* upstream: inputs settle before the key baseline */
+        sim_input_sleep_end(woke_by, PW.wake_t);
+    }
+    if ((applied & APPLIED_RAILS) && metalio_board_restore_rails() != HAL_I2C_OK) sim_metric_add("power.sleep_restore_errors", 1);
+    sim_sensors_resume();
+}
+
+/* GPIO2 woke the chip: read the wake inputs before their directions change (upstream latches P17
+ * first). The RTC's INT stays low until its flag is cleared; a POWER press may already be over, and
+ * with the RTC quiet nothing else can pull the line, so that is POWER (upstream: a released short
+ * press keeps its POWER-wake meaning). With POWER masked only P16 can pull the line: RTC. */
+static uint32_t classify_gpio2(bool power_key, bool rtc) {
+    uint8_t p1 = 0xFF;
+    bool ok = metalio_board_read(1, &p1) == HAL_I2C_OK;
+    uint32_t why = 0;
+    if (rtc && ok && !(p1 & MB_P1_RTC_INT)) why |= HAL_WAKE_RTC;
+    if (power_key && (!ok || !(p1 & MB_P1_POWER_KEY) || !why)) why |= HAL_WAKE_POWER_KEY;
+    if (!why) {
+        PW.wakes_unexplained++;
+        why = HAL_WAKE_RTC;
+    }
+    return why;
+}
+
+/* While the chip sleeps, current follows the hardware: the chip's CPU and radio stop (the Wi-Fi
+ * link and the link radio, "wifi" and "modem"), what hangs on a rail that was cut stops, the 4G module
+ * pages at its standby current while P14 stays up ("modem.standby"), anything else left on keeps
+ * drawing. Without the board model every consumer stops, as before. */
+static bool stops_asleep(const char *name, bool board) {
+    if (!board || !strcmp(name, "cpu.base") || !strcmp(name, "wifi") || !strcmp(name, "modem")) return true;
+    if (!strncmp(name, "audio.", 6)) return !sim_board_shared_power(); /* the BH1098G and amplifier on P14 */
+    return false;
+}
+
+/* P16 (the RTC's INT) idles high: only then can it wake the chip. Upstream never arms it; on the board
+ * in hand the factory log reads it low with the RTC idle (see dev_tca9555.c), so check. */
+static bool rtc_line_idle(void) {
+    uint8_t p1 = 0;
+    return metalio_board_read(1, &p1) == HAL_I2C_OK && (p1 & MB_P1_RTC_INT);
 }
 
 uint32_t hal_power_sleep(const hal_sleep_cfg_t *cfg) {
     if (vtk_in_isr() || !vtk_self()) osal_panic("hal_power_sleep must be called from a task");
     if (!cfg) return 0;
-    /* refuse while something is still busy (the system must quiesce first) */
-    if (hal_display_pending() > 0 || sim_display_playing() || sim_audio_busy()) {
-        sim_metric_add("power.sleep_refused", 1);
+    const char *busy = busy_reason();
+    if (busy) { /* the system must quiesce first */
+        refused("power.sleep_busy", busy); /* (power.sleep_refused is the system's count of 0 returns) */
         return 0;
     }
     uint64_t t_enter = vtk_now();
-    osal_task_delay_us(g_profile.sleep_enter_us); /* PMIC to sleep, SD parked, rails cut */
-    /* other tasks ran during the entry sequence: anything they started must finish awake (the
-     * real port checks again with the scheduler suspended, right before esp_light_sleep_start) */
-    if (hal_display_pending() > 0 || sim_display_playing() || sim_audio_busy()) {
-        sim_metric_add("power.sleep_aborted", 1);
+    bool board = metalio_board_ready();
+    uint32_t lines = cfg->wake_mask | (cfg->max_us ? HAL_WAKE_TIMER : 0);
+    if (!cfg->keep_modem) lines &= ~(uint32_t)HAL_WAKE_MODEM;
+    bool power_key = board && (lines & HAL_WAKE_POWER_KEY), rtc = board && (lines & HAL_WAKE_RTC);
+    if (board) lines = (lines & ~(uint32_t)(HAL_WAKE_POWER_KEY | HAL_WAKE_RTC)) | (power_key || rtc ? WAKE_GPIO2 : 0);
+    if (rtc && !rtc_line_idle()) { /* a line that is already low cannot signal: the timer bounds the wait */
+        rtc = false;
+        sim_metric_add("power.rtc_wake_unavailable", 1);
+        if (!power_key) lines &= ~(uint32_t)WAKE_GPIO2;
+    }
+    int applied = 0;
+    const char *why_not = NULL;
+    if (board) why_not = board_enter(cfg, power_key, rtc, &applied);
+    else osal_task_delay_us(g_profile.sleep_enter_us); /* PMIC to sleep, SD parked, rails cut */
+    /* other tasks ran during the entry: anything they started must finish awake (the real port
+     * checks again with the scheduler suspended, right before esp_light_sleep_start) */
+    if (!why_not && (busy = busy_reason())) why_not = busy;
+    if (why_not) {
+        refused("power.sleep_aborted", why_not);
+        if (board) board_exit(applied, HAL_KEY_NONE);
         osal_task_delay_us(g_profile.sleep_exit_us);
         return 0;
     }
     if (cfg->cancel && cfg->cancel(cfg->cancel_ctx)) { /* e.g. unlocked during the entry sequence */
         sim_metric_add("power.sleep_cancelled", 1);
+        if (board) board_exit(applied, HAL_KEY_NONE);
         osal_task_delay_us(g_profile.sleep_exit_us);
         return 0;
     }
-    uint32_t wake_mask = cfg->wake_mask | (cfg->max_us ? HAL_WAKE_TIMER : 0);
-    if (!cfg->keep_modem) wake_mask &= ~(uint32_t)HAL_WAKE_MODEM;
     vtk_lock();
     uint64_t t0 = vtk_now();
     PW.sleeping = true;
     PW.sleep_t0 = t0;
     PW.wake_cause = 0;
-    PW.wake_mask = wake_mask;
+    PW.wake_mask = lines;
     vtk_set_sleeper_locked(vtk_self());
     if (cfg->max_us) PW.slice_ev = vtk_event_at(t0 + cfg->max_us * 1000ull, slice_cb, NULL);
+    if (sim_gpio2_low()) start_wake(WAKE_GPIO2); /* EXT1 is level triggered: already low wakes at once */
     vtk_unlock();
-    /* rails cut: every consumer stops drawing (the modem, the Wi-Fi radio ...) and is restored
-     * after the wake; answerable standby keeps the 4G rail: the module idles at its paging
-     * current plus whatever shares that rail (modem.standby replaces the awake modem current) */
     bool parked[MAX_CONSUMERS] = {false};
     double parked_ma[MAX_CONSUMERS] = {0};
     for (int i = 0; i < PW.n; i++)
-        if (PW.c[i].on) {
+        if (PW.c[i].on && stops_asleep(PW.c[i].name, board)) {
             parked[i] = true;
             parked_ma[i] = PW.c[i].ma;
             sim_power_consumer(PW.c[i].name, false, 0);
         }
     sim_power_consumer("cpu.sleep", true, g_profile.ma_sleep);
-    if (cfg->keep_modem && g_profile.info.has_modem) sim_power_consumer("modem.standby", true, g_profile.ma_standby_modem);
+    bool modem_rail = board ? sim_board_shared_power() : cfg->keep_modem;
+    if (modem_rail && g_profile.info.has_modem) sim_power_consumer("modem.standby", true, g_profile.ma_standby_modem);
     sim_trace_instant("power", "sleep", t0, NULL);
     vtk_lock();
     while (!PW.wake_cause) vtk_block_locked(&PW.sleep_wq, VTK_TIME_INF);
@@ -350,6 +470,7 @@ uint32_t hal_power_sleep(const hal_sleep_cfg_t *cfg) {
     PW.wake_mask = 0;
     vtk_set_sleeper_locked(NULL);
     vtk_unlock();
+    if (cause == WAKE_GPIO2) cause = classify_gpio2(power_key, rtc); /* the scheduler runs again (upstream too) */
     sim_power_consumer("cpu.sleep", false, 0);
     sim_power_consumer("modem.standby", false, 0);
     for (int i = 0; i < PW.n; i++)
@@ -360,7 +481,8 @@ uint32_t hal_power_sleep(const hal_sleep_cfg_t *cfg) {
     for (int i = 0; i < 8; i++)
         if (cause & (1u << i)) PW.wakes_by[i]++;
     sim_trace_span("power", "light sleep", t0, t1, NULL);
-    osal_task_delay_us(g_profile.sleep_exit_us); /* rails back, key baseline */
+    if (board) board_exit(applied, cause & HAL_WAKE_POWER_KEY ? HAL_KEY_POWER : HAL_KEY_NONE);
+    osal_task_delay_us(g_profile.sleep_exit_us); /* the display bus re-initialised */
     if (cause != HAL_WAKE_TIMER) osal_task_delay_us(g_profile.sd_remount_us);
     sim_trace_span("power", "standby enter+exit", t_enter, vtk_now(), NULL);
     return cause;
@@ -464,6 +586,7 @@ void sim_power_report(void) {
             sim_metric_set(key, (double)PW.wakes_by[i]);
         }
     if (PW.lost_inputs) sim_metric_set("power.inputs_lost_asleep", (double)PW.lost_inputs);
+    if (PW.wakes_unexplained) sim_metric_set("power.wakes.unexplained", (double)PW.wakes_unexplained);
 }
 
 /* ------------------------------------------------------------ device */

@@ -22,6 +22,13 @@
  *
  * The DMA rings come out of DMA-capable internal RAM while a direction is
  * open (upstream tears the I2S channel down when the last user releases it).
+ *
+ * The Plus: the BH1098G clocks the I2S only in a mode, and loses it whenever
+ * P14 goes off (light sleep without the modem kept, a reset of that rail).
+ * As upstream (MetalioAudio_Init, then OnPowerOff/OnPowerRestored and the
+ * audio demand), the port sets conversation mode at boot and again before
+ * audio starts when P14 came back since; the amplifier (P04) is enabled only
+ * while P14 supplies it.
  */
 #include <math.h>
 #include <stdint.h>
@@ -31,6 +38,7 @@
 
 #include "ink/hal_audio.h"
 #include "ink/hal_power.h"
+#include "bh1098g/bh1098g.h"
 #include "board/metalio_board.h"
 #include "sim.h"
 
@@ -43,6 +51,9 @@ static struct {
     size_t ring_bytes; /* one direction: N descriptors x chunk frames x slot bytes */
     osal_mutex_t *cb_lock;
     osal_task_t *task;
+    osal_mutex_t *bt_lock;      /* the BH1098G's mode */
+    bool bt_mode_set;
+    unsigned bt_epoch;          /* P14 power cycle the mode was set in */
     /* microphone */
     bool cap_on;
     hal_audio_capture_cb cb;
@@ -68,6 +79,8 @@ static struct {
     void *tx_dma;
     bool sounding, in_gap;      /* the last samples played were not silent; a gap that cut sound is going on */
     uint64_t underruns, underrun_samples, idle_samples, played_samples;
+    uint64_t no_clock_ns;       /* time the I2S had no clock from the BH1098G */
+    unsigned drain_timeouts;
     /* speaker.wav */
     FILE *wav;
     uint64_t wav_samples, wav_end_ns;
@@ -145,10 +158,21 @@ static int16_t mic_sample(uint64_t n) {
     }
 }
 
+/* The ESP is the I2S slave: bit and word clocks come from the BH1098G, which drives them only when it
+ * is powered (P14), booted and set to a mode. Without them no descriptor completes in either
+ * direction: the ring does not move, writers wait, captures stop arriving. */
+static bool i2s_clock(void) { return !sim_board_present() || sim_bt_audio_clock(); }
+
 static void cap_tick(void *arg) { /* ISR: one more descriptor recorded */
     (void)arg;
     A.cap_ev = 0;
     if (!A.cap_on) return;
+    if (!i2s_clock()) { /* no clock: nothing recorded this period */
+        A.cap_t0 += A.period_ns;
+        A.no_clock_ns += A.period_ns;
+        A.cap_ev = vtk_event_at(A.cap_t0 + (A.produced + 1) * A.period_ns, cap_tick, NULL);
+        return;
+    }
     A.produced++;
     if (A.produced - A.consumed > (uint64_t)A.N) { /* ring wrapped: the oldest descriptor is overwritten */
         A.consumed++;
@@ -230,6 +254,12 @@ static void play_tick(void *arg) { /* ISR: the DMA needs the next descriptor */
     uint64_t t = vtk_isr_now();
     A.play_ev = 0;
     if (!A.dma_running) return;
+    if (!i2s_clock()) { /* no clock: the DMA does not advance */
+        A.no_clock_ns += A.period_ns;
+        A.boundary_ns = t + A.period_ns;
+        A.play_ev = vtk_event_at(A.boundary_ns, play_tick, NULL);
+        return;
+    }
     int16_t *s = A.slots + (size_t)A.tail * A.chunk;
     if (A.full > 0) {
         wav_put(s, A.chunk, t);
@@ -264,6 +294,37 @@ static void play_tick(void *arg) { /* ISR: the DMA needs the next descriptor */
 
 /* -------------------------------------------------------------------- API */
 
+/* Conversation mode on the BH1098G unless it still has it from this P14 power cycle: waits for the
+ * chip to boot (BH1098G_BOOT_US after P14 came on) and sends the mode (~0.7 s). Task context. */
+static void ensure_bt_mode(void) {
+    if (!A.bt_lock || !(metalio_board_output(1) & MB_P1_SHARED_PWR)) return; /* unpowered: no clock */
+    osal_mutex_lock(A.bt_lock, OSAL_WAIT_FOREVER);
+    unsigned epoch = metalio_board_shared_power_epoch();
+    if (!A.bt_mode_set || A.bt_epoch != epoch) {
+        uint64_t ready = metalio_board_shared_power_since_us() + BH1098G_BOOT_US, now = osal_now_us();
+        if (ready > now) osal_task_delay_us(ready - now);
+        hal_uart_t *u = hal_uart_open(BH1098G_UART_PORT, BH1098G_BAUD);
+        A.bt_mode_set = u && bh1098g_set_mode(u, 1) == 0;
+        A.bt_epoch = epoch;
+        if (!A.bt_mode_set) sim_warn("audio: BH1098G mode 1 not set");
+        else sim_metric_add("audio.bt_mode_sets", 1);
+    }
+    osal_mutex_unlock(A.bt_lock);
+}
+
+static void bt_boot_task(void *arg) { /* upstream MetalioAudio_Init: mode 1 once the chip is up */
+    (void)arg;
+    ensure_bt_mode();
+}
+
+static void amp(bool on) { /* NS4150 enable, TCA9555 P04: only while P14 supplies it */
+    if (metalio_board_ready()) {
+        if (!on || (metalio_board_output(1) & MB_P1_SHARED_PWR)) metalio_board_set(0, MB_P0_AMP, on ? MB_P0_AMP : 0);
+    } else if (g_profile.flash_stalls_cpu) {
+        sim_i2c_transfer("io-expander", 3);
+    }
+}
+
 static void lazy_init(void) {
     if (A.init) return;
     A.init = true;
@@ -291,6 +352,7 @@ int hal_audio_capture_start(hal_audio_capture_cb cb, void *ctx) {
     osal_mem_tag(prev);
     if (!A.rx_dma) return -1;
     hal_power_request(HAL_PWR_AUDIO_IN, true);
+    ensure_bt_mode();
     A.cb = cb;
     A.ctx = ctx;
     vtk_lock();
@@ -330,8 +392,8 @@ int hal_audio_play_start(void) {
     osal_mem_tag(prev);
     if (!A.tx_dma) return -1;
     hal_power_request(HAL_PWR_AUDIO_OUT, true);
-    if (metalio_board_ready()) metalio_board_set(0, MB_P0_AMP, MB_P0_AMP); /* amplifier enable (TCA9555 P04) */
-    else if (g_profile.flash_stalls_cpu) sim_i2c_transfer("io-expander", 3);
+    ensure_bt_mode();
+    amp(true);
     vtk_lock();
     A.out_on = true;
     A.draining = false;
@@ -390,7 +452,15 @@ void hal_audio_play_stop(bool drain) {
     if (drain && (A.full > 0 || A.partial > 0 || A.dma_running)) {
         A.draining = true;
         maybe_start_dma_locked(vtk_now());
-        while (A.dma_running) vtk_block_locked(&A.play_wq, VTK_TIME_INF);
+        /* bounded: without the BH1098G's clock the queue never drains */
+        uint64_t limit = vtk_now() + (uint64_t)(A.N + 2) * A.period_ns + SIM_MS(200);
+        while (A.dma_running) {
+            uint64_t now = vtk_now();
+            if (now >= limit || !vtk_block_locked(&A.play_wq, limit - now)) {
+                if (A.dma_running) A.drain_timeouts++;
+                break;
+            }
+        }
     }
     if (A.play_ev) vtk_event_cancel(A.play_ev);
     A.play_ev = 0;
@@ -401,8 +471,7 @@ void hal_audio_play_stop(bool drain) {
     vtk_unlock();
     osal_free(A.tx_dma);
     A.tx_dma = NULL;
-    if (metalio_board_ready()) metalio_board_set(0, MB_P0_AMP, 0); /* amplifier off */
-    else if (g_profile.flash_stalls_cpu) sim_i2c_transfer("io-expander", 3);
+    amp(false);
     hal_power_request(HAL_PWR_AUDIO_OUT, false);
 }
 
@@ -420,6 +489,12 @@ void sim_audio_init(void) {
     osal_task_cfg_t cfg = {.name = "audio_in", .fn = audio_task, .stack_bytes = g_profile.audio_task_stack,
                            .priority = g_profile.audio_task_prio, .core = -1, .flags = OSAL_TASK_STACK_EXTERNAL};
     if (!A.cb_lock || osal_task_create(&cfg, &A.task) != OSAL_OK) osal_panic("audio driver init failed");
+    if (metalio_board_ready()) { /* the Plus: the BH1098G on UART1 */
+        A.bt_lock = osal_mutex_create();
+        osal_task_cfg_t bt = {.name = "bt_audio", .fn = bt_boot_task, .stack_bytes = 2048, .priority = 4, .core = -1,
+                              .flags = OSAL_TASK_STACK_EXTERNAL};
+        if (!A.bt_lock || osal_task_create(&bt, NULL) != OSAL_OK) osal_panic("audio driver init failed: BH1098G setup");
+    }
     osal_mem_tag(prev);
 }
 
@@ -434,6 +509,8 @@ void sim_audio_speaker_counters(uint64_t *underruns, double *underrun_ms, double
 }
 
 void sim_audio_report(void) {
+    if (A.no_clock_ns) sim_metric_set("audio.i2s_no_clock_ms", (double)A.no_clock_ns / 1e6);
+    if (A.drain_timeouts) sim_metric_set("audio.speaker.drain_timeouts", A.drain_timeouts);
     sim_metric_set("audio.mic.captured_ms", A.cap_samples * 1000.0 / HAL_AUDIO_RATE);
     sim_metric_set("audio.mic.overruns", (double)A.cap_overruns);
     sim_metric_set("audio.mic.lost_ms", A.cap_lost_samples * 1000.0 / HAL_AUDIO_RATE);
