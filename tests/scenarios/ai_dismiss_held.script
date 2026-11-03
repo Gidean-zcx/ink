@@ -1,0 +1,11 @@
+# Close the AI sheet (HOME) while the AI key is still held (audit AUD2-001): the recording stops at
+# once, nothing more of the turn goes out, the answer neither shows nor plays, and the release
+# afterwards changes nothing. Before the fix the release found the sheet closed and returned early:
+# the microphone stayed on to the end of the run.
+@3s      tap   116dp 160dp        # 阅读
++2500ms  tap   50% 160dp          # 星星邮差
++3s      mic   speech
++0ms     key   ai 4000ms          # hold to talk for 4 s
++1500ms  key   home               # close the sheet 1.5 s into the hold
++12s     snap  after
++1s      end

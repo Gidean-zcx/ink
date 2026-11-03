@@ -8,6 +8,10 @@
  *   Opus frames stream to the hub as binary messages [1][stream][seq] once
  *   the link is online; frames captured before that are buffered (PSRAM).
  * Key up: microphone off; after the last frame `ai.listen.end` follows.
+ * Closing the sheet ends the turn wherever it is: a capture still running
+ *   stops at once (the key may still be held), frames not yet sent are
+ *   dropped, `ai.listen.end` still goes out so the hub finishes the turn,
+ *   and its answer and speech are ignored.
  * Hub -> device: `ai.stt` (what was understood), `ai.delta` (answer text),
  *   binary TTS frames [2][stream][seq] played as a VOICE stream, `ai.tts.end`,
  *   then the reply to `ai.listen`. Errors are shown in place.
@@ -57,6 +61,8 @@ static struct {
     frame_t *buf_head, *buf_tail;
     int buffered, frames_sent;
     bool end_pending;
+    bool drop_frames;   /* the sheet was closed while capturing: the rest of this turn's audio is dropped */
+    bool capturing;     /* UI task: this turn's microphone is on */
     lv_timer_t *flush_timer;
     /* voice downlink (hub task; with `stream`, changed under `lock`) */
     int tts_stream;   /* audio stream playing the current turn's speech (0 none) */
@@ -119,8 +125,26 @@ static void set_status(const char *s) {
     ink_ui_hint_obj(AI.status, INK_REFRESH_FAST);
 }
 
+static void free_buffered(void);
+
+/* Microphone off for this turn (UI task); idempotent. discard: the frames not yet sent and the rest
+ * the encoder still delivers are dropped (the end notification still goes out). */
+static void end_capture(bool discard) {
+    if (!AI.capturing) return;
+    AI.capturing = false;
+    if (discard) {
+        osal_mutex_lock(AI.lock, OSAL_WAIT_FOREVER);
+        free_buffered();
+        AI.drop_frames = true;
+        osal_mutex_unlock(AI.lock);
+        ink_probe_count("ai.capture_cancelled");
+    }
+    ink_audio_capture_end();
+}
+
 bool ink_ai_dismiss(void) {
     if (!AI.open) return false;
+    end_capture(true); /* closing while the key is still held ends the recording too */
     lv_obj_delete(AI.sheet);
     AI.sheet = NULL;
     AI.open = false;
@@ -298,6 +322,11 @@ static void on_frame(void *ctx, const uint8_t *data, size_t len, uint32_t seq) {
     memcpy(f->data + 4, data, len);
     osal_mutex_lock(AI.lock, OSAL_WAIT_FOREVER);
     f->data[1] = AI.stream;
+    if (AI.drop_frames) { /* the sheet was closed: nothing more of this turn goes out */
+        osal_mutex_unlock(AI.lock);
+        osal_free(f);
+        return;
+    }
     if (AI.buffered >= MAX_BUFFERED_FRAMES) {
         osal_mutex_unlock(AI.lock);
         osal_free(f);
@@ -404,8 +433,10 @@ void ink_ai_key(bool pressed, uint64_t t_us) {
             free_buffered();
             AI.frames_sent = 0;
             AI.end_pending = false;
+            AI.drop_frames = false;
             osal_mutex_unlock(AI.lock);
             if (ink_audio_capture_begin(on_frame, NULL) == 0) {
+                AI.capturing = true;
                 AI.req_id = request("ai.listen", true);
                 if (!AI.flush_timer) AI.flush_timer = lv_timer_create(flush_timer_cb, 100, NULL);
                 else lv_timer_resume(AI.flush_timer);
@@ -415,12 +446,13 @@ void ink_ai_key(bool pressed, uint64_t t_us) {
         }
         return;
     }
+    bool was_capturing = AI.capturing;
+    end_capture(false); /* also when the sheet was closed meanwhile (then it already ended) */
     if (!AI.open) return;
     osal_mutex_lock(AI.lock, OSAL_WAIT_FOREVER);
     AI.t_release = t_us; /* the hub task reads it for the first-audio probe */
     osal_mutex_unlock(AI.lock);
-    if (voice_ok() && AI.asking) {
-        ink_audio_capture_end();
+    if (was_capturing || (voice_ok() && AI.asking)) {
         lv_label_set_text(AI.question, "…");
         set_status("正在想…");
         return;

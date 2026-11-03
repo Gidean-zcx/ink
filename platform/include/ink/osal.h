@@ -162,13 +162,22 @@ void osal_sem_delete(osal_sem_t *s);
 osal_err_t osal_sem_take(osal_sem_t *s, int64_t timeout_us);
 void osal_sem_give(osal_sem_t *s);
 
-/* ---------- software timers (callbacks run in the timer service task) ---------- */
+/* ---------- software timers ----------
+ * Callbacks run in the timer service task, one at a time for all timers: keep them short and never
+ * block (every other timer waits). create, start, stop, delete: any task, not an ISR; also from a
+ * timer callback, including the timer's own. */
 typedef struct osal_timer osal_timer_t;
 typedef void (*osal_timer_fn)(void *arg);
 osal_timer_t *osal_timer_create(const char *name, osal_timer_fn fn, void *arg);
+/** Stop, wait until its callback is not running (unless called from the timer task, where it cannot
+ *  be), free. arg may be freed once it returns. */
 void osal_timer_delete(osal_timer_t *t);
-/** period_us = 0 for one-shot. Restarting an active timer re-arms it. */
+/** period_us = 0 for one-shot. Restarting an active timer re-arms it; firings not yet dispatched are
+ *  dropped. */
 osal_err_t osal_timer_start(osal_timer_t *t, uint64_t delay_us, uint64_t period_us);
+/** After it returns the timer does not fire again (a firing not yet dispatched is dropped). A
+ *  callback already running in the timer task may still be finishing: osal_timer_delete waits for
+ *  it. */
 osal_err_t osal_timer_stop(osal_timer_t *t);
 
 /* ---------- misc ---------- */

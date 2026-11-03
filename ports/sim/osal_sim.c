@@ -642,8 +642,9 @@ struct osal_timer {
 
 static struct {
     osal_task_t *task;
-    vtk_waitq_t wq;
+    vtk_waitq_t wq, done_wq;
     osal_timer_t *head, *tail;
+    osal_timer_t *running; /* its callback is running in the timer task */
 } TS;
 
 static void timer_fire(void *arg) { /* ISR context */
@@ -702,9 +703,14 @@ static void timer_task(void *arg) {
             else TS.head = t;
             TS.tail = t;
         }
+        TS.running = t;
         vtk_unlock();
         sim_charge_ns_always(SIM_US(4)); /* esp_timer dispatch overhead */
-        t->fn(t->arg);
+        t->fn(t->arg); /* may delete t: not touched after this */
+        vtk_lock();
+        TS.running = NULL;
+        vtk_wake_all_locked(&TS.done_wq);
+        vtk_unlock();
     }
 }
 
@@ -754,6 +760,11 @@ void osal_timer_delete(osal_timer_t *t) {
     if (!t) return;
     if (vtk_self() && !vtk_in_isr()) {
         osal_timer_stop(t);
+        if (osal_task_self() != TS.task) { /* from the timer task it cannot be running anyway */
+            vtk_lock();
+            while (TS.running == t) vtk_block_locked(&TS.done_wq, VTK_TIME_INF);
+            vtk_unlock();
+        }
     } else {
         if (t->ev) vtk_event_cancel(t->ev);
         unlink_pending(t);

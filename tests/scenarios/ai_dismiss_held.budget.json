@@ -1,0 +1,10 @@
+{
+  "_doc": "HOME closes the AI sheet while the AI key is still held (audit AUD2-001): the capture ends at the close, the turn's answer is dropped.",
+  "ai.presses": {"min": 1, "max": 1},
+  "ai.capture_cancelled": {"min": 1, "max": 1, "why": "closing the sheet must end the running capture"},
+  "audio.mic.captured_ms": {"max": 2000, "why": "the microphone stops at the close (1.5 s into the 4 s hold), not at the release or never"},
+  "ai.release_to_first_audio_heard_ms.count": {"max": 0, "optional": true, "why": "no answer audio after the sheet was closed"},
+  "audio.speaker.played_ms": {"max": 500, "why": "only the listen tone plays"},
+  "panic.count": {"max": 0, "optional": true},
+  "warnings.count": {"max": 0, "optional": true}
+}

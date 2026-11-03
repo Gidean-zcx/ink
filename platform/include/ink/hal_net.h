@@ -61,13 +61,24 @@ hal_at_result_t hal_modem_at_payload(const char *cmd, const char *payload, char 
  *  -1 after timeout_ms. Task context. */
 int hal_modem_urc(char *buf, size_t cap, uint32_t timeout_ms);
 
+/*
+ * WebSocket client (TLS). Threads and lifetime:
+ *  - cb runs in a platform network task, one call at a time per connection, in this order: at most
+ *    one HAL_WS_CONNECTED, then TEXT / BINARY, then at most one HAL_WS_CLOSED. `data` is valid only
+ *    during the call. cb must return soon and must not wait without a bound on the task that frees
+ *    the connection (hal_ws_free waits for cb); it must not call hal_ws_send or hal_ws_free for its
+ *    own connection.
+ *  - hal_ws_open, hal_ws_send, hal_ws_free: any task, not an ISR, not from cb. One task at a time
+ *    per connection for send and free (the owner).
+ *  - After HAL_WS_CLOSED the handle stays valid (send fails) until hal_ws_free.
+ */
 typedef struct hal_ws hal_ws_t;
 
 typedef enum {
     HAL_WS_CONNECTED = 1, /* TLS + WebSocket handshake done */
     HAL_WS_TEXT,          /* one complete text message */
     HAL_WS_BINARY,        /* one complete binary message (audio) */
-    HAL_WS_CLOSED,        /* closed by either side or by link loss; the handle stays valid until hal_ws_free */
+    HAL_WS_CLOSED,        /* closed by the peer, by link loss or a failed connect; not after hal_ws_free */
 } hal_ws_event_t;
 
 typedef void (*hal_ws_cb)(void *ctx, hal_ws_event_t ev, const uint8_t *data, size_t len);
@@ -79,7 +90,8 @@ hal_ws_t *hal_ws_open(const char *url, hal_ws_cb cb, void *ctx);
  * the send buffer is full. Returns 0, or -1 if not connected / timed out.
  */
 int hal_ws_send(hal_ws_t *ws, bool binary, const void *data, size_t len, int64_t timeout_us);
-/** Close (no more callbacks after HAL_WS_CLOSED) and release. */
+/** Close if still open (no HAL_WS_CLOSED for that), wait until no callback is running and none can
+ *  start, release the handle. ctx may be freed once it returns. May block for a network round trip. */
 void hal_ws_free(hal_ws_t *ws);
 
 #ifdef __cplusplus

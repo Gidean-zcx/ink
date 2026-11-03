@@ -43,7 +43,7 @@ struct hal_ws {
     sim_msg_t *tx_head, *tx_tail;
     size_t tx_bytes;
     uint64_t gen;
-    vtk_waitq_t wq, txwq;
+    vtk_waitq_t wq, txwq, donewq;
     bool close_req, dead, freed_by_user, task_done;
     uint64_t dead_since;
     uint64_t down_last, up_last; /* latest arrival scheduled in each direction (TCP delivers in order) */
@@ -993,7 +993,10 @@ static void ws_task(void *arg) {
         sim_host_free(m);
     }
     w->rx_tail = w->tx_tail = NULL;
-    w->task_done = true;
+    vtk_lock();
+    w->task_done = true; /* no callback runs from here on: hal_ws_free may return */
+    vtk_wake_all_locked(&w->donewq);
+    vtk_unlock();
     /* the struct itself is host memory and is never freed: link events may still refer to it */
 }
 
@@ -1037,6 +1040,7 @@ hal_ws_t *hal_ws_open(const char *url, hal_ws_cb cb, void *ctx) {
 
 int hal_ws_send(hal_ws_t *w, bool binary, const void *data, size_t len, int64_t timeout_us) {
     if (!w || vtk_in_isr()) return -1;
+    if (osal_task_self() == w->task) osal_panic("hal_ws_send from its connection's callback (see hal_net.h)");
     vtk_lock();
     uint64_t deadline = timeout_us < 0 ? VTK_TIME_INF : vtk_now() + (uint64_t)timeout_us * 1000ull;
     while (w->state == 1 && w->tx_bytes + len > TX_BUFFER_BYTES && w->tx_bytes > 0) {
@@ -1068,12 +1072,14 @@ int hal_ws_send(hal_ws_t *w, bool binary, const void *data, size_t len, int64_t 
 
 void hal_ws_free(hal_ws_t *w) {
     if (!w) return;
+    if (vtk_in_isr() || osal_task_self() == w->task) osal_panic("hal_ws_free from an ISR or its connection's callback (see hal_net.h)");
     vtk_lock();
     w->close_req = true;
     vtk_wake_one_locked(&w->wq);
     struct hal_ws **pp = &N.conns;
     while (*pp && *pp != w) pp = &(*pp)->next;
     if (*pp) *pp = w->next;
+    while (!w->task_done) vtk_block_locked(&w->donewq, VTK_TIME_INF); /* a callback in progress finishes */
     vtk_unlock();
     osal_free(w->tls_int);
     osal_free(w->tls_ext);

@@ -8,6 +8,11 @@
  * Requests made while not online wait in the outbox until their timeout;
  * requests in flight when the connection drops fail with INK_HUB_ERR_LOST
  * (callers decide whether to retry; durable sync uses the storage service).
+ *
+ * Threads: the hub task owns the connection and everything about it. Other
+ * tasks only send it messages, read the state (atomic), set the demand
+ * deadline and queue fire-and-forget messages (both under tx_lock, which
+ * also reserves the send budget before the message is queued).
  */
 #include <stdio.h>
 #include <string.h>
@@ -53,6 +58,7 @@ typedef struct {
 typedef struct {
     uint8_t type;
     uint8_t ws_event;
+    uint32_t ws_gen; /* the connection an HE_WS event came from */
     call_req_t *req;
     char *data; /* heap copy (PSRAM) */
     size_t len;
@@ -74,12 +80,14 @@ static struct {
     osal_queue_t *q;
     osal_mutex_t *id_lock;
     hal_ws_t *ws;
-    hub_state_t state;
+    uint32_t ws_gen; /* hub task: the current connection's number (its callback's ctx) */
+    hub_state_t state; /* written by the hub task only (set_state), read by any task (atomic) */
     pending_t pend[MAX_PENDING];
     uint32_t next_id;
     uint32_t hello_id;
-    uint64_t last_activity, demand_until, backoff_until, backoff_us, connect_started;
-    volatile bool low_power; /* device locked: disconnect as soon as idle */
+    uint64_t last_activity, backoff_until, backoff_us, connect_started; /* hub task */
+    uint64_t demand_until; /* under tx_lock: 64 bits are not one access on RV32 */
+    bool low_power;        /* atomic: device locked, disconnect as soon as idle */
     struct {
         char prefix[16];
         ink_hub_notify_fn fn;
@@ -87,9 +95,9 @@ static struct {
     } subs[MAX_SUBS];
     int nsubs;
     ink_json_t *json; /* parse buffer (PSRAM, ~2 KB): keeps the token array off the stack */
-    osal_mutex_t *tx_lock;
+    osal_mutex_t *tx_lock; /* the tx queue, its byte count and demand_until */
     tx_item_t *tx_head, *tx_tail;
-    size_t tx_bytes;
+    size_t tx_bytes;       /* reserved: queued plus being queued */
     ink_hub_binary_fn bin_fn;
     void *bin_ctx;
     struct {
@@ -99,6 +107,17 @@ static struct {
     } reqs[4];
     int nreqs;
 } H;
+
+static void set_state(hub_state_t s) { __atomic_store_n(&H.state, s, __ATOMIC_RELEASE); }
+static hub_state_t get_state(void) { return __atomic_load_n(&H.state, __ATOMIC_ACQUIRE); }
+static bool low_power(void) { return __atomic_load_n(&H.low_power, __ATOMIC_ACQUIRE); }
+
+static uint64_t demand_until(void) {
+    osal_mutex_lock(H.tx_lock, OSAL_WAIT_FOREVER);
+    uint64_t t = H.demand_until;
+    osal_mutex_unlock(H.tx_lock);
+    return t;
+}
 
 static char *dup_mem(const void *p, size_t n) {
     char *c = osal_malloc(n + 1, OSAL_MEM_EXTERNAL);
@@ -110,16 +129,22 @@ static char *dup_mem(const void *p, size_t n) {
 
 /* ------------------------------------------------------------ HAL glue */
 
+#define WS_POST_WAIT_US 500000
+
 static void ws_cb(void *ctx, hal_ws_event_t ev, const uint8_t *data, size_t len) { /* platform network task */
-    (void)ctx;
-    hub_msg_t m = {.type = HE_WS, .ws_event = (uint8_t)ev};
+    hub_msg_t m = {.type = HE_WS, .ws_event = (uint8_t)ev, .ws_gen = (uint32_t)(uintptr_t)ctx};
     if (data && len) {
         const char *prev = osal_mem_tag("hub");
         m.data = dup_mem(data, len);
         osal_mem_tag(prev);
         m.len = len;
     }
-    osal_queue_send(H.q, &m, OSAL_WAIT_FOREVER);
+    /* bounded (hal_net.h): the hub task may be waiting in hal_ws_free for this callback, and then it
+     * is discarding this connection anyway */
+    if (osal_queue_send(H.q, &m, WS_POST_WAIT_US) != OSAL_OK) {
+        osal_free(m.data);
+        ink_probe_count("hub.rx_dropped");
+    }
 }
 
 static void link_cb(void *ctx, const hal_link_status_t *st) {
@@ -196,12 +221,12 @@ static void enter_backoff(void) {
     H.backoff_us = H.backoff_us ? (H.backoff_us * 2 > 60000000ull ? 60000000ull : H.backoff_us * 2) : 1000000ull;
     uint64_t jitter = (osal_now_us() * 2654435761u) % (H.backoff_us / 4 + 1);
     H.backoff_until = osal_now_us() + H.backoff_us + jitter;
-    H.state = HS_BACKOFF;
+    set_state(HS_BACKOFF);
     ink_probe_count("hub.backoffs");
 }
 
 static bool has_demand(uint64_t now) {
-    if (now < H.demand_until) return true;
+    if (now < demand_until()) return true;
     for (int i = 0; i < MAX_PENDING; i++)
         if (H.pend[i].used) return true;
     return false;
@@ -211,8 +236,8 @@ static void start_connect(void) {
     hal_link_status_t st;
     hal_net_link_status(&st);
     H.connect_started = osal_now_us();
-    H.ws = hal_ws_open(H.url, ws_cb, NULL);
-    H.state = H.ws ? HS_CONNECTING : HS_BACKOFF;
+    H.ws = hal_ws_open(H.url, ws_cb, (void *)(uintptr_t)++H.ws_gen);
+    set_state(H.ws ? HS_CONNECTING : HS_BACKOFF);
     if (!H.ws) enter_backoff();
 }
 
@@ -232,7 +257,7 @@ static void on_text(const char *txt, size_t len) {
         if (!ink_json_int(j, id_t, &id)) return;
         if ((uint32_t)id == H.hello_id && H.state == HS_HELLO) {
             if (res_t >= 0) {
-                H.state = HS_ONLINE;
+                set_state(HS_ONLINE);
                 H.backoff_us = 0;
                 ink_probe_value("hub.online_ms", (double)(osal_now_us() - H.connect_started) / 1000.0);
                 for (int i = 0; i < MAX_PENDING; i++)
@@ -280,7 +305,7 @@ static void send_hello(void) {
     snprintf(hello.method, sizeof hello.method, "hello");
     hello.params = params;
     if (send_request(&hello) != 0) enter_backoff();
-    else H.state = HS_HELLO;
+    else set_state(HS_HELLO);
     hello.params = NULL;
 }
 
@@ -312,8 +337,8 @@ static uint64_t next_wakeup(uint64_t now) {
         if (H.pend[i].used && H.pend[i].deadline < t) t = H.pend[i].deadline;
     if (H.state == HS_BACKOFF && H.backoff_until < t) t = H.backoff_until;
     if (H.state == HS_ONLINE) {
-        uint64_t idle = H.last_activity + (H.low_power ? 0 : IDLE_DISCONNECT_US);
-        if (H.demand_until > idle) idle = H.demand_until;
+        uint64_t idle = H.last_activity + (low_power() ? 0 : IDLE_DISCONNECT_US), demand = demand_until();
+        if (demand > idle) idle = demand;
         if (idle < t) t = idle;
     }
     if (H.state == HS_HELLO && H.connect_started + HELLO_TIMEOUT_US < t) t = H.connect_started + HELLO_TIMEOUT_US;
@@ -355,6 +380,7 @@ static void hub_task(void *arg) {
             case HE_LINK: break;
             case HE_TX: break; /* drained below */
             case HE_WS:
+                if (!H.ws || m.ws_gen != H.ws_gen) break; /* from a connection already closed */
                 if (m.ws_event == HAL_WS_CONNECTED && H.state == HS_CONNECTING) {
                     send_hello();
                 } else if (m.ws_event == HAL_WS_TEXT && m.data) {
@@ -368,7 +394,7 @@ static void hub_task(void *arg) {
                     if (has_demand(now)) enter_backoff();
                     else {
                         close_ws();
-                        H.state = HS_DISCONNECTED;
+                        set_state(HS_DISCONNECTED);
                     }
                 }
                 break;
@@ -389,16 +415,16 @@ static void hub_task(void *arg) {
             if (has_demand(now) && st.up) start_connect();
             break;
         case HS_BACKOFF:
-            if (!has_demand(now)) H.state = HS_DISCONNECTED;
+            if (!has_demand(now)) set_state(HS_DISCONNECTED);
             else if (now >= H.backoff_until && st.up) start_connect();
             break;
         case HS_HELLO:
             if (now >= H.connect_started + HELLO_TIMEOUT_US) enter_backoff();
             break;
         case HS_ONLINE:
-            if (!has_demand(now) && now >= H.last_activity + (H.low_power ? 0 : IDLE_DISCONNECT_US)) { /* D-24 */
+            if (!has_demand(now) && now >= H.last_activity + (low_power() ? 0 : IDLE_DISCONNECT_US)) { /* D-24 */
                 close_ws();
-                H.state = HS_DISCONNECTED;
+                set_state(HS_DISCONNECTED);
                 ink_probe_count("hub.idle_disconnects");
             }
             break;
@@ -413,7 +439,7 @@ static void on_power(void *ctx, ink_power_state_t from, ink_power_state_t to, ui
     (void)ctx;
     (void)from;
     (void)cause_us;
-    H.low_power = to == INK_PWR_LOCKED; /* D-24: locked -> disconnect once quiet */
+    __atomic_store_n(&H.low_power, to == INK_PWR_LOCKED, __ATOMIC_RELEASE); /* D-24: locked -> disconnect once quiet */
     hub_msg_t m = {.type = HE_DEMAND};   /* wake the hub task to re-evaluate (sets no demand) */
     osal_queue_send(H.q, &m, 0);
 }
@@ -465,17 +491,22 @@ int ink_hub_subscribe(const char *prefix, ink_hub_notify_fn fn, void *ctx) {
 }
 
 void ink_hub_demand(void) {
-    H.demand_until = osal_now_us() + DEMAND_HOLD_US;
+    if (!H.tx_lock) return; /* before ink_hub_init: nothing to connect */
+    uint64_t until = osal_now_us() + DEMAND_HOLD_US;
+    osal_mutex_lock(H.tx_lock, OSAL_WAIT_FOREVER);
+    if (until > H.demand_until) H.demand_until = until;
+    osal_mutex_unlock(H.tx_lock);
     hub_msg_t m = {.type = HE_DEMAND};
     osal_queue_send(H.q, &m, 0);
 }
 
-bool ink_hub_online(void) { return H.state == HS_ONLINE; }
+bool ink_hub_online(void) { return get_state() == HS_ONLINE; }
 
 static int enqueue_tx(bool binary, const void *data, size_t len) {
-    if (H.state != HS_ONLINE) return -1;
-    osal_mutex_lock(H.tx_lock, OSAL_WAIT_FOREVER);
+    if (get_state() != HS_ONLINE) return -1;
+    osal_mutex_lock(H.tx_lock, OSAL_WAIT_FOREVER); /* reserve the budget first: producers race */
     bool full = H.tx_bytes + len > TX_MAX_BYTES;
+    if (!full) H.tx_bytes += len;
     osal_mutex_unlock(H.tx_lock);
     if (full) {
         ink_probe_count("hub.tx_overflow");
@@ -484,16 +515,19 @@ static int enqueue_tx(bool binary, const void *data, size_t len) {
     const char *prev = osal_mem_tag("hub");
     tx_item_t *it = osal_malloc(sizeof *it + len, OSAL_MEM_EXTERNAL);
     osal_mem_tag(prev);
-    if (!it) return -1;
+    osal_mutex_lock(H.tx_lock, OSAL_WAIT_FOREVER);
+    if (!it) {
+        H.tx_bytes -= len; /* give the reservation back */
+        osal_mutex_unlock(H.tx_lock);
+        return -1;
+    }
     it->next = NULL;
     it->binary = binary;
     it->len = len;
     memcpy(it->data, data, len);
-    osal_mutex_lock(H.tx_lock, OSAL_WAIT_FOREVER);
     if (H.tx_tail) H.tx_tail->next = it;
     else H.tx_head = it;
     H.tx_tail = it;
-    H.tx_bytes += len;
     osal_mutex_unlock(H.tx_lock);
     hub_msg_t m = {.type = HE_TX};
     osal_queue_send(H.q, &m, 0); /* a full queue still wakes the task soon: it drains on every wake */

@@ -297,6 +297,14 @@ add_test(NAME selftest-board-wiring
           --budget ${CMAKE_SOURCE_DIR}/tests/sim/board.budget.json
           --out ${CMAKE_BINARY_DIR}/test-out/selftest-board --quiet --end 40s --no-random-outages)
 set_tests_properties(selftest-board-wiring PROPERTIES ENVIRONMENT "INK_SELFTEST_BOARD=1")
+# System service checks (storage cache versions; tests/system/systest.c), on the services themselves.
+add_executable(sim-systest ports/sim/sim_main.c tests/system/systest.c)
+target_link_libraries(sim-systest PRIVATE ink_system ink_lvgl ink_port_sim)
+target_compile_options(sim-systest PRIVATE ${INK_WARN})
+add_test(NAME systest-services
+  COMMAND sim-systest --profile ${CMAKE_SOURCE_DIR}/profiles/metalio-plus.json
+          --budget ${CMAKE_SOURCE_DIR}/tests/system/systest.budget.json
+          --out ${CMAKE_BINARY_DIR}/test-out/systest --quiet --end 30s --no-random-outages)
 add_test(NAME determinism
   COMMAND ${CMAKE_COMMAND} -DSIM=$<TARGET_FILE:sim-selftest>
           -DPROFILE=${CMAKE_SOURCE_DIR}/profiles/metalio-plus.json
@@ -335,6 +343,7 @@ if(INK_HAVE_FONTS)
   ink_scenario(reader_continuous metalio-plus)
   ink_scenario(reader_rapid metalio-plus)
   ink_scenario(ai_dismiss metalio-plus)
+  ink_scenario(ai_dismiss_held metalio-plus)
   add_test(NAME scenario-reader_empty-metalio-plus
     COMMAND ink-sim --profile ${CMAKE_SOURCE_DIR}/profiles/metalio-plus.json
             --script ${CMAKE_SOURCE_DIR}/tests/scenarios/reader_empty.script

@@ -19,6 +19,10 @@
  * coalesce. Reads see queued writes, including the one being written; then
  * the read cache (small files and "does not exist", external RAM, LRU),
  * filled by reads, writes and background prefetches; only then the flash.
+ * The cache never holds an older version than the newest write: a write
+ * replaces the entry, or drops it when the new content does not fit (too
+ * large, no memory) or the write failed; what a read or prefetch got from
+ * the flash is not cached while a newer write for the path is queued.
  */
 #include <stdio.h>
 #include <string.h>
@@ -97,13 +101,28 @@ static centry_t *cache_find(const char *path) {
     return NULL;
 }
 
+static void cache_drop(const char *path) {
+    for (int i = 0; i < CACHE_MAX; i++)
+        if (ST.cache[i].path && !strcmp(ST.cache[i].path, path)) {
+            osal_free(ST.cache[i].path);
+            ST.cache[i] = (centry_t){0};
+        }
+}
+
+/* The content of path is now `data` (len -1: no file): cache it, or forget what was cached. */
 static void cache_put(const char *path, const void *data, int len) {
-    if (len > CACHE_FILE_MAX) return;
+    if (len > CACHE_FILE_MAX) {
+        cache_drop(path);
+        return;
+    }
     size_t plen = strlen(path) + 1, dlen = len > 0 ? (size_t)len : 0;
     const char *prev = osal_mem_tag("storage-cache");
     char *block = osal_malloc(plen + dlen + 1, OSAL_MEM_EXTERNAL);
     osal_mem_tag(prev);
-    if (!block) return;
+    if (!block) {
+        cache_drop(path);
+        return;
+    }
     memcpy(block, path, plen);
     if (dlen) memcpy(block + plen, data, dlen);
     centry_t *e = NULL;
@@ -122,11 +141,17 @@ static void cache_put(const char *path, const void *data, int len) {
 
 /* Flash read into the cache (storage task, guard taken inside). Returns bytes, -1 = no file, -2 = too large. */
 static int read_guarded(const char *path, void *buf, size_t cap);
+static bool queued_for(const char *path) { /* under lock: a write of path is waiting or being written */
+    for (int i = 0; i < MAX_JOBS; i++)
+        if (ST.jobs[i].used && !strcmp(ST.jobs[i].path, path)) return true;
+    return false;
+}
+
 static int load_into_cache(const char *path) {
     int n = read_guarded(path, ST.scratch, CACHE_FILE_MAX + 1);
     if (n > CACHE_FILE_MAX) return -2;
     osal_mutex_lock(ST.lock, OSAL_WAIT_FOREVER);
-    cache_put(path, ST.scratch, n < 0 ? -1 : n);
+    if (!queued_for(path)) cache_put(path, ST.scratch, n < 0 ? -1 : n); /* else the flash is already old */
     osal_mutex_unlock(ST.lock);
     return n;
 }
@@ -301,11 +326,7 @@ static void storage_task(void *arg) {
                 ink_probe_count("storage.write_errors");
                 osal_mutex_lock(ST.lock, OSAL_WAIT_FOREVER);
                 ST.failed++;
-                centry_t *e = cache_find(job.path);
-                if (e) {
-                    osal_free(e->path);
-                    *e = (centry_t){0};
-                }
+                cache_drop(job.path);
                 osal_mutex_unlock(ST.lock);
             }
             finish_job(slot);

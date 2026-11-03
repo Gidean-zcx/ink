@@ -484,6 +484,29 @@ static void check_input(void) {
 
 /* ------------------------------------------------------------- main */
 
+/* ------------------------------------------- timer delete vs a running callback (osal.h) */
+
+static volatile bool g_tcb_in, g_tcb_done;
+
+static void slow_timer_cb(void *arg) {
+    (void)arg;
+    g_tcb_in = true;
+    sim_charge_ns_always(SIM_MS(5)); /* 5 ms of work in the timer task */
+    g_tcb_done = true;
+}
+
+static void test_timer_delete(void) {
+    osal_timer_t *t = osal_timer_create("slow", slow_timer_cb, NULL);
+    g_tcb_in = g_tcb_done = false;
+    osal_timer_start(t, 1000, 0);
+    for (int i = 0; !g_tcb_in && i < 1000; i++) sim_charge_ns_always(SIM_US(50)); /* spin: on two cores the callback runs meanwhile */
+    bool was_running = g_tcb_in && !g_tcb_done;
+    osal_timer_delete(t);
+    CHECK(g_tcb_in && g_tcb_done, "osal_timer_delete returns only after the callback that was running (%s) finished",
+          was_running ? "it was" : "it had ended");
+    if (g_profile.cores > 1) CHECK(was_running, "on two cores the delete really met a running callback");
+}
+
 static void selftest_task(void *arg) {
     (void)arg;
     hal_input_set_sink(sink, NULL);
@@ -501,6 +524,7 @@ static void selftest_task(void *arg) {
     test_underrun();
     test_sd();
     test_speaker();
+    test_timer_delete();
     /* the script taps at 4.0 s and 4.5 s and presses NEXT at 5 s */
     uint64_t now = osal_now_us();
     if (now < 6500000) osal_task_delay_us(6500000 - now);
