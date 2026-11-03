@@ -88,6 +88,7 @@ void sim_metric_add(const char *name, double v);    /* counter */
 void sim_metric_max(const char *name, double v);    /* max gauge */
 void sim_metric_min(const char *name, double v);    /* min gauge */
 void sim_metric_set(const char *name, double v);    /* gauge */
+double sim_metric_value(const char *name);         /* so far: a counter's or gauge's value, a distribution's count; 0 if none (tests) */
 /** Warning: printed, counted in "warnings.count", listed in the report. */
 void sim_warn(const char *fmt, ...) __attribute__((format(printf, 1, 2)));
 void sim_note(const char *fmt, ...) __attribute__((format(printf, 1, 2)));

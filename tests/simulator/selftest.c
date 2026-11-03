@@ -24,6 +24,7 @@
 #include "ink/hal_net.h"
 #include "ink/hal_power.h"
 #include "ink/probe.h"
+#include "ink/rotation.h"
 #include "ft6336u/ft6336u.h"
 #include "nt26/nt26.h"
 #include "tps65185/tps65185.h"
@@ -964,12 +965,31 @@ static void blip_task(void *arg) {
     }
 }
 
-static bool update_and_wait(const uint8_t *px, const hal_rect_t *area) {
+/* what the panel shows, as one sees it, averaged over a native area (-1: no image) */
+static double panel_mean(const hal_rect_t *a) {
+    static uint8_t vis[1216 * 1216];
+    hal_panel_info_t pi;
+    hal_display_get_info(&pi);
+    int lw = 0, lh = 0;
+    if (!sim_display_visible(vis, sizeof vis, &lw, &lh)) return -1;
+    double sum = 0;
+    for (int y = a->y; y < a->y + a->h; y++)
+        for (int x = a->x; x < a->x + a->w; x++) {
+            int lx, ly;
+            ink_native_to_logical(pi.width, pi.height, pi.rotation_deg, x, y, &lx, &ly);
+            sum += vis[(size_t)ly * (size_t)lw + (size_t)lx];
+        }
+    return sum / ((double)a->w * a->h);
+}
+
+static bool update_and_wait_for(const uint8_t *px, const hal_rect_t *area, int max_ms) {
     g_upd_done = false;
     hal_display_update(area, px, area->w, HAL_WF_GL16, 0, upd_done, NULL);
-    for (int i = 0; i < 500 && !g_upd_done; i++) osal_task_delay_us(10000);
+    for (int i = 0; i < max_ms / 10 && !g_upd_done; i++) osal_task_delay_us(10000);
     return g_upd_done;
 }
+
+static bool update_and_wait(const uint8_t *px, const hal_rect_t *area) { return update_and_wait_for(px, area, 5000); }
 
 static void display_cut_checks(void) {
     static uint8_t px[64 * 64];
@@ -1002,6 +1022,21 @@ static void display_cut_checks(void) {
     CHECK(off1 && off2, "with the screen's power P05 left off, update after update fails");
     metalio_board_set(0, MB_P0_CAM_SCR, MB_P0_CAM_SCR);
     CHECK(update_and_wait(px, &area) && g_upd_ok, "and they work again once P05 is back");
+    /* after a drive that lost its supply the panel's state is unknown: the next update redraws the
+     * whole panel, so the same image sent again is what it shows (audit AUD5-001: PQ-BN's controller
+     * had counted pushes the panel never got) */
+    memset(px, 0xFF, sizeof px);
+    CHECK(update_and_wait(px, &area) && g_upd_ok && panel_mean(&area) > 230, "a white area to start from");
+    memset(px, 0x00, sizeof px);
+    osal_task_cfg_t cb = {.name = "panel_blip", .fn = blip_task, .arg = (void *)(intptr_t)0, .stack_bytes = 2048,
+                          .priority = OSAL_PRIO_NORMAL + 2, .core = -1};
+    osal_task_create(&cb, NULL);
+    bool lost = update_and_wait(px, &area) && !g_upd_ok;
+    uint32_t redraws = (uint32_t)sim_metric_value("display.redraws_after_supply_loss");
+    bool again = update_and_wait_for(px, &area, 20000) && g_upd_ok; /* PQ-BN: a full clean first, ~10 s */
+    double mean = panel_mean(&area);
+    CHECK(lost && again && mean < 25 && (uint32_t)sim_metric_value("display.redraws_after_supply_loss") == redraws + 1,
+          "after a supply loss the same image sent again is on the panel, redrawn in full (mean %.0f)", mean);
 }
 
 static void board_task(void *arg) {

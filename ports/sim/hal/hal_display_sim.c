@@ -465,6 +465,25 @@ static bool supply_suspect(void) {
     return supply_drops() != g_drops0 || (g_profile.pmic_tps65185 && g_epd.ioexp && epd_power_pins_touched(&g_epd));
 }
 
+/* A drive lost its supply part way: the pixels it reached are unknown (and PQ-BN's controller may
+ * count pushes the panel never got), so the next drive redraws from the framebuffer first: EPDiy the
+ * whole panel (clear + full GC16), PQ-BN a clean of what was being driven then (g_redraw_area, the
+ * union of the updates in flight; the whole panel if unknown). */
+static bool g_redraw;
+static hal_rect_t g_redraw_area;
+
+static void redraw_add(const hal_rect_t *a) {
+    if (a->w <= 0 || a->h <= 0) return;
+    if (g_redraw_area.w <= 0) {
+        g_redraw_area = *a;
+        return;
+    }
+    int x0 = a->x < g_redraw_area.x ? a->x : g_redraw_area.x, y0 = a->y < g_redraw_area.y ? a->y : g_redraw_area.y;
+    int x1 = a->x + a->w > g_redraw_area.x + g_redraw_area.w ? a->x + a->w : g_redraw_area.x + g_redraw_area.w;
+    int y1 = a->y + a->h > g_redraw_area.y + g_redraw_area.h ? a->y + a->h : g_redraw_area.y + g_redraw_area.h;
+    g_redraw_area = (hal_rect_t){x0, y0, x1 - x0, y1 - y0};
+}
+
 /* Rails up for a refresh. False when the board's sequence failed after its retries: the request
  * then fails (ok = false, the panel unchanged) and the system decides what to do (upstream
  * restarts the chip at this point; that policy belongs to the system, not the simulator). */
@@ -538,6 +557,7 @@ static bool power_kept(void) {
     bool good = D.rails_on && supply_drops() == g_drops0 && epd_power_kept(&g_epd);
     if (!good && D.rails_on) {
         power_down_locked();
+        g_redraw = true;
         sim_metric_add("display.power_lost_during_waveform", 1);
         sim_note("display: the panel supply went away during a waveform; the update fails, the image is not as asked");
     }
@@ -737,8 +757,17 @@ static void execute(req_t *r) {
         if (full_gc16 && g_profile.gc16_full_phases > phases) phases = g_profile.gc16_full_phases;
         started = vtk_now();
         sim_power_consumer("display.refresh", true, g_profile.ma_display_refresh);
-        if (full_gc16 && g_profile.gc16_full_clear_frames > 0) play_clear(g_profile.gc16_full_clear_frames);
-        bool underrun = !play(phases, &r->area);
+        const bool redraw = g_redraw;
+        bool underrun = false;
+        if (redraw) { /* after a supply loss: the whole framebuffer, from a cleared panel */
+            hal_rect_t all = {0, 0, D.W, D.H};
+            play_clear(g_profile.clear_frames);
+            underrun = !play(g_profile.gc16_full_phases, &all);
+            recovered = !underrun; /* applied as the full image below */
+        } else {
+            if (full_gc16 && g_profile.gc16_full_clear_frames > 0) play_clear(g_profile.gc16_full_clear_frames);
+            underrun = !play(phases, &r->area);
+        }
         if (underrun) {
             sim_metric_add("display.underruns", 1);
             sim_warn("display: a prepared line was not ready at %.3f ms during a %s waveform (feeders slower than the "
@@ -763,6 +792,11 @@ static void execute(req_t *r) {
             hal_cpu_boost_release(g_boost);
             if (r->done) r->done(r->ctx, &res);
             return;
+        }
+        if (redraw && recovered) {
+            g_redraw = false;
+            g_redraw_area = (hal_rect_t){0, 0, 0, 0};
+            sim_metric_add("display.redraws_after_supply_loss", 1);
         }
         back_copy(&r->area);
         sim_i2c_transfer("io-expander", 3);
@@ -1095,6 +1129,10 @@ static void pq_apply(uint32_t now) {
     /* the controller pushes whatever the supply does; the particles move only with rails and VCOM */
     const bool powered = !g_profile.pmic_tps65185 || sim_tps65185_panel_ready();
     if (!powered) sim_metric_add("display.unpowered_phases", 1);
+    if (supply_suspect()) { /* known lost: the controller does not count a phase the drive will not keep */
+        sim_metric_add("display.phases_withheld", 1);
+        return;
+    }
     for (int y = 0; y < D.H; y++) {
         if (!pqbn_v4_exec_row(&PQ.C, now, y, PQ.line)) continue;
         if (!powered) continue;
@@ -1191,6 +1229,7 @@ static void pq_after_phase(uint32_t now, uint64_t scan_end) {
         if (!cleaning && !waiting && pq_area_still(u->tx0, u->ty0, u->tx1, u->ty1, now + 1)) {
             if (!checked) checked = power_kept() ? 1 : -1;
             if (checked < 0) { /* every update in flight fails; the drive stops (pq_drive) */
+                for (int k = 0; k < PQ.nu; k++) redraw_add(&PQ.u[k].r.area);
                 for (int k = 0; k < PQ.nu; k++) pq_finish(&PQ.u[k], vtk_now(), false);
                 PQ.nu = 0;
                 PQ.clean_stage = 0;
@@ -1230,6 +1269,17 @@ static void pq_drive(void) {
     check_panel_power();
     sim_i2c_transfer("io-expander", 3);
     sim_power_consumer("display.refresh", true, g_profile.ma_display_refresh);
+    if (g_redraw && PQ.clean_stage == 0) { /* after a supply loss: a clean resyncs what was being driven */
+        const hal_rect_t a = g_redraw_area.w > 0 ? g_redraw_area : (hal_rect_t){0, 0, D.W, D.H};
+        req_t rc = {.id = ++D.next_id, .area = a, .wf = HAL_WF_GC16, .queued_ns = vtk_now()};
+        D.pending++;
+        pq_ingest(&rc);
+        for (int i = 0; i < PQ.nu; i++) /* what was asked there is done when the clean has shown it */
+            if (i != PQ.clean_idx && rect_overlap(&PQ.u[i].r.area, &a)) PQ.u[i].after_clean = true;
+        g_redraw = false; /* set again if this drive loses its supply too */
+        g_redraw_area = (hal_rect_t){0, 0, 0, 0};
+        sim_metric_add("display.redraws_after_supply_loss", 1);
+    }
     D.playing = true;
     if (!PQ.planned) pq_advance_idle();
     uint64_t t_start = vtk_now(), t0 = vtk_now(), last_scan = 0;
@@ -1242,6 +1292,7 @@ static void pq_drive(void) {
             plan_running = false;
             PQ.planned = false;
             (void)power_kept(); /* confirms through the driver; the rails count as off */
+            for (int k = 0; k < PQ.nu; k++) redraw_add(&PQ.u[k].r.area);
             for (int k = 0; k < PQ.nu; k++) pq_finish(&PQ.u[k], vtk_now(), false);
             PQ.nu = 0;
             PQ.clean_stage = 0;
