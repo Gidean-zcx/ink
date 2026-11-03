@@ -77,7 +77,7 @@
 | 安全功能 | 全关 |
 | 当前启动槽 | ota_0（出厂固件），ota_1 为空 |
 
-建议把测量固件写进空的 ota_1，再让 otadata 指向它，不碰 ota_0。复原时写回原 otadata 即可，最坏情况整片恢复。具体命令写入前另给用户确认，见[第 0 步记录 §9](2026-11-03-phase0.md)。
+测量固件已编好（[tools/hw-probe](../../tools/hw-probe/README.md)），写入方案见 [phase1-plan.md](phase1-plan.md)：只写空的 ota_1 和一份指向它的 otadata，不碰 ota_0；复原时写回出厂 otadata。**等用户同意后再写。**
 
 ## 记录
 

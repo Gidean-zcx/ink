@@ -1,0 +1,12 @@
+# The factory partition table, entry for entry (docs/hardware/2026-11-03-phase0.md section 4):
+# the app links against the same layout the device's bootloader and otadata use.
+# Name,    Type, SubType,  Offset,   Size
+nvs,       data, nvs,      0x9000,   0x4000
+otadata,   data, ota,      0xd000,   0x2000
+phy_init,  data, phy,      0xf000,   0x1000
+model,     data, spiffs,   0x10000,  0x64000
+ota_0,     app,  ota_0,    0x80000,  0x500000
+ota_1,     app,  ota_1,    0x580000, 0x500000
+resources, data, spiffs,   0xa80000, 0x64000
+font_data, data, 0x40,     0xae4000, 0x500000
+coredump,  data, coredump, 0xfe4000, 0x10000
