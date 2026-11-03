@@ -32,6 +32,10 @@ typedef struct {
     bool (*on_swipe)(ink_swipe_dir_t dir);
     /* page context for the AI (G-002): plain text of what is on screen; returns bytes written */
     int (*snapshot)(char *buf, size_t cap);
+    /* optional: the queued input (and the call just handled) is done and the frame is drawn next:
+     * expensive drawing deferred by the handlers happens here, once for the whole batch (e.g. four
+     * page turns in a row render the fourth page only) */
+    void (*settle)(void);
 } ink_activity_t;
 
 /** Start the UI task with `home` as the root activity. */
@@ -51,6 +55,9 @@ void ink_ui_post(void (*fn)(void *), void *arg);
  *  requested LVGL refresh not rendered yet (any task; the power service waits for false before
  *  it sleeps the chip). A rendered frame is reported by ink_display_busy() instead. */
 bool ink_ui_busy(void);
+/** Messages (input or posted calls) are waiting for the UI task: background work in the UI task
+ *  (rendering the next page ahead) waits for them (UI task). */
+bool ink_ui_queue_pending(void);
 
 /** Refresh intent for an area that is about to change (UI task). Without a hint, changes use UI. */
 void ink_ui_hint_area(const lv_area_t *logical, ink_refresh_t intent);

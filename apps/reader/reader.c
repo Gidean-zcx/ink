@@ -3,8 +3,10 @@
  *
  * Page turn path: the next page is rendered ahead of time into a second PSRAM
  * buffer while the reader looks at the current one, so a turn is a buffer
- * swap + one TEXT refresh. Pages are found lazily (page start offsets grow as
- * you read). The reading position is saved through the storage service,
+ * swap + one TEXT refresh. A turn to a page that is not rendered yet only
+ * moves the target; the page is rendered when the queued input is handled
+ * (settle), so a burst of turns renders its last page only. Pages are found
+ * lazily (page start offsets grow as you read). The reading position is saved through the storage service,
  * which waits for an idle panel (flash writes freeze PSRAM and would break a
  * waveform).
  */
@@ -48,6 +50,8 @@ static struct {
     int bw, bh;        /* page buffer (logical) */
     uint8_t *buf[2];   /* [cur, ahead] */
     int buf_page[2];
+    int shown;         /* buffer on screen (-1 none) */
+    bool show_pending; /* `page` is not on screen yet: rendered and shown in book_settle */
     lv_image_dsc_t dsc;
     lv_obj_t *img, *footer, *title;
     lv_timer_t *ahead_timer, *save_timer;
@@ -219,6 +223,7 @@ static bool render_into(int slot, int page) {
 }
 
 static void show_slot(int slot) {
+    RD.shown = slot;
     RD.dsc.data = RD.buf[slot];
     lv_image_set_src(RD.img, &RD.dsc);
     ink_ui_hint_obj(RD.img, INK_REFRESH_TEXT);
@@ -231,8 +236,13 @@ static void show_slot(int slot) {
 
 static void ahead_cb(lv_timer_t *t) {
     (void)t;
+    if (RD.show_pending) return;
+    if (ink_ui_queue_pending()) { /* input first (more turns may follow): render ahead when it is quiet */
+        arm_once(RD.ahead_timer);
+        return;
+    }
     int want = RD.page + 1;
-    int slot = RD.buf_page[0] == RD.page ? 1 : 0;
+    int slot = RD.shown == 0 ? 1 : 0; /* the buffer not on screen */
     if (RD.buf_page[slot] != want) render_into(slot, want);
 }
 
@@ -246,17 +256,17 @@ static void save_cb(lv_timer_t *t) {
 }
 
 static bool go_to(int target) {
-    if (target < 0 || !book_ready()) return false;
+    if (target < 0 || !book_ready() || find_page_start(target) < 0) return false; /* past the end of the book */
     int slot = RD.buf_page[0] == target ? 0 : RD.buf_page[1] == target ? 1 : -1;
-    if (slot < 0) {
-        slot = RD.buf_page[0] == RD.page ? 1 : 0; /* reuse the buffer not on screen */
-        if (!render_into(slot, target)) return false; /* past the end of the book */
-        ink_probe_count("reader.turns_rendered_on_demand");
-    } else {
-        ink_probe_count("reader.turns_prerendered");
-    }
+    if (RD.show_pending) ink_probe_count("reader.turns_coalesced"); /* the page waiting to be drawn is skipped */
     RD.page = target;
-    show_slot(slot);
+    if (slot >= 0) {
+        RD.show_pending = false;
+        show_slot(slot);
+        ink_probe_count("reader.turns_prerendered");
+    } else {
+        RD.show_pending = true; /* rendered once the queued input is handled (book_settle) */
+    }
     if (!RD.dirty_pos) RD.dirty_since_us = osal_now_us();
     RD.dirty_pos = true;
     ink_probe_count("reader.page_turns");
@@ -266,6 +276,16 @@ static bool go_to(int target) {
     if (osal_now_us() - RD.dirty_since_us >= SAVE_AT_LEAST_EVERY_MS * 1000ull) save_cb(NULL);
     else arm_once(RD.save_timer);
     return true;
+}
+
+/* The input queued up is handled (the UI task draws next): render the page the turns ended on. */
+static void book_settle(void) {
+    if (!RD.show_pending) return;
+    RD.show_pending = false;
+    int slot = RD.shown == 0 ? 1 : 0; /* the buffer not on screen */
+    if (!render_into(slot, RD.page)) return;
+    show_slot(slot);
+    ink_probe_count("reader.turns_rendered_on_demand");
 }
 
 /* ---- actions: keys, swipes, taps and the AI all turn pages through these ---- */
@@ -404,6 +424,7 @@ static void book_create(lv_obj_t *scr, void *arg) {
     uint64_t t0 = osal_now_us();
     memset(&RD, 0, sizeof RD);
     RD.buf_page[0] = RD.buf_page[1] = -1;
+    RD.shown = -1;
     snprintf(RD.member, sizeof RD.member, "%s", ink_member_current()->id);
     ink_font_t *body = ink_font_for_pt(8, pi.dpi);
     ink_font_t *small = ink_font_for_pt(6, pi.dpi);
@@ -501,7 +522,8 @@ const ink_activity_t ink_app_book = {.name = "book",
                                      .destroy = book_destroy,
                                      .on_key = book_key,
                                      .on_swipe = book_swipe,
-                                     .snapshot = book_snapshot};
+                                     .snapshot = book_snapshot,
+                                     .settle = book_settle};
 
 int ink_reader_actions_init(void) {
     int r = ink_actions_register(SHELF_ACTIONS, (int)(sizeof SHELF_ACTIONS / sizeof SHELF_ACTIONS[0]));

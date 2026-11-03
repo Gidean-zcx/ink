@@ -213,8 +213,9 @@ if(INK_HAVE_FONTS)
   ink_scenario(ai_ask metalio-plus)
   ink_scenario(standby metalio-plus)
   # regressions from the 2026-11 audit review (docs/audits/README.md): position saved while reading
-  # on, late AI speech after the sheet is closed, a book that cannot be opened
+  # on, fast page flipping, late AI speech after the sheet is closed, a book that cannot be opened
   ink_scenario(reader_continuous metalio-plus)
+  ink_scenario(reader_rapid metalio-plus)
   ink_scenario(ai_dismiss metalio-plus)
   add_test(NAME scenario-reader_empty-metalio-plus
     COMMAND ink-sim --profile ${CMAKE_SOURCE_DIR}/profiles/metalio-plus.json
