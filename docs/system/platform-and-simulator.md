@@ -78,7 +78,7 @@ cmake -S . -B build && cmake --build build -j && ctest --test-dir build --output
     --out out/ --trace --frames
 ```
 
-- **场景脚本**：按虚拟时间写手指、按键、截图、电量、断电（`powercut`，或 `powercut write 2` 在之后第 2 次 Flash 写入中途断电）、切换网络（`net lte|wifi|none`）、断网（`outage 6s`）、换 SIM 卡（`sim external|internal none|data|sms|voice`）、设备朝向（`orient portrait|upside_down|landscape_left|landscape_right|face_up|face_down`）、晃动（`shake`）、时钟掉电（`rtc lost`）等动作；坐标可写 `116dp`、`50%`，同一脚本适用于所有屏幕。CI 场景用 `--no-random-outages` 关掉随机断网；`--flash-timing typ|max|tail` 选 Flash 擦写时间的取法。
+- **场景脚本**：按虚拟时间写手指、按键、截图、电量、断电（`powercut`，或 `powercut write 2` 在之后第 2 次 Flash 写入中途断电）、切换网络（`net lte|wifi|none`）、断网（`outage 6s`）、换 SIM 卡（`sim external|internal none|data|sms|voice`）、设备朝向（`orient portrait|upside_down|landscape_left|landscape_right|face_up|face_down`）、晃动（`shake`）、时钟掉电（`rtc lost`）、周围的网络（`wifi on|off [rssi]`、`cell on|off [rsrp]`）、来短信（`sms-in 号码 内容`）、来电（`call-in 号码`）、对方接听或挂断（`remote answer|hangup`）等动作；坐标可写 `116dp`、`50%`，同一脚本适用于所有屏幕。CI 场景用 `--no-random-outages` 关掉随机断网；`--flash-timing typ|max|tail` 选 Flash 擦写时间的取法。
 - **输出**：`metrics.json`（每个任务的 CPU、栈、内存标签、刷新次数与波形、时延分布、Flash 停顿……）、`final.png` 与 `snap-*.png`（按竖屏方向、含残影）、`frames/`（每次刷新一张）、`trace.json`（用 https://ui.perfetto.dev 打开，可看到每个核上每个任务何时运行、每次刷新与 Flash 停顿）。
 - **预算**：`*.budget.json` 写“这个场景必须满足什么”，例如翻页 p95 ≤ 1 s、内部 RAM 低水位、零欠载、零警告；超出则 CI 失败。条目还可写 SRS 目标（`target_max` + `srs`）：没达到时输出“SRS GAP”并计入 `srs_gaps`，不让 CI 失败——差距一直可见，等实机数据再定。
 - **CI**：`.github/workflows/sim.yml` 在每次推送时构建、跑全部场景（含 ASan/UBSan），并保存报告与截图。CI 需要 `fonts-noto-cjk` 生成中文点阵字体。
@@ -96,7 +96,7 @@ cmake -S . -B build && cmake --build build -j && ctest --test-dir build --output
 
 - **左边是设备**：屏幕按墨水屏的样子显示（含残影；系统开前光时按冷暖比例染色），刷新完成才变，和真机一样有延迟。鼠标左键就是手指，按住拖动是滑动。屏幕下方三个盖板键在官方的触摸坐标 X=100/200/300 上（HOME、返回/上页、下页）；右侧是电源键、音量+、音量−，左侧是 AI 键（BOOT）。键在外壳上的位置是示意，官方没有公开外壳图。顶部指示灯显示“刷新中”“待机”“充电”“振动”“前光”。
 - **快捷键**：空格 = AI 键（按住说话），P = 电源键（按住 3 秒即长按），`=`/`-` = 音量，H = 主页，←/→ = 上页/下页；按住 Shift 悬停屏幕可看触摸坐标。
-- **右边是硬件控制**：暂停/继续与 0.25×～10× 倍速（暂停时整台设备冻结，虚拟时间不走）；喇叭声音放到电脑上；电量与 USB 充电（电量计读数、充电电流）；设备朝向和“晃一下”（加速度计），时钟芯片的时间；网络在 4G、Wi-Fi、无网络之间切换，或断网 5 秒；4G 的两张卡（外置卡槽、内置卡）各插什么卡（没有、只有流量、加短信、加通话），以及模组的状态（卡槽设置、在用的卡、是否注册）；窗口只模拟硬件，切卡由系统经 AT 命令完成（R-043、R-044）；麦克风听到的声音（说话、安静、噪声）；“拔掉电池”掉电（正在写的 Flash 会写坏一半）；CPU 两个核的占用（按档案折算到 S31）、内部 RAM 与 PSRAM 余量。
+- **右边是硬件控制**：暂停/继续与 0.25×～10× 倍速（暂停时整台设备冻结，虚拟时间不走）；喇叭声音放到电脑上；麦克风可选电脑麦克风；摄像头画面来自电脑摄像头（可切测试图案），并显示设备最近拍的一张；短信与电话的“外面的人”（发短信给设备、打电话给设备、对方接听或挂断）；网络只设周围的信号（有没有 Wi-Fi、4G 覆盖与强弱），用哪条由系统决定；电量与 USB 充电（电量计读数、充电电流）；设备朝向和“晃一下”（加速度计），时钟芯片的时间；网络在 4G、Wi-Fi、无网络之间切换，或断网 5 秒；4G 的两张卡（外置卡槽、内置卡）各插什么卡（没有、只有流量、加短信、加通话），以及模组的状态（卡槽设置、在用的卡、是否注册）；窗口只模拟硬件，切卡由系统经 AT 命令完成（R-043、R-044）；麦克风听到的声音（说话、安静、噪声）；“拔掉电池”掉电（正在写的 Flash 会写坏一半）；CPU 两个核的占用（按档案折算到 S31）、内部 RAM 与 PSRAM 余量。
 - **下边是日志**：系统日志和模拟器的提示、警告都在这里，可筛选；终端里同样有一份。
 - **数据**：Flash 镜像和 SD 卡目录默认在 `build/gui-data/`，重启后书签、设置都还在；截图和 `metrics.json` 在 `build/gui-data/out/`。“重启设备”和崩溃、掉电后的“重新开机”都是重新启动整个程序，等于给设备重新上电。
 - **调试**：系统代码和窗口在同一个进程里，可以用 `lldb ./build/ink-sim-gui`（Linux 用 gdb）或 VS Code、Xcode 下断点、单步、看变量；macOS 第一次调试时系统会要求授权开发者工具。设备死机（panic）时窗口不退出，保留最后的画面、原因和日志。
@@ -109,11 +109,12 @@ cmake -S . -B build && cmake --build build -j && ctest --test-dir build --output
 
 依赖：SDL2（系统装了就用，Debian/Ubuntu 是 `libsdl2-dev`，macOS 可 `brew install sdl2`；没装时 CMake 自动下载 release-2.32.10 编译）和 Dear ImGui v1.91.9b（自动下载）。不想编窗口程序时加 `-DINK_GUI=OFF`。窗口的中文字体用构建时配置的 Noto Sans CJK，找不到再用系统的冬青黑体、华文黑体。
 
-**和官方硬件的一致性**（R-043）：逐项对照见[模拟器与官方硬件的对照](../research/simulator/hardware-parity.md)。2026-11-03 第二轮后 21 项里 18 项一致，2 项部分一致（音频芯片的 UART AT、4G 的短信电话），摄像头不做。总线上除摄像头外每颗芯片都有寄存器级模型，系统经本项目的驱动访问它们（D-41 A）：
+**和官方硬件的一致性**（R-043）：逐项对照见[模拟器与官方硬件的对照](../research/simulator/hardware-parity.md)。2026-11-03 第三轮后 21 项都一致（估计与假设见对照表）。总线上除摄像头外每颗芯片都有寄存器级模型，系统经本项目的驱动访问它们（D-41 A）：
 
 - `drivers/board/metalio_board`：IO 扩展芯片的唯一实例与锁，屏电源、按键、马达、功放、共享复位与电源、关机脉冲都经它；`drivers/board/metalio_touch`：触摸坐标与盖板键；
 - `drivers/ft6336u`、`drivers/bq27220`、`drivers/cx25601n`、`drivers/pcf8563`、`drivers/sc7a20h`、`drivers/nt26`；
-- 新的 HAL：`hal_power_shutdown`、`hal_rtc_*`、`hal_accel_*`、`hal_modem_at`；`hal_power_battery` 在 Plus 上经电量计和充电芯片读；
+- 新的 HAL：`hal_power_shutdown`、`hal_rtc_*`、`hal_accel_*`、`hal_camera_*`、`hal_uart_*`（蓝牙音频芯片）、`hal_modem_at` / `hal_modem_at_payload` / `hal_modem_urc`（4G 的 AT、短信、电话）、`hal_net_use`（系统选网）；`hal_power_battery` 在 Plus 上经电量计和充电芯片读；
+- 驱动还有 `drivers/gc2145`（摄像头）、`drivers/bh1098g`（蓝牙音频）；`drivers/nt26` 加了短信与电话；
 - GPIO2 按线与建模（IO 扩展芯片的 INT 和加速度计的 INT1）：驱动任务两边都要读，否则锁存的 INT1 会把线一直拉低，后面的按键就丢了；
 - I2C 故障注入每个器件用自己的随机序列，可只对一个器件（见 §5.8）；
 - 估计值与假设都写在各模型文件的开头：电池内阻、充电曲线、充电芯片的复位值、电源芯片在第几个关机脉冲动作、加速度计的坐标轴方向。
