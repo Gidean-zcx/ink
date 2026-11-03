@@ -20,6 +20,7 @@
 #include "ink/sys/members.h"
 #include "ink/sys/net.h"
 #include "ink/sys/res.h"
+#include "ink/sys/rt.h"
 #include "ink/sys/settings.h"
 #include "ink/sys/state.h"
 #include "ink/sys/power.h"
@@ -596,6 +597,65 @@ static void res_checks(void) {
     CHECK(ink_mem_check() == INK_PRESSURE_NORMAL && wait_for(&g_finished, 3, 2000000) && g_steps == 3, "freed, pressure is normal and it runs");
 }
 
+/* ---- step 5: realtime sessions (detailed design §6.6) ---- */
+
+static volatile int g_echoes;
+static uint8_t g_echo_kind[32];
+static uint64_t g_echo_t[32];
+
+static void on_echo(void *ctx, int sid, uint8_t kind, const uint8_t *payload, size_t len, uint16_t seq, uint32_t t_ms, uint8_t flags) {
+    (void)ctx;
+    (void)sid;
+    (void)payload;
+    (void)len;
+    (void)seq;
+    (void)t_ms;
+    (void)flags;
+    if (g_echoes < 32) {
+        g_echo_kind[g_echoes] = kind;
+        g_echo_t[g_echoes] = osal_now_us();
+    }
+    g_echoes++;
+}
+
+static void rt_checks(void) {
+    static const ink_rt_handler_t H = {.on_frame = on_echo};
+    int sid = ink_rt_open("echo", NULL, &H);
+    CHECK(sid > 0 && ink_rt_open_count() == 1, "a realtime session opens (sid %d)", sid);
+    for (int w = 0; w < 100 && !ink_rt_ready(sid); w++) osal_task_delay_us(100000);
+    CHECK(ink_hub_online() && ink_rt_ready(sid), "an open session connects the hub and is confirmed by it");
+    uint8_t voice[160];
+    memset(voice, 0x55, sizeof voice);
+    uint64_t t0 = osal_now_us();
+    CHECK(ink_rt_send(sid, INK_RT_VOICE_UP, voice, sizeof voice, 0) == 0 && wait_for(&g_echoes, 1, 5000000) && g_echo_kind[0] == INK_RT_VOICE_UP,
+          "a frame goes out and comes back");
+    CHECK(g_echo_t[0] - t0 < 200000, "round trip through the hub in %llu ms (Wi-Fi model)", (unsigned long long)((g_echo_t[0] - t0) / 1000));
+
+    /* priorities: background bulk queued first, a voice frame after it, the voice frame leaves first */
+    static uint8_t bulk[2048 + INK_RT_HDR];
+    memset(bulk, 0, sizeof bulk);
+    bulk[0] = INK_RT_SCREEN;
+    bulk[1] = (uint8_t)sid;
+    for (int i = 0; i < 16; i++) ink_hub_send_frame(bulk, sizeof bulk, INK_HUB_TX_BACKGROUND);
+    ink_rt_send(sid, INK_RT_VOICE_UP, voice, sizeof voice, 0);
+    CHECK(wait_for(&g_echoes, 18, 10000000), "all 17 come back (%d)", g_echoes - 1);
+    int at = -1;
+    for (int i = 1; i < 18 && i < 32; i++)
+        if (g_echo_kind[i] == INK_RT_VOICE_UP) at = i - 1;
+    CHECK(at >= 0 && at <= 1, "the voice frame queued last left first (position %d of 17)", at);
+
+    /* background jobs wait while a session is open */
+    g_steps = 0;
+    ink_job_t j = {.name = "three", .step = three_steps, .finish = job_finished};
+    int done = g_finished;
+    CHECK(ink_job_submit(&j) > 0, "a job is queued during a session");
+    osal_task_delay_us(200000);
+    CHECK(g_steps == 0, "it waits while the session is open");
+    ink_rt_close(sid);
+    CHECK(ink_rt_open_count() == 0 && wait_for(&g_finished, done + 1, 2000000) && g_steps == 3, "closed, the job runs");
+    CHECK(ink_rt_send(sid, INK_RT_VOICE_UP, voice, sizeof voice, 0) != 0, "nothing goes out on a closed session");
+}
+
 /* Children: last, a child cannot switch back to an adult without the PIN. */
 static void child_checks(void) {
     ink_receipt_t rc;
@@ -614,7 +674,7 @@ static void systest_task(void *arg) {
     (void)arg;
     if (ink_display_init() != 0 || ink_storage_init() != 0 || ink_cap_init() != 0 || ink_exec_init() != 0 || ink_res_init() != 0 || ink_storage_reclaimable() != 0 || ink_state_init() != 0 ||
         ink_settings_init() != 0 || ink_power_init() != 0 || ink_net_init() != 0 || ink_light_init() != 0 ||
-        ink_hub_init("wss://hub.local/v1/device") != 0 || ink_audio_init() != 0 || ink_camera_init() != 0 || ink_comm_init() != 0) {
+        ink_hub_init("wss://hub.local/v1/device") != 0 || ink_rt_init() != 0 || ink_audio_init() != 0 || ink_camera_init() != 0 || ink_comm_init() != 0) {
         CHECK(0, "the system services start");
         return;
     }
@@ -628,6 +688,7 @@ static void systest_task(void *arg) {
     ink_members_init();
     service_checks();
     res_checks();
+    rt_checks();
     child_checks();
     ink_probe_mark("systest-done");
 }

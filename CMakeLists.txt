@@ -154,6 +154,7 @@ add_library(ink_system STATIC
   system/services/storage/storage_service.c
   system/services/power/power_service.c
   system/services/hub/hub_link.c
+  system/services/hub/rt.c
   system/services/ai/ai_service.c
   system/services/audio/audio_service.c
   system/services/res/exec.c

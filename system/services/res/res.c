@@ -257,8 +257,10 @@ static void job_tick(void *arg);
 static void job_kick(void) {
     if (!R.lock) return;
     osal_mutex_lock(R.lock, OSAL_WAIT_FOREVER);
-    bool post = !R.scheduled;
-    R.scheduled = true;
+    bool any = false;
+    for (int i = 0; i < JOBS_MAX && !any; i++) any = R.jobs[i].used;
+    bool post = any && !R.scheduled; /* no jobs, no executor: exec.bg is created on its first real job */
+    if (post) R.scheduled = true;
     osal_mutex_unlock(R.lock);
     if (post && ink_exec_post(INK_EXEC_BG, job_tick, NULL) != 0) {
         osal_mutex_lock(R.lock, OSAL_WAIT_FOREVER);

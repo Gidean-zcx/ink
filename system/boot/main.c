@@ -15,6 +15,7 @@
 #include "ink/sys/exec.h"
 #include "ink/sys/power.h"
 #include "ink/sys/res.h"
+#include "ink/sys/rt.h"
 #include "ink/sys/hub.h"
 #include "ink/sys/members.h"
 #include "ink/sys/net.h"
@@ -39,7 +40,7 @@ void ink_main(void) {
     if (ink_power_init() != 0) osal_panic("power service failed to start");
     ink_members_init();
     if (ink_net_init() != 0 || ink_light_init() != 0) osal_panic("network or light settings failed to start");
-    if (ink_hub_init("wss://hub.local/v1/device") != 0) osal_panic("hub link failed to start");
+    if (ink_hub_init("wss://hub.local/v1/device") != 0 || ink_rt_init() != 0) osal_panic("hub link failed to start");
     if (ink_audio_init() != 0) osal_panic("audio service failed to start");
     hal_device_info_t di;
     hal_device_get_info(&di);

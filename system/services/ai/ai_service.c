@@ -25,6 +25,7 @@
 #include "ink/osal.h"
 #include "ink/probe.h"
 #include "ink/sys/cap.h"
+#include "ink/sys/rt.h"
 #include "ink/sys/ai.h"
 #include "ink/sys/audio.h"
 #include "ink/sys/font.h"
@@ -43,7 +44,8 @@ static const char *SIM_TRANSCRIPT = "这一页讲了什么？";
 typedef struct frame {
     struct frame *next;
     size_t len;
-    uint8_t data[]; /* [kind][stream][seq lo][seq hi] + Opus */
+    uint8_t sid; /* the realtime session of its turn */
+    uint8_t data[]; /* Opus */
 } frame_t;
 
 static struct {
@@ -152,7 +154,7 @@ bool ink_ai_dismiss(void) {
     AI.sheet = NULL;
     AI.open = false;
     AI.asking = false;
-    /* closing ends this turn's speech too: frames still on their way are dropped (on_binary), not
+    /* closing ends this turn's speech too: frames still on their way are dropped (on_rt_frame), not
      * played after the sheet is gone */
     osal_mutex_lock(AI.lock, OSAL_WAIT_FOREVER);
     AI.tts_stream = 0;
@@ -261,18 +263,23 @@ static void on_speech_failed(void *ctx, int id) {
     if (ours) post(turn, 4, 0, NULL);
 }
 
-static void on_binary(void *ctx, const uint8_t *d, size_t len) { /* hub task: TTS frames */
+static void on_rt_frame(void *ctx, int sid, uint8_t kind, const uint8_t *opus, size_t len, uint16_t seq, uint32_t t_ms,
+                        uint8_t flags) { /* hub task: TTS frames of this turn's session */
     (void)ctx;
-    if (len < 5 || d[0] != 2) return;
+    (void)seq;
+    (void)t_ms;
+    (void)flags;
+    if (kind != INK_RT_VOICE_DOWN || !len) return;
+    uint8_t st = (uint8_t)sid;
     /* under the lock, so a press (new turn) cannot slip between the check and opening a stream */
     osal_mutex_lock(AI.lock, OSAL_WAIT_FOREVER);
-    if (d[1] == AI.stream && AI.tts_done_for != d[1]) { /* the current turn, its speech not ended yet */
-        if (AI.tts_stream <= 0 || AI.tts_for != d[1]) {
+    if (st == AI.stream && AI.tts_done_for != st) { /* the current turn, its speech not ended yet */
+        if (AI.tts_stream <= 0 || AI.tts_for != st) {
             AI.tts_stream = ink_audio_stream_open(INK_AUDIO_PRIO_VOICE, AI.t_release, "ai.release_to_first_audio_heard_ms");
-            AI.tts_for = d[1];
+            AI.tts_for = st;
             AI.tts_opened = AI.tts_stream > 0 ? AI.tts_stream : 0;
         }
-        if (AI.tts_stream > 0) ink_audio_stream_push(AI.tts_stream, d + 4, len - 4);
+        if (AI.tts_stream > 0) ink_audio_stream_push(AI.tts_stream, opus, len);
     }
     osal_mutex_unlock(AI.lock);
 }
@@ -299,11 +306,11 @@ static void free_buffered(void) { /* under lock */
 
 /* Send buffered frames (and the end notification once the last frame went out) if online. */
 static void flush_uplink(void) {
-    if (!ink_hub_online()) return;
+    if (!ink_rt_ready(AI.stream)) return; /* the turn's session is not confirmed yet: keep buffering */
     osal_mutex_lock(AI.lock, OSAL_WAIT_FOREVER);
     while (AI.buf_head) {
         frame_t *f = AI.buf_head;
-        if (ink_hub_send_binary(f->data, f->len) != 0) break;
+        if (ink_rt_send(f->sid, INK_RT_VOICE_UP, f->data, f->len, 0) != 0) break;
         AI.buf_head = f->next;
         if (!AI.buf_head) AI.buf_tail = NULL;
         AI.buffered--;
@@ -332,17 +339,15 @@ static void on_frame(void *ctx, const uint8_t *data, size_t len, uint32_t seq) {
         return;
     }
     const char *prev = osal_mem_tag("ai");
-    frame_t *f = osal_malloc(sizeof *f + len + 4, OSAL_MEM_EXTERNAL);
+    frame_t *f = osal_malloc(sizeof *f + len, OSAL_MEM_EXTERNAL);
     osal_mem_tag(prev);
     if (!f) return;
+    (void)seq; /* the session numbers its frames */
     f->next = NULL;
-    f->len = len + 4;
-    f->data[0] = 1;
-    f->data[2] = (uint8_t)seq;
-    f->data[3] = (uint8_t)(seq >> 8);
-    memcpy(f->data + 4, data, len);
+    f->len = len;
+    memcpy(f->data, data, len);
     osal_mutex_lock(AI.lock, OSAL_WAIT_FOREVER);
-    f->data[1] = AI.stream;
+    f->sid = AI.stream;
     if (AI.drop_frames) { /* the sheet was closed: nothing more of this turn goes out */
         osal_mutex_unlock(AI.lock);
         osal_free(f);
@@ -426,12 +431,16 @@ static int request(const char *method, bool voice) {
 
 static bool voice_ok(void) { return ink_audio_has_mic(); }
 
+static const ink_rt_handler_t AI_RT = {.on_frame = on_rt_frame};
+
 void ink_ai_key(bool pressed, uint64_t t_us) {
     if (pressed) {
         AI.t_press = t_us;
         /* a new turn: frames and the speech end of the previous one no longer apply */
+        if (AI.stream) ink_rt_close(AI.stream); /* the previous turn's session */
+        int sid = ink_rt_open("voice.chat", NULL, &AI_RT);
         osal_mutex_lock(AI.lock, OSAL_WAIT_FOREVER);
-        AI.stream++;
+        AI.stream = sid > 0 ? (uint8_t)sid : 0;
         AI.tts_stream = AI.tts_opened = 0;
         AI.tts_for = AI.tts_done_for = -1;
         osal_mutex_unlock(AI.lock);
@@ -507,7 +516,6 @@ int ink_ai_init(void) {
     if (!AI.answer_text || !AI.lock) return -1;
     AI.answer_text[0] = 0;
     AI.tts_for = AI.tts_done_for = -1;
-    ink_hub_on_binary(on_binary, NULL);
     ink_audio_on_stream_failed(on_speech_failed, NULL);
     return ink_hub_subscribe("ai.", on_notify, NULL);
 }

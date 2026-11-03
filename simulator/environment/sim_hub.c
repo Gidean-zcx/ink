@@ -15,8 +15,9 @@
  *   ]}
  * A rule may set "drop": true (no answer: tests timeouts).
  *
- * Voice turns ("ai.listen"): the request opens a session; binary microphone
- * frames [1][stream][seq] are counted; the "ai.listen.end" notification makes
+ * Voice turns ("ai.listen"): the request opens a turn in the device's realtime
+ * session ("rt.open", answered here); binary microphone frames [1][sid][seq]...
+ * (10-byte header, ink/sys/rt.h) are counted; the "ai.listen.end" notification makes
  * the hub answer like the real one: "ai.stt" (transcript) after stt_ms, the
  * text chunks ("ai.delta") after think_ms, TTS audio as binary frames
  * [2][stream][seq] (stand-in Opus, sent tts_speed x faster than real time,
@@ -168,14 +169,20 @@ static void finish_listen(int i, uint64_t at) {
         /* this chunk's speech: chars / cps seconds of 60 ms frames, sent `speed` x real time */
         int frames = (int)(utf8_chars(txt) / cps / 0.06) + 1;
         for (int f = 0; f < frames; f++) {
-            uint8_t pkt[4 + 200];
+            uint8_t pkt[10 + 200]; /* realtime frame header (ink/sys/rt.h): kind, session, seq, time, flags */
+            uint32_t t_ms = (uint32_t)(tts_at / 1000000u);
             pkt[0] = 2;
             pkt[1] = (uint8_t)LS[i].stream;
             pkt[2] = (uint8_t)seq;
             pkt[3] = (uint8_t)(seq >> 8);
+            pkt[4] = (uint8_t)t_ms;
+            pkt[5] = (uint8_t)(t_ms >> 8);
+            pkt[6] = (uint8_t)(t_ms >> 16);
+            pkt[7] = (uint8_t)(t_ms >> 24);
+            pkt[8] = pkt[9] = 0;
             double syl = 0.5 + 0.5 * sin(seq * 0.9); /* syllable rhythm */
-            int n = sim_opus_fake_packet(pkt + 4, 200, 170.0 + 40.0 * sin(seq * 0.23), 1500.0 + 4000.0 * syl, 180, seq * 2654435761u);
-            sim_net_hub_send(ws, tts_at, pkt, (size_t)(4 + n), true);
+            int n = sim_opus_fake_packet(pkt + 10, 200, 170.0 + 40.0 * sin(seq * 0.23), 1500.0 + 4000.0 * syl, 180, seq * 2654435761u);
+            sim_net_hub_send(ws, tts_at, pkt, (size_t)(10 + n), true);
             tts_at += (uint64_t)(SIM_MS(60) / speed);
             seq++;
         }
@@ -262,6 +269,29 @@ static bool on_device_response(struct hal_ws *ws, uint64_t t, cJSON *msg) {
 /* Server capabilities the device calls through its remote proxy ("tools/call" to the hub, the
  * answer an MCP CallToolResult whose structuredContent is a receipt). "echo" returns its arguments
  * (tests of the proxy). Unknown names fall through to the script's rules. */
+/* Realtime sessions opened with cap "echo": every frame comes back as it was (tests of the session
+ * layer: order, priorities, round trip). */
+static struct {
+    struct hal_ws *ws;
+    int sid;
+} ECHO[4];
+
+static bool echo_session(struct hal_ws *ws, int sid) {
+    for (int i = 0; i < 4; i++)
+        if (ECHO[i].ws == ws && ECHO[i].sid == sid) return true;
+    return false;
+}
+
+static void echo_set(struct hal_ws *ws, int sid, bool on) {
+    if (on && echo_session(ws, sid)) return; /* announced again after a reconnect */
+    for (int i = 0; i < 4; i++)
+        if (on ? !ECHO[i].ws : ECHO[i].ws == ws && ECHO[i].sid == sid) {
+            ECHO[i].ws = on ? ws : NULL;
+            ECHO[i].sid = on ? sid : 0;
+            return;
+        }
+}
+
 static bool server_tool(struct hal_ws *ws, uint64_t t, cJSON *req, cJSON *id) {
     const cJSON *pr = cJSON_GetObjectItemCaseSensitive(req, "params");
     const char *name = cJSON_GetStringValue(cJSON_GetObjectItemCaseSensitive(pr, "name"));
@@ -289,6 +319,11 @@ static bool server_tool(struct hal_ws *ws, uint64_t t, cJSON *req, cJSON *id) {
 void sim_hub_receive(struct hal_ws *ws, uint64_t t, const uint8_t *data, size_t len, bool binary) {
     if (binary) { /* microphone frames of a voice turn */
         sim_metric_add("hub.binary_bytes", (double)len);
+        if (len >= 10 && echo_session(ws, data[1])) {
+            sim_metric_add("hub.rt_echoed", 1);
+            sim_net_hub_send(ws, t + SIM_MS(5), data, len, true);
+            return;
+        }
         if (len >= 4 && data[0] == 1)
             for (int i = 0; i < MAX_LISTEN; i++)
                 if (LS[i].used && LS[i].ws == ws && LS[i].stream == data[1]) LS[i].frames++;
@@ -319,6 +354,27 @@ void sim_hub_receive(struct hal_ws *ws, uint64_t t, const uint8_t *data, size_t 
         int stream = (int)num_or(pr, "stream", -1);
         for (int i = 0; i < MAX_LISTEN; i++)
             if (LS[i].used && LS[i].ws == ws && LS[i].stream == stream) answer_listen(i, t);
+        cJSON_Delete(req);
+        return;
+    }
+    if (!strcmp(method, "rt.close")) { /* a realtime session ended (device side) */
+        sim_metric_add("hub.rt_closed", 1);
+        echo_set(ws, (int)num_or(cJSON_GetObjectItemCaseSensitive(req, "params"), "sid", 0), false);
+        cJSON_Delete(req);
+        return;
+    }
+    if (id && !strcmp(method, "rt.open")) { /* a realtime session (ink/sys/rt.h): the device chose its id */
+        const cJSON *pr = cJSON_GetObjectItemCaseSensitive(req, "params");
+        cJSON *res = cJSON_CreateObject();
+        cJSON_AddStringToObject(res, "jsonrpc", "2.0");
+        cJSON_AddItemToObject(res, "id", cJSON_Duplicate(id, 1));
+        cJSON *r = cJSON_AddObjectToObject(res, "result");
+        cJSON_AddNumberToObject(r, "sid", num_or(pr, "sid", 0));
+        const char *cap = cJSON_GetStringValue(cJSON_GetObjectItemCaseSensitive(pr, "cap"));
+        if (cap && !strcmp(cap, "echo")) echo_set(ws, (int)num_or(pr, "sid", 0), true);
+        send_json(ws, t + SIM_MS(5), res);
+        cJSON_Delete(res);
+        sim_metric_add("hub.rt_opened", 1);
         cJSON_Delete(req);
         return;
     }

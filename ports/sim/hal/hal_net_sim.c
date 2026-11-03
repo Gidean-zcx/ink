@@ -64,8 +64,9 @@ static struct {
     bool radio_active;
     vtk_event_id_t tail_ev;
     bool dns_cached;
-    hal_link_cb link_cb;
-    void *link_ctx;
+    hal_link_cb link_cb[4]; /* up to four listeners (hal_net.h) */
+    void *link_ctx[4];
+    int nlink;
     vtk_waitq_t evt_wq;
     bool link_changed;
     struct hal_ws *conns;
@@ -773,8 +774,9 @@ void hal_net_link_status(hal_link_status_t *out) {
 }
 
 void hal_net_set_link_callback(hal_link_cb cb, void *ctx) {
-    N.link_cb = cb;
-    N.link_ctx = ctx;
+    if (N.nlink >= 4) osal_panic("net: more than four link listeners");
+    N.link_ctx[N.nlink] = ctx;
+    N.link_cb[N.nlink++] = cb;
 }
 
 /* System event loop task (esp_event "sys_evt" on the device): delivers link changes. */
@@ -786,10 +788,10 @@ static void sys_evt_task(void *arg) {
         N.link_changed = false;
         vtk_unlock();
         sim_charge_ns_always(SIM_US(40));
-        if (N.link_cb) {
+        if (N.nlink) {
             hal_link_status_t st;
             hal_net_link_status(&st);
-            N.link_cb(N.link_ctx, &st);
+            for (int i = 0; i < N.nlink; i++) N.link_cb[i](N.link_ctx[i], &st);
         }
     }
 }

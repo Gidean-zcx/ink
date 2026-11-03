@@ -42,7 +42,8 @@ void hal_net_link_status(hal_link_status_t *out);
 void hal_net_use(hal_link_type_t type);
 
 typedef void (*hal_link_cb)(void *ctx, const hal_link_status_t *st);
-/** Notified when the link changes (comes up, goes down, switches Wi-Fi/LTE). */
+/** Notified when the link changes (comes up, goes down, switches Wi-Fi/LTE). Up to four listeners,
+ *  each added once (on the device: esp_event handlers); they run in the platform's event task. */
 void hal_net_set_link_callback(hal_link_cb cb, void *ctx);
 
 /* ---- cellular modem AT channel ----

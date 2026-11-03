@@ -42,6 +42,10 @@ int ink_hub_subscribe(const char *prefix, ink_hub_notify_fn fn, void *ctx);
 /** User activity: open the connection now if needed and keep it up for a while (pre-connect on key press). */
 void ink_hub_demand(void);
 bool ink_hub_online(void);
+/** fn(ctx) in the hub task each time the connection is (re)established. Up to 2. */
+int ink_hub_on_online(void (*fn)(void *ctx), void *ctx);
+/** Stay connected while held (reference-counted; realtime sessions hold it). */
+void ink_hub_keep(bool on);
 
 /**
  * Fire-and-forget while online (returns INK_HUB_ERR_OFFLINE otherwise): a JSON-RPC notification,
@@ -50,6 +54,10 @@ bool ink_hub_online(void);
  */
 int ink_hub_notify(const char *method, const char *params_json);
 int ink_hub_send_binary(const void *data, size_t len);
+/* Send classes, highest first: what waits in the queue is sent in this order (detailed design §6.4). */
+enum { INK_HUB_TX_VOICE = 0, INK_HUB_TX_INPUT, INK_HUB_TX_SCREEN, INK_HUB_TX_CONTROL, INK_HUB_TX_BACKGROUND };
+/** One binary message in a send class (ink_hub_send_binary is the voice class). */
+int ink_hub_send_frame(const void *data, size_t len, int cls);
 typedef void (*ink_hub_binary_fn)(void *ctx, const uint8_t *data, size_t len);
 /** The (single) receiver of binary messages from the hub; runs in the hub task. */
 void ink_hub_on_binary(ink_hub_binary_fn fn, void *ctx);
