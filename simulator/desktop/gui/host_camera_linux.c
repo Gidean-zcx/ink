@@ -1,7 +1,8 @@
 /* host_camera.h on Linux: V4L2 /dev/video0, 640x480 YUYV converted to BGRA on a reader thread.
  * Every setup step is checked and undone on failure; frames are converted with the driver's row
- * stride and only from buffers that were mapped, and only whole frames (a short one is skipped). A
- * capture error on the reader thread stops it and says so in the status. */
+ * stride and only from buffers that were mapped, and only whole frames the driver did not flag as
+ * bad (a short, empty or flagged one is skipped). A capture error on the reader thread stops it and
+ * says so in the status. */
 #include <errno.h>
 #include <fcntl.h>
 #include <linux/videodev2.h>
@@ -69,8 +70,8 @@ static void *reader(void *arg) {
             stopped();
             break;
         }
-        size_t len = b.bytesused ? b.bytesused : ((int)b.index < g_nmap ? g_len[b.index] : 0);
-        if ((int)b.index < g_nmap && len <= g_len[b.index] && whole_frame(len)) {
+        size_t len = b.bytesused; /* what the driver filled in; 0 is no frame */
+        if ((int)b.index < g_nmap && !(b.flags & V4L2_BUF_FLAG_ERROR) && len <= g_len[b.index] && whole_frame(len)) {
             pthread_mutex_lock(&g_m);
             if (g_frame) {
                 yuyv_to_bgra(g_map[b.index], g_frame, g_w, g_h, g_stride);
