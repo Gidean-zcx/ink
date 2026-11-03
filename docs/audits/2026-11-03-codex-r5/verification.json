@@ -1,0 +1,38 @@
+[
+  {
+    "id": "AUD5-001",
+    "verdict": "部分修复",
+    "evidence_type": "复现、代码核查",
+    "note": "原r3_display_p05/r4_p05_preoff两档均不再假成功；恢复后同图可见。连续两次丢电和自动清理期间重叠更新均每请求一次回调、最终图像正确；P05断开时显示服务busy归0，不无限重试。初始化写也计入changed。但PQ-BN用户GC16清理绕过g_redraw收尾，系统强制全屏恢复后的下一次小更新重复清全屏，0.329s→10.119s（AUD6-002）；局部GC16还推迟损坏区补画。 正常standby解锁到可见p50另从655.503ms增至785.458ms，预热失败0→2，最终刷新均成功；正常翻页及两档HAL循环的可见时延未退化。"
+  },
+  {
+    "id": "AUD5-002",
+    "verdict": "部分修复",
+    "evidence_type": "复现、代码核查",
+    "note": "服务层原丢帧已修：原故障流480ms全部播放；永久启动失败约8.66s后仅一次回调（audio任务），可重入API且释放hold；新流重置等待期。实际AI恢复组与正常组均播放20160ms；永久故障ai.speech_failed=1。但失败UI被稍后的回答完成覆盖（AUD6-003），端到端提示尚不完整。另有中途失去时钟永久停滞的新高问题AUD6-001，区别于原启动失败。 原正常录放音及正式AI场景均完成、无新增告警或欠载；AI首声p50未变慢。"
+  },
+  {
+    "id": "AUD5-003",
+    "verdict": "已修复",
+    "evidence_type": "复现、代码核查",
+    "note": "原 r4_ai_failed：mic_unavailable=1、采音0ms、ai.ask/ai.listen/answers均0，不再伪造提问；ai_service.c:463–489保存本次mic_failed并在松键返回。新增正式场景ai_mic_unavailable：失败后再按可正常录音780ms、ai.listen=1、answers=1，预算通过；示例分支仅无麦克风设备可达。"
+  },
+  {
+    "id": "AUD5-004",
+    "verdict": "已修复",
+    "evidence_type": "复现、代码核查",
+    "note": "CMakeLists.txt:327–331已注册selftest-board-wiring-pqbn，独立预算min=69。本轮完整Werror CTest 42/42通过；EPDiy整板70项、PQ-BN69项，test.fail=0、budget_violations=0、power.off=1。"
+  },
+  {
+    "id": "AUD2-023",
+    "verdict": "部分修复",
+    "evidence_type": "文档核查、代码核查、复现",
+    "note": "此前“两档都过”“音频原已处理”“所有输出写”已改；R-034及硬件表8一致/14部分统一，初始化输出写现被记录，独立PQ-BN预算通过。但audits/README.md:24的“不清记录”与metalio_epd_power.c:49–52先清P05 changed再读取不符；“任何一次丢电后下一次先重刷”未覆盖用户GC16组合（AUD6-002）。需按当前实现及本轮证据收窄完成表述。"
+  },
+  {
+    "id": "N4-1",
+    "verdict": "已修复",
+    "evidence_type": "复现、代码核查",
+    "note": "tests/simulator/gui_smoke.cmake:10–12使用--speed 1、16s退出；本机dummy后端gui-smoke通过（16.94s），touches=2、page_turns=1、warnings=[]并生成window.png。仅证明本轮运行，不能证明任意宿主长时间卡顿下绝不偶发。"
+  }
+]

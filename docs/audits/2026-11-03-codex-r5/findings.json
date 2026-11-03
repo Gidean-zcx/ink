@@ -1,0 +1,52 @@
+[
+  {
+    "id": "AUD6-001",
+    "severity": "高",
+    "area": "音频服务 / 播放中途失去时钟后的恢复",
+    "title": "播放途中P14断电又恢复后，音频永久停在已打开状态，无失败通知且阻止睡眠",
+    "evidence_type": "复现、代码核查、推断",
+    "locations": [
+      "system/services/audio/audio_service.c:284",
+      "system/services/audio/audio_service.c:347",
+      "system/services/audio/audio_service.c:385",
+      "ports/sim/hal/hal_audio_sim.c:257",
+      "ports/sim/hal/hal_audio_sim.c:302"
+    ],
+    "impact": "50帧已接收并finish的3s音频，播放120ms后P14中断1s；复电10s后仍只播放120ms，mode=clock=0、busy=1、未通知失败，存储写入仍pending=1。AU.out_open未失效，8s退避/放弃只处理打不开的输出，写入无进展没有上限。若无外部取消，按代码该状态将持续持有睡眠hold。Flash写入有排队超过30s的强制上限（代码核查，未实测等到30s），不称写入永久阻塞。手动stop_all后资源释放并能重播。此项是播放已启动后的遗漏路径，与已修复的AUD5-002启动失败区分。",
+    "recommendation": "对已打开输出的供电/时钟失效或持续零进展做有界恢复：停旧HAL、重新配置芯片、保留未播数据或明确失败并通知；释放睡眠与写入hold。补服务级中途掉电→恢复、永久故障及取消场景。",
+    "reproduce": "python3 docs/audits/2026-11-03-codex-r5/experiments/run.py r5_service_midcut；exit=0。1.941s played_ms=120；12.960s（复电10s）played_ms=120 busy=1 mode=0 clock=0 power=1 failures=0 storage_pending=1；手动停止1s后busy=0/pending=0，新流完整播放300ms。见experiments/results.json。"
+  },
+  {
+    "id": "AUD6-002",
+    "severity": "高",
+    "area": "PQ-BN / 丢电重刷与GC16清理状态",
+    "title": "成功完成恢复用全屏GC16后未清除重刷标志，下一次正常小更新又全屏清理约10秒",
+    "evidence_type": "复现、代码核查",
+    "locations": [
+      "ports/sim/hal/hal_display_sim.c:1272",
+      "ports/sim/hal/hal_display_sim.c:1279",
+      "ports/sim/hal/hal_display_sim.c:1210",
+      "ports/sim/hal/hal_display_sim.c:1012",
+      "system/services/display/refresh_policy.c:109",
+      "system/services/display/refresh_policy.c:151"
+    ],
+    "impact": "一次全屏更新中P05掉电后，系统将下次更新提升为全屏GC16；该GC16已正确恢复画面，却因PQ.clean_stage非0绕过自动重刷分支，未清g_redraw。之后普通128×128更新再触发全屏清理，10.119s才完成；无故障对照同一更新0.329s。实测多9.79s（约30.8倍），再次闪整屏并占用刷新资源。直接HAL的下一次GC16若仅覆盖另一区域，还会延迟原损坏区域的修复（灰度150.66而目标0），等更后一次GL16才补。",
+    "recommendation": "统一用户GC16与自动恢复清理的状态收尾：覆盖丢电区域且成功完成时清除相应恢复范围；不能覆盖的范围合并补清。新增真实显示服务的失败→强制全屏→下一次局刷和局部GC16恢复测试。",
+    "reproduce": "AUDIT_END=60s python3 docs/audits/2026-11-03-codex-r5/experiments/run.py --pqbn r5_system_redraw r5_system_redraw_control；均exit=0。故障组recovery-full waited_us=12091949、pending=0、redraws=0，随后normal-small waited_us=10118917/redraws=1；对照normal-small waited_us=328917/redraws=0。r5_redraw_gc16_other另验证局部GC16跳过原区域的修复。"
+  },
+  {
+    "id": "AUD6-003",
+    "severity": "中",
+    "area": "AI语音反馈 / 失败状态保存",
+    "title": "扬声器失败提示被稍后到达的回答完成事件覆盖，最终界面不再说明语音未播放",
+    "evidence_type": "复现、代码核查",
+    "locations": [
+      "system/services/ai/ai_service.c:194",
+      "system/services/ai/ai_service.c:198",
+      "system/services/ai/ai_service.c:253"
+    ],
+    "impact": "Wi-Fi模拟链路上的正常录音回答，录音结束后断P14，文字回答照常到达。声音输出在8s重试后失败，UI确实短暂显示“声音没能播放”，但随后kind=1无条件设置“回答完成”，最终画面失去失败说明。仅60ms按键提示音播放、整段回答语音未播；用户稍晚看屏会看不到原因。回调已触发，故不定为完全静默失败或高。",
+    "recommendation": "把语音失败记录为本轮持久状态，与文字生成完成分开；完成文案保留未播原因，新一轮或明确重试时再清。增加失败回调先到、文本done后到的顺序断言。",
+    "reproduce": "AUDIT_END=40s python3 docs/audits/2026-11-03-codex-r5/experiments/run.py --asan r5_ai_speaker_fail；exit=0，无sanitizer错误。16.842/17.850s标签“声音没能播放：扬声器没打开，文字回答在上面”；18.860s变为“回答完成 · 按 AI 键继续问，按 HOME 关闭”；ai.speech_failed=audio.play_failed=1、audio.speaker.played_ms=60。普通构建有相同最终截图及指标。"
+  }
+]
