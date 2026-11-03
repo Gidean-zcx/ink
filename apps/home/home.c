@@ -5,8 +5,7 @@
  */
 #include <stdio.h>
 
-#include "ink/hal_device.h"
-#include "ink/osal.h"
+#include "ink/sys/app.h"
 #include "ink/probe.h"
 #include "ink/sys/font.h"
 #include "ink/sys/ui.h"
@@ -32,11 +31,10 @@ static const char *PAGES[] = {
 #define NPAGES (int)(sizeof PAGES / sizeof PAGES[0])
 
 static void update_info(void) {
-    osal_mem_stats_t in, ex;
-    osal_mem_stats(OSAL_MEM_INTERNAL, &in);
-    osal_mem_stats(OSAL_MEM_EXTERNAL, &ex);
-    lv_label_set_text_fmt(H.info, "internal free %u KiB (min %u)  psram free %u KiB", (unsigned)(in.free / 1024),
-                          (unsigned)(in.min_free / 1024), (unsigned)(ex.free / 1024));
+    size_t in, in_min, ex;
+    ink_app_mem_free(&in, &in_min, &ex);
+    lv_label_set_text_fmt(H.info, "internal free %u KiB (min %u)  psram free %u KiB", (unsigned)(in / 1024), (unsigned)(in_min / 1024),
+                          (unsigned)(ex / 1024));
 }
 
 static void count_cb(lv_event_t *e) {
@@ -56,10 +54,10 @@ static void turn(int delta) {
     ink_probe_count("home.page_turns");
 }
 
-static bool on_key(hal_key_t key, bool long_press) {
+static bool on_key(ink_key_t key, bool long_press) {
     if (long_press) return false;
-    if (key == HAL_KEY_NEXT || key == HAL_KEY_VOL_DOWN) turn(+1);
-    else if (key == HAL_KEY_PREV || key == HAL_KEY_VOL_UP) turn(-1);
+    if (key == INK_KEY_NEXT || key == INK_KEY_VOL_DOWN) turn(+1);
+    else if (key == INK_KEY_PREV || key == INK_KEY_VOL_UP) turn(-1);
     else return false;
     return true;
 }
@@ -93,9 +91,7 @@ static void create(lv_obj_t *scr, void *arg) {
     lv_obj_align(rb, LV_ALIGN_TOP_LEFT, ink_dp(16), ink_dp(132));
     lv_obj_add_event_cb(rb, reader_cb, LV_EVENT_CLICKED, NULL);
     lv_obj_t *rl = lv_label_create(rb);
-    hal_panel_info_t pi;
-    hal_display_get_info(&pi);
-    ink_font_t *cjk = ink_font_for_pt(9, pi.dpi);
+    ink_font_t *cjk = ink_font_for_pt(9, ink_panel_dpi());
     if (cjk) lv_obj_set_style_text_font(rl, ink_font_lvgl(cjk), 0);
     lv_label_set_text(rl, cjk ? "阅读" : "Reader");
     lv_obj_center(rl);

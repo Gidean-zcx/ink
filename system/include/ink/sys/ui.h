@@ -22,13 +22,24 @@
 extern "C" {
 #endif
 
+/* Keys, as apps see them (the same values as the HAL's). */
+typedef hal_key_t ink_key_t;
+#define INK_KEY_AI HAL_KEY_AI
+#define INK_KEY_POWER HAL_KEY_POWER
+#define INK_KEY_VOL_UP HAL_KEY_VOL_UP
+#define INK_KEY_VOL_DOWN HAL_KEY_VOL_DOWN
+#define INK_KEY_HOME HAL_KEY_HOME
+#define INK_KEY_PREV HAL_KEY_PREV
+#define INK_KEY_NEXT HAL_KEY_NEXT
+#define INK_KEY_BACK HAL_KEY_BACK
+
 typedef struct {
     const char *name;
     /* build the screen; `screen` is a fresh LVGL screen owned by the runtime */
     void (*create)(lv_obj_t *screen, void *arg);
     void (*destroy)(void);
     /* return true if handled */
-    bool (*on_key)(hal_key_t key, bool long_press);
+    bool (*on_key)(ink_key_t key, bool long_press);
     bool (*on_swipe)(ink_swipe_dir_t dir);
     /* page context for the AI (G-002): plain text of what is on screen; returns bytes written */
     int (*snapshot)(char *buf, size_t cap);

@@ -14,9 +14,8 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "ink/hal_storage.h"
-#include "ink/osal.h"
 #include "ink/probe.h"
+#include "ink/sys/app.h"
 #include "ink/sys/cap.h"
 #include "ink/sys/font.h"
 #include "ink/sys/members.h"
@@ -69,16 +68,17 @@ static void pos_path(char *out, size_t cap, const char *member, const char *book
 
 static void scan_library(void) {
     LIB.nbooks = 0;
-    hal_dir_t *d = hal_fs_opendir("/content/books");
-    hal_dirent_t e;
-    while (d && LIB.nbooks < MAX_BOOKS && hal_fs_readdir(d, &e) == 1) {
-        size_t n = strlen(e.name);
-        if (e.is_dir || n < 5 || strcmp(e.name + n - 4, ".txt")) continue;
+    ink_dir_t *d = ink_dir_open("/content/books");
+    char name[128];
+    bool is_dir;
+    while (d && LIB.nbooks < MAX_BOOKS && ink_dir_next(d, name, sizeof name, &is_dir) == 1) {
+        size_t n = strlen(name);
+        if (is_dir || n < 5 || strcmp(name + n - 4, ".txt")) continue;
         book_t *b = &LIB.books[LIB.nbooks++];
-        snprintf(b->name, sizeof b->name, "%.*s", (int)(n - 4), e.name);
-        snprintf(b->path, sizeof b->path, "/content/books/%s", e.name);
+        snprintf(b->name, sizeof b->name, "%.*s", (int)(n - 4), name);
+        snprintf(b->path, sizeof b->path, "/content/books/%s", name);
     }
-    hal_fs_closedir(d);
+    ink_dir_close(d);
     /* stable order */
     for (int i = 0; i < LIB.nbooks; i++)
         for (int j = i + 1; j < LIB.nbooks; j++)
@@ -106,15 +106,14 @@ static void book_clicked(lv_event_t *e) {
 
 static void library_create(lv_obj_t *scr, void *arg) {
     (void)arg;
-    hal_panel_info_t pi;
-    hal_display_get_info(&pi);
-    ink_font_t *title_font = ink_font_for_pt(11, pi.dpi);
+    int dpi = ink_panel_dpi();
+    ink_font_t *title_font = ink_font_for_pt(11, dpi);
     lv_obj_t *t = lv_label_create(scr);
     if (title_font) lv_obj_set_style_text_font(t, ink_font_lvgl(title_font), 0);
     lv_label_set_text(t, "书架");
     lv_obj_align(t, LV_ALIGN_TOP_LEFT, ink_dp(16), ink_dp(12));
     scan_library();
-    ink_font_t *f = ink_font_for_pt(9, pi.dpi);
+    ink_font_t *f = ink_font_for_pt(9, dpi);
     for (int i = 0; i < LIB.nbooks; i++) {
         lv_obj_t *b = lv_button_create(scr);
         ink_ui_style_button(b);
@@ -188,7 +187,7 @@ static int find_page_start(int page) {
         if (next <= s0) return -1;
         if (RD.nstarts == RD.cap) {
             int ncap = RD.cap * 2;
-            uint32_t *n = osal_realloc(RD.starts, (size_t)ncap * sizeof(uint32_t), OSAL_MEM_DEFAULT);
+            uint32_t *n = ink_app_realloc(RD.starts, (size_t)ncap * sizeof(uint32_t));
             if (!n) return -1;
             RD.starts = n;
             RD.cap = ncap;
@@ -207,14 +206,14 @@ static void arm_once(lv_timer_t *t) {
 static bool render_into(int slot, int page) {
     int start = find_page_start(page);
     if (start < 0) return false;
-    uint64_t t0 = osal_now_us();
+    uint64_t t0 = ink_now_us();
     ink_page_t pg;
     ink_layout_page(&RD.layout, RD.text, RD.len, (size_t)start, &pg);
     memset(RD.buf[slot], 0xff, (size_t)RD.bw * RD.bh);
-    osal_cost_units("psram.copy_byte", (uint64_t)RD.bw * RD.bh / 2); /* clear (write-only) */
+    ink_app_cost("psram.copy_byte", (uint64_t)RD.bw * RD.bh / 2); /* clear (write-only) */
     ink_render_page(&RD.layout, RD.text, &pg, RD.buf[slot], RD.bw, RD.bw, RD.bh, 0, 0);
     RD.buf_page[slot] = page;
-    ink_probe_value("reader.page_render_ms", (double)(osal_now_us() - t0) / 1000.0);
+    ink_probe_value("reader.page_render_ms", (double)(ink_now_us() - t0) / 1000.0);
     return true;
 }
 
@@ -263,13 +262,13 @@ static bool go_to(int target) {
     } else {
         RD.show_pending = true; /* rendered once the queued input is handled (book_settle) */
     }
-    if (!RD.dirty_pos) RD.dirty_since_us = osal_now_us();
+    if (!RD.dirty_pos) RD.dirty_since_us = ink_now_us();
     RD.dirty_pos = true;
     ink_probe_count("reader.page_turns");
     arm_once(RD.ahead_timer);
     /* saved after a pause in reading; the idle timer restarts on every turn, so reading on without
      * a pause saves at least every SAVE_AT_LEAST_EVERY_MS (the write itself waits for an idle panel) */
-    if (osal_now_us() - RD.dirty_since_us >= SAVE_AT_LEAST_EVERY_MS * 1000ull) save_cb(NULL);
+    if (ink_now_us() - RD.dirty_since_us >= SAVE_AT_LEAST_EVERY_MS * 1000ull) save_cb(NULL);
     else arm_once(RD.save_timer);
     return true;
 }
@@ -363,10 +362,10 @@ static void turn(int delta, ink_source_t src) {
 }
 
 /* Pages turn with the cover keys; the volume keys only change the volume (D-19). */
-static bool book_key(hal_key_t key, bool long_press) {
+static bool book_key(ink_key_t key, bool long_press) {
     if (long_press) return false;
-    if (key == HAL_KEY_NEXT) turn(+1, INK_SRC_KEY);
-    else if (key == HAL_KEY_PREV) turn(-1, INK_SRC_KEY);
+    if (key == INK_KEY_NEXT) turn(+1, INK_SRC_KEY);
+    else if (key == INK_KEY_PREV) turn(-1, INK_SRC_KEY);
     else return false;
     return true;
 }
@@ -389,21 +388,21 @@ static void page_clicked(lv_event_t *e) {
 }
 
 static bool load_text(const char *path) {
-    int64_t size = hal_fs_size(path);
+    int64_t size = ink_file_size(path);
     if (size <= 0 || size > MAX_BOOK_BYTES) return false;
-    const char *prev = osal_mem_tag("reader-text");
-    RD.text = osal_malloc((size_t)size + 1, OSAL_MEM_EXTERNAL);
-    osal_mem_tag(prev);
+    const char *prev = ink_app_tag("reader-text");
+    RD.text = ink_app_alloc((size_t)size + 1, true);
+    ink_app_tag(prev);
     if (!RD.text) return false;
-    hal_file_t *f = hal_fs_open(path, HAL_O_READ);
+    ink_file_t *f = ink_file_open(path);
     if (!f) return false;
     size_t got = 0;
     while (got < (size_t)size) {
-        ssize_t n = hal_fs_read(f, RD.text + got, (size_t)size - got > 32768 ? 32768 : (size_t)size - got);
+        int64_t n = ink_file_read(f, RD.text + got, (size_t)size - got > 32768 ? 32768 : (size_t)size - got);
         if (n <= 0) break;
         got += (size_t)n;
     }
-    hal_fs_close(f);
+    ink_file_close(f);
     RD.len = got;
     RD.text[got] = 0;
     return got > 0;
@@ -413,15 +412,14 @@ static void book_destroy(void);
 
 static void book_create(lv_obj_t *scr, void *arg) {
     LIB.open = (int)(intptr_t)arg;
-    hal_panel_info_t pi;
-    hal_display_get_info(&pi);
-    uint64_t t0 = osal_now_us();
+    int dpi = ink_panel_dpi();
+    uint64_t t0 = ink_now_us();
     memset(&RD, 0, sizeof RD);
     RD.buf_page[0] = RD.buf_page[1] = -1;
     RD.shown = -1;
     snprintf(RD.member, sizeof RD.member, "%s", ink_member_current()->id);
-    ink_font_t *body = ink_font_for_pt(8, pi.dpi);
-    ink_font_t *small = ink_font_for_pt(6, pi.dpi);
+    ink_font_t *body = ink_font_for_pt(8, dpi);
+    ink_font_t *small = ink_font_for_pt(6, dpi);
     if (!body || !load_text(LIB.books[LIB.open].path)) {
         lv_obj_t *l = lv_label_create(scr);
         lv_label_set_text(l, "cannot open book");
@@ -437,13 +435,13 @@ static void book_create(lv_obj_t *scr, void *arg) {
     RD.layout.line_gap = ink_font_px(body) / 3;
     RD.layout.para_gap = ink_font_px(body) / 4;
     RD.layout.indent_em = 2;
-    const char *prev = osal_mem_tag("reader-pages");
+    const char *prev = ink_app_tag("reader-pages");
     RD.cap = 256;
-    RD.starts = osal_malloc((size_t)RD.cap * sizeof(uint32_t), OSAL_MEM_DEFAULT);
-    RD.buf[0] = osal_malloc((size_t)RD.bw * RD.bh, OSAL_MEM_EXTERNAL);
-    RD.buf[1] = osal_malloc((size_t)RD.bw * RD.bh, OSAL_MEM_EXTERNAL);
-    osal_mem_tag(prev);
-    if (!RD.starts || !RD.buf[0] || !RD.buf[1]) osal_panic("reader: out of memory for page buffers");
+    RD.starts = ink_app_alloc((size_t)RD.cap * sizeof(uint32_t), false);
+    RD.buf[0] = ink_app_alloc((size_t)RD.bw * RD.bh, true);
+    RD.buf[1] = ink_app_alloc((size_t)RD.bw * RD.bh, true);
+    ink_app_tag(prev);
+    if (!RD.starts || !RD.buf[0] || !RD.buf[1]) ink_app_fail("reader: out of memory for page buffers");
     RD.starts[0] = 0;
     RD.nstarts = 1;
 
@@ -484,17 +482,17 @@ static void book_create(lv_obj_t *scr, void *arg) {
     lv_timer_set_repeat_count(RD.save_timer, 1);
     lv_timer_set_auto_delete(RD.save_timer, false);
     lv_timer_pause(RD.save_timer);
-    ink_probe_value("reader.open_ms", (double)(osal_now_us() - t0) / 1000.0);
+    ink_probe_value("reader.open_ms", (double)(ink_now_us() - t0) / 1000.0);
 }
 
 static void book_destroy(void) {
     if (RD.dirty_pos) save_cb(NULL); /* queued; written when the panel is idle */
     if (RD.ahead_timer) lv_timer_delete(RD.ahead_timer);
     if (RD.save_timer) lv_timer_delete(RD.save_timer);
-    osal_free(RD.buf[0]);
-    osal_free(RD.buf[1]);
-    osal_free(RD.starts);
-    osal_free(RD.text);
+    ink_app_free(RD.buf[0]);
+    ink_app_free(RD.buf[1]);
+    ink_app_free(RD.starts);
+    ink_app_free(RD.text);
     memset(&RD, 0, sizeof RD);
 }
 

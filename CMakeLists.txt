@@ -178,7 +178,9 @@ add_library(ink_system STATIC
   system/text/linebreak.c
   system/text/layout.c
   system/ui/lock_mark.c
-  system/ui/ui_task.c)
+  system/ui/ui_task.c
+  system/ui/app.c
+  system/apps/remote/remote.c)
 target_include_directories(ink_system PUBLIC system/include PRIVATE system/services/display third_party/jsmn)
 target_link_libraries(ink_system PUBLIC ink_platform ink_lvgl ink_lz4)
 # The system calls the HAL; in this build the simulator port implements it. Link-only (no headers
@@ -187,7 +189,7 @@ target_link_libraries(ink_system PUBLIC ink_platform ink_lvgl ink_lz4)
 target_link_libraries(ink_system INTERFACE $<LINK_ONLY:ink_port_sim>)
 target_compile_options(ink_system PRIVATE ${INK_WARN})
 
-add_library(ink_apps STATIC apps/home/home.c apps/reader/reader.c apps/remote/remote.c)
+add_library(ink_apps STATIC apps/home/home.c apps/reader/reader.c)
 target_link_libraries(ink_apps PUBLIC ink_system)
 target_compile_options(ink_apps PRIVATE ${INK_WARN})
 
@@ -364,6 +366,7 @@ target_include_directories(pools-test PRIVATE simulator/memory simulator/kernel/
 target_link_libraries(pools-test PRIVATE ink_platform ink_tlsf)
 target_compile_options(pools-test PRIVATE ${INK_WARN})
 add_test(NAME unit-pools COMMAND pools-test)
+add_test(NAME sdk-boundary COMMAND ${CMAKE_COMMAND} -DSRC=${CMAKE_SOURCE_DIR} -P ${CMAKE_SOURCE_DIR}/tests/sdk_boundary.cmake)
 # System service checks (storage cache versions; tests/integration/systest.c), on the services themselves.
 add_executable(sim-systest simulator/runtime/sim_main.c tests/integration/systest.c)
 target_link_libraries(sim-systest PRIVATE ink_system ink_port_sim)
