@@ -7,11 +7,15 @@
 ## 现状（2026-11-03）
 
 - **到货**：2026-11-03 到货，比预计的 12 月初早。已经用 USB 连到用户的 Mac（Apple Silicon）。
-- **能操作设备的只有用户本机的程序。** 助手所在的云端会话碰不到 USB 设备：
-  - 它在用户 Mac 上的命令行是隔离的虚拟机，看不到 USB 串口；
-  - 屏幕控制对终端类应用只允许点击，不能输入。
-- **因此的分工**：本机的 Codex CLI 负责接触设备；助手负责定步骤、核对结果、把实测值写回档案与文档。
-- **第 0 步**（只读识别 + 整片备份 + 出厂固件日志）已交给本机 Codex，提示词见 [phase0-prompt.md](phase0-prompt.md)。结果放在用户电脑的 `~/work/ink-hw/bringup-<日期>/`，脱敏摘要在其中的 `share/SUMMARY.md`。
+- **谁操作设备**：项目已转到用户本机的 Claude Code，由它直接接触设备。云端会话碰不到 USB，见[交接说明](../handoff/local-claude-code.md)。
+- **第 0 步已完成**（只读识别 + 整片备份 + 出厂固件日志），记录见 [2026-11-03-phase0.md](2026-11-03-phase0.md)，要点：
+  - USB-C 接的是 S31 自带的 USB 串口/JTAG；
+  - 安全功能全关，eFuse 都是默认值；
+  - 从 ota_0 启动出厂固件 2.0.66，ota_1 为空；
+  - PSRAM 16 MB；Flash 是 Puya PY25Q128HA；
+  - 整片备份两次读取一致，并与设备比对通过。
+- **原始资料的位置**：只在用户电脑上，仓库同级目录 `ink-hw/bringup-<日期>/` 下分 `private/` 和 `share/`，脱敏摘要是 `share/SUMMARY.md`。整片备份另有一份在本机其它目录。
+- **上机工具**：[tools/bringup/](../../tools/bringup/)，都只读设备。
 
 ## 规则
 
@@ -47,7 +51,13 @@
 | font_data | data/0x40 | 0xae4000 | 5M |
 | coredump | data/coredump | 0xfe4000 | 64K |
 
-**工具版本**：esptool 需 5.3 或更新。5.3 起才有 ESP32-S31 的 stub 刷写器，并修了它的 Flash 读写命令。出处：[esptool v5.3.0 发布说明](https://newreleases.io/project/github/espressif/esptool/release/v5.3.0)，2026-11-03 查阅。
+**工具版本**：esptool 需 5.3 或更新。5.3 起才有 ESP32-S31 的 stub 刷写器，并修了它的 Flash 读写命令。出处：[esptool v5.3.0 发布说明](https://newreleases.io/project/github/espressif/esptool/release/v5.3.0)，2026-11-03 查阅。第 0 步用的是 5.6.0。
+
+**实测与上游配置的对照**（第 0 步）：
+
+- 分区表与上表逐项一致。
+- Flash 实际是 DIO 80 MHz、16 MB，PSRAM 是八线 200 MHz、16 MB。
+- 出厂固件的控制台在 UART0（GPIO59/58），USB 串口/JTAG 作第二控制台，串口日志可以直接从 USB 读。
 
 ## 接下来
 
@@ -59,10 +69,19 @@
 | 第 1 步 | 测量固件：只报告硬件信息（PSRAM、内部 RAM 各段、Flash 型号），并在真机上跑指令级模拟器的同一批校准内核（拷贝、字形、送行等），直接对比模拟值；不碰屏幕、电源和无线 | SP-00、校准 D-35 的送行成本 | 是，只写一个应用槽，可按备份复原 |
 | 第 2 步起 | 屏幕点亮与刷新时序、Flash 擦写停顿、音频并发、电流等 | SP-01、SP-02、SP-12、SP-13、SP-14 | 是 |
 
-第 1 步写设备的方式与复原步骤，要等第 0 步确认三件事后再定：USB 连到哪个控制器、安全功能是否关闭、当前从哪个槽启动。
+第 1 步写设备的方式要等第 0 步确认三件事。现已确认：
+
+| 问题 | 结果 |
+| --- | --- |
+| USB 接哪个控制器 | USB 串口/JTAG，esptool 能自动复位进下载模式 |
+| 安全功能 | 全关 |
+| 当前启动槽 | ota_0（出厂固件），ota_1 为空 |
+
+建议把测量固件写进空的 ota_1，再让 otadata 指向它，不碰 ota_0。复原时写回原 otadata 即可，最坏情况整片恢复。具体命令写入前另给用户确认，见[第 0 步记录 §9](2026-11-03-phase0.md)。
 
 ## 记录
 
 | 日期 | 步骤 | 结果 | 详见 |
 | --- | --- | --- | --- |
-| 2026-11-03 | 到货，USB 连接用户的 Mac；第 0 步交给本机 Codex | 进行中 | [phase0-prompt.md](phase0-prompt.md) |
+| 2026-11-03 | 到货，USB 连接用户的 Mac；第 0 步提示词交给本机 Codex | 改由本机 Claude Code 执行 | [phase0-prompt.md](phase0-prompt.md) |
+| 2026-11-03 | 第 0 步：只读识别、整片备份、出厂固件启动与运行日志 | 完成，没有写设备 | [2026-11-03-phase0.md](2026-11-03-phase0.md) |

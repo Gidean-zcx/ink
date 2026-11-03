@@ -10,7 +10,7 @@
 
 ### 1. 准备仓库
 
-- 仓库放在 `~/work/ink`：没有就 `git clone https://github.com/Gidean-zcx/ink ~/work/ink`，有就 `git pull`。
+- 仓库原计划放在 `~/work/ink`。2026-11-03 用户说用当前路径就可以，所以仓库留在用户电脑上原来的工作区目录。没有就 `git clone https://github.com/Gidean-zcx/ink`，有就 `git pull`。
 - 用 `gh auth status` 确认能推送；不能就请用户 `gh auth login`。
 
 ### 2. 读文档（按顺序）
@@ -45,9 +45,10 @@ cmake --build build -j && ctest --test-dir build --output-on-failure    # 应为
 
 ### 4. 实机第 0 步：只读识别、整片备份、出厂固件日志
 
-- 先看 `~/work/ink-hw/` 里是否已有结果：用户可能已让 Codex 做过。有就核对，不重复备份。
+- **已于 2026-11-03 完成**，见 [hardware/2026-11-03-phase0.md](../hardware/2026-11-03-phase0.md)。下面保留原步骤。
+- 先看实机资料目录里是否已有结果：用户可能已让 Codex 做过。有就核对，不重复备份。
 - 没有就由你按 [phase0-prompt.md](../hardware/phase0-prompt.md) 的规则和步骤直接执行。那份提示词原本写给 Codex，规则对你同样适用。
-- 产出放在 `~/work/ink-hw/bringup-YYYYMMDD/`，不在仓库里。
+- 产出放在仓库同级目录 `ink-hw/bringup-YYYYMMDD/`，不在仓库里。原计划是 `~/work/ink-hw/`，按用户要求改到当前工作区；不放进仓库目录，因为仓库是公开的，而且 `git clean -fdx` 会删掉被忽略的文件。
 - 结束后：
   - 把脱敏摘要写成 `docs/hardware/YYYY-MM-DD-phase0.md`；
   - 更新 [hardware/README.md](../hardware/README.md) 的现状与记录表；
@@ -135,9 +136,9 @@ git clone -b v6.1 --recursive https://github.com/espressif/esp-idf ~/esp/esp-idf
 
 **隐私**
 
-- 仓库是公开的。备份、原始日志、NVS 内容、TF 卡数据只留在本机 `~/work/ink-hw/`。
+- 仓库是公开的。备份、原始日志、NVS 内容、TF 卡数据只留在本机：仓库同级的 `ink-hw/`；整片备份的第二份在本机另一个目录。
 - 提交前确认没有 MAC、IMEI、ICCID、序列号、Wi-Fi 名称与密码、令牌。
-- 只在项目目录（`~/work/ink`、`~/work/ink-hw`、`~/esp`）里工作，不读这台电脑上与项目无关的文件。
+- 只在项目目录里工作：仓库、仓库同级的 `ink-hw/`、第二份备份目录、`~/esp`。不读这台电脑上与项目无关的文件。
 
 **记录**
 
@@ -159,6 +160,8 @@ git clone -b v6.1 --recursive https://github.com/espressif/esp-idf ~/esp/esp-idf
 - **GitHub Actions**：每次推送 `main`、`claude/**` 分支，以及每个 PR，都会自动跑 Linux 构建、全部测试和 ASan。
 
 ## 交给本机 Claude Code 的提示词
+
+原样保留。其中的 `~/work/…` 路径已按上文改用当前工作区。
 
 ```
 你接手 GitHub 仓库 Gidean-zcx/ink 的开发（一台 AI 原生墨水屏设备的系统与模拟器）。之前的工作在云端会话完成；现在实物（CloudZao Metalio E-Ink4 Plus，ESP32-S31）已通过 USB 接到这台 Mac，改由你在本机推进。
