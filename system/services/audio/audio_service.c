@@ -19,6 +19,12 @@
  * itself (the TX channel clears what it sent). While a stream waits for data
  * the output stays open for a while, then closes.
  *
+ * An output that cannot open (the audio chip unpowered, e.g. right after a wake
+ * whose supply is still being restored): a stream's frames stay queued and the
+ * open is tried again, backing off to once a second; after OPEN_GIVE_UP_US the
+ * stream fails, its frames are dropped and its owner is told
+ * (ink_audio_on_stream_failed). A tone that cannot play is dropped.
+ *
  * The staging buffer belongs to the service task; the API only changes the
  * stream and the task drops staged audio of a stream that is gone.
  */
@@ -44,6 +50,7 @@
 #define PLC_MAX 3                     /* conceal at most this many missing frames in a row */
 #define BITRATE 24000
 #define WAIT_HOLD_US 300000 /* a stream waiting for data keeps the output open this long, then it closes */
+#define OPEN_GIVE_UP_US 8000000 /* a stream whose output cannot open for this long fails */
 #define FRAME HAL_OPUS_FRAME_SAMPLES
 
 typedef struct {
@@ -78,6 +85,10 @@ static struct {
     int staged_stream; /* stream the staged samples belong to (0 = a tone) */
     bool out_open;
     uint64_t waiting_since; /* output open, the stream has nothing ready since (0 = not waiting) */
+    uint64_t open_failing_since, open_retry_at; /* the output did not open for the stream (0 = not failing) */
+    unsigned open_tries;
+    ink_audio_fail_fn fail_fn; /* told when a stream fails */
+    void *fail_ctx;
     /* tone request */
     bool tone_pending;
     ink_tone_t tone;
@@ -259,6 +270,47 @@ static bool stage_next(void) {
     return true;
 }
 
+/* Would the stream play now if the output were open? (stage_next's conditions, nothing consumed) */
+static bool stream_wants_output(void) {
+    lock();
+    bool want = AU.stream && (AU.started ? AU.jb_count > 0 || (!AU.finishing && AU.plc_run < PLC_MAX)
+                                         : AU.jb_count >= JB_PREBUFFER || (AU.finishing && AU.jb_count > 0));
+    unlock();
+    return want;
+}
+
+/* The output for the stream: open, or tried again later (the frames wait); after OPEN_GIVE_UP_US the
+ * stream fails. Service task. */
+static bool output_for_stream(void) {
+    if (AU.out_open) return true;
+    uint64_t now = osal_now_us();
+    if (now < AU.open_retry_at) return false;
+    if (open_output()) {
+        AU.open_failing_since = AU.open_retry_at = 0;
+        AU.open_tries = 0;
+        return true;
+    }
+    if (!AU.open_failing_since) AU.open_failing_since = now;
+    uint64_t gap = 100000ull << (AU.open_tries < 4 ? AU.open_tries : 4);
+    AU.open_retry_at = now + (gap > 1000000 ? 1000000 : gap);
+    AU.open_tries++;
+    ink_probe_count("audio.output_open_failures");
+    if (now - AU.open_failing_since < OPEN_GIVE_UP_US) return false;
+    lock();
+    int id = AU.stream;
+    free_jb();
+    AU.stream = 0;
+    AU.finishing = AU.started = false;
+    ink_audio_fail_fn fn = AU.fail_fn;
+    void *ctx = AU.fail_ctx;
+    unlock();
+    AU.open_failing_since = AU.open_retry_at = 0;
+    AU.open_tries = 0;
+    ink_probe_count("audio.play_failed");
+    if (fn && id) fn(ctx, id);
+    return false;
+}
+
 static void service_playback(void) {
     lock();
     bool tone = AU.tone_pending;
@@ -271,16 +323,20 @@ static void service_playback(void) {
         AU.staged_stream = 0;
     }
     unlock();
-    if (tone && open_output()) {
-        make_tone(which);
-        AU.heard_probe = probe;
-        AU.heard_cause = cause;
+    if (tone) {
+        if (open_output()) {
+            make_tone(which);
+            AU.heard_probe = probe;
+            AU.heard_cause = cause;
+        } else {
+            ink_probe_count("audio.tones_dropped"); /* a prompt played late would mislead */
+        }
     }
     for (;;) {
-        if (AU.pcm_off >= AU.pcm_len && !stage_next()) break; /* nothing ready */
-        if (!open_output()) {
-            AU.pcm_off = AU.pcm_len = 0;
-            break;
+        if (AU.pcm_off >= AU.pcm_len) { /* nothing staged: take the next frame only when it can play */
+            if (!stream_wants_output() || !output_for_stream() || !stage_next()) break;
+        } else if (!output_for_stream()) {
+            break; /* staged samples wait for the output */
         }
         AU.waiting_since = 0;
         if (AU.heard_probe) { /* first samples of a probed tone go out now: when will they be heard? */
@@ -431,6 +487,8 @@ int ink_audio_stream_open(ink_audio_prio_t prio, uint64_t cause_us, const char *
     free_jb();
     AU.stream = ++AU.next_stream;
     AU.prio = prio;
+    AU.open_failing_since = AU.open_retry_at = 0; /* a new stream tries the output at once */
+    AU.open_tries = 0;
     AU.finishing = AU.started = false;
     AU.plc_run = 0;
     AU.stream_probe = heard_probe;
@@ -501,3 +559,10 @@ void ink_audio_tone(ink_tone_t tone, uint64_t cause_us, const char *probe) {
 }
 
 void ink_audio_set_volume(int percent) { AU.volume = percent < 0 ? 0 : percent > 100 ? 100 : percent; }
+
+void ink_audio_on_stream_failed(ink_audio_fail_fn fn, void *ctx) {
+    lock();
+    AU.fail_fn = fn;
+    AU.fail_ctx = ctx;
+    unlock();
+}

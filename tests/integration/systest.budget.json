@@ -1,7 +1,7 @@
 {
   "_doc": "System service checks (tests/integration/systest.c): every CHECK must pass and nothing may panic.",
   "test.fail": {"max": 0, "optional": true, "why": "a system test CHECK failed (see warnings)"},
-  "test.pass": {"min": 8, "why": "fewer checks ran than expected"},
+  "test.pass": {"min": 13, "why": "fewer checks ran than expected"},
   "panic.count": {"max": 0, "optional": true},
   "warnings.count": {"max": 0, "optional": true}
 }

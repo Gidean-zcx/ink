@@ -1,0 +1,9 @@
+{
+  "_doc": "AI key while the microphone cannot start (audit AUD5-003): nothing is asked in the user's name; once the expander and the audio chip set up, the next ask works.",
+  "panic.count": {"max": 0, "optional": true},
+  "ai.presses": {"min": 2},
+  "ai.mic_unavailable": {"min": 1, "why": "the first press finds the microphone unable to start"},
+  "hub.requests.ai.ask": {"max": 0, "optional": true, "why": "a press whose microphone did not start must not send a question the user did not ask"},
+  "ai.answers": {"min": 1, "why": "once the expander and the audio chip set up, the next ask is answered"},
+  "audio.speaker.played_ms": {"min": 500, "why": "and the answer is spoken"}
+}

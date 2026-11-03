@@ -23,6 +23,7 @@
  *   +0       sms-in 10086 text...     # a text message arrives (needs a card with SMS)
  *   +0       call-in 13800000000      # an incoming call (needs a card with voice)
  *   +0       remote answer|hangup     # the far end of a call
+ *   +0       faults io-expander 1.0   # that chip's I2C transfers time out at this rate; "faults off" ends it
  *   +5s      end
  *
  * Times: "@t" absolute, "+t" relative to the previous line; units us/ms/s/m
@@ -39,7 +40,7 @@
 #include "ink/rotation.h"
 #include "sim.h"
 
-typedef enum { A_TOUCH, A_KEY, A_SNAP, A_MARK, A_NOTE, A_BATTERY, A_POWERCUT, A_END, A_NET, A_OUTAGE, A_MIC, A_SIM, A_ORIENT, A_SHAKE, A_RTC_LOST, A_SMS_IN, A_CALL_IN, A_REMOTE, A_ENV } akind_t;
+typedef enum { A_TOUCH, A_KEY, A_SNAP, A_MARK, A_NOTE, A_BATTERY, A_POWERCUT, A_END, A_NET, A_OUTAGE, A_MIC, A_SIM, A_ORIENT, A_SHAKE, A_RTC_LOST, A_SMS_IN, A_CALL_IN, A_REMOTE, A_ENV, A_FAULTS } akind_t;
 
 typedef struct {
     uint64_t t;
@@ -253,6 +254,15 @@ int sim_script_load(const char *path, char *err, size_t errlen) {
             uint64_t dur;
             ok = n >= 3 && !parse_dur(tok[2], &dur);
             if (ok) push(t, A_OUTAGE)->c = (int)(dur / 1000000ull); /* ms */
+        } else if (!strcmp(cmd, "faults")) {
+            ok = n >= 3 && (!strcmp(tok[2], "off") || (n >= 4 && atof(tok[3]) >= 0 && atof(tok[3]) <= 1));
+            if (ok) {
+                action_t *a = push(t, A_FAULTS);
+                if (strcmp(tok[2], "off")) {
+                    snprintf(a->text, sizeof a->text, "%s", tok[2]);
+                    a->c = (int)(atof(tok[3]) * 1000 + 0.5); /* per mille */
+                }
+            }
         } else if (!strcmp(cmd, "powercut")) {
             action_t *a = push(t, A_POWERCUT);
             a->c = (n >= 3 && !strcmp(tok[2], "write")) ? (n >= 4 ? atoi(tok[3]) : 1) : 0;
@@ -311,6 +321,7 @@ static void run_action(void *arg) { /* ISR context */
         if (!sim_net_incoming_call(a->num)) sim_note("script: call to the device not put through");
         break;
     case A_ENV: sim_net_env(a->a, a->b != 0, a->c); break;
+    case A_FAULTS: sim_i2c_set_faults(a->c / 1000.0, a->text[0] ? a->text : NULL); break;
     case A_REMOTE:
         if (a->a) sim_net_remote_answer();
         else sim_net_remote_hangup();

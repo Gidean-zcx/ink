@@ -8,8 +8,11 @@
 
 #include "ink/osal.h"
 #include "ink/probe.h"
+#include "ink/sys/audio.h"
 #include "ink/sys/display.h"
+#include "ink/sys/power.h"
 #include "ink/sys/storage.h"
+#include "metalio_plus/metalio_board.h"
 #include "sim.h"
 
 #define CHECK(cond, ...)                                                 \
@@ -54,13 +57,56 @@ static void storage_checks(void) {
     CHECK(ink_storage_failed() == 0, "no write failed");
 }
 
+/* Playback while the speaker cannot start (the Bluetooth audio chip, which clocks the I2S, unpowered:
+ * audit AUD5-002): the stream's frames wait instead of being taken and dropped; they all play once it
+ * can start; a stream that cannot start for long fails and its owner is told. */
+static volatile int g_failed_id;
+
+static void on_failed(void *ctx, int id) {
+    (void)ctx;
+    g_failed_id = id;
+}
+
+static int push_frames(int id, int n) {
+    int ok = 0;
+    for (int i = 0; i < n; i++) {
+        const uint8_t f[8] = {0xA5, 0x00, 0x10, 0x30, 0x11, 0, 0, 0}; /* the stand-in codec: a 440 Hz tone */
+        if (ink_audio_stream_push(id, f, sizeof f) == 0) ok++;
+    }
+    return ok;
+}
+
+static void audio_checks(void) {
+    ink_audio_on_stream_failed(on_failed, NULL);
+    metalio_board_set(1, MB_P1_SHARED_PWR, 0);
+    double played0 = sim_audio_played_ms();
+    int id = ink_audio_stream_open(INK_AUDIO_PRIO_VOICE, 0, NULL);
+    CHECK(id > 0 && push_frames(id, 10) == 10, "a stream takes 10 frames while the speaker cannot start");
+    ink_audio_stream_finish(id);
+    osal_task_delay_us(1500000);
+    CHECK(sim_audio_played_ms() == played0 && g_failed_id == 0, "they wait: nothing played, the stream has not failed");
+    metalio_board_set(1, MB_P1_SHARED_PWR, MB_P1_SHARED_PWR);
+    osal_task_delay_us(4000000);
+    double played = sim_audio_played_ms() - played0;
+    CHECK(played >= 590 && g_failed_id == 0, "once the speaker can start all of them play (%.0f ms of 600)", played);
+    metalio_board_set(1, MB_P1_SHARED_PWR, 0);
+    id = ink_audio_stream_open(INK_AUDIO_PRIO_VOICE, 0, NULL);
+    push_frames(id, 5);
+    osal_task_delay_us(10000000);
+    CHECK(g_failed_id == id && push_frames(id, 1) == 0, "a stream whose speaker stays off fails after a while, its owner is told (%d, %d)",
+          g_failed_id, id);
+    metalio_board_set(1, MB_P1_SHARED_PWR, MB_P1_SHARED_PWR);
+    ink_audio_on_stream_failed(NULL, NULL);
+}
+
 static void systest_task(void *arg) {
     (void)arg;
-    if (ink_display_init() != 0 || ink_storage_init() != 0) {
-        CHECK(0, "the display and storage services start");
+    if (ink_display_init() != 0 || ink_storage_init() != 0 || ink_power_init() != 0 || ink_audio_init() != 0) {
+        CHECK(0, "the display, storage, power and audio services start");
         return;
     }
     storage_checks();
+    audio_checks();
     ink_probe_mark("systest-done");
 }
 

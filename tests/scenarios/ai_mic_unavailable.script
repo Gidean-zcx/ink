@@ -1,0 +1,12 @@
+# AI key while the microphone cannot start (audit AUD5-003). The IO expander's bus fails from boot
+# (--i2c-faults 1.0:io-expander): the board does not set up, so neither does the Bluetooth audio chip
+# that clocks the microphone. The sheet says nothing was heard and no question is sent in the user's
+# name. Once the bus answers, a key on the expander sets it up, the next ask records and is answered
+# in text and speech.
+@4s      mic   speech
++0ms     key   ai 1500ms          # the microphone cannot start: "没听到", nothing asked
++3s      faults off               # the bus answers
++1s      key   vol_up             # an edge on GPIO2: the expander sets up
++3s      key   ai 1500ms          # records now; the answer comes as text and speech
++16s     snap  ai-answer
++1s      end

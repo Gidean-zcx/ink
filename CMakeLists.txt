@@ -324,6 +324,11 @@ add_test(NAME selftest-board-wiring
           --budget ${CMAKE_SOURCE_DIR}/tests/simulator/board.budget.json
           --out ${CMAKE_BINARY_DIR}/test-out/selftest-board --quiet --end 90s --no-random-outages)
 set_tests_properties(selftest-board-wiring PROPERTIES ENVIRONMENT "INK_SELFTEST_BOARD=1")
+add_test(NAME selftest-board-wiring-pqbn
+  COMMAND sim-selftest --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus-pqbn.json
+          --budget ${CMAKE_SOURCE_DIR}/tests/simulator/board.pqbn.budget.json
+          --out ${CMAKE_BINARY_DIR}/test-out/selftest-board-pqbn --quiet --end 90s --no-random-outages)
+set_tests_properties(selftest-board-wiring-pqbn PROPERTIES ENVIRONMENT "INK_SELFTEST_BOARD=1")
 add_test(NAME selftest-expander-dead
   COMMAND sim-selftest --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
           --budget ${CMAKE_SOURCE_DIR}/tests/simulator/expander_dead.budget.json
@@ -343,7 +348,7 @@ target_compile_options(sim-systest PRIVATE ${INK_WARN})
 add_test(NAME systest-services
   COMMAND sim-systest --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
           --budget ${CMAKE_SOURCE_DIR}/tests/integration/systest.budget.json
-          --out ${CMAKE_BINARY_DIR}/test-out/systest --quiet --end 30s --no-random-outages)
+          --out ${CMAKE_BINARY_DIR}/test-out/systest --quiet --end 40s --no-random-outages)
 add_test(NAME determinism
   COMMAND ${CMAKE_COMMAND} -DSIM=$<TARGET_FILE:sim-selftest>
           -DPROFILE=${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
@@ -383,6 +388,14 @@ if(INK_HAVE_FONTS)
   ink_scenario(reader_rapid metalio-plus)
   ink_scenario(ai_dismiss metalio-plus)
   ink_scenario(ai_dismiss_held metalio-plus)
+  # the microphone cannot start (the expander, and with it the audio chip, not set up): AUD5-003
+  add_test(NAME scenario-ai_mic_unavailable-metalio-plus
+    COMMAND ink-sim --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+            --script ${CMAKE_SOURCE_DIR}/tests/scenarios/ai_mic_unavailable.script
+            --budget ${CMAKE_SOURCE_DIR}/tests/scenarios/ai_mic_unavailable.budget.json
+            --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
+            --out ${CMAKE_BINARY_DIR}/test-out/ai_mic_unavailable-metalio-plus --quiet --trace --frames --no-random-outages
+            --i2c-faults 1.0:io-expander)
   add_test(NAME scenario-reader_empty-metalio-plus
     COMMAND ink-sim --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
             --script ${CMAKE_SOURCE_DIR}/tests/scenarios/reader_empty.script

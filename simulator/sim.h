@@ -263,6 +263,7 @@ void sim_input_sleep_end(hal_key_t woke_by, uint64_t t_wake_ns, bool keys_back);
 void sim_input_restore_later(bool keys, bool rails); /* the wake's restore failed: the input task retries */
 hal_power_state_t sim_power_state(void);
 bool sim_audio_busy(void);
+double sim_audio_played_ms(void); /* what the speaker has played so far (tests) */
 void sim_audio_init(void);            /* task context (boot) */
 void sim_audio_report(void);
 void sim_audio_mic_source(const char *name); /* ISR (script): "speech" | "silence" | "noise" | "host" (window) */

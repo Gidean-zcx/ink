@@ -542,6 +542,13 @@ void sim_audio_init(void) {
 
 bool sim_audio_busy(void) { return A.cap_on || A.out_on; }
 
+double sim_audio_played_ms(void) {
+    vtk_lock();
+    double ms = A.played_samples * 1000.0 / HAL_AUDIO_RATE;
+    vtk_unlock();
+    return ms;
+}
+
 void sim_audio_speaker_counters(uint64_t *underruns, double *underrun_ms, double *idle_ms) {
     vtk_lock();
     *underruns = A.underruns;

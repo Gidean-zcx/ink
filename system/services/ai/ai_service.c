@@ -63,16 +63,18 @@ static struct {
     bool end_pending;
     bool drop_frames;   /* the sheet was closed while capturing: the rest of this turn's audio is dropped */
     bool capturing;     /* UI task: this turn's microphone is on */
+    bool mic_failed;    /* UI task: this turn's microphone did not start: nothing is heard, nothing asked */
     lv_timer_t *flush_timer;
     /* voice downlink (hub task; with `stream`, changed under `lock`) */
     int tts_stream;   /* audio stream playing the current turn's speech (0 none) */
     int tts_for;      /* turn the audio stream belongs to (-1 none) */
     int tts_done_for; /* turn whose speech has ended (-1 none): frames after the end are dropped */
+    int tts_opened;   /* the last audio stream opened for the current turn (0 none): a failure told later */
 } AI;
 
 typedef struct {
     int req_id;
-    int kind; /* 0 delta, 1 done, 2 error, 3 stt */
+    int kind; /* 0 delta, 1 done, 2 error, 3 stt, 4 the answer's speech could not play */
     int status;
     char text[];
 } ai_post_t;
@@ -164,7 +166,9 @@ bool ink_ai_dismiss(void) {
 
 static void ui_apply(void *arg) { /* UI task */
     ai_post_t *p = arg;
-    bool match = (p->kind == 0 || p->kind == 3) ? p->req_id == AI.req_id : p->req_id == AI.seq;
+    bool match = (p->kind == 0 || p->kind == 3) ? p->req_id == AI.req_id
+                 : p->kind == 4                 ? p->req_id == AI.stream
+                                                : p->req_id == AI.seq;
     if (!AI.open || !match) {
         osal_free(p);
         return;
@@ -188,6 +192,9 @@ static void ui_apply(void *arg) { /* UI task */
             set_status("回答中");
             ink_ui_cause(AI.t_release, "ai.release_to_first_text_visible_ms");
         }
+    } else if (p->kind == 4) { /* the speaker could not start for the answer (the text is on the sheet) */
+        set_status("声音没能播放：扬声器没打开，文字回答在上面");
+        ink_probe_count("ai.speech_failed");
     } else if (p->kind == 1) {
         AI.asking = false;
         set_status("回答完成 · 按 AI 键继续问，按 HOME 关闭");
@@ -241,6 +248,17 @@ static void on_notify(void *ctx, const char *method, const ink_json_t *j, int pa
     }
 }
 
+/* The audio service gave up on a stream (its speaker output could not open for seconds): if it was
+ * this turn's speech, the sheet says so. Audio task. */
+static void on_speech_failed(void *ctx, int id) {
+    (void)ctx;
+    osal_mutex_lock(AI.lock, OSAL_WAIT_FOREVER);
+    bool ours = id > 0 && id == AI.tts_opened;
+    int turn = AI.stream;
+    osal_mutex_unlock(AI.lock);
+    if (ours) post(turn, 4, 0, NULL);
+}
+
 static void on_binary(void *ctx, const uint8_t *d, size_t len) { /* hub task: TTS frames */
     (void)ctx;
     if (len < 5 || d[0] != 2) return;
@@ -250,6 +268,7 @@ static void on_binary(void *ctx, const uint8_t *d, size_t len) { /* hub task: TT
         if (AI.tts_stream <= 0 || AI.tts_for != d[1]) {
             AI.tts_stream = ink_audio_stream_open(INK_AUDIO_PRIO_VOICE, AI.t_release, "ai.release_to_first_audio_heard_ms");
             AI.tts_for = d[1];
+            AI.tts_opened = AI.tts_stream > 0 ? AI.tts_stream : 0;
         }
         if (AI.tts_stream > 0) ink_audio_stream_push(AI.tts_stream, d + 4, len - 4);
     }
@@ -411,9 +430,10 @@ void ink_ai_key(bool pressed, uint64_t t_us) {
         /* a new turn: frames and the speech end of the previous one no longer apply */
         osal_mutex_lock(AI.lock, OSAL_WAIT_FOREVER);
         AI.stream++;
-        AI.tts_stream = 0;
+        AI.tts_stream = AI.tts_opened = 0;
         AI.tts_for = AI.tts_done_for = -1;
         osal_mutex_unlock(AI.lock);
+        AI.mic_failed = false;
         ink_audio_stop_all(); /* talking over the previous answer interrupts it */
         ink_audio_tone(INK_TONE_LISTEN, t_us, "ai.press_to_tone_heard_ms");
         ink_hub_demand(); /* pre-connect while the user speaks */
@@ -440,8 +460,11 @@ void ink_ai_key(bool pressed, uint64_t t_us) {
                 AI.req_id = request("ai.listen", true);
                 if (!AI.flush_timer) AI.flush_timer = lv_timer_create(flush_timer_cb, 100, NULL);
                 else lv_timer_resume(AI.flush_timer);
-            } else {
+            } else { /* nothing will be heard this turn, so nothing will be asked (audit AUD5-003) */
+                AI.mic_failed = true;
                 ink_probe_count("ai.mic_unavailable");
+                set_status("麦克风没能打开，请稍后再按 AI 键");
+                ink_audio_tone(INK_TONE_ERROR, 0, NULL);
             }
         }
         return;
@@ -452,14 +475,22 @@ void ink_ai_key(bool pressed, uint64_t t_us) {
     osal_mutex_lock(AI.lock, OSAL_WAIT_FOREVER);
     AI.t_release = t_us; /* the hub task reads it for the first-audio probe */
     osal_mutex_unlock(AI.lock);
+    if (AI.mic_failed) { /* the microphone did not start: the user's words were not heard */
+        set_status("没听到：麦克风没能打开，请稍后再按 AI 键");
+        return;
+    }
     if (was_capturing || (voice_ok() && AI.asking)) {
         lv_label_set_text(AI.question, "…");
         set_status("正在想…");
         return;
     }
-    /* no microphone: a fixed question stands in */
-    char q[96];
-    snprintf(q, sizeof q, "你问：%s", SIM_TRANSCRIPT);
+    if (voice_ok()) { /* a microphone that did not record this turn: there is nothing to ask */
+        set_status("没听到，请再按 AI 键说一遍");
+        return;
+    }
+    /* a device without a microphone: a sample question stands in, and says so */
+    char q[128];
+    snprintf(q, sizeof q, "示例问题（这台设备没有麦克风）：%s", SIM_TRANSCRIPT);
     lv_label_set_text(AI.question, q);
     ink_ui_hint_obj(AI.question, INK_REFRESH_FAST);
     set_status("正在想…");
@@ -475,5 +506,6 @@ int ink_ai_init(void) {
     AI.answer_text[0] = 0;
     AI.tts_for = AI.tts_done_for = -1;
     ink_hub_on_binary(on_binary, NULL);
+    ink_audio_on_stream_failed(on_speech_failed, NULL);
     return ink_hub_subscribe("ai.", on_notify, NULL);
 }

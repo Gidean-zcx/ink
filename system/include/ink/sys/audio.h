@@ -60,6 +60,15 @@ void ink_audio_stream_abort(int id);
 void ink_audio_stop_all(void);
 
 /**
+ * A stream whose speaker output could not be opened (the audio chip unpowered, e.g. right after a
+ * wake whose supply is still being restored) keeps its frames and tries again; after about 8 s it
+ * fails: its frames are dropped, pushes to it return -1 and this function is called (audio task,
+ * keep it short). One listener; NULL removes it.
+ */
+typedef void (*ink_audio_fail_fn)(void *ctx, int id);
+void ink_audio_on_stream_failed(ink_audio_fail_fn fn, void *ctx);
+
+/**
  * Play a short prompt. If `probe` is set, records "cause_us -> first sample heard" (ms)
  * under that name (e.g. "ai.press_to_tone_heard_ms").
  */
