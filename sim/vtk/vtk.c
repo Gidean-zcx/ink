@@ -120,18 +120,22 @@ static __thread vtk_task_t *tls_self;
  * hooks, creating tasks, the exit path) runs in a zone at the bottom of that thread's stack,
  * below the task's own zone. The stack estimate then sees only the task's code: it does not
  * depend on host timing (which pthread paths run) or on how deep the host's libc goes. */
-__attribute__((noinline)) static void in_zone_of(const vtk_task_t *t, void (*fn)(void *), void *arg) {
+__attribute__((noinline)) static void in_zone_of(const vtk_task_t *t, void (*fn)(void *), void *arg, bool wipe) {
     uint8_t *here = __builtin_frame_address(0);
     if (!t || here <= t->own_lo) { /* main thread, or already in the kernel zone */
         fn(arg);
         return;
     }
-    uint8_t *volatile gap = alloca((size_t)(here - t->own_lo)); /* moves the stack pointer, writes nothing */
+    size_t n = (size_t)(here - t->own_lo);
+    uint8_t *volatile gap = alloca(n); /* moves the stack pointer, writes nothing */
+    /* At thread start: whatever the host's thread start left below us (glibc writes ~1.9 KiB) is not
+     * the task's. The own zone's part of the gap is unused, and memset runs below it. */
+    if (wipe && gap <= t->own_lo) memset(t->own_lo, STACK_PATTERN, (size_t)(gap + n - t->own_lo));
     fn(arg);
     (void)gap; /* used after the call, so fn is not a tail call and does run below the gap */
 }
 
-static void in_kernel_zone(void (*fn)(void *), void *arg) { in_zone_of(tls_self, fn, arg); }
+static void in_kernel_zone(void (*fn)(void *), void *arg) { in_zone_of(tls_self, fn, arg, false); }
 
 void vtk_host_call(void (*fn)(void *), void *arg) { in_kernel_zone(fn, arg); }
 
@@ -617,7 +621,7 @@ static void first_baton_in_zone(void *p) {
 
 static void *task_thread(void *p) {
     vtk_task_t *t = p;
-    in_zone_of(t, first_baton_in_zone, t);
+    in_zone_of(t, first_baton_in_zone, t, true);
     t->entry = __builtin_frame_address(0);
     t->fn(t->arg);
     vtk_task_exit();
