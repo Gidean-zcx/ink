@@ -22,4 +22,4 @@
 cmake -S . -B build && cmake --build build -j && ctest --test-dir build --output-on-failure
 ```
 
-需要拉取 LVGL，还需要 Noto Sans CJK 字体，见 [docs/background.md §11](docs/background.md)。模拟器只在 Linux 上验证过，以 GitHub Actions 的 Linux CI 为准。
+需要拉取 LVGL，还需要 Noto Sans CJK 字体，见 [docs/background.md §11](docs/background.md)。测试在 Linux 和 macOS（Apple clang、arm64）上都能全部通过，以 GitHub Actions 的 Linux CI 为准。

@@ -304,6 +304,7 @@ python3 tools/simreport/simreport.py out/reader --lang zh    # HTML 报告：刷
 **内存余量**
 
 - AI 场景内部 RAM 最低余量 38 KiB（PQ-BN 档案 35 KiB），预算 32 KiB，偏紧。内部堆总量 96 KiB 仍是估计，要等本项目固件的 `idf.py size`。
+- 任务栈：按 2026-11-03 改正后的估计（D-42），存储任务 3.4 KiB / 3.5 KiB、中枢连接任务 3.3 KiB / 4 KiB 离配置的栈最近。这是主机上的偏悲观估计，是否加栈以 S31 编译的 `-fstack-usage` 为准。
 
 **外部审计的后续事项**
 

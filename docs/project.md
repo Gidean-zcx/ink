@@ -104,6 +104,11 @@
   - 上电时间现在由驱动和模型算出来（125～140 ms，原为固定 140 ms），时延基本不变；新增 2 项测试，与 main 合并后共 32 项；
   - 本机装好 ESP-IDF v6.1（`~/esp`），供第 1 步测量固件和 CI 编 S31 固件使用。
   - 第一次 CI 失败的原因：新预算把 `warnings.count` 写成必有项，Linux 上一条警告都没有，计数器就不存在；改成可选后通过。用户登录了 `gh`，CI 日志现在能直接读。
+- 让模拟器测试在 macOS 上也能通过（分支 `claude/strange-knuth-e3baca`，见[平台与模拟器 §5.7](system/platform-and-simulator.md)与 [D-42](decisions/README.md)）：
+  - 原因是任务栈估计把主机代码算了进去：macOS 上 `main` 估计 6～7.9 KiB，超过 4 KiB，每次运行还差几十字节；Linux 上 glibc 让探针基线达到 9016 字节，多数估计被压到下限，原口径在 Linux 上几乎不报警（CI 诊断实测）；
+  - 改为只量任务自己的代码（D-42，可逆，按推荐暂定 A）。模型输出不变；Linux 与 macOS 上各任务的估计相差 20% 以内；macOS 上 32 项全过（含 `-Werror`、ASan/UBSan），原先 ASan 下 4 个自检中止的问题也一并解决；
+  - 新数字显示存储任务（3.4 KiB / 3.5 KiB）与中枢连接任务（3.3 KiB / 4 KiB）离配置的栈最近，是否加栈以 S31 编译的 `-fstack-usage` 为准；
+  - 诊断用的临时分支 `claude/stack-diag-e3baca` 留在远端，不合并。
 
 ## 2026-11-02 接续记录
 
