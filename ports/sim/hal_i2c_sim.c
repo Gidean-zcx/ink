@@ -52,7 +52,7 @@ hal_i2c_dev_t *hal_i2c_device(int bus, uint8_t addr7, const char *name) {
     struct hal_i2c_dev *d = &DEVS[n_devs++];
     d->bus = bus;
     d->addr = addr7;
-    snprintf(d->name, sizeof d->name, "%s", name);
+    sim_copy_name(d->name, sizeof d->name, name);
     return d;
 }
 
