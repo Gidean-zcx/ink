@@ -3,7 +3,7 @@
  * simulator with a configurable in-order timing model.
  *
  * Purpose: measure target cycles per unit of work for the simulator's cost
- * classes (profiles/<device>.json "costs_cycles"). It is a performance model, not a
+ * classes (simulator/profiles/<device>.json "costs_cycles"). It is a performance model, not a
  * full system emulator: no privilege modes, no interrupts, no MMU, traps stop
  * the run.
  *

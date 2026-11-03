@@ -60,8 +60,8 @@ cmake --build build -j && ctest --test-dir build --output-on-failure    # 应为
 
 | 实测项 | 写回哪里 |
 | --- | --- |
-| PSRAM 容量 | 决定用 8 MB 还是 16 MB 档案（`profiles/metalio-plus.json` / `metalio-plus-psram16.json`） |
-| 启动日志里 `heap_init` 列出的内部 RAM 各段 | `profiles/*.json` 的 `memory`（区段、预留） |
+| PSRAM 容量 | 决定用 8 MB 还是 16 MB 档案（`simulator/profiles/metalio-plus.json` / `metalio-plus-psram16.json`） |
+| 启动日志里 `heap_init` 列出的内部 RAM 各段 | `simulator/profiles/*.json` 的 `memory`（区段、预留） |
 | Flash 型号 | 擦写时间、是否支持擦写挂起，影响 D-36、SP-12 |
 | 出厂固件日志里的刷新时序（如有） | SP-01，对照 D-35 的送行模型 |
 

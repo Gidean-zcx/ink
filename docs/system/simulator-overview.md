@@ -14,29 +14,35 @@
 flowchart TB
   subgraph same["真机与模拟器共用（同一份源码）"]
     apps["应用 apps/：主页、阅读器"]
-    sys["系统 system/：界面、输入、显示服务、存储、网络与中枢、AI、电源"]
+    sys["系统 system/：服务（显示、输入、存储、电源、音频、中枢、AI）、策略、界面、文字"]
     api["平台接口 platform/include/ink/：OSAL + HAL"]
-    drv["驱动 drivers/：TCA9555 · TPS65185 · FT6336U · BQ27220 · CX25601N · PCF8563 · SC7A20H · GC2145 · BH1098G · NT26 · 板级 board/"]
+    drv["芯片驱动 drivers/chips/：TCA9555 · TPS65185 · FT6336U · BQ27220 · CX25601N · PCF8563 · SC7A20H · GC2145 · BH1098G · NT26"]
+    board["板级 boards/metalio_plus/：扩展芯片的唯一实例、屏电源顺序、触摸坐标、浅睡步骤"]
   end
-  subgraph simport["模拟器端口 ports/sim/"]
-    halsim["HAL 的模拟实现：hal_i2c → 芯片模型；hal_uart → 蓝牙音频芯片；hal_modem_at → 4G 模组；显示管线、存储、网络链路、音频"]
-    models["芯片与器件模型 dev_*.c：寄存器、中断线、上电时序、共享引脚"]
-    vtk["虚拟时间内核 sim/vtk + 内存池 sim/mem + 设备档案 profiles/"]
+  subgraph simport["模拟器（只在电脑上）"]
+    halsim["模拟端口 ports/sim/：OSAL 与各 HAL 接到模型上，走真实驱动"]
+    models["芯片与器件模型 simulator/models/：寄存器、中断线、上电时序、共享引脚"]
+    env["环境 simulator/environment/ 与窗口里的控制：中枢、信号、换卡、朝向、插拔 USB"]
+    vtk["虚拟时间内核 simulator/kernel/vtk + 内存池 simulator/memory + 设备档案 simulator/profiles/"]
   end
   subgraph devport["真机端口 ports/esp32s31/（待写）"]
     haldev["HAL 的真机实现：ESP-IDF 的 I2C、UART、GPIO、LCD+DMA、I2S、DVP、SDMMC、Flash、睡眠"]
     chips["真实芯片"]
   end
-  gui["桌面窗口 ports/sim/gui：设备外观、硬件与环境控制、日志；电脑的摄像头、麦克风、喇叭"]
+  gui["桌面窗口 simulator/desktop/：设备外观、硬件与环境控制、日志；电脑的摄像头、麦克风、喇叭"]
   apps --> sys --> api
-  sys --> drv
-  drv --> api
+  board --> drv --> api
   api --> halsim
   api --> haldev
+  halsim --> board
   halsim --> models --> vtk
+  env --> models
+  haldev --> board
   haldev --> chips
   gui -. "sim_gui.h：外部事件注入、画面与状态" .-> halsim
 ```
+
+目录与构建目标的细节见[仓库结构](repo-layout.md)。
 
 要点：
 
@@ -49,14 +55,18 @@ flowchart TB
 | 组件 | 目录 | 做什么 | 真机上 |
 | --- | --- | --- | --- |
 | 应用 | `apps/` | 主页、阅读器等界面 | 不变 |
-| 系统 | `system/` | 界面框架（LVGL）、输入与手势、显示服务（刷新调度、波形选择）、存储、网络与中枢连接、AI、电源策略 | 不变 |
+| 系统 | `system/` | 服务（显示：刷新调度与波形选择；输入与手势；存储；电源策略；音频；与中枢的连接；AI）、动作与权限、界面框架（LVGL）、文字排版 | 不变 |
 | 平台接口 | `platform/include/ink/` | OSAL（任务、队列、锁、定时器、内存）与各 HAL | 不变 |
-| 驱动 | `drivers/` | 每颗芯片一个驱动；`board/` 是 Plus 的接法（IO 扩展芯片的唯一实例、屏电源上电顺序、触摸坐标与盖板键） | 不变 |
-| 虚拟时间内核 | `sim/vtk/` | 任务是真线程，但轮流执行，时间按模型推进：双核、固定优先级抢占、CPU 成本、Flash 操作冻结全部任务；可实时（窗口）或尽快（测试）；同样输入结果逐位一致 | — |
-| 内存模型 | `sim/mem/` | 内部 RAM、DMA、PSRAM 三个池，TLSF 分配器，碎片、低水位、栈估计 | — |
-| 设备档案 | `profiles/*.json` | 每种设备的参数：核数与频率、内存分区、各类 CPU 成本、屏幕与波形、Flash 时序、电流、网络、SIM 卡 | — |
-| 模拟器端口 | `ports/sim/` | 各 HAL 的模拟实现与芯片模型（见下表），场景脚本，指标、预算与跟踪 | 换成 `ports/esp32s31/` |
-| 桌面窗口 | `ports/sim/gui/` | SDL2 + Dear ImGui：设备外观、鼠标触摸、按键、硬件与环境控制、资源与日志；电脑的摄像头、麦克风、喇叭 | — |
+| 芯片驱动 | `drivers/chips/`、`drivers/display/` | 每颗芯片一个驱动；PQ-BN 直驱算法 | 不变 |
+| 板级 | `boards/metalio_plus/` | Plus 的接法：IO 扩展芯片的唯一实例与锁、屏电源上电顺序、触摸坐标与盖板键、浅睡的板级步骤、关机脉冲 | 不变 |
+| 模拟端口 | `ports/sim/` | OSAL 的模拟实现（`osal/`），各 HAL 的模拟实现（`hal/`），经真实驱动访问模型 | 换成 `ports/esp32s31/` |
+| 芯片与器件模型 | `simulator/models/` | 扩展芯片、屏电源芯片、电量计与充电芯片、时钟与加速度计、摄像头、蓝牙音频芯片的寄存器级模型（触摸、4G 模组的模型暂在对应 HAL 文件里） | — |
+| 环境 | `simulator/environment/` | 脚本化的中枢；周围的信号、卡、朝向等由运行器和窗口注入 | 真实的世界 |
+| 虚拟时间内核 | `simulator/kernel/vtk/` | 任务是真线程，但轮流执行，时间按模型推进：双核、固定优先级抢占、CPU 成本、Flash 操作冻结全部任务；可实时（窗口）或尽快（测试）；同样输入结果逐位一致 | — |
+| 内存模型 | `simulator/memory/` | 内部 RAM、DMA、PSRAM 三个池，TLSF 分配器，碎片、低水位、栈估计 | — |
+| 运行器 | `simulator/runtime/` | `ink-sim` 的入口、场景脚本、指标与预算、跟踪、设备档案加载 | — |
+| 设备档案 | `simulator/profiles/*.json` | 每种设备的参数：核数与频率、内存分区、各类 CPU 成本、屏幕与波形、Flash 时序、电流、网络、SIM 卡 | — |
+| 桌面窗口 | `simulator/desktop/` | SDL2 + Dear ImGui：设备外观、鼠标触摸、按键、硬件与环境控制、资源与日志；电脑的摄像头、麦克风、喇叭 | — |
 | 指令级模拟器 | `tools/iss/` | RV32 指令级模拟，测热点代码的周期数，校准档案里的 CPU 成本；第 1 步已与实机核对 | — |
 | 上机工具 | `tools/bringup/`、`tools/hw-probe/` | 只读识别与备份、测量固件 | 实机上用 |
 
@@ -65,13 +75,13 @@ flowchart TB
 | 接口 | 系统用它做什么 | 模拟器里 | 真机上 |
 | --- | --- | --- | --- |
 | OSAL `osal.h` | 任务、队列、锁、信号量、定时器、内存 | 虚拟时间内核 + 内存池 | FreeRTOS + heap_caps |
-| `hal_display.h` | 提交区域与波形、等完成 | EPDiy 刷新管线模型（送行任务、行队列、每相时间、Flash 停顿造成的欠载、残影）+ 屏电源芯片模型 | EPDiy 端口：LCD 外设 + DMA，屏电源经 `drivers/board` |
+| `hal_display.h` | 提交区域与波形、等完成 | EPDiy 刷新管线模型（送行任务、行队列、每相时间、Flash 停顿造成的欠载、残影）+ 屏电源芯片模型 | EPDiy 端口：LCD 外设 + DMA，屏电源经 `boards/metalio_plus` |
 | `hal_input.h` | 触摸点与按键事件 | FT6336U 与 IO 扩展芯片的模型，经驱动读 | 同一套驱动，GPIO5 / GPIO2 / GPIO61 中断 |
 | `hal_power.h` | 电量、资源开关、CPU 提频、浅睡与唤醒、关机、前光、振动 | 电池与耗电模型；电量计 / 充电芯片模型；浅睡状态机 | esp_pm、浅睡、驱动 |
 | `hal_storage.h` | 内部 Flash 文件系统、SD 卡 | LittleFS 跑在模拟 NOR 上（擦写时序、掉电撕裂）；SD 用电脑目录加时延模型 | LittleFS on Flash，FATFS on SDMMC |
 | `hal_net.h` | 链路状态、选网 `hal_net_use`、WebSocket；4G 的 `hal_modem_at` / `hal_modem_at_payload` / `hal_modem_urc` | 链路模型（时延、带宽、断网）+ 环境（周围的信号）+ 4G 模组 AT 模型（卡槽、注册、短信、电话） | Wi-Fi 与 UART 网卡，AT 走同一条链路 |
 | `hal_audio.h` / `hal_codec.h` | 喇叭、麦克风、Opus | I2S 环形缓冲与时序；声音可放到电脑上，麦克风可用电脑的 | I2S（从模式）+ 编解码 |
-| `hal_camera.h` | 拍一张照片 | GC2145 寄存器模型，画面来自电脑摄像头 | DVP + `drivers/gc2145` |
+| `hal_camera.h` | 拍一张照片 | GC2145 寄存器模型，画面来自电脑摄像头 | DVP + `drivers/chips/gc2145` |
 | `hal_uart.h` | 带行协议的外设 | 蓝牙音频芯片 BH1098G 模型 | UART1 |
 | `hal_i2c.h` | 驱动访问 I2C 芯片 | 共享总线计时 + 按地址分发给芯片模型，可注入故障 | ESP-IDF i2c_master |
 | `hal_device.h` | 设备信息、时钟、加速度计、日志 | PCF8563 / SC7A20H 模型 | 驱动 |

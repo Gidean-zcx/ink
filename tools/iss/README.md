@@ -1,6 +1,6 @@
 # tools/iss：指令级校准（Level 2）
 
-用一个确定性的 RV32 指令集模拟器（ISS）跑真实的 RISC-V 代码，量出 ESP32-S31 上各成本类的"每单位周期数"，给主机模拟器 `profiles/*.json` 的 `costs_cycles` 提供有依据的数值。方法、参数依据、结果与局限见 [docs/research/simulator/iss-calibration.md](../../docs/research/simulator/iss-calibration.md)。
+用一个确定性的 RV32 指令集模拟器（ISS）跑真实的 RISC-V 代码，量出 ESP32-S31 上各成本类的"每单位周期数"，给主机模拟器 `simulator/profiles/*.json` 的 `costs_cycles` 提供有依据的数值。方法、参数依据、结果与局限见 [docs/research/simulator/iss-calibration.md](../../docs/research/simulator/iss-calibration.md)。
 
 ## 一条命令
 

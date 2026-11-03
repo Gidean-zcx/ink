@@ -47,7 +47,7 @@ void hal_net_set_link_callback(hal_link_cb cb, void *ctx);
 
 /* ---- cellular modem AT channel ----
  * The modem's AT command port (the Plus: NT26 over the UART-Ethernet link, multiplexed with the
- * data frames). Drivers (drivers/nt26) build features such as switching SIM cards on it. */
+ * data frames). Drivers (drivers/chips/nt26) build features such as switching SIM cards on it. */
 typedef enum { HAL_AT_OK = 0, HAL_AT_ERROR = -1, HAL_AT_TIMEOUT = -2, HAL_AT_NO_MODEM = -3 } hal_at_result_t;
 
 /** Send one command (no CR/LF) and wait up to timeout_ms for its final result code. resp receives

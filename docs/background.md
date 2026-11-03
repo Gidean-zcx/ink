@@ -135,22 +135,25 @@
 
 ## 7. 系统架构（已实现部分）
 
-分层与接口见 [平台与模拟器 §1](system/platform-and-simulator.md)，设计依据见 [底座设计](system/foundation.md)。
+分层与接口见 [平台与模拟器 §1](system/platform-and-simulator.md)，设计依据见 [底座设计](system/foundation.md)，目录与构建目标见[仓库结构](system/repo-layout.md)（2026-11-03 按系统架构重组）。
 
 ```
-apps/            主页、阅读器（只依赖 system 与 platform 接口）
-system/          可移植的系统服务：显示、刷新策略、输入、界面任务（LVGL）、存储、
-                 中文排版与字体、中枢连接、音频、AI、动作注册表与策略、成员、电源
-platform/include/ink/   OSAL + HAL 接口（显示、输入、存储、网络、音频、编解码、
-                 电源、设备、资源）+ 探针（对用户重要的指标）
-ports/sim/       模拟器端口：上述接口在模拟设备上的实现 + 场景脚本、指标、轨迹
-sim/             模拟器核心：虚拟时间内核（vtk）、按设备尺寸的堆（TLSF）、设备档案
-drivers/epd/     PQ-BN v4 直驱内核（研究原样拆分）
-profiles/        设备档案：Plus 悲观档（CI 门槛）、Plus 16 MB、Plus 上游显示管线、
-                 Plus PQ-BN、RK3566 类墨水屏、桌面 LCD
+apps/                   主页、阅读器（只依赖系统接口）
+system/                 自研系统：boot/（启动装配）、services/（显示与刷新策略、输入、存储、电源、
+                        音频、中枢连接、AI）、policy/（动作注册表与策略、成员）、ui/（界面任务，LVGL）、
+                        text/（中文排版与字体）、util/（JSON）、include/（系统接口）
+platform/include/ink/   OSAL + HAL 接口（显示、输入、存储、网络、音频、编解码、电源、设备、资源、
+                        摄像头、串口、I2C）+ 探针（对用户重要的指标）
+drivers/                芯片驱动 chips/（10 颗）与 PQ-BN v4 直驱内核 display/pqbn/
+boards/metalio_plus/    Plus 的接法：IO 扩展芯片、屏电源顺序、触摸坐标、浅睡步骤、关机脉冲
+ports/sim/              模拟器端口：OSAL（osal/）与各 HAL（hal/）在模拟设备上的实现
+simulator/              模拟器：虚拟时间内核（kernel/vtk）、按设备尺寸的堆（memory，TLSF）、芯片模型
+                        （models）、中枢（environment）、运行器与指标（runtime）、桌面窗口（desktop）
+simulator/profiles/     设备档案：Plus 悲观档（CI 门槛）、Plus 16 MB、Plus 上游显示管线、
+                        Plus PQ-BN、RK3566 类墨水屏、桌面 LCD
 ```
 
-**主要服务做什么**（实现见 `system/*/`）
+**主要服务做什么**（实现见 `system/services/*/`）
 
 - **显示服务 + 刷新策略**：界面提交的区域按模式（DU/GL16/GC16）派发给显示 HAL。EPDiy 端口上有全局锁和周期清屏。异步面板（PQ-BN）上最多 16 个更新同时在途，不做周期清屏。
 - **界面任务**：LVGL 9.5 渲染到 4 bpp 帧缓冲，所有分配放在 PSRAM（D-30）。
@@ -196,7 +199,7 @@ profiles/        设备档案：Plus 悲观档（CI 门槛）、Plus 16 MB、Plu
 
 **档案约定**
 
-- `profiles/metalio-plus.json` 是悲观档，也是 CI 的门槛：成本取“拟合值 ×1.3”与“慢角”中较大的一个。
+- `simulator/profiles/metalio-plus.json` 是悲观档，也是 CI 的门槛：成本取“拟合值 ×1.3”与“慢角”中较大的一个。
 - `metalio-plus-psram16.json` 是“很可能的情况”。
 
 **证据边界**（审计重点）
@@ -230,7 +233,7 @@ profiles/        设备档案：Plus 悲观档（CI 门槛）、Plus 16 MB、Plu
 **PQ-BN v4 直驱（可选）**
 
 - 来自用户另一会话的研究：[研究报告](research/eink-refresh-algorithm.md)，资料在 [eink-refresh/](research/eink-refresh/README.md)。
-- 内核在 `drivers/epd/pqbn_v4.c`，只做了拆分。
+- 内核在 `drivers/display/pqbn/pqbn_v4.c`，只做了拆分。
 - 集成方式与复核结论见 [集成报告](research/eink-refresh-integration.md)：
   - 小更新快很多，因为没有全局锁；
   - 本 ISS 测得的算力是研究估算的 1.15～2.6 倍，必须用两个扫描任务；
@@ -273,7 +276,7 @@ cmake -S . -B build-werror -DINK_WERROR=ON && cmake --build build-werror -j && c
 cmake -S . -B build-asan -DINK_SANITIZE=ON && cmake --build build-asan -j && ctest --test-dir build-asan   # ASan + UBSan
 
 # 单独跑一个场景（换档案即可比较两种显示驱动）
-./build/ink-sim --profile profiles/metalio-plus.json --script tests/scenarios/reader_basic.script \
+./build/ink-sim --profile simulator/profiles/metalio-plus.json --script tests/scenarios/reader_basic.script \
     --budget tests/scenarios/reader_basic.budget.json --assets build/assets --content build/test-content \
     --out out/reader --trace --frames
 python3 tools/simreport/simreport.py out/reader --lang zh    # HTML 报告：刷新胶片、预算、时延、CPU、内存

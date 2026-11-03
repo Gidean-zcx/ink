@@ -199,7 +199,7 @@ P4 手册给出 6.92/MHz（双核），上面的推理对 P4 应该同样成立�
 周期/单位，320 MHz【仿】。
 - 建议值 = raw×1.3 向上取整（预期情形）；
 - 悲观值 = max(raw×1.3, 慢角) 向上取整；
-- 现猜测取自 `profiles/metalio-plus.json`。
+- 现猜测取自 `simulator/profiles/metalio-plus.json`。
 
 | 成本类 | 单位 | raw | ×1.3 | 建议值 | 悲观值 | 现猜测 | 建议/现猜测 | 理想 | 慢角 | -Os | Zb/Zc |
 |---|---|---|---|---|---|---|---|---|---|---|---|
@@ -296,7 +296,7 @@ S31 的 XespV 向量扩展 ISS 不建模；若能用于查表，这一项还能�
 
 ### 2.7 PQ-BN 直驱内核（2026-11-02，刷新算法研究集成）【仿】
 
-用 `tools/iss/bench/run_pqbn.sh` 在研究的 7 个全分辨率场景上跑 `drivers/epd/pqbn_v4.c`。帧由 ISS 新增的输入服务读入（`iss -i 文件`，目标端 `iss_input()`，不计时、不经缓存，读入前写回并作废 D-cache，略偏悲观）。
+用 `tools/iss/bench/run_pqbn.sh` 在研究的 7 个全分辨率场景上跑 `drivers/display/pqbn/pqbn_v4.c`。帧由 ISS 新增的输入服务读入（`iss -i 文件`，目标端 `iss_input()`，不计时、不经缓存，读入前写回并作废 D-cache，略偏悲观）。
 
 布局：
 

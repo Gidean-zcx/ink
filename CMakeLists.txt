@@ -47,60 +47,81 @@ target_include_directories(ink_littlefs PUBLIC third_party/littlefs)
 # All LittleFS buffers come from the device heaps (osal_malloc), never libc.
 target_compile_definitions(ink_littlefs PUBLIC LFS_NO_MALLOC LFS_NO_DEBUG LFS_NO_TRACE)
 
-# ---------------------------------------------------------------- simulator core
-add_library(ink_sim_core STATIC sim/vtk/vtk.c sim/mem/pools.c sim/profile.c)
-target_include_directories(ink_sim_core PUBLIC sim sim/vtk sim/mem platform/include)
-target_link_libraries(ink_sim_core PUBLIC ink_tlsf ink_cjson Threads::Threads m)
+# ---------------------------------------------------------------- layers
+# One target per layer (docs/system/repo-layout.md), from the bottom up; each exposes only its own
+# headers. platform/include is the contract between the portable code and a port.
+add_library(ink_platform INTERFACE)
+target_include_directories(ink_platform INTERFACE platform/include)
+
+# Chip drivers and the panel algorithm: portable, built the same for the device (ESP-IDF).
+add_library(ink_drivers STATIC
+  drivers/chips/tca9555/tca9555.c
+  drivers/chips/tps65185/tps65185.c
+  drivers/chips/ft6336u/ft6336u.c
+  drivers/chips/bq27220/bq27220.c
+  drivers/chips/cx25601n/cx25601n.c
+  drivers/chips/pcf8563/pcf8563.c
+  drivers/chips/sc7a20h/sc7a20h.c
+  drivers/chips/gc2145/gc2145.c
+  drivers/chips/bh1098g/bh1098g.c
+  drivers/chips/nt26/nt26.c
+  drivers/display/pqbn/pqbn_v4.c)
+target_include_directories(ink_drivers PUBLIC drivers/chips drivers/display/pqbn)
+target_link_libraries(ink_drivers PUBLIC ink_platform)
+target_compile_options(ink_drivers PRIVATE ${INK_WARN})
+
+# The Metalio E-Ink4 Plus: its wiring, the shared expander, panel power, touch coordinates.
+add_library(ink_board_metalio_plus STATIC
+  boards/metalio_plus/metalio_board.c
+  boards/metalio_plus/metalio_epd_power.c
+  boards/metalio_plus/metalio_touch.c)
+target_include_directories(ink_board_metalio_plus PUBLIC boards)
+target_link_libraries(ink_board_metalio_plus PUBLIC ink_drivers ink_platform)
+target_compile_options(ink_board_metalio_plus PRIVATE ${INK_WARN})
+
+# Simulator kernel: virtual time, device memory pools, device profiles.
+add_library(ink_sim_core STATIC simulator/kernel/vtk/vtk.c simulator/memory/pools.c simulator/runtime/profile.c)
+target_include_directories(ink_sim_core PUBLIC simulator/kernel/vtk simulator/memory simulator/runtime)
+target_link_libraries(ink_sim_core PUBLIC ink_platform ink_tlsf ink_cjson Threads::Threads m)
 target_compile_options(ink_sim_core PRIVATE ${INK_WARN})
 
-add_library(ink_stb STATIC ports/sim/stb_impl.c)
+add_library(ink_stb STATIC simulator/runtime/stb_impl.c)
 target_include_directories(ink_stb PUBLIC third_party/stb)
 target_compile_options(ink_stb PRIVATE -w)
 
+# The simulated device: the port (OSAL and HAL on the models), the chip models, the environment
+# (hub, signals), the runner's metrics, trace and scripts, the desktop bridge. One library while
+# models and HAL implementations still call each other (see the layout doc).
 add_library(ink_port_sim STATIC
-  drivers/epd/pqbn_v4.c
-  drivers/tca9555/tca9555.c
-  drivers/tps65185/tps65185.c
-  drivers/nt26/nt26.c
-  drivers/board/metalio_epd_power.c
-  drivers/board/metalio_board.c
-  drivers/board/metalio_touch.c
-  drivers/ft6336u/ft6336u.c
-  drivers/bq27220/bq27220.c
-  drivers/cx25601n/cx25601n.c
-  drivers/pcf8563/pcf8563.c
-  drivers/sc7a20h/sc7a20h.c
-  drivers/gc2145/gc2145.c
-  drivers/bh1098g/bh1098g.c
-  ports/sim/hal_i2c_sim.c
-  ports/sim/dev_epd_power.c
-  ports/sim/dev_tca9555.c
-  ports/sim/dev_power_chips.c
-  ports/sim/dev_rtc_accel.c
-  ports/sim/hal_sensors_sim.c
-  ports/sim/dev_camera.c
-  ports/sim/dev_bt_audio.c
-  ports/sim/osal_sim.c
-  ports/sim/metrics.c
-  ports/sim/trace.c
-  ports/sim/script.c
-  ports/sim/hal_display_sim.c
-  ports/sim/hal_input_sim.c
-  ports/sim/hal_storage_sim.c
-  ports/sim/hal_power_sim.c
-  ports/sim/hal_assets_sim.c
-  ports/sim/hal_net_sim.c
-  ports/sim/hal_audio_sim.c
-  ports/sim/hal_codec_sim.c
-  ports/sim/sim_hub.c
-  ports/sim/sim_gui.c)
-target_include_directories(ink_port_sim PUBLIC ports/sim platform/include drivers/epd drivers)
-target_link_libraries(ink_port_sim PUBLIC ink_sim_core ink_littlefs ink_stb)
+  ports/sim/osal/osal_sim.c
+  ports/sim/hal/hal_i2c_sim.c
+  ports/sim/hal/hal_sensors_sim.c
+  ports/sim/hal/hal_display_sim.c
+  ports/sim/hal/hal_input_sim.c
+  ports/sim/hal/hal_storage_sim.c
+  ports/sim/hal/hal_power_sim.c
+  ports/sim/hal/hal_assets_sim.c
+  ports/sim/hal/hal_net_sim.c
+  ports/sim/hal/hal_audio_sim.c
+  ports/sim/hal/hal_codec_sim.c
+  simulator/models/dev_epd_power.c
+  simulator/models/dev_tca9555.c
+  simulator/models/dev_power_chips.c
+  simulator/models/dev_rtc_accel.c
+  simulator/models/dev_camera.c
+  simulator/models/dev_bt_audio.c
+  simulator/environment/sim_hub.c
+  simulator/runtime/metrics.c
+  simulator/runtime/trace.c
+  simulator/runtime/script.c
+  simulator/desktop/sim_gui.c)
+target_include_directories(ink_port_sim PUBLIC simulator simulator/desktop)
+target_link_libraries(ink_port_sim PUBLIC ink_board_metalio_plus ink_drivers ink_sim_core ink_littlefs ink_stb)
 target_compile_options(ink_port_sim PRIVATE ${INK_WARN})
 
 # An executable = the simulator runner + the code under test (which provides ink_main()).
 function(ink_sim_executable name)
-  add_executable(${name} ports/sim/sim_main.c ${ARGN})
+  add_executable(${name} simulator/runtime/sim_main.c ${ARGN})
   target_link_libraries(${name} PRIVATE ink_port_sim)
   target_compile_options(${name} PRIVATE ${INK_WARN})
 endfunction()
@@ -122,29 +143,35 @@ target_compile_options(ink_lvgl PRIVATE -w)
 
 # ---------------------------------------------------------------- portable system + apps
 add_library(ink_system STATIC
-  system/main.c
-  system/display/display_service.c
-  system/display/refresh_policy.c
-  system/input/input_service.c
-  system/storage/storage_service.c
-  system/core/ink_json.c
-  system/core/actions.c
-  system/core/members.c
-  system/core/system_actions.c
-  system/power/power_service.c
-  system/ui/lock_mark.c
-  system/net/hub_link.c
-  system/ai/ai_service.c
-  system/audio/audio_service.c
+  system/services/display/display_service.c
+  system/services/display/refresh_policy.c
+  system/services/input/input_service.c
+  system/services/storage/storage_service.c
+  system/services/power/power_service.c
+  system/services/hub/hub_link.c
+  system/services/ai/ai_service.c
+  system/services/audio/audio_service.c
+  system/policy/actions.c
+  system/policy/members.c
+  system/policy/system_actions.c
+  system/util/ink_json.c
   system/text/ink_font.c
   system/text/linebreak.c
   system/text/layout.c
-  system/ui/ui_task.c
-  apps/home/home.c
-  apps/reader/reader.c)
-target_include_directories(ink_system PUBLIC system/include platform/include system/display third_party/jsmn)
-target_link_libraries(ink_system PUBLIC ink_lvgl)
+  system/ui/lock_mark.c
+  system/ui/ui_task.c)
+target_include_directories(ink_system PUBLIC system/include PRIVATE system/services/display third_party/jsmn)
+target_link_libraries(ink_system PUBLIC ink_platform ink_lvgl)
 target_compile_options(ink_system PRIVATE ${INK_WARN})
+
+add_library(ink_apps STATIC apps/home/home.c apps/reader/reader.c)
+target_link_libraries(ink_apps PUBLIC ink_system)
+target_compile_options(ink_apps PRIVATE ${INK_WARN})
+
+# The product: ink_main() starts the services and the apps (the composition root).
+add_library(ink_boot STATIC system/boot/main.c)
+target_link_libraries(ink_boot PUBLIC ink_apps ink_system)
+target_compile_options(ink_boot PRIVATE ${INK_WARN})
 
 # ---------------------------------------------------------------- assets (generated)
 # CJK bitmap fonts rendered from Noto Sans CJK (SIL OFL 1.1) by tools/fontgen.
@@ -175,16 +202,16 @@ endif()
 # Scenario content: the committed sample books + a generated long book (pagination stress).
 set(INK_TEST_CONTENT ${CMAKE_BINARY_DIR}/test-content)
 add_custom_command(OUTPUT ${INK_TEST_CONTENT}/books/测试长书.txt
-  COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/tests/content ${INK_TEST_CONTENT}
+  COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/tests/fixtures/content ${INK_TEST_CONTENT}
   COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/testdata/make_long_book.py
-          ${CMAKE_SOURCE_DIR}/tests/content/books/星星邮差.txt ${INK_TEST_CONTENT}/books/测试长书.txt 40
-  DEPENDS ${CMAKE_SOURCE_DIR}/tools/testdata/make_long_book.py ${CMAKE_SOURCE_DIR}/tests/content/books/星星邮差.txt
+          ${CMAKE_SOURCE_DIR}/tests/fixtures/content/books/星星邮差.txt ${INK_TEST_CONTENT}/books/测试长书.txt 40
+  DEPENDS ${CMAKE_SOURCE_DIR}/tools/testdata/make_long_book.py ${CMAKE_SOURCE_DIR}/tests/fixtures/content/books/星星邮差.txt
   COMMENT "test content: long book")
 add_custom_target(ink_test_content ALL DEPENDS ${INK_TEST_CONTENT}/books/测试长书.txt)
 
 # The full system on the simulated device.
-add_executable(ink-sim ports/sim/sim_main.c)
-target_link_libraries(ink-sim PRIVATE ink_system ink_lvgl ink_port_sim)
+add_executable(ink-sim simulator/runtime/sim_main.c)
+target_link_libraries(ink-sim PRIVATE ink_boot ink_port_sim)
 target_compile_options(ink-sim PRIVATE ${INK_WARN})
 
 # ---------------------------------------------------------------- desktop simulator (R-042, D-43)
@@ -239,83 +266,83 @@ if(INK_GUI)
   if(Python3_FOUND)
     add_custom_command(OUTPUT ${INK_GUI_GLYPHS}
       COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/gui
-      COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/ports/sim/gui/glyphs.py -o ${INK_GUI_GLYPHS}
-              ${CMAKE_SOURCE_DIR}/ports/sim/gui/gui_main.cpp
-      DEPENDS ${CMAKE_SOURCE_DIR}/ports/sim/gui/glyphs.py ${CMAKE_SOURCE_DIR}/ports/sim/gui/gui_main.cpp
+      COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/simulator/desktop/gui/glyphs.py -o ${INK_GUI_GLYPHS}
+              ${CMAKE_SOURCE_DIR}/simulator/desktop/gui/gui_main.cpp
+      DEPENDS ${CMAKE_SOURCE_DIR}/simulator/desktop/gui/glyphs.py ${CMAKE_SOURCE_DIR}/simulator/desktop/gui/gui_main.cpp
       COMMENT "ink-sim-gui: glyphs used by the window")
   else()
     file(WRITE ${INK_GUI_GLYPHS} "static const char kGuiGlyphs[] = \"\";\n")
   endif()
   if(APPLE)
-    set(INK_HOST_CAMERA ports/sim/gui/host_camera_mac.m)
-    set_source_files_properties(ports/sim/gui/host_camera_mac.m PROPERTIES COMPILE_OPTIONS "-fobjc-arc")
+    set(INK_HOST_CAMERA simulator/desktop/gui/host_camera_mac.m)
+    set_source_files_properties(simulator/desktop/gui/host_camera_mac.m PROPERTIES COMPILE_OPTIONS "-fobjc-arc")
   elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    set(INK_HOST_CAMERA ports/sim/gui/host_camera_linux.c)
+    set(INK_HOST_CAMERA simulator/desktop/gui/host_camera_linux.c)
   else()
     message(FATAL_ERROR "ink-sim-gui: no computer-camera backend for ${CMAKE_SYSTEM_NAME}")
   endif()
-  add_executable(ink-sim-gui ports/sim/sim_main.c ports/sim/gui/gui_main.cpp ${INK_HOST_CAMERA} ${INK_GUI_GLYPHS})
+  add_executable(ink-sim-gui simulator/runtime/sim_main.c simulator/desktop/gui/gui_main.cpp ${INK_HOST_CAMERA} ${INK_GUI_GLYPHS})
   if(APPLE)
     target_link_libraries(ink-sim-gui PRIVATE "-framework AVFoundation" "-framework CoreMedia" "-framework CoreVideo" "-framework Foundation")
     # usage descriptions, so macOS can ask for the camera and the microphone
-    target_link_options(ink-sim-gui PRIVATE "LINKER:-sectcreate,__TEXT,__info_plist,${CMAKE_SOURCE_DIR}/ports/sim/gui/Info.plist")
+    target_link_options(ink-sim-gui PRIVATE "LINKER:-sectcreate,__TEXT,__info_plist,${CMAKE_SOURCE_DIR}/simulator/desktop/gui/Info.plist")
   endif()
   target_compile_definitions(ink-sim-gui PRIVATE INK_SIM_NO_MAIN
     INK_SOURCE_DIR="${CMAKE_SOURCE_DIR}" INK_BINARY_DIR="${CMAKE_BINARY_DIR}"
     INK_GUI_FONT="${INK_CJK_FONT}" INK_GUI_FONT_FACE=${INK_CJK_FACE})
   target_include_directories(ink-sim-gui PRIVATE ${CMAKE_BINARY_DIR}/gui)
-  target_link_libraries(ink-sim-gui PRIVATE ink_system ink_lvgl ink_port_sim ink_imgui)
+  target_link_libraries(ink-sim-gui PRIVATE ink_boot ink_port_sim ink_imgui)
   target_compile_options(ink-sim-gui PRIVATE ${INK_WARN})
 endif()
 
 # ---------------------------------------------------------------- tests
 enable_testing()
-ink_sim_executable(sim-selftest tests/sim/selftest.c)
+ink_sim_executable(sim-selftest tests/simulator/selftest.c)
 foreach(p metalio-plus metalio-plus-psram16 pinenote-rk3566 desktop-lcd)
   add_test(NAME selftest-${p}
-    COMMAND sim-selftest --profile ${CMAKE_SOURCE_DIR}/profiles/${p}.json
-            --script ${CMAKE_SOURCE_DIR}/tests/sim/selftest.script
-            --budget ${CMAKE_SOURCE_DIR}/tests/sim/selftest.budget.json
+    COMMAND sim-selftest --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/${p}.json
+            --script ${CMAKE_SOURCE_DIR}/tests/simulator/selftest.script
+            --budget ${CMAKE_SOURCE_DIR}/tests/simulator/selftest.budget.json
             --out ${CMAKE_BINARY_DIR}/test-out/selftest-${p} --quiet)
 endforeach()
 # Death test: a task with a PSRAM stack touching /user must crash the simulated device, as ESP-IDF does.
 add_test(NAME selftest-psram-stack-flash-access-crashes
-  COMMAND sim-selftest --profile ${CMAKE_SOURCE_DIR}/profiles/metalio-plus.json
+  COMMAND sim-selftest --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
           --out ${CMAKE_BINARY_DIR}/test-out/selftest-death --quiet --end 2s)
 set_tests_properties(selftest-psram-stack-flash-access-crashes PROPERTIES
   ENVIRONMENT "INK_SELFTEST_DEATH=psram_flash"
   PASS_REGULAR_EXPRESSION "stack in PSRAM and accessed /user")
 # The modem's two SIM slots: online switches, an empty slot, switching back (INK_SELFTEST_CELL).
 add_test(NAME selftest-sim-slots
-  COMMAND sim-selftest --profile ${CMAKE_SOURCE_DIR}/profiles/metalio-plus.json
-          --budget ${CMAKE_SOURCE_DIR}/tests/sim/cell.budget.json
+  COMMAND sim-selftest --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+          --budget ${CMAKE_SOURCE_DIR}/tests/simulator/cell.budget.json
           --out ${CMAKE_BINARY_DIR}/test-out/selftest-sim-slots --quiet --end 60s --no-random-outages)
 set_tests_properties(selftest-sim-slots PROPERTIES ENVIRONMENT "INK_SELFTEST_CELL=1")
 # The Plus board's IO expander wiring: motor, shared reset and supply of the modem, power-off pulses.
 add_test(NAME selftest-board-wiring
-  COMMAND sim-selftest --profile ${CMAKE_SOURCE_DIR}/profiles/metalio-plus.json
-          --budget ${CMAKE_SOURCE_DIR}/tests/sim/board.budget.json
+  COMMAND sim-selftest --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+          --budget ${CMAKE_SOURCE_DIR}/tests/simulator/board.budget.json
           --out ${CMAKE_BINARY_DIR}/test-out/selftest-board --quiet --end 40s --no-random-outages)
 set_tests_properties(selftest-board-wiring PROPERTIES ENVIRONMENT "INK_SELFTEST_BOARD=1")
-# System service checks (storage cache versions; tests/system/systest.c), on the services themselves.
-add_executable(sim-systest ports/sim/sim_main.c tests/system/systest.c)
-target_link_libraries(sim-systest PRIVATE ink_system ink_lvgl ink_port_sim)
+# System service checks (storage cache versions; tests/integration/systest.c), on the services themselves.
+add_executable(sim-systest simulator/runtime/sim_main.c tests/integration/systest.c)
+target_link_libraries(sim-systest PRIVATE ink_system ink_port_sim)
 target_compile_options(sim-systest PRIVATE ${INK_WARN})
 add_test(NAME systest-services
-  COMMAND sim-systest --profile ${CMAKE_SOURCE_DIR}/profiles/metalio-plus.json
-          --budget ${CMAKE_SOURCE_DIR}/tests/system/systest.budget.json
+  COMMAND sim-systest --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+          --budget ${CMAKE_SOURCE_DIR}/tests/integration/systest.budget.json
           --out ${CMAKE_BINARY_DIR}/test-out/systest --quiet --end 30s --no-random-outages)
 add_test(NAME determinism
   COMMAND ${CMAKE_COMMAND} -DSIM=$<TARGET_FILE:sim-selftest>
-          -DPROFILE=${CMAKE_SOURCE_DIR}/profiles/metalio-plus.json
-          -DSCRIPT=${CMAKE_SOURCE_DIR}/tests/sim/selftest.script
+          -DPROFILE=${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+          -DSCRIPT=${CMAKE_SOURCE_DIR}/tests/simulator/selftest.script
           -DOUT=${CMAKE_BINARY_DIR}/test-out/determinism
-          -P ${CMAKE_SOURCE_DIR}/tests/sim/determinism.cmake)
+          -P ${CMAKE_SOURCE_DIR}/tests/simulator/determinism.cmake)
 
 # System scenarios: the real system on simulated devices, judged by budgets.
 function(ink_scenario name profile)
   add_test(NAME scenario-${name}-${profile}
-    COMMAND ink-sim --profile ${CMAKE_SOURCE_DIR}/profiles/${profile}.json
+    COMMAND ink-sim --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/${profile}.json
             --script ${CMAKE_SOURCE_DIR}/tests/scenarios/${name}.script
             --budget ${CMAKE_SOURCE_DIR}/tests/scenarios/${name}.budget.json
             --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
@@ -326,7 +353,7 @@ ink_scenario(home_basic metalio-plus-psram16)
 # Panel power safety (D-41): the board driver against the PMIC model must flag a VCOM that differs
 # from the panel's (here a panel labelled 1.50 V while the board drives 1.20 V).
 add_test(NAME selftest-panel-vcom-mismatch
-  COMMAND ink-sim --profile ${CMAKE_SOURCE_DIR}/profiles/metalio-plus.json
+  COMMAND ink-sim --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
           --script ${CMAKE_SOURCE_DIR}/tests/scenarios/home_basic.script
           --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
           --out ${CMAKE_BINARY_DIR}/test-out/selftest-vcom --no-random-outages --panel-vcom-mv 1500 --end 8s)
@@ -345,27 +372,27 @@ if(INK_HAVE_FONTS)
   ink_scenario(ai_dismiss metalio-plus)
   ink_scenario(ai_dismiss_held metalio-plus)
   add_test(NAME scenario-reader_empty-metalio-plus
-    COMMAND ink-sim --profile ${CMAKE_SOURCE_DIR}/profiles/metalio-plus.json
+    COMMAND ink-sim --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
             --script ${CMAKE_SOURCE_DIR}/tests/scenarios/reader_empty.script
             --budget ${CMAKE_SOURCE_DIR}/tests/scenarios/reader_empty.budget.json
-            --assets ${INK_ASSETS_DIR} --content ${CMAKE_SOURCE_DIR}/tests/content-bad
+            --assets ${INK_ASSETS_DIR} --content ${CMAKE_SOURCE_DIR}/tests/fixtures/content-bad
             --out ${CMAKE_BINARY_DIR}/test-out/reader_empty-metalio-plus --quiet --trace --frames --no-random-outages)
   # PQ-BN direct drive (research PR #7) on the same scenarios and budgets, plus its flash pause
   add_test(NAME scenario-reader_basic-metalio-plus-pqbn
-    COMMAND ink-sim --profile ${CMAKE_SOURCE_DIR}/profiles/metalio-plus-pqbn.json
+    COMMAND ink-sim --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus-pqbn.json
             --script ${CMAKE_SOURCE_DIR}/tests/scenarios/reader_basic.script
             --budget ${CMAKE_SOURCE_DIR}/tests/scenarios/reader_basic.pqbn.budget.json
             --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
             --out ${CMAKE_BINARY_DIR}/test-out/reader_basic-metalio-plus-pqbn --quiet --trace --frames --no-random-outages)
   ink_scenario(ai_ask metalio-plus-pqbn)
   add_test(NAME scenario-pqbn_flash_pause-metalio-plus-pqbn
-    COMMAND ink-sim --profile ${CMAKE_SOURCE_DIR}/profiles/metalio-plus-pqbn.json
+    COMMAND ink-sim --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus-pqbn.json
             --script ${CMAKE_SOURCE_DIR}/tests/scenarios/pqbn_flash_pause.script
             --budget ${CMAKE_SOURCE_DIR}/tests/scenarios/pqbn_flash_pause.budget.json
             --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
             --out ${CMAKE_BINARY_DIR}/test-out/pqbn_flash_pause --quiet --trace --no-random-outages)
   add_test(NAME scenario-ai_tools-metalio-plus
-    COMMAND ink-sim --profile ${CMAKE_SOURCE_DIR}/profiles/metalio-plus.json
+    COMMAND ink-sim --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
             --script ${CMAKE_SOURCE_DIR}/tests/scenarios/ai_tools.script
             --budget ${CMAKE_SOURCE_DIR}/tests/scenarios/ai_tools.budget.json
             --hub ${CMAKE_SOURCE_DIR}/tests/scenarios/ai_tools.hub.json
@@ -374,21 +401,21 @@ if(INK_HAVE_FONTS)
   # Power cut in the middle of a position save, reboot from the torn flash image.
   add_test(NAME scenario-powercut-during-save
     COMMAND ${CMAKE_COMMAND} -DSIM=$<TARGET_FILE:ink-sim>
-            -DPROFILE=${CMAKE_SOURCE_DIR}/profiles/metalio-plus.json
+            -DPROFILE=${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
             -DOUT=${CMAKE_BINARY_DIR}/test-out/powercut -DSRC=${CMAKE_SOURCE_DIR}/tests/scenarios
             -DASSETS=${INK_ASSETS_DIR} -DCONTENT=${INK_TEST_CONTENT}
             -P ${CMAKE_SOURCE_DIR}/tests/scenarios/powercut.cmake)
   # The real system must be bit-for-bit deterministic too (budgets compare single runs).
   add_test(NAME determinism-reader
     COMMAND ${CMAKE_COMMAND} -DSIM=$<TARGET_FILE:ink-sim>
-            -DPROFILE=${CMAKE_SOURCE_DIR}/profiles/metalio-plus.json
+            -DPROFILE=${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
             -DSCRIPT=${CMAKE_SOURCE_DIR}/tests/scenarios/reader_basic.script
             -DOUT=${CMAKE_BINARY_DIR}/test-out/determinism-reader
             "-DEXTRA=--assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT} --no-random-outages"
-            -P ${CMAKE_SOURCE_DIR}/tests/sim/determinism.cmake)
+            -P ${CMAKE_SOURCE_DIR}/tests/simulator/determinism.cmake)
   # Same reader on the upstream display pipeline (timing comparison; lenient budget).
   add_test(NAME scenario-reader_basic-upstream-pipeline
-    COMMAND ink-sim --profile ${CMAKE_SOURCE_DIR}/profiles/metalio-plus-upstream-display.json
+    COMMAND ink-sim --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus-upstream-display.json
             --script ${CMAKE_SOURCE_DIR}/tests/scenarios/reader_basic.script
             --budget ${CMAKE_SOURCE_DIR}/tests/scenarios/upstream_pipeline.budget.json
             --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
@@ -397,13 +424,13 @@ if(INK_HAVE_FONTS)
   # meet its budgets while position saves hit a used filesystem.
   add_test(NAME fixture-aged-user-image
     COMMAND ${CMAKE_COMMAND} -DMODE=make -DSIM=$<TARGET_FILE:sim-selftest>
-            -DPROFILE=${CMAKE_SOURCE_DIR}/profiles/metalio-plus.json
+            -DPROFILE=${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
             -DIMAGE=${CMAKE_BINARY_DIR}/test-out/aged-user.img -DOUT=${CMAKE_BINARY_DIR}/test-out/aging
             -P ${CMAKE_SOURCE_DIR}/tests/scenarios/aged_image.cmake)
   set_tests_properties(fixture-aged-user-image PROPERTIES FIXTURES_SETUP aged_user)
   add_test(NAME scenario-reader_basic-aged-flash-max
     COMMAND ${CMAKE_COMMAND} -DMODE=run -DSIM=$<TARGET_FILE:ink-sim>
-            -DPROFILE=${CMAKE_SOURCE_DIR}/profiles/metalio-plus.json
+            -DPROFILE=${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
             -DIMAGE=${CMAKE_BINARY_DIR}/test-out/aged-user.img -DOUT=${CMAKE_BINARY_DIR}/test-out/reader_basic-aged
             -DSCRIPT=${CMAKE_SOURCE_DIR}/tests/scenarios/reader_basic.script
             -DBUDGET=${CMAKE_SOURCE_DIR}/tests/scenarios/reader_basic.budget.json
@@ -414,7 +441,7 @@ if(INK_HAVE_FONTS)
   # Shared-bus faults on the panel power path (D-41): 2 % of hal_i2c transfers time out, as one did on
   # the device in phase 0; the driver must recover by its retries and never scan an unpowered panel.
   add_test(NAME scenario-reader_basic-panel-power-faults
-    COMMAND ink-sim --profile ${CMAKE_SOURCE_DIR}/profiles/metalio-plus.json
+    COMMAND ink-sim --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
             --script ${CMAKE_SOURCE_DIR}/tests/scenarios/reader_basic.script
             --budget ${CMAKE_SOURCE_DIR}/tests/scenarios/panel_power_faults.budget.json
             --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
@@ -423,7 +450,7 @@ if(INK_HAVE_FONTS)
 endif()
 # The panel supply never comes up: every refresh fails (ok = false) instead of pretending.
 add_test(NAME scenario-home-panel-power-dead
-  COMMAND ink-sim --profile ${CMAKE_SOURCE_DIR}/profiles/metalio-plus.json
+  COMMAND ink-sim --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
           --script ${CMAKE_SOURCE_DIR}/tests/scenarios/home_basic.script
           --budget ${CMAKE_SOURCE_DIR}/tests/scenarios/panel_power_dead.budget.json
           --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
@@ -431,7 +458,7 @@ add_test(NAME scenario-home-panel-power-dead
 # Portability smoke runs: same system, other panels/classes (budget: no panic, input works)
 foreach(p pinenote-rk3566 desktop-lcd metalio-plus-pqbn)
   add_test(NAME portability-home-${p}
-    COMMAND ink-sim --profile ${CMAKE_SOURCE_DIR}/profiles/${p}.json
+    COMMAND ink-sim --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/${p}.json
             --script ${CMAKE_SOURCE_DIR}/tests/scenarios/home_basic.script
             --budget ${CMAKE_SOURCE_DIR}/tests/scenarios/portability.budget.json
             --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
@@ -454,6 +481,6 @@ add_test(NAME iss-selftest COMMAND iss-selftest)
 if(INK_GUI AND INK_HAVE_FONTS)
   add_test(NAME gui-smoke
     COMMAND ${CMAKE_COMMAND} -DGUI=$<TARGET_FILE:ink-sim-gui> -DOUT=${CMAKE_BINARY_DIR}/test-out/gui-smoke
-            -P ${CMAKE_SOURCE_DIR}/tests/sim/gui_smoke.cmake)
+            -P ${CMAKE_SOURCE_DIR}/tests/simulator/gui_smoke.cmake)
   set_tests_properties(gui-smoke PROPERTIES TIMEOUT 180)
 endif()

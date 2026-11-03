@@ -1,5 +1,5 @@
 {
-  "_doc": "Reader on the PQ-BN direct-drive profile (profiles/metalio-plus-pqbn.json, D-40): the same checks as reader_basic.budget.json except the page-turn gate. With the kernel as written the next phase is planned after each scan, so a full page takes ~1 s (p95 ~1.0 s vs 0.72 s with EPDiy); planning behind the scan (a port change, docs/research/eink-refresh-integration.md) brings it to ~0.71 s. The gate guards the model against regressions; target_max shows the gap to the EPDiy port.",
+  "_doc": "Reader on the PQ-BN direct-drive profile (simulator/profiles/metalio-plus-pqbn.json, D-40): the same checks as reader_basic.budget.json except the page-turn gate. With the kernel as written the next phase is planned after each scan, so a full page takes ~1 s (p95 ~1.0 s vs 0.72 s with EPDiy); planning behind the scan (a port change, docs/research/eink-refresh-integration.md) brings it to ~0.71 s. The gate guards the model against regressions; target_max shows the gap to the EPDiy port.",
   "panic.count": {
     "max": 0,
     "optional": true

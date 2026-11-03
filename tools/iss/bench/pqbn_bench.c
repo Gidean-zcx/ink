@@ -1,4 +1,4 @@
-/* PQ-BN v4 (drivers/epd/pqbn_v4.c) on the ISS, ESP32-S31 model: per-phase cost of the planner
+/* PQ-BN v4 (drivers/display/pqbn/pqbn_v4.c) on the ISS, ESP32-S31 model: per-phase cost of the planner
  * (pqbn_v4_phase) and per-row cost of the executor (pqbn_v4_exec_row, line mode) on the research's
  * full-resolution scenarios (docs/research/eink-refresh/pqbn_v4/rv/gen_scenarios.py: 1216x684 panel,
  * a UI frame every third phase). Memory as on the device: fb4, hot and cold in PSRAM (through the

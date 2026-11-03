@@ -4,7 +4,7 @@
  * Every platform exposes a device profile: what hardware exists and how big
  * the budgets are. The portable system adapts to it at runtime (cache sizes,
  * layout density, which apps appear) instead of being compiled for one board.
- * The simulator loads the same profile from profiles/<name>.json.
+ * The simulator loads the same profile from simulator/profiles/<name>.json.
  */
 #ifndef INK_HAL_DEVICE_H
 #define INK_HAL_DEVICE_H

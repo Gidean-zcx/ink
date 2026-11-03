@@ -168,5 +168,5 @@ cat >"$B/meta.json" <<EOF
 EOF
 log "fit timing model, run kernels, write report"
 "$PYTHON" "$HERE/scripts/calib.py" --iss "$B/iss" --elf-dir "$B/elf" --base "$HERE/timing/esp32s31.cfg" \
-  --profile "$REPO/profiles/metalio-plus.json" --runs "$B/runs" --out "$OUT" --meta "$B/meta.json"
+  --profile "$REPO/simulator/profiles/metalio-plus.json" --runs "$B/runs" --out "$OUT" --meta "$B/meta.json"
 log "done: $OUT/costs.json, $OUT/report.md, $OUT/esp32s31.fitted.cfg"

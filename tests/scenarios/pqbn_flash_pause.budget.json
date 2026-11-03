@@ -1,5 +1,5 @@
 {
-  "_doc": "PQ-BN direct drive (profiles/metalio-plus-pqbn.json): a flash write requested while the panel converges pauses the drive at a phase boundary instead of waiting for every update to settle (D-36 still holds: no flash operation meets a scan).",
+  "_doc": "PQ-BN direct drive (simulator/profiles/metalio-plus-pqbn.json): a flash write requested while the panel converges pauses the drive at a phase boundary instead of waiting for every update to settle (D-36 still holds: no flash operation meets a scan).",
   "panic.count": {
     "max": 0,
     "optional": true

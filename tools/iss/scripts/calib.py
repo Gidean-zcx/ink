@@ -4,7 +4,7 @@
 Called by tools/iss/calibrate.sh once everything is built:
 
   calib.py --iss build/iss --elf-dir build/elf --base timing/esp32s31.cfg \
-           --profile ../../profiles/metalio-plus.json --runs build/runs --out out
+           --profile ../../simulator/profiles/metalio-plus.json --runs build/runs --out out
 
 Steps
   1. CoreMark fit: evaluate a box of physically plausible 5-stage in-order
@@ -298,7 +298,7 @@ def main():
                     "'raw' = fitted model, kernels -O2, hot code (ideal I-cache; flash fetch is charged separately "
                     "via icache.miss); 'with_margin' = raw x 1.3 (performance-modeling.md: CPU x1.3 until calibrated "
                     "on hardware); 'proposed' = with_margin rounded up for the profile. 'ideal'/'slow' = bounding "
-                    "corners; 'Os'/'zbzc' = build sensitivities. Not applied to profiles/.",
+                    "corners; 'Os'/'zbzc' = build sensitivities. Not applied to simulator/profiles/.",
         "anchor": {"coremark_per_mhz_per_core": ANCHOR,
                    "source": "Espressif material (ESP32-S31 datasheet v0.5: CoreMark 2195.20 dual-core @320 MHz = "
                              "6.86/MHz, assumed linear per core), unverified on our board"},

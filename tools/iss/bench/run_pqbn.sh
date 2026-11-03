@@ -35,8 +35,8 @@ LDFLAGS="-nostartfiles -L$ISSDIR/rt -Wl,--gc-sections -Wl,--no-warn-rwx-segments
 build() { # name defines...
   local name=$1; shift
   # shellcheck disable=SC2086
-  "$RV_GCC" $TFLAGS "$@" -I"$ISSDIR/rt" -I"$REPO/drivers/epd" $LDFLAGS "$ISSDIR/rt/crt0.S" "$ISSDIR/rt/syscalls.c" \
-    "$HERE/pqbn_bench.c" "$REPO/drivers/epd/pqbn_v4.c" -lc -lm -lgcc -o "$OUT/$name.elf"
+  "$RV_GCC" $TFLAGS "$@" -I"$ISSDIR/rt" -I"$REPO/drivers/display/pqbn" $LDFLAGS "$ISSDIR/rt/crt0.S" "$ISSDIR/rt/syscalls.c" \
+    "$HERE/pqbn_bench.c" "$REPO/drivers/display/pqbn/pqbn_v4.c" -lc -lm -lgcc -o "$OUT/$name.elf"
 }
 # the executor in IRAM as in the port (PQBN_HOT); the planner stays in flash (XIP)
 HOT='-DPQBN_HOT=__attribute__((section(".iram.text"),noinline))'

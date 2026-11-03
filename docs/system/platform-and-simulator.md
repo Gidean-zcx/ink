@@ -11,7 +11,7 @@
 | 有没有现成的 ESP32-S31 模拟器 | 没有。QEMU 只支持 esp32/c3/s3；ESP-IDF 的 linux 目标是单核协作式，没有时间与资源模型 | 2026-11-01 调研（[性能建模报告](../research/simulator/performance-modeling.md)） |
 | 采用什么方式 | **两级**：第一级把系统代码编译成电脑程序，跑在“虚拟时间内核 + 按设备尺寸限定的内存池 + 外设模型”上；第二级用自写的 RISC-V 指令级模拟器跑热点代码，给第一级的 CPU 成本校准（已完成首轮，[报告](../research/simulator/iss-calibration.md)） | 本文 §2、§6 |
 | 结果是否可信 | 时间按上限取、资源按下限取；同一场景重复运行结果逐位一致；每个参数注明来源（代码 / 数据手册 / 指令级测量 / 估算）；第一次独立评审的 3 高 8 中 7 低、第二次的 2 高 3 中及若干低问题和 1 个系统缺陷均已处理（§5.2、§5.3）。到货后按 SP-01 等实测校准，验收规则为“预测的 p95 时延与峰值内存不低于实测的 0.9 倍”（宁可高估） | [性能建模报告](../research/simulator/performance-modeling.md) |
-| 换设备要不要重写 | 不用。系统与应用只依赖 OSAL/HAL 与设备档案；分辨率、DPI、屏幕类型（墨水屏/LCD）、核数、内存在档案里，界面用 dp 和物理尺寸。同一个系统已在 Plus、RK3566 类墨水屏平板、桌面 LCD 三个档案上跑通 | 本文 §1、`profiles/` |
+| 换设备要不要重写 | 不用。系统与应用只依赖 OSAL/HAL 与设备档案；分辨率、DPI、屏幕类型（墨水屏/LCD）、核数、内存在档案里，界面用 dp 和物理尺寸。同一个系统已在 Plus、RK3566 类墨水屏平板、桌面 LCD 三个档案上跑通 | 本文 §1、`simulator/profiles/` |
 | 模拟器已经发现了什么 | 内部 RAM 极紧、翻页时间构成、打开书时界面任务读 Flash 会让真机死机、按下反色让反馈慢一倍、滑动被当成点击、换屏被拆成两次刷新、Flash 读写与刷新冲突、PMIC 上电挡在每次响应前面、上游每次刷新都比对整块屏幕、4G 空闲恢复让提问多等、**送行任务算力几乎刚好等于扫描速度（照搬上游代码配小队列会花屏）**、旧一轮的“TTS 结束”会把新回答静音、写入中的内容读不到等，均已修正、写入预算或形成决策（D-35、D-36） | 本文 §5 |
 | 现在的数字（悲观档，本端口设计） | 翻页稳定 p95 0.72 s（SRS 建议 0.6 s，差距见 §5.4）；点书到首页稳定 1.2 s（SR-UX-03 ≤1.5 s）；首次可见变化 p50 0.25 s（p95 0.34 s）；按住 AI 键到听见提示音 61 ms、看到“正在听” 0.51 s；松开到第一段回答 p50 2.1 s（含一次断网重试时 2.5 s）；内部 + DMA RAM 最坏时余约 55 KiB（阅读）/ 38 KiB（AI 提问，预算 32 KiB）。前提是送行任务按 D-35 优化（每行 ≤约 32 µs）；照搬上游代码配 64 行预填会花屏 | CI 输出 `metrics.json`、§5.4 |
 
@@ -27,7 +27,7 @@ platform/include/ink/   osal.h  hal_display.h  hal_input.h  hal_storage.h  hal_n
 ports/sim        模拟器（本仓库已实现）
 ports/esp32s31   FreeRTOS + 上游驱动（到货前搭骨架，到货后实测）
 ports/posix      pthread + Linux（RK3566 等 SoC、桌面；待做）
-profiles/*.json  设备档案：每个数字都在这里，系统运行时按档案自适应
+simulator/profiles/*.json  设备档案：每个数字都在这里，系统运行时按档案自适应
 ```
 
 | 接口 | 内容 | 设计要点 |
@@ -46,16 +46,16 @@ profiles/*.json  设备档案：每个数字都在这里，系统运行时按档
 
 ## 2. 第一级模拟器：模型与参数
 
-所有参数在 `profiles/metalio-plus.json`（悲观档，CI 的门槛）里，来源见[性能建模报告](../research/simulator/performance-modeling.md)和[指令级校准报告](../research/simulator/iss-calibration.md)。另有 `metalio-plus-psram16.json`（预期 CPU 成本，即“很可能的情况”；PSRAM 已实测为 16 MB，两档都按 16 MB）和 `metalio-plus-upstream-display.json`（上游显示管线：127 行队列、64 KiB LUT、PMIC 上电期间暂停触摸；只用来比较时间）。启动时会列出档案没写、用了默认值的参数（Plus 档案现为 0 个）。2026-11-03 起，PSRAM 容量、内部堆的区段结构、DMA 预留、Flash 型号与擦写时间按[第 0 步实机记录](../hardware/2026-11-03-phase0.md)改写，见 §5.7。
+所有参数在 `simulator/profiles/metalio-plus.json`（悲观档，CI 的门槛）里，来源见[性能建模报告](../research/simulator/performance-modeling.md)和[指令级校准报告](../research/simulator/iss-calibration.md)。另有 `metalio-plus-psram16.json`（预期 CPU 成本，即“很可能的情况”；PSRAM 已实测为 16 MB，两档都按 16 MB）和 `metalio-plus-upstream-display.json`（上游显示管线：127 行队列、64 KiB LUT、PMIC 上电期间暂停触摸；只用来比较时间）。启动时会列出档案没写、用了默认值的参数（Plus 档案现为 0 个）。2026-11-03 起，PSRAM 容量、内部堆的区段结构、DMA 预留、Flash 型号与擦写时间按[第 0 步实机记录](../hardware/2026-11-03-phase0.md)改写，见 §5.7。
 
 | 模型 | 做法 | 主要参数（Plus 悲观档） |
 | --- | --- | --- |
-| CPU 与调度（`sim/vtk`） | 每个系统任务是真实的线程，但同一时刻只放行一个（“接力棒”），由离散事件调度器按虚拟时间推进：2 核、固定优先级抢占、**同优先级按节拍轮转**、上下文切换与内核调用计费、空闲时间瞬间跳过。互斥量按 FreeRTOS：只给直接持有者继承优先级、持有任何互斥量期间不降回、不移交所有权。Flash 停顿期间所有任务冻结：一段计算即使在停顿登记前就开始了，跑到停顿起点也停下、停顿结束后才继续（评审二 M-B）。CPU 时间有两种算法：**标注模式**（默认，确定性）按代码里的成本标注计费，系统代码再加 I-cache 缺失系数；档案缺某个成本类会报警告而不是悄悄记 0；**实测模式**按主机 CPU 时间 × 换算系数 | 320 MHz（CoreMark 拟合 3.08/MHz）；内核调用 2 µs、切换 10 µs；节拍 100 Hz；长计算每 200 µs 可被抢占；I-cache 缺失 +15% |
+| CPU 与调度（`simulator/kernel/vtk`） | 每个系统任务是真实的线程，但同一时刻只放行一个（“接力棒”），由离散事件调度器按虚拟时间推进：2 核、固定优先级抢占、**同优先级按节拍轮转**、上下文切换与内核调用计费、空闲时间瞬间跳过。互斥量按 FreeRTOS：只给直接持有者继承优先级、持有任何互斥量期间不降回、不移交所有权。Flash 停顿期间所有任务冻结：一段计算即使在停顿登记前就开始了，跑到停顿起点也停下、停顿结束后才继续（评审二 M-B）。CPU 时间有两种算法：**标注模式**（默认，确定性）按代码里的成本标注计费，系统代码再加 I-cache 缺失系数；档案缺某个成本类会报警告而不是悄悄记 0；**实测模式**按主机 CPU 时间 × 换算系数 | 320 MHz（CoreMark 拟合 3.08/MHz）；内核调用 2 µs、切换 10 µs；节拍 100 Hz；长计算每 200 µs 可被抢占；I-cache 缺失 +15% |
 | 指令级校准（`tools/iss`） | 自写 RV32IMAFC 指令级模拟器（顺序单发射流水线、分支预测、I/D 缓存、S31 内存映射），用 ESP-IDF v6.1 的 S31 编译选项交叉编译真实内核，测出每字节拷贝、每字形、每像素转换、JSON、解压、CRC 的周期数；按 CoreMark 与 P4/S3 的 PSRAM 实测拟合 | 悲观档取“×1.3 与慢角的较大值”，预期档取 ×1.3；文本排版、LVGL、堆管理仍是估计 |
-| 内存（`sim/mem`） | 三个真实的 TLSF 堆：内部、DMA 预留、PSRAM。**内部堆由几个互不相连的区段组成**（最大块受最大区段限制），每段扣除设备分配器的控制开销；任务控制块、栈、队列、定时器都从内部 RAM 扣；分配顺序按 IDF 6.1 的 S31 能力表：DMA 与内部分配先用普通内部 RAM、再用预留，普通分配最后也会落进预留；按“标签”统计谁用了多少；内部与 DMA 的最大空闲块每次分配都记录 | 内部 80 + 16 KiB：结构实测，即一大段加顶部 16 KiB 一段，总量 96 KiB 仍是悲观估计；DMA 预留 64 KiB（出厂固件实测配置）；PSRAM 15.5 MiB（实测 16 MB 片）；每段控制开销 1.5 KiB |
+| 内存（`simulator/memory`） | 三个真实的 TLSF 堆：内部、DMA 预留、PSRAM。**内部堆由几个互不相连的区段组成**（最大块受最大区段限制），每段扣除设备分配器的控制开销；任务控制块、栈、队列、定时器都从内部 RAM 扣；分配顺序按 IDF 6.1 的 S31 能力表：DMA 与内部分配先用普通内部 RAM、再用预留，普通分配最后也会落进预留；按“标签”统计谁用了多少；内部与 DMA 的最大空闲块每次分配都记录 | 内部 80 + 16 KiB：结构实测，即一大段加顶部 16 KiB 一段，总量 96 KiB 仍是悲观估计；DMA 预留 64 KiB（出厂固件实测配置）；PSRAM 15.5 MiB（实测 16 MB 片）；每段控制开销 1.5 KiB |
 | DMA 用户 | LCD bounce 缓冲（显示驱动）、4G UART 以太网的收发环（模组上电期间）、TF 卡每次传输的中转缓冲；I2S 录放音环随音频管线加入 | 4.8 KiB / 12 KiB / 4 KiB |
 | 墨水屏 | 上电（Plus 三档：板级驱动对 TCA9555/TPS65185 芯片模型走真实上电顺序，约 125～140 ms，见 §5.8；上游显示管线档仍按固定 140 ms 并暂停触摸）→ **比对**（上游：对区域所在的整行做差分图，PSRAM 进出）→ 逐相播放 → **回写**（脏行拷回旧帧缓冲）→ 稳定。**每一相逐行规划**：两个最高优先级送行任务（栈在 PSRAM）把行转换进各自的行队列——上游固定奇偶分行，本端口“谁空谁取”；每行成本分三种（整行转换、只转换区域内的列、区域外的空操作行）；LCD 补缓冲中断占 0 核一部分，使 0 核送行变慢；预填够若干行后开始扫描，之后中断每 17 µs 取一行（同时预取两块 8 行的 bounce 缓冲）；某一行没按时备好就是**欠载**，按上游中止该波形并恢复（清屏 69 帧 + 完整 GC16）。一相的长度 = 预填 + 688 行扫描 + 帧结束开销，不足 12 ms 补足。送行任务一直占着核，直到自己最后一行入队（上游在满队列上空转），或只在计算时占核（“阻塞”方式）。Flash 停顿按虚拟时间纳入规划（不论何时登记）：送行任务冻结；补缓冲中断若不是 IRAM 安全（上游配置）则同时被屏蔽，停顿超过一块 bounce 缓冲即花屏；整屏闪刷用 48 相表；每相都清空字体缓存模型 | 端口：每行 31.8 µs（指令级实测 28.9 µs × 1.1）、预填 64 行、每任务队列 48 行、只转换区域列、谁空谁取、中断 IRAM 安全、LUT 1 KiB；整屏一相 12.9 ms、预填 1.0 ms、最小余量 46 行。上游复现：每行 33.4 µs、奇偶分行、预填 192、队列 127、比对整屏、“清屏”= 69 帧 + 48 相；一相 15.1 ms、余量 129 行。GC16 36 相（整屏 48）、GL16 37、DU 20；LCD 中断 10% |
-| 墨水屏：PQ-BN 直驱（可选驱动，`display.driver = "pqbn"`） | 研究内核（`drivers/epd/pqbn_v4.c`）每相真的运行：UI 的更新换成 4 bpp 目标并标记 32×4 的 tile，驱动在有像素在动时连续出相，新更新加入下一相（没有全局锁）。每相：两个扫描任务（沿用送行模型，满队列时阻塞）按每行成本送行，行成本 = 空闲带 r_idle，或 r_band + r_tile × 本相在推的 tile；规划器是单独的任务，成本 = p_base + p_px × 访问的像素 + …（两者都由 `tools/iss/bench` 在研究场景上实测拟合）。内核要求规划下一相时本相扫描已经走过那些 tile，所以默认规划排在每相扫描之后（内核原样）；`plan_during_scan` 让两者重叠，代表“规划跟在扫描后面逐带进行或 tile 状态双缓冲”的改造端口。相时钟在两次驱动之间按真实时间前进（上限 255 相）；面板模型按满摆推数、首推粘滞、像素间离散推动光学状态，截图即模型状态。区域内 tile 全部静止才算完成；GC16 = 黑→白→内容的闪刷；可在相边界暂停给 Flash 让路 | 研究的面板假设：满摆 7.6 推、粘滞 0.3 / 120 相、离散 ±4%（未实测）；悲观成本：每行 43 / 1836 + 216 周期 × tile，规划 26.7 万 + 248 周期 × 像素；预算 8000 像素/相、关自动运动、规划在扫描之后、两个扫描任务、预填 32 行、队列 2×24 行 |
+| 墨水屏：PQ-BN 直驱（可选驱动，`display.driver = "pqbn"`） | 研究内核（`drivers/display/pqbn/pqbn_v4.c`）每相真的运行：UI 的更新换成 4 bpp 目标并标记 32×4 的 tile，驱动在有像素在动时连续出相，新更新加入下一相（没有全局锁）。每相：两个扫描任务（沿用送行模型，满队列时阻塞）按每行成本送行，行成本 = 空闲带 r_idle，或 r_band + r_tile × 本相在推的 tile；规划器是单独的任务，成本 = p_base + p_px × 访问的像素 + …（两者都由 `tools/iss/bench` 在研究场景上实测拟合）。内核要求规划下一相时本相扫描已经走过那些 tile，所以默认规划排在每相扫描之后（内核原样）；`plan_during_scan` 让两者重叠，代表“规划跟在扫描后面逐带进行或 tile 状态双缓冲”的改造端口。相时钟在两次驱动之间按真实时间前进（上限 255 相）；面板模型按满摆推数、首推粘滞、像素间离散推动光学状态，截图即模型状态。区域内 tile 全部静止才算完成；GC16 = 黑→白→内容的闪刷；可在相边界暂停给 Flash 让路 | 研究的面板假设：满摆 7.6 推、粘滞 0.3 / 120 相、离散 ±4%（未实测）；悲观成本：每行 43 / 1836 + 216 周期 × tile，规划 26.7 万 + 248 周期 × 像素；预算 8000 像素/相、关自动运动、规划在扫描之后、两个扫描任务、预填 32 行、队列 2×24 行 |
 | 触摸、按键、I2C | 手指按下 20 ms 后控制器报中断 → 驱动任务经 100 kHz 共享总线读 9 字节 → 按 10 ms 轮询直到抬起。**按键按真实来源**：AI 键直连 GPIO（去抖 20 ms）；电源/音量在 IO 扩展芯片上（中断后读两次 I2C）；HOME/上一页/下一页是触摸控制器识别的盖板触摸键（和手指一样要检测、读总线、轮询；每个键是控制器的一个触点，与手指共用 2 个触点，所以两个键可以同时按住）。PMIC 上电、波形开始/结束的 IO 扩展写入都占同一条总线。事件带物理发生时刻，测的是端到端时延。触摸控制器一段时间没被触摸就转入慢速“监视”扫描，第一下触摸（含盖板键）要多等最多一个监视周期；系统空闲时后台总线轮询（电量计等）放慢 | 本系统端口用总线互斥，PMIC 只在事务期间占总线（约 10 ms）；上游档案在整个上电期间暂停触摸（140 ms）。监视模式 10 s 后进入、最多多等 60 ms（估计，未对照数据手册）；后台轮询 500 ms，空闲时 2 s |
 | 内部 Flash（`/user`） | LittleFS 跑在模拟 NOR 上，按 IDF 6.1 的调用方式计停顿：**一次 `esp_flash_write` 每 8 KiB 一个关缓存窗口**（LittleFS 从内部缓冲直写），窗口内 SPI1 每条命令最多 64 字节、每条编程命令计“首字节时间 + 按长度分摊的页时间”；读按 64 字节一条命令计；每次擦一个扇区一个窗口（IDF 只在多扇区擦除之间让出，LittleFS 每次只擦一个）。**每个窗口内两个核上所有任务冻结**；**栈在 PSRAM 的任务碰 `/user` 直接判为死机**（同 ESP-IDF 断言）；读进 PSRAM 时按 IDF 申请内部中转缓冲（取所需、16 KiB、最大空闲块三者最小，失败即报错）；波形播放期间发生的 Flash 操作单独计数（系统规则是零，见 D-36），并先计入 IDF 跨核 IPC 等最高优先级送行任务让出的时间；每次调用与 CRC 计 CPU；NOR 只能 1→0；可保存镜像跨次运行；`powercut` 撕裂进行中的写入 | 板上 Flash 型号未核实，取通用悲观值：擦除 45/400 ms、页编程 0.7/3 ms、编程命令首字节 30 µs、每条 SPI1 命令 1.5 µs、原始读 20 MB/s（实际约 13.6 MB/s）；用户分区 1408 KiB；CI 另用“老化”镜像和最坏擦写时间跑阅读场景 |
 | 缓存 | 内存映射的字体：64 KiB 两路 D-cache 行模型，缺失一次按 DIO 80 MHz 取 64 字节计约 3.6 µs；比对和每一相的送行都把 PSRAM 帧缓冲流过同一缓存，模型随之清空 | 阅读场景约 2.5 万次缺失 |
@@ -73,7 +73,7 @@ profiles/*.json  设备档案：每个数字都在这里，系统运行时按档
 
 ```bash
 cmake -S . -B build && cmake --build build -j && ctest --test-dir build --output-on-failure
-./build/ink-sim --profile profiles/metalio-plus.json --script tests/scenarios/reader_basic.script \
+./build/ink-sim --profile simulator/profiles/metalio-plus.json --script tests/scenarios/reader_basic.script \
     --budget tests/scenarios/reader_basic.budget.json --assets build/assets --content build/test-content \
     --out out/ --trace --frames
 ```
@@ -91,7 +91,7 @@ cmake -S . -B build && cmake --build build -j && ctest --test-dir build --output
 
 ```bash
 ./build/ink-sim-gui                      # 默认：预期档、构建出的字体和样书、持久的 Flash 与 SD
-./build/ink-sim-gui --profile profiles/metalio-plus.json --speed 2   # 换档案、两倍速
+./build/ink-sim-gui --profile simulator/profiles/metalio-plus.json --speed 2   # 换档案、两倍速
 ```
 
 - **左边是设备**：屏幕按墨水屏的样子显示（含残影；系统开前光时按冷暖比例染色），刷新完成才变，和真机一样有延迟。鼠标左键就是手指，按住拖动是滑动。屏幕下方三个盖板键在官方的触摸坐标 X=100/200/300 上（HOME、返回/上页、下页）；右侧是电源键、音量+、音量−，左侧是 AI 键（BOOT）。键在外壳上的位置是示意，官方没有公开外壳图。顶部指示灯显示“刷新中”“待机”“充电”“振动”“前光”。
@@ -101,7 +101,7 @@ cmake -S . -B build && cmake --build build -j && ctest --test-dir build --output
 - **数据**：Flash 镜像和 SD 卡目录默认在 `build/gui-data/`，重启后书签、设置都还在；截图和 `metrics.json` 在 `build/gui-data/out/`。“重启设备”和崩溃、掉电后的“重新开机”都是重新启动整个程序，等于给设备重新上电。
 - **调试**：系统代码和窗口在同一个进程里，可以用 `lldb ./build/ink-sim-gui`（Linux 用 gdb）或 VS Code、Xcode 下断点、单步、看变量；macOS 第一次调试时系统会要求授权开发者工具。设备死机（panic）时窗口不退出，保留最后的画面、原因和日志。
 
-**结构**：窗口跑在主线程（macOS 要求），模拟在另一个线程里运行原来的 `sim_main()`，固定为实时模式、没有默认结束时间。两边只通过 [ports/sim/sim_gui.h](../../ports/sim/sim_gui.h) 交互：
+**结构**：窗口跑在主线程（macOS 要求），模拟在另一个线程里运行原来的 `sim_main()`，固定为实时模式、没有默认结束时间。两边只通过 [simulator/desktop/sim_gui.h](../../simulator/desktop/sim_gui.h) 交互：
 
 - 窗口的动作（触摸、按键、电池、网络……）作为外部事件注入（`vtk_inject_external`），在模拟里以中断上下文执行，和场景脚本走同一套接口，所以时序模型（触摸控制器、IO 扩展器、I2C 总线）一样生效；
 - 画面和状态由窗口每 33 ms 请求一次，模拟在事件里把可见图像（屏幕值加残影，按竖屏方向）和统计数据交给窗口；画面没变就不拷贝；
@@ -111,10 +111,10 @@ cmake -S . -B build && cmake --build build -j && ctest --test-dir build --output
 
 **和官方硬件的一致性**（R-043）：逐项对照见[模拟器与官方硬件的对照](../research/simulator/hardware-parity.md)。2026-11-03 第三轮后 21 项都一致（估计与假设见对照表）。总线上除摄像头外每颗芯片都有寄存器级模型，系统经本项目的驱动访问它们（D-41 A）：
 
-- `drivers/board/metalio_board`：IO 扩展芯片的唯一实例与锁，屏电源、按键、马达、功放、共享复位与电源、关机脉冲都经它；`drivers/board/metalio_touch`：触摸坐标与盖板键；
-- `drivers/ft6336u`、`drivers/bq27220`、`drivers/cx25601n`、`drivers/pcf8563`、`drivers/sc7a20h`、`drivers/nt26`；
+- `boards/metalio_plus/metalio_board`：IO 扩展芯片的唯一实例与锁，屏电源、按键、马达、功放、共享复位与电源、关机脉冲都经它；`boards/metalio_plus/metalio_touch`：触摸坐标与盖板键；
+- `drivers/chips/ft6336u`、`drivers/chips/bq27220`、`drivers/chips/cx25601n`、`drivers/chips/pcf8563`、`drivers/chips/sc7a20h`、`drivers/chips/nt26`；
 - 新的 HAL：`hal_power_shutdown`、`hal_rtc_*`、`hal_accel_*`、`hal_camera_*`、`hal_uart_*`（蓝牙音频芯片）、`hal_modem_at` / `hal_modem_at_payload` / `hal_modem_urc`（4G 的 AT、短信、电话）、`hal_net_use`（系统选网）；`hal_power_battery` 在 Plus 上经电量计和充电芯片读；
-- 驱动还有 `drivers/gc2145`（摄像头）、`drivers/bh1098g`（蓝牙音频）；`drivers/nt26` 加了短信与电话；
+- 驱动还有 `drivers/chips/gc2145`（摄像头）、`drivers/chips/bh1098g`（蓝牙音频）；`drivers/chips/nt26` 加了短信与电话；
 - GPIO2 按线与建模（IO 扩展芯片的 INT 和加速度计的 INT1）：驱动任务两边都要读，否则锁存的 INT1 会把线一直拉低，后面的按键就丢了；
 - I2C 故障注入每个器件用自己的随机序列，可只对一个器件（见 §5.8）；
 - 估计值与假设都写在各模型文件的开头：电池内阻、充电曲线、充电芯片的复位值、电源芯片在第几个关机脉冲动作、加速度计的坐标轴方向。
@@ -239,7 +239,7 @@ cmake -S . -B build && cmake --build build -j && ctest --test-dir build --output
 
 ### 5.6 PQ-BN 直驱刷新算法：集成与复核
 
-用户另一会话研究的刷新算法（[研究报告](../research/eink-refresh-algorithm.md)，PR #7）已接入：内核作为第二种显示驱动，系统与应用代码不变，换一份档案（`profiles/metalio-plus-pqbn.json`）即可切换。完整结论、对比表和到货验证见[集成报告](../research/eink-refresh-integration.md)，要点：
+用户另一会话研究的刷新算法（[研究报告](../research/eink-refresh-algorithm.md)，PR #7）已接入：内核作为第二种显示驱动，系统与应用代码不变，换一份档案（`simulator/profiles/metalio-plus-pqbn.json`）即可切换。完整结论、对比表和到货验证见[集成报告](../research/eink-refresh-integration.md)，要点：
 
 | 发现 | 数据 | 处理 |
 | --- | --- | --- |
@@ -308,10 +308,10 @@ cmake -S . -B build && cmake --build build -j && ctest --test-dir build --output
 
 | 层 | 文件 | 真机 | 模拟器 |
 | --- | --- | --- | --- |
-| I2C 主机接口 | `platform/include/ink/hal_i2c.h` | ESP-IDF `i2c_master`（端口层，待写） | `ports/sim/hal_i2c_sim.c`：每次传输按位时占用共享总线，交给该地址上的芯片模型；没有模型就 NACK |
-| 芯片驱动 | `drivers/tca9555/`、`drivers/tps65185/` | 同一份代码 | 同一份代码 |
-| 板级上电顺序 | `drivers/board/metalio_epd_power.c` | 同一份代码 | 同一份代码 |
-| 芯片 | 实物 | — | `ports/sim/dev_epd_power.c`：TCA9555（0x20）与 TPS65185（0x68）的寄存器级模型，TCA9555 的 P00～P02 接 TPS65185 的 VCOM_CTRL、PWRUP、WAKEUP，P07 读它的 PWR_GOOD |
+| I2C 主机接口 | `platform/include/ink/hal_i2c.h` | ESP-IDF `i2c_master`（端口层，待写） | `ports/sim/hal/hal_i2c_sim.c`：每次传输按位时占用共享总线，交给该地址上的芯片模型；没有模型就 NACK |
+| 芯片驱动 | `drivers/chips/tca9555/`、`drivers/chips/tps65185/` | 同一份代码 | 同一份代码 |
+| 板级上电顺序 | `boards/metalio_plus/metalio_epd_power.c` | 同一份代码 | 同一份代码 |
+| 芯片 | 实物 | — | `simulator/models/dev_epd_power.c`：TCA9555（0x20）与 TPS65185（0x68）的寄存器级模型，TCA9555 的 P00～P02 接 TPS65185 的 VCOM_CTRL、PWRUP、WAKEUP，P07 读它的 PWR_GOOD |
 
 档案里 `display.pmic = "tps65185"` 的三个 Plus 档案（悲观、预期、PQ-BN）走这条路径，`power_up_us` 与 `touch_pause_during_power_us` 不再使用。上游显示管线档写 `"none"`，仍是固定时间，用来比较上游行为。
 
@@ -396,7 +396,7 @@ UPSEQ1 的选通延时编码（3/6/9/12 ms）按数据手册。
 
    - **电源**：`hal_power_sleep` 用 `esp_light_sleep_start` 按片睡；挂起调度器后再查一次刷新、音频与取消回调，再睡；唤醒键电平先锁存再恢复按键方向（上游做法）；定时唤醒不重挂 TF 卡、不恢复电源轨；升频锁用 `esp_pm_lock_create(ESP_PM_CPU_FREQ_MAX)`，需开 `CONFIG_PM_ENABLE` 并保持自动浅睡关闭（同上游）；降频时 LCD、I2S、UART 的时钟不得随 CPU 主频变化（驱动持 APB 锁或用独立时钟源），否则波形与音频出错——列入到货验证；保持 4G 待机要用模组的睡眠握手（MRDY/SRDY）让模组在寻呼间隙睡眠，电流由 SP-10 实测。
 
-   - **PQ-BN 直驱（D-40 选用时）**：内核即 `drivers/epd/pqbn_v4.c`；执行器（`pqbn_v4_exec_row`）放 IRAM（`PQBN_HOT` = `IRAM_ATTR`），两个扫描任务谁空谁取、满队列时阻塞，预填 32 行；规划器单独一个任务，跟在扫描后面逐带规划下一相（规划某一带用该带下一次被扫描的相号），或把执行器读取的 tile 状态做双缓冲；相时钟跨过空闲时段前进（上限 255 相），并补做被跳过相号的时间戳维护（审计 F-8）；每像素状态、帧缓冲与规划器的表放 PSRAM，执行表与 tile 状态放内部 RAM；实现 `hal_display_pause()`：Flash 操作前在相边界停住、像素保持；面板响应按 SP-13 标定后重建表。
+   - **PQ-BN 直驱（D-40 选用时）**：内核即 `drivers/display/pqbn/pqbn_v4.c`；执行器（`pqbn_v4_exec_row`）放 IRAM（`PQBN_HOT` = `IRAM_ATTR`），两个扫描任务谁空谁取、满队列时阻塞，预填 32 行；规划器单独一个任务，跟在扫描后面逐带规划下一相（规划某一带用该带下一次被扫描的相号），或把执行器读取的 tile 状态做双缓冲；相时钟跨过空闲时段前进（上限 255 相），并补做被跳过相号的时间戳维护（审计 F-8）；每像素状态、帧缓冲与规划器的表放 PSRAM，执行表与 tile 状态放内部 RAM；实现 `hal_display_pause()`：Flash 操作前在相边界停住、像素保持；面板响应按 SP-13 标定后重建表。
 
    另需评估 S31 的 Flash 自动挂起（`SPI_FLASH_AUTO_SUSPEND`，S31 硬件支持，取决于板上 Flash 型号）：若可用，擦写期间缓存不关，送行任务与音频都不会被冻结。板上是 Puya PY25Q128HA：芯片支持挂起（75h/7Ah，延迟 ≤ 30 µs），但 IDF v6.1 的通用驱动只对 XMC、FM 开启（[第 0 步](../hardware/2026-11-03-phase0.md)），要用就得自写芯片驱动并实测。还要评估 XespV 向量扩展能否用于行准备。
 2. 到货第一周（第 0 步已完成：PSRAM 16 MB、`heap_init` 区段、Flash 型号、出厂固件的 `EpdTiming`，见[记录](../hardware/2026-11-03-phase0.md)）：读 `esp_psram_get_size()`、跑 SP-01（刷新时序：上游 `EpdTiming` 日志给出每相周期与扫描时间；另测每行准备时间，分上游 C 与优化版）、`idf.py size` 与 `heap_caps_print_heap_info`（静态内存与内部堆区段）、Flash 擦写与停顿实测、查板上 Flash 型号是否支持自动挂起，把实测值写回档案，并按 §5.4 选定预填与行时间。
