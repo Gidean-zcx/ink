@@ -1,6 +1,7 @@
 /* host_camera.h on Linux: V4L2 /dev/video0, 640x480 YUYV converted to BGRA on a reader thread.
  * Every setup step is checked and undone on failure; frames are converted with the driver's row
- * stride and only from buffers that were mapped. */
+ * stride and only from buffers that were mapped, and only whole frames (a short one is skipped). A
+ * capture error on the reader thread stops it and says so in the status. */
 #include <errno.h>
 #include <fcntl.h>
 #include <linux/videodev2.h>
@@ -20,17 +21,18 @@ static uint8_t *g_frame;
 static int g_w, g_h, g_stride, g_fd = -1, g_nmap;
 static bool g_have, g_thread;
 static atomic_bool g_run;
-static const char *g_status = "未启动";
+static _Atomic(const char *) g_status = "未启动"; /* written by the reader thread too, read by the window */
 static void *g_map[NBUF];
 static size_t g_len[NBUF];
 static pthread_t g_th;
 
 static uint8_t clamp(int v) { return (uint8_t)(v < 0 ? 0 : v > 255 ? 255 : v); }
 
-static void yuyv_to_bgra(const uint8_t *src, size_t len, uint8_t *dst, int w, int h, int stride) {
+static bool whole_frame(size_t len) { return len >= (size_t)(g_h - 1) * (size_t)g_stride + (size_t)g_w * 2; }
+
+static void yuyv_to_bgra(const uint8_t *src, uint8_t *dst, int w, int h, int stride) { /* a whole frame */
     for (int y = 0; y < h; y++) {
         const uint8_t *row = src + (size_t)y * (size_t)stride;
-        if ((size_t)(row - src) + (size_t)w * 2 > len) return; /* short buffer: keep what we have */
         for (int x = 0; x + 1 < w; x += 2) {
             int y0 = row[2 * x], u = row[2 * x + 1] - 128, y1 = row[2 * x + 2], v = row[2 * x + 3] - 128;
             for (int k = 0; k < 2; k++) {
@@ -45,6 +47,13 @@ static void yuyv_to_bgra(const uint8_t *src, size_t len, uint8_t *dst, int w, in
     }
 }
 
+static void stopped(void) { /* reader thread: the device failed */
+    pthread_mutex_lock(&g_m);
+    g_have = false;
+    pthread_mutex_unlock(&g_m);
+    atomic_store(&g_status, "摄像头出错，已停止（用测试图案）");
+}
+
 static void *reader(void *arg) {
     (void)arg;
     while (atomic_load(&g_run)) {
@@ -57,17 +66,23 @@ static void *reader(void *arg) {
                 usleep(5000);
                 continue;
             }
+            stopped();
             break;
         }
-        if ((int)b.index < g_nmap && b.bytesused <= g_len[b.index]) {
+        size_t len = b.bytesused ? b.bytesused : ((int)b.index < g_nmap ? g_len[b.index] : 0);
+        if ((int)b.index < g_nmap && len <= g_len[b.index] && whole_frame(len)) {
             pthread_mutex_lock(&g_m);
             if (g_frame) {
-                yuyv_to_bgra(g_map[b.index], b.bytesused ? b.bytesused : g_len[b.index], g_frame, g_w, g_h, g_stride);
+                yuyv_to_bgra(g_map[b.index], g_frame, g_w, g_h, g_stride);
                 g_have = true;
             }
             pthread_mutex_unlock(&g_m);
         }
-        ioctl(g_fd, VIDIOC_QBUF, &b);
+        while (ioctl(g_fd, VIDIOC_QBUF, &b) < 0) { /* the buffer goes back, or the stream runs dry */
+            if (errno == EINTR) continue;
+            stopped();
+            return NULL;
+        }
     }
     return NULL;
 }
@@ -95,14 +110,14 @@ static void cleanup(void) {
 
 static void fail(const char *status) {
     cleanup();
-    g_status = status;
+    atomic_store(&g_status, status);
 }
 
 void host_camera_open(void) {
     if (g_fd >= 0) return;
     g_fd = open("/dev/video0", O_RDWR | O_NONBLOCK | O_CLOEXEC);
     if (g_fd < 0) {
-        g_status = "这台电脑没有摄像头（用测试图案）";
+        atomic_store(&g_status, "这台电脑没有摄像头（用测试图案）");
         return;
     }
     struct v4l2_format f;
@@ -138,17 +153,17 @@ void host_camera_open(void) {
         if (ioctl(g_fd, VIDIOC_QBUF, &b) < 0) return fail("摄像头打不开（用测试图案）");
     }
     pthread_mutex_lock(&g_m);
-    g_frame = malloc((size_t)g_w * (size_t)g_h * 4);
+    g_frame = calloc((size_t)g_w * (size_t)g_h, 4);
     pthread_mutex_unlock(&g_m);
     enum v4l2_buf_type t = V4L2_BUF_TYPE_VIDEO_CAPTURE;
     if (!g_frame || ioctl(g_fd, VIDIOC_STREAMON, &t) < 0) return fail("摄像头打不开（用测试图案）");
+    atomic_store(&g_status, "电脑摄像头工作中"); /* before the reader, which may report an error at once */
     atomic_store(&g_run, true);
     if (pthread_create(&g_th, NULL, reader, NULL) != 0) {
         atomic_store(&g_run, false);
         return fail("摄像头打不开（用测试图案）");
     }
     g_thread = true;
-    g_status = "电脑摄像头工作中";
 }
 
 bool host_camera_frame(uint8_t *bgra, size_t cap, int *w, int *h) {
@@ -165,7 +180,7 @@ bool host_camera_frame(uint8_t *bgra, size_t cap, int *w, int *h) {
 
 void host_camera_close(void) {
     cleanup();
-    g_status = "未启动";
+    atomic_store(&g_status, "未启动");
 }
 
-const char *host_camera_status(void) { return g_status; }
+const char *host_camera_status(void) { return atomic_load(&g_status); }

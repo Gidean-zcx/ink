@@ -1,4 +1,5 @@
 /* host_camera.h on macOS: AVFoundation, 640x480 BGRA frames on a serial queue. */
+#include <stdatomic.h>
 #import <AVFoundation/AVFoundation.h>
 #include <pthread.h>
 #include <stdlib.h>
@@ -10,7 +11,7 @@ static pthread_mutex_t g_m = PTHREAD_MUTEX_INITIALIZER;
 static uint8_t *g_frame;
 static int g_w, g_h;
 static bool g_have;
-static const char *g_status = "未启动";
+static _Atomic(const char *) g_status = "未启动"; /* written on the control queue, read by the window */
 
 @interface InkCameraSink : NSObject <AVCaptureVideoDataOutputSampleBufferDelegate>
 @end
@@ -56,13 +57,13 @@ static void start_session(unsigned gen) { /* on the control queue */
     if (gen != g_gen || g_session) return;
     AVCaptureDevice *dev = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
     if (!dev) {
-        g_status = "这台电脑没有摄像头（用测试图案）";
+        atomic_store(&g_status, "这台电脑没有摄像头（用测试图案）");
         return;
     }
     NSError *err = nil;
     AVCaptureDeviceInput *in = [AVCaptureDeviceInput deviceInputWithDevice:dev error:&err];
     if (!in) {
-        g_status = "摄像头打不开（用测试图案）";
+        atomic_store(&g_status, "摄像头打不开（用测试图案）");
         return;
     }
     AVCaptureSession *session = [[AVCaptureSession alloc] init];
@@ -77,7 +78,7 @@ static void start_session(unsigned gen) { /* on the control queue */
     if ([session canAddOutput:out]) [session addOutput:out];
     [session startRunning];
     g_session = session;
-    g_status = "电脑摄像头工作中";
+    atomic_store(&g_status, "电脑摄像头工作中");
 }
 
 void host_camera_open(void) {
@@ -86,17 +87,17 @@ void host_camera_open(void) {
       switch ([AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo]) {
       case AVAuthorizationStatusAuthorized: start_session(gen); break;
       case AVAuthorizationStatusNotDetermined:
-          g_status = "等待授权使用摄像头";
+          atomic_store(&g_status, "等待授权使用摄像头");
           [AVCaptureDevice requestAccessForMediaType:AVMediaTypeVideo
                                    completionHandler:^(BOOL granted) {
                                      dispatch_async(ctl(), ^{
                                        if (gen != g_gen) return; /* closed or reopened meanwhile */
                                        if (granted) start_session(gen);
-                                       else g_status = "没有摄像头权限（系统设置 → 隐私与安全性 → 摄像头）";
+                                       else atomic_store(&g_status, "没有摄像头权限（系统设置 → 隐私与安全性 → 摄像头）");
                                      });
                                    }];
           break;
-      default: g_status = "没有摄像头权限（系统设置 → 隐私与安全性 → 摄像头）"; break;
+      default: atomic_store(&g_status, "没有摄像头权限（系统设置 → 隐私与安全性 → 摄像头）"); break;
       }
     });
 }
@@ -119,7 +120,7 @@ void host_camera_close(void) {
       if (g_session) [g_session stopRunning];
       g_session = nil;
       g_sink = nil;
-      g_status = "未启动";
+      atomic_store(&g_status, "未启动");
     });
     if (g_frames) dispatch_sync(g_frames, ^{}); /* the last frame callback has finished */
     pthread_mutex_lock(&g_m);
@@ -130,4 +131,4 @@ void host_camera_close(void) {
     pthread_mutex_unlock(&g_m);
 }
 
-const char *host_camera_status(void) { return g_status; }
+const char *host_camera_status(void) { return atomic_load(&g_status); }
