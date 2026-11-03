@@ -1,0 +1,6 @@
+{
+  "_doc": "Home screen with the panel PMIC never answering (--i2c-faults 1.0:pmic): every refresh must fail after the board driver's retries (ok = false, nothing driven), and no waveform may start without rails.",
+  "display.power_failures": {"min": 1, "why": "the failed power-ups must be reported as failed updates"},
+  "display.unpowered_waveforms": {"max": 0, "optional": true, "why": "no waveform without good rails and VCOM"},
+  "panic.count": {"max": 0, "optional": true, "why": "the system must survive a dead panel supply"}
+}

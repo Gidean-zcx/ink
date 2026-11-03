@@ -211,6 +211,7 @@ bool sim_board_cam_power(void);           /* P05: camera / screen power */
 typedef bool (*sim_camera_source_fn)(uint8_t *rgb565be, int w, int h, void *ctx);
 void sim_camera_set_source(sim_camera_source_fn fn, void *ctx); /* before sim_main */
 void sim_camera_init(void);               /* task context (boot) */
+void sim_camera_power_lost(void);         /* board: P05 or P12 fell */
 bool sim_camera_last(uint8_t *buf, size_t cap, uint32_t *seq); /* the last picture taken, if newer than *seq */
 unsigned sim_camera_captures(void);
 /* BH1098G Bluetooth audio chip on UART1 (dev_bt_audio.c) */

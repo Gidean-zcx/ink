@@ -80,6 +80,7 @@ static void outputs_changed(uint8_t rise0, uint8_t fall0, uint8_t rise1, uint8_t
         X.shared_pwr_warn++;
         sim_warn("board: amplifier enabled (TCA9555 P04) while its supply P14 is off");
     }
+    if ((fall0 & MB_P0_CAM_SCR) || (fall1 & MB_P1_SHARED_RST)) sim_camera_power_lost(); /* sensor off or in reset */
     if (fall1 & MB_P1_SHARED_RST) {
         if (sim_net_modem_registered()) {
             X.shared_rst_warn++;

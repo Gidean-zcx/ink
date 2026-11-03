@@ -4,8 +4,8 @@
  * software reset (0xFE = 0xF0, then 16 ms), output format RGB565 (page 0, 0x84 = 0x06), pad output
  * enable 0xF2 (0x0F streams, 0x00 stops). VGA 640x480, RGB565 with the high byte first.
  *
- * This driver writes the registers the board's sequence depends on; the device port should load
- * the full vendor table (sensor tuning) the same way.
+ * gc2145_start loads the vendor's full VGA RGB565 sequence (gc2145_vga_table.h, Apache-2.0), as
+ * the official board does before every capture.
  */
 #ifndef INK_GC2145_H
 #define INK_GC2145_H

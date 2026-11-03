@@ -3,13 +3,16 @@
  * driver (drivers/gc2145), as the device port will do.
  *
  * Registers (official dvp_camera.cc and the vendor VGA table @690a023): product ID 0xF0/0xF1 =
- * 0x21 0x45 on any page; page select 0xFE, where writing 0xF0 is a software reset; page 0 holds the
- * pad output enable 0xF2 (non-zero streams) and the output format 0x84 (0x06 = RGB565). The sensor
- * answers only while TCA9555 P05 (camera/screen power) and P12 (shared reset) are high.
+ * 0x21 0x45; 0xF0..0xFF are system registers on every page; page select 0xFE, where writing 0xF0 is
+ * a software reset (the configuration is lost); page 0 holds the output format 0x84 (0x06 = RGB565)
+ * and the crop window 0x90..0x98 (on, 480 rows, 640 columns), the pad output enable is 0xF2. Losing
+ * TCA9555 P05 (camera/screen power) or P12 (shared reset) stops the sensor and clears its setup.
  *
- * Frames: VGA RGB565, high byte first, at CAM_FPS (ESTIMATE: 15 fps from the 20 MHz MCLK); a
- * picture is ready after the warm-up frames upstream drops. The picture comes from the source the
- * desktop simulator sets (the computer's camera); without one, a test pattern.
+ * Frames: they are only VGA RGB565 when the sensor was set up for it (the vendor sequence in
+ * drivers/gc2145); otherwise the DVP receiver does not get the 614400 bytes it waits for. CAM_FPS
+ * is an ESTIMATE (the vendor sequence's name says 15 fps at 20 MHz MCLK); a picture is kept after
+ * the warm-up frames upstream drops. The picture comes from the source the desktop simulator sets
+ * (the computer's camera); without one, a test pattern.
  */
 #include <stdlib.h>
 #include <string.h>
@@ -24,7 +27,7 @@
 #define CAM_FPS 15
 
 static struct {
-    uint8_t page, ptr, reg0[256];
+    uint8_t page, ptr, reg0[256], sys[16]; /* page 0 registers; 0xF0..0xFF on every page */
     bool streaming;
     unsigned captures, resets;
     sim_camera_source_fn src;
@@ -37,31 +40,48 @@ static hal_i2c_dev_t *g_cam;
 
 static bool powered(void) { return sim_board_cam_power() && !sim_board_shared_reset_held(); }
 
+static void lose_setup(void) {
+    memset(CAM.reg0, 0, sizeof CAM.reg0);
+    memset(CAM.sys, 0, sizeof CAM.sys);
+    CAM.page = 0;
+    CAM.streaming = false;
+}
+
+void sim_camera_power_lost(void) { lose_setup(); } /* board: P05 or P12 fell; any context */
+
+/* set up for VGA RGB565 as the board's sequence leaves it */
+static bool vga_rgb565(void) {
+    const uint8_t *r = CAM.reg0;
+    return r[0x84] == 0x06 && (r[0x90] & 1) && ((r[0x95] << 8) | r[0x96]) == 480 && ((r[0x97] << 8) | r[0x98]) == 640 &&
+           CAM.sys[0xF7 - 0xF0] == 0x1D && CAM.sys[0xF8 - 0xF0] == 0x84;
+}
+
 static int cam_xfer(void *state, const uint8_t *w, size_t wlen, uint8_t *r, size_t rlen) {
     (void)state;
     if (!powered()) {
-        CAM.streaming = false;
+        lose_setup();
         return HAL_I2C_NACK;
     }
     if (wlen) CAM.ptr = w[0];
     for (size_t i = 1; i < wlen; i++, CAM.ptr++) {
         if (CAM.ptr == 0xFE) {
             if (w[i] == 0xF0) { /* software reset */
-                memset(CAM.reg0, 0, sizeof CAM.reg0);
-                CAM.page = 0;
-                CAM.streaming = false;
+                lose_setup();
                 CAM.resets++;
             } else {
                 CAM.page = w[i] & 0x03;
             }
             continue;
         }
-        if (CAM.page != 0) continue;
-        CAM.reg0[CAM.ptr] = w[i];
-        if (CAM.ptr == 0xF2) CAM.streaming = w[i] != 0;
+        if (CAM.ptr >= 0xF0) {
+            CAM.sys[CAM.ptr - 0xF0] = w[i];
+            if (CAM.ptr == 0xF2) CAM.streaming = w[i] != 0;
+            continue;
+        }
+        if (CAM.page == 0) CAM.reg0[CAM.ptr] = w[i];
     }
     for (size_t i = 0; i < rlen; i++, CAM.ptr++)
-        r[i] = CAM.ptr == 0xF0 ? 0x21 : CAM.ptr == 0xF1 ? 0x45 : CAM.page == 0 ? CAM.reg0[CAM.ptr] : 0;
+        r[i] = CAM.ptr == 0xF0 ? 0x21 : CAM.ptr == 0xF1 ? 0x45 : CAM.ptr > 0xF1 ? CAM.sys[CAM.ptr - 0xF0] : CAM.page == 0 ? CAM.reg0[CAM.ptr] : 0;
     return HAL_I2C_OK;
 }
 
@@ -100,18 +120,24 @@ bool hal_camera_info(hal_camera_info_t *out) {
 }
 
 int hal_camera_capture(uint8_t *buf, size_t cap, uint32_t timeout_ms) {
-    if (!g_cam) return -1;
-    if (cap < GC2145_FRAME_BYTES) return -1;
+    uint64_t deadline = osal_now_us() + (uint64_t)timeout_ms * 1000u; /* covers the whole call */
+    if (!g_cam || !buf || cap < GC2145_FRAME_BYTES || !pools_is_external(buf)) return -1; /* DMA writes PSRAM */
     uint16_t pid = 0;
     if (gc2145_probe(g_cam, &pid) != HAL_I2C_OK || pid != GC2145_PID) return -2;
     if (gc2145_start(g_cam) != HAL_I2C_OK) return -3;
-    uint64_t need_us = (uint64_t)(GC2145_WARMUP_FRAMES + 1) * 1000000u / CAM_FPS;
-    if (need_us / 1000 > timeout_ms) {
-        gc2145_stop(g_cam);
-        return -4;
+    const uint64_t frame_us = 1000000u / CAM_FPS;
+    for (int f = 0; f <= GC2145_WARMUP_FRAMES; f++) { /* frames arrive one by one over DVP */
+        if (osal_now_us() + frame_us > deadline) {
+            gc2145_stop(g_cam);
+            return -4;
+        }
+        osal_task_delay_us(frame_us);
+        if (!CAM.streaming) return -5; /* lost power or reset meanwhile: no complete frame */
+        if (!vga_rgb565()) {
+            gc2145_stop(g_cam);
+            return -6; /* the receiver waits for 614400 bytes that never come as such */
+        }
     }
-    osal_task_delay_us(need_us); /* the warm-up frames and the one kept arrive over DVP by DMA */
-    if (!CAM.streaming) return -5; /* lost power or reset meanwhile */
     vtk_host_call(fill_on_host, buf);
     gc2145_stop(g_cam);
     CAM.captures++;

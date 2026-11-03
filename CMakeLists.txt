@@ -412,6 +412,13 @@ if(INK_HAVE_FONTS)
             --out ${CMAKE_BINARY_DIR}/test-out/reader_basic-panel-power-faults --quiet --no-random-outages
             --i2c-faults 0.08:pmic)
 endif()
+# The panel supply never comes up: every refresh fails (ok = false) instead of pretending.
+add_test(NAME scenario-home-panel-power-dead
+  COMMAND ink-sim --profile ${CMAKE_SOURCE_DIR}/profiles/metalio-plus.json
+          --script ${CMAKE_SOURCE_DIR}/tests/scenarios/home_basic.script
+          --budget ${CMAKE_SOURCE_DIR}/tests/scenarios/panel_power_dead.budget.json
+          --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
+          --out ${CMAKE_BINARY_DIR}/test-out/home-panel-power-dead --quiet --no-random-outages --i2c-faults 1.0:pmic --end 8s)
 # Portability smoke runs: same system, other panels/classes (budget: no panic, input works)
 foreach(p pinenote-rk3566 desktop-lcd metalio-plus-pqbn)
   add_test(NAME portability-home-${p}

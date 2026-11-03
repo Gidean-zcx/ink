@@ -1,5 +1,6 @@
 #include "gc2145/gc2145.h"
 
+#include "gc2145/gc2145_vga_table.h"
 #include "ink/osal.h"
 
 static hal_i2c_status_t wr(hal_i2c_dev_t *dev, uint8_t reg, uint8_t v) {
@@ -17,19 +18,19 @@ hal_i2c_status_t gc2145_probe(hal_i2c_dev_t *dev, uint16_t *pid) {
     return s;
 }
 
+/* The vendor's VGA RGB565 sequence (gc2145_vga_table.h, as the official board loads it on every
+ * capture): software reset, clocks and PLL, windowing, ISP tuning, the 640x480 crop, output on. */
 hal_i2c_status_t gc2145_start(hal_i2c_dev_t *dev) {
-    /* the vendor table's head: software reset three times, then 16 ms */
-    hal_i2c_status_t s = HAL_I2C_OK;
-    for (int i = 0; i < 3 && s == HAL_I2C_OK; i++) s = wr(dev, 0xFE, 0xF0);
-    if (s != HAL_I2C_OK) return s;
-    osal_task_delay_us(16000);
-    static const uint8_t seq[][2] = {
-        {0xFE, 0x00}, {0xFC, 0x06}, {0xF6, 0x00}, {0xF7, 0x1D}, {0xF8, 0x84}, {0xFA, 0x00}, {0xF9, 0xFE}, /* clocks, PLL */
-        {0xFE, 0x00}, {0x84, 0x06},                                                                    /* RGB565 */
-        {0xF2, 0x0F},                                                                                  /* output on */
-    };
-    for (unsigned i = 0; i < sizeof seq / sizeof seq[0] && s == HAL_I2C_OK; i++) s = wr(dev, seq[i][0], seq[i][1]);
-    return s;
+    for (unsigned i = 0; i < sizeof GC2145_VGA_RGB565 / sizeof GC2145_VGA_RGB565[0]; i++) {
+        const gc2145_reg_t *e = &GC2145_VGA_RGB565[i];
+        if (e->reg == 0xFF) {
+            osal_task_delay_us((uint64_t)e->value * 1000u);
+            continue;
+        }
+        hal_i2c_status_t s = wr(dev, e->reg, e->value);
+        if (s != HAL_I2C_OK) return s;
+    }
+    return wr(dev, 0xFE, 0x00); /* page 0, as upstream leaves it */
 }
 
 hal_i2c_status_t gc2145_stop(hal_i2c_dev_t *dev) {

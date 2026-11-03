@@ -60,7 +60,9 @@ enum {
     OSAL_MEM_DEFAULT = 0,
     OSAL_MEM_INTERNAL = 1u << 0, /* on-chip SRAM (scarce: tens of KiB available) */
     OSAL_MEM_EXTERNAL = 1u << 1, /* PSRAM (MiBs; stalls while internal flash is written) */
-    OSAL_MEM_DMA = 1u << 2,      /* DMA-capable (subset of internal) */
+    OSAL_MEM_DMA = 1u << 2,      /* DMA-capable: alone, internal RAM; with EXTERNAL, PSRAM a DMA engine reaches
+                                  * (the S31's GDMA does; such buffers are cache-line aligned and synced by the
+                                  * driver, e.g. camera frames). DMA|INTERNAL|EXTERNAL is invalid. */
 };
 
 void *osal_malloc(size_t size, uint32_t caps);

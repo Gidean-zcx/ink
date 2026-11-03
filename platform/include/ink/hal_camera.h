@@ -20,9 +20,12 @@ typedef struct {
 
 /** False if this device has no camera. */
 bool hal_camera_info(hal_camera_info_t *out);
-/** Take one picture into buf (>= frame_bytes): start the sensor, drop the warm-up frames, keep
- *  one, stop. Returns the bytes written, or < 0 (no camera, sensor not answering, timeout). Task
- *  context; takes about half a second. */
+/** Take one picture into buf (>= frame_bytes), which the camera's DMA fills directly: allocate it
+ *  with osal_malloc(frame_bytes, OSAL_MEM_DMA | OSAL_MEM_EXTERNAL) (upstream: a PSRAM frame buffer
+ *  from esp_cam_ctlr_alloc_buffer). Loads the sensor's sequence, drops the warm-up frames, keeps
+ *  one, stops. timeout_ms covers the whole call. Returns the bytes written, or < 0: no camera or
+ *  wrong buffer (-1), sensor not answering (-2, -3), timeout (-4), power or reset lost meanwhile
+ *  (-5), sensor not set up for VGA RGB565 (-6). Task context; about a second. */
 int hal_camera_capture(uint8_t *buf, size_t cap, uint32_t timeout_ms);
 
 #ifdef __cplusplus

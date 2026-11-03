@@ -444,8 +444,11 @@ static void check_panel_power(void) {
     g_pmic_warned = true;
 }
 
-static void power_up(void) {
-    if (D.rails_on) return;
+/* Rails up for a refresh. False when the board's sequence failed after its retries: the request
+ * then fails (ok = false, the panel unchanged) and the system decides what to do (upstream
+ * restarts the chip at this point; that policy belongs to the system, not the simulator). */
+static bool power_up(void) {
+    if (D.rails_on) return true;
     uint64_t t0 = vtk_now();
     if (g_profile.pmic_tps65185) {
         /* first use, in the driver task that runs the sequence anyway (keeps I2C off the boot stack) */
@@ -454,8 +457,10 @@ static void power_up(void) {
         sim_metric_sample("display.power_up_ms", (double)(vtk_now() - t0) / 1e6);
         if (r != EPD_POWER_OK) {
             sim_metric_add("display.power_failures", 1);
-            sim_warn("display: panel power-up failed (%s) after %d retries; the device would enter safe mode",
-                     epd_power_result_name(r), EPD_PWR_RETRIES);
+            sim_note("display: panel power-up failed (%s) after %d retries; the update fails", epd_power_result_name(r),
+                     EPD_PWR_RETRIES);
+            sim_trace_span("display", "power-up failed", t0, vtk_now(), NULL);
+            return false;
         }
     } else {
         uint64_t pause = SIM_US(g_profile.touch_pause_us);
@@ -468,6 +473,7 @@ static void power_up(void) {
     D.rails_on = true;
     sim_power_consumer("display.rails", true, 0);
     sim_trace_span("display", "power-up", t0, vtk_now(), NULL);
+    return true;
     sim_metric_add("display.power_ups", 1);
 }
 
@@ -646,8 +652,14 @@ static void execute(req_t *r) {
         started = vtk_now();
         vtk_sleep_ns(SIM_US(g_profile.lcd_frame_us));
         done = vtk_now();
+    } else if (!power_up()) {
+        res.ok = false; /* no rails: nothing driven, the panel keeps its image */
+        res.started_us = res.done_us = vtk_now() / 1000;
+        D.pending--;
+        hal_cpu_boost_release(g_boost);
+        if (r->done) r->done(r->ctx, &res);
+        return;
     } else {
-        power_up();
         check_panel_power();
         sim_i2c_transfer("io-expander", 3); /* panel control lines on the TCA9555 at waveform start */
         diff_pass(&r->area);
@@ -1046,8 +1058,8 @@ static void pq_record_finished(void *p) {
     }
 }
 
-static void pq_finish(pq_upd_t *u, uint64_t done_ns) {
-    hal_display_result_t res = {.id = u->r.id, .ok = true, .waveform = u->r.wf, .queued_us = u->r.queued_ns / 1000};
+static void pq_finish(pq_upd_t *u, uint64_t done_ns, bool ok) {
+    hal_display_result_t res = {.id = u->r.id, .ok = ok, .waveform = u->r.wf, .queued_us = u->r.queued_ns / 1000};
     res.started_us = (u->started_ns ? u->started_ns : done_ns) / 1000;
     res.done_us = done_ns / 1000;
     pq_finished_t f = {u, done_ns};
@@ -1094,7 +1106,7 @@ static void pq_after_phase(uint32_t now, uint64_t scan_end) {
         bool cleaning = PQ.clean_stage && i == PQ.clean_idx;
         bool waiting = u->after_clean && PQ.clean_stage;
         if (!cleaning && !waiting && pq_area_still(u->tx0, u->ty0, u->tx1, u->ty1, now + 1)) {
-            pq_finish(u, u->started_ns ? scan_end : vtk_now());
+            pq_finish(u, u->started_ns ? scan_end : vtk_now(), true);
             PQ.u[i] = PQ.u[--PQ.nu]; /* swap-remove: only the last entry moves (to i) */
             if (PQ.clean_stage && PQ.clean_idx == PQ.nu) PQ.clean_idx = i;
             continue;
@@ -1119,7 +1131,12 @@ static void pq_drain_requests(void) {
 static void pq_drive(void) {
     if (!g_boost) g_boost = hal_cpu_boost_create("epd");
     hal_cpu_boost_acquire(g_boost);
-    power_up();
+    if (!power_up()) { /* no rails: every update in flight fails, the panel keeps its image */
+        for (int i = 0; i < PQ.nu; i++) pq_finish(&PQ.u[i], vtk_now(), false);
+        PQ.nu = 0;
+        hal_cpu_boost_release(g_boost);
+        return;
+    }
     check_panel_power();
     sim_i2c_transfer("io-expander", 3);
     sim_power_consumer("display.refresh", true, g_profile.ma_display_refresh);

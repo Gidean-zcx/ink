@@ -629,6 +629,12 @@ static void cell_task(void *arg) {
     ink_probe_mark("cell-done");
 }
 
+static void cam_cut_task(void *arg) {
+    (void)arg;
+    osal_task_delay_us(500000);
+    metalio_board_set(0, MB_P0_CAM_SCR, 0);
+}
+
 /* INK_SELFTEST_BOARD=1: the Plus board's IO expander wiring (config.h @690a023) through our board
  * driver: the motor on P03, the shared touch + 4G reset on P12 and the shared supply on P14 acting
  * on the modem, then the official power-off pulse train on P13, which ends the run. */
@@ -680,15 +686,23 @@ static void board_task(void *arg) {
     /* camera (GC2145): a VGA RGB565 picture after the warm-up frames; no answer without P05 */
     hal_camera_info_t ci;
     CHECK(hal_camera_info(&ci) && ci.width == 640 && ci.height == 480 && ci.frame_bytes == 640u * 480u * 2u, "the camera is a 640x480 RGB565 sensor");
-    uint8_t *pic = osal_malloc(ci.frame_bytes, OSAL_MEM_EXTERNAL);
+    uint8_t *pic = osal_malloc(ci.frame_bytes, OSAL_MEM_DMA | OSAL_MEM_EXTERNAL);
     uint64_t t_cam = osal_now_us();
     int got = pic ? hal_camera_capture(pic, ci.frame_bytes, 2000) : -100;
     uint64_t took_cam = osal_now_us() - t_cam;
     CHECK(got == (int)ci.frame_bytes && pic[0] == 0xFF && pic[1] == 0xFF, "a picture arrives (test pattern: white bar first; %d bytes)", got);
-    CHECK(took_cam >= 550000 && took_cam < 800000, "taking it costs the warm-up frames (%llu ms)", (unsigned long long)(took_cam / 1000));
+    CHECK(took_cam >= 650000 && took_cam < 1200000, "taking it costs the vendor sequence and the warm-up frames (%llu ms)", (unsigned long long)(took_cam / 1000));
     metalio_board_set(0, MB_P0_CAM_SCR, 0);
     CHECK(pic && hal_camera_capture(pic, ci.frame_bytes, 2000) < 0, "without its supply (P05 low) the sensor does not answer");
     metalio_board_set(0, MB_P0_CAM_SCR, MB_P0_CAM_SCR);
+    osal_task_cfg_t cut = {.name = "cam_cut", .fn = cam_cut_task, .stack_bytes = 2048, .priority = OSAL_PRIO_NORMAL + 1, .core = -1};
+    osal_task_create(&cut, NULL); /* cuts P05 in the middle of the next capture */
+    CHECK(pic && hal_camera_capture(pic, ci.frame_bytes, 3000) == -5, "a capture that loses power half way fails instead of returning a frame");
+    metalio_board_set(0, MB_P0_CAM_SCR, MB_P0_CAM_SCR);
+    CHECK(pic && hal_camera_capture(pic, ci.frame_bytes, 300) == -4, "the timeout covers the whole capture (300 ms is too short)");
+    uint8_t *internal = osal_malloc(64, OSAL_MEM_INTERNAL);
+    CHECK(internal && hal_camera_capture(internal, ci.frame_bytes, 3000) == -1, "a buffer the camera DMA cannot fill is refused");
+    if (internal) osal_free(internal);
     if (pic) osal_free(pic);
 
     /* Bluetooth audio chip (BH1098G on UART1): conversation mode set at boot, version answer */
