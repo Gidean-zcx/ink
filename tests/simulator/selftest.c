@@ -974,7 +974,10 @@ static void board_task(void *arg) {
     osal_task_create(&cut, NULL); /* cuts P05 in the middle of the next capture */
     CHECK(pic && hal_camera_capture(pic, ci.frame_bytes, 3000) == -5, "a capture that loses power half way fails instead of returning a frame");
     metalio_board_set(0, MB_P0_CAM_SCR, MB_P0_CAM_SCR);
-    CHECK(pic && hal_camera_capture(pic, ci.frame_bytes, 300) == -4, "the timeout covers the whole capture (300 ms is too short)");
+    uint64_t t_short = osal_now_us();
+    CHECK(pic && hal_camera_capture(pic, ci.frame_bytes, 100) == -4 && osal_now_us() - t_short < 150000,
+          "the timeout covers the whole capture, its set-up too (100 ms: gave up after %llu ms)",
+          (unsigned long long)((osal_now_us() - t_short) / 1000));
     uint8_t *internal = osal_malloc(64, OSAL_MEM_INTERNAL);
     CHECK(internal && hal_camera_capture(internal, ci.frame_bytes, 3000) == -1, "a buffer the camera DMA cannot fill is refused");
     if (internal) osal_free(internal);

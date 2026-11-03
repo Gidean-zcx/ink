@@ -124,7 +124,9 @@ static int capture(uint8_t *buf, size_t cap, uint32_t timeout_ms) {
     if (!g_cam || !buf || cap < GC2145_FRAME_BYTES || !pools_is_external(buf)) return -1; /* DMA writes PSRAM */
     uint16_t pid = 0;
     if (gc2145_probe(g_cam, &pid) != HAL_I2C_OK || pid != GC2145_PID) return -2;
-    if (gc2145_start(g_cam) != HAL_I2C_OK) return -3;
+    hal_i2c_status_t st = gc2145_start_until(g_cam, deadline); /* the ~0.4 s set-up counts against the timeout */
+    if (st == HAL_I2C_TIMEOUT) return -4;
+    if (st != HAL_I2C_OK) return -3;
     const uint64_t frame_us = 1000000u / CAM_FPS;
     for (int f = 0; f <= GC2145_WARMUP_FRAMES; f++) { /* frames arrive one by one over DVP */
         if (osal_now_us() + frame_us > deadline) {

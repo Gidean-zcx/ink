@@ -23,8 +23,11 @@
 #define GC2145_WARMUP_FRAMES 8 /* upstream kWarmupFrames: frames dropped before the one kept */
 
 hal_i2c_status_t gc2145_probe(hal_i2c_dev_t *dev, uint16_t *pid);
-/** Reset, VGA RGB565, output on (task context; waits the reset time). */
+/** Reset, VGA RGB565, output on (task context; waits the reset time). The sequence takes ~0.4 s. */
 hal_i2c_status_t gc2145_start(hal_i2c_dev_t *dev);
+/** The same, giving up with HAL_I2C_TIMEOUT before a step that would end after deadline_us
+ *  (osal_now_us() time; 0 = no deadline). The sensor is then half set up: start again. */
+hal_i2c_status_t gc2145_start_until(hal_i2c_dev_t *dev, uint64_t deadline_us);
 hal_i2c_status_t gc2145_stop(hal_i2c_dev_t *dev);
 
 #endif
