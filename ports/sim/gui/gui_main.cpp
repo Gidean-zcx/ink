@@ -749,6 +749,30 @@ void draw_panel(ImVec2 pos, ImVec2 size) {
             ImGui::TextDisabled("插卡后要等模组重新开射频才识别：是否支持热插拔还没确认。");
         }
     }
+    if (ImGui::CollapsingHeader("短信与电话（外面的人）")) {
+        static char number[24] = "13800138000", text[256] = "你好，这是一条测试短信。";
+        static bool auto_answer = true;
+        ImGui::SetNextItemWidth(160);
+        ImGui::InputText("号码", number, sizeof number);
+        ImGui::SetNextItemWidth(-1);
+        ImGui::InputText("##sms", text, sizeof text);
+        if (ImGui::Button("发短信给设备")) sim_gui_sms_to_device(number, text);
+        ImGui::SameLine();
+        if (ImGui::Button("打电话给设备")) sim_gui_call_device(number);
+        static const char *states[] = {"没有通话", "通话中", "", "设备在呼叫对方", "正在呼叫设备"};
+        ImGui::Text("通话：%s%s%s", states[g_st.call >= 0 && g_st.call <= 4 ? g_st.call : 0], g_st.call ? " · " : "", g_st.call ? g_st.call_number : "");
+        ImGui::BeginDisabled(g_st.call != 3);
+        if (ImGui::Button("对方接听")) sim_gui_remote(true);
+        ImGui::EndDisabled();
+        ImGui::SameLine();
+        ImGui::BeginDisabled(g_st.call == 0);
+        if (ImGui::Button("对方挂断")) sim_gui_remote(false);
+        ImGui::EndDisabled();
+        ImGui::SameLine();
+        if (ImGui::Checkbox("对方 4 秒后自动接听", &auto_answer)) sim_gui_auto_answer(auto_answer);
+        if (g_st.sms_sent > 0) ImGui::TextWrapped("设备发出 %d 条短信，最近一条给 %s：%s", g_st.sms_sent, g_st.last_sms_number, g_st.last_sms_text);
+        ImGui::TextDisabled("需要卡有短信 / 通话业务（见“4G 卡”）。通话的声音还没有模拟。");
+    }
     if (ImGui::CollapsingHeader("麦克风", ImGuiTreeNodeFlags_DefaultOpen)) {
         static const char *names[] = {"电脑麦克风", "合成的说话", "安静", "噪声"};
         static const char *ids[] = {"host", "speech", "silence", "noise"};

@@ -65,6 +65,11 @@ typedef struct {
     unsigned accel_motions;
     int bt_mode;                /* BH1098G mode, 0 = not set */
     bool bt_powered;
+    /* calls and messages, seen from the network */
+    int call;                   /* 0 idle, 1 active, 3 ringing at the far end, 4 ringing the device */
+    char call_number[24];
+    int sms_sent;               /* messages the device sent */
+    char last_sms_number[24], last_sms_text[400];
 } sim_gui_stats_t;
 
 /** Ask for a fresh sample and, if the panel image changed, a new frame. At most one request is
@@ -84,6 +89,11 @@ void sim_gui_mic(const char *source); /* "speech" | "silence" | "noise" */
 void sim_gui_sim_card(int slot, int kind); /* put a card in a slot or take it out (kind as sim_card) */
 void sim_gui_orient(const char *name);     /* portrait, upside_down, landscape_left/right, face_up/down */
 void sim_gui_shake(void);
+/* the outside world: messages and calls to the device, the far end of a call */
+void sim_gui_sms_to_device(const char *number, const char *text);
+void sim_gui_call_device(const char *number);
+void sim_gui_remote(bool answer); /* the far end answers / hangs up */
+void sim_gui_auto_answer(bool on);
 void sim_gui_snapshot(const char *name); /* <out>/snap-<name>.png */
 void sim_gui_power_cut(void);         /* pull the battery: tears an in-flight flash write, stops */
 void sim_gui_stop(void);              /* clean stop (saves the flash image) */

@@ -563,6 +563,38 @@ static void cell_task(void *arg) {
     r = nt26_select_sim(NT26_EXTERNAL_SLOT, 30000);
     CHECK(r == NT26_OK && lte_up(), "switching away from the empty slot works (%s)", nt26_result_name(r));
 
+    /* SMS and calls on the external card (data, SMS and voice) */
+    char num[24], text[200], urc[120];
+    CHECK(nt26_sms_send("10086", "查询话费 OK", 10000) == NT26_OK, "a Chinese text message goes out (UCS2)");
+    CHECK(sim_net_sent_sms(0, num, sizeof num, text, sizeof text) == 1 && !strcmp(num, "10086") && !strcmp(text, "查询话费 OK"),
+          "the network got it as written (%s: %s)", num, text);
+    vtk_lock();
+    bool delivered = sim_net_deliver_sms("95588", "您的验证码是 123456");
+    vtk_unlock();
+    int idx = -1;
+    CHECK(delivered && hal_modem_urc(urc, sizeof urc, 1000) > 0 && sscanf(urc, "+CMTI: \"SM\",%d", &idx) == 1, "an incoming message is announced (%s)", urc);
+    CHECK(nt26_sms_read(idx, num, sizeof num, text, sizeof text) == NT26_OK && !strcmp(num, "95588") && !strcmp(text, "您的验证码是 123456"),
+          "and reads back (%s: %s)", num, text);
+    CHECK(nt26_sms_delete(idx) == NT26_OK, "and is deleted");
+    CHECK(nt26_dial("13800138000") == NT26_OK && hal_modem_urc(urc, sizeof urc, 1000) > 0 && strstr(urc, ",3,"), "a call goes out and rings (%s)", urc);
+    CHECK(hal_modem_urc(urc, sizeof urc, 6000) > 0 && strstr(urc, ",0,0,0,0,"), "the far end picks up (%s)", urc);
+    CHECK(nt26_hangup() == NT26_OK && hal_modem_urc(urc, sizeof urc, 1000) > 0 && !strcmp(urc, "NO CARRIER"), "hanging up ends it (%s)", urc);
+    vtk_lock();
+    bool rang = sim_net_incoming_call("13900139000");
+    vtk_unlock();
+    bool got_ring = false;
+    for (int i = 0; i < 4 && hal_modem_urc(urc, sizeof urc, 1000) > 0;) {
+        if (!strcmp(urc, "RING")) got_ring = true;
+        if (got_ring && strstr(urc, "+CLIP: \"13900139000\"")) break;
+        i++;
+    }
+    CHECK(rang && got_ring, "an incoming call rings with the caller's number");
+    CHECK(nt26_answer() == NT26_OK && hal_modem_urc(urc, sizeof urc, 1000) > 0 && strstr(urc, "+CLCC: 1,1,0,"), "answering it (%s)", urc);
+    vtk_lock();
+    sim_net_remote_hangup();
+    vtk_unlock();
+    CHECK(hal_modem_urc(urc, sizeof urc, 1000) > 0 && !strcmp(urc, "NO CARRIER"), "the caller hangs up (%s)", urc);
+
     CHECK(hal_modem_at("AT+ECRST", resp, sizeof resp, 1000) == HAL_AT_OK, "AT+ECRST is acknowledged");
     CHECK(hal_modem_at("AT", resp, sizeof resp, 300) == HAL_AT_TIMEOUT && !lte_up(), "the rebooting modem does not answer");
     osal_task_delay_us(4000000);

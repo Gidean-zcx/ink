@@ -272,6 +272,14 @@ void sim_net_set_card(int slot, bool present, bool sms, bool voice); /* ISR (scr
 void sim_net_modem_hold_reset(bool held);  /* board P12 (shared touch + 4G reset); any context */
 void sim_net_modem_power(bool on);         /* board P14 (shared 4G + BT audio + amplifier supply) */
 bool sim_net_modem_registered(void);
+/* The outside world for SMS and calls (window, scripts; ISR context) */
+bool sim_net_deliver_sms(const char *number, const char *utf8); /* false: no SMS service or store full */
+bool sim_net_incoming_call(const char *number);                 /* false: busy or no voice service */
+void sim_net_remote_answer(void);
+void sim_net_remote_hangup(void);
+void sim_net_auto_answer(bool on);
+int sim_net_call(char *number, size_t cap);                     /* 0 idle, 1 active, 3 ringing out, 4 ringing in */
+int sim_net_sent_sms(int i, char *number, size_t ncap, char *text, size_t tcap); /* returns how many were sent */
 void sim_net_hub_send(struct hal_ws *ws, uint64_t t_send, const void *data, size_t len, bool binary); /* ISR */
 int sim_hub_load(const char *path, char *err, size_t errlen);
 void sim_hub_receive(struct hal_ws *ws, uint64_t t, const uint8_t *data, size_t len, bool binary); /* ISR */

@@ -33,4 +33,17 @@ nt26_result_t nt26_registered(bool *registered);
 nt26_result_t nt26_select_sim(nt26_slot_t slot, uint32_t reg_timeout_ms);
 const char *nt26_result_name(nt26_result_t r);
 
+/* ---- SMS (text mode, UCS2 so Chinese works) and voice calls (3GPP TS 27.005 / 27.007) ---- */
+/** Send a text message (UTF-8). The card's plan must include SMS. */
+nt26_result_t nt26_sms_send(const char *number, const char *utf8, uint32_t timeout_ms);
+/** Read message `index` (from a +CMTI notification): sender and UTF-8 text. */
+nt26_result_t nt26_sms_read(int index, char *number, int number_cap, char *utf8, int text_cap);
+nt26_result_t nt26_sms_delete(int index);
+nt26_result_t nt26_dial(const char *number); /* voice call (VoLTE) */
+nt26_result_t nt26_answer(void);
+nt26_result_t nt26_hangup(void);
+/* UTF-8 <-> UCS2 hex as AT+CSCS="UCS2" wants it */
+int nt26_utf8_to_ucs2_hex(const char *utf8, char *hex, int cap);
+int nt26_ucs2_hex_to_utf8(const char *hex, char *utf8, int cap);
+
 #endif

@@ -280,6 +280,8 @@ static void cell_reset_done_cb(void *arg) { /* ISR: the modem rebooted, radio on
     cell_radio(true, vtk_isr_now());
 }
 
+static void call_end(void);
+
 /* The board holds the modem in reset (P12 low) or cuts its supply (P14 low): deaf, radio off; when
  * both are released it boots like after AT+ECRST. Any context. */
 static void modem_gate(void) {
@@ -289,6 +291,7 @@ static void modem_gate(void) {
         if (CELL.boot_ev) vtk_event_cancel(CELL.boot_ev);
         CELL.boot_ev = 0;
         cell_radio(false, now);
+        call_end();
         CELL.deaf_until = VTK_TIME_INF;
     } else if (!down && CELL.deaf_until == VTK_TIME_INF) {
         CELL.deaf_until = now + SIM_MS(CELL_RESET_MS);
@@ -310,12 +313,167 @@ void sim_net_modem_hold_reset(bool held) { modem_board_pin(&CELL.held, held); }
 void sim_net_modem_power(bool on) { modem_board_pin(&CELL.unpowered, !on); }
 bool sim_net_modem_registered(void) { return g_profile.lte.present && cell_ok(); }
 
+/* ---- SMS, calls and unsolicited lines (3GPP TS 27.005 / 27.007 text mode) ----
+ * Messages wait in the modem's store and are announced with +CMTI; AT+CMGR/AT+CMGD read and delete
+ * them, in UCS2 hex after AT+CSCS="UCS2" (else as plain text). AT+CMGS takes the text after its
+ * "> " prompt and answers +CMGS after SMS_SEND_MS (ESTIMATE). Calls: ATD<n>; ATA, ATH / AT+CHUP,
+ * AT+CLCC; state changes are reported as +CLCC lines (stat 0 active, 2 dialling, 3 alerting,
+ * 4 incoming), an incoming call rings (RING, +CLIP) every 3 s, the end is NO CARRIER. Which
+ * unsolicited lines the EC718PM firmware really sends is an ASSUMPTION until its AT manual is
+ * checked. SMS needs a card with SMS, calls one with voice (VoLTE), and both a registration.
+ * Call audio is not modelled (how the modem's voice reaches the speaker is not known). */
+#define SMS_SEND_MS 2000
+#define SMS_SLOTS 16
+#define URC_SLOTS 16
+#define CALL_RING_MS 3000
+#define CALL_ANSWER_MS 4000  /* the far end picks up an outgoing call (auto-answer) */
+#define CALL_RING_GIVEUP_MS 30000
+
+static struct {
+    bool text_mode, ucs2;
+    struct { bool used, read; char number[24], text[400]; } sms[SMS_SLOTS];
+    struct { char number[24], text[400]; } sent[8];
+    int sent_n;
+    char urc[URC_SLOTS][120];
+    int urc_h, urc_n;
+    vtk_waitq_t urc_wq;
+    int call;        /* 0 idle, 2 dialling, 3 alerting, 4 incoming, 1 active */
+    bool call_out;
+    char call_number[24];
+    bool auto_answer;
+    vtk_event_id_t call_ev;
+    uint64_t ring_started;
+    unsigned sms_in, sms_out, calls;
+} MS = {.auto_answer = true};
+
+static void urc_push(const char *line) { /* ISR or locked */
+    if (MS.urc_n == URC_SLOTS) {
+        MS.urc_h = (MS.urc_h + 1) % URC_SLOTS;
+        MS.urc_n--;
+    }
+    snprintf(MS.urc[(MS.urc_h + MS.urc_n) % URC_SLOTS], sizeof MS.urc[0], "%s", line);
+    MS.urc_n++;
+    if (vtk_in_isr()) vtk_isr_wake_one(&MS.urc_wq);
+    else vtk_wake_one_locked(&MS.urc_wq);
+}
+
+int hal_modem_urc(char *buf, size_t cap, uint32_t timeout_ms) {
+    uint64_t deadline = vtk_now() + SIM_MS(timeout_ms);
+    vtk_lock();
+    while (MS.urc_n == 0) {
+        uint64_t now = vtk_now();
+        if (now >= deadline || !vtk_block_locked(&MS.urc_wq, deadline - now)) {
+            if (MS.urc_n) break;
+            vtk_unlock();
+            return -1;
+        }
+    }
+    snprintf(buf, cap, "%s", MS.urc[MS.urc_h]);
+    MS.urc_h = (MS.urc_h + 1) % URC_SLOTS;
+    MS.urc_n--;
+    vtk_unlock();
+    return (int)strlen(buf);
+}
+
+static bool can_sms(void) { return cell_ok() && CELL.sms[CELL.active]; }
+static bool can_call(void) { return cell_ok() && CELL.voice[CELL.active]; }
+
+/* text to the charset in use (UCS2 hex, BMP only, or as is) */
+static void encode(const char *utf8, char *out, size_t cap) {
+    if (!MS.ucs2) {
+        snprintf(out, cap, "%s", utf8);
+        return;
+    }
+    size_t n = 0;
+    const unsigned char *p = (const unsigned char *)utf8;
+    while (*p && n + 5 < cap) {
+        unsigned cp;
+        if (*p < 0x80) {
+            cp = *p++;
+        } else if ((*p & 0xE0) == 0xC0 && p[1]) {
+            cp = (unsigned)(p[0] & 0x1F) << 6 | (p[1] & 0x3F);
+            p += 2;
+        } else if ((*p & 0xF0) == 0xE0 && p[1] && p[2]) {
+            cp = (unsigned)(p[0] & 0x0F) << 12 | (unsigned)(p[1] & 0x3F) << 6 | (p[2] & 0x3F);
+            p += 3;
+        } else {
+            cp = '?';
+            p++;
+        }
+        n += (size_t)snprintf(out + n, cap - n, "%04X", cp);
+    }
+    out[n] = 0;
+}
+
+static void decode(const char *in, char *utf8, size_t cap) {
+    if (!MS.ucs2) {
+        snprintf(utf8, cap, "%s", in);
+        return;
+    }
+    size_t n = 0, len = strlen(in);
+    for (size_t i = 0; i + 3 < len && n + 4 < cap; i += 4) {
+        unsigned u = 0;
+        for (int k = 0; k < 4; k++) {
+            char c = in[i + (size_t)k];
+            u = u << 4 | (unsigned)(c <= '9' ? c - '0' : (c | 0x20) - 'a' + 10);
+        }
+        if (u < 0x80) utf8[n++] = (char)u;
+        else if (u < 0x800) utf8[n++] = (char)(0xC0 | u >> 6), utf8[n++] = (char)(0x80 | (u & 0x3F));
+        else utf8[n++] = (char)(0xE0 | u >> 12), utf8[n++] = (char)(0x80 | (u >> 6 & 0x3F)), utf8[n++] = (char)(0x80 | (u & 0x3F));
+    }
+    utf8[n] = 0;
+}
+
+static void call_report(void) { /* ISR or locked */
+    char l[80];
+    if (!MS.call) {
+        urc_push("NO CARRIER");
+        return;
+    }
+    snprintf(l, sizeof l, "+CLCC: 1,%d,%d,0,0,\"%s\",129", MS.call_out ? 0 : 1, MS.call == 1 ? 0 : MS.call, MS.call_number);
+    urc_push(l);
+}
+
+static void call_end(void) { /* ISR or locked */
+    if (MS.call_ev) vtk_event_cancel(MS.call_ev);
+    MS.call_ev = 0;
+    if (!MS.call) return;
+    MS.call = 0;
+    call_report();
+}
+
+static void call_tick(void *arg) { /* ISR: ring again, give up, or the far end answers */
+    (void)arg;
+    MS.call_ev = 0;
+    uint64_t now = vtk_isr_now();
+    if (MS.call == 4) {
+        if (now - MS.ring_started >= SIM_MS(CALL_RING_GIVEUP_MS)) {
+            call_end();
+            return;
+        }
+        char l[60];
+        urc_push("RING");
+        snprintf(l, sizeof l, "+CLIP: \"%s\",129", MS.call_number);
+        urc_push(l);
+        MS.call_ev = vtk_event_at(now + SIM_MS(CALL_RING_MS), call_tick, NULL);
+    } else if (MS.call == 3 && MS.auto_answer) {
+        MS.call = 1;
+        call_report();
+    }
+}
+
 hal_at_result_t hal_modem_at(const char *cmd, char *resp, size_t resp_cap, uint32_t timeout_ms) {
+    return hal_modem_at_payload(cmd, NULL, resp, resp_cap, timeout_ms);
+}
+
+hal_at_result_t hal_modem_at_payload(const char *cmd, const char *payload, char *resp, size_t resp_cap, uint32_t timeout_ms) {
     if (resp && resp_cap) resp[0] = 0;
     if (!g_profile.lte.present) return HAL_AT_NO_MODEM;
-    enum { K_AT, K_CFUN_Q, K_CFUN0, K_CFUN1, K_SLOT_Q, K_SLOT_SET, K_CPIN, K_CEREG, K_RST, K_BAD } k = K_BAD;
+    enum { K_AT, K_CFUN_Q, K_CFUN0, K_CFUN1, K_SLOT_Q, K_SLOT_SET, K_CPIN, K_CEREG, K_RST, K_CMGF, K_CSCS, K_CNMI, K_CMGS, K_CMGR,
+           K_CMGD, K_ATD, K_ATA, K_CHUP, K_CLCC, K_BAD } k = K_BAD;
     unsigned lat_ms = CELL_AT_MS;
-    int slot = -1;
+    int slot = -1, idx = -1;
+    char arg[64] = "";
     if (!strcmp(cmd, "AT")) k = K_AT;
     else if (!strcmp(cmd, "AT+CFUN?")) k = K_CFUN_Q;
     else if (!strcmp(cmd, "AT+CFUN=0")) k = K_CFUN0, lat_ms = CELL_CFUN0_MS;
@@ -326,6 +484,16 @@ hal_at_result_t hal_modem_at(const char *cmd, char *resp, size_t resp_cap, uint3
     else if (!strcmp(cmd, "AT+CPIN?")) k = K_CPIN;
     else if (!strcmp(cmd, "AT+CEREG?")) k = K_CEREG;
     else if (!strcmp(cmd, "AT+ECRST")) k = K_RST;
+    else if (!strncmp(cmd, "AT+CMGF=", 8)) k = K_CMGF;
+    else if (!strncmp(cmd, "AT+CSCS=", 8)) k = K_CSCS;
+    else if (!strncmp(cmd, "AT+CNMI=", 8)) k = K_CNMI;
+    else if (sscanf(cmd, "AT+CMGS=\"%63[^\"]\"", arg) == 1) k = K_CMGS, lat_ms = SMS_SEND_MS;
+    else if (sscanf(cmd, "AT+CMGR=%d", &idx) == 1) k = K_CMGR;
+    else if (sscanf(cmd, "AT+CMGD=%d", &idx) == 1) k = K_CMGD;
+    else if (sscanf(cmd, "ATD%23[^;];", arg) == 1) k = K_ATD;
+    else if (!strcmp(cmd, "ATA")) k = K_ATA;
+    else if (!strcmp(cmd, "ATH") || !strcmp(cmd, "AT+CHUP")) k = K_CHUP;
+    else if (!strcmp(cmd, "AT+CLCC")) k = K_CLCC;
     uint64_t t0 = vtk_now(), limit = t0 + SIM_MS(timeout_ms);
     uint64_t done = CELL.deaf_until == VTK_TIME_INF ? VTK_TIME_INF : (t0 > CELL.deaf_until ? t0 : CELL.deaf_until) + SIM_MS(lat_ms);
     if (done > limit) { /* deaf (in reset, unpowered, rebooting) or slower than the caller waits: lost */
@@ -334,16 +502,19 @@ hal_at_result_t hal_modem_at(const char *cmd, char *resp, size_t resp_cap, uint3
     }
     vtk_sleep_ns(done - t0);
     hal_at_result_t r = HAL_AT_OK;
-    char line[48] = "";
+    char info[1100] = "";
     vtk_lock();
     switch (k) {
     case K_AT: break;
-    case K_CFUN_Q: snprintf(line, sizeof line, "+CFUN: %d", CELL.radio ? 1 : 0); break;
-    case K_CFUN0: cell_radio(false, vtk_now()); break;
+    case K_CFUN_Q: snprintf(info, sizeof info, "+CFUN: %d", CELL.radio ? 1 : 0); break;
+    case K_CFUN0:
+        cell_radio(false, vtk_now());
+        call_end();
+        break;
     case K_CFUN1:
         if (!CELL.radio) cell_radio(true, vtk_now());
         break;
-    case K_SLOT_Q: snprintf(line, sizeof line, "+ECSIMCFG: \"SimSlot\",%d", CELL.selected); break;
+    case K_SLOT_Q: snprintf(info, sizeof info, "+ECSIMCFG: \"SimSlot\",%d", CELL.selected); break;
     case K_SLOT_SET:
         if (slot != 0 && slot != 1) {
             r = HAL_AT_ERROR;
@@ -354,25 +525,139 @@ hal_at_result_t hal_modem_at(const char *cmd, char *resp, size_t resp_cap, uint3
         }
         break;
     case K_CPIN: /* the card is powered only with the radio on (ASSUMPTION) */
-        if (CELL.radio && CELL.present[CELL.active]) snprintf(line, sizeof line, "+CPIN: READY");
+        if (CELL.radio && CELL.present[CELL.active]) snprintf(info, sizeof info, "+CPIN: READY");
         else r = HAL_AT_ERROR;
         break;
     case K_CEREG: {
         int stat = cell_ok() ? 1 : CELL.radio && CELL.present[CELL.active] && CELL.reg_ev ? 2 : 0;
-        snprintf(line, sizeof line, "+CEREG: 0,%d", stat);
+        snprintf(info, sizeof info, "+CEREG: 0,%d", stat);
         break;
     }
     case K_RST:
         cell_radio(false, vtk_now());
+        call_end();
         CELL.deaf_until = vtk_now() + SIM_MS(CELL_RESET_MS);
         CELL.resets++;
         CELL.boot_ev = vtk_event_at(CELL.deaf_until, cell_reset_done_cb, NULL);
         break;
+    case K_CMGF: MS.text_mode = cmd[8] == '1'; break;
+    case K_CSCS: MS.ucs2 = strstr(cmd, "UCS2") != NULL; break;
+    case K_CNMI: break;
+    case K_CMGS:
+        if (!payload || !MS.text_mode || !can_sms()) {
+            snprintf(info, sizeof info, "+CMS ERROR: %d", !cell_ok() ? 331 : 500);
+            r = HAL_AT_ERROR;
+        } else {
+            int i = MS.sent_n % 8;
+            decode(arg, MS.sent[i].number, sizeof MS.sent[i].number);
+            decode(payload, MS.sent[i].text, sizeof MS.sent[i].text);
+            MS.sent_n++;
+            MS.sms_out++;
+            snprintf(info, sizeof info, "+CMGS: %d", MS.sms_out & 0xFF);
+        }
+        break;
+    case K_CMGR:
+        if (idx < 0 || idx >= SMS_SLOTS || !MS.sms[idx].used || !MS.text_mode) {
+            r = HAL_AT_ERROR;
+        } else {
+            char num[100], text[900];
+            encode(MS.sms[idx].number, num, sizeof num);
+            encode(MS.sms[idx].text, text, sizeof text);
+            snprintf(info, sizeof info, "+CMGR: \"%s\",\"%s\",,\"26/11/02,00:00:00+32\"\n%s", MS.sms[idx].read ? "REC READ" : "REC UNREAD", num, text);
+            MS.sms[idx].read = true;
+        }
+        break;
+    case K_CMGD:
+        if (idx >= 0 && idx < SMS_SLOTS) MS.sms[idx].used = false;
+        else r = HAL_AT_ERROR;
+        break;
+    case K_ATD:
+        if (MS.call || !can_call()) {
+            r = HAL_AT_ERROR;
+            snprintf(info, sizeof info, "+CME ERROR: %d", !cell_ok() ? 30 : 4);
+        } else {
+            MS.call = 3; /* dialled, ringing at the far end */
+            MS.call_out = true;
+            snprintf(MS.call_number, sizeof MS.call_number, "%s", arg);
+            MS.calls++;
+            call_report();
+            MS.call_ev = vtk_event_at(vtk_now() + SIM_MS(CALL_ANSWER_MS), call_tick, NULL);
+        }
+        break;
+    case K_ATA:
+        if (MS.call != 4) {
+            r = HAL_AT_ERROR;
+        } else {
+            if (MS.call_ev) vtk_event_cancel(MS.call_ev);
+            MS.call_ev = 0;
+            MS.call = 1;
+            call_report();
+        }
+        break;
+    case K_CHUP: call_end(); break;
+    case K_CLCC:
+        if (MS.call)
+            snprintf(info, sizeof info, "+CLCC: 1,%d,%d,0,0,\"%s\",129", MS.call_out ? 0 : 1, MS.call == 1 ? 0 : MS.call, MS.call_number);
+        break;
     case K_BAD: r = HAL_AT_ERROR; break;
     }
     vtk_unlock();
-    if (resp && resp_cap) snprintf(resp, resp_cap, "%s", line);
+    if (resp && resp_cap) snprintf(resp, resp_cap, "%s", info);
     return r;
+}
+
+/* The outside world (window, scripts; ISR context) */
+bool sim_net_deliver_sms(const char *number, const char *utf8) {
+    if (!can_sms()) return false;
+    for (int i = 0; i < SMS_SLOTS; i++)
+        if (!MS.sms[i].used) {
+            MS.sms[i].used = true;
+            MS.sms[i].read = false;
+            snprintf(MS.sms[i].number, sizeof MS.sms[i].number, "%s", number);
+            snprintf(MS.sms[i].text, sizeof MS.sms[i].text, "%s", utf8);
+            MS.sms_in++;
+            char l[40];
+            snprintf(l, sizeof l, "+CMTI: \"SM\",%d", i);
+            urc_push(l);
+            return true;
+        }
+    return false; /* store full */
+}
+
+bool sim_net_incoming_call(const char *number) {
+    if (MS.call || !can_call()) return false;
+    MS.call = 4;
+    MS.call_out = false;
+    snprintf(MS.call_number, sizeof MS.call_number, "%s", number);
+    MS.calls++;
+    MS.ring_started = vtk_isr_now();
+    call_report();
+    call_tick(NULL); /* first RING now */
+    return true;
+}
+
+void sim_net_remote_answer(void) {
+    if (MS.call == 3) {
+        if (MS.call_ev) vtk_event_cancel(MS.call_ev);
+        MS.call_ev = 0;
+        MS.call = 1;
+        call_report();
+    }
+}
+
+void sim_net_remote_hangup(void) { call_end(); }
+void sim_net_auto_answer(bool on) { MS.auto_answer = on; }
+
+int sim_net_call(char *number, size_t cap) {
+    if (number && cap) snprintf(number, cap, "%s", MS.call_number);
+    return MS.call;
+}
+
+int sim_net_sent_sms(int i, char *number, size_t ncap, char *text, size_t tcap) {
+    if (i < 0 || i >= MS.sent_n || i < MS.sent_n - 8) return MS.sent_n;
+    snprintf(number, ncap, "%s", MS.sent[i % 8].number);
+    snprintf(text, tcap, "%s", MS.sent[i % 8].text);
+    return MS.sent_n;
 }
 
 void sim_net_cell_state(sim_cell_state_t *out) { /* ISR */
@@ -399,6 +684,7 @@ void sim_net_set_card(int slot, bool present, bool sms, bool voice) { /* ISR (sc
     CELL.voice[slot] = present && voice;
     if (slot == CELL.active && was && !present) {
         CELL.registered = false; /* stays off until the next radio-on, even if the card comes back */
+        call_end();
         cell_relink();
     }
 }

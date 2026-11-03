@@ -48,9 +48,15 @@ void hal_net_set_link_callback(hal_link_cb cb, void *ctx);
 typedef enum { HAL_AT_OK = 0, HAL_AT_ERROR = -1, HAL_AT_TIMEOUT = -2, HAL_AT_NO_MODEM = -3 } hal_at_result_t;
 
 /** Send one command (no CR/LF) and wait up to timeout_ms for its final result code. resp receives
- *  the information line before it (e.g. "+CEREG: 0,1"), or "" if none. Task context; callers
- *  serialize (one command at a time, as on the real link). */
+ *  the information lines before it, separated by '\n' (e.g. "+CEREG: 0,1"), or "" if none. Task
+ *  context; callers serialize (one command at a time, as on the real link). */
 hal_at_result_t hal_modem_at(const char *cmd, char *resp, size_t resp_cap, uint32_t timeout_ms);
+/** A command that prompts for data ("> "), such as AT+CMGS: send cmd, then payload ended by
+ *  Ctrl-Z, and wait for the final result. */
+hal_at_result_t hal_modem_at_payload(const char *cmd, const char *payload, char *resp, size_t resp_cap, uint32_t timeout_ms);
+/** Next unsolicited line from the modem (RING, +CMTI..., NO CARRIER), oldest first; its length, or
+ *  -1 after timeout_ms. Task context. */
+int hal_modem_urc(char *buf, size_t cap, uint32_t timeout_ms);
 
 typedef struct hal_ws hal_ws_t;
 

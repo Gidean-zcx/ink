@@ -110,6 +110,9 @@ static void poll_on_host(void *arg) {
     st.sim_registered = cs.registered;
     st.sim_searching = cs.searching;
     st.volte = cs.volte;
+    st.call = sim_net_call(st.call_number, sizeof st.call_number);
+    st.sms_sent = sim_net_sent_sms(-1, NULL, 0, NULL, 0);
+    if (st.sms_sent > 0) sim_net_sent_sms(st.sms_sent - 1, st.last_sms_number, sizeof st.last_sms_number, st.last_sms_text, sizeof st.last_sms_text);
     if (sim_board_present()) {
         st.rtc_s = sim_rtc_now_s();
         sim_accel_orientation(st.accel_mg);
@@ -175,12 +178,13 @@ void sim_gui_get_stats(sim_gui_stats_t *out) {
 
 /* ------------------------------------------------------------------ actions */
 
-typedef enum { C_TOUCH, C_KEY, C_BATTERY, C_NET, C_OUTAGE, C_MIC, C_SNAP, C_POWERCUT, C_SIM_CARD, C_ORIENT, C_SHAKE } cmd_kind_t;
+typedef enum { C_TOUCH, C_KEY, C_BATTERY, C_NET, C_OUTAGE, C_MIC, C_SNAP, C_POWERCUT, C_SIM_CARD, C_ORIENT, C_SHAKE, C_SMS_IN, C_CALL_IN, C_REMOTE, C_AUTO_ANSWER } cmd_kind_t;
 
 typedef struct {
     cmd_kind_t kind;
     int a, b, c;
-    char text[48];
+    char num[24];
+    char text[400];
 } cmd_t;
 
 static void free_on_host(void *p) { free(p); }
@@ -199,6 +203,13 @@ static void cmd_event(void *arg) { /* ISR context, like the script's actions */
     case C_SIM_CARD: sim_net_set_card(c->a, c->b > 0, c->b >= 2, c->b == 3); break;
     case C_ORIENT: sim_accel_orient(c->text); break;
     case C_SHAKE: sim_accel_shake(); break;
+    case C_SMS_IN: c->a = sim_net_deliver_sms(c->num, c->text); break;
+    case C_CALL_IN: sim_net_incoming_call(c->num); break;
+    case C_REMOTE:
+        if (c->a) sim_net_remote_answer();
+        else sim_net_remote_hangup();
+        break;
+    case C_AUTO_ANSWER: sim_net_auto_answer(c->a != 0); break;
     }
     vtk_host_call(free_on_host, c);
 }
@@ -225,6 +236,20 @@ void sim_gui_power_cut(void) { send(C_POWERCUT, 0, 0, 0, NULL); }
 void sim_gui_sim_card(int slot, int kind) { send(C_SIM_CARD, slot, kind, 0, NULL); }
 void sim_gui_orient(const char *name) { send(C_ORIENT, 0, 0, 0, name); }
 void sim_gui_shake(void) { send(C_SHAKE, 0, 0, 0, NULL); }
+
+static void send_num(cmd_kind_t kind, const char *num, const char *text) {
+    cmd_t *m = calloc(1, sizeof *m);
+    if (!m) return;
+    m->kind = kind;
+    snprintf(m->num, sizeof m->num, "%s", num ? num : "");
+    snprintf(m->text, sizeof m->text, "%s", text ? text : "");
+    if (!inject(cmd_event, m)) free(m);
+}
+
+void sim_gui_sms_to_device(const char *number, const char *text) { send_num(C_SMS_IN, number, text); }
+void sim_gui_call_device(const char *number) { send_num(C_CALL_IN, number, NULL); }
+void sim_gui_remote(bool answer) { send(C_REMOTE, answer, 0, 0, NULL); }
+void sim_gui_auto_answer(bool on) { send(C_AUTO_ANSWER, on, 0, 0, NULL); }
 
 void sim_gui_stop(void) {
     if (sim_gui_phase() == SIM_GUI_RUNNING) vtk_stop();

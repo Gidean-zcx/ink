@@ -18,6 +18,9 @@
  *   +0       orient portrait|upside_down|landscape_left|landscape_right|face_up|face_down
  *   +0       shake                    # a movement the accelerometer notices
  *   +0       rtc lost                 # the RTC's backup supply failed: its time is invalid
+ *   +0       sms-in 10086 text...     # a text message arrives (needs a card with SMS)
+ *   +0       call-in 13800000000      # an incoming call (needs a card with voice)
+ *   +0       remote answer|hangup     # the far end of a call
  *   +5s      end
  *
  * Times: "@t" absolute, "+t" relative to the previous line; units us/ms/s/m
@@ -34,13 +37,14 @@
 #include "ink/rotation.h"
 #include "sim.h"
 
-typedef enum { A_TOUCH, A_KEY, A_SNAP, A_MARK, A_NOTE, A_BATTERY, A_POWERCUT, A_END, A_NET, A_OUTAGE, A_MIC, A_SIM, A_ORIENT, A_SHAKE, A_RTC_LOST } akind_t;
+typedef enum { A_TOUCH, A_KEY, A_SNAP, A_MARK, A_NOTE, A_BATTERY, A_POWERCUT, A_END, A_NET, A_OUTAGE, A_MIC, A_SIM, A_ORIENT, A_SHAKE, A_RTC_LOST, A_SMS_IN, A_CALL_IN, A_REMOTE } akind_t;
 
 typedef struct {
     uint64_t t;
     akind_t kind;
     int a, b, c;
     char text[96];
+    char num[24];
 } action_t;
 
 static action_t *A;
@@ -218,6 +222,23 @@ int sim_script_load(const char *path, char *err, size_t errlen) {
         } else if (!strcmp(cmd, "rtc")) {
             ok = n >= 3 && !strcmp(tok[2], "lost");
             if (ok) push(t, A_RTC_LOST);
+        } else if (!strcmp(cmd, "sms-in")) {
+            ok = n >= 4;
+            if (ok) {
+                action_t *a = push(t, A_SMS_IN);
+                snprintf(a->num, sizeof a->num, "%s", tok[2]);
+                a->text[0] = 0;
+                for (int k = 3; k < n; k++) {
+                    size_t l = strlen(a->text);
+                    snprintf(a->text + l, sizeof a->text - l, "%s%s", k > 3 ? " " : "", tok[k]);
+                }
+            }
+        } else if (!strcmp(cmd, "call-in")) {
+            ok = n >= 3;
+            if (ok) snprintf(push(t, A_CALL_IN)->num, 24, "%s", tok[2]);
+        } else if (!strcmp(cmd, "remote")) {
+            ok = n >= 3 && (!strcmp(tok[2], "answer") || !strcmp(tok[2], "hangup"));
+            if (ok) push(t, A_REMOTE)->a = !strcmp(tok[2], "answer");
         } else if (!strcmp(cmd, "outage")) {
             uint64_t dur;
             ok = n >= 3 && !parse_dur(tok[2], &dur);
@@ -273,6 +294,16 @@ static void run_action(void *arg) { /* ISR context */
     case A_ORIENT: sim_accel_orient(a->text); break;
     case A_SHAKE: sim_accel_shake(); break;
     case A_RTC_LOST: sim_rtc_lose_time(); break;
+    case A_SMS_IN:
+        if (!sim_net_deliver_sms(a->num, a->text)) sim_note("script: sms to the device not delivered (no SMS service)");
+        break;
+    case A_CALL_IN:
+        if (!sim_net_incoming_call(a->num)) sim_note("script: call to the device not put through");
+        break;
+    case A_REMOTE:
+        if (a->a) sim_net_remote_answer();
+        else sim_net_remote_hangup();
+        break;
     }
 }
 
