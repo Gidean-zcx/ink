@@ -35,9 +35,22 @@ static uint8_t shadow_port0(epd_power_t *p) {
     return v;
 }
 
+static hal_i2c_status_t read_port0_tries(epd_power_t *p, uint8_t *levels) { /* a bus timeout is not an answer */
+    hal_i2c_status_t s = HAL_I2C_ERR;
+    for (int i = 0; i < 3 && s != HAL_I2C_OK; i++) s = read_port0(p, levels);
+    return s;
+}
+
 static epd_power_result_t power_on_once(epd_power_t *p) {
     p->attempts++;
     if (p->gate_output) p->gate_output(p->ctx, false);
+
+    /* the screen's power: on from here to the end of the waveform, or the record says otherwise */
+    io_lock(p);
+    p->ioexp->changed[0] &= (uint8_t)~EPD_PWR_SCREEN;
+    io_unlock(p);
+    uint8_t levels0 = 0;
+    if (read_port0_tries(p, &levels0) != HAL_I2C_OK || !(levels0 & EPD_PWR_SCREEN)) return EPD_POWER_NO_SCREEN;
 
     /* STANDBY (WAKEUP high, PWRUP and VCOM_CTRL low); let the PMIC wake before any I2C */
     pins(p, EPD_PWR_WAKEUP);
@@ -82,14 +95,14 @@ static epd_power_result_t power_on_once(epd_power_t *p) {
     }
     if (p->gate_output) p->gate_output(p->ctx, true);
     io_lock(p);
-    p->ioexp->changed[0] &= (uint8_t)~WATCH_MASK; /* from here a change of these pins is someone else's */
+    p->ioexp->changed[0] &= (uint8_t)~PIN_MASK; /* our own writes; from here a change of these pins is someone else's */
     io_unlock(p);
     return EPD_POWER_OK;
 }
 
 epd_power_result_t epd_power_on(epd_power_t *p) {
     epd_power_result_t r = power_on_once(p);
-    for (int retry = 1; r != EPD_POWER_OK && retry <= EPD_PWR_RETRIES; retry++) {
+    for (int retry = 1; r != EPD_POWER_OK && r != EPD_POWER_NO_SCREEN && retry <= EPD_PWR_RETRIES; retry++) {
         epd_power_off(p);
         osal_task_delay_us(100000);
         p->retries++;
@@ -111,10 +124,8 @@ void epd_power_off(epd_power_t *p) {
 
 bool epd_power_good(epd_power_t *p) {
     uint8_t levels = 0, pg = 0;
+    if (read_port0_tries(p, &levels) != HAL_I2C_OK || !(levels & EPD_PWR_GOOD) || !(levels & EPD_PWR_SCREEN)) return false;
     hal_i2c_status_t s = HAL_I2C_ERR;
-    for (int i = 0; i < 3 && s != HAL_I2C_OK; i++) s = read_port0(p, &levels);
-    if (s != HAL_I2C_OK || !(levels & EPD_PWR_GOOD)) return false;
-    s = HAL_I2C_ERR;
     for (int i = 0; i < 3 && s != HAL_I2C_OK; i++) s = tps65185_read(p->pmic, TPS_REG_PG, &pg);
     return s == HAL_I2C_OK && (pg & TPS_PG_ALL_GOOD) == TPS_PG_ALL_GOOD;
 }
@@ -141,6 +152,7 @@ void epd_power_sleep(epd_power_t *p) {
 const char *epd_power_result_name(epd_power_result_t r) {
     switch (r) {
     case EPD_POWER_OK: return "ok";
+    case EPD_POWER_NO_SCREEN: return "screen power P05 off";
     case EPD_POWER_NO_PMIC: return "no PMIC";
     case EPD_POWER_CONFIG_FAILED: return "PMIC configuration failed";
     case EPD_POWER_NO_PWR_GOOD: return "no PWR_GOOD";

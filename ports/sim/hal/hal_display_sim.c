@@ -478,8 +478,7 @@ static bool power_up_locked(void) {
         sim_metric_sample("display.power_up_ms", (double)(vtk_now() - t0) / 1e6);
         if (r != EPD_POWER_OK) {
             sim_metric_add("display.power_failures", 1);
-            sim_note("display: panel power-up failed (%s) after %d retries; the update fails", epd_power_result_name(r),
-                     EPD_PWR_RETRIES);
+            sim_note("display: panel power-up failed (%s); the update fails", epd_power_result_name(r));
             sim_trace_span("display", "power-up failed", t0, vtk_now(), NULL);
             return false;
         }

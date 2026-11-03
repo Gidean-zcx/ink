@@ -39,6 +39,7 @@ typedef enum {
     EPD_POWER_CONFIG_FAILED, /* REVID or UPSEQ access failed */
     EPD_POWER_NO_PWR_GOOD,   /* PWR_GOOD did not rise after PWRUP */
     EPD_POWER_RAILS_FAILED,  /* ENABLE or VCOM write failed, or the PG register never read all good */
+    EPD_POWER_NO_SCREEN,     /* the screen's power P05 is off (or unreadable): not ours to switch, no retry */
 } epd_power_result_t;
 
 typedef struct {
@@ -60,7 +61,9 @@ typedef struct {
     unsigned ioexp_errors; /* failed expander writes; the sequence goes on, as upstream */
 } epd_power_t;
 
-/** Rails and VCOM up, gate output enabled; retries a failed attempt up to EPD_PWR_RETRIES times. */
+/** Rails and VCOM up, gate output enabled; retries a failed attempt up to EPD_PWR_RETRIES times.
+ *  Needs the screen's power P05 on and leaves it alone otherwise (upstream's camera path does the same
+ *  with the shared outputs): EPD_POWER_NO_SCREEN, at once. */
 epd_power_result_t epd_power_on(epd_power_t *p);
 
 /** Gate output off, rails down, PMIC to SLEEP. */
@@ -69,9 +72,9 @@ void epd_power_off(epd_power_t *p);
 /** Before deep sleep: PMIC to SLEEP with the datasheet waits. */
 void epd_power_sleep(epd_power_t *p);
 
-/** Are the rails and VCOM good now? PWR_GOOD (P07) through the expander, then the PMIC's PG
- *  register; false if either says no or does not answer after three tries (a bus timeout is not a
- *  supply loss; a PMIC that lost WAKEUP does not answer at all). */
+/** Are the rails and VCOM good now, with the screen powered? PWR_GOOD (P07) and P05 through the
+ *  expander, then the PMIC's PG register; false if any says no or does not answer after three tries (a
+ *  bus timeout is not a supply loss; a PMIC that lost WAKEUP does not answer at all). */
 bool epd_power_good(epd_power_t *p);
 
 /** Has anyone changed the PMIC's pins (WAKEUP, PWRUP, VCOM_CTRL) or the screen's power (P05) since

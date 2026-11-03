@@ -994,6 +994,14 @@ static void display_cut_checks(void) {
         CHECK(ok && !g_upd_ok, "an update whose %s blips part way fails, although it is back before the end", BLIP_NAME[b]);
     }
     CHECK(update_and_wait(px, &area) && g_upd_ok, "after a blip the next update powers up from the start and works");
+    /* the screen's power left off (audit AUD5-001): updates keep failing until it is back; the
+     * power-up does not take P05 over (upstream's camera path leaves the shared outputs alone too) */
+    metalio_board_set(0, MB_P0_CAM_SCR, 0);
+    bool off1 = update_and_wait(px, &area) && !g_upd_ok;
+    bool off2 = update_and_wait(px, &area) && !g_upd_ok;
+    CHECK(off1 && off2, "with the screen's power P05 left off, update after update fails");
+    metalio_board_set(0, MB_P0_CAM_SCR, MB_P0_CAM_SCR);
+    CHECK(update_and_wait(px, &area) && g_upd_ok, "and they work again once P05 is back");
 }
 
 static void board_task(void *arg) {
