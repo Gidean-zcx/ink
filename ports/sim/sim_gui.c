@@ -74,6 +74,8 @@ static void heap_stats(uint32_t caps, size_t *total, size_t *free_now, size_t *m
     *min_free = m.min_free;
 }
 
+static void pic_on_host(void *arg);
+
 static void poll_on_host(void *arg) {
     (void)arg;
     sim_gui_stats_t st;
@@ -133,6 +135,7 @@ static void poll_on_host(void *arg) {
             G.display_version = v;
         }
     }
+    if (sim_board_present()) pic_on_host(NULL);
     G.poll_pending = false;
     pthread_mutex_unlock(&Gm);
 }
@@ -255,3 +258,57 @@ int sim_gui_audio_pull(int16_t *out, int n) {
     pthread_mutex_unlock(&Gm);
     return k;
 }
+
+/* ------------------------------------------------------------------ computer microphone -> mic */
+
+static struct {
+    int16_t buf[AUDIO_RING];
+    int head, count;
+} MI;
+
+void sim_gui_mic_push(const int16_t *pcm, int n) {
+    pthread_mutex_lock(&Gm);
+    for (int i = 0; i < n; i++) {
+        MI.buf[(MI.head + MI.count) % AUDIO_RING] = pcm[i];
+        if (MI.count < AUDIO_RING) MI.count++;
+        else MI.head = (MI.head + 1) % AUDIO_RING;
+    }
+    pthread_mutex_unlock(&Gm);
+}
+
+int sim_gui_mic_pull(int16_t *out, int n) {
+    pthread_mutex_lock(&Gm);
+    int k = n < MI.count ? n : MI.count;
+    for (int i = 0; i < k; i++) out[i] = MI.buf[(MI.head + i) % AUDIO_RING];
+    MI.head = (MI.head + k) % AUDIO_RING;
+    MI.count -= k;
+    pthread_mutex_unlock(&Gm);
+    return k;
+}
+
+/* ------------------------------------------------------------------ camera */
+
+void sim_gui_set_camera_source(sim_gui_camera_fn fn, void *ctx) { sim_camera_set_source(fn, ctx); }
+
+static uint8_t *g_pic;
+static uint32_t g_pic_seq, g_pic_taken;
+
+static void pic_on_host(void *arg) { /* simulation side, at a poll */
+    (void)arg;
+    if (!g_pic) g_pic = malloc(640 * 480 * 2);
+    uint32_t seq = g_pic_seq;
+    if (g_pic && sim_camera_last(g_pic, 640 * 480 * 2, &seq)) g_pic_seq = seq;
+}
+
+bool sim_gui_take_picture(uint8_t *buf, size_t cap) {
+    pthread_mutex_lock(&Gm);
+    bool fresh = g_pic && g_pic_seq != g_pic_taken && cap >= 640 * 480 * 2;
+    if (fresh) {
+        memcpy(buf, g_pic, 640 * 480 * 2);
+        g_pic_taken = g_pic_seq;
+    }
+    pthread_mutex_unlock(&Gm);
+    return fresh;
+}
+
+unsigned sim_gui_camera_captures(void) { return sim_camera_captures(); }

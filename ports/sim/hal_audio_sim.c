@@ -34,7 +34,7 @@
 #include "board/metalio_board.h"
 #include "sim.h"
 
-typedef enum { MIC_SPEECH = 0, MIC_SILENCE, MIC_NOISE } mic_src_t;
+typedef enum { MIC_SPEECH = 0, MIC_SILENCE, MIC_NOISE, MIC_HOST } mic_src_t;
 
 static struct {
     bool init;
@@ -118,9 +118,21 @@ static void wav_put(const int16_t *pcm, int n, uint64_t t_ns) {
 
 /* ------------------------------------------------------------- microphone */
 
+static int16_t host_mic_sample(void) { /* the computer's microphone (desktop simulator), 16 kHz */
+    static int16_t buf[256];
+    static int pos, len;
+    if (pos >= len) {
+        len = sim_gui_mic_pull(buf, 256);
+        pos = 0;
+        if (len <= 0) return 0; /* nothing captured yet: silence */
+    }
+    return buf[pos++];
+}
+
 static int16_t mic_sample(uint64_t n) {
     double t = (double)n / HAL_AUDIO_RATE;
     switch (A.src) {
+    case MIC_HOST: return host_mic_sample();
     case MIC_SILENCE: return (int16_t)((int)((n * 2654435761u) >> 27) - 16); /* room noise, a few LSB */
     case MIC_NOISE: return (int16_t)((int)((n * 2654435761u) >> 19) - 4096);
     default: {
@@ -174,7 +186,7 @@ static void audio_task(void *arg) {
 }
 
 void sim_audio_mic_source(const char *name) { /* ISR (script) */
-    A.src = !strcmp(name, "silence") ? MIC_SILENCE : !strcmp(name, "noise") ? MIC_NOISE : MIC_SPEECH;
+    A.src = !strcmp(name, "silence") ? MIC_SILENCE : !strcmp(name, "noise") ? MIC_NOISE : !strcmp(name, "host") ? MIC_HOST : MIC_SPEECH;
 }
 
 /* ---------------------------------------------------------------- speaker */

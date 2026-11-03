@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>CFBundleIdentifier</key>
+  <string>dev.ink.sim-gui</string>
+  <key>CFBundleName</key>
+  <string>ink-sim-gui</string>
+  <key>NSCameraUsageDescription</key>
+  <string>模拟设备的摄像头（GC2145）用电脑摄像头的画面。</string>
+  <key>NSMicrophoneUsageDescription</key>
+  <string>模拟设备的麦克风用电脑麦克风的声音。</string>
+</dict>
+</plist>

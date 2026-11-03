@@ -205,6 +205,13 @@ bool sim_tca_int_low(void);
 bool sim_board_motor_on(void);
 bool sim_board_amp_on(void);
 bool sim_board_shared_reset_held(void);   /* P12 low: touch controller and modem in reset */
+bool sim_board_cam_power(void);           /* P05: camera / screen power */
+/* GC2145 camera (dev_camera.c). The window may give it pictures (RGB565, high byte first). */
+typedef bool (*sim_camera_source_fn)(uint8_t *rgb565be, int w, int h, void *ctx);
+void sim_camera_set_source(sim_camera_source_fn fn, void *ctx); /* before sim_main */
+void sim_camera_init(void);               /* task context (boot) */
+bool sim_camera_last(uint8_t *buf, size_t cap, uint32_t *seq); /* the last picture taken, if newer than *seq */
+unsigned sim_camera_captures(void);
 void sim_gpio2_update(void);              /* GPIO2 = expander INT AND accelerometer INT1 (wired); any context */
 /* RTC + accelerometer models (dev_rtc_accel.c) and their HALs (hal_sensors_sim.c) */
 void sim_rtc_accel_init(void);
@@ -234,7 +241,7 @@ hal_power_state_t sim_power_state(void);
 bool sim_audio_busy(void);
 void sim_audio_init(void);            /* task context (boot) */
 void sim_audio_report(void);
-void sim_audio_mic_source(const char *name); /* ISR (script): "speech" | "silence" | "noise" */
+void sim_audio_mic_source(const char *name); /* ISR (script): "speech" | "silence" | "noise" | "host" (window) */
 void sim_audio_speaker_counters(uint64_t *underruns, double *underrun_ms, double *idle_ms); /* self-test */
 /** Build a stand-in Opus packet (level, pitch) the simulated decoder turns into a tone. */
 int sim_opus_fake_packet(uint8_t *out, int cap, double freq, double level, int bytes, uint32_t seed);
@@ -274,6 +281,7 @@ void sim_gui_started(void);
 void sim_gui_finished(void);
 void sim_gui_crashed(const char *reason) __attribute__((noreturn));
 void sim_gui_audio_push(const int16_t *pcm, int n); /* speaker samples (16 kHz mono) for the window */
+int sim_gui_mic_pull(int16_t *out, int n);           /* the computer's microphone (16 kHz mono), 0 if none */
 void sim_fatal(const char *reason) __attribute__((noreturn));
 /** Entry point of the simulated system (provided by the system/app under test). */
 void ink_main(void);

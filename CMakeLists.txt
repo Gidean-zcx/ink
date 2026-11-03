@@ -67,12 +67,14 @@ add_library(ink_port_sim STATIC
   drivers/cx25601n/cx25601n.c
   drivers/pcf8563/pcf8563.c
   drivers/sc7a20h/sc7a20h.c
+  drivers/gc2145/gc2145.c
   ports/sim/hal_i2c_sim.c
   ports/sim/dev_epd_power.c
   ports/sim/dev_tca9555.c
   ports/sim/dev_power_chips.c
   ports/sim/dev_rtc_accel.c
   ports/sim/hal_sensors_sim.c
+  ports/sim/dev_camera.c
   ports/sim/osal_sim.c
   ports/sim/metrics.c
   ports/sim/trace.c
@@ -239,7 +241,21 @@ if(INK_GUI)
   else()
     file(WRITE ${INK_GUI_GLYPHS} "static const char kGuiGlyphs[] = \"\";\n")
   endif()
-  add_executable(ink-sim-gui ports/sim/sim_main.c ports/sim/gui/gui_main.cpp ${INK_GUI_GLYPHS})
+  if(APPLE)
+    enable_language(OBJC)
+    set(INK_HOST_CAMERA ports/sim/gui/host_camera_mac.m)
+    set_source_files_properties(ports/sim/gui/host_camera_mac.m PROPERTIES COMPILE_OPTIONS "-fobjc-arc")
+  elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    set(INK_HOST_CAMERA ports/sim/gui/host_camera_linux.c)
+  else()
+    message(FATAL_ERROR "ink-sim-gui: no computer-camera backend for ${CMAKE_SYSTEM_NAME}")
+  endif()
+  add_executable(ink-sim-gui ports/sim/sim_main.c ports/sim/gui/gui_main.cpp ${INK_HOST_CAMERA} ${INK_GUI_GLYPHS})
+  if(APPLE)
+    target_link_libraries(ink-sim-gui PRIVATE "-framework AVFoundation" "-framework CoreMedia" "-framework CoreVideo" "-framework Foundation")
+    # usage descriptions, so macOS can ask for the camera and the microphone
+    target_link_options(ink-sim-gui PRIVATE "LINKER:-sectcreate,__TEXT,__info_plist,${CMAKE_SOURCE_DIR}/ports/sim/gui/Info.plist")
+  endif()
   target_compile_definitions(ink-sim-gui PRIVATE INK_SIM_NO_MAIN
     INK_SOURCE_DIR="${CMAKE_SOURCE_DIR}" INK_BINARY_DIR="${CMAKE_BINARY_DIR}"
     INK_GUI_FONT="${INK_CJK_FONT}" INK_GUI_FONT_FACE=${INK_CJK_FACE})

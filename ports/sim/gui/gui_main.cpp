@@ -38,6 +38,7 @@
 #include <vector>
 
 #include "gui_glyphs.h"
+#include "host_camera.h"
 #include "imgui.h"
 #include "imgui_impl_sdl2.h"
 #include "imgui_impl_sdlrenderer2.h"
@@ -293,6 +294,74 @@ SDL_AudioDeviceID open_audio() {
     return dev;
 }
 
+/* ------------------------------------------------------------------ computer microphone -> mic */
+
+SDL_AudioDeviceID g_mic_dev;
+
+void mic_cb(void *, Uint8 *stream, int len) { sim_gui_mic_push(reinterpret_cast<const int16_t *>(stream), len / 2); }
+
+bool open_mic() {
+    if (g_mic_dev) return true;
+    if (SDL_InitSubSystem(SDL_INIT_AUDIO) != 0) return false;
+    SDL_AudioSpec want, have;
+    SDL_zero(want);
+    want.freq = 16000; /* the device's I2S rate */
+    want.format = AUDIO_S16SYS;
+    want.channels = 1;
+    want.samples = 512;
+    want.callback = mic_cb;
+    g_mic_dev = SDL_OpenAudioDevice(nullptr, 1, &want, &have, 0);
+    if (g_mic_dev) SDL_PauseAudioDevice(g_mic_dev, 0);
+    return g_mic_dev != 0;
+}
+
+/* ------------------------------------------------------------------ computer camera -> GC2145 */
+
+std::atomic<bool> g_cam_host{true};
+std::vector<uint8_t> g_cam_bgra;
+
+/* The sensor asks for a picture (simulation thread): the newest camera frame, cropped to 4:3 and
+ * scaled to VGA, as RGB565 with the high byte first. */
+bool camera_source(uint8_t *out, int w, int h, void *) {
+    if (!g_cam_host) return false;
+    if (g_cam_bgra.empty()) g_cam_bgra.resize(1920u * 1440u * 4u);
+    int fw = 0, fh = 0;
+    if (!host_camera_frame(g_cam_bgra.data(), g_cam_bgra.size(), &fw, &fh) || fw <= 0 || fh <= 0) return false;
+    int cw = fw, ch = fh; /* crop to the sensor's aspect */
+    if (cw * h > ch * w) cw = ch * w / h;
+    else ch = cw * h / w;
+    int x0 = (fw - cw) / 2, y0 = (fh - ch) / 2;
+    for (int y = 0; y < h; y++)
+        for (int x = 0; x < w; x++) {
+            const uint8_t *p = &g_cam_bgra[4 * ((size_t)(y0 + y * ch / h) * (size_t)fw + (size_t)(x0 + x * cw / w))];
+            uint16_t c = (uint16_t)(((p[2] >> 3) << 11) | ((p[1] >> 2) << 5) | (p[0] >> 3));
+            out[2 * (y * w + x)] = (uint8_t)(c >> 8);
+            out[2 * (y * w + x) + 1] = (uint8_t)c;
+        }
+    return true;
+}
+
+SDL_Texture *g_pic_tex;
+std::vector<uint8_t> g_pic;
+
+void update_picture() {
+    if (g_pic.empty()) g_pic.resize(640u * 480u * 2u);
+    if (!sim_gui_take_picture(g_pic.data(), g_pic.size())) return;
+    if (!g_pic_tex) g_pic_tex = SDL_CreateTexture(g_ren, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, 640, 480);
+    void *pixels;
+    int pitch;
+    if (!g_pic_tex || SDL_LockTexture(g_pic_tex, nullptr, &pixels, &pitch)) return;
+    for (int y = 0; y < 480; y++) {
+        uint32_t *row = reinterpret_cast<uint32_t *>(static_cast<uint8_t *>(pixels) + (size_t)y * (size_t)pitch);
+        for (int x = 0; x < 640; x++) {
+            uint16_t c = (uint16_t)(g_pic[2 * (y * 640 + x)] << 8 | g_pic[2 * (y * 640 + x) + 1]);
+            uint32_t r = (c >> 11) << 3, g = ((c >> 5) & 63) << 2, b = (c & 31) << 3;
+            row[x] = 0xFF000000u | r << 16 | g << 8 | b;
+        }
+    }
+    SDL_UnlockTexture(g_pic_tex);
+}
+
 /* ------------------------------------------------------------------ device keys */
 
 bool g_mouse_key[HAL_KEY_COUNT], g_kb_key[HAL_KEY_COUNT], g_sent_key[HAL_KEY_COUNT];
@@ -335,7 +404,7 @@ bool g_paused;
 double g_speed = 1.0;
 int g_batt = 80;
 bool g_usb;
-int g_mic = 0;
+int g_mic = 1; /* synthetic speech, as the simulation starts */
 bool g_fit = true;
 bool g_restart;
 bool g_autoscroll = true;
@@ -681,16 +750,27 @@ void draw_panel(ImVec2 pos, ImVec2 size) {
         }
     }
     if (ImGui::CollapsingHeader("麦克风", ImGuiTreeNodeFlags_DefaultOpen)) {
-        static const char *names[] = {"有人说话", "安静", "噪声"};
-        static const char *ids[] = {"speech", "silence", "noise"};
-        for (int i = 0; i < 3; i++) {
+        static const char *names[] = {"电脑麦克风", "合成的说话", "安静", "噪声"};
+        static const char *ids[] = {"host", "speech", "silence", "noise"};
+        for (int i = 0; i < 4; i++) {
             if (i) ImGui::SameLine();
             if (ImGui::RadioButton(names[i], g_mic == i)) {
                 g_mic = i;
+                if (i == 0 && !open_mic()) toast("打不开电脑麦克风（检查系统的麦克风权限）");
                 sim_gui_mic(ids[i]);
             }
         }
-        ImGui::TextDisabled("按住 AI 键时麦克风听到的声音（BH1098G 经 I2S）。");
+        ImGui::TextDisabled("麦克风听到的声音（BH1098G 经 I2S，16 kHz）。");
+    }
+    if (ImGui::CollapsingHeader("摄像头 GC2145", ImGuiTreeNodeFlags_DefaultOpen)) {
+        bool host = g_cam_host;
+        if (ImGui::RadioButton("电脑摄像头", host)) g_cam_host = true;
+        ImGui::SameLine();
+        if (ImGui::RadioButton("测试图案", !host)) g_cam_host = false;
+        ImGui::TextDisabled("%s；设备拍了 %u 张", host_camera_status(), sim_gui_camera_captures());
+        update_picture();
+        if (g_pic_tex) ImGui::Image((ImTextureID)(intptr_t)g_pic_tex, ImVec2(240, 180));
+        ImGui::TextDisabled("上面是设备最近拍的一张（640×480 RGB565）。拍照由系统调用相机接口完成。");
     }
     if (ImGui::CollapsingHeader("姿态与时钟", ImGuiTreeNodeFlags_DefaultOpen)) {
         static const char *names[] = {"竖着", "倒过来", "向左横放", "向右横放", "平放，屏幕朝上", "平放，屏幕朝下"};
@@ -916,6 +996,8 @@ int main(int argc, char **argv) {
     load_font(fb_scale);
     build_lut(0, 0);
     SDL_AudioDeviceID audio = headless ? 0 : open_audio();
+    if (!headless) host_camera_open();
+    sim_gui_set_camera_source(camera_source, nullptr);
 
     sim_gui_enable();
     pthread_attr_t attr;
@@ -1045,6 +1127,9 @@ int main(int argc, char **argv) {
     }
     stop_simulation();
     if (audio) SDL_CloseAudioDevice(audio);
+    if (g_mic_dev) SDL_CloseAudioDevice(g_mic_dev);
+    host_camera_close();
+    if (g_pic_tex) SDL_DestroyTexture(g_pic_tex);
     ImGui_ImplSDLRenderer2_Shutdown();
     ImGui_ImplSDL2_Shutdown();
     ImGui::DestroyContext();

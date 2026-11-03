@@ -12,6 +12,7 @@
 #include <string.h>
 
 #include "ink/hal_audio.h"
+#include "ink/hal_camera.h"
 #include "ink/hal_device.h"
 #include "ink/hal_display.h"
 #include "ink/hal_input.h"
@@ -615,6 +616,20 @@ static void board_task(void *arg) {
     vtk_lock();
     sim_input_key(HAL_KEY_VOL_UP, false);
     vtk_unlock();
+
+    /* camera (GC2145): a VGA RGB565 picture after the warm-up frames; no answer without P05 */
+    hal_camera_info_t ci;
+    CHECK(hal_camera_info(&ci) && ci.width == 640 && ci.height == 480 && ci.frame_bytes == 640u * 480u * 2u, "the camera is a 640x480 RGB565 sensor");
+    uint8_t *pic = osal_malloc(ci.frame_bytes, OSAL_MEM_EXTERNAL);
+    uint64_t t_cam = osal_now_us();
+    int got = pic ? hal_camera_capture(pic, ci.frame_bytes, 2000) : -100;
+    uint64_t took_cam = osal_now_us() - t_cam;
+    CHECK(got == (int)ci.frame_bytes && pic[0] == 0xFF && pic[1] == 0xFF, "a picture arrives (test pattern: white bar first; %d bytes)", got);
+    CHECK(took_cam >= 550000 && took_cam < 800000, "taking it costs the warm-up frames (%llu ms)", (unsigned long long)(took_cam / 1000));
+    metalio_board_set(0, MB_P0_CAM_SCR, 0);
+    CHECK(pic && hal_camera_capture(pic, ci.frame_bytes, 2000) < 0, "without its supply (P05 low) the sensor does not answer");
+    metalio_board_set(0, MB_P0_CAM_SCR, MB_P0_CAM_SCR);
+    if (pic) osal_free(pic);
 
     char resp[64];
     bool reg = false;

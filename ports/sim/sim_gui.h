@@ -92,6 +92,15 @@ const char *sim_gui_out_dir(void);
 /** Speaker samples the device played (16 kHz mono), for the computer's audio output; returns how
  *  many were copied (the rest is silence). Any thread. */
 int sim_gui_audio_pull(int16_t *out, int n);
+/** The computer's microphone (16 kHz mono) for the simulated mic; any thread. */
+void sim_gui_mic_push(const int16_t *pcm, int n);
+/** The device's camera takes its pictures from here (RGB565 high byte first, w x h); return false
+ *  for the sensor's test pattern. Set before sim_main. */
+typedef bool (*sim_gui_camera_fn)(uint8_t *rgb565be, int w, int h, void *ctx);
+void sim_gui_set_camera_source(sim_gui_camera_fn fn, void *ctx);
+/** Copy the last picture the device took (640x480 RGB565 high byte first) if it is new. */
+bool sim_gui_take_picture(uint8_t *buf, size_t cap);
+unsigned sim_gui_camera_captures(void);
 
 #ifdef __cplusplus
 }
