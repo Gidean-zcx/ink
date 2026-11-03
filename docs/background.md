@@ -271,7 +271,7 @@ PQ-BN 各配置的对比见 [system-comparison.md](research/eink-refresh/integra
 **命令**
 
 ```bash
-cmake -S . -B build && cmake --build build -j && ctest --test-dir build --output-on-failure   # 42 项
+cmake -S . -B build && cmake --build build -j && ctest --test-dir build --output-on-failure   # 43 项
 cmake -S . -B build-werror -DINK_WERROR=ON && cmake --build build-werror -j && ctest --test-dir build-werror
 cmake -S . -B build-asan -DINK_SANITIZE=ON && cmake --build build-asan -j && ctest --test-dir build-asan   # ASan + UBSan
 
@@ -286,7 +286,7 @@ python3 tools/simreport/simreport.py out/reader --lang zh    # HTML 报告：刷
 
 - GitHub Actions（`.github/workflows/sim.yml`）在每次推送 main、`claude/**` 和每个 PR 时运行：带 `-Werror` 的构建与全部测试，再跑 ASan/UBSan。
 - `s31-size.yml` 只能手动触发，用 ESP-IDF 编译基线与上游固件，看静态内存占用。
-- 42 项测试的组成见 [平台与模拟器 §3](system/platform-and-simulator.md)：
+- 43 项测试的组成见 [平台与模拟器 §3](system/platform-and-simulator.md)：
   - 模拟器自检（4 个档案）、死亡测试、两项确定性；
   - 主页、阅读、AI 提问、AI 工具调用、待机等场景；
   - 老化文件系统 + 最坏擦写、断电、上游管线复现、可移植性冒烟；
@@ -302,7 +302,7 @@ python3 tools/simreport/simreport.py out/reader --lang zh    # HTML 报告：刷
 **PQ-BN**
 
 - “规划跟在扫描后面逐带进行”（或 tile 状态双缓冲）尚未实现。档案里的 `plan_during_scan=true` 只是假设这项改造已完成的时序。
-- 相时钟跨静止推进时没有补做被跳过相号的时间戳维护，长时间使用后 10 位时间戳会回绕（审计 AUD-011，[后续事项](audits/README.md) F-8）。
+- 跨静止推进相时钟时补做的时间戳维护（内核 `pqbn_v4_skip`；原审计 AUD-011、后续事项 F-8，2026-11-03 第七、八轮复审后修好，见[审计记录](audits/README.md)）在下一次驱动开始时一次做完，按指令级模拟器实测计入成本：长时间静止后的第一次刷新多约 15～60 ms。真机端口可以改为在静止期间分批做。
 
 **内存余量**
 

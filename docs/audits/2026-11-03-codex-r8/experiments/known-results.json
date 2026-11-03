@@ -1,0 +1,56 @@
+[
+  {
+    "command": [
+      "build-audit/ink-sim",
+      "--assets",
+      "build-audit/assets",
+      "--content",
+      "build-audit/test-content",
+      "--profile",
+      "simulator/profiles/metalio-plus.json",
+      "--script",
+      "docs/audits/2026-11-codex-review/gen_race.script",
+      "--hub",
+      "docs/audits/2026-11-codex-review/gen_race.hub.json",
+      "--out",
+      "build-audit/r8-known/gen-race",
+      "--no-random-outages",
+      "--trace"
+    ],
+    "exit_code": 0,
+    "output": [],
+    "metrics": {
+      "reader.open_ms": {
+        "count": 1,
+        "mean": 46.389,
+        "min": 46.389,
+        "p50": 46.389,
+        "p95": 46.389,
+        "p99": 46.389,
+        "max": 46.389
+      },
+      "reader.page_render_ms": {
+        "count": 4,
+        "mean": 36.658,
+        "min": 34.851,
+        "p50": 36.938,
+        "p95": 37.521,
+        "p99": 37.521,
+        "max": 37.521
+      },
+      "reader.page_turns": 2,
+      "reader.restored_page": {
+        "count": 1,
+        "mean": 0,
+        "min": 0,
+        "p50": 0,
+        "p95": 0,
+        "p99": 0,
+        "max": 0
+      },
+      "reader.turns_prerendered": 2,
+      "tools.calls.done": 1
+    },
+    "warnings": []
+  }
+]

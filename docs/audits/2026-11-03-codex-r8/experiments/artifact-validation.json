@@ -1,0 +1,482 @@
+{
+  "head": "38511ec9b490b20210087dc17a9df31eec0ded6d",
+  "passed": true,
+  "checks": [
+    {
+      "name": "audited_head_unchanged",
+      "passed": true,
+      "evidence": "38511ec9b490b20210087dc17a9df31eec0ded6d"
+    },
+    {
+      "name": "tracked_files_unchanged",
+      "passed": true,
+      "evidence": {
+        "unstaged": "",
+        "staged": ""
+      }
+    },
+    {
+      "name": "untracked_outputs_confined",
+      "passed": true,
+      "evidence": [
+        "docs/audits/2026-11-03-codex-r8/TASK.md",
+        "docs/audits/2026-11-03-codex-r8/experiments/README.md",
+        "docs/audits/2026-11-03-codex-r8/experiments/audio-integrity.json",
+        "docs/audits/2026-11-03-codex-r8/experiments/audio_integrity.py",
+        "docs/audits/2026-11-03-codex-r8/experiments/auxiliary.py",
+        "docs/audits/2026-11-03-codex-r8/experiments/clock-cycle-results.json",
+        "docs/audits/2026-11-03-codex-r8/experiments/clock_cycles.c",
+        "docs/audits/2026-11-03-codex-r8/experiments/comparison.json",
+        "docs/audits/2026-11-03-codex-r8/experiments/image-comparison.json",
+        "docs/audits/2026-11-03-codex-r8/experiments/image_compare.py",
+        "docs/audits/2026-11-03-codex-r8/experiments/known-results.json",
+        "docs/audits/2026-11-03-codex-r8/experiments/metrics-evidence.json",
+        "docs/audits/2026-11-03-codex-r8/experiments/pq-cost-results.json",
+        "docs/audits/2026-11-03-codex-r8/experiments/pq-results.json",
+        "docs/audits/2026-11-03-codex-r8/experiments/pq_checks.py",
+        "docs/audits/2026-11-03-codex-r8/experiments/pq_cost.c",
+        "docs/audits/2026-11-03-codex-r8/experiments/pq_cost.py",
+        "docs/audits/2026-11-03-codex-r8/experiments/pq_skip.c",
+        "docs/audits/2026-11-03-codex-r8/experiments/probe.c",
+        "docs/audits/2026-11-03-codex-r8/experiments/replay.c",
+        "docs/audits/2026-11-03-codex-r8/experiments/results.json",
+        "docs/audits/2026-11-03-codex-r8/experiments/run.py",
+        "docs/audits/2026-11-03-codex-r8/experiments/suite-evidence.json",
+        "docs/audits/2026-11-03-codex-r8/experiments/suite-steps.json",
+        "docs/audits/2026-11-03-codex-r8/experiments/suites.py",
+        "docs/audits/2026-11-03-codex-r8/experiments/summarize.py",
+        "docs/audits/2026-11-03-codex-r8/experiments/validate.py",
+        "docs/audits/2026-11-03-codex-r8/findings.json",
+        "docs/audits/2026-11-03-codex-r8/report.md",
+        "docs/audits/2026-11-03-codex-r8/verification.json"
+      ]
+    },
+    {
+      "name": "files_below_1_MB",
+      "passed": true,
+      "evidence": {
+        "files": 30,
+        "largest_bytes": 96447
+      }
+    },
+    {
+      "name": "json_parse",
+      "passed": true,
+      "evidence": []
+    },
+    {
+      "name": "audit_python_syntax_without_bytecode",
+      "passed": true,
+      "evidence": []
+    },
+    {
+      "name": "report_and_experiment_links",
+      "passed": true,
+      "evidence": []
+    },
+    {
+      "name": "report_finalized",
+      "passed": true,
+      "evidence": "final status and no pending skeleton sections"
+    },
+    {
+      "name": "findings_schema",
+      "passed": true,
+      "evidence": [
+        [
+          "area",
+          "evidence_type",
+          "id",
+          "impact",
+          "locations",
+          "recommendation",
+          "reproduce",
+          "severity",
+          "title"
+        ],
+        [
+          "area",
+          "evidence_type",
+          "id",
+          "impact",
+          "locations",
+          "recommendation",
+          "reproduce",
+          "severity",
+          "title"
+        ]
+      ]
+    },
+    {
+      "name": "findings_ids_and_counts",
+      "passed": true,
+      "evidence": {
+        "ids": [
+          "AUD9-001",
+          "AUD9-002"
+        ],
+        "severity": {
+          "中": 1,
+          "高": 1
+        }
+      }
+    },
+    {
+      "name": "finding_locations_exist",
+      "passed": true,
+      "evidence": []
+    },
+    {
+      "name": "verification_schema_and_verdicts",
+      "passed": true,
+      "evidence": {
+        "AUD8-001": "已修复",
+        "AUD-011/F-8": "部分修复",
+        "AUD2-023": "部分修复",
+        "AUD-007/F-6": "未修复"
+      }
+    },
+    {
+      "name": "all_build_and_ctest_steps_exit_0",
+      "passed": true,
+      "evidence": [
+        {
+          "label": "current-configure",
+          "exit_code": 0
+        },
+        {
+          "label": "current-build",
+          "exit_code": 0
+        },
+        {
+          "label": "current-ctest",
+          "exit_code": 0
+        },
+        {
+          "label": "asan-configure",
+          "exit_code": 0
+        },
+        {
+          "label": "asan-build",
+          "exit_code": 0
+        },
+        {
+          "label": "asan-ctest",
+          "exit_code": 0
+        },
+        {
+          "label": "before-configure",
+          "exit_code": 0
+        },
+        {
+          "label": "before-build",
+          "exit_code": 0
+        },
+        {
+          "label": "before-ctest",
+          "exit_code": 0
+        }
+      ]
+    },
+    {
+      "name": "formal_test_counts",
+      "passed": true,
+      "evidence": [
+        [
+          "100% tests passed out of 43",
+          "Total Test time (real) =  22.64 sec"
+        ],
+        [
+          "100% tests passed out of 42",
+          "Total Test time (real) =   9.12 sec"
+        ]
+      ]
+    },
+    {
+      "name": "probe_counts_and_exits",
+      "passed": true,
+      "evidence": {
+        "current": 28,
+        "before": 11,
+        "asan": 6
+      }
+    },
+    {
+      "name": "supplementary_sanitizer_diagnostics",
+      "passed": true,
+      "evidence": []
+    },
+    {
+      "name": "pq_expected_defect_exits",
+      "passed": true,
+      "evidence": [
+        {
+          "label": "compile",
+          "sanitizer": false,
+          "exit_code": 0
+        },
+        {
+          "label": "run",
+          "sanitizer": false,
+          "exit_code": 1
+        },
+        {
+          "label": "compile",
+          "sanitizer": true,
+          "exit_code": 0
+        },
+        {
+          "label": "run",
+          "sanitizer": true,
+          "exit_code": 1
+        }
+      ]
+    },
+    {
+      "name": "clock_positive_negative_control",
+      "passed": true,
+      "evidence": [
+        {
+          "label": "compile",
+          "old_idle_algorithm": true,
+          "exit_code": 0
+        },
+        {
+          "label": "run",
+          "old_idle_algorithm": true,
+          "exit_code": 1
+        },
+        {
+          "label": "compile",
+          "old_idle_algorithm": false,
+          "exit_code": 0
+        },
+        {
+          "label": "run",
+          "old_idle_algorithm": false,
+          "exit_code": 0
+        }
+      ]
+    },
+    {
+      "name": "iss_completed_with_measured_regions",
+      "passed": true,
+      "evidence": {
+        "final_exits": {
+          "compile": 0,
+          "fitted": 0,
+          "slow": 0
+        },
+        "prior_auxiliary_compile_failures": 1
+      }
+    },
+    {
+      "name": "audio_sample_checks",
+      "passed": true,
+      "evidence": {
+        "control_samples": 48000,
+        "with_tones_samples": 52800,
+        "all_48000_voice_samples_identical": true,
+        "fault_cancel_tail_is_tone": true,
+        "fault_replace_tail_is_new_stream": true
+      }
+    },
+    {
+      "name": "normal_comparisons",
+      "passed": true,
+      "evidence": {
+        "comparisons": 11,
+        "identical_pngs": 9
+      }
+    },
+    {
+      "name": "known_F6_reproduced",
+      "passed": true,
+      "evidence": {
+        "reader.open_ms": {
+          "count": 1,
+          "mean": 46.389,
+          "min": 46.389,
+          "p50": 46.389,
+          "p95": 46.389,
+          "p99": 46.389,
+          "max": 46.389
+        },
+        "reader.page_render_ms": {
+          "count": 4,
+          "mean": 36.658,
+          "min": 34.851,
+          "p50": 36.938,
+          "p95": 37.521,
+          "p99": 37.521,
+          "max": 37.521
+        },
+        "reader.page_turns": 2,
+        "reader.restored_page": {
+          "count": 1,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "reader.turns_prerendered": 2,
+        "tools.calls.done": 1
+      }
+    }
+  ],
+  "files": [
+    {
+      "path": "TASK.md",
+      "bytes": 7049,
+      "sha256": "cbb2a861759733058e7f51c0dc4de01ae7f44186c883698b32ba7a49a2fef898"
+    },
+    {
+      "path": "experiments/README.md",
+      "bytes": 8804,
+      "sha256": "a7ab8435378cf8d8c8d08db5e8bf0030f0608e537336cbd7e573708d4dfc0480"
+    },
+    {
+      "path": "experiments/audio-integrity.json",
+      "bytes": 1165,
+      "sha256": "0d35e609cc10a34a6e504179a474f4442a77cf9c7d4aea8d9812f19865a2894c"
+    },
+    {
+      "path": "experiments/audio_integrity.py",
+      "bytes": 1562,
+      "sha256": "20b1b5c3d41601833dba80ebc4ad90f9304e54320b12c3cf42e49358c81c83cb"
+    },
+    {
+      "path": "experiments/auxiliary.py",
+      "bytes": 2319,
+      "sha256": "13a018ad31be3cb628507a8111422e4f5e8adb70b9e8c56fb4153b99575b2bc7"
+    },
+    {
+      "path": "experiments/clock-cycle-results.json",
+      "bytes": 1529,
+      "sha256": "6e7f52418a0ca8b4b0f7870f379c54ab7f7badb9ef7e0bddbbaaa4d1db48f0fb"
+    },
+    {
+      "path": "experiments/clock_cycles.c",
+      "bytes": 3722,
+      "sha256": "529a5c45cb7881c278e389e5920226f6fbe75bba37352cd29532ca76c129cc3d"
+    },
+    {
+      "path": "experiments/comparison.json",
+      "bytes": 51263,
+      "sha256": "674ac47fb7eb7458f2b25319c9cc938d62441f8002e13a2f4f9b0018c509083e"
+    },
+    {
+      "path": "experiments/image-comparison.json",
+      "bytes": 376,
+      "sha256": "9ef08fe915a87edca61600387c4195125c56cae45a2ce4b25e18362a615805ce"
+    },
+    {
+      "path": "experiments/image_compare.py",
+      "bytes": 987,
+      "sha256": "a7995839d6ca58227a15e32b8c7da30b580c704f0e37ca0ff2a589743f714376"
+    },
+    {
+      "path": "experiments/known-results.json",
+      "bytes": 1217,
+      "sha256": "b0398c27a3be13c40d126462830170129418786c8dea0a49980d74755ec36ac5"
+    },
+    {
+      "path": "experiments/metrics-evidence.json",
+      "bytes": 96447,
+      "sha256": "63a0f77424721dbdbc41c04d416d0a45243e36d1fbd8fb904af045c4a237be97"
+    },
+    {
+      "path": "experiments/pq-cost-results.json",
+      "bytes": 7066,
+      "sha256": "466024fdeec473c2fe33f2858f2d26a46591a4ba54228ae4e280ae9772c99764"
+    },
+    {
+      "path": "experiments/pq-results.json",
+      "bytes": 10916,
+      "sha256": "5a9c9625c3097b1db729799ecb9b2f03ee29e35551581710010ec3334ed1f31c"
+    },
+    {
+      "path": "experiments/pq_checks.py",
+      "bytes": 1107,
+      "sha256": "876279a52a17a4ce4cd3713f1271ae4704f7dfdc9166ecd9a3a618931dd51cba"
+    },
+    {
+      "path": "experiments/pq_cost.c",
+      "bytes": 1553,
+      "sha256": "a60c78d1cb1eeae82b6140309287dd6bfcdab42861ee5d6783185f1c5eb34fad"
+    },
+    {
+      "path": "experiments/pq_cost.py",
+      "bytes": 2076,
+      "sha256": "6c55791bd35740f39715d6693acf54482810009f450d966e480e808ad34a253e"
+    },
+    {
+      "path": "experiments/pq_skip.c",
+      "bytes": 4230,
+      "sha256": "ad6889f89a253357b0325e6ad53f0082064aa5fdf8480c428118bb45c28ca0b3"
+    },
+    {
+      "path": "experiments/probe.c",
+      "bytes": 2820,
+      "sha256": "87c7c5b19dccfbb1a7a3b1e5bc277ab2ee6a2028aa5874e0fbf687fb5bf98301"
+    },
+    {
+      "path": "experiments/replay.c",
+      "bytes": 6823,
+      "sha256": "859650adc313f02cc184ebccd550cb3cc5e9f172271bfe7c833adfdb7ee7156b"
+    },
+    {
+      "path": "experiments/results.json",
+      "bytes": 85738,
+      "sha256": "3df269cd599845ba4489e5f21861c0e40886495d4939b1fde32318e81179d089"
+    },
+    {
+      "path": "experiments/run.py",
+      "bytes": 4183,
+      "sha256": "fce2fd6e358253bcd3a31dd286cb6822fde0273d12487e53a1235fd329ced503"
+    },
+    {
+      "path": "experiments/suite-evidence.json",
+      "bytes": 53141,
+      "sha256": "7c327c3bdc63824b677451109e8e7a5a71408af3f9a71c99899190d274b2a731"
+    },
+    {
+      "path": "experiments/suite-steps.json",
+      "bytes": 4440,
+      "sha256": "b373c55c393ce0dc68b50dcf895791a39a8b7f370b9b7f07e9cb8cb777a9a83a"
+    },
+    {
+      "path": "experiments/suites.py",
+      "bytes": 2715,
+      "sha256": "232a9425256c18ac7ce946d3ac9f4ec2d9c3c92f2e109228234371258861247a"
+    },
+    {
+      "path": "experiments/summarize.py",
+      "bytes": 6069,
+      "sha256": "00cb61bd97db54fc17ba464694496f5111e251b005eebe867171c9f071d2a5c5"
+    },
+    {
+      "path": "experiments/validate.py",
+      "bytes": 8011,
+      "sha256": "53c2aca045a872f52fd2b800b2f225edfb4d29ae2b03060185a4dfa1b6637539"
+    },
+    {
+      "path": "findings.json",
+      "bytes": 2329,
+      "sha256": "5674e69460b57f90c2344d51c2cae9642e70a8ef570f47722baa4c3555edb93a"
+    },
+    {
+      "path": "report.md",
+      "bytes": 22982,
+      "sha256": "8c10a0fd845647262a2e0b982754552cc5d33647c07734cb0ba7b9c35babeef1"
+    },
+    {
+      "path": "verification.json",
+      "bytes": 2432,
+      "sha256": "02f690c477ac9a3c31b4f236b125dc9fd99082fb52497dae103880f5030b78c3"
+    }
+  ],
+  "note": "Artifact consistency check, not additional product test or hardware acceptance; build caches are task-authorized and ignored by git."
+}

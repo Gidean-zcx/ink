@@ -1,0 +1,33 @@
+[
+  {
+    "id": "AUD9-001",
+    "severity": "中",
+    "area": "PQ-BN / 静止跳相",
+    "title": "长跳步只补最后512相，不能维持时间戳与逐相运行等价",
+    "evidence_type": "复现、代码核查",
+    "locations": [
+      "drivers/display/pqbn/pqbn_v4.c:503",
+      "drivers/display/pqbn/pqbn_v4.c:505",
+      "drivers/display/pqbn/pqbn_v4.h:79"
+    ],
+    "impact": "H=512、from=20、跳768相时，2624个静止像素被重构为停留不足64相（逐相0），下一次第236行的白转灰规划hot有48字节/cold有256字节不同。当前模拟器上限255避免此路径，影响公开内核API及长静止调用方，定中。",
+    "recommendation": "分段维持年龄钳位，或验证前提后正确重建最终状态；明确允许的步长范围并覆盖长跳步及后续规划。",
+    "reproduce": "python3 docs/audits/2026-11-03-codex-r8/experiments/pq_checks.py；普通与sanitizer探针编译0、运行1，pq-results.json包含逐case差异。"
+  },
+  {
+    "id": "AUD9-002",
+    "severity": "高",
+    "area": "PQ-BN / 模拟器CPU成本",
+    "title": "时间戳维护误用空行executor成本，255相跳步的CPU时间低估约800～1270倍",
+    "evidence_type": "复现（指令级模型）、代码核查",
+    "locations": [
+      "ports/sim/hal/hal_display_sim.c:1098",
+      "ports/sim/hal/hal_display_sim.c:1099",
+      "simulator/profiles/metalio-plus-pqbn.json:109",
+      "drivers/display/pqbn/pqbn_v4.c:471"
+    ],
+    "impact": "正常模拟器上限255相即触发。1216×684白色静止屏维护实际目标指令7,881,837条，仓库ISS fitted/slow为11,881,482/18,590,900 cycles（320MHz下37.130/58.097ms），模拟器只记340*43=14,620 cycles（0.0457ms）。CPU占用、刷新时延与并发资源结论偏乐观；默认EPDiy不受影响。不是实机测量，也未证明必有音频欠载。",
+    "recommendation": "独立标定skip维护的状态、扫行、PSRAM和4096边界成本，正确计入调度；修正返回扫行取整。重跑长静止后刷新/音频并发预算，不能把所有executor空行成本一并调大。",
+    "reproduce": "python3 docs/audits/2026-11-03-codex-r8/experiments/pq_cost.py；本地交叉编译真实pqbn_v4.c并在仓库fitted与slow ISS模型运行，命令和区段结果见pq-cost-results.json。"
+  }
+]

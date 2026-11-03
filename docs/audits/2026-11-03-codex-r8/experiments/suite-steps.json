@@ -1,0 +1,157 @@
+[
+  {
+    "label": "current-configure",
+    "command": [
+      "cmake",
+      "-S",
+      ".",
+      "-B",
+      "build-audit",
+      "-DINK_WERROR=ON",
+      "-DFETCHCONTENT_FULLY_DISCONNECTED=ON",
+      "-DINK_CJK_FONT=/Users/bytedance/Documents/Workspace/ink/build-deps/fonts/NotoSansCJK-Regular.ttc",
+      "-DINK_CJK_FACE=2",
+      "-DPython3_EXECUTABLE=/Users/bytedance/Documents/Workspace/ink/build-deps/pyenv/bin/python",
+      "-DFETCHCONTENT_SOURCE_DIR_LVGL=/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src",
+      "-DFETCHCONTENT_SOURCE_DIR_IMGUI=/Users/bytedance/Documents/Workspace/ink/build/_deps/imgui-src",
+      "-DFETCHCONTENT_SOURCE_DIR_SDL2=/Users/bytedance/Documents/Workspace/ink/build/_deps/sdl2-src"
+    ],
+    "exit_code": 0,
+    "elapsed_s": 28.015,
+    "log": "build-audit/r8-configure.log"
+  },
+  {
+    "label": "current-build",
+    "command": [
+      "cmake",
+      "--build",
+      "build-audit",
+      "-j",
+      "8"
+    ],
+    "exit_code": 0,
+    "elapsed_s": 12.608,
+    "log": "build-audit/r8-build.log"
+  },
+  {
+    "label": "current-ctest",
+    "command": [
+      "/Users/bytedance/Documents/Workspace/ink/build-deps/pyenv/bin/ctest",
+      "--test-dir",
+      "build-audit",
+      "-j",
+      "8",
+      "--timeout",
+      "300",
+      "--output-on-failure"
+    ],
+    "exit_code": 0,
+    "elapsed_s": 22.804,
+    "log": "build-audit/r8-ctest.log"
+  },
+  {
+    "label": "asan-configure",
+    "command": [
+      "cmake",
+      "-S",
+      ".",
+      "-B",
+      "build-audit-asan",
+      "-DINK_WERROR=ON",
+      "-DFETCHCONTENT_FULLY_DISCONNECTED=ON",
+      "-DINK_CJK_FONT=/Users/bytedance/Documents/Workspace/ink/build-deps/fonts/NotoSansCJK-Regular.ttc",
+      "-DINK_CJK_FACE=2",
+      "-DPython3_EXECUTABLE=/Users/bytedance/Documents/Workspace/ink/build-deps/pyenv/bin/python",
+      "-DFETCHCONTENT_SOURCE_DIR_LVGL=/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src",
+      "-DFETCHCONTENT_SOURCE_DIR_IMGUI=/Users/bytedance/Documents/Workspace/ink/build/_deps/imgui-src",
+      "-DFETCHCONTENT_SOURCE_DIR_SDL2=/Users/bytedance/Documents/Workspace/ink/build/_deps/sdl2-src",
+      "-DINK_GUI=OFF",
+      "-DINK_SANITIZE=ON"
+    ],
+    "exit_code": 0,
+    "elapsed_s": 1.659,
+    "log": "build-audit-asan/r8-configure.log"
+  },
+  {
+    "label": "asan-build",
+    "command": [
+      "cmake",
+      "--build",
+      "build-audit-asan",
+      "-j",
+      "8"
+    ],
+    "exit_code": 0,
+    "elapsed_s": 8.808,
+    "log": "build-audit-asan/r8-build.log"
+  },
+  {
+    "label": "asan-ctest",
+    "command": [
+      "/Users/bytedance/Documents/Workspace/ink/build-deps/pyenv/bin/ctest",
+      "--test-dir",
+      "build-audit-asan",
+      "-j",
+      "8",
+      "--timeout",
+      "300",
+      "--output-on-failure"
+    ],
+    "exit_code": 0,
+    "elapsed_s": 9.271,
+    "log": "build-audit-asan/r8-ctest.log"
+  },
+  {
+    "label": "before-configure",
+    "command": [
+      "cmake",
+      "-S",
+      "build-audit/before-src",
+      "-B",
+      "build-audit/before",
+      "-DINK_WERROR=ON",
+      "-DFETCHCONTENT_FULLY_DISCONNECTED=ON",
+      "-DINK_CJK_FONT=/Users/bytedance/Documents/Workspace/ink/build-deps/fonts/NotoSansCJK-Regular.ttc",
+      "-DINK_CJK_FACE=2",
+      "-DPython3_EXECUTABLE=/Users/bytedance/Documents/Workspace/ink/build-deps/pyenv/bin/python",
+      "-DFETCHCONTENT_SOURCE_DIR_LVGL=/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src",
+      "-DFETCHCONTENT_SOURCE_DIR_IMGUI=/Users/bytedance/Documents/Workspace/ink/build/_deps/imgui-src",
+      "-DFETCHCONTENT_SOURCE_DIR_SDL2=/Users/bytedance/Documents/Workspace/ink/build/_deps/sdl2-src",
+      "-DINK_GUI=OFF"
+    ],
+    "exit_code": 0,
+    "elapsed_s": 1.221,
+    "log": "build-audit/before/r8-configure.log"
+  },
+  {
+    "label": "before-build",
+    "command": [
+      "cmake",
+      "--build",
+      "build-audit/before",
+      "-j",
+      "8"
+    ],
+    "exit_code": 0,
+    "elapsed_s": 5.846,
+    "log": "build-audit/before/r8-build.log"
+  },
+  {
+    "label": "before-ctest",
+    "command": [
+      "/Users/bytedance/Documents/Workspace/ink/build-deps/pyenv/bin/ctest",
+      "--test-dir",
+      "build-audit/before",
+      "-j",
+      "8",
+      "--timeout",
+      "300",
+      "--output-on-failure",
+      "-R",
+      "^scenario-(ai_ask|standby|reader_basic)-metalio-plus(-pqbn)?$"
+    ],
+    "exit_code": 0,
+    "elapsed_s": 1.583,
+    "log": "build-audit/before/r8-ctest.log"
+  }
+]
