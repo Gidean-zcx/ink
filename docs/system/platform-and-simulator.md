@@ -99,7 +99,7 @@ cmake -S . -B build && cmake --build build -j && ctest --test-dir build --output
 - **右边是硬件控制**：暂停/继续与 0.25×～10× 倍速（暂停时整台设备冻结，虚拟时间不走）；电量与 USB 充电；网络在 4G、Wi-Fi、无网络之间切换，或断网 5 秒；麦克风听到的声音（说话、安静、噪声）；“拔掉电池”掉电（正在写的 Flash 会写坏一半）；CPU 两个核的占用（按档案折算到 S31）、内部 RAM 与 PSRAM 余量。
 - **下边是日志**：系统日志和模拟器的提示、警告都在这里，可筛选；终端里同样有一份。
 - **数据**：Flash 镜像和 SD 卡目录默认在 `build/gui-data/`，重启后书签、设置都还在；截图和 `metrics.json` 在 `build/gui-data/out/`。“重启设备”和崩溃、掉电后的“重新开机”都是重新启动整个程序，等于给设备重新上电。
-- **调试**：系统代码和窗口在同一个进程里，直接 `lldb ./build/ink-sim-gui`（Linux 用 gdb）下断点、单步、看变量。设备死机（panic）时窗口不退出，保留最后的画面、原因和日志。
+- **调试**：系统代码和窗口在同一个进程里，可以用 `lldb ./build/ink-sim-gui`（Linux 用 gdb）或 VS Code、Xcode 下断点、单步、看变量；macOS 第一次调试时系统会要求授权开发者工具。设备死机（panic）时窗口不退出，保留最后的画面、原因和日志。
 
 **结构**：窗口跑在主线程（macOS 要求），模拟在另一个线程里运行原来的 `sim_main()`，固定为实时模式、没有默认结束时间。两边只通过 [ports/sim/sim_gui.h](../../ports/sim/sim_gui.h) 交互：
 
