@@ -1,0 +1,5 @@
+# AUD-004 run 2: boot from the image left by the power cut, open the same book
+@3s      tap   116dp 160dp
++2500ms  tap   50% 228dp
++3s      snap  resumed
++500ms   end

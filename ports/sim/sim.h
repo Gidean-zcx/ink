@@ -38,6 +38,8 @@ typedef struct {
     const char *hub_script;    /* scripted hub rules (JSON); built-in defaults if NULL */
     bool no_random_outages;    /* disable the profile's random link outages */
     const char *flash_timing;  /* override the profile's flash timing: "typ" | "max" | "tail" */
+    double i2c_faults;         /* share of hal_i2c transfers that time out (fault injection) */
+    unsigned panel_vcom_mv;    /* override the panel's VCOM (0 = profile): a panel with another label */
     bool trace;               /* write Chrome/Perfetto trace JSON */
     bool frames;              /* write a PNG after every completed display update */
     bool quiet;
@@ -143,6 +145,20 @@ void sim_power_consumer(const char *name, bool on, double ma);
 void sim_i2c_init(void);
 void sim_i2c_transfer(const char *who, int bytes);       /* blocks for the bus + transfer time */
 void sim_i2c_hold(const char *who, uint64_t ns);         /* occupy the bus (e.g. PMIC power-up sequence) */
+
+/* Register-level chip models answering hal_i2c transfers (hal_i2c_sim.c, dev_*.c) */
+typedef struct {
+    /* One transfer: write wlen bytes, then (repeated start) read rlen bytes. HAL_I2C_OK or HAL_I2C_NACK. */
+    int (*xfer)(void *state, const uint8_t *w, size_t wlen, uint8_t *r, size_t rlen);
+} sim_i2c_model_t;
+void sim_i2c_attach(int bus, uint8_t addr7, const sim_i2c_model_t *m, void *state);
+void sim_i2c_set_faults(double timeout_rate); /* --i2c-faults: share of hal_i2c transfers that time out */
+
+/* Panel power chips of the Plus (dev_epd_power.c): TCA9555 port 0 drives the TPS65185 pins */
+void sim_epd_chips_init(void);
+bool sim_tps65185_panel_ready(void); /* rails good and VCOM driven; checks VCOM against the panel's */
+void sim_tps65185_gate(bool oe);     /* EPD XOE level, for the power-down order check */
+void sim_tps65185_report(void);
 
 /* ---- audio (I2S rings) + stand-in codec ---- */
 void sim_display_plan_info(const hal_rect_t *area, uint64_t *phase_ns, uint64_t *busy0_ns, uint64_t *busy1_ns,

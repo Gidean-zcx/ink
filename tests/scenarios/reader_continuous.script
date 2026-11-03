@@ -1,0 +1,42 @@
+# Reading on without a pause (a page every 2 s for 72 s): the position must still be saved while
+# reading (SR-PL-08: at most one interval, 60 s, is lost on a power cut). The idle save (8 s after the
+# last turn) never fires here: the script ends 1 s after the last turn. Audit AUD-004 (2026-11).
+@3s      tap   116dp 160dp        # 阅读
++2500ms  tap   50% 228dp          # 测试长书
++3s      key   next
++2s      key   next
++2s      key   next
++2s      key   next
++2s      key   next
++2s      key   next
++2s      key   next
++2s      key   next
++2s      key   next
++2s      key   next
++2s      key   next
++2s      key   next
++2s      key   next
++2s      key   next
++2s      key   next
++2s      key   next
++2s      key   next
++2s      key   next
++2s      key   next
++2s      key   next
++2s      key   next
++2s      key   next
++2s      key   next
++2s      key   next
++2s      key   next
++2s      key   next
++2s      key   next
++2s      key   next
++2s      key   next
++2s      key   next
++2s      key   next
++2s      key   next
++2s      key   next
++2s      key   next
++2s      key   next
++2s      key   next
++1s      end

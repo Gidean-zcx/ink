@@ -90,11 +90,12 @@ int profile_load(const char *path, sim_profile_t *p, char *err, size_t errlen) {
         return -1;
     }
     cJSON *root = cJSON_Parse(text);
-    free(text);
-    if (!root) {
+    if (!root) { /* the error position points into text: report before freeing it */
         snprintf(err, errlen, "invalid JSON in %s near: %.40s", path, cJSON_GetErrorPtr() ? cJSON_GetErrorPtr() : "?");
+        free(text);
         return -1;
     }
+    free(text);
 
     snprintf(p->id, sizeof p->id, "%s", str(root, "id", "unknown"));
     snprintf(p->name, sizeof p->name, "%s", str(root, "name", p->id));
@@ -161,6 +162,8 @@ int profile_load(const char *path, sim_profile_t *p, char *err, size_t errlen) {
     p->power_up_us = (uint32_t)num(d, "power_up_us", 140000);
     p->power_down_us = (uint32_t)num(d, "power_down_us", 2000);
     p->touch_pause_us = (uint32_t)num(d, "touch_pause_during_power_us", 0);
+    p->pmic_tps65185 = !strcmp(str(d, "pmic", "none"), "tps65185");
+    p->panel_vcom_mv = (unsigned)(p->pmic_tps65185 ? num(d, "panel_vcom_mv", 1200) : num_opt(d, "panel_vcom_mv", 1200));
     p->lcd_frame_us = p->panel.tech == HAL_PANEL_LCD ? (uint32_t)num(d, "lcd_frame_us", 16667) : 16667;
     p->line_count = (int)num(d, "line_count", 688);
     p->line_ns = (uint32_t)(num(d, "line_time_us", 17) * 1000);
@@ -312,9 +315,11 @@ int profile_load(const char *path, sim_profile_t *p, char *err, size_t errlen) {
         L->tail_s = num(l, "tail_s", i ? 10 : 1);
         const cJSON *oph = cJSON_GetObjectItemCaseSensitive(l, "outages_per_hour");
         const cJSON *os = cJSON_GetObjectItemCaseSensitive(l, "outage_s");
-        L->outages_per_hour = cJSON_IsArray(oph) ? cJSON_GetArrayItem(oph, 1)->valuedouble : num(l, "outages_per_hour", 0);
-        L->outage_min_s = cJSON_IsArray(os) ? cJSON_GetArrayItem(os, 0)->valuedouble : 2;
-        L->outage_max_s = cJSON_IsArray(os) ? cJSON_GetArrayItem(os, 1)->valuedouble : 5;
+        /* ranges are [min, max]; anything else falls back to the defaults */
+        const bool oph2 = cJSON_IsArray(oph) && cJSON_GetArraySize(oph) == 2, os2 = cJSON_IsArray(os) && cJSON_GetArraySize(os) == 2;
+        L->outages_per_hour = oph2 ? cJSON_GetArrayItem(oph, 1)->valuedouble : num(l, "outages_per_hour", 0);
+        L->outage_min_s = os2 ? cJSON_GetArrayItem(os, 0)->valuedouble : 2;
+        L->outage_max_s = os2 ? cJSON_GetArrayItem(os, 1)->valuedouble : 5;
     }
     snprintf(p->default_link, sizeof p->default_link, "%s", str(net, "default_link", "lte"));
     p->tls_internal_bytes = (size_t)(num(net, "tls_internal_kib", 6) * 1024);

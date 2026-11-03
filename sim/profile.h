@@ -81,6 +81,8 @@ typedef struct {
     uint32_t power_up_us;
     uint32_t power_down_us;
     uint32_t touch_pause_us;
+    bool pmic_tps65185;         /* panel power by the board driver against chip models (else power_up_us) */
+    unsigned panel_vcom_mv;     /* VCOM the panel needs (its label); the PMIC model checks against it */
     uint32_t lcd_frame_us;      /* LCD: time until visible */
     /* EPDiy-style CPU feeders (feeders "cpu"): two max-priority tasks convert lines into per-feeder
      * queues; the LCD bounce-buffer interrupt pulls them; the phase is planned line by line */

@@ -1,0 +1,6 @@
+# AUD-013: two cover keys held, then a finger: the controller has 2 points (touch_points = 2)
+@3s      key   next 600ms
++0ms     key   prev 600ms
++100ms   press 50% 50%
++800ms   release
++2s      end

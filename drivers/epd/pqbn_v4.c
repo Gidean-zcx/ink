@@ -1,7 +1,6 @@
 /* PQ-BN v4 kernel: research copy docs/research/eink-refresh/pqbn_v4/kernel/pqbn_v4.c (PR #7,
  * e77d01c) with the context struct and tile flags moved to pqbn_v4.h and one line split for
- * -Wmisleading-indentation, cls_of_rest marked unused (clang -Wunused-function), and PQBN_HOT on
- * the executor (IRAM placement); algorithm unchanged. */
+ * -Wmisleading-indentation, and PQBN_HOT on the executor (IRAM placement); algorithm unchanged. */
 // PQ-BN v4: plan once per change, execute with a table lookup.
 //
 // v3 re-evaluated every in-flight pixel every phase (table lookup + state update per pixel per phase).
@@ -146,7 +145,7 @@ void pqbn_v4_build_motion(uint8_t *exk_m /*7*256*/, uint8_t *tau_nib /*2048*/, c
 
 static inline int sx5(int v) { return ((v & 31) ^ 16) - 16; }
 static inline int snapq(int v) { return v > 252 ? 255 : v < 3 ? 0 : v; }
-static inline __attribute__((unused)) int cls_of_rest(int r) { return r <= 0 ? 0 : r < 8 ? 1 : r < 64 ? 2 : 3; }
+static inline __attribute__((unused)) int cls_of_rest(int r) { return r <= 0 ? 0 : r < 8 ? 1 : r < 64 ? 2 : 3; } // kept from the research file; unused here (clang -Wunused-function)
 static const uint8_t lvl_tab[64] = {0, 1, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
                                      6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6};
 static inline int lvl_of_rest(int r) { return r >= 64 ? 7 : lvl_tab[r]; }      // r >= 0

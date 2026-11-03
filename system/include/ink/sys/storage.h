@@ -38,8 +38,14 @@ void ink_storage_prefetch(const char *path);
  * are forced (counted as storage.forced_writes).
  */
 void ink_storage_hold_writes(bool hold);
-/** Writes waiting in the queue (0 = all durable). */
+/** Writes waiting in the queue, including the one being written (0 = nothing left to write). */
 int ink_storage_pending(void);
+/**
+ * Writes that failed since boot (e.g. /user full). A failed write leaves the previous content of
+ * its path in place, and reads of that path return the flash content again. Queued (accepted) is
+ * not stored: a caller that must know waits for pending() == 0 and compares failed().
+ */
+int ink_storage_failed(void);
 
 #ifdef __cplusplus
 }

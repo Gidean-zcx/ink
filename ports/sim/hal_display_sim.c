@@ -50,11 +50,14 @@
 #include <string.h>
 #include <sys/stat.h>
 
+#include "board/metalio_epd_power.h"
 #include "ink/hal_display.h"
+#include "ink/hal_i2c.h"
 #include "ink/rotation.h"
 #include "pqbn_v4.h"
 #include "sim.h"
 #include "stb_image_write.h"
+#include "tps65185/tps65185.h"
 
 #define QUEUE_LEN 16
 #define FEEDER_STACK 3072
@@ -387,15 +390,60 @@ static void feeder_task(void *arg) {
 
 /* ------------------------------------------------------------------ driver */
 
+/* Panel power with display.pmic = "tps65185": the board driver (drivers/board) runs against the chip
+ * models in dev_epd_power.c, so the sequence and its timing are the driver's own. Otherwise a fixed
+ * power_up_us stands in for it. */
+static tca9555_t g_ioexp;
+static epd_power_t g_epd;
+static bool g_pmic_warned;
+
+static void gate_output(void *ctx, bool on) {
+    (void)ctx;
+    sim_tps65185_gate(on); /* XOE is a GPIO; only the PMIC model's order check needs it */
+}
+
+static void board_init(void) {
+    /* port 0: P00-P05 outputs (PMIC pins, motor, amplifier, camera/screen power), P06-P07 inputs;
+     * port 1: P12-P14 outputs (touch reset, power-off pulse, modem power), the rest inputs (keys, RTC) */
+    static const uint8_t out[2] = {0x00, 0x14}, dir[2] = {0xC0, 0xE3};
+    sim_epd_chips_init();
+    if (tca9555_init(&g_ioexp, hal_i2c_device(0, TCA9555_ADDR_BASE, "io-expander"), out, dir) != HAL_I2C_OK)
+        sim_warn("display: TCA9555 init failed");
+    g_epd = (epd_power_t){.ioexp = &g_ioexp,
+                          .pmic = hal_i2c_device(0, TPS65185_ADDR, "pmic"),
+                          .vcom_mv = METALIO_EPD_VCOM_MV,
+                          .gate_output = gate_output};
+}
+
+/* At waveform start: the panel must see good rails and VCOM (checked by the PMIC model). */
+static void check_panel_power(void) {
+    if (!g_profile.pmic_tps65185 || sim_tps65185_panel_ready()) return;
+    sim_metric_add("display.unpowered_waveforms", 1);
+    if (!g_pmic_warned) sim_warn("display: waveform started without panel power (rails or VCOM not good)");
+    g_pmic_warned = true;
+}
+
 static void power_up(void) {
     if (D.rails_on) return;
     uint64_t t0 = vtk_now();
-    uint64_t pause = SIM_US(g_profile.touch_pause_us);
-    uint64_t total = SIM_US(g_profile.power_up_us);
-    if (pause > total) pause = total;
-    if (pause) sim_i2c_hold("pmic", pause); /* PMIC register writes + PG polling hold the shared bus */
-    uint64_t now = vtk_now();
-    if (now < t0 + total) vtk_sleep_ns(t0 + total - now);
+    if (g_profile.pmic_tps65185) {
+        /* first use, in the driver task that runs the sequence anyway (keeps I2C off the boot stack) */
+        if (!g_ioexp.dev) board_init();
+        epd_power_result_t r = epd_power_on(&g_epd);
+        sim_metric_sample("display.power_up_ms", (double)(vtk_now() - t0) / 1e6);
+        if (r != EPD_POWER_OK) {
+            sim_metric_add("display.power_failures", 1);
+            sim_warn("display: panel power-up failed (%s) after %d retries; the device would enter safe mode",
+                     epd_power_result_name(r), EPD_PWR_RETRIES);
+        }
+    } else {
+        uint64_t pause = SIM_US(g_profile.touch_pause_us);
+        uint64_t total = SIM_US(g_profile.power_up_us);
+        if (pause > total) pause = total;
+        if (pause) sim_i2c_hold("pmic", pause); /* PMIC register writes + PG polling hold the shared bus */
+        uint64_t now = vtk_now();
+        if (now < t0 + total) vtk_sleep_ns(t0 + total - now);
+    }
     D.rails_on = true;
     sim_power_consumer("display.rails", true, 0);
     sim_trace_span("display", "power-up", t0, vtk_now(), NULL);
@@ -405,7 +453,10 @@ static void power_up(void) {
 static void power_down(void) {
     if (!D.rails_on) return;
     uint64_t t0 = vtk_now();
-    vtk_sleep_ns(SIM_US(g_profile.power_down_us));
+    if (g_profile.pmic_tps65185)
+        epd_power_off(&g_epd);
+    else
+        vtk_sleep_ns(SIM_US(g_profile.power_down_us));
     D.rails_on = false;
     sim_power_consumer("display.rails", false, 0);
     sim_trace_span("display", "power-down", t0, vtk_now(), NULL);
@@ -574,6 +625,7 @@ static void execute(req_t *r) {
         done = vtk_now();
     } else {
         power_up();
+        check_panel_power();
         sim_i2c_transfer("io-expander", 3); /* panel control lines on the TCA9555 at waveform start */
         diff_pass(&r->area);
         int phases = g_profile.wf[wf].phases;
@@ -886,6 +938,7 @@ static void pq_advance_idle(void) {
     uint64_t j = (vtk_now() - PQ.idle_since) / phase_ns;
     if (j > 255) j = 255;
     if (!j) return;
+    sim_metric_add("display.pqbn.idle_advance_phases", (double)j); /* budgets check the clock moves across rests */
     const uint32_t from = PQ.now, to = PQ.now + (uint32_t)j;
     if ((from >> 12) != (to >> 12)) {
         const uint32_t m = to & ~4095u;
@@ -1043,6 +1096,7 @@ static void pq_drive(void) {
     if (!g_boost) g_boost = hal_cpu_boost_create("epd");
     hal_cpu_boost_acquire(g_boost);
     power_up();
+    check_panel_power();
     sim_i2c_transfer("io-expander", 3);
     sim_power_consumer("display.refresh", true, g_profile.ma_display_refresh);
     D.playing = true;
@@ -1422,6 +1476,12 @@ uint64_t sim_display_ipc_wait_ns(uint64_t now) {
 
 void sim_display_report(void) {
     sim_metric_set("display.busy_ms", D.busy_ns / 1e6);
+    if (g_profile.pmic_tps65185) {
+        sim_metric_set("display.pmic.attempts", g_epd.attempts);
+        sim_metric_set("display.pmic.retries", g_epd.retries);
+        sim_metric_set("display.pmic.ioexp_errors", g_epd.ioexp_errors);
+        sim_tps65185_report();
+    }
     if (pq_mode() && PQ.opt) {
         sim_metric_set("display.pqbn.phases", (double)PQ.phases);
         sim_metric_set("display.pqbn.plan_late_phases", (double)PQ.plan_late);
