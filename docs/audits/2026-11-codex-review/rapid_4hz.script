@@ -1,0 +1,46 @@
+# AUD-002: 40 NEXT presses at 4 Hz (80 ms hold, 250 ms apart), then 20 s to drain
+@3s      tap   116dp 160dp
++2500ms  tap   50% 228dp
++3s      snap  page1
++3s      key   next
++250ms      key   next
++250ms      key   next
++250ms      key   next
++250ms      key   next
++250ms      key   next
++250ms      key   next
++250ms      key   next
++250ms      key   next
++250ms      key   next
++250ms      key   next
++250ms      key   next
++250ms      key   next
++250ms      key   next
++250ms      key   next
++250ms      key   next
++250ms      key   next
++250ms      key   next
++250ms      key   next
++250ms      key   next
++250ms      key   next
++250ms      key   next
++250ms      key   next
++250ms      key   next
++250ms      key   next
++250ms      key   next
++250ms      key   next
++250ms      key   next
++250ms      key   next
++250ms      key   next
++250ms      key   next
++250ms      key   next
++250ms      key   next
++250ms      key   next
++250ms      key   next
++250ms      key   next
++250ms      key   next
++250ms      key   next
++250ms      key   next
++250ms      key   next
++20s     snap  drained
++500ms   end

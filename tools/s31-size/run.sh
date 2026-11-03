@@ -16,8 +16,10 @@ mkdir -p "$WORK" && cd "$WORK"
 # shellcheck disable=SC1091
 . ./esp-idf/export.sh
 
-build_size () {  # $1=名称 $2=工程目录
+FAILED=""
+build_size () {  # $1=名称 $2=工程目录；失败的工程记下来，最后整体返回非零（日志仍全部保留）
   echo "== $1"
+  rm -f "$WORK/$1.size.txt" "$WORK/$1.components.txt"   # 不留上一次运行的结果
   if (cd "$2" && idf.py --preview set-target esp32s31 >"$WORK/$1.build.log" 2>&1 \
         && idf.py build >>"$WORK/$1.build.log" 2>&1 \
         && idf.py size >"$WORK/$1.size.txt" 2>&1 \
@@ -25,6 +27,8 @@ build_size () {  # $1=名称 $2=工程目录
     echo "   ok"
   else
     echo "   failed，见 $WORK/$1.build.log"
+    rm -f "$WORK/$1.size.txt" "$WORK/$1.components.txt"   # 半截的结果不进汇总
+    FAILED="$FAILED $1"
   fi
 }
 
@@ -42,4 +46,8 @@ build_size upstream upstream
 
 echo
 echo "===== 静态内存汇总 ====="
-for f in "$WORK"/*.size.txt; do echo "--- $(basename "$f")"; cat "$f"; done
+for f in "$WORK"/*.size.txt; do [ -f "$f" ] || continue; echo "--- $(basename "$f")"; cat "$f"; done
+if [ -n "$FAILED" ]; then
+  echo "失败的工程：$FAILED" >&2
+  exit 1
+fi

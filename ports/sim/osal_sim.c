@@ -252,7 +252,9 @@ osal_err_t osal_task_create(const osal_task_cfg_t *cfg, osal_task_t **out) {
         pools_free(t->stack_mem);
         pools_free(t->tcb_mem);
         sim_host_free(t);
-        sim_warn("task '%s' not created: simulator task table full", cfg->name ? cfg->name : "?");
+        sim_warn("task '%s' not created: the simulator's task table is full (%d tasks created in this run; "
+                 "exited tasks keep their slot) - a simulator limit, not a device one",
+                 cfg->name ? cfg->name : "?", vtk_task_count());
         return OSAL_NO_MEM;
     }
     if (!t->vt) {

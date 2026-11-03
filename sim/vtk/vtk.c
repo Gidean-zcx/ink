@@ -755,10 +755,40 @@ static size_t host_stack_used(const vtk_task_t *t) {
  * empty probe task needs to reach the kernel, scaled by the host/target ratio. Thread start,
  * the kernel and the exit path are not counted (in_kernel_zone). Rough; the real check is
  * -fstack-usage on the RISC-V build. */
+static uint8_t diag_copy[256 * 1024];
+static size_t diag_len;
 static uint32_t stack_used_est(const vtk_task_t *t) {
     size_t used_host = host_stack_used(t);
     size_t base = K.stack_probe ? host_stack_used(K.stack_probe) : 0;
     size_t net = used_host > base ? used_host - base : 0;
+    if (getenv("STACK_DIAG")) {
+        static int maps_done;
+        if (!maps_done) {
+            maps_done = 1;
+            FILE *mf = fopen("/proc/self/maps", "r");
+            if (mf) {
+                char line[512];
+                while (fgets(line, sizeof line, mf))
+                    if (strstr(line, "r-xp")) fprintf(stderr, "DIAG2M %s", line);
+                fclose(mf);
+            }
+        }
+        fprintf(stderr, "DIAG2 %s used=%zu base=%zu\n", t->name, used_host, base);
+        const uint8_t *z = NULL;
+        size_t n = 0;
+        if (t == K.stack_probe && diag_len) z = diag_copy, n = diag_len;
+        else if (t->state != VTK_ST_DONE && t->entry && !strcmp(t->name, "i2c_bg")) z = t->own_lo, n = (size_t)(t->entry - t->own_lo);
+        if (z) {
+            size_t i = 0;
+            while (i < n && z[i] == STACK_PATTERN) i++;
+            fprintf(stderr, "DIAG2Z %s depth=%zu\n", t->name, n - i);
+            for (size_t k = i & ~(size_t)7; k + 8 <= n && k < (i & ~(size_t)7) + 8 * 400; k += 8) {
+                uint64_t v;
+                memcpy(&v, z + k, 8);
+                fprintf(stderr, "DIAG2W %s %zu %016llx\n", t->name, n - k, (unsigned long long)v);
+            }
+        }
+    }
     return (uint32_t)((double)net / K.cfg.host_stack_ratio) + 256u; /* + minimal RTOS frame */
 }
 
@@ -932,6 +962,10 @@ static void task_exit_in_zone(void *p) {
 void vtk_task_exit(void) {
     vtk_task_t *self = tls_self;
     self->used_at_exit = own_stack_used(self); /* glibc's pthread_exit unwinds back up into the task's zone */
+    if (self == K.stack_probe && getenv("STACK_DIAG") && self->entry) {
+        diag_len = (size_t)(self->entry - self->own_lo);
+        memcpy(diag_copy, self->own_lo, diag_len);
+    }
     in_kernel_zone(task_exit_in_zone, self);
     abort(); /* not reached */
 }

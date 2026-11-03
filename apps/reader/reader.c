@@ -3,11 +3,14 @@
  *
  * Page turn path: the next page is rendered ahead of time into a second PSRAM
  * buffer while the reader looks at the current one, so a turn is a buffer
- * swap + one TEXT refresh. Pages are found lazily (page start offsets grow as
- * you read). The reading position is saved through the storage service,
+ * swap + one TEXT refresh. A turn to a page that is not rendered yet only
+ * moves the target; the page is rendered when the queued input is handled
+ * (settle), so a burst of turns renders its last page only. Pages are found
+ * lazily (page start offsets grow as you read). The reading position is saved through the storage service,
  * which waits for an idle panel (flash writes freeze PSRAM and would break a
  * waveform).
  */
+#include <limits.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -16,6 +19,7 @@
 #include "ink/probe.h"
 #include "ink/sys/actions.h"
 #include "ink/sys/font.h"
+#include "ink/sys/members.h"
 #include "ink/sys/storage.h"
 #include "ink/sys/text.h"
 #include "ink/sys/ui.h"
@@ -23,6 +27,7 @@
 #define MAX_BOOKS 16
 #define MAX_BOOK_BYTES (2u * 1024u * 1024u)
 #define SAVE_AFTER_IDLE_MS 8000
+#define SAVE_AT_LEAST_EVERY_MS 60000 /* SR-PL-08: reading on without a pause loses at most this much */
 
 typedef struct {
     char name[96];
@@ -45,11 +50,20 @@ static struct {
     int bw, bh;        /* page buffer (logical) */
     uint8_t *buf[2];   /* [cur, ahead] */
     int buf_page[2];
+    int shown;         /* buffer on screen (-1 none) */
+    bool show_pending; /* `page` is not on screen yet: rendered and shown in book_settle */
     lv_image_dsc_t dsc;
     lv_obj_t *img, *footer, *title;
     lv_timer_t *ahead_timer, *save_timer;
     bool dirty_pos;
+    uint64_t dirty_since_us; /* first turn not saved yet */
+    char member[16];         /* whose reading position this is (the member who opened the book) */
 } RD;
+
+/* Reading positions are kept per member (foundation §5.5, D-03): one small file per member and book. */
+static void pos_path(char *out, size_t cap, const char *member, const char *book) {
+    snprintf(out, cap, "/user/apps/reader-%s-%s.pos", member, book);
+}
 
 /* ------------------------------------------------------------- library */
 
@@ -77,7 +91,7 @@ static void scan_library(void) {
      * (which would have to wait for the tap's refresh to finish) */
     for (int i = 0; i < LIB.nbooks; i++) {
         char pos[200];
-        snprintf(pos, sizeof pos, "/user/apps/reader-%s.pos", LIB.books[i].name);
+        pos_path(pos, sizeof pos, ink_member_current()->id, LIB.books[i].name);
         ink_storage_prefetch(pos);
     }
 }
@@ -165,6 +179,9 @@ static const ink_action_t SHELF_ACTIONS[] = {
 
 /* ---------------------------------------------------------------- book */
 
+/* The text is loaded and paginated from the start (an empty or unreadable file leaves the book closed). */
+static bool book_ready(void) { return RD.text && RD.starts && RD.nstarts > 0; }
+
 /* starts[k] = byte offset of page k; a final entry == len marks the end of the book. */
 static int find_page_start(int page) {
     while (RD.nstarts <= page) {
@@ -206,6 +223,7 @@ static bool render_into(int slot, int page) {
 }
 
 static void show_slot(int slot) {
+    RD.shown = slot;
     RD.dsc.data = RD.buf[slot];
     lv_image_set_src(RD.img, &RD.dsc);
     ink_ui_hint_obj(RD.img, INK_REFRESH_TEXT);
@@ -218,8 +236,13 @@ static void show_slot(int slot) {
 
 static void ahead_cb(lv_timer_t *t) {
     (void)t;
+    if (RD.show_pending) return;
+    if (ink_ui_queue_pending()) { /* input first (more turns may follow): render ahead when it is quiet */
+        arm_once(RD.ahead_timer);
+        return;
+    }
     int want = RD.page + 1;
-    int slot = RD.buf_page[0] == RD.page ? 1 : 0;
+    int slot = RD.shown == 0 ? 1 : 0; /* the buffer not on screen */
     if (RD.buf_page[slot] != want) render_into(slot, want);
 }
 
@@ -227,31 +250,52 @@ static void save_cb(lv_timer_t *t) {
     (void)t;
     if (!RD.dirty_pos) return;
     char path[200], data[64];
-    snprintf(path, sizeof path, "/user/apps/reader-%s.pos", LIB.books[LIB.open].name);
+    pos_path(path, sizeof path, RD.member, LIB.books[LIB.open].name);
     int n = snprintf(data, sizeof data, "offset=%u\n", (unsigned)RD.starts[RD.page]);
     if (ink_storage_write_atomic(path, data, (size_t)n) == 0) RD.dirty_pos = false;
 }
 
 static bool go_to(int target) {
-    if (target < 0) return false;
+    if (target < 0 || !book_ready() || find_page_start(target) < 0) return false; /* past the end of the book */
     int slot = RD.buf_page[0] == target ? 0 : RD.buf_page[1] == target ? 1 : -1;
-    if (slot < 0) {
-        slot = RD.buf_page[0] == RD.page ? 1 : 0; /* reuse the buffer not on screen */
-        if (!render_into(slot, target)) return false; /* past the end of the book */
-        ink_probe_count("reader.turns_rendered_on_demand");
-    } else {
-        ink_probe_count("reader.turns_prerendered");
-    }
+    if (RD.show_pending) ink_probe_count("reader.turns_coalesced"); /* the page waiting to be drawn is skipped */
     RD.page = target;
-    show_slot(slot);
+    if (slot >= 0) {
+        RD.show_pending = false;
+        show_slot(slot);
+        ink_probe_count("reader.turns_prerendered");
+    } else {
+        RD.show_pending = true; /* rendered once the queued input is handled (book_settle) */
+    }
+    if (!RD.dirty_pos) RD.dirty_since_us = osal_now_us();
     RD.dirty_pos = true;
     ink_probe_count("reader.page_turns");
     arm_once(RD.ahead_timer);
-    arm_once(RD.save_timer);
+    /* saved after a pause in reading; the idle timer restarts on every turn, so reading on without
+     * a pause saves at least every SAVE_AT_LEAST_EVERY_MS (the write itself waits for an idle panel) */
+    if (osal_now_us() - RD.dirty_since_us >= SAVE_AT_LEAST_EVERY_MS * 1000ull) save_cb(NULL);
+    else arm_once(RD.save_timer);
     return true;
 }
 
+/* The input queued up is handled (the UI task draws next): render the page the turns ended on. */
+static void book_settle(void) {
+    if (!RD.show_pending) return;
+    RD.show_pending = false;
+    int slot = RD.shown == 0 ? 1 : 0; /* the buffer not on screen */
+    if (!render_into(slot, RD.page)) return;
+    show_slot(slot);
+    ink_probe_count("reader.turns_rendered_on_demand");
+}
+
 /* ---- actions: keys, swipes, taps and the AI all turn pages through these ---- */
+
+static bool not_open(ink_receipt_t *rc) {
+    if (book_ready()) return false;
+    rc->status = INK_RC_FAILED;
+    snprintf(rc->detail, sizeof rc->detail, "the book could not be opened");
+    return true;
+}
 
 static void page_receipt(ink_receipt_t *rc) {
     snprintf(rc->object, sizeof rc->object, "book:%s#page=%d", LIB.books[LIB.open].name, RD.page + 1);
@@ -262,6 +306,7 @@ static void page_receipt(ink_receipt_t *rc) {
 static void act_next(const ink_json_t *a, int t, ink_receipt_t *rc) {
     (void)a;
     (void)t;
+    if (not_open(rc)) return;
     if (!go_to(RD.page + 1)) {
         rc->status = INK_RC_FAILED;
         snprintf(rc->detail, sizeof rc->detail, "already on the last page");
@@ -272,6 +317,7 @@ static void act_next(const ink_json_t *a, int t, ink_receipt_t *rc) {
 static void act_prev(const ink_json_t *a, int t, ink_receipt_t *rc) {
     (void)a;
     (void)t;
+    if (not_open(rc)) return;
     if (!go_to(RD.page - 1)) {
         rc->status = INK_RC_FAILED;
         snprintf(rc->detail, sizeof rc->detail, "already on the first page");
@@ -281,9 +327,10 @@ static void act_prev(const ink_json_t *a, int t, ink_receipt_t *rc) {
 
 static void act_goto(const ink_json_t *a, int t, ink_receipt_t *rc) {
     int64_t page;
-    if (!a || !ink_json_int(a, ink_json_find(a, t, "page"), &page) || page < 1) {
+    if (not_open(rc)) return;
+    if (!a || !ink_json_int(a, ink_json_find(a, t, "page"), &page) || page < 1 || page > INT_MAX) {
         rc->status = INK_RC_INVALID;
-        snprintf(rc->detail, sizeof rc->detail, "page must be >= 1");
+        snprintf(rc->detail, sizeof rc->detail, "page must be an integer >= 1");
         return;
     }
     if (!go_to((int)page - 1)) {
@@ -298,6 +345,7 @@ static int book_snapshot(char *buf, size_t cap);
 static void act_read(const ink_json_t *a, int t, ink_receipt_t *rc) {
     (void)a;
     (void)t;
+    if (not_open(rc)) return;
     page_receipt(rc);
     book_snapshot(rc->say, sizeof rc->say); /* the start of the page; the full text is in the page snapshot */
 }
@@ -320,10 +368,11 @@ static void turn(int delta, ink_source_t src) {
     ink_action_invoke(delta > 0 ? "reader.next_page" : "reader.prev_page", NULL, src, 0, &rc);
 }
 
+/* Pages turn with the cover keys; the volume keys only change the volume (D-19). */
 static bool book_key(hal_key_t key, bool long_press) {
     if (long_press) return false;
-    if (key == HAL_KEY_NEXT || key == HAL_KEY_VOL_DOWN) turn(+1, INK_SRC_KEY);
-    else if (key == HAL_KEY_PREV || key == HAL_KEY_VOL_UP) turn(-1, INK_SRC_KEY);
+    if (key == HAL_KEY_NEXT) turn(+1, INK_SRC_KEY);
+    else if (key == HAL_KEY_PREV) turn(-1, INK_SRC_KEY);
     else return false;
     return true;
 }
@@ -375,6 +424,8 @@ static void book_create(lv_obj_t *scr, void *arg) {
     uint64_t t0 = osal_now_us();
     memset(&RD, 0, sizeof RD);
     RD.buf_page[0] = RD.buf_page[1] = -1;
+    RD.shown = -1;
+    snprintf(RD.member, sizeof RD.member, "%s", ink_member_current()->id);
     ink_font_t *body = ink_font_for_pt(8, pi.dpi);
     ink_font_t *small = ink_font_for_pt(6, pi.dpi);
     if (!body || !load_text(LIB.books[LIB.open].path)) {
@@ -404,7 +455,7 @@ static void book_create(lv_obj_t *scr, void *arg) {
 
     /* restore the saved position */
     char path[200], data[64] = {0};
-    snprintf(path, sizeof path, "/user/apps/reader-%s.pos", LIB.books[LIB.open].name);
+    pos_path(path, sizeof path, RD.member, LIB.books[LIB.open].name);
     unsigned saved = 0;
     if (ink_storage_read(path, data, sizeof data - 1) > 0) sscanf(data, "offset=%u", &saved);
     while (saved && find_page_start(RD.page + 1) >= 0 && RD.starts[RD.page + 1] <= saved) RD.page++;
@@ -454,7 +505,7 @@ static void book_destroy(void) {
 }
 
 static int book_snapshot(char *buf, size_t cap) {
-    if (!RD.text || !cap) return 0;
+    if (!book_ready() || !cap) return 0;
     size_t a = RD.starts[RD.page];
     size_t b = RD.page + 1 < RD.nstarts ? RD.starts[RD.page + 1] : RD.len;
     if (b > RD.len) b = RD.len;
@@ -471,7 +522,8 @@ const ink_activity_t ink_app_book = {.name = "book",
                                      .destroy = book_destroy,
                                      .on_key = book_key,
                                      .on_swipe = book_swipe,
-                                     .snapshot = book_snapshot};
+                                     .snapshot = book_snapshot,
+                                     .settle = book_settle};
 
 int ink_reader_actions_init(void) {
     int r = ink_actions_register(SHELF_ACTIONS, (int)(sizeof SHELF_ACTIONS / sizeof SHELF_ACTIONS[0]));

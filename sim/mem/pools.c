@@ -236,10 +236,10 @@ typedef struct {
 
 static void warn_failure(void *arg) {
     const failure_t *f = arg;
+    heap_pool_t *p = f->pool;
     char msg[200];
     snprintf(msg, sizeof msg, "allocation of %zu bytes failed (caps=0x%x, owner=%s, %s free=%zu largest=%zu)", f->size,
-             f->caps, f->owner ? f->owner : "?", f->pool->name, f->pool->usable > f->pool->used ? f->pool->usable - f->pool->used : 0,
-             largest_free(f->pool));
+             f->caps, f->owner ? f->owner : "?", p->name, p->usable > p->used ? p->usable - p->used : 0, largest_free(p));
     g_warn(msg);
 }
 
