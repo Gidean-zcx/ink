@@ -151,9 +151,14 @@ add_library(ink_system STATIC
   system/services/hub/hub_link.c
   system/services/ai/ai_service.c
   system/services/audio/audio_service.c
-  system/policy/actions.c
+  system/services/res/exec.c
+  system/policy/cap.c
   system/policy/members.c
+  system/policy/settings.c
+  system/policy/state.c
   system/policy/system_actions.c
+  system/policy/watch.c
+  system/util/ink_args.c
   system/util/ink_json.c
   system/text/ink_font.c
   system/text/linebreak.c

@@ -38,6 +38,7 @@
 #include "ink/osal.h"
 #include "ink/probe.h"
 #include "ink/sys/audio.h"
+#include "ink/sys/settings.h"
 #include "ink/sys/power.h"
 #include "ink/sys/storage.h"
 
@@ -420,9 +421,20 @@ static void audio_task(void *arg) {
 
 /* ----------------------------------------------------------------- API */
 
+static void volume_apply(void *ctx, int64_t v) {
+    (void)ctx;
+    ink_audio_set_volume((int)v);
+}
+
+static const ink_setting_def_t AUDIO_SETTINGS[] = {
+    {.id = "audio.volume", .title = "音量", .type = INK_SET_INT, .min = 0, .max = 100, .def = 70, .child_may_change = true,
+     .apply = volume_apply, .apply_exec = INK_EXEC_DIRECT},
+};
+
 int ink_audio_init(void) {
     hal_audio_get_info(&AU.info);
-    AU.volume = 70;
+    /* the saved volume; 70 where the settings table is not running (some test programs) */
+    AU.volume = ink_settings_define(AUDIO_SETTINGS, 1) == 0 ? (int)ink_setting_get("audio.volume") : 70;
     const char *prev = osal_mem_tag("audio");
     AU.lock = osal_mutex_create();
     AU.wake = osal_sem_create(0, 1);

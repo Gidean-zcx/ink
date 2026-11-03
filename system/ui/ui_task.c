@@ -47,6 +47,7 @@ typedef struct {
 
 static struct {
     osal_queue_t *q;
+    osal_task_t *task;
     lv_display_t *disp;
     lv_indev_t *indev;
     int lw, lh, nw, nh, rot, dpi;
@@ -568,6 +569,7 @@ static void handle_round(const umsg_t *first) {
 
 static void ui_task(void *arg) {
     (void)arg;
+    UI.task = osal_task_self(); /* before anything can ask ink_ui_is_current() */
     lv_init();
     lv_tick_set_cb(tick_cb);
     lv_log_register_print_cb(log_cb);
@@ -637,5 +639,9 @@ int ink_ui_start(const ink_activity_t *home) {
      * writes regardless) and internal RAM is the scarcest resource (foundation §3.2). */
     osal_task_cfg_t cfg = {.name = "ui", .fn = ui_task, .stack_bytes = UI_STACK, .priority = UI_PRIO, .core = -1,
                            .flags = OSAL_TASK_STACK_EXTERNAL};
-    return osal_task_create(&cfg, NULL) == OSAL_OK ? 0 : -1;
+    return osal_task_create(&cfg, &UI.task) == OSAL_OK ? 0 : -1;
 }
+
+bool ink_ui_started(void) { return UI.q != NULL; }
+
+bool ink_ui_is_current(void) { return UI.task && osal_task_self() == UI.task; }

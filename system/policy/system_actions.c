@@ -4,47 +4,36 @@
  */
 #include <stdio.h>
 
-#include "ink/sys/actions.h"
-#include "ink/sys/audio.h"
+#include "ink/sys/cap.h"
+#include "ink/sys/settings.h"
 #include "ink/sys/members.h"
 #include "ink/sys/ui.h"
 
-static void go_home(const ink_json_t *args, int atok, ink_receipt_t *rc) {
-    (void)args;
-    (void)atok;
+static void go_home(ink_call_t *c) {
+    ink_receipt_t *rc = &c->rc;
     ink_ui_home();
     snprintf(rc->object, sizeof rc->object, "screen:home");
     snprintf(rc->say, sizeof rc->say, "回到主页了");
 }
 
-static void full_refresh(const ink_json_t *args, int atok, ink_receipt_t *rc) {
-    (void)args;
-    (void)atok;
+static void full_refresh(ink_call_t *c) {
+    ink_receipt_t *rc = &c->rc;
     ink_ui_hint_frame(INK_REFRESH_FULL);
     lv_obj_invalidate(lv_screen_active());
     snprintf(rc->say, sizeof rc->say, "屏幕刷新一下");
 }
 
-static void set_volume(const ink_json_t *args, int atok, ink_receipt_t *rc) {
-    int64_t v;
-    if (!args || !ink_json_int(args, ink_json_find(args, atok, "percent"), &v) || v < 0 || v > 100) {
-        rc->status = INK_RC_INVALID;
-        snprintf(rc->detail, sizeof rc->detail, "percent must be 0..100");
-        return;
-    }
-    ink_audio_set_volume((int)v);
-    snprintf(rc->object, sizeof rc->object, "setting:volume");
-    rc->revision = (uint32_t)v;
-    snprintf(rc->say, sizeof rc->say, "音量调到 %d", (int)v);
+static void set_volume(ink_call_t *c) {
+    int64_t v = 0;
+    ink_args_get_int(&c->args, "percent", &v); /* the schema checked it: 0..100 */
+    if (ink_setting_set("audio.volume", v, c->src, &c->rc) == INK_RC_DONE)
+        snprintf(c->rc.say, sizeof c->rc.say, "音量调到 %d", (int)v);
 }
 
-static void switch_member(const ink_json_t *args, int atok, ink_receipt_t *rc) {
+static void switch_member(ink_call_t *c) {
+    ink_receipt_t *rc = &c->rc;
     char id[16];
-    if (!args || ink_json_str(args, ink_json_find(args, atok, "id"), id, sizeof id) < 0) {
-        rc->status = INK_RC_INVALID;
-        snprintf(rc->detail, sizeof rc->detail, "id required");
-        return;
-    }
+    ink_args_get_str(&c->args, "id", id, sizeof id); /* required by the schema */
     int r = ink_member_switch(id);
     if (r == -2) {
         rc->status = INK_RC_REJECTED;
@@ -61,26 +50,24 @@ static void switch_member(const ink_json_t *args, int atok, ink_receipt_t *rc) {
     snprintf(rc->say, sizeof rc->say, "现在是%s的空间", ink_member_current()->name);
 }
 
-static void factory_reset(const ink_json_t *args, int atok, ink_receipt_t *rc) {
-    (void)args;
-    (void)atok;
-    rc->status = INK_RC_FAILED;
-    snprintf(rc->detail, sizeof rc->detail, "not implemented yet");
+static void factory_reset(ink_call_t *c) {
+    c->rc.status = INK_RC_FAILED;
+    snprintf(c->rc.detail, sizeof c->rc.detail, "not implemented yet");
 }
 
-static const ink_action_t SYSTEM_ACTIONS[] = {
+static const ink_cap_t SYSTEM_ACTIONS[] = {
     {.id = "system.home", .title = "回到主页", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = go_home},
     {.id = "system.full_refresh", .title = "整屏刷新（清残影）", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = full_refresh},
     {.id = "system.set_volume",
      .title = "调音量",
-     .args = "{\"type\":\"object\",\"properties\":{\"percent\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":100}},"
+     .input = "{\"type\":\"object\",\"properties\":{\"percent\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":100}},"
              "\"required\":[\"percent\"]}",
      .effect = INK_FX_LOCAL_WRITE,
      .child_ok = true,
      .run = set_volume},
     {.id = "system.switch_member",
      .title = "切换成员",
-     .args = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"string\"}},\"required\":[\"id\"]}",
+     .input = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"string\"}},\"required\":[\"id\"]}",
      .effect = INK_FX_NAVIGATE,
      .child_ok = true,
      .run = switch_member},
@@ -88,5 +75,5 @@ static const ink_action_t SYSTEM_ACTIONS[] = {
 };
 
 int ink_system_actions_init(void) {
-    return ink_actions_register(SYSTEM_ACTIONS, (int)(sizeof SYSTEM_ACTIONS / sizeof SYSTEM_ACTIONS[0]));
+    return ink_cap_register(SYSTEM_ACTIONS, (int)(sizeof SYSTEM_ACTIONS / sizeof SYSTEM_ACTIONS[0]));
 }

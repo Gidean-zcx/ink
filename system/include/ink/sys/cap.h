@@ -1,0 +1,131 @@
+/*
+ * Capabilities (architecture v1.0 §4.3, detailed design §2): what a person or
+ * the AI asks for to get something done. Every one is registered once with a
+ * description (arguments as JSON Schema, side-effect class, who may use it,
+ * service class, where its handler runs) and invoked the same way from a
+ * button, a key, another app, the AI or the hub, so "doing it by hand" and
+ * "asking the AI" give the same result by construction (foundation §6.1).
+ * The policy gate here, not a prompt, decides confirmation and refusal
+ * (§6.2, §8). Every invocation returns a receipt with one status from a
+ * single enumeration (§6.4).
+ *
+ * The description table is the only source: the tool list the hub and the
+ * model see is generated from it.
+ */
+#ifndef INK_SYS_CAP_H
+#define INK_SYS_CAP_H
+
+#include <stdbool.h>
+#include <stddef.h>
+#include <stdint.h>
+
+#include "ink/sys/args.h"
+#include "ink/sys/exec.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+typedef enum {
+    INK_FX_READ = 0,          /* read the current page, list the shelf */
+    INK_FX_NAVIGATE,          /* open a book, go to a page (can go back) */
+    INK_FX_LOCAL_WRITE,       /* add a word, note something (undo window in the receipt) */
+    INK_FX_LOCAL_DESTRUCTIVE, /* delete, bulk replace: confirm on the device */
+    INK_FX_EXTERNAL,          /* message, call, share: confirm on the device by the current member */
+    INK_FX_SYSTEM,            /* reset, upgrade, system settings: confirm (PIN when needed), never children */
+} ink_effect_t;
+
+typedef enum { INK_CONFIRM_NONE = 0, INK_CONFIRM_DEVICE, INK_CONFIRM_PARENT } ink_confirm_t;
+
+/* The one receipt status enumeration (shared with the hub and the docs). */
+typedef enum {
+    INK_RC_DONE = 0,
+    INK_RC_PARTIAL,
+    INK_RC_QUEUED,
+    INK_RC_PENDING_CONFIRMATION,
+    INK_RC_REJECTED, /* refused by the policy gate */
+    INK_RC_STALE,    /* aimed at a page that is no longer on screen */
+    INK_RC_INVALID,  /* bad arguments, unknown capability, not available here */
+    INK_RC_FAILED,
+    INK_RC_CANCELLED,
+    INK_RC_UNDONE,
+} ink_rc_t;
+
+/* Who asks. Touch, keys and the system are the member's own direct manipulation. */
+typedef enum { INK_SRC_TOUCH = 0, INK_SRC_KEY, INK_SRC_AI, INK_SRC_SYSTEM, INK_SRC_APP, INK_SRC_REMOTE } ink_source_t;
+
+typedef enum { INK_FORM_CALL = 0, INK_FORM_STREAM, INK_FORM_EVENT, INK_FORM_SESSION } ink_form_t;
+typedef enum { INK_QOS_INTERACTIVE = 0, INK_QOS_REALTIME, INK_QOS_MEDIA, INK_QOS_NETWORK, INK_QOS_BACKGROUND } ink_qos_t;
+typedef enum { INK_OFFLINE_FAIL = 0, INK_OFFLINE_QUEUE, INK_OFFLINE_LOCAL } ink_offline_t;
+enum { INK_EXPOSE_APP = 1, INK_EXPOSE_AI = 2, INK_EXPOSE_REMOTE = 4 }; /* 0 = everyone */
+
+typedef struct {
+    ink_rc_t status;
+    char object[48];   /* affected object, e.g. "book:星星邮差#page=12" */
+    uint32_t revision; /* new state version of that object */
+    uint32_t undo_ms;  /* how long it can be undone (0 = not undoable) */
+    char say[160];     /* one sentence the AI may speak without another model call */
+    char detail[96];   /* why it was rejected / invalid / failed */
+} ink_receipt_t;
+
+typedef struct ink_cap ink_cap_t;
+
+/* One invocation, as the handler sees it. The handler fills `rc` (status is DONE on entry). */
+typedef struct {
+    const ink_cap_t *cap;
+    ink_args_t args;
+    ink_source_t src;
+    uint32_t page_gen; /* the page generation the caller saw (AI, hub), 0 = not page-bound */
+    ink_receipt_t rc;
+} ink_call_t;
+
+struct ink_cap {
+    const char *id;         /* "reader.next_page": named after what it does, never after a chip */
+    uint16_t version;       /* 0 means 1 */
+    ink_form_t form;
+    const char *title;      /* shown to people and to the model: "下一页" */
+    const char *input;      /* JSON Schema (object) of the arguments; NULL = none */
+    const char *output;     /* JSON Schema of the result; NULL = the receipt only */
+    ink_effect_t effect;
+    bool child_ok;          /* children may use it (their whitelist can still narrow this) */
+    const char *permission; /* what the calling app needs (app manifests, step 9); NULL = nothing */
+    ink_qos_t qos;
+    uint32_t timeout_ms;    /* 0 = the service class default */
+    bool retry_ok;
+    ink_offline_t offline;
+    uint8_t expose;         /* INK_EXPOSE_* bits; 0 = everyone */
+    const char *activity;   /* only meaningful while this activity is on top; NULL = anywhere */
+    ink_exec_t exec;        /* where the handler runs (UI task by default) */
+    void (*run)(ink_call_t *call);
+};
+
+/** Register a static table (it must outlive the program). 0, or -1 when the registry is full. */
+int ink_cap_register(const ink_cap_t *table, int n);
+const ink_cap_t *ink_cap_find(const char *id);
+/** Registered and usable now (a page-bound capability only while its page is on top). */
+bool ink_cap_available(const char *id);
+
+/**
+ * Invoke (UI task). `args` may be NULL. `page_gen`, if not 0, is the page generation the caller
+ * saw: page-bound capabilities on a newer page are refused as stale. Returns rc->status.
+ */
+ink_rc_t ink_cap_invoke(const char *id, const ink_args_t *args, ink_source_t src, uint32_t page_gen, ink_receipt_t *rc);
+/** The same with JSON arguments (the AI's, the hub's): converted and checked against the schema. */
+ink_rc_t ink_cap_invoke_json(const char *id, const char *args_json, ink_source_t src, uint32_t page_gen, ink_receipt_t *rc);
+
+/** The tool list for the hub and the model: JSON array of what the current member may use now. */
+int ink_cap_manifest_json(char *out, size_t cap);
+/** Compact JSON array of the ids available now (for page snapshots). */
+int ink_cap_ids_json(char *out, size_t cap);
+const char *ink_rc_name(ink_rc_t rc);
+const char *ink_effect_name(ink_effect_t fx);
+/** Receipt as JSON (for the hub). */
+int ink_receipt_json(const ink_receipt_t *rc, char *out, size_t cap);
+
+/** Hub glue: answer the hub's "tools/list" and "tools/call" requests through the registry. */
+int ink_tools_init(void);
+
+#ifdef __cplusplus
+}
+#endif
+#endif

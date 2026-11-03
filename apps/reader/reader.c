@@ -17,7 +17,7 @@
 #include "ink/hal_storage.h"
 #include "ink/osal.h"
 #include "ink/probe.h"
-#include "ink/sys/actions.h"
+#include "ink/sys/cap.h"
 #include "ink/sys/font.h"
 #include "ink/sys/members.h"
 #include "ink/sys/storage.h"
@@ -136,9 +136,8 @@ static void library_create(lv_obj_t *scr, void *arg) {
 
 const ink_activity_t ink_app_reader = {.name = "reader", .create = library_create};
 
-static void act_list(const ink_json_t *a, int t, ink_receipt_t *rc) {
-    (void)a;
-    (void)t;
+static void act_list(ink_call_t *c) {
+    ink_receipt_t *rc = &c->rc;
     if (!LIB.nbooks) scan_library();
     size_t n = (size_t)snprintf(rc->say, sizeof rc->say, "书架上有：");
     for (int i = 0; i < LIB.nbooks && n < sizeof rc->say; i++)
@@ -146,13 +145,10 @@ static void act_list(const ink_json_t *a, int t, ink_receipt_t *rc) {
     snprintf(rc->object, sizeof rc->object, "shelf:books");
 }
 
-static void act_open(const ink_json_t *a, int t, ink_receipt_t *rc) {
+static void act_open(ink_call_t *c) {
+    ink_receipt_t *rc = &c->rc;
     char title[96];
-    if (!a || ink_json_str(a, ink_json_find(a, t, "title"), title, sizeof title) < 0) {
-        rc->status = INK_RC_INVALID;
-        snprintf(rc->detail, sizeof rc->detail, "title required");
-        return;
-    }
+    ink_args_get_str(&c->args, "title", title, sizeof title); /* required by the schema */
     if (!LIB.nbooks) scan_library();
     for (int i = 0; i < LIB.nbooks; i++)
         if (strstr(LIB.books[i].name, title) || strstr(title, LIB.books[i].name)) {
@@ -165,11 +161,11 @@ static void act_open(const ink_json_t *a, int t, ink_receipt_t *rc) {
     snprintf(rc->detail, sizeof rc->detail, "no such book on the shelf");
 }
 
-static const ink_action_t SHELF_ACTIONS[] = {
+static const ink_cap_t SHELF_ACTIONS[] = {
     {.id = "reader.list_books", .title = "书架上有哪些书", .effect = INK_FX_READ, .child_ok = true, .run = act_list},
     {.id = "reader.open_book",
      .title = "打开一本书",
-     .args = "{\"type\":\"object\",\"properties\":{\"title\":{\"type\":\"string\"}},\"required\":[\"title\"]}",
+     .input = "{\"type\":\"object\",\"properties\":{\"title\":{\"type\":\"string\"}},\"required\":[\"title\"]}",
      .effect = INK_FX_NAVIGATE,
      .child_ok = true,
      .run = act_open},
@@ -303,9 +299,8 @@ static void page_receipt(ink_receipt_t *rc) {
     snprintf(rc->say, sizeof rc->say, "现在是第 %d 页", RD.page + 1);
 }
 
-static void act_next(const ink_json_t *a, int t, ink_receipt_t *rc) {
-    (void)a;
-    (void)t;
+static void act_next(ink_call_t *c) {
+    ink_receipt_t *rc = &c->rc;
     if (not_open(rc)) return;
     if (!go_to(RD.page + 1)) {
         rc->status = INK_RC_FAILED;
@@ -314,9 +309,8 @@ static void act_next(const ink_json_t *a, int t, ink_receipt_t *rc) {
     page_receipt(rc);
 }
 
-static void act_prev(const ink_json_t *a, int t, ink_receipt_t *rc) {
-    (void)a;
-    (void)t;
+static void act_prev(ink_call_t *c) {
+    ink_receipt_t *rc = &c->rc;
     if (not_open(rc)) return;
     if (!go_to(RD.page - 1)) {
         rc->status = INK_RC_FAILED;
@@ -325,10 +319,11 @@ static void act_prev(const ink_json_t *a, int t, ink_receipt_t *rc) {
     page_receipt(rc);
 }
 
-static void act_goto(const ink_json_t *a, int t, ink_receipt_t *rc) {
+static void act_goto(ink_call_t *c) {
+    ink_receipt_t *rc = &c->rc;
     int64_t page;
     if (not_open(rc)) return;
-    if (!a || !ink_json_int(a, ink_json_find(a, t, "page"), &page) || page < 1 || page > INT_MAX) {
+    if (!ink_args_get_int(&c->args, "page", &page) || page < 1 || page > INT_MAX) {
         rc->status = INK_RC_INVALID;
         snprintf(rc->detail, sizeof rc->detail, "page must be an integer >= 1");
         return;
@@ -342,20 +337,19 @@ static void act_goto(const ink_json_t *a, int t, ink_receipt_t *rc) {
 
 static int book_snapshot(char *buf, size_t cap);
 
-static void act_read(const ink_json_t *a, int t, ink_receipt_t *rc) {
-    (void)a;
-    (void)t;
+static void act_read(ink_call_t *c) {
+    ink_receipt_t *rc = &c->rc;
     if (not_open(rc)) return;
     page_receipt(rc);
     book_snapshot(rc->say, sizeof rc->say); /* the start of the page; the full text is in the page snapshot */
 }
 
-static const ink_action_t BOOK_ACTIONS[] = {
+static const ink_cap_t BOOK_ACTIONS[] = {
     {.id = "reader.next_page", .title = "下一页", .effect = INK_FX_NAVIGATE, .child_ok = true, .activity = "book", .run = act_next},
     {.id = "reader.prev_page", .title = "上一页", .effect = INK_FX_NAVIGATE, .child_ok = true, .activity = "book", .run = act_prev},
     {.id = "reader.goto_page",
      .title = "跳到第几页",
-     .args = "{\"type\":\"object\",\"properties\":{\"page\":{\"type\":\"integer\",\"minimum\":1}},\"required\":[\"page\"]}",
+     .input = "{\"type\":\"object\",\"properties\":{\"page\":{\"type\":\"integer\",\"minimum\":1}},\"required\":[\"page\"]}",
      .effect = INK_FX_NAVIGATE,
      .child_ok = true,
      .activity = "book",
@@ -365,7 +359,7 @@ static const ink_action_t BOOK_ACTIONS[] = {
 
 static void turn(int delta, ink_source_t src) {
     ink_receipt_t rc;
-    ink_action_invoke(delta > 0 ? "reader.next_page" : "reader.prev_page", NULL, src, 0, &rc);
+    ink_cap_invoke(delta > 0 ? "reader.next_page" : "reader.prev_page", NULL, src, 0, &rc);
 }
 
 /* Pages turn with the cover keys; the volume keys only change the volume (D-19). */
@@ -526,6 +520,6 @@ const ink_activity_t ink_app_book = {.name = "book",
                                      .settle = book_settle};
 
 int ink_reader_actions_init(void) {
-    int r = ink_actions_register(SHELF_ACTIONS, (int)(sizeof SHELF_ACTIONS / sizeof SHELF_ACTIONS[0]));
-    return r ? r : ink_actions_register(BOOK_ACTIONS, (int)(sizeof BOOK_ACTIONS / sizeof BOOK_ACTIONS[0]));
+    int r = ink_cap_register(SHELF_ACTIONS, (int)(sizeof SHELF_ACTIONS / sizeof SHELF_ACTIONS[0]));
+    return r ? r : ink_cap_register(BOOK_ACTIONS, (int)(sizeof BOOK_ACTIONS / sizeof BOOK_ACTIONS[0]));
 }

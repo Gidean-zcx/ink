@@ -24,7 +24,7 @@
 #include "ink/hal_display.h"
 #include "ink/osal.h"
 #include "ink/probe.h"
-#include "ink/sys/actions.h"
+#include "ink/sys/cap.h"
 #include "ink/sys/ai.h"
 #include "ink/sys/audio.h"
 #include "ink/sys/font.h"
@@ -403,7 +403,7 @@ static int request(const char *method, bool voice) {
     ink_jw_raw(&w, ",\"actions\":");
     {
         char ids[768];
-        int k = ink_actions_ids_json(ids, sizeof ids);
+        int k = ink_cap_ids_json(ids, sizeof ids);
         ink_jw_raw(&w, k > 0 ? ids : "[]");
     }
     ink_jw_raw(&w, "}}");
