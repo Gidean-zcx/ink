@@ -1,0 +1,46 @@
+[
+  {
+    "id": "AUD7-001",
+    "severity": "高",
+    "area": "PQ-BN / 丢电恢复回调顺序",
+    "title": "局部GC16不能覆盖受损区时，受损区的新请求在补清之前就回调成功",
+    "evidence_type": "复现、代码核查",
+    "locations": ["ports/sim/hal/hal_display_sim.c:1257", "ports/sim/hal/hal_display_sim.c:1228", "ports/sim/hal/hal_display_sim.c:1238", "ports/sim/hal/hal_display_sim.c:1402", "platform/include/ink/hal_display.h:81"],
+    "impact": "P05丢电损坏左侧黑块；复电后右侧GC16期间再次请求左侧黑块。右侧清理1056×684时，左侧请求2.526973s回调ok=1，12.561648s左侧均值仍151.06（目标0），12.950s才恢复到0.22，成功通知提前超过10s。小面积不覆盖和部分覆盖也分别在均值150.66、75.03时成功。旧版同样提前回调且最终不恢复；当前补上最终恢复，遗漏回调依赖，属于旧问题残留。违反HAL物理稳定回调契约；当前系统故障后强制全屏GC16避开此分支，直接HAL并发区域更新仍可触发。",
+    "recommendation": "在接纳请求时建立恢复区域的完成依赖，重叠请求应等恢复清理真正结束后才完成；在pq_after_phase发成功回调之前处理未覆盖的恢复区域。",
+    "reproduce": "AUDIT_END=60s python3 docs/audits/2026-11-03-codex-r6/experiments/run.py --pqbn r6_gc16_large_other r6_gc16_partial；加--before比较旧版，加--asan复核内存检查版。均exit=0，回调时间和可见像素见experiments/results.json。"
+  },
+  {
+    "id": "AUD7-002",
+    "severity": "中",
+    "area": "音频 / 恢复时未播数据",
+    "title": "停滞恢复直接清空DMA中已接收但未播放的声音，未报告丢失",
+    "evidence_type": "复现、代码核查",
+    "locations": ["system/services/audio/audio_service.c:337", "ports/sim/hal/hal_audio_sim.c:510", "tests/integration/systest.c:122", "docs/audits/README.md:25"],
+    "impact": "原r5_service_midcut的50帧3000ms当前能自动恢复，但实际仅播放2940ms；60ms留在HAL环形缓冲的声音被close_output(false)丢掉，失败回调为0。停滞检测前插入提示音时还覆盖服务的暂存帧，实测2880ms。故不能称未播声音全部保留。原高问题的无限阻塞已消除，此残留定中。",
+    "recommendation": "明确恢复期间的未播数据所有权；保存或重放仍未消费的PCM，或明确报告有声片段丢失并修正文档承诺。测试应核对样本数量，不能只用>=2800ms验收3000ms全部播放。",
+    "reproduce": "AUDIT_END=40s python3 docs/audits/2026-11-03-codex-r6/experiments/run.py r5_service_midcut；played_ms=2940。AUDIT_END=60s python3 docs/audits/2026-11-03-codex-r6/experiments/run.py r6_audio_tone_stall；played_ms=2880，failures=0。均exit=0。"
+  },
+  {
+    "id": "AUD7-003",
+    "severity": "中",
+    "area": "音频 / 恢复与取消交错",
+    "title": "输出重开期间取消后，已取消流仍向扬声器补播一帧",
+    "evidence_type": "复现、代码核查",
+    "locations": ["system/services/audio/audio_service.c:351", "system/services/audio/audio_service.c:368", "system/services/audio/audio_service.c:377", "system/services/audio/audio_service.c:575", "ports/sim/hal/hal_audio_sim.c:313"],
+    "impact": "P14复电后的蓝牙启动/设模式等待期间调用ink_audio_stop_all，取消时played_ms=120，当前随后变成180ms；修复前对照始终120ms。暂存帧代次只在service_playback开头检查，阻塞重开返回后不复核，旧声音在取消后再播60ms。该窗口由新增自动恢复路径打开，定中，不称整段语音继续播放。",
+    "recommendation": "每次可能阻塞的输出打开/重开返回后重新验证流代次及取消状态，再提交暂存PCM；保证替换流不会继承旧帧。",
+    "reproduce": "AUDIT_END=60s python3 docs/audits/2026-11-03-codex-r6/experiments/run.py [--before] r6_audio_cancel_reopen；4.760s取消，当前最终180ms，旧版120ms；均exit=0。"
+  },
+  {
+    "id": "AUD7-004",
+    "severity": "中",
+    "area": "屏幕上电 / P05等待截止时间",
+    "title": "宣称最多300ms的P05等待实际约600ms，持续断电时每次请求重复支付",
+    "evidence_type": "复现、代码核查",
+    "locations": ["boards/metalio_plus/metalio_epd_power.c:53", "boards/metalio_plus/metalio_epd_power.h:66", "ports/sim/osal/osal_sim.c:272", "ports/sim/hal/hal_display_sim.c:533", "docs/audits/README.md:29"],
+    "impact": "P05持续关闭，两档连续3次刷新均正确失败，但每次power_up约619ms（含关断收尾），旧版约19ms，新增约600ms而非最多300ms。以30次相对延迟充当截止时间，OSAL按tick向上取整，锁/轮询成本使每轮约20ms。显示驱动任务及电源互斥锁在等待期间被占用；并非CPU忙循环或整系统死锁。正常待机解锁改善仍成立。",
+    "recommendation": "用osal_now_us的绝对截止时间控制等待，计入调度和锁成本，并在临界截止处重新读状态；按实际恢复状态决定是否需要等待。补持续断电的耗时上界断言。",
+    "reproduce": "AUDIT_END=60s python3 docs/audits/2026-11-03-codex-r6/experiments/run.py [--before] [--pqbn] r6_p05_off；两档当前每次观察总耗时约640ms，旧版约40ms；metrics.json的display.power_up_ms当前max619.691ms，旧版max19.69ms。均exit=0。"
+  }
+]

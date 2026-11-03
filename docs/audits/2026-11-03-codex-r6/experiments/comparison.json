@@ -1,0 +1,1414 @@
+{
+  "head": "8c38f17a5c2525b1859dd0c8e2723844734f6a81",
+  "before": "0dbf9aaa97a354c6d62eeaef2b4dfbfd1e8237f3",
+  "note": "固定配置的虚拟时间比较；不代表实机测量。未出现的计数器在解读时按0，原始差异保留null。",
+  "comparisons": [
+    {
+      "name": "reader_basic-metalio-plus",
+      "before_file": "build-audit/before/test-out/reader_basic-metalio-plus/metrics.json",
+      "after_file": "build-audit/test-out/reader_basic-metalio-plus/metrics.json",
+      "all_metric_differences": {
+        "cpu.core0.busy_pct": {
+          "before": 24.88197858464774,
+          "after": 24.882046933753944
+        },
+        "cpu.core1.busy_pct": {
+          "before": 20.7679527402734,
+          "after": 20.76808628391167
+        },
+        "power.avg_ma.active": {
+          "before": 58.83106327335045,
+          "after": 58.831112423312234
+        },
+        "power.avg_ma.idle": {
+          "before": 28.01734964412962,
+          "after": 28.017349644129574
+        },
+        "power.avg_ma_estimate": {
+          "before": 53.3319785301367,
+          "after": 53.33201890868558
+        },
+        "power.mah.cpu.base": {
+          "before": 0.3183229130444445,
+          "after": 0.31832291304444443
+        },
+        "power.mah.cpu_busy": {
+          "before": 0.12059190191666666,
+          "after": 0.12059243525
+        },
+        "power.mah.modem": {
+          "before": 0.10537323359333332,
+          "after": 0.10537323359333334
+        },
+        "power.mah_total": {
+          "before": 0.7044265497522223,
+          "after": 0.7044270830855555
+        },
+        "task.epd.cpu_ms": {
+          "before": 1777.045675,
+          "after": 1777.151675
+        },
+        "task.ui.cpu_ms": {
+          "before": 2816.960378,
+          "after": 2816.950378
+        }
+      },
+      "warnings_before": [],
+      "warnings_after": [],
+      "budget_violations_before": 0,
+      "budget_violations_after": 0,
+      "final_png_before_sha256": "ab610c112607b783274af11bffd4055fe474df5a115b8dab01e74a483cbe07bb",
+      "final_png_after_sha256": "ab610c112607b783274af11bffd4055fe474df5a115b8dab01e74a483cbe07bb",
+      "final_png_byte_equal": true
+    },
+    {
+      "name": "standby-metalio-plus",
+      "before_file": "build-audit/before/test-out/standby-metalio-plus/metrics.json",
+      "after_file": "build-audit/test-out/standby-metalio-plus/metrics.json",
+      "all_metric_differences": {
+        "cpu.core0.busy_pct": {
+          "before": 0.7026611889636863,
+          "after": 0.7030586027306343
+        },
+        "cpu.core1.busy_pct": {
+          "before": 0.6071854015359818,
+          "after": 0.6067762308713378
+        },
+        "display.busy_ms": {
+          "before": 8538.504936,
+          "after": 8269.365862
+        },
+        "display.pmic.attempts": {
+          "before": 12,
+          "after": 10
+        },
+        "display.power_failures": {
+          "before": 2,
+          "after": null
+        },
+        "display.power_up_ms": {
+          "before": {
+            "count": 11,
+            "mean": 130.94369336363636,
+            "min": 20.6,
+            "p50": 134.585334,
+            "p95": 330.708,
+            "p99": 330.708,
+            "max": 330.708
+          },
+          "after": {
+            "count": 9,
+            "mean": 161.26328366666667,
+            "min": 119.817422,
+            "p50": 137.39001,
+            "p95": 330.708,
+            "p99": 330.708,
+            "max": 330.708
+          }
+        },
+        "display.queue_wait_ms": {
+          "before": {
+            "count": 16,
+            "mean": 18.392007125,
+            "min": 0.017,
+            "p50": 0.017,
+            "p95": 224.623334,
+            "p99": 224.623334,
+            "max": 224.623334
+          },
+          "after": {
+            "count": 16,
+            "mean": 20.8409819375,
+            "min": 0.017,
+            "p50": 0.017,
+            "p95": 224.623334,
+            "p99": 224.623334,
+            "max": 224.623334
+          }
+        },
+        "display.update_ms.GL16": {
+          "before": {
+            "count": 8,
+            "mean": 557.929862,
+            "min": 484.769228,
+            "p50": 530.54906,
+            "p95": 709.365562,
+            "p99": 709.365562,
+            "max": 709.365562
+          },
+          "after": {
+            "count": 8,
+            "mean": 529.185427375,
+            "min": 484.769228,
+            "p50": 499.336491,
+            "p95": 709.365562,
+            "p99": 709.365562,
+            "max": 709.365562
+          }
+        },
+        "i2c.busy_ms": {
+          "before": 1306.83,
+          "after": 1303.05
+        },
+        "i2c.wait_ms.io-expander": {
+          "before": {
+            "count": 321,
+            "mean": 0.0620498442367601,
+            "min": 0.007,
+            "p50": 0.007,
+            "p95": 0.007,
+            "p99": 2.532,
+            "max": 2.532
+          },
+          "after": {
+            "count": 315,
+            "mean": 0.06309841269841265,
+            "min": 0.007,
+            "p50": 0.007,
+            "p95": 0.007,
+            "p99": 2.532,
+            "max": 2.532
+          }
+        },
+        "power.avg_ma.active": {
+          "before": 48.26674616326618,
+          "after": 48.26663449133804
+        },
+        "power.avg_ma.locked": {
+          "before": 7.207190222873821,
+          "after": 7.207192252066195
+        },
+        "power.avg_ma_estimate": {
+          "before": 20.4108451109377,
+          "after": 20.410842759558165
+        },
+        "power.mah.cpu_busy": {
+          "before": 0.07674973327777777,
+          "after": 0.0767490443888889
+        },
+        "power.mah_total": {
+          "before": 5.979810649585,
+          "after": 5.97980996069611
+        },
+        "power.unlock_to_visible_ms": {
+          "before": {
+            "count": 3,
+            "mean": 828.803,
+            "min": 785.458,
+            "p50": 785.458,
+            "p95": 915.493,
+            "p99": 915.493,
+            "max": 915.493
+          },
+          "after": {
+            "count": 3,
+            "mean": 752.1596666666668,
+            "min": 665.493,
+            "p50": 675.493,
+            "p95": 915.493,
+            "p99": 915.493,
+            "max": 915.493
+          }
+        },
+        "task.display.cpu_ms": {
+          "before": 252.886299,
+          "after": 252.876299
+        },
+        "task.epd.cpu_ms": {
+          "before": 1075.193427,
+          "after": 1075.069427
+        },
+        "task.ui.cpu_ms": {
+          "before": 898.693623,
+          "after": 898.703623
+        }
+      },
+      "warnings_before": [],
+      "warnings_after": [],
+      "budget_violations_before": 0,
+      "budget_violations_after": 0,
+      "final_png_before_sha256": "d8a4112a3e1cc45c5a69c1914142f783eb8b88dfa8ff5f2ce9e7f6dc8ca2a0a6",
+      "final_png_after_sha256": "d8a4112a3e1cc45c5a69c1914142f783eb8b88dfa8ff5f2ce9e7f6dc8ca2a0a6",
+      "final_png_byte_equal": true
+    },
+    {
+      "name": "ai_ask-metalio-plus",
+      "before_file": "build-audit/before/test-out/ai_ask-metalio-plus/metrics.json",
+      "after_file": "build-audit/test-out/ai_ask-metalio-plus/metrics.json",
+      "all_metric_differences": {
+        "ai.press_to_listening_visible_ms": {
+          "before": {
+            "count": 3,
+            "mean": 514.07,
+            "min": 513.998,
+            "p50": 514.052,
+            "p95": 514.16,
+            "p99": 514.16,
+            "max": 514.16
+          },
+          "after": {
+            "count": 3,
+            "mean": 514.066,
+            "min": 514.012,
+            "p50": 514.022,
+            "p95": 514.164,
+            "p99": 514.164,
+            "max": 514.164
+          }
+        },
+        "ai.press_to_tone_heard_ms": {
+          "before": {
+            "count": 3,
+            "mean": 52.17766666666666,
+            "min": 52.172,
+            "p50": 52.172,
+            "p95": 52.189,
+            "p99": 52.189,
+            "max": 52.189
+          },
+          "after": {
+            "count": 3,
+            "mean": 52.18833333333333,
+            "min": 52.186,
+            "p50": 52.186,
+            "p95": 52.193,
+            "p99": 52.193,
+            "max": 52.193
+          }
+        },
+        "ai.release_to_first_audio_heard_ms": {
+          "before": {
+            "count": 2,
+            "mean": 2637.138,
+            "min": 2443.693,
+            "p50": 2443.693,
+            "p95": 2830.583,
+            "p99": 2830.583,
+            "max": 2830.583
+          },
+          "after": {
+            "count": 2,
+            "mean": 2637.1415,
+            "min": 2443.7,
+            "p50": 2443.7,
+            "p95": 2830.583,
+            "p99": 2830.583,
+            "max": 2830.583
+          }
+        },
+        "ai.release_to_first_text_visible_ms": {
+          "before": {
+            "count": 2,
+            "mean": 2300.022,
+            "min": 2106.577,
+            "p50": 2106.577,
+            "p95": 2493.467,
+            "p99": 2493.467,
+            "max": 2493.467
+          },
+          "after": {
+            "count": 2,
+            "mean": 2300.0255,
+            "min": 2106.584,
+            "p50": 2106.584,
+            "p95": 2493.467,
+            "p99": 2493.467,
+            "max": 2493.467
+          }
+        },
+        "ai.release_to_upload_done_ms": {
+          "before": {
+            "count": 3,
+            "mean": 124.45766666666667,
+            "min": 29.065,
+            "p50": 29.065,
+            "p95": 315.243,
+            "p99": 315.243,
+            "max": 315.243
+          },
+          "after": {
+            "count": 3,
+            "mean": 124.46233333333333,
+            "min": 29.072,
+            "p50": 29.072,
+            "p95": 315.243,
+            "p99": 315.243,
+            "max": 315.243
+          }
+        },
+        "cpu.core0.busy_pct": {
+          "before": 17.477322334271243,
+          "after": 17.37927853460889
+        },
+        "cpu.core1.busy_pct": {
+          "before": 14.284992156443444,
+          "after": 14.383709298818234
+        },
+        "display.busy_ms": {
+          "before": 16746.76846,
+          "after": 16746.73596
+        },
+        "display.power_up_ms": {
+          "before": {
+            "count": 21,
+            "mean": 135.90234485714288,
+            "min": 125.555968,
+            "p50": 136.573723,
+            "p95": 141.070374,
+            "p99": 141.838733,
+            "max": 141.838733
+          },
+          "after": {
+            "count": 21,
+            "mean": 135.9008463809524,
+            "min": 125.543,
+            "p50": 136.563223,
+            "p95": 141.070374,
+            "p99": 141.838733,
+            "max": 141.838733
+          }
+        },
+        "display.queue_wait_ms": {
+          "before": {
+            "count": 32,
+            "mean": 16.2937421875,
+            "min": 0.017,
+            "p50": 0.017,
+            "p95": 124.71857,
+            "p99": 124.884986,
+            "max": 124.884986
+          },
+          "after": {
+            "count": 32,
+            "mean": 16.2919921875,
+            "min": 0.017,
+            "p50": 0.017,
+            "p95": 124.70457,
+            "p99": 124.870986,
+            "max": 124.870986
+          }
+        },
+        "display.update_ms.DU": {
+          "before": {
+            "count": 12,
+            "mean": 361.86261141666665,
+            "min": 253.095728,
+            "p50": 325.766856,
+            "p95": 470.190268,
+            "p99": 470.190268,
+            "max": 470.190268
+          },
+          "after": {
+            "count": 12,
+            "mean": 361.86198641666664,
+            "min": 253.095728,
+            "p50": 325.766856,
+            "p95": 470.190268,
+            "p99": 470.190268,
+            "max": 470.190268
+          }
+        },
+        "display.update_ms.GC16": {
+          "before": {
+            "count": 5,
+            "mean": 664.540147,
+            "min": 552.157623,
+            "p50": 693.865496,
+            "p95": 826.830679,
+            "p99": 826.830679,
+            "max": 826.830679
+          },
+          "after": {
+            "count": 5,
+            "mean": 664.537347,
+            "min": 552.157623,
+            "p50": 693.865496,
+            "p95": 826.830679,
+            "p99": 826.830679,
+            "max": 826.830679
+          }
+        },
+        "display.update_ms.GL16": {
+          "before": {
+            "count": 15,
+            "mean": 600.030654,
+            "min": 516.427712,
+            "p50": 641.285698,
+            "p95": 658.242445,
+            "p99": 658.242445,
+            "max": 658.242445
+          },
+          "after": {
+            "count": 15,
+            "mean": 600.0261873333333,
+            "min": 516.427712,
+            "p50": 641.271698,
+            "p95": 658.242445,
+            "p99": 658.242445,
+            "max": 658.242445
+          }
+        },
+        "hub.request_ms": {
+          "before": {
+            "count": 2,
+            "mean": 13238.2935,
+            "min": 12585.621,
+            "p50": 12585.621,
+            "p95": 13890.966,
+            "p99": 13890.966,
+            "max": 13890.966
+          },
+          "after": {
+            "count": 2,
+            "mean": 13238.295,
+            "min": 12585.621,
+            "p50": 12585.621,
+            "p95": 13890.969,
+            "p99": 13890.969,
+            "max": 13890.969
+          }
+        },
+        "mem.external.largest_free_min_bytes": {
+          "before": 12012712,
+          "after": 12012744
+        },
+        "mem.external.min_free_bytes": {
+          "before": 12013712,
+          "after": 12013744
+        },
+        "mem.tag.audio.external.peak_bytes": {
+          "before": 139840,
+          "after": 139808
+        },
+        "net.connect_ms": {
+          "before": {
+            "count": 2,
+            "mean": 1108.011617,
+            "min": 681.931578,
+            "p50": 681.931578,
+            "p95": 1534.091656,
+            "p99": 1534.091656,
+            "max": 1534.091656
+          },
+          "after": {
+            "count": 2,
+            "mean": 1108.0173615,
+            "min": 681.931578,
+            "p50": 681.931578,
+            "p95": 1534.103145,
+            "p99": 1534.103145,
+            "max": 1534.103145
+          }
+        },
+        "power.avg_ma.active": {
+          "before": 186.61274061216065,
+          "after": 186.61302348666527
+        },
+        "power.avg_ma.idle": {
+          "before": 124.12139535640793,
+          "after": 124.12140852494805
+        },
+        "power.avg_ma_estimate": {
+          "before": 161.57134062157564,
+          "after": 161.571520343444
+        },
+        "power.mah.audio.in": {
+          "before": 0.015079582896666666,
+          "after": 0.015079755186666668
+        },
+        "power.mah.audio.out": {
+          "before": 0.26567855475972224,
+          "after": 0.26567971170416665
+        },
+        "power.mah.cpu.base": {
+          "before": 0.5773727618055555,
+          "after": 0.5773727618055556
+        },
+        "power.mah.cpu_busy": {
+          "before": 0.15678231347222224,
+          "after": 0.15678563716666666
+        },
+        "power.mah.display.rails": {
+          "before": 0.05600703649111111,
+          "after": 0.05600703419777778
+        },
+        "power.mah.modem": {
+          "before": 2.7793875638044434,
+          "after": 2.7793873488044434
+        },
+        "power.mah_total": {
+          "before": 3.9876704483963876,
+          "after": 3.987674884031944
+        },
+        "power.state_ms.active": {
+          "before": 53246.215507,
+          "after": 53246.222507
+        },
+        "power.state_ms.idle": {
+          "before": 35603.784493,
+          "after": 35603.777493
+        },
+        "task.audio.cpu_ms": {
+          "before": 1633.374721,
+          "after": 1633.617721
+        },
+        "task.audio.ready_delay_max_ms": {
+          "before": 10.405056,
+          "after": 10.402208
+        },
+        "task.audio_in.cpu_ms": {
+          "before": 16.672,
+          "after": 16.702
+        },
+        "task.audio_in.ready_delay_max_ms": {
+          "before": 10.386056,
+          "after": 10.389119
+        },
+        "task.display.cpu_ms": {
+          "before": 464.849597,
+          "after": 464.829597
+        },
+        "task.epd.cpu_ms": {
+          "before": 2709.198604,
+          "after": 2709.492604
+        },
+        "task.epd_prep0.cpu_ms": {
+          "before": 10492.661638,
+          "after": 10492.642092
+        },
+        "task.epd_prep1.cpu_ms": {
+          "before": 10263.533116,
+          "after": 10263.603927
+        },
+        "task.esp_timer.ready_delay_max_ms": {
+          "before": 4.554432,
+          "after": 4.558525
+        },
+        "task.hub.cpu_ms": {
+          "before": 83.962193,
+          "after": 83.972193
+        },
+        "task.hub.ready_delay_max_ms": {
+          "before": 10.288722,
+          "after": 10.283564
+        },
+        "task.i2c_bg.ready_delay_max_ms": {
+          "before": 53.045859,
+          "after": 53.059859
+        },
+        "task.input.ready_delay_max_ms": {
+          "before": 8.071805,
+          "after": 8.078805
+        },
+        "task.power.cpu_ms": {
+          "before": 0.917,
+          "after": 0.927
+        },
+        "task.sys_evt.ready_delay_max_ms": {
+          "before": 0.125456,
+          "after": 0.129549
+        },
+        "task.ui.cpu_ms": {
+          "before": 1534.820354,
+          "after": 1534.800354
+        }
+      },
+      "warnings_before": [],
+      "warnings_after": [],
+      "budget_violations_before": 0,
+      "budget_violations_after": 0,
+      "final_png_before_sha256": "8666079a5854d8fd89d8bee970a2608458c3100ca742eb7d5421febb197bef8a",
+      "final_png_after_sha256": "8666079a5854d8fd89d8bee970a2608458c3100ca742eb7d5421febb197bef8a",
+      "final_png_byte_equal": true
+    },
+    {
+      "name": "ai_ask-metalio-plus-pqbn",
+      "before_file": "build-audit/before/test-out/ai_ask-metalio-plus-pqbn/metrics.json",
+      "after_file": "build-audit/test-out/ai_ask-metalio-plus-pqbn/metrics.json",
+      "all_metric_differences": {
+        "ai.press_to_listening_visible_ms": {
+          "before": {
+            "count": 3,
+            "mean": 450.5813333333333,
+            "min": 400.589,
+            "p50": 475.551,
+            "p95": 475.604,
+            "p99": 475.604,
+            "max": 475.604
+          },
+          "after": {
+            "count": 3,
+            "mean": 450.57633333333337,
+            "min": 400.555,
+            "p50": 475.556,
+            "p95": 475.618,
+            "p99": 475.618,
+            "max": 475.618
+          }
+        },
+        "ai.press_to_tone_heard_ms": {
+          "before": {
+            "count": 3,
+            "mean": 52.17766666666666,
+            "min": 52.172,
+            "p50": 52.172,
+            "p95": 52.189,
+            "p99": 52.189,
+            "max": 52.189
+          },
+          "after": {
+            "count": 3,
+            "mean": 52.18833333333333,
+            "min": 52.186,
+            "p50": 52.186,
+            "p95": 52.193,
+            "p99": 52.193,
+            "max": 52.193
+          }
+        },
+        "ai.release_to_first_audio_heard_ms": {
+          "before": {
+            "count": 2,
+            "mean": 2463.146,
+            "min": 2435.868,
+            "p50": 2435.868,
+            "p95": 2490.424,
+            "p99": 2490.424,
+            "max": 2490.424
+          },
+          "after": {
+            "count": 2,
+            "mean": 2463.1825,
+            "min": 2435.875,
+            "p50": 2435.875,
+            "p95": 2490.49,
+            "p99": 2490.49,
+            "max": 2490.49
+          }
+        },
+        "ai.release_to_first_text_visible_ms": {
+          "before": {
+            "count": 2,
+            "mean": 1986.177,
+            "min": 1950.845,
+            "p50": 1950.845,
+            "p95": 2021.509,
+            "p99": 2021.509,
+            "max": 2021.509
+          },
+          "after": {
+            "count": 2,
+            "mean": 1986.213,
+            "min": 1950.852,
+            "p50": 1950.852,
+            "p95": 2021.574,
+            "p99": 2021.574,
+            "max": 2021.574
+          }
+        },
+        "ai.release_to_upload_done_ms": {
+          "before": {
+            "count": 3,
+            "mean": 29.065,
+            "min": 29.065,
+            "p50": 29.065,
+            "p95": 29.065,
+            "p99": 29.065,
+            "max": 29.065
+          },
+          "after": {
+            "count": 3,
+            "mean": 29.072,
+            "min": 29.072,
+            "p50": 29.072,
+            "p95": 29.072,
+            "p99": 29.072,
+            "max": 29.072
+          }
+        },
+        "bt.commands": {
+          "before": 1,
+          "after": 2
+        },
+        "bt.lost_commands": {
+          "before": 1,
+          "after": 0
+        },
+        "cpu.core0.busy_pct": {
+          "before": 5.95400340461452,
+          "after": 5.8420090984805855
+        },
+        "cpu.core1.busy_pct": {
+          "before": 3.5069151344963423,
+          "after": 3.61947806527856
+        },
+        "display.busy_ms": {
+          "before": 6805.391241,
+          "after": 6805.376336
+        },
+        "display.power_up_ms": {
+          "before": {
+            "count": 22,
+            "mean": 135.33964763636365,
+            "min": 122.907606,
+            "p50": 136.590856,
+            "p95": 140.675,
+            "p99": 141.070374,
+            "max": 141.070374
+          },
+          "after": {
+            "count": 22,
+            "mean": 135.32443881818182,
+            "min": 122.915106,
+            "p50": 136.586126,
+            "p95": 140.675,
+            "p99": 141.070374,
+            "max": 141.070374
+          }
+        },
+        "display.pqbn.cycle_ms": {
+          "before": {
+            "count": 376,
+            "mean": 16.733549388297888,
+            "min": 12.43275,
+            "p50": 19.103421,
+            "p95": 19.174056,
+            "p99": 19.314289,
+            "max": 20.32749
+          },
+          "after": {
+            "count": 376,
+            "mean": 16.73351107712767,
+            "min": 12.42275,
+            "p50": 19.103421,
+            "p95": 19.174056,
+            "p99": 19.314289,
+            "max": 20.32749
+          }
+        },
+        "display.pqbn.drive_ms": {
+          "before": 6805.391241,
+          "after": 6805.376336
+        },
+        "display.update_ms.DU": {
+          "before": {
+            "count": 12,
+            "mean": 343.72516766666666,
+            "min": 97.364178,
+            "p50": 254.057587,
+            "p95": 977.894918,
+            "p99": 977.894918,
+            "max": 977.894918
+          },
+          "after": {
+            "count": 12,
+            "mean": 343.71271725,
+            "min": 97.364178,
+            "p50": 254.050587,
+            "p95": 977.894918,
+            "p99": 977.894918,
+            "max": 977.894918
+          }
+        },
+        "display.update_ms.GL16": {
+          "before": {
+            "count": 21,
+            "mean": 326.189929047619,
+            "min": 138.046242,
+            "p50": 284.790676,
+            "p95": 734.201505,
+            "p99": 785.471409,
+            "max": 785.471409
+          },
+          "after": {
+            "count": 21,
+            "mean": 326.17570923809524,
+            "min": 138.046242,
+            "p50": 284.80355,
+            "p95": 734.201505,
+            "p99": 785.471409,
+            "max": 785.471409
+          }
+        },
+        "hub.online_ms": {
+          "before": {
+            "count": 2,
+            "mean": 1004.3125,
+            "min": 567.99,
+            "p50": 567.99,
+            "p95": 1440.635,
+            "p99": 1440.635,
+            "max": 1440.635
+          },
+          "after": {
+            "count": 2,
+            "mean": 1004.313,
+            "min": 567.99,
+            "p50": 567.99,
+            "p95": 1440.636,
+            "p99": 1440.636,
+            "max": 1440.636
+          }
+        },
+        "hub.request_ms": {
+          "before": {
+            "count": 2,
+            "mean": 13212.9685,
+            "min": 12534.971,
+            "p50": 12534.971,
+            "p95": 13890.966,
+            "p99": 13890.966,
+            "max": 13890.966
+          },
+          "after": {
+            "count": 2,
+            "mean": 13213.0025,
+            "min": 12535.036,
+            "p50": 12535.036,
+            "p95": 13890.969,
+            "p99": 13890.969,
+            "max": 13890.969
+          }
+        },
+        "i2c.wait_ms.io-expander": {
+          "before": {
+            "count": 343,
+            "mean": 0.02123096793002913,
+            "min": 0.007,
+            "p50": 0.007,
+            "p95": 0.007,
+            "p99": 0.007,
+            "max": 4.888222
+          },
+          "after": {
+            "count": 343,
+            "mean": 0.021210559766763826,
+            "min": 0.007,
+            "p50": 0.007,
+            "p95": 0.007,
+            "p99": 0.007,
+            "max": 4.881222
+          }
+        },
+        "mem.external.largest_free_min_bytes": {
+          "before": 11158320,
+          "after": 11158312
+        },
+        "mem.external.min_free_bytes": {
+          "before": 11158872,
+          "after": 11158864
+        },
+        "mem.tag.audio.external.peak_bytes": {
+          "before": 139808,
+          "after": 139816
+        },
+        "power.avg_ma.active": {
+          "before": 174.39021258824107,
+          "after": 174.390518993539
+        },
+        "power.avg_ma.idle": {
+          "before": 122.6725960722102,
+          "after": 122.67272156454737
+        },
+        "power.avg_ma_estimate": {
+          "before": 153.47229354747324,
+          "after": 153.4725689807653
+        },
+        "power.mah.audio.in": {
+          "before": 0.015079831376666668,
+          "after": 0.015080003666666666
+        },
+        "power.mah.audio.out": {
+          "before": 0.2692264388625,
+          "after": 0.269227527751389
+        },
+        "power.mah.cpu_busy": {
+          "before": 0.046700145122222224,
+          "after": 0.046702951916666666
+        },
+        "power.mah.display.rails": {
+          "before": 0.04048498202222221,
+          "after": 0.04048496306222221
+        },
+        "power.mah.display.refresh": {
+          "before": 0.0754328360111111,
+          "after": 0.0754326704
+        },
+        "power.mah.modem": {
+          "before": 2.763484471936666,
+          "after": 2.76348738638111
+        },
+        "power.mah_total": {
+          "before": 3.7877814671369436,
+          "after": 3.78778826498361
+        },
+        "power.state_ms.active": {
+          "before": 52913.36502,
+          "after": 52913.43752
+        },
+        "power.state_ms.idle": {
+          "before": 35936.63498,
+          "after": 35936.56248
+        },
+        "storage.wait_for_idle_ms": {
+          "before": {
+            "count": 2,
+            "mean": 8538.676,
+            "min": 6006.572,
+            "p50": 6006.572,
+            "p95": 11070.78,
+            "p99": 11070.78,
+            "max": 11070.78
+          },
+          "after": {
+            "count": 2,
+            "mean": 8538.709,
+            "min": 6006.572,
+            "p50": 6006.572,
+            "p95": 11070.846,
+            "p99": 11070.846,
+            "max": 11070.846
+          }
+        },
+        "storage.write_ms": {
+          "before": {
+            "count": 2,
+            "mean": 4.168,
+            "min": 3.445,
+            "p50": 3.445,
+            "p95": 4.891,
+            "p99": 4.891,
+            "max": 4.891
+          },
+          "after": {
+            "count": 2,
+            "mean": 4.1675,
+            "min": 3.444,
+            "p50": 3.444,
+            "p95": 4.891,
+            "p99": 4.891,
+            "max": 4.891
+          }
+        },
+        "task.audio.cpu_ms": {
+          "before": 1659.302468,
+          "after": 1659.581968
+        },
+        "task.audio.ready_delay_max_ms": {
+          "before": 0.311183,
+          "after": 0.311506
+        },
+        "task.audio_in.cpu_ms": {
+          "before": 16.372,
+          "after": 16.362
+        },
+        "task.audio_in.ready_delay_max_ms": {
+          "before": 0.292835,
+          "after": 0.280493
+        },
+        "task.display.cpu_ms": {
+          "before": 507.708347,
+          "after": 507.678347
+        },
+        "task.epd.cpu_ms": {
+          "before": 64.528,
+          "after": 64.816
+        },
+        "task.epd.ready_delay_max_ms": {
+          "before": 0.343468,
+          "after": 0.343145
+        },
+        "task.epd_prep0.cpu_ms": {
+          "before": 771.07223,
+          "after": 771.069953
+        },
+        "task.epd_prep1.cpu_ms": {
+          "before": 660.331617,
+          "after": 660.341617
+        },
+        "task.esp_timer.ready_delay_max_ms": {
+          "before": 0.104577,
+          "after": 0.105077
+        },
+        "task.power.cpu_ms": {
+          "before": 0.907,
+          "after": 0.917
+        },
+        "task.ui.cpu_ms": {
+          "before": 1698.720655,
+          "after": 1698.690655
+        },
+        "ui.action_to_first_change_ms": {
+          "before": {
+            "count": 6,
+            "mean": 152.55983333333333,
+            "min": 25.418,
+            "p50": 168.615,
+            "p95": 242.38,
+            "p99": 242.38,
+            "max": 242.38
+          },
+          "after": {
+            "count": 6,
+            "mean": 152.561,
+            "min": 25.418,
+            "p50": 168.615,
+            "p95": 242.387,
+            "p99": 242.387,
+            "max": 242.387
+          }
+        },
+        "ui.action_to_visible_ms": {
+          "before": {
+            "count": 6,
+            "mean": 717.871333333333,
+            "min": 526.762,
+            "p50": 617.801,
+            "p95": 994.929,
+            "p99": 994.929,
+            "max": 994.929
+          },
+          "after": {
+            "count": 6,
+            "mean": 717.8725,
+            "min": 526.762,
+            "p50": 617.808,
+            "p95": 994.929,
+            "p99": 994.929,
+            "max": 994.929
+          }
+        },
+        "ui.action_to_visible_ms.TEXT": {
+          "before": {
+            "count": 2,
+            "mean": 790.9425,
+            "min": 617.801,
+            "p50": 617.801,
+            "p95": 964.084,
+            "p99": 964.084,
+            "max": 964.084
+          },
+          "after": {
+            "count": 2,
+            "mean": 790.946,
+            "min": 617.808,
+            "p50": 617.808,
+            "p95": 964.084,
+            "p99": 964.084,
+            "max": 964.084
+          }
+        }
+      },
+      "warnings_before": [],
+      "warnings_after": [],
+      "budget_violations_before": 0,
+      "budget_violations_after": 0,
+      "final_png_before_sha256": "24a9c3270718a93aa63fea3ddd6f9523c154aad2344b4cad62c357d51623716f",
+      "final_png_after_sha256": "24a9c3270718a93aa63fea3ddd6f9523c154aad2344b4cad62c357d51623716f",
+      "final_png_byte_equal": true
+    },
+    {
+      "name": "r4_service_normal",
+      "before_file": "build-audit/r6-probes/r4_service_normal-before/metrics.json",
+      "after_file": "build-audit/r6-probes/r4_service_normal/metrics.json",
+      "all_metric_differences": {
+        "bt.commands": {
+          "before": 1,
+          "after": 2
+        },
+        "bt.lost_commands": {
+          "before": 1,
+          "after": 0
+        },
+        "cpu.core0.busy_pct": {
+          "before": 0.509919885,
+          "after": 0.509931135
+        },
+        "power.avg_ma.active": {
+          "before": 36.84545078688233,
+          "after": 36.845464120167264
+        },
+        "power.avg_ma.idle": {
+          "before": 28.00034797018121,
+          "after": 28.0003479701812
+        },
+        "power.avg_ma_estimate": {
+          "before": 29.492964488125,
+          "after": 29.492966738125
+        },
+        "power.mah.cpu_busy": {
+          "before": 0.0022054689722222224,
+          "after": 0.002205493972222222
+        },
+        "power.mah_total": {
+          "before": 0.3276996054236111,
+          "after": 0.327699630423611
+        },
+        "task.audio.cpu_ms": {
+          "before": 35.193393,
+          "after": 35.197893
+        },
+        "task.audio.stack_used_est_bytes": {
+          "before": 1776,
+          "after": 1760
+        }
+      },
+      "warnings_before": [],
+      "warnings_after": [],
+      "budget_violations_before": 0,
+      "budget_violations_after": 0,
+      "final_png_before_sha256": "086e4b79986678849deef1891ba2ac3331b20756f78e0c2cc3b95cf0cecf813b",
+      "final_png_after_sha256": "086e4b79986678849deef1891ba2ac3331b20756f78e0c2cc3b95cf0cecf813b",
+      "final_png_byte_equal": true,
+      "probe_output_equal": true
+    },
+    {
+      "name": "r4_normal",
+      "before_file": "build-audit/r6-probes/r4_normal-before/metrics.json",
+      "after_file": "build-audit/r6-probes/r4_normal/metrics.json",
+      "all_metric_differences": {
+        "bt.commands": {
+          "before": 3,
+          "after": 4
+        },
+        "bt.lost_commands": {
+          "before": 1,
+          "after": 0
+        },
+        "cpu.core0.busy_pct": {
+          "before": 9.18205446,
+          "after": 9.18236946
+        },
+        "i2c.wait_ms.io-expander": {
+          "before": {
+            "count": 187,
+            "mean": 0.015146679144385007,
+            "min": 0.007,
+            "p50": 0.007,
+            "p95": 0.007,
+            "p99": 0.007,
+            "max": 1.530429
+          },
+          "after": {
+            "count": 187,
+            "mean": 0.01507181283422458,
+            "min": 0.007,
+            "p50": 0.007,
+            "p95": 0.007,
+            "p99": 0.007,
+            "max": 1.516429
+          }
+        },
+        "power.avg_ma.active": {
+          "before": 41.75730493715,
+          "after": 41.75736793715
+        },
+        "power.avg_ma_estimate": {
+          "before": 41.75730493715,
+          "after": 41.75736793715
+        },
+        "power.mah.cpu_busy": {
+          "before": 0.03933560193333334,
+          "after": 0.03933630193333333
+        },
+        "power.mah_total": {
+          "before": 0.46397005485722226,
+          "after": 0.4639707548572222
+        },
+        "task.epd.cpu_ms": {
+          "before": 178.822848,
+          "after": 178.948848
+        }
+      },
+      "warnings_before": [],
+      "warnings_after": [],
+      "budget_violations_before": 0,
+      "budget_violations_after": 0,
+      "final_png_before_sha256": "9fcc09084974ae2d8f4f922016a2c73a217c5243333853ee8cbe5efa25ce44f4",
+      "final_png_after_sha256": "9fcc09084974ae2d8f4f922016a2c73a217c5243333853ee8cbe5efa25ce44f4",
+      "final_png_byte_equal": true,
+      "probe_output_equal": true
+    },
+    {
+      "name": "r4_normal_activity",
+      "before_file": "build-audit/r6-probes/r4_normal_activity-before/metrics.json",
+      "after_file": "build-audit/r6-probes/r4_normal_activity/metrics.json",
+      "all_metric_differences": {
+        "bt.commands": {
+          "before": 3,
+          "after": 4
+        },
+        "bt.lost_commands": {
+          "before": 1,
+          "after": 0
+        },
+        "cpu.core0.busy_pct": {
+          "before": 9.224786645,
+          "after": 9.225101645
+        },
+        "i2c.wait_ms.io-expander": {
+          "before": {
+            "count": 191,
+            "mean": 0.06062107329842932,
+            "min": 0.007,
+            "p50": 0.007,
+            "p95": 0.628,
+            "p99": 0.637,
+            "max": 0.644
+          },
+          "after": {
+            "count": 191,
+            "mean": 0.060547774869109956,
+            "min": 0.007,
+            "p50": 0.007,
+            "p95": 0.628,
+            "p99": 0.637,
+            "max": 0.644
+          }
+        },
+        "power.avg_ma.active": {
+          "before": 41.97338323315,
+          "after": 41.97344623315
+        },
+        "power.avg_ma_estimate": {
+          "before": 41.97338323315,
+          "after": 41.97344623315
+        },
+        "power.mah.cpu_busy": {
+          "before": 0.039479311644444445,
+          "after": 0.039480011644444445
+        },
+        "power.mah_total": {
+          "before": 0.46637092481277775,
+          "after": 0.4663716248127777
+        },
+        "task.epd.cpu_ms": {
+          "before": 179.662848,
+          "after": 179.788848
+        }
+      },
+      "warnings_before": [],
+      "warnings_after": [],
+      "budget_violations_before": 0,
+      "budget_violations_after": 0,
+      "final_png_before_sha256": "9fcc09084974ae2d8f4f922016a2c73a217c5243333853ee8cbe5efa25ce44f4",
+      "final_png_after_sha256": "9fcc09084974ae2d8f4f922016a2c73a217c5243333853ee8cbe5efa25ce44f4",
+      "final_png_byte_equal": true,
+      "probe_output_equal": true
+    },
+    {
+      "name": "r4_normal-pqbn",
+      "before_file": "build-audit/r6-probes/r4_normal-pqbn-before/metrics.json",
+      "after_file": "build-audit/r6-probes/r4_normal-pqbn/metrics.json",
+      "all_metric_differences": {
+        "bt.commands": {
+          "before": 3,
+          "after": 4
+        },
+        "bt.lost_commands": {
+          "before": 1,
+          "after": 0
+        },
+        "cpu.core0.busy_pct": {
+          "before": 0.843145355,
+          "after": 0.843355355
+        },
+        "power.avg_ma.active": {
+          "before": 34.755041013433335,
+          "after": 34.75508301343333
+        },
+        "power.avg_ma_estimate": {
+          "before": 34.755041013433335,
+          "after": 34.75508301343333
+        },
+        "power.mah.cpu_busy": {
+          "before": 0.0037470172333333336,
+          "after": 0.003747717233333333
+        },
+        "power.mah_total": {
+          "before": 0.5792506835572222,
+          "after": 0.579251383557222
+        },
+        "task.epd.cpu_ms": {
+          "before": 18.252,
+          "after": 18.378
+        }
+      },
+      "warnings_before": [],
+      "warnings_after": [],
+      "budget_violations_before": 0,
+      "budget_violations_after": 0,
+      "final_png_before_sha256": "9a79d4a4fb03ac205179b879299f18afc3eb1950d966f78bc3f7090b3f47cf8b",
+      "final_png_after_sha256": "9a79d4a4fb03ac205179b879299f18afc3eb1950d966f78bc3f7090b3f47cf8b",
+      "final_png_byte_equal": true,
+      "probe_output_equal": true
+    },
+    {
+      "name": "r4_normal_activity-pqbn",
+      "before_file": "build-audit/r6-probes/r4_normal_activity-pqbn-before/metrics.json",
+      "after_file": "build-audit/r6-probes/r4_normal_activity-pqbn/metrics.json",
+      "all_metric_differences": {
+        "bt.commands": {
+          "before": 3,
+          "after": 4
+        },
+        "bt.lost_commands": {
+          "before": 1,
+          "after": 0
+        },
+        "cpu.core0.busy_pct": {
+          "before": 0.877247145,
+          "after": 0.877457145
+        },
+        "i2c.wait_ms.io-expander": {
+          "before": {
+            "count": 191,
+            "mean": 0.09037689528795813,
+            "min": 0.007,
+            "p50": 0.007,
+            "p95": 0.628,
+            "p99": 2.502,
+            "max": 2.527
+          },
+          "after": {
+            "count": 191,
+            "mean": 0.09030359685863876,
+            "min": 0.007,
+            "p50": 0.007,
+            "p95": 0.628,
+            "p99": 2.502,
+            "max": 2.527
+          }
+        },
+        "power.avg_ma.active": {
+          "before": 34.90062474643334,
+          "after": 34.90066674643333
+        },
+        "power.avg_ma_estimate": {
+          "before": 34.90062474643334,
+          "after": 34.90066674643333
+        },
+        "power.mah.cpu_busy": {
+          "before": 0.003897524238888889,
+          "after": 0.003898224238888889
+        },
+        "power.mah_total": {
+          "before": 0.5816770791072222,
+          "after": 0.5816777791072222
+        },
+        "task.epd.cpu_ms": {
+          "before": 18.572,
+          "after": 18.698
+        }
+      },
+      "warnings_before": [],
+      "warnings_after": [],
+      "budget_violations_before": 0,
+      "budget_violations_after": 0,
+      "final_png_before_sha256": "9a79d4a4fb03ac205179b879299f18afc3eb1950d966f78bc3f7090b3f47cf8b",
+      "final_png_after_sha256": "9a79d4a4fb03ac205179b879299f18afc3eb1950d966f78bc3f7090b3f47cf8b",
+      "final_png_byte_equal": true,
+      "probe_output_equal": true
+    }
+  ]
+}
