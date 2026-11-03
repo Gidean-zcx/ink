@@ -181,6 +181,8 @@ void sim_display_snapshot(const char *name) {
 }
 
 uint32_t sim_display_version(void) { return D.version; }
+uint32_t sim_display_phase_seq(void) { return D.phase_seq; }
+
 bool sim_display_busy(void) { return D.playing; }
 
 bool sim_display_visible(uint8_t *out, size_t cap, int *lw, int *lh) {
@@ -225,6 +227,16 @@ typedef struct plan {
 } plan_t;
 
 static plan_t PLAN; /* kernel lock */
+
+/* Self-test hook: a flash stall of this length starting just after the next phase's scan begins
+ * (inside the waveform, more lines left than the queues can bridge). */
+static uint64_t g_test_stall_ns;
+static void test_stall_cb(void *arg) { /* ISR: kernel lock held */
+    (void)arg;
+    vtk_stall_begin_locked(vtk_isr_now() + g_test_stall_ns);
+    g_test_stall_ns = 0;
+}
+void sim_display_stall_next_scan(uint64_t ns) { g_test_stall_ns = ns; }
 
 /* Flash stall hook (kernel lock held): remember it; a playing phase is re-planned. */
 static void display_stall_hook(uint64_t from, uint64_t until) {
@@ -504,6 +516,7 @@ static bool play_cpu(int phases, const hal_rect_t *a) {
         plan_phase(a, t0, &p);
         PLAN = p;
         D.phase_seq++;
+        if (g_test_stall_ns && k > 0) vtk_event_at(p.scan_start + SIM_US(200), test_stall_cb, NULL);
         vtk_wake_all_locked(&D.feed_wq);
         vtk_unlock();
         for (;;) { /* until the scan ends; a flash stall reported meanwhile re-plans the phase */

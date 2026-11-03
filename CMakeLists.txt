@@ -61,6 +61,8 @@ add_library(ink_port_sim STATIC
   drivers/nt26/nt26.c
   drivers/board/metalio_epd_power.c
   drivers/board/metalio_board.c
+  drivers/board/metalio_touch.c
+  drivers/ft6336u/ft6336u.c
   ports/sim/hal_i2c_sim.c
   ports/sim/dev_epd_power.c
   ports/sim/dev_tca9555.c

@@ -364,11 +364,10 @@ static void test_underrun(void) {
     for (int i = 0; i < 400 && !sim_display_playing(); i++) osal_task_delay_us(1000);
     osal_task_delay_us(100000); /* well inside the waveform */
     CHECK(sim_display_playing(), "the DU is still playing when the stall starts");
+    /* right after the next phase's scan starts: more lines left than the queues can bridge (a stall
+     * near the end of a scan, or before it, only delays the next phase); e.g. a sector erase */
     uint64_t bridge_ns = (uint64_t)(2 * g_profile.line_queue_lines + 2 * g_profile.bounce_lines) * g_profile.line_ns;
-    vtk_lock();
-    vtk_stall_begin_locked(vtk_now() + bridge_ns + 2000000); /* e.g. a sector erase */
-    vtk_unlock();
-    vtk_sched_point();
+    sim_display_stall_next_scan(bridge_ns + 2000000);
     hal_display_result_t r;
     osal_queue_recv(disp_q, &r, OSAL_WAIT_FOREVER);
     hal_rect_t all = {0, 0, pi.width, pi.height};

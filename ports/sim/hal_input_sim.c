@@ -29,6 +29,8 @@
 
 #include "ink/hal_input.h"
 #include "board/metalio_board.h"
+#include "board/metalio_touch.h"
+#include "ft6336u/ft6336u.h"
 #include "ink/rotation.h"
 #include "sim.h"
 
@@ -41,6 +43,7 @@
 typedef struct {
     bool down;
     int nx, ny;
+    int lx, ly;        /* the same point in logical (UI) coordinates */
     uint64_t t_change; /* physical time of last down/up */
 } phys_touch_t;
 
@@ -166,6 +169,8 @@ void sim_input_touch(int id, bool down, int lx, int ly) {
     bool was = p->down;
     p->nx = nx;
     p->ny = ny;
+    p->lx = lx;
+    p->ly = ly;
     p->down = down;
     if (down != was) p->t_change = vtk_isr_now();
     if (down && !was) {
@@ -272,7 +277,9 @@ static int points_reported(void) {
     return n;
 }
 
-static bool any_reported_down(void) { return points_reported() > 0; }
+static hal_i2c_dev_t *g_ft; /* the Plus: FT6336U through our driver (NULL: timing-only touch model) */
+static int ft_reported(void);
+static bool any_reported_down(void) { return g_ft ? ft_reported() > 0 : points_reported() > 0; }
 
 static void deliver_key(hal_key_t key, bool pressed, uint64_t t_ns) {
     hal_input_event_t e = {.type = HAL_IN_KEY, .t_us = t_ns / 1000};
@@ -282,7 +289,162 @@ static void deliver_key(hal_key_t key, bool pressed, uint64_t t_ns) {
     deliver(&e);
 }
 
+/* ------------------------------------------------- FT6336U, register level (the Plus)
+ * The controller hands out its two contact slots: releases free them, cover keys take free slots
+ * before fingers, and a contact beyond two waits for a free slot. A read from TD_STATUS (0x02)
+ * returns the slots in use: event, X, ID, Y in portrait coordinates matching the UI (cover keys at
+ * Y 1600, X 100/200/300, metalio_touch.h). Chip ID 0x64 (0xA3), firmware 0x03 (0xA6, the version
+ * upstream updates to), INT mode (0xA4). INT stays low while touched; when the controller notices
+ * a contact (detection delay, monitor scan) is modelled by the physical part above. */
+static struct {
+    struct { bool used, key; int idx; uint64_t t_down, t_up; } slot[FT6336U_MAX_POINTS];
+    uint8_t ptr, int_mode;
+} FT;
+
+static bool ft_down(bool key, int idx) { return key ? IN.vkey[idx].down : IN.phys[idx].down; }
+static uint64_t ft_t_change(bool key, int idx) { return key ? IN.vkey[idx].t_change : IN.phys[idx].t_change; }
+static int ft_slots(void) { return g_profile.touch_points < FT6336U_MAX_POINTS ? g_profile.touch_points : FT6336U_MAX_POINTS; }
+
+static bool ft_held(bool key, int idx) {
+    for (int s = 0; s < ft_slots(); s++)
+        if (FT.slot[s].used && FT.slot[s].key == key && FT.slot[s].idx == idx) return true;
+    return false;
+}
+
+static void ft_take(bool key, int idx) {
+    for (int s = 0; s < ft_slots(); s++)
+        if (!FT.slot[s].used) {
+            FT.slot[s].used = true;
+            FT.slot[s].key = key;
+            FT.slot[s].idx = idx;
+            FT.slot[s].t_down = ft_t_change(key, idx);
+            return;
+        }
+}
+
+static void ft_assign(void) {
+    for (int s = 0; s < ft_slots(); s++)
+        if (FT.slot[s].used && !ft_down(FT.slot[s].key, FT.slot[s].idx)) {
+            FT.slot[s].used = false;
+            FT.slot[s].t_up = ft_t_change(FT.slot[s].key, FT.slot[s].idx);
+        }
+    for (int k = 0; k < HAL_KEY_COUNT; k++)
+        if (IN.vkey[k].down && !ft_held(true, k)) ft_take(true, k);
+    for (int i = 0; i < MAX_TOUCH; i++)
+        if (IN.phys[i].down && !ft_held(false, i)) ft_take(false, i);
+}
+
+static void ft_raw(int s, int *x, int *y) {
+    if (FT.slot[s].key) {
+        hal_key_t k = (hal_key_t)FT.slot[s].idx;
+        *x = k == HAL_KEY_HOME ? MT_VK_HOME_X : k == HAL_KEY_PREV ? MT_VK_PREV_X : MT_VK_NEXT_X;
+        *y = MT_VK_Y;
+    } else {
+        *x = IN.phys[FT.slot[s].idx].lx;
+        *y = IN.phys[FT.slot[s].idx].ly;
+    }
+}
+
+static uint8_t ft_reg(uint8_t reg) {
+    int used = 0;
+    for (int s = 0; s < ft_slots(); s++) used += FT.slot[s].used;
+    switch (reg) {
+    case 0x02: return (uint8_t)used;
+    case 0xA3: return FT6336U_CHIP_ID;
+    case 0xA4: return FT.int_mode;
+    case 0xA6: return 0x03;
+    default: break;
+    }
+    if (reg < 0x03 || reg >= 0x03 + 6 * FT6336U_MAX_POINTS) return 0;
+    int k = (reg - 0x03) / 6, off = (reg - 0x03) % 6, s = -1;
+    for (int i = 0, seen = 0; i < ft_slots(); i++)
+        if (FT.slot[i].used && seen++ == k) s = i;
+    if (s < 0) return 0xFF;
+    int x, y;
+    ft_raw(s, &x, &y);
+    switch (off) {
+    case 0: return (uint8_t)((2 << 6) | ((x >> 8) & 0x0F)); /* event: contact */
+    case 1: return (uint8_t)x;
+    case 2: return (uint8_t)((s << 4) | ((y >> 8) & 0x0F));
+    case 3: return (uint8_t)y;
+    case 4: return 0x10; /* weight */
+    default: return 0;
+    }
+}
+
+static int ft_xfer(void *state, const uint8_t *w, size_t wlen, uint8_t *r, size_t rlen) {
+    (void)state;
+    if (wlen) FT.ptr = w[0];
+    for (size_t i = 1; i < wlen; i++, FT.ptr++)
+        if (FT.ptr == 0xA4) FT.int_mode = w[i];
+    if (rlen && FT.ptr == 0x02) ft_assign(); /* a frame read */
+    for (size_t i = 0; i < rlen; i++, FT.ptr++) r[i] = ft_reg(FT.ptr);
+    return HAL_I2C_OK;
+}
+
+/* The driver side (the device port does the same with the same drivers): read the points, tell the
+ * cover keys from fingers by position, report what changed per contact ID. Events carry the
+ * physical time of the action, which the model knows, so latency probes stay end to end. */
+static struct { bool down, key; hal_key_t vk; int x, y; } RP[FT6336U_MAX_POINTS];
+
+static void deliver_touch(int id, hal_touch_phase_t phase, int lx, int ly, uint64_t t_ns) {
+    hal_input_event_t e = {.type = HAL_IN_TOUCH, .t_us = t_ns / 1000};
+    e.touch.id = id;
+    e.touch.phase = phase;
+    ink_logical_to_native(g_profile.panel.width, g_profile.panel.height, g_profile.panel.rotation_deg, lx, ly, &e.touch.x, &e.touch.y);
+    sim_metric_sample("input.touch_delivery_ms", (vtk_now() / 1000 - e.t_us) / 1e3);
+    deliver(&e);
+}
+
+static int ft_reported(void) {
+    int n = 0;
+    for (int i = 0; i < FT6336U_MAX_POINTS; i++) n += RP[i].down;
+    return n;
+}
+
+static void poll_touch_ft(void) {
+    ft6336u_point_t pts[FT6336U_MAX_POINTS];
+    int n = 0;
+    if (ft6336u_read(g_ft, pts, ft_slots(), &n) != HAL_I2C_OK) {
+        sim_metric_add("input.touch_read_errors", 1);
+        return;
+    }
+    uint64_t t_read = vtk_now();
+    bool seen[FT6336U_MAX_POINTS] = {false};
+    for (int i = 0; i < n; i++)
+        if (pts[i].id >= 0 && pts[i].id < FT6336U_MAX_POINTS) seen[pts[i].id] = true;
+    for (int id = 0; id < FT6336U_MAX_POINTS; id++) /* releases first: they free contacts */
+        if (RP[id].down && !seen[id]) {
+            RP[id].down = false;
+            if (RP[id].key) deliver_key(RP[id].vk, false, FT.slot[id].t_up);
+            else deliver_touch(id, HAL_TOUCH_UP, RP[id].x, RP[id].y, FT.slot[id].t_up);
+        }
+    for (int i = 0; i < n; i++) {
+        int id = pts[i].id;
+        if (id < 0 || id >= FT6336U_MAX_POINTS) continue;
+        hal_key_t vk = metalio_touch_cover_key(pts[i].x, pts[i].y);
+        bool panel = metalio_touch_on_panel(pts[i].x, pts[i].y);
+        if (!RP[id].down && (vk != HAL_KEY_NONE || panel)) {
+            RP[id].down = true;
+            RP[id].key = vk != HAL_KEY_NONE;
+            RP[id].vk = vk;
+            RP[id].x = pts[i].x;
+            RP[id].y = pts[i].y;
+            if (RP[id].key) deliver_key(vk, true, FT.slot[id].t_down);
+            else deliver_touch(id, HAL_TOUCH_DOWN, pts[i].x, pts[i].y, FT.slot[id].t_down);
+        } else if (RP[id].down && !RP[id].key && panel && (pts[i].x != RP[id].x || pts[i].y != RP[id].y)) {
+            RP[id].x = pts[i].x;
+            RP[id].y = pts[i].y;
+            deliver_touch(id, HAL_TOUCH_MOVE, pts[i].x, pts[i].y, t_read);
+        }
+    }
+}
+
 static void poll_touch_once(void) {
+    if (g_ft) {
+        poll_touch_ft();
+        return;
+    }
     sim_i2c_transfer("touch", g_profile.touch_read_bytes);
     uint64_t t_read = vtk_now();
     /* cover keys, each its own point: releases first (they free points), then presses while the
@@ -395,6 +557,16 @@ void hal_input_get_info(hal_input_info_t *out) {
 
 void sim_input_init(void) {
     const char *prev = osal_mem_tag("input-driver");
+    if (sim_board_present() && g_profile.has_touch) { /* the Plus: FT6336U on the shared bus */
+        static const sim_i2c_model_t ft = {ft_xfer};
+        sim_i2c_attach(0, FT6336U_ADDR, &ft, NULL);
+        g_ft = hal_i2c_device(0, FT6336U_ADDR, "touch");
+        uint8_t fw = 0;
+        if (ft6336u_init(g_ft, &fw) != HAL_I2C_OK) {
+            sim_warn("input: FT6336U did not answer as expected");
+            g_ft = NULL;
+        }
+    }
     osal_task_cfg_t cfg = {.name = "input", .fn = input_task, .stack_bytes = INPUT_STACK, .priority = INPUT_PRIO, .core = -1};
     if (osal_task_create(&cfg, &IN.task) != OSAL_OK) osal_panic("input driver init failed");
     if (g_profile.i2c_background_poll_ms) {

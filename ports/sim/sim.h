@@ -120,6 +120,8 @@ double sim_display_ghost_level(void);
 /* Desktop simulator (ISR context or host work): change counter, refresh in progress, and a copy of
  * the visible image in logical orientation (cap >= panel pixels; false before the display exists). */
 uint32_t sim_display_version(void);
+uint32_t sim_display_phase_seq(void); /* bumped for every waveform phase (self-tests) */
+void sim_display_stall_next_scan(uint64_t ns); /* self-test: flash stall right after the next scan starts */
 bool sim_display_busy(void);
 bool sim_display_visible(uint8_t *out, size_t cap, int *lw, int *lh);
 
