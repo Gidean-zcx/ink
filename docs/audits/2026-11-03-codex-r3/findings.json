@@ -1,0 +1,69 @@
+[
+  {
+    "id": "AUD4-001",
+    "severity": "严重",
+    "area": "显示 HAL / 屏电源模型",
+    "title": "瞬态失电在完成检查前恢复，两条显示管线仍可回调成功",
+    "evidence_type": "复现、代码核查",
+    "locations": [
+      "ports/sim/hal/hal_display_sim.c:520",
+      "ports/sim/hal/hal_display_sim.c:744",
+      "ports/sim/hal/hal_display_sim.c:1174",
+      "ports/sim/hal/hal_display_sim.c:1218",
+      "ports/sim/hal/hal_display_sim.c:1278",
+      "simulator/models/dev_epd_power.c:75"
+    ],
+    "impact": "AUD3-003 的持续失电复现已修好，但结束时 PG 正常不等于整个波形供电正常。默认 EPDiy 不使用已观测的 supply_drops 代次，失电后恢复会把完整目标图提交并报告成功；PQ-BN 的普通掉轨可失败，但 VCOM_CTRL 瞬态拉低不改变 P07，PQ-BN 仍在无 VCOM 的时段推进光学模型，最终报告成功。按第一轮定级，这是关键供电/显示结论假阳性（严重），不是实机画质推断。",
+    "recommendation": "为每次刷新锁存电源有效性失效代次，EPDiy 和 PQ-BN 在每次提交成功前校验同一代次；供电模型应涵盖 rails 与 VCOM 的有效性变化，PQ-BN 无供电时不推进面板。失电一旦发生，即使本次结束前恢复也应失败，并明确重新初始化/重画策略。",
+    "reproduce": "运行 python3 docs/audits/2026-11-03-codex-r3/experiments/run.py r3_display_transient r3_display_vcom，再加 --pqbn 运行同名项。默认档 rails cut 在 1.930 s ready=0，2.013 s ready=1 且 playing=1，2.345 s id=1 ok=1；VCOM 组两档均 ready=0→1 后 id=1 ok=1。PQ-BN 普通 rails cut 对照 id=1 ok=0，说明并非所有掉电检测都失效。见 experiments/results.json；截图仅存构建目录。"
+  },
+  {
+    "id": "AUD4-002",
+    "severity": "高",
+    "area": "输入 HAL / 唤醒恢复",
+    "title": "持续触摸占住输入循环，扩展芯片后台恢复被无限推迟",
+    "evidence_type": "复现、代码核查",
+    "locations": [
+      "ports/sim/hal/hal_input_sim.c:646",
+      "ports/sim/hal/hal_input_sim.c:735",
+      "ports/sim/hal/hal_input_sim.c:743",
+      "ports/sim/hal/hal_input_sim.c:753"
+    ],
+    "impact": "restore_due 只在输入任务的外层循环处理；持续触摸的内层循环只处理 exp_irq/exp_confirm。若唤醒恢复正好需要后台重试，触摸按住多久，按键方向就继续停留睡眠配置多久，POWER 松开与音量输入都无法送达。探针中总线已恢复数秒，但配置仍为 00,80；松开触摸才恢复 c0,e3。不是永久总线故障导致的合理降级。",
+    "recommendation": "在触摸轮询循环中同样提取并服务 restore_due，或将恢复放到独立的有界工作队列；统一与 sample_lock 的状态迁移，补持续触摸、恢复重试、按键去抖同时发生的回归。",
+    "reproduce": "python3 docs/audits/2026-11-03-codex-r3/experiments/run.py r3_wake_touch。POWER 400 ms 唤醒，401–650 ms 注入 io-expander 错误，470 ms 开始持续触摸；5.100 s cfg=00,80 keys=1，5.610 s 音量点击后仍 keys=1；松触摸后 5.640 s 补 POWER 释放，6.120 s cfg=c0,e3 keys=2。r2_wake_read_fault 无触摸对照收齐 POWER/VOL 4 个事件。"
+  },
+  {
+    "id": "AUD4-003",
+    "severity": "高",
+    "area": "电源 HAL / 音频 HAL",
+    "title": "唤醒供电尚待后台恢复时释放准入锁，录音仍假成功并永久缺少时钟",
+    "evidence_type": "复现、代码核查",
+    "locations": [
+      "ports/sim/hal/hal_power_sim.c:379",
+      "ports/sim/hal/hal_power_sim.c:448",
+      "ports/sim/hal/hal_audio_sim.c:299",
+      "ports/sim/hal/hal_audio_sim.c:368",
+      "ports/sim/hal/hal_input_sim.c:648"
+    ],
+    "impact": "睡眠准入租约修复了正常进入阶段的竞争，但恢复失败会把 rails 恢复转交后台后释放 g_admission。此时启动音频，ensure_bt_mode 看到 P14 关闭直接返回，capture_start 仍置 cap_on 并返回 0。后台把电源恢复后没有再次设置 BH 模式，持续零样本；用户不主动 stop/restart 就无法恢复，播放入口具有同样控制流。",
+    "recommendation": "让准入状态区分已唤醒和外设供电恢复完成；音频启动必须取得有效供电并确认模式就绪，否则有界等待或明确返回失败并释放租约/缓冲。后台复电需通知音频重新设置，补长于同步重试窗口的故障。",
+    "reproduce": "python3 docs/audits/2026-11-03-codex-r3/experiments/run.py r3_wake_audio。2.700 s sleep 返回 POWER、power=0；2.720 s capture_start rc=0 mode=0 clock=0；故障 3.140 s 解除，5.230 s power=1 但 samples=0 mode=0 clock=0 busy=1。停止后睡眠 cause=1，说明此复现不是单纯租约泄漏或死锁。"
+  },
+  {
+    "id": "AUD4-004",
+    "severity": "高",
+    "area": "开机恢复 / 音频初始化",
+    "title": "扩展芯片延迟初始化后，BH1098G 初始化永远缺席",
+    "evidence_type": "复现、代码核查",
+    "locations": [
+      "ports/sim/hal/hal_audio_sim.c:300",
+      "ports/sim/hal/hal_audio_sim.c:511",
+      "ports/sim/hal/hal_input_sim.c:663",
+      "simulator/runtime/sim_main.c:141"
+    ],
+    "impact": "sim_audio_init 只在开机时 board_ready 为真才创建 bt_lock/启动模式设置任务；新的输入恢复路径能使 board_ready 从假变真，但不补音频初始化。此后 ensure_bt_mode 每次因 bt_lock 为空立即返回，录音可报成功、共享电源正常，却永远没有 BH 时钟和样本。与 AUD4-003 不同，单纯等 rails 恢复或再次录音也不能补上缺失的初始化对象。",
+    "recommendation": "按硬件存在性初始化必需的同步对象，并让芯片启动按 ready/电源代次惰性重试；或增加完整的板级恢复通知，避免仅恢复按键就宣称整板可用。为开机总线故障后恢复加入音频端到端检查。",
+    "reproduce": "python3 docs/audits/2026-11-03-codex-r3/experiments/run.py r3_boot_audio（脚本自动加 --i2c-faults 1:io-expander）。在应用入口解除故障并触发 POWER：board_ready 0→1、按键共 2 个；3.640 s capture_start rc=0 mode=0 clock=0；6.150 s power=1 samples=0 busy=1。"
+  }
+]

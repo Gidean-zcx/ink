@@ -1,0 +1,187 @@
+{
+  "audit_commit": "95587e5a5f641fa4fd44c313f366e69f244faeb1",
+  "all_checks_passed": true,
+  "meaning": "audit package and observations are consistent; product still has 1 critical and 3 high findings",
+  "checks": [
+    {
+      "name": "fixed_commit",
+      "passed": true,
+      "detail": "95587e5a5f641fa4fd44c313f366e69f244faeb1"
+    },
+    {
+      "name": "tracked_files_unchanged",
+      "passed": true,
+      "detail": "no tracked changes"
+    },
+    {
+      "name": "untracked_scope",
+      "passed": true,
+      "detail": [
+        "docs/audits/2026-11-03-codex-r3/TASK.md",
+        "docs/audits/2026-11-03-codex-r3/experiments/README.md",
+        "docs/audits/2026-11-03-codex-r3/experiments/artifact-validation.json",
+        "docs/audits/2026-11-03-codex-r3/experiments/deep_probe.c",
+        "docs/audits/2026-11-03-codex-r3/experiments/display-image-evidence.json",
+        "docs/audits/2026-11-03-codex-r3/experiments/extra_probe.c",
+        "docs/audits/2026-11-03-codex-r3/experiments/history-evidence.json",
+        "docs/audits/2026-11-03-codex-r3/experiments/history_check.py",
+        "docs/audits/2026-11-03-codex-r3/experiments/layout-evidence.json",
+        "docs/audits/2026-11-03-codex-r3/experiments/layout_check.py",
+        "docs/audits/2026-11-03-codex-r3/experiments/probe.c",
+        "docs/audits/2026-11-03-codex-r3/experiments/record.py",
+        "docs/audits/2026-11-03-codex-r3/experiments/results.json",
+        "docs/audits/2026-11-03-codex-r3/experiments/run.py",
+        "docs/audits/2026-11-03-codex-r3/experiments/validate.py",
+        "docs/audits/2026-11-03-codex-r3/findings.json",
+        "docs/audits/2026-11-03-codex-r3/report.md",
+        "docs/audits/2026-11-03-codex-r3/verification.json"
+      ]
+    },
+    {
+      "name": "file_sizes",
+      "passed": true,
+      "detail": {
+        "files": 18,
+        "largest_bytes": 29392
+      }
+    },
+    {
+      "name": "no_build_logs_or_media",
+      "passed": true,
+      "detail": "runtime artifacts remain in allowed build directories"
+    },
+    {
+      "name": "json_parse",
+      "passed": true,
+      "detail": "all audit JSON files parse"
+    },
+    {
+      "name": "python_syntax",
+      "passed": true,
+      "detail": "all experiment scripts parse"
+    },
+    {
+      "name": "verification_ids",
+      "passed": true,
+      "detail": [
+        "AUD2-010",
+        "AUD2-012",
+        "AUD2-016",
+        "AUD2-019",
+        "AUD2-020",
+        "AUD2-022",
+        "AUD2-023",
+        "AUD2-024",
+        "AUD3-001",
+        "AUD3-002",
+        "AUD3-003",
+        "AUD3-004"
+      ]
+    },
+    {
+      "name": "verification_schema",
+      "passed": true,
+      "detail": {
+        "已修复": 7,
+        "部分修复": 5
+      }
+    },
+    {
+      "name": "findings_schema",
+      "passed": true,
+      "detail": {
+        "严重": 1,
+        "高": 3
+      }
+    },
+    {
+      "name": "finding_locations_exist",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "name": "report_complete",
+      "passed": true,
+      "detail": "all verdicts and finding titles rendered"
+    },
+    {
+      "name": "local_markdown_links",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "name": "build-audit_ctest",
+      "passed": true,
+      "detail": "40/40"
+    },
+    {
+      "name": "build-audit-asan_ctest",
+      "passed": true,
+      "detail": "39/39"
+    },
+    {
+      "name": "layout_sources",
+      "passed": true,
+      "detail": "85 changed code pairs; no additions/deletions"
+    },
+    {
+      "name": "layout_headers",
+      "passed": true,
+      "detail": "12/12"
+    },
+    {
+      "name": "history_builds_tests",
+      "passed": true,
+      "detail": "configure/build/ctest each revision exit=0"
+    },
+    {
+      "name": "history_artifacts",
+      "passed": true,
+      "detail": "39 metrics and 410 PNG pairs identical"
+    },
+    {
+      "name": "probe_processes",
+      "passed": true,
+      "detail": "27 configurations ended normally; defects are judged by observations"
+    },
+    {
+      "name": "timer_delete_observation",
+      "passed": true,
+      "detail": "normal and ASan"
+    },
+    {
+      "name": "AUD4-001_observation",
+      "passed": true,
+      "detail": "EPDiy rail transient and both VCOM transients falsely succeed; PQ rail control fails"
+    },
+    {
+      "name": "PQ_callbacks_once",
+      "passed": true,
+      "detail": "4 failures then successful new request"
+    },
+    {
+      "name": "AUD4-002_observation",
+      "passed": true,
+      "detail": "normal and ASan"
+    },
+    {
+      "name": "AUD4-003_observation",
+      "passed": true,
+      "detail": "normal and ASan; powered but no audio clock/samples"
+    },
+    {
+      "name": "AUD4-004_observation",
+      "passed": true,
+      "detail": "normal and ASan; powered but no audio clock/samples"
+    },
+    {
+      "name": "sanitizer_logs",
+      "passed": true,
+      "detail": {
+        "configurations": 5,
+        "errors": [],
+        "leak_check": false
+      }
+    }
+  ]
+}

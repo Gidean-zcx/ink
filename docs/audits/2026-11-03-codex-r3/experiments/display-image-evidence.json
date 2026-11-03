@@ -1,0 +1,50 @@
+[
+  {
+    "name": "r3_display_transient",
+    "changed_pixels_after_cut": 16384,
+    "dimensions": [
+      684,
+      1216
+    ]
+  },
+  {
+    "name": "r3_display_vcom",
+    "changed_pixels_after_cut": 16384,
+    "dimensions": [
+      684,
+      1216
+    ]
+  },
+  {
+    "name": "r3_display_multi",
+    "changed_pixels_after_cut": 49152,
+    "dimensions": [
+      684,
+      1216
+    ]
+  },
+  {
+    "name": "r3_display_transient-pqbn",
+    "changed_pixels_after_cut": 16384,
+    "dimensions": [
+      684,
+      1216
+    ]
+  },
+  {
+    "name": "r3_display_vcom-pqbn",
+    "changed_pixels_after_cut": 16384,
+    "dimensions": [
+      684,
+      1216
+    ]
+  },
+  {
+    "name": "r3_display_multi-pqbn",
+    "changed_pixels_after_cut": 24192,
+    "dimensions": [
+      684,
+      1216
+    ]
+  }
+]

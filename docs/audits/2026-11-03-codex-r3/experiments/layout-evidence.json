@@ -1,0 +1,1025 @@
+{
+  "before": "4309087",
+  "restructure": "dc085cb",
+  "code_files": [
+    {
+      "old": "drivers/board/metalio_board.c",
+      "new": "boards/metalio_plus/metalio_board.c",
+      "status": "R099",
+      "byte_identical": false,
+      "code_identical": true
+    },
+    {
+      "old": "drivers/board/metalio_board.h",
+      "new": "boards/metalio_plus/metalio_board.h",
+      "status": "R100",
+      "byte_identical": true,
+      "code_identical": true
+    },
+    {
+      "old": "drivers/board/metalio_epd_power.c",
+      "new": "boards/metalio_plus/metalio_epd_power.c",
+      "status": "R100",
+      "byte_identical": true,
+      "code_identical": true
+    },
+    {
+      "old": "drivers/board/metalio_epd_power.h",
+      "new": "boards/metalio_plus/metalio_epd_power.h",
+      "status": "R100",
+      "byte_identical": true,
+      "code_identical": true
+    },
+    {
+      "old": "drivers/board/metalio_touch.c",
+      "new": "boards/metalio_plus/metalio_touch.c",
+      "status": "R092",
+      "byte_identical": false,
+      "code_identical": true
+    },
+    {
+      "old": "drivers/board/metalio_touch.h",
+      "new": "boards/metalio_plus/metalio_touch.h",
+      "status": "R100",
+      "byte_identical": true,
+      "code_identical": true
+    },
+    {
+      "old": "drivers/bh1098g/bh1098g.c",
+      "new": "drivers/chips/bh1098g/bh1098g.c",
+      "status": "R100",
+      "byte_identical": true,
+      "code_identical": true
+    },
+    {
+      "old": "drivers/bh1098g/bh1098g.h",
+      "new": "drivers/chips/bh1098g/bh1098g.h",
+      "status": "R100",
+      "byte_identical": true,
+      "code_identical": true
+    },
+    {
+      "old": "drivers/bq27220/bq27220.c",
+      "new": "drivers/chips/bq27220/bq27220.c",
+      "status": "R100",
+      "byte_identical": true,
+      "code_identical": true
+    },
+    {
+      "old": "drivers/bq27220/bq27220.h",
+      "new": "drivers/chips/bq27220/bq27220.h",
+      "status": "R100",
+      "byte_identical": true,
+      "code_identical": true
+    },
+    {
+      "old": "drivers/cx25601n/cx25601n.c",
+      "new": "drivers/chips/cx25601n/cx25601n.c",
+      "status": "R100",
+      "byte_identical": true,
+      "code_identical": true
+    },
+    {
+      "old": "drivers/cx25601n/cx25601n.h",
+      "new": "drivers/chips/cx25601n/cx25601n.h",
+      "status": "R100",
+      "byte_identical": true,
+      "code_identical": true
+    },
+    {
+      "old": "drivers/ft6336u/ft6336u.c",
+      "new": "drivers/chips/ft6336u/ft6336u.c",
+      "status": "R100",
+      "byte_identical": true,
+      "code_identical": true
+    },
+    {
+      "old": "drivers/ft6336u/ft6336u.h",
+      "new": "drivers/chips/ft6336u/ft6336u.h",
+      "status": "R100",
+      "byte_identical": true,
+      "code_identical": true
+    },
+    {
+      "old": "drivers/gc2145/gc2145.c",
+      "new": "drivers/chips/gc2145/gc2145.c",
+      "status": "R100",
+      "byte_identical": true,
+      "code_identical": true
+    },
+    {
+      "old": "drivers/gc2145/gc2145.h",
+      "new": "drivers/chips/gc2145/gc2145.h",
+      "status": "R100",
+      "byte_identical": true,
+      "code_identical": true
+    },
+    {
+      "old": "drivers/gc2145/gc2145_vga_table.h",
+      "new": "drivers/chips/gc2145/gc2145_vga_table.h",
+      "status": "R100",
+      "byte_identical": true,
+      "code_identical": true
+    },
+    {
+      "old": "drivers/nt26/nt26.c",
+      "new": "drivers/chips/nt26/nt26.c",
+      "status": "R100",
+      "byte_identical": true,
+      "code_identical": true
+    },
+    {
+      "old": "drivers/nt26/nt26.h",
+      "new": "drivers/chips/nt26/nt26.h",
+      "status": "R100",
+      "byte_identical": true,
+      "code_identical": true
+    },
+    {
+      "old": "drivers/pcf8563/pcf8563.c",
+      "new": "drivers/chips/pcf8563/pcf8563.c",
+      "status": "R100",
+      "byte_identical": true,
+      "code_identical": true
+    },
+    {
+      "old": "drivers/pcf8563/pcf8563.h",
+      "new": "drivers/chips/pcf8563/pcf8563.h",
+      "status": "R100",
+      "byte_identical": true,
+      "code_identical": true
+    },
+    {
+      "old": "drivers/sc7a20h/sc7a20h.c",
+      "new": "drivers/chips/sc7a20h/sc7a20h.c",
+      "status": "R100",
+      "byte_identical": true,
+      "code_identical": true
+    },
+    {
+      "old": "drivers/sc7a20h/sc7a20h.h",
+      "new": "drivers/chips/sc7a20h/sc7a20h.h",
+      "status": "R100",
+      "byte_identical": true,
+      "code_identical": true
+    },
+    {
+      "old": "drivers/tca9555/tca9555.c",
+      "new": "drivers/chips/tca9555/tca9555.c",
+      "status": "R100",
+      "byte_identical": true,
+      "code_identical": true
+    },
+    {
+      "old": "drivers/tca9555/tca9555.h",
+      "new": "drivers/chips/tca9555/tca9555.h",
+      "status": "R100",
+      "byte_identical": true,
+      "code_identical": true
+    },
+    {
+      "old": "drivers/tps65185/tps65185.c",
+      "new": "drivers/chips/tps65185/tps65185.c",
+      "status": "R100",
+      "byte_identical": true,
+      "code_identical": true
+    },
+    {
+      "old": "drivers/tps65185/tps65185.h",
+      "new": "drivers/chips/tps65185/tps65185.h",
+      "status": "R095",
+      "byte_identical": false,
+      "code_identical": true
+    },
+    {
+      "old": "drivers/epd/pqbn_v4.c",
+      "new": "drivers/display/pqbn/pqbn_v4.c",
+      "status": "R100",
+      "byte_identical": true,
+      "code_identical": true
+    },
+    {
+      "old": "drivers/epd/pqbn_v4.h",
+      "new": "drivers/display/pqbn/pqbn_v4.h",
+      "status": "R099",
+      "byte_identical": false,
+      "code_identical": true
+    },
+    {
+      "old": "platform/include/ink/hal_device.h",
+      "new": "platform/include/ink/hal_device.h",
+      "status": "M",
+      "byte_identical": false,
+      "code_identical": true
+    },
+    {
+      "old": "platform/include/ink/hal_net.h",
+      "new": "platform/include/ink/hal_net.h",
+      "status": "M",
+      "byte_identical": false,
+      "code_identical": true
+    },
+    {
+      "old": "ports/sim/hal_assets_sim.c",
+      "new": "ports/sim/hal/hal_assets_sim.c",
+      "status": "R100",
+      "byte_identical": true,
+      "code_identical": true
+    },
+    {
+      "old": "ports/sim/hal_audio_sim.c",
+      "new": "ports/sim/hal/hal_audio_sim.c",
+      "status": "R099",
+      "byte_identical": false,
+      "code_identical": true
+    },
+    {
+      "old": "ports/sim/hal_codec_sim.c",
+      "new": "ports/sim/hal/hal_codec_sim.c",
+      "status": "R100",
+      "byte_identical": true,
+      "code_identical": true
+    },
+    {
+      "old": "ports/sim/hal_display_sim.c",
+      "new": "ports/sim/hal/hal_display_sim.c",
+      "status": "R099",
+      "byte_identical": false,
+      "code_identical": true
+    },
+    {
+      "old": "ports/sim/hal_i2c_sim.c",
+      "new": "ports/sim/hal/hal_i2c_sim.c",
+      "status": "R100",
+      "byte_identical": true,
+      "code_identical": true
+    },
+    {
+      "old": "ports/sim/hal_input_sim.c",
+      "new": "ports/sim/hal/hal_input_sim.c",
+      "status": "R099",
+      "byte_identical": false,
+      "code_identical": true
+    },
+    {
+      "old": "ports/sim/hal_net_sim.c",
+      "new": "ports/sim/hal/hal_net_sim.c",
+      "status": "R099",
+      "byte_identical": false,
+      "code_identical": true
+    },
+    {
+      "old": "ports/sim/hal_power_sim.c",
+      "new": "ports/sim/hal/hal_power_sim.c",
+      "status": "R099",
+      "byte_identical": false,
+      "code_identical": true
+    },
+    {
+      "old": "ports/sim/hal_sensors_sim.c",
+      "new": "ports/sim/hal/hal_sensors_sim.c",
+      "status": "R100",
+      "byte_identical": true,
+      "code_identical": true
+    },
+    {
+      "old": "ports/sim/hal_storage_sim.c",
+      "new": "ports/sim/hal/hal_storage_sim.c",
+      "status": "R100",
+      "byte_identical": true,
+      "code_identical": true
+    },
+    {
+      "old": "ports/sim/osal_sim.c",
+      "new": "ports/sim/osal/osal_sim.c",
+      "status": "R099",
+      "byte_identical": false,
+      "code_identical": true
+    },
+    {
+      "old": "ports/sim/gui/gui_main.cpp",
+      "new": "simulator/desktop/gui/gui_main.cpp",
+      "status": "R099",
+      "byte_identical": false,
+      "code_identical": true
+    },
+    {
+      "old": "ports/sim/gui/host_camera.h",
+      "new": "simulator/desktop/gui/host_camera.h",
+      "status": "R100",
+      "byte_identical": true,
+      "code_identical": true
+    },
+    {
+      "old": "ports/sim/gui/host_camera_linux.c",
+      "new": "simulator/desktop/gui/host_camera_linux.c",
+      "status": "R100",
+      "byte_identical": true,
+      "code_identical": true
+    },
+    {
+      "old": "ports/sim/gui/host_camera_mac.m",
+      "new": "simulator/desktop/gui/host_camera_mac.m",
+      "status": "R100",
+      "byte_identical": true,
+      "code_identical": true
+    },
+    {
+      "old": "ports/sim/sim_gui.c",
+      "new": "simulator/desktop/sim_gui.c",
+      "status": "R100",
+      "byte_identical": true,
+      "code_identical": true
+    },
+    {
+      "old": "ports/sim/sim_gui.h",
+      "new": "simulator/desktop/sim_gui.h",
+      "status": "R097",
+      "byte_identical": false,
+      "code_identical": true
+    },
+    {
+      "old": "ports/sim/sim_hub.c",
+      "new": "simulator/environment/sim_hub.c",
+      "status": "R100",
+      "byte_identical": true,
+      "code_identical": true
+    },
+    {
+      "old": "sim/vtk/vtk.c",
+      "new": "simulator/kernel/vtk/vtk.c",
+      "status": "R100",
+      "byte_identical": true,
+      "code_identical": true
+    },
+    {
+      "old": "sim/vtk/vtk.h",
+      "new": "simulator/kernel/vtk/vtk.h",
+      "status": "R100",
+      "byte_identical": true,
+      "code_identical": true
+    },
+    {
+      "old": "sim/mem/pools.c",
+      "new": "simulator/memory/pools.c",
+      "status": "R100",
+      "byte_identical": true,
+      "code_identical": true
+    },
+    {
+      "old": "sim/mem/pools.h",
+      "new": "simulator/memory/pools.h",
+      "status": "R100",
+      "byte_identical": true,
+      "code_identical": true
+    },
+    {
+      "old": "ports/sim/dev_bt_audio.c",
+      "new": "simulator/models/dev_bt_audio.c",
+      "status": "R097",
+      "byte_identical": false,
+      "code_identical": true
+    },
+    {
+      "old": "ports/sim/dev_camera.c",
+      "new": "simulator/models/dev_camera.c",
+      "status": "R096",
+      "byte_identical": false,
+      "code_identical": true
+    },
+    {
+      "old": "ports/sim/dev_epd_power.c",
+      "new": "simulator/models/dev_epd_power.c",
+      "status": "R099",
+      "byte_identical": false,
+      "code_identical": true
+    },
+    {
+      "old": "ports/sim/dev_power_chips.c",
+      "new": "simulator/models/dev_power_chips.c",
+      "status": "R099",
+      "byte_identical": false,
+      "code_identical": true
+    },
+    {
+      "old": "ports/sim/dev_rtc_accel.c",
+      "new": "simulator/models/dev_rtc_accel.c",
+      "status": "R099",
+      "byte_identical": false,
+      "code_identical": true
+    },
+    {
+      "old": "ports/sim/dev_tca9555.c",
+      "new": "simulator/models/dev_tca9555.c",
+      "status": "R098",
+      "byte_identical": false,
+      "code_identical": true
+    },
+    {
+      "old": "ports/sim/metrics.c",
+      "new": "simulator/runtime/metrics.c",
+      "status": "R100",
+      "byte_identical": true,
+      "code_identical": true
+    },
+    {
+      "old": "sim/profile.c",
+      "new": "simulator/runtime/profile.c",
+      "status": "R100",
+      "byte_identical": true,
+      "code_identical": true
+    },
+    {
+      "old": "sim/profile.h",
+      "new": "simulator/runtime/profile.h",
+      "status": "R098",
+      "byte_identical": false,
+      "code_identical": true
+    },
+    {
+      "old": "ports/sim/script.c",
+      "new": "simulator/runtime/script.c",
+      "status": "R100",
+      "byte_identical": true,
+      "code_identical": true
+    },
+    {
+      "old": "ports/sim/sim_main.c",
+      "new": "simulator/runtime/sim_main.c",
+      "status": "R098",
+      "byte_identical": false,
+      "code_identical": true
+    },
+    {
+      "old": "ports/sim/stb_impl.c",
+      "new": "simulator/runtime/stb_impl.c",
+      "status": "R100",
+      "byte_identical": true,
+      "code_identical": true
+    },
+    {
+      "old": "ports/sim/trace.c",
+      "new": "simulator/runtime/trace.c",
+      "status": "R100",
+      "byte_identical": true,
+      "code_identical": true
+    },
+    {
+      "old": "ports/sim/sim.h",
+      "new": "simulator/sim.h",
+      "status": "R099",
+      "byte_identical": false,
+      "code_identical": true
+    },
+    {
+      "old": "system/main.c",
+      "new": "system/boot/main.c",
+      "status": "R100",
+      "byte_identical": true,
+      "code_identical": true
+    },
+    {
+      "old": "system/core/actions.c",
+      "new": "system/policy/actions.c",
+      "status": "R100",
+      "byte_identical": true,
+      "code_identical": true
+    },
+    {
+      "old": "system/core/members.c",
+      "new": "system/policy/members.c",
+      "status": "R100",
+      "byte_identical": true,
+      "code_identical": true
+    },
+    {
+      "old": "system/core/system_actions.c",
+      "new": "system/policy/system_actions.c",
+      "status": "R100",
+      "byte_identical": true,
+      "code_identical": true
+    },
+    {
+      "old": "system/ai/ai_service.c",
+      "new": "system/services/ai/ai_service.c",
+      "status": "R100",
+      "byte_identical": true,
+      "code_identical": true
+    },
+    {
+      "old": "system/audio/audio_service.c",
+      "new": "system/services/audio/audio_service.c",
+      "status": "R100",
+      "byte_identical": true,
+      "code_identical": true
+    },
+    {
+      "old": "system/display/display_service.c",
+      "new": "system/services/display/display_service.c",
+      "status": "R100",
+      "byte_identical": true,
+      "code_identical": true
+    },
+    {
+      "old": "system/display/refresh_policy.c",
+      "new": "system/services/display/refresh_policy.c",
+      "status": "R100",
+      "byte_identical": true,
+      "code_identical": true
+    },
+    {
+      "old": "system/display/refresh_policy.h",
+      "new": "system/services/display/refresh_policy.h",
+      "status": "R100",
+      "byte_identical": true,
+      "code_identical": true
+    },
+    {
+      "old": "system/net/hub_link.c",
+      "new": "system/services/hub/hub_link.c",
+      "status": "R100",
+      "byte_identical": true,
+      "code_identical": true
+    },
+    {
+      "old": "system/input/input_service.c",
+      "new": "system/services/input/input_service.c",
+      "status": "R100",
+      "byte_identical": true,
+      "code_identical": true
+    },
+    {
+      "old": "system/power/power_service.c",
+      "new": "system/services/power/power_service.c",
+      "status": "R100",
+      "byte_identical": true,
+      "code_identical": true
+    },
+    {
+      "old": "system/storage/storage_service.c",
+      "new": "system/services/storage/storage_service.c",
+      "status": "R100",
+      "byte_identical": true,
+      "code_identical": true
+    },
+    {
+      "old": "system/core/ink_json.c",
+      "new": "system/util/ink_json.c",
+      "status": "R100",
+      "byte_identical": true,
+      "code_identical": true
+    },
+    {
+      "old": "tests/system/systest.c",
+      "new": "tests/integration/systest.c",
+      "status": "R097",
+      "byte_identical": false,
+      "code_identical": true
+    },
+    {
+      "old": "tests/sim/selftest.c",
+      "new": "tests/simulator/selftest.c",
+      "status": "R099",
+      "byte_identical": false,
+      "code_identical": true
+    },
+    {
+      "old": "tools/iss/bench/pqbn_bench.c",
+      "new": "tools/iss/bench/pqbn_bench.c",
+      "status": "M",
+      "byte_identical": false,
+      "code_identical": true
+    },
+    {
+      "old": "tools/iss/src/iss.h",
+      "new": "tools/iss/src/iss.h",
+      "status": "M",
+      "byte_identical": false,
+      "code_identical": true
+    }
+  ],
+  "added": [],
+  "deleted": [],
+  "header_checks": [
+    {
+      "target": "ink_system",
+      "header": "ink/osal.h",
+      "expected_visible": true,
+      "exit_code": 0,
+      "passed": true,
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/cc",
+        "-DLV_CONF_INCLUDE_SIMPLE",
+        "-I/Users/bytedance/Documents/Workspace/ink-audit-3/system/include",
+        "-I/Users/bytedance/Documents/Workspace/ink-audit-3/system/services/display",
+        "-I/Users/bytedance/Documents/Workspace/ink-audit-3/third_party/jsmn",
+        "-I/Users/bytedance/Documents/Workspace/ink-audit-3/platform/include",
+        "-I/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src",
+        "-I/Users/bytedance/Documents/Workspace/ink-audit-3/system/ui",
+        "-O2",
+        "-g",
+        "-DNDEBUG",
+        "-std=gnu11",
+        "-isysroot",
+        "/Library/Developer/CommandLineTools/SDKs/MacOSX26.2.sdk",
+        "-mmacosx-version-min=15.7",
+        "-Wall",
+        "-Wextra",
+        "-Wshadow",
+        "-Wno-unused-parameter",
+        "-Werror",
+        "-x",
+        "c",
+        "-fsyntax-only",
+        "-"
+      ],
+      "evidence": []
+    },
+    {
+      "target": "ink_system",
+      "header": "ink/sys/display.h",
+      "expected_visible": true,
+      "exit_code": 0,
+      "passed": true,
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/cc",
+        "-DLV_CONF_INCLUDE_SIMPLE",
+        "-I/Users/bytedance/Documents/Workspace/ink-audit-3/system/include",
+        "-I/Users/bytedance/Documents/Workspace/ink-audit-3/system/services/display",
+        "-I/Users/bytedance/Documents/Workspace/ink-audit-3/third_party/jsmn",
+        "-I/Users/bytedance/Documents/Workspace/ink-audit-3/platform/include",
+        "-I/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src",
+        "-I/Users/bytedance/Documents/Workspace/ink-audit-3/system/ui",
+        "-O2",
+        "-g",
+        "-DNDEBUG",
+        "-std=gnu11",
+        "-isysroot",
+        "/Library/Developer/CommandLineTools/SDKs/MacOSX26.2.sdk",
+        "-mmacosx-version-min=15.7",
+        "-Wall",
+        "-Wextra",
+        "-Wshadow",
+        "-Wno-unused-parameter",
+        "-Werror",
+        "-x",
+        "c",
+        "-fsyntax-only",
+        "-"
+      ],
+      "evidence": []
+    },
+    {
+      "target": "ink_system",
+      "header": "sim.h",
+      "expected_visible": false,
+      "exit_code": 1,
+      "passed": true,
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/cc",
+        "-DLV_CONF_INCLUDE_SIMPLE",
+        "-I/Users/bytedance/Documents/Workspace/ink-audit-3/system/include",
+        "-I/Users/bytedance/Documents/Workspace/ink-audit-3/system/services/display",
+        "-I/Users/bytedance/Documents/Workspace/ink-audit-3/third_party/jsmn",
+        "-I/Users/bytedance/Documents/Workspace/ink-audit-3/platform/include",
+        "-I/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src",
+        "-I/Users/bytedance/Documents/Workspace/ink-audit-3/system/ui",
+        "-O2",
+        "-g",
+        "-DNDEBUG",
+        "-std=gnu11",
+        "-isysroot",
+        "/Library/Developer/CommandLineTools/SDKs/MacOSX26.2.sdk",
+        "-mmacosx-version-min=15.7",
+        "-Wall",
+        "-Wextra",
+        "-Wshadow",
+        "-Wno-unused-parameter",
+        "-Werror",
+        "-x",
+        "c",
+        "-fsyntax-only",
+        "-"
+      ],
+      "evidence": [
+        "<stdin>:1:10: fatal error: 'sim.h' file not found",
+        "    1 | #include \"sim.h\""
+      ]
+    },
+    {
+      "target": "ink_system",
+      "header": "vtk.h",
+      "expected_visible": false,
+      "exit_code": 1,
+      "passed": true,
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/cc",
+        "-DLV_CONF_INCLUDE_SIMPLE",
+        "-I/Users/bytedance/Documents/Workspace/ink-audit-3/system/include",
+        "-I/Users/bytedance/Documents/Workspace/ink-audit-3/system/services/display",
+        "-I/Users/bytedance/Documents/Workspace/ink-audit-3/third_party/jsmn",
+        "-I/Users/bytedance/Documents/Workspace/ink-audit-3/platform/include",
+        "-I/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src",
+        "-I/Users/bytedance/Documents/Workspace/ink-audit-3/system/ui",
+        "-O2",
+        "-g",
+        "-DNDEBUG",
+        "-std=gnu11",
+        "-isysroot",
+        "/Library/Developer/CommandLineTools/SDKs/MacOSX26.2.sdk",
+        "-mmacosx-version-min=15.7",
+        "-Wall",
+        "-Wextra",
+        "-Wshadow",
+        "-Wno-unused-parameter",
+        "-Werror",
+        "-x",
+        "c",
+        "-fsyntax-only",
+        "-"
+      ],
+      "evidence": [
+        "<stdin>:1:10: fatal error: 'vtk.h' file not found",
+        "    1 | #include \"vtk.h\""
+      ]
+    },
+    {
+      "target": "ink_system",
+      "header": "tca9555/tca9555.h",
+      "expected_visible": false,
+      "exit_code": 1,
+      "passed": true,
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/cc",
+        "-DLV_CONF_INCLUDE_SIMPLE",
+        "-I/Users/bytedance/Documents/Workspace/ink-audit-3/system/include",
+        "-I/Users/bytedance/Documents/Workspace/ink-audit-3/system/services/display",
+        "-I/Users/bytedance/Documents/Workspace/ink-audit-3/third_party/jsmn",
+        "-I/Users/bytedance/Documents/Workspace/ink-audit-3/platform/include",
+        "-I/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src",
+        "-I/Users/bytedance/Documents/Workspace/ink-audit-3/system/ui",
+        "-O2",
+        "-g",
+        "-DNDEBUG",
+        "-std=gnu11",
+        "-isysroot",
+        "/Library/Developer/CommandLineTools/SDKs/MacOSX26.2.sdk",
+        "-mmacosx-version-min=15.7",
+        "-Wall",
+        "-Wextra",
+        "-Wshadow",
+        "-Wno-unused-parameter",
+        "-Werror",
+        "-x",
+        "c",
+        "-fsyntax-only",
+        "-"
+      ],
+      "evidence": [
+        "<stdin>:1:10: fatal error: 'tca9555/tca9555.h' file not found",
+        "    1 | #include \"tca9555/tca9555.h\""
+      ]
+    },
+    {
+      "target": "ink_system",
+      "header": "metalio_plus/metalio_board.h",
+      "expected_visible": false,
+      "exit_code": 1,
+      "passed": true,
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/cc",
+        "-DLV_CONF_INCLUDE_SIMPLE",
+        "-I/Users/bytedance/Documents/Workspace/ink-audit-3/system/include",
+        "-I/Users/bytedance/Documents/Workspace/ink-audit-3/system/services/display",
+        "-I/Users/bytedance/Documents/Workspace/ink-audit-3/third_party/jsmn",
+        "-I/Users/bytedance/Documents/Workspace/ink-audit-3/platform/include",
+        "-I/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src",
+        "-I/Users/bytedance/Documents/Workspace/ink-audit-3/system/ui",
+        "-O2",
+        "-g",
+        "-DNDEBUG",
+        "-std=gnu11",
+        "-isysroot",
+        "/Library/Developer/CommandLineTools/SDKs/MacOSX26.2.sdk",
+        "-mmacosx-version-min=15.7",
+        "-Wall",
+        "-Wextra",
+        "-Wshadow",
+        "-Wno-unused-parameter",
+        "-Werror",
+        "-x",
+        "c",
+        "-fsyntax-only",
+        "-"
+      ],
+      "evidence": [
+        "<stdin>:1:10: fatal error: 'metalio_plus/metalio_board.h' file not found",
+        "    1 | #include \"metalio_plus/metalio_board.h\""
+      ]
+    },
+    {
+      "target": "ink_apps",
+      "header": "ink/osal.h",
+      "expected_visible": true,
+      "exit_code": 0,
+      "passed": true,
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/cc",
+        "-DLV_CONF_INCLUDE_SIMPLE",
+        "-I/Users/bytedance/Documents/Workspace/ink-audit-3/system/include",
+        "-I/Users/bytedance/Documents/Workspace/ink-audit-3/platform/include",
+        "-I/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src",
+        "-I/Users/bytedance/Documents/Workspace/ink-audit-3/system/ui",
+        "-O2",
+        "-g",
+        "-DNDEBUG",
+        "-std=gnu11",
+        "-isysroot",
+        "/Library/Developer/CommandLineTools/SDKs/MacOSX26.2.sdk",
+        "-mmacosx-version-min=15.7",
+        "-Wall",
+        "-Wextra",
+        "-Wshadow",
+        "-Wno-unused-parameter",
+        "-Werror",
+        "-x",
+        "c",
+        "-fsyntax-only",
+        "-"
+      ],
+      "evidence": []
+    },
+    {
+      "target": "ink_apps",
+      "header": "ink/sys/display.h",
+      "expected_visible": true,
+      "exit_code": 0,
+      "passed": true,
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/cc",
+        "-DLV_CONF_INCLUDE_SIMPLE",
+        "-I/Users/bytedance/Documents/Workspace/ink-audit-3/system/include",
+        "-I/Users/bytedance/Documents/Workspace/ink-audit-3/platform/include",
+        "-I/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src",
+        "-I/Users/bytedance/Documents/Workspace/ink-audit-3/system/ui",
+        "-O2",
+        "-g",
+        "-DNDEBUG",
+        "-std=gnu11",
+        "-isysroot",
+        "/Library/Developer/CommandLineTools/SDKs/MacOSX26.2.sdk",
+        "-mmacosx-version-min=15.7",
+        "-Wall",
+        "-Wextra",
+        "-Wshadow",
+        "-Wno-unused-parameter",
+        "-Werror",
+        "-x",
+        "c",
+        "-fsyntax-only",
+        "-"
+      ],
+      "evidence": []
+    },
+    {
+      "target": "ink_apps",
+      "header": "sim.h",
+      "expected_visible": false,
+      "exit_code": 1,
+      "passed": true,
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/cc",
+        "-DLV_CONF_INCLUDE_SIMPLE",
+        "-I/Users/bytedance/Documents/Workspace/ink-audit-3/system/include",
+        "-I/Users/bytedance/Documents/Workspace/ink-audit-3/platform/include",
+        "-I/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src",
+        "-I/Users/bytedance/Documents/Workspace/ink-audit-3/system/ui",
+        "-O2",
+        "-g",
+        "-DNDEBUG",
+        "-std=gnu11",
+        "-isysroot",
+        "/Library/Developer/CommandLineTools/SDKs/MacOSX26.2.sdk",
+        "-mmacosx-version-min=15.7",
+        "-Wall",
+        "-Wextra",
+        "-Wshadow",
+        "-Wno-unused-parameter",
+        "-Werror",
+        "-x",
+        "c",
+        "-fsyntax-only",
+        "-"
+      ],
+      "evidence": [
+        "<stdin>:1:10: fatal error: 'sim.h' file not found",
+        "    1 | #include \"sim.h\""
+      ]
+    },
+    {
+      "target": "ink_apps",
+      "header": "vtk.h",
+      "expected_visible": false,
+      "exit_code": 1,
+      "passed": true,
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/cc",
+        "-DLV_CONF_INCLUDE_SIMPLE",
+        "-I/Users/bytedance/Documents/Workspace/ink-audit-3/system/include",
+        "-I/Users/bytedance/Documents/Workspace/ink-audit-3/platform/include",
+        "-I/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src",
+        "-I/Users/bytedance/Documents/Workspace/ink-audit-3/system/ui",
+        "-O2",
+        "-g",
+        "-DNDEBUG",
+        "-std=gnu11",
+        "-isysroot",
+        "/Library/Developer/CommandLineTools/SDKs/MacOSX26.2.sdk",
+        "-mmacosx-version-min=15.7",
+        "-Wall",
+        "-Wextra",
+        "-Wshadow",
+        "-Wno-unused-parameter",
+        "-Werror",
+        "-x",
+        "c",
+        "-fsyntax-only",
+        "-"
+      ],
+      "evidence": [
+        "<stdin>:1:10: fatal error: 'vtk.h' file not found",
+        "    1 | #include \"vtk.h\""
+      ]
+    },
+    {
+      "target": "ink_apps",
+      "header": "tca9555/tca9555.h",
+      "expected_visible": false,
+      "exit_code": 1,
+      "passed": true,
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/cc",
+        "-DLV_CONF_INCLUDE_SIMPLE",
+        "-I/Users/bytedance/Documents/Workspace/ink-audit-3/system/include",
+        "-I/Users/bytedance/Documents/Workspace/ink-audit-3/platform/include",
+        "-I/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src",
+        "-I/Users/bytedance/Documents/Workspace/ink-audit-3/system/ui",
+        "-O2",
+        "-g",
+        "-DNDEBUG",
+        "-std=gnu11",
+        "-isysroot",
+        "/Library/Developer/CommandLineTools/SDKs/MacOSX26.2.sdk",
+        "-mmacosx-version-min=15.7",
+        "-Wall",
+        "-Wextra",
+        "-Wshadow",
+        "-Wno-unused-parameter",
+        "-Werror",
+        "-x",
+        "c",
+        "-fsyntax-only",
+        "-"
+      ],
+      "evidence": [
+        "<stdin>:1:10: fatal error: 'tca9555/tca9555.h' file not found",
+        "    1 | #include \"tca9555/tca9555.h\""
+      ]
+    },
+    {
+      "target": "ink_apps",
+      "header": "metalio_plus/metalio_board.h",
+      "expected_visible": false,
+      "exit_code": 1,
+      "passed": true,
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/cc",
+        "-DLV_CONF_INCLUDE_SIMPLE",
+        "-I/Users/bytedance/Documents/Workspace/ink-audit-3/system/include",
+        "-I/Users/bytedance/Documents/Workspace/ink-audit-3/platform/include",
+        "-I/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src",
+        "-I/Users/bytedance/Documents/Workspace/ink-audit-3/system/ui",
+        "-O2",
+        "-g",
+        "-DNDEBUG",
+        "-std=gnu11",
+        "-isysroot",
+        "/Library/Developer/CommandLineTools/SDKs/MacOSX26.2.sdk",
+        "-mmacosx-version-min=15.7",
+        "-Wall",
+        "-Wextra",
+        "-Wshadow",
+        "-Wno-unused-parameter",
+        "-Werror",
+        "-x",
+        "c",
+        "-fsyntax-only",
+        "-"
+      ],
+      "evidence": [
+        "<stdin>:1:10: fatal error: 'metalio_plus/metalio_board.h' file not found",
+        "    1 | #include \"metalio_plus/metalio_board.h\""
+      ]
+    }
+  ]
+}

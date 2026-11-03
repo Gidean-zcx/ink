@@ -1,0 +1,139 @@
+{
+  "commands": [
+    {
+      "revision": "4309087",
+      "step": "configure",
+      "command": [
+        "cmake",
+        "-S",
+        "/Users/bytedance/Documents/Workspace/ink-audit-3/build-audit/history/4309087/src",
+        "-B",
+        "/Users/bytedance/Documents/Workspace/ink-audit-3/build-audit/history/4309087/build",
+        "-DINK_WERROR=ON",
+        "-DINK_GUI=OFF",
+        "-DINK_CJK_FONT=/Users/bytedance/Documents/Workspace/ink/build-deps/fonts/NotoSansCJK-Regular.ttc",
+        "-DINK_CJK_FACE=2",
+        "-DPython3_EXECUTABLE=/Users/bytedance/Documents/Workspace/ink/build-deps/pyenv/bin/python",
+        "-DFETCHCONTENT_SOURCE_DIR_LVGL=/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src"
+      ],
+      "exit_code": 0,
+      "tail": [
+        "-- Found Python3: /Users/bytedance/Documents/Workspace/ink/build-deps/pyenv/bin/python (found version \"3.11.15\") found components: Interpreter ",
+        "-- Configuring done (1.2s)",
+        "-- Generating done (0.3s)",
+        "-- Build files have been written to: /Users/bytedance/Documents/Workspace/ink-audit-3/build-audit/history/4309087/build"
+      ]
+    },
+    {
+      "revision": "4309087",
+      "step": "build",
+      "command": [
+        "cmake",
+        "--build",
+        "/Users/bytedance/Documents/Workspace/ink-audit-3/build-audit/history/4309087/build",
+        "-j",
+        "8"
+      ],
+      "exit_code": 0,
+      "tail": [
+        "[ 99%] Linking C executable ink-sim",
+        "[100%] Linking C executable sim-systest",
+        "[100%] Built target ink-sim",
+        "[100%] Built target sim-systest"
+      ]
+    },
+    {
+      "revision": "4309087",
+      "step": "ctest",
+      "command": [
+        "/Users/bytedance/Documents/Workspace/ink/build-deps/pyenv/bin/ctest",
+        "--test-dir",
+        "/Users/bytedance/Documents/Workspace/ink-audit-3/build-audit/history/4309087/build",
+        "-j",
+        "8",
+        "--timeout",
+        "300",
+        "--output-on-failure"
+      ],
+      "exit_code": 0,
+      "tail": [
+        "",
+        "100% tests passed out of 37",
+        "",
+        "Total Test time (real) =   6.53 sec"
+      ]
+    },
+    {
+      "revision": "dc085cb",
+      "step": "configure",
+      "command": [
+        "cmake",
+        "-S",
+        "/Users/bytedance/Documents/Workspace/ink-audit-3/build-audit/history/dc085cb/src",
+        "-B",
+        "/Users/bytedance/Documents/Workspace/ink-audit-3/build-audit/history/dc085cb/build",
+        "-DINK_WERROR=ON",
+        "-DINK_GUI=OFF",
+        "-DINK_CJK_FONT=/Users/bytedance/Documents/Workspace/ink/build-deps/fonts/NotoSansCJK-Regular.ttc",
+        "-DINK_CJK_FACE=2",
+        "-DPython3_EXECUTABLE=/Users/bytedance/Documents/Workspace/ink/build-deps/pyenv/bin/python",
+        "-DFETCHCONTENT_SOURCE_DIR_LVGL=/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src"
+      ],
+      "exit_code": 0,
+      "tail": [
+        "-- Found Python3: /Users/bytedance/Documents/Workspace/ink/build-deps/pyenv/bin/python (found version \"3.11.15\") found components: Interpreter ",
+        "-- Configuring done (0.9s)",
+        "-- Generating done (0.2s)",
+        "-- Build files have been written to: /Users/bytedance/Documents/Workspace/ink-audit-3/build-audit/history/dc085cb/build"
+      ]
+    },
+    {
+      "revision": "dc085cb",
+      "step": "build",
+      "command": [
+        "cmake",
+        "--build",
+        "/Users/bytedance/Documents/Workspace/ink-audit-3/build-audit/history/dc085cb/build",
+        "-j",
+        "8"
+      ],
+      "exit_code": 0,
+      "tail": [
+        "[100%] Built target ink_boot",
+        "[100%] Building C object CMakeFiles/ink-sim.dir/simulator/runtime/sim_main.c.o",
+        "[100%] Linking C executable ink-sim",
+        "[100%] Built target ink-sim"
+      ]
+    },
+    {
+      "revision": "dc085cb",
+      "step": "ctest",
+      "command": [
+        "/Users/bytedance/Documents/Workspace/ink/build-deps/pyenv/bin/ctest",
+        "--test-dir",
+        "/Users/bytedance/Documents/Workspace/ink-audit-3/build-audit/history/dc085cb/build",
+        "-j",
+        "8",
+        "--timeout",
+        "300",
+        "--output-on-failure"
+      ],
+      "exit_code": 0,
+      "tail": [
+        "",
+        "100% tests passed out of 37",
+        "",
+        "Total Test time (real) =   3.71 sec"
+      ]
+    }
+  ],
+  "complete": true,
+  "metrics_pairs": 39,
+  "metrics_only_before": [],
+  "metrics_only_after": [],
+  "metrics_differences": [],
+  "png_pairs": 410,
+  "png_only_before": [],
+  "png_only_after": [],
+  "png_differences": []
+}

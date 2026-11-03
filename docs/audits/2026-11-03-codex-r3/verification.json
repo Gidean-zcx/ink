@@ -1,0 +1,74 @@
+[
+  {
+    "id": "AUD3-001",
+    "verdict": "已修复",
+    "evidence_type": "复现、代码核查、推断",
+    "note": "ports/sim/osal/osal_sim.c:734–747、771–786：同一 VTK 锁内置 deleting、取消事件和 pending，等待正在运行的回调后再次 disarm。普通与 ASan 的 r2_timer_rearm_delete 均 exit=0，重启返回 OSAL_INVALID(-3)，calls=1，未出现 UAF。platform/include/ink/osal.h:165–181 的同步删除有条件可移植：设备端需要包装层的删除标记、在途计数/完成通知和自身删除延后回收，不能把底层原生删除直接视为此保证；现无 ESP-IDF 端口，本轮不声称设备端已经实现/验证。"
+  },
+  {
+    "id": "AUD3-002",
+    "verdict": "部分修复",
+    "evidence_type": "复现、代码核查",
+    "note": "hal_power_sim.c:370–390 和 hal_input_sim.c:582–658 补上同步 3 次重试及后台恢复。r2_wake_read_fault/control 均恢复 c0,e3、POWER 2 事件、VOL 后共 4 事件。持续触摸会使后台恢复饿死（AUD4-002）；供电尚未恢复就对新外设工作放行（AUD4-003）。永久总线故障下重试持续但有间隔，不阻塞普通应用任务；后台最大间隔实际为 800 ms（50<<4），并非文档所说 1 s。"
+  },
+  {
+    "id": "AUD3-003",
+    "verdict": "部分修复",
+    "evidence_type": "复现、代码核查",
+    "note": "hal_display_sim.c:520–531、744–751、1223–1231 修复持续失电：r2_display_cut 回调 ok=0。四刷新探针在 PQ-BN 上每个 ID 各失败回调一次，pending 归零；复电后新请求成功。仍不能识别波形内失电后复电，且 VCOM 瞬断两条管线均可误报成功，见严重问题 AUD4-001。"
+  },
+  {
+    "id": "AUD3-004",
+    "verdict": "部分修复",
+    "evidence_type": "复现、代码核查",
+    "note": "hal_audio_sim.c:359–396、404–494 与 hal_power_sim.c:434–449 的租约覆盖分配/启动/停止，原 entry/late/race 三个交错均修好（样本 9600/18960/9600、mode=clock=1）。分配失败与正常停止有释放路径；未见原交错死锁。但异步恢复 rails 期间仍允许启动，成功后持续零样本（AUD4-003）；启动本身也不传播 ensure_bt_mode 的未就绪。补充 r3_audio_oom：录音/播放分配失败均 -1，释放后睡眠 cause=1；r3_play_sleep_entry：mode=clock=1、写入 2400 样本、停止后可睡眠，未见这两条路径泄漏租约。"
+  },
+  {
+    "id": "AUD2-010",
+    "verdict": "已修复",
+    "evidence_type": "复现、代码核查",
+    "note": "simulator/memory/pools.c:130–149、219–236、355–363：公开 free/largest_free 按 TLSF 空闲块遍历，内部/DMA 低水位逐次分配更新。build-audit/pools-test exit=0；碎片案例 reported=actual=61536（第二轮相差 400 B），零池为 0，归属表 100000 次循环仍为 4096。外部池的历史低水位仍在两次采样间估算，不把它当逐次精确水位。"
+  },
+  {
+    "id": "AUD2-012",
+    "verdict": "已修复",
+    "evidence_type": "复现、代码核查",
+    "note": "hal_input_sim.c:663–685 以 sim_board_present 区分模型不存在与板初始化失败，不再在失败时绕过寄存器。r2_input_boot_fault：present=1 ready=0 keys=0；现有 selftest-expander-dead 和补充 r3_boot_audio 均证明总线恢复后按键 2 个且 board_ready=1。延迟初始化对音频的遗漏另记 AUD4-004，不把“键能恢复”升级为整板全部可恢复。"
+  },
+  {
+    "id": "AUD2-016",
+    "verdict": "已修复",
+    "evidence_type": "复现、代码核查",
+    "note": "drivers/chips/gc2145/gc2145.c:23–35、simulator/models/dev_camera.c:122–145 将截止时间传入完整设置表，并检查延时预算。r2_camera_deadline：0/1/100 ms 预算实耗 1.443/1.443/100.352 ms，均返回 -4；原先约 400 ms 无界超支消除。仍容许在途总线事务/调度粒度的尾差；不能解释为严格硬实时截止。整板自检包含正常采集和帧中断电，常规/ASan 套件均通过。"
+  },
+  {
+    "id": "AUD2-019",
+    "verdict": "部分修复",
+    "evidence_type": "代码核查",
+    "note": "simulator/desktop/gui/host_camera_linux.c:31–84、155–165：非零短帧不发布、DQBUF/QBUF 硬错误清 g_have 并发布错误状态、帧缓冲 calloc，原报告主要路径已处理。但 72 行仍把 bytesused=0 换成映射容量，空载荷可通过 whole_frame 并作为新帧发布；没有使用 V4L2_BUF_FLAG_ERROR 过滤错误帧。剩余为中级输入有效性问题；本机只作静态核查，未运行 Linux 或真实摄像头。"
+  },
+  {
+    "id": "AUD2-020",
+    "verdict": "已修复",
+    "evidence_type": "代码核查、复现",
+    "note": "simulator/desktop/gui/host_camera_mac.m:14、60–100、123、134：g_status 的所有读写统一为 C11 原子指针，指向静态字符串；既有 ctl 串行化和 gen 仍保留。macOS Werror 构建及 gui-smoke 通过。未申请摄像头权限、未运行 AVFoundation 实际采集，不据此证明所有媒体生命周期。"
+  },
+  {
+    "id": "AUD2-022",
+    "verdict": "已修复",
+    "evidence_type": "文档核查、代码核查、复现",
+    "note": ".github/workflows/sim.yml:61 的 macOS 配置明确 CMAKE_DISABLE_FIND_PACKAGE_SDL2=ON；CMakeLists.txt:8–11 提前启用 OBJC，235–249 拉固定 SDL2 release-2.32.10。按 TASK 的已缓存源码依赖完成本机配置/Werror 构建/40 项测试（exit=0），其中 gui-smoke 通过。未联网查看远端 CI，此处核实的是配置覆盖与本地等价源码分支。"
+  },
+  {
+    "id": "AUD2-023",
+    "verdict": "部分修复",
+    "evidence_type": "文档核查、代码核查、复现",
+    "note": "requirements.md:88 的 R-034 已改为按审计记录逐项处理；hardware-parity.md:15、32 已准确区分 EPDiy 提交模型和 SD 仅延时。其 16、20、28 行仍将掉电检测/唤醒后台恢复/复电重设模式写得过满；本轮 AUD4-001～004 复现反例，屏电源和实体键的故障一致性需重新降级。PQ-BN 的 PG 查询仅在更新可完成时（hal_display_sim.c:1173），不是每相固定查询，处理表“相与相之间”应注明此边界。"
+  },
+  {
+    "id": "AUD2-024",
+    "verdict": "已修复",
+    "evidence_type": "复现、代码核查、文档核查",
+    "note": "CMakeLists.txt:53–85、145–174 分出 platform/drivers/board/system/apps/boot，system/apps 无驱动、板或模拟器 include 传播；refresh_policy 与 jsmn 已 PRIVATE。layout_check.py 的 12 个正负编译边界检查全部符合预期。4309087→dc085cb 的 85 个变动 C/C++/ObjC 源/头对照，除注释、board 包含名和 GUI 默认档案路径迁移外代码一致，无新增/删除遗失。独立导出并构建两份历史快照，各 37/37 headless 测试通过，39 份 metrics.json 与 410 张 PNG 逐字节/结构相同。模型/HAL 与 sim.h 仍合在 ink_port_sim 是明确记录的边界，不宣称已完成模型内部拆分。"
+  }
+]
