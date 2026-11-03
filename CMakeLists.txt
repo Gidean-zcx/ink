@@ -324,6 +324,12 @@ add_test(NAME selftest-board-wiring
           --budget ${CMAKE_SOURCE_DIR}/tests/simulator/board.budget.json
           --out ${CMAKE_BINARY_DIR}/test-out/selftest-board --quiet --end 60s --no-random-outages)
 set_tests_properties(selftest-board-wiring PROPERTIES ENVIRONMENT "INK_SELFTEST_BOARD=1")
+# Unit tests: one part on its own, checked against its reference (here the pools against TLSF).
+add_executable(pools-test tests/unit/pools_test.c)
+target_include_directories(pools-test PRIVATE simulator/memory simulator/kernel/vtk)
+target_link_libraries(pools-test PRIVATE ink_platform ink_tlsf)
+target_compile_options(pools-test PRIVATE ${INK_WARN})
+add_test(NAME unit-pools COMMAND pools-test)
 # System service checks (storage cache versions; tests/integration/systest.c), on the services themselves.
 add_executable(sim-systest simulator/runtime/sim_main.c tests/integration/systest.c)
 target_link_libraries(sim-systest PRIVATE ink_system ink_port_sim)

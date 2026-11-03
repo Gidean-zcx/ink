@@ -127,19 +127,29 @@ void pools_tag_info(int i, const char **tag, size_t cur[POOL_COUNT], size_t peak
 
 static const char *NAMES[POOL_COUNT] = {"internal", "dma", "external"};
 
-static void walk_largest(void *ptr, size_t size, int used, void *user) {
+/* What is really free: the free blocks as TLSF has them. Counting allocations and frees cannot
+ * say this exactly: a freed block keeps its header unless it merges with a neighbour. */
+typedef struct {
+    size_t free, largest;
+} pool_walk_t;
+
+static void walk_stats(void *ptr, size_t size, int used, void *user) {
     (void)ptr;
-    size_t *max = user;
-    if (!used && size > *max) *max = size;
+    pool_walk_t *w = user;
+    if (used) return;
+    w->free += size;
+    if (size > w->largest) w->largest = size;
 }
 
-static size_t largest_free(heap_pool_t *p) {
-    if (!p->tlsf) return 0;
-    size_t max = 0;
+static pool_walk_t pool_walk(heap_pool_t *p) {
+    pool_walk_t w = {0, 0};
+    if (!p->tlsf) return w;
     for (int r = 0; r < p->nregions; r++)
-        if (p->region[r]) tlsf_walk_pool(p->region[r], walk_largest, &max);
-    return max;
+        if (p->region[r]) tlsf_walk_pool(p->region[r], walk_stats, &w);
+    return w;
 }
+
+static size_t largest_free(heap_pool_t *p) { return pool_walk(p).largest; }
 
 static void walk_free(void *ptr, size_t size, int used, void *user) {
     (void)ptr;
@@ -179,7 +189,7 @@ static void pool_init(heap_pool_t *p, const char *name, const size_t *regions, i
     size_t freeb = 0;
     for (int r = 0; r < nregions; r++)
         if (p->region[r]) tlsf_walk_pool(p->region[r], walk_free, &freeb);
-    p->usable = freeb;
+    p->usable = freeb; /* == pool_walk(p).free */
     p->min_free = p->usable;
     p->min_largest = largest_free(p);
 }
@@ -201,37 +211,41 @@ static heap_pool_t *owner_of(void *ptr) {
     return NULL;
 }
 
-static void track_after_change(heap_pool_t *p) {
-    size_t free_now = p->usable > p->used ? p->usable - p->used : 0;
-    if (free_now < p->min_free) p->min_free = free_now;
-    size_t fi = P[POOL_INTERNAL].usable > P[POOL_INTERNAL].used ? P[POOL_INTERNAL].usable - P[POOL_INTERNAL].used : 0;
-    size_t fd = P[POOL_DMA].usable > P[POOL_DMA].used ? P[POOL_DMA].usable - P[POOL_DMA].used : 0;
-    if (fi + fd < g_internal_total_min) g_internal_total_min = fi + fd;
+static size_t g_internal_largest_min = (size_t)-1; /* min over time of the largest block internal-only allocations can get */
+
+/* Low-water marks after an allocation (and at each sample). The internal and DMA pools are walked
+ * every time; the external one (MiBs, thousands of blocks) only at samples, between them its free
+ * space is estimated from the bytes handed out. */
+static void track_after_change(heap_pool_t *p, bool walk_external) {
+    if (p == &P[POOL_EXTERNAL]) {
+        size_t f = p->usable > p->used ? p->usable - p->used : 0;
+        if (walk_external) {
+            pool_walk_t w = pool_walk(p);
+            f = w.free;
+            if (w.largest < p->min_largest) p->min_largest = w.largest;
+        }
+        if (f < p->min_free) p->min_free = f;
+        return;
+    }
+    pool_walk_t wi = pool_walk(&P[POOL_INTERNAL]), wd = pool_walk(&P[POOL_DMA]);
+    const pool_walk_t *w = p == &P[POOL_INTERNAL] ? &wi : &wd;
+    if (w->free < p->min_free) p->min_free = w->free;
+    if (w->largest < p->min_largest) p->min_largest = w->largest;
+    if (wi.free + wd.free < g_internal_total_min) g_internal_total_min = wi.free + wd.free;
+    size_t best = wi.largest > wd.largest ? wi.largest : wd.largest;
+    if (best < g_internal_largest_min) g_internal_largest_min = best;
 }
 
 size_t pools_internal_total_min_free(void) { return g_internal_total_min == (size_t)-1 ? 0 : g_internal_total_min; }
-
-static size_t g_internal_largest_min = (size_t)-1; /* min over time of the largest block internal-only allocations can get */
-
-static void track_largest(heap_pool_t *p) {
-    if (p == &P[POOL_EXTERNAL]) return; /* MiBs: sampled periodically instead (walk cost) */
-    size_t l = largest_free(p);
-    if (l < p->min_largest) p->min_largest = l;
-    size_t li = p == &P[POOL_INTERNAL] ? l : largest_free(&P[POOL_INTERNAL]);
-    size_t ld = p == &P[POOL_DMA] ? l : largest_free(&P[POOL_DMA]);
-    size_t best = li > ld ? li : ld;
-    if (best < g_internal_largest_min) g_internal_largest_min = best;
-}
 
 size_t pools_internal_total_min_largest(void) { return g_internal_largest_min == (size_t)-1 ? 0 : g_internal_largest_min; }
 
 static void *try_alloc(heap_pool_t *p, size_t size) {
     void *ptr = tlsf_malloc(p->tlsf, size ? size : 1);
     if (ptr) {
-        p->used += tlsf_block_size(ptr) + tlsf_alloc_overhead(); /* the block's header is gone from free space too */
+        p->used += tlsf_block_size(ptr) + tlsf_alloc_overhead(); /* the external pool's estimate between samples */
         p->alloc_count++;
-        track_after_change(p);
-        track_largest(p);
+        track_after_change(p, false);
     }
     return ptr;
 }
@@ -248,7 +262,7 @@ static void warn_failure(void *arg) {
     heap_pool_t *p = f->pool;
     char msg[200];
     snprintf(msg, sizeof msg, "allocation of %zu bytes failed (caps=0x%x, owner=%s, %s free=%zu largest=%zu)", f->size,
-             f->caps, f->owner ? f->owner : "?", p->name, p->usable > p->used ? p->usable - p->used : 0, largest_free(p));
+             f->caps, f->owner ? f->owner : "?", p->name, pool_walk(p).free, largest_free(p));
     g_warn(msg);
 }
 
@@ -327,11 +341,7 @@ void *pools_realloc(void *ptr, size_t size, uint32_t caps, const char *owner) {
 }
 
 void pools_sample(void) {
-    for (int i = 0; i < POOL_COUNT; i++) {
-        size_t l = largest_free(&P[i]);
-        if (l < P[i].min_largest) P[i].min_largest = l;
-        track_after_change(&P[i]);
-    }
+    for (int i = 0; i < POOL_COUNT; i++) track_after_change(&P[i], true);
 }
 
 size_t pools_min_largest(pool_id_t id) { return P[id].min_largest; }
@@ -344,10 +354,11 @@ int pools_pool_of(const void *ptr) {
 
 void pools_stats(pool_id_t id, osal_mem_stats_t *out) {
     heap_pool_t *p = &P[id];
+    pool_walk_t w = pool_walk(p);
     out->total = p->usable;
-    out->free = p->usable > p->used ? p->usable - p->used : 0;
-    out->min_free = p->min_free;
-    out->largest_free = largest_free(p);
+    out->free = w.free;
+    out->min_free = p->min_free < w.free ? p->min_free : w.free;
+    out->largest_free = w.largest;
     out->alloc_count = p->alloc_count;
     out->failed_allocs = p->failed;
 }
