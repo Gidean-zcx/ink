@@ -187,7 +187,7 @@ static void cap_checks(void) {
     char why[96], name[8];
     CHECK(n > 0 && ink_args_from_json(&back, buf, (size_t)n, NULL, why, sizeof why) == 0 && ink_args_get_str(&back, "name", name, sizeof name) == 3 &&
               !strcmp(name, "a\"b"),
-          "arguments survive a round trip through JSON (%s)", buf);
+          "arguments survive a round trip through JSON (%.120s)", buf);
 
     /* the tool list is generated from the table */
     n = ink_cap_manifest_json(buf, sizeof buf);
@@ -239,7 +239,7 @@ static void state_checks(void) {
     osal_task_delay_us(600000);
     CHECK(g_seen[2] == 2 && g_slow_seen == 3, "after it, one delivery with the latest value (%d, %lld)", g_seen[2], (long long)g_slow_seen);
     static char buf[512];
-    CHECK(ink_state_json(buf, sizeof buf, 0) > 0 && strstr(buf, "\"test.level\":6") && strstr(buf, "\"test.name\":\"abc\""), "the snapshot (%s)", buf);
+    CHECK(ink_state_json(buf, sizeof buf, 0) > 0 && strstr(buf, "\"test.level\":6") && strstr(buf, "\"test.name\":\"abc\""), "the snapshot (%.120s)", buf);
 }
 
 static int64_t g_applied = -1;
@@ -288,13 +288,13 @@ static void settings_checks(void) {
     drain_storage();
     int n = ink_storage_read(INK_SETTINGS_PATH, buf, sizeof buf - 1);
     buf[n > 0 ? n : 0] = 0;
-    CHECK(n > 0 && strstr(buf, "\"test.vol\":7") && strstr(buf, "\"test.mode\":2"), "the values are saved (%s)", buf);
+    CHECK(n > 0 && strstr(buf, "\"test.vol\":7") && strstr(buf, "\"test.mode\":2"), "the values are saved (%.120s)", buf);
     for (int v = 1; v <= 3; v++) ink_setting_set("test.vol", v, INK_SRC_TOUCH, &rc);
     osal_task_delay_us(1200000);
     drain_storage();
     n = ink_storage_read(INK_SETTINGS_PATH, buf, sizeof buf - 1);
     buf[n > 0 ? n : 0] = 0;
-    CHECK(strstr(buf, "\"test.vol\":3"), "a burst of changes is saved once, with the last value (%s)", buf);
+    CHECK(strstr(buf, "\"test.vol\":3"), "a burst of changes is saved once, with the last value (%.120s)", buf);
 
     /* start-up: saved values come back; one out of range falls back to the default */
     static const char saved[] = "{\"test.vol\":3,\"test.loaded\":5,\"test.bad\":99,\"test.future\":1}";
