@@ -67,6 +67,11 @@ static unsigned vcom_mv(void) {
     return (((unsigned)(T.reg[TPS_REG_VCOM2] & 1) << 8) | T.reg[TPS_REG_VCOM1]) * TPS_VCOM_STEP_MV;
 }
 
+static void rails_good_cb(void *arg) { /* ISR */
+    (void)arg;
+    sim_tca_reeval();
+}
+
 static void tps_pins(bool wakeup, bool pwrup, bool vcom_ctrl) {
     uint64_t now = vtk_now();
     if (T.pwrup && !pwrup && T.t_rails) {
@@ -92,6 +97,9 @@ static void tps_pins(bool wakeup, bool pwrup, bool vcom_ctrl) {
         uint64_t start = now > T.t_awake ? now : T.t_awake;
         T.t_rails = start + SIM_US(strobes_us(T.reg[TPS_REG_UPSEQ1]) + RAMP_US);
         T.power_ups++;
+        vtk_lock(); /* PWR_GOOD (TCA9555 P07) rises then: the expander's INT follows */
+        vtk_event_at(T.t_rails, rails_good_cb, NULL);
+        vtk_unlock();
     }
     T.wakeup = wakeup;
     T.pwrup = pwrup;

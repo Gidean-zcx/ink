@@ -8,9 +8,10 @@
  * 4G + Bluetooth audio + amplifier supply (P14). Writing a register continues with the other
  * register of its pair, as on the chip.
  *
- * INT (open drain, to GPIO2 together with the accelerometer's INT1) asserts when a port 1 input
- * changes and releases when port 1's input register is read. P07 toggling with every panel power
- * cycle would raise INT on the chip as well; that is not modelled (the keys driver reads port 1).
+ * INT (open drain, to GPIO2 together with the accelerometer's INT1) asserts while an input differs
+ * from what was last read from its port, and releases when that port is read or the input goes
+ * back, as on the chip. P07 (the PMIC's PWR_GOOD) raises it with every panel power cycle, which is
+ * why upstream's key handler reads port 0 too.
  *
  * Checks of the official wiring rules (warnings):
  *  - P12 low resets the 4G modem along with the touch controller;
@@ -28,7 +29,7 @@
 static struct {
     uint8_t out[2], pol[2], cfg[2], ptr;
     uint8_t ext[2];      /* levels driven onto the input pins from outside */
-    uint8_t seen1;       /* port 1 input levels at the last read of its input register */
+    uint8_t seen0, seen1; /* input levels at the last read of each port's input register */
     bool int_low;
     bool motor, amp;
     unsigned pulses;     /* P13 rising edges with power-off spacing */
@@ -44,7 +45,7 @@ static uint8_t levels(int port) {
 }
 
 static void update_int(void) {
-    bool low = (levels(1) & X.cfg[1]) != (X.seen1 & X.cfg[1]);
+    bool low = ((levels(0) ^ X.seen0) & X.cfg[0]) || ((levels(1) ^ X.seen1) & X.cfg[1]);
     if (low != X.int_low) {
         X.int_low = low;
         sim_gpio2_update();
@@ -56,6 +57,8 @@ bool sim_board_motor_on(void) { return X.motor; }
 bool sim_board_amp_on(void) { return X.amp; }
 bool sim_board_shared_reset_held(void) { return !(levels(1) & MB_P1_SHARED_RST); }
 bool sim_board_cam_power(void) { return levels(0) & MB_P0_CAM_SCR; }
+
+void sim_tca_reeval(void) { update_int(); } /* ISR or locked: an input changed on its own (P07) */
 
 void sim_tca_input(int port, uint8_t mask, uint8_t value) { /* ISR or locked */
     X.ext[port] = (uint8_t)((X.ext[port] & ~mask) | (value & mask));
@@ -130,7 +133,8 @@ static int tca_xfer(void *state, const uint8_t *w, size_t wlen, uint8_t *r, size
         switch (X.ptr >> 1) {
         case 0:
             r[i] = levels(port) ^ X.pol[port];
-            if (port == 1) X.seen1 = levels(1); /* reading the port that changed releases INT */
+            if (port == 0) X.seen0 = levels(0); /* reading the port that changed releases INT */
+            else X.seen1 = levels(1);
             break;
         case 1: r[i] = X.out[port]; break;
         case 2: r[i] = X.pol[port]; break;

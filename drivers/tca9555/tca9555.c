@@ -13,6 +13,7 @@ hal_i2c_status_t tca9555_init(tca9555_t *t, hal_i2c_dev_t *dev, const uint8_t ou
     for (int port = 0; port < 2; port++) {
         t->out[port] = out[port];
         t->dir[port] = dir[port];
+        t->stale[port] = false;
         hal_i2c_status_t s = write_reg(t, (uint8_t)(REG_OUTPUT0 + port), out[port]);
         if (s == HAL_I2C_OK) s = write_reg(t, (uint8_t)(REG_POLARITY0 + port), 0);
         if (s == HAL_I2C_OK) s = write_reg(t, (uint8_t)(REG_CONFIG0 + port), dir[port]);
@@ -21,9 +22,22 @@ hal_i2c_status_t tca9555_init(tca9555_t *t, hal_i2c_dev_t *dev, const uint8_t ou
     return first;
 }
 
+/* The shadow holds what the chip is known to drive. A failed write may or may not have landed (a
+ * timeout can come after the chip latched the byte), so the shadow is marked stale and the next
+ * change reads the output register back first instead of resending a guess. */
 hal_i2c_status_t tca9555_set(tca9555_t *t, int port, uint8_t mask, uint8_t value) {
-    t->out[port] = (uint8_t)((t->out[port] & ~mask) | (value & mask));
-    return write_reg(t, (uint8_t)(REG_OUTPUT0 + port), t->out[port]);
+    if (t->stale[port]) {
+        uint8_t reg = (uint8_t)(REG_OUTPUT0 + port), now;
+        hal_i2c_status_t r = hal_i2c_write_read(t->dev, &reg, 1, &now, 1);
+        if (r != HAL_I2C_OK) return r;
+        t->out[port] = now;
+        t->stale[port] = false;
+    }
+    uint8_t want = (uint8_t)((t->out[port] & ~mask) | (value & mask));
+    hal_i2c_status_t s = write_reg(t, (uint8_t)(REG_OUTPUT0 + port), want);
+    if (s == HAL_I2C_OK) t->out[port] = want;
+    else t->stale[port] = true;
+    return s;
 }
 
 hal_i2c_status_t tca9555_read(tca9555_t *t, int port, uint8_t *levels) {

@@ -6,6 +6,7 @@
 #ifndef INK_TCA9555_H
 #define INK_TCA9555_H
 
+#include <stdbool.h>
 #include <stdint.h>
 
 #include "ink/hal_i2c.h"
@@ -18,8 +19,9 @@ extern "C" {
 
 typedef struct {
     hal_i2c_dev_t *dev;
-    uint8_t out[2]; /* wanted output levels, also kept when a write fails */
+    uint8_t out[2]; /* output levels the chip is known to drive */
     uint8_t dir[2]; /* configuration registers: 1 = input */
+    bool stale[2]; /* a write failed: the output register is read back before the next change */
 } tca9555_t;
 
 /** Write the output levels first, then the directions, so pins come up at the intended level. */

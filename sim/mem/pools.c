@@ -46,7 +46,7 @@ typedef struct {
     uint8_t pool;
 } amap_ent_t;
 static amap_ent_t *AM;
-static size_t am_cap, am_used;
+static size_t am_cap, am_live, am_tomb; /* live entries, tombstones left by frees */
 
 static int tag_index(const char *tag) {
     if (!tag) tag = "?";
@@ -60,27 +60,31 @@ static int tag_index(const char *tag) {
 static size_t am_hash(uintptr_t k) { return (size_t)((k >> 4) * 0x9E3779B97F4A7C15ull); }
 
 static void am_put(uintptr_t k, uint32_t size, int tag, int pool);
-static void am_grow(void) {
+/* Rehash: drop the tombstones, and double only when the live entries need it (the table follows
+ * what is allocated now, not how many allocations there ever were). */
+static void am_rehash(void) {
     amap_ent_t *old = AM;
     size_t oldcap = am_cap;
-    am_cap = am_cap ? am_cap * 2 : 4096;
+    if (!am_cap) am_cap = 4096;
+    else if ((am_live + 1) * 4 > am_cap) am_cap *= 2;
     AM = calloc(am_cap, sizeof *AM);
     if (!AM) abort();
-    am_used = 0;
+    am_live = am_tomb = 0;
     for (size_t i = 0; i < oldcap; i++)
         if (old[i].key > 1) am_put(old[i].key, old[i].size, old[i].tag, old[i].pool);
     free(old);
 }
 
 static void am_put(uintptr_t k, uint32_t size, int tag, int pool) {
-    if ((am_used + 1) * 2 > am_cap) am_grow();
+    if ((am_live + am_tomb + 1) * 2 > am_cap) am_rehash();
     size_t i = am_hash(k) & (am_cap - 1);
     while (AM[i].key > 1) i = (i + 1) & (am_cap - 1);
+    if (AM[i].key == 1) am_tomb--;
     AM[i].key = k;
     AM[i].size = size;
     AM[i].tag = (uint16_t)tag;
     AM[i].pool = (uint8_t)pool;
-    am_used++;
+    am_live++;
 }
 
 static amap_ent_t *am_find(uintptr_t k) {
@@ -107,6 +111,8 @@ static void unattribute(void *ptr) {
     TAGS[e->tag].cur[e->pool] -= e->size;
     TAGS[e->tag].live--;
     e->key = 1; /* tombstone */
+    am_live--;
+    am_tomb++;
 }
 
 int pools_tag_count(void) { return ntags; }
@@ -130,7 +136,8 @@ static void walk_largest(void *ptr, size_t size, int used, void *user) {
 static size_t largest_free(heap_pool_t *p) {
     if (!p->tlsf) return 0;
     size_t max = 0;
-    for (int r = 0; r < p->nregions; r++) tlsf_walk_pool(p->region[r], walk_largest, &max);
+    for (int r = 0; r < p->nregions; r++)
+        if (p->region[r]) tlsf_walk_pool(p->region[r], walk_largest, &max);
     return max;
 }
 
@@ -151,8 +158,9 @@ static void pool_init(heap_pool_t *p, const char *name, const size_t *regions, i
     if (nregions > MAX_REGIONS) nregions = MAX_REGIONS;
     for (int r = 0; r < nregions; r++) {
         size_t want = regions[r] > overhead ? regions[r] - overhead : 0; /* the device allocator's own control data */
-        rsz[r] = (want + tlsf_pool_overhead() + 15) & ~(size_t)15;
-        if (rsz[r] < 1024) rsz[r] = 1024;
+        /* a region the fixed overhead eats up, or too small for a few of TLSF's smallest blocks, adds
+         * nothing (it used to be rounded up to 1 KiB, space the device does not have) */
+        rsz[r] = want >= 4 * tlsf_block_size_min() ? (want + tlsf_pool_overhead() + 15) & ~(size_t)15 : 0;
         total += rsz[r];
     }
     p->size = total;
@@ -164,12 +172,13 @@ static void pool_init(heap_pool_t *p, const char *name, const size_t *regions, i
     p->tlsf = tlsf_create(p->base);
     uint8_t *at = p->base + ((ctl + 15) & ~(size_t)15);
     for (int r = 0; r < nregions; r++) {
-        p->region[r] = tlsf_add_pool(p->tlsf, at, rsz[r]);
+        p->region[r] = rsz[r] ? tlsf_add_pool(p->tlsf, at, rsz[r]) : NULL;
         at += rsz[r];
     }
     p->nregions = nregions;
     size_t freeb = 0;
-    for (int r = 0; r < nregions; r++) tlsf_walk_pool(p->region[r], walk_free, &freeb);
+    for (int r = 0; r < nregions; r++)
+        if (p->region[r]) tlsf_walk_pool(p->region[r], walk_free, &freeb);
     p->usable = freeb;
     p->min_free = p->usable;
     p->min_largest = largest_free(p);
@@ -219,7 +228,7 @@ size_t pools_internal_total_min_largest(void) { return g_internal_largest_min ==
 static void *try_alloc(heap_pool_t *p, size_t size) {
     void *ptr = tlsf_malloc(p->tlsf, size ? size : 1);
     if (ptr) {
-        p->used += tlsf_block_size(ptr);
+        p->used += tlsf_block_size(ptr) + tlsf_alloc_overhead(); /* the block's header is gone from free space too */
         p->alloc_count++;
         track_after_change(p);
         track_largest(p);
@@ -285,7 +294,7 @@ void pools_free(void *ptr) {
         fprintf(stderr, "pools: free of foreign pointer %p\n", ptr);
         abort();
     }
-    p->used -= tlsf_block_size(ptr);
+    p->used -= tlsf_block_size(ptr) + tlsf_alloc_overhead();
     p->alloc_count--;
     unattribute(ptr);
     tlsf_free(p->tlsf, ptr);

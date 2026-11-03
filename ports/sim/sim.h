@@ -202,6 +202,7 @@ void sim_tca9555_init(void);
 void sim_tca9555_report(void);
 void sim_tca_input(int port, uint8_t mask, uint8_t value); /* physical input levels (keys, RTC INT); ISR or locked */
 bool sim_tca_int_low(void);
+void sim_tca_reeval(void);                /* ISR or locked: an input changed by itself (PWR_GOOD) */
 bool sim_board_motor_on(void);
 bool sim_board_amp_on(void);
 bool sim_board_shared_reset_held(void);   /* P12 low: touch controller and modem in reset */

@@ -14,6 +14,7 @@
 #include <alloca.h>
 #include <errno.h>
 #include <pthread.h>
+#include <stdatomic.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -82,7 +83,8 @@ static struct {
     vtk_config_t cfg;
     pthread_mutex_t m;
     pthread_cond_t main_cv;
-    bool initialized, running, finished, stop_req;
+    bool initialized, running, finished;
+    atomic_bool stop_req; /* set from any thread (the desktop window too) */
     vtk_task_t *tasks[VTK_MAX_TASKS];
     int ntasks;
     uint64_t now[VTK_MAX_CORES];
@@ -435,7 +437,7 @@ static uint64_t realtime_wait_locked(uint64_t target) {
         pthread_mutex_lock(&K.ext_m);
         bool have_ext = K.ext_head != NULL;
         pthread_mutex_unlock(&K.ext_m);
-        if (K.rt_paused && !K.stop_req) {
+        if (K.rt_paused && !atomic_load(&K.stop_req)) {
             wall_v = 0; /* frozen: no time passes and external input waits */
             have_ext = false;
         }
@@ -445,7 +447,7 @@ static uint64_t realtime_wait_locked(uint64_t target) {
             pull_external_locked(at);
             return at;
         }
-        if (K.stop_req || (!K.rt_paused && wall_v >= target)) return target;
+        if (atomic_load(&K.stop_req) || (!K.rt_paused && wall_v >= target)) return target;
         uint64_t wait_ns = K.rt_paused ? 50000000ull : (uint64_t)((double)(target - wall_v) / speed);
         if (wait_ns > 50000000ull) wait_ns = 50000000ull;
         struct timespec ts;
@@ -471,7 +473,7 @@ static void schedule_locked(vtk_task_t *self) {
             if (self && self->state != VTK_ST_DONE) park_forever_locked(self);
             return;
         }
-        if (K.stop_req) {
+        if (atomic_load(&K.stop_req)) {
             finish_locked();
             continue;
         }
@@ -730,13 +732,13 @@ void vtk_run(void) {
 }
 
 void vtk_stop(void) {
-    K.stop_req = true;
+    atomic_store(&K.stop_req, true);
     pthread_mutex_lock(&K.ext_m);
     pthread_cond_broadcast(&K.ext_cv);
     pthread_mutex_unlock(&K.ext_m);
 }
 
-bool vtk_stopping(void) { return K.stop_req || K.finished; }
+bool vtk_stopping(void) { return atomic_load(&K.stop_req) || K.finished; }
 
 static void realtime_kick(void) {
     pthread_mutex_lock(&K.ext_m);

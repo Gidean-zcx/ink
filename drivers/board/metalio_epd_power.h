@@ -42,6 +42,11 @@ typedef enum {
 
 typedef struct {
     tca9555_t *ioexp;
+    /* The expander is shared (motor, amplifier, shared rails on the same ports): each expander
+     * transaction runs between io_lock and io_unlock, short, never across the sequence's waits.
+     * May be NULL when nothing else uses the expander. */
+    void (*io_lock)(void);
+    void (*io_unlock)(void);
     hal_i2c_dev_t *pmic;
     unsigned vcom_mv;
     /* Gate driver output enable (EPD XOE, a GPIO). The panel needs it low at

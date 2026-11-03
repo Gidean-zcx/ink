@@ -63,6 +63,7 @@ typedef struct {
     int64_t rtc_s;              /* UTC seconds the RTC shows */
     int accel_mg[3];            /* gravity the accelerometer reports */
     unsigned accel_motions;
+    unsigned camera_captures;
     int bt_mode;                /* BH1098G mode, 0 = not set */
     bool bt_powered;
     /* calls and messages, seen from the network */
@@ -117,7 +118,6 @@ typedef bool (*sim_gui_camera_fn)(uint8_t *rgb565be, int w, int h, void *ctx);
 void sim_gui_set_camera_source(sim_gui_camera_fn fn, void *ctx);
 /** Copy the last picture the device took (640x480 RGB565 high byte first) if it is new. */
 bool sim_gui_take_picture(uint8_t *buf, size_t cap);
-unsigned sim_gui_camera_captures(void);
 
 #ifdef __cplusplus
 }

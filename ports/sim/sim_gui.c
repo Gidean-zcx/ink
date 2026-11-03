@@ -119,6 +119,7 @@ static void poll_on_host(void *arg) {
         sim_accel_orientation(st.accel_mg);
         st.accel_motions = sim_accel_motions();
         st.bt_mode = sim_bt_audio_mode();
+        st.camera_captures = sim_camera_captures();
         st.bt_powered = sim_bt_audio_powered();
     }
 
@@ -341,4 +342,3 @@ bool sim_gui_take_picture(uint8_t *buf, size_t cap) {
     return fresh;
 }
 
-unsigned sim_gui_camera_captures(void) { return sim_camera_captures(); }

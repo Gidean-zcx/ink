@@ -22,6 +22,7 @@
 #define SDL_MAIN_HANDLED
 #include <SDL.h>
 
+#include <fcntl.h>
 #include <limits.h>
 #include <pthread.h>
 #include <stdio.h>
@@ -105,17 +106,31 @@ void *log_reader(void *arg) {
 }
 
 /* Route fd through a pipe whose reader copies it to the original fd and to the log panel. */
+/* The read end and the saved original stay out of a restarted process (exec closes them). */
 int capture(int fd, FILE *f) {
     int fds[2];
     if (pipe(fds)) return -1;
     int orig = dup(fd);
+    if (orig < 0) {
+        close(fds[0]);
+        close(fds[1]);
+        return -1;
+    }
+    fcntl(fds[0], F_SETFD, FD_CLOEXEC);
+    fcntl(orig, F_SETFD, FD_CLOEXEC);
     fflush(f);
     dup2(fds[1], fd);
     close(fds[1]);
     setvbuf(f, nullptr, _IOLBF, 0);
     Pipe *p = new Pipe{fds[0], orig};
     pthread_t th;
-    if (pthread_create(&th, nullptr, log_reader, p) == 0) pthread_detach(th);
+    if (pthread_create(&th, nullptr, log_reader, p) == 0) {
+        pthread_detach(th);
+    } else { /* no reader: put the original back rather than fill a pipe nobody drains */
+        dup2(orig, fd);
+        close(fds[0]);
+        delete p;
+    }
     return orig;
 }
 
@@ -798,7 +813,7 @@ void draw_panel(ImVec2 pos, ImVec2 size) {
         if (ImGui::RadioButton("电脑摄像头", host)) g_cam_host = true;
         ImGui::SameLine();
         if (ImGui::RadioButton("测试图案", !host)) g_cam_host = false;
-        ImGui::TextDisabled("%s；设备拍了 %u 张", host_camera_status(), sim_gui_camera_captures());
+        ImGui::TextDisabled("%s；设备拍了 %u 张", host_camera_status(), g_st.camera_captures);
         update_picture();
         if (g_pic_tex) ImGui::Image((ImTextureID)(intptr_t)g_pic_tex, ImVec2(240, 180));
         ImGui::TextDisabled("上面是设备最近拍的一张（640×480 RGB565）。拍照由系统调用相机接口完成。");

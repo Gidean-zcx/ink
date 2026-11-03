@@ -429,6 +429,8 @@ static void board_init(void) {
     sim_epd_chips_init();
     if (!metalio_board_ready()) sim_warn("display: board IO expander not ready");
     g_epd = (epd_power_t){.ioexp = metalio_ioexp(),
+                          .io_lock = metalio_board_lock,
+                          .io_unlock = metalio_board_unlock,
                           .pmic = hal_i2c_device(0, TPS65185_ADDR, "pmic"),
                           .vcom_mv = METALIO_EPD_VCOM_MV,
                           .gate_output = gate_output};

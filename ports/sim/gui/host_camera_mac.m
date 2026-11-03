@@ -39,11 +39,21 @@ static const char *g_status = "未启动";
 }
 @end
 
+/* Session and status change only on one serial control queue; a generation number makes a late
+ * permission answer or a start that races a close do nothing. */
 static AVCaptureSession *g_session;
 static InkCameraSink *g_sink;
-static dispatch_queue_t g_queue;
+static dispatch_queue_t g_frames, g_ctl;
+static unsigned g_gen;
 
-static void start_session(void) {
+static dispatch_queue_t ctl(void) {
+    static dispatch_once_t once;
+    dispatch_once(&once, ^{ g_ctl = dispatch_queue_create("ink.camera.control", DISPATCH_QUEUE_SERIAL); });
+    return g_ctl;
+}
+
+static void start_session(unsigned gen) { /* on the control queue */
+    if (gen != g_gen || g_session) return;
     AVCaptureDevice *dev = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
     if (!dev) {
         g_status = "这台电脑没有摄像头（用测试图案）";
@@ -62,8 +72,8 @@ static void start_session(void) {
     out.videoSettings = @{(id)kCVPixelBufferPixelFormatTypeKey : @(kCVPixelFormatType_32BGRA)};
     out.alwaysDiscardsLateVideoFrames = YES;
     g_sink = [[InkCameraSink alloc] init];
-    g_queue = dispatch_queue_create("ink.camera", DISPATCH_QUEUE_SERIAL);
-    [out setSampleBufferDelegate:g_sink queue:g_queue];
+    if (!g_frames) g_frames = dispatch_queue_create("ink.camera.frames", DISPATCH_QUEUE_SERIAL);
+    [out setSampleBufferDelegate:g_sink queue:g_frames];
     if ([session canAddOutput:out]) [session addOutput:out];
     [session startRunning];
     g_session = session;
@@ -71,18 +81,24 @@ static void start_session(void) {
 }
 
 void host_camera_open(void) {
-    switch ([AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo]) {
-    case AVAuthorizationStatusAuthorized: start_session(); break;
-    case AVAuthorizationStatusNotDetermined:
-        g_status = "等待授权使用摄像头";
-        [AVCaptureDevice requestAccessForMediaType:AVMediaTypeVideo
-                                 completionHandler:^(BOOL granted) {
-                                   if (granted) start_session();
-                                   else g_status = "没有摄像头权限（系统设置 → 隐私与安全性 → 摄像头）";
-                                 }];
-        break;
-    default: g_status = "没有摄像头权限（系统设置 → 隐私与安全性 → 摄像头）"; break;
-    }
+    dispatch_async(ctl(), ^{
+      unsigned gen = ++g_gen;
+      switch ([AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo]) {
+      case AVAuthorizationStatusAuthorized: start_session(gen); break;
+      case AVAuthorizationStatusNotDetermined:
+          g_status = "等待授权使用摄像头";
+          [AVCaptureDevice requestAccessForMediaType:AVMediaTypeVideo
+                                   completionHandler:^(BOOL granted) {
+                                     dispatch_async(ctl(), ^{
+                                       if (gen != g_gen) return; /* closed or reopened meanwhile */
+                                       if (granted) start_session(gen);
+                                       else g_status = "没有摄像头权限（系统设置 → 隐私与安全性 → 摄像头）";
+                                     });
+                                   }];
+          break;
+      default: g_status = "没有摄像头权限（系统设置 → 隐私与安全性 → 摄像头）"; break;
+      }
+    });
 }
 
 bool host_camera_frame(uint8_t *bgra, size_t cap, int *w, int *h) {
@@ -98,8 +114,20 @@ bool host_camera_frame(uint8_t *bgra, size_t cap, int *w, int *h) {
 }
 
 void host_camera_close(void) {
-    if (g_session) [g_session stopRunning];
-    g_session = nil;
+    dispatch_sync(ctl(), ^{
+      g_gen++; /* a pending permission answer starts nothing */
+      if (g_session) [g_session stopRunning];
+      g_session = nil;
+      g_sink = nil;
+      g_status = "未启动";
+    });
+    if (g_frames) dispatch_sync(g_frames, ^{}); /* the last frame callback has finished */
+    pthread_mutex_lock(&g_m);
+    free(g_frame);
+    g_frame = NULL;
+    g_w = g_h = 0;
+    g_have = false;
+    pthread_mutex_unlock(&g_m);
 }
 
 const char *host_camera_status(void) { return g_status; }

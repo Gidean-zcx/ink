@@ -6,6 +6,9 @@
 #   cmake -S . -B build && cmake --build build -j && ctest --test-dir build --output-on-failure
 cmake_minimum_required(VERSION 3.16)
 project(ink C)
+if(APPLE)
+  enable_language(OBJC) # before SDL2's own configure (FetchContent) and the window's camera code
+endif()
 
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
@@ -244,7 +247,6 @@ if(INK_GUI)
     file(WRITE ${INK_GUI_GLYPHS} "static const char kGuiGlyphs[] = \"\";\n")
   endif()
   if(APPLE)
-    enable_language(OBJC)
     set(INK_HOST_CAMERA ports/sim/gui/host_camera_mac.m)
     set_source_files_properties(ports/sim/gui/host_camera_mac.m PROPERTIES COMPILE_OPTIONS "-fobjc-arc")
   elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")

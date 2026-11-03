@@ -58,6 +58,7 @@ static struct {
     int kh, kn;
     /* IO expander keys: changes waiting for the driver's reads */
     bool exp_irq, exp_confirm;
+    uint64_t gpio2_fell; /* time of the last falling edge on GPIO2 */
     struct { hal_key_t key; bool pressed; uint64_t t; } exp_pending[KEY_FIFO];
     int exp_n;
     /* cover keys: touch points the controller reports outside the panel (upstream: Y ~ 1600), one
@@ -147,6 +148,7 @@ void sim_gpio2_update(void) {
     bool fell = low && !g_gpio2_low;
     g_gpio2_low = low;
     if (!fell) return;
+    IN.gpio2_fell = vtk_in_isr() ? vtk_isr_now() : vtk_now();
     IN.exp_irq = true;
     if (vtk_in_isr()) vtk_isr_wake_one(&IN.wq);
     else vtk_wake_one_locked(&IN.wq);
@@ -491,6 +493,87 @@ static void poll_touch_once(void) {
     }
 }
 
+/* GPIO2 service on the Plus (the expander's INT and the accelerometer's INT1 share the line): read
+ * both expander ports, which releases INT (upstream metalio_keys.cc reads port 0 for that too, as
+ * the panel PMIC's PWR_GOOD on P07 raises it with every power cycle), and the accelerometer's latch.
+ * Key events come from the levels read, confirmed by a second read after the debounce time; a
+ * failed read delivers nothing and is retried. Events carry the time of the edge. */
+static uint8_t g_keys_last = MB_P1_KEYS; /* debounced key levels (a bit high = released) */
+static uint8_t g_keys_first;             /* levels at the read that started a debounce */
+static bool g_keys_pending;
+static uint64_t g_keys_t;
+
+static void confirm_later(void) {
+    vtk_lock();
+    vtk_event_after(SIM_US(g_profile.key_debounce_us), expander_confirm_cb, NULL);
+    vtk_unlock();
+}
+
+static void deliver_key_changes(uint8_t now) {
+    static const struct { uint8_t bit; hal_key_t key; } K[] = {
+        {MB_P1_POWER_KEY, HAL_KEY_POWER}, {MB_P1_VOL_UP, HAL_KEY_VOL_UP}, {MB_P1_VOL_DOWN, HAL_KEY_VOL_DOWN}};
+    for (unsigned i = 0; i < sizeof K / sizeof K[0]; i++)
+        if ((now ^ g_keys_last) & K[i].bit) deliver_key(K[i].key, !(now & K[i].bit), g_keys_t);
+    g_keys_last = now;
+}
+
+static void service_expander(bool edge, bool confirm) {
+    uint8_t p0, p1;
+    if (!metalio_board_ready()) { /* no register model: timing only */
+        if (edge) {
+            sim_i2c_transfer("io-expander", 2);
+            confirm_later();
+        }
+        if (confirm) {
+            sim_i2c_transfer("io-expander", 2);
+            for (int i = 0; i < IN.exp_n; i++) deliver_key(IN.exp_pending[i].key, IN.exp_pending[i].pressed, IN.exp_pending[i].t);
+            IN.exp_n = 0;
+        }
+        return;
+    }
+    if (edge) {
+        bool ok = metalio_board_read(1, &p1) == HAL_I2C_OK;
+        metalio_board_read(0, &p0);  /* releases an INT raised by port 0 */
+        sim_sensors_service_gpio2(); /* the accelerometer shares GPIO2 */
+        if (ok && !g_keys_pending && (p1 & MB_P1_KEYS) != g_keys_last) {
+            g_keys_first = p1 & MB_P1_KEYS;
+            g_keys_pending = true;
+            g_keys_t = IN.gpio2_fell;
+            confirm_later();
+        } else if (!ok && !g_keys_pending) {
+            g_keys_first = g_keys_last; /* unknown: read again after the debounce time */
+            g_keys_pending = true;
+            g_keys_t = IN.gpio2_fell;
+            confirm_later();
+        }
+    }
+    if (confirm && g_keys_pending) {
+        if (metalio_board_read(1, &p1) != HAL_I2C_OK) {
+            sim_metric_add("input.key_read_errors", 1);
+            confirm_later();
+            return;
+        }
+        uint8_t now = p1 & MB_P1_KEYS;
+        if (now == g_keys_first) {
+            g_keys_pending = false;
+            if (now != g_keys_last) deliver_key_changes(now);
+        } else { /* still bouncing, or changed again */
+            g_keys_first = now;
+            confirm_later();
+        }
+    }
+}
+
+static void deliver_gpio_keys(bool sample) {
+    while (IN.kn > 0) {
+        hal_input_event_t e = IN.keys[IN.kh];
+        IN.kh = (IN.kh + 1) % KEY_FIFO;
+        IN.kn--;
+        if (sample) sim_metric_sample("input.key_delivery_ms", (vtk_now() / 1000 - e.t_us) / 1e3);
+        deliver(&e);
+    }
+}
+
 static void input_task(void *arg) {
     (void)arg;
     for (;;) {
@@ -499,41 +582,21 @@ static void input_task(void *arg) {
         bool irq = IN.irq, exp_irq = IN.exp_irq, exp_confirm = IN.exp_confirm;
         IN.irq = IN.exp_irq = IN.exp_confirm = false;
         vtk_unlock();
-        uint8_t p1;
-        if (exp_irq) { /* read the expander's input port (clears its INT), confirm after the debounce time */
-            if (metalio_board_ready()) metalio_board_read(1, &p1);
-            else sim_i2c_transfer("io-expander", 2);
-            sim_sensors_service_gpio2(); /* the accelerometer shares GPIO2 */
-            vtk_lock();
-            vtk_event_after(SIM_US(g_profile.key_debounce_us), expander_confirm_cb, NULL);
-            vtk_unlock();
-        }
-        if (exp_confirm) {
-            if (metalio_board_ready()) metalio_board_read(1, &p1);
-            else sim_i2c_transfer("io-expander", 2);
-            for (int i = 0; i < IN.exp_n; i++) deliver_key(IN.exp_pending[i].key, IN.exp_pending[i].pressed, IN.exp_pending[i].t);
-            IN.exp_n = 0;
-        }
-        while (IN.kn > 0) {
-            hal_input_event_t e = IN.keys[IN.kh];
-            IN.kh = (IN.kh + 1) % KEY_FIFO;
-            IN.kn--;
-            sim_metric_sample("input.key_delivery_ms", (vtk_now() / 1000 - e.t_us) / 1e3);
-            deliver(&e);
-        }
+        if (exp_irq || exp_confirm) service_expander(exp_irq, exp_confirm);
+        deliver_gpio_keys(true);
         if (!irq) continue;
-        /* touch session: read, then poll while any finger is down */
+        /* touch session: read, then poll while any finger is down; keys keep being served */
         do {
             poll_touch_once();
             if (!any_reported_down()) break;
             osal_task_delay_us((uint64_t)g_profile.touch_poll_ms * 1000ull);
-            /* keys pressed during a touch session are still delivered promptly */
-            while (IN.kn > 0) {
-                hal_input_event_t e = IN.keys[IN.kh];
-                IN.kh = (IN.kh + 1) % KEY_FIFO;
-                IN.kn--;
-                deliver(&e);
-            }
+            vtk_lock();
+            exp_irq = IN.exp_irq;
+            exp_confirm = IN.exp_confirm;
+            IN.exp_irq = IN.exp_confirm = false;
+            vtk_unlock();
+            if (exp_irq || exp_confirm) service_expander(exp_irq, exp_confirm);
+            deliver_gpio_keys(false);
         } while (1);
     }
 }

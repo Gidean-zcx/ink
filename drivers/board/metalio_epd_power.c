@@ -6,9 +6,32 @@
 #define TICK_US 10000 /* upstream's vTaskDelay(1): one FreeRTOS tick at HZ = 100 */
 #define PIN_MASK (EPD_PWR_VCOM_CTRL | EPD_PWR_PWRUP | EPD_PWR_WAKEUP)
 
+static void io_lock(epd_power_t *p) {
+    if (p->io_lock) p->io_lock();
+}
+static void io_unlock(epd_power_t *p) {
+    if (p->io_unlock) p->io_unlock();
+}
+
 static void pins(epd_power_t *p, uint8_t levels) {
     /* upstream logs a failed write and carries on; the missing edge shows up in the next step */
+    io_lock(p);
     if (tca9555_set(p->ioexp, 0, PIN_MASK, levels) != HAL_I2C_OK) p->ioexp_errors++;
+    io_unlock(p);
+}
+
+static hal_i2c_status_t read_port0(epd_power_t *p, uint8_t *levels) {
+    io_lock(p);
+    hal_i2c_status_t s = tca9555_read(p->ioexp, 0, levels);
+    io_unlock(p);
+    return s;
+}
+
+static uint8_t shadow_port0(epd_power_t *p) {
+    io_lock(p);
+    uint8_t v = p->ioexp->out[0];
+    io_unlock(p);
+    return v;
 }
 
 static epd_power_result_t power_on_once(epd_power_t *p) {
@@ -40,7 +63,7 @@ static epd_power_result_t power_on_once(epd_power_t *p) {
     bool good = false;
     for (int i = 0; i < 200 && !good; i++) {
         uint8_t levels;
-        if (tca9555_read(p->ioexp, 0, &levels) == HAL_I2C_OK && (levels & EPD_PWR_GOOD))
+        if (read_port0(p, &levels) == HAL_I2C_OK && (levels & EPD_PWR_GOOD))
             good = true;
         else
             osal_task_yield();
@@ -83,8 +106,9 @@ void epd_power_off(epd_power_t *p) {
 }
 
 void epd_power_sleep(epd_power_t *p) {
-    if (p->ioexp->out[0] & PIN_MASK) {
-        pins(p, p->ioexp->out[0] & EPD_PWR_WAKEUP); /* PWRUP and VCOM_CTRL low first */
+    uint8_t out0 = shadow_port0(p);
+    if (out0 & PIN_MASK) {
+        pins(p, out0 & EPD_PWR_WAKEUP); /* PWRUP and VCOM_CTRL low first */
         osal_task_delay_us(50000);
         pins(p, 0);
     }
