@@ -660,7 +660,18 @@ static void restore_try(void) { /* input task */
 
 static void service_expander_locked(bool edge, bool confirm) {
     uint8_t p0, p1;
-    if (!metalio_board_ready()) { /* no register model: timing only */
+    if (sim_board_present() && !metalio_board_ready()) {
+        /* the board's expander did not set up (bus errors at boot): as on the device, no key can be
+         * read until it does; every GPIO2 edge tries again (audit AUD2-012) */
+        if (metalio_board_init() != HAL_I2C_OK) {
+            sim_metric_add("input.expander_not_set_up", 1);
+            return;
+        }
+        sim_metric_add("input.expander_set_up_late", 1);
+        keys_resume_locked(); /* the levels now are the baseline; a key held now is reported */
+        return;
+    }
+    if (!sim_board_present()) { /* no register model: timing only */
         if (edge) {
             sim_i2c_transfer("io-expander", 2);
             confirm_later();

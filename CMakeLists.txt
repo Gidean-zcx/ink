@@ -324,6 +324,12 @@ add_test(NAME selftest-board-wiring
           --budget ${CMAKE_SOURCE_DIR}/tests/simulator/board.budget.json
           --out ${CMAKE_BINARY_DIR}/test-out/selftest-board --quiet --end 60s --no-random-outages)
 set_tests_properties(selftest-board-wiring PROPERTIES ENVIRONMENT "INK_SELFTEST_BOARD=1")
+add_test(NAME selftest-expander-dead
+  COMMAND sim-selftest --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+          --budget ${CMAKE_SOURCE_DIR}/tests/simulator/expander_dead.budget.json
+          --out ${CMAKE_BINARY_DIR}/test-out/selftest-expander-dead --quiet --end 3s --no-random-outages
+          --i2c-faults 1.0:io-expander)
+set_tests_properties(selftest-expander-dead PROPERTIES ENVIRONMENT "INK_SELFTEST_EXPANDER_DEAD=1")
 # Unit tests: one part on its own, checked against its reference (here the pools against TLSF).
 add_executable(pools-test tests/unit/pools_test.c)
 target_include_directories(pools-test PRIVATE simulator/memory simulator/kernel/vtk)

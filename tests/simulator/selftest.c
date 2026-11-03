@@ -1060,7 +1060,44 @@ static void age_task(void *arg) {
     ink_probe_mark("aging-done");
 }
 
+/* INK_SELFTEST_EXPANDER_DEAD with --i2c-faults 1.0:io-expander: the expander never set up at boot.
+ * Keys must not reach the system around it; once the bus answers, the next edge sets it up and keys
+ * work (audit AUD2-012). */
+static int g_dead_keys;
+
+static void dead_sink(const hal_input_event_t *e, void *ctx) {
+    (void)ctx;
+    if (e->type == HAL_IN_KEY) g_dead_keys++;
+}
+
+static void power_key_event(void *arg) { sim_input_key(HAL_KEY_POWER, arg != NULL); } /* ISR */
+
+static void expander_dead_task(void *arg) {
+    (void)arg;
+    hal_input_set_sink(dead_sink, NULL);
+    CHECK(!metalio_board_ready(), "the expander did not set up with its bus failing");
+    vtk_lock();
+    vtk_event_after(SIM_MS(20), power_key_event, (void *)1);
+    vtk_event_after(SIM_MS(200), power_key_event, NULL);
+    vtk_unlock();
+    osal_task_delay_us(500000);
+    CHECK(g_dead_keys == 0, "no key event without a working expander (%d)", g_dead_keys);
+    sim_i2c_set_faults(0, NULL);
+    vtk_lock();
+    vtk_event_after(SIM_MS(20), power_key_event, (void *)1);
+    vtk_event_after(SIM_MS(300), power_key_event, NULL);
+    vtk_unlock();
+    osal_task_delay_us(800000);
+    CHECK(metalio_board_ready() && g_dead_keys == 2, "once the bus answers the expander is set up and keys work (%d events)", g_dead_keys);
+    ink_probe_mark("expander-dead-done");
+}
+
 void ink_main(void) {
+    if (getenv("INK_SELFTEST_EXPANDER_DEAD")) {
+        osal_task_cfg_t cfg = {.name = "exp_dead", .fn = expander_dead_task, .stack_bytes = 4096, .priority = OSAL_PRIO_NORMAL, .core = -1};
+        osal_task_create(&cfg, NULL);
+        return;
+    }
     if (getenv("INK_SELFTEST_BOARD")) {
         osal_task_cfg_t cfg = {.name = "board", .fn = board_task, .stack_bytes = 6144, .priority = OSAL_PRIO_NORMAL, .core = -1};
         osal_task_create(&cfg, NULL);
