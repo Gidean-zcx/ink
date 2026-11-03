@@ -61,7 +61,7 @@ flowchart LR
 | 产品给谁用、首版做什么 | [产品定义 PRD](docs/product/prd.md)、[需求深读](docs/product/needs-analysis.md) |
 | 需求与边界 | [需求](docs/requirements.md)、[想法记录](docs/ideas.md) |
 | 每个功能做到什么程度算合格 | [系统需求 SRS](docs/system/srs.md) |
-| 系统怎么分层、设备与服务器怎么分工 | [系统架构概要设计 v0.2](docs/system/system-architecture.md)（待审核）、[架构方案](docs/system/architecture.md)、[底座设计](docs/system/foundation.md)（可点选的[底座地图](https://claude.ai/artifact/KvJAr2ZS9MZNvHu9RqcZRz)，源文件 [docs/foundation-map.html](docs/foundation-map.html)） |
+| 系统怎么分层、设备与服务器怎么分工 | [系统架构概要设计 v1.0](docs/system/system-architecture.md)（已确认）、[架构方案](docs/system/architecture.md)、[底座设计](docs/system/foundation.md)（可点选的[底座地图](https://claude.ai/artifact/KvJAr2ZS9MZNvHu9RqcZRz)，源文件 [docs/foundation-map.html](docs/foundation-map.html)） |
 | **模拟器：怎么搭的、组件与接口、怎么平移到真机** | [模拟系统总览](docs/system/simulator-overview.md)、[平台与模拟器](docs/system/platform-and-simulator.md)、[硬件对照](docs/research/simulator/hardware-parity.md) |
 | 代码放在哪、分几层 | [仓库结构](docs/system/repo-layout.md) |
 | 墨水屏刷新算法 | [刷新算法研究](docs/research/eink-refresh-algorithm.md)、[集成报告](docs/research/eink-refresh-integration.md) |
