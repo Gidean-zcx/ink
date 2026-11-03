@@ -111,7 +111,7 @@
 - 让模拟器测试在 macOS 上也能通过（分支 `claude/strange-knuth-e3baca`，见[平台与模拟器 §5.7](system/platform-and-simulator.md)与 [D-42](decisions/README.md)）：
   - 原因是任务栈估计把主机代码算了进去：macOS 上 `main` 估计 6～7.9 KiB，超过 4 KiB，每次运行还差几十字节；Linux 上 glibc 让探针基线达到 9016 字节，多数估计被压到下限，原口径在 Linux 上几乎不报警（CI 诊断实测）；
   - 改为只量任务自己的代码（D-42，可逆，按推荐暂定 A）。模型输出不变；Linux 与 macOS 上各任务的估计相差 20% 以内；macOS 上 32 项全过（含 `-Werror`、ASan/UBSan），原先 ASan 下 4 个自检中止的问题也一并解决；
-  - 新数字显示存储任务（3.4 KiB / 3.5 KiB）与中枢连接任务（3.3 KiB / 4 KiB）离配置的栈最近，是否加栈以 S31 编译的 `-fstack-usage` 为准；
+  - 新数字显示存储任务（3384 / 3584 字节）与中枢连接任务（3392 / 4096 字节）离配置的栈最近，是否加栈以 S31 编译的 `-fstack-usage` 为准；
   - 诊断用的临时分支 `claude/stack-diag-e3baca` 留在远端，不合并。
 
 ## 2026-11-02 接续记录
