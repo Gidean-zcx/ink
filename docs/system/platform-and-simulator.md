@@ -107,7 +107,7 @@ cmake -S . -B build && cmake --build build -j && ctest --test-dir build --output
 - 画面和状态由窗口每 33 ms 请求一次，模拟在事件里把可见图像（屏幕值加残影，按竖屏方向）和统计数据交给窗口；画面没变就不拷贝；
 - 内核新增 `vtk_set_realtime_speed` 和 `vtk_set_paused`，可从任何线程改速度或冻结，虚拟时间从当前位置接着走；不开实时模式的运行（全部场景测试）不受影响，确定性测试仍逐位一致。
 
-依赖：SDL2（系统装了就用，Debian/Ubuntu 是 `libsdl2-dev`，macOS 可 `brew install sdl2`；没装时 CMake 自动下载 release-2.32.10 编译）和 Dear ImGui v1.91.9b（自动下载）。不想编窗口程序时加 `-DINK_GUI=OFF`。窗口的中文字体用构建时配置的 Noto Sans CJK，找不到再用系统的冬青黑体、华文黑体。
+依赖：SDL2（系统装了就用，Debian/Ubuntu 是 `libsdl2-dev`，macOS 可 `brew install sdl2`；没装时 CMake 自动下载 release-2.32.10 编译；装了也想自己编，加 `-DCMAKE_DISABLE_FIND_PACKAGE_SDL2=ON`，macOS 的 CI 就走这条路）和 Dear ImGui v1.91.9b（自动下载）。不想编窗口程序时加 `-DINK_GUI=OFF`。窗口的中文字体用构建时配置的 Noto Sans CJK，找不到再用系统的冬青黑体、华文黑体。
 
 **和官方硬件的一致性**（R-043）：逐项对照见[模拟器与官方硬件的对照](../research/simulator/hardware-parity.md)。2026-11-03 第三轮后 21 项都一致（估计与假设见对照表）。总线上除摄像头外每颗芯片都有寄存器级模型，系统经本项目的驱动访问它们（D-41 A）：
 

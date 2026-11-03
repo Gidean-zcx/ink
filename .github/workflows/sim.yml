@@ -3,6 +3,8 @@ name: sim
 # Builds the simulator and the portable system on Linux and macOS and runs
 # every scenario against its budgets. No hardware needed. Linux is the
 # reference; macOS (Apple clang, arm64) is where the desktop simulator is used.
+# Linux links the system SDL2; macOS builds the pinned SDL2 from source, the
+# path a Mac without Homebrew's SDL2 takes, so both branches stay covered.
 on:
   push:
     branches: [main, "claude/**"]
@@ -48,17 +50,15 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Pillow for the font generator, SDL2 for the desktop simulator
-        run: |
-          python -m pip install pillow
-          brew install sdl2
+      - name: Pillow for the font generator
+        run: python -m pip install pillow
       - name: Noto Sans CJK (release Sans2.004, checked by hash)
         run: |
           mkdir -p fonts
           curl -sSL -o fonts/NotoSansCJK-Regular.ttc https://github.com/notofonts/noto-cjk/raw/Sans2.004/Sans/OTC/NotoSansCJK-Regular.ttc
           echo "b76b0433203017ca80401b2ee0dd69350349871c4b19d504c34dbdd80541690a  fonts/NotoSansCJK-Regular.ttc" | shasum -a 256 -c
       - name: Configure (warnings are errors)
-        run: cmake -S . -B build -DINK_WERROR=ON -DINK_CJK_FONT=$PWD/fonts/NotoSansCJK-Regular.ttc -DINK_CJK_FACE=2 -DPython3_EXECUTABLE=$(which python)
+        run: cmake -S . -B build -DINK_WERROR=ON -DINK_CJK_FONT=$PWD/fonts/NotoSansCJK-Regular.ttc -DINK_CJK_FACE=2 -DPython3_EXECUTABLE=$(which python) -DCMAKE_DISABLE_FIND_PACKAGE_SDL2=ON
       - name: Build
         run: cmake --build build -j
       - name: Scenarios and budgets
