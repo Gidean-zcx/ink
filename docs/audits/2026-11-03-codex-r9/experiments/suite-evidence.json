@@ -1,0 +1,1716 @@
+{
+  "head": "31642df9fb101e79041d03b1edb215174c6dc116",
+  "environment": {
+    "os": "macOS 15.7.9 (24G830)",
+    "arch": "arm64",
+    "compiler": "Apple clang 17.0.0",
+    "cmake": "3.28.3",
+    "ctest": "4.4.4",
+    "probe_python": "3.9.6"
+  },
+  "suites": [
+    {
+      "directory": "build-audit",
+      "log": "build-audit/r9-ctest.log",
+      "observed_exit_code": 0,
+      "tests": [
+        " 1/43 Test  #6: selftest-sim-slots ............................   Passed    1.28 sec",
+        " 2/43 Test  #5: selftest-psram-stack-flash-access-crashes .....   Passed    1.29 sec",
+        " 3/43 Test  #4: selftest-desktop-lcd ..........................   Passed    1.32 sec",
+        " 4/43 Test  #9: selftest-expander-dead ........................   Passed    0.04 sec",
+        " 5/43 Test  #3: selftest-pinenote-rk3566 ......................   Passed    1.37 sec",
+        " 6/43 Test #35: fixture-aged-user-image .......................   Passed    1.40 sec",
+        " 7/43 Test  #2: selftest-metalio-plus-psram16 .................   Passed    1.44 sec",
+        " 8/43 Test  #1: selftest-metalio-plus .........................   Passed    1.46 sec",
+        " 9/43 Test  #8: selftest-board-wiring-pqbn ....................   Passed    0.26 sec",
+        "10/43 Test  #7: selftest-board-wiring .........................   Passed    1.62 sec",
+        "11/43 Test #13: determinism ...................................   Passed    0.24 sec",
+        "12/43 Test #10: unit-pools ....................................   Passed    0.58 sec",
+        "13/43 Test #11: unit-pqbn-clock ...............................   Passed    1.59 sec",
+        "14/43 Test #12: systest-services ..............................   Passed    2.89 sec",
+        "15/43 Test #16: selftest-panel-vcom-mismatch ..................   Passed    3.38 sec",
+        "16/43 Test #18: scenario-keys_overlap-metalio-plus ............   Passed    3.63 sec",
+        "17/43 Test #15: scenario-home_basic-metalio-plus-psram16 ......   Passed    3.92 sec",
+        "18/43 Test #14: scenario-home_basic-metalio-plus ..............   Passed    3.92 sec",
+        "19/43 Test #21: scenario-standby-metalio-plus .................   Passed    1.52 sec",
+        "20/43 Test #25: scenario-ai_dismiss_held-metalio-plus .........   Passed    0.64 sec",
+        "21/43 Test #24: scenario-ai_dismiss-metalio-plus ..............   Passed    0.70 sec",
+        "22/43 Test #19: scenario-reader_basic-metalio-plus-psram16 ....   Passed    4.19 sec",
+        "23/43 Test #17: scenario-reader_basic-metalio-plus ............   Passed    4.52 sec",
+        "24/43 Test #27: scenario-reader_empty-metalio-plus ............   Passed    0.42 sec",
+        "25/43 Test #26: scenario-ai_mic_unavailable-metalio-plus ......   Passed    0.65 sec",
+        "26/43 Test #30: scenario-pqbn_flash_pause-metalio-plus-pqbn ...   Passed    0.33 sec",
+        "27/43 Test #20: scenario-ai_ask-metalio-plus ..................   Passed    3.79 sec",
+        "28/43 Test #23: scenario-reader_rapid-metalio-plus ............   Passed    1.78 sec",
+        "29/43 Test #28: scenario-reader_basic-metalio-plus-pqbn .......   Passed    1.14 sec",
+        "30/43 Test #29: scenario-ai_ask-metalio-plus-pqbn .............   Passed    1.23 sec",
+        "31/43 Test #38: scenario-home-panel-power-dead ................   Passed    0.05 sec",
+        "32/43 Test #32: scenario-powercut-during-save .................   Passed    0.96 sec",
+        "33/43 Test #40: portability-home-desktop-lcd ..................   Passed    0.08 sec",
+        "34/43 Test #39: portability-home-pinenote-rk3566 ..............   Passed    0.14 sec",
+        "35/43 Test #22: scenario-reader_continuous-metalio-plus .......   Passed    2.63 sec",
+        "36/43 Test #41: portability-home-metalio-plus-pqbn ............   Passed    0.17 sec",
+        "37/43 Test #34: scenario-reader_basic-upstream-pipeline .......   Passed    1.06 sec",
+        "38/43 Test #36: scenario-reader_basic-aged-flash-max ..........   Passed    0.88 sec",
+        "39/43 Test #37: scenario-reader_basic-panel-power-faults ......   Passed    0.76 sec",
+        "40/43 Test #31: scenario-ai_tools-metalio-plus ................   Passed    1.52 sec",
+        "41/43 Test #42: iss-selftest ..................................   Passed    0.47 sec",
+        "42/43 Test #33: determinism-reader ............................   Passed    1.60 sec",
+        "43/43 Test #43: gui-smoke .....................................   Passed   17.09 sec"
+      ],
+      "summary": [
+        "100% tests passed out of 43",
+        "Total Test time (real) =  24.69 sec"
+      ]
+    },
+    {
+      "directory": "build-audit-asan",
+      "log": "build-audit-asan/r9-ctest.log",
+      "observed_exit_code": 0,
+      "tests": [
+        " 1/42 Test  #5: selftest-psram-stack-flash-access-crashes .....   Passed    0.55 sec",
+        " 2/42 Test  #6: selftest-sim-slots ............................   Passed    0.56 sec",
+        " 3/42 Test  #9: selftest-expander-dead ........................   Passed    0.10 sec",
+        " 4/42 Test  #4: selftest-desktop-lcd ..........................   Passed    0.68 sec",
+        " 5/42 Test  #2: selftest-metalio-plus-psram16 .................   Passed    0.80 sec",
+        " 6/42 Test  #1: selftest-metalio-plus .........................   Passed    0.82 sec",
+        " 7/42 Test #35: fixture-aged-user-image .......................   Passed    0.90 sec",
+        " 8/42 Test  #3: selftest-pinenote-rk3566 ......................   Passed    0.93 sec",
+        " 9/42 Test  #7: selftest-board-wiring .........................   Passed    1.02 sec",
+        "10/42 Test  #8: selftest-board-wiring-pqbn ....................   Passed    0.54 sec",
+        "11/42 Test #10: unit-pools ....................................   Passed    0.50 sec",
+        "12/42 Test #13: determinism ...................................   Passed    0.48 sec",
+        "13/42 Test #11: unit-pqbn-clock ...............................   Passed    0.97 sec",
+        "14/42 Test #12: systest-services ..............................   Passed    1.36 sec",
+        "15/42 Test #16: selftest-panel-vcom-mismatch ..................   Passed    1.87 sec",
+        "16/42 Test #18: scenario-keys_overlap-metalio-plus ............   Passed    2.41 sec",
+        "17/42 Test #15: scenario-home_basic-metalio-plus-psram16 ......   Passed    2.80 sec",
+        "18/42 Test #14: scenario-home_basic-metalio-plus ..............   Passed    2.82 sec",
+        "19/42 Test #21: scenario-standby-metalio-plus .................   Passed    2.42 sec",
+        "20/42 Test #25: scenario-ai_dismiss_held-metalio-plus .........   Passed    1.07 sec",
+        "21/42 Test #24: scenario-ai_dismiss-metalio-plus ..............   Passed    1.18 sec",
+        "22/42 Test #19: scenario-reader_basic-metalio-plus-psram16 ....   Passed    3.82 sec",
+        "23/42 Test #17: scenario-reader_basic-metalio-plus ............   Passed    4.05 sec",
+        "24/42 Test #27: scenario-reader_empty-metalio-plus ............   Passed    0.82 sec",
+        "25/42 Test #30: scenario-pqbn_flash_pause-metalio-plus-pqbn ...   Passed    0.59 sec",
+        "26/42 Test #26: scenario-ai_mic_unavailable-metalio-plus ......   Passed    1.20 sec",
+        "27/42 Test #20: scenario-ai_ask-metalio-plus ..................   Passed    4.44 sec",
+        "28/42 Test #23: scenario-reader_rapid-metalio-plus ............   Passed    3.10 sec",
+        "29/42 Test #32: scenario-powercut-during-save .................   Passed    1.24 sec",
+        "30/42 Test #22: scenario-reader_continuous-metalio-plus .......   Passed    4.61 sec",
+        "31/42 Test #28: scenario-reader_basic-metalio-plus-pqbn .......   Passed    2.75 sec",
+        "32/42 Test #38: scenario-home-panel-power-dead ................   Passed    0.18 sec",
+        "33/42 Test #34: scenario-reader_basic-upstream-pipeline .......   Passed    1.59 sec",
+        "34/42 Test #40: portability-home-desktop-lcd ..................   Passed    0.34 sec",
+        "35/42 Test #41: portability-home-metalio-plus-pqbn ............   Passed    0.45 sec",
+        "36/42 Test #36: scenario-reader_basic-aged-flash-max ..........   Passed    1.58 sec",
+        "37/42 Test #39: portability-home-pinenote-rk3566 ..............   Passed    0.62 sec",
+        "38/42 Test #29: scenario-ai_ask-metalio-plus-pqbn .............   Passed    3.15 sec",
+        "39/42 Test #37: scenario-reader_basic-panel-power-faults ......   Passed    1.46 sec",
+        "40/42 Test #42: iss-selftest ..................................   Passed    0.52 sec",
+        "41/42 Test #33: determinism-reader ............................   Passed    2.83 sec",
+        "42/42 Test #31: scenario-ai_tools-metalio-plus ................   Passed    3.17 sec"
+      ],
+      "summary": [
+        "100% tests passed out of 42",
+        "Total Test time (real) =   8.86 sec"
+      ]
+    }
+  ],
+  "selected_scenarios": [
+    {
+      "metrics_file": "build-audit/test-out/selftest-board/metrics.json",
+      "status": "ok",
+      "virtual_time_s": 72.21065,
+      "metrics": {
+        "audio.bt_mode_sets": 5,
+        "audio.i2s_no_clock_ms": 570,
+        "audio.mic.captured_ms": 1590,
+        "audio.mic.lost_ms": 0,
+        "audio.mic.overruns": 0,
+        "audio.speaker.drain_timeouts": 1,
+        "audio.speaker.idle_ms": 0,
+        "audio.speaker.played_ms": 300,
+        "audio.speaker.underrun_ms": 0,
+        "audio.speaker.underruns": 0,
+        "audio.start_without_chip": 3,
+        "board.shared_power_warnings": 0,
+        "board.shared_reset_warnings": 1,
+        "bt.commands": 11,
+        "bt.lost_commands": 0,
+        "bt.mode": 1,
+        "display.busy_ms": 10991.986452,
+        "display.pmic.attempts": 19,
+        "display.pmic.ioexp_errors": 0,
+        "display.pmic.order_warnings": 5,
+        "display.pmic.power_ups": 21,
+        "display.pmic.retries": 0,
+        "display.pmic.vcom_mismatches": 0,
+        "display.pmic.vcom_mv": 1200,
+        "display.power_failures": 2,
+        "display.power_lost_during_waveform": 7,
+        "display.power_up_ms": {
+          "count": 19,
+          "mean": 126.87647400000003,
+          "min": 19.979,
+          "p50": 140.067,
+          "p95": 140.468233,
+          "p99": 140.468233,
+          "max": 140.468233
+        },
+        "display.power_ups": 17,
+        "display.redraws_after_supply_loss": 5,
+        "display.update_ms.GC16": {
+          "count": 2,
+          "mean": 1613.8637465,
+          "min": 1583.065449,
+          "p50": 1583.065449,
+          "p95": 1644.662044,
+          "p99": 1644.662044,
+          "max": 1644.662044
+        },
+        "display.update_ms.GL16": {
+          "count": 8,
+          "mean": 1166.18207975,
+          "min": 591.579149,
+          "p50": 602.236649,
+          "p95": 2191.986882,
+          "p99": 2191.986882,
+          "max": 2191.986882
+        },
+        "display.updates.GC16": 2,
+        "display.updates.GL16": 8,
+        "input.expander_restored_late": 1,
+        "input.gpio2_rechecks": 1,
+        "input.key_delivery_ms": {
+          "count": 16,
+          "mean": 51.4026875,
+          "min": 0.009,
+          "p50": 22.237,
+          "p95": 240.052,
+          "p99": 240.052,
+          "max": 240.052
+        },
+        "input.touch_delivery_ms": {
+          "count": 2,
+          "mean": 29.1555,
+          "min": 11.813,
+          "p50": 11.813,
+          "p95": 46.498,
+          "p99": 46.498,
+          "max": 46.498
+        },
+        "input.touch_monitor_extra_ms": {
+          "count": 1,
+          "mean": 24.687227,
+          "min": 24.687227,
+          "p50": 24.687227,
+          "p95": 24.687227,
+          "p99": 24.687227,
+          "max": 24.687227
+        },
+        "input.touches": 1,
+        "mem.dma.failed_allocs": 0,
+        "mem.external.failed_allocs": 0,
+        "mem.internal.failed_allocs": 0,
+        "power.off": 1,
+        "power.sleep_busy": 1,
+        "power.sleep_busy.motor": 1,
+        "power.sleep_ms": 5624.606,
+        "power.sleep_restore_errors": 3,
+        "power.sleep_restore_retries": 14,
+        "power.sleeps": 9,
+        "task.epd.cpu_ms": 333.291431,
+        "test.pass": 72
+      },
+      "warnings": [
+        "5.912s board: P12 low resets the touch controller AND the 4G modem (shared reset); the modem was registered",
+        "20.438s display: TPS65185 rails went down while the gate output (XOE) was low for 12 us (panel spec 6.1)",
+        "22.670s display: TPS65185 rails went down while the gate output (XOE) was low for 12 us (panel spec 6.1)",
+        "29.410s display: TPS65185 rails went down while the gate output (XOE) was low for 12 us (panel spec 6.1)",
+        "31.732s display: TPS65185 rails went down while the gate output (XOE) was low for 12 us (panel spec 6.1)",
+        "35.330s display: TPS65185 rails went down while the gate output (XOE) was low for 12 us (panel spec 6.1)"
+      ],
+      "budget_violations": 0,
+      "final_png_sha256": "7a075357d5efc32b1aa8b760124d7b049ac4aec0a2693e3875a5cc73a1d5eec7"
+    },
+    {
+      "metrics_file": "build-audit/test-out/selftest-board-pqbn/metrics.json",
+      "status": "ok",
+      "virtual_time_s": 68.89065,
+      "metrics": {
+        "audio.bt_mode_sets": 5,
+        "audio.i2s_no_clock_ms": 570,
+        "audio.mic.captured_ms": 1590,
+        "audio.mic.lost_ms": 0,
+        "audio.mic.overruns": 0,
+        "audio.speaker.drain_timeouts": 1,
+        "audio.speaker.idle_ms": 0,
+        "audio.speaker.played_ms": 300,
+        "audio.speaker.underrun_ms": 0,
+        "audio.speaker.underruns": 0,
+        "audio.start_without_chip": 3,
+        "board.shared_power_warnings": 0,
+        "board.shared_reset_warnings": 1,
+        "bt.commands": 11,
+        "bt.lost_commands": 0,
+        "bt.mode": 1,
+        "display.busy_ms": 11623.705861,
+        "display.pmic.attempts": 18,
+        "display.pmic.ioexp_errors": 0,
+        "display.pmic.order_warnings": 5,
+        "display.pmic.power_ups": 16,
+        "display.pmic.retries": 0,
+        "display.pmic.vcom_mismatches": 0,
+        "display.pmic.vcom_mv": 1200,
+        "display.power_failures": 2,
+        "display.power_lost_during_waveform": 7,
+        "display.power_up_ms": {
+          "count": 18,
+          "mean": 126.14366700000002,
+          "min": 19.979,
+          "p50": 140.067,
+          "p95": 140.468233,
+          "p99": 140.468233,
+          "max": 140.468233
+        },
+        "display.power_ups": 16,
+        "display.pqbn.cleans": 8,
+        "display.pqbn.idle_advance_phases": 457,
+        "display.pqbn.rest_upkeep_ms": {
+          "count": 16,
+          "mean": 6.6687223125,
+          "min": 2.880246,
+          "p50": 3.051962,
+          "p95": 58.687825,
+          "p99": 58.687825,
+          "max": 58.687825
+        },
+        "display.redraws_after_supply_loss": 7,
+        "display.update_ms.GC16": {
+          "count": 8,
+          "mean": 1436.51845975,
+          "min": 39.281,
+          "p50": 229.370122,
+          "p95": 10050.704857,
+          "p99": 10050.704857,
+          "max": 10050.704857
+        },
+        "display.update_ms.GL16": {
+          "count": 17,
+          "mean": 236.5905437647059,
+          "min": 20.411233,
+          "p50": 190.379233,
+          "p95": 633.044916,
+          "p99": 633.044916,
+          "max": 633.044916
+        },
+        "display.updates.GC16": 8,
+        "display.updates.GL16": 17,
+        "input.expander_restored_late": 1,
+        "input.gpio2_rechecks": 1,
+        "input.key_delivery_ms": {
+          "count": 16,
+          "mean": 51.4026875,
+          "min": 0.009,
+          "p50": 22.237,
+          "p95": 240.052,
+          "p99": 240.052,
+          "max": 240.052
+        },
+        "input.touch_delivery_ms": {
+          "count": 2,
+          "mean": 29.1555,
+          "min": 11.813,
+          "p50": 11.813,
+          "p95": 46.498,
+          "p99": 46.498,
+          "max": 46.498
+        },
+        "input.touch_monitor_extra_ms": {
+          "count": 1,
+          "mean": 24.687227,
+          "min": 24.687227,
+          "p50": 24.687227,
+          "p95": 24.687227,
+          "p99": 24.687227,
+          "max": 24.687227
+        },
+        "input.touches": 1,
+        "mem.dma.failed_allocs": 0,
+        "mem.external.failed_allocs": 0,
+        "mem.internal.failed_allocs": 0,
+        "power.off": 1,
+        "power.sleep_busy": 1,
+        "power.sleep_busy.motor": 1,
+        "power.sleep_ms": 5624.606,
+        "power.sleep_restore_errors": 3,
+        "power.sleep_restore_retries": 14,
+        "power.sleeps": 9,
+        "task.epd.cpu_ms": 184.919557,
+        "test.pass": 71
+      },
+      "warnings": [
+        "5.912s board: P12 low resets the touch controller AND the 4G modem (shared reset); the modem was registered",
+        "20.430s display: TPS65185 rails went down while the gate output (XOE) was low for 12 us (panel spec 6.1)",
+        "21.170s display: TPS65185 rails went down while the gate output (XOE) was low for 12 us (panel spec 6.1)",
+        "22.490s display: TPS65185 rails went down while the gate output (XOE) was low for 12 us (panel spec 6.1)",
+        "23.120s display: TPS65185 rails went down while the gate output (XOE) was low for 12 us (panel spec 6.1)",
+        "33.980s display: TPS65185 rails went down while the gate output (XOE) was low for 12 us (panel spec 6.1)"
+      ],
+      "budget_violations": 0,
+      "final_png_sha256": "aa0b5341e2f58b30799935479566c5b9e67802b60252773ca1190ce27741b202"
+    },
+    {
+      "metrics_file": "build-audit/test-out/ai_mic_unavailable-metalio-plus/metrics.json",
+      "status": "ok",
+      "virtual_time_s": 28.001663835,
+      "metrics": {
+        "ai.answers": 1,
+        "ai.mic_unavailable": 1,
+        "ai.press_to_listening_visible_ms": {
+          "count": 2,
+          "mean": 815.264,
+          "min": 560.054,
+          "p50": 560.054,
+          "p95": 1070.474,
+          "p99": 1070.474,
+          "max": 1070.474
+        },
+        "ai.press_to_tone_heard_ms": {
+          "count": 1,
+          "mean": 761.668,
+          "min": 761.668,
+          "p50": 761.668,
+          "p95": 761.668,
+          "p99": 761.668,
+          "max": 761.668
+        },
+        "ai.presses": 2,
+        "ai.release_to_done_visible_ms": {
+          "count": 1,
+          "mean": 13023.644,
+          "min": 13023.644,
+          "p50": 13023.644,
+          "p95": 13023.644,
+          "p99": 13023.644,
+          "max": 13023.644
+        },
+        "ai.release_to_first_audio_heard_ms": {
+          "count": 1,
+          "mean": 2511.666,
+          "min": 2511.666,
+          "p50": 2511.666,
+          "p95": 2511.666,
+          "p99": 2511.666,
+          "max": 2511.666
+        },
+        "ai.release_to_first_text_visible_ms": {
+          "count": 1,
+          "mean": 2198.077,
+          "min": 2198.077,
+          "p50": 2198.077,
+          "p95": 2198.077,
+          "p99": 2198.077,
+          "max": 2198.077
+        },
+        "ai.release_to_question_visible_ms": {
+          "count": 1,
+          "mean": 1043.116,
+          "min": 1043.116,
+          "p50": 1043.116,
+          "p95": 1043.116,
+          "p99": 1043.116,
+          "max": 1043.116
+        },
+        "ai.release_to_upload_done_ms": {
+          "count": 1,
+          "mean": 20.306,
+          "min": 20.306,
+          "p50": 20.306,
+          "p95": 20.306,
+          "p99": 20.306,
+          "max": 20.306
+        },
+        "audio.bt_mode_sets": 1,
+        "audio.mic.captured_ms": 780,
+        "audio.mic.lost_ms": 0,
+        "audio.mic.overruns": 0,
+        "audio.speaker.idle_ms": 0,
+        "audio.speaker.played_ms": 13050,
+        "audio.speaker.underrun_ms": 0,
+        "audio.speaker.underruns": 0,
+        "audio.start_without_chip": 3,
+        "audio.tones_dropped": 2,
+        "board.shared_power_warnings": 0,
+        "board.shared_reset_warnings": 0,
+        "bt.commands": 2,
+        "bt.lost_commands": 0,
+        "bt.mode": 1,
+        "display.busy_ms": 5333.632545,
+        "display.pmic.attempts": 12,
+        "display.pmic.ioexp_errors": 10,
+        "display.pmic.order_warnings": 0,
+        "display.pmic.power_ups": 7,
+        "display.pmic.retries": 0,
+        "display.pmic.vcom_mismatches": 0,
+        "display.pmic.vcom_mv": 1200,
+        "display.power_failures": 5,
+        "display.power_up_ms": {
+          "count": 12,
+          "mean": 193.81943233333337,
+          "min": 136.1075,
+          "p50": 141.631528,
+          "p95": 269.985,
+          "p99": 269.985,
+          "max": 269.985
+        },
+        "display.power_ups": 7,
+        "display.update_ms.DU": {
+          "count": 4,
+          "mean": 367.127528,
+          "min": 253.095728,
+          "p50": 312.427712,
+          "p95": 468.039532,
+          "p99": 468.039532,
+          "max": 468.039532
+        },
+        "display.update_ms.GC16": {
+          "count": 1,
+          "mean": 761.727055,
+          "min": 761.727055,
+          "p50": 761.727055,
+          "p95": 761.727055,
+          "p99": 761.727055,
+          "max": 761.727055
+        },
+        "display.update_ms.GL16": {
+          "count": 5,
+          "mean": 600.7460076,
+          "min": 516.417712,
+          "p50": 655.1755,
+          "p95": 658.03524,
+          "p99": 658.03524,
+          "max": 658.03524
+        },
+        "display.updates.DU": 4,
+        "display.updates.GC16": 1,
+        "display.updates.GL16": 5,
+        "hub.requests.ai.listen": 1,
+        "hub.requests.ai.listen.end": 1,
+        "hub.requests.hello": 1,
+        "input.expander_set_up_late": 1,
+        "input.key_delivery_ms": {
+          "count": 6,
+          "mean": 17.047666666666668,
+          "min": 0.009,
+          "p50": 20.01,
+          "p95": 22.237,
+          "p99": 22.237,
+          "max": 22.237
+        },
+        "input.touches": 0,
+        "mem.dma.failed_allocs": 0,
+        "mem.external.failed_allocs": 0,
+        "mem.internal.failed_allocs": 0,
+        "power.sleep_ms": 0,
+        "power.sleeps": 0,
+        "task.audio.cpu_ms": 594.737024,
+        "task.epd.cpu_ms": 824.276695,
+        "ui.action_to_visible_ms": {
+          "count": 1,
+          "mean": 830.028,
+          "min": 830.028,
+          "p50": 830.028,
+          "p95": 830.028,
+          "p99": 830.028,
+          "max": 830.028
+        },
+        "ui.action_to_visible_ms.FULL": {
+          "count": 1,
+          "mean": 830.028,
+          "min": 830.028,
+          "p50": 830.028,
+          "p95": 830.028,
+          "p99": 830.028,
+          "max": 830.028
+        }
+      },
+      "warnings": [
+        "0.100s board: TCA9555 init failed",
+        "0.474s display: board IO expander not ready"
+      ],
+      "budget_violations": 0,
+      "final_png_sha256": "8fa4db7e86e69734927e9fab49803640a1cea7046038ad292950733cb4e6f82b"
+    },
+    {
+      "metrics_file": "build-audit/test-out/reader_basic-metalio-plus/metrics.json",
+      "status": "ok",
+      "virtual_time_s": 47.55,
+      "metrics": {
+        "audio.bt_mode_sets": 1,
+        "audio.mic.captured_ms": 0,
+        "audio.mic.lost_ms": 0,
+        "audio.mic.overruns": 0,
+        "audio.speaker.idle_ms": 0,
+        "audio.speaker.played_ms": 0,
+        "audio.speaker.underrun_ms": 0,
+        "audio.speaker.underruns": 0,
+        "board.shared_power_warnings": 0,
+        "board.shared_reset_warnings": 0,
+        "bt.commands": 2,
+        "bt.lost_commands": 0,
+        "bt.mode": 1,
+        "display.busy_ms": 11294.934794,
+        "display.pmic.attempts": 9,
+        "display.pmic.ioexp_errors": 0,
+        "display.pmic.order_warnings": 0,
+        "display.pmic.power_ups": 9,
+        "display.pmic.retries": 0,
+        "display.pmic.vcom_mismatches": 0,
+        "display.pmic.vcom_mv": 1200,
+        "display.power_up_ms": {
+          "count": 9,
+          "mean": 129.54563511111112,
+          "min": 124.070735,
+          "p50": 124.077922,
+          "p95": 138.874,
+          "p99": 138.874,
+          "max": 138.874
+        },
+        "display.power_ups": 9,
+        "display.update_ms.DU": {
+          "count": 2,
+          "mean": 329.952032,
+          "min": 308.76481,
+          "p50": 308.76481,
+          "p95": 351.139254,
+          "p99": 351.139254,
+          "max": 351.139254
+        },
+        "display.update_ms.GC16": {
+          "count": 6,
+          "mean": 657.4476158333333,
+          "min": 518.129264,
+          "p50": 693.865496,
+          "p95": 826.830679,
+          "p99": 826.830679,
+          "max": 826.830679
+        },
+        "display.update_ms.GL16": {
+          "count": 12,
+          "mean": 530.5548933333333,
+          "min": 530.54906,
+          "p50": 530.55906,
+          "p95": 530.55906,
+          "p99": 530.55906,
+          "max": 530.55906
+        },
+        "display.updates.DU": 2,
+        "display.updates.GC16": 6,
+        "display.updates.GL16": 12,
+        "input.key_delivery_ms": {
+          "count": 20,
+          "mean": 16.1637804,
+          "min": 1.805,
+          "p50": 11.815,
+          "p95": 21.811,
+          "p99": 75.876608,
+          "max": 75.876608
+        },
+        "input.touch_delivery_ms": {
+          "count": 36,
+          "mean": 4.926722222222223,
+          "min": 0,
+          "p50": 0,
+          "p95": 21.811,
+          "p99": 21.811,
+          "max": 21.811
+        },
+        "input.touch_monitor_extra_ms": {
+          "count": 1,
+          "mean": 54.065608,
+          "min": 54.065608,
+          "p50": 54.065608,
+          "p95": 54.065608,
+          "p99": 54.065608,
+          "max": 54.065608
+        },
+        "input.touches": 7,
+        "mem.dma.failed_allocs": 0,
+        "mem.external.failed_allocs": 0,
+        "mem.internal.failed_allocs": 0,
+        "power.sleep_ms": 0,
+        "power.sleeps": 0,
+        "reader.open_ms": {
+          "count": 1,
+          "mean": 313.356,
+          "min": 313.356,
+          "p50": 313.356,
+          "p95": 313.356,
+          "p99": 313.356,
+          "max": 313.356
+        },
+        "reader.page_render_ms": {
+          "count": 16,
+          "mean": 47.4829375,
+          "min": 32.221,
+          "p50": 36.01,
+          "p95": 216.563,
+          "p99": 216.563,
+          "max": 216.563
+        },
+        "reader.page_turns": 14,
+        "reader.restored_page": {
+          "count": 1,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "reader.turns_prerendered": 13,
+        "reader.turns_rendered_on_demand": 1,
+        "task.audio.cpu_ms": 0.035687,
+        "task.epd.cpu_ms": 1777.160675,
+        "ui.action_to_visible_ms": {
+          "count": 17,
+          "mean": 676.1237647058822,
+          "min": 325.849,
+          "p50": 709.34,
+          "p95": 954.239,
+          "p99": 954.239,
+          "max": 954.239
+        },
+        "ui.action_to_visible_ms.FAST": {
+          "count": 2,
+          "mean": 344.164,
+          "min": 325.849,
+          "p50": 325.849,
+          "p95": 362.479,
+          "p99": 362.479,
+          "max": 362.479
+        },
+        "ui.action_to_visible_ms.FLASH_UI": {
+          "count": 1,
+          "mean": 954.239,
+          "min": 954.239,
+          "p50": 954.239,
+          "p95": 954.239,
+          "p99": 954.239,
+          "max": 954.239
+        },
+        "ui.action_to_visible_ms.TEXT": {
+          "count": 14,
+          "mean": 703.6812142857143,
+          "min": 682.75,
+          "p50": 709.34,
+          "p95": 723.043,
+          "p99": 723.043,
+          "max": 723.043
+        }
+      },
+      "warnings": [],
+      "budget_violations": 0,
+      "final_png_sha256": "ab610c112607b783274af11bffd4055fe474df5a115b8dab01e74a483cbe07bb"
+    },
+    {
+      "metrics_file": "build-audit/test-out/standby-metalio-plus/metrics.json",
+      "status": "ok",
+      "virtual_time_s": 1054.7,
+      "metrics": {
+        "audio.bt_mode_sets": 1,
+        "audio.mic.captured_ms": 0,
+        "audio.mic.lost_ms": 0,
+        "audio.mic.overruns": 0,
+        "audio.speaker.idle_ms": 0,
+        "audio.speaker.played_ms": 0,
+        "audio.speaker.underrun_ms": 0,
+        "audio.speaker.underruns": 0,
+        "board.shared_power_warnings": 0,
+        "board.shared_reset_warnings": 0,
+        "bt.commands": 2,
+        "bt.lost_commands": 0,
+        "bt.mode": 1,
+        "display.busy_ms": 8269.365862,
+        "display.pmic.attempts": 10,
+        "display.pmic.ioexp_errors": 0,
+        "display.pmic.order_warnings": 0,
+        "display.pmic.power_ups": 9,
+        "display.pmic.retries": 1,
+        "display.pmic.vcom_mismatches": 0,
+        "display.pmic.vcom_mv": 1200,
+        "display.power_up_ms": {
+          "count": 9,
+          "mean": 161.26328366666667,
+          "min": 119.817422,
+          "p50": 137.39001,
+          "p95": 330.708,
+          "p99": 330.708,
+          "max": 330.708
+        },
+        "display.power_ups": 9,
+        "display.update_ms.DU": {
+          "count": 5,
+          "mean": 381.9507392,
+          "min": 308.76481,
+          "p50": 415.857197,
+          "p95": 418.135238,
+          "p99": 418.135238,
+          "max": 418.135238
+        },
+        "display.update_ms.GC16": {
+          "count": 3,
+          "mean": 738.1872236666667,
+          "min": 693.865496,
+          "p50": 693.865496,
+          "p95": 826.830679,
+          "p99": 826.830679,
+          "max": 826.830679
+        },
+        "display.update_ms.GL16": {
+          "count": 8,
+          "mean": 529.185427375,
+          "min": 484.769228,
+          "p50": 499.336491,
+          "p95": 709.365562,
+          "p99": 709.365562,
+          "max": 709.365562
+        },
+        "display.updates.DU": 5,
+        "display.updates.GC16": 3,
+        "display.updates.GL16": 8,
+        "input.key_delivery_ms": {
+          "count": 14,
+          "mean": 24.071257714285714,
+          "min": 1.805,
+          "p50": 22.227,
+          "p95": 75.876608,
+          "p99": 75.876608,
+          "max": 75.876608
+        },
+        "input.touch_delivery_ms": {
+          "count": 4,
+          "mean": 11.8105,
+          "min": 1.805,
+          "p50": 1.815,
+          "p95": 21.811,
+          "p99": 21.811,
+          "max": 21.811
+        },
+        "input.touch_monitor_extra_ms": {
+          "count": 1,
+          "mean": 54.065608,
+          "min": 54.065608,
+          "p50": 54.065608,
+          "p95": 54.065608,
+          "p99": 54.065608,
+          "max": 54.065608
+        },
+        "input.touches": 2,
+        "mem.dma.failed_allocs": 0,
+        "mem.external.failed_allocs": 0,
+        "mem.internal.failed_allocs": 0,
+        "power.lock_to_sleep_ms": {
+          "count": 3,
+          "mean": 1048.549,
+          "min": 1047.795,
+          "p50": 1047.795,
+          "p95": 1050.057,
+          "p99": 1050.057,
+          "max": 1050.057
+        },
+        "power.sleep_cancelled": 1,
+        "power.sleep_deferred": 15,
+        "power.sleep_ms": 409215.568,
+        "power.sleep_refused": 1,
+        "power.sleeps": 7,
+        "power.unlock_to_visible_ms": {
+          "count": 3,
+          "mean": 752.1596666666668,
+          "min": 665.493,
+          "p50": 675.493,
+          "p95": 915.493,
+          "p99": 915.493,
+          "max": 915.493
+        },
+        "reader.open_ms": {
+          "count": 1,
+          "mean": 46.389,
+          "min": 46.389,
+          "p50": 46.389,
+          "p95": 46.389,
+          "p99": 46.389,
+          "max": 46.389
+        },
+        "reader.page_render_ms": {
+          "count": 4,
+          "mean": 36.60075,
+          "min": 34.851,
+          "p50": 36.658,
+          "p95": 37.521,
+          "p99": 37.521,
+          "max": 37.521
+        },
+        "reader.page_turns": 2,
+        "reader.restored_page": {
+          "count": 1,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "reader.turns_prerendered": 2,
+        "task.audio.cpu_ms": 0.035687,
+        "task.epd.cpu_ms": 1075.108427,
+        "ui.action_to_visible_ms": {
+          "count": 4,
+          "mean": 540.218,
+          "min": 325.798,
+          "p50": 362.479,
+          "p95": 763.423,
+          "p99": 763.423,
+          "max": 763.423
+        },
+        "ui.action_to_visible_ms.FAST": {
+          "count": 2,
+          "mean": 344.1385,
+          "min": 325.798,
+          "p50": 325.798,
+          "p95": 362.479,
+          "p99": 362.479,
+          "max": 362.479
+        },
+        "ui.action_to_visible_ms.TEXT": {
+          "count": 2,
+          "mean": 736.2975,
+          "min": 709.172,
+          "p50": 709.172,
+          "p95": 763.423,
+          "p99": 763.423,
+          "max": 763.423
+        }
+      },
+      "warnings": [],
+      "budget_violations": 0,
+      "final_png_sha256": "d8a4112a3e1cc45c5a69c1914142f783eb8b88dfa8ff5f2ce9e7f6dc8ca2a0a6"
+    },
+    {
+      "metrics_file": "build-audit/test-out/ai_ask-metalio-plus/metrics.json",
+      "status": "ok",
+      "virtual_time_s": 88.85,
+      "metrics": {
+        "ai.answers": 2,
+        "ai.failures": 1,
+        "ai.press_to_listening_visible_ms": {
+          "count": 3,
+          "mean": 514.0133333333333,
+          "min": 513.986,
+          "p50": 514.013,
+          "p95": 514.041,
+          "p99": 514.041,
+          "max": 514.041
+        },
+        "ai.press_to_tone_heard_ms": {
+          "count": 3,
+          "mean": 52.18933333333333,
+          "min": 52.187,
+          "p50": 52.187,
+          "p95": 52.194,
+          "p99": 52.194,
+          "max": 52.194
+        },
+        "ai.presses": 3,
+        "ai.release_to_done_visible_ms": {
+          "count": 2,
+          "mean": 13058.639,
+          "min": 12853.644,
+          "p50": 12853.644,
+          "p95": 13263.634,
+          "p99": 13263.634,
+          "max": 13263.634
+        },
+        "ai.release_to_error_visible_ms": {
+          "count": 1,
+          "mean": 4225.664,
+          "min": 4225.664,
+          "p50": 4225.664,
+          "p95": 4225.664,
+          "p99": 4225.664,
+          "max": 4225.664
+        },
+        "ai.release_to_first_audio_heard_ms": {
+          "count": 2,
+          "mean": 2637.244,
+          "min": 2443.887,
+          "p50": 2443.887,
+          "p95": 2830.601,
+          "p99": 2830.601,
+          "max": 2830.601
+        },
+        "ai.release_to_first_text_visible_ms": {
+          "count": 2,
+          "mean": 2300.11,
+          "min": 2106.753,
+          "p50": 2106.753,
+          "p95": 2493.467,
+          "p99": 2493.467,
+          "max": 2493.467
+        },
+        "ai.release_to_question_visible_ms": {
+          "count": 2,
+          "mean": 1218.116,
+          "min": 1173.116,
+          "p50": 1173.116,
+          "p95": 1263.116,
+          "p99": 1263.116,
+          "max": 1263.116
+        },
+        "ai.release_to_upload_done_ms": {
+          "count": 3,
+          "mean": 124.47366666666666,
+          "min": 29.089,
+          "p50": 29.089,
+          "p95": 315.243,
+          "p99": 315.243,
+          "max": 315.243
+        },
+        "audio.bt_mode_sets": 1,
+        "audio.mic.captured_ms": 4500,
+        "audio.mic.lost_ms": 0,
+        "audio.mic.overruns": 0,
+        "audio.speaker.idle_ms": 0,
+        "audio.speaker.played_ms": 27135,
+        "audio.speaker.underrun_ms": 0,
+        "audio.speaker.underruns": 0,
+        "board.shared_power_warnings": 0,
+        "board.shared_reset_warnings": 0,
+        "bt.commands": 2,
+        "bt.lost_commands": 0,
+        "bt.mode": 1,
+        "display.busy_ms": 16746.061822,
+        "display.pmic.attempts": 21,
+        "display.pmic.ioexp_errors": 0,
+        "display.pmic.order_warnings": 0,
+        "display.pmic.power_ups": 21,
+        "display.pmic.retries": 0,
+        "display.pmic.vcom_mismatches": 0,
+        "display.pmic.vcom_mv": 1200,
+        "display.power_up_ms": {
+          "count": 21,
+          "mean": 135.86007942857145,
+          "min": 125.558,
+          "p50": 136.523659,
+          "p95": 141.070374,
+          "p99": 141.824733,
+          "max": 141.824733
+        },
+        "display.power_ups": 21,
+        "display.update_ms.DU": {
+          "count": 12,
+          "mean": 361.8467256666666,
+          "min": 253.095728,
+          "p50": 325.766856,
+          "p95": 470.190268,
+          "p99": 470.190268,
+          "max": 470.190268
+        },
+        "display.update_ms.GC16": {
+          "count": 5,
+          "mean": 664.537147,
+          "min": 552.157623,
+          "p50": 693.865496,
+          "p95": 826.830679,
+          "p99": 826.830679,
+          "max": 826.830679
+        },
+        "display.update_ms.GL16": {
+          "count": 15,
+          "mean": 600.0093826666667,
+          "min": 516.427712,
+          "p50": 641.266379,
+          "p95": 658.228445,
+          "p99": 658.228445,
+          "max": 658.228445
+        },
+        "display.updates.DU": 12,
+        "display.updates.GC16": 5,
+        "display.updates.GL16": 15,
+        "hub.requests.ai.listen": 3,
+        "hub.requests.ai.listen.end": 2,
+        "hub.requests.hello": 2,
+        "input.key_delivery_ms": {
+          "count": 12,
+          "mean": 18.940025666666667,
+          "min": 1.805,
+          "p50": 20.01,
+          "p95": 49.607626,
+          "p99": 49.607626,
+          "max": 49.607626
+        },
+        "input.touch_delivery_ms": {
+          "count": 4,
+          "mean": 11.8105,
+          "min": 1.805,
+          "p50": 1.815,
+          "p95": 21.811,
+          "p99": 21.811,
+          "max": 21.811
+        },
+        "input.touch_monitor_extra_ms": {
+          "count": 3,
+          "mean": 27.53773766666667,
+          "min": 3.947682,
+          "p50": 27.796626,
+          "p95": 50.868905,
+          "p99": 50.868905,
+          "max": 50.868905
+        },
+        "input.touches": 2,
+        "mem.dma.failed_allocs": 0,
+        "mem.external.failed_allocs": 0,
+        "mem.internal.failed_allocs": 0,
+        "power.sleep_ms": 0,
+        "power.sleeps": 0,
+        "reader.open_ms": {
+          "count": 1,
+          "mean": 46.389,
+          "min": 46.389,
+          "p50": 46.389,
+          "p95": 46.389,
+          "p99": 46.389,
+          "max": 46.389
+        },
+        "reader.page_render_ms": {
+          "count": 3,
+          "mean": 36.343333333333334,
+          "min": 34.851,
+          "p50": 36.658,
+          "p95": 37.521,
+          "p99": 37.521,
+          "max": 37.521
+        },
+        "reader.page_turns": 1,
+        "reader.restored_page": {
+          "count": 1,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "reader.turns_prerendered": 1,
+        "task.audio.cpu_ms": 1671.377221,
+        "task.epd.cpu_ms": 2709.535604,
+        "ui.action_to_visible_ms": {
+          "count": 5,
+          "mean": 559.5214,
+          "min": 325.798,
+          "p50": 685.079,
+          "p95": 715.079,
+          "p99": 715.079,
+          "max": 715.079
+        },
+        "ui.action_to_visible_ms.FAST": {
+          "count": 2,
+          "mean": 344.1385,
+          "min": 325.798,
+          "p50": 325.798,
+          "p95": 362.479,
+          "p99": 362.479,
+          "max": 362.479
+        },
+        "ui.action_to_visible_ms.FLASH_UI": {
+          "count": 2,
+          "mean": 700.079,
+          "min": 685.079,
+          "p50": 685.079,
+          "p95": 715.079,
+          "p99": 715.079,
+          "max": 715.079
+        },
+        "ui.action_to_visible_ms.TEXT": {
+          "count": 1,
+          "mean": 709.172,
+          "min": 709.172,
+          "p50": 709.172,
+          "p95": 709.172,
+          "p99": 709.172,
+          "max": 709.172
+        }
+      },
+      "warnings": [],
+      "budget_violations": 0,
+      "final_png_sha256": "8666079a5854d8fd89d8bee970a2608458c3100ca742eb7d5421febb197bef8a"
+    },
+    {
+      "metrics_file": "build-audit/test-out/ai_ask-metalio-plus-pqbn/metrics.json",
+      "status": "ok",
+      "virtual_time_s": 88.85,
+      "metrics": {
+        "ai.answers": 2,
+        "ai.failures": 1,
+        "ai.press_to_listening_visible_ms": {
+          "count": 3,
+          "mean": 481.462,
+          "min": 440.086,
+          "p50": 498.179,
+          "p95": 506.121,
+          "p99": 506.121,
+          "max": 506.121
+        },
+        "ai.press_to_tone_heard_ms": {
+          "count": 3,
+          "mean": 52.18933333333333,
+          "min": 52.187,
+          "p50": 52.187,
+          "p95": 52.194,
+          "p99": 52.194,
+          "max": 52.194
+        },
+        "ai.presses": 3,
+        "ai.release_to_done_visible_ms": {
+          "count": 2,
+          "mean": 12736.505,
+          "min": 12694.43,
+          "p50": 12694.43,
+          "p95": 12778.58,
+          "p99": 12778.58,
+          "max": 12778.58
+        },
+        "ai.release_to_error_visible_ms": {
+          "count": 1,
+          "mean": 4078.067,
+          "min": 4078.067,
+          "p50": 4078.067,
+          "p95": 4078.067,
+          "p99": 4078.067,
+          "max": 4078.067
+        },
+        "ai.release_to_first_audio_heard_ms": {
+          "count": 2,
+          "mean": 2463.3215,
+          "min": 2436.058,
+          "p50": 2436.058,
+          "p95": 2490.585,
+          "p99": 2490.585,
+          "max": 2490.585
+        },
+        "ai.release_to_first_text_visible_ms": {
+          "count": 2,
+          "mean": 2017.017,
+          "min": 1990.216,
+          "p50": 1990.216,
+          "p95": 2043.818,
+          "p99": 2043.818,
+          "max": 2043.818
+        },
+        "ai.release_to_question_visible_ms": {
+          "count": 2,
+          "mean": 703.8,
+          "min": 663.108,
+          "p50": 663.108,
+          "p95": 744.492,
+          "p99": 744.492,
+          "max": 744.492
+        },
+        "ai.release_to_upload_done_ms": {
+          "count": 3,
+          "mean": 29.089333333333332,
+          "min": 29.089,
+          "p50": 29.089,
+          "p95": 29.09,
+          "p99": 29.09,
+          "max": 29.09
+        },
+        "audio.bt_mode_sets": 1,
+        "audio.mic.captured_ms": 4500,
+        "audio.mic.lost_ms": 0,
+        "audio.mic.overruns": 0,
+        "audio.speaker.idle_ms": 0,
+        "audio.speaker.played_ms": 27495,
+        "audio.speaker.underrun_ms": 0,
+        "audio.speaker.underruns": 0,
+        "board.shared_power_warnings": 0,
+        "board.shared_reset_warnings": 0,
+        "bt.commands": 2,
+        "bt.lost_commands": 0,
+        "bt.mode": 1,
+        "display.busy_ms": 6699.964512,
+        "display.pmic.attempts": 22,
+        "display.pmic.ioexp_errors": 0,
+        "display.pmic.order_warnings": 0,
+        "display.pmic.power_ups": 22,
+        "display.pmic.retries": 0,
+        "display.pmic.vcom_mismatches": 0,
+        "display.pmic.vcom_mv": 1200,
+        "display.power_up_ms": {
+          "count": 22,
+          "mean": 135.25865818181816,
+          "min": 122.910625,
+          "p50": 136.416997,
+          "p95": 140.675,
+          "p99": 141.070374,
+          "max": 141.070374
+        },
+        "display.power_ups": 22,
+        "display.pqbn.cleans": 0,
+        "display.pqbn.idle_advance_phases": 4027,
+        "display.pqbn.rest_upkeep_ms": {
+          "count": 26,
+          "mean": 35.684535269230764,
+          "min": 4.940834,
+          "p50": 40.314253,
+          "p95": 58.687825,
+          "p99": 58.687825,
+          "max": 58.687825
+        },
+        "display.update_ms.DU": {
+          "count": 12,
+          "mean": 373.2582,
+          "min": 136.150615,
+          "p50": 274.002154,
+          "p95": 977.644769,
+          "p99": 977.644769,
+          "max": 977.644769
+        },
+        "display.update_ms.GL16": {
+          "count": 21,
+          "mean": 355.7029685714286,
+          "min": 147.104137,
+          "p50": 335.034567,
+          "p95": 738.020222,
+          "p99": 825.773262,
+          "max": 825.773262
+        },
+        "display.updates.DU": 12,
+        "display.updates.GL16": 21,
+        "hub.requests.ai.listen": 3,
+        "hub.requests.ai.listen.end": 2,
+        "hub.requests.hello": 2,
+        "input.key_delivery_ms": {
+          "count": 14,
+          "mean": 22.226556000000006,
+          "min": 1.805,
+          "p50": 20.01,
+          "p95": 72.679905,
+          "p99": 72.679905,
+          "max": 72.679905
+        },
+        "input.touch_delivery_ms": {
+          "count": 4,
+          "mean": 11.8105,
+          "min": 1.805,
+          "p50": 1.815,
+          "p95": 21.811,
+          "p99": 21.811,
+          "max": 21.811
+        },
+        "input.touch_monitor_extra_ms": {
+          "count": 3,
+          "mean": 27.53773766666667,
+          "min": 3.947682,
+          "p50": 27.796626,
+          "p95": 50.868905,
+          "p99": 50.868905,
+          "max": 50.868905
+        },
+        "input.touches": 2,
+        "mem.dma.failed_allocs": 0,
+        "mem.external.failed_allocs": 0,
+        "mem.internal.failed_allocs": 0,
+        "power.sleep_ms": 0,
+        "power.sleeps": 0,
+        "reader.open_ms": {
+          "count": 1,
+          "mean": 46.287,
+          "min": 46.287,
+          "p50": 46.287,
+          "p95": 46.287,
+          "p99": 46.287,
+          "max": 46.287
+        },
+        "reader.page_render_ms": {
+          "count": 4,
+          "mean": 42.71125,
+          "min": 36.658,
+          "p50": 37.419,
+          "p95": 59.182,
+          "p99": 59.182,
+          "max": 59.182
+        },
+        "reader.page_turns": 2,
+        "reader.restored_page": {
+          "count": 1,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "reader.turns_prerendered": 2,
+        "task.audio.cpu_ms": 1699.913468,
+        "task.epd.cpu_ms": 992.011917,
+        "ui.action_to_visible_ms": {
+          "count": 6,
+          "mean": 744.4556666666667,
+          "min": 585.458,
+          "p50": 629.046,
+          "p95": 1004.386,
+          "p99": 1004.386,
+          "max": 1004.386
+        },
+        "ui.action_to_visible_ms.FAST": {
+          "count": 2,
+          "mean": 808.09,
+          "min": 621.502,
+          "p50": 621.502,
+          "p95": 994.678,
+          "p99": 994.678,
+          "max": 994.678
+        },
+        "ui.action_to_visible_ms.FLASH_UI": {
+          "count": 2,
+          "mean": 607.252,
+          "min": 585.458,
+          "p50": 585.458,
+          "p95": 629.046,
+          "p99": 629.046,
+          "max": 629.046
+        },
+        "ui.action_to_visible_ms.TEXT": {
+          "count": 2,
+          "mean": 818.025,
+          "min": 631.664,
+          "p50": 631.664,
+          "p95": 1004.386,
+          "p99": 1004.386,
+          "max": 1004.386
+        }
+      },
+      "warnings": [],
+      "budget_violations": 0,
+      "final_png_sha256": "9e40b5caf628d8f956f8f939c8a1058b93dd440012117059010040859dcad9be"
+    },
+    {
+      "metrics_file": "build-audit/test-out/gui-smoke/out/metrics.json",
+      "status": "ok",
+      "virtual_time_s": 16.1,
+      "metrics": {
+        "audio.bt_mode_sets": 1,
+        "audio.mic.captured_ms": 0,
+        "audio.mic.lost_ms": 0,
+        "audio.mic.overruns": 0,
+        "audio.speaker.idle_ms": 0,
+        "audio.speaker.played_ms": 0,
+        "audio.speaker.underrun_ms": 0,
+        "audio.speaker.underruns": 0,
+        "board.shared_power_warnings": 0,
+        "board.shared_reset_warnings": 0,
+        "bt.commands": 2,
+        "bt.lost_commands": 0,
+        "bt.mode": 1,
+        "display.busy_ms": 3320.227907,
+        "display.pmic.attempts": 4,
+        "display.pmic.ioexp_errors": 0,
+        "display.pmic.order_warnings": 0,
+        "display.pmic.power_ups": 4,
+        "display.pmic.retries": 0,
+        "display.pmic.vcom_mismatches": 0,
+        "display.pmic.vcom_mv": 1200,
+        "display.power_up_ms": {
+          "count": 4,
+          "mean": 133.24822025,
+          "min": 118.097516,
+          "p50": 134.138365,
+          "p95": 140.7,
+          "p99": 140.7,
+          "max": 140.7
+        },
+        "display.power_ups": 4,
+        "display.update_ms.DU": {
+          "count": 2,
+          "mean": 283.49519,
+          "min": 272.90193,
+          "p50": 272.90193,
+          "p95": 294.08845,
+          "p99": 294.08845,
+          "max": 294.08845
+        },
+        "display.update_ms.GC16": {
+          "count": 3,
+          "mean": 722.2473083333333,
+          "min": 677.54252,
+          "p50": 677.54252,
+          "p95": 811.656885,
+          "p99": 811.656885,
+          "max": 811.656885
+        },
+        "display.update_ms.GL16": {
+          "count": 1,
+          "mean": 515.467012,
+          "min": 515.467012,
+          "p50": 515.467012,
+          "p95": 515.467012,
+          "p99": 515.467012,
+          "max": 515.467012
+        },
+        "display.updates.DU": 2,
+        "display.updates.GC16": 3,
+        "display.updates.GL16": 1,
+        "input.key_delivery_ms": {
+          "count": 2,
+          "mean": 19.8238145,
+          "min": 17.836629,
+          "p50": 17.836629,
+          "p95": 21.811,
+          "p99": 21.811,
+          "max": 21.811
+        },
+        "input.touch_delivery_ms": {
+          "count": 4,
+          "mean": 17.02425,
+          "min": 11.973,
+          "p50": 12.502,
+          "p95": 21.811,
+          "p99": 21.811,
+          "max": 21.811
+        },
+        "input.touches": 2,
+        "mem.dma.failed_allocs": 0,
+        "mem.external.failed_allocs": 0,
+        "mem.internal.failed_allocs": 0,
+        "power.sleep_ms": 0,
+        "power.sleeps": 0,
+        "reader.open_ms": {
+          "count": 1,
+          "mean": 34.079,
+          "min": 34.079,
+          "p50": 34.079,
+          "p95": 34.079,
+          "p99": 34.079,
+          "max": 34.079
+        },
+        "reader.page_render_ms": {
+          "count": 3,
+          "mean": 24.32766666666667,
+          "min": 22.879,
+          "p50": 24.862,
+          "p95": 25.242,
+          "p99": 25.242,
+          "max": 25.242
+        },
+        "reader.page_turns": 1,
+        "reader.restored_page": {
+          "count": 1,
+          "mean": 0,
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "reader.turns_prerendered": 1,
+        "task.audio.cpu_ms": 0.035687,
+        "task.epd.cpu_ms": 387.37589,
+        "ui.action_to_visible_ms": {
+          "count": 3,
+          "mean": 429.941,
+          "min": 293.9,
+          "p50": 319.599,
+          "p95": 676.324,
+          "p99": 676.324,
+          "max": 676.324
+        },
+        "ui.action_to_visible_ms.FAST": {
+          "count": 2,
+          "mean": 306.7495,
+          "min": 293.9,
+          "p50": 293.9,
+          "p95": 319.599,
+          "p99": 319.599,
+          "max": 319.599
+        },
+        "ui.action_to_visible_ms.TEXT": {
+          "count": 1,
+          "mean": 676.324,
+          "min": 676.324,
+          "p50": 676.324,
+          "p95": 676.324,
+          "p99": 676.324,
+          "max": 676.324
+        }
+      },
+      "warnings": [],
+      "budget_violations": 0,
+      "final_png_sha256": "8756a7bae75bad15cc083cfeec389d18cae7e583ac6062e83ad9672e51012d64"
+    }
+  ],
+  "all_bt_counters": [
+    {
+      "name": "aging",
+      "commands": 2,
+      "lost_commands": 0
+    },
+    {
+      "name": "ai_ask-metalio-plus",
+      "commands": 2,
+      "lost_commands": 0
+    },
+    {
+      "name": "ai_ask-metalio-plus-pqbn",
+      "commands": 2,
+      "lost_commands": 0
+    },
+    {
+      "name": "ai_dismiss-metalio-plus",
+      "commands": 2,
+      "lost_commands": 0
+    },
+    {
+      "name": "ai_dismiss_held-metalio-plus",
+      "commands": 2,
+      "lost_commands": 0
+    },
+    {
+      "name": "ai_mic_unavailable-metalio-plus",
+      "commands": 2,
+      "lost_commands": 0
+    },
+    {
+      "name": "ai_tools-metalio-plus",
+      "commands": 2,
+      "lost_commands": 0
+    },
+    {
+      "name": "home-panel-power-dead",
+      "commands": 2,
+      "lost_commands": 0
+    },
+    {
+      "name": "home_basic-metalio-plus",
+      "commands": 2,
+      "lost_commands": 0
+    },
+    {
+      "name": "home_basic-metalio-plus-psram16",
+      "commands": 2,
+      "lost_commands": 0
+    },
+    {
+      "name": "keys_overlap-metalio-plus",
+      "commands": 2,
+      "lost_commands": 0
+    },
+    {
+      "name": "portability-metalio-plus-pqbn",
+      "commands": 2,
+      "lost_commands": 0
+    },
+    {
+      "name": "pqbn_flash_pause",
+      "commands": 2,
+      "lost_commands": 0
+    },
+    {
+      "name": "reader_basic-aged",
+      "commands": 2,
+      "lost_commands": 0
+    },
+    {
+      "name": "reader_basic-metalio-plus",
+      "commands": 2,
+      "lost_commands": 0
+    },
+    {
+      "name": "reader_basic-metalio-plus-pqbn",
+      "commands": 2,
+      "lost_commands": 0
+    },
+    {
+      "name": "reader_basic-metalio-plus-psram16",
+      "commands": 2,
+      "lost_commands": 0
+    },
+    {
+      "name": "reader_basic-panel-power-faults",
+      "commands": 2,
+      "lost_commands": 0
+    },
+    {
+      "name": "reader_basic-upstream-pipeline",
+      "commands": 2,
+      "lost_commands": 0
+    },
+    {
+      "name": "reader_continuous-metalio-plus",
+      "commands": 2,
+      "lost_commands": 0
+    },
+    {
+      "name": "reader_empty-metalio-plus",
+      "commands": 2,
+      "lost_commands": 0
+    },
+    {
+      "name": "reader_rapid-metalio-plus",
+      "commands": 2,
+      "lost_commands": 0
+    },
+    {
+      "name": "selftest-board",
+      "commands": 11,
+      "lost_commands": 0
+    },
+    {
+      "name": "selftest-board-pqbn",
+      "commands": 11,
+      "lost_commands": 0
+    },
+    {
+      "name": "selftest-death",
+      "commands": 0,
+      "lost_commands": 0
+    },
+    {
+      "name": "selftest-expander-dead",
+      "commands": 2,
+      "lost_commands": 0
+    },
+    {
+      "name": "selftest-metalio-plus",
+      "commands": 2,
+      "lost_commands": 0
+    },
+    {
+      "name": "selftest-metalio-plus-psram16",
+      "commands": 2,
+      "lost_commands": 0
+    },
+    {
+      "name": "selftest-sim-slots",
+      "commands": 2,
+      "lost_commands": 0
+    },
+    {
+      "name": "selftest-vcom",
+      "commands": 2,
+      "lost_commands": 0
+    },
+    {
+      "name": "standby-metalio-plus",
+      "commands": 2,
+      "lost_commands": 0
+    },
+    {
+      "name": "systest",
+      "commands": 10,
+      "lost_commands": 2
+    }
+  ]
+}

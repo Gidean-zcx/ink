@@ -1,0 +1,318 @@
+{
+  "status": "passed",
+  "head": "31642df9fb101e79041d03b1edb215174c6dc116",
+  "tracked_files_unchanged": true,
+  "untracked_files_only_in_audit": true,
+  "all_files_under_1MB": true,
+  "json_count": 15,
+  "files": [
+    {
+      "path": "TASK.md",
+      "bytes": 6796
+    },
+    {
+      "path": "experiments/README.md",
+      "bytes": 7602
+    },
+    {
+      "path": "experiments/audio-integrity.json",
+      "bytes": 2053
+    },
+    {
+      "path": "experiments/audio_integrity.py",
+      "bytes": 1609
+    },
+    {
+      "path": "experiments/comparison.json",
+      "bytes": 59471
+    },
+    {
+      "path": "experiments/image-comparison.json",
+      "bytes": 372
+    },
+    {
+      "path": "experiments/image_compare.py",
+      "bytes": 987
+    },
+    {
+      "path": "experiments/metrics-evidence.json",
+      "bytes": 50687
+    },
+    {
+      "path": "experiments/pq-cost-extended-results.json",
+      "bytes": 7446
+    },
+    {
+      "path": "experiments/pq-cost-results.json",
+      "bytes": 4850
+    },
+    {
+      "path": "experiments/pq-extended-results.json",
+      "bytes": 1644
+    },
+    {
+      "path": "experiments/pq-results.json",
+      "bytes": 10838
+    },
+    {
+      "path": "experiments/pq_checks.py",
+      "bytes": 1107
+    },
+    {
+      "path": "experiments/pq_cost.c",
+      "bytes": 1553
+    },
+    {
+      "path": "experiments/pq_cost.py",
+      "bytes": 2076
+    },
+    {
+      "path": "experiments/pq_cost_extended.c",
+      "bytes": 1748
+    },
+    {
+      "path": "experiments/pq_cost_extended.py",
+      "bytes": 2130
+    },
+    {
+      "path": "experiments/pq_extended.c",
+      "bytes": 4885
+    },
+    {
+      "path": "experiments/pq_extended.py",
+      "bytes": 1129
+    },
+    {
+      "path": "experiments/pq_skip.c",
+      "bytes": 4230
+    },
+    {
+      "path": "experiments/preliminary-results.json",
+      "bytes": 5173
+    },
+    {
+      "path": "experiments/probe-builds.json",
+      "bytes": 24327
+    },
+    {
+      "path": "experiments/probe.c",
+      "bytes": 2522
+    },
+    {
+      "path": "experiments/replay.c",
+      "bytes": 2864
+    },
+    {
+      "path": "experiments/results.json",
+      "bytes": 65190
+    },
+    {
+      "path": "experiments/run.py",
+      "bytes": 4545
+    },
+    {
+      "path": "experiments/suite-evidence.json",
+      "bytes": 54190
+    },
+    {
+      "path": "experiments/suite-steps.json",
+      "bytes": 4438
+    },
+    {
+      "path": "experiments/suites.py",
+      "bytes": 2715
+    },
+    {
+      "path": "experiments/summarize.py",
+      "bytes": 6161
+    },
+    {
+      "path": "experiments/validate.py",
+      "bytes": 5367
+    },
+    {
+      "path": "findings.json",
+      "bytes": 1292
+    },
+    {
+      "path": "report.md",
+      "bytes": 21626
+    },
+    {
+      "path": "verification.json",
+      "bytes": 1958
+    }
+  ],
+  "links": [
+    {
+      "source": "report.md",
+      "target": "verification.json"
+    },
+    {
+      "source": "report.md",
+      "target": "findings.json"
+    },
+    {
+      "source": "report.md",
+      "target": "experiments/README.md"
+    },
+    {
+      "source": "report.md",
+      "target": "experiments/suite-steps.json"
+    },
+    {
+      "source": "report.md",
+      "target": "experiments/pq-results.json"
+    },
+    {
+      "source": "report.md",
+      "target": "experiments/pq-extended-results.json"
+    },
+    {
+      "source": "report.md",
+      "target": "experiments/pq-cost-results.json"
+    },
+    {
+      "source": "report.md",
+      "target": "experiments/pq-cost-extended-results.json"
+    },
+    {
+      "source": "report.md",
+      "target": "experiments/results.json"
+    },
+    {
+      "source": "report.md",
+      "target": "experiments/metrics-evidence.json"
+    },
+    {
+      "source": "report.md",
+      "target": "experiments/audio-integrity.json"
+    },
+    {
+      "source": "report.md",
+      "target": "experiments/comparison.json"
+    },
+    {
+      "source": "report.md",
+      "target": "experiments/image-comparison.json"
+    },
+    {
+      "source": "report.md",
+      "target": "experiments/preliminary-results.json"
+    },
+    {
+      "source": "report.md",
+      "target": "experiments/README.md"
+    },
+    {
+      "source": "report.md",
+      "target": "experiments/artifact-validation.json"
+    },
+    {
+      "source": "experiments/README.md",
+      "target": "suite-steps.json"
+    },
+    {
+      "source": "experiments/README.md",
+      "target": "suite-evidence.json"
+    },
+    {
+      "source": "experiments/README.md",
+      "target": "pq-results.json"
+    },
+    {
+      "source": "experiments/README.md",
+      "target": "pq-extended-results.json"
+    },
+    {
+      "source": "experiments/README.md",
+      "target": "pq-cost-results.json"
+    },
+    {
+      "source": "experiments/README.md",
+      "target": "pq-cost-extended-results.json"
+    },
+    {
+      "source": "experiments/README.md",
+      "target": "preliminary-results.json"
+    },
+    {
+      "source": "experiments/README.md",
+      "target": "results.json"
+    },
+    {
+      "source": "experiments/README.md",
+      "target": "probe-builds.json"
+    },
+    {
+      "source": "experiments/README.md",
+      "target": "audio-integrity.json"
+    },
+    {
+      "source": "experiments/README.md",
+      "target": "comparison.json"
+    },
+    {
+      "source": "experiments/README.md",
+      "target": "image-comparison.json"
+    },
+    {
+      "source": "experiments/README.md",
+      "target": "artifact-validation.json"
+    }
+  ],
+  "commands": [
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "exit_code": 0,
+      "output": "31642df9fb101e79041d03b1edb215174c6dc116",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--exit-code",
+        "HEAD",
+        "--"
+      ],
+      "exit_code": 0,
+      "output": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "ls-files",
+        "--others",
+        "--exclude-standard"
+      ],
+      "exit_code": 0,
+      "output": "docs/audits/2026-11-03-codex-r9/TASK.md\ndocs/audits/2026-11-03-codex-r9/experiments/README.md\ndocs/audits/2026-11-03-codex-r9/experiments/audio-integrity.json\ndocs/audits/2026-11-03-codex-r9/experiments/audio_integrity.py\ndocs/audits/2026-11-03-codex-r9/experiments/comparison.json\ndocs/audits/2026-11-03-codex-r9/experiments/image-comparison.json\ndocs/audits/2026-11-03-codex-r9/experiments/image_compare.py\ndocs/audits/2026-11-03-codex-r9/experiments/metrics-evidence.json\ndocs/audits/2026-11-03-codex-r9/experiments/pq-cost-extended-results.json\ndocs/audits/2026-11-03-codex-r9/experiments/pq-cost-results.json\ndocs/audits/2026-11-03-codex-r9/experiments/pq-extended-results.json\ndocs/audits/2026-11-03-codex-r9/experiments/pq-results.json\ndocs/audits/2026-11-03-codex-r9/experiments/pq_checks.py\ndocs/audits/2026-11-03-codex-r9/experiments/pq_cost.c\ndocs/audits/2026-11-03-codex-r9/experiments/pq_cost.py\ndocs/audits/2026-11-03-codex-r9/experiments/pq_cost_extended.c\ndocs/audits/2026-11-03-codex-r9/experiments/pq_cost_extended.py\ndocs/audits/2026-11-03-codex-r9/experiments/pq_extended.c\ndocs/audits/2026-11-03-codex-r9/experiments/pq_extended.py\ndocs/audits/2026-11-03-codex-r9/experiments/pq_skip.c\ndocs/audits/2026-11-03-codex-r9/experiments/preliminary-results.json\ndocs/audits/2026-11-03-codex-r9/experiments/probe-builds.json\ndocs/audits/2026-11-03-codex-r9/experiments/probe.c\ndocs/audits/2026-11-03-codex-r9/experiments/replay.c\ndocs/audits/2026-11-03-codex-r9/experiments/results.json\ndocs/audits/2026-11-03-codex-r9/experiments/run.py\ndocs/audits/2026-11-03-codex-r9/experiments/suite-evidence.json\ndocs/audits/2026-11-03-codex-r9/experiments/suite-steps.json\ndocs/audits/2026-11-03-codex-r9/experiments/suites.py\ndocs/audits/2026-11-03-codex-r9/experiments/summarize.py\ndocs/audits/2026-11-03-codex-r9/experiments/validate.py\ndocs/audits/2026-11-03-codex-r9/findings.json\ndocs/audits/2026-11-03-codex-r9/report.md\ndocs/audits/2026-11-03-codex-r9/verification.json",
+      "stderr": ""
+    }
+  ],
+  "suites": [
+    43,
+    42
+  ],
+  "historical_scenarios": 5,
+  "kernel_cases_per_mode": 575,
+  "extended_direct": 540,
+  "extended_periodic": 12,
+  "final_probe_combinations": 22,
+  "historical_comparisons": 12,
+  "default_identical": 6,
+  "identical_wav_files": 6,
+  "findings_by_severity": {
+    "严重": 0,
+    "高": 0,
+    "中": 1,
+    "低": 0
+  },
+  "note": "仅检查交付及只读边界；不替代软件测试，不声称关闭历史F-6或其他范围外事项。"
+}

@@ -1,0 +1,178 @@
+[
+  {
+    "label": "compile",
+    "command": [
+      "/Users/bytedance/esp/.espressif/tools/riscv32-esp-elf/esp-15.2.0_20251204/riscv32-esp-elf/bin/riscv32-esp-elf-gcc",
+      "-march=rv32imafc_zicsr_zifencei_zaamo_zalrsc",
+      "-mabi=ilp32f",
+      "-mtune=esp-base",
+      "-ffunction-sections",
+      "-fdata-sections",
+      "-fstrict-volatile-bitfields",
+      "-std=gnu17",
+      "-O2",
+      "-fno-jump-tables",
+      "-fno-tree-switch-conversion",
+      "-DPQBN_HOT=__attribute__((section(\".iram.text\"),noinline))",
+      "-Itools/iss/rt",
+      "-Idrivers/display/pqbn",
+      "-nostartfiles",
+      "-Ltools/iss/rt",
+      "-Wl,--gc-sections",
+      "-Wl,--no-warn-rwx-segments",
+      "-T",
+      "xip.ld",
+      "tools/iss/rt/crt0.S",
+      "tools/iss/rt/syscalls.c",
+      "/Users/bytedance/Documents/Workspace/ink-audit-9/docs/audits/2026-11-03-codex-r9/experiments/pq_cost.c",
+      "drivers/display/pqbn/pqbn_v4.c",
+      "-lc",
+      "-lm",
+      "-lgcc",
+      "-o",
+      "/Users/bytedance/Documents/Workspace/ink-audit-9/build-audit/r9-pq-cost.elf"
+    ],
+    "exit_code": 0,
+    "output": []
+  },
+  {
+    "label": "fitted",
+    "command": [
+      "/Users/bytedance/Documents/Workspace/ink-audit-9/build-audit/iss",
+      "-c",
+      "tools/iss/out/esp32s31.fitted.cfg",
+      "-o",
+      "/Users/bytedance/Documents/Workspace/ink-audit-9/build-audit/r9-pq-cost-fitted.json",
+      "/Users/bytedance/Documents/Workspace/ink-audit-9/build-audit/r9-pq-cost.elf"
+    ],
+    "exit_code": 0,
+    "output": [
+      "skip-white-255 rows=340 model_cycles=14620",
+      "skip-gray-255 rows=340 model_cycles=14620",
+      "skip-white-cross4096 rows=340 model_cycles=14620",
+      "skip-white-1 rows=2 model_cycles=86",
+      "exec_row=0",
+      "iss: exit 0, 128149857 instructions, 180096880 cycles, CPI 1.405"
+    ],
+    "regions": [
+      {
+        "name": "skip-white-255",
+        "units": 340,
+        "aux_units": 255,
+        "cycles": 11886055.6171875,
+        "cycles_per_unit": 34958.987109,
+        "instret": 7885653
+      },
+      {
+        "name": "skip-gray-255",
+        "units": 340,
+        "aux_units": 255,
+        "cycles": 1027113.5234375,
+        "cycles_per_unit": 3020.922128,
+        "instret": 495413
+      },
+      {
+        "name": "skip-white-cross4096",
+        "units": 340,
+        "aux_units": 255,
+        "cycles": 11950033.41796875,
+        "cycles_per_unit": 35147.157112,
+        "instret": 7939023
+      },
+      {
+        "name": "skip-white-1",
+        "units": 2,
+        "aux_units": 1,
+        "cycles": 75296.07421875,
+        "cycles_per_unit": 37648.037109,
+        "instret": 46371
+      },
+      {
+        "name": "executor-idle-row",
+        "units": 1,
+        "aux_units": 0,
+        "cycles": 31,
+        "cycles_per_unit": 31.0,
+        "instret": 27
+      }
+    ]
+  },
+  {
+    "label": "slow",
+    "command": [
+      "/Users/bytedance/Documents/Workspace/ink-audit-9/build-audit/iss",
+      "-c",
+      "tools/iss/out/esp32s31.fitted.cfg",
+      "-o",
+      "/Users/bytedance/Documents/Workspace/ink-audit-9/build-audit/r9-pq-cost-slow.json",
+      "-s",
+      "lat.load_sub=3",
+      "-s",
+      "lat.mul=2",
+      "-s",
+      "br.mispredict=3",
+      "-s",
+      "br.jal_nobtb=3",
+      "-s",
+      "dcache.hit_extra=1",
+      "-s",
+      "mem.sram_extra=1",
+      "-s",
+      "psram.fill=287.6",
+      "-s",
+      "psram.writeback=328.6",
+      "/Users/bytedance/Documents/Workspace/ink-audit-9/build-audit/r9-pq-cost.elf"
+    ],
+    "exit_code": 0,
+    "output": [
+      "skip-white-255 rows=340 model_cycles=14620",
+      "skip-gray-255 rows=340 model_cycles=14620",
+      "skip-white-cross4096 rows=340 model_cycles=14620",
+      "skip-white-1 rows=2 model_cycles=86",
+      "exec_row=0",
+      "iss: exit 0, 128149857 instructions, 284961988 cycles, CPI 2.224"
+    ],
+    "regions": [
+      {
+        "name": "skip-white-255",
+        "units": 340,
+        "aux_units": 255,
+        "cycles": 18596739.3359375,
+        "cycles_per_unit": 54696.292165,
+        "instret": 7885653
+      },
+      {
+        "name": "skip-gray-255",
+        "units": 340,
+        "aux_units": 255,
+        "cycles": 1550603.046875,
+        "cycles_per_unit": 4560.597197,
+        "instret": 495413
+      },
+      {
+        "name": "skip-white-cross4096",
+        "units": 340,
+        "aux_units": 255,
+        "cycles": 18688429.5859375,
+        "cycles_per_unit": 54965.96937,
+        "instret": 7939023
+      },
+      {
+        "name": "skip-white-1",
+        "units": 2,
+        "aux_units": 1,
+        "cycles": 97441.1484375,
+        "cycles_per_unit": 48720.574219,
+        "instret": 46371
+      },
+      {
+        "name": "executor-idle-row",
+        "units": 1,
+        "aux_units": 0,
+        "cycles": 38,
+        "cycles_per_unit": 38.0,
+        "instret": 27
+      }
+    ]
+  }
+]

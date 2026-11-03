@@ -1,0 +1,110 @@
+[
+  {
+    "name": "r8_idle",
+    "sanitizer": false,
+    "pqbn": true,
+    "before": false,
+    "command": [
+      "/Users/bytedance/Documents/Workspace/ink-audit-9/build-audit/r9-probe",
+      "--profile",
+      "simulator/profiles/metalio-plus-pqbn.json",
+      "--out",
+      "/Users/bytedance/Documents/Workspace/ink-audit-9/build-audit/r9-probes/r8_idle-pqbn",
+      "--end",
+      "780s",
+      "--assets",
+      "/Users/bytedance/Documents/Workspace/ink-audit-9/build-audit/assets",
+      "--content",
+      "/Users/bytedance/Documents/Workspace/ink-audit-9/build-audit/test-content",
+      "--no-random-outages",
+      "--trace"
+    ],
+    "exit_code": 0,
+    "output": [
+      "[     1.740s] AUD9 begin r8_idle",
+      "[     2.070s] AUD5 display id=1 ok=1 p05=1 ready=1 latency_us=144938",
+      "[     2.080s] AUD5 update waited id=1 callbacks=1 elapsed_us=340000",
+      "[     6.456s] AUD5 display id=2 ok=1 p05=1 ready=1 latency_us=157370",
+      "[     6.470s] AUD5 update waited id=2 callbacks=1 elapsed_us=380040",
+      "[     6.470s] AUD9 idle-refresh gap_us=4000000 elapsed_us=380042 pending=0 playing=0 callbacks=2 ok=2",
+      "[     6.666s] AUD5 display id=3 ok=1 p05=1 ready=1 latency_us=0",
+      "[     6.670s] AUD5 update waited id=3 callbacks=1 elapsed_us=199958",
+      "[    67.033s] AUD5 display id=4 ok=1 p05=1 ready=1 latency_us=144938",
+      "[    67.040s] AUD5 update waited id=4 callbacks=1 elapsed_us=359999",
+      "[    67.040s] AUD9 idle-refresh gap_us=60000000 elapsed_us=360001 pending=0 playing=0 callbacks=4 ok=4",
+      "[    67.247s] AUD5 display id=5 ok=1 p05=1 ready=1 latency_us=0",
+      "[    67.260s] AUD5 update waited id=5 callbacks=1 elapsed_us=220040",
+      "[   667.636s] AUD5 display id=6 ok=1 p05=1 ready=1 latency_us=157371",
+      "[   667.650s] AUD5 update waited id=6 callbacks=1 elapsed_us=380040",
+      "[   667.650s] AUD9 idle-refresh gap_us=600000000 elapsed_us=380042 pending=0 playing=0 callbacks=6 ok=6",
+      "[   667.846s] AUD5 display id=7 ok=1 p05=1 ready=1 latency_us=0",
+      "[   667.850s] AUD5 update waited id=7 callbacks=1 elapsed_us=199958",
+      "[   672.213s] AUD5 display id=8 ok=1 p05=1 ready=1 latency_us=144937",
+      "[   672.220s] AUD5 update waited id=8 callbacks=1 elapsed_us=359999",
+      "[   672.220s] AUD9 idle-refresh gap_us=4000000 elapsed_us=360001 pending=0 playing=0 callbacks=8 ok=8",
+      "[   672.220s] AUD9 end r8_idle"
+    ]
+  },
+  {
+    "name": "r9_concurrent",
+    "sanitizer": false,
+    "pqbn": true,
+    "before": false,
+    "command": [
+      "/Users/bytedance/Documents/Workspace/ink-audit-9/build-audit/r9-probe",
+      "--profile",
+      "simulator/profiles/metalio-plus-pqbn.json",
+      "--out",
+      "/Users/bytedance/Documents/Workspace/ink-audit-9/build-audit/r9-probes/r9_concurrent-pqbn",
+      "--end",
+      "780s",
+      "--assets",
+      "/Users/bytedance/Documents/Workspace/ink-audit-9/build-audit/assets",
+      "--content",
+      "/Users/bytedance/Documents/Workspace/ink-audit-9/build-audit/test-content",
+      "--no-random-outages",
+      "--trace"
+    ],
+    "exit_code": 0,
+    "output": [
+      "[     1.740s] AUD10 begin r9_concurrent",
+      "[    10.155s] AUD10 callback id=1 ok=1 total_us=4214234 drive_us=3966916 mean=4.4067",
+      "[    18.305s] AUD10 callback id=2 ok=1 total_us=8143756 drive_us=5965084 mean=255.0000",
+      "[    18.320s] AUD10 concurrent gap_us=4000000 played_ms=6000 callbacks=2 ok=2 busy=0 failures=0",
+      "[    82.685s] AUD10 callback id=3 ok=1 total_us=4214016 drive_us=3966870 mean=4.4651",
+      "[    90.835s] AUD10 callback id=4 ok=1 total_us=8143776 drive_us=5965104 mean=255.0000",
+      "[    90.850s] AUD10 concurrent gap_us=60000000 played_ms=6000 callbacks=4 ok=4 busy=0 failures=0",
+      "[   726.575s] AUD10 callback id=5 ok=1 total_us=4222416 drive_us=3966947 mean=4.4651",
+      "[   734.712s] AUD10 callback id=6 ok=1 total_us=8131058 drive_us=5952373 mean=255.0000",
+      "[   734.720s] AUD10 concurrent gap_us=600000000 played_ms=6000 callbacks=6 ok=6 busy=0 failures=0"
+    ]
+  },
+  {
+    "name": "r9_concurrent_control",
+    "sanitizer": false,
+    "pqbn": true,
+    "before": false,
+    "command": [
+      "/Users/bytedance/Documents/Workspace/ink-audit-9/build-audit/r9-probe",
+      "--profile",
+      "simulator/profiles/metalio-plus-pqbn.json",
+      "--out",
+      "/Users/bytedance/Documents/Workspace/ink-audit-9/build-audit/r9-probes/r9_concurrent_control-pqbn",
+      "--end",
+      "780s",
+      "--assets",
+      "/Users/bytedance/Documents/Workspace/ink-audit-9/build-audit/assets",
+      "--content",
+      "/Users/bytedance/Documents/Workspace/ink-audit-9/build-audit/test-content",
+      "--no-random-outages",
+      "--trace"
+    ],
+    "exit_code": 0,
+    "output": [
+      "[     1.740s] AUD10 begin r9_concurrent_control",
+      "[    11.840s] AUD10 concurrent gap_us=4000000 played_ms=6000 callbacks=0 ok=0 busy=0 failures=0",
+      "[    77.890s] AUD10 concurrent gap_us=60000000 played_ms=6000 callbacks=0 ok=0 busy=0 failures=0",
+      "[   728.250s] AUD10 concurrent gap_us=600000000 played_ms=6000 callbacks=0 ok=0 busy=0 failures=0"
+    ]
+  }
+]

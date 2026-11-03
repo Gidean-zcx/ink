@@ -1,0 +1,18 @@
+[
+  {
+    "id": "AUD10-001",
+    "severity": "中",
+    "area": "PQ-BN / 静止维护CPU成本",
+    "title": "跨4096边界的1～2相短跳未被固定调用成本完全覆盖",
+    "evidence_type": "复现（指令级模型）、代码核查",
+    "locations": [
+      "drivers/display/pqbn/pqbn_v4.c:495",
+      "drivers/display/pqbn/pqbn_v4.c:549",
+      "ports/sim/hal/hal_display_sim.c:1099",
+      "simulator/profiles/metalio-plus-pqbn.json:117"
+    ],
+    "impact": "1216×684白色静止屏from=4095,n=1实扫1行。慢角135929.875 cycles/0.424781ms，现计97444 cycles/0.304513ms，少0.120268ms；n=2少0.045225ms。整屏6498 tile和171 band的age_clamp固定开销在少量扫行时未被包住。255相主要漏账已消除，未证明预算翻转或音频欠载；属于AUD9-002窄范围中级残留，非新的高级缺陷。",
+    "recommendation": "单独校准跨4096边界的固定开销并计入，或采用足以覆盖该边界的skip_call；补测0/1/2/255相。将来解除255上限时另测skip_long。",
+    "reproduce": "python3 docs/audits/2026-11-03-codex-r9/experiments/pq_cost_extended.py；编译和fitted/slow均exit=0，结果见experiments/pq-cost-extended-results.json的white-cross4096-1与white-cross4096-2；当前公式为42495+rows*54949。"
+  }
+]

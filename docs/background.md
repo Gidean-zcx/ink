@@ -233,11 +233,11 @@ simulator/profiles/     设备档案：Plus 悲观档（CI 门槛）、Plus 16 M
 **PQ-BN v4 直驱（可选）**
 
 - 来自用户另一会话的研究：[研究报告](research/eink-refresh-algorithm.md)，资料在 [eink-refresh/](research/eink-refresh/README.md)。
-- 内核在 `drivers/display/pqbn/pqbn_v4.c`，只做了拆分。
+- 内核在 `drivers/display/pqbn/pqbn_v4.c`：从研究代码拆出，另加了跨静止的维护接口 `pqbn_v4_skip`（2026-11-03 起的复审，见[审计记录](audits/README.md)）。
 - 集成方式与复核结论见 [集成报告](research/eink-refresh-integration.md)：
   - 小更新快很多，因为没有全局锁；
   - 本 ISS 测得的算力是研究估算的 1.15～2.6 倍，必须用两个扫描任务；
-  - 内核要求规划排在每相扫描之后，按原样整页翻页 908/1002 ms，现方案是 709/722 ms；
+  - 内核要求规划排在每相扫描之后，按原样整页翻页 908/1002 ms，现方案是 709/722 ms（集成报告当时的数；之后计入了跨静止的维护成本，长时间静止后的第一次刷新多约 15～60 ms）；
   - “规划跟在扫描后面逐带进行”的改造可降到 654/714 ms，但**尚未实现**；
   - 面板响应决定上限。
 

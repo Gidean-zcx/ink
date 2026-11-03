@@ -1,0 +1,268 @@
+[
+  {
+    "label": "compile",
+    "command": [
+      "/Users/bytedance/esp/.espressif/tools/riscv32-esp-elf/esp-15.2.0_20251204/riscv32-esp-elf/bin/riscv32-esp-elf-gcc",
+      "-march=rv32imafc_zicsr_zifencei_zaamo_zalrsc",
+      "-mabi=ilp32f",
+      "-mtune=esp-base",
+      "-ffunction-sections",
+      "-fdata-sections",
+      "-fstrict-volatile-bitfields",
+      "-std=gnu17",
+      "-O2",
+      "-fno-jump-tables",
+      "-fno-tree-switch-conversion",
+      "-DPQBN_HOT=__attribute__((section(\".iram.text\"),noinline))",
+      "-Itools/iss/rt",
+      "-Idrivers/display/pqbn",
+      "-nostartfiles",
+      "-Ltools/iss/rt",
+      "-Wl,--gc-sections",
+      "-Wl,--no-warn-rwx-segments",
+      "-T",
+      "xip.ld",
+      "tools/iss/rt/crt0.S",
+      "tools/iss/rt/syscalls.c",
+      "/Users/bytedance/Documents/Workspace/ink-audit-9/docs/audits/2026-11-03-codex-r9/experiments/pq_cost_extended.c",
+      "drivers/display/pqbn/pqbn_v4.c",
+      "-lc",
+      "-lm",
+      "-lgcc",
+      "-o",
+      "/Users/bytedance/Documents/Workspace/ink-audit-9/build-audit/r9-pq-cost-extended.elf"
+    ],
+    "exit_code": 0,
+    "output": []
+  },
+  {
+    "label": "fitted",
+    "command": [
+      "/Users/bytedance/Documents/Workspace/ink-audit-9/build-audit/iss",
+      "-c",
+      "tools/iss/out/esp32s31.fitted.cfg",
+      "-o",
+      "/Users/bytedance/Documents/Workspace/ink-audit-9/build-audit/r9-pq-cost-extended-fitted.json",
+      "/Users/bytedance/Documents/Workspace/ink-audit-9/build-audit/r9-pq-cost-extended.elf"
+    ],
+    "exit_code": 0,
+    "output": [
+      "white-cross4096-1 rows=1 model_cycles=97444",
+      "white-cross4096-2 rows=3 model_cycles=207342",
+      "white-cross4096-255 rows=340 model_cycles=18725155",
+      "white-wrap32-255 rows=341 model_cycles=18780104",
+      "black-255 rows=340 model_cycles=18725155",
+      "mixed-255 rows=340 model_cycles=18725155",
+      "white-512 rows=684 model_cycles=37627611",
+      "white-513 rows=684 model_cycles=37627611",
+      "white-max32 rows=684 model_cycles=37627611",
+      "exec_row=0",
+      "iss: exit 0, 329924595 instructions, 468987902 cycles, CPI 1.422"
+    ],
+    "regions": [
+      {
+        "name": "white-cross4096-1",
+        "units": 1,
+        "aux_units": 1,
+        "cycles": 104737.4375,
+        "cycles_per_unit": 104737.4375,
+        "instret": 76620
+      },
+      {
+        "name": "white-cross4096-2",
+        "units": 3,
+        "aux_units": 2,
+        "cycles": 168496.51171875,
+        "cycles_per_unit": 56165.503906,
+        "instret": 122958
+      },
+      {
+        "name": "white-cross4096-255",
+        "units": 340,
+        "aux_units": 255,
+        "cycles": 11946829.6171875,
+        "cycles_per_unit": 35137.734168,
+        "instret": 7939023
+      },
+      {
+        "name": "white-wrap32-255",
+        "units": 341,
+        "aux_units": 255,
+        "cycles": 11986892.0546875,
+        "cycles_per_unit": 35152.176113,
+        "instret": 7962144
+      },
+      {
+        "name": "black-255",
+        "units": 340,
+        "aux_units": 255,
+        "cycles": 11886056.6171875,
+        "cycles_per_unit": 34958.990051,
+        "instret": 7885653
+      },
+      {
+        "name": "mixed-255",
+        "units": 340,
+        "aux_units": 255,
+        "cycles": 9818854.6171875,
+        "cycles_per_unit": 28878.984168,
+        "instret": 5611733
+      },
+      {
+        "name": "white-512",
+        "units": 684,
+        "aux_units": 512,
+        "cycles": 24028468.18359375,
+        "cycles_per_unit": 35129.33945,
+        "instret": 15917319
+      },
+      {
+        "name": "white-513",
+        "units": 684,
+        "aux_units": 513,
+        "cycles": 25679185.3828125,
+        "cycles_per_unit": 37542.668688,
+        "instret": 17571151
+      },
+      {
+        "name": "white-max32",
+        "units": 684,
+        "aux_units": 4294967295,
+        "cycles": 25256829.3828125,
+        "cycles_per_unit": 36925.189156,
+        "instret": 17148781
+      },
+      {
+        "name": "executor-idle-row",
+        "units": 1,
+        "aux_units": 0,
+        "cycles": 31,
+        "cycles_per_unit": 31.0,
+        "instret": 27
+      }
+    ]
+  },
+  {
+    "label": "slow",
+    "command": [
+      "/Users/bytedance/Documents/Workspace/ink-audit-9/build-audit/iss",
+      "-c",
+      "tools/iss/out/esp32s31.fitted.cfg",
+      "-o",
+      "/Users/bytedance/Documents/Workspace/ink-audit-9/build-audit/r9-pq-cost-extended-slow.json",
+      "-s",
+      "lat.load_sub=3",
+      "-s",
+      "lat.mul=2",
+      "-s",
+      "br.mispredict=3",
+      "-s",
+      "br.jal_nobtb=3",
+      "-s",
+      "dcache.hit_extra=1",
+      "-s",
+      "mem.sram_extra=1",
+      "-s",
+      "psram.fill=287.6",
+      "-s",
+      "psram.writeback=328.6",
+      "/Users/bytedance/Documents/Workspace/ink-audit-9/build-audit/r9-pq-cost-extended.elf"
+    ],
+    "exit_code": 0,
+    "output": [
+      "white-cross4096-1 rows=1 model_cycles=97444",
+      "white-cross4096-2 rows=3 model_cycles=207342",
+      "white-cross4096-255 rows=340 model_cycles=18725155",
+      "white-wrap32-255 rows=341 model_cycles=18780104",
+      "black-255 rows=340 model_cycles=18725155",
+      "mixed-255 rows=340 model_cycles=18725155",
+      "white-512 rows=684 model_cycles=37627611",
+      "white-513 rows=684 model_cycles=37627611",
+      "white-max32 rows=684 model_cycles=37627611",
+      "exec_row=0",
+      "iss: exit 0, 329924595 instructions, 741838322 cycles, CPI 2.249"
+    ],
+    "regions": [
+      {
+        "name": "white-cross4096-1",
+        "units": 1,
+        "aux_units": 1,
+        "cycles": 135929.875,
+        "cycles_per_unit": 135929.875,
+        "instret": 76620
+      },
+      {
+        "name": "white-cross4096-2",
+        "units": 3,
+        "aux_units": 2,
+        "cycles": 221814.0234375,
+        "cycles_per_unit": 73938.007812,
+        "instret": 122958
+      },
+      {
+        "name": "white-cross4096-255",
+        "units": 340,
+        "aux_units": 255,
+        "cycles": 18676315.328125,
+        "cycles_per_unit": 54930.3392,
+        "instret": 7939023
+      },
+      {
+        "name": "white-wrap32-255",
+        "units": 341,
+        "aux_units": 255,
+        "cycles": 18750878.953125,
+        "cycles_per_unit": 54987.914819,
+        "instret": 7962144
+      },
+      {
+        "name": "black-255",
+        "units": 340,
+        "aux_units": 255,
+        "cycles": 18596741.3359375,
+        "cycles_per_unit": 54696.298047,
+        "instret": 7885653
+      },
+      {
+        "name": "mixed-255",
+        "units": 340,
+        "aux_units": 255,
+        "cycles": 16116098.3359375,
+        "cycles_per_unit": 47400.289223,
+        "instret": 5611733
+      },
+      {
+        "name": "white-512",
+        "units": 684,
+        "aux_units": 512,
+        "cycles": 37740769.0234375,
+        "cycles_per_unit": 55176.5629,
+        "instret": 15917319
+      },
+      {
+        "name": "white-513",
+        "units": 684,
+        "aux_units": 513,
+        "cycles": 39378282.3828125,
+        "cycles_per_unit": 57570.588279,
+        "instret": 17571151
+      },
+      {
+        "name": "white-max32",
+        "units": 684,
+        "aux_units": 4294967295,
+        "cycles": 38955933.3828125,
+        "cycles_per_unit": 56953.118981,
+        "instret": 17148781
+      },
+      {
+        "name": "executor-idle-row",
+        "units": 1,
+        "aux_units": 0,
+        "cycles": 38,
+        "cycles_per_unit": 38.0,
+        "instret": 27
+      }
+    ]
+  }
+]
