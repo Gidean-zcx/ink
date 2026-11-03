@@ -1,0 +1,11 @@
+# Remote screen (R-048, D-53): asked by voice, the AI opens a page the hub
+# renders (remote.open); the device shows the changed areas it pulls, a tap is
+# answered locally at once and by the hub after its render.
+@3s      mic   speech
++0       key   ai 1200ms         # "打开网页看看今天的新闻" -> the hub calls remote.open
++14s     snap  remote-first      # the answer sheet covers the lower half; the links are above it
++0       tap   560 85            # the "next" link
++3s      snap  remote-next
++0       tap   560 85            # next again
++3s      tap   100 85            # the "previous" link
++4s      end

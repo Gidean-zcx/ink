@@ -319,6 +319,7 @@ static bool server_tool(struct hal_ws *ws, uint64_t t, cJSON *req, cJSON *id) {
 void sim_hub_receive(struct hal_ws *ws, uint64_t t, const uint8_t *data, size_t len, bool binary) {
     if (binary) { /* microphone frames of a voice turn */
         sim_metric_add("hub.binary_bytes", (double)len);
+        if (sim_remote_frame(ws, t, data, len)) return; /* credits and input of a remote screen */
         if (len >= 10 && echo_session(ws, data[1])) {
             sim_metric_add("hub.rt_echoed", 1);
             sim_net_hub_send(ws, t + SIM_MS(5), data, len, true);
@@ -360,6 +361,7 @@ void sim_hub_receive(struct hal_ws *ws, uint64_t t, const uint8_t *data, size_t 
     if (!strcmp(method, "rt.close")) { /* a realtime session ended (device side) */
         sim_metric_add("hub.rt_closed", 1);
         echo_set(ws, (int)num_or(cJSON_GetObjectItemCaseSensitive(req, "params"), "sid", 0), false);
+        sim_remote_close(ws, (int)num_or(cJSON_GetObjectItemCaseSensitive(req, "params"), "sid", 0));
         cJSON_Delete(req);
         return;
     }
@@ -372,6 +374,10 @@ void sim_hub_receive(struct hal_ws *ws, uint64_t t, const uint8_t *data, size_t 
         cJSON_AddNumberToObject(r, "sid", num_or(pr, "sid", 0));
         const char *cap = cJSON_GetStringValue(cJSON_GetObjectItemCaseSensitive(pr, "cap"));
         if (cap && !strcmp(cap, "echo")) echo_set(ws, (int)num_or(pr, "sid", 0), true);
+        if (cap && !strcmp(cap, "browser.session")) {
+            const cJSON *pp = cJSON_GetObjectItemCaseSensitive(pr, "params");
+            sim_remote_open(ws, t, (int)num_or(pr, "sid", 0), (int)num_or(pp, "w", 684), (int)num_or(pp, "h", 1216));
+        }
         send_json(ws, t + SIM_MS(5), res);
         cJSON_Delete(res);
         sim_metric_add("hub.rt_opened", 1);

@@ -28,6 +28,7 @@ extern const ink_activity_t ink_app_home;
 
 int ink_system_actions_init(void);
 int ink_reader_actions_init(void);
+int ink_remote_init(void);
 int ink_ui_lock_mark_init(void);
 
 void ink_main(void) {
@@ -46,7 +47,7 @@ void ink_main(void) {
     hal_device_get_info(&di);
     if (ink_camera_init() != 0 || (di.has_modem && ink_comm_init() != 0)) osal_panic("camera or communication service failed to start");
     if (ink_ai_init() != 0) osal_panic("ai service failed to start");
-    if (ink_tools_init() != 0 || ink_system_actions_init() != 0 || ink_reader_actions_init() != 0)
+    if (ink_tools_init() != 0 || ink_system_actions_init() != 0 || ink_reader_actions_init() != 0 || ink_remote_init() != 0)
         osal_panic("action registry failed to start");
     if (ink_ui_start(&ink_app_home) != 0 || ink_ui_lock_mark_init() != 0) osal_panic("ui failed to start");
     ink_probe_mark("system-started");

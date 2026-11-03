@@ -16,6 +16,7 @@
 #include "ink/sys/exec.h"
 #include "ink/sys/hub.h"
 #include "ink/sys/json.h"
+#include "ink/sys/lz4.h"
 #include "cJSON.h"
 #include "ink/sys/members.h"
 #include "ink/sys/net.h"
@@ -656,6 +657,23 @@ static void rt_checks(void) {
     CHECK(ink_rt_send(sid, INK_RT_VOICE_UP, voice, sizeof voice, 0) != 0, "nothing goes out on a closed session");
 }
 
+/* ---- step 7: the LZ4 decoder of the remote screen (detailed design §8.4) ---- */
+
+static void lz4_checks(void) {
+    static uint8_t src[4096], enc[4400], dec[4096];
+    static uint32_t work[INK_LZ4_WORK / 4];
+    for (int i = 0; i < (int)sizeof src; i++) src[i] = (uint8_t)((i % 97) < 60 ? 0xFF : (i * 7) & 0x3F); /* text-like runs */
+    int n = ink_lz4_encode(src, sizeof src, enc, sizeof enc, work);
+    CHECK(n > 0 && n < (int)sizeof src / 2, "4 KiB of text-like gray compresses (%d bytes)", n);
+    CHECK(ink_lz4_decode(enc, (size_t)n, dec, sizeof dec) == (int)sizeof src && !memcmp(src, dec, sizeof src), "and decodes back unchanged");
+    CHECK(ink_lz4_decode(enc, (size_t)n - 3, dec, sizeof dec) < 0, "a truncated block is refused");
+    CHECK(ink_lz4_decode(enc, (size_t)n, dec, sizeof dec - 1) < 0, "an output buffer one byte short is refused, not overrun");
+    static const uint8_t far[] = {0x1F, 'a', 0x10, 0x00, 0x00}; /* a match 16 bytes back after 1 byte of output */
+    CHECK(ink_lz4_decode(far, sizeof far, dec, sizeof dec) < 0, "a match reaching before the start is refused");
+    static const uint8_t zero[] = {0x1F, 'a', 0x00, 0x00, 0x00};
+    CHECK(ink_lz4_decode(zero, sizeof zero, dec, sizeof dec) < 0, "a zero offset is refused");
+}
+
 /* Children: last, a child cannot switch back to an adult without the PIN. */
 static void child_checks(void) {
     ink_receipt_t rc;
@@ -689,6 +707,7 @@ static void systest_task(void *arg) {
     service_checks();
     res_checks();
     rt_checks();
+    lz4_checks();
     child_checks();
     ink_probe_mark("systest-done");
 }

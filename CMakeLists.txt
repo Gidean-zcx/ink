@@ -50,6 +50,10 @@ target_compile_definitions(ink_littlefs PUBLIC LFS_NO_MALLOC LFS_NO_DEBUG LFS_NO
 # ---------------------------------------------------------------- layers
 # One target per layer (docs/system/repo-layout.md), from the bottom up; each exposes only its own
 # headers. platform/include is the contract between the portable code and a port.
+# LZ4 block format: the device decodes the remote screen, the simulated hub encodes it
+add_library(ink_lz4 STATIC system/util/lz4.c)
+target_include_directories(ink_lz4 PUBLIC system/include)
+
 add_library(ink_platform INTERFACE)
 target_include_directories(ink_platform INTERFACE platform/include)
 
@@ -105,6 +109,7 @@ add_library(ink_port_sim STATIC
   ports/sim/hal/hal_audio_sim.c
   ports/sim/hal/hal_cellular_sim.c
   ports/sim/hal/hal_afe_sim.c
+  ports/sim/hal/hal_jpeg_sim.c
   ports/sim/hal/hal_codec_sim.c
   simulator/models/dev_epd_power.c
   simulator/models/dev_tca9555.c
@@ -113,12 +118,13 @@ add_library(ink_port_sim STATIC
   simulator/models/dev_camera.c
   simulator/models/dev_bt_audio.c
   simulator/environment/sim_hub.c
+  simulator/environment/sim_remote.c
   simulator/runtime/metrics.c
   simulator/runtime/trace.c
   simulator/runtime/script.c
   simulator/desktop/sim_gui.c)
 target_include_directories(ink_port_sim PUBLIC simulator simulator/desktop)
-target_link_libraries(ink_port_sim PUBLIC ink_board_metalio_plus ink_drivers ink_sim_core ink_littlefs ink_stb)
+target_link_libraries(ink_port_sim PUBLIC ink_board_metalio_plus ink_drivers ink_sim_core ink_littlefs ink_stb ink_lz4)
 target_compile_options(ink_port_sim PRIVATE ${INK_WARN})
 
 # An executable = the simulator runner + the code under test (which provides ink_main()).
@@ -174,14 +180,14 @@ add_library(ink_system STATIC
   system/ui/lock_mark.c
   system/ui/ui_task.c)
 target_include_directories(ink_system PUBLIC system/include PRIVATE system/services/display third_party/jsmn)
-target_link_libraries(ink_system PUBLIC ink_platform ink_lvgl)
+target_link_libraries(ink_system PUBLIC ink_platform ink_lvgl ink_lz4)
 # The system calls the HAL; in this build the simulator port implements it. Link-only (no headers
 # leak into the system or the apps), and it puts the port after the system on every link line, which
 # GNU ld needs for HAL functions only the system references (e.g. hal_cell_*).
 target_link_libraries(ink_system INTERFACE $<LINK_ONLY:ink_port_sim>)
 target_compile_options(ink_system PRIVATE ${INK_WARN})
 
-add_library(ink_apps STATIC apps/home/home.c apps/reader/reader.c)
+add_library(ink_apps STATIC apps/home/home.c apps/reader/reader.c apps/remote/remote.c)
 target_link_libraries(ink_apps PUBLIC ink_system)
 target_compile_options(ink_apps PRIVATE ${INK_WARN})
 
@@ -437,6 +443,13 @@ if(INK_HAVE_FONTS)
             --budget ${CMAKE_SOURCE_DIR}/tests/scenarios/pqbn_flash_pause.budget.json
             --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
             --out ${CMAKE_BINARY_DIR}/test-out/pqbn_flash_pause --quiet --trace --no-random-outages)
+  add_test(NAME scenario-remote_browse-metalio-plus
+    COMMAND ink-sim --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+            --script ${CMAKE_SOURCE_DIR}/tests/scenarios/remote_browse.script
+            --budget ${CMAKE_SOURCE_DIR}/tests/scenarios/remote_browse.budget.json
+            --hub ${CMAKE_SOURCE_DIR}/tests/scenarios/remote_browse.hub.json
+            --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
+            --out ${CMAKE_BINARY_DIR}/test-out/remote_browse-metalio-plus --quiet --trace --frames --no-random-outages)
   add_test(NAME scenario-ai_tools-metalio-plus
     COMMAND ink-sim --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
             --script ${CMAKE_SOURCE_DIR}/tests/scenarios/ai_tools.script
