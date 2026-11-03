@@ -36,6 +36,7 @@
   },
   "warnings.count": {
     "max": 0,
-    "why": "retries are expected; a simulator warning is not"
+    "optional": true,
+    "why": "retries are expected; a simulator warning is not (no warning at all leaves the counter unrecorded)"
   }
 }
