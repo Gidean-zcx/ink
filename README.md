@@ -1,103 +1,77 @@
-# reader
+# ink（reader）
 
-基于 [CloudZao E-Ink4 Plus](https://github.com/CloudZao/Metalio-E-INK4-Plus)，探索供本人和子女使用的 AI 原生个人设备：阅读、学习、听书、日常工具，以及具备相应硬件条件时的短信和通话。暂称“家庭 AI 手机”。
+基于 [CloudZao Metalio E-Ink4 Plus](https://github.com/CloudZao/Metalio-E-INK4-Plus) 的墨水屏设备上，自研一套 AI 原生的系统，供本人和孩子使用：阅读、听书、学习、日常工具，以及短信和电话。暂称“家庭 AI 手机”。项目建立于 2026-10-26，仓库 [Gidean-zcx/ink](https://github.com/Gidean-zcx/ink)。
 
-项目建立于 2026-10-26。云端仓库为 [Gidean-zcx/ink](https://github.com/Gidean-zcx/ink)，项目资料沿用 reader 名称。后续零散想法与需求从[云端协作入口](docs/project.md)持续接续。
+两个核心目标（[G-001、G-002](docs/requirements.md)）：把刷消遣 app 的时间变成获取高价值信息、增长知识和能力的时间；系统级原生 AI，系统和应用的所有行为、数据和页面都能被 AI 操作和读取。
 
-## 现在从这里开始（2026-11-02）
+## 现状（2026-11-03）
 
-**第一次接触本项目，或要做审计：先读 [项目全貌与背景](docs/background.md)。** 它集中交代了用户与目标、硬件、时间线、已定的决策、已实现的系统与模拟器、哪些只是估算、怎么构建测试，以及已知问题。
+- **硬件**：整机已到货。第 0 步（只读识别与整片备份）和第 1 步（测量固件跑校准内核，测完复原）完成，见[实机记录](docs/hardware/README.md)。自研系统还没有在实机上跑过。
+- **自研系统**：主页、书架与阅读器、语音 AI、动作与策略、电源与待机、4G 切卡与短信电话的驱动，已在模拟器上实现并按预算测试。
+- **模拟器**：把系统编译成电脑程序，跑在按 E-Ink4 Plus 建模的虚拟设备上（双核、时间、内存和整块板的芯片都按官方硬件建模）；有命令行（场景测试）和桌面窗口（类似 Android Studio 的模拟器）两种用法。哪些部件与官方一致、哪些只是估计，见[硬件对照](docs/research/simulator/hardware-parity.md)。
+- **测试**：38 项，GitHub Actions 在 Linux 和 macOS 上每次推送都跑。
+- **审计**：2026-11-03 用 Codex 对全系统与模拟器做了审计，问题已处理，见[审计记录](docs/audits/README.md)。
 
-项目已走完 S0 探索与调研。当前是 S1 产品定义（基本完成）、S2 系统需求与 S3 架构和技术验证（进行中），完整流程见 [开发流程](docs/process.md)。
-
-- **实物**：整机 2026-11-03 到货，第 0 步（只读识别与整片备份）和第 1 步（测量固件跑校准内核，测完复原）已完成，见 [实机记录](docs/hardware/README.md)。系统在自建的两级模拟器上开发和验证：
-  - 第一级把系统编译成电脑程序，在按 E-Ink4 Plus 建模的虚拟设备上运行；
-  - 第二级是指令级模拟器，用来校准 CPU 成本。
-- **桌面模拟器**：`./build/ink-sim-gui` 打开一个类似 Android Studio 模拟器的窗口，用鼠标和键盘操作模拟设备，右侧可改电量、网络、麦克风、掉电等，见[平台与模拟器 §3.1](docs/system/platform-and-simulator.md)。
-- **已有的系统纵切**：主页、书架与阅读器、语音 AI、动作与策略、电源与待机。全部在 CI 中按预算检查（38 项测试）。
-- **证据边界**：实机已测芯片、存储、内存布局和 CPU 成本（第 0、1 步）；系统本身还没有在实机上跑过。
-
-| 想知道 | 看这里 |
-| --- | --- |
-| **项目全貌、证据边界、构建与测试** | [项目全貌与背景](docs/background.md) |
-| 整个流程怎么走、现在在哪一步 | [开发流程](docs/process.md) |
-| 产品给谁用、首版做什么 | [产品定义 PRD](docs/product/prd.md)、[需求深读](docs/product/needs-analysis.md) |
-| 每个功能做到什么程度算合格 | [系统需求 SRS](docs/system/srs.md) |
-| 第一版底座怎么设计 | [底座设计](docs/system/foundation.md)；可点选的[底座地图](https://claude.ai/artifact/KvJAr2ZS9MZNvHu9RqcZRz)（源文件 [docs/foundation-map.html](docs/foundation-map.html)） |
-| **模拟器与平台抽象：模型、参数、评审、现在的数字** | [平台与模拟器](docs/system/platform-and-simulator.md) |
-| 墨水屏刷新算法研究及其集成复核 | [刷新算法研究](docs/research/eink-refresh-algorithm.md)、[集成报告](docs/research/eink-refresh-integration.md) |
-| 系统怎么分层、设备与服务器怎么分工 | [架构方案](docs/system/architecture.md) |
-| 最大的技术风险和实机验证计划 | [风险与验证](docs/system/risks-and-spikes.md) |
-| 需要用户拍板的事项与推荐 | [决策记录](docs/decisions/README.md)；可点选的[交互式决策板](https://claude.ai/artifact/RWnCX8AyAbyqArc7D9Wsft)（源文件 [docs/decision-board.html](docs/decision-board.html)） |
-| 实机上机步骤与实测结果 | [实机记录](docs/hardware/README.md) |
-| 在用户电脑上用本机 Claude Code 接手 | [接手说明](docs/handoff/local-claude-code.md) |
-| 外部审计 | [审计记录与任务说明](docs/audits/README.md) |
-
-构建与测试：
+## 快速开始
 
 ```bash
 cmake -S . -B build && cmake --build build -j && ctest --test-dir build --output-on-failure
 ```
 
-需要能访问 GitHub（拉取 LVGL），以及 `fonts-noto-cjk`、`python3-pil`。详见 [项目全貌 §11](docs/background.md)。
+需要能访问 GitHub（拉取 LVGL；没装 SDL2 时还会拉取 SDL2 和 Dear ImGui），以及 Noto Sans CJK 字体和带 Pillow 的 Python 3（Debian/Ubuntu：`fonts-noto-cjk`、`python3-pil`、`libsdl2-dev`；macOS 的做法见 [CI 配置](.github/workflows/sim.yml)）。详见[项目全貌 §11](docs/background.md)。
 
-下方是 S0 阶段的原始说明与调研索引，作为参考库保留。
+- 桌面模拟器：`./build/ink-sim-gui`，用法见[平台与模拟器 §3.1](docs/system/platform-and-simulator.md)。
+- 跑一个场景：`./build/ink-sim --profile simulator/profiles/metalio-plus.json --script tests/scenarios/home_basic.script --assets build/assets --content build/test-content --out out/`。
 
-## 两个核心目标
+## 仓库结构
 
-用户已明确：把原来刷消遣 app 的时间转成高价值信息获取与知识、能力增长；同时提供系统级原生 AI first，使所有系统/app 行为、数据以及任意场景和页面都能被 AI 操作或获取。
+```text
+apps/                  应用（主页、阅读器）
+system/                自研系统：boot/ 启动装配，services/ 系统服务，policy/ 动作与权限，ui/ text/ util/，include/ 系统接口
+platform/include/ink/  平台接口：OSAL 与各 HAL（系统与端口之间的契约）
+drivers/               芯片驱动（chips/）与 PQ-BN 直驱算法（display/）
+boards/metalio_plus/   Plus 的接法：IO 扩展芯片、屏电源顺序、触摸坐标、浅睡的板级步骤
+ports/sim/             模拟器端口：OSAL 与各 HAL 的模拟实现；真机端口 ports/esp32s31/ 待写
+simulator/             模拟器：虚拟时间内核、内存池、芯片模型、环境、运行器、桌面窗口、设备档案
+tests/                 自检、系统服务检查、场景与预算、测试内容
+tools/                 字体生成、报告、指令级模拟器、上机工具
+third_party/           固定版本的第三方代码
+docs/                  需求、决策、调研、系统设计、实机记录、审计
+```
 
-两个目标记录为 [G-001、G-002](docs/requirements.md)，用于评估全部功能。当前增加成人/儿童学习动力、游戏互动、个人新闻及儿童新闻/百科研究；具体玩法与新闻形态保持候选。
+```mermaid
+flowchart LR
+  apps["应用"] --> sys["系统"] --> api["平台接口<br/>OSAL + HAL"]
+  board["板级"] --> drv["芯片驱动"] --> api
+  api --> sim["模拟器端口<br/>+ 芯片模型 + 虚拟时间"]
+  api --> dev["真机端口<br/>（待写）"]
+  sim --> board
+  dev --> board
+```
 
-已知儿童使用者为 5–6 岁，识字能力可以、可独立阅读，用户希望提供听书。儿童原型据此探索自主读、纯听和读听切换，具体交互仍待讨论。
+应用、系统、平台接口、驱动和板级是真机与模拟器共用的同一份源码；两边只换端口。每层是一个独立的构建目标，系统和应用在构建上就引用不到驱动和模拟器。细节见[仓库结构](docs/system/repo-layout.md)和[模拟系统总览](docs/system/simulator-overview.md)。
 
-## 当前阶段
+## 文档导航
 
-收集零散想法、整理产品原型、研究关键架构与可行性。用户于 2026-10-26 将硬件进一步限定为 **只考虑 E-Ink4 Plus**；软件产品和应用架构重新构思，吸收原理及可复用驱动。
+| 想知道 | 看这里 |
+| --- | --- |
+| **项目全貌、证据边界、构建与测试** | [项目全貌与背景](docs/background.md) |
+| 最近做了什么、接下来做什么 | [接续记录](docs/project.md) |
+| 整个流程怎么走、现在在哪一步 | [开发流程](docs/process.md) |
+| 产品给谁用、首版做什么 | [产品定义 PRD](docs/product/prd.md)、[需求深读](docs/product/needs-analysis.md) |
+| 需求与边界 | [需求](docs/requirements.md)、[想法记录](docs/ideas.md) |
+| 每个功能做到什么程度算合格 | [系统需求 SRS](docs/system/srs.md) |
+| 系统怎么分层、设备与服务器怎么分工 | [架构方案](docs/system/architecture.md)、[底座设计](docs/system/foundation.md)（可点选的[底座地图](https://claude.ai/artifact/KvJAr2ZS9MZNvHu9RqcZRz)，源文件 [docs/foundation-map.html](docs/foundation-map.html)） |
+| **模拟器：怎么搭的、组件与接口、怎么平移到真机** | [模拟系统总览](docs/system/simulator-overview.md)、[平台与模拟器](docs/system/platform-and-simulator.md)、[硬件对照](docs/research/simulator/hardware-parity.md) |
+| 代码放在哪、分几层 | [仓库结构](docs/system/repo-layout.md) |
+| 墨水屏刷新算法 | [刷新算法研究](docs/research/eink-refresh-algorithm.md)、[集成报告](docs/research/eink-refresh-integration.md) |
+| 最大的技术风险和实机验证计划 | [风险与验证](docs/system/risks-and-spikes.md) |
+| 需要用户拍板的事项与推荐 | [决策记录](docs/decisions/README.md)（可点选的[交互式决策板](https://claude.ai/artifact/RWnCX8AyAbyqArc7D9Wsft)，源文件 [docs/decision-board.html](docs/decision-board.html)） |
+| 实机上机步骤与实测结果 | [实机记录](docs/hardware/README.md) |
+| 外部审计与处理 | [审计记录](docs/audits/README.md) |
+| 竞品、市场、硬件与技术调研 | [调研资料索引](docs/research/README.md)、[研究简报](docs/briefs/README.md)、[竞品交互资料库](docs/research/interaction-library/README.md) |
+| 在用户电脑上用本机 Claude Code 接手 | [接手说明](docs/handoff/local-claude-code.md) |
 
-具体板卡版本及模组装配、首版功能、预算与续航指标尚未确定。2026-10-30 用户确认账户系统、服务器备份与恢复需要建设，以应对初期不稳定并考虑未来朋友使用；备份粒度、账户形式及多设备同步策略待定。近期优先构建匹配 Plus 算力与资源的高效底层系统，并使 UI 交互匹配墨水屏特性。通话／短信待办、平台输入法、LLM 联想及儿童新闻／百科也已纳入功能方向，具体形态与首版顺序未定。竞品研究已按用户要求扩大到整个相关市场：阅读器、墨水屏平板/手机、学习与词典、单词卡、HiFi 和故事机等；社区固件仅是其中一类参考。本轮已明确上述方向与底层优先级；具体底层方案、验证指标和完整首版范围继续整理，当前没有开始固件开发、PCB 设计或采购。
+## 协作方式
 
-## 项目资料
-
-- [云端协作入口](docs/project.md)：当前状态、资料位置，以及新想法和新需求的接续方式。
-- [有限算力下的调度与体验](docs/research/system-scheduling-and-experience.md)：2026-10-31 补充；联合考虑 CPU、内存、音频、刷新、IO 和多任务流程，保留源码证据与实机验证边界。
-- [墨水屏刷新算法研究](docs/research/eink-refresh-algorithm.md)：2026-11-02 归档，包括 PaperBoy 对照、Plus 波形审计与延迟仿真、PQ-BN v4 直驱算法（含自动快速运动渲染），以及[代码、结果与对比视频](docs/research/eink-refresh/README.md)；均为仿真与指令级估算，未实机验证。
-
-后续设计优先从[按问题查竞品依据](docs/research/interaction-library/design-reference-guide.md)进入，再查具体任务、证据与缺口；不必按时间顺序读完简报。
-
-- [第五十七期：墨水屏刷新算法与直驱方案](docs/briefs/057-eink-refresh-algorithm.md)：绕开全局锁逐相驱动；点按 50% 可见时间从 136 ms 降到 48 ms（仿真）；v4 单核可承担静止、出字、翻页，快速滚动自动切换渲染方式；待硬件标定。
-- [第五十六期：墨水屏怎样做到操作顺畅](docs/briefs/056-eink-ui-interaction.md)：官方文档与 Plus 固定源码交叉核查；区分输入、可见、可读和完成，比较手势、分页、AI 分段及儿童互动。
-- [第五十五期：全局入口与执行环境](docs/briefs/055-global-entry-and-execution-context.md)：快捷指令补语音/按键/组件、共享输入、提醒回访与配置组织；修正预览范围，新增14条设计参考。
-- [全部研究简报](docs/briefs/README.md)：历史发现与变更，按时间查阅。
-- [竞品交互资料库](docs/research/interaction-library/README.md)：65 组已知目录，含逐产品案例、任务覆盖、来源与静态摘页、按设计问题检索；当前数量统一见 [案例索引](docs/research/interaction-library/case-index.md)。已新增公开样刊网页的有限实际操作记录；尚无手机或电子纸实机操作。
-- [想法记录](docs/ideas.md)：保存原始想法及逐条讨论结果。
-- [需求与边界](docs/requirements.md)：区分已经明确的要求和仍待了解的信息。
-- [CloudZao 硬件与源码](docs/research/cloudzao.md)：板卡差异、固定提交的驱动抽查、通信能力边界。
-- [Plus 蜂窝通信与社区固件](docs/research/eink4-plus-cellular.md)：NT26、短信/通话条件、原理图证据缺口与固件目录。
-- [数据备份、同步与账户](docs/research/data-backup-sync.md)：系统统一备份、整机/按 app 恢复、卸载和刷机的数据边界。
-- [墨水屏高刷调研](docs/research/eink-high-refresh.md)：PaperBoyS3、60Hz 的含义、迁移条件与估算。
-- [AI 原生与应用平台调研](docs/research/ai-native-platform.md)：系统能力、动态应用、渐进式披露、语音和内容导入。
-- [竞品研究总览](docs/research/competitor-landscape.md)：跨品类研究入口与早期场景记录。
-- [跨品类竞品矩阵](docs/research/market-competitor-matrix.md)：43 组产品/服务的功能依据、可借鉴点和依赖；待补品牌另列。
-- [功能机会与完整场景](docs/research/cross-category-opportunities.md)：新增 16 项候选及八种场景比较，产品价值与 Plus 实现条件分别讨论。
-- [成人与儿童学习动力研究](docs/research/learning-engagement.md)：研究依据、游戏策划、字节系公开机制、连续学习与能力成就；C-025～C-028。
-- [个人新闻与儿童发现研究](docs/research/personal-news.md)：编辑简报、订阅与来源对照、可解释的价值标准、新闻与百科；C-029～C-032。
-- [固件功能分类与候选池](docs/research/firmware-feature-landscape.md)：官方/社区功能、运行位置、来源及可借鉴点；建议与需求分开。
-- [协作约定](AGENTS.md)：让后续讨论延续当前阶段和协作方式。
-
-## 如何推进
-
-直接用自然语言提出一个想法即可，无需先整理完整需求文档。每次讨论围绕当前想法展开：
-
-1. 先说明可行性判断与成立条件。
-2. 解释主要限制、实现代价，以及可能更合适的替代办法。
-3. 标明哪些是资料支持的事实，哪些只是推断，哪些需要实际验证。
-4. 必要时提出一个最小验证办法，并将有价值的结论记入资料。
-
-只追问当前判断所必需的信息；具体功能在用户表达后再进入需求清单。阶段随用户后续意图调整。
-
-## 初步方向
-
-项目起点是个人单片机阅读器；现已扩展为家庭 AI 原生设备，阅读仍是重要场景。当前总体判断为“有条件可行”，不意味着全部场景已经能在同一款板卡上实现。
-
-显示和通信均围绕 E-Ink4 Plus 研究。其源码已有直接 NT26 接入路径；完整短信、通话音频及待机接收仍需对应具体模组和接线。其他型号只保留历史比较或原理参考。硬件事实、上游描述、代码抽查、估算和助手建议在对应文档中分别标注；目前没有本项目实机测试结果。
+协作约定在 [AGENTS.md](AGENTS.md)：用中文交流；事实、推断、待验证分开标注；用户的需求与助手的建议分开记录。直接用自然语言提出想法即可，不用先写完整的需求文档。写设备、花钱、拆机、删除历史资料、对外发布等事项要用户明确同意。
