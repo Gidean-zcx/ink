@@ -95,19 +95,28 @@ int main(void) {
     long w = wrapped(&A, now - 1);
     CHECK(w == 0, "after drives and rests %ld settled pixels read as just moved", w);
 
-    /* 2. a rest by pqbn_v4_skip == the same phases run with nothing to drive (from 4000: across 4096) */
-    setup(&A, 3990);
-    setup(&B, 3990);
-    for (uint32_t p = 3991; p <= 4000; p++) {
-        pqbn_v4_phase(&A, p);
-        pqbn_v4_phase(&B, p);
+    /* 2. a rest by pqbn_v4_skip == the same phases run with nothing to drive: the simulator's rests
+     * (up to 255 phases, here across 4096) and long ones (768 phases; 9000 phases across two
+     * multiples of 4096), from a state the drives left */
+    static const struct { uint32_t start, n; } R[] = {{3990, 265}, {20, 768}, {3000, 9000}};
+    for (unsigned k = 0; k < sizeof R / sizeof R[0]; k++) {
+        setup(&A, R[k].start);
+        setup(&B, R[k].start);
+        uint32_t p = R[k].start + 1;
+        for (int d = 0; d < 10; d++, p++) {
+            pqbn_v4_phase(&A, p);
+            pqbn_v4_phase(&B, p);
+        }
+        const uint32_t from = p - 1, to = from + R[k].n;
+        for (uint32_t q = from + 1; q != to + 1; q++) pqbn_v4_phase(&A, q);
+        pqbn_v4_skip(&B, from, to);
+        CHECK(!memcmp(A.cold, B.cold, (size_t)PW * PH * 2), "a rest of %u phases: the settled pixels' timestamps differ", R[k].n);
+        CHECK(!memcmp(A.hot, B.hot, (size_t)PW * PH / 2), "a rest of %u phases: the pixel states differ", R[k].n);
+        CHECK(!memcmp(A.tile_plan, B.tile_plan, (size_t)(PW / PQBN_TPX) * (PH / PQBN_TPY) * 2), "a rest of %u phases: the tile ages differ",
+              R[k].n);
+        CHECK(!memcmp(A.band, B.band, (size_t)(PH / PQBN_TPY) * 4), "a rest of %u phases: the band clocks differ", R[k].n);
+        CHECK(wrapped(&B, to) == 0, "a rest of %u phases: settled pixels read as just moved", R[k].n);
     }
-    for (uint32_t p = 4001; p <= 4255; p++) pqbn_v4_phase(&A, p);
-    pqbn_v4_skip(&B, 4000, 4255);
-    CHECK(!memcmp(A.cold, B.cold, (size_t)PW * PH * 2), "the settled pixels' timestamps differ after a skipped rest");
-    CHECK(!memcmp(A.hot, B.hot, (size_t)PW * PH / 2), "the pixel states differ after a skipped rest");
-    CHECK(!memcmp(A.tile_plan, B.tile_plan, (size_t)(PW / PQBN_TPX) * (PH / PQBN_TPY) * 2), "the tile ages differ after a skipped rest");
-    CHECK(!memcmp(A.band, B.band, (size_t)(PH / PQBN_TPY) * 4), "the band clocks differ after a skipped rest");
     if (fails) return 1;
     printf("pqbn clock: rests keep timestamps unambiguous and equal running the phases\n");
     return 0;
