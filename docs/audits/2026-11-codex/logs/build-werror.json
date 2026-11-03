@@ -1,0 +1,54 @@
+{
+  "mode": "werror",
+  "steps": [
+    {
+      "command": [
+        "/root/.local/bin/cmake",
+        "-S",
+        "/workspace/scratch/d7182863fc48/ink-audit",
+        "-B",
+        "/workspace/scratch/d7182863fc48/ink-audit-work/build-werror",
+        "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON",
+        "-DFETCHCONTENT_SOURCE_DIR_LVGL=/opt/lvgl",
+        "-DINK_WERROR=ON"
+      ],
+      "exit": 0,
+      "seconds": 0.979,
+      "tail": "-- The C compiler identification is GNU 13.3.0\n-- Detecting C compiler ABI info\n-- Detecting C compiler ABI info - done\n-- Check for working C compiler: /usr/bin/cc - skipped\n-- Detecting C compile features\n-- Detecting C compile features - done\n-- Performing Test CMAKE_HAVE_LIBC_PTHREAD\n-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success\n-- Found Threads: TRUE\n-- Found Python3: /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12 (found version \"3.12.14\") found components: Interpreter\n-- Configuring done (0.7s)\n-- Generating done (0.1s)\n-- Build files have been written to: /workspace/scratch/d7182863fc48/ink-audit-work/build-werror\n"
+    },
+    {
+      "command": [
+        "/root/.local/bin/cmake",
+        "--build",
+        "/workspace/scratch/d7182863fc48/ink-audit-work/build-werror",
+        "-j4"
+      ],
+      "exit": 0,
+      "seconds": 30.47,
+      "tail": "lvgl/src/widgets/spinner/lv_spinner.c.o\n[ 95%] Building C object CMakeFiles/ink_lvgl.dir/opt/lvgl/src/widgets/switch/lv_switch.c.o\n[ 95%] Building C object CMakeFiles/ink_lvgl.dir/opt/lvgl/src/widgets/table/lv_table.c.o\n[ 96%] Building C object CMakeFiles/ink_lvgl.dir/opt/lvgl/src/widgets/tabview/lv_tabview.c.o\n[ 96%] Building C object CMakeFiles/ink_lvgl.dir/opt/lvgl/src/widgets/tileview/lv_tileview.c.o\n[ 96%] Building C object CMakeFiles/ink_lvgl.dir/opt/lvgl/src/widgets/textarea/lv_textarea.c.o\n[ 96%] Building C object CMakeFiles/ink_lvgl.dir/opt/lvgl/src/widgets/win/lv_win.c.o\n[ 96%] Building C object CMakeFiles/ink_lvgl.dir/system/ui/lv_mem_osal.c.o\n[ 97%] Linking C static library libink_lvgl.a\n[ 97%] Built target ink_lvgl\n[ 97%] Building C object CMakeFiles/ink_system.dir/system/display/refresh_policy.c.o\n[ 97%] Building C object CMakeFiles/ink_system.dir/system/input/input_service.c.o\n[ 97%] Building C object CMakeFiles/ink_system.dir/system/main.c.o\n[ 97%] Building C object CMakeFiles/ink_system.dir/system/display/display_service.c.o\n[ 97%] Building C object CMakeFiles/ink_system.dir/system/storage/storage_service.c.o\n[ 98%] Building C object CMakeFiles/ink_system.dir/system/core/ink_json.c.o\n[ 98%] Building C object CMakeFiles/ink_system.dir/system/core/actions.c.o\n[ 98%] Building C object CMakeFiles/ink_system.dir/system/core/members.c.o\n[ 98%] Building C object CMakeFiles/ink_system.dir/system/core/system_actions.c.o\n[ 98%] Building C object CMakeFiles/ink_system.dir/system/power/power_service.c.o\n[ 99%] Building C object CMakeFiles/ink_system.dir/system/ui/lock_mark.c.o\n[ 99%] Building C object CMakeFiles/ink_system.dir/system/net/hub_link.c.o\n[ 99%] Building C object CMakeFiles/ink_system.dir/system/ai/ai_service.c.o\n[ 99%] Building C object CMakeFiles/ink_system.dir/system/audio/audio_service.c.o\n[ 99%] Building C object CMakeFiles/ink_system.dir/system/text/ink_font.c.o\n[100%] Building C object CMakeFiles/ink_system.dir/system/text/linebreak.c.o\n[100%] Building C object CMakeFiles/ink_system.dir/system/text/layout.c.o\n[100%] Building C object CMakeFiles/ink_system.dir/system/ui/ui_task.c.o\n[100%] Building C object CMakeFiles/ink_system.dir/apps/home/home.c.o\n[100%] Building C object CMakeFiles/ink_system.dir/apps/reader/reader.c.o\n[100%] Linking C static library libink_system.a\n[100%] Built target ink_system\n[100%] Building C object CMakeFiles/ink-sim.dir/ports/sim/sim_main.c.o\n[100%] Linking C executable ink-sim\n[100%] Built target ink-sim\n"
+    },
+    {
+      "command": [
+        "/root/.local/bin/ctest",
+        "--test-dir",
+        "/workspace/scratch/d7182863fc48/ink-audit-work/build-werror",
+        "-N"
+      ],
+      "exit": 0,
+      "seconds": 0.158,
+      "tail": "Test project /workspace/scratch/d7182863fc48/ink-audit-work/build-werror\n  Test  #1: selftest-metalio-plus\n  Test  #2: selftest-metalio-plus-psram16\n  Test  #3: selftest-pinenote-rk3566\n  Test  #4: selftest-desktop-lcd\n  Test  #5: selftest-psram-stack-flash-access-crashes\n  Test  #6: determinism\n  Test  #7: scenario-home_basic-metalio-plus\n  Test  #8: scenario-home_basic-metalio-plus-psram16\n  Test  #9: scenario-reader_basic-metalio-plus\n  Test #10: scenario-keys_overlap-metalio-plus\n  Test #11: scenario-reader_basic-metalio-plus-psram16\n  Test #12: scenario-ai_ask-metalio-plus\n  Test #13: scenario-standby-metalio-plus\n  Test #14: scenario-reader_basic-metalio-plus-pqbn\n  Test #15: scenario-ai_ask-metalio-plus-pqbn\n  Test #16: scenario-pqbn_flash_pause-metalio-plus-pqbn\n  Test #17: scenario-ai_tools-metalio-plus\n  Test #18: scenario-powercut-during-save\n  Test #19: determinism-reader\n  Test #20: scenario-reader_basic-upstream-pipeline\n  Test #21: fixture-aged-user-image\n  Test #22: scenario-reader_basic-aged-flash-max\n  Test #23: portability-home-pinenote-rk3566\n  Test #24: portability-home-desktop-lcd\n  Test #25: portability-home-metalio-plus-pqbn\n  Test #26: iss-selftest\n\nTotal Tests: 26\n"
+    },
+    {
+      "command": [
+        "/root/.local/bin/ctest",
+        "--test-dir",
+        "/workspace/scratch/d7182863fc48/ink-audit-work/build-werror",
+        "--output-on-failure",
+        "-j1"
+      ],
+      "exit": 0,
+      "seconds": 71.553,
+      "tail": "sram16 ......   Passed    3.17 sec\n      Start  9: scenario-reader_basic-metalio-plus\n 9/26 Test  #9: scenario-reader_basic-metalio-plus ............   Passed    6.79 sec\n      Start 10: scenario-keys_overlap-metalio-plus\n10/26 Test #10: scenario-keys_overlap-metalio-plus ............   Passed    0.94 sec\n      Start 11: scenario-reader_basic-metalio-plus-psram16\n11/26 Test #11: scenario-reader_basic-metalio-plus-psram16 ....   Passed    2.63 sec\n      Start 12: scenario-ai_ask-metalio-plus\n12/26 Test #12: scenario-ai_ask-metalio-plus ..................   Passed    4.22 sec\n      Start 13: scenario-standby-metalio-plus\n13/26 Test #13: scenario-standby-metalio-plus .................   Passed    2.74 sec\n      Start 14: scenario-reader_basic-metalio-plus-pqbn\n14/26 Test #14: scenario-reader_basic-metalio-plus-pqbn .......   Passed    3.94 sec\n      Start 15: scenario-ai_ask-metalio-plus-pqbn\n15/26 Test #15: scenario-ai_ask-metalio-plus-pqbn .............   Passed    3.27 sec\n      Start 16: scenario-pqbn_flash_pause-metalio-plus-pqbn\n16/26 Test #16: scenario-pqbn_flash_pause-metalio-plus-pqbn ...   Passed    0.84 sec\n      Start 17: scenario-ai_tools-metalio-plus\n17/26 Test #17: scenario-ai_tools-metalio-plus ................   Passed    4.41 sec\n      Start 18: scenario-powercut-during-save\n18/26 Test #18: scenario-powercut-during-save .................   Passed    2.52 sec\n      Start 19: determinism-reader\n19/26 Test #19: determinism-reader ............................   Passed    3.77 sec\n      Start 20: scenario-reader_basic-upstream-pipeline\n20/26 Test #20: scenario-reader_basic-upstream-pipeline .......   Passed    2.74 sec\n      Start 21: fixture-aged-user-image\n21/26 Test #21: fixture-aged-user-image .......................   Passed    0.20 sec\n      Start 22: scenario-reader_basic-aged-flash-max\n22/26 Test #22: scenario-reader_basic-aged-flash-max ..........   Passed    1.90 sec\n      Start 23: portability-home-pinenote-rk3566\n23/26 Test #23: portability-home-pinenote-rk3566 ..............   Passed    0.36 sec\n      Start 24: portability-home-desktop-lcd\n24/26 Test #24: portability-home-desktop-lcd ..................   Passed    0.23 sec\n      Start 25: portability-home-metalio-plus-pqbn\n25/26 Test #25: portability-home-metalio-plus-pqbn ............   Passed    0.37 sec\n      Start 26: iss-selftest\n26/26 Test #26: iss-selftest ..................................   Passed    0.03 sec\n\n100% tests passed out of 26\n\nTotal Test time (real) =  71.31 sec\n"
+    }
+  ]
+}

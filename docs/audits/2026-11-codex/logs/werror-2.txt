@@ -1,0 +1,29 @@
+Test project /workspace/scratch/d7182863fc48/ink-audit-work/build-werror
+  Test  #1: selftest-metalio-plus
+  Test  #2: selftest-metalio-plus-psram16
+  Test  #3: selftest-pinenote-rk3566
+  Test  #4: selftest-desktop-lcd
+  Test  #5: selftest-psram-stack-flash-access-crashes
+  Test  #6: determinism
+  Test  #7: scenario-home_basic-metalio-plus
+  Test  #8: scenario-home_basic-metalio-plus-psram16
+  Test  #9: scenario-reader_basic-metalio-plus
+  Test #10: scenario-keys_overlap-metalio-plus
+  Test #11: scenario-reader_basic-metalio-plus-psram16
+  Test #12: scenario-ai_ask-metalio-plus
+  Test #13: scenario-standby-metalio-plus
+  Test #14: scenario-reader_basic-metalio-plus-pqbn
+  Test #15: scenario-ai_ask-metalio-plus-pqbn
+  Test #16: scenario-pqbn_flash_pause-metalio-plus-pqbn
+  Test #17: scenario-ai_tools-metalio-plus
+  Test #18: scenario-powercut-during-save
+  Test #19: determinism-reader
+  Test #20: scenario-reader_basic-upstream-pipeline
+  Test #21: fixture-aged-user-image
+  Test #22: scenario-reader_basic-aged-flash-max
+  Test #23: portability-home-pinenote-rk3566
+  Test #24: portability-home-desktop-lcd
+  Test #25: portability-home-metalio-plus-pqbn
+  Test #26: iss-selftest
+
+Total Tests: 26
