@@ -29,9 +29,28 @@ static int lvl(int r) {
     return r >= 64 ? 7 : t[r];
 }
 
+static void teardown(pqbn_v4_ctx *C) {
+    if (!C->W) return;
+    free((void *)C->dec);
+    free((void *)C->exk);
+    free((void *)C->exk_m);
+    free((void *)C->tau);
+    free((void *)C->tau_nib);
+    free((void *)C->fb4);
+    free(C->hot);
+    free(C->cold);
+    free(C->tile_dirty);
+    free(C->tile_plan);
+    free(C->tile_nmax);
+    free(C->band);
+    free(C->row_active);
+    free(C->drive);
+    memset(C, 0, sizeof *C);
+}
+
 static void setup(pqbn_v4_ctx *C, uint32_t now) {
     int ntx = PW / PQBN_TPX, nty = PH / PQBN_TPY, nt = ntx * nty;
-    memset(C, 0, sizeof *C);
+    teardown(C);
     uint8_t *dec = alloc(16384), *exk = alloc(6 * 256), *exk_m = alloc(7 * 256), *tau = alloc(4096), *tau_nib = alloc(2048);
     if (pqbn_v4_build(dec, exk, C->step, 7.6f, 0.3f, 120.0f)) abort();
     for (int i = 0; i < 4096; i++) tau[i] = (uint8_t)((((i & 63) * 37) + ((i >> 6) * 101)) & 15);
@@ -117,6 +136,8 @@ int main(void) {
         CHECK(!memcmp(A.band, B.band, (size_t)(PH / PQBN_TPY) * 4), "a rest of %u phases: the band clocks differ", R[k].n);
         CHECK(wrapped(&B, to) == 0, "a rest of %u phases: settled pixels read as just moved", R[k].n);
     }
+    teardown(&A);
+    teardown(&B);
     if (fails) return 1;
     printf("pqbn clock: rests keep timestamps unambiguous and equal running the phases\n");
     return 0;

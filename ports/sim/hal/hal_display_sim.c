@@ -1096,7 +1096,8 @@ static void pq_advance_idle(void) {
     /* the skipped phases' upkeep (timestamp sweep, tile ages), as if they had run with nothing to drive:
      * without it the settled pixels' 10-bit timestamps wrapped after a few drive/rest cycles (AUD-011) */
     const int rows = pqbn_v4_skip(&PQ.C, from, to);
-    const double cyc = g_profile.pqbn.skip_call + (double)rows * g_profile.pqbn.skip_row; /* ISS, settled rows: pessimistic */
+    double cyc = g_profile.pqbn.skip_call + (double)rows * g_profile.pqbn.skip_row; /* ISS, settled rows: pessimistic */
+    if ((from >> 12) != (to >> 12)) cyc += g_profile.pqbn.skip_clamp; /* the tile-age clamp at a multiple of 4096 */
     sim_charge_cycles(cyc);
     sim_metric_sample("display.pqbn.rest_upkeep_ms", sim_cycles_ns(cyc) / 1e6);
     PQ.now = to;
