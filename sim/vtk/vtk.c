@@ -113,6 +113,7 @@ static struct {
 } K;
 
 static __thread vtk_task_t *tls_self;
+static long diag_fb_sp[VTK_MAX_TASKS], diag_start_used[VTK_MAX_TASKS], diag_probe_ck[4];
 
 /* ------------------------------------------------------------------ utils */
 
@@ -607,6 +608,8 @@ bool vtk_in_isr(void) { return K.in_isr; }
 
 static void first_baton_in_zone(void *p) {
     vtk_task_t *t = p;
+    volatile char here_c = 0;
+    diag_fb_sp[t->id] = (long)((const uint8_t *)&here_c - t->own_lo);
     tls_self = t; /* Apple platforms allocate a thread's TLS on first use (dyld + malloc) */
     pthread_mutex_lock(&K.m);
     wait_baton_locked(t);
@@ -615,10 +618,12 @@ static void first_baton_in_zone(void *p) {
     pthread_mutex_unlock(&K.m);
 }
 
+static size_t own_stack_used(const vtk_task_t *t);
 static void *task_thread(void *p) {
     vtk_task_t *t = p;
     in_zone_of(t, first_baton_in_zone, t);
     t->entry = __builtin_frame_address(0);
+    diag_start_used[t->id] = (long)own_stack_used(t);
     t->fn(t->arg);
     vtk_task_exit();
 }
@@ -773,7 +778,11 @@ static uint32_t stack_used_est(const vtk_task_t *t) {
                 fclose(mf);
             }
         }
-        fprintf(stderr, "DIAG2 %s used=%zu base=%zu\n", t->name, used_host, base);
+        fprintf(stderr, "DIAG2 %s used=%zu base=%zu start_used=%ld first_baton_sp_vs_own_lo=%ld%s\n", t->name, used_host,
+                base, diag_start_used[t->id], diag_fb_sp[t->id], t == K.stack_probe ? "" : "");
+        if (t == K.stack_probe)
+            fprintf(stderr, "DIAG2 probe checkpoints: at fn entry %ld, after yield %ld, after sleep %ld\n", diag_probe_ck[0],
+                    diag_probe_ck[1], diag_probe_ck[2]);
         const uint8_t *z = NULL;
         size_t n = 0;
         if (t == K.stack_probe && diag_len) z = diag_copy, n = diag_len;
@@ -794,8 +803,11 @@ static uint32_t stack_used_est(const vtk_task_t *t) {
 
 static void stack_probe_fn(void *arg) {
     (void)arg;
+    diag_probe_ck[0] = (long)own_stack_used(tls_self);
     vtk_yield();
+    diag_probe_ck[1] = (long)own_stack_used(tls_self);
     vtk_sleep_ns(1);
+    diag_probe_ck[2] = (long)own_stack_used(tls_self);
 }
 
 void vtk_calibrate_stack(void) {
