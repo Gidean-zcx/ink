@@ -341,6 +341,7 @@ python3 tools/simreport/simreport.py out/reader --lang zh    # HTML 报告：刷
 | 协作规则（含 Codex 路由约定） | [AGENTS.md](../AGENTS.md) |
 | 外部审计 | [audits/codex-audit-prompt.md](audits/codex-audit-prompt.md) |
 | 实机上机步骤与实测结果 | [hardware/README.md](hardware/README.md) |
+| 在用户电脑上用本机 Claude Code 接手 | [handoff/local-claude-code.md](handoff/local-claude-code.md) |
 
 ## 14. PR 与分支
 

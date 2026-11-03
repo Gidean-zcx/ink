@@ -29,6 +29,7 @@
 | 最大的技术风险和实机验证计划 | [风险与验证](docs/system/risks-and-spikes.md) |
 | 需要用户拍板的事项与推荐 | [决策记录](docs/decisions/README.md)；可点选的[交互式决策板](https://claude.ai/artifact/RWnCX8AyAbyqArc7D9Wsft)（源文件 [docs/decision-board.html](docs/decision-board.html)） |
 | 实机上机步骤与实测结果 | [实机记录](docs/hardware/README.md) |
+| 在用户电脑上用本机 Claude Code 接手 | [接手说明](docs/handoff/local-claude-code.md) |
 | 外部审计 | [审计记录与任务说明](docs/audits/README.md) |
 
 构建与测试：
