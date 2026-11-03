@@ -26,6 +26,11 @@ if(INK_SANITIZE)
   add_compile_options(-fsanitize=address,undefined -fno-omit-frame-pointer)
   add_link_options(-fsanitize=address,undefined)
 endif()
+# Bind symbols at load (macOS does already): lazily, the dynamic linker would run on the stack of
+# whichever simulated task first calls a libc function, with a CPU-dependent size (XSAVE area).
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+  add_link_options(-Wl,-z,now)
+endif()
 
 # ---------------------------------------------------------------- third party
 add_library(ink_tlsf STATIC third_party/tlsf/tlsf.c)
