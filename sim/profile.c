@@ -322,6 +322,17 @@ int profile_load(const char *path, sim_profile_t *p, char *err, size_t errlen) {
         L->outage_max_s = os2 ? cJSON_GetArrayItem(os, 1)->valuedouble : 5;
     }
     snprintf(p->default_link, sizeof p->default_link, "%s", str(net, "default_link", "lte"));
+    /* "sim": {"selected": 0|1, "external": card, "internal": card}, card = none | data | sms | voice */
+    const cJSON *sim = net ? obj(net, "sim") : NULL;
+    p->sim_selected = (int)num_opt(sim, "selected", 0) == 1 ? 1 : 0;
+    static const char *const slot_keys[2] = {"external", "internal"};
+    for (int i = 0; i < 2; i++) {
+        const cJSON *cv = cJSON_GetObjectItemCaseSensitive(sim, slot_keys[i]);
+        const char *c = cJSON_IsString(cv) ? cv->valuestring : i ? "data" : "voice";
+        p->sim_card[i].present = strcmp(c, "none") != 0;
+        p->sim_card[i].sms = !strcmp(c, "sms") || !strcmp(c, "voice");
+        p->sim_card[i].voice = !strcmp(c, "voice");
+    }
     p->tls_internal_bytes = (size_t)(num(net, "tls_internal_kib", 6) * 1024);
     p->tls_external_bytes = (size_t)(num(net, "tls_external_kib", 40) * 1024);
     p->ws_stack = (uint32_t)num(net, "ws_task_stack", 4096);

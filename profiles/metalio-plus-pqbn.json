@@ -257,6 +257,8 @@
     },
     "_notes": "estimates (unverified): LTE limited by the 2 Mbaud UART-Ethernet link; RRC idle after ~10 s, resume ~300 ms; TLS 1 session ~40 KiB PSRAM + ~6 KiB internal; esp_websocket_client task 4 KiB; event loop task 2.5 KiB",
     "default_link": "lte",
+    "sim": {"selected": 0, "external": "voice", "internal": "data"},
+    "_notes_sim": "Cellular SIM (upstream settings_network_tab.cc @690a023, README 4G section; checked 2026-11-03): the NT26 (EC718PM per the factory boot log) has an external card slot (SimSlot 0) and an internal card (SimSlot 1), one active at a time; the slot is a modem setting kept across reboots, switched with AT+CFUN=0, AT+ECSIMCFG=SimSlot,n, AT+CFUN=1. The factory NVS of the user's unit says 4G mode, slot 0 (external), and its boot log shows a card registering. Cards here are ASSUMPTIONS: the user's own card outside (data, SMS, voice), a data-only card inside (as CloudZao documents for the Claw4; not confirmed for the Plus).",
     "tls_internal_kib": 6,
     "tls_external_kib": 40,
     "ws_task_stack": 4096,

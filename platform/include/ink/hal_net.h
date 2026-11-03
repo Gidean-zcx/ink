@@ -42,6 +42,26 @@ typedef void (*hal_link_cb)(void *ctx, const hal_link_status_t *st);
 /** Notified when the link changes (comes up, goes down, switches Wi-Fi/LTE). */
 void hal_net_set_link_callback(hal_link_cb cb, void *ctx);
 
+/* ---- cellular SIM ----
+ * The Plus's modem has an external card slot and an internal (soldered) card; one is active at a
+ * time, chosen by a modem setting that survives reboots. Values match the modem's SimSlot. */
+typedef enum { HAL_SIM_EXTERNAL = 0, HAL_SIM_INTERNAL = 1 } hal_sim_slot_t;
+
+typedef struct {
+    bool modem;               /* false: no cellular modem on this device */
+    hal_sim_slot_t selected;  /* the modem's setting */
+    bool present[2];          /* a card in each slot (internal: fitted and activated), by hal_sim_slot_t */
+    bool switching;           /* a switch is in progress */
+    bool registered;          /* on the network with the selected card */
+    bool volte;               /* voice (IMS) registered: calls possible */
+} hal_cell_info_t;
+
+void hal_cell_info(hal_cell_info_t *out);
+/** Switch the modem to another card: radio off, set the slot, radio on, register (several
+ *  seconds; the LTE link is down meanwhile and stays down if that slot has no card). Returns
+ *  false if there is no modem, a switch is running, or the slot is already selected. */
+bool hal_cell_select_sim(hal_sim_slot_t slot);
+
 typedef struct hal_ws hal_ws_t;
 
 typedef enum {

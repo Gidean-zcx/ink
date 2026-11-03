@@ -503,7 +503,10 @@ void draw_device(ImVec2 area_pos, ImVec2 area_size, float fb_scale) {
     badge(SDL_GetTicks64() < g_shake_until_ms, "振动", IM_COL32(255, 120, 120, 255));
     badge(g_st.light_cold + g_st.light_warm > 0, "前光", IM_COL32(255, 230, 170, 255));
     char batt[48];
-    snprintf(batt, sizeof batt, "%d%%  %s", g_st.battery_percent, !g_st.link_up ? "无网络" : !strcmp(g_st.link, "wifi") ? "Wi-Fi" : "4G");
+    const char *net = !strcmp(g_st.link, "wifi") ? (g_st.link_up ? "Wi-Fi" : "Wi-Fi 断开")
+                      : !strcmp(g_st.link, "lte")  ? (g_st.sim_switching ? "4G 切卡中" : !g_st.sim_registered ? "4G 无卡" : g_st.link_up ? "4G" : "4G 断开")
+                                                   : "无网络";
+    snprintf(batt, sizeof batt, "%d%%  %s", g_st.battery_percent, net);
     ImVec2 bts = ImGui::CalcTextSize(batt);
     dl->AddText(ImVec2(d.at(kSide + (float)pw, iy).x - bts.x, d.at(0, iy).y - bts.y / 2), IM_COL32(200, 200, 205, 255), batt);
 
@@ -620,6 +623,29 @@ void draw_panel(ImVec2 pos, ImVec2 size) {
         if (ImGui::Button("断网 5 秒")) sim_gui_outage(5000);
         ImGui::SameLine();
         ImGui::TextDisabled("当前：%s%s", g_st.link, g_st.link_up ? "，在线" : "，断开");
+        if (g_st.cell_modem) {
+            ImGui::SeparatorText("4G 卡（两张卡，同一时间只用一张）");
+            static const char *kinds[] = {"没有卡", "只有流量", "流量 + 短信", "流量 + 短信 + 通话"};
+            static const char *slot_names[] = {"外置卡（卡槽）", "内置卡（贴片）"};
+            for (int i = 0; i < 2; i++) {
+                ImGui::PushID(i);
+                int k = g_st.sim_card[i];
+                ImGui::SetNextItemWidth(170);
+                if (ImGui::Combo(slot_names[i], &k, kinds, 4)) sim_gui_sim_card(i, k);
+                ImGui::PopID();
+            }
+            const char *state = g_st.sim_switching    ? "正在切换"
+                                : g_st.sim_registered ? (g_st.volte ? "已注册，可通话" : "已注册，不能通话")
+                                                      : "未注册（这个卡槽没卡，或刚插卡还没重新识别）";
+            ImGui::Text("模组在用：%s · %s", g_st.sim_selected ? "内置卡" : "外置卡", state);
+            ImGui::BeginDisabled(g_st.sim_switching);
+            if (ImGui::Button(g_st.sim_selected ? "让模组切到外置卡" : "让模组切到内置卡")) sim_gui_sim_select(1 - g_st.sim_selected);
+            ImGui::EndDisabled();
+            if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
+                tooltip("开发用：替系统发切卡命令（关射频 → 设卡槽 → 开射频，约 5 秒，期间 4G 断开）。"
+                        "官方固件在 设置 → 网络 → 4G 里切换，选择会存在模组里，重启后不变。");
+            ImGui::TextDisabled("插卡后要切换或重启才识别：模组是否支持热插拔还没确认。");
+        }
     }
     if (ImGui::CollapsingHeader("麦克风", ImGuiTreeNodeFlags_DefaultOpen)) {
         static const char *names[] = {"有人说话", "安静", "噪声"};

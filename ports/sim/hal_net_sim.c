@@ -57,6 +57,7 @@ struct hal_ws {
 static struct {
     hal_link_type_t type;
     bool up;
+    bool want;                   /* the network is there (coverage, no outage); LTE also needs a registered card */
     const profile_link_t *L;
     uint64_t up_free, down_free; /* link busy until */
     uint64_t last_traffic;
@@ -144,11 +145,34 @@ static void wake_conns(void) {
     }
 }
 
+/* ------------------------------------------------------------- cellular SIM
+ * Plus: NT26 (EC718PM) with an external card slot (SimSlot 0) and an internal card (SimSlot 1); one
+ * active at a time, chosen by a modem setting that survives reboots (kept next to --flash-image).
+ * A switch follows upstream settings_network_tab.cc @690a023: AT+CFUN=0, 500 ms, AT+ECSIMCFG=
+ * SimSlot,n, 500 ms, AT+CFUN=1, then the card registers. Durations are ESTIMATES (upstream allows
+ * 8 s / 5 s / 15 s for the three commands; the factory boot log registered ~1 s after the SIM
+ * check). LTE is up only while the selected card is present and registered. Removing the active
+ * card drops the registration at once; a card put in is seen at the next radio-on (a switch or a
+ * reboot): whether the modem detects hot plug is not confirmed. */
+#define CELL_CFUN0_MS 800
+#define CELL_GAP_MS 500
+#define CELL_SLOT_MS 200
+#define CELL_REG_MS 3000
+
+static struct {
+    int selected, target;
+    bool present[2], sms[2], voice[2];
+    bool registered, switching;
+} CELL;
+
+static bool cell_ok(void) { return CELL.registered && CELL.present[CELL.selected]; }
+
 static void set_link(hal_link_type_t t, bool up) { /* ISR or locked task context */
     hal_link_type_t old = N.type;
     bool was = N.up;
     N.type = t;
-    N.up = up && t != HAL_LINK_NONE;
+    N.want = up;
+    N.up = up && t != HAL_LINK_NONE && (t != HAL_LINK_LTE || !g_profile.lte.present || cell_ok());
     N.L = t == HAL_LINK_LTE ? &g_profile.lte : t == HAL_LINK_WIFI ? &g_profile.wifi : NULL;
     if (old != t) {
         N.dns_cached = false;
@@ -185,6 +209,108 @@ void sim_net_set_link(const char *name) { /* ISR (script) */
 const char *sim_net_link(bool *up) { /* ISR */
     if (up) *up = N.up;
     return N.type == HAL_LINK_LTE ? "lte" : N.type == HAL_LINK_WIFI ? "wifi" : "none";
+}
+
+static void cell_save_on_host(void *arg) {
+    (void)arg;
+    if (!g_sim.flash_image) return;
+    char path[600];
+    snprintf(path, sizeof path, "%s.modem", g_sim.flash_image);
+    FILE *f = fopen(path, "w");
+    if (!f) return;
+    fprintf(f, "SimSlot=%d\n", CELL.selected);
+    fclose(f);
+}
+
+static void cell_load_on_host(void *arg) {
+    (void)arg;
+    if (!g_sim.flash_image) return;
+    char path[600];
+    snprintf(path, sizeof path, "%s.modem", g_sim.flash_image);
+    FILE *f = fopen(path, "r");
+    if (!f) return;
+    int v;
+    if (fscanf(f, "SimSlot=%d", &v) == 1 && (v == 0 || v == 1)) CELL.selected = v;
+    fclose(f);
+}
+
+static void cell_relink(void) { /* ISR or locked */
+    if (N.type == HAL_LINK_LTE) set_link(HAL_LINK_LTE, N.want);
+}
+
+static void cell_slot_set_cb(void *arg) { /* ISR: AT+ECSIMCFG answered OK */
+    (void)arg;
+    CELL.selected = CELL.target;
+    vtk_host_call(cell_save_on_host, NULL);
+    sim_trace_instant("net", CELL.selected ? "sim slot: internal" : "sim slot: external", vtk_isr_now(), NULL);
+}
+
+static void cell_radio_on_cb(void *arg) { /* ISR: AT+CFUN=1 done, the new card registered (or not) */
+    (void)arg;
+    CELL.switching = false;
+    CELL.registered = CELL.present[CELL.selected];
+    sim_metric_add("net.sim_switches", 1);
+    cell_relink();
+}
+
+static bool cell_select(int slot) { /* ISR or locked */
+    if (!g_profile.lte.present || CELL.switching || slot < 0 || slot > 1 || slot == CELL.selected) return false;
+    uint64_t t = now_any();
+    CELL.switching = true;
+    CELL.target = slot;
+    CELL.registered = false;
+    cell_relink();
+    vtk_event_at(t + SIM_MS(CELL_CFUN0_MS + CELL_GAP_MS + CELL_SLOT_MS), cell_slot_set_cb, NULL);
+    vtk_event_at(t + SIM_MS(CELL_CFUN0_MS + 2 * CELL_GAP_MS + CELL_SLOT_MS + CELL_REG_MS), cell_radio_on_cb, NULL);
+    return true;
+}
+
+bool hal_cell_select_sim(hal_sim_slot_t slot) {
+    vtk_lock();
+    bool ok = cell_select((int)slot);
+    vtk_unlock();
+    return ok;
+}
+
+bool sim_net_cell_select(int slot) { return cell_select(slot); } /* ISR (window) */
+
+void hal_cell_info(hal_cell_info_t *out) {
+    memset(out, 0, sizeof *out);
+    out->modem = g_profile.lte.present;
+    if (!out->modem) return;
+    out->selected = (hal_sim_slot_t)CELL.selected;
+    out->present[0] = CELL.present[0];
+    out->present[1] = CELL.present[1];
+    out->switching = CELL.switching;
+    out->registered = cell_ok();
+    out->volte = out->registered && CELL.voice[CELL.selected];
+}
+
+void sim_net_cell_state(sim_cell_state_t *out) { /* ISR */
+    hal_cell_info_t ci;
+    hal_cell_info(&ci);
+    out->modem = ci.modem;
+    out->selected = CELL.selected;
+    for (int i = 0; i < 2; i++) {
+        out->present[i] = CELL.present[i];
+        out->sms[i] = CELL.sms[i];
+        out->voice[i] = CELL.voice[i];
+    }
+    out->switching = ci.switching;
+    out->registered = ci.registered;
+    out->volte = ci.volte;
+}
+
+void sim_net_set_card(int slot, bool present, bool sms, bool voice) { /* ISR (script, window) or locked */
+    if (slot < 0 || slot > 1) return;
+    bool was = CELL.present[slot];
+    CELL.present[slot] = present;
+    CELL.sms[slot] = present && sms;
+    CELL.voice[slot] = present && voice;
+    if (slot == CELL.selected && was && !present && !CELL.switching) {
+        CELL.registered = false; /* stays off until the next radio-on, even if the card comes back */
+        cell_relink();
+    }
 }
 
 void sim_net_outage(uint64_t ns) { /* ISR (script) */
@@ -535,8 +661,17 @@ static void idle_forever(void *arg) {
 void sim_net_init(void) {
     hal_link_type_t t = !strcmp(g_profile.default_link, "wifi") ? HAL_LINK_WIFI
                         : !strcmp(g_profile.default_link, "lte") ? HAL_LINK_LTE : HAL_LINK_NONE;
+    CELL.selected = g_profile.sim_selected;
+    for (int i = 0; i < 2; i++) {
+        CELL.present[i] = g_profile.sim_card[i].present;
+        CELL.sms[i] = g_profile.sim_card[i].sms;
+        CELL.voice[i] = g_profile.sim_card[i].voice;
+    }
+    vtk_host_call(cell_load_on_host, NULL); /* the modem kept its slot setting */
+    CELL.registered = CELL.present[CELL.selected]; /* registered at boot (no boot-time delay modelled) */
     N.type = t;
-    N.up = t != HAL_LINK_NONE;
+    N.want = t != HAL_LINK_NONE;
+    N.up = N.want && (t != HAL_LINK_LTE || !g_profile.lte.present || cell_ok());
     N.L = t == HAL_LINK_LTE ? &g_profile.lte : t == HAL_LINK_WIFI ? &g_profile.wifi : NULL;
     if (N.up) sim_power_consumer(t == HAL_LINK_LTE ? "modem" : "wifi", true,
                                  t == HAL_LINK_LTE ? g_profile.ma_lte_idle : g_profile.ma_wifi_idle);

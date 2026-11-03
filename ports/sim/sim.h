@@ -202,6 +202,15 @@ void sim_net_report(void);
 void sim_net_set_link(const char *name); /* ISR (script): "lte" | "wifi" | "none" */
 void sim_net_outage(uint64_t ns);        /* ISR (script) */
 const char *sim_net_link(bool *up);      /* ISR: "lte" | "wifi" | "none" */
+typedef struct {
+    bool modem;
+    int selected;                        /* 0 external slot, 1 internal card */
+    bool present[2], sms[2], voice[2];   /* each slot's card */
+    bool switching, registered, volte;
+} sim_cell_state_t;
+void sim_net_cell_state(sim_cell_state_t *out);                    /* ISR */
+void sim_net_set_card(int slot, bool present, bool sms, bool voice); /* ISR (script, window) or locked */
+bool sim_net_cell_select(int slot);                                 /* ISR (window): what the system's setting would do */
 void sim_net_hub_send(struct hal_ws *ws, uint64_t t_send, const void *data, size_t len, bool binary); /* ISR */
 int sim_hub_load(const char *path, char *err, size_t errlen);
 void sim_hub_receive(struct hal_ws *ws, uint64_t t, const uint8_t *data, size_t len, bool binary); /* ISR */

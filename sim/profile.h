@@ -167,6 +167,9 @@ typedef struct {
     /* network */
     profile_link_t wifi, lte;
     char default_link[8];          /* "lte" | "wifi" | "none" */
+    /* cellular SIM: the modem's selected slot (0 external, 1 internal) and each slot's card */
+    int sim_selected;
+    struct { bool present, sms, voice; } sim_card[2];
     size_t tls_internal_bytes, tls_external_bytes;
     uint32_t ws_stack, sys_evt_stack;
     uint32_t dead_detect_ms;       /* a dead connection is noticed after this (ping timeout) */

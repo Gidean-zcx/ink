@@ -17,6 +17,7 @@
 #include "ink/hal_input.h"
 #include "ink/hal_storage.h"
 #include "ink/osal.h"
+#include "ink/hal_net.h"
 #include "ink/probe.h"
 #include "sim.h" /* the self-test may peek at the profile to compute expectations */
 
@@ -513,6 +514,55 @@ static void bad_psram_task(void *arg) {
     sim_warn("death test: a PSRAM-stack task read /user without crashing the device");
 }
 
+/* INK_SELFTEST_CELL=1: the modem's two SIM slots (external card slot, internal card) and an online
+ * switch (radio off, set the slot, radio on), as on the Plus: LTE goes down during the switch and
+ * comes back on the new card; an empty slot leaves it down and can be left again. */
+static bool lte_up(void) {
+    hal_link_status_t st;
+    hal_net_link_status(&st);
+    return st.type == HAL_LINK_LTE && st.up;
+}
+
+static void cell_task(void *arg) {
+    (void)arg;
+    const uint64_t settle = 6000000; /* a switch takes ~5 s in the model */
+    hal_cell_info_t ci;
+    hal_cell_info(&ci);
+    if (!ci.modem) {
+        CHECK(!hal_cell_select_sim(HAL_SIM_INTERNAL), "no modem: a SIM switch is refused");
+        ink_probe_mark("cell-done");
+        return;
+    }
+    CHECK((int)ci.selected == g_profile.sim_selected && ci.registered && lte_up(), "boots on the profile's card with LTE up");
+    CHECK(!hal_cell_select_sim(ci.selected), "selecting the card in use is refused");
+    CHECK(hal_cell_select_sim(HAL_SIM_INTERNAL), "a switch to the internal card starts");
+    hal_cell_info(&ci);
+    CHECK(ci.switching && !ci.registered && !lte_up(), "LTE is down while the modem switches cards");
+    CHECK(!hal_cell_select_sim(HAL_SIM_EXTERNAL), "a second switch is refused while one runs");
+    osal_task_delay_us(settle);
+    hal_cell_info(&ci);
+    CHECK(!ci.switching && ci.selected == HAL_SIM_INTERNAL && ci.registered && lte_up() && !ci.volte,
+          "the internal card registers without a reboot (data only: no VoLTE)");
+    vtk_lock();
+    sim_net_set_card(HAL_SIM_INTERNAL, false, false, false); /* the card is taken away */
+    vtk_unlock();
+    hal_cell_info(&ci);
+    CHECK(!ci.registered && !lte_up(), "losing the active card drops LTE");
+    CHECK(hal_cell_select_sim(HAL_SIM_EXTERNAL), "a switch back to the external card starts");
+    osal_task_delay_us(settle);
+    hal_cell_info(&ci);
+    CHECK(ci.selected == HAL_SIM_EXTERNAL && ci.registered && lte_up() && ci.volte, "the external card registers, with VoLTE");
+    CHECK(hal_cell_select_sim(HAL_SIM_INTERNAL), "a switch to the now empty internal slot starts");
+    osal_task_delay_us(settle);
+    hal_cell_info(&ci);
+    CHECK(ci.selected == HAL_SIM_INTERNAL && !ci.registered && !lte_up(), "an empty slot leaves LTE down");
+    CHECK(hal_cell_select_sim(HAL_SIM_EXTERNAL), "switching away from an empty slot still works");
+    osal_task_delay_us(settle);
+    hal_cell_info(&ci);
+    CHECK(ci.registered && lte_up(), "back on the external card");
+    ink_probe_mark("cell-done");
+}
+
 /* INK_SELFTEST_AGE=1 with --flash-image: leave /user 50-60 % full and fragmented (written to 80 %,
  * every third file deleted, some rewritten), so scenarios run on an aged filesystem where writes
  * trigger block reclaim and metadata compaction. */
@@ -556,6 +606,11 @@ static void age_task(void *arg) {
 }
 
 void ink_main(void) {
+    if (getenv("INK_SELFTEST_CELL")) {
+        osal_task_cfg_t cfg = {.name = "cell", .fn = cell_task, .stack_bytes = 4096, .priority = OSAL_PRIO_NORMAL, .core = -1};
+        osal_task_create(&cfg, NULL);
+        return;
+    }
     if (getenv("INK_SELFTEST_AGE")) {
         osal_task_cfg_t cfg = {.name = "age", .fn = age_task, .stack_bytes = 4096, .priority = OSAL_PRIO_NORMAL, .core = -1};
         osal_task_create(&cfg, NULL);

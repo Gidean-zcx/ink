@@ -95,6 +95,14 @@ static void poll_on_host(void *arg) {
     snprintf(st.link, sizeof st.link, "%s", sim_net_link(&st.link_up));
     heap_stats(OSAL_MEM_INTERNAL, &st.internal_total, &st.internal_free, &st.internal_min_free);
     heap_stats(OSAL_MEM_EXTERNAL, &st.external_total, &st.external_free, &st.external_min_free);
+    sim_cell_state_t cs;
+    sim_net_cell_state(&cs);
+    st.cell_modem = cs.modem;
+    st.sim_selected = cs.selected;
+    for (int i = 0; i < 2; i++) st.sim_card[i] = !cs.present[i] ? 0 : cs.voice[i] ? 3 : cs.sms[i] ? 2 : 1;
+    st.sim_switching = cs.switching;
+    st.sim_registered = cs.registered;
+    st.volte = cs.volte;
 
     pthread_mutex_lock(&Gm);
     st.seq = G.stats.seq + 1;
@@ -152,7 +160,7 @@ void sim_gui_get_stats(sim_gui_stats_t *out) {
 
 /* ------------------------------------------------------------------ actions */
 
-typedef enum { C_TOUCH, C_KEY, C_BATTERY, C_NET, C_OUTAGE, C_MIC, C_SNAP, C_POWERCUT } cmd_kind_t;
+typedef enum { C_TOUCH, C_KEY, C_BATTERY, C_NET, C_OUTAGE, C_MIC, C_SNAP, C_POWERCUT, C_SIM_CARD, C_SIM_SELECT } cmd_kind_t;
 
 typedef struct {
     cmd_kind_t kind;
@@ -173,6 +181,8 @@ static void cmd_event(void *arg) { /* ISR context, like the script's actions */
     case C_MIC: sim_audio_mic_source(c->text); break;
     case C_SNAP: sim_display_snapshot(c->text); break;
     case C_POWERCUT: sim_storage_power_cut(); break;
+    case C_SIM_CARD: sim_net_set_card(c->a, c->b > 0, c->b >= 2, c->b == 3); break;
+    case C_SIM_SELECT: sim_net_cell_select(c->a); break;
     }
     vtk_host_call(free_on_host, c);
 }
@@ -196,6 +206,8 @@ void sim_gui_outage(int ms) { send(C_OUTAGE, ms, 0, 0, NULL); }
 void sim_gui_mic(const char *source) { send(C_MIC, 0, 0, 0, source); }
 void sim_gui_snapshot(const char *name) { send(C_SNAP, 0, 0, 0, name); }
 void sim_gui_power_cut(void) { send(C_POWERCUT, 0, 0, 0, NULL); }
+void sim_gui_sim_card(int slot, int kind) { send(C_SIM_CARD, slot, kind, 0, NULL); }
+void sim_gui_sim_select(int slot) { send(C_SIM_SELECT, slot, 0, 0, NULL); }
 
 void sim_gui_stop(void) {
     if (sim_gui_phase() == SIM_GUI_RUNNING) vtk_stop();

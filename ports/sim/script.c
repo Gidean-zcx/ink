@@ -14,6 +14,7 @@
  *   +1s      mic   speech|silence|noise  # what the microphone hears
  *   +0       net   wifi | lte | none   # switch the network link
  *   +0       outage 5s                 # link drops for a while (dead connection noticed later)
+ *   +0       sim   external|internal none|data|sms|voice  # card in a SIM slot (what its plan allows)
  *   +5s      end
  *
  * Times: "@t" absolute, "+t" relative to the previous line; units us/ms/s/m
@@ -30,7 +31,7 @@
 #include "ink/rotation.h"
 #include "sim.h"
 
-typedef enum { A_TOUCH, A_KEY, A_SNAP, A_MARK, A_NOTE, A_BATTERY, A_POWERCUT, A_END, A_NET, A_OUTAGE, A_MIC } akind_t;
+typedef enum { A_TOUCH, A_KEY, A_SNAP, A_MARK, A_NOTE, A_BATTERY, A_POWERCUT, A_END, A_NET, A_OUTAGE, A_MIC, A_SIM } akind_t;
 
 typedef struct {
     uint64_t t;
@@ -192,6 +193,17 @@ int sim_script_load(const char *path, char *err, size_t errlen) {
         } else if (!strcmp(cmd, "mic")) {
             ok = n >= 3 && (!strcmp(tok[2], "speech") || !strcmp(tok[2], "silence") || !strcmp(tok[2], "noise"));
             if (ok) snprintf(push(t, A_MIC)->text, 16, "%s", tok[2]);
+        } else if (!strcmp(cmd, "sim")) {
+            static const char *const kinds[] = {"none", "data", "sms", "voice"};
+            int slot = n >= 3 ? (!strcmp(tok[2], "external") ? 0 : !strcmp(tok[2], "internal") ? 1 : -1) : -1, kind = -1;
+            for (int k = 0; k < 4 && n >= 4; k++)
+                if (!strcmp(tok[3], kinds[k])) kind = k;
+            ok = slot >= 0 && kind >= 0;
+            if (ok) {
+                action_t *a = push(t, A_SIM);
+                a->a = slot;
+                a->b = kind;
+            }
         } else if (!strcmp(cmd, "outage")) {
             uint64_t dur;
             ok = n >= 3 && !parse_dur(tok[2], &dur);
@@ -243,6 +255,7 @@ static void run_action(void *arg) { /* ISR context */
     case A_NET: sim_net_set_link(a->text); break;
     case A_OUTAGE: sim_net_outage(SIM_MS(a->c)); break;
     case A_MIC: sim_audio_mic_source(a->text); break;
+    case A_SIM: sim_net_set_card(a->a, a->b > 0, a->b >= 2, a->b == 3); break;
     }
 }
 

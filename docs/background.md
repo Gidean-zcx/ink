@@ -268,7 +268,7 @@ PQ-BN 各配置的对比见 [system-comparison.md](research/eink-refresh/integra
 **命令**
 
 ```bash
-cmake -S . -B build && cmake --build build -j && ctest --test-dir build --output-on-failure   # 33 项
+cmake -S . -B build && cmake --build build -j && ctest --test-dir build --output-on-failure   # 34 项
 cmake -S . -B build-werror -DINK_WERROR=ON && cmake --build build-werror -j && ctest --test-dir build-werror
 cmake -S . -B build-asan -DINK_SANITIZE=ON && cmake --build build-asan -j && ctest --test-dir build-asan   # ASan + UBSan
 
@@ -283,7 +283,7 @@ python3 tools/simreport/simreport.py out/reader --lang zh    # HTML 报告：刷
 
 - GitHub Actions（`.github/workflows/sim.yml`）在每次推送 main、`claude/**` 和每个 PR 时运行：带 `-Werror` 的构建与全部测试，再跑 ASan/UBSan。
 - `s31-size.yml` 只能手动触发，用 ESP-IDF 编译基线与上游固件，看静态内存占用。
-- 33 项测试的组成见 [平台与模拟器 §3](system/platform-and-simulator.md)：
+- 34 项测试的组成见 [平台与模拟器 §3](system/platform-and-simulator.md)：
   - 模拟器自检（4 个档案）、死亡测试、两项确定性；
   - 主页、阅读、AI 提问、AI 工具调用、待机等场景；
   - 老化文件系统 + 最坏擦写、断电、上游管线复现、可移植性冒烟；
