@@ -1,0 +1,137 @@
+ink-sim: profile leaves 3 values at simulator defaults: display.frame_time_us display.gc16_full_clear_frames display.driver
+ink-sim: CloudZao Metalio E-Ink4 Plus (ESP32-S31, 4.7in 1216x684 EPD) | 2 cores @ 320 MHz | heap 96 KiB internal + 64 KiB DMA + 15872 KiB external | annotated CPU model
+[     0.014s] /user: blank flash, formatting LittleFS (1408 KiB)
+---- metrics (metalio-e-ink4-plus, 65.000 s virtual) ----
+  accel.motions                                0.00
+  ai.press_to_listening_visible_ms             n=1     p50=513.41     p95=513.41     max=513.41
+  ai.press_to_tone_heard_ms                    n=1     p50=51.36      p95=51.36      max=51.36
+  ai.presses                                   1.00
+  assets.dcache_hits                           3018.00
+  assets.dcache_misses                         351.00
+  assets.mapped_bytes                          3148222.00
+  audio.mic.captured_ms                        61965.00
+  audio.mic.lost_ms                            0.00
+  audio.mic.overruns                           0.00
+  audio.speaker.idle_ms                        0.00
+  audio.speaker.played_ms                      60.00
+  audio.speaker.underrun_ms                    0.00
+  audio.speaker.underruns                      0.00
+  board.motor_starts                           0.00
+  board.shared_power_warnings                  0.00
+  board.shared_reset_warnings                  0.00
+  boot.platform_ready_ms                       n=1     p50=132.27     p95=132.27     max=132.27
+  bt.commands                                  2.00
+  bt.lost_commands                             0.00
+  bt.mode                                      1.00
+  cpu.core0.busy_pct                           5.83
+  cpu.core1.busy_pct                           18.35
+  display.busy_ms                              3208.68
+  display.dispatch.FAST                        2.00
+  display.dispatch.FLASH_UI+clean              2.00
+  display.dispatch.UI                          2.00
+  display.feeder_slack_lines_min               45.92
+  display.ghost_level_final                    0.14
+  display.ghost_level_max                      0.15
+  display.phase_ms                             n=198   p50=12.44      p95=12.86      max=12.86
+  display.pmic.attempts                        5.00
+  display.pmic.ioexp_errors                    0.00
+  display.pmic.order_warnings                  0.00
+  display.pmic.power_ups                       5.00
+  display.pmic.retries                         0.00
+  display.pmic.vcom_mismatches                 0.00
+  display.pmic.vcom_mv                         1200.00
+  display.power_up_ms                          n=5     p50=136.04     p95=140.68     max=140.68
+  display.power_ups                            5.00
+  display.prefill_ms                           n=198   p50=0.60       p95=1.02       max=1.02
+  display.queue_wait_ms                        n=6     p50=0.02       p95=62.11      max=62.11
+  display.update_ms.DU                         n=2     p50=325.74     p95=416.77     max=416.77
+  display.update_ms.GC16                       n=2     p50=586.40     p95=826.85     max=826.85
+  display.update_ms.GL16                       n=2     p50=484.74     p95=529.93     max=529.93
+  display.updates.DU                           2.00
+  display.updates.GC16                         2.00
+  display.updates.GL16                         2.00
+  display.wakes                                3.00
+  display.wakes_unused                         1.00
+  flash.cpu_stall_total_ms                     174.17
+  flash.erases                                 3.00
+  flash.formats                                1.00
+  flash.max_sector_erases                      1.00
+  flash.max_stall_ms                           57.76
+  flash.mount_ms                               n=1     p50=115.35     p95=115.35     max=115.35
+  flash.program_bytes                          512.00
+  flash.programs                               4.00
+  flash.reads                                  23.00
+  flash.stall_ms                               n=30    p50=0.04       p95=57.54      max=57.76
+  hub.binary_bytes                             112004.00
+  hub.errors.2                                 1.00
+  hub.idle_disconnects                         1.00
+  hub.online_ms                                n=1     p50=1904.95    p95=1904.95    max=1904.95
+  hub.requests.ai.listen                       1.00
+  hub.requests.hello                           1.00
+  i2c.busy_ms                                  215.52
+  i2c.wait_ms.accel                            n=10    p50=0.01       p95=0.01       max=0.01
+  i2c.wait_ms.charger                          n=6     p50=0.01       p95=0.01       max=0.01
+  i2c.wait_ms.fuel-gauge                       n=50    p50=0.01       p95=0.01       max=0.01
+  i2c.wait_ms.io-expander                      n=54    p50=0.01       p95=0.01       max=1.79
+  i2c.wait_ms.pmic                             n=64    p50=0.01       p95=0.01       max=0.01
+  i2c.wait_ms.touch                            n=6     p50=0.01       p95=0.01       max=0.01
+  input.key_delivery_ms                        n=6     p50=20.01      p95=30.64      max=30.64
+  input.touches                                0.00
+  mem.dma.failed_allocs                        0.00
+  mem.dma.free_bytes                           47216.00
+  mem.dma.largest_free_min_bytes               33288.00
+  mem.dma.min_free_bytes                       33392.00
+  mem.dma.total_bytes                          64000.00
+  mem.external.failed_allocs                   0.00
+  mem.external.free_bytes                      13456232.00
+  mem.external.largest_free_min_bytes          13451976.00
+  mem.external.min_free_bytes                  13448000.00
+  mem.external.total_bytes                     16251392.00
+  mem.internal.failed_allocs                   0.00
+  mem.internal.free_bytes                      5368.00
+  mem.internal.largest_free_min_bytes          88.00
+  mem.internal.min_free_bytes                  552.00
+  mem.internal.total_bytes                     95232.00
+  mem.internal_total.largest_free_min_bytes    33288.00
+  mem.internal_total.min_free_bytes            38400.00
+  modem.resets                                 0.00
+  modem.slot_changes                           0.00
+  net.bytes_down                               61.00
+  net.bytes_up                                 112792.00
+  net.connect_failures                         0.00
+  net.connect_ms                               n=1     p50=1725.48    p95=1725.48    max=1725.48
+  net.connects                                 1.00
+  net.dropped_uplink                           2.00
+  net.messages_down                            1.00
+  net.messages_up                              752.00
+  net.radio_resumes                            1.00
+  net.retransmissions                          6.00
+  power.avg_ma.active                          189.05
+  power.avg_ma.locked                          198.65
+  power.avg_ma_estimate                        196.87
+  power.charge_current_set_ma                  960.00
+  power.locked_sleep_share                     0.00
+  power.mah.audio.in                           0.21
+  power.mah.audio.out                          0.00
+  power.mah.cpu.base                           0.45
+  power.mah.cpu_busy                           0.09
+  power.mah.display.rails                      0.01
+  power.mah.display.refresh                    0.03
+  power.mah.modem                              2.77
+  power.mah_total                              3.55
+  power.sleep_ms                               0.00
+  power.sleeps                                 0.00
+  power.state_ms.active                        12103.34
+  power.state_ms.idle                          0.00
+  power.state_ms.locked                        52896.66
+  power.to_locked                              1.00
+  rtc.alarms                                   0.00
+  sd.busy_spikes                               0.00
+  sd.ops                                       0.00
+  sd.read_bytes                                0.00
+  sd.write_bytes                               0.00
+  ui.action_to_first_change_ms                 n=1     p50=337.09     p95=337.09     max=337.09
+  ui.action_to_visible_ms                      n=1     p50=785.03     p95=785.03     max=785.03
+  ui.action_to_visible_ms.FLASH_UI             n=1     p50=785.03     p95=785.03     max=785.03
+ink-sim: ok, 65.000 s virtual, report /Users/bytedance/Documents/Workspace/ink-audit-1/build-audit/audit-scenarios/ai_held_dismiss/metrics.json
+[     0.132] ink: starting system services

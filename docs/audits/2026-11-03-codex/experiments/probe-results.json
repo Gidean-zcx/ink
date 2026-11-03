@@ -1,0 +1,236 @@
+[
+  {
+    "name": "storage_cache",
+    "command": [
+      "/Users/bytedance/Documents/Workspace/ink-audit-1/build-audit/audit-probe",
+      "--profile",
+      "profiles/metalio-plus.json",
+      "--out",
+      "/Users/bytedance/Documents/Workspace/ink-audit-1/build-audit/audit-probes/storage_cache",
+      "--end",
+      "20s",
+      "--no-random-outages"
+    ],
+    "exit_code": 0,
+    "output": [
+      "[     1.740s] AUDIT begin storage_cache",
+      "[     1.890s] AUDIT writes=0,0 pending=0 failed=0 durable_size=1200 read_n=3 first=4f4c44",
+      "[     1.890s] AUDIT complete storage_cache"
+    ]
+  },
+  {
+    "name": "tca_shadow",
+    "command": [
+      "/Users/bytedance/Documents/Workspace/ink-audit-1/build-audit/audit-probe",
+      "--profile",
+      "profiles/metalio-plus.json",
+      "--out",
+      "/Users/bytedance/Documents/Workspace/ink-audit-1/build-audit/audit-probes/tca_shadow",
+      "--end",
+      "20s",
+      "--no-random-outages"
+    ],
+    "exit_code": 0,
+    "output": [
+      "[     1.740s] AUDIT begin tca_shadow",
+      "[     1.790s] AUDIT failed_motor_write=-2 motor_before=0 amp_write=0 motor_after=1",
+      "[     1.790s] AUDIT complete tca_shadow"
+    ]
+  },
+  {
+    "name": "input_fault",
+    "command": [
+      "/Users/bytedance/Documents/Workspace/ink-audit-1/build-audit/audit-probe",
+      "--profile",
+      "profiles/metalio-plus.json",
+      "--out",
+      "/Users/bytedance/Documents/Workspace/ink-audit-1/build-audit/audit-probes/input_fault",
+      "--end",
+      "20s",
+      "--no-random-outages"
+    ],
+    "exit_code": 0,
+    "output": [
+      "[     1.740s] AUDIT begin input_fault",
+      "[     2.060s] AUDIT key=2 pressed=1 latency_ms=120.102",
+      "[     4.250s] AUDIT keys_delivered=1",
+      "[     4.250s] AUDIT complete input_fault"
+    ]
+  },
+  {
+    "name": "touch_blocks_power",
+    "command": [
+      "/Users/bytedance/Documents/Workspace/ink-audit-1/build-audit/audit-probe",
+      "--profile",
+      "profiles/metalio-plus.json",
+      "--out",
+      "/Users/bytedance/Documents/Workspace/ink-audit-1/build-audit/audit-probes/touch_blocks_power",
+      "--end",
+      "20s",
+      "--no-random-outages"
+    ],
+    "exit_code": 0,
+    "output": [
+      "[     1.740s] AUDIT begin touch_blocks_power",
+      "[     3.773s] AUDIT key=2 pressed=1 latency_ms=1833.269",
+      "[     3.773s] AUDIT key=2 pressed=0 latency_ms=1433.270",
+      "[     4.250s] AUDIT keys_delivered=2",
+      "[     4.250s] AUDIT complete touch_blocks_power"
+    ]
+  },
+  {
+    "name": "camera_cut",
+    "command": [
+      "/Users/bytedance/Documents/Workspace/ink-audit-1/build-audit/audit-probe",
+      "--profile",
+      "profiles/metalio-plus.json",
+      "--out",
+      "/Users/bytedance/Documents/Workspace/ink-audit-1/build-audit/audit-probes/camera_cut",
+      "--end",
+      "20s",
+      "--no-random-outages"
+    ],
+    "exit_code": 0,
+    "output": [
+      "[     1.740s] AUDIT begin camera_cut",
+      "[     1.950s] AUDIT camera supply cut rc=0 powered=0",
+      "[     2.370s] AUDIT capture_rc=614400 elapsed_ms=630.572 powered=0",
+      "[     2.370s] AUDIT complete camera_cut"
+    ]
+  },
+  {
+    "name": "camera_timeout",
+    "command": [
+      "/Users/bytedance/Documents/Workspace/ink-audit-1/build-audit/audit-probe",
+      "--profile",
+      "profiles/metalio-plus.json",
+      "--out",
+      "/Users/bytedance/Documents/Workspace/ink-audit-1/build-audit/audit-probes/camera_timeout",
+      "--end",
+      "20s",
+      "--no-random-outages"
+    ],
+    "exit_code": 0,
+    "output": [
+      "[     1.740s] AUDIT begin camera_timeout",
+      "[     2.371s] AUDIT capture_rc=614400 elapsed_ms=631.257 powered=1",
+      "[     2.371s] AUDIT complete camera_timeout"
+    ]
+  },
+  {
+    "name": "audio_unpowered",
+    "command": [
+      "/Users/bytedance/Documents/Workspace/ink-audit-1/build-audit/audit-probe",
+      "--profile",
+      "profiles/metalio-plus.json",
+      "--out",
+      "/Users/bytedance/Documents/Workspace/ink-audit-1/build-audit/audit-probes/audio_unpowered",
+      "--end",
+      "20s",
+      "--no-random-outages"
+    ],
+    "exit_code": 0,
+    "output": [
+      "[     1.740s] AUDIT begin audio_unpowered",
+      "[     2.250s] AUDIT capture_start=0 bt_powered=0 samples=7920",
+      "[     2.250s] AUDIT complete audio_unpowered"
+    ]
+  },
+  {
+    "name": "sleep_rails",
+    "command": [
+      "/Users/bytedance/Documents/Workspace/ink-audit-1/build-audit/audit-probe",
+      "--profile",
+      "profiles/metalio-plus.json",
+      "--out",
+      "/Users/bytedance/Documents/Workspace/ink-audit-1/build-audit/audit-probes/sleep_rails",
+      "--end",
+      "20s",
+      "--no-random-outages"
+    ],
+    "exit_code": 0,
+    "output": [
+      "[     1.740s] AUDIT begin sleep_rails",
+      "[     2.140s] AUDIT sleeping=1 bt_powered=1 modem_registered=1 motor=1 camera_power=1 load_ma=1.500",
+      "[     2.990s] AUDIT woke=1 bt_powered=1 motor=1",
+      "[     2.990s] AUDIT complete sleep_rails"
+    ]
+  },
+  {
+    "name": "ai_held_dismiss",
+    "command": [
+      "/Users/bytedance/Documents/Workspace/ink-audit-1/build-audit/ink-sim",
+      "--profile",
+      "profiles/metalio-plus.json",
+      "--script",
+      "/Users/bytedance/Documents/Workspace/ink-audit-1/docs/audits/2026-11-03-codex/experiments/ai_held_dismiss.script",
+      "--assets",
+      "/Users/bytedance/Documents/Workspace/ink-audit-1/build-audit/assets",
+      "--content",
+      "/Users/bytedance/Documents/Workspace/ink-audit-1/build-audit/test-content",
+      "--out",
+      "/Users/bytedance/Documents/Workspace/ink-audit-1/build-audit/audit-scenarios/ai_held_dismiss",
+      "--no-random-outages"
+    ],
+    "exit_code": 0
+  },
+  {
+    "name": "ai_held_control",
+    "command": [
+      "/Users/bytedance/Documents/Workspace/ink-audit-1/build-audit/ink-sim",
+      "--profile",
+      "profiles/metalio-plus.json",
+      "--script",
+      "/Users/bytedance/Documents/Workspace/ink-audit-1/docs/audits/2026-11-03-codex/experiments/ai_held_control.script",
+      "--assets",
+      "/Users/bytedance/Documents/Workspace/ink-audit-1/build-audit/assets",
+      "--content",
+      "/Users/bytedance/Documents/Workspace/ink-audit-1/build-audit/test-content",
+      "--out",
+      "/Users/bytedance/Documents/Workspace/ink-audit-1/build-audit/audit-scenarios/ai_held_control",
+      "--no-random-outages"
+    ],
+    "exit_code": 0
+  },
+  {
+    "name": "display_fault",
+    "command": [
+      "/Users/bytedance/Documents/Workspace/ink-audit-1/build-audit/audit-probe",
+      "--profile",
+      "profiles/metalio-plus.json",
+      "--out",
+      "/Users/bytedance/Documents/Workspace/ink-audit-1/build-audit/audit-probes/display_fault",
+      "--end",
+      "20s",
+      "--no-random-outages"
+    ],
+    "exit_code": 0,
+    "output": [
+      "[     1.740s] AUDIT begin display_fault",
+      "[     2.840s] AUDIT display_submit=1 wait_rc=0 callback_ok=1 panel_ready=0",
+      "[     2.840s] AUDIT complete display_fault"
+    ]
+  },
+  {
+    "name": "nt26_unicode",
+    "command": [
+      "/Users/bytedance/Documents/Workspace/ink-audit-1/build-audit/audit-probe",
+      "--profile",
+      "profiles/metalio-plus.json",
+      "--out",
+      "/Users/bytedance/Documents/Workspace/ink-audit-1/build-audit/audit-probes/nt26_unicode",
+      "--end",
+      "20s",
+      "--no-random-outages"
+    ],
+    "exit_code": 0,
+    "output": [
+      "[     1.740s] AUDIT begin nt26_unicode",
+      "[     1.740s] AUDIT nt26_hex=D8000041 rc=3 bytes=e2918100",
+      "[     1.740s] AUDIT nt26_hex=DC00 rc=3 bytes=edb08000",
+      "[     1.740s] AUDIT nt26_hex=004 rc=0 bytes=00000000",
+      "[     1.740s] AUDIT nt26_utf8=C080 rc=4 hex=0000",
+      "[     1.740s] AUDIT complete nt26_unicode"
+    ]
+  }
+]

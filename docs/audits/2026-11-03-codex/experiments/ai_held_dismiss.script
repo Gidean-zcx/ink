@@ -1,0 +1,6 @@
+# Release AI after closing the sheet while still recording.
+@3s mic speech
+@3s key ai 3000ms
+@4s key home
+@12s key power
+@65s end

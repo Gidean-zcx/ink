@@ -1,0 +1,5 @@
+# Control: the same press/release without closing the sheet.
+@3s mic speech
+@3s key ai 3000ms
+@12s key power
+@65s end

@@ -1,0 +1,395 @@
+{
+  "generated_at_utc": "2026-11-03T10:47:44.205759+00:00",
+  "status": "passed",
+  "scope": "Artifact integrity checks only; not a semantic or security proof.",
+  "audit_commit": "3a435a59812b9d3d40fbe04358c9b17ef4eb15bf",
+  "upstream_commit": "690a023c66862af103a3187464373ee7c5efcd14",
+  "findings": {
+    "total": 24,
+    "by_severity": {
+      "高": 10,
+      "中": 8,
+      "严重": 5,
+      "低": 1
+    }
+  },
+  "checks": [
+    {
+      "check": "findings_schema",
+      "passed": true
+    },
+    {
+      "check": "ids_unique_and_contiguous",
+      "passed": true
+    },
+    {
+      "check": "severity_counts",
+      "passed": true,
+      "details": {
+        "高": 10,
+        "中": 8,
+        "严重": 5,
+        "低": 1
+      }
+    },
+    {
+      "check": "area_and_evidence_values",
+      "passed": true
+    },
+    {
+      "check": "report_sections_A_to_I",
+      "passed": true
+    },
+    {
+      "check": "I_is_last_top_level_section",
+      "passed": true
+    },
+    {
+      "check": "report_findings_match",
+      "passed": true
+    },
+    {
+      "check": "no_known_exit_code_typo",
+      "passed": true
+    },
+    {
+      "check": "source_files_and_line_numbers",
+      "passed": true,
+      "details": {
+        "checked": 104,
+        "invalid": []
+      }
+    },
+    {
+      "check": "required_artifacts_exist",
+      "passed": true,
+      "details": {
+        "count": 37
+      }
+    },
+    {
+      "check": "markdown_local_links",
+      "passed": true,
+      "details": {
+        "checked": 38,
+        "invalid": []
+      }
+    },
+    {
+      "check": "report_experiment_references",
+      "passed": true,
+      "details": {
+        "checked": 20
+      }
+    },
+    {
+      "check": "all_12_probe_modes_completed",
+      "passed": true
+    },
+    {
+      "check": "probe_excerpts_match_logs",
+      "passed": true
+    },
+    {
+      "check": "gui_restart_observation",
+      "passed": true,
+      "details": {
+        "boots_and_pipe_fds": [
+          [
+            1,
+            4
+          ],
+          [
+            2,
+            6
+          ],
+          [
+            3,
+            8
+          ],
+          [
+            4,
+            10
+          ]
+        ],
+        "process_exit_code": 0
+      }
+    },
+    {
+      "check": "ctest.log_35_passed",
+      "passed": true
+    },
+    {
+      "check": "asan-ctest.log_35_passed",
+      "passed": true
+    },
+    {
+      "check": "memory_observation",
+      "passed": true
+    },
+    {
+      "check": "ai_control_metrics",
+      "passed": true
+    },
+    {
+      "check": "original_configure_failure_preserved",
+      "passed": true
+    },
+    {
+      "check": "python_syntax_without_cache_writes",
+      "passed": true,
+      "details": []
+    },
+    {
+      "check": "root_commit_fixed",
+      "passed": true
+    },
+    {
+      "check": "upstream_commit_fixed",
+      "passed": true
+    },
+    {
+      "check": "tracked_product_changes_absent",
+      "passed": true,
+      "details": {
+        "working_diff_exit": 0,
+        "staged_diff_exit": 0
+      }
+    },
+    {
+      "check": "visible_changes_only_in_audit_directory",
+      "passed": true,
+      "details": [
+        "?? docs/audits/2026-11-03-codex/"
+      ]
+    },
+    {
+      "check": "no_symlink_artifacts",
+      "passed": true
+    },
+    {
+      "check": "each_artifact_under_1MB",
+      "passed": true,
+      "details": {
+        "count_excluding_validation": 40,
+        "largest_bytes": 117298,
+        "limit_bytes": 1000000
+      }
+    },
+    {
+      "check": "limited_sensitive_format_scan",
+      "passed": true,
+      "details": {
+        "mac_address_format": 0,
+        "imei_or_iccid_length_decimal": 0,
+        "api_secret_format": 0,
+        "private_key_block": 0,
+        "bearer_credential": 0,
+        "sensitive_label_value": 0
+      }
+    }
+  ],
+  "files_excluding_this_validation_json": [
+    {
+      "path": "TASK.md",
+      "bytes": 6507,
+      "sha256": "7a0fc464ff94060b08c72e89c2f460f5f1899f2c300e1149b523ed972495fb61"
+    },
+    {
+      "path": "experiments/README.md",
+      "bytes": 10393,
+      "sha256": "96c9718df5effd9ccfb6e1c7c5280291019b101d263cb83759a78493ed8376c7"
+    },
+    {
+      "path": "experiments/ai_held_control.log",
+      "bytes": 9072,
+      "sha256": "babdf40f9d894be051187e3c5e3d2db698b931e0956711971ffbeaa381700813"
+    },
+    {
+      "path": "experiments/ai_held_control.script",
+      "bytes": 118,
+      "sha256": "90d4ae879f02e2e9d0a9993aeb4ac69b36db82e626fe86d847224a68e4fd9d10"
+    },
+    {
+      "path": "experiments/ai_held_dismiss.log",
+      "bytes": 8577,
+      "sha256": "48aefce69060a8d745b626a5b9450ed46a0d56834dd76d62cc413bd07cb641be"
+    },
+    {
+      "path": "experiments/ai_held_dismiss.script",
+      "bytes": 130,
+      "sha256": "c8a5fac476486dc38e21d9d32289e0eb45d3f5b3b54e19dee287427c9262566a"
+    },
+    {
+      "path": "experiments/asan-build.log",
+      "bytes": 117298,
+      "sha256": "b754af4290f026e604157343c11714cd3a5bff38e5089053e83f98b1ef751723"
+    },
+    {
+      "path": "experiments/asan-configure.log",
+      "bytes": 18542,
+      "sha256": "fe00308bcbec7206bf2abb7b579fc3ba6cb3dab3ec51b876a9e27db86f40f52f"
+    },
+    {
+      "path": "experiments/asan-ctest.log",
+      "bytes": 4751,
+      "sha256": "9cda51552141b5dd3efed0e37283bb2bfa560d0ab6110dae9109975d4ec5d48a"
+    },
+    {
+      "path": "experiments/audio_unpowered.log",
+      "bytes": 5807,
+      "sha256": "72e2b70bd8ad06c8e1f6c0ffe42bd86715561ffe8b3526cc555355c9de4db875"
+    },
+    {
+      "path": "experiments/build.log",
+      "bytes": 110816,
+      "sha256": "6a20c37147ebacd027a4fec3e7cdd24bf2cd760b33e3646c75baa06b4d4141f5"
+    },
+    {
+      "path": "experiments/build_probes.py",
+      "bytes": 1341,
+      "sha256": "d4f832d6d049f78886827e948d846cf190de77d5f61d122b5836bb024ab84bca"
+    },
+    {
+      "path": "experiments/camera_cut.log",
+      "bytes": 5994,
+      "sha256": "d44816028e4339191e600cbe8299acae154a5c771d07d2677453034aae569889"
+    },
+    {
+      "path": "experiments/camera_timeout.log",
+      "bytes": 5901,
+      "sha256": "5ae3746add833ae5369521961fa15b8dc561c7a5aa768502ff3a46bdd399897e"
+    },
+    {
+      "path": "experiments/collect_results.py",
+      "bytes": 1405,
+      "sha256": "3cc1255cbae76f52b7f04c1e9778e55d97ac63ea1c2d981639043808f61e5e9b"
+    },
+    {
+      "path": "experiments/configure-second.log",
+      "bytes": 9147,
+      "sha256": "18b98f2f2953f6a2ec3ca69d5df70caaa5dcae15c17d2f9513d89fda20b4a39d"
+    },
+    {
+      "path": "experiments/configure-workaround.log",
+      "bytes": 6473,
+      "sha256": "30c8a8b8ffa6a98fdc5cf4daba872095e772bfdd47c113a1ad65388bba98e7a2"
+    },
+    {
+      "path": "experiments/configure.log",
+      "bytes": 21322,
+      "sha256": "430de591c0a369753493d0dabe64e5c8e6f633106eea6df747b020c772c3c8c7"
+    },
+    {
+      "path": "experiments/ctest.log",
+      "bytes": 4746,
+      "sha256": "9e08822cf2094ab571c4728b776009b2ac943731571783c7e8629570a0def5ca"
+    },
+    {
+      "path": "experiments/display_fault.log",
+      "bytes": 7161,
+      "sha256": "85ea209482bd51be3aaa1d373ae1cc645859e6a07d492acad4bf52207e90a283"
+    },
+    {
+      "path": "experiments/enable_objc.cmake",
+      "bytes": 189,
+      "sha256": "a6dcc9e174514afb615b7bf36143b02ab65559921f1f8e1d8c4ef7eaf66ec57e"
+    },
+    {
+      "path": "experiments/evidence-summary.json",
+      "bytes": 29740,
+      "sha256": "3b907081fbe4777f3bee7db616629c9965e63645e665f19640450bc3d2982048"
+    },
+    {
+      "path": "experiments/gui-restart-results.json",
+      "bytes": 1282,
+      "sha256": "d17eb4e513a2bd40e6e45540711f215177981c71a94f0c0529f0f74aad148b48"
+    },
+    {
+      "path": "experiments/gui-restart.log",
+      "bytes": 26142,
+      "sha256": "5eab0232227e75c6662676d067c8f10fb21b2c55989bf7bf7215fe7a2ef093c6"
+    },
+    {
+      "path": "experiments/gui_restart_probe.py",
+      "bytes": 1730,
+      "sha256": "35a19f0a04f58e47a62da9e1f188654081f100900d71635360270ee0eb1372e3"
+    },
+    {
+      "path": "experiments/input_fault.log",
+      "bytes": 5920,
+      "sha256": "ae574ae85db0c90f3343cc7b1117ab5b310b3aa8571907fb32acd3d3ae55cf3b"
+    },
+    {
+      "path": "experiments/memory.log",
+      "bytes": 301,
+      "sha256": "623d382050e0fc985ca78def422f321aac92d206e0a190eed6e90d6d6581e0b2"
+    },
+    {
+      "path": "experiments/memory_probe.c",
+      "bytes": 1505,
+      "sha256": "10b58e3988b22b4a104d4da4008288acef71efed6472ccb663d7bef8285870a6"
+    },
+    {
+      "path": "experiments/nt26_unicode.log",
+      "bytes": 6104,
+      "sha256": "4e8faa9f585045337c90b10b9af23f5394f6ca8458610b94fd7bf69372b7bcdb"
+    },
+    {
+      "path": "experiments/probe-build.log",
+      "bytes": 749,
+      "sha256": "3d464f1e07f3793fda49120651a48ceb62104624ee5f308f9ff16c1370961dbf"
+    },
+    {
+      "path": "experiments/probe-results.json",
+      "bytes": 7739,
+      "sha256": "507ff18dcaed9b9d70688695738b73eb7b7b8893c96956983350f7b79a28e4e1"
+    },
+    {
+      "path": "experiments/probe.c",
+      "bytes": 7228,
+      "sha256": "f0a8bc32a9c64bb369365d8e7bc2d5df1c8c9ec14b287b9205f6623820ebacb9"
+    },
+    {
+      "path": "experiments/run_probes.py",
+      "bytes": 2149,
+      "sha256": "bb755650de34bbea4f4425467efac068837d5be72b4084e5441980555206aac8"
+    },
+    {
+      "path": "experiments/sleep_rails.log",
+      "bytes": 6038,
+      "sha256": "fde2cbd2f6e41430d48a329b2e7107e806352a2727cf00a113912e0520d6bc8d"
+    },
+    {
+      "path": "experiments/storage_cache.log",
+      "bytes": 6113,
+      "sha256": "b8d11b44330e1589263fac4713b425d95843d95f134dc6983a44a87cff39f00d"
+    },
+    {
+      "path": "experiments/tca_shadow.log",
+      "bytes": 5863,
+      "sha256": "2fd72490165d6c9cbabb0928c8612e3e81a883d9efb24ce5d6d90dfee87ecc33"
+    },
+    {
+      "path": "experiments/touch_blocks_power.log",
+      "bytes": 6042,
+      "sha256": "b074c27646a20ea6f7e300d68c7c59eee3202a670ec0d5aaee9522c046ee2e57"
+    },
+    {
+      "path": "experiments/validate_artifacts.py",
+      "bytes": 10320,
+      "sha256": "fe6cecd7b32ce86666883b1ad03a2db74368eb6bab664b9b21f4598b0fced995"
+    },
+    {
+      "path": "findings.json",
+      "bytes": 23285,
+      "sha256": "1fe6b90d8e07840709f1d8a616fb4d3b235381e2f75f57433d4cc0dc1fdf3771"
+    },
+    {
+      "path": "report.md",
+      "bytes": 52696,
+      "sha256": "fcf274f721f0d8678040ae8f4265face0b4096f390ceb1b1a3848f505c5e3842"
+    }
+  ],
+  "errors": []
+}

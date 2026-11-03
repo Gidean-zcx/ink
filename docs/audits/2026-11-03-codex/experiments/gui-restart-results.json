@@ -1,0 +1,70 @@
+{
+  "command": [
+    "/Users/bytedance/Documents/Workspace/ink-audit-1/build-audit/ink-sim-gui",
+    "--data",
+    "/Users/bytedance/Documents/Workspace/ink-audit-1/build-audit/audit-gui-restart",
+    "--speed",
+    "4",
+    "--no-random-outages",
+    "--gui-click",
+    "1070,133@4",
+    "--gui-exit-after",
+    "15",
+    "--gui-screenshot",
+    "/Users/bytedance/Documents/Workspace/ink-audit-1/build-audit/audit-gui-restart/window.png"
+  ],
+  "samples": [
+    {
+      "boots": 1,
+      "pipe_fds": 4,
+      "lsof_rc": 0
+    },
+    {
+      "boots": 1,
+      "pipe_fds": 4,
+      "lsof_rc": 0
+    },
+    {
+      "boots": 1,
+      "pipe_fds": 4,
+      "lsof_rc": 0
+    },
+    {
+      "boots": 2,
+      "pipe_fds": 6,
+      "lsof_rc": 0
+    },
+    {
+      "boots": 2,
+      "pipe_fds": 6,
+      "lsof_rc": 0
+    },
+    {
+      "boots": 2,
+      "pipe_fds": 6,
+      "lsof_rc": 0
+    },
+    {
+      "boots": 3,
+      "pipe_fds": 8,
+      "lsof_rc": 0
+    },
+    {
+      "boots": 3,
+      "pipe_fds": 8,
+      "lsof_rc": 0
+    },
+    {
+      "boots": 3,
+      "pipe_fds": 8,
+      "lsof_rc": 0
+    },
+    {
+      "boots": 4,
+      "pipe_fds": 10,
+      "lsof_rc": 0
+    }
+  ],
+  "termination": "SIGTERM sent only to this audit subprocess after bounded observation",
+  "exit_code": 0
+}

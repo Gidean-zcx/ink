@@ -1,0 +1,101 @@
+ink-sim: profile leaves 3 values at simulator defaults: display.frame_time_us display.gc16_full_clear_frames display.driver
+ink-sim: CloudZao Metalio E-Ink4 Plus (ESP32-S31, 4.7in 1216x684 EPD) | 2 cores @ 320 MHz | heap 96 KiB internal + 64 KiB DMA + 15872 KiB external | annotated CPU model
+[     0.014s] /user: blank flash, formatting LittleFS (1408 KiB)
+[     1.740s] AUDIT begin storage_cache
+[     1.890s] AUDIT writes=0,0 pending=0 failed=0 durable_size=1200 read_n=3 first=4f4c44
+[     1.890s] AUDIT complete storage_cache
+---- metrics (metalio-e-ink4-plus, 1.891 s virtual) ----
+  accel.motions                                0.00
+  assets.dcache_hits                           0.00
+  assets.dcache_misses                         0.00
+  audio.mic.captured_ms                        0.00
+  audio.mic.lost_ms                            0.00
+  audio.mic.overruns                           0.00
+  audio.speaker.idle_ms                        0.00
+  audio.speaker.played_ms                      0.00
+  audio.speaker.underrun_ms                    0.00
+  audio.speaker.underruns                      0.00
+  board.motor_starts                           0.00
+  board.shared_power_warnings                  0.00
+  board.shared_reset_warnings                  0.00
+  boot.platform_ready_ms                       n=1     p50=132.27     p95=132.27     max=132.27
+  bt.commands                                  2.00
+  bt.lost_commands                             0.00
+  bt.mode                                      1.00
+  cpu.core0.busy_pct                           13.14
+  cpu.core1.busy_pct                           13.15
+  display.busy_ms                              0.00
+  display.ghost_level_final                    0.00
+  display.pmic.attempts                        0.00
+  display.pmic.ioexp_errors                    0.00
+  display.pmic.order_warnings                  0.00
+  display.pmic.power_ups                       0.00
+  display.pmic.retries                         0.00
+  display.pmic.vcom_mismatches                 0.00
+  display.pmic.vcom_mv                         0.00
+  flash.cpu_stall_total_ms                     245.31
+  flash.erases                                 4.00
+  flash.formats                                1.00
+  flash.max_sector_erases                      1.00
+  flash.max_stall_ms                           59.75
+  flash.mount_ms                               n=1     p50=115.35     p95=115.35     max=115.35
+  flash.program_bytes                          2560.00
+  flash.programs                               13.00
+  flash.reads                                  97.00
+  flash.stall_ms                               n=114   p50=0.04       p95=1.37       max=59.75
+  i2c.busy_ms                                  23.01
+  i2c.wait_ms.accel                            n=10    p50=0.01       p95=0.01       max=0.01
+  i2c.wait_ms.charger                          n=6     p50=0.01       p95=0.01       max=0.01
+  i2c.wait_ms.fuel-gauge                       n=3     p50=0.01       p95=0.01       max=0.01
+  i2c.wait_ms.io-expander                      n=6     p50=0.01       p95=0.01       max=0.01
+  i2c.wait_ms.touch                            n=3     p50=0.01       p95=0.01       max=0.01
+  input.touches                                0.00
+  mem.dma.failed_allocs                        0.00
+  mem.dma.free_bytes                           60416.00
+  mem.dma.largest_free_min_bytes               60408.00
+  mem.dma.min_free_bytes                       60416.00
+  mem.dma.total_bytes                          64000.00
+  mem.external.failed_allocs                   0.00
+  mem.external.free_bytes                      13737112.00
+  mem.external.largest_free_min_bytes          13734544.00
+  mem.external.min_free_bytes                  13734688.00
+  mem.external.total_bytes                     16251392.00
+  mem.internal.failed_allocs                   0.00
+  mem.internal.free_bytes                      7176.00
+  mem.internal.largest_free_min_bytes          1744.00
+  mem.internal.min_free_bytes                  2208.00
+  mem.internal.total_bytes                     95232.00
+  mem.internal_total.largest_free_min_bytes    60408.00
+  mem.internal_total.min_free_bytes            62624.00
+  modem.resets                                 0.00
+  modem.slot_changes                           0.00
+  net.bytes_down                               0.00
+  net.bytes_up                                 0.00
+  net.connect_failures                         0.00
+  net.connects                                 0.00
+  net.messages_down                            0.00
+  net.messages_up                              0.00
+  net.radio_resumes                            0.00
+  power.avg_ma.active                          37.51
+  power.avg_ma_estimate                        37.51
+  power.charge_current_set_ma                  960.00
+  power.mah.cpu.base                           0.01
+  power.mah.cpu_busy                           0.00
+  power.mah.display.rails                      0.00
+  power.mah.modem                              0.00
+  power.mah_total                              0.02
+  power.sleep_ms                               0.00
+  power.sleeps                                 0.00
+  power.state_ms.active                        1890.96
+  power.state_ms.idle                          0.00
+  power.state_ms.locked                        0.00
+  rtc.alarms                                   0.00
+  sd.busy_spikes                               0.00
+  sd.ops                                       0.00
+  sd.read_bytes                                0.00
+  sd.write_bytes                               0.00
+  storage.read_ms                              n=1     p50=0.00       p95=0.00       max=0.00
+  storage.reads_from_ram                       1.00
+  storage.wait_for_idle_ms                     n=2     p50=0.05       p95=0.05       max=0.05
+  storage.write_ms                             n=2     p50=3.45       p95=70.20      max=70.20
+ink-sim: ok, 1.891 s virtual, report /Users/bytedance/Documents/Workspace/ink-audit-1/build-audit/audit-probes/storage_cache/metrics.json

@@ -1,0 +1,115 @@
+ink-sim: profile leaves 3 values at simulator defaults: display.frame_time_us display.gc16_full_clear_frames display.driver
+ink-sim: CloudZao Metalio E-Ink4 Plus (ESP32-S31, 4.7in 1216x684 EPD) | 2 cores @ 320 MHz | heap 96 KiB internal + 64 KiB DMA + 15872 KiB external | annotated CPU model
+[     0.014s] /user: blank flash, formatting LittleFS (1408 KiB)
+[     1.740s] AUDIT begin display_fault
+[     2.590s] WARN display: panel power-up failed (no PMIC) after 3 retries; the device would enter safe mode
+[     2.590s] WARN display: waveform started without panel power (rails or VCOM not good)
+[     2.840s] AUDIT display_submit=1 wait_rc=0 callback_ok=1 panel_ready=0
+[     2.840s] AUDIT complete display_fault
+[     2.840s] WARN task 'main' may overflow its 4096-byte stack (pessimistic host-based estimate 4832 bytes; verify with -fstack-usage on the RISC-V build)
+---- metrics (metalio-e-ink4-plus, 2.841 s virtual) ----
+  accel.motions                                0.00
+  assets.dcache_hits                           0.00
+  assets.dcache_misses                         0.00
+  audio.mic.captured_ms                        0.00
+  audio.mic.lost_ms                            0.00
+  audio.mic.overruns                           0.00
+  audio.speaker.idle_ms                        0.00
+  audio.speaker.played_ms                      0.00
+  audio.speaker.underrun_ms                    0.00
+  audio.speaker.underruns                      0.00
+  board.motor_starts                           0.00
+  board.shared_power_warnings                  0.00
+  board.shared_reset_warnings                  0.00
+  boot.platform_ready_ms                       n=1     p50=132.27     p95=132.27     max=132.27
+  bt.commands                                  2.00
+  bt.lost_commands                             0.00
+  bt.mode                                      1.00
+  cpu.core0.busy_pct                           11.53
+  cpu.core1.busy_pct                           10.96
+  display.busy_ms                              1100.52
+  display.feeder_slack_lines_min               47.97
+  display.ghost_level_final                    0.09
+  display.ghost_level_max                      0.09
+  display.phase_ms                             n=20    p50=12.00      p95=12.00      max=12.00
+  display.pmic.attempts                        4.00
+  display.pmic.ioexp_errors                    0.00
+  display.pmic.order_warnings                  0.00
+  display.pmic.power_ups                       0.00
+  display.pmic.retries                         3.00
+  display.pmic.vcom_mismatches                 0.00
+  display.pmic.vcom_mv                         0.00
+  display.power_failures                       1.00
+  display.power_up_ms                          n=1     p50=850.37     p95=850.37     max=850.37
+  display.power_ups                            1.00
+  display.prefill_ms                           n=20    p50=0.07       p95=0.07       max=0.07
+  display.queue_wait_ms                        n=1     p50=0.02       p95=0.02       max=0.02
+  display.unpowered_waveforms                  1.00
+  display.update_ms.DU                         n=1     p50=1098.12    p95=1098.12    max=1098.12
+  display.updates.DU                           1.00
+  flash.cpu_stall_total_ms                     115.18
+  flash.erases                                 2.00
+  flash.formats                                1.00
+  flash.max_sector_erases                      1.00
+  flash.max_stall_ms                           57.54
+  flash.mount_ms                               n=1     p50=115.35     p95=115.35     max=115.35
+  flash.program_bytes                          256.00
+  flash.programs                               2.00
+  flash.reads                                  12.00
+  flash.stall_ms                               n=16    p50=0.04       p95=57.54      max=57.54
+  i2c.busy_ms                                  236.39
+  i2c.timeouts                                 4.00
+  i2c.wait_ms.accel                            n=10    p50=0.01       p95=0.01       max=0.01
+  i2c.wait_ms.charger                          n=6     p50=0.01       p95=0.01       max=0.01
+  i2c.wait_ms.fuel-gauge                       n=5     p50=0.01       p95=0.01       max=0.01
+  i2c.wait_ms.io-expander                      n=21    p50=0.01       p95=0.01       max=0.01
+  i2c.wait_ms.pmic                             n=4     p50=0.01       p95=0.01       max=0.01
+  i2c.wait_ms.touch                            n=3     p50=0.01       p95=0.01       max=0.01
+  input.touches                                0.00
+  mem.dma.failed_allocs                        0.00
+  mem.dma.free_bytes                           64000.00
+  mem.dma.largest_free_min_bytes               64000.00
+  mem.dma.min_free_bytes                       64000.00
+  mem.dma.total_bytes                          64000.00
+  mem.external.failed_allocs                   0.00
+  mem.external.free_bytes                      14574080.00
+  mem.external.largest_free_min_bytes          14570960.00
+  mem.external.min_free_bytes                  14571008.00
+  mem.external.total_bytes                     16251392.00
+  mem.internal.failed_allocs                   0.00
+  mem.internal.free_bytes                      10312.00
+  mem.internal.largest_free_min_bytes          5336.00
+  mem.internal.min_free_bytes                  5672.00
+  mem.internal.total_bytes                     95232.00
+  mem.internal_total.largest_free_min_bytes    64000.00
+  mem.internal_total.min_free_bytes            69672.00
+  modem.resets                                 0.00
+  modem.slot_changes                           0.00
+  net.bytes_down                               0.00
+  net.bytes_up                                 0.00
+  net.connect_failures                         0.00
+  net.connects                                 0.00
+  net.messages_down                            0.00
+  net.messages_up                              0.00
+  net.radio_resumes                            0.00
+  power.avg_ma.active                          41.08
+  power.avg_ma_estimate                        41.08
+  power.charge_current_set_ma                  960.00
+  power.mah.cpu.base                           0.02
+  power.mah.cpu_busy                           0.00
+  power.mah.display.rails                      0.00
+  power.mah.display.refresh                    0.00
+  power.mah.modem                              0.01
+  power.mah_total                              0.03
+  power.sleep_ms                               0.00
+  power.sleeps                                 0.00
+  power.state_ms.active                        2840.82
+  power.state_ms.idle                          0.00
+  power.state_ms.locked                        0.00
+  rtc.alarms                                   0.00
+  sd.busy_spikes                               0.00
+  sd.ops                                       0.00
+  sd.read_bytes                                0.00
+  sd.write_bytes                               0.00
+  warnings.count                               3.00
+ink-sim: ok, 2.841 s virtual, report /Users/bytedance/Documents/Workspace/ink-audit-1/build-audit/audit-probes/display_fault/metrics.json

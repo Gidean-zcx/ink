@@ -1,0 +1,394 @@
+[
+  {
+    "id": "AUD2-001",
+    "severity": "高",
+    "area": "A",
+    "title": "按住 AI 键时关闭面板，录音不会随松键结束",
+    "evidence_type": "复现",
+    "locations": [
+      "system/ai/ai_service.c:122",
+      "system/ai/ai_service.c:418",
+      "system/audio/audio_service.c:483",
+      "tests/scenarios/ai_dismiss.script:1"
+    ],
+    "impact": "录音和编码持续消耗资源，关闭界面、松键及锁屏均不能结束该次采集；对讲边界与用户预期不符。模拟中上传仍发生，是否到达真实服务器未验证。",
+    "recommendation": "将采集会话的取消从 AI 面板可见性中分离；dismiss 必须结束或取消采集、清空该轮待发帧并释放电源持有。松键清理应幂等，不能被 !AI.open 提前返回跳过。",
+    "reproduce": "python3 docs/audits/2026-11-03-codex/experiments/run_probes.py ai_held_dismiss ai_held_control"
+  },
+  {
+    "id": "AUD2-002",
+    "severity": "高",
+    "area": "A",
+    "title": "小文件被大文件替换后，存储服务仍返回旧缓存",
+    "evidence_type": "复现",
+    "locations": [
+      "system/storage/storage_service.c:100",
+      "system/storage/storage_service.c:180",
+      "system/storage/storage_service.c:365"
+    ],
+    "impact": "写入成功且作业已落盘，后续读取仍看见旧内容，直到缓存淘汰或重启；使用该内容继续写回可能覆盖新数据。实验确认读一致性错误，没有宣称已复现掉电丢失。",
+    "recommendation": "写入任何新版本时先使旧缓存失效；超过缓存上限或缓存分配失败时也必须失效。为排队写入、预取和读缓存建立版本检查。",
+    "reproduce": "python3 docs/audits/2026-11-03-codex/experiments/run_probes.py storage_cache"
+  },
+  {
+    "id": "AUD2-003",
+    "severity": "高",
+    "area": "A",
+    "title": "中枢连接状态跨任务裸读写，发送限额检查与入队不原子",
+    "evidence_type": "代码核查",
+    "locations": [
+      "system/net/hub_link.c:77",
+      "system/net/hub_link.c:309",
+      "system/net/hub_link.c:467",
+      "system/net/hub_link.c:475"
+    ],
+    "impact": "UI、音频、power 与 hub 任务之间没有完整同步；在真实双核执行中构成 C 数据竞争，64 位 demand_until 在 RV32 上还可能撕裂。多个生产者可以都通过 96 KiB 检查后超额入队。具体断连或超额峰值未在本次运行中复现。",
+    "recommendation": "连接状态、需求截止时间统一由 hub 任务通过消息更新，或用明确定义的锁/原子快照；发送额度在同一锁区间预留并入队，失败回滚预留。",
+    "reproduce": "静态追踪 ink_hub_demand、ink_hub_online、enqueue_tx、hub_task 和 on_power；用真正并行的 OSAL 测试后端或目标双核压力测试验证，不以 VTK 顺序执行通过作为无竞争证据。"
+  },
+  {
+    "id": "AUD2-004",
+    "severity": "中",
+    "area": "B",
+    "title": "WebSocket 和计时器缺少可依赖的销毁、回调静默契约",
+    "evidence_type": "代码核查",
+    "locations": [
+      "platform/include/ink/hal_net.h:70",
+      "platform/include/ink/hal_net.h:82",
+      "ports/sim/hal_net_sim.c:887",
+      "ports/sim/hal_net_sim.c:941",
+      "ports/sim/hal_net_sim.c:1066",
+      "platform/include/ink/osal.h:163",
+      "ports/sim/osal_sim.c:688"
+    ],
+    "impact": "真机端口无法仅凭头文件判断释放 ctx 的时机、主动关闭是否应回调 CLOSED、能否从回调中关闭，以及计时器删除是否等待正在运行的回调。不同实现容易产生晚回调、死锁或悬空上下文。",
+    "recommendation": "逐接口规定调用上下文、线程安全、对象与参数生命周期、关闭是否阻塞、回调内允许的操作；分开 request_close 与 join/free，或明确同步静默保证，并提供端口共享契约测试。",
+    "reproduce": "对照上述头文件与实现；特别检查 hal_ws_free 返回与网络任务继续执行之间的窗口，以及 timer_task 出队后删除计时器的窗口。本项未做动态 UAF 复现。"
+  },
+  {
+    "id": "AUD2-005",
+    "severity": "中",
+    "area": "B",
+    "title": "内存能力接口把 DMA 固定为内部 RAM，无法表达官方摄像头的 PSRAM DMA 缓冲",
+    "evidence_type": "复现",
+    "locations": [
+      "platform/include/ink/osal.h:62",
+      "sim/mem/pools.c:249",
+      "platform/include/ink/hal_camera.h:23",
+      "upstream@690a023:main/boards/common/camera/dvp_camera.cc:144"
+    ],
+    "impact": "新增摄像头端口不能直接复用当前能力组合；若端口另分配 DMA 帧再拷贝，600 KiB 级额外峰值和拷贝成本不会出现在当前模型中。尚未实现真机端口，因此这是移植接口缺口。",
+    "recommendation": "约定 DMA 能力与内存位置的组合及对齐/缓存同步要求，或让 camera HAL 明确拥有传输缓冲并向调用方复制；模型与资源预算必须采用同一方案。无效能力组合应拒绝，不能静默忽略 EXTERNAL。",
+    "reproduce": "python3 docs/audits/2026-11-03-codex/experiments/build_probes.py；build-audit/audit-memory-probe"
+  },
+  {
+    "id": "AUD2-006",
+    "severity": "高",
+    "area": "C",
+    "title": "TCA9555 写失败后保留新影子值，后续无关写入意外补发旧操作",
+    "evidence_type": "复现",
+    "locations": [
+      "drivers/tca9555/tca9555.c:24",
+      "drivers/board/metalio_board.c:31"
+    ],
+    "impact": "调用者已收到失败，但后续更改另一位可能开启马达、功放或改变电源脚；硬件状态和调用方认知不一致。没有进行真实硬件损伤实验。",
+    "recommendation": "区分期望状态与已确认硬件状态；失败后读回/标记未知并显式恢复。不要在下一次无关 set 中悄悄携带失败事务；I2C 超时可能部分执行，简单回滚软件值也不足以替代读回。",
+    "reproduce": "python3 docs/audits/2026-11-03-codex/experiments/run_probes.py tca_shadow"
+  },
+  {
+    "id": "AUD2-007",
+    "severity": "高",
+    "area": "C",
+    "title": "屏电源驱动绕过整板 TCA9555 锁",
+    "evidence_type": "代码核查",
+    "locations": [
+      "drivers/board/metalio_board.c:26",
+      "drivers/board/metalio_epd_power.c:9",
+      "ports/sim/hal_display_sim.c:431",
+      "ports/sim/hal_display_sim.c:451",
+      "ports/sim/hal_power_sim.c:136",
+      "ports/sim/hal_audio_sim.c:333"
+    ],
+    "impact": "屏电源与马达/功放共用 Port0 影子寄存器，但读改写不受同一锁保护。真实并行下存在丢更新及先后顺序反转风险，涉及高压轨开关。实际丢写与硬件后果未动态复现。",
+    "recommendation": "所有端口位更新经过唯一的板级仲裁入口；把短事务读改写锁与整段长电源时序的资源租约分开，避免简单把几百毫秒延时全部放在总线锁中。",
+    "reproduce": "追踪 metalio_ioexp 返回的全局对象、epd_power 的 pins、metalio_board_set 的锁；检查当前调用点没有在 epd_power_on/off 外取得同一板锁。"
+  },
+  {
+    "id": "AUD2-008",
+    "severity": "严重",
+    "area": "C",
+    "title": "GC2145 驱动省略 VGA 窗口与完整初始化，模型却保证 VGA 出图",
+    "evidence_type": "代码核查",
+    "locations": [
+      "drivers/gc2145/gc2145.c:20",
+      "drivers/gc2145/gc2145.h:7",
+      "ports/sim/dev_camera.c:59",
+      "ports/sim/dev_camera.c:102",
+      "upstream@690a023:main/boards/common/camera/dvp_camera.cc:130",
+      "upstream@690a023:main/boards/common/camera/gc2145_vga_settings.h:695"
+    ],
+    "impact": "现有“640×480 正确出图”的测试不能证明驱动能原样用于设备；摄像头初始化、接收和资源预算的关键结论存在乐观偏差。严重级针对关键模型误导，不代表本次实测了真机故障。",
+    "recommendation": "在可移植驱动中采用有出处的完整寄存器序列；模型至少校验窗口、格式、时钟/流状态和帧完成条件；DVP/MCLK、DMA 与资源租约由 HAL 实施并计账。",
+    "reproduce": "比较 gc2145_start 的短序列与 upstream 固定提交的 kGc2145Vga，特别是窗口 0x90–0x98；现有 selftest-board-wiring 仍通过。"
+  },
+  {
+    "id": "AUD2-009",
+    "severity": "中",
+    "area": "C",
+    "title": "NT26 新增短信编码器接受非法 UTF-8 与不成对代理项",
+    "evidence_type": "复现",
+    "locations": [
+      "drivers/nt26/nt26.c:83",
+      "drivers/nt26/nt26.c:113",
+      "drivers/nt26/nt26.c:162"
+    ],
+    "impact": "短信或 AT 响应的畸形文本被静默变成其他字符、非法 UTF-8 或空串，影响展示和协议解析；本次没有复现越界读写。",
+    "recommendation": "复用已严格校验的 UTF-8 解码，检查十六进制长度、每个字符和代理项配对；明确 UCS2 与 UTF-16 的差异以及非 BMP 字符处理策略。",
+    "reproduce": "python3 docs/audits/2026-11-03-codex/experiments/run_probes.py nt26_unicode"
+  },
+  {
+    "id": "AUD2-010",
+    "severity": "高",
+    "area": "D",
+    "title": "内存空闲量漏算分块头开销，零容量池仍凭空产生可用空间",
+    "evidence_type": "复现",
+    "locations": [
+      "sim/mem/pools.c:149",
+      "sim/mem/pools.c:195",
+      "sim/mem/pools.c:219",
+      "sim/mem/pools.c:334"
+    ],
+    "impact": "free/min_free 及合并的内部内存低水位偏乐观，资源门槛会使用错误余量；零容量或已被固定开销吃光的区域还能分配。没有据此推断当前默认场景已在真机 OOM。",
+    "recommendation": "按 TLSF 实际空闲块之和或包含分裂元数据的增量核算 free/低水位；零可用容量应建立空池而非最小 1024 B。主机与目标分配器的头开销需要另行校准并标注。",
+    "reproduce": "python3 docs/audits/2026-11-03-codex/experiments/build_probes.py；build-audit/audit-memory-probe"
+  },
+  {
+    "id": "AUD2-011",
+    "severity": "中",
+    "area": "D",
+    "title": "分配归属表按累计插入数扩容，反复分配释放导致主机内存增长",
+    "evidence_type": "复现",
+    "locations": [
+      "sim/mem/pools.c:63",
+      "sim/mem/pools.c:75",
+      "sim/mem/pools.c:104"
+    ],
+    "impact": "模拟设备的 live allocation 已归零，宿主的归属哈希表仍随分配历史增长，长时间交互/压力测试消耗越来越多主机内存；这不属于目标 SRAM 泄漏。",
+    "recommendation": "分别维护 live 与 tombstone 数量；复用墓碑时不要增加占用槽数，适时同容量重散列，再按实际存活量决定扩容。",
+    "reproduce": "build-audit/audit-memory-probe（编译说明见 experiments/README.md）"
+  },
+  {
+    "id": "AUD2-012",
+    "severity": "严重",
+    "area": "E",
+    "title": "实体键绕过寄存器读值，GPIO2/RTC 中断链也有旁路",
+    "evidence_type": "复现",
+    "locations": [
+      "ports/sim/hal_input_sim.c:239",
+      "ports/sim/hal_input_sim.c:502",
+      "ports/sim/dev_tca9555.c:11",
+      "ports/sim/dev_tca9555.c:46",
+      "ports/sim/dev_rtc_accel.c:66"
+    ],
+    "impact": "总线读取失败或硬件接法/方向寄存器不正确，模型仍可能向系统报告有效按键或唤醒，削弱共享 GPIO2、错误恢复和睡眠唤醒的验证能力。",
+    "recommendation": "环境只改变物理引脚，驱动必须从成功读取的寄存器推导状态与去抖；同时建模两端口 INT，并由实际电平与 MCU 唤醒配置产生 RTC 唤醒，不从器件直接调用系统唤醒。",
+    "reproduce": "python3 docs/audits/2026-11-03-codex/experiments/run_probes.py input_fault"
+  },
+  {
+    "id": "AUD2-013",
+    "severity": "高",
+    "area": "E",
+    "title": "按住触摸时，电源和音量实体键被堵到松手",
+    "evidence_type": "复现",
+    "locations": [
+      "ports/sim/hal_input_sim.c:494",
+      "ports/sim/hal_input_sim.c:525"
+    ],
+    "impact": "手指持续停在屏幕或盖板键上时，POWER/VOL 事件延迟可随保持时间增长；与“按键仍及时送达”的注释和交互目标不符。",
+    "recommendation": "触摸轮询每轮同时处理 exp_irq/exp_confirm，或拆成独立服务任务并共享合适的总线仲裁；给持续触摸期间实体键的最大延迟设置回归门槛。",
+    "reproduce": "python3 docs/audits/2026-11-03-codex/experiments/run_probes.py touch_blocks_power"
+  },
+  {
+    "id": "AUD2-014",
+    "severity": "严重",
+    "area": "E",
+    "title": "休眠仅修改电流账，不真正停用已建模的电源与外设",
+    "evidence_type": "复现",
+    "locations": [
+      "ports/sim/hal_power_sim.c:298",
+      "ports/sim/hal_power_sim.c:331",
+      "ports/sim/hal_power_sim.c:363",
+      "drivers/board/metalio_epd_power.c:83",
+      "profiles/metalio-plus.json:287"
+    ],
+    "impact": "休眠电流、断电后外设恢复、P14 重新上电后音频模式重建等关键结论被绕过。即使脚仍使能，统计仍可显示最低休眠电流；这些数字不能作为接线与关闭流程已正确的证据。",
+    "recommendation": "睡眠 HAL 执行真实驱动序列并保留必要资源租约，由引脚和器件状态决定耗电；拒绝仍有活动外设的休眠。将模型状态断言和电流估计分开测试。",
+    "reproduce": "python3 docs/audits/2026-11-03-codex/experiments/run_probes.py sleep_rails"
+  },
+  {
+    "id": "AUD2-015",
+    "severity": "严重",
+    "area": "E",
+    "title": "I2S 音频模型不依赖 BH1098G 电源、模式和时钟",
+    "evidence_type": "复现",
+    "locations": [
+      "ports/sim/hal_audio_sim.c:148",
+      "ports/sim/hal_audio_sim.c:228",
+      "ports/sim/hal_audio_sim.c:286",
+      "ports/sim/dev_tca9555.c:89",
+      "platform/include/ink/hal_audio.h:9"
+    ],
+    "impact": "BH1098G 断电后，ESP 作为 I2S 从机仍被模型报告为持续收到音频；共享电源循环后的模式恢复、失钟/停流以及音频故障恢复测试会得到错误成功结论。",
+    "recommendation": "将 RX/TX 传输推进绑定到 BH1098G 的电源、模式和外部时钟状态；失去时钟时停止 DMA 进度并走明确定义的超时/错误；系统或板级策略负责重新上电和恢复模式。",
+    "reproduce": "python3 docs/audits/2026-11-03-codex/experiments/run_probes.py audio_unpowered"
+  },
+  {
+    "id": "AUD2-016",
+    "severity": "高",
+    "area": "E",
+    "title": "摄像头采集中断电仍返回成功，timeout 未覆盖完整调用",
+    "evidence_type": "复现",
+    "locations": [
+      "ports/sim/dev_camera.c:40",
+      "ports/sim/dev_camera.c:102",
+      "ports/sim/dev_tca9555.c:66",
+      "platform/include/ink/hal_camera.h:23"
+    ],
+    "impact": "采集被断电/复位打断时可能给出伪造成功帧，调用者无法验证恢复；超时计量遗漏初始化与总线开销。",
+    "recommendation": "电源/复位边沿立即使传感器流失效；逐帧推进并检查完整帧条件，返回前校验状态；使用调用入口的绝对 deadline，并确保每条失败路径停止流和释放资源。",
+    "reproduce": "python3 docs/audits/2026-11-03-codex/experiments/run_probes.py camera_cut camera_timeout"
+  },
+  {
+    "id": "AUD2-017",
+    "severity": "严重",
+    "area": "E",
+    "title": "屏电源重试全部失败后仍回调显示成功并改变模拟屏幕",
+    "evidence_type": "复现",
+    "locations": [
+      "ports/sim/hal_display_sim.c:445",
+      "ports/sim/hal_display_sim.c:466",
+      "ports/sim/hal_display_sim.c:628",
+      "ports/sim/hal_display_sim.c:694",
+      "platform/include/ink/hal_display.h:91"
+    ],
+    "impact": "系统收到“物理稳定、可读”的成功结果，实际模型电源仍未就绪。警告不能代替失败回调，屏幕和延迟指标会给出虚假完成；无法验证上层刷新失败处理。",
+    "recommendation": "power_up 返回状态并中止该请求；保持物理屏幕不变，以 ok=false 通知服务，系统决定重试或降级。安全模式应有可验证行为，不应仅出现在警告文字里。",
+    "reproduce": "python3 docs/audits/2026-11-03-codex/experiments/run_probes.py display_fault"
+  },
+  {
+    "id": "AUD2-018",
+    "severity": "高",
+    "area": "F",
+    "title": "GUI 停止请求与摄像头计数跨主机线程访问未同步",
+    "evidence_type": "代码核查",
+    "locations": [
+      "sim/vtk/vtk.c:85",
+      "sim/vtk/vtk.c:438",
+      "sim/vtk/vtk.c:732",
+      "ports/sim/sim_gui.c:257",
+      "ports/sim/sim_gui.c:344",
+      "ports/sim/dev_camera.c:117"
+    ],
+    "impact": "UI 线程写 stop_req，调度线程以另一把锁读取，属于 C 数据竞争；摄像头采集数也从 GUI 直接读设备模型变量。可能造成停止请求不可见或异常观测，具体失效未复现。",
+    "recommendation": "停止位使用原子或一致的锁，或通过线程安全的外部事件通道投递；摄像头计数并入已有 Gm 保护的统计快照。以真正多线程的 TSAN/压力测试验证生命周期路径。",
+    "reproduce": "追踪 sim_gui_stop → vtk_stop 与 schedule_locked/realtime_wait_locked；对照 sim_gui_camera_captures 和模型写入。本次没有运行 TSAN，不能把 ASan/UBSan 全过当作无数据竞争。"
+  },
+  {
+    "id": "AUD2-019",
+    "severity": "高",
+    "area": "F",
+    "title": "Linux 摄像头未验证 mmap/缓冲边界，也忽略返回的行跨度",
+    "evidence_type": "代码核查",
+    "locations": [
+      "ports/sim/gui/host_camera_linux.c:26",
+      "ports/sim/gui/host_camera_linux.c:47",
+      "ports/sim/gui/host_camera_linux.c:89",
+      "ports/sim/gui/host_camera_linux.c:104"
+    ],
+    "impact": "合法带行填充的 YUYV 格式会出现错行；mmap 失败等情况下可能解引用无效指针。部分失败路径仍泄漏映射/帧或误报工作中。当前宿主为 macOS，未在真实 Linux 摄像头上复现。",
+    "recommendation": "验证查询/映射/入队/线程创建每一步，统一失败清理；按 bytesperline 转换，核对 index、bytesused 和映射长度；记录成功映射数量，close 时释放 frame 并复位状态。g_run 也应原子化或锁保护。",
+    "reproduce": "Linux 环境使用可控 V4L2 替身分别返回带 padding 的格式、MAP_FAILED、短帧和 pthread_create 失败。本次只作代码核查，不连接摄像头。"
+  },
+  {
+    "id": "AUD2-020",
+    "severity": "中",
+    "area": "F",
+    "title": "macOS 摄像头异步授权与关闭没有统一生命周期",
+    "evidence_type": "代码核查",
+    "locations": [
+      "ports/sim/gui/host_camera_mac.m:46",
+      "ports/sim/gui/host_camera_mac.m:73",
+      "ports/sim/gui/host_camera_mac.m:100"
+    ],
+    "impact": "授权完成回调可能在 close 之后再创建 session；g_session/g_status 在不同线程读写未统一串行化。帧内存本身有锁，但不能据此保证启动/停止安全。未触发真实权限弹窗或摄像头采集。",
+    "recommendation": "用串行控制队列管理 session 和状态，加入关闭标志或 generation；close 先使待授权/启动操作失效，再停止会话、排空回调并清理帧状态。",
+    "reproduce": "用授权回调替身构造 open → close → granted 交错，并验证关闭后不启动设备。本次为静态可达路径，未做真实授权实验。"
+  },
+  {
+    "id": "AUD2-021",
+    "severity": "中",
+    "area": "F",
+    "title": "GUI exec 重启继承旧日志描述符",
+    "evidence_type": "复现",
+    "locations": [
+      "ports/sim/gui/gui_main.cpp:86",
+      "ports/sim/gui/gui_main.cpp:108",
+      "ports/sim/gui/gui_main.cpp:122",
+      "ports/sim/gui/gui_main.cpp:1173"
+    ],
+    "impact": "反复点击重启逐次积累文件描述符，最终可能不能打开文件、管道或外设。正常使用重启按钮即可触发，无需真实设备。",
+    "recommendation": "为日志读端和备份描述符设置 close-on-exec；停止并回收日志线程，关闭 fd、释放 Pipe；处理 pipe/dup/pthread_create 失败。保留重启前 flush 和持久化确认。",
+    "reproduce": "python3 docs/audits/2026-11-03-codex/experiments/gui_restart_probe.py"
+  },
+  {
+    "id": "AUD2-022",
+    "severity": "中",
+    "area": "G",
+    "title": "任务指定的离线 macOS 构建配置在 Objective-C 初始化顺序上失败",
+    "evidence_type": "复现",
+    "locations": [
+      "CMakeLists.txt:200",
+      "CMakeLists.txt:215",
+      "CMakeLists.txt:247",
+      ".github/workflows/sim.yml:14"
+    ],
+    "impact": "在本机 CMake 4.4.4、AppleClang 17、没有系统 SDL2 的条件下，完全按 TASK 配置无法生成构建系统。Linux CI 使用系统 SDL2，未覆盖这个路径。",
+    "recommendation": "在顶层、SDL2 FetchContent 之前启用 APPLE 所需的 OBJC 语言；补 macOS 源码 SDL2 配置/构建验证，保留 Linux 测试。审计 workaround 只用于继续核查，不视作产品修复。",
+    "reproduce": "运行 TASK.md 第 4 节的原始 cmake 命令；见 experiments/configure.log。随后同一构建目录重复原命令仍失败，见 configure-second.log。"
+  },
+  {
+    "id": "AUD2-023",
+    "severity": "中",
+    "area": "H",
+    "title": "硬件对照的“21 项都一致”与实现和状态记录不符",
+    "evidence_type": "文档核查",
+    "locations": [
+      "docs/research/simulator/hardware-parity.md:7",
+      "docs/research/simulator/hardware-parity.md:16",
+      "docs/research/simulator/hardware-parity.md:35",
+      "docs/decisions/README.md:104",
+      "docs/requirements.md:88"
+    ],
+    "impact": "容易把已有模型或通过自检理解为驱动与硬件全部一致，并据此开始依赖错误资源/故障结论的详细框架设计；现行需求状态也无法可靠反映已完成内容。",
+    "recommendation": "按每个部件分列接线、正常行为、故障/电源耦合、资源、上游比对、实机验证；把本次失真条目降为部分。更新 R-034 的实施状态；保留明确标为历史的 S0 文本，不删除历史判断。",
+    "reproduce": "对照本报告 AUD2-008、012、014–017 与硬件表；检查 R-034 仍写“网络与音频模型未做”，而相关源码与 AI 场景均已存在。"
+  },
+  {
+    "id": "AUD2-024",
+    "severity": "低",
+    "area": "I",
+    "title": "构建目标与公开头文件未强制目录所表示的分层",
+    "evidence_type": "代码核查",
+    "locations": [
+      "CMakeLists.txt:55",
+      "CMakeLists.txt:97",
+      "CMakeLists.txt:121",
+      "CMakeLists.txt:142",
+      "ports/sim/sim.h:1",
+      "ports/sim/dev_camera.c:102"
+    ],
+    "impact": "当前便于纵切演示，但为真机复用驱动、替换 UI、单测模型时，需要复制源清单或依赖整个模拟器。目录重命名本身不能解决模型与 HAL 混合、服务与应用混合的依赖。",
+    "recommendation": "采用报告 I 节的目标目录与独立 CMake targets；先锁定行为基线，再机械搬迁，再缩小 PUBLIC include，最后分离混合实现。不要一次同时修 bug、改名和重写模型。",
+    "reproduce": "核对 ink_port_sim 同时编入芯片驱动、板级策略、HAL、脚本、metrics、hub 环境与 GUI bridge；ink_system 同时编入所有服务和两个 app。"
+  }
+]

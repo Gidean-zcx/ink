@@ -1,0 +1,1080 @@
+{
+  "audit-scenarios/ai_held_control": {
+    "status": "ok",
+    "virtual_time_s": 65.05,
+    "budget_violations": 0,
+    "srs_gaps": 0,
+    "warnings": [],
+    "metrics": {
+      "audio.mic.captured_ms": 3000,
+      "audio.speaker.played_ms": 20160,
+      "power.sleep_ms": 36279.986,
+      "power.locked_sleep_share": 0.6851945575096168,
+      "power.avg_ma.locked": 81.98126324407887,
+      "hub.binary_bytes": 7308,
+      "mem.internal_total.min_free_bytes": 38400,
+      "mem.internal_total.largest_free_min_bytes": 33288,
+      "input.key_delivery_ms": {
+        "count": 4,
+        "mean": 20.753,
+        "min": 20.01,
+        "p50": 20.01,
+        "p95": 21.496,
+        "p99": 21.496,
+        "max": 21.496
+      }
+    }
+  },
+  "audit-scenarios/ai_held_dismiss": {
+    "status": "ok",
+    "virtual_time_s": 65,
+    "budget_violations": 0,
+    "srs_gaps": 0,
+    "warnings": [],
+    "metrics": {
+      "audio.mic.captured_ms": 61965,
+      "audio.speaker.played_ms": 60,
+      "power.sleep_ms": 0,
+      "power.locked_sleep_share": 0,
+      "power.avg_ma.locked": 198.6537175150611,
+      "hub.binary_bytes": 112004,
+      "mem.internal_total.min_free_bytes": 38400,
+      "mem.internal_total.largest_free_min_bytes": 33288,
+      "input.key_delivery_ms": {
+        "count": 6,
+        "mean": 19.488167166666667,
+        "min": 1.491171,
+        "p50": 20.01,
+        "p95": 30.635832,
+        "p99": 30.635832,
+        "max": 30.635832
+      }
+    }
+  },
+  "audit-probes/audio_unpowered": {
+    "status": "ok",
+    "virtual_time_s": 2.250028,
+    "budget_violations": 0,
+    "srs_gaps": 0,
+    "warnings": [],
+    "metrics": {
+      "audio.mic.captured_ms": 495,
+      "audio.speaker.played_ms": 0,
+      "power.sleep_ms": 0,
+      "mem.internal_total.min_free_bytes": 62352,
+      "mem.internal_total.largest_free_min_bytes": 56312
+    }
+  },
+  "audit-probes/camera_cut": {
+    "status": "ok",
+    "virtual_time_s": 2.370643,
+    "budget_violations": 0,
+    "srs_gaps": 0,
+    "warnings": [],
+    "metrics": {
+      "audio.mic.captured_ms": 0,
+      "audio.speaker.played_ms": 0,
+      "power.sleep_ms": 0,
+      "mem.internal_total.min_free_bytes": 65576,
+      "mem.internal_total.largest_free_min_bytes": 64000
+    }
+  },
+  "audit-probes/camera_timeout": {
+    "status": "ok",
+    "virtual_time_s": 2.371274,
+    "budget_violations": 0,
+    "srs_gaps": 0,
+    "warnings": [],
+    "metrics": {
+      "audio.mic.captured_ms": 0,
+      "audio.speaker.played_ms": 0,
+      "power.sleep_ms": 0,
+      "mem.internal_total.min_free_bytes": 69672,
+      "mem.internal_total.largest_free_min_bytes": 64000
+    }
+  },
+  "audit-probes/display_fault": {
+    "status": "ok",
+    "virtual_time_s": 2.840821936,
+    "budget_violations": 0,
+    "srs_gaps": 0,
+    "warnings": [
+      "2.590s display: panel power-up failed (no PMIC) after 3 retries; the device would enter safe mode",
+      "2.590s display: waveform started without panel power (rails or VCOM not good)",
+      "2.840s task 'main' may overflow its 4096-byte stack (pessimistic host-based estimate 4832 bytes; verify with -fstack-usage on the RISC-V build)"
+    ],
+    "metrics": {
+      "audio.mic.captured_ms": 0,
+      "audio.speaker.played_ms": 0,
+      "power.sleep_ms": 0,
+      "display.power_failures": 1,
+      "display.unpowered_waveforms": 1,
+      "mem.internal_total.min_free_bytes": 69672,
+      "mem.internal_total.largest_free_min_bytes": 64000
+    }
+  },
+  "audit-probes/input_fault": {
+    "status": "ok",
+    "virtual_time_s": 4.250012,
+    "budget_violations": 0,
+    "srs_gaps": 0,
+    "warnings": [],
+    "metrics": {
+      "audio.mic.captured_ms": 0,
+      "audio.speaker.played_ms": 0,
+      "power.sleep_ms": 0,
+      "mem.internal_total.min_free_bytes": 69672,
+      "mem.internal_total.largest_free_min_bytes": 64000,
+      "input.key_delivery_ms": {
+        "count": 1,
+        "mean": 120.102,
+        "min": 120.102,
+        "p50": 120.102,
+        "p95": 120.102,
+        "p99": 120.102,
+        "max": 120.102
+      }
+    }
+  },
+  "audit-probes/nt26_unicode": {
+    "status": "ok",
+    "virtual_time_s": 1.740012,
+    "budget_violations": 0,
+    "srs_gaps": 0,
+    "warnings": [
+      "1.740s task 'main' may overflow its 4096-byte stack (pessimistic host-based estimate 6096 bytes; verify with -fstack-usage on the RISC-V build)"
+    ],
+    "metrics": {
+      "audio.mic.captured_ms": 0,
+      "audio.speaker.played_ms": 0,
+      "power.sleep_ms": 0,
+      "mem.internal_total.min_free_bytes": 69672,
+      "mem.internal_total.largest_free_min_bytes": 64000
+    }
+  },
+  "audit-probes/sleep_rails": {
+    "status": "ok",
+    "virtual_time_s": 2.990012,
+    "budget_violations": 0,
+    "srs_gaps": 0,
+    "warnings": [],
+    "metrics": {
+      "audio.mic.captured_ms": 0,
+      "audio.speaker.played_ms": 0,
+      "power.sleep_ms": 1002,
+      "mem.internal_total.min_free_bytes": 69672,
+      "mem.internal_total.largest_free_min_bytes": 64000
+    }
+  },
+  "audit-probes/storage_cache": {
+    "status": "ok",
+    "virtual_time_s": 1.8909569,
+    "budget_violations": 0,
+    "srs_gaps": 0,
+    "warnings": [],
+    "metrics": {
+      "audio.mic.captured_ms": 0,
+      "audio.speaker.played_ms": 0,
+      "power.sleep_ms": 0,
+      "mem.internal_total.min_free_bytes": 62624,
+      "mem.internal_total.largest_free_min_bytes": 60408
+    }
+  },
+  "audit-probes/tca_shadow": {
+    "status": "ok",
+    "virtual_time_s": 1.790704,
+    "budget_violations": 0,
+    "srs_gaps": 0,
+    "warnings": [],
+    "metrics": {
+      "audio.mic.captured_ms": 0,
+      "audio.speaker.played_ms": 0,
+      "power.sleep_ms": 0,
+      "mem.internal_total.min_free_bytes": 69672,
+      "mem.internal_total.largest_free_min_bytes": 64000
+    }
+  },
+  "audit-probes/touch_blocks_power": {
+    "status": "ok",
+    "virtual_time_s": 4.250012,
+    "budget_violations": 0,
+    "srs_gaps": 0,
+    "warnings": [],
+    "metrics": {
+      "audio.mic.captured_ms": 0,
+      "audio.speaker.played_ms": 0,
+      "power.sleep_ms": 0,
+      "mem.internal_total.min_free_bytes": 69672,
+      "mem.internal_total.largest_free_min_bytes": 64000,
+      "input.key_delivery_ms": {
+        "count": 2,
+        "mean": 1633.26925,
+        "min": 1433.2695,
+        "p50": 1433.2695,
+        "p95": 1833.269,
+        "p99": 1833.269,
+        "max": 1833.269
+      }
+    }
+  },
+  "test-out/aging": {
+    "status": "ok",
+    "virtual_time_s": 200,
+    "budget_violations": 0,
+    "srs_gaps": 0,
+    "warnings": [],
+    "metrics": {
+      "audio.mic.captured_ms": 0,
+      "audio.speaker.played_ms": 0,
+      "power.sleep_ms": 0,
+      "mem.internal_total.min_free_bytes": 64704,
+      "mem.internal_total.largest_free_min_bytes": 64000
+    }
+  },
+  "test-out/ai_ask-metalio-plus": {
+    "status": "ok",
+    "virtual_time_s": 88.85,
+    "budget_violations": 0,
+    "srs_gaps": 1,
+    "warnings": [],
+    "metrics": {
+      "audio.mic.captured_ms": 4500,
+      "audio.speaker.played_ms": 27120,
+      "power.sleep_ms": 0,
+      "hub.binary_bytes": 7688,
+      "mem.internal_total.min_free_bytes": 38400,
+      "mem.internal_total.largest_free_min_bytes": 33288,
+      "reader.page_turns": 1,
+      "ui.action_to_visible_ms.TEXT": {
+        "count": 1,
+        "mean": 709.144,
+        "min": 709.144,
+        "p50": 709.144,
+        "p95": 709.144,
+        "p99": 709.144,
+        "max": 709.144
+      },
+      "input.key_delivery_ms": {
+        "count": 12,
+        "mean": 18.93752566666667,
+        "min": 1.803,
+        "p50": 20.01,
+        "p95": 49.607626,
+        "p99": 49.607626,
+        "max": 49.607626
+      }
+    }
+  },
+  "test-out/ai_ask-metalio-plus-pqbn": {
+    "status": "ok",
+    "virtual_time_s": 88.85,
+    "budget_violations": 0,
+    "srs_gaps": 1,
+    "warnings": [],
+    "metrics": {
+      "audio.mic.captured_ms": 4500,
+      "audio.speaker.played_ms": 27495,
+      "power.sleep_ms": 0,
+      "hub.binary_bytes": 7504,
+      "mem.internal_total.min_free_bytes": 35800,
+      "mem.internal_total.largest_free_min_bytes": 30736,
+      "reader.page_turns": 2,
+      "ui.action_to_visible_ms.TEXT": {
+        "count": 2,
+        "mean": 790.438,
+        "min": 617.408,
+        "p50": 617.408,
+        "p95": 963.468,
+        "p99": 963.468,
+        "max": 963.468
+      },
+      "input.key_delivery_ms": {
+        "count": 14,
+        "mean": 22.26924685714286,
+        "min": 1.803,
+        "p50": 20.01,
+        "p95": 72.679905,
+        "p99": 72.679905,
+        "max": 72.679905
+      }
+    }
+  },
+  "test-out/ai_dismiss-metalio-plus": {
+    "status": "ok",
+    "virtual_time_s": 23.55,
+    "budget_violations": 0,
+    "srs_gaps": 0,
+    "warnings": [],
+    "metrics": {
+      "audio.mic.captured_ms": 1500,
+      "audio.speaker.played_ms": 60,
+      "power.sleep_ms": 0,
+      "hub.binary_bytes": 3568,
+      "mem.internal_total.min_free_bytes": 38400,
+      "mem.internal_total.largest_free_min_bytes": 33288,
+      "input.key_delivery_ms": {
+        "count": 4,
+        "mean": 17.940216,
+        "min": 0.772432,
+        "p50": 20.01,
+        "p95": 30.968432,
+        "p99": 30.968432,
+        "max": 30.968432
+      }
+    }
+  },
+  "test-out/ai_tools-metalio-plus": {
+    "status": "ok",
+    "virtual_time_s": 46.55,
+    "budget_violations": 0,
+    "srs_gaps": 0,
+    "warnings": [],
+    "metrics": {
+      "audio.mic.captured_ms": 4800,
+      "audio.speaker.played_ms": 9300,
+      "power.sleep_ms": 0,
+      "hub.binary_bytes": 11280,
+      "mem.internal_total.min_free_bytes": 38400,
+      "mem.internal_total.largest_free_min_bytes": 33288,
+      "reader.page_turns": 2,
+      "ui.action_to_visible_ms.TEXT": {
+        "count": 1,
+        "mean": 709.144,
+        "min": 709.144,
+        "p50": 709.144,
+        "p95": 709.144,
+        "p99": 709.144,
+        "max": 709.144
+      },
+      "input.key_delivery_ms": {
+        "count": 10,
+        "mean": 18.3694,
+        "min": 1.803,
+        "p50": 20.01,
+        "p95": 21.811,
+        "p99": 21.811,
+        "max": 21.811
+      }
+    }
+  },
+  "test-out/home_basic-metalio-plus": {
+    "status": "ok",
+    "virtual_time_s": 18.05,
+    "budget_violations": 0,
+    "srs_gaps": 0,
+    "warnings": [],
+    "metrics": {
+      "audio.mic.captured_ms": 0,
+      "audio.speaker.played_ms": 0,
+      "power.sleep_ms": 0,
+      "mem.internal_total.min_free_bytes": 55448,
+      "mem.internal_total.largest_free_min_bytes": 54816,
+      "ui.action_to_visible_ms.TEXT": {
+        "count": 7,
+        "mean": 600.729,
+        "min": 590.495,
+        "p50": 604.5,
+        "p95": 604.5,
+        "p99": 604.5,
+        "max": 604.5
+      },
+      "input.key_delivery_ms": {
+        "count": 12,
+        "mean": 11.812000000000003,
+        "min": 1.813,
+        "p50": 1.813,
+        "p95": 21.811,
+        "p99": 21.811,
+        "max": 21.811
+      }
+    }
+  },
+  "test-out/home_basic-metalio-plus-psram16": {
+    "status": "ok",
+    "virtual_time_s": 18.05,
+    "budget_violations": 0,
+    "srs_gaps": 0,
+    "warnings": [],
+    "metrics": {
+      "audio.mic.captured_ms": 0,
+      "audio.speaker.played_ms": 0,
+      "power.sleep_ms": 0,
+      "mem.internal_total.min_free_bytes": 55736,
+      "mem.internal_total.largest_free_min_bytes": 55128,
+      "ui.action_to_visible_ms.TEXT": {
+        "count": 7,
+        "mean": 575.6562857142856,
+        "min": 565.433,
+        "p50": 579.423,
+        "p95": 579.423,
+        "p99": 579.423,
+        "max": 579.423
+      },
+      "input.key_delivery_ms": {
+        "count": 12,
+        "mean": 11.812000000000003,
+        "min": 1.813,
+        "p50": 1.813,
+        "p95": 21.811,
+        "p99": 21.811,
+        "max": 21.811
+      }
+    }
+  },
+  "test-out/keys_overlap-metalio-plus": {
+    "status": "ok",
+    "virtual_time_s": 12.05,
+    "budget_violations": 0,
+    "srs_gaps": 0,
+    "warnings": [],
+    "metrics": {
+      "audio.mic.captured_ms": 0,
+      "audio.speaker.played_ms": 0,
+      "power.sleep_ms": 0,
+      "mem.internal_total.min_free_bytes": 55448,
+      "mem.internal_total.largest_free_min_bytes": 54816,
+      "reader.page_turns": 1,
+      "ui.action_to_visible_ms.TEXT": {
+        "count": 1,
+        "mean": 709.144,
+        "min": 709.144,
+        "p50": 709.144,
+        "p95": 709.144,
+        "p99": 709.144,
+        "max": 709.144
+      },
+      "input.key_delivery_ms": {
+        "count": 4,
+        "mean": 6.805,
+        "min": 1.803,
+        "p50": 1.803,
+        "p95": 21.811,
+        "p99": 21.811,
+        "max": 21.811
+      }
+    }
+  },
+  "test-out/portability-desktop-lcd": {
+    "status": "ok",
+    "virtual_time_s": 18.05,
+    "budget_violations": 0,
+    "srs_gaps": 0,
+    "warnings": [],
+    "metrics": {
+      "audio.mic.captured_ms": 0,
+      "audio.speaker.played_ms": 0,
+      "power.sleep_ms": 0,
+      "mem.internal_total.min_free_bytes": 83845784,
+      "mem.internal_total.largest_free_min_bytes": 67068208,
+      "ui.action_to_visible_ms.TEXT": {
+        "count": 7,
+        "mean": 41.710857142857144,
+        "min": 31.722,
+        "p50": 43.374,
+        "p95": 43.378,
+        "p99": 43.378,
+        "max": 43.378
+      },
+      "input.key_delivery_ms": {
+        "count": 12,
+        "mean": 20.0015,
+        "min": 20,
+        "p50": 20.002,
+        "p95": 20.002,
+        "p99": 20.002,
+        "max": 20.002
+      }
+    }
+  },
+  "test-out/portability-metalio-plus-pqbn": {
+    "status": "ok",
+    "virtual_time_s": 18.05,
+    "budget_violations": 0,
+    "srs_gaps": 0,
+    "warnings": [],
+    "metrics": {
+      "audio.mic.captured_ms": 0,
+      "audio.speaker.played_ms": 0,
+      "power.sleep_ms": 0,
+      "mem.internal_total.min_free_bytes": 52848,
+      "mem.internal_total.largest_free_min_bytes": 52264,
+      "ui.action_to_visible_ms.TEXT": {
+        "count": 7,
+        "mean": 279.2208571428572,
+        "min": 271.184,
+        "p50": 283.586,
+        "p95": 286.869,
+        "p99": 286.869,
+        "max": 286.869
+      },
+      "input.key_delivery_ms": {
+        "count": 12,
+        "mean": 11.817,
+        "min": 1.823,
+        "p50": 1.823,
+        "p95": 21.811,
+        "p99": 21.811,
+        "max": 21.811
+      }
+    }
+  },
+  "test-out/portability-pinenote-rk3566": {
+    "status": "ok",
+    "virtual_time_s": 18.05,
+    "budget_violations": 0,
+    "srs_gaps": 0,
+    "warnings": [],
+    "metrics": {
+      "audio.mic.captured_ms": 0,
+      "audio.speaker.played_ms": 0,
+      "power.sleep_ms": 0,
+      "mem.internal_total.min_free_bytes": 83845784,
+      "mem.internal_total.largest_free_min_bytes": 67068208,
+      "ui.action_to_visible_ms.TEXT": {
+        "count": 1,
+        "mean": 505.469,
+        "min": 505.469,
+        "p50": 505.469,
+        "p95": 505.469,
+        "p99": 505.469,
+        "max": 505.469
+      }
+    }
+  },
+  "test-out/pqbn_flash_pause": {
+    "status": "ok",
+    "virtual_time_s": 13.75,
+    "budget_violations": 0,
+    "srs_gaps": 0,
+    "warnings": [],
+    "metrics": {
+      "audio.mic.captured_ms": 0,
+      "audio.speaker.played_ms": 0,
+      "power.sleep_ms": 0,
+      "mem.internal_total.min_free_bytes": 52848,
+      "mem.internal_total.largest_free_min_bytes": 52264,
+      "reader.page_turns": 2,
+      "ui.action_to_visible_ms.TEXT": {
+        "count": 2,
+        "mean": 1022.95,
+        "min": 963.468,
+        "p50": 963.468,
+        "p95": 1082.432,
+        "p99": 1082.432,
+        "max": 1082.432
+      },
+      "input.key_delivery_ms": {
+        "count": 6,
+        "mean": 12.610996666666665,
+        "min": 1.803,
+        "p50": 6.397,
+        "p95": 21.811,
+        "p99": 21.811,
+        "max": 21.811
+      }
+    }
+  },
+  "test-out/reader_basic-aged": {
+    "status": "ok",
+    "virtual_time_s": 47.55,
+    "budget_violations": 0,
+    "srs_gaps": 1,
+    "warnings": [],
+    "metrics": {
+      "audio.mic.captured_ms": 0,
+      "audio.speaker.played_ms": 0,
+      "power.sleep_ms": 0,
+      "mem.internal_total.min_free_bytes": 55448,
+      "mem.internal_total.largest_free_min_bytes": 54816,
+      "reader.page_turns": 14,
+      "ui.action_to_visible_ms.TEXT": {
+        "count": 14,
+        "mean": 703.6257142857143,
+        "min": 682.72,
+        "p50": 709.308,
+        "p95": 723.013,
+        "p99": 723.013,
+        "max": 723.013
+      },
+      "input.key_delivery_ms": {
+        "count": 20,
+        "mean": 13.907291350000003,
+        "min": 1.803,
+        "p50": 6.397,
+        "p95": 21.811,
+        "p99": 40.836827,
+        "max": 40.836827
+      }
+    }
+  },
+  "test-out/reader_basic-metalio-plus": {
+    "status": "ok",
+    "virtual_time_s": 47.55,
+    "budget_violations": 0,
+    "srs_gaps": 1,
+    "warnings": [],
+    "metrics": {
+      "audio.mic.captured_ms": 0,
+      "audio.speaker.played_ms": 0,
+      "power.sleep_ms": 0,
+      "mem.internal_total.min_free_bytes": 55448,
+      "mem.internal_total.largest_free_min_bytes": 54816,
+      "reader.page_turns": 14,
+      "ui.action_to_visible_ms.TEXT": {
+        "count": 14,
+        "mean": 703.6257142857143,
+        "min": 682.72,
+        "p50": 709.308,
+        "p95": 723.013,
+        "p99": 723.013,
+        "max": 723.013
+      },
+      "input.key_delivery_ms": {
+        "count": 20,
+        "mean": 16.1592804,
+        "min": 1.803,
+        "p50": 11.813,
+        "p95": 21.811,
+        "p99": 75.876608,
+        "max": 75.876608
+      }
+    }
+  },
+  "test-out/reader_basic-metalio-plus-pqbn": {
+    "status": "ok",
+    "virtual_time_s": 47.55,
+    "budget_violations": 0,
+    "srs_gaps": 1,
+    "warnings": [],
+    "metrics": {
+      "audio.mic.captured_ms": 0,
+      "audio.speaker.played_ms": 0,
+      "power.sleep_ms": 0,
+      "mem.internal_total.min_free_bytes": 52848,
+      "mem.internal_total.largest_free_min_bytes": 52264,
+      "reader.page_turns": 14,
+      "ui.action_to_visible_ms.TEXT": {
+        "count": 14,
+        "mean": 901.1203571428572,
+        "min": 736.64,
+        "p50": 908.369,
+        "p95": 1003.016,
+        "p99": 1003.016,
+        "max": 1003.016
+      },
+      "input.key_delivery_ms": {
+        "count": 20,
+        "mean": 16.1592804,
+        "min": 1.803,
+        "p50": 11.813,
+        "p95": 21.811,
+        "p99": 75.876608,
+        "max": 75.876608
+      }
+    }
+  },
+  "test-out/reader_basic-metalio-plus-psram16": {
+    "status": "ok",
+    "virtual_time_s": 47.55,
+    "budget_violations": 0,
+    "srs_gaps": 1,
+    "warnings": [],
+    "metrics": {
+      "audio.mic.captured_ms": 0,
+      "audio.speaker.played_ms": 0,
+      "power.sleep_ms": 0,
+      "mem.internal_total.min_free_bytes": 55736,
+      "mem.internal_total.largest_free_min_bytes": 55128,
+      "reader.page_turns": 14,
+      "ui.action_to_visible_ms.TEXT": {
+        "count": 14,
+        "mean": 669.7619285714285,
+        "min": 649.531,
+        "p50": 676.102,
+        "p95": 678.374,
+        "p99": 678.374,
+        "max": 678.374
+      },
+      "input.key_delivery_ms": {
+        "count": 20,
+        "mean": 16.1577804,
+        "min": 1.803,
+        "p50": 11.823,
+        "p95": 21.811,
+        "p99": 75.876608,
+        "max": 75.876608
+      }
+    }
+  },
+  "test-out/reader_basic-panel-power-faults": {
+    "status": "ok",
+    "virtual_time_s": 47.55,
+    "budget_violations": 0,
+    "srs_gaps": 0,
+    "warnings": [],
+    "metrics": {
+      "audio.mic.captured_ms": 0,
+      "audio.speaker.played_ms": 0,
+      "power.sleep_ms": 0,
+      "mem.internal_total.min_free_bytes": 55448,
+      "mem.internal_total.largest_free_min_bytes": 54816,
+      "reader.page_turns": 14,
+      "ui.action_to_visible_ms.TEXT": {
+        "count": 14,
+        "mean": 761.3187857142857,
+        "min": 689.123,
+        "p50": 709.308,
+        "p95": 1031.241,
+        "p99": 1031.241,
+        "max": 1031.241
+      },
+      "input.key_delivery_ms": {
+        "count": 20,
+        "mean": 25.6552304,
+        "min": 1.803,
+        "p50": 21.811,
+        "p95": 55.707,
+        "p99": 75.876608,
+        "max": 75.876608
+      }
+    }
+  },
+  "test-out/reader_basic-upstream-pipeline": {
+    "status": "ok",
+    "virtual_time_s": 47.55,
+    "budget_violations": 0,
+    "srs_gaps": 0,
+    "warnings": [],
+    "metrics": {
+      "audio.mic.captured_ms": 0,
+      "audio.speaker.played_ms": 0,
+      "power.sleep_ms": 0,
+      "mem.internal_total.min_free_bytes": 55448,
+      "mem.internal_total.largest_free_min_bytes": 54816,
+      "reader.page_turns": 14,
+      "ui.action_to_visible_ms.TEXT": {
+        "count": 14,
+        "mean": 790.2475714285714,
+        "min": 767.493,
+        "p50": 796.124,
+        "p95": 809.981,
+        "p99": 809.981,
+        "max": 809.981
+      },
+      "input.key_delivery_ms": {
+        "count": 20,
+        "mean": 41.80975495,
+        "min": 1.803,
+        "p50": 21.811,
+        "p95": 83.85586,
+        "p99": 137.780608,
+        "max": 137.780608
+      }
+    }
+  },
+  "test-out/reader_continuous-metalio-plus": {
+    "status": "ok",
+    "virtual_time_s": 79.55,
+    "budget_violations": 0,
+    "srs_gaps": 0,
+    "warnings": [],
+    "metrics": {
+      "audio.mic.captured_ms": 0,
+      "audio.speaker.played_ms": 0,
+      "power.sleep_ms": 0,
+      "mem.internal_total.min_free_bytes": 55448,
+      "mem.internal_total.largest_free_min_bytes": 54816,
+      "reader.page_turns": 36,
+      "ui.action_to_visible_ms.TEXT": {
+        "count": 36,
+        "mean": 707.4844166666667,
+        "min": 696.878,
+        "p50": 709.473,
+        "p95": 711.044,
+        "p99": 711.723,
+        "max": 711.723
+      },
+      "input.key_delivery_ms": {
+        "count": 72,
+        "mean": 14.04019444444445,
+        "min": 1.803,
+        "p50": 6.397,
+        "p95": 21.811,
+        "p99": 21.811,
+        "max": 21.811
+      }
+    }
+  },
+  "test-out/reader_empty-metalio-plus": {
+    "status": "ok",
+    "virtual_time_s": 15.530002,
+    "budget_violations": 0,
+    "srs_gaps": 0,
+    "warnings": [],
+    "metrics": {
+      "audio.mic.captured_ms": 0,
+      "audio.speaker.played_ms": 0,
+      "power.sleep_ms": 0,
+      "mem.internal_total.min_free_bytes": 55448,
+      "mem.internal_total.largest_free_min_bytes": 54816,
+      "input.key_delivery_ms": {
+        "count": 6,
+        "mean": 11.808666666666667,
+        "min": 1.803,
+        "p50": 1.813,
+        "p95": 21.811,
+        "p99": 21.811,
+        "max": 21.811
+      }
+    }
+  },
+  "test-out/reader_rapid-metalio-plus": {
+    "status": "ok",
+    "virtual_time_s": 35.85,
+    "budget_violations": 0,
+    "srs_gaps": 0,
+    "warnings": [],
+    "metrics": {
+      "audio.mic.captured_ms": 0,
+      "audio.speaker.played_ms": 0,
+      "power.sleep_ms": 0,
+      "mem.internal_total.min_free_bytes": 55448,
+      "mem.internal_total.largest_free_min_bytes": 54816,
+      "reader.page_turns": 60,
+      "ui.action_to_visible_ms.TEXT": {
+        "count": 19,
+        "mean": 1728.194947368421,
+        "min": 709.134,
+        "p50": 1801.276,
+        "p95": 1996.057,
+        "p99": 1996.057,
+        "max": 1996.057
+      },
+      "input.key_delivery_ms": {
+        "count": 120,
+        "mean": 17.41595188333333,
+        "min": 0.561048,
+        "p50": 21.811,
+        "p95": 30.862292,
+        "p99": 31.583192,
+        "max": 31.593192
+      }
+    }
+  },
+  "test-out/selftest-board": {
+    "status": "ok",
+    "virtual_time_s": 16.04065,
+    "budget_violations": 0,
+    "srs_gaps": 0,
+    "warnings": [
+      "3.194s board: P12 low resets the touch controller AND the 4G modem (shared reset); the modem was registered",
+      "16.040s task 'board' may overflow its 4096-byte stack (pessimistic host-based estimate 4760 bytes; verify with -fstack-usage on the RISC-V build)"
+    ],
+    "metrics": {
+      "audio.mic.captured_ms": 0,
+      "audio.speaker.played_ms": 0,
+      "power.sleep_ms": 1797.976,
+      "mem.internal_total.min_free_bytes": 65216,
+      "mem.internal_total.largest_free_min_bytes": 64000,
+      "input.key_delivery_ms": {
+        "count": 2,
+        "mean": 21.8665935,
+        "min": 21.497,
+        "p50": 21.497,
+        "p95": 22.236187,
+        "p99": 22.236187,
+        "max": 22.236187
+      }
+    }
+  },
+  "test-out/selftest-death": {
+    "status": "panic",
+    "virtual_time_s": 0.132311757,
+    "budget_violations": 0,
+    "srs_gaps": 0,
+    "warnings": [
+      "0.132s PANIC in psram_reader: task 'psram_reader' has its stack in PSRAM and accessed /user: the flash driver disables the cache and ESP-IDF asserts (stack unusable with cache disabled) -> device reset. Go through the storage service."
+    ],
+    "metrics": {
+      "audio.mic.captured_ms": 0,
+      "audio.speaker.played_ms": 0,
+      "power.sleep_ms": 0,
+      "mem.internal_total.min_free_bytes": 68800,
+      "mem.internal_total.largest_free_min_bytes": 64000
+    }
+  },
+  "test-out/selftest-desktop-lcd": {
+    "status": "ok",
+    "virtual_time_s": 7.05,
+    "budget_violations": 0,
+    "srs_gaps": 0,
+    "warnings": [],
+    "metrics": {
+      "audio.mic.captured_ms": 0,
+      "audio.speaker.played_ms": 90,
+      "power.sleep_ms": 0,
+      "mem.internal_total.min_free_bytes": 81759352,
+      "mem.internal_total.largest_free_min_bytes": 64973816,
+      "input.key_delivery_ms": {
+        "count": 2,
+        "mean": 20,
+        "min": 20,
+        "p50": 20,
+        "p95": 20,
+        "p99": 20,
+        "max": 20
+      }
+    }
+  },
+  "test-out/selftest-metalio-plus": {
+    "status": "ok",
+    "virtual_time_s": 7.05,
+    "budget_violations": 0,
+    "srs_gaps": 0,
+    "warnings": [
+      "0.360s allocation of 4096 bytes failed (caps=0x1, owner=selftest, internal free=1384 largest=864)",
+      "4.628s display: a prepared line was not ready at 4616.758 ms during a DU waveform (feeders slower than the scan, too small a prefill, or a flash operation froze them) -> garbage on the panel; recovering with clear + full GC16"
+    ],
+    "metrics": {
+      "audio.mic.captured_ms": 0,
+      "audio.speaker.played_ms": 90,
+      "power.sleep_ms": 0,
+      "mem.internal_total.min_free_bytes": 3944,
+      "mem.internal_total.largest_free_min_bytes": 2448,
+      "input.key_delivery_ms": {
+        "count": 2,
+        "mean": 11.807,
+        "min": 1.803,
+        "p50": 1.803,
+        "p95": 21.811,
+        "p99": 21.811,
+        "max": 21.811
+      }
+    }
+  },
+  "test-out/selftest-metalio-plus-psram16": {
+    "status": "ok",
+    "virtual_time_s": 7.05,
+    "budget_violations": 0,
+    "srs_gaps": 0,
+    "warnings": [
+      "0.360s allocation of 4096 bytes failed (caps=0x1, owner=selftest, internal free=1384 largest=864)",
+      "4.587s display: a prepared line was not ready at 4575.995 ms during a DU waveform (feeders slower than the scan, too small a prefill, or a flash operation froze them) -> garbage on the panel; recovering with clear + full GC16"
+    ],
+    "metrics": {
+      "audio.mic.captured_ms": 0,
+      "audio.speaker.played_ms": 90,
+      "power.sleep_ms": 0,
+      "mem.internal_total.min_free_bytes": 3944,
+      "mem.internal_total.largest_free_min_bytes": 2448,
+      "input.key_delivery_ms": {
+        "count": 2,
+        "mean": 11.807,
+        "min": 1.803,
+        "p50": 1.803,
+        "p95": 21.811,
+        "p99": 21.811,
+        "max": 21.811
+      }
+    }
+  },
+  "test-out/selftest-pinenote-rk3566": {
+    "status": "ok",
+    "virtual_time_s": 7.05,
+    "budget_violations": 0,
+    "srs_gaps": 0,
+    "warnings": [],
+    "metrics": {
+      "audio.mic.captured_ms": 0,
+      "audio.speaker.played_ms": 90,
+      "power.sleep_ms": 0,
+      "mem.internal_total.min_free_bytes": 81759352,
+      "mem.internal_total.largest_free_min_bytes": 64973816
+    }
+  },
+  "test-out/selftest-sim-slots": {
+    "status": "ok",
+    "virtual_time_s": 60,
+    "budget_violations": 0,
+    "srs_gaps": 0,
+    "warnings": [
+      "60.000s task 'cell' may overflow its 4096-byte stack (pessimistic host-based estimate 6480 bytes; verify with -fstack-usage on the RISC-V build)"
+    ],
+    "metrics": {
+      "audio.mic.captured_ms": 0,
+      "audio.speaker.played_ms": 0,
+      "power.sleep_ms": 0,
+      "mem.internal_total.min_free_bytes": 65216,
+      "mem.internal_total.largest_free_min_bytes": 64000
+    }
+  },
+  "test-out/selftest-vcom": {
+    "status": "ok",
+    "virtual_time_s": 8,
+    "budget_violations": 0,
+    "srs_gaps": 0,
+    "warnings": [
+      "0.510s display: VCOM driven at -1200 mV but the panel needs -1500 mV (wrong VCOM can damage the panel)"
+    ],
+    "metrics": {
+      "audio.mic.captured_ms": 0,
+      "audio.speaker.played_ms": 0,
+      "power.sleep_ms": 0,
+      "mem.internal_total.min_free_bytes": 55448,
+      "mem.internal_total.largest_free_min_bytes": 54816,
+      "ui.action_to_visible_ms.TEXT": {
+        "count": 1,
+        "mean": 604.5,
+        "min": 604.5,
+        "p50": 604.5,
+        "p95": 604.5,
+        "p99": 604.5,
+        "max": 604.5
+      },
+      "input.key_delivery_ms": {
+        "count": 2,
+        "mean": 11.812,
+        "min": 1.813,
+        "p50": 1.813,
+        "p95": 21.811,
+        "p99": 21.811,
+        "max": 21.811
+      }
+    }
+  },
+  "test-out/standby-metalio-plus": {
+    "status": "ok",
+    "virtual_time_s": 1054.7,
+    "budget_violations": 0,
+    "srs_gaps": 0,
+    "warnings": [],
+    "metrics": {
+      "audio.mic.captured_ms": 0,
+      "audio.speaker.played_ms": 0,
+      "power.sleep_ms": 409053.992,
+      "power.locked_sleep_share": 0.9881676157446276,
+      "power.avg_ma.locked": 7.214703081545338,
+      "mem.internal_total.min_free_bytes": 55448,
+      "mem.internal_total.largest_free_min_bytes": 54816,
+      "reader.page_turns": 2,
+      "ui.action_to_visible_ms.TEXT": {
+        "count": 2,
+        "mean": 736.256,
+        "min": 709.144,
+        "p50": 709.144,
+        "p95": 763.368,
+        "p99": 763.368,
+        "max": 763.368
+      },
+      "input.key_delivery_ms": {
+        "count": 14,
+        "mean": 23.87368628571429,
+        "min": 1.803,
+        "p50": 21.486,
+        "p95": 75.876608,
+        "p99": 75.876608,
+        "max": 75.876608
+      }
+    }
+  }
+}

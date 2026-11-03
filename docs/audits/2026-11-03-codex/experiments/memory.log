@@ -1,0 +1,4 @@
+external_plus_dma: returned_pool=0 (0=internal,2=external)
+100 allocations: reported_free=59136 tlsf_free=58336 overstatement=800 largest=58336
+configured_dma=0 reported_total=1008
+allocation_map_after_100000_alloc_free: capacity=131072 entries_counter=36613 live=0 host_bytes=2097152 failed_allocs=0

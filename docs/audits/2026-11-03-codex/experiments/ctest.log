@@ -1,0 +1,75 @@
+Test project /Users/bytedance/Documents/Workspace/ink-audit-1/build-audit
+      Start 28: fixture-aged-user-image
+      Start  1: selftest-metalio-plus
+      Start  2: selftest-metalio-plus-psram16
+      Start  3: selftest-pinenote-rk3566
+      Start  4: selftest-desktop-lcd
+      Start  5: selftest-psram-stack-flash-access-crashes
+      Start  6: selftest-sim-slots
+      Start  7: selftest-board-wiring
+ 1/35 Test  #5: selftest-psram-stack-flash-access-crashes .....   Passed    2.80 sec
+      Start  8: determinism
+ 2/35 Test  #6: selftest-sim-slots ............................   Passed    2.81 sec
+      Start  9: scenario-home_basic-metalio-plus
+ 3/35 Test  #7: selftest-board-wiring .........................   Passed    2.87 sec
+ 4/35 Test  #4: selftest-desktop-lcd ..........................   Passed    2.87 sec
+      Start 10: scenario-home_basic-metalio-plus-psram16
+      Start 11: selftest-panel-vcom-mismatch
+ 5/35 Test #28: fixture-aged-user-image .......................   Passed    2.90 sec
+      Start 12: scenario-reader_basic-metalio-plus
+ 6/35 Test  #3: selftest-pinenote-rk3566 ......................   Passed    2.91 sec
+      Start 13: scenario-keys_overlap-metalio-plus
+ 7/35 Test  #1: selftest-metalio-plus .........................   Passed    2.91 sec
+ 8/35 Test  #2: selftest-metalio-plus-psram16 .................   Passed    2.91 sec
+      Start 14: scenario-reader_basic-metalio-plus-psram16
+      Start 15: scenario-ai_ask-metalio-plus
+ 9/35 Test  #8: determinism ...................................   Passed    0.24 sec
+      Start 16: scenario-standby-metalio-plus
+10/35 Test #11: selftest-panel-vcom-mismatch ..................   Passed    0.92 sec
+      Start 17: scenario-reader_continuous-metalio-plus
+11/35 Test #13: scenario-keys_overlap-metalio-plus ............   Passed    1.19 sec
+      Start 18: scenario-reader_rapid-metalio-plus
+12/35 Test  #9: scenario-home_basic-metalio-plus ..............   Passed    1.29 sec
+      Start 19: scenario-ai_dismiss-metalio-plus
+13/35 Test #10: scenario-home_basic-metalio-plus-psram16 ......   Passed    1.30 sec
+      Start 20: scenario-reader_empty-metalio-plus
+14/35 Test #16: scenario-standby-metalio-plus .................   Passed    1.60 sec
+      Start 21: scenario-reader_basic-metalio-plus-pqbn
+15/35 Test #20: scenario-reader_empty-metalio-plus ............   Passed    0.53 sec
+      Start 22: scenario-ai_ask-metalio-plus-pqbn
+16/35 Test #19: scenario-ai_dismiss-metalio-plus ..............   Passed    0.67 sec
+      Start 23: scenario-pqbn_flash_pause-metalio-plus-pqbn
+17/35 Test #14: scenario-reader_basic-metalio-plus-psram16 ....   Passed    2.03 sec
+      Start 24: scenario-ai_tools-metalio-plus
+18/35 Test #12: scenario-reader_basic-metalio-plus ............   Passed    2.05 sec
+      Start 25: scenario-powercut-during-save
+19/35 Test #23: scenario-pqbn_flash_pause-metalio-plus-pqbn ...   Passed    0.34 sec
+      Start 26: determinism-reader
+20/35 Test #15: scenario-ai_ask-metalio-plus ..................   Passed    2.60 sec
+      Start 27: scenario-reader_basic-upstream-pipeline
+21/35 Test #18: scenario-reader_rapid-metalio-plus ............   Passed    1.70 sec
+      Start 29: scenario-reader_basic-aged-flash-max
+22/35 Test #21: scenario-reader_basic-metalio-plus-pqbn .......   Passed    1.25 sec
+      Start 30: scenario-reader_basic-panel-power-faults
+23/35 Test #25: scenario-powercut-during-save .................   Passed    1.01 sec
+      Start 31: portability-home-pinenote-rk3566
+24/35 Test #22: scenario-ai_ask-metalio-plus-pqbn .............   Passed    1.29 sec
+      Start 32: portability-home-desktop-lcd
+25/35 Test #32: portability-home-desktop-lcd ..................   Passed    0.16 sec
+      Start 33: portability-home-metalio-plus-pqbn
+26/35 Test #31: portability-home-pinenote-rk3566 ..............   Passed    0.23 sec
+      Start 34: iss-selftest
+27/35 Test #17: scenario-reader_continuous-metalio-plus .......   Passed    2.54 sec
+      Start 35: gui-smoke
+28/35 Test #33: portability-home-metalio-plus-pqbn ............   Passed    0.19 sec
+29/35 Test #27: scenario-reader_basic-upstream-pipeline .......   Passed    1.02 sec
+30/35 Test #24: scenario-ai_tools-metalio-plus ................   Passed    1.63 sec
+31/35 Test #29: scenario-reader_basic-aged-flash-max ..........   Passed    0.86 sec
+32/35 Test #30: scenario-reader_basic-panel-power-faults ......   Passed    0.78 sec
+33/35 Test #26: determinism-reader ............................   Passed    1.62 sec
+34/35 Test #34: iss-selftest ..................................   Passed    1.15 sec
+35/35 Test #35: gui-smoke .....................................   Passed    5.60 sec
+
+100% tests passed out of 35
+
+Total Test time (real) =  11.98 sec
