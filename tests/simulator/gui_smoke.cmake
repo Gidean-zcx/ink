@@ -1,12 +1,14 @@
 # Desktop simulator, headless (SDL dummy video driver): boot the device in the window, open the
 # shelf and a book with mouse clicks on the panel, turn the page with the NEXT cover key, and check
 # that the system saw it all. The clicks go through the window's own input path (--gui-click at
-# window points; the layout is fixed for the 1400x940 headless window).
+# window points; the layout is fixed for the 1400x940 headless window). Real-time speed: a click's
+# press and release reach the system a window frame apart, so at --speed 4 a slow runner's frames
+# (one over 0.2 s, seen once on the macOS runner) stretched the NEXT tap past the 0.8 s long press.
 #   cmake -DGUI=ink-sim-gui -DOUT=dir -P gui_smoke.cmake
 file(REMOVE_RECURSE ${OUT})
 set(ENV{SDL_VIDEODRIVER} dummy)
 execute_process(
-  COMMAND ${GUI} --data ${OUT} --speed 4 --no-random-outages
+  COMMAND ${GUI} --data ${OUT} --speed 1 --no-random-outages
           --gui-click 441,207@3 --gui-click 498,207@6 --gui-click 481,657@12
           --gui-exit-after 16 --gui-screenshot ${OUT}/window.png
   RESULT_VARIABLE rc OUTPUT_VARIABLE out ERROR_VARIABLE err)
