@@ -39,6 +39,7 @@ typedef struct {
     bool no_random_outages;    /* disable the profile's random link outages */
     const char *flash_timing;  /* override the profile's flash timing: "typ" | "max" | "tail" */
     double i2c_faults;         /* share of hal_i2c transfers that time out (fault injection) */
+    const char *i2c_fault_dev; /* only this device ("pmic", "touch"...), NULL = all */
     unsigned panel_vcom_mv;    /* override the panel's VCOM (0 = profile): a panel with another label */
     bool trace;               /* write Chrome/Perfetto trace JSON */
     bool frames;              /* write a PNG after every completed display update */
@@ -148,11 +149,23 @@ void sim_power_report(void);
 void sim_power_set_battery(int percent, bool charging);
 /** Track a power consumer: name, current in mA while on. ISR-safe. */
 void sim_power_consumer(const char *name, bool on, double ma);
+/* Battery model (hal_power_sim.c) read by the gauge and charger models (dev_power_chips.c) */
+double sim_battery_soc(void);             /* 0..1 */
+int sim_battery_mv(void);
+int sim_battery_ma(void);                 /* + charging */
+double sim_power_load_ma(void);
+bool sim_power_vbus(void);                /* USB plugged in */
+void sim_power_set_charge_ma(double ma);  /* ISR or locked */
+void sim_power_chips_init(void);          /* task context (boot): gauge + charger models, charger set up */
+void sim_charger_update(void);            /* ISR or locked: input, settings or charge level changed */
+bool sim_board_battery(hal_battery_t *out); /* task context: through the gauge and charger drivers */
 void sim_power_off(const char *reason);   /* the battery is cut (power-off pulses, shutdown): the run ends */
 const char *sim_power_off_reason(void);   /* NULL while powered */
 typedef struct {
     int percent, millivolts;
     bool charging;
+    int battery_ma;             /* + into the battery */
+    int charge_ma;              /* from the charger */
     int light_cold, light_warm; /* front light, permille */
     int state;                  /* hal_power_state_t */
     bool sleeping;              /* light sleep */
@@ -172,7 +185,7 @@ typedef struct {
     int (*xfer)(void *state, const uint8_t *w, size_t wlen, uint8_t *r, size_t rlen);
 } sim_i2c_model_t;
 void sim_i2c_attach(int bus, uint8_t addr7, const sim_i2c_model_t *m, void *state);
-void sim_i2c_set_faults(double timeout_rate); /* --i2c-faults: share of hal_i2c transfers that time out */
+void sim_i2c_set_faults(double timeout_rate, const char *device); /* --i2c-faults RATE[:DEVICE] */
 
 /* Panel power chips of the Plus (dev_epd_power.c): TCA9555 port 0 drives the TPS65185 pins */
 void sim_epd_chips_init(void);

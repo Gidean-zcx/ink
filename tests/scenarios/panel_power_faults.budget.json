@@ -1,5 +1,5 @@
 {
-  "_doc": "Reader on the pessimistic Plus profile with 2 % of hal_i2c transfers timing out (--i2c-faults 0.02). The panel power driver (drivers/board/metalio_epd_power.c) must recover by its retries, as the factory firmware did once on the device (docs/hardware/2026-11-03-phase0.md, section 6). Latency is not judged here: every retry costs about 0.25 s.",
+  "_doc": "Reader on the pessimistic Plus profile with 8 % of the panel PMIC's I2C transfers timing out (--i2c-faults 0.08:pmic; each device draws its faults from its own stream, so other chips' traffic does not move them). The panel power driver (drivers/board/metalio_epd_power.c) must recover by its retries, as the factory firmware did once on the device (docs/hardware/2026-11-03-phase0.md, section 6). Latency is not judged here: every retry costs about 0.25 s.",
   "i2c.timeouts": {
     "min": 1,
     "why": "the injected faults must actually reach the panel power path"

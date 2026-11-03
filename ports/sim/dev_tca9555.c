@@ -144,6 +144,7 @@ void sim_board_init(void) { /* task context (boot) */
     if (!sim_board_present()) return;
     sim_tca9555_init();
     if (metalio_board_init() != HAL_I2C_OK) sim_warn("board: TCA9555 init failed");
+    sim_power_chips_init();
 }
 
 void sim_tca9555_init(void) {

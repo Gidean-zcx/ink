@@ -86,6 +86,8 @@ static void poll_on_host(void *arg) {
     st.battery_percent = pw.percent;
     st.battery_mv = pw.millivolts;
     st.charging = pw.charging;
+    st.battery_ma = pw.battery_ma;
+    st.charge_ma = pw.charge_ma;
     st.light_cold = pw.light_cold;
     st.light_warm = pw.light_warm;
     st.power_state = pw.state;

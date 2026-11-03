@@ -63,9 +63,12 @@ add_library(ink_port_sim STATIC
   drivers/board/metalio_board.c
   drivers/board/metalio_touch.c
   drivers/ft6336u/ft6336u.c
+  drivers/bq27220/bq27220.c
+  drivers/cx25601n/cx25601n.c
   ports/sim/hal_i2c_sim.c
   ports/sim/dev_epd_power.c
   ports/sim/dev_tca9555.c
+  ports/sim/dev_power_chips.c
   ports/sim/osal_sim.c
   ports/sim/metrics.c
   ports/sim/trace.c
@@ -383,7 +386,7 @@ if(INK_HAVE_FONTS)
             --budget ${CMAKE_SOURCE_DIR}/tests/scenarios/panel_power_faults.budget.json
             --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
             --out ${CMAKE_BINARY_DIR}/test-out/reader_basic-panel-power-faults --quiet --no-random-outages
-            --i2c-faults 0.02)
+            --i2c-faults 0.08:pmic)
 endif()
 # Portability smoke runs: same system, other panels/classes (budget: no panic, input works)
 foreach(p pinenote-rk3566 desktop-lcd metalio-plus-pqbn)

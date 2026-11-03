@@ -40,6 +40,7 @@ typedef struct {
     int ncores;
     uint64_t core_busy_ns[4];  /* cumulative, for load over an interval */
     int battery_percent, battery_mv;
+    int battery_ma, charge_ma;  /* + into the battery; from the charger */
     bool charging;
     int light_cold, light_warm; /* front light, permille (set by the system) */
     int power_state;            /* hal_power_state_t */

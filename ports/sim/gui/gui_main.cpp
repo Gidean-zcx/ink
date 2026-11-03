@@ -618,8 +618,9 @@ void draw_panel(ImVec2 pos, ImVec2 size) {
         bool apply = ImGui::IsItemDeactivatedAfterEdit();
         if (ImGui::Checkbox("插着 USB（充电）", &g_usb)) apply = true;
         if (apply) sim_gui_battery(g_batt, g_usb);
-        ImGui::TextDisabled("系统读到：%d%%，%d mV%s", g_st.battery_percent, g_st.battery_mv, g_st.charging ? "，充电中" : "");
-        ImGui::TextDisabled("官方：电量计 BQ27220、充电 CX25601N（默认 1 A），目前按行为模拟。");
+        ImGui::Text("电量计：%d%%，%d mV，电池电流 %+d mA", g_st.battery_percent, g_st.battery_mv, g_st.battery_ma);
+        if (g_usb) ImGui::Text("充电芯片：%s%s", g_st.charge_ma > 0 ? "充电中 " : "已充满或未充电", g_st.charge_ma > 0 ? (std::to_string(g_st.charge_ma) + " mA").c_str() : "");
+        ImGui::TextDisabled("电量计 BQ27220、充电 CX25601N（开机设 1 A，实际 960 mA），按寄存器模拟。");
     }
     if (ImGui::CollapsingHeader("网络", ImGuiTreeNodeFlags_DefaultOpen)) {
         static const char *names[] = {"4G（NT26）", "Wi-Fi", "无网络"};

@@ -44,6 +44,8 @@ static struct {
     int light_cold, light_warm;
     unsigned haptic_pulses;
     uint64_t haptic_until;
+    double chg_ma, chg_mah; /* current into the battery from the charger (dev_power_chips.c) */
+    uint64_t chg_since;
     double cpu_mah;
     /* clock and sleep */
     hal_power_state_t state;
@@ -120,6 +122,8 @@ void hal_light_set(int cold_permille, int warm_permille) {
 }
 
 bool hal_haptic_available(void) { return g_profile.info.has_haptics; }
+static void battery_model(hal_battery_t *out);
+
 /* The motor hangs on TCA9555 P03: a small task switches it on, waits, and off (upstream uses an
  * esp_timer callback for the same I2C writes). */
 static osal_queue_t *g_haptic_q;
@@ -173,10 +177,12 @@ void hal_power_shutdown(void) {
 
 void sim_power_gui_state(sim_power_gui_t *out) { /* ISR context (desktop simulator) */
     hal_battery_t b;
-    hal_power_battery(&b);
+    battery_model(&b);
     out->percent = b.percent;
     out->millivolts = b.millivolts;
     out->charging = b.charging;
+    out->battery_ma = sim_battery_ma();
+    out->charge_ma = (int)PW.chg_ma;
     out->light_cold = PW.light_cold;
     out->light_warm = PW.light_warm;
     out->state = (int)PW.state;
@@ -185,9 +191,15 @@ void sim_power_gui_state(sim_power_gui_t *out) { /* ISR context (desktop simulat
     out->haptic_on = sim_board_present() ? sim_board_motor_on() : vtk_isr_now() < PW.haptic_until;
 }
 
+static void chg_settle(uint64_t t) {
+    if (t > PW.chg_since) PW.chg_mah += PW.chg_ma * (double)(t - PW.chg_since) / 3.6e12;
+    PW.chg_since = t;
+}
+
 static double total_mah(void) {
     uint64_t t = now_ns();
     double sum = 0;
+    chg_settle(t);
     for (int i = 0; i < PW.n; i++) {
         settle(&PW.c[i], t);
         sum += PW.c[i].mah;
@@ -197,7 +209,7 @@ static double total_mah(void) {
     double busy_h = 0;
     for (int c = 0; c < g_profile.cores; c++) busy_h += (double)vtk_core_busy_ns(c) / 3.6e12;
     PW.cpu_mah = g_profile.ma_per_core_busy * busy_h;
-    return sum + PW.cpu_mah;
+    return sum + PW.cpu_mah - PW.chg_mah;
 }
 
 /* ------------------------------------------------------------ clock */
@@ -354,20 +366,62 @@ uint32_t hal_power_sleep(const hal_sleep_cfg_t *cfg) {
     return cause;
 }
 
-void hal_power_battery(hal_battery_t *out) {
+/* ------------------------------------------------------------ battery
+ * State of charge from the energy the consumers drew minus what the charger put in. Terminal
+ * voltage: the official 424860-2000 discharge curve measured at ~1 A (bq27220_gauge.cc @690a023),
+ * corrected by an internal resistance (estimate) for the actual current. */
+static const int BATT_CURVE_1A[11] = {3300, 3481, 3565, 3624, 3663, 3702, 3757, 3828, 3919, 4021, 4211};
+#define BATT_R_MOHM 150 /* (est.) */
+
+double sim_battery_soc(void) {
     double used = total_mah();
     double soc = PW.soc - (g_profile.batt_mah > 0 ? used / g_profile.batt_mah : 0);
-    if (soc < 0) soc = 0;
+    return soc < 0 ? 0 : soc > 1 ? 1 : soc;
+}
+
+double sim_power_load_ma(void) {
+    uint64_t t = now_ns();
+    double ma = 0;
+    for (int i = 0; i < PW.n; i++)
+        if (PW.c[i].on) ma += PW.c[i].ma;
+    (void)t;
+    return ma;
+}
+
+int sim_battery_mv(void) {
+    double soc = sim_battery_soc() * 100.0;
+    int i = soc >= 100 ? 9 : (int)(soc / 10);
+    double v = BATT_CURVE_1A[i] + (BATT_CURVE_1A[i + 1] - BATT_CURVE_1A[i]) * (soc - 10.0 * i) / 10.0;
+    double into = PW.chg_ma - sim_power_load_ma(); /* + charging */
+    return (int)(v + (1000.0 + into) * BATT_R_MOHM / 1000.0);
+}
+
+int sim_battery_ma(void) { return (int)(PW.chg_ma - sim_power_load_ma()); }
+bool sim_power_vbus(void) { return PW.charging; }
+
+void sim_power_set_charge_ma(double ma) { /* ISR or locked: the charger's current into the battery */
+    chg_settle(now_ns());
+    PW.chg_ma = ma > 0 ? ma : 0;
+}
+
+static void battery_model(hal_battery_t *out) {
+    double soc = sim_battery_soc();
     out->percent = (int)(soc * 100.0 + 0.5);
-    out->millivolts = 3300 + (int)(soc * 900.0); /* crude linear OCV */
-    out->charging = PW.charging;
+    out->millivolts = sim_battery_mv();
+    out->charging = PW.charging && PW.chg_ma > 0;
     out->external_power = PW.charging;
+}
+
+void hal_power_battery(hal_battery_t *out) {
+    if (sim_board_present() && !vtk_in_isr() && sim_board_battery(out)) return; /* gauge + charger drivers */
+    battery_model(out);
 }
 
 void sim_power_set_battery(int percent, bool charging) {
     double used = total_mah();
     PW.soc = percent / 100.0 + (g_profile.batt_mah > 0 ? used / g_profile.batt_mah : 0);
     PW.charging = charging;
+    sim_charger_update();
 }
 
 void sim_power_init(void) {

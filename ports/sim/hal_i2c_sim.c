@@ -11,6 +11,8 @@
 #include <stdio.h>
 
 #include "ink/hal_i2c.h"
+#include <string.h>
+
 #include "sim.h"
 
 #define MAX_MODELS 8
@@ -21,6 +23,7 @@ struct hal_i2c_dev {
     int bus;
     uint8_t addr;
     char name[24];
+    uint32_t fault_rng; /* own fault stream: adding a device does not shift another's faults */
 };
 
 static struct {
@@ -43,7 +46,11 @@ void sim_i2c_attach(int bus, uint8_t addr7, const sim_i2c_model_t *m, void *stat
     n_models++;
 }
 
-void sim_i2c_set_faults(double timeout_rate) { fault_rate = timeout_rate; }
+static const char *fault_dev; /* NULL: every device */
+void sim_i2c_set_faults(double timeout_rate, const char *device) {
+    fault_rate = timeout_rate;
+    fault_dev = device;
+}
 
 hal_i2c_dev_t *hal_i2c_device(int bus, uint8_t addr7, const char *name) {
     for (int i = 0; i < n_devs; i++)
@@ -52,13 +59,24 @@ hal_i2c_dev_t *hal_i2c_device(int bus, uint8_t addr7, const char *name) {
     struct hal_i2c_dev *d = &DEVS[n_devs++];
     d->bus = bus;
     d->addr = addr7;
+    d->fault_rng = (g_sim.seed ? g_sim.seed : 1u) * 2654435761u ^ (0x9E3779B9u * (uint32_t)(addr7 + 1)) ^ (uint32_t)bus;
+    if (!d->fault_rng) d->fault_rng = 0x2545F491u;
     sim_copy_name(d->name, sizeof d->name, name);
     return d;
 }
 
+static double fault_draw(hal_i2c_dev_t *d) { /* xorshift32 per device */
+    uint32_t x = d->fault_rng;
+    x ^= x << 13;
+    x ^= x >> 17;
+    x ^= x << 5;
+    d->fault_rng = x;
+    return (double)(x >> 8) / (double)(1u << 24);
+}
+
 static hal_i2c_status_t xfer(hal_i2c_dev_t *d, const uint8_t *w, size_t wlen, uint8_t *r, size_t rlen) {
     /* no random draw unless faults are on: other random streams stay as they were */
-    if (fault_rate > 0 && sim_rand01() < fault_rate) {
+    if (fault_rate > 0 && (!fault_dev || !strcmp(fault_dev, d->name)) && fault_draw(d) < fault_rate) {
         sim_i2c_hold(d->name, SIM_US(TIMEOUT_US));
         sim_metric_add("i2c.timeouts", 1);
         return HAL_I2C_TIMEOUT;
