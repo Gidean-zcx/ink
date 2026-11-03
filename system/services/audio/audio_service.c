@@ -39,6 +39,7 @@
 #include "ink/probe.h"
 #include "ink/sys/audio.h"
 #include "ink/sys/settings.h"
+#include "ink/sys/state.h"
 #include "ink/sys/power.h"
 #include "ink/sys/storage.h"
 
@@ -400,6 +401,23 @@ static void update_write_hold(void) {
     }
 }
 
+/* System state: what plays (published on change only), and whether the device listens (hands-free, step 6). */
+static const ink_state_def_t ST_PLAYING = {.id = "audio.now_playing", .type = INK_ST_STR, .title = "正在播放"};
+static const ink_state_def_t ST_LISTENING = {.id = "audio.listening", .type = INK_ST_BOOL, .title = "在听（免按键）"};
+static int h_playing = -1, h_listening = -1;
+
+static void publish_playing(void) { /* audio task */
+    static const char *const NAME[] = {"none", "story", "voice", "alert"};
+    static const char *last;
+    lock();
+    const char *now = AU.stream && (unsigned)AU.prio < 4 ? NAME[AU.prio] : NAME[0];
+    unlock();
+    if (now != last) {
+        ink_state_set_str(h_playing, now);
+        last = now;
+    }
+}
+
 static void audio_task(void *arg) {
     (void)arg;
     const char *prev = osal_mem_tag("audio");
@@ -416,6 +434,7 @@ static void audio_task(void *arg) {
         service_playback();
         while (capture_step(scratch)) service_playback();
         update_write_hold();
+        publish_playing();
     }
 }
 
@@ -426,15 +445,24 @@ static void volume_apply(void *ctx, int64_t v) {
     ink_audio_set_volume((int)v);
 }
 
+/* When the device listens for its wake word (D-52: a setting, by default only while the screen is
+ * on and unlocked). Takes effect with the voice front end (detailed design §7). */
+static const char *const HANDSFREE[] = {"screen_on", "always", "off", NULL};
+
 static const ink_setting_def_t AUDIO_SETTINGS[] = {
     {.id = "audio.volume", .title = "音量", .type = INK_SET_INT, .min = 0, .max = 100, .def = 70, .child_may_change = true,
      .apply = volume_apply, .apply_exec = INK_EXEC_DIRECT},
+    {.id = "voice.handsfree", .title = "免按键（什么时候在听）", .type = INK_SET_ENUM, .def = 0, .choices = HANDSFREE},
 };
 
 int ink_audio_init(void) {
     hal_audio_get_info(&AU.info);
     /* the saved volume; 70 where the settings table is not running (some test programs) */
-    AU.volume = ink_settings_define(AUDIO_SETTINGS, 1) == 0 ? (int)ink_setting_get("audio.volume") : 70;
+    AU.volume = ink_settings_define(AUDIO_SETTINGS, 2) == 0 ? (int)ink_setting_get("audio.volume") : 70;
+    h_playing = ink_state_define(&ST_PLAYING);
+    h_listening = ink_state_define(&ST_LISTENING);
+    ink_state_set_str(h_playing, "none");
+    ink_state_set_bool(h_listening, false);
     const char *prev = osal_mem_tag("audio");
     AU.lock = osal_mutex_create();
     AU.wake = osal_sem_create(0, 1);

@@ -1,0 +1,7 @@
+# Environment for the system service checks (tests/integration/systest.c):
+# cards with text messages in both slots, a message that arrives while the
+# communication checks wait for it.
+@0       sim   external sms
++0       sim   internal sms
+@24s     sms-in 10086 你好，这是一条测试短信
+@70s     end

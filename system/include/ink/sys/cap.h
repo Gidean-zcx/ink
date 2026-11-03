@@ -143,6 +143,16 @@ int ink_cap_call(const char *addr, const ink_args_t *args, const ink_call_opts_t
 void ink_cap_defer(ink_call_t *call);
 void ink_cap_done(ink_call_t *call);
 
+/*
+ * Events (form INK_FORM_EVENT, e.g. "message.received"): registered like any capability so the
+ * hub and the model see them, but subscribed to rather than called. The payload is a copy.
+ */
+typedef void (*ink_event_fn)(void *ctx, const char *id, const ink_args_t *payload);
+/** fn on `exec` for every event whose id starts with `prefix`. Up to 16. */
+int ink_cap_subscribe(const char *prefix, ink_event_fn fn, void *ctx, ink_exec_t exec);
+/** The providing service emits an event (any task). */
+void ink_cap_emit(const char *id, const ink_args_t *payload);
+
 /** The tool list for the hub and the model: JSON array of what the current member may use now. */
 int ink_cap_manifest_json(char *out, size_t cap);
 /** Compact JSON array of the ids available now (for page snapshots). */

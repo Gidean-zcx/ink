@@ -23,6 +23,8 @@ typedef struct {
     const char *allow[8];
 } ink_member_t;
 
+/** Publish member.current (after the state table started). */
+void ink_members_init(void);
 const ink_member_t *ink_member_current(void);
 /** Switch member. Returns 0, -1 (unknown member) or -2 (child -> adult needs a PIN). */
 int ink_member_switch(const char *id);

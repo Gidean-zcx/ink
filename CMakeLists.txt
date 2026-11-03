@@ -103,6 +103,7 @@ add_library(ink_port_sim STATIC
   ports/sim/hal/hal_assets_sim.c
   ports/sim/hal/hal_net_sim.c
   ports/sim/hal/hal_audio_sim.c
+  ports/sim/hal/hal_cellular_sim.c
   ports/sim/hal/hal_codec_sim.c
   simulator/models/dev_epd_power.c
   simulator/models/dev_tca9555.c
@@ -144,6 +145,10 @@ target_compile_options(ink_lvgl PRIVATE -w)
 # ---------------------------------------------------------------- portable system + apps
 add_library(ink_system STATIC
   system/services/display/display_service.c
+  system/services/display/light.c
+  system/services/camera/camera_service.c
+  system/services/comm/comm_service.c
+  system/services/net/net_service.c
   system/services/display/refresh_policy.c
   system/services/input/input_service.c
   system/services/storage/storage_service.c
@@ -353,7 +358,8 @@ target_compile_options(sim-systest PRIVATE ${INK_WARN})
 add_test(NAME systest-services
   COMMAND sim-systest --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
           --budget ${CMAKE_SOURCE_DIR}/tests/integration/systest.budget.json
-          --out ${CMAKE_BINARY_DIR}/test-out/systest --quiet --end 40s --no-random-outages)
+          --script ${CMAKE_SOURCE_DIR}/tests/integration/systest.script
+          --out ${CMAKE_BINARY_DIR}/test-out/systest --quiet --no-random-outages)
 add_test(NAME determinism
   COMMAND ${CMAKE_COMMAND} -DSIM=$<TARGET_FILE:sim-selftest>
           -DPROFILE=${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json

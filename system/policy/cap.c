@@ -85,6 +85,7 @@ static ink_rc_t reject(ink_receipt_t *rc, ink_rc_t st, const char *why) {
 static ink_rc_t gate(const ink_cap_t *c, ink_source_t src, uint32_t page_gen, ink_receipt_t *rc) {
     if (!c) return reject(rc, INK_RC_INVALID, "unknown action");
     if (!on_its_page(c)) return reject(rc, INK_RC_INVALID, "not available on this page");
+    if (c->form == INK_FORM_EVENT || !c->run) return reject(rc, INK_RC_INVALID, "an event: subscribe to it");
     if (!exposed(c, src)) return reject(rc, INK_RC_INVALID, "not offered to this caller");
     const ink_member_t *m = ink_member_current();
     if (m->role == INK_ROLE_CHILD) {
@@ -485,6 +486,69 @@ static int remote_call(const char *name, const ink_args_t *args, const ink_call_
         finish(p);
     }
     return 0;
+}
+
+/* ------------------------------------------------------------ events */
+
+#define SUBS_MAX 16
+
+static struct {
+    const char *prefix;
+    size_t plen;
+    ink_event_fn fn;
+    void *ctx;
+    ink_exec_t exec;
+} SUBS[SUBS_MAX];
+static int nsubs;
+
+typedef struct {
+    ink_event_fn fn;
+    void *ctx;
+    char id[48];
+    ink_args_t payload;
+} event_job_t;
+
+int ink_cap_subscribe(const char *prefix, ink_event_fn fn, void *ctx, ink_exec_t exec) {
+    if (!CB.lock || !fn) return -1;
+    osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER);
+    int r = -1;
+    if (nsubs < SUBS_MAX) {
+        SUBS[nsubs] = (typeof(SUBS[0])){prefix ? prefix : "", prefix ? strlen(prefix) : 0, fn, ctx, exec};
+        r = nsubs++;
+    }
+    osal_mutex_unlock(CB.lock);
+    return r < 0 ? -1 : 0;
+}
+
+static void event_job(void *arg) {
+    event_job_t *e = arg;
+    e->fn(e->ctx, e->id, &e->payload);
+    osal_free(e);
+}
+
+void ink_cap_emit(const char *id, const ink_args_t *payload) {
+    char key[64];
+    snprintf(key, sizeof key, "event.%s", id);
+    ink_probe_count(key);
+    for (int i = 0; i < nsubs; i++) {
+        if (strncmp(id, SUBS[i].prefix, SUBS[i].plen)) continue;
+        const char *prev = osal_mem_tag("cap");
+        event_job_t *e = osal_malloc(sizeof *e, OSAL_MEM_EXTERNAL);
+        osal_mem_tag(prev);
+        if (!e) {
+            ink_probe_count("event.dropped");
+            continue;
+        }
+        e->fn = SUBS[i].fn;
+        e->ctx = SUBS[i].ctx;
+        snprintf(e->id, sizeof e->id, "%s", id);
+        if (payload) e->payload = *payload;
+        else ink_args_init(&e->payload);
+        if (ink_exec_post(SUBS[i].exec, event_job, e) != 0) {
+            ink_probe_count("event.dropped");
+            osal_free(e);
+        }
+    }
 }
 
 /* What the current member may use now, as the AI sees it. */

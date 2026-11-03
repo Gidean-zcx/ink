@@ -63,6 +63,9 @@ int ink_display_busy(void);
  *  panel is idle when taking it. */
 void ink_display_flash_guard(bool hold);
 
+/** Front light settings (display.light, display.warmth); after the settings table started. */
+int ink_light_init(void);
+
 #ifdef __cplusplus
 }
 #endif

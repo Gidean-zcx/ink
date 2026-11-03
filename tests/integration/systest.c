@@ -9,6 +9,8 @@
 #include "ink/osal.h"
 #include "ink/probe.h"
 #include "ink/sys/audio.h"
+#include "ink/sys/camera.h"
+#include "ink/sys/comm.h"
 #include "ink/sys/cap.h"
 #include "ink/sys/display.h"
 #include "ink/sys/exec.h"
@@ -16,6 +18,7 @@
 #include "ink/sys/json.h"
 #include "cJSON.h"
 #include "ink/sys/members.h"
+#include "ink/sys/net.h"
 #include "ink/sys/settings.h"
 #include "ink/sys/state.h"
 #include "ink/sys/power.h"
@@ -192,8 +195,8 @@ static void cap_checks(void) {
     /* the tool list is generated from the table */
     n = ink_cap_manifest_json(buf, sizeof buf);
     cJSON *list = n > 0 ? cJSON_Parse(buf) : NULL; /* the whole list: more tokens than the device parser takes */
-    CHECK(cJSON_IsArray(list) && cJSON_GetArraySize(list) == 8, "the tool list is a JSON array of the 8 offered to the AI (%d)",
-          cJSON_GetArraySize(list));
+    CHECK(cJSON_IsArray(list) && cJSON_GetArraySize(list) >= 8, "the tool list is a JSON array: the 8 test and settings capabilities offered to "
+          "the AI, and the services' own (%d)", cJSON_GetArraySize(list));
     cJSON_Delete(list);
     CHECK(strstr(buf, "\"name\":\"test.args\"") && strstr(buf, "\"maxLength\":3") && !strstr(buf, "test.hidden") && !strstr(buf, "test.page"),
           "it lists what the AI may use now, with the schemas");
@@ -383,6 +386,77 @@ static void bus_checks(void) {
           "an unknown hub capability fails with the hub's reason (%s)", g_bus_rc.detail);
 }
 
+/* ---- step 3: the services' state, settings, capabilities and events (detailed design §4.4) ---- */
+
+static volatile int g_sms_events;
+static char g_sms_text[64];
+
+static void on_message(void *ctx, const char *id, const ink_args_t *payload) {
+    (void)ctx;
+    (void)id;
+    ink_args_get_str(payload, "text", g_sms_text, sizeof g_sms_text);
+    g_sms_events++;
+}
+
+static bool state_is(const char *id, const char *want) {
+    char s[32];
+    return ink_state_get_str(ink_state_find(id), s, sizeof s) >= 0 && !strcmp(s, want);
+}
+
+static void service_checks(void) {
+    int64_t v = -1;
+    char ps[16] = "";
+    ink_state_get_str(ink_state_find("power.state"), ps, sizeof ps);
+    CHECK(!strcmp(ps, "active") || !strcmp(ps, "idle"), "power.state is published (%s)", ps);
+    CHECK(ink_state_get_int(ink_state_find("battery.level"), &v) && v > 0 && v <= 100, "battery.level is published (%lld %%)", (long long)v);
+    CHECK(ink_state_get_int(ink_state_find("net.online"), &v) && ink_state_find("net.type") >= 0, "net.online and net.type are published");
+    CHECK(state_is("member.current", "owner") && state_is("audio.now_playing", "none"), "member.current and audio.now_playing are published");
+    static char buf[8192];
+    CHECK(ink_settings_json(buf, sizeof buf) > 0 && strstr(buf, "\"audio.volume\"") && strstr(buf, "\"voice.handsfree\"") &&
+              strstr(buf, "\"power.lock_after_s\"") && strstr(buf, "\"display.light\"") && strstr(buf, "\"net.prefer\"") && strstr(buf, "\"cell.sim_slot\""),
+          "the services' settings are in the table");
+    CHECK(ink_setting_get("voice.handsfree") == 0, "hands-free listens only while the screen is on, by default (D-52)");
+    ink_receipt_t rc;
+    CHECK(ink_setting_set("power.lock_after_s", 30, INK_SRC_TOUCH, &rc) == INK_RC_INVALID, "auto-lock below a minute is refused");
+    CHECK(ink_setting_set("display.light", 40, INK_SRC_TOUCH, &rc) == INK_RC_DONE, "the front light is a setting");
+    /* internal mechanisms are not offered (architecture §4.1) */
+    CHECK(ink_cap_manifest_json(buf, sizeof buf) > 0 && !strstr(buf, "modem") && !strstr(buf, "AT+") && !strstr(buf, "rail") && !strstr(buf, "refresh_sched"),
+          "no AT commands, rails or refresh scheduling among the capabilities");
+    CHECK(ink_state_json(buf, sizeof buf, 0) > 0 && !strstr(buf, "rail") && !strstr(buf, "modem"), "nor in the state");
+
+    /* camera */
+    ink_call_opts_t o = {.src = INK_SRC_APP, .reply_exec = INK_EXEC_DIRECT, .done = bus_done};
+    int before = g_bus_done;
+    CHECK(ink_cap_call("camera.capture", NULL, &o) == 0 && wait_done(before + 1, 6000000) && g_bus_rc.status == INK_RC_DONE &&
+              !strcmp(g_bus_rc.object, "photo:1"),
+          "camera.capture takes a picture (%s, %s)", ink_rc_name(g_bus_rc.status), g_bus_rc.detail);
+    CHECK(ink_cap_call("camera.capture", NULL, &o) == 0 && wait_done(before + 2, 6000000) && !strcmp(g_bus_rc.object, "photo:2"),
+          "a second one queues behind it (%s)", g_bus_rc.object);
+
+    /* text messages */
+    CHECK(ink_cap_subscribe("message.", on_message, NULL, INK_EXEC_DIRECT) == 0, "subscribe to message events");
+    ink_args_t a;
+    ink_args_init(&a);
+    ink_args_str(&a, "to", "10086");
+    ink_args_str(&a, "text", "查询余额");
+    o.src = INK_SRC_AI;
+    before = g_bus_done;
+    CHECK(ink_cap_call("message.send", &a, &o) == 0 && wait_done(before + 1, 100000) && g_bus_rc.status == INK_RC_PENDING_CONFIRMATION,
+          "a message the AI wants to send waits for confirmation (%s)", ink_rc_name(g_bus_rc.status));
+    o.src = INK_SRC_TOUCH;
+    CHECK(ink_cap_call("message.send", &a, &o) == 0 && wait_done(before + 2, 30000000) && g_bus_rc.status == INK_RC_DONE,
+          "sent by touch (%s, %s)", ink_rc_name(g_bus_rc.status), g_bus_rc.detail);
+    for (int w = 0; w < 200 && !g_sms_events; w++) osal_task_delay_us(100000); /* the script sends one at 24 s */
+    CHECK(g_sms_events == 1 && strstr(g_sms_text, "测试短信"), "an incoming message is an event with its text (%d, %s)", g_sms_events, g_sms_text);
+    CHECK(ink_cap_invoke("message.list", NULL, INK_SRC_AI, 0, &rc) == INK_RC_DONE && rc.revision == 1 && strstr(rc.say, "10086"), "message.list (%s)",
+          rc.say);
+
+    /* the card in use is a setting; the switch is the driver's (R-044) */
+    CHECK(ink_setting_set("cell.sim_slot", 1, INK_SRC_TOUCH, &rc) == INK_RC_DONE, "choose the internal card");
+    for (int w = 0; w < 300 && !state_is("cell.sim", "internal"); w++) osal_task_delay_us(100000);
+    CHECK(state_is("cell.sim", "internal"), "the modem switched online and cell.sim says so");
+}
+
 /* Children: last, a child cannot switch back to an adult without the PIN. */
 static void child_checks(void) {
     ink_receipt_t rc;
@@ -390,7 +464,7 @@ static void child_checks(void) {
     CHECK(ink_cap_invoke("test.system", NULL, INK_SRC_TOUCH, 0, &rc) == INK_RC_REJECTED, "children never run system capabilities");
     CHECK(ink_cap_invoke("test.grown", NULL, INK_SRC_TOUCH, 0, &rc) == INK_RC_REJECTED, "nor ones off their whitelist");
     CHECK(ink_cap_invoke("test.read", NULL, INK_SRC_TOUCH, 0, &rc) == INK_RC_DONE, "child_ok ones run");
-    static char buf[2048];
+    static char buf[8192];
     CHECK(ink_cap_manifest_json(buf, sizeof buf) > 0 && !strstr(buf, "test.system") && !strstr(buf, "test.grown") && strstr(buf, "test.read"),
           "the child's tool list leaves them out");
     CHECK(ink_setting_set("test.mode", 1, INK_SRC_TOUCH, &rc) == INK_RC_REJECTED, "nor settings children may not change (%s)", ink_rc_name(rc.status));
@@ -400,8 +474,9 @@ static void child_checks(void) {
 static void systest_task(void *arg) {
     (void)arg;
     if (ink_display_init() != 0 || ink_storage_init() != 0 || ink_cap_init() != 0 || ink_exec_init() != 0 || ink_state_init() != 0 ||
-        ink_settings_init() != 0 || ink_power_init() != 0 || ink_hub_init("wss://hub.local/v1/device") != 0 || ink_audio_init() != 0) {
-        CHECK(0, "the display, storage, bus, state, settings, power, hub and audio services start");
+        ink_settings_init() != 0 || ink_power_init() != 0 || ink_net_init() != 0 || ink_light_init() != 0 ||
+        ink_hub_init("wss://hub.local/v1/device") != 0 || ink_audio_init() != 0 || ink_camera_init() != 0 || ink_comm_init() != 0) {
+        CHECK(0, "the system services start");
         return;
     }
     storage_checks();
@@ -410,6 +485,8 @@ static void systest_task(void *arg) {
     state_checks();
     settings_checks();
     bus_checks();
+    ink_members_init();
+    service_checks();
     child_checks();
     ink_probe_mark("systest-done");
 }
