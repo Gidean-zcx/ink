@@ -1,0 +1,333 @@
+{
+  "head": "06a882fb7c39ddaac41a111c161e2f26c9798070",
+  "checks": [
+    {
+      "check": "each_artifact_under_1_MB",
+      "passed": true
+    },
+    {
+      "check": "json_and_python_syntax",
+      "passed": true
+    },
+    {
+      "check": "verification_ids",
+      "passed": true
+    },
+    {
+      "check": "verification_verdicts",
+      "passed": true
+    },
+    {
+      "check": "report_verdicts_match_json",
+      "passed": true
+    },
+    {
+      "check": "new_findings_schema",
+      "passed": true
+    },
+    {
+      "check": "new_findings_ids",
+      "passed": true
+    },
+    {
+      "check": "source_location_system/services/audio/audio_service.c:363",
+      "passed": true
+    },
+    {
+      "check": "source_location_system/services/audio/audio_service.c:378",
+      "passed": true
+    },
+    {
+      "check": "source_location_system/services/audio/audio_service.c:380",
+      "passed": true
+    },
+    {
+      "check": "source_location_system/include/ink/sys/audio.h:8",
+      "passed": true
+    },
+    {
+      "check": "source_location_docs/audits/README.md:27",
+      "passed": true
+    },
+    {
+      "check": "relative_link_report.md:experiments/suite-steps.json",
+      "passed": true
+    },
+    {
+      "check": "relative_link_report.md:experiments/results.json",
+      "passed": true
+    },
+    {
+      "check": "relative_link_report.md:experiments/comparison.json",
+      "passed": true
+    },
+    {
+      "check": "relative_link_report.md:experiments/known-results.json",
+      "passed": true
+    },
+    {
+      "check": "relative_link_report.md:experiments/suite-steps.json",
+      "passed": true
+    },
+    {
+      "check": "relative_link_report.md:experiments/suite-evidence.json",
+      "passed": true
+    },
+    {
+      "check": "relative_link_report.md:experiments/commands.txt",
+      "passed": true
+    },
+    {
+      "check": "relative_link_report.md:experiments/results.json",
+      "passed": true
+    },
+    {
+      "check": "relative_link_report.md:experiments/metrics-evidence.json",
+      "passed": true
+    },
+    {
+      "check": "relative_link_report.md:experiments/README.md",
+      "passed": true
+    },
+    {
+      "check": "relative_link_report.md:experiments/artifact-validation.json",
+      "passed": true
+    },
+    {
+      "check": "relative_link_experiments/README.md:suite-steps.json",
+      "passed": true
+    },
+    {
+      "check": "relative_link_experiments/README.md:suite-evidence.json",
+      "passed": true
+    },
+    {
+      "check": "relative_link_experiments/README.md:commands.txt",
+      "passed": true
+    },
+    {
+      "check": "relative_link_experiments/README.md:known-results.json",
+      "passed": true
+    },
+    {
+      "check": "relative_link_experiments/README.md:results.json",
+      "passed": true
+    },
+    {
+      "check": "relative_link_experiments/README.md:metrics-evidence.json",
+      "passed": true
+    },
+    {
+      "check": "relative_link_experiments/README.md:comparison.json",
+      "passed": true
+    },
+    {
+      "check": "relative_link_experiments/README.md:artifact-validation.json",
+      "passed": true
+    },
+    {
+      "check": "84_distinct_probe_combinations",
+      "passed": true
+    },
+    {
+      "check": "all_probe_processes_finished",
+      "passed": true
+    },
+    {
+      "check": "16_sanitizer_combinations",
+      "passed": true
+    },
+    {
+      "check": "no_probe_sanitizer_diagnostics",
+      "passed": true
+    },
+    {
+      "check": "tone_regression_reproduced_False",
+      "passed": true
+    },
+    {
+      "check": "cancel_fix_False",
+      "passed": true
+    },
+    {
+      "check": "replace_fix_False",
+      "passed": true
+    },
+    {
+      "check": "tone_regression_reproduced_True",
+      "passed": true
+    },
+    {
+      "check": "cancel_fix_True",
+      "passed": true
+    },
+    {
+      "check": "replace_fix_True",
+      "passed": true
+    },
+    {
+      "check": "tone_old_response_under_150ms",
+      "passed": true
+    },
+    {
+      "check": "r7_display_multi_unique_callbacks",
+      "passed": true
+    },
+    {
+      "check": "r7_display_multi_pixels_at_success",
+      "passed": true
+    },
+    {
+      "check": "r7_display_multi_drained",
+      "passed": true
+    },
+    {
+      "check": "r7_display_control_unique_callbacks",
+      "passed": true
+    },
+    {
+      "check": "r7_display_control_pixels_at_success",
+      "passed": true
+    },
+    {
+      "check": "r7_display_control_drained",
+      "passed": true
+    },
+    {
+      "check": "r7_display_recut_unique_callbacks",
+      "passed": true
+    },
+    {
+      "check": "r7_display_recut_pixels_at_success",
+      "passed": true
+    },
+    {
+      "check": "r7_display_recut_drained",
+      "passed": true
+    },
+    {
+      "check": "r7_rails_cancel_restored_False",
+      "passed": true
+    },
+    {
+      "check": "r7_rails_cancel_fault_restored_False",
+      "passed": true
+    },
+    {
+      "check": "r7_rails_wake_fault_restored_False",
+      "passed": true
+    },
+    {
+      "check": "rails_deadline_bounded_False",
+      "passed": true
+    },
+    {
+      "check": "r7_rails_cancel_restored_True",
+      "passed": true
+    },
+    {
+      "check": "r7_rails_cancel_fault_restored_True",
+      "passed": true
+    },
+    {
+      "check": "r7_rails_wake_fault_restored_True",
+      "passed": true
+    },
+    {
+      "check": "rails_deadline_bounded_True",
+      "passed": true
+    },
+    {
+      "check": "9_normal_comparisons_png_equal",
+      "passed": true
+    },
+    {
+      "check": "normal_comparisons_no_warnings",
+      "passed": true
+    },
+    {
+      "check": "normal_comparisons_no_budget_violations",
+      "passed": true
+    },
+    {
+      "check": "9_build_and_test_steps_pass",
+      "passed": true
+    },
+    {
+      "check": "known_clock_still_fails",
+      "passed": true
+    },
+    {
+      "check": "known_late_tool_still_executes",
+      "passed": true
+    },
+    {
+      "check": "same_head",
+      "passed": true
+    },
+    {
+      "check": "no_tracked_mutations",
+      "passed": true
+    },
+    {
+      "check": "all_untracked_in_r7",
+      "passed": true
+    }
+  ],
+  "git": {
+    "head": {
+      "exit_code": 0,
+      "output": "06a882fb7c39ddaac41a111c161e2f26c9798070"
+    },
+    "diff": {
+      "exit_code": 0,
+      "output": ""
+    },
+    "cached": {
+      "exit_code": 0,
+      "output": ""
+    },
+    "status": {
+      "exit_code": 0,
+      "output": "?? docs/audits/2026-11-03-codex-r7/"
+    },
+    "untracked": {
+      "exit_code": 0,
+      "output": "docs/audits/2026-11-03-codex-r7/TASK.md\ndocs/audits/2026-11-03-codex-r7/experiments/README.md\ndocs/audits/2026-11-03-codex-r7/experiments/artifact-validation.json\ndocs/audits/2026-11-03-codex-r7/experiments/commands.txt\ndocs/audits/2026-11-03-codex-r7/experiments/comparison.json\ndocs/audits/2026-11-03-codex-r7/experiments/known-results.json\ndocs/audits/2026-11-03-codex-r7/experiments/known.py\ndocs/audits/2026-11-03-codex-r7/experiments/metrics-evidence.json\ndocs/audits/2026-11-03-codex-r7/experiments/probe.c\ndocs/audits/2026-11-03-codex-r7/experiments/replay.c\ndocs/audits/2026-11-03-codex-r7/experiments/results.json\ndocs/audits/2026-11-03-codex-r7/experiments/run.py\ndocs/audits/2026-11-03-codex-r7/experiments/suite-evidence.json\ndocs/audits/2026-11-03-codex-r7/experiments/suite-steps.json\ndocs/audits/2026-11-03-codex-r7/experiments/suites.py\ndocs/audits/2026-11-03-codex-r7/experiments/summarize.py\ndocs/audits/2026-11-03-codex-r7/experiments/validate.py\ndocs/audits/2026-11-03-codex-r7/findings.json\ndocs/audits/2026-11-03-codex-r7/report.md\ndocs/audits/2026-11-03-codex-r7/verification.json"
+    }
+  },
+  "new_findings": {
+    "中": 1
+  },
+  "verification": {
+    "已修复": 3,
+    "部分修复": 2
+  },
+  "probe_combinations": 84,
+  "sanitizer_combinations": 16,
+  "known_high_rechecked": [
+    "AUD-007/F-6",
+    "AUD-011/F-8"
+  ],
+  "artifact_sha256": {
+    "docs/audits/2026-11-03-codex-r7/report.md": "9f1be9be9a8dcf8fc5a9bdc0f636ec2c8b7d0d57bc50f599d787622a3dd451aa",
+    "docs/audits/2026-11-03-codex-r7/findings.json": "73462153d8d411ebf6547d9853585a325a243134130859a15bb728fce94f92eb",
+    "docs/audits/2026-11-03-codex-r7/TASK.md": "f9258bfb20471d806d6c7498380504e418be22207aad5d7e77ec03392b322b95",
+    "docs/audits/2026-11-03-codex-r7/verification.json": "25cfb3b66093bf29772c7083cd00264d13757c4260a65fe9bf45e6d8b06bc5a2",
+    "docs/audits/2026-11-03-codex-r7/experiments/replay.c": "1c3cfc2b69d2302c26957c9ce5dbf86a36f03d37f28775571bda3b8eec91243b",
+    "docs/audits/2026-11-03-codex-r7/experiments/suite-steps.json": "9b09bbfbc4458f65ed7aab0c8980befffb1a6ba003fe802c124ccf4cb69b7669",
+    "docs/audits/2026-11-03-codex-r7/experiments/known.py": "4c4e26ac8d4aaf13a82e7a3271aea11c7018bced56db2a9808e45587192736f6",
+    "docs/audits/2026-11-03-codex-r7/experiments/run.py": "f5009623270f3213df20e71bdc8d6abcf906c2b73056fda39acb34c2207db018",
+    "docs/audits/2026-11-03-codex-r7/experiments/suite-evidence.json": "6df2bb360c7d39af48965213580205c832924a47f97f1c1b4640346c6f1f1dff",
+    "docs/audits/2026-11-03-codex-r7/experiments/known-results.json": "26e63b05783327967fce4cf1438addbbadc746b622626cfea57d1029bb33ad3a",
+    "docs/audits/2026-11-03-codex-r7/experiments/results.json": "42e099b801c934079385303488b7e093e2bf1c2a42f82662202dcb45b5d3072c",
+    "docs/audits/2026-11-03-codex-r7/experiments/summarize.py": "2f867aacffc02b055e824f939021509e203312b343752c2dbaa019944137e5db",
+    "docs/audits/2026-11-03-codex-r7/experiments/comparison.json": "eb382d6e8453a7f89c1bd1d6dd0bbf3d871c99deb9abac93152b50e7bcd54500",
+    "docs/audits/2026-11-03-codex-r7/experiments/metrics-evidence.json": "0a87de31a2208de5ef760ce34648608ca7eaf853720cfaee233e0b1cfeb7d4fc",
+    "docs/audits/2026-11-03-codex-r7/experiments/README.md": "a52ae3c2146c97938db282781e5ed71a9705f1baa4a6632613671b0c009c734f",
+    "docs/audits/2026-11-03-codex-r7/experiments/suites.py": "da904e518e8e19b1f41337e8440c0307a088d7679334c00114d6b78728ae29d3",
+    "docs/audits/2026-11-03-codex-r7/experiments/validate.py": "f03df90cbae662d162089aaf4da29133e9e5e45deab1742f4284a77e0ebb3092",
+    "docs/audits/2026-11-03-codex-r7/experiments/commands.txt": "74b1852de329ff412e9fc53345c2bed2e595ac3fb4d3023caf31d6167e678dc6",
+    "docs/audits/2026-11-03-codex-r7/experiments/probe.c": "21a1fd43712b4ad6e298b4e583ba19392b845437e77d2ec3bae447c9d67d310b"
+  }
+}

@@ -1,0 +1,123 @@
+[
+  {
+    "name": "clock-compile",
+    "command": [
+      "cc",
+      "-O1",
+      "-std=c11",
+      "-Idrivers/display/pqbn",
+      "-o",
+      "/Users/bytedance/Documents/Workspace/ink-audit-7/build-audit/r7-known/clock",
+      "docs/audits/2026-11-codex-review/pqbn_clock.c",
+      "drivers/display/pqbn/pqbn_v4.c",
+      "-lm"
+    ],
+    "exit_code": 0,
+    "output": []
+  },
+  {
+    "name": "clock-20-3",
+    "command": [
+      "/Users/bytedance/Documents/Workspace/ink-audit-7/build-audit/r7-known/clock",
+      "20",
+      "3"
+    ],
+    "exit_code": 1,
+    "output": [
+      "drive=20 phases, cycles=3, clock=826 phases (true rest of every pixel >= 825)",
+      "settled pixels: 32768, reconstructed dwell level != 7 (rest wrapped below 64): 30208 (92.2%), first row 0"
+    ]
+  },
+  {
+    "name": "gen-race",
+    "command": [
+      "/Users/bytedance/Documents/Workspace/ink-audit-7/build-audit/ink-sim",
+      "--assets",
+      "/Users/bytedance/Documents/Workspace/ink-audit-7/build-audit/assets",
+      "--content",
+      "/Users/bytedance/Documents/Workspace/ink-audit-7/build-audit/test-content",
+      "--profile",
+      "simulator/profiles/metalio-plus.json",
+      "--script",
+      "docs/audits/2026-11-codex-review/gen_race.script",
+      "--hub",
+      "docs/audits/2026-11-codex-review/gen_race.hub.json",
+      "--out",
+      "/Users/bytedance/Documents/Workspace/ink-audit-7/build-audit/r7-known/gen-race",
+      "--no-random-outages",
+      "--trace"
+    ],
+    "exit_code": 0,
+    "output": [],
+    "metrics": {
+      "ai.press_to_listening_visible_ms": {
+        "count": 1,
+        "mean": 513.226,
+        "min": 513.226,
+        "p50": 513.226,
+        "p95": 513.226,
+        "p99": 513.226,
+        "max": 513.226
+      },
+      "ai.press_to_tone_heard_ms": {
+        "count": 1,
+        "mean": 50.905,
+        "min": 50.905,
+        "p50": 50.905,
+        "p95": 50.905,
+        "p99": 50.905,
+        "max": 50.905
+      },
+      "ai.presses": 1,
+      "ai.release_to_upload_done_ms": {
+        "count": 1,
+        "mean": 604.982,
+        "min": 604.982,
+        "p50": 604.982,
+        "p95": 604.982,
+        "p99": 604.982,
+        "max": 604.982
+      },
+      "ai.tool_to_visible_ms": {
+        "count": 1,
+        "mean": 819.892,
+        "min": 819.892,
+        "p50": 819.892,
+        "p95": 819.892,
+        "p99": 819.892,
+        "max": 819.892
+      },
+      "reader.open_ms": {
+        "count": 1,
+        "mean": 46.389,
+        "min": 46.389,
+        "p50": 46.389,
+        "p95": 46.389,
+        "p99": 46.389,
+        "max": 46.389
+      },
+      "reader.page_render_ms": {
+        "count": 4,
+        "mean": 36.658,
+        "min": 34.851,
+        "p50": 36.938,
+        "p95": 37.521,
+        "p99": 37.521,
+        "max": 37.521
+      },
+      "reader.page_turns": 2,
+      "reader.restored_page": {
+        "count": 1,
+        "mean": 0,
+        "min": 0,
+        "p50": 0,
+        "p95": 0,
+        "p99": 0,
+        "max": 0
+      },
+      "reader.turns_prerendered": 2,
+      "tools.calls.done": 1
+    },
+    "warnings": []
+  }
+]
