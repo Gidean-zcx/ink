@@ -7,8 +7,12 @@
 
 static int send(hal_uart_t *u, const char *cmd) {
     char line[32];
-    int n = snprintf(line, sizeof line, "%s\r\n", cmd);
-    return hal_uart_write(u, line, (size_t)n) == n ? 0 : -1;
+    size_t n = strlen(cmd);
+    if (n + 2 > sizeof line) return -1;
+    memcpy(line, cmd, n);
+    line[n] = '\r';
+    line[n + 1] = '\n';
+    return hal_uart_write(u, line, n + 2) == (int)(n + 2) ? 0 : -1;
 }
 
 int bh1098g_set_mode(hal_uart_t *u, int mode) {

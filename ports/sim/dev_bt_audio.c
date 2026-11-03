@@ -118,7 +118,7 @@ static void bt_boot_task(void *arg) {
 
 void sim_bt_audio_init(void) { /* task context (boot); P14 is high from the board's power-on levels */
     sim_bt_audio_power(true);
-    osal_task_cfg_t c = {.name = "bt_audio", .fn = bt_boot_task, .stack_bytes = 2048, .priority = 4, .core = -1,
+    osal_task_cfg_t c = {.name = "bt_audio", .fn = bt_boot_task, .stack_bytes = 3072, .priority = 4, .core = -1,
                          .flags = OSAL_TASK_STACK_EXTERNAL};
     if (osal_task_create(&c, NULL) != OSAL_OK) sim_warn("board: cannot start the BH1098G setup");
 }
