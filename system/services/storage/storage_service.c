@@ -32,6 +32,7 @@
 #include "ink/osal.h"
 #include "ink/probe.h"
 #include "ink/sys/display.h"
+#include "ink/sys/res.h"
 #include "ink/sys/storage.h"
 
 #define MAX_JOBS 8
@@ -108,6 +109,26 @@ static void cache_drop(const char *path) {
             ST.cache[i] = (centry_t){0};
         }
 }
+
+/* Give memory back under pressure (resource manager): least recently used entries first. */
+static size_t reclaim(void *ctx, size_t want) {
+    (void)ctx;
+    size_t got = 0;
+    osal_mutex_lock(ST.lock, OSAL_WAIT_FOREVER);
+    while (got < want) {
+        centry_t *e = NULL;
+        for (int i = 0; i < CACHE_MAX; i++)
+            if (ST.cache[i].path && (!e || ST.cache[i].used_at < e->used_at)) e = &ST.cache[i];
+        if (!e) break;
+        got += strlen(e->path) + 1 + (e->len > 0 ? (size_t)e->len : 0) + 1;
+        osal_free(e->path);
+        *e = (centry_t){0};
+    }
+    osal_mutex_unlock(ST.lock);
+    return got;
+}
+
+int ink_storage_reclaimable(void) { return ink_mem_reclaimer("storage-cache", 10, reclaim, NULL); }
 
 /* The content of path is now `data` (len -1: no file): cache it, or forget what was cached. */
 static void cache_put(const char *path, const void *data, int len) {

@@ -25,6 +25,8 @@ extern "C" {
 #endif
 
 int ink_storage_init(void);
+/** Offer the read cache to the resource manager (after ink_res_init). */
+int ink_storage_reclaimable(void);
 /** Queue an atomic replace of `path` (/user/...) with a copy of data. Coalesces repeated writes of one path. */
 int ink_storage_write_atomic(const char *path, const void *data, size_t len);
 /** Read a small file into buf (blocks while the storage task reads it); bytes read or -1. Sees queued writes. */

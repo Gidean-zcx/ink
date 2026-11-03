@@ -157,6 +157,7 @@ add_library(ink_system STATIC
   system/services/ai/ai_service.c
   system/services/audio/audio_service.c
   system/services/res/exec.c
+  system/services/res/res.c
   system/policy/cap.c
   system/policy/members.c
   system/policy/settings.c

@@ -19,6 +19,7 @@
 #include "cJSON.h"
 #include "ink/sys/members.h"
 #include "ink/sys/net.h"
+#include "ink/sys/res.h"
 #include "ink/sys/settings.h"
 #include "ink/sys/state.h"
 #include "ink/sys/power.h"
@@ -492,6 +493,109 @@ static void service_checks(void) {
     CHECK(state_is("cell.sim", "internal"), "the modem switched online and cell.sim says so");
 }
 
+/* ---- step 4: resource management (detailed design §5.3) ---- */
+
+static void *g_spare;     /* what the test cache gives back */
+static int g_reclaims;
+static int g_steps;
+static bool g_steps_on_bg = true;
+static int g_finished, g_cancelled;
+
+static size_t test_reclaim(void *ctx, size_t want) {
+    (void)ctx;
+    (void)want;
+    g_reclaims++;
+    if (!g_spare) return 0;
+    osal_free(g_spare);
+    g_spare = NULL;
+    return 1536u * 1024u;
+}
+
+static ink_job_step_t three_steps(void *ctx) {
+    (void)ctx;
+    g_steps_on_bg = g_steps_on_bg && ink_exec_is_current(INK_EXEC_BG);
+    return ++g_steps >= 3 ? INK_JOB_DONE : INK_JOB_MORE;
+}
+static ink_job_step_t forever(void *ctx) {
+    (void)ctx;
+    osal_task_delay_us(5000);
+    return INK_JOB_MORE;
+}
+static void job_finished(void *ctx, ink_job_step_t how, bool cancelled) {
+    (void)ctx;
+    (void)how;
+    if (cancelled) g_cancelled++;
+    else g_finished++;
+}
+
+static bool wait_for(volatile int *v, int want, uint64_t max_us) {
+    for (uint64_t w = 0; *v < want && w < max_us; w += 2000) osal_task_delay_us(2000);
+    return *v >= want;
+}
+
+static void res_checks(void) {
+    /* quotas */
+    CHECK(ink_mem_budget("test.mem", INK_MEM_PSRAM, 64 * 1024) == 0, "a quota is declared");
+    void *a = ink_mem_alloc("test.mem", INK_MEM_PSRAM, 48 * 1024);
+    void *b = ink_mem_alloc("test.mem", INK_MEM_PSRAM, 32 * 1024);
+    CHECK(a && !b && ink_mem_used("test.mem", INK_MEM_PSRAM) == 48 * 1024, "past its quota a component gets nothing");
+    ink_mem_free(a);
+    b = ink_mem_alloc("test.mem", INK_MEM_PSRAM, 32 * 1024);
+    CHECK(b && ink_mem_used("test.mem", INK_MEM_PSRAM) == 32 * 1024, "after a free it fits again");
+    ink_mem_free(b);
+
+    /* jobs: steps on exec.bg, cancel, hold */
+    ink_job_t j = {.name = "three", .step = three_steps, .finish = job_finished};
+    CHECK(ink_job_submit(&j) > 0 && wait_for(&g_finished, 1, 2000000) && g_steps == 3 && g_steps_on_bg, "a three-step job runs on exec.bg (%d)",
+          g_steps);
+    ink_job_t f = {.name = "forever", .step = forever, .finish = job_finished};
+    int id = ink_job_submit(&f);
+    osal_task_delay_us(50000);
+    ink_job_cancel(id);
+    CHECK(id > 0 && wait_for(&g_cancelled, 1, 2000000) && ink_jobs_pending() == 0, "a cancelled job stops and is told so");
+    ink_jobs_hold(true);
+    g_steps = 0;
+    CHECK(ink_job_submit(&j) > 0, "a job is queued while jobs are held");
+    osal_task_delay_us(200000);
+    CHECK(g_steps == 0, "a held job does not run");
+    ink_jobs_hold(false);
+    CHECK(wait_for(&g_finished, 2, 2000000) && g_steps == 3, "released, it runs");
+
+    /* pressure: reclaim first, then pause background work */
+    CHECK(ink_mem_reclaimer("test-cache", 0, test_reclaim, NULL) == 0, "a reclaimable cache registers");
+    osal_mem_stats_t st;
+    osal_mem_stats(OSAL_MEM_EXTERNAL, &st);
+    static void *hog[24];
+    int nh = 0;
+    while (st.free > 3u * 1024u * 1024u && nh < 24) { /* fill PSRAM to just under 3 MiB free */
+        hog[nh++] = osal_malloc(1024u * 1024u, OSAL_MEM_EXTERNAL);
+        osal_mem_stats(OSAL_MEM_EXTERNAL, &st);
+    }
+    g_spare = osal_malloc(1536u * 1024u, OSAL_MEM_EXTERNAL); /* now under 2 MiB: tight */
+    CHECK(!ink_mem_admit(INK_MEM_PSRAM, 512 * 1024), "a large block is not admitted when it would make PSRAM tight");
+    CHECK(ink_mem_check() == INK_PRESSURE_NORMAL && g_reclaims >= 1 && !g_spare, "tight: caches give memory back and it is normal again (%d)",
+          g_reclaims);
+    static void *keep[16]; /* take all but ~700 KiB (free space may be in pieces); twice: the first check */
+    int nk = 0;             /* lets every cache (the camera's last photo too) give back what it has */
+    for (int round = 0; round < 2; round++) {
+        for (osal_mem_stats(OSAL_MEM_EXTERNAL, &st); st.free > 760u * 1024u && nk < 16; osal_mem_stats(OSAL_MEM_EXTERNAL, &st)) {
+            size_t want = st.free - 700u * 1024u;
+            keep[nk++] = osal_malloc(want < st.largest_free ? want : st.largest_free, OSAL_MEM_EXTERNAL);
+        }
+        if (!round) ink_mem_check();
+    }
+    ink_pressure_t lv = ink_mem_check();
+    osal_mem_stats(OSAL_MEM_EXTERNAL, &st);
+    CHECK(lv >= INK_PRESSURE_LOW, "with nothing left to give, pressure stays (%s; PSRAM free %zu, %d blocks)", ink_pressure_name(lv), st.free, nk);
+    g_steps = 0;
+    CHECK(ink_job_submit(&j) > 0, "a job is queued under pressure");
+    osal_task_delay_us(200000);
+    CHECK(g_steps == 0, "it waits while memory is low");
+    for (int i = 0; i < nk; i++) osal_free(keep[i]);
+    for (int i = 0; i < nh; i++) osal_free(hog[i]);
+    CHECK(ink_mem_check() == INK_PRESSURE_NORMAL && wait_for(&g_finished, 3, 2000000) && g_steps == 3, "freed, pressure is normal and it runs");
+}
+
 /* Children: last, a child cannot switch back to an adult without the PIN. */
 static void child_checks(void) {
     ink_receipt_t rc;
@@ -508,7 +612,7 @@ static void child_checks(void) {
 
 static void systest_task(void *arg) {
     (void)arg;
-    if (ink_display_init() != 0 || ink_storage_init() != 0 || ink_cap_init() != 0 || ink_exec_init() != 0 || ink_state_init() != 0 ||
+    if (ink_display_init() != 0 || ink_storage_init() != 0 || ink_cap_init() != 0 || ink_exec_init() != 0 || ink_res_init() != 0 || ink_storage_reclaimable() != 0 || ink_state_init() != 0 ||
         ink_settings_init() != 0 || ink_power_init() != 0 || ink_net_init() != 0 || ink_light_init() != 0 ||
         ink_hub_init("wss://hub.local/v1/device") != 0 || ink_audio_init() != 0 || ink_camera_init() != 0 || ink_comm_init() != 0) {
         CHECK(0, "the system services start");
@@ -523,6 +627,7 @@ static void systest_task(void *arg) {
     bus_checks();
     ink_members_init();
     service_checks();
+    res_checks();
     child_checks();
     ink_probe_mark("systest-done");
 }
