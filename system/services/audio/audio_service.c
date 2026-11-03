@@ -161,6 +161,8 @@ static bool take_frame(int16_t *out) { /* under lock */
 static void close_output(bool drain);
 static void free_jb(void);
 
+static int g_last_command = -1;
+
 static void listen_event(ink_listen_ev_t ev, uint64_t t_us) {
     if (AU.listen_fn) AU.listen_fn(AU.listen_ctx, ev, t_us);
 }
@@ -171,6 +173,10 @@ static void afe_step(const int16_t *frame) {
     uint64_t now = osal_now_us();
     hal_afe_feed(frame, AU.ref_frame, FRAME, now, &r);
     if (r.wake) listen_event(INK_LISTEN_WAKE, now);
+    if (r.command >= 0) {
+        __atomic_store_n(&g_last_command, r.command, __ATOMIC_RELEASE);
+        listen_event(INK_LISTEN_COMMAND, now);
+    }
     if (r.speech && !AU.afe_speech) {
         lock();
         bool answer = AU.stream && AU.prio == INK_AUDIO_PRIO_VOICE; /* an answer is playing: speech interrupts it */
@@ -557,6 +563,9 @@ int ink_audio_init(void) {
                            .flags = OSAL_TASK_STACK_EXTERNAL};
     return osal_task_create(&cfg, &AU.task) == OSAL_OK ? 0 : -1;
 }
+
+int ink_audio_listen_commands(const char *const *phrases, int n) { return hal_afe_set_commands(phrases, n); }
+int ink_audio_last_command(void) { return __atomic_load_n(&g_last_command, __ATOMIC_ACQUIRE); }
 
 bool ink_audio_can_listen(void) { return AU.info.has_mic && AU.task && hal_afe_available(); }
 

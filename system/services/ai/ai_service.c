@@ -523,6 +523,22 @@ typedef struct {
 
 static bool g_handsfree_turn; /* UI task: this turn began with the wake word or an interruption */
 
+/* Offline quick intents (architecture §6.4): the commonest commands, recognised on the device and
+ * mapped straight to a capability, so they work without the hub. Online the hub understands the
+ * whole utterance instead. */
+static const char *const INTENT_WORDS[] = {"下一页", "上一页", "读出这一页", "回到主页"};
+static const char *const INTENT_CAPS[] = {"reader.next_page", "reader.prev_page", "reader.read_page", "system.home"};
+
+static void offline_intent(int k, uint64_t t) { /* UI task, during a hands-free turn */
+    if (k < 0 || k >= (int)(sizeof INTENT_CAPS / sizeof INTENT_CAPS[0]) || ink_hub_online()) return;
+    ink_receipt_t rc;
+    ink_cap_invoke(INTENT_CAPS[k], NULL, INK_SRC_AI, 0, &rc); /* the AI's policy applies, as for the hub's calls */
+    ink_probe_count("ai.offline_intents");
+    g_handsfree_turn = false;
+    ink_ai_dismiss(); /* the turn ends here: nothing goes to the hub */
+    ink_audio_tone(rc.status == INK_RC_DONE ? INK_TONE_DONE : INK_TONE_ERROR, t, NULL);
+}
+
 static void listen_job(void *arg) { /* UI task: the voice front end's events drive the same turn as the AI key */
     listen_job_t *j = arg;
     if (j->ev == INK_LISTEN_WAKE && g_handsfree_turn) j->ev = INK_LISTEN_SPEECH; /* already listening to this one */
@@ -532,6 +548,8 @@ static void listen_job(void *arg) { /* UI task: the voice front end's events dri
         tone_probe = j->ev == INK_LISTEN_WAKE ? "ai.wake_to_tone_heard_ms" : "ai.barge_to_tone_heard_ms";
         ink_ai_key(true, j->t);
         tone_probe = "ai.press_to_tone_heard_ms";
+    } else if (j->ev == INK_LISTEN_COMMAND && g_handsfree_turn) {
+        offline_intent(ink_audio_last_command(), j->t);
     } else if (j->ev == INK_LISTEN_QUIET && g_handsfree_turn) { /* said what they wanted: like releasing the key */
         g_handsfree_turn = false;
         ink_ai_key(false, j->t);
@@ -575,6 +593,7 @@ int ink_ai_init(void) {
     AI.answer_text[0] = 0;
     AI.tts_for = AI.tts_done_for = -1;
     ink_audio_on_stream_failed(on_speech_failed, NULL);
+    ink_audio_listen_commands(INTENT_WORDS, (int)(sizeof INTENT_WORDS / sizeof INTENT_WORDS[0]));
     ink_state_watch("power.state", on_listen_inputs, NULL, INK_EXEC_DIRECT);
     ink_settings_watch("voice.handsfree", on_listen_inputs, NULL, INK_EXEC_DIRECT);
     listen_policy(NULL);

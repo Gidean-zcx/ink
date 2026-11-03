@@ -12,6 +12,7 @@
  *   +3s      powercut                 # tear in-flight flash op, save image, stop
  *   +3s      powercut write 2         # cut during the 2nd flash program/erase from now
  *   +1s      mic   speech|silence|noise|wake  # what the microphone hears (wake: the wake word, said like speech)
+ *   +0       mic   say 下一页         # speech with these words (the device's command words may know them)
  *   +0       net   wifi | lte | none   # shorthand for the environment: that network appears (none: all gone)
  *   +0       wifi  on|off [rssi]        # a known Wi-Fi network in range, e.g. wifi on -70
  *   +0       cell  on|off [rsrp]        # cellular coverage, e.g. cell on -105
@@ -40,7 +41,7 @@
 #include "ink/rotation.h"
 #include "sim.h"
 
-typedef enum { A_TOUCH, A_KEY, A_SNAP, A_MARK, A_NOTE, A_BATTERY, A_POWERCUT, A_END, A_NET, A_OUTAGE, A_MIC, A_SIM, A_ORIENT, A_SHAKE, A_RTC_LOST, A_SMS_IN, A_CALL_IN, A_REMOTE, A_ENV, A_FAULTS } akind_t;
+typedef enum { A_TOUCH, A_KEY, A_SNAP, A_MARK, A_NOTE, A_BATTERY, A_POWERCUT, A_END, A_NET, A_OUTAGE, A_MIC, A_MIC_SAY, A_SIM, A_ORIENT, A_SHAKE, A_RTC_LOST, A_SMS_IN, A_CALL_IN, A_REMOTE, A_ENV, A_FAULTS } akind_t;
 
 typedef struct {
     uint64_t t;
@@ -200,6 +201,9 @@ int sim_script_load(const char *path, char *err, size_t errlen) {
         } else if (!strcmp(cmd, "net")) {
             ok = n >= 3 && (!strcmp(tok[2], "lte") || !strcmp(tok[2], "wifi") || !strcmp(tok[2], "none"));
             if (ok) snprintf(push(t, A_NET)->text, 16, "%s", tok[2]);
+        } else if (!strcmp(cmd, "mic") && n >= 4 && !strcmp(tok[2], "say")) { /* mic say <words>: speech the device may recognise */
+            ok = true;
+            snprintf(push(t, A_MIC_SAY)->text, 96, "%s", tok[3]);
         } else if (!strcmp(cmd, "mic")) {
             ok = n >= 3 && (!strcmp(tok[2], "speech") || !strcmp(tok[2], "silence") || !strcmp(tok[2], "noise") || !strcmp(tok[2], "wake"));
             if (ok) snprintf(push(t, A_MIC)->text, 16, "%s", tok[2]);
@@ -310,6 +314,7 @@ static void run_action(void *arg) { /* ISR context */
     case A_NET: sim_net_set_link(a->text); break;
     case A_OUTAGE: sim_net_outage(SIM_MS(a->c)); break;
     case A_MIC: sim_audio_mic_source(a->text); break;
+    case A_MIC_SAY: sim_audio_mic_say(a->text); break;
     case A_SIM: sim_net_set_card(a->a, a->b > 0, a->b >= 2, a->b == 3); break;
     case A_ORIENT: sim_accel_orient(a->text); break;
     case A_SHAKE: sim_accel_shake(); break;

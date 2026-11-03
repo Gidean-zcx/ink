@@ -80,11 +80,17 @@ void ink_audio_tone(ink_tone_t tone, uint64_t cause_us, const char *probe);
  * A capture begun while listening shares the microphone and starts from that moment. Events run
  * in the audio task: keep them short. The chip stays awake while listening.
  */
-typedef enum { INK_LISTEN_WAKE = 1, INK_LISTEN_SPEECH, INK_LISTEN_QUIET, INK_LISTEN_BARGE } ink_listen_ev_t;
+typedef enum { INK_LISTEN_WAKE = 1, INK_LISTEN_SPEECH, INK_LISTEN_QUIET, INK_LISTEN_BARGE, INK_LISTEN_COMMAND } ink_listen_ev_t;
+/* COMMAND: a command word from ink_audio_listen_commands was recognised on the device; which one:
+ * ink_audio_last_command(). */
 typedef void (*ink_audio_listen_fn)(void *ctx, ink_listen_ev_t ev, uint64_t t_us);
 /** The device can listen hands-free (a microphone and a voice front end). */
 bool ink_audio_can_listen(void);
 int ink_audio_listen(bool on, ink_audio_listen_fn fn, void *ctx);
+/** The command words the device recognises by itself (offline quick intents); call before listening. */
+int ink_audio_listen_commands(const char *const *phrases, int n);
+/** Index of the command word last reported by INK_LISTEN_COMMAND. */
+int ink_audio_last_command(void);
 
 /** Speaker volume 0..100 (software gain). */
 void ink_audio_set_volume(int percent);

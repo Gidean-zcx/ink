@@ -67,6 +67,7 @@ static struct {
     int16_t *mic, *ref;
     mic_src_t src;
     uint64_t src_since; /* when the person last changed what they do (ns) */
+    char phrase[48]; /* what the person says (mic say), for the command recogniser */
     uint64_t cap_lost_samples, cap_samples, cap_overruns;
     /* speaker */
     bool out_on;
@@ -212,11 +213,20 @@ static void audio_task(void *arg) {
 }
 
 void sim_audio_mic_source(const char *name) { /* ISR (script) */
+    A.phrase[0] = 0;
     A.src = !strcmp(name, "silence") ? MIC_SILENCE : !strcmp(name, "noise") ? MIC_NOISE : !strcmp(name, "host") ? MIC_HOST
           : !strcmp(name, "wake")    ? MIC_WAKE
                                      : MIC_SPEECH;
     A.src_since = vtk_now();
 }
+
+void sim_audio_mic_say(const char *phrase) { /* ISR (script): speech whose words the command recogniser may know */
+    snprintf(A.phrase, sizeof A.phrase, "%s", phrase);
+    A.src = MIC_SPEECH;
+    A.src_since = vtk_now();
+}
+
+const char *sim_audio_mic_phrase(void) { return A.src == MIC_SPEECH && A.phrase[0] ? A.phrase : NULL; }
 
 int sim_audio_mic_state(uint64_t *since_ns) { /* what the person does now: 0 quiet, 1 speaks, 2 says the wake word */
     if (since_ns) *since_ns = A.src_since;

@@ -8,12 +8,16 @@
  * until measured with ESP-SR on the S31).
  */
 #include <stdlib.h>
+#include <string.h>
 
 #include "ink/hal_afe.h"
 #include "ink/osal.h"
 #include "sim.h"
 
 static struct {
+    const char *const *commands;
+    int ncommands;
+    uint64_t command_for_ns; /* the utterance already reported as a command (its start + 1) */
     bool on;
     void *ram;
     bool speech;
@@ -23,6 +27,12 @@ static struct {
 } F;
 
 bool hal_afe_available(void) { return g_profile.afe.present; }
+
+int hal_afe_set_commands(const char *const *phrases, int n) {
+    F.commands = phrases;
+    F.ncommands = n;
+    return 0;
+}
 
 int hal_afe_start(void) {
     if (!g_profile.afe.present) return -1;
@@ -82,6 +92,16 @@ void hal_afe_feed(const int16_t *mic, const int16_t *ref, int samples, uint64_t 
     if (F.echo_until_ns && now >= F.echo_until_ns && !st) {
         F.speech = false;
         F.echo_until_ns = 0;
+    }
+    out->command = -1; /* a command word: recognised ~600 ms after the person began saying it (ESTIMATE) */
+    const char *said = sim_audio_mic_phrase();
+    if (st == 1 && said && F.command_for_ns != since + 1 && now >= since + SIM_MS(600)) {
+        F.command_for_ns = since + 1;
+        for (int i = 0; i < F.ncommands; i++)
+            if (!strcmp(F.commands[i], said)) {
+                out->command = i;
+                sim_metric_add("afe.commands", 1);
+            }
     }
     out->speech = F.speech;
     out->speech_since_us = F.speech_since_ns / 1000;

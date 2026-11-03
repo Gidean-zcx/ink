@@ -269,6 +269,8 @@ void sim_audio_init(void);            /* task context (boot) */
 void sim_audio_report(void);
 void sim_audio_mic_source(const char *name); /* ISR (script): "speech" | "silence" | "noise" | "wake" | "host" (window) */
 int sim_audio_mic_state(uint64_t *since_ns); /* 0 quiet, 1 speaks, 2 says the wake word; since when */
+void sim_audio_mic_say(const char *phrase); /* ISR (script): speech with these words */
+const char *sim_audio_mic_phrase(void);     /* the words being said, or NULL */
 void sim_audio_speaker_counters(uint64_t *underruns, double *underrun_ms, double *idle_ms); /* self-test */
 /** Build a stand-in Opus packet (level, pitch) the simulated decoder turns into a tone. */
 int sim_opus_fake_packet(uint8_t *out, int cap, double freq, double level, int bytes, uint32_t seed);
