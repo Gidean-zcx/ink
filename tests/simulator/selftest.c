@@ -982,6 +982,24 @@ static double panel_mean(const hal_rect_t *a) {
     return sum / ((double)a->w * a->h);
 }
 
+static volatile bool g_lost_done, g_lost_ok;
+static volatile double g_lost_mean = -1;
+static hal_rect_t g_lost_area;
+
+static double panel_mean(const hal_rect_t *a);
+
+static void lost_area_done(void *ctx, const hal_display_result_t *r) { /* display task */
+    (void)ctx;
+    g_lost_ok = r->ok;
+    g_lost_mean = panel_mean(&g_lost_area); /* what the panel shows there when the update says it is done */
+    g_lost_done = true;
+}
+
+static void ignore_done(void *ctx, const hal_display_result_t *r) {
+    (void)ctx;
+    (void)r;
+}
+
 static bool update_wf_and_wait(const uint8_t *px, const hal_rect_t *area, hal_waveform_t wf, int max_ms) {
     g_upd_done = false;
     hal_display_update(area, px, area->w, wf, 0, upd_done, NULL);
@@ -1060,6 +1078,25 @@ static void display_cut_checks(void) {
     CHECK(lost2 && full_ok && small && took < 2000000, "after a supply loss and a full GC16, a small update takes its usual time (%llu ms)",
           (unsigned long long)(took / 1000));
     osal_free(full);
+
+    /* a supply loss on one area, then at once a GC16 of another area and an update of the lost one:
+     * the update of the lost area is done only when the panel shows it there (audit AUD7-001) */
+    static uint8_t other[64 * 64];
+    const hal_rect_t right = {128, 0, 64, 64};
+    memset(px, 0xFF, sizeof px);
+    bool base = update_and_wait(px, &area) && g_upd_ok;
+    memset(px, 0x00, sizeof px);
+    osal_task_create(&cb, NULL);
+    bool lost3 = update_and_wait(px, &area) && !g_upd_ok;
+    memset(other, 0xFF, sizeof other);
+    g_lost_area = area;
+    g_lost_done = false;
+    hal_display_update(&right, other, 64, HAL_WF_GC16, 0, ignore_done, NULL);
+    hal_display_update(&area, px, 64, HAL_WF_GL16, 0, lost_area_done, NULL);
+    for (int i = 0; i < 2000 && !g_lost_done; i++) osal_task_delay_us(10000);
+    CHECK(base && lost3 && g_lost_done && g_lost_ok && g_lost_mean >= 0 && g_lost_mean < 25,
+          "with a GC16 elsewhere, the lost area's update is done only once the panel shows it (mean %.0f at its callback)", g_lost_mean);
+    for (int i = 0; i < 2000 && hal_display_pending() > 0; i++) osal_task_delay_us(10000);
 }
 
 static void board_task(void *arg) {

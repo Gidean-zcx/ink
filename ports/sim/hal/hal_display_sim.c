@@ -846,6 +846,7 @@ typedef struct {
     int tx0, ty0, tx1, ty1;   /* tiles covered, inclusive */
     uint64_t started_ns;      /* first push in the area */
     bool after_clean;         /* overlaps the area of a clean in progress: done only after it */
+    bool after_redraw;        /* overlaps an area a supply loss left to redraw (g_redraw): done only after that redraw */
 } pq_upd_t;
 
 static struct {
@@ -1018,6 +1019,10 @@ static void pq_ingest(const req_t *r) {
         return;
     }
     u->after_clean = PQ.clean_stage && rect_overlap(&r->area, &PQ.clean_area);
+    if (g_redraw) { /* the panel there is unknown until the redraw clean has run (pq_redraw_check) */
+        const hal_rect_t lost = g_redraw_area.w > 0 ? g_redraw_area : (hal_rect_t){0, 0, D.W, D.H};
+        u->after_redraw = rect_overlap(&r->area, &lost);
+    }
     pq_target(&r->area, -1, true);
 }
 
@@ -1225,7 +1230,7 @@ static void pq_after_phase(uint32_t now, uint64_t scan_end) {
     for (int i = 0; i < PQ.nu;) {
         pq_upd_t *u = &PQ.u[i];
         bool cleaning = PQ.clean_stage && i == PQ.clean_idx;
-        bool waiting = u->after_clean && PQ.clean_stage;
+        bool waiting = (u->after_clean && PQ.clean_stage) || (u->after_redraw && g_redraw);
         if (!cleaning && !waiting && pq_area_still(u->tx0, u->ty0, u->tx1, u->ty1, now + 1)) {
             if (!checked) checked = power_kept() ? 1 : -1;
             if (checked < 0) { /* every update in flight fails; the drive stops (pq_drive) */
@@ -1262,7 +1267,10 @@ static void pq_redraw_check(void) {
         pq_ingest(&rc);
     }
     for (int i = 0; i < PQ.nu; i++) /* what was asked there is done when the clean has shown it */
-        if (i != PQ.clean_idx && rect_overlap(&PQ.u[i].r.area, &a)) PQ.u[i].after_clean = true;
+        if (i != PQ.clean_idx && rect_overlap(&PQ.u[i].r.area, &a)) {
+            PQ.u[i].after_clean = true; /* now: until this clean is done */
+            PQ.u[i].after_redraw = false;
+        }
     g_redraw = false; /* set again if this drive loses its supply too */
     g_redraw_area = (hal_rect_t){0, 0, 0, 0};
     sim_metric_add("display.redraws_after_supply_loss", 1);
